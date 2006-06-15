@@ -1,0 +1,81 @@
+EVENT:   Profiler Initialize
+MESSAGE: Monitoring Assemblies:
+MESSAGE: ------------------------------------------------------------------ Module: 0x79b7a000
+MESSAGE: Failed to load symbols for module [mscorlib.dll] in [c:\windows\microsoft.net\framework\v1.1.4322].
+EVENT:   Loaded Module [c:\windows\microsoft.net\framework\v1.1.4322\mscorlib.dll]
+MESSAGE: Module [0x79b7a000] attached To assembly [0x00157de8]
+EVENT:   Monitoring Assembly [mscorlib][0x00157de8]
+MESSAGE: ------------------------------------------------------------------ Module: 0x0017a158
+MESSAGE: Failed to load symbols for module [nunit-console.exe] in [C:\Documents and Settings\John\My Documents\TreeSurgeon\WeSay\tools\nunit].
+EVENT:   Loaded Module [C:\Documents and Settings\John\My Documents\TreeSurgeon\WeSay\tools\nunit\nunit-console.exe]
+MESSAGE: Module [0x0017a158] attached To assembly [0x00179d10]
+EVENT:   Monitoring Assembly [nunit-console][0x00179d10]
+MESSAGE: ------------------------------------------------------------------ Module: 0x001b65c0
+MESSAGE: Failed to load symbols for module [nunit-console-runner.dll] in [c:\documents and settings\john\my documents\treesurgeon\wesay\tools\nunit].
+EVENT:   Loaded Module [c:\documents and settings\john\my documents\treesurgeon\wesay\tools\nunit\nunit-console-runner.dll]
+MESSAGE: Module [0x001b65c0] attached To assembly [0x001b62a0]
+EVENT:   Monitoring Assembly [nunit-console-runner][0x001b62a0]
+MESSAGE: ------------------------------------------------------------------ Module: 0x001cebb0
+MESSAGE: Failed to load symbols for module [nunit.util.dll] in [c:\documents and settings\john\my documents\treesurgeon\wesay\tools\nunit].
+EVENT:   Loaded Module [c:\documents and settings\john\my documents\treesurgeon\wesay\tools\nunit\nunit.util.dll]
+MESSAGE: Module [0x001cebb0] attached To assembly [0x001cdf40]
+EVENT:   Monitoring Assembly [nunit.util][0x001cdf40]
+MESSAGE: ------------------------------------------------------------------ Module: 0x7beb8000
+MESSAGE: Failed to load symbols for module [system.xml.dll] in [c:\windows\assembly\gac\system.xml\1.0.5000.0__b77a5c561934e089].
+EVENT:   Loaded Module [c:\windows\assembly\gac\system.xml\1.0.5000.0__b77a5c561934e089\system.xml.dll]
+MESSAGE: Module [0x7beb8000] attached To assembly [0x001d5df0]
+EVENT:   Monitoring Assembly [System.Xml][0x001d5df0]
+MESSAGE: ------------------------------------------------------------------ Module: 0x001dcb68
+MESSAGE: Failed to load symbols for module [nunit.core.dll] in [c:\documents and settings\john\my documents\treesurgeon\wesay\tools\nunit].
+EVENT:   Loaded Module [c:\documents and settings\john\my documents\treesurgeon\wesay\tools\nunit\nunit.core.dll]
+MESSAGE: Module [0x001dcb68] attached To assembly [0x001d6508]
+EVENT:   Monitoring Assembly [nunit.core][0x001d6508]
+MESSAGE: ------------------------------------------------------------------ Module: 0x7b2f60a0
+MESSAGE: Failed to load symbols for module [system.dll] in [c:\windows\assembly\gac\system\1.0.5000.0__b77a5c561934e089].
+EVENT:   Loaded Module [c:\windows\assembly\gac\system\1.0.5000.0__b77a5c561934e089\system.dll]
+MESSAGE: Module [0x7b2f60a0] attached To assembly [0x001f4ad8]
+EVENT:   Monitoring Assembly [System][0x001f4ad8]
+MESSAGE: ------------------------------------------------------------------ Module: 0x001f5348
+MESSAGE: Failed to load symbols for module [nunit.core.dll] in [c:\documents and settings\john\my documents\treesurgeon\wesay\tools\nunit].
+EVENT:   Loaded Module [c:\documents and settings\john\my documents\treesurgeon\wesay\tools\nunit\nunit.core.dll]
+MESSAGE: Module [0x001f5348] attached To assembly [0x002110c8]
+EVENT:   Monitoring Assembly [nunit.core][0x002110c8]
+MESSAGE: ------------------------------------------------------------------ Module: 0x0020f8b0
+MESSAGE: Failed to load symbols for module [system.dll] in [c:\windows\assembly\gac\system\1.0.5000.0__b77a5c561934e089].
+EVENT:   Loaded Module [c:\windows\assembly\gac\system\1.0.5000.0__b77a5c561934e089\system.dll]
+MESSAGE: Module [0x0020f8b0] attached To assembly [0x0020f6a8]
+EVENT:   Monitoring Assembly [System][0x0020f6a8]
+EVENT:   Unloaded Assembly []
+MESSAGE: ------------------------------------------------------------------ Module: 0x002262e8
+MESSAGE: Failed to load symbols for module [system.xml.dll] in [c:\windows\assembly\gac\system.xml\1.0.5000.0__b77a5c561934e089].
+EVENT:   Loaded Module [c:\windows\assembly\gac\system.xml\1.0.5000.0__b77a5c561934e089\system.xml.dll]
+MESSAGE: Module [0x002262e8] attached To assembly [0x00224ad8]
+EVENT:   Monitoring Assembly [System.Xml][0x00224ad8]
+MESSAGE: ------------------------------------------------------------------ Module: 0x00147bd8
+MESSAGE: Loaded symbols for module [wesay.unittests.dll] in [c:\docume~1\john\locals~1\temp\nunit20\shadowcopycache\632840123308750000\tests\assembly\dl2\73792f42\bc9f166d_6b7ec601].
+EVENT:   Loaded Module [c:\docume~1\john\locals~1\temp\nunit20\shadowcopycache\632840123308750000\tests\assembly\dl2\73792f42\bc9f166d_6b7ec601\wesay.unittests.dll]
+MESSAGE: Module [0x00147bd8] attached To assembly [0x00226620]
+EVENT:   Monitoring Assembly [WeSay.UnitTests][0x00226620]
+MESSAGE: ------------------------------------------------------------------ Module: 0x00219cf0
+MESSAGE: Failed to load symbols for module [nunit.framework.dll] in [c:\docume~1\john\locals~1\temp\nunit20\shadowcopycache\632840123308750000\tests\assembly\dl2\240363be\008a4ffa_361ac501].
+EVENT:   Loaded Module [c:\docume~1\john\locals~1\temp\nunit20\shadowcopycache\632840123308750000\tests\assembly\dl2\240363be\008a4ffa_361ac501\nunit.framework.dll]
+MESSAGE: Module [0x00219cf0] attached To assembly [0x002190e8]
+EVENT:   Monitoring Assembly [nunit.framework][0x002190e8]
+MESSAGE: ------------------------------------------------------------------ Module: 0x0373cad8
+MESSAGE: Failed to load symbols for module [nunit.core.extensions.dll] in [c:\documents and settings\john\my documents\treesurgeon\wesay\tools\nunit].
+EVENT:   Loaded Module [c:\documents and settings\john\my documents\treesurgeon\wesay\tools\nunit\nunit.core.extensions.dll]
+MESSAGE: Module [0x0373cad8] attached To assembly [0x002361b8]
+EVENT:   Monitoring Assembly [nunit.core.extensions][0x002361b8]
+EVENT:   Class Load [WeSay.UnitTests.Test1] from [WeSay.UnitTests]
+MESSAGE: Loading Method [ThisIsAnExampleTest] on [WeSay.UnitTests.Test1]
+MESSAGE: Loading Method [.ctor] on [WeSay.UnitTests.Test1]
+MESSAGE: Symbols not available.
+EVENT:   Unloaded Assembly [nunit.core]
+EVENT:   Unloaded Assembly [System]
+EVENT:   Unloaded Assembly [System.Xml]
+EVENT:   Unloaded Assembly [WeSay.UnitTests]
+EVENT:   Unloaded Assembly [nunit.framework]
+EVENT:   Unloaded Assembly [nunit.core.extensions]
+EVENT:   Profiler Shutdown
+MESSAGE: Loading Method [.ctor] on [WeSay.UnitTests.Test1]
+MESSAGE: Symbols not available.

@@ -1,0 +1,10 @@
+<?xml version="1.0" ?>
+<?xml-stylesheet href="coverage.xsl" type="text/xsl" ?>
+<coverage>
+  <module name="c:\docume~1\john\locals~1\temp\nunit20\shadowcopycache\632840123308750000\tests\assembly\dl2\73792f42\bc9f166d_6b7ec601\wesay.unittests.dll" assembly="WeSay.UnitTests">
+	<method name="ThisIsAnExampleTest" class="WeSay.UnitTests.Test1">
+	  <seqpnt visitcount="1" line="11" column="4" endline="11" endcolumn="28" document="c:\Documents and Settings\John\My Documents\TreeSurgeon\WeSay\src\UnitTests\Test1.cs"/>
+	  <seqpnt visitcount="1" line="12" column="3" endline="12" endcolumn="4" document="c:\Documents and Settings\John\My Documents\TreeSurgeon\WeSay\src\UnitTests\Test1.cs"/>
+	</method>
+  </module>
+</coverage>
