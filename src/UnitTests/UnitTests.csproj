@@ -97,6 +97,14 @@
 	<ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
+	<Reference Include="db4o, Version=5.2.2.0, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\db4o.dll</HintPath>
+	</Reference>
+	<Reference Include="JetBrains.dotTrace.Api, Version=2.0.215.10, Culture=neutral, PublicKeyToken=a69a3c730d060360">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\..\Program Files\JetBrains\dotTrace 2.0\JetBrains.dotTrace.Api.dll</HintPath>
+	</Reference>
 	<Reference Include="nunit.framework">
 	  <Name>nunit.framework</Name>
 	  <HintPath>..\..\lib\nunit.framework.dll</HintPath>
