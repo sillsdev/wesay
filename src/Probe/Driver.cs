@@ -1,4 +1,6 @@
 using System;
+using Gtk;
+using Glade;
 
 namespace Probe
 {
@@ -8,15 +10,15 @@ namespace Probe
 	class Driver
 	{
 		#region Glade Widgets
-#pragma warning disable 649
 
-	[Glade.Widget] Gtk.Window window1;
+		[Widget] Gtk.Window window1;
+		[Widget] Gtk.Notebook _tabControl;
+		[Widget] Gtk.TreeView _entryList;
 
-#pragma warning restore 649
-	#endregion
+		#endregion
 
 
-	/// <summary>
+		/// <summary>
 		/// The main entry point for the application.
 		/// </summary>
 		[STAThread]
@@ -27,19 +29,58 @@ namespace Probe
 
 		public Driver(string[] args)
 		{
-			Gtk.Application.Init();
+			Application.Init();
 
 		   //for resource (couldn't get it to work) Glade.XML gxml = new Glade.XML (null, "probe.glade", "window1", null);
 			Glade.XML gxml = new Glade.XML ("probe.glade", "window1", null);
 			gxml.Autoconnect (this);
-			Gtk.Application.Run();
+			this._tabControl.SwitchPage += new SwitchPageHandler(OnTabControl_switch_page);
+
+
+			TreeStore store = new TreeStore(typeof(string), typeof(string));
+
+			for (int i = 0; i < 5; i++)
+			{
+				TreeIter iter = store.AppendValues("Demo " + i, "Data " + i);
+			}
+
+			_entryList.Model = store;
+			_entryList.HeadersVisible = true;
+
+			_entryList.AppendColumn("Demo", new CellRendererText(), "text", 0);
+			_entryList.AppendColumn("Data", new CellRendererText(), "text", 1);
+
+
+
+
+			Application.Run();
 		}
 
+		//void tabControl_SwitchPage(object o, SwitchPageArgs args)
+		//{
+		//    throw new Exception("The method or operation is not implemented.");
+		//}
+
 		// Connect the Signals defined in Glade
-		public void on_window1_delete_event (object o, Gtk.DeleteEventArgs args)
+		public void on_window1_delete_event (object o, DeleteEventArgs args)
 		{
-			Gtk.Application.Quit();
+			Application.Quit();
 			args.RetVal = true;
+		}
+
+
+		protected void TreeModelIfaceDelegates(object o, EventArgs args)
+		{
+			return;
+		}
+
+		protected void OnTabControl_switch_page(object o, SwitchPageArgs args)
+		{
+
+		}
+		protected void OnEntryList_show(object o, EventArgs args)
+		{
+
 		}
 
 		#region Button Click Event handlers
@@ -51,13 +92,13 @@ namespace Probe
 
 		protected void on_toolbutton2_clicked(object o, EventArgs args)
 		{
-			Gtk.FileSelection fDlg = new Gtk.FileSelection("Choose a File");
+			FileSelection fDlg = new FileSelection("Choose a File");
 			fDlg.Modal = true;
 
 			int nRc = fDlg.Run();
 			fDlg.Hide();
 
-			if(nRc == (int)Gtk.ResponseType.Ok)
+			if(nRc == (int)ResponseType.Ok)
 			{
 			}
 			return;
@@ -65,7 +106,7 @@ namespace Probe
 
 		protected void on_toolbutton3_clicked(object o, EventArgs args)
 		{
-			Gtk.Application.Quit();
+			Application.Quit();
 			return;
 		}
 
@@ -80,13 +121,13 @@ namespace Probe
 
 		protected void on_open1_activate(object o, EventArgs args)
 		{
-			Gtk.FileSelection fDlg = new Gtk.FileSelection("Choose a File");
+			FileSelection fDlg = new FileSelection("Choose a File");
 			fDlg.Modal = true;
 
 			int nRc = fDlg.Run();
 			fDlg.Hide();
 
-			if(nRc == (int)Gtk.ResponseType.Ok)
+			if(nRc == (int)ResponseType.Ok)
 			{
 			}
 			return;
@@ -104,7 +145,7 @@ namespace Probe
 
 		protected void on_quit1_activate(object o, EventArgs args)
 		{
-			Gtk.Application.Quit();
+			Application.Quit();
 			return;
 		}
 
@@ -138,9 +179,9 @@ namespace Probe
 
 			Gtk.MessageDialog md = new Gtk.MessageDialog (
 				this.window1,
-				Gtk.DialogFlags.DestroyWithParent,
-				Gtk.MessageType.Info,
-				Gtk.ButtonsType.Ok,
+				DialogFlags.DestroyWithParent,
+				MessageType.Info,
+				ButtonsType.Ok,
 				AuthorStringBuild.ToString ()
 				);
 
