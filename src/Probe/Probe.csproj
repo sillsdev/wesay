@@ -125,6 +125,12 @@
 	  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	</None>
   </ItemGroup>
+  <ItemGroup>
+	<ProjectReference Include="..\Core\Core.csproj">
+	  <Project>{B383F122-EA56-4DB2-8C54-27A9F2E2F2BA}</Project>
+	  <Name>Core</Name>
+	</ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
 	<PreBuildEvent>
