@@ -97,6 +97,10 @@
 	<ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
+	<Reference Include="db4o, Version=5.4.8.0, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\db4o.dll</HintPath>
+	</Reference>
 	<Reference Include="System">
 	  <Name>System</Name>
 	</Reference>
@@ -111,6 +115,7 @@
 	<Compile Include="AssemblyInfo.cs">
 	  <SubType>Code</SubType>
 	</Compile>
+	<Compile Include="DataService.cs" />
 	<Compile Include="LexicalEntry.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

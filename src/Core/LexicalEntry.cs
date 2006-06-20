@@ -20,7 +20,7 @@ namespace WeSay.Core
 			_lexicalForm = GetFieldFromTestXml(node, "lexeme","unknown!");
 			_gloss = GetFieldFromTestXml(node,"gloss",null);
 			_example = GetFieldFromTestXml(node, "example",null);
-	  }
+		}
 		private static string GetFieldFromTestXml(System.Xml.XmlNode node, string elementName, string defaultValue)
 		{
 			System.Xml.XmlNode n= node.SelectSingleNode(elementName);
@@ -29,6 +29,22 @@ namespace WeSay.Core
 			return n.InnerText;
 		}
 
+	  public string LexicalForm {
+		get {
+		  return _lexicalForm;
+		}
+	  }
 
+	  public string Gloss {
+		get {
+		  return _gloss;
+		}
+	  }
+
+	  public string Example {
+		get {
+		  return _example;
+		}
+	  }
 	}
 }

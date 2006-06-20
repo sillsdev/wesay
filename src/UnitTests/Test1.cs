@@ -3,6 +3,7 @@ using com.db4o;
 using System.Diagnostics;
 using WeSay.Core;
 using System.Xml;
+using System.Collections.Generic;
 
 namespace WeSay.UnitTests
 {
@@ -19,14 +20,43 @@ namespace WeSay.UnitTests
 		}
 	}
 
+  [TestFixture]
+  public class DataTest
+  {
+	[Test]
+
+	public void Main() {
+	  DataService dataService = new DataService(@"c:\WeSay\src\unittests\thai5000.yap");
+	  try {
+		IList<LexicalEntry> lexicalEntries = dataService.LexicalEntries;
+		Assert.IsNotNull(lexicalEntries);
+		Assert.Less(0, lexicalEntries.Count);
+
+		LexicalEntry currentLexicalEntry = dataService.CurrentLexicalEntry;
+		Assert.IsNotNull(currentLexicalEntry);
+		Assert.IsTrue(lexicalEntries.Contains(currentLexicalEntry));
+		dataService.CurrentLexicalEntry = dataService.LexicalEntries[2000];
+		Assert.AreNotEqual(currentLexicalEntry, dataService.CurrentLexicalEntry);
+
+		dataService.Filtered = true;
+		Assert.IsNotNull(dataService.LexicalEntries);
+		Assert.Less(0, dataService.LexicalEntries.Count);
+		Assert.IsNotNull(dataService.CurrentLexicalEntry);
+		Assert.AreEqual(currentLexicalEntry, dataService.CurrentLexicalEntry);
+		Assert.AreEqual(329, dataService.LexicalEntries.Count);
+	  }
+	  finally {
+		dataService.Dispose();
+	  }
+	}
+  }
+
 	[TestFixture]
 	public class Test1
 	{
 		[Test]
 		public void Load()
 		{
-			JetBrains.dotTrace.Api.CPUProfiler.Start();
-
 			ObjectContainer database = GetBlankDb("thai5000.yap");
 			try
 			{
@@ -44,7 +74,6 @@ namespace WeSay.UnitTests
 			{
 				database.Close();
 			}
-			JetBrains.dotTrace.Api.CPUProfiler.StopAndSaveSnapShot();
 		}
 
 		[Test]
@@ -79,7 +108,7 @@ namespace WeSay.UnitTests
 		private ObjectContainer GetDb(string name)
 		{
 			ObjectContainer db;
-			string s = @"c:\WeSay\src\unittests\"+name;
+			string s = GetDbFilePath(name);
 			db = Db4oFactory.OpenFile(s);
 
 			Assert.IsNotNull(db);
@@ -92,7 +121,7 @@ namespace WeSay.UnitTests
 		private ObjectContainer GetBlankDb(string name)
 		{
 			ObjectContainer db;
-			string s = @"c:\WeSay\src\unittests\"+name;
+			string s = GetDbFilePath(name);
 			System.IO.File.Delete(s);
 			db = Db4oFactory.OpenFile(s);
 
@@ -101,6 +130,10 @@ namespace WeSay.UnitTests
 //            SetupIndices(config);
 
 			return db;
+		}
+
+		private static string GetDbFilePath(string name) {
+		  return @"c:\WeSay\src\unittests\" + name;
 		}
 
 		private static void SetupIndices(com.db4o.config.Configuration config)
