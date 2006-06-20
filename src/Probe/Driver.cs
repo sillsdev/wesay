@@ -1,6 +1,4 @@
 using System;
-using Gtk;
-using Glade;
 
 namespace Probe
 {
@@ -10,13 +8,15 @@ namespace Probe
 	class Driver
 	{
 		#region Glade Widgets
+#pragma warning disable 649
 
-		[Widget] Gtk.Window window1;
+	[Glade.Widget] Gtk.Window window1;
 
-		#endregion
+#pragma warning restore 649
+	#endregion
 
 
-		/// <summary>
+	/// <summary>
 		/// The main entry point for the application.
 		/// </summary>
 		[STAThread]
@@ -27,18 +27,18 @@ namespace Probe
 
 		public Driver(string[] args)
 		{
-			Application.Init();
+			Gtk.Application.Init();
 
 		   //for resource (couldn't get it to work) Glade.XML gxml = new Glade.XML (null, "probe.glade", "window1", null);
 			Glade.XML gxml = new Glade.XML ("probe.glade", "window1", null);
 			gxml.Autoconnect (this);
-			Application.Run();
+			Gtk.Application.Run();
 		}
 
 		// Connect the Signals defined in Glade
-		public void on_window1_delete_event (object o, DeleteEventArgs args)
+		public void on_window1_delete_event (object o, Gtk.DeleteEventArgs args)
 		{
-			Application.Quit();
+			Gtk.Application.Quit();
 			args.RetVal = true;
 		}
 
@@ -51,13 +51,13 @@ namespace Probe
 
 		protected void on_toolbutton2_clicked(object o, EventArgs args)
 		{
-			FileSelection fDlg = new FileSelection("Choose a File");
+			Gtk.FileSelection fDlg = new Gtk.FileSelection("Choose a File");
 			fDlg.Modal = true;
 
 			int nRc = fDlg.Run();
 			fDlg.Hide();
 
-			if(nRc == (int)ResponseType.Ok)
+			if(nRc == (int)Gtk.ResponseType.Ok)
 			{
 			}
 			return;
@@ -65,7 +65,7 @@ namespace Probe
 
 		protected void on_toolbutton3_clicked(object o, EventArgs args)
 		{
-			Application.Quit();
+			Gtk.Application.Quit();
 			return;
 		}
 
@@ -80,13 +80,13 @@ namespace Probe
 
 		protected void on_open1_activate(object o, EventArgs args)
 		{
-			FileSelection fDlg = new FileSelection("Choose a File");
+			Gtk.FileSelection fDlg = new Gtk.FileSelection("Choose a File");
 			fDlg.Modal = true;
 
 			int nRc = fDlg.Run();
 			fDlg.Hide();
 
-			if(nRc == (int)ResponseType.Ok)
+			if(nRc == (int)Gtk.ResponseType.Ok)
 			{
 			}
 			return;
@@ -104,7 +104,7 @@ namespace Probe
 
 		protected void on_quit1_activate(object o, EventArgs args)
 		{
-			Application.Quit();
+			Gtk.Application.Quit();
 			return;
 		}
 
@@ -138,9 +138,9 @@ namespace Probe
 
 			Gtk.MessageDialog md = new Gtk.MessageDialog (
 				this.window1,
-				DialogFlags.DestroyWithParent,
-				MessageType.Info,
-				ButtonsType.Ok,
+				Gtk.DialogFlags.DestroyWithParent,
+				Gtk.MessageType.Info,
+				Gtk.ButtonsType.Ok,
 				AuthorStringBuild.ToString ()
 				);
 
