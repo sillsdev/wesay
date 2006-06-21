@@ -1,6 +1,7 @@
 using System;
 using Gtk;
 using Glade;
+using WeSay.Core;
 
 namespace Probe
 {
@@ -11,12 +12,13 @@ namespace Probe
 	{
 		#region Glade Widgets
 #pragma warning disable 649
-			[Widget] Gtk.Window window1;
+		[Widget] Gtk.Window window1;
 		[Widget] Gtk.Notebook _tabControl;
 		[Widget] Gtk.TreeView _entryList;
 #pragma warning restore 649
 		#endregion
 
+		DataService _data;
 
 		/// <summary>
 		/// The main entry point for the application.
@@ -25,9 +27,9 @@ namespace Probe
 		static void Main(string[] args)
 		{
 	  Application.Init();
-	  new Driver(args);
+			new Driver(args);
 	  Application.Run();
-	}
+		}
 
 		public Driver(string[] args)
 		{
@@ -37,20 +39,49 @@ namespace Probe
 			this._tabControl.SwitchPage += new SwitchPageHandler(OnTabControl_switch_page);
 
 
-			TreeStore store = new TreeStore(typeof(string), typeof(string));
+			Gtk.CellRendererText lexicalFormCellRenderer = new Gtk.CellRendererText();
+			 Gtk.TreeViewColumn lexicalFormColumn = new Gtk.TreeViewColumn("Word", lexicalFormCellRenderer, new object[] { });
+			//lexicalFormColumn.PackStart(lexicalFormCell, true);
+		  //  lexicalFormColumn.SetCellDataFunc(lexicalFormCell, new CellLayoutDataFunc(RX));
+		  //  lexicalFormColumn.SetCellDataFunc(lexicalFormCell, new NodeCellDataFunc(NX));
+			 lexicalFormColumn.SetCellDataFunc(lexicalFormCellRenderer, new TreeCellDataFunc(TX));
 
-			for (int i = 0; i < 5; i++)
-			{
-				TreeIter iter = store.AppendValues("Demo " + i, "Data " + i);
+
+		   TreeStore store = new TreeStore(typeof(int));
+		   _data = new DataService(@"c:\WeSay\src\unittests\thai5000.yap");
+			//           foreach (LexicalEntry entry in data.LexicalEntries)
+			int count = _data.LexicalEntries.Count;
+			for(int i=0; i< count; i++)
+		   {
+			   store.AppendValues(i);
 			}
 
-			_entryList.Model = store;
-			_entryList.HeadersVisible = true;
+		   _entryList.Model = store;
+		   _entryList.AppendColumn(lexicalFormColumn);
 
-			_entryList.AppendColumn("Demo", new CellRendererText(), "text", 0);
-			_entryList.AppendColumn("Data", new CellRendererText(), "text", 1);
+		   _entryList.ShowAll();
+		   window1.ShowAll();
+
+			Application.Run();
 		}
 
+		public void TX(TreeViewColumn tree_column, CellRenderer cell, TreeModel tree_model, TreeIter iter)
+		{
+			//LexicalEntry entry = (LexicalEntry)tree_model.GetValue(iter, 0);
+			//(cell as Gtk.CellRendererText).Text = entry.Gloss;
+//            int i = ((Z)tree_model.GetValue(iter, 0)).x;
+			int i = ((int)tree_model.GetValue(iter, 0));
+			LexicalEntry entry = (LexicalEntry)_data.LexicalEntries[i];
+			(cell as Gtk.CellRendererText).Text = entry.Gloss;
+		}
+
+
+
+		//private void RenderGloss(CellLayout cell_layout, Gtk.CellRenderer cell, Gtk.TreeModel model, Gtk.TreeIter iter)
+		//{
+		//    LexicalEntry entry = (LexicalEntry)model.GetValue(iter, 0);
+		//    (cell as Gtk.CellRendererText).Text = entry.Gloss;
+		//}
 		//void tabControl_SwitchPage(object o, SwitchPageArgs args)
 		//{
 		//    throw new Exception("The method or operation is not implemented.");
@@ -58,9 +89,9 @@ namespace Probe
 
 		// Connect the Signals defined in Glade
 		public void OnWindowDeleteEvent(object o, DeleteEventArgs args) {
-	  Application.Quit();
-	  args.RetVal = true;
-	}
+			Application.Quit();
+			args.RetVal = true;
+		}
 
 		protected void TreeModelIfaceDelegates(object o, EventArgs args)
 		{
