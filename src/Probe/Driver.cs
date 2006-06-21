@@ -3,7 +3,7 @@ using Gtk;
 using Glade;
 using WeSay.Core;
 
-namespace Probe
+namespace WeSay.UI
 {
 	/// <summary>
 	/// Summary description for Driver.
@@ -18,7 +18,8 @@ namespace Probe
 #pragma warning restore 649
 		#endregion
 
-		DataService _data;
+		protected DataService _data;
+		protected WordGridHandler _wordGridHandler;
 
 		/// <summary>
 		/// The main entry point for the application.
@@ -26,58 +27,17 @@ namespace Probe
 		[STAThread]
 		static void Main(string[] args)
 		{
-	  Application.Init();
-			new Driver(args);
-	  Application.Run();
+			Application.Init();
+			Driver d = new Driver(args);
+			Application.Run();
 		}
 
 		public Driver(string[] args)
 		{
-			Glade.XML gxml = new Glade.XML ("probe.glade", "window1", null);
-			gxml.Autoconnect (this);
+			Glade.XML gxml = new Glade.XML("probe.glade", "window1", null);
+			gxml.Autoconnect(this);
 
-		   AddColumn("Word", new TreeCellDataFunc(OnRenderLexemeForm));
-		   AddColumn("Gloss", new TreeCellDataFunc(OnRenderGloss));
-
-		   TreeStore store = new TreeStore(typeof(int));
-		   _data = new DataService(@"c:\WeSay\src\unittests\thai5000.yap");
-
-		   int count = _data.LexicalEntries.Count;
-		   for(int i=0; i< count; i++)
-		   {
-			   store.AppendValues(i);
-		   }
-
-		   _entryList.Model = store;
-
-			Application.Run();
-		}
-
-		private void AddColumn(string title, TreeCellDataFunc handler)
-		{
-			Gtk.CellRendererText renderer = new Gtk.CellRendererText();
-			Gtk.TreeViewColumn column = new Gtk.TreeViewColumn(title, renderer, new object[] { });
-			column.SetCellDataFunc(renderer, handler);
-			 _entryList.AppendColumn(column);
-		}
-
-		public void OnRenderLexemeForm(TreeViewColumn tree_column, CellRenderer cell, TreeModel tree_model, TreeIter iter)
-		{
-			LexicalEntry entry = GetEnterFromIterator(tree_model, ref iter);
-			(cell as Gtk.CellRendererText).Text = entry.LexicalForm;
-		}
-
-		public void OnRenderGloss(TreeViewColumn tree_column, CellRenderer cell, TreeModel tree_model, TreeIter iter)
-		{
-			LexicalEntry entry = GetEnterFromIterator(tree_model, ref iter);
-			(cell as Gtk.CellRendererText).Text = entry.Gloss;
-		}
-
-		private LexicalEntry GetEnterFromIterator(TreeModel tree_model, ref TreeIter iter)
-		{
-			int i = ((int)tree_model.GetValue(iter, 0));
-			LexicalEntry entry = (LexicalEntry)_data.LexicalEntries[i];
-			return entry;
+			_wordGridHandler = new WordGridHandler(_entryList,_data);
 		}
 
 
