@@ -33,59 +33,53 @@ namespace Probe
 
 		public Driver(string[] args)
 		{
-		   //for resource (couldn't get it to work) Glade.XML gxml = new Glade.XML (null, "probe.glade", "window1", null);
 			Glade.XML gxml = new Glade.XML ("probe.glade", "window1", null);
 			gxml.Autoconnect (this);
-			this._tabControl.SwitchPage += new SwitchPageHandler(OnTabControl_switch_page);
 
-
-			Gtk.CellRendererText lexicalFormCellRenderer = new Gtk.CellRendererText();
-			 Gtk.TreeViewColumn lexicalFormColumn = new Gtk.TreeViewColumn("Word", lexicalFormCellRenderer, new object[] { });
-			//lexicalFormColumn.PackStart(lexicalFormCell, true);
-		  //  lexicalFormColumn.SetCellDataFunc(lexicalFormCell, new CellLayoutDataFunc(RX));
-		  //  lexicalFormColumn.SetCellDataFunc(lexicalFormCell, new NodeCellDataFunc(NX));
-			 lexicalFormColumn.SetCellDataFunc(lexicalFormCellRenderer, new TreeCellDataFunc(TX));
-
+		   AddColumn("Word", new TreeCellDataFunc(OnRenderLexemeForm));
+		   AddColumn("Gloss", new TreeCellDataFunc(OnRenderGloss));
 
 		   TreeStore store = new TreeStore(typeof(int));
 		   _data = new DataService(@"c:\WeSay\src\unittests\thai5000.yap");
-			//           foreach (LexicalEntry entry in data.LexicalEntries)
-			int count = _data.LexicalEntries.Count;
-			for(int i=0; i< count; i++)
+
+		   int count = _data.LexicalEntries.Count;
+		   for(int i=0; i< count; i++)
 		   {
 			   store.AppendValues(i);
-			}
+		   }
 
 		   _entryList.Model = store;
-		   _entryList.AppendColumn(lexicalFormColumn);
-
-		   _entryList.ShowAll();
-		   window1.ShowAll();
 
 			Application.Run();
 		}
 
-		public void TX(TreeViewColumn tree_column, CellRenderer cell, TreeModel tree_model, TreeIter iter)
+		private void AddColumn(string title, TreeCellDataFunc handler)
 		{
-			//LexicalEntry entry = (LexicalEntry)tree_model.GetValue(iter, 0);
-			//(cell as Gtk.CellRendererText).Text = entry.Gloss;
-//            int i = ((Z)tree_model.GetValue(iter, 0)).x;
-			int i = ((int)tree_model.GetValue(iter, 0));
-			LexicalEntry entry = (LexicalEntry)_data.LexicalEntries[i];
+			Gtk.CellRendererText renderer = new Gtk.CellRendererText();
+			Gtk.TreeViewColumn column = new Gtk.TreeViewColumn(title, renderer, new object[] { });
+			column.SetCellDataFunc(renderer, handler);
+			 _entryList.AppendColumn(column);
+		}
+
+		public void OnRenderLexemeForm(TreeViewColumn tree_column, CellRenderer cell, TreeModel tree_model, TreeIter iter)
+		{
+			LexicalEntry entry = GetEnterFromIterator(tree_model, ref iter);
+			(cell as Gtk.CellRendererText).Text = entry.LexicalForm;
+		}
+
+		public void OnRenderGloss(TreeViewColumn tree_column, CellRenderer cell, TreeModel tree_model, TreeIter iter)
+		{
+			LexicalEntry entry = GetEnterFromIterator(tree_model, ref iter);
 			(cell as Gtk.CellRendererText).Text = entry.Gloss;
 		}
 
+		private LexicalEntry GetEnterFromIterator(TreeModel tree_model, ref TreeIter iter)
+		{
+			int i = ((int)tree_model.GetValue(iter, 0));
+			LexicalEntry entry = (LexicalEntry)_data.LexicalEntries[i];
+			return entry;
+		}
 
-
-		//private void RenderGloss(CellLayout cell_layout, Gtk.CellRenderer cell, Gtk.TreeModel model, Gtk.TreeIter iter)
-		//{
-		//    LexicalEntry entry = (LexicalEntry)model.GetValue(iter, 0);
-		//    (cell as Gtk.CellRendererText).Text = entry.Gloss;
-		//}
-		//void tabControl_SwitchPage(object o, SwitchPageArgs args)
-		//{
-		//    throw new Exception("The method or operation is not implemented.");
-		//}
 
 		// Connect the Signals defined in Glade
 		public void OnWindowDeleteEvent(object o, DeleteEventArgs args) {
