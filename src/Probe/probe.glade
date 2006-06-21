@@ -18,6 +18,7 @@
   <property name="gravity">GDK_GRAVITY_NORTH_WEST</property>
   <property name="focus_on_map">True</property>
   <property name="urgency_hint">False</property>
+  <signal name="delete_event" handler="OnWindowDeleteEvent" last_modification_time="Wed, 21 Jun 2006 02:21:05 GMT"/>
 
   <child>
 	<widget class="GtkNotebook" id="_tabControl">

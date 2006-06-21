@@ -10,11 +10,11 @@ namespace Probe
 	class Driver
 	{
 		#region Glade Widgets
-
-		[Widget] Gtk.Window window1;
+#pragma warning disable 649
+			[Widget] Gtk.Window window1;
 		[Widget] Gtk.Notebook _tabControl;
 		[Widget] Gtk.TreeView _entryList;
-
+#pragma warning restore 649
 		#endregion
 
 
@@ -24,13 +24,13 @@ namespace Probe
 		[STAThread]
 		static void Main(string[] args)
 		{
-			new Driver(args);
-		}
+	  Application.Init();
+	  new Driver(args);
+	  Application.Run();
+	}
 
 		public Driver(string[] args)
 		{
-			Application.Init();
-
 		   //for resource (couldn't get it to work) Glade.XML gxml = new Glade.XML (null, "probe.glade", "window1", null);
 			Glade.XML gxml = new Glade.XML ("probe.glade", "window1", null);
 			gxml.Autoconnect (this);
@@ -49,11 +49,6 @@ namespace Probe
 
 			_entryList.AppendColumn("Demo", new CellRendererText(), "text", 0);
 			_entryList.AppendColumn("Data", new CellRendererText(), "text", 1);
-
-
-
-
-			Application.Run();
 		}
 
 		//void tabControl_SwitchPage(object o, SwitchPageArgs args)
@@ -62,12 +57,10 @@ namespace Probe
 		//}
 
 		// Connect the Signals defined in Glade
-		public void on_window1_delete_event (object o, DeleteEventArgs args)
-		{
-			Application.Quit();
-			args.RetVal = true;
-		}
-
+		public void OnWindowDeleteEvent(object o, DeleteEventArgs args) {
+	  Application.Quit();
+	  args.RetVal = true;
+	}
 
 		protected void TreeModelIfaceDelegates(object o, EventArgs args)
 		{
@@ -82,7 +75,6 @@ namespace Probe
 		{
 
 		}
-
 		#region Button Click Event handlers
 
 		protected void on_toolbutton1_clicked(object o, EventArgs args)
