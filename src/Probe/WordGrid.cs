@@ -18,16 +18,9 @@ namespace WeSay.UI
 			AddColumn(entryList, "Word", new TreeCellDataFunc(OnRenderLexemeForm));
 			AddColumn(entryList, "Gloss", new TreeCellDataFunc(OnRenderGloss));
 
-			TreeStore store = new TreeStore(typeof(int));
 			_dataService = new DataService(@"c:\WeSay\src\unittests\thai5000.yap");
 
-			int count = _dataService.LexicalEntries.Count;
-			for (int i = 0; i < count; i++)
-			{
-				store.AppendValues(i);
-			}
-
-			entryList.Model = store;
+			entryList.Model = _dataService.Model;
 		}
 
 		private void AddColumn(Gtk.TreeView entryList, string title, TreeCellDataFunc handler)
@@ -40,14 +33,12 @@ namespace WeSay.UI
 
 		public void OnRenderLexemeForm(TreeViewColumn tree_column, CellRenderer cell, TreeModel tree_model, TreeIter iter)
 		{
-			LexicalEntry entry = GetEnterFromIterator(tree_model, ref iter);
-			(cell as Gtk.CellRendererText).Text = entry.LexicalForm;
+			(cell as Gtk.CellRendererText).Text = _dataService.GetLexemeForm(tree_model, iter);
 		}
 
 		public void OnRenderGloss(TreeViewColumn tree_column, CellRenderer cell, TreeModel tree_model, TreeIter iter)
 		{
-			LexicalEntry entry = GetEnterFromIterator(tree_model, ref iter);
-			(cell as Gtk.CellRendererText).Text = entry.Gloss;
+			(cell as Gtk.CellRendererText).Text = _dataService.GetGloss(tree_model, iter);
 		}
 
 		private LexicalEntry GetEnterFromIterator(TreeModel tree_model, ref TreeIter iter)
