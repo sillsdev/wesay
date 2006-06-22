@@ -33,11 +33,19 @@ namespace WeSay.Core
 		get {
 		  return _lexicalForm;
 		}
+		set
+		{
+			_lexicalForm = value;
+		}
 	  }
 
 	  public string Gloss {
 		get {
 		  return _gloss;
+		}
+	   set
+		{
+			_gloss = value;
 		}
 	  }
 

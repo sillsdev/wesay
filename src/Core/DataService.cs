@@ -106,6 +106,33 @@ namespace WeSay.Core
 		  _lexicalEntries = _db.Query<LexicalEntry>(typeof(LexicalEntry));
 		}
 	}
-  }
+
+	public void GotoNextRecord()
+	{
+		int i =1 + _lexicalEntries.IndexOf(CurrentLexicalEntry);
+		if (i < _lexicalEntries.Count)
+			CurrentLexicalEntry = _lexicalEntries[i];
+	}
+	public void GotoPreviousRecord()
+	{
+		int i = _lexicalEntries.IndexOf(CurrentLexicalEntry)-1;
+		if (i >=0)
+			CurrentLexicalEntry = _lexicalEntries[i];
+	}
+
+	public void GotoFirstRecord()
+	{
+		 CurrentLexicalEntry = _lexicalEntries[0];
+	}
+	public void GotoLastRecord()
+	{
+		CurrentLexicalEntry = _lexicalEntries[_lexicalEntries.Count - 1];
+	}
+
+	  public void Changed(LexicalEntry  entry)
+	{
+		_db.Set(entry);
+	}
+}
 
 }

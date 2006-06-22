@@ -33,7 +33,7 @@
 	  <property name="enable_popup">False</property>
 
 	  <child>
-	<widget class="GtkVBox" id="vbox1">
+	<widget class="GtkVBox" id="_detailVBox">
 	  <property name="visible">True</property>
 	  <property name="homogeneous">False</property>
 	  <property name="spacing">0</property>
@@ -47,7 +47,7 @@
 		  <property name="show_arrow">True</property>
 
 		  <child>
-		<widget class="GtkToolButton" id="toolbutton1">
+		<widget class="GtkToolButton" id="_buttonAdd">
 		  <property name="visible">True</property>
 		  <property name="stock_id">gtk-add</property>
 		  <property name="visible_horizontal">True</property>
@@ -61,7 +61,7 @@
 		  </child>
 
 		  <child>
-		<widget class="GtkToolButton" id="toolbutton2">
+		<widget class="GtkToolButton" id="_buttonDelete">
 		  <property name="visible">True</property>
 		  <property name="stock_id">gtk-delete</property>
 		  <property name="visible_horizontal">True</property>
@@ -88,7 +88,7 @@
 		  </child>
 
 		  <child>
-		<widget class="GtkToolButton" id="toolbutton3">
+		<widget class="GtkToolButton" id="_buttonFirst">
 		  <property name="visible">True</property>
 		  <property name="stock_id">gtk-goto-first</property>
 		  <property name="visible_horizontal">True</property>
@@ -102,7 +102,7 @@
 		  </child>
 
 		  <child>
-		<widget class="GtkToolButton" id="toolbutton4">
+		<widget class="GtkToolButton" id="_buttonBack">
 		  <property name="visible">True</property>
 		  <property name="stock_id">gtk-go-back</property>
 		  <property name="visible_horizontal">True</property>
@@ -116,7 +116,7 @@
 		  </child>
 
 		  <child>
-		<widget class="GtkToolButton" id="toolbutton5">
+		<widget class="GtkToolButton" id="_buttonForward">
 		  <property name="visible">True</property>
 		  <property name="stock_id">gtk-go-forward</property>
 		  <property name="visible_horizontal">True</property>
@@ -130,7 +130,7 @@
 		  </child>
 
 		  <child>
-		<widget class="GtkToolButton" id="toolbutton6">
+		<widget class="GtkToolButton" id="_buttonLast">
 		  <property name="visible">True</property>
 		  <property name="stock_id">gtk-goto-last</property>
 		  <property name="visible_horizontal">True</property>
@@ -151,12 +151,13 @@
 	  </child>
 
 	  <child>
-		<widget class="GtkTable" id="table1">
+		<widget class="GtkTable" id="_wordDetailTable">
+		  <property name="border_width">12</property>
 		  <property name="visible">True</property>
 		  <property name="n_rows">2</property>
 		  <property name="n_columns">2</property>
 		  <property name="homogeneous">False</property>
-		  <property name="row_spacing">0</property>
+		  <property name="row_spacing">12</property>
 		  <property name="column_spacing">0</property>
 
 		  <child>
@@ -437,11 +438,12 @@
 
 			  <child>
 			<widget class="GtkTreeView" id="_entryList">
+			  <property name="border_width">33</property>
 			  <property name="visible">True</property>
 			  <property name="can_focus">True</property>
 			  <property name="headers_visible">True</property>
 			  <property name="rules_hint">False</property>
-			  <property name="reorderable">False</property>
+			  <property name="reorderable">True</property>
 			  <property name="enable_search">True</property>
 			  <property name="fixed_height_mode">False</property>
 			  <property name="hover_selection">False</property>

@@ -8,18 +8,20 @@ namespace WeSay.UI
 	/// <summary>
 	/// Summary description for Driver.
 	/// </summary>
-	class Driver
+	class Driver : IDisposable
 	{
 		#region Glade Widgets
-#pragma warning disable 649
+		#pragma warning disable 649
 		[Widget] Gtk.Window window1;
 		[Widget] Gtk.Notebook _tabControl;
 		[Widget] Gtk.TreeView _entryList;
-#pragma warning restore 649
+		 [Widget] Gtk.VBox _detailVBox;
+	   #pragma warning restore 649
 		#endregion
 
-		protected DataService _data;
+		protected DataService _model;
 		protected WordGridHandler _wordGridHandler;
+		protected WordDetailView _wordDetailView;
 
 		/// <summary>
 		/// The main entry point for the application.
@@ -36,15 +38,23 @@ namespace WeSay.UI
 		{
 			Glade.XML gxml = new Glade.XML("probe.glade", "window1", null);
 			gxml.Autoconnect(this);
+			_model = new DataService(@"c:\WeSay\src\unittests\thai5000.yap");
 
-			_wordGridHandler = new WordGridHandler(_entryList,_data);
+			_wordGridHandler = new WordGridHandler(_entryList,_model);
+			_wordDetailView = new WordDetailView(_detailVBox, _model);
+	 }
+
+		public void Dispose()
+		{
+			_model.Dispose();
 		}
 
-
 		// Connect the Signals defined in Glade
-		public void OnWindowDeleteEvent(object o, DeleteEventArgs args) {
+		public void OnWindowDeleteEvent(object o, DeleteEventArgs args)
+		{
 			Application.Quit();
 			args.RetVal = true;
+			Dispose();
 		}
 
 		protected void TreeModelIfaceDelegates(object o, EventArgs args)
@@ -67,23 +77,8 @@ namespace WeSay.UI
 			return;
 		}
 
-		protected void on_toolbutton2_clicked(object o, EventArgs args)
+		protected void on_buttonAddClicked(object o, EventArgs args)
 		{
-			FileSelection fDlg = new FileSelection("Choose a File");
-			fDlg.Modal = true;
-
-			int nRc = fDlg.Run();
-			fDlg.Hide();
-
-			if(nRc == (int)ResponseType.Ok)
-			{
-			}
-			return;
-		}
-
-		protected void on_toolbutton3_clicked(object o, EventArgs args)
-		{
-			Application.Quit();
 			return;
 		}
 
@@ -110,15 +105,6 @@ namespace WeSay.UI
 			return;
 		}
 
-		protected void on_save1_activate(object o, EventArgs args)
-		{
-			return;
-		}
-
-		protected void on_save_as1_activate(object o, EventArgs args)
-		{
-			return;
-		}
 
 		protected void on_quit1_activate(object o, EventArgs args)
 		{
@@ -126,25 +112,6 @@ namespace WeSay.UI
 			return;
 		}
 
-		protected void on_cut1_activate(object o, EventArgs args)
-		{
-			return;
-		}
-
-		protected void on_copy1_activate(object o, EventArgs args)
-		{
-			return;
-		}
-
-		protected void on_delete1_activate(object o, EventArgs args)
-		{
-			return;
-		}
-
-		protected void on_paste1_activate(object o, EventArgs args)
-		{
-			return;
-		}
 
 		protected void on_about1_activate(object o, EventArgs args)
 		{

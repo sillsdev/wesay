@@ -121,6 +121,7 @@
 	<Compile Include="Driver.cs">
 	  <SubType>Code</SubType>
 	</Compile>
+	<Compile Include="WordDetailView.cs" />
 	<Compile Include="WordGrid.cs" />
 	<None Include="probe.glade">
 	  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
