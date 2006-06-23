@@ -14,9 +14,11 @@ namespace WeSay.UI
 		#pragma warning disable 649
 		[Widget] Gtk.Window window1;
 		[Widget] Gtk.Notebook _tabControl;
-		[Widget] Gtk.TreeView _entryList;
-		 [Widget] Gtk.VBox _detailVBox;
-	   #pragma warning restore 649
+   //     [Widget] Gtk.TreeView _entryList;
+		[Widget] Gtk.VBox _detailVBox;
+		[Widget]  Gtk.HBox _dummyDetailViewHolder;
+		[Widget]  Gtk.VBox _dummyWordGridViewHolder;
+	  #pragma warning restore 649
 		#endregion
 
 		protected DataService _model;
@@ -40,9 +42,12 @@ namespace WeSay.UI
 			gxml.Autoconnect(this);
 			_model = new DataService(@"c:\WeSay\src\unittests\thai5000.yap");
 
-			_wordGridHandler = new WordGridHandler(_entryList,_model);
-			_wordDetailView = new WordDetailView(_detailVBox, _model);
-	 }
+			_wordGridHandler = new WordGridHandler(_dummyWordGridViewHolder,_model);
+		  //  _wordDetailView = new WordDetailView(_detailVBox, _model);
+
+			WordDetailView d = new WordDetailView(_dummyDetailViewHolder, _model);
+			//_dummyDetailViewHolder.ShowAll();
+		 }
 
 		public void Dispose()
 		{
@@ -66,10 +71,7 @@ namespace WeSay.UI
 		{
 
 		}
-		protected void OnEntryList_show(object o, EventArgs args)
-		{
 
-		}
 		#region Button Click Event handlers
 
 		protected void on_toolbutton1_clicked(object o, EventArgs args)

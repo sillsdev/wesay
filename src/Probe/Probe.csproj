@@ -123,6 +123,9 @@
 	</Compile>
 	<Compile Include="WordDetailView.cs" />
 	<Compile Include="WordGrid.cs" />
+	<None Include="WordGrid.glade">
+	  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	</None>
 	<None Include="probe.glade">
 	  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	</None>

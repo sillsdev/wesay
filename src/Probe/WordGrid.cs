@@ -10,15 +10,22 @@ namespace WeSay.UI
 	class WordGridHandler
 	{
 		protected DataService _dataService;
+		[Widget]    protected Gtk.VBox _root;
+		 [Widget]   protected Gtk.TreeView _entryList;
 
-		public WordGridHandler(Gtk.TreeView entryList, DataService dataService)
+		public WordGridHandler(Container container, DataService dataService)
 		{
 			_dataService = dataService;
 
-			AddColumn(entryList, "Word", new TreeCellDataFunc(OnRenderLexemeForm));
-			AddColumn(entryList, "Gloss", new TreeCellDataFunc(OnRenderGloss));
+			Glade.XML gxml = new Glade.XML("probe.glade", "_wordGridHolder", null);
+			gxml.Autoconnect(this);
+			_root.Reparent(container);
 
-			entryList.Model = _dataService.Model;
+
+			AddColumn(_entryList, "Word", new TreeCellDataFunc(OnRenderLexemeForm));
+			AddColumn(_entryList, "Gloss", new TreeCellDataFunc(OnRenderGloss));
+
+			_entryList.Model = _dataService.Model;
 		}
 
 		private void AddColumn(Gtk.TreeView entryList, string title, TreeCellDataFunc handler)

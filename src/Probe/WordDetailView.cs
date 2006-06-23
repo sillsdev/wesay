@@ -10,38 +10,40 @@ namespace WeSay.UI
 	class WordDetailView
 	{
 		protected DataService _dataService;
-		protected Gtk.Table _wordDetailTable;
-		protected Gtk.Entry _word;
-		protected Gtk.Entry _gloss;
-		protected Gtk.ToolButton _buttonForward;
-		 protected Gtk.ToolButton _buttonBackward;
-		  protected Gtk.ToolButton _buttonFirst;
-		  protected Gtk.ToolButton _buttonLast;
-   protected Gtk.VBox _detailVBox;
+		[Widget]protected Gtk.Table _wordDetailTable;
+		[Widget] protected Gtk.Entry _word;
+		[Widget]  protected Gtk.Entry _gloss;
+		[Widget]  protected Gtk.ToolButton _buttonForward;
+		[Widget] protected Gtk.ToolButton _buttonBackward;
+		[Widget] protected Gtk.ToolButton _buttonFirst;
+		[Widget] protected Gtk.ToolButton _buttonLast;
 
-		public WordDetailView(Gtk.VBox detailVBox, DataService dataService)
+		[Widget]  public Gtk.VBox _wordDetailVBox;
+
+		public WordDetailView(Container container, DataService dataService)
 		{
-			_detailVBox = detailVBox;
+			_dataService = dataService;
 
-			Gtk.ToolButton  b = (Gtk.ToolButton )((Gtk.Toolbar)_detailVBox.Children[0]).Children[3];
-			b.Clicked += new EventHandler(first_Clicked);
-			b = (Gtk.ToolButton)((Gtk.Toolbar)_detailVBox.Children[0]).Children[4];
-			b.Clicked += new EventHandler(back_Clicked);
-			b = (Gtk.ToolButton)((Gtk.Toolbar)_detailVBox.Children[0]).Children[5];
-			b.Clicked += new EventHandler(next_Clicked);
-			b = (Gtk.ToolButton)((Gtk.Toolbar)_detailVBox.Children[0]).Children[6];
-			b.Clicked += new EventHandler(last_Clicked);
+			Glade.XML gxml = new Glade.XML("probe.glade", "_wordDetailHolder", null);
+			gxml.Autoconnect(this);
+			_wordDetailVBox.Reparent(container);
 
-			_wordDetailTable = (Gtk.Table) detailVBox.Children[1];
-		   _dataService = dataService;
-		   _word = (Gtk.Entry) _wordDetailTable.Children[3];
-		   _word.FocusOutEvent += new FocusOutEventHandler(OnWord_FocusOutEvent);
-		   _word.EditingDone += new EventHandler(OnWord_EditingDone);
-		   _gloss = (Gtk.Entry)_wordDetailTable.Children[2];
-			_gloss.EditingDone+=new EventHandler(OnGloss_EditingDone);
-		   _gloss.FocusOutEvent += new FocusOutEventHandler(OnGloss_FocusOutEvent);
+			WireEvents();
 
 			Update();
+		}
+
+		private void WireEvents()
+		{
+			_buttonFirst.Clicked += new EventHandler(first_Clicked);
+			_buttonBackward.Clicked += new EventHandler(back_Clicked);
+			_buttonForward.Clicked += new EventHandler(next_Clicked);
+			_buttonLast.Clicked += new EventHandler(last_Clicked);
+
+			_word.FocusOutEvent += new FocusOutEventHandler(OnWord_FocusOutEvent);
+			_word.EditingDone += new EventHandler(OnWord_EditingDone);
+			_gloss.EditingDone += new EventHandler(OnGloss_EditingDone);
+			_gloss.FocusOutEvent += new FocusOutEventHandler(OnGloss_FocusOutEvent);
 		}
 
 		void OnWord_FocusOutEvent(object o, FocusOutEventArgs args)
