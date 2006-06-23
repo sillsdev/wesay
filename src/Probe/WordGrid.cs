@@ -22,15 +22,16 @@ namespace WeSay.UI
 			_root.Reparent(container);
 
 
-			AddColumn(_entryList, "Word", new TreeCellDataFunc(OnRenderLexemeForm));
-			AddColumn(_entryList, "Gloss", new TreeCellDataFunc(OnRenderGloss));
+			AddColumn(_entryList, "Word", new TreeCellDataFunc(OnRenderLexemeForm), 25);
+			AddColumn(_entryList, "Gloss", new TreeCellDataFunc(OnRenderGloss),12);
 
 			_entryList.Model = _dataService.Model;
 		}
 
-		private void AddColumn(Gtk.TreeView entryList, string title, TreeCellDataFunc handler)
+		private void AddColumn(Gtk.TreeView entryList, string title, TreeCellDataFunc handler, int size)
 		{
 			Gtk.CellRendererText renderer = new Gtk.CellRendererText();
+			renderer.SizePoints = size;
 			Gtk.TreeViewColumn column = new Gtk.TreeViewColumn(title, renderer, new object[] { });
 			column.SetCellDataFunc(renderer, handler);
 			entryList.AppendColumn(column);
