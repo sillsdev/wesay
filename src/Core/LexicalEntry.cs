@@ -33,9 +33,8 @@ namespace WeSay.Core
 		get {
 		  return _lexicalForm;
 		}
-		set
-		{
-			_lexicalForm = value;
+		set {
+		  _lexicalForm = value;
 		}
 	  }
 
@@ -43,15 +42,17 @@ namespace WeSay.Core
 		get {
 		  return _gloss;
 		}
-	   set
-		{
-			_gloss = value;
+		set {
+		  _gloss = value;
 		}
 	  }
 
 	  public string Example {
 		get {
 		  return _example;
+		}
+		set {
+		  _example = value;
 		}
 	  }
 	}

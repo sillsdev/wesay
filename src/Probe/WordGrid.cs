@@ -7,44 +7,47 @@ using WeSay.Core;
 
 namespace WeSay.UI
 {
-	class WordGridHandler
-	{
-		protected DataService _dataService;
-		[Widget]    protected Gtk.VBox _root;
-		 [Widget]   protected Gtk.TreeView _entryList;
+  class WordGridHandler
+  {
+	protected LexiconModel _dataService;
+	LexiconTreeView _entryList;
+	TreeModelAdapter _lexiconModel;
 
-		public WordGridHandler(Container container, DataService dataService)
-		{
-			_dataService = dataService;
+#pragma warning disable 649
+	[Widget]
+	protected Gtk.VBox _root;
+	[Widget]
+	protected Gtk.ScrolledWindow _entryScroller;
+#pragma warning restore 649
 
-			Glade.XML gxml = new Glade.XML("probe.glade", "_wordGridHolder", null);
-			gxml.Autoconnect(this);
-			_root.Reparent(container);
 
+	public WordGridHandler(Container container, LexiconModel dataService) {
+	  _dataService = dataService;
+	  _lexiconModel = new TreeModelAdapter(_dataService);
+	  _entryList = new LexiconTreeView(_lexiconModel);
 
-			AddColumn(_entryList, "Word", new TreeCellDataFunc(OnRenderLexemeForm), 25);
-			AddColumn(_entryList, "Gloss", new TreeCellDataFunc(OnRenderGloss),12);
+	  Glade.XML gxml = new Glade.XML("probe.glade", "_wordGridHolder", null);
+	  gxml.Autoconnect(this);
 
-			_entryList.Model = _dataService.Model;
-		}
+	  _entryScroller.Add(_entryList);
+	  _root.Reparent(container);
 
-		private void AddColumn(Gtk.TreeView entryList, string title, TreeCellDataFunc handler, int size)
-		{
-			Gtk.CellRendererText renderer = new Gtk.CellRendererText();
-			renderer.SizePoints = size;
-			Gtk.TreeViewColumn column = new Gtk.TreeViewColumn(title, renderer, new object[] { });
-			column.SetCellDataFunc(renderer, handler);
-			entryList.AppendColumn(column);
-		}
+	  _entryList.FixedHeightMode = true;
+	  _entryList.ShowAll();
 
-		public void OnRenderLexemeForm(TreeViewColumn tree_column, CellRenderer cell, TreeModel tree_model, TreeIter iter)
-		{
-			(cell as Gtk.CellRendererText).Text = _dataService.GetLexemeForm(tree_model, iter);
-		}
-
-		public void OnRenderGloss(TreeViewColumn tree_column, CellRenderer cell, TreeModel tree_model, TreeIter iter)
-		{
-			(cell as Gtk.CellRendererText).Text = _dataService.GetGloss(tree_model, iter);
-		}
+	  AddColumn(_entryList, "Word", 0, 25, 120);
+	  AddColumn(_entryList, "Gloss", 1, 12, 200);
 	}
- }
+
+	private void AddColumn(LexiconTreeView entryList, string title, int column, int fontSize, int minWidth) {
+	  Gtk.CellRendererText renderer = new Gtk.CellRendererText();
+	  renderer.SizePoints = fontSize;
+	  Gtk.TreeViewColumn treeViewColumn = new Gtk.TreeViewColumn(title, renderer, "text", column);
+	  treeViewColumn.Sizing = TreeViewColumnSizing.Fixed;
+	  treeViewColumn.Visible = true;
+	  treeViewColumn.Resizable = true;
+	  treeViewColumn.MinWidth = minWidth;
+	  entryList.AppendColumn(treeViewColumn);
+	}
+  }
+}

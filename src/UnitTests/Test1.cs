@@ -24,10 +24,8 @@ namespace WeSay.UnitTests
   public class DataTest
   {
 	[Test]
-
 	public void Main() {
-	  DataService dataService = new DataService(@"c:\WeSay\src\unittests\thai5000.yap");
-	  try {
+	  using (LexiconModel dataService = new LexiconModel(@"c:\WeSay\src\unittests\thai5000.yap")) {
 		IList<LexicalEntry> lexicalEntries = dataService.LexicalEntries;
 		Assert.IsNotNull(lexicalEntries);
 		Assert.Less(0, lexicalEntries.Count);
@@ -44,9 +42,6 @@ namespace WeSay.UnitTests
 		Assert.IsNotNull(dataService.CurrentLexicalEntry);
 		Assert.AreEqual(currentLexicalEntry, dataService.CurrentLexicalEntry);
 		Assert.AreEqual(329, dataService.LexicalEntries.Count);
-	  }
-	  finally {
-		dataService.Dispose();
 	  }
 	}
   }

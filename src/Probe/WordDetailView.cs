@@ -9,7 +9,8 @@ namespace WeSay.UI
 {
 	class WordDetailView
 	{
-		protected DataService _dataService;
+		protected LexiconModel _dataService;
+#pragma warning disable 649
 		[Widget]protected Gtk.Table _wordDetailTable;
 		[Widget] protected Gtk.Entry _word;
 		[Widget]  protected Gtk.Entry _gloss;
@@ -17,10 +18,10 @@ namespace WeSay.UI
 		[Widget] protected Gtk.ToolButton _buttonBackward;
 		[Widget] protected Gtk.ToolButton _buttonFirst;
 		[Widget] protected Gtk.ToolButton _buttonLast;
-
 		[Widget]  public Gtk.VBox _wordDetailVBox;
+#pragma warning restore 649
 
-		public WordDetailView(Container container, DataService dataService)
+		public WordDetailView(Container container, LexiconModel dataService)
 		{
 			_dataService = dataService;
 
@@ -105,16 +106,6 @@ namespace WeSay.UI
 
 			_word.Text = _dataService.CurrentLexicalEntry.LexicalForm;
 			_gloss.Text = _dataService.CurrentLexicalEntry.Gloss;
-		}
-
-		public void OnRenderLexemeForm(TreeViewColumn tree_column, CellRenderer cell, TreeModel tree_model, TreeIter iter)
-		{
-			(cell as Gtk.CellRendererText).Text = _dataService.GetLexemeForm(tree_model, iter);
-		}
-
-		public void OnRenderGloss(TreeViewColumn tree_column, CellRenderer cell, TreeModel tree_model, TreeIter iter)
-		{
-			(cell as Gtk.CellRendererText).Text = _dataService.GetGloss(tree_model, iter);
 		}
 	}
  }

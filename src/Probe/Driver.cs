@@ -11,15 +11,15 @@ namespace WeSay.UI
 	class Driver : IDisposable
 	{
 		#region Glade Widgets
-		#pragma warning disable 649
-		[Widget] Gtk.Window window1;
-		[Widget] Gtk.Notebook _tabControl;
-		[Widget]  Gtk.HBox _dummyDetailViewHolder;
-		[Widget]  Gtk.VBox _dummyWordGridViewHolder;
-		#pragma warning restore 649
+	  #pragma warning disable 649
+		  [Widget] Gtk.Window window1;
+	  [Widget] Gtk.Notebook _tabControl;
+	  [Widget] Gtk.HBox _dummyDetailViewHolder;
+	  [Widget] Gtk.VBox _dummyWordGridViewHolder;
+	  #pragma warning restore 649
 		#endregion
 
-		protected DataService _model;
+	protected LexiconModel _model;
 
 		[STAThread]
 		static void Main(string[] args)
@@ -33,7 +33,7 @@ namespace WeSay.UI
 		{
 			Glade.XML gxml = new Glade.XML("probe.glade", "window1", null);
 			gxml.Autoconnect(this);
-			_model = new DataService(@"c:\WeSay\src\unittests\thai5000.yap");
+			_model = new LexiconModel(@"c:\WeSay\src\unittests\thai5000.yap");
 
 			WordGridHandler g = new WordGridHandler(_dummyWordGridViewHolder, _model);
 			WordDetailView d = new WordDetailView(_dummyDetailViewHolder, _model);

@@ -101,6 +101,8 @@
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\db4o.dll</HintPath>
 	</Reference>
+	<Reference Include="glib-sharp, Version=2.8.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
+	<Reference Include="gtk-sharp, Version=2.8.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
 	<Reference Include="nunit.framework">
 	  <Name>nunit.framework</Name>
 	  <HintPath>..\..\lib\nunit.framework.dll</HintPath>

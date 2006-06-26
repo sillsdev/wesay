@@ -97,6 +97,7 @@
 	<ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
+	<Reference Include="atk-sharp, Version=2.8.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
 	<Reference Include="db4o, Version=5.4.8.0, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\db4o.dll</HintPath>
@@ -117,8 +118,10 @@
 	<Compile Include="AssemblyInfo.cs">
 	  <SubType>Code</SubType>
 	</Compile>
-	<Compile Include="DataService.cs" />
+	<Compile Include="LexiconModel.cs" />
 	<Compile Include="LexicalEntry.cs" />
+	<Compile Include="LexiconTreeView.cs" />
+	<Compile Include="TreeModelAdapter.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
