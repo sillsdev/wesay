@@ -7,15 +7,15 @@ namespace WeSay.Core
 	TreeModelInterfaceDelegates _treeModelInterface;
 
 	static GLib.GType[] _columnTypes = new GLib.GType[2] { GLib.GType.String, GLib.GType.String };
-	LexiconModel _ds;
+	LexiconModel _lexiconModel;
 	int _maxIndex;
 
-	public TreeModelAdapter(LexiconModel ds): base(IntPtr.Zero) {
+	public TreeModelAdapter(LexiconModel lexiconModel): base(IntPtr.Zero) {
 	  CreateNativeObject(new string[0], new GLib.Value[0]);
 	  this.BuildTreeModelInterface();
 
-	  _ds = ds;
-	  _maxIndex = this._ds.LexicalEntries.Count;
+	  _lexiconModel = lexiconModel;
+	  _maxIndex = this._lexiconModel.Count;
 	}
 
 	public void Setup() {
@@ -184,7 +184,7 @@ namespace WeSay.Core
 	  VerifyValidColumn(column);
 	  g_value_init(ref value, _columnTypes[column].Val);
 
-	  LexicalEntry row = _ds.LexicalEntries[index];
+	  LexicalEntry row = _lexiconModel[index];
 	  switch (column) {
 		case 0: {
 		  value.Val = row.LexicalForm;

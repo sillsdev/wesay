@@ -29,31 +29,56 @@ namespace WeSay.Core
 			return n.InnerText;
 		}
 
-	  public string LexicalForm {
-		get {
-		  return _lexicalForm;
+	  private string StringOrEmpty(string s) {
+		if (s == null) {
+		  return string.Empty;
 		}
-		set {
-		  _lexicalForm = value;
+		else {
+		  return s;
 		}
 	  }
 
-	  public string Gloss {
+	  private string StringOrNull(string value) {
+		if (value == null || value.Length == 0) {
+		  return null;
+		}
+		else {
+		  return value;
+		}
+	 }
+
+	  public string LexicalForm {
 		get {
-		  return _gloss;
+		  return StringOrEmpty(_lexicalForm);
 		}
 		set {
-		  _gloss = value;
+		  _lexicalForm = StringOrNull(value);
+		}
+	  }
+
+
+	  public string Gloss {
+		get {
+		  return StringOrEmpty(_gloss);
+		}
+		set {
+		  _gloss = StringOrNull(value);
 		}
 	  }
 
 	  public string Example {
 		get {
-		  return _example;
+		  return StringOrEmpty(_example);
 		}
 		set {
-		  _example = value;
+		  _example = StringOrNull(value);
 		}
+	  }
+
+	  public void initialize(LexicalEntry entry) {
+		_lexicalForm = entry._lexicalForm;
+		_gloss = entry._gloss;
+		_example = entry._example;
 	  }
 	}
 }
