@@ -17,7 +17,9 @@ namespace WeSay.UI
 	protected Gtk.Entry _word;
 	[Widget]
 	protected Gtk.Entry _gloss;
-	[Widget]
+	 [Widget]
+	protected Gtk.Entry _example;
+   [Widget]
 	protected Gtk.ToolButton _buttonAdd;
 	[Widget]
 	protected Gtk.ToolButton _buttonDelete;
@@ -39,6 +41,9 @@ namespace WeSay.UI
 	  Glade.XML gxml = new Glade.XML("probe.glade", "_wordDetailHolder", null);
 	  gxml.Autoconnect(this);
 	  _wordDetailVBox.Reparent(container);
+			_word.ModifyFont(Pango.FontDescription.FromString("default 30"));
+			_gloss.ModifyFont(Pango.FontDescription.FromString("default 20"));
+			_example.ModifyFont(Pango.FontDescription.FromString("default 20"));
 
 	  WireEvents();
 
@@ -59,7 +64,20 @@ namespace WeSay.UI
 	  _word.EditingDone += new EventHandler(OnWord_EditingDone);
 	  _gloss.EditingDone += new EventHandler(OnGloss_EditingDone);
 	  _gloss.FocusOutEvent += new FocusOutEventHandler(OnGloss_FocusOutEvent);
+	  _example.EditingDone+=new EventHandler(_example_EditingDone);
+	  _example.FocusOutEvent+=new FocusOutEventHandler(_example_FocusOutEvent);
 	}
+
+	  void _example_FocusOutEvent(object o, FocusOutEventArgs args)
+	  {
+		  _example.FinishEditing();
+	  }
+
+	  void _example_EditingDone(object sender, EventArgs e)
+	  {
+		  _lexiconModel.CurrentLexicalEntry.Example  = _example.Text;
+		  _lexiconModel.OnChanged(_lexiconModel.CurrentLexicalEntry);
+	  }
 
 	void OnWord_FocusOutEvent(object o, FocusOutEventArgs args) {
 	  _word.FinishEditing();
@@ -122,6 +140,7 @@ namespace WeSay.UI
 
 	  _word.Text = _lexiconModel.CurrentLexicalEntry.LexicalForm;
 	  _gloss.Text = _lexiconModel.CurrentLexicalEntry.Gloss;
+	  _example .Text = _lexiconModel.CurrentLexicalEntry.Example ;
 	}
   }
 }
