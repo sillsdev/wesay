@@ -123,6 +123,11 @@
 	<Compile Include="LexiconTreeView.cs" />
 	<Compile Include="TreeModelAdapter.cs" />
   </ItemGroup>
+  <ItemGroup>
+	<None Include="WeSay.Core.dll.config">
+	  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	</None>
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
 	<PreBuildEvent>
