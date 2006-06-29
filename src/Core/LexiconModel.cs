@@ -18,7 +18,6 @@ namespace WeSay.Core
 	  _filtered = false;
 	  _db = Db4o.OpenFile(filePath);
 	  RefreshLexicalEntries();
-	  RefreshCurrentLexicalEntry();
 	}
 
 	public void Dispose() {
@@ -41,6 +40,7 @@ namespace WeSay.Core
 	  else {
 		_lexicalEntries = _db.Query<LexicalEntry>(typeof(LexicalEntry));
 	  }
+	  RefreshCurrentLexicalEntry();
 	}
 
 	public bool Filtered {
@@ -48,9 +48,10 @@ namespace WeSay.Core
 		return _filtered;
 	  }
 	  set {
-		_filtered = value;
-		RefreshLexicalEntries();
-		RefreshCurrentLexicalEntry();
+		if (_filtered != value) {
+		  _filtered = value;
+		  RefreshLexicalEntries();
+		}
 	  }
 	}
 	#region Iterator

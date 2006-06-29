@@ -170,7 +170,7 @@ namespace WeSay.Core
 	  return path;
 	}
 
-	[System.Runtime.InteropServices.DllImport("libgobject-2.0-0.dll")]
+	[System.Runtime.InteropServices.DllImport("libgobject-2.0-0")]
 	static extern void g_value_init(ref GLib.Value val, IntPtr type);
 
 	/// <summary>
