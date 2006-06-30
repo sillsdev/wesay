@@ -35,7 +35,8 @@ namespace WeSay.UI
 	public Gtk.VBox _wordDetailVBox;
 #pragma warning restore 649
 
-	public WordDetailView(Container container, LexiconModel lexiconModel) {
+	public WordDetailView(Container container, LexiconModel lexiconModel)
+	{
 	  _lexiconModel = lexiconModel;
 
 	  Glade.XML gxml = new Glade.XML("probe.glade", "_wordDetailHolder", null);

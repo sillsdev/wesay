@@ -19,7 +19,11 @@ namespace WeSay.UI
 	[Widget]
 	Gtk.HBox _dummyDetailViewHolder;
 	[Widget]
-	Gtk.VBox _dummyWordGridViewHolder;
+	  Gtk.VBox _dummyWordGridViewHolder;
+
+	[Widget]
+	  Gtk.VBox _dummyActionsViewHolder;
+
 #pragma warning restore 649
 	#endregion
 
@@ -48,6 +52,7 @@ namespace WeSay.UI
 
 	  WordGridHandler g = new WordGridHandler(_dummyWordGridViewHolder, _model);
 	  WordDetailView d = new WordDetailView(_dummyDetailViewHolder, _model);
+	  WordActionsView a = new WordActionsView(_dummyActionsViewHolder, _model);
 	}
 
 	public void Dispose() {
