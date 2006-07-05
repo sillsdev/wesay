@@ -37,6 +37,10 @@ namespace WeSay.UI
 
 	  AddColumn(_entryList, "Word", 0, 25, 120);
 	  AddColumn(_entryList, "Gloss", 1, 12, 200);
+
+	  //_entryList.Focused += new FocusedHandler(OnFocused);
+	  _entryList.FocusInEvent += new FocusInEventHandler(OnFocused);
+
 	}
 
 	private void AddColumn(LexiconTreeView entryList, string title, int column, int fontSize, int minWidth) {
@@ -48,6 +52,11 @@ namespace WeSay.UI
 	  treeViewColumn.Resizable = true;
 	  treeViewColumn.MinWidth = minWidth;
 	  entryList.AppendColumn(treeViewColumn);
+	}
+
+	public void OnFocused(object o, FocusInEventArgs args) {
+	  _lexiconModel.Refresh();
+	  args.RetVal = false;
 	}
   }
 }

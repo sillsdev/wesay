@@ -8,24 +8,37 @@ namespace WeSay.Core
 
 	static GLib.GType[] _columnTypes = new GLib.GType[2] { GLib.GType.String, GLib.GType.String };
 	LexiconModel _lexiconModel;
-	int _maxIndex;
+	int _originalCount;
 
 	public TreeModelAdapter(LexiconModel lexiconModel): base(IntPtr.Zero) {
 	  CreateNativeObject(new string[0], new GLib.Value[0]);
 	  this.BuildTreeModelInterface();
 
 	  _lexiconModel = lexiconModel;
-	  _maxIndex = this._lexiconModel.Count;
+	  _originalCount = _lexiconModel.Count;
 	}
 
-	public void Setup() {
-	  for (int i = 0; i < _maxIndex; ++i) {
-		EmitRowInserted(i);
+	public void Refresh() {
+	  int refreshCount = Math.Min(_lexiconModel.Count, _originalCount);
+	  int addCount = Math.Max(_lexiconModel.Count - _originalCount, 0);
+	  int deleteCount = Math.Max(_originalCount - _lexiconModel.Count, 0);
+	  //int i;
+	  //for (i = 0; i < refreshCount; ++i) {
+	  //  EmitRowChanged(i);
+	  //}
+	  //--i;
+	  int i = refreshCount - 1;
+	  for (int j = 0; j < addCount; ++j) {
+		EmitRowInserted(i + j);
 	  }
+	  for (int j = deleteCount; j > 0; --j) {
+		EmitRowDeleted(i + j);
+	  }
+	  _originalCount = _lexiconModel.Count;
 	}
 
 	bool IsValidIndex(int index) {
-	  return 0 <= index && index < this._maxIndex;
+	  return 0 <= index && index < _lexiconModel.Count;
 	}
 
 	void VerifyValidIndex(int index) {
@@ -208,7 +221,7 @@ namespace WeSay.Core
 	/// <returns>true if iter has been changed to the next node</returns>
 	public bool Next_callback(ref int index) {
 	  VerifyValidIndex(index);
-	  return (IsValidIndex(++index));
+	  return(IsValidIndex(++index));
 	}
 
 	/// <summary>
@@ -225,7 +238,7 @@ namespace WeSay.Core
 		return true;
 	  }
 	  VerifyValidIndex(parent);
-	  child = this._maxIndex;
+	  child = _lexiconModel.Count;
 	  return false;
 	}
 
@@ -246,7 +259,7 @@ namespace WeSay.Core
 	/// <returns></returns>
 	public int NChildren_callback(int index) {
 	  if (index == -1) {
-		return this._maxIndex;
+		return _lexiconModel.Count;
 	  }
 	  VerifyValidIndex(index);
 	  return 0;
@@ -267,7 +280,7 @@ namespace WeSay.Core
 		return true;
 	  }
 	  VerifyValidIndex(parent);
-	  child = this._maxIndex;
+	  child = _lexiconModel.Count;
 	  return false;
 	}
 
@@ -281,7 +294,7 @@ namespace WeSay.Core
 	/// <returns>true if iter is set to parent of child</returns>
 	public bool Parent_callback(out int parent, int child) {
 	  VerifyValidIndex(child);
-	  parent = this._maxIndex;
+	  parent = _lexiconModel.Count;
 	  return false;
 	}
 
@@ -290,6 +303,20 @@ namespace WeSay.Core
 
 	private void EmitRowInserted(int index) {
 	  gtksharp_node_store_emit_row_inserted(Handle, this.GetPath_callback(index), index);
+	}
+
+	[System.Runtime.InteropServices.DllImport("gtksharpglue-2")]
+	static extern void gtksharp_node_store_emit_row_deleted(IntPtr handle, IntPtr path, int node_idx);
+
+	private void EmitRowDeleted(int index) {
+	  gtksharp_node_store_emit_row_deleted(Handle, GetPath(index).Handle, index);
+	}
+
+	[System.Runtime.InteropServices.DllImport("gtksharpglue-2")]
+	static extern void gtksharp_node_store_emit_row_changed(IntPtr handle, IntPtr path, int node_idx);
+
+	private void EmitRowChanged(int index) {
+	  gtksharp_node_store_emit_row_changed(Handle, this.GetPath_callback(index), index);
 	}
 
 	[System.Runtime.InteropServices.DllImport("gtksharpglue-2")]

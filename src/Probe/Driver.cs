@@ -65,20 +65,5 @@ namespace WeSay.UI
 	  args.RetVal = true;
 	  Dispose();
 	}
-
-	#region Button Click Event handlers
-
-
-	#endregion
-
-	#region Menu item handlers
-
-	protected void on_quit1_activate(object o, EventArgs args) {
-	  Application.Quit();
-	  return;
-	}
-
-
-	#endregion
   }
 }
