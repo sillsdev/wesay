@@ -7,9 +7,8 @@ using WeSay.Core;
 
 namespace WeSay.UI
 {
-	class WordActionsView
+	class WordActionsView : ViewHandler
 	{
-		protected LexiconModel _model;
 
 #pragma warning disable 649
 		[Widget]  protected Gtk.VBox _rootVBox;
@@ -18,16 +17,42 @@ namespace WeSay.UI
 #pragma warning restore 649
 
 
-		public WordActionsView(Container container, LexiconModel model)
+		public WordActionsView()
 		{
-			_model = model;
 
 			Glade.XML gxml = new Glade.XML("probe.glade", "_actionsViewHolder", null);
 			gxml.Autoconnect(this);
 
-			_rootVBox.Reparent(container);
-
 			_btnNewWordsToUSB.Clicked += new EventHandler(_btnNewWordsToUSB_Clicked);
+
+			ParentTabControl = s_tabcontrol;
+		}
+
+
+
+		public Gtk.Notebook ParentTabControl
+		{
+			set
+			{
+				_rootVBox.Reparent(value);
+				value.SetTabLabelText(_rootVBox, TabLabel);
+			}
+		}
+
+		public string TabLabel
+		{
+			get
+			{
+				return "Admin Action Test";
+			}
+		}
+
+	   public Container ParentContainer
+		{
+			set
+			{
+				_rootVBox.Reparent(value);
+			 }
 		}
 
 		void _btnNewWordsToUSB_Clicked(object sender, EventArgs e)

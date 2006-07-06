@@ -2,6 +2,8 @@ using System;
 using Gtk;
 using Glade;
 using WeSay.Core;
+using Spring.Context;
+using Spring.Context.Support;
 
 namespace WeSay.UI
 {
@@ -46,13 +48,17 @@ namespace WeSay.UI
 		filePath = args[0];
 	  }
 
-	  Glade.XML gxml = new Glade.XML("probe.glade", "window1", null);
-	  gxml.Autoconnect(this);
-	  _model = new LexiconModel(filePath);
+		Glade.XML gxml = new Glade.XML("probe.glade", "window1", null);
+		gxml.Autoconnect(this);
 
-	  WordGridHandler g = new WordGridHandler(_dummyWordGridViewHolder, _model);
-	  WordDetailView d = new WordDetailView(_dummyDetailViewHolder, _model);
-	  WordActionsView a = new WordActionsView(_dummyActionsViewHolder, _model);
+		LexiconModel.s_FilePath = filePath;//hack
+		WordActionsView.s_tabcontrol = _tabControl;//hack
+
+		//hold on to your seats... this is where the ui gets built.
+	   // IApplicationContext ctx = new Spring.Context.Support.XmlApplicationContext("file://AppContext.xml"); // ContextRegistry.GetContext();
+		IApplicationContext ctx = new Spring.Context.Support.XmlApplicationContext("assembly://Probe/WeSay.Probe/AppContext.xml"); // ContextRegistry.GetContext();
+
+		  _model = (LexiconModel) ctx.GetObject("TheModel");// new LexiconModel(filePath);
 	}
 
 	public void Dispose() {

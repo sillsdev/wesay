@@ -4,12 +4,12 @@ using System.Text;
 using Gtk;
 using Glade;
 using WeSay.Core;
+using Spring.Objects.Factory;
 
 namespace WeSay.UI
 {
-  class WordDetailView
+	class WordDetailView : ViewHandler, IInitializingObject
   {
-	protected LexiconModel _lexiconModel;
 #pragma warning disable 649
 	[Widget]
 	protected Gtk.Table _wordDetailTable;
@@ -35,20 +35,43 @@ namespace WeSay.UI
 	public Gtk.VBox _wordDetailVBox;
 #pragma warning restore 649
 
-	public WordDetailView(Container container, LexiconModel lexiconModel)
+	public WordDetailView()
 	{
-	  _lexiconModel = lexiconModel;
+	 // _model = lexiconModel;
 
 	  Glade.XML gxml = new Glade.XML("probe.glade", "_wordDetailHolder", null);
 	  gxml.Autoconnect(this);
-	  _wordDetailVBox.Reparent(container);
 			_word.ModifyFont(Pango.FontDescription.FromString("default 30"));
 			_gloss.ModifyFont(Pango.FontDescription.FromString("default 20"));
 			_example.ModifyFont(Pango.FontDescription.FromString("default 20"));
 
-	  WireEvents();
 
-	  Update();
+
+	}
+
+	//called by Spring factory. Part of IInitializingObject
+	public void AfterPropertiesSet()
+	{
+		_wordDetailVBox.Reparent(s_tabcontrol);
+		s_tabcontrol.SetTabLabelText(_wordDetailVBox, "Detail");
+		Update();
+		WireEvents();
+	}
+
+	public Gtk.Notebook ParentTabControl
+	{
+		set
+		{
+			_wordDetailVBox.Reparent(value);
+			value.SetTabLabelText(_wordDetailVBox, TabLabel);
+		}
+	}
+	public string TabLabel
+	{
+		get
+		{
+			return "details details";
+		}
 	}
 
 	private void WireEvents() {
@@ -76,8 +99,8 @@ namespace WeSay.UI
 
 	  void _example_EditingDone(object sender, EventArgs e)
 	  {
-		  _lexiconModel.CurrentLexicalEntry.Example  = _example.Text;
-		  _lexiconModel.OnChanged(_lexiconModel.CurrentLexicalEntry);
+		  _model.CurrentLexicalEntry.Example  = _example.Text;
+		  _model.OnChanged(_model.CurrentLexicalEntry);
 	  }
 
 	void OnWord_FocusOutEvent(object o, FocusOutEventArgs args) {
@@ -87,46 +110,46 @@ namespace WeSay.UI
 	  _gloss.FinishEditing();
 	}
 	void OnWord_EditingDone(object sender, EventArgs e) {
-	  _lexiconModel.CurrentLexicalEntry.LexicalForm = _word.Text;
-	  _lexiconModel.OnChanged(_lexiconModel.CurrentLexicalEntry);
+	  _model.CurrentLexicalEntry.LexicalForm = _word.Text;
+	  _model.OnChanged(_model.CurrentLexicalEntry);
 	}
 	void OnGloss_EditingDone(object sender, EventArgs e) {
-	  _lexiconModel.CurrentLexicalEntry.Gloss = _gloss.Text;
-	  _lexiconModel.OnChanged(_lexiconModel.CurrentLexicalEntry);
+	  _model.CurrentLexicalEntry.Gloss = _gloss.Text;
+	  _model.OnChanged(_model.CurrentLexicalEntry);
 	}
 
 	void add_Clicked(object sender, EventArgs e) {
-	  _lexiconModel.Add(new LexicalEntry());
+	  _model.Add(new LexicalEntry());
 	  Update();
 	}
 
 	void delete_Clicked(object sender, EventArgs e) {
-	  _lexiconModel.Remove(_lexiconModel.CurrentLexicalEntry);
+	  _model.Remove(_model.CurrentLexicalEntry);
 	  Update();
 	}
 
 
 	void last_Clicked(object sender, EventArgs e) {
 	  SaveCurrentEditting();
-	  _lexiconModel.GotoLastRecord();
+	  _model.GotoLastRecord();
 	  Update();
 	}
 
 	void back_Clicked(object sender, EventArgs e) {
 	  SaveCurrentEditting();
-	  _lexiconModel.GotoPreviousRecord();
+	  _model.GotoPreviousRecord();
 	  Update();
 	}
 
 	void first_Clicked(object sender, EventArgs e) {
 	  SaveCurrentEditting();
-	  _lexiconModel.GotoFirstRecord();
+	  _model.GotoFirstRecord();
 	  Update();
 	}
 
 	void next_Clicked(object sender, EventArgs e) {
 	  SaveCurrentEditting();
-	  _lexiconModel.GotoNextRecord();
+	  _model.GotoNextRecord();
 	  Update();
 	}
 
@@ -139,9 +162,9 @@ namespace WeSay.UI
 
 	private void Update() {
 
-	  _word.Text = _lexiconModel.CurrentLexicalEntry.LexicalForm;
-	  _gloss.Text = _lexiconModel.CurrentLexicalEntry.Gloss;
-	  _example .Text = _lexiconModel.CurrentLexicalEntry.Example ;
+	  _word.Text = _model.CurrentLexicalEntry.LexicalForm;
+	  _gloss.Text = _model.CurrentLexicalEntry.Gloss;
+	  _example .Text = _model.CurrentLexicalEntry.Example ;
 	}
   }
 }

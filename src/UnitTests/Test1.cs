@@ -26,7 +26,9 @@ namespace WeSay.UnitTests
   {
 	[Test]
 	public void Main() {
-	  using (LexiconModel lexiconModel = new LexiconModel(@"c:\WeSay\src\unittests\thai5000.yap")) {
+	  using (LexiconModel lexiconModel = new LexiconModel(@"c:\WeSay\src\unittests\thai5000.yap"))
+	  {
+
 		Assert.Less(0, lexiconModel.Count);
 
 		LexicalEntry currentLexicalEntry = lexiconModel.CurrentLexicalEntry;

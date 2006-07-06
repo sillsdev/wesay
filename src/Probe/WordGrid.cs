@@ -4,33 +4,42 @@ using System.Text;
 using Gtk;
 using Glade;
 using WeSay.Core;
+using Spring.Objects.Factory;
 
 namespace WeSay.UI
 {
-  class WordGridHandler
+	class WordGridHandler : ViewHandler, IInitializingObject
   {
-	protected LexiconModel _dataService;
 	LexiconTreeView _entryList;
-	TreeModelAdapter _lexiconModel;
+	TreeModelAdapter _modelAdapter;
 
-#pragma warning disable 649
-	[Widget]
-	protected Gtk.VBox _root;
-	[Widget]
-	protected Gtk.ScrolledWindow _entryScroller;
-#pragma warning restore 649
+	#pragma warning disable 649
+		[Widget]
+		protected Gtk.VBox _root;
+		[Widget]
+		protected Gtk.ScrolledWindow _entryScroller;
+	#pragma warning restore 649
 
 
-	public WordGridHandler(Container container, LexiconModel dataService) {
-	  _dataService = dataService;
-	  _lexiconModel = new TreeModelAdapter(_dataService);
-	  _entryList = new LexiconTreeView(_lexiconModel);
+	public WordGridHandler()//Container container, LexiconModel dataService)
+	{
 
 	  Glade.XML gxml = new Glade.XML("probe.glade", "_wordGridHolder", null);
 	  gxml.Autoconnect(this);
 
+	}
+
+	//called by Spring factory. Part of IInitializingObject
+	public void AfterPropertiesSet()
+	{
+	  _modelAdapter = new TreeModelAdapter(_model);
+	  _entryList = new LexiconTreeView(_modelAdapter);
+
 	  _entryScroller.Add(_entryList);
-	  _root.Reparent(container);
+
+	  _root.Reparent(s_tabcontrol);
+	  s_tabcontrol.SetTabLabelText(_root, "Words");
+
 
 	  _entryList.FixedHeightMode = true;
 	  _entryList.ShowAll();
@@ -55,7 +64,7 @@ namespace WeSay.UI
 	}
 
 	public void OnFocused(object o, FocusInEventArgs args) {
-	  _lexiconModel.Refresh();
+	  _modelAdapter.Refresh();
 	  args.RetVal = false;
 	}
   }

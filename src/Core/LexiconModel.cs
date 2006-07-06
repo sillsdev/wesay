@@ -9,15 +9,35 @@ namespace WeSay.Core
 
   public class LexiconModel : ICollection<LexicalEntry>, IDisposable
   {
+	  static public string s_FilePath; //hack until we learn more of Spring.Net
+
 	ObjectContainer _db;
 	LexicalEntry _currentLexicalEntry;
 	bool _filtered;
 	IList<LexicalEntry> _lexicalEntries;
 
-	public LexiconModel(string filePath) {
+	public LexiconModel()
+	{
 	  _filtered = false;
-	  _db = Db4o.OpenFile(filePath);
-	  RefreshLexicalEntries();
+	  FilePath = s_FilePath; ;
+	}
+
+	  public LexiconModel(string filePath)
+	  {
+		 _filtered = false;
+		 s_FilePath = filePath;
+		 FilePath = s_FilePath; ;
+	  }
+
+	public string FilePath
+	{
+		set
+		{
+			_db = Db4o.OpenFile(value);
+			if (_db == null)
+				throw new ApplicationException("Problem opening "+value);
+			RefreshLexicalEntries();
+		}
 	}
 
 	public void Dispose() {
@@ -26,7 +46,13 @@ namespace WeSay.Core
 
 	private void RefreshCurrentLexicalEntry() {
 	  if (!_lexicalEntries.Contains(_currentLexicalEntry)) {
-		_currentLexicalEntry = _lexicalEntries[0];
+		  if (_lexicalEntries.Count > 0)
+			  _currentLexicalEntry = _lexicalEntries[0];
+		  else
+		  {
+			  _currentLexicalEntry = new LexicalEntry();
+			  Add(_currentLexicalEntry);
+		  }
 	  }
 	}
 

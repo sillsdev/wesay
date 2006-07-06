@@ -99,10 +99,22 @@
 	  <HintPath>..\..\..\GTK\2.8\lib\gtk-sharp-2.0\gtk-sharp.dll</HintPath>
 	  <AssemblyFolderKey>hklm\gtk-sharp</AssemblyFolderKey>
 	</Reference>
+	<Reference Include="log4net, Version=1.2.9.0, Culture=neutral, PublicKeyToken=b32731d11ce58905">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\Spring.NET\log4net.dll</HintPath>
+	</Reference>
 	<Reference Include="pango-sharp">
 	  <Name>pango-sharp</Name>
 	  <HintPath>..\..\..\GTK\2.8\lib\gtk-sharp-2.0\pango-sharp.dll</HintPath>
 	  <AssemblyFolderKey>hklm\gtk-sharp</AssemblyFolderKey>
+	</Reference>
+	<Reference Include="Spring.Core, Version=1.1.0.0, Culture=neutral, PublicKeyToken=65e474d141e25e07">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\Spring.NET\Spring.Core.dll</HintPath>
+	</Reference>
+	<Reference Include="Spring.Services, Version=1.1.0.0, Culture=neutral, PublicKeyToken=65e474d141e25e07">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\Spring.NET\Spring.Services.dll</HintPath>
 	</Reference>
 	<Reference Include="System">
 	  <Name>System</Name>
@@ -121,6 +133,7 @@
 	<Compile Include="Driver.cs">
 	  <SubType>Code</SubType>
 	</Compile>
+	<Compile Include="ViewWidget.cs" />
 	<Compile Include="WordActionsView.cs" />
 	<Compile Include="WordDetailView.cs" />
 	<Compile Include="WordGrid.cs" />
@@ -133,6 +146,11 @@
 	  <Project>{B383F122-EA56-4DB2-8C54-27A9F2E2F2BA}</Project>
 	  <Name>Core</Name>
 	</ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+	<EmbeddedResource Include="AppContext.xml">
+	  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	</EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
