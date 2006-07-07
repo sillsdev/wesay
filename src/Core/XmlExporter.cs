@@ -35,9 +35,10 @@ namespace WeSay.Core
 			foreach (LexicalEntry entry in this._model)
 			{
 				writer.WriteStartElement("entry");
-				writer.WriteElementString("lexicalForm",entry.LexicalForm);
-				writer.WriteElementString("gloss",entry.Gloss);
-				writer.WriteElementString("example", entry.Example);
+
+				WriteMultilingualString(writer, "lexicalForm", entry.LexicalForm);
+				WriteMultilingualString(writer, "gloss", entry.Gloss);
+				WriteMultilingualString(writer, "example", entry.Example);
 				writer.WriteEndElement();
 
 			}
@@ -45,5 +46,13 @@ namespace WeSay.Core
 			 writer.WriteEndDocument();
 			 writer.Close();
 	   }
+
+		private static void WriteMultilingualString(XmlWriter writer, string elementName, string s)
+		{
+			writer.WriteStartElement(elementName);
+			writer.WriteAttributeString("ws", "??");
+			writer.WriteString(s);
+			writer.WriteEndElement();
+		}
 	}
 }

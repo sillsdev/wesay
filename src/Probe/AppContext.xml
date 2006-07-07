@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<objects xmlns="http://www.springframework.net" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.net http://www.springframework.net/xsd/spring-objects.xsd">
+
+  <object id="TheModel" type="WeSay.Core.LexiconModel, WeSay.Core">
+  </object>
+
+  <object id="GridTab" type="WeSay.UI.WordGridHandler, Probe">
+	<property name="Model" ref ="TheModel"/>
+  </object>
+  <object id="DetailsTab" type="WeSay.UI.WordDetailView, Probe">
+	<property name="Model" ref ="TheModel"/>
+  </object>
+  <object id="AdminActionsTab" type="WeSay.UI.WordActionsView, Probe">
+	<property name="Model" ref ="TheModel"/>
+  </object>
+</objects>
