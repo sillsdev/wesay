@@ -9,51 +9,34 @@ namespace WeSay.Core
 
   public class LexiconModel : ICollection<LexicalEntry>, IDisposable
   {
-	  static public string s_FilePath; //hack until we learn more of Spring.Net
+	static public string s_FilePath; //hack until we learn more of Spring.Net
 
 	ObjectContainer _db;
-	LexicalEntry _currentLexicalEntry;
 	bool _filtered;
 	IList<LexicalEntry> _lexicalEntries;
 
-	public LexiconModel()
-	{
+	public LexiconModel() {
 	  _filtered = false;
-	  FilePath = s_FilePath; ;
+	  FilePath = s_FilePath;
 	}
 
-	  public LexiconModel(string filePath)
-	  {
-		 _filtered = false;
-		 s_FilePath = filePath;
-		 FilePath = s_FilePath; ;
-	  }
+	public LexiconModel(string filePath) {
+	  _filtered = false;
+	  s_FilePath = filePath;
+	  FilePath = s_FilePath;
+	}
 
-	public string FilePath
-	{
-		set
-		{
-			_db = Db4o.OpenFile(value);
-			if (_db == null)
-				throw new ApplicationException("Problem opening "+value);
-			RefreshLexicalEntries();
-		}
+	public string FilePath {
+	  set {
+		_db = Db4o.OpenFile(value);
+		if (_db == null)
+		  throw new ApplicationException("Problem opening " + value);
+		RefreshLexicalEntries();
+	  }
 	}
 
 	public void Dispose() {
 	  _db.Close();
-	}
-
-	private void RefreshCurrentLexicalEntry() {
-	  if (!_lexicalEntries.Contains(_currentLexicalEntry)) {
-		  if (_lexicalEntries.Count > 0)
-			  _currentLexicalEntry = _lexicalEntries[0];
-		  else
-		  {
-			  _currentLexicalEntry = new LexicalEntry();
-			  Add(_currentLexicalEntry);
-		  }
-	  }
 	}
 
 	private void RefreshLexicalEntries() {
@@ -66,7 +49,6 @@ namespace WeSay.Core
 	  else {
 		_lexicalEntries = _db.Query<LexicalEntry>(typeof(LexicalEntry));
 	  }
-	  RefreshCurrentLexicalEntry();
 	}
 
 	public bool Filtered {
@@ -80,46 +62,6 @@ namespace WeSay.Core
 		}
 	  }
 	}
-	#region Iterator
-	public LexicalEntry CurrentLexicalEntry {
-	  get {
-		return _currentLexicalEntry;
-	  }
-	  set {
-		if (_lexicalEntries.Contains(value)) {
-		  _currentLexicalEntry = value;
-		}
-		else {
-		  throw new ApplicationException("That LexicalEntry does not exist in collection");
-		}
-	  }
-	}
-
-	public bool GotoNextRecord() {
-	  int i = 1 + _lexicalEntries.IndexOf(CurrentLexicalEntry);
-	  if (i < _lexicalEntries.Count) {
-		CurrentLexicalEntry = _lexicalEntries[i];
-		return true;
-	  }
-	  return false;
-	}
-	public bool GotoPreviousRecord() {
-	  int i = _lexicalEntries.IndexOf(CurrentLexicalEntry) - 1;
-	  if (i >= 0) {
-		CurrentLexicalEntry = _lexicalEntries[i];
-		return true;
-	  }
-	  return false;
-	}
-
-	public void GotoFirstRecord() {
-	  CurrentLexicalEntry = _lexicalEntries[0];
-	}
-	public void GotoLastRecord() {
-	  CurrentLexicalEntry = _lexicalEntries[_lexicalEntries.Count - 1];
-	}
-	#endregion
-
 	#region IList<LexicalEntry> Members
 
 	public int IndexOf(LexicalEntry item) {
@@ -169,9 +111,6 @@ namespace WeSay.Core
 	}
 
 	public bool Remove(LexicalEntry item) {
-	  if (!GotoNextRecord()) {
-		GotoPreviousRecord();
-	  }
 	  _db.Delete(item);
 	  _db.Commit();
 	  RefreshLexicalEntries();
@@ -182,7 +121,6 @@ namespace WeSay.Core
 	  _db.Set(item);
 	  _db.Commit();
 	  RefreshLexicalEntries();
-	  CurrentLexicalEntry = item;
 	}
 
 	#endregion

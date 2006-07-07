@@ -136,6 +136,7 @@
 	</Compile>
 	<Compile Include="LexiconModel.cs" />
 	<Compile Include="LexicalEntry.cs" />
+	<Compile Include="LexiconTreeSelection.cs" />
 	<Compile Include="LexiconTreeView.cs" />
 	<Compile Include="TreeModelAdapter.cs" />
 	<Compile Include="XmlExporter.cs" />

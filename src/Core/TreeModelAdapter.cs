@@ -18,6 +18,17 @@ namespace WeSay.Core
 	  _originalCount = _lexiconModel.Count;
 	}
 
+	public void Refresh(LexicalEntry l) {
+	  int index = _lexiconModel.IndexOf(l);
+	  Refresh(index);
+	}
+
+
+	public void Refresh(int index) {
+	  Refresh();
+	  EmitRowChanged(index);
+	}
+
 	public void Refresh() {
 	  int refreshCount = Math.Min(_lexiconModel.Count, _originalCount);
 	  int addCount = Math.Max(_lexiconModel.Count - _originalCount, 0);
@@ -157,12 +168,7 @@ namespace WeSay.Core
 	  if (path == IntPtr.Zero){
 		throw new ArgumentNullException("path");
 	  }
-	  Gtk.TreePath treepath = new Gtk.TreePath(path);
-	  int depth = treepath.Depth;
-	  if (depth <= 0) {
-		throw new ArgumentOutOfRangeException("path", "Path must have depth > 0");
-	  }
-	  index = treepath.Indices[0];
+	  index = GetIndex(path);
 	  return (IsValidIndex(index));
 	}
 
@@ -176,11 +182,20 @@ namespace WeSay.Core
 	  return GetPath(index).Handle;
 	}
 
-	private Gtk.TreePath GetPath(int index) {
+	public Gtk.TreePath GetPath(int index) {
 	  Gtk.TreePath path = new Gtk.TreePath();
 	  path.AppendIndex(index);
 	  path.Owned = false;
 	  return path;
+	}
+
+	public int GetIndex(IntPtr path) {
+	  Gtk.TreePath treepath = new Gtk.TreePath(path);
+	  int depth = treepath.Depth;
+	  if (depth <= 0) {
+		throw new ArgumentOutOfRangeException("path", "Path must have depth > 0");
+	  }
+	  return treepath.Indices[0];
 	}
 
 	[System.Runtime.InteropServices.DllImport("libgobject-2.0-0.dll")]

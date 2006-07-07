@@ -136,6 +136,7 @@
 	<Compile Include="ViewWidget.cs" />
 	<Compile Include="WordActionsView.cs" />
 	<Compile Include="WordDetailView.cs" />
+	<Compile Include="WordDetailWithBrowseView.cs" />
 	<Compile Include="WordGrid.cs" />
 	<None Include="probe.glade">
 	  <CopyToOutputDirectory>Always</CopyToOutputDirectory>

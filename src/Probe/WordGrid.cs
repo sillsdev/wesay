@@ -13,12 +13,12 @@ namespace WeSay.UI
 	LexiconTreeView _entryList;
 	TreeModelAdapter _modelAdapter;
 
-	#pragma warning disable 649
-		[Widget]
-		protected Gtk.VBox _root;
-		[Widget]
-		protected Gtk.ScrolledWindow _entryScroller;
-	#pragma warning restore 649
+#pragma warning disable 649
+	[Widget]
+	protected Gtk.VBox _root;
+	[Widget]
+	protected Gtk.ScrolledWindow _entryScroller;
+#pragma warning restore 649
 
 
 	public WordGridHandler()//Container container, LexiconModel dataService)
@@ -47,7 +47,6 @@ namespace WeSay.UI
 	  AddColumn(_entryList, "Word", 0, 25, 120);
 	  AddColumn(_entryList, "Gloss", 1, 12, 200);
 
-	  //_entryList.Focused += new FocusedHandler(OnFocused);
 	  _entryList.FocusInEvent += new FocusInEventHandler(OnFocused);
 
 	}

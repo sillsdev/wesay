@@ -31,16 +31,8 @@ namespace WeSay.UnitTests
 
 		Assert.Less(0, lexiconModel.Count);
 
-		LexicalEntry currentLexicalEntry = lexiconModel.CurrentLexicalEntry;
-		Assert.IsNotNull(currentLexicalEntry);
-		Assert.IsTrue(lexiconModel.Contains(currentLexicalEntry));
-		lexiconModel.CurrentLexicalEntry = lexiconModel[2000];
-		Assert.AreNotEqual(currentLexicalEntry, lexiconModel.CurrentLexicalEntry);
-
 		lexiconModel.Filtered = true;
 		Assert.Less(0, lexiconModel.Count);
-		Assert.IsNotNull(lexiconModel.CurrentLexicalEntry);
-		Assert.AreEqual(currentLexicalEntry, lexiconModel.CurrentLexicalEntry);
 		Assert.AreEqual(329, lexiconModel.Count);
 	  }
 	}

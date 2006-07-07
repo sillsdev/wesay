@@ -18,14 +18,6 @@ namespace WeSay.UI
 	Gtk.Window window1;
 	[Widget]
 	Gtk.Notebook _tabControl;
-	[Widget]
-	Gtk.HBox _dummyDetailViewHolder;
-	[Widget]
-	  Gtk.VBox _dummyWordGridViewHolder;
-
-	[Widget]
-	  Gtk.VBox _dummyActionsViewHolder;
-
 #pragma warning restore 649
 	#endregion
 
@@ -48,17 +40,17 @@ namespace WeSay.UI
 		filePath = args[0];
 	  }
 
-		Glade.XML gxml = new Glade.XML("probe.glade", "window1", null);
-		gxml.Autoconnect(this);
+	  Glade.XML gxml = new Glade.XML("probe.glade", "window1", null);
+	  gxml.Autoconnect(this);
 
-		LexiconModel.s_FilePath = filePath;//hack
-		WordActionsView.s_tabcontrol = _tabControl;//hack
+	  LexiconModel.s_FilePath = filePath;//hack
+	  WordActionsView.s_tabcontrol = _tabControl;//hack
 
-		//hold on to your seats... this is where the ui gets built.
-	   // IApplicationContext ctx = new Spring.Context.Support.XmlApplicationContext("file://AppContext.xml"); // ContextRegistry.GetContext();
-		IApplicationContext ctx = new Spring.Context.Support.XmlApplicationContext("assembly://Probe/WeSay.Probe/AppContext.xml"); // ContextRegistry.GetContext();
+	  //hold on to your seats... this is where the ui gets built.
+	  // IApplicationContext ctx = new Spring.Context.Support.XmlApplicationContext("file://AppContext.xml"); // ContextRegistry.GetContext();
+	  IApplicationContext ctx = new Spring.Context.Support.XmlApplicationContext("assembly://Probe/WeSay.Probe/AppContext.xml"); // ContextRegistry.GetContext();
 
-		  _model = (LexiconModel) ctx.GetObject("TheModel");// new LexiconModel(filePath);
+	  _model = (LexiconModel) ctx.GetObject("TheModel");// new LexiconModel(filePath);
 	}
 
 	public void Dispose() {

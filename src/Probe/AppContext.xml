@@ -5,6 +5,10 @@
   <object id="TheModel" type="WeSay.Core.LexiconModel, WeSay.Core">
   </object>
 
+  <object id="BrowseDetailsTab" type="WeSay.UI.BrowseDetailHandler, Probe">
+	<property name="Model" ref ="TheModel"/>
+  </object>
+
   <object id="GridTab" type="WeSay.UI.WordGridHandler, Probe">
 	<property name="Model" ref ="TheModel"/>
   </object>

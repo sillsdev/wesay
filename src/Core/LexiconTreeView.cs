@@ -5,6 +5,7 @@ namespace WeSay.Core
 	public class LexiconTreeView : Gtk.TreeView {
 
 		TreeModelAdapter store;
+	LexiconTreeSelection selection;
 
 		public LexiconTreeView (TreeModelAdapter store) : base (IntPtr.Zero)
 		{
@@ -40,6 +41,15 @@ namespace WeSay.Core
 			AppendColumn (col);
 			return col;
 		}
+
+	public LexiconTreeSelection LexiconTreeSelection {
+	  get {
+		if (selection == null)
+		  selection = new LexiconTreeSelection(Selection);
+		return selection;
+	  }
+	}
+
 	}
 
 }
