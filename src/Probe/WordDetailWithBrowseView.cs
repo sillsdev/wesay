@@ -12,6 +12,7 @@ namespace WeSay.UI
 	LexiconTreeView _entryList;
 	TreeModelAdapter _treeModelAdapter;
 	LexicalEntry _currentLexicalEntry;
+	TernarySearchTree.TstDictionary _allLexicalForms;
 
 #pragma warning disable 649
 	[Widget]
@@ -30,28 +31,27 @@ namespace WeSay.UI
 	public Gtk.VBox _wordDetailWithBrowse_VBox;
 	[Widget]
 	protected Gtk.ScrolledWindow _wordDetailWithBrowse_entryScroller;
+	[Widget]
+	protected Gtk.Entry _wordDetailWithBrowse_entry_gotoWord;
 
 #pragma warning restore 649
 
 	public BrowseDetailHandler() {
-
 	  Glade.XML gxml = new Glade.XML("probe.glade", "_wordDetailWithBrowseHolder", null);
 	  gxml.Autoconnect(this);
 	}
 
-
 	public void AfterPropertiesSet() {
-
 	  _treeModelAdapter = new TreeModelAdapter(_model);
 	  _entryList = new LexiconTreeView(_treeModelAdapter);
 
 	  _wordDetailWithBrowse_entryScroller.Add(_entryList);
 	  _wordDetailWithBrowse_VBox.Reparent(s_tabcontrol);
-	  s_tabcontrol.SetTabLabelText(_wordDetailWithBrowse_VBox, "New Detail");
+	  s_tabcontrol.SetTabLabelText(_wordDetailWithBrowse_VBox, "All words");
 
-	  _wordDetailWithBrowse_word.ModifyFont(Pango.FontDescription.FromString("default 20"));
+	  _wordDetailWithBrowse_word.ModifyFont(Pango.FontDescription.FromString("default 25"));
 	  _wordDetailWithBrowse_gloss.ModifyFont(Pango.FontDescription.FromString("default 15"));
-	  _wordDetailWithBrowse_example.ModifyFont(Pango.FontDescription.FromString("default 20"));
+	  _wordDetailWithBrowse_example.ModifyFont(Pango.FontDescription.FromString("default 25"));
 
 	  _entryList.FixedHeightMode = true;
 	  AddColumn(_entryList, "Entries", 0, 15, 0);
@@ -60,8 +60,44 @@ namespace WeSay.UI
 	  selection.Select(0);
 	  selection.Changed += new EventHandler(selection_Changed);
 
+	  _wordDetailWithBrowse_entry_gotoWord.Completion = new EntryCompletion();
+	  _wordDetailWithBrowse_entry_gotoWord.Completion.TextColumn = 0;
+	  _wordDetailWithBrowse_entry_gotoWord.Completion.MatchFunc = EntryCompletionAlwaysMatchesMatchFunc;
+	  _wordDetailWithBrowse_entry_gotoWord.Completion.InlineCompletion = true;
+	  _wordDetailWithBrowse_entry_gotoWord.Completion.PopupSingleMatch = true;
+
 	  WireEvents();
 	  Update();
+	}
+
+	void ReloadCompletionModel() {
+	  string source = _wordDetailWithBrowse_entry_gotoWord.Text;
+	  if (source.Length != 0) {
+		System.Collections.IList similarWords = _allLexicalForms.NearNeighbors(source, 1);
+		if (similarWords.Count == 0) {
+		  similarWords = _allLexicalForms.NearNeighbors(source, 2);
+		}
+
+		TreeStore store = new TreeStore(typeof(string));
+		foreach (System.Collections.DictionaryEntry d in similarWords) {
+		  TreeIter iter = store.AppendNode();
+		  store.SetValue(iter, 0, d.Key);
+		}
+		_wordDetailWithBrowse_entry_gotoWord.Completion.Model = store;
+	  }
+	}
+
+	void LoadLexicalForms() {
+	  _allLexicalForms = new TernarySearchTree.TstDictionary();
+	  foreach (LexicalEntry entry in _model) {
+		if(!_allLexicalForms.ContainsKey(entry.LexicalForm)){
+		  _allLexicalForms.Add(entry.LexicalForm, entry);
+		}
+	  }
+	}
+
+	static bool EntryCompletionAlwaysMatchesMatchFunc(EntryCompletion entryCompletion, string key, TreeIter iter) {
+	  return true;
 	}
 
 	void selection_Changed(object sender, EventArgs e) {
@@ -99,6 +135,46 @@ namespace WeSay.UI
 	  _wordDetailWithBrowse_gloss.FocusOutEvent += new FocusOutEventHandler(OnGloss_FocusOutEvent);
 	  _wordDetailWithBrowse_example.EditingDone += new EventHandler(OnExample_EditingDone);
 	  _wordDetailWithBrowse_example.FocusOutEvent += new FocusOutEventHandler(OnExample_FocusOutEvent);
+
+	  _wordDetailWithBrowse_entry_gotoWord.TextInserted += new TextInsertedHandler(_wordDetailWithBrowse_entry_gotoWord_TextInserted);
+	  _wordDetailWithBrowse_entry_gotoWord.TextDeleted += new TextDeletedHandler(_wordDetailWithBrowse_entry_gotoWord_TextDeleted);
+
+	  _wordDetailWithBrowse_entry_gotoWord.KeyReleaseEvent += new KeyReleaseEventHandler(_wordDetailWithBrowse_entry_gotoWord_KeyReleaseEvent);
+
+	  _wordDetailWithBrowse_entry_gotoWord.FocusOutEvent += new FocusOutEventHandler(_wordDetailWithBrowse_entry_gotoWord_FocusOutEvent);
+	  _wordDetailWithBrowse_entry_gotoWord.FocusInEvent += new FocusInEventHandler(_wordDetailWithBrowse_entry_gotoWord_FocusInEvent);
+	}
+
+	void _wordDetailWithBrowse_entry_gotoWord_FocusInEvent(object o, FocusInEventArgs args) {
+	  LoadLexicalForms();
+	}
+
+	void _wordDetailWithBrowse_entry_gotoWord_FocusOutEvent(object o, FocusOutEventArgs args) {
+	  _allLexicalForms = null; // save memory over speed and we don't have to worry about keeping anything up to date
+	}
+
+	void _wordDetailWithBrowse_entry_gotoWord_KeyReleaseEvent(object o, KeyReleaseEventArgs args) {
+	  if (args.Event.Key == Gdk.Key.Return) {
+		TernarySearchTree.TstDictionaryEntry e = _allLexicalForms.Find(_wordDetailWithBrowse_entry_gotoWord.Text);
+		if (e != null) {
+		  LexicalEntry lexicalEntry = (LexicalEntry) e.Value;
+		  LexiconTreeSelection selection = _entryList.LexiconTreeSelection;
+		  int index = _model.IndexOf(lexicalEntry);
+		  if (index < _model.Count) {
+			selection.Select(index);
+		  }
+		}
+	  }
+	}
+
+	void _wordDetailWithBrowse_entry_gotoWord_TextDeleted(object o, TextDeletedArgs args) {
+	  ReloadCompletionModel();
+	  args.RetVal = true;
+	}
+
+	void _wordDetailWithBrowse_entry_gotoWord_TextInserted(object o, TextInsertedArgs args) {
+	  ReloadCompletionModel();
+	  args.RetVal = true;
 	}
 
 	void _wordDetailWithBrowse_word_TextDeleted(object o, TextDeletedArgs args) {
