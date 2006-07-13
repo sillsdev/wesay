@@ -4,6 +4,7 @@ using System.Text;
 using Gtk;
 using Glade;
 using WeSay.Core;
+using WeSay.LexicalModel;
 
 namespace WeSay.UI
 {

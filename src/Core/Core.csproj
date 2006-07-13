@@ -135,7 +135,6 @@
 	  <SubType>Code</SubType>
 	</Compile>
 	<Compile Include="LexiconModel.cs" />
-	<Compile Include="LexicalEntry.cs" />
 	<Compile Include="LexiconTreeSelection.cs" />
 	<Compile Include="LexiconTreeView.cs" />
 	<Compile Include="TreeModelAdapter.cs" />
@@ -145,6 +144,12 @@
 	<None Include="WeSay.Core.dll.config">
 	  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	</None>
+  </ItemGroup>
+  <ItemGroup>
+	<ProjectReference Include="..\LexicalModel\LexicalModel.csproj">
+	  <Project>{01E0FA78-E8B8-477A-9609-42AEF9B02932}</Project>
+	  <Name>LexicalModel</Name>
+	</ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

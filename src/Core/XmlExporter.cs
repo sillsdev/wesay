@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Xml;
+using WeSay.LexicalModel;
+
 
 namespace WeSay.Core
 {

@@ -5,6 +5,7 @@ using System.IO;
 using WeSay.Core;
 using System.Xml;
 using System.Collections.Generic;
+using WeSay.LexicalModel;
 
 namespace WeSay.UnitTests
 {
@@ -42,7 +43,7 @@ namespace WeSay.UnitTests
 	public class Test1
 	{
 		[Test]
-		public void Load()
+		public void LoadTestXML()
 		{
 			ObjectContainer database = GetBlankDb("thai5000.yap");
 			try
@@ -53,6 +54,28 @@ namespace WeSay.UnitTests
 				{
 					LexicalEntry entry = new LexicalEntry();
 					entry.LoadFromTestXml(node);
+
+					database.Set(entry);
+				}
+			}
+			finally
+			{
+				database.Close();
+			}
+		}
+
+		[Test]
+		public void LoadTestWeSayXML()
+		{
+			ObjectContainer database = GetBlankDb("thai5000.yap");
+			try
+			{
+				XmlDocument document = new XmlDocument();
+				document.Load(@"c:\WeSay\src\unittests\pwoWeSay.xml");
+				foreach (XmlNode node in document.SelectNodes("lexicon/entry"))
+				{
+					LexicalEntry entry = new LexicalEntry();
+					entry.LoadFromWeSayXml(node);
 
 					database.Set(entry);
 				}

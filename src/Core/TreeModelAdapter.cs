@@ -1,4 +1,5 @@
 using System;
+using WeSay.LexicalModel;
 
 namespace WeSay.Core
 {
@@ -38,7 +39,8 @@ namespace WeSay.Core
 	  //  EmitRowChanged(i);
 	  //}
 	  //--i;
-	  int i = refreshCount - 1;
+	  int i = Math.Max(0, refreshCount - 1);
+
 	  for (int j = 0; j < addCount; ++j) {
 		EmitRowInserted(i + j);
 	  }

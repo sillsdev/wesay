@@ -121,6 +121,10 @@
 	  <Project>{B383F122-EA56-4DB2-8C54-27A9F2E2F2BA}</Project>
 	  <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
 	</ProjectReference>
+	<ProjectReference Include="..\LexicalModel\LexicalModel.csproj">
+	  <Project>{01E0FA78-E8B8-477A-9609-42AEF9B02932}</Project>
+	  <Name>LexicalModel</Name>
+	</ProjectReference>
   </ItemGroup>
   <ItemGroup>
 	<Compile Include="AssemblyInfo.cs">

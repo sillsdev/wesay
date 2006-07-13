@@ -5,6 +5,7 @@ using Gtk;
 using Glade;
 using WeSay.Core;
 using Spring.Objects.Factory;
+using WeSay.LexicalModel;
 
 namespace WeSay.UI
 {

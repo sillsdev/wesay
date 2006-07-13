@@ -51,7 +51,8 @@ namespace WeSay.UI
 	  IApplicationContext ctx = new Spring.Context.Support.XmlApplicationContext("assembly://Probe/WeSay.Probe/AppContext.xml"); // ContextRegistry.GetContext();
 
 	  _model = (LexiconModel) ctx.GetObject("TheModel");// new LexiconModel(filePath);
-	}
+
+   }
 
 	public void Dispose() {
 	  _model.Dispose();

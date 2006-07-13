@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using com.db4o;
 using Gtk;
+using WeSay.LexicalModel;
 
 namespace WeSay.Core
 {
