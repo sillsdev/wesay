@@ -137,6 +137,7 @@
 	<Compile Include="ViewWidget.cs" />
 	<Compile Include="WordActionsView.cs" />
 	<Compile Include="WordDetailView.cs" />
+	<Compile Include="WordDetailWithBrowseView.cs" />
 	<Compile Include="WordGrid.cs" />
 	<None Include="probe.glade">
 	  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -150,6 +151,10 @@
 	<ProjectReference Include="..\LexicalModel\LexicalModel.csproj">
 	  <Project>{01E0FA78-E8B8-477A-9609-42AEF9B02932}</Project>
 	  <Name>LexicalModel</Name>
+	</ProjectReference>
+	<ProjectReference Include="..\TernarySearchTree\TernarySearchTree.csproj">
+	  <Project>{CA7B16B7-B998-4E24-B292-46DA3F84F97A}</Project>
+	  <Name>TernarySearchTree</Name>
 	</ProjectReference>
   </ItemGroup>
   <ItemGroup>

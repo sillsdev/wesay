@@ -34,7 +34,7 @@ namespace WeSay.UI
 	public Driver(string[] args) {
 	  string filePath;
 	  if (args.Length == 0) {
-		filePath = @"c:\WeSay\src\unittests\thai5000.yap";
+		filePath = @"c:\WeSay\src\unittests\TestData\thai5000.yap";
 	  }
 	  else {
 		filePath = args[0];

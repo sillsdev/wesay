@@ -21,35 +21,33 @@ namespace WeSay.UnitTests
 	  Debug.WriteLine(ProcessMemory.WorkingSet + " " + s);
 	}
   }
-
-  [TestFixture]
-  public class DataTest
-  {
-	[Test]
-	public void Main() {
-	  using (LexiconModel lexiconModel = new LexiconModel(@"c:\WeSay\src\unittests\thai5000.yap"))
-	  {
-
-		Assert.Less(0, lexiconModel.Count);
-
-		lexiconModel.Filtered = true;
-		Assert.Less(0, lexiconModel.Count);
-		Assert.AreEqual(329, lexiconModel.Count);
-	  }
+	public class TestBase
+	{
+		protected static string GetDbFilePath(string name)
+		{
+			return @"c:\WeSay\src\unittests\TestData\" + name;
+		}
 	}
-  }
 
 	[TestFixture]
-	public class Test1
+	public class Test1 : TestBase
 	{
+		protected string _outputDir = @"c:\WeSay\output\tests\";
+
+		[SetUp]
+		public void Setup()
+		{
+			System.IO.Directory.CreateDirectory(_outputDir );
+		}
+
 		[Test]
-		public void LoadTestXML()
+		public void LoadThai5000FromTextXML()
 		{
 			ObjectContainer database = GetBlankDb("thai5000.yap");
 			try
 			{
 				XmlDocument document = new XmlDocument();
-				document.Load(@"c:\WeSay\src\unittests\thai5000.xml");
+				document.Load(@"c:\WeSay\src\unittests\TestData\thai5000.xml");
 				foreach (XmlNode node in document.SelectNodes("test/entry"))
 				{
 					LexicalEntry entry = new LexicalEntry();
@@ -57,6 +55,7 @@ namespace WeSay.UnitTests
 
 					database.Set(entry);
 				}
+
 			}
 			finally
 			{
@@ -65,18 +64,16 @@ namespace WeSay.UnitTests
 		}
 
 		[Test]
-		public void LoadTestWeSayXML()
+		public void ImportWeSayXML()
 		{
-			ObjectContainer database = GetBlankDb("thai5000.yap");
+			ObjectContainer database = GetBlankDb("pwo.yap");
 			try
 			{
 				XmlDocument document = new XmlDocument();
-				document.Load(@"c:\WeSay\src\unittests\pwoWeSay.xml");
+				document.Load(@"c:\WeSay\src\unittests\TestData\pwo.xws");
 				foreach (XmlNode node in document.SelectNodes("lexicon/entry"))
 				{
-					LexicalEntry entry = new LexicalEntry();
-					entry.LoadFromWeSayXml(node);
-
+					LexicalEntry entry = WeSayLexicalImporter.LoadFromWeSayXml(node);
 					database.Set(entry);
 				}
 			}
@@ -142,10 +139,7 @@ namespace WeSay.UnitTests
 			return db;
 		}
 
-		private static string GetDbFilePath(string name)
-		{
-			return @"c:\WeSay\src\unittests\" + name;
-		}
+
 
 		private static void SetupIndices(com.db4o.config.Configuration config)
 		{
@@ -156,23 +150,38 @@ namespace WeSay.UnitTests
 		}
 
 		[Test]
-		public void Export()
+		public void ExportThai5000()
 		{
-			using (LexiconModel model = new LexiconModel(@"c:\WeSay\src\unittests\thai5000.yap"))
+			using (LexiconModel model = new LexiconModel(GetDbFilePath("thai5000.yap")))
 			{
-				XmlExporter exporter = new XmlExporter(model);
-				string path = @"c:\WeSay\src\unittests\wordsExport.xml";
-				System.IO.File.Delete(path);
+				WeSayExporter exporter = new WeSayExporter(model);
+				string path = _outputDir+"wordsExport.xml";
+				if(File.Exists(path))
+					System.IO.File.Delete(path);
 				exporter.Export(path);
 				Assert.IsTrue(File.Exists(path),"Could not find the file that was supposed to be exported.");
 				XmlDocument document = new XmlDocument();
 				document.Load(path);
 				Assert.AreEqual(model.Count, document.SelectNodes("lexicon/entry").Count, "The resulting file had the wrong number of words in it.");
 
-			   path = @"c:\WeSay\src\unittests\wordsExport.zip";
+				path = _outputDir+"wordsExport.zip";
 			   System.IO.File.Delete(path);
 			   exporter.ExportToZip(path);
 			   Assert.IsTrue(File.Exists(path),"Could not find the zip file that was supposed to be exported.");
+			}
+		}
+
+		[Test]
+		public void Filter()
+		{
+			using (LexiconModel lexiconModel = new LexiconModel(GetDbFilePath("thai5000.yap")))
+			{
+
+				Assert.Less(0, lexiconModel.Count);
+
+				lexiconModel.Filtered = true;
+				Assert.Less(0, lexiconModel.Count);
+				Assert.AreEqual(329, lexiconModel.Count);
 			}
 		}
 	}

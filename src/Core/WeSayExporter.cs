@@ -7,10 +7,10 @@ using WeSay.LexicalModel;
 
 namespace WeSay.Core
 {
-	public class XmlExporter
+	public class WeSayExporter
 	{
 		protected LexiconModel _model;
-		public XmlExporter(LexiconModel model)
+		public WeSayExporter(LexiconModel model)
 		{
 			this._model = model;
 		}
@@ -36,25 +36,12 @@ namespace WeSay.Core
 
 			foreach (LexicalEntry entry in this._model)
 			{
-				writer.WriteStartElement("entry");
-
-				WriteMultilingualString(writer, "lexicalForm", entry.LexicalForm);
-				WriteMultilingualString(writer, "gloss", entry.Gloss);
-				WriteMultilingualString(writer, "example", entry.Example);
-				writer.WriteEndElement();
+				WeSayLexicalExporter.Write(writer, entry);
 
 			}
 			 writer.WriteEndElement();
 			 writer.WriteEndDocument();
 			 writer.Close();
 	   }
-
-		private static void WriteMultilingualString(XmlWriter writer, string elementName, string s)
-		{
-			writer.WriteStartElement(elementName);
-			writer.WriteAttributeString("ws", "??");
-			writer.WriteString(s);
-			writer.WriteEndElement();
-		}
 	}
 }

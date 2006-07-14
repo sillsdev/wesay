@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lexicon>
+  <entry id='115f5359-8290-40d9-a708-641d474383aa' dateCreated='2003-08-07' dateModified='2003-07-10'>
+	<lexicalForm ws="xkal">alpha</lexicalForm>
+	<sense>
+	  <pos ws="Eng">trans</pos>
+	  <gloss ws="Eng">to.see</gloss>
+	</sense>
+	<sense>
+	  <pos ws="Eng">trans</pos>
+	  <gloss ws="Eng">to.understand</gloss>
+	</sense>
+  </entry>
+</lexicon>

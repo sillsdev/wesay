@@ -57,7 +57,7 @@ namespace WeSay.UI
 
 		void _btnNewWordsToUSB_Clicked(object sender, EventArgs e)
 		{
-			XmlExporter exporter = new XmlExporter(this._model);
+			WeSayExporter exporter = new WeSayExporter(this._model);
 			string p = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal);
 			p = System.IO.Path.Combine(p, "words.zip");
 

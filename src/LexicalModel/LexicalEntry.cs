@@ -29,20 +29,6 @@ namespace WeSay.LexicalModel
 			return n.InnerText;
 		}
 
-		public void LoadFromWeSayXml(System.Xml.XmlNode node)
-		{
-			_lexicalForm = GetFieldFromWeSayXml(node, "lexicalForm", "unknown!");
-			_gloss = GetFieldFromWeSayXml(node, "sense/gloss[@ws='Eng']", null);
-			_example = GetFieldFromWeSayXml(node, "sense/exampleGroup/example", null);
-		}
-		private static string GetFieldFromWeSayXml(System.Xml.XmlNode node, string elementName, string defaultValue)
-		{
-			System.Xml.XmlNode n = node.SelectSingleNode(elementName);
-			if (n == null)
-				return defaultValue;
-			return n.InnerText;
-		}
-
 	  private string StringOrEmpty(string s) {
 		if (s == null) {
 		  return string.Empty;

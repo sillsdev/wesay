@@ -138,7 +138,7 @@
 	<Compile Include="LexiconTreeSelection.cs" />
 	<Compile Include="LexiconTreeView.cs" />
 	<Compile Include="TreeModelAdapter.cs" />
-	<Compile Include="XmlExporter.cs" />
+	<Compile Include="WeSayExporter.cs" />
   </ItemGroup>
   <ItemGroup>
 	<None Include="WeSay.Core.dll.config">
