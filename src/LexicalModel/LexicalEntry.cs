@@ -9,6 +9,13 @@ namespace WeSay.LexicalModel
 		private string _lexicalForm;
 		private string _gloss;
 		private string _example;
+		private Guid _guid;
+
+		public Guid Guid
+		{
+			get { return _guid; }
+			set { _guid = value; }
+		}
 
 		public LexicalEntry()
 		{
@@ -21,6 +28,9 @@ namespace WeSay.LexicalModel
 			_gloss = GetFieldFromTestXml(node,"gloss",null);
 			_example = GetFieldFromTestXml(node, "example",null);
 		}
+
+
+
 		private static string GetFieldFromTestXml(System.Xml.XmlNode node, string elementName, string defaultValue)
 		{
 			System.Xml.XmlNode n= node.SelectSingleNode(elementName);
