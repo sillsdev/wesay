@@ -7,8 +7,8 @@
 	<ProjectGuid>{54BFA315-50DD-40AE-86CA-348B01F57A95}</ProjectGuid>
 	<OutputType>Library</OutputType>
 	<AppDesignerFolder>Properties</AppDesignerFolder>
-	<RootNamespace>FieldWorksImport.Tests</RootNamespace>
-	<AssemblyName>FieldWorksImport.Tests</AssemblyName>
+	<RootNamespace>WeSayImportIntoFW.Tests</RootNamespace>
+	<AssemblyName>WeSayImportIntoFW.Tests</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
 	<DebugSymbols>true</DebugSymbols>
@@ -53,7 +53,7 @@
 	<Compile Include="WeSayImportTests.cs" />
   </ItemGroup>
   <ItemGroup>
-	<ProjectReference Include="..\FieldWorksImport\FieldWorksImport.csproj">
+	<ProjectReference Include="..\WeSayImportIntoFW\WeSayImportIntoFW.csproj">
 	  <Project>{2D97902D-CF72-4612-8AB9-B931514642EA}</Project>
 	  <Name>FieldWorksImport</Name>
 	</ProjectReference>
@@ -64,7 +64,7 @@
   </ItemGroup>
   <ItemGroup>
 	<Content Include="TestData\ChangedEntry.xml" />
-	<Content Include="TestData\WeSaySample1.xml" />
+	<Content Include="TestData\WeSayForDemo.wesay.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

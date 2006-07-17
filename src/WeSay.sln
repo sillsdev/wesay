@@ -19,9 +19,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TernarySearchTree.Tests", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TernarySearchTree", "TernarySearchTree\TernarySearchTree.csproj", "{CA7B16B7-B998-4E24-B292-46DA3F84F97A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FieldWorksImport", "FieldWorksImport\FieldWorksImport.csproj", "{2D97902D-CF72-4612-8AB9-B931514642EA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeSayImportIntoFW", "WeSayImportIntoFW\WeSayImportIntoFW.csproj", "{2D97902D-CF72-4612-8AB9-B931514642EA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FieldWorksImport.Tests", "FieldWorksImport.Tests\FieldWorksImport.Tests.csproj", "{54BFA315-50DD-40AE-86CA-348B01F57A95}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeSayImportIntoFW.Tests", "WeSayImportIntoFW.Tests\WeSayImportIntoFW.Tests.csproj", "{54BFA315-50DD-40AE-86CA-348B01F57A95}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
