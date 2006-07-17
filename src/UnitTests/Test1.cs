@@ -73,7 +73,7 @@ namespace WeSay.UnitTests
 				document.Load(@"c:\WeSay\src\unittests\TestData\pwo.xws");
 				foreach (XmlNode node in document.SelectNodes("lexicon/entry"))
 				{
-					LexicalEntry entry = WeSayLexicalImporter.LoadFromWeSayXml(node);
+					LexicalEntry entry = LiftImporter.LoadFromWeSayXml(node);
 					database.Set(entry);
 				}
 			}

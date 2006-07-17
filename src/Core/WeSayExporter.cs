@@ -36,7 +36,7 @@ namespace WeSay.Core
 
 			foreach (LexicalEntry entry in this._model)
 			{
-				WeSayLexicalExporter.Write(writer, entry);
+				LiftExporter.Write(writer, entry);
 
 			}
 			 writer.WriteEndElement();

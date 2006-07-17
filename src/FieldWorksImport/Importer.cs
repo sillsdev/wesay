@@ -6,10 +6,8 @@ using System.Diagnostics;
 using SIL.FieldWorks.FDO;
 using SIL.FieldWorks.FDO.Cellar;
 using SIL.FieldWorks.FDO.Cellar.Generated;
-//using SIL.FieldWorks.FDO.FDOTests;
 using SIL.FieldWorks.FDO.Ling;
 using SIL.FieldWorks.FDO.Ling.Generated;
-//using SIL.FieldWorks.Common.Utils;
 
 namespace WeSay.FieldWorks
 {
@@ -28,28 +26,73 @@ namespace WeSay.FieldWorks
 		{
 			XmlDocument doc = new XmlDocument();
 			doc.Load(path);
+
 			foreach (XmlNode node in doc.SelectNodes("lexicon/entry"))
 			{
-				WeSay.LexicalModel.LexicalEntry weSayEntry =
-					WeSay.LexicalModel.WeSayLexicalImporter.LoadFromWeSayXml(node);
-
-				Guid guid = weSayEntry.Guid;
-				int hvo = _cache.GetIdFromGuid(guid);
-				if (hvo > 0)
-				{
-					LexEntry existing = LexEntry.CreateFromDBObject(_cache, hvo);
-
-					//MultiStringAccessor a = new MultiStringAccessor(_cache, 0, 0, null);
-					//existing.LexemeFormOA.Form.MergeAlternatives();
-				}
-				else
-				{
-					MakeFwEntryFromWeSayEntry(weSayEntry);
-				}
+				ImportOneEntry(node);
 			}
 		}
 
-		private LexEntry MakeFwEntryFromWeSayEntry(WeSay.LexicalModel.LexicalEntry weSayEntry)
+
+		/// <summary>
+		/// Import a single entry selected out of a Lift file. For test use.
+		/// </summary>
+		/// <param name="path"></param>
+		/// <param name="xpath"></param>
+		/// <returns>either the entry which was created were merged into</returns>
+		public SIL.FieldWorks.FDO.Ling.LexEntry ImportOneWeSayEntry(string path, string xpath)
+		{
+			XmlDocument doc = new XmlDocument();
+			doc.Load(path);
+			return ImportOneEntry(doc.SelectSingleNode(xpath));
+		}
+
+		private SIL.FieldWorks.FDO.Ling.LexEntry ImportOneEntry(XmlNode node)
+		{
+			SIL.FieldWorks.FDO.Ling.LexEntry flexEntry;
+			WeSay.LexicalModel.LexicalEntry weSayEntry = WeSay.LexicalModel.LiftImporter.LoadFromWeSayXml(node);
+
+			Guid guid = weSayEntry.Guid;
+			int hvo = _cache.GetIdFromGuid(guid);
+			if (hvo > 0)
+			{
+				flexEntry = LexEntry.CreateFromDBObject(_cache, hvo);
+			   // if (((LexSense)flexEntry.SensesOS[0]).Gloss.AnalysisDefaultWritingSystem != weSayEntry.Gloss)
+				MergeAnalysisString(((LexSense)flexEntry.SensesOS[0]).Gloss,weSayEntry.Gloss);
+				MergeVernacularString(flexEntry.LexemeFormOA.Form,weSayEntry.LexicalForm);
+				MergeVernacularString(((LexExampleSentence)((LexSense)flexEntry.SensesOS[0]).ExamplesOS[0]).Example,weSayEntry.Example);
+			}
+			else
+			{
+				flexEntry = MakeFwEntryFromWeSayEntry(weSayEntry);
+			}
+			return flexEntry;
+		}
+
+
+		private void MergeAnalysisString(MultiUnicodeAccessor fwString, string wsString)
+		{
+			if(wsString.Length >0)
+				fwString.AnalysisDefaultWritingSystem = wsString;
+
+			//MultiStringAccessor a = new MultiStringAccessor(_cache, 0, 0, null);
+			//existing.LexemeFormOA.Form.MergeAlternatives();
+		}
+
+		private void MergeVernacularString (MultiUnicodeAccessor fwString, string wsString)
+		{
+			if (wsString.Length > 0)
+				fwString.VernacularDefaultWritingSystem = wsString;
+
+		}
+
+		private void MergeVernacularString (MultiStringAccessor fwString, string wsString)
+		{
+			if (wsString.Length > 0)
+				fwString.VernacularDefaultWritingSystem.Text = wsString;
+		}
+
+		private SIL.FieldWorks.FDO.Ling.LexEntry MakeFwEntryFromWeSayEntry(WeSay.LexicalModel.LexicalEntry weSayEntry)
 		{
 			//MoStemMsa msa = new MoStemMsa();
 			//// I wouldn't even *pretend* to understand this weirdness. Is 'dummy' a technical term?

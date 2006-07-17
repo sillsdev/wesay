@@ -20,7 +20,6 @@ namespace WeSay.FieldWorks
 	{
 		protected FdoCache m_cache;
 
-
 		[Test]
 		public void LoadWeSay()
 		{
@@ -28,8 +27,13 @@ namespace WeSay.FieldWorks
 			int count = m_cache.LanguageProject.LexicalDatabaseOA.EntriesOC.Count;
 			importer.ImportWeSayFile(GetSampleFilePath("WeSaySample1.xml"));
 			Assert.AreEqual(1+count, m_cache.LanguageProject.LexicalDatabaseOA.EntriesOC.Count);
-			importer.ImportWeSayFile(GetSampleFilePath("WeSaySample1.xml"));
+
+			SIL.FieldWorks.FDO.Ling.LexEntry e = importer.ImportOneWeSayEntry(GetSampleFilePath("ChangedEntry.xml"), "lexicon/entry[@testid='1']");
 			Assert.AreEqual(1+count, m_cache.LanguageProject.LexicalDatabaseOA.EntriesOC.Count, "should have merged");
+			Assert.IsTrue(((LexSense)e.SensesOS[0]).Gloss.AnalysisDefaultWritingSystem.Contains("changed"),"gloss not merged.");
+			Assert.IsTrue(e.LexemeFormOA.Form.VernacularDefaultWritingSystem.Contains("changed"),"lexeme form not merged.");
+
+
 	   }
 
 	   [NUnit.Framework.TearDown]
