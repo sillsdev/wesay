@@ -7,8 +7,8 @@
 	<ProjectGuid>{2D97902D-CF72-4612-8AB9-B931514642EA}</ProjectGuid>
 	<OutputType>Library</OutputType>
 	<AppDesignerFolder>Properties</AppDesignerFolder>
-	<RootNamespace>FieldWorksImport</RootNamespace>
-	<AssemblyName>FieldWorksImport</AssemblyName>
+	<RootNamespace>WeSayImportIntoFW</RootNamespace>
+	<AssemblyName>WeSayImportIntoFW</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
 	<DebugSymbols>true</DebugSymbols>
