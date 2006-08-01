@@ -53,10 +53,6 @@
 	<Compile Include="WeSayImportTests.cs" />
   </ItemGroup>
   <ItemGroup>
-	<ProjectReference Include="..\WeSayImportIntoFW\WeSayImportIntoFW.csproj">
-	  <Project>{2D97902D-CF72-4612-8AB9-B931514642EA}</Project>
-	  <Name>FieldWorksImport</Name>
-	</ProjectReference>
 	<ProjectReference Include="..\LexicalModel\LexicalModel.csproj">
 	  <Project>{01E0FA78-E8B8-477A-9609-42AEF9B02932}</Project>
 	  <Name>LexicalModel</Name>
