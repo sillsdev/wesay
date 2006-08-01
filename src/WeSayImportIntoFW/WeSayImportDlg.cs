@@ -10,7 +10,7 @@ using SIL.FieldWorks.FDO;
 
 namespace WeSay.FieldWorks
 {
-	public partial class WeSayImportDlg : Form, SIL.FieldWorks.LexText.Controls.IFwConnectedDialog
+	public partial class WeSayImportDlg : Form, SIL.FieldWorks.LexText.Controls.IFwExtension
 	{
 		private FdoCache _cache;
 		private XCore.Mediator _mediator;
@@ -19,11 +19,11 @@ namespace WeSay.FieldWorks
 			InitializeComponent();
 		}
 		/// <summary>
-		/// From IFwConnectedDialog
+		/// From IFwExtension
 		/// </summary>
 		/// <param name="cache"></param>
 		/// <param name="mediator"></param>
-		void SIL.FieldWorks.LexText.Controls.IFwConnectedDialog.Init(FdoCache cache, XCore.Mediator mediator)
+		void SIL.FieldWorks.LexText.Controls.IFwExtension.Init(FdoCache cache, XCore.Mediator mediator)
 		{
 			_cache = cache;
 			_mediator = mediator;

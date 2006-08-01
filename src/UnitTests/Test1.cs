@@ -92,8 +92,7 @@ namespace WeSay.UnitTests
 				ProcessMemory.Write("Start of READ");
 
 				com.db4o.query.Query query = database.Query();
-				//query.Constrain(typeof(UtteranceHistory));
-				//query.Descend("_utteranceKey").Constrain(this.GUID.ToString());
+				query.Constrain(typeof(LexicalModel.LexicalEntry));
 				com.db4o.config.Configuration config = Db4o.Configure();
 				//config.ActivationDepth(0);
 
