@@ -28,7 +28,7 @@
 	</UpgradeBackupLocation>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-	<OutputPath>..\..\output\debug\</OutputPath>
+	<OutputPath>..\..\..\output\prototype\debug\</OutputPath>
 	<AllowUnsafeBlocks>false</AllowUnsafeBlocks>
 	<BaseAddress>285212672</BaseAddress>
 	<CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
