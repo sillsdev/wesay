@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <commands>
+	<command id="CmdImportWeSayData" label="WeSay Words..."  message="LaunchConnectedDialog">
+	  <parameters>
+		<dynamicloaderinfo assemblyPath="WeSayImportIntoFW.dll" class="WeSay.FieldWorks.WeSayImportDlg" notFoundMessage="FieldWorks could not find a suitable installation of WeSay: words on your system.  Please make sure that we say: words is installed. If it is installed in an unusual place, its location must part of your PATH environment variable."/>
+	  </parameters>
+	</command>
+  </commands>
+
+  <menuAddOn>
+	  <menu id="Import" label="_Import">
+		<item command="CmdImportWeSayData"/>
+	  </menu>
+  </menuAddOn>
+</root>

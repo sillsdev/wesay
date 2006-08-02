@@ -1,0 +1,172 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+	<ProjectType>Local</ProjectType>
+	<ProductVersion>8.0.50727</ProductVersion>
+	<SchemaVersion>2.0</SchemaVersion>
+	<ProjectGuid>{DAD7A473-C55C-447B-AAD2-D28EF00BF97A}</ProjectGuid>
+	<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+	<ApplicationIcon>
+	</ApplicationIcon>
+	<AssemblyKeyContainerName>
+	</AssemblyKeyContainerName>
+	<AssemblyName>Probe</AssemblyName>
+	<AssemblyOriginatorKeyFile>
+	</AssemblyOriginatorKeyFile>
+	<DefaultClientScript>JScript</DefaultClientScript>
+	<DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
+	<DefaultTargetSchema>IE50</DefaultTargetSchema>
+	<DelaySign>false</DelaySign>
+	<OutputType>WinExe</OutputType>
+	<RootNamespace>WeSay.Probe</RootNamespace>
+	<RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+	<StartupObject>
+	</StartupObject>
+	<FileUpgradeFlags>
+	</FileUpgradeFlags>
+	<UpgradeBackupLocation>
+	</UpgradeBackupLocation>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+	<OutputPath>..\..\output\debug\</OutputPath>
+	<AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+	<BaseAddress>285212672</BaseAddress>
+	<CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+	<ConfigurationOverrideFile>
+	</ConfigurationOverrideFile>
+	<DefineConstants>DEBUG;TRACE</DefineConstants>
+	<DocumentationFile>
+	</DocumentationFile>
+	<DebugSymbols>true</DebugSymbols>
+	<FileAlignment>4096</FileAlignment>
+	<NoStdLib>false</NoStdLib>
+	<NoWarn>
+	</NoWarn>
+	<Optimize>false</Optimize>
+	<RegisterForComInterop>false</RegisterForComInterop>
+	<RemoveIntegerChecks>false</RemoveIntegerChecks>
+	<TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+	<WarningLevel>4</WarningLevel>
+	<DebugType>full</DebugType>
+	<ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+	<OutputPath>bin\Release\</OutputPath>
+	<AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+	<BaseAddress>285212672</BaseAddress>
+	<CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+	<ConfigurationOverrideFile>
+	</ConfigurationOverrideFile>
+	<DefineConstants>TRACE</DefineConstants>
+	<DocumentationFile>
+	</DocumentationFile>
+	<DebugSymbols>false</DebugSymbols>
+	<FileAlignment>4096</FileAlignment>
+	<NoStdLib>false</NoStdLib>
+	<NoWarn>
+	</NoWarn>
+	<Optimize>true</Optimize>
+	<RegisterForComInterop>false</RegisterForComInterop>
+	<RemoveIntegerChecks>false</RemoveIntegerChecks>
+	<TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+	<WarningLevel>4</WarningLevel>
+	<DebugType>none</DebugType>
+	<ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+	<Reference Include="atk-sharp">
+	  <Name>atk-sharp</Name>
+	  <HintPath>..\..\..\GTK\2.8\lib\gtk-sharp-2.0\atk-sharp.dll</HintPath>
+	  <AssemblyFolderKey>hklm\gtk-sharp</AssemblyFolderKey>
+	</Reference>
+	<Reference Include="gdk-sharp">
+	  <Name>gdk-sharp</Name>
+	  <HintPath>..\..\..\GTK\2.8\lib\gtk-sharp-2.0\gdk-sharp.dll</HintPath>
+	  <AssemblyFolderKey>hklm\gtk-sharp</AssemblyFolderKey>
+	</Reference>
+	<Reference Include="glade-sharp">
+	  <Name>glade-sharp</Name>
+	  <HintPath>..\..\..\GTK\2.8\lib\gtk-sharp-2.0\glade-sharp.dll</HintPath>
+	  <AssemblyFolderKey>hklm\gtk-sharp</AssemblyFolderKey>
+	</Reference>
+	<Reference Include="glib-sharp">
+	  <Name>glib-sharp</Name>
+	  <HintPath>..\..\..\GTK\2.8\lib\gtk-sharp-2.0\glib-sharp.dll</HintPath>
+	  <AssemblyFolderKey>hklm\gtk-sharp</AssemblyFolderKey>
+	</Reference>
+	<Reference Include="gtk-sharp">
+	  <Name>gtk-sharp</Name>
+	  <HintPath>..\..\..\GTK\2.8\lib\gtk-sharp-2.0\gtk-sharp.dll</HintPath>
+	  <AssemblyFolderKey>hklm\gtk-sharp</AssemblyFolderKey>
+	</Reference>
+	<Reference Include="log4net, Version=1.2.9.0, Culture=neutral, PublicKeyToken=b32731d11ce58905">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\Spring.NET\log4net.dll</HintPath>
+	</Reference>
+	<Reference Include="pango-sharp">
+	  <Name>pango-sharp</Name>
+	  <HintPath>..\..\..\GTK\2.8\lib\gtk-sharp-2.0\pango-sharp.dll</HintPath>
+	  <AssemblyFolderKey>hklm\gtk-sharp</AssemblyFolderKey>
+	</Reference>
+	<Reference Include="Spring.Core, Version=1.1.0.0, Culture=neutral, PublicKeyToken=65e474d141e25e07">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\Spring.NET\Spring.Core.dll</HintPath>
+	</Reference>
+	<Reference Include="Spring.Services, Version=1.1.0.0, Culture=neutral, PublicKeyToken=65e474d141e25e07">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\Spring.NET\Spring.Services.dll</HintPath>
+	</Reference>
+	<Reference Include="System">
+	  <Name>System</Name>
+	</Reference>
+	<Reference Include="System.Data">
+	  <Name>System.Data</Name>
+	</Reference>
+	<Reference Include="System.Windows.Forms" />
+	<Reference Include="System.XML">
+	  <Name>System.XML</Name>
+	</Reference>
+  </ItemGroup>
+  <ItemGroup>
+	<Compile Include="AssemblyInfo.cs">
+	  <SubType>Code</SubType>
+	</Compile>
+	<Compile Include="Driver.cs">
+	  <SubType>Code</SubType>
+	</Compile>
+	<Compile Include="ViewWidget.cs" />
+	<Compile Include="WordActionsView.cs" />
+	<Compile Include="WordDetailView.cs" />
+	<Compile Include="WordDetailWithBrowseView.cs" />
+	<Compile Include="WordGrid.cs" />
+	<None Include="probe.glade">
+	  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	</None>
+  </ItemGroup>
+  <ItemGroup>
+	<ProjectReference Include="..\Core\Core.csproj">
+	  <Project>{B383F122-EA56-4DB2-8C54-27A9F2E2F2BA}</Project>
+	  <Name>Core</Name>
+	</ProjectReference>
+	<ProjectReference Include="..\LexicalModel\LexicalModel.csproj">
+	  <Project>{01E0FA78-E8B8-477A-9609-42AEF9B02932}</Project>
+	  <Name>LexicalModel</Name>
+	</ProjectReference>
+	<ProjectReference Include="..\TernarySearchTree\TernarySearchTree.csproj">
+	  <Project>{CA7B16B7-B998-4E24-B292-46DA3F84F97A}</Project>
+	  <Name>TernarySearchTree</Name>
+	</ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+	<EmbeddedResource Include="AppContext.xml">
+	  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	</EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+	<PreBuildEvent>
+	</PreBuildEvent>
+	<PostBuildEvent>
+	</PostBuildEvent>
+  </PropertyGroup>
+</Project>
