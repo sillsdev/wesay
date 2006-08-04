@@ -4,11 +4,11 @@
 	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
 	<ProductVersion>8.0.50727</ProductVersion>
 	<SchemaVersion>2.0</SchemaVersion>
-	<ProjectGuid>{5F61C809-B6C0-4567-9603-B2198E1AD038}</ProjectGuid>
+	<ProjectGuid>{6366719E-DA80-4680-9E06-D9BC6F340DE3}</ProjectGuid>
 	<OutputType>Library</OutputType>
 	<AppDesignerFolder>Properties</AppDesignerFolder>
-	<RootNamespace>WeSay.LexicalModel</RootNamespace>
-	<AssemblyName>LexicalModel</AssemblyName>
+	<RootNamespace>WeSay.Language.Tests</RootNamespace>
+	<AssemblyName>Language.Tests</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
 	<DebugSymbols>true</DebugSymbols>
@@ -28,14 +28,17 @@
 	<WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+	<Reference Include="nunit.framework, Version=2.2.8.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\nunit.framework.dll</HintPath>
+	</Reference>
 	<Reference Include="System" />
 	<Reference Include="System.Data" />
 	<Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-	<Compile Include="LexicalEntry.cs" />
+	<Compile Include="Main.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />
-	<Compile Include="WritingSystem.cs" />
   </ItemGroup>
   <ItemGroup>
 	<ProjectReference Include="..\Language\Language.csproj">

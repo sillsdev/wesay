@@ -4,11 +4,11 @@
 	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
 	<ProductVersion>8.0.50727</ProductVersion>
 	<SchemaVersion>2.0</SchemaVersion>
-	<ProjectGuid>{5F61C809-B6C0-4567-9603-B2198E1AD038}</ProjectGuid>
+	<ProjectGuid>{39DF05AB-8B2E-4CCA-8525-E0D6473E6E65}</ProjectGuid>
 	<OutputType>Library</OutputType>
 	<AppDesignerFolder>Properties</AppDesignerFolder>
-	<RootNamespace>WeSay.LexicalModel</RootNamespace>
-	<AssemblyName>LexicalModel</AssemblyName>
+	<RootNamespace>WeSay.Language</RootNamespace>
+	<AssemblyName>Language</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
 	<DebugSymbols>true</DebugSymbols>
@@ -33,15 +33,8 @@
 	<Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-	<Compile Include="LexicalEntry.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />
 	<Compile Include="WritingSystem.cs" />
-  </ItemGroup>
-  <ItemGroup>
-	<ProjectReference Include="..\Language\Language.csproj">
-	  <Project>{39DF05AB-8B2E-4CCA-8525-E0D6473E6E65}</Project>
-	  <Name>Language</Name>
-	</ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
