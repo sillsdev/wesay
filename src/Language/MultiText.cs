@@ -4,10 +4,10 @@ using System.Text;
 
 namespace WeSay.Language
 {
-	class WritingSystem
+	class MultiText
 	{
 		protected System.Collections.Generic.Dictionary<string, string> _forms;
-		public WritingSystem()
+		public MultiText()
 		{
 			_forms = new Dictionary<string, string>();
 		}
