@@ -4,7 +4,7 @@ using System.Text;
 
 namespace WeSay.Language
 {
-	class MultiText
+	public class MultiText
 	{
 		protected System.Collections.Generic.Dictionary<string, string> _forms;
 		public MultiText()
