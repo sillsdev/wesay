@@ -33,14 +33,19 @@
 	<Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-	<Compile Include="LexicalEntry.cs" />
+	<Compile Include="LexEntry.cs" />
+	<Compile Include="LexExampleSentence.cs" />
+	<Compile Include="LexSense.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />
-	<Compile Include="WritingSystem.cs" />
   </ItemGroup>
   <ItemGroup>
 	<ProjectReference Include="..\Language\Language.csproj">
 	  <Project>{39DF05AB-8B2E-4CCA-8525-E0D6473E6E65}</Project>
 	  <Name>Language</Name>
+	</ProjectReference>
+	<ProjectReference Include="..\WeSay.Base\WeSay.Base.csproj">
+	  <Project>{08D8E88F-969F-406F-9DA4-00FA2ACE884F}</Project>
+	  <Name>WeSay.Base</Name>
 	</ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
