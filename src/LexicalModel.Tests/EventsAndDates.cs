@@ -8,7 +8,7 @@ using WeSay.LexicalModel;
 namespace LexicalModel.Tests
 {
 	[TestFixture]
-	public class Test1
+	public class EventsAndDates
 	{
 		[SetUp]
 		public void Setup()
