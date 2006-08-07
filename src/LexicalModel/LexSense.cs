@@ -6,27 +6,44 @@ using WeSay.Language;
 
 namespace WeSay.LexicalModel
 {
-	public class LexSense : INotifyPropertyChanged
+	public class LexSense
 	{
 		private MultiText _gloss;
-		private System.Collections.Generic.List<LexExampleSentence> _exampleSentences;
+		private BindingList<LexExampleSentence> _exampleSentences;
+
+		  private event PropertyChangedEventHandler _propertyChangedHandler;
 
 		/// <summary>
-		/// For INotifyPropertyChanged
+		///
 		/// </summary>
-		public event PropertyChangedEventHandler PropertyChanged;
-
-		public LexSense()
+		/// <param name="propertyChangedHandler">at this time, we are not taking note of
+		/// changes at the sense level, only at the entry level.  So this is the owning
+		/// lexical entry's change event.</param>
+		public LexSense(PropertyChangedEventHandler propertyChangedHandler)
 		{
-			PropertyChanged += new PropertyChangedEventHandler(OnPropertyChanged);
-			_gloss = new MultiText(PropertyChanged);
-			_exampleSentences = new List<LexExampleSentence>();
+			_propertyChangedHandler = propertyChangedHandler;
+			_gloss = new MultiText(propertyChangedHandler);
+			_exampleSentences = new BindingList<LexExampleSentence>();
+
+			//nb: order of these two is important.  Touching adding new actually triggers ListChanged!
+			_exampleSentences.AddingNew += new AddingNewEventHandler(OnExampleSentences_AddingNew);
+			_exampleSentences.ListChanged += new ListChangedEventHandler(OnExampleSentences_ListChanged);
+
 		}
 
-		void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
+		void OnExampleSentences_ListChanged(object sender, ListChangedEventArgs e)
 		{
-			//if we added modified date to sense, we'd set it here.
+			NotifyPropertyChanged("Example Sentences");
 		}
+
+		void OnExampleSentences_AddingNew(object sender, AddingNewEventArgs e)
+		{
+			e.NewObject = new LexExampleSentence(this._propertyChangedHandler);
+		}
+
+		//public LexSense()
+		//{
+		//}
 
 		public MultiText Gloss
 		{
@@ -34,7 +51,7 @@ namespace WeSay.LexicalModel
 		  //  set { _gloss = value; }
 		}
 
-		public List<LexExampleSentence> ExampleSentences
+		public BindingList<LexExampleSentence> ExampleSentences
 		{
 			get { return _exampleSentences; }
 		   // set { _exampleSentences = value; }
@@ -42,10 +59,19 @@ namespace WeSay.LexicalModel
 
 		private void NotifyPropertyChanged(string info)
 		{
-			if (PropertyChanged != null)
+			if (_propertyChangedHandler != null)
 			{
-				PropertyChanged(this, new PropertyChangedEventArgs(info));
+				_propertyChangedHandler(this, new PropertyChangedEventArgs(info));
 			}
 		}
+
+		///// <summary>
+		///// called by owning LexEntry
+		///// </summary>
+		///// <param name="propertyChangedEventHandler"></param>
+		//internal void WireUp(PropertyChangedEventHandler propertyChangedEventHandler)
+		//{
+		//    this._propertyChangedHandler = propertyChangedEventHandler;
+		//}
 	}
 }
