@@ -10,19 +10,18 @@ namespace WeSay.Language
 	/// MultiText holds an array of strings, indexed by writing system ID.
 	/// These are simple, single language Unicode strings.
 	/// </summary>
-	public class MultiText
+	public class MultiText : INotifyPropertyChanged
 	{
 		/// <summary>
 		/// For INotifyPropertyChanged
 		/// </summary>
-		private event PropertyChangedEventHandler _propertyChangedHandler;
+		public event PropertyChangedEventHandler PropertyChanged;
 
 		protected System.Collections.Generic.Dictionary<string, string> _forms;
 
-		public MultiText(PropertyChangedEventHandler propertyChangedHandler)
+		public MultiText()
 		{
 			_forms = new Dictionary<string, string>();
-			_propertyChangedHandler = propertyChangedHandler;
 		}
 
 		public string this[string writingSystemId]
@@ -70,14 +69,14 @@ namespace WeSay.Language
 			   _forms[writingSystemId] = form;
 		   }
 
-		   NotifyPropertyChanged("Dont actually know who we are.");
+		   NotifyPropertyChanged(writingSystemId);
 		}
 
-		private void NotifyPropertyChanged(string info)
+		private void NotifyPropertyChanged(string writingSystemId)
 		{
-			if (_propertyChangedHandler != null)
+			if (PropertyChanged != null)
 			{
-				_propertyChangedHandler(this, new PropertyChangedEventArgs(info));
+				PropertyChanged(this, new PropertyChangedEventArgs(writingSystemId));
 			}
 		}
 	}

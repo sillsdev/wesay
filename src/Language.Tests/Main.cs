@@ -11,7 +11,6 @@ namespace Language.Tests
 	{
 		private bool _gotHandlerNotice;
 
-		event PropertyChangedEventHandler propertyChangedHandler;
 	   [SetUp]
 		public void Setup()
 		{
@@ -21,8 +20,8 @@ namespace Language.Tests
 		public void Notification()
 		{
 			_gotHandlerNotice = false;
-			propertyChangedHandler += new PropertyChangedEventHandler(Test1_propertyChangedHandler);
-			MultiText text = new MultiText(propertyChangedHandler);
+			MultiText text = new MultiText();
+			text.PropertyChanged += new PropertyChangedEventHandler(Test1_propertyChangedHandler);
 			text.SetAlternative("zox", "");
 			Assert.IsTrue(_gotHandlerNotice);
 		}
@@ -35,7 +34,7 @@ namespace Language.Tests
 		[Test]
 		public void NullConditions()
 		{
-			MultiText text = new MultiText(propertyChangedHandler);
+			MultiText text = new MultiText();
 			Assert.AreSame("", text["foo"], "never before heard of alternative should give back an empty string");
 			Assert.AreSame("", text["foo"], "second time");
 			Assert.AreSame("", text.GetAlternative("fox"));
@@ -50,7 +49,7 @@ namespace Language.Tests
 		[Test]
 		public void BasicStuff()
 		{
-			MultiText text = new MultiText(propertyChangedHandler);
+			MultiText text = new MultiText();
 			text["foo"] = "alpha";
 			Assert.AreSame("alpha", text["foo"]);
 			text["foo"] = "beta";

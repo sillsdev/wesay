@@ -6,12 +6,11 @@ using WeSay.Language;
 
 namespace WeSay.LexicalModel
 {
-	public class LexSense
+	public class LexSense : INotifyPropertyChanged
 	{
 		private MultiText _gloss;
 		private BindingList<LexExampleSentence> _exampleSentences;
-
-		  private event PropertyChangedEventHandler _propertyChangedHandler;
+		public event PropertyChangedEventHandler PropertyChanged;
 
 		/// <summary>
 		///
@@ -19,10 +18,10 @@ namespace WeSay.LexicalModel
 		/// <param name="propertyChangedHandler">at this time, we are not taking note of
 		/// changes at the sense level, only at the entry level.  So this is the owning
 		/// lexical entry's change event.</param>
-		public LexSense(PropertyChangedEventHandler propertyChangedHandler)
+		public LexSense()
 		{
-			_propertyChangedHandler = propertyChangedHandler;
-			_gloss = new MultiText(propertyChangedHandler);
+			_gloss = new MultiText();
+			_gloss.PropertyChanged+=new PropertyChangedEventHandler(OnChildObjectPropertyChanged);
 			_exampleSentences = new BindingList<LexExampleSentence>();
 
 			//nb: order of these two is important.  Touching adding new actually triggers ListChanged!
@@ -31,47 +30,39 @@ namespace WeSay.LexicalModel
 
 		}
 
+		void OnChildObjectPropertyChanged(object sender, PropertyChangedEventArgs e)
+		{
+			NotifyPropertyChanged(e.PropertyName);
+		}
+
 		void OnExampleSentences_ListChanged(object sender, ListChangedEventArgs e)
 		{
-			NotifyPropertyChanged("Example Sentences");
+			NotifyPropertyChanged("ExampleSentences");
 		}
 
 		void OnExampleSentences_AddingNew(object sender, AddingNewEventArgs e)
 		{
-			e.NewObject = new LexExampleSentence(this._propertyChangedHandler);
+			e.NewObject = new LexExampleSentence();
+			((LexExampleSentence)e.NewObject).PropertyChanged += new PropertyChangedEventHandler(OnChildObjectPropertyChanged);
 		}
 
-		//public LexSense()
-		//{
-		//}
 
 		public MultiText Gloss
 		{
 			get { return _gloss; }
-		  //  set { _gloss = value; }
 		}
 
 		public BindingList<LexExampleSentence> ExampleSentences
 		{
 			get { return _exampleSentences; }
-		   // set { _exampleSentences = value; }
 		}
 
-		private void NotifyPropertyChanged(string info)
+		private void NotifyPropertyChanged(string propertyName)
 		{
-			if (_propertyChangedHandler != null)
+			if (PropertyChanged != null)
 			{
-				_propertyChangedHandler(this, new PropertyChangedEventArgs(info));
+				PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
 		}
-
-		///// <summary>
-		///// called by owning LexEntry
-		///// </summary>
-		///// <param name="propertyChangedEventHandler"></param>
-		//internal void WireUp(PropertyChangedEventHandler propertyChangedEventHandler)
-		//{
-		//    this._propertyChangedHandler = propertyChangedEventHandler;
-		//}
 	}
 }

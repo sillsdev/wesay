@@ -25,9 +25,10 @@ namespace WeSay.LexicalModel
 		public LexEntry()
 		{
 			PropertyChanged += new PropertyChangedEventHandler(OnPropertyChanged);
-			_lexicalForm = new MultiText(PropertyChanged);
-			_senses = new BindingList<LexSense>();
+			_lexicalForm = new MultiText();
+			_lexicalForm.PropertyChanged += new PropertyChangedEventHandler(OnChildObjectPropertyChanged);
 
+			_senses = new BindingList<LexSense>();
 			//nb:  order of these two is important.  Touching adding new actually triggers ListChanged!
 			_senses.AddingNew += new AddingNewEventHandler(OnAddingNewSense);
 			_senses.ListChanged += new ListChangedEventHandler(OnListChanged);
@@ -43,7 +44,13 @@ namespace WeSay.LexicalModel
 		/// </summary>
 		void OnAddingNewSense(object sender, AddingNewEventArgs e)
 		{
-			e.NewObject = new LexSense(this.PropertyChanged);
+			e.NewObject = new LexSense();//this.PropertyChanged)
+			((LexSense)(e.NewObject)).PropertyChanged += new PropertyChangedEventHandler(OnChildObjectPropertyChanged);
+		}
+
+		void OnChildObjectPropertyChanged(object sender, PropertyChangedEventArgs e)
+		{
+			NotifyPropertyChanged(e.PropertyName);
 		}
 
 		/// <summary>
@@ -98,11 +105,11 @@ namespace WeSay.LexicalModel
 			}
 		}
 
-		private void NotifyPropertyChanged(string info)
+		private void NotifyPropertyChanged(string propertyName)
 		{
 			if (PropertyChanged != null)
 			{
-				PropertyChanged(this, new PropertyChangedEventArgs(info));
+				PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
 		}
 	}
