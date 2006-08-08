@@ -12,6 +12,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeSay.Base", "WeSay.Base\We
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeSay.Base.Tests", "WeSay.Base.Tests\WeSay.Base.Tests.csproj", "{90746215-4AC3-4F57-B65D-4B7797687D90}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeSay.UI", "WeSay.UI\WeSay.UI.csproj", "{AC8F284C-7B34-4AC9-A7DE-FAF765456DFF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeSay.UI.Tests", "WeSay.UI.Tests\WeSay.UI.Tests.csproj", "{6AED6785-CC6F-4A6A-BDB1-1895C6DA1090}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,6 +46,14 @@ Global
 		{90746215-4AC3-4F57-B65D-4B7797687D90}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{90746215-4AC3-4F57-B65D-4B7797687D90}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{90746215-4AC3-4F57-B65D-4B7797687D90}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC8F284C-7B34-4AC9-A7DE-FAF765456DFF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC8F284C-7B34-4AC9-A7DE-FAF765456DFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC8F284C-7B34-4AC9-A7DE-FAF765456DFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC8F284C-7B34-4AC9-A7DE-FAF765456DFF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6AED6785-CC6F-4A6A-BDB1-1895C6DA1090}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6AED6785-CC6F-4A6A-BDB1-1895C6DA1090}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6AED6785-CC6F-4A6A-BDB1-1895C6DA1090}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6AED6785-CC6F-4A6A-BDB1-1895C6DA1090}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Text;
 using System.ComponentModel;
 using WeSay.Language;
-//using WeSay.Base;
 
 
 namespace WeSay.LexicalModel
