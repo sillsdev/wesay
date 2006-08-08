@@ -12,6 +12,7 @@ namespace WeSay.UI.Tests
 		[SetUp]
 		public void Setup()
 		{
+			Gtk.Application.Init();
 		}
 
 		[Test]
@@ -19,13 +20,26 @@ namespace WeSay.UI.Tests
 		{
 			MultiText text = new MultiText();
 			Gtk.Entry widget = new Gtk.Entry();
-
 			Binding binding = new Binding(text, "en", widget);
 
 			text["en"] = "hello";
 			Assert.AreEqual("hello", widget.Text);
 			text["en"] = null;
 			Assert.AreEqual("",widget.Text);
+		}
+
+		[Test]
+		public void WidgetToTarget()
+		{
+			MultiText text = new MultiText();
+			Gtk.Entry widget = new Gtk.Entry();
+
+			Binding binding = new Binding(text, "en", widget);
+
+			widget.Text = "aaa";
+			Assert.AreEqual("aaa", text["en"]);
+			widget.Text = "";
+			Assert.AreEqual("", text["en"]);
 		}
 	}
 }
