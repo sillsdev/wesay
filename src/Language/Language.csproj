@@ -36,12 +36,6 @@
 	<Compile Include="Properties\AssemblyInfo.cs" />
 	<Compile Include="MultiText.cs" />
   </ItemGroup>
-  <ItemGroup>
-	<ProjectReference Include="..\WeSay.Base\WeSay.Base.csproj">
-	  <Project>{08D8E88F-969F-406F-9DA4-00FA2ACE884F}</Project>
-	  <Name>WeSay.Base</Name>
-	</ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
 	   Other similar extension points exist, see Microsoft.Common.targets.

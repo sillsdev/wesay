@@ -4,11 +4,11 @@
 	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
 	<ProductVersion>8.0.50727</ProductVersion>
 	<SchemaVersion>2.0</SchemaVersion>
-	<ProjectGuid>{5F61C809-B6C0-4567-9603-B2198E1AD038}</ProjectGuid>
+	<ProjectGuid>{6AED6785-CC6F-4A6A-BDB1-1895C6DA1090}</ProjectGuid>
 	<OutputType>Library</OutputType>
 	<AppDesignerFolder>Properties</AppDesignerFolder>
-	<RootNamespace>WeSay.LexicalModel</RootNamespace>
-	<AssemblyName>LexicalModel</AssemblyName>
+	<RootNamespace>WeSay.UI.Tests</RootNamespace>
+	<AssemblyName>WeSay.UI.Tests</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
 	<DebugSymbols>true</DebugSymbols>
@@ -28,20 +28,29 @@
 	<WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+	<Reference Include="atk-sharp, Version=2.8.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
+	<Reference Include="glib-sharp, Version=2.8.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
+	<Reference Include="gtk-sharp, Version=2.8.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
+	<Reference Include="nunit.framework, Version=2.2.8.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\nunit.framework.dll</HintPath>
+	</Reference>
 	<Reference Include="System" />
 	<Reference Include="System.Data" />
 	<Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-	<Compile Include="LexEntry.cs" />
-	<Compile Include="LexExampleSentence.cs" />
-	<Compile Include="LexSense.cs" />
+	<Compile Include="BindingTests.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
 	<ProjectReference Include="..\Language\Language.csproj">
 	  <Project>{39DF05AB-8B2E-4CCA-8525-E0D6473E6E65}</Project>
 	  <Name>Language</Name>
+	</ProjectReference>
+	<ProjectReference Include="..\WeSay.UI\WeSay.UI.csproj">
+	  <Project>{AC8F284C-7B34-4AC9-A7DE-FAF765456DFF}</Project>
+	  <Name>WeSay.UI</Name>
 	</ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
