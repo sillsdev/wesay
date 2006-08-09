@@ -1,7 +1,7 @@
 ﻿using System;
-namespace WeSay.App
+namespace WeSay.UI
 {
-	interface ITool
+	public interface ITool
 	{
 		void Activate();
 		void Deactivate();

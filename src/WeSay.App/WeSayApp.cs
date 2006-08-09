@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Gtk;
+using WeSay.UI;
 
 namespace WeSay.App
 {

@@ -14,7 +14,7 @@
 	<DebugSymbols>true</DebugSymbols>
 	<DebugType>full</DebugType>
 	<Optimize>false</Optimize>
-	<OutputPath>bin\Debug\</OutputPath>
+	<OutputPath>..\..\output\Debug\</OutputPath>
 	<DefineConstants>DEBUG;TRACE</DefineConstants>
 	<ErrorReport>prompt</ErrorReport>
 	<WarningLevel>4</WarningLevel>
@@ -31,27 +31,19 @@
 	<Reference Include="atk-sharp, Version=2.8.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
 	<Reference Include="glib-sharp, Version=2.8.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
 	<Reference Include="gtk-sharp, Version=2.8.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
+	<Reference Include="PicoContainer, Version=1.0.2412.18537, Culture=neutral, processorArchitecture=MSIL">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\PicoContainer\PicoContainer.dll</HintPath>
+	</Reference>
 	<Reference Include="System" />
 	<Reference Include="System.Data" />
 	<Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
 	<Compile Include="AppConfig.cs" />
-	<Compile Include="DictionaryTool.cs" />
-	<Compile Include="ITool.cs" />
 	<Compile Include="DummyTool.cs" />
 	<Compile Include="WeSayApp.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />
-	<EmbeddedResource Include="Properties\Resources.resx">
-	  <Generator>ResXFileCodeGenerator</Generator>
-	  <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-	  <SubType>Designer</SubType>
-	</EmbeddedResource>
-	<Compile Include="Properties\Resources.Designer.cs">
-	  <AutoGen>True</AutoGen>
-	  <DependentUpon>Resources.resx</DependentUpon>
-	  <DesignTime>True</DesignTime>
-	</Compile>
 	<None Include="Properties\Settings.settings">
 	  <Generator>SettingsSingleFileGenerator</Generator>
 	  <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -61,6 +53,16 @@
 	  <DependentUpon>Settings.settings</DependentUpon>
 	  <DesignTimeSharedInput>True</DesignTimeSharedInput>
 	</Compile>
+  </ItemGroup>
+  <ItemGroup>
+	<ProjectReference Include="..\LexicalTools\LexicalTools.csproj">
+	  <Project>{87AF0B02-2983-486D-857F-D1859535C234}</Project>
+	  <Name>LexicalTools</Name>
+	</ProjectReference>
+	<ProjectReference Include="..\WeSay.UI\WeSay.UI.csproj">
+	  <Project>{AC8F284C-7B34-4AC9-A7DE-FAF765456DFF}</Project>
+	  <Name>WeSay.UI</Name>
+	</ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

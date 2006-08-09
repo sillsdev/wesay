@@ -2,10 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Gtk;
+using WeSay.UI;
 
 namespace WeSay.App
 {
-	public class DummyTool : WeSay.App.ITool
+	public class DummyTool : WeSay.UI.ITool
 	{
 		private HBox _container;
 
