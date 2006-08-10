@@ -21,5 +21,12 @@ namespace LexicalModel.Tests
 			//System.Windows.Forms.Binding b = new System.Windows.Forms.Binding("text", bl, "LexicalForm");
 			//b.
 		}
+
+		//[Test]
+		//public void Serialize()
+		//{
+		//    System.Xml.Serialization.XmlSerializer s = new System.Xml.Serialization.XmlSerializer(typeof(LexEntry));
+		//    s.Serialize(
+		//}
 	}
 }

@@ -10,9 +10,11 @@ namespace WeSay.UI
 		private string _propertyName;
 		private INotifyPropertyChanged _dataTarget;
 		private Gtk.Entry _widgetTarget;
+		private bool _inMidstOfChange;
 
 		public Binding(INotifyPropertyChanged dataTarget, string propertyName, Gtk.Entry widgetTarget)
 		{
+			_inMidstOfChange = false;
 		   _dataTarget= dataTarget;
 		   _dataTarget.PropertyChanged += new PropertyChangedEventHandler(_dataTarget_PropertyChanged);
 		   _propertyName=propertyName;
@@ -34,10 +36,19 @@ namespace WeSay.UI
 
 		void _dataTarget_PropertyChanged(object sender, PropertyChangedEventArgs e)
 		{
-			if (e.PropertyName != _propertyName)
+			if (_inMidstOfChange ||
+				e.PropertyName != _propertyName)
 				return;
 
-			_widgetTarget.Text = GetTargetValue();
+			try
+			{
+				_inMidstOfChange = true;
+				_widgetTarget.Text = GetTargetValue();
+			}
+			finally
+			{
+				_inMidstOfChange = false;
+			}
 		}
 
 		private string GetTargetValue()
@@ -50,10 +61,23 @@ namespace WeSay.UI
 
 		private void SetTargetValue(string s)
 		{
-			WeSay.Language.MultiText text = _dataTarget as WeSay.Language.MultiText;
-			if (text == null)
-				throw new ArgumentException("Binding can't handle that type of target.");
-			text[_propertyName] = s;
+			if (_inMidstOfChange)
+				return;
+
+			try
+			{
+				_inMidstOfChange = true;
+
+				WeSay.Language.MultiText text = _dataTarget as WeSay.Language.MultiText;
+				if (text == null)
+					throw new ArgumentException("Binding can't handle that type of target.");
+				text[_propertyName] = s;
+
+			}
+			finally
+			{
+				_inMidstOfChange = false;
+			}
 		}
 
 		public INotifyPropertyChanged DataTarget

@@ -1,11 +1,11 @@
 ﻿using System;
 namespace WeSay.UI
 {
-	public interface ITool
+	public interface ITask
 	{
 		void Activate();
 		void Deactivate();
 		string Label { get; }
-		Gtk.HBox Container { get;set; }
+		Gtk.VBox Container { get;set; }
 	}
 }

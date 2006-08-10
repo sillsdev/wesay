@@ -4,11 +4,11 @@
 	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
 	<ProductVersion>8.0.50727</ProductVersion>
 	<SchemaVersion>2.0</SchemaVersion>
-	<ProjectGuid>{EFB9D66D-AF0F-4E45-A1AC-DB32981711D2}</ProjectGuid>
-	<OutputType>WinExe</OutputType>
+	<ProjectGuid>{64726381-FEA8-47D5-A884-18AED42E93B6}</ProjectGuid>
+	<OutputType>Library</OutputType>
 	<AppDesignerFolder>Properties</AppDesignerFolder>
-	<RootNamespace>WeSay.App</RootNamespace>
-	<AssemblyName>WeSay.App</AssemblyName>
+	<RootNamespace>WesSay.CommonTools</RootNamespace>
+	<AssemblyName>CommonTools</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
 	<DebugSymbols>true</DebugSymbols>
@@ -31,29 +31,14 @@
 	<Reference Include="atk-sharp, Version=2.8.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
 	<Reference Include="glib-sharp, Version=2.8.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
 	<Reference Include="gtk-sharp, Version=2.8.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
-	<Reference Include="PicoContainer, Version=1.0.2412.18537, Culture=neutral, processorArchitecture=MSIL">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\PicoContainer\PicoContainer.dll</HintPath>
-	</Reference>
+	<Reference Include="gtkhtml-sharp, Version=2.8.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
 	<Reference Include="System" />
 	<Reference Include="System.Data" />
 	<Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-	<Compile Include="BasilProject.cs" />
-	<Compile Include="SampleTaskBuilder.cs" />
-	<Compile Include="TabAppShell.cs" />
-	<Compile Include="WeSayApp.cs" />
+	<Compile Include="Dashboard.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />
-	<None Include="Properties\Settings.settings">
-	  <Generator>SettingsSingleFileGenerator</Generator>
-	  <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-	</None>
-	<Compile Include="Properties\Settings.Designer.cs">
-	  <AutoGen>True</AutoGen>
-	  <DependentUpon>Settings.settings</DependentUpon>
-	  <DesignTimeSharedInput>True</DesignTimeSharedInput>
-	</Compile>
   </ItemGroup>
   <ItemGroup>
 	<ProjectReference Include="..\WeSay.UI\WeSay.UI.csproj">
