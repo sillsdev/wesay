@@ -39,32 +39,6 @@ namespace WeSay.DataAdaptor
 		#endregion
 	}
 
-	//public class Db4oBindingList<T> : BindingList<T> where T : new()
-	//{
-	//    ObjectContainer _data;
-
-	//    public Db4oBindingList()
-	//        : base()
-	//    {
-	//    }
-
-	//    private void Db4oSet(T o)
-	//    {
-	//        _data.Set(o);
-	//        _data.Commit();
-	//    }
-
-	//    protected override object AddNewCore()
-	//    {
-	//        T o = new T();
-	//        Db4oSet(o);
-	//        this.Add(o);
-	//        return o;
-	//    }
-	//    //        protected override
-	//}
-
-
 	public class Db4oDataAdaptor<T> : IBindingList, IDataAdaptor, IList<T>, ICollection<T>, IEnumerable<T> where T : new()
 	{
 		ObjectContainer _db;
@@ -670,3 +644,30 @@ namespace WeSay.DataAdaptor
 		private bool _isEnumerating;
 	}
 }
+
+
+//public class Db4oBindingList<T> : BindingList<T> where T : new()
+//{
+//    ObjectContainer _data;
+
+//    public Db4oBindingList()
+//        : base()
+//    {
+//    }
+
+//    private void Db4oSet(T o)
+//    {
+//        _data.Set(o);
+//        _data.Commit();
+//    }
+
+//    protected override object AddNewCore()
+//    {
+//        T o = new T();
+//        Db4oSet(o);
+//        this.Add(o);
+//        return o;
+//    }
+//    //        protected override
+//}
+
