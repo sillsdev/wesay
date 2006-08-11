@@ -6,7 +6,7 @@ using System.ComponentModel;
 
 namespace WeSay.Data
 {
-	public class Db4oDataAdaptor<T> : IBindingList, IFilterable<T>, IList<T>, ICollection<T>, IEnumerable<T> where T : new()
+	public class Db4oBindingList<T> : IBindingList, IFilterable<T>, IList<T>, ICollection<T>, IEnumerable<T> where T : INotifyPropertyChanged, new()
 	{
 		ObjectContainer _db;
 		IList<T> _records;
@@ -18,6 +18,69 @@ namespace WeSay.Data
 				return true;
 			};
 
+		public IComparer<T> Sort
+		{
+			get
+			{
+				return _sort;
+			}
+			set
+			{
+				_sort = value;
+				Load();
+				OnListReset();
+			}
+		}
+
+		public Db4oBindingList(Db4oBindingListConfiguration<T> configuration)
+		{
+			this._db = (ObjectContainer)configuration.DataSource.Data;
+			_filter = configuration.Filter;
+			if (configuration.Filter == null)
+			{
+				_filter = _noFilter;
+			}
+			this._sort = configuration.Sort;
+			Load();
+		}
+
+		private void Db4oSet(T o)
+		{
+			_db.Set(o);
+			_db.Commit();
+		}
+
+		public void Update(T o)
+		{
+			Db4oSet(o);
+		}
+
+		private void WatchForUpdates(T o)
+		{
+			o.PropertyChanged += new PropertyChangedEventHandler(ChildT_PropertyChanged);
+
+		}
+
+		void ChildT_PropertyChanged(object sender, PropertyChangedEventArgs e)
+		{
+			T o = (T)sender;
+			Update(o);
+		}
+
+		public void Load()
+		{
+			if (this.Sort == null)
+			{
+				_records = _db.Query<T>(_filter);
+			}
+			else
+			{
+				_records = _db.Query<T>(_filter, this.Sort);
+			}
+		}
+
+
+		#region IFilterable Members
 
 		public void ApplyFilter(Predicate<T> filter)
 		{
@@ -45,82 +108,11 @@ namespace WeSay.Data
 			}
 		}
 
-		public IComparer<T> Sort
-		{
-			get
-			{
-				return _sort;
-			}
-			set
-			{
-				_sort = value;
-				Load();
-				OnListReset();
-			}
-		}
-
-		public Db4oDataAdaptor(Db4oBindingListConfiguration<T> configuration)
-		{
-			this._db = (ObjectContainer)configuration.DataSource.Data;
-			_filter = configuration.Filter;
-			if (configuration.Filter == null)
-			{
-				_filter = _noFilter;
-			}
-			this._sort = configuration.Sort;
-			Load();
-		}
-
-		private void Db4oSet(T o)
-		{
-			_db.Set(o);
-			_db.Commit();
-		}
-
-		public void Update(T o)
-		{
-			Db4oSet(o);
-		}
-
-		public void Load()
-		{
-			if (this.Sort == null)
-			{
-				_records = _db.Query<T>(_filter);
-			}
-			else
-			{
-				_records = _db.Query<T>(_filter, this.Sort);
-			}
-		}
-
-		protected virtual void OnItemAdded(int newIndex)
-		{
-			OnListChanged(new ListChangedEventArgs(ListChangedType.ItemAdded, newIndex));
-		}
-
-		protected virtual void OnItemDeleted(int oldIndex)
-		{
-			OnListChanged(new ListChangedEventArgs(ListChangedType.ItemDeleted, oldIndex));
-		}
-
-		protected virtual void OnListReset()
-		{
-			OnListChanged(new ListChangedEventArgs(ListChangedType.Reset, -1));
-		}
-
-		protected virtual void OnListChanged(ListChangedEventArgs e)
-		{
-			if (this.ListChanged != null)
-			{
-				this.ListChanged(this, e);
-			}
-		}
-
+		#endregion
 
 		#region IBindingList Members
 
-//        private bool _isSorted;
+		//        private bool _isSorted;
 
 		void IBindingList.AddIndex(PropertyDescriptor property)
 		{
@@ -130,6 +122,7 @@ namespace WeSay.Data
 		{
 			T o = new T();
 			Add(o);
+			WatchForUpdates(o);
 			return o;
 		}
 
@@ -171,6 +164,29 @@ namespace WeSay.Data
 			{
 				throw new NotSupportedException();
 				//                return _isSorted;
+			}
+		}
+
+		protected virtual void OnItemAdded(int newIndex)
+		{
+			OnListChanged(new ListChangedEventArgs(ListChangedType.ItemAdded, newIndex));
+		}
+
+		protected virtual void OnItemDeleted(int oldIndex)
+		{
+			OnListChanged(new ListChangedEventArgs(ListChangedType.ItemDeleted, oldIndex));
+		}
+
+		protected virtual void OnListReset()
+		{
+			OnListChanged(new ListChangedEventArgs(ListChangedType.Reset, -1));
+		}
+
+		protected virtual void OnListChanged(ListChangedEventArgs e)
+		{
+			if (this.ListChanged != null)
+			{
+				this.ListChanged(this, e);
 			}
 		}
 
@@ -249,7 +265,9 @@ namespace WeSay.Data
 		{
 			get
 			{
-				return _records[index];
+				T item = _records[index];
+				WatchForUpdates(item);
+				return item;
 			}
 			set
 			{
@@ -265,6 +283,7 @@ namespace WeSay.Data
 		{
 			T item = (T)value;
 			Add(item);
+			WatchForUpdates(item);
 			return IndexOf(item);
 		}
 
@@ -336,8 +355,10 @@ namespace WeSay.Data
 				{
 					throw new ArgumentOutOfRangeException();
 				}
+				T item = (T)value;
+				WatchForUpdates(item);
 
-				this[index] = (T)value;
+				this[index] = item;
 			}
 		}
 
@@ -349,6 +370,7 @@ namespace WeSay.Data
 		{
 			Db4oSet(item);
 			Load();
+			WatchForUpdates(item);
 			OnItemAdded(IndexOf(item));
 		}
 
@@ -460,10 +482,10 @@ namespace WeSay.Data
 
 		public struct Enumerator : IEnumerator<T>
 		{
-			Db4oDataAdaptor<T> _collection;
+			Db4oBindingList<T> _collection;
 			int _index;
 
-			public Enumerator(Db4oDataAdaptor<T> collection)
+			public Enumerator(Db4oBindingList<T> collection)
 			{
 				if (collection == null)
 				{

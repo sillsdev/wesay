@@ -8,6 +8,7 @@ namespace WeSay.Data
 	public class Db4oDataSource : IDisposable
 	{
 		ObjectContainer _db;
+		private bool _disposed = false;
 
 		public Db4oDataSource(string filePath)
 		{
@@ -22,6 +23,10 @@ namespace WeSay.Data
 		{
 			get
 			{
+				if (this._disposed)
+				{
+					throw new ObjectDisposedException("Db4oDataSource");
+				}
 				return _db;
 			}
 		}
@@ -31,7 +36,14 @@ namespace WeSay.Data
 
 		public void Dispose()
 		{
-			_db.Close();
+			if (!this._disposed)
+			{
+				_db.Close();
+				_db.Dispose();
+				_db = null;
+				GC.SuppressFinalize(this);
+			}
+			_disposed = true;
 		}
 
 		#endregion
