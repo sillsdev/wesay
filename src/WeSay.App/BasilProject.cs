@@ -12,6 +12,13 @@ namespace WeSay.App
 			_projectDirectoryPath = projectDirectoryPath;
 		}
 
+		public string MainDBPath
+		{
+			get
+			{
+				return System.IO.Path.Combine(_projectDirectoryPath,"thai.yap");
+			}
+		}
 		public string Name
 		{
 			get
@@ -20,6 +27,5 @@ namespace WeSay.App
 				return "Project: "+_projectDirectoryPath;
 			}
 		}
-
 	}
 }

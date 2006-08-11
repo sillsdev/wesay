@@ -54,7 +54,7 @@ namespace WeSay.LexicalTools
 					senseTableBuilder.AddWidgetRow("example: ", MakeBoundEntry(example.Sentence, "en"));
 					senseTableBuilder.AddWidgetRow("translation: ", MakeBoundEntry(example.Translation, "en"));
 				}
-			  builder.AddWidgetRow("meaning: ", senseTableBuilder.BuildTable());
+				builder.AddWidgetRow("meaning: ", senseTableBuilder.BuildTable());
 		  }
 			_container.PackStart(builder.BuildTable());
 		}

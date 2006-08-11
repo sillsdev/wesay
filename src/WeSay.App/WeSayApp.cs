@@ -17,6 +17,15 @@ namespace WeSay.App
 			IMutablePicoContainer container = CreateContainer();
 
 			container.RegisterComponentInstance(project);
+		   // container.RegisterComponentInstance("path", project.MainDBPath);
+		  //  WeSay.DataAdaptor.Db4oDataSource ds = new WeSay.DataAdaptor.Db4oDataSource(project.MainDBPath);
+		  //  container.RegisterComponentInstance("ds", ds);
+		   // WeSay.DataAdaptor.Db4oDataAdaptor<WeSay.LexicalModel.LexEntry>.Configuration x = new WeSay.DataAdaptor.Db4oDataAdaptor<WeSay.LexicalModel.LexEntry>.Configuration(ds);
+
+			//container.RegisterComponentInstance(x);
+
+
+			//ds = container.GetComponentInstanceOfType(typeof(WeSay.DataAdaptor.Db4oDataSource)) as WeSay.DataAdaptor.Db4oDataSource;
 
 			WeSay.UI.IAppShell shell = new TabAppShell(project, new SampleTaskBuilder(container));
 			Application.Run();
@@ -31,10 +40,17 @@ namespace WeSay.App
 			assemblies.Add(@"CommonTools.dll");
 			assemblies.Add(@"LexicalTools.dll");
 			assemblies.Add(@"LexicalModel.Tests.dll");
+		   // assemblies.Add(@"DataAdaptor.dll");
 
 			foreach (Type t in FindTypesToRegister(assemblies))
 			{
-				pico.RegisterComponentImplementation(t.ToString(), t);
+				if (t.IsAbstract || t.IsInterface)
+				{
+				}
+				else
+				{
+					pico.RegisterComponentImplementation(t.ToString(), t);
+				}
 			}
 
 			return pico;

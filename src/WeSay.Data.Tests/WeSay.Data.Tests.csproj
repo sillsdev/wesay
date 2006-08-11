@@ -42,7 +42,7 @@
 	<Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-	<ProjectReference Include="..\Data\Data.csproj">
+	<ProjectReference Include="..\WeSay.Data\WeSay.Data.csproj">
 	  <Project>{600D0FD4-D189-41A0-9BC5-FC79AD2CF1CD}</Project>
 	  <Name>DataAdaptor</Name>
 	</ProjectReference>
