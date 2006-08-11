@@ -1,5 +1,5 @@
 using System;
-namespace WeSay.DataAdaptor
+namespace WeSay.Data
 {
 	interface IFilterable<T>
 	 where T : new()

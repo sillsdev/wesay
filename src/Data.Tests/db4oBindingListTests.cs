@@ -6,7 +6,7 @@ using System.ComponentModel;
 
 
 
-namespace WeSay.DataAdaptor.Tests
+namespace WeSay.Data.Tests
 {
 	public class StoredItem
 	{
@@ -80,7 +80,7 @@ namespace WeSay.DataAdaptor.Tests
 
 			_FilePath = System.IO.Path.GetTempFileName();
 			this._dataSource = new Db4oDataSource(_FilePath);
-			this._adaptor = new Db4oDataAdaptor<StoredItem>(new Db4oDataAdaptor<StoredItem>.Configuration(this._dataSource));
+			this._adaptor = new Db4oDataAdaptor<StoredItem>(new Db4oBindingListConfiguration<StoredItem>(this._dataSource));
 
 			this._enumerable = this._adaptor;
 			this._adaptor.Add(new StoredItem("Jared", 1, new DateTime(2003, 7, 10)));
@@ -109,7 +109,7 @@ namespace WeSay.DataAdaptor.Tests
 
 			_FilePath = System.IO.Path.GetTempFileName();
 			this._dataSource = new Db4oDataSource(_FilePath);
-			this._adaptor = new Db4oDataAdaptor<StoredItem>(new Db4oDataAdaptor<StoredItem>.Configuration(this._dataSource));
+			this._adaptor = new Db4oDataAdaptor<StoredItem>(new Db4oBindingListConfiguration<StoredItem>(this._dataSource));
 
 			this._enumerable = this._adaptor;
 			this._itemCount = 0;
@@ -136,7 +136,7 @@ namespace WeSay.DataAdaptor.Tests
 		{
 			_FilePath = System.IO.Path.GetTempFileName();
 			this._dataSource = new Db4oDataSource(_FilePath);
-			this._adaptor = new Db4oDataAdaptor<StoredItem>(new Db4oDataAdaptor<StoredItem>.Configuration(this._dataSource));
+			this._adaptor = new Db4oDataAdaptor<StoredItem>(new Db4oBindingListConfiguration<StoredItem>(this._dataSource));
 
 			this._collection = this._adaptor;
 			this._adaptor.Add(new StoredItem("Jared", 1, new DateTime(2003, 7, 10)));
@@ -165,7 +165,7 @@ namespace WeSay.DataAdaptor.Tests
 		{
 			_FilePath = System.IO.Path.GetTempFileName();
 			this._dataSource = new Db4oDataSource(_FilePath);
-			this._adaptor = new Db4oDataAdaptor<StoredItem>(new Db4oDataAdaptor<StoredItem>.Configuration(this._dataSource));
+			this._adaptor = new Db4oDataAdaptor<StoredItem>(new Db4oBindingListConfiguration<StoredItem>(this._dataSource));
 
 			this._collection = this._adaptor;
 			this._itemCount = 0;
@@ -191,8 +191,7 @@ namespace WeSay.DataAdaptor.Tests
 		{
 			_FilePath = System.IO.Path.GetTempFileName();
 			this._dataSource = new Db4oDataSource(_FilePath);
-			Db4oDataAdaptor<StoredItem>.Configuration config = new Db4oDataAdaptor<StoredItem>.Configuration(this._dataSource);
-			//            config.Sort = new Comparer<StoredItem>();
+			Db4oBindingListConfiguration<StoredItem> config = new Db4oBindingListConfiguration<StoredItem>(this._dataSource);
 
 			this._adaptor = new Db4oDataAdaptor<StoredItem>(config);
 
@@ -233,7 +232,7 @@ namespace WeSay.DataAdaptor.Tests
 		{
 			_FilePath = System.IO.Path.GetTempFileName();
 			this._dataSource = new Db4oDataSource(_FilePath);
-			this._adaptor = new Db4oDataAdaptor<StoredItem>(new Db4oDataAdaptor<StoredItem>.Configuration(this._dataSource));
+			this._adaptor = new Db4oDataAdaptor<StoredItem>(new Db4oBindingListConfiguration<StoredItem>(this._dataSource));
 
 			this._list = this._adaptor;
 			this._firstItem = null;
@@ -270,7 +269,7 @@ namespace WeSay.DataAdaptor.Tests
 		{
 			_FilePath = System.IO.Path.GetTempFileName();
 			this._dataSource = new Db4oDataSource(_FilePath);
-			this._adaptor = new Db4oDataAdaptor<StoredItem>(new Db4oDataAdaptor<StoredItem>.Configuration(this._dataSource));
+			this._adaptor = new Db4oDataAdaptor<StoredItem>(new Db4oBindingListConfiguration<StoredItem>(this._dataSource));
 			this._bindingList = this._adaptor;
 
 			this._newItem = new StoredItem();
@@ -319,7 +318,7 @@ namespace WeSay.DataAdaptor.Tests
 		{
 			_FilePath = System.IO.Path.GetTempFileName();
 			this._dataSource = new Db4oDataSource(_FilePath);
-			this._adaptor = new Db4oDataAdaptor<StoredItem>(new Db4oDataAdaptor<StoredItem>.Configuration(this._dataSource));
+			this._adaptor = new Db4oDataAdaptor<StoredItem>(new Db4oBindingListConfiguration<StoredItem>(this._dataSource));
 			this._bindingList = this._adaptor;
 
 			this._newItem = new StoredItem();
@@ -377,7 +376,7 @@ namespace WeSay.DataAdaptor.Tests
 		{
 			_filePath = System.IO.Path.GetTempFileName();
 			this._dataSource = new Db4oDataSource(_filePath);
-			this._adaptor = new Db4oDataAdaptor<StoredItem>(new Db4oDataAdaptor<StoredItem>.Configuration(this._dataSource));
+			this._adaptor = new Db4oDataAdaptor<StoredItem>(new Db4oBindingListConfiguration<StoredItem>(this._dataSource));
 			this._adaptor.ListChanged += new ListChangedEventHandler(_adaptor_ListChanged);
 
 			_jared = new StoredItem("Jared", 1, new DateTime(2003, 7, 10));
@@ -468,7 +467,7 @@ namespace WeSay.DataAdaptor.Tests
 		{
 			_filePath = System.IO.Path.GetTempFileName();
 			this._dataSource = new Db4oDataSource(_filePath);
-			this._adaptor = new Db4oDataAdaptor<StoredItem>(new Db4oDataAdaptor<StoredItem>.Configuration(this._dataSource));
+			this._adaptor = new Db4oDataAdaptor<StoredItem>(new Db4oBindingListConfiguration<StoredItem>(this._dataSource));
 			this._adaptor.ListChanged += new ListChangedEventHandler(_adaptor_ListChanged);
 
 			_eric = new StoredItem("Eric", 1, new DateTime(2006, 2, 28));

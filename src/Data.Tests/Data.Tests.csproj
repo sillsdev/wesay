@@ -28,7 +28,7 @@
 	<WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-	<Compile Include="db4oDataAdaptorTests.cs" />
+	<Compile Include="db4oBindingListTests.cs" />
 	<Compile Include="IBindingListTest.cs" />
 	<Compile Include="ICollectionBaseTest.cs" />
 	<Compile Include="IEnumerableBaseTest.cs" />
@@ -42,7 +42,7 @@
 	<Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-	<ProjectReference Include="..\DataAdaptor\DataAdaptor.csproj">
+	<ProjectReference Include="..\Data\Data.csproj">
 	  <Project>{600D0FD4-D189-41A0-9BC5-FC79AD2CF1CD}</Project>
 	  <Name>DataAdaptor</Name>
 	</ProjectReference>

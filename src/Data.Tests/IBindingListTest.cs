@@ -5,7 +5,7 @@ using System.Text;
 using NUnit.Framework;
 using System.ComponentModel;
 
-namespace WeSay.DataAdaptor.Tests
+namespace WeSay.Data.Tests
 {
 	public class IBindingListBaseTest<T, K>
 	{

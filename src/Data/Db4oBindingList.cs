@@ -4,42 +4,9 @@ using System.Text;
 using com.db4o;
 using System.ComponentModel;
 
-namespace WeSay.DataAdaptor
+namespace WeSay.Data
 {
-
-	public class Db4oDataSource : IDataSource, IDisposable
-	{
-		ObjectContainer _db;
-
-		public Db4oDataSource(string filePath)
-		{
-			_db = Db4o.OpenFile(filePath);
-			if (_db == null)
-			{
-				throw new ApplicationException("Problem opening " + filePath);
-			}
-		}
-
-		public object Data
-		{
-			get
-			{
-				return _db;
-			}
-		}
-
-
-		#region IDisposable Members
-
-		public void Dispose()
-		{
-			_db.Close();
-		}
-
-		#endregion
-	}
-
-	public class Db4oDataAdaptor<T> : IBindingList, IDataAdaptor, IList<T>, ICollection<T>, IEnumerable<T> where T : new()
+	public class Db4oDataAdaptor<T> : IBindingList, IFilterable<T>, IList<T>, ICollection<T>, IEnumerable<T> where T : new()
 	{
 		ObjectContainer _db;
 		IList<T> _records;
@@ -92,54 +59,7 @@ namespace WeSay.DataAdaptor
 			}
 		}
 
-		public class Configuration
-		{
-			Db4oDataSource _dataSource;
-			Predicate<T> _filter;
-			IComparer<T> _sort;
-
-			public Predicate<T> Filter
-			{
-				get
-				{
-					return _filter;
-				}
-				set
-				{
-					_filter = value;
-				}
-			}
-			public IComparer<T> Sort
-			{
-				get
-				{
-					return _sort;
-				}
-				set
-				{
-					_sort = value;
-				}
-			}
-
-			public Db4oDataSource DataSource
-			{
-				get
-				{
-					return _dataSource;
-				}
-				set
-				{
-					_dataSource = value;
-				}
-			}
-
-			public Configuration(Db4oDataSource dataSource)
-			{
-				_dataSource = dataSource;
-			}
-		}
-
-		public Db4oDataAdaptor(Configuration configuration)
+		public Db4oDataAdaptor(Db4oBindingListConfiguration<T> configuration)
 		{
 			this._db = (ObjectContainer)configuration.DataSource.Data;
 			_filter = configuration.Filter;
@@ -167,7 +87,8 @@ namespace WeSay.DataAdaptor
 			if (this.Sort == null)
 			{
 				_records = _db.Query<T>(_filter);
-			} else
+			}
+			else
 			{
 				_records = _db.Query<T>(_filter, this.Sort);
 			}
@@ -199,7 +120,7 @@ namespace WeSay.DataAdaptor
 
 		#region IBindingList Members
 
-		private bool _isSorted;
+//        private bool _isSorted;
 
 		void IBindingList.AddIndex(PropertyDescriptor property)
 		{
@@ -249,7 +170,7 @@ namespace WeSay.DataAdaptor
 			get
 			{
 				throw new NotSupportedException();
-//                return _isSorted;
+				//                return _isSorted;
 			}
 		}
 
@@ -262,7 +183,7 @@ namespace WeSay.DataAdaptor
 		void IBindingList.RemoveSort()
 		{
 			throw new NotSupportedException();
-//            _isSorted = false;
+			//            _isSorted = false;
 		}
 
 		ListSortDirection IBindingList.SortDirection

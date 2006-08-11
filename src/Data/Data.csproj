@@ -7,8 +7,8 @@
 	<ProjectGuid>{600D0FD4-D189-41A0-9BC5-FC79AD2CF1CD}</ProjectGuid>
 	<OutputType>Library</OutputType>
 	<AppDesignerFolder>Properties</AppDesignerFolder>
-	<RootNamespace>WeSay.DataAdaptor</RootNamespace>
-	<AssemblyName>DataAdaptor</AssemblyName>
+	<RootNamespace>WeSay.Data</RootNamespace>
+	<AssemblyName>WeSayData</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
 	<DebugSymbols>true</DebugSymbols>
@@ -37,8 +37,10 @@
 	<Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-	<Compile Include="Db4oDataAdaptor.cs" />
-	<Compile Include="IDataAdaptor.cs" />
+	<Compile Include="Db4oBindingList.cs" />
+	<Compile Include="Db4oBindingListConfiguration.cs" />
+	<Compile Include="Db4oDataSource.cs" />
+	<Compile Include="IFilterable.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
