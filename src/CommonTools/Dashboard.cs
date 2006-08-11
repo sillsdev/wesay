@@ -12,14 +12,19 @@ namespace WeSay.CommonTools
 	{
 		private VBox _container;
 		private IBindingList _records;
+		private WeSay.UI.IProject _project;
 
-		public Dashboard(IBindingList records)
+		public Dashboard(WeSay.UI.IProject project, IBindingList records)
 		{
 			_records = records;
+			_project = project;
 		}
 
 		public void Activate()
 		{
+			_container.PackStart(new Gtk.Label(_project.Name));
+			_container.PackStart(new Gtk.Label(_records.Count.ToString() + " Records"));
+
 			//Gtk.HTML _html = new HTML();
 			//_html.LoadFromString("<html>Hello</html>");
 			//_container.PackStart(_html);
