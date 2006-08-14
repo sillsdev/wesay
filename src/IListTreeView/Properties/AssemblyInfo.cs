@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("WeSay.Data.Tests")]
+[assembly: AssemblyTitle("IListTreeView")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("WeSay")]
-[assembly: AssemblyProduct("DataAdaptor.Tests")]
+[assembly: AssemblyProduct("IListTreeView")]
 [assembly: AssemblyCopyright("Copyright © WeSay 2006")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("95a0fa19-812f-4608-a9d9-5d6b61ad7828")]
+[assembly: Guid("797ff113-f7f6-46cd-ac1b-db1524fdfade")]
 
 // Version information for an assembly consists of the following four values:
 //
