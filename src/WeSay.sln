@@ -24,6 +24,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeSay.Data.Tests", "WeSay.D
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LexicalTools.Tests", "LexicalTools.Tests\LexicalTools.Tests.csproj", "{9936180C-90A7-467C-B761-EC184EFE1F9F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeSay.App.Tests", "WeSay.App.Tests\WeSay.App.Tests.csproj", "{7DA57D98-255B-46DE-BF94-D163695A0568}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -78,6 +80,10 @@ Global
 		{9936180C-90A7-467C-B761-EC184EFE1F9F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9936180C-90A7-467C-B761-EC184EFE1F9F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9936180C-90A7-467C-B761-EC184EFE1F9F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7DA57D98-255B-46DE-BF94-D163695A0568}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7DA57D98-255B-46DE-BF94-D163695A0568}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7DA57D98-255B-46DE-BF94-D163695A0568}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7DA57D98-255B-46DE-BF94-D163695A0568}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
