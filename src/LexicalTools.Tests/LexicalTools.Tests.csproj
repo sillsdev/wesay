@@ -4,11 +4,11 @@
 	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
 	<ProductVersion>8.0.50727</ProductVersion>
 	<SchemaVersion>2.0</SchemaVersion>
-	<ProjectGuid>{6AED6785-CC6F-4A6A-BDB1-1895C6DA1090}</ProjectGuid>
+	<ProjectGuid>{9936180C-90A7-467C-B761-EC184EFE1F9F}</ProjectGuid>
 	<OutputType>Library</OutputType>
 	<AppDesignerFolder>Properties</AppDesignerFolder>
-	<RootNamespace>WeSay.UI.Tests</RootNamespace>
-	<AssemblyName>WeSay.UI.Tests</AssemblyName>
+	<RootNamespace>WeSay.LexicalTools.Tests</RootNamespace>
+	<AssemblyName>LexicalTools.Tests</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
 	<DebugSymbols>true</DebugSymbols>
@@ -40,14 +40,17 @@
 	<Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-	<Compile Include="BindingTests.cs" />
+	<Compile Include="TestEntryView.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />
-	<Compile Include="TableBuilderTests.cs" />
   </ItemGroup>
   <ItemGroup>
-	<ProjectReference Include="..\Language\Language.csproj">
-	  <Project>{39DF05AB-8B2E-4CCA-8525-E0D6473E6E65}</Project>
-	  <Name>Language</Name>
+	<ProjectReference Include="..\LexicalModel.Tests\LexicalModel.Tests.csproj">
+	  <Project>{123D695C-0D5D-46E5-893F-39EC4E0B01B8}</Project>
+	  <Name>LexicalModel.Tests</Name>
+	</ProjectReference>
+	<ProjectReference Include="..\LexicalTools\LexicalTools.csproj">
+	  <Project>{87AF0B02-2983-486D-857F-D1859535C234}</Project>
+	  <Name>LexicalTools</Name>
 	</ProjectReference>
 	<ProjectReference Include="..\WeSay.UI\WeSay.UI.csproj">
 	  <Project>{AC8F284C-7B34-4AC9-A7DE-FAF765456DFF}</Project>

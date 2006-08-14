@@ -27,7 +27,6 @@ namespace WeSay.UI
 		}
 
 		private Gtk.Table _table;
-		private uint _rowsSoFar = 0;
 		List<Row> _rows;
 
 		public TableBuilder()
@@ -37,8 +36,8 @@ namespace WeSay.UI
 
 		public Gtk.Table BuildTable()
 		{
-
-			_table = new Table(2, (uint)_rows.Count, false);
+			uint _rowsSoFar = 0;
+			_table = new Table((uint)_rows.Count, 2, false);
 			foreach(Row r in _rows)
 			{
 				Label label = new Gtk.Label(r._label);

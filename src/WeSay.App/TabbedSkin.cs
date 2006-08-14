@@ -39,6 +39,8 @@ namespace WeSay.App
 			window.ShowAll ();
 		}
 
+
+
 		private void  OnNotebookSwitchPage(object o, SwitchPageArgs args)
 		{
 			ITask t = (ITask)_tabsToTools[(int)args.PageNum];
