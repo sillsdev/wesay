@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("WeSay.App.Tests")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("SIL")]
-[assembly: AssemblyProduct("WeSay.App.Tests")]
-[assembly: AssemblyCopyright("Copyright © SIL 2006")]
+[assembly: AssemblyCompany("WeSay")]
+[assembly: AssemblyProduct("WeSay.Tests")]
+[assembly: AssemblyCopyright("Copyright © WeSay 2006")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

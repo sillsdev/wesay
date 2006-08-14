@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("LexicalTools")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("SIL")]
-[assembly: AssemblyProduct("LexicalTools")]
-[assembly: AssemblyCopyright("Copyright © SIL 2006")]
+[assembly: AssemblyCompany("WeSay")]
+[assembly: AssemblyProduct("WeSay")]
+[assembly: AssemblyCopyright("Copyright © WeSay 2006")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
