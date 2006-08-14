@@ -6,14 +6,14 @@ using WeSay.UI;
 
 namespace WeSay.App
 {
-	public class TabAppShell : WeSay.UI.ISkin
+	public class TabbedSkin : WeSay.UI.ISkin
 	{
 		private Gtk.Window window;
 		private System.Collections.Hashtable _tabsToTools;
 		private ITask _currentTool;
 		private BasilProject _project;
 
-		public TabAppShell(BasilProject project, ITaskBuilder taskBuilder)
+		public TabbedSkin(BasilProject project, ITaskBuilder taskBuilder)
 		{
 			_project = project;
 			_tabsToTools = new System.Collections.Hashtable();
@@ -39,7 +39,7 @@ namespace WeSay.App
 			window.ShowAll ();
 		}
 
-		void OnNotebookSwitchPage(object o, SwitchPageArgs args)
+		private void  OnNotebookSwitchPage(object o, SwitchPageArgs args)
 		{
 			ITask t = (ITask)_tabsToTools[(int)args.PageNum];
 		   if (_currentTool == t)

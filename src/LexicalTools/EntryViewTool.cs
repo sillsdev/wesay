@@ -11,10 +11,10 @@ namespace WeSay.LexicalTools
 	public class EntryViewTool : WeSay.UI.ITask
 	{
 		private VBox _container;
-		private  BindingList<LexEntry> _records;
+		private IBindingList _records;
 		private System.Windows.Forms.BindingSource _bindingSource; //could get by with CurrencyManager
 
-		public EntryViewTool(BindingList<LexEntry> records)
+		public EntryViewTool( IBindingList records)
 		{
 			_records = records;
 			_bindingSource = new System.Windows.Forms.BindingSource(_records, null);
@@ -43,6 +43,12 @@ namespace WeSay.LexicalTools
 		private void AddTable()
 		{
 		   LexEntry record = _bindingSource.Current as LexEntry;
+		   if (record == null)
+		   {
+			   _container.PackStart(new Label("No Records Yet"));
+			   return; //what to do?
+		   }
+
 		   TableBuilder builder = new TableBuilder();
 			builder.AddWidgetRow("word: ", MakeBoundEntry(record.LexicalForm, "en"));
 			foreach (LexSense sense in record.Senses)

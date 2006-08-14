@@ -42,7 +42,7 @@
   <ItemGroup>
 	<Compile Include="BasilProject.cs" />
 	<Compile Include="SampleTaskBuilder.cs" />
-	<Compile Include="TabAppShell.cs" />
+	<Compile Include="TabbedSkin.cs" />
 	<Compile Include="WeSayApp.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />
 	<None Include="Properties\Settings.settings">
@@ -59,6 +59,10 @@
 	<ProjectReference Include="..\LexicalModel\LexicalModel.csproj">
 	  <Project>{5F61C809-B6C0-4567-9603-B2198E1AD038}</Project>
 	  <Name>LexicalModel</Name>
+	</ProjectReference>
+	<ProjectReference Include="..\WeSay.Data\WeSay.Data.csproj">
+	  <Project>{600D0FD4-D189-41A0-9BC5-FC79AD2CF1CD}</Project>
+	  <Name>WeSay.Data</Name>
 	</ProjectReference>
 	<ProjectReference Include="..\WeSay.UI\WeSay.UI.csproj">
 	  <Project>{AC8F284C-7B34-4AC9-A7DE-FAF765456DFF}</Project>

@@ -37,8 +37,8 @@
   </ItemGroup>
   <ItemGroup>
 	<Compile Include="Binding.cs" />
-	<Compile Include="IAppShell.cs" />
 	<Compile Include="IProject.cs" />
+	<Compile Include="ISkin.cs" />
 	<Compile Include="ITaskBuilder.cs" />
 	<Compile Include="ITool.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />

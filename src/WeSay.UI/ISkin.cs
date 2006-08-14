@@ -4,7 +4,7 @@ using System.Text;
 
 namespace WeSay.UI
 {
-	public interface IAppShell
+	public interface ISkin
 	{
 	}
 }
