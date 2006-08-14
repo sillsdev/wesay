@@ -6,7 +6,7 @@ using WeSay.UI;
 
 namespace WeSay.App
 {
-	public class TabAppShell : WeSay.UI.IAppShell
+	public class TabAppShell : WeSay.UI.ISkin
 	{
 		private Gtk.Window window;
 		private System.Collections.Hashtable _tabsToTools;
