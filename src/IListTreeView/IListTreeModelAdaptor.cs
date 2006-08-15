@@ -1,15 +1,15 @@
 using System;
-using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
 namespace WeSay.IListTreeView
 {
-	public class IListTreeModelAdaptor<T> : GLib.Object
+	public class IListTreeModelAdaptor : GLib.Object
 	{
-		private IListTreeModelConfiguration<T> _configuration;
+		private IListTreeModelConfiguration _configuration;
+
 		private TreeModelInterfaceDelegates _treeModelInterface;
 
-		public IListTreeModelAdaptor(IListTreeModelConfiguration<T> configuration)
+		public IListTreeModelAdaptor(IListTreeModelConfiguration configuration)
 			: base(IntPtr.Zero)
 		{
 			if (configuration == null)
@@ -20,6 +20,18 @@ namespace WeSay.IListTreeView
 			BuildTreeModelInterface();
 
 			this._configuration = configuration;
+		}
+
+		protected IListTreeModelConfiguration Configuration
+		{
+			get
+			{
+				return _configuration;
+			}
+			private set
+			{
+				_configuration = value;
+			}
 		}
 
 		private bool IsValidIndex(int index)
@@ -125,7 +137,7 @@ namespace WeSay.IListTreeView
 			public ParentDelegate parent;
 		}
 
-		[DllImport("gtksharpglue-2.so")]
+		[DllImport("gtksharpglue-2")]
 		private static extern void gtksharp_node_store_set_tree_model_callbacks(IntPtr raw, ref TreeModelInterfaceDelegates cbs);
 
 		private void BuildTreeModelInterface()
@@ -201,7 +213,7 @@ namespace WeSay.IListTreeView
 			return GetPath(index).Handle;
 		}
 
-		[DllImport("gobject-2.0.so")]
+		[DllImport("libgtk-win32-2.0-0.dll")]
 		private static extern void g_value_init (ref GLib.Value val, IntPtr type);
 
 		protected void GetValue_callback (int index, int column, ref GLib.Value value)
@@ -210,7 +222,7 @@ namespace WeSay.IListTreeView
 			VerifyValidColumn(column);
 
 			g_value_init(ref value, GetColumnType(column).Val);
-			T instance = this._configuration.DataSource[index];
+			object instance = this._configuration.DataSource[index];
 			value.Val = this._configuration.GetValueStrategy(instance, column);
 		}
 

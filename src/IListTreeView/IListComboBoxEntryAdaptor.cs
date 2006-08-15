@@ -1,16 +1,17 @@
 using System;
-using System.Collections.Generic;
+using System.Collections;
 using System.Runtime.InteropServices;
+using System.Collections.Generic;
 
 namespace WeSay.IListTreeView
 {
 
-	public class IListComboBoxEntryAdaptor<T> : Gtk.ComboBoxEntry
+	public class IListComboBoxEntryAdaptor : Gtk.ComboBoxEntry
 	{
-		private IListTreeModelAdaptor<T> _model;
-		private IListTreeModelConfiguration<T> _modelConfiguration;
+		private IListTreeModelAdaptor _model;
+		private IListTreeModelConfiguration _modelConfiguration = new IListTreeModelConfiguration();
 
-		public IListComboBoxEntryAdaptor(IList<T> store)
+		public IListComboBoxEntryAdaptor(IList store)
 			: base(IntPtr.Zero)
 		{
 			string[] names = { "model" };
@@ -19,13 +20,13 @@ namespace WeSay.IListTreeView
 			vals[0].Dispose();
 
 			this._modelConfiguration.DataSource = store;
-			Model = new IListTreeModelAdaptor<T>(_modelConfiguration);
+			Model = new IListTreeModelAdaptor(_modelConfiguration);
 		}
 
 		public IListComboBoxEntryAdaptor()
 			: base()
 		{
-			Model = new IListTreeModelAdaptor<T>(_modelConfiguration);
+			Model = new IListTreeModelAdaptor(_modelConfiguration);
 		}
 
 
@@ -38,7 +39,7 @@ namespace WeSay.IListTreeView
 			gtk_combo_box_set_model(Handle, _model == null ? IntPtr.Zero : _model.Handle);
 		}
 
-		public new IListTreeModelAdaptor<T> Model
+		public new IListTreeModelAdaptor Model
 		{
 			get
 			{
@@ -51,7 +52,7 @@ namespace WeSay.IListTreeView
 			}
 		}
 
-		public IList<T> DataSource
+		public IList DataSource
 		{
 			get
 			{
@@ -64,7 +65,7 @@ namespace WeSay.IListTreeView
 			}
 		}
 
-		public List<GLib.GType> Column_Types
+		public IList<GLib.GType> Column_Types
 		{
 			get
 			{
@@ -76,7 +77,7 @@ namespace WeSay.IListTreeView
 			}
 		}
 
-		public GetValueStrategy<T> GetValueStrategy
+		public GetValueStrategyDelegate GetValueStrategy
 		{
 			set
 			{

@@ -26,6 +26,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LexicalTools.Tests", "Lexic
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeSay.App.Tests", "WeSay.App.Tests\WeSay.App.Tests.csproj", "{7DA57D98-255B-46DE-BF94-D163695A0568}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IListTreeView", "IListTreeView\IListTreeView.csproj", "{B538A561-53CA-4892-9906-E86C098045E1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IListTreeView.Tests", "IListTreeView.Tests\IListTreeView.Tests.csproj", "{AB1CE60F-3CF7-411E-AE0B-C214126EBEA4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -84,6 +88,14 @@ Global
 		{7DA57D98-255B-46DE-BF94-D163695A0568}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7DA57D98-255B-46DE-BF94-D163695A0568}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7DA57D98-255B-46DE-BF94-D163695A0568}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B538A561-53CA-4892-9906-E86C098045E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B538A561-53CA-4892-9906-E86C098045E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B538A561-53CA-4892-9906-E86C098045E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B538A561-53CA-4892-9906-E86C098045E1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AB1CE60F-3CF7-411E-AE0B-C214126EBEA4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AB1CE60F-3CF7-411E-AE0B-C214126EBEA4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AB1CE60F-3CF7-411E-AE0B-C214126EBEA4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AB1CE60F-3CF7-411E-AE0B-C214126EBEA4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
