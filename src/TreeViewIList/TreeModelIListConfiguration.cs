@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace WeSay.IListTreeView
+namespace WeSay.TreeViewIList
 {
 	public delegate GLib.Value GetValueStrategyDelegate(object instance, int column);
 
@@ -77,7 +77,7 @@ namespace WeSay.IListTreeView
 		}
 	}
 
-	public class IListTreeModelConfiguration
+	public class TreeModelIListConfiguration
 	{
 		IList _data;
 		IList<GLib.GType> _columnTypes;

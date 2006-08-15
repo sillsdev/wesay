@@ -1,16 +1,17 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using System.Collections.Generic;
 
-namespace WeSay.IListTreeView
+namespace WeSay.TreeViewIList
 {
-	public class IListComboBoxAdaptor : Gtk.ComboBox
-	{
-		private IListTreeModelAdaptor _model;
-		private IListTreeModelConfiguration _modelConfiguration = new IListTreeModelConfiguration();
 
-		public IListComboBoxAdaptor(IList store)
+	public class TreeViewAdaptorIList : Gtk.TreeView
+	{
+		private TreeModelIListAdaptor _model;
+		private TreeModelIListConfiguration _modelConfiguration = new TreeModelIListConfiguration();
+
+		public TreeViewAdaptorIList(IList store)
 			: base(IntPtr.Zero)
 		{
 			string[] names = { "model" };
@@ -19,25 +20,24 @@ namespace WeSay.IListTreeView
 			vals[0].Dispose();
 
 			this._modelConfiguration.DataSource = store;
-			Model = new IListTreeModelAdaptor(_modelConfiguration);
+			Model = new TreeModelIListAdaptor(_modelConfiguration);
 		}
 
-		public IListComboBoxAdaptor()
+		public TreeViewAdaptorIList()
 			: base()
 		{
-			Model = new IListTreeModelAdaptor(_modelConfiguration);
+			Model = new TreeModelIListAdaptor(_modelConfiguration);
 		}
 
-
-		[DllImport("libgtk-x11-2.0.so")]
-		static extern void gtk_combo_box_set_model(IntPtr raw, IntPtr model);
+		[DllImport("libgtk-win32-2.0-0.dll")]
+		static extern void gtk_tree_view_set_model(IntPtr raw, IntPtr model);
 
 		private void UpdateModel()
 		{
-			gtk_combo_box_set_model(Handle, IntPtr.Zero);
-			gtk_combo_box_set_model(Handle, _model == null ? IntPtr.Zero : _model.Handle);
+			gtk_tree_view_set_model(Handle, _model == null ? IntPtr.Zero : _model.Handle);
 		}
-		public new IListTreeModelAdaptor Model
+
+		public new TreeModelIListAdaptor Model
 		{
 			get
 			{

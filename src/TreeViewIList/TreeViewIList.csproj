@@ -37,15 +37,15 @@
 	<Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-	<Compile Include="IListTreeModelConfiguration.cs" />
-	<Compile Include="IListComboBoxAdaptor.cs" />
-	<Compile Include="IListComboBoxEntryAdaptor.cs" />
-	<Compile Include="IListTreeModelAdaptor.cs" />
-	<Compile Include="IListTreeViewAdaptor.cs" />
+	<Compile Include="TreeModelIListConfiguration.cs" />
+	<Compile Include="ComboBoxIListAdaptor.cs" />
+	<Compile Include="ComboBoxEntryIListAdaptor.cs" />
+	<Compile Include="TreeModelIListAdaptor.cs" />
+	<Compile Include="TreeViewIListAdaptor.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-	<None Include="IListTreeView.dll.config">
+	<None Include="TreeViewIList.dll.config">
 	  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	</None>
   </ItemGroup>

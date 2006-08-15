@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
 
-namespace IListTreeView.Tests
+namespace WeSay.TreeViewIList.Tests
 {
 	[TestFixture]
 	public class TreeViewTests

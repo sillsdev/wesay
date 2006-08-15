@@ -1,17 +1,16 @@
 using System;
 using System.Collections;
-using System.Runtime.InteropServices;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 
-namespace WeSay.IListTreeView
+namespace WeSay.TreeViewIList
 {
-
-	public class IListComboBoxEntryAdaptor : Gtk.ComboBoxEntry
+	public class IListComboBoxAdaptor : Gtk.ComboBox
 	{
-		private IListTreeModelAdaptor _model;
-		private IListTreeModelConfiguration _modelConfiguration = new IListTreeModelConfiguration();
+		private TreeModelIListAdaptor _model;
+		private TreeModelIListConfiguration _modelConfiguration = new TreeModelIListConfiguration();
 
-		public IListComboBoxEntryAdaptor(IList store)
+		public IListComboBoxAdaptor(IList store)
 			: base(IntPtr.Zero)
 		{
 			string[] names = { "model" };
@@ -20,13 +19,13 @@ namespace WeSay.IListTreeView
 			vals[0].Dispose();
 
 			this._modelConfiguration.DataSource = store;
-			Model = new IListTreeModelAdaptor(_modelConfiguration);
+			Model = new TreeModelIListAdaptor(_modelConfiguration);
 		}
 
-		public IListComboBoxEntryAdaptor()
+		public IListComboBoxAdaptor()
 			: base()
 		{
-			Model = new IListTreeModelAdaptor(_modelConfiguration);
+			Model = new TreeModelIListAdaptor(_modelConfiguration);
 		}
 
 
@@ -38,8 +37,7 @@ namespace WeSay.IListTreeView
 			gtk_combo_box_set_model(Handle, IntPtr.Zero);
 			gtk_combo_box_set_model(Handle, _model == null ? IntPtr.Zero : _model.Handle);
 		}
-
-		public new IListTreeModelAdaptor Model
+		public new TreeModelIListAdaptor Model
 		{
 			get
 			{

@@ -1,15 +1,15 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace WeSay.IListTreeView
+namespace WeSay.TreeViewIList
 {
-	public class IListTreeModelAdaptor : GLib.Object
+	public class TreeModelIListAdaptor : GLib.Object
 	{
-		private IListTreeModelConfiguration _configuration;
+		private TreeModelIListConfiguration _configuration;
 
 		private TreeModelInterfaceDelegates _treeModelInterface;
 
-		public IListTreeModelAdaptor(IListTreeModelConfiguration configuration)
+		public TreeModelIListAdaptor(TreeModelIListConfiguration configuration)
 			: base(IntPtr.Zero)
 		{
 			if (configuration == null)
@@ -22,7 +22,7 @@ namespace WeSay.IListTreeView
 			this._configuration = configuration;
 		}
 
-		protected IListTreeModelConfiguration Configuration
+		protected TreeModelIListConfiguration Configuration
 		{
 			get
 			{

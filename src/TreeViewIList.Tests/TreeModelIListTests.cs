@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
 
-namespace WeSay.IListTreeView.Tests
+namespace WeSay.TreeViewIList.Tests
 {
 	[TestFixture]
-	public class TreeModelIListTests : IListTreeModelAdaptor
+	public class TreeModelIListTests : TreeModelIListAdaptor
 	{
 		public TreeModelIListTests()
-			: base(new IListTreeModelConfiguration())
+			: base(new TreeModelIListConfiguration())
 		{
 		}
 

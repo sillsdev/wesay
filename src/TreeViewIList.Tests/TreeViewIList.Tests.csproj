@@ -7,8 +7,8 @@
 	<ProjectGuid>{AB1CE60F-3CF7-411E-AE0B-C214126EBEA4}</ProjectGuid>
 	<OutputType>Library</OutputType>
 	<AppDesignerFolder>Properties</AppDesignerFolder>
-	<RootNamespace>WeSay.IListTreeView.Tests</RootNamespace>
-	<AssemblyName>IListTreeView.Tests</AssemblyName>
+	<RootNamespace>WeSay.TreeViewIList.Tests</RootNamespace>
+	<AssemblyName>TreeViewIList.Tests</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
 	<DebugSymbols>true</DebugSymbols>
@@ -36,14 +36,14 @@
 	<Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-	<Compile Include="IListTreeModelTests.cs" />
-	<Compile Include="IListTreeViewTests.cs" />
+	<Compile Include="TreeModelIListTests.cs" />
+	<Compile Include="TreeViewIListTests.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-	<ProjectReference Include="..\IListTreeView\IListTreeView.csproj">
+	<ProjectReference Include="..\TreeViewIList\TreeViewIList.csproj">
 	  <Project>{B538A561-53CA-4892-9906-E86C098045E1}</Project>
-	  <Name>IListTreeView</Name>
+	  <Name>TreeViewIList</Name>
 	</ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

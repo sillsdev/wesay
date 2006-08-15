@@ -26,9 +26,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LexicalTools.Tests", "Lexic
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeSay.App.Tests", "WeSay.App.Tests\WeSay.App.Tests.csproj", "{7DA57D98-255B-46DE-BF94-D163695A0568}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IListTreeView", "IListTreeView\IListTreeView.csproj", "{B538A561-53CA-4892-9906-E86C098045E1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TreeViewIList", "TreeViewIList\TreeViewIList.csproj", "{B538A561-53CA-4892-9906-E86C098045E1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IListTreeView.Tests", "IListTreeView.Tests\IListTreeView.Tests.csproj", "{AB1CE60F-3CF7-411E-AE0B-C214126EBEA4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TreeViewIList.Tests", "TreeViewIList.Tests\TreeViewIList.Tests.csproj", "{AB1CE60F-3CF7-411E-AE0B-C214126EBEA4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
