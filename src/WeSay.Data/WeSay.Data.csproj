@@ -40,6 +40,7 @@
 	<Compile Include="Db4oBindingList.cs" />
 	<Compile Include="Db4oBindingListConfiguration.cs" />
 	<Compile Include="Db4oDataSource.cs" />
+	<Compile Include="Db4oList.cs" />
 	<Compile Include="IFilterable.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
