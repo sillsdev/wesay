@@ -26,9 +26,29 @@ namespace WeSay.Data
 			}
 			set
 			{
+				_propertyDescriptor = null;
+				_listSortDirection = ListSortDirection.Ascending;
 				_sort = value;
 				Load();
 				OnListReset();
+			}
+		}
+
+		public void Add(IList<T> l)
+		{
+			int count = l.Count;
+			for (int i = 0; i < count; i++)
+			{
+				_db.Set(l[i]);
+			}
+			_db.Commit();
+
+			Load();
+			for (int i = 0; i < count; i++)
+			{
+				T item = l[i];
+				WatchForUpdates(item);
+				OnItemAdded(IndexOf(item));
 			}
 		}
 
@@ -69,13 +89,27 @@ namespace WeSay.Data
 
 		public void Load()
 		{
-			if (this.Sort == null)
+			if (this._filter == _noFilter)
 			{
-				_records = _db.Query<T>(_filter);
+				if (this.Sort == null)
+				{
+					_records = _db.Query<T>();
+				}
+				else
+				{
+					_records = _db.Query<T>(_filter, this.Sort);
+				}
 			}
 			else
 			{
-				_records = _db.Query<T>(_filter, this.Sort);
+				if (this.Sort == null)
+				{
+					_records = _db.Query<T>(_filter);
+				}
+				else
+				{
+					_records = _db.Query<T>(_filter, this.Sort);
+				}
 			}
 		}
 
@@ -148,9 +182,54 @@ namespace WeSay.Data
 			}
 		}
 
-		void IBindingList.ApplySort(PropertyDescriptor property, ListSortDirection direction)
+		public class PropertyDescriptorComparer<U> : Comparer<U>
 		{
-			throw new NotSupportedException();
+			PropertyDescriptor _propertyDescriptor;
+			ListSortDirection _listSortDirection;
+
+			public PropertyDescriptorComparer(PropertyDescriptor propertyDescriptor, ListSortDirection listSortDirection)
+			{
+				if (propertyDescriptor == null)
+				{
+					throw new ArgumentNullException("propertyDescriptor");
+				}
+				_propertyDescriptor = propertyDescriptor;
+				_listSortDirection = listSortDirection;
+			}
+
+			public override int Compare(U x, U y)
+			{
+				if (x == null)
+				{
+					return -1;
+				}
+				if (y == null)
+				{
+					return 1;
+				}
+
+				int i = System.Collections.Comparer.Default.Compare(
+											_propertyDescriptor.GetValue(x),
+											_propertyDescriptor.GetValue(y));
+				if (_listSortDirection == ListSortDirection.Descending)
+				{
+					return -i;
+				}
+				else
+				{
+					return i;
+				}
+			}
+		}
+
+		PropertyDescriptor _propertyDescriptor;
+		ListSortDirection _listSortDirection;
+
+		public void ApplySort(PropertyDescriptor property, ListSortDirection direction)
+		{
+			Sort = new PropertyDescriptorComparer<T>(property, direction);
+			_propertyDescriptor = property;
+			_listSortDirection = direction;
 		}
 
 		int IBindingList.Find(PropertyDescriptor property, object key)
@@ -158,12 +237,11 @@ namespace WeSay.Data
 			throw new NotSupportedException();
 		}
 
-		bool IBindingList.IsSorted
+		public bool IsSorted
 		{
 			get
 			{
-				throw new NotSupportedException();
-				//                return _isSorted;
+				return _sort != null;
 			}
 		}
 
@@ -196,25 +274,24 @@ namespace WeSay.Data
 		{
 		}
 
-		void IBindingList.RemoveSort()
+		public void RemoveSort()
 		{
-			throw new NotSupportedException();
-			//            _isSorted = false;
+			Sort = null;
 		}
 
-		ListSortDirection IBindingList.SortDirection
+		public ListSortDirection SortDirection
 		{
 			get
 			{
-				throw new NotSupportedException();
+				return _listSortDirection;
 			}
 		}
 
-		PropertyDescriptor IBindingList.SortProperty
+		public PropertyDescriptor SortProperty
 		{
 			get
 			{
-				throw new NotSupportedException();
+				return _propertyDescriptor;
 			}
 		}
 
@@ -238,7 +315,7 @@ namespace WeSay.Data
 		{
 			get
 			{
-				return false;
+				return true;
 			}
 		}
 

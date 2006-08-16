@@ -1,18 +1,17 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using com.db4o;
 
 namespace WeSay.Data
 {
 	public class Db4oDataSource : IDisposable
 	{
-		ObjectContainer _db;
+		com.db4o.ObjectContainer _db;
 		private bool _disposed = false;
 
 		public Db4oDataSource(string filePath)
 		{
-			_db = Db4o.OpenFile(filePath);
+			_db = com.db4o.Db4o.OpenFile(filePath);
 			if (_db == null)
 			{
 				throw new ApplicationException("Problem opening " + filePath);

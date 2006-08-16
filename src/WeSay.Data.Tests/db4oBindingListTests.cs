@@ -1,8 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
-using NUnit.Framework;
 using System.ComponentModel;
+using NUnit.Framework;
 
 
 
@@ -213,9 +212,11 @@ namespace WeSay.Data.Tests
 			this._db4oBindingList = new Db4oBindingList<TestItem>(new Db4oBindingListConfiguration<TestItem>(this._dataSource));
 			this._bindingList = this._db4oBindingList;
 
+			PropertyDescriptorCollection pdc = TypeDescriptor.GetProperties(typeof(TestItem));
+			this._property = pdc.Find("StoredInt", false);
+
 			this._newItem = new TestItem();
 			this._key = 1;
-			this._property = null;
 			base.TestFixtureSetUp();
 		}
 
@@ -238,6 +239,20 @@ namespace WeSay.Data.Tests
 		public void TearDown()
 		{
 			this._db4oBindingList.Clear();
+		}
+
+		protected override void VerifySort()
+		{
+			base.VerifySort();
+			Assert.AreEqual(1, _db4oBindingList[0].StoredInt);
+			Assert.AreEqual(2, _db4oBindingList[1].StoredInt);
+		}
+
+		protected override void VerifyUnsorted()
+		{
+			base.VerifyUnsorted();
+			//Assert.AreEqual(2, _db4oBindingList[0].StoredInt);
+			//Assert.AreEqual(1, _db4oBindingList[1].StoredInt);
 		}
 
 		public override void ListChangedOnChange()
@@ -264,7 +279,8 @@ namespace WeSay.Data.Tests
 
 			this._newItem = new TestItem();
 			this._key = 1;
-			this._property = null;
+			PropertyDescriptorCollection pdc = TypeDescriptor.GetProperties(typeof(TestItem));
+			this._property = pdc.Find("StoredInt", false);
 			base.TestFixtureSetUp();
 		}
 
@@ -280,97 +296,6 @@ namespace WeSay.Data.Tests
 		}
 	}
 
-
-	[TestFixture]
-	public class Db4oBindingListFilteredTest
-	{
-
-		Db4oDataSource _dataSource;
-		Db4oBindingList<TestItem> _bindingList;
-		string _filePath;
-		TestItem _jared, _gianna;
-
-
-		private bool _listChanged;
-		private ListChangedEventArgs _listChangedEventArgs;
-
-		public void _adaptor_ListChanged(object sender, ListChangedEventArgs e)
-		{
-			_listChanged = true;
-			_listChangedEventArgs = e;
-		}
-
-		private void AssertListChanged()
-		{
-			Assert.IsTrue(_listChanged);
-			Assert.AreEqual(ListChangedType.Reset, this._listChangedEventArgs.ListChangedType);
-			ResetListChanged();
-		}
-		private void ResetListChanged()
-		{
-			this._listChanged = false;
-			this._listChangedEventArgs = null;
-		}
-
-		[SetUp]
-		public void SetUp()
-		{
-			_filePath = System.IO.Path.GetTempFileName();
-			this._dataSource = new Db4oDataSource(_filePath);
-			this._bindingList = new Db4oBindingList<TestItem>(new Db4oBindingListConfiguration<TestItem>(this._dataSource));
-			this._bindingList.ListChanged += new ListChangedEventHandler(_adaptor_ListChanged);
-
-			_jared = new TestItem("Jared", 1, new DateTime(2003, 7, 10));
-			_gianna = new TestItem("Gianna", 2, new DateTime(2006, 7, 17));
-			this._bindingList.Add(_jared);
-			this._bindingList.Add(_gianna);
-			ResetListChanged();
-		}
-
-		[TearDown]
-		public void TestFixtureTearDown()
-		{
-			this._dataSource.Dispose();
-			System.IO.File.Delete(_filePath);
-		}
-
-		[Test]
-		public void Filter()
-		{
-			Assert.AreEqual(2, this._bindingList.Count);
-			Assert.IsFalse(_listChanged);
-			this._bindingList.ApplyFilter(delegate(TestItem item)
-			{
-				return item.StoredInt == 1;
-			});
-			Assert.AreEqual(1, this._bindingList.Count);
-			Assert.AreEqual(_jared, this._bindingList[0]);
-			AssertListChanged();
-		}
-		[Test]
-		public void ClearFilter()
-		{
-			Filter();
-			this._bindingList.RemoveFilter();
-			Assert.AreEqual(2, this._bindingList.Count);
-			AssertListChanged();
-		}
-
-		[Test]
-		public void ChangeFilter()
-		{
-			Filter();
-
-			this._bindingList.ApplyFilter(delegate(TestItem item)
-			{
-				return item.StoredString.StartsWith("Gia");
-			});
-			Assert.AreEqual(1, this._bindingList.Count);
-			Assert.AreEqual(_gianna, this._bindingList[0]);
-			AssertListChanged();
-		}
-
-	}
 
 	[TestFixture]
 	public class Db4oBindingListSortedTest
@@ -464,7 +389,7 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		public void SortInt()
+		public void SortIntComparer()
 		{
 			Assert.IsFalse(_listChanged);
 			this._bindingList.Sort = new StoredItemIntComparer();
@@ -476,7 +401,23 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		public void SortDate()
+		public void SortInt()
+		{
+			Assert.IsFalse(_listChanged);
+
+			PropertyDescriptorCollection pdc = TypeDescriptor.GetProperties(typeof(TestItem));
+			PropertyDescriptor pd = pdc.Find("StoredInt", false);
+			((IBindingList)this._bindingList).ApplySort(pd, ListSortDirection.Descending);
+
+			Assert.AreEqual(_eric, this._bindingList[0]);
+			Assert.AreEqual(_allison, this._bindingList[1]);
+			Assert.AreEqual(_jared, this._bindingList[2]);
+			Assert.AreEqual(_gianna, this._bindingList[3]);
+			AssertListChanged();
+		}
+
+		[Test]
+		public void SortDateComparer()
 		{
 			Assert.IsFalse(_listChanged);
 			this._bindingList.Sort = new StoredItemDateComparer();
@@ -486,9 +427,24 @@ namespace WeSay.Data.Tests
 			Assert.AreEqual(_gianna, this._bindingList[3]);
 			AssertListChanged();
 		}
+		[Test]
+		public void SortDate()
+		{
+			Assert.IsFalse(_listChanged);
+
+			PropertyDescriptorCollection pdc = TypeDescriptor.GetProperties(typeof(TestItem));
+			PropertyDescriptor pd = pdc.Find("StoredDateTime", false);
+			((IBindingList)this._bindingList).ApplySort(pd, ListSortDirection.Descending);
+
+			Assert.AreEqual(_allison, this._bindingList[0]);
+			Assert.AreEqual(_eric, this._bindingList[1]);
+			Assert.AreEqual(_jared, this._bindingList[2]);
+			Assert.AreEqual(_gianna, this._bindingList[3]);
+			AssertListChanged();
+		}
 
 		[Test]
-		public void SortString()
+		public void SortStringComparer()
 		{
 			Assert.IsFalse(_listChanged);
 			this._bindingList.Sort = new StoredItemStringComparer();
@@ -497,6 +453,30 @@ namespace WeSay.Data.Tests
 			Assert.AreEqual(_gianna, this._bindingList[2]);
 			Assert.AreEqual(_jared, this._bindingList[3]);
 			AssertListChanged();
+		}
+
+		[Test]
+		public void SortString()
+		{
+			Assert.IsFalse(_listChanged);
+
+			PropertyDescriptorCollection pdc = TypeDescriptor.GetProperties(typeof(TestItem));
+			PropertyDescriptor pd = pdc.Find("StoredString", false);
+			((IBindingList)this._bindingList).ApplySort(pd, ListSortDirection.Descending);
+
+			Assert.AreEqual(_allison, this._bindingList[0]);
+			Assert.AreEqual(_eric, this._bindingList[1]);
+			Assert.AreEqual(_gianna, this._bindingList[2]);
+			Assert.AreEqual(_jared, this._bindingList[3]);
+			AssertListChanged();
+		}
+
+		[Test]
+		public void ChangeSortComparer()
+		{
+			SortIntComparer();
+			SortDateComparer();
+			SortStringComparer();
 		}
 
 		[Test]

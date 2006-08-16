@@ -29,6 +29,7 @@
   </PropertyGroup>
   <ItemGroup>
 	<Compile Include="db4oBindingListTests.cs" />
+	<Compile Include="Db4oFilterableTest.cs" />
 	<Compile Include="IBindingListTest.cs" />
 	<Compile Include="ICollectionBaseTest.cs" />
 	<Compile Include="IEnumerableBaseTest.cs" />
@@ -45,7 +46,7 @@
   <ItemGroup>
 	<ProjectReference Include="..\WeSay.Data\WeSay.Data.csproj">
 	  <Project>{600D0FD4-D189-41A0-9BC5-FC79AD2CF1CD}</Project>
-	  <Name>DataAdaptor</Name>
+	  <Name>WeSay.Data</Name>
 	</ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

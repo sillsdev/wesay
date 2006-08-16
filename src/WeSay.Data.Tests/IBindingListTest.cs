@@ -83,19 +83,32 @@ namespace WeSay.Data.Tests
 				}
 			}
 		}
+
+		protected virtual void VerifySort()
+		{
+		}
+
 		[Test]
 		public void ApplySort()
 		{
 			if (_bindingList.SupportsSorting)
 			{
+				if (_property == null)
+				{
+					PropertyDescriptorCollection pdc = TypeDescriptor.GetProperties(typeof(T));
+					this._property = pdc[0];
+
+				}
+
+				Assert.IsNotNull(_property);
 				Assert.IsFalse(_listChanged);
-				_bindingList.ApplySort(_property, ListSortDirection.Ascending);
+				_bindingList.ApplySort(_property, ListSortDirection.Descending);
 				if (_bindingList.SupportsChangeNotification)
 				{
 					Assert.IsTrue(_listChanged);
 					Assert.IsTrue(_listChangedEventArgs.ListChangedType == ListChangedType.Reset);
 				}
-				//todo verify sorted
+				VerifySort();
 			}
 			else
 			{
@@ -119,6 +132,7 @@ namespace WeSay.Data.Tests
 		{
 			if (_bindingList.SupportsSearching)
 			{
+				Assert.IsNotNull(_property);
 				int row = _bindingList.Find(_property, _key);
 				Assert.Greater(row, 0);
 			}
@@ -145,6 +159,10 @@ namespace WeSay.Data.Tests
 			_bindingList.RemoveIndex(_property); // can do nothing
 		}
 
+		protected virtual void VerifyUnsorted()
+		{
+		}
+
 		[Test]
 		public void RemoveSort()
 		{
@@ -157,7 +175,7 @@ namespace WeSay.Data.Tests
 					Assert.IsTrue(_listChanged);
 					Assert.IsTrue(_listChangedEventArgs.ListChangedType == ListChangedType.Reset);
 				}
-				//todo verify unsorted
+				VerifyUnsorted();
 			}
 			else
 			{
