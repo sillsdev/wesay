@@ -7,7 +7,7 @@ using System.ComponentModel;
 
 namespace WeSay.Data.Tests
 {
-	public class IBindingListBaseTest<T, K>
+	public class IBindingListBaseTest<T, K> where T: new()
 	{
 		protected IBindingList _bindingList;
 		protected PropertyDescriptor _property;
@@ -22,13 +22,6 @@ namespace WeSay.Data.Tests
 			this._listChangedEventArgs = null;
 		}
 
-		public void TestFixtureSetUp()
-		{
-			this._bindingList.ListChanged += new ListChangedEventHandler(_bindingList_ListChanged);
-			this._listChanged = false;
-			this._listChangedEventArgs = null;
-		}
-
 		public void _bindingList_ListChanged(object sender, ListChangedEventArgs e)
 		{
 			_listChanged = true;
@@ -36,8 +29,9 @@ namespace WeSay.Data.Tests
 		}
 
 		[SetUp]
-		public void Setup()
+		public virtual void SetUp()
 		{
+			this._bindingList.ListChanged += new ListChangedEventHandler(_bindingList_ListChanged);
 			_listChanged = false;
 			_listChangedEventArgs = null;
 		}
@@ -86,6 +80,7 @@ namespace WeSay.Data.Tests
 
 		protected virtual void VerifySort()
 		{
+			Assert.IsTrue(_bindingList.IsSorted);
 		}
 
 		[Test]
@@ -99,16 +94,23 @@ namespace WeSay.Data.Tests
 					this._property = pdc[0];
 
 				}
-
-				Assert.IsNotNull(_property);
 				Assert.IsFalse(_listChanged);
+				VerifyUnsorted();
+
 				_bindingList.ApplySort(_property, ListSortDirection.Descending);
-				if (_bindingList.SupportsChangeNotification)
+				if (_bindingList.Count > 1)
 				{
-					Assert.IsTrue(_listChanged);
-					Assert.IsTrue(_listChangedEventArgs.ListChangedType == ListChangedType.Reset);
+					if (_bindingList.SupportsChangeNotification)
+					{
+						Assert.IsTrue(_listChanged);
+						Assert.IsTrue(_listChangedEventArgs.ListChangedType == ListChangedType.Reset);
+					}
+					VerifySort();
 				}
-				VerifySort();
+				else
+				{
+					VerifyUnsorted();
+				}
 			}
 			else
 			{
@@ -161,6 +163,7 @@ namespace WeSay.Data.Tests
 
 		protected virtual void VerifyUnsorted()
 		{
+			Assert.IsFalse(_bindingList.IsSorted);
 		}
 
 		[Test]
@@ -169,11 +172,27 @@ namespace WeSay.Data.Tests
 			if (_bindingList.SupportsSorting)
 			{
 				Assert.IsFalse(_listChanged);
+				Assert.IsFalse(_bindingList.IsSorted);
 				_bindingList.RemoveSort();
 				if (_bindingList.SupportsChangeNotification)
 				{
-					Assert.IsTrue(_listChanged);
-					Assert.IsTrue(_listChangedEventArgs.ListChangedType == ListChangedType.Reset);
+					Assert.IsFalse(_listChanged);
+				}
+				if (_property == null)
+				{
+					PropertyDescriptorCollection pdc = TypeDescriptor.GetProperties(typeof(T));
+					this._property = pdc[0];
+				}
+				_bindingList.ApplySort(_property, ListSortDirection.Descending);
+				ResetListChanged();
+				_bindingList.RemoveSort();
+				if (_bindingList.Count > 1)
+				{
+					if (_bindingList.SupportsChangeNotification)
+					{
+						Assert.IsTrue(_listChanged);
+						Assert.IsTrue(_listChangedEventArgs.ListChangedType == ListChangedType.Reset);
+					}
 				}
 				VerifyUnsorted();
 			}
@@ -192,7 +211,6 @@ namespace WeSay.Data.Tests
 					Assert.Fail();
 				}
 			}
-
 		}
 
 		[Test]
@@ -219,7 +237,7 @@ namespace WeSay.Data.Tests
 					_listChanged = false;
 					_listChangedEventArgs = null;
 				}
-				_bindingList[0] = default(T);
+				_bindingList[0] = new T();
 				Assert.IsTrue(_listChanged);
 				Assert.IsTrue(_listChangedEventArgs.ListChangedType == ListChangedType.ItemChanged);
 				Assert.AreEqual(-1, _listChangedEventArgs.OldIndex);
@@ -293,7 +311,7 @@ namespace WeSay.Data.Tests
 
 
 		[TestFixtureSetUp]
-		public new void TestFixtureSetUp()
+		public void TestFixtureSetUp()
 		{
 			BindingList<SimpleClass> bindingList = new BindingList<SimpleClass>();
 
@@ -313,8 +331,6 @@ namespace WeSay.Data.Tests
 			this._newItem = new SimpleClass("6", 6);
 			this._key = "1";
 			this._property = null;
-
-			base.TestFixtureSetUp();
 		}
 
 		void bindingList_AddingNew(object sender, AddingNewEventArgs e)
@@ -329,7 +345,7 @@ namespace WeSay.Data.Tests
 
 
 		[SetUp]
-		public void SetUp()
+		public override void SetUp()
 		{
 			BindingList<SimpleClass> bindingList = new BindingList<SimpleClass>();
 
@@ -345,7 +361,7 @@ namespace WeSay.Data.Tests
 			this._key = "1";
 			this._property = null;
 
-			base.TestFixtureSetUp();
+			base.SetUp();
 		}
 
 		void bindingList_AddingNew(object sender, AddingNewEventArgs e)

@@ -412,7 +412,7 @@ namespace Db4o.Binding
 			Query(this.Filter, this.Sorter, commit);
 		}
 		/// <summary>
-		/// Calls <see cref="Refresh(int)"/> for each item.
+		/// Calls <see cref="RefreshAt(int)"/> for each item.
 		/// </summary>
 		public void Refresh()
 		{
@@ -658,6 +658,13 @@ namespace Db4o.Binding
 
 		#region Filtering
 
+		public bool IsFiltered
+		{
+			get
+			{
+				return this._filter == ComparisonHelper<T>.DefaultPredicate;
+			}
+		}
 		/// <summary>
 		/// Filter used for filtering (removing) and validating items.
 		/// </summary>
@@ -789,6 +796,15 @@ namespace Db4o.Binding
 		{
 			get { return _sortingInDatabase; }
 			set { _sortingInDatabase = value; }
+		}
+
+		public bool IsSorted
+		{
+			get
+			{
+				return _sortCalled;
+
+			}
 		}
 
 		/// <summary>
@@ -943,6 +959,9 @@ namespace Db4o.Binding
 					DeleteItem(oldId, true);
 					this.ItemIds[index] = newId;
 				}
+				if (this.StoreItemOnPropertyChanged)
+					RegisterItemPropertyChangedHandler(value, true);
+
 			}
 		}
 
@@ -983,7 +1002,10 @@ namespace Db4o.Binding
 		/// </summary>
 		public void CopyTo(T[] array, int arrayIndex)
 		{
-			CopyTo(0, array, arrayIndex, this.Count);
+			if (this.Count != 0)
+			{
+				CopyTo(0, array, arrayIndex, this.Count - 1);
+			}
 		}
 		/// <summary>
 		/// See <see cref="ICollection`1.Count"/>.
@@ -1034,17 +1056,115 @@ namespace Db4o.Binding
 		#endregion
 
 		#region IEnumerable Members
+		#region Enumerator
+
+		public struct Enumerator : IEnumerator<T>
+		{
+			Db4oList<T> _collection;
+			int _index;
+			bool _isDisposed;
+
+			public Enumerator(Db4oList<T> collection)
+			{
+				if (collection == null)
+				{
+					throw new ArgumentNullException();
+				}
+				_collection = collection;
+				_index = -1;
+				_isDisposed = false;
+			}
+			private void CheckValidIndex(int validMinimum)
+			{
+				if (_index < validMinimum || _index >= _collection.Count)
+				{
+					throw new InvalidOperationException();
+				}
+			}
+			private void CheckCollectionUnchanged()
+			{
+				if (!_collection._isEnumerating)
+				{
+					throw new InvalidOperationException();
+				}
+			}
+			private void CheckDisposed()
+			{
+				if (_isDisposed)
+				{
+					throw new ObjectDisposedException("Db4oList.Enumerator");
+				}
+			}
+
+			#region IEnumerator<T> Members
+
+			public T Current
+			{
+				get
+				{
+					CheckDisposed();
+					CheckValidIndex(0);
+					CheckCollectionUnchanged();
+					return ((IList<T>)_collection)[_index];
+				}
+			}
+
+			#endregion
+
+			#region IDisposable Members
+
+			void IDisposable.Dispose()
+			{
+				_collection = null;
+			}
+
+			#endregion
+
+			#region IEnumerator Members
+
+			object System.Collections.IEnumerator.Current
+			{
+				get
+				{
+					CheckDisposed();
+					return Current;
+				}
+			}
+
+			public bool MoveNext()
+			{
+				CheckDisposed();
+				CheckValidIndex(-1);
+				CheckCollectionUnchanged();
+				return (++_index < _collection.Count);
+			}
+
+			public void Reset()
+			{
+				CheckDisposed();
+				CheckCollectionUnchanged();
+				_index = -1;
+			}
+
+			#endregion
+		}
+		private bool _isEnumerating;
+
+		#endregion
+
+		public Enumerator GetEnumerator()
+		{
+			_isEnumerating = true;
+			return new Enumerator(this);
+		}
 
 		/// <summary>
 		/// Enumerator.
 		/// See <see cref="IEnumerable"/>.
 		/// </summary>
-		public IEnumerator GetEnumerator()
+		IEnumerator System.Collections.IEnumerable.GetEnumerator()
 		{
-			for (int i = 0; i < this.ItemIds.Count; i++)
-			{
-				yield return this[i];
-			}
+			return GetEnumerator();
 		}
 
 		#endregion

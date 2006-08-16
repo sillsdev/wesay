@@ -41,7 +41,7 @@ namespace WeSay.Data.Tests
 		{
 			_filePath = System.IO.Path.GetTempFileName();
 			this._dataSource = new Db4oDataSource(_filePath);
-			this._bindingList = new Db4oBindingList<TestItem>(new Db4oBindingListConfiguration<TestItem>(this._dataSource));
+			this._bindingList = new Db4oBindingList<TestItem>(this._dataSource);
 			this._bindingList.ListChanged += new ListChangedEventHandler(_adaptor_ListChanged);
 
 			_jared = new TestItem("Jared", 1, new DateTime(2003, 7, 10));
@@ -170,7 +170,7 @@ namespace WeSay.Data.Tests
 		{
 			_filePath = System.IO.Path.GetTempFileName();
 			this._dataSource = new Db4oDataSource(_filePath);
-			this._bindingList = new Db4oBindingList<SimpleTestClass>(new Db4oBindingListConfiguration<SimpleTestClass>(this._dataSource));
+			this._bindingList = new Db4oBindingList<SimpleTestClass>(this._dataSource);
 		}
 
 		[TearDown]
@@ -184,13 +184,13 @@ namespace WeSay.Data.Tests
 		public void FastFilter()
 		{
 			List<SimpleTestClass> l = new List<SimpleTestClass>();
-			for (int i = 0; i < 10000; ++i)
+			for (int i = 0; i < 1000; ++i)
 			{
 				l.Add(new SimpleTestClass(i));
 			}
 			this._bindingList.Add(l);
 
-			Assert.AreEqual(10000, this._bindingList.Count);
+			Assert.AreEqual(1000, this._bindingList.Count);
 			this._bindingList.ApplyFilter(delegate(SimpleTestClass item)
 			{
 				return item.I > 100 && item.I <=200;

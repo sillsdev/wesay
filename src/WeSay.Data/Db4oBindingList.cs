@@ -1,118 +1,75 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
-using com.db4o;
 using System.ComponentModel;
 
 namespace WeSay.Data
 {
-	public class Db4oBindingList<T> : IBindingList, IFilterable<T>, IList<T>, ICollection<T>, IEnumerable<T> where T : INotifyPropertyChanged, new()
+	public class Db4oBindingList<T> : IBindingList, IFilterable<T>, IList<T>, ICollection<T>, IEnumerable<T> where T : class, INotifyPropertyChanged, new()
 	{
-		ObjectContainer _db;
-		IList<T> _records;
-		Predicate<T> _filter;
-		IComparer<T> _sort;
+		Db4o.Binding.Db4oList<T> _records;
+		PropertyDescriptor	_propertyDescriptor;
+		ListSortDirection   _listSortDirection;
 
-		static Predicate<T> _noFilter = delegate(T o)
-			{
-				return true;
-			};
-
-		public IComparer<T> Sort
+		private void Initialize(Db4oDataSource dataSource, Predicate<T> filter, Comparison<T> sort )
 		{
-			get
-			{
-				return _sort;
+			if(dataSource == null){
+				throw new ArgumentNullException("dataSource");
 			}
-			set
-			{
-				_propertyDescriptor = null;
-				_listSortDirection = ListSortDirection.Ascending;
-				_sort = value;
-				Load();
-				OnListReset();
+
+			_records = new Db4o.Binding.Db4oList<T>((com.db4o.ObjectContainer)dataSource.Data, new List<T>(), filter, sort);
+			_records.ReadCacheSize = 0;
+			_records.WriteCacheSize = 1;
+			_records.Requery(false);
+		}
+
+		public Db4oBindingList(Db4oDataSource dataSource)
+		{
+			Initialize(dataSource, null, null);
+		}
+
+		public Db4oBindingList(Db4oDataSource dataSource, Predicate<T> filter)
+		{
+			if(filter == null){
+				throw new ArgumentNullException("filter");
 			}
+			Initialize(dataSource, filter, null);
+		}
+
+		public Db4oBindingList(Db4oDataSource dataSource, Predicate<T> filter, Comparison<T> sort)
+		{
+			if(filter == null){
+				throw new ArgumentNullException("filter");
+			}
+			if(sort == null){
+				throw new ArgumentNullException("sort");
+			}
+			Initialize(dataSource, filter, sort);
+		}
+
+		public Db4oBindingList(Db4oDataSource dataSource, Comparison<T> sort)
+		{
+			if(sort == null){
+				throw new ArgumentNullException("sort");
+			}
+			Initialize(dataSource, null, sort);
 		}
 
 		public void Add(IList<T> l)
 		{
+			_records.WriteCacheSize = 0;
 			int count = l.Count;
 			for (int i = 0; i < count; i++)
 			{
-				_db.Set(l[i]);
+				_records.Add(l[i]);
 			}
-			_db.Commit();
+			_records.Commit();
+			_records.WriteCacheSize = 1;
 
-			Load();
 			for (int i = 0; i < count; i++)
 			{
-				T item = l[i];
-				WatchForUpdates(item);
-				OnItemAdded(IndexOf(item));
+				OnItemAdded(i);
 			}
 		}
-
-		public Db4oBindingList(Db4oBindingListConfiguration<T> configuration)
-		{
-			this._db = (ObjectContainer)configuration.DataSource.Data;
-			_filter = configuration.Filter;
-			if (configuration.Filter == null)
-			{
-				_filter = _noFilter;
-			}
-			this._sort = configuration.Sort;
-			Load();
-		}
-
-		private void Db4oSet(T o)
-		{
-			_db.Set(o);
-			_db.Commit();
-		}
-
-		public void Update(T o)
-		{
-			Db4oSet(o);
-		}
-
-		private void WatchForUpdates(T o)
-		{
-			o.PropertyChanged += new PropertyChangedEventHandler(ChildT_PropertyChanged);
-
-		}
-
-		void ChildT_PropertyChanged(object sender, PropertyChangedEventArgs e)
-		{
-			T o = (T)sender;
-			Update(o);
-		}
-
-		public void Load()
-		{
-			if (this._filter == _noFilter)
-			{
-				if (this.Sort == null)
-				{
-					_records = _db.Query<T>();
-				}
-				else
-				{
-					_records = _db.Query<T>(_filter, this.Sort);
-				}
-			}
-			else
-			{
-				if (this.Sort == null)
-				{
-					_records = _db.Query<T>(_filter);
-				}
-				else
-				{
-					_records = _db.Query<T>(_filter, this.Sort);
-				}
-			}
-		}
-
 
 		#region IFilterable Members
 
@@ -122,15 +79,13 @@ namespace WeSay.Data
 			{
 				throw new ArgumentNullException();
 			}
-			_filter = filter;
-			Load();
+			_records.Filter = filter;
 			OnListReset();
 		}
 
 		public void RemoveFilter()
 		{
-			_filter = _noFilter;
-			Load();
+			_records.Filter = null;
 			OnListReset();
 		}
 
@@ -138,15 +93,13 @@ namespace WeSay.Data
 		{
 			get
 			{
-				return _filter == _noFilter;
+				return _records.IsFiltered;
 			}
 		}
 
 		#endregion
 
 		#region IBindingList Members
-
-		//        private bool _isSorted;
 
 		void IBindingList.AddIndex(PropertyDescriptor property)
 		{
@@ -155,8 +108,8 @@ namespace WeSay.Data
 		object IBindingList.AddNew()
 		{
 			T o = new T();
-			Add(o);
-			WatchForUpdates(o);
+			_records.Add(o);
+			OnItemAdded(IndexOf(o));
 			return o;
 		}
 
@@ -182,54 +135,18 @@ namespace WeSay.Data
 			}
 		}
 
-		public class PropertyDescriptorComparer<U> : Comparer<U>
-		{
-			PropertyDescriptor _propertyDescriptor;
-			ListSortDirection _listSortDirection;
-
-			public PropertyDescriptorComparer(PropertyDescriptor propertyDescriptor, ListSortDirection listSortDirection)
-			{
-				if (propertyDescriptor == null)
-				{
-					throw new ArgumentNullException("propertyDescriptor");
-				}
-				_propertyDescriptor = propertyDescriptor;
-				_listSortDirection = listSortDirection;
-			}
-
-			public override int Compare(U x, U y)
-			{
-				if (x == null)
-				{
-					return -1;
-				}
-				if (y == null)
-				{
-					return 1;
-				}
-
-				int i = System.Collections.Comparer.Default.Compare(
-											_propertyDescriptor.GetValue(x),
-											_propertyDescriptor.GetValue(y));
-				if (_listSortDirection == ListSortDirection.Descending)
-				{
-					return -i;
-				}
-				else
-				{
-					return i;
-				}
-			}
-		}
-
-		PropertyDescriptor _propertyDescriptor;
-		ListSortDirection _listSortDirection;
-
 		public void ApplySort(PropertyDescriptor property, ListSortDirection direction)
 		{
-			Sort = new PropertyDescriptorComparer<T>(property, direction);
+			Comparison<T> sort = delegate(T item1, T item2)
+			{
+				PropertyComparison<T> propertySorter = ComparisonHelper<T>.GetPropertyComparison(ComparisonHelper<T>.DefaultPropertyComparison, direction);
+				return propertySorter(item1, item2, property);
+			};
+
+			_records.Sort(sort);
 			_propertyDescriptor = property;
 			_listSortDirection = direction;
+			OnListReset();
 		}
 
 		int IBindingList.Find(PropertyDescriptor property, object key)
@@ -241,13 +158,18 @@ namespace WeSay.Data
 		{
 			get
 			{
-				return _sort != null;
+				return _records.IsSorted;
 			}
 		}
 
 		protected virtual void OnItemAdded(int newIndex)
 		{
 			OnListChanged(new ListChangedEventArgs(ListChangedType.ItemAdded, newIndex));
+		}
+
+		protected virtual void OnItemChanged(int newIndex)
+		{
+			OnListChanged(new ListChangedEventArgs(ListChangedType.ItemChanged, newIndex));
 		}
 
 		protected virtual void OnItemDeleted(int oldIndex)
@@ -276,7 +198,12 @@ namespace WeSay.Data
 
 		public void RemoveSort()
 		{
-			Sort = null;
+			if (IsSorted)
+			{
+				_records.RemoveSort();
+				_propertyDescriptor = null;
+				OnListReset();
+			}
 		}
 
 		public ListSortDirection SortDirection
@@ -330,25 +257,26 @@ namespace WeSay.Data
 
 		void IList<T>.Insert(int index, T item)
 		{
-			throw new NotSupportedException();
+			_records.Insert(index, item);
+			OnItemChanged(index);
 		}
 
 		public void RemoveAt(int index)
 		{
-			Remove(this[index]);
+			_records.RemoveAt(index);
+			OnItemDeleted(index);
 		}
 
 		public T this[int index]
 		{
 			get
 			{
-				T item = _records[index];
-				WatchForUpdates(item);
-				return item;
+				return _records[index];
 			}
 			set
 			{
-				throw new NotSupportedException();
+				_records[index] = value;
+				OnItemChanged(index);
 			}
 		}
 
@@ -360,7 +288,6 @@ namespace WeSay.Data
 		{
 			T item = (T)value;
 			Add(item);
-			WatchForUpdates(item);
 			return IndexOf(item);
 		}
 
@@ -405,13 +332,16 @@ namespace WeSay.Data
 			Remove((T)value);
 		}
 
-		void System.Collections.IList.RemoveAt(int index)
+		private void CheckIndex(int index)
 		{
 			if (index < 0 || index >= Count)
 			{
 				throw new ArgumentOutOfRangeException();
 			}
-
+		}
+		void System.Collections.IList.RemoveAt(int index)
+		{
+			CheckIndex(index);
 			RemoveAt(index);
 		}
 
@@ -419,23 +349,14 @@ namespace WeSay.Data
 		{
 			get
 			{
-				if (index < 0 || index >= Count)
-				{
-					throw new ArgumentOutOfRangeException();
-				}
-
-				return this[index];
+				CheckIndex(index);
+				return _records[index];
 			}
 			set
 			{
-				if (index < 0 || index >= Count)
-				{
-					throw new ArgumentOutOfRangeException();
-				}
-				T item = (T)value;
-				WatchForUpdates(item);
-
-				this[index] = item;
+				CheckIndex(index);
+				_records[index] = (T)value;
+				OnItemChanged(index);
 			}
 		}
 
@@ -445,20 +366,18 @@ namespace WeSay.Data
 
 		public void Add(T item)
 		{
-			Db4oSet(item);
-			Load();
-			WatchForUpdates(item);
+			_records.Add(item);
 			OnItemAdded(IndexOf(item));
 		}
 
 		public void Clear()
 		{
-			foreach (T item in _records)
+			int count = _records.Count;
+			_records.Clear();
+			for(int i=0; i < count; ++i)
 			{
-				_db.Delete(item);
+				OnItemDeleted(i);
 			}
-			_db.Commit();
-			Load();
 		}
 
 		public bool Contains(T item)
@@ -483,22 +402,13 @@ namespace WeSay.Data
 		{
 			get
 			{
-				return false;
+				return _records.IsReadOnly;
 			}
 		}
 
 		public bool Remove(T item)
 		{
-			if (!Contains(item))
-			{
-				return false;
-			}
-			int index = this.IndexOf(item);
-			_db.Delete(item);
-			_db.Commit();
-			Load();
-			OnItemDeleted(index);
-			return true;
+			return _records.Remove(item);
 		}
 
 		#endregion
@@ -509,16 +419,18 @@ namespace WeSay.Data
 		{
 			if (array == null)
 			{
-				throw new ArgumentNullException();
+				throw new ArgumentNullException("array");
 			}
 			if (index < 0)
 			{
-				throw new ArgumentOutOfRangeException();
+				throw new ArgumentOutOfRangeException("index", index, "must be >= 0");
 			}
-
-			if (index + Count > array.Length || array.Rank > 1)
+			if (index + Count > array.Length)
 			{
-				throw new ArgumentException();
+				throw new ArgumentException("array not large enough to fit collection starting at index");
+			}
+			if (array.Rank > 1){
+				throw new ArgumentException("array cannot be multidimensional", "array");
 			}
 
 			T[] tArray = new T[Count];
@@ -555,97 +467,11 @@ namespace WeSay.Data
 
 		#endregion
 
-		#region Enumerator
-
-		public struct Enumerator : IEnumerator<T>
-		{
-			Db4oBindingList<T> _collection;
-			int _index;
-
-			public Enumerator(Db4oBindingList<T> collection)
-			{
-				if (collection == null)
-				{
-					throw new ArgumentNullException();
-				}
-				_collection = collection;
-				_index = -1;
-			}
-			private void CheckValidIndex(int ValidMinimum)
-			{
-				if (_index < ValidMinimum || _index >= _collection.Count)
-				{
-					throw new InvalidOperationException();
-				}
-			}
-			private void CheckCollectionUnchanged()
-			{
-				if (!_collection._isEnumerating)
-				{
-					throw new InvalidOperationException();
-				}
-			}
-
-			#region IEnumerator<T> Members
-
-			public T Current
-			{
-				get
-				{
-					CheckValidIndex(0);
-					CheckCollectionUnchanged();
-					return ((IList<T>)_collection)[_index];
-				}
-			}
-
-			#endregion
-
-			#region IDisposable Members
-
-			void IDisposable.Dispose()
-			{
-			}
-
-			#endregion
-
-			#region IEnumerator Members
-
-			object System.Collections.IEnumerator.Current
-			{
-				get
-				{
-					return Current;
-				}
-			}
-
-			public bool MoveNext()
-			{
-				CheckValidIndex(-1);
-				CheckCollectionUnchanged();
-				return (++_index < _collection.Count);
-			}
-
-			public void Reset()
-			{
-				CheckCollectionUnchanged();
-				_index = -1;
-			}
-
-			#endregion
-		}
-
-		public Enumerator GetEnumerator()
-		{
-			_isEnumerating = true;
-			return new Enumerator(this);
-		}
-
-
 		#region IEnumerable Members
 
 		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
 		{
-			return ((IEnumerable<T>)this).GetEnumerator();
+			return ((System.Collections.IEnumerable)_records).GetEnumerator();
 		}
 
 		#endregion
@@ -654,39 +480,12 @@ namespace WeSay.Data
 
 		IEnumerator<T> IEnumerable<T>.GetEnumerator()
 		{
-			return GetEnumerator();
+			return ((IEnumerable<T>)_records).GetEnumerator();
 		}
 
 		#endregion
-		#endregion
+}
 
-
-		private bool _isEnumerating;
-	}
 }
 
 
-//public class Db4oBindingList<T> : BindingList<T> where T : new()
-//{
-//    ObjectContainer _data;
-
-//    public Db4oBindingList()
-//        : base()
-//    {
-//    }
-
-//    private void Db4oSet(T o)
-//    {
-//        _data.Set(o);
-//        _data.Commit();
-//    }
-
-//    protected override object AddNewCore()
-//    {
-//        T o = new T();
-//        Db4oSet(o);
-//        this.Add(o);
-//        return o;
-//    }
-//    //        protected override
-//}

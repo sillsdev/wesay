@@ -24,8 +24,7 @@ namespace WeSay.App
 			WeSay.Data.Db4oDataSource ds = new WeSay.Data.Db4oDataSource(project.PathToLexicalModelDB);
 			_picoContext.RegisterComponentInstance(ds);
 
-			WeSay.Data.Db4oBindingListConfiguration<LexEntry> config = new WeSay.Data.Db4oBindingListConfiguration<LexEntry>(ds);
-			WeSay.Data.Db4oBindingList<LexEntry> entries = new WeSay.Data.Db4oBindingList<LexEntry>(config);
+			WeSay.Data.Db4oBindingList<LexEntry> entries = new WeSay.Data.Db4oBindingList<LexEntry>(ds);
 			_picoContext.RegisterComponentInstance(entries);
 		}
 
