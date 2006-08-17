@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
+using WeSay.LexicalModel;
 using WeSay.LexicalTools;
 using Gtk;
 
@@ -29,6 +30,17 @@ namespace WeSay.LexicalTools.Tests
 			tool.Deactivate();
 
 			Assert.AreNotEqual(null, tool.Label);
+		}
+
+		[Test]
+		public void LoadThai()
+		{
+
+			WeSay.Data.Db4oDataSource ds = new WeSay.Data.Db4oDataSource( @"..\..\SampleProjects\Thai\thai.yap");
+		   // WeSay.Data.Db4oBindingListConfiguration<LexEntry> config = new WeSay.Data.Db4oBindingListConfiguration<LexEntry>(ds);
+			WeSay.Data.Db4oBindingList<LexEntry> entries = new WeSay.Data.Db4oBindingList<LexEntry>(ds);
+
+			Assert.Greater(entries.Count,0);
 		}
 	}
 }

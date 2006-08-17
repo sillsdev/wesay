@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using System.Diagnostics;
@@ -6,6 +7,30 @@ using System.ComponentModel;
 
 namespace WeSay.Language
 {
+	public class LanguageForm
+	{
+		private string _writingSystemId;
+		private string _form;
+
+		public LanguageForm(string writingSystemId, string form)
+		{
+			_writingSystemId = writingSystemId;
+			_form =  form;
+		}
+
+		public string WritingSystemId
+		{
+			get { return _writingSystemId; }
+		  //  set { _writingSystemId = value; }
+		}
+
+		public string Form
+		{
+			get { return _form; }
+			set { _form = value; }
+		}
+	}
+
 	/// <summary>
 	/// MultiText holds an array of strings, indexed by writing system ID.
 	/// These are simple, single language Unicode strings.
@@ -17,12 +42,17 @@ namespace WeSay.Language
 		/// </summary>
 		public event PropertyChangedEventHandler PropertyChanged;
 
-		protected System.Collections.Generic.Dictionary<string, string> _forms;
+
+		//protected System.Collections.Generic.Dictionary<string, string> _forms;
+//        protected System.Collections.Generic.List<LanguageForm> _forms;
+		protected System.Collections.ArrayList _forms;
 
 		public MultiText()
 		{
-			_forms = new Dictionary<string, string>();
-		}
+		   // _forms = new Dictionary<string, string>();
+		 //   _forms = new List<LanguageForm>(1);
+			 _forms = new ArrayList(1);
+	  }
 
 		public string this[string writingSystemId]
 		{
@@ -35,13 +65,23 @@ namespace WeSay.Language
 				SetAlternative(writingSystemId, value);
 			}
 		}
+		public LanguageForm Find(string writingSystemId)
+		{
+			foreach(LanguageForm f in _forms)
+			{
+				if(f.WritingSystemId == writingSystemId)
+					return f;
+			}
+			return null;
+		}
 
 		public string GetAlternative(string writingSystemId)
 		{
-			if (!_forms.ContainsKey(writingSystemId))
+			LanguageForm alt = Find(writingSystemId);
+			if (null == alt)
 				return "";
 
-			string form = _forms[writingSystemId];
+			string form = alt.Form;
 			if (form == null)
 			{
 				return "";
@@ -57,16 +97,25 @@ namespace WeSay.Language
 
 		   //enhance: check to see if there has actually been a change
 
+		   LanguageForm alt = Find(writingSystemId);
 		   if (form == null || form == "") // we don't use space to store empty strings.
 		   {
-			   if (_forms.ContainsKey(writingSystemId))
+			   if (alt != null)
 			   {
-				   _forms.Remove(writingSystemId);
+				   _forms.Remove(alt);
 			   }
 		   }
 		   else
 		   {
-			   _forms[writingSystemId] = form;
+			   if (alt != null)
+			   {
+				   alt.Form = form;
+			   }
+			   else
+			   {
+				   _forms.Add(new LanguageForm(writingSystemId, form));
+			   }
+
 		   }
 
 		   NotifyPropertyChanged(writingSystemId);
@@ -78,6 +127,7 @@ namespace WeSay.Language
 			{
 				PropertyChanged(this, new PropertyChangedEventArgs(writingSystemId));
 			}
+
 		}
 	}
 }

@@ -40,13 +40,27 @@
 	<Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+	<Compile Include="TestFormatImporter.cs" />
+	<Compile Include="MakeTestFiles.cs" />
 	<Compile Include="TaskBuilderTests.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+	<ProjectReference Include="..\Language\Language.csproj">
+	  <Project>{39DF05AB-8B2E-4CCA-8525-E0D6473E6E65}</Project>
+	  <Name>Language</Name>
+	</ProjectReference>
+	<ProjectReference Include="..\LexicalModel\LexicalModel.csproj">
+	  <Project>{5F61C809-B6C0-4567-9603-B2198E1AD038}</Project>
+	  <Name>LexicalModel</Name>
+	</ProjectReference>
 	<ProjectReference Include="..\WeSay.App\WeSay.App.csproj">
 	  <Project>{EFB9D66D-AF0F-4E45-A1AC-DB32981711D2}</Project>
 	  <Name>WeSay.App</Name>
+	</ProjectReference>
+	<ProjectReference Include="..\WeSay.Data\WeSay.Data.csproj">
+	  <Project>{600D0FD4-D189-41A0-9BC5-FC79AD2CF1CD}</Project>
+	  <Name>WeSay.Data</Name>
 	</ProjectReference>
 	<ProjectReference Include="..\WeSay.UI\WeSay.UI.csproj">
 	  <Project>{AC8F284C-7B34-4AC9-A7DE-FAF765456DFF}</Project>

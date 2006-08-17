@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
 using Gtk;
 using System.ComponentModel;
 using WeSay.LexicalModel;
@@ -50,14 +49,14 @@ namespace WeSay.LexicalTools
 		   }
 
 		   TableBuilder builder = new TableBuilder();
-			builder.AddWidgetRow("word: ", MakeBoundEntry(record.LexicalForm, "en"));
+			builder.AddWidgetRow("word: ", MakeBoundEntry(record.LexicalForm, "th"));
 			foreach (LexSense sense in record.Senses)
 			{
 				TableBuilder senseTableBuilder = new TableBuilder();
 				senseTableBuilder.AddWidgetRow("gloss: ", MakeBoundEntry(sense.Gloss, "en"));
 				foreach (LexExampleSentence example in sense.ExampleSentences)
 				{
-					senseTableBuilder.AddWidgetRow("example: ", MakeBoundEntry(example.Sentence, "en"));
+					senseTableBuilder.AddWidgetRow("example: ", MakeBoundEntry(example.Sentence, "th"));
 					senseTableBuilder.AddWidgetRow("translation: ", MakeBoundEntry(example.Translation, "en"));
 				}
 				builder.AddWidgetRow("meaning: ", senseTableBuilder.BuildTable());

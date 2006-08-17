@@ -40,6 +40,7 @@
 	<Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+	<Compile Include="PersistenceTests.cs" />
 	<Compile Include="TestEntryView.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -48,9 +49,17 @@
 	  <Project>{123D695C-0D5D-46E5-893F-39EC4E0B01B8}</Project>
 	  <Name>LexicalModel.Tests</Name>
 	</ProjectReference>
+	<ProjectReference Include="..\LexicalModel\LexicalModel.csproj">
+	  <Project>{5F61C809-B6C0-4567-9603-B2198E1AD038}</Project>
+	  <Name>LexicalModel</Name>
+	</ProjectReference>
 	<ProjectReference Include="..\LexicalTools\LexicalTools.csproj">
 	  <Project>{87AF0B02-2983-486D-857F-D1859535C234}</Project>
 	  <Name>LexicalTools</Name>
+	</ProjectReference>
+	<ProjectReference Include="..\WeSay.Data\WeSay.Data.csproj">
+	  <Project>{600D0FD4-D189-41A0-9BC5-FC79AD2CF1CD}</Project>
+	  <Name>WeSay.Data</Name>
 	</ProjectReference>
 	<ProjectReference Include="..\WeSay.UI\WeSay.UI.csproj">
 	  <Project>{AC8F284C-7B34-4AC9-A7DE-FAF765456DFF}</Project>

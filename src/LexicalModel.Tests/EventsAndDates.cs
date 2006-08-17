@@ -10,74 +10,83 @@ namespace LexicalModel.Tests
 	[TestFixture]
 	public class EventsAndDates
 	{
+		protected bool _didNotify;
+		protected LexEntry _entry;
+
 		[SetUp]
 		public void Setup()
 		{
+		   _entry = new LexEntry();
+		   _entry.PropertyChanged += new System.ComponentModel.PropertyChangedEventHandler(_entry_PropertyChanged);
+			_didNotify = false;
+		}
+
+		void _entry_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+		{
+			_didNotify = true;
 		}
 
 		[Test]
 		public void CreationDate()
 		{
-			LexEntry entry = new LexEntry();
-			Assert.AreEqual(entry.CreationDate.Date, DateTime.Today);
+			Assert.AreEqual(_entry.CreationDate.Date, DateTime.Today);
 		}
 
 		[Test]
 		public void ModifiedDateOnCreation()
 		{
-			LexEntry entry = new LexEntry();
-			Assert.AreEqual(entry.ModifiedDate, entry.CreationDate);
+			Assert.AreEqual(_entry.ModifiedDate, _entry.CreationDate);
 		}
 
 		[Test]
 		public void ModifiedDateAfterMultiTextChange()
 		{
-			LexEntry entry = new LexEntry();
-			long start = entry.ModifiedDate.Ticks;
+			long start = _entry.ModifiedDate.Ticks;
 			System.Threading.Thread.Sleep(100);//else modtime doesn't change
-			entry.LexicalForm["foo"] = "hello";
-			Assert.Greater((decimal)entry.ModifiedDate.Ticks, start);
+			_entry.LexicalForm["foo"] = "hello";
+			Assert.Greater((decimal)_entry.ModifiedDate.Ticks, start);
+			Assert.IsTrue(_didNotify);
 		}
 
 		[Test]
 		public void ModifiedDateAfterLexSenseVectorChanges()
 		{
-			LexEntry entry = new LexEntry();
-			long start = entry.ModifiedDate.Ticks;
+			long start = _entry.ModifiedDate.Ticks;
 			System.Threading.Thread.Sleep(100);//else modtime doesn't change
-			entry.Senses.AddNew();
-			Assert.Greater((decimal)entry.ModifiedDate.Ticks, start);
+			_entry.Senses.AddNew();
+			Assert.Greater((decimal)_entry.ModifiedDate.Ticks, start);
+			Assert.IsTrue(_didNotify);
 		}
 		[Test]
 		public void ModifiedDateAfterLexSenseGlossChange()
 		{
-			LexEntry entry = new LexEntry();
-			LexSense sense = entry.Senses.AddNew();
-			long start = entry.ModifiedDate.Ticks;
+			LexSense sense = _entry.Senses.AddNew();
+			long start = _entry.ModifiedDate.Ticks;
 			System.Threading.Thread.Sleep(100);//else modtime doesn't change
 			sense.Gloss["foo"] = "hello";
-			Assert.Greater((decimal)entry.ModifiedDate.Ticks, start);
+			Assert.Greater((decimal)_entry.ModifiedDate.Ticks, start);
+			Assert.IsTrue(_didNotify);
 		}
 		[Test]
 		public void ModifiedDateAfterAddingExampleSentence()
 		{
-			LexEntry entry = new LexEntry();
-			LexSense sense = entry.Senses.AddNew();
-			 long start = entry.ModifiedDate.Ticks;
+			LexSense sense = _entry.Senses.AddNew();
+			 long start = _entry.ModifiedDate.Ticks;
 			System.Threading.Thread.Sleep(100);//else modtime doesn't change
 		   LexExampleSentence example = sense.ExampleSentences.AddNew();
-			Assert.Greater((decimal)entry.ModifiedDate.Ticks, start);
+			Assert.Greater((decimal)_entry.ModifiedDate.Ticks, start);
+			Assert.IsTrue(_didNotify);
 		}
 		[Test]
 		public void ModifiedDateAfterChangingExampleSentence()
 		{
-			LexEntry entry = new LexEntry();
-			LexSense sense = entry.Senses.AddNew();
-			long start = entry.ModifiedDate.Ticks;
+			LexSense sense = _entry.Senses.AddNew();
+			long start = _entry.ModifiedDate.Ticks;
 			System.Threading.Thread.Sleep(100);//else modtime doesn't change
 			LexExampleSentence example = sense.ExampleSentences.AddNew();
 			example.Sentence["foo"] = "hello";
-			Assert.Greater((decimal)entry.ModifiedDate.Ticks, start);
+			Assert.Greater((decimal)_entry.ModifiedDate.Ticks, start);
+			Assert.IsTrue(_didNotify);
 		}
 	}
 }

@@ -1,8 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using NUnit.Framework;
 using Gtk;
+using NUnit.Framework;
 
 namespace WeSay.App.Tests
 {
@@ -12,14 +9,14 @@ namespace WeSay.App.Tests
 		[SetUp]
 		public void Setup()
 		{
-			Gtk.Application.Init();
+			Application.Init();
 		}
 
 		[Test]
 		public void SmokeTest()
 		{
 			BasilProject project = new BasilProject(@"..\..\SampleProjects\Thai");
-			WeSay.App.SampleTaskBuilder builder = new SampleTaskBuilder(project);
+			SampleTaskBuilder builder = new SampleTaskBuilder(project);
 			using (builder)
 			{
 				Assert.Greater(builder.Tasks.Count,0);

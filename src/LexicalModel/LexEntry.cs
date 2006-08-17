@@ -2,12 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.ComponentModel;
+using com.db4o;
 using WeSay.Language;
 
 
 namespace WeSay.LexicalModel
 {
-	public class LexEntry : INotifyPropertyChanged
+	public class LexEntry : WeSayDataObject
 	{
 		private MultiText _lexicalForm;
 		private Guid _guid;
@@ -15,55 +16,25 @@ namespace WeSay.LexicalModel
 		private DateTime _creationDate;
 		private DateTime _modifiedDate;
 
-		/// <summary>
-		/// For INotifyPropertyChanged
-		/// </summary>
-		public event PropertyChangedEventHandler PropertyChanged;
-
-
 		public LexEntry()
 		{
-			PropertyChanged += new PropertyChangedEventHandler(OnPropertyChanged);
 			_lexicalForm = new MultiText();
-			_lexicalForm.PropertyChanged += new PropertyChangedEventHandler(OnChildObjectPropertyChanged);
-
 			_senses = new BindingList<LexSense>();
-			//nb:  order of these two is important.  Touching adding new actually triggers ListChanged!
-			_senses.AddingNew += new AddingNewEventHandler(OnAddingNewSense);
-			_senses.ListChanged += new ListChangedEventHandler(OnListChanged);
-
-			//nb: will need to move this if a
-			//backend might call this constructor when de-persisting this object, unless it would then reset the field
 			_creationDate = DateTime.Now;
 			_modifiedDate = _creationDate;
+
+			WireUpEvents();
 	   }
 
-		/// <summary>
-		/// Create a new LexSense. Called by the binding list when a AddNew() is called on the list.
-		/// </summary>
-		void OnAddingNewSense(object sender, AddingNewEventArgs e)
-		{
-			e.NewObject = new LexSense();//this.PropertyChanged)
-			((LexSense)(e.NewObject)).PropertyChanged += new PropertyChangedEventHandler(OnChildObjectPropertyChanged);
-		}
+	   protected override void WireUpEvents()
+	   {
+		   base.WireUpEvents();
+		   WireUpChild(_lexicalForm);
+		   WireUpList(_senses,"senses");
+	   }
 
-		void OnChildObjectPropertyChanged(object sender, PropertyChangedEventArgs e)
-		{
-			NotifyPropertyChanged(e.PropertyName);
-		}
 
-		/// <summary>
-		/// called by the binding list when senses are added, removed, reordered, etc.
-		/// </summary>
-		void OnListChanged(object sender, ListChangedEventArgs e)
-		{
-			_modifiedDate = DateTime.Now;
-		}
-
-		/// <summary>
-		/// called when any field that is part of the enty at some level is changed
-		/// </summary>
-		void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
+		public override void SomethingWasModified()
 		{
 			_modifiedDate = DateTime.Now;
 		}
@@ -104,12 +75,6 @@ namespace WeSay.LexicalModel
 			}
 		}
 
-		private void NotifyPropertyChanged(string propertyName)
-		{
-			if (PropertyChanged != null)
-			{
-				PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-			}
-		}
+
 	}
 }
