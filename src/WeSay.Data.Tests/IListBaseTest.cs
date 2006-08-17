@@ -120,6 +120,7 @@ namespace WeSay.Data.Tests
 			int count = this._list.Count;
 			this._list.Add(_newItem);
 			Assert.AreEqual(count + 1, this._list.Count);
+			Assert.AreEqual(_newItem, this._list[count]);
 		}
 
 		public void Clear()

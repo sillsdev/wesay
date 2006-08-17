@@ -181,26 +181,6 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		public void FastFilter()
-		{
-			List<SimpleTestClass> l = new List<SimpleTestClass>();
-			for (int i = 0; i < 1000; ++i)
-			{
-				l.Add(new SimpleTestClass(i));
-			}
-			this._bindingList.Add(l);
-
-			Assert.AreEqual(1000, this._bindingList.Count);
-			this._bindingList.ApplyFilter(delegate(SimpleTestClass item)
-			{
-				return item.I > 100 && item.I <=200;
-			});
-			Assert.AreEqual(100, this._bindingList.Count);
-			Assert.AreEqual(101, this._bindingList[0].I);
-			Assert.AreEqual(200, this._bindingList[99].I);
-		}
-
-		[Test]
 		public void SlowFilter()
 		{
 			for (int i = 0; i < 1000; ++i)
@@ -216,6 +196,26 @@ namespace WeSay.Data.Tests
 			Assert.AreEqual(100, this._bindingList.Count);
 			Assert.AreEqual(101, this._bindingList[0].I);
 		}
+
+		[Test]
+		public void SlowFilterOneCommit()
+		{
+			_bindingList.WriteCacheSize = 1000;
+			for (int i = 0; i < 1000; ++i)
+			{
+				this._bindingList.Add(new SimpleTestClass(i));
+			}
+			_bindingList.WriteCacheSize = 1;
+
+			Assert.AreEqual(1000, this._bindingList.Count);
+			this._bindingList.ApplyFilter(delegate(SimpleTestClass item)
+			{
+				return item.I > 100 && item.I <= 200;
+			});
+			Assert.AreEqual(100, this._bindingList.Count);
+			Assert.AreEqual(101, this._bindingList[0].I);
+		}
+
 	}
 
 }

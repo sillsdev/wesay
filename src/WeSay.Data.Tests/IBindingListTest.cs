@@ -54,6 +54,7 @@ namespace WeSay.Data.Tests
 				Assert.IsNotNull(o);
 				Assert.IsInstanceOfType(typeof(T), o);
 				Assert.AreEqual(count+1, _bindingList.Count);
+				Assert.AreEqual(o, _bindingList[count]);
 				if (_bindingList.SupportsChangeNotification)
 				{
 					Assert.IsTrue(_listChanged);

@@ -54,20 +54,15 @@ namespace WeSay.Data
 			Initialize(dataSource, null, sort);
 		}
 
-		public void Add(IList<T> l)
+		public int WriteCacheSize
 		{
-			_records.WriteCacheSize = 0;
-			int count = l.Count;
-			for (int i = 0; i < count; i++)
+			get
 			{
-				_records.Add(l[i]);
+				return _records.WriteCacheSize;
 			}
-			_records.Commit();
-			_records.WriteCacheSize = 1;
-
-			for (int i = 0; i < count; i++)
+			set
 			{
-				OnItemAdded(i);
+				_records.WriteCacheSize = value;
 			}
 		}
 
@@ -108,8 +103,7 @@ namespace WeSay.Data
 		object IBindingList.AddNew()
 		{
 			T o = new T();
-			_records.Add(o);
-			OnItemAdded(IndexOf(o));
+			Add(o);
 			return o;
 		}
 

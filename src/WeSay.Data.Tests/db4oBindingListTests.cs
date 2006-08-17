@@ -452,20 +452,20 @@ namespace WeSay.Data.Tests
 		{
 			TestItem item = (TestItem)((IBindingList)_bindingList).AddNew();
 			int index = _bindingList.IndexOf(item);
+			Assert.AreEqual(_bindingList.Count - 1, index);
 			Assert.AreEqual(0, item.StoredInt);
 			item.StoredInt = 11;
 
 			ReOpenDatabase();
-
-			Assert.AreEqual(item, _bindingList[index]);
-			Assert.AreEqual(11, _bindingList[index].StoredInt);
+			Assert.IsFalse(_bindingList.Contains(item)); // when the database is reopened, the link to the database is lost
+			Assert.AreEqual(item, _bindingList[0]);
+			Assert.AreEqual(11, _bindingList[0].StoredInt);
 		}
 
 		private void ReOpenDatabase()
 		{
 			this._dataSource.Dispose();
 			OpenDatabase();
-
 		}
 
 		private void OpenDatabase()
