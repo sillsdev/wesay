@@ -27,11 +27,19 @@ namespace WeSay.UI
 		}
 
 		private Gtk.Table _table;
-		List<Row> _rows;
+		private List<Row> _rows;
 
 		public TableBuilder()
 		{
 			_rows = new List<Row>();
+		}
+
+		/// <summary>
+		/// This is provided primarily for unit testing
+		/// </summary>
+		public int RowCount
+		{
+			get { return _rows.Count; }
 		}
 
 		public Gtk.Table BuildTable()

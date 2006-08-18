@@ -49,27 +49,12 @@ namespace WeSay.LexicalTools
 		   }
 
 		   TableBuilder builder = new TableBuilder();
-			builder.AddWidgetRow("word: ", MakeBoundEntry(record.LexicalForm, "th"));
-			foreach (LexSense sense in record.Senses)
-			{
-				TableBuilder senseTableBuilder = new TableBuilder();
-				senseTableBuilder.AddWidgetRow("gloss: ", MakeBoundEntry(sense.Gloss, "en"));
-				foreach (LexExampleSentence example in sense.ExampleSentences)
-				{
-					senseTableBuilder.AddWidgetRow("example: ", MakeBoundEntry(example.Sentence, "th"));
-					senseTableBuilder.AddWidgetRow("translation: ", MakeBoundEntry(example.Translation, "en"));
-				}
-				builder.AddWidgetRow("meaning: ", senseTableBuilder.BuildTable());
-		  }
+		   LexEntryLayouter layout = new LexEntryLayouter(builder);
+		   layout.AddWidgets(record);
+
 			_container.PackStart(builder.BuildTable());
 		}
 
-		private Entry MakeBoundEntry(WeSay.Language.MultiText text, string writingSystemId)
-		{
-			Gtk.Entry entry = new Gtk.Entry(text[writingSystemId]);
-			WeSay.UI.Binding binding = new WeSay.UI.Binding(text, writingSystemId, entry);
-			return entry;
-		}
 
 		void OnPreviousClicked(object sender, EventArgs e)
 		{

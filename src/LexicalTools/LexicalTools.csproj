@@ -38,6 +38,10 @@
   </ItemGroup>
   <ItemGroup>
 	<Compile Include="EntryViewTool.cs" />
+	<Compile Include="Layouter.cs" />
+	<Compile Include="LexEntryLayouter.cs" />
+	<Compile Include="LexExampleSentenceLayouter.cs" />
+	<Compile Include="LexSenseLayouter.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
