@@ -7,8 +7,8 @@
 	<ProjectGuid>{B538A561-53CA-4892-9906-E86C098045E1}</ProjectGuid>
 	<OutputType>Library</OutputType>
 	<AppDesignerFolder>Properties</AppDesignerFolder>
-	<RootNamespace>WeSay.IListTreeView</RootNamespace>
-	<AssemblyName>IListTreeView</AssemblyName>
+	<RootNamespace>WeSay.TreeViewIList</RootNamespace>
+	<AssemblyName>TreeViewIList</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
 	<DebugSymbols>true</DebugSymbols>

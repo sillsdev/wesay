@@ -70,17 +70,6 @@ namespace WeSay.Data
 			_records.WriteCacheSize = defaultWriteCacheSize;
 		}
 
-		public void Add(System.Collections.IEnumerator enumerator)
-		{
-			_records.WriteCacheSize = 0;
-			while (enumerator.MoveNext())
-			{
-				Add((T)enumerator.Current);
-			}
-			_records.Commit();
-			_records.WriteCacheSize = defaultWriteCacheSize;
-		}
-
 		public bool Commit()
 		{
 			return _records.Commit();

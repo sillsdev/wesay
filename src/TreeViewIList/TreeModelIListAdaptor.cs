@@ -6,7 +6,6 @@ namespace WeSay.TreeViewIList
 	public class TreeModelIListAdaptor : GLib.Object
 	{
 		private TreeModelIListConfiguration _configuration;
-
 		private TreeModelInterfaceDelegates _treeModelInterface;
 
 		public TreeModelIListAdaptor(TreeModelIListConfiguration configuration)
@@ -16,10 +15,9 @@ namespace WeSay.TreeViewIList
 			{
 				throw new ArgumentNullException();
 			}
+			this._configuration = configuration;
 			CreateNativeObject(new string[0], new GLib.Value[0]);
 			BuildTreeModelInterface();
-
-			this._configuration = configuration;
 		}
 
 		protected TreeModelIListConfiguration Configuration
@@ -71,7 +69,7 @@ namespace WeSay.TreeViewIList
 			int depth = treepath.Depth;
 			if (depth <= 0)
 			{
-				throw new ArgumentOutOfRangeException("path", "Path must have depth > 0");
+				return PastTheEndIndex;
 			}
 			return treepath.Indices[0];
 		}
@@ -102,7 +100,7 @@ namespace WeSay.TreeViewIList
 		[GLib.CDeclCallback]
 		private delegate IntPtr GetColumnTypeDelegate (int column);
 		[GLib.CDeclCallback]
-		private delegate bool GetNodeDelegate (out int index, IntPtr path);
+		private delegate bool GetRowDelegate (out int index, IntPtr path);
 		[GLib.CDeclCallback]
 		private delegate IntPtr GetPathDelegate(int index);
 		[GLib.CDeclCallback]
@@ -126,7 +124,7 @@ namespace WeSay.TreeViewIList
 			public GetFlagsDelegate get_flags;
 			public GetNColumnsDelegate get_n_columns;
 			public GetColumnTypeDelegate get_column_type;
-			public GetNodeDelegate get_row;
+			public GetRowDelegate get_row;
 			public GetPathDelegate get_path;
 			public GetValueDelegate get_value;
 			public NextDelegate next;
@@ -145,7 +143,7 @@ namespace WeSay.TreeViewIList
 			this._treeModelInterface.get_flags = new GetFlagsDelegate(this.GetFlags_callback);
 			this._treeModelInterface.get_n_columns = new GetNColumnsDelegate(this.GetNColumns_callback);
 			this._treeModelInterface.get_column_type = new GetColumnTypeDelegate(this.GetColumnType_callback);
-			this._treeModelInterface.get_row = new GetNodeDelegate(this.GetRow_callback);
+			this._treeModelInterface.get_row = new GetRowDelegate(this.GetRow_callback);
 			this._treeModelInterface.get_path = new GetPathDelegate(this.GetPath_callback);
 			this._treeModelInterface.get_value = new GetValueDelegate(this.GetValue_callback);
 			this._treeModelInterface.next = new NextDelegate(this.Next_callback);
@@ -184,6 +182,10 @@ namespace WeSay.TreeViewIList
 		/// <returns></returns>
 		protected IntPtr GetColumnType_callback (int column)
 		{
+			if (!IsValidColumn(column))
+			{
+				return GLib.GType.Invalid.Val;
+			}
 			return GetColumnType(column).Val;
 		}
 
@@ -197,7 +199,8 @@ namespace WeSay.TreeViewIList
 		{
 			if (path == IntPtr.Zero)
 			{
-				throw new ArgumentNullException("path");
+				index = PastTheEndIndex;
+				return false;
 			}
 			index = GetIndex(path);
 			return (IsValidIndex(index));
@@ -210,10 +213,14 @@ namespace WeSay.TreeViewIList
 		/// <returns></returns>
 		protected IntPtr GetPath_callback(int index)
 		{
+			if (!IsValidIndex(index))
+			{
+				return IntPtr.Zero;
+			}
 			return GetPath(index).Handle;
 		}
 
-		[DllImport("libgtk-win32-2.0-0.dll")]
+		[DllImport("libgobject-2.0-0.dll")]
 		private static extern void g_value_init (ref GLib.Value val, IntPtr type);
 
 		protected void GetValue_callback (int index, int column, ref GLib.Value value)
@@ -234,8 +241,12 @@ namespace WeSay.TreeViewIList
 		/// <returns>true if iter has been changed to the next node</returns>
 		protected bool Next_callback(ref int index)
 		{
-			VerifyValidIndex(index);
-			return IsValidIndex(++index);
+			if (IsValidIndex(index))
+			{
+				return IsValidIndex(++index);
+			}
+			index = PastTheEndIndex;
+			return false;
 		}
 
 		/// <summary>
@@ -251,7 +262,6 @@ namespace WeSay.TreeViewIList
 			child = 0;
 			return true;
 		  }
-		  VerifyValidIndex(parent);
 		  child = PastTheEndIndex;
 		  return false;
 		}
@@ -263,7 +273,6 @@ namespace WeSay.TreeViewIList
 		/// <returns>true if iter has children otherwise false</returns>
 		protected bool HasChild_callback(int index)
 		{
-			VerifyValidIndex(index);
 			return false;
 		}
 
@@ -278,7 +287,6 @@ namespace WeSay.TreeViewIList
 			{
 				return PastTheEndIndex;
 			}
-			VerifyValidIndex(index);
 			return 0;
 		}
 
@@ -293,12 +301,11 @@ namespace WeSay.TreeViewIList
 		/// <returns>true if iter is valid</returns>
 		protected bool NthChild_callback(out int child, int parent, int n)
 		{
-			if (parent == -1)
+			if (parent == -1 && IsValidIndex(n))
 			{
 				child = n;
 				return true;
 			}
-			VerifyValidIndex(parent);
 			child = PastTheEndIndex;
 			return false;
 		}
@@ -313,7 +320,6 @@ namespace WeSay.TreeViewIList
 		/// <returns>true if iter is set to parent of child</returns>
 		protected bool Parent_callback(out int parent, int child)
 		{
-			VerifyValidIndex(child);
 			parent = PastTheEndIndex;
 			return false;
 		}
