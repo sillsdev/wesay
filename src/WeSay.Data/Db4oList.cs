@@ -249,6 +249,21 @@ namespace Db4o.Binding
 			}
 		}
 		/// <summary>
+		/// Activation depth used when calling <see cref="SetItem"/>.
+		/// </summary>
+		/// <value>Default: 5.</value>
+		/// <exception cref="ArgumentOutOfRangeException">set: Value is &lt; 0.</exception>
+		public int SetActivationDepth
+		{
+			get { return this._setActivationDepth; }
+			set
+			{
+				if (value < 0)
+					throw new ArgumentOutOfRangeException("SetActivationDepth", value, "Must be >= 0.");
+				this._setActivationDepth = value;
+			}
+		}
+		/// <summary>
 		/// Activation (instantiation) depth used when calling <see cref="ExtObjectContainer.PeekPersisted"/>.
 		/// </summary>
 		/// <remarks>
@@ -1340,7 +1355,7 @@ namespace Db4o.Binding
 		protected virtual void DoStoreItem(T item)
 		{
 			if (!OnStoring(item))
-				this.Database.Set(item);
+				this.Database.Set(item, SetActivationDepth);
 		}
 		/// <summary>
 		/// Deletes item from <see cref="Database"/>.
@@ -1450,6 +1465,10 @@ namespace Db4o.Binding
 		/// See <see cref="ActivationDepth"/>.
 		/// </summary>
 		private int _activationDepth = 5;
+		/// <summary>
+		/// See <see cref="SetActivationDepth"/>.
+		/// </summary>
+		private int _setActivationDepth = 5;
 		/// <summary>
 		/// See <see cref="PeekPersistedActivationDepth"/>.
 		/// </summary>

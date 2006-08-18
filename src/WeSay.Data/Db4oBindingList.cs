@@ -19,6 +19,10 @@ namespace WeSay.Data
 			_records = new Db4o.Binding.Db4oList<T>((com.db4o.ObjectContainer)dataSource.Data, new List<T>(), filter, sort);
 			_records.ReadCacheSize = 0;
 			_records.WriteCacheSize = 1;
+			_records.PeekPersistedActivationDepth = 99;
+			_records.ActivationDepth = 99;
+			_records.RefreshActivationDepth = 99;
+			_records.SetActivationDepth = 99;
 			_records.Requery(false);
 		}
 

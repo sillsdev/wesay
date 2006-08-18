@@ -40,7 +40,6 @@
 	<Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-	<Compile Include="PersistenceTests.cs" />
 	<Compile Include="TestEntryView.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
