@@ -43,7 +43,7 @@ namespace Db4o.Binding
 	/// <typeparam name="T">List item type.</typeparam>
 	[TypeConverter(typeof(ExpandableObjectConverter))]
 	public class Db4oList<T>
-		: IList<T>
+		: IList<T>, IDisposable
 		where T : class
 	{
 		#region Constructors
@@ -177,14 +177,22 @@ namespace Db4o.Binding
 		/// </remarks>
 		public IList<long> ItemIds
 		{
-			get { return _itemIds; }
+			get
+			{
+				VerifyNotDisposed();
+				return _itemIds;
+			}
 		}
 		/// <summary>
 		/// db4o database object container used for items manipulation.
 		/// </summary>
 		public ExtObjectContainer Database
 		{
-			get { return _database; }
+			get
+			{
+				VerifyNotDisposed();
+				return _database;
+			}
 		}
 		/// <summary>
 		/// Maximum number of db4o activated items in memory.
@@ -200,9 +208,14 @@ namespace Db4o.Binding
 		/// <exception cref="ArgumentOutOfRangeException">set: Value is &lt; 0.</exception>
 		public int ReadCacheSize
 		{
-			get { return this._readCacheSize; }
+			get
+			{
+				VerifyNotDisposed();
+				return this._readCacheSize;
+			}
 			set
 			{
+				VerifyNotDisposed();
 				if (value < 0)
 					throw new ArgumentOutOfRangeException("ReadCacheSize", value, "Must be >= 0.");
 				if (this._readCacheSize == value)
@@ -222,9 +235,14 @@ namespace Db4o.Binding
 		/// <exception cref="ArgumentOutOfRangeException">set: Value is &lt; 0.</exception>
 		public int WriteCacheSize
 		{
-			get { return this._writeCacheSize; }
+			get
+			{
+				VerifyNotDisposed();
+				return this._writeCacheSize;
+			}
 			set
 			{
+				VerifyNotDisposed();
 				if (value < 0)
 					throw new ArgumentOutOfRangeException("WriteCacheSize", value, "Must be >= 0.");
 				if (this._writeCacheSize == value)
@@ -240,9 +258,14 @@ namespace Db4o.Binding
 		/// <exception cref="ArgumentOutOfRangeException">set: Value is &lt; 0.</exception>
 		public int ActivationDepth
 		{
-			get { return this._activationDepth; }
+			get
+			{
+				VerifyNotDisposed();
+				return this._activationDepth;
+			}
 			set
 			{
+				VerifyNotDisposed();
 				if (value < 0)
 					throw new ArgumentOutOfRangeException("ActivationDepth", value, "Must be >= 0.");
 				this._activationDepth = value;
@@ -274,9 +297,14 @@ namespace Db4o.Binding
 		/// <exception cref="ArgumentOutOfRangeException">set: Value is &lt;= 0.</exception>
 		public int PeekPersistedActivationDepth
 		{
-			get { return this._peekPersistedActivationDepth; }
+			get
+			{
+				VerifyNotDisposed();
+				return this._peekPersistedActivationDepth;
+			}
 			set
 			{
+				VerifyNotDisposed();
 				if (value <= 0)
 					throw new ArgumentOutOfRangeException("PeekPersistedActivationDepth", value, "Must be > 0.");
 				this._peekPersistedActivationDepth = value;
@@ -289,9 +317,14 @@ namespace Db4o.Binding
 		/// <exception cref="ArgumentOutOfRangeException">set: Value is &lt;= 0.</exception>
 		public int RefreshActivationDepth
 		{
-			get { return this._peekPersistedActivationDepth; }
+			get
+			{
+				VerifyNotDisposed();
+				return this._peekPersistedActivationDepth;
+			}
 			set
 			{
+				VerifyNotDisposed();
 				if (value <= 0)
 					throw new ArgumentOutOfRangeException("PeekPersistedActivationDepth", value, "Must be > 0.");
 				this._peekPersistedActivationDepth = value;
@@ -302,7 +335,11 @@ namespace Db4o.Binding
 		/// </summary>
 		public bool HasChanges
 		{
-			get { return this._writeCacheCurrentSize > 0; }
+			get
+			{
+				VerifyNotDisposed();
+				return this._writeCacheCurrentSize > 0;
+			}
 		}
 		/// <summary>
 		/// Whether to store item to database when its <see cref="INotifyPropertyChanged.PropertyChanged"/> is fired.
@@ -314,9 +351,14 @@ namespace Db4o.Binding
 		/// <value>Default: true.</value>
 		public bool StoreItemOnPropertyChanged
 		{
-			get { return _storeItemOnPropertyChanged; }
+			get
+			{
+				VerifyNotDisposed();
+				return _storeItemOnPropertyChanged;
+			}
 			set
 			{
+				VerifyNotDisposed();
 				if (_storeItemOnPropertyChanged == value)
 					return;
 				_storeItemOnPropertyChanged = value;
@@ -348,6 +390,8 @@ namespace Db4o.Binding
 		public virtual void InitItems(IEnumerable items,
 			Predicate<T> filter, Comparison<T> sorter, bool commit)
 		{
+			VerifyNotDisposed();
+
 			if (items == null)
 				throw new ArgumentNullException("items");
 			if (commit)
@@ -396,6 +440,7 @@ namespace Db4o.Binding
 		/// <param name="commit">Whether to call <see cref="Commit"/>.</param>
 		public void Query(Predicate<T> filter, Comparison<T> sorter, bool commit)
 		{
+			VerifyNotDisposed();
 			if (filter == null)
 				filter = ComparisonHelper<T>.DefaultPredicate;
 			IList<T> list;
@@ -424,6 +469,7 @@ namespace Db4o.Binding
 		/// <param name="commit">Whether to call <see cref="Commit"/>.</param>
 		public void Requery(bool commit)
 		{
+			VerifyNotDisposed();
 			Query(this.Filter, this.Sorter, commit);
 		}
 		/// <summary>
@@ -431,6 +477,7 @@ namespace Db4o.Binding
 		/// </summary>
 		public void Refresh()
 		{
+			VerifyNotDisposed();
 			for (int i = this.Count - 1; i >= 0; i--)
 				RefreshAt(i);
 		}
@@ -441,6 +488,7 @@ namespace Db4o.Binding
 		/// <exception cref="ArgumentOutOfRangeException"><paramref name="index"/> is invalid.</exception>
 		public void RefreshAt(int index)
 		{
+			VerifyNotDisposed();
 			T item = GetItem(this.ItemIds[index], false);
 			Refresh(item);
 		}
@@ -450,6 +498,7 @@ namespace Db4o.Binding
 		/// <param name="item">Item to be refreshed.</param>
 		public void Refresh(T item)
 		{
+			VerifyNotDisposed();
 			this.Database.Refresh(item, this.RefreshActivationDepth);
 		}
 		/// <summary>
@@ -458,6 +507,7 @@ namespace Db4o.Binding
 		/// <param name="commit">Passed to <see cref="Requery"/>.</param>
 		public void RequeryAndRefresh(bool commit)
 		{
+			VerifyNotDisposed();
 			Requery(commit);
 			Refresh();
 		}
@@ -468,6 +518,7 @@ namespace Db4o.Binding
 		/// <returns>true, if any changes were committed.</returns>
 		public virtual bool Commit()
 		{
+			VerifyNotDisposed();
 			bool hasChanges = this.HasChanges;
 			if (hasChanges)
 			{
@@ -484,6 +535,7 @@ namespace Db4o.Binding
 		/// <returns>true, if any changes were rollbacked.</returns>
 		public virtual bool Rollback()
 		{
+			VerifyNotDisposed();
 			bool hasChanges = this.HasChanges;
 			if (hasChanges)
 			{
@@ -510,6 +562,7 @@ namespace Db4o.Binding
 		/// <exception cref="ArgumentNullException"><paramref name="action"/> is null.</exception>
 		public void ForEach(Action<T> action)
 		{
+			VerifyNotDisposed();
 			if (action == null)
 				throw new ArgumentNullException("action");
 			foreach (T item in this)
@@ -522,6 +575,7 @@ namespace Db4o.Binding
 		/// <exception cref="ArgumentNullException"><paramref name="action"/> is null.</exception>
 		public void ForEach(Action<long> action)
 		{
+			VerifyNotDisposed();
 			this._itemIds.ForEach(action);
 		}
 		/// <summary>
@@ -542,6 +596,7 @@ namespace Db4o.Binding
 		/// <exception cref="ArgumentOutOfRangeException"><paramref name="arrayIndex"/> is &lt; 0.</exception>
 		public void CopyTo(int index, T[] array, int arrayIndex, int count)
 		{
+			VerifyNotDisposed();
 			if (index < 0)
 				throw new ArgumentOutOfRangeException("index", index, "Must be >= 0.");
 			if (index >= this.Count)
@@ -570,6 +625,7 @@ namespace Db4o.Binding
 		/// <returns>true, if something in the list was changed.</returns>
 		public virtual bool RemoveChange(Db4oListChanges change)
 		{
+			VerifyNotDisposed();
 			bool ret = false;
 			if (IsChange(change, Db4oListChanges.Filter) && IsChange(change, Db4oListChanges.Sort))
 			{
@@ -624,6 +680,7 @@ namespace Db4o.Binding
 		/// <param name="register">true to register handler, false to unregister it.</param>
 		public void RegisterItemPropertyChangedHandler(T item, bool register)
 		{
+			VerifyNotDisposed();
 			INotifyPropertyChanged localItem = item as INotifyPropertyChanged;
 			if (localItem == null)
 				return;
@@ -650,6 +707,7 @@ namespace Db4o.Binding
 		/// </exception>
 		public int FindIndex(int startIndex, int count, Predicate<T> match)
 		{
+			VerifyNotDisposed();
 			if (match == null)
 				throw new ArgumentNullException("match");
 			return this._itemIds.FindIndex(startIndex, count, GetIdPredicate(match));
@@ -659,6 +717,7 @@ namespace Db4o.Binding
 		/// </summary>
 		public int FindIndex(int startIndex, Predicate<T> match)
 		{
+			VerifyNotDisposed();
 			return FindIndex(startIndex, this.Count - startIndex, match);
 		}
 		/// <summary>
@@ -666,6 +725,7 @@ namespace Db4o.Binding
 		/// </summary>
 		public int FindIndex(Predicate<T> match)
 		{
+			VerifyNotDisposed();
 			return FindIndex(0, match);
 		}
 
@@ -677,6 +737,7 @@ namespace Db4o.Binding
 		{
 			get
 			{
+				VerifyNotDisposed();
 				return this._filter == ComparisonHelper<T>.DefaultPredicate;
 			}
 		}
@@ -692,10 +753,12 @@ namespace Db4o.Binding
 		{
 			get
 			{
+				VerifyNotDisposed();
 				return this._filter;
 			}
 			set
 			{
+				VerifyNotDisposed();
 				if (value == null)
 					value = ComparisonHelper<T>.DefaultPredicate;
 				if (this._filter == value)
@@ -733,8 +796,16 @@ namespace Db4o.Binding
 		/// <value>Default: false.</value>
 		public bool DeleteItemsWhileFiltering
 		{
-			get { return _deleteItemsWhileFiltering; }
-			set { _deleteItemsWhileFiltering = value; }
+			get
+			{
+				VerifyNotDisposed();
+				return _deleteItemsWhileFiltering;
+			}
+			set
+			{
+				VerifyNotDisposed();
+				_deleteItemsWhileFiltering = value;
+			}
 		}
 		/// <summary>
 		/// If true, filtering is done using <see cref="Database"/> by <see cref="Query"/>ing with current <see cref="Sorter"/>.
@@ -743,14 +814,23 @@ namespace Db4o.Binding
 		/// <value>Default: true.</value>
 		public bool FilteringInDatabase
 		{
-			get { return _filteringInDatabase; }
-			set { _filteringInDatabase = value; }
+			get
+			{
+				VerifyNotDisposed();
+				return _filteringInDatabase;
+			}
+			set
+			{
+				VerifyNotDisposed();
+				_filteringInDatabase = value;
+			}
 		}
 		/// <summary>
 		/// Calls <see cref="RemoveChange"/> with <see cref="Db4oListChanges.Filter"/> to remove any filtering done by setting <see cref="Filter"/>.
 		/// </summary>
 		public bool RemoveFilter()
 		{
+			VerifyNotDisposed();
 			return RemoveChange(Db4oListChanges.Filter);
 		}
 
@@ -785,8 +865,16 @@ namespace Db4o.Binding
 		/// <value>Default: <see cref="ComparisonHelper{}.DefaultEqualityComparison"/>.</value>
 		public EqualityComparison<T> Equaler
 		{
-			get { return _equaler; }
-			set { _equaler = value; }
+			get
+			{
+				VerifyNotDisposed();
+				return _equaler;
+			}
+			set
+			{
+				VerifyNotDisposed();
+				_equaler = value;
+			}
 		}
 
 		#endregion
@@ -799,7 +887,11 @@ namespace Db4o.Binding
 		/// <value>If null, items are not sorted.</value>
 		public Comparison<T> Sorter
 		{
-			get { return this._sorter; }
+			get
+			{
+				VerifyNotDisposed();
+				return this._sorter;
+			}
 		}
 		/// <summary>
 		/// If true, sorting is done using <see cref="Database"/> by <see cref="Query"/>ing with current <see cref="Filter"/>.
@@ -809,16 +901,24 @@ namespace Db4o.Binding
 		/// <value>Default: true.</value>
 		public bool SortingInDatabase
 		{
-			get { return _sortingInDatabase; }
-			set { _sortingInDatabase = value; }
+			get
+			{
+				VerifyNotDisposed();
+				return _sortingInDatabase;
+			}
+			set
+			{
+				VerifyNotDisposed();
+				_sortingInDatabase = value;
+			}
 		}
 
 		public bool IsSorted
 		{
 			get
 			{
+				VerifyNotDisposed();
 				return _sortCalled;
-
 			}
 		}
 
@@ -829,6 +929,7 @@ namespace Db4o.Binding
 		/// <param name="sorter">Sorter. If null, <see cref="ComparisonHelper{}.DefaultComparison"/> is used.</param>
 		public void Sort(Comparison<T> sorter)
 		{
+			VerifyNotDisposed();
 			if (this.Count <= 1)
 				return;
 			if (sorter == null)
@@ -855,6 +956,7 @@ namespace Db4o.Binding
 		/// </summary>
 		public bool RemoveSort()
 		{
+			VerifyNotDisposed();
 			return RemoveChange(Db4oListChanges.Sort);
 		}
 
@@ -892,6 +994,7 @@ namespace Db4o.Binding
 		/// </summary>
 		public int IndexOf(T item)
 		{
+			VerifyNotDisposed();
 			int index = -1;
 			try
 			{
@@ -911,6 +1014,7 @@ namespace Db4o.Binding
 		/// <remarks>Item is also stored to <see cref="Database"/>.</remarks>
 		public void Insert(int index, T item)
 		{
+			VerifyNotDisposed();
 			this.ItemIds.Insert(index, 0);
 			try
 			{
@@ -928,6 +1032,7 @@ namespace Db4o.Binding
 		/// <remarks>Item is also deleted from <see cref="Database"/>.</remarks>
 		public void RemoveAt(int index)
 		{
+			VerifyNotDisposed();
 			long id = this.ItemIds[index];
 			this.ItemIds.RemoveAt(index);
 			DeleteItem(id, true);
@@ -946,12 +1051,14 @@ namespace Db4o.Binding
 		{
 			get
 			{
+				VerifyNotDisposed();
 				long id = this.ItemIds[index];
 				T item = GetItem(id, true);
 				return item;
 			}
 			set
 			{
+				VerifyNotDisposed();
 				ValidateItem(value);
 				long oldId = this.ItemIds[index];
 				bool isStored = this.Database.IsStored(value);
@@ -975,7 +1082,10 @@ namespace Db4o.Binding
 					this.ItemIds[index] = newId;
 				}
 				if (this.StoreItemOnPropertyChanged)
+				{
+					this._readCache.Enqueue(newId);
 					RegisterItemPropertyChangedHandler(value, true);
+				}
 
 			}
 		}
@@ -990,6 +1100,7 @@ namespace Db4o.Binding
 		/// <remarks>Calls <see cref="Insert"/>.</remarks>
 		public void Add(T item)
 		{
+			VerifyNotDisposed();
 			Insert(this.ItemIds.Count, item);
 		}
 		/// <summary>
@@ -998,6 +1109,7 @@ namespace Db4o.Binding
 		/// <remarks>Items are also deleted from <see cref="Database"/>.</remarks>
 		public void Clear()
 		{
+			VerifyNotDisposed();
 			for (int i = 0; i < this.ItemIds.Count; i++)
 			{
 				DeleteItem(this.ItemIds[i], false);
@@ -1010,6 +1122,7 @@ namespace Db4o.Binding
 		/// <remarks>Calls <see cref="IndexOf"/>.</remarks>
 		public bool Contains(T item)
 		{
+			VerifyNotDisposed();
 			return IndexOf(item) >= 0;
 		}
 		/// <summary>
@@ -1017,6 +1130,7 @@ namespace Db4o.Binding
 		/// </summary>
 		public void CopyTo(T[] array, int arrayIndex)
 		{
+			VerifyNotDisposed();
 			if (this.Count != 0)
 			{
 				CopyTo(0, array, arrayIndex, this.Count - 1);
@@ -1027,7 +1141,11 @@ namespace Db4o.Binding
 		/// </summary>
 		public int Count
 		{
-			get { return this.ItemIds.Count; }
+			get
+			{
+				VerifyNotDisposed();
+				return this.ItemIds.Count;
+			}
 		}
 		/// <summary>
 		/// See <see cref="ICollection`1.IsReadOnly"/>.
@@ -1035,7 +1153,11 @@ namespace Db4o.Binding
 		/// <value>false.</value>
 		public bool IsReadOnly
 		{
-			get { return false; }
+			get
+			{
+				VerifyNotDisposed();
+				return false;
+			}
 		}
 		/// <summary>
 		/// See <see cref="ICollection`1.Remove"/>.
@@ -1043,6 +1165,7 @@ namespace Db4o.Binding
 		/// <remarks>Calls <see cref="RemoveAt"/>.</remarks>
 		public bool Remove(T item)
 		{
+			VerifyNotDisposed();
 			int index = IndexOf(item);
 			if (index >= 0)
 			{
@@ -1169,6 +1292,7 @@ namespace Db4o.Binding
 
 		public Enumerator GetEnumerator()
 		{
+			VerifyNotDisposed();
 			_isEnumerating = true;
 			return new Enumerator(this);
 		}
@@ -1521,6 +1645,52 @@ namespace Db4o.Binding
 		/// See <see cref="StoreItemOnPropertyChanged"/>.
 		/// </summary>
 		private bool _storeItemOnPropertyChanged = true;
+
+		#region IDisposable Members
+		private bool _isDisposed = false;
+		public void Dispose()
+		{
+			if (!this._isDisposed)
+			{
+				if(_database.IsClosed()){
+					throw new ApplicationException("Database should not be disposed until after Db4oList is disposed.");
+				}
+				int count = this._readCache.Count;
+				long id;
+				T item;
+				for (int i = 0; i < count; ++i)
+				{
+					id = this._readCache.Dequeue();
+					item = GetItem(id, false);
+					if (item != null)
+					{
+						if (this.StoreItemOnPropertyChanged)
+						{
+							RegisterItemPropertyChangedHandler(item, false);
+						}
+					}
+				}
+				_isDisposed = true;
+			}
+			GC.SuppressFinalize(this);
+		}
+		protected void VerifyNotDisposed()
+		{
+			if (this._isDisposed)
+			{
+				throw new ObjectDisposedException("Db4oList");
+			}
+		}
+		~Db4oList()
+		{
+			if (!this._isDisposed)
+			{
+				throw new ApplicationException("Disposed not explicitly called");
+			}
+		}
+
+
+		#endregion
 	}
 
 
@@ -1550,7 +1720,10 @@ namespace Db4o.Binding
 		/// </summary>
 		public T Item
 		{
-			get { return _item; }
+			get
+			{
+				return _item;
+			}
 		}
 
 		/// <summary>

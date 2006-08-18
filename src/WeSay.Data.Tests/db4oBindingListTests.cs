@@ -31,6 +31,7 @@ namespace WeSay.Data.Tests
 		[TestFixtureTearDown]
 		public void FixtureTearDown()
 		{
+			this._bindingList.Dispose();
 			this._dataSource.Dispose();
 			System.IO.File.Delete(_FilePath);
 		}
@@ -58,6 +59,7 @@ namespace WeSay.Data.Tests
 		[TestFixtureTearDown]
 		public void FixtureTearDown()
 		{
+			this._bindingList.Dispose();
 			this._dataSource.Dispose();
 			System.IO.File.Delete(_FilePath);
 		}
@@ -87,6 +89,7 @@ namespace WeSay.Data.Tests
 		[TestFixtureTearDown]
 		public void FixtureTearDown()
 		{
+			this._bindingList.Dispose();
 			this._dataSource.Dispose();
 			System.IO.File.Delete(_FilePath);
 		}
@@ -114,6 +117,7 @@ namespace WeSay.Data.Tests
 		[TestFixtureTearDown]
 		public void FixtureTearDown()
 		{
+			this._bindingList.Dispose();
 			this._dataSource.Dispose();
 			System.IO.File.Delete(_FilePath);
 		}
@@ -145,15 +149,10 @@ namespace WeSay.Data.Tests
 		[TearDown]
 		public void TearDown()
 		{
+
+			this._bindingList.Dispose();
 			this._dataSource.Dispose();
 			System.IO.File.Delete(_FilePath);
-		}
-
-		[Test]
-		[ExpectedException(typeof(NotSupportedException))]
-		public new void InsertNotSupported()
-		{
-			base.InsertNotSupported();
 		}
 
 	}
@@ -181,15 +180,9 @@ namespace WeSay.Data.Tests
 		[TearDown]
 		public void TearDown()
 		{
+			this._bindingList.Dispose();
 			this._dataSource.Dispose();
 			System.IO.File.Delete(_FilePath);
-		}
-
-		[Test]
-		[ExpectedException(typeof(NotSupportedException))]
-		public new void InsertNotSupported()
-		{
-			base.InsertNotSupported();
 		}
 
 	}
@@ -226,6 +219,7 @@ namespace WeSay.Data.Tests
 		[TearDown]
 		public void TearDown()
 		{
+			((IDisposable)this._bindingList).Dispose();
 			this._dataSource.Dispose();
 			System.IO.File.Delete(_FilePath);
 		}
@@ -271,6 +265,8 @@ namespace WeSay.Data.Tests
 		[TearDown]
 		public void TestFixtureTearDown()
 		{
+			((IDisposable)this._bindingList
+	).Dispose();
 			this._dataSource.Dispose();
 			System.IO.File.Delete(_FilePath);
 		}
@@ -331,6 +327,7 @@ namespace WeSay.Data.Tests
 		[TearDown]
 		public void TestFixtureTearDown()
 		{
+			this._bindingList.Dispose();
 			this._dataSource.Dispose();
 			System.IO.File.Delete(_filePath);
 		}
@@ -415,6 +412,7 @@ namespace WeSay.Data.Tests
 		[TearDown]
 		public void TestFixtureTearDown()
 		{
+			this._bindingList.Dispose();
 			this._dataSource.Dispose();
 			System.IO.File.Delete(_filePath);
 		}
@@ -430,6 +428,32 @@ namespace WeSay.Data.Tests
 			ReOpenDatabase();
 
 			Assert.AreEqual(_jared, _bindingList[0]);
+			Assert.AreEqual(1, _bindingList[0].StoredInt);
+		}
+
+		[Test]
+		public void ChangeAfterClosed()
+		{
+			Assert.IsTrue(_bindingList.Contains(_jared));
+			ReOpenDatabase();
+			Assert.IsFalse(_bindingList.Contains(_jared)); // should no longer contain this instance
+			Assert.AreEqual(_jared, _bindingList[0]);
+			_jared.StoredInt = 1; // should not be wired up to throw events to old bindinglist anymore
+			Assert.AreNotEqual(_jared, _bindingList[0]);
+		}
+
+		[Test]
+		public void ChangeAfterReopen()
+		{
+			ReOpenDatabase();
+			Assert.AreEqual(3, _bindingList[0].StoredInt);
+
+			TestItem item = _bindingList[0];
+			item.StoredInt = 1;
+			Assert.AreEqual(1, _bindingList[0].StoredInt);
+
+			ReOpenDatabase();
+
 			Assert.AreEqual(1, _bindingList[0].StoredInt);
 		}
 
@@ -464,6 +488,7 @@ namespace WeSay.Data.Tests
 
 		private void ReOpenDatabase()
 		{
+			this._bindingList.Dispose();
 			this._dataSource.Dispose();
 			OpenDatabase();
 		}

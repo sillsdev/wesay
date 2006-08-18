@@ -4,11 +4,12 @@ using System.ComponentModel;
 
 namespace WeSay.Data
 {
-	public class Db4oBindingList<T> : IBindingList, IFilterable<T>, IList<T>, ICollection<T>, IEnumerable<T> where T : class, INotifyPropertyChanged, new()
+	public class Db4oBindingList<T> : IBindingList, IFilterable<T>, IList<T>, ICollection<T>, IEnumerable<T>, IDisposable where T : class, INotifyPropertyChanged, new()
 	{
 		Db4o.Binding.Db4oList<T> _records;
 		PropertyDescriptor	_propertyDescriptor;
 		ListSortDirection   _listSortDirection;
+		private static int defaultWriteCacheSize = 1;
 
 		private void Initialize(Db4oDataSource dataSource, Predicate<T> filter, Comparison<T> sort )
 		{
@@ -18,13 +19,13 @@ namespace WeSay.Data
 
 			_records = new Db4o.Binding.Db4oList<T>((com.db4o.ObjectContainer)dataSource.Data, new List<T>(), filter, sort);
 			_records.ReadCacheSize = 0;
-			_records.WriteCacheSize = 1;
+			_records.WriteCacheSize = defaultWriteCacheSize;
 			_records.PeekPersistedActivationDepth = 99;
 			_records.ActivationDepth = 99;
 			_records.RefreshActivationDepth = 99;
 			_records.SetActivationDepth = 99;
 			_records.Requery(false);
-		}
+		   }
 
 		public Db4oBindingList(Db4oDataSource dataSource)
 		{
@@ -58,14 +59,43 @@ namespace WeSay.Data
 			Initialize(dataSource, null, sort);
 		}
 
+		public void Add(IEnumerator<T> enumerator)
+		{
+			_records.WriteCacheSize = 0;
+			while (enumerator.MoveNext())
+			{
+				Add(enumerator.Current);
+			}
+			_records.Commit();
+			_records.WriteCacheSize = defaultWriteCacheSize;
+		}
+
+		public void Add(System.Collections.IEnumerator enumerator)
+		{
+			_records.WriteCacheSize = 0;
+			while (enumerator.MoveNext())
+			{
+				Add((T)enumerator.Current);
+			}
+			_records.Commit();
+			_records.WriteCacheSize = defaultWriteCacheSize;
+		}
+
+		public bool Commit()
+		{
+			return _records.Commit();
+		}
+
 		public int WriteCacheSize
 		{
 			get
 			{
+				VerifyNotDisposed();
 				return _records.WriteCacheSize;
 			}
 			set
 			{
+				VerifyNotDisposed();
 				_records.WriteCacheSize = value;
 			}
 		}
@@ -74,6 +104,7 @@ namespace WeSay.Data
 
 		public void ApplyFilter(Predicate<T> filter)
 		{
+			VerifyNotDisposed();
 			if (filter == null)
 			{
 				throw new ArgumentNullException();
@@ -84,6 +115,7 @@ namespace WeSay.Data
 
 		public void RemoveFilter()
 		{
+			VerifyNotDisposed();
 			_records.Filter = null;
 			OnListReset();
 		}
@@ -92,6 +124,7 @@ namespace WeSay.Data
 		{
 			get
 			{
+				VerifyNotDisposed();
 				return _records.IsFiltered;
 			}
 		}
@@ -135,6 +168,7 @@ namespace WeSay.Data
 
 		public void ApplySort(PropertyDescriptor property, ListSortDirection direction)
 		{
+			VerifyNotDisposed();
 			Comparison<T> sort = delegate(T item1, T item2)
 			{
 				PropertyComparison<T> propertySorter = ComparisonHelper<T>.GetPropertyComparison(ComparisonHelper<T>.DefaultPropertyComparison, direction);
@@ -156,6 +190,7 @@ namespace WeSay.Data
 		{
 			get
 			{
+				VerifyNotDisposed();
 				return _records.IsSorted;
 			}
 		}
@@ -192,10 +227,13 @@ namespace WeSay.Data
 
 		void IBindingList.RemoveIndex(PropertyDescriptor property)
 		{
+			VerifyNotDisposed();
 		}
 
 		public void RemoveSort()
 		{
+			VerifyNotDisposed();
+
 			if (IsSorted)
 			{
 				_records.RemoveSort();
@@ -208,6 +246,7 @@ namespace WeSay.Data
 		{
 			get
 			{
+				VerifyNotDisposed();
 				return _listSortDirection;
 			}
 		}
@@ -216,6 +255,7 @@ namespace WeSay.Data
 		{
 			get
 			{
+				VerifyNotDisposed();
 				return _propertyDescriptor;
 			}
 		}
@@ -224,6 +264,7 @@ namespace WeSay.Data
 		{
 			get
 			{
+				VerifyNotDisposed();
 				return true;
 			}
 		}
@@ -232,6 +273,7 @@ namespace WeSay.Data
 		{
 			get
 			{
+				VerifyNotDisposed();
 				return false;
 			}
 		}
@@ -240,6 +282,7 @@ namespace WeSay.Data
 		{
 			get
 			{
+				VerifyNotDisposed();
 				return true;
 			}
 		}
@@ -250,17 +293,20 @@ namespace WeSay.Data
 
 		public int IndexOf(T item)
 		{
+			VerifyNotDisposed();
 			return _records.IndexOf(item);
 		}
 
-		void IList<T>.Insert(int index, T item)
+		public void Insert(int index, T item)
 		{
+			VerifyNotDisposed();
 			_records.Insert(index, item);
 			OnItemChanged(index);
 		}
 
 		public void RemoveAt(int index)
 		{
+			VerifyNotDisposed();
 			_records.RemoveAt(index);
 			OnItemDeleted(index);
 		}
@@ -269,10 +315,12 @@ namespace WeSay.Data
 		{
 			get
 			{
+				VerifyNotDisposed();
 				return _records[index];
 			}
 			set
 			{
+				VerifyNotDisposed();
 				_records[index] = value;
 				OnItemChanged(index);
 			}
@@ -284,6 +332,7 @@ namespace WeSay.Data
 
 		int System.Collections.IList.Add(object value)
 		{
+			VerifyNotDisposed();
 			T item = (T)value;
 			Add(item);
 			return IndexOf(item);
@@ -291,28 +340,33 @@ namespace WeSay.Data
 
 		void System.Collections.IList.Clear()
 		{
+			VerifyNotDisposed();
 			Clear();
 		}
 
 		bool System.Collections.IList.Contains(object value)
 		{
+			VerifyNotDisposed();
 			return Contains((T)value);
 		}
 
 		int System.Collections.IList.IndexOf(object value)
 		{
+			VerifyNotDisposed();
 			return IndexOf((T)value);
 		}
 
 		void System.Collections.IList.Insert(int index, object value)
 		{
-			throw new NotSupportedException();
+			VerifyNotDisposed();
+			Insert(index, (T)value);
 		}
 
 		public bool IsFixedSize
 		{
 			get
 			{
+				VerifyNotDisposed();
 				return false;
 			}
 		}
@@ -321,12 +375,14 @@ namespace WeSay.Data
 		{
 			get
 			{
+				VerifyNotDisposed();
 				return IsReadOnly;
 			}
 		}
 
 		void System.Collections.IList.Remove(object value)
 		{
+			VerifyNotDisposed();
 			Remove((T)value);
 		}
 
@@ -339,6 +395,7 @@ namespace WeSay.Data
 		}
 		void System.Collections.IList.RemoveAt(int index)
 		{
+			VerifyNotDisposed();
 			CheckIndex(index);
 			RemoveAt(index);
 		}
@@ -347,11 +404,13 @@ namespace WeSay.Data
 		{
 			get
 			{
+				VerifyNotDisposed();
 				CheckIndex(index);
 				return _records[index];
 			}
 			set
 			{
+				VerifyNotDisposed();
 				CheckIndex(index);
 				_records[index] = (T)value;
 				OnItemChanged(index);
@@ -364,12 +423,14 @@ namespace WeSay.Data
 
 		public void Add(T item)
 		{
+			VerifyNotDisposed();
 			_records.Add(item);
 			OnItemAdded(IndexOf(item));
 		}
 
 		public void Clear()
 		{
+			VerifyNotDisposed();
 			int count = _records.Count;
 			_records.Clear();
 			for(int i=0; i < count; ++i)
@@ -380,11 +441,13 @@ namespace WeSay.Data
 
 		public bool Contains(T item)
 		{
+			VerifyNotDisposed();
 			return _records.Contains(item);
 		}
 
 		public void CopyTo(T[] array, int arrayIndex)
 		{
+			VerifyNotDisposed();
 			_records.CopyTo(array, arrayIndex);
 		}
 
@@ -392,6 +455,7 @@ namespace WeSay.Data
 		{
 			get
 			{
+				VerifyNotDisposed();
 				return _records.Count;
 			}
 		}
@@ -400,12 +464,14 @@ namespace WeSay.Data
 		{
 			get
 			{
+				VerifyNotDisposed();
 				return _records.IsReadOnly;
 			}
 		}
 
 		public bool Remove(T item)
 		{
+			VerifyNotDisposed();
 			return _records.Remove(item);
 		}
 
@@ -415,6 +481,7 @@ namespace WeSay.Data
 
 		void System.Collections.ICollection.CopyTo(Array array, int index)
 		{
+			VerifyNotDisposed();
 			if (array == null)
 			{
 				throw new ArgumentNullException("array");
@@ -443,6 +510,7 @@ namespace WeSay.Data
 		{
 			get
 			{
+				VerifyNotDisposed();
 				return Count;
 			}
 		}
@@ -451,6 +519,7 @@ namespace WeSay.Data
 		{
 			get
 			{
+				VerifyNotDisposed();
 				return false;
 			}
 		}
@@ -459,6 +528,7 @@ namespace WeSay.Data
 		{
 			get
 			{
+				VerifyNotDisposed();
 				return this;
 			}
 		}
@@ -469,6 +539,7 @@ namespace WeSay.Data
 
 		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
 		{
+			VerifyNotDisposed();
 			return ((System.Collections.IEnumerable)_records).GetEnumerator();
 		}
 
@@ -478,11 +549,41 @@ namespace WeSay.Data
 
 		IEnumerator<T> IEnumerable<T>.GetEnumerator()
 		{
+			VerifyNotDisposed();
 			return ((IEnumerable<T>)_records).GetEnumerator();
 		}
 
 		#endregion
-}
+
+		#region IDisposable Members
+
+		private bool _isDisposed = false;
+		public void Dispose()
+		{
+			if (!this._isDisposed)
+			{
+				this._records.Dispose();
+				_isDisposed = true;
+			}
+			GC.SuppressFinalize(this);
+		}
+		protected void VerifyNotDisposed(){
+			if (this._isDisposed)
+			{
+				throw new ObjectDisposedException("Db4oBindingList");
+			}
+		}
+		~Db4oBindingList()
+		{
+			if (!this._isDisposed)
+			{
+				throw new ApplicationException("Disposed not explicitly called");
+			}
+		}
+
+
+		#endregion
+	}
 
 }
 

@@ -54,6 +54,7 @@ namespace WeSay.Data.Tests
 		[TearDown]
 		public void TestFixtureTearDown()
 		{
+			this._bindingList.Dispose();
 			this._dataSource.Dispose();
 			System.IO.File.Delete(_filePath);
 		}
@@ -99,7 +100,7 @@ namespace WeSay.Data.Tests
 	[TestFixture]
 	public class Db4oFilterSpeedTest
 	{
-		public class SimpleTestClass: INotifyPropertyChanged, IComparable, IComparable<SimpleTestClass>
+		public class SimpleTestClass : INotifyPropertyChanged, IComparable, IComparable<SimpleTestClass>
 		{
 			int _i;
 			public SimpleTestClass()
@@ -174,8 +175,9 @@ namespace WeSay.Data.Tests
 		}
 
 		[TearDown]
-		public void TestFixtureTearDown()
+		public void TearDown()
 		{
+			this._bindingList.Dispose();
 			this._dataSource.Dispose();
 			System.IO.File.Delete(_filePath);
 		}
