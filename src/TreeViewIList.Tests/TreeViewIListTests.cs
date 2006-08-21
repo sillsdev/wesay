@@ -73,8 +73,11 @@ namespace WeSay.TreeViewIList.Tests
 			}
 			treeview = new TreeViewAdaptorIList(list);
 			treeview.AppendColumn("Name", new Gtk.CellRendererText());
+			treeview.Column_Types.Add(GLib.GType.String);
 			treeview.AppendColumn("Number", new Gtk.CellRendererText());
+			treeview.Column_Types.Add(GLib.GType.Int);
 			treeview.AppendColumn("Gender", new Gtk.CellRendererText());
+			treeview.Column_Types.Add(GLib.GType.String);
 
 			treeview.GetValueStrategy = delegate(object o, int column)
 				{

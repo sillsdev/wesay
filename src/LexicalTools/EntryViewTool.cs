@@ -23,7 +23,7 @@ namespace WeSay.LexicalTools
 		public void Activate()
 		{
 			AddToolbar();
-			AddTable();
+			AddToolview();
 			_container.ShowAll();
 		}
 
@@ -39,7 +39,20 @@ namespace WeSay.LexicalTools
 		   _container.PackStart(bar, false, false, 0);
 		}
 
-		private void AddTable()
+		private void AddToolview()
+		{
+			HBox hbox = new HBox();
+			_container.PackStart(hbox);
+			AddListArea(hbox);
+			AddDetailArea(hbox);
+		}
+
+		private void AddListArea(Box parent)
+		{
+//            parent.PackStart();
+		}
+
+		private void AddDetailArea(Box parent)
 		{
 		   LexEntry record = _bindingSource.Current as LexEntry;
 		   if (record == null)
@@ -52,7 +65,13 @@ namespace WeSay.LexicalTools
 		   LexEntryLayouter layout = new LexEntryLayouter(builder);
 		   layout.AddWidgets(record);
 
-			_container.PackStart(builder.BuildTable());
+			parent.PackStart(builder.BuildTable());
+		}
+
+		private void RefreshDetailArea(Box parent)
+		{
+			parent.Children[1].Destroy();
+			AddDetailArea(parent);
 		}
 
 
@@ -68,8 +87,7 @@ namespace WeSay.LexicalTools
 		}
 		void OnPositionChanged(object sender, EventArgs e)
 		{
-			_container.Children[1].Destroy();
-			AddTable();
+			RefreshDetailArea((HBox)_container.Children[1]);
 			_container.ShowAll();
 		}
 
