@@ -22,6 +22,7 @@ namespace WeSay.LexicalTools.Tests
 		[TearDown]
 		public void TearDown()
 		{
+			this._entriesList.Dispose();
 			this._dataSource.Dispose();
 			File.Delete(_filePath);
 		}
@@ -35,6 +36,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			if (_dataSource != null)
 			{
+				_entriesList.Dispose();
 				_dataSource.Dispose();
 			}
 			_dataSource = new WeSay.Data.Db4oDataSource(_filePath);
