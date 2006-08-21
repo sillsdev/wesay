@@ -7,13 +7,14 @@ namespace WeSay.Data
 	public class Db4oBindingList<T> : IBindingList, IFilterable<T>, IList<T>, ICollection<T>, IEnumerable<T>, IDisposable where T : class, INotifyPropertyChanged, new()
 	{
 		Db4o.Binding.Db4oList<T> _records;
-		PropertyDescriptor	_propertyDescriptor;
-		ListSortDirection   _listSortDirection;
-		private static int defaultWriteCacheSize = 1;
+		PropertyDescriptor _propertyDescriptor;
+		ListSortDirection _listSortDirection;
+		private static int defaultWriteCacheSize = 0;
 
-		private void Initialize(Db4oDataSource dataSource, Predicate<T> filter, Comparison<T> sort )
+		private void Initialize(Db4oDataSource dataSource, Predicate<T> filter, Comparison<T> sort)
 		{
-			if(dataSource == null){
+			if (dataSource == null)
+			{
 				throw new ArgumentNullException("dataSource");
 			}
 
@@ -25,7 +26,7 @@ namespace WeSay.Data
 			_records.RefreshActivationDepth = 99;
 			_records.SetActivationDepth = 99;
 			_records.Requery(false);
-		   }
+		}
 
 		public Db4oBindingList(Db4oDataSource dataSource)
 		{
@@ -34,7 +35,8 @@ namespace WeSay.Data
 
 		public Db4oBindingList(Db4oDataSource dataSource, Predicate<T> filter)
 		{
-			if(filter == null){
+			if (filter == null)
+			{
 				throw new ArgumentNullException("filter");
 			}
 			Initialize(dataSource, filter, null);
@@ -42,10 +44,12 @@ namespace WeSay.Data
 
 		public Db4oBindingList(Db4oDataSource dataSource, Predicate<T> filter, Comparison<T> sort)
 		{
-			if(filter == null){
+			if (filter == null)
+			{
 				throw new ArgumentNullException("filter");
 			}
-			if(sort == null){
+			if (sort == null)
+			{
 				throw new ArgumentNullException("sort");
 			}
 			Initialize(dataSource, filter, sort);
@@ -53,7 +57,8 @@ namespace WeSay.Data
 
 		public Db4oBindingList(Db4oDataSource dataSource, Comparison<T> sort)
 		{
-			if(sort == null){
+			if (sort == null)
+			{
 				throw new ArgumentNullException("sort");
 			}
 			Initialize(dataSource, null, sort);
@@ -206,9 +211,11 @@ namespace WeSay.Data
 
 		protected virtual void OnListChanged(ListChangedEventArgs e)
 		{
-			if (this.ListChanged != null)
+
+			ListChangedEventHandler listChanged = this.ListChanged;
+			if (listChanged != null)
 			{
-				this.ListChanged(this, e);
+				listChanged(this, e);
 			}
 		}
 
@@ -422,7 +429,7 @@ namespace WeSay.Data
 			VerifyNotDisposed();
 			int count = _records.Count;
 			_records.Clear();
-			for(int i=0; i < count; ++i)
+			for (int i = 0; i < count; ++i)
 			{
 				OnItemDeleted(i);
 			}
@@ -483,7 +490,8 @@ namespace WeSay.Data
 			{
 				throw new ArgumentException("array not large enough to fit collection starting at index");
 			}
-			if (array.Rank > 1){
+			if (array.Rank > 1)
+			{
 				throw new ArgumentException("array cannot be multidimensional", "array");
 			}
 
@@ -546,34 +554,47 @@ namespace WeSay.Data
 
 		#region IDisposable Members
 
-		private bool _isDisposed = false;
+#if DEBUG
+		~Db4oBindingList()
+		{
+			if (!this._disposed)
+			{
+				throw new ApplicationException("Disposed not explicitly called on Db4oBindingList.");
+			}
+		}
+#endif
+
+		private bool _disposed = false;
+
 		public void Dispose()
 		{
-			if (!this._isDisposed)
-			{
-				this._records.Dispose();
-				_isDisposed = true;
-			}
+			Dispose(true);
 			GC.SuppressFinalize(this);
 		}
-		protected void VerifyNotDisposed(){
-			if (this._isDisposed)
+
+		protected virtual void Dispose(bool disposing)
+		{
+			if (!this._disposed)
+			{
+				if (disposing)
+				{
+					// dispose-only, i.e. non-finalizable logic
+					this._records.Dispose();
+				}
+
+				// shared (dispose and finalizable) cleanup logic
+				this._disposed = true;
+			}
+		}
+
+		protected void VerifyNotDisposed()
+		{
+			if (this._disposed)
 			{
 				throw new ObjectDisposedException("Db4oBindingList");
 			}
 		}
-		~Db4oBindingList()
-		{
-			if (!this._isDisposed)
-			{
-				throw new ApplicationException("Disposed not explicitly called");
-			}
-		}
-
-
 		#endregion
 	}
 
 }
-
-

@@ -108,11 +108,12 @@ namespace Db4o.Binding
 		/// <returns>true, if <paramref name="item"/> was activated.</returns>
 		protected virtual bool OnActivating(T item)
 		{
+			EventHandler<Db4oListEventArgs<T>> activating = this.Activating;
 			bool cancel = false;
-			if (this.Activating != null)
+			if (activating != null)
 			{
 				Db4oListEventArgs<T> args = new Db4oListEventArgs<T>(item);
-				this.Activating(this, args);
+				activating(this, args);
 				cancel = args.Cancel;
 			}
 			return cancel;
@@ -124,11 +125,12 @@ namespace Db4o.Binding
 		/// <returns>true, if <paramref name="item"/> was deactivated.</returns>
 		protected virtual bool OnDeactivating(T item)
 		{
+			EventHandler<Db4oListEventArgs<T>> deactivating = this.Deactivating;
 			bool cancel = false;
-			if (this.Deactivating != null)
+			if (deactivating != null)
 			{
 				Db4oListEventArgs<T> args = new Db4oListEventArgs<T>(item);
-				this.Deactivating(this, args);
+				deactivating(this, args);
 				cancel = args.Cancel;
 			}
 			return cancel;
@@ -140,11 +142,12 @@ namespace Db4o.Binding
 		/// <returns>true, if <paramref name="item"/> was stored.</returns>
 		protected virtual bool OnStoring(T item)
 		{
+			EventHandler<Db4oListEventArgs<T>> storing = this.Storing;
 			bool cancel = false;
-			if (this.Storing != null)
+			if (storing != null)
 			{
 				Db4oListEventArgs<T> args = new Db4oListEventArgs<T>(item);
-				this.Storing(this, args);
+				storing(this, args);
 				cancel = args.Cancel;
 			}
 			return cancel;
@@ -156,11 +159,12 @@ namespace Db4o.Binding
 		/// <returns>true, if <paramref name="item"/> was deleted.</returns>
 		protected virtual bool OnDeleting(T item)
 		{
+			EventHandler<Db4oListEventArgs<T>> deleting = this.Deleting;
 			bool cancel = false;
-			if (this.Deleting != null)
+			if (deleting != null)
 			{
 				Db4oListEventArgs<T> args = new Db4oListEventArgs<T>(item);
-				this.Deleting(this, args);
+				deleting(this, args);
 				cancel = args.Cancel;
 			}
 			return cancel;
@@ -1647,47 +1651,57 @@ namespace Db4o.Binding
 		private bool _storeItemOnPropertyChanged = true;
 
 		#region IDisposable Members
-		private bool _isDisposed = false;
+		private bool _disposed = false;
 		public void Dispose()
 		{
-			if (!this._isDisposed)
+			Dispose(true);
+			GC.SuppressFinalize(this);
+		}
+		protected virtual void Dispose(bool disposing)
+		{
+			if (!this._disposed)
 			{
-				if(_database.IsClosed()){
-					throw new ApplicationException("Database should not be disposed until after Db4oList is disposed.");
-				}
-				int count = this._readCache.Count;
-				long id;
-				T item;
-				for (int i = 0; i < count; ++i)
+				if (disposing)
 				{
-					id = this._readCache.Dequeue();
-					item = GetItem(id, false);
-					if (item != null)
+					if (_database.IsClosed())
 					{
-						if (this.StoreItemOnPropertyChanged)
+						throw new ApplicationException("Database should not be disposed until after Db4oList is disposed.");
+					}
+					int count = this._readCache.Count;
+					long id;
+					T item;
+					for (int i = 0; i < count; ++i)
+					{
+						id = this._readCache.Dequeue();
+						item = GetItem(id, false);
+						if (item != null)
 						{
-							RegisterItemPropertyChangedHandler(item, false);
+							if (this.StoreItemOnPropertyChanged)
+							{
+								RegisterItemPropertyChangedHandler(item, false);
+							}
 						}
 					}
 				}
-				_isDisposed = true;
+				_disposed = true;
 			}
-			GC.SuppressFinalize(this);
 		}
 		protected void VerifyNotDisposed()
 		{
-			if (this._isDisposed)
+			if (this._disposed)
 			{
 				throw new ObjectDisposedException("Db4oList");
 			}
 		}
+#if DEBUG
 		~Db4oList()
 		{
-			if (!this._isDisposed)
+			if (!this._disposed)
 			{
 				throw new ApplicationException("Disposed not explicitly called");
 			}
 		}
+#endif
 
 
 		#endregion
