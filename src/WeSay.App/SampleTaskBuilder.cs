@@ -22,7 +22,9 @@ namespace WeSay.App
 			_picoContext.RegisterComponentInstance(project);
 
 			WeSay.Data.Db4oDataSource ds = new WeSay.Data.Db4oDataSource(project.PathToLexicalModelDB);
-			_picoContext.RegisterComponentInstance(ds);
+			IComponentAdapter dsAdaptor= _picoContext.RegisterComponentInstance(ds);
+
+			_picoContext.AddOrderedComponentAdapter(dsAdaptor);//adding it explicity gives proper disposal order
 
 			WeSay.Data.Db4oBindingList<LexEntry> entries = new WeSay.Data.Db4oBindingList<LexEntry>(ds);
 			_picoContext.RegisterComponentInstance(entries);
