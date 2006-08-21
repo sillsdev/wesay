@@ -37,6 +37,7 @@
   </ItemGroup>
   <ItemGroup>
 	<Compile Include="Binding.cs" />
+	<Compile Include="GhostBinding.cs" />
 	<Compile Include="IProject.cs" />
 	<Compile Include="ISkin.cs" />
 	<Compile Include="ITaskBuilder.cs" />

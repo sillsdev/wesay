@@ -16,25 +16,25 @@ namespace WeSay.UI
 		{
 			_inMidstOfChange = false;
 		   _dataTarget= dataTarget;
-		   _dataTarget.PropertyChanged += new PropertyChangedEventHandler(_dataTarget_PropertyChanged);
+		   _dataTarget.PropertyChanged += new PropertyChangedEventHandler(OnDataPropertyChanged);
 		   _propertyName=propertyName;
 		   _widgetTarget = widgetTarget;
-		   _widgetTarget.TextInserted += new Gtk.TextInsertedHandler(_widgetTarget_TextInserted);
-		   _widgetTarget.TextDeleted +=new Gtk.TextDeletedHandler(_widgetTarget_TextDeleted);
+		   _widgetTarget.TextInserted += new Gtk.TextInsertedHandler(OnWidgetTextInserted);
+		   _widgetTarget.TextDeleted +=new Gtk.TextDeletedHandler(OnWidgetTextDeleted);
 		}
 
-		void _widgetTarget_TextDeleted(object o, Gtk.TextDeletedArgs args)
+		protected void OnWidgetTextDeleted(object o, Gtk.TextDeletedArgs args)
 		{
 			 SetTargetValue(_widgetTarget.Text);
 
 		}
 
-		void _widgetTarget_TextInserted(object o, Gtk.TextInsertedArgs args)
+		protected void OnWidgetTextInserted(object o, Gtk.TextInsertedArgs args)
 		{
 			SetTargetValue(_widgetTarget.Text);
 		}
 
-		void _dataTarget_PropertyChanged(object sender, PropertyChangedEventArgs e)
+		protected void OnDataPropertyChanged(object sender, PropertyChangedEventArgs e)
 		{
 			if (_inMidstOfChange ||
 				e.PropertyName != _propertyName)
@@ -51,7 +51,7 @@ namespace WeSay.UI
 			}
 		}
 
-		private string GetTargetValue()
+		protected string GetTargetValue()
 		{
 			WeSay.Language.MultiText text = _dataTarget as WeSay.Language.MultiText;
 			if (text == null)
@@ -59,7 +59,7 @@ namespace WeSay.UI
 			return text[_propertyName];
 		}
 
-		private void SetTargetValue(string s)
+		protected void SetTargetValue(string s)
 		{
 			if (_inMidstOfChange)
 				return;

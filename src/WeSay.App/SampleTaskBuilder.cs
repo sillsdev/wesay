@@ -24,7 +24,13 @@ namespace WeSay.App
 			WeSay.Data.Db4oDataSource ds = new WeSay.Data.Db4oDataSource(project.PathToLexicalModelDB);
 			IComponentAdapter dsAdaptor= _picoContext.RegisterComponentInstance(ds);
 
-			_picoContext.AddOrderedComponentAdapter(dsAdaptor);//adding it explicity gives proper disposal order
+			/* Because the data source is never actually touched by the normal pico container code,
+			 * it never gets  added to this ordered list.  The ordered list is used for the lifecycle
+			 * functions, such as dispose.  Without adding it explicitly, this will end up
+			 * getting disposed of first, whereas we need to it to be disposed of last.
+			 * Adding it explicity to the ordered list gives proper disposal order.
+			 */
+			_picoContext.AddOrderedComponentAdapter(dsAdaptor);
 
 			WeSay.Data.Db4oBindingList<LexEntry> entries = new WeSay.Data.Db4oBindingList<LexEntry>(ds);
 			_picoContext.RegisterComponentInstance(entries);
