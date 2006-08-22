@@ -6,55 +6,66 @@ using NUnit.Framework;
 namespace WeSay.TreeViewIList.Tests
 {
 	public class TestPerson
-{
-	public enum GenderType {
-		Male,
-		Female
-	}
-
-	private string _name;
-	private int _number;
-	private GenderType _gender;
-
-	public string Name
 	{
-		get { return this._name; }
-	}
-
-	public int Number
-	{
-		get { return this._number; }
-	}
-
-	public GenderType Gender
-	{
-		get { return this._gender; }
-	}
-
-
-	public TestPerson (string name, int number, GenderType gender)
-	{
-		this._name = name;
-		this._number = number;
-		this._gender = gender;
-	}
-
-	static public TestPerson GetRandomPerson(){
-		Random random = new Random();
-		GenderType gender = GenderType.Male;
-		if(random.Next(0,1) == 0){
-			gender = GenderType.Female;
+		public enum GenderType
+		{
+			Male,
+			Female
 		}
-		string name = string.Empty;
-		int max = random.Next(6);
-		for(int i = 0; i < max; i++){
-			name += Convert.ToChar(random.Next(64, 128));
+
+		private string _name;
+		private int _number;
+		private GenderType _gender;
+
+		public string Name
+		{
+			get
+			{
+				return this._name;
+			}
 		}
-		return new TestPerson(name, random.Next(), gender);
+
+		public int Number
+		{
+			get
+			{
+				return this._number;
+			}
+		}
+
+		public GenderType Gender
+		{
+			get
+			{
+				return this._gender;
+			}
+		}
+
+
+		public TestPerson(string name, int number, GenderType gender)
+		{
+			this._name = name;
+			this._number = number;
+			this._gender = gender;
+		}
+
+		static public TestPerson GetRandomPerson()
+		{
+			Random random = new Random();
+			GenderType gender = GenderType.Male;
+			if (random.Next(0, 1) == 0)
+			{
+				gender = GenderType.Female;
+			}
+			string name = string.Empty;
+			int max = random.Next(6);
+			for (int i = 0; i < max; i++)
+			{
+				name += Convert.ToChar(random.Next(64, 128));
+			}
+			return new TestPerson(name, random.Next(), gender);
+		}
 	}
-}
-
-
 
 	[TestFixture]
 	public class TreeViewTests
@@ -81,7 +92,7 @@ namespace WeSay.TreeViewIList.Tests
 
 			treeview.GetValueStrategy = delegate(object o, int column)
 				{
-					TestPerson p = (TestPerson) o;
+					TestPerson p = (TestPerson)o;
 					switch (column)
 					{
 						case 0:
@@ -107,7 +118,7 @@ namespace WeSay.TreeViewIList.Tests
 		public void Column_Types()
 		{
 			Assert.AreEqual(3, treeview.Column_Types.Count);
-			Assert.AreEqual(GLib.GType.String,treeview.Column_Types[0]);
+			Assert.AreEqual(GLib.GType.String, treeview.Column_Types[0]);
 			Assert.AreEqual(GLib.GType.Int, treeview.Column_Types[1]);
 			Assert.AreEqual(GLib.GType.String, treeview.Column_Types[2]);
 		}
@@ -119,30 +130,4 @@ namespace WeSay.TreeViewIList.Tests
 		}
 	}
 
-	[TestFixture]
-	public class NodeViewTests
-	{
-
-		[Test]
-		public void NodeviewColumns()
-		{
-			Gtk.Application.Init();
-
-			Gtk.NodeView nodeview;
-			nodeview = new Gtk.NodeView(new Gtk.NodeStore(typeof(string)));
-			nodeview.AppendColumn("Name", new Gtk.CellRendererText());
-			nodeview.AppendColumn("Number", new Gtk.CellRendererText());
-			nodeview.AppendColumn("Gender", new Gtk.CellRendererText());
-			Assert.AreEqual(3, nodeview.Columns.Length);
-			nodeview = null;
-			GC.Collect();
-
-			nodeview = new Gtk.NodeView(new Gtk.NodeStore(typeof(string)));
-			nodeview.AppendColumn("Name", new Gtk.CellRendererText());
-			nodeview.AppendColumn("Number", new Gtk.CellRendererText());
-			nodeview.AppendColumn("Gender", new Gtk.CellRendererText());
-			Assert.AreEqual(3, nodeview.Columns.Length);
-			nodeview.Dispose();
-		}
-	}
 }

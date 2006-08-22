@@ -36,16 +36,16 @@ namespace WeSay.TreeViewIList
 			gtk_tree_view_set_model(Handle, _model == null ? IntPtr.Zero : _model.Handle);
 		}
 
-		//[DllImport("libgtk-win32-2.0-0.dll")]
-		//static extern IntPtr gtk_tree_view_get_type();
+		[DllImport("libgtk-win32-2.0-0.dll")]
+		static extern IntPtr gtk_tree_view_get_type();
 
-		//public static new GLib.GType GType
-		//{
-		//    get
-		//    {
-		//        return new GLib.GType(gtk_tree_view_get_type());
-		//    }
-		//}
+		public static new GLib.GType GType
+		{
+			get
+			{
+				return new GLib.GType(gtk_tree_view_get_type());
+			}
+		}
 
 		public new TreeModelIListAdaptor Model
 		{
