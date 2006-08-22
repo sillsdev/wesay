@@ -117,6 +117,32 @@ namespace WeSay.TreeViewIList.Tests
 		{
 			Assert.AreEqual(3, treeview.Columns.Length);
 		}
+	}
 
+	[TestFixture]
+	public class NodeViewTests
+	{
+
+		[Test]
+		public void NodeviewColumns()
+		{
+			Gtk.Application.Init();
+
+			Gtk.NodeView nodeview;
+			nodeview = new Gtk.NodeView(new Gtk.NodeStore(typeof(string)));
+			nodeview.AppendColumn("Name", new Gtk.CellRendererText());
+			nodeview.AppendColumn("Number", new Gtk.CellRendererText());
+			nodeview.AppendColumn("Gender", new Gtk.CellRendererText());
+			Assert.AreEqual(3, nodeview.Columns.Length);
+			nodeview = null;
+			GC.Collect();
+
+			nodeview = new Gtk.NodeView(new Gtk.NodeStore(typeof(string)));
+			nodeview.AppendColumn("Name", new Gtk.CellRendererText());
+			nodeview.AppendColumn("Number", new Gtk.CellRendererText());
+			nodeview.AppendColumn("Gender", new Gtk.CellRendererText());
+			Assert.AreEqual(3, nodeview.Columns.Length);
+			nodeview.Dispose();
+		}
 	}
 }

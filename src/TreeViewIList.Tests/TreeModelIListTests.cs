@@ -6,6 +6,17 @@ using NUnit.Framework;
 namespace WeSay.TreeViewIList.Tests
 {
 	[TestFixture]
+	public class ConstructTwiceTests
+	{
+		[Test]
+		public void ConstructTwice()
+		{
+			TreeModelIListAdaptor adaptor = new TreeModelIListAdaptor(new TreeModelIListConfiguration());
+			adaptor = new TreeModelIListAdaptor(new TreeModelIListConfiguration());
+		}
+	}
+
+	[TestFixture]
 	public class TreeModelIListTests : TreeModelIListAdaptor
 	{
 		int _PastTheEndIndex;
@@ -307,6 +318,17 @@ namespace WeSay.TreeViewIList.Tests
 			parent = -1;
 			Assert.IsFalse(Parent_callback(out parent, this._PastTheEndIndex));
 			Assert.AreEqual(this._PastTheEndIndex, parent);
+		}
+
+		[System.Runtime.InteropServices.DllImport("gtksharpglue-2")]
+		static extern IntPtr gtksharp_node_store_get_type();
+
+		public static new GLib.GType GType
+		{
+			get
+			{
+				return new GLib.GType(gtksharp_node_store_get_type());
+			}
 		}
 	}
 }

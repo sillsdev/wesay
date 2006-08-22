@@ -4,6 +4,7 @@ using Gtk;
 using System.ComponentModel;
 using WeSay.LexicalModel;
 using WeSay.UI;
+using WeSay.TreeViewIList;
 
 namespace WeSay.LexicalTools
 {
@@ -49,7 +50,19 @@ namespace WeSay.LexicalTools
 
 		private void AddListArea(Box parent)
 		{
-//            parent.PackStart();
+			System.Collections.IList list = this._records;
+			TreeViewAdaptorIList treeview = new TreeViewAdaptorIList(list);
+			treeview.AppendColumn("Entries", new Gtk.CellRendererText());
+			treeview.Column_Types.Add(GLib.GType.String);
+			treeview.FixedHeightMode = true;
+
+			treeview.GetValueStrategy = delegate(object o, int column)
+				{
+					LexEntry lexEntry = (LexEntry)o;
+					return lexEntry.LexicalForm["th"];
+				};
+			parent.PackStart(treeview);
+			treeview.ShowAll();
 		}
 
 		private void AddDetailArea(Box parent)

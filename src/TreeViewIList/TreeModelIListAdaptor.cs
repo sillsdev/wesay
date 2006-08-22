@@ -351,7 +351,7 @@ namespace WeSay.TreeViewIList
 		[System.Runtime.InteropServices.DllImport("gtksharpglue-2")]
 		static extern IntPtr gtksharp_node_store_get_type();
 
-		private static new GLib.GType GType
+		public static new GLib.GType GType
 		{
 			get
 			{

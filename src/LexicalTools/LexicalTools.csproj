@@ -53,6 +53,10 @@
 	  <Project>{5F61C809-B6C0-4567-9603-B2198E1AD038}</Project>
 	  <Name>LexicalModel</Name>
 	</ProjectReference>
+	<ProjectReference Include="..\TreeViewIList\TreeViewIList.csproj">
+	  <Project>{B538A561-53CA-4892-9906-E86C098045E1}</Project>
+	  <Name>TreeViewIList</Name>
+	</ProjectReference>
 	<ProjectReference Include="..\WeSay.UI\WeSay.UI.csproj">
 	  <Project>{AC8F284C-7B34-4AC9-A7DE-FAF765456DFF}</Project>
 	  <Name>WeSay.UI</Name>
