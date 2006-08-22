@@ -127,8 +127,6 @@ namespace WeSay.LexicalTools
 		{
 			TreeViewIListSelection selection = _treeview.Selection;
 			selection.Select(_bindingSource.Position);
-//            _treeview.ScrollToCell(_treeview.Se
-
 			RefreshDetailArea((HBox)_container.Children[1]);
 			_container.ShowAll();
 		}
