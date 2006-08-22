@@ -100,26 +100,26 @@
 	<Reference Include="atk-sharp, Version=2.8.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
 	<Reference Include="db4o, Version=5.4.8.0, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\db4o.dll</HintPath>
+	  <HintPath>..\..\..\lib\Db4o.dll</HintPath>
 	  <Private>True</Private>
 	</Reference>
 	<Reference Include="glib-sharp, Version=2.8.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
 	<Reference Include="gtk-sharp, Version=2.8.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
 	<Reference Include="ICSharpCode.SharpZipLib, Version=0.84.0.0, Culture=neutral, PublicKeyToken=1b03e6acf1164f73">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\ICSharpCode.SharpZipLib.dll</HintPath>
+	  <HintPath>..\..\..\lib\ICSharpCode.SharpZipLib.dll</HintPath>
 	</Reference>
 	<Reference Include="log4net, Version=1.2.9.0, Culture=neutral, PublicKeyToken=b32731d11ce58905">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\Spring.NET\log4net.dll</HintPath>
+	  <HintPath>..\..\..\lib\Spring.NET\log4net.dll</HintPath>
 	</Reference>
 	<Reference Include="Spring.Core, Version=1.1.0.0, Culture=neutral, PublicKeyToken=65e474d141e25e07">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\Spring.NET\Spring.Core.dll</HintPath>
+	  <HintPath>..\..\..\lib\Spring.NET\Spring.Core.dll</HintPath>
 	</Reference>
 	<Reference Include="Spring.Services, Version=1.1.0.0, Culture=neutral, PublicKeyToken=65e474d141e25e07">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\Spring.NET\Spring.Services.dll</HintPath>
+	  <HintPath>..\..\..\lib\Spring.NET\Spring.Services.dll</HintPath>
 	</Reference>
 	<Reference Include="System">
 	  <Name>System</Name>
