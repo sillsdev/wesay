@@ -18,17 +18,41 @@ namespace WeSay.LexicalTools
 			int rowCount = 1;
 			LexSense sense = (LexSense)dataObject;
 
-			TableBuilder senseTableBuilder = new TableBuilder();
-			senseTableBuilder.AddWidgetRow("gloss: ", MakeBoundEntry(sense.Gloss, "en"));
+			_builder.AddWidgetRow("Meaning: ", MakeBoundEntry(sense.Gloss, "en"));
 
-			LexExampleSentenceLayouter exampleLayouter = new LexExampleSentenceLayouter(senseTableBuilder);
+			LexExampleSentenceLayouter exampleLayouter = new LexExampleSentenceLayouter(_builder);
 			foreach (LexExampleSentence example in sense.ExampleSentences)
 			{
 			   rowCount+= exampleLayouter.AddWidgets(example);
 			}
-			_builder.AddWidgetRow("meaning: ", senseTableBuilder.BuildTable());
+		  //  _builder.AddWidgetRow("meaning: ", senseTableBuilder.BuildTable());
 
 			return rowCount;
 		}
+
+		public int AddGhost(System.ComponentModel.BindingList<LexSense> list)
+		{
+			_builder.AddWidgetRow("(Meaning): ", MakeGhostEntry(list, "Gloss", "en"));
+
+			return 1;
+		}
+
+//        public override int AddWidgets(object dataObject)
+//        {
+//            int rowCount = 1;
+//            LexSense sense = (LexSense)dataObject;
+//
+//            TableBuilder senseTableBuilder = new TableBuilder();
+//            senseTableBuilder.AddWidgetRow("gloss: ", MakeBoundEntry(sense.Gloss, "en"));
+//
+//            LexExampleSentenceLayouter exampleLayouter = new LexExampleSentenceLayouter(senseTableBuilder);
+//            foreach (LexExampleSentence example in sense.ExampleSentences)
+//            {
+//                rowCount += exampleLayouter.AddWidgets(example);
+//            }
+//            _builder.AddWidgetRow("meaning: ", senseTableBuilder.BuildTable());
+//
+//            return rowCount;
+//        }
 	}
 }

@@ -22,6 +22,9 @@ namespace WeSay.LexicalTools
 			{
 				rowCount+= layouter.AddWidgets(sense);
 			}
+			//add a ghost
+			 rowCount+= layouter.AddGhost(entry.Senses);
+
 			return rowCount;
 		}
 	}

@@ -11,7 +11,10 @@ namespace WeSay.UI.Tests
 	{
 		private Papa _papa = new Papa();
 		private Entry _ghostFirstNameWidget;
-		private GhostBinding _binding;
+		private Entry _papaNameWidget;
+	   private GhostBinding _binding;
+		protected bool _didNotify;
+
 
 		public class Child : WeSay.LexicalModel.WeSayDataObject
 		{
@@ -55,19 +58,42 @@ namespace WeSay.UI.Tests
 
 		}
 
+		void _binding_Triggered(object sender, EventArgs args)
+		{
+			_didNotify = true;
+		}
+
 		[SetUp]
 		public void Setup()
 		{
 			Application.Init();
+			_papaNameWidget = new Entry("John");
 			_ghostFirstNameWidget = new Entry();
 			_binding = new GhostBinding(_papa.Children, "First", "en", _ghostFirstNameWidget);
-		}
+			_didNotify = false;
+			Window w = new Window("test");
+			VBox box = new VBox();
+			w.Add(box);
+			box.PackStart(_papaNameWidget);
+			box.PackStart(_ghostFirstNameWidget);
+			box.ShowAll();
+			w.ShowAll();
+			_papaNameWidget.Show();
+			while (Gtk.Application.EventsPending())
+			{ Gtk.Application.RunIteration(); }
+
+			//Application.Run();
+			_papaNameWidget.GrabFocus();
+			 _ghostFirstNameWidget.GrabFocus();
+	   }
 
 
 		[Test]
 		public void EmptyListGrows()
 		{
 			_ghostFirstNameWidget.Text = "Samuel";
+			Assert.AreEqual(0, _papa.Children.Count);
+			_papaNameWidget.GrabFocus();
 			Assert.AreEqual(1, _papa.Children.Count);
 		}
 
@@ -75,7 +101,18 @@ namespace WeSay.UI.Tests
 		public void NewItemGetsValue()
 		{
 			_ghostFirstNameWidget.Text = "Samuel";
-			Assert.AreEqual("Samuel",_papa.Children[0].First["en"]);
+			_papaNameWidget.GrabFocus();
+			Assert.AreEqual("Samuel", _papa.Children[0].First["en"]);
 		}
+		 [Test]
+		public void NewItemTriggersEvent()
+		{
+			 _binding.Triggered += new GhostBinding.GhostTriggered(_binding_Triggered);
+			_ghostFirstNameWidget.Text = "Samuel";
+			_papaNameWidget.GrabFocus();
+			Assert.IsTrue(_didNotify);
+		}
+
+
 	}
 }

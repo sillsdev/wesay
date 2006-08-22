@@ -55,6 +55,7 @@ namespace WeSay.UI
 				++_rowsSoFar;
 			}
 
+
 			return _table;
 		}
 
@@ -68,6 +69,7 @@ namespace WeSay.UI
 		public void AddWidgetRow(string label, Gtk.Widget widget)
 		{
 			_rows.Add(new Row(label, widget));
+
 		}
 		public void AddLabelRow(string label)
 		{

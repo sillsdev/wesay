@@ -15,8 +15,8 @@ namespace WeSay.UI
 		protected IBindingList _listTarget;
 		private Gtk.Entry _widgetTarget;
 
-		//todo: this  to use a misleading event
-		//public event PropertyChangedEventHandler ListSizeChanged;
+		public delegate void GhostTriggered(object sender, EventArgs args);
+		public event GhostTriggered Triggered;
 
 		public GhostBinding(IBindingList targetList, string propertyName,  string writingSystemId, Entry widgetTarget)
 		{
@@ -27,8 +27,15 @@ namespace WeSay.UI
 		   _writingSystemId = writingSystemId;
 
 		   _widgetTarget = widgetTarget;
-		   _widgetTarget.TextInserted += new Gtk.TextInsertedHandler(OnWidgetTextInserted);
-		   _widgetTarget.TextDeleted +=new Gtk.TextDeletedHandler(OnWidgetTextDeleted);
+		   _widgetTarget.FocusOutEvent += new FocusOutEventHandler(_widgetTarget_FocusOutEvent);
+		}
+
+		void _widgetTarget_FocusOutEvent(object o, FocusOutEventArgs args)
+		{
+			if(_widgetTarget.Text.Trim().Length>0)
+			{
+				TimeForRealObject();
+			}
 		}
 
 		/// <summary>
@@ -42,6 +49,10 @@ namespace WeSay.UI
 			if (e.ListChangedType == ListChangedType.ItemAdded)
 			{
 				FillInMultiTextOfNewObject(_listTarget[e.NewIndex], _propertyName, _writingSystemId, _widgetTarget.Text);
+				if (Triggered != null)
+				{
+					Triggered.Invoke(this, null);
+				}
 			}
 		}
 
@@ -57,6 +68,8 @@ namespace WeSay.UI
 
 		protected  void TimeForRealObject()
 		{
+			_widgetTarget.FocusOutEvent -= new FocusOutEventHandler(_widgetTarget_FocusOutEvent);
+
 			IBindingList list = _listTarget as IBindingList;
 			//in addition to adding a list item, this will fire events on the object that owns the list
 			list.AddNew();
