@@ -2,42 +2,43 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
+using WeSay.Language;
 
 namespace WeSay.UI
 {
 	public class Binding
 	{
-		private string _propertyName;
-		private INotifyPropertyChanged _dataTarget;
+		protected string _writingSystemId;
+		protected INotifyPropertyChanged _dataTarget;
 		private Gtk.Entry _widgetTarget;
-		private bool _inMidstOfChange;
+		protected bool _inMidstOfChange;
 
-		public Binding(INotifyPropertyChanged dataTarget, string propertyName, Gtk.Entry widgetTarget)
+		public Binding(INotifyPropertyChanged dataTarget, string writingSystemId, Gtk.Entry widgetTarget)
 		{
 			_inMidstOfChange = false;
 		   _dataTarget= dataTarget;
 		   _dataTarget.PropertyChanged += new PropertyChangedEventHandler(OnDataPropertyChanged);
-		   _propertyName=propertyName;
+		   _writingSystemId=writingSystemId;
 		   _widgetTarget = widgetTarget;
 		   _widgetTarget.TextInserted += new Gtk.TextInsertedHandler(OnWidgetTextInserted);
 		   _widgetTarget.TextDeleted +=new Gtk.TextDeletedHandler(OnWidgetTextDeleted);
 		}
 
-		protected void OnWidgetTextDeleted(object o, Gtk.TextDeletedArgs args)
+		protected virtual void OnWidgetTextDeleted(object o, Gtk.TextDeletedArgs args)
 		{
 			 SetTargetValue(_widgetTarget.Text);
 
 		}
 
-		protected void OnWidgetTextInserted(object o, Gtk.TextInsertedArgs args)
+		protected virtual void OnWidgetTextInserted(object o, Gtk.TextInsertedArgs args)
 		{
 			SetTargetValue(_widgetTarget.Text);
 		}
 
-		protected void OnDataPropertyChanged(object sender, PropertyChangedEventArgs e)
+		protected virtual void OnDataPropertyChanged(object sender, PropertyChangedEventArgs e)
 		{
 			if (_inMidstOfChange ||
-				e.PropertyName != _propertyName)
+				e.PropertyName != _writingSystemId) //FIX THIS
 				return;
 
 			try
@@ -56,10 +57,10 @@ namespace WeSay.UI
 			WeSay.Language.MultiText text = _dataTarget as WeSay.Language.MultiText;
 			if (text == null)
 				throw new ArgumentException("Binding can't handle that type of target.");
-			return text[_propertyName];
+			return text[_writingSystemId];
 		}
 
-		protected void SetTargetValue(string s)
+		protected virtual void SetTargetValue(string s)
 		{
 			if (_inMidstOfChange)
 				return;
@@ -68,10 +69,18 @@ namespace WeSay.UI
 			{
 				_inMidstOfChange = true;
 
-				WeSay.Language.MultiText text = _dataTarget as WeSay.Language.MultiText;
-				if (text == null)
-					throw new ArgumentException("Binding can't handle that type of target.");
-				text[_propertyName] = s;
+				if (_dataTarget as MultiText != null)
+				{
+					MultiText text = _dataTarget as WeSay.Language.MultiText;
+					text[_writingSystemId] = s;
+				}
+				else if (_dataTarget as IBindingList != null)
+				{
+					IBindingList list = _dataTarget as IBindingList;
+					//in addition to add a menu item, this will fire events on the object that owns the list
+					list.AddNew();
+				}
+				else throw new ArgumentException("Binding doesn't understand that type of target.");
 
 			}
 			finally
@@ -85,9 +94,9 @@ namespace WeSay.UI
 			get { return _dataTarget; }
 		}
 
-		protected string PropertyName
+		protected string WritingSystemId
 		{
-			get { return _propertyName; }
+			get { return _writingSystemId; }
 		}
 		public Gtk.Widget WidgetTarget
 		{

@@ -98,6 +98,7 @@ namespace WeSay.LexicalModel
 		{
 			e.NewObject = new T();
 			_parent.WireUpChild((INotifyPropertyChanged)e.NewObject);
+			_parent.NotifyPropertyChanged(this._listName);
 			_parent.SomethingWasModified();
 		}
 	}
