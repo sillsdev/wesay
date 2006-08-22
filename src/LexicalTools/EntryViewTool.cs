@@ -12,6 +12,7 @@ namespace WeSay.LexicalTools
 	{
 		private VBox _container;
 		private IBindingList _records;
+		private TreeViewAdaptorIList _treeview;
 		private System.Windows.Forms.BindingSource _bindingSource; //could get by with CurrencyManager
 
 		public EntryViewTool(IBindingList records)
@@ -56,13 +57,13 @@ namespace WeSay.LexicalTools
 			scrolled.VscrollbarPolicy = PolicyType.Always;
 			parent.PackStart(scrolled);
 
-			TreeViewAdaptorIList treeview = new TreeViewAdaptorIList(list);
-			treeview.GetValueStrategy = delegate(object o, int column)
+			_treeview = new TreeViewAdaptorIList(list);
+			_treeview.GetValueStrategy = delegate(object o, int column)
 				{
 					LexEntry lexEntry = (LexEntry)o;
 					return lexEntry.LexicalForm["th"];
 				};
-			treeview.Column_Types.Add(GLib.GType.String);
+			_treeview.Column_Types.Add(GLib.GType.String);
 
 			Gtk.CellRendererText renderer = new Gtk.CellRendererText();
 			renderer.SizePoints = 15;
@@ -71,22 +72,19 @@ namespace WeSay.LexicalTools
 			treeViewColumn.Visible = true;
 			treeViewColumn.Resizable = true;
 			treeViewColumn.MinWidth = 0;
-			treeview.AppendColumn(treeViewColumn);
-			TreeSelection selection = treeview.Selection;
-			_records.IndexOf(_bindingSource.Current);
-			selection.SelectPath(new TreePath("0"));
+			_treeview.AppendColumn(treeViewColumn);
+			_treeview.FixedHeightMode = true;
+			TreeViewIListSelection selection = _treeview.Selection;
+			selection.Select(_bindingSource.Position);
 			selection.Changed += new EventHandler(OnSelectionChanged);
 
-
-			treeview.FixedHeightMode = true;
-
-			scrolled.Child = treeview;
+			scrolled.Child = _treeview;
 			scrolled.ShowAll();
 		}
 
 		void OnSelectionChanged(object sender, EventArgs e)
 		{
-			//throw new Exception("The method or operation is not implemented.");
+			_bindingSource.Position = ((TreeViewIListSelection)sender).Selected;
 		}
 
 		private void AddDetailArea(Box parent)
@@ -111,8 +109,6 @@ namespace WeSay.LexicalTools
 			{
 				parent.Children[1].Destroy();
 			}
-			//Widget detailArea = parent.Children[1];
-			//detailArea.Destroy();
 			AddDetailArea(parent);
 		}
 
@@ -129,6 +125,10 @@ namespace WeSay.LexicalTools
 		}
 		void OnPositionChanged(object sender, EventArgs e)
 		{
+			TreeViewIListSelection selection = _treeview.Selection;
+			selection.Select(_bindingSource.Position);
+//            _treeview.ScrollToCell(_treeview.Se
+
 			RefreshDetailArea((HBox)_container.Children[1]);
 			_container.ShowAll();
 		}

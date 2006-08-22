@@ -10,6 +10,7 @@ namespace WeSay.TreeViewIList
 	{
 		private TreeModelIListAdaptor _model;
 		private TreeModelIListConfiguration _modelConfiguration = new TreeModelIListConfiguration();
+		private TreeViewIListSelection _selection;
 
 		public TreeViewAdaptorIList(IList store)
 			: base(IntPtr.Zero)
@@ -92,5 +93,15 @@ namespace WeSay.TreeViewIList
 				this._modelConfiguration.GetValueStrategy = value;
 			}
 		}
+		public new TreeViewIListSelection Selection
+		{
+			get
+			{
+				if (_selection == null)
+					_selection = new TreeViewIListSelection(base.Selection);
+				return _selection;
+			}
+		}
+
 	}
 }

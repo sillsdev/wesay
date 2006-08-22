@@ -63,7 +63,7 @@ namespace WeSay.TreeViewIList
 			return this._configuration.ColumnTypes[column];
 		}
 
-		private int GetIndex(IntPtr path)
+		public int GetIndex(IntPtr path)
 		{
 			Gtk.TreePath treepath = new Gtk.TreePath(path);
 			int depth = treepath.Depth;
@@ -74,7 +74,7 @@ namespace WeSay.TreeViewIList
 			return treepath.Indices[0];
 		}
 
-		private Gtk.TreePath GetPath(int index)
+		public Gtk.TreePath GetPath(int index)
 		{
 			this.VerifyValidIndex(index);
 			Gtk.TreePath path = new Gtk.TreePath();
