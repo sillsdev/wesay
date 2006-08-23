@@ -16,6 +16,7 @@ namespace WeSay.UI
 		public DetailViewManager()
 		{
 			_box = new VBox();
+
 		}
 
 		/// <summary>
@@ -28,7 +29,12 @@ namespace WeSay.UI
 
 		public Widget Widget
 		{
-			get { return _box; }
+			get
+			{
+				Alignment leftTopAlignment = new Alignment(0.0f, 0.0f, 0.0f, 0.0f);
+				 leftTopAlignment.Add(_box);
+				return leftTopAlignment;
+			}
 		}
 
 //        private static Alignment GetLeftTopAlignment(Label label)
@@ -38,15 +44,22 @@ namespace WeSay.UI
 //            return leftTopAlignment;
 //        }
 
-		public object AddWidgetRow(string label, Gtk.Widget widget)
+		public Widget AddWidgetRow(string label, Gtk.Widget widget)
 		{
 			HBox x = new HBox();
 			x.PackStart(new Label( label));
 			x.PackStart(widget);
 			_box.PackStart(x);
 			x.Show();
+			x.ShowAll();
+			_box.Visible = false;
+			_box.Visible = true;
 			return x;
 
+		}
+
+		public void ReplaceRow(Widget existing)
+		{
 		}
 
 		public object AddLabelRow(string label)

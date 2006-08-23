@@ -4,7 +4,7 @@ namespace WeSay.LexicalTools
 {
 	public class LexExampleSentenceLayouter : Layouter
 	{
-		public LexExampleSentenceLayouter(TableBuilder builder)
+		public LexExampleSentenceLayouter(DetailViewManager builder)
 			: base(builder)
 		{
 		}

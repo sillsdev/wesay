@@ -23,7 +23,7 @@ namespace WeSay.LexicalTools.Tests
 			AddSense(entry);
 			AddSense(entry);
 
-			TableBuilder builder = new TableBuilder();
+			DetailViewManager builder = new DetailViewManager();
 			LexEntryLayouter layout = new LexEntryLayouter(builder);
 			int rowcount = layout.AddWidgets(entry);
 

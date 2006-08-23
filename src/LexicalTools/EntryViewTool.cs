@@ -96,11 +96,11 @@ namespace WeSay.LexicalTools
 				return; //what to do?
 			}
 
-			TableBuilder builder = new TableBuilder();
+			DetailViewManager builder = new DetailViewManager();
 			LexEntryLayouter layout = new LexEntryLayouter(builder);
 			layout.AddWidgets(record);
 
-			parent.PackStart(builder.BuildTable());
+			parent.PackStart(builder.Widget);
 		}
 
 		private void RefreshDetailArea(Box parent)

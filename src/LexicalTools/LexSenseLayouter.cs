@@ -8,7 +8,7 @@ namespace WeSay.LexicalTools
 {
 	public class LexSenseLayouter : Layouter
 	{
-		public LexSenseLayouter(TableBuilder builder)
+		public LexSenseLayouter(DetailViewManager builder)
 			: base(builder)
 		{
 		}
@@ -33,8 +33,18 @@ namespace WeSay.LexicalTools
 		public int AddGhost(System.ComponentModel.BindingList<LexSense> list)
 		{
 			_builder.AddWidgetRow("(Meaning): ", MakeGhostEntry(list, "Gloss", "en"));
-
 			return 1;
+		}
+
+
+		protected override void binding_Triggered(object newGuy, System.EventArgs args)
+		{
+		   // AddWidgets(newGuy);//todo:: insert these at right spot
+			_builder.AddLabelRow("test: ");
+
+			_builder.Widget.ShowAll();
+
+			//and how to add a new ghost? or can we keep the old one, but clear him out?
 		}
 
 //        public override int AddWidgets(object dataObject)

@@ -15,7 +15,7 @@ namespace WeSay.UI
 		protected IBindingList _listTarget;
 		private Gtk.Entry _widgetTarget;
 
-		public delegate void GhostTriggered(object sender, EventArgs args);
+		public delegate void GhostTriggered(object newGuy, EventArgs args);
 		public event GhostTriggered Triggered;
 
 		public GhostBinding(IBindingList targetList, string propertyName,  string writingSystemId, Entry widgetTarget)
@@ -48,10 +48,11 @@ namespace WeSay.UI
 		{
 			if (e.ListChangedType == ListChangedType.ItemAdded)
 			{
-				FillInMultiTextOfNewObject(_listTarget[e.NewIndex], _propertyName, _writingSystemId, _widgetTarget.Text);
+				object newGuy = _listTarget[e.NewIndex];
+				FillInMultiTextOfNewObject(newGuy, _propertyName, _writingSystemId, _widgetTarget.Text);
 				if (Triggered != null)
 				{
-					Triggered.Invoke(this, null);
+					Triggered.Invoke(newGuy, null);
 				}
 			}
 		}

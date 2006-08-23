@@ -6,9 +6,9 @@ namespace WeSay.LexicalTools
 {
 	public abstract class Layouter
 	{
-		protected TableBuilder _builder;
+		protected DetailViewManager _builder;
 
-	   public Layouter(TableBuilder builder)
+		public Layouter(DetailViewManager builder)
 		{
 			_builder = builder;
 		}
@@ -25,7 +25,13 @@ namespace WeSay.LexicalTools
 		{
 			Gtk.Entry entry = new Gtk.Entry();
 			WeSay.UI.GhostBinding binding = new WeSay.UI.GhostBinding(list, ghostPropertyName, writingSystemId, entry);
+			binding.Triggered += new GhostBinding.GhostTriggered(binding_Triggered);
 			return entry;
+		}
+
+		protected virtual void binding_Triggered(object sender, System.EventArgs args)
+		{
+
 		}
 	}
 }

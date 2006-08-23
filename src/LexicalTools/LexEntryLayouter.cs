@@ -6,7 +6,7 @@ namespace WeSay.LexicalTools
 {
 	public class LexEntryLayouter : Layouter
 	{
-		public LexEntryLayouter(TableBuilder builder)
+		public LexEntryLayouter(DetailViewManager builder)
 		  : base(builder)
 		{
 		}
