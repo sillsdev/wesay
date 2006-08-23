@@ -10,10 +10,15 @@ namespace WeSay.App
 	{
 
 		[STAThread]
-		static void Main()
+		static void Main(string[] args)
 		{
+			string FilePath = @"..\..\SampleProjects\Thai";
+			if (args.Length > 0)
+			{
+				FilePath = args[0];
+			}
 			Application.Init();
-			BasilProject project = new BasilProject(@"..\..\SampleProjects\Thai");
+			BasilProject project = new BasilProject(FilePath);
 
 			WeSay.UI.ITaskBuilder builder = new SampleTaskBuilder(project);
 

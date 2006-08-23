@@ -410,7 +410,7 @@ namespace WeSay.Data.Tests
 		}
 
 		[TearDown]
-		public void TestFixtureTearDown()
+		public void TearDown()
 		{
 			this._bindingList.Dispose();
 			this._dataSource.Dispose();
@@ -500,6 +500,42 @@ namespace WeSay.Data.Tests
 			PropertyDescriptorCollection pdc = TypeDescriptor.GetProperties(typeof(TestItem));
 			PropertyDescriptor pd = pdc.Find("StoredDateTime", false);
 			this._bindingList.ApplySort(pd, ListSortDirection.Descending);
+		}
+
+		private int TestItemDepth(TestItem item)
+		{
+			int depth = 0;
+			while (item != null)
+			{
+				++depth;
+				item = item.ChildTestItem;
+			}
+			return depth;
+		}
+
+		[Test]
+		public void NestedStructure()
+		{
+			const int items = 10;
+			this._bindingList.Clear();
+
+			TestItem root = new TestItem("Root Item", 0, DateTime.Now);
+			TestItem parent = root;
+			for (int i = 1; i < items; ++i)
+			{
+				TestItem child = new TestItem("Child Item", i, DateTime.Now);
+				parent.ChildTestItem = child;
+				parent = child;
+			}
+
+			Assert.AreEqual(items, TestItemDepth(root));
+			this._bindingList.Add(root);
+			Assert.AreEqual(root, this._bindingList[0]);
+			Assert.AreEqual(items, TestItemDepth(this._bindingList[0]));
+
+			ReOpenDatabase();
+
+			Assert.AreEqual(items, TestItemDepth(this._bindingList[0]));
 		}
 	}
 }

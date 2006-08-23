@@ -10,6 +10,19 @@ namespace WeSay.Data.Tests
 		int _storedInt;
 		string _storedString;
 		DateTime _storedDateTime;
+		TestItem _testItem;
+
+		public TestItem ChildTestItem
+		{
+			get
+			{
+				return _testItem;
+			}
+			set
+			{
+				_testItem = value;
+			}
+		}
 
 		public TestItem()
 		{
