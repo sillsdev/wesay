@@ -4,7 +4,7 @@ namespace WeSay.LexicalTools
 {
 	public class LexExampleSentenceLayouter : Layouter
 	{
-		public LexExampleSentenceLayouter(DetailViewManager builder)
+		public LexExampleSentenceLayouter(DetailList  builder)
 			: base(builder)
 		{
 		}
@@ -13,8 +13,8 @@ namespace WeSay.LexicalTools
 		{
 			LexExampleSentence example = (LexExampleSentence)dataObject;
 
-			_builder.AddWidgetRow("example: ", MakeBoundEntry(example.Sentence, "th"));
-			_builder.AddWidgetRow("translation: ", MakeBoundEntry(example.Translation, "en"));
+			_builder.AddWidgetRow("Example", false, MakeBoundEntry(example.Sentence, "th"));
+			_builder.AddWidgetRow("Translation", false, MakeBoundEntry(example.Translation, "en"));
 			return 2;
 		}
 	}

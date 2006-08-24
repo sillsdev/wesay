@@ -1,4 +1,4 @@
-using Gtk;
+
 using NUnit.Framework;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Tests;
@@ -12,7 +12,7 @@ namespace WeSay.LexicalTools.Tests
 		[SetUp]
 		public void Setup()
 		{
-			Application.Init();
+			//Application.Init();
 		}
 
 		[Test]
@@ -23,7 +23,7 @@ namespace WeSay.LexicalTools.Tests
 			AddSense(entry);
 			AddSense(entry);
 
-			DetailViewManager builder = new DetailViewManager();
+			DetailList builder = new DetailList();
 			LexEntryLayouter layout = new LexEntryLayouter(builder);
 			int rowcount = layout.AddWidgets(entry);
 

@@ -40,6 +40,7 @@
 	<Compile Include="LexEntry.cs" />
 	<Compile Include="LexExampleSentence.cs" />
 	<Compile Include="LexSense.cs" />
+	<Compile Include="PretendRecordList.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />
 	<Compile Include="WeSayDataObject.cs" />
   </ItemGroup>

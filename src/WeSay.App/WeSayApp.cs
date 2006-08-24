@@ -1,8 +1,6 @@
 using System;
 using System.Collections;
-using Gtk;
-
-
+using System.Windows.Forms;
 
 namespace WeSay.App
 {
@@ -25,9 +23,12 @@ namespace WeSay.App
 
 			try
 			{
-				WeSay.UI.ISkin shell = new TabbedSkin(project, builder);
+				 Application.EnableVisualStyles();
+				Application.SetCompatibleTextRenderingDefault(false);
+			  // WeSay.UI.ISkin shell = new TabbedSkin(project, builder);
+				Form f =  new TabbedForm(project, builder);
+				Application.Run(f);
 
-				Application.Run();
 
 			}
 			finally

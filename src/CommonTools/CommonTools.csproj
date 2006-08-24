@@ -7,7 +7,7 @@
 	<ProjectGuid>{64726381-FEA8-47D5-A884-18AED42E93B6}</ProjectGuid>
 	<OutputType>Library</OutputType>
 	<AppDesignerFolder>Properties</AppDesignerFolder>
-	<RootNamespace>WesSay.CommonTools</RootNamespace>
+	<RootNamespace>WeSay.CommonTools</RootNamespace>
 	<AssemblyName>CommonTools</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -28,16 +28,19 @@
 	<WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-	<Reference Include="atk-sharp, Version=2.8.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
-	<Reference Include="glib-sharp, Version=2.8.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
-	<Reference Include="gtk-sharp, Version=2.8.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
-	<Reference Include="gtkhtml-sharp, Version=2.8.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
 	<Reference Include="System" />
 	<Reference Include="System.Data" />
+	<Reference Include="System.Drawing" />
+	<Reference Include="System.Windows.Forms" />
 	<Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-	<Compile Include="Dashboard.cs" />
+	<Compile Include="DashboardControl.cs">
+	  <SubType>UserControl</SubType>
+	</Compile>
+	<Compile Include="DashboardControl.Designer.cs">
+	  <DependentUpon>DashboardControl.cs</DependentUpon>
+	</Compile>
 	<Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -45,6 +48,12 @@
 	  <Project>{AC8F284C-7B34-4AC9-A7DE-FAF765456DFF}</Project>
 	  <Name>WeSay.UI</Name>
 	</ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+	<EmbeddedResource Include="DashboardControl.resx">
+	  <SubType>Designer</SubType>
+	  <DependentUpon>DashboardControl.cs</DependentUpon>
+	</EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

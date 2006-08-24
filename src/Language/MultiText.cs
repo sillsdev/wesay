@@ -90,6 +90,15 @@ namespace WeSay.Language
 				return form;
 		}
 
+		//hack
+		public string GetFirstAlternative()
+		{
+			if (this._forms.Count > 0)
+				return ((LanguageForm) _forms[0]).Form;
+			else
+				return "";
+		}
+
 		public void SetAlternative(string writingSystemId, string form)
 		{
 		   Debug.Assert(writingSystemId != null && writingSystemId.Length > 0, "The writing system id was empty.");

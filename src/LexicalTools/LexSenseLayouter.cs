@@ -8,7 +8,7 @@ namespace WeSay.LexicalTools
 {
 	public class LexSenseLayouter : Layouter
 	{
-		public LexSenseLayouter(DetailViewManager builder)
+		public LexSenseLayouter(DetailList builder)
 			: base(builder)
 		{
 		}
@@ -18,7 +18,7 @@ namespace WeSay.LexicalTools
 			int rowCount = 1;
 			LexSense sense = (LexSense)dataObject;
 
-			_builder.AddWidgetRow("Meaning: ", MakeBoundEntry(sense.Gloss, "en"));
+			_builder.AddWidgetRow("Meaning", true,MakeBoundEntry(sense.Gloss, "en"));
 
 			LexExampleSentenceLayouter exampleLayouter = new LexExampleSentenceLayouter(_builder);
 			foreach (LexExampleSentence example in sense.ExampleSentences)
@@ -32,7 +32,7 @@ namespace WeSay.LexicalTools
 
 		public int AddGhost(System.ComponentModel.BindingList<LexSense> list)
 		{
-			_builder.AddWidgetRow("(Meaning): ", MakeGhostEntry(list, "Gloss", "en"));
+			_builder.AddWidgetRow("Meaning", false, MakeGhostEntry(list, "Gloss", "en"));
 			return 1;
 		}
 
@@ -42,7 +42,6 @@ namespace WeSay.LexicalTools
 		   // AddWidgets(newGuy);//todo:: insert these at right spot
 			_builder.AddLabelRow("test: ");
 
-			_builder.Widget.ShowAll();
 
 			//and how to add a new ghost? or can we keep the old one, but clear him out?
 		}

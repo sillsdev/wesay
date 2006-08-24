@@ -10,15 +10,15 @@ namespace WeSay.LexicalModel.Tests
 			: base()
 		{
 			LexEntry entry = this.AddNew();
-			for (int i = 0; i < 200; ++i)
+			for (int i = 0; i < 4; ++i)
 			{
-				entry.LexicalForm["en"] = "apple " + i.ToString();
+				entry.LexicalForm["th"] = "apple " + i.ToString();
 				LexSense sense = entry.Senses.AddNew();
 				sense.Gloss["en"] = "red thing " + i.ToString();
 				if ((i % 3)==0)
 				{
 					LexExampleSentence example = sense.ExampleSentences.AddNew();
-					example.Sentence["en"] = "An apple a day keeps the doctor away.";
+					example.Sentence["th"] = "An apple a day keeps the doctor away.";
 				}
 				if ((i % 4)==0)
 				{
@@ -28,7 +28,7 @@ namespace WeSay.LexicalModel.Tests
 
 			}
 			entry = this.AddNew();
-			entry.LexicalForm["en"] = "orange";
+			entry.LexicalForm["th"] = "orange";
 		}
 	}
 }

@@ -26,6 +26,16 @@ namespace WeSay.LexicalModel
 			WireUpEvents();
 	   }
 
+		public override string ToString()
+		{
+			//hack
+			if(_lexicalForm !=null)
+				return _lexicalForm.GetFirstAlternative();
+			else
+				return "";
+		}
+
+
 	   protected override void WireUpEvents()
 	   {
 		   base.WireUpEvents();

@@ -33,11 +33,17 @@
 	<Reference Include="gtk-sharp, Version=2.8.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
 	<Reference Include="System" />
 	<Reference Include="System.Data" />
+	<Reference Include="System.Drawing" />
 	<Reference Include="System.Windows.Forms" />
 	<Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-	<Compile Include="EntryViewTool.cs" />
+	<Compile Include="EntryDetailControl.cs">
+	  <SubType>UserControl</SubType>
+	</Compile>
+	<Compile Include="EntryDetailControl.Designer.cs">
+	  <DependentUpon>EntryDetailControl.cs</DependentUpon>
+	</Compile>
 	<Compile Include="Layouter.cs" />
 	<Compile Include="LexEntryLayouter.cs" />
 	<Compile Include="LexExampleSentenceLayouter.cs" />
@@ -61,6 +67,12 @@
 	  <Project>{AC8F284C-7B34-4AC9-A7DE-FAF765456DFF}</Project>
 	  <Name>WeSay.UI</Name>
 	</ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+	<EmbeddedResource Include="EntryDetailControl.resx">
+	  <SubType>Designer</SubType>
+	  <DependentUpon>EntryDetailControl.cs</DependentUpon>
+	</EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

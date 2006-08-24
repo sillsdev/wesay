@@ -3,16 +3,17 @@ using System.Collections.Generic;
 using System.Text;
 using System.ComponentModel;
 using WeSay.UI;
-using Gtk;
+using System.Windows.Forms;
 
 namespace WeSay.CommonTools
 {
 
 	public class Dashboard : ITask
 	{
-		private VBox _container;
+  //      private VBox _container;
 		private IBindingList _records;
 		private WeSay.UI.IProject _project;
+		private Control _control;
 
 		public Dashboard(WeSay.UI.IProject project, IBindingList records)
 		{
@@ -22,8 +23,8 @@ namespace WeSay.CommonTools
 
 		public void Activate()
 		{
-			_container.PackStart(new Gtk.Label(_project.Name));
-			_container.PackStart(new Gtk.Label(_records.Count.ToString() + " Records"));
+			//_container.PackStart(new Gtk.Label(_project.Name));
+			//_container.PackStart(new Gtk.Label(_records.Count.ToString() + " Records"));
 
 			//Gtk.HTML _html = new HTML();
 			//_html.LoadFromString("<html>Hello</html>");
@@ -41,10 +42,11 @@ namespace WeSay.CommonTools
 			get { return "Start"; }
 		}
 
-		public VBox Container
+		public Control Control
 		{
-			get { return _container; }
-			set { _container = value; }
+			get { return _control; }
 		}
+
+
 	}
 }

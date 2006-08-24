@@ -6,7 +6,7 @@ namespace WeSay.LexicalTools
 {
 	public class LexEntryLayouter : Layouter
 	{
-		public LexEntryLayouter(DetailViewManager builder)
+		public LexEntryLayouter(DetailList builder)
 		  : base(builder)
 		{
 		}
@@ -16,7 +16,7 @@ namespace WeSay.LexicalTools
 			int rowCount = 1;
 			LexEntry entry = (LexEntry)dataObject;
 
-			_builder.AddWidgetRow("word: ", MakeBoundEntry(entry.LexicalForm, "th"));
+			_builder.AddWidgetRow("Word", true, MakeBoundEntry(entry.LexicalForm, "th"));
 			LexSenseLayouter layouter = new LexSenseLayouter(_builder);
 			foreach (LexSense sense in entry.Senses)
 			{

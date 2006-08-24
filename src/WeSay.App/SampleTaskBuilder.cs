@@ -1,17 +1,17 @@
 using System;
-using System.Reflection;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
-using Gtk;
-using WeSay.UI;
+using System.Reflection;
 using PicoContainer;
-using System.Collections.Specialized;
+using PicoContainer.Defaults;
+using WeSay.Data;
 using WeSay.LexicalModel;
+using WeSay.LexicalModel.Tests;
+using WeSay.UI;
 
 namespace WeSay.App
 {
-	public class SampleTaskBuilder : WeSay.UI.ITaskBuilder, IDisposable
+	public class SampleTaskBuilder : ITaskBuilder, IDisposable
 	{
 		private bool _disposed = false;
 		private IMutablePicoContainer _picoContext;
@@ -21,18 +21,21 @@ namespace WeSay.App
 			_picoContext =  CreateContainer();
 			_picoContext.RegisterComponentInstance(project);
 
-			WeSay.Data.Db4oDataSource ds = new WeSay.Data.Db4oDataSource(project.PathToLexicalModelDB);
-			IComponentAdapter dsAdaptor= _picoContext.RegisterComponentInstance(ds);
+			//Db4oDataSource ds = new Db4oDataSource(project.PathToLexicalModelDB);
+			//IComponentAdapter dsAdaptor= _picoContext.RegisterComponentInstance(ds);
 
-			/* Because the data source is never actually touched by the normal pico container code,
-			 * it never gets  added to this ordered list.  The ordered list is used for the lifecycle
-			 * functions, such as dispose.  Without adding it explicitly, this will end up
-			 * getting disposed of first, whereas we need to it to be disposed of last.
-			 * Adding it explicity to the ordered list gives proper disposal order.
-			 */
-			_picoContext.AddOrderedComponentAdapter(dsAdaptor);
+			///* Because the data source is never actually touched by the normal pico container code,
+			// * it never gets  added to this ordered list.  The ordered list is used for the lifecycle
+			// * functions, such as dispose.  Without adding it explicitly, this will end up
+			// * getting disposed of first, whereas we need to it to be disposed of last.
+			// * Adding it explicity to the ordered list gives proper disposal order.
+			// */
+			//_picoContext.AddOrderedComponentAdapter(dsAdaptor);
 
-			WeSay.Data.Db4oBindingList<LexEntry> entries = new WeSay.Data.Db4oBindingList<LexEntry>(ds);
+			//Db4oBindingList<LexEntry> entries = new Db4oBindingList<LexEntry>(ds);
+
+			BindingList<LexEntry> entries = new PretendRecordList();
+
 			_picoContext.RegisterComponentInstance(entries);
 		}
 
@@ -41,8 +44,8 @@ namespace WeSay.App
 			get
 			{
 				List<ITask> tools = new List<ITask>();
-				tools.Add(CreateTool( "WeSay.CommonTools.Dashboard"));
-				tools.Add(CreateTool( "WeSay.LexicalTools.EntryViewTool"));
+				tools.Add(CreateTool( "WeSay.CommonTools.DashboardControl"));
+				tools.Add(CreateTool("WeSay.LexicalTools.EntryDetailControl"));
 				return tools;
 			}
 		}
@@ -67,13 +70,15 @@ namespace WeSay.App
 
 		private ITask CreateTool(string fullToolName)
 		{
-		   return (ITask)_picoContext.GetComponentInstance(fullToolName);
+		   ITask i = (ITask)_picoContext.GetComponentInstance(fullToolName);
+		   System.Diagnostics.Debug.Assert(i != null);
+		   return i;
 		}
 
 
 		private static IMutablePicoContainer CreateContainer()
 		{
-			IMutablePicoContainer pico = new PicoContainer.Defaults.DefaultPicoContainer();
+			IMutablePicoContainer pico = new DefaultPicoContainer();
 
 			List<String> assemblies = new List<string>();
 			assemblies.Add(@"CommonTools.dll");
@@ -109,5 +114,6 @@ namespace WeSay.App
 			}
 			return registerTypes;
 		}
+
 	}
 }

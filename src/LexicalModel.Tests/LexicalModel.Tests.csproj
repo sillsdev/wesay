@@ -41,7 +41,6 @@
 	<Compile Include="Binding.cs" />
 	<Compile Include="EventsAndDates.cs" />
 	<Compile Include="PersistenceTests.cs" />
-	<Compile Include="PretendRecordList.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

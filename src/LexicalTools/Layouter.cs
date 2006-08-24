@@ -1,31 +1,33 @@
 using System.ComponentModel;
-using Gtk;
+using System.Windows.Forms;
 using WeSay.UI;
 
 namespace WeSay.LexicalTools
 {
 	public abstract class Layouter
 	{
-		protected DetailViewManager _builder;
+		protected DetailList _builder;
 
-		public Layouter(DetailViewManager builder)
+		public Layouter(DetailList builder)
 		{
 			_builder = builder;
 		}
 		public abstract int AddWidgets(object dataObject);
 
-		protected Entry MakeBoundEntry(WeSay.Language.MultiText text, string writingSystemId)
+		protected Control MakeBoundEntry(WeSay.Language.MultiText text, string writingSystemId)
 		{
-			Gtk.Entry entry = new Gtk.Entry(text[writingSystemId]);
-			WeSay.UI.Binding binding = new WeSay.UI.Binding(text, writingSystemId, entry);
+			TextBox entry = new TextBox();
+			entry.Text = text[writingSystemId];
+
+			//WeSay.UI.Binding binding = new WeSay.UI.Binding(text, writingSystemId, entry);
 			return entry;
 		}
 
-		protected Entry MakeGhostEntry(IBindingList list, string ghostPropertyName, string writingSystemId)
+		protected Control MakeGhostEntry(IBindingList list, string ghostPropertyName, string writingSystemId)
 		{
-			Gtk.Entry entry = new Gtk.Entry();
-			WeSay.UI.GhostBinding binding = new WeSay.UI.GhostBinding(list, ghostPropertyName, writingSystemId, entry);
-			binding.Triggered += new GhostBinding.GhostTriggered(binding_Triggered);
+			TextBox entry = new TextBox();
+			//WeSay.UI.GhostBinding binding = new WeSay.UI.GhostBinding(list, ghostPropertyName, writingSystemId, entry);
+			//binding.Triggered += new GhostBinding.GhostTriggered(binding_Triggered);
 			return entry;
 		}
 
