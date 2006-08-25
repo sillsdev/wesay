@@ -211,15 +211,10 @@ namespace WeSay.Data
 
 		protected virtual void OnListChanged(ListChangedEventArgs e)
 		{
-
-			ListChangedEventHandler listChanged = this.ListChanged;
-			if (listChanged != null)
-			{
-				listChanged(this, e);
-			}
+			this.ListChanged(this, e);
 		}
 
-		public event ListChangedEventHandler ListChanged;
+	  public event ListChangedEventHandler ListChanged = delegate {};
 
 		void IBindingList.RemoveIndex(PropertyDescriptor property)
 		{

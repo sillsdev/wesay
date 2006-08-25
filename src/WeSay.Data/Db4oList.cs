@@ -84,22 +84,22 @@ namespace Db4o.Binding
 		/// Fired when activating of <see cref="Db4oListEventArgs`1.Item"/> by db4o is needed.
 		/// If item was activated during the event, <see cref="Db4oListEventArgs`1.Cancel"/> must be set to true.
 		/// </summary>
-		public event EventHandler<Db4oListEventArgs<T>> Activating;
+	  public event EventHandler<Db4oListEventArgs<T>> Activating = delegate{ };
 		/// <summary>
 		/// Fired when deactivating of <see cref="Db4oListEventArgs`1.Item"/> by db4o is needed.
 		/// If item was deactivated during the event, <see cref="Db4oListEventArgs`1.Cancel"/> must be set to true.
 		/// </summary>
-		public event EventHandler<Db4oListEventArgs<T>> Deactivating;
+	  public event EventHandler<Db4oListEventArgs<T>> Deactivating = delegate {};
 		/// <summary>
 		/// Fired when storing (adding or updating) of <see cref="Db4oListEventArgs`1.Item"/> by db4o is needed.
 		/// If item was stored during the event, <see cref="Db4oListEventArgs`1.Cancel"/> must be set to true.
 		/// </summary>
-		public event EventHandler<Db4oListEventArgs<T>> Storing;
+	  public event EventHandler<Db4oListEventArgs<T>> Storing = delegate{};
 		/// <summary>
 		/// Fired when deleting of <see cref="Db4oListEventArgs`1.Item"/> (which is not activated) by db4o is needed.
 		/// If item was deleted during the event, <see cref="Db4oListEventArgs`1.Cancel"/> must be set to true.
 		/// </summary>
-		public event EventHandler<Db4oListEventArgs<T>> Deleting;
+	  public event EventHandler<Db4oListEventArgs<T>> Deleting = delegate{};
 
 		/// <summary>
 		/// Fires <see cref="Activating"/> event.
@@ -108,14 +108,10 @@ namespace Db4o.Binding
 		/// <returns>true, if <paramref name="item"/> was activated.</returns>
 		protected virtual bool OnActivating(T item)
 		{
-			EventHandler<Db4oListEventArgs<T>> activating = this.Activating;
 			bool cancel = false;
-			if (activating != null)
-			{
-				Db4oListEventArgs<T> args = new Db4oListEventArgs<T>(item);
-				activating(this, args);
-				cancel = args.Cancel;
-			}
+			Db4oListEventArgs<T> args = new Db4oListEventArgs<T>(item);
+			this.Activating(this, args);
+			cancel = args.Cancel;
 			return cancel;
 		}
 		/// <summary>
@@ -125,14 +121,10 @@ namespace Db4o.Binding
 		/// <returns>true, if <paramref name="item"/> was deactivated.</returns>
 		protected virtual bool OnDeactivating(T item)
 		{
-			EventHandler<Db4oListEventArgs<T>> deactivating = this.Deactivating;
 			bool cancel = false;
-			if (deactivating != null)
-			{
-				Db4oListEventArgs<T> args = new Db4oListEventArgs<T>(item);
-				deactivating(this, args);
-				cancel = args.Cancel;
-			}
+			Db4oListEventArgs<T> args = new Db4oListEventArgs<T>(item);
+			this.Deactivating(this, args);
+			cancel = args.Cancel;
 			return cancel;
 		}
 		/// <summary>
@@ -142,14 +134,10 @@ namespace Db4o.Binding
 		/// <returns>true, if <paramref name="item"/> was stored.</returns>
 		protected virtual bool OnStoring(T item)
 		{
-			EventHandler<Db4oListEventArgs<T>> storing = this.Storing;
 			bool cancel = false;
-			if (storing != null)
-			{
-				Db4oListEventArgs<T> args = new Db4oListEventArgs<T>(item);
-				storing(this, args);
-				cancel = args.Cancel;
-			}
+			Db4oListEventArgs<T> args = new Db4oListEventArgs<T>(item);
+			this.Storing(this, args);
+			cancel = args.Cancel;
 			return cancel;
 		}
 		/// <summary>
@@ -159,14 +147,10 @@ namespace Db4o.Binding
 		/// <returns>true, if <paramref name="item"/> was deleted.</returns>
 		protected virtual bool OnDeleting(T item)
 		{
-			EventHandler<Db4oListEventArgs<T>> deleting = this.Deleting;
 			bool cancel = false;
-			if (deleting != null)
-			{
-				Db4oListEventArgs<T> args = new Db4oListEventArgs<T>(item);
-				deleting(this, args);
-				cancel = args.Cancel;
-			}
+			Db4oListEventArgs<T> args = new Db4oListEventArgs<T>(item);
+			this.Deleting(this, args);
+			cancel = args.Cancel;
 			return cancel;
 		}
 
@@ -688,10 +672,15 @@ namespace Db4o.Binding
 			INotifyPropertyChanged localItem = item as INotifyPropertyChanged;
 			if (localItem == null)
 				return;
-			if (register)
-				localItem.PropertyChanged += Item_PropertyChanged;
-			else
+			  if (register)
+			  {
 				localItem.PropertyChanged -= Item_PropertyChanged;
+				localItem.PropertyChanged += Item_PropertyChanged;
+			  }
+			  else
+			  {
+				localItem.PropertyChanged -= Item_PropertyChanged;
+			  }
 		}
 
 		#region Finding
