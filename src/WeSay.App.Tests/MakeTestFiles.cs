@@ -15,18 +15,19 @@ namespace WeSay.Data.Tests
 			{
 				System.IO.File.Delete(s);
 			}
-			WeSay.Data.Db4oDataSource src = new Db4oDataSource(s);
-			using (src)
+			using (WeSay.Data.Db4oDataSource src = new Db4oDataSource(s))
 			{
-				WeSay.Data.Db4oBindingList<LexEntry> list = new Db4oBindingList<LexEntry>(src);
+			  using (WeSay.Data.Db4oBindingList<LexEntry> list = new Db4oBindingList<LexEntry>(src))
+			  {
 				//((WeSay.Data.ITransactionControl) list).AutoCommit = true;
 				XmlDocument document = new XmlDocument();
 				document.Load(@"..\..\SampleProjects\Thai\thai500.xml");
 
 				TestFormatImporter importer = new TestFormatImporter();
-				importer.Load(document , list);
+				importer.Load(document, list);
 
-			  //  ((WeSay.Data.ITransactionControl) list).Commit();
+				//  ((WeSay.Data.ITransactionControl) list).Commit();
+			  }
 			}
 		}
 	}
