@@ -34,7 +34,7 @@ namespace WeSay.App
 
 			//Db4oBindingList<LexEntry> entries = new Db4oBindingList<LexEntry>(ds);
 
-			BindingList<LexEntry> entries = new PretendRecordList();
+			IBindingList entries = new PretendRecordList();
 
 			_picoContext.RegisterComponentInstance(entries);
 		}

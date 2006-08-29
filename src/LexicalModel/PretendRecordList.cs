@@ -4,7 +4,7 @@ using System.Text;
 
 namespace WeSay.LexicalModel.Tests
 {
-	public class PretendRecordList : System.ComponentModel.BindingList<LexEntry>
+	public class PretendRecordList : WeSay.Data.InMemoryBindingList<LexEntry>
 	{
 		public PretendRecordList()
 			: base()
@@ -13,16 +13,16 @@ namespace WeSay.LexicalModel.Tests
 			for (int i = 0; i < 4; ++i)
 			{
 				entry.LexicalForm["th"] = "apple " + i.ToString();
-				LexSense sense = entry.Senses.AddNew();
+				LexSense sense = (LexSense) entry.Senses.AddNew();
 				sense.Gloss["en"] = "red thing " + i.ToString();
 				if ((i % 3)==0)
 				{
-					LexExampleSentence example = sense.ExampleSentences.AddNew();
+					LexExampleSentence example = (LexExampleSentence) sense.ExampleSentences.AddNew();
 					example.Sentence["th"] = "An apple a day keeps the doctor away.";
 				}
 				if ((i % 4)==0)
 				{
-					sense = entry.Senses.AddNew();
+					sense = (LexSense) entry.Senses.AddNew();
 					sense.Gloss["en"] = "computer brand";
 				}
 

@@ -12,14 +12,14 @@ namespace WeSay.LexicalModel
 	{
 		private MultiText _lexicalForm;
 		private Guid _guid;
-		private BindingList<LexSense> _senses;
+		private WeSay.Data.InMemoryBindingList<LexSense> _senses;
 		private DateTime _creationDate;
 		private DateTime _modifiedDate;
 
 		public LexEntry()
 		{
 			_lexicalForm = new MultiText();
-			_senses = new BindingList<LexSense>();
+			_senses = new WeSay.Data.InMemoryBindingList<LexSense>();
 			_creationDate = DateTime.Now;
 			_modifiedDate = _creationDate;
 
@@ -64,7 +64,7 @@ namespace WeSay.LexicalModel
 			get { return _modifiedDate; }
 		}
 
-		public BindingList<LexSense> Senses
+		public IBindingList Senses
 		{
 			get   {  return _senses;       }
 		}

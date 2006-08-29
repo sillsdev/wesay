@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using WeSay.LexicalModel;
 using WeSay.UI;
+using System.ComponentModel;
 
 namespace WeSay.LexicalTools
 {
@@ -30,7 +31,7 @@ namespace WeSay.LexicalTools
 			return rowCount;
 		}
 
-		public int AddGhost(System.ComponentModel.BindingList<LexSense> list)
+		public int AddGhost(IBindingList list)
 		{
 			_builder.AddWidgetRow("Meaning", false, MakeGhostEntry(list, "Gloss", "en"));
 			return 1;

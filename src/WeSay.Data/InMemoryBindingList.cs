@@ -11,6 +11,7 @@ namespace WeSay.Data
 		ListSortDirection _listSortDirection;
 		bool _isSorted;
 
+
 		public InMemoryBindingList()
 		{
 			_list = new List<T>();
@@ -30,11 +31,16 @@ namespace WeSay.Data
 		{
 		}
 
-		object IBindingList.AddNew()
+		public T AddNew()
 		{
 			T o = new T();
 			Add(o);
 			return o;
+		}
+
+		object IBindingList.AddNew()
+		{
+			return AddNew();
 		}
 
 		bool IBindingList.AllowEdit

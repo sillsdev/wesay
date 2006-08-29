@@ -34,7 +34,7 @@ namespace WeSay.LexicalModel
 		   XmlNode n = node;//test format from eric is flat
 		   //foreach (XmlNode n in node.SelectNodes("sense"))
 		   //{
-			   LexSense sense = entry.Senses.AddNew();
+			   LexSense sense = (LexSense) entry.Senses.AddNew();
 				sense.Gloss[_analysisWS] = GetFieldFromWeSayXml(n, "gloss", null);
 				AddExamples(sense, n);
 			//}
@@ -48,7 +48,7 @@ namespace WeSay.LexicalModel
 			   string e = GetFieldFromWeSayXml(node, "example", null);
 			   if (e != null)
 			   {
-					LexExampleSentence sentence = sense.ExampleSentences.AddNew();
+				  LexExampleSentence sentence = (LexExampleSentence)sense.ExampleSentences.AddNew();
 				  sentence.Sentence[_vernacularWS] = e;
 			   }
 		  //     }

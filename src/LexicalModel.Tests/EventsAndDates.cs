@@ -60,7 +60,7 @@ namespace LexicalModel.Tests
 		[Test]
 		public void ModifiedDateAfterLexSenseGlossChange()
 		{
-			LexSense sense = _entry.Senses.AddNew();
+			LexSense sense = (LexSense) _entry.Senses.AddNew();
 			long start = _entry.ModifiedDate.Ticks;
 			System.Threading.Thread.Sleep(100);//else modtime doesn't change
 			sense.Gloss["foo"] = "hello";
@@ -70,20 +70,20 @@ namespace LexicalModel.Tests
 		[Test]
 		public void ModifiedDateAfterAddingExampleSentence()
 		{
-			LexSense sense = _entry.Senses.AddNew();
+			LexSense sense = (LexSense) _entry.Senses.AddNew();
 			 long start = _entry.ModifiedDate.Ticks;
 			System.Threading.Thread.Sleep(100);//else modtime doesn't change
-		   LexExampleSentence example = sense.ExampleSentences.AddNew();
+		   LexExampleSentence example = (LexExampleSentence) sense.ExampleSentences.AddNew();
 			Assert.Greater((decimal)_entry.ModifiedDate.Ticks, start);
 			Assert.IsTrue(_didNotify);
 		}
 		[Test]
 		public void ModifiedDateAfterChangingExampleSentence()
 		{
-			LexSense sense = _entry.Senses.AddNew();
+			LexSense sense = (LexSense) _entry.Senses.AddNew();
 			long start = _entry.ModifiedDate.Ticks;
 			System.Threading.Thread.Sleep(100);//else modtime doesn't change
-			LexExampleSentence example = sense.ExampleSentences.AddNew();
+			LexExampleSentence example = (LexExampleSentence) sense.ExampleSentences.AddNew();
 			example.Sentence["foo"] = "hello";
 			Assert.Greater((decimal)_entry.ModifiedDate.Ticks, start);
 			Assert.IsTrue(_didNotify);

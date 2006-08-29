@@ -32,14 +32,14 @@ namespace WeSay.LexicalTools.Tests
 
 		private static void AddSense(LexEntry entry)
 		{
-			LexSense sense = entry.Senses.AddNew();
+			LexSense sense = (LexSense) entry.Senses.AddNew();
 			AddExample(sense);
 			AddExample(sense);
 		}
 
 		private static void AddExample(LexSense sense)
 		{
-			LexExampleSentence example = sense.ExampleSentences.AddNew();
+			LexExampleSentence example = (LexExampleSentence) sense.ExampleSentences.AddNew();
 			example.Sentence["th"] = "sentence";
 		}
 	}

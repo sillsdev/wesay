@@ -23,9 +23,9 @@ namespace WeSay.LexicalModel
 			WireUpEvents();
 		}
 
-		protected void WireUpList<T>(BindingList<T> list, string listName) where T : new()
+		protected void WireUpList(IBindingList list, string listName)
 		{
-			_listEventHelpers.Add(new ListEventHelper<T>(this, list, listName));
+			_listEventHelpers.Add(new ListEventHelper(this, list, listName));
 		}
 
 		protected virtual void WireUpEvents()
@@ -62,16 +62,15 @@ namespace WeSay.LexicalModel
 		}
 	}
 
-	public class ListEventHelper<T> where T : new()
+	public class ListEventHelper
 	{
 		protected WeSayDataObject _parent;
 		protected string _listName;
 
-		public ListEventHelper(WeSayDataObject parent, BindingList<T> list, string listName)
+		public ListEventHelper(WeSayDataObject parent, IBindingList list, string listName)
 		{
 			_parent = parent;
 			_listName = listName;
-			list.AddingNew += new AddingNewEventHandler(OnAddingNewToAList);
 			list.ListChanged += new ListChangedEventHandler(OnListChanged);
 			foreach (INotifyPropertyChanged x in list)
 			{
@@ -86,18 +85,13 @@ namespace WeSay.LexicalModel
 
 		void OnListChanged(object sender, ListChangedEventArgs e)
 		{
+			if (e.ListChangedType == ListChangedType.ItemAdded)
+			{
+				IBindingList list = (IBindingList) sender;
+				_parent.WireUpChild((INotifyPropertyChanged)list[e.NewIndex]);
+				_parent.SomethingWasModified();
+			}
 			_parent.NotifyPropertyChanged(_listName);
-		}
-
-		///// <summary>
-		///// Called by the binding list when a AddNew() is called on the list.
-		///// </summary>
-		void OnAddingNewToAList(object sender, AddingNewEventArgs e)
-		{
-			e.NewObject = new T();
-			_parent.WireUpChild((INotifyPropertyChanged)e.NewObject);
-			_parent.NotifyPropertyChanged(this._listName);
-			_parent.SomethingWasModified();
 		}
 	}
 }

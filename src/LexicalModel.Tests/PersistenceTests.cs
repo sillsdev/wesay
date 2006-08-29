@@ -66,14 +66,14 @@ namespace WeSay.LexicalTools.Tests
 			CycleDatabase();
 			LexEntry entry = new LexEntry();
 			entry.LexicalForm["en"] = "12";
-			LexSense sense = entry.Senses.AddNew();
-			LexExampleSentence example= sense.ExampleSentences.AddNew();
+			LexSense sense = (LexSense) entry.Senses.AddNew();
+			LexExampleSentence example= (LexExampleSentence)sense.ExampleSentences.AddNew();
 			example.Sentence["th"] = "sawa";
 			_entriesList.Add(entry);
 			entry = CycleDatabase();
-			entry.Senses[0].ExampleSentences[0].Sentence["th"]="sawadee";
+			((LexExampleSentence)((LexSense)entry.Senses[0]).ExampleSentences[0]).Sentence["th"]="sawadee";
 			entry = CycleDatabase();
-			Assert.AreEqual("sawadee", entry.Senses[0].ExampleSentences[0].Sentence["th"]);
+			Assert.AreEqual("sawadee", ((LexExampleSentence)((LexSense)entry.Senses[0]).ExampleSentences[0]).Sentence["th"]);
 	   }
 
 		[Test]
@@ -81,14 +81,14 @@ namespace WeSay.LexicalTools.Tests
 		{
 			CycleDatabase();
 			LexEntry entry = new LexEntry();
-			LexSense sense = entry.Senses.AddNew();
-			LexExampleSentence example= sense.ExampleSentences.AddNew();
+			LexSense sense = (LexSense) entry.Senses.AddNew();
+			LexExampleSentence example= (LexExampleSentence) sense.ExampleSentences.AddNew();
 			example.Sentence["th"] = "sawa";
 			_entriesList.Add(entry);
 			entry = CycleDatabase();
 			entry.PropertyChanged += new System.ComponentModel.PropertyChangedEventHandler(_entry_PropertyChanged);
 			_didNotify = false;
-			entry.Senses[0].ExampleSentences[0].Sentence["th"]="sawadeekap";
+			((LexExampleSentence)((LexSense)entry.Senses[0]).ExampleSentences[0]).Sentence["th"]="sawadeekap";
 			Assert.IsTrue(_didNotify);
 		}
 	}
