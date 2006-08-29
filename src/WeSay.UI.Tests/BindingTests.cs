@@ -1,3 +1,4 @@
+using System.Windows.Forms;
 using WeSay.Language;
 using System;
 using System.Collections.Generic;
@@ -19,7 +20,7 @@ namespace WeSay.UI.Tests
 		public void TargetToWidget()
 		{
 			MultiText text = new MultiText();
-			Gtk.Entry widget = new Gtk.Entry();
+			TextBox widget = new TextBox();
 			Binding binding = new Binding(text, "en", widget);
 
 			text["en"] = "hello";
@@ -32,7 +33,7 @@ namespace WeSay.UI.Tests
 		public void WidgetToTarget()
 		{
 			MultiText text = new MultiText();
-			Gtk.Entry widget = new Gtk.Entry();
+			TextBox widget = new TextBox();
 
 			Binding binding = new Binding(text, "en", widget);
 

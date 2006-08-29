@@ -15,7 +15,7 @@ namespace WeSay.App
 			{
 				FilePath = args[0];
 			}
-//            Application.Init();
+
 			BasilProject project = new BasilProject(FilePath);
 
 			WeSay.UI.ITaskBuilder builder = new SampleTaskBuilder(project);

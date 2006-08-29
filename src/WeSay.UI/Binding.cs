@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
+using System.Windows.Forms;
 using WeSay.Language;
 
 namespace WeSay.UI
@@ -10,29 +11,44 @@ namespace WeSay.UI
 	{
 		protected string _writingSystemId;
 		protected INotifyPropertyChanged _dataTarget;
-		private Gtk.Entry _widgetTarget;
+		private TextBox _textBoxTarget;
 		protected bool _inMidstOfChange;
 
-		public Binding(INotifyPropertyChanged dataTarget, string writingSystemId, Gtk.Entry widgetTarget)
+		public Binding(INotifyPropertyChanged dataTarget, string writingSystemId, TextBox widgetTarget)
 		{
 			_inMidstOfChange = false;
 		   _dataTarget= dataTarget;
 		   _dataTarget.PropertyChanged += new PropertyChangedEventHandler(OnDataPropertyChanged);
 		   _writingSystemId=writingSystemId;
-		   _widgetTarget = widgetTarget;
-		   _widgetTarget.TextInserted += new Gtk.TextInsertedHandler(OnWidgetTextInserted);
-		   _widgetTarget.TextDeleted +=new Gtk.TextDeletedHandler(OnWidgetTextDeleted);
+		   _textBoxTarget = widgetTarget;
+		   _textBoxTarget.TextChanged += new EventHandler(OnTextBoxChanged);
+		   _textBoxTarget.Disposed += new EventHandler(_textBoxTarget_Disposed);
+		   _textBoxTarget.VisibleChanged += new EventHandler(_textBoxTarget_VisibleChanged);
+	   }
+
+		void _textBoxTarget_VisibleChanged(object sender, EventArgs e)
+		{
+			TearDown();
 		}
 
-		protected virtual void OnWidgetTextDeleted(object o, Gtk.TextDeletedArgs args)
+		void _textBoxTarget_Disposed(object sender, EventArgs e)
 		{
-			 SetTargetValue(_widgetTarget.Text);
-
+			TearDown();
 		}
 
-		protected virtual void OnWidgetTextInserted(object o, Gtk.TextInsertedArgs args)
+		void OnTextBoxChanged(object sender, EventArgs e)
 		{
-			SetTargetValue(_widgetTarget.Text);
+		   SetTargetValue(_textBoxTarget.Text);
+		}
+
+		private void TearDown()
+		{
+			_dataTarget.PropertyChanged -= new PropertyChangedEventHandler(OnDataPropertyChanged);
+			_dataTarget = null;
+			_textBoxTarget.TextChanged -= new EventHandler(OnTextBoxChanged);
+			_textBoxTarget.Disposed -= new EventHandler(_textBoxTarget_Disposed);
+			_textBoxTarget.VisibleChanged -= new EventHandler(_textBoxTarget_VisibleChanged);
+			_textBoxTarget = null;
 		}
 
 		protected virtual void OnDataPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -44,7 +60,7 @@ namespace WeSay.UI
 			try
 			{
 				_inMidstOfChange = true;
-				_widgetTarget.Text = GetTargetValue();
+				_textBoxTarget.Text = GetTargetValue();
 			}
 			finally
 			{
@@ -98,9 +114,9 @@ namespace WeSay.UI
 		{
 			get { return _writingSystemId; }
 		}
-		public Gtk.Widget WidgetTarget
+		public TextBox TextBoxTarget
 		{
-			get { return _widgetTarget; }
+			get { return _textBoxTarget; }
 		}
 	}
 }

@@ -6,6 +6,7 @@ using System.Data;
 using System.Text;
 using System.Windows.Forms;
 using WeSay.LexicalModel;
+using WeSay.TreeViewIList;
 using WeSay.UI;
 
 namespace WeSay.LexicalTools
@@ -24,16 +25,26 @@ namespace WeSay.LexicalTools
 			_bindingSource.PositionChanged += new EventHandler(OnCurrentRecordChanged);
 
 			InitializeComponent();
-			listBox1.DataSource = records;
+			_detailPanel.BackColor = SystemColors.Control;//we like it to stand out at design time, but not runtime
+
+			_recordsListBox.DataSource = records;
+
+			_recordsListBox.SelectedIndexChanged += new EventHandler(OnRecordSelectionChanged);
+		}
+
+		void OnRecordSelectionChanged(object sender, EventArgs e)
+		{
+			_bindingSource.Position = _recordsListBox.SelectedIndex;
 		}
 
 		void OnCurrentRecordChanged(object sender, EventArgs e)
 		{
+			BuildDetailArea();
 		}
 
 		public void Activate()
 		{
-			AddDetailArea();
+			BuildDetailArea();
 		}
 
 
@@ -62,9 +73,11 @@ namespace WeSay.LexicalTools
 		}
 
 
-		private void AddDetailArea()
+		private void BuildDetailArea()
 		{
+			this.SuspendLayout();
 			this._detailPanel.SuspendLayout();
+			_detailPanel.Controls.Clear();
 			LexEntry record = _bindingSource.Current as LexEntry;
 			if (record == null)
 			{
@@ -75,7 +88,13 @@ namespace WeSay.LexicalTools
 			layout.AddWidgets(record);
 
 			this._detailPanel.ResumeLayout(true);
-			//this._detailPanel.Refresh();
+			this.ResumeLayout(false);
+		}
+
+
+		private void button2_Click(object sender, EventArgs e)
+		{
+
 		}
 	}
 }

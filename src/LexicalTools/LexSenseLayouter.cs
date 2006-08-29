@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Windows.Forms;
 using WeSay.LexicalModel;
 using WeSay.UI;
 using System.ComponentModel;
@@ -16,36 +17,49 @@ namespace WeSay.LexicalTools
 
 		public override int AddWidgets(object dataObject)
 		{
-			int rowCount = 1;
-			LexSense sense = (LexSense)dataObject;
+			return AddWidgets(dataObject, -1);
+		}
 
-			_builder.AddWidgetRow("Meaning", true,MakeBoundEntry(sense.Gloss, "en"));
+		private int AddWidgets(object dataObject, int insertAtRow)
+		{
+			 int rowCount = 1;
+		   LexSense sense = (LexSense)dataObject;
+
+			Control c = _builder.AddWidgetRow("Meaning", true,MakeBoundEntry(sense.Gloss, "en"), insertAtRow);
+			insertAtRow = _builder.GetRowOfControl(c);
 
 			LexExampleSentenceLayouter exampleLayouter = new LexExampleSentenceLayouter(_builder);
 			foreach (LexExampleSentence example in sense.ExampleSentences)
 			{
-			   rowCount+= exampleLayouter.AddWidgets(example);
+				rowCount += exampleLayouter.AddWidgets(example, insertAtRow + rowCount);
 			}
-		  //  _builder.AddWidgetRow("meaning: ", senseTableBuilder.BuildTable());
+
+			//add a ghost
+			rowCount += exampleLayouter.AddGhost(sense.ExampleSentences, insertAtRow+rowCount);
 
 			return rowCount;
 		}
 
+		private void AddWidgets(object dataObject, Control refControl)
+		{
+			int row    = _builder.GetRowOfControl(refControl);
+			AddWidgets(dataObject, row);
+		}
+
 		public int AddGhost(IBindingList list)
 		{
-			_builder.AddWidgetRow("Meaning", false, MakeGhostEntry(list, "Gloss", "en"));
+			TextBox entry = new TextBox();
+			GhostBinding g=   MakeGhostBinding(list, "Gloss", "en", entry);
+			g.ReferenceControl = _builder.AddWidgetRow("Meaning", false, entry);
 			return 1;
 		}
 
 
-		protected override void binding_Triggered(object newGuy, System.EventArgs args)
+		protected override void OnGhostBindingTriggered(GhostBinding sender, object newGuy, System.EventArgs args)
 		{
-		   // AddWidgets(newGuy);//todo:: insert these at right spot
-			_builder.AddLabelRow("test: ");
-
-
-			//and how to add a new ghost? or can we keep the old one, but clear him out?
+		   AddWidgets(newGuy, sender.ReferenceControl);
 		}
+
 
 //        public override int AddWidgets(object dataObject)
 //        {

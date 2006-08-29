@@ -16,9 +16,19 @@ namespace WeSay.UI
 			this.Margin = new Padding(5, 5, 5, 5);
 		}
 
-		public void AddWidgetRow(string label, bool isHeader, Control control)
+		public Control AddWidgetRow(string label, bool isHeader, Control control)
 		{
-			Panel p = new Panel();
+			return AddWidgetRow(label, isHeader, control, this.Controls.Count);
+		}
+
+
+		public Control AddWidgetRow(string label, bool isHeader, Control control, int row)
+		{
+			if (row < 0)
+			{
+			   row= this.Controls.Count;
+			}
+		   Panel p = new Panel();
 			p.Size = new Size(25, 25);
 			p.Dock = DockStyle.Top;
 
@@ -39,15 +49,23 @@ namespace WeSay.UI
 			p.Controls.Add(control);
 
 			this.Controls.Add(p);
-			this.Controls.SetChildIndex(p, 0);//stick at end
+			//reverse order (that's how docking works)
+			this.Controls.SetChildIndex(p, (this.Controls.Count-row) - 1);
+
+			return p;
 		}
 
-		public void AddLabelRow(string label)
+		public int GetRowOfControl(Control control)
 		{
-			Label l = new Label();
-			l.Dock = DockStyle.Top;
-			l.Text = label;
-			this.Controls.Add(l);
+			return (this.Controls.Count - this.Controls.GetChildIndex(control) ) -1;
 		}
+
+		//public void AddLabelRow(string label)
+		//{
+		//    Label l = new Label();
+		//    l.Dock = DockStyle.Top;
+		//    l.Text = label;
+		//    this.Controls.Add(l);
+		//}
 	}
 }

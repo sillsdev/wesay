@@ -1,6 +1,6 @@
 using System;
 using System.ComponentModel;
-using Gtk;
+using System.Windows.Forms;
 using NUnit.Framework;
 using WeSay.Language;
 
@@ -10,8 +10,8 @@ namespace WeSay.UI.Tests
 	public class GhostBindingTests
 	{
 		private Papa _papa = new Papa();
-		private Entry _ghostFirstNameWidget;
-		private Entry _papaNameWidget;
+		private TextBox _ghostFirstNameWidget;
+		private TextBox _papaNameWidget;
 	   private GhostBinding _binding;
 		protected bool _didNotify;
 
@@ -58,7 +58,7 @@ namespace WeSay.UI.Tests
 
 		}
 
-		void _binding_Triggered(object sender, EventArgs args)
+		void _binding_Triggered(object sender, object newObject, EventArgs args)
 		{
 			_didNotify = true;
 		}
@@ -66,25 +66,25 @@ namespace WeSay.UI.Tests
 		[SetUp]
 		public void Setup()
 		{
-			Application.Init();
-			_papaNameWidget = new Entry("John");
-			_ghostFirstNameWidget = new Entry();
+			_papaNameWidget = new TextBox();
+			_papaNameWidget.Text  =  "John";
+			_ghostFirstNameWidget = new TextBox();
 			_binding = new GhostBinding(_papa.Children, "First", "en", _ghostFirstNameWidget);
 			_didNotify = false;
-			Window w = new Window("test");
-			VBox box = new VBox();
-			w.Add(box);
-			box.PackStart(_papaNameWidget);
-			box.PackStart(_ghostFirstNameWidget);
-			box.ShowAll();
-			w.ShowAll();
+			//Window w = new Window("test");
+			//VBox box = new VBox();
+			//w.Add(box);
+			//box.PackStart(_papaNameWidget);
+			//box.PackStart(_ghostFirstNameWidget);
+			//box.ShowAll();
+			//w.ShowAll();
 			_papaNameWidget.Show();
 			while (Gtk.Application.EventsPending())
 			{ Gtk.Application.RunIteration(); }
 
 			//Application.Run();
-			_papaNameWidget.GrabFocus();
-			 _ghostFirstNameWidget.GrabFocus();
+			_papaNameWidget.Focus();
+			 _ghostFirstNameWidget.Focus();
 	   }
 
 
@@ -93,7 +93,7 @@ namespace WeSay.UI.Tests
 		{
 			_ghostFirstNameWidget.Text = "Samuel";
 			Assert.AreEqual(0, _papa.Children.Count);
-			_papaNameWidget.GrabFocus();
+			_papaNameWidget.Focus();
 			Assert.AreEqual(1, _papa.Children.Count);
 		}
 
@@ -101,7 +101,7 @@ namespace WeSay.UI.Tests
 		public void NewItemGetsValue()
 		{
 			_ghostFirstNameWidget.Text = "Samuel";
-			_papaNameWidget.GrabFocus();
+			_papaNameWidget.Focus();
 			Assert.AreEqual("Samuel", _papa.Children[0].First["en"]);
 		}
 		 [Test]
@@ -109,7 +109,7 @@ namespace WeSay.UI.Tests
 		{
 			 _binding.Triggered += new GhostBinding.GhostTriggered(_binding_Triggered);
 			_ghostFirstNameWidget.Text = "Samuel";
-			_papaNameWidget.GrabFocus();
+			_papaNameWidget.Focus();
 			Assert.IsTrue(_didNotify);
 		}
 
