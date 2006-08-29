@@ -1,3 +1,5 @@
+using System;
+
 namespace WeSay.LexicalTools
 {
 	partial class EntryDetailControl
@@ -31,8 +33,8 @@ namespace WeSay.LexicalTools
 			this._recordsListBox = new System.Windows.Forms.ListBox();
 			this._detailPanel = new WeSay.UI.DetailList();
 			this.panel1 = new System.Windows.Forms.Panel();
-			this.btnAdd = new System.Windows.Forms.Button();
 			this.btnDelete = new System.Windows.Forms.Button();
+			this.btnAdd = new System.Windows.Forms.Button();
 			this.panel1.SuspendLayout();
 			this.SuspendLayout();
 			//
@@ -56,7 +58,11 @@ namespace WeSay.LexicalTools
 			this._detailPanel.AutoScroll = true;
 			this._detailPanel.BackColor = System.Drawing.SystemColors.ActiveCaption;
 			this._detailPanel.Location = new System.Drawing.Point(126, 5);
-			this._detailPanel.Margin = new System.Windows.Forms.Padding(5);
+
+			if (Environment.OSVersion.Platform != PlatformID.Unix)
+			{
+		   //     this._detailPanel.Margin = new System.Windows.Forms.Padding(5);
+			}
 			this._detailPanel.Name = "_detailPanel";
 			this._detailPanel.Size = new System.Drawing.Size(367, 122);
 			this._detailPanel.TabIndex = 4;
@@ -71,6 +77,16 @@ namespace WeSay.LexicalTools
 			this.panel1.Size = new System.Drawing.Size(493, 34);
 			this.panel1.TabIndex = 7;
 			//
+			// btnDelete
+			//
+			this.btnDelete.Location = new System.Drawing.Point(163, 3);
+			this.btnDelete.Name = "btnDelete";
+			this.btnDelete.Size = new System.Drawing.Size(75, 23);
+			this.btnDelete.TabIndex = 7;
+			this.btnDelete.Text = "Delete Word";
+			this.btnDelete.UseVisualStyleBackColor = true;
+			this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
+			//
 			// btnAdd
 			//
 			this.btnAdd.Location = new System.Drawing.Point(18, 8);
@@ -79,15 +95,6 @@ namespace WeSay.LexicalTools
 			this.btnAdd.TabIndex = 6;
 			this.btnAdd.Text = "New Word";
 			this.btnAdd.UseVisualStyleBackColor = true;
-			//
-			// btnDelete
-			//
-			this.btnDelete.Location = new System.Drawing.Point(147, 8);
-			this.btnDelete.Name = "btnDelete";
-			this.btnDelete.Size = new System.Drawing.Size(75, 23);
-			this.btnDelete.TabIndex = 7;
-			this.btnDelete.Text = "Delete Word";
-			this.btnDelete.UseVisualStyleBackColor = true;
 			//
 			// EntryDetailControl
 			//

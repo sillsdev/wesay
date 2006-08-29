@@ -49,6 +49,12 @@
 	<Compile Include="IFilterable.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+	<ProjectReference Include="..\PlatformSpecific\PlatformSpecific.csproj">
+	  <Project>{55E6BAB0-9B46-4C89-8773-4432417C1ADF}</Project>
+	  <Name>PlatformSpecific</Name>
+	</ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
 	   Other similar extension points exist, see Microsoft.Common.targets.

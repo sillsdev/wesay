@@ -1,7 +1,6 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.ComponentModel;
+using com.db4o;
 
 namespace WeSay.LexicalModel
 {
@@ -14,10 +13,10 @@ namespace WeSay.LexicalModel
 																	{
 																	};
 
-		[com.db4o.Transient]
+		[Transient]
 		protected ArrayList _listEventHelpers;
 
-		public void ObjectOnActivate(com.db4o.ObjectContainer container)
+		public void ObjectOnActivate(ObjectContainer container)
 		{
 			container.Activate(this, int.MaxValue);
 			WireUpEvents();

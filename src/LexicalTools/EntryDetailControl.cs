@@ -1,12 +1,8 @@
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
-using System.Data;
-using System.Text;
 using System.Windows.Forms;
 using WeSay.LexicalModel;
-using WeSay.TreeViewIList;
 using WeSay.UI;
 
 namespace WeSay.LexicalTools
@@ -15,14 +11,11 @@ namespace WeSay.LexicalTools
 	{
 
 		private IBindingList _records;
-		private System.Windows.Forms.BindingSource _bindingSource; //could get by with CurrencyManager
-
 
 		public EntryDetailControl(IBindingList records)
 		{
 			_records = records;
-			_bindingSource = new System.Windows.Forms.BindingSource(_records, null);
-			_bindingSource.PositionChanged += new EventHandler(OnCurrentRecordChanged);
+			this.BindingContext[_records].PositionChanged += new EventHandler(OnCurrentRecordChanged);
 
 			InitializeComponent();
 			_detailPanel.BackColor = SystemColors.Control;//we like it to stand out at design time, but not runtime
@@ -34,7 +27,7 @@ namespace WeSay.LexicalTools
 
 		void OnRecordSelectionChanged(object sender, EventArgs e)
 		{
-			_bindingSource.Position = _recordsListBox.SelectedIndex;
+			this.BindingContext[_records].Position = _recordsListBox.SelectedIndex;
 		}
 
 		void OnCurrentRecordChanged(object sender, EventArgs e)
@@ -78,7 +71,7 @@ namespace WeSay.LexicalTools
 			this.SuspendLayout();
 			this._detailPanel.SuspendLayout();
 			_detailPanel.Controls.Clear();
-			LexEntry record = _bindingSource.Current as LexEntry;
+			Object record = CurrentRecord ;
 			if (record == null)
 			{
 				return;
@@ -91,8 +84,15 @@ namespace WeSay.LexicalTools
 			this.ResumeLayout(false);
 		}
 
+		private Object CurrentRecord
+		{
+			get
+			{
+				return this.BindingContext[_records].Current as LexEntry;
+			}
+		}
 
-		private void button2_Click(object sender, EventArgs e)
+		private void btnDelete_Click(object sender, EventArgs e)
 		{
 
 		}
