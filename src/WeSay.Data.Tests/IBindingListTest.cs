@@ -79,13 +79,39 @@ namespace WeSay.Data.Tests
 			}
 		}
 
-		protected virtual void VerifySort()
+		protected virtual void VerifySortAscending(){
+		}
+
+		protected virtual void VerifySortDescending()
 		{
+		}
+
+		protected virtual void VerifySort(ListSortDirection direction)
+		{
+			if (direction == ListSortDirection.Ascending)
+			{
+				VerifySortAscending();
+			}
+			else
+			{
+				VerifySortDescending();
+			}
 			Assert.IsTrue(_bindingList.IsSorted);
 		}
 
 		[Test]
-		public void ApplySort()
+		public void ApplySortAscending()
+		{
+			ApplySort(ListSortDirection.Ascending);
+		}
+
+		[Test]
+		public void ApplySortDescending()
+		{
+			ApplySort(ListSortDirection.Descending);
+		}
+
+		public void ApplySort(ListSortDirection direction)
 		{
 			if (_bindingList.SupportsSorting)
 			{
@@ -98,7 +124,7 @@ namespace WeSay.Data.Tests
 				Assert.IsFalse(_listChanged);
 				VerifyUnsorted();
 
-				_bindingList.ApplySort(_property, ListSortDirection.Descending);
+				_bindingList.ApplySort(_property, direction);
 				if (_bindingList.Count > 1)
 				{
 					if (_bindingList.SupportsChangeNotification)
@@ -106,7 +132,7 @@ namespace WeSay.Data.Tests
 						Assert.IsTrue(_listChanged);
 						Assert.IsTrue(_listChangedEventArgs.ListChangedType == ListChangedType.Reset);
 					}
-					VerifySort();
+					VerifySort(direction);
 				}
 				else
 				{
@@ -117,7 +143,7 @@ namespace WeSay.Data.Tests
 			{
 				try
 				{
-					_bindingList.ApplySort(_property, ListSortDirection.Ascending);
+					_bindingList.ApplySort(_property, direction);
 					Assert.Fail();
 				}
 				catch (NotSupportedException)
@@ -309,8 +335,6 @@ namespace WeSay.Data.Tests
 	[TestFixture]
 	public class IBindingListStringTest : IBindingListBaseTest<SimpleClass,string>
 	{
-
-
 		[TestFixtureSetUp]
 		public void TestFixtureSetUp()
 		{
@@ -343,8 +367,6 @@ namespace WeSay.Data.Tests
 	[TestFixture]
 	public class IBindingListNoDataTest : IBindingListBaseTest<SimpleClass, string>
 	{
-
-
 		[SetUp]
 		public override void SetUp()
 		{

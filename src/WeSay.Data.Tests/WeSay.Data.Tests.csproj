@@ -27,7 +27,8 @@
 	<ErrorReport>prompt</ErrorReport>
 	<WarningLevel>4</WarningLevel>
   </PropertyGroup>
-   <ItemGroup>
+  <ItemGroup>
+	<Compile Include="InMemoryBindingListTests.cs" />
 	<Compile Include="db4oBindingListTests.cs" />
 	<Compile Include="Db4oFilterableTest.cs" />
 	<Compile Include="IBindingListTest.cs" />
