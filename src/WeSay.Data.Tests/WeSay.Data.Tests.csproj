@@ -27,7 +27,7 @@
 	<ErrorReport>prompt</ErrorReport>
 	<WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <ItemGroup>
+   <ItemGroup>
 	<Compile Include="db4oBindingListTests.cs" />
 	<Compile Include="Db4oFilterableTest.cs" />
 	<Compile Include="IBindingListTest.cs" />
@@ -38,7 +38,13 @@
 	<Compile Include="TestItem.cs" />
   </ItemGroup>
   <ItemGroup>
-	<Reference Include="nunit.framework, Version=2.2.8.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL" />
+	<Reference Include="Db4o, Version=5.5.1.0, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\Db4o.dll</HintPath>
+	</Reference>
+	<Reference Include="nunit.framework, Version=2.2.8.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+	  <SpecificVersion>False</SpecificVersion>
+	</Reference>
 	<Reference Include="System" />
 	<Reference Include="System.Data" />
 	<Reference Include="System.Xml" />

@@ -5,14 +5,19 @@ using System.ComponentModel;
 
 namespace WeSay.Data.Tests
 {
-	public class TestItem : INotifyPropertyChanged
+	public class ChildTestItem
 	{
 		int _storedInt;
 		string _storedString;
 		DateTime _storedDateTime;
-		TestItem _testItem;
-
-		public TestItem ChildTestItem
+		ChildTestItem _testItem;
+		public ChildTestItem(string s, int i, DateTime d)
+		{
+			_storedInt = i;
+			_storedString = s;
+			_storedDateTime = d;
+		}
+		public ChildTestItem Child
 		{
 			get
 			{
@@ -23,6 +28,73 @@ namespace WeSay.Data.Tests
 				_testItem = value;
 			}
 		}
+
+		public int Depth
+		{
+			get
+			{
+				int depth = 1;
+				ChildTestItem item = this.Child;
+				while (item != null)
+				{
+					++depth;
+					item = item.Child;
+				}
+				return depth;
+			}
+		}
+
+	}
+	public class TestItem : INotifyPropertyChanged
+	{
+		int _storedInt;
+		string _storedString;
+		DateTime _storedDateTime;
+		ChildTestItem _testItem;
+		int _onActivateDepth;
+
+		public int OnActivateDepth
+		{
+			get
+			{
+				return _onActivateDepth;
+			}
+		 }
+
+		public ChildTestItem Child
+		{
+			get
+			{
+				return _testItem;
+			}
+			set
+			{
+				_testItem = value;
+			}
+		}
+
+		public void ObjectOnActivate(com.db4o.ObjectContainer container)
+		{
+			_onActivateDepth = Depth;
+		}
+
+
+		public int Depth
+		{
+			get
+			{
+				int depth = 1;
+				ChildTestItem item = this.Child;
+				while (item != null)
+				{
+					++depth;
+					item = item.Child;
+				}
+				return depth;
+			}
+		}
+
+
 
 		public TestItem()
 		{

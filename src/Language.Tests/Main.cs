@@ -21,12 +21,12 @@ namespace Language.Tests
 		{
 			_gotHandlerNotice = false;
 			MultiText text = new MultiText();
-			text.PropertyChanged += new PropertyChangedEventHandler(Test1_propertyChangedHandler);
+			text.PropertyChanged += new PropertyChangedEventHandler(propertyChangedHandler);
 			text.SetAlternative("zox", "");
 			Assert.IsTrue(_gotHandlerNotice);
 		}
 
-		void Test1_propertyChangedHandler(object sender, PropertyChangedEventArgs e)
+		void propertyChangedHandler(object sender, PropertyChangedEventArgs e)
 		{
 			_gotHandlerNotice = true;
 		}

@@ -502,17 +502,6 @@ namespace WeSay.Data.Tests
 			this._bindingList.ApplySort(pd, ListSortDirection.Descending);
 		}
 
-		private int TestItemDepth(TestItem item)
-		{
-			int depth = 0;
-			while (item != null)
-			{
-				++depth;
-				item = item.ChildTestItem;
-			}
-			return depth;
-		}
-
 		[Test]
 		public void NestedStructure()
 		{
@@ -520,22 +509,51 @@ namespace WeSay.Data.Tests
 			this._bindingList.Clear();
 
 			TestItem root = new TestItem("Root Item", 0, DateTime.Now);
-			TestItem parent = root;
-			for (int i = 1; i < items; ++i)
+			root.Child = new ChildTestItem("Child Item", 1, DateTime.Now);
+
+			ChildTestItem parent = root.Child;
+			for (int i = 2; i < items; ++i)
 			{
-				TestItem child = new TestItem("Child Item", i, DateTime.Now);
-				parent.ChildTestItem = child;
-				parent = child;
+				parent.Child = new ChildTestItem("Child Item", i, DateTime.Now);
+				parent = parent.Child;
 			}
 
-			Assert.AreEqual(items, TestItemDepth(root));
+			Assert.AreEqual(items, root.Depth);
 			this._bindingList.Add(root);
+			Assert.AreEqual(1, _bindingList.Count);
 			Assert.AreEqual(root, this._bindingList[0]);
-			Assert.AreEqual(items, TestItemDepth(this._bindingList[0]));
+			Assert.AreEqual(items, this._bindingList[0].Depth);
 
 			ReOpenDatabase();
-
-			Assert.AreEqual(items, TestItemDepth(this._bindingList[0]));
+			Assert.AreEqual(1, _bindingList.Count);
+			Assert.AreEqual(root, _bindingList[0]);
+			Assert.AreEqual(items, this._bindingList[0].Depth);
+			Assert.Fail("this is failing");
 		}
+
+		[Test]
+		[Ignore("Come back to this. Right now we get around this by calling activate in the OnActivateDepth method of our data classes.")]
+		public void NestedStructureActivation()
+		{
+			const int items = 10;
+			this._bindingList.Clear();
+
+			TestItem root = new TestItem("Root Item", 0, DateTime.Now);
+			root.Child = new ChildTestItem("Child Item", 1, DateTime.Now);
+
+			ChildTestItem parent = root.Child;
+			for (int i = 2; i < items; ++i)
+			{
+				parent.Child = new ChildTestItem("Child Item", i, DateTime.Now);
+				parent = parent.Child;
+			}
+
+			Assert.AreEqual(items, root.Depth);
+			this._bindingList.Add(root);
+
+			ReOpenDatabase();
+			Assert.AreEqual(items, this._bindingList[0].OnActivateDepth);
+		}
+
 	}
 }

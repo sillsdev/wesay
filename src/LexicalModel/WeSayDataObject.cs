@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
-using com.db4o;
 
 namespace WeSay.LexicalModel
 {
@@ -11,12 +10,14 @@ namespace WeSay.LexicalModel
 		/// <summary>
 		/// For INotifyPropertyChanged
 		/// </summary>
-		public event PropertyChangedEventHandler PropertyChanged;
+		public event PropertyChangedEventHandler PropertyChanged = delegate
+																	{
+																	};
 
-		[Transient]
+		[com.db4o.Transient]
 		protected ArrayList _listEventHelpers;
 
-		public void ObjectOnActivate(ObjectContainer container)
+		public void ObjectOnActivate(com.db4o.ObjectContainer container)
 		{
 			container.Activate(this, int.MaxValue);
 			WireUpEvents();
@@ -52,13 +53,10 @@ namespace WeSay.LexicalModel
 
 		internal void NotifyPropertyChanged(string propertyName)
 		{
-			if (PropertyChanged != null)
-			{
-				PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-			}
+			PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 		}
 
-		protected void OnChildObjectPropertyChanged(object sender, PropertyChangedEventArgs e)
+		protected virtual void OnChildObjectPropertyChanged(object sender, PropertyChangedEventArgs e)
 		{
 			NotifyPropertyChanged(e.PropertyName);
 		}

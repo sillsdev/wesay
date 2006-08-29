@@ -75,7 +75,10 @@ namespace WeSay.LexicalTools
 			_treeview.AppendColumn(treeViewColumn);
 			_treeview.FixedHeightMode = true;
 			TreeViewIListSelection selection = _treeview.Selection;
-			selection.Select(_bindingSource.Position);
+			if (_bindingSource.Count > 0)
+			{
+				selection.Select(0);
+			}
 			selection.Changed += new EventHandler(OnSelectionChanged);
 
 			scrolled.Child = _treeview;
@@ -105,9 +108,10 @@ namespace WeSay.LexicalTools
 
 		private void RefreshDetailArea(Box parent)
 		{
-			while (parent.Children.Length != 1)
+			int count = parent.Children.Length;
+			for (int i = count - 1; i >= 1; i--)
 			{
-				parent.Children[1].Destroy();
+				parent.Children[i].Destroy();
 			}
 			AddDetailArea(parent);
 		}
@@ -134,9 +138,10 @@ namespace WeSay.LexicalTools
 
 		public void Deactivate()
 		{
-			while (_container.Children.Length != 0)
+			int count = _container.Children.Length;
+			for (int i = count - 1; i >= 0; i--)
 			{
-				_container.Children[0].Destroy();
+				_container.Children[i].Destroy();
 			}
 		}
 

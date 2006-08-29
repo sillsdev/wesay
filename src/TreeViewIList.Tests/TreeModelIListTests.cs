@@ -26,6 +26,14 @@ namespace WeSay.TreeViewIList.Tests
 		{
 		}
 
+		//public TreeModelIListTests()
+		//    : base()
+		//{
+		//    this._configuration = new TreeModelIListConfiguration();
+		//    CreateNativeObject(new string[0], new GLib.Value[0]);
+		//    this.BuildTreeModelInterface();
+		//}
+
 		[TestFixtureSetUp]
 		public void TestFixtureSetUp()
 		{

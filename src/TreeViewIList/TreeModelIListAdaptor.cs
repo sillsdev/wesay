@@ -5,7 +5,7 @@ namespace WeSay.TreeViewIList
 {
 	public class TreeModelIListAdaptor : GLib.Object
 	{
-		private TreeModelIListConfiguration _configuration;
+		protected TreeModelIListConfiguration _configuration;
 		private TreeModelInterfaceDelegates _treeModelInterface;
 
 		public TreeModelIListAdaptor(TreeModelIListConfiguration configuration)
@@ -18,6 +18,10 @@ namespace WeSay.TreeViewIList
 			this._configuration = configuration;
 			CreateNativeObject(new string[0], new GLib.Value[0]);
 			BuildTreeModelInterface();
+		}
+
+		protected TreeModelIListAdaptor() : base(IntPtr.Zero)
+		{
 		}
 
 		protected TreeModelIListConfiguration Configuration
@@ -138,7 +142,7 @@ namespace WeSay.TreeViewIList
 		[DllImport("gtksharpglue-2")]
 		private static extern void gtksharp_node_store_set_tree_model_callbacks(IntPtr raw, ref TreeModelInterfaceDelegates cbs);
 
-		private void BuildTreeModelInterface()
+		protected void BuildTreeModelInterface()
 		{
 			this._treeModelInterface.get_flags = new GetFlagsDelegate(this.GetFlags_callback);
 			this._treeModelInterface.get_n_columns = new GetNColumnsDelegate(this.GetNColumns_callback);

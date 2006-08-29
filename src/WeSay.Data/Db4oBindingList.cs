@@ -25,6 +25,7 @@ namespace WeSay.Data
 			_records.ActivationDepth = 99;
 			_records.RefreshActivationDepth = 99;
 			_records.SetActivationDepth = 99;
+//            _records.RequeryAndRefresh(false);
 			_records.Requery(false);
 		}
 
