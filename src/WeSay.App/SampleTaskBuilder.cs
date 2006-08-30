@@ -8,18 +8,19 @@ using WeSay.Data;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Tests;
 using WeSay.UI;
+using System.Collections;
 
 namespace WeSay.App
 {
 	public class SampleTaskBuilder : ITaskBuilder, IDisposable
 	{
 		private bool _disposed = false;
-		private IMutablePicoContainer _picoContext;
+		private IMutablePicoContainer _parentPicoContext;
 
-	   public SampleTaskBuilder(BasilProject project)
+		public SampleTaskBuilder(BasilProject project)
 		{
-			_picoContext =  CreateContainer();
-			_picoContext.RegisterComponentInstance(project);
+			_parentPicoContext = CreateContainer();
+			_parentPicoContext.RegisterComponentInstance(project);
 
 			//Db4oDataSource ds = new Db4oDataSource(project.PathToLexicalModelDB);
 			//IComponentAdapter dsAdaptor= _picoContext.RegisterComponentInstance(ds);
@@ -33,10 +34,9 @@ namespace WeSay.App
 			//_picoContext.AddOrderedComponentAdapter(dsAdaptor);
 
 			//Db4oBindingList<LexEntry> entries = new Db4oBindingList<LexEntry>(ds);
-
 			IBindingList entries = new PretendRecordList();
+			_parentPicoContext.RegisterComponentInstance(entries);
 
-			_picoContext.RegisterComponentInstance(entries);
 		}
 
 		public IList<ITask> Tasks
@@ -44,8 +44,10 @@ namespace WeSay.App
 			get
 			{
 				List<ITask> tools = new List<ITask>();
-				tools.Add(CreateTool( "WeSay.CommonTools.DashboardControl"));
-				tools.Add(CreateTool("WeSay.LexicalTools.EntryDetailControl"));
+				tools.Add(CreateTool("WeSay.CommonTools.DashboardControl,CommonTools"));
+				tools.Add(CreateTool("WeSay.LexicalTools.EntryDetailControl,LexicalTools"));
+				tools.Add(CreateTool("WeSay.CommonTools.PictureControl,CommonTools", "Collect Words","RealWord.gif"));
+				tools.Add(CreateTool("WeSay.CommonTools.PictureControl,CommonTools", "Semantic Domains", "SemDom.gif"));
 				return tools;
 			}
 		}
@@ -61,59 +63,106 @@ namespace WeSay.App
 		{
 			if (!this._disposed)
 			{
-				_picoContext.Dispose();
-				_picoContext = null;
+				_parentPicoContext.Dispose();
+				_parentPicoContext = null;
 				GC.SuppressFinalize(this);
 			}
 			_disposed = true;
 		}
 
-		private ITask CreateTool(string fullToolName)
+		private IMutablePicoContainer NewChildContainer(IList instances)
 		{
-		   ITask i = (ITask)_picoContext.GetComponentInstance(fullToolName);
+			IMutablePicoContainer child = new DefaultPicoContainer(_parentPicoContext);
+			if (instances != null)
+			{
+				foreach (object instance in instances)
+				{
+					child.RegisterComponentInstance(instance);
+				}
+			}
+			return child;
+		}
+
+
+		private ITask CreateTool(IMutablePicoContainer picoContext, string fullToolClass)
+		{
+			RegisterType(picoContext, fullToolClass);
+
+		   ITask i = (ITask)picoContext.GetComponentInstance(fullToolClass);
 		   System.Diagnostics.Debug.Assert(i != null);
 		   return i;
 		}
 
+		private static void RegisterType(IMutablePicoContainer picoContext, string fullToolClass)
+		{
+			picoContext.RegisterComponentImplementation(fullToolClass, Type.GetType(fullToolClass, true));
+		}
+
+
+		private ITask CreateTool(string fullToolClass, IList instances)
+		{
+			return CreateTool(NewChildContainer(instances), fullToolClass);
+		}
+
+		private ITask CreateTool(string fullToolClass)
+		{
+			return CreateTool(_parentPicoContext, fullToolClass);
+		}
+
+		private ITask CreateTool(string fullToolClass, string label)
+		{
+			IList instances = new List<string>();
+			instances.Add(label);
+			return CreateTool(fullToolClass, instances);
+		}
+
+		private ITask CreateTool(string fullToolName, string label, string pictureFilePath)
+		{
+			IList instances = new List<object>();
+			instances.Add(label);
+			instances.Add(new System.Drawing.Bitmap(pictureFilePath));
+
+			return CreateTool(fullToolName, instances);
+		}
 
 		private static IMutablePicoContainer CreateContainer()
 		{
 			IMutablePicoContainer pico = new DefaultPicoContainer();
 
-			List<String> assemblies = new List<string>();
-			assemblies.Add(@"CommonTools.dll");
-			assemblies.Add(@"LexicalTools.dll");
-			// assemblies.Add(@"LexicalModel.Tests.dll");
-			//     assemblies.Add(@"WeSayData.dll");
+			//List<String> assemblies = new List<string>();
+			//assemblies.Add(@"CommonTools.dll");
+			//assemblies.Add(@"LexicalTools.dll");
+			//// assemblies.Add(@"LexicalModel.Tests.dll");
+			////     assemblies.Add(@"WeSayData.dll");
 
-			foreach (Type t in FindTypesToRegister(assemblies))
-			{
-				if (t.IsAbstract || t.IsInterface)
-				{
-				}
-				else
-				{
-					pico.RegisterComponentImplementation(t.ToString(), t);
-				}
-			}
+			//foreach (Type t in FindTypesToRegister(assemblies))
+			//{
+			//    if (t.IsAbstract || t.IsInterface)
+			//    {
+			//    }
+			//    else
+			//    {
+			//        pico.RegisterComponentImplementation(t.ToString(), t);
+			//    }
+			//}
 
 			return pico;
 		}
 
 
-		protected static IList<Type> FindTypesToRegister(IList<string> assemblies)
-		{
-			IList<Type> registerTypes = new List<Type>();
-			foreach (string assembly in assemblies)
-			{
-				Type[] types = Assembly.LoadFrom(assembly).GetTypes();
-				foreach (Type type in types)
-				{
-					registerTypes.Add(type);
-				}
-			}
-			return registerTypes;
-		}
+		//protected static IList<Type> FindTypesToRegister(IList<string> assemblies)
+		//{
+		//    IList<Type> registerTypes = new List<Type>();
+		//    foreach (string assembly in assemblies)
+		//    {
+		//        Type[] types = Assembly.LoadFrom(assembly).GetTypes();
+		//        foreach (Type type in types)
+		//        {
+		//            registerTypes.Add(type);
+		//        }
+		//    }
+		//    return registerTypes;
+		//}
 
 	}
 }
