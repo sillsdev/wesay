@@ -32,7 +32,7 @@ namespace WeSay.LexicalTools
 
 		protected Control MakeBoundEntry(WeSay.Language.MultiText text, string writingSystemId)
 		{
-			TextBox entry = new TextBox();
+			WeSayTextBox entry = new WeSayTextBox();
 			entry.Text = text[writingSystemId];
 
 			WeSay.UI.Binding binding = new WeSay.UI.Binding(text, writingSystemId, entry);
@@ -41,14 +41,14 @@ namespace WeSay.LexicalTools
 
 		protected Control MakeGhostEntry(IBindingList list, string ghostPropertyName, string writingSystemId)
 		{
-			TextBox entry = new TextBox();
+			WeSayTextBox entry = new WeSayTextBox();
 			WeSay.UI.GhostBinding binding = new WeSay.UI.GhostBinding(list, ghostPropertyName, writingSystemId, entry);
 			binding.Triggered += new GhostBinding.GhostTriggered(OnGhostBindingTriggered);
 			return entry;
 		}
 
 		protected GhostBinding MakeGhostBinding(IBindingList list, string ghostPropertyName, string writingSystemId,
-			TextBox entry)
+			WeSayTextBox entry)
 		{
 			WeSay.UI.GhostBinding binding = new WeSay.UI.GhostBinding(list, ghostPropertyName, writingSystemId, entry);
 			binding.Triggered += new GhostBinding.GhostTriggered(OnGhostBindingTriggered);

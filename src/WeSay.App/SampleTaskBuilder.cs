@@ -25,12 +25,12 @@ namespace WeSay.App
 			if (project.PathToLexicalModelDB.IndexOf("PRETEND") > -1)
 			{
 			  IBindingList pEntries = new PretendRecordList();
-			  _picoContext.RegisterComponentInstance(pEntries);
+			  _parentPicoContext.RegisterComponentInstance(pEntries);
 			}
 			else
 			{
 				Db4oDataSource ds = new Db4oDataSource(project.PathToLexicalModelDB);
-				IComponentAdapter dsAdaptor = _picoContext.RegisterComponentInstance(ds);
+				IComponentAdapter dsAdaptor = _parentPicoContext.RegisterComponentInstance(ds);
 
 				///* Because the data source is never actually touched by the normal pico container code,
 				// * it never gets  added to this ordered list.  The ordered list is used for the lifecycle
@@ -38,12 +38,11 @@ namespace WeSay.App
 				// * getting disposed of first, whereas we need to it to be disposed of last.
 				// * Adding it explicity to the ordered list gives proper disposal order.
 				// */
-				_picoContext.AddOrderedComponentAdapter(dsAdaptor);
+				_parentPicoContext.AddOrderedComponentAdapter(dsAdaptor);
 
 				Db4oBindingList<LexEntry> entries = new Db4oBindingList<LexEntry>(ds);
-			  _picoContext.RegisterComponentInstance(entries);
-			}
-			_parentPicoContext.RegisterComponentInstance(entries);
+				_parentPicoContext.RegisterComponentInstance(entries);
+		   }
 
 		}
 

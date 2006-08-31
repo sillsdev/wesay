@@ -52,6 +52,12 @@
 	<Compile Include="ITool.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />
 	<Compile Include="TableBuilder.cs" />
+	<Compile Include="WeSayTextBox.cs">
+	  <SubType>Component</SubType>
+	</Compile>
+	<Compile Include="WeSayTextBox.Designer.cs">
+	  <DependentUpon>WeSayTextBox.cs</DependentUpon>
+	</Compile>
   </ItemGroup>
   <ItemGroup>
 	<ProjectReference Include="..\Language\Language.csproj">

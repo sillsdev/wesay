@@ -51,7 +51,7 @@ namespace WeSay.LexicalTools
 
 		public int AddGhost(IBindingList list)
 		{
-			TextBox entry = new TextBox();
+			WeSayTextBox entry = new WeSayTextBox();
 			GhostBinding g=   MakeGhostBinding(list, "Gloss", "en", entry);
 			g.ReferenceControl = _detailList.AddWidgetRow("Meaning", false, entry);
 			return 1;

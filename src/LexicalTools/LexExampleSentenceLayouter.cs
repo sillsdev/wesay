@@ -30,7 +30,7 @@ namespace WeSay.LexicalTools
 
 		public int AddGhost(System.ComponentModel.IBindingList list, int insertAtRow)
 		{
-			TextBox entry = new TextBox();
+			WeSayTextBox entry = new WeSayTextBox();
 			GhostBinding g = MakeGhostBinding(list, "Sentence", "th", entry);
 			g.ReferenceControl = _detailList.AddWidgetRow("Example", false, entry, insertAtRow);
 			return 1;
