@@ -15,24 +15,36 @@ namespace WeSay.App
 			{
 				FilePath = args[0];
 			}
-
+#if GTK
+			GLib.Thread.Init();
+			Gdk.Threads.Init();
+			Application.Init();
+#endif
 			BasilProject project = new BasilProject(FilePath);
 
 			WeSay.UI.ITaskBuilder builder = new SampleTaskBuilder(project);
-
-
+#if GTK
+			Gdk.Threads.Enter();
+#endif
 			try
 			{
+
+#if GTK
+				WeSay.UI.ISkin shell = new TabbedSkin(project, builder);
+				Application.Run();
+#else
 				 Application.EnableVisualStyles();
 				Application.SetCompatibleTextRenderingDefault(false);
-			  // WeSay.UI.ISkin shell = new TabbedSkin(project, builder);
 				Form f =  new TabbedForm(project, builder);
 				Application.Run(f);
-
+#endif
 
 			}
 			finally
 			{
+#if GTK
+				Gdk.Threads.Leave();
+#endif
 				//TODO(JH): having a builder than needs to be kept around so it can be disposed of is all wrong.
 				//either I want to change it to something like TaskList rather than ITaskBuilder, or
 				//it needs to create some disposable object other than a IList<>.
@@ -42,7 +54,5 @@ namespace WeSay.App
 					((IDisposable)builder).Dispose();
 			}
 		}
-
-
 	}
 }
