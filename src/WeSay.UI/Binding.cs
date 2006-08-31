@@ -13,10 +13,10 @@ namespace WeSay.UI
 	{
 		private string _writingSystemId;
 		private INotifyPropertyChanged _dataTarget;
-		private TextBox _textBoxTarget;
+		private WeSayTextBox _textBoxTarget;
 		private bool _inMidstOfChange;
 
-		public Binding(INotifyPropertyChanged dataTarget, string writingSystemId, TextBox widgetTarget)
+		public Binding(INotifyPropertyChanged dataTarget, string writingSystemId, WeSayTextBox widgetTarget)
 		{
 			_inMidstOfChange = false;
 		   _dataTarget= dataTarget;
@@ -130,7 +130,7 @@ namespace WeSay.UI
 		{
 			get { return _writingSystemId; }
 		}
-		public TextBox TextBoxTarget
+		public WeSayTextBox TextBoxTarget
 		{
 			get { return _textBoxTarget; }
 		}

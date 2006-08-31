@@ -13,14 +13,14 @@ namespace WeSay.UI.Tests
 		[SetUp]
 		public void Setup()
 		{
-			Gtk.Application.Init();
+		   // Gtk.Application.Init();
 		}
 
 		[Test]
 		public void TargetToWidget()
 		{
 			MultiText text = new MultiText();
-			TextBox widget = new TextBox();
+			WeSayTextBox widget = new WeSayTextBox();
 			Binding binding = new Binding(text, "en", widget);
 
 			text["en"] = "hello";
@@ -33,7 +33,7 @@ namespace WeSay.UI.Tests
 		public void WidgetToTarget()
 		{
 			MultiText text = new MultiText();
-			TextBox widget = new TextBox();
+			WeSayTextBox widget = new WeSayTextBox();
 
 			Binding binding = new Binding(text, "en", widget);
 

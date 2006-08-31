@@ -17,6 +17,9 @@ namespace WeSay.UI
 		/// </summary>
 		protected int _rowCount = 0;
 
+		private int _indexOfLabel = 1;
+		private int _indexOfTextBox = 2;
+
 		public DetailList()
 		{
 			InitializeComponent();
@@ -25,6 +28,7 @@ namespace WeSay.UI
 			{
 				this.Margin = new Padding(5, 5, 5, 5); //not implemented inn mono 1.16
 			}
+			_fadeInTimer.Interval = 500;
 		}
 
 		public void Clear()
@@ -51,36 +55,60 @@ namespace WeSay.UI
 		}
 
 
-		public Control AddWidgetRow(string fieldLabel, bool isHeader, Control control, int insertAtRow)
+		public Control AddWidgetRow(string fieldLabel, bool isHeader, Control editWidget, int insertAtRow)
 		{
-			control.Size = new Size(200, 50);
 			if (insertAtRow < 0)
 			{
 				  insertAtRow = _rowCount;
 			}
 
+			Panel panel = AddRowPanel(editWidget, fieldLabel, isHeader);
+
+			int i = RowToControlInsertionIndex(insertAtRow);
+			Debug.Assert(i >= 0, "A negative insertion value will fail under Mono.");
+
+			base.Controls.SetChildIndex(panel, i);
+
+			++_rowCount;
+			return panel;
+		}
+
+
+
+		private Panel AddRowPanel(Control editWidget, string fieldLabel, bool isHeader)
+		{
 			Panel panel = new Panel();
-			panel.Size = new Size(25, 25);
 			panel.Dock = DockStyle.Top;
+			panel.Size = new Size(25, 27);
+
+
+			int top = AddHorizontalRule(panel, isHeader, _rowCount == 0);
+			panel.Size = new Size(25, 28+top);
 
 			Label label = new Label();
-			if (isHeader)
-			{
-				label.Font = new Font(label.Font, FontStyle.Bold);
-			}
-
-
-
 			label.Text = fieldLabel;
 			label.Size = new Size(60, 50);
-			label.Dock = DockStyle.Left;
+		   // label.Dock = DockStyle.Left;
+			label.Top = 9+top;
 			panel.Controls.Add(label);
 
-			control.Dock = DockStyle.Right;
+			editWidget.Top = 6+top;
+			editWidget.Size = new Size(200, 50);
+			editWidget.Width = 5;//THIS IS IGNORED, something to do with the anchor.right. AAAAAAAAAHHHH!!!!!!// this.Width - (label.Width + 200);
+			FixUpForMono(editWidget);
+			editWidget.Left = label.Width + 10;
+			//editWidget.Dock = DockStyle.Right ;
+		   editWidget.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+			panel.Controls.Add(editWidget);
 
-			control.Width = this.Width - (label.Width + 30);
+			base.Controls.Add(panel);
 
-			// in mono 1.16,  controls with was something like zero,
+			return panel;
+		}
+
+		private static void FixUpForMono(Control control)
+		{
+// in mono 1.16,  controls with was something like zero,
 			//such that the the child width was something like -3.
 			//we tried various things to work around this and couldn't get anything smart to work.
 			if (Environment.OSVersion.Platform == PlatformID.Unix)
@@ -95,22 +123,40 @@ namespace WeSay.UI
 
 				//didn't help    control.Dock = DockStyle.Fill;
 			}
+		}
 
-			control.Left = label.Width + 10;
-			control.Anchor = AnchorStyles.Left | AnchorStyles.Right;
-			panel.Controls.Add(control);
+		private int AddHorizontalRule(Panel parentPanel, bool isHeader, bool isFirstInList)
+		{
 
-			base.Controls.Add(panel);
-			//reverse order (that's how docking works)
+			Panel line = new Panel();
+			line.BorderStyle = BorderStyle.None;//let it provide some padding
+			line.ForeColor = System.Drawing.SystemColors.Control;//make it invisible
+			line.Left = 2;
+			line.Width = parentPanel.Width - 4;
+			if (isHeader && !isFirstInList)
+			{
+				line.Top = 5; // <---- defines the padding
+			   // label.Font = new Font(label.Font, FontStyle.Bold);
+				line.BackColor = System.Drawing.Color.LightGray;
+				line.Height = 1;
+			 //   parentPanel.Height += 5;
+			}
+			else
+			{   //it's now a placeholder to keep indexing simple
+				line.Top = 0;
+				line.Height = 0;
+			}
+			line.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+			//line.Dock = DockStyle.Top;
+			parentPanel.Controls.Add(line);
 
-			//HACK: why is this needed?  Need to do the math when I am more awake
-			int i = (_rowCount - insertAtRow);// -1;
-			Debug.Assert(i >= 0, "A negative insertion value will fail under Mono.");
+			//Panel padding = new Panel();
+			//padding.BackColor = System.Drawing.Color.Red;
+			//padding.Height = 10;
+			//padding.Top = 0;
+			//parentPanel.Controls.Add(padding);
 
-			base.Controls.SetChildIndex(panel, i);
-
-			++_rowCount;
-			return panel;
+			return line.Bottom + 4;
 		}
 
 
@@ -119,34 +165,40 @@ namespace WeSay.UI
 			return (_rowCount - base.Controls.GetChildIndex(control)) - 1;
 		}
 
+		private int RowToControlInsertionIndex(int row)
+		{
+			//reverse order (that's how docking works)
+			return ((_rowCount) - row);
+		}
+
+		private int RowToControlIndex(int row)
+		{
+			//reverse order (that's how docking works)
+			return RowToControlInsertionIndex(row) -1 ;
+		}
+
 		private void _fadeInTimer_Tick(object sender, EventArgs e)
 		{
 			foreach (Control c in base.Controls)
 			{
 				if (c.Controls.Count < 2)
 					continue;
-				TextBox tb = c.Controls[1] as TextBox;
+				WeSayTextBox tb = c.Controls[_indexOfTextBox] as WeSayTextBox;
 				if (tb == null)
 					continue;
 
-				int interval = 1;
-				if (tb.BackColor.R < 255)
-				{
-					interval = Math.Min(interval, 255 - tb.BackColor.R);
-
-					//tb.BackColor = System.Drawing.Color.FromArgb(tb.BackColor.A+1,tb.BackColor);
-					tb.BackColor = System.Drawing.Color.FromArgb(tb.BackColor.R + interval,
-					 tb.BackColor.G + interval,
-					 tb.BackColor.B + interval);
-
-				}
-				else
-				{
-					tb.BorderStyle = BorderStyle.FixedSingle;
-				 Label l = c.Controls[0] as Label;
-				 l.Visible = true;
-			   }
+				tb.FadeInSomeMore((Label) c.Controls[_indexOfLabel]);
 			}
+		}
+
+
+
+		public void MoveInsertionPoint(int row)
+		{
+			Panel p = (Panel)base.Controls[RowToControlIndex(row)];
+			WeSayTextBox tb = p.Controls[_indexOfTextBox] as WeSayTextBox;
+			tb.Focus();
+			tb.Select(1000, 0);//go to end
 		}
 	}
 }

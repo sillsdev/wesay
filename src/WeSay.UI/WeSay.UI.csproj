@@ -51,7 +51,6 @@
 	<Compile Include="ITaskBuilder.cs" />
 	<Compile Include="ITool.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />
-	<Compile Include="TableBuilder.cs" />
 	<Compile Include="WeSayTextBox.cs">
 	  <SubType>Component</SubType>
 	</Compile>

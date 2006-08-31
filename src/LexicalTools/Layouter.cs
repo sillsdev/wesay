@@ -30,6 +30,8 @@ namespace WeSay.LexicalTools
 		/// <returns></returns>
 		public abstract int AddWidgets(object dataObject);
 
+		internal abstract int AddWidgets(object dataObject, int row);
+
 		protected Control MakeBoundEntry(WeSay.Language.MultiText text, string writingSystemId)
 		{
 			WeSayTextBox entry = new WeSayTextBox();
@@ -57,7 +59,15 @@ namespace WeSay.LexicalTools
 
 		protected virtual void OnGhostBindingTriggered(GhostBinding sender, object newDataTarget, System.EventArgs args)
 		{
-
+			AddWidgetsAfterGhostTrigger(newDataTarget, sender.ReferenceControl);
 		}
+
+		protected void AddWidgetsAfterGhostTrigger(object dataObject, Control refControl)
+		{
+			int row    = _detailList.GetRowOfControl(refControl);
+			AddWidgets(dataObject, row);
+			_detailList.MoveInsertionPoint(row);
+		}
+
 	}
 }

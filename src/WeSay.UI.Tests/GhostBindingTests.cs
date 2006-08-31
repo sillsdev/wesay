@@ -10,8 +10,8 @@ namespace WeSay.UI.Tests
 	public class GhostBindingTests
 	{
 		private Papa _papa = new Papa();
-		private TextBox _ghostFirstNameWidget;
-		private TextBox _papaNameWidget;
+		private WeSayTextBox _ghostFirstNameWidget;
+		private WeSayTextBox _papaNameWidget;
 	   private GhostBinding _binding;
 		protected bool _didNotify;
 
@@ -66,9 +66,9 @@ namespace WeSay.UI.Tests
 		[SetUp]
 		public void Setup()
 		{
-			_papaNameWidget = new TextBox();
+			_papaNameWidget = new WeSayTextBox();
 			_papaNameWidget.Text  =  "John";
-			_ghostFirstNameWidget = new TextBox();
+			_ghostFirstNameWidget = new WeSayTextBox();
 			_binding = new GhostBinding(_papa.Children, "First", "en", _ghostFirstNameWidget);
 			_didNotify = false;
 			//Window w = new Window("test");
@@ -79,8 +79,8 @@ namespace WeSay.UI.Tests
 			//box.ShowAll();
 			//w.ShowAll();
 			_papaNameWidget.Show();
-			while (Gtk.Application.EventsPending())
-			{ Gtk.Application.RunIteration(); }
+//            while (Gtk.Application.EventsPending())
+//            { Gtk.Application.RunIteration(); }
 
 			//Application.Run();
 			_papaNameWidget.Focus();
@@ -91,9 +91,8 @@ namespace WeSay.UI.Tests
 		[Test]
 		public void EmptyListGrows()
 		{
-			_ghostFirstNameWidget.Text = "Samuel";
-			Assert.AreEqual(0, _papa.Children.Count);
-			_papaNameWidget.Focus();
+			 Assert.AreEqual(0, _papa.Children.Count);
+		   _ghostFirstNameWidget.Text = "Samuel";
 			Assert.AreEqual(1, _papa.Children.Count);
 		}
 
@@ -101,7 +100,6 @@ namespace WeSay.UI.Tests
 		public void NewItemGetsValue()
 		{
 			_ghostFirstNameWidget.Text = "Samuel";
-			_papaNameWidget.Focus();
 			Assert.AreEqual("Samuel", _papa.Children[0].First["en"]);
 		}
 		 [Test]
@@ -109,7 +107,6 @@ namespace WeSay.UI.Tests
 		{
 			 _binding.Triggered += new GhostBinding.GhostTriggered(_binding_Triggered);
 			_ghostFirstNameWidget.Text = "Samuel";
-			_papaNameWidget.Focus();
 			Assert.IsTrue(_didNotify);
 		}
 

@@ -18,7 +18,7 @@ namespace WeSay.LexicalTools
 			return AddWidgets(dataObject, -1);
 		}
 
-		public int AddWidgets(object dataObject, int insertAtRow)
+		internal override int AddWidgets(object dataObject, int insertAtRow)
 		{
 			 int rowCount = 2;
 			 LexExampleSentence example = (LexExampleSentence)dataObject;
@@ -33,19 +33,8 @@ namespace WeSay.LexicalTools
 			WeSayTextBox entry = new WeSayTextBox();
 			GhostBinding g = MakeGhostBinding(list, "Sentence", "th", entry);
 			g.ReferenceControl = _detailList.AddWidgetRow("Example", false, entry, insertAtRow);
+		   // entry.PrepareForFadeIn();
 			return 1;
 		}
-
-		protected override void OnGhostBindingTriggered(GhostBinding sender, object newDataTarget, System.EventArgs args)
-		{
-			AddWidgets(newDataTarget, sender.ReferenceControl);
-		}
-
-		private void AddWidgets(object dataObject, Control refControl)
-		{
-			int row = _detailList.GetRowOfControl(refControl);
-			AddWidgets(dataObject, row);
-		}
-
 	}
 }

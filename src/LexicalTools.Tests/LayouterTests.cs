@@ -19,7 +19,7 @@ namespace WeSay.LexicalTools.Tests
 		public void CountEntryLayoutRows()
 		{
 			LexEntry entry = new LexEntry();
-			entry.LexicalForm["en"] = "12";
+			entry.LexicalForm["en"] = "hello";
 			AddSense(entry);
 			AddSense(entry);
 
@@ -27,7 +27,7 @@ namespace WeSay.LexicalTools.Tests
 			LexEntryLayouter layout = new LexEntryLayouter(builder);
 			int rowcount = layout.AddWidgets(entry);
 
-			Assert.AreEqual(11, rowcount);
+			Assert.AreEqual(14, rowcount);
 		}
 
 		private static void AddSense(LexEntry entry)

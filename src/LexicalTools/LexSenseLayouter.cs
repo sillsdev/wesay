@@ -23,7 +23,7 @@ namespace WeSay.LexicalTools
 			return AddWidgets(dataObject, -1);
 		}
 
-		private int AddWidgets(object dataObject, int insertAtRow)
+		internal override int AddWidgets(object dataObject, int insertAtRow)
 		{
 			 int rowCount = 1;
 		   LexSense sense = (LexSense)dataObject;
@@ -43,24 +43,14 @@ namespace WeSay.LexicalTools
 			return rowCount;
 		}
 
-		private void AddWidgets(object dataObject, Control refControl)
-		{
-			int row    = _detailList.GetRowOfControl(refControl);
-			AddWidgets(dataObject, row);
-		}
-
 		public int AddGhost(IBindingList list)
 		{
 			WeSayTextBox entry = new WeSayTextBox();
 			GhostBinding g=   MakeGhostBinding(list, "Gloss", "en", entry);
-			g.ReferenceControl = _detailList.AddWidgetRow("Meaning", false, entry);
+			g.ReferenceControl = _detailList.AddWidgetRow("Meaning", true, entry);
 			return 1;
 		}
 
 
-		protected override void OnGhostBindingTriggered(GhostBinding sender, object newDataTarget, System.EventArgs args)
-		{
-		   AddWidgets(newDataTarget, sender.ReferenceControl);
-		}
 	}
 }

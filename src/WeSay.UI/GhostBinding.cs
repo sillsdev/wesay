@@ -16,7 +16,7 @@ namespace WeSay.UI
 		private string _writingSystemId;
 		private string _propertyName;
 		private IBindingList _listTarget;
-		private TextBox _textBoxTarget;
+		private WeSayTextBox _textBoxTarget;
 		private Control _referenceControl;
 
 		public delegate void GhostTriggered(GhostBinding sender, object newGuy, EventArgs args);
@@ -27,7 +27,7 @@ namespace WeSay.UI
 		/// </summary>
 		public event GhostTriggered Triggered;
 
-		public GhostBinding(IBindingList targetList, string propertyName,  string writingSystemId, TextBox textBoxTarget)
+		public GhostBinding(IBindingList targetList, string propertyName,  string writingSystemId, WeSayTextBox textBoxTarget)
 		{
 		   _listTarget= targetList;
 		   _listTarget.ListChanged +=new ListChangedEventHandler(_listTarget_ListChanged);
@@ -35,11 +35,27 @@ namespace WeSay.UI
 		   _writingSystemId = writingSystemId;
 
 		   _textBoxTarget = textBoxTarget;
-		   _textBoxTarget.Leave += new EventHandler(OnTextBoxTarget_Leave);
+		   _textBoxTarget.TextChanged += new EventHandler(_textBoxTarget_TextChanged);
+		  // _textBoxTarget.Leave += new EventHandler(OnTextBoxTarget_Leave);
 		   _textBoxTarget.Disposed+=new EventHandler(_textBoxTarget_Disposed); //+= new EventHandler(_textBoxTarget_HandleDestroyed);
 		   _textBoxTarget.VisibleChanged += new EventHandler(_textBoxTarget_VisibleChanged);
 		}
 
+		void _textBoxTarget_TextChanged(object sender, EventArgs e)
+		{
+			if (_textBoxTarget.Text.Trim().Length > 0)
+			{
+				TimeForRealObject();
+			}
+		}
+
+		//void OnTextBoxTarget_Leave(object sender, EventArgs e)
+		//{
+		//    if (_textBoxTarget.Text.Trim().Length > 0)
+		//    {
+		//        TimeForRealObject();
+		//    }
+		//}
 
 		/// <summary>
 		/// Change of visibility is not a very satisfying to time to trigger this,
@@ -47,7 +63,7 @@ namespace WeSay.UI
 		/// </summary>
 		 void _textBoxTarget_VisibleChanged(object sender, EventArgs e)
 		{
-			if (((TextBox)sender).Visible == false)
+			//once I wrapped textbox in wesaytextbox, this was never false anymore! if (((WeSayTextBox)sender).Visible == false)
 			{
 				TearDown();
 			}
@@ -62,7 +78,8 @@ namespace WeSay.UI
 			_referenceControl = null;
 			_listTarget.ListChanged -=new ListChangedEventHandler(_listTarget_ListChanged);
 			_listTarget = null;
-			_textBoxTarget.Leave -= new EventHandler(OnTextBoxTarget_Leave);
+		   // _textBoxTarget.Leave -= new EventHandler(OnTextBoxTarget_Leave);
+			_textBoxTarget.TextChanged -= new EventHandler(_textBoxTarget_TextChanged);
 			_textBoxTarget.Disposed -= new EventHandler(_textBoxTarget_Disposed); //+= new EventHandler(_textBoxTarget_HandleDestroyed);
 			_textBoxTarget.VisibleChanged -= new EventHandler(_textBoxTarget_VisibleChanged);
 			_textBoxTarget = null;
@@ -88,13 +105,7 @@ namespace WeSay.UI
 			set { _referenceControl = value; }
 		}
 
-		void OnTextBoxTarget_Leave(object sender, EventArgs e)
-		{
-			if(_textBoxTarget.Text.Trim().Length>0)
-			{
-				TimeForRealObject();
-			}
-		}
+
 
 
 		/// <summary>
@@ -121,10 +132,9 @@ namespace WeSay.UI
 			IBindingList list = _listTarget as IBindingList;
 			//in addition to adding a list item, this will fire events on the object that owns the list
 			list.AddNew();
-			_textBoxTarget.Text = ""; //ready for the next one
-			_textBoxTarget.BackColor = System.Drawing.SystemColors.Control;
-			_textBoxTarget.BorderStyle  = BorderStyle.None;
-		}
+			_textBoxTarget.Text = "";
+			_textBoxTarget.PrepareForFadeIn();
+		 }
 
 		private void FillInMultiTextOfNewObject(object o, string propertyName, string writingSystemId, string value)
 		{
