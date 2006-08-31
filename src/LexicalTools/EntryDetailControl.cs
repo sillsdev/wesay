@@ -70,7 +70,7 @@ namespace WeSay.LexicalTools
 		{
 			this.SuspendLayout();
 			this._detailPanel.SuspendLayout();
-			_detailPanel.Controls.Clear();
+			_detailPanel.Clear();
 			Object record = CurrentRecord ;
 			if (record == null)
 			{

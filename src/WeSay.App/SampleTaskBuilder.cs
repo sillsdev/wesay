@@ -22,19 +22,27 @@ namespace WeSay.App
 			_parentPicoContext = CreateContainer();
 			_parentPicoContext.RegisterComponentInstance(project);
 
-			//Db4oDataSource ds = new Db4oDataSource(project.PathToLexicalModelDB);
-			//IComponentAdapter dsAdaptor= _picoContext.RegisterComponentInstance(ds);
+			if (project.PathToLexicalModelDB.IndexOf("PRETEND") > -1)
+			{
+			  IBindingList pEntries = new PretendRecordList();
+			  _picoContext.RegisterComponentInstance(pEntries);
+			}
+			else
+			{
+				Db4oDataSource ds = new Db4oDataSource(project.PathToLexicalModelDB);
+				IComponentAdapter dsAdaptor = _picoContext.RegisterComponentInstance(ds);
 
-			///* Because the data source is never actually touched by the normal pico container code,
-			// * it never gets  added to this ordered list.  The ordered list is used for the lifecycle
-			// * functions, such as dispose.  Without adding it explicitly, this will end up
-			// * getting disposed of first, whereas we need to it to be disposed of last.
-			// * Adding it explicity to the ordered list gives proper disposal order.
-			// */
-			//_picoContext.AddOrderedComponentAdapter(dsAdaptor);
+				///* Because the data source is never actually touched by the normal pico container code,
+				// * it never gets  added to this ordered list.  The ordered list is used for the lifecycle
+				// * functions, such as dispose.  Without adding it explicitly, this will end up
+				// * getting disposed of first, whereas we need to it to be disposed of last.
+				// * Adding it explicity to the ordered list gives proper disposal order.
+				// */
+				_picoContext.AddOrderedComponentAdapter(dsAdaptor);
 
-			//Db4oBindingList<LexEntry> entries = new Db4oBindingList<LexEntry>(ds);
-			IBindingList entries = new PretendRecordList();
+				Db4oBindingList<LexEntry> entries = new Db4oBindingList<LexEntry>(ds);
+			  _picoContext.RegisterComponentInstance(entries);
+			}
 			_parentPicoContext.RegisterComponentInstance(entries);
 
 		}

@@ -28,7 +28,14 @@ namespace WeSay.UI
 		/// </summary>
 		private void InitializeComponent()
 		{
+			this.components = new System.ComponentModel.Container();
+			this._fadeInTimer = new System.Windows.Forms.Timer(this.components);
 			this.SuspendLayout();
+			//
+			// _fadeInTimer
+			//
+			this._fadeInTimer.Enabled = true;
+			this._fadeInTimer.Tick += new System.EventHandler(this._fadeInTimer_Tick);
 			//
 			// DetailList
 			//
@@ -42,5 +49,7 @@ namespace WeSay.UI
 		}
 
 		#endregion
+
+		private System.Windows.Forms.Timer _fadeInTimer;
 	}
 }

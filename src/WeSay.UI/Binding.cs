@@ -1,18 +1,20 @@
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Text;
 using System.Windows.Forms;
 using WeSay.Language;
 
 namespace WeSay.UI
 {
+	/// <summary>
+	/// This simple binding class connects a text box with a MultiText.
+	/// Changes in either one are reflected in the other.
+	/// </summary>
 	public class Binding
 	{
-		protected string _writingSystemId;
-		protected INotifyPropertyChanged _dataTarget;
+		private string _writingSystemId;
+		private INotifyPropertyChanged _dataTarget;
 		private TextBox _textBoxTarget;
-		protected bool _inMidstOfChange;
+		private bool _inMidstOfChange;
 
 		public Binding(INotifyPropertyChanged dataTarget, string writingSystemId, TextBox widgetTarget)
 		{
@@ -26,11 +28,18 @@ namespace WeSay.UI
 		   _textBoxTarget.VisibleChanged += new EventHandler(_textBoxTarget_VisibleChanged);
 	   }
 
+	   /// <summary>
+	   /// Change of visibility is not a very satisfying to time to trigger this,
+	   /// but it does the best I've found.
+	   /// </summary>
 		void _textBoxTarget_VisibleChanged(object sender, EventArgs e)
 		{
 			TearDown();
 		}
 
+		/// <summary>
+		/// We get this when closing the app, rather than the visibility changed event.
+		/// </summary>
 		void _textBoxTarget_Disposed(object sender, EventArgs e)
 		{
 			TearDown();
@@ -41,6 +50,10 @@ namespace WeSay.UI
 		   SetTargetValue(_textBoxTarget.Text);
 		}
 
+		/// <summary>
+		/// Drop our connections to everything so garbage collection can happen and we aren't
+		/// a zombie responding to data change events.
+		/// </summary>
 		private void TearDown()
 		{
 			_dataTarget.PropertyChanged -= new PropertyChangedEventHandler(OnDataPropertyChanged);
@@ -51,6 +64,9 @@ namespace WeSay.UI
 			_textBoxTarget = null;
 		}
 
+		/// <summary>
+		/// Respond to a change in the data object that we are attached to.
+		/// </summary>
 		protected virtual void OnDataPropertyChanged(object sender, PropertyChangedEventArgs e)
 		{
 			if (_inMidstOfChange ||
@@ -70,7 +86,7 @@ namespace WeSay.UI
 
 		protected string GetTargetValue()
 		{
-			WeSay.Language.MultiText text = _dataTarget as WeSay.Language.MultiText;
+			MultiText text = _dataTarget as MultiText;
 			if (text == null)
 				throw new ArgumentException("Binding can't handle that type of target.");
 			return text[_writingSystemId];
@@ -87,15 +103,15 @@ namespace WeSay.UI
 
 				if (_dataTarget as MultiText != null)
 				{
-					MultiText text = _dataTarget as WeSay.Language.MultiText;
+					MultiText text = _dataTarget as MultiText;
 					text[_writingSystemId] = s;
 				}
-				else if (_dataTarget as IBindingList != null)
-				{
-					IBindingList list = _dataTarget as IBindingList;
-					//in addition to add a menu item, this will fire events on the object that owns the list
-					list.AddNew();
-				}
+				//else if (_dataTarget as IBindingList != null)
+				//{
+				//    IBindingList list = _dataTarget as IBindingList;
+				//    //in addition to add a menu item, this will fire events on the object that owns the list
+				//    list.AddNew();
+				//}
 				else throw new ArgumentException("Binding doesn't understand that type of target.");
 
 			}

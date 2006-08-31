@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -12,7 +13,7 @@ namespace WeSay.UI
 	public partial class DetailList : UserControl
 	{
 		/// <summary>
-		/// we have this instead of just using this.Count() because that is not implemented in Mono 1.16
+		/// we have this instead of just using this.Count() because  Count not implemented in Mono 1.16
 		/// </summary>
 		protected int _rowCount = 0;
 
@@ -26,14 +27,21 @@ namespace WeSay.UI
 			}
 		}
 
-		/// <summary>
+		public void Clear()
+		{
+			_rowCount = 0;
+			base.Controls.Clear();
+		}
+
+	   /// <summary>
 		/// I want to hide this from clients who would try to touch my controls directly
 		/// </summary>
-		protected new ControlCollection Controls
+		///doesn't work to hide       protected new ControlCollection Controls
+		public new ControlCollection Controls
 		{
 			get
 			{
-				return base.Controls;
+				throw new ApplicationException("Please don't access my Controls property externally.");
 			}
 		}
 
@@ -60,6 +68,9 @@ namespace WeSay.UI
 			{
 				label.Font = new Font(label.Font, FontStyle.Bold);
 			}
+
+
+
 			label.Text = fieldLabel;
 			label.Size = new Size(60, 50);
 			label.Dock = DockStyle.Left;
@@ -89,13 +100,14 @@ namespace WeSay.UI
 			control.Anchor = AnchorStyles.Left | AnchorStyles.Right;
 			panel.Controls.Add(control);
 
-			this.Controls.Add(panel);
+			base.Controls.Add(panel);
 			//reverse order (that's how docking works)
 
 			//HACK: why is this needed?  Need to do the math when I am more awake
-			int i = (_rowCount - insertAtRow) - 1;
-			i = Math.Max(i, 0);
-			this.Controls.SetChildIndex(panel, i);
+			int i = (_rowCount - insertAtRow);// -1;
+			Debug.Assert(i >= 0, "A negative insertion value will fail under Mono.");
+
+			base.Controls.SetChildIndex(panel, i);
 
 			++_rowCount;
 			return panel;
@@ -104,7 +116,37 @@ namespace WeSay.UI
 
 		public int GetRowOfControl(Control control)
 		{
-			return (_rowCount - this.Controls.GetChildIndex(control)) - 1;
+			return (_rowCount - base.Controls.GetChildIndex(control)) - 1;
+		}
+
+		private void _fadeInTimer_Tick(object sender, EventArgs e)
+		{
+			foreach (Control c in base.Controls)
+			{
+				if (c.Controls.Count < 2)
+					continue;
+				TextBox tb = c.Controls[1] as TextBox;
+				if (tb == null)
+					continue;
+
+				int interval = 1;
+				if (tb.BackColor.R < 255)
+				{
+					interval = Math.Min(interval, 255 - tb.BackColor.R);
+
+					//tb.BackColor = System.Drawing.Color.FromArgb(tb.BackColor.A+1,tb.BackColor);
+					tb.BackColor = System.Drawing.Color.FromArgb(tb.BackColor.R + interval,
+					 tb.BackColor.G + interval,
+					 tb.BackColor.B + interval);
+
+				}
+				else
+				{
+					tb.BorderStyle = BorderStyle.FixedSingle;
+				 Label l = c.Controls[0] as Label;
+				 l.Visible = true;
+			   }
+			}
 		}
 	}
 }

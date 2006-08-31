@@ -1,9 +1,11 @@
-using Gtk;
 using WeSay.LexicalModel;
 using WeSay.UI;
 
 namespace WeSay.LexicalTools
 {
+	/// <summary>
+	/// <see cref="Layouter"/>
+	/// </summary>
 	public class LexEntryLayouter : Layouter
 	{
 		public LexEntryLayouter(DetailList builder)
@@ -16,8 +18,8 @@ namespace WeSay.LexicalTools
 			int rowCount = 1;
 			LexEntry entry = (LexEntry)dataObject;
 
-			_builder.AddWidgetRow("Word", true, MakeBoundEntry(entry.LexicalForm, "th"));
-			LexSenseLayouter layouter = new LexSenseLayouter(_builder);
+			_detailList.AddWidgetRow("Word", true, MakeBoundEntry(entry.LexicalForm, "th"));
+			LexSenseLayouter layouter = new LexSenseLayouter(_detailList);
 			foreach (LexSense sense in entry.Senses)
 			{
 				rowCount+= layouter.AddWidgets(sense);

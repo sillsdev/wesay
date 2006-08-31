@@ -4,14 +4,30 @@ using WeSay.UI;
 
 namespace WeSay.LexicalTools
 {
+	/// <summary>
+	/// A Layouter is responsible for filling a detailed list with the contents
+	/// of a single data object (e.g. LexSense, LexExample), etc.
+	/// There are will normally be a single subclass per class of data,
+	/// and each of these layout erstwhile call a different layouter for each
+	/// child object (e.g. LexEntryLayouter would employ a SenseLayouter to display senses).
+	/// </summary>
 	public abstract class Layouter
 	{
-		protected DetailList _builder;
+		/// <summary>
+		/// The DetailList we are filling.
+		/// </summary>
+		protected DetailList _detailList;
 
 		public Layouter(DetailList builder)
 		{
-			_builder = builder;
+			_detailList = builder;
 		}
+
+		/// <summary>
+		/// actually add the widget's that are needed to the detailed list
+		/// </summary>
+		/// <param name="dataObject"></param>
+		/// <returns></returns>
 		public abstract int AddWidgets(object dataObject);
 
 		protected Control MakeBoundEntry(WeSay.Language.MultiText text, string writingSystemId)
@@ -38,7 +54,8 @@ namespace WeSay.LexicalTools
 			binding.Triggered += new GhostBinding.GhostTriggered(OnGhostBindingTriggered);
 			return binding;
 		}
-		protected virtual void OnGhostBindingTriggered(GhostBinding sender, object newGuy, System.EventArgs args)
+
+		protected virtual void OnGhostBindingTriggered(GhostBinding sender, object newDataTarget, System.EventArgs args)
 		{
 
 		}
