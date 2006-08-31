@@ -84,10 +84,6 @@
 	</ProjectReference>
   </ItemGroup>
   <ItemGroup>
-	<EmbeddedResource Include="LexFieldControl.resx">
-	  <SubType>Designer</SubType>
-	  <DependentUpon>LexFieldControl.cs</DependentUpon>
-	</EmbeddedResource>
 	<EmbeddedResource Include="Properties\Resources.resx">
 	  <SubType>Designer</SubType>
 	  <Generator>ResXFileCodeGenerator</Generator>

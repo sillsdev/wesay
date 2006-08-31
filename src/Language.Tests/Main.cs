@@ -3,11 +3,12 @@ using System.Diagnostics;
 using System.Collections.Generic;
 using System.ComponentModel;
 using WeSay.Language;
+using System.Collections;
 
 namespace Language.Tests
 {
 	[TestFixture]
-	public class Test1
+	public class MultiTextTests
 	{
 		private bool _gotHandlerNotice;
 
@@ -60,6 +61,60 @@ namespace Language.Tests
 			Assert.AreSame("gamma", text["foo"], "setting a different alternative should not affect this one");
 			text["foo"] = null;
 			Assert.AreSame("", text["foo"]);
+		}
+
+		[Test]
+		public void ImplementsIEnumerable()
+		{
+			MultiText text = new MultiText();
+			IEnumerable ienumerable = text;
+			Assert.IsNotNull(ienumerable);
+		}
+
+		[Test]
+		public void Count()
+		{
+			MultiText text = new MultiText();
+			Assert.AreEqual(0, text.Count);
+			text["a"] = "alpha";
+			text["b"] = "beta";
+			text["g"] = "gamma";
+			Assert.AreEqual(3, text.Count);
+		}
+
+		[Test]
+		public void IterateWithForEach()
+		{
+			MultiText text = new MultiText();
+			text["a"] = "alpha";
+			text["b"] = "beta";
+			text["g"] = "gamma";
+			int i = 0;
+			foreach (LanguageForm l in text)
+			{
+				switch(i){
+					case 0:
+						Assert.AreEqual("a", l.WritingSystemId);
+						Assert.AreEqual("alpha", l.Form);
+						break;
+					case 1:
+						Assert.AreEqual("b", l.WritingSystemId);
+						Assert.AreEqual("beta", l.Form);
+						break;
+					case 2:
+						Assert.AreEqual("g", l.WritingSystemId);
+						Assert.AreEqual("gamma", l.Form);
+						break;
+				}
+				i++;
+			}
+		}
+		[Test]
+		public void GetEnumerator()
+		{
+			MultiText text = new MultiText();
+			IEnumerator ienumerator = text.GetEnumerator();
+			Assert.IsNotNull(ienumerator);
 		}
 	}
 }

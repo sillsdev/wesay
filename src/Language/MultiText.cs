@@ -35,7 +35,7 @@ namespace WeSay.Language
 	/// MultiText holds an array of strings, indexed by writing system ID.
 	/// These are simple, single language Unicode strings.
 	/// </summary>
-	public class MultiText : INotifyPropertyChanged
+	public class MultiText : INotifyPropertyChanged, IEnumerable
 	{
 		/// <summary>
 		/// For INotifyPropertyChanged
@@ -93,10 +93,18 @@ namespace WeSay.Language
 		//hack
 		public string GetFirstAlternative()
 		{
-			if (this._forms.Count > 0)
+			if (Count > 0)
 				return ((LanguageForm) _forms[0]).Form;
 			else
 				return "";
+		}
+
+		public int Count
+		{
+			get
+			{
+				return _forms.Count;
+			}
 		}
 
 		public void SetAlternative(string writingSystemId, string form)
@@ -138,5 +146,14 @@ namespace WeSay.Language
 			}
 
 		}
+
+		#region IEnumerable Members
+
+		public IEnumerator GetEnumerator()
+		{
+			return _forms.GetEnumerator();
+		}
+
+		#endregion
 	}
 }

@@ -38,6 +38,7 @@
 	<Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+	<Compile Include="TestFieldControl.cs" />
 	<Compile Include="LayouterTests.cs" />
 	<Compile Include="TestEntryView.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />

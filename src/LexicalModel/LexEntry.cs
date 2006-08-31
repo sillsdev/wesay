@@ -38,7 +38,35 @@ namespace WeSay.LexicalModel
 
 		public string ToRtf()
 		{
-			return "some Rtf stuff eventually";
+
+			string rtf = @"{\rtf1\ansi ";
+			  if(_lexicalForm !=null){
+				  foreach(LanguageForm l in _lexicalForm){
+					  rtf += l.Form + " ";
+				  }
+			  }
+
+			  foreach(LexSense sense in _senses) {
+				  if(sense.Gloss != null) {
+					  foreach (LanguageForm l in sense.Gloss)
+					  {
+						  rtf += l.Form + " ";
+					  }
+				  }
+				  foreach (LexExampleSentence exampleSentence in sense.ExampleSentences){
+					  if(exampleSentence.Sentence != null)
+					  {
+						  foreach (LanguageForm l in exampleSentence.Sentence)
+						  {
+							  rtf += l.Form + " ";
+						  }
+					  }
+				  }
+			  }
+
+			rtf += @"\par}";
+			return rtf;
+
 		}
 
 	   protected override void WireUpEvents()
