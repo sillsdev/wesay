@@ -7,94 +7,33 @@ using WeSay.UI;
 
 namespace WeSay.LexicalTools
 {
-	public partial class EntryDetailControl : UserControl,ITask
+	public partial class EntryDetailControl : WeSay.UI.DetailList
 	{
 
-		private IBindingList _records;
+		private LexEntry _record;
 
-		public EntryDetailControl(IBindingList records)
+		public EntryDetailControl()
 		{
-			_records = records;
-			this.BindingContext[_records].PositionChanged += new EventHandler(OnCurrentRecordChanged);
-
-			InitializeComponent();
-			_detailPanel.BackColor = SystemColors.Control;//we like it to stand out at design time, but not runtime
-
-			_recordsListBox.DataSource = records;
-
-			_recordsListBox.SelectedIndexChanged += new EventHandler(OnRecordSelectionChanged);
 		}
 
-		void OnRecordSelectionChanged(object sender, EventArgs e)
-		{
-			this.BindingContext[_records].Position = _recordsListBox.SelectedIndex;
-		}
-
-		void OnCurrentRecordChanged(object sender, EventArgs e)
-		{
-			BuildDetailArea();
-		}
-
-		public void Activate()
-		{
-			BuildDetailArea();
-		}
-
-
-		public void Deactivate()
-		{
-
-		}
-
-		public string Label
-		{
+		public LexEntry DataSource{
 			get
 			{
-				return "Words";
+				return _record;
 			}
-		}
-
-		public Control Control
-		{
-			get { return this; }
-		}
-
-		public void Add(Control c)
-		{
-			c.Dock = DockStyle.Top;
-			_detailPanel.Controls.Add(c);
-		}
-
-
-		private void BuildDetailArea()
-		{
-			this.SuspendLayout();
-			this._detailPanel.SuspendLayout();
-			_detailPanel.Clear();
-			Object record = CurrentRecord ;
-			if (record == null)
+			set
 			{
-				return;
+				this.SuspendLayout();
+				this.Clear();
+				_record = value;
+				if (_record != null)
+				{
+					LexEntryLayouter layout = new LexEntryLayouter(this);
+					layout.AddWidgets(_record);
+				}
+
+				this.ResumeLayout(true);
 			}
-
-			LexEntryLayouter layout = new LexEntryLayouter(this._detailPanel);
-			layout.AddWidgets(record);
-
-			this._detailPanel.ResumeLayout(true);
-			this.ResumeLayout(false);
-		}
-
-		private Object CurrentRecord
-		{
-			get
-			{
-				return this.BindingContext[_records].Current as LexEntry;
-			}
-		}
-
-		private void btnDelete_Click(object sender, EventArgs e)
-		{
-
 		}
 	}
 }

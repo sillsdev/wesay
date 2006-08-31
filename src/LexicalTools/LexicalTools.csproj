@@ -35,15 +35,24 @@
 	<Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-	<Compile Include="EntryDetailControl.cs">
+	<Compile Include="EntryDetailTask.cs">
 	  <SubType>UserControl</SubType>
 	</Compile>
-	<Compile Include="EntryDetailControl.Designer.cs">
-	  <DependentUpon>EntryDetailControl.cs</DependentUpon>
+	<Compile Include="EntryDetailTask.Designer.cs">
+	  <DependentUpon>EntryDetailTask.cs</DependentUpon>
+	</Compile>
+	<Compile Include="EntryDetailControl.cs">
+	  <SubType>UserControl</SubType>
 	</Compile>
 	<Compile Include="Layouter.cs" />
 	<Compile Include="LexEntryLayouter.cs" />
 	<Compile Include="LexExampleSentenceLayouter.cs" />
+	<Compile Include="LexFieldControl.cs">
+	  <SubType>UserControl</SubType>
+	</Compile>
+	<Compile Include="LexFieldControl.Designer.cs">
+	  <DependentUpon>LexFieldControl.cs</DependentUpon>
+	</Compile>
 	<Compile Include="LexSenseLayouter.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />
 	<Compile Include="Properties\Resources.Designer.cs">
@@ -75,15 +84,23 @@
 	</ProjectReference>
   </ItemGroup>
   <ItemGroup>
-	<EmbeddedResource Include="EntryDetailControl.resx">
+	<EmbeddedResource Include="LexFieldControl.resx">
 	  <SubType>Designer</SubType>
-	  <DependentUpon>EntryDetailControl.cs</DependentUpon>
+	  <DependentUpon>LexFieldControl.cs</DependentUpon>
 	</EmbeddedResource>
 	<EmbeddedResource Include="Properties\Resources.resx">
 	  <SubType>Designer</SubType>
 	  <Generator>ResXFileCodeGenerator</Generator>
 	  <LastGenOutput>Resources.Designer.cs</LastGenOutput>
 	</EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+	<Content Include="RealWord.gif">
+	  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	</Content>
+	<Content Include="SemDom.gif">
+	  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	</Content>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

@@ -36,6 +36,11 @@ namespace WeSay.LexicalModel
 		}
 
 
+		public string ToRtf()
+		{
+			return "some Rtf stuff eventually";
+		}
+
 	   protected override void WireUpEvents()
 	   {
 		   base.WireUpEvents();

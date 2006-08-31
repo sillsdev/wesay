@@ -33,7 +33,7 @@ namespace WeSay.App
 				WeSay.UI.ISkin shell = new TabbedSkin(project, builder);
 				Application.Run();
 #else
-				 Application.EnableVisualStyles();
+				Application.EnableVisualStyles();
 				Application.SetCompatibleTextRenderingDefault(false);
 				Form f =  new TabbedForm(project, builder);
 				Application.Run(f);

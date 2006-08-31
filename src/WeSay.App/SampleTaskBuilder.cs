@@ -52,7 +52,7 @@ namespace WeSay.App
 			{
 				List<ITask> tools = new List<ITask>();
 				tools.Add(CreateTool("WeSay.CommonTools.DashboardControl,CommonTools"));
-				tools.Add(CreateTool("WeSay.LexicalTools.EntryDetailControl,LexicalTools"));
+				tools.Add(CreateTool("WeSay.LexicalTools.EntryDetailTask,LexicalTools"));
 				tools.Add(CreateTool("WeSay.CommonTools.PictureControl,CommonTools", "Collect Words","RealWord.gif"));
 				tools.Add(CreateTool("WeSay.CommonTools.PictureControl,CommonTools", "Semantic Domains", "SemDom.gif"));
 				return tools;
