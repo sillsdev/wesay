@@ -26,7 +26,11 @@ namespace WeSay.Data
 			_records.ActivationDepth = 99;
 			_records.RefreshActivationDepth = 99;
 			_records.SetActivationDepth = 99;
-//            _records.RequeryAndRefresh(false);
+			//            _records.RequeryAndRefresh(false);
+			if (_records.FilteringInDatabase && filter != null)
+			{
+				_records.Commit();
+			}
 			_records.Requery(false);
 		}
 
@@ -105,6 +109,10 @@ namespace WeSay.Data
 			{
 				throw new ArgumentNullException();
 			}
+			if (_records.FilteringInDatabase)
+			{
+				_records.Commit();
+			}
 			_records.Filter = filter;
 			OnListReset();
 		}
@@ -165,6 +173,7 @@ namespace WeSay.Data
 		public void ApplySort(PropertyDescriptor property, ListSortDirection direction)
 		{
 			VerifyNotDisposed();
+
 			Comparison<T> sort = delegate(T item1, T item2)
 			{
 				PropertyComparison<T> propertySorter = ComparisonHelper<T>.GetPropertyComparison(ComparisonHelper<T>.DefaultPropertyComparison, direction);
@@ -216,7 +225,9 @@ namespace WeSay.Data
 			this.ListChanged(this, e);
 		}
 
-	  public event ListChangedEventHandler ListChanged = delegate {};
+		public event ListChangedEventHandler ListChanged = delegate
+		{
+		};
 
 		void IBindingList.RemoveIndex(PropertyDescriptor property)
 		{

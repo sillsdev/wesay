@@ -36,6 +36,7 @@
 	<Compile Include="IEnumerableBaseTest.cs" />
 	<Compile Include="IListBaseTest.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />
+	<Compile Include="SimpleIntTestClass.cs" />
 	<Compile Include="TestItem.cs" />
   </ItemGroup>
   <ItemGroup>

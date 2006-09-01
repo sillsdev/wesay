@@ -433,9 +433,20 @@ namespace Db4o.Binding
 				filter = ComparisonHelper<T>.DefaultPredicate;
 			IList<T> list;
 			if (sorter == null)
-				list = this.Database.Query<T>(filter);
+			{
+				if (filter == ComparisonHelper<T>.DefaultPredicate)
+				{
+					list = this.Database.Query<T>();
+				}
+				else
+				{
+					list = this.Database.Query<T>(filter);
+				}
+			}
 			else
+			{
 				list = this.Database.Query<T>(filter, sorter);
+			}
 			InitItems(list, filter, sorter, commit);
 		}
 		/// <summary>

@@ -36,6 +36,15 @@ namespace WeSay.Data.Tests
 			this._listChangedEventArgs = null;
 		}
 
+		[TestFixtureSetUp]
+		public void TestFixtureSetup()
+		{
+			com.db4o.config.Configuration configuration = com.db4o.Db4o.Configure();
+			com.db4o.config.ObjectClass objectClass = configuration.ObjectClass(typeof(TestItem));
+			objectClass.ObjectField("_storedInt").Indexed(true);
+			objectClass.ObjectField("_storedString").Indexed(true);
+		}
+
 		[SetUp]
 		public void SetUp()
 		{
@@ -97,81 +106,34 @@ namespace WeSay.Data.Tests
 	}
 
 
+
 	[TestFixture]
-	public class Db4oFilterSpeedTest
+	public class IndexedFilters
 	{
-		public class SimpleTestClass : INotifyPropertyChanged, IComparable, IComparable<SimpleTestClass>
-		{
-			int _i;
-			public SimpleTestClass()
-			{
-			}
-
-			public SimpleTestClass(int i)
-			{
-				this._i = i;
-			}
-
-			public int I
-			{
-				get
-				{
-					return _i;
-				}
-				set
-				{
-					_i = value;
-					OnPropertyChanged(new PropertyChangedEventArgs("I"));
-				}
-			}
-
-			#region INotifyPropertyChanged Members
-
-			public event PropertyChangedEventHandler PropertyChanged;
-			protected virtual void OnPropertyChanged(PropertyChangedEventArgs e)
-			{
-				if (this.PropertyChanged != null)
-				{
-					this.PropertyChanged(this, e);
-				}
-
-			}
-
-			#endregion
-
-			#region IComparable Members
-
-			int IComparable.CompareTo(object obj)
-			{
-				return CompareTo((SimpleTestClass)obj);
-			}
-
-			#endregion
-
-			#region IComparable<SimpleTestClass> Members
-
-			public int CompareTo(SimpleTestClass other)
-			{
-				if (other == null)
-				{
-					return 1;
-				}
-				return (other.I - I);
-			}
-
-			#endregion
-		}
-
 		Db4oDataSource _dataSource;
-		Db4oBindingList<SimpleTestClass> _bindingList;
+		Db4oBindingList<SimpleIntTestClass> _bindingList;
 		string _filePath;
+		const int _bindingListSize = 1000;
+		Predicate<SimpleIntTestClass> _filter = delegate(SimpleIntTestClass item)
+									 {
+										 return item.I > 100 && item.I <= 200;
+									 };
+
+		[TestFixtureSetUp]
+		public void TestFixtureSetup()
+		{
+			com.db4o.config.Configuration configuration = com.db4o.Db4o.Configure();
+			com.db4o.config.ObjectClass objectClass = configuration.ObjectClass(typeof(SimpleIntTestClass));
+			objectClass.ObjectField("_i").Indexed(true);
+		}
 
 		[SetUp]
 		public void SetUp()
 		{
 			_filePath = System.IO.Path.GetTempFileName();
 			this._dataSource = new Db4oDataSource(_filePath);
-			this._bindingList = new Db4oBindingList<SimpleTestClass>(this._dataSource);
+			this._bindingList = new Db4oBindingList<SimpleIntTestClass>(this._dataSource);
+			Construct();
 		}
 
 		[TearDown]
@@ -182,42 +144,180 @@ namespace WeSay.Data.Tests
 			System.IO.File.Delete(_filePath);
 		}
 
-		[Test]
-		public void SlowFilter()
+		public void Construct()
 		{
-			for (int i = 0; i < 1000; ++i)
+			for (int i = 0; i < _bindingListSize; ++i)
 			{
-				this._bindingList.Add(new SimpleTestClass(i));
+				this._bindingList.Add(new SimpleIntTestClass(i));
 			}
-
-			Assert.AreEqual(1000, this._bindingList.Count);
-			this._bindingList.ApplyFilter(delegate(SimpleTestClass item)
-			{
-				return item.I > 100 && item.I <= 200;
-			});
-			Assert.AreEqual(100, this._bindingList.Count);
-			Assert.AreEqual(101, this._bindingList[0].I);
 		}
 
 		[Test]
-		public void SlowFilterOneCommit()
+		public void ConstructWithFilter()
 		{
-			_bindingList.WriteCacheSize = 1000;
-			for (int i = 0; i < 1000; ++i)
+			using (Db4oBindingList<SimpleIntTestClass> newBindingList = new Db4oBindingList<SimpleIntTestClass>(this._dataSource, _filter))
 			{
-				this._bindingList.Add(new SimpleTestClass(i));
+				Assert.AreEqual(100, newBindingList.Count);
 			}
-			_bindingList.WriteCacheSize = 1;
+		}
 
-			Assert.AreEqual(1000, this._bindingList.Count);
-			this._bindingList.ApplyFilter(delegate(SimpleTestClass item)
+		[Test]
+		public void ApplyFilter()
+		{
+			using (Db4oBindingList<SimpleIntTestClass> newBindingList = new Db4oBindingList<SimpleIntTestClass>(this._dataSource))
 			{
-				return item.I > 100 && item.I <= 200;
-			});
-			Assert.AreEqual(100, this._bindingList.Count);
-			Assert.AreEqual(101, this._bindingList[0].I);
+				newBindingList.ApplyFilter(_filter);
+				Assert.AreEqual(100, newBindingList.Count);
+			}
 		}
 
 	}
 
+	[TestFixture]
+	public class Db4oSpeedTest
+	{
+
+		Db4oDataSource _dataSource;
+		Db4oBindingList<SimpleIntTestClass> _bindingList;
+		string _filePath;
+		const int _bindingListSize = 5000;
+		Predicate<SimpleIntTestClass> _filter = delegate(SimpleIntTestClass item)
+									 {
+										 return item.I > 100 && item.I <= 200;
+									 };
+
+
+		[TestFixtureSetUp]
+		public void TestFixtureSetup()
+		{
+			com.db4o.config.Configuration configuration = com.db4o.Db4o.Configure();
+			com.db4o.config.ObjectClass objectClass = configuration.ObjectClass(typeof(SimpleIntTestClass));
+			com.db4o.config.ObjectField objectField = objectClass.ObjectField("_i");
+			objectField.Indexed(true);
+		}
+		[SetUp]
+		public void SetUp()
+		{
+			_filePath = System.IO.Path.GetTempFileName();
+			this._dataSource = new Db4oDataSource(_filePath);
+			this._bindingList = new Db4oBindingList<SimpleIntTestClass>(this._dataSource);
+		}
+
+		[TearDown]
+		public void TearDown()
+		{
+			this._bindingList.Dispose();
+			this._dataSource.Dispose();
+			System.IO.File.Delete(_filePath);
+		}
+
+		public void Construct()
+		{
+			TearDown();
+			SetUp();
+			for (int i = 0; i < _bindingListSize; ++i)
+			{
+				this._bindingList.Add(new SimpleIntTestClass(i));
+			}
+		}
+
+		[Test]
+		public void ConstructTime()
+		{
+			Construct();
+			Assert.Greater((decimal)TimeCommitAllAtOnce().ElapsedTicks, (decimal)TimeCommitOneAtATime().ElapsedTicks);
+		}
+
+		[Test]
+		public void CompareQueryWithAndWithoutFilter()
+		{
+			Assert.Less((decimal)TimeQueryNoFilter().ElapsedTicks, (decimal)TimeQueryWithFilter().ElapsedTicks);
+		}
+
+		[Test]
+		public void CompareApplyFilterWithNoApplyFilter()
+		{
+			Assert.Less((decimal)TimeQueryNoFilter().ElapsedTicks, (decimal)TimeQueryThenApplyFilter().ElapsedTicks);
+		}
+
+		[Test]
+		public void CompareQueryWithFilterAndQueryThenApplyFilter()
+		{
+			Assert.Less((decimal)TimeQueryWithFilter().ElapsedTicks, (decimal)TimeQueryThenApplyFilter().ElapsedTicks);
+		}
+
+		private delegate void Strategy();
+
+		private System.Diagnostics.Stopwatch Time(string label, Strategy strategy){
+			System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
+			stopwatch.Start();
+
+			strategy.Invoke();
+
+			stopwatch.Stop();
+			System.Console.WriteLine(label + " {0}", stopwatch.Elapsed);
+			return stopwatch;
+		}
+
+		private System.Diagnostics.Stopwatch TimeCommitAllAtOnce()
+		{
+			return Time("Commit all at once",
+						delegate()
+						{
+							_bindingList.WriteCacheSize = 0;
+							Construct();
+							_bindingList.WriteCacheSize = 1;
+						});
+		}
+
+		private System.Diagnostics.Stopwatch TimeCommitOneAtATime()
+		{
+			return Time("Commit one at a time",
+						delegate()
+						{
+							Construct();
+						});
+		}
+
+
+		private System.Diagnostics.Stopwatch TimeQueryNoFilter()
+		{
+			Construct();
+			return Time("No filter",
+						delegate()
+						{
+							using (Db4oBindingList<SimpleIntTestClass> newBindingList = new Db4oBindingList<SimpleIntTestClass>(this._dataSource))
+							{
+								Assert.AreEqual(_bindingListSize, newBindingList.Count);
+							}
+						});
+		}
+
+		private System.Diagnostics.Stopwatch TimeQueryWithFilter()
+		{
+			Construct();
+			return Time("Constructed with filter",
+						delegate()
+						{
+							using (Db4oBindingList<SimpleIntTestClass> newBindingList = new Db4oBindingList<SimpleIntTestClass>(this._dataSource, _filter))
+							{
+								Assert.AreEqual(100, newBindingList.Count);
+							}
+						});
+		}
+
+		private System.Diagnostics.Stopwatch TimeQueryThenApplyFilter()
+		{
+			Construct();
+			return Time("Constructed then filter applied",
+						delegate()
+						{
+							using (Db4oBindingList<SimpleIntTestClass> newBindingList = new Db4oBindingList<SimpleIntTestClass>(this._dataSource))
+							{
+								newBindingList.ApplyFilter(_filter);
+								Assert.AreEqual(100, newBindingList.Count);
+							}
+						});
+		}
+	}
 }
