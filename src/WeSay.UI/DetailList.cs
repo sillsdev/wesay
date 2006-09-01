@@ -37,6 +37,13 @@ namespace WeSay.UI
 			base.Controls.Clear();
 		}
 
+		public int Count
+		{
+			get
+			{
+				return _rowCount;
+			}
+		}
 	   /// <summary>
 		/// I want to hide this from clients who would try to touch my controls directly
 		/// </summary>

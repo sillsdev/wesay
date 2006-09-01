@@ -29,32 +29,43 @@ namespace WeSay.LexicalTools
 		private void InitializeComponent()
 		{
 			this._lexicalEntryView = new System.Windows.Forms.RichTextBox();
+			this._entryDetailControl = new EntryDetailControl();
 			this.SuspendLayout();
 			//
-			// richTextBox1
+			// _lexicalEntryView
 			//
 			this._lexicalEntryView.BackColor = System.Drawing.SystemColors.Control;
 			this._lexicalEntryView.BorderStyle = System.Windows.Forms.BorderStyle.None;
 			this._lexicalEntryView.Location = new System.Drawing.Point(3, 3);
-			this._lexicalEntryView.Name = "richTextBox1";
+			this._lexicalEntryView.Name = "_lexicalEntryView";
 			this._lexicalEntryView.ReadOnly = true;
 			this._lexicalEntryView.Size = new System.Drawing.Size(464, 115);
 			this._lexicalEntryView.TabIndex = 0;
 			this._lexicalEntryView.Text = "";
+			//
+			// _entryDetailControl
+			//
+			this._entryDetailControl.Location = new System.Drawing.Point(54, 170);
+			this._entryDetailControl.Name = "_entryDetailControl";
+			this._entryDetailControl.Size = new System.Drawing.Size(383, 70);
+			this._entryDetailControl.TabIndex = 1;
 			//
 			// LexFieldControl
 			//
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.Controls.Add(this._lexicalEntryView);
+			this.Controls.Add(this._entryDetailControl);
 			this.Name = "LexFieldControl";
 			this.Size = new System.Drawing.Size(474, 370);
 			this.ResumeLayout(false);
+			this.PerformLayout();
 
 		}
 
 		#endregion
 
 		private System.Windows.Forms.RichTextBox _lexicalEntryView;
+		private EntryDetailControl _entryDetailControl;
 	}
 }

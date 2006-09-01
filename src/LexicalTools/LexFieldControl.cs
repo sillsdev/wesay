@@ -18,6 +18,26 @@ namespace WeSay.LexicalTools
 			InitializeComponent();
 		}
 
+		public string Control_DataView
+		{
+			get
+			{
+				return _lexicalEntryView.Text;
+			}
+			set
+			{
+				_lexicalEntryView.Text = value; // this could go to rtf depending on the value
+			}
+		}
+
+		public EntryDetailControl Control_EntryDetail
+		{
+			get
+			{
+				return _entryDetailControl;
+			}
+		}
+
 		public LexEntry DataSource
 		{
 			get
@@ -31,6 +51,7 @@ namespace WeSay.LexicalTools
 					throw new ArgumentNullException();
 				}
 				_record = value;
+				_entryDetailControl.DataSource = value;
 				_lexicalEntryView.Rtf = _record.ToRtf();
 			}
 		}
