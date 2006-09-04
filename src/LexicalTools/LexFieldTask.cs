@@ -7,7 +7,7 @@ using WeSay.UI;
 
 namespace WeSay.LexicalTools
 {
-	public partial class LexFieldTask : UserControl,ITask
+	public partial class LexFieldTask : UserControl, ITask
 	{
 
 		private IBindingList _records;
@@ -30,10 +30,6 @@ namespace WeSay.LexicalTools
 			InitializeComponent();
 			_lexFieldDetailPanel.BackColor = SystemColors.Control;//we like it to stand out at design time, but not runtime
 			_lexFieldDetailPanel.Control_EntryDetail.BackColor = SystemColors.Control;
-			_recordsListBox.DataSource = records;
-			_recordsListBox.SelectedIndexChanged += new EventHandler(OnRecordSelectionChanged);
-
-			_lexFieldDetailPanel.DataSource = CurrentRecord;
 			_lexFieldDetailPanel.ShowField = filter;
 		}
 
@@ -46,12 +42,19 @@ namespace WeSay.LexicalTools
 
 		public void Activate()
 		{
+			_recordsListBox.DataSource = _records;
+			_lexFieldDetailPanel.DataSource = CurrentRecord;
+
+			_recordsListBox.SelectedIndexChanged += new EventHandler(OnRecordSelectionChanged);
+
+			_recordsListBox.Refresh();
+			_lexFieldDetailPanel.Refresh();
 		}
 
 
 		public void Deactivate()
 		{
-
+			_recordsListBox.SelectedIndexChanged += new EventHandler(OnRecordSelectionChanged);
 		}
 
 		public string Label
@@ -64,9 +67,27 @@ namespace WeSay.LexicalTools
 
 		public Control Control
 		{
-			get { return this; }
+			get
+			{
+				return this;
+			}
 		}
 
+		public IBindingList DataSource
+		{
+			get
+			{
+				return _records;
+			}
+		}
+
+		public LexFieldControl Control_Details
+		{
+			get
+			{
+				return _lexFieldDetailPanel;
+			}
+		}
 		/// <summary>
 		/// Gets current record as selected in record list
 		/// </summary>

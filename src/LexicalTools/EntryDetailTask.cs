@@ -19,10 +19,6 @@ namespace WeSay.LexicalTools
 
 			InitializeComponent();
 			_entryDetailPanel.BackColor = SystemColors.Control;//we like it to stand out at design time, but not runtime
-
-			_recordsListBox.DataSource = records;
-			_entryDetailPanel.DataSource = CurrentRecord;
-			_recordsListBox.SelectedIndexChanged += new EventHandler(OnRecordSelectionChanged);
 		}
 
 		void OnRecordSelectionChanged(object sender, EventArgs e)
@@ -34,12 +30,14 @@ namespace WeSay.LexicalTools
 
 		public void Activate()
 		{
+			_recordsListBox.DataSource = _records;
+			_entryDetailPanel.DataSource = CurrentRecord;
+			_recordsListBox.SelectedIndexChanged += new EventHandler(OnRecordSelectionChanged);
 		}
-
 
 		public void Deactivate()
 		{
-
+			_recordsListBox.SelectedIndexChanged -= new EventHandler(OnRecordSelectionChanged);
 		}
 
 		public string Label
@@ -53,6 +51,11 @@ namespace WeSay.LexicalTools
 		public Control Control
 		{
 			get { return this; }
+		}
+
+		public IBindingList DataSource
+		{
+			get { return _records;}
 		}
 
 		private LexEntry CurrentRecord
