@@ -18,6 +18,26 @@ namespace WeSay.LexicalTools
 			InitializeComponent();
 		}
 
+		public LexFieldControl(Predicate<string> filter)
+		{
+			InitializeComponent();
+
+			_entryDetailControl.ShowField = filter;
+		}
+
+		public Predicate<string>  ShowField
+		{
+			get
+			{
+				return _entryDetailControl.ShowField;
+			}
+			set
+			{
+				_entryDetailControl.ShowField = value;
+			}
+		}
+
+
 		public string Control_DataView
 		{
 			get

@@ -16,6 +16,7 @@ namespace WeSay.LexicalTools
 		{
 		}
 
+
 		public override int AddWidgets(object dataObject)
 		{
 			return AddWidgets(dataObject, -1);
@@ -23,13 +24,15 @@ namespace WeSay.LexicalTools
 
 		internal override int AddWidgets(object dataObject, int insertAtRow)
 		{
-			 int rowCount = 1;
+			 int rowCount = 0;
 		   LexSense sense = (LexSense)dataObject;
-
+		   if (_detailList.ShowField("Meaning"))
+		   {
 			Control c = _detailList.AddWidgetRow("Meaning", true,MakeBoundEntry(sense.Gloss, BasilProject.Project.AnalysisWritingSystemDefault), insertAtRow);
-			insertAtRow = _detailList.GetRowOfControl(c);
-
-			LexExampleSentenceLayouter exampleLayouter = new LexExampleSentenceLayouter(_detailList);
+			   ++rowCount;
+			   insertAtRow = _detailList.GetRowOfControl(c);
+		   }
+		   LexExampleSentenceLayouter exampleLayouter = new LexExampleSentenceLayouter(_detailList);
 
 			rowCount = AddChildrenWidgets(exampleLayouter, sense.ExampleSentences, insertAtRow, rowCount);
 
@@ -41,10 +44,15 @@ namespace WeSay.LexicalTools
 
 		public int AddGhost(IBindingList list)
 		{
+			int rowCount = 0;
+			if (_detailList.ShowField("Meaning"))
+			{
 			WeSayTextBox entry = new WeSayTextBox(BasilProject.Project.AnalysisWritingSystemDefault);
 			GhostBinding g=   MakeGhostBinding(list, "Gloss", BasilProject.Project.AnalysisWritingSystemDefault, entry);
-			g.ReferenceControl = _detailList.AddWidgetRow("Meaning", true, entry);
-			return 1;
+				g.ReferenceControl = _detailList.AddWidgetRow("Meaning", true, entry);
+				++rowCount;
+			}
+			return rowCount;
 		}
 
 

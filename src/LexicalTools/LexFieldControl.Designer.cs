@@ -39,15 +39,15 @@ namespace WeSay.LexicalTools
 			this._lexicalEntryView.Location = new System.Drawing.Point(3, 3);
 			this._lexicalEntryView.Name = "_lexicalEntryView";
 			this._lexicalEntryView.ReadOnly = true;
-			this._lexicalEntryView.Size = new System.Drawing.Size(464, 115);
+			this._lexicalEntryView.Size = new System.Drawing.Size(450, 85);
 			this._lexicalEntryView.TabIndex = 0;
 			this._lexicalEntryView.Text = "";
 			//
 			// _entryDetailControl
 			//
-			this._entryDetailControl.Location = new System.Drawing.Point(54, 170);
+			this._entryDetailControl.Location = new System.Drawing.Point(3, 95);
 			this._entryDetailControl.Name = "_entryDetailControl";
-			this._entryDetailControl.Size = new System.Drawing.Size(383, 70);
+			this._entryDetailControl.Size = new System.Drawing.Size(450, 250);
 			this._entryDetailControl.TabIndex = 1;
 			//
 			// LexFieldControl

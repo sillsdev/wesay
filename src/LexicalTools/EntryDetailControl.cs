@@ -23,17 +23,24 @@ namespace WeSay.LexicalTools
 			}
 			set
 			{
-				this.SuspendLayout();
-				this.Clear();
 				_record = value;
-				if (_record != null)
-				{
-					LexEntryLayouter layout = new LexEntryLayouter(this);
-					layout.AddWidgets(_record);
-				}
 
-				this.ResumeLayout(true);
+				Refresh();
 			}
+		}
+
+		public override void Refresh()
+		{
+			this.SuspendLayout();
+			this.Clear();
+			if (_record != null)
+			{
+				LexEntryLayouter layout = new LexEntryLayouter(this);
+				layout.AddWidgets(_record);
+			}
+
+			this.ResumeLayout(true);
+			base.Refresh();
 		}
 	}
 }

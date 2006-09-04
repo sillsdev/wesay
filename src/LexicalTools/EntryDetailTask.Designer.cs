@@ -63,7 +63,7 @@ namespace WeSay.LexicalTools
 			{
 				//     this._entryDetailPanel.Margin = new System.Windows.Forms.Padding(5);
 			}
-			this._entryDetailPanel.Name = "_detailPanel";
+			this._entryDetailPanel.Name = "_entryDetailPanel";
 			this._entryDetailPanel.Size = new System.Drawing.Size(367, 122);
 			this._entryDetailPanel.TabIndex = 4;
 			//

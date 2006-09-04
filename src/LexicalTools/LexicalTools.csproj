@@ -35,6 +35,12 @@
 	<Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+	<Compile Include="LexFieldTask.cs">
+	  <SubType>UserControl</SubType>
+	</Compile>
+	<Compile Include="LexFieldTask.Designer.cs">
+	  <DependentUpon>LexFieldTask.cs</DependentUpon>
+	</Compile>
 	<Compile Include="EntryDetailTask.cs">
 	  <SubType>UserControl</SubType>
 	</Compile>

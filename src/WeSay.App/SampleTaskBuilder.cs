@@ -56,8 +56,12 @@ namespace WeSay.App
 				List<ITask> tools = new List<ITask>();
 				tools.Add(CreateTool("WeSay.CommonTools.DashboardControl,CommonTools"));
 				tools.Add(CreateTool("WeSay.LexicalTools.EntryDetailTask,LexicalTools"));
-				tools.Add(CreateTool("WeSay.CommonTools.PictureControl,CommonTools", "Collect Words","RealWord.gif"));
-				tools.Add(CreateTool("WeSay.CommonTools.PictureControl,CommonTools", "Semantic Domains", "SemDom.gif"));
+				tools.Add(CreateTool("WeSay.LexicalTools.LexFieldTask,LexicalTools",
+					CreateLexFieldConfiguration("Add Meanings", "Meaning")));
+				tools.Add(CreateTool("WeSay.CommonTools.PictureControl,CommonTools",
+					CreatePictureConfiguration("Collect Words", "RealWord.gif")));
+				tools.Add(CreateTool("WeSay.CommonTools.PictureControl,CommonTools",
+					CreatePictureConfiguration("Semantic Domains", "SemDom.gif")));
 				return tools;
 			}
 		}
@@ -126,13 +130,26 @@ namespace WeSay.App
 			return CreateTool(fullToolClass, instances);
 		}
 
-		private ITask CreateTool(string fullToolName, string label, string pictureFilePath)
+		private IList CreatePictureConfiguration(string label, string pictureFilePath)
 		{
 			IList instances = new List<object>();
 			instances.Add(label);
 			instances.Add(new System.Drawing.Bitmap(pictureFilePath));
 
-			return CreateTool(fullToolName, instances);
+			return instances;
+		}
+
+		private IList CreateLexFieldConfiguration(string label, string fieldToShow)
+		{
+			IList instances = new List<object>();
+			instances.Add(label);
+			System.Predicate<string> filter = delegate(string s)
+							{
+								return s == fieldToShow;
+							};
+			instances.Add(filter);
+
+			return instances;
 		}
 
 		private static IMutablePicoContainer CreateContainer()

@@ -39,20 +39,26 @@ namespace WeSay.LexicalModel
 		public string ToRtf()
 		{
 
-			string rtf = @"{\rtf1\ansi ";
+			string rtf = @"{\rtf1\ansi\fs28 ";
 			  if(_lexicalForm !=null){
+				  rtf += @"\b ";
 				  foreach(LanguageForm l in _lexicalForm){
 					  rtf += l.Form + " ";
 				  }
+				  rtf += @"\b0 ";
 			  }
 
 			  foreach(LexSense sense in _senses) {
-				  if(sense.Gloss != null) {
+				  rtf += @"\i ";
+				  if (sense.Gloss != null)
+				  {
 					  foreach (LanguageForm l in sense.Gloss)
 					  {
 						  rtf += l.Form + " ";
 					  }
 				  }
+				  rtf += @" \i0 ";
+
 				  foreach (LexExampleSentence exampleSentence in sense.ExampleSentences){
 					  if(exampleSentence.Sentence != null)
 					  {
@@ -65,8 +71,23 @@ namespace WeSay.LexicalModel
 			  }
 
 			rtf += @"\par}";
-			return rtf;
+			return Utf16ToRtfAnsi(rtf);
+		}
 
+		private string Utf16ToRtfAnsi(string inString)
+		{
+			string outString= String.Empty;
+			foreach (char c in inString){
+				if (c > 128)
+				{
+					outString += @"\u" + Convert.ToInt16(c).ToString() + "?";
+				}
+				else
+				{
+					outString += c;
+				}
+			}
+			return outString;
 		}
 
 	   protected override void WireUpEvents()
@@ -117,7 +138,5 @@ namespace WeSay.LexicalModel
 				}
 			}
 		}
-
-
 	}
 }

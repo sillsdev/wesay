@@ -1,3 +1,5 @@
+using System;
+using System.Windows.Forms;
 using WeSay.Language;
 using WeSay.LexicalModel;
 using WeSay.UI;
@@ -20,21 +22,33 @@ namespace WeSay.LexicalTools
 
 		internal override int AddWidgets(object dataObject, int insertAtRow)
 		{
-			 int rowCount = 2;
+			 int rowCount = 0;
 			 LexExampleSentence example = (LexExampleSentence)dataObject;
-			 _detailList.AddWidgetRow("Example", false, MakeBoundEntry(example.Sentence, BasilProject.Project.VernacularWritingSystemDefault), insertAtRow);
-			_detailList.AddWidgetRow("Translation", false, MakeBoundEntry(example.Translation, BasilProject.Project.AnalysisWritingSystemDefault),insertAtRow+1 );
-
+			 if (_detailList.ShowField("Example"))
+			 {
+				 _detailList.AddWidgetRow("Example", false, MakeBoundEntry(example.Sentence, BasilProject.Project.VernacularWritingSystemDefault), insertAtRow);
+				 ++rowCount;
+			 }
+			 if (_detailList.ShowField("Translation"))
+			 {
+				 _detailList.AddWidgetRow("Translation", false, MakeBoundEntry(example.Translation, BasilProject.Project.AnalysisWritingSystemDefault),insertAtRow+1 );
+				 ++rowCount;
+			 }
 			return rowCount;
 		}
 
 		public int AddGhost(System.ComponentModel.IBindingList list, int insertAtRow)
 		{
-			WeSayTextBox entry = new WeSayTextBox(BasilProject.Project.AnalysisWritingSystemDefault);
-			GhostBinding g = MakeGhostBinding(list, "Sentence", BasilProject.Project.VernacularWritingSystemDefault, entry);
-			g.ReferenceControl = _detailList.AddWidgetRow("Example", false, entry, insertAtRow);
-		   // entry.PrepareForFadeIn();
-			return 1;
+			int rowCount = 0;
+			if (_detailList.ShowField("Example"))
+			{
+				WeSayTextBox entry = new WeSayTextBox(BasilProject.Project.AnalysisWritingSystemDefault);
+				GhostBinding g = MakeGhostBinding(list, "Sentence", BasilProject.Project.VernacularWritingSystemDefault, entry);
+				g.ReferenceControl = _detailList.AddWidgetRow("Example", false, entry, insertAtRow);
+				// entry.PrepareForFadeIn();
+				++rowCount;
+			}
+			return rowCount;
 		}
 	}
 }

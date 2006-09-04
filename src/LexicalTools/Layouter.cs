@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.ComponentModel;
 using System.Windows.Forms;
@@ -24,6 +25,7 @@ namespace WeSay.LexicalTools
 		{
 			_detailList = builder;
 		}
+
 
 		/// <summary>
 		/// actually add the widget's that are needed to the detailed list

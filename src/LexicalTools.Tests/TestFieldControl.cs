@@ -44,7 +44,14 @@ namespace WeSay.LexicalTools.Tests
 
 		private void TestSingleControl(LexEntry entry)
 		{
-			LexFieldControl lexFieldControl = new LexFieldControl();
+			LexFieldControl lexFieldControl = new LexFieldControl(delegate(string fieldName)
+														{
+															if (fieldName == "LexicalForm")
+															{
+																return true;
+															}
+															return false;
+														});
 			lexFieldControl.DataSource = entry;
 
 			Assert.AreEqual(1, lexFieldControl.Control_EntryDetail.Count);

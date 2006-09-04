@@ -20,8 +20,28 @@ namespace WeSay.UI
 		private int _indexOfLabel = 1;
 		private int _indexOfTextBox = 2;
 
-		public DetailList()
+		private Predicate<string> _filter;
+
+		public Predicate<string> ShowField
 		{
+			get
+			{
+				return _filter;
+			}
+			set
+			{
+				if (value == null)
+				{
+					throw new ArgumentNullException();
+				}
+				_filter = value;
+				Refresh();
+			}
+		}
+
+		private void Initialize(Predicate<string> filter)
+		{
+			_filter = filter;
 			InitializeComponent();
 
 			if (Environment.OSVersion.Platform != PlatformID.Unix)
@@ -29,7 +49,26 @@ namespace WeSay.UI
 				this.Margin = new Padding(5, 5, 5, 5); //not implemented inn mono 1.16
 			}
 			_fadeInTimer.Interval = 500;
+
 		}
+
+		public DetailList()
+		{
+			Initialize(delegate(string s)
+						{
+							return true;
+						});
+		}
+
+		public DetailList(Predicate<string> filter)
+		{
+			if (filter == null)
+			{
+				throw new ArgumentNullException();
+			}
+			Initialize(filter);
+		}
+
 
 		public void Clear()
 		{

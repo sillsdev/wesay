@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using WeSay.Language;
 using WeSay.LexicalModel;
@@ -11,7 +12,7 @@ namespace WeSay.LexicalTools
 	public class LexEntryLayouter : Layouter
 	{
 		public LexEntryLayouter(DetailList builder)
-		  : base(builder)
+			: base(builder)
 		{
 		}
 
@@ -22,14 +23,20 @@ namespace WeSay.LexicalTools
 
 		internal override int AddWidgets(object dataObject, int insertAtRow)
 		{
-			int rowCount = 1;
+			int rowCount = 0;
 			LexEntry entry = (LexEntry)dataObject;
-
-			_detailList.AddWidgetRow("Word", true, MakeBoundEntry(entry.LexicalForm, BasilProject.Project.VernacularWritingSystemDefault), insertAtRow);
+			if (_detailList.ShowField("LexicalForm"))
+			{
+				_detailList.AddWidgetRow("Word", true, MakeBoundEntry(entry.LexicalForm, BasilProject.Project.VernacularWritingSystemDefault), insertAtRow);
+				++rowCount;
+			}
 			LexSenseLayouter layouter = new LexSenseLayouter(_detailList);
-			rowCount = AddChildrenWidgets(layouter, entry.Senses, insertAtRow, rowCount);
+			foreach (LexSense sense in entry.Senses)
+			{
+				rowCount = AddChildrenWidgets(layouter, entry.Senses, insertAtRow, rowCount);
+			}
 			//add a ghost
-			 rowCount+= layouter.AddGhost(entry.Senses);
+			rowCount += layouter.AddGhost(entry.Senses);
 
 			return rowCount;
 		}
