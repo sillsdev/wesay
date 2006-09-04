@@ -1,3 +1,4 @@
+using System.Collections;
 using WeSay.Language;
 using WeSay.LexicalModel;
 using WeSay.UI;
@@ -26,19 +27,7 @@ namespace WeSay.LexicalTools
 
 			_detailList.AddWidgetRow("Word", true, MakeBoundEntry(entry.LexicalForm, BasilProject.Project.VernacularWritingSystemDefault), insertAtRow);
 			LexSenseLayouter layouter = new LexSenseLayouter(_detailList);
-			foreach (LexSense sense in entry.Senses)
-			{
-				int r;
-				if (insertAtRow < 0)
-				{
-					r = insertAtRow;    // just stick at the end
-				}
-				else
-				{
-					 r = insertAtRow + rowCount;
-			   }
-				rowCount+= layouter.AddWidgets(sense, r);
-			}
+			rowCount = AddChildrenWidgets(layouter, entry.Senses, insertAtRow, rowCount);
 			//add a ghost
 			 rowCount+= layouter.AddGhost(entry.Senses);
 

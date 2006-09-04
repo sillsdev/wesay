@@ -1,3 +1,4 @@
+using System.Collections;
 using System.ComponentModel;
 using System.Windows.Forms;
 using WeSay.Language;
@@ -70,5 +71,22 @@ namespace WeSay.LexicalTools
 			_detailList.MoveInsertionPoint(row);
 		}
 
+		protected int AddChildrenWidgets(Layouter layouter, IList list, int insertAtRow , int rowCount)
+		{
+			foreach (object sense in list)
+			{
+				int r;
+				if (insertAtRow < 0)
+				{
+					r = insertAtRow;    // just stick at the end
+				}
+				else
+				{
+					r = insertAtRow + rowCount;
+				}
+				rowCount+= layouter.AddWidgets(sense, r);
+			}
+			return rowCount;
+		}
 	}
 }

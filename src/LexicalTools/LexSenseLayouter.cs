@@ -30,10 +30,8 @@ namespace WeSay.LexicalTools
 			insertAtRow = _detailList.GetRowOfControl(c);
 
 			LexExampleSentenceLayouter exampleLayouter = new LexExampleSentenceLayouter(_detailList);
-			foreach (LexExampleSentence example in sense.ExampleSentences)
-			{
-				rowCount += exampleLayouter.AddWidgets(example, insertAtRow + rowCount);
-			}
+
+			rowCount = AddChildrenWidgets(exampleLayouter, sense.ExampleSentences, insertAtRow, rowCount);
 
 			//add a ghost
 			rowCount += exampleLayouter.AddGhost(sense.ExampleSentences, insertAtRow+rowCount);
