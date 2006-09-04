@@ -11,17 +11,17 @@ namespace WeSay.UI
 	/// </summary>
 	public class Binding
 	{
-		private string _writingSystemId;
+		private WritingSystem _writingSystem;
 		private INotifyPropertyChanged _dataTarget;
 		private WeSayTextBox _textBoxTarget;
 		private bool _inMidstOfChange;
 
-		public Binding(INotifyPropertyChanged dataTarget, string writingSystemId, WeSayTextBox widgetTarget)
+		public Binding(INotifyPropertyChanged dataTarget, WritingSystem writingSystem, WeSayTextBox widgetTarget)
 		{
 			_inMidstOfChange = false;
 		   _dataTarget= dataTarget;
 		   _dataTarget.PropertyChanged += new PropertyChangedEventHandler(OnDataPropertyChanged);
-		   _writingSystemId=writingSystemId;
+		   _writingSystem=writingSystem;
 		   _textBoxTarget = widgetTarget;
 		   _textBoxTarget.TextChanged += new EventHandler(OnTextBoxChanged);
 		   _textBoxTarget.Disposed += new EventHandler(_textBoxTarget_Disposed);
@@ -70,7 +70,7 @@ namespace WeSay.UI
 		protected virtual void OnDataPropertyChanged(object sender, PropertyChangedEventArgs e)
 		{
 			if (_inMidstOfChange ||
-				e.PropertyName != _writingSystemId) //FIX THIS
+				e.PropertyName != _writingSystem.Id) //FIX THIS
 				return;
 
 			try
@@ -89,7 +89,7 @@ namespace WeSay.UI
 			MultiText text = _dataTarget as MultiText;
 			if (text == null)
 				throw new ArgumentException("Binding can't handle that type of target.");
-			return text[_writingSystemId];
+			return text[_writingSystem.Id];
 		}
 
 		protected virtual void SetTargetValue(string s)
@@ -104,7 +104,7 @@ namespace WeSay.UI
 				if (_dataTarget as MultiText != null)
 				{
 					MultiText text = _dataTarget as MultiText;
-					text[_writingSystemId] = s;
+					text[_writingSystem.Id] = s;
 				}
 				//else if (_dataTarget as IBindingList != null)
 				//{
@@ -126,10 +126,10 @@ namespace WeSay.UI
 			get { return _dataTarget; }
 		}
 
-		protected string WritingSystemId
-		{
-			get { return _writingSystemId; }
-		}
+		//protected string WritingSystemId
+		//{
+		//    get { return _writingSystemId; }
+		//}
 		public WeSayTextBox TextBoxTarget
 		{
 			get { return _textBoxTarget; }

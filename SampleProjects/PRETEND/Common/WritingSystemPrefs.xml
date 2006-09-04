@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<prefs analysisWritingSystem="en" vernacularWritingSystem="Pretend">
+  <writingSystem id="Pretend">
+	<font name="Arial" baseSize="20"/>
+  </writingSystem>
+  <writingSystem id="en">
+	<font name="Courier" baseSize="10"/>
+  </writingSystem>
+</prefs>

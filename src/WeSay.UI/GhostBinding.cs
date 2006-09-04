@@ -13,7 +13,7 @@ namespace WeSay.UI
 	/// </summary>
 	public class GhostBinding
 	{
-		private string _writingSystemId;
+		private WritingSystem _writingSystem;
 		private string _propertyName;
 		private IBindingList _listTarget;
 		private WeSayTextBox _textBoxTarget;
@@ -27,12 +27,12 @@ namespace WeSay.UI
 		/// </summary>
 		public event GhostTriggered Triggered;
 
-		public GhostBinding(IBindingList targetList, string propertyName,  string writingSystemId, WeSayTextBox textBoxTarget)
+		public GhostBinding(IBindingList targetList, string propertyName, WritingSystem writingSystem, WeSayTextBox textBoxTarget)
 		{
 		   _listTarget= targetList;
 		   _listTarget.ListChanged +=new ListChangedEventHandler(_listTarget_ListChanged);
 		   _propertyName=propertyName;
-		   _writingSystemId = writingSystemId;
+		   _writingSystem = writingSystem;
 
 		   _textBoxTarget = textBoxTarget;
 		   _textBoxTarget.TextChanged += new EventHandler(_textBoxTarget_TextChanged);
@@ -119,7 +119,7 @@ namespace WeSay.UI
 			if (e.ListChangedType == ListChangedType.ItemAdded)
 			{
 				object newGuy = _listTarget[e.NewIndex];
-				FillInMultiTextOfNewObject(newGuy, _propertyName, _writingSystemId, _textBoxTarget.Text);
+				FillInMultiTextOfNewObject(newGuy, _propertyName, _writingSystem, _textBoxTarget.Text);
 				if (Triggered != null)
 				{
 					Triggered.Invoke(this, newGuy, null);
@@ -136,11 +136,11 @@ namespace WeSay.UI
 			_textBoxTarget.PrepareForFadeIn();
 		 }
 
-		private void FillInMultiTextOfNewObject(object o, string propertyName, string writingSystemId, string value)
+		private void FillInMultiTextOfNewObject(object o, string propertyName, WritingSystem writingSystem, string value)
 		{
 		   PropertyInfo info = o.GetType().GetProperty(propertyName);
 		   MultiText text = (MultiText) info.GetValue(o, null);
-		   text.SetAlternative(writingSystemId, value);
+		   text.SetAlternative(writingSystem.Id, value);
 		}
 	}
 }

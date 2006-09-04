@@ -39,7 +39,6 @@
 	<Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-	<Compile Include="BasilProject.cs" />
 	<Compile Include="SampleTaskBuilder.cs" />
 	<Compile Include="TabbedForm.cs">
 	  <SubType>Form</SubType>

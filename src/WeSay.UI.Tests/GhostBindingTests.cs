@@ -1,6 +1,4 @@
 using System;
-using System.ComponentModel;
-using System.Windows.Forms;
 using NUnit.Framework;
 using WeSay.Language;
 
@@ -66,10 +64,10 @@ namespace WeSay.UI.Tests
 		[SetUp]
 		public void Setup()
 		{
-			_papaNameWidget = new WeSayTextBox();
+			_papaNameWidget = new WeSayTextBox(BasilProject.Project.AnalysisWritingSystemDefault);
 			_papaNameWidget.Text  =  "John";
-			_ghostFirstNameWidget = new WeSayTextBox();
-			_binding = new GhostBinding(_papa.Children, "First", "en", _ghostFirstNameWidget);
+			_ghostFirstNameWidget = new WeSayTextBox(BasilProject.Project.AnalysisWritingSystemDefault);
+			_binding = new GhostBinding(_papa.Children, "First", BasilProject.Project.AnalysisWritingSystemDefault, _ghostFirstNameWidget);
 			_didNotify = false;
 			//Window w = new Window("test");
 			//VBox box = new VBox();

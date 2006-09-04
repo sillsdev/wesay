@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<prefs analysisWritingSystem="ANA" vernacularWritingSystem="VER">
+<writingSystem id="ANA">
+  <font name="WingDings" baseSize="20"/>
+</writingSystem>
+  <writingSystem id="VER">
+	<font name="WingDings" baseSize="20"/>
+  </writingSystem>
+</prefs>

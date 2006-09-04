@@ -1,6 +1,7 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
+using WeSay.Language;
 
 namespace WeSay.UI
 {
@@ -8,10 +9,11 @@ namespace WeSay.UI
 	{
 	   // private bool _isGhost;
 
-		public WeSayTextBox()
+		public WeSayTextBox(WritingSystem ws)
 		{
 		 //   _isGhost = false;
 			InitializeComponent();
+			this.Font = ws.Font;
 		}
 
 		//public bool IsGhost
@@ -41,25 +43,25 @@ namespace WeSay.UI
 
 		public void FadeInSomeMore(Label label)
 		{
-			int interval = 3;
-			if (this.BackColor.R < System.Drawing.SystemColors.Window.R)
+			int interval = 2;
+			if (this.BackColor.R < SystemColors.Window.R)
 			{
 				interval = Math.Min(interval, 255 - this.BackColor.R);
 
-				this.BackColor = System.Drawing.Color.FromArgb(this.BackColor.R + interval,
+				this.BackColor = Color.FromArgb(this.BackColor.R + interval,
 															 this.BackColor.G + interval,
 															 this.BackColor.B + interval);
 			}
-			else if( this.BackColor != System.Drawing.SystemColors.Window)
+			else if( this.BackColor != SystemColors.Window)
 			{
-				this.BackColor = System.Drawing.SystemColors.Window;
+				this.BackColor = SystemColors.Window;
 			}
 		}
 
 		public void PrepareForFadeIn()
 		{
 				this.Text = ""; //ready for the next one
-				this.BackColor = System.Drawing.SystemColors.Control;
+				this.BackColor = SystemColors.Control;
 		}
 	}
 }

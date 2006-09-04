@@ -13,7 +13,7 @@ namespace WeSay.LexicalTools
 		private IBindingList _records;
 		private int _currentIndex;
 
-		public EntryDetailTask(IBindingList records)
+		public EntryDetailTask(BasilProject project, IBindingList records)
 		{
 			_records = records;
 

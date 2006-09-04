@@ -1,5 +1,6 @@
 using Gtk;
 using NUnit.Framework;
+using WeSay.UI;
 
 namespace WeSay.App.Tests
 {

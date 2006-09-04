@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using System.Windows.Forms;
+using WeSay.Language;
 using WeSay.UI;
 
 namespace WeSay.LexicalTools
@@ -32,27 +33,27 @@ namespace WeSay.LexicalTools
 
 		internal abstract int AddWidgets(object dataObject, int row);
 
-		protected Control MakeBoundEntry(WeSay.Language.MultiText text, string writingSystemId)
+		protected Control MakeBoundEntry(WeSay.Language.MultiText text, WritingSystem writingSystem)
 		{
-			WeSayTextBox entry = new WeSayTextBox();
-			entry.Text = text[writingSystemId];
+			WeSayTextBox entry = new WeSayTextBox(writingSystem);
+			entry.Text = text[writingSystem.Id];
 
-			WeSay.UI.Binding binding = new WeSay.UI.Binding(text, writingSystemId, entry);
+			WeSay.UI.Binding binding = new WeSay.UI.Binding(text, writingSystem, entry);
 			return entry;
 		}
 
-		protected Control MakeGhostEntry(IBindingList list, string ghostPropertyName, string writingSystemId)
+		protected Control MakeGhostEntry(IBindingList list, string ghostPropertyName, WritingSystem writingSystem)
 		{
-			WeSayTextBox entry = new WeSayTextBox();
-			WeSay.UI.GhostBinding binding = new WeSay.UI.GhostBinding(list, ghostPropertyName, writingSystemId, entry);
+			WeSayTextBox entry = new WeSayTextBox(writingSystem);
+			WeSay.UI.GhostBinding binding = new WeSay.UI.GhostBinding(list, ghostPropertyName, writingSystem, entry);
 			binding.Triggered += new GhostBinding.GhostTriggered(OnGhostBindingTriggered);
 			return entry;
 		}
 
-		protected GhostBinding MakeGhostBinding(IBindingList list, string ghostPropertyName, string writingSystemId,
+		protected GhostBinding MakeGhostBinding(IBindingList list, string ghostPropertyName, WritingSystem writingSystem,
 			WeSayTextBox entry)
 		{
-			WeSay.UI.GhostBinding binding = new WeSay.UI.GhostBinding(list, ghostPropertyName, writingSystemId, entry);
+			WeSay.UI.GhostBinding binding = new WeSay.UI.GhostBinding(list, ghostPropertyName, writingSystem, entry);
 			binding.Triggered += new GhostBinding.GhostTriggered(OnGhostBindingTriggered);
 			return binding;
 		}

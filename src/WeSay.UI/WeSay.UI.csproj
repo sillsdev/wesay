@@ -38,6 +38,7 @@
 	<Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+	<Compile Include="BasilProject.cs" />
 	<Compile Include="Binding.cs" />
 	<Compile Include="DetailList.cs">
 	  <SubType>UserControl</SubType>

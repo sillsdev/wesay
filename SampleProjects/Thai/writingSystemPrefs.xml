@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<prefs analysisWritingSystem="en" vernacularWritingSystem="th">
+  <writingSystem id="th">
+	<font name="Arial" baseSize="25"/>
+  </writingSystem>
+  <writingSystem id="en">
+	<font name="Times New Roman" baseSize="12"/>
+  </writingSystem>
+</prefs>

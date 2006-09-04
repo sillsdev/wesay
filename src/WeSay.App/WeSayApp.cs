@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Windows.Forms;
+using WeSay.UI;
 
 namespace WeSay.App
 {
@@ -21,6 +22,7 @@ namespace WeSay.App
 			Application.Init();
 #endif
 			BasilProject project = new BasilProject(FilePath);
+			project.InitWritingSystems();
 
 			WeSay.UI.ITaskBuilder builder = new SampleTaskBuilder(project);
 #if GTK

@@ -1,9 +1,5 @@
-using System.Windows.Forms;
-using WeSay.Language;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using NUnit.Framework;
+using WeSay.Language;
 
 namespace WeSay.UI.Tests
 {
@@ -20,10 +16,10 @@ namespace WeSay.UI.Tests
 		public void TargetToWidget()
 		{
 			MultiText text = new MultiText();
-			WeSayTextBox widget = new WeSayTextBox();
-			Binding binding = new Binding(text, "en", widget);
+			WeSayTextBox widget = new WeSayTextBox(BasilProject.Project.AnalysisWritingSystemDefault);
+			Binding binding = new Binding(text, BasilProject.Project.AnalysisWritingSystemDefault, widget);
 
-			text["en"] = "hello";
+			text[BasilProject.Project.AnalysisWritingSystemDefault.Id] = "hello";
 			Assert.AreEqual("hello", widget.Text);
 			text["en"] = null;
 			Assert.AreEqual("",widget.Text);
@@ -33,9 +29,9 @@ namespace WeSay.UI.Tests
 		public void WidgetToTarget()
 		{
 			MultiText text = new MultiText();
-			WeSayTextBox widget = new WeSayTextBox();
+			WeSayTextBox widget = new WeSayTextBox(BasilProject.Project.AnalysisWritingSystemDefault);
 
-			Binding binding = new Binding(text, "en", widget);
+			Binding binding = new Binding(text, BasilProject.Project.AnalysisWritingSystemDefault, widget);
 
 			widget.Text = "aaa";
 			Assert.AreEqual("aaa", text["en"]);

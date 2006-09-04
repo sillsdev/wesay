@@ -34,9 +34,16 @@
 	</Reference>
 	<Reference Include="System" />
 	<Reference Include="System.Data" />
+	<Reference Include="System.Drawing" />
 	<Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+	<Compile Include="TestResources.Designer.cs">
+	  <AutoGen>True</AutoGen>
+	  <DesignTime>True</DesignTime>
+	  <DependentUpon>TestResources.resx</DependentUpon>
+	</Compile>
+	<Compile Include="WritingSystemTests.cs" />
 	<Compile Include="Main.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -45,6 +52,20 @@
 	  <Project>{39DF05AB-8B2E-4CCA-8525-E0D6473E6E65}</Project>
 	  <Name>Language</Name>
 	</ProjectReference>
+	<ProjectReference Include="..\PlatformSpecific\PlatformSpecific.csproj">
+	  <Project>{55E6BAB0-9B46-4C89-8773-4432417C1ADF}</Project>
+	  <Name>PlatformSpecific</Name>
+	</ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+	<EmbeddedResource Include="TestResources.resx">
+	  <SubType>Designer</SubType>
+	  <Generator>ResXFileCodeGenerator</Generator>
+	  <LastGenOutput>TestResources.Designer.cs</LastGenOutput>
+	</EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+	<None Include="Resources\WritingSystemPrefs.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

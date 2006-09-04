@@ -5,6 +5,7 @@ using System.Reflection;
 using PicoContainer;
 using PicoContainer.Defaults;
 using WeSay.Data;
+using WeSay.Language;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Tests;
 using WeSay.UI;
@@ -19,6 +20,8 @@ namespace WeSay.App
 
 		public SampleTaskBuilder(BasilProject project)
 		{
+
+
 			_parentPicoContext = CreateContainer();
 			_parentPicoContext.RegisterComponentInstance(project);
 

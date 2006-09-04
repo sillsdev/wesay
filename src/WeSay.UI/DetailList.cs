@@ -172,6 +172,16 @@ namespace WeSay.UI
 			return (_rowCount - base.Controls.GetChildIndex(control)) - 1;
 		}
 
+		/// <summary>
+		/// for unit testing
+		/// </summary>
+		/// <param name="row"></param>
+		/// <returns></returns>
+		public Control GetControlOfRow(int row)
+		{
+			return (base.Controls[RowToControlIndex(row)]);
+		}
+
 		private int RowToControlInsertionIndex(int row)
 		{
 			//reverse order (that's how docking works)
@@ -203,9 +213,26 @@ namespace WeSay.UI
 		public void MoveInsertionPoint(int row)
 		{
 			Panel p = (Panel)base.Controls[RowToControlIndex(row)];
-			WeSayTextBox tb = p.Controls[_indexOfTextBox] as WeSayTextBox;
+			WeSayTextBox tb = (WeSayTextBox)GetEditControlFromReferenceControl(p);
 			tb.Focus();
 			tb.Select(1000, 0);//go to end
+		}
+
+		/// <summary>
+		/// for tests
+		/// </summary>
+		public Control GetEditControlFromReferenceControl(Control rowControl)
+		{
+			return rowControl.Controls[_indexOfTextBox];
+		}
+
+
+		/// <summary>
+		/// for tests
+		/// </summary>
+		public Control GetLabelControlFromReferenceControl(Control rowControl)
+		{
+			return rowControl.Controls[_indexOfLabel];
 		}
 	}
 }

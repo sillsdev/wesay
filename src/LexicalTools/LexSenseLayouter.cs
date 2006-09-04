@@ -1,7 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Windows.Forms;
+using WeSay.Language;
 using WeSay.LexicalModel;
 using WeSay.UI;
 using System.ComponentModel;
@@ -28,7 +26,7 @@ namespace WeSay.LexicalTools
 			 int rowCount = 1;
 		   LexSense sense = (LexSense)dataObject;
 
-			Control c = _detailList.AddWidgetRow("Meaning", true,MakeBoundEntry(sense.Gloss, "en"), insertAtRow);
+			Control c = _detailList.AddWidgetRow("Meaning", true,MakeBoundEntry(sense.Gloss, BasilProject.Project.AnalysisWritingSystemDefault), insertAtRow);
 			insertAtRow = _detailList.GetRowOfControl(c);
 
 			LexExampleSentenceLayouter exampleLayouter = new LexExampleSentenceLayouter(_detailList);
@@ -45,8 +43,8 @@ namespace WeSay.LexicalTools
 
 		public int AddGhost(IBindingList list)
 		{
-			WeSayTextBox entry = new WeSayTextBox();
-			GhostBinding g=   MakeGhostBinding(list, "Gloss", "en", entry);
+			WeSayTextBox entry = new WeSayTextBox(BasilProject.Project.AnalysisWritingSystemDefault);
+			GhostBinding g=   MakeGhostBinding(list, "Gloss", BasilProject.Project.AnalysisWritingSystemDefault, entry);
 			g.ReferenceControl = _detailList.AddWidgetRow("Meaning", true, entry);
 			return 1;
 		}

@@ -1,4 +1,4 @@
-using System.Windows.Forms;
+using WeSay.Language;
 using WeSay.LexicalModel;
 using WeSay.UI;
 namespace WeSay.LexicalTools
@@ -22,16 +22,16 @@ namespace WeSay.LexicalTools
 		{
 			 int rowCount = 2;
 			 LexExampleSentence example = (LexExampleSentence)dataObject;
-			_detailList.AddWidgetRow("Example", false, MakeBoundEntry(example.Sentence, "th"),insertAtRow );
-			_detailList.AddWidgetRow("Translation", false, MakeBoundEntry(example.Translation, "en"),insertAtRow+1 );
+			 _detailList.AddWidgetRow("Example", false, MakeBoundEntry(example.Sentence, BasilProject.Project.VernacularWritingSystemDefault), insertAtRow);
+			_detailList.AddWidgetRow("Translation", false, MakeBoundEntry(example.Translation, BasilProject.Project.AnalysisWritingSystemDefault),insertAtRow+1 );
 
 			return rowCount;
 		}
 
 		public int AddGhost(System.ComponentModel.IBindingList list, int insertAtRow)
 		{
-			WeSayTextBox entry = new WeSayTextBox();
-			GhostBinding g = MakeGhostBinding(list, "Sentence", "th", entry);
+			WeSayTextBox entry = new WeSayTextBox(BasilProject.Project.AnalysisWritingSystemDefault);
+			GhostBinding g = MakeGhostBinding(list, "Sentence", BasilProject.Project.VernacularWritingSystemDefault, entry);
 			g.ReferenceControl = _detailList.AddWidgetRow("Example", false, entry, insertAtRow);
 		   // entry.PrepareForFadeIn();
 			return 1;
