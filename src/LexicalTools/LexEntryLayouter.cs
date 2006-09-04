@@ -28,7 +28,16 @@ namespace WeSay.LexicalTools
 			LexSenseLayouter layouter = new LexSenseLayouter(_detailList);
 			foreach (LexSense sense in entry.Senses)
 			{
-				rowCount+= layouter.AddWidgets(sense, insertAtRow + rowCount);
+				int r;
+				if (insertAtRow < 0)
+				{
+					r = insertAtRow;    // just stick at the end
+				}
+				else
+				{
+					 r = insertAtRow + rowCount;
+			   }
+				rowCount+= layouter.AddWidgets(sense, r);
 			}
 			//add a ghost
 			 rowCount+= layouter.AddGhost(entry.Senses);
