@@ -24,10 +24,6 @@ namespace WeSay.LexicalTools
 			{
 				throw new ArgumentNullException("label");
 			}
-			if (filter == null)
-			{
-				throw new ArgumentNullException("filter");
-			}
 			_records = records;
 			_label = label;
 
@@ -71,10 +67,18 @@ namespace WeSay.LexicalTools
 			get { return this; }
 		}
 
+		/// <summary>
+		/// Gets current record as selected in record list
+		/// </summary>
+		/// <value>null if record list is empty</value>
 		private LexEntry CurrentRecord
 		{
 			get
 			{
+				if (_records.Count == 0)
+				{
+					return null;
+				}
 				return _records[_currentIndex] as LexEntry;
 			}
 		}

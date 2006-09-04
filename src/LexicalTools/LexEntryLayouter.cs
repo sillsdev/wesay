@@ -31,10 +31,7 @@ namespace WeSay.LexicalTools
 				++rowCount;
 			}
 			LexSenseLayouter layouter = new LexSenseLayouter(_detailList);
-			foreach (LexSense sense in entry.Senses)
-			{
-				rowCount = AddChildrenWidgets(layouter, entry.Senses, insertAtRow, rowCount);
-			}
+			rowCount = AddChildrenWidgets(layouter, entry.Senses, insertAtRow, rowCount);
 			//add a ghost
 			rowCount += layouter.AddGhost(entry.Senses);
 

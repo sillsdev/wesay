@@ -17,13 +17,13 @@ namespace WeSay.App
 	{
 		private bool _disposed = false;
 		private IMutablePicoContainer _parentPicoContext;
+		BasilProject _project;
 
 		public SampleTaskBuilder(BasilProject project)
 		{
-
-
 			_parentPicoContext = CreateContainer();
 			_parentPicoContext.RegisterComponentInstance(project);
+			_project = project;
 
 			if (project.PathToLexicalModelDB.IndexOf("PRETEND") > -1)
 			{
@@ -38,13 +38,13 @@ namespace WeSay.App
 				///* Because the data source is never actually touched by the normal pico container code,
 				// * it never gets  added to this ordered list.  The ordered list is used for the lifecycle
 				// * functions, such as dispose.  Without adding it explicitly, this will end up
-				// * getting disposed of first, whereas we need to it to be disposed of last.
+				// * getting disposed of first, whereas we need it to be disposed of last.
 				// * Adding it explicity to the ordered list gives proper disposal order.
 				// */
 				_parentPicoContext.AddOrderedComponentAdapter(dsAdaptor);
 
 				Db4oBindingList<LexEntry> entries = new Db4oBindingList<LexEntry>(ds);
-				_parentPicoContext.RegisterComponentInstance(entries);
+				_parentPicoContext.RegisterComponentInstance("All Entries", entries);
 		   }
 
 		}
@@ -57,7 +57,7 @@ namespace WeSay.App
 				tools.Add(CreateTool("WeSay.CommonTools.DashboardControl,CommonTools"));
 				tools.Add(CreateTool("WeSay.LexicalTools.EntryDetailTask,LexicalTools"));
 				tools.Add(CreateTool("WeSay.LexicalTools.LexFieldTask,LexicalTools",
-					CreateLexFieldConfiguration("Add Meanings", "Meaning")));
+					CreateLexFieldConfiguration("Add Meanings", "GhostGloss")));
 				tools.Add(CreateTool("WeSay.CommonTools.PictureControl,CommonTools",
 					CreatePictureConfiguration("Collect Words", "RealWord.gif")));
 				tools.Add(CreateTool("WeSay.CommonTools.PictureControl,CommonTools",
@@ -87,6 +87,7 @@ namespace WeSay.App
 		private IMutablePicoContainer NewChildContainer(IList instances)
 		{
 			IMutablePicoContainer child = new DefaultPicoContainer(_parentPicoContext);
+			_parentPicoContext.AddChildContainer(child);
 			if (instances != null)
 			{
 				foreach (object instance in instances)
@@ -142,12 +143,30 @@ namespace WeSay.App
 		private IList CreateLexFieldConfiguration(string label, string fieldToShow)
 		{
 			IList instances = new List<object>();
+			Predicate<LexEntry> entryFilter = delegate(LexEntry entry)
+						{
+							if (entry.Senses.Count == 0)
+							{
+								return true;
+							}
+							foreach (LexSense sense in entry.Senses) {
+								if (sense.Gloss[_project.AnalysisWritingSystemDefault.Id] == string.Empty)
+								{
+									return true;
+								}
+							}
+							return false;
+						};
+
+			Db4oDataSource ds = (Db4oDataSource)_parentPicoContext.GetComponentInstance(typeof(Db4oDataSource));
+			Db4oBindingList<LexEntry> entries = new Db4oBindingList<LexEntry>(ds, entryFilter);
+			instances.Add(entries);
 			instances.Add(label);
-			System.Predicate<string> filter = delegate(string s)
+			System.Predicate<string> fieldFilter = delegate(string s)
 							{
 								return s == fieldToShow;
 							};
-			instances.Add(filter);
+			instances.Add(fieldFilter);
 
 			return instances;
 		}

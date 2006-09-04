@@ -66,13 +66,16 @@ namespace WeSay.LexicalTools
 			}
 			set
 			{
-				if (value == null)
-				{
-					throw new ArgumentNullException();
-				}
 				_record = value;
 				_entryDetailControl.DataSource = value;
-				_lexicalEntryView.Rtf = _record.ToRtf();
+				if (_record == null)
+				{
+					_lexicalEntryView.Text = String.Empty;
+				}
+				else
+				{
+					_lexicalEntryView.Rtf = _record.ToRtf();
+				}
 			}
 		}
 

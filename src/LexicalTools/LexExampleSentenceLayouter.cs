@@ -24,7 +24,7 @@ namespace WeSay.LexicalTools
 		{
 			 int rowCount = 0;
 			 LexExampleSentence example = (LexExampleSentence)dataObject;
-			 if (_detailList.ShowField("Example"))
+			 if (_detailList.ShowField("Sentence"))
 			 {
 				 _detailList.AddWidgetRow("Example", false, MakeBoundEntry(example.Sentence, BasilProject.Project.VernacularWritingSystemDefault), insertAtRow);
 				 ++rowCount;
@@ -40,7 +40,7 @@ namespace WeSay.LexicalTools
 		public int AddGhost(System.ComponentModel.IBindingList list, int insertAtRow)
 		{
 			int rowCount = 0;
-			if (_detailList.ShowField("Example"))
+			if (_detailList.ShowField("GhostSentence"))
 			{
 				WeSayTextBox entry = new WeSayTextBox(BasilProject.Project.AnalysisWritingSystemDefault);
 				GhostBinding g = MakeGhostBinding(list, "Sentence", BasilProject.Project.VernacularWritingSystemDefault, entry);

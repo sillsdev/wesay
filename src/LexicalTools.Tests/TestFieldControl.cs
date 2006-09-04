@@ -1,6 +1,7 @@
 using NUnit.Framework;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Tests;
+using WeSay.UI;
 
 namespace WeSay.LexicalTools.Tests
 {
@@ -15,6 +16,8 @@ namespace WeSay.LexicalTools.Tests
 		[SetUp]
 		public void SetUp()
 		{
+			BasilProject.InitializeForTests();
+
 			apple = CreateTestEntry("apple", "red thing", "An apple a day keeps the doctor away.");
 			banana = CreateTestEntry("banana", "yellow food", "Monkeys like to eat bananas.");
 			car = CreateTestEntry("car", "small motorized vehicle", "Watch out for cars when you cross the street.");
@@ -29,11 +32,28 @@ namespace WeSay.LexicalTools.Tests
 		}
 
 		[Test]
+		public void NullDataSource_ShowsEmpty()
+		{
+			LexFieldControl lexFieldControl = CreateForm(null);
+			Assert.AreEqual(string.Empty, lexFieldControl.Control_DataView);
+		}
+
+		[Test]
 		public void DataSource_ShowsCurrentEntry()
 		{
 		   TestEntryShows(apple);
 		   TestEntryShows(banana);
 		}
+
+		private static void TestEntryShows(LexEntry entry)
+		{
+			LexFieldControl lexFieldControl = CreateForm(entry);
+			Assert.IsTrue(lexFieldControl.Control_DataView.Contains(GetLexicalForm(entry)));
+			Assert.IsTrue(lexFieldControl.Control_DataView.Contains(GetGloss(entry)));
+			Assert.IsTrue(lexFieldControl.Control_DataView.Contains(GetExampleSentence(entry)));
+		}
+
+
 
 		[Test]
 		public void EditField_SingleControl()
@@ -71,15 +91,7 @@ namespace WeSay.LexicalTools.Tests
 			//Assert.IsTrue(lexFieldControl.Control_EntryDetail.Contains(GetLexicalForm(entry)));
 		}
 
-		private static void TestEntryShows(LexEntry entry)
-		{
-			LexFieldControl lexFieldControl = CreateForm(entry);
-			Assert.IsTrue(lexFieldControl.Control_DataView.Contains(GetLexicalForm(entry)));
-			Assert.IsTrue(lexFieldControl.Control_DataView.Contains(GetGloss(entry)));
-			Assert.IsTrue(lexFieldControl.Control_DataView.Contains(GetExampleSentence(entry)));
-		}
-
-		private static LexFieldControl CreateForm(LexEntry entry)
+		 private static LexFieldControl CreateForm(LexEntry entry)
 		{
 			LexFieldControl lexFieldControl = new LexFieldControl();
 			lexFieldControl.DataSource = entry;
