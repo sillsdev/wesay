@@ -21,6 +21,10 @@ namespace WeSay.UI
 		{
 			get
 			{
+				if (_singleton == null)
+				{
+					throw new ApplicationException("BasilProject Not initialized. For tests, call BasilProject.InitializeForTests().");
+				}
 				return _singleton;
 			}
 		}

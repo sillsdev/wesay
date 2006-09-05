@@ -12,9 +12,13 @@ namespace WeSay.UI.Tests
 		[SetUp]
 		public void Setup()
 		{
-		  DirectoryInfo dir = Directory.CreateDirectory(Path.Combine(Path.GetTempPath(), Path.GetRandomFileName()));
-		  _projectDirectory = dir.FullName;
-		   BasilProject p = new BasilProject(_projectDirectory);
+			DirectoryInfo dirProject = Directory.CreateDirectory(Path.Combine(Path.GetTempPath(), Path.GetRandomFileName()));
+			//DirectoryInfo dirCommon = Directory.CreateDirectory(Path.Combine(dirProject.FullName, "common"));
+			_projectDirectory = dirProject.FullName;
+			BasilProject p = new BasilProject(_projectDirectory);
+
+			Directory.CreateDirectory(Directory.GetParent(p.PathToWritingSystemPrefs).FullName);
+
 			StreamWriter writer = File.CreateText(p.PathToWritingSystemPrefs);
 			writer.Write(TestResources.WritingSystemPrefs);
 			writer.Close();

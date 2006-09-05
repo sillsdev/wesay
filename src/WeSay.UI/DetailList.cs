@@ -46,8 +46,9 @@ namespace WeSay.UI
 
 			if (Environment.OSVersion.Platform != PlatformID.Unix)
 			{
-				this.Margin = new Padding(5, 5, 5, 5); //not implemented inn mono 1.16
+				//this.Margin = new Padding(5, 5, 5, 5); //not implemented inn mono 1.16
 			}
+			_fadeInTimer.Enabled = false;
 			_fadeInTimer.Interval = 500;
 
 		}
@@ -139,7 +140,7 @@ namespace WeSay.UI
 			panel.Controls.Add(label);
 
 			editWidget.Top = 6+top;
-			editWidget.Size = new Size(200, 50);
+		   // editWidget.w.Size = new Size(200, 50);
 			editWidget.Width = 5;//THIS IS IGNORED, something to do with the anchor.right. AAAAAAAAAHHHH!!!!!!// this.Width - (label.Width + 200);
 			FixUpForMono(editWidget);
 			editWidget.Left = label.Width + 10;

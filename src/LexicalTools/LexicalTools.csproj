@@ -28,6 +28,14 @@
 	<WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+	<Reference Include="DevAge.Core, Version=1.0.0.11, Culture=neutral, PublicKeyToken=faad465d84242dbf">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\DevAge.SourceGrid\DevAge.Core.dll</HintPath>
+	</Reference>
+	<Reference Include="DevAge.SourceGrid3, Version=1.0.0.11, Culture=neutral, PublicKeyToken=faad465d84242dbf">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\DevAge.SourceGrid\DevAge.SourceGrid3.dll</HintPath>
+	</Reference>
 	<Reference Include="System" />
 	<Reference Include="System.Data" />
 	<Reference Include="System.Drawing" />
@@ -76,6 +84,10 @@
 	  <Project>{5F61C809-B6C0-4567-9603-B2198E1AD038}</Project>
 	  <Name>LexicalModel</Name>
 	</ProjectReference>
+	<ProjectReference Include="..\ListBox\ListBox\ListBox.csproj">
+	  <Project>{3CB6560B-DA13-4348-BE4E-4E12E05A6559}</Project>
+	  <Name>ListBox</Name>
+	</ProjectReference>
 	<ProjectReference Include="..\TreeViewIList\TreeViewIList.csproj">
 	  <Project>{B538A561-53CA-4892-9906-E86C098045E1}</Project>
 	  <Name>TreeViewIList</Name>
@@ -90,6 +102,10 @@
 	</ProjectReference>
   </ItemGroup>
   <ItemGroup>
+	<EmbeddedResource Include="EntryDetailTask.resx">
+	  <SubType>Designer</SubType>
+	  <DependentUpon>EntryDetailTask.cs</DependentUpon>
+	</EmbeddedResource>
 	<EmbeddedResource Include="Properties\Resources.resx">
 	  <SubType>Designer</SubType>
 	  <Generator>ResXFileCodeGenerator</Generator>

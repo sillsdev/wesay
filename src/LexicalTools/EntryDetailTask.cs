@@ -18,7 +18,13 @@ namespace WeSay.LexicalTools
 			_records = records;
 
 			InitializeComponent();
+
+
 			_entryDetailPanel.BackColor = SystemColors.Control;//we like it to stand out at design time, but not runtime
+			_recordsListBox.Font = project.VernacularWritingSystemDefault.Font;
+
+			_recordsListBox.AutoSize();
+			_recordsListBox.Columns.StretchToFit();
 		}
 
 		void OnRecordSelectionChanged(object sender, EventArgs e)

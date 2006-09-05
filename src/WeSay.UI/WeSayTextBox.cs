@@ -14,6 +14,29 @@ namespace WeSay.UI
 		 //   _isGhost = false;
 			InitializeComponent();
 			this.Font = ws.Font;
+
+
+		}
+
+		public new string Text
+		{
+			set
+			{
+				base.Text = value;
+
+				Bitmap  bitmap = new System.Drawing.Bitmap(10, 10);
+				System.Drawing.Graphics graphics = System.Drawing.Graphics.FromImage(bitmap);
+				SizeF sz = graphics.MeasureString(value, this.Font);
+				sz.Height += 20;
+				if (this.Height < sz.Height)
+				{
+					this.Height = (int)sz.Height;
+				}
+			}
+			get
+			{
+				return base.Text;
+			}
 		}
 
 		//public bool IsGhost

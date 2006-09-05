@@ -64,6 +64,8 @@ namespace WeSay.UI.Tests
 		[SetUp]
 		public void Setup()
 		{
+			BasilProject.InitializeForTests();
+
 			_papaNameWidget = new WeSayTextBox(BasilProject.Project.AnalysisWritingSystemDefault);
 			_papaNameWidget.Text  =  "John";
 			_ghostFirstNameWidget = new WeSayTextBox(BasilProject.Project.AnalysisWritingSystemDefault);

@@ -9,7 +9,7 @@ namespace WeSay.UI.Tests
 		[SetUp]
 		public void Setup()
 		{
-		   // Gtk.Application.Init();
+			BasilProject.InitializeForTests();
 		}
 
 		[Test]
