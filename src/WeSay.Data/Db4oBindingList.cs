@@ -124,6 +124,24 @@ namespace WeSay.Data
 			OnListReset();
 		}
 
+		public void RefreshFilter()
+		{
+			VerifyNotDisposed();
+			if(_records.IsFiltered){
+				if (_records.FilteringInDatabase)
+				{
+					this._records.Requery(true);
+					OnListReset();
+				}
+				else
+				{
+					Predicate<T> filter = _records.Filter;
+					_records.Filter = null;
+					ApplyFilter(filter);
+				}
+			}
+		}
+
 		public bool IsFiltered
 		{
 			get

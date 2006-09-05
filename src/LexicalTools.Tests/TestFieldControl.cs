@@ -2,6 +2,7 @@ using NUnit.Framework;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Tests;
 using WeSay.UI;
+using System.Windows.Forms;
 
 namespace WeSay.LexicalTools.Tests
 {
@@ -32,14 +33,24 @@ namespace WeSay.LexicalTools.Tests
 		}
 
 		[Test]
-		public void NullDataSource_ShowsEmpty()
+		public void CreateWithFilter()
 		{
-			LexFieldControl lexFieldControl = CreateForm(null);
-			Assert.AreEqual(string.Empty, lexFieldControl.Control_DataView);
+			LexFieldControl lexFieldControl = new LexFieldControl(delegate(string s)
+																	{
+																		return true;
+																	});
+			Assert.IsNotNull(lexFieldControl);
 		}
 
 		[Test]
-		public void DataSource_ShowsCurrentEntry()
+		public void NullDataSource_ShowsEmpty()
+		{
+			LexFieldControl lexFieldControl = CreateForm(null);
+			Assert.AreEqual(string.Empty, lexFieldControl.Control_FormattedView);
+		}
+
+		[Test]
+		public void FormattedView_ShowsCurrentEntry()
 		{
 		   TestEntryShows(apple);
 		   TestEntryShows(banana);
@@ -48,38 +59,27 @@ namespace WeSay.LexicalTools.Tests
 		private static void TestEntryShows(LexEntry entry)
 		{
 			LexFieldControl lexFieldControl = CreateForm(entry);
-			Assert.IsTrue(lexFieldControl.Control_DataView.Contains(GetLexicalForm(entry)));
-			Assert.IsTrue(lexFieldControl.Control_DataView.Contains(GetGloss(entry)));
-			Assert.IsTrue(lexFieldControl.Control_DataView.Contains(GetExampleSentence(entry)));
+			Assert.IsTrue(lexFieldControl.Control_FormattedView.Contains(GetLexicalForm(entry)));
+			Assert.IsTrue(lexFieldControl.Control_FormattedView.Contains(GetGloss(entry)));
+			Assert.IsTrue(lexFieldControl.Control_FormattedView.Contains(GetExampleSentence(entry)));
 		}
-
-
 
 		[Test]
 		public void EditField_SingleControl()
 		{
-			TestSingleControl(apple);
-			TestSingleControl(banana);
-		}
-
-		private void TestSingleControl(LexEntry entry)
-		{
-			LexFieldControl lexFieldControl = new LexFieldControl(delegate(string fieldName)
-														{
-															if (fieldName == "LexicalForm")
-															{
-																return true;
-															}
-															return false;
-														});
-			lexFieldControl.DataSource = entry;
-
+			LexFieldControl lexFieldControl = CreateFilteredForm(apple, "Gloss");
 			Assert.AreEqual(1, lexFieldControl.Control_EntryDetail.Count);
 		}
 
+		[Test]
+		public void EditField_SingleControlWithGhost()
+		{
+			LexFieldControl lexFieldControl = CreateFilteredForm(apple, "Gloss GhostGloss");
+			Assert.AreEqual(2, lexFieldControl.Control_EntryDetail.Count);
+		}
 
 		[Test]
-		public void DataSource_EditField_MapsToLexicalForm()
+		public void EditField_MapsToLexicalForm()
 		{
 			TestEditFieldMapsToLexicalForm(car);
 			TestEditFieldMapsToLexicalForm(bike);
@@ -87,11 +87,27 @@ namespace WeSay.LexicalTools.Tests
 
 		private static void TestEditFieldMapsToLexicalForm(LexEntry entry)
 		{
-			LexFieldControl lexFieldControl = CreateForm(entry);
-			//Assert.IsTrue(lexFieldControl.Control_EntryDetail.Contains(GetLexicalForm(entry)));
+			LexFieldControl lexFieldControl = CreateFilteredForm(entry, "Gloss");
+			EntryDetailControl entryDetailControl = lexFieldControl.Control_EntryDetail;
+			Control referenceControl = entryDetailControl.GetControlOfRow(0);
+			Label labelControl = entryDetailControl.GetLabelControlFromReferenceControl(referenceControl);
+			Assert.AreEqual("Meaning", labelControl.Text);
+			Control editControl = entryDetailControl.GetEditControlFromReferenceControl(referenceControl);
+			Assert.IsTrue(editControl.Text.Contains(GetGloss(entry)));
 		}
 
-		 private static LexFieldControl CreateForm(LexEntry entry)
+		[Test]
+		public void EditField_Change_DisplayedInFormattedView()
+		{
+			LexFieldControl lexFieldControl = CreateFilteredForm(apple, "LexicalForm");
+			EntryDetailControl entryDetailControl = lexFieldControl.Control_EntryDetail;
+			Control referenceControl = entryDetailControl.GetControlOfRow(0);
+			Control editControl = entryDetailControl.GetEditControlFromReferenceControl(referenceControl);
+			editControl.Text = "test";
+			Assert.IsTrue(lexFieldControl.Control_FormattedView.Contains("test"));
+	   }
+
+		private static LexFieldControl CreateForm(LexEntry entry)
 		{
 			LexFieldControl lexFieldControl = new LexFieldControl();
 			lexFieldControl.DataSource = entry;
@@ -99,14 +115,25 @@ namespace WeSay.LexicalTools.Tests
 			return lexFieldControl;
 		}
 
+
+		private static LexFieldControl CreateFilteredForm(LexEntry entry, string s)
+		{
+			LexFieldControl lexFieldControl = new LexFieldControl(delegate(string fieldName)
+														{
+															return s.Contains(fieldName);
+														});
+			lexFieldControl.DataSource = entry;
+			return lexFieldControl;
+		}
+
 		private static LexEntry CreateTestEntry(string lexicalForm, string gloss, string exampleSentence)
 		{
 			LexEntry entry = new LexEntry();
-			entry.LexicalForm["th"] = lexicalForm;
+			entry.LexicalForm[BasilProject.Project.VernacularWritingSystemDefault.Id] = lexicalForm;
 			LexSense sense = (LexSense)entry.Senses.AddNew();
-			sense.Gloss["en"] = gloss;
+			sense.Gloss[BasilProject.Project.AnalysisWritingSystemDefault.Id] = gloss;
 			LexExampleSentence example = (LexExampleSentence)sense.ExampleSentences.AddNew();
-			example.Sentence["th"] = exampleSentence;
+			example.Sentence[BasilProject.Project.VernacularWritingSystemDefault.Id] = exampleSentence;
 			return entry;
 		}
 

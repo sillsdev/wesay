@@ -57,7 +57,7 @@ namespace WeSay.App
 				tools.Add(CreateTool("WeSay.CommonTools.DashboardControl,CommonTools"));
 				tools.Add(CreateTool("WeSay.LexicalTools.EntryDetailTask,LexicalTools"));
 				tools.Add(CreateTool("WeSay.LexicalTools.LexFieldTask,LexicalTools",
-					CreateLexFieldConfiguration("Add Meanings", "GhostGloss")));
+					CreateLexFieldConfiguration("Add Meanings", "Gloss GhostGloss")));
 				tools.Add(CreateTool("WeSay.CommonTools.PictureControl,CommonTools",
 					CreatePictureConfiguration("Collect Words", "RealWord.gif")));
 				tools.Add(CreateTool("WeSay.CommonTools.PictureControl,CommonTools",
@@ -164,7 +164,7 @@ namespace WeSay.App
 			instances.Add(label);
 			System.Predicate<string> fieldFilter = delegate(string s)
 							{
-								return s == fieldToShow;
+								return fieldToShow.Contains(s);
 							};
 			instances.Add(fieldFilter);
 

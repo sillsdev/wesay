@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Drawing;
 using System.Data;
 using System.Text;
 using System.Windows.Forms;
@@ -38,7 +37,7 @@ namespace WeSay.LexicalTools
 		}
 
 
-		public string Control_DataView
+		public string Control_FormattedView
 		{
 			get
 			{
@@ -66,6 +65,10 @@ namespace WeSay.LexicalTools
 			}
 			set
 			{
+				if (_record != null)
+				{
+					_record.PropertyChanged -= OnRecordPropertyChanged;
+				}
 				_record = value;
 				_entryDetailControl.DataSource = value;
 				if (_record == null)
@@ -74,9 +77,16 @@ namespace WeSay.LexicalTools
 				}
 				else
 				{
+					_record.PropertyChanged +=new PropertyChangedEventHandler(OnRecordPropertyChanged);
+
 					_lexicalEntryView.Rtf = _record.ToRtf();
 				}
 			}
+		}
+
+		private void OnRecordPropertyChanged(object sender, PropertyChangedEventArgs e)
+		{
+			_lexicalEntryView.Rtf = _record.ToRtf();
 		}
 
 	}

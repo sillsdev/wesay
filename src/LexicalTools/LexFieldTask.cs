@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using WeSay.LexicalModel;
 using WeSay.UI;
+using WeSay.Data;
 
 namespace WeSay.LexicalTools
 {
@@ -29,7 +30,6 @@ namespace WeSay.LexicalTools
 
 			InitializeComponent();
 			_lexFieldDetailPanel.BackColor = SystemColors.Control;//we like it to stand out at design time, but not runtime
-			_lexFieldDetailPanel.Control_EntryDetail.BackColor = SystemColors.Control;
 			_lexFieldDetailPanel.ShowField = filter;
 		}
 
@@ -42,6 +42,16 @@ namespace WeSay.LexicalTools
 
 		public void Activate()
 		{
+			IFilterable<LexEntry> filteredRecords = _records as IFilterable<LexEntry>;
+			if (filteredRecords != null)
+			{
+				if (filteredRecords.IsFiltered)
+				{
+					filteredRecords.RefreshFilter();
+				}
+			}
+
+
 			_recordsListBox.DataSource = _records;
 			_lexFieldDetailPanel.DataSource = CurrentRecord;
 

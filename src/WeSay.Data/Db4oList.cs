@@ -742,7 +742,7 @@ namespace Db4o.Binding
 			get
 			{
 				VerifyNotDisposed();
-				return this._filter == ComparisonHelper<T>.DefaultPredicate;
+				return this._filter != ComparisonHelper<T>.DefaultPredicate;
 			}
 		}
 		/// <summary>

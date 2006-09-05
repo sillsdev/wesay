@@ -1,7 +1,7 @@
 using System;
 namespace WeSay.Data
 {
-	interface IFilterable<T>
+	public interface IFilterable<T>
 	{
 		void ApplyFilter(Predicate<T> filter);
 		bool IsFiltered
@@ -9,5 +9,6 @@ namespace WeSay.Data
 			get;
 		}
 		void RemoveFilter();
+		void RefreshFilter();
 	}
 }

@@ -103,6 +103,19 @@ namespace WeSay.Data.Tests
 			Assert.AreEqual(_gianna, this._bindingList[0]);
 			AssertListChanged();
 		}
+
+		[Test]
+		public void RefreshFilter()
+		{
+			Filter();
+
+			_gianna.StoredInt = 1;
+			Assert.AreEqual(1, this._bindingList.Count);
+			this._bindingList.RefreshFilter();
+			Assert.AreEqual(2, this._bindingList.Count);
+			AssertListChanged();
+		}
+
 	}
 
 

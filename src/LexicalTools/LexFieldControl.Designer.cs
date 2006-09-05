@@ -49,6 +49,7 @@ namespace WeSay.LexicalTools
 			this._entryDetailControl.Name = "_entryDetailControl";
 			this._entryDetailControl.Size = new System.Drawing.Size(450, 250);
 			this._entryDetailControl.TabIndex = 1;
+			this._entryDetailControl.BackColor = System.Drawing.SystemColors.Control;
 			//
 			// LexFieldControl
 			//

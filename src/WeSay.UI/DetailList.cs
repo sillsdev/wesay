@@ -91,7 +91,7 @@ namespace WeSay.UI
 		{
 			get
 			{
-				throw new ApplicationException("Please don't access my Controls property externally.");
+				throw new ApplicationException("Please don't access my Controls property externally.\n For testing use GetControlOfRow and GetEditControlFromReferenceControl.");
 			}
 		}
 
@@ -269,9 +269,9 @@ namespace WeSay.UI
 		/// <summary>
 		/// for tests
 		/// </summary>
-		public Control GetLabelControlFromReferenceControl(Control rowControl)
+		public Label GetLabelControlFromReferenceControl(Control rowControl)
 		{
-			return rowControl.Controls[_indexOfLabel];
+			return (Label) rowControl.Controls[_indexOfLabel];
 		}
 	}
 }

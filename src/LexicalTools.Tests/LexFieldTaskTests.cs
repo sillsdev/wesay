@@ -12,7 +12,10 @@ namespace WeSay.LexicalTools.Tests
 	[TestFixture]
 	public class LexFieldTaskTests
 	{
-		IBindingList _records;
+		Db4oDataSource _dataSource;
+		Db4oBindingList<LexEntry> _records;
+		string _FilePath;
+
 		Predicate<string> _fieldFilter;
 		string _label;
 		string _lexicalForm;
@@ -21,7 +24,11 @@ namespace WeSay.LexicalTools.Tests
 		public void Setup()
 		{
 			BasilProject.InitializeForTests();
-			_records = new InMemoryBindingList<LexEntry>();
+
+			_FilePath = System.IO.Path.GetTempFileName();
+			this._dataSource = new Db4oDataSource(_FilePath);
+			this._records = new Db4oBindingList<LexEntry>(this._dataSource);
+
 			LexEntry entry = new LexEntry();
 			_lexicalForm = "vernacular";
 			entry.LexicalForm.SetAlternative(BasilProject.Project.VernacularWritingSystemDefault.Id, _lexicalForm);
@@ -32,6 +39,14 @@ namespace WeSay.LexicalTools.Tests
 							return s == "LexicalForm";
 						};
 			_label = "My label";
+		}
+
+		[TearDown]
+		public void TearDown()
+		{
+			this._records.Dispose();
+			this._dataSource.Dispose();
+			System.IO.File.Delete(_FilePath);
 		}
 
 		[Test]
@@ -82,14 +97,48 @@ namespace WeSay.LexicalTools.Tests
 		{
 			LexFieldTask task = new LexFieldTask(_records, _label, _fieldFilter);
 			task.Activate();
-			Assert.IsTrue(task.Control_Details.Control_DataView.Contains(_lexicalForm));
+			Assert.IsTrue(task.Control_Details.Control_FormattedView.Contains(_lexicalForm));
 			Assert.AreEqual(1, task.DataSource.Count);
 			task.Deactivate();
 			_records.Clear();
 			task.Activate();
-			Assert.AreEqual(string.Empty, task.Control_Details.Control_DataView);
+			Assert.AreEqual(string.Empty, task.Control_Details.Control_FormattedView);
 			Assert.AreEqual(0, task.DataSource.Count);
 			task.Deactivate();
 		}
+
+		[Test]
+		public void Activate_Refilters()
+		{
+			LexFieldTask task = new LexFieldTask(_records, _label, _fieldFilter);
+
+			Predicate<LexEntry> entriesWithoutGlosses = delegate(LexEntry entry)
+						{
+							if (entry.Senses.Count == 0)
+							{
+								return true;
+							}
+							foreach (LexSense sense in entry.Senses)
+							{
+								if (sense.Gloss[BasilProject.Project.AnalysisWritingSystemDefault.Id] == string.Empty)
+								{
+									return true;
+								}
+							}
+							return false;
+						};
+
+			_records.ApplyFilter(entriesWithoutGlosses);
+
+			task.Activate();
+			Assert.AreEqual(1, task.DataSource.Count);
+			task.Deactivate();
+			LexSense newSense = (LexSense)_records[0].Senses.AddNew();
+			newSense.Gloss[BasilProject.Project.AnalysisWritingSystemDefault.Id] = "a gloss";
+			task.Activate();
+			Assert.AreEqual(0, task.DataSource.Count);
+			task.Deactivate();
+		}
+
 	}
 }

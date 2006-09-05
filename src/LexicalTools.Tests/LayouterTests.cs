@@ -31,7 +31,7 @@ namespace WeSay.LexicalTools.Tests
 			DetailList dl = MakeDetailList();
 
 			Control rowControl = dl.GetControlOfRow(0);
-			Label l = (Label) dl.GetLabelControlFromReferenceControl(rowControl);
+			Label l = dl.GetLabelControlFromReferenceControl(rowControl);
 			Assert.AreEqual("Word", l.Text);
 		}
 
