@@ -23,23 +23,25 @@ namespace WeSay.App
 				//t.Container = container;
 				TabPage page = new TabPage(t.Label);
 				page.Tag = t;
-				t.Control.Dock = DockStyle.Fill;
-
-				page.Controls.Add(t.Control);
 				this.tabControl1.TabPages.Add(page);
 			}
 		}
 
 		void tabControl1_SelectedIndexChanged(object sender, System.EventArgs e)
 		{
-			ITask t = (ITask)((TabControl)sender).SelectedTab.Tag;
+			TabPage page = ((TabControl)sender).SelectedTab;
+			ITask t = (ITask)page.Tag;
 			if (_currentTool == t)
 				return; //debounce
 
 			if (_currentTool != null)
 				_currentTool.Deactivate();
 			if (t != null)
+			{
+				t.Control.Dock = DockStyle.Fill;
+				page.Controls.Add(t.Control);
 				t.Activate();
+			}
 			_currentTool = t;
 		}
 	}

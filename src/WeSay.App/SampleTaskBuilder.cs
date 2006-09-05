@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Reflection;
+using System.Windows.Forms;
 using PicoContainer;
 using PicoContainer.Defaults;
 using WeSay.Data;
@@ -48,6 +49,8 @@ namespace WeSay.App
 		   }
 
 		}
+		delegate ITask TaskDelegate();
+
 
 		public IList<ITask> Tasks
 		{
@@ -55,9 +58,26 @@ namespace WeSay.App
 			{
 				List<ITask> tools = new List<ITask>();
 				tools.Add(CreateTool("WeSay.CommonTools.DashboardControl,CommonTools"));
-				tools.Add(CreateTool("WeSay.LexicalTools.EntryDetailTask,LexicalTools"));
-				tools.Add(CreateTool("WeSay.LexicalTools.LexFieldTask,LexicalTools",
-					CreateLexFieldConfiguration("Add Meanings", "Gloss GhostGloss")));
+				// tools.Add(CreateTool("WeSay.LexicalTools.EntryDetailTask,LexicalTools"));
+
+				tools.Add(new TaskProxy("Words", delegate
+					{
+						return CreateTool("WeSay.LexicalTools.EntryDetailTask,LexicalTools") ;
+					}));
+
+
+
+//                tools.Add(CreateTool("WeSay.LexicalTools.LexFieldTask,LexicalTools",
+//                    CreateLexFieldConfiguration("Add Meanings", "Gloss GhostGloss")));
+
+				tools.Add(new TaskProxy("Add Meanings", delegate
+				{
+					return CreateTool("WeSay.LexicalTools.LexFieldTask,LexicalTools",
+					CreateLexFieldConfiguration("Add Meanings", "Gloss GhostGloss"));
+				}));
+
+
+
 				tools.Add(CreateTool("WeSay.CommonTools.PictureControl,CommonTools",
 					CreatePictureConfiguration("Collect Words", "RealWord.gif")));
 				tools.Add(CreateTool("WeSay.CommonTools.PictureControl,CommonTools",
@@ -66,6 +86,57 @@ namespace WeSay.App
 			}
 		}
 
+		class TaskProxy : ITask
+		{
+			private string _label;
+			private TaskDelegate _makeTask;
+			private ITask _realTask;
+
+			public TaskProxy(string label, TaskDelegate makeTask)
+			{
+				_label = label;
+				_makeTask = makeTask;
+			}
+
+			#region ITask Members
+
+			public void Activate()
+			{
+				RealTask.Activate();
+			}
+
+
+			public void Deactivate()
+			{
+			}
+
+			public string Label
+			{
+				get { return _label; }
+			}
+
+			public System.Windows.Forms.Control Control
+			{
+				get
+				{
+					return RealTask.Control;
+				}
+			}
+
+			private ITask RealTask
+			{
+				get
+				{
+					if (_realTask == null)
+					{
+						_realTask = _makeTask();
+					}
+					return _realTask;
+				}
+			}
+
+			#endregion
+		}
 
 		//TODO(JH): having a builder than needs to be kept around so it can be disposed of is all wrong.
 		//either I want to change it to something like TaskList rather than ITaskBuilder, or
@@ -92,6 +163,7 @@ namespace WeSay.App
 			{
 				foreach (object instance in instances)
 				{
+					//REVIEW: Huh? This is registering every LexEntry.
 					child.RegisterComponentInstance(instance);
 				}
 			}

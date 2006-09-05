@@ -19,12 +19,8 @@ namespace WeSay.LexicalTools
 
 			InitializeComponent();
 
-
 			_entryDetailPanel.BackColor = SystemColors.Control;//we like it to stand out at design time, but not runtime
-			_recordsListBox.Font = project.VernacularWritingSystemDefault.Font;
 
-			_recordsListBox.AutoSize();
-			_recordsListBox.Columns.StretchToFit();
 		}
 
 		void OnRecordSelectionChanged(object sender, EventArgs e)
@@ -39,6 +35,10 @@ namespace WeSay.LexicalTools
 			_recordsListBox.DataSource = _records;
 			_entryDetailPanel.DataSource = CurrentRecord;
 			_recordsListBox.SelectedIndexChanged += new EventHandler(OnRecordSelectionChanged);
+
+			_recordsListBox.Font = BasilProject.Project.VernacularWritingSystemDefault.Font;
+			_recordsListBox.AutoSize();
+			_recordsListBox.Columns.StretchToFit();
 		}
 
 		public void Deactivate()

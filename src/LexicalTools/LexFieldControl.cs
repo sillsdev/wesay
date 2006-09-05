@@ -24,6 +24,8 @@ namespace WeSay.LexicalTools
 			_entryDetailControl.ShowField = filter;
 		}
 
+		[Browsable(false)]
+		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
 		public Predicate<string>  ShowField
 		{
 			get

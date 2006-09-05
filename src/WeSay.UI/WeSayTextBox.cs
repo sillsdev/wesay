@@ -27,7 +27,7 @@ namespace WeSay.UI
 				Bitmap  bitmap = new System.Drawing.Bitmap(10, 10);
 				System.Drawing.Graphics graphics = System.Drawing.Graphics.FromImage(bitmap);
 				SizeF sz = graphics.MeasureString(value, this.Font);
-				sz.Height += 20;
+			  //  sz.Height += 5;
 				if (this.Height < sz.Height)
 				{
 					this.Height = (int)sz.Height;

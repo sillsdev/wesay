@@ -125,17 +125,14 @@ namespace WeSay.UI
 		private Panel AddRowPanel(Control editWidget, string fieldLabel, bool isHeader)
 		{
 			Panel panel = new Panel();
-			panel.Dock = DockStyle.Top;
-			panel.Size = new Size(25, 27);
 
 
-			int top = AddHorizontalRule(panel, isHeader, _rowCount == 0);
-			panel.Size = new Size(25, 28+top);
-
+			int top = 0;// AddHorizontalRule(panel, isHeader, _rowCount == 0);
+			if (isHeader)
+				top = 15;
 			Label label = new Label();
 			label.Text = fieldLabel;
 			label.Size = new Size(60, 50);
-		   // label.Dock = DockStyle.Left;
 			label.Top = 9+top;
 			panel.Controls.Add(label);
 
@@ -144,11 +141,13 @@ namespace WeSay.UI
 			editWidget.Width = 5;//THIS IS IGNORED, something to do with the anchor.right. AAAAAAAAAHHHH!!!!!!// this.Width - (label.Width + 200);
 			FixUpForMono(editWidget);
 			editWidget.Left = label.Width + 10;
-			//editWidget.Dock = DockStyle.Right ;
-		   editWidget.Anchor = AnchorStyles.Left | AnchorStyles.Right;
-			panel.Controls.Add(editWidget);
 
-			base.Controls.Add(panel);
+			panel.Size = new Size(100, 10+editWidget.Height+top );//careful.. if width is too small, then editwidget grows to much.  Weird.
+
+			editWidget.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+			panel.Controls.Add(editWidget);
+			panel.Dock = DockStyle.Top;
+		  base.Controls.Add(panel);
 
 			return panel;
 		}

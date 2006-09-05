@@ -15,6 +15,7 @@ namespace WeSay.LexicalTools
 		private string _label;
 		private int _currentIndex;
 
+
 		public LexFieldTask(IBindingList records, string label, Predicate<string> filter)
 		{
 			if (records == null)
@@ -56,6 +57,10 @@ namespace WeSay.LexicalTools
 			_lexFieldDetailPanel.DataSource = CurrentRecord;
 
 			_recordsListBox.SelectedIndexChanged += new EventHandler(OnRecordSelectionChanged);
+
+			_recordsListBox.Font = BasilProject.Project.VernacularWritingSystemDefault.Font;
+			_recordsListBox.AutoSize();
+			_recordsListBox.Columns.StretchToFit();
 
 			_recordsListBox.Refresh();
 			_lexFieldDetailPanel.Refresh();

@@ -89,10 +89,10 @@ namespace WeSay.LexicalTools
 			this._recordsListBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
 						| System.Windows.Forms.AnchorStyles.Left)));
 			this._recordsListBox.GridToolTipActive = true;
-			this._recordsListBox.Location = new System.Drawing.Point(0, 20);
+			this._recordsListBox.Location = new System.Drawing.Point(3, 20);
 			this._recordsListBox.Name = "_recordsListBox";
 			this._recordsListBox.SelectedIndex = 0;
-			this._recordsListBox.Size = new System.Drawing.Size(118, 127);
+			this._recordsListBox.Size = new System.Drawing.Size(118, 110);
 			this._recordsListBox.SpecialKeys = ((SourceGrid3.GridSpecialKeys)(((((((SourceGrid3.GridSpecialKeys.Arrows | SourceGrid3.GridSpecialKeys.Tab)
 						| SourceGrid3.GridSpecialKeys.PageDownUp)
 						| SourceGrid3.GridSpecialKeys.Enter)

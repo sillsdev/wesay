@@ -102,10 +102,6 @@
 	</ProjectReference>
   </ItemGroup>
   <ItemGroup>
-	<EmbeddedResource Include="EntryDetailTask.resx">
-	  <SubType>Designer</SubType>
-	  <DependentUpon>EntryDetailTask.cs</DependentUpon>
-	</EmbeddedResource>
 	<EmbeddedResource Include="Properties\Resources.resx">
 	  <SubType>Designer</SubType>
 	  <Generator>ResXFileCodeGenerator</Generator>
