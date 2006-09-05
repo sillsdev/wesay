@@ -1,19 +1,21 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Reflection;
+using System.Diagnostics;
+using System.Drawing;
 using System.Windows.Forms;
 using PicoContainer;
 using PicoContainer.Defaults;
 using WeSay.Data;
-using WeSay.Language;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Tests;
 using WeSay.UI;
-using System.Collections;
 
 namespace WeSay.App
 {
+	delegate ITask TaskDelegate();
+
 	public class SampleTaskBuilder : ITaskBuilder, IDisposable
 	{
 		private bool _disposed = false;
@@ -49,7 +51,6 @@ namespace WeSay.App
 		   }
 
 		}
-		delegate ITask TaskDelegate();
 
 
 		public IList<ITask> Tasks
@@ -58,17 +59,12 @@ namespace WeSay.App
 			{
 				List<ITask> tools = new List<ITask>();
 				tools.Add(CreateTool("WeSay.CommonTools.DashboardControl,CommonTools"));
-				// tools.Add(CreateTool("WeSay.LexicalTools.EntryDetailTask,LexicalTools"));
 
 				tools.Add(new TaskProxy("Words", delegate
 					{
 						return CreateTool("WeSay.LexicalTools.EntryDetailTask,LexicalTools") ;
 					}));
 
-
-
-//                tools.Add(CreateTool("WeSay.LexicalTools.LexFieldTask,LexicalTools",
-//                    CreateLexFieldConfiguration("Add Meanings", "Gloss GhostGloss")));
 
 				tools.Add(new TaskProxy("Add Meanings", delegate
 				{
@@ -86,57 +82,6 @@ namespace WeSay.App
 			}
 		}
 
-		class TaskProxy : ITask
-		{
-			private string _label;
-			private TaskDelegate _makeTask;
-			private ITask _realTask;
-
-			public TaskProxy(string label, TaskDelegate makeTask)
-			{
-				_label = label;
-				_makeTask = makeTask;
-			}
-
-			#region ITask Members
-
-			public void Activate()
-			{
-				RealTask.Activate();
-			}
-
-
-			public void Deactivate()
-			{
-			}
-
-			public string Label
-			{
-				get { return _label; }
-			}
-
-			public System.Windows.Forms.Control Control
-			{
-				get
-				{
-					return RealTask.Control;
-				}
-			}
-
-			private ITask RealTask
-			{
-				get
-				{
-					if (_realTask == null)
-					{
-						_realTask = _makeTask();
-					}
-					return _realTask;
-				}
-			}
-
-			#endregion
-		}
 
 		//TODO(JH): having a builder than needs to be kept around so it can be disposed of is all wrong.
 		//either I want to change it to something like TaskList rather than ITaskBuilder, or
@@ -176,7 +121,7 @@ namespace WeSay.App
 			RegisterType(picoContext, fullToolClass);
 
 		   ITask i = (ITask)picoContext.GetComponentInstance(fullToolClass);
-		   System.Diagnostics.Debug.Assert(i != null);
+		   Debug.Assert(i != null);
 		   return i;
 		}
 
@@ -207,7 +152,7 @@ namespace WeSay.App
 		{
 			IList instances = new List<object>();
 			instances.Add(label);
-			instances.Add(new System.Drawing.Bitmap(pictureFilePath));
+			instances.Add(new Bitmap(pictureFilePath));
 
 			return instances;
 		}
@@ -234,7 +179,7 @@ namespace WeSay.App
 			Db4oBindingList<LexEntry> entries = new Db4oBindingList<LexEntry>(ds, entryFilter);
 			instances.Add(entries);
 			instances.Add(label);
-			System.Predicate<string> fieldFilter = delegate(string s)
+			Predicate<string> fieldFilter = delegate(string s)
 							{
 								return fieldToShow.Contains(s);
 							};
@@ -282,5 +227,59 @@ namespace WeSay.App
 		//    return registerTypes;
 		//}
 
+	}
+
+
+	class TaskProxy : ITask
+	{
+		private string _label;
+		private TaskDelegate _makeTask;
+		private ITask _realTask;
+
+		public TaskProxy(string label, TaskDelegate makeTask)
+		{
+			_label = label;
+			_makeTask = makeTask;
+		}
+
+		#region ITask Members
+
+		public void Activate()
+		{
+			RealTask.Activate();
+		}
+
+
+		public void Deactivate()
+		{
+			  RealTask.Deactivate();
+	  }
+
+		public string Label
+		{
+			get { return _label; }
+		}
+
+		public Control Control
+		{
+			get
+			{
+				return RealTask.Control;
+			}
+		}
+
+		private ITask RealTask
+		{
+			get
+			{
+				if (_realTask == null)
+				{
+					_realTask = _makeTask();
+				}
+				return _realTask;
+			}
+		}
+
+		#endregion
 	}
 }
