@@ -21,15 +21,22 @@ namespace WeSay.App
 			foreach (ITask t in taskBuilder.Tasks)
 			{
 				//t.Container = container;
-				TabPage page = new TabPage(t.Label);
+				TabPage page = new TabPage(StringCatalog.Get(t.Label));
 				page.Tag = t;
 				this.tabControl1.TabPages.Add(page);
 			}
+
+			ActivateTab(this.tabControl1.SelectedTab);
 		}
 
 		void tabControl1_SelectedIndexChanged(object sender, System.EventArgs e)
 		{
 			TabPage page = ((TabControl)sender).SelectedTab;
+			ActivateTab(page);
+		}
+
+		private void ActivateTab(TabPage page)
+		{
 			ITask t = (ITask)page.Tag;
 			if (_currentTool == t)
 				return; //debounce
@@ -44,5 +51,6 @@ namespace WeSay.App
 			}
 			_currentTool = t;
 		}
+
 	}
 }

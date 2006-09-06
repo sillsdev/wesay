@@ -16,6 +16,7 @@ namespace WeSay.UI
 		private XmlDocument _fontPrefsDoc;
 		private  WritingSystem _vernacularWritingSystemDefault;
 		private  WritingSystem _analysisWritingSystemDefault;
+		private string _stringCatalogSelector;
 
 		public static BasilProject Project
 		{
@@ -40,6 +41,8 @@ namespace WeSay.UI
 		{
 			BasilProject project = new BasilProject(@"../../SampleProjects/PRETEND");
 			project.InitWritingSystems();
+			project.StringCatalogSelector = "en";
+			project.InitStringCatalog();
 		}
 
 		public BasilProject(string projectDirectoryPath)
@@ -63,6 +66,14 @@ namespace WeSay.UI
 			get
 			{
 				return System.IO.Path.Combine(CommonDirectory, "writingSystemPrefs.xml");
+			}
+		}
+
+		public string PathToStringCatalog
+		{
+			get
+			{
+				return System.IO.Path.Combine(CommonDirectory, _stringCatalogSelector+".po");
 			}
 		}
 
@@ -142,6 +153,14 @@ namespace WeSay.UI
 				return _vernacularWritingSystemDefault;
 			}
 		}
+
+		public string StringCatalogSelector
+		{
+			get { return _stringCatalogSelector; }
+			set { _stringCatalogSelector = value; }
+		}
+
+
 		private  WritingSystem GetWritingSystem(string id)
 		{
 			if (!_writingSystems.ContainsKey(id))
@@ -150,6 +169,20 @@ namespace WeSay.UI
 				_writingSystems.Add(id, new WritingSystem(id, font));
 			}
 			return _writingSystems[id];
+		}
+
+		public void InitStringCatalog()
+		{
+			try
+			{
+				new StringCatalog(this.PathToStringCatalog);
+			}
+			catch(System.IO.FileNotFoundException )
+			{
+				//todo: get some ui message up
+				new StringCatalog();
+
+			}
 		}
 	}
 }

@@ -23,6 +23,8 @@ namespace WeSay.App
 #endif
 			BasilProject project = new BasilProject(FilePath);
 			project.InitWritingSystems();
+			project.StringCatalogSelector = "br";
+			project.InitStringCatalog();
 
 			WeSay.UI.ITaskBuilder builder = new SampleTaskBuilder(project);
 #if GTK

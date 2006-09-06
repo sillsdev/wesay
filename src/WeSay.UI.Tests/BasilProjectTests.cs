@@ -12,19 +12,34 @@ namespace WeSay.UI.Tests
 		[SetUp]
 		public void Setup()
 		{
+			string poFile = Path.GetTempFileName();
+
 			DirectoryInfo dirProject = Directory.CreateDirectory(Path.Combine(Path.GetTempPath(), Path.GetRandomFileName()));
-			//DirectoryInfo dirCommon = Directory.CreateDirectory(Path.Combine(dirProject.FullName, "common"));
 			_projectDirectory = dirProject.FullName;
-			BasilProject p = new BasilProject(_projectDirectory);
+			BasilProject project = new BasilProject(_projectDirectory);
 
-			Directory.CreateDirectory(Directory.GetParent(p.PathToWritingSystemPrefs).FullName);
+			WriteSampleWritingSystemFile(project);
+			 project.InitWritingSystems();
 
-			StreamWriter writer = File.CreateText(p.PathToWritingSystemPrefs);
+
+		}
+
+		private void WriteSampleWritingSystemFile(BasilProject project)
+		{
+			Directory.CreateDirectory(Directory.GetParent(project.PathToWritingSystemPrefs).FullName);
+			StreamWriter writer = File.CreateText(project.PathToWritingSystemPrefs);
 			writer.Write(TestResources.WritingSystemPrefs);
 			writer.Close();
-
-			p.InitWritingSystems();
 		}
+
+		private void WriteSampleStringCatalogFile(BasilProject project)
+		{
+			Directory.CreateDirectory(Directory.GetParent(project.PathToStringCatalog).FullName);
+			StreamWriter writer = File.CreateText(project.PathToStringCatalog);
+			writer.Write(TestResources.poStrings);
+			writer.Close();
+		}
+
 		[TearDown]
 		public void TearDown()
 		{
@@ -32,7 +47,7 @@ namespace WeSay.UI.Tests
 		}
 
 		[Test]
-		public void Test()
+		public void RightFont()
 		{
 			WritingSystem ws = BasilProject.Project.AnalysisWritingSystemDefault;
 			Assert.AreEqual("ANA", ws.Id);
@@ -48,6 +63,26 @@ namespace WeSay.UI.Tests
 			Assert.IsNotNull(ws);
 			ws = BasilProject.Project.VernacularWritingSystemDefault;
 			Assert.IsNotNull(ws);
+		}
+
+
+		[Test]
+		public void LocalizedStringsDuringTests()
+		{
+			BasilProject project = new BasilProject(_projectDirectory);
+			WriteSampleStringCatalogFile(project);
+			project.InitStringCatalog();
+			Assert.AreEqual("deng", StringCatalog.Get("red"));
+		}
+
+		[Test]
+		public void LocalizedStringsFromPretendSample()
+		{
+			BasilProject project = new BasilProject(@"../../SampleProjects/PRETEND");
+			project.StringCatalogSelector = "en";
+			project.InitStringCatalog();
+
+			Assert.AreEqual("red", StringCatalog.Get("red"));
 		}
 	}
 }

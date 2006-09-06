@@ -27,7 +27,7 @@ namespace WeSay.LexicalTools
 			LexEntry entry = (LexEntry)dataObject;
 			if (_detailList.ShowField("LexicalForm"))
 			{
-				_detailList.AddWidgetRow("Word", true, MakeBoundEntry(entry.LexicalForm, BasilProject.Project.VernacularWritingSystemDefault), insertAtRow);
+				_detailList.AddWidgetRow(StringCatalog.Get("Word"), true, MakeBoundEntry(entry.LexicalForm, BasilProject.Project.VernacularWritingSystemDefault), insertAtRow);
 				++rowCount;
 			}
 			LexSenseLayouter layouter = new LexSenseLayouter(_detailList);

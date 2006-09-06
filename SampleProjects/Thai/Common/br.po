@@ -1,0 +1,33 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: WeSay\n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: 2006-09-06 17:01+0700\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Language: Portuguese\n"
+"X-Poedit-Basepath: c:\\wesay\\src\n"
+
+msgid "Word"
+msgstr "Palavra"
+
+msgid "Meaning"
+msgstr "Sentidos"
+
+msgid "Example"
+msgstr "Exemplo"
+
+msgid "Translation"
+msgstr "Tradução"
+
+msgid "Words"
+msgstr "Palavras"
+
+msgid "Add Meanings"
+msgstr "Acreçenta Sentidos"
+
+msgid "Dashboard"
+msgstr ""
