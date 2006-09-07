@@ -53,6 +53,14 @@
 	</Compile>
   </ItemGroup>
   <ItemGroup>
+	<ProjectReference Include="..\Language\Language.csproj">
+	  <Project>{39DF05AB-8B2E-4CCA-8525-E0D6473E6E65}</Project>
+	  <Name>Language</Name>
+	</ProjectReference>
+	<ProjectReference Include="..\LexicalModel\LexicalModel.csproj">
+	  <Project>{5F61C809-B6C0-4567-9603-B2198E1AD038}</Project>
+	  <Name>LexicalModel</Name>
+	</ProjectReference>
 	<ProjectReference Include="..\WeSay.UI\WeSay.UI.csproj">
 	  <Project>{AC8F284C-7B34-4AC9-A7DE-FAF765456DFF}</Project>
 	  <Name>WeSay.UI</Name>

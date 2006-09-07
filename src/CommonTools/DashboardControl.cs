@@ -46,5 +46,13 @@ namespace WeSay.CommonTools
 		{
 
 		}
+
+		private void exportLIFT_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+		{
+			string path = string.Format(@"c:\{0}-lift.xml", _project.Name);
+			LexicalModel.LiftExporter exporter = new WeSay.LexicalModel.LiftExporter(path);
+			exporter.Add((IList<LexicalModel.LexEntry>) _records);
+			exporter.End();
+		}
 	}
 }

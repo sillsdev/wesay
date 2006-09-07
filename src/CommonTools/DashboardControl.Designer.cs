@@ -32,6 +32,7 @@ namespace WeSay.CommonTools
 			this._projectNameLabel = new System.Windows.Forms.Label();
 			this._dictionarySizeLabel = new System.Windows.Forms.Label();
 			this.pictureBox1 = new System.Windows.Forms.PictureBox();
+			this.exportLIFT = new System.Windows.Forms.LinkLabel();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
 			this.SuspendLayout();
 			//
@@ -65,10 +66,22 @@ namespace WeSay.CommonTools
 			this.pictureBox1.TabIndex = 2;
 			this.pictureBox1.TabStop = false;
 			//
+			// exportLIFT
+			//
+			this.exportLIFT.AutoSize = true;
+			this.exportLIFT.Location = new System.Drawing.Point(17, 311);
+			this.exportLIFT.Name = "exportLIFT";
+			this.exportLIFT.Size = new System.Drawing.Size(78, 13);
+			this.exportLIFT.TabIndex = 3;
+			this.exportLIFT.TabStop = true;
+			this.exportLIFT.Text = "Export To LIFT";
+			this.exportLIFT.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.exportLIFT_LinkClicked);
+			//
 			// DashboardControl
 			//
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.Controls.Add(this.exportLIFT);
 			this.Controls.Add(this.pictureBox1);
 			this.Controls.Add(this._dictionarySizeLabel);
 			this.Controls.Add(this._projectNameLabel);
@@ -85,5 +98,6 @@ namespace WeSay.CommonTools
 		private System.Windows.Forms.Label _projectNameLabel;
 		private System.Windows.Forms.Label _dictionarySizeLabel;
 		private System.Windows.Forms.PictureBox pictureBox1;
+		private System.Windows.Forms.LinkLabel exportLIFT;
 	}
 }
