@@ -130,7 +130,7 @@ namespace WeSay.UI
 			get
 			{
 				//we don't really want to give this directory out... this is just for a test
-				return "Project: "+_projectDirectoryPath;
+				return Path.GetFileName(this._projectDirectoryPath);
 			}
 		}
 

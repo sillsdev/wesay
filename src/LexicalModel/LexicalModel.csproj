@@ -40,6 +40,8 @@
 	<Compile Include="LexEntry.cs" />
 	<Compile Include="LexExampleSentence.cs" />
 	<Compile Include="LexSense.cs" />
+	<Compile Include="LiftExporter.cs" />
+	<Compile Include="LiftImporter.cs" />
 	<Compile Include="PretendRecordList.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />
 	<Compile Include="WeSayDataObject.cs" />

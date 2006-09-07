@@ -29,32 +29,32 @@ namespace WeSay.CommonTools
 		private void InitializeComponent()
 		{
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DashboardControl));
-			this.label1 = new System.Windows.Forms.Label();
-			this.label2 = new System.Windows.Forms.Label();
+			this._projectNameLabel = new System.Windows.Forms.Label();
+			this._dictionarySizeLabel = new System.Windows.Forms.Label();
 			this.pictureBox1 = new System.Windows.Forms.PictureBox();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
 			this.SuspendLayout();
 			//
-			// label1
+			// _projectNameLabel
 			//
-			this.label1.AutoSize = true;
-			this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label1.Location = new System.Drawing.Point(14, 13);
-			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(194, 31);
-			this.label1.TabIndex = 0;
-			this.label1.Text = "Lahu Champu";
-			this.label1.Click += new System.EventHandler(this.label1_Click);
+			this._projectNameLabel.AutoSize = true;
+			this._projectNameLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this._projectNameLabel.Location = new System.Drawing.Point(14, 13);
+			this._projectNameLabel.Name = "_projectNameLabel";
+			this._projectNameLabel.Size = new System.Drawing.Size(194, 31);
+			this._projectNameLabel.TabIndex = 0;
+			this._projectNameLabel.Text = "Lahu Champu";
+			this._projectNameLabel.Click += new System.EventHandler(this.label1_Click);
 			//
-			// label2
+			// _dictionarySizeLabel
 			//
-			this.label2.AutoSize = true;
-			this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label2.Location = new System.Drawing.Point(16, 267);
-			this.label2.Name = "label2";
-			this.label2.Size = new System.Drawing.Size(178, 20);
-			this.label2.TabIndex = 1;
-			this.label2.Text = "Dictionary has {0} words";
+			this._dictionarySizeLabel.AutoSize = true;
+			this._dictionarySizeLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this._dictionarySizeLabel.Location = new System.Drawing.Point(16, 267);
+			this._dictionarySizeLabel.Name = "_dictionarySizeLabel";
+			this._dictionarySizeLabel.Size = new System.Drawing.Size(178, 20);
+			this._dictionarySizeLabel.TabIndex = 1;
+			this._dictionarySizeLabel.Text = "Dictionary has {0} words";
 			//
 			// pictureBox1
 			//
@@ -70,8 +70,8 @@ namespace WeSay.CommonTools
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.Controls.Add(this.pictureBox1);
-			this.Controls.Add(this.label2);
-			this.Controls.Add(this.label1);
+			this.Controls.Add(this._dictionarySizeLabel);
+			this.Controls.Add(this._projectNameLabel);
 			this.Name = "DashboardControl";
 			this.Size = new System.Drawing.Size(499, 342);
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
@@ -82,8 +82,8 @@ namespace WeSay.CommonTools
 
 		#endregion
 
-		private System.Windows.Forms.Label label1;
-		private System.Windows.Forms.Label label2;
+		private System.Windows.Forms.Label _projectNameLabel;
+		private System.Windows.Forms.Label _dictionarySizeLabel;
 		private System.Windows.Forms.PictureBox pictureBox1;
 	}
 }

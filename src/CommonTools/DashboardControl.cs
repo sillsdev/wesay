@@ -17,7 +17,8 @@ namespace WeSay.CommonTools
 			_records = records;
 			_project = project;
 			InitializeComponent();
-			this.label2.Text = String.Format(this.label2.Text, records.Count);
+			this._dictionarySizeLabel.Text = String.Format(StringCatalog.Get(this._dictionarySizeLabel.Text), records.Count);
+			this._projectNameLabel.Text = _project.Name;
 		}
 
 		public void Activate()
