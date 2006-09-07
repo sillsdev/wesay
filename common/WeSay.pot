@@ -1,0 +1,37 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: blah balh\n"
+"POT-Creation-Date: 2005-09-20 20:52+0200\n"
+"PO-Revision-Date: 2006-09-06 16:48+0700\n"
+"Last-Translator: \n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "Word"
+msgstr "Palavra"
+
+msgid "Meaning"
+msgstr "Sentidos"
+
+msgid "Example"
+msgstr "Exemplo"
+
+msgid "Translation"
+msgstr "Tradução"
+
+msgid "Words"
+msgstr "Palavras"
+
+msgid "Add Meanings"
+msgstr "Acreçenta Sentidos"
+
+msgid "Dashboard"
+msgstr ""

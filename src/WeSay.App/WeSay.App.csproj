@@ -39,6 +39,7 @@
 	<Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+	<Compile Include="CommandLineParser.cs" />
 	<Compile Include="SampleTaskBuilder.cs" />
 	<Compile Include="TabbedForm.cs">
 	  <SubType>Form</SubType>
@@ -46,7 +47,8 @@
 	<Compile Include="TabbedForm.Designer.cs">
 	  <DependentUpon>TabbedForm.cs</DependentUpon>
 	</Compile>
-	<Compile Include="WeSayApp.cs" />
+	<Compile Include="WeSayApp.cs">
+	</Compile>
 	<Compile Include="Properties\AssemblyInfo.cs" />
 	<None Include="Properties\Settings.settings">
 	  <Generator>SettingsSingleFileGenerator</Generator>

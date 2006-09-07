@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
+using System.Reflection;
 using System.Text;
 using System.Xml;
 using WeSay.Language;
@@ -69,11 +71,49 @@ namespace WeSay.UI
 			}
 		}
 
-		public string PathToStringCatalog
+		public string LocateStringCatalog()
+		{
+			if (File.Exists(PathToStringCatalogInProjectDir))
+			{
+				return PathToStringCatalogInProjectDir;
+			}
+
+			//fall back to the program's common directory
+			string path = System.IO.Path.Combine(ApplicationCommonDirectory, _stringCatalogSelector + ".po");
+			if (File.Exists(path))
+			{
+				return path;
+			}
+
+			else return null;
+		}
+
+		public string PathToStringCatalogInProjectDir
 		{
 			get
 			{
 				return System.IO.Path.Combine(CommonDirectory, _stringCatalogSelector+".po");
+			}
+		}
+
+		private string ApplicationCommonDirectory
+		{
+			get
+			{
+				//GetEntryAssembly is null from nunit
+				//string path = Assembly.GetEntryAssembly().CodeBase.Replace("file:///", "");
+				string path = Assembly.GetExecutingAssembly().CodeBase.Replace("file:///", "");
+				//go up to dir containing the executable
+				path = Directory.GetParent(path).FullName;
+			   if (path.ToLower().IndexOf("output") > -1)
+				{
+					//go up to output
+					path = Directory.GetParent(path).FullName;
+				   //go up to directory containing output
+					path = Directory.GetParent(path).FullName;
+				}
+				 path =System.IO.Path.Combine(path, "common");
+				 return path;
 			}
 		}
 
@@ -175,13 +215,20 @@ namespace WeSay.UI
 		{
 			try
 			{
-				new StringCatalog(this.PathToStringCatalog);
+				string p = this.LocateStringCatalog();
+				if (p == null)
+				{
+					new StringCatalog();
+				}
+				else
+				{
+					new StringCatalog(p);
+				}
 			}
 			catch(System.IO.FileNotFoundException )
 			{
 				//todo: get some ui message up
 				new StringCatalog();
-
 			}
 		}
 	}

@@ -12,16 +12,12 @@ namespace WeSay.UI.Tests
 		[SetUp]
 		public void Setup()
 		{
-			string poFile = Path.GetTempFileName();
-
 			DirectoryInfo dirProject = Directory.CreateDirectory(Path.Combine(Path.GetTempPath(), Path.GetRandomFileName()));
 			_projectDirectory = dirProject.FullName;
 			BasilProject project = new BasilProject(_projectDirectory);
 
 			WriteSampleWritingSystemFile(project);
-			 project.InitWritingSystems();
-
-
+			project.InitWritingSystems();
 		}
 
 		private void WriteSampleWritingSystemFile(BasilProject project)
@@ -34,8 +30,8 @@ namespace WeSay.UI.Tests
 
 		private void WriteSampleStringCatalogFile(BasilProject project)
 		{
-			Directory.CreateDirectory(Directory.GetParent(project.PathToStringCatalog).FullName);
-			StreamWriter writer = File.CreateText(project.PathToStringCatalog);
+			Directory.CreateDirectory(Directory.GetParent(project.PathToStringCatalogInProjectDir).FullName);
+			StreamWriter writer = File.CreateText(project.PathToStringCatalogInProjectDir);
 			writer.Write(TestResources.poStrings);
 			writer.Close();
 		}

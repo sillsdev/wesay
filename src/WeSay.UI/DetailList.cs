@@ -17,8 +17,8 @@ namespace WeSay.UI
 		/// </summary>
 		protected int _rowCount = 0;
 
-		private int _indexOfLabel = 1;
-		private int _indexOfTextBox = 2;
+		private int _indexOfLabel = 0;
+		private int _indexOfTextBox = 1;
 
 		private Predicate<string> _filter;
 

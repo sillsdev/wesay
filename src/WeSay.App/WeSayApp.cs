@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Windows.Forms;
+using CommandLine;
 using WeSay.UI;
 
 namespace WeSay.App
@@ -8,22 +9,45 @@ namespace WeSay.App
 	class WeSayApp
 	{
 
+		class CommandLineArguments
+		{
+			[DefaultArgument(ArgumentType.AtMostOnce,
+				DefaultValue=@"..\..\SampleProjects\Thai",
+				HelpText="Path to the folder containing the project.")]
+			public string projectPath=null;
+
+			[Argument(ArgumentType.AtMostOnce,
+				HelpText="Language to show the user interface in.",
+				LongName="ui",
+				ShortName="")]
+			public string ui=null;
+		}
+
+		static void ShowCommandLineError(string e)
+		{
+			CommandLine.Parser p = new Parser(typeof(CommandLineArguments), new ErrorReporter(ShowCommandLineError));
+			e += "\r\n\r\n" + p.GetUsageString(200);
+			MessageBox.Show(e,"WeSay Command Line Problem");
+		}
+
 		[STAThread]
 		static void Main(string[] args)
 		{
-			string FilePath = @"..\..\SampleProjects\Thai";
-			if (args.Length > 0)
+
+			CommandLineArguments cmdArgs = new CommandLineArguments();
+			if (!CommandLine.Parser.ParseArguments(args, cmdArgs, new ErrorReporter(ShowCommandLineError)))
 			{
-				FilePath = args[0];
+				return;
 			}
+
 #if GTK
 			GLib.Thread.Init();
 			Gdk.Threads.Init();
 			Application.Init();
 #endif
-			BasilProject project = new BasilProject(FilePath);
+			BasilProject project = new BasilProject(cmdArgs.projectPath);
 			project.InitWritingSystems();
-			project.StringCatalogSelector = "br";
+			project.StringCatalogSelector = cmdArgs.ui;
 			project.InitStringCatalog();
 
 			WeSay.UI.ITaskBuilder builder = new SampleTaskBuilder(project);

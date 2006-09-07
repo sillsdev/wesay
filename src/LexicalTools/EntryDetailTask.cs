@@ -68,6 +68,10 @@ namespace WeSay.LexicalTools
 		{
 			get
 			{
+				if (_records.Count == 0)
+				{
+					return null;
+				}
 				return _records[_currentIndex] as LexEntry;
 			}
 		}
