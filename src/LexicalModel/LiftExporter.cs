@@ -13,7 +13,7 @@ namespace WeSay.LexicalModel
 		public LiftExporter(string path)
 		{
 			_writer = XmlWriter.Create(path, PrepareSettings(false));
-			Start();
+		   Start();
 		}
 
 		/// <summary>
@@ -55,6 +55,14 @@ namespace WeSay.LexicalModel
 				_writer.WriteEndDocument();
 			}
 			_writer.Close();
+		}
+
+		public void Add(IList<LexEntry> entries)
+		{
+			foreach (LexEntry entry in entries)
+			{
+				Add(entry);
+			}
 		}
 
 		public void Add(LexEntry entry)

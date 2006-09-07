@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Text;
 using System.Xml;
@@ -5,13 +7,13 @@ using NUnit.Framework;
 using WeSay.Data;
 using WeSay.Language;
 using WeSay.LexicalModel;
+using WeSay.LexicalModel.Tests;
 
 namespace WeSay.LexicalTools.Tests
 {
 	[TestFixture]
 	public class LiftExportTests
 	{
-		private Db4oBindingList<LexEntry> _entriesList;
 		private LiftExporter _exporter;
 		private StringBuilder _stringBuilder;
 
@@ -19,15 +21,74 @@ namespace WeSay.LexicalTools.Tests
 		public void Setup()
 		{
 			_stringBuilder = new StringBuilder();
-			XmlWriterSettings settings = new XmlWriterSettings();
+			PrepWriterForFragment();
+		}
+
+		private void PrepWriterForFragment()
+		{
 			_exporter = new LiftExporter(_stringBuilder, true);
 		}
+
+		private void PrepWriterForFullDocument()
+		{
+			_exporter = new LiftExporter(_stringBuilder, false);
+		}
+
 
 		[TearDown]
 		public void TearDown()
 		{
-//            this._entriesList.Dispose();
+
 		}
+
+		[Test]
+		public void DocStructure()
+		{
+			PrepWriterForFullDocument();
+			CheckAnswer("<?xml version=\"1.0\" encoding=\"utf-16\"?><lift />");
+		}
+
+
+		[Test]
+		public void TwoEntries()
+		{
+			PrepWriterForFullDocument();
+			WriteTwoEntries();
+			XmlDocument doc = new XmlDocument();
+			doc.LoadXml(_stringBuilder.ToString());
+			Assert.AreEqual(2, doc.SelectNodes("lift/entry").Count);
+		}
+
+		[Test]
+		public void WriteToFile()
+		{
+			string filePath = Path.GetTempFileName();
+			try
+			{
+				_exporter = new LiftExporter(filePath);
+				WriteTwoEntries();
+				XmlDocument doc = new XmlDocument();
+				doc.Load(filePath);
+				Assert.AreEqual(2, doc.SelectNodes("lift/entry").Count);
+				}
+			finally
+			{
+				File.Delete(filePath);
+			}
+		}
+
+		private void WriteTwoEntries()
+		{
+			WeSay.Data.InMemoryBindingList<LexEntry> entries = new WeSay.Data.InMemoryBindingList<LexEntry>();
+			LexEntry entry = entries.AddNew();
+			entry.LexicalForm["red"] = "sunset";
+			entry = entries.AddNew();
+			entry.LexicalForm["yellow"] = "flower";
+
+			_exporter.Add(entries);
+			_exporter.End();
+		}
+
 
 		[Test]
 		public void MultiText()
@@ -135,14 +196,7 @@ namespace WeSay.LexicalTools.Tests
 			CheckAnswer("<sense><example><source><form lang=\"red\">red sunset tonight</form></source></example></sense>");
 		}
 
-		[Test]
-		public void DocStructure()
-		{
-			XmlWriterSettings settings = new XmlWriterSettings();
-			settings.ConformanceLevel = ConformanceLevel.Document;
-			_exporter = new LiftExporter(_stringBuilder, false);
-			CheckAnswer("<?xml version=\"1.0\" encoding=\"utf-16\"?><lift />");
-		}
+
 
 		private void CheckAnswer(string answer)
 		{
