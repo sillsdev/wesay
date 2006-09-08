@@ -32,11 +32,11 @@
   <ItemGroup>
 	<Reference Include="DevAge.Core, Version=1.0.0.11, Culture=neutral, PublicKeyToken=faad465d84242dbf, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\DevAge.Core\bin\Debug\DevAge.Core.dll</HintPath>
+	  <HintPath>..\..\..\lib\DevAge.SourceGrid\DevAge.Core.dll</HintPath>
 	</Reference>
 	<Reference Include="DevAge.SourceGrid3, Version=1.0.0.11, Culture=neutral, PublicKeyToken=faad465d84242dbf, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\DevAge.SourceGrid3\bin\Debug\DevAge.SourceGrid3.dll</HintPath>
+	  <HintPath>..\..\..\lib\DevAge.SourceGrid\DevAge.SourceGrid3.dll</HintPath>
 	</Reference>
 	<Reference Include="System" />
 	<Reference Include="System.Data" />

@@ -35,6 +35,15 @@ namespace WeSay.App
 			}
 			else
 			{
+				com.db4o.config.Configuration db4oConfiguration = com.db4o.Db4o.Configure();
+				com.db4o.config.ObjectClass objectClass = db4oConfiguration.ObjectClass(typeof(Language.LanguageForm));
+				objectClass.ObjectField("_writingSystemId").Indexed(true);
+				objectClass.ObjectField("_form").Indexed(true);
+
+				objectClass = db4oConfiguration.ObjectClass(typeof(LexEntry));
+				objectClass.ObjectField("_modifiedDate").Indexed(true);
+
+
 				Db4oDataSource ds = new Db4oDataSource(project.PathToLexicalModelDB);
 				IComponentAdapter dsAdaptor = _parentPicoContext.RegisterComponentInstance(ds);
 
@@ -183,17 +192,26 @@ namespace WeSay.App
 			//            };
 
 			Db4oDataSource ds = (Db4oDataSource)_parentPicoContext.GetComponentInstance(typeof(Db4oDataSource));
-			Db4oBindingList<LexEntry> entries = new Db4oBindingList<LexEntry>(ds,delegate(com.db4o.query.Query query)
-								{
-									query.Constrain(typeof(LexEntry));
-									com.db4o.query.Query glossForms = query.Descend("_senses")
-																				.Descend("_gloss")
-																				.Descend("_forms");
+			//Db4oBindingList<LexEntry> entries = new Db4oBindingList<LexEntry>(ds,delegate(com.db4o.query.Query query)
+			//                    {
+			//                        query.Constrain(typeof(LexEntry));
+			//                        com.db4o.query.Query glossForms = query.Descend("_senses")
+			//                                                                    .Descend("_gloss")
+			//                                                                    .Descend("_forms");
 
-									glossForms.Constrain(typeof(Language.LanguageForm)).Not();
-									//.Or(glossForms.Descend("_writingSystemId").Constrain(_project.AnalysisWritingSystemDefault.Id).Not());
+			//                        glossForms.Constrain(typeof(Language.LanguageForm)).Not();
+			//                        //.Or(glossForms.Descend("_writingSystemId").Constrain(_project.AnalysisWritingSystemDefault.Id).Not());
+			//                        return query;
+			//                    });
+
+
+			Db4oBindingList<LexEntry> entries = new Db4oBindingList<LexEntry>(ds, delegate(com.db4o.query.Query query)
+								{
+									//words modified in the past hour
+									query.Constrain(typeof(LexEntry));
+									query.Descend("_modifiedDate").Constrain(DateTime.Now.AddHours(-1)).Greater();
 									return query;
-								});//, entryFilter);
+								});
 
 			instances.Add(entries);
 			instances.Add(label);

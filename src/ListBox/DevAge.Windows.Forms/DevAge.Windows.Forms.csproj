@@ -74,8 +74,14 @@
 	<ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
-	<Reference Include="DevAge.Core, Version=1.0.0.11, Culture=neutral, PublicKeyToken=faad465d84242dbf" />
-	<Reference Include="DevAge.Drawing, Version=1.0.0.11, Culture=neutral, PublicKeyToken=faad465d84242dbf" />
+	<Reference Include="DevAge.Core, Version=1.0.0.11, Culture=neutral, PublicKeyToken=faad465d84242dbf">
+	  <Private>True</Private>
+	  <HintPath>..\..\..\lib\DevAge.SourceGrid\DevAge.Core.dll</HintPath>
+	</Reference>
+	<Reference Include="DevAge.Drawing, Version=1.0.0.11, Culture=neutral, PublicKeyToken=faad465d84242dbf">
+	  <Private>True</Private>
+	  <HintPath>..\..\..\lib\DevAge.SourceGrid\DevAge.Drawing.dll</HintPath>
+	</Reference>
 	<Reference Include="System">
 	  <Name>System</Name>
 	</Reference>
