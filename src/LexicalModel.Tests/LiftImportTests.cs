@@ -31,22 +31,23 @@ namespace WeSay.LexicalTools.Tests
 
 
 
-		[Test]
+		[Test, Ignore("File Reading Not Implemented Yet")]
 		public void FromFile()
 		{
-//            string filePath = Path.GetTempFileName();
-//            try
-//            {
-//                _importer = new LiftExporter(filePath);
-//                WriteTwoEntries();
-//                XmlDocument doc = new XmlDocument();
-//                doc.Load(filePath);
-//                Assert.AreEqual(2, doc.SelectNodes("lift/entry").Count);
-//            }
-//            finally
-//            {
-//                File.Delete(filePath);
-//            }
+			string filePath = Path.GetTempFileName();
+			try
+			{
+//                 this._doc.LoadXml("<wrap><form lang=\"blue\">ocean</form><form lang=\"red\">sunset</form></wrap>");
+//                _importer = new LiftImporter(filePath);
+
+				//XmlDocument doc = new XmlDocument();
+				///doc.Load(filePath);
+				//Assert.AreEqual(2, doc.SelectNodes("lift/entry").Count);
+			}
+			finally
+			{
+				File.Delete(filePath);
+			}
 		}
 
 		[Test]
@@ -126,49 +127,5 @@ namespace WeSay.LexicalTools.Tests
 
 		}
 
-//        [Test]
-//        public void SmallEntry()
-//        {
-//            LexEntry entry = new LexEntry();
-//            entry.LexicalForm["blue"] = "ocean";
-//            _importer.Add(entry);
-//            CheckAnswer("<entry><form lang=\"blue\">ocean</form></entry>");
-//        }
-//
-//        [Test]
-//        public void EntryWithSenses()
-//        {
-//            LexEntry entry = new LexEntry();
-//            entry.LexicalForm["blue"] = "ocean";
-//            LexSense sense = new LexSense();
-//            sense.Gloss["a"] = "aaa";
-//            entry.Senses.Add(sense);
-//            sense = new LexSense();
-//            sense.Gloss["b"] = "bbb";
-//            entry.Senses.Add(sense);
-//            _importer.Add(entry);
-//            CheckAnswer("<entry><form lang=\"blue\">ocean</form></entry><sense><gloss><form lang=\"a\">aaa</form></gloss></sense><sense><gloss><form lang=\"b\">bbb</form></gloss></sense>");
-//        }
-//
-//
-//        [Test]
-//        public void SenseWithExample()
-//        {
-//            LexSense sense = new LexSense();
-//            LexExampleSentence example = new LexExampleSentence();
-//            example.Sentence["red"] = "red sunset tonight";
-//            sense.ExampleSentences.Add(example);
-//            _importer.Add(sense);
-//            CheckAnswer("<sense><example><source><form lang=\"red\">red sunset tonight</form></source></example></sense>");
-//        }
-//
-//
-//
-//        private void CheckAnswer(string answer)
-//        {
-//            _importer.End();
-//            Assert.AreEqual(answer,
-//                            _stringBuilder.ToString());
-//        }
 	}
 }

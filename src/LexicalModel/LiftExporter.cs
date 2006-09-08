@@ -74,6 +74,18 @@ namespace WeSay.LexicalModel
 			{
 				Add(sense);
 			}
+			_writer.WriteEndElement();
+		}
+
+		public void Add(LexSense sense)
+		{
+			_writer.WriteStartElement("sense");
+			WriteFormInElement("gloss", sense.Gloss);
+			foreach (LexExampleSentence example in sense.ExampleSentences)
+			{
+				Add(example);
+			}
+			_writer.WriteEndElement();
 		}
 
 		public void Add(LexExampleSentence example)
@@ -95,16 +107,6 @@ namespace WeSay.LexicalModel
 			}
 		}
 
-		public void Add(LexSense sense)
-		{
-			_writer.WriteStartElement("sense");
-			WriteFormInElement("gloss", sense.Gloss);
-			foreach (LexExampleSentence example in sense.ExampleSentences)
-			{
-				Add(example);
-			}
-			_writer.WriteEndElement();
-		}
 
 		private void WriteForm(MultiText text)
 		{
@@ -112,7 +114,6 @@ namespace WeSay.LexicalModel
 			{
 				Add(text);
 			}
-			_writer.WriteEndElement();
 		}
 
 		private void WriteFormInElement(string name, MultiText text)

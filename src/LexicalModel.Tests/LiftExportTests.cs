@@ -178,7 +178,7 @@ namespace WeSay.LexicalTools.Tests
 			sense.Gloss["b"] = "bbb";
 			entry.Senses.Add(sense);
 			_exporter.Add(entry);
-			CheckAnswer("<entry><form lang=\"blue\">ocean</form></entry><sense><gloss><form lang=\"a\">aaa</form></gloss></sense><sense><gloss><form lang=\"b\">bbb</form></gloss></sense></entry>");
+			CheckAnswer("<entry><form lang=\"blue\">ocean</form><sense><gloss><form lang=\"a\">aaa</form></gloss></sense><sense><gloss><form lang=\"b\">bbb</form></gloss></sense></entry>");
 		}
 
 
