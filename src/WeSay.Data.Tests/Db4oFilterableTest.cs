@@ -244,18 +244,24 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void CompareQueryWithAndWithoutFilter()
 		{
+			TimeQueryNoFilter();
+			TimeQueryWithFilter();
 			Assert.Less((decimal)TimeQueryNoFilter().ElapsedTicks, (decimal)TimeQueryWithFilter().ElapsedTicks);
 		}
 
 		[Test]
 		public void CompareApplyFilterWithNoApplyFilter()
 		{
+			TimeQueryNoFilter();
+			TimeQueryThenApplyFilter();
 			Assert.Less((decimal)TimeQueryNoFilter().ElapsedTicks, (decimal)TimeQueryThenApplyFilter().ElapsedTicks);
 		}
 
 		[Test]
 		public void CompareQueryWithFilterAndQueryThenApplyFilter()
 		{
+			TimeQueryWithFilter();
+			TimeQueryThenApplyFilter();
 			Assert.Less((decimal)TimeQueryWithFilter().ElapsedTicks, (decimal)TimeQueryThenApplyFilter().ElapsedTicks);
 		}
 
