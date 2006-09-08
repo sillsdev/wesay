@@ -97,7 +97,7 @@ namespace DevAge.Windows.Forms
 				s += key;
 			}
 
-	//jdh breaks mono		System.Windows.Forms.SendKeys.Send(s);
+		System.Windows.Forms.SendKeys.Send(s);
 		}
 	}
 }

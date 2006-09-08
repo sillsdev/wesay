@@ -28,7 +28,7 @@
 	</UpgradeBackupLocation>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-	<OutputPath>bin\Debug\</OutputPath>
+	<OutputPath>..\..\DevAge.SourceGrid\</OutputPath>
 	<AllowUnsafeBlocks>false</AllowUnsafeBlocks>
 	<BaseAddress>285212672</BaseAddress>
 	<CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
@@ -73,6 +73,14 @@
 	<ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
+	<Reference Include="DevAge.Core, Version=1.0.0.11, Culture=neutral, PublicKeyToken=faad465d84242dbf">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\DevAge.SourceGrid\DevAge.Core.dll</HintPath>
+	</Reference>
+	<Reference Include="DevAge.Drawing, Version=1.0.0.11, Culture=neutral, PublicKeyToken=faad465d84242dbf">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\DevAge.SourceGrid\DevAge.Drawing.dll</HintPath>
+	</Reference>
 	<Reference Include="System">
 	  <Name>System</Name>
 	</Reference>
@@ -91,22 +99,8 @@
 	<Reference Include="System.Xml">
 	  <Name>System.XML</Name>
 	</Reference>
-	<ProjectReference Include="..\DevAge.Core\DevAge.Core.csproj">
-	  <Name>DevAge.Core</Name>
-	  <Project>{3EB346D6-5AE2-42BE-98F9-BFAC1C2C719C}</Project>
-	  <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
-	</ProjectReference>
-	<ProjectReference Include="..\DevAge.Drawing\DevAge.Drawing.csproj">
-	  <Name>DevAge.Drawing</Name>
-	  <Project>{AD5BFD3B-EE21-4673-B4A2-C5C0ABC1132C}</Project>
-	  <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
-	</ProjectReference>
   </ItemGroup>
   <ItemGroup>
-	<Compile Include="..\DevAgeAssemblyInfo.cs">
-	  <Link>DevAgeAssemblyInfo.cs</Link>
-	  <SubType>Code</SubType>
-	</Compile>
 	<Compile Include="AssemblyInfo.cs">
 	  <SubType>Code</SubType>
 	</Compile>
