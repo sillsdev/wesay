@@ -117,6 +117,7 @@ namespace WeSay.App
 				foreach (object instance in instances)
 				{
 					//REVIEW: Huh? This is registering every LexEntry.
+					Debug.Assert(null == instance as LexicalModel.LexEntry,"Flying Saucer Siting");
 					child.RegisterComponentInstance(instance);
 				}
 			}

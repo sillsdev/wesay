@@ -97,7 +97,8 @@ namespace DevAge.Windows.Forms
 				s += key;
 			}
 
-		System.Windows.Forms.SendKeys.Send(s);
+			//wesay changes to run under mono
+			//System.Windows.Forms.SendKeys.Send(s);
 		}
 	}
 }

@@ -41,6 +41,7 @@
 	<Compile Include="Binding.cs" />
 	<Compile Include="LiftExportTests.cs" />
 	<Compile Include="EventsAndDates.cs" />
+	<Compile Include="LiftImportTests.cs" />
 	<Compile Include="PersistenceTests.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

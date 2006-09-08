@@ -46,6 +46,7 @@
   <ItemGroup>
 	<Compile Include="BindingGridValueModel.cs" />
 	<Compile Include="BindingListGrid.cs">
+	  <SubType>Component</SubType>
 	</Compile>
 	<Compile Include="BindingListGridColumn.cs" />
 	<Compile Include="Cells.cs" />
@@ -69,12 +70,6 @@
 	  <DependentUpon>Settings.settings</DependentUpon>
 	  <DesignTimeSharedInput>True</DesignTimeSharedInput>
 	</Compile>
-  </ItemGroup>
-  <ItemGroup>
-	<ProjectReference Include="..\DevAge.Windows.Forms\DevAge.Windows.Forms.csproj">
-	  <Project>{3DF8B880-8A23-4F10-9EAB-D72EF0672C3E}</Project>
-	  <Name>DevAge.Windows.Forms</Name>
-	</ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

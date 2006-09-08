@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
 using System.Text;
 using System.Xml;
@@ -7,7 +5,6 @@ using NUnit.Framework;
 using WeSay.Data;
 using WeSay.Language;
 using WeSay.LexicalModel;
-using WeSay.LexicalModel.Tests;
 
 namespace WeSay.LexicalTools.Tests
 {
@@ -79,7 +76,7 @@ namespace WeSay.LexicalTools.Tests
 
 		private void WriteTwoEntries()
 		{
-			WeSay.Data.InMemoryBindingList<LexEntry> entries = new WeSay.Data.InMemoryBindingList<LexEntry>();
+			InMemoryBindingList<LexEntry> entries = new InMemoryBindingList<LexEntry>();
 			LexEntry entry = entries.AddNew();
 			entry.LexicalForm["red"] = "sunset";
 			entry = entries.AddNew();

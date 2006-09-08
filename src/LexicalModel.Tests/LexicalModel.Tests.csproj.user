@@ -3,5 +3,7 @@
 	<StartAction>Program</StartAction>
 	<StartProgram>C:\WeSay\tools\nunit\nunit-gui.exe</StartProgram>
 	<StartArguments>LexicalModel.Tests.Dll</StartArguments>
+	<StartWorkingDirectory>
+	</StartWorkingDirectory>
   </PropertyGroup>
 </Project>
