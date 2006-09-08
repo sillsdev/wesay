@@ -41,10 +41,34 @@ namespace WeSay.LexicalModel
 	   public LexExampleSentence ReadExample(XmlNode xmlNode)
 	   {
 		   LexExampleSentence example = new LexExampleSentence();
-		   ReadMultiTextOrNull(xmlNode, "example/source", example.Sentence);
+		   ReadMultiTextOrNull(xmlNode, "source", example.Sentence);
 		   //NB: will only read in one translation
-		   ReadMultiTextOrNull(xmlNode, "example/trans", example.Translation);
+		   ReadMultiTextOrNull(xmlNode, "trans", example.Translation);
 		   return example;
+	   }
+
+	   public LexSense ReadSense(XmlNode xmlNode)
+	   {
+		   LexSense sense = new LexSense();
+		   ReadMultiTextOrNull(xmlNode, "gloss", sense.Gloss);
+		   foreach (XmlNode n in xmlNode.SelectNodes("example"))
+		   {
+			   sense.ExampleSentences.Add(ReadExample(n));
+		   }
+		   return sense;
+	   }
+
+	   public LexEntry ReadEntry(XmlNode xmlNode)
+	   {
+		   LexEntry entry = new LexEntry();
+		   ReadMultiText(xmlNode, entry.LexicalForm);
+
+		  foreach (XmlNode n in xmlNode.SelectNodes("sense"))
+		   {
+			   entry.Senses.Add(ReadSense(n));
+		   }
+
+		   return entry;
 	   }
    }
 }
