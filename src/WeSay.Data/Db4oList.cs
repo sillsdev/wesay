@@ -465,10 +465,12 @@ namespace Db4o.Binding
 		{
 			get
 			{
+				VerifyNotDisposed();
 				return _SODAQuery;
 			}
 			set
 			{
+				VerifyNotDisposed();
 				_SODAQuery = value;
 				if (_SODAQuery != null)
 				{

@@ -114,18 +114,14 @@ namespace WeSay.LexicalTools.Tests
 
 			//Predicate<LexEntry> entriesWithoutGlosses = delegate(LexEntry entry)
 			//            {
-			//                if (entry.Senses.Count == 0)
-			//                {
-			//                    return true;
-			//                }
 			//                foreach (LexSense sense in entry.Senses)
 			//                {
-			//                    if (sense.Gloss[BasilProject.Project.AnalysisWritingSystemDefault.Id] == string.Empty)
+			//                    if (sense.Gloss[BasilProject.Project.AnalysisWritingSystemDefault.Id] != null)
 			//                    {
-			//                        return true;
+			//                        return false;
 			//                    }
 			//                }
-			//                return false;
+			//                return true;
 			//            };
 
 			//_records.ApplyFilter(entriesWithoutGlosses);
@@ -134,10 +130,11 @@ namespace WeSay.LexicalTools.Tests
 			//_records.SODAQuery = delegate(com.db4o.query.Query query) //has empty analysis form of a gloss
 			//            {
 			//                query.Constrain(typeof(LexEntry));
-			//                com.db4o.query.Query forms = query.Descend("_senses").Descend("_gloss").Descend("_forms");
-			//                forms.Descend("_writingSystemId").Constrain(BasilProject.Project.AnalysisWritingSystemDefault.Id)
-			//                    .And(forms.Descend("_form").Constrain(string.Empty));
-
+			//                query.Descend("_senses")
+			//                     .Descend("_gloss")
+			//                     .Descend("_forms")
+			//                     .Descend("_writingSystemId")
+			//                     .Constrain(_project.AnalysisWritingSystemDefault.Id).Not();
 			//                return query;
 			//            };
 

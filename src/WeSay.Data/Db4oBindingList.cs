@@ -11,7 +11,7 @@ namespace WeSay.Data
 		ListSortDirection _listSortDirection;
 		private static int defaultWriteCacheSize = 0;
 
-		private void Initialize(Db4oDataSource dataSource, Predicate<T> filter, Comparison<T> sort)
+		private void Initialize(Db4oDataSource dataSource, Predicate<T> filter, Comparison<T> sort, Db4o.Binding.SODAQueryProvider sodaQuery)
 		{
 			if (dataSource == null)
 			{
@@ -33,7 +33,14 @@ namespace WeSay.Data
 			}
 			try
 			{
-				_records.Requery(false);
+				if (sodaQuery != null)
+				{
+					_records.SODAQuery = sodaQuery;
+				}
+				else
+				{
+					_records.Requery(false);
+				}
 			}
 			catch (Exception e)
 			{
@@ -44,7 +51,12 @@ namespace WeSay.Data
 
 		public Db4oBindingList(Db4oDataSource dataSource)
 		{
-			Initialize(dataSource, null, null);
+			Initialize(dataSource, null, null, null);
+		}
+
+		public Db4oBindingList(Db4oDataSource dataSource, Db4o.Binding.SODAQueryProvider sodaQuery)
+		{
+			Initialize(dataSource, null, null, sodaQuery);
 		}
 
 		public Db4oBindingList(Db4oDataSource dataSource, Predicate<T> filter)
@@ -53,7 +65,7 @@ namespace WeSay.Data
 			{
 				throw new ArgumentNullException("filter");
 			}
-			Initialize(dataSource, filter, null);
+			Initialize(dataSource, filter, null, null);
 		}
 
 		public Db4oBindingList(Db4oDataSource dataSource, Predicate<T> filter, Comparison<T> sort)
@@ -66,7 +78,7 @@ namespace WeSay.Data
 			{
 				throw new ArgumentNullException("sort");
 			}
-			Initialize(dataSource, filter, sort);
+			Initialize(dataSource, filter, sort, null);
 		}
 
 		public Db4oBindingList(Db4oDataSource dataSource, Comparison<T> sort)
@@ -75,7 +87,7 @@ namespace WeSay.Data
 			{
 				throw new ArgumentNullException("sort");
 			}
-			Initialize(dataSource, null, sort);
+			Initialize(dataSource, null, sort, null);
 		}
 
 		public Db4o.Binding.SODAQueryProvider SODAQuery

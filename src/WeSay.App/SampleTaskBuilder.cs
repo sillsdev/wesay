@@ -171,27 +171,28 @@ namespace WeSay.App
 			//                {
 			//                    foreach (LanguageForm form in sense.Gloss)
 			//                    {
-			//                        if (form.WritingSystemId == _project.AnalysisWritingSystemDefault.Id &&
-			//                           form.Form == string.Empty)
+			//                        if (form.WritingSystemId == _project.AnalysisWritingSystemDefault.Id)
 			//                        {
-			//                            return true;
+			//                            return false;
 			//                        }
 			//                    }
+			//                    return true;
 			//                }
 			//                return false;
 			//            };
 
 			Db4oDataSource ds = (Db4oDataSource)_parentPicoContext.GetComponentInstance(typeof(Db4oDataSource));
-			Db4oBindingList<LexEntry> entries = new Db4oBindingList<LexEntry>(ds/*, entryFilter*/);
-			entries.SODAQuery = delegate(com.db4o.query.Query query)
-									{
-										query.Constrain(typeof(LexEntry));
-										com.db4o.query.Query forms = query.Descend("_senses").Descend("_gloss").Descend("_forms");
-										forms.Descend("_writingSystemId").Constrain(_project.AnalysisWritingSystemDefault.Id)
-											.And(forms.Descend("_form").Constrain(string.Empty));
+			Db4oBindingList<LexEntry> entries = new Db4oBindingList<LexEntry>(ds,delegate(com.db4o.query.Query query)
+								{
+									query.Constrain(typeof(LexEntry));
+									com.db4o.query.Query glossForms = query.Descend("_senses")
+																				.Descend("_gloss")
+																				.Descend("_forms");
 
-										return query;
-									};
+									glossForms.Constrain(typeof(Language.LanguageForm)).Not();
+									//.Or(glossForms.Descend("_writingSystemId").Constrain(_project.AnalysisWritingSystemDefault.Id).Not());
+									return query;
+								});//, entryFilter);
 
 			instances.Add(entries);
 			instances.Add(label);
