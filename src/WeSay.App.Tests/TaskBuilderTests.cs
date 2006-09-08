@@ -14,13 +14,26 @@ namespace WeSay.App.Tests
 		}
 
 		[Test]
-		public void SmokeTest()
+		public void ThaiTest()
 		{
-			BasilProject project = new BasilProject(@"..\..\SampleProjects\Thai");
-			SampleTaskBuilder builder = new SampleTaskBuilder(project);
-			using (builder)
+			using (BasilProject project = new BasilProject(@"..\..\SampleProjects\Thai"))
 			{
-				Assert.Greater(builder.Tasks.Count,0);
+				using (SampleTaskBuilder builder = new SampleTaskBuilder(project))
+				{
+					Assert.Greater(builder.Tasks.Count, 0);
+				}
+			}
+		}
+		[Test]
+		public void PretendTest()
+		{
+			using (BasilProject project = new BasilProject(@"..\..\SampleProjects\Thai"))
+			{
+
+				using (SampleTaskBuilder builder = new SampleTaskBuilder(project))
+				{
+					Assert.Greater(builder.Tasks.Count, 0);
+				}
 			}
 		}
 	}

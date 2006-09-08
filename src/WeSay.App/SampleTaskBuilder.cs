@@ -18,7 +18,7 @@ namespace WeSay.App
 
 	public class SampleTaskBuilder : ITaskBuilder, IDisposable
 	{
-		private bool _disposed = false;
+		private bool _disposed;
 		private IMutablePicoContainer _parentPicoContext;
 		BasilProject _project;
 
@@ -30,8 +30,8 @@ namespace WeSay.App
 
 			if (project.PathToLexicalModelDB.IndexOf("PRETEND") > -1)
 			{
-			  IBindingList pEntries = new PretendRecordList();
-			  _parentPicoContext.RegisterComponentInstance(pEntries);
+				IBindingList pEntries = new PretendRecordList();
+				_parentPicoContext.RegisterComponentInstance(pEntries);
 			}
 			else
 			{
@@ -48,7 +48,7 @@ namespace WeSay.App
 
 				Db4oBindingList<LexEntry> entries = new Db4oBindingList<LexEntry>(ds);
 				_parentPicoContext.RegisterComponentInstance("All Entries", entries);
-		   }
+			}
 
 		}
 
@@ -82,7 +82,6 @@ namespace WeSay.App
 			}
 		}
 
-
 		//TODO(JH): having a builder than needs to be kept around so it can be disposed of is all wrong.
 		//either I want to change it to something like TaskList rather than ITaskBuilder, or
 		//it needs to create some disposable object other than a IList<>.
@@ -91,13 +90,22 @@ namespace WeSay.App
 
 		public void Dispose()
 		{
+			Dispose(true);
+		}
+
+		protected virtual void Dispose(bool disposing)
+		{
 			if (!this._disposed)
 			{
-				_parentPicoContext.Dispose();
-				_parentPicoContext = null;
-				GC.SuppressFinalize(this);
+				if (disposing)
+				{
+					_parentPicoContext.Dispose();
+					_parentPicoContext = null;
+					GC.SuppressFinalize(this);
+				}
 			}
 			_disposed = true;
+
 		}
 
 		private IMutablePicoContainer NewChildContainer(IList instances)
@@ -116,13 +124,13 @@ namespace WeSay.App
 		}
 
 
-		private ITask CreateTool(IMutablePicoContainer picoContext, string fullToolClass)
+		private static ITask CreateTool(IMutablePicoContainer picoContext, string fullToolClass)
 		{
 			RegisterType(picoContext, fullToolClass);
 
-		   ITask i = (ITask)picoContext.GetComponentInstance(fullToolClass);
+			ITask i = (ITask)picoContext.GetComponentInstance(fullToolClass);
 		   Debug.Assert(i != null);
-		   return i;
+			return i;
 		}
 
 		private static void RegisterType(IMutablePicoContainer picoContext, string fullToolClass)
@@ -141,14 +149,7 @@ namespace WeSay.App
 			return CreateTool(_parentPicoContext, fullToolClass);
 		}
 
-		private ITask CreateTool(string fullToolClass, string label)
-		{
-			IList instances = new List<string>();
-			instances.Add(label);
-			return CreateTool(fullToolClass, instances);
-		}
-
-		private IList CreatePictureConfiguration(string label, string pictureFilePath)
+		private static IList CreatePictureConfiguration(string label, string pictureFilePath)
 		{
 			IList instances = new List<object>();
 			instances.Add(label);
@@ -160,23 +161,38 @@ namespace WeSay.App
 		private IList CreateLexFieldConfiguration(string label, string fieldToShow)
 		{
 			IList instances = new List<object>();
-			Predicate<LexEntry> entryFilter = delegate(LexEntry entry)
-						{
-							if (entry.Senses.Count == 0)
-							{
-								return true;
-							}
-							foreach (LexSense sense in entry.Senses) {
-								if (sense.Gloss[_project.AnalysisWritingSystemDefault.Id] == string.Empty)
-								{
-									return true;
-								}
-							}
-							return false;
-						};
+			//Predicate<LexEntry> entryFilter = delegate(LexEntry entry)
+			//            {
+			//                if (entry.Senses.Count == 0)
+			//                {
+			//                    return true;
+			//                }
+			//                foreach (LexSense sense in entry.Senses)
+			//                {
+			//                    foreach (LanguageForm form in sense.Gloss)
+			//                    {
+			//                        if (form.WritingSystemId == _project.AnalysisWritingSystemDefault.Id &&
+			//                           form.Form == string.Empty)
+			//                        {
+			//                            return true;
+			//                        }
+			//                    }
+			//                }
+			//                return false;
+			//            };
 
 			Db4oDataSource ds = (Db4oDataSource)_parentPicoContext.GetComponentInstance(typeof(Db4oDataSource));
-			Db4oBindingList<LexEntry> entries = new Db4oBindingList<LexEntry>(ds, entryFilter);
+			Db4oBindingList<LexEntry> entries = new Db4oBindingList<LexEntry>(ds/*, entryFilter*/);
+			entries.SODAQuery = delegate(com.db4o.query.Query query)
+									{
+										query.Constrain(typeof(LexEntry));
+										com.db4o.query.Query forms = query.Descend("_senses").Descend("_gloss").Descend("_forms");
+										forms.Descend("_writingSystemId").Constrain(_project.AnalysisWritingSystemDefault.Id)
+											.And(forms.Descend("_form").Constrain(string.Empty));
+
+										return query;
+									};
+
 			instances.Add(entries);
 			instances.Add(label);
 			Predicate<string> fieldFilter = delegate(string s)
@@ -190,43 +206,8 @@ namespace WeSay.App
 
 		private static IMutablePicoContainer CreateContainer()
 		{
-			IMutablePicoContainer pico = new DefaultPicoContainer();
-
-			//List<String> assemblies = new List<string>();
-			//assemblies.Add(@"CommonTools.dll");
-			//assemblies.Add(@"LexicalTools.dll");
-			//// assemblies.Add(@"LexicalModel.Tests.dll");
-			////     assemblies.Add(@"WeSayData.dll");
-
-			//foreach (Type t in FindTypesToRegister(assemblies))
-			//{
-			//    if (t.IsAbstract || t.IsInterface)
-			//    {
-			//    }
-			//    else
-			//    {
-			//        pico.RegisterComponentImplementation(t.ToString(), t);
-			//    }
-			//}
-
-			return pico;
+			return new DefaultPicoContainer();
 		}
-
-
-		//protected static IList<Type> FindTypesToRegister(IList<string> assemblies)
-		//{
-		//    IList<Type> registerTypes = new List<Type>();
-		//    foreach (string assembly in assemblies)
-		//    {
-		//        Type[] types = Assembly.LoadFrom(assembly).GetTypes();
-		//        foreach (Type type in types)
-		//        {
-		//            registerTypes.Add(type);
-		//        }
-		//    }
-		//    return registerTypes;
-		//}
-
 	}
 
 
@@ -240,7 +221,7 @@ namespace WeSay.App
 		{
 			_label = label;
 			_makeTask = makeTask;
-		}
+}
 
 		#region ITask Members
 

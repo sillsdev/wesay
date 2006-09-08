@@ -6,14 +6,18 @@ namespace WeSay.TreeViewIList
 {
 	public class TreeViewIListSelection
 	{
-		private Gtk.TreeSelection selection;
+		private Gtk.TreeSelection _selection;
 
 		public event EventHandler Changed;
 
 		public TreeViewIListSelection(Gtk.TreeSelection selection)
 		{
-			this.selection = selection;
-			selection.Changed += new EventHandler(OnSelectionChanged);
+			if (selection == null)
+			{
+				throw new ArgumentNullException();
+			}
+			this._selection = selection;
+			_selection.Changed += new EventHandler(OnSelectionChanged);
 		}
 
 		private void OnSelectionChanged(object sender, EventArgs e)
@@ -29,11 +33,11 @@ namespace WeSay.TreeViewIList
 		public void Select(int index)
 		{
 			Gtk.TreePath path = TreeView.Model.GetPath(index);
-			selection.SelectPath(path);
+			_selection.SelectPath(path);
 			TreeView.ScrollToCell(path, TreeView.Columns[0], false, 0, 0);
 		}
 
-		public Gtk.SelectionMode Mode
+		public static Gtk.SelectionMode Mode
 		{
 			get
 			{
@@ -45,14 +49,14 @@ namespace WeSay.TreeViewIList
 		{
 			get
 			{
-				return selection.TreeView as TreeViewAdaptorIList;
+				return _selection.TreeView as TreeViewAdaptorIList;
 			}
 		}
 		public int Selected
 		{
 			get
 			{
-				Gtk.TreePath[] paths = selection.GetSelectedRows();
+				Gtk.TreePath[] paths = _selection.GetSelectedRows();
 				if (paths.Length > 0)
 				{
 					return TreeView.Model.GetIndex(paths[0].Handle);

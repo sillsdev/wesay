@@ -8,6 +8,8 @@ using com.db4o.inside.query;
 
 namespace Db4o.Binding
 {
+	public delegate com.db4o.query.Query SODAQueryProvider(com.db4o.query.Query query);
+
 	/// <summary>
 	/// db4o aware list with items stored in db4o database.
 	/// Can be used to manipulate db4o query results.
@@ -429,26 +431,56 @@ namespace Db4o.Binding
 		public void Query(Predicate<T> filter, Comparison<T> sorter, bool commit)
 		{
 			VerifyNotDisposed();
-			if (filter == null)
-				filter = ComparisonHelper<T>.DefaultPredicate;
-			IList<T> list;
-			if (sorter == null)
+			IEnumerable list;
+
+			if (_SODAQuery != null)
 			{
-				if (filter == ComparisonHelper<T>.DefaultPredicate)
-				{
-					list = this.Database.Query<T>();
-				}
-				else
-				{
-					list = this.Database.Query<T>(filter);
-				}
+				com.db4o.query.Query query = _SODAQuery(this.Database.Query());
+				list = query.Execute();
 			}
 			else
 			{
-				list = this.Database.Query<T>(filter, sorter);
+				if (filter == null)
+					filter = ComparisonHelper<T>.DefaultPredicate;
+				if (sorter == null)
+				{
+					if (filter == ComparisonHelper<T>.DefaultPredicate)
+					{
+						list = this.Database.Query<T>();
+					}
+					else
+					{
+						list = this.Database.Query<T>(filter);
+					}
+				}
+				else
+				{
+					list = this.Database.Query<T>(filter, sorter);
+				}
 			}
 			InitItems(list, filter, sorter, commit);
 		}
+
+		public SODAQueryProvider SODAQuery
+		{
+			get
+			{
+				return _SODAQuery;
+			}
+			set
+			{
+				_SODAQuery = value;
+				if (_SODAQuery != null)
+				{
+					Query(null, null, true);
+				}
+			}
+		}
+
+		protected SODAQueryProvider _SODAQuery;
+
+
+
 		/// <summary>
 		/// Instantiates new <see cref="Db4oList{T}"/> object and calls its <see cref="Query"/> method without committing anything.
 		/// </summary>
@@ -1189,7 +1221,8 @@ namespace Db4o.Binding
 		/// </summary>
 		IEnumerator<T> IEnumerable<T>.GetEnumerator()
 		{
-			for (int i = 0; i < this.ItemIds.Count; i++)
+			int count = this.ItemIds.Count;
+			for (int i = 0; i < count; i++)
 			{
 				yield return this[i];
 			}
@@ -1230,7 +1263,7 @@ namespace Db4o.Binding
 					throw new InvalidOperationException();
 				}
 			}
-			private void CheckDisposed()
+			private void VerifyNotDisposed()
 			{
 				if (_isDisposed)
 				{
@@ -1244,7 +1277,7 @@ namespace Db4o.Binding
 			{
 				get
 				{
-					CheckDisposed();
+					VerifyNotDisposed();
 					CheckValidIndex(0);
 					CheckCollectionUnchanged();
 					return ((IList<T>)_collection)[_index];
@@ -1268,14 +1301,14 @@ namespace Db4o.Binding
 			{
 				get
 				{
-					CheckDisposed();
+					VerifyNotDisposed();
 					return Current;
 				}
 			}
 
 			public bool MoveNext()
 			{
-				CheckDisposed();
+				VerifyNotDisposed();
 				CheckValidIndex(-1);
 				CheckCollectionUnchanged();
 				return (++_index < _collection.Count);
@@ -1283,7 +1316,7 @@ namespace Db4o.Binding
 
 			public void Reset()
 			{
-				CheckDisposed();
+				VerifyNotDisposed();
 				CheckCollectionUnchanged();
 				_index = -1;
 			}

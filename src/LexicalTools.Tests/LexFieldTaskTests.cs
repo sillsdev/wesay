@@ -112,32 +112,66 @@ namespace WeSay.LexicalTools.Tests
 		{
 			LexFieldTask task = new LexFieldTask(_records, _label, _fieldFilter);
 
-			Predicate<LexEntry> entriesWithoutGlosses = delegate(LexEntry entry)
-						{
-							if (entry.Senses.Count == 0)
-							{
-								return true;
-							}
-							foreach (LexSense sense in entry.Senses)
-							{
-								if (sense.Gloss[BasilProject.Project.AnalysisWritingSystemDefault.Id] == string.Empty)
-								{
-									return true;
-								}
-							}
-							return false;
-						};
+			//Predicate<LexEntry> entriesWithoutGlosses = delegate(LexEntry entry)
+			//            {
+			//                if (entry.Senses.Count == 0)
+			//                {
+			//                    return true;
+			//                }
+			//                foreach (LexSense sense in entry.Senses)
+			//                {
+			//                    if (sense.Gloss[BasilProject.Project.AnalysisWritingSystemDefault.Id] == string.Empty)
+			//                    {
+			//                        return true;
+			//                    }
+			//                }
+			//                return false;
+			//            };
 
-			_records.ApplyFilter(entriesWithoutGlosses);
+			//_records.ApplyFilter(entriesWithoutGlosses);
+
+
+			//_records.SODAQuery = delegate(com.db4o.query.Query query) //has empty analysis form of a gloss
+			//            {
+			//                query.Constrain(typeof(LexEntry));
+			//                com.db4o.query.Query forms = query.Descend("_senses").Descend("_gloss").Descend("_forms");
+			//                forms.Descend("_writingSystemId").Constrain(BasilProject.Project.AnalysisWritingSystemDefault.Id)
+			//                    .And(forms.Descend("_form").Constrain(string.Empty));
+
+			//                return query;
+			//            };
+
+			_records.SODAQuery = delegate(com.db4o.query.Query query) //has no senses
+			{
+				query.Constrain(typeof(LexEntry));
+				query.Descend("_senses").Constrain(typeof(LexSense)).Not();
+				return query;
+			};
 
 			task.Activate();
 			Assert.AreEqual(1, task.DataSource.Count);
 			task.Deactivate();
+
 			LexSense newSense = (LexSense)_records[0].Senses.AddNew();
-			newSense.Gloss[BasilProject.Project.AnalysisWritingSystemDefault.Id] = "a gloss";
 			task.Activate();
 			Assert.AreEqual(0, task.DataSource.Count);
 			task.Deactivate();
+
+			//newSense.Gloss[BasilProject.Project.AnalysisWritingSystemDefault.Id] = string.Empty;
+			//task.Activate();
+			//Assert.AreEqual(1, task.DataSource.Count);
+			//task.Deactivate();
+
+			//newSense.Gloss[BasilProject.Project.AnalysisWritingSystemDefault.Id] = "a gloss";
+			//task.Activate();
+			//Assert.AreEqual(0, task.DataSource.Count);
+			//task.Deactivate();
+
+			//LexSense anotherSense = (LexSense)_records[0].Senses.AddNew();
+			//task.Activate();
+			//Assert.AreEqual(1, task.DataSource.Count);
+			//task.Deactivate();
+
 		}
 
 	}

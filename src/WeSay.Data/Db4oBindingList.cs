@@ -31,7 +31,15 @@ namespace WeSay.Data
 			{
 				_records.Commit();
 			}
-			_records.Requery(false);
+			try
+			{
+				_records.Requery(false);
+			}
+			catch (Exception e)
+			{
+				Dispose();
+				throw (e);
+			}
 		}
 
 		public Db4oBindingList(Db4oDataSource dataSource)
@@ -70,8 +78,23 @@ namespace WeSay.Data
 			Initialize(dataSource, null, sort);
 		}
 
+		public Db4o.Binding.SODAQueryProvider SODAQuery
+		{
+			get
+			{
+				VerifyNotDisposed();
+				return _records.SODAQuery;
+			}
+			set
+			{
+				VerifyNotDisposed();
+				_records.SODAQuery = value;
+			}
+		}
+
 		public void Add(IEnumerator<T> enumerator)
 		{
+			VerifyNotDisposed();
 			_records.WriteCacheSize = 0;
 			while (enumerator.MoveNext())
 			{
@@ -83,6 +106,7 @@ namespace WeSay.Data
 
 		public bool Commit()
 		{
+			VerifyNotDisposed();
 			return _records.Commit();
 		}
 
@@ -127,7 +151,8 @@ namespace WeSay.Data
 		public void RefreshFilter()
 		{
 			VerifyNotDisposed();
-			if(_records.IsFiltered){
+			if (_records.IsFiltered)
+			{
 				if (_records.FilteringInDatabase)
 				{
 					this._records.Requery(true);
@@ -140,6 +165,11 @@ namespace WeSay.Data
 					ApplyFilter(filter);
 				}
 			}
+			else if (_records.SODAQuery != null)
+			{
+				_records.Requery(true);
+			}
+
 		}
 
 		public bool IsFiltered
@@ -147,7 +177,7 @@ namespace WeSay.Data
 			get
 			{
 				VerifyNotDisposed();
-				return _records.IsFiltered;
+				return _records.IsFiltered || _records.SODAQuery != null;
 			}
 		}
 

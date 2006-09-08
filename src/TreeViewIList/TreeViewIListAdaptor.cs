@@ -86,7 +86,7 @@ namespace WeSay.TreeViewIList
 			}
 		}
 
-		public GetValueStrategyDelegate GetValueStrategy
+		public ValueStrategyProvider GetValueStrategy
 		{
 			set
 			{

@@ -1,0 +1,16 @@
+﻿<NUnitProject>
+  <Settings activeconfig="Debug" appbase="C:\WeSay\output" />
+  <Config name="Debug" binpathtype="Auto">
+	<assembly path="debug\Language.Tests.dll" />
+	<assembly path="debug\LexicalModel.Tests.dll" />
+	<assembly path="debug\LexicalTools.Tests.dll" />
+	<assembly path="debug\TreeViewIList.Tests.dll" />
+	<assembly path="debug\WeSay.App.Tests.dll" />
+	<assembly path="debug\WeSay.Data.Tests.dll" />
+	<assembly path="debug\WeSay.UI.Tests.dll" />
+  </Config>
+  <Config name="Release" binpathtype="Auto">
+	<assembly path="release\TreeViewIList.Tests.dll" />
+	<assembly path="release\WeSay.Data.Tests.dll" />
+  </Config>
+</NUnitProject>

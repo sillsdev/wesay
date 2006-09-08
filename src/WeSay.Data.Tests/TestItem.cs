@@ -11,6 +11,9 @@ namespace WeSay.Data.Tests
 		string _storedString;
 		DateTime _storedDateTime;
 		ChildTestItem _testItem;
+		public ChildTestItem()
+		{
+		}
 		public ChildTestItem(string s, int i, DateTime d)
 		{
 			_storedInt = i;
@@ -50,8 +53,23 @@ namespace WeSay.Data.Tests
 		int _storedInt;
 		string _storedString;
 		DateTime _storedDateTime;
-		ChildTestItem _testItem;
+		ChildTestItem _childTestItem;
 		int _onActivateDepth;
+
+		List<ChildTestItem> _childTestItems;
+
+		public List<ChildTestItem> Children
+		{
+			get
+			{
+				return _childTestItems;
+			}
+			set
+			{
+				_childTestItems = value;
+				OnPropertyChanged(new PropertyChangedEventArgs("Children"));
+			}
+		}
 
 		public int OnActivateDepth
 		{
@@ -65,11 +83,12 @@ namespace WeSay.Data.Tests
 		{
 			get
 			{
-				return _testItem;
+				return _childTestItem;
 			}
 			set
 			{
-				_testItem = value;
+				_childTestItem = value;
+				OnPropertyChanged(new PropertyChangedEventArgs("Child"));
 			}
 		}
 

@@ -46,7 +46,6 @@
   <ItemGroup>
 	<Compile Include="BindingGridValueModel.cs" />
 	<Compile Include="BindingListGrid.cs">
-	  <SubType>Component</SubType>
 	</Compile>
 	<Compile Include="BindingListGridColumn.cs" />
 	<Compile Include="Cells.cs" />
