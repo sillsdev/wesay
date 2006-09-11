@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Xml;
@@ -31,18 +33,39 @@ namespace WeSay.LexicalTools.Tests
 
 
 
-		[Test, Ignore("File Reading Not Implemented Yet")]
+		[Test]
 		public void FromFile()
 		{
 			string filePath = Path.GetTempFileName();
 			try
 			{
-//                 this._doc.LoadXml("<wrap><form lang=\"blue\">ocean</form><form lang=\"red\">sunset</form></wrap>");
-//                _importer = new LiftImporter(filePath);
+				XmlWriter writer = XmlWriter.Create(filePath);
+				writer.WriteStartDocument();
+				writer.WriteStartElement("lift");
 
-				//XmlDocument doc = new XmlDocument();
-				///doc.Load(filePath);
-				//Assert.AreEqual(2, doc.SelectNodes("lift/entry").Count);
+				writer.WriteStartElement("entry");
+				writer.WriteStartElement("form");
+				writer.WriteAttributeString("lang", "en");
+				writer.WriteString("test word 1");
+				writer.WriteEndElement();
+				writer.WriteEndElement();
+
+				writer.WriteStartElement("entry");
+				writer.WriteStartElement("form");
+				writer.WriteAttributeString("lang", "xyz");
+				writer.WriteString("test word 2");
+				writer.WriteEndElement();
+				writer.WriteEndElement();
+
+				writer.WriteEndElement();
+				writer.WriteEndDocument();
+				writer.Close();
+
+				_importer = new LiftImporter();
+				IList<LexEntry> entries = _importer.ReadFile(filePath);
+				Assert.AreEqual(2, entries.Count);
+
+				Assert.AreEqual("test word 2", entries[1].LexicalForm["xyz"]);
 			}
 			finally
 			{
@@ -112,9 +135,11 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void BlankEntry()
 		{
-			_doc.LoadXml("<entry />");
+			Guid g = Guid.NewGuid();
+			_doc.LoadXml(string.Format("<entry id=\"{0}\" />", g.ToString()));
 			LexEntry entry = _importer.ReadEntry (_doc.SelectSingleNode("entry"));
 			Assert.IsNotNull(entry);
+			Assert.AreEqual(g.ToString(), entry.Guid.ToString());
 		}
 
 		[Test]

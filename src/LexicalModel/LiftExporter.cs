@@ -68,6 +68,7 @@ namespace WeSay.LexicalModel
 		public void Add(LexEntry entry)
 		{
 			_writer.WriteStartElement("entry");
+			_writer.WriteAttributeString("id", entry.Guid.ToString());
 			WriteForm(entry.LexicalForm);
 
 			foreach(LexSense sense in entry.Senses)

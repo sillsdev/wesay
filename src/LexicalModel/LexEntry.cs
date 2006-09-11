@@ -18,13 +18,25 @@ namespace WeSay.LexicalModel
 
 		public LexEntry()
 		{
-			_lexicalForm = new MultiText();
-			_senses = new WeSay.Data.InMemoryBindingList<LexSense>();
-			_creationDate = DateTime.Now;
-			_modifiedDate = _creationDate;
+			Init(Guid.NewGuid());
+		}
+
+		public LexEntry(Guid guid)
+		{
+			Init(guid);
+		}
+
+		private void Init(Guid guid)
+		{
+			_guid = guid;
+			this._lexicalForm = new MultiText();
+			this._senses = new WeSay.Data.InMemoryBindingList<LexSense>();
+			this._creationDate = DateTime.Now;
+			this._modifiedDate = _creationDate;
 
 			WireUpEvents();
-	   }
+		}
+
 
 		public override string ToString()
 		{

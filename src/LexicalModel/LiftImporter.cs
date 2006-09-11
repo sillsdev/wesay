@@ -12,6 +12,19 @@ namespace WeSay.LexicalModel
 	   {
 	   }
 
+	   public IList<LexEntry> ReadFile(string path)
+	   {
+		   XmlDocument doc =new XmlDocument();
+		   doc.Load(path);
+		   XmlNodeList entryNodes = doc.SelectNodes("./lift/entry");
+		   List<LexEntry> entries = new List<LexEntry>(entryNodes.Count);
+		   foreach (XmlNode node in entryNodes)
+		   {
+			   entries.Add(this.ReadEntry(node));
+		   }
+		   return entries;
+	   }
+
 	  public void ReadMultiTextOrNull(XmlNode node, string query, MultiText text)
 	   {
 		   XmlNode element = node.SelectSingleNode(query);
@@ -58,9 +71,26 @@ namespace WeSay.LexicalModel
 		   return sense;
 	   }
 
+	   private string GetOptionalAttributeString(XmlNode xmlNode, string name)
+	   {
+		   XmlAttribute attr= xmlNode.Attributes[name];
+		   if (attr == null)
+			   return null;
+		   return attr.Value;
+	   }
+
 	   public LexEntry ReadEntry(XmlNode xmlNode)
 	   {
-		   LexEntry entry = new LexEntry();
+		   LexEntry entry;
+		   string guid = GetOptionalAttributeString(xmlNode, "id");
+		   if (guid != null)
+		   {
+			   entry = new LexEntry(new Guid(guid));
+		   }
+		   else
+		   {
+			   entry = new LexEntry();
+		   }
 		   ReadMultiText(xmlNode, entry.LexicalForm);
 
 		  foreach (XmlNode n in xmlNode.SelectNodes("sense"))

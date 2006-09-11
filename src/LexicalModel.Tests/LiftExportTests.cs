@@ -153,8 +153,9 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void BlankEntry()
 		{
-			_exporter.Add(new LexEntry());
-			CheckAnswer("<entry />");
+			LexEntry entry = new LexEntry();
+			_exporter.Add(entry);
+			CheckAnswer(string.Format("<entry id=\"{0}\" />", entry.Guid));
 		}
 
 		[Test]
@@ -163,7 +164,8 @@ namespace WeSay.LexicalTools.Tests
 			 LexEntry entry = new LexEntry();
 			 entry.LexicalForm["blue"] = "ocean";
 			 _exporter.Add(entry);
-			CheckAnswer("<entry><form lang=\"blue\">ocean</form></entry>");
+			 string answer = string.Format("<entry id=\"{0}\"><form lang=\"blue\">ocean</form></entry>",entry.Guid);
+			CheckAnswer(answer);
 		}
 
 		[Test]
@@ -178,7 +180,8 @@ namespace WeSay.LexicalTools.Tests
 			sense.Gloss["b"] = "bbb";
 			entry.Senses.Add(sense);
 			_exporter.Add(entry);
-			CheckAnswer("<entry><form lang=\"blue\">ocean</form><sense><gloss><form lang=\"a\">aaa</form></gloss></sense><sense><gloss><form lang=\"b\">bbb</form></gloss></sense></entry>");
+
+			CheckAnswer(string.Format("<entry id=\"{0}\"><form lang=\"blue\">ocean</form><sense><gloss><form lang=\"a\">aaa</form></gloss></sense><sense><gloss><form lang=\"b\">bbb</form></gloss></sense></entry>",entry.Guid));
 		}
 
 
