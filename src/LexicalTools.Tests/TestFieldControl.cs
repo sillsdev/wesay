@@ -9,6 +9,7 @@ namespace WeSay.LexicalTools.Tests
 	[TestFixture]
 	public class TestFieldControl
 	{
+		LexEntry empty;
 		LexEntry apple;
 		LexEntry banana;
 		LexEntry car;
@@ -19,6 +20,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			BasilProject.InitializeForTests();
 
+			empty = CreateTestEntry("", "", "");
 			apple = CreateTestEntry("apple", "red thing", "An apple a day keeps the doctor away.");
 			banana = CreateTestEntry("banana", "yellow food", "Monkeys like to eat bananas.");
 			car = CreateTestEntry("car", "small motorized vehicle", "Watch out for cars when you cross the street.");
@@ -46,7 +48,7 @@ namespace WeSay.LexicalTools.Tests
 		public void NullDataSource_ShowsEmpty()
 		{
 			LexFieldControl lexFieldControl = CreateForm(null);
-			Assert.AreEqual(string.Empty, lexFieldControl.Control_FormattedView);
+			Assert.AreEqual(string.Empty, lexFieldControl.Control_FormattedView.Text);
 		}
 
 		[Test]
@@ -59,9 +61,9 @@ namespace WeSay.LexicalTools.Tests
 		private static void TestEntryShows(LexEntry entry)
 		{
 			LexFieldControl lexFieldControl = CreateForm(entry);
-			Assert.IsTrue(lexFieldControl.Control_FormattedView.Contains(GetLexicalForm(entry)));
-			Assert.IsTrue(lexFieldControl.Control_FormattedView.Contains(GetGloss(entry)));
-			Assert.IsTrue(lexFieldControl.Control_FormattedView.Contains(GetExampleSentence(entry)));
+			Assert.IsTrue(lexFieldControl.Control_FormattedView.Text.Contains(GetLexicalForm(entry)));
+			Assert.IsTrue(lexFieldControl.Control_FormattedView.Text.Contains(GetGloss(entry)));
+			Assert.IsTrue(lexFieldControl.Control_FormattedView.Text.Contains(GetExampleSentence(entry)));
 		}
 
 		[Test]
@@ -91,7 +93,7 @@ namespace WeSay.LexicalTools.Tests
 			EntryDetailControl entryDetailControl = lexFieldControl.Control_EntryDetail;
 			Control referenceControl = entryDetailControl.GetControlOfRow(0);
 			Label labelControl = entryDetailControl.GetLabelControlFromReferenceControl(referenceControl);
-			Assert.AreEqual("Meaning", labelControl.Text);
+			Assert.AreEqual("Meaning 1", labelControl.Text);
 			Control editControl = entryDetailControl.GetEditControlFromReferenceControl(referenceControl);
 			Assert.IsTrue(editControl.Text.Contains(GetGloss(entry)));
 		}
@@ -104,8 +106,54 @@ namespace WeSay.LexicalTools.Tests
 			Control referenceControl = entryDetailControl.GetControlOfRow(0);
 			Control editControl = entryDetailControl.GetEditControlFromReferenceControl(referenceControl);
 			editControl.Text = "test";
-			Assert.IsTrue(lexFieldControl.Control_FormattedView.Contains("test"));
+			Assert.IsTrue(lexFieldControl.Control_FormattedView.Text.Contains("test"));
 	   }
+
+		[Test]
+		public void FormattedView_FocusInControl_Displayed()
+		{
+			LexFieldControl lexFieldControl = CreateFilteredForm(apple, "LexicalForm");
+			lexFieldControl.Control_FormattedView.Select();
+			string rtfOriginal = lexFieldControl.Control_FormattedView.Rtf;
+
+			EntryDetailControl entryDetailControl = lexFieldControl.Control_EntryDetail;
+			Control referenceControl = entryDetailControl.GetControlOfRow(0);
+			Control editControl = entryDetailControl.GetEditControlFromReferenceControl(referenceControl);
+			editControl.Select();
+			Assert.AreNotEqual(rtfOriginal, lexFieldControl.Control_FormattedView.Rtf);
+		}
+
+		[Test]
+		public void FormattedView_ChangeRecordThenBack_NothingHighlighted()
+		{
+			LexFieldControl lexFieldControl = CreateFilteredForm(apple, "LexicalForm");
+			lexFieldControl.Control_FormattedView.Select();
+			string rtfAppleNothingHighlighted = lexFieldControl.Control_FormattedView.Rtf;
+
+			EntryDetailControl entryDetailControl = lexFieldControl.Control_EntryDetail;
+			Control referenceControl = entryDetailControl.GetControlOfRow(0);
+			Control editControl = entryDetailControl.GetEditControlFromReferenceControl(referenceControl);
+			editControl.Select();
+			Assert.AreNotEqual(rtfAppleNothingHighlighted, lexFieldControl.Control_FormattedView.Rtf);
+
+			lexFieldControl.DataSource = banana;
+			lexFieldControl.DataSource = apple;
+			Assert.AreEqual(rtfAppleNothingHighlighted, lexFieldControl.Control_FormattedView.Rtf);
+		}
+
+		[Test]
+		public void FormattedView_EmptyField_StillHighlighted()
+		{
+			LexFieldControl lexFieldControl = CreateFilteredForm(empty, "LexicalForm");
+			lexFieldControl.Control_FormattedView.Select();
+			string rtfEmptyNothingHighlighted = lexFieldControl.Control_FormattedView.Rtf;
+
+			EntryDetailControl entryDetailControl = lexFieldControl.Control_EntryDetail;
+			Control referenceControl = entryDetailControl.GetControlOfRow(0);
+			Control editControl = entryDetailControl.GetEditControlFromReferenceControl(referenceControl);
+			editControl.Select();
+			Assert.AreNotEqual(rtfEmptyNothingHighlighted, lexFieldControl.Control_FormattedView.Rtf);
+		}
 
 		private static LexFieldControl CreateForm(LexEntry entry)
 		{

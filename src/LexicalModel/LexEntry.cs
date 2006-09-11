@@ -41,73 +41,18 @@ namespace WeSay.LexicalModel
 		public override string ToString()
 		{
 			//hack
-			if(_lexicalForm !=null)
+			if (_lexicalForm != null)
 				return _lexicalForm.GetFirstAlternative();
 			else
 				return "";
 		}
 
-
-		public string ToRtf()
+		protected override void WireUpEvents()
 		{
-
-			string rtf = @"{\rtf1\ansi\fs28 ";
-			  if(_lexicalForm !=null){
-				  rtf += @"\b ";
-				  foreach(LanguageForm l in _lexicalForm){
-					  rtf += l.Form + " ";
-				  }
-				  rtf += @"\b0 ";
-			  }
-
-			  foreach(LexSense sense in _senses) {
-				  rtf += @"\i ";
-				  if (sense.Gloss != null)
-				  {
-					  foreach (LanguageForm l in sense.Gloss)
-					  {
-						  rtf += l.Form + " ";
-					  }
-				  }
-				  rtf += @" \i0 ";
-
-				  foreach (LexExampleSentence exampleSentence in sense.ExampleSentences){
-					  if(exampleSentence.Sentence != null)
-					  {
-						  foreach (LanguageForm l in exampleSentence.Sentence)
-						  {
-							  rtf += l.Form + " ";
-						  }
-					  }
-				  }
-			  }
-
-			rtf += @"\par}";
-			return Utf16ToRtfAnsi(rtf);
+			base.WireUpEvents();
+			WireUpChild(_lexicalForm);
+			WireUpList(_senses, "senses");
 		}
-
-		private string Utf16ToRtfAnsi(string inString)
-		{
-			string outString= String.Empty;
-			foreach (char c in inString){
-				if (c > 128)
-				{
-					outString += @"\u" + Convert.ToInt16(c).ToString() + "?";
-				}
-				else
-				{
-					outString += c;
-				}
-			}
-			return outString;
-		}
-
-	   protected override void WireUpEvents()
-	   {
-		   base.WireUpEvents();
-		   WireUpChild(_lexicalForm);
-		   WireUpList(_senses,"senses");
-	   }
 
 
 		public override void SomethingWasModified()
@@ -117,22 +62,34 @@ namespace WeSay.LexicalModel
 
 		public MultiText LexicalForm
 		{
-			get   {  return _lexicalForm;       }
+			get
+			{
+				return _lexicalForm;
+			}
 		}
 
 		public DateTime CreationDate
 		{
-			get   {  return _creationDate;  }
+			get
+			{
+				return _creationDate;
+			}
 		}
 
 		public DateTime ModifiedDate
 		{
-			get { return _modifiedDate; }
+			get
+			{
+				return _modifiedDate;
+			}
 		}
 
 		public IBindingList Senses
 		{
-			get   {  return _senses;       }
+			get
+			{
+				return _senses;
+			}
 		}
 
 		/// <summary>
@@ -140,12 +97,15 @@ namespace WeSay.LexicalModel
 		/// </summary>
 		public Guid Guid
 		{
-			get { return _guid; }
+			get
+			{
+				return _guid;
+			}
 			set
 			{
-				if (_guid  != value)
+				if (_guid != value)
 				{
-					_guid  = value;
+					_guid = value;
 					NotifyPropertyChanged("GUID");
 				}
 			}

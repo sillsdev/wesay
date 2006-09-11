@@ -56,7 +56,7 @@ namespace WeSay.UI.Tests
 
 		}
 
-		void _binding_Triggered(object sender, object newObject, EventArgs args)
+		void _binding_Triggered(object sender, System.ComponentModel.IBindingList list, int index, EventArgs args)
 		{
 			_didNotify = true;
 		}

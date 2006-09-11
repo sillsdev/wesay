@@ -13,13 +13,17 @@ namespace WeSay.UI
 	/// </summary>
 	public class GhostBinding
 	{
+		public event EventHandler<CurrentItemEventArgs> CurrentItemChanged = delegate
+																	 {
+																	 };
+
 		private WritingSystem _writingSystem;
 		private string _propertyName;
 		private IBindingList _listTarget;
 		private WeSayTextBox _textBoxTarget;
 		private Control _referenceControl;
 
-		public delegate void GhostTriggered(GhostBinding sender, object newGuy, EventArgs args);
+		public delegate void GhostTriggered(GhostBinding sender, IBindingList list, int index, EventArgs args);
 
 		/// <summary>
 		/// Fires at some point after the user has entered some information in the ghost text box.
@@ -36,7 +40,8 @@ namespace WeSay.UI
 
 		   _textBoxTarget = textBoxTarget;
 		   _textBoxTarget.TextChanged += new EventHandler(_textBoxTarget_TextChanged);
-		  // _textBoxTarget.Leave += new EventHandler(OnTextBoxTarget_Leave);
+		   _textBoxTarget.Enter += new EventHandler(OnTextBoxEntered);
+		   // _textBoxTarget.Leave += new EventHandler(OnTextBoxTarget_Leave);
 		   _textBoxTarget.Disposed+=new EventHandler(_textBoxTarget_Disposed); //+= new EventHandler(_textBoxTarget_HandleDestroyed);
 		   _textBoxTarget.VisibleChanged += new EventHandler(_textBoxTarget_VisibleChanged);
 		}
@@ -47,6 +52,11 @@ namespace WeSay.UI
 			{
 				TimeForRealObject();
 			}
+		}
+
+		void OnTextBoxEntered(object sender, EventArgs e)
+		{
+			CurrentItemChanged(sender, new CurrentItemEventArgs(_propertyName, _writingSystem));
 		}
 
 		//void OnTextBoxTarget_Leave(object sender, EventArgs e)
@@ -122,7 +132,7 @@ namespace WeSay.UI
 				FillInMultiTextOfNewObject(newGuy, _propertyName, _writingSystem, _textBoxTarget.Text);
 				if (Triggered != null)
 				{
-					Triggered.Invoke(this, newGuy, null);
+					Triggered.Invoke(this, _listTarget, e.NewIndex, null);
 				}
 			}
 		}

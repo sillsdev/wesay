@@ -40,7 +40,6 @@ namespace WeSay.LexicalTools
 			this._lexicalEntryView.Name = "_lexicalEntryView";
 			this._lexicalEntryView.ReadOnly = true;
 			this._lexicalEntryView.Size = new System.Drawing.Size(450, 85);
-			this._lexicalEntryView.TabIndex = 0;
 			this._lexicalEntryView.Text = "";
 			//
 			// _entryDetailControl

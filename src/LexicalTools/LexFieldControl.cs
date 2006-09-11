@@ -6,21 +6,29 @@ using System.Text;
 using System.Windows.Forms;
 using WeSay.UI;
 using WeSay.LexicalModel;
+using WeSay.Language;
 
 namespace WeSay.LexicalTools
 {
 	public partial class LexFieldControl : UserControl
 	{
 		LexEntry _record;
-		public LexFieldControl()
+
+		private void Initialize()
+		{
+			_entryDetailControl.CurrentItemChanged += new EventHandler<CurrentItemEventArgs>(OnCurrentItemChanged);
+		}
+
+	   public LexFieldControl()
 		{
 			InitializeComponent();
+			Initialize();
 		}
 
 		public LexFieldControl(Predicate<string> filter)
 		{
 			InitializeComponent();
-
+			Initialize();
 			_entryDetailControl.ShowField = filter;
 		}
 
@@ -38,16 +46,11 @@ namespace WeSay.LexicalTools
 			}
 		}
 
-
-		public string Control_FormattedView
+		public RichTextBox Control_FormattedView
 		{
 			get
 			{
-				return _lexicalEntryView.Text;
-			}
-			set
-			{
-				_lexicalEntryView.Text = value; // this could go to rtf depending on the value
+				return _lexicalEntryView;
 			}
 		}
 
@@ -73,6 +76,7 @@ namespace WeSay.LexicalTools
 				}
 				_record = value;
 				_entryDetailControl.DataSource = value;
+				_currentItem = null;
 				if (_record == null)
 				{
 					_lexicalEntryView.Text = String.Empty;
@@ -81,15 +85,27 @@ namespace WeSay.LexicalTools
 				{
 					_record.PropertyChanged +=new PropertyChangedEventHandler(OnRecordPropertyChanged);
 
-					_lexicalEntryView.Rtf = _record.ToRtf();
+					RefreshLexicalEntryView();
 				}
 			}
 		}
 
 		private void OnRecordPropertyChanged(object sender, PropertyChangedEventArgs e)
 		{
-			_lexicalEntryView.Rtf = _record.ToRtf();
+			RefreshLexicalEntryView();
 		}
 
+		private void RefreshLexicalEntryView()
+		{
+			_lexicalEntryView.Rtf = RtfRenderer.ToRtf(_record, _currentItem);
+		}
+
+		private void OnCurrentItemChanged(object sender, CurrentItemEventArgs e)
+		{
+			_currentItem = e;
+			RefreshLexicalEntryView();
+		}
+
+		private CurrentItemEventArgs _currentItem;
 	}
 }

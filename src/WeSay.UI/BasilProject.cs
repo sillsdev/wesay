@@ -13,7 +13,15 @@ namespace WeSay.UI
 	{
 		private static BasilProject _singleton;
 
-		private  System.Collections.Generic.Dictionary<string, WritingSystem> _writingSystems;
+		private System.Collections.Generic.Dictionary<string, WritingSystem> _writingSystems;
+
+		public System.Collections.Generic.Dictionary<string, WritingSystem> WritingSystems
+		{
+			get
+			{
+				return _writingSystems;
+			}
+		}
 		private string _projectDirectoryPath;
 		private XmlDocument _fontPrefsDoc;
 		private  WritingSystem _vernacularWritingSystemDefault;

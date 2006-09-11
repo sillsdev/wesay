@@ -12,6 +12,10 @@ namespace WeSay.UI
 	/// </summary>
 	public partial class DetailList : UserControl
 	{
+		public event EventHandler<CurrentItemEventArgs> CurrentItemChanged = delegate
+																			 {
+																			 };
+
 		/// <summary>
 		/// we have this instead of just using this.Count() because  Count not implemented in Mono 1.16
 		/// </summary>
@@ -255,6 +259,11 @@ namespace WeSay.UI
 			WeSayTextBox tb = (WeSayTextBox)GetEditControlFromReferenceControl(p);
 			tb.Focus();
 			tb.Select(1000, 0);//go to end
+		}
+
+		public void OnBindingCurrentItemChanged(object sender, CurrentItemEventArgs e)
+		{
+			CurrentItemChanged(sender, e);
 		}
 
 		/// <summary>

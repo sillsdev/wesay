@@ -11,6 +11,9 @@ namespace WeSay.UI
 	/// </summary>
 	public class Binding
 	{
+		public event EventHandler<CurrentItemEventArgs> CurrentItemChanged = delegate
+																			 {
+																			 };
 		private WritingSystem _writingSystem;
 		private INotifyPropertyChanged _dataTarget;
 		private WeSayTextBox _textBoxTarget;
@@ -19,20 +22,26 @@ namespace WeSay.UI
 		public Binding(INotifyPropertyChanged dataTarget, WritingSystem writingSystem, WeSayTextBox widgetTarget)
 		{
 			_inMidstOfChange = false;
-		   _dataTarget= dataTarget;
-		   _dataTarget.PropertyChanged += new PropertyChangedEventHandler(OnDataPropertyChanged);
-		   _writingSystem=writingSystem;
-		   _textBoxTarget = widgetTarget;
-		   _textBoxTarget.TextChanged += new EventHandler(OnTextBoxChanged);
-		   _textBoxTarget.Disposed += new EventHandler(_textBoxTarget_Disposed);
-		   _textBoxTarget.VisibleChanged += new EventHandler(_textBoxTarget_VisibleChanged);
-	   }
+			_dataTarget = dataTarget;
+			_dataTarget.PropertyChanged += new PropertyChangedEventHandler(OnDataPropertyChanged);
+			_writingSystem = writingSystem;
+			_textBoxTarget = widgetTarget;
+			_textBoxTarget.TextChanged += new EventHandler(OnTextBoxChanged);
+			_textBoxTarget.Disposed += new EventHandler(OnTextBoxTargetDisposed);
+			_textBoxTarget.VisibleChanged += new EventHandler(OnTextBoxTargetVisibilityChanged);
+			_textBoxTarget.Enter += new EventHandler(OnTextBoxEntered);
+		}
 
-	   /// <summary>
-	   /// Change of visibility is not a very satisfying to time to trigger this,
-	   /// but it does the best I've found.
-	   /// </summary>
-		void _textBoxTarget_VisibleChanged(object sender, EventArgs e)
+		void OnTextBoxEntered(object sender, EventArgs e)
+		{
+			CurrentItemChanged(sender, new CurrentItemEventArgs(DataTarget, _writingSystem));
+		}
+
+		/// <summary>
+		/// Change of visibility is not a very satisfying to time to trigger this,
+		/// but it does the best I've found.
+		/// </summary>
+		void OnTextBoxTargetVisibilityChanged(object sender, EventArgs e)
 		{
 			TearDown();
 		}
@@ -40,14 +49,14 @@ namespace WeSay.UI
 		/// <summary>
 		/// We get this when closing the app, rather than the visibility changed event.
 		/// </summary>
-		void _textBoxTarget_Disposed(object sender, EventArgs e)
+		void OnTextBoxTargetDisposed(object sender, EventArgs e)
 		{
 			TearDown();
 		}
 
 		void OnTextBoxChanged(object sender, EventArgs e)
 		{
-		   SetTargetValue(_textBoxTarget.Text);
+			SetTargetValue(_textBoxTarget.Text);
 		}
 
 		/// <summary>
@@ -59,8 +68,8 @@ namespace WeSay.UI
 			_dataTarget.PropertyChanged -= new PropertyChangedEventHandler(OnDataPropertyChanged);
 			_dataTarget = null;
 			_textBoxTarget.TextChanged -= new EventHandler(OnTextBoxChanged);
-			_textBoxTarget.Disposed -= new EventHandler(_textBoxTarget_Disposed);
-			_textBoxTarget.VisibleChanged -= new EventHandler(_textBoxTarget_VisibleChanged);
+			_textBoxTarget.Disposed -= new EventHandler(OnTextBoxTargetDisposed);
+			_textBoxTarget.VisibleChanged -= new EventHandler(OnTextBoxTargetVisibilityChanged);
 			_textBoxTarget = null;
 		}
 
@@ -112,7 +121,8 @@ namespace WeSay.UI
 				//    //in addition to add a menu item, this will fire events on the object that owns the list
 				//    list.AddNew();
 				//}
-				else throw new ArgumentException("Binding doesn't understand that type of target.");
+				else
+					throw new ArgumentException("Binding doesn't understand that type of target.");
 
 			}
 			finally
@@ -123,7 +133,10 @@ namespace WeSay.UI
 
 		public INotifyPropertyChanged DataTarget
 		{
-			get { return _dataTarget; }
+			get
+			{
+				return _dataTarget;
+			}
 		}
 
 		//protected string WritingSystemId
@@ -132,7 +145,10 @@ namespace WeSay.UI
 		//}
 		public WeSayTextBox TextBoxTarget
 		{
-			get { return _textBoxTarget; }
+			get
+			{
+				return _textBoxTarget;
+			}
 		}
 	}
 }

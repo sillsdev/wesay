@@ -3,6 +3,7 @@ using System.Windows.Forms;
 using WeSay.Language;
 using WeSay.LexicalModel;
 using WeSay.UI;
+using System.ComponentModel;
 namespace WeSay.LexicalTools
 {
 	/// <summary>
@@ -15,15 +16,15 @@ namespace WeSay.LexicalTools
 		{
 		}
 
-		public override int AddWidgets(object dataObject)
+		public override int AddWidgets(IBindingList list, int index)
 		{
-			return AddWidgets(dataObject, -1);
+			return AddWidgets(list, index, -1);
 		}
 
-		internal override int AddWidgets(object dataObject, int insertAtRow)
+		internal override int AddWidgets(IBindingList list, int index, int insertAtRow)
 		{
 			 int rowCount = 0;
-			 LexExampleSentence example = (LexExampleSentence)dataObject;
+			 LexExampleSentence example = (LexExampleSentence)list[index];
 			 if (_detailList.ShowField("Sentence"))
 			 {
 				 _detailList.AddWidgetRow(StringCatalog.Get("Example"), false, MakeBoundEntry(example.Sentence, BasilProject.Project.VernacularWritingSystemDefault), insertAtRow);

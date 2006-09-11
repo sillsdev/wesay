@@ -3,6 +3,7 @@ using System.Collections;
 using WeSay.Language;
 using WeSay.LexicalModel;
 using WeSay.UI;
+using System.ComponentModel;
 
 namespace WeSay.LexicalTools
 {
@@ -16,15 +17,24 @@ namespace WeSay.LexicalTools
 		{
 		}
 
-		public override int AddWidgets(object dataObject)
+		public override int AddWidgets(IBindingList list, int index)
 		{
-			return AddWidgets(dataObject, -1);
+			return AddWidgets(list, index, -1);
 		}
 
-		internal override int AddWidgets(object dataObject, int insertAtRow)
+		internal override int AddWidgets(IBindingList list, int index, int insertAtRow)
+		{
+			return AddWidgets((LexEntry)list[index], insertAtRow);
+		}
+
+		public int AddWidgets(LexEntry entry)
+		{
+			return AddWidgets(entry, -1);
+		}
+
+		internal int AddWidgets(LexEntry entry, int insertAtRow)
 		{
 			int rowCount = 0;
-			LexEntry entry = (LexEntry)dataObject;
 			if (_detailList.ShowField("LexicalForm"))
 			{
 				_detailList.AddWidgetRow(StringCatalog.Get("Word"), true, MakeBoundEntry(entry.LexicalForm, BasilProject.Project.VernacularWritingSystemDefault), insertAtRow);
@@ -37,5 +47,7 @@ namespace WeSay.LexicalTools
 
 			return rowCount;
 		}
+
+
 	}
 }

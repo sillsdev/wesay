@@ -12,11 +12,11 @@ namespace WeSay.Data
 		public Db4oDataSource(string filePath)
 		{
 			_db = com.db4o.Db4o.OpenFile(filePath);
-#if DEBUG
 			if (_db == null)
 			{
 				throw new ApplicationException("Problem opening " + filePath);
 			}
+#if DEBUG
 			((com.db4o.YapStream)_db).GetNativeQueryHandler().QueryOptimizationFailure += new com.db4o.inside.query.QueryOptimizationFailureHandler(OnQueryOptimizationFailure);
 #endif
 		}
@@ -24,9 +24,9 @@ namespace WeSay.Data
 #if DEBUG
 		void OnQueryOptimizationFailure(object sender, com.db4o.inside.query.QueryOptimizationFailureEventArgs args)
 		{
-			//throw new ApplicationException("Query not Optimized", args.Reason);
-			System.Diagnostics.Debug.WriteLine("Query not Optimized:");
-			System.Diagnostics.Debug.WriteLine(args.Reason);
+			throw new ApplicationException("Query not Optimized", args.Reason);
+			//System.Diagnostics.Debug.WriteLine("Query not Optimized:");
+			//System.Diagnostics.Debug.WriteLine(args.Reason);
 		}
 #endif
 

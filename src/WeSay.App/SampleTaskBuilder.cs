@@ -78,7 +78,7 @@ namespace WeSay.App
 				tools.Add(new TaskProxy("Add Meanings", delegate
 				{
 					return CreateTool("WeSay.LexicalTools.LexFieldTask,LexicalTools",
-					CreateLexFieldConfiguration("Add Meanings", "Gloss GhostGloss"));
+					CreateLexFieldConfiguration("Add Meanings", "GhostGloss Gloss"));
 				}));
 
 
@@ -217,7 +217,38 @@ namespace WeSay.App
 			instances.Add(label);
 			Predicate<string> fieldFilter = delegate(string s)
 							{
-								return fieldToShow.Contains(s);
+								int i =0;
+								i = fieldToShow.IndexOf(s);
+								while (i != -1)
+								{
+									if (i == 0)
+									{
+										if (i + s.Length == fieldToShow.Length)
+										{
+											return true;
+										}
+										if (Char.IsSeparator(fieldToShow[i + s.Length]))
+										{
+											return true;
+										}
+										return false;
+									}
+
+									if (Char.IsSeparator(fieldToShow[i - 1]))
+									{
+										if (i + s.Length == fieldToShow.Length)
+										{
+											return true;
+										}
+										if (Char.IsSeparator(fieldToShow[i + s.Length]))
+										{
+											return true;
+										}
+
+									}
+									i = fieldToShow.IndexOf(s, i + 1);
+								}
+								return false;
 							};
 			instances.Add(fieldFilter);
 

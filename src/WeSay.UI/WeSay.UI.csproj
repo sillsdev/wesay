@@ -40,6 +40,7 @@
   <ItemGroup>
 	<Compile Include="BasilProject.cs" />
 	<Compile Include="Binding.cs" />
+	<Compile Include="CurrentItemEventArgs.cs" />
 	<Compile Include="DetailList.cs">
 	  <SubType>UserControl</SubType>
 	</Compile>

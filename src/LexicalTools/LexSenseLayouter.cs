@@ -17,18 +17,18 @@ namespace WeSay.LexicalTools
 		}
 
 
-		public override int AddWidgets(object dataObject)
+		public override int AddWidgets(IBindingList list, int index)
 		{
-			return AddWidgets(dataObject, -1);
+			return AddWidgets(list, index, -1);
 		}
 
-		internal override int AddWidgets(object dataObject, int insertAtRow)
+		internal override int AddWidgets(IBindingList list, int index, int insertAtRow)
 		{
 			 int rowCount = 0;
-		   LexSense sense = (LexSense)dataObject;
+		   LexSense sense = (LexSense)list[index];
 		   if (_detailList.ShowField("Gloss"))
 		   {
-			Control c = _detailList.AddWidgetRow(StringCatalog.Get("Meaning"), true,MakeBoundEntry(sense.Gloss, BasilProject.Project.AnalysisWritingSystemDefault), insertAtRow);
+			Control c = _detailList.AddWidgetRow(StringCatalog.Get("Meaning") + " " + (index+1).ToString(), true,MakeBoundEntry(sense.Gloss, BasilProject.Project.AnalysisWritingSystemDefault), insertAtRow);
 			   ++rowCount;
 			   insertAtRow = _detailList.GetRowOfControl(c);
 		   }
@@ -48,13 +48,24 @@ namespace WeSay.LexicalTools
 			if (_detailList.ShowField("GhostGloss"))
 			{
 			WeSayTextBox entry = new WeSayTextBox(BasilProject.Project.AnalysisWritingSystemDefault);
-			GhostBinding g=   MakeGhostBinding(list, "Gloss", BasilProject.Project.AnalysisWritingSystemDefault, entry);
-				g.ReferenceControl = _detailList.AddWidgetRow(StringCatalog.Get("Meaning"), true, entry);
-				++rowCount;
+			GhostBinding g= MakeGhostBinding(list, "Gloss", BasilProject.Project.AnalysisWritingSystemDefault, entry);
+			g.ReferenceControl = _detailList.AddWidgetRow(StringCatalog.Get("New Meaning"), true, entry);
+			++rowCount;
 			}
 			return rowCount;
 		}
 
+		public bool HasSenseWithEmptyGloss(IBindingList list)
+		{
+			foreach (LexSense sense in list)
+			{
+				if (sense.Gloss.Count == 0)
+				{
+					return true;
+				}
+			}
+			return false;
+		}
 
 	}
 }
