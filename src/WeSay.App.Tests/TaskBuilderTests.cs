@@ -1,4 +1,4 @@
-using Gtk;
+//using Gtk;
 using NUnit.Framework;
 using WeSay.UI;
 
@@ -10,7 +10,7 @@ namespace WeSay.App.Tests
 		[SetUp]
 		public void Setup()
 		{
-			Application.Init();
+		 //   Application.Init();
 		}
 
 		[Test]
@@ -18,6 +18,8 @@ namespace WeSay.App.Tests
 		{
 			using (BasilProject project = new BasilProject(@"..\..\SampleProjects\Thai"))
 			{
+				project.InitWritingSystems();
+				project.InitStringCatalog();
 				using (SampleTaskBuilder builder = new SampleTaskBuilder(project))
 				{
 					Assert.Greater(builder.Tasks.Count, 0);
@@ -29,6 +31,8 @@ namespace WeSay.App.Tests
 		{
 			using (BasilProject project = new BasilProject(@"..\..\SampleProjects\Thai"))
 			{
+				project.InitWritingSystems();
+				project.InitStringCatalog();
 
 				using (SampleTaskBuilder builder = new SampleTaskBuilder(project))
 				{
