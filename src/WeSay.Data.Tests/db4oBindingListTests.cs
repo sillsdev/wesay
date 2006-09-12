@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using NUnit.Framework;
 
-
-
 namespace WeSay.Data.Tests
 {
 	[TestFixture]
@@ -17,7 +15,6 @@ namespace WeSay.Data.Tests
 		[TestFixtureSetUp]
 		public void FixtureSetUp()
 		{
-
 			_FilePath = System.IO.Path.GetTempFileName();
 			this._dataSource = new Db4oDataSource(_FilePath);
 			this._bindingList = new Db4oBindingList<TestItem>(this._dataSource);
@@ -47,7 +44,6 @@ namespace WeSay.Data.Tests
 		[TestFixtureSetUp]
 		public void FixtureSetUp()
 		{
-
 			_FilePath = System.IO.Path.GetTempFileName();
 			this._dataSource = new Db4oDataSource(_FilePath);
 			this._bindingList = new Db4oBindingList<TestItem>(this._dataSource);
@@ -149,7 +145,6 @@ namespace WeSay.Data.Tests
 		[TearDown]
 		public void TearDown()
 		{
-
 			this._bindingList.Dispose();
 			this._dataSource.Dispose();
 			System.IO.File.Delete(_FilePath);
@@ -190,11 +185,9 @@ namespace WeSay.Data.Tests
 	[TestFixture]
 	public class Db4oBindingListIBindingListTest : IBindingListBaseTest<TestItem, int>
 	{
-
 		Db4oDataSource _dataSource;
 		Db4oBindingList<TestItem> _db4oBindingList;
 		string _FilePath;
-
 
 		[SetUp]
 		public override void SetUp()
@@ -247,7 +240,6 @@ namespace WeSay.Data.Tests
 	[TestFixture]
 	public class Db4oBindingListIBindingListWithNoDataTest : IBindingListBaseTest<TestItem, int>
 	{
-
 		Db4oDataSource _dataSource;
 		Db4oBindingList<TestItem> _db4oBindingList;
 		string _FilePath;
@@ -270,24 +262,19 @@ namespace WeSay.Data.Tests
 		[TearDown]
 		public void TestFixtureTearDown()
 		{
-			((IDisposable)this._bindingList
-	).Dispose();
+			((IDisposable)this._bindingList).Dispose();
 			this._dataSource.Dispose();
 			System.IO.File.Delete(_FilePath);
 		}
-
 	}
-
 
 	[TestFixture]
 	public class Db4oBindingListSortedTest
 	{
-
 		Db4oDataSource _dataSource;
 		Db4oBindingList<TestItem> _bindingList;
 		string _filePath;
 		TestItem _jared, _gianna, _eric, _allison;
-
 
 		private bool _listChanged;
 		private ListChangedEventArgs _listChangedEventArgs;
@@ -606,6 +593,5 @@ namespace WeSay.Data.Tests
 			ReOpenDatabase();
 			Assert.AreEqual(items, this._bindingList[0].OnActivateDepth);
 		}
-
 	}
 }

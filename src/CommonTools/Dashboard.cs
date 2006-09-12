@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.ComponentModel;
-using WeSay.UI;
 using System.Windows.Forms;
+using WeSay.UI;
 
 namespace WeSay.CommonTools
 {
