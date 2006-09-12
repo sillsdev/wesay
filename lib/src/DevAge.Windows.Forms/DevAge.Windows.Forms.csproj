@@ -104,6 +104,7 @@
 	<Compile Include="AssemblyInfo.cs">
 	  <SubType>Code</SubType>
 	</Compile>
+	<Compile Include="DevAgeAssemblyInfo.cs" />
 	<Compile Include="Windows\Forms\ActivityProgress.cs">
 	  <SubType>UserControl</SubType>
 	</Compile>

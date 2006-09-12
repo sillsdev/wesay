@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevAge.Windows.Forms", "DevAge.Windows.Forms.csproj", "{3DF8B880-8A23-4F10-9EAB-D72EF0672C3E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3DF8B880-8A23-4F10-9EAB-D72EF0672C3E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3DF8B880-8A23-4F10-9EAB-D72EF0672C3E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3DF8B880-8A23-4F10-9EAB-D72EF0672C3E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3DF8B880-8A23-4F10-9EAB-D72EF0672C3E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
