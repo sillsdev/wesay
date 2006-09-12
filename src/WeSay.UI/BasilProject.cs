@@ -104,7 +104,7 @@ namespace WeSay.UI
 			}
 		}
 
-		private string ApplicationCommonDirectory
+		public string ApplicationCommonDirectory
 		{
 			get
 			{
