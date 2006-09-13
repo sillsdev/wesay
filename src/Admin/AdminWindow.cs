@@ -13,9 +13,13 @@ namespace Admin
 	{
 		public AdminWindow()
 		{
-			 BasilProject.InitializeForTests();
+
 		   InitializeComponent();
 
+		   if (this.DesignMode)
+			   return;
+
+		   BasilProject.InitializeForTests();
 		}
 	}
 }

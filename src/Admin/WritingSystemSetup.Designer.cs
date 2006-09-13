@@ -32,10 +32,10 @@ namespace Admin
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
 			this._wsListBox = new System.Windows.Forms.ListBox();
 			this._tabControl = new System.Windows.Forms.TabControl();
-			this._renderingPage = new System.Windows.Forms.TabPage();
-			this._sortingPage = new System.Windows.Forms.TabPage();
 			this._basicPage = new System.Windows.Forms.TabPage();
+			this._renderingPage = new System.Windows.Forms.TabPage();
 			this._typingPage = new System.Windows.Forms.TabPage();
+			this._sortingPage = new System.Windows.Forms.TabPage();
 			this.toolStrip1 = new System.Windows.Forms.ToolStrip();
 			this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
 			this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
@@ -87,26 +87,6 @@ namespace Admin
 			this._tabControl.Size = new System.Drawing.Size(216, 125);
 			this._tabControl.TabIndex = 0;
 			//
-			// _renderingPage
-			//
-			this._renderingPage.Location = new System.Drawing.Point(4, 22);
-			this._renderingPage.Name = "_renderingPage";
-			this._renderingPage.Padding = new System.Windows.Forms.Padding(3);
-			this._renderingPage.Size = new System.Drawing.Size(208, 124);
-			this._renderingPage.TabIndex = 0;
-			this._renderingPage.Text = "Rendering";
-			this._renderingPage.UseVisualStyleBackColor = true;
-			//
-			// _sortingPage
-			//
-			this._sortingPage.Location = new System.Drawing.Point(4, 22);
-			this._sortingPage.Name = "_sortingPage";
-			this._sortingPage.Padding = new System.Windows.Forms.Padding(3);
-			this._sortingPage.Size = new System.Drawing.Size(208, 124);
-			this._sortingPage.TabIndex = 1;
-			this._sortingPage.Text = "Sorting";
-			this._sortingPage.UseVisualStyleBackColor = true;
-			//
 			// _basicPage
 			//
 			this._basicPage.Location = new System.Drawing.Point(4, 22);
@@ -116,17 +96,38 @@ namespace Admin
 			this._basicPage.Text = "Basic";
 			this._basicPage.UseVisualStyleBackColor = true;
 			//
+			// _renderingPage
+			//
+			this._renderingPage.Location = new System.Drawing.Point(4, 22);
+			this._renderingPage.Name = "_renderingPage";
+			this._renderingPage.Padding = new System.Windows.Forms.Padding(3);
+			this._renderingPage.Size = new System.Drawing.Size(208, 99);
+			this._renderingPage.TabIndex = 0;
+			this._renderingPage.Text = "Rendering";
+			this._renderingPage.UseVisualStyleBackColor = true;
+			//
 			// _typingPage
 			//
 			this._typingPage.Location = new System.Drawing.Point(4, 22);
 			this._typingPage.Name = "_typingPage";
-			this._typingPage.Size = new System.Drawing.Size(208, 124);
+			this._typingPage.Size = new System.Drawing.Size(208, 99);
 			this._typingPage.TabIndex = 3;
 			this._typingPage.Text = "Typing";
 			this._typingPage.UseVisualStyleBackColor = true;
 			//
+			// _sortingPage
+			//
+			this._sortingPage.Location = new System.Drawing.Point(4, 22);
+			this._sortingPage.Name = "_sortingPage";
+			this._sortingPage.Padding = new System.Windows.Forms.Padding(3);
+			this._sortingPage.Size = new System.Drawing.Size(208, 99);
+			this._sortingPage.TabIndex = 1;
+			this._sortingPage.Text = "Sorting";
+			this._sortingPage.UseVisualStyleBackColor = true;
+			//
 			// toolStrip1
 			//
+			this.toolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
 			this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
 			this.toolStripButton1,
 			this.toolStripButton2,
@@ -134,17 +135,17 @@ namespace Admin
 			this.toolStripButton4});
 			this.toolStrip1.Location = new System.Drawing.Point(0, 0);
 			this.toolStrip1.Name = "toolStrip1";
+			this.toolStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
 			this.toolStrip1.Size = new System.Drawing.Size(329, 25);
 			this.toolStrip1.TabIndex = 1;
 			this.toolStrip1.Text = "toolStrip1";
 			//
 			// toolStripButton1
 			//
-			this.toolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
 			this.toolStripButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton1.Image")));
 			this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.toolStripButton1.Name = "toolStripButton1";
-			this.toolStripButton1.Size = new System.Drawing.Size(23, 22);
+			this.toolStripButton1.Size = new System.Drawing.Size(123, 22);
 			this.toolStripButton1.Text = "New Writing System";
 			//
 			// toolStripButton2
@@ -154,7 +155,7 @@ namespace Admin
 			this.toolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.toolStripButton2.Name = "toolStripButton2";
 			this.toolStripButton2.Size = new System.Drawing.Size(23, 22);
-			this.toolStripButton2.Text = "toolStripButton2";
+			this.toolStripButton2.Text = "Move Up";
 			//
 			// toolStripButton3
 			//
@@ -163,21 +164,22 @@ namespace Admin
 			this.toolStripButton3.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.toolStripButton3.Name = "toolStripButton3";
 			this.toolStripButton3.Size = new System.Drawing.Size(23, 22);
-			this.toolStripButton3.Text = "toolStripButton3";
+			this.toolStripButton3.Text = "Move Down";
 			//
 			// toolStripButton4
 			//
-			this.toolStripButton4.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.toolStripButton4.Enabled = false;
 			this.toolStripButton4.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton4.Image")));
 			this.toolStripButton4.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.toolStripButton4.Name = "toolStripButton4";
-			this.toolStripButton4.Size = new System.Drawing.Size(23, 22);
-			this.toolStripButton4.Text = "toolStripButton4";
+			this.toolStripButton4.Size = new System.Drawing.Size(141, 22);
+			this.toolStripButton4.Text = "Remove Writing System";
 			//
 			// WritingSystemSetup
 			//
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.BackColor = System.Drawing.SystemColors.ControlLightLight;
 			this.Controls.Add(this.splitContainer1);
 			this.Controls.Add(this.toolStrip1);
 			this.Name = "WritingSystemSetup";

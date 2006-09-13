@@ -42,11 +42,31 @@
 	<Compile Include="AdminWindow.Designer.cs">
 	  <DependentUpon>AdminWindow.cs</DependentUpon>
 	</Compile>
+	<Compile Include="FieldsControl.cs">
+	  <SubType>UserControl</SubType>
+	</Compile>
+	<Compile Include="FieldsControl.Designer.cs">
+	  <DependentUpon>FieldsControl.cs</DependentUpon>
+	</Compile>
+	<Compile Include="OtherControl.cs">
+	  <SubType>UserControl</SubType>
+	</Compile>
+	<Compile Include="OtherControl.Designer.cs">
+	  <DependentUpon>OtherControl.cs</DependentUpon>
+	</Compile>
 	<Compile Include="Program.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />
 	<EmbeddedResource Include="AdminWindow.resx">
 	  <SubType>Designer</SubType>
 	  <DependentUpon>AdminWindow.cs</DependentUpon>
+	</EmbeddedResource>
+	<EmbeddedResource Include="FieldsControl.resx">
+	  <SubType>Designer</SubType>
+	  <DependentUpon>FieldsControl.cs</DependentUpon>
+	</EmbeddedResource>
+	<EmbeddedResource Include="OtherControl.resx">
+	  <SubType>Designer</SubType>
+	  <DependentUpon>OtherControl.cs</DependentUpon>
 	</EmbeddedResource>
 	<EmbeddedResource Include="Properties\Resources.resx">
 	  <Generator>ResXFileCodeGenerator</Generator>

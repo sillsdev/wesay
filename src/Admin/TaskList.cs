@@ -12,6 +12,14 @@ namespace Admin
 		{
 			InitializeComponent();
 
+
+		}
+
+		private void TaskList_Load(object sender, System.EventArgs e)
+		{
+			if (this.DesignMode)
+				return;
+
 			string path = Path.Combine(BasilProject.Project.ApplicationCommonDirectory, "taskInventory.xml");
 			XmlDocument doc = new XmlDocument();
 			doc.Load(path);
