@@ -3,7 +3,7 @@ using System.Windows.Forms;
 using System.Xml;
 using WeSay.UI;
 
-namespace Admin
+namespace WeSay.Admin
 {
 	public partial class TaskList : UserControl
 	{

@@ -14,18 +14,17 @@ namespace WeSay.UI.Tests
 		{
 			DirectoryInfo dirProject = Directory.CreateDirectory(Path.Combine(Path.GetTempPath(), Path.GetRandomFileName()));
 			_projectDirectory = dirProject.FullName;
-			BasilProject project = new BasilProject(_projectDirectory);
 
-			WriteSampleWritingSystemFile(project);
-			project.InitWritingSystems();
 		}
 
-		private void WriteSampleWritingSystemFile(BasilProject project)
+		private void WriteSampleWritingSystemFile()
 		{
+			BasilProject project = new BasilProject(_projectDirectory);
 			Directory.CreateDirectory(Directory.GetParent(project.PathToWritingSystemPrefs).FullName);
 			StreamWriter writer = File.CreateText(project.PathToWritingSystemPrefs);
 			writer.Write(TestResources.WritingSystemPrefs);
 			writer.Close();
+			project.InitWritingSystems();
 		}
 
 		private void WriteSampleStringCatalogFile(BasilProject project)
@@ -45,6 +44,7 @@ namespace WeSay.UI.Tests
 		[Test]
 		public void RightFont()
 		{
+			WriteSampleWritingSystemFile();
 			WritingSystem ws = BasilProject.Project.AnalysisWritingSystemDefault;
 			Assert.AreEqual("ANA", ws.Id);
 			Assert.AreEqual("Wingdings", ws.Font.Name);
@@ -55,6 +55,7 @@ namespace WeSay.UI.Tests
 		[Test]
 		public void NoSetupDefaultWritingSystems()
 		{
+			WriteSampleWritingSystemFile();
 			WritingSystem ws = BasilProject.Project.AnalysisWritingSystemDefault;
 			Assert.IsNotNull(ws);
 			ws = BasilProject.Project.VernacularWritingSystemDefault;
@@ -79,6 +80,26 @@ namespace WeSay.UI.Tests
 			project.InitStringCatalog();
 
 			Assert.AreEqual("red", StringCatalog.Get("red"));
+		}
+
+		[Test]
+		public void MakeProjectFiles()
+		{
+			string path = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+			try
+			{
+				Directory.CreateDirectory(path);
+				BasilProject p = new BasilProject(path);
+				p.CreateEmptyProject();
+				Assert.IsTrue(Directory.Exists(path));
+				Assert.IsTrue(Directory.Exists(p.ApplicationCommonDirectory));
+				//Assert.IsTrue(Directory.Exists(p.PathToLexicalModelDB));
+				Assert.IsTrue(Directory.Exists(p.PathToWritingSystemPrefs));
+			}
+			finally
+			{
+				Directory.Delete(path, true);
+			}
 		}
 	}
 }

@@ -60,6 +60,7 @@
 	<Compile Include="WeSayTextBox.Designer.cs">
 	  <DependentUpon>WeSayTextBox.cs</DependentUpon>
 	</Compile>
+	<Compile Include="WeSayWordsProject.cs" />
   </ItemGroup>
   <ItemGroup>
 	<ProjectReference Include="..\Language\Language.csproj">

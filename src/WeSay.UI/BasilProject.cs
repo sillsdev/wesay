@@ -9,39 +9,9 @@ using WeSay.Language;
 
 namespace WeSay.UI
 {
-	public class WeSayWordsProject : BasilProject
-	{
-		public WeSayWordsProject(string projectDirectoryPath) : base(projectDirectoryPath){}
-
-		public string PathToTaskConfig
-		{
-			get
-			{
-				return System.IO.Path.Combine(ApplicationDirectory, "tasks.xml");
-			}
-		}
-
-		public string PathToLexicalModelDB
-		{
-			get
-			{
-				return System.IO.Path.Combine(ProjectDirectoryPath, "lexicon.yap");
-			}
-		}
-
-		private string ApplicationDirectory
-		{
-			get
-			{
-				return System.IO.Path.Combine(ProjectDirectoryPath, "WeSay");
-			}
-		}
-
-	}
-
 	public class BasilProject : WeSay.UI.IProject, IDisposable
 	{
-		private static BasilProject _singleton;
+		protected static BasilProject _singleton;
 
 		private System.Collections.Generic.Dictionary<string, WritingSystem> _writingSystems;
 
@@ -88,7 +58,9 @@ namespace WeSay.UI
 		/// </summary>
 		public static void InitializeForTests()
 		{
-			BasilProject project = new BasilProject(@"../../SampleProjects/PRETEND");
+			string s = Path.Combine(GetTopWeSayDirectory(), "SampleProjects/PRETEND");
+
+			BasilProject project = new BasilProject(s);
 			project.InitWritingSystems();
 			project.StringCatalogSelector = "en";
 			project.InitStringCatalog();
@@ -97,6 +69,10 @@ namespace WeSay.UI
 		public BasilProject(string projectDirectoryPath)
 		{
 			 _projectDirectoryPath = projectDirectoryPath;
+			 if (_singleton != null)
+			 {
+				 _singleton.Dispose();
+			 }
 			 _singleton = this;
 			_writingSystems = new Dictionary<string, WritingSystem>();
 		}
@@ -138,21 +114,23 @@ namespace WeSay.UI
 		{
 			get
 			{
-				//GetEntryAssembly is null from nunit
-				//string path = Assembly.GetEntryAssembly().CodeBase.Replace("file:///", "");
-				string path = Assembly.GetExecutingAssembly().CodeBase.Replace("file:///", "");
-				//go up to dir containing the executable
-				path = Directory.GetParent(path).FullName;
-			   if (path.ToLower().IndexOf("output") > -1)
-				{
-					//go up to output
-					path = Directory.GetParent(path).FullName;
-				   //go up to directory containing output
-					path = Directory.GetParent(path).FullName;
-				}
-				 path =System.IO.Path.Combine(path, "common");
-				 return path;
+				return System.IO.Path.Combine(GetTopWeSayDirectory(), "common");
 			}
+		}
+
+		private static string GetTopWeSayDirectory()
+		{
+			string path = Assembly.GetExecutingAssembly().CodeBase.Replace("file:///", "");
+			//go up to dir containing the executable
+			path = Directory.GetParent(path).FullName;
+			if (path.ToLower().IndexOf("output") > -1)
+			{
+				//go up to output
+				path = Directory.GetParent(path).FullName;
+				//go up to directory containing output
+				path = Directory.GetParent(path).FullName;
+			}
+			return path;
 		}
 
 		private string CommonDirectory
@@ -175,7 +153,10 @@ namespace WeSay.UI
 
 		public void Dispose()
 		{
-
+			if (_singleton == this)
+			{
+				_singleton = null;
+			}
 		}
 
 		/// <summary>
@@ -265,9 +246,18 @@ namespace WeSay.UI
 			}
 			catch(System.IO.FileNotFoundException )
 			{
-				//todo: get some ui message up
+				//todo:when we add logging, this would be a good place to log a problem
 				new StringCatalog();
 			}
+		}
+
+		public virtual void CreateEmptyProject()
+		{
+			Directory.CreateDirectory(this.PathToWritingSystemPrefs);
+		}
+		public static BasilProject CreateNewProject(string path)
+		{
+			throw new Exception("The method or operation is not implemented.");
 		}
 	}
 }

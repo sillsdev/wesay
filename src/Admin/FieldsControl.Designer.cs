@@ -1,4 +1,4 @@
-namespace Admin
+namespace WeSay.Admin
 {
 	partial class FieldsControl
 	{
