@@ -9,6 +9,36 @@ using WeSay.Language;
 
 namespace WeSay.UI
 {
+	public class WeSayWordsProject : BasilProject
+	{
+		public WeSayWordsProject(string projectDirectoryPath) : base(projectDirectoryPath){}
+
+		public string PathToTaskConfig
+		{
+			get
+			{
+				return System.IO.Path.Combine(ApplicationDirectory, "tasks.xml");
+			}
+		}
+
+		public string PathToLexicalModelDB
+		{
+			get
+			{
+				return System.IO.Path.Combine(ProjectDirectoryPath, "lexicon.yap");
+			}
+		}
+
+		private string ApplicationDirectory
+		{
+			get
+			{
+				return System.IO.Path.Combine(ProjectDirectoryPath, "WeSay");
+			}
+		}
+
+	}
+
 	public class BasilProject : WeSay.UI.IProject, IDisposable
 	{
 		private static BasilProject _singleton;
@@ -23,6 +53,15 @@ namespace WeSay.UI
 			}
 		}
 		private string _projectDirectoryPath;
+
+		protected string ProjectDirectoryPath
+		{
+			get
+			{
+				return _projectDirectoryPath;
+			}
+		}
+
 		private XmlDocument _fontPrefsDoc;
 		private  WritingSystem _vernacularWritingSystemDefault;
 		private  WritingSystem _analysisWritingSystemDefault;
@@ -60,15 +99,6 @@ namespace WeSay.UI
 			 _projectDirectoryPath = projectDirectoryPath;
 			 _singleton = this;
 			_writingSystems = new Dictionary<string, WritingSystem>();
-		}
-
-
-		public string PathToLexicalModelDB
-		{
-			get
-			{
-				return System.IO.Path.Combine(_projectDirectoryPath,"lexicon.yap");
-			}
 		}
 
 		public string PathToWritingSystemPrefs

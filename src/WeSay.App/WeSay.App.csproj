@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
 	<Compile Include="CommandLineParser.cs" />
+	<Compile Include="ConfigFileTaskBuilder.cs" />
 	<Compile Include="SampleTaskBuilder.cs" />
 	<Compile Include="TabbedForm.cs">
 	  <SubType>Form</SubType>

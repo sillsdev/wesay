@@ -1,3 +1,7 @@
+#if DEBUG
+#define THROW_ON_OPTIMIZATION_FAILURE
+#endif
+
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -16,12 +20,12 @@ namespace WeSay.Data
 			{
 				throw new ApplicationException("Problem opening " + filePath);
 			}
-#if DEBUG
+#if THROW_ON_OPTIMIZATION_FAILURE
 			((com.db4o.YapStream)_db).GetNativeQueryHandler().QueryOptimizationFailure += new com.db4o.inside.query.QueryOptimizationFailureHandler(OnQueryOptimizationFailure);
 #endif
 		}
 
-#if DEBUG
+#if THROW_ON_OPTIMIZATION_FAILURE
 		void OnQueryOptimizationFailure(object sender, com.db4o.inside.query.QueryOptimizationFailureEventArgs args)
 		{
 			throw new ApplicationException("Query not Optimized", args.Reason);

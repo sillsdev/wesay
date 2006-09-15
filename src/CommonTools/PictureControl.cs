@@ -10,14 +10,12 @@ namespace WeSay.CommonTools
 {
 	public partial class PictureControl : UserControl, ITask
 	{
-		private WeSay.UI.IProject _project;
 		private string _label;
 
-		public PictureControl(WeSay.UI.IProject project, string label, System.Drawing.Image image)
+		public PictureControl(string label, string pictureFilePath)
 		{
-			_project = project;
 			_label = label;
-			InitializeComponent(image);
+			InitializeComponent(new Bitmap(pictureFilePath));
 		}
 
 		#region ITask Members

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Windows.Forms;
 using CommandLine;
 using WeSay.UI;
+using System.IO;
 
 namespace WeSay.App
 {
@@ -45,15 +46,14 @@ namespace WeSay.App
 			Gdk.Threads.Init();
 			Application.Init();
 #endif
-			BasilProject project = new BasilProject(cmdArgs.projectPath);
+			WeSayWordsProject project = new WeSayWordsProject(cmdArgs.projectPath);
 			project.InitWritingSystems();
 			project.StringCatalogSelector = cmdArgs.ui;
 			project.InitStringCatalog();
-
-			WeSay.UI.ITaskBuilder builder = new SampleTaskBuilder(project);
 #if GTK
 			Gdk.Threads.Enter();
 #endif
+			WeSay.UI.ITaskBuilder builder = null;
 			try
 			{
 
@@ -63,6 +63,15 @@ namespace WeSay.App
 #else
 				Application.EnableVisualStyles();
 				Application.SetCompatibleTextRenderingDefault(false);
+#if ConfigBuilder
+				using (FileStream config = new FileStream(project.WeSayWords.PathToTaskConfig, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete))
+				{
+					builder = new ConfigFileTaskBuilder(project, config);
+				}
+#else
+				builder = new SampleTaskBuilder(project);
+
+#endif
 				Form f =  new TabbedForm(project, builder);
 				Application.Run(f);
 #endif

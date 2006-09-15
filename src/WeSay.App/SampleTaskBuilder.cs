@@ -22,7 +22,7 @@ namespace WeSay.App
 		private IMutablePicoContainer _parentPicoContext;
 		BasilProject _project;
 
-		public SampleTaskBuilder(BasilProject project)
+		public SampleTaskBuilder(WeSayWordsProject project)
 		{
 			_parentPicoContext = CreateContainer();
 			_parentPicoContext.RegisterComponentInstance(project);
@@ -82,11 +82,12 @@ namespace WeSay.App
 				}));
 
 
-
-				tools.Add(CreateTool("WeSay.CommonTools.PictureControl,CommonTools",
-					CreatePictureConfiguration("Collect Words", "RealWord.gif")));
-				tools.Add(CreateTool("WeSay.CommonTools.PictureControl,CommonTools",
-					CreatePictureConfiguration("Semantic Domains", "SemDom.gif")));
+				tools.Add(CreatePictureTool("CollectWords", "WeSay.CommonTools.PictureControl,CommonTools",
+					"Collect Words", "RealWord.gif"));
+				tools.Add(CreatePictureTool("SemDom", "WeSay.CommonTools.PictureControl,CommonTools",
+					"Semantic Domains", "SemDom.gif"));
+				//tools.Add(CreateTool("WeSay.CommonTools.PictureControl,CommonTools",
+				//    CreatePictureConfiguration("Semantic Domains", "SemDom.gif")));
 				return tools;
 			}
 		}
@@ -159,13 +160,17 @@ namespace WeSay.App
 			return CreateTool(_parentPicoContext, fullToolClass);
 		}
 
-		private static IList CreatePictureConfiguration(string label, string pictureFilePath)
+		private ITask CreatePictureTool(string id, string fullToolClass, string label, string pictureFilePath)
 		{
-			IList instances = new List<object>();
-			instances.Add(label);
-			instances.Add(new Bitmap(pictureFilePath));
+			_parentPicoContext.RegisterComponentImplementation(id, Type.GetType(fullToolClass, true),
+				new IParameter[]{
+					new ConstantParameter(label),
+					new ConstantParameter(pictureFilePath)
+				});
 
-			return instances;
+			ITask i = (ITask)_parentPicoContext.GetComponentInstance(id);
+			Debug.Assert(i != null);
+			return i;
 		}
 
 		private IList CreateLexFieldConfiguration(string label, string fieldToShow)
@@ -204,7 +209,7 @@ namespace WeSay.App
 			//                        return query;
 			//                    });
 
-
+#if SODA
 			Db4oBindingList<LexEntry> entries = new Db4oBindingList<LexEntry>(ds, delegate(com.db4o.query.Query query)
 								{
 									//words modified in the past hour
@@ -212,6 +217,14 @@ namespace WeSay.App
 									query.Descend("_modifiedDate").Constrain(DateTime.Now.AddHours(-1)).Greater();
 									return query;
 								});
+#else //native
+			DateTime anHourAgo = DateTime.Now.AddHours(-1);
+			Db4oBindingList<LexEntry> entries = new Db4oBindingList<LexEntry>(ds, delegate(LexEntry entry)
+								{
+									//words modified in the past hour
+									return (entry.ModifiedDate > anHourAgo);
+								});
+#endif
 
 			instances.Add(entries);
 			instances.Add(label);

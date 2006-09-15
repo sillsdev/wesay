@@ -16,7 +16,7 @@ namespace WeSay.App.Tests
 		[Test]
 		public void ThaiTest()
 		{
-			using (BasilProject project = new BasilProject(@"..\..\SampleProjects\Thai"))
+			using (WeSayWordsProject project = new WeSayWordsProject(@"..\..\SampleProjects\Thai"))
 			{
 				project.InitWritingSystems();
 				project.InitStringCatalog();
@@ -29,7 +29,7 @@ namespace WeSay.App.Tests
 		[Test]
 		public void PretendTest()
 		{
-			using (BasilProject project = new BasilProject(@"..\..\SampleProjects\Thai"))
+			using (WeSayWordsProject project = new WeSayWordsProject(@"..\..\SampleProjects\PRETEND"))
 			{
 				project.InitWritingSystems();
 				project.InitStringCatalog();
