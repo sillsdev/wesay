@@ -24,15 +24,15 @@ namespace WeSay.UI.Tests
 		}
 
 
-		[Test]
+		[Test, Ignore()]
 		public void MakeProjectFiles()
 		{
 			string path = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
 			try
 			{
 				Directory.CreateDirectory(path);
-				WeSayWordsProject p = new WeSayWordsProject(path);
-				p.CreateEmptyProject();
+				WeSayWordsProject p = new WeSayWordsProject();
+				p.Create(path);
 				Assert.IsTrue(Directory.Exists(path));
 				Assert.IsTrue(Directory.Exists(p.PathToLexicalModelDB));
 			}

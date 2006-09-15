@@ -19,7 +19,8 @@ namespace WeSay.UI.Tests
 
 		private void WriteSampleWritingSystemFile()
 		{
-			BasilProject project = new BasilProject(_projectDirectory);
+			BasilProject project = new BasilProject();
+			project.Load(_projectDirectory);
 			Directory.CreateDirectory(Directory.GetParent(project.PathToWritingSystemPrefs).FullName);
 			StreamWriter writer = File.CreateText(project.PathToWritingSystemPrefs);
 			writer.Write(TestResources.WritingSystemPrefs);
@@ -66,7 +67,8 @@ namespace WeSay.UI.Tests
 		[Test]
 		public void LocalizedStringsDuringTests()
 		{
-			BasilProject project = new BasilProject(_projectDirectory);
+			BasilProject project = new BasilProject();
+			project.Load(_projectDirectory);
 			WriteSampleStringCatalogFile(project);
 			project.InitStringCatalog();
 			Assert.AreEqual("deng", StringCatalog.Get("red"));
@@ -75,7 +77,8 @@ namespace WeSay.UI.Tests
 		[Test]
 		public void LocalizedStringsFromPretendSample()
 		{
-			BasilProject project = new BasilProject(@"../../SampleProjects/PRETEND");
+			BasilProject project = new BasilProject();
+			project.Load(_projectDirectory);
 			project.StringCatalogSelector = "en";
 			project.InitStringCatalog();
 
@@ -89,12 +92,11 @@ namespace WeSay.UI.Tests
 			try
 			{
 				Directory.CreateDirectory(path);
-				BasilProject p = new BasilProject(path);
-				p.CreateEmptyProject();
+				BasilProject project = new BasilProject();
+				project.Create(path);
 				Assert.IsTrue(Directory.Exists(path));
-				Assert.IsTrue(Directory.Exists(p.ApplicationCommonDirectory));
-				//Assert.IsTrue(Directory.Exists(p.PathToLexicalModelDB));
-				Assert.IsTrue(Directory.Exists(p.PathToWritingSystemPrefs));
+				Assert.IsTrue(Directory.Exists(project.ApplicationCommonDirectory));
+				Assert.IsTrue(Directory.Exists(project.PathToWritingSystemPrefs));
 			}
 			finally
 			{

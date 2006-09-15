@@ -15,7 +15,7 @@ namespace WeSay.Admin
 	{
 		private WelcomeControl _welcomePage = new WelcomeControl();
 		private ProjectTabs _projectTabs;
-		private BasilProject _project;
+		private WeSayWordsProject _project;
 
 		public AdminWindow()
 		{
@@ -57,11 +57,12 @@ namespace WeSay.Admin
 
 		public void CreateNewProject(string path)
 		{
-			BasilProject p;
+			WeSayWordsProject p;
 
 			try
 			{
-				p = BasilProject.CreateNewProject(path);
+				p = new WeSayWordsProject();
+				p.Create(path);
 			}
 			catch (Exception e)
 			{
@@ -83,7 +84,8 @@ namespace WeSay.Admin
 
 			try
 			{
-				this._project = new BasilProject(path);
+				this._project = new WeSayWordsProject();
+				_project.Load(path);
 			}
 			catch (Exception e)
 			{

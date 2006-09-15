@@ -5,8 +5,8 @@ namespace WeSay.UI
 {
 	public class WeSayWordsProject : BasilProject
 	{
-		public WeSayWordsProject(string projectDirectoryPath)
-			: base(projectDirectoryPath)
+		public WeSayWordsProject()
+			: base()
 		{
 		}
 
@@ -22,10 +22,17 @@ namespace WeSay.UI
 			}
 		}
 
-		public virtual void CreateEmptyProject()
+		public override void Load(string projectDirectoryPath)
 		{
-			Directory.CreateDirectory(this.PathToLexicalModelDB);
+			base.Load(projectDirectoryPath);
 		}
+
+		public override  void Create(string projectDirectoryPath)
+		{
+			base.Create(projectDirectoryPath);
+			Directory.CreateDirectory(Path.GetDirectoryName(this.PathToLexicalModelDB));
+		}
+
 
 		public string PathToTaskConfig
 		{

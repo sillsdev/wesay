@@ -47,6 +47,14 @@ namespace WeSay.UI
 				}
 				return _singleton;
 			}
+			set
+			{
+				if (_singleton != null)
+				{
+					_singleton.Dispose();
+				}
+				_singleton = value;
+			}
 		}
 
 		/// <summary>
@@ -60,21 +68,28 @@ namespace WeSay.UI
 		{
 			string s = Path.Combine(GetTopWeSayDirectory(), "SampleProjects/PRETEND");
 
-			BasilProject project = new BasilProject(s);
+			BasilProject project = new BasilProject();
+			project.Load(s);
 			project.InitWritingSystems();
 			project.StringCatalogSelector = "en";
 			project.InitStringCatalog();
 		}
 
-		public BasilProject(string projectDirectoryPath)
+		public BasilProject()
 		{
-			 _projectDirectoryPath = projectDirectoryPath;
-			 if (_singleton != null)
-			 {
-				 _singleton.Dispose();
-			 }
-			 _singleton = this;
+			BasilProject.Project =this;
 			_writingSystems = new Dictionary<string, WritingSystem>();
+		}
+
+		public virtual void Load(string projectDirectoryPath)
+		{
+			this._projectDirectoryPath = projectDirectoryPath;
+		}
+
+		public virtual void Create(string projectDirectoryPath)
+		{
+			this._projectDirectoryPath = projectDirectoryPath;
+			Directory.CreateDirectory(this.PathToWritingSystemPrefs);
 		}
 
 		public string PathToWritingSystemPrefs
@@ -251,13 +266,6 @@ namespace WeSay.UI
 			}
 		}
 
-		public virtual void CreateEmptyProject()
-		{
-			Directory.CreateDirectory(this.PathToWritingSystemPrefs);
-		}
-		public static BasilProject CreateNewProject(string path)
-		{
-			throw new Exception("The method or operation is not implemented.");
-		}
+
 	}
 }
