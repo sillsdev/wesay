@@ -177,11 +177,11 @@ namespace WeSay.LexicalTools.Tests
 		private static LexEntry CreateTestEntry(string lexicalForm, string gloss, string exampleSentence)
 		{
 			LexEntry entry = new LexEntry();
-			entry.LexicalForm[BasilProject.Project.VernacularWritingSystemDefault.Id] = lexicalForm;
+			entry.LexicalForm[BasilProject.Project.WritingSystems.VernacularWritingSystemDefault.Id] = lexicalForm;
 			LexSense sense = (LexSense)entry.Senses.AddNew();
-			sense.Gloss[BasilProject.Project.AnalysisWritingSystemDefault.Id] = gloss;
+			sense.Gloss[BasilProject.Project.WritingSystems.AnalysisWritingSystemDefault.Id] = gloss;
 			LexExampleSentence example = (LexExampleSentence)sense.ExampleSentences.AddNew();
-			example.Sentence[BasilProject.Project.VernacularWritingSystemDefault.Id] = exampleSentence;
+			example.Sentence[BasilProject.Project.WritingSystems.VernacularWritingSystemDefault.Id] = exampleSentence;
 			return entry;
 		}
 

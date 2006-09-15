@@ -1,40 +1,15 @@
 using System;
-using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Reflection;
-using System.Text;
-using System.Xml;
 using WeSay.Language;
 
 namespace WeSay.UI
 {
-	public class BasilProject : WeSay.UI.IProject, IDisposable
+	public class BasilProject : IProject, IDisposable
 	{
 		protected static BasilProject _singleton;
-
-		private System.Collections.Generic.Dictionary<string, WritingSystem> _writingSystems;
-
-		public System.Collections.Generic.Dictionary<string, WritingSystem> WritingSystems
-		{
-			get
-			{
-				return _writingSystems;
-			}
-		}
+		private WritingSystemCollection _writingSystems;
 		private string _projectDirectoryPath;
-
-		protected string ProjectDirectoryPath
-		{
-			get
-			{
-				return _projectDirectoryPath;
-			}
-		}
-
-		private XmlDocument _fontPrefsDoc;
-		private  WritingSystem _vernacularWritingSystemDefault;
-		private  WritingSystem _analysisWritingSystemDefault;
 		private string _stringCatalogSelector;
 
 		public static BasilProject Project
@@ -77,8 +52,8 @@ namespace WeSay.UI
 
 		public BasilProject()
 		{
-			BasilProject.Project =this;
-			_writingSystems = new Dictionary<string, WritingSystem>();
+			Project =this;
+			_writingSystems = new WritingSystemCollection();
 		}
 
 		public virtual void Load(string projectDirectoryPath)
@@ -92,11 +67,27 @@ namespace WeSay.UI
 			Directory.CreateDirectory(this.PathToWritingSystemPrefs);
 		}
 
+		 public WritingSystemCollection WritingSystems
+		{
+			get
+			{
+				return _writingSystems;
+			}
+		}
+
+		protected string ProjectDirectoryPath
+		{
+			get
+			{
+				return _projectDirectoryPath;
+			}
+		}
+
 		public string PathToWritingSystemPrefs
 		{
 			get
 			{
-				return System.IO.Path.Combine(CommonDirectory, "writingSystemPrefs.xml");
+				return Path.Combine(CommonDirectory, "writingSystemPrefs.xml");
 			}
 		}
 
@@ -108,7 +99,7 @@ namespace WeSay.UI
 			}
 
 			//fall back to the program's common directory
-			string path = System.IO.Path.Combine(ApplicationCommonDirectory, _stringCatalogSelector + ".po");
+			string path = Path.Combine(ApplicationCommonDirectory, _stringCatalogSelector + ".po");
 			if (File.Exists(path))
 			{
 				return path;
@@ -121,7 +112,7 @@ namespace WeSay.UI
 		{
 			get
 			{
-				return System.IO.Path.Combine(CommonDirectory, _stringCatalogSelector+".po");
+				return Path.Combine(CommonDirectory, _stringCatalogSelector+".po");
 			}
 		}
 
@@ -129,7 +120,7 @@ namespace WeSay.UI
 		{
 			get
 			{
-				return System.IO.Path.Combine(GetTopWeSayDirectory(), "common");
+				return Path.Combine(GetTopWeSayDirectory(), "common");
 			}
 		}
 
@@ -152,7 +143,7 @@ namespace WeSay.UI
 		{
 			get
 			{
-				return System.IO.Path.Combine(_projectDirectoryPath, "common");
+				return Path.Combine(_projectDirectoryPath, "common");
 			}
 		}
 
@@ -181,52 +172,9 @@ namespace WeSay.UI
 		/// </summary>
 		public void InitWritingSystems()
 		{
-			_fontPrefsDoc = new XmlDocument();
-			_fontPrefsDoc.Load(PathToWritingSystemPrefs);
-			foreach(XmlNode node in _fontPrefsDoc.SelectNodes("prefs/writingSystem"))
-			{
-				 WritingSystem ws = new WritingSystem(node);
-				 _writingSystems.Add(ws.Id, ws);
-			}
-
-			string id = GetIdOfLabelledWritingSystem("analysisWritingSystem");
-			_analysisWritingSystemDefault = _writingSystems[id];
-			id = GetIdOfLabelledWritingSystem("vernacularWritingSystem");
-			_vernacularWritingSystemDefault = _writingSystems[id];
+			_writingSystems.Load(this.PathToWritingSystemPrefs);
 		}
 
-		private string GetIdOfLabelledWritingSystem(string label)
-		{
-			return _fontPrefsDoc.SelectSingleNode("prefs").Attributes[label].Value;
-		}
-
-
-//        public static void LoadVernacularWritingSystem(string filePath)
-//        {
-//            _vernacularWritingSystemDefault = new WritingSystem(filePath);
-//            _writingSystems.Add(WritingSystem._vernacularWritingSystemDefault.Id, WritingSystem._vernacularWritingSystemDefault);
-//        }
-//        public static void LoadAnalysisWritingSystem(string filePath)
-//        {
-//            _analysisWritingSystemDefault = new WritingSystem(filePath);
-//            _writingSystems.Add(WritingSystem._analysisWritingSystemDefault.Id, WritingSystem._analysisWritingSystemDefault);
-//        }
-
-		public  WritingSystem AnalysisWritingSystemDefault
-		{
-			get
-			{
-				 return _analysisWritingSystemDefault;
-			}
-		}
-
-		public  WritingSystem VernacularWritingSystemDefault
-		{
-			get
-			{
-				return _vernacularWritingSystemDefault;
-			}
-		}
 
 		public string StringCatalogSelector
 		{
@@ -234,16 +182,6 @@ namespace WeSay.UI
 			set { _stringCatalogSelector = value; }
 		}
 
-
-		private  WritingSystem GetWritingSystem(string id)
-		{
-			if (!_writingSystems.ContainsKey(id))
-			{
-				System.Drawing.Font font = new System.Drawing.Font("Arial", 12, FontStyle.Italic);//italic 'cause something's wrong
-				_writingSystems.Add(id, new WritingSystem(id, font));
-			}
-			return _writingSystems[id];
-		}
 
 		public void InitStringCatalog()
 		{
@@ -259,7 +197,7 @@ namespace WeSay.UI
 					new StringCatalog(p);
 				}
 			}
-			catch(System.IO.FileNotFoundException )
+			catch(FileNotFoundException )
 			{
 				//todo:when we add logging, this would be a good place to log a problem
 				new StringCatalog();

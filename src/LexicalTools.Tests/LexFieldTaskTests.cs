@@ -31,7 +31,7 @@ namespace WeSay.LexicalTools.Tests
 
 			LexEntry entry = new LexEntry();
 			_lexicalForm = "vernacular";
-			entry.LexicalForm.SetAlternative(BasilProject.Project.VernacularWritingSystemDefault.Id, _lexicalForm);
+			entry.LexicalForm.SetAlternative(BasilProject.Project.WritingSystems.VernacularWritingSystemDefault.Id, _lexicalForm);
 			_records.Add(entry);
 
 			_fieldFilter = delegate(string s)

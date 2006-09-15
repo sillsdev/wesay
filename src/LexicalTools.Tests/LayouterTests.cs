@@ -49,8 +49,8 @@ namespace WeSay.LexicalTools.Tests
 		private DetailList MakeDetailList()
 		{
 			LexEntry entry = new LexEntry();
-			entry.LexicalForm[BasilProject.Project.VernacularWritingSystemDefault.Id] = "WordInVernacular";
-			entry.LexicalForm[BasilProject.Project.AnalysisWritingSystemDefault.Id] = "WordInAnalysis";
+			entry.LexicalForm[BasilProject.Project.WritingSystems.VernacularWritingSystemDefault.Id] = "WordInVernacular";
+			entry.LexicalForm[BasilProject.Project.WritingSystems.AnalysisWritingSystemDefault.Id] = "WordInAnalysis";
 			AddSense(entry);
 			AddSense(entry);
 
@@ -63,7 +63,7 @@ namespace WeSay.LexicalTools.Tests
 		private static void AddSense(LexEntry entry)
 		{
 			LexSense sense = (LexSense) entry.Senses.AddNew();
-			sense.Gloss[BasilProject.Project.AnalysisWritingSystemDefault.Id] = "GlossInAnalysis";
+			sense.Gloss[BasilProject.Project.WritingSystems.AnalysisWritingSystemDefault.Id] = "GlossInAnalysis";
 			AddExample(sense);
 			AddExample(sense);
 		}
@@ -71,7 +71,7 @@ namespace WeSay.LexicalTools.Tests
 		private static void AddExample(LexSense sense)
 		{
 			LexExampleSentence example = (LexExampleSentence) sense.ExampleSentences.AddNew();
-			example.Sentence[BasilProject.Project.VernacularWritingSystemDefault.Id] = "sentence";
+			example.Sentence[BasilProject.Project.WritingSystems.VernacularWritingSystemDefault.Id] = "sentence";
 		}
 	}
 }

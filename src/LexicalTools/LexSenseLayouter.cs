@@ -28,7 +28,7 @@ namespace WeSay.LexicalTools
 		   LexSense sense = (LexSense)list[index];
 		   if (_detailList.ShowField("Gloss"))
 		   {
-			Control c = _detailList.AddWidgetRow(StringCatalog.Get("Meaning") + " " + (index+1).ToString(), true,MakeBoundEntry(sense.Gloss, BasilProject.Project.AnalysisWritingSystemDefault), insertAtRow);
+			Control c = _detailList.AddWidgetRow(StringCatalog.Get("Meaning") + " " + (index+1).ToString(), true,MakeBoundEntry(sense.Gloss, BasilProject.Project.WritingSystems.AnalysisWritingSystemDefault), insertAtRow);
 			   ++rowCount;
 			   insertAtRow = _detailList.GetRowOfControl(c);
 		   }
@@ -47,8 +47,8 @@ namespace WeSay.LexicalTools
 			int rowCount = 0;
 			if (_detailList.ShowField("GhostGloss"))
 			{
-			WeSayTextBox entry = new WeSayTextBox(BasilProject.Project.AnalysisWritingSystemDefault);
-			GhostBinding g= MakeGhostBinding(list, "Gloss", BasilProject.Project.AnalysisWritingSystemDefault, entry);
+			WeSayTextBox entry = new WeSayTextBox(BasilProject.Project.WritingSystems.AnalysisWritingSystemDefault);
+			GhostBinding g= MakeGhostBinding(list, "Gloss", BasilProject.Project.WritingSystems.AnalysisWritingSystemDefault, entry);
 			g.ReferenceControl = _detailList.AddWidgetRow(StringCatalog.Get("New Meaning"), true, entry);
 			++rowCount;
 			}

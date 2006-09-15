@@ -37,7 +37,7 @@ namespace WeSay.LexicalTools
 			int rowCount = 0;
 			if (_detailList.ShowField("LexicalForm"))
 			{
-				_detailList.AddWidgetRow(StringCatalog.Get("Word"), true, MakeBoundEntry(entry.LexicalForm, BasilProject.Project.VernacularWritingSystemDefault), insertAtRow);
+				_detailList.AddWidgetRow(StringCatalog.Get("Word"), true, MakeBoundEntry(entry.LexicalForm, BasilProject.Project.WritingSystems.VernacularWritingSystemDefault), insertAtRow);
 				++rowCount;
 			}
 			LexSenseLayouter layouter = new LexSenseLayouter(_detailList);

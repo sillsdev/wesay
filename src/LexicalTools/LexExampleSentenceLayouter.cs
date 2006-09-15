@@ -27,12 +27,12 @@ namespace WeSay.LexicalTools
 			 LexExampleSentence example = (LexExampleSentence)list[index];
 			 if (_detailList.ShowField("Sentence"))
 			 {
-				 _detailList.AddWidgetRow(StringCatalog.Get("Example"), false, MakeBoundEntry(example.Sentence, BasilProject.Project.VernacularWritingSystemDefault), insertAtRow);
+				 _detailList.AddWidgetRow(StringCatalog.Get("Example"), false, MakeBoundEntry(example.Sentence, BasilProject.Project.WritingSystems.VernacularWritingSystemDefault), insertAtRow);
 				 ++rowCount;
 			 }
 			 if (_detailList.ShowField("Translation"))
 			 {
-				 _detailList.AddWidgetRow(StringCatalog.Get("Translation"), false, MakeBoundEntry(example.Translation, BasilProject.Project.AnalysisWritingSystemDefault),insertAtRow+1 );
+				 _detailList.AddWidgetRow(StringCatalog.Get("Translation"), false, MakeBoundEntry(example.Translation, BasilProject.Project.WritingSystems.AnalysisWritingSystemDefault),insertAtRow+1 );
 				 ++rowCount;
 			 }
 			return rowCount;
@@ -43,8 +43,8 @@ namespace WeSay.LexicalTools
 			int rowCount = 0;
 			if (_detailList.ShowField("GhostSentence"))
 			{
-				WeSayTextBox entry = new WeSayTextBox(BasilProject.Project.AnalysisWritingSystemDefault);
-				GhostBinding g = MakeGhostBinding(list, "Sentence", BasilProject.Project.VernacularWritingSystemDefault, entry);
+				WeSayTextBox entry = new WeSayTextBox(BasilProject.Project.WritingSystems.AnalysisWritingSystemDefault);
+				GhostBinding g = MakeGhostBinding(list, "Sentence", BasilProject.Project.WritingSystems.VernacularWritingSystemDefault, entry);
 				g.ReferenceControl = _detailList.AddWidgetRow(StringCatalog.Get("Example"), false, entry, insertAtRow);
 				// entry.PrepareForFadeIn();
 				++rowCount;

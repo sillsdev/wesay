@@ -66,10 +66,10 @@ namespace WeSay.UI.Tests
 		{
 			BasilProject.InitializeForTests();
 
-			_papaNameWidget = new WeSayTextBox(BasilProject.Project.AnalysisWritingSystemDefault);
+			_papaNameWidget = new WeSayTextBox(BasilProject.Project.WritingSystems.AnalysisWritingSystemDefault);
 			_papaNameWidget.Text  =  "John";
-			_ghostFirstNameWidget = new WeSayTextBox(BasilProject.Project.AnalysisWritingSystemDefault);
-			_binding = new GhostBinding(_papa.Children, "First", BasilProject.Project.AnalysisWritingSystemDefault, _ghostFirstNameWidget);
+			_ghostFirstNameWidget = new WeSayTextBox(BasilProject.Project.WritingSystems.AnalysisWritingSystemDefault);
+			_binding = new GhostBinding(_papa.Children, "First", BasilProject.Project.WritingSystems.AnalysisWritingSystemDefault, _ghostFirstNameWidget);
 			_didNotify = false;
 			//Window w = new Window("test");
 			//VBox box = new VBox();

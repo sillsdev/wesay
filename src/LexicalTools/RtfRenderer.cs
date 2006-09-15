@@ -23,7 +23,7 @@ namespace WeSay.LexicalTools
 			int senseNumber = 1;
 			foreach (LexSense sense in entry.Senses)
 			{
-				rtf += SwitchToWritingSystem(BasilProject.Project.AnalysisWritingSystemDefault.Id);
+				rtf += SwitchToWritingSystem(BasilProject.Project.WritingSystems.AnalysisWritingSystemDefault.Id);
 				rtf += senseNumber.ToString();
 
 				rtf += @" \i ";
@@ -105,7 +105,7 @@ namespace WeSay.LexicalTools
 			string rtf = string.Empty;
 			if (currentItem != null && property == currentItem.PropertyName)
 			{
-				rtf += SwitchToWritingSystem(BasilProject.Project.AnalysisWritingSystemDefault.Id);
+				rtf += SwitchToWritingSystem(BasilProject.Project.WritingSystems.AnalysisWritingSystemDefault.Id);
 				rtf += number.ToString() + RenderBlankPosition();
 			}
 			return rtf;

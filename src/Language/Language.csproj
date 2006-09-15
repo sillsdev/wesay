@@ -37,6 +37,7 @@
 	<Compile Include="Properties\AssemblyInfo.cs" />
 	<Compile Include="MultiText.cs" />
 	<Compile Include="WritingSystem.cs" />
+	<Compile Include="WritingSystemCollection.cs" />
   </ItemGroup>
   <ItemGroup>
 	<ProjectReference Include="..\PlatformSpecific\PlatformSpecific.csproj">

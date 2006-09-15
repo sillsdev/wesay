@@ -46,7 +46,7 @@ namespace WeSay.UI.Tests
 		public void RightFont()
 		{
 			WriteSampleWritingSystemFile();
-			WritingSystem ws = BasilProject.Project.AnalysisWritingSystemDefault;
+			WritingSystem ws = BasilProject.Project.WritingSystems.AnalysisWritingSystemDefault;
 			Assert.AreEqual("ANA", ws.Id);
 			Assert.AreEqual("Wingdings", ws.Font.Name);
 			Assert.AreEqual(20, ws.Font.Size);
@@ -57,9 +57,9 @@ namespace WeSay.UI.Tests
 		public void NoSetupDefaultWritingSystems()
 		{
 			WriteSampleWritingSystemFile();
-			WritingSystem ws = BasilProject.Project.AnalysisWritingSystemDefault;
+			WritingSystem ws = BasilProject.Project.WritingSystems.AnalysisWritingSystemDefault;
 			Assert.IsNotNull(ws);
-			ws = BasilProject.Project.VernacularWritingSystemDefault;
+			ws = BasilProject.Project.WritingSystems.VernacularWritingSystemDefault;
 			Assert.IsNotNull(ws);
 		}
 

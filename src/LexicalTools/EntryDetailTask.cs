@@ -36,7 +36,7 @@ namespace WeSay.LexicalTools
 			_entryDetailPanel.DataSource = CurrentRecord;
 			_recordsListBox.SelectedIndexChanged += new EventHandler(OnRecordSelectionChanged);
 
-			_recordsListBox.Font = BasilProject.Project.VernacularWritingSystemDefault.Font;
+			_recordsListBox.Font = BasilProject.Project.WritingSystems.VernacularWritingSystemDefault.Font;
 			_recordsListBox.AutoSize();
 			_recordsListBox.Columns.StretchToFit();
 		}
