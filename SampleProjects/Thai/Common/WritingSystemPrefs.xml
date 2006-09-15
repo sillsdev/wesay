@@ -1,9 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<prefs analysisWritingSystem="en" vernacularWritingSystem="th">
-  <writingSystem id="th">
-		<font name="SomeMissingFontName" baseSize="20"/>
-	</writingSystem>
-	<writingSystem id="en">
-		<font name="Courier" baseSize="10"/>
-	</writingSystem>
-</prefs>
+<WritingSystemCollection>
+  <AnalysisWritingSystemDefaultId>en</AnalysisWritingSystemDefaultId>
+  <VernacularWritingSystemDefaultId>th</VernacularWritingSystemDefaultId>
+  <members>
+	<WritingSystem>
+	  <FontName>SomeMissingFontName</FontName>
+	  <FontSize>20</FontSize>
+	  <Id>th</Id>
+	</WritingSystem>
+	<WritingSystem>
+	  <FontName>Courier</FontName>
+	  <FontSize>10</FontSize>
+	  <Id>en</Id>
+	</WritingSystem>
+  </members>
+</WritingSystemCollection>

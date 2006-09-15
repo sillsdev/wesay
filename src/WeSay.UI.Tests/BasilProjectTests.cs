@@ -1,6 +1,7 @@
 using System.IO;
 using NUnit.Framework;
 using WeSay.Language;
+using WeSay.Language.Tests;
 
 namespace WeSay.UI.Tests
 {
@@ -17,16 +18,6 @@ namespace WeSay.UI.Tests
 
 		}
 
-		private void WriteSampleWritingSystemFile()
-		{
-			BasilProject project = new BasilProject();
-			project.Load(_projectDirectory);
-			Directory.CreateDirectory(Directory.GetParent(project.PathToWritingSystemPrefs).FullName);
-			StreamWriter writer = File.CreateText(project.PathToWritingSystemPrefs);
-			writer.Write(TestResources.WritingSystemPrefs);
-			writer.Close();
-			project.InitWritingSystems();
-		}
 
 		private void WriteSampleStringCatalogFile(BasilProject project)
 		{
@@ -43,20 +34,13 @@ namespace WeSay.UI.Tests
 		}
 
 		[Test]
-		public void RightFont()
-		{
-			WriteSampleWritingSystemFile();
-			WritingSystem ws = BasilProject.Project.WritingSystems.AnalysisWritingSystemDefault;
-			Assert.AreEqual("ANA", ws.Id);
-			Assert.AreEqual("Wingdings", ws.Font.Name);
-			Assert.AreEqual(20, ws.Font.Size);
-
-		}
-
-		[Test]
 		public void NoSetupDefaultWritingSystems()
 		{
-			WriteSampleWritingSystemFile();
+			BasilProject project = new BasilProject();
+			project.Load(_projectDirectory);
+			Directory.CreateDirectory(Directory.GetParent(project.PathToWritingSystemPrefs).FullName);
+			WritingSystemTests.WriteSampleWritingSystemFile(project.PathToWritingSystemPrefs);
+			project.InitWritingSystems();
 			WritingSystem ws = BasilProject.Project.WritingSystems.AnalysisWritingSystemDefault;
 			Assert.IsNotNull(ws);
 			ws = BasilProject.Project.WritingSystems.VernacularWritingSystemDefault;

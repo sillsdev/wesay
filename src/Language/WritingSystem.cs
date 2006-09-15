@@ -1,9 +1,11 @@
 
 using System.Drawing;
 using System.Xml;
+using Exortech.NetReflector;
 
 namespace WeSay.Language
 {
+	[ReflectorType("WritingSystem")]
 	public class WritingSystem
 	{
 
@@ -30,6 +32,13 @@ namespace WeSay.Language
 		/// <summary>
 		/// default for testing only
 		/// </summary>
+		public WritingSystem()
+		{
+		}
+
+		/// <summary>
+		/// default for testing only
+		/// </summary>
 		public WritingSystem(string id, Font font)
 		{
 			_id = id;
@@ -46,9 +55,54 @@ namespace WeSay.Language
 			}
 		}
 
+		[ReflectorProperty("FontName", Required=true)]
+		public string FontName
+		{
+			get
+			{
+				if (_font == null)
+				{
+					return "Arial";
+				}
+				else
+				{
+					return _font.Name;
+				}
+			}
+			set
+			{
+				_font = new Font(value, FontSize);
+			}
+	   }
+
+		[ReflectorProperty("FontSize", Required = true)]
+		public int FontSize
+		{
+			get
+			{
+				if (_font == null)
+				{
+					return 12;
+				}
+				else
+				{
+					return (int)_font.Size;
+				}
+			}
+			set
+			{
+				_font = new Font(FontName, value);
+			}
+		}
+
+		[ReflectorProperty("Id", Required=true)]
 		public string Id
 		{
 			get { return _id; }
+			set
+			{
+				_id = value;
+			}
 		}
 
 

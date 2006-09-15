@@ -1,9 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<prefs analysisWritingSystem="en" vernacularWritingSystem="Pretend">
-  <writingSystem id="Pretend">
-	<font name="Arial" baseSize="20"/>
-  </writingSystem>
-  <writingSystem id="en">
-	<font name="Courier" baseSize="10"/>
-  </writingSystem>
-</prefs>
+<WritingSystemCollection>
+  <AnalysisWritingSystemDefaultId>en</AnalysisWritingSystemDefaultId>
+  <VernacularWritingSystemDefaultId>Pretend</VernacularWritingSystemDefaultId>
+  <members>
+	<WritingSystem>
+	  <FontName>Arial</FontName>
+	  <FontSize>20</FontSize>
+	  <Id>en</Id>
+	</WritingSystem>
+	<WritingSystem>
+	  <FontName>Courier</FontName>
+	  <FontSize>10</FontSize>
+	  <Id>Pretend</Id>
+	</WritingSystem>
+  </members>
+</WritingSystemCollection>
