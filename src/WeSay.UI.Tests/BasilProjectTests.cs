@@ -37,7 +37,7 @@ namespace WeSay.UI.Tests
 		public void NoSetupDefaultWritingSystems()
 		{
 			BasilProject project = new BasilProject();
-			project.Load(_projectDirectory);
+			project.Load(_projectDirectory,true);
 			Directory.CreateDirectory(Directory.GetParent(project.PathToWritingSystemPrefs).FullName);
 			WritingSystemTests.WriteSampleWritingSystemFile(project.PathToWritingSystemPrefs);
 			project.InitWritingSystems();
@@ -52,7 +52,7 @@ namespace WeSay.UI.Tests
 		public void LocalizedStringsDuringTests()
 		{
 			BasilProject project = new BasilProject();
-			project.Load(_projectDirectory);
+			project.Load(_projectDirectory,true);
 			WriteSampleStringCatalogFile(project);
 			project.InitStringCatalog();
 			Assert.AreEqual("deng", StringCatalog.Get("red"));
@@ -62,7 +62,7 @@ namespace WeSay.UI.Tests
 		public void LocalizedStringsFromPretendSample()
 		{
 			BasilProject project = new BasilProject();
-			project.Load(_projectDirectory);
+			project.Load(_projectDirectory,true);
 			project.StringCatalogSelector = "en";
 			project.InitStringCatalog();
 

@@ -1,4 +1,5 @@
 
+using System.ComponentModel;
 using System.Drawing;
 using System.Xml;
 using Exortech.NetReflector;
@@ -45,7 +46,32 @@ namespace WeSay.Language
 			_font = font;
 		}
 
+		public override string ToString()
+		{
+			return this.Id;
+		}
 
+
+		[ReflectorProperty("Id", Required = true)]
+		public string Id
+		{
+			get { return _id; }
+			set
+			{
+				_id = value;
+			}
+		}
+
+//        //we'll be getting rid of this property
+//        [Browsable(true), System.ComponentModel.DisplayName("Vernacular")]
+//        public string VernacularDefault
+//        {
+//            get { return _id; }
+//            set
+//            {
+//                _id = value;
+//            }
+//        }
 
 		public Font Font
 		{
@@ -53,8 +79,13 @@ namespace WeSay.Language
 			{
 				return _font;
 			}
+			set
+			{
+				_font = value;
+			}
 		}
 
+		[Browsable(false)]
 		[ReflectorProperty("FontName", Required=true)]
 		public string FontName
 		{
@@ -75,6 +106,7 @@ namespace WeSay.Language
 			}
 	   }
 
+		[Browsable(false)]
 		[ReflectorProperty("FontSize", Required = true)]
 		public int FontSize
 		{
@@ -95,15 +127,6 @@ namespace WeSay.Language
 			}
 		}
 
-		[ReflectorProperty("Id", Required=true)]
-		public string Id
-		{
-			get { return _id; }
-			set
-			{
-				_id = value;
-			}
-		}
 
 
 

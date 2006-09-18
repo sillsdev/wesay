@@ -32,6 +32,42 @@ namespace WeSay.UI
 			}
 		}
 
+
+		public BasilProject()
+		{
+			Project =this;
+			_writingSystems = new WritingSystemCollection();
+		}
+
+		public virtual void Load(string projectDirectoryPath)
+		{
+			Load(projectDirectoryPath, false);
+		}
+
+		/// <summary>
+		/// Tests can use this version
+		/// </summary>
+		/// <param name="projectDirectoryPath"></param>
+		/// <param name="dontInitialize"></param>
+		public virtual void Load(string projectDirectoryPath, bool dontInitialize)
+		{
+			this._projectDirectoryPath = projectDirectoryPath;
+			if (!dontInitialize)
+			{
+				InitStringCatalog();
+				InitWritingSystems();
+			}
+		}
+
+		public virtual void Create(string projectDirectoryPath)
+		{
+			this._projectDirectoryPath = projectDirectoryPath;
+			Directory.CreateDirectory(this.PathToWritingSystemPrefs);
+			InitStringCatalog();
+			InitWritingSystems();
+		}
+
+
 		/// <summary>
 		/// Many tests throughout the system will not care at all about project related things,
 		/// but they will break if there is no project initialized, since many things
@@ -45,26 +81,9 @@ namespace WeSay.UI
 
 			BasilProject project = new BasilProject();
 			project.Load(s);
-			project.InitWritingSystems();
+//            project.InitWritingSystems();
+//            project.InitStringCatalog();
 			project.StringCatalogSelector = "en";
-			project.InitStringCatalog();
-		}
-
-		public BasilProject()
-		{
-			Project =this;
-			_writingSystems = new WritingSystemCollection();
-		}
-
-		public virtual void Load(string projectDirectoryPath)
-		{
-			this._projectDirectoryPath = projectDirectoryPath;
-		}
-
-		public virtual void Create(string projectDirectoryPath)
-		{
-			this._projectDirectoryPath = projectDirectoryPath;
-			Directory.CreateDirectory(this.PathToWritingSystemPrefs);
 		}
 
 		 public WritingSystemCollection WritingSystems
@@ -165,14 +184,12 @@ namespace WeSay.UI
 			}
 		}
 
-		/// <summary>
-		/// NB: this is currently not part of normal construction in order to facilitate
-		/// tests which need to access paths provided by the project in order to create
-		/// the files which this method will read.
-		/// </summary>
-		public void InitWritingSystems()
+		 public void InitWritingSystems()
 		{
-			_writingSystems.Load(this.PathToWritingSystemPrefs);
+			if (File.Exists(this.PathToWritingSystemPrefs))
+			{
+				_writingSystems.Load(this.PathToWritingSystemPrefs);
+			}
 		}
 
 

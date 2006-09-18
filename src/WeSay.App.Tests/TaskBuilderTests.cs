@@ -19,8 +19,6 @@ namespace WeSay.App.Tests
 			using (WeSayWordsProject project = new WeSayWordsProject())
 			{
 				project.Load(@"..\..\SampleProjects\Thai");
-				project.InitWritingSystems();
-				project.InitStringCatalog();
 				using (SampleTaskBuilder builder = new SampleTaskBuilder(project))
 				{
 					Assert.Greater(builder.Tasks.Count, 0);
@@ -33,8 +31,6 @@ namespace WeSay.App.Tests
 			using (WeSayWordsProject project = new WeSayWordsProject())
 			{
 				project.Load(@"..\..\SampleProjects\PRETEND");
-				project.InitWritingSystems();
-				project.InitStringCatalog();
 
 				using (SampleTaskBuilder builder = new SampleTaskBuilder(project))
 				{

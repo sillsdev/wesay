@@ -41,15 +41,16 @@ namespace WeSay.Admin
 
 		public override string ToString()
 		{
-			try
-			{
-				return this._node.SelectSingleNode("tool/config/label").InnerText;
+				XmlNode label = this._node.SelectSingleNode("tool/config/label");
+				if (label != null)
+				{
+					return label.InnerText;
+				}
+				else
+				{
+					return GetOptionalAttributeString(_node, "id", "task");
+				}
 
-			}
-			catch (System.Exception)
-			{
-				return GetOptionalAttributeString(_node, "id", "task");
-			}
 		}
 
 		private string GetOptionalAttributeString(XmlNode xmlNode, string name, string defaultValue)

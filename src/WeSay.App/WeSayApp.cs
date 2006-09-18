@@ -48,9 +48,7 @@ namespace WeSay.App
 #endif
 			WeSayWordsProject project = new WeSayWordsProject();
 			project.Load(cmdArgs.projectPath);
-			project.InitWritingSystems();
 			project.StringCatalogSelector = cmdArgs.ui;
-			project.InitStringCatalog();
 #if GTK
 			Gdk.Threads.Enter();
 #endif
