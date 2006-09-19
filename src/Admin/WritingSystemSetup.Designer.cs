@@ -79,6 +79,7 @@ namespace WeSay.Admin
 			// toolStripButton2
 			//
 			this.toolStripButton2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.toolStripButton2.Enabled = false;
 			this.toolStripButton2.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton2.Image")));
 			this.toolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.toolStripButton2.Name = "toolStripButton2";
@@ -88,6 +89,7 @@ namespace WeSay.Admin
 			// toolStripButton3
 			//
 			this.toolStripButton3.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.toolStripButton3.Enabled = false;
 			this.toolStripButton3.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton3.Image")));
 			this.toolStripButton3.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.toolStripButton3.Name = "toolStripButton3";
@@ -160,6 +162,8 @@ namespace WeSay.Admin
 			this._basicControl.Name = "_basicControl";
 			this._basicControl.Size = new System.Drawing.Size(208, 99);
 			this._basicControl.TabIndex = 0;
+			this._basicControl.WritingSystemCollection = null;
+			this._basicControl.DisplayPropertiesChanged += new System.EventHandler(this._basicControl_DisplayPropertiesChanged);
 			//
 			// _fontsPage
 			//

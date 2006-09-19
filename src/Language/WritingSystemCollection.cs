@@ -39,6 +39,32 @@ namespace WeSay.Language
 
 		}
 
+		public void IdOfWritingSystemChanged(WritingSystem ws, string oldKey)
+		{
+			Remove(oldKey);
+			if (_analysisWritingSystemDefaultId == oldKey)
+			{
+				_analysisWritingSystemDefaultId = ws.Id;
+			}
+			if (_vernacularWritingSystemDefaultId  == oldKey)
+			{
+				_vernacularWritingSystemDefaultId = ws.Id;
+			}
+			Add(ws.Id, ws);
+		}
+
+//        private WritingSystem FindIndexWithoutUsingId(WritingSystem ws)
+//        {
+//            foreach (WritingSystem w in this.Values)
+//            {
+//                if (w == ws)
+//                {
+//                      return w;
+//                }
+//            }
+//            return null;
+//        }
+
 //        private string GetIdOfLabelledWritingSystem(string label)
 //        {
 //            return _fontPrefsDoc.SelectSingleNode("prefs").Attributes[label].Value;

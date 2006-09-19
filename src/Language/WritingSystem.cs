@@ -73,6 +73,7 @@ namespace WeSay.Language
 //            }
 //        }
 
+		[Browsable(false)]
 		public Font Font
 		{
 			get
