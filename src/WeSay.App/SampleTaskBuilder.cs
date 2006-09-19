@@ -77,15 +77,15 @@ namespace WeSay.App
 
 				tools.Add(new TaskProxy("Add Meanings", delegate
 				{
-					return CreateTool("WeSay.LexicalTools.LexFieldTask,LexicalTools",
-					CreateLexFieldConfiguration("Add Meanings", "GhostGloss Gloss"));
+					return CreateLexFieldTask("AddMeanings", "WeSay.LexicalTools.LexFieldTask,LexicalTools",
+								"Add Meanings", "Add glosses to entries when missing.", "GhostGloss Gloss");
 				}));
 
 
-				tools.Add(CreatePictureTool("CollectWords", "WeSay.CommonTools.PictureControl,CommonTools",
-					"Collect Words", "RealWord.gif"));
-				tools.Add(CreatePictureTool("SemDom", "WeSay.CommonTools.PictureControl,CommonTools",
-					"Semantic Domains", "SemDom.gif"));
+				tools.Add(CreatePictureTask("CollectWords", "WeSay.CommonTools.PictureControl,CommonTools",
+					"Collect Words", "Collect words using words in another language.", "RealWord.gif"));
+				tools.Add(CreatePictureTask("SemDom", "WeSay.CommonTools.PictureControl,CommonTools",
+					"Semantic Domains", "Collect words using semantic domains.", "SemDom.gif"));
 				//tools.Add(CreateTool("WeSay.CommonTools.PictureControl,CommonTools",
 				//    CreatePictureConfiguration("Semantic Domains", "SemDom.gif")));
 				return tools;
@@ -134,13 +134,12 @@ namespace WeSay.App
 			return child;
 		}
 
-
 		private static ITask CreateTool(IMutablePicoContainer picoContext, string fullToolClass)
 		{
 			RegisterType(picoContext, fullToolClass);
 
 			ITask i = (ITask)picoContext.GetComponentInstance(fullToolClass);
-		   Debug.Assert(i != null);
+			Debug.Assert(i != null);
 			return i;
 		}
 
@@ -148,7 +147,6 @@ namespace WeSay.App
 		{
 			picoContext.RegisterComponentImplementation(fullToolClass, Type.GetType(fullToolClass, true));
 		}
-
 
 		private ITask CreateTool(string fullToolClass, IList instances)
 		{
@@ -160,11 +158,12 @@ namespace WeSay.App
 			return CreateTool(_parentPicoContext, fullToolClass);
 		}
 
-		private ITask CreatePictureTool(string id, string fullToolClass, string label, string pictureFilePath)
+		private ITask CreatePictureTask(string id, string fullToolClass, string label, string description, string pictureFilePath)
 		{
 			_parentPicoContext.RegisterComponentImplementation(id, Type.GetType(fullToolClass, true),
 				new IParameter[]{
 					new ConstantParameter(label),
+					new ConstantParameter(description),
 					new ConstantParameter(pictureFilePath)
 				});
 
@@ -173,99 +172,25 @@ namespace WeSay.App
 			return i;
 		}
 
-		private IList CreateLexFieldConfiguration(string label, string fieldToShow)
+		private ITask CreateLexFieldTask(string id, string fullToolClass, string label, string description, string fieldsToShow)
 		{
-			IList instances = new List<object>();
-			//Predicate<LexEntry> entryFilter = delegate(LexEntry entry)
-			//            {
-			//                if (entry.Senses.Count == 0)
-			//                {
-			//                    return true;
-			//                }
-			//                foreach (LexSense sense in entry.Senses)
-			//                {
-			//                    foreach (LanguageForm form in sense.Gloss)
-			//                    {
-			//                        if (form.WritingSystemId == _project.AnalysisWritingSystemDefault.Id)
-			//                        {
-			//                            return false;
-			//                        }
-			//                    }
-			//                    return true;
-			//                }
-			//                return false;
-			//            };
+			_parentPicoContext.RegisterComponentImplementation("GlossFilter", Type.GetType("WeSay.LexicalModel.MissingGlossFilter,LexicalModel", true),
+				new IParameter[]{
+					new ConstantParameter("en"),
+				});
 
-			Db4oDataSource ds = (Db4oDataSource)_parentPicoContext.GetComponentInstance(typeof(Db4oDataSource));
-			//Db4oBindingList<LexEntry> entries = new Db4oBindingList<LexEntry>(ds,delegate(com.db4o.query.Query query)
-			//                    {
-			//                        query.Constrain(typeof(LexEntry));
-			//                        com.db4o.query.Query glossForms = query.Descend("_senses")
-			//                                                                    .Descend("_gloss")
-			//                                                                    .Descend("_forms");
+			_parentPicoContext.RegisterComponentImplementation(id, Type.GetType(fullToolClass, true),
+				new IParameter[]{
+					new ComponentParameter("All Entries"),
+					new ComponentParameter("GlossFilter"),
+					new ConstantParameter(label),
+					new ConstantParameter(description),
+					new ConstantParameter(fieldsToShow)
+				});
 
-			//                        glossForms.Constrain(typeof(Language.LanguageForm)).Not();
-			//                        //.Or(glossForms.Descend("_writingSystemId").Constrain(_project.AnalysisWritingSystemDefault.Id).Not());
-			//                        return query;
-			//                    });
-
-#if SODA
-			Db4oBindingList<LexEntry> entries = new Db4oBindingList<LexEntry>(ds, delegate(com.db4o.query.Query query)
-								{
-									//words modified in the past hour
-									query.Constrain(typeof(LexEntry));
-									query.Descend("_modifiedDate").Constrain(DateTime.Now.AddHours(-1)).Greater();
-									return query;
-								});
-#else //native
-			DateTime anHourAgo = DateTime.Now.AddHours(-1);
-			Db4oBindingList<LexEntry> entries = new Db4oBindingList<LexEntry>(ds, delegate(LexEntry entry)
-								{
-									//words modified in the past hour
-									return (entry.ModifiedDate > anHourAgo);
-								});
-#endif
-
-			instances.Add(entries);
-			instances.Add(label);
-			Predicate<string> fieldFilter = delegate(string s)
-							{
-								int i =0;
-								i = fieldToShow.IndexOf(s);
-								while (i != -1)
-								{
-									if (i == 0)
-									{
-										if (i + s.Length == fieldToShow.Length)
-										{
-											return true;
-										}
-										if (Char.IsSeparator(fieldToShow[i + s.Length]))
-										{
-											return true;
-										}
-										return false;
-									}
-
-									if (Char.IsSeparator(fieldToShow[i - 1]))
-									{
-										if (i + s.Length == fieldToShow.Length)
-										{
-											return true;
-										}
-										if (Char.IsSeparator(fieldToShow[i + s.Length]))
-										{
-											return true;
-										}
-
-									}
-									i = fieldToShow.IndexOf(s, i + 1);
-								}
-								return false;
-							};
-			instances.Add(fieldFilter);
-
-			return instances;
+			ITask i = (ITask)_parentPicoContext.GetComponentInstance(id);
+			Debug.Assert(i != null);
+			return i;
 		}
 
 		private static IMutablePicoContainer CreateContainer()
@@ -303,6 +228,22 @@ namespace WeSay.App
 		public string Label
 		{
 			get { return _label; }
+		}
+
+		public string Description
+		{
+			get
+			{
+				return RealTask.Description;
+			}
+		}
+
+		public Predicate<object> Filter
+		{
+			get
+			{
+				return RealTask.Filter;
+			}
 		}
 
 		public Control Control

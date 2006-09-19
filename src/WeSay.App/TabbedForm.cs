@@ -45,9 +45,9 @@ namespace WeSay.App
 				_currentTool.Deactivate();
 			if (t != null)
 			{
+				t.Activate();
 				t.Control.Dock = DockStyle.Fill;
 				page.Controls.Add(t.Control);
-				t.Activate();
 			}
 			_currentTool = t;
 		}

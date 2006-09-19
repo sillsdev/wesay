@@ -13,14 +13,12 @@ namespace WeSay.LexicalTools
 		private IBindingList _records;
 		private int _currentIndex;
 
-		public EntryDetailTask(BasilProject project, IBindingList records)
+		public EntryDetailTask(IBindingList records)
 		{
-			_records = records;
-
 			InitializeComponent();
+			_records = records;//new WeSay.Data.InMemoryBindingList<LexEntry>();
 
 			_entryDetailPanel.BackColor = SystemColors.Control;//we like it to stand out at design time, but not runtime
-
 		}
 
 		void OnRecordSelectionChanged(object sender, EventArgs e)
@@ -54,6 +52,26 @@ namespace WeSay.LexicalTools
 			}
 		}
 
+		public string Description
+		{
+			get
+			{
+				return "Edit all relevant fields for lexical entries.";
+			}
+		}
+
+		public Predicate<object> Filter
+		{
+			get
+			{
+				return delegate(object o)
+								{
+									return true;
+								};
+			}
+		}
+
+
 		public Control Control
 		{
 			get { return this; }
@@ -62,6 +80,15 @@ namespace WeSay.LexicalTools
 		public IBindingList DataSource
 		{
 			get { return _records;}
+			set
+			{
+				if (value == null)
+				{
+					throw new ArgumentNullException();
+				}
+				_records = value;
+			}
+
 		}
 
 		private LexEntry CurrentRecord

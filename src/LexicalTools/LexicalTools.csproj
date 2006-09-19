@@ -47,11 +47,13 @@
 	<Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-	<Compile Include="LexFieldTask.cs">
+	<Compile Include="LexFieldTool.cs">
 	  <SubType>UserControl</SubType>
 	</Compile>
-	<Compile Include="LexFieldTask.Designer.cs">
-	  <DependentUpon>LexFieldTask.cs</DependentUpon>
+	<Compile Include="LexFieldTool.Designer.cs">
+	  <DependentUpon>LexFieldTool.cs</DependentUpon>
+	</Compile>
+	<Compile Include="LexFieldTask.cs">
 	</Compile>
 	<Compile Include="EntryDetailTask.cs">
 	  <SubType>UserControl</SubType>

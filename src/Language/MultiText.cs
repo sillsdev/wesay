@@ -79,12 +79,12 @@ namespace WeSay.Language
 		{
 			LanguageForm alt = Find(writingSystemId);
 			if (null == alt)
-				return "";
+				return string.Empty;
 
 			string form = alt.Form;
 			if (form == null)
 			{
-				return "";
+				return string.Empty;
 			}
 			else
 				return form;
@@ -96,7 +96,7 @@ namespace WeSay.Language
 			if (Count > 0)
 				return ((LanguageForm) _forms[0]).Form;
 			else
-				return "";
+				return string.Empty;
 		}
 
 		public int Count
@@ -115,7 +115,7 @@ namespace WeSay.Language
 		   //enhance: check to see if there has actually been a change
 
 		   LanguageForm alt = Find(writingSystemId);
-		   if (form == null || form == "") // we don't use space to store empty strings.
+		   if (form == null || form == string.Empty) // we don't use space to store empty strings.
 		   {
 			   if (alt != null)
 			   {

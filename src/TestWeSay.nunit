@@ -8,6 +8,7 @@
 	<assembly path="debug\WeSay.App.Tests.dll" />
 	<assembly path="debug\WeSay.Data.Tests.dll" />
 	<assembly path="debug\WeSay.UI.Tests.dll" />
+	<assembly path="Debug\ListBox.Tests.dll" />
   </Config>
   <Config name="Release" binpathtype="Auto">
 	<assembly path="release\TreeViewIList.Tests.dll" />

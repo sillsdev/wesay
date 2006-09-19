@@ -13,6 +13,14 @@ namespace WeSay.LexicalTools
 		/// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
 		protected override void Dispose(bool disposing)
 		{
+			if (disposing && !this.IsDisposed)
+			{
+				if (_record != null)
+				{
+					_record.PropertyChanged -= OnRecordPropertyChanged;
+				}
+				_entryDetailControl.CurrentItemChanged -= OnCurrentItemChanged;
+			}
 			if (disposing && (components != null))
 			{
 				components.Dispose();

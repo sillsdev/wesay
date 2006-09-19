@@ -15,7 +15,6 @@ namespace WeSay.LexicalModel
 		{
 			_gloss = new MultiText();
 			_exampleSentences = new WeSay.Data.InMemoryBindingList<LexExampleSentence>();
-
 			WireUpEvents();
 		}
 

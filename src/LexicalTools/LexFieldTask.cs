@@ -5,71 +5,88 @@ using System.Windows.Forms;
 using WeSay.LexicalModel;
 using WeSay.UI;
 using WeSay.Data;
+using System.Text.RegularExpressions;
 
 namespace WeSay.LexicalTools
 {
-	public partial class LexFieldTask : UserControl, ITask
+	public partial class LexFieldTask : ITask
 	{
-
+		private LexFieldTool _lexFieldTool;
 		private IBindingList _records;
 		private string _label;
-		private int _currentIndex;
+		private string _description;
 
+		public string Description
+		{
+			get
+			{
+				return _description;
+			}
+		}
 
-		public LexFieldTask(IBindingList records, string label, Predicate<string> filter)
+		private Predicate<object> _filter;
+		private Predicate<string> _showField;
+
+		public Predicate<string> ShowField
+		{
+			get
+			{
+				return _showField;
+			}
+		 }
+
+		public LexFieldTask(IBindingList records, IFilter filter, string label, string description, string fieldsToShow)
 		{
 			if (records == null)
 			{
 				throw new ArgumentNullException("records");
 			}
+			if (filter == null)
+			{
+				throw new ArgumentNullException("filter");
+			}
 			if (label == null)
 			{
 				throw new ArgumentNullException("label");
 			}
+			if (description == null)
+			{
+				throw new ArgumentNullException("description");
+			}
+			if (fieldsToShow == null)
+			{
+				throw new ArgumentNullException("fieldsToShow");
+			}
 			_records = records;
+			_filter = filter.Inquire;
 			_label = label;
-
-			InitializeComponent();
-			_lexFieldDetailPanel.BackColor = SystemColors.Control;//we like it to stand out at design time, but not runtime
-			_lexFieldDetailPanel.ShowField = filter;
+			_description = description;
+			InitializeFieldFilter(fieldsToShow);
 		}
 
-		void OnRecordSelectionChanged(object sender, EventArgs e)
+		private void InitializeFieldFilter(string fieldsToShow)
 		{
-			_currentIndex = _recordsListBox.SelectedIndex;
-			_lexFieldDetailPanel.DataSource = CurrentRecord;
+			string[] fields = fieldsToShow.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+			_showField = delegate(string s)
+						 {
+							return Array.Exists<string>(fields, delegate (string field){
+								return s==field;
+							});
+						 };
 		}
 
 
 		public void Activate()
 		{
-			IFilterable<LexEntry> filteredRecords = _records as IFilterable<LexEntry>;
-			if (filteredRecords != null)
-			{
-				if (filteredRecords.IsFiltered)
-				{
-					filteredRecords.RefreshFilter();
-				}
-			}
-
-
-			_recordsListBox.DataSource = _records;
-			_lexFieldDetailPanel.DataSource = CurrentRecord;
-
-			_recordsListBox.SelectedIndexChanged += new EventHandler(OnRecordSelectionChanged);
-
-			_recordsListBox.Font = BasilProject.Project.WritingSystems.VernacularWritingSystemDefault.Font;
-			_recordsListBox.AutoSize();
-			_recordsListBox.Columns.StretchToFit();
-
-			_recordsListBox.Refresh();
-			_lexFieldDetailPanel.Refresh();
+			_lexFieldTool = new LexFieldTool(_records, _showField);
 		}
 
 
 		public void Deactivate()
 		{
-			_recordsListBox.SelectedIndexChanged += new EventHandler(OnRecordSelectionChanged);
+			_lexFieldTool.Dispose();
+			_lexFieldTool = null;
 		}
 
 		public string Label
@@ -80,11 +97,15 @@ namespace WeSay.LexicalTools
 			}
 		}
 
+		/// <summary>
+		/// The LexFieldTool associated with this task
+		/// </summary>
+		/// <remarks>Non null only when task is activated</remarks>
 		public Control Control
 		{
 			get
 			{
-				return this;
+				return _lexFieldTool;
 			}
 		}
 
@@ -96,32 +117,13 @@ namespace WeSay.LexicalTools
 			}
 		}
 
-		public LexFieldControl Control_Details
+		public Predicate<object> Filter
 		{
 			get
 			{
-				return _lexFieldDetailPanel;
-			}
-		}
-		/// <summary>
-		/// Gets current record as selected in record list
-		/// </summary>
-		/// <value>null if record list is empty</value>
-		private LexEntry CurrentRecord
-		{
-			get
-			{
-				if (_records.Count == 0)
-				{
-					return null;
-				}
-				return _records[_currentIndex] as LexEntry;
+				return _filter;
 			}
 		}
 
-		private void btnDelete_Click(object sender, EventArgs e)
-		{
-
-		}
 	}
 }

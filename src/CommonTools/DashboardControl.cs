@@ -10,17 +10,16 @@ namespace WeSay.CommonTools
 	public partial class DashboardControl : UserControl, ITask
 	{
 		private IBindingList _records;
-		private WeSay.UI.IProject _project;
 
-		public DashboardControl(WeSay.UI.IProject project, IBindingList records)
+		public DashboardControl(IBindingList records)
 		{
 			_records = records;
-			_project = project;
 			InitializeComponent();
 			this._dictionarySizeLabel.Text = String.Format(StringCatalog.Get(this._dictionarySizeLabel.Text), records.Count);
-			this._projectNameLabel.Text = _project.Name;
+			this._projectNameLabel.Text = BasilProject.Project.Name;
 		}
 
+		#region ITask
 		public void Activate()
 		{
 
@@ -49,10 +48,30 @@ namespace WeSay.CommonTools
 
 		private void exportLIFT_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
 		{
-			string path = string.Format(@"c:\{0}-lift.xml", _project.Name);
+			string path = string.Format(@"c:\{0}-lift.xml", BasilProject.Project.Name);
 			LexicalModel.LiftExporter exporter = new WeSay.LexicalModel.LiftExporter(path);
 			exporter.Add((IList<LexicalModel.LexEntry>) _records);
 			exporter.End();
 		}
+
+		public string Description
+		{
+			get
+			{
+				return "Switch tasks and see current status of tasks";
+			}
+		}
+
+		public Predicate<object> Filter
+		{
+			get
+			{
+				return delegate(object o){
+					return true;
+				};
+			}
+		}
+
+		#endregion
 	}
 }

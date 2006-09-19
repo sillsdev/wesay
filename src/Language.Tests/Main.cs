@@ -36,16 +36,16 @@ namespace Language.Tests
 		public void NullConditions()
 		{
 			MultiText text = new MultiText();
-			Assert.AreSame("", text["foo"], "never before heard of alternative should give back an empty string");
-			Assert.AreSame("", text["foo"], "second time");
-			Assert.AreSame("", text.GetAlternative("fox"));
+			Assert.AreSame(string.Empty, text["foo"], "never before heard of alternative should give back an empty string");
+			Assert.AreSame(string.Empty, text["foo"], "second time");
+			Assert.AreSame(string.Empty, text.GetAlternative("fox"));
 			text.SetAlternative("zox", "");
-			Assert.AreSame("", text["zox"]);
+			Assert.AreSame(string.Empty, text["zox"]);
 			text.SetAlternative("zox", null);
-			Assert.AreSame("", text["zox"], "should still be empty string after setting to null");
+			Assert.AreSame(string.Empty, text["zox"], "should still be empty string after setting to null");
 			text.SetAlternative("zox", "something");
 			text.SetAlternative("zox", null);
-			Assert.AreSame("", text["zox"], "should still be empty string after setting something and then back to null");
+			Assert.AreSame(string.Empty, text["zox"], "should still be empty string after setting something and then back to null");
 		}
 		[Test]
 		public void BasicStuff()
@@ -60,7 +60,7 @@ namespace Language.Tests
 			text["bee"] = "beeeee";
 			Assert.AreSame("gamma", text["foo"], "setting a different alternative should not affect this one");
 			text["foo"] = null;
-			Assert.AreSame("", text["foo"]);
+			Assert.AreSame(string.Empty, text["foo"]);
 		}
 
 		[Test]

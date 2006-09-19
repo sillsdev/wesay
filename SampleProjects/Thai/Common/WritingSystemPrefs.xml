@@ -4,13 +4,13 @@
   <VernacularWritingSystemDefaultId>th</VernacularWritingSystemDefaultId>
   <members>
 	<WritingSystem>
-	  <FontName>SomeMissingFontName</FontName>
+	  <FontName>Angsana New</FontName>
 	  <FontSize>20</FontSize>
 	  <Id>th</Id>
 	</WritingSystem>
 	<WritingSystem>
-	  <FontName>Courier</FontName>
-	  <FontSize>10</FontSize>
+	  <FontName>Courier New</FontName>
+	  <FontSize>13</FontSize>
 	  <Id>en</Id>
 	</WritingSystem>
   </members>

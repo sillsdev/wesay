@@ -11,24 +11,26 @@ namespace WeSay.CommonTools
 	public partial class PictureControl : UserControl, ITask
 	{
 		private string _label;
+		private string _description;
 
-		public PictureControl(string label, string pictureFilePath)
+		public PictureControl(string label, string description, string pictureFilePath)
 		{
 			_label = label;
+			_description = description;
 			InitializeComponent(new Bitmap(pictureFilePath));
 		}
 
 		#region ITask Members
 
-		void ITask.Activate()
+		public void Activate()
 		{
 		}
 
-		void ITask.Deactivate()
+		public void Deactivate()
 		{
 		}
 
-		string ITask.Label
+		public string Label
 		{
 			get
 			{
@@ -36,11 +38,30 @@ namespace WeSay.CommonTools
 			}
 		}
 
-		Control ITask.Control
+		public Control Control
 		{
 			get
 			{
 				return this;
+			}
+		}
+
+		public string Description
+		{
+			get
+			{
+				return _description;
+			}
+		}
+
+		public Predicate<object> Filter
+		{
+			get
+			{
+				return delegate(object o)
+				{
+					return false;
+				};
 			}
 		}
 

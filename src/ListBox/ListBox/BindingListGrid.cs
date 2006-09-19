@@ -33,6 +33,10 @@ namespace ListBox
 
 		protected override void Dispose(bool disposing)
 		{
+			if (disposing && !this.IsDisposed)
+			{
+				Unbind();
+			}
 			base.Dispose (disposing);
 		}
 

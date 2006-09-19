@@ -7,26 +7,27 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using WeSay.Data;
 using System.Xml.XPath;
+using WeSay.LexicalModel;
 
 namespace WeSay.App
 {
 	public class ConfigFileTaskBuilder : ITaskBuilder, IDisposable
 	{
 		private bool _disposed;
-		private IMutablePicoContainer _parentPicoContext;
+		private IMutablePicoContainer _picoContext;
 		BasilProject _project;
 		List<ITask> _tasks;
 
 		public ConfigFileTaskBuilder(WeSayWordsProject project, Stream config)
 		{
-			_parentPicoContext = new DefaultPicoContainer();
-			_parentPicoContext.RegisterComponentInstance(project);
+			_picoContext = new DefaultPicoContainer();
+			_picoContext.RegisterComponentInstance(project);
 			_project = project;
 
 			if (project.PathToLexicalModelDB.IndexOf("PRETEND") > -1)
 			{
 				IBindingList pEntries = new WeSay.LexicalModel.Tests.PretendRecordList();
-				_parentPicoContext.RegisterComponentInstance(pEntries);
+				_picoContext.RegisterComponentInstance("All Entries",pEntries);
 			}
 			else
 			{
@@ -39,7 +40,7 @@ namespace WeSay.App
 				objectClass.ObjectField("_modifiedDate").Indexed(true);
 
 				Db4oDataSource ds = new Db4oDataSource(project.PathToLexicalModelDB);
-				IComponentAdapter dsAdaptor = _parentPicoContext.RegisterComponentInstance(ds);
+				IComponentAdapter dsAdaptor = _picoContext.RegisterComponentInstance(ds);
 
 				///* Because the data source is never actually touched by the normal pico container code,
 				// * it never gets  added to this ordered list.  The ordered list is used for the lifecycle
@@ -47,10 +48,10 @@ namespace WeSay.App
 				// * getting disposed of first, whereas we need it to be disposed of last.
 				// * Adding it explicity to the ordered list gives proper disposal order.
 				// */
-				_parentPicoContext.AddOrderedComponentAdapter(dsAdaptor);
+				_picoContext.AddOrderedComponentAdapter(dsAdaptor);
 
 				Db4oBindingList<WeSay.LexicalModel.LexEntry> entries = new Db4oBindingList<WeSay.LexicalModel.LexEntry>(ds);
-				_parentPicoContext.RegisterComponentInstance("All Entries", entries);
+				_picoContext.RegisterComponentInstance("All Entries", entries);
 			}
 			InitializeTaskList(config);
 		}
@@ -65,7 +66,7 @@ namespace WeSay.App
 			{
 				string id = RegisterComponent(task);
 
-				ITask iTask = (ITask)_parentPicoContext.GetComponentInstance(id);
+				ITask iTask = (ITask)_picoContext.GetComponentInstance(id);
 				System.Diagnostics.Debug.Assert(iTask != null);
 				_tasks.Add(iTask);
 			}
@@ -86,43 +87,51 @@ namespace WeSay.App
 				foreach (XPathNavigator child in children)
 				{
 					IParameter parameter;
-					switch (child.GetAttribute("class", string.Empty))
+					string componentRef = child.GetAttribute("ref", string.Empty);
+					if (componentRef != string.Empty)
 					{
-						case "":
-							parameter = new ConstantParameter(child.Value);
-							break;
-						case "string":
-							parameter = new ConstantParameter(child.Value);
-							break;
-						case "bool":
-							parameter = new ConstantParameter(child.ValueAsBoolean);
-							break;
-						case "DateTime":
-							parameter = new ConstantParameter(child.ValueAsDateTime);
-							break;
-						case "double":
-							parameter = new ConstantParameter(child.ValueAsDouble);
-							break;
-						case "int":
-							parameter = new ConstantParameter(child.ValueAsInt);
-							break;
-						case "long":
-							parameter = new ConstantParameter(child.ValueAsLong);
-							break;
-						default:
-							parameter = new ComponentParameter(RegisterComponent(child));
-							break;
+						parameter = new ComponentParameter(componentRef);
+					}
+					else
+					{
+						switch (child.GetAttribute("class", string.Empty))
+						{
+							case "":
+								parameter = new ConstantParameter(child.Value);
+								break;
+							case "string":
+								parameter = new ConstantParameter(child.Value);
+								break;
+							case "bool":
+								parameter = new ConstantParameter(child.ValueAsBoolean);
+								break;
+							case "DateTime":
+								parameter = new ConstantParameter(child.ValueAsDateTime);
+								break;
+							case "double":
+								parameter = new ConstantParameter(child.ValueAsDouble);
+								break;
+							case "int":
+								parameter = new ConstantParameter(child.ValueAsInt);
+								break;
+							case "long":
+								parameter = new ConstantParameter(child.ValueAsLong);
+								break;
+							default:
+								parameter = new ComponentParameter(RegisterComponent(child));
+								break;
+						}
 					}
 					parameters.Add(parameter);
 				}
-				_parentPicoContext.RegisterComponentImplementation(id,
+				_picoContext.RegisterComponentImplementation(id,
 													GetType(component.GetAttribute("class", string.Empty),
 															component.GetAttribute("assembly", string.Empty)),
 													parameters.ToArray());
 			}
 			else
 			{
-				_parentPicoContext.RegisterComponentImplementation(id,
+				_picoContext.RegisterComponentImplementation(id,
 													GetType(component.GetAttribute("class", string.Empty),
 															component.GetAttribute("assembly", string.Empty)));
 			}
@@ -158,8 +167,8 @@ namespace WeSay.App
 			{
 				if (disposing)
 				{
-					_parentPicoContext.Dispose();
-					_parentPicoContext = null;
+					_picoContext.Dispose();
+					_picoContext = null;
 					GC.SuppressFinalize(this);
 				}
 			}

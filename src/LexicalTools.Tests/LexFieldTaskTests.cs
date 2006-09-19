@@ -16,9 +16,12 @@ namespace WeSay.LexicalTools.Tests
 		Db4oBindingList<LexEntry> _records;
 		string _FilePath;
 
-		Predicate<string> _fieldFilter;
-		string _label;
-		string _lexicalForm;
+		private IFilter _filter;
+		private string _fieldsToShow;
+		private string _label;
+		private string _description;
+
+		private string _lexicalForm;
 
 		[SetUp]
 		public void Setup()
@@ -34,11 +37,10 @@ namespace WeSay.LexicalTools.Tests
 			entry.LexicalForm.SetAlternative(BasilProject.Project.WritingSystems.VernacularWritingSystemDefault.Id, _lexicalForm);
 			_records.Add(entry);
 
-			_fieldFilter = delegate(string s)
-						{
-							return s == "LexicalForm";
-						};
+			_fieldsToShow = "LexicalForm";
 			_label = "My label";
+			_description = "My description";
+			_filter = new MissingGlossFilter(BasilProject.Project.WritingSystems.VernacularWritingSystemDefault.Id);
 		}
 
 		[TearDown]
@@ -52,7 +54,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void Create()
 		{
-			LexFieldTask task = new LexFieldTask(_records, _label, _fieldFilter);
+			LexFieldTask task = new LexFieldTask(_records, _filter, _label, _description, _fieldsToShow);
 			Assert.IsNotNull(task);
 		}
 
@@ -60,7 +62,7 @@ namespace WeSay.LexicalTools.Tests
 		public void Create_RecordsIsEmpty()
 		{
 			_records.Clear();
-			LexFieldTask task = new LexFieldTask(_records, _label, _fieldFilter);
+			LexFieldTask task = new LexFieldTask(_records, _filter, _label, _description, _fieldsToShow);
 			Assert.IsNotNull(task);
 		}
 
@@ -68,107 +70,108 @@ namespace WeSay.LexicalTools.Tests
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void Create_RecordsIsNull_ThrowsArgumentNullException()
 		{
-			LexFieldTask task = new LexFieldTask(null, _label, _fieldFilter);
-		}
-
-		[Test]
-		[ExpectedException(typeof(ArgumentNullException))]
-		public void Create_LabelIsNull_ThrowsArgumentNullException()
-		{
-			LexFieldTask task = new LexFieldTask(_records, null, _fieldFilter);
+			LexFieldTask task = new LexFieldTask(null, _filter, _label, _description, _fieldsToShow);
 		}
 
 		[Test]
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void Create_FilterIsNull_ThrowsArgumentNullException()
 		{
-			LexFieldTask task = new LexFieldTask(_records, _label, null);
+			LexFieldTask task = new LexFieldTask(_records, null, _label, _description, _fieldsToShow);
+		}
+
+		[Test]
+		[ExpectedException(typeof(ArgumentNullException))]
+		public void Create_LabelIsNull_ThrowsArgumentNullException()
+		{
+			LexFieldTask task = new LexFieldTask(_records, _filter, null, _description, _fieldsToShow);
+		}
+
+		[Test]
+		[ExpectedException(typeof(ArgumentNullException))]
+		public void Create_DescriptionIsNull_ThrowsArgumentNullException()
+		{
+			LexFieldTask task = new LexFieldTask(_records, _filter, _label, null, _fieldsToShow);
+		}
+
+		[Test]
+		[ExpectedException(typeof(ArgumentNullException))]
+		public void Create_FieldFilterIsNull_ThrowsArgumentNullException()
+		{
+			LexFieldTask task = new LexFieldTask(_records, _filter, _label, _description, null);
 		}
 
 		[Test]
 		public void Label_InitializedFromCreate()
 		{
-			LexFieldTask task = new LexFieldTask(_records, _label, _fieldFilter);
+			LexFieldTask task = new LexFieldTask(_records, _filter, _label, _description, _fieldsToShow);
 			Assert.AreEqual(_label, task.Label);
+		}
+
+		[Test]
+		public void Description_InitializedFromCreate()
+		{
+			LexFieldTask task = new LexFieldTask(_records, _filter, _label, _description, _fieldsToShow);
+			Assert.AreEqual(_description, task.Description);
 		}
 
 		[Test]
 		public void Activate_Refreshes()
 		{
-			LexFieldTask task = new LexFieldTask(_records, _label, _fieldFilter);
+			LexFieldTask task = new LexFieldTask(_records, _filter, _label, _description, _fieldsToShow);
 			task.Activate();
-			Assert.IsTrue(task.Control_Details.Control_FormattedView.Text.Contains(_lexicalForm));
+			Assert.IsTrue(((LexFieldTool)task.Control).Control_Details.Control_FormattedView.Text.Contains(_lexicalForm));
 			Assert.AreEqual(1, task.DataSource.Count);
 			task.Deactivate();
 			_records.Clear();
 			task.Activate();
-			Assert.AreEqual(string.Empty, task.Control_Details.Control_FormattedView.Text);
+			Assert.AreEqual(string.Empty, ((LexFieldTool)task.Control).Control_Details.Control_FormattedView.Text);
 			Assert.AreEqual(0, task.DataSource.Count);
 			task.Deactivate();
 		}
 
 		[Test]
-		public void Activate_Refilters()
+		public void FieldsToShow_SingleField_InitializedFromCreate()
 		{
-			LexFieldTask task = new LexFieldTask(_records, _label, _fieldFilter);
+			LexFieldTask task = new LexFieldTask(_records, _filter, _label, _description, "Single");
+			Assert.AreEqual(true, task.ShowField("Single"));
+			Assert.AreEqual(false, task.ShowField("SingleField"));
+			Assert.AreEqual(false, task.ShowField("Single Field"));
+			Assert.AreEqual(false, task.ShowField("Field"));
+			Assert.AreEqual(false, task.ShowField(" "));
+			Assert.AreEqual(false, task.ShowField(String.Empty));
+		}
 
-			//Predicate<LexEntry> entriesWithoutGlosses = delegate(LexEntry entry)
-			//            {
-			//                foreach (LexSense sense in entry.Senses)
-			//                {
-			//                    if (sense.Gloss[BasilProject.Project.AnalysisWritingSystemDefault.Id] != null)
-			//                    {
-			//                        return false;
-			//                    }
-			//                }
-			//                return true;
-			//            };
+		[Test]
+		public void FieldsToShow_TwoFields_InitializedFromCreate()
+		{
+			LexFieldTask task = new LexFieldTask(_records, _filter, _label, _description, "First Second");
+			Assert.AreEqual(true, task.ShowField("First"));
+			Assert.AreEqual(true, task.ShowField("Second"));
+			Assert.AreEqual(false, task.ShowField("FirstSecond"));
+			Assert.AreEqual(false, task.ShowField(" "));
+			Assert.AreEqual(false, task.ShowField(String.Empty));
+		}
 
-			//_records.ApplyFilter(entriesWithoutGlosses);
+		[Test]
+		public void FieldsToShow_ThreeFields_InitializedFromCreate()
+		{
+			LexFieldTask task = new LexFieldTask(_records, _filter, _label, _description, "First Second Third");
+			Assert.AreEqual(true, task.ShowField("First"));
+			Assert.AreEqual(true, task.ShowField("Second"));
+			Assert.AreEqual(true, task.ShowField("Third"));
+			Assert.AreEqual(false, task.ShowField("FirstSecond"));
+			Assert.AreEqual(false, task.ShowField("SecondThird"));
+			Assert.AreEqual(false, task.ShowField(" "));
+			Assert.AreEqual(false, task.ShowField(String.Empty));
+		}
 
-
-			//_records.SODAQuery = delegate(com.db4o.query.Query query) //has empty analysis form of a gloss
-			//            {
-			//                query.Constrain(typeof(LexEntry));
-			//                query.Descend("_senses")
-			//                     .Descend("_gloss")
-			//                     .Descend("_forms")
-			//                     .Descend("_writingSystemId")
-			//                     .Constrain(_project.AnalysisWritingSystemDefault.Id).Not();
-			//                return query;
-			//            };
-
-			_records.SODAQuery = delegate(com.db4o.query.Query query) //has no senses
-			{
-				query.Constrain(typeof(LexEntry));
-				query.Descend("_senses").Constrain(typeof(LexSense)).Not();
-				return query;
-			};
-
-			task.Activate();
-			Assert.AreEqual(1, task.DataSource.Count);
-			task.Deactivate();
-
-			LexSense newSense = (LexSense)_records[0].Senses.AddNew();
-			task.Activate();
-			Assert.AreEqual(0, task.DataSource.Count);
-			task.Deactivate();
-
-			//newSense.Gloss[BasilProject.Project.AnalysisWritingSystemDefault.Id] = string.Empty;
-			//task.Activate();
-			//Assert.AreEqual(1, task.DataSource.Count);
-			//task.Deactivate();
-
-			//newSense.Gloss[BasilProject.Project.AnalysisWritingSystemDefault.Id] = "a gloss";
-			//task.Activate();
-			//Assert.AreEqual(0, task.DataSource.Count);
-			//task.Deactivate();
-
-			//LexSense anotherSense = (LexSense)_records[0].Senses.AddNew();
-			//task.Activate();
-			//Assert.AreEqual(1, task.DataSource.Count);
-			//task.Deactivate();
-
+		[Test]
+		public void FieldsToShow_HidingField_InitializedFromCreate()
+		{
+			LexFieldTask task = new LexFieldTask(_records, _filter, _label, _description, "GhostGloss Gloss");
+			Assert.AreEqual(true, task.ShowField("Gloss"));
+			Assert.AreEqual(true, task.ShowField("GhostGloss"));
 		}
 
 	}

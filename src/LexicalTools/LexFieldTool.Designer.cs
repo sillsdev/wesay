@@ -2,7 +2,7 @@ using System;
 
 namespace WeSay.LexicalTools
 {
-	partial class LexFieldTask
+	partial class LexFieldTool
 	{
 		/// <summary>
 		/// Required designer variable.
@@ -15,6 +15,10 @@ namespace WeSay.LexicalTools
 		/// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
 		protected override void Dispose(bool disposing)
 		{
+			if (disposing && !this.IsDisposed)
+			{
+				_recordsListBox.SelectedIndexChanged -= OnRecordSelectionChanged;
+			}
 			if (disposing && (components != null))
 			{
 				components.Dispose();

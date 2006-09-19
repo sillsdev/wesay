@@ -1,10 +1,10 @@
+//#define SampleBuilder
 using System;
 using System.Collections;
 using System.Windows.Forms;
 using CommandLine;
 using WeSay.UI;
 using System.IO;
-
 namespace WeSay.App
 {
 	class WeSayApp
@@ -62,14 +62,13 @@ namespace WeSay.App
 #else
 				Application.EnableVisualStyles();
 				Application.SetCompatibleTextRenderingDefault(false);
-#if ConfigBuilder
-				using (FileStream config = new FileStream(project.WeSayWords.PathToTaskConfig, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete))
+#if SampleBuilder
+				builder = new SampleTaskBuilder(project);
+#else
+				using (FileStream config = new FileStream(project.PathToTaskConfig, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete))
 				{
 					builder = new ConfigFileTaskBuilder(project, config);
 				}
-#else
-				builder = new SampleTaskBuilder(project);
-
 #endif
 				Form f =  new TabbedForm(project, builder);
 				Application.Run(f);
