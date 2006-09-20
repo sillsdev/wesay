@@ -9,10 +9,6 @@ namespace WeSay.UI
 		void Deactivate();
 		string Label { get; }
 		string Description { get; }
-		Predicate<object> Filter
-		{
-			get;
-		}
 
 		//Gtk.VBox Container { get;set; }
 		Control Control { get;}

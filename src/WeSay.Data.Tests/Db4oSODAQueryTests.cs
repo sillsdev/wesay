@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
 
-namespace WeSay.Data.Tests
+namespace WeSay.Data.Tests.Db4oBindingListTests
 {
 	[TestFixture]
 	public class db4oBindingListSODAQuery
 	{
 		Db4oDataSource _dataSource;
-		Db4oBindingList<TestItem> _bindingList;
+		Db4oRecordList<TestItem> _bindingList;
 		string _FilePath;
 
 		[SetUp]
@@ -18,7 +18,7 @@ namespace WeSay.Data.Tests
 
 			_FilePath = System.IO.Path.GetTempFileName();
 			this._dataSource = new Db4oDataSource(_FilePath);
-			this._bindingList = new Db4oBindingList<TestItem>(this._dataSource);
+			this._bindingList = new Db4oRecordList<TestItem>(this._dataSource);
 
 			this._bindingList.Add(new TestItem("Jared", 1, new DateTime(2003, 7, 10)));
 			this._bindingList.Add(new TestItem("Gianna", 2, new DateTime(2006, 7, 17)));

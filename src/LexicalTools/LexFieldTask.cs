@@ -24,7 +24,6 @@ namespace WeSay.LexicalTools
 			}
 		}
 
-		private Predicate<object> _filter;
 		private Predicate<string> _showField;
 
 		public Predicate<string> ShowField
@@ -35,7 +34,7 @@ namespace WeSay.LexicalTools
 			}
 		 }
 
-		public LexFieldTask(IBindingList records, IFilter filter, string label, string description, string fieldsToShow)
+		public LexFieldTask(IRecordList<LexEntry> records, IFilter<LexEntry> filter, string label, string description, string fieldsToShow)
 		{
 			if (records == null)
 			{
@@ -58,7 +57,6 @@ namespace WeSay.LexicalTools
 				throw new ArgumentNullException("fieldsToShow");
 			}
 			_records = records;
-			_filter = filter.Inquire;
 			_label = label;
 			_description = description;
 			InitializeFieldFilter(fieldsToShow);
@@ -114,14 +112,6 @@ namespace WeSay.LexicalTools
 			get
 			{
 				return _records;
-			}
-		}
-
-		public Predicate<object> Filter
-		{
-			get
-			{
-				return _filter;
 			}
 		}
 

@@ -13,10 +13,10 @@ namespace WeSay.LexicalTools.Tests
 	public class LexFieldTaskTests
 	{
 		Db4oDataSource _dataSource;
-		Db4oBindingList<LexEntry> _records;
+		Db4oRecordList<LexEntry> _records;
 		string _FilePath;
 
-		private IFilter _filter;
+		private IFilter<LexEntry> _filter;
 		private string _fieldsToShow;
 		private string _label;
 		private string _description;
@@ -30,7 +30,7 @@ namespace WeSay.LexicalTools.Tests
 
 			_FilePath = System.IO.Path.GetTempFileName();
 			this._dataSource = new Db4oDataSource(_FilePath);
-			this._records = new Db4oBindingList<LexEntry>(this._dataSource);
+			this._records = new Db4oRecordList<LexEntry>(this._dataSource);
 
 			LexEntry entry = new LexEntry();
 			_lexicalForm = "vernacular";

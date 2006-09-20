@@ -1,18 +1,19 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Collections;
 
 namespace WeSay.Data
 {
-	public class InMemoryBindingList<T> : IBindingList, IList<T>, ICollection<T>, IEnumerable<T> where T : class, INotifyPropertyChanged, new()
+	public class InMemoryRecordList<T> : IRecordList<T> where T : class, new()
 	{
 		List<T> _list;
 		PropertyDescriptor _propertyDescriptor;
 		ListSortDirection _listSortDirection;
 		bool _isSorted;
+		bool _isFiltered;
 
-
-		public InMemoryBindingList()
+		public InMemoryRecordList()
 		{
 			_list = new List<T>();
 		}
@@ -22,6 +23,14 @@ namespace WeSay.Data
 			while (enumerator.MoveNext())
 			{
 				Add(enumerator.Current);
+			}
+		}
+
+		public void Add(IEnumerator enumerator)
+		{
+			while (enumerator.MoveNext())
+			{
+				Add((T)enumerator.Current);
 			}
 		}
 
@@ -182,6 +191,41 @@ namespace WeSay.Data
 
 		#endregion
 
+		#region IFilterable<T> Members
+
+		public void ApplyFilter(Predicate<T> itemsToInclude)
+		{
+			if (itemsToInclude == null)
+			{
+				throw new ArgumentNullException();
+			}
+			Predicate<T> itemsToExclude = ComparisonHelper<T>.GetInversePredicate(itemsToInclude);
+			_list.RemoveAll(itemsToExclude);
+			_isFiltered = true;
+			OnListReset();
+		}
+
+		public void RemoveFilter()
+		{
+			throw new NotImplementedException();
+			//_records.Filter = null;
+			//OnListReset();
+		}
+
+		public void RefreshFilter()
+		{
+			throw new NotImplementedException();
+			//OnListReset();
+		}
+
+		public bool IsFiltered
+		{
+			get
+			{
+				return _isFiltered;
+			}
+		}
+#endregion
 		#region IList<T> Members
 
 		public int IndexOf(T item)

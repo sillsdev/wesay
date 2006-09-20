@@ -9,12 +9,12 @@ namespace WeSay.LexicalModel
 	public class LexSense : WeSayDataObject
 	{
 		private MultiText _gloss;
-		private WeSay.Data.InMemoryBindingList<LexExampleSentence> _exampleSentences;
+		private WeSay.Data.InMemoryRecordList<LexExampleSentence> _exampleSentences;
 
 		 public LexSense()
 		{
 			_gloss = new MultiText();
-			_exampleSentences = new WeSay.Data.InMemoryBindingList<LexExampleSentence>();
+			_exampleSentences = new WeSay.Data.InMemoryRecordList<LexExampleSentence>();
 			WireUpEvents();
 		}
 

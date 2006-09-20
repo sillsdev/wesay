@@ -4,7 +4,7 @@ using System.Text;
 
 namespace WeSay.LexicalModel
 {
-	public class MissingGlossFilter : WeSay.LexicalModel.IFilter
+	public class MissingGlossFilter : WeSay.Data.IFilter<LexEntry>
 	{
 		string _writingSystemId;
 
@@ -13,7 +13,17 @@ namespace WeSay.LexicalModel
 			_writingSystemId = writingSystemId;
 		}
 
-		public Predicate<object> Inquire
+		#region IFilter<LexEntry> Members
+
+		public string Key
+		{
+			get
+			{
+				return this.ToString() + "writingSystemId";
+			}
+		}
+
+		public Predicate<LexEntry> Inquire
 		{
 			get
 			{
@@ -21,9 +31,9 @@ namespace WeSay.LexicalModel
 			}
 		}
 
-		private bool Filter(object o)
+		#endregion
+		private bool Filter(LexEntry entry)
 		{
-			LexEntry entry = o as LexEntry;
 			if (entry == null)
 			{
 				return false;

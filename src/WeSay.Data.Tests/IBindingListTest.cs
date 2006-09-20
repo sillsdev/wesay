@@ -5,7 +5,7 @@ using System.Text;
 using NUnit.Framework;
 using System.ComponentModel;
 
-namespace WeSay.Data.Tests
+namespace WeSay.Data.Tests.IBindingListTests
 {
 	public class IBindingListBaseTest<T, K> where T: new()
 	{

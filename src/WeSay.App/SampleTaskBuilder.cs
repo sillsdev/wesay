@@ -55,7 +55,7 @@ namespace WeSay.App
 				// */
 				_parentPicoContext.AddOrderedComponentAdapter(dsAdaptor);
 
-				Db4oBindingList<LexEntry> entries = new Db4oBindingList<LexEntry>(ds);
+				Db4oRecordList<LexEntry> entries = new Db4oRecordList<LexEntry>(ds);
 				_parentPicoContext.RegisterComponentInstance("All Entries", entries);
 			}
 
@@ -235,14 +235,6 @@ namespace WeSay.App
 			get
 			{
 				return RealTask.Description;
-			}
-		}
-
-		public Predicate<object> Filter
-		{
-			get
-			{
-				return RealTask.Filter;
 			}
 		}
 

@@ -5,7 +5,7 @@ using System.Text;
 using NUnit.Framework;
 
 
-namespace WeSay.Data.Tests
+namespace WeSay.Data.Tests.IListTests
 {
 	// Four Types of IList : FixedSizeReadOnly, FixedSizeReadWrite,
 	//                       VariableSizeReadOnly, VariableSizeReadWrite

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace WeSay.LexicalModel.Tests
 {
-	public class PretendRecordList : WeSay.Data.InMemoryBindingList<LexEntry>
+	public class PretendRecordList : WeSay.Data.InMemoryRecordList<LexEntry>
 	{
 		public PretendRecordList()
 			: base()

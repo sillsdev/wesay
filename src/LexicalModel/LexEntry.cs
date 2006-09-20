@@ -12,7 +12,7 @@ namespace WeSay.LexicalModel
 	{
 		private MultiText _lexicalForm;
 		private Guid _guid;
-		private WeSay.Data.InMemoryBindingList<LexSense> _senses;
+		private WeSay.Data.InMemoryRecordList<LexSense> _senses;
 		private DateTime _creationDate;
 		private DateTime _modifiedDate;
 
@@ -30,7 +30,7 @@ namespace WeSay.LexicalModel
 		{
 			_guid = guid;
 			this._lexicalForm = new MultiText();
-			this._senses = new WeSay.Data.InMemoryBindingList<LexSense>();
+			this._senses = new WeSay.Data.InMemoryRecordList<LexSense>();
 			this._creationDate = DateTime.Now;
 			this._modifiedDate = _creationDate;
 

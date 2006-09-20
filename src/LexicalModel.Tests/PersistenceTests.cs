@@ -8,7 +8,7 @@ namespace WeSay.LexicalTools.Tests
 	[TestFixture]
 	public class PersistenceTests
 	{
-		private Db4oBindingList<LexEntry> _entriesList;
+		private Db4oRecordList<LexEntry> _entriesList;
 		private Db4oDataSource _dataSource;
 		private string _filePath ;
 		protected bool _didNotify;
@@ -40,7 +40,7 @@ namespace WeSay.LexicalTools.Tests
 				_dataSource.Dispose();
 			}
 			_dataSource = new WeSay.Data.Db4oDataSource(_filePath);
-			_entriesList = new WeSay.Data.Db4oBindingList<LexEntry>(_dataSource);
+			_entriesList = new WeSay.Data.Db4oRecordList<LexEntry>(_dataSource);
 			if (_entriesList.Count > 0)
 				return _entriesList[0];
 			else

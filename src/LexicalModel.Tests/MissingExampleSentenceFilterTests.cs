@@ -13,15 +13,6 @@ namespace WeSay.LexicalModel.Tests
 	public class MissingExampleSentenceFilterTests
 	{
 		[Test]
-		public void NotALexEntry()
-		{
-			LexSense sense = new LexSense();
-
-			MissingExampleSentenceFilter missingExampleSentence = new MissingExampleSentenceFilter("vernacular");
-			Assert.AreEqual(false, missingExampleSentence.Inquire(sense));
-		}
-
-		[Test]
 		public void SenseExampleSentenceHasVernacularWritingSystem()
 		{
 			LexEntry entry = new LexEntry();

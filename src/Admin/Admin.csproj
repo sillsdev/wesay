@@ -51,7 +51,7 @@
 	<Compile Include="FontControl.cs">
 	  <SubType>UserControl</SubType>
 	</Compile>
-	<Compile Include="FontControl.Designer.cs">
+	<Compile Include="FontControl.designer.cs">
 	  <DependentUpon>FontControl.cs</DependentUpon>
 	</Compile>
 	<Compile Include="OtherControl.cs">
@@ -77,8 +77,8 @@
 	  <DependentUpon>FieldsControl.cs</DependentUpon>
 	</EmbeddedResource>
 	<EmbeddedResource Include="FontControl.resx">
-	  <SubType>Designer</SubType>
 	  <DependentUpon>FontControl.cs</DependentUpon>
+	  <SubType>Designer</SubType>
 	</EmbeddedResource>
 	<EmbeddedResource Include="OtherControl.resx">
 	  <SubType>Designer</SubType>
@@ -102,8 +102,8 @@
 	  <DependentUpon>WelcomeControl.cs</DependentUpon>
 	</EmbeddedResource>
 	<EmbeddedResource Include="WritingSystemBasic.resx">
-	  <SubType>Designer</SubType>
 	  <DependentUpon>WritingSystemBasic.cs</DependentUpon>
+	  <SubType>Designer</SubType>
 	</EmbeddedResource>
 	<EmbeddedResource Include="WritingSystemSetup.resx">
 	  <SubType>Designer</SubType>
@@ -139,7 +139,7 @@
 	<Compile Include="WritingSystemBasic.cs">
 	  <SubType>UserControl</SubType>
 	</Compile>
-	<Compile Include="WritingSystemBasic.Designer.cs">
+	<Compile Include="WritingSystemBasic.designer.cs">
 	  <DependentUpon>WritingSystemBasic.cs</DependentUpon>
 	</Compile>
 	<Compile Include="WritingSystemSetup.cs">

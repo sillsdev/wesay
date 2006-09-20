@@ -23,11 +23,13 @@ namespace WeSay.LexicalTools
 			InitializeComponent();
 			_lexFieldDetailPanel.BackColor = SystemColors.Control;//we like it to stand out at design time, but not runtime
 			_lexFieldDetailPanel.ShowField = fieldFilter;
-
-			_recordsListBox.Font = BasilProject.Project.WritingSystems.VernacularWritingSystemDefault.Font;
+			_lexFieldDetailPanel.DataSource = CurrentRecord;
 
 			_recordsListBox.DataSource = _records;
-			_lexFieldDetailPanel.DataSource = CurrentRecord;
+			_recordsListBox.Font = BasilProject.Project.WritingSystems.VernacularWritingSystemDefault.Font;
+			_recordsListBox.AutoSize();
+			_recordsListBox.Columns.StretchToFit();
+
 
 			_recordsListBox.SelectedIndexChanged += new EventHandler(OnRecordSelectionChanged);
 		}

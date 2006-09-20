@@ -28,9 +28,9 @@ namespace WeSay.Data
 #if THROW_ON_OPTIMIZATION_FAILURE
 		void OnQueryOptimizationFailure(object sender, com.db4o.inside.query.QueryOptimizationFailureEventArgs args)
 		{
+			System.Diagnostics.Debug.WriteLine("Query not Optimized:");
+			System.Diagnostics.Debug.WriteLine(args.Reason);
 			throw new ApplicationException("Query not Optimized", args.Reason);
-			//System.Diagnostics.Debug.WriteLine("Query not Optimized:");
-			//System.Diagnostics.Debug.WriteLine(args.Reason);
 		}
 #endif
 

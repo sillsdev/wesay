@@ -76,7 +76,7 @@ namespace WeSay.LexicalTools.Tests
 
 		private void WriteTwoEntries()
 		{
-			InMemoryBindingList<LexEntry> entries = new InMemoryBindingList<LexEntry>();
+			InMemoryRecordList<LexEntry> entries = new InMemoryRecordList<LexEntry>();
 			LexEntry entry = entries.AddNew();
 			entry.LexicalForm["red"] = "sunset";
 			entry = entries.AddNew();

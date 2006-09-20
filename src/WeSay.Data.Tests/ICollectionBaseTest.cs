@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using NUnit.Framework;
 
 
-namespace WeSay.Data.Tests
+namespace WeSay.Data.Tests.ICollectionTests
 {
 	public class ICollectionBaseTest<T>
 	{

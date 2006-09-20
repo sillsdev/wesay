@@ -21,7 +21,7 @@ namespace WeSay.Data.Tests
 			}
 			using (WeSay.Data.Db4oDataSource src = new Db4oDataSource(s))
 			{
-				using (WeSay.Data.Db4oBindingList<LexEntry> list = new Db4oBindingList<LexEntry>(src))
+				using (WeSay.Data.Db4oRecordList<LexEntry> list = new Db4oRecordList<LexEntry>(src))
 				{
 					//((WeSay.Data.ITransactionControl) list).AutoCommit = true;
 					XmlDocument document = new XmlDocument();

@@ -1,4 +1,4 @@
-//#define SampleBuilder
+#define SampleBuilder
 using System;
 using System.Collections;
 using System.Windows.Forms;

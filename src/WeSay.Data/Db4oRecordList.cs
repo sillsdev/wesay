@@ -4,7 +4,7 @@ using System.ComponentModel;
 
 namespace WeSay.Data
 {
-	public class Db4oBindingList<T> : IBindingList, IFilterable<T>, IList<T>, ICollection<T>, IEnumerable<T>, IDisposable where T : class, INotifyPropertyChanged, new()
+	public class Db4oRecordList<T> : IRecordList<T>, IDisposable where T : class, new()
 	{
 		Db4o.Binding.Db4oList<T> _records;
 		PropertyDescriptor _propertyDescriptor;
@@ -49,17 +49,17 @@ namespace WeSay.Data
 			}
 		}
 
-		public Db4oBindingList(Db4oDataSource dataSource)
+		public Db4oRecordList(Db4oDataSource dataSource)
 		{
 			Initialize(dataSource, null, null, null);
 		}
 
-		public Db4oBindingList(Db4oDataSource dataSource, Db4o.Binding.SODAQueryProvider sodaQuery)
+		public Db4oRecordList(Db4oDataSource dataSource, Db4o.Binding.SODAQueryProvider sodaQuery)
 		{
 			Initialize(dataSource, null, null, sodaQuery);
 		}
 
-		public Db4oBindingList(Db4oDataSource dataSource, Predicate<T> filter)
+		public Db4oRecordList(Db4oDataSource dataSource, Predicate<T> filter)
 		{
 			if (filter == null)
 			{
@@ -68,7 +68,7 @@ namespace WeSay.Data
 			Initialize(dataSource, filter, null, null);
 		}
 
-		public Db4oBindingList(Db4oDataSource dataSource, Predicate<T> filter, Comparison<T> sort)
+		public Db4oRecordList(Db4oDataSource dataSource, Predicate<T> filter, Comparison<T> sort)
 		{
 			if (filter == null)
 			{
@@ -81,7 +81,7 @@ namespace WeSay.Data
 			Initialize(dataSource, filter, sort, null);
 		}
 
-		public Db4oBindingList(Db4oDataSource dataSource, Comparison<T> sort)
+		public Db4oRecordList(Db4oDataSource dataSource, Comparison<T> sort)
 		{
 			if (sort == null)
 			{
@@ -623,11 +623,11 @@ namespace WeSay.Data
 		#region IDisposable Members
 
 #if DEBUG
-		~Db4oBindingList()
+		~Db4oRecordList()
 		{
 			if (!this._disposed)
 			{
-				throw new ApplicationException("Disposed not explicitly called on Db4oBindingList.");
+				throw new ApplicationException("Disposed not explicitly called on Db4oRecordList.");
 			}
 		}
 #endif
@@ -659,7 +659,7 @@ namespace WeSay.Data
 		{
 			if (this._disposed)
 			{
-				throw new ObjectDisposedException("Db4oBindingList");
+				throw new ObjectDisposedException("Db4oRecordList");
 			}
 		}
 		#endregion

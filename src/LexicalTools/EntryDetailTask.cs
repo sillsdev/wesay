@@ -60,18 +60,6 @@ namespace WeSay.LexicalTools
 			}
 		}
 
-		public Predicate<object> Filter
-		{
-			get
-			{
-				return delegate(object o)
-								{
-									return true;
-								};
-			}
-		}
-
-
 		public Control Control
 		{
 			get { return this; }

@@ -34,16 +34,16 @@ namespace WeSay.UI.Tests
 
 		public class Papa : WeSay.LexicalModel.WeSayDataObject
 		{
-			private WeSay.Data.InMemoryBindingList<Child> _children = new WeSay.Data.InMemoryBindingList<Child>();
+			private WeSay.Data.InMemoryRecordList<Child> _children = new WeSay.Data.InMemoryRecordList<Child>();
 
 			public Papa()
 			{
-				_children = new WeSay.Data.InMemoryBindingList<Child>();
+				_children = new WeSay.Data.InMemoryRecordList<Child>();
 
 				WireUpEvents();
 		   }
 
-			public WeSay.Data.InMemoryBindingList<Child> Children
+			public WeSay.Data.InMemoryRecordList<Child> Children
 			{
 				get { return _children; }
 			}

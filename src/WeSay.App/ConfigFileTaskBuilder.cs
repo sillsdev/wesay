@@ -50,7 +50,7 @@ namespace WeSay.App
 				// */
 				_picoContext.AddOrderedComponentAdapter(dsAdaptor);
 
-				Db4oBindingList<WeSay.LexicalModel.LexEntry> entries = new Db4oBindingList<WeSay.LexicalModel.LexEntry>(ds);
+				Db4oRecordList<WeSay.LexicalModel.LexEntry> entries = new Db4oRecordList<WeSay.LexicalModel.LexEntry>(ds);
 				_picoContext.RegisterComponentInstance("All Entries", entries);
 			}
 			InitializeTaskList(config);

@@ -10,7 +10,7 @@ namespace WeSay.LexicalModel
 	   private  string _vernacularWS="th";
 	   private  string _analysisWS="en";
 
-	   public  void Load(System.Xml.XmlDocument doc, WeSay.Data.Db4oBindingList<LexEntry> db)
+	   public  void Load(System.Xml.XmlDocument doc, WeSay.Data.Db4oRecordList<LexEntry> db)
 		{
 			foreach (XmlNode node in doc.SelectNodes("test/entry"))
 			{

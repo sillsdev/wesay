@@ -1,9 +1,14 @@
 ﻿using System;
-namespace WeSay.LexicalModel
+namespace WeSay.Data
 {
-	public interface IFilter
+	public interface IFilter<T>
 	{
-		Predicate<object> Inquire
+		Predicate<T> Inquire
+		{
+			get;
+		}
+
+		string Key
 		{
 			get;
 		}

@@ -13,15 +13,6 @@ namespace WeSay.LexicalModel.Tests
 	public class MissingGlossFilterTests
 	{
 		[Test]
-		public void NotALexEntry()
-		{
-			LexSense sense = new LexSense();
-
-			MissingGlossFilter missingGloss = new MissingGlossFilter("analysis");
-			Assert.AreEqual(false, missingGloss.Inquire(sense));
-		}
-
-		[Test]
 		public void SenseGlossHasAnalysisWritingSystem()
 		{
 			LexEntry entry = new LexEntry();

@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using NUnit.Framework;
 
-namespace WeSay.Data.Tests
+namespace WeSay.Data.Tests.Db4oBindingListTests
 {
 	[TestFixture]
 	public class Db4oFilterableTest
 	{
 
 		Db4oDataSource _dataSource;
-		Db4oBindingList<TestItem> _bindingList;
+		Db4oRecordList<TestItem> _bindingList;
 		string _filePath;
 		TestItem _jared, _gianna;
 
@@ -50,7 +50,7 @@ namespace WeSay.Data.Tests
 		{
 			_filePath = System.IO.Path.GetTempFileName();
 			this._dataSource = new Db4oDataSource(_filePath);
-			this._bindingList = new Db4oBindingList<TestItem>(this._dataSource);
+			this._bindingList = new Db4oRecordList<TestItem>(this._dataSource);
 			this._bindingList.ListChanged += new ListChangedEventHandler(_adaptor_ListChanged);
 
 			_jared = new TestItem("Jared", 1, new DateTime(2003, 7, 10));
@@ -121,7 +121,7 @@ namespace WeSay.Data.Tests
 	public class IndexedFilters
 	{
 		Db4oDataSource _dataSource;
-		Db4oBindingList<SimpleIntTestClass> _bindingList;
+		Db4oRecordList<SimpleIntTestClass> _bindingList;
 		string _filePath;
 		const int _bindingListSize = 1000;
 		Predicate<SimpleIntTestClass> _filter = delegate(SimpleIntTestClass item)
@@ -142,7 +142,7 @@ namespace WeSay.Data.Tests
 		{
 			_filePath = System.IO.Path.GetTempFileName();
 			this._dataSource = new Db4oDataSource(_filePath);
-			this._bindingList = new Db4oBindingList<SimpleIntTestClass>(this._dataSource);
+			this._bindingList = new Db4oRecordList<SimpleIntTestClass>(this._dataSource);
 			Construct();
 		}
 
@@ -165,7 +165,7 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void ConstructWithFilter()
 		{
-			using (Db4oBindingList<SimpleIntTestClass> newBindingList = new Db4oBindingList<SimpleIntTestClass>(this._dataSource, _filter))
+			using (Db4oRecordList<SimpleIntTestClass> newBindingList = new Db4oRecordList<SimpleIntTestClass>(this._dataSource, _filter))
 			{
 				Assert.AreEqual(100, newBindingList.Count);
 			}
@@ -174,12 +174,11 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void ApplyFilter()
 		{
-			using (Db4oBindingList<SimpleIntTestClass> newBindingList = new Db4oBindingList<SimpleIntTestClass>(this._dataSource))
+			using (Db4oRecordList<SimpleIntTestClass> newBindingList = new Db4oRecordList<SimpleIntTestClass>(this._dataSource))
 			{
 				newBindingList.ApplyFilter(_filter);
 				Assert.AreEqual(100, newBindingList.Count);
 			}
 		}
-
 	}
 }

@@ -2,20 +2,23 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using NUnit.Framework;
+using WeSay.Data.Tests.IEnumerableTests;
+using WeSay.Data.Tests.ICollectionTests;
+using WeSay.Data.Tests.IListTests;
+using WeSay.Data.Tests.IBindingListTests;
 
 
-
-namespace WeSay.Data.Tests
+namespace WeSay.Data.Tests.InMemoryRecordListTests
 {
 	[TestFixture]
-	public class InMemoryBindingListIEnumerableTests : IEnumerableBaseTest<TestItem>
+	public class InMemoryRecordListIEnumerableTests : IEnumerableBaseTest<TestItem>
 	{
-		InMemoryBindingList<TestItem> _bindingList;
+		InMemoryRecordList<TestItem> _bindingList;
 
 		[TestFixtureSetUp]
 		public void FixtureSetUp()
 		{
-			this._bindingList = new InMemoryBindingList<TestItem>();
+			this._bindingList = new InMemoryRecordList<TestItem>();
 
 			this._enumerable = this._bindingList;
 			this._bindingList.Add(new TestItem("Jared", 1, new DateTime(2003, 7, 10)));
@@ -25,26 +28,26 @@ namespace WeSay.Data.Tests
 	}
 
 	[TestFixture]
-	public class InMemoryBindingListIEnumerableWithNoDataTests : IEnumerableBaseTest<TestItem>
+	public class InMemoryRecordListIEnumerableWithNoDataTests : IEnumerableBaseTest<TestItem>
 	{
 		[TestFixtureSetUp]
 		public void FixtureSetUp()
 		{
-			this._enumerable = new InMemoryBindingList<TestItem>();
+			this._enumerable = new InMemoryRecordList<TestItem>();
 			this._itemCount = 0;
 		}
 	}
 
 
 	[TestFixture]
-	public class InMemoryBindingListICollectionTest : ICollectionBaseTest<TestItem>
+	public class InMemoryRecordListICollectionTest : ICollectionBaseTest<TestItem>
 	{
-		InMemoryBindingList<TestItem> _bindingList;
+		InMemoryRecordList<TestItem> _bindingList;
 
 		[TestFixtureSetUp]
 		public void FixtureSetUp()
 		{
-			this._bindingList = new InMemoryBindingList<TestItem>();
+			this._bindingList = new InMemoryRecordList<TestItem>();
 
 			this._collection = this._bindingList;
 			this._bindingList.Add(new TestItem("Jared", 1, new DateTime(2003, 7, 10)));
@@ -55,25 +58,25 @@ namespace WeSay.Data.Tests
 
 
 	[TestFixture]
-	public class InMemoryBindingListICollectionWithNoDataTest : ICollectionBaseTest<TestItem>
+	public class InMemoryRecordListICollectionWithNoDataTest : ICollectionBaseTest<TestItem>
 	{
 		[TestFixtureSetUp]
 		public void FixtureSetUp()
 		{
-			this._collection = new InMemoryBindingList<TestItem>();
+			this._collection = new InMemoryRecordList<TestItem>();
 			this._itemCount = 0;
 		}
 	}
 
 	[TestFixture]
-	public class InMemoryBindingListIListTest : IListVariableSizeReadWriteBaseTest<TestItem>
+	public class InMemoryRecordListIListTest : IListVariableSizeReadWriteBaseTest<TestItem>
 	{
-		InMemoryBindingList<TestItem> _bindingList;
+		InMemoryRecordList<TestItem> _bindingList;
 
 		[SetUp]
 		public void SetUp()
 		{
-			this._bindingList = new InMemoryBindingList<TestItem>();
+			this._bindingList = new InMemoryRecordList<TestItem>();
 
 			this._list = this._bindingList;
 			TestItem firstItem = new TestItem("Jared", 1, new DateTime(2003, 7, 10));
@@ -86,12 +89,12 @@ namespace WeSay.Data.Tests
 	}
 
 	[TestFixture]
-	public class InMemoryBindingListIListWithNoDataTest : IListVariableSizeReadWriteBaseTest<TestItem>
+	public class InMemoryRecordListIListWithNoDataTest : IListVariableSizeReadWriteBaseTest<TestItem>
 	{
 		[SetUp]
 		public void SetUp()
 		{
-			this._list = new InMemoryBindingList<TestItem>();
+			this._list = new InMemoryRecordList<TestItem>();
 			this._firstItem = null;
 			this._newItem = new TestItem();
 			this._isSorted = true;
@@ -99,15 +102,15 @@ namespace WeSay.Data.Tests
 	}
 
 	[TestFixture]
-	public class InMemoryBindingListIBindingListTest : IBindingListBaseTest<TestItem, int>
+	public class InMemoryRecordListIBindingListTest : IBindingListBaseTest<TestItem, int>
 	{
-		InMemoryBindingList<TestItem> _InMemoryBindingList;
+		InMemoryRecordList<TestItem> _inMemoryRecordList;
 
 		[SetUp]
 		public override void SetUp()
 		{
-			this._InMemoryBindingList = new InMemoryBindingList<TestItem>();
-			this._bindingList = this._InMemoryBindingList;
+			this._inMemoryRecordList = new InMemoryRecordList<TestItem>();
+			this._bindingList = this._inMemoryRecordList;
 
 			PropertyDescriptorCollection pdc = TypeDescriptor.GetProperties(typeof(TestItem));
 			this._property = pdc.Find("StoredInt", false);
@@ -116,22 +119,22 @@ namespace WeSay.Data.Tests
 			this._key = 1;
 			base.SetUp();
 
-			this._InMemoryBindingList.Add(new TestItem("Gianna", 2, new DateTime(2006, 7, 17)));
-			this._InMemoryBindingList.Add(new TestItem("Jared", 1, new DateTime(2003, 7, 10)));
+			this._inMemoryRecordList.Add(new TestItem("Gianna", 2, new DateTime(2006, 7, 17)));
+			this._inMemoryRecordList.Add(new TestItem("Jared", 1, new DateTime(2003, 7, 10)));
 			this.ResetListChanged();
 		}
 
 		protected override void VerifySortAscending()
 		{
-			Assert.AreEqual(1, _InMemoryBindingList[0].StoredInt);
-			Assert.AreEqual(2, _InMemoryBindingList[1].StoredInt);
+			Assert.AreEqual(1, _inMemoryRecordList[0].StoredInt);
+			Assert.AreEqual(2, _inMemoryRecordList[1].StoredInt);
 			base.VerifySortAscending();
 		}
 
 		protected override void VerifySortDescending()
 		{
-			Assert.AreEqual(2, _InMemoryBindingList[0].StoredInt);
-			Assert.AreEqual(1, _InMemoryBindingList[1].StoredInt);
+			Assert.AreEqual(2, _inMemoryRecordList[0].StoredInt);
+			Assert.AreEqual(1, _inMemoryRecordList[1].StoredInt);
 			base.VerifySortDescending();
 		}
 
@@ -142,12 +145,12 @@ namespace WeSay.Data.Tests
 	}
 
 	[TestFixture]
-	public class InMemoryBindingListIBindingListWithNoDataTest : IBindingListBaseTest<TestItem, int>
+	public class InMemoryRecordListIBindingListWithNoDataTest : IBindingListBaseTest<TestItem, int>
 	{
 		[SetUp]
 		public override void SetUp()
 		{
-			this._bindingList = new InMemoryBindingList<TestItem>();
+			this._bindingList = new InMemoryRecordList<TestItem>();
 
 			this._newItem = new TestItem();
 			this._key = 1;
@@ -159,9 +162,9 @@ namespace WeSay.Data.Tests
 
 
 	[TestFixture]
-	public class InMemoryBindingListSortedTest
+	public class InMemoryRecordListSortedTest
 	{
-		InMemoryBindingList<TestItem> _bindingList;
+		InMemoryRecordList<TestItem> _bindingList;
 
 		TestItem _jared, _gianna, _eric, _allison;
 
@@ -190,7 +193,7 @@ namespace WeSay.Data.Tests
 		[SetUp]
 		public void SetUp()
 		{
-			this._bindingList = new InMemoryBindingList<TestItem>();
+			this._bindingList = new InMemoryRecordList<TestItem>();
 			this._bindingList.ListChanged += new ListChangedEventHandler(_adaptor_ListChanged);
 
 			_eric = new TestItem("Eric", 1, new DateTime(2006, 2, 28));

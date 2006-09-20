@@ -7,7 +7,7 @@ namespace WeSay.LexicalModel
 {
 	public class Lexicon
 	{
-		WeSay.Data.Db4oBindingList<LexEntry> _entries;
+		WeSay.Data.Db4oRecordList<LexEntry> _entries;
 
 		public IBindingList Entries
 		{
@@ -17,9 +17,9 @@ namespace WeSay.LexicalModel
 			}
 		}
 
-		public Lexicon(WeSay.Data.Db4oDataSource dataSource, IFilter filter)
+		public Lexicon(WeSay.Data.Db4oDataSource dataSource, WeSay.Data.IFilter<LexEntry> filter)
 		{
-			_entries = new WeSay.Data.Db4oBindingList<LexEntry>(dataSource);//, filter.SODAQuery);
+			_entries = new WeSay.Data.Db4oRecordList<LexEntry>(dataSource);//, filter.SODAQuery);
 		}
 
 
