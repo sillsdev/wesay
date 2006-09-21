@@ -76,14 +76,16 @@ namespace WeSay.LexicalTools.Tests
 
 		private void WriteTwoEntries()
 		{
-			InMemoryRecordList<LexEntry> entries = new InMemoryRecordList<LexEntry>();
-			LexEntry entry = entries.AddNew();
-			entry.LexicalForm["red"] = "sunset";
-			entry = entries.AddNew();
-			entry.LexicalForm["yellow"] = "flower";
+			using (InMemoryRecordList<LexEntry> entries = new InMemoryRecordList<LexEntry>())
+			{
+				LexEntry entry = entries.AddNew();
+				entry.LexicalForm["red"] = "sunset";
+				entry = entries.AddNew();
+				entry.LexicalForm["yellow"] = "flower";
 
-			_exporter.Add(entries);
-			_exporter.End();
+				_exporter.Add(entries);
+				_exporter.End();
+			}
 		}
 
 

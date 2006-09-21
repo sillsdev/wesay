@@ -4,12 +4,14 @@ using System.ComponentModel;
 
 namespace WeSay.Data
 {
-	public class Db4oRecordList<T> : IRecordList<T>, IList<T>, ICollection<T>, IEnumerable<T>, IDisposable where T : class, new()
+	public class Db4oRecordList<T> : IRecordList<T> where T : class, new()
 	{
 		Db4o.Binding.Db4oList<T> _records;
 		PropertyDescriptor _sortProperty;
 		ListSortDirection _listSortDirection;
 		private static int defaultWriteCacheSize = 0;
+		PropertyDescriptorCollection _pdc;
+
 
 		private void Initialize(Db4oDataSource dataSource, Predicate<T> filter, Comparison<T> sort, Db4o.Binding.SODAQueryProvider sodaQuery)
 		{
@@ -17,16 +19,18 @@ namespace WeSay.Data
 			{
 				throw new ArgumentNullException("dataSource");
 			}
+			_pdc = TypeDescriptor.GetProperties(typeof(T));
 
 			_records = new Db4o.Binding.Db4oList<T>((com.db4o.ObjectContainer)dataSource.Data, new List<T>(), filter, sort);
 			_records.SortingInDatabase = false;
-			_records.ReadCacheSize = 0;
+			_records.ReadCacheSize = 0; // I think this could go back to lower
 			_records.WriteCacheSize = defaultWriteCacheSize;
 			_records.PeekPersistedActivationDepth = 99;
 			_records.ActivationDepth = 99;
 			_records.RefreshActivationDepth = 99;
 			_records.SetActivationDepth = 99;
 			//            _records.RequeryAndRefresh(false);
+			_records.Storing += new EventHandler<Db4o.Binding.Db4oListEventArgs<T>>(OnRecordStoring);
 			if (_records.FilteringInDatabase && filter != null)
 			{
 				_records.Commit();
@@ -88,6 +92,18 @@ namespace WeSay.Data
 				throw new ArgumentNullException("sort");
 			}
 			Initialize(dataSource, null, sort, null);
+		}
+
+		void OnRecordStoring(object sender, Db4o.Binding.Db4oListEventArgs<T> e)
+		{
+			if (e.PropertyName == string.Empty)
+			{
+				OnItemChanged(_records.IndexOf(e.Item));
+			}
+			else
+			{
+				OnItemChanged(_records.IndexOf(e.Item), e.PropertyName);
+			}
 		}
 
 		public Db4o.Binding.SODAQueryProvider SODAQuery
@@ -268,6 +284,17 @@ namespace WeSay.Data
 		protected virtual void OnItemChanged(int newIndex)
 		{
 			OnListChanged(new ListChangedEventArgs(ListChangedType.ItemChanged, newIndex));
+		}
+
+		protected virtual void OnItemChanged(int newIndex, string field)
+		{
+			PropertyDescriptor propertyDescriptor = _pdc.Find(field, false);
+			if (propertyDescriptor == null)
+			{
+				OnItemChanged(newIndex);
+			}
+
+			OnListChanged(new ListChangedEventArgs(ListChangedType.ItemChanged, newIndex, propertyDescriptor));
 		}
 
 		protected virtual void OnItemDeleted(int oldIndex)
@@ -497,10 +524,7 @@ namespace WeSay.Data
 			VerifyNotDisposed();
 			int count = _records.Count;
 			_records.Clear();
-			for (int i = 0; i < count; ++i)
-			{
-				OnItemDeleted(i);
-			}
+			OnListReset();
 		}
 
 		public bool Contains(T item)

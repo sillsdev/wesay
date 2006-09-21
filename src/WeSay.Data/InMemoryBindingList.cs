@@ -5,62 +5,29 @@ using System.Collections;
 
 namespace WeSay.Data
 {
-	public class InMemoryRecordList<T> : IRecordList<T> where T : class, new()
+	public class InMemoryBindingList<T> : IBindingList, IEquatable<IBindingList>, IList<T>, ICollection<T>, IEnumerable<T> where T : class, new()
 	{
 		List<T> _list;
 		PropertyDescriptor _sortProperty;
 		ListSortDirection _listSortDirection;
 		bool _isSorted;
-		bool _isFiltered;
-		PropertyDescriptorCollection _pdc;
 
-
-		public InMemoryRecordList()
+		public InMemoryBindingList()
 		{
 			_list = new List<T>();
-			_pdc =  TypeDescriptor.GetProperties(typeof(T));
 		}
 
-		public InMemoryRecordList(IRecordList<T> original)
+		public InMemoryBindingList(IRecordList<T> original)
 			: this()
 		{
 			this.AddRange(original);
-
 			_isSorted = original.IsSorted;
 			_sortProperty = original.SortProperty;
 			_listSortDirection = original.SortDirection;
-
-			_isFiltered = original.IsFiltered;
-		}
-
-		bool IRecordList<T>.Commit()
-		{
-			return true;
-		}
-
-		public void RegisterItemPropertyChangedHandler(T item, bool register)
-		{
-			VerifyNotDisposed();
-			INotifyPropertyChanged localItem = item as INotifyPropertyChanged;
-			if (localItem == null)
-			{
-				return;
-			}
-			localItem.PropertyChanged -= Item_PropertyChanged;
-			if (register)
-			{
-				localItem.PropertyChanged += Item_PropertyChanged;
-			}
-		}
-
-		private void Item_PropertyChanged(object sender, PropertyChangedEventArgs e)
-		{
-			OnItemChanged(_list.IndexOf((T)sender), e.PropertyName);
 		}
 
 		public void AddRange(IEnumerable<T> collection)
 		{
-			VerifyNotDisposed();
 			IEnumerator<T> enumerator = collection.GetEnumerator();
 			while (enumerator.MoveNext())
 			{
@@ -70,7 +37,6 @@ namespace WeSay.Data
 
 		public void AddRange(IEnumerable collection)
 		{
-			VerifyNotDisposed();
 			IEnumerator enumerator = collection.GetEnumerator();
 			while (enumerator.MoveNext())
 			{
@@ -82,12 +48,10 @@ namespace WeSay.Data
 
 		void IBindingList.AddIndex(PropertyDescriptor property)
 		{
-			VerifyNotDisposed();
 		}
 
 		public T AddNew()
 		{
-			VerifyNotDisposed();
 			T o = new T();
 			Add(o);
 			return o;
@@ -95,7 +59,6 @@ namespace WeSay.Data
 
 		object IBindingList.AddNew()
 		{
-			VerifyNotDisposed();
 			return AddNew();
 		}
 
@@ -103,7 +66,6 @@ namespace WeSay.Data
 		{
 			get
 			{
-				VerifyNotDisposed();
 				return true;
 			}
 		}
@@ -111,7 +73,6 @@ namespace WeSay.Data
 		{
 			get
 			{
-				VerifyNotDisposed();
 				return true;
 			}
 		}
@@ -119,14 +80,12 @@ namespace WeSay.Data
 		{
 			get
 			{
-				VerifyNotDisposed();
 				return true;
 			}
 		}
 
 		public void ApplySort(PropertyDescriptor property, ListSortDirection direction)
 		{
-			VerifyNotDisposed();
 			if (_list.Count > 1)
 			{
 				Comparison<T> sort = delegate(T item1, T item2)
@@ -145,7 +104,6 @@ namespace WeSay.Data
 
 		int IBindingList.Find(PropertyDescriptor property, object key)
 		{
-			VerifyNotDisposed();
 			throw new NotSupportedException();
 		}
 
@@ -153,7 +111,6 @@ namespace WeSay.Data
 		{
 			get
 			{
-				VerifyNotDisposed();
 				return _isSorted;
 			}
 		}
@@ -166,17 +123,6 @@ namespace WeSay.Data
 		protected virtual void OnItemChanged(int newIndex)
 		{
 			OnListChanged(new ListChangedEventArgs(ListChangedType.ItemChanged, newIndex));
-		}
-
-		protected virtual void OnItemChanged(int newIndex, string field)
-		{
-			PropertyDescriptor propertyDescriptor = _pdc.Find(field, false);
-			if (propertyDescriptor == null)
-			{
-				OnItemChanged(newIndex);
-			}
-
-			OnListChanged(new ListChangedEventArgs(ListChangedType.ItemChanged, newIndex, propertyDescriptor));
 		}
 
 		protected virtual void OnItemDeleted(int oldIndex)
@@ -200,12 +146,10 @@ namespace WeSay.Data
 
 		void IBindingList.RemoveIndex(PropertyDescriptor property)
 		{
-			VerifyNotDisposed();
 		}
 
 		public void RemoveSort()
 		{
-			VerifyNotDisposed();
 			if (IsSorted)
 			{
 				_isSorted = false;
@@ -218,7 +162,6 @@ namespace WeSay.Data
 		{
 			get
 			{
-				VerifyNotDisposed();
 				return _listSortDirection;
 			}
 		}
@@ -227,7 +170,6 @@ namespace WeSay.Data
 		{
 			get
 			{
-				VerifyNotDisposed();
 				return _sortProperty;
 			}
 		}
@@ -236,7 +178,6 @@ namespace WeSay.Data
 		{
 			get
 			{
-				VerifyNotDisposed();
 				return true;
 			}
 		}
@@ -245,7 +186,6 @@ namespace WeSay.Data
 		{
 			get
 			{
-				VerifyNotDisposed();
 				return false;
 			}
 		}
@@ -254,71 +194,27 @@ namespace WeSay.Data
 		{
 			get
 			{
-				VerifyNotDisposed();
 				return true;
 			}
 		}
 
 		#endregion
 
-		#region IFilterable<T> Members
-
-		public void ApplyFilter(Predicate<T> itemsToInclude)
-		{
-			VerifyNotDisposed();
-			if (itemsToInclude == null)
-			{
-				throw new ArgumentNullException();
-			}
-			Predicate<T> itemsToExclude = ComparisonHelper<T>.GetInversePredicate(itemsToInclude);
-			_list.RemoveAll(itemsToExclude);
-			_isFiltered = true;
-			OnListReset();
-		}
-
-		public void RemoveFilter()
-		{
-			VerifyNotDisposed();
-			throw new NotImplementedException();
-			//_records.Filter = null;
-			//OnListReset();
-		}
-
-		public void RefreshFilter()
-		{
-			VerifyNotDisposed();
-			throw new NotImplementedException();
-			//OnListReset();
-		}
-
-		public bool IsFiltered
-		{
-			get
-			{
-				VerifyNotDisposed();
-				return _isFiltered;
-			}
-		}
-#endregion
 		#region IList<T> Members
 
 		public int IndexOf(T item)
 		{
-			VerifyNotDisposed();
 			return _list.IndexOf(item);
 		}
 
 		public void Insert(int index, T item)
 		{
-			VerifyNotDisposed();
 			_list.Insert(index, item);
 			OnItemChanged(index);
 		}
 
 		public void RemoveAt(int index)
 		{
-			VerifyNotDisposed();
-			RegisterItemPropertyChangedHandler(this[index], false);
 			_list.RemoveAt(index);
 			OnItemDeleted(index);
 		}
@@ -327,16 +223,11 @@ namespace WeSay.Data
 		{
 			get
 			{
-				VerifyNotDisposed();
 				return _list[index];
 			}
 			set
 			{
-				VerifyNotDisposed();
-				RegisterItemPropertyChangedHandler(this[index], false);
 				_list[index] = value;
-				RegisterItemPropertyChangedHandler(value, true);
-
 				OnItemChanged(index);
 			}
 		}
@@ -347,7 +238,6 @@ namespace WeSay.Data
 
 		int System.Collections.IList.Add(object value)
 		{
-			VerifyNotDisposed();
 			T item = (T)value;
 			Add(item);
 			return IndexOf(item);
@@ -355,25 +245,21 @@ namespace WeSay.Data
 
 		void System.Collections.IList.Clear()
 		{
-			VerifyNotDisposed();
 			Clear();
 		}
 
 		bool System.Collections.IList.Contains(object value)
 		{
-			VerifyNotDisposed();
 			return Contains((T)value);
 		}
 
 		int System.Collections.IList.IndexOf(object value)
 		{
-			VerifyNotDisposed();
 			return IndexOf((T)value);
 		}
 
 		void System.Collections.IList.Insert(int index, object value)
 		{
-			VerifyNotDisposed();
 			Insert(index, (T)value);
 		}
 
@@ -381,7 +267,6 @@ namespace WeSay.Data
 		{
 			get
 			{
-				VerifyNotDisposed();
 				return false;
 			}
 		}
@@ -390,14 +275,12 @@ namespace WeSay.Data
 		{
 			get
 			{
-				VerifyNotDisposed();
 				return IsReadOnly;
 			}
 		}
 
 		void System.Collections.IList.Remove(object value)
 		{
-			VerifyNotDisposed();
 			Remove((T)value);
 		}
 
@@ -411,7 +294,6 @@ namespace WeSay.Data
 
 		void System.Collections.IList.RemoveAt(int index)
 		{
-			VerifyNotDisposed();
 			CheckIndex(index);
 			RemoveAt(index);
 		}
@@ -420,13 +302,11 @@ namespace WeSay.Data
 		{
 			get
 			{
-				VerifyNotDisposed();
 				CheckIndex(index);
 				return _list[index];
 			}
 			set
 			{
-				VerifyNotDisposed();
 				CheckIndex(index);
 				_list[index] = (T)value;
 				OnItemChanged(index);
@@ -439,34 +319,24 @@ namespace WeSay.Data
 
 		public void Add(T item)
 		{
-			VerifyNotDisposed();
 			_list.Add(item);
-			RegisterItemPropertyChangedHandler(item, true);
 			OnItemAdded(IndexOf(item));
 		}
 
 		public void Clear()
 		{
-			VerifyNotDisposed();
 			int count = _list.Count;
-			foreach (T item in _list)
-			{
-				RegisterItemPropertyChangedHandler(item, false);
-			}
-
 			_list.Clear();
 			OnListReset();
 		}
 
 		public bool Contains(T item)
 		{
-			VerifyNotDisposed();
 			return _list.Contains(item);
 		}
 
 		public void CopyTo(T[] array, int arrayIndex)
 		{
-			VerifyNotDisposed();
 			_list.CopyTo(array, arrayIndex);
 		}
 
@@ -474,7 +344,6 @@ namespace WeSay.Data
 		{
 			get
 			{
-				VerifyNotDisposed();
 				return _list.Count;
 			}
 		}
@@ -483,14 +352,12 @@ namespace WeSay.Data
 		{
 			get
 			{
-				VerifyNotDisposed();
 				return false;
 			}
 		}
 
 		public bool Remove(T item)
 		{
-			VerifyNotDisposed();
 			return _list.Remove(item);
 		}
 
@@ -500,7 +367,6 @@ namespace WeSay.Data
 
 		void System.Collections.ICollection.CopyTo(Array array, int index)
 		{
-			VerifyNotDisposed();
 			if (array == null)
 			{
 				throw new ArgumentNullException("array");
@@ -530,7 +396,6 @@ namespace WeSay.Data
 		{
 			get
 			{
-				VerifyNotDisposed();
 				return Count;
 			}
 		}
@@ -539,7 +404,6 @@ namespace WeSay.Data
 		{
 			get
 			{
-				VerifyNotDisposed();
 				return false;
 			}
 		}
@@ -548,7 +412,6 @@ namespace WeSay.Data
 		{
 			get
 			{
-				VerifyNotDisposed();
 				return this;
 			}
 		}
@@ -559,7 +422,6 @@ namespace WeSay.Data
 
 		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
 		{
-			VerifyNotDisposed();
 			return ((System.Collections.IEnumerable)_list).GetEnumerator();
 		}
 
@@ -569,18 +431,16 @@ namespace WeSay.Data
 
 		IEnumerator<T> IEnumerable<T>.GetEnumerator()
 		{
-			VerifyNotDisposed();
 			return ((IEnumerable<T>)_list).GetEnumerator();
 		}
 
 		#endregion
 
 
-		#region IEquatable<IRecordList<T>> Members
+		#region IEquatable<IBindingList> Members
 
-		public bool Equals(IRecordList<T> other)
+		public bool Equals(IBindingList other)
 		{
-			VerifyNotDisposed();
 			if (other == null)
 			{
 				return false;
@@ -602,12 +462,11 @@ namespace WeSay.Data
 
 		public override bool Equals(object obj)
 		{
-			VerifyNotDisposed();
 			if (obj == null)
 			{
 				return false;
 			}
-			IRecordList<T> recordList = obj as IRecordList<T>;
+			IBindingList recordList = obj as IBindingList;
 			if (recordList == null)
 			{
 				return false;
@@ -619,73 +478,13 @@ namespace WeSay.Data
 
 		public override int GetHashCode()
 		{
-			VerifyNotDisposed();
 			int hashCode = _list.GetHashCode();
 
 			if (_isSorted)
 			{
 				hashCode ^= _sortProperty.GetHashCode() ^ _listSortDirection.GetHashCode();
-
 			}
-
 			return hashCode;
 		}
-
-		#region IDisposable Members
-#if DEBUG
-		~InMemoryRecordList()
-		{
-			if (!this._disposed)
-			{
-				throw new ApplicationException("Disposed not explicitly called on InMemoryRecordList.");
-			}
-		}
-#endif
-
-		private bool _disposed = false;
-
-		public bool IsDisposed
-		{
-			get
-			{
-				return _disposed;
-			}
-		}
-
-		public void Dispose()
-		{
-			Dispose(true);
-			GC.SuppressFinalize(this);
-		}
-
-		protected virtual void Dispose(bool disposing)
-		{
-			if (!this.IsDisposed)
-			{
-				if (disposing)
-				{
-					// dispose-only, i.e. non-finalizable logic
-					foreach (T item in _list)
-					{
-						RegisterItemPropertyChangedHandler(item, false);
-					}
-					_list = null;
-				}
-
-				// shared (dispose and finalizable) cleanup logic
-				this._disposed = true;
-			}
-		}
-
-		protected void VerifyNotDisposed()
-		{
-			if (this._disposed)
-			{
-				throw new ObjectDisposedException("InMemoryRecordList");
-			}
-		}
-		#endregion
-
 	}
-
 }

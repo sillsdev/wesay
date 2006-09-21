@@ -190,7 +190,7 @@ namespace WeSay.Data.Tests.Db4oRecordListTests
 	public class Db4oRecordListIBindingListTest : IBindingListBaseTest<TestItem, int>
 	{
 		Db4oDataSource _dataSource;
-		Db4oRecordList<TestItem> _db4oRecordList;
+		Db4oRecordList<TestItem> _recordList;
 		string _FilePath;
 
 		[SetUp]
@@ -198,8 +198,8 @@ namespace WeSay.Data.Tests.Db4oRecordListTests
 		{
 			_FilePath = System.IO.Path.GetTempFileName();
 			this._dataSource = new Db4oDataSource(_FilePath);
-			this._db4oRecordList = new Db4oRecordList<TestItem>(this._dataSource);
-			this._bindingList = this._db4oRecordList;
+			this._recordList = new Db4oRecordList<TestItem>(this._dataSource);
+			this._bindingList = this._recordList;
 
 			PropertyDescriptorCollection pdc = TypeDescriptor.GetProperties(typeof(TestItem));
 			this._property = pdc.Find("StoredInt", false);
@@ -208,30 +208,30 @@ namespace WeSay.Data.Tests.Db4oRecordListTests
 			this._key = 1;
 			base.SetUp();
 
-			this._db4oRecordList.Add(new TestItem("Gianna", 2, new DateTime(2006, 7, 17)));
-			this._db4oRecordList.Add(new TestItem("Jared", 1, new DateTime(2003, 7, 10)));
+			this._recordList.Add(new TestItem("Gianna", 2, new DateTime(2006, 7, 17)));
+			this._recordList.Add(new TestItem("Jared", 1, new DateTime(2003, 7, 10)));
 			this.ResetListChanged();
 		}
 
 		[TearDown]
 		public void TearDown()
 		{
-			((IDisposable)this._db4oRecordList).Dispose();
+			this._recordList.Dispose();
 			this._dataSource.Dispose();
 			System.IO.File.Delete(_FilePath);
 		}
 
 		protected override void VerifySortAscending()
 		{
-			Assert.AreEqual(1, _db4oRecordList[0].StoredInt);
-			Assert.AreEqual(2, _db4oRecordList[1].StoredInt);
+			Assert.AreEqual(1, _recordList[0].StoredInt);
+			Assert.AreEqual(2, _recordList[1].StoredInt);
 			base.VerifySortAscending();
 		}
 
 		protected override void VerifySortDescending()
 		{
-			Assert.AreEqual(2, _db4oRecordList[0].StoredInt);
-			Assert.AreEqual(1, _db4oRecordList[1].StoredInt);
+			Assert.AreEqual(2, _recordList[0].StoredInt);
+			Assert.AreEqual(1, _recordList[1].StoredInt);
 			base.VerifySortDescending();
 		}
 
@@ -266,9 +266,78 @@ namespace WeSay.Data.Tests.Db4oRecordListTests
 		[TearDown]
 		public void TestFixtureTearDown()
 		{
-			((IDisposable)this._db4oRecordList).Dispose();
+			this._db4oRecordList.Dispose();
 			this._dataSource.Dispose();
 			System.IO.File.Delete(_FilePath);
+		}
+	}
+
+	[TestFixture]
+	public class Db4oRecordListIRecordListTest : IRecordListBaseTest<TestItem>
+	{
+		Db4oDataSource _dataSource;
+		Db4oRecordList<TestItem> _db4oRecordList;
+		string _FilePath;
+
+		[SetUp]
+		public override void SetUp()
+		{
+			_FilePath = System.IO.Path.GetTempFileName();
+			this._dataSource = new Db4oDataSource(_FilePath);
+			this._db4oRecordList = new Db4oRecordList<TestItem>(this._dataSource);
+			this._recordList = this._db4oRecordList;
+
+			this._changedFieldName = "StoredInt";
+			base.SetUp();
+
+			this._db4oRecordList.Add(new TestItem("Gianna", 2, new DateTime(2006, 7, 17)));
+			this._db4oRecordList.Add(new TestItem("Jared", 1, new DateTime(2003, 7, 10)));
+			this.ResetListChanged();
+		}
+
+		[TearDown]
+		public void TestFixtureTearDown()
+		{
+			this._db4oRecordList.Dispose();
+			this._dataSource.Dispose();
+			System.IO.File.Delete(_FilePath);
+		}
+
+		protected override void Change(TestItem item)
+		{
+			item.StoredInt++;
+		}
+	}
+
+	[TestFixture]
+	public class Db4oRecordListIRecordListWithNoDataTest : IRecordListBaseTest<TestItem>
+	{
+		Db4oDataSource _dataSource;
+		Db4oRecordList<TestItem> _db4oRecordList;
+		string _FilePath;
+
+		[SetUp]
+		public override void SetUp()
+		{
+			_FilePath = System.IO.Path.GetTempFileName();
+			this._dataSource = new Db4oDataSource(_FilePath);
+			this._db4oRecordList = new Db4oRecordList<TestItem>(this._dataSource);
+			this._recordList = this._db4oRecordList;
+			this._changedFieldName = "StoredInt";
+			base.SetUp();
+		}
+
+		[TearDown]
+		public void TestFixtureTearDown()
+		{
+			this._db4oRecordList.Dispose();
+			this._dataSource.Dispose();
+			System.IO.File.Delete(_FilePath);
+		}
+
+		protected override void Change(TestItem item)
+		{
+			item.StoredInt++;
 		}
 	}
 

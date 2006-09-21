@@ -249,6 +249,7 @@ namespace WeSay.Data.Tests.IBindingListTests
 				_bindingList.Add(_newItem);
 				Assert.IsTrue(_listChanged);
 				Assert.IsTrue(_listChangedEventArgs.ListChangedType == ListChangedType.ItemAdded);
+				Assert.AreEqual(_bindingList.Count -1, _listChangedEventArgs.NewIndex);
 				Assert.AreEqual(-1, _listChangedEventArgs.OldIndex);
 			}
 		}
@@ -267,6 +268,7 @@ namespace WeSay.Data.Tests.IBindingListTests
 				_bindingList[0] = new T();
 				Assert.IsTrue(_listChanged);
 				Assert.IsTrue(_listChangedEventArgs.ListChangedType == ListChangedType.ItemChanged);
+				Assert.AreEqual(0, _listChangedEventArgs.NewIndex);
 				Assert.AreEqual(-1, _listChangedEventArgs.OldIndex);
 			}
 		}
@@ -289,6 +291,24 @@ namespace WeSay.Data.Tests.IBindingListTests
 				Assert.AreEqual(0, _listChangedEventArgs.NewIndex);
 			}
 		}
+		[Test]
+		public void ListChangedOnClear()
+		{
+			Assert.IsFalse(_listChanged);
+			if (_bindingList.SupportsChangeNotification)
+			{
+				if (_bindingList.Count == 0)
+				{
+					_bindingList.Add(this._newItem);
+					_listChanged = false;
+					_listChangedEventArgs = null;
+				}
+				_bindingList.Clear();
+				Assert.IsTrue(_listChanged);
+				Assert.IsTrue(_listChangedEventArgs.ListChangedType == ListChangedType.Reset);
+			}
+		}
+
 	}
 
 	public class SimpleClass

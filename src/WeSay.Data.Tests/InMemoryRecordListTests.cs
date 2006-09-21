@@ -11,7 +11,7 @@ using WeSay.Data.Tests.IBindingListTests;
 namespace WeSay.Data.Tests.InMemoryRecordListTests
 {
 	[TestFixture]
-	public class InMemoryRecordListIEnumerableTests : IEnumerableBaseTest<TestItem>
+	public class InMemoryRecordListIEnumerableTests: IEnumerableBaseTest<TestItem>
 	{
 		InMemoryRecordList<TestItem> _bindingList;
 
@@ -25,6 +25,12 @@ namespace WeSay.Data.Tests.InMemoryRecordListTests
 			this._bindingList.Add(new TestItem("Gianna", 2, new DateTime(2006, 7, 17)));
 			this._itemCount = 2;
 		}
+
+		[TestFixtureTearDown]
+		public void FixtureTearDown()
+		{
+			this._bindingList.Dispose();
+		}
 	}
 
 	[TestFixture]
@@ -35,6 +41,11 @@ namespace WeSay.Data.Tests.InMemoryRecordListTests
 		{
 			this._enumerable = new InMemoryRecordList<TestItem>();
 			this._itemCount = 0;
+		}
+		[TestFixtureTearDown]
+		public void FixtureTearDown()
+		{
+			((IDisposable)this._enumerable).Dispose();
 		}
 	}
 
@@ -54,6 +65,11 @@ namespace WeSay.Data.Tests.InMemoryRecordListTests
 			this._bindingList.Add(new TestItem("Gianna", 2, new DateTime(2006, 7, 17)));
 			this._itemCount = 2;
 		}
+		[TestFixtureTearDown]
+		public void FixtureTearDown()
+		{
+			this._bindingList.Dispose();
+		}
 	}
 
 
@@ -65,6 +81,11 @@ namespace WeSay.Data.Tests.InMemoryRecordListTests
 		{
 			this._collection = new InMemoryRecordList<TestItem>();
 			this._itemCount = 0;
+		}
+		[TestFixtureTearDown]
+		public void FixtureTearDown()
+		{
+			((IDisposable)this._collection).Dispose();
 		}
 	}
 
@@ -86,6 +107,11 @@ namespace WeSay.Data.Tests.InMemoryRecordListTests
 			this._newItem = new TestItem();
 			this._isSorted = true;
 		}
+		[TearDown]
+		public void TearDown()
+		{
+			this._bindingList.Dispose();
+		}
 	}
 
 	[TestFixture]
@@ -98,6 +124,11 @@ namespace WeSay.Data.Tests.InMemoryRecordListTests
 			this._firstItem = null;
 			this._newItem = new TestItem();
 			this._isSorted = true;
+		}
+		[TearDown]
+		public void TearDown()
+		{
+			((IDisposable)this._list).Dispose();
 		}
 	}
 
@@ -122,6 +153,12 @@ namespace WeSay.Data.Tests.InMemoryRecordListTests
 			this._inMemoryRecordList.Add(new TestItem("Gianna", 2, new DateTime(2006, 7, 17)));
 			this._inMemoryRecordList.Add(new TestItem("Jared", 1, new DateTime(2003, 7, 10)));
 			this.ResetListChanged();
+		}
+
+		[TearDown]
+		public void TearDown()
+		{
+			this._inMemoryRecordList.Dispose();
 		}
 
 		protected override void VerifySortAscending()
@@ -157,6 +194,64 @@ namespace WeSay.Data.Tests.InMemoryRecordListTests
 			PropertyDescriptorCollection pdc = TypeDescriptor.GetProperties(typeof(TestItem));
 			this._property = pdc.Find("StoredInt", false);
 			base.SetUp();
+		}
+		[TearDown]
+		public void TearDown()
+		{
+			((IDisposable)this._bindingList).Dispose();
+		}
+
+	}
+
+	[TestFixture]
+	public class InMemoryRecordListIRecordListTest : IRecordListBaseTest<TestItem>
+	{
+		InMemoryRecordList<TestItem> _inMemoryRecordList;
+
+		[SetUp]
+		public override void SetUp()
+		{
+			this._inMemoryRecordList = new InMemoryRecordList<TestItem>();
+			this._recordList = this._inMemoryRecordList;
+			this._changedFieldName = "StoredInt";
+			base.SetUp();
+
+			this._inMemoryRecordList.Add(new TestItem("Gianna", 2, new DateTime(2006, 7, 17)));
+			this._inMemoryRecordList.Add(new TestItem("Jared", 1, new DateTime(2003, 7, 10)));
+			this.ResetListChanged();
+		}
+
+		[TearDown]
+		public void TearDown()
+		{
+			this._inMemoryRecordList.Dispose();
+		}
+
+		protected override void Change(TestItem item)
+		{
+			item.StoredInt++;
+		}
+	}
+
+	[TestFixture]
+	public class InMemoryRecordListIRecordListWithNoDataTest : IRecordListBaseTest<TestItem>
+	{
+		[SetUp]
+		public override void SetUp()
+		{
+			this._recordList = new InMemoryRecordList<TestItem>();
+			this._changedFieldName = "StoredInt";
+			base.SetUp();
+		}
+		[TearDown]
+		public void TearDown()
+		{
+			this._recordList.Dispose();
+		}
+
+		protected override void Change(TestItem item)
+		{
+			item.StoredInt++;
 		}
 	}
 
@@ -205,6 +300,11 @@ namespace WeSay.Data.Tests.InMemoryRecordListTests
 			this._bindingList.Add(_eric);
 			this._bindingList.Add(_allison);
 			ResetListChanged();
+		}
+		[TearDown]
+		public void TearDown()
+		{
+			this._bindingList.Dispose();
 		}
 
 		[Test]

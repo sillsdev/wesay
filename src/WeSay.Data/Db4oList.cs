@@ -134,10 +134,10 @@ namespace Db4o.Binding
 		/// </summary>
 		/// <param name="item">List item.</param>
 		/// <returns>true, if <paramref name="item"/> was stored.</returns>
-		protected virtual bool OnStoring(T item)
+		protected virtual bool OnStoring(T item, string propertyName)
 		{
 			bool cancel = false;
-			Db4oListEventArgs<T> args = new Db4oListEventArgs<T>(item);
+			Db4oListEventArgs<T> args = new Db4oListEventArgs<T>(item, propertyName);
 			this.Storing(this, args);
 			cancel = args.Cancel;
 			return cancel;
@@ -717,15 +717,11 @@ namespace Db4o.Binding
 			INotifyPropertyChanged localItem = item as INotifyPropertyChanged;
 			if (localItem == null)
 				return;
-			  if (register)
-			  {
-				localItem.PropertyChanged -= Item_PropertyChanged;
-				localItem.PropertyChanged += Item_PropertyChanged;
-			  }
-			  else
-			  {
-				localItem.PropertyChanged -= Item_PropertyChanged;
-			  }
+			localItem.PropertyChanged -= Item_PropertyChanged;
+			if (register)
+			{
+			   localItem.PropertyChanged += Item_PropertyChanged;
+			}
 		}
 
 		#region Finding
@@ -1101,7 +1097,7 @@ namespace Db4o.Binding
 				long oldId = this.ItemIds[index];
 				bool isStored = this.Database.IsStored(value);
 				if (!isStored)
-					StoreItem(value);
+					StoreItem(value, string.Empty);
 				long newId = GetItemId(value);
 				if (isStored)
 				{
@@ -1112,7 +1108,7 @@ namespace Db4o.Binding
 						storeAgain = !this.Equaler(oldValue, value);
 					}
 					if (storeAgain)
-						StoreItem(value);
+						StoreItem(value, string.Empty);
 				}
 				if (oldId != newId)
 				{
@@ -1503,9 +1499,9 @@ namespace Db4o.Binding
 		/// </summary>
 		/// <remarks>Calls <see cref="DoStoreItem"/> and <see cref="CommitFullCache"/>.</remarks>
 		/// <param name="item">Item.</param>
-		protected void StoreItem(T item)
+		protected void StoreItem(T item, string propertyName)
 		{
-			DoStoreItem(item);
+			DoStoreItem(item, propertyName);
 			CommitFullCache();
 		}
 		/// <summary>
@@ -1515,9 +1511,9 @@ namespace Db4o.Binding
 		/// If item is not stored by calling <see cref="OnStoring"/>, it is stored by calling <see cref="ExtObjectContainer.Set"/>.
 		/// </remarks>
 		/// <param name="item">Item.</param>
-		protected virtual void DoStoreItem(T item)
+		protected virtual void DoStoreItem(T item, string propertyName)
 		{
-			if (!OnStoring(item))
+			if (!OnStoring(item, propertyName))
 				this.Database.Set(item, SetActivationDepth);
 		}
 		/// <summary>
@@ -1588,7 +1584,7 @@ namespace Db4o.Binding
 		/// </summary>
 		private void Item_PropertyChanged(object sender, PropertyChangedEventArgs e)
 		{
-			StoreItem((T)sender);
+			StoreItem((T)sender, e.PropertyName);
 		}
 
 		/// <summary>
@@ -1764,6 +1760,11 @@ namespace Db4o.Binding
 			this._item = item;
 		}
 
+		public Db4oListEventArgs(T item, string propertyName) : this(item)
+		{
+			_propertyName = propertyName;
+		}
+
 		/// <summary>
 		/// Item which the event is about.
 		/// </summary>
@@ -1779,6 +1780,15 @@ namespace Db4o.Binding
 		/// See <see cref="Item"/>.
 		/// </summary>
 		private T _item;
+		private string _propertyName;
+
+		public string PropertyName
+		{
+			get
+			{
+				return _propertyName;
+			}
+		}
 	}
 
 

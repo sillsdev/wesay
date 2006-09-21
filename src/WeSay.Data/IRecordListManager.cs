@@ -4,7 +4,7 @@ using System.Text;
 
 namespace WeSay.Data
 {
-	public interface IRecordListManager<T> where T : class, new()
+	public interface IRecordListManager<T>: IDisposable where T : class, new()
 	{
 		IRecordList<T> Get();
 		IRecordList<T> Get(IFilter<T> filter);
