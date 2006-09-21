@@ -4,10 +4,10 @@ using System.ComponentModel;
 
 namespace WeSay.Data
 {
-	public class Db4oRecordList<T> : IRecordList<T>, IDisposable where T : class, new()
+	public class Db4oRecordList<T> : IRecordList<T>, IList<T>, ICollection<T>, IEnumerable<T>, IDisposable where T : class, new()
 	{
 		Db4o.Binding.Db4oList<T> _records;
-		PropertyDescriptor _propertyDescriptor;
+		PropertyDescriptor _sortProperty;
 		ListSortDirection _listSortDirection;
 		private static int defaultWriteCacheSize = 0;
 
@@ -241,7 +241,7 @@ namespace WeSay.Data
 			};
 
 			_records.Sort(sort);
-			_propertyDescriptor = property;
+			_sortProperty = property;
 			_listSortDirection = direction;
 			OnListReset();
 		}
@@ -301,7 +301,7 @@ namespace WeSay.Data
 			if (IsSorted)
 			{
 				_records.RemoveSort();
-				_propertyDescriptor = null;
+				_sortProperty = null;
 				OnListReset();
 			}
 		}
@@ -320,7 +320,7 @@ namespace WeSay.Data
 			get
 			{
 				VerifyNotDisposed();
-				return _propertyDescriptor;
+				return _sortProperty;
 			}
 		}
 
@@ -663,6 +663,59 @@ namespace WeSay.Data
 			}
 		}
 		#endregion
+		#region IEquatable<IRecordList<T>> Members
+
+		public bool Equals(IRecordList<T> other)
+		{
+			if (other == null)
+			{
+				return false;
+			}
+			if (this.Count != other.Count)
+			{
+				return false;
+			}
+			for (int i = 0; i < this.Count; i++)
+			{
+				// must be in same order to be equal
+				if (this[i] != other[i])
+				{
+					return false;
+				}
+			}
+			return true;
+		}
+
+		public override bool Equals(object obj)
+		{
+			if (obj == null)
+			{
+				return false;
+			}
+			IRecordList<T> recordList = obj as IRecordList<T>;
+			if (recordList == null)
+			{
+				return false;
+			}
+
+			return Equals(recordList);
+		}
+		#endregion
+
+		public override int GetHashCode()
+		{
+			int hashCode = _records.GetHashCode();
+
+			if (_records.IsSorted)
+			{
+				hashCode ^= _sortProperty.GetHashCode() ^ _listSortDirection.GetHashCode();
+
+			}
+
+			return hashCode;
+		}
+
+
 	}
 
 }

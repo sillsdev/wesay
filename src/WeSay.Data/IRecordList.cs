@@ -5,7 +5,7 @@ using System.ComponentModel;
 
 namespace WeSay.Data
 {
-	public interface IRecordList<T>: IBindingList, IFilterable<T>, IList<T>, ICollection<T>, IEnumerable<T> where T : class, new()
+	public interface IRecordList<T>: IBindingList, IFilterable<T>, IEquatable<IRecordList<T>> where T : class, new()
 	{
 	}
 }

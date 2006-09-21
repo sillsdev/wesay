@@ -5,10 +5,10 @@ using System.Collections;
 
 namespace WeSay.Data
 {
-	public class InMemoryRecordList<T> : IRecordList<T> where T : class, new()
+	public class InMemoryRecordList<T> : IRecordList<T>, IList<T>, ICollection<T>, IEnumerable<T> where T : class, new()
 	{
 		List<T> _list;
-		PropertyDescriptor _propertyDescriptor;
+		PropertyDescriptor _sortProperty;
 		ListSortDirection _listSortDirection;
 		bool _isSorted;
 		bool _isFiltered;
@@ -18,16 +18,26 @@ namespace WeSay.Data
 			_list = new List<T>();
 		}
 
-		public void Add(IEnumerator<T> enumerator)
+		public InMemoryRecordList(IRecordList<T> original)
+			: this()
 		{
-			while (enumerator.MoveNext())
-			{
-				Add(enumerator.Current);
-			}
+			this.AddRange(original);
+
+			_isSorted = original.IsSorted;
+			_sortProperty = original.SortProperty;
+			_listSortDirection = original.SortDirection;
+
+			_isFiltered = original.IsFiltered;
 		}
 
-		public void Add(IEnumerator enumerator)
+		public void AddRange(IEnumerable<T> collection)
 		{
+			_list.AddRange(collection);
+		}
+
+		public void AddRange(IEnumerable collection)
+		{
+			IEnumerator enumerator = collection.GetEnumerator();
 			while (enumerator.MoveNext())
 			{
 				Add((T)enumerator.Current);
@@ -85,7 +95,7 @@ namespace WeSay.Data
 				};
 
 				_list.Sort(sort);
-				_propertyDescriptor = property;
+				_sortProperty = property;
 				_listSortDirection = direction;
 				_isSorted = true;
 				OnListReset();
@@ -143,7 +153,7 @@ namespace WeSay.Data
 			if (IsSorted)
 			{
 				_isSorted = false;
-				_propertyDescriptor = null;
+				_sortProperty = null;
 				OnListReset();
 			}
 		}
@@ -161,7 +171,7 @@ namespace WeSay.Data
 			get
 			{
 
-				return _propertyDescriptor;
+				return _sortProperty;
 			}
 		}
 
@@ -464,6 +474,60 @@ namespace WeSay.Data
 		}
 
 		#endregion
+
+
+		#region IEquatable<IRecordList<T>> Members
+
+		public bool Equals(IRecordList<T> other)
+		{
+			if (other == null)
+			{
+				return false;
+			}
+			if (this.Count != other.Count)
+			{
+				return false;
+			}
+			for (int i = 0; i < this.Count; i++)
+			{
+				// must be in same order to be equal
+				if (this[i] != other[i])
+				{
+					return false;
+				}
+			}
+			return true;
+		}
+
+		public override bool Equals(object obj)
+		{
+			if (obj == null)
+			{
+				return false;
+			}
+			IRecordList<T> recordList = obj as IRecordList<T>;
+			if (recordList == null)
+			{
+				return false;
+			}
+
+			return Equals(recordList);
+		}
+		#endregion
+
+		public override int GetHashCode()
+		{
+			int hashCode = _list.GetHashCode();
+
+			if (_isSorted)
+			{
+				hashCode ^= _sortProperty.GetHashCode() ^ _listSortDirection.GetHashCode();
+
+			}
+
+			return hashCode;
+		}
+
 	}
 
 }

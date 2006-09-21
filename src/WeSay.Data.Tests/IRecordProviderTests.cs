@@ -24,31 +24,30 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void Create()
 		{
-			RecordProviderInventory recordProviderInventory = new RecordProviderInventory(_sourceRecords);
-			IRecordProvider data = recordProviderInventory.Get<SimpleIntTestClass>();
+			InMemoryRecordListManager<SimpleIntTestClass> recordListManager = new InMemoryRecordListManager<SimpleIntTestClass>(_sourceRecords);
+			IRecordList<SimpleIntTestClass> data = recordListManager.Get();
 			Assert.IsNotNull(data);
 		}
 
 		[Test]
 		public void NoFilter_GivesAllRecords()
 		{
-			RecordProviderInventory recordProviderInventory = new RecordProviderInventory(_sourceRecords);
-			IRecordProvider data = recordProviderInventory.Get <SimpleIntTestClass>();
-			IBindingList records = data.Records;
-			Assert.IsNotNull(records);
-			Assert.AreSame(_sourceRecords, records);
+			InMemoryRecordListManager<SimpleIntTestClass> recordListManager = new InMemoryRecordListManager<SimpleIntTestClass>(_sourceRecords);
+			IRecordList<SimpleIntTestClass> data = recordListManager.Get();
+			Assert.IsNotNull(data);
+			Assert.AreEqual(_sourceRecords, data);
 		}
 
 		[Test]
 		public void Filter_GivesFilterdRecords()
 		{
-			RecordProviderInventory recordProviderInventory = new RecordProviderInventory(_sourceRecords);
-			IRecordProvider data = recordProviderInventory.Get(new SimpleIntFilter(11, 20));
-			IBindingList records = data.Records;
-			Assert.IsNotNull(records);
-			Assert.AreEqual(10, records.Count);
-			Assert.AreEqual(11, ((SimpleIntTestClass)records[0]).I);
-			Assert.AreNotEqual(_sourceRecords, records);
+			InMemoryRecordListManager<SimpleIntTestClass> recordListManager = new InMemoryRecordListManager<SimpleIntTestClass>(_sourceRecords);
+			IRecordList<SimpleIntTestClass> data = recordListManager.Get(new SimpleIntFilter(11, 20));
+			Assert.IsNotNull(data);
+			Assert.AreEqual(10, data.Count);
+			Assert.AreEqual(11, ((SimpleIntTestClass)data[0]).I);
+			Assert.AreNotEqual(_sourceRecords, data);
 		}
+
 	}
 }

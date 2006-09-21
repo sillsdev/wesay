@@ -43,14 +43,16 @@
   <ItemGroup>
 	<Compile Include="ComparisonHelper.cs" />
 	<Compile Include="Db4oRecordList.cs" />
+	<Compile Include="Db4oRecordListManager.cs" />
 	<Compile Include="IFilter.cs" />
 	<Compile Include="Db4oDataSource.cs" />
 	<Compile Include="Db4oList.cs" />
 	<Compile Include="IFilterable.cs" />
 	<Compile Include="InMemoryRecordList.cs" />
+	<Compile Include="InMemoryRecordListManager.cs" />
 	<Compile Include="IRecordList.cs" />
+	<Compile Include="IRecordListManager.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />
-	<Compile Include="RecordProviderInventory.cs" />
   </ItemGroup>
   <ItemGroup>
 	<ProjectReference Include="..\PlatformSpecific\PlatformSpecific.csproj">
