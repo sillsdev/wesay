@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
 	<Compile Include="AbstractRecordList.cs" />
+	<Compile Include="AbstractRecordListManager.cs" />
 	<Compile Include="ComparisonHelper.cs" />
 	<Compile Include="InMemoryBindingList.cs" />
 	<Compile Include="Db4oRecordList.cs" />
