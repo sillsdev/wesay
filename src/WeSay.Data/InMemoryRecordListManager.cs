@@ -116,7 +116,9 @@ namespace WeSay.Data
 
 			void OnMasterRecordListDeletingRecord(object sender, RecordListEventArgs<T> e)
 			{
+				_isSourceMasterRecord = true;
 				HandleItemDeletedFromMaster(e.Item);
+				_isSourceMasterRecord = false;
 			}
 
 			void OnMasterRecordListListChanged(object sender, ListChangedEventArgs e)
@@ -150,6 +152,15 @@ namespace WeSay.Data
 				}
 				return shouldAdd;
 			}
+			protected override bool ShouldDeleteRecord(T item)
+			{
+				if (!_isSourceMasterRecord && _masterRecordList != null)
+				{
+					_masterRecordList.Remove(item);
+				}
+				return base.ShouldDeleteRecord(item);
+			}
+
 			private void HandleItemAddedToMaster(T item)
 			{
 				AddIfRelevantElseRemove(item);
@@ -201,14 +212,6 @@ namespace WeSay.Data
 				}
 			}
 
-			protected override void OnItemDeleted(int oldIndex)
-			{
-				base.OnItemDeleted(oldIndex);
-				if (!_isSourceMasterRecord && _masterRecordList != null)
-				{
-					_masterRecordList.Remove(this[oldIndex]);
-				}
-			}
 
 			#region IDisposable Members
 

@@ -171,10 +171,11 @@ namespace WeSay.Data.Tests
 			IRecordList<SimpleIntTestClass> recordList11to17 = _recordListManager.Get(new SimpleIntFilter(11, 17));
 			_sourceRecords.Remove(recordList10to19[1]);
 			Assert.AreEqual(49, _sourceRecords.Count);
+			Assert.AreEqual(12, _sourceRecords[11].I);
 			Assert.AreEqual(6, recordList11to17.Count);
-			Assert.AreEqual(12, recordList11to17[0]);
+			Assert.AreEqual(12, recordList11to17[0].I);
 			Assert.AreEqual(9, recordList10to19.Count);
-			Assert.AreEqual(12, recordList10to19[1]);
+			Assert.AreEqual(12, recordList10to19[1].I);
 		}
 
 		[Test]
@@ -184,11 +185,11 @@ namespace WeSay.Data.Tests
 			IRecordList<SimpleIntTestClass> recordList11to17 = _recordListManager.Get(new SimpleIntFilter(11, 17));
 			recordList10to19.Remove(recordList10to19[1]);
 			Assert.AreEqual(6, recordList11to17.Count);
-			Assert.AreEqual(12, recordList11to17[0]);
+			Assert.AreEqual(12, recordList11to17[0].I);
 			Assert.AreEqual(9, recordList10to19.Count);
-			Assert.AreEqual(12, recordList10to19[1]);
+			Assert.AreEqual(12, recordList10to19[1].I);
 			Assert.AreEqual(49, _sourceRecords.Count);
-			Assert.AreEqual(12, _sourceRecords[10]);
+			Assert.AreEqual(12, _sourceRecords[11].I);
 		}
 
 	}
