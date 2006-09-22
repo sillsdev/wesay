@@ -48,6 +48,11 @@ namespace WeSay.Data
 
 		void IBindingList.AddIndex(PropertyDescriptor property)
 		{
+		  AddIndex(property);
+		}
+
+		protected virtual void AddIndex(PropertyDescriptor property)
+		{
 		}
 
 		public T AddNew()
@@ -66,10 +71,24 @@ namespace WeSay.Data
 		{
 			get
 			{
-				return true;
+				return AllowEdit;
 			}
 		}
+		protected virtual bool AllowEdit
+		{
+		  get
+		  {
+			return true;
+		  }
+		}
 		bool IBindingList.AllowNew
+		{
+		  get
+		  {
+			return AllowNew;
+		  }
+		}
+		protected virtual bool AllowNew
 		{
 			get
 			{
@@ -80,9 +99,16 @@ namespace WeSay.Data
 		{
 			get
 			{
-				return true;
+				return AllowRemove;
 			}
 		}
+	  protected virtual bool AllowRemove
+	  {
+		get
+		{
+		  return true;
+		}
+	  }
 
 		public void ApplySort(PropertyDescriptor property, ListSortDirection direction)
 		{
@@ -104,8 +130,13 @@ namespace WeSay.Data
 
 		int IBindingList.Find(PropertyDescriptor property, object key)
 		{
-			throw new NotSupportedException();
+		  return Find();
 		}
+
+	  protected virtual int Find()
+	  {
+		throw new NotSupportedException();
+	  }
 
 		public bool IsSorted
 		{
@@ -146,9 +177,14 @@ namespace WeSay.Data
 
 		void IBindingList.RemoveIndex(PropertyDescriptor property)
 		{
+		  RemoveIndex(property);
 		}
 
-		public void RemoveSort()
+	  protected virtual void RemoveIndex(PropertyDescriptor property)
+	  {
+	  }
+
+	  public void RemoveSort()
 		{
 			if (IsSorted)
 			{
@@ -178,27 +214,51 @@ namespace WeSay.Data
 		{
 			get
 			{
-				return true;
+				return SupportsChangeNotification;
 			}
 		}
 
-		bool IBindingList.SupportsSearching
+	  protected virtual bool SupportsChangeNotification
+	  {
+		get
+		{
+		  return true;
+		}
+	  }
+
+	  bool IBindingList.SupportsSearching
 		{
 			get
 			{
-				return false;
+				return SupportsSearching;
 			}
 		}
 
-		bool IBindingList.SupportsSorting
+	  protected virtual bool SupportsSearching
+	  {
+		get
+		{
+		  return false;
+		}
+	  }
+
+	  bool IBindingList.SupportsSorting
 		{
 			get
 			{
-				return true;
+				return SupportsSearching;
 			}
 		}
 
-		#endregion
+	  protected virtual bool SupportsSorting
+	  {
+		get
+		{
+		  return true;
+		}
+	  }
+
+#endregion
 
 		#region IList<T> Members
 
@@ -325,7 +385,6 @@ namespace WeSay.Data
 
 		public void Clear()
 		{
-			int count = _list.Count;
 			_list.Clear();
 			OnListReset();
 		}
@@ -404,17 +463,33 @@ namespace WeSay.Data
 		{
 			get
 			{
-				return false;
+				return IsSynchronized;
 			}
 		}
 
+	  protected virtual bool IsSynchronized
+	  {
+		get
+		{
+		  return false;
+		}
+	  }
+
 		object System.Collections.ICollection.SyncRoot
 		{
-			get
-			{
-				return this;
-			}
+		  get
+		  {
+			return SyncRoot;
+		  }
 		}
+
+	  protected virtual object SyncRoot
+	  {
+		get
+		{
+		  return this;
+		}
+	  }
 
 		#endregion
 
@@ -422,10 +497,15 @@ namespace WeSay.Data
 
 		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
 		{
-			return ((System.Collections.IEnumerable)_list).GetEnumerator();
+		  return GetEnumerator();
 		}
 
-		#endregion
+	  protected virtual System.Collections.IEnumerator GetEnumerator()
+	  {
+		return ((System.Collections.IEnumerable) _list).GetEnumerator();
+	  }
+
+	  #endregion
 
 		#region IEnumerable<T> Members
 

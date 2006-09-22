@@ -1,0 +1,657 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<FxCopProject Version="1.35" Name="My FxCop Project">
+ <ProjectOptions>
+  <SharedProject>True</SharedProject>
+  <Stylesheet Apply="False">http://www.gotdotnet.com/team/fxcop//xsl/1.35/FxCopReport.xsl</Stylesheet>
+  <SaveMessages>
+   <Project Status="Active, Excluded" NewOnly="False" />
+   <Report Status="Active" NewOnly="False" />
+  </SaveMessages>
+  <ProjectFile Compress="True" DefaultTargetCheck="True" DefaultRuleCheck="True" SaveByRuleGroup="" Deterministic="True" />
+  <EnableMultithreadedLoad>True</EnableMultithreadedLoad>
+  <EnableMultithreadedAnalysis>True</EnableMultithreadedAnalysis>
+  <SourceLookup>True</SourceLookup>
+  <AnalysisExceptionsThreshold>10</AnalysisExceptionsThreshold>
+  <RuleExceptionsThreshold>1</RuleExceptionsThreshold>
+  <Spelling Locale="en-us" />
+  <VersionAware>False</VersionAware>
+  <OverrideRuleVisibilities>False</OverrideRuleVisibilities>
+  <CustomDictionaries SearchFxCopDir="True" SearchUserProfile="True" SearchProjectDir="True" />
+  <SearchGlobalAssemblyCache>False</SearchGlobalAssemblyCache>
+  <DeadlockDetectionTimeout>120</DeadlockDetectionTimeout>
+ </ProjectOptions>
+ <Targets>
+  <Target Name="$(ProjectDir)/output/debug/WeSay.Data.dll" Analyze="True" AnalyzeAllChildren="True" />
+ </Targets>
+ <Rules>
+  <RuleFiles>
+   <RuleFile Name="$(FxCopDir)\Rules\DesignRules.dll" Enabled="True" AllRulesEnabled="True" />
+   <RuleFile Name="$(FxCopDir)\Rules\GlobalizationRules.dll" Enabled="True" AllRulesEnabled="True" />
+   <RuleFile Name="$(FxCopDir)\Rules\InteroperabilityRules.dll" Enabled="True" AllRulesEnabled="True" />
+   <RuleFile Name="$(FxCopDir)\Rules\MobilityRules.dll" Enabled="True" AllRulesEnabled="True" />
+   <RuleFile Name="$(FxCopDir)\Rules\NamingRules.dll" Enabled="True" AllRulesEnabled="True" />
+   <RuleFile Name="$(FxCopDir)\Rules\PerformanceRules.dll" Enabled="True" AllRulesEnabled="True" />
+   <RuleFile Name="$(FxCopDir)\Rules\PortabilityRules.dll" Enabled="True" AllRulesEnabled="True" />
+   <RuleFile Name="$(FxCopDir)\Rules\SecurityRules.dll" Enabled="True" AllRulesEnabled="True" />
+   <RuleFile Name="$(FxCopDir)\Rules\UsageRules.dll" Enabled="True" AllRulesEnabled="True" />
+  </RuleFiles>
+  <Groups />
+  <Settings />
+ </Rules>
+ <FxCopReport Version="1.35">
+  <Namespaces>
+   <Namespace Name="System">
+	<Messages>
+	 <Message TypeName="AvoidNamespacesWithFewTypes" Category="Microsoft.Design" CheckId="CA1020" Status="Excluded" Created="2006-09-22 13:48:19Z">
+	  <Issue>
+	   <Item>System</Item>
+	  </Issue>
+	  <Notes>
+	   <User Name="Eric">
+		<Note Id="15" />
+	   </User>
+	  </Notes>
+	 </Message>
+	</Messages>
+   </Namespace>
+   <Namespace Name="WeSay.Data">
+	<Messages>
+	 <Message TypeName="ShortAcronymsShouldBeUppercase" Category="Microsoft.Naming" CheckId="CA1706" Status="Excluded" Created="2006-09-22 13:48:19Z">
+	  <Issue Name="Namespace">
+	   <Item>We</Item>
+	   <Item>WeSay.Data</Item>
+	  </Issue>
+	  <Notes>
+	   <User Name="Eric">
+		<Note Id="3" />
+	   </User>
+	  </Notes>
+	 </Message>
+	</Messages>
+   </Namespace>
+  </Namespaces>
+  <Targets>
+   <Target Name="$(ProjectDir)/output/debug/WeSay.Data.dll">
+	<Modules>
+	 <Module Name="wesay.data.dll">
+	  <Messages>
+	   <Message TypeName="AssembliesShouldHaveValidStrongNames" Category="Microsoft.Design" CheckId="CA2210" Created="2006-09-22 13:48:19Z">
+		<Issue Name="NoStrongName">
+		 <Item>WeSay.Data</Item>
+		</Issue>
+	   </Message>
+	  </Messages>
+	  <Namespaces>
+	   <Namespace Name="System">
+		<Types>
+		 <Type Name="ComparisonHelper`1">
+		  <Members>
+		   <Member Name="DefaultComparison">
+			<Messages>
+			 <Message TypeName="DoNotDeclareStaticMembersOnGenericTypes" Category="Microsoft.Design" CheckId="CA1000" Status="Excluded" Created="2006-09-22 13:48:19Z">
+			  <Issue>
+			   <Item>ComparisonHelper`1.DefaultComparison:Comparison`1&lt;T&gt;</Item>
+			   <Item>System.ComparisonHelper`1</Item>
+			  </Issue>
+			  <Notes>
+			   <User Name="Eric">
+				<Note Id="12" />
+			   </User>
+			  </Notes>
+			 </Message>
+			</Messages>
+		   </Member>
+		   <Member Name="DefaultEqualityComparison">
+			<Messages>
+			 <Message TypeName="DoNotDeclareStaticMembersOnGenericTypes" Category="Microsoft.Design" CheckId="CA1000" Status="Excluded" Created="2006-09-22 13:48:19Z">
+			  <Issue>
+			   <Item>ComparisonHelper`1.DefaultEqualityComparison:EqualityComparison`1&lt;T&gt;</Item>
+			   <Item>System.ComparisonHelper`1</Item>
+			  </Issue>
+			  <Notes>
+			   <User Name="Eric">
+				<Note Id="12" />
+			   </User>
+			  </Notes>
+			 </Message>
+			</Messages>
+		   </Member>
+		   <Member Name="DefaultPredicate">
+			<Messages>
+			 <Message TypeName="DoNotDeclareStaticMembersOnGenericTypes" Category="Microsoft.Design" CheckId="CA1000" Status="Excluded" Created="2006-09-22 13:48:19Z">
+			  <Issue>
+			   <Item>ComparisonHelper`1.DefaultPredicate:Predicate`1&lt;T&gt;</Item>
+			   <Item>System.ComparisonHelper`1</Item>
+			  </Issue>
+			  <Notes>
+			   <User Name="Eric">
+				<Note Id="12" />
+			   </User>
+			  </Notes>
+			 </Message>
+			</Messages>
+		   </Member>
+		   <Member Name="DefaultPropertyComparison">
+			<Messages>
+			 <Message TypeName="DoNotDeclareStaticMembersOnGenericTypes" Category="Microsoft.Design" CheckId="CA1000" Status="Excluded" Created="2006-09-22 13:48:19Z">
+			  <Issue>
+			   <Item>ComparisonHelper`1.DefaultPropertyComparison:PropertyComparison`1&lt;T&gt;</Item>
+			   <Item>System.ComparisonHelper`1</Item>
+			  </Issue>
+			  <Notes>
+			   <User Name="Eric">
+				<Note Id="12" />
+			   </User>
+			  </Notes>
+			 </Message>
+			</Messages>
+		   </Member>
+		   <Member Name="DefaultPropertyPredicate">
+			<Messages>
+			 <Message TypeName="DoNotDeclareStaticMembersOnGenericTypes" Category="Microsoft.Design" CheckId="CA1000" Status="Excluded" Created="2006-09-22 13:48:19Z">
+			  <Issue>
+			   <Item>ComparisonHelper`1.DefaultPropertyPredicate:PropertyPredicate`1&lt;T&gt;</Item>
+			   <Item>System.ComparisonHelper`1</Item>
+			  </Issue>
+			  <Notes>
+			   <User Name="Eric">
+				<Note Id="12" />
+			   </User>
+			  </Notes>
+			 </Message>
+			</Messages>
+		   </Member>
+		   <Member Name="GetComparison(System.Collections.Generic.Comparer`1&lt;T&gt;):System.Comparison`1&lt;T&gt;">
+			<Messages>
+			 <Message TypeName="DoNotDeclareStaticMembersOnGenericTypes" Category="Microsoft.Design" CheckId="CA1000" Status="Excluded" Created="2006-09-22 13:48:19Z">
+			  <Issue>
+			   <Item>ComparisonHelper`1.GetComparison(Comparer`1&lt;T&gt;):Comparison`1&lt;T&gt;</Item>
+			   <Item>System.ComparisonHelper`1</Item>
+			  </Issue>
+			  <Notes>
+			   <User Name="Eric">
+				<Note Id="12" />
+			   </User>
+			  </Notes>
+			 </Message>
+			</Messages>
+		   </Member>
+		   <Member Name="GetComparison(System.Comparison`1&lt;T&gt;,System.ComponentModel.ListSortDirection):System.Comparison`1&lt;T&gt;">
+			<Messages>
+			 <Message TypeName="DoNotDeclareStaticMembersOnGenericTypes" Category="Microsoft.Design" CheckId="CA1000" Status="Excluded" Created="2006-09-22 13:48:19Z">
+			  <Issue>
+			   <Item>ComparisonHelper`1.GetComparison(Comparison`1&lt;T&gt;, ListSortDirection):Comparison`1&lt;T&gt;</Item>
+			   <Item>System.ComparisonHelper`1</Item>
+			  </Issue>
+			  <Notes>
+			   <User Name="Eric">
+				<Note Id="12" />
+			   </User>
+			  </Notes>
+			 </Message>
+			</Messages>
+		   </Member>
+		   <Member Name="GetDescendingComparison(System.Comparison`1&lt;T&gt;):System.Comparison`1&lt;T&gt;">
+			<Messages>
+			 <Message TypeName="DoNotDeclareStaticMembersOnGenericTypes" Category="Microsoft.Design" CheckId="CA1000" Status="Excluded" Created="2006-09-22 13:48:19Z">
+			  <Issue>
+			   <Item>ComparisonHelper`1.GetDescendingComparison(Comparison`1&lt;T&gt;):Comparison`1&lt;T&gt;</Item>
+			   <Item>System.ComparisonHelper`1</Item>
+			  </Issue>
+			  <Notes>
+			   <User Name="Eric">
+				<Note Id="12" />
+			   </User>
+			  </Notes>
+			 </Message>
+			</Messages>
+		   </Member>
+		   <Member Name="GetDescendingPropertyComparison(System.PropertyComparison`1&lt;T&gt;):System.PropertyComparison`1&lt;T&gt;">
+			<Messages>
+			 <Message TypeName="DoNotDeclareStaticMembersOnGenericTypes" Category="Microsoft.Design" CheckId="CA1000" Status="Excluded" Created="2006-09-22 13:48:19Z">
+			  <Issue>
+			   <Item>ComparisonHelper`1.GetDescendingPropertyComparison(PropertyComparison`1&lt;T&gt;):PropertyComparison`1&lt;T&gt;</Item>
+			   <Item>System.ComparisonHelper`1</Item>
+			  </Issue>
+			  <Notes>
+			   <User Name="Eric">
+				<Note Id="12" />
+			   </User>
+			  </Notes>
+			 </Message>
+			</Messages>
+		   </Member>
+		   <Member Name="GetEqualityComparison(System.Collections.Generic.EqualityComparer`1&lt;T&gt;):System.EqualityComparison`1&lt;T&gt;">
+			<Messages>
+			 <Message TypeName="DoNotDeclareStaticMembersOnGenericTypes" Category="Microsoft.Design" CheckId="CA1000" Status="Excluded" Created="2006-09-22 13:48:19Z">
+			  <Issue>
+			   <Item>ComparisonHelper`1.GetEqualityComparison(EqualityComparer`1&lt;T&gt;):EqualityComparison`1&lt;T&gt;</Item>
+			   <Item>System.ComparisonHelper`1</Item>
+			  </Issue>
+			  <Notes>
+			   <User Name="Eric">
+				<Note Id="12" />
+			   </User>
+			  </Notes>
+			 </Message>
+			</Messages>
+		   </Member>
+		   <Member Name="GetEqualityComparison(System.Comparison`1&lt;T&gt;):System.EqualityComparison`1&lt;T&gt;">
+			<Messages>
+			 <Message TypeName="DoNotDeclareStaticMembersOnGenericTypes" Category="Microsoft.Design" CheckId="CA1000" Status="Excluded" Created="2006-09-22 13:48:19Z">
+			  <Issue>
+			   <Item>ComparisonHelper`1.GetEqualityComparison(Comparison`1&lt;T&gt;):EqualityComparison`1&lt;T&gt;</Item>
+			   <Item>System.ComparisonHelper`1</Item>
+			  </Issue>
+			  <Notes>
+			   <User Name="Eric">
+				<Note Id="12" />
+			   </User>
+			  </Notes>
+			 </Message>
+			</Messages>
+		   </Member>
+		   <Member Name="GetInversePredicate(System.Predicate`1&lt;T&gt;):System.Predicate`1&lt;T&gt;">
+			<Messages>
+			 <Message TypeName="DoNotDeclareStaticMembersOnGenericTypes" Category="Microsoft.Design" CheckId="CA1000" Status="Excluded" Created="2006-09-22 13:48:19Z">
+			  <Issue>
+			   <Item>ComparisonHelper`1.GetInversePredicate(Predicate`1&lt;T&gt;):Predicate`1&lt;T&gt;</Item>
+			   <Item>System.ComparisonHelper`1</Item>
+			  </Issue>
+			  <Notes>
+			   <User Name="Eric">
+				<Note Id="12" />
+			   </User>
+			  </Notes>
+			 </Message>
+			</Messages>
+		   </Member>
+		   <Member Name="GetPropertyComparison(System.PropertyComparison`1&lt;T&gt;,System.ComponentModel.ListSortDirection):System.PropertyComparison`1&lt;T&gt;">
+			<Messages>
+			 <Message TypeName="DoNotDeclareStaticMembersOnGenericTypes" Category="Microsoft.Design" CheckId="CA1000" Status="Excluded" Created="2006-09-22 13:48:19Z">
+			  <Issue>
+			   <Item>ComparisonHelper`1.GetPropertyComparison(PropertyComparison`1&lt;T&gt;, ListSortDirection):PropertyComparison`1&lt;T&gt;</Item>
+			   <Item>System.ComparisonHelper`1</Item>
+			  </Issue>
+			  <Notes>
+			   <User Name="Eric">
+				<Note Id="12" />
+			   </User>
+			  </Notes>
+			 </Message>
+			</Messages>
+		   </Member>
+		  </Members>
+		 </Type>
+		</Types>
+	   </Namespace>
+	   <Namespace Name="WeSay.Data">
+		<Types>
+		 <Type Name="AbstractRecordList`1">
+		  <Messages>
+		   <Message TypeName="IdentifiersShouldHaveCorrectSuffix" Category="Microsoft.Naming" CheckId="CA1710" Status="Excluded" Created="2006-09-22 13:48:19Z">
+			<Issue>
+			 <Item>WeSay.Data.AbstractRecordList`1</Item>
+			 <Item>Collection</Item>
+			</Issue>
+			<Notes>
+			 <User Name="Eric">
+			  <Note Id="6" />
+			 </User>
+			</Notes>
+		   </Message>
+		  </Messages>
+		  <Members>
+		   <Member Name="AddIndex(System.ComponentModel.PropertyDescriptor):System.Void">
+			<Messages>
+			 <Message Id="property" TypeName="ReviewUnusedParameters" Category="Microsoft.Usage" CheckId="CA1801" Status="Excluded" Created="2006-09-22 15:46:05Z" FixCategory="Breaking">
+			  <Issue>
+			   <Item>property</Item>
+			   <Item>AbstractRecordList`1.AddIndex(PropertyDescriptor):Void</Item>
+			  </Issue>
+			  <Notes>
+			   <User Name="Eric">
+				<Note Id="10" />
+			   </User>
+			  </Notes>
+			 </Message>
+			</Messages>
+		   </Member>
+		   <Member Name="Finalize():System.Void">
+			<Messages>
+			 <Message TypeName="ImplementIDisposableCorrectly" Category="Microsoft.Design" CheckId="CA1063" Status="Excluded" Created="2006-09-22 13:48:19Z">
+			  <Issue Name="FinalizeImplementation">
+			   <Item>AbstractRecordList`1.Finalize():Void</Item>
+			  </Issue>
+			  <Notes>
+			   <User Name="Eric">
+				<Note Id="7" />
+			   </User>
+			  </Notes>
+			 </Message>
+			</Messages>
+		   </Member>
+		   <Member Name="Find(System.ComponentModel.PropertyDescriptor,System.Object):System.Int32">
+			<Messages>
+			 <Message Id="key" TypeName="ReviewUnusedParameters" Category="Microsoft.Usage" CheckId="CA1801" Status="Excluded" Created="2006-09-22 15:44:24Z" FixCategory="Breaking">
+			  <Issue>
+			   <Item>key</Item>
+			   <Item>AbstractRecordList`1.Find(PropertyDescriptor, Object):Int32</Item>
+			  </Issue>
+			  <Notes>
+			   <User Name="Eric">
+				<Note Id="8" />
+			   </User>
+			  </Notes>
+			 </Message>
+			 <Message Id="property" TypeName="ReviewUnusedParameters" Category="Microsoft.Usage" CheckId="CA1801" Status="Excluded" Created="2006-09-22 15:44:24Z" FixCategory="Breaking">
+			  <Issue>
+			   <Item>property</Item>
+			   <Item>AbstractRecordList`1.Find(PropertyDescriptor, Object):Int32</Item>
+			  </Issue>
+			  <Notes>
+			   <User Name="Eric">
+				<Note Id="8" />
+			   </User>
+			  </Notes>
+			 </Message>
+			</Messages>
+		   </Member>
+		   <Member Name="RemoveIndex(System.ComponentModel.PropertyDescriptor):System.Void">
+			<Messages>
+			 <Message Id="property" TypeName="ReviewUnusedParameters" Category="Microsoft.Usage" CheckId="CA1801" Status="Excluded" Created="2006-09-22 15:51:12Z" FixCategory="Breaking">
+			  <Issue>
+			   <Item>property</Item>
+			   <Item>AbstractRecordList`1.RemoveIndex(PropertyDescriptor):Void</Item>
+			  </Issue>
+			  <Notes>
+			   <User Name="Eric">
+				<Note Id="11" />
+			   </User>
+			  </Notes>
+			 </Message>
+			</Messages>
+		   </Member>
+		  </Members>
+		 </Type>
+		 <Type Name="AbstractRecordListManager">
+		  <Members>
+		   <Member Name="CreateMasterRecordList():WeSay.Data.IRecordList`1&lt;T&gt;">
+			<Messages>
+			 <Message TypeName="GenericMethodsShouldProvideTypeParameter" Category="Microsoft.Design" CheckId="CA1004" Status="Excluded" Created="2006-09-22 13:48:19Z">
+			  <Issue>
+			   <Item>AbstractRecordListManager.CreateMasterRecordList():IRecordList`1&lt;T&gt;</Item>
+			   <Item>T</Item>
+			  </Issue>
+			  <Notes>
+			   <User Name="Eric">
+				<Note Id="1" />
+			   </User>
+			  </Notes>
+			 </Message>
+			</Messages>
+		   </Member>
+		   <Member Name="Finalize():System.Void">
+			<Messages>
+			 <Message Id="System.InvalidOperationException.#ctor(System.String)" TypeName="DoNotPassLiteralsAsLocalizedParameters" Category="Microsoft.Globalization" CheckId="CA1303" Status="Excluded" Created="2006-09-22 15:04:55Z">
+			  <Issue>
+			   <Item>AbstractRecordListManager.Finalize():Void</Item>
+			   <Item>1</Item>
+			   <Item>InvalidOperationException.InvalidOperationException(String)</Item>
+			   <Item>Disposed not explicitly called on ____.</Item>
+			  </Issue>
+			 </Message>
+			 <Message TypeName="ImplementIDisposableCorrectly" Category="Microsoft.Design" CheckId="CA1063" Status="Excluded" Created="2006-09-22 13:48:19Z">
+			  <Issue Name="FinalizeImplementation">
+			   <Item>AbstractRecordListManager.Finalize():Void</Item>
+			  </Issue>
+			  <Notes>
+			   <User Name="Eric">
+				<Note Id="4" />
+			   </User>
+			  </Notes>
+			 </Message>
+			</Messages>
+		   </Member>
+		   <Member Name="Get():WeSay.Data.IRecordList`1&lt;T&gt;">
+			<Messages>
+			 <Message TypeName="GenericMethodsShouldProvideTypeParameter" Category="Microsoft.Design" CheckId="CA1004" Status="Excluded" Created="2006-09-22 13:48:19Z">
+			  <Issue>
+			   <Item>AbstractRecordListManager.Get():IRecordList`1&lt;T&gt;</Item>
+			   <Item>T</Item>
+			  </Issue>
+			  <Notes>
+			   <User Name="Eric">
+				<Note Id="1" />
+			   </User>
+			  </Notes>
+			 </Message>
+			</Messages>
+		   </Member>
+		  </Members>
+		 </Type>
+		 <Type Name="Db4oDataSource">
+		  <Members>
+		   <Member Name="OnQueryOptimizationFailure(System.Object,com.db4o.inside.query.QueryOptimizationFailureEventArgs):System.Void">
+			<Messages>
+			 <Message Id="WeSay.Data.Db4oException.#ctor(System.String,System.Exception)" TypeName="DoNotPassLiteralsAsLocalizedParameters" Category="Microsoft.Globalization" CheckId="CA1303" Status="Excluded" Created="2006-09-22 15:20:23Z">
+			  <Issue>
+			   <Item>Db4oDataSource.OnQueryOptimizationFailure(Object, QueryOptimizationFailureEventArgs):Void</Item>
+			   <Item>1</Item>
+			   <Item>Db4oException.Db4oException(String, Exception)</Item>
+			   <Item>Query not Optimized</Item>
+			  </Issue>
+			  <Notes>
+			   <User Name="Eric">
+				<Note Id="13" />
+				<Note Id="14" />
+			   </User>
+			  </Notes>
+			 </Message>
+			</Messages>
+		   </Member>
+		  </Members>
+		 </Type>
+		 <Type Name="Db4oList`1">
+		  <Members>
+		   <Member Name="Finalize():System.Void">
+			<Messages>
+			 <Message TypeName="RemoveEmptyFinalizers" Category="Microsoft.Performance" CheckId="CA1821" Status="Excluded" Created="2006-09-22 14:17:00Z">
+			  <Issue>
+			   <Item>WeSay.Data.Db4oList`1</Item>
+			  </Issue>
+			  <Notes>
+			   <User Name="Eric">
+				<Note Id="9" />
+			   </User>
+			  </Notes>
+			 </Message>
+			</Messages>
+		   </Member>
+		   <Member Name="GetIds(System.Collections.IEnumerable):System.Collections.Generic.IEnumerable`1&lt;System.Int64&gt;">
+			<Messages>
+			 <Message TypeName="DoNotCastUnnecessarily" Category="Microsoft.Performance" CheckId="CA1800" Status="Excluded" Created="2006-09-22 14:17:00Z">
+			  <Issue Name="Parameter">
+			   <Item>items</Item>
+			   <Item>com.db4o.ObjectSet</Item>
+			   <Item>Db4oList`1.GetIds(IEnumerable):IEnumerable`1&lt;System.Int64&gt;</Item>
+			   <Item>isint</Item>
+			  </Issue>
+			  <Issue Name="Parameter">
+			   <Item>items</Item>
+			   <Item>com.db4o.inside.query.GenericObjectSetFacade`1&lt;type parameter.T&gt;</Item>
+			   <Item>Db4oList`1.GetIds(IEnumerable):IEnumerable`1&lt;System.Int64&gt;</Item>
+			   <Item>isint</Item>
+			  </Issue>
+			  <Notes>
+			   <User Name="Eric">
+				<Note Id="5" />
+			   </User>
+			  </Notes>
+			 </Message>
+			</Messages>
+		   </Member>
+		  </Members>
+		 </Type>
+		 <Type Name="Db4oRecordList`1">
+		  <Messages>
+		   <Message TypeName="IdentifiersShouldHaveCorrectSuffix" Category="Microsoft.Naming" CheckId="CA1710" Status="Excluded" Created="2006-09-22 13:48:19Z">
+			<Issue>
+			 <Item>WeSay.Data.Db4oRecordList`1</Item>
+			 <Item>Collection</Item>
+			</Issue>
+			<Notes>
+			 <User Name="Eric">
+			  <Note Id="6" />
+			 </User>
+			</Notes>
+		   </Message>
+		  </Messages>
+		 </Type>
+		 <Type Name="InMemoryBindingList`1">
+		  <Messages>
+		   <Message TypeName="IdentifiersShouldHaveCorrectSuffix" Category="Microsoft.Naming" CheckId="CA1710" Status="Excluded" Created="2006-09-22 13:48:19Z">
+			<Issue>
+			 <Item>WeSay.Data.InMemoryBindingList`1</Item>
+			 <Item>Collection</Item>
+			</Issue>
+			<Notes>
+			 <User Name="Eric">
+			  <Note Id="2" />
+			 </User>
+			</Notes>
+		   </Message>
+		  </Messages>
+		 </Type>
+		 <Type Name="InMemoryRecordList`1">
+		  <Messages>
+		   <Message TypeName="IdentifiersShouldHaveCorrectSuffix" Category="Microsoft.Naming" CheckId="CA1710" Status="Excluded" Created="2006-09-22 13:48:19Z">
+			<Issue>
+			 <Item>WeSay.Data.InMemoryRecordList`1</Item>
+			 <Item>Collection</Item>
+			</Issue>
+			<Notes>
+			 <User Name="Eric">
+			  <Note Id="6" />
+			 </User>
+			</Notes>
+		   </Message>
+		  </Messages>
+		 </Type>
+		 <Type Name="InMemoryRecordListManager">
+		  <Members>
+		   <Member Name="CreateMasterRecordList():WeSay.Data.IRecordList`1&lt;T&gt;">
+			<Messages>
+			 <Message TypeName="GenericMethodsShouldProvideTypeParameter" Category="Microsoft.Design" CheckId="CA1004" Status="Excluded" Created="2006-09-22 13:48:19Z">
+			  <Issue>
+			   <Item>InMemoryRecordListManager.CreateMasterRecordList():IRecordList`1&lt;T&gt;</Item>
+			   <Item>T</Item>
+			  </Issue>
+			  <Notes>
+			   <User Name="Eric">
+				<Note Id="1" />
+			   </User>
+			  </Notes>
+			 </Message>
+			</Messages>
+		   </Member>
+		  </Members>
+		 </Type>
+		 <Type Name="IRecordList`1">
+		  <Messages>
+		   <Message TypeName="IdentifiersShouldHaveCorrectSuffix" Category="Microsoft.Naming" CheckId="CA1710" Status="Excluded" Created="2006-09-22 13:48:19Z">
+			<Issue>
+			 <Item>WeSay.Data.IRecordList`1</Item>
+			 <Item>Collection</Item>
+			</Issue>
+			<Notes>
+			 <User Name="Eric">
+			  <Note Id="6" />
+			 </User>
+			</Notes>
+		   </Message>
+		  </Messages>
+		 </Type>
+		 <Type Name="IRecordListManager">
+		  <Members>
+		   <Member Name="Get():WeSay.Data.IRecordList`1&lt;T&gt;">
+			<Messages>
+			 <Message TypeName="GenericMethodsShouldProvideTypeParameter" Category="Microsoft.Design" CheckId="CA1004" Status="Excluded" Created="2006-09-22 13:48:19Z">
+			  <Issue>
+			   <Item>IRecordListManager.Get():IRecordList`1&lt;T&gt;</Item>
+			   <Item>T</Item>
+			  </Issue>
+			  <Notes>
+			   <User Name="Eric">
+				<Note Id="0" />
+			   </User>
+			  </Notes>
+			 </Message>
+			</Messages>
+		   </Member>
+		  </Members>
+		 </Type>
+		</Types>
+	   </Namespace>
+	  </Namespaces>
+	 </Module>
+	</Modules>
+   </Target>
+  </Targets>
+  <Notes>
+   <User Name="Eric">
+	<Note Id="0" Modified="2006-09-22 14:23:10Z">We need the type parameter for a return type. It doesn't make sense for it to be inferred in this case. We are trying to avoid making this class generic which would be the natural way to change the design.</Note>
+	<Note Id="1" Modified="2006-09-22 14:27:47Z">The best way to handle this would be to make the class a generic but we are trying to avoid that so we can still use PicoContainer. If we don't need this we can change the design.</Note>
+	<Note Id="2" Modified="2006-09-22 14:30:04Z">We are actually giving it the more specific collection type.</Note>
+	<Note Id="3" Modified="2006-09-22 14:35:41Z">We in WeSay is not an acronym</Note>
+	<Note Id="4" Modified="2006-09-22 14:54:17Z">We only have a finalizer in debug build to catch non disposed case</Note>
+	<Note Id="5" Modified="2006-09-22 15:25:20Z">readability</Note>
+	<Note Id="6" Modified="2006-09-22 15:35:44Z">End in RecordList this is more specific for our purposes</Note>
+	<Note Id="7" Modified="2006-09-22 15:36:01Z">Fine</Note>
+	<Note Id="8" Modified="2006-09-22 15:44:39Z">Fine</Note>
+	<Note Id="9" Modified="2006-09-22 15:45:18Z">Entirely surrounded by conditional</Note>
+	<Note Id="10" Modified="2006-09-22 15:46:22Z">not a problem</Note>
+	<Note Id="11" Modified="2006-09-22 15:51:34Z">fine</Note>
+	<Note Id="12" Modified="2006-09-22 15:54:10Z">not a problem</Note>
+	<Note Id="13" Modified="2006-09-22 15:58:42Z">never presented to real user</Note>
+	<Note Id="14" Modified="2006-09-22 15:59:20Z">Never presented to user</Note>
+	<Note Id="15" Modified="2006-09-22 15:59:32Z">not a problem</Note>
+   </User>
+  </Notes>
+  <Rules>
+   <Rule TypeName="AssembliesShouldHaveValidStrongNames" Category="Microsoft.Design" CheckId="CA2210">
+	<Resolution Name="NoStrongName">Sign '{0}' with a strong name key.</Resolution>
+   </Rule>
+   <Rule TypeName="AvoidNamespacesWithFewTypes" Category="Microsoft.Design" CheckId="CA1020">
+	<Resolution Name="Default">Consider merging the types defined in '{0}' with another namespace.</Resolution>
+   </Rule>
+   <Rule TypeName="DoNotCastUnnecessarily" Category="Microsoft.Performance" CheckId="CA1800">
+	<Resolution Name="Parameter">'{0}', a parameter, is cast to type '{1}' multiple times in method {2}. Cache the result of the 'as' operator or direct cast in order to eliminate the redundant {3} instruction.</Resolution>
+   </Rule>
+   <Rule TypeName="DoNotDeclareStaticMembersOnGenericTypes" Category="Microsoft.Design" CheckId="CA1000">
+	<Resolution Name="Default">Remove {0} from '{1}' or make it an instance member.</Resolution>
+   </Rule>
+   <Rule TypeName="DoNotPassLiteralsAsLocalizedParameters" Category="Microsoft.Globalization" CheckId="CA1303">
+	<Resolution Name="Default">{0} passes a literal as parameter {1} of a call to {2}. Retrieve the following string argument from a resource table instead: '{3}'</Resolution>
+   </Rule>
+   <Rule TypeName="GenericMethodsShouldProvideTypeParameter" Category="Microsoft.Design" CheckId="CA1004">
+	<Resolution Name="Default">Consider a design where {0} doesn't require explicit type parameter '{1}' in any call to it.</Resolution>
+   </Rule>
+   <Rule TypeName="IdentifiersShouldHaveCorrectSuffix" Category="Microsoft.Naming" CheckId="CA1710">
+	<Resolution Name="Default">Rename '{0}' to end in '{1}'.</Resolution>
+   </Rule>
+   <Rule TypeName="ImplementIDisposableCorrectly" Category="Microsoft.Design" CheckId="CA1063">
+	<Resolution Name="FinalizeImplementation">Modify {0} so that it calls Dispose(false) and then returns.</Resolution>
+   </Rule>
+   <Rule TypeName="RemoveEmptyFinalizers" Category="Microsoft.Performance" CheckId="CA1821">
+	<Resolution Name="Default">{0} implements a finalizer that only calls conditionally emitted methods or the base type finalizer. Remove the finalizer or insure that it is only conditionally compiled into the assembly. If this violation occurs against a finalizer that is entirely wrapped in a conditionally-emitted block of code, suppress this message.</Resolution>
+   </Rule>
+   <Rule TypeName="ReviewUnusedParameters" Category="Microsoft.Usage" CheckId="CA1801">
+	<Resolution Name="Default">Parameter '{0}' of {1} is never used. Remove the parameter or use it in the method body.</Resolution>
+   </Rule>
+   <Rule TypeName="ShortAcronymsShouldBeUppercase" Category="Microsoft.Naming" CheckId="CA1706">
+	<Resolution Name="Namespace">Correct the capitalization of '{0}' in namespace name '{1}'.</Resolution>
+   </Rule>
+  </Rules>
+ </FxCopReport>
+</FxCopProject>

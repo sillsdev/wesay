@@ -8,7 +8,7 @@ namespace WeSay.Data
   public abstract class AbstractRecordListManager : IRecordListManager
   {
 	Hashtable _filteredRecordLists;
-	public AbstractRecordListManager()
+	protected AbstractRecordListManager()
 	{
 	  _filteredRecordLists = new Hashtable();
 	}
@@ -44,12 +44,12 @@ namespace WeSay.Data
 		{
 			if (!this._disposed)
 			{
-			  throw new ApplicationException("Disposed not explicitly called on " + this.GetType().FullName + ".");
+			  throw new InvalidOperationException("Disposed not explicitly called on " + this.GetType().FullName + ".");
 			}
 		}
 #endif
 
-		private bool _disposed = false;
+		private bool _disposed;
 
 		public void Dispose()
 		{

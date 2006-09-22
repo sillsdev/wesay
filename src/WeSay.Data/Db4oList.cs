@@ -6,9 +6,10 @@ using com.db4o;
 using com.db4o.ext;
 using com.db4o.inside.query;
 
-namespace Db4o.Binding
+namespace WeSay.Data
 {
-	public delegate com.db4o.query.Query SODAQueryProvider(com.db4o.query.Query query);
+  [CLSCompliant(false)]
+	public delegate com.db4o.query.Query SodaQueryProvider(com.db4o.query.Query query);
 
 	/// <summary>
 	/// db4o aware list with items stored in db4o database.
@@ -44,7 +45,7 @@ namespace Db4o.Binding
 	/// </remarks>
 	/// <typeparam name="T">List item type.</typeparam>
 	[TypeConverter(typeof(ExpandableObjectConverter))]
-	public class Db4oList<T>
+	internal class Db4oList<T>
 		: IList<T>, IDisposable
 		where T : class
 	{
@@ -461,7 +462,7 @@ namespace Db4o.Binding
 			InitItems(list, filter, sorter, commit);
 		}
 
-		public SODAQueryProvider SODAQuery
+		public SodaQueryProvider SODAQuery
 		{
 			get
 			{
@@ -479,7 +480,7 @@ namespace Db4o.Binding
 			}
 		}
 
-		protected SODAQueryProvider _SODAQuery;
+		private SodaQueryProvider _SODAQuery;
 
 
 
@@ -1393,8 +1394,7 @@ namespace Db4o.Binding
 			{
 				item = ActivateItem(id);
 				if (item == null)
-					throw new InvalidOperationException(
-						string.Format("Object with Id = {0} does not exists in database {1}.", id, this.Database));
+					throw new InvalidOperationException("Object with Id = " + id + " does not exists in database " + this.Database +".");
 			}
 			else
 			{
@@ -1573,7 +1573,7 @@ namespace Db4o.Binding
 		/// <param name="changes">Changes to check in.</param>
 		/// <param name="change">Change to check for.</param>
 		/// <returns>true, if <paramref name="changes"/> contains <paramref name="change"/>.</returns>
-		protected bool IsChange(Db4oListChanges changes, Db4oListChanges change)
+		protected static bool IsChange(Db4oListChanges changes, Db4oListChanges change)
 		{
 			return (changes & change) > 0;
 		}
@@ -1590,7 +1590,7 @@ namespace Db4o.Binding
 		/// <summary>
 		/// See <see cref="ItemIds"/>.
 		/// </summary>
-		protected List<long> _itemIds = new List<long>();
+		private List<long> _itemIds = new List<long>();
 		/// <summary>
 		/// See <see cref="Database"/>.
 		/// </summary>
@@ -1696,7 +1696,7 @@ namespace Db4o.Binding
 				{
 					if (_database.IsClosed())
 					{
-						throw new ApplicationException("Database should not be disposed until after Db4oList is disposed.");
+						throw new InvalidOperationException("Database should not be disposed until after Db4oList is disposed.");
 					}
 					int count = this._readCache.Count;
 					long id;
@@ -1729,7 +1729,7 @@ namespace Db4o.Binding
 		{
 			if (!this._disposed)
 			{
-				throw new ApplicationException("Disposed not explicitly called");
+				throw new InvalidOperationException("Disposed not explicitly called");
 			}
 		}
 #endif
@@ -1796,7 +1796,7 @@ namespace Db4o.Binding
 	/// <see cref="Db4oList`1"/> list changes.
 	/// </summary>
 	[Flags]
-	public enum Db4oListChanges : byte
+	public enum Db4oListChanges
 	{
 		/// <summary>
 		/// Filtering.

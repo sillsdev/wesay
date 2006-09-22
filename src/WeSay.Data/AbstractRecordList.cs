@@ -8,11 +8,39 @@ namespace WeSay.Data
 {
 	public abstract class AbstractRecordList<T> : IRecordList<T> where T : class, new()
 	{
-		protected IList<T> _records;
+	  protected AbstractRecordList()
+	  {
+		_propertyDescriptorCollectionForT = TypeDescriptor.GetProperties(typeof(T));
+	  }
+	  private IList<T> _records;
 
-		protected PropertyDescriptor _sortProperty;
-		protected ListSortDirection _listSortDirection;
-		protected PropertyDescriptorCollection _pdc;
+	  protected IList<T> Records
+	  {
+		get
+		{
+		  return _records;
+		}
+		set
+		{
+		  _records = value;
+		}
+	  }
+
+		private PropertyDescriptor _sortProperty;
+		private ListSortDirection _listSortDirection;
+
+		protected ListSortDirection ListSortDirection
+		{
+		  get
+		  {
+			return _listSortDirection;
+		  }
+		  set
+		  {
+			_listSortDirection = value;
+		  }
+		}
+		readonly private PropertyDescriptorCollection _propertyDescriptorCollectionForT;
 
 		public event EventHandler<RecordListEventArgs<T>> AddingRecord = delegate
 		{
@@ -80,9 +108,14 @@ namespace WeSay.Data
 		void IBindingList.AddIndex(PropertyDescriptor property)
 		{
 			VerifyNotDisposed();
+			AddIndex(property);
 		}
 
-		public T AddNew()
+	  protected void AddIndex(PropertyDescriptor property)
+	  {
+	  }
+
+	  public T AddNew()
 		{
 			VerifyNotDisposed();
 			T o = new T();
@@ -101,22 +134,44 @@ namespace WeSay.Data
 			get
 			{
 				VerifyNotDisposed();
-				return true;
+				return AllowEdit;
 			}
 		}
+	  protected bool AllowEdit
+	  {
+		get
+		{
+		  return true;
+		}
+	  }
+
 		bool IBindingList.AllowNew
 		{
 			get
 			{
 				VerifyNotDisposed();
-				return true;
+				return AllowNew;
 			}
+		}
+		protected bool AllowNew
+		{
+		  get
+		  {
+			return true;
+		  }
 		}
 		bool IBindingList.AllowRemove
 		{
+		  get
+		  {
+			VerifyNotDisposed();
+			return AllowRemove;
+		  }
+		}
+		protected bool AllowRemove
+		{
 			get
 			{
-				VerifyNotDisposed();
 				return true;
 			}
 		}
@@ -144,8 +199,13 @@ namespace WeSay.Data
 		int IBindingList.Find(PropertyDescriptor property, object key)
 		{
 			VerifyNotDisposed();
-			throw new NotSupportedException();
+			return Find(property, key);
 		}
+
+	  protected int Find(PropertyDescriptor property, object key)
+	  {
+		throw new NotSupportedException();
+	  }
 
 		abstract public bool IsSorted
 		{
@@ -164,7 +224,7 @@ namespace WeSay.Data
 
 		protected virtual void OnItemChanged(int newIndex, string field)
 		{
-			PropertyDescriptor propertyDescriptor = _pdc.Find(field, false);
+			PropertyDescriptor propertyDescriptor = _propertyDescriptorCollectionForT.Find(field, false);
 			if (propertyDescriptor == null)
 			{
 				OnItemChanged(newIndex);
@@ -195,7 +255,11 @@ namespace WeSay.Data
 		void IBindingList.RemoveIndex(PropertyDescriptor property)
 		{
 			VerifyNotDisposed();
+			RemoveIndex(property);
 		}
+	  protected void RemoveIndex(PropertyDescriptor property)
+	  {
+	  }
 
 		public void RemoveSort()
 		{
@@ -226,47 +290,74 @@ namespace WeSay.Data
 				VerifyNotDisposed();
 				return _sortProperty;
 			}
+			protected set
+			{
+			  _sortProperty = value;
+			}
 		}
 
 		bool IBindingList.SupportsChangeNotification
 		{
 			get
 			{
-				VerifyNotDisposed();
-				return true;
+			  VerifyNotDisposed();
+			  return SupportsChangeNotification;
 			}
 		}
+
+	  protected bool SupportsChangeNotification
+	  {
+		get
+		{
+		  return true;
+		}
+	  }
 
 		bool IBindingList.SupportsSearching
 		{
 			get
 			{
 				VerifyNotDisposed();
-				return false;
+				return SupportsSearching;
 			}
 		}
+
+	  protected bool SupportsSearching
+	  {
+		get
+		{
+		  return false;
+		}
+	  }
 
 		bool IBindingList.SupportsSorting
 		{
 			get
 			{
 				VerifyNotDisposed();
-				return true;
+				return SupportsSorting;
 			}
 		}
+	  protected bool SupportsSorting
+	  {
+		get
+		{
+		  return true;
+		}
+	  }
 
 		#endregion
 
 		#region IFilterable<T> Members
 
-		public void ApplyFilter(Predicate<T> itemsToInclude)
+		public void ApplyFilter(Predicate<T> filter)
 		{
 			VerifyNotDisposed();
-			if (itemsToInclude == null)
+			if (filter == null)
 			{
 				throw new ArgumentNullException();
 			}
-			DoFilter(itemsToInclude);
+			DoFilter(filter);
 			OnListReset();
 		}
 
@@ -538,30 +629,51 @@ namespace WeSay.Data
 			get
 			{
 				VerifyNotDisposed();
-				return false;
+				return IsSynchronized;
 			}
 		}
 
-		object System.Collections.ICollection.SyncRoot
+	  protected bool IsSynchronized
+	  {
+		get
+		{
+		  return false;
+		}
+	  }
+
+	  object System.Collections.ICollection.SyncRoot
 		{
 			get
 			{
 				VerifyNotDisposed();
-				return this;
+				return SyncRoot;
 			}
 		}
 
-		#endregion
+	  protected object SyncRoot
+	  {
+		get
+		{
+		  return this;
+		}
+	  }
+
+#endregion
 
 		#region IEnumerable Members
 
 		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
 		{
 			VerifyNotDisposed();
-			return ((System.Collections.IEnumerable)_records).GetEnumerator();
+			return GetEnumerator();
 		}
 
-		#endregion
+	  protected System.Collections.IEnumerator GetEnumerator()
+	  {
+		return ((System.Collections.IEnumerable) _records).GetEnumerator();
+	  }
+
+#endregion
 
 		#region IEnumerable<T> Members
 
@@ -634,7 +746,7 @@ namespace WeSay.Data
 		{
 			if (!this._disposed)
 			{
-				throw new ApplicationException("Disposed not explicitly called on " + this.GetType().FullName + ".");
+				throw new InvalidOperationException("Disposed not explicitly called on " + this.GetType().FullName + ".");
 			}
 		}
 #endif

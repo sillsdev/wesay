@@ -8,16 +8,14 @@ namespace WeSay.Data
 	{
 		private static int defaultWriteCacheSize = 0;
 
-		private void Initialize(Db4oDataSource dataSource, Predicate<T> filter, Comparison<T> sort, Db4o.Binding.SODAQueryProvider sodaQuery)
+		private void Initialize(Db4oDataSource dataSource, Predicate<T> filter, Comparison<T> sort, SodaQueryProvider sodaQuery)
 		{
 			if (dataSource == null)
 			{
 				throw new ArgumentNullException("dataSource");
 			}
-			_pdc = TypeDescriptor.GetProperties(typeof(T));
-
-			Db4o.Binding.Db4oList<T> records = new Db4o.Binding.Db4oList<T>((com.db4o.ObjectContainer)dataSource.Data, new List<T>(), filter, sort);
-			_records = records;
+			Db4oList<T> records = new Db4oList<T>((com.db4o.ObjectContainer)dataSource.Data, new List<T>(), filter, sort);
+			Records = records;
 			records.SortingInDatabase = false;
 			records.FilteringInDatabase = false;
 			records.ReadCacheSize = 0; // I think this could go back to lower
@@ -27,7 +25,7 @@ namespace WeSay.Data
 			records.RefreshActivationDepth = 99;
 			records.SetActivationDepth = 99;
 			//            records.RequeryAndRefresh(false);
-			records.Storing += new EventHandler<Db4o.Binding.Db4oListEventArgs<T>>(OnRecordStoring);
+			records.Storing += new EventHandler<Db4oListEventArgs<T>>(OnRecordStoring);
 			try
 			{
 				if (sodaQuery != null)
@@ -39,10 +37,10 @@ namespace WeSay.Data
 					records.Requery(records.FilteringInDatabase && filter != null);
 				}
 			}
-			catch (Exception e)
+			catch
 			{
 				Dispose();
-				throw (e);
+				throw;
 			}
 		}
 
@@ -51,7 +49,8 @@ namespace WeSay.Data
 			Initialize(dataSource, null, null, null);
 		}
 
-		public Db4oRecordList(Db4oDataSource dataSource, Db4o.Binding.SODAQueryProvider sodaQuery)
+	  [CLSCompliant(false)]
+	  public Db4oRecordList(Db4oDataSource dataSource, SodaQueryProvider sodaQuery)
 		{
 			Initialize(dataSource, null, null, sodaQuery);
 		}
@@ -87,42 +86,43 @@ namespace WeSay.Data
 			Initialize(dataSource, null, sort, null);
 		}
 
-		void OnRecordStoring(object sender, Db4o.Binding.Db4oListEventArgs<T> e)
+		void OnRecordStoring(object sender, Db4oListEventArgs<T> e)
 		{
-			if (e.PropertyName == string.Empty)
+			if (e.PropertyName.Length == 0)
 			{
-				OnItemChanged(_records.IndexOf(e.Item));
+				OnItemChanged(Records.IndexOf(e.Item));
 			}
 			else
 			{
-				OnItemChanged(_records.IndexOf(e.Item), e.PropertyName);
+				OnItemChanged(Records.IndexOf(e.Item), e.PropertyName);
 			}
 		}
 
 		public override bool Commit()
 		{
 			VerifyNotDisposed();
-			return ((Db4o.Binding.Db4oList<T>)_records).Commit();
+			return ((Db4oList<T>)Records).Commit();
 		}
 
-		public Db4o.Binding.SODAQueryProvider SODAQuery
+	  [CLSCompliant(false)]
+	  public SodaQueryProvider SodaQuery
 		{
 			get
 			{
 				VerifyNotDisposed();
-				return ((Db4o.Binding.Db4oList<T>)_records).SODAQuery;
+				return ((Db4oList<T>)Records).SODAQuery;
 			}
 			set
 			{
 				VerifyNotDisposed();
-				((Db4o.Binding.Db4oList<T>)_records).SODAQuery = value;
+				((Db4oList<T>)Records).SODAQuery = value;
 			}
 		}
 
 		public void Add(IEnumerator<T> enumerator)
 		{
 			VerifyNotDisposed();
-			Db4o.Binding.Db4oList<T> records = (Db4o.Binding.Db4oList<T>)_records;
+			Db4oList<T> records = (Db4oList<T>)Records;
 			records.WriteCacheSize = 0;
 			while (enumerator.MoveNext())
 			{
@@ -138,18 +138,18 @@ namespace WeSay.Data
 			get
 			{
 				VerifyNotDisposed();
-				return ((Db4o.Binding.Db4oList<T>)_records).WriteCacheSize;
+				return ((Db4oList<T>)Records).WriteCacheSize;
 			}
 			set
 			{
 				VerifyNotDisposed();
-				((Db4o.Binding.Db4oList<T>)_records).WriteCacheSize = value;
+				((Db4oList<T>)Records).WriteCacheSize = value;
 			}
 		}
 
 		protected override void DoFilter(Predicate<T> itemsToInclude)
 		{
-			Db4o.Binding.Db4oList<T> records = (Db4o.Binding.Db4oList<T>) _records;
+			Db4oList<T> records = (Db4oList<T>) Records;
 			if (records.FilteringInDatabase)
 			{
 				records.Commit();
@@ -165,7 +165,7 @@ namespace WeSay.Data
 		}
 		protected override void DoRemoveFilter()
 		{
-			Db4o.Binding.Db4oList<T> records = (Db4o.Binding.Db4oList<T>)_records;
+			Db4oList<T> records = (Db4oList<T>)Records;
 
 			records.Filter = null;
 			if (!records.FilteringInDatabase)
@@ -179,7 +179,7 @@ namespace WeSay.Data
 			get
 			{
 				VerifyNotDisposed();
-				Db4o.Binding.Db4oList<T> records = (Db4o.Binding.Db4oList<T>)_records;
+				Db4oList<T> records = (Db4oList<T>)Records;
 
 				return records.IsFiltered || records.SODAQuery != null;
 			}
@@ -187,7 +187,7 @@ namespace WeSay.Data
 
 		protected override void  DoSort(Comparison<T> sort)
 		{
-			((Db4o.Binding.Db4oList<T>)_records).Sort(sort);
+			((Db4oList<T>)Records).Sort(sort);
 		}
 
 		public override bool IsSorted
@@ -195,13 +195,13 @@ namespace WeSay.Data
 			get
 			{
 				VerifyNotDisposed();
-				return ((Db4o.Binding.Db4oList<T>)_records).IsSorted;
+				return ((Db4oList<T>)Records).IsSorted;
 			}
 		}
 
 		protected override void DoRemoveSort()
 		{
-			((Db4o.Binding.Db4oList<T>)_records).RemoveSort();
+			((Db4oList<T>)Records).RemoveSort();
 		}
 
 		protected override void  Dispose(bool disposing)
@@ -209,7 +209,7 @@ namespace WeSay.Data
 			if (! this.IsDisposed){
 				if (disposing)
 				{
-					((Db4o.Binding.Db4oList<T>)_records).Dispose();
+					((Db4oList<T>)Records).Dispose();
 				}
 			}
 			base.Dispose(disposing);

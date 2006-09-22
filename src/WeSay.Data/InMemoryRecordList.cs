@@ -12,8 +12,7 @@ namespace WeSay.Data
 
 		public InMemoryRecordList()
 		{
-			_records = new List<T>();
-			_pdc = TypeDescriptor.GetProperties(typeof(T));
+			Records = new List<T>();
 		}
 
 		public InMemoryRecordList(IRecordList<T> original)
@@ -22,8 +21,8 @@ namespace WeSay.Data
 			this.AddRange(original);
 
 			_isSorted = original.IsSorted;
-			_sortProperty = original.SortProperty;
-			_listSortDirection = original.SortDirection;
+			SortProperty = original.SortProperty;
+			ListSortDirection = original.SortDirection;
 
 			_isFiltered = original.IsFiltered;
 		}
@@ -35,7 +34,7 @@ namespace WeSay.Data
 
 		protected override void DoSort(Comparison<T> sort)
 		{
-			((List < T >) _records).Sort(sort);
+			((List < T >) Records).Sort(sort);
 			_isSorted = true;
 		}
 
@@ -56,7 +55,7 @@ namespace WeSay.Data
 		protected override void DoFilter(Predicate<T> itemsToInclude)
 		{
 			Predicate<T> itemsToExclude = ComparisonHelper<T>.GetInversePredicate(itemsToInclude);
-			((List<T>)_records).RemoveAll(itemsToExclude);
+			((List<T>)Records).RemoveAll(itemsToExclude);
 			_isFiltered = true;
 		}
 
@@ -79,7 +78,7 @@ namespace WeSay.Data
 		{
 			if (base.ShouldClearRecords())
 			{
-				foreach (T item in _records)
+				foreach (T item in Records)
 				{
 					RegisterItemPropertyChangedHandler(item, false);
 				}
@@ -136,7 +135,7 @@ namespace WeSay.Data
 
 		private void Item_PropertyChanged(object sender, PropertyChangedEventArgs e)
 		{
-			OnItemChanged(_records.IndexOf((T)sender), e.PropertyName);
+			OnItemChanged(Records.IndexOf((T)sender), e.PropertyName);
 		}
 
 		protected override void Dispose(bool disposing)
@@ -146,7 +145,7 @@ namespace WeSay.Data
 				if (disposing)
 				{
 					// dispose-only, i.e. non-finalizable logic
-					foreach (T item in _records)
+					foreach (T item in Records)
 					{
 						RegisterItemPropertyChangedHandler(item, false);
 					}

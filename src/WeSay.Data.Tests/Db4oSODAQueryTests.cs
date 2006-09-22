@@ -48,7 +48,7 @@ namespace WeSay.Data.Tests.Db4oBindingListTests
 		[Test]
 		public void Everything()
 		{
-			_bindingList.SODAQuery = delegate(com.db4o.query.Query query)
+			_bindingList.SodaQuery = delegate(com.db4o.query.Query query)
 			{
 				query.Constrain(typeof(TestItem));
 				return query;
@@ -59,7 +59,7 @@ namespace WeSay.Data.Tests.Db4oBindingListTests
 		[Test]
 		public void StoredStringEqualGianna()
 		{
-			_bindingList.SODAQuery = delegate(com.db4o.query.Query query)
+			_bindingList.SodaQuery = delegate(com.db4o.query.Query query)
 			{
 				query.Constrain(typeof(TestItem));
 				query.Descend("_storedString").Constrain("Gianna");
@@ -72,7 +72,7 @@ namespace WeSay.Data.Tests.Db4oBindingListTests
 		[Test]
 		public void TestItemHasChildWithEmptyString()
 		{
-			_bindingList.SODAQuery = TestItemHasChildWithEmptyString;
+			_bindingList.SodaQuery = TestItemHasChildWithEmptyString;
 			Console.WriteLine("Items having child with empty string:");
 			foreach (TestItem item in _bindingList)
 			{
@@ -97,7 +97,7 @@ namespace WeSay.Data.Tests.Db4oBindingListTests
 		[Test]
 		public void TestItemWithNoChildren()
 		{
-			_bindingList.SODAQuery = TestItemWithNoChildren;
+			_bindingList.SodaQuery = TestItemWithNoChildren;
 			Console.WriteLine("Items with no children:");
 			foreach (TestItem item in _bindingList)
 			{
@@ -123,7 +123,7 @@ namespace WeSay.Data.Tests.Db4oBindingListTests
 		[Ignore("Waiting for db4o fix")]
 		public void TestItemWithNoChildrenOrWithChildWithEmptyString()
 		{
-			_bindingList.SODAQuery = TestItemWithNoChildrenOrWithChildWithEmptyString;
+			_bindingList.SodaQuery = TestItemWithNoChildrenOrWithChildWithEmptyString;
 			Console.WriteLine("Items with no children or having child with empty string:");
 			foreach (TestItem item in _bindingList)
 			{
