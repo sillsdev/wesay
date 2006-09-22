@@ -15,11 +15,11 @@ namespace WeSay.Data.Tests
 		public void Setup()
 		{
 			_sourceRecords = new InMemoryRecordList<SimpleIntTestClass>();
+			_recordListManager = new InMemoryRecordListManager<SimpleIntTestClass>(_sourceRecords);
 			for (int i = 0; i < 50; i++)
 			{
 				_sourceRecords.Add(new SimpleIntTestClass(i));
 			}
-			_recordListManager = new InMemoryRecordListManager<SimpleIntTestClass>(_sourceRecords);
 		}
 
 		[TearDown]
@@ -33,6 +33,15 @@ namespace WeSay.Data.Tests
 		public void Create()
 		{
 			Assert.IsNotNull(_recordListManager);
+		}
+
+		[Test]
+		[ExpectedException(typeof(ArgumentNullException))]
+		public void Create_NullSource_ThrowsException()
+		{
+			using (InMemoryRecordListManager<SimpleIntTestClass> recordListManager = new InMemoryRecordListManager<SimpleIntTestClass>(null))
+			{
+			}
 		}
 
 		[Test]
@@ -76,15 +85,6 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		public void AddToFilteredRecordList_AddsToMaster()
-		{
-			IRecordList<SimpleIntTestClass> recordList = _recordListManager.Get(new SimpleIntFilter(41, 60));
-			Assert.AreEqual(50, _sourceRecords.Count);
-			recordList.Add(new SimpleIntTestClass(50));
-			Assert.AreEqual(51,_sourceRecords.Count);
-		}
-
-		[Test]
 		public void ChangeRecord_NoLongerMeetsFilterCriteria_RemovedFromRecordList_StillInMaster()
 		{
 			IRecordList<SimpleIntTestClass> recordList11to20 = _recordListManager.Get(new SimpleIntFilter(11, 20));
@@ -107,16 +107,47 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		public void AddRecord_MeetsFilterCriteria_AddedToRecordListAndMaster()
+		public void ChangeRecord_MeetsFilterCriteria_RemainsInSimilarRecordList()
+		{
+			IRecordList<SimpleIntTestClass> recordList11to20 = _recordListManager.Get(new SimpleIntFilter(11, 20));
+			IRecordList<SimpleIntTestClass> recordList11to17 = _recordListManager.Get(new SimpleIntFilter(11, 17));
+			recordList11to20[0].I = 12;
+			Assert.AreEqual(7, recordList11to17.Count);
+			Assert.AreEqual(10, recordList11to20.Count);
+			Assert.AreEqual(12, recordList11to17[0].I);
+			Assert.AreEqual(12, recordList11to20[0].I);
+		}
+
+		[Test]
+		public void AddRecordToFiltered_AddedToMaster()
 		{
 			IRecordList<SimpleIntTestClass> recordList11to20 = _recordListManager.Get(new SimpleIntFilter(11, 20));
 			recordList11to20.Add(new SimpleIntTestClass(15));
-			Assert.AreEqual(11, recordList11to20.Count);
 			Assert.AreEqual(51, _sourceRecords.Count);
 		}
 
 		[Test]
-		public void AddRecord_DoesNotMeetsFilterCriteria_AddedToMasterOnly()
+		public void AddRecordToFiltered_AddedToRelevantRecordLists()
+		{
+			IRecordList<SimpleIntTestClass> recordList11to20 = _recordListManager.Get(new SimpleIntFilter(11, 20));
+			IRecordList<SimpleIntTestClass> recordList11to17 = _recordListManager.Get(new SimpleIntFilter(11, 17));
+			recordList11to20.Add(new SimpleIntTestClass(15));
+			Assert.AreEqual(8, recordList11to17.Count);
+			Assert.AreEqual(11, recordList11to20.Count);
+		}
+
+		[Test]
+		public void AddRecordToMaster_AddedToRelevantRecordLists()
+		{
+			IRecordList<SimpleIntTestClass> recordList11to20 = _recordListManager.Get(new SimpleIntFilter(11, 20));
+			IRecordList<SimpleIntTestClass> recordList11to17 = _recordListManager.Get(new SimpleIntFilter(11, 17));
+			_sourceRecords.Add(new SimpleIntTestClass(15));
+			Assert.AreEqual(8, recordList11to17.Count);
+			Assert.AreEqual(11, recordList11to20.Count);
+		}
+
+		[Test]
+		public void AddRecordToFiltered_DoesNotMeetFilterCriteria_AddedToMasterOnly()
 		{
 			IRecordList<SimpleIntTestClass> recordList11to20 = _recordListManager.Get(new SimpleIntFilter(11, 20));
 			recordList11to20.Add(new SimpleIntTestClass(50));
@@ -131,6 +162,33 @@ namespace WeSay.Data.Tests
 			recordList11to20.Add(_sourceRecords[12]);
 			Assert.AreEqual(10, recordList11to20.Count);
 			Assert.AreEqual(50, _sourceRecords.Count);
+		}
+
+		[Test]
+		public void RemoveRecordFromMaster_RemovedFromFilteredRecordLists()
+		{
+			IRecordList<SimpleIntTestClass> recordList10to19 = _recordListManager.Get(new SimpleIntFilter(10, 19));
+			IRecordList<SimpleIntTestClass> recordList11to17 = _recordListManager.Get(new SimpleIntFilter(11, 17));
+			_sourceRecords.Remove(recordList10to19[1]);
+			Assert.AreEqual(49, _sourceRecords.Count);
+			Assert.AreEqual(6, recordList11to17.Count);
+			Assert.AreEqual(12, recordList11to17[0]);
+			Assert.AreEqual(9, recordList10to19.Count);
+			Assert.AreEqual(12, recordList10to19[1]);
+		}
+
+		[Test]
+		public void RemoveRecordFromFiltered_RemovedFromFilteredRecordListsAndMaster()
+		{
+			IRecordList<SimpleIntTestClass> recordList10to19 = _recordListManager.Get(new SimpleIntFilter(10, 19));
+			IRecordList<SimpleIntTestClass> recordList11to17 = _recordListManager.Get(new SimpleIntFilter(11, 17));
+			recordList10to19.Remove(recordList10to19[1]);
+			Assert.AreEqual(6, recordList11to17.Count);
+			Assert.AreEqual(12, recordList11to17[0]);
+			Assert.AreEqual(9, recordList10to19.Count);
+			Assert.AreEqual(12, recordList10to19[1]);
+			Assert.AreEqual(49, _sourceRecords.Count);
+			Assert.AreEqual(12, _sourceRecords[10]);
 		}
 
 	}

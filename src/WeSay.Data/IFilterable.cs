@@ -9,6 +9,5 @@ namespace WeSay.Data
 			get;
 		}
 		void RemoveFilter();
-		void RefreshFilter();
 	}
 }

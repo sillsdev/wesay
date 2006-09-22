@@ -103,18 +103,6 @@ namespace WeSay.Data.Tests.Db4oBindingListTests
 			Assert.AreEqual(_gianna, this._bindingList[0]);
 			AssertListChanged();
 		}
-
-		[Test]
-		public void RefreshFilter()
-		{
-			Filter();
-
-			_gianna.StoredInt = 1;
-			Assert.AreEqual(1, this._bindingList.Count);
-			this._bindingList.RefreshFilter();
-			Assert.AreEqual(2, this._bindingList.Count);
-			AssertListChanged();
-		}
 	}
 
 	[TestFixture]
@@ -164,6 +152,17 @@ namespace WeSay.Data.Tests.Db4oBindingListTests
 
 		[Test]
 		public void ConstructWithFilter()
+		{
+			_bindingList.Commit();
+			using (Db4oRecordList<SimpleIntTestClass> newBindingList = new Db4oRecordList<SimpleIntTestClass>(this._dataSource, _filter))
+			{
+				Assert.AreEqual(100, newBindingList.Count);
+			}
+		}
+
+		[Test]
+		[Ignore("db4o bug gives improper result if _bindingList is not committed first")]
+		public void ConstructWithFilterDb4oBug()
 		{
 			using (Db4oRecordList<SimpleIntTestClass> newBindingList = new Db4oRecordList<SimpleIntTestClass>(this._dataSource, _filter))
 			{

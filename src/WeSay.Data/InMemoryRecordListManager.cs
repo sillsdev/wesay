@@ -13,9 +13,15 @@ namespace WeSay.Data
 
 		public InMemoryRecordListManager(IRecordList<T> sourceRecords)
 		{
+			if (sourceRecords == null)
+			{
+				this._disposed = true;
+				throw new ArgumentNullException();
+			}
 			_sourceRecords = sourceRecords;
 			_recordLists = new Dictionary<string, IRecordList<T>>();
 		}
+
 		#region IRecordListManager Members
 
 		public IRecordList<T> Get()
@@ -24,7 +30,7 @@ namespace WeSay.Data
 			{
 				_recordLists.Add(String.Empty, new FilteredInMemoryRecordList(_sourceRecords));
 			}
-			return (IRecordList<T>) _recordLists[String.Empty];
+			return (IRecordList<T>)_recordLists[String.Empty];
 		}
 
 		public IRecordList<T> Get(IFilter<T> filter)
@@ -35,6 +41,7 @@ namespace WeSay.Data
 			}
 			return (IRecordList<T>)_recordLists[filter.Key];
 		}
+
 		#endregion
 
 		#region IDisposable Members
@@ -68,6 +75,7 @@ namespace WeSay.Data
 						keyValuePair.Value.Dispose();
 					}
 					_recordLists = null;
+					_sourceRecords = null;
 				}
 
 				// shared (dispose and finalizable) cleanup logic
@@ -87,37 +95,119 @@ namespace WeSay.Data
 		class FilteredInMemoryRecordList : InMemoryRecordList<T>
 		{
 			IRecordList<T> _masterRecordList;
+			bool _isSourceMasterRecord;
+			Predicate<T> IsRelevant;
 
 			public FilteredInMemoryRecordList(IRecordList<T> sourceRecords)
 				: base(sourceRecords)
 			{
 				_masterRecordList = sourceRecords;
 				_masterRecordList.ListChanged += new ListChangedEventHandler(OnMasterRecordListListChanged);
+				_masterRecordList.DeletingRecord += new EventHandler<RecordListEventArgs<T>>(OnMasterRecordListDeletingRecord);
 			}
+
 
 			public FilteredInMemoryRecordList(IRecordList<T> sourceRecords, Predicate<T> filter)
 				: this(sourceRecords)
 			{
-				if(!this.IsFiltered) {
-					this.ApplyFilter(filter);
-				}
+				IsRelevant = filter;
+				this.ApplyFilter(filter);
+			}
+
+			void OnMasterRecordListDeletingRecord(object sender, RecordListEventArgs<T> e)
+			{
+				HandleItemDeletedFromMaster(e.Item);
 			}
 
 			void OnMasterRecordListListChanged(object sender, ListChangedEventArgs e)
 			{
+				IRecordList<T> masterRecordList = (IRecordList<T>)sender;
 				VerifyNotDisposed();
+				_isSourceMasterRecord = true;
+				switch (e.ListChangedType)
+				{
+					case ListChangedType.ItemAdded:
+						HandleItemAddedToMaster(masterRecordList[e.NewIndex]);
+						break;
+					case ListChangedType.ItemChanged:
+						HandleItemChangedInMaster(masterRecordList[e.NewIndex]);
+						break;
+					case ListChangedType.ItemDeleted:
+						break;
+					case ListChangedType.Reset:
+						HandleItemsClearedFromMaster(masterRecordList);
+						break;
+				}
+				_isSourceMasterRecord = false;
+			}
+
+			protected override bool ShouldAddRecord(T item)
+			{
+				bool shouldAdd = base.ShouldAddRecord(item);
+				if (shouldAdd)
+				{
+					shouldAdd = !Contains(item);
+				}
+				return shouldAdd;
+			}
+			private void HandleItemAddedToMaster(T item)
+			{
+				AddIfRelevantElseRemove(item);
+			}
+
+			private void HandleItemChangedInMaster(T item)
+			{
+				AddIfRelevantElseRemove(item);
+			}
+
+			private void AddIfRelevantElseRemove(T item)
+			{
+				if (this.IsRelevant(item))
+				{
+					if (!Contains(item))
+					{
+						this.Add(item);
+					}
+				}
+				else if (this.Contains(item))
+				{
+					this.Remove(item);
+				}
+			}
+
+			private void HandleItemDeletedFromMaster(T item)
+			{
+				if (this.Contains(item))
+				{
+					this.Remove(item);
+				}
+			}
+
+			private void HandleItemsClearedFromMaster(IRecordList<T> masterRecordList)
+			{
+				// The reset event can be raised when items are cleared and also when sorting or filtering occurs
+				if (masterRecordList.Count == 0)
+				{
+					this.Clear();
+				}
 			}
 
 			protected override void OnItemAdded(int newIndex)
 			{
 				base.OnItemAdded(newIndex);
-				_masterRecordList.Add(this[newIndex]);
+				if (!_isSourceMasterRecord && _masterRecordList != null)
+				{
+					_masterRecordList.Add(this[newIndex]);
+				}
 			}
 
 			protected override void OnItemDeleted(int oldIndex)
 			{
 				base.OnItemDeleted(oldIndex);
-				_masterRecordList.Remove(this[oldIndex]);
+				if (!_isSourceMasterRecord && _masterRecordList != null)
+				{
+					_masterRecordList.Remove(this[oldIndex]);
+				}
 			}
 
 			#region IDisposable Members

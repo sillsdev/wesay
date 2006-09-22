@@ -29,6 +29,10 @@ namespace WeSay.Data.Tests
 				OnPropertyChanged(new PropertyChangedEventArgs("I"));
 			}
 		}
+		public override string ToString()
+		{
+			return I.ToString();
+		}
 
 		#region INotifyPropertyChanged Members
 

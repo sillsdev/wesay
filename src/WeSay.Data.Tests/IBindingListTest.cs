@@ -273,7 +273,7 @@ namespace WeSay.Data.Tests.IBindingListTests
 			}
 		}
 		[Test]
-		public void ListChangedOnDelete()
+		public void ListChangedOnRemoveAt()
 		{
 			Assert.IsFalse(_listChanged);
 			if (_bindingList.SupportsChangeNotification)
@@ -291,6 +291,26 @@ namespace WeSay.Data.Tests.IBindingListTests
 				Assert.AreEqual(0, _listChangedEventArgs.NewIndex);
 			}
 		}
+		[Test]
+		public void ListChangedOnRemove()
+		{
+			Assert.IsFalse(_listChanged);
+			if (_bindingList.SupportsChangeNotification)
+			{
+				if (_bindingList.Count == 0)
+				{
+					_bindingList.Add(this._newItem);
+					_listChanged = false;
+					_listChangedEventArgs = null;
+				}
+				_bindingList.Remove(_bindingList[0]);
+				Assert.IsTrue(_listChanged);
+				Assert.IsTrue(_listChangedEventArgs.ListChangedType == ListChangedType.ItemDeleted);
+				Assert.AreEqual(-1, _listChangedEventArgs.OldIndex);
+				Assert.AreEqual(0, _listChangedEventArgs.NewIndex);
+			}
+		}
+
 		[Test]
 		public void ListChangedOnClear()
 		{
