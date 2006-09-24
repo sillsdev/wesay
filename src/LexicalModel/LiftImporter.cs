@@ -25,7 +25,7 @@ namespace WeSay.LexicalModel
 		   return entries;
 	   }
 
-	  public void ReadMultiTextOrNull(XmlNode node, string query, MultiText text)
+	  public static void ReadMultiTextOrNull(XmlNode node, string query, MultiText text)
 	   {
 		   XmlNode element = node.SelectSingleNode(query);
 		   if (element != null)
@@ -38,7 +38,7 @@ namespace WeSay.LexicalModel
 	   /// this takes a text, rather than returning one just because the
 	   /// lexical model classes currently always create their MultiText fields during the constructor.
 	   /// </summary>
-		public void ReadMultiText(XmlNode node, MultiText text)
+		public static void ReadMultiText(XmlNode node, MultiText text)
 	   {
 		   foreach(XmlNode form in node.SelectNodes("form"))
 		   {
@@ -51,7 +51,7 @@ namespace WeSay.LexicalModel
 		   return form.Attributes[attr].Value;
 	   }
 
-	   public LexExampleSentence ReadExample(XmlNode xmlNode)
+	   public static LexExampleSentence ReadExample(XmlNode xmlNode)
 	   {
 		   LexExampleSentence example = new LexExampleSentence();
 		   ReadMultiTextOrNull(xmlNode, "source", example.Sentence);
@@ -71,7 +71,7 @@ namespace WeSay.LexicalModel
 		   return sense;
 	   }
 
-	   private string GetOptionalAttributeString(XmlNode xmlNode, string name)
+	   private static string GetOptionalAttributeString(XmlNode xmlNode, string name)
 	   {
 		   XmlAttribute attr= xmlNode.Attributes[name];
 		   if (attr == null)

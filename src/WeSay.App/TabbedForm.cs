@@ -6,13 +6,10 @@ namespace WeSay.App
 	public partial class TabbedForm : Form
 	{
 		private ITask _currentTool;
-		private BasilProject _project;
 
 		public TabbedForm(BasilProject project, ITaskBuilder taskBuilder)
 		{
 			InitializeComponent();
-
-			_project = project;
 
 			this.tabControl1.TabPages.Clear();
 

@@ -56,38 +56,38 @@ namespace WeSay.TreeViewIList.Tests
 		public void GetFlags()
 		{
 			Assert.AreEqual((int)(Gtk.TreeModelFlags.ItersPersist | Gtk.TreeModelFlags.ListOnly),
-				GetFlags_callback());
+				GetFlagsCallback());
 		}
 
 		[Test]
 		public void GetNColumns()
 		{
-			Assert.AreEqual(1, GetNColumns_callback());
+			Assert.AreEqual(1, GetNColumnsCallback());
 		}
 
 		[Test]
 		public void GetColumnType()
 		{
-			Assert.AreEqual(GLib.GType.String.Val, GetColumnType_callback(0));
+			Assert.AreEqual(GLib.GType.String.Val, GetColumnTypeCallback(0));
 		}
 
 		[Test]
 		public void GetColumnTypeBad()
 		{
-			Assert.AreEqual(GLib.GType.Invalid.Val, GetColumnType_callback(-1));
-			Assert.AreEqual(GLib.GType.Invalid.Val, GetColumnType_callback(1));
+			Assert.AreEqual(GLib.GType.Invalid.Val, GetColumnTypeCallback(-1));
+			Assert.AreEqual(GLib.GType.Invalid.Val, GetColumnTypeCallback(1));
 		}
 
 		[Test]
 		public void GetRow(){
 			int index;
 			Gtk.TreePath path = new Gtk.TreePath("0");
-			Assert.IsTrue(GetRow_callback(out index, path.Handle));
+			Assert.IsTrue(GetRowCallback(out index, path.Handle));
 			Assert.AreEqual(0, index);
 
 			int i = this._PastTheEndIndex - 1;
 			path = new Gtk.TreePath(i.ToString());
-			Assert.IsTrue(GetRow_callback(out index, path.Handle));
+			Assert.IsTrue(GetRowCallback(out index, path.Handle));
 			Assert.AreEqual(this._PastTheEndIndex-1, index);
 		}
 
@@ -100,22 +100,22 @@ namespace WeSay.TreeViewIList.Tests
 
 			path = new Gtk.TreePath("0.0");
 			index = -1;
-			Assert.IsFalse(GetRow_callback(out index, path.Handle));
+			Assert.IsFalse(GetRowCallback(out index, path.Handle));
 			Assert.AreEqual(this._PastTheEndIndex, index);
 
 			path = new Gtk.TreePath("-1");
 			index = -1;
-			Assert.IsFalse(GetRow_callback(out index, path.Handle));
+			Assert.IsFalse(GetRowCallback(out index, path.Handle));
 			Assert.AreEqual(this._PastTheEndIndex, index);
 
 			path = new Gtk.TreePath("");
 			index = -1;
-			Assert.IsFalse(GetRow_callback(out index, path.Handle));
+			Assert.IsFalse(GetRowCallback(out index, path.Handle));
 			Assert.AreEqual(this._PastTheEndIndex, index);
 
 			path = new Gtk.TreePath(this._PastTheEndIndex.ToString());
 			index = -1;
-			Assert.IsFalse(GetRow_callback(out index, path.Handle));
+			Assert.IsFalse(GetRowCallback(out index, path.Handle));
 			Assert.AreEqual(this._PastTheEndIndex, index);
 		}
 
@@ -124,10 +124,10 @@ namespace WeSay.TreeViewIList.Tests
 		public void GetPath()
 		{
 			Gtk.TreePath path;
-			path = new Gtk.TreePath(GetPath_callback(0));
+			path = new Gtk.TreePath(GetPathCallback(0));
 			Assert.AreEqual("0", path.ToString());
 
-			path = new Gtk.TreePath(GetPath_callback(this._PastTheEndIndex-1));
+			path = new Gtk.TreePath(GetPathCallback(this._PastTheEndIndex-1));
 			int i = this._PastTheEndIndex -1;
 			Assert.AreEqual(i.ToString(), path.ToString());
 		}
@@ -135,8 +135,8 @@ namespace WeSay.TreeViewIList.Tests
 		[Test]
 		public void GetPathBad()
 		{
-			Assert.AreEqual(IntPtr.Zero, GetPath_callback(-1));
-			Assert.AreEqual(IntPtr.Zero, GetPath_callback(-1));
+			Assert.AreEqual(IntPtr.Zero, GetPathCallback(-1));
+			Assert.AreEqual(IntPtr.Zero, GetPathCallback(-1));
 		}
 
 		[System.Runtime.InteropServices.DllImport("libgobject-2.0-0.dll")]
@@ -147,7 +147,7 @@ namespace WeSay.TreeViewIList.Tests
 		{
 			GLib.Value value;
 			g_value_init(out value, GLib.GType.String.Val);
-			GetValue_callback(0, 0, ref value);
+			GetValueCallback(0, 0, ref value);
 			Assert.AreEqual("first item", value.Val);
 		}
 
@@ -157,21 +157,21 @@ namespace WeSay.TreeViewIList.Tests
 			int index = 0;
 			for (int i = 0; i < this._PastTheEndIndex-1; ++i)
 			{
-				Assert.IsTrue(Next_callback(ref index), "index {0}", index);
+				Assert.IsTrue(NextCallback(ref index), "index {0}", index);
 				Assert.AreEqual(i + 1, index);
 			}
-			Assert.IsFalse(Next_callback(ref index));
+			Assert.IsFalse(NextCallback(ref index));
 		}
 
 		[Test]
 		public void NextBad()
 		{
 			int index = -1;
-			Assert.IsFalse(Next_callback(ref index));
+			Assert.IsFalse(NextCallback(ref index));
 			Assert.AreEqual(this._PastTheEndIndex, index);
 
 			index = this._PastTheEndIndex;
-			Assert.IsFalse(Next_callback(ref index));
+			Assert.IsFalse(NextCallback(ref index));
 			Assert.AreEqual(this._PastTheEndIndex, index);
 		}
 
@@ -179,69 +179,69 @@ namespace WeSay.TreeViewIList.Tests
 		public void Children()
 		{
 			int child = -1;
-			Assert.IsTrue(Children_callback(out child, -1));
+			Assert.IsTrue(ChildrenCallback(out child, -1));
 			Assert.AreEqual(0, child);
 
 			child = -1;
-			Assert.IsFalse(Children_callback(out child, 0));
+			Assert.IsFalse(ChildrenCallback(out child, 0));
 			Assert.AreEqual(this._PastTheEndIndex, child);
 
 			child = -1;
-			Assert.IsFalse(Children_callback(out child, this._PastTheEndIndex - 1));
+			Assert.IsFalse(ChildrenCallback(out child, this._PastTheEndIndex - 1));
 			Assert.AreEqual(this._PastTheEndIndex, child);
 		}
 		[Test]
 		public void ChildrenBad()
 		{
 			int child = -1;
-			Assert.IsFalse(Children_callback(out child, -2));
+			Assert.IsFalse(ChildrenCallback(out child, -2));
 			Assert.AreEqual(this._PastTheEndIndex, child);
 
 
 			child = -1;
-			Assert.IsFalse(Children_callback(out child, this._PastTheEndIndex));
+			Assert.IsFalse(ChildrenCallback(out child, this._PastTheEndIndex));
 			Assert.AreEqual(this._PastTheEndIndex, child);
 		}
 
 		[Test]
 		public void HasChild()
 		{
-			Assert.IsFalse(HasChild_callback(0));
-			Assert.IsFalse(HasChild_callback(this._PastTheEndIndex-1));
+			Assert.IsFalse(HasChildCallback(0));
+			Assert.IsFalse(HasChildCallback(this._PastTheEndIndex-1));
 		}
 
 		[Test]
 		public void HasChildBad()
 		{
-			Assert.IsFalse(HasChild_callback(-1));
-			Assert.IsFalse(HasChild_callback(this._PastTheEndIndex));
+			Assert.IsFalse(HasChildCallback(-1));
+			Assert.IsFalse(HasChildCallback(this._PastTheEndIndex));
 		}
 
 
 		[Test]
 		public void NChildren()
 		{
-			Assert.AreEqual(this._PastTheEndIndex, NChildren_callback(-1));
-			Assert.AreEqual(0, NChildren_callback(0));
-			Assert.AreEqual(0, NChildren_callback(this._PastTheEndIndex - 1));
+			Assert.AreEqual(this._PastTheEndIndex, NChildrenCallback(-1));
+			Assert.AreEqual(0, NChildrenCallback(0));
+			Assert.AreEqual(0, NChildrenCallback(this._PastTheEndIndex - 1));
 		}
 
 		[Test]
 		public void NChildrenBad()
 		{
-			Assert.AreEqual(0, NChildren_callback(-2));
-			Assert.AreEqual(0, NChildren_callback(this._PastTheEndIndex));
+			Assert.AreEqual(0, NChildrenCallback(-2));
+			Assert.AreEqual(0, NChildrenCallback(this._PastTheEndIndex));
 		}
 
 		[Test]
 		public void NthChild()
 		{
 			int child = -1;
-			Assert.IsTrue(NthChild_callback(out child, -1, 0));
+			Assert.IsTrue(NthChildCallback(out child, -1, 0));
 			Assert.AreEqual(0, child);
 
 			child = -1;
-			Assert.IsTrue(NthChild_callback(out child, -1, this._PastTheEndIndex - 1));
+			Assert.IsTrue(NthChildCallback(out child, -1, this._PastTheEndIndex - 1));
 			Assert.AreEqual(this._PastTheEndIndex-1, child);
 		}
 
@@ -249,59 +249,59 @@ namespace WeSay.TreeViewIList.Tests
 		public void NthChildBad()
 		{
 			int child = -1;
-			Assert.IsFalse(NthChild_callback(out child, -1, -1));
+			Assert.IsFalse(NthChildCallback(out child, -1, -1));
 			Assert.AreEqual(this._PastTheEndIndex, child);
 
 			child = -1;
-			Assert.IsFalse(NthChild_callback(out child, -1, this._PastTheEndIndex));
+			Assert.IsFalse(NthChildCallback(out child, -1, this._PastTheEndIndex));
 			Assert.AreEqual(this._PastTheEndIndex, child);
 
 			child = -1;
-			Assert.IsFalse(NthChild_callback(out child, -2, -1));
+			Assert.IsFalse(NthChildCallback(out child, -2, -1));
 			Assert.AreEqual(this._PastTheEndIndex, child);
 
 			child = -1;
-			Assert.IsFalse(NthChild_callback(out child, -2, 0));
+			Assert.IsFalse(NthChildCallback(out child, -2, 0));
 			Assert.AreEqual(this._PastTheEndIndex, child);
 
 			child = -1;
-			Assert.IsFalse(NthChild_callback(out child, -2, 1));
+			Assert.IsFalse(NthChildCallback(out child, -2, 1));
 			Assert.AreEqual(this._PastTheEndIndex, child);
 
 			child = -1;
-			Assert.IsFalse(NthChild_callback(out child, -2, -1));
+			Assert.IsFalse(NthChildCallback(out child, -2, -1));
 			Assert.AreEqual(this._PastTheEndIndex, child);
 
 			child = -1;
-			Assert.IsFalse(NthChild_callback(out child, 0, 0));
+			Assert.IsFalse(NthChildCallback(out child, 0, 0));
 			Assert.AreEqual(this._PastTheEndIndex, child);
 
 			child = -1;
-			Assert.IsFalse(NthChild_callback(out child, 0, 1));
+			Assert.IsFalse(NthChildCallback(out child, 0, 1));
 			Assert.AreEqual(this._PastTheEndIndex, child);
 
 			child = -1;
-			Assert.IsFalse(NthChild_callback(out child, this._PastTheEndIndex - 1, -1));
+			Assert.IsFalse(NthChildCallback(out child, this._PastTheEndIndex - 1, -1));
 			Assert.AreEqual(this._PastTheEndIndex, child);
 
 			child = -1;
-			Assert.IsFalse(NthChild_callback(out child, this._PastTheEndIndex - 1, 0));
+			Assert.IsFalse(NthChildCallback(out child, this._PastTheEndIndex - 1, 0));
 			Assert.AreEqual(this._PastTheEndIndex, child);
 
 			child = -1;
-			Assert.IsFalse(NthChild_callback(out child, this._PastTheEndIndex - 1, 1));
+			Assert.IsFalse(NthChildCallback(out child, this._PastTheEndIndex - 1, 1));
 			Assert.AreEqual(this._PastTheEndIndex, child);
 
 			child = -1;
-			Assert.IsFalse(NthChild_callback(out child, this._PastTheEndIndex, -1));
+			Assert.IsFalse(NthChildCallback(out child, this._PastTheEndIndex, -1));
 			Assert.AreEqual(this._PastTheEndIndex, child);
 
 			child = -1;
-			Assert.IsFalse(NthChild_callback(out child, this._PastTheEndIndex, 0));
+			Assert.IsFalse(NthChildCallback(out child, this._PastTheEndIndex, 0));
 			Assert.AreEqual(this._PastTheEndIndex, child);
 
 			child = -1;
-			Assert.IsFalse(NthChild_callback(out child, this._PastTheEndIndex, 1));
+			Assert.IsFalse(NthChildCallback(out child, this._PastTheEndIndex, 1));
 			Assert.AreEqual(this._PastTheEndIndex, child);
 		}
 
@@ -309,22 +309,22 @@ namespace WeSay.TreeViewIList.Tests
 		public void Parent()
 		{
 			int parent = -1;
-			Assert.IsFalse(Parent_callback(out parent, 0));
+			Assert.IsFalse(ParentCallback(out parent, 0));
 			Assert.AreEqual(this._PastTheEndIndex, parent);
 
 			parent = -1;
-			Assert.IsFalse(Parent_callback(out parent, this._PastTheEndIndex - 1));
+			Assert.IsFalse(ParentCallback(out parent, this._PastTheEndIndex - 1));
 			Assert.AreEqual(this._PastTheEndIndex, parent);
 		}
 		[Test]
 		public void ParentBad()
 		{
 			int parent = -1;
-			Assert.IsFalse(Parent_callback(out parent, -1));
+			Assert.IsFalse(ParentCallback(out parent, -1));
 			Assert.AreEqual(this._PastTheEndIndex, parent);
 
 			parent = -1;
-			Assert.IsFalse(Parent_callback(out parent, this._PastTheEndIndex));
+			Assert.IsFalse(ParentCallback(out parent, this._PastTheEndIndex));
 			Assert.AreEqual(this._PastTheEndIndex, parent);
 		}
 

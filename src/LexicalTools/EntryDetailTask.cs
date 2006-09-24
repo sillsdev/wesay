@@ -72,7 +72,7 @@ namespace WeSay.LexicalTools
 			{
 				if (value == null)
 				{
-					throw new ArgumentNullException();
+					throw new ArgumentNullException("value");
 				}
 				_records = value;
 			}

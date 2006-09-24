@@ -45,7 +45,7 @@ namespace WeSay.LexicalModel
 				foreach (LexExampleSentence example in sense.ExampleSentences)
 				{
 					hasExample = true;
-					if (example.Sentence[_writingSystemId] == string.Empty)
+					if (example.Sentence[_writingSystemId].Length == 0)
 					{
 						return true;
 					}

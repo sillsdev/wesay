@@ -7,7 +7,19 @@ namespace WeSay.UI
 {
 	public class BasilProject : IProject, IDisposable
 	{
-		protected static BasilProject _singleton;
+	  private static BasilProject _singleton;
+
+	  protected static BasilProject Singleton
+	  {
+		get
+		{
+		  return BasilProject._singleton;
+		}
+		set
+		{
+		  BasilProject._singleton = value;
+		}
+	  }
 		private WritingSystemCollection _writingSystems;
 		private string _projectDirectoryPath;
 		private string _stringCatalogSelector;
@@ -18,7 +30,7 @@ namespace WeSay.UI
 			{
 				if (_singleton == null)
 				{
-					throw new ApplicationException("BasilProject Not initialized. For tests, call BasilProject.InitializeForTests().");
+				  throw new InvalidOperationException("BasilProject Not initialized. For tests, call BasilProject.InitializeForTests().");
 				}
 				return _singleton;
 			}

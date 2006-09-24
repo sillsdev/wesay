@@ -8,7 +8,7 @@ using WeSay.Language;
 
 namespace WeSay.LexicalModel
 {
-	public class LexEntry : WeSayDataObject
+	sealed public class LexEntry : WeSayDataObject
 	{
 		private MultiText _lexicalForm;
 		private Guid _guid;

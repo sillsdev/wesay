@@ -6,7 +6,7 @@ using WeSay.Language;
 
 namespace WeSay.LexicalModel
 {
-	public class LexSense : WeSayDataObject
+	sealed public class LexSense : WeSayDataObject
 	{
 		private MultiText _gloss;
 		private WeSay.Data.InMemoryBindingList<LexExampleSentence> _exampleSentences;

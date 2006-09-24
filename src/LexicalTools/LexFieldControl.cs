@@ -46,7 +46,7 @@ namespace WeSay.LexicalTools
 			}
 		}
 
-		public RichTextBox Control_FormattedView
+		public RichTextBox ControlFormattedView
 		{
 			get
 			{
@@ -54,7 +54,7 @@ namespace WeSay.LexicalTools
 			}
 		}
 
-		public EntryDetailControl Control_EntryDetail
+		public EntryDetailControl ControlEntryDetail
 		{
 			get
 			{

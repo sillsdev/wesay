@@ -5,7 +5,8 @@ using System.Runtime.InteropServices;
 
 namespace WeSay.TreeViewIList
 {
-	public class IListComboBoxAdaptor : Gtk.ComboBox
+  [CLSCompliant(false)]
+  public class IListComboBoxAdaptor : Gtk.ComboBox
 	{
 		private TreeModelIListAdaptor _model;
 		private TreeModelIListConfiguration _modelConfiguration = new TreeModelIListConfiguration();
@@ -27,24 +28,27 @@ namespace WeSay.TreeViewIList
 		{
 		}
 
+	private static class NativeMethods
+	{
+	  [DllImport("libgtk-x11-2.0.so")]
+	  public static extern void gtk_combo_box_set_model(IntPtr raw, IntPtr model);
+	  [DllImport("libgtk-win32-2.0-0.dll")]
+	  public static extern IntPtr gtk_combo_box_get_type();
+	}
 
-		[DllImport("libgtk-x11-2.0.so")]
-		static extern void gtk_combo_box_set_model(IntPtr raw, IntPtr model);
 
 		private void UpdateModel()
 		{
-			gtk_combo_box_set_model(Handle, IntPtr.Zero);
-			gtk_combo_box_set_model(Handle, _model == null ? IntPtr.Zero : _model.Handle);
+			NativeMethods.gtk_combo_box_set_model(Handle, IntPtr.Zero);
+			NativeMethods.gtk_combo_box_set_model(Handle, _model == null ? IntPtr.Zero : _model.Handle);
 		}
 
-		[DllImport("libgtk-win32-2.0-0.dll")]
-		static extern IntPtr gtk_combo_box_get_type();
 
 		public static new GLib.GType GType
 		{
 			get
 			{
-				return new GLib.GType(gtk_combo_box_get_type());
+			  return new GLib.GType(NativeMethods.gtk_combo_box_get_type());
 			}
 		}
 
@@ -74,7 +78,7 @@ namespace WeSay.TreeViewIList
 			}
 		}
 
-		public IList<GLib.GType> Column_Types
+		public IList<GLib.GType> ColumnTypes
 		{
 			get
 			{

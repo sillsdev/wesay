@@ -10,11 +10,12 @@ namespace WeSay.TreeViewIList
 
 		public event EventHandler Changed;
 
-		public TreeViewIListSelection(Gtk.TreeSelection selection)
+	  [CLSCompliant(false)]
+	  public TreeViewIListSelection(Gtk.TreeSelection selection)
 		{
 			if (selection == null)
 			{
-				throw new ArgumentNullException();
+				throw new ArgumentNullException("selection");
 			}
 			this._selection = selection;
 			_selection.Changed += new EventHandler(OnSelectionChanged);
@@ -37,7 +38,8 @@ namespace WeSay.TreeViewIList
 			TreeView.ScrollToCell(path, TreeView.Columns[0], false, 0, 0);
 		}
 
-		public static Gtk.SelectionMode Mode
+	  [CLSCompliant(false)]
+	  public static Gtk.SelectionMode Mode
 		{
 			get
 			{
@@ -45,7 +47,8 @@ namespace WeSay.TreeViewIList
 			}
 		}
 
-		public TreeViewAdaptorIList TreeView
+	  [CLSCompliant(false)]
+	  public TreeViewAdaptorIList TreeView
 		{
 			get
 			{

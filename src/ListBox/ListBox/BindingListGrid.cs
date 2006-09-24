@@ -11,8 +11,8 @@ namespace ListBox
 	/// </summary>
 	public class BindingListGrid : GridVirtual
 	{
-		protected IBindingList _list;
-		protected int _selected;
+		private IBindingList _list;
+		private int _selected;
 		public event EventHandler SelectedIndexChanged;
 
 		public BindingListGrid()

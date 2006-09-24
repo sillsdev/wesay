@@ -118,21 +118,21 @@ namespace WeSay.App
 
 		}
 
-		private IMutablePicoContainer NewChildContainer(IList instances)
-		{
-			IMutablePicoContainer child = new DefaultPicoContainer(_parentPicoContext);
-			_parentPicoContext.AddChildContainer(child);
-			if (instances != null)
-			{
-				foreach (object instance in instances)
-				{
-					//REVIEW: Huh? This is registering every LexEntry.
-					Debug.Assert(null == instance as LexicalModel.LexEntry,"Flying Saucer Siting");
-					child.RegisterComponentInstance(instance);
-				}
-			}
-			return child;
-		}
+		//private IMutablePicoContainer NewChildContainer(IList instances)
+		//{
+		//    IMutablePicoContainer child = new DefaultPicoContainer(_parentPicoContext);
+		//    _parentPicoContext.AddChildContainer(child);
+		//    if (instances != null)
+		//    {
+		//        foreach (object instance in instances)
+		//        {
+		//            //REVIEW: Huh? This is registering every LexEntry.
+		//            Debug.Assert(null == instance as LexicalModel.LexEntry,"Flying Saucer Siting");
+		//            child.RegisterComponentInstance(instance);
+		//        }
+		//    }
+		//    return child;
+		//}
 
 		private static ITask CreateTool(IMutablePicoContainer picoContext, string fullToolClass)
 		{
@@ -148,10 +148,10 @@ namespace WeSay.App
 			picoContext.RegisterComponentImplementation(fullToolClass, Type.GetType(fullToolClass, true));
 		}
 
-		private ITask CreateTool(string fullToolClass, IList instances)
-		{
-			return CreateTool(NewChildContainer(instances), fullToolClass);
-		}
+		//private ITask CreateTool(string fullToolClass, IList instances)
+		//{
+		//    return CreateTool(NewChildContainer(instances), fullToolClass);
+		//}
 
 		private ITask CreateTool(string fullToolClass)
 		{

@@ -14,11 +14,11 @@ namespace WeSay.UI
 		{
 			get
 			{
-				if (_singleton == null)
+				if (Singleton == null)
 				{
-					throw new ApplicationException("WeSayWordsProject Not initialized. For tests, call BasilProject.InitializeForTests().");
+				  throw new InvalidOperationException("WeSayWordsProject Not initialized. For tests, call BasilProject.InitializeForTests().");
 				}
-				return (WeSayWordsProject) _singleton;
+				return (WeSayWordsProject) Singleton;
 			}
 		}
 

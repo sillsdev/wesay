@@ -8,56 +8,56 @@ using WeSay.UI;
 
 namespace WeSay.LexicalTools
 {
-	public class RtfRenderer
+	public static class RtfRenderer
 	{
 		public static string ToRtf(LexEntry entry, CurrentItemEventArgs currentItem)
 		{
+		  StringBuilder rtf = new StringBuilder();
+			rtf.Append(@"{\rtf1\ansi\fs28 ");
+			rtf.Append(MakeFontTable());
 
-			string rtf = @"{\rtf1\ansi\fs28 ";
-			rtf += MakeFontTable();
-
-			rtf += @"\b ";
-			rtf += RenderField(entry.LexicalForm, currentItem);
-			rtf += @"\b0 ";
+			rtf.Append(@"\b ");
+			rtf.Append(RenderField(entry.LexicalForm, currentItem));
+			rtf.Append(@"\b0");
 
 			int senseNumber = 1;
 			foreach (LexSense sense in entry.Senses)
 			{
-				rtf += SwitchToWritingSystem(BasilProject.Project.WritingSystems.AnalysisWritingSystemDefault.Id);
-				rtf += senseNumber.ToString();
+				rtf.Append(SwitchToWritingSystem(BasilProject.Project.WritingSystems.AnalysisWritingSystemDefault.Id));
+				rtf.Append(senseNumber.ToString());
 
-				rtf += @" \i ";
-				rtf += RenderField(sense.Gloss, currentItem);
-				rtf += @"\i0 ";
+				rtf.Append(@" \i ");
+				rtf.Append(RenderField(sense.Gloss, currentItem));
+				rtf.Append(@"\i0 ");
 
 				foreach (LexExampleSentence exampleSentence in sense.ExampleSentences)
 				{
-					rtf += RenderField(exampleSentence.Sentence, currentItem);
-					rtf += RenderField(exampleSentence.Translation, currentItem);
+					rtf.Append(RenderField(exampleSentence.Sentence, currentItem));
+					rtf.Append(RenderField(exampleSentence.Translation, currentItem));
 				}
 
-				rtf += RenderGhostedField("Sentence", currentItem, sense.ExampleSentences.Count + 1);
-				rtf += RenderGhostedField("Translation", currentItem, sense.ExampleSentences.Count + 1);
+				rtf.Append(RenderGhostedField("Sentence", currentItem, sense.ExampleSentences.Count + 1));
+				rtf.Append(RenderGhostedField("Translation", currentItem, sense.ExampleSentences.Count + 1));
 
 				++senseNumber;
 			}
-			rtf += RenderGhostedField("Gloss", currentItem, entry.Senses.Count + 1);
+			rtf.Append(RenderGhostedField("Gloss", currentItem, entry.Senses.Count + 1));
 
-			rtf += @"\par}";
-			return Utf16ToRtfAnsi(rtf);
+			rtf.Append(@"\par}");
+			return Utf16ToRtfAnsi(rtf.ToString());
 		}
 
 		private static string MakeFontTable()
 		{
-			string rtf = @"{\fonttbl";
+			StringBuilder rtf = new StringBuilder(@"{\fonttbl");
 			int i = 0;
 			foreach (KeyValuePair<string, WritingSystem> ws in BasilProject.Project.WritingSystems)
 			{
-				rtf += @"\f" + i.ToString() + @"\fnil\fcharset0" + " " +ws.Value.Font.FontFamily.Name + ";";
+				rtf.Append(@"\f" + i.ToString() + @"\fnil\fcharset0" + " " +ws.Value.Font.FontFamily.Name + ";");
 				i++;
 			}
-			rtf+="}";
-			return rtf;
+			rtf.Append("}");
+			return rtf.ToString();
 		}
 
 		private static int GetFontNumber(WritingSystem writingSystem){
@@ -75,29 +75,31 @@ namespace WeSay.LexicalTools
 
 		private static string RenderField(MultiText text, CurrentItemEventArgs currentItem)
 		{
-			string rtf = string.Empty;
+			StringBuilder rtf = new StringBuilder();
 			if (text != null)
 			{
 				if (text.Count == 0 && currentItem != null && text == currentItem.DataTarget)
 				{
-					rtf += RenderBlankPosition();
+					rtf.Append(RenderBlankPosition());
 				}
 
 				foreach (LanguageForm l in text)
 				{
 					if (IsCurrentField(text, l, currentItem))
 					{
-						rtf += @"\ul     ";
+						rtf.Append(@"\ul     ");
 					}
-					rtf += SwitchToWritingSystem(l.WritingSystemId);
-					rtf += l.Form + " ";
+					rtf.Append(SwitchToWritingSystem(l.WritingSystemId));
+					rtf.Append(l.Form + " ");
 					if (IsCurrentField(text, l, currentItem))
 					{
-						rtf += "   " + Convert.ToChar(160) + @"\ulnone  ";
+					  rtf.Append("   ");
+					  rtf.Append(Convert.ToChar(160));
+					  rtf.Append(@"\ulnone  ");
 					}
 				}
 			}
-			return rtf;
+			return rtf.ToString();
 		}
 
 		private static string RenderGhostedField(string property, CurrentItemEventArgs currentItem, int number)
@@ -135,19 +137,21 @@ namespace WeSay.LexicalTools
 
 		private static string Utf16ToRtfAnsi(string inString)
 		{
-			string outString = String.Empty;
+			StringBuilder outString = new StringBuilder();
 			foreach (char c in inString)
 			{
 				if (c > 128)
 				{
-					outString += @"\u" + Convert.ToInt16(c).ToString() + "?";
+				  outString.Append(@"\u");
+				  outString.Append(Convert.ToInt16(c).ToString());
+				  outString.Append('?');
 				}
 				else
 				{
-					outString += c;
+					outString.Append(c);
 				}
 			}
-			return outString;
+			return outString.ToString();
 		}
 	}
 }

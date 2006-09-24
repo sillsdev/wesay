@@ -45,7 +45,7 @@ namespace WeSay.LexicalTools
 						| System.Windows.Forms.AnchorStyles.Right)));
 			this._lexFieldDetailPanel.AutoScroll = true;
 			this._lexFieldDetailPanel.BackColor = System.Drawing.SystemColors.ActiveCaption;
-			this._lexFieldDetailPanel.Control_FormattedView.Text = "";
+			this._lexFieldDetailPanel.ControlFormattedView.Text = "";
 			this._lexFieldDetailPanel.DataSource = null;
 			this._lexFieldDetailPanel.Location = new System.Drawing.Point(126, 5);
 			this._lexFieldDetailPanel.Name = "_lexFieldDetailPanel";

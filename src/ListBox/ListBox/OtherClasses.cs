@@ -72,7 +72,7 @@ namespace ListBox
 
 		public void SetValue(CellContext cellContext, object p_Value)
 		{
-			throw new ApplicationException("Not supported");
+			throw new NotSupportedException();
 		}
 		#endregion
 	}

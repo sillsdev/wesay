@@ -43,7 +43,7 @@ namespace WeSay.LexicalModel
 			foreach (LexSense sense in entry.Senses)
 			{
 				hasSense = true;
-				if (sense.Gloss[_writingSystemId] == string.Empty)
+				if (sense.Gloss[_writingSystemId].Length == 0)
 				{
 					return true;
 				}

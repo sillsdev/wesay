@@ -12,12 +12,12 @@ namespace WeSay.App
 
 		class CommandLineArguments
 		{
-			[DefaultArgument(ArgumentType.AtMostOnce,
+			[DefaultArgument(ArgumentTypes.AtMostOnce,
 				DefaultValue=@"..\..\SampleProjects\Thai",
 				HelpText="Path to the folder containing the project.")]
 			public string projectPath=null;
 
-			[Argument(ArgumentType.AtMostOnce,
+			[Argument(ArgumentTypes.AtMostOnce,
 				HelpText="Language to show the user interface in.",
 				LongName="ui",
 				ShortName="")]
@@ -85,7 +85,7 @@ namespace WeSay.App
 				//it needs to create some disposable object other than a IList<>.
 				//The reason we need to be able to dispose of it is because we need some way to
 				//dispose of things that it might create, such as a data source.
-				if (builder as IDisposable != null)
+				if (builder is IDisposable)
 					((IDisposable)builder).Dispose();
 			}
 		}

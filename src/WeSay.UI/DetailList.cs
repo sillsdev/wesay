@@ -19,7 +19,7 @@ namespace WeSay.UI
 		/// <summary>
 		/// we have this instead of just using this.Count() because  Count not implemented in Mono 1.16
 		/// </summary>
-		protected int _rowCount = 0;
+		private int _rowCount = 0;
 
 		private int _indexOfLabel = 0;
 		private int _indexOfTextBox = 1;
@@ -92,11 +92,11 @@ namespace WeSay.UI
 		/// I want to hide this from clients who would try to touch my controls directly
 		/// </summary>
 		///doesn't work to hide       protected new ControlCollection Controls
-		public new ControlCollection Controls
+		public static new ControlCollection Controls
 		{
 			get
 			{
-				throw new ApplicationException("Please don't access my Controls property externally.\n For testing use GetControlOfRow and GetEditControlFromReferenceControl.");
+			  throw new InvalidOperationException("Please don't access my Controls property externally.\n For testing use GetControlOfRow and GetEditControlFromReferenceControl.");
 			}
 		}
 
@@ -175,39 +175,39 @@ namespace WeSay.UI
 			}
 		}
 
-		private int AddHorizontalRule(Panel parentPanel, bool isHeader, bool isFirstInList)
-		{
+		//private int AddHorizontalRule(Panel parentPanel, bool isHeader, bool isFirstInList)
+		//{
 
-			Panel line = new Panel();
-			line.BorderStyle = BorderStyle.None;//let it provide some padding
-			line.ForeColor = System.Drawing.SystemColors.Control;//make it invisible
-			line.Left = 2;
-			line.Width = parentPanel.Width - 4;
-			if (isHeader && !isFirstInList)
-			{
-				line.Top = 5; // <---- defines the padding
-			   // label.Font = new Font(label.Font, FontStyle.Bold);
-				line.BackColor = System.Drawing.Color.LightGray;
-				line.Height = 1;
-			 //   parentPanel.Height += 5;
-			}
-			else
-			{   //it's now a placeholder to keep indexing simple
-				line.Top = 0;
-				line.Height = 0;
-			}
-			line.Anchor = AnchorStyles.Left | AnchorStyles.Right;
-			//line.Dock = DockStyle.Top;
-			parentPanel.Controls.Add(line);
+		//    Panel line = new Panel();
+		//    line.BorderStyle = BorderStyle.None;//let it provide some padding
+		//    line.ForeColor = System.Drawing.SystemColors.Control;//make it invisible
+		//    line.Left = 2;
+		//    line.Width = parentPanel.Width - 4;
+		//    if (isHeader && !isFirstInList)
+		//    {
+		//        line.Top = 5; // <---- defines the padding
+		//       // label.Font = new Font(label.Font, FontStyle.Bold);
+		//        line.BackColor = System.Drawing.Color.LightGray;
+		//        line.Height = 1;
+		//     //   parentPanel.Height += 5;
+		//    }
+		//    else
+		//    {   //it's now a placeholder to keep indexing simple
+		//        line.Top = 0;
+		//        line.Height = 0;
+		//    }
+		//    line.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+		//    //line.Dock = DockStyle.Top;
+		//    parentPanel.Controls.Add(line);
 
-			//Panel padding = new Panel();
-			//padding.BackColor = System.Drawing.Color.Red;
-			//padding.Height = 10;
-			//padding.Top = 0;
-			//parentPanel.Controls.Add(padding);
+		//    //Panel padding = new Panel();
+		//    //padding.BackColor = System.Drawing.Color.Red;
+		//    //padding.Height = 10;
+		//    //padding.Top = 0;
+		//    //parentPanel.Controls.Add(padding);
 
-			return line.Bottom + 4;
-		}
+		//    return line.Bottom + 4;
+		//}
 
 
 		public int GetRowOfControl(Control control)

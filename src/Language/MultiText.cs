@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Diagnostics;
 using System.ComponentModel;
+using System.Collections.ObjectModel;
 
 namespace WeSay.Language
 {
@@ -35,23 +36,20 @@ namespace WeSay.Language
 	/// MultiText holds an array of strings, indexed by writing system ID.
 	/// These are simple, single language Unicode strings.
 	/// </summary>
-	public class MultiText : INotifyPropertyChanged, IEnumerable
+	public sealed class MultiText : INotifyPropertyChanged, IEnumerable<LanguageForm>
 	{
 		/// <summary>
 		/// For INotifyPropertyChanged
 		/// </summary>
 		public event PropertyChangedEventHandler PropertyChanged;
 
-
-		//protected System.Collections.Generic.Dictionary<string, string> _forms;
-//        protected System.Collections.Generic.List<LanguageForm> _forms;
-		protected System.Collections.ArrayList _forms;
+		private Collection<LanguageForm> _forms;
+//        protected System.Collections.ArrayList _forms;
 
 		public MultiText()
 		{
-		   // _forms = new Dictionary<string, string>();
-		 //   _forms = new List<LanguageForm>(1);
-			 _forms = new ArrayList(1);
+			_forms = new Collection<LanguageForm>();
+		 //    _forms = new ArrayList(1);
 	  }
 
 		public string this[string writingSystemId]
@@ -115,7 +113,7 @@ namespace WeSay.Language
 		   //enhance: check to see if there has actually been a change
 
 		   LanguageForm alt = Find(writingSystemId);
-		   if (form == null || form == string.Empty) // we don't use space to store empty strings.
+		   if (form == null || form.Length == 0) // we don't use space to store empty strings.
 		   {
 			   if (alt != null)
 			   {
@@ -149,11 +147,20 @@ namespace WeSay.Language
 
 		#region IEnumerable Members
 
-		public IEnumerator GetEnumerator()
+		IEnumerator IEnumerable.GetEnumerator()
 		{
 			return _forms.GetEnumerator();
 		}
 
 		#endregion
-	}
+
+		#region IEnumerable<LanguageForm> Members
+
+		public IEnumerator<LanguageForm> GetEnumerator()
+		{
+		  return _forms.GetEnumerator();
+		}
+
+		#endregion
+	  }
 }

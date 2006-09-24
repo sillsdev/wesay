@@ -31,3 +31,6 @@ using System.Runtime.InteropServices;
 //
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
+
+[assembly: System.CLSCompliant(true)]
+[assembly: System.Security.Permissions.SecurityPermission(System.Security.Permissions.SecurityAction.RequestMinimum, Execution = true)]

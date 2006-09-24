@@ -74,7 +74,7 @@ namespace WeSay.UI
 			_catalog = new System.Collections.Specialized.StringDictionary();
 		}
 
-		private string GetStringBetweenQuotes(string line)
+		private static string GetStringBetweenQuotes(string line)
 		{
 			int s = line.IndexOf('"');
 			int f = line.LastIndexOf('"');

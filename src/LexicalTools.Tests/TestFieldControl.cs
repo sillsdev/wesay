@@ -48,7 +48,7 @@ namespace WeSay.LexicalTools.Tests
 		public void NullDataSource_ShowsEmpty()
 		{
 			LexFieldControl lexFieldControl = CreateForm(null);
-			Assert.AreEqual(string.Empty, lexFieldControl.Control_FormattedView.Text);
+			Assert.AreEqual(string.Empty, lexFieldControl.ControlFormattedView.Text);
 		}
 
 		[Test]
@@ -61,23 +61,23 @@ namespace WeSay.LexicalTools.Tests
 		private static void TestEntryShows(LexEntry entry)
 		{
 			LexFieldControl lexFieldControl = CreateForm(entry);
-			Assert.IsTrue(lexFieldControl.Control_FormattedView.Text.Contains(GetLexicalForm(entry)));
-			Assert.IsTrue(lexFieldControl.Control_FormattedView.Text.Contains(GetGloss(entry)));
-			Assert.IsTrue(lexFieldControl.Control_FormattedView.Text.Contains(GetExampleSentence(entry)));
+			Assert.IsTrue(lexFieldControl.ControlFormattedView.Text.Contains(GetLexicalForm(entry)));
+			Assert.IsTrue(lexFieldControl.ControlFormattedView.Text.Contains(GetGloss(entry)));
+			Assert.IsTrue(lexFieldControl.ControlFormattedView.Text.Contains(GetExampleSentence(entry)));
 		}
 
 		[Test]
 		public void EditField_SingleControl()
 		{
 			LexFieldControl lexFieldControl = CreateFilteredForm(apple, "Gloss");
-			Assert.AreEqual(1, lexFieldControl.Control_EntryDetail.Count);
+			Assert.AreEqual(1, lexFieldControl.ControlEntryDetail.Count);
 		}
 
 		[Test]
 		public void EditField_SingleControlWithGhost()
 		{
 			LexFieldControl lexFieldControl = CreateFilteredForm(apple, "Gloss GhostGloss");
-			Assert.AreEqual(2, lexFieldControl.Control_EntryDetail.Count);
+			Assert.AreEqual(2, lexFieldControl.ControlEntryDetail.Count);
 		}
 
 		[Test]
@@ -90,7 +90,7 @@ namespace WeSay.LexicalTools.Tests
 		private static void TestEditFieldMapsToLexicalForm(LexEntry entry)
 		{
 			LexFieldControl lexFieldControl = CreateFilteredForm(entry, "Gloss");
-			EntryDetailControl entryDetailControl = lexFieldControl.Control_EntryDetail;
+			EntryDetailControl entryDetailControl = lexFieldControl.ControlEntryDetail;
 			Control referenceControl = entryDetailControl.GetControlOfRow(0);
 			Label labelControl = entryDetailControl.GetLabelControlFromReferenceControl(referenceControl);
 			Assert.AreEqual("Meaning 1", labelControl.Text);
@@ -102,57 +102,57 @@ namespace WeSay.LexicalTools.Tests
 		public void EditField_Change_DisplayedInFormattedView()
 		{
 			LexFieldControl lexFieldControl = CreateFilteredForm(apple, "LexicalForm");
-			EntryDetailControl entryDetailControl = lexFieldControl.Control_EntryDetail;
+			EntryDetailControl entryDetailControl = lexFieldControl.ControlEntryDetail;
 			Control referenceControl = entryDetailControl.GetControlOfRow(0);
 			Control editControl = entryDetailControl.GetEditControlFromReferenceControl(referenceControl);
 			editControl.Text = "test";
-			Assert.IsTrue(lexFieldControl.Control_FormattedView.Text.Contains("test"));
+			Assert.IsTrue(lexFieldControl.ControlFormattedView.Text.Contains("test"));
 	   }
 
 		[Test]
 		public void FormattedView_FocusInControl_Displayed()
 		{
 			LexFieldControl lexFieldControl = CreateFilteredForm(apple, "LexicalForm");
-			lexFieldControl.Control_FormattedView.Select();
-			string rtfOriginal = lexFieldControl.Control_FormattedView.Rtf;
+			lexFieldControl.ControlFormattedView.Select();
+			string rtfOriginal = lexFieldControl.ControlFormattedView.Rtf;
 
-			EntryDetailControl entryDetailControl = lexFieldControl.Control_EntryDetail;
+			EntryDetailControl entryDetailControl = lexFieldControl.ControlEntryDetail;
 			Control referenceControl = entryDetailControl.GetControlOfRow(0);
 			Control editControl = entryDetailControl.GetEditControlFromReferenceControl(referenceControl);
 			editControl.Select();
-			Assert.AreNotEqual(rtfOriginal, lexFieldControl.Control_FormattedView.Rtf);
+			Assert.AreNotEqual(rtfOriginal, lexFieldControl.ControlFormattedView.Rtf);
 		}
 
 		[Test]
 		public void FormattedView_ChangeRecordThenBack_NothingHighlighted()
 		{
 			LexFieldControl lexFieldControl = CreateFilteredForm(apple, "LexicalForm");
-			lexFieldControl.Control_FormattedView.Select();
-			string rtfAppleNothingHighlighted = lexFieldControl.Control_FormattedView.Rtf;
+			lexFieldControl.ControlFormattedView.Select();
+			string rtfAppleNothingHighlighted = lexFieldControl.ControlFormattedView.Rtf;
 
-			EntryDetailControl entryDetailControl = lexFieldControl.Control_EntryDetail;
+			EntryDetailControl entryDetailControl = lexFieldControl.ControlEntryDetail;
 			Control referenceControl = entryDetailControl.GetControlOfRow(0);
 			Control editControl = entryDetailControl.GetEditControlFromReferenceControl(referenceControl);
 			editControl.Select();
-			Assert.AreNotEqual(rtfAppleNothingHighlighted, lexFieldControl.Control_FormattedView.Rtf);
+			Assert.AreNotEqual(rtfAppleNothingHighlighted, lexFieldControl.ControlFormattedView.Rtf);
 
 			lexFieldControl.DataSource = banana;
 			lexFieldControl.DataSource = apple;
-			Assert.AreEqual(rtfAppleNothingHighlighted, lexFieldControl.Control_FormattedView.Rtf);
+			Assert.AreEqual(rtfAppleNothingHighlighted, lexFieldControl.ControlFormattedView.Rtf);
 		}
 
 		[Test]
 		public void FormattedView_EmptyField_StillHighlighted()
 		{
 			LexFieldControl lexFieldControl = CreateFilteredForm(empty, "LexicalForm");
-			lexFieldControl.Control_FormattedView.Select();
-			string rtfEmptyNothingHighlighted = lexFieldControl.Control_FormattedView.Rtf;
+			lexFieldControl.ControlFormattedView.Select();
+			string rtfEmptyNothingHighlighted = lexFieldControl.ControlFormattedView.Rtf;
 
-			EntryDetailControl entryDetailControl = lexFieldControl.Control_EntryDetail;
+			EntryDetailControl entryDetailControl = lexFieldControl.ControlEntryDetail;
 			Control referenceControl = entryDetailControl.GetControlOfRow(0);
 			Control editControl = entryDetailControl.GetEditControlFromReferenceControl(referenceControl);
 			editControl.Select();
-			Assert.AreNotEqual(rtfEmptyNothingHighlighted, lexFieldControl.Control_FormattedView.Rtf);
+			Assert.AreNotEqual(rtfEmptyNothingHighlighted, lexFieldControl.ControlFormattedView.Rtf);
 		}
 
 		private static LexFieldControl CreateForm(LexEntry entry)

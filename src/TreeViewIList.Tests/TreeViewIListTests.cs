@@ -83,11 +83,11 @@ namespace WeSay.TreeViewIList.Tests
 			}
 			treeview = new TreeViewAdaptorIList(list);
 			treeview.AppendColumn("Name", new Gtk.CellRendererText());
-			treeview.Column_Types.Add(GLib.GType.String);
+			treeview.ColumnTypes.Add(GLib.GType.String);
 			treeview.AppendColumn("Number", new Gtk.CellRendererText());
-			treeview.Column_Types.Add(GLib.GType.Int);
+			treeview.ColumnTypes.Add(GLib.GType.Int);
 			treeview.AppendColumn("Gender", new Gtk.CellRendererText());
-			treeview.Column_Types.Add(GLib.GType.String);
+			treeview.ColumnTypes.Add(GLib.GType.String);
 
 			treeview.GetValueStrategy = delegate(object o, int column)
 				{
@@ -116,10 +116,10 @@ namespace WeSay.TreeViewIList.Tests
 		[Test]
 		public void Column_Types()
 		{
-			Assert.AreEqual(3, treeview.Column_Types.Count);
-			Assert.AreEqual(GLib.GType.String, treeview.Column_Types[0]);
-			Assert.AreEqual(GLib.GType.Int, treeview.Column_Types[1]);
-			Assert.AreEqual(GLib.GType.String, treeview.Column_Types[2]);
+			Assert.AreEqual(3, treeview.ColumnTypes.Count);
+			Assert.AreEqual(GLib.GType.String, treeview.ColumnTypes[0]);
+			Assert.AreEqual(GLib.GType.Int, treeview.ColumnTypes[1]);
+			Assert.AreEqual(GLib.GType.String, treeview.ColumnTypes[2]);
 		}
 
 		[Test]

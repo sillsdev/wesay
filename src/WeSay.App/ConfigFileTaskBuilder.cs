@@ -15,14 +15,12 @@ namespace WeSay.App
 	{
 		private bool _disposed;
 		private IMutablePicoContainer _picoContext;
-		BasilProject _project;
 		List<ITask> _tasks;
 
 		public ConfigFileTaskBuilder(WeSayWordsProject project, Stream config)
 		{
 			_picoContext = new DefaultPicoContainer();
 			_picoContext.RegisterComponentInstance(project);
-			_project = project;
 
 			if (project.PathToLexicalModelDB.IndexOf("PRETEND") > -1)
 			{
@@ -75,7 +73,7 @@ namespace WeSay.App
 		private string RegisterComponent(XPathNavigator component)
 		{
 			string id = component.GetAttribute("id", string.Empty);
-			if (id == string.Empty)
+			if (id.Length == 0)
 			{
 				id = Guid.NewGuid().ToString();
 			}
@@ -88,7 +86,7 @@ namespace WeSay.App
 				{
 					IParameter parameter;
 					string componentRef = child.GetAttribute("ref", string.Empty);
-					if (componentRef != string.Empty)
+					if (componentRef.Length > 0)
 					{
 						parameter = new ComponentParameter(componentRef);
 					}

@@ -214,7 +214,7 @@ namespace CommandLine
 	/// Used to control parsing of command line arguments.
 	/// </summary>
 	[Flags]
-	public enum ArgumentType
+	public enum ArgumentTypes
 	{
 		/// <summary>
 		/// Indicates that this field is required. An error will be displayed
@@ -265,7 +265,7 @@ namespace CommandLine
 		/// Allows control of command line parsing.
 		/// </summary>
 		/// <param name="type"> Specifies the error checking to be done on the argument. </param>
-		public ArgumentAttribute(ArgumentType type)
+		public ArgumentAttribute(ArgumentTypes type)
 		{
 			this.type = type;
 		}
@@ -273,7 +273,7 @@ namespace CommandLine
 		/// <summary>
 		/// The error checking to be done on the argument.
 		/// </summary>
-		public ArgumentType Type
+		public ArgumentTypes Type
 		{
 			get { return this.type; }
 		}
@@ -309,7 +309,7 @@ namespace CommandLine
 		public string LongName
 		{
 			get { Debug.Assert(!this.DefaultLongName); return this.longName; }
-			set { Debug.Assert(value != ""); this.longName = value; }
+			set { Debug.Assert(value.Length > 0); this.longName = value; }
 		}
 
 		/// <summary>
@@ -344,7 +344,7 @@ namespace CommandLine
 		private string longName;
 		private string helpText;
 		private object defaultValue;
-		private ArgumentType type;
+		private ArgumentTypes type;
 	}
 
 	/// <summary>
@@ -355,13 +355,13 @@ namespace CommandLine
 	/// does not affect the usage of the argument.
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Field)]
-	public class DefaultArgumentAttribute : ArgumentAttribute
+	sealed public class DefaultArgumentAttribute : ArgumentAttribute
 	{
 		/// <summary>
 		/// Indicates that this argument is the default argument.
 		/// </summary>
 		/// <param name="type"> Specifies the error checking to be done on the argument. </param>
-		public DefaultArgumentAttribute(ArgumentType type)
+		public DefaultArgumentAttribute(ArgumentTypes type)
 			: base (type)
 		{
 		}
@@ -462,7 +462,7 @@ namespace CommandLine
 
 		private class HelpArgument
 		{
-			[ArgumentAttribute(ArgumentType.AtMostOnce, ShortName="?")]
+			[ArgumentAttribute(ArgumentTypes.AtMostOnce, ShortName="?")]
 			public bool help = false;
 		}
 
@@ -531,13 +531,14 @@ namespace CommandLine
 			internal SMALL_RECT srWindow;
 			internal COORD dwMaximumWindowSize;
 		}
+	  private static class NativeMethods
+	  {
+		[DllImport("kernel32.dll", EntryPoint = "GetStdHandle", SetLastError = true, CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
+		public static extern int GetStdHandle(int nStdHandle);
 
-		[DllImport("kernel32.dll", EntryPoint="GetStdHandle", SetLastError=true, CharSet=CharSet.Auto, CallingConvention=CallingConvention.StdCall)]
-		private static extern int GetStdHandle(int nStdHandle);
-
-		[DllImport("kernel32.dll", EntryPoint="GetConsoleScreenBufferInfo", SetLastError=true, CharSet=CharSet.Auto, CallingConvention=CallingConvention.StdCall)]
-		private static extern int GetConsoleScreenBufferInfo(int hConsoleOutput, ref CONSOLE_SCREEN_BUFFER_INFO lpConsoleScreenBufferInfo);
-
+		[DllImport("kernel32.dll", EntryPoint = "GetConsoleScreenBufferInfo", SetLastError = true, CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
+		public static extern int GetConsoleScreenBufferInfo(int hConsoleOutput, ref CONSOLE_SCREEN_BUFFER_INFO lpConsoleScreenBufferInfo);
+	  }
 		/// <summary>
 		/// Returns the number of columns in the current console window
 		/// </summary>
@@ -548,7 +549,7 @@ namespace CommandLine
 			CONSOLE_SCREEN_BUFFER_INFO csbi = new CONSOLE_SCREEN_BUFFER_INFO();
 
 			int rc;
-			rc = GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), ref csbi);
+			rc = NativeMethods.GetConsoleScreenBufferInfo(NativeMethods.GetStdHandle(STD_OUTPUT_HANDLE), ref csbi);
 			screenWidth = csbi.dwSize.x;
 			return screenWidth;
 		}
@@ -1060,14 +1061,14 @@ namespace CommandLine
 				return null;
 		}
 
-		private static ArgumentType Flags(ArgumentAttribute attribute, FieldInfo field)
+		private static ArgumentTypes Flags(ArgumentAttribute attribute, FieldInfo field)
 		{
 			if (attribute != null)
 				return attribute.Type;
 			else if (IsCollectionType(field.FieldType))
-				return ArgumentType.MultipleUnique;
+				return ArgumentTypes.MultipleUnique;
 			else
-				return ArgumentType.AtMostOnce;
+				return ArgumentTypes.AtMostOnce;
 		}
 
 		private static bool IsCollectionType(Type type)
@@ -1107,7 +1108,7 @@ namespace CommandLine
 					this.collectionValues = new ArrayList();
 				}
 
-				Debug.Assert(this.longName != null && this.longName != "");
+				Debug.Assert(this.longName != null && this.longName.Length > 0);
 				Debug.Assert(!this.isDefault || !this.ExplicitShortName);
 				Debug.Assert(!IsCollection || AllowMultiple, "Collection arguments must have allow multiple");
 				Debug.Assert(!Unique || IsCollection, "Unique only applicable to collection arguments");
@@ -1405,7 +1406,7 @@ namespace CommandLine
 
 			public bool IsRequired
 			{
-				get { return 0 != (this.flags & ArgumentType.Required); }
+				get { return 0 != (this.flags & ArgumentTypes.Required); }
 			}
 
 			public bool SeenValue
@@ -1415,12 +1416,12 @@ namespace CommandLine
 
 			public bool AllowMultiple
 			{
-				get { return 0 != (this.flags & ArgumentType.Multiple); }
+				get { return 0 != (this.flags & ArgumentTypes.Multiple); }
 			}
 
 			public bool Unique
 			{
-				get { return 0 != (this.flags & ArgumentType.Unique); }
+				get { return 0 != (this.flags & ArgumentTypes.Unique); }
 			}
 
 			public Type Type
@@ -1447,7 +1448,7 @@ namespace CommandLine
 			private bool seenValue;
 			private FieldInfo field;
 			private Type elementType;
-			private ArgumentType flags;
+			private ArgumentTypes flags;
 			private ArrayList collectionValues;
 			private ErrorReporter reporter;
 			private bool isDefault;

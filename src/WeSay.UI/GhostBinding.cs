@@ -146,7 +146,7 @@ namespace WeSay.UI
 			_textBoxTarget.PrepareForFadeIn();
 		 }
 
-		private void FillInMultiTextOfNewObject(object o, string propertyName, WritingSystem writingSystem, string value)
+		private static void FillInMultiTextOfNewObject(object o, string propertyName, WritingSystem writingSystem, string value)
 		{
 		   PropertyInfo info = o.GetType().GetProperty(propertyName);
 		   MultiText text = (MultiText) info.GetValue(o, null);

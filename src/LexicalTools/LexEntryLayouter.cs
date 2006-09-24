@@ -35,12 +35,12 @@ namespace WeSay.LexicalTools
 		internal int AddWidgets(LexEntry entry, int insertAtRow)
 		{
 			int rowCount = 0;
-			if (_detailList.ShowField("LexicalForm"))
+			if (DetailList.ShowField("LexicalForm"))
 			{
-				_detailList.AddWidgetRow(StringCatalog.Get("Word"), true, MakeBoundEntry(entry.LexicalForm, BasilProject.Project.WritingSystems.VernacularWritingSystemDefault), insertAtRow);
+				DetailList.AddWidgetRow(StringCatalog.Get("Word"), true, MakeBoundEntry(entry.LexicalForm, BasilProject.Project.WritingSystems.VernacularWritingSystemDefault), insertAtRow);
 				++rowCount;
 			}
-			LexSenseLayouter layouter = new LexSenseLayouter(_detailList);
+			LexSenseLayouter layouter = new LexSenseLayouter(DetailList);
 			rowCount = AddChildrenWidgets(layouter, entry.Senses, insertAtRow, rowCount);
 			//add a ghost
 			rowCount += layouter.AddGhost(entry.Senses);

@@ -2,7 +2,7 @@ using WeSay.Language;
 
 namespace WeSay.LexicalModel
 {
-	public class LexExampleSentence : WeSayDataObject
+	sealed public class LexExampleSentence : WeSayDataObject
 	{
 		private MultiText _sentence;
 		private MultiText _translation;

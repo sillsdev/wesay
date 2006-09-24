@@ -78,7 +78,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			this._doc.LoadXml("<wrap><form lang=\"blue\">ocean</form><form lang=\"red\">sunset</form></wrap>");
 			MultiText text = new MultiText();
-			_importer.ReadMultiText(this._doc.SelectSingleNode("wrap"),text);
+			LiftImporter.ReadMultiText(this._doc.SelectSingleNode("wrap"),text);
 			Assert.AreEqual("ocean", text["blue"]);
 			Assert.AreEqual("sunset", text["red"]);
 		}
@@ -88,7 +88,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			_doc.LoadXml("<wrap></wrap>");
 			MultiText text = new MultiText();
-			_importer.ReadMultiText(_doc.SelectSingleNode("wrap"),text);
+			LiftImporter.ReadMultiText(_doc.SelectSingleNode("wrap"),text);
 			Assert.AreEqual(0,text.Count);
 		}
 
@@ -96,7 +96,7 @@ namespace WeSay.LexicalTools.Tests
 		public void BlankExample()
 		{
 			_doc.LoadXml("<example></example>");
-			LexExampleSentence example = _importer.ReadExample(_doc.SelectSingleNode("example"));
+			LexExampleSentence example = LiftImporter.ReadExample(_doc.SelectSingleNode("example"));
 			Assert.IsNotNull(example);
 		}
 
@@ -106,7 +106,7 @@ namespace WeSay.LexicalTools.Tests
 		public void FullExample()
 		{
 			_doc.LoadXml("<example><source><form lang=\"blue\">ocean's eleven</form><form lang=\"red\">red sunset tonight</form></source><trans><form lang=\"green\">blah blah</form></trans></example>");
-			LexExampleSentence example = _importer.ReadExample(_doc.SelectSingleNode("example"));
+			LexExampleSentence example = LiftImporter.ReadExample(_doc.SelectSingleNode("example"));
 			Assert.AreEqual("ocean's eleven",example.Sentence["blue"]);
 			Assert.AreEqual("red sunset tonight", example.Sentence["red"]);
 			Assert.AreEqual("blah blah", example.Translation["green"]);

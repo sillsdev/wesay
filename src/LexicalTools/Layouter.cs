@@ -19,9 +19,21 @@ namespace WeSay.LexicalTools
 		/// <summary>
 		/// The DetailList we are filling.
 		/// </summary>
-		protected DetailList _detailList;
+	  private DetailList _detailList;
 
-		public Layouter(DetailList builder)
+	  protected DetailList DetailList
+	  {
+		get
+		{
+		  return _detailList;
+		}
+		set
+		{
+		  _detailList = value;
+		}
+	  }
+
+		protected Layouter(DetailList builder)
 		{
 			_detailList = builder;
 		}
@@ -73,23 +85,21 @@ namespace WeSay.LexicalTools
 			_detailList.MoveInsertionPoint(row);
 		}
 
-		protected int AddChildrenWidgets(Layouter layouter, IBindingList list, int insertAtRow , int rowCount)
+		protected static int AddChildrenWidgets(Layouter layouter, IBindingList list, int insertAtRow , int rowCount)
 		{
-			int index = 0;
+			int r;
 
-			foreach (object sense in list)
+			for (int i = 0; i < list.Count; i++)
 			{
-				int r;
-				if (insertAtRow < 0)
-				{
-					r = insertAtRow;    // just stick at the end
-				}
-				else
-				{
-					r = insertAtRow + rowCount;
-				}
-				rowCount+= layouter.AddWidgets(list, index, r);
-				++index;
+			  if (insertAtRow < 0)
+			  {
+				r = insertAtRow;    // just stick at the end
+			  }
+			  else
+			  {
+				r = insertAtRow + rowCount;
+			  }
+			  rowCount += layouter.AddWidgets(list, i, r);
 			}
 			return rowCount;
 		}

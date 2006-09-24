@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.ComponentModel;
 using com.db4o;
@@ -14,8 +15,9 @@ namespace WeSay.LexicalModel
 																	};
 
 		[Transient]
-		protected ArrayList _listEventHelpers;
+		private ArrayList _listEventHelpers;
 
+	  [CLSCompliant(false)]
 		public void ObjectOnActivate(ObjectContainer container)
 		{
 			container.Activate(this, int.MaxValue);
@@ -63,8 +65,8 @@ namespace WeSay.LexicalModel
 
 	public class ListEventHelper
 	{
-		protected WeSayDataObject _parent;
-		protected string _listName;
+		private WeSayDataObject _parent;
+		private string _listName;
 
 		public ListEventHelper(WeSayDataObject parent, IBindingList list, string listName)
 		{

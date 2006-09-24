@@ -41,7 +41,7 @@ namespace WeSay.LexicalTools
 		}
 
 
-		public LexFieldControl Control_Details
+		public LexFieldControl ControlDetails
 		{
 			get
 			{

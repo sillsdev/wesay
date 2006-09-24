@@ -21,7 +21,16 @@
   <DeadlockDetectionTimeout>120</DeadlockDetectionTimeout>
  </ProjectOptions>
  <Targets>
+  <Target Name="$(ProjectDir)/output/debug/Language.dll" Analyze="True" AnalyzeAllChildren="True" />
+  <Target Name="$(ProjectDir)/output/debug/LexicalModel.dll" Analyze="True" AnalyzeAllChildren="True" />
+  <Target Name="$(ProjectDir)/output/debug/LexicalTools.dll" Analyze="True" AnalyzeAllChildren="True" />
+  <Target Name="$(ProjectDir)/output/debug/ListBox.dll" Analyze="True" AnalyzeAllChildren="True" />
+  <Target Name="$(ProjectDir)/output/debug/MonoSpecific.dll" Analyze="True" AnalyzeAllChildren="True" />
+  <Target Name="$(ProjectDir)/output/debug/PlatformSpecific.dll" Analyze="True" AnalyzeAllChildren="True" />
+  <Target Name="$(ProjectDir)/output/debug/TreeViewIList.dll" Analyze="True" AnalyzeAllChildren="True" />
+  <Target Name="$(ProjectDir)/output/debug/WeSay.App.exe" Analyze="True" AnalyzeAllChildren="True" />
   <Target Name="$(ProjectDir)/output/debug/WeSay.Data.dll" Analyze="True" AnalyzeAllChildren="True" />
+  <Target Name="$(ProjectDir)/output/debug/WeSay.UI.dll" Analyze="True" AnalyzeAllChildren="True" />
  </Targets>
  <Rules>
   <RuleFiles>
@@ -54,6 +63,16 @@
 	 </Message>
 	</Messages>
    </Namespace>
+   <Namespace Name="WeSay.App">
+	<Messages>
+	 <Message TypeName="ShortAcronymsShouldBeUppercase" Category="Microsoft.Naming" CheckId="CA1706" Status="Excluded" Created="2006-09-22 16:45:00Z">
+	  <Issue Name="Namespace">
+	   <Item>We</Item>
+	   <Item>WeSay.App</Item>
+	  </Issue>
+	 </Message>
+	</Messages>
+   </Namespace>
    <Namespace Name="WeSay.Data">
 	<Messages>
 	 <Message TypeName="ShortAcronymsShouldBeUppercase" Category="Microsoft.Naming" CheckId="CA1706" Status="Excluded" Created="2006-09-22 13:48:19Z">
@@ -69,8 +88,1862 @@
 	 </Message>
 	</Messages>
    </Namespace>
+   <Namespace Name="WeSay.Language">
+	<Messages>
+	 <Message TypeName="AvoidNamespacesWithFewTypes" Category="Microsoft.Design" CheckId="CA1020" Created="2006-09-22 16:00:09Z">
+	  <Issue>
+	   <Item>WeSay.Language</Item>
+	  </Issue>
+	 </Message>
+	 <Message TypeName="ShortAcronymsShouldBeUppercase" Category="Microsoft.Naming" CheckId="CA1706" Status="Excluded" Created="2006-09-22 16:00:09Z">
+	  <Issue Name="Namespace">
+	   <Item>We</Item>
+	   <Item>WeSay.Language</Item>
+	  </Issue>
+	  <Notes>
+	   <User Name="Eric">
+		<Note Id="16" />
+	   </User>
+	  </Notes>
+	 </Message>
+	</Messages>
+   </Namespace>
+   <Namespace Name="WeSay.LexicalModel">
+	<Messages>
+	 <Message TypeName="ShortAcronymsShouldBeUppercase" Category="Microsoft.Naming" CheckId="CA1706" Status="Excluded" Created="2006-09-22 16:22:23Z">
+	  <Issue Name="Namespace">
+	   <Item>We</Item>
+	   <Item>WeSay.LexicalModel</Item>
+	  </Issue>
+	  <Notes>
+	   <User Name="Eric">
+		<Note Id="17" />
+	   </User>
+	  </Notes>
+	 </Message>
+	</Messages>
+   </Namespace>
+   <Namespace Name="WeSay.LexicalModel.Tests">
+	<Messages>
+	 <Message TypeName="AvoidNamespacesWithFewTypes" Category="Microsoft.Design" CheckId="CA1020" Created="2006-09-22 16:22:23Z">
+	  <Issue>
+	   <Item>WeSay.LexicalModel.Tests</Item>
+	  </Issue>
+	 </Message>
+	 <Message TypeName="ShortAcronymsShouldBeUppercase" Category="Microsoft.Naming" CheckId="CA1706" Status="Excluded" Created="2006-09-22 16:22:23Z">
+	  <Issue Name="Namespace">
+	   <Item>We</Item>
+	   <Item>WeSay.LexicalModel.Tests</Item>
+	  </Issue>
+	  <Notes>
+	   <User Name="Eric">
+		<Note Id="17" />
+	   </User>
+	  </Notes>
+	 </Message>
+	</Messages>
+   </Namespace>
+   <Namespace Name="WeSay.LexicalTools">
+	<Messages>
+	 <Message TypeName="ShortAcronymsShouldBeUppercase" Category="Microsoft.Naming" CheckId="CA1706" Status="Excluded" Created="2006-09-22 16:45:00Z">
+	  <Issue Name="Namespace">
+	   <Item>We</Item>
+	   <Item>WeSay.LexicalTools</Item>
+	  </Issue>
+	 </Message>
+	</Messages>
+   </Namespace>
+   <Namespace Name="WeSay.TreeViewIList">
+	<Messages>
+	 <Message TypeName="ShortAcronymsShouldBeUppercase" Category="Microsoft.Naming" CheckId="CA1706" Status="Excluded" Created="2006-09-22 16:45:00Z">
+	  <Issue Name="Namespace">
+	   <Item>We</Item>
+	   <Item>WeSay.TreeViewIList</Item>
+	  </Issue>
+	 </Message>
+	</Messages>
+   </Namespace>
+   <Namespace Name="WeSay.UI">
+	<Messages>
+	 <Message TypeName="ShortAcronymsShouldBeUppercase" Category="Microsoft.Naming" CheckId="CA1706" Status="Excluded" Created="2006-09-22 16:45:00Z">
+	  <Issue Name="Namespace">
+	   <Item>We</Item>
+	   <Item>WeSay.UI</Item>
+	  </Issue>
+	 </Message>
+	</Messages>
+   </Namespace>
   </Namespaces>
   <Targets>
+   <Target Name="$(ProjectDir)/output/debug/Language.dll">
+	<Modules>
+	 <Module Name="language.dll">
+	  <Messages>
+	   <Message TypeName="AssembliesShouldHaveValidStrongNames" Category="Microsoft.Design" CheckId="CA2210" Created="2006-09-22 16:00:09Z">
+		<Issue Name="NoStrongName">
+		 <Item>Language</Item>
+		</Issue>
+	   </Message>
+	  </Messages>
+	  <Namespaces>
+	   <Namespace Name="WeSay.Language">
+		<Types>
+		 <Type Name="MultiText">
+		  <Messages>
+		   <Message Id="Multi" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2006-09-22 16:00:09Z">
+			<Issue Name="Type">
+			 <Item>Multi</Item>
+			 <Item>WeSay.Language.MultiText</Item>
+			</Issue>
+		   </Message>
+		   <Message TypeName="IdentifiersShouldHaveCorrectSuffix" Category="Microsoft.Naming" CheckId="CA1710" Created="2006-09-22 16:00:09Z">
+			<Issue>
+			 <Item>WeSay.Language.MultiText</Item>
+			 <Item>Collection</Item>
+			</Issue>
+		   </Message>
+		  </Messages>
+		  <Members>
+		   <Member Name="GetFirstAlternative():System.String">
+			<Messages>
+			 <Message TypeName="UsePropertiesWhereAppropriate" Category="Microsoft.Design" CheckId="CA1024" Created="2006-09-22 16:00:09Z">
+			  <Issue Certainty="50">
+			   <Item>GetFirstAlternative</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		  </Members>
+		 </Type>
+		 <Type Name="WritingSystem">
+		  <Messages>
+		   <Message TypeName="TypesThatOwnDisposableFieldsShouldBeDisposable" Category="Microsoft.Design" CheckId="CA1001" Created="2006-09-22 16:00:09Z" FixCategory="Breaking">
+			<Issue>
+			 <Item>WeSay.Language.WritingSystem</Item>
+			 <Item>System.Drawing.Font</Item>
+			</Issue>
+		   </Message>
+		  </Messages>
+		  <Members>
+		   <Member Name=".ctor(System.Xml.XmlNode)">
+			<Messages>
+			 <Message Id="System.Xml.XmlNode" TypeName="MembersShouldNotExposeCertainConcreteTypes" Category="Microsoft.Design" CheckId="CA1059" Created="2006-09-22 16:00:09Z">
+			  <Issue Name="System.Xml.XmlNode">
+			   <Item>WritingSystem.WritingSystem(XmlNode)</Item>
+			   <Item>System.Xml.XmlNode</Item>
+			  </Issue>
+			 </Message>
+			 <Message Id="System.Single.Parse(System.String)" TypeName="SpecifyIFormatProvider" Category="Microsoft.Globalization" CheckId="CA1305" Created="2006-09-22 16:00:09Z">
+			  <Issue>
+			   <Item>WritingSystem.WritingSystem(XmlNode)</Item>
+			   <Item>System.Single.Parse(System.String)</Item>
+			   <Item>System.Single.Parse(System.String,System.IFormatProvider)</Item>
+			  </Issue>
+			 </Message>
+			 <Message TypeName="ValidateArgumentsOfPublicMethods" Category="Microsoft.Design" CheckId="CA1062" Created="2006-09-22 16:00:09Z">
+			  <Issue>
+			   <Item>'node'</Item>
+			   <Item>WritingSystem.WritingSystem(XmlNode)</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		  </Members>
+		 </Type>
+		 <Type Name="WritingSystemCollection">
+		  <Messages>
+		   <Message TypeName="IdentifiersShouldHaveCorrectSuffix" Category="Microsoft.Naming" CheckId="CA1710" Created="2006-09-22 16:00:09Z">
+			<Issue>
+			 <Item>WeSay.Language.WritingSystemCollection</Item>
+			 <Item>Dictionary</Item>
+			</Issue>
+		   </Message>
+		   <Message TypeName="IdentifiersShouldNotHaveIncorrectSuffix" Category="Microsoft.Naming" CheckId="CA1711" Created="2006-09-22 16:00:09Z">
+			<Issue>
+			 <Item>WeSay.Language.WritingSystemCollection</Item>
+			 <Item>Collection</Item>
+			</Issue>
+		   </Message>
+		   <Message TypeName="MarkISerializableTypesWithSerializable" Category="Microsoft.Usage" CheckId="CA2237" Created="2006-09-22 16:00:09Z">
+			<Issue Certainty="75" Level="Warning">
+			 <Item>WritingSystemCollection</Item>
+			</Issue>
+		   </Message>
+		  </Messages>
+		  <Members>
+		   <Member Name="IdOfWritingSystemChanged(WeSay.Language.WritingSystem,System.String):System.Void">
+			<Messages>
+			 <Message TypeName="ValidateArgumentsOfPublicMethods" Category="Microsoft.Design" CheckId="CA1062" Created="2006-09-22 16:00:09Z">
+			  <Issue>
+			   <Item>'ws'</Item>
+			   <Item>WritingSystemCollection.IdOfWritingSystemChanged(WritingSystem, String):Void</Item>
+			  </Issue>
+			  <Issue>
+			   <Item>'ws'</Item>
+			   <Item>WritingSystemCollection.IdOfWritingSystemChanged(WritingSystem, String):Void</Item>
+			  </Issue>
+			  <Issue>
+			   <Item>'ws'</Item>
+			   <Item>WritingSystemCollection.IdOfWritingSystemChanged(WritingSystem, String):Void</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		   <Member Name="MembersAsArray">
+			<Messages>
+			 <Message TypeName="PropertiesShouldNotReturnArrays" Category="Microsoft.Performance" CheckId="CA1819" Created="2006-09-22 16:00:09Z">
+			  <Issue>
+			   <Item>WritingSystemCollection.MembersAsArray:WritingSystem[]</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+			<Accessors>
+			 <Accessor Name="set_MembersAsArray(WeSay.Language.WritingSystem[]):System.Void">
+			  <Messages>
+			   <Message TypeName="ValidateArgumentsOfPublicMethods" Category="Microsoft.Design" CheckId="CA1062" Created="2006-09-22 16:00:09Z">
+				<Issue>
+				 <Item>'value'</Item>
+				 <Item>WritingSystemCollection.set_MembersAsArray(WritingSystem[]):Void</Item>
+				</Issue>
+				<Issue>
+				 <Item>'value'</Item>
+				 <Item>WritingSystemCollection.set_MembersAsArray(WritingSystem[]):Void</Item>
+				</Issue>
+			   </Message>
+			  </Messages>
+			 </Accessor>
+			</Accessors>
+		   </Member>
+		  </Members>
+		 </Type>
+		</Types>
+	   </Namespace>
+	  </Namespaces>
+	 </Module>
+	</Modules>
+   </Target>
+   <Target Name="$(ProjectDir)/output/debug/LexicalModel.dll">
+	<Modules>
+	 <Module Name="lexicalmodel.dll">
+	  <Messages>
+	   <Message TypeName="AssembliesShouldHaveValidStrongNames" Category="Microsoft.Design" CheckId="CA2210" Created="2006-09-22 16:22:23Z">
+		<Issue Name="NoStrongName">
+		 <Item>LexicalModel</Item>
+		</Issue>
+	   </Message>
+	  </Messages>
+	  <Namespaces>
+	   <Namespace Name="WeSay.LexicalModel">
+		<Types>
+		 <Type Name="LexEntry">
+		  <Messages>
+		   <Message Id="Lex" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2006-09-22 16:22:23Z">
+			<Issue Name="Type">
+			 <Item>Lex</Item>
+			 <Item>WeSay.LexicalModel.LexEntry</Item>
+			</Issue>
+		   </Message>
+		  </Messages>
+		 </Type>
+		 <Type Name="LexExampleSentence">
+		  <Messages>
+		   <Message Id="Lex" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2006-09-22 16:22:23Z">
+			<Issue Name="Type">
+			 <Item>Lex</Item>
+			 <Item>WeSay.LexicalModel.LexExampleSentence</Item>
+			</Issue>
+		   </Message>
+		  </Messages>
+		 </Type>
+		 <Type Name="Lexicon">
+		  <Messages>
+		   <Message TypeName="TypesThatOwnDisposableFieldsShouldBeDisposable" Category="Microsoft.Design" CheckId="CA1001" Created="2006-09-22 16:22:23Z" FixCategory="Breaking">
+			<Issue>
+			 <Item>WeSay.LexicalModel.Lexicon</Item>
+			 <Item>WeSay.Data.Db4oRecordList`1&lt;WeSay.LexicalModel.LexEntry&gt;</Item>
+			</Issue>
+		   </Message>
+		  </Messages>
+		  <Members>
+		   <Member Name=".ctor(WeSay.Data.Db4oDataSource,WeSay.Data.IFilter`1&lt;WeSay.LexicalModel.LexEntry&gt;)">
+			<Messages>
+			 <Message Id="filter" TypeName="ReviewUnusedParameters" Category="Microsoft.Usage" CheckId="CA1801" Created="2006-09-22 16:22:23Z" FixCategory="Breaking">
+			  <Issue>
+			   <Item>filter</Item>
+			   <Item>Lexicon.Lexicon(Db4oDataSource, IFilter`1&lt;WeSay.LexicalModel.LexEntry&gt;)</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		  </Members>
+		 </Type>
+		 <Type Name="LexSense">
+		  <Messages>
+		   <Message Id="Lex" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2006-09-22 16:22:23Z">
+			<Issue Name="Type">
+			 <Item>Lex</Item>
+			 <Item>WeSay.LexicalModel.LexSense</Item>
+			</Issue>
+		   </Message>
+		  </Messages>
+		 </Type>
+		 <Type Name="LiftExporter">
+		  <Members>
+		   <Member Name="Add(WeSay.LexicalModel.LexEntry):System.Void">
+			<Messages>
+			 <Message TypeName="ValidateArgumentsOfPublicMethods" Category="Microsoft.Design" CheckId="CA1062" Created="2006-09-22 16:22:23Z">
+			  <Issue>
+			   <Item>'entry'</Item>
+			   <Item>LiftExporter.Add(LexEntry):Void</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		   <Member Name="Add(WeSay.LexicalModel.LexExampleSentence):System.Void">
+			<Messages>
+			 <Message TypeName="ValidateArgumentsOfPublicMethods" Category="Microsoft.Design" CheckId="CA1062" Created="2006-09-22 16:22:23Z">
+			  <Issue>
+			   <Item>'example'</Item>
+			   <Item>LiftExporter.Add(LexExampleSentence):Void</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		   <Member Name="Add(WeSay.LexicalModel.LexSense):System.Void">
+			<Messages>
+			 <Message TypeName="ValidateArgumentsOfPublicMethods" Category="Microsoft.Design" CheckId="CA1062" Created="2006-09-22 16:22:23Z">
+			  <Issue>
+			   <Item>'sense'</Item>
+			   <Item>LiftExporter.Add(LexSense):Void</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		  </Members>
+		 </Type>
+		 <Type Name="LiftImporter">
+		  <Members>
+		   <Member Name="ReadEntry(System.Xml.XmlNode):WeSay.LexicalModel.LexEntry">
+			<Messages>
+			 <Message Id="System.Xml.XmlNode" TypeName="MembersShouldNotExposeCertainConcreteTypes" Category="Microsoft.Design" CheckId="CA1059" Created="2006-09-22 16:22:23Z">
+			  <Issue Name="System.Xml.XmlNode">
+			   <Item>LiftImporter.ReadEntry(XmlNode):LexEntry</Item>
+			   <Item>System.Xml.XmlNode</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		   <Member Name="ReadExample(System.Xml.XmlNode):WeSay.LexicalModel.LexExampleSentence">
+			<Messages>
+			 <Message Id="System.Xml.XmlNode" TypeName="MembersShouldNotExposeCertainConcreteTypes" Category="Microsoft.Design" CheckId="CA1059" Created="2006-09-22 16:22:23Z">
+			  <Issue Name="System.Xml.XmlNode">
+			   <Item>LiftImporter.ReadExample(XmlNode):LexExampleSentence</Item>
+			   <Item>System.Xml.XmlNode</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		   <Member Name="ReadMultiText(System.Xml.XmlNode,WeSay.Language.MultiText):System.Void">
+			<Messages>
+			 <Message Id="Multi" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2006-09-22 16:22:23Z">
+			  <Issue Name="Member">
+			   <Item>Multi</Item>
+			   <Item>LiftImporter.ReadMultiText(XmlNode, MultiText):Void</Item>
+			  </Issue>
+			 </Message>
+			 <Message Id="System.Xml.XmlNode" TypeName="MembersShouldNotExposeCertainConcreteTypes" Category="Microsoft.Design" CheckId="CA1059" Created="2006-09-22 16:22:23Z">
+			  <Issue Name="System.Xml.XmlNode">
+			   <Item>LiftImporter.ReadMultiText(XmlNode, MultiText):Void</Item>
+			   <Item>System.Xml.XmlNode</Item>
+			  </Issue>
+			 </Message>
+			 <Message TypeName="ValidateArgumentsOfPublicMethods" Category="Microsoft.Design" CheckId="CA1062" Created="2006-09-22 16:22:23Z">
+			  <Issue>
+			   <Item>'node'</Item>
+			   <Item>LiftImporter.ReadMultiText(XmlNode, MultiText):Void</Item>
+			  </Issue>
+			  <Issue>
+			   <Item>'text'</Item>
+			   <Item>LiftImporter.ReadMultiText(XmlNode, MultiText):Void</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		   <Member Name="ReadMultiTextOrNull(System.Xml.XmlNode,System.String,WeSay.Language.MultiText):System.Void">
+			<Messages>
+			 <Message Id="Multi" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2006-09-22 16:22:23Z">
+			  <Issue Name="Member">
+			   <Item>Multi</Item>
+			   <Item>LiftImporter.ReadMultiTextOrNull(XmlNode, String, MultiText):Void</Item>
+			  </Issue>
+			 </Message>
+			 <Message Id="System.Xml.XmlNode" TypeName="MembersShouldNotExposeCertainConcreteTypes" Category="Microsoft.Design" CheckId="CA1059" Created="2006-09-22 16:22:23Z">
+			  <Issue Name="System.Xml.XmlNode">
+			   <Item>LiftImporter.ReadMultiTextOrNull(XmlNode, String, MultiText):Void</Item>
+			   <Item>System.Xml.XmlNode</Item>
+			  </Issue>
+			 </Message>
+			 <Message TypeName="ValidateArgumentsOfPublicMethods" Category="Microsoft.Design" CheckId="CA1062" Created="2006-09-22 16:22:23Z">
+			  <Issue>
+			   <Item>'node'</Item>
+			   <Item>LiftImporter.ReadMultiTextOrNull(XmlNode, String, MultiText):Void</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		   <Member Name="ReadSense(System.Xml.XmlNode):WeSay.LexicalModel.LexSense">
+			<Messages>
+			 <Message TypeName="MarkMembersAsStatic" Category="Microsoft.Performance" CheckId="CA1822" Created="2006-09-22 17:39:13Z" FixCategory="Breaking">
+			  <Issue>
+			   <Item>LiftImporter.ReadSense(XmlNode):LexSense</Item>
+			  </Issue>
+			 </Message>
+			 <Message Id="System.Xml.XmlNode" TypeName="MembersShouldNotExposeCertainConcreteTypes" Category="Microsoft.Design" CheckId="CA1059" Created="2006-09-22 16:22:23Z">
+			  <Issue Name="System.Xml.XmlNode">
+			   <Item>LiftImporter.ReadSense(XmlNode):LexSense</Item>
+			   <Item>System.Xml.XmlNode</Item>
+			  </Issue>
+			 </Message>
+			 <Message TypeName="ValidateArgumentsOfPublicMethods" Category="Microsoft.Design" CheckId="CA1062" Created="2006-09-22 16:22:23Z">
+			  <Issue>
+			   <Item>'xmlNode'</Item>
+			   <Item>LiftImporter.ReadSense(XmlNode):LexSense</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		  </Members>
+		 </Type>
+		 <Type Name="ListEventHelper">
+		  <Members>
+		   <Member Name=".ctor(WeSay.LexicalModel.WeSayDataObject,System.ComponentModel.IBindingList,System.String)">
+			<Messages>
+			 <Message TypeName="ValidateArgumentsOfPublicMethods" Category="Microsoft.Design" CheckId="CA1062" Created="2006-09-22 16:22:23Z">
+			  <Issue>
+			   <Item>'list'</Item>
+			   <Item>ListEventHelper.ListEventHelper(WeSayDataObject, IBindingList, String)</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		  </Members>
+		 </Type>
+		 <Type Name="WeSayDataObject">
+		  <Messages>
+		   <Message TypeName="ShortAcronymsShouldBeUppercase" Category="Microsoft.Naming" CheckId="CA1706" Status="Excluded" Created="2006-09-22 16:22:23Z">
+			<Issue Name="Type">
+			 <Item>We</Item>
+			 <Item>WeSay.LexicalModel.WeSayDataObject</Item>
+			</Issue>
+			<Notes>
+			 <User Name="Eric">
+			  <Note Id="17" />
+			 </User>
+			</Notes>
+		   </Message>
+		  </Messages>
+		  <Members>
+		   <Member Name="ObjectOnActivate(com.db4o.ObjectContainer):System.Void">
+			<Messages>
+			 <Message TypeName="ValidateArgumentsOfPublicMethods" Category="Microsoft.Design" CheckId="CA1062" Created="2006-09-22 16:22:23Z">
+			  <Issue>
+			   <Item>'container'</Item>
+			   <Item>WeSayDataObject.ObjectOnActivate(ObjectContainer):Void</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		   <Member Name="OnChildObjectPropertyChanged(System.Object,System.ComponentModel.PropertyChangedEventArgs):System.Void">
+			<Messages>
+			 <Message TypeName="ReviewVisibleEventHandlers" Category="Microsoft.Security" CheckId="CA2109" Created="2006-09-22 16:22:23Z">
+			  <Issue>
+			   <Item>WeSayDataObject.OnChildObjectPropertyChanged(Object, PropertyChangedEventArgs):Void</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		  </Members>
+		 </Type>
+		</Types>
+	   </Namespace>
+	   <Namespace Name="WeSay.LexicalModel.Tests">
+		<Types>
+		 <Type Name="PretendRecordList">
+		  <Messages>
+		   <Message TypeName="IdentifiersShouldHaveCorrectSuffix" Category="Microsoft.Naming" CheckId="CA1710" Created="2006-09-22 16:22:23Z">
+			<Issue>
+			 <Item>WeSay.LexicalModel.Tests.PretendRecordList</Item>
+			 <Item>Collection</Item>
+			</Issue>
+		   </Message>
+		  </Messages>
+		  <Members>
+		   <Member Name=".ctor()">
+			<Messages>
+			 <Message Id="System.Int32.ToString" TypeName="SpecifyIFormatProvider" Category="Microsoft.Globalization" CheckId="CA1305" Created="2006-09-22 16:22:23Z">
+			  <Issue>
+			   <Item>PretendRecordList.PretendRecordList()</Item>
+			   <Item>System.Int32.ToString</Item>
+			   <Item>System.Int32.ToString(System.IFormatProvider)</Item>
+			  </Issue>
+			  <Issue>
+			   <Item>PretendRecordList.PretendRecordList()</Item>
+			   <Item>System.Int32.ToString</Item>
+			   <Item>System.Int32.ToString(System.IFormatProvider)</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		  </Members>
+		 </Type>
+		</Types>
+	   </Namespace>
+	  </Namespaces>
+	 </Module>
+	</Modules>
+   </Target>
+   <Target Name="$(ProjectDir)/output/debug/LexicalTools.dll">
+	<Modules>
+	 <Module Name="lexicaltools.dll">
+	  <Messages>
+	   <Message TypeName="AssembliesShouldHaveValidStrongNames" Category="Microsoft.Design" CheckId="CA2210" Created="2006-09-22 16:45:00Z">
+		<Issue Name="NoStrongName">
+		 <Item>LexicalTools</Item>
+		</Issue>
+	   </Message>
+	  </Messages>
+	  <Namespaces>
+	   <Namespace Name="WeSay.LexicalTools">
+		<Types>
+		 <Type Name="EntryDetailTask">
+		  <Members>
+		   <Member Name="DataSource">
+			<Messages>
+			 <Message TypeName="CollectionPropertiesShouldBeReadOnly" Category="Microsoft.Usage" CheckId="CA2227" Status="Excluded" Created="2006-09-22 16:45:00Z">
+			  <Issue>
+			   <Item>DataSource</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+			<Accessors>
+			 <Accessor Name="set_DataSource(System.ComponentModel.IBindingList):System.Void">
+			  <Messages>
+			   <Message TypeName="InstantiateArgumentExceptionsCorrectly" Category="Microsoft.Usage" CheckId="CA2208" Created="2006-09-22 16:45:00Z">
+				<Issue Name="NoArguments">
+				 <Item>System.ArgumentNullException</Item>
+				</Issue>
+			   </Message>
+			  </Messages>
+			 </Accessor>
+			</Accessors>
+		   </Member>
+		   <Member Name="InitializeComponent():System.Void">
+			<Messages>
+			 <Message Id="System.Windows.Forms.Control.set_Text(System.String)" TypeName="DoNotPassLiteralsAsLocalizedParameters" Category="Microsoft.Globalization" CheckId="CA1303" Created="2006-09-22 16:45:00Z">
+			  <Issue>
+			   <Item>EntryDetailTask.InitializeComponent():Void</Item>
+			   <Item>1</Item>
+			   <Item>Control.set_Text(String):Void</Item>
+			   <Item>Delete Word</Item>
+			  </Issue>
+			  <Issue>
+			   <Item>EntryDetailTask.InitializeComponent():Void</Item>
+			   <Item>1</Item>
+			   <Item>Control.set_Text(String):Void</Item>
+			   <Item>New Word</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		  </Members>
+		 </Type>
+		 <Type Name="Layouter">
+		  <Messages>
+		   <Message Id="Layouter" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2006-09-22 16:45:00Z">
+			<Issue Name="Type">
+			 <Item>Layouter</Item>
+			 <Item>WeSay.LexicalTools.Layouter</Item>
+			</Issue>
+		   </Message>
+		  </Messages>
+		  <Members>
+		   <Member Name="AddChildrenWidgets(WeSay.LexicalTools.Layouter,System.ComponentModel.IBindingList,System.Int32,System.Int32):System.Int32">
+			<Messages>
+			 <Message Id="0#layouter" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2006-09-22 16:45:00Z">
+			  <Issue Name="Parameter">
+			   <Item>Layouter.AddChildrenWidgets(Layouter, IBindingList, Int32, Int32):Int32</Item>
+			   <Item>layouter</Item>
+			   <Item>layouter</Item>
+			  </Issue>
+			 </Message>
+			 <Message TypeName="ValidateArgumentsOfPublicMethods" Category="Microsoft.Design" CheckId="CA1062" Created="2006-09-22 16:45:00Z">
+			  <Issue>
+			   <Item>'layouter'</Item>
+			   <Item>Layouter.AddChildrenWidgets(Layouter, IBindingList, Int32, Int32):Int32</Item>
+			  </Issue>
+			  <Issue>
+			   <Item>'layouter'</Item>
+			   <Item>Layouter.AddChildrenWidgets(Layouter, IBindingList, Int32, Int32):Int32</Item>
+			  </Issue>
+			  <Issue>
+			   <Item>'layouter'</Item>
+			   <Item>Layouter.AddChildrenWidgets(Layouter, IBindingList, Int32, Int32):Int32</Item>
+			  </Issue>
+			  <Issue>
+			   <Item>'list'</Item>
+			   <Item>Layouter.AddChildrenWidgets(Layouter, IBindingList, Int32, Int32):Int32</Item>
+			  </Issue>
+			  <Issue>
+			   <Item>'list'</Item>
+			   <Item>Layouter.AddChildrenWidgets(Layouter, IBindingList, Int32, Int32):Int32</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		  </Members>
+		 </Type>
+		 <Type Name="LexEntryLayouter">
+		  <Messages>
+		   <Message Id="Layouter" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2006-09-22 16:45:00Z">
+			<Issue Name="Type">
+			 <Item>Layouter</Item>
+			 <Item>WeSay.LexicalTools.LexEntryLayouter</Item>
+			</Issue>
+		   </Message>
+		   <Message Id="Lex" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2006-09-22 16:45:00Z">
+			<Issue Name="Type">
+			 <Item>Lex</Item>
+			 <Item>WeSay.LexicalTools.LexEntryLayouter</Item>
+			</Issue>
+		   </Message>
+		  </Messages>
+		 </Type>
+		 <Type Name="LexExampleSentenceLayouter">
+		  <Messages>
+		   <Message Id="Layouter" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2006-09-22 16:45:00Z">
+			<Issue Name="Type">
+			 <Item>Layouter</Item>
+			 <Item>WeSay.LexicalTools.LexExampleSentenceLayouter</Item>
+			</Issue>
+		   </Message>
+		   <Message Id="Lex" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2006-09-22 16:45:00Z">
+			<Issue Name="Type">
+			 <Item>Lex</Item>
+			 <Item>WeSay.LexicalTools.LexExampleSentenceLayouter</Item>
+			</Issue>
+		   </Message>
+		  </Messages>
+		 </Type>
+		 <Type Name="LexFieldControl">
+		  <Messages>
+		   <Message Id="Lex" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2006-09-22 16:45:00Z">
+			<Issue Name="Type">
+			 <Item>Lex</Item>
+			 <Item>WeSay.LexicalTools.LexFieldControl</Item>
+			</Issue>
+		   </Message>
+		  </Messages>
+		  <Members>
+		   <Member Name="InitializeComponent():System.Void">
+			<Messages>
+			 <Message Id="System.Windows.Forms.Control.set_Text(System.String)" TypeName="DoNotPassLiteralsAsLocalizedParameters" Category="Microsoft.Globalization" CheckId="CA1303" Created="2006-09-22 16:45:00Z">
+			  <Issue>
+			   <Item>LexFieldControl.InitializeComponent():Void</Item>
+			   <Item>1</Item>
+			   <Item>Control.set_Text(String):Void</Item>
+			   <Item />
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		  </Members>
+		 </Type>
+		 <Type Name="LexFieldTask">
+		  <Messages>
+		   <Message Id="Lex" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2006-09-22 16:45:00Z">
+			<Issue Name="Type">
+			 <Item>Lex</Item>
+			 <Item>WeSay.LexicalTools.LexFieldTask</Item>
+			</Issue>
+		   </Message>
+		   <Message TypeName="TypesThatOwnDisposableFieldsShouldBeDisposable" Category="Microsoft.Design" CheckId="CA1001" Created="2006-09-22 16:45:00Z" FixCategory="Breaking">
+			<Issue>
+			 <Item>WeSay.LexicalTools.LexFieldTask</Item>
+			 <Item>WeSay.LexicalTools.LexFieldTool</Item>
+			</Issue>
+		   </Message>
+		  </Messages>
+		 </Type>
+		 <Type Name="LexFieldTool">
+		  <Messages>
+		   <Message Id="Lex" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2006-09-22 16:45:00Z">
+			<Issue Name="Type">
+			 <Item>Lex</Item>
+			 <Item>WeSay.LexicalTools.LexFieldTool</Item>
+			</Issue>
+		   </Message>
+		  </Messages>
+		  <Members>
+		   <Member Name="InitializeComponent():System.Void">
+			<Messages>
+			 <Message Id="System.Windows.Forms.Control.set_Text(System.String)" TypeName="DoNotPassLiteralsAsLocalizedParameters" Category="Microsoft.Globalization" CheckId="CA1303" Created="2006-09-22 16:45:00Z">
+			  <Issue>
+			   <Item>LexFieldTool.InitializeComponent():Void</Item>
+			   <Item>1</Item>
+			   <Item>Control.set_Text(String):Void</Item>
+			   <Item />
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		  </Members>
+		 </Type>
+		 <Type Name="LexSenseLayouter">
+		  <Messages>
+		   <Message Id="Layouter" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2006-09-22 16:45:00Z">
+			<Issue Name="Type">
+			 <Item>Layouter</Item>
+			 <Item>WeSay.LexicalTools.LexSenseLayouter</Item>
+			</Issue>
+		   </Message>
+		   <Message Id="Lex" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2006-09-22 16:45:00Z">
+			<Issue Name="Type">
+			 <Item>Lex</Item>
+			 <Item>WeSay.LexicalTools.LexSenseLayouter</Item>
+			</Issue>
+		   </Message>
+		  </Messages>
+		  <Members>
+		   <Member Name="AddWidgets(System.ComponentModel.IBindingList,System.Int32,System.Int32):System.Int32">
+			<Messages>
+			 <Message Id="System.Int32.ToString" TypeName="SpecifyIFormatProvider" Category="Microsoft.Globalization" CheckId="CA1305" Created="2006-09-22 16:45:00Z">
+			  <Issue>
+			   <Item>LexSenseLayouter.AddWidgets(IBindingList, Int32, Int32):Int32</Item>
+			   <Item>System.Int32.ToString</Item>
+			   <Item>System.Int32.ToString(System.IFormatProvider)</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		   <Member Name="HasSenseWithEmptyGloss(System.ComponentModel.IBindingList):System.Boolean">
+			<Messages>
+			 <Message TypeName="ValidateArgumentsOfPublicMethods" Category="Microsoft.Design" CheckId="CA1062" Created="2006-09-22 16:45:00Z">
+			  <Issue>
+			   <Item>'list'</Item>
+			   <Item>LexSenseLayouter.HasSenseWithEmptyGloss(IBindingList):Boolean</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		  </Members>
+		 </Type>
+		 <Type Name="RtfRenderer">
+		  <Messages>
+		   <Message Id="Renderer" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2006-09-22 16:45:00Z">
+			<Issue Name="Type">
+			 <Item>Renderer</Item>
+			 <Item>WeSay.LexicalTools.RtfRenderer</Item>
+			</Issue>
+		   </Message>
+		  </Messages>
+		  <Members>
+		   <Member Name="MakeFontTable():System.String">
+			<Messages>
+			 <Message Id="System.Int32.ToString" TypeName="SpecifyIFormatProvider" Category="Microsoft.Globalization" CheckId="CA1305" Created="2006-09-22 16:45:00Z">
+			  <Issue>
+			   <Item>RtfRenderer.MakeFontTable():String</Item>
+			   <Item>System.Int32.ToString</Item>
+			   <Item>System.Int32.ToString(System.IFormatProvider)</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		   <Member Name="RenderGhostedField(System.String,WeSay.UI.CurrentItemEventArgs,System.Int32):System.String">
+			<Messages>
+			 <Message Id="System.Int32.ToString" TypeName="SpecifyIFormatProvider" Category="Microsoft.Globalization" CheckId="CA1305" Created="2006-09-22 16:45:00Z">
+			  <Issue>
+			   <Item>RtfRenderer.RenderGhostedField(String, CurrentItemEventArgs, Int32):String</Item>
+			   <Item>System.Int32.ToString</Item>
+			   <Item>System.Int32.ToString(System.IFormatProvider)</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		   <Member Name="ToRtf(WeSay.LexicalModel.LexEntry,WeSay.UI.CurrentItemEventArgs):System.String">
+			<Messages>
+			 <Message Id="System.Int32.ToString" TypeName="SpecifyIFormatProvider" Category="Microsoft.Globalization" CheckId="CA1305" Created="2006-09-22 16:45:00Z">
+			  <Issue>
+			   <Item>RtfRenderer.ToRtf(LexEntry, CurrentItemEventArgs):String</Item>
+			   <Item>System.Int32.ToString</Item>
+			   <Item>System.Int32.ToString(System.IFormatProvider)</Item>
+			  </Issue>
+			 </Message>
+			 <Message TypeName="ValidateArgumentsOfPublicMethods" Category="Microsoft.Design" CheckId="CA1062" Created="2006-09-22 16:45:00Z">
+			  <Issue>
+			   <Item>'entry'</Item>
+			   <Item>RtfRenderer.ToRtf(LexEntry, CurrentItemEventArgs):String</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		   <Member Name="Utf16ToRtfAnsi(System.String):System.String">
+			<Messages>
+			 <Message Id="System.Int16.ToString" TypeName="SpecifyIFormatProvider" Category="Microsoft.Globalization" CheckId="CA1305" Created="2006-09-22 16:45:00Z">
+			  <Issue>
+			   <Item>RtfRenderer.Utf16ToRtfAnsi(String):String</Item>
+			   <Item>System.Int16.ToString</Item>
+			   <Item>System.Int16.ToString(System.IFormatProvider)</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		  </Members>
+		 </Type>
+		</Types>
+	   </Namespace>
+	  </Namespaces>
+	 </Module>
+	</Modules>
+   </Target>
+   <Target Name="$(ProjectDir)/output/debug/ListBox.dll">
+	<Modules>
+	 <Module Name="listbox.dll">
+	  <Messages>
+	   <Message TypeName="AssembliesShouldHaveValidStrongNames" Category="Microsoft.Design" CheckId="CA2210" Created="2006-09-22 16:45:00Z">
+		<Issue Name="NoStrongName">
+		 <Item>ListBox</Item>
+		</Issue>
+	   </Message>
+	  </Messages>
+	  <Namespaces>
+	   <Namespace Name="ListBox">
+		<Types>
+		 <Type Name="BindingGridValueModel">
+		  <Members>
+		   <Member Name="GetValue(SourceGrid3.CellContext):System.Object">
+			<Messages>
+			 <Message Id="grid" TypeName="RemoveUnusedLocals" Category="Microsoft.Performance" CheckId="CA1804" Created="2006-09-22 16:45:00Z">
+			  <Issue>
+			   <Item>BindingGridValueModel.GetValue(CellContext):Object</Item>
+			   <Item>grid</Item>
+			   <Item>ListBox.BindingListGrid</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		  </Members>
+		 </Type>
+		 <Type Name="BindingListGrid">
+		  <Members>
+		   <Member Name=".ctor()">
+			<Messages>
+			 <Message TypeName="DoNotInitializeUnnecessarily" Category="Microsoft.Performance" CheckId="CA1805" Created="2006-09-22 16:45:00Z">
+			  <Issue>
+			   <Item>BindingListGrid.BindingListGrid()</Item>
+			   <Item>_selected</Item>
+			   <Item>System.Int32</Item>
+			   <Item>0</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		   <Member Name="BeginEditRow(System.Int32):System.Boolean">
+			<Messages>
+			 <Message TypeName="MarkMembersAsStatic" Category="Microsoft.Performance" CheckId="CA1822" Created="2006-09-22 16:45:00Z" FixCategory="Breaking">
+			  <Issue>
+			   <Item>BindingListGrid.BeginEditRow(Int32):Boolean</Item>
+			  </Issue>
+			 </Message>
+			 <Message Id="gridRow" TypeName="ReviewUnusedParameters" Category="Microsoft.Usage" CheckId="CA1801" Created="2006-09-22 16:45:00Z" FixCategory="Breaking">
+			  <Issue>
+			   <Item>gridRow</Item>
+			   <Item>BindingListGrid.BeginEditRow(Int32):Boolean</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		   <Member Name="DataSource">
+			<Messages>
+			 <Message TypeName="CollectionPropertiesShouldBeReadOnly" Category="Microsoft.Usage" CheckId="CA2227" Status="Excluded" Created="2006-09-22 16:45:00Z">
+			  <Issue>
+			   <Item>DataSource</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		   <Member Name="GetCell(System.Int32,System.Int32):SourceGrid3.Cells.ICellVirtual">
+			<Messages>
+			 <Message TypeName="DoNotCatchGeneralExceptionTypes" Category="Microsoft.Design" CheckId="CA1031" Created="2006-09-22 16:45:00Z">
+			  <Issue>
+			   <Item>BindingListGrid.GetCell(Int32, Int32):ICellVirtual</Item>
+			   <Item>System.Exception</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		   <Member Name="SelectedDataRows">
+			<Messages>
+			 <Message TypeName="MarkMembersAsStatic" Category="Microsoft.Performance" CheckId="CA1822" Created="2006-09-22 16:45:00Z" FixCategory="Breaking">
+			  <Issue>
+			   <Item>BindingListGrid.SelectedDataRows:DataRowView[]</Item>
+			  </Issue>
+			 </Message>
+			 <Message TypeName="PropertiesShouldNotReturnArrays" Category="Microsoft.Performance" CheckId="CA1819" Created="2006-09-22 16:45:00Z">
+			  <Issue>
+			   <Item>BindingListGrid.SelectedDataRows:DataRowView[]</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+			<Accessors>
+			 <Accessor Name="set_SelectedDataRows(System.Data.DataRowView[]):System.Void">
+			  <Messages>
+			   <Message Id="value" TypeName="ReviewUnusedParameters" Category="Microsoft.Usage" CheckId="CA1801" Created="2006-09-22 16:45:00Z" FixCategory="Breaking">
+				<Issue>
+				 <Item>value</Item>
+				 <Item>BindingListGrid.set_SelectedDataRows(DataRowView[]):Void</Item>
+				</Issue>
+			   </Message>
+			  </Messages>
+			 </Accessor>
+			</Accessors>
+		   </Member>
+		   <Member Name="Selection_FocusRowLeaving(System.Object,SourceGrid3.RowCancelEventArgs):System.Void">
+			<Messages>
+			 <Message TypeName="DoNotCatchGeneralExceptionTypes" Category="Microsoft.Design" CheckId="CA1031" Created="2006-09-22 16:45:00Z">
+			  <Issue>
+			   <Item>BindingListGrid.Selection_FocusRowLeaving(Object, RowCancelEventArgs):Void</Item>
+			   <Item>System.Exception</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		  </Members>
+		 </Type>
+		 <Type Name="BindingListGridColumn">
+		  <Members>
+		   <Member Name="Create(ListBox.BindingListGrid,System.Data.DataColumn,System.Boolean):ListBox.BindingListGridColumn">
+			<Messages>
+			 <Message TypeName="ValidateArgumentsOfPublicMethods" Category="Microsoft.Design" CheckId="CA1062" Created="2006-09-22 16:45:00Z">
+			  <Issue>
+			   <Item>'dataColumn'</Item>
+			   <Item>BindingListGridColumn.Create(BindingListGrid, DataColumn, Boolean):BindingListGridColumn</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		   <Member Name="DataCell">
+			<Messages>
+			 <Message TypeName="PropertyNamesShouldNotMatchGetMethods" Category="Microsoft.Naming" CheckId="CA1721" Created="2006-09-22 16:45:00Z">
+			  <Issue>
+			   <Item>GetDataCell</Item>
+			   <Item>DataCell</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		  </Members>
+		 </Type>
+		 <Type Name="Cell">
+		  <Members>
+		   <Member Name=".ctor(System.Data.DataColumn)">
+			<Messages>
+			 <Message Id="column" TypeName="ReviewUnusedParameters" Category="Microsoft.Usage" CheckId="CA1801" Created="2006-09-22 16:45:00Z" FixCategory="Breaking">
+			  <Issue>
+			   <Item>column</Item>
+			   <Item>Cell.Cell(DataColumn)</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		  </Members>
+		 </Type>
+		 <Type Name="CheckBox">
+		  <Members>
+		   <Member Name=".ctor(System.Data.DataColumn)">
+			<Messages>
+			 <Message Id="column" TypeName="ReviewUnusedParameters" Category="Microsoft.Usage" CheckId="CA1801" Created="2006-09-22 16:45:00Z" FixCategory="Breaking">
+			  <Issue>
+			   <Item>column</Item>
+			   <Item>CheckBox.CheckBox(DataColumn)</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		  </Members>
+		 </Type>
+		 <Type Name="DataGridCellController">
+		  <Members>
+		   <Member Name="OnEditStarting(SourceGrid3.CellContext,System.ComponentModel.CancelEventArgs):System.Void">
+			<Messages>
+			 <Message TypeName="ValidateArgumentsOfPublicMethods" Category="Microsoft.Design" CheckId="CA1062" Created="2006-09-22 16:45:00Z">
+			  <Issue>
+			   <Item>'e'</Item>
+			   <Item>DataGridCellController.OnEditStarting(CellContext, CancelEventArgs):Void</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		   <Member Name="OnValueChanging(SourceGrid3.CellContext,DevAge.ComponentModel.ValueEventArgs):System.Void">
+			<Messages>
+			 <Message Id="System.Int32.ToString" TypeName="SpecifyIFormatProvider" Category="Microsoft.Globalization" CheckId="CA1305" Created="2006-09-22 16:45:00Z">
+			  <Issue>
+			   <Item>DataGridCellController.OnValueChanging(CellContext, ValueEventArgs):Void</Item>
+			   <Item>System.Int32.ToString</Item>
+			   <Item>System.Int32.ToString(System.IFormatProvider)</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		  </Members>
+		 </Type>
+		 <Type Name="DataGridColumnHeader">
+		  <Members>
+		   <Member Name=".ctor(System.String)">
+			<Messages>
+			 <Message Id="0#p" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2006-09-22 16:45:00Z">
+			  <Issue Name="Parameter">
+			   <Item>DataGridColumnHeader.DataGridColumnHeader(String)</Item>
+			   <Item>p</Item>
+			   <Item>pCaption</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		  </Members>
+		 </Type>
+		 <Type Name="DataGridColumns">
+		  <Messages>
+		   <Message TypeName="ICollectionImplementationsHaveStronglyTypedMembers" Category="Microsoft.Design" CheckId="CA1035" Created="2006-09-22 16:45:00Z">
+			<Issue>
+			 <Item>DataGridColumns</Item>
+			</Issue>
+		   </Message>
+		   <Message TypeName="IdentifiersShouldHaveCorrectSuffix" Category="Microsoft.Naming" CheckId="CA1710" Created="2006-09-22 16:45:00Z">
+			<Issue>
+			 <Item>ListBox.DataGridColumns</Item>
+			 <Item>Collection</Item>
+			</Issue>
+		   </Message>
+		  </Messages>
+		 </Type>
+		 <Type Name="EndEditingException">
+		  <Messages>
+		   <Message TypeName="ImplementStandardExceptionConstructors" Category="Microsoft.Design" CheckId="CA1032" Created="2006-09-22 16:45:00Z">
+			<Issue>
+			 <Item>ListBox.EndEditingException</Item>
+			 <Item>public EndEditingException()</Item>
+			</Issue>
+			<Issue>
+			 <Item>ListBox.EndEditingException</Item>
+			 <Item>public EndEditingException(String)</Item>
+			</Issue>
+			<Issue>
+			 <Item>ListBox.EndEditingException</Item>
+			 <Item>public EndEditingException(String, Exception)</Item>
+			</Issue>
+		   </Message>
+		  </Messages>
+		  <Members>
+		   <Member Name=".ctor(System.Exception)">
+			<Messages>
+			 <Message TypeName="ValidateArgumentsOfPublicMethods" Category="Microsoft.Design" CheckId="CA1062" Created="2006-09-22 16:45:00Z">
+			  <Issue>
+			   <Item>'innerException'</Item>
+			   <Item>EndEditingException.EndEditingException(Exception)</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		   <Member Name=".ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+			<Messages>
+			 <Message Id="0#p" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2006-09-22 16:45:00Z">
+			  <Issue Name="Parameter">
+			   <Item>EndEditingException.EndEditingException(SerializationInfo, StreamingContext)</Item>
+			   <Item>p</Item>
+			   <Item>p_Info</Item>
+			  </Issue>
+			 </Message>
+			 <Message Id="1#p" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2006-09-22 16:45:00Z">
+			  <Issue Name="Parameter">
+			   <Item>EndEditingException.EndEditingException(SerializationInfo, StreamingContext)</Item>
+			   <Item>p</Item>
+			   <Item>p_StreamingContext</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		  </Members>
+		 </Type>
+		</Types>
+	   </Namespace>
+	  </Namespaces>
+	 </Module>
+	</Modules>
+   </Target>
+   <Target Name="$(ProjectDir)/output/debug/MonoSpecific.dll">
+	<Modules>
+	 <Module Name="monospecific.dll">
+	  <Messages>
+	   <Message TypeName="AssembliesShouldHaveValidStrongNames" Category="Microsoft.Design" CheckId="CA2210" Created="2006-09-22 16:45:00Z">
+		<Issue Name="NoStrongName">
+		 <Item>MonoSpecific</Item>
+		</Issue>
+	   </Message>
+	  </Messages>
+	 </Module>
+	</Modules>
+   </Target>
+   <Target Name="$(ProjectDir)/output/debug/PlatformSpecific.dll">
+	<Modules>
+	 <Module Name="platformspecific.dll">
+	  <Messages>
+	   <Message TypeName="AssembliesShouldHaveValidStrongNames" Category="Microsoft.Design" CheckId="CA2210" Created="2006-09-22 16:45:00Z">
+		<Issue Name="NoStrongName">
+		 <Item>PlatformSpecific</Item>
+		</Issue>
+	   </Message>
+	  </Messages>
+	 </Module>
+	</Modules>
+   </Target>
+   <Target Name="$(ProjectDir)/output/debug/TreeViewIList.dll">
+	<Modules>
+	 <Module Name="treeviewilist.dll">
+	  <Messages>
+	   <Message TypeName="AssembliesShouldHaveValidStrongNames" Category="Microsoft.Design" CheckId="CA2210" Created="2006-09-22 16:45:00Z">
+		<Issue Name="NoStrongName">
+		 <Item>TreeViewIList</Item>
+		</Issue>
+	   </Message>
+	  </Messages>
+	  <Namespaces>
+	   <Namespace Name="WeSay.TreeViewIList">
+		<Types>
+		 <Type Name="ComboBoxEntryIListAdaptor">
+		  <Messages>
+		   <Message TypeName="CollectionsShouldImplementGenericInterface" Category="Microsoft.Design" CheckId="CA1010" Created="2006-09-22 16:45:00Z">
+			<Issue Certainty="60">
+			 <Item>ComboBoxEntryIListAdaptor</Item>
+			 <Item>IEnumerable</Item>
+			</Issue>
+		   </Message>
+		   <Message TypeName="IdentifiersShouldHaveCorrectSuffix" Category="Microsoft.Naming" CheckId="CA1710" Created="2006-09-22 16:45:00Z">
+			<Issue>
+			 <Item>WeSay.TreeViewIList.ComboBoxEntryIListAdaptor</Item>
+			 <Item>Collection</Item>
+			</Issue>
+		   </Message>
+		  </Messages>
+		  <Members>
+		   <Member Name=".ctor(System.Collections.IList)">
+			<Messages>
+			 <Message TypeName="DoNotCallOverridableMethodsInConstructors" Category="Microsoft.Usage" CheckId="CA2214" Created="2006-09-22 16:45:00Z">
+			  <Issue>
+			   <Item>ComboBoxEntryIListAdaptor.ComboBoxEntryIListAdaptor(IList)</Item>
+			   <Item>&#xD;&#xA;&#xD;&#xA;ComboBoxEntryIListAdaptor.ComboBoxEntryIListAdaptor(IList)&#xD;&#xA;Object.CreateNativeObject(String[], Value[]):Void</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		   <Member Name="DataSource">
+			<Messages>
+			 <Message TypeName="CollectionPropertiesShouldBeReadOnly" Category="Microsoft.Usage" CheckId="CA2227" Status="Excluded" Created="2006-09-22 16:45:00Z">
+			  <Issue>
+			   <Item>DataSource</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		   <Member Name="GetValueStrategy">
+			<Messages>
+			 <Message TypeName="PropertiesShouldNotBeWriteOnly" Category="Microsoft.Design" CheckId="CA1044" Created="2006-09-22 16:45:00Z">
+			  <Issue>
+			   <Item>GetValueStrategy</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		  </Members>
+		 </Type>
+		 <Type Name="IListComboBoxAdaptor">
+		  <Messages>
+		   <Message TypeName="CollectionsShouldImplementGenericInterface" Category="Microsoft.Design" CheckId="CA1010" Created="2006-09-22 16:45:00Z">
+			<Issue Certainty="60">
+			 <Item>IListComboBoxAdaptor</Item>
+			 <Item>IEnumerable</Item>
+			</Issue>
+		   </Message>
+		   <Message TypeName="IdentifiersShouldHaveCorrectSuffix" Category="Microsoft.Naming" CheckId="CA1710" Created="2006-09-22 16:45:00Z">
+			<Issue>
+			 <Item>WeSay.TreeViewIList.IListComboBoxAdaptor</Item>
+			 <Item>Collection</Item>
+			</Issue>
+		   </Message>
+		  </Messages>
+		  <Members>
+		   <Member Name=".ctor(System.Collections.IList)">
+			<Messages>
+			 <Message TypeName="DoNotCallOverridableMethodsInConstructors" Category="Microsoft.Usage" CheckId="CA2214" Created="2006-09-22 16:45:00Z">
+			  <Issue>
+			   <Item>IListComboBoxAdaptor.IListComboBoxAdaptor(IList)</Item>
+			   <Item>&#xD;&#xA;&#xD;&#xA;IListComboBoxAdaptor.IListComboBoxAdaptor(IList)&#xD;&#xA;Object.CreateNativeObject(String[], Value[]):Void</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		   <Member Name="DataSource">
+			<Messages>
+			 <Message TypeName="CollectionPropertiesShouldBeReadOnly" Category="Microsoft.Usage" CheckId="CA2227" Status="Excluded" Created="2006-09-22 16:45:00Z">
+			  <Issue>
+			   <Item>DataSource</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		   <Member Name="GetValueStrategy">
+			<Messages>
+			 <Message TypeName="PropertiesShouldNotBeWriteOnly" Category="Microsoft.Design" CheckId="CA1044" Created="2006-09-22 16:45:00Z">
+			  <Issue>
+			   <Item>GetValueStrategy</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		  </Members>
+		 </Type>
+		 <Type Name="TreeModelIListAdaptor">
+		  <Members>
+		   <Member Name=".ctor(WeSay.TreeViewIList.TreeModelIListConfiguration)">
+			<Messages>
+			 <Message TypeName="DoNotCallOverridableMethodsInConstructors" Category="Microsoft.Usage" CheckId="CA2214" Created="2006-09-22 16:45:00Z">
+			  <Issue>
+			   <Item>TreeModelIListAdaptor.TreeModelIListAdaptor(TreeModelIListConfiguration)</Item>
+			   <Item>&#xD;&#xA;&#xD;&#xA;TreeModelIListAdaptor.TreeModelIListAdaptor(TreeModelIListConfiguration)&#xD;&#xA;Object.CreateNativeObject(String[], Value[]):Void</Item>
+			  </Issue>
+			 </Message>
+			 <Message TypeName="InstantiateArgumentExceptionsCorrectly" Category="Microsoft.Usage" CheckId="CA2208" Created="2006-09-22 16:45:00Z">
+			  <Issue Name="NoArguments">
+			   <Item>System.ArgumentNullException</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		   <Member Name="_configuration">
+			<Messages>
+			 <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2006-09-22 16:45:00Z">
+			  <Issue>
+			   <Item>_configuration</Item>
+			  </Issue>
+			 </Message>
+			 <Message Id="Member" TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Created="2006-09-22 16:45:00Z">
+			  <Issue Name="Member">
+			   <Item>_configuration</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		   <Member Name="EmitRowChanged(System.Int32):System.Void">
+			<Messages>
+			 <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2006-09-22 16:45:00Z">
+			  <Issue>
+			   <Item>TreeModelIListAdaptor.EmitRowChanged(Int32):Void</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		   <Member Name="EmitRowDeleted(System.Int32):System.Void">
+			<Messages>
+			 <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2006-09-22 16:45:00Z">
+			  <Issue>
+			   <Item>TreeModelIListAdaptor.EmitRowDeleted(Int32):Void</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		   <Member Name="EmitRowInserted(System.Int32):System.Void">
+			<Messages>
+			 <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2006-09-22 16:45:00Z">
+			  <Issue>
+			   <Item>TreeModelIListAdaptor.EmitRowInserted(Int32):Void</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		   <Member Name="GetFlagsCallback():System.Int32">
+			<Messages>
+			 <Message TypeName="UsePropertiesWhereAppropriate" Category="Microsoft.Design" CheckId="CA1024" Created="2006-09-22 17:39:13Z">
+			  <Issue Certainty="50">
+			   <Item>GetFlagsCallback</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		   <Member Name="GetNColumnsCallback():System.Int32">
+			<Messages>
+			 <Message TypeName="UsePropertiesWhereAppropriate" Category="Microsoft.Design" CheckId="CA1024" Created="2006-09-22 17:39:13Z">
+			  <Issue Certainty="50">
+			   <Item>GetNColumnsCallback</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		   <Member Name="GetValueCallback(System.Int32,System.Int32,GLib.Value&amp;):System.Void">
+			<Messages>
+			 <Message Id="2#" TypeName="DoNotPassTypesByReference" Category="Microsoft.Design" CheckId="CA1045" Created="2006-09-22 17:39:13Z">
+			  <Issue Certainty="50">
+			   <Item>value</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		   <Member Name="NthChildCallback(System.Int32&amp;,System.Int32,System.Int32):System.Boolean">
+			<Messages>
+			 <Message Id="0#" TypeName="AvoidOutParameters" Category="Microsoft.Design" CheckId="CA1021" Created="2006-09-22 17:39:13Z">
+			  <Issue>
+			   <Item>child</Item>
+			  </Issue>
+			 </Message>
+			 <Message Id="2#n" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2006-09-22 17:39:13Z">
+			  <Issue Name="ParameterOneLetter">
+			   <Item>TreeModelIListAdaptor.NthChildCallback(Int32&amp;, Int32, Int32):Boolean</Item>
+			   <Item>n</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		   <Member Name="ParentCallback(System.Int32&amp;,System.Int32):System.Boolean">
+			<Messages>
+			 <Message Id="0#" TypeName="AvoidOutParameters" Category="Microsoft.Design" CheckId="CA1021" Created="2006-09-22 17:39:13Z">
+			  <Issue>
+			   <Item>parent</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		   <Member Name="VerifyValidColumn(System.Int32):System.Void">
+			<Messages>
+			 <Message Id="System.ArgumentOutOfRangeException.#ctor(System.String,System.String)" TypeName="DoNotPassLiteralsAsLocalizedParameters" Category="Microsoft.Globalization" CheckId="CA1303" Created="2006-09-22 16:45:00Z">
+			  <Issue>
+			   <Item>TreeModelIListAdaptor.VerifyValidColumn(Int32):Void</Item>
+			   <Item>2</Item>
+			   <Item>ArgumentOutOfRangeException.ArgumentOutOfRangeException(String, String)</Item>
+			   <Item>column is not valid (it may be past the end)</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		   <Member Name="VerifyValidIndex(System.Int32):System.Void">
+			<Messages>
+			 <Message Id="System.ArgumentOutOfRangeException.#ctor(System.String,System.String)" TypeName="DoNotPassLiteralsAsLocalizedParameters" Category="Microsoft.Globalization" CheckId="CA1303" Created="2006-09-22 16:45:00Z">
+			  <Issue>
+			   <Item>TreeModelIListAdaptor.VerifyValidIndex(Int32):Void</Item>
+			   <Item>2</Item>
+			   <Item>ArgumentOutOfRangeException.ArgumentOutOfRangeException(String, String)</Item>
+			   <Item>index is not valid (it may be past the end)</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		  </Members>
+		 </Type>
+		 <Type Name="TreeModelIListAdaptor+NativeMethods">
+		  <Members>
+		   <Member Name="gtksharp_node_store_emit_row_changed(System.IntPtr,System.IntPtr,System.Int32):System.Void">
+			<Messages>
+			 <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Created="2006-09-22 17:52:15Z">
+			  <Issue>
+			   <Item>NativeMethods.gtksharp_node_store_emit_row_changed(IntPtr, IntPtr, Int32):Void</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		   <Member Name="gtksharp_node_store_emit_row_deleted(System.IntPtr,System.IntPtr,System.Int32):System.Void">
+			<Messages>
+			 <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Created="2006-09-22 17:52:15Z">
+			  <Issue>
+			   <Item>NativeMethods.gtksharp_node_store_emit_row_deleted(IntPtr, IntPtr, Int32):Void</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		   <Member Name="gtksharp_node_store_emit_row_inserted(System.IntPtr,System.IntPtr,System.Int32):System.Void">
+			<Messages>
+			 <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Created="2006-09-22 17:52:15Z">
+			  <Issue>
+			   <Item>NativeMethods.gtksharp_node_store_emit_row_inserted(IntPtr, IntPtr, Int32):Void</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		  </Members>
+		 </Type>
+		 <Type Name="TreeModelIListConfiguration">
+		  <Members>
+		   <Member Name="DataSource">
+			<Messages>
+			 <Message TypeName="CollectionPropertiesShouldBeReadOnly" Category="Microsoft.Usage" CheckId="CA2227" Status="Excluded" Created="2006-09-22 16:45:00Z">
+			  <Issue>
+			   <Item>DataSource</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		  </Members>
+		 </Type>
+		 <Type Name="TreeViewAdaptorIList">
+		  <Messages>
+		   <Message TypeName="CollectionsShouldImplementGenericInterface" Category="Microsoft.Design" CheckId="CA1010" Created="2006-09-22 16:45:00Z">
+			<Issue Certainty="60">
+			 <Item>TreeViewAdaptorIList</Item>
+			 <Item>IEnumerable</Item>
+			</Issue>
+		   </Message>
+		   <Message TypeName="IdentifiersShouldHaveCorrectSuffix" Category="Microsoft.Naming" CheckId="CA1710" Created="2006-09-22 16:45:00Z">
+			<Issue>
+			 <Item>WeSay.TreeViewIList.TreeViewAdaptorIList</Item>
+			 <Item>Collection</Item>
+			</Issue>
+		   </Message>
+		  </Messages>
+		  <Members>
+		   <Member Name=".ctor(System.Collections.IList)">
+			<Messages>
+			 <Message TypeName="DoNotCallOverridableMethodsInConstructors" Category="Microsoft.Usage" CheckId="CA2214" Created="2006-09-22 16:45:00Z">
+			  <Issue>
+			   <Item>TreeViewAdaptorIList.TreeViewAdaptorIList(IList)</Item>
+			   <Item>&#xD;&#xA;&#xD;&#xA;TreeViewAdaptorIList.TreeViewAdaptorIList(IList)&#xD;&#xA;Object.CreateNativeObject(String[], Value[]):Void</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		   <Member Name="DataSource">
+			<Messages>
+			 <Message TypeName="CollectionPropertiesShouldBeReadOnly" Category="Microsoft.Usage" CheckId="CA2227" Status="Excluded" Created="2006-09-22 16:45:00Z">
+			  <Issue>
+			   <Item>DataSource</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		   <Member Name="GetValueStrategy">
+			<Messages>
+			 <Message TypeName="PropertiesShouldNotBeWriteOnly" Category="Microsoft.Design" CheckId="CA1044" Created="2006-09-22 16:45:00Z">
+			  <Issue>
+			   <Item>GetValueStrategy</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		  </Members>
+		 </Type>
+		</Types>
+	   </Namespace>
+	  </Namespaces>
+	 </Module>
+	</Modules>
+   </Target>
+   <Target Name="$(ProjectDir)/output/debug/WeSay.App.exe">
+	<Modules>
+	 <Module Name="wesay.app.exe">
+	  <Messages>
+	   <Message TypeName="AssembliesShouldHaveValidStrongNames" Category="Microsoft.Design" CheckId="CA2210" Created="2006-09-22 16:45:00Z">
+		<Issue Name="NoStrongName">
+		 <Item>WeSay.App</Item>
+		</Issue>
+	   </Message>
+	  </Messages>
+	  <Namespaces>
+	   <Namespace Name="CommandLine">
+		<Types>
+		 <Type Name="ArgumentAttribute">
+		  <Messages>
+		   <Message TypeName="AvoidUnsealedAttributes" Category="Microsoft.Performance" CheckId="CA1813" Status="Excluded" Created="2006-09-22 16:45:00Z">
+			<Issue>
+			 <Item>CommandLine.ArgumentAttribute</Item>
+			</Issue>
+		   </Message>
+		  </Messages>
+		  <Members>
+		   <Member Name="LongName">
+			<Accessors>
+			 <Accessor Name="set_LongName(System.String):System.Void">
+			  <Messages>
+			   <Message TypeName="ValidateArgumentsOfPublicMethods" Category="Microsoft.Design" CheckId="CA1062" Created="2006-09-22 17:16:37Z">
+				<Issue>
+				 <Item>'value'</Item>
+				 <Item>ArgumentAttribute.set_LongName(String):Void</Item>
+				</Issue>
+			   </Message>
+			  </Messages>
+			 </Accessor>
+			</Accessors>
+		   </Member>
+		  </Members>
+		 </Type>
+		 <Type Name="ArgumentTypes">
+		  <Messages>
+		   <Message TypeName="EnumsShouldHaveZeroValue" Category="Microsoft.Design" CheckId="CA1008" Created="2006-09-22 17:16:37Z" FixCategory="Breaking">
+			<Issue Name="FlagsRename">
+			 <Item>CommandLine.ArgumentTypes</Item>
+			 <Item>ArgumentTypes.AtMostOnce</Item>
+			</Issue>
+		   </Message>
+		  </Messages>
+		  <Members>
+		   <Member Name="LastOccurenceWins">
+			<Messages>
+			 <Message Id="Occurence" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2006-09-22 17:16:37Z">
+			  <Issue Name="Member">
+			   <Item>Occurence</Item>
+			   <Item>ArgumentTypes.LastOccurenceWins</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		  </Members>
+		 </Type>
+		 <Type Name="Parser">
+		  <Members>
+		   <Member Name=".ctor(System.Type,CommandLine.ErrorReporter)">
+			<Messages>
+			 <Message TypeName="ValidateArgumentsOfPublicMethods" Category="Microsoft.Design" CheckId="CA1062" Created="2006-09-22 16:45:00Z">
+			  <Issue>
+			   <Item>'argumentSpecification'</Item>
+			   <Item>Parser.Parser(Type, ErrorReporter)</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		   <Member Name="DefaultValue(CommandLine.ArgumentAttribute,System.Reflection.FieldInfo):System.Object">
+			<Messages>
+			 <Message Id="field" TypeName="ReviewUnusedParameters" Category="Microsoft.Usage" CheckId="CA1801" Created="2006-09-22 16:45:00Z" FixCategory="NonBreaking">
+			  <Issue>
+			   <Item>field</Item>
+			   <Item>Parser.DefaultValue(ArgumentAttribute, FieldInfo):Object</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		   <Member Name="GetConsoleWindowWidth():System.Int32">
+			<Messages>
+			 <Message Id="rc" TypeName="RemoveUnusedLocals" Category="Microsoft.Performance" CheckId="CA1804" Created="2006-09-22 16:45:00Z">
+			  <Issue>
+			   <Item>Parser.GetConsoleWindowWidth():Int32</Item>
+			   <Item>rc</Item>
+			   <Item>System.Int32</Item>
+			  </Issue>
+			 </Message>
+			 <Message TypeName="UsePropertiesWhereAppropriate" Category="Microsoft.Design" CheckId="CA1024" Created="2006-09-22 16:45:00Z">
+			  <Issue Certainty="50">
+			   <Item>GetConsoleWindowWidth</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		   <Member Name="HelpText(CommandLine.ArgumentAttribute,System.Reflection.FieldInfo):System.String">
+			<Messages>
+			 <Message Id="field" TypeName="ReviewUnusedParameters" Category="Microsoft.Usage" CheckId="CA1801" Created="2006-09-22 16:45:00Z" FixCategory="NonBreaking">
+			  <Issue>
+			   <Item>field</Item>
+			   <Item>Parser.HelpText(ArgumentAttribute, FieldInfo):String</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		   <Member Name="IndexOf(System.Text.StringBuilder,System.Char,System.Int32):System.Int32">
+			<Messages>
+			 <Message TypeName="ValidateArgumentsOfPublicMethods" Category="Microsoft.Design" CheckId="CA1062" Created="2006-09-22 16:45:00Z">
+			  <Issue>
+			   <Item>'text'</Item>
+			   <Item>Parser.IndexOf(StringBuilder, Char, Int32):Int32</Item>
+			  </Issue>
+			  <Issue>
+			   <Item>'text'</Item>
+			   <Item>Parser.IndexOf(StringBuilder, Char, Int32):Int32</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		   <Member Name="LastIndexOf(System.Text.StringBuilder,System.Char,System.Int32):System.Int32">
+			<Messages>
+			 <Message TypeName="ValidateArgumentsOfPublicMethods" Category="Microsoft.Design" CheckId="CA1062" Created="2006-09-22 16:45:00Z">
+			  <Issue>
+			   <Item>'text'</Item>
+			   <Item>Parser.LastIndexOf(StringBuilder, Char, Int32):Int32</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		   <Member Name="LexFileArguments(System.String,System.String[]&amp;):System.Boolean">
+			<Messages>
+			 <Message Id="System.String.Format(System.String,System.Object)" TypeName="SpecifyIFormatProvider" Category="Microsoft.Globalization" CheckId="CA1305" Created="2006-09-22 16:45:00Z">
+			  <Issue>
+			   <Item>Parser.LexFileArguments(String, String[]&amp;):Boolean</Item>
+			   <Item>System.String.Format(System.String,System.Object)</Item>
+			   <Item>System.String.Format(System.IFormatProvider,System.String,System.Object[])</Item>
+			  </Issue>
+			 </Message>
+			 <Message Id="System.String.Format(System.String,System.Object,System.Object)" TypeName="SpecifyIFormatProvider" Category="Microsoft.Globalization" CheckId="CA1305" Created="2006-09-22 16:45:00Z">
+			  <Issue>
+			   <Item>Parser.LexFileArguments(String, String[]&amp;):Boolean</Item>
+			   <Item>System.String.Format(System.String,System.Object,System.Object)</Item>
+			   <Item>System.String.Format(System.IFormatProvider,System.String,System.Object[])</Item>
+			  </Issue>
+			 </Message>
+			 <Message TypeName="DoNotCatchGeneralExceptionTypes" Category="Microsoft.Design" CheckId="CA1031" Status="Excluded" Created="2006-09-22 16:45:00Z">
+			  <Issue>
+			   <Item>Parser.LexFileArguments(String, String[]&amp;):Boolean</Item>
+			   <Item>System.Exception</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		   <Member Name="ParseArguments(System.String[],System.Object,CommandLine.ErrorReporter):System.Boolean">
+			<Messages>
+			 <Message TypeName="ValidateArgumentsOfPublicMethods" Category="Microsoft.Design" CheckId="CA1062" Created="2006-09-22 16:45:00Z">
+			  <Issue>
+			   <Item>'destination'</Item>
+			   <Item>Parser.ParseArguments(String[], Object, ErrorReporter):Boolean</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		   <Member Name="ParseArgumentsWithUsage(System.String[],System.Object):System.Boolean">
+			<Messages>
+			 <Message TypeName="ValidateArgumentsOfPublicMethods" Category="Microsoft.Design" CheckId="CA1062" Created="2006-09-22 16:45:00Z">
+			  <Issue>
+			   <Item>'destination'</Item>
+			   <Item>Parser.ParseArgumentsWithUsage(String[], Object):Boolean</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		   <Member Name="ReportUnrecognizedArgument(System.String):System.Void">
+			<Messages>
+			 <Message Id="System.String.Format(System.String,System.Object)" TypeName="SpecifyIFormatProvider" Category="Microsoft.Globalization" CheckId="CA1305" Created="2006-09-22 16:45:00Z">
+			  <Issue>
+			   <Item>Parser.ReportUnrecognizedArgument(String):Void</Item>
+			   <Item>System.String.Format(System.String,System.Object)</Item>
+			   <Item>System.String.Format(System.IFormatProvider,System.String,System.Object[])</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		  </Members>
+		 </Type>
+		 <Type Name="Parser+Argument">
+		  <Members>
+		   <Member Name=".ctor(CommandLine.ArgumentAttribute,System.Reflection.FieldInfo,CommandLine.ErrorReporter)">
+			<Messages>
+			 <Message TypeName="DoNotInitializeUnnecessarily" Category="Microsoft.Performance" CheckId="CA1805" Created="2006-09-22 16:45:00Z">
+			  <Issue>
+			   <Item>Argument.Argument(ArgumentAttribute, FieldInfo, ErrorReporter)</Item>
+			   <Item>seenValue</Item>
+			   <Item>System.Boolean</Item>
+			   <Item>false</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		   <Member Name="ParseValue(System.Type,System.String,System.Object&amp;):System.Boolean">
+			<Messages>
+			 <Message TypeName="DoNotCatchGeneralExceptionTypes" Category="Microsoft.Design" CheckId="CA1031" Created="2006-09-22 16:45:00Z">
+			  <Issue>
+			   <Item>Argument.ParseValue(Type, String, Object&amp;):Boolean</Item>
+			   <Item>System.Object</Item>
+			  </Issue>
+			 </Message>
+			 <Message Id="System.Int32.Parse(System.String)" TypeName="SpecifyIFormatProvider" Category="Microsoft.Globalization" CheckId="CA1305" Created="2006-09-22 16:45:00Z">
+			  <Issue>
+			   <Item>Argument.ParseValue(Type, String, Object&amp;):Boolean</Item>
+			   <Item>System.Int32.Parse(System.String)</Item>
+			   <Item>System.Int32.Parse(System.String,System.IFormatProvider)</Item>
+			  </Issue>
+			  <Issue>
+			   <Item>Argument.ParseValue(Type, String, Object&amp;):Boolean</Item>
+			   <Item>System.Int32.Parse(System.String)</Item>
+			   <Item>System.Int32.Parse(System.String,System.IFormatProvider)</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		   <Member Name="ReportBadArgumentValue(System.String):System.Void">
+			<Messages>
+			 <Message Id="System.String.Format(System.String,System.Object,System.Object)" TypeName="SpecifyIFormatProvider" Category="Microsoft.Globalization" CheckId="CA1305" Created="2006-09-22 16:45:00Z">
+			  <Issue>
+			   <Item>Argument.ReportBadArgumentValue(String):Void</Item>
+			   <Item>System.String.Format(System.String,System.Object,System.Object)</Item>
+			   <Item>System.String.Format(System.IFormatProvider,System.String,System.Object[])</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		   <Member Name="ReportDuplicateArgumentValue(System.String):System.Void">
+			<Messages>
+			 <Message Id="System.String.Format(System.String,System.Object,System.Object)" TypeName="SpecifyIFormatProvider" Category="Microsoft.Globalization" CheckId="CA1305" Created="2006-09-22 16:45:00Z">
+			  <Issue>
+			   <Item>Argument.ReportDuplicateArgumentValue(String):Void</Item>
+			   <Item>System.String.Format(System.String,System.Object,System.Object)</Item>
+			   <Item>System.String.Format(System.IFormatProvider,System.String,System.Object[])</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		   <Member Name="ReportMissingRequiredArgument():System.Boolean">
+			<Messages>
+			 <Message Id="System.String.Format(System.String,System.Object)" TypeName="SpecifyIFormatProvider" Category="Microsoft.Globalization" CheckId="CA1305" Created="2006-09-22 16:45:00Z">
+			  <Issue>
+			   <Item>Argument.ReportMissingRequiredArgument():Boolean</Item>
+			   <Item>System.String.Format(System.String,System.Object)</Item>
+			   <Item>System.String.Format(System.IFormatProvider,System.String,System.Object[])</Item>
+			  </Issue>
+			  <Issue>
+			   <Item>Argument.ReportMissingRequiredArgument():Boolean</Item>
+			   <Item>System.String.Format(System.String,System.Object)</Item>
+			   <Item>System.String.Format(System.IFormatProvider,System.String,System.Object[])</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		   <Member Name="SetValue(System.String,System.Object):System.Boolean">
+			<Messages>
+			 <Message Id="System.String.Format(System.String,System.Object)" TypeName="SpecifyIFormatProvider" Category="Microsoft.Globalization" CheckId="CA1305" Created="2006-09-22 16:45:00Z">
+			  <Issue>
+			   <Item>Argument.SetValue(String, Object):Boolean</Item>
+			   <Item>System.String.Format(System.String,System.Object)</Item>
+			   <Item>System.String.Format(System.IFormatProvider,System.String,System.Object[])</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		  </Members>
+		 </Type>
+		 <Type Name="Parser+HelpArgument">
+		  <Members>
+		   <Member Name=".ctor()">
+			<Messages>
+			 <Message TypeName="DoNotInitializeUnnecessarily" Category="Microsoft.Performance" CheckId="CA1805" Created="2006-09-22 16:45:00Z">
+			  <Issue>
+			   <Item>HelpArgument.HelpArgument()</Item>
+			   <Item>help</Item>
+			   <Item>System.Boolean</Item>
+			   <Item>false</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		  </Members>
+		 </Type>
+		</Types>
+	   </Namespace>
+	   <Namespace Name="WeSay.App">
+		<Types>
+		 <Type Name="SampleTaskBuilder">
+		  <Members>
+		   <Member Name="_project">
+			<Messages>
+			 <Message TypeName="AvoidUnusedPrivateFields" Category="Microsoft.Performance" CheckId="CA1823" Created="2006-09-22 16:45:00Z">
+			  <Issue>
+			   <Item>SampleTaskBuilder._project</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		  </Members>
+		 </Type>
+		 <Type Name="TabbedForm">
+		  <Members>
+		   <Member Name=".ctor(WeSay.UI.BasilProject,WeSay.UI.ITaskBuilder)">
+			<Messages>
+			 <Message Id="project" TypeName="ReviewUnusedParameters" Category="Microsoft.Usage" CheckId="CA1801" Created="2006-09-22 17:16:37Z" FixCategory="Breaking">
+			  <Issue>
+			   <Item>project</Item>
+			   <Item>TabbedForm.TabbedForm(BasilProject, ITaskBuilder)</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		   <Member Name="InitializeComponent():System.Void">
+			<Messages>
+			 <Message Id="System.Windows.Forms.Control.set_Text(System.String)" TypeName="DoNotPassLiteralsAsLocalizedParameters" Category="Microsoft.Globalization" CheckId="CA1303" Created="2006-09-22 16:45:00Z">
+			  <Issue>
+			   <Item>TabbedForm.InitializeComponent():Void</Item>
+			   <Item>1</Item>
+			   <Item>Control.set_Text(String):Void</Item>
+			   <Item>WeSay</Item>
+			  </Issue>
+			  <Issue>
+			   <Item>TabbedForm.InitializeComponent():Void</Item>
+			   <Item>1</Item>
+			   <Item>Control.set_Text(String):Void</Item>
+			   <Item>tabPage2</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		  </Members>
+		 </Type>
+		 <Type Name="WeSayApp">
+		  <Members>
+		   <Member Name="Main(System.String[]):System.Void">
+			<Messages>
+			 <Message TypeName="DoNotCastUnnecessarily" Category="Microsoft.Performance" CheckId="CA1800" Status="Excluded" Created="2006-09-22 16:45:00Z">
+			  <Issue Name="Local">
+			   <Item>builder</Item>
+			   <Item>System.IDisposable</Item>
+			   <Item>WeSayApp.Main(String[]):Void</Item>
+			   <Item>castclass</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		   <Member Name="ShowCommandLineError(System.String):System.Void">
+			<Messages>
+			 <Message Id="System.Windows.Forms.MessageBox.Show(System.String,System.String)" TypeName="DoNotPassLiteralsAsLocalizedParameters" Category="Microsoft.Globalization" CheckId="CA1303" Created="2006-09-22 16:45:00Z">
+			  <Issue>
+			   <Item>WeSayApp.ShowCommandLineError(String):Void</Item>
+			   <Item>2</Item>
+			   <Item>MessageBox.Show(String, String):DialogResult</Item>
+			   <Item>WeSay Command Line Problem</Item>
+			  </Issue>
+			 </Message>
+			 <Message TypeName="SpecifyMessageBoxOptions" Category="Microsoft.Globalization" CheckId="CA1300" Created="2006-09-22 16:45:00Z">
+			  <Issue>
+			   <Item>WeSayApp.ShowCommandLineError(String):Void</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		  </Members>
+		 </Type>
+		 <Type Name="WeSayApp+CommandLineArguments">
+		  <Members>
+		   <Member Name=".ctor()">
+			<Messages>
+			 <Message TypeName="DoNotInitializeUnnecessarily" Category="Microsoft.Performance" CheckId="CA1805" Created="2006-09-22 16:45:00Z">
+			  <Issue>
+			   <Item>CommandLineArguments.CommandLineArguments()</Item>
+			   <Item>projectPath</Item>
+			   <Item>System.String</Item>
+			   <Item>null</Item>
+			  </Issue>
+			  <Issue>
+			   <Item>CommandLineArguments.CommandLineArguments()</Item>
+			   <Item>ui</Item>
+			   <Item>System.String</Item>
+			   <Item>null</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		  </Members>
+		 </Type>
+		</Types>
+	   </Namespace>
+	  </Namespaces>
+	 </Module>
+	</Modules>
+   </Target>
    <Target Name="$(ProjectDir)/output/debug/WeSay.Data.dll">
 	<Modules>
 	 <Module Name="wesay.data.dll">
@@ -597,6 +2470,365 @@
 	 </Module>
 	</Modules>
    </Target>
+   <Target Name="$(ProjectDir)/output/debug/WeSay.UI.dll">
+	<Modules>
+	 <Module Name="wesay.ui.dll">
+	  <Messages>
+	   <Message TypeName="AssembliesShouldHaveValidStrongNames" Category="Microsoft.Design" CheckId="CA2210" Created="2006-09-22 16:45:00Z">
+		<Issue Name="NoStrongName">
+		 <Item>WeSay.UI</Item>
+		</Issue>
+	   </Message>
+	  </Messages>
+	  <Namespaces>
+	   <Namespace Name="WeSay.UI">
+		<Types>
+		 <Type Name="BasilProject">
+		  <Messages>
+		   <Message TypeName="ImplementIDisposableCorrectly" Category="Microsoft.Design" CheckId="CA1063" Created="2006-09-22 16:45:00Z">
+			<Issue Name="ProvideDisposeBool">
+			 <Item>WeSay.UI.BasilProject</Item>
+			</Issue>
+		   </Message>
+		  </Messages>
+		  <Members>
+		   <Member Name="ApplicationCommonDirectory">
+			<Messages>
+			 <Message TypeName="MarkMembersAsStatic" Category="Microsoft.Performance" CheckId="CA1822" Created="2006-09-22 16:45:00Z" FixCategory="Breaking">
+			  <Issue>
+			   <Item>BasilProject.ApplicationCommonDirectory:String</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		   <Member Name="Dispose():System.Void">
+			<Messages>
+			 <Message TypeName="ImplementIDisposableCorrectly" Category="Microsoft.Design" CheckId="CA1063" Created="2006-09-22 16:45:00Z">
+			  <Issue Name="DisposeImplementation">
+			   <Item>BasilProject.Dispose():Void</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		   <Member Name="GetTopWeSayDirectory():System.String">
+			<Messages>
+			 <Message Id="System.String.ToLower" TypeName="SpecifyCultureInfo" Category="Microsoft.Globalization" CheckId="CA1304" Created="2006-09-22 16:45:00Z">
+			  <Issue>
+			   <Item>BasilProject.GetTopWeSayDirectory():String</Item>
+			   <Item>System.String.ToLower</Item>
+			   <Item>System.String.ToLower(System.Globalization.CultureInfo)</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		   <Member Name="InitStringCatalog():System.Void">
+			<Messages>
+			 <Message Id="WeSay.UI.StringCatalog" TypeName="DoNotIgnoreMethodResults" Category="Microsoft.Usage" CheckId="CA1806" Created="2006-09-22 16:45:00Z">
+			  <Issue Name="ObjectCreation">
+			   <Item>BasilProject.InitStringCatalog():Void</Item>
+			   <Item>WeSay.UI.StringCatalog</Item>
+			  </Issue>
+			  <Issue Name="ObjectCreation">
+			   <Item>BasilProject.InitStringCatalog():Void</Item>
+			   <Item>WeSay.UI.StringCatalog</Item>
+			  </Issue>
+			  <Issue Name="ObjectCreation">
+			   <Item>BasilProject.InitStringCatalog():Void</Item>
+			   <Item>WeSay.UI.StringCatalog</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		   <Member Name="Load(System.String,System.Boolean):System.Void">
+			<Messages>
+			 <Message Id="1#dont" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2006-09-22 16:45:00Z">
+			  <Issue Name="Parameter">
+			   <Item>BasilProject.Load(String, Boolean):Void</Item>
+			   <Item>dont</Item>
+			   <Item>dontInitialize</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		   <Member Name="PathToWritingSystemPrefs">
+			<Messages>
+			 <Message Id="Prefs" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2006-09-22 16:45:00Z">
+			  <Issue Name="Member">
+			   <Item>Prefs</Item>
+			   <Item>BasilProject.PathToWritingSystemPrefs:String</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		  </Members>
+		 </Type>
+		 <Type Name="Binding">
+		  <Members>
+		   <Member Name="GetTargetValue():System.String">
+			<Messages>
+			 <Message Id="System.ArgumentException.#ctor(System.String)" TypeName="DoNotPassLiteralsAsLocalizedParameters" Category="Microsoft.Globalization" CheckId="CA1303" Created="2006-09-22 16:45:00Z">
+			  <Issue>
+			   <Item>Binding.GetTargetValue():String</Item>
+			   <Item>1</Item>
+			   <Item>ArgumentException.ArgumentException(String)</Item>
+			   <Item>Binding can't handle that type of target.</Item>
+			  </Issue>
+			 </Message>
+			 <Message TypeName="UsePropertiesWhereAppropriate" Category="Microsoft.Design" CheckId="CA1024" Created="2006-09-22 16:45:00Z">
+			  <Issue Certainty="50">
+			   <Item>GetTargetValue</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		   <Member Name="OnDataPropertyChanged(System.Object,System.ComponentModel.PropertyChangedEventArgs):System.Void">
+			<Messages>
+			 <Message TypeName="ReviewVisibleEventHandlers" Category="Microsoft.Security" CheckId="CA2109" Created="2006-09-22 16:45:00Z">
+			  <Issue>
+			   <Item>Binding.OnDataPropertyChanged(Object, PropertyChangedEventArgs):Void</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		   <Member Name="SetTargetValue(System.String):System.Void">
+			<Messages>
+			 <Message Id="System.ArgumentException.#ctor(System.String)" TypeName="DoNotPassLiteralsAsLocalizedParameters" Category="Microsoft.Globalization" CheckId="CA1303" Created="2006-09-22 16:45:00Z">
+			  <Issue>
+			   <Item>Binding.SetTargetValue(String):Void</Item>
+			   <Item>1</Item>
+			   <Item>ArgumentException.ArgumentException(String)</Item>
+			   <Item>Binding doesn't understand that type of target.</Item>
+			  </Issue>
+			 </Message>
+			 <Message Id="0#s" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2006-09-22 16:45:00Z">
+			  <Issue Name="ParameterOneLetter">
+			   <Item>Binding.SetTargetValue(String):Void</Item>
+			   <Item>s</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		  </Members>
+		 </Type>
+		 <Type Name="DetailList">
+		  <Members>
+		   <Member Name=".ctor()">
+			<Messages>
+			 <Message TypeName="DoNotInitializeUnnecessarily" Category="Microsoft.Performance" CheckId="CA1805" Created="2006-09-22 16:45:00Z">
+			  <Issue>
+			   <Item>DetailList.DetailList()</Item>
+			   <Item>_indexOfLabel</Item>
+			   <Item>System.Int32</Item>
+			   <Item>0</Item>
+			  </Issue>
+			  <Issue>
+			   <Item>DetailList.DetailList()</Item>
+			   <Item>_rowCount</Item>
+			   <Item>System.Int32</Item>
+			   <Item>0</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		   <Member Name=".ctor(System.Predicate`1&lt;System.String&gt;)">
+			<Messages>
+			 <Message TypeName="DoNotInitializeUnnecessarily" Category="Microsoft.Performance" CheckId="CA1805" Created="2006-09-22 16:45:00Z">
+			  <Issue>
+			   <Item>DetailList.DetailList(Predicate`1&lt;System.String&gt;)</Item>
+			   <Item>_indexOfLabel</Item>
+			   <Item>System.Int32</Item>
+			   <Item>0</Item>
+			  </Issue>
+			  <Issue>
+			   <Item>DetailList.DetailList(Predicate`1&lt;System.String&gt;)</Item>
+			   <Item>_rowCount</Item>
+			   <Item>System.Int32</Item>
+			   <Item>0</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		   <Member Name="Controls">
+			<Accessors>
+			 <Accessor Name="get_Controls():System.Windows.Forms.Control+ControlCollection">
+			  <Messages>
+			   <Message Id="System.InvalidOperationException.#ctor(System.String)" TypeName="DoNotPassLiteralsAsLocalizedParameters" Category="Microsoft.Globalization" CheckId="CA1303" Created="2006-09-22 17:39:13Z">
+				<Issue>
+				 <Item>DetailList.get_Controls():ControlCollection</Item>
+				 <Item>1</Item>
+				 <Item>InvalidOperationException.InvalidOperationException(String)</Item>
+				 <Item>Please don't access my Controls property externally.&#xA; For testing use GetControlOfRow and GetEditControlFromReferenceControl.</Item>
+				</Issue>
+			   </Message>
+			  </Messages>
+			 </Accessor>
+			</Accessors>
+		   </Member>
+		   <Member Name="GetEditControlFromReferenceControl(System.Windows.Forms.Control):System.Windows.Forms.Control">
+			<Messages>
+			 <Message TypeName="ValidateArgumentsOfPublicMethods" Category="Microsoft.Design" CheckId="CA1062" Created="2006-09-22 16:45:00Z">
+			  <Issue>
+			   <Item>'rowControl'</Item>
+			   <Item>DetailList.GetEditControlFromReferenceControl(Control):Control</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		   <Member Name="GetLabelControlFromReferenceControl(System.Windows.Forms.Control):System.Windows.Forms.Label">
+			<Messages>
+			 <Message TypeName="ValidateArgumentsOfPublicMethods" Category="Microsoft.Design" CheckId="CA1062" Created="2006-09-22 16:45:00Z">
+			  <Issue>
+			   <Item>'rowControl'</Item>
+			   <Item>DetailList.GetLabelControlFromReferenceControl(Control):Label</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		   <Member Name="Initialize(System.Predicate`1&lt;System.String&gt;):System.Void">
+			<Messages>
+			 <Message TypeName="DoNotUseTimersThatPreventPowerStateChanges" Category="Microsoft.Mobility" CheckId="CA1601" Created="2006-09-22 16:45:00Z">
+			  <Issue>
+			   <Item>Timer.set_Interval(Int32):Void</Item>
+			   <Item>DetailList.Initialize(Predicate`1&lt;System.String&gt;):Void</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		   <Member Name="OnBindingCurrentItemChanged(System.Object,WeSay.UI.CurrentItemEventArgs):System.Void">
+			<Messages>
+			 <Message TypeName="ReviewVisibleEventHandlers" Category="Microsoft.Security" CheckId="CA2109" Created="2006-09-22 16:45:00Z">
+			  <Issue>
+			   <Item>DetailList.OnBindingCurrentItemChanged(Object, CurrentItemEventArgs):Void</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		  </Members>
+		 </Type>
+		 <Type Name="GhostBinding">
+		  <Members>
+		   <Member Name="Triggered" Kind="Event">
+			<Messages>
+			 <Message TypeName="DeclareEventHandlersCorrectly" Category="Microsoft.Design" CheckId="CA1009" Created="2006-09-22 16:45:00Z">
+			  <Issue Name="First">
+			   <Item>GhostTriggered</Item>
+			  </Issue>
+			  <Issue Name="Second">
+			   <Item>GhostTriggered</Item>
+			  </Issue>
+			  <Issue Name="TooMany">
+			   <Item>GhostTriggered</Item>
+			  </Issue>
+			 </Message>
+			 <Message TypeName="IdentifiersShouldHaveCorrectSuffix" Category="Microsoft.Naming" CheckId="CA1710" Created="2006-09-22 16:45:00Z">
+			  <Issue>
+			   <Item>WeSay.UI.GhostBinding+GhostTriggered</Item>
+			   <Item>EventHandler</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		   <Member Name="TimeForRealObject():System.Void">
+			<Messages>
+			 <Message Id="WeSay.UI.WeSayTextBox.set_Text(System.String)" TypeName="DoNotPassLiteralsAsLocalizedParameters" Category="Microsoft.Globalization" CheckId="CA1303" Created="2006-09-22 16:45:00Z">
+			  <Issue>
+			   <Item>GhostBinding.TimeForRealObject():Void</Item>
+			   <Item>1</Item>
+			   <Item>WeSayTextBox.set_Text(String):Void</Item>
+			   <Item />
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		  </Members>
+		 </Type>
+		 <Type Name="ISkin">
+		  <Messages>
+		   <Message TypeName="AvoidEmptyInterfaces" Category="Microsoft.Design" CheckId="CA1040" Created="2006-09-22 16:45:00Z">
+			<Issue>
+			 <Item>ISkin</Item>
+			</Issue>
+		   </Message>
+		  </Messages>
+		 </Type>
+		 <Type Name="WeSayTextBox">
+		  <Messages>
+		   <Message TypeName="ShortAcronymsShouldBeUppercase" Category="Microsoft.Naming" CheckId="CA1706" Status="Excluded" Created="2006-09-22 16:45:00Z">
+			<Issue Name="Type">
+			 <Item>We</Item>
+			 <Item>WeSay.UI.WeSayTextBox</Item>
+			</Issue>
+		   </Message>
+		  </Messages>
+		  <Members>
+		   <Member Name=".ctor(WeSay.Language.WritingSystem)">
+			<Messages>
+			 <Message TypeName="ValidateArgumentsOfPublicMethods" Category="Microsoft.Design" CheckId="CA1062" Created="2006-09-22 16:45:00Z">
+			  <Issue>
+			   <Item>'ws'</Item>
+			   <Item>WeSayTextBox.WeSayTextBox(WritingSystem)</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		   <Member Name="FadeInSomeMore(System.Windows.Forms.Label):System.Void">
+			<Messages>
+			 <Message Id="label" TypeName="ReviewUnusedParameters" Category="Microsoft.Usage" CheckId="CA1801" Created="2006-09-22 16:45:00Z" FixCategory="Breaking">
+			  <Issue>
+			   <Item>label</Item>
+			   <Item>WeSayTextBox.FadeInSomeMore(Label):Void</Item>
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		   <Member Name="PrepareForFadeIn():System.Void">
+			<Messages>
+			 <Message Id="WeSay.UI.WeSayTextBox.set_Text(System.String)" TypeName="DoNotPassLiteralsAsLocalizedParameters" Category="Microsoft.Globalization" CheckId="CA1303" Created="2006-09-22 16:45:00Z">
+			  <Issue>
+			   <Item>WeSayTextBox.PrepareForFadeIn():Void</Item>
+			   <Item>1</Item>
+			   <Item>WeSayTextBox.set_Text(String):Void</Item>
+			   <Item />
+			  </Issue>
+			 </Message>
+			</Messages>
+		   </Member>
+		  </Members>
+		 </Type>
+		 <Type Name="WeSayWordsProject">
+		  <Messages>
+		   <Message TypeName="ShortAcronymsShouldBeUppercase" Category="Microsoft.Naming" CheckId="CA1706" Status="Excluded" Created="2006-09-22 16:45:00Z">
+			<Issue Name="Type">
+			 <Item>We</Item>
+			 <Item>WeSay.UI.WeSayWordsProject</Item>
+			</Issue>
+		   </Message>
+		  </Messages>
+		  <Members>
+		   <Member Name="Project">
+			<Accessors>
+			 <Accessor Name="get_Project():WeSay.UI.WeSayWordsProject">
+			  <Messages>
+			   <Message Id="System.InvalidOperationException.#ctor(System.String)" TypeName="DoNotPassLiteralsAsLocalizedParameters" Category="Microsoft.Globalization" CheckId="CA1303" Created="2006-09-22 17:39:13Z">
+				<Issue>
+				 <Item>WeSayWordsProject.get_Project():WeSayWordsProject</Item>
+				 <Item>1</Item>
+				 <Item>InvalidOperationException.InvalidOperationException(String)</Item>
+				 <Item>WeSayWordsProject Not initialized. For tests, call BasilProject.InitializeForTests().</Item>
+				</Issue>
+			   </Message>
+			  </Messages>
+			 </Accessor>
+			</Accessors>
+		   </Member>
+		  </Members>
+		 </Type>
+		</Types>
+	   </Namespace>
+	  </Namespaces>
+	 </Module>
+	</Modules>
+   </Target>
   </Targets>
   <Notes>
    <User Name="Eric">
@@ -616,41 +2848,160 @@
 	<Note Id="13" Modified="2006-09-22 15:58:42Z">never presented to real user</Note>
 	<Note Id="14" Modified="2006-09-22 15:59:20Z">Never presented to user</Note>
 	<Note Id="15" Modified="2006-09-22 15:59:32Z">not a problem</Note>
+	<Note Id="16" Modified="2006-09-22 16:01:43Z">We is not acronym</Note>
+	<Note Id="17" Modified="2006-09-22 16:42:58Z">We is okay</Note>
    </User>
   </Notes>
   <Rules>
    <Rule TypeName="AssembliesShouldHaveValidStrongNames" Category="Microsoft.Design" CheckId="CA2210">
 	<Resolution Name="NoStrongName">Sign '{0}' with a strong name key.</Resolution>
    </Rule>
+   <Rule TypeName="AvoidEmptyInterfaces" Category="Microsoft.Design" CheckId="CA1040">
+	<Resolution Name="Default">Define a custom attribute to replace '{0}'.</Resolution>
+   </Rule>
    <Rule TypeName="AvoidNamespacesWithFewTypes" Category="Microsoft.Design" CheckId="CA1020">
 	<Resolution Name="Default">Consider merging the types defined in '{0}' with another namespace.</Resolution>
    </Rule>
+   <Rule TypeName="AvoidOutParameters" Category="Microsoft.Design" CheckId="CA1021">
+	<Resolution Name="Default">Consider a design that does not require that '{0}' be an out parameter.</Resolution>
+   </Rule>
+   <Rule TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811">
+	<Resolution Name="Default">'{0}' appears to have no upstream public or protected callers.</Resolution>
+   </Rule>
+   <Rule TypeName="AvoidUnsealedAttributes" Category="Microsoft.Performance" CheckId="CA1813">
+	<Resolution Name="Default">Seal '{0}', if possible.</Resolution>
+   </Rule>
+   <Rule TypeName="AvoidUnusedPrivateFields" Category="Microsoft.Performance" CheckId="CA1823">
+	<Resolution Name="Default">It appears that field '{0}' is never used or is only ever assigned to. Use this field or remove it.</Resolution>
+   </Rule>
+   <Rule TypeName="CollectionPropertiesShouldBeReadOnly" Category="Microsoft.Usage" CheckId="CA2227">
+	<Resolution Name="Default">Change '{0}' to be read-only by removing the property setter.</Resolution>
+   </Rule>
+   <Rule TypeName="CollectionsShouldImplementGenericInterface" Category="Microsoft.Design" CheckId="CA1010">
+	<Resolution Name="Default">'{0}' appears to be a non-generic, strongly typed collection. Add an implementation to the instance of {1}&lt;T&gt; where T is {0}'s underlying element type.</Resolution>
+   </Rule>
+   <Rule TypeName="DeclareEventHandlersCorrectly" Category="Microsoft.Design" CheckId="CA1009">
+	<Resolution Name="First">Declare the first parameter of '{0}' as an object named 'sender'.</Resolution>
+	<Resolution Name="Second">Declare the second parameter of '{0}' as an EventArgs, or an instance of a type that extends EventArgs, named 'e'.</Resolution>
+	<Resolution Name="TooMany">Remove all but the first two parameters of '{0}'.</Resolution>
+   </Rule>
+   <Rule TypeName="DoNotCallOverridableMethodsInConstructors" Category="Microsoft.Usage" CheckId="CA2214">
+	<Resolution Name="Default">'{0}' contains a call chain that results in a call to a virtual method defined by the class. Review the following call stack for unintended consequences: {1}</Resolution>
+   </Rule>
    <Rule TypeName="DoNotCastUnnecessarily" Category="Microsoft.Performance" CheckId="CA1800">
+	<Resolution Name="Local">'{0}', a local, is cast to type '{1}' multiple times in method {2}. Cache the result of the 'as' operator or direct cast in order to eliminate the redundant {3} instruction.</Resolution>
 	<Resolution Name="Parameter">'{0}', a parameter, is cast to type '{1}' multiple times in method {2}. Cache the result of the 'as' operator or direct cast in order to eliminate the redundant {3} instruction.</Resolution>
+   </Rule>
+   <Rule TypeName="DoNotCatchGeneralExceptionTypes" Category="Microsoft.Design" CheckId="CA1031">
+	<Resolution Name="Default">Modify '{0}' to catch a more specific exception than '{1}' or rethrow the exception.</Resolution>
    </Rule>
    <Rule TypeName="DoNotDeclareStaticMembersOnGenericTypes" Category="Microsoft.Design" CheckId="CA1000">
 	<Resolution Name="Default">Remove {0} from '{1}' or make it an instance member.</Resolution>
    </Rule>
+   <Rule TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051">
+	<Resolution Name="Default">Make '{0}' private or internal (Friend in VB, public private in C++) and provide a public or protected property to access it.</Resolution>
+   </Rule>
+   <Rule TypeName="DoNotIgnoreMethodResults" Category="Microsoft.Usage" CheckId="CA1806">
+	<Resolution Name="ObjectCreation">{0} creates an instance of {1} which is either not assigned to a variable or is never used. Remove the object creation if it is unnecessary or use it within the method.</Resolution>
+   </Rule>
+   <Rule TypeName="DoNotInitializeUnnecessarily" Category="Microsoft.Performance" CheckId="CA1805">
+	<Resolution Name="Default">{0} initializes field {1} of type {2} to {3}. Remove this initialization as it will be done automatically by the runtime.</Resolution>
+   </Rule>
    <Rule TypeName="DoNotPassLiteralsAsLocalizedParameters" Category="Microsoft.Globalization" CheckId="CA1303">
 	<Resolution Name="Default">{0} passes a literal as parameter {1} of a call to {2}. Retrieve the following string argument from a resource table instead: '{3}'</Resolution>
+   </Rule>
+   <Rule TypeName="DoNotPassTypesByReference" Category="Microsoft.Design" CheckId="CA1045">
+	<Resolution Name="Default">Consider a design that does not require that '{0}' be a reference parameter.</Resolution>
+   </Rule>
+   <Rule TypeName="DoNotUseTimersThatPreventPowerStateChanges" Category="Microsoft.Mobility" CheckId="CA1601">
+	<Resolution Name="Default">Modify the call to {0} in method {1} to set the timer interval to a value that's greater than or equal to one second.</Resolution>
+   </Rule>
+   <Rule TypeName="EnumsShouldHaveZeroValue" Category="Microsoft.Design" CheckId="CA1008">
+	<Resolution Name="FlagsRename">In enum '{0}', change the name of '{1}' to 'None'.</Resolution>
    </Rule>
    <Rule TypeName="GenericMethodsShouldProvideTypeParameter" Category="Microsoft.Design" CheckId="CA1004">
 	<Resolution Name="Default">Consider a design where {0} doesn't require explicit type parameter '{1}' in any call to it.</Resolution>
    </Rule>
+   <Rule TypeName="ICollectionImplementationsHaveStronglyTypedMembers" Category="Microsoft.Design" CheckId="CA1035">
+	<Resolution Name="Default">'{0}' should provide a strongly typed implementation of ICollection.CopyTo.</Resolution>
+   </Rule>
+   <Rule TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704">
+	<Resolution Name="Member">Correct the spelling of the unrecognized token '{0}' in member name '{1}'.</Resolution>
+	<Resolution Name="Parameter">In method {0}, correct the spelling of the unrecognized token '{1}' in parameter name '{2}' or strip it entirely if it represents any sort of hungarian notation.</Resolution>
+	<Resolution Name="ParameterOneLetter">In method {0}, consider providing a more meaningful name than the one-letter parameter name '{1}'.</Resolution>
+	<Resolution Name="Type">Correct the spelling of the unrecognized token '{0}' in type name '{1}'.</Resolution>
+   </Rule>
    <Rule TypeName="IdentifiersShouldHaveCorrectSuffix" Category="Microsoft.Naming" CheckId="CA1710">
 	<Resolution Name="Default">Rename '{0}' to end in '{1}'.</Resolution>
    </Rule>
+   <Rule TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707">
+	<Resolution Name="Member">Remove all underscores from member '{0}'.</Resolution>
+   </Rule>
+   <Rule TypeName="IdentifiersShouldNotHaveIncorrectSuffix" Category="Microsoft.Naming" CheckId="CA1711">
+	<Resolution Name="Default">Rename '{0}' so that it does not end in '{1}'.</Resolution>
+   </Rule>
    <Rule TypeName="ImplementIDisposableCorrectly" Category="Microsoft.Design" CheckId="CA1063">
+	<Resolution Name="DisposeImplementation">Modify {0} so that it calls Dispose(true), then calls GC.SuppressFinalize on the current object instance ('this' or 'Me' in VB), and then returns.</Resolution>
 	<Resolution Name="FinalizeImplementation">Modify {0} so that it calls Dispose(false) and then returns.</Resolution>
+	<Resolution Name="ProvideDisposeBool">Provide an overridable implementation of Dispose(bool) on {0} or mark the type as sealed. A call to Dispose(false) should only clean up native resources. A call to Dispose(true) should clean up both managed and native resources.</Resolution>
+   </Rule>
+   <Rule TypeName="ImplementStandardExceptionConstructors" Category="Microsoft.Design" CheckId="CA1032">
+	<Resolution Name="Default">Add the following constructor to {0}: {1}.</Resolution>
+   </Rule>
+   <Rule TypeName="InstantiateArgumentExceptionsCorrectly" Category="Microsoft.Usage" CheckId="CA2208">
+	<Resolution Name="NoArguments">Call the {0} constructor that contains a message and/or paramName parameter.</Resolution>
+   </Rule>
+   <Rule TypeName="MarkISerializableTypesWithSerializable" Category="Microsoft.Usage" CheckId="CA2237">
+	<Resolution Name="Default">Add [Serializable] to '{0}' as this type implements ISerializable.</Resolution>
+   </Rule>
+   <Rule TypeName="MarkMembersAsStatic" Category="Microsoft.Performance" CheckId="CA1822">
+	<Resolution Name="Default">The 'this' parameter (or 'Me' in VB) of {0} is never used. Mark the member as static (or Shared in VB) or use 'this'/'Me' in the method body or at least one property accessor, if appropriate.</Resolution>
+   </Rule>
+   <Rule TypeName="MembersShouldNotExposeCertainConcreteTypes" Category="Microsoft.Design" CheckId="CA1059">
+	<Resolution Name="System.Xml.XmlNode">Modify member '{0}' so that it no longer exposes the concrete type {1}. Use IXPathNavigable to represent Xml data sources.</Resolution>
+   </Rule>
+   <Rule TypeName="PropertiesShouldNotBeWriteOnly" Category="Microsoft.Design" CheckId="CA1044">
+	<Resolution Name="Default">Add a property getter to '{0}'.</Resolution>
+   </Rule>
+   <Rule TypeName="PropertiesShouldNotReturnArrays" Category="Microsoft.Performance" CheckId="CA1819">
+	<Resolution Name="Default">Change {0} to return a collection or make it a method.</Resolution>
+   </Rule>
+   <Rule TypeName="PropertyNamesShouldNotMatchGetMethods" Category="Microsoft.Naming" CheckId="CA1721">
+	<Resolution Name="Default">Method name '{0}' is confusing given the existence of property '{1}'. Rename or remove one of these members.</Resolution>
    </Rule>
    <Rule TypeName="RemoveEmptyFinalizers" Category="Microsoft.Performance" CheckId="CA1821">
 	<Resolution Name="Default">{0} implements a finalizer that only calls conditionally emitted methods or the base type finalizer. Remove the finalizer or insure that it is only conditionally compiled into the assembly. If this violation occurs against a finalizer that is entirely wrapped in a conditionally-emitted block of code, suppress this message.</Resolution>
    </Rule>
+   <Rule TypeName="RemoveUnusedLocals" Category="Microsoft.Performance" CheckId="CA1804">
+	<Resolution Name="Default">{0} declares a local, '{1}', of type {2}, which is never used or is only assigned to. Use this local or remove it.</Resolution>
+   </Rule>
    <Rule TypeName="ReviewUnusedParameters" Category="Microsoft.Usage" CheckId="CA1801">
 	<Resolution Name="Default">Parameter '{0}' of {1} is never used. Remove the parameter or use it in the method body.</Resolution>
    </Rule>
+   <Rule TypeName="ReviewVisibleEventHandlers" Category="Microsoft.Security" CheckId="CA2109">
+	<Resolution Name="Default">Consider making {0} not externally visible.</Resolution>
+   </Rule>
    <Rule TypeName="ShortAcronymsShouldBeUppercase" Category="Microsoft.Naming" CheckId="CA1706">
 	<Resolution Name="Namespace">Correct the capitalization of '{0}' in namespace name '{1}'.</Resolution>
+	<Resolution Name="Type">Correct the capitalization of '{0}' in type name '{1}'.</Resolution>
+   </Rule>
+   <Rule TypeName="SpecifyCultureInfo" Category="Microsoft.Globalization" CheckId="CA1304">
+	<Resolution Name="Default">{0} makes a call to {1} that does not explicitly provide a CultureInfo. This should be replaced with a call to {2}.</Resolution>
+   </Rule>
+   <Rule TypeName="SpecifyIFormatProvider" Category="Microsoft.Globalization" CheckId="CA1305">
+	<Resolution Name="Default">{0} makes a call to {1} that does not explicitly provide an IFormatProvider. This should be replaced with a call to {2}.</Resolution>
+   </Rule>
+   <Rule TypeName="SpecifyMessageBoxOptions" Category="Microsoft.Globalization" CheckId="CA1300">
+	<Resolution Name="Default">Change {0} to call the MessageBox.Show overload that specifies MessageBoxOptions, and make sure to set MessageBoxOptions.RightAlign and MessageBoxOptions.RtlReading if RightToLeft is set to RightToLeft.Yes on the parent control. If it is set to RightTolLeft.Inherit, check its parent until a value indicating Yes or No is found.</Resolution>
+   </Rule>
+   <Rule TypeName="TypesThatOwnDisposableFieldsShouldBeDisposable" Category="Microsoft.Design" CheckId="CA1001">
+	<Resolution Name="Default">Implement IDisposable on '{0}' as it instantiates members of the following IDisposable types: {1}</Resolution>
+   </Rule>
+   <Rule TypeName="UsePropertiesWhereAppropriate" Category="Microsoft.Design" CheckId="CA1024">
+	<Resolution Name="Default">Change '{0}' to a property if appropriate.</Resolution>
+   </Rule>
+   <Rule TypeName="ValidateArgumentsOfPublicMethods" Category="Microsoft.Design" CheckId="CA1062">
+	<Resolution Name="Default">Validate parameter {0} passed to externally visible method {1}.</Resolution>
    </Rule>
   </Rules>
  </FxCopReport>

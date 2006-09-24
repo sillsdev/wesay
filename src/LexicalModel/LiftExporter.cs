@@ -8,7 +8,7 @@ namespace WeSay.LexicalModel
 {
 	public class LiftExporter
 	{
-		protected XmlWriter _writer;
+		private XmlWriter _writer;
 
 		public LiftExporter(string path)
 		{
@@ -30,7 +30,7 @@ namespace WeSay.LexicalModel
 			}
 		}
 
-		private XmlWriterSettings PrepareSettings(bool produceFragmentOnly)
+		private static XmlWriterSettings PrepareSettings(bool produceFragmentOnly)
 		{
 			XmlWriterSettings settings = new XmlWriterSettings();
 			if (produceFragmentOnly)

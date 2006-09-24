@@ -21,7 +21,6 @@ namespace WeSay.UI
 
 		public Binding(INotifyPropertyChanged dataTarget, WritingSystem writingSystem, WeSayTextBox widgetTarget)
 		{
-			_inMidstOfChange = false;
 			_dataTarget = dataTarget;
 			_dataTarget.PropertyChanged += new PropertyChangedEventHandler(OnDataPropertyChanged);
 			_writingSystem = writingSystem;
