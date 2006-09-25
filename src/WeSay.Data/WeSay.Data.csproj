@@ -44,6 +44,7 @@
 	<Compile Include="AbstractRecordList.cs" />
 	<Compile Include="AbstractRecordListManager.cs" />
 	<Compile Include="ComparisonHelper.cs" />
+	<Compile Include="Db4oRecordListManager.cs" />
 	<Compile Include="InMemoryBindingList.cs" />
 	<Compile Include="Db4oRecordList.cs" />
 	<Compile Include="IFilter.cs" />

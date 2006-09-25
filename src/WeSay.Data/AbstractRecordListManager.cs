@@ -5,49 +5,64 @@ using System.Collections;
 
 namespace WeSay.Data
 {
-  public abstract class AbstractRecordListManager : IRecordListManager
-  {
-	Hashtable _filteredRecordLists;
-	protected AbstractRecordListManager()
+	public abstract class AbstractRecordListManager : IRecordListManager
 	{
-	  _filteredRecordLists = new Hashtable();
-	}
+		Hashtable _filteredRecordLists;
+		protected AbstractRecordListManager()
+		{
+			_filteredRecordLists = new Hashtable();
+		}
 
-	abstract protected IRecordList<T> CreateMasterRecordList<T>() where T : class, new();
-	abstract protected IRecordList<T> CreateFilteredRecordList<T>(Predicate<T> filter) where T : class, new();
+		abstract protected IRecordList<T> CreateMasterRecordList<T>() where T : class, new();
+		abstract protected IRecordList<T> CreateFilteredRecordList<T>(Predicate<T> filter) where T : class, new();
 
-	#region IRecordListManager Members
+		#region IRecordListManager Members
 
-	public IRecordList<T> Get<T>() where T : class, new()
-	{
-	  if (!_filteredRecordLists.ContainsKey(String.Empty))
-	  {
-		_filteredRecordLists.Add(String.Empty, CreateMasterRecordList<T>());
-	  }
-	  return (IRecordList<T>) _filteredRecordLists[String.Empty];
-	}
+		public void Register<T>(IFilter<T> filter) where T : class, new()
+		{
+			if (!_filteredRecordLists.ContainsKey(filter.Key))
+			{
+				_filteredRecordLists.Add(filter.Key, null);
+			}
+		}
 
-	public IRecordList<T> Get<T>(IFilter<T> filter) where T : class, new()
-	{
-	  if (!_filteredRecordLists.ContainsKey(filter.Key))
-	  {
-		_filteredRecordLists.Add(filter.Key, CreateFilteredRecordList<T>(filter.Inquire));
-	  }
-	  return (IRecordList<T>) _filteredRecordLists[filter.Key];
-	}
+		public IRecordList<T> Get<T>() where T : class, new()
+		{
+			if (!_filteredRecordLists.ContainsKey(String.Empty))
+			{
+				_filteredRecordLists.Add(String.Empty, CreateMasterRecordList<T>());
+			}
+			return (IRecordList<T>)_filteredRecordLists[String.Empty];
+		}
 
-	#endregion
+		public IRecordList<T> Get<T>(IFilter<T> filter) where T : class, new()
+		{
+			if (!_filteredRecordLists.ContainsKey(filter.Key))
+			{
+				throw new InvalidOperationException("Filter must be registered before it can be retrieved with Get.");
+			}
+			IRecordList<T> recordList = (IRecordList<T>)_filteredRecordLists[filter.Key];
+			if (recordList == null)
+			{
+				recordList = CreateFilteredRecordList<T>(filter.Inquire);
+				_filteredRecordLists[filter.Key] = recordList;
+			}
+
+			return recordList;
+		}
+
+		#endregion
 
 		#region IDisposable Members
-#if DEBUG
-	~AbstractRecordListManager()
+		#if DEBUG
+		~AbstractRecordListManager()
 		{
 			if (!this._disposed)
 			{
-			  throw new InvalidOperationException("Disposed not explicitly called on " + this.GetType().FullName + ".");
+				throw new InvalidOperationException("Disposed not explicitly called on " + this.GetType().FullName + ".");
 			}
 		}
-#endif
+		#endif
 
 		private bool _disposed;
 
@@ -67,7 +82,8 @@ namespace WeSay.Data
 					foreach (DictionaryEntry dictionaryEntry in _filteredRecordLists)
 					{
 						IDisposable disposable = dictionaryEntry.Value as IDisposable;
-						if(disposable != null){
+						if (disposable != null)
+						{
 							disposable.Dispose();
 						}
 					}
@@ -83,11 +99,11 @@ namespace WeSay.Data
 		{
 			if (this._disposed)
 			{
-			  throw new ObjectDisposedException(this.GetType().FullName);
+				throw new ObjectDisposedException(this.GetType().FullName);
 			}
 		}
 		#endregion
 
 
-	  }
+	}
 }

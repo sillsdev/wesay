@@ -44,13 +44,22 @@ namespace WeSay.Data
 			}
 		}
 
-		public Db4oRecordList(Db4oDataSource dataSource)
+		public Db4oRecordList(Db4oDataSource dataSource):base()
 		{
 			Initialize(dataSource, null, null, null);
 		}
 
-	  [CLSCompliant(false)]
-	  public Db4oRecordList(Db4oDataSource dataSource, SodaQueryProvider sodaQuery)
+		public Db4oRecordList(Db4oRecordList<T> source ):base()
+		{
+			this.ListSortDirection = source.ListSortDirection;
+			this.SortProperty = source.SortProperty;
+
+			Db4oList<T> sourceRecords = (Db4oList<T>)source.Records;
+			Records = new Db4oList<T>(sourceRecords.Database, sourceRecords.ItemIds, sourceRecords.Filter, sourceRecords.Sorter);
+		}
+
+		[CLSCompliant(false)]
+		public Db4oRecordList(Db4oDataSource dataSource, SodaQueryProvider sodaQuery)
 		{
 			Initialize(dataSource, null, null, sodaQuery);
 		}
@@ -104,16 +113,14 @@ namespace WeSay.Data
 			return ((Db4oList<T>)Records).Commit();
 		}
 
-	  [CLSCompliant(false)]
-	  public SodaQueryProvider SodaQuery
+		[CLSCompliant(false)]
+		public SodaQueryProvider SodaQuery
 		{
-			get
-			{
+			get {
 				VerifyNotDisposed();
 				return ((Db4oList<T>)Records).SODAQuery;
 			}
-			set
-			{
+			set {
 				VerifyNotDisposed();
 				((Db4oList<T>)Records).SODAQuery = value;
 			}
@@ -135,13 +142,11 @@ namespace WeSay.Data
 
 		public int WriteCacheSize
 		{
-			get
-			{
+			get {
 				VerifyNotDisposed();
 				return ((Db4oList<T>)Records).WriteCacheSize;
 			}
-			set
-			{
+			set {
 				VerifyNotDisposed();
 				((Db4oList<T>)Records).WriteCacheSize = value;
 			}
@@ -176,8 +181,7 @@ namespace WeSay.Data
 
 		public override bool IsFiltered
 		{
-			get
-			{
+			get {
 				VerifyNotDisposed();
 				Db4oList<T> records = (Db4oList<T>)Records;
 
@@ -192,8 +196,7 @@ namespace WeSay.Data
 
 		public override bool IsSorted
 		{
-			get
-			{
+			get {
 				VerifyNotDisposed();
 				return ((Db4oList<T>)Records).IsSorted;
 			}
@@ -206,7 +209,8 @@ namespace WeSay.Data
 
 		protected override void  Dispose(bool disposing)
 		{
-			if (! this.IsDisposed){
+			if (! this.IsDisposed)
+			{
 				if (disposing)
 				{
 					((Db4oList<T>)Records).Dispose();

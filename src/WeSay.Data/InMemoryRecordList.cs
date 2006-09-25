@@ -10,7 +10,7 @@ namespace WeSay.Data
 		bool _isSorted;
 		bool _isFiltered;
 
-		public InMemoryRecordList()
+		public InMemoryRecordList():base()
 		{
 			Records = new List<T>();
 		}

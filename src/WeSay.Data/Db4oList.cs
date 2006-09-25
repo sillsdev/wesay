@@ -8,7 +8,7 @@ using com.db4o.inside.query;
 
 namespace WeSay.Data
 {
-  [CLSCompliant(false)]
+	[CLSCompliant(false)]
 	public delegate com.db4o.query.Query SodaQueryProvider(com.db4o.query.Query query);
 
 	/// <summary>
@@ -46,8 +46,8 @@ namespace WeSay.Data
 	/// <typeparam name="T">List item type.</typeparam>
 	[TypeConverter(typeof(ExpandableObjectConverter))]
 	internal class Db4oList<T>
-		: IList<T>, IDisposable
-		where T : class
+	: IList<T>, IDisposable
+	where T : class
 	{
 		#region Constructors
 
@@ -73,10 +73,37 @@ namespace WeSay.Data
 		/// <param name="sorter">Initial <see cref="Sorter"/>.</param>
 		/// <exception cref="ArgumentNullException"><paramref name="database"/> is null.</exception>
 		public Db4oList(ObjectContainer database, IEnumerable items,
-			Predicate<T> filter, Comparison<T> sorter)
-			: this(database)
+						Predicate<T> filter, Comparison<T> sorter)
+		: this(database)
 		{
 			InitItems(items, filter, sorter, false);
+		}
+
+		/// <summary>
+		/// Constructor.
+		/// </summary>
+		/// <remarks>Calls <see cref="InitItems"/>.</remarks>
+		/// <param name="database">See <see cref="Database"/>.</param>
+		/// <param name="items">Collection of items to be added to the list.</param>
+		/// <param name="filter">Initial <see cref="Filter"/>.</param>
+		/// <param name="sorter">Initial <see cref="Sorter"/>.</param>
+		/// <exception cref="ArgumentNullException"><paramref name="database"/> is null.</exception>
+		public Db4oList(ObjectContainer database, IList<long> itemIds,
+						Predicate<T> filter, Comparison<T> sorter)
+		: this(database)
+		{
+		  if (itemIds == null) {
+				throw new ArgumentNullException("itemIds");
+		  }
+			this.ItemIds.Clear();
+			if (filter == null)
+				filter = ComparisonHelper<T>.DefaultPredicate;
+			this._filter = filter;
+			this._itemIds.AddRange(itemIds);
+			this._initFilter = filter;
+			this._initSorter = sorter;
+			this._filterCalled = false;
+			this._sortCalled = false;
 		}
 
 		#endregion
@@ -87,22 +114,22 @@ namespace WeSay.Data
 		/// Fired when activating of <see cref="Db4oListEventArgs`1.Item"/> by db4o is needed.
 		/// If item was activated during the event, <see cref="Db4oListEventArgs`1.Cancel"/> must be set to true.
 		/// </summary>
-	  public event EventHandler<Db4oListEventArgs<T>> Activating = delegate{ };
+		public event EventHandler<Db4oListEventArgs<T>> Activating = delegate{ };
 		/// <summary>
 		/// Fired when deactivating of <see cref="Db4oListEventArgs`1.Item"/> by db4o is needed.
 		/// If item was deactivated during the event, <see cref="Db4oListEventArgs`1.Cancel"/> must be set to true.
 		/// </summary>
-	  public event EventHandler<Db4oListEventArgs<T>> Deactivating = delegate {};
+		public event EventHandler<Db4oListEventArgs<T>> Deactivating = delegate {};
 		/// <summary>
 		/// Fired when storing (adding or updating) of <see cref="Db4oListEventArgs`1.Item"/> by db4o is needed.
 		/// If item was stored during the event, <see cref="Db4oListEventArgs`1.Cancel"/> must be set to true.
 		/// </summary>
-	  public event EventHandler<Db4oListEventArgs<T>> Storing = delegate{};
+		public event EventHandler<Db4oListEventArgs<T>> Storing = delegate{};
 		/// <summary>
 		/// Fired when deleting of <see cref="Db4oListEventArgs`1.Item"/> (which is not activated) by db4o is needed.
 		/// If item was deleted during the event, <see cref="Db4oListEventArgs`1.Cancel"/> must be set to true.
 		/// </summary>
-	  public event EventHandler<Db4oListEventArgs<T>> Deleting = delegate{};
+		public event EventHandler<Db4oListEventArgs<T>> Deleting = delegate{};
 
 		/// <summary>
 		/// Fires <see cref="Activating"/> event.
@@ -168,8 +195,7 @@ namespace WeSay.Data
 		/// </remarks>
 		public IList<long> ItemIds
 		{
-			get
-			{
+			get {
 				VerifyNotDisposed();
 				return _itemIds;
 			}
@@ -179,8 +205,7 @@ namespace WeSay.Data
 		/// </summary>
 		public ExtObjectContainer Database
 		{
-			get
-			{
+			get {
 				VerifyNotDisposed();
 				return _database;
 			}
@@ -199,13 +224,11 @@ namespace WeSay.Data
 		/// <exception cref="ArgumentOutOfRangeException">set: Value is &lt; 0.</exception>
 		public int ReadCacheSize
 		{
-			get
-			{
+			get {
 				VerifyNotDisposed();
 				return this._readCacheSize;
 			}
-			set
-			{
+			set {
 				VerifyNotDisposed();
 				if (value < 0)
 					throw new ArgumentOutOfRangeException("ReadCacheSize", value, "Must be >= 0.");
@@ -226,13 +249,11 @@ namespace WeSay.Data
 		/// <exception cref="ArgumentOutOfRangeException">set: Value is &lt; 0.</exception>
 		public int WriteCacheSize
 		{
-			get
-			{
+			get {
 				VerifyNotDisposed();
 				return this._writeCacheSize;
 			}
-			set
-			{
+			set {
 				VerifyNotDisposed();
 				if (value < 0)
 					throw new ArgumentOutOfRangeException("WriteCacheSize", value, "Must be >= 0.");
@@ -249,13 +270,11 @@ namespace WeSay.Data
 		/// <exception cref="ArgumentOutOfRangeException">set: Value is &lt; 0.</exception>
 		public int ActivationDepth
 		{
-			get
-			{
+			get {
 				VerifyNotDisposed();
 				return this._activationDepth;
 			}
-			set
-			{
+			set {
 				VerifyNotDisposed();
 				if (value < 0)
 					throw new ArgumentOutOfRangeException("ActivationDepth", value, "Must be >= 0.");
@@ -270,8 +289,7 @@ namespace WeSay.Data
 		public int SetActivationDepth
 		{
 			get { return this._setActivationDepth; }
-			set
-			{
+			set {
 				if (value < 0)
 					throw new ArgumentOutOfRangeException("SetActivationDepth", value, "Must be >= 0.");
 				this._setActivationDepth = value;
@@ -288,13 +306,11 @@ namespace WeSay.Data
 		/// <exception cref="ArgumentOutOfRangeException">set: Value is &lt;= 0.</exception>
 		public int PeekPersistedActivationDepth
 		{
-			get
-			{
+			get {
 				VerifyNotDisposed();
 				return this._peekPersistedActivationDepth;
 			}
-			set
-			{
+			set {
 				VerifyNotDisposed();
 				if (value <= 0)
 					throw new ArgumentOutOfRangeException("PeekPersistedActivationDepth", value, "Must be > 0.");
@@ -308,13 +324,11 @@ namespace WeSay.Data
 		/// <exception cref="ArgumentOutOfRangeException">set: Value is &lt;= 0.</exception>
 		public int RefreshActivationDepth
 		{
-			get
-			{
+			get {
 				VerifyNotDisposed();
 				return this._peekPersistedActivationDepth;
 			}
-			set
-			{
+			set {
 				VerifyNotDisposed();
 				if (value <= 0)
 					throw new ArgumentOutOfRangeException("PeekPersistedActivationDepth", value, "Must be > 0.");
@@ -326,8 +340,7 @@ namespace WeSay.Data
 		/// </summary>
 		public bool HasChanges
 		{
-			get
-			{
+			get {
 				VerifyNotDisposed();
 				return this._writeCacheCurrentSize > 0;
 			}
@@ -342,13 +355,11 @@ namespace WeSay.Data
 		/// <value>Default: true.</value>
 		public bool StoreItemOnPropertyChanged
 		{
-			get
-			{
+			get {
 				VerifyNotDisposed();
 				return _storeItemOnPropertyChanged;
 			}
-			set
-			{
+			set {
 				VerifyNotDisposed();
 				if (_storeItemOnPropertyChanged == value)
 					return;
@@ -379,7 +390,7 @@ namespace WeSay.Data
 		/// <param name="commit">Whether to call <see cref="Commit"/>.</param>
 		/// <exception cref="ArgumentNullException"><paramref name="items"/> is null.</exception>
 		public virtual void InitItems(IEnumerable items,
-			Predicate<T> filter, Comparison<T> sorter, bool commit)
+									  Predicate<T> filter, Comparison<T> sorter, bool commit)
 		{
 			VerifyNotDisposed();
 
@@ -464,13 +475,11 @@ namespace WeSay.Data
 
 		public SodaQueryProvider SODAQuery
 		{
-			get
-			{
+			get {
 				VerifyNotDisposed();
 				return _SODAQuery;
 			}
-			set
-			{
+			set {
 				VerifyNotDisposed();
 				_SODAQuery = value;
 				if (_SODAQuery != null)
@@ -721,7 +730,7 @@ namespace WeSay.Data
 			localItem.PropertyChanged -= Item_PropertyChanged;
 			if (register)
 			{
-			   localItem.PropertyChanged += Item_PropertyChanged;
+				localItem.PropertyChanged += Item_PropertyChanged;
 			}
 		}
 
@@ -770,8 +779,7 @@ namespace WeSay.Data
 
 		public bool IsFiltered
 		{
-			get
-			{
+			get {
 				VerifyNotDisposed();
 				return this._filter != ComparisonHelper<T>.DefaultPredicate;
 			}
@@ -786,13 +794,11 @@ namespace WeSay.Data
 		/// <value>set: If null, <see cref="ComparisonHelper{}.DefaultPredicate"/> is used.</value>
 		public Predicate<T> Filter
 		{
-			get
-			{
+			get {
 				VerifyNotDisposed();
 				return this._filter;
 			}
-			set
-			{
+			set {
 				VerifyNotDisposed();
 				if (value == null)
 					value = ComparisonHelper<T>.DefaultPredicate;
@@ -803,12 +809,12 @@ namespace WeSay.Data
 					Predicate<T> removeFilter = ComparisonHelper<T>.GetInversePredicate(value);
 					if (this.DeleteItemsWhileFiltering)
 						removeFilter = delegate(T item)
-							{
-								bool remove = removeFilter(item);
-								if (remove && GetItemId(item) > 0)
-									DeleteItem(item);
-								return remove;
-							};
+						{
+							bool remove = removeFilter(item);
+							if (remove && GetItemId(item) > 0)
+								DeleteItem(item);
+							return remove;
+						};
 					this._itemIds.RemoveAll(GetIdPredicate(removeFilter));
 				}
 				if (this.FilteringInDatabase)
@@ -831,13 +837,11 @@ namespace WeSay.Data
 		/// <value>Default: false.</value>
 		public bool DeleteItemsWhileFiltering
 		{
-			get
-			{
+			get {
 				VerifyNotDisposed();
 				return _deleteItemsWhileFiltering;
 			}
-			set
-			{
+			set {
 				VerifyNotDisposed();
 				_deleteItemsWhileFiltering = value;
 			}
@@ -849,13 +853,11 @@ namespace WeSay.Data
 		/// <value>Default: true.</value>
 		public bool FilteringInDatabase
 		{
-			get
-			{
+			get {
 				VerifyNotDisposed();
 				return _filteringInDatabase;
 			}
-			set
-			{
+			set {
 				VerifyNotDisposed();
 				_filteringInDatabase = value;
 			}
@@ -880,13 +882,13 @@ namespace WeSay.Data
 			if (predicate == null)
 				throw new ArgumentNullException("predicate");
 			return delegate(long id)
-				{
-					T item = GetItem(id, true);
-					if (item == null)
-						return false;
-					else
-						return predicate(item);
-				};
+			{
+				T item = GetItem(id, true);
+				if (item == null)
+					return false;
+				else
+					return predicate(item);
+			};
 		}
 
 		#endregion
@@ -900,13 +902,11 @@ namespace WeSay.Data
 		/// <value>Default: <see cref="ComparisonHelper{}.DefaultEqualityComparison"/>.</value>
 		public EqualityComparison<T> Equaler
 		{
-			get
-			{
+			get {
 				VerifyNotDisposed();
 				return _equaler;
 			}
-			set
-			{
+			set {
 				VerifyNotDisposed();
 				_equaler = value;
 			}
@@ -922,8 +922,7 @@ namespace WeSay.Data
 		/// <value>If null, items are not sorted.</value>
 		public Comparison<T> Sorter
 		{
-			get
-			{
+			get {
 				VerifyNotDisposed();
 				return this._sorter;
 			}
@@ -936,13 +935,11 @@ namespace WeSay.Data
 		/// <value>Default: true.</value>
 		public bool SortingInDatabase
 		{
-			get
-			{
+			get {
 				VerifyNotDisposed();
 				return _sortingInDatabase;
 			}
-			set
-			{
+			set {
 				VerifyNotDisposed();
 				_sortingInDatabase = value;
 			}
@@ -950,8 +947,7 @@ namespace WeSay.Data
 
 		public bool IsSorted
 		{
-			get
-			{
+			get {
 				VerifyNotDisposed();
 				return _sortCalled;
 			}
@@ -1006,18 +1002,18 @@ namespace WeSay.Data
 			if (sorter == null)
 				throw new ArgumentNullException("sorter");
 			return delegate(long id1, long id2)
-				{
-					T item1 = GetItem(id1, true);
-					T item2 = GetItem(id2, true);
-					if (item1 == null && item2 != null)
-						return -1;
-					else if (item1 != null && item2 == null)
-						return 1;
-					else if (item1 == null && item2 == null)
-						return 0;
-					else
-						return sorter(item1, item2);
-				};
+			{
+				T item1 = GetItem(id1, true);
+				T item2 = GetItem(id2, true);
+				if (item1 == null && item2 != null)
+					return -1;
+				else if (item1 != null && item2 == null)
+					return 1;
+				else if (item1 == null && item2 == null)
+					return 0;
+				else
+					return sorter(item1, item2);
+			};
 		}
 
 		#endregion
@@ -1084,15 +1080,13 @@ namespace WeSay.Data
 		/// <returns>Item.</returns>
 		public T this[int index]
 		{
-			get
-			{
+			get {
 				VerifyNotDisposed();
 				long id = this.ItemIds[index];
 				T item = GetItem(id, true);
 				return item;
 			}
-			set
-			{
+			set {
 				VerifyNotDisposed();
 				ValidateItem(value);
 				long oldId = this.ItemIds[index];
@@ -1176,8 +1170,7 @@ namespace WeSay.Data
 		/// </summary>
 		public int Count
 		{
-			get
-			{
+			get {
 				VerifyNotDisposed();
 				return this.ItemIds.Count;
 			}
@@ -1188,8 +1181,7 @@ namespace WeSay.Data
 		/// <value>false.</value>
 		public bool IsReadOnly
 		{
-			get
-			{
+			get {
 				VerifyNotDisposed();
 				return false;
 			}
@@ -1274,8 +1266,7 @@ namespace WeSay.Data
 
 			public T Current
 			{
-				get
-				{
+				get {
 					VerifyNotDisposed();
 					CheckValidIndex(0);
 					CheckCollectionUnchanged();
@@ -1298,8 +1289,7 @@ namespace WeSay.Data
 
 			object System.Collections.IEnumerator.Current
 			{
-				get
-				{
+				get {
 					VerifyNotDisposed();
 					return Current;
 				}
@@ -1394,7 +1384,7 @@ namespace WeSay.Data
 			{
 				item = ActivateItem(id);
 				if (item == null)
-					throw new InvalidOperationException("Object with Id = " + id + " does not exists in database " + this.Database +".");
+					throw new InvalidOperationException("Object with Id = " + id + " does not exists in database " + this.Database + ".");
 			}
 			else
 			{
@@ -1432,7 +1422,7 @@ namespace WeSay.Data
 			{
 				if (!this.Database.IsActive(item))
 				{
-					if (this.ReadCacheSize > 0 /*&& !this._readCache.Contains(id)*/)
+					if (this.ReadCacheSize > 0)
 					{
 						DeactivateExcessItems(1);
 						this._readCache.Enqueue(id);
@@ -1724,7 +1714,7 @@ namespace WeSay.Data
 				throw new ObjectDisposedException("Db4oList");
 			}
 		}
-#if DEBUG
+		#if DEBUG
 		~Db4oList()
 		{
 			if (!this._disposed)
@@ -1732,7 +1722,7 @@ namespace WeSay.Data
 				throw new InvalidOperationException("Disposed not explicitly called");
 			}
 		}
-#endif
+		#endif
 
 
 		#endregion
@@ -1770,8 +1760,7 @@ namespace WeSay.Data
 		/// </summary>
 		public T Item
 		{
-			get
-			{
+			get {
 				return _item;
 			}
 		}
@@ -1784,8 +1773,7 @@ namespace WeSay.Data
 
 		public string PropertyName
 		{
-			get
-			{
+			get {
 				return _propertyName;
 			}
 		}

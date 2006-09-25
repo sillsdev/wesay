@@ -8,37 +8,33 @@ namespace WeSay.Data
 {
 	public abstract class AbstractRecordList<T> : IRecordList<T> where T : class, new()
 	{
-	  protected AbstractRecordList()
-	  {
-		_propertyDescriptorCollectionForT = TypeDescriptor.GetProperties(typeof(T));
-	  }
-	  private IList<T> _records;
+		protected AbstractRecordList()
+		{
+			_propertyDescriptorCollectionForT = TypeDescriptor.GetProperties(typeof(T));
+		}
+		private IList<T> _records;
 
-	  protected IList<T> Records
-	  {
-		get
+		protected IList<T> Records
 		{
-		  return _records;
+			get {
+				return _records;
+			}
+			set {
+				_records = value;
+			}
 		}
-		set
-		{
-		  _records = value;
-		}
-	  }
 
 		private PropertyDescriptor _sortProperty;
 		private ListSortDirection _listSortDirection;
 
 		protected ListSortDirection ListSortDirection
 		{
-		  get
-		  {
-			return _listSortDirection;
-		  }
-		  set
-		  {
-			_listSortDirection = value;
-		  }
+			get {
+				return _listSortDirection;
+			}
+			set {
+				_listSortDirection = value;
+			}
 		}
 		readonly private PropertyDescriptorCollection _propertyDescriptorCollectionForT;
 
@@ -111,11 +107,11 @@ namespace WeSay.Data
 			AddIndex(property);
 		}
 
-	  protected void AddIndex(PropertyDescriptor property)
-	  {
-	  }
+		protected void AddIndex(PropertyDescriptor property)
+		{
+		}
 
-	  public T AddNew()
+		public T AddNew()
 		{
 			VerifyNotDisposed();
 			T o = new T();
@@ -131,47 +127,41 @@ namespace WeSay.Data
 
 		bool IBindingList.AllowEdit
 		{
-			get
-			{
+			get {
 				VerifyNotDisposed();
 				return AllowEdit;
 			}
 		}
-	  protected bool AllowEdit
-	  {
-		get
+		protected bool AllowEdit
 		{
-		  return true;
+			get {
+				return true;
+			}
 		}
-	  }
 
 		bool IBindingList.AllowNew
 		{
-			get
-			{
+			get {
 				VerifyNotDisposed();
 				return AllowNew;
 			}
 		}
 		protected bool AllowNew
 		{
-		  get
-		  {
-			return true;
-		  }
+			get {
+				return true;
+			}
 		}
 		bool IBindingList.AllowRemove
 		{
-		  get
-		  {
-			VerifyNotDisposed();
-			return AllowRemove;
-		  }
+			get {
+				VerifyNotDisposed();
+				return AllowRemove;
+			}
 		}
 		protected bool AllowRemove
 		{
-			get
-			{
+			get {
 				return true;
 			}
 		}
@@ -202,10 +192,10 @@ namespace WeSay.Data
 			return Find(property, key);
 		}
 
-	  protected int Find(PropertyDescriptor property, object key)
-	  {
-		throw new NotSupportedException();
-	  }
+		protected int Find(PropertyDescriptor property, object key)
+		{
+			throw new NotSupportedException();
+		}
 
 		abstract public bool IsSorted
 		{
@@ -257,9 +247,9 @@ namespace WeSay.Data
 			VerifyNotDisposed();
 			RemoveIndex(property);
 		}
-	  protected void RemoveIndex(PropertyDescriptor property)
-	  {
-	  }
+		protected void RemoveIndex(PropertyDescriptor property)
+		{
+		}
 
 		public void RemoveSort()
 		{
@@ -276,8 +266,7 @@ namespace WeSay.Data
 
 		public ListSortDirection SortDirection
 		{
-			get
-			{
+			get {
 				VerifyNotDisposed();
 				return _listSortDirection;
 			}
@@ -285,66 +274,58 @@ namespace WeSay.Data
 
 		public PropertyDescriptor SortProperty
 		{
-			get
-			{
+			get {
 				VerifyNotDisposed();
 				return _sortProperty;
 			}
-			protected set
-			{
-			  _sortProperty = value;
+			protected set {
+				_sortProperty = value;
 			}
 		}
 
 		bool IBindingList.SupportsChangeNotification
 		{
-			get
-			{
-			  VerifyNotDisposed();
-			  return SupportsChangeNotification;
+			get {
+				VerifyNotDisposed();
+				return SupportsChangeNotification;
 			}
 		}
 
-	  protected bool SupportsChangeNotification
-	  {
-		get
+		protected bool SupportsChangeNotification
 		{
-		  return true;
+			get {
+				return true;
+			}
 		}
-	  }
 
 		bool IBindingList.SupportsSearching
 		{
-			get
-			{
+			get {
 				VerifyNotDisposed();
 				return SupportsSearching;
 			}
 		}
 
-	  protected bool SupportsSearching
-	  {
-		get
+		protected bool SupportsSearching
 		{
-		  return false;
+			get {
+				return false;
+			}
 		}
-	  }
 
 		bool IBindingList.SupportsSorting
 		{
-			get
-			{
+			get {
 				VerifyNotDisposed();
 				return SupportsSorting;
 			}
 		}
-	  protected bool SupportsSorting
-	  {
-		get
+		protected bool SupportsSorting
 		{
-		  return true;
+			get {
+				return true;
+			}
 		}
-	  }
 
 		#endregion
 
@@ -403,13 +384,11 @@ namespace WeSay.Data
 
 		public T this[int index]
 		{
-			get
-			{
+			get {
 				VerifyNotDisposed();
 				return _records[index];
 			}
-			set
-			{
+			set {
 				VerifyNotDisposed();
 				if (ShouldReplaceRecord(index, value))
 				{
@@ -457,8 +436,7 @@ namespace WeSay.Data
 
 		public bool IsFixedSize
 		{
-			get
-			{
+			get {
 				VerifyNotDisposed();
 				return false;
 			}
@@ -466,8 +444,7 @@ namespace WeSay.Data
 
 		bool System.Collections.IList.IsReadOnly
 		{
-			get
-			{
+			get {
 				VerifyNotDisposed();
 				return IsReadOnly;
 			}
@@ -496,14 +473,12 @@ namespace WeSay.Data
 
 		object System.Collections.IList.this[int index]
 		{
-			get
-			{
+			get {
 				VerifyNotDisposed();
 				CheckIndex(index);
 				return _records[index];
 			}
-			set
-			{
+			set {
 				VerifyNotDisposed();
 				CheckIndex(index);
 				_records[index] = (T)value;
@@ -549,8 +524,7 @@ namespace WeSay.Data
 
 		public int Count
 		{
-			get
-			{
+			get {
 				VerifyNotDisposed();
 				return _records.Count;
 			}
@@ -558,8 +532,7 @@ namespace WeSay.Data
 
 		public bool IsReadOnly
 		{
-			get
-			{
+			get {
 				VerifyNotDisposed();
 				return _records.IsReadOnly;
 			}
@@ -617,8 +590,7 @@ namespace WeSay.Data
 
 		int System.Collections.ICollection.Count
 		{
-			get
-			{
+			get {
 				VerifyNotDisposed();
 				return Count;
 			}
@@ -626,39 +598,35 @@ namespace WeSay.Data
 
 		bool System.Collections.ICollection.IsSynchronized
 		{
-			get
-			{
+			get {
 				VerifyNotDisposed();
 				return IsSynchronized;
 			}
 		}
 
-	  protected bool IsSynchronized
-	  {
-		get
+		protected bool IsSynchronized
 		{
-		  return false;
+			get {
+				return false;
+			}
 		}
-	  }
 
-	  object System.Collections.ICollection.SyncRoot
+		object System.Collections.ICollection.SyncRoot
 		{
-			get
-			{
+			get {
 				VerifyNotDisposed();
 				return SyncRoot;
 			}
 		}
 
-	  protected object SyncRoot
-	  {
-		get
+		protected object SyncRoot
 		{
-		  return this;
+			get {
+				return this;
+			}
 		}
-	  }
 
-#endregion
+		#endregion
 
 		#region IEnumerable Members
 
@@ -668,12 +636,12 @@ namespace WeSay.Data
 			return GetEnumerator();
 		}
 
-	  protected System.Collections.IEnumerator GetEnumerator()
-	  {
-		return ((System.Collections.IEnumerable) _records).GetEnumerator();
-	  }
+		protected System.Collections.IEnumerator GetEnumerator()
+		{
+			return ((System.Collections.IEnumerable) _records).GetEnumerator();
+		}
 
-#endregion
+		#endregion
 
 		#region IEnumerable<T> Members
 
@@ -741,7 +709,7 @@ namespace WeSay.Data
 		}
 
 		#region IDisposable Members
-#if DEBUG
+		#if DEBUG
 		~AbstractRecordList()
 		{
 			if (!this._disposed)
@@ -749,14 +717,13 @@ namespace WeSay.Data
 				throw new InvalidOperationException("Disposed not explicitly called on " + this.GetType().FullName + ".");
 			}
 		}
-#endif
+		#endif
 
 		private bool _disposed = false;
 
 		public bool IsDisposed
 		{
-			get
-			{
+			get {
 				return _disposed;
 			}
 		}

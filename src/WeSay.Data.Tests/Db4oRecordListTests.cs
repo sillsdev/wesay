@@ -667,4 +667,45 @@ namespace WeSay.Data.Tests.Db4oRecordListTests
 			Assert.AreEqual(items, this._recordList[0].OnActivateDepth);
 		}
 	}
+
+	[TestFixture]
+	public class Db4oRecordListTests
+	{
+		Db4oDataSource _dataSource;
+		Db4oRecordList<TestItem> _db4oRecordList;
+		string _FilePath;
+
+		[SetUp]
+		public override void SetUp()
+		{
+			_FilePath = System.IO.Path.GetTempFileName();
+			this._dataSource = new Db4oDataSource(_FilePath);
+		}
+
+		[TearDown]
+		public void TestFixtureTearDown()
+		{
+			this._dataSource.Dispose();
+			System.IO.File.Delete(_FilePath);
+		}
+
+		[Test]
+		public void CopyConstructor()
+		{
+			using (Db4oRecordList<SimpleIntTestClass> recordList = new Db4oRecordList<SimpleIntTestClass>(this._dataSource))
+			{
+				for (int i = 0; i < 50; i++)
+				{
+					recordList.Add(new SimpleIntTestClass(i));
+				}
+
+				using (Db4oRecordList<SimpleIntTestClass> recordListCopy = new Db4oRecordList<SimpleIntTestClass>(recordList))
+				{
+					Assert.IsNotNull(recordListCopy);
+					Assert.AreNotSame(recordList, recordListCopy);
+					Assert.AreEqual(recordList, recordListCopy);
+				}
+			}
+		}
+	}
 }
