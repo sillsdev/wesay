@@ -6,12 +6,12 @@ using NUnit.Framework;
 namespace WeSay.Data.Tests
 {
 	[TestFixture]
-	class InMemoryRecordListManagerTests : RecordListManagerBaseTests
+	class Db4oRecordListManagerTests : RecordListManagerBaseTests
 	{
 		[SetUp]
 		public override void Setup()
 		{
-			_recordListManager = new InMemoryRecordListManager();
+			_recordListManager = new Db4oRecordListManager();
 			base.Setup();
 		}
 	}

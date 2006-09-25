@@ -672,11 +672,10 @@ namespace WeSay.Data.Tests.Db4oRecordListTests
 	public class Db4oRecordListTests
 	{
 		Db4oDataSource _dataSource;
-		Db4oRecordList<TestItem> _db4oRecordList;
 		string _FilePath;
 
 		[SetUp]
-		public override void SetUp()
+		public void SetUp()
 		{
 			_FilePath = System.IO.Path.GetTempFileName();
 			this._dataSource = new Db4oDataSource(_FilePath);
