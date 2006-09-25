@@ -1,8 +1,8 @@
-#region Copyright (c) 2003-2004, Luke T. Maxon
+#region Copyright (c) 2003-2005, Luke T. Maxon
 
 /********************************************************************************************************************
 '
-' Copyright (c) 2003-2004, Luke T. Maxon
+' Copyright (c) 2003-2005, Luke T. Maxon
 ' All rights reserved.
 '
 ' Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -43,13 +43,13 @@ namespace NUnit.Extensions.Forms
 	/// </summary>
 	public delegate void ModalFormActivated();
 
-	internal delegate void ModalFormActivatedHwnd( IntPtr hWnd );
+	internal delegate void ModalFormActivatedHwnd(IntPtr hWnd);
 
 	public class ModalFormTester : IDisposable
 	{
 		private class Handler
 		{
-			public Handler( Delegate handler, bool expected )
+			public Handler(Delegate handler, bool expected)
 			{
 				this.handler = handler;
 				this.expected = expected;
@@ -60,23 +60,23 @@ namespace NUnit.Extensions.Forms
 				return expected == invoked;
 			}
 
-			public void Invoke( IntPtr hWnd )
+			public void Invoke(IntPtr hWnd)
 			{
 				invoked = true;
 				try
 				{
-					if (handler is ModalFormActivated)
+					if(handler is ModalFormActivated)
 					{
-						handler.DynamicInvoke( new object[] {} );
+						handler.DynamicInvoke(new object[] {});
 					}
-					else if (handler is ModalFormActivatedHwnd)
+					else if(handler is ModalFormActivatedHwnd)
 					{
-						handler.DynamicInvoke( new object[] {hWnd} );
+						handler.DynamicInvoke(new object[] {hWnd});
 					}
 				}
-				catch( TargetInvocationException ex )
+				catch(TargetInvocationException ex)
 				{
-					if (ex.InnerException != null)
+					if(ex.InnerException != null)
 					{
 						throw ex.InnerException;
 					}
@@ -84,6 +84,7 @@ namespace NUnit.Extensions.Forms
 			}
 
 			private bool invoked = false;
+
 			private bool expected = false;
 
 			private Delegate handler = null;
@@ -95,30 +96,36 @@ namespace NUnit.Extensions.Forms
 
 		public ModalFormTester()
 		{
-			Add( ANY, (ModalFormActivatedHwnd) Delegate.CreateDelegate( typeof(ModalFormActivatedHwnd), this, "UnexpectedModal" ), false );
+			Add(ANY,
+				(ModalFormActivatedHwnd)
+				Delegate.CreateDelegate(typeof(ModalFormActivatedHwnd), this, "UnexpectedModal"), false);
 		}
 
-		public void UnexpectedModal( IntPtr hWnd )
+		public void UnexpectedModal(IntPtr hWnd)
 		{
-			MessageBoxTester messageBox = new MessageBoxTester( hWnd );
-			messageBox.ClickOk();
+			MessageBoxTester messageBox = new MessageBoxTester(hWnd);
+			//wesay
+			//jdh
+			//original: messageBox.ClickOk();
+			//new
+			throw new ApplicationException("Unexpected messagebox: " + messageBox.Text);
 		}
 
-		public void ExpectModal( string name, ModalFormActivated handler )
+		public void ExpectModal(string name, ModalFormActivated handler)
 		{
-			ExpectModal( name, handler, true );
+			ExpectModal(name, handler, true);
 		}
 
-	public void ExpectModal( string name, ModalFormActivated handler, bool expected )
+		public void ExpectModal(string name, ModalFormActivated handler, bool expected)
 		{
 			BeginListening(); //can be called multiple times.
-			handlers[name] = new Handler( handler, expected );
+			handlers[name] = new Handler(handler, expected);
 		}
 
-		internal void Add( string name, ModalFormActivatedHwnd handler, bool expected )
+		internal void Add(string name, ModalFormActivatedHwnd handler, bool expected)
 		{
 			BeginListening(); //can be called multiple times.
-			handlers[name] = new Handler( handler, expected );
+			handlers[name] = new Handler(handler, expected);
 		}
 
 		~ModalFormTester()
@@ -128,10 +135,10 @@ namespace NUnit.Extensions.Forms
 
 		public bool Verify()
 		{
-			foreach (string name in handlers.Keys)
+			foreach(string name in handlers.Keys)
 			{
 				Handler h = handlers[name] as Handler;
-				if (!h.Verify())
+				if(!h.Verify())
 				{
 					return false;
 				}
@@ -140,7 +147,9 @@ namespace NUnit.Extensions.Forms
 		}
 
 		private Win32.CBTCallback callback = null;
+
 		private IntPtr handleToHook = IntPtr.Zero;
+
 		private const int CbtHookType = 5;
 		private const int HCBT_ACTIVATE = 5;
 
@@ -148,78 +157,77 @@ namespace NUnit.Extensions.Forms
 
 		private void BeginListening()
 		{
-			if (!listening)
+			if(!listening)
 			{
 				listening = true;
-				callback = new Win32.CBTCallback( ModalListener );
-				handleToHook = Win32.SetWindowsHookEx( CbtHookType, callback, IntPtr.Zero, AppDomain.GetCurrentThreadId() );
+				callback = new Win32.CBTCallback(ModalListener);
+				handleToHook = Win32.SetWindowsHookEx(CbtHookType, callback, IntPtr.Zero, Win32.GetCurrentThreadId());
 			}
 		}
 
 		public void Dispose()
 		{
-			if (handleToHook != IntPtr.Zero)
+			if(handleToHook != IntPtr.Zero)
 			{
-				Win32.UnhookWindowsHookEx( handleToHook );
+				Win32.UnhookWindowsHookEx(handleToHook);
 				handleToHook = IntPtr.Zero;
 			}
-			GC.SuppressFinalize( this );
+			GC.SuppressFinalize(this);
 		}
 
-		private void Invoke( string name, IntPtr hWnd )
+		private void Invoke(string name, IntPtr hWnd)
 		{
-			if (name != null)
+			if(name != null)
 			{
 				Handler h = handlers[name] as Handler;
-				if (h != null)
+				if(h != null)
 				{
-					h.Invoke( hWnd );
+					h.Invoke(hWnd);
 					return;
 				}
 
 				Handler h2 = handlers[ANY] as Handler;
-				if (h2 != null)
+				if(h2 != null)
 				{
-					h2.Invoke( hWnd );
+					h2.Invoke(hWnd);
 				}
 			}
 		}
 
-		private IntPtr ModalListener( int code, IntPtr wParam, IntPtr lParam )
+		private IntPtr ModalListener(int code, IntPtr wParam, IntPtr lParam)
 		{
-			if (code == HCBT_ACTIVATE)
+			if(code == HCBT_ACTIVATE)
 			{
-				Form form = Form.FromHandle( wParam ) as Form;
+				Form form = Form.FromHandle(wParam) as Form;
 
 				string name = null;
 
-				if (form != null && form.Modal)
+				if(form != null && form.Modal)
 				{
 					name = form.Name;
 				}
-				else if (IsDialog( wParam ))
+				else if(IsDialog(wParam))
 				{
-					name = MessageBoxTester.GetCaption( wParam );
-					if (name == null)
+					name = MessageBoxTester.GetCaption(wParam);
+					if(name == null)
 					{
 						name = string.Empty;
 					}
 				}
 
-				Invoke( name, wParam );
+				Invoke(name, wParam);
 			}
 
-			return Win32.CallNextHookEx( handleToHook, code, wParam, lParam );
+			return Win32.CallNextHookEx(handleToHook, code, wParam, lParam);
 		}
 
-		private bool IsDialog( IntPtr wParam )
+		protected bool IsDialog(IntPtr wParam)
 		{
 			StringBuilder className = new StringBuilder();
 			className.Capacity = 255;
-			Win32.GetClassName( wParam, className, 255 );
+			Win32.GetClassName(wParam, className, 255);
 
-			return ( "#32770" == className.ToString() );
+			return ("#32770" == className.ToString());
 		}
-
 	}
 }
