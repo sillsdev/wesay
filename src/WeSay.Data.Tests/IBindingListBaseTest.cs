@@ -74,7 +74,7 @@ namespace WeSay.Data.Tests.IBindingListTests
 				}
 				catch
 				{
-					Assert.Fail();
+					Assert.Fail("When AddNew is not supported, should throw not supported exception");
 				}
 			}
 		}
@@ -151,7 +151,7 @@ namespace WeSay.Data.Tests.IBindingListTests
 				}
 				catch
 				{
-					Assert.Fail();
+					Assert.Fail("When Sorting is not supported, should throw not supported exception");
 				}
 			}
 		}
@@ -177,7 +177,7 @@ namespace WeSay.Data.Tests.IBindingListTests
 				}
 				catch
 				{
-					Assert.Fail();
+					Assert.Fail("When Finding is not supported, should throw not supported exception");
 				}
 			}
 		}
@@ -235,7 +235,7 @@ namespace WeSay.Data.Tests.IBindingListTests
 				}
 				catch
 				{
-					Assert.Fail();
+					Assert.Fail("When Sorting is not supported, should throw not supported exception");
 				}
 			}
 		}

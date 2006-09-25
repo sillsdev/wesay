@@ -246,7 +246,7 @@ namespace WeSay.Data
 		{
 			get
 			{
-				return SupportsSearching;
+				return SupportsSorting;
 			}
 		}
 
@@ -417,7 +417,13 @@ namespace WeSay.Data
 
 		public bool Remove(T item)
 		{
-			return _list.Remove(item);
+			int index = _list.IndexOf(item);
+			if(index != -1){
+				_list.RemoveAt(index);
+				OnItemDeleted(index);
+				return true;
+			}
+			return false;
 		}
 
 		#endregion

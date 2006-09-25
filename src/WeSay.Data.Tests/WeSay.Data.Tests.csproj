@@ -28,12 +28,13 @@
 	<WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+	<Compile Include="InMemoryBindingListTests.cs" />
 	<Compile Include="Db4oRecordListTests.cs" />
 	<Compile Include="Db4oSODAQueryTests.cs" />
 	<Compile Include="IFilterableTest.cs" />
 	<Compile Include="InMemoryRecordListManagerTests.cs" />
 	<Compile Include="InMemoryRecordListTests.cs" />
-	<Compile Include="IBindingListTest.cs" />
+	<Compile Include="IBindingListBaseTest.cs" />
 	<Compile Include="ICollectionBaseTest.cs" />
 	<Compile Include="IEnumerableBaseTest.cs" />
 	<Compile Include="IListBaseTest.cs" />
