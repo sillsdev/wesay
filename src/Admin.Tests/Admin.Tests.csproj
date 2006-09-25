@@ -32,6 +32,10 @@
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\nunit.framework.dll</HintPath>
 	</Reference>
+	<Reference Include="NUnitForms, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\NUnitForms.dll</HintPath>
+	</Reference>
 	<Reference Include="System" />
 	<Reference Include="System.Data" />
 	<Reference Include="System.Windows.Forms" />
@@ -49,10 +53,6 @@
 	<ProjectReference Include="..\Admin\Admin.csproj">
 	  <Project>{54C943DB-7725-4F52-BCE4-86C3D3D5A66E}</Project>
 	  <Name>Admin</Name>
-	</ProjectReference>
-	<ProjectReference Include="..\nunitforms\nunitforms.csproj">
-	  <Project>{C7342C9C-6E66-4AEA-BAEC-F40F26A22CA2}</Project>
-	  <Name>nunitforms</Name>
 	</ProjectReference>
 	<ProjectReference Include="..\WeSay.UI\WeSay.UI.csproj">
 	  <Project>{AC8F284C-7B34-4AC9-A7DE-FAF765456DFF}</Project>

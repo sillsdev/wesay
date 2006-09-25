@@ -19,16 +19,27 @@ namespace WeSay.Language
 		{
 			NetReflectorReader r = new NetReflectorReader(MakeTypeTable());
 			XmlReader reader = XmlReader.Create(path);
-			r.Read(reader, this);
-			reader.Close();
-
+			try
+			{
+				r.Read(reader, this);
+			}
+			finally
+			{
+				reader.Close();
+			}
 		}
 
 		public void Write(XmlWriter writer)
 		{
-			writer.WriteStartDocument();
-			NetReflector.Write(writer, this);
-			writer.Close();
+			try
+			{
+				writer.WriteStartDocument();
+				NetReflector.Write(writer, this);
+			}
+			finally
+			{
+				writer.Close();
+			}
 		}
 
 		private NetReflectorTypeTable MakeTypeTable()
@@ -91,6 +102,9 @@ namespace WeSay.Language
 		{
 			get
 			{
+				if (_analysisWritingSystemDefaultId == null)
+					return "";//a null would omit the xml attribute when serializing
+
 				return _analysisWritingSystemDefaultId;
 			}
 			set
@@ -104,6 +118,8 @@ namespace WeSay.Language
 		{
 			get
 			{
+				if (_vernacularWritingSystemDefaultId == null)
+					return "";//a null would omit the xml attribute when serializing
 				return _vernacularWritingSystemDefaultId;
 			}
 			set

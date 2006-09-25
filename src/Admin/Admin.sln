@@ -12,7 +12,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Admin.Tests", "..\Admin.Tes
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Language.Tests", "..\Language.Tests\Language.Tests.csproj", "{6366719E-DA80-4680-9E06-D9BC6F340DE3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunitforms", "..\nunitforms\nunitforms.csproj", "{C7342C9C-6E66-4AEA-BAEC-F40F26A22CA2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NUnitForms", "..\..\lib\src\nunitforms\NUnitForms.csproj", "{C7342C9C-6E66-4AEA-BAEC-F40F26A22CA2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

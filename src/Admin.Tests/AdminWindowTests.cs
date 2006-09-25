@@ -41,15 +41,14 @@ namespace WeSay.Admin.Tests
 				Directory.Delete(_projectFolder, true);
 			}
 	   }
-		//stupid nunitforms will freak 'cause window was closed
-		[Test, ExpectedException(typeof(FormsTestAssertionException))]
+
+		[Test]
 		public void ProjectFilesTouched()
 		{
 			_window.OpenProject( BasilProject.GetPretendProjectDirectory());
 			string p = BasilProject.Project.PathToWritingSystemPrefs;
 			DateTime before = File.GetLastWriteTime(p);
 			_mainWindowTester.Close();
-			MessageBox.Show("hello");
 			DateTime after = File.GetLastWriteTime(p);
 			Assert.AreNotEqual(before, after);
 		}
@@ -85,6 +84,12 @@ namespace WeSay.Admin.Tests
 		{
 			CreateNewProject();
 			WalkTopLevelTabs();
+		}
+		[Test]
+		public void CreateNewProjectThenOpen()
+		{
+			_window.CreateNewProject(_projectFolder);
+			_window.OpenProject(_projectFolder);
 		}
 
 		private void WalkTopLevelTabs()
