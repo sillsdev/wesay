@@ -59,14 +59,14 @@ namespace WeSay.Admin
 			// newProjectToolStripMenuItem
 			//
 			this.newProjectToolStripMenuItem.Name = "newProjectToolStripMenuItem";
-			this.newProjectToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.newProjectToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
 			this.newProjectToolStripMenuItem.Text = "&New Project...";
 			this.newProjectToolStripMenuItem.Click += new System.EventHandler(this.OnCreateProject);
 			//
 			// openProjectToolStripMenuItem
 			//
 			this.openProjectToolStripMenuItem.Name = "openProjectToolStripMenuItem";
-			this.openProjectToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.openProjectToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
 			this.openProjectToolStripMenuItem.Text = "&Open Project...";
 			this.openProjectToolStripMenuItem.Click += new System.EventHandler(this.OnOpenProject);
 			//
@@ -81,6 +81,7 @@ namespace WeSay.Admin
 			this.Name = "AdminWindow";
 			this.Text = "WeSay Admin";
 			this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.AdminWindow_FormClosed);
+			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.AdminWindow_FormClosing);
 			this.menuStrip1.ResumeLayout(false);
 			this.menuStrip1.PerformLayout();
 			this.ResumeLayout(false);

@@ -17,26 +17,26 @@ namespace WeSay.Language
 
 		public void Load(string path)
 		{
-//           XmlDocument _fontPrefsDoc = new XmlDocument();
-//            _fontPrefsDoc.Load(path);
-//            foreach (XmlNode node in _fontPrefsDoc.SelectNodes("prefs/writingSystem"))
-//            {
-//                WritingSystem ws = new WritingSystem(node);
-//                this.Add(ws.Id, ws);
-//            }
-//
-//            _analysisWritingSystemDefaultId = GetIdOfLabelledWritingSystem("analysisWritingSystem");
-//            _vernacularWritingSystemDefaultId = GetIdOfLabelledWritingSystem("vernacularWritingSystem");
-
-			NetReflectorTypeTable t = new NetReflectorTypeTable();
-			t.Add(typeof(WritingSystemCollection));
-			t.Add(typeof(WritingSystem));
-
-			NetReflectorReader r = new NetReflectorReader(t);
+			NetReflectorReader r = new NetReflectorReader(MakeTypeTable());
 			XmlReader reader = XmlReader.Create(path);
 			r.Read(reader, this);
 			reader.Close();
 
+		}
+
+		public void Write(XmlWriter writer)
+		{
+			writer.WriteStartDocument();
+			NetReflector.Write(writer, this);
+			writer.Close();
+		}
+
+		private NetReflectorTypeTable MakeTypeTable()
+		{
+			NetReflectorTypeTable t = new NetReflectorTypeTable();
+			t.Add(typeof(WritingSystemCollection));
+			t.Add(typeof(WritingSystem));
+			return t;
 		}
 
 		public void IdOfWritingSystemChanged(WritingSystem ws, string oldKey)
@@ -142,5 +142,6 @@ namespace WeSay.Language
 			}
 			return this[id];
 		}
+
 	}
 }

@@ -28,9 +28,9 @@ namespace WeSay.Admin
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this.tabControl1 = new System.Windows.Forms.TabControl();
+			this._projectTabControl = new System.Windows.Forms.TabControl();
 			this._tasksPage = new System.Windows.Forms.TabPage();
-			this.taskList1 = new WeSay.Admin.TaskList();
+			this.taskList1 = new WeSay.Admin.TaskListControl();
 			this._fieldsPage = new System.Windows.Forms.TabPage();
 			this.fieldsControl1 = new WeSay.Admin.FieldsControl();
 			this._writingSystemPage = new System.Windows.Forms.TabPage();
@@ -38,7 +38,7 @@ namespace WeSay.Admin
 			this._otherPage = new System.Windows.Forms.TabPage();
 			this.otherControl1 = new WeSay.Admin.OtherControl();
 			this._transferPage = new System.Windows.Forms.TabPage();
-			this.tabControl1.SuspendLayout();
+			this._projectTabControl.SuspendLayout();
 			this._tasksPage.SuspendLayout();
 			this._fieldsPage.SuspendLayout();
 			this._writingSystemPage.SuspendLayout();
@@ -47,17 +47,17 @@ namespace WeSay.Admin
 			//
 			// tabControl1
 			//
-			this.tabControl1.Controls.Add(this._tasksPage);
-			this.tabControl1.Controls.Add(this._fieldsPage);
-			this.tabControl1.Controls.Add(this._writingSystemPage);
-			this.tabControl1.Controls.Add(this._otherPage);
-			this.tabControl1.Controls.Add(this._transferPage);
-			this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.tabControl1.Location = new System.Drawing.Point(0, 0);
-			this.tabControl1.Name = "tabControl1";
-			this.tabControl1.SelectedIndex = 0;
-			this.tabControl1.Size = new System.Drawing.Size(712, 447);
-			this.tabControl1.TabIndex = 2;
+			this._projectTabControl.Controls.Add(this._tasksPage);
+			this._projectTabControl.Controls.Add(this._fieldsPage);
+			this._projectTabControl.Controls.Add(this._writingSystemPage);
+			this._projectTabControl.Controls.Add(this._otherPage);
+			this._projectTabControl.Controls.Add(this._transferPage);
+			this._projectTabControl.Dock = System.Windows.Forms.DockStyle.Fill;
+			this._projectTabControl.Location = new System.Drawing.Point(0, 0);
+			this._projectTabControl.Name = "_projectTabControl";
+			this._projectTabControl.SelectedIndex = 0;
+			this._projectTabControl.Size = new System.Drawing.Size(712, 447);
+			this._projectTabControl.TabIndex = 2;
 			//
 			// _tasksPage
 			//
@@ -151,10 +151,10 @@ namespace WeSay.Admin
 			//
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.Controls.Add(this.tabControl1);
+			this.Controls.Add(this._projectTabControl);
 			this.Name = "ProjectTabs";
 			this.Size = new System.Drawing.Size(712, 447);
-			this.tabControl1.ResumeLayout(false);
+			this._projectTabControl.ResumeLayout(false);
 			this._tasksPage.ResumeLayout(false);
 			this._fieldsPage.ResumeLayout(false);
 			this._writingSystemPage.ResumeLayout(false);
@@ -165,9 +165,9 @@ namespace WeSay.Admin
 
 		#endregion
 
-		private System.Windows.Forms.TabControl tabControl1;
+		private System.Windows.Forms.TabControl _projectTabControl;
 		private System.Windows.Forms.TabPage _tasksPage;
-		private TaskList taskList1;
+		private TaskListControl taskList1;
 		private System.Windows.Forms.TabPage _fieldsPage;
 		private FieldsControl fieldsControl1;
 		private System.Windows.Forms.TabPage _writingSystemPage;

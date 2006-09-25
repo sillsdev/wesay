@@ -1,17 +1,1 @@
-<?xml version="1.0" encoding="utf-8"?>
-<WritingSystemCollection>
-  <AnalysisWritingSystemDefaultId>en</AnalysisWritingSystemDefaultId>
-  <VernacularWritingSystemDefaultId>th</VernacularWritingSystemDefaultId>
-  <members>
-	<WritingSystem>
-	  <FontName>Angsana New</FontName>
-	  <FontSize>20</FontSize>
-	  <Id>th</Id>
-	</WritingSystem>
-	<WritingSystem>
-	  <FontName>Courier New</FontName>
-	  <FontSize>13</FontSize>
-	  <Id>en</Id>
-	</WritingSystem>
-  </members>
-</WritingSystemCollection>
+﻿<?xml version="1.0" encoding="utf-8"?><WritingSystemCollection><AnalysisWritingSystemDefaultId>en</AnalysisWritingSystemDefaultId><members><WritingSystem><FontName>Angsana New</FontName><FontSize>20</FontSize><Id>th</Id></WritingSystem><WritingSystem><FontName>Courier New</FontName><FontSize>13</FontSize><Id>en</Id></WritingSystem></members><VernacularWritingSystemDefaultId>th</VernacularWritingSystemDefaultId></WritingSystemCollection>

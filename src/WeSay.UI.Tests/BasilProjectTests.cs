@@ -80,7 +80,7 @@ namespace WeSay.UI.Tests
 				project.Create(path);
 				Assert.IsTrue(Directory.Exists(path));
 				Assert.IsTrue(Directory.Exists(project.ApplicationCommonDirectory));
-				Assert.IsTrue(Directory.Exists(project.PathToWritingSystemPrefs));
+				Assert.IsTrue(File.Exists(project.PathToWritingSystemPrefs));
 			}
 			finally
 			{

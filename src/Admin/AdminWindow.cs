@@ -28,8 +28,6 @@ namespace WeSay.Admin
 			InstallWelcomePage();
 		}
 
-
-
 		void OnOpenProject(object sender, EventArgs e)
 		{
 			string s = WeSay.Admin.Properties.Settings.Default.LastProjectPath;
@@ -75,6 +73,7 @@ namespace WeSay.Admin
 				_project.Dispose();
 			}
 			_project = p;
+			SetupProjectControls();
 		}
 
 		public void OpenProject(string path)
@@ -93,6 +92,11 @@ namespace WeSay.Admin
 				return;
 			}
 
+			SetupProjectControls();
+		}
+
+		private void SetupProjectControls()
+		{
 			try
 			{
 				this.Text = "WeSay Admin: " + _project.Name;
@@ -140,16 +144,29 @@ namespace WeSay.Admin
 
 		private void AdminWindow_FormClosed(object sender, FormClosedEventArgs e)
 		{
-//            System.Configuration.Configuration config =
-//                     ConfigurationManager.OpenExeConfiguration(
-//                     ConfigurationUserLevel.None);
-//
-//            config.Save();//(ConfigurationSaveMode.Modified);
-			WeSay.Admin.Properties.Settings.Default.Save();
 			if (_projectTabs != null)
 			{
 				_projectTabs.Dispose();
 			}
+		}
+
+		private void AdminWindow_FormClosing(object sender, FormClosingEventArgs e)
+		{
+			try
+			{
+				if (_project != null)
+				{
+					_project.Save();
+				}
+				WeSay.Admin.Properties.Settings.Default.Save();
+			}
+			catch (Exception error)
+			{
+				e.Cancel = true;
+				MessageBox.Show(error.Message);
+			}
+
+
 		}
 	}
 }

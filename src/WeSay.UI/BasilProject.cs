@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Reflection;
+using System.Xml;
 using WeSay.Language;
 
 namespace WeSay.UI
@@ -23,6 +24,8 @@ namespace WeSay.UI
 		private WritingSystemCollection _writingSystems;
 		private string _projectDirectoryPath;
 		private string _stringCatalogSelector;
+
+		public event EventHandler HackedEditorsSaveNow;
 
 		public static BasilProject Project
 		{
@@ -74,12 +77,27 @@ namespace WeSay.UI
 		public virtual void Create(string projectDirectoryPath)
 		{
 			this._projectDirectoryPath = projectDirectoryPath;
-			Directory.CreateDirectory(this.PathToWritingSystemPrefs);
+			Directory.CreateDirectory(this.CommonDirectory);
 			InitStringCatalog();
 			InitWritingSystems();
+			Save();
 		}
 
+		public virtual void Save()
+		{
+		   Save(_projectDirectoryPath);
+		   if (HackedEditorsSaveNow != null)
+		   {
+			   HackedEditorsSaveNow.Invoke(this, null);
+		   }
+		}
 
+	   public virtual void Save(string projectDirectoryPath)
+		{
+			XmlWriter writer = XmlWriter.Create(this.PathToWritingSystemPrefs);
+			_writingSystems.Write(writer);
+			writer.Close();
+		}
 		/// <summary>
 		/// Many tests throughout the system will not care at all about project related things,
 		/// but they will break if there is no project initialized, since many things
@@ -89,16 +107,19 @@ namespace WeSay.UI
 		/// </summary>
 		public static void InitializeForTests()
 		{
-			string s = Path.Combine(GetTopWeSayDirectory(), "SampleProjects/PRETEND");
-
 			BasilProject project = new BasilProject();
-			project.Load(s);
+			project.Load(GetPretendProjectDirectory());
 //            project.InitWritingSystems();
 //            project.InitStringCatalog();
 			project.StringCatalogSelector = "en";
 		}
 
-		 public WritingSystemCollection WritingSystems
+		public static string GetPretendProjectDirectory()
+		{
+			return Path.Combine(GetTopAppDirectory(), "SampleProjects/PRETEND");
+		}
+
+		public WritingSystemCollection WritingSystems
 		{
 			get
 			{
@@ -139,6 +160,7 @@ namespace WeSay.UI
 			else return null;
 		}
 
+
 		public string PathToStringCatalogInProjectDir
 		{
 			get
@@ -151,11 +173,11 @@ namespace WeSay.UI
 		{
 			get
 			{
-				return Path.Combine(GetTopWeSayDirectory(), "common");
+				return Path.Combine(GetTopAppDirectory(), "common");
 			}
 		}
 
-		private static string GetTopWeSayDirectory()
+		protected static string GetTopAppDirectory()
 		{
 			string path = Assembly.GetExecutingAssembly().CodeBase.Replace("file:///", "");
 			//go up to dir containing the executable

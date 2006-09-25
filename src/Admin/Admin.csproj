@@ -93,9 +93,9 @@
 	  <LastGenOutput>Resources.Designer.cs</LastGenOutput>
 	  <SubType>Designer</SubType>
 	</EmbeddedResource>
-	<EmbeddedResource Include="TaskList.resx">
+	<EmbeddedResource Include="TaskListControl.resx">
 	  <SubType>Designer</SubType>
-	  <DependentUpon>TaskList.cs</DependentUpon>
+	  <DependentUpon>TaskListControl.cs</DependentUpon>
 	</EmbeddedResource>
 	<EmbeddedResource Include="WelcomeControl.resx">
 	  <SubType>Designer</SubType>
@@ -124,11 +124,11 @@
 	  <DependentUpon>Settings.settings</DependentUpon>
 	  <DesignTimeSharedInput>True</DesignTimeSharedInput>
 	</Compile>
-	<Compile Include="TaskList.cs">
+	<Compile Include="TaskListControl.cs">
 	  <SubType>UserControl</SubType>
 	</Compile>
-	<Compile Include="TaskList.Designer.cs">
-	  <DependentUpon>TaskList.cs</DependentUpon>
+	<Compile Include="TaskListControl.Designer.cs">
+	  <DependentUpon>TaskListControl.cs</DependentUpon>
 	</Compile>
 	<Compile Include="WelcomeControl.cs">
 	  <SubType>UserControl</SubType>

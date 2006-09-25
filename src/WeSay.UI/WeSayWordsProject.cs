@@ -30,15 +30,16 @@ namespace WeSay.UI
 		public override  void Create(string projectDirectoryPath)
 		{
 			base.Create(projectDirectoryPath);
+			Directory.CreateDirectory(this.PathToWeSaySpecificFilesDirectory);
 			Directory.CreateDirectory(Path.GetDirectoryName(this.PathToLexicalModelDB));
-		}
+	   }
 
 
-		public string PathToTaskConfig
+		public string PathToProjectTaskInventory
 		{
 			get
 			{
-				return System.IO.Path.Combine(this.ApplicationDirectory, "tasks.xml");
+				return System.IO.Path.Combine(this.PathToWeSaySpecificFilesDirectory, "tasks.xml");
 			}
 		}
 
@@ -58,5 +59,12 @@ namespace WeSay.UI
 			}
 		}
 
+		private string PathToWeSaySpecificFilesDirectory
+		{
+			get
+			{
+				return Path.Combine(ProjectDirectoryPath, "WeSay");
+			}
+		}
 	}
 }

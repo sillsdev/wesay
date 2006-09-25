@@ -81,6 +81,8 @@ namespace WeSay.Language.Tests
 			 Assert.AreEqual(99,ws.FontSize);
 	   }
 
+
+
 		[Test]
 		public void SerializeCollection()
 		{
@@ -96,13 +98,25 @@ namespace WeSay.Language.Tests
 
 		private static string MakeXmlFromCollection()
 		{
+			WritingSystemCollection c = MakeSampleCollection();
+
+			System.Text.StringBuilder builder = new System.Text.StringBuilder();
+			XmlWriter writer = XmlWriter.Create(builder);
+			c.Write(writer);
+
+			return builder.ToString();
+		}
+
+		private static WritingSystemCollection MakeSampleCollection()
+		{
 			WritingSystemCollection c = new WritingSystemCollection();
 			c.Add("one", new WritingSystem("one", new Font("Arial", 11)));
 			c.Add("two", new WritingSystem("two", new Font("Times New Roman", 22)));
 			c.AnalysisWritingSystemDefaultId = "one";
 			c.VernacularWritingSystemDefaultId = "two";
-			return NetReflector.Write(c);
+			return c;
 		}
+
 
 
 		[Test]
@@ -121,9 +135,7 @@ namespace WeSay.Language.Tests
 		[Test]
 		public void DeserializeCollectionViaLoad()
 		{
-			StreamWriter w= File.CreateText(_path);
-			w.Write(MakeXmlFromCollection());
-			w.Close();
+			MakeSampleCollection().Write(XmlWriter.Create(_path));
 
 			WritingSystemCollection c = new WritingSystemCollection();
 			c.Load(_path);
