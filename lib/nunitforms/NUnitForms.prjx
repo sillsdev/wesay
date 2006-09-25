@@ -1,0 +1,80 @@
+<Project name="NUnitForms" standardNamespace="NUnitForms" description="" newfilesearch="None" enableviewstate="True" version="1.1" projecttype="C#">
+  <Contents>
+	<File name=".\AssemblyInfo.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+	<File name="..\AmbiguousNameException.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+	<File name="..\ButtonTester.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+	<File name="..\CheckBoxTester.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+	<File name="..\CheckedListBoxTester.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+	<File name="..\ComboBoxTester.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+	<File name="..\ControlCollection.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+	<File name="..\ControlFinder.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+	<File name="..\ControlNotVisibleException.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+	<File name="..\ControlTester.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+	<File name="..\Desktop.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+	<File name="..\Finder.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+	<File name="..\FormCollection.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+	<File name="..\FormFinder.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+	<File name="..\FormTester.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+	<File name="..\Key.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+	<File name="..\KeyboardControl.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+	<File name="..\KeyboardController.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+	<File name="..\LabelTester.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+	<File name="..\LinkLabelTester.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+	<File name="..\ListBoxTester.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+	<File name="..\ListViewTester.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+	<File name="..\MenuItemCollection.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+	<File name="..\MenuItemFinder.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+	<File name="..\MenuItemTester.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+	<File name="..\MessageBoxTester.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+	<File name="..\ModalFormTester.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+	<File name="..\MouseControl.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+	<File name="..\MouseController.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+	<File name="..\NoSuchControlException.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+	<File name="..\NUnitFormsAssertionTest.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+	<File name="..\NUnitFormsAssertTest.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+	<File name="..\NUnitFormTest.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+	<File name="..\RadioButtonTester.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+	<File name="..\TabControlTester.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+	<File name="..\TextBoxTester.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+	<File name="..\ToolBarButtonTester.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+	<File name="..\ToolbarTester.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+	<File name="..\TreeViewTester.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+	<File name="..\Win32.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+	<File name=".\Scripting" subtype="Directory" buildaction="Compile" dependson="" data="" />
+	<File name=".\Scripting\AssertCommand.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+	<File name=".\Scripting\Command.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+	<File name=".\Scripting\CommandFactory.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+	<File name=".\Scripting\ICommand.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+	<File name=".\Scripting\KeyboardCommand.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+	<File name=".\Scripting\MouseCommand.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+	<File name=".\Scripting\NullCommand.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+	<File name=".\Scripting\Parser.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+	<File name=".\Scripting\Script.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+	<File name=".\Scripting\ScriptPlayer.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+	<File name=".\Scripting\ShowFormCommand.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+	<File name=".\Scripting\Speed.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+	<File name=".\Scripting\TesterMethodCommand.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+  </Contents>
+  <References>
+	<Reference type="Assembly" refto="..\..\..\lib\NUnit2.2\nunit.core.dll" localcopy="True" />
+	<Reference type="Assembly" refto="..\..\..\lib\NUnit2.2\nunit.framework.dll" localcopy="True" />
+  </References>
+  <DeploymentInformation target="" script="" strategy="File" />
+  <Configuration runwithwarnings="True" name="Debug">
+	<CodeGeneration runtime="MsNet" compiler="Csc" compilerversion="" warninglevel="4" nowarn="" includedebuginformation="True" optimize="False" unsafecodeallowed="False" generateoverflowchecks="True" mainclass="" target="Library" definesymbols="" generatexmldocumentation="False" win32Icon="" noconfig="False" nostdlib="False" />
+	<Execution commandlineparameters="" consolepause="True" />
+	<Output directory="..\bin\Debug" assembly="NUnitForms" executeScript="" executeBeforeBuild="" executeAfterBuild="" executeBeforeBuildArguments="" executeAfterBuildArguments="" />
+  </Configuration>
+  <Configurations active="Debug">
+	<Configuration runwithwarnings="True" name="Debug">
+	  <CodeGeneration runtime="MsNet" compiler="Csc" compilerversion="" warninglevel="4" nowarn="" includedebuginformation="True" optimize="False" unsafecodeallowed="False" generateoverflowchecks="True" mainclass="" target="Library" definesymbols="" generatexmldocumentation="False" win32Icon="" noconfig="False" nostdlib="False" />
+	  <Execution commandlineparameters="" consolepause="True" />
+	  <Output directory="..\bin\Debug" assembly="NUnitForms" executeScript="" executeBeforeBuild="" executeAfterBuild="" executeBeforeBuildArguments="" executeAfterBuildArguments="" />
+	</Configuration>
+	<Configuration runwithwarnings="True" name="Release">
+	  <CodeGeneration runtime="MsNet" compiler="Csc" compilerversion="" warninglevel="4" nowarn="" includedebuginformation="False" optimize="True" unsafecodeallowed="False" generateoverflowchecks="False" mainclass="" target="Exe" definesymbols="" generatexmldocumentation="False" win32Icon="" noconfig="False" nostdlib="False" />
+	  <Execution commandlineparameters="" consolepause="True" />
+	  <Output directory="..\bin\Release" assembly="NUnitForms" executeScript="" executeBeforeBuild="" executeAfterBuild="" executeBeforeBuildArguments="" executeAfterBuildArguments="" />
+	</Configuration>
+  </Configurations>
+</Project>
