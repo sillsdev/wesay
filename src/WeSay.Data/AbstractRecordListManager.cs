@@ -72,6 +72,14 @@ namespace WeSay.Data
 			GC.SuppressFinalize(this);
 		}
 
+		public bool IsDisposed
+		{
+			get
+			{
+				return _disposed;
+			}
+		}
+
 		protected virtual void Dispose(bool disposing)
 		{
 			if (!this._disposed)

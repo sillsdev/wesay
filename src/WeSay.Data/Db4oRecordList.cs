@@ -16,16 +16,7 @@ namespace WeSay.Data
 			}
 			Db4oList<T> records = new Db4oList<T>((com.db4o.ObjectContainer)dataSource.Data, new List<T>(), filter, sort);
 			Records = records;
-			records.SortingInDatabase = false;
-			records.FilteringInDatabase = false;
-			records.ReadCacheSize = 0; // I think this could go back to lower
-			records.WriteCacheSize = defaultWriteCacheSize;
-			records.PeekPersistedActivationDepth = 99;
-			records.ActivationDepth = 99;
-			records.RefreshActivationDepth = 99;
-			records.SetActivationDepth = 99;
-			//            records.RequeryAndRefresh(false);
-			records.Storing += new EventHandler<Db4oListEventArgs<T>>(OnRecordStoring);
+			InitializeDb4oListBehavior(records);
 			try
 			{
 				if (sodaQuery != null)
@@ -44,6 +35,19 @@ namespace WeSay.Data
 			}
 		}
 
+		private void InitializeDb4oListBehavior(Db4oList<T> records) {
+			records.SortingInDatabase = false;
+			records.FilteringInDatabase = false;
+			records.ReadCacheSize = 0; // I think this could go back to lower
+			records.WriteCacheSize = defaultWriteCacheSize;
+			records.PeekPersistedActivationDepth = 99;
+			records.ActivationDepth = 99;
+			records.RefreshActivationDepth = 99;
+			records.SetActivationDepth = 99;
+			//            records.RequeryAndRefresh(false);
+			records.Storing += new EventHandler<Db4oListEventArgs<T>>(OnRecordStoring);
+		}
+
 		public Db4oRecordList(Db4oDataSource dataSource):base()
 		{
 			Initialize(dataSource, null, null, null);
@@ -55,7 +59,9 @@ namespace WeSay.Data
 			this.SortProperty = source.SortProperty;
 
 			Db4oList<T> sourceRecords = (Db4oList<T>)source.Records;
-			Records = new Db4oList<T>(sourceRecords.Database, sourceRecords.ItemIds, sourceRecords.Filter, sourceRecords.Sorter);
+			Db4oList<T> records = new Db4oList<T>(sourceRecords.Database, sourceRecords.ItemIds, sourceRecords.Filter, sourceRecords.Sorter);
+			InitializeDb4oListBehavior(records);
+			Records = records;
 		}
 
 		[CLSCompliant(false)]
@@ -97,13 +103,17 @@ namespace WeSay.Data
 
 		void OnRecordStoring(object sender, Db4oListEventArgs<T> e)
 		{
-			if (e.PropertyName.Length == 0)
+			int index = Records.IndexOf(e.Item);
+			if (index != -1)
 			{
-				OnItemChanged(Records.IndexOf(e.Item));
-			}
-			else
-			{
-				OnItemChanged(Records.IndexOf(e.Item), e.PropertyName);
+				if (e.PropertyName.Length == 0)
+				{
+					OnItemChanged(index);
+				}
+				else
+				{
+					OnItemChanged(index, e.PropertyName);
+				}
 			}
 		}
 
@@ -152,7 +162,7 @@ namespace WeSay.Data
 			}
 		}
 
-		protected override void DoFilter(Predicate<T> itemsToInclude)
+		protected override void DoFilter(Predicate<T> filter)
 		{
 			Db4oList<T> records = (Db4oList<T>) Records;
 			if (records.FilteringInDatabase)
@@ -166,7 +176,7 @@ namespace WeSay.Data
 					RemoveFilter();
 				}
 			}
-			records.Filter = itemsToInclude;
+			records.Filter = filter;
 		}
 		protected override void DoRemoveFilter()
 		{

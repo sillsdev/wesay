@@ -5,11 +5,12 @@ using System.ComponentModel;
 using com.db4o;
 using com.db4o.ext;
 using com.db4o.inside.query;
+using com.db4o.query;
 
 namespace WeSay.Data
 {
 	[CLSCompliant(false)]
-	public delegate com.db4o.query.Query SodaQueryProvider(com.db4o.query.Query query);
+	public delegate Query SodaQueryProvider(Query query);
 
 	/// <summary>
 	/// db4o aware list with items stored in db4o database.
@@ -26,8 +27,8 @@ namespace WeSay.Data
 	/// * Compiled with db4o 5.5.1.
 	/// * Optimized item activation - item is not searched in read cache.
 	/// * Added <see cref="StoreItemOnPropertyChanged"/> feature.
-	/// * Added <see cref="Refresh"/>, <see cref="RefreshAt"/> and <see cref="RequeryAndRefresh"/> method.
-	/// * Bug removed: When <see cref="FilteringInDatabase"/> was true and <see cref="Query"/> was called, the result was endless loop.
+	/// * Added <see cref="Db4oList<T>.Refresh"/>, <see cref="RefreshAt"/> and <see cref="RequeryAndRefresh"/> method.
+	/// * Bug removed: When <see cref="FilteringInDatabase"/> was true and <see cref="com.db4o.query.Query"/> was called, the result was endless loop.
 	/// * <see cref="Rollback"/> does not requery anymore, but uses new cache of deleted item identifiers to add those items back to this list.
 	/// _________________________________________
 	/// Version: 2006.04.10
@@ -44,10 +45,10 @@ namespace WeSay.Data
 	/// Only item`s db4o identifiers and fixed amount of activated objects are held in memory.
 	/// </remarks>
 	/// <typeparam name="T">List item type.</typeparam>
-	[TypeConverter(typeof(ExpandableObjectConverter))]
+	[TypeConverter(typeof (ExpandableObjectConverter))]
 	internal class Db4oList<T>
-	: IList<T>, IDisposable
-	where T : class
+			: IList<T>, IDisposable
+			where T : class
 	{
 		#region Constructors
 
@@ -59,10 +60,13 @@ namespace WeSay.Data
 		public Db4oList(ObjectContainer database)
 		{
 			if (database == null)
+			{
 				throw new ArgumentNullException("database");
-			this._database = database.Ext();
-			this.ReadCacheSize = 1000;
+			}
+			_database = database.Ext();
+			ReadCacheSize = 1000;
 		}
+
 		/// <summary>
 		/// Constructor.
 		/// </summary>
@@ -74,7 +78,7 @@ namespace WeSay.Data
 		/// <exception cref="ArgumentNullException"><paramref name="database"/> is null.</exception>
 		public Db4oList(ObjectContainer database, IEnumerable items,
 						Predicate<T> filter, Comparison<T> sorter)
-		: this(database)
+				: this(database)
 		{
 			InitItems(items, filter, sorter, false);
 		}
@@ -84,26 +88,29 @@ namespace WeSay.Data
 		/// </summary>
 		/// <remarks>Calls <see cref="InitItems"/>.</remarks>
 		/// <param name="database">See <see cref="Database"/>.</param>
-		/// <param name="items">Collection of items to be added to the list.</param>
+		/// <param name="itemIds">Collection of items to be added to the list.</param>
 		/// <param name="filter">Initial <see cref="Filter"/>.</param>
 		/// <param name="sorter">Initial <see cref="Sorter"/>.</param>
 		/// <exception cref="ArgumentNullException"><paramref name="database"/> is null.</exception>
 		public Db4oList(ObjectContainer database, IList<long> itemIds,
 						Predicate<T> filter, Comparison<T> sorter)
-		: this(database)
+				: this(database)
 		{
-		  if (itemIds == null) {
+			if (itemIds == null)
+			{
 				throw new ArgumentNullException("itemIds");
-		  }
-			this.ItemIds.Clear();
+			}
+			ItemIds.Clear();
 			if (filter == null)
+			{
 				filter = ComparisonHelper<T>.DefaultPredicate;
-			this._filter = filter;
-			this._itemIds.AddRange(itemIds);
-			this._initFilter = filter;
-			this._initSorter = sorter;
-			this._filterCalled = false;
-			this._sortCalled = false;
+			}
+			_filter = filter;
+			_itemIds.AddRange(itemIds);
+			_initFilter = filter;
+			_initSorter = sorter;
+			_filterCalled = false;
+			_sortCalled = false;
 		}
 
 		#endregion
@@ -111,25 +118,28 @@ namespace WeSay.Data
 		#region Events
 
 		/// <summary>
-		/// Fired when activating of <see cref="Db4oListEventArgs`1.Item"/> by db4o is needed.
-		/// If item was activated during the event, <see cref="Db4oListEventArgs`1.Cancel"/> must be set to true.
+		/// Fired when activating of <see cref="Db4oListEventArgs<T>.Item"/> by db4o is needed.
+		/// If item was activated during the event, <see cref="Db4oListEventArgs<T>.Cancel"/> must be set to true.
 		/// </summary>
-		public event EventHandler<Db4oListEventArgs<T>> Activating = delegate{ };
+		public event EventHandler<Db4oListEventArgs<T>> Activating = delegate {};
+
 		/// <summary>
-		/// Fired when deactivating of <see cref="Db4oListEventArgs`1.Item"/> by db4o is needed.
-		/// If item was deactivated during the event, <see cref="Db4oListEventArgs`1.Cancel"/> must be set to true.
+		/// Fired when deactivating of <see cref="Db4oListEventArgs<T>.Item"/> by db4o is needed.
+		/// If item was deactivated during the event, <see cref="Db4oListEventArgs<T>.Cancel"/> must be set to true.
 		/// </summary>
 		public event EventHandler<Db4oListEventArgs<T>> Deactivating = delegate {};
+
 		/// <summary>
-		/// Fired when storing (adding or updating) of <see cref="Db4oListEventArgs`1.Item"/> by db4o is needed.
-		/// If item was stored during the event, <see cref="Db4oListEventArgs`1.Cancel"/> must be set to true.
+		/// Fired when storing (adding or updating) of <see cref="Db4oListEventArgs<T>.Item"/> by db4o is needed.
+		/// If item was stored during the event, <see cref="Db4oListEventArgs<T>.Cancel"/> must be set to true.
 		/// </summary>
-		public event EventHandler<Db4oListEventArgs<T>> Storing = delegate{};
+		public event EventHandler<Db4oListEventArgs<T>> Storing = delegate {};
+
 		/// <summary>
-		/// Fired when deleting of <see cref="Db4oListEventArgs`1.Item"/> (which is not activated) by db4o is needed.
-		/// If item was deleted during the event, <see cref="Db4oListEventArgs`1.Cancel"/> must be set to true.
+		/// Fired when deleting of <see cref="Db4oListEventArgs<T>.Item"/> (which is not activated) by db4o is needed.
+		/// If item was deleted during the event, <see cref="Db4oListEventArgs<T>.Cancel"/> must be set to true.
 		/// </summary>
-		public event EventHandler<Db4oListEventArgs<T>> Deleting = delegate{};
+		public event EventHandler<Db4oListEventArgs<T>> Deleting = delegate {};
 
 		/// <summary>
 		/// Fires <see cref="Activating"/> event.
@@ -138,12 +148,13 @@ namespace WeSay.Data
 		/// <returns>true, if <paramref name="item"/> was activated.</returns>
 		protected virtual bool OnActivating(T item)
 		{
-			bool cancel = false;
+			bool cancel;
 			Db4oListEventArgs<T> args = new Db4oListEventArgs<T>(item);
-			this.Activating(this, args);
+			Activating(this, args);
 			cancel = args.Cancel;
 			return cancel;
 		}
+
 		/// <summary>
 		/// Fires <see cref="Deactivating"/> event.
 		/// </summary>
@@ -151,12 +162,13 @@ namespace WeSay.Data
 		/// <returns>true, if <paramref name="item"/> was deactivated.</returns>
 		protected virtual bool OnDeactivating(T item)
 		{
-			bool cancel = false;
+			bool cancel;
 			Db4oListEventArgs<T> args = new Db4oListEventArgs<T>(item);
-			this.Deactivating(this, args);
+			Deactivating(this, args);
 			cancel = args.Cancel;
 			return cancel;
 		}
+
 		/// <summary>
 		/// Fires <see cref="Storing"/> event.
 		/// </summary>
@@ -164,12 +176,13 @@ namespace WeSay.Data
 		/// <returns>true, if <paramref name="item"/> was stored.</returns>
 		protected virtual bool OnStoring(T item, string propertyName)
 		{
-			bool cancel = false;
+			bool cancel;
 			Db4oListEventArgs<T> args = new Db4oListEventArgs<T>(item, propertyName);
-			this.Storing(this, args);
+			Storing(this, args);
 			cancel = args.Cancel;
 			return cancel;
 		}
+
 		/// <summary>
 		/// Fires <see cref="Deleting"/> event.
 		/// </summary>
@@ -177,9 +190,9 @@ namespace WeSay.Data
 		/// <returns>true, if <paramref name="item"/> was deleted.</returns>
 		protected virtual bool OnDeleting(T item)
 		{
-			bool cancel = false;
+			bool cancel;
 			Db4oListEventArgs<T> args = new Db4oListEventArgs<T>(item);
-			this.Deleting(this, args);
+			Deleting(this, args);
 			cancel = args.Cancel;
 			return cancel;
 		}
@@ -195,21 +208,25 @@ namespace WeSay.Data
 		/// </remarks>
 		public IList<long> ItemIds
 		{
-			get {
+			get
+			{
 				VerifyNotDisposed();
 				return _itemIds;
 			}
 		}
+
 		/// <summary>
 		/// db4o database object container used for items manipulation.
 		/// </summary>
 		public ExtObjectContainer Database
 		{
-			get {
+			get
+			{
 				VerifyNotDisposed();
 				return _database;
 			}
 		}
+
 		/// <summary>
 		/// Maximum number of db4o activated items in memory.
 		/// </summary>
@@ -224,21 +241,28 @@ namespace WeSay.Data
 		/// <exception cref="ArgumentOutOfRangeException">set: Value is &lt; 0.</exception>
 		public int ReadCacheSize
 		{
-			get {
+			get
+			{
 				VerifyNotDisposed();
-				return this._readCacheSize;
+				return _readCacheSize;
 			}
-			set {
+			set
+			{
 				VerifyNotDisposed();
 				if (value < 0)
+				{
 					throw new ArgumentOutOfRangeException("ReadCacheSize", value, "Must be >= 0.");
-				if (this._readCacheSize == value)
+				}
+				if (_readCacheSize == value)
+				{
 					return;
-				this._readCacheSize = value;
+				}
+				_readCacheSize = value;
 				DeactivateExcessItems(0);
-				this._readCache.TrimExcess();
+				_readCache.TrimExcess();
 			}
 		}
+
 		/// <summary>
 		/// Maximum number of changes (item added, deleted, changed) before <see cref="Commit"/> is called automatically.
 		/// </summary>
@@ -249,20 +273,27 @@ namespace WeSay.Data
 		/// <exception cref="ArgumentOutOfRangeException">set: Value is &lt; 0.</exception>
 		public int WriteCacheSize
 		{
-			get {
+			get
+			{
 				VerifyNotDisposed();
-				return this._writeCacheSize;
+				return _writeCacheSize;
 			}
-			set {
+			set
+			{
 				VerifyNotDisposed();
 				if (value < 0)
+				{
 					throw new ArgumentOutOfRangeException("WriteCacheSize", value, "Must be >= 0.");
-				if (this._writeCacheSize == value)
+				}
+				if (_writeCacheSize == value)
+				{
 					return;
-				this._writeCacheSize = value;
+				}
+				_writeCacheSize = value;
 				CommitFullCache();
 			}
 		}
+
 		/// <summary>
 		/// Activation/deactivation depth used during item activation/deactivation when no custom activation/deactivation is done using <see cref="Activating"/>/<see cref="Deactivating"/> events.
 		/// </summary>
@@ -270,81 +301,102 @@ namespace WeSay.Data
 		/// <exception cref="ArgumentOutOfRangeException">set: Value is &lt; 0.</exception>
 		public int ActivationDepth
 		{
-			get {
+			get
+			{
 				VerifyNotDisposed();
-				return this._activationDepth;
+				return _activationDepth;
 			}
-			set {
+			set
+			{
 				VerifyNotDisposed();
 				if (value < 0)
+				{
 					throw new ArgumentOutOfRangeException("ActivationDepth", value, "Must be >= 0.");
-				this._activationDepth = value;
+				}
+				_activationDepth = value;
 			}
 		}
+
 		/// <summary>
-		/// Activation depth used when calling <see cref="SetItem"/>.
+		/// Activation depth used when calling <see cref="Db4oList<T>[]"/>.
 		/// </summary>
 		/// <value>Default: 5.</value>
 		/// <exception cref="ArgumentOutOfRangeException">set: Value is &lt; 0.</exception>
 		public int SetActivationDepth
 		{
-			get { return this._setActivationDepth; }
-			set {
+			get { return _setActivationDepth; }
+			set
+			{
 				if (value < 0)
+				{
 					throw new ArgumentOutOfRangeException("SetActivationDepth", value, "Must be >= 0.");
-				this._setActivationDepth = value;
+				}
+				_setActivationDepth = value;
 			}
 		}
+
 		/// <summary>
 		/// Activation (instantiation) depth used when calling <see cref="ExtObjectContainer.PeekPersisted"/>.
 		/// </summary>
 		/// <remarks>
-		/// See <see cref="Item"/>.
+		/// See <see cref="Db4oList<T>[]"/>.
 		/// Used during item comparison using <see cref="Equaler"/>.
 		/// </remarks>
 		/// <value>Default: 5.</value>
 		/// <exception cref="ArgumentOutOfRangeException">set: Value is &lt;= 0.</exception>
 		public int PeekPersistedActivationDepth
 		{
-			get {
+			get
+			{
 				VerifyNotDisposed();
-				return this._peekPersistedActivationDepth;
+				return _peekPersistedActivationDepth;
 			}
-			set {
+			set
+			{
 				VerifyNotDisposed();
 				if (value <= 0)
+				{
 					throw new ArgumentOutOfRangeException("PeekPersistedActivationDepth", value, "Must be > 0.");
-				this._peekPersistedActivationDepth = value;
+				}
+				_peekPersistedActivationDepth = value;
 			}
 		}
+
 		/// <summary>
-		/// Activation depth used when calling <see cref="Refresh"/>.
+		/// Activation depth used when calling <see cref="Refresh(T)"/>.
 		/// </summary>
 		/// <value>Default: 5.</value>
 		/// <exception cref="ArgumentOutOfRangeException">set: Value is &lt;= 0.</exception>
 		public int RefreshActivationDepth
 		{
-			get {
+			get
+			{
 				VerifyNotDisposed();
-				return this._peekPersistedActivationDepth;
+				return _peekPersistedActivationDepth;
 			}
-			set {
+			set
+			{
 				VerifyNotDisposed();
 				if (value <= 0)
+				{
 					throw new ArgumentOutOfRangeException("PeekPersistedActivationDepth", value, "Must be > 0.");
-				this._peekPersistedActivationDepth = value;
+				}
+				_peekPersistedActivationDepth = value;
 			}
 		}
+
 		/// <summary>
 		/// Gets whether the list has some changes which can be committed to or rollbacked from <see cref="Database"/>.
 		/// </summary>
 		public bool HasChanges
 		{
-			get {
+			get
+			{
 				VerifyNotDisposed();
-				return this._writeCacheCurrentSize > 0;
+				return _writeCacheCurrentSize > 0;
 			}
 		}
+
 		/// <summary>
 		/// Whether to store item to database when its <see cref="INotifyPropertyChanged.PropertyChanged"/> is fired.
 		/// </summary>
@@ -355,17 +407,23 @@ namespace WeSay.Data
 		/// <value>Default: true.</value>
 		public bool StoreItemOnPropertyChanged
 		{
-			get {
+			get
+			{
 				VerifyNotDisposed();
 				return _storeItemOnPropertyChanged;
 			}
-			set {
+			set
+			{
 				VerifyNotDisposed();
 				if (_storeItemOnPropertyChanged == value)
+				{
 					return;
+				}
 				_storeItemOnPropertyChanged = value;
-				foreach (long id in this._readCache)
+				foreach (long id in _readCache)
+				{
 					RegisterItemPropertyChangedHandler(GetItem(id, false), value);
+				}
 			}
 		}
 
@@ -389,27 +447,33 @@ namespace WeSay.Data
 		/// </param>
 		/// <param name="commit">Whether to call <see cref="Commit"/>.</param>
 		/// <exception cref="ArgumentNullException"><paramref name="items"/> is null.</exception>
-		public virtual void InitItems(IEnumerable items,
+		public void InitItems(IEnumerable items,
 									  Predicate<T> filter, Comparison<T> sorter, bool commit)
 		{
 			VerifyNotDisposed();
 
 			if (items == null)
+			{
 				throw new ArgumentNullException("items");
+			}
 			if (commit)
+			{
 				Commit();
-			this.ItemIds.Clear();
+			}
+			ItemIds.Clear();
 			// db4o query collection
 			IEnumerable<long> ids = GetIds(items);
 			bool fromDatabase = ids != null;
 			if (filter == null)
+			{
 				filter = ComparisonHelper<T>.DefaultPredicate;
-			this._filter = filter;
+			}
+			_filter = filter;
 			if (fromDatabase)
 			{
-				this._itemIds.AddRange(ids);
+				_itemIds.AddRange(ids);
 			}
-			// any enumerable collection
+					// any enumerable collection
 			else
 			{
 				foreach (T item in items)
@@ -418,25 +482,26 @@ namespace WeSay.Data
 					{
 						Add(item);
 					}
-					catch (ArgumentException)
-					{
-					}
+					catch (ArgumentException) {}
 				}
 			}
 			// sorting is called only in !fromDatabase case, otherwise it was done in db4o query
 			if (sorter != null && !fromDatabase)
+			{
 				Sort(sorter);
-			this._initFilter = filter;
-			this._initSorter = sorter;
-			this._filterCalled = false;
-			this._sortCalled = false;
+			}
+			_initFilter = filter;
+			_initSorter = sorter;
+			_filterCalled = false;
+			_sortCalled = false;
 		}
+
 		/// <summary>
 		/// Performs db4o native query and calls <see cref="InitItems"/> with query results.
 		/// </summary>
 		/// <param name="filter">
 		/// Query filtering predicate (like <see cref="Filter"/>).
-		/// If null, <see cref="ComparisonHelper{}.Default"/> is used.
+		/// If null, <see cref="ComparisonHelper<T>.DefaultPredicate"/> is used.
 		/// </param>
 		/// <param name="sorter">Query sorting (like <see cref="Sorter"/>). If null, no sorting is done.</param>
 		/// <param name="commit">Whether to call <see cref="Commit"/>.</param>
@@ -447,27 +512,29 @@ namespace WeSay.Data
 
 			if (_SODAQuery != null)
 			{
-				com.db4o.query.Query query = _SODAQuery(this.Database.Query());
+				Query query = _SODAQuery(Database.Query());
 				list = query.Execute();
 			}
 			else
 			{
 				if (filter == null)
+				{
 					filter = ComparisonHelper<T>.DefaultPredicate;
+				}
 				if (sorter == null)
 				{
 					if (filter == ComparisonHelper<T>.DefaultPredicate)
 					{
-						list = this.Database.Query<T>();
+						list = Database.Query<T>();
 					}
 					else
 					{
-						list = this.Database.Query<T>(filter);
+						list = Database.Query<T>(filter);
 					}
 				}
 				else
 				{
-					list = this.Database.Query<T>(filter, sorter);
+					list = Database.Query<T>(filter, sorter);
 				}
 			}
 			InitItems(list, filter, sorter, commit);
@@ -475,11 +542,13 @@ namespace WeSay.Data
 
 		public SodaQueryProvider SODAQuery
 		{
-			get {
+			get
+			{
 				VerifyNotDisposed();
 				return _SODAQuery;
 			}
-			set {
+			set
+			{
 				VerifyNotDisposed();
 				_SODAQuery = value;
 				if (_SODAQuery != null)
@@ -491,10 +560,8 @@ namespace WeSay.Data
 
 		private SodaQueryProvider _SODAQuery;
 
-
-
 		/// <summary>
-		/// Instantiates new <see cref="Db4oList{T}"/> object and calls its <see cref="Query"/> method without committing anything.
+		/// Instantiates new <see cref="Db4oList{T}"/> object and calls its <see cref="com.db4o.query.Query"/> method without committing anything.
 		/// </summary>
 		/// <param name="database">See <see cref="Database"/>.</param>
 		/// <param name="filter">Query filtering predicate (like <see cref="Filter"/>).</param>
@@ -506,24 +573,29 @@ namespace WeSay.Data
 			list.Query(filter, sorter, false);
 			return list;
 		}
+
 		/// <summary>
-		/// Calls <see cref="Query"/> method with current <see cref="Filter"/> and <see cref="Sorter"/>.
+		/// Calls <see cref="com.db4o.query.Query"/> method with current <see cref="Filter"/> and <see cref="Sorter"/>.
 		/// </summary>
 		/// <param name="commit">Whether to call <see cref="Commit"/>.</param>
 		public void Requery(bool commit)
 		{
 			VerifyNotDisposed();
-			Query(this.Filter, this.Sorter, commit);
+			Query(Filter, Sorter, commit);
 		}
+
 		/// <summary>
 		/// Calls <see cref="RefreshAt(int)"/> for each item.
 		/// </summary>
 		public void Refresh()
 		{
 			VerifyNotDisposed();
-			for (int i = this.Count - 1; i >= 0; i--)
+			for (int i = Count - 1; i >= 0; i--)
+			{
 				RefreshAt(i);
+			}
 		}
+
 		/// <summary>
 		/// Calls <see cref="Refresh(T)"/> for item at <paramref name="index"/>.
 		/// </summary>
@@ -532,9 +604,10 @@ namespace WeSay.Data
 		public void RefreshAt(int index)
 		{
 			VerifyNotDisposed();
-			T item = GetItem(this.ItemIds[index], false);
+			T item = GetItem(ItemIds[index], false);
 			Refresh(item);
 		}
+
 		/// <summary>
 		/// Calls <see cref="ExtObjectContainer.Refresh"/> for <paramref name="item"/> with <see cref="RefreshActivationDepth"/>.
 		/// </summary>
@@ -542,10 +615,11 @@ namespace WeSay.Data
 		public void Refresh(T item)
 		{
 			VerifyNotDisposed();
-			this.Database.Refresh(item, this.RefreshActivationDepth);
+			Database.Refresh(item, RefreshActivationDepth);
 		}
+
 		/// <summary>
-		/// Calls <see cref="Requery"/> and then <see cref="Refresh"/>.
+		/// Calls <see cref="Requery"/> and then <see cref="Refresh()"/>.
 		/// </summary>
 		/// <param name="commit">Passed to <see cref="Requery"/>.</param>
 		public void RequeryAndRefresh(bool commit)
@@ -554,6 +628,7 @@ namespace WeSay.Data
 			Requery(commit);
 			Refresh();
 		}
+
 		/// <summary>
 		/// Commits previously made changes to <see cref="Database"/>.
 		/// </summary>
@@ -562,42 +637,48 @@ namespace WeSay.Data
 		public virtual bool Commit()
 		{
 			VerifyNotDisposed();
-			bool hasChanges = this.HasChanges;
+			bool hasChanges = HasChanges;
 			if (hasChanges)
 			{
-				this.Database.Commit();
-				this._writeCacheCurrentSize = 0;
-				this._deleteCache.Clear();
+				Database.Commit();
+				_writeCacheCurrentSize = 0;
+				_deleteCache.Clear();
 			}
 			return hasChanges;
 		}
+
 		/// <summary>
-		/// Rollbacks (voids) previously (from last <see cref="Commit"/> call which returned true or constructor call) made changes in <see cref="Database"/>, removes previously added items, adds previously removed items (to the end of list) and refreshes all items in list by calling <see cref="Refresh"/>.
+		/// Rollbacks (voids) previously (from last <see cref="Commit"/> call which returned true or constructor call) made changes in <see cref="Database"/>, removes previously added items, adds previously removed items (to the end of list) and refreshes all items in list by calling <see cref="Refresh()"/>.
 		/// </summary>
 		/// <remarks>If <see cref="HasChanges"/> is false, does nothing.</remarks>
 		/// <returns>true, if any changes were rollbacked.</returns>
 		public virtual bool Rollback()
 		{
 			VerifyNotDisposed();
-			bool hasChanges = this.HasChanges;
+			bool hasChanges = HasChanges;
 			if (hasChanges)
 			{
-				this.Database.Rollback();
-				this._writeCacheCurrentSize = 0;
+				Database.Rollback();
+				_writeCacheCurrentSize = 0;
 				object item;
-				int count = this._deleteCache.Count;
+				int count = _deleteCache.Count;
 				for (int i = 0; i < count; i++)
-					this.ItemIds.Add(this._deleteCache.Dequeue());
-				for (int i = this.Count - 1; i >= 0; i--)
 				{
-					item = GetItem(this.ItemIds[i], false);
+					ItemIds.Add(_deleteCache.Dequeue());
+				}
+				for (int i = Count - 1; i >= 0; i--)
+				{
+					item = GetItem(ItemIds[i], false);
 					if (item == null)
-						this.ItemIds.RemoveAt(i);
+					{
+						ItemIds.RemoveAt(i);
+					}
 				}
 				Refresh();
 			}
 			return hasChanges;
 		}
+
 		/// <summary>
 		/// Does <paramref name="action"/> with each item in this list.
 		/// </summary>
@@ -607,10 +688,15 @@ namespace WeSay.Data
 		{
 			VerifyNotDisposed();
 			if (action == null)
+			{
 				throw new ArgumentNullException("action");
+			}
 			foreach (T item in this)
+			{
 				action(item);
+			}
 		}
+
 		/// <summary>
 		/// Does <paramref name="action"/> with each item identifier (see <see cref="ItemIds"/>) in this list.
 		/// </summary>
@@ -619,8 +705,9 @@ namespace WeSay.Data
 		public void ForEach(Action<long> action)
 		{
 			VerifyNotDisposed();
-			this._itemIds.ForEach(action);
+			_itemIds.ForEach(action);
 		}
+
 		/// <summary>
 		/// Copies specified items to <paramref name="array"/>.
 		/// </summary>
@@ -641,26 +728,43 @@ namespace WeSay.Data
 		{
 			VerifyNotDisposed();
 			if (index < 0)
+			{
 				throw new ArgumentOutOfRangeException("index", index, "Must be >= 0.");
-			if (index >= this.Count)
+			}
+			if (index >= Count)
+			{
 				throw new ArgumentOutOfRangeException("index", index, "Must be < Count.");
+			}
 			if (count <= 0)
+			{
 				throw new ArgumentOutOfRangeException("count", count, "Must be > 0.");
-			if (count >= this.Count - index)
+			}
+			if (count >= Count - index)
+			{
 				throw new ArgumentOutOfRangeException("count", count, "So many items are not available.");
+			}
 			if (array == null)
+			{
 				throw new ArgumentNullException("array");
+			}
 			if (array.Rank != 1)
+			{
 				throw new ArgumentException("Must be one dimensional.", "array");
+			}
 			if (arrayIndex < 0)
+			{
 				throw new ArgumentOutOfRangeException("arrayIndex", arrayIndex, "Must be >= 0.");
+			}
 			if (array.Length - arrayIndex < count)
+			{
 				throw new ArgumentException("Does not have enough space.", "array");
+			}
 			for (int i = 0; i < count; i++)
 			{
 				array[arrayIndex + i] = this[index + count];
 			}
 		}
+
 		/// <summary>
 		/// Removes a list change.
 		/// </summary>
@@ -673,46 +777,49 @@ namespace WeSay.Data
 			if (IsChange(change, Db4oListChanges.Filter) && IsChange(change, Db4oListChanges.Sort))
 			{
 				if (
-					this._filterCalled && this._initFilter != this.Filter ||
-					this._sortCalled && this._initSorter != this.Sorter)
+						_filterCalled && _initFilter != Filter ||
+						_sortCalled && _initSorter != Sorter)
 				{
-					Query(this._initFilter, this._initSorter, false);
+					Query(_initFilter, _initSorter, false);
 					ret = true;
 				}
 			}
 			else if (IsChange(change, Db4oListChanges.Filter))
 			{
-				if (this._filterCalled && this._initFilter != this.Filter)
+				if (_filterCalled && _initFilter != Filter)
 				{
-					Comparison<T> sorter = this._initSorter;
-					bool sortCalled = this._sortCalled;
-					Query(this._initFilter, this.Sorter, false);
-					this._initSorter = sorter;
-					this._sortCalled = sortCalled;
+					Comparison<T> sorter = _initSorter;
+					bool sortCalled = _sortCalled;
+					Query(_initFilter, Sorter, false);
+					_initSorter = sorter;
+					_sortCalled = sortCalled;
 					ret = true;
 				}
-				this._filterCalled = false;
+				_filterCalled = false;
 			}
 			else if (IsChange(change, Db4oListChanges.Sort))
 			{
-				if (this._sortCalled && this.Count > 0 && this._initSorter != this.Sorter)
+				if (_sortCalled && Count > 0 && _initSorter != Sorter)
 				{
-					if (this._initSorter != null)
-						Sort(this._initSorter);
+					if (_initSorter != null)
+					{
+						Sort(_initSorter);
+					}
 					else
 					{
-						Predicate<T> filter = this._initFilter;
-						bool filterCalled = this._filterCalled;
-						Query(this.Filter, this._initSorter, false);
-						this._initFilter = filter;
-						this._filterCalled = filterCalled;
+						Predicate<T> filter = _initFilter;
+						bool filterCalled = _filterCalled;
+						Query(Filter, _initSorter, false);
+						_initFilter = filter;
+						_filterCalled = filterCalled;
 					}
 					ret = true;
 				}
-				this._sortCalled = false;
+				_sortCalled = false;
 			}
 			return ret;
 		}
+
 		/// <summary>
 		/// (Un)Registers local event handler which stores changed item to database.
 		/// </summary>
@@ -726,7 +833,9 @@ namespace WeSay.Data
 			VerifyNotDisposed();
 			INotifyPropertyChanged localItem = item as INotifyPropertyChanged;
 			if (localItem == null)
+			{
 				return;
+			}
 			localItem.PropertyChanged -= Item_PropertyChanged;
 			if (register)
 			{
@@ -753,19 +862,23 @@ namespace WeSay.Data
 		{
 			VerifyNotDisposed();
 			if (match == null)
+			{
 				throw new ArgumentNullException("match");
-			return this._itemIds.FindIndex(startIndex, count, GetIdPredicate(match));
+			}
+			return _itemIds.FindIndex(startIndex, count, GetIdPredicate(match));
 		}
+
 		/// <summary>
-		/// Calls <see cref="FindIndex"/> with count representing number of items from <paramref name="startIndex"/> to the end of the list.
+		/// Calls <see cref="Db4oList<T>.FindIndex(int, int, Predicate<T>)"/> with count representing number of items from <paramref name="startIndex"/> to the end of the list.
 		/// </summary>
 		public int FindIndex(int startIndex, Predicate<T> match)
 		{
 			VerifyNotDisposed();
-			return FindIndex(startIndex, this.Count - startIndex, match);
+			return FindIndex(startIndex, Count - startIndex, match);
 		}
+
 		/// <summary>
-		/// Calls <see cref="FindIndex"/> with startIndex set to 0 and count to <see cref="Count"/>.
+		/// Calls <see cref="Db4oList<T>.FindIndex(int, Predicate<T>)"/> with startIndex set to 0 and count to <see cref="Count"/>.
 		/// </summary>
 		public int FindIndex(Predicate<T> match)
 		{
@@ -779,11 +892,13 @@ namespace WeSay.Data
 
 		public bool IsFiltered
 		{
-			get {
+			get
+			{
 				VerifyNotDisposed();
-				return this._filter != ComparisonHelper<T>.DefaultPredicate;
+				return _filter != ComparisonHelper<T>.DefaultPredicate;
 			}
 		}
+
 		/// <summary>
 		/// Filter used for filtering (removing) and validating items.
 		/// </summary>
@@ -794,74 +909,91 @@ namespace WeSay.Data
 		/// <value>set: If null, <see cref="ComparisonHelper{}.DefaultPredicate"/> is used.</value>
 		public Predicate<T> Filter
 		{
-			get {
+			get
+			{
 				VerifyNotDisposed();
-				return this._filter;
+				return _filter;
 			}
-			set {
+			set
+			{
 				VerifyNotDisposed();
 				if (value == null)
+				{
 					value = ComparisonHelper<T>.DefaultPredicate;
-				if (this._filter == value)
+				}
+				if (_filter == value)
+				{
 					return;
-				if (this.Count > 0 && (!this.FilteringInDatabase || this.DeleteItemsWhileFiltering))
+				}
+				if (Count > 0 && (!FilteringInDatabase || DeleteItemsWhileFiltering))
 				{
 					Predicate<T> removeFilter = ComparisonHelper<T>.GetInversePredicate(value);
-					if (this.DeleteItemsWhileFiltering)
+					if (DeleteItemsWhileFiltering)
+					{
 						removeFilter = delegate(T item)
-						{
-							bool remove = removeFilter(item);
-							if (remove && GetItemId(item) > 0)
-								DeleteItem(item);
-							return remove;
-						};
-					this._itemIds.RemoveAll(GetIdPredicate(removeFilter));
+									   {
+										   bool remove = removeFilter(item);
+										   if (remove && GetItemId(item) > 0)
+										   {
+											   DeleteItem(item);
+										   }
+										   return remove;
+									   };
+					}
+					_itemIds.RemoveAll(GetIdPredicate(removeFilter));
 				}
-				if (this.FilteringInDatabase)
+				if (FilteringInDatabase)
 				{
-					Predicate<T> initFilter = this._initFilter;
-					Comparison<T> initSorter = this._initSorter;
-					bool sortCalled = this._sortCalled;
-					Query(value, this.Sorter, false);
-					this._initFilter = initFilter;
-					this._initSorter = initSorter;
-					this._sortCalled = sortCalled;
+					Predicate<T> initFilter = _initFilter;
+					Comparison<T> initSorter = _initSorter;
+					bool sortCalled = _sortCalled;
+					Query(value, Sorter, false);
+					_initFilter = initFilter;
+					_initSorter = initSorter;
+					_sortCalled = sortCalled;
 				}
-				this._filterCalled = true;
-				this._filter = value;
+				_filterCalled = true;
+				_filter = value;
 			}
 		}
+
 		/// <summary>
 		/// If true, when filtering, all removed items are deleted from <see cref="Database"/>.
 		/// </summary>
 		/// <value>Default: false.</value>
 		public bool DeleteItemsWhileFiltering
 		{
-			get {
+			get
+			{
 				VerifyNotDisposed();
 				return _deleteItemsWhileFiltering;
 			}
-			set {
+			set
+			{
 				VerifyNotDisposed();
 				_deleteItemsWhileFiltering = value;
 			}
 		}
+
 		/// <summary>
-		/// If true, filtering is done using <see cref="Database"/> by <see cref="Query"/>ing with current <see cref="Sorter"/>.
+		/// If true, filtering is done using <see cref="Database"/> by <see cref="com.db4o.query.Query"/>ing with current <see cref="Sorter"/>.
 		/// If false, it is done in memory.
 		/// </summary>
 		/// <value>Default: true.</value>
 		public bool FilteringInDatabase
 		{
-			get {
+			get
+			{
 				VerifyNotDisposed();
 				return _filteringInDatabase;
 			}
-			set {
+			set
+			{
 				VerifyNotDisposed();
 				_filteringInDatabase = value;
 			}
 		}
+
 		/// <summary>
 		/// Calls <see cref="RemoveChange"/> with <see cref="Db4oListChanges.Filter"/> to remove any filtering done by setting <see cref="Filter"/>.
 		/// </summary>
@@ -880,15 +1012,21 @@ namespace WeSay.Data
 		protected Predicate<long> GetIdPredicate(Predicate<T> predicate)
 		{
 			if (predicate == null)
-				throw new ArgumentNullException("predicate");
-			return delegate(long id)
 			{
-				T item = GetItem(id, true);
-				if (item == null)
-					return false;
-				else
-					return predicate(item);
-			};
+				throw new ArgumentNullException("predicate");
+			}
+			return delegate(long id)
+				   {
+					   T item = GetItem(id, true);
+					   if (item == null)
+					   {
+						   return false;
+					   }
+					   else
+					   {
+						   return predicate(item);
+					   }
+				   };
 		}
 
 		#endregion
@@ -898,15 +1036,17 @@ namespace WeSay.Data
 		/// <summary>
 		/// Compares items for equality.
 		/// </summary>
-		/// <remarks>See <see cref="Item"/>.</remarks>
+		/// <remarks>See <see cref="Db4oList<T>.Item"/>.</remarks>
 		/// <value>Default: <see cref="ComparisonHelper{}.DefaultEqualityComparison"/>.</value>
 		public EqualityComparison<T> Equaler
 		{
-			get {
+			get
+			{
 				VerifyNotDisposed();
 				return _equaler;
 			}
-			set {
+			set
+			{
 				VerifyNotDisposed();
 				_equaler = value;
 			}
@@ -922,24 +1062,28 @@ namespace WeSay.Data
 		/// <value>If null, items are not sorted.</value>
 		public Comparison<T> Sorter
 		{
-			get {
+			get
+			{
 				VerifyNotDisposed();
-				return this._sorter;
+				return _sorter;
 			}
 		}
+
 		/// <summary>
-		/// If true, sorting is done using <see cref="Database"/> by <see cref="Query"/>ing with current <see cref="Filter"/>.
+		/// If true, sorting is done using <see cref="Database"/> by <see cref="com.db4o.query.Query"/>ing with current <see cref="Filter"/>.
 		/// If false, it is done in memory.
 		/// See <see cref="Sort"/>.
 		/// </summary>
 		/// <value>Default: true.</value>
 		public bool SortingInDatabase
 		{
-			get {
+			get
+			{
 				VerifyNotDisposed();
 				return _sortingInDatabase;
 			}
-			set {
+			set
+			{
 				VerifyNotDisposed();
 				_sortingInDatabase = value;
 			}
@@ -947,7 +1091,8 @@ namespace WeSay.Data
 
 		public bool IsSorted
 		{
-			get {
+			get
+			{
 				VerifyNotDisposed();
 				return _sortCalled;
 			}
@@ -961,27 +1106,32 @@ namespace WeSay.Data
 		public void Sort(Comparison<T> sorter)
 		{
 			VerifyNotDisposed();
-			if (this.Count <= 1)
-				return;
-			if (sorter == null)
-				sorter = ComparisonHelper<T>.DefaultComparison;
-			if (this.SortingInDatabase)
+			if (Count <= 1)
 			{
-				Predicate<T> initFilter = this._initFilter;
-				Comparison<T> initSorter = this._initSorter;
-				bool filterCalled = this._filterCalled;
-				Query(this.Filter, sorter, false);
-				this._initFilter = initFilter;
-				this._initSorter = initSorter;
-				this._filterCalled = filterCalled;
+				return;
+			}
+			if (sorter == null)
+			{
+				sorter = ComparisonHelper<T>.DefaultComparison;
+			}
+			if (SortingInDatabase)
+			{
+				Predicate<T> initFilter = _initFilter;
+				Comparison<T> initSorter = _initSorter;
+				bool filterCalled = _filterCalled;
+				Query(Filter, sorter, false);
+				_initFilter = initFilter;
+				_initSorter = initSorter;
+				_filterCalled = filterCalled;
 			}
 			else
 			{
-				this._itemIds.Sort(GetIdSorter(sorter));
+				_itemIds.Sort(GetIdSorter(sorter));
 			}
-			this._sortCalled = true;
-			this._sorter = sorter;
+			_sortCalled = true;
+			_sorter = sorter;
 		}
+
 		/// <summary>
 		/// Calls <see cref="RemoveChange"/> with <see cref="Db4oListChanges.Sort"/> to remove any filtering done by calling <see cref="Sort"/>.
 		/// </summary>
@@ -1000,20 +1150,30 @@ namespace WeSay.Data
 		protected Comparison<long> GetIdSorter(Comparison<T> sorter)
 		{
 			if (sorter == null)
-				throw new ArgumentNullException("sorter");
-			return delegate(long id1, long id2)
 			{
-				T item1 = GetItem(id1, true);
-				T item2 = GetItem(id2, true);
-				if (item1 == null && item2 != null)
-					return -1;
-				else if (item1 != null && item2 == null)
-					return 1;
-				else if (item1 == null && item2 == null)
-					return 0;
-				else
-					return sorter(item1, item2);
-			};
+				throw new ArgumentNullException("sorter");
+			}
+			return delegate(long id1, long id2)
+				   {
+					   T item1 = GetItem(id1, true);
+					   T item2 = GetItem(id2, true);
+					   if (item1 == null && item2 != null)
+					   {
+						   return -1;
+					   }
+					   else if (item1 != null && item2 == null)
+					   {
+						   return 1;
+					   }
+					   else if (item1 == null && item2 == null)
+					   {
+						   return 0;
+					   }
+					   else
+					   {
+						   return sorter(item1, item2);
+					   }
+				   };
 		}
 
 		#endregion
@@ -1021,7 +1181,7 @@ namespace WeSay.Data
 		#region IList<T> Members
 
 		/// <summary>
-		/// See <see cref="IList`1.IndexOf"/>.
+		/// See <see cref="IList<T>.IndexOf"/>.
 		/// </summary>
 		public int IndexOf(T item)
 		{
@@ -1029,47 +1189,50 @@ namespace WeSay.Data
 			int index = -1;
 			try
 			{
-				ValidateItem(item);
+				//ValidateItem(item);
 				long id = GetItemId(item);
 				if (id > 0)
-					index = this.ItemIds.IndexOf(id);
+				{
+					index = ItemIds.IndexOf(id);
+				}
 			}
-			catch (ArgumentException)
-			{
-			}
+			catch (ArgumentException) {}
 			return index;
 		}
+
 		/// <summary>
-		/// See <see cref="IList`1.Insert"/>.
+		/// See <see cref="IList<T>.Insert"/>.
 		/// </summary>
 		/// <remarks>Item is also stored to <see cref="Database"/>.</remarks>
 		public void Insert(int index, T item)
 		{
 			VerifyNotDisposed();
-			this.ItemIds.Insert(index, 0);
+			ItemIds.Insert(index, 0);
 			try
 			{
 				this[index] = item;
 			}
 			catch (ArgumentException)
 			{
-				this.ItemIds.RemoveAt(index);
+				ItemIds.RemoveAt(index);
 				throw;
 			}
 		}
+
 		/// <summary>
-		/// See <see cref="IList`1.RemoveAt"/>.
+		/// See <see cref="IList<T>.RemoveAt"/>.
 		/// </summary>
 		/// <remarks>Item is also deleted from <see cref="Database"/>.</remarks>
 		public void RemoveAt(int index)
 		{
 			VerifyNotDisposed();
-			long id = this.ItemIds[index];
-			this.ItemIds.RemoveAt(index);
+			long id = ItemIds[index];
+			ItemIds.RemoveAt(index);
 			DeleteItem(id, true);
 		}
+
 		/// <summary>
-		/// See <see cref="IList`1.Item"/>.
+		/// See <see cref="IList<T>.Item"/>.
 		/// List items indexer.
 		/// </summary>
 		/// <remarks>
@@ -1080,42 +1243,47 @@ namespace WeSay.Data
 		/// <returns>Item.</returns>
 		public T this[int index]
 		{
-			get {
+			get
+			{
 				VerifyNotDisposed();
-				long id = this.ItemIds[index];
+				long id = ItemIds[index];
 				T item = GetItem(id, true);
 				return item;
 			}
-			set {
+			set
+			{
 				VerifyNotDisposed();
 				ValidateItem(value);
-				long oldId = this.ItemIds[index];
-				bool isStored = this.Database.IsStored(value);
+				long oldId = ItemIds[index];
+				bool isStored = Database.IsStored(value);
 				if (!isStored)
+				{
 					StoreItem(value, string.Empty);
+				}
 				long newId = GetItemId(value);
 				if (isStored)
 				{
-					bool storeAgain = this.Equaler == null;
+					bool storeAgain = Equaler == null;
 					if (!storeAgain)
 					{
-						T oldValue = (T)this.Database.PeekPersisted(value, this.PeekPersistedActivationDepth, false);
-						storeAgain = !this.Equaler(oldValue, value);
+						T oldValue = (T) Database.PeekPersisted(value, PeekPersistedActivationDepth, false);
+						storeAgain = !Equaler(oldValue, value);
 					}
 					if (storeAgain)
+					{
 						StoreItem(value, string.Empty);
+					}
 				}
 				if (oldId != newId)
 				{
 					DeleteItem(oldId, true);
-					this.ItemIds[index] = newId;
+					ItemIds[index] = newId;
 				}
-				if (this.StoreItemOnPropertyChanged)
+				if (StoreItemOnPropertyChanged)
 				{
-					this._readCache.Enqueue(newId);
+					_readCache.Enqueue(newId);
 					RegisterItemPropertyChangedHandler(value, true);
 				}
-
 			}
 		}
 
@@ -1124,29 +1292,31 @@ namespace WeSay.Data
 		#region ICollection<T> Members
 
 		/// <summary>
-		/// See <see cref="ICollection`1.Add"/>.
+		/// See <see cref="ICollection<T>.Add"/>.
 		/// </summary>
 		/// <remarks>Calls <see cref="Insert"/>.</remarks>
 		public void Add(T item)
 		{
 			VerifyNotDisposed();
-			Insert(this.ItemIds.Count, item);
+			Insert(ItemIds.Count, item);
 		}
+
 		/// <summary>
-		/// See <see cref="ICollection`1.Clear"/>.
+		/// See <see cref="ICollection<T>.Clear"/>.
 		/// </summary>
 		/// <remarks>Items are also deleted from <see cref="Database"/>.</remarks>
 		public void Clear()
 		{
 			VerifyNotDisposed();
-			for (int i = 0; i < this.ItemIds.Count; i++)
+			for (int i = 0; i < ItemIds.Count; i++)
 			{
-				DeleteItem(this.ItemIds[i], false);
+				DeleteItem(ItemIds[i], false);
 			}
-			this.ItemIds.Clear();
+			ItemIds.Clear();
 		}
+
 		/// <summary>
-		/// See <see cref="ICollection`1.Contains"/>.
+		/// See <see cref="ICollection<T>.Contains"/>.
 		/// </summary>
 		/// <remarks>Calls <see cref="IndexOf"/>.</remarks>
 		public bool Contains(T item)
@@ -1154,40 +1324,46 @@ namespace WeSay.Data
 			VerifyNotDisposed();
 			return IndexOf(item) >= 0;
 		}
+
 		/// <summary>
-		/// See <see cref="ICollection`1.CopyTo"/>.
+		/// See <see cref="ICollection<T>.CopyTo"/>.
 		/// </summary>
 		public void CopyTo(T[] array, int arrayIndex)
 		{
 			VerifyNotDisposed();
-			if (this.Count != 0)
+			if (Count != 0)
 			{
-				CopyTo(0, array, arrayIndex, this.Count - 1);
+				CopyTo(0, array, arrayIndex, Count - 1);
 			}
 		}
+
 		/// <summary>
-		/// See <see cref="ICollection`1.Count"/>.
+		/// See <see cref="ICollection<T>.Count"/>.
 		/// </summary>
 		public int Count
 		{
-			get {
+			get
+			{
 				VerifyNotDisposed();
-				return this.ItemIds.Count;
+				return ItemIds.Count;
 			}
 		}
+
 		/// <summary>
-		/// See <see cref="ICollection`1.IsReadOnly"/>.
+		/// See <see cref="ICollection<T>.IsReadOnly"/>.
 		/// </summary>
 		/// <value>false.</value>
 		public bool IsReadOnly
 		{
-			get {
+			get
+			{
 				VerifyNotDisposed();
 				return false;
 			}
 		}
+
 		/// <summary>
-		/// See <see cref="ICollection`1.Remove"/>.
+		/// See <see cref="ICollection<T>.Remove"/>.
 		/// </summary>
 		/// <remarks>Calls <see cref="RemoveAt"/>.</remarks>
 		public bool Remove(T item)
@@ -1208,11 +1384,11 @@ namespace WeSay.Data
 
 		/// <summary>
 		/// Typed enumerator.
-		/// See <see cref="IEnumerable`1"/>.
+		/// See <see cref="IEnumerable<T>"/>.
 		/// </summary>
 		IEnumerator<T> IEnumerable<T>.GetEnumerator()
 		{
-			int count = this.ItemIds.Count;
+			int count = ItemIds.Count;
 			for (int i = 0; i < count; i++)
 			{
 				yield return this[i];
@@ -1222,6 +1398,7 @@ namespace WeSay.Data
 		#endregion
 
 		#region IEnumerable Members
+
 		#region Enumerator
 
 		public struct Enumerator : IEnumerator<T>
@@ -1240,6 +1417,7 @@ namespace WeSay.Data
 				_index = -1;
 				_isDisposed = false;
 			}
+
 			private void CheckValidIndex(int validMinimum)
 			{
 				if (_index < validMinimum || _index >= _collection.Count)
@@ -1247,6 +1425,7 @@ namespace WeSay.Data
 					throw new InvalidOperationException();
 				}
 			}
+
 			private void CheckCollectionUnchanged()
 			{
 				if (!_collection._isEnumerating)
@@ -1254,6 +1433,7 @@ namespace WeSay.Data
 					throw new InvalidOperationException();
 				}
 			}
+
 			private void VerifyNotDisposed()
 			{
 				if (_isDisposed)
@@ -1266,11 +1446,12 @@ namespace WeSay.Data
 
 			public T Current
 			{
-				get {
+				get
+				{
 					VerifyNotDisposed();
 					CheckValidIndex(0);
 					CheckCollectionUnchanged();
-					return ((IList<T>)_collection)[_index];
+					return ((IList<T>) _collection)[_index];
 				}
 			}
 
@@ -1289,7 +1470,8 @@ namespace WeSay.Data
 
 			object System.Collections.IEnumerator.Current
 			{
-				get {
+				get
+				{
 					VerifyNotDisposed();
 					return Current;
 				}
@@ -1312,6 +1494,7 @@ namespace WeSay.Data
 
 			#endregion
 		}
+
 		private bool _isEnumerating;
 
 		#endregion
@@ -1350,7 +1533,7 @@ namespace WeSay.Data
 				ObjectSet objectSet = items as ObjectSet;
 				ids = objectSet.Ext().GetIDs();
 			}
-			// results from db4o native query
+					// results from db4o native query
 			else if (items is GenericObjectSetFacade<T>)
 			{
 				GenericObjectSetFacade<T> genericObjectSetFacade = items as GenericObjectSetFacade<T>;
@@ -1358,6 +1541,7 @@ namespace WeSay.Data
 			}
 			return ids;
 		}
+
 		/// <summary>
 		/// Gets db4o id of item.
 		/// </summary>
@@ -1366,8 +1550,9 @@ namespace WeSay.Data
 		protected long GetItemId(T item)
 		{
 			//ValidateItem(item);
-			return this.Database.GetID(item);
+			return Database.GetID(item);
 		}
+
 		/// <summary>
 		/// Gets item specified by its id from <see cref="Database"/> and optionally activates it.
 		/// </summary>
@@ -1384,14 +1569,18 @@ namespace WeSay.Data
 			{
 				item = ActivateItem(id);
 				if (item == null)
-					throw new InvalidOperationException("Object with Id = " + id + " does not exists in database " + this.Database + ".");
+				{
+					throw new InvalidOperationException("Object with Id = " + id + " does not exists in database " +
+														Database + ".");
+				}
 			}
 			else
 			{
-				item = (T)this.Database.GetByID(id);
+				item = (T) Database.GetByID(id);
 			}
 			return item;
 		}
+
 		/// <summary>
 		/// Validates item.
 		/// </summary>
@@ -1402,10 +1591,15 @@ namespace WeSay.Data
 		protected virtual void ValidateItem(T item)
 		{
 			if (item == null)
+			{
 				throw new ArgumentNullException("item");
-			if (!this.Filter(item))
+			}
+			if (!Filter(item))
+			{
 				throw new ArgumentOutOfRangeException("item", item, "Does not satisfy Filter condition.");
+			}
 		}
+
 		/// <summary>
 		/// Activates item.
 		/// </summary>
@@ -1417,23 +1611,26 @@ namespace WeSay.Data
 		/// <returns>Activated item or null if <paramref name="id"/> is not id of stored object.</returns>
 		protected T ActivateItem(long id)
 		{
-			T item = (T)this.Database.GetByID(id);
+			T item = (T) Database.GetByID(id);
 			if (item != null)
 			{
-				if (!this.Database.IsActive(item))
+				if (!Database.IsActive(item))
 				{
-					if (this.ReadCacheSize > 0)
+					if (ReadCacheSize > 0)
 					{
 						DeactivateExcessItems(1);
-						this._readCache.Enqueue(id);
+						_readCache.Enqueue(id);
 					}
 					DoActivateItem(item);
 				}
-				if (this.StoreItemOnPropertyChanged)
+				if (StoreItemOnPropertyChanged)
+				{
 					RegisterItemPropertyChangedHandler(item, true);
+				}
 			}
 			return item;
 		}
+
 		/// <summary>
 		/// Activates item.
 		/// </summary>
@@ -1444,8 +1641,11 @@ namespace WeSay.Data
 		protected virtual void DoActivateItem(T item)
 		{
 			if (!OnActivating(item))
-				this.Database.Activate(item, this.ActivationDepth);
+			{
+				Database.Activate(item, ActivationDepth);
+			}
 		}
+
 		/// <summary>
 		/// Deactivates unnecessary items in read cache.
 		/// </summary>
@@ -1453,25 +1653,32 @@ namespace WeSay.Data
 		/// <param name="extraFreeSize">Extra number of items to make free in read cache.</param>
 		protected void DeactivateExcessItems(int extraFreeSize)
 		{
-			if (this.ReadCacheSize == 0)
+			if (ReadCacheSize == 0)
+			{
 				return;
-			int deactivationCount = this._readCache.Count - this.ReadCacheSize +
-				Math.Min(this.ReadCacheSize, extraFreeSize);
+			}
+			int deactivationCount = _readCache.Count - ReadCacheSize +
+									Math.Min(ReadCacheSize, extraFreeSize);
 			long id;
 			T item;
 			for (int i = 0; i < deactivationCount; i++)
 			{
-				id = this._readCache.Dequeue();
+				id = _readCache.Dequeue();
 				item = GetItem(id, false);
 				if (item != null)
 				{
-					if (this.StoreItemOnPropertyChanged)
+					if (StoreItemOnPropertyChanged)
+					{
 						RegisterItemPropertyChangedHandler(item, false);
-					if (this.Database.IsActive(item))
+					}
+					if (Database.IsActive(item))
+					{
 						DoDeactivateItem(item);
+					}
 				}
 			}
 		}
+
 		/// <summary>
 		/// Deactivates item.
 		/// </summary>
@@ -1482,8 +1689,11 @@ namespace WeSay.Data
 		protected virtual void DoDeactivateItem(T item)
 		{
 			if (!OnDeactivating(item))
-				this.Database.Deactivate(item, this.ActivationDepth);
+			{
+				Database.Deactivate(item, ActivationDepth);
+			}
 		}
+
 		/// <summary>
 		/// Stores (adds or updates) item in <see cref="Database"/>.
 		/// </summary>
@@ -1494,18 +1704,22 @@ namespace WeSay.Data
 			DoStoreItem(item, propertyName);
 			CommitFullCache();
 		}
+
 		/// <summary>
 		/// Stores (adds or updates) item in <see cref="Database"/>.
 		/// </summary>
 		/// <remarks>
-		/// If item is not stored by calling <see cref="OnStoring"/>, it is stored by calling <see cref="ExtObjectContainer.Set"/>.
+		/// If item is not stored by calling <see cref="OnStoring"/>, it is stored by calling <see cref="com.db4o.ext.ExtObjectContainer.Set(object, int)"/>.
 		/// </remarks>
 		/// <param name="item">Item.</param>
 		protected virtual void DoStoreItem(T item, string propertyName)
 		{
 			if (!OnStoring(item, propertyName))
-				this.Database.Set(item, SetActivationDepth);
+			{
+				Database.Set(item, SetActivationDepth);
+			}
 		}
+
 		/// <summary>
 		/// Deletes item from <see cref="Database"/>.
 		/// </summary>
@@ -1516,8 +1730,9 @@ namespace WeSay.Data
 			long id = GetItemId(item);
 			DoDeleteItem(item);
 			CommitFullCache();
-			this._deleteCache.Enqueue(id);
+			_deleteCache.Enqueue(id);
 		}
+
 		/// <summary>
 		/// Deletes item from <see cref="Database"/>.
 		/// </summary>
@@ -1528,35 +1743,50 @@ namespace WeSay.Data
 		protected virtual void DoDeleteItem(T item)
 		{
 			if (!OnDeleting(item))
-				this.Database.Delete(item);
+			{
+				Database.Delete(item);
+			}
 		}
+
 		/// <summary>
 		/// Deletes item specified by its id from <see cref="Database"/>.
 		/// </summary>
-		/// <remarks>Calls <see cref="DeleteItem"/>.</remarks>
+		/// <remarks>Calls <see cref="Db4oList<T>.DeleteItem(T)"/>.</remarks>
 		/// <param name="id">Item id.</param>
 		/// <param name="onlyIfLast">Whether to delete item only if no same item (object specified by id) is in the list.</param>
 		protected void DeleteItem(long id, bool onlyIfLast)
 		{
 			if (id <= 0)
+			{
 				return;
-			if (onlyIfLast && this.ItemIds.Contains(id))
+			}
+			if (onlyIfLast && ItemIds.Contains(id))
+			{
 				return;
+			}
 			T item = GetItem(id, false);
 			if (item != null)
+			{
 				DeleteItem(item);
+			}
 		}
+
 		/// <summary>
 		/// Increases current write cache size by 1 and calls <see cref="Commit"/> if the cache is full.
 		/// </summary>
 		/// <remarks>Must be called after any database change to commit changes if write cache is full.</remarks>
 		protected void CommitFullCache()
 		{
-			if (this._writeCacheCurrentSize < int.MaxValue)
-				this._writeCacheCurrentSize++;
-			if (this.WriteCacheSize > 0 && this._writeCacheCurrentSize >= this.WriteCacheSize)
+			if (_writeCacheCurrentSize < int.MaxValue)
+			{
+				_writeCacheCurrentSize++;
+			}
+			if (WriteCacheSize > 0 && _writeCacheCurrentSize >= WriteCacheSize)
+			{
 				Commit();
+			}
 		}
+
 		/// <summary>
 		/// Checks, whether <paramref name="changes"/> contains <paramref name="change"/>.
 		/// </summary>
@@ -1574,130 +1804,154 @@ namespace WeSay.Data
 		/// </summary>
 		private void Item_PropertyChanged(object sender, PropertyChangedEventArgs e)
 		{
-			StoreItem((T)sender, e.PropertyName);
+			StoreItem((T) sender, e.PropertyName);
 		}
 
 		/// <summary>
 		/// See <see cref="ItemIds"/>.
 		/// </summary>
 		private List<long> _itemIds = new List<long>();
+
 		/// <summary>
 		/// See <see cref="Database"/>.
 		/// </summary>
 		private ExtObjectContainer _database;
+
 		/// <summary>
 		/// See <see cref="ReadCacheSize"/>.
 		/// </summary>
 		private int _readCacheSize;
+
 		/// <summary>
 		/// Read cache.
 		/// Hold activated items` ids.
 		/// See <see cref="ReadCacheSize"/>.
 		/// </summary>
 		private Queue<long> _readCache = new Queue<long>();
+
 		/// <summary>
 		/// Delete cache.
 		/// Hold deleted items` ids which are added back to this list on <see cref="Rollback"/>.
 		/// Cache is cleared on <see cref="Commit"/>.
 		/// </summary>
 		private Queue<long> _deleteCache = new Queue<long>();
+
 		/// <summary>
 		/// See <see cref="WriteCacheSize"/>.
 		/// </summary>
 		private int _writeCacheSize = 100;
+
 		/// <summary>
 		/// Current size of write cache.
 		/// See <see cref="WriteCacheSize"/>.
 		/// </summary>
 		private int _writeCacheCurrentSize;
+
 		/// <summary>
 		/// See <see cref="ActivationDepth"/>.
 		/// </summary>
 		private int _activationDepth = 5;
+
 		/// <summary>
 		/// See <see cref="SetActivationDepth"/>.
 		/// </summary>
 		private int _setActivationDepth = 5;
+
 		/// <summary>
 		/// See <see cref="PeekPersistedActivationDepth"/>.
 		/// </summary>
 		private int _peekPersistedActivationDepth = 5;
+
 		/// <summary>
 		/// See <see cref="Filter"/>.
 		/// </summary>
 		private Predicate<T> _filter = ComparisonHelper<T>.DefaultPredicate;
+
 		/// <summary>
 		/// Initial filter used when removing filter.
 		/// See <see cref="Filter"/> and <see cref="RemoveFilter"/>.
 		/// </summary>
 		private Predicate<T> _initFilter;
+
 		/// <summary>
 		/// Used in <see cref="RemoveFilter"/>.
 		/// See <see cref="Filter"/>.
 		/// </summary>
 		private bool _filterCalled;
+
 		/// <summary>
 		/// See <see cref="DeleteItemsWhileFiltering"/>.
 		/// </summary>
 		private bool _deleteItemsWhileFiltering;
+
 		/// <summary>
 		/// See <see cref="FilteringInDatabase"/>.
 		/// </summary>
 		private bool _filteringInDatabase = true;
+
 		/// <summary>
 		/// See <see cref="Equaler"/>.
 		/// </summary>
 		private EqualityComparison<T> _equaler = ComparisonHelper<T>.DefaultEqualityComparison;
+
 		/// <summary>
 		/// See <see cref="Sorter"/>.
 		/// </summary>
 		private Comparison<T> _sorter;
+
 		/// <summary>
 		/// Initial sorter used when removing sorting.
 		/// See <see cref="Sorter"/> and <see cref="RemoveSort"/>.
 		/// </summary>
 		private Comparison<T> _initSorter;
+
 		/// <summary>
 		/// Used in <see cref="RemoveSort"/>.
 		/// See <see cref="Sorter"/>.
 		/// </summary>
 		private bool _sortCalled;
+
 		/// <summary>
 		/// See <see cref="SortingInDatabase"/>.
 		/// </summary>
 		private bool _sortingInDatabase = true;
+
 		/// <summary>
 		/// See <see cref="StoreItemOnPropertyChanged"/>.
 		/// </summary>
 		private bool _storeItemOnPropertyChanged = true;
 
 		#region IDisposable Members
+
 		private bool _disposed = false;
+
 		public void Dispose()
 		{
 			Dispose(true);
 			GC.SuppressFinalize(this);
 		}
+
 		protected virtual void Dispose(bool disposing)
 		{
-			if (!this._disposed)
+			if (!_disposed)
 			{
 				if (disposing)
 				{
 					if (_database.IsClosed())
 					{
-						throw new InvalidOperationException("Database should not be disposed until after Db4oList is disposed.");
+						throw new InvalidOperationException(
+								"Database should not be disposed until after Db4oList is disposed.");
 					}
-					int count = this._readCache.Count;
+					int count = _readCache.Count;
 					long id;
 					T item;
 					for (int i = 0; i < count; ++i)
 					{
-						id = this._readCache.Dequeue();
+						id = _readCache.Dequeue();
 						item = GetItem(id, false);
 						if (item != null)
 						{
-							if (this.StoreItemOnPropertyChanged)
+							if (StoreItemOnPropertyChanged)
 							{
 								RegisterItemPropertyChangedHandler(item, false);
 							}
@@ -1707,27 +1961,27 @@ namespace WeSay.Data
 				_disposed = true;
 			}
 		}
+
 		protected void VerifyNotDisposed()
 		{
-			if (this._disposed)
+			if (_disposed)
 			{
 				throw new ObjectDisposedException("Db4oList");
 			}
 		}
-		#if DEBUG
+
+#if DEBUG
 		~Db4oList()
 		{
-			if (!this._disposed)
+			if (!_disposed)
 			{
 				throw new InvalidOperationException("Disposed not explicitly called");
 			}
 		}
-		#endif
-
+#endif
 
 		#endregion
 	}
-
 
 	/// <summary>
 	/// <see cref="Db4oList`1"/> event arguments.
@@ -1736,18 +1990,17 @@ namespace WeSay.Data
 	public class Db4oListEventArgs<T> : CancelEventArgs
 	{
 		/// <summary>
-		/// Constructor with <see cref="Cancel"/> false and <see cref="Item"/> null.
+		/// Constructor with <see cref="CancelEventArgs.Cancel"/> false and <see cref="Item"/> null.
 		/// </summary>
-		public Db4oListEventArgs()
-		{
-		}
+		public Db4oListEventArgs() {}
+
 		/// <summary>
-		/// Constructor with <see cref="Cancel"/> false and <see cref="Item"/> set to <paramref name="item"/>.
+		/// Constructor with <see cref="CancelEventArgs.Cancel"/> false and <see cref="Item"/> set to <paramref name="item"/>.
 		/// </summary>
 		/// <param name="item">Item.</param>
 		public Db4oListEventArgs(T item)
 		{
-			this._item = item;
+			_item = item;
 		}
 
 		public Db4oListEventArgs(T item, string propertyName) : this(item)
@@ -1760,25 +2013,21 @@ namespace WeSay.Data
 		/// </summary>
 		public T Item
 		{
-			get {
-				return _item;
-			}
+			get { return _item; }
 		}
 
 		/// <summary>
 		/// See <see cref="Item"/>.
 		/// </summary>
 		private T _item;
+
 		private string _propertyName;
 
 		public string PropertyName
 		{
-			get {
-				return _propertyName;
-			}
+			get { return _propertyName; }
 		}
 	}
-
 
 	/// <summary>
 	/// <see cref="Db4oList`1"/> list changes.

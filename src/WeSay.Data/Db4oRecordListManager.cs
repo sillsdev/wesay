@@ -1,26 +1,35 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.ComponentModel;
-using System.Collections;
 
 namespace WeSay.Data
 {
 	public class Db4oRecordListManager : AbstractRecordListManager
 	{
-		public Db4oRecordListManager()
+		private Db4oDataSource _dataSource;
+
+		public Db4oRecordListManager(string filePath)
 		: base()
 		{
+			_dataSource = new Db4oDataSource(filePath);
 		}
 
 		protected override IRecordList<T> CreateMasterRecordList<T>()
 		{
-			return new InMemoryRecordList<T>();
+			return new Db4oRecordList<T>(_dataSource);
 		}
 
 		protected override IRecordList<T> CreateFilteredRecordList<T>(Predicate<T> filter)
 		{
 			return new FilteredDb4oRecordList<T>(Get<T>(), filter);
+		}
+		protected override void Dispose(bool disposing)
+		{
+			bool canBeDisposed = !IsDisposed;
+			base.Dispose(disposing);
+			if (canBeDisposed && disposing)
+			{
+				_dataSource.Dispose();
+			}
 		}
 
 		class FilteredDb4oRecordList<T> : Db4oRecordList<T> where T : class, new()
@@ -36,7 +45,7 @@ namespace WeSay.Data
 				_masterRecordList.ListChanged += new ListChangedEventHandler(OnMasterRecordListListChanged);
 				_masterRecordList.DeletingRecord += new EventHandler<RecordListEventArgs<T>>(OnMasterRecordListDeletingRecord);
 				IsRelevant = filter;
-				this.ApplyFilter(filter);
+				ApplyFilter(filter);
 			}
 
 			void OnMasterRecordListDeletingRecord(object sender, RecordListEventArgs<T> e)
@@ -73,7 +82,19 @@ namespace WeSay.Data
 				bool shouldAdd = base.ShouldAddRecord(item);
 				if (shouldAdd)
 				{
-					shouldAdd = !Contains(item);
+					if(IsRelevant(item))
+					{
+						shouldAdd = !Contains(item);
+					}
+					else
+					{
+						shouldAdd = false;
+						if (!_isSourceMasterRecord && _masterRecordList != null)
+						{
+							_masterRecordList.Add(item);
+						}
+					}
+
 				}
 				return shouldAdd;
 			}
@@ -98,24 +119,24 @@ namespace WeSay.Data
 
 			private void AddIfRelevantElseRemove(T item)
 			{
-				if (this.IsRelevant(item))
+				if (IsRelevant(item))
 				{
 					if (!Contains(item))
 					{
-						this.Add(item);
+						Add(item);
 					}
 				}
-				else if (this.Contains(item))
+				else if (Contains(item))
 				{
-					this.Remove(item);
+					Remove(item);
 				}
 			}
 
 			private void HandleItemDeletedFromMaster(T item)
 			{
-				if (this.Contains(item))
+				if (Contains(item))
 				{
-					this.Remove(item);
+					Remove(item);
 				}
 			}
 
@@ -124,7 +145,7 @@ namespace WeSay.Data
 				// The reset event can be raised when items are cleared and also when sorting or filtering occurs
 				if (masterRecordList.Count == 0)
 				{
-					this.Clear();
+					Clear();
 				}
 			}
 
@@ -142,7 +163,7 @@ namespace WeSay.Data
 
 			protected override void Dispose(bool disposing)
 			{
-				if (!this.IsDisposed)
+				if (!IsDisposed)
 				{
 					if (disposing)
 					{

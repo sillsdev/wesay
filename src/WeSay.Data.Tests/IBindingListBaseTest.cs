@@ -53,7 +53,7 @@ namespace WeSay.Data.Tests.IBindingListTests
 				object o = _bindingList.AddNew();
 				Assert.IsNotNull(o);
 				Assert.IsInstanceOfType(typeof(T), o);
-				Assert.AreEqual(count+1, _bindingList.Count);
+				Assert.AreEqual(count + 1, _bindingList.Count);
 				Assert.AreEqual(o, _bindingList[count]);
 				if (_bindingList.SupportsChangeNotification)
 				{
@@ -79,7 +79,8 @@ namespace WeSay.Data.Tests.IBindingListTests
 			}
 		}
 
-		protected virtual void VerifySortAscending(){
+		protected virtual void VerifySortAscending()
+		{
 		}
 
 		protected virtual void VerifySortDescending()
@@ -249,7 +250,7 @@ namespace WeSay.Data.Tests.IBindingListTests
 				_bindingList.Add(_newItem);
 				Assert.IsTrue(_listChanged);
 				Assert.IsTrue(_listChangedEventArgs.ListChangedType == ListChangedType.ItemAdded);
-				Assert.AreEqual(_bindingList.Count -1, _listChangedEventArgs.NewIndex);
+				Assert.AreEqual(_bindingList.Count - 1, _listChangedEventArgs.NewIndex);
 				Assert.AreEqual(-1, _listChangedEventArgs.OldIndex);
 			}
 		}
@@ -347,24 +348,20 @@ namespace WeSay.Data.Tests.IBindingListTests
 
 		public string String
 		{
-			get
-			{
+			get {
 				return _s;
 			}
-			set
-			{
+			set {
 				_s = value;
 			}
 		}
 
 		public int Int
 		{
-			get
-			{
+			get {
 				return _i;
 			}
-			set
-			{
+			set {
 				_i = value;
 			}
 		}
@@ -387,10 +384,10 @@ namespace WeSay.Data.Tests.IBindingListTests
 			bindingList.AllowRemove = true;
 			bindingList.RaiseListChangedEvents = true;
 			bindingList.Add(new SimpleClass("1", 1));
-			bindingList.Add(new SimpleClass("2",2));
-			bindingList.Add(new SimpleClass("3",3));
-			bindingList.Add(new SimpleClass("4",4));
-			bindingList.Add(new SimpleClass("5",5));
+			bindingList.Add(new SimpleClass("2", 2));
+			bindingList.Add(new SimpleClass("3", 3));
+			bindingList.Add(new SimpleClass("4", 4));
+			bindingList.Add(new SimpleClass("5", 5));
 
 			this._bindingList = bindingList;
 			this._newItem = new SimpleClass("6", 6);

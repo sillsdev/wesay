@@ -1,22 +1,25 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 using NUnit.Framework;
 
 namespace WeSay.Data.Tests
 {
 	public abstract class RecordListManagerBaseTests
 	{
-		protected IRecordListManager _recordListManager;
+		private IRecordListManager _recordListManager;
 		IRecordList<SimpleIntTestClass> _sourceRecords;
 		SimpleIntFilter _filter10to19;
 		SimpleIntFilter _filter11to12;
 		SimpleIntFilter _filter11to17;
 		SimpleIntFilter _filter11to20;
 
-		[SetUp]
+
+
+
+
 		public virtual void Setup()
 		{
+			_recordListManager = CreateRecordListManager();
+
 			_sourceRecords = _recordListManager.Get<SimpleIntTestClass>();
 			for (int i = 0; i < 50; i++)
 			{
@@ -32,10 +35,10 @@ namespace WeSay.Data.Tests
 			_recordListManager.Register<SimpleIntTestClass>(_filter11to20);
 		}
 
-		[TearDown]
-		public void TearDown()
+		protected abstract IRecordListManager CreateRecordListManager();
+
+		public virtual void TearDown()
 		{
-			_sourceRecords.Dispose();
 			_recordListManager.Dispose();
 		}
 
@@ -49,7 +52,7 @@ namespace WeSay.Data.Tests
 		[ExpectedException(typeof(InvalidOperationException))]
 		public void Get_UnregisteredFilter_ThrowsException()
 		{
-			IRecordList<SimpleIntTestClass> data = _recordListManager.Get<SimpleIntTestClass>(new SimpleIntFilter(21, 30));
+			_recordListManager.Get<SimpleIntTestClass>(new SimpleIntFilter(21, 30));
 		}
 
 		[Test]
@@ -66,7 +69,7 @@ namespace WeSay.Data.Tests
 			IRecordList<SimpleIntTestClass> data = _recordListManager.Get<SimpleIntTestClass>(_filter11to20);
 			Assert.IsNotNull(data);
 			Assert.AreEqual(10, data.Count);
-			Assert.AreEqual(11, ((SimpleIntTestClass)data[0]).I);
+			Assert.AreEqual(11, data[0].I);
 			Assert.AreNotEqual(_sourceRecords, data);
 		}
 
