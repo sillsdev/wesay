@@ -36,21 +36,31 @@ namespace WeSay.Admin
 			{
 				s= Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 			}
-			_newProjectLocationDialog.SelectedPath = s;
+			this._chooseProjectLocationDialog.SelectedPath = s;
 
-		   if (DialogResult.OK != _newProjectLocationDialog.ShowDialog())
+		   if (DialogResult.OK != this._chooseProjectLocationDialog.ShowDialog())
 				return;
-		   OpenProject(_newProjectLocationDialog.SelectedPath);
+
+			if (WeSayWordsProject.IsValidProjectDirectory(_chooseProjectLocationDialog.SelectedPath))
+			{
+
+				OpenProject(this._chooseProjectLocationDialog.SelectedPath);
+			}
+			else
+			{
+				MessageBox.Show("That directory does not appear to be a valid WeSay Project directory.");
+			}
 		}
+
 
 
 
 		private void OnCreateProject(object sender, EventArgs e)
 		{
-			if (DialogResult.OK != _newProjectLocationDialog.ShowDialog())
+			if (DialogResult.OK != this._chooseProjectLocationDialog.ShowDialog())
 				return;
-			CreateNewProject(_newProjectLocationDialog.SelectedPath);
-			OpenProject(_newProjectLocationDialog.SelectedPath);
+			CreateNewProject(this._chooseProjectLocationDialog.SelectedPath);
+			OpenProject(this._chooseProjectLocationDialog.SelectedPath);
 		}
 
 		public void CreateNewProject(string path)
@@ -84,7 +94,7 @@ namespace WeSay.Admin
 			try
 			{
 				this._project = new WeSayWordsProject();
-				_project.Load(path);
+				_project.LoadFromProjectDirectoryPath(path);
 			}
 			catch (Exception e)
 			{

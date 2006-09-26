@@ -16,6 +16,9 @@ namespace WeSay.Admin
 
 		private void WritingSystemSetup_Load(object sender, EventArgs e)
 		{
+			if (DesignMode)
+				return;
+
 			LoadWritingSystemListBox();
 			//for checking that ids are unique
 			_basicControl.WritingSystemCollection = BasilProject.Project.WritingSystems;
@@ -136,6 +139,9 @@ namespace WeSay.Admin
 
 	}
 
+	/// <summary>
+	/// An item to stick in the listview which represents a ws
+	/// </summary>
 	public class WsDisplayProxy
 	{
 		private WritingSystem _writingSystem;

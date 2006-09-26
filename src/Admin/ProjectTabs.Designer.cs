@@ -30,11 +30,11 @@ namespace WeSay.Admin
 		{
 			this._projectTabControl = new System.Windows.Forms.TabControl();
 			this._tasksPage = new System.Windows.Forms.TabPage();
-			this.taskList1 = new WeSay.Admin.TaskListControl();
+			this._taskListControl = new WeSay.Admin.TaskListControl();
 			this._fieldsPage = new System.Windows.Forms.TabPage();
 			this.fieldsControl1 = new WeSay.Admin.FieldsControl();
 			this._writingSystemPage = new System.Windows.Forms.TabPage();
-			this.writingSystemSetup1 = new WeSay.Admin.WritingSystemSetup();
+			this._writingSystemSetupControl = new WeSay.Admin.WritingSystemSetup();
 			this._otherPage = new System.Windows.Forms.TabPage();
 			this.otherControl1 = new WeSay.Admin.OtherControl();
 			this._transferPage = new System.Windows.Forms.TabPage();
@@ -45,7 +45,7 @@ namespace WeSay.Admin
 			this._otherPage.SuspendLayout();
 			this.SuspendLayout();
 			//
-			// tabControl1
+			// _projectTabControl
 			//
 			this._projectTabControl.Controls.Add(this._tasksPage);
 			this._projectTabControl.Controls.Add(this._fieldsPage);
@@ -61,7 +61,7 @@ namespace WeSay.Admin
 			//
 			// _tasksPage
 			//
-			this._tasksPage.Controls.Add(this.taskList1);
+			this._tasksPage.Controls.Add(this._taskListControl);
 			this._tasksPage.Location = new System.Drawing.Point(4, 22);
 			this._tasksPage.Name = "_tasksPage";
 			this._tasksPage.Padding = new System.Windows.Forms.Padding(3);
@@ -70,15 +70,15 @@ namespace WeSay.Admin
 			this._tasksPage.Text = "Tasks";
 			this._tasksPage.UseVisualStyleBackColor = true;
 			//
-			// taskList1
+			// _taskListControl
 			//
-			this.taskList1.BackColor = System.Drawing.SystemColors.ControlLightLight;
-			this.taskList1.CausesValidation = false;
-			this.taskList1.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.taskList1.Location = new System.Drawing.Point(3, 3);
-			this.taskList1.Name = "taskList1";
-			this.taskList1.Size = new System.Drawing.Size(698, 415);
-			this.taskList1.TabIndex = 0;
+			this._taskListControl.BackColor = System.Drawing.SystemColors.ControlLightLight;
+			this._taskListControl.CausesValidation = false;
+			this._taskListControl.Dock = System.Windows.Forms.DockStyle.Fill;
+			this._taskListControl.Location = new System.Drawing.Point(3, 3);
+			this._taskListControl.Name = "_taskListControl";
+			this._taskListControl.Size = new System.Drawing.Size(698, 415);
+			this._taskListControl.TabIndex = 0;
 			//
 			// _fieldsPage
 			//
@@ -102,7 +102,7 @@ namespace WeSay.Admin
 			//
 			// _writingSystemPage
 			//
-			this._writingSystemPage.Controls.Add(this.writingSystemSetup1);
+			this._writingSystemPage.Controls.Add(this._writingSystemSetupControl);
 			this._writingSystemPage.Location = new System.Drawing.Point(4, 22);
 			this._writingSystemPage.Name = "_writingSystemPage";
 			this._writingSystemPage.Padding = new System.Windows.Forms.Padding(3);
@@ -111,14 +111,14 @@ namespace WeSay.Admin
 			this._writingSystemPage.Text = "Writing Systems";
 			this._writingSystemPage.UseVisualStyleBackColor = true;
 			//
-			// writingSystemSetup1
+			// _writingSystemSetupControl
 			//
-			this.writingSystemSetup1.BackColor = System.Drawing.SystemColors.ControlLightLight;
-			this.writingSystemSetup1.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.writingSystemSetup1.Location = new System.Drawing.Point(3, 3);
-			this.writingSystemSetup1.Name = "writingSystemSetup1";
-			this.writingSystemSetup1.Size = new System.Drawing.Size(698, 415);
-			this.writingSystemSetup1.TabIndex = 0;
+			this._writingSystemSetupControl.BackColor = System.Drawing.SystemColors.ControlLightLight;
+			this._writingSystemSetupControl.Dock = System.Windows.Forms.DockStyle.Fill;
+			this._writingSystemSetupControl.Location = new System.Drawing.Point(3, 3);
+			this._writingSystemSetupControl.Name = "_writingSystemSetupControl";
+			this._writingSystemSetupControl.Size = new System.Drawing.Size(698, 415);
+			this._writingSystemSetupControl.TabIndex = 0;
 			//
 			// _otherPage
 			//
@@ -167,11 +167,11 @@ namespace WeSay.Admin
 
 		private System.Windows.Forms.TabControl _projectTabControl;
 		private System.Windows.Forms.TabPage _tasksPage;
-		private TaskListControl taskList1;
+		private TaskListControl _taskListControl;
 		private System.Windows.Forms.TabPage _fieldsPage;
 		private FieldsControl fieldsControl1;
 		private System.Windows.Forms.TabPage _writingSystemPage;
-		private WritingSystemSetup writingSystemSetup1;
+		private WritingSystemSetup _writingSystemSetupControl;
 		private System.Windows.Forms.TabPage _otherPage;
 		private OtherControl otherControl1;
 		private System.Windows.Forms.TabPage _transferPage;

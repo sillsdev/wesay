@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<WritingSystemCollection>
+  <AnalysisWritingSystemDefaultId>en</AnalysisWritingSystemDefaultId>
+  <members>
+	<WritingSystem>
+	  <FontName>Doulos SIL</FontName>
+	  <FontSize>12</FontSize>
+	  <Id>en</Id>
+	</WritingSystem>
+  </members>
+  <VernacularWritingSystemDefaultId>en</VernacularWritingSystemDefaultId>
+</WritingSystemCollection>

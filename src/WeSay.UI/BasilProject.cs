@@ -54,9 +54,9 @@ namespace WeSay.UI
 			_writingSystems = new WritingSystemCollection();
 		}
 
-		public virtual void Load(string projectDirectoryPath)
+		public virtual void LoadFromProjectDirectoryPath(string projectDirectoryPath)
 		{
-			Load(projectDirectoryPath, false);
+			LoadFromProjectDirectoryPath(projectDirectoryPath, false);
 		}
 
 		/// <summary>
@@ -64,7 +64,7 @@ namespace WeSay.UI
 		/// </summary>
 		/// <param name="projectDirectoryPath"></param>
 		/// <param name="dontInitialize"></param>
-		public virtual void Load(string projectDirectoryPath, bool dontInitialize)
+		public virtual void LoadFromProjectDirectoryPath(string projectDirectoryPath, bool dontInitialize)
 		{
 			this._projectDirectoryPath = projectDirectoryPath;
 			if (!dontInitialize)
@@ -108,7 +108,7 @@ namespace WeSay.UI
 		public static void InitializeForTests()
 		{
 			BasilProject project = new BasilProject();
-			project.Load(GetPretendProjectDirectory());
+			project.LoadFromProjectDirectoryPath(GetPretendProjectDirectory());
 //            project.InitWritingSystems();
 //            project.InitStringCatalog();
 			project.StringCatalogSelector = "en";
@@ -139,8 +139,13 @@ namespace WeSay.UI
 		{
 			get
 			{
-				return Path.Combine(CommonDirectory, "writingSystemPrefs.xml");
+				return GetPathToWritingSystemPrefs(this.CommonDirectory);
 			}
+		}
+
+		private static string GetPathToWritingSystemPrefs(string parentDir)
+		{
+			return Path.Combine(parentDir, "writingSystemPrefs.xml");
 		}
 
 		public string LocateStringCatalog()
@@ -223,6 +228,10 @@ namespace WeSay.UI
 			if (File.Exists(this.PathToWritingSystemPrefs))
 			{
 				_writingSystems.Load(this.PathToWritingSystemPrefs);
+			}
+			else
+			{   //load defaults
+				_writingSystems.Load(GetPathToWritingSystemPrefs(this.ApplicationCommonDirectory));
 			}
 		}
 

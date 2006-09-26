@@ -85,7 +85,9 @@ namespace WeSay.Language
 		{
 			get
 			{
-				return this[_analysisWritingSystemDefaultId];
+				WritingSystem ws;
+				this.TryGetValue(_analysisWritingSystemDefaultId, out ws);
+				return ws;
 			}
 		}
 
@@ -93,7 +95,9 @@ namespace WeSay.Language
 		{
 			get
 			{
-				return this[_vernacularWritingSystemDefaultId];
+				WritingSystem ws;
+				this.TryGetValue(_vernacularWritingSystemDefaultId, out ws);
+				return ws;
 			}
 		}
 

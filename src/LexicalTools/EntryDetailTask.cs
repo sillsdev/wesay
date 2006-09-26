@@ -13,6 +13,12 @@ namespace WeSay.LexicalTools
 		private IBindingList _records;
 		private int _currentIndex;
 
+		public EntryDetailTask(IBindingList records, string unusedLabel)
+			: this(records)
+		{
+
+		}
+
 		public EntryDetailTask(IBindingList records)
 		{
 			InitializeComponent();

@@ -22,7 +22,7 @@ namespace WeSay.App
 			_picoContext = new DefaultPicoContainer();
 			_picoContext.RegisterComponentInstance(project);
 
-			if (project.PathToLexicalModelDB.IndexOf("PRETEND") > -1)
+			if (project.PathToWeSaySpecificFilesDirectory.IndexOf("PRETEND") > -1)
 			{
 				IBindingList pEntries = new WeSay.LexicalModel.Tests.PretendRecordList();
 				_picoContext.RegisterComponentInstance("All Entries",pEntries);
@@ -64,6 +64,8 @@ namespace WeSay.App
 			{
 				string id = RegisterComponent(task);
 
+				//typical error here: PicoInitializationException("Either do the specified parameters not match any of....
+				//may mean you have an extra (unused), missing, or out-of-order parameter element in the xml.
 				ITask iTask = (ITask)_picoContext.GetComponentInstance(id);
 				System.Diagnostics.Debug.Assert(iTask != null);
 				_tasks.Add(iTask);

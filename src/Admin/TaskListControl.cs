@@ -53,33 +53,44 @@ namespace WeSay.Admin
 			{
 				XmlDocument inventoryDoc = new XmlDocument();
 				inventoryDoc.Load(Path.Combine(BasilProject.Project.ApplicationCommonDirectory, "taskInventory.xml"));
-				XmlDocument projectDoc = new XmlDocument();
+				XmlDocument projectDoc = null;
 				if (File.Exists(WeSayWordsProject.Project.PathToProjectTaskInventory))
 				{
 					try
 					{
+						projectDoc = new XmlDocument();
 						projectDoc.Load(WeSayWordsProject.Project.PathToProjectTaskInventory);
 					}
 					catch (Exception e)
 					{
-
-
-
 						MessageBox.Show("There was a problem reading the task xml. " + e.Message);
 						projectDoc = null;
 					}
+				}
 
-					foreach (XmlNode node in inventoryDoc.SelectNodes("tasks/task"))
+				//if there are no tasks, might as well be no document, so clear it out
+				if(projectDoc != null && (null == projectDoc.SelectSingleNode("tasks/task")))
+				{
+					projectDoc = null;
+				}
+
+				foreach (XmlNode node in inventoryDoc.SelectNodes("tasks/task"))
+				{
+					TaskInfo task = new TaskInfo(node);
+					XmlNode foundMatchingTask = null;
+					bool showCheckMark;
+
+					if (projectDoc == null)
 					{
-						TaskInfo task = new TaskInfo(node);
-						XmlNode foundMatchingTask = null;
-						if (projectDoc != null)
-						{
-							foundMatchingTask = projectDoc.SelectSingleNode("tasks/task[@id='" + task.Id + "']");
-						}
-						bool showCheckMark = foundMatchingTask != null;
-						this._taskList.Items.Add(task, showCheckMark);
+						XmlAttribute isDefault = node.Attributes["default"];
+						showCheckMark = (isDefault != null) && isDefault.Value == "true";
 					}
+					else
+					{
+						foundMatchingTask = projectDoc.SelectSingleNode("tasks/task[@id='" + task.Id + "']");
+						showCheckMark = foundMatchingTask != null;
+					}
+					this._taskList.Items.Add(task, showCheckMark);
 				}
 			}
 			catch (Exception error)

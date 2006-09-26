@@ -92,6 +92,47 @@ namespace WeSay.Admin.Tests
 			_window.OpenProject(_projectFolder);
 		}
 
+		[Test]
+		public void NewProjectShowsTasks()
+		{
+			CreateProjectAndGoToTaskControl();
+			CheckedListBoxTester c = new CheckedListBoxTester("_taskList");
+			Assert.Greater(c.Properties.Items.Count, 0);
+		}
+
+		[Test]
+		public void NewProjectShowSomeDefaultTasks()
+		{
+			CreateProjectAndGoToTaskControl();
+			CheckedListBoxTester c = new CheckedListBoxTester("_taskList");
+			Assert.Greater(c.Properties.CheckedItems.Count, 0);
+		}
+
+		private void CreateProjectAndGoToTaskControl()
+		{
+			this._window.CreateNewProject(this._projectFolder);
+			this._window.OpenProject(this._projectFolder);
+
+			GotoProjectTab("_tabListControl");
+		}
+
+		[Test]
+		public void NewProjectShowsOneWritingSystem()
+		{
+			_window.CreateNewProject(_projectFolder);
+			_window.OpenProject(_projectFolder);
+
+			GotoProjectTab("_writingSystemSetupControl");
+			ListBoxTester c = new ListBoxTester("_wsListBox");
+			Assert.AreEqual(1, c.Properties.Items.Count);
+		}
+
+		private static void GotoProjectTab(string projectTabName)
+		{
+			TabControlTester t = new TabControlTester("_projectTabControl");
+			t.Properties.SelectedTab = t.Properties.TabPages[projectTabName];
+		}
+
 		private void WalkTopLevelTabs()
 		{
 //            for(int i = 0; i<10000;i++)

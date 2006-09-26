@@ -11,6 +11,11 @@ namespace WeSay.CommonTools
 	{
 		private IBindingList _records;
 
+		public DashboardControl(IBindingList records, string unusedLabel) :this(records)
+		{
+
+		}
+
 		public DashboardControl(IBindingList records)
 		{
 			_records = records;

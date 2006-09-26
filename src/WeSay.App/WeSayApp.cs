@@ -1,4 +1,3 @@
-#define SampleBuilder
 using System;
 using System.Collections;
 using System.Windows.Forms;
@@ -13,9 +12,9 @@ namespace WeSay.App
 		class CommandLineArguments
 		{
 			[DefaultArgument(ArgumentTypes.AtMostOnce,
-				DefaultValue=@"..\..\SampleProjects\Thai",
-				HelpText="Path to the folder containing the project.")]
-			public string projectPath=null;
+				DefaultValue=@"..\..\SampleProjects\Thai\WeSay\thai500.words",
+				HelpText=@"Path to the words file (e.g. c:\thai\wesay\thai500.words).")]
+			public string wordsPath=null;
 
 			[Argument(ArgumentTypes.AtMostOnce,
 				HelpText="Language to show the user interface in.",
@@ -27,6 +26,7 @@ namespace WeSay.App
 		static void ShowCommandLineError(string e)
 		{
 			CommandLine.Parser p = new Parser(typeof(CommandLineArguments), new ErrorReporter(ShowCommandLineError));
+			e = e.Replace("Duplicate 'wordsPath' argument", "Please enclose project path in quotes if it contains spaces.");
 			e += "\r\n\r\n" + p.GetUsageString(200);
 			MessageBox.Show(e,"WeSay Command Line Problem");
 		}
@@ -48,32 +48,22 @@ namespace WeSay.App
 #endif
 			WeSayWordsProject project = new WeSayWordsProject();
 			project.StringCatalogSelector = cmdArgs.ui;
-			project.Load(cmdArgs.projectPath);
+			project.LoadFromLexiconPath(cmdArgs.wordsPath);
 #if GTK
 			Gdk.Threads.Enter();
 #endif
 			WeSay.UI.ITaskBuilder builder = null;
 			try
 			{
-
-#if GTK
-				WeSay.UI.ISkin shell = new TabbedSkin(project, builder);
-				Application.Run();
-#else
 				Application.EnableVisualStyles();
 				Application.SetCompatibleTextRenderingDefault(false);
-#if SampleBuilder
-				builder = new SampleTaskBuilder(project);
-#else
-				using (FileStream config = new FileStream(project.PathToTaskConfig, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete))
+//                builder = new SampleTaskBuilder(project);
+				using (FileStream config = new FileStream(project.PathToProjectTaskInventory, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete))
 				{
 					builder = new ConfigFileTaskBuilder(project, config);
 				}
-#endif
 				Form f =  new TabbedForm(project, builder);
 				Application.Run(f);
-#endif
-
 			}
 			finally
 			{

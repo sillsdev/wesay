@@ -46,6 +46,7 @@ namespace WeSay.UI.Tests
 			Assert.AreSame(_control.GetEditControlFromReferenceControl(rowTwo), _focussedControl);
 			 _control.MoveInsertionPoint(2);
 			Assert.AreSame(_control.GetEditControlFromReferenceControl(rowThree), _focussedControl);
+			_window.Close();
 	  }
 
 		private WeSayTextBox MakeWiredUpTextBox()

@@ -12,6 +12,8 @@ namespace WeSay.Admin
 	{
 		public ProjectTabs()
 		{
+//            if (DesignMode)
+//                WeSay.UI.WeSayWordsProject.InitializeForTests();
 			InitializeComponent();
 		}
 	}

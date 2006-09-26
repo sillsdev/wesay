@@ -28,7 +28,7 @@ namespace WeSay.App
 			_parentPicoContext.RegisterComponentInstance(project);
 			_project = project;
 
-			if (project.PathToLexicalModelDB.IndexOf("PRETEND") > -1)
+			if (project.PathToWeSaySpecificFilesDirectory.IndexOf("PRETEND") > -1)
 			{
 				IBindingList pEntries = new PretendRecordList();
 				_parentPicoContext.RegisterComponentInstance(pEntries);

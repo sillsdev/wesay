@@ -5,7 +5,9 @@ namespace WeSay.UI
 {
 	public class WeSayWordsProject : BasilProject
 	{
-		public WeSayWordsProject()
+		private string _pathToLexiconDatabase = "lexicon.yap";
+
+		public WeSayWordsProject()//string pathToLexiconDatabase)
 			: base()
 		{
 		}
@@ -22,18 +24,35 @@ namespace WeSay.UI
 			}
 		}
 
-		public override void Load(string projectDirectoryPath)
+		public void LoadFromLexiconPath(string lexiconPath)
 		{
-			base.Load(projectDirectoryPath);
+			_pathToLexiconDatabase = lexiconPath;
+			CheckLexiconIsInValidProjectDirectory();
+			//walk up from file to /wesay to /<project>
+			base.LoadFromProjectDirectoryPath(Directory.GetParent(Directory.GetParent(lexiconPath).FullName).FullName);
+		}
+
+		private void CheckLexiconIsInValidProjectDirectory()
+		{
+
 		}
 
 		public override  void Create(string projectDirectoryPath)
 		{
 			base.Create(projectDirectoryPath);
 			Directory.CreateDirectory(this.PathToWeSaySpecificFilesDirectory);
-			Directory.CreateDirectory(Path.GetDirectoryName(this.PathToLexicalModelDB));
 	   }
 
+		public static bool IsValidProjectDirectory(string dir)
+		{
+			string[] requiredDirectories = new string[] { "common", "wesay" };
+			foreach (string s in requiredDirectories)
+			{
+				if (!Directory.Exists(Path.Combine(dir, s)))
+					return false;
+			}
+			return true;
+		}
 
 		public string PathToProjectTaskInventory
 		{
@@ -47,7 +66,7 @@ namespace WeSay.UI
 		{
 			get
 			{
-				return System.IO.Path.Combine(ProjectDirectoryPath, "lexicon.yap");
+				return System.IO.Path.Combine(ProjectDirectoryPath, this._pathToLexiconDatabase);
 			}
 		}
 
@@ -59,7 +78,7 @@ namespace WeSay.UI
 			}
 		}
 
-		private string PathToWeSaySpecificFilesDirectory
+		public string PathToWeSaySpecificFilesDirectory
 		{
 			get
 			{

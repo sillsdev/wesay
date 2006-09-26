@@ -18,7 +18,7 @@ namespace WeSay.App.Tests
 		{
 			using (WeSayWordsProject project = new WeSayWordsProject())
 			{
-				project.Load(@"..\..\SampleProjects\Thai");
+				project.LoadFromProjectDirectoryPath(@"..\..\SampleProjects\Thai");
 				using (SampleTaskBuilder builder = new SampleTaskBuilder(project))
 				{
 					Assert.Greater(builder.Tasks.Count, 0);
@@ -30,7 +30,7 @@ namespace WeSay.App.Tests
 		{
 			using (WeSayWordsProject project = new WeSayWordsProject())
 			{
-				project.Load(@"..\..\SampleProjects\PRETEND");
+				project.LoadFromProjectDirectoryPath(@"..\..\SampleProjects\PRETEND");
 
 				using (SampleTaskBuilder builder = new SampleTaskBuilder(project))
 				{

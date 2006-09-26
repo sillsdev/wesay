@@ -34,7 +34,7 @@ namespace WeSay.UI.Tests
 				WeSayWordsProject p = new WeSayWordsProject();
 				p.Create(path);
 				Assert.IsTrue(Directory.Exists(path));
-				Assert.IsTrue(Directory.Exists(p.PathToLexicalModelDB));
+				Assert.IsTrue(Directory.Exists(p.PathToWeSaySpecificFilesDirectory));
 			}
 			finally
 			{

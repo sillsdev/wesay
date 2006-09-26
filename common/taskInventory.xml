@@ -1,14 +1,15 @@
 <?xml version="1.0"?>
 <tasks>
-  <task id="Dashboard" class="WeSay.CommonTools.DashboardControl" assembly="CommonTools">
+  <task id="Dashboard" class="WeSay.CommonTools.DashboardControl" assembly="CommonTools" default="true">
+	<entries ref="All Entries" />
 	<label>Dashboard</label>
   </task>
-
-  <task id="EntryDetail" class="WeSay.LexicalTools.EntryDetailTask" assembly="LexicalTools">
+  <task id="EntryDetail" class="WeSay.LexicalTools.EntryDetailTask" assembly="LexicalTools" default="true">
+	<entries ref="All Entries" />
 	<label>Words</label>
   </task>
 
-  <task id="AddMeanings" class="WeSay.LexicalTools.LexFieldTask" assembly="LexicalTools">
+  <task id="AddMeanings" class="WeSay.LexicalTools.LexFieldTask" assembly="LexicalTools" default="true">
 	<entries ref="All Entries"/>
 	<filter class="WeSay.LexicalModel.MissingGlossFilter" assembly="LexicalModel">
 	  <writingSystemId>en</writingSystemId>

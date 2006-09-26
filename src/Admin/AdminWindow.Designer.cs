@@ -32,7 +32,7 @@ namespace WeSay.Admin
 			this.projectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.newProjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.openProjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this._newProjectLocationDialog = new System.Windows.Forms.FolderBrowserDialog();
+			this._chooseProjectLocationDialog = new System.Windows.Forms.FolderBrowserDialog();
 			this.menuStrip1.SuspendLayout();
 			this.SuspendLayout();
 			//
@@ -95,6 +95,6 @@ namespace WeSay.Admin
 		private System.Windows.Forms.ToolStripMenuItem projectToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem newProjectToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem openProjectToolStripMenuItem;
-		private System.Windows.Forms.FolderBrowserDialog _newProjectLocationDialog;
+		private System.Windows.Forms.FolderBrowserDialog _chooseProjectLocationDialog;
 	}
 }

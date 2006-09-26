@@ -84,14 +84,14 @@ namespace WeSay.Admin
 			this.richTextBox1.TabIndex = 2;
 			this.richTextBox1.Text = "Check each task you want to make available inside WeSay.";
 			//
-			// TaskList
+			// TaskListControl
 			//
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.SystemColors.ControlLightLight;
 			this.Controls.Add(this.richTextBox1);
 			this.Controls.Add(this.splitContainer1);
-			this.Name = "TaskList";
+			this.Name = "TaskListControl";
 			this.Size = new System.Drawing.Size(443, 261);
 			this.Load += new System.EventHandler(this.TaskList_Load);
 			this.splitContainer1.Panel1.ResumeLayout(false);
