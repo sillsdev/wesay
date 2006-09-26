@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Data;
+using System.IO;
 using System.Text;
 using System.Windows.Forms;
 
@@ -16,6 +17,19 @@ namespace WeSay.Admin
 		public WelcomeControl()
 		{
 			InitializeComponent();
+
+		   string s = WeSay.Admin.Properties.Settings.Default.LastProjectPath;
+		   if (s != null && s.Length > 0 && Directory.Exists(s))
+		   {
+			   string[] directories = s.Split('\\');
+			   this.openRecentProject.Text = "Open " + directories[directories.Length-1];
+		   }
+		   else
+		   {
+			   this.openRecentProject.Visible = false;
+			   this.openDifferentProject.Text = "Open Existing Project";
+		   }
+
 		}
 
 		private void webBrowser1_Navigating(object sender, WebBrowserNavigatingEventArgs e)
@@ -35,6 +49,32 @@ namespace WeSay.Admin
 				{
 					OpenProjectClicked.Invoke(this, null);
 				}
+			}
+		}
+
+
+		private void openRecentProject_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+		{
+		   if (OpenProjectClicked != null)
+			{
+				OpenProjectClicked.Invoke(WeSay.Admin.Properties.Settings.Default.LastProjectPath, null);
+			}
+
+		}
+
+		private void openDifferentProject_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+		{
+			if (OpenProjectClicked != null)
+			{
+				OpenProjectClicked.Invoke(this, null);
+			}
+		}
+
+		private void createNewProject_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+		{
+			 if (NewProjectClicked != null)
+			{
+				NewProjectClicked.Invoke(this, null);
 			}
 		}
 	}

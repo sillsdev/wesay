@@ -14,7 +14,7 @@ namespace WeSay.Admin
 			InitializeComponent();
 		}
 
-		private void WritingSystemSetup_Load(object sender, EventArgs e)
+		public void WritingSystemSetup_Load(object sender, EventArgs e)
 		{
 			if (DesignMode)
 				return;

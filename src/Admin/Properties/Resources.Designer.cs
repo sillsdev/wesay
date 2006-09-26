@@ -59,5 +59,12 @@ namespace WeSay.Admin.Properties {
 				resourceCulture = value;
 			}
 		}
+
+		internal static System.Drawing.Bitmap RoundedBorder {
+			get {
+				object obj = ResourceManager.GetObject("RoundedBorder", resourceCulture);
+				return ((System.Drawing.Bitmap)(obj));
+			}
+		}
 	}
 }

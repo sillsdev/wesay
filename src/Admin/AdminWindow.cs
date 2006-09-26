@@ -30,21 +30,26 @@ namespace WeSay.Admin
 
 		void OnOpenProject(object sender, EventArgs e)
 		{
-			string s = WeSay.Admin.Properties.Settings.Default.LastProjectPath;
-
-			if (s == null || s =="")
+			string selectedPath = sender as string;
+			if (selectedPath == null)
 			{
-				s= Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+				string s = WeSay.Admin.Properties.Settings.Default.LastProjectPath;
+
+				if (s == null || s == "")
+				{
+					s = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+				}
+				this._chooseProjectLocationDialog.SelectedPath = s;
+
+				if (DialogResult.OK != this._chooseProjectLocationDialog.ShowDialog())
+					return;
+
+				selectedPath = this._chooseProjectLocationDialog.SelectedPath;
 			}
-			this._chooseProjectLocationDialog.SelectedPath = s;
 
-		   if (DialogResult.OK != this._chooseProjectLocationDialog.ShowDialog())
-				return;
-
-			if (WeSayWordsProject.IsValidProjectDirectory(_chooseProjectLocationDialog.SelectedPath))
+			if (WeSayWordsProject.IsValidProjectDirectory(selectedPath))
 			{
-
-				OpenProject(this._chooseProjectLocationDialog.SelectedPath);
+				OpenProject(selectedPath);
 			}
 			else
 			{
@@ -177,6 +182,11 @@ namespace WeSay.Admin
 			}
 
 
+		}
+
+		private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			new AboutBox().ShowDialog();
 		}
 	}
 }

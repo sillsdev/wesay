@@ -36,6 +36,12 @@
 	<Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+	<Compile Include="AboutBox.cs">
+	  <SubType>Form</SubType>
+	</Compile>
+	<Compile Include="AboutBox.Designer.cs">
+	  <DependentUpon>AboutBox.cs</DependentUpon>
+	</Compile>
 	<Compile Include="AdminWindow.cs">
 	  <SubType>Form</SubType>
 	</Compile>
@@ -68,6 +74,10 @@
 	  <DependentUpon>ProjectTabs.cs</DependentUpon>
 	</Compile>
 	<Compile Include="Properties\AssemblyInfo.cs" />
+	<EmbeddedResource Include="AboutBox.resx">
+	  <SubType>Designer</SubType>
+	  <DependentUpon>AboutBox.cs</DependentUpon>
+	</EmbeddedResource>
 	<EmbeddedResource Include="AdminWindow.resx">
 	  <SubType>Designer</SubType>
 	  <DependentUpon>AdminWindow.cs</DependentUpon>
@@ -160,6 +170,7 @@
 	</ProjectReference>
   </ItemGroup>
   <ItemGroup>
+	<None Include="Resources\RoundedBorder.PNG" />
 	<Content Include="Welcome.htm">
 	  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	</Content>

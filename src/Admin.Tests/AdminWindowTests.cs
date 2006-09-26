@@ -113,7 +113,7 @@ namespace WeSay.Admin.Tests
 			this._window.CreateNewProject(this._projectFolder);
 			this._window.OpenProject(this._projectFolder);
 
-			GotoProjectTab("_tabListControl");
+			GotoProjectTab("_tasksPage");
 		}
 
 		[Test]
@@ -122,7 +122,7 @@ namespace WeSay.Admin.Tests
 			_window.CreateNewProject(_projectFolder);
 			_window.OpenProject(_projectFolder);
 
-			GotoProjectTab("_writingSystemSetupControl");
+			GotoProjectTab("_writingSystemPage");
 			ListBoxTester c = new ListBoxTester("_wsListBox");
 			Assert.AreEqual(1, c.Properties.Items.Count);
 		}
@@ -130,7 +130,10 @@ namespace WeSay.Admin.Tests
 		private static void GotoProjectTab(string projectTabName)
 		{
 			TabControlTester t = new TabControlTester("_projectTabControl");
+
 			t.Properties.SelectedTab = t.Properties.TabPages[projectTabName];
+
+			Assert.IsNotNull(t.Properties.SelectedTab, "Couldn't find "+projectTabName);
 		}
 
 		private void WalkTopLevelTabs()

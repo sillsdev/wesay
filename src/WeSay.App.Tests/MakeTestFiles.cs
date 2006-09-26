@@ -13,7 +13,7 @@ namespace WeSay.Data.Tests
 			string s = System.IO.Path.Combine(
 			System.IO.Path.Combine(System.IO.Path.Combine("..", ".."),
 				System.IO.Path.Combine("SampleProjects", "Thai")),
-				"lexicon.yap");
+				"thai5000.words");
 			//string s = System.IO.Path.GetFullPath(@"..\..\SampleProjects\Thai\thai.yap");
 			if (System.IO.File.Exists(s))
 			{

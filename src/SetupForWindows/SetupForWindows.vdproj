@@ -459,6 +459,12 @@
 		}
 		"Entry"
 		{
+		"MsmKey" = "8:_F578CD83E9ED41C99EEF058838E7B51E"
+		"OwnerKey" = "8:_UNDEFINED"
+		"MsmSig" = "8:_UNDEFINED"
+		}
+		"Entry"
+		{
 		"MsmKey" = "8:_UNDEFINED"
 		"OwnerKey" = "8:_C501F80FAEFC461096566E3E8A89BE07"
 		"MsmSig" = "8:_UNDEFINED"
@@ -1274,16 +1280,36 @@
 			"IsDependency" = "11:TRUE"
 			"IsolateTo" = "8:"
 			}
+			"{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_F578CD83E9ED41C99EEF058838E7B51E"
+			{
+			"SourcePath" = "8:..\\..\\artwork\\words.ico"
+			"TargetName" = "8:words.ico"
+			"Tag" = "8:"
+			"Folder" = "8:_493C6CB7197C47FF8D71ED99C441EB17"
+			"Condition" = "8:"
+			"Transitive" = "11:FALSE"
+			"Vital" = "11:TRUE"
+			"ReadOnly" = "11:FALSE"
+			"Hidden" = "11:FALSE"
+			"System" = "11:FALSE"
+			"Permanent" = "11:FALSE"
+			"SharedLegacy" = "11:FALSE"
+			"PackageAs" = "3:1"
+			"Register" = "3:1"
+			"Exclude" = "11:FALSE"
+			"IsDependency" = "11:FALSE"
+			"IsolateTo" = "8:"
+			}
 		}
 		"FileType"
 		{
 			"{5EB83D71-FA18-4901-BE56-DE22E13CC478}:_F0D8EC2C03634F05AC4FCE3EE7D73DE4"
 			{
 			"Name" = "8:WeSay Words Database"
-			"Description" = "8:"
+			"Description" = "8:Lexical Database from WeSay"
 			"Extensions" = "8:.words"
 			"MIME" = "8:"
-			"Icon" = "8:"
+			"Icon" = "8:_F578CD83E9ED41C99EEF058838E7B51E"
 			"IconIndex" = "3:0"
 				"Command"
 				{
@@ -1375,7 +1401,7 @@
 		"Name" = "8:Microsoft Visual Studio"
 		"ProductName" = "8:WeSay"
 		"ProductCode" = "8:{32090B64-242F-4D2B-B070-1E114FC94F9B}"
-		"PackageCode" = "8:{457A0DE1-2F62-4862-AA0A-7883E4F1FB54}"
+		"PackageCode" = "8:{FE0D3801-260B-4C83-BC8F-A0E465D45DB1}"
 		"UpgradeCode" = "8:{BFAF1171-C6B5-483A-BFD8-3C0DB6188041}"
 		"RestartWWWService" = "11:FALSE"
 		"RemovePreviousVersions" = "11:TRUE"
@@ -2055,6 +2081,34 @@
 			"ProjectOutputGroupRegister" = "3:1"
 			"OutputConfiguration" = "8:"
 			"OutputGroupCanonicalName" = "8:Built"
+			"OutputProjectGuid" = "8:{EFB9D66D-AF0F-4E45-A1AC-DB32981711D2}"
+			"ShowKeyOutput" = "11:TRUE"
+				"ExcludeFilters"
+				{
+				}
+			}
+			"{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_4F5DA15653314983BE280416A8A18BB8"
+			{
+			"SourcePath" = "8:"
+			"TargetName" = "8:"
+			"Tag" = "8:"
+			"Folder" = "8:_493C6CB7197C47FF8D71ED99C441EB17"
+			"Condition" = "8:"
+			"Transitive" = "11:FALSE"
+			"Vital" = "11:TRUE"
+			"ReadOnly" = "11:FALSE"
+			"Hidden" = "11:FALSE"
+			"System" = "11:FALSE"
+			"Permanent" = "11:FALSE"
+			"SharedLegacy" = "11:FALSE"
+			"PackageAs" = "3:1"
+			"Register" = "3:1"
+			"Exclude" = "11:FALSE"
+			"IsDependency" = "11:FALSE"
+			"IsolateTo" = "8:"
+			"ProjectOutputGroupRegister" = "3:1"
+			"OutputConfiguration" = "8:"
+			"OutputGroupCanonicalName" = "8:ContentFiles"
 			"OutputProjectGuid" = "8:{EFB9D66D-AF0F-4E45-A1AC-DB32981711D2}"
 			"ShowKeyOutput" = "11:TRUE"
 				"ExcludeFilters"
