@@ -39,9 +39,9 @@ namespace WeSay.Data.Tests
 		public event PropertyChangedEventHandler PropertyChanged;
 		protected virtual void OnPropertyChanged(PropertyChangedEventArgs e)
 		{
-			if (this.PropertyChanged != null)
+			if (PropertyChanged != null)
 			{
-				this.PropertyChanged(this, e);
+				PropertyChanged(this, e);
 			}
 
 		}

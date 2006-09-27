@@ -17,9 +17,9 @@ namespace WeSay.Data
 		  return new InMemoryRecordList<T>();
 		}
 
-		protected override IRecordList<T> CreateFilteredRecordList<T>(Predicate<T> filter)
+		protected override IRecordList<T> CreateFilteredRecordList<T>(IFilter<T> filter)
 		{
-		  return new FilteredInMemoryRecordList<T>(Get<T>(), filter);
+		  return new FilteredInMemoryRecordList<T>(Get<T>(), filter.Inquire);
 		}
 
 		class FilteredInMemoryRecordList<T> : InMemoryRecordList<T> where T : class, new()
@@ -154,6 +154,5 @@ namespace WeSay.Data
 			}
 			#endregion
 		}
-
-	  }
+	}
 }

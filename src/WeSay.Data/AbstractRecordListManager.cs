@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Collections;
 
 namespace WeSay.Data
@@ -14,15 +12,20 @@ namespace WeSay.Data
 		}
 
 		abstract protected IRecordList<T> CreateMasterRecordList<T>() where T : class, new();
-		abstract protected IRecordList<T> CreateFilteredRecordList<T>(Predicate<T> filter) where T : class, new();
+		abstract protected IRecordList<T> CreateFilteredRecordList<T>(IFilter<T> filter) where T : class, new();
 
 		#region IRecordListManager Members
+
+		protected virtual IRecordList<T> CreateFilteredRecordListUnlessSlow<T>(IFilter<T> filter) where T: class, new()
+		{
+			return null;
+		}
 
 		public void Register<T>(IFilter<T> filter) where T : class, new()
 		{
 			if (!_filteredRecordLists.ContainsKey(filter.Key))
 			{
-				_filteredRecordLists.Add(filter.Key, null);
+				_filteredRecordLists.Add(filter.Key, CreateFilteredRecordListUnlessSlow<T>(filter));
 			}
 		}
 
@@ -44,10 +47,9 @@ namespace WeSay.Data
 			IRecordList<T> recordList = (IRecordList<T>)_filteredRecordLists[filter.Key];
 			if (recordList == null)
 			{
-				recordList = CreateFilteredRecordList<T>(filter.Inquire);
-				_filteredRecordLists[filter.Key] = recordList;
+				recordList = CreateFilteredRecordList<T>(filter);
 			}
-
+			_filteredRecordLists[filter.Key] = recordList;
 			return recordList;
 		}
 
@@ -59,7 +61,7 @@ namespace WeSay.Data
 		{
 			if (!this._disposed)
 			{
-				throw new InvalidOperationException("Disposed not explicitly called on " + this.GetType().FullName + ".");
+				throw new InvalidOperationException("Disposed not explicitly called on " + GetType().FullName + ".");
 			}
 		}
 		#endif
@@ -78,11 +80,16 @@ namespace WeSay.Data
 			{
 				return _disposed;
 			}
+			private
+			set
+			{
+				_disposed = value;
+			}
 		}
 
 		protected virtual void Dispose(bool disposing)
 		{
-			if (!this._disposed)
+			if (!IsDisposed)
 			{
 				if (disposing)
 				{
@@ -99,15 +106,15 @@ namespace WeSay.Data
 				}
 
 				// shared (dispose and finalizable) cleanup logic
-				this._disposed = true;
+				IsDisposed = true;
 			}
 		}
 
 		protected void VerifyNotDisposed()
 		{
-			if (this._disposed)
+			if (IsDisposed)
 			{
-				throw new ObjectDisposedException(this.GetType().FullName);
+				throw new ObjectDisposedException(GetType().FullName);
 			}
 		}
 		#endregion

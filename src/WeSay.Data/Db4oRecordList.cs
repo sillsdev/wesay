@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 
 namespace WeSay.Data
 {
@@ -12,6 +11,7 @@ namespace WeSay.Data
 		{
 			if (dataSource == null)
 			{
+				Dispose();
 				throw new ArgumentNullException("dataSource");
 			}
 			Db4oList<T> records = new Db4oList<T>((com.db4o.ObjectContainer)dataSource.Data, new List<T>(), filter, sort);
@@ -55,10 +55,10 @@ namespace WeSay.Data
 
 		public Db4oRecordList(Db4oRecordList<T> source ):base()
 		{
-			this.ListSortDirection = source.ListSortDirection;
-			this.SortProperty = source.SortProperty;
+			ListSortDirection = source.ListSortDirection;
+			SortProperty = source.SortProperty;
 
-			Db4oList<T> sourceRecords = (Db4oList<T>)source.Records;
+			Db4oList<T> sourceRecords = (Db4oList<T>) source.Records;
 			Db4oList<T> records = new Db4oList<T>(sourceRecords.Database, sourceRecords.ItemIds, sourceRecords.Filter, sourceRecords.Sorter);
 			InitializeDb4oListBehavior(records);
 			Records = records;
@@ -219,11 +219,14 @@ namespace WeSay.Data
 
 		protected override void  Dispose(bool disposing)
 		{
-			if (! this.IsDisposed)
+			if (!IsDisposed)
 			{
 				if (disposing)
 				{
-					((Db4oList<T>)Records).Dispose();
+					if (Records != null)
+					{
+						((Db4oList<T>)Records).Dispose();
+					}
 				}
 			}
 			base.Dispose(disposing);

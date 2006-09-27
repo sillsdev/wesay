@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.ComponentModel;
 using System.Collections;
 
@@ -20,6 +19,15 @@ namespace WeSay.Data
 				return _records;
 			}
 			set {
+				if(_records != null)
+				{
+					IDisposable disposable = _records as IDisposable;
+					if(disposable != null)
+					{
+						disposable.Dispose();
+					}
+
+				}
 				_records = value;
 			}
 		}
@@ -55,7 +63,7 @@ namespace WeSay.Data
 		protected virtual bool ShouldAddRecord(T item)
 		{
 			RecordListEventArgs<T> args = new RecordListEventArgs<T>(item);
-			this.AddingRecord(this, args);
+			AddingRecord(this, args);
 			return !args.Cancel;
 		}
 		/// <summary>
@@ -66,7 +74,7 @@ namespace WeSay.Data
 		protected virtual bool ShouldDeleteRecord(T item)
 		{
 			RecordListEventArgs<T> args = new RecordListEventArgs<T>(item);
-			this.DeletingRecord(this, args);
+			DeletingRecord(this, args);
 			return !args.Cancel;
 		}
 		protected virtual bool ShouldReplaceRecord(int index, T value)
@@ -235,7 +243,7 @@ namespace WeSay.Data
 
 		protected virtual void OnListChanged(ListChangedEventArgs e)
 		{
-			this.ListChanged(this, e);
+			ListChanged(this, e);
 		}
 
 		public event ListChangedEventHandler ListChanged = delegate
@@ -648,7 +656,7 @@ namespace WeSay.Data
 		IEnumerator<T> IEnumerable<T>.GetEnumerator()
 		{
 			VerifyNotDisposed();
-			return ((IEnumerable<T>)_records).GetEnumerator();
+			return _records.GetEnumerator();
 		}
 
 		#endregion
@@ -663,11 +671,11 @@ namespace WeSay.Data
 			{
 				return false;
 			}
-			if (this.Count != other.Count)
+			if (Count != other.Count)
 			{
 				return false;
 			}
-			for (int i = 0; i < this.Count; i++)
+			for (int i = 0; i < Count; i++)
 			{
 				// must be in same order to be equal
 				if (this[i] != other[i])
@@ -700,7 +708,7 @@ namespace WeSay.Data
 			VerifyNotDisposed();
 			int hashCode = _records.GetHashCode();
 
-			if (this.IsSorted)
+			if (IsSorted)
 			{
 				hashCode ^= _sortProperty.GetHashCode() ^ _listSortDirection.GetHashCode();
 			}
@@ -714,7 +722,7 @@ namespace WeSay.Data
 		{
 			if (!this._disposed)
 			{
-				throw new InvalidOperationException("Disposed not explicitly called on " + this.GetType().FullName + ".");
+				throw new InvalidOperationException("Disposed not explicitly called on " + GetType().FullName + ".");
 			}
 		}
 		#endif
@@ -736,7 +744,7 @@ namespace WeSay.Data
 
 		protected virtual void Dispose(bool disposing)
 		{
-			if (!this.IsDisposed)
+			if (!IsDisposed)
 			{
 				if (disposing)
 				{
@@ -753,7 +761,7 @@ namespace WeSay.Data
 		{
 			if (this._disposed)
 			{
-				throw new ObjectDisposedException(this.GetType().FullName);
+				throw new ObjectDisposedException(GetType().FullName);
 			}
 		}
 

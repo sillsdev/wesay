@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.ComponentModel;
 
 namespace WeSay.Data
@@ -8,7 +7,7 @@ namespace WeSay.Data
 	public class RecordListEventArgs<T> : CancelEventArgs
 	{
 		/// <summary>
-		/// Constructor with <see cref="Cancel"/> false and <see cref="Item"/> set to <paramref name="item"/>.
+		/// Constructor with <see cref="CancelEventArgs.Cancel"/> false and <see cref="Item"/> set to <paramref name="item"/>.
 		/// </summary>
 		/// <param name="item">Item.</param>
 		public RecordListEventArgs(T item)
@@ -65,5 +64,7 @@ namespace WeSay.Data
 			get;
 			set;
 		}
+
+		new void RemoveAt(int index);
 	}
 }

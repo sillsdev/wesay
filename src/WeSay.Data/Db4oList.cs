@@ -61,6 +61,7 @@ namespace WeSay.Data
 		{
 			if (database == null)
 			{
+				Dispose();
 				throw new ArgumentNullException("database");
 			}
 			_database = database.Ext();
@@ -98,6 +99,7 @@ namespace WeSay.Data
 		{
 			if (itemIds == null)
 			{
+				Dispose();
 				throw new ArgumentNullException("itemIds");
 			}
 			ItemIds.Clear();
@@ -206,13 +208,23 @@ namespace WeSay.Data
 		/// Direct manipulation of this list is not validated.
 		/// If invalid id (not associated with any db4o stored object) is stored in this list, <see cref="InvalidOperationException"/> will be thrown in some operations done by this class IList implementation (get indexer etc.).
 		/// </remarks>
-		public IList<long> ItemIds
+		public List<long> ItemIds
 		{
 			get
 			{
 				VerifyNotDisposed();
 				return _itemIds;
 			}
+						set
+			{
+				VerifyNotDisposed();
+				if (value == null)
+				{
+					throw new ArgumentNullException();
+				}
+				_itemIds = value;
+			}
+
 		}
 
 		/// <summary>
@@ -1937,11 +1949,12 @@ namespace WeSay.Data
 			{
 				if (disposing)
 				{
-					if (_database.IsClosed())
+					if (_database != null && _database.IsClosed())
 					{
 						throw new InvalidOperationException(
 								"Database should not be disposed until after Db4oList is disposed.");
 					}
+
 					int count = _readCache.Count;
 					long id;
 					T item;
@@ -1956,6 +1969,7 @@ namespace WeSay.Data
 								RegisterItemPropertyChangedHandler(item, false);
 							}
 						}
+
 					}
 				}
 				_disposed = true;
