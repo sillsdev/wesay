@@ -33,7 +33,7 @@ namespace WeSay.UI
 			CheckLexiconIsInValidProjectDirectory(lexiconPath);
 			//walk up from file to /wesay to /<project>
 			base.LoadFromProjectDirectoryPath(Directory.GetParent(Directory.GetParent(lexiconPath).FullName).FullName);
-			Debug.Assert(PathToLexicalModelDB == lexiconPath);
+			Debug.Assert(PathToLexicalModelDB.ToLower() == lexiconPath.ToLower());
 	   }
 
 		public override  void LoadFromProjectDirectoryPath(string projectDirectoryPath)
@@ -67,7 +67,7 @@ namespace WeSay.UI
 		{
 			string[] dirs = p.Split('\\');
 			string projectRoot=Directory.GetParent( Directory.GetParent(p).FullName).FullName;
-			if(dirs[dirs.Length-1] != "WeSay"
+			if(dirs[dirs.Length-2].ToLower()!= "wesay"
 				|| (!IsValidProjectDirectory(projectRoot)))
 			{
 				throw new ApplicationException("WeSay cannot open the lexicon, because it is not in a proper WeSay/Basil project structure.");
