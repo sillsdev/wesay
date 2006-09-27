@@ -1,12 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.IO;
-using System.Text;
 using System.Windows.Forms;
 using WeSay.Admin.Properties;
+using WeSay.Data;
+using WeSay.LexicalModel;
 using WeSay.UI;
 
 namespace WeSay.Admin
@@ -22,10 +20,23 @@ namespace WeSay.Admin
 
 			InitializeComponent();
 
-			if (this.DesignMode)
-				return;
+			this.Project = null;
 
+//            if (this.DesignMode)
+//                return;
+//
 			InstallWelcomePage();
+		}
+
+		private WeSayWordsProject Project
+		{
+			get { return this._project; }
+			set
+			{
+				this._project = value;
+				exportToLIFTXmlToolStripMenuItem.Enabled = (value != null);
+				importFromLIFTXMLToolStripMenuItem.Enabled = (value != null);
+			}
 		}
 
 		void OnOpenProject(object sender, EventArgs e)
@@ -33,7 +44,7 @@ namespace WeSay.Admin
 			string selectedPath = sender as string;
 			if (selectedPath == null)
 			{
-				string s = WeSay.Admin.Properties.Settings.Default.LastProjectPath;
+				string s = Settings.Default.LastProjectPath;
 
 				if (s == null || s == "")
 				{
@@ -83,23 +94,23 @@ namespace WeSay.Admin
 				return;
 			}
 
-			if (_project != null)
+			if (this.Project != null)
 			{
-				_project.Dispose();
+				this.Project.Dispose();
 			}
-			_project = p;
+			this.Project = p;
 			SetupProjectControls();
 		}
 
 		public void OpenProject(string path)
 		{
 			//System.Configuration.ConfigurationManager.AppSettings["LastProjectPath"] = path;
-			WeSay.Admin.Properties.Settings.Default.LastProjectPath = path;
+			Settings.Default.LastProjectPath = path;
 
 			try
 			{
-				this._project = new WeSayWordsProject();
-				_project.LoadFromProjectDirectoryPath(path);
+				this.Project = new WeSayWordsProject();
+				this.Project.LoadFromProjectDirectoryPath(path);
 			}
 			catch (Exception e)
 			{
@@ -114,7 +125,7 @@ namespace WeSay.Admin
 		{
 			try
 			{
-				this.Text = "WeSay Admin: " + _project.Name;
+				this.Text = "WeSay Admin: " + this.Project.Name;
 				RemoveExistingControls();
 				InstallProjectsControls();
 			}
@@ -169,11 +180,11 @@ namespace WeSay.Admin
 		{
 			try
 			{
-				if (_project != null)
+				if (this.Project != null)
 				{
-					_project.Save();
+					this.Project.Save();
 				}
-				WeSay.Admin.Properties.Settings.Default.Save();
+				Settings.Default.Save();
 			}
 			catch (Exception error)
 			{
@@ -188,5 +199,91 @@ namespace WeSay.Admin
 		{
 			new AboutBox().ShowDialog();
 		}
+
+		private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			Application.Exit();
+		}
+
+		private void ExportToLiftXmlToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			OpenFileDialog openDialog = new OpenFileDialog();
+			openDialog.Title="Choose the Words file to convert to LIFT";
+			openDialog.FileName = WeSayWordsProject.Project.PathToLexicalModelDB;
+			openDialog.Filter = "WeSay Words(*.words)|*.words";
+			if (openDialog.ShowDialog() != DialogResult.OK)
+			{
+				return;
+			}
+			SaveFileDialog saveDialog = new SaveFileDialog();
+			saveDialog.Title="Save LIFT file as";
+			saveDialog.Filter = "LIFT XML (*.xml)|*.xml";
+			saveDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+			saveDialog.FileName=_project.Name+".lift.xml";
+			if (saveDialog.ShowDialog() != DialogResult.OK)
+			{
+				return;
+			}
+
+			ConvertWordsFileToLIFT(saveDialog.FileName, openDialog.FileName);
+		}
+
+		private static void ConvertWordsFileToLIFT(string destinationLIFTPath, string sourceWordsPath)
+		{
+			LiftExporter exporter=null;
+			try
+			{
+				exporter = new LiftExporter(destinationLIFTPath);
+
+				using (Db4oDataSource ds = new Db4oDataSource(sourceWordsPath))
+				{
+					using (Db4oRecordList<LexEntry> entries = new Db4oRecordList<LexEntry>(ds))
+					{
+						exporter.Add(entries);
+					}
+				}
+			}
+			finally
+			{
+				exporter.End();
+			}
+		}
+
+		private void ImportFromLiftXmlToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			OpenFileDialog openDialog = new OpenFileDialog();
+			openDialog.Title = "Choose the LIFT xml file to convert to a WeSay Words file";
+			openDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+			openDialog.Filter = "LIFT XML (*.xml)|*.xml";
+			if (openDialog.ShowDialog() != DialogResult.OK)
+			{
+				return;
+			}
+			SaveFileDialog saveDialog = new SaveFileDialog();
+			saveDialog.Title = "Save WeSay Words file as";
+			saveDialog.Filter = "WeSay Words(*.words)|*.words";
+			saveDialog.InitialDirectory = WeSayWordsProject.Project.PathToLexicalModelDB;
+			if (saveDialog.ShowDialog() != DialogResult.OK)
+			{
+				return;
+			}
+			string sourceWordsPath = openDialog.FileName;
+			string destPath = saveDialog.FileName;
+			if (File.Exists(destPath)) // make backup of the file we're about to over-write
+			{
+				File.Move(destPath, destPath+".bak");
+			}
+
+			using (Db4oDataSource ds = new WeSay.Data.Db4oDataSource(destPath))
+			{
+				using (Db4oRecordList<LexEntry> entries = new Db4oRecordList<LexEntry>(ds))
+				{
+					LiftImporter importer = new LiftImporter(entries);
+					importer.ReadFile(sourceWordsPath);
+				}
+			}
+
+		}
+
 	}
 }

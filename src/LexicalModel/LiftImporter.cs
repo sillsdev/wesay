@@ -8,8 +8,15 @@ namespace WeSay.LexicalModel
 {
    public  class LiftImporter
 	{
-	   public LiftImporter()
+	   private IList<LexEntry> _entries;
+
+	   /// <summary>
+	   ///
+	   /// </summary>
+	   /// <param name="entries">An existing list to fill</param>
+	   public LiftImporter(IList<LexEntry> entries)
 	   {
+		   this._entries = entries;
 	   }
 
 	   public IList<LexEntry> ReadFile(string path)
@@ -17,12 +24,11 @@ namespace WeSay.LexicalModel
 		   XmlDocument doc =new XmlDocument();
 		   doc.Load(path);
 		   XmlNodeList entryNodes = doc.SelectNodes("./lift/entry");
-		   List<LexEntry> entries = new List<LexEntry>(entryNodes.Count);
 		   foreach (XmlNode node in entryNodes)
 		   {
-			   entries.Add(this.ReadEntry(node));
+			   this._entries.Add(this.ReadEntry(node));
 		   }
-		   return entries;
+		   return this._entries;
 	   }
 
 	  public static void ReadMultiTextOrNull(XmlNode node, string query, MultiText text)

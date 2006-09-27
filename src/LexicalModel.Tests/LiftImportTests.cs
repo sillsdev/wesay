@@ -15,11 +15,13 @@ namespace WeSay.LexicalTools.Tests
 	{
 		private LiftImporter _importer;
 		private XmlDocument _doc;
+		private IList<LexEntry> _entries;
 
 		[SetUp]
 		public void Setup()
 		{
-			_importer = new LiftImporter();
+			_entries = new List<LexEntry>();
+			_importer = new LiftImporter(_entries);
 			_doc = new XmlDocument();
 		}
 
@@ -61,11 +63,11 @@ namespace WeSay.LexicalTools.Tests
 				writer.WriteEndDocument();
 				writer.Close();
 
-				_importer = new LiftImporter();
-				IList<LexEntry> entries = _importer.ReadFile(filePath);
-				Assert.AreEqual(2, entries.Count);
+				_importer = new LiftImporter(_entries);
+				_importer.ReadFile(filePath);
+				Assert.AreEqual(2, this._entries.Count);
 
-				Assert.AreEqual("test word 2", entries[1].LexicalForm["xyz"]);
+				Assert.AreEqual("test word 2", this._entries[1].LexicalForm["xyz"]);
 			}
 			finally
 			{

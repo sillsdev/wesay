@@ -33,7 +33,6 @@ namespace WeSay.Admin
 			this.projectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.newProjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.openProjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this._chooseProjectLocationDialog = new System.Windows.Forms.FolderBrowserDialog();
 			this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
 			this.exportToLIFTXmlToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.importFromLIFTXMLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -41,6 +40,7 @@ namespace WeSay.Admin
 			this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this._chooseProjectLocationDialog = new System.Windows.Forms.FolderBrowserDialog();
 			this.menuStrip1.SuspendLayout();
 			this.SuspendLayout();
 			//
@@ -94,12 +94,14 @@ namespace WeSay.Admin
 			this.exportToLIFTXmlToolStripMenuItem.Name = "exportToLIFTXmlToolStripMenuItem";
 			this.exportToLIFTXmlToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
 			this.exportToLIFTXmlToolStripMenuItem.Text = "&Export To LIFT XML...";
+			this.exportToLIFTXmlToolStripMenuItem.Click += new System.EventHandler(this.ExportToLiftXmlToolStripMenuItem_Click);
 			//
 			// importFromLIFTXMLToolStripMenuItem
 			//
 			this.importFromLIFTXMLToolStripMenuItem.Name = "importFromLIFTXMLToolStripMenuItem";
 			this.importFromLIFTXMLToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
 			this.importFromLIFTXMLToolStripMenuItem.Text = "&Import From LIFT XML...";
+			this.importFromLIFTXMLToolStripMenuItem.Click += new System.EventHandler(this.ImportFromLiftXmlToolStripMenuItem_Click);
 			//
 			// toolStripMenuItem1
 			//

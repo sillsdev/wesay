@@ -14,6 +14,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Language.Tests", "..\Langua
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NUnitForms", "..\..\lib\src\nunitforms\NUnitForms.csproj", "{C7342C9C-6E66-4AEA-BAEC-F40F26A22CA2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeSay.Data", "..\WeSay.Data\WeSay.Data.csproj", "{600D0FD4-D189-41A0-9BC5-FC79AD2CF1CD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LexicalModel", "..\LexicalModel\LexicalModel.csproj", "{5F61C809-B6C0-4567-9603-B2198E1AD038}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeSay.App", "..\WeSay.App\WeSay.App.csproj", "{EFB9D66D-AF0F-4E45-A1AC-DB32981711D2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LexicalModel.Tests", "..\LexicalModel.Tests\LexicalModel.Tests.csproj", "{123D695C-0D5D-46E5-893F-39EC4E0B01B8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -48,6 +56,22 @@ Global
 		{C7342C9C-6E66-4AEA-BAEC-F40F26A22CA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C7342C9C-6E66-4AEA-BAEC-F40F26A22CA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C7342C9C-6E66-4AEA-BAEC-F40F26A22CA2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{600D0FD4-D189-41A0-9BC5-FC79AD2CF1CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{600D0FD4-D189-41A0-9BC5-FC79AD2CF1CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{600D0FD4-D189-41A0-9BC5-FC79AD2CF1CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{600D0FD4-D189-41A0-9BC5-FC79AD2CF1CD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5F61C809-B6C0-4567-9603-B2198E1AD038}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5F61C809-B6C0-4567-9603-B2198E1AD038}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5F61C809-B6C0-4567-9603-B2198E1AD038}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5F61C809-B6C0-4567-9603-B2198E1AD038}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EFB9D66D-AF0F-4E45-A1AC-DB32981711D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EFB9D66D-AF0F-4E45-A1AC-DB32981711D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EFB9D66D-AF0F-4E45-A1AC-DB32981711D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EFB9D66D-AF0F-4E45-A1AC-DB32981711D2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{123D695C-0D5D-46E5-893F-39EC4E0B01B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{123D695C-0D5D-46E5-893F-39EC4E0B01B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{123D695C-0D5D-46E5-893F-39EC4E0B01B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{123D695C-0D5D-46E5-893F-39EC4E0B01B8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

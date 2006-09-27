@@ -1,11 +1,12 @@
 using System;
+using System.Diagnostics;
 using System.IO;
 
 namespace WeSay.UI
 {
 	public class WeSayWordsProject : BasilProject
 	{
-		private string _pathToLexiconDatabase = "lexicon.yap";
+		private string _lexiconDatabaseFileName = null;
 
 		public WeSayWordsProject()//string pathToLexiconDatabase)
 			: base()
@@ -26,21 +27,58 @@ namespace WeSay.UI
 
 		public void LoadFromLexiconPath(string lexiconPath)
 		{
-			_pathToLexiconDatabase = lexiconPath;
-			CheckLexiconIsInValidProjectDirectory();
+			Debug.Assert(File.Exists(lexiconPath));
+
+			_lexiconDatabaseFileName = Path.GetFileName(lexiconPath);
+			CheckLexiconIsInValidProjectDirectory(lexiconPath);
 			//walk up from file to /wesay to /<project>
 			base.LoadFromProjectDirectoryPath(Directory.GetParent(Directory.GetParent(lexiconPath).FullName).FullName);
-		}
+			Debug.Assert(PathToLexicalModelDB == lexiconPath);
+	   }
 
-		private void CheckLexiconIsInValidProjectDirectory()
+		public override  void LoadFromProjectDirectoryPath(string projectDirectoryPath)
 		{
+			base.LoadFromProjectDirectoryPath(projectDirectoryPath);
 
+			DetermineWordsFile();
 		}
 
-		public override  void Create(string projectDirectoryPath)
+		private void DetermineWordsFile()
+		{
+			//try to use the one implied by the project name (e.g. thai.words)
+			if (File.Exists(this.PathToLexicalModelDB))
+			{
+				return;
+			}
+
+			//use the first words file we do find
+			string[] p = Directory.GetFiles(this.PathToWeSaySpecificFilesDirectory, "*.words");
+			if (p.Length > 0)
+			{
+				this._lexiconDatabaseFileName = Path.GetFileName(p[0]);
+			}
+			else
+			{
+				//just leave as is, couldn't find one.
+			}
+		}
+
+		private void CheckLexiconIsInValidProjectDirectory(string p)
+		{
+			string[] dirs = p.Split('\\');
+			string projectRoot=Directory.GetParent( Directory.GetParent(p).FullName).FullName;
+			if(dirs[dirs.Length-1] != "WeSay"
+				|| (!IsValidProjectDirectory(projectRoot)))
+			{
+				throw new ApplicationException("WeSay cannot open the lexicon, because it is not in a proper WeSay/Basil project structure.");
+			}
+		}
+
+		public override void Create(string projectDirectoryPath)
 		{
 			base.Create(projectDirectoryPath);
 			Directory.CreateDirectory(this.PathToWeSaySpecificFilesDirectory);
+		   // this._lexiconDatabaseFileName = this.Name+".words";
 	   }
 
 		public static bool IsValidProjectDirectory(string dir)
@@ -66,7 +104,14 @@ namespace WeSay.UI
 		{
 			get
 			{
-				return System.IO.Path.Combine(ProjectDirectoryPath, this._pathToLexiconDatabase);
+				if (_lexiconDatabaseFileName != null)
+				{
+					return System.IO.Path.Combine(PathToWeSaySpecificFilesDirectory, this._lexiconDatabaseFileName);
+				}
+				else
+				{
+					return System.IO.Path.Combine(PathToWeSaySpecificFilesDirectory, this.Name+".words");
+				}
 			}
 		}
 
