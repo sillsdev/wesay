@@ -33,7 +33,6 @@ namespace WeSay.App
 				{
 					masterRecordList.Add(entry);
 				}
-				IBindingList pEntries = new WeSay.LexicalModel.Tests.PretendRecordList();
 			}
 			else
 			{
