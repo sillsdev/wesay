@@ -1,5 +1,4 @@
 using System.IO;
-using System.Xml;
 using NUnit.Framework;
 using WeSay.LexicalModel;
 
@@ -23,7 +22,8 @@ namespace WeSay.Data.Tests
 			return s;
 		}
 
-		[Test,Ignore("Run this explicity to setup the sample data. It should not be required for any tests.")]
+		[Test]
+		[Ignore("Run this explicity to setup the sample data. It should not be required for any tests.")]
 		public void MakeThai5000SampleFromLift()
 		{
 			string sourcePath = CombinePathParts(new string[] { "..", "..", "SampleProjects", "Thai", "WeSay", "thai5000.lift.xml"});

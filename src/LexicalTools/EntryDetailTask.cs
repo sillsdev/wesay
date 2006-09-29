@@ -1,7 +1,7 @@
 using System;
-using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
+using WeSay.Data;
 using WeSay.LexicalModel;
 using WeSay.UI;
 
@@ -10,19 +10,19 @@ namespace WeSay.LexicalTools
 	public partial class EntryDetailTask : UserControl,ITask
 	{
 
-		private IBindingList _records;
+		private IRecordList<LexEntry> _records;
 		private int _currentIndex;
 
-		public EntryDetailTask(IBindingList records, string unusedLabel)
-			: this(records)
+		public EntryDetailTask(IRecordListManager recordListManager, string unusedLabel)
+			: this(recordListManager)
 		{
 
 		}
 
-		public EntryDetailTask(IBindingList records)
+		public EntryDetailTask(IRecordListManager recordListManager)
 		{
 			InitializeComponent();
-			_records = records;//new WeSay.Data.InMemoryBindingList<LexEntry>();
+			_records = recordListManager.Get<LexEntry>();
 
 			_entryDetailPanel.BackColor = SystemColors.Control;//we like it to stand out at design time, but not runtime
 		}
@@ -71,20 +71,6 @@ namespace WeSay.LexicalTools
 			get { return this; }
 		}
 
-		public IBindingList DataSource
-		{
-			get { return _records;}
-			set
-			{
-				if (value == null)
-				{
-					throw new ArgumentNullException("value");
-				}
-				_records = value;
-			}
-
-		}
-
 		private LexEntry CurrentRecord
 		{
 			get
@@ -93,7 +79,7 @@ namespace WeSay.LexicalTools
 				{
 					return null;
 				}
-				return _records[_currentIndex] as LexEntry;
+				return _records[_currentIndex];
 			}
 		}
 

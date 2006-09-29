@@ -1,7 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
-using System.ComponentModel;
 using WeSay.Data;
 using WeSay.LexicalModel;
 using WeSay.UI;
@@ -12,9 +9,8 @@ namespace WeSay.LexicalTools.Tests
 	[TestFixture]
 	public class LexFieldTaskTests
 	{
-		Db4oDataSource _dataSource;
-		Db4oRecordList<LexEntry> _records;
-		string _FilePath;
+		IRecordListManager _recordListManager;
+		string _filePath;
 
 		private IFilter<LexEntry> _filter;
 		private string _fieldsToShow;
@@ -28,14 +24,14 @@ namespace WeSay.LexicalTools.Tests
 		{
 			BasilProject.InitializeForTests();
 
-			_FilePath = System.IO.Path.GetTempFileName();
-			this._dataSource = new Db4oDataSource(_FilePath);
-			this._records = new Db4oRecordList<LexEntry>(this._dataSource);
+			this._filePath = System.IO.Path.GetTempFileName();
+			this._recordListManager = new Db4oRecordListManager(_filePath);
 
 			LexEntry entry = new LexEntry();
 			_lexicalForm = "vernacular";
 			entry.LexicalForm.SetAlternative(BasilProject.Project.WritingSystems.VernacularWritingSystemDefault.Id, _lexicalForm);
-			_records.Add(entry);
+			IRecordList<LexEntry> masterRecordList = this._recordListManager.Get<LexEntry>();
+			masterRecordList.Add(entry);
 
 			_fieldsToShow = "LexicalForm";
 			_label = "My label";
@@ -46,84 +42,87 @@ namespace WeSay.LexicalTools.Tests
 		[TearDown]
 		public void TearDown()
 		{
-			this._records.Dispose();
-			this._dataSource.Dispose();
-			System.IO.File.Delete(_FilePath);
+			this._recordListManager.Dispose();
+			System.IO.File.Delete(_filePath);
 		}
 
 		[Test]
 		public void Create()
 		{
-			LexFieldTask task = new LexFieldTask(_records, _filter, _label, _description, _fieldsToShow);
+			LexFieldTask task = new LexFieldTask(_recordListManager, _filter, _label, _description, _fieldsToShow);
 			Assert.IsNotNull(task);
 		}
 
 		[Test]
 		public void Create_RecordsIsEmpty()
 		{
-			_records.Clear();
-			LexFieldTask task = new LexFieldTask(_records, _filter, _label, _description, _fieldsToShow);
+			ClearMasterRecordList();
+			LexFieldTask task = new LexFieldTask(_recordListManager, _filter, _label, _description, _fieldsToShow);
 			Assert.IsNotNull(task);
+		}
+
+		private void ClearMasterRecordList() {
+			this._recordListManager.Get<LexEntry>().Clear();
 		}
 
 		[Test]
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void Create_RecordsIsNull_ThrowsArgumentNullException()
 		{
-			LexFieldTask task = new LexFieldTask(null, _filter, _label, _description, _fieldsToShow);
+			new LexFieldTask(null, _filter, _label, _description, _fieldsToShow);
 		}
 
 		[Test]
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void Create_FilterIsNull_ThrowsArgumentNullException()
 		{
-			LexFieldTask task = new LexFieldTask(_records, null, _label, _description, _fieldsToShow);
+			new LexFieldTask(_recordListManager, null, _label, _description, _fieldsToShow);
 		}
 
 		[Test]
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void Create_LabelIsNull_ThrowsArgumentNullException()
 		{
-			LexFieldTask task = new LexFieldTask(_records, _filter, null, _description, _fieldsToShow);
+			new LexFieldTask(_recordListManager, _filter, null, _description, _fieldsToShow);
 		}
 
 		[Test]
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void Create_DescriptionIsNull_ThrowsArgumentNullException()
 		{
-			LexFieldTask task = new LexFieldTask(_records, _filter, _label, null, _fieldsToShow);
+			new LexFieldTask(_recordListManager, _filter, _label, null, _fieldsToShow);
 		}
 
 		[Test]
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void Create_FieldFilterIsNull_ThrowsArgumentNullException()
 		{
-			LexFieldTask task = new LexFieldTask(_records, _filter, _label, _description, null);
+			new LexFieldTask(_recordListManager, _filter, _label, _description, null);
 		}
 
 		[Test]
 		public void Label_InitializedFromCreate()
 		{
-			LexFieldTask task = new LexFieldTask(_records, _filter, _label, _description, _fieldsToShow);
+			LexFieldTask task = new LexFieldTask(_recordListManager, _filter, _label, _description, _fieldsToShow);
 			Assert.AreEqual(_label, task.Label);
 		}
 
 		[Test]
 		public void Description_InitializedFromCreate()
 		{
-			LexFieldTask task = new LexFieldTask(_records, _filter, _label, _description, _fieldsToShow);
+			LexFieldTask task = new LexFieldTask(_recordListManager, _filter, _label, _description, _fieldsToShow);
 			Assert.AreEqual(_description, task.Description);
 		}
 
 		[Test]
 		public void Activate_Refreshes()
 		{
-			LexFieldTask task = new LexFieldTask(_records, _filter, _label, _description, _fieldsToShow);
+			LexFieldTask task = new LexFieldTask(_recordListManager, _filter, _label, _description, _fieldsToShow);
 			task.Activate();
 			Assert.IsTrue(((LexFieldTool)task.Control).ControlDetails.ControlFormattedView.Text.Contains(_lexicalForm));
 			Assert.AreEqual(1, task.DataSource.Count);
 			task.Deactivate();
-			_records.Clear();
+			ClearMasterRecordList();
 			task.Activate();
 			Assert.AreEqual(string.Empty, ((LexFieldTool)task.Control).ControlDetails.ControlFormattedView.Text);
 			Assert.AreEqual(0, task.DataSource.Count);
@@ -133,7 +132,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void FieldsToShow_SingleField_InitializedFromCreate()
 		{
-			LexFieldTask task = new LexFieldTask(_records, _filter, _label, _description, "Single");
+			LexFieldTask task = new LexFieldTask(_recordListManager, _filter, _label, _description, "Single");
 			Assert.AreEqual(true, task.ShowField("Single"));
 			Assert.AreEqual(false, task.ShowField("SingleField"));
 			Assert.AreEqual(false, task.ShowField("Single Field"));
@@ -145,7 +144,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void FieldsToShow_TwoFields_InitializedFromCreate()
 		{
-			LexFieldTask task = new LexFieldTask(_records, _filter, _label, _description, "First Second");
+			LexFieldTask task = new LexFieldTask(_recordListManager, _filter, _label, _description, "First Second");
 			Assert.AreEqual(true, task.ShowField("First"));
 			Assert.AreEqual(true, task.ShowField("Second"));
 			Assert.AreEqual(false, task.ShowField("FirstSecond"));
@@ -156,7 +155,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void FieldsToShow_ThreeFields_InitializedFromCreate()
 		{
-			LexFieldTask task = new LexFieldTask(_records, _filter, _label, _description, "First Second Third");
+			LexFieldTask task = new LexFieldTask(_recordListManager, _filter, _label, _description, "First Second Third");
 			Assert.AreEqual(true, task.ShowField("First"));
 			Assert.AreEqual(true, task.ShowField("Second"));
 			Assert.AreEqual(true, task.ShowField("Third"));
@@ -169,7 +168,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void FieldsToShow_HidingField_InitializedFromCreate()
 		{
-			LexFieldTask task = new LexFieldTask(_records, _filter, _label, _description, "GhostGloss Gloss");
+			LexFieldTask task = new LexFieldTask(_recordListManager, _filter, _label, _description, "GhostGloss Gloss");
 			Assert.AreEqual(true, task.ShowField("Gloss"));
 			Assert.AreEqual(true, task.ShowField("GhostGloss"));
 		}

@@ -77,7 +77,7 @@ namespace WeSay.UI
 		public virtual void Create(string projectDirectoryPath)
 		{
 			this._projectDirectoryPath = projectDirectoryPath;
-			Directory.CreateDirectory(this.CommonDirectory);
+			Directory.CreateDirectory(CommonDirectory);
 			InitStringCatalog();
 			InitWritingSystems();
 			Save();
@@ -94,7 +94,7 @@ namespace WeSay.UI
 
 	   public virtual void Save(string projectDirectoryPath)
 		{
-			XmlWriter writer = XmlWriter.Create(this.PathToWritingSystemPrefs);
+			XmlWriter writer = XmlWriter.Create(PathToWritingSystemPrefs);
 			_writingSystems.Write(writer);
 			writer.Close();
 		}
@@ -139,7 +139,7 @@ namespace WeSay.UI
 		{
 			get
 			{
-				return GetPathToWritingSystemPrefs(this.CommonDirectory);
+				return GetPathToWritingSystemPrefs(CommonDirectory);
 			}
 		}
 
@@ -225,13 +225,13 @@ namespace WeSay.UI
 
 		 public void InitWritingSystems()
 		{
-			if (File.Exists(this.PathToWritingSystemPrefs))
+			if (File.Exists(PathToWritingSystemPrefs))
 			{
-				_writingSystems.Load(this.PathToWritingSystemPrefs);
+				_writingSystems.Load(PathToWritingSystemPrefs);
 			}
 			else
 			{   //load defaults
-				_writingSystems.Load(GetPathToWritingSystemPrefs(this.ApplicationCommonDirectory));
+				_writingSystems.Load(GetPathToWritingSystemPrefs(ApplicationCommonDirectory));
 			}
 		}
 
@@ -247,7 +247,7 @@ namespace WeSay.UI
 		{
 			try
 			{
-				string p = this.LocateStringCatalog();
+				string p = LocateStringCatalog();
 				if (p == null)
 				{
 					new StringCatalog();

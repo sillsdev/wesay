@@ -1,9 +1,7 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Drawing;
 using System.Windows.Forms;
 using PicoContainer;
 using PicoContainer.Defaults;
@@ -20,18 +18,22 @@ namespace WeSay.App
 	{
 		private bool _disposed;
 		private IMutablePicoContainer _parentPicoContext;
-		BasilProject _project;
 
 		public SampleTaskBuilder(WeSayWordsProject project)
 		{
 			_parentPicoContext = CreateContainer();
-			_parentPicoContext.RegisterComponentInstance(project);
-			_project = project;
+			_parentPicoContext.RegisterComponentInstance("Project", project);
+			IRecordListManager recordListManager;
 
 			if (project.PathToWeSaySpecificFilesDirectory.IndexOf("PRETEND") > -1)
 			{
-				IBindingList pEntries = new PretendRecordList();
-				_parentPicoContext.RegisterComponentInstance(pEntries);
+				IBindingList entries = new PretendRecordList();
+				recordListManager = new InMemoryRecordListManager();
+				IRecordList<LexEntry> masterRecordList = recordListManager.Get<LexEntry>();
+				foreach (LexEntry entry in entries)
+				{
+					masterRecordList.Add(entry);
+				}
 			}
 			else
 			{
@@ -43,22 +45,9 @@ namespace WeSay.App
 				objectClass = db4oConfiguration.ObjectClass(typeof(LexEntry));
 				objectClass.ObjectField("_modifiedDate").Indexed(true);
 
-
-				Db4oDataSource ds = new Db4oDataSource(project.PathToLexicalModelDB);
-				IComponentAdapter dsAdaptor = _parentPicoContext.RegisterComponentInstance(ds);
-
-				///* Because the data source is never actually touched by the normal pico container code,
-				// * it never gets  added to this ordered list.  The ordered list is used for the lifecycle
-				// * functions, such as dispose.  Without adding it explicitly, this will end up
-				// * getting disposed of first, whereas we need it to be disposed of last.
-				// * Adding it explicity to the ordered list gives proper disposal order.
-				// */
-				_parentPicoContext.AddOrderedComponentAdapter(dsAdaptor);
-
-				Db4oRecordList<LexEntry> entries = new Db4oRecordList<LexEntry>(ds);
-				_parentPicoContext.RegisterComponentInstance("All Entries", entries);
+				recordListManager = new Db4oRecordListManager(project.PathToLexicalModelDB);
 			}
-
+			_parentPicoContext.RegisterComponentInstance("Record List Manager", recordListManager);
 		}
 
 
@@ -118,22 +107,6 @@ namespace WeSay.App
 
 		}
 
-		//private IMutablePicoContainer NewChildContainer(IList instances)
-		//{
-		//    IMutablePicoContainer child = new DefaultPicoContainer(_parentPicoContext);
-		//    _parentPicoContext.AddChildContainer(child);
-		//    if (instances != null)
-		//    {
-		//        foreach (object instance in instances)
-		//        {
-		//            //REVIEW: Huh? This is registering every LexEntry.
-		//            Debug.Assert(null == instance as LexicalModel.LexEntry,"Flying Saucer Siting");
-		//            child.RegisterComponentInstance(instance);
-		//        }
-		//    }
-		//    return child;
-		//}
-
 		private static ITask CreateTool(IMutablePicoContainer picoContext, string fullToolClass)
 		{
 			RegisterType(picoContext, fullToolClass);
@@ -147,11 +120,6 @@ namespace WeSay.App
 		{
 			picoContext.RegisterComponentImplementation(fullToolClass, Type.GetType(fullToolClass, true));
 		}
-
-		//private ITask CreateTool(string fullToolClass, IList instances)
-		//{
-		//    return CreateTool(NewChildContainer(instances), fullToolClass);
-		//}
 
 		private ITask CreateTool(string fullToolClass)
 		{
@@ -181,7 +149,7 @@ namespace WeSay.App
 
 			_parentPicoContext.RegisterComponentImplementation(id, Type.GetType(fullToolClass, true),
 				new IParameter[]{
-					new ComponentParameter("All Entries"),
+					new ComponentParameter("Record List Manager"),
 					new ComponentParameter("GlossFilter"),
 					new ConstantParameter(label),
 					new ConstantParameter(description),

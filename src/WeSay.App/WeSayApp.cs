@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Windows.Forms;
 using CommandLine;
 using WeSay.UI;
@@ -12,7 +11,7 @@ namespace WeSay.App
 		class CommandLineArguments
 		{
 			[DefaultArgument(ArgumentTypes.AtMostOnce,
-				DefaultValue=@"..\..\SampleProjects\Thai\WeSay\thai500.words",
+				DefaultValue=@"..\..\SampleProjects\Thai\WeSay\thai5000.words",
 				HelpText=@"Path to the words file (e.g. c:\thai\wesay\thai500.words).")]
 			public string wordsPath=null;
 
@@ -57,11 +56,11 @@ namespace WeSay.App
 			{
 				Application.EnableVisualStyles();
 				Application.SetCompatibleTextRenderingDefault(false);
-//                builder = new SampleTaskBuilder(project);
-				using (FileStream config = new FileStream(project.PathToProjectTaskInventory, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete))
-				{
-					builder = new ConfigFileTaskBuilder(project, config);
-				}
+				builder = new SampleTaskBuilder(project);
+				//using (FileStream config = new FileStream(project.PathToProjectTaskInventory, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete))
+				//{
+				//    builder = new ConfigFileTaskBuilder(project, config);
+				//}
 				Form f =  new TabbedForm(project, builder);
 				Application.Run(f);
 			}

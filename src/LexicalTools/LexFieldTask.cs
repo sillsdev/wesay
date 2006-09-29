@@ -1,18 +1,16 @@
 using System;
-using System.ComponentModel;
-using System.Drawing;
 using System.Windows.Forms;
 using WeSay.LexicalModel;
 using WeSay.UI;
 using WeSay.Data;
-using System.Text.RegularExpressions;
 
 namespace WeSay.LexicalTools
 {
 	public partial class LexFieldTask : ITask
 	{
 		private LexFieldTool _lexFieldTool;
-		private IBindingList _records;
+		private IRecordListManager _recordListManager;
+		private IFilter<LexEntry> _filter;
 		private string _label;
 		private string _description;
 
@@ -34,11 +32,11 @@ namespace WeSay.LexicalTools
 			}
 		 }
 
-		public LexFieldTask(IRecordList<LexEntry> records, IFilter<LexEntry> filter, string label, string description, string fieldsToShow)
+		public LexFieldTask(IRecordListManager recordListManager, IFilter<LexEntry> filter, string label, string description, string fieldsToShow)
 		{
-			if (records == null)
+			if (recordListManager == null)
 			{
-				throw new ArgumentNullException("records");
+				throw new ArgumentNullException("recordListManager");
 			}
 			if (filter == null)
 			{
@@ -56,9 +54,11 @@ namespace WeSay.LexicalTools
 			{
 				throw new ArgumentNullException("fieldsToShow");
 			}
-			_records = records;
+			_recordListManager = recordListManager;
+			recordListManager.Register<LexEntry>(filter);
 			_label = label;
 			_description = description;
+			_filter = filter;
 			InitializeFieldFilter(fieldsToShow);
 		}
 
@@ -77,7 +77,7 @@ namespace WeSay.LexicalTools
 
 		public void Activate()
 		{
-			_lexFieldTool = new LexFieldTool(_records, _showField);
+			_lexFieldTool = new LexFieldTool(DataSource, _showField);
 		}
 
 
@@ -107,11 +107,11 @@ namespace WeSay.LexicalTools
 			}
 		}
 
-		public IBindingList DataSource
+		public IRecordList<LexEntry> DataSource
 		{
 			get
 			{
-				return _records;
+				return _recordListManager.Get<LexEntry>(_filter);
 			}
 		}
 

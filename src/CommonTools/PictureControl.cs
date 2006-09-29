@@ -1,8 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 using WeSay.UI;
 
@@ -51,17 +47,6 @@ namespace WeSay.CommonTools
 			get
 			{
 				return _description;
-			}
-		}
-
-		public Predicate<object> Filter
-		{
-			get
-			{
-				return delegate(object o)
-				{
-					return false;
-				};
 			}
 		}
 

@@ -1,26 +1,24 @@
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
 using System.Windows.Forms;
 using WeSay.UI;
+using WeSay.Data;
 
 namespace WeSay.CommonTools
 {
 	public partial class DashboardControl : UserControl, ITask
 	{
-		private IBindingList _records;
+		private IRecordList<LexicalModel.LexEntry> _records;
 
-		public DashboardControl(IBindingList records, string unusedLabel) :this(records)
+		public DashboardControl(IRecordListManager recordListManager, string unusedLabel) :this(recordListManager)
 		{
 
 		}
 
-		public DashboardControl(IBindingList records)
+		public DashboardControl(IRecordListManager recordListManager)
 		{
-			_records = records;
+			_records = recordListManager.Get<LexicalModel.LexEntry>();
 			InitializeComponent();
-			this._dictionarySizeLabel.Text = String.Format(StringCatalog.Get(this._dictionarySizeLabel.Text), records.Count);
+			this._dictionarySizeLabel.Text = String.Format(StringCatalog.Get(this._dictionarySizeLabel.Text), _records.Count);
 			this._projectNameLabel.Text = BasilProject.Project.Name;
 		}
 
@@ -55,7 +53,7 @@ namespace WeSay.CommonTools
 		{
 			string path = string.Format(@"c:\{0}-lift.xml", BasilProject.Project.Name);
 			LexicalModel.LiftExporter exporter = new WeSay.LexicalModel.LiftExporter(path);
-			exporter.Add((IList<LexicalModel.LexEntry>) _records);
+			exporter.Add(_records);
 			exporter.End();
 		}
 
@@ -64,16 +62,6 @@ namespace WeSay.CommonTools
 			get
 			{
 				return "Switch tasks and see current status of tasks";
-			}
-		}
-
-		public Predicate<object> Filter
-		{
-			get
-			{
-				return delegate(object o){
-					return true;
-				};
 			}
 		}
 

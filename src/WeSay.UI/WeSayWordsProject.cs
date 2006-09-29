@@ -33,7 +33,7 @@ namespace WeSay.UI
 			CheckLexiconIsInValidProjectDirectory(lexiconPath);
 			//walk up from file to /wesay to /<project>
 			base.LoadFromProjectDirectoryPath(Directory.GetParent(Directory.GetParent(lexiconPath).FullName).FullName);
-			Debug.Assert(PathToLexicalModelDB.ToLower() == lexiconPath.ToLower());
+			Debug.Assert(PathToLexicalModelDB.ToLower() == Path.GetFullPath(lexiconPath).ToLower());
 	   }
 
 		public override  void LoadFromProjectDirectoryPath(string projectDirectoryPath)
@@ -112,14 +112,6 @@ namespace WeSay.UI
 				{
 					return System.IO.Path.Combine(PathToWeSaySpecificFilesDirectory, this.Name+".words");
 				}
-			}
-		}
-
-		private string ApplicationDirectory
-		{
-			get
-			{
-				return System.IO.Path.Combine(ProjectDirectoryPath, "WeSay");
 			}
 		}
 

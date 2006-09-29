@@ -1,5 +1,4 @@
 using System;
-using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 using WeSay.LexicalModel;
@@ -10,9 +9,9 @@ namespace WeSay.LexicalTools
 {
 	public partial class LexFieldTool : UserControl
 	{
-		private IBindingList _records;
+		private IRecordList<LexEntry> _records;
 		private int _currentIndex;
-		public LexFieldTool(IBindingList records, Predicate<string> fieldFilter)
+		public LexFieldTool(IRecordList<LexEntry> records, Predicate<string> fieldFilter)
 		{
 			if (records == null)
 			{
@@ -60,7 +59,7 @@ namespace WeSay.LexicalTools
 				{
 					return null;
 				}
-				return _records[_currentIndex] as LexEntry;
+				return _records[_currentIndex];
 			}
 		}
 	}
