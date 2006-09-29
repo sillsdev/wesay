@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.IO;
 using NUnit.Framework;
 
@@ -93,7 +95,7 @@ namespace WeSay.Data.Tests
 			Assert.AreEqual(12, recordList10to19[1].I);
 		}
 
-		public delegate void ChangeRecordList<T>(Db4oRecordList<T> recordList) where T:class, new();
+		private delegate void ChangeRecordList<T>(Db4oRecordList<T> recordList) where T:class, new();
 
 		private void ChangeDatabaseOutFromUnderRecordListManager(ChangeRecordList<SimpleIntTestClass> change)
 		{
@@ -173,6 +175,117 @@ namespace WeSay.Data.Tests
 			Assert.AreEqual(9, recordList10to19.Count);
 			Assert.AreEqual(12, recordList10to19[1].I);
 		}
+	}
 
+	[TestFixture]
+	public class Db4oRecordListManagerCacheTests
+	{
+		private string _filePath;
+		private IRecordListManager _recordListManager;
+		private IRecordList<SimpleIntTestClass> _sourceRecords;
+		private SimpleIntFilter _filter11to17;
+
+		protected IRecordListManager RecordListManager
+		{
+			get
+			{
+				return _recordListManager;
+			}
+		}
+
+		protected SimpleIntFilter Filter11to17
+		{
+			get
+			{
+				return _filter11to17;
+			}
+		}
+
+		[SetUp]
+		public void Setup()
+		{
+			_filePath = System.IO.Path.GetTempFileName();
+			_recordListManager = new Db4oRecordListManager(_filePath);
+			PopupateMasterRecordList();
+
+			_filter11to17 = new SimpleIntFilter(11, 17);
+			Filter11to17.UseInverseFilter = true;
+			RecordListManager.Register<SimpleIntTestClass>(Filter11to17);
+			RecordListManager.Get<SimpleIntTestClass>(Filter11to17);
+			RecordListManager.Dispose();
+			_recordListManager = new Db4oRecordListManager(_filePath);
+
+			_filter11to17 = new SimpleIntFilter(11, 17);
+			RecordListManager.Register<SimpleIntTestClass>(Filter11to17);
+
+		}
+
+		private void PopupateMasterRecordList()
+		{
+			_sourceRecords = RecordListManager.Get<SimpleIntTestClass>();
+			for (int i = 0; i < 50; i++)
+			{
+				_sourceRecords.Add(new SimpleIntTestClass(i));
+			}
+		}
+
+		[TearDown]
+		public void TearDown()
+		{
+			RecordListManager.Dispose();
+
+			string cacheDirectory = Path.Combine(Path.GetDirectoryName(this._filePath), "Cache");
+			if (Directory.Exists(cacheDirectory))
+			{
+				Directory.Delete(cacheDirectory, true);
+			}
+			System.IO.File.Delete(_filePath);
+		}
+
+		[Test]
+		public void FilterModified_ChangedRecord_NoLongerMeetsFilterCriteria_RemovedFromCachedRecordLists()
+		{
+			IRecordList<SimpleIntTestClass> masterRecordList = RecordListManager.Get<SimpleIntTestClass>();
+			masterRecordList[11].I = 10;
+			IRecordList<SimpleIntTestClass> recordList11to17 = RecordListManager.Get<SimpleIntTestClass>(Filter11to17);
+			Assert.AreEqual(6, recordList11to17.Count);
+			Assert.AreEqual(12, recordList11to17[0].I);
+		}
+
+		[Test]
+		public void FilterModified_ChangedRecord_MeetsFilterCriteria_AddedToCachedRecordList()
+		{
+			IRecordList<SimpleIntTestClass> masterRecordList = RecordListManager.Get<SimpleIntTestClass>();
+			masterRecordList[0].I = 12;
+			IRecordList<SimpleIntTestClass> recordList11to17 = RecordListManager.Get<SimpleIntTestClass>(Filter11to17);
+			Assert.AreEqual(8, recordList11to17.Count);
+			SimpleIntTestClass[] List11to17 = new SimpleIntTestClass[recordList11to17.Count];
+			recordList11to17.CopyTo(List11to17, 0);
+			SimpleIntTestClass[] ListOf12 = Array.FindAll<SimpleIntTestClass>(List11to17,
+														  delegate(SimpleIntTestClass testClass)
+														  {
+															  return testClass.I == 12;
+														  });
+			Assert.AreEqual(2, ListOf12.Length);
+		}
+
+		[Test]
+		public void FilterModified_AddedRecord_AddedToCachedRecordLists()
+		{
+			IRecordList<SimpleIntTestClass> masterRecordList = RecordListManager.Get<SimpleIntTestClass>();
+			masterRecordList.Add(new SimpleIntTestClass(15));
+			IRecordList<SimpleIntTestClass> recordList11to17 = RecordListManager.Get<SimpleIntTestClass>(Filter11to17);
+			Assert.AreEqual(8, recordList11to17.Count);
+		}
+
+		[Test]
+		public void FilterModified_RemovedRecord_RemovedFromCachedRecordLists()
+		{
+			IRecordList<SimpleIntTestClass> masterRecordList = RecordListManager.Get<SimpleIntTestClass>();
+			masterRecordList.RemoveAt(11);
+			IRecordList<SimpleIntTestClass> recordList11to17 = RecordListManager.Get<SimpleIntTestClass>(Filter11to17);
+			Assert.AreEqual(6, recordList11to17.Count);
+			Assert.AreEqual(12, recordList11to17[0].I);
+		}
 	}
 }

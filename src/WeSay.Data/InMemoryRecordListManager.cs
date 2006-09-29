@@ -1,17 +1,10 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.ComponentModel;
-using System.Collections;
 
 namespace WeSay.Data
 {
 	public class InMemoryRecordListManager : AbstractRecordListManager
 	{
-		public InMemoryRecordListManager() :base()
-		{
-		}
-
 		protected override IRecordList<T> CreateMasterRecordList<T>()
 		{
 		  return new InMemoryRecordList<T>();
@@ -35,7 +28,7 @@ namespace WeSay.Data
 			  _masterRecordList.ListChanged += new ListChangedEventHandler(OnMasterRecordListListChanged);
 			  _masterRecordList.DeletingRecord += new EventHandler<RecordListEventArgs<T>>(OnMasterRecordListDeletingRecord);
 			  IsRelevant = filter;
-			  this.ApplyFilter(filter);
+			  ApplyFilter(filter);
 			}
 
 			void OnMasterRecordListDeletingRecord(object sender, RecordListEventArgs<T> e)
@@ -101,20 +94,20 @@ namespace WeSay.Data
 				{
 					if (!Contains(item))
 					{
-						this.Add(item);
+						Add(item);
 					}
 				}
-				else if (this.Contains(item))
+				else if (Contains(item))
 				{
-					this.Remove(item);
+					Remove(item);
 				}
 			}
 
 			private void HandleItemDeletedFromMaster(T item)
 			{
-				if (this.Contains(item))
+				if (Contains(item))
 				{
-					this.Remove(item);
+					Remove(item);
 				}
 			}
 
@@ -123,7 +116,7 @@ namespace WeSay.Data
 				// The reset event can be raised when items are cleared and also when sorting or filtering occurs
 				if (masterRecordList.Count == 0)
 				{
-					this.Clear();
+					Clear();
 				}
 			}
 
@@ -141,7 +134,7 @@ namespace WeSay.Data
 
 			protected override void Dispose(bool disposing)
 			{
-				if (!this.IsDisposed)
+				if (!IsDisposed)
 				{
 					if (disposing)
 					{

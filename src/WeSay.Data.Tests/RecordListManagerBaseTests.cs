@@ -66,7 +66,7 @@ namespace WeSay.Data.Tests
 			RecordListManager.Register<SimpleIntTestClass>(Filter11to20);
 		}
 
-		private void CreateFilters()
+		protected virtual void CreateFilters()
 		{
 			_filter10to19 = new SimpleIntFilter(10, 19);
 			_filter11to12 = new SimpleIntFilter(11, 12);

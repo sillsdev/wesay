@@ -66,5 +66,10 @@ namespace WeSay.Data
 		}
 
 		new void RemoveAt(int index);
+
+		 /// <summary>
+		/// Removes all items from the collection
+		/// </summary>
+		new void Clear();
 	}
 }

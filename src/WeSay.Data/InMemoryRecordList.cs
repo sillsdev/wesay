@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Collections;
 
 namespace WeSay.Data
 {
@@ -18,7 +17,7 @@ namespace WeSay.Data
 		public InMemoryRecordList(IRecordList<T> original)
 			: this()
 		{
-			this.AddRange(original);
+			AddRange(original);
 
 			_isSorted = original.IsSorted;
 			SortProperty = original.SortProperty;
@@ -140,7 +139,7 @@ namespace WeSay.Data
 
 		protected override void Dispose(bool disposing)
 		{
-			if (!this.IsDisposed)
+			if (!IsDisposed)
 			{
 				if (disposing)
 				{

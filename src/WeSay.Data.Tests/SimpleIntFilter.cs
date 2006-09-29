@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace WeSay.Data.Tests
 {
@@ -8,6 +6,8 @@ namespace WeSay.Data.Tests
 	{
 		int _lowerBound;
 		int _upperBound;
+		private bool _useInverseFilter;
+
 		public SimpleIntFilter(int lowerBound, int upperBound)
 		{
 			_lowerBound = lowerBound;
@@ -19,20 +19,36 @@ namespace WeSay.Data.Tests
 		{
 			get
 			{
-				return delegate(SimpleIntTestClass simpleIntTest)
+				if(!UseInverseFilter)
 				{
-					return (_lowerBound <= simpleIntTest.I && simpleIntTest.I <= _upperBound);
-				};
+					return filter1;
+				}
+				return filter2;
 			}
 		}
-
 
 		public string Key
 		{
 			get
 			{
-				return this.ToString() + _lowerBound.ToString() + "-" + _upperBound.ToString();
+				return ToString() + _lowerBound.ToString() + "-" + _upperBound.ToString();
 			}
+		}
+
+		public bool UseInverseFilter
+		{
+			get { return this._useInverseFilter; }
+			set { this._useInverseFilter = value; }
+		}
+
+		private bool filter1(SimpleIntTestClass simpleIntTest)
+		{
+			return (_lowerBound <= simpleIntTest.I && simpleIntTest.I <= _upperBound);
+		}
+
+		private bool filter2(SimpleIntTestClass simpleIntTest)
+		{
+			return (_lowerBound > simpleIntTest.I || simpleIntTest.I > _upperBound);
 		}
 
 		#endregion

@@ -139,6 +139,7 @@ namespace WeSay.Data
 							BinaryFormatter formatter = new BinaryFormatter();
 							try
 							{
+								formatter.Serialize(fs, GetFilterHashCode());
 								formatter.Serialize(fs, ((Db4oList<T>)Records).ItemIds);
 							}
 							finally
@@ -157,6 +158,17 @@ namespace WeSay.Data
 				}
 			}
 
+			private int GetFilterHashCode() {
+				byte[] bytes = ((Db4oList<T>) Records).Filter.Method.GetMethodBody().GetILAsByteArray();
+				int hashCode = 0;
+				for (int i = 0; i < bytes.Length; i++)
+				{
+					byte b = bytes[i];
+					hashCode ^= b;
+				}
+				return hashCode;
+			}
+
 			void DeserializeRecordIds()
 			{
 				List<long> itemIds;
@@ -165,6 +177,14 @@ namespace WeSay.Data
 					BinaryFormatter formatter = new BinaryFormatter();
 					try
 					{
+						int filterHashCode = (int) formatter.Deserialize(fs);
+						if(filterHashCode != GetFilterHashCode())
+						{
+							// this will make sure that if the code of a filter changes, the
+							// cache will be invalidated. I couldn't think of how to make this
+							// testable. If you can please add a test.
+							throw new InvalidOperationException("Cache is invalid");
+						}
 						itemIds = (List<long>)formatter.Deserialize(fs);
 						((Db4oList<T>)Records).ItemIds = itemIds;
 					}

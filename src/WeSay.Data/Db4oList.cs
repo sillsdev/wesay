@@ -751,7 +751,7 @@ namespace WeSay.Data
 			{
 				throw new ArgumentOutOfRangeException("count", count, "Must be > 0.");
 			}
-			if (count >= Count - index)
+			if (count > Count - index)
 			{
 				throw new ArgumentOutOfRangeException("count", count, "So many items are not available.");
 			}
@@ -773,7 +773,7 @@ namespace WeSay.Data
 			}
 			for (int i = 0; i < count; i++)
 			{
-				array[arrayIndex + i] = this[index + count];
+				array[arrayIndex + i] = this[index + i];
 			}
 		}
 
@@ -1345,7 +1345,7 @@ namespace WeSay.Data
 			VerifyNotDisposed();
 			if (Count != 0)
 			{
-				CopyTo(0, array, arrayIndex, Count - 1);
+				CopyTo(0, array, arrayIndex, Count);
 			}
 		}
 
