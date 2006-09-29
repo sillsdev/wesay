@@ -56,11 +56,11 @@ namespace WeSay.App
 			{
 				Application.EnableVisualStyles();
 				Application.SetCompatibleTextRenderingDefault(false);
-				builder = new SampleTaskBuilder(project);
-				//using (FileStream config = new FileStream(project.PathToProjectTaskInventory, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete))
-				//{
-				//    builder = new ConfigFileTaskBuilder(project, config);
-				//}
+				//builder = new SampleTaskBuilder(project);
+				using (FileStream config = new FileStream(project.PathToProjectTaskInventory, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete))
+				{
+					builder = new ConfigFileTaskBuilder(project, config);
+				}
 				Form f =  new TabbedForm(project, builder);
 				Application.Run(f);
 			}

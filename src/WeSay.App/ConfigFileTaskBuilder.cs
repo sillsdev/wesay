@@ -1,13 +1,14 @@
 using System;
 using PicoContainer;
 using PicoContainer.Defaults;
+using WeSay.LexicalModel;
+using WeSay.LexicalModel.Tests;
 using WeSay.UI;
 using System.IO;
 using System.Collections.Generic;
 using System.ComponentModel;
 using WeSay.Data;
 using System.Xml.XPath;
-using WeSay.LexicalModel;
 
 namespace WeSay.App
 {
@@ -21,11 +22,18 @@ namespace WeSay.App
 		{
 			_picoContext = new DefaultPicoContainer();
 			_picoContext.RegisterComponentInstance(project);
+			IRecordListManager recordListManager;
 
 			if (project.PathToWeSaySpecificFilesDirectory.IndexOf("PRETEND") > -1)
 			{
+				IBindingList entries = new PretendRecordList();
+				recordListManager = new InMemoryRecordListManager();
+				IRecordList<LexEntry> masterRecordList = recordListManager.Get<LexEntry>();
+				foreach (LexEntry entry in entries)
+				{
+					masterRecordList.Add(entry);
+				}
 				IBindingList pEntries = new WeSay.LexicalModel.Tests.PretendRecordList();
-				_picoContext.RegisterComponentInstance("All Entries",pEntries);
 			}
 			else
 			{
@@ -34,23 +42,12 @@ namespace WeSay.App
 				objectClass.ObjectField("_writingSystemId").Indexed(true);
 				objectClass.ObjectField("_form").Indexed(true);
 
-				objectClass = db4oConfiguration.ObjectClass(typeof(WeSay.LexicalModel.LexEntry));
+				objectClass = db4oConfiguration.ObjectClass(typeof(LexEntry));
 				objectClass.ObjectField("_modifiedDate").Indexed(true);
 
-				Db4oDataSource ds = new Db4oDataSource(project.PathToLexicalModelDB);
-				IComponentAdapter dsAdaptor = _picoContext.RegisterComponentInstance(ds);
-
-				///* Because the data source is never actually touched by the normal pico container code,
-				// * it never gets  added to this ordered list.  The ordered list is used for the lifecycle
-				// * functions, such as dispose.  Without adding it explicitly, this will end up
-				// * getting disposed of first, whereas we need it to be disposed of last.
-				// * Adding it explicity to the ordered list gives proper disposal order.
-				// */
-				_picoContext.AddOrderedComponentAdapter(dsAdaptor);
-
-				Db4oRecordList<WeSay.LexicalModel.LexEntry> entries = new Db4oRecordList<WeSay.LexicalModel.LexEntry>(ds);
-				_picoContext.RegisterComponentInstance("All Entries", entries);
+				recordListManager = new Db4oRecordListManager(project.PathToLexicalModelDB);
 			}
+			_picoContext.RegisterComponentInstance("All Entries", recordListManager);
 			InitializeTaskList(config);
 		}
 
