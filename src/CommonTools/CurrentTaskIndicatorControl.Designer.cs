@@ -44,7 +44,8 @@ namespace WeSay.CommonTools
 			//
 			// _indicatorPanel
 			//
-			this._indicatorPanel.Location = new System.Drawing.Point(80, 31);
+			this._indicatorPanel.AutoSize = true;
+			this._indicatorPanel.Location = new System.Drawing.Point(70, 31);
 			this._indicatorPanel.Name = "_indicatorPanel";
 			this._indicatorPanel.Size = new System.Drawing.Size(471, 62);
 			this._indicatorPanel.TabIndex = 1;

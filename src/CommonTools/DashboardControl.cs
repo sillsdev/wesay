@@ -18,9 +18,20 @@ namespace WeSay.CommonTools
 			DictionaryStatusControl status = new DictionaryStatusControl(recordListManager.Get<LexEntry>());
 			this._vbox.AddControlToBottom(status);
 			_vbox.AddControlToBottom(new CurrentTaskIndicatorControl(new TaskIndicator()));
-			_vbox.AddControlToBottom(new TaskIndicator());
-			_vbox.AddControlToBottom(new TaskIndicator());
-			_vbox.AddControlToBottom(new TaskIndicator());
+			AddIndicator(new TaskIndicator());
+			AddIndicator(new TaskIndicator());
+			AddIndicator(new TaskIndicator());
+		}
+
+		private void AddIndicator(TaskIndicator indicator)
+		{
+			Panel indentPanel = new Panel();
+			indicator.Left = 70;
+			indicator.Top = 0;
+			indentPanel.Size = new System.Drawing.Size(indicator.Right,indicator.Height);
+			indentPanel.AutoSize = true;
+			indentPanel.Controls.Add(indicator);
+			this._vbox.AddControlToBottom(indentPanel);
 		}
 
 		#region ITask

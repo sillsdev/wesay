@@ -21,5 +21,10 @@ namespace WeSay.CommonTools
 		   Debug.Assert(this.BackColor != System.Drawing.Color.Transparent);
 		   this._textShortDescription.BackColor = this.BackColor;
 		}
+
+		private void _btnName_Click(object sender, EventArgs e)
+		{
+
+		}
 	}
 }
