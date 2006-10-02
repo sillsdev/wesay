@@ -30,11 +30,12 @@ namespace WeSay.LexicalTools
 		/// </summary>
 		private void InitializeComponent()
 		{
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EntryDetailTask));
 			this._entryDetailPanel = new WeSay.LexicalTools.EntryDetailControl();
 			this.panel1 = new System.Windows.Forms.Panel();
-			this.btnDelete = new System.Windows.Forms.Button();
-			this.btnAdd = new System.Windows.Forms.Button();
 			this._recordsListBox = new ListBox.BindingListGrid();
+			this._btnNewWord = new System.Windows.Forms.LinkLabel();
+			this._btnDeleteWord = new System.Windows.Forms.LinkLabel();
 			this.panel1.SuspendLayout();
 			this.SuspendLayout();
 			//
@@ -47,42 +48,20 @@ namespace WeSay.LexicalTools
 			this._entryDetailPanel.BackColor = System.Drawing.SystemColors.ActiveCaption;
 			this._entryDetailPanel.DataSource = null;
 			this._entryDetailPanel.Location = new System.Drawing.Point(126, 0);
-			if (Environment.OSVersion.Platform != PlatformID.Unix)
-			{
-				//this._entryDetailPanel.Margin = new System.Windows.Forms.Padding(5);
-			}
 			this._entryDetailPanel.Name = "_entryDetailPanel";
+			this._entryDetailPanel.ShowField = ((System.Predicate<string>)(resources.GetObject("_entryDetailPanel.ShowField")));
 			this._entryDetailPanel.Size = new System.Drawing.Size(367, 127);
 			this._entryDetailPanel.TabIndex = 4;
 			//
 			// panel1
 			//
-			this.panel1.Controls.Add(this.btnDelete);
-			this.panel1.Controls.Add(this.btnAdd);
+			this.panel1.Controls.Add(this._btnDeleteWord);
+			this.panel1.Controls.Add(this._btnNewWord);
 			this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
 			this.panel1.Location = new System.Drawing.Point(0, 135);
 			this.panel1.Name = "panel1";
 			this.panel1.Size = new System.Drawing.Size(493, 34);
 			this.panel1.TabIndex = 7;
-			//
-			// btnDelete
-			//
-			this.btnDelete.Location = new System.Drawing.Point(163, 7);
-			this.btnDelete.Name = "btnDelete";
-			this.btnDelete.Size = new System.Drawing.Size(75, 23);
-			this.btnDelete.TabIndex = 7;
-			this.btnDelete.Text = "Delete Word";
-			this.btnDelete.UseVisualStyleBackColor = true;
-			this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
-			//
-			// btnAdd
-			//
-			this.btnAdd.Location = new System.Drawing.Point(18, 8);
-			this.btnAdd.Name = "btnAdd";
-			this.btnAdd.Size = new System.Drawing.Size(75, 23);
-			this.btnAdd.TabIndex = 6;
-			this.btnAdd.Text = "New Word";
-			this.btnAdd.UseVisualStyleBackColor = true;
 			//
 			// _recordsListBox
 			//
@@ -102,6 +81,34 @@ namespace WeSay.LexicalTools
 			this._recordsListBox.StyleGrid = null;
 			this._recordsListBox.TabIndex = 8;
 			//
+			// _btnNewWord
+			//
+			this._btnNewWord.AutoSize = true;
+			this._btnNewWord.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
+			this._btnNewWord.LinkColor = System.Drawing.Color.Black;
+			this._btnNewWord.Location = new System.Drawing.Point(15, 7);
+			this._btnNewWord.Name = "_btnNewWord";
+			this._btnNewWord.Size = new System.Drawing.Size(58, 13);
+			this._btnNewWord.TabIndex = 8;
+			this._btnNewWord.TabStop = true;
+			this._btnNewWord.Text = "New Word";
+			this._btnNewWord.VisitedLinkColor = System.Drawing.Color.Black;
+			this._btnNewWord.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this._btnNewWord_LinkClicked);
+			//
+			// _btnDeleteWord
+			//
+			this._btnDeleteWord.AutoSize = true;
+			this._btnDeleteWord.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
+			this._btnDeleteWord.LinkColor = System.Drawing.Color.Black;
+			this._btnDeleteWord.Location = new System.Drawing.Point(135, 7);
+			this._btnDeleteWord.Name = "_btnDeleteWord";
+			this._btnDeleteWord.Size = new System.Drawing.Size(90, 13);
+			this._btnDeleteWord.TabIndex = 9;
+			this._btnDeleteWord.TabStop = true;
+			this._btnDeleteWord.Text = "Delete This Word";
+			this._btnDeleteWord.VisitedLinkColor = System.Drawing.Color.Black;
+			this._btnDeleteWord.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this._btnDeleteWord_LinkClicked);
+			//
 			// EntryDetailTask
 			//
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -112,6 +119,7 @@ namespace WeSay.LexicalTools
 			this.Name = "EntryDetailTask";
 			this.Size = new System.Drawing.Size(493, 169);
 			this.panel1.ResumeLayout(false);
+			this.panel1.PerformLayout();
 			this.ResumeLayout(false);
 
 		}
@@ -120,8 +128,8 @@ namespace WeSay.LexicalTools
 
 		private EntryDetailControl _entryDetailPanel;
 		private System.Windows.Forms.Panel panel1;
-		private System.Windows.Forms.Button btnDelete;
-		private System.Windows.Forms.Button btnAdd;
 		private ListBox.BindingListGrid _recordsListBox;
+		private System.Windows.Forms.LinkLabel _btnDeleteWord;
+		private System.Windows.Forms.LinkLabel _btnNewWord;
 	}
 }

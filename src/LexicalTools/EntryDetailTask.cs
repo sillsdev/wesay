@@ -77,7 +77,12 @@ namespace WeSay.LexicalTools
 			}
 		}
 
-		private void btnDelete_Click(object sender, EventArgs e)
+		private void _btnNewWord_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+		{
+			_records.Add(new LexEntry());
+		}
+
+		private void _btnDeleteWord_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
 		{
 
 		}
