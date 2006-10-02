@@ -65,32 +65,30 @@ namespace WeSay.Data
 				}
 			}
 
-			public FilteredDb4oRecordList(IRecordList<T> sourceRecords, IFilter<T> filter, string dataPath, bool throwIfFilterNotOptimizable)
+			public FilteredDb4oRecordList(IRecordList<T> sourceRecords, IFilter<T> filter, string dataPath, bool constructOnlyIfFilterIsCached)
 			: base((Db4oRecordList<T>)sourceRecords)
 			{
 				_cachePath = Path.Combine(dataPath, "Cache");
 				_isRelevantFilter = filter;
 
-				if (throwIfFilterNotOptimizable)
+				if (constructOnlyIfFilterIsCached)
 				{
-					((Db4oList<T>)Records).ItemIds = new List<long>();
+					((Db4oList<T>)Records).ItemIds.Clear();
 				}
 
 				ApplyFilter(IsRelevant);
 
-				if (throwIfFilterNotOptimizable)
+				if (constructOnlyIfFilterIsCached)
 				{
-					_isInitializingFromCache = true;
-					try
+					List<long> itemIds;
+					itemIds = GetDeserializedRecordIds();
+					if (itemIds == null)
 					{
-						DeserializeRecordIds();
-					}
-					catch
-					{
+						_isInitializingFromCache = true;
 						Dispose();
-						throw new OperationCanceledException();
+						throw new OperationCanceledException("Filter is not cached.");
 					}
-					_isInitializingFromCache = false;
+					((Db4oList<T>)Records).ItemIds = itemIds;
 				}
 				_masterRecordList = sourceRecords;
 				_masterRecordList.ListChanged += new ListChangedEventHandler(OnMasterRecordListListChanged);
@@ -169,32 +167,30 @@ namespace WeSay.Data
 				return hashCode;
 			}
 
-			void DeserializeRecordIds()
+			List<long> GetDeserializedRecordIds()
 			{
-				List<long> itemIds;
-				using (FileStream fs = File.Open(CacheFilePath, FileMode.Open))
+				List<long> itemIds = null;
+				if (File.Exists(CacheFilePath))
 				{
-					BinaryFormatter formatter = new BinaryFormatter();
-					try
+					using (FileStream fs = File.Open(CacheFilePath, FileMode.Open))
 					{
-						int filterHashCode = (int) formatter.Deserialize(fs);
-						if(filterHashCode != GetFilterHashCode())
+						BinaryFormatter formatter = new BinaryFormatter();
+						try
 						{
-							// this will make sure that if the code of a filter changes, the
-							// cache will be invalidated. I couldn't think of how to make this
-							// testable. If you can please add a test.
-							throw new InvalidOperationException("Cache is invalid");
+							int filterHashCode = (int)formatter.Deserialize(fs);
+							if (filterHashCode == GetFilterHashCode())
+							{
+								itemIds = (List<long>)formatter.Deserialize(fs);
+							}
 						}
-						itemIds = (List<long>)formatter.Deserialize(fs);
-						((Db4oList<T>)Records).ItemIds = itemIds;
-					}
-					finally
-					{
-						fs.Close();
+						finally
+						{
+							fs.Close();
+						}
 					}
 				}
+				return itemIds;
 			}
-
 
 			void OnMasterRecordListDeletingRecord(object sender, RecordListEventArgs<T> e)
 			{
