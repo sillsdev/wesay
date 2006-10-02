@@ -26,5 +26,10 @@ namespace WeSay.CommonTools
 		{
 
 		}
+
+		private void _textShortDescription_TextChanged(object sender, EventArgs e)
+		{
+
+		}
 	}
 }

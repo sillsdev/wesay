@@ -36,21 +36,22 @@ namespace WeSay.CommonTools
 			// _count
 			//
 			this._count.AutoSize = true;
-			this._count.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this._count.Font = new System.Drawing.Font("Verdana", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this._count.Location = new System.Drawing.Point(-5, 10);
 			this._count.Name = "_count";
-			this._count.Size = new System.Drawing.Size(60, 24);
+			this._count.Size = new System.Drawing.Size(70, 23);
 			this._count.TabIndex = 0;
 			this._count.Text = "12345";
 			//
 			// _btnName
 			//
+			this._btnName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
 			this._btnName.BackColor = System.Drawing.Color.AliceBlue;
-			this._btnName.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-			this._btnName.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this._btnName.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this._btnName.Location = new System.Drawing.Point(79, 9);
 			this._btnName.Name = "_btnName";
-			this._btnName.Size = new System.Drawing.Size(245, 33);
+			this._btnName.Size = new System.Drawing.Size(275, 33);
 			this._btnName.TabIndex = 1;
 			this._btnName.Text = "Gather from Foo words";
 			this._btnName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -59,12 +60,16 @@ namespace WeSay.CommonTools
 			//
 			// _textShortDescription
 			//
+			this._textShortDescription.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
 			this._textShortDescription.BorderStyle = System.Windows.Forms.BorderStyle.None;
+			this._textShortDescription.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this._textShortDescription.Location = new System.Drawing.Point(79, 48);
 			this._textShortDescription.Name = "_textShortDescription";
-			this._textShortDescription.Size = new System.Drawing.Size(244, 13);
+			this._textShortDescription.Size = new System.Drawing.Size(275, 15);
 			this._textShortDescription.TabIndex = 2;
 			this._textShortDescription.Text = "See words in Foo, write the same words in Boo";
+			this._textShortDescription.TextChanged += new System.EventHandler(this._textShortDescription_TextChanged);
 			//
 			// TaskIndicator
 			//
@@ -76,7 +81,7 @@ namespace WeSay.CommonTools
 			this.Controls.Add(this._btnName);
 			this.Controls.Add(this._count);
 			this.Name = "TaskIndicator";
-			this.Size = new System.Drawing.Size(354, 72);
+			this.Size = new System.Drawing.Size(357, 72);
 			this.BackColorChanged += new System.EventHandler(this.TaskIndicator_BackColorChanged);
 			this.ResumeLayout(false);
 			this.PerformLayout();

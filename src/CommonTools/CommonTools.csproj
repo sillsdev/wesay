@@ -65,6 +65,9 @@
 	  <DesignTime>True</DesignTime>
 	  <DependentUpon>Resources.resx</DependentUpon>
 	</Compile>
+	<Compile Include="ShapeControl.cs">
+	  <SubType>Component</SubType>
+	</Compile>
 	<Compile Include="TaskIndicator.cs">
 	  <SubType>UserControl</SubType>
 	</Compile>

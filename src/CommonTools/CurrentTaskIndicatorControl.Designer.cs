@@ -35,17 +35,21 @@ namespace WeSay.CommonTools
 			// label1
 			//
 			this.label1.AutoSize = true;
-			this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label1.Location = new System.Drawing.Point(4, 4);
+			this.label1.BackColor = System.Drawing.Color.Transparent;
+			this.label1.Font = new System.Drawing.Font("Verdana", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label1.Location = new System.Drawing.Point(12, 9);
 			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(114, 24);
+			this.label1.Size = new System.Drawing.Size(136, 23);
 			this.label1.TabIndex = 0;
 			this.label1.Text = "Current task:";
 			//
 			// _indicatorPanel
 			//
+			this._indicatorPanel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
 			this._indicatorPanel.AutoSize = true;
-			this._indicatorPanel.Location = new System.Drawing.Point(70, 31);
+			this._indicatorPanel.BackColor = System.Drawing.Color.Transparent;
+			this._indicatorPanel.Location = new System.Drawing.Point(70, 35);
 			this._indicatorPanel.Name = "_indicatorPanel";
 			this._indicatorPanel.Size = new System.Drawing.Size(471, 62);
 			this._indicatorPanel.TabIndex = 1;
@@ -55,7 +59,7 @@ namespace WeSay.CommonTools
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.AutoSize = true;
-			this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+			this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(242)))), ((int)(((byte)(253)))), ((int)(((byte)(219)))));
 			this.Controls.Add(this._indicatorPanel);
 			this.Controls.Add(this.label1);
 			this.Name = "CurrentTaskIndicatorControl";

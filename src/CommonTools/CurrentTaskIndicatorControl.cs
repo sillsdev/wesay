@@ -17,7 +17,20 @@ namespace WeSay.CommonTools
 			_content = content;
 			InitializeComponent();
 			content.BackColor = this.BackColor;// System.Drawing.Color.Transparent;
+			content.Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
 			this._indicatorPanel.Controls.Add(content);
+			ShapeControl.ShapeControl s = new ShapeControl.ShapeControl();
+			s.Shape = ShapeControl.ShapeType.RoundedRectangle;
+			s.BorderStyle = System.Drawing.Drawing2D.DashStyle.Dot;
+			s.BorderWidth = 1;
+			s.BorderColor = System.Drawing.Color.Black;
+			s.BackColor = this.BackColor;
+			this.BackColor = System.Drawing.Color.White;
+			s.Dock = DockStyle.Fill;
+			this.Controls.Add(s);
+			label1.BackColor = s.BackColor;
+			_indicatorPanel.BackColor = s.BackColor;
+			_content.BackColor = s.BackColor;
 		}
 	}
 }
