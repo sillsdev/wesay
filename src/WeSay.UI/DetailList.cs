@@ -10,16 +10,11 @@ namespace WeSay.UI
 	/// It supports dynamically removing and inserting new rows, to support
 	/// "ghost" fields
 	/// </summary>
-	public partial class DetailList : UserControl
+	public partial class DetailList : VBox
 	{
 		public event EventHandler<CurrentItemEventArgs> CurrentItemChanged = delegate
 																			 {
 																			 };
-
-		/// <summary>
-		/// we have this instead of just using this.Count() because  Count not implemented in Mono 1.16
-		/// </summary>
-		private int _rowCount = 0;
 
 		private int _indexOfLabel = 0;
 		private int _indexOfTextBox = 1;
@@ -75,31 +70,6 @@ namespace WeSay.UI
 		}
 
 
-		public void Clear()
-		{
-			_rowCount = 0;
-			base.Controls.Clear();
-		}
-
-		public int Count
-		{
-			get
-			{
-				return _rowCount;
-			}
-		}
-	   /// <summary>
-		/// I want to hide this from clients who would try to touch my controls directly
-		/// </summary>
-		///doesn't work to hide       protected new ControlCollection Controls
-		public static new ControlCollection Controls
-		{
-			get
-			{
-			  throw new InvalidOperationException("Please don't access my Controls property externally.\n For testing use GetControlOfRow and GetEditControlFromReferenceControl.");
-			}
-		}
-
 		public Control AddWidgetRow(string label, bool isHeader, Control control)
 		{
 			return AddWidgetRow(label, isHeader, control, _rowCount);
@@ -108,29 +78,15 @@ namespace WeSay.UI
 
 		public Control AddWidgetRow(string fieldLabel, bool isHeader, Control editWidget, int insertAtRow)
 		{
-			if (insertAtRow < 0)
-			{
-				  insertAtRow = _rowCount;
-			}
-
 			Panel panel = AddRowPanel(editWidget, fieldLabel, isHeader);
 
-			int i = RowToControlInsertionIndex(insertAtRow);
-			Debug.Assert(i >= 0, "A negative insertion value will fail under Mono.");
+			AddControl(panel, insertAtRow);
 
-			base.Controls.SetChildIndex(panel, i);
-
-			++_rowCount;
 			return panel;
 		}
 
-
-
 		private Panel AddRowPanel(Control editWidget, string fieldLabel, bool isHeader)
 		{
-			Panel panel = new Panel();
-
-
 			int top = 0;// AddHorizontalRule(panel, isHeader, _rowCount == 0);
 			if (isHeader)
 				top = 15;
@@ -138,20 +94,17 @@ namespace WeSay.UI
 			label.Text = fieldLabel;
 			label.Size = new Size(60, 50);
 			label.Top = 9+top;
-			panel.Controls.Add(label);
 
 			editWidget.Top = 6+top;
-		   // editWidget.w.Size = new Size(200, 50);
-			editWidget.Width = 5;//THIS IS IGNORED, something to do with the anchor.right. AAAAAAAAAHHHH!!!!!!// this.Width - (label.Width + 200);
+			editWidget.Width = 5;
 			FixUpForMono(editWidget);
 			editWidget.Left = label.Width + 10;
-
-			panel.Size = new Size(100, 10+editWidget.Height+top );//careful.. if width is too small, then editwidget grows to much.  Weird.
-
 			editWidget.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+
+			Panel panel = new Panel();
+			panel.Size = new Size(100, 10+editWidget.Height+(editWidget.Top-6) );//careful.. if width is too small, then editwidget grows to much.  Weird.
+			panel.Controls.Add(label);
 			panel.Controls.Add(editWidget);
-			panel.Dock = DockStyle.Top;
-		  base.Controls.Add(panel);
 
 			return panel;
 		}
@@ -210,36 +163,9 @@ namespace WeSay.UI
 		//}
 
 
-		public int GetRowOfControl(Control control)
-		{
-			return (_rowCount - base.Controls.GetChildIndex(control)) - 1;
-		}
-
-		/// <summary>
-		/// for unit testing
-		/// </summary>
-		/// <param name="row"></param>
-		/// <returns></returns>
-		public Control GetControlOfRow(int row)
-		{
-			return (base.Controls[RowToControlIndex(row)]);
-		}
-
-		private int RowToControlInsertionIndex(int row)
-		{
-			//reverse order (that's how docking works)
-			return ((_rowCount) - row);
-		}
-
-		private int RowToControlIndex(int row)
-		{
-			//reverse order (that's how docking works)
-			return RowToControlInsertionIndex(row) -1 ;
-		}
-
 		private void _fadeInTimer_Tick(object sender, EventArgs e)
 		{
-			foreach (Control c in base.Controls)
+			foreach (Control c in base.ActualControls)
 			{
 				if (c.Controls.Count < 2)
 					continue;
@@ -255,7 +181,7 @@ namespace WeSay.UI
 
 		public void MoveInsertionPoint(int row)
 		{
-			Panel p = (Panel)base.Controls[RowToControlIndex(row)];
+			Panel p = (Panel)base.ActualControls[RowToControlIndex(row)];
 			WeSayTextBox tb = (WeSayTextBox)GetEditControlFromReferenceControl(p);
 			tb.Focus();
 			tb.Select(1000, 0);//go to end

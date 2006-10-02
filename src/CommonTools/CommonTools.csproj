@@ -29,15 +29,29 @@
   </PropertyGroup>
   <ItemGroup>
 	<Reference Include="System" />
+	<Reference Include="System.Data" />
 	<Reference Include="System.Drawing" />
 	<Reference Include="System.Windows.Forms" />
+	<Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+	<Compile Include="CurrentTaskIndicatorControl.cs">
+	  <SubType>UserControl</SubType>
+	</Compile>
+	<Compile Include="CurrentTaskIndicatorControl.Designer.cs">
+	  <DependentUpon>CurrentTaskIndicatorControl.cs</DependentUpon>
+	</Compile>
 	<Compile Include="DashboardControl.cs">
 	  <SubType>UserControl</SubType>
 	</Compile>
 	<Compile Include="DashboardControl.Designer.cs">
 	  <DependentUpon>DashboardControl.cs</DependentUpon>
+	</Compile>
+	<Compile Include="DictionaryStatusControl.cs">
+	  <SubType>UserControl</SubType>
+	</Compile>
+	<Compile Include="DictionaryStatusControl.Designer.cs">
+	  <DependentUpon>DictionaryStatusControl.cs</DependentUpon>
 	</Compile>
 	<Compile Include="PictureControl.cs">
 	  <SubType>UserControl</SubType>
@@ -50,6 +64,12 @@
 	  <AutoGen>True</AutoGen>
 	  <DesignTime>True</DesignTime>
 	  <DependentUpon>Resources.resx</DependentUpon>
+	</Compile>
+	<Compile Include="TaskIndicator.cs">
+	  <SubType>UserControl</SubType>
+	</Compile>
+	<Compile Include="TaskIndicator.Designer.cs">
+	  <DependentUpon>TaskIndicator.cs</DependentUpon>
 	</Compile>
   </ItemGroup>
   <ItemGroup>
@@ -71,14 +91,26 @@
 	</ProjectReference>
   </ItemGroup>
   <ItemGroup>
+	<EmbeddedResource Include="CurrentTaskIndicatorControl.resx">
+	  <SubType>Designer</SubType>
+	  <DependentUpon>CurrentTaskIndicatorControl.cs</DependentUpon>
+	</EmbeddedResource>
 	<EmbeddedResource Include="DashboardControl.resx">
 	  <SubType>Designer</SubType>
 	  <DependentUpon>DashboardControl.cs</DependentUpon>
+	</EmbeddedResource>
+	<EmbeddedResource Include="DictionaryStatusControl.resx">
+	  <SubType>Designer</SubType>
+	  <DependentUpon>DictionaryStatusControl.cs</DependentUpon>
 	</EmbeddedResource>
 	<EmbeddedResource Include="Properties\Resources.resx">
 	  <SubType>Designer</SubType>
 	  <Generator>ResXFileCodeGenerator</Generator>
 	  <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+	</EmbeddedResource>
+	<EmbeddedResource Include="TaskIndicator.resx">
+	  <SubType>Designer</SubType>
+	  <DependentUpon>TaskIndicator.cs</DependentUpon>
 	</EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

@@ -1,5 +1,6 @@
 using System;
 using System.Windows.Forms;
+using WeSay.LexicalModel;
 using WeSay.UI;
 using WeSay.Data;
 
@@ -13,8 +14,13 @@ namespace WeSay.CommonTools
 		{
 			_records = recordListManager.Get<LexicalModel.LexEntry>();
 			InitializeComponent();
-			this._dictionarySizeLabel.Text = String.Format(StringCatalog.Get(this._dictionarySizeLabel.Text), _records.Count);
 			this._projectNameLabel.Text = BasilProject.Project.Name;
+			DictionaryStatusControl status = new DictionaryStatusControl(recordListManager.Get<LexEntry>());
+			this._vbox.AddControlToBottom(status);
+			_vbox.AddControlToBottom(new CurrentTaskIndicatorControl(new TaskIndicator()));
+			_vbox.AddControlToBottom(new TaskIndicator());
+			_vbox.AddControlToBottom(new TaskIndicator());
+			_vbox.AddControlToBottom(new TaskIndicator());
 		}
 
 		#region ITask
@@ -42,14 +48,6 @@ namespace WeSay.CommonTools
 		private void label1_Click(object sender, EventArgs e)
 		{
 
-		}
-
-		private void exportLIFT_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-		{
-			string path = string.Format(@"c:\{0}-lift.xml", BasilProject.Project.Name);
-			LexicalModel.LiftExporter exporter = new WeSay.LexicalModel.LiftExporter(path);
-			exporter.Add(_records);
-			exporter.End();
 		}
 
 		public string Description

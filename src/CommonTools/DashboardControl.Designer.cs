@@ -28,13 +28,19 @@ namespace WeSay.CommonTools
 		/// </summary>
 		private void InitializeComponent()
 		{
-			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DashboardControl));
+			this._vbox = new WeSay.UI.VBox();
 			this._projectNameLabel = new System.Windows.Forms.Label();
-			this._dictionarySizeLabel = new System.Windows.Forms.Label();
-			this.pictureBox1 = new System.Windows.Forms.PictureBox();
-			this.exportLIFT = new System.Windows.Forms.LinkLabel();
-			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
 			this.SuspendLayout();
+			//
+			// _vbox
+			//
+			this._vbox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+						| System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
+			this._vbox.Location = new System.Drawing.Point(20, 62);
+			this._vbox.Name = "_vbox";
+			this._vbox.Size = new System.Drawing.Size(438, 258);
+			this._vbox.TabIndex = 3;
 			//
 			// _projectNameLabel
 			//
@@ -47,47 +53,17 @@ namespace WeSay.CommonTools
 			this._projectNameLabel.Text = "Lahu Champu";
 			this._projectNameLabel.Click += new System.EventHandler(this.label1_Click);
 			//
-			// _dictionarySizeLabel
-			//
-			this._dictionarySizeLabel.AutoSize = true;
-			this._dictionarySizeLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this._dictionarySizeLabel.Location = new System.Drawing.Point(16, 267);
-			this._dictionarySizeLabel.Name = "_dictionarySizeLabel";
-			this._dictionarySizeLabel.Size = new System.Drawing.Size(178, 20);
-			this._dictionarySizeLabel.TabIndex = 1;
-			this._dictionarySizeLabel.Text = "Dictionary has {0} words";
-			//
-			// pictureBox1
-			//
-			this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-			this.pictureBox1.Location = new System.Drawing.Point(45, 55);
-			this.pictureBox1.Name = "pictureBox1";
-			this.pictureBox1.Size = new System.Drawing.Size(311, 177);
-			this.pictureBox1.TabIndex = 2;
-			this.pictureBox1.TabStop = false;
-			//
-			// exportLIFT
-			//
-			this.exportLIFT.AutoSize = true;
-			this.exportLIFT.Location = new System.Drawing.Point(17, 311);
-			this.exportLIFT.Name = "exportLIFT";
-			this.exportLIFT.Size = new System.Drawing.Size(78, 13);
-			this.exportLIFT.TabIndex = 3;
-			this.exportLIFT.TabStop = true;
-			this.exportLIFT.Text = "Export To LIFT";
-			this.exportLIFT.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.exportLIFT_LinkClicked);
-			//
 			// DashboardControl
 			//
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.Controls.Add(this.exportLIFT);
-			this.Controls.Add(this.pictureBox1);
-			this.Controls.Add(this._dictionarySizeLabel);
+			this.AutoScroll = true;
+			this.AutoSize = true;
+			this.BackColor = System.Drawing.Color.White;
+			this.Controls.Add(this._vbox);
 			this.Controls.Add(this._projectNameLabel);
 			this.Name = "DashboardControl";
 			this.Size = new System.Drawing.Size(499, 342);
-			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -95,9 +71,8 @@ namespace WeSay.CommonTools
 
 		#endregion
 
+		private WeSay.UI.VBox _vbox;
 		private System.Windows.Forms.Label _projectNameLabel;
-		private System.Windows.Forms.Label _dictionarySizeLabel;
-		private System.Windows.Forms.PictureBox pictureBox1;
-		private System.Windows.Forms.LinkLabel exportLIFT;
+
 	}
 }
