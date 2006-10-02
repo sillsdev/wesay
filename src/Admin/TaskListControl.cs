@@ -83,12 +83,12 @@ namespace WeSay.Admin
 					if (projectDoc == null)
 					{
 						XmlAttribute isDefault = node.Attributes["default"];
-						showCheckMark = (isDefault != null) && isDefault.Value == "true";
+						showCheckMark = task.IsDefault;
 					}
 					else
 					{
 						foundMatchingTask = projectDoc.SelectSingleNode("tasks/task[@id='" + task.Id + "']");
-						showCheckMark = foundMatchingTask != null;
+						showCheckMark = !task.IsOptional || foundMatchingTask != null;
 					}
 					this._taskList.Items.Add(task, showCheckMark);
 				}
@@ -97,6 +97,28 @@ namespace WeSay.Admin
 			{
 				MessageBox.Show("There may have been a problem reading the master task inventory xml. " + error.Message);
 			}
+		}
+
+		private void _taskList_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			TaskInfo i = _taskList.SelectedItem as TaskInfo;
+			if (i == null)
+				return;
+			_description.Text = i.Description;
+		}
+
+		private void _taskList_ItemCheck(object sender, ItemCheckEventArgs e)
+		{
+			TaskInfo i = _taskList.SelectedItem as TaskInfo;
+			if (i == null)
+			{
+				return;
+			}
+			if (!i.IsOptional)
+			{
+				e.NewValue = CheckState.Checked;
+			}
+
 		}
 	}
 
@@ -116,6 +138,36 @@ namespace WeSay.Admin
 				return GetOptionalAttributeString(this.Node, "id", "task");
 			}
 		}
+
+		public string Description
+		{
+			get
+			{
+				return _node.SelectSingleNode("description").InnerText;
+			}
+		}
+
+
+		public bool IsDefault
+		{
+			get
+			{
+				bool b = GetOptionalAttributeString(_node, "default", "false") == "true";
+				return b || !IsOptional;
+			}
+		}
+
+		public bool IsOptional
+		{
+			get
+			{
+				XmlNode x = _node.SelectSingleNode("optional"); ;
+				if (x != null && x.InnerText.Trim() == "false")
+					return false;
+				return true;
+			}
+		}
+
 
 		public XmlNode Node
 		{

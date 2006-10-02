@@ -31,10 +31,12 @@ namespace WeSay.Admin
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
 			this._taskList = new System.Windows.Forms.CheckedListBox();
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
+			this._description = new System.Windows.Forms.TextBox();
 			this.richTextBox1 = new System.Windows.Forms.RichTextBox();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
 			this.splitContainer1.SuspendLayout();
+			this.groupBox1.SuspendLayout();
 			this.SuspendLayout();
 			//
 			// splitContainer1
@@ -61,9 +63,12 @@ namespace WeSay.Admin
 			this._taskList.Name = "_taskList";
 			this._taskList.Size = new System.Drawing.Size(147, 199);
 			this._taskList.TabIndex = 0;
+			this._taskList.SelectedIndexChanged += new System.EventHandler(this._taskList_SelectedIndexChanged);
+			this._taskList.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this._taskList_ItemCheck);
 			//
 			// groupBox1
 			//
+			this.groupBox1.Controls.Add(this._description);
 			this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.groupBox1.Location = new System.Drawing.Point(0, 0);
 			this.groupBox1.Name = "groupBox1";
@@ -71,6 +76,18 @@ namespace WeSay.Admin
 			this.groupBox1.TabIndex = 0;
 			this.groupBox1.TabStop = false;
 			this.groupBox1.Text = "About this Task";
+			//
+			// _description
+			//
+			this._description.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+						| System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
+			this._description.BorderStyle = System.Windows.Forms.BorderStyle.None;
+			this._description.Location = new System.Drawing.Point(11, 20);
+			this._description.Multiline = true;
+			this._description.Name = "_description";
+			this._description.Size = new System.Drawing.Size(262, 179);
+			this._description.TabIndex = 0;
 			//
 			// richTextBox1
 			//
@@ -97,6 +114,8 @@ namespace WeSay.Admin
 			this.splitContainer1.Panel1.ResumeLayout(false);
 			this.splitContainer1.Panel2.ResumeLayout(false);
 			this.splitContainer1.ResumeLayout(false);
+			this.groupBox1.ResumeLayout(false);
+			this.groupBox1.PerformLayout();
 			this.ResumeLayout(false);
 
 		}
@@ -107,5 +126,6 @@ namespace WeSay.Admin
 		private System.Windows.Forms.CheckedListBox _taskList;
 		private System.Windows.Forms.GroupBox groupBox1;
 		private System.Windows.Forms.RichTextBox richTextBox1;
+		private System.Windows.Forms.TextBox _description;
 	}
 }
