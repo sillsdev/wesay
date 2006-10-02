@@ -13,12 +13,6 @@ namespace WeSay.LexicalTools
 		private IRecordList<LexEntry> _records;
 		private int _currentIndex;
 
-		public EntryDetailTask(IRecordListManager recordListManager, string unusedLabel)
-			: this(recordListManager)
-		{
-
-		}
-
 		public EntryDetailTask(IRecordListManager recordListManager)
 		{
 			InitializeComponent();

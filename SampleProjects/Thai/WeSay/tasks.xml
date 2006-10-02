@@ -1,2 +1,39 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<tasks><task id="Dashboard" class="WeSay.CommonTools.DashboardControl" assembly="CommonTools" default="true"><entries ref="All Entries" /><label>Dashboard</label></task><task id="EntryDetail" class="WeSay.LexicalTools.EntryDetailTask" assembly="LexicalTools" default="true"><entries ref="All Entries" /><label>Words</label></task><task id="AddMeanings" class="WeSay.LexicalTools.LexFieldTask" assembly="LexicalTools" default="true"><entries ref="All Entries" /><filter class="WeSay.LexicalModel.MissingGlossFilter" assembly="LexicalModel"><writingSystemId>en</writingSystemId></filter><label>Add Meanings</label><description>Add meanings to entries where they are missing.</description><showfields>Gloss</showfields></task><task id="AddExamples" class="WeSay.LexicalTools.LexFieldTask" assembly="LexicalTools"><entries ref="All Entries" /><filter class="WeSay.LexicalModel.MissingExampleSentenceFilter" assembly="LexicalModel"><writingSystemId>th</writingSystemId></filter><label>Add Examples</label><description>Add example sentences to entries where they are missing.</description><showfield>Sentence</showfield></task><task id="Collect Words" class="WeSay.CommonTools.PictureControl" assembly="CommonTools"><label>Collect Words</label><description>Collect new words given words in another language.</description><picture>RealWord.gif</picture></task><task id="SemanticDomains" class="WeSay.CommonTools.PictureControl" assembly="CommonTools"><label>Semantic Domains</label><description>Collect new words by semantic domain.</description><picture>SemDom.gif</picture></task></tasks>
+<tasks>
+  <task id="Dashboard" class="WeSay.CommonTools.DashboardControl" assembly="CommonTools" default="true">
+	<entries ref="All Entries" />
+	<label UseInConstructor="false">Dashboard</label>
+  </task>
+  <task id="EntryDetail" class="WeSay.LexicalTools.EntryDetailTask" assembly="LexicalTools" default="true">
+	<entries ref="All Entries" />
+	<label UseInConstructor="false">Words</label>
+  </task>
+  <task id="AddMeanings" class="WeSay.LexicalTools.LexFieldTask" assembly="LexicalTools" default="true">
+	<entries ref="All Entries" />
+	<filter class="WeSay.LexicalModel.MissingGlossFilter" assembly="LexicalModel">
+	  <writingSystemId>en</writingSystemId>
+	</filter>
+	<label>Add Meanings</label>
+	<description>Add meanings to entries where they are missing.</description>
+	<showfields>Gloss</showfields>
+  </task>
+  <task id="AddExamples" class="WeSay.LexicalTools.LexFieldTask" assembly="LexicalTools">
+	<entries ref="All Entries" />
+	<filter class="WeSay.LexicalModel.MissingExampleSentenceFilter" assembly="LexicalModel">
+	  <writingSystemId>th</writingSystemId>
+	</filter>
+	<label>Add Examples</label>
+	<description>Add example sentences to entries where they are missing.</description>
+	<showfield>Sentence</showfield>
+  </task>
+  <task id="Collect Words" class="WeSay.CommonTools.PictureControl" assembly="CommonTools">
+	<label>Collect Words</label>
+	<description>Collect new words given words in another language.</description>
+	<picture>RealWord.gif</picture>
+  </task>
+  <task id="SemanticDomains" class="WeSay.CommonTools.PictureControl" assembly="CommonTools">
+	<label>Semantic Domains</label>
+	<description>Collect new words by semantic domain.</description>
+	<picture>SemDom.gif</picture>
+  </task>
+</tasks>

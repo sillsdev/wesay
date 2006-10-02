@@ -9,11 +9,6 @@ namespace WeSay.CommonTools
 	{
 		private IRecordList<LexicalModel.LexEntry> _records;
 
-		public DashboardControl(IRecordListManager recordListManager, string unusedLabel) :this(recordListManager)
-		{
-
-		}
-
 		public DashboardControl(IRecordListManager recordListManager)
 		{
 			_records = recordListManager.Get<LexicalModel.LexEntry>();

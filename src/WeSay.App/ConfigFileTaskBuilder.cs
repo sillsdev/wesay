@@ -82,43 +82,46 @@ namespace WeSay.App
 				XPathNodeIterator children = component.SelectChildren(string.Empty, string.Empty);
 				foreach (XPathNavigator child in children)
 				{
-					IParameter parameter;
-					string componentRef = child.GetAttribute("ref", string.Empty);
-					if (componentRef.Length > 0)
+					if (child.GetAttribute("UseInConstructor", string.Empty) != "false")
 					{
-						parameter = new ComponentParameter(componentRef);
-					}
-					else
-					{
-						switch (child.GetAttribute("class", string.Empty))
+						IParameter parameter;
+						string componentRef = child.GetAttribute("ref", string.Empty);
+						if (componentRef.Length > 0)
 						{
-							case "":
-								parameter = new ConstantParameter(child.Value);
-								break;
-							case "string":
-								parameter = new ConstantParameter(child.Value);
-								break;
-							case "bool":
-								parameter = new ConstantParameter(child.ValueAsBoolean);
-								break;
-							case "DateTime":
-								parameter = new ConstantParameter(child.ValueAsDateTime);
-								break;
-							case "double":
-								parameter = new ConstantParameter(child.ValueAsDouble);
-								break;
-							case "int":
-								parameter = new ConstantParameter(child.ValueAsInt);
-								break;
-							case "long":
-								parameter = new ConstantParameter(child.ValueAsLong);
-								break;
-							default:
-								parameter = new ComponentParameter(RegisterComponent(child));
-								break;
+							parameter = new ComponentParameter(componentRef);
 						}
+						else
+						{
+							switch (child.GetAttribute("class", string.Empty))
+							{
+								case "":
+									parameter = new ConstantParameter(child.Value);
+									break;
+								case "string":
+									parameter = new ConstantParameter(child.Value);
+									break;
+								case "bool":
+									parameter = new ConstantParameter(child.ValueAsBoolean);
+									break;
+								case "DateTime":
+									parameter = new ConstantParameter(child.ValueAsDateTime);
+									break;
+								case "double":
+									parameter = new ConstantParameter(child.ValueAsDouble);
+									break;
+								case "int":
+									parameter = new ConstantParameter(child.ValueAsInt);
+									break;
+								case "long":
+									parameter = new ConstantParameter(child.ValueAsLong);
+									break;
+								default:
+									parameter = new ComponentParameter(RegisterComponent(child));
+									break;
+							}
+						}
+						parameters.Add(parameter);
 					}
-					parameters.Add(parameter);
 				}
 				_picoContext.RegisterComponentImplementation(id,
 													GetType(component.GetAttribute("class", string.Empty),
