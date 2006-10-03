@@ -1,35 +1,43 @@
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
-using System.Drawing;
-using System.Data;
-using System.Text;
 using System.Windows.Forms;
+using WeSay.UI;
 
 namespace WeSay.CommonTools
 {
 	public partial class TaskIndicator : UserControl
 	{
-		public TaskIndicator()
+		public event EventHandler selected = delegate {};
+
+		private ITask _task;
+
+		public TaskIndicator(ITask task)
 		{
+			if (task == null)
+			{
+				throw new ArgumentNullException();
+			}
 			InitializeComponent();
+			_task = task;
+			this._count.Text = task.Status;
+			this._btnName.Text = task.Label;
+			this._textShortDescription.Text = task.Description;
+		}
+
+		public ITask Task
+		{
+			get { return this._task; }
 		}
 
 		private void TaskIndicator_BackColorChanged(object sender, EventArgs e)
 		{
-		   Debug.Assert(this.BackColor != System.Drawing.Color.Transparent);
-		   this._textShortDescription.BackColor = this.BackColor;
+		   Debug.Assert(BackColor != System.Drawing.Color.Transparent);
+		   this._textShortDescription.BackColor = BackColor;
 		}
 
-		private void _btnName_Click(object sender, EventArgs e)
+		private void OnBtnNameClick(object sender, EventArgs e)
 		{
-
-		}
-
-		private void _textShortDescription_TextChanged(object sender, EventArgs e)
-		{
-
+			selected(this, e);
 		}
 	}
 }

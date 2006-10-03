@@ -1,5 +1,5 @@
 using System;
-using System.Diagnostics;
+using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -21,6 +21,8 @@ namespace WeSay.UI
 
 		private Predicate<string> _filter;
 
+		[Browsable(false)]
+		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
 		public Predicate<string> ShowField
 		{
 			get
@@ -72,7 +74,7 @@ namespace WeSay.UI
 
 		public Control AddWidgetRow(string label, bool isHeader, Control control)
 		{
-			return AddWidgetRow(label, isHeader, control, _rowCount);
+			return AddWidgetRow(label, isHeader, control, Count);
 		}
 
 
@@ -165,7 +167,7 @@ namespace WeSay.UI
 
 		private void _fadeInTimer_Tick(object sender, EventArgs e)
 		{
-			foreach (Control c in base.ActualControls)
+			foreach (Control c in ActualControls)
 			{
 				if (c.Controls.Count < 2)
 					continue;
@@ -181,7 +183,7 @@ namespace WeSay.UI
 
 		public void MoveInsertionPoint(int row)
 		{
-			Panel p = (Panel)base.ActualControls[RowToControlIndex(row)];
+			Panel p = (Panel)ActualControls[RowToControlIndex(row)];
 			WeSayTextBox tb = (WeSayTextBox)GetEditControlFromReferenceControl(p);
 			tb.Focus();
 			tb.Select(1000, 0);//go to end

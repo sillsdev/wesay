@@ -20,7 +20,7 @@ namespace WeSay.Data
 		public InMemoryBindingList(IRecordList<T> original)
 			: this()
 		{
-			this.AddRange(original);
+			AddRange(original);
 			_isSorted = original.IsSorted;
 			_sortProperty = original.SortProperty;
 			_listSortDirection = original.SortDirection;
@@ -168,7 +168,7 @@ namespace WeSay.Data
 
 		protected virtual void OnListChanged(ListChangedEventArgs e)
 		{
-			this.ListChanged(this, e);
+			ListChanged(this, e);
 		}
 
 		public event ListChangedEventHandler ListChanged = delegate
@@ -531,11 +531,11 @@ namespace WeSay.Data
 			{
 				return false;
 			}
-			if (this.Count != other.Count)
+			if (Count != other.Count)
 			{
 				return false;
 			}
-			for (int i = 0; i < this.Count; i++)
+			for (int i = 0; i < Count; i++)
 			{
 				// must be in same order to be equal
 				if (this[i] != other[i])

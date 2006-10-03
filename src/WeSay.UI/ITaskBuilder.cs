@@ -1,5 +1,4 @@
-﻿using System;
-namespace WeSay.UI
+﻿namespace WeSay.UI
 {
 	public interface ITaskBuilder
 	{

@@ -18,10 +18,12 @@ namespace WeSay.App
 		private IMutablePicoContainer _picoContext;
 		List<ITask> _tasks;
 
-		public ConfigFileTaskBuilder(WeSayWordsProject project, Stream config)
+		public ConfigFileTaskBuilder(Stream config, WeSayWordsProject project, ICurrentWorkTask currentWorkTask)
 		{
 			_picoContext = new DefaultPicoContainer();
-			_picoContext.RegisterComponentInstance(project);
+			_picoContext.RegisterComponentInstance("Project", project);
+			_picoContext.RegisterComponentInstance("Current Task Provider", currentWorkTask);
+
 			IRecordListManager recordListManager;
 
 			if (project.PathToWeSaySpecificFilesDirectory.IndexOf("PRETEND") > -1)

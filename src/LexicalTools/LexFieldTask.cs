@@ -107,6 +107,22 @@ namespace WeSay.LexicalTools
 			}
 		}
 
+		public bool IsPinned
+		{
+			get
+			{
+				return false;
+			}
+		}
+
+		public string Status
+		{
+			get
+			{
+				return DataSource.Count.ToString();
+			}
+		}
+
 		public IRecordList<LexEntry> DataSource
 		{
 			get

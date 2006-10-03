@@ -65,6 +65,22 @@ namespace WeSay.LexicalTools
 			get { return this; }
 		}
 
+		public bool IsPinned
+		{
+			get
+			{
+				return true;
+			}
+		}
+
+		public string Status
+		{
+			get
+			{
+				return _records.Count.ToString();
+			}
+		}
+
 		private LexEntry CurrentRecord
 		{
 			get

@@ -18,13 +18,33 @@ namespace WeSay.UI.Tests
 
 		}
 
-
-		private void WriteSampleStringCatalogFile(BasilProject project)
+		private void InitializeSampleProject()
 		{
-			Directory.CreateDirectory(Directory.GetParent(project.PathToStringCatalogInProjectDir).FullName);
-			StreamWriter writer = File.CreateText(project.PathToStringCatalogInProjectDir);
+			WriteSampleStringCatalogFile();
+			WriteSampleWritingSystemFile();
+	}
+
+		private string GetCommonDirectory()
+		{
+			return Path.Combine(_projectDirectory, "common");
+		}
+
+		private void WriteSampleStringCatalogFile()
+		{
+			Directory.CreateDirectory(_projectDirectory);
+			Directory.CreateDirectory(GetCommonDirectory());
+			string pathToStringCatalogInProjectDir = Path.Combine(GetCommonDirectory(), "th.po");
+			StreamWriter writer = File.CreateText(pathToStringCatalogInProjectDir);
 			writer.Write(TestResources.poStrings);
 			writer.Close();
+		}
+
+		private void WriteSampleWritingSystemFile()
+		{
+			Directory.CreateDirectory(_projectDirectory);
+			Directory.CreateDirectory(GetCommonDirectory());
+			string pathToWritingSystemPrefs = Path.Combine(GetCommonDirectory(), "writingSystemPrefs.xml");
+			WritingSystemTests.WriteSampleWritingSystemFile(pathToWritingSystemPrefs);
 		}
 
 		[TearDown]
@@ -36,35 +56,34 @@ namespace WeSay.UI.Tests
 		[Test]
 		public void NoSetupDefaultWritingSystems()
 		{
+			InitializeSampleProject();
+
 			BasilProject project = new BasilProject();
-			project.LoadFromProjectDirectoryPath(_projectDirectory,true);
-			Directory.CreateDirectory(Directory.GetParent(project.PathToWritingSystemPrefs).FullName);
-			WritingSystemTests.WriteSampleWritingSystemFile(project.PathToWritingSystemPrefs);
-			project.InitWritingSystems();
+			project.LoadFromProjectDirectoryPath(_projectDirectory);
 			WritingSystem ws = BasilProject.Project.WritingSystems.AnalysisWritingSystemDefault;
 			Assert.IsNotNull(ws);
 			ws = BasilProject.Project.WritingSystems.VernacularWritingSystemDefault;
 			Assert.IsNotNull(ws);
 		}
 
-
 		[Test]
 		public void LocalizedStringsDuringTests()
 		{
+			InitializeSampleProject();
+
 			BasilProject project = new BasilProject();
-			project.LoadFromProjectDirectoryPath(_projectDirectory,true);
-			WriteSampleStringCatalogFile(project);
-			project.InitStringCatalog();
+			project.StringCatalogSelector = "th";
+			project.LoadFromProjectDirectoryPath(_projectDirectory);
 			Assert.AreEqual("deng", StringCatalog.Get("red"));
 		}
 
 		[Test]
 		public void LocalizedStringsFromPretendSample()
 		{
+			InitializeSampleProject();
 			BasilProject project = new BasilProject();
-			project.LoadFromProjectDirectoryPath(_projectDirectory,true);
 			project.StringCatalogSelector = "en";
-			project.InitStringCatalog();
+			project.LoadFromProjectDirectoryPath(_projectDirectory);
 
 			Assert.AreEqual("red", StringCatalog.Get("red"));
 		}

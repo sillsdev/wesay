@@ -1,10 +1,5 @@
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
-using System.Drawing;
-using System.Data;
-using System.Text;
 using System.Windows.Forms;
 
 namespace WeSay.UI
@@ -15,7 +10,7 @@ namespace WeSay.UI
 		/// <summary>
 		/// we have this instead of just using this.Count() because  Count not implemented in Mono 1.16
 		/// </summary>
-		protected int _rowCount = 0;
+		private int _rowCount = 0;
 
 
 		public VBox()

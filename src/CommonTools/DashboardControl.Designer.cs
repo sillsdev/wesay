@@ -52,7 +52,6 @@ namespace WeSay.CommonTools
 			this._projectNameLabel.Size = new System.Drawing.Size(194, 31);
 			this._projectNameLabel.TabIndex = 0;
 			this._projectNameLabel.Text = "Lahu Champu";
-			this._projectNameLabel.Click += new System.EventHandler(this.label1_Click);
 			//
 			// DashboardControl
 			//

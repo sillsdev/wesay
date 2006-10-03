@@ -19,7 +19,9 @@ namespace WeSay.App.Tests
 			using (WeSayWordsProject project = new WeSayWordsProject())
 			{
 				project.LoadFromProjectDirectoryPath(@"..\..\SampleProjects\Thai");
-				using (SampleTaskBuilder builder = new SampleTaskBuilder(project))
+				TabbedForm tabbedForm = new TabbedForm();
+
+				using (SampleTaskBuilder builder = new SampleTaskBuilder(project, tabbedForm))
 				{
 					Assert.Greater(builder.Tasks.Count, 0);
 				}
@@ -31,8 +33,9 @@ namespace WeSay.App.Tests
 			using (WeSayWordsProject project = new WeSayWordsProject())
 			{
 				project.LoadFromProjectDirectoryPath(@"..\..\SampleProjects\PRETEND");
+				TabbedForm tabbedForm = new TabbedForm();
 
-				using (SampleTaskBuilder builder = new SampleTaskBuilder(project))
+				using (SampleTaskBuilder builder = new SampleTaskBuilder(project, tabbedForm))
 				{
 					Assert.Greater(builder.Tasks.Count, 0);
 				}

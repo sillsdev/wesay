@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 
@@ -7,10 +8,18 @@ namespace WeSay.UI
 	public class WeSayWordsProject : BasilProject
 	{
 		private string _lexiconDatabaseFileName = null;
+		private IList<ITask> _tasks;
 
-		public WeSayWordsProject()//string pathToLexiconDatabase)
-			: base()
+		public IList<ITask> Tasks
 		{
+			get
+			{
+				return this._tasks;
+			}
+			set
+			{
+				this._tasks = value;
+			}
 		}
 
 		public static new WeSayWordsProject Project
@@ -46,13 +55,13 @@ namespace WeSay.UI
 		private void DetermineWordsFile()
 		{
 			//try to use the one implied by the project name (e.g. thai.words)
-			if (File.Exists(this.PathToLexicalModelDB))
+			if (File.Exists(PathToLexicalModelDB))
 			{
 				return;
 			}
 
 			//use the first words file we do find
-			string[] p = Directory.GetFiles(this.PathToWeSaySpecificFilesDirectory, "*.words");
+			string[] p = Directory.GetFiles(PathToWeSaySpecificFilesDirectory, "*.words");
 			if (p.Length > 0)
 			{
 				this._lexiconDatabaseFileName = Path.GetFileName(p[0]);
@@ -77,7 +86,7 @@ namespace WeSay.UI
 		public override void Create(string projectDirectoryPath)
 		{
 			base.Create(projectDirectoryPath);
-			Directory.CreateDirectory(this.PathToWeSaySpecificFilesDirectory);
+			Directory.CreateDirectory(PathToWeSaySpecificFilesDirectory);
 		   // this._lexiconDatabaseFileName = this.Name+".words";
 	   }
 
@@ -96,7 +105,7 @@ namespace WeSay.UI
 		{
 			get
 			{
-				return System.IO.Path.Combine(this.PathToWeSaySpecificFilesDirectory, "tasks.xml");
+				return System.IO.Path.Combine(PathToWeSaySpecificFilesDirectory, "tasks.xml");
 			}
 		}
 
@@ -110,7 +119,7 @@ namespace WeSay.UI
 				}
 				else
 				{
-					return System.IO.Path.Combine(PathToWeSaySpecificFilesDirectory, this.Name+".words");
+					return System.IO.Path.Combine(PathToWeSaySpecificFilesDirectory, Name+".words");
 				}
 			}
 		}
@@ -122,5 +131,6 @@ namespace WeSay.UI
 				return Path.Combine(ProjectDirectoryPath, "WeSay");
 			}
 		}
+
 	}
 }

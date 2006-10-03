@@ -24,7 +24,6 @@ namespace WeSay.Data.Tests.IEnumerableTests
 		[Test]
 		public void ForEach()
 		{
-			System.Collections.IEnumerator enumerator = this._enumerable.GetEnumerator();
 			int i = 0;
 			foreach (T item in this._enumerable)
 			{

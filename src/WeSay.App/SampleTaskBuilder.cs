@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Windows.Forms;
 using PicoContainer;
 using PicoContainer.Defaults;
 using WeSay.Data;
@@ -17,12 +16,13 @@ namespace WeSay.App
 	public class SampleTaskBuilder : ITaskBuilder, IDisposable
 	{
 		private bool _disposed;
-		private IMutablePicoContainer _parentPicoContext;
+		private IMutablePicoContainer _picoContext;
 
-		public SampleTaskBuilder(WeSayWordsProject project)
+		public SampleTaskBuilder(WeSayWordsProject project, ICurrentWorkTask currentWorkTask)
 		{
-			_parentPicoContext = CreateContainer();
-			_parentPicoContext.RegisterComponentInstance("Project", project);
+			_picoContext = CreateContainer();
+			_picoContext.RegisterComponentInstance("Project", project);
+			_picoContext.RegisterComponentInstance("Current Task Provider", currentWorkTask);
 			IRecordListManager recordListManager;
 
 			if (project.PathToWeSaySpecificFilesDirectory.IndexOf("PRETEND") > -1)
@@ -47,7 +47,7 @@ namespace WeSay.App
 
 				recordListManager = new Db4oRecordListManager(project.PathToLexicalModelDB);
 			}
-			_parentPicoContext.RegisterComponentInstance("Record List Manager", recordListManager);
+			_picoContext.RegisterComponentInstance("Record List Manager", recordListManager);
 		}
 
 
@@ -58,17 +58,11 @@ namespace WeSay.App
 				List<ITask> tools = new List<ITask>();
 				tools.Add(CreateTool("WeSay.CommonTools.DashboardControl,CommonTools"));
 
-				tools.Add(new TaskProxy("Words", delegate
-					{
-						return CreateTool("WeSay.LexicalTools.EntryDetailTask,LexicalTools") ;
-					}));
+				tools.Add(CreateTool("WeSay.LexicalTools.EntryDetailTask,LexicalTools"));
 
 
-				tools.Add(new TaskProxy("Add Meanings", delegate
-				{
-					return CreateLexFieldTask("AddMeanings", "WeSay.LexicalTools.LexFieldTask,LexicalTools",
-								"Add Meanings", "Add glosses to entries when missing.", "GhostGloss Gloss");
-				}));
+				tools.Add(CreateLexFieldTask("AddMeanings", "WeSay.LexicalTools.LexFieldTask,LexicalTools",
+								"Add Meanings", "Add glosses to entries when missing.", "GhostGloss Gloss"));
 
 
 				tools.Add(CreatePictureTask("CollectWords", "WeSay.CommonTools.PictureControl,CommonTools",
@@ -98,8 +92,8 @@ namespace WeSay.App
 			{
 				if (disposing)
 				{
-					_parentPicoContext.Dispose();
-					_parentPicoContext = null;
+					_picoContext.Dispose();
+					_picoContext = null;
 					GC.SuppressFinalize(this);
 				}
 			}
@@ -123,31 +117,31 @@ namespace WeSay.App
 
 		private ITask CreateTool(string fullToolClass)
 		{
-			return CreateTool(_parentPicoContext, fullToolClass);
+			return CreateTool(_picoContext, fullToolClass);
 		}
 
 		private ITask CreatePictureTask(string id, string fullToolClass, string label, string description, string pictureFilePath)
 		{
-			_parentPicoContext.RegisterComponentImplementation(id, Type.GetType(fullToolClass, true),
+			_picoContext.RegisterComponentImplementation(id, Type.GetType(fullToolClass, true),
 				new IParameter[]{
 					new ConstantParameter(label),
 					new ConstantParameter(description),
 					new ConstantParameter(pictureFilePath)
 				});
 
-			ITask i = (ITask)_parentPicoContext.GetComponentInstance(id);
+			ITask i = (ITask)_picoContext.GetComponentInstance(id);
 			Debug.Assert(i != null);
 			return i;
 		}
 
 		private ITask CreateLexFieldTask(string id, string fullToolClass, string label, string description, string fieldsToShow)
 		{
-			_parentPicoContext.RegisterComponentImplementation("GlossFilter", Type.GetType("WeSay.LexicalModel.MissingGlossFilter,LexicalModel", true),
+			_picoContext.RegisterComponentImplementation("GlossFilter", Type.GetType("WeSay.LexicalModel.MissingGlossFilter,LexicalModel", true),
 				new IParameter[]{
 					new ConstantParameter("en"),
 				});
 
-			_parentPicoContext.RegisterComponentImplementation(id, Type.GetType(fullToolClass, true),
+			_picoContext.RegisterComponentImplementation(id, Type.GetType(fullToolClass, true),
 				new IParameter[]{
 					new ComponentParameter("Record List Manager"),
 					new ComponentParameter("GlossFilter"),
@@ -156,7 +150,7 @@ namespace WeSay.App
 					new ConstantParameter(fieldsToShow)
 				});
 
-			ITask i = (ITask)_parentPicoContext.GetComponentInstance(id);
+			ITask i = (ITask)_picoContext.GetComponentInstance(id);
 			Debug.Assert(i != null);
 			return i;
 		}
@@ -165,67 +159,5 @@ namespace WeSay.App
 		{
 			return new DefaultPicoContainer();
 		}
-	}
-
-
-	class TaskProxy : ITask
-	{
-		private string _label;
-		private TaskDelegate _makeTask;
-		private ITask _realTask;
-
-		public TaskProxy(string label, TaskDelegate makeTask)
-		{
-			_label = label;
-			_makeTask = makeTask;
-}
-
-		#region ITask Members
-
-		public void Activate()
-		{
-			RealTask.Activate();
-		}
-
-
-		public void Deactivate()
-		{
-			  RealTask.Deactivate();
-	  }
-
-		public string Label
-		{
-			get { return _label; }
-		}
-
-		public string Description
-		{
-			get
-			{
-				return RealTask.Description;
-			}
-		}
-
-		public Control Control
-		{
-			get
-			{
-				return RealTask.Control;
-			}
-		}
-
-		private ITask RealTask
-		{
-			get
-			{
-				if (_realTask == null)
-				{
-					_realTask = _makeTask();
-				}
-				return _realTask;
-			}
-		}
-
-		#endregion
 	}
 }

@@ -109,8 +109,6 @@ namespace WeSay.UI
 		{
 			BasilProject project = new BasilProject();
 			project.LoadFromProjectDirectoryPath(GetPretendProjectDirectory());
-//            project.InitWritingSystems();
-//            project.InitStringCatalog();
 			project.StringCatalogSelector = "en";
 		}
 
@@ -223,7 +221,7 @@ namespace WeSay.UI
 			}
 		}
 
-		 public void InitWritingSystems()
+		 private void InitWritingSystems()
 		{
 			if (File.Exists(PathToWritingSystemPrefs))
 			{
@@ -243,7 +241,7 @@ namespace WeSay.UI
 		}
 
 
-		public void InitStringCatalog()
+		private void InitStringCatalog()
 		{
 			try
 			{

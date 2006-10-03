@@ -56,7 +56,7 @@ namespace WeSay.CommonTools
 			this._btnName.Text = "Gather from Foo words";
 			this._btnName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this._btnName.UseVisualStyleBackColor = false;
-			this._btnName.Click += new System.EventHandler(this._btnName_Click);
+			this._btnName.Click += new System.EventHandler(this.OnBtnNameClick);
 			//
 			// _textShortDescription
 			//
@@ -69,7 +69,6 @@ namespace WeSay.CommonTools
 			this._textShortDescription.Size = new System.Drawing.Size(275, 15);
 			this._textShortDescription.TabIndex = 2;
 			this._textShortDescription.Text = "See words in Foo, write the same words in Boo";
-			this._textShortDescription.TextChanged += new System.EventHandler(this._textShortDescription_TextChanged);
 			//
 			// TaskIndicator
 			//

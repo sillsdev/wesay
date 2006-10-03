@@ -1,3 +1,5 @@
+using System;
+
 namespace WeSay.CommonTools
 {
 	partial class PictureControl

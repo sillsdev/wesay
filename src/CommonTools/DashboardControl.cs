@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 using WeSay.LexicalModel;
 using WeSay.UI;
@@ -8,19 +9,38 @@ namespace WeSay.CommonTools
 {
 	public partial class DashboardControl : UserControl, ITask
 	{
-		private IRecordList<LexicalModel.LexEntry> _records;
+		IRecordListManager _recordListManager;
+		ICurrentWorkTask _currentWorkTaskProvider;
+		IList<TaskIndicator> _taskIndicators;
 
-		public DashboardControl(IRecordListManager recordListManager)
+		public DashboardControl(IRecordListManager recordListManager, ICurrentWorkTask currentWorkTaskProvider)
 		{
-			_records = recordListManager.Get<LexicalModel.LexEntry>();
+			if (recordListManager == null)
+			{
+				throw new ArgumentNullException("recordListManager");
+			}
+			if (currentWorkTaskProvider == null)
+			{
+				throw new ArgumentNullException("currentWorkTaskProvider");
+			}
+			_taskIndicators = new List<TaskIndicator>();
+			_recordListManager = recordListManager;
+			_currentWorkTaskProvider = currentWorkTaskProvider;
 			InitializeComponent();
-			this._projectNameLabel.Text = BasilProject.Project.Name;
-			DictionaryStatusControl status = new DictionaryStatusControl(recordListManager.Get<LexEntry>());
-			this._vbox.AddControlToBottom(status);
-			_vbox.AddControlToBottom(new CurrentTaskIndicatorControl(new TaskIndicator()));
-			AddIndicator(new TaskIndicator());
-			AddIndicator(new TaskIndicator());
-			AddIndicator(new TaskIndicator());
+	   }
+
+		private TaskIndicator TaskIndicatorFromTask(ITask task)
+		{
+			TaskIndicator taskIndicator = new TaskIndicator(task);
+			taskIndicator.selected += new EventHandler(OnTaskIndicatorSelected);
+			_taskIndicators.Add(taskIndicator);
+			return taskIndicator;
+		}
+
+		void OnTaskIndicatorSelected(object sender, EventArgs e)
+		{
+			TaskIndicator taskIndicator = (TaskIndicator) sender;
+			_currentWorkTaskProvider.CurrentWorkTask = taskIndicator.Task;
 		}
 
 		private void AddIndicator(TaskIndicator indicator)
@@ -37,18 +57,38 @@ namespace WeSay.CommonTools
 		#region ITask
 		public void Activate()
 		{
+			this._projectNameLabel.Text = BasilProject.Project.Name;
+			DictionaryStatusControl status = new DictionaryStatusControl(_recordListManager.Get<LexEntry>());
+			this._vbox.AddControlToBottom(status);
+			ITask currentWorkTask = _currentWorkTaskProvider.CurrentWorkTask;
+			if (currentWorkTask != null)
+			{
+				_vbox.AddControlToBottom(new CurrentTaskIndicatorControl(TaskIndicatorFromTask(currentWorkTask)));
+			}
+
+			IList<ITask> taskList = ((WeSayWordsProject)BasilProject.Project).Tasks;
+			foreach (ITask task in taskList)
+			{
+				if (!task.IsPinned && task != currentWorkTask)
+				{
+					AddIndicator(TaskIndicatorFromTask(task));
+				}
+			}
 
 		}
 
 		public void Deactivate()
 		{
-
+			foreach (TaskIndicator taskIndicator in _taskIndicators)
+			{
+				taskIndicator.selected -= OnTaskIndicatorSelected;
+			}
+			this._vbox.Clear();
 		}
 
 		public string Label
 		{
-			get { return "Dashboard";
-				 }
+			get { return "Dashboard";}
 		}
 
 		public Control Control
@@ -56,9 +96,20 @@ namespace WeSay.CommonTools
 			get { return this; }
 		}
 
-		private void label1_Click(object sender, EventArgs e)
+		public bool IsPinned
 		{
+			get
+			{
+				return true;
+			}
+		}
 
+		public string Status
+		{
+			get
+			{
+				return string.Empty;
+			}
 		}
 
 		public string Description

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 
 namespace WeSay.UI
 {
@@ -12,5 +11,7 @@ namespace WeSay.UI
 
 		//Gtk.VBox Container { get;set; }
 		Control Control { get;}
+		bool IsPinned { get; }
+		string Status { get; }
 	}
 }

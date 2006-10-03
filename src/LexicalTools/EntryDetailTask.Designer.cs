@@ -49,7 +49,6 @@ namespace WeSay.LexicalTools
 			this._entryDetailPanel.DataSource = null;
 			this._entryDetailPanel.Location = new System.Drawing.Point(126, 0);
 			this._entryDetailPanel.Name = "_entryDetailPanel";
-			this._entryDetailPanel.ShowField = ((System.Predicate<string>)(resources.GetObject("_entryDetailPanel.ShowField")));
 			this._entryDetailPanel.Size = new System.Drawing.Size(367, 127);
 			this._entryDetailPanel.TabIndex = 4;
 			//

@@ -45,6 +45,7 @@
 	  <DependentUpon>DetailList.cs</DependentUpon>
 	</Compile>
 	<Compile Include="GhostBinding.cs" />
+	<Compile Include="ICurrentWorkTask.cs" />
 	<Compile Include="IProject.cs" />
 	<Compile Include="ISkin.cs" />
 	<Compile Include="ITaskBuilder.cs" />

@@ -1,15 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace WeSay.LexicalModel.Tests
 {
-	public class PretendRecordList : WeSay.Data.InMemoryRecordList<LexEntry>
+	public class PretendRecordList : WeSay.Data.InMemoryBindingList<LexEntry>
 	{
 		public PretendRecordList()
 			: base()
 		{
-			LexEntry entry = this.AddNew();
+			LexEntry entry = AddNew();
 			for (int i = 0; i < 4; ++i)
 			{
 				entry.LexicalForm["th"] = "apple " + i.ToString();
@@ -27,7 +23,7 @@ namespace WeSay.LexicalModel.Tests
 				}
 
 			}
-			entry = this.AddNew();
+			entry = AddNew();
 			entry.LexicalForm["th"] = "orange";
 		}
 	}

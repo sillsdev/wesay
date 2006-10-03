@@ -56,13 +56,18 @@ namespace WeSay.App
 			{
 				Application.EnableVisualStyles();
 				Application.SetCompatibleTextRenderingDefault(false);
-				//builder = new SampleTaskBuilder(project);
+				TabbedForm tabbedForm = new TabbedForm();
+
+				//builder = new SampleTaskBuilder(project, tabbedForm);
 				using (FileStream config = new FileStream(project.PathToProjectTaskInventory, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete))
 				{
-					builder = new ConfigFileTaskBuilder(project, config);
+					builder = new ConfigFileTaskBuilder(config, project, tabbedForm);
 				}
-				Form f =  new TabbedForm(project, builder);
-				Application.Run(f);
+				project.Tasks = builder.Tasks;
+
+
+				tabbedForm.InitializeTasks(project.Tasks);
+				Application.Run(tabbedForm);
 			}
 			finally
 			{
