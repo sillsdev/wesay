@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using SourceGrid3;
 
@@ -12,12 +13,12 @@ namespace ListBox
 	public class BindingListGrid : GridVirtual
 	{
 		private IBindingList _list;
-		private int _selectedRowIndex;
+//        private int _selectedRowIndex;
 		public event EventHandler SelectedIndexChanged;
 
 		public BindingListGrid()
 		{
-			this._selectedRowIndex = 0;
+//            this._selectedRowIndex = 0;
 			FixedRows = 0;
 			FixedColumns = 0;
 
@@ -29,6 +30,20 @@ namespace ListBox
 
 			Selection.FocusStyle = SourceGrid3.FocusStyle.RemoveFocusCellOnLeave;
 			Selection.FocusRowLeaving += new RowCancelEventHandler(Selection_FocusRowLeaving);
+
+			//nb: this comes at a time that the Selection.GetRowsIndex() is empty,
+			//so it's not too useful!
+			//Selection.Changed += new EventHandler(Selection_Changed);
+
+		}
+
+
+		void Selection_Changed(object sender, EventArgs e)
+		{
+			if (SelectedIndexChanged != null)
+			{
+				SelectedIndexChanged.Invoke(this, null);
+			}
 		}
 
 		protected override void Dispose(bool disposing)
@@ -49,17 +64,29 @@ namespace ListBox
 			//jdh
 			get
 			{
-				return this._selectedRowIndex;
+				//return this._selectedRowIndex;
+				int[] r = Selection.GetRowsIndex();
+				if (r == null || r.Length == 0)
+					return 0; //hack. Having start up problems if I dont return a valid index when the grid doesn't have a selection yet.
+				//for some reason does grow Debug.Assert(r.Length == 1, "Don't expect multiple selected rows");
+				return r[0];
 			}
 			set
 			{
-				this._selectedRowIndex = value;
-				Selection.SelectRow(this._selectedRowIndex, true);
+				if (_list == null)
+				{
+					return; //the designer will intialize us with this.
+				}
+				Debug.Assert(value < _list.Count);
+			  //  this._selectedRowIndex = value;
+				Selection.SelectRow(value, true);
 				Selection.FocusRow(value);
+
 				if (SelectedIndexChanged != null)
 				{
 					SelectedIndexChanged.Invoke(this, null);
 				}
+
 			}
 		}
 		/// <summary>
@@ -69,9 +96,9 @@ namespace ListBox
 		{
 			get
 			{
-				if (this._selectedRowIndex < 0 || this._selectedRowIndex >= _list.Count)
+				if (SelectedIndex < -1)
 					return null;
-				return _list[this._selectedRowIndex];
+				return _list[SelectedIndex];
 			}
 		}
 
@@ -237,6 +264,11 @@ namespace ListBox
 				_list = value;
 				if (_list != null)
 					Bind();
+
+				if (_list.Count > 0)
+				{
+					this.SelectedIndex = 0;
+				}
 			}
 		}
 
@@ -257,6 +289,23 @@ namespace ListBox
 		{
 			Rows.RowsChanged();
 			InvalidateCells();
+			if (Selection.IsEmpty() && _list.Count > 0)
+			{
+				if (e.NewIndex == _list.Count)
+				{
+					//just deleted the last item in the list, so select the one above it
+					Selection.SelectRow(e.NewIndex -1, true); ;
+
+				}
+				else
+				{
+				  //does this ever happen?
+					Debug.Fail("it does happen");
+					Selection.SelectRow(0, true); ;
+				}
+			  //  SelectedIndex = 0;
+			}
+
 		}
 
 		protected virtual void Bind()

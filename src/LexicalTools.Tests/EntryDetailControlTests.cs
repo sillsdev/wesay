@@ -27,10 +27,10 @@ namespace WeSay.LexicalTools.Tests
 			this._filePath = System.IO.Path.GetTempFileName();
 			this._recordListManager = new Db4oRecordListManager(_filePath);
 
-			LexEntry entry = new LexEntry();
-			entry.LexicalForm.SetAlternative(this._vernacularWsId, "Initial");
 			this._records = this._recordListManager.Get<LexEntry>();
-			this._records.Add(entry);
+			AddEntry("Initial");
+			AddEntry("Secondary");
+			AddEntry("Tertiary");
 
 			this._control = new EntryDetailTask(_recordListManager);
 			this._control.Dock = DockStyle.Fill;
@@ -38,6 +38,13 @@ namespace WeSay.LexicalTools.Tests
 			f.Controls.Add(this._control);
 			f.Show();
 			_control.Activate();
+		}
+
+		private void AddEntry(string lexemeForm)
+		{
+			LexEntry entry = new LexEntry();
+			entry.LexicalForm.SetAlternative(this._vernacularWsId, lexemeForm);
+			this._records.Add(entry);
 		}
 
 		public override void TearDown()
@@ -73,6 +80,60 @@ namespace WeSay.LexicalTools.Tests
 			Assert.AreEqual("", LexemeFormOfSelectedEntry);
 		}
 
+		[Test]
+		public void ClickingDeleteWordDereasesRecordsByOne()
+		{
+			int before = _records.Count;
+			ClickDeleteWord();
+			Assert.AreEqual(before-1, _records.Count);
+		}
+
+
+
+		[Test]
+		public void DeletingFirstWordSelectsNextWordInList()
+		{
+			Assert.AreEqual("Initial", LexemeFormOfSelectedEntry);
+			ClickDeleteWord();
+			Assert.AreEqual("Secondary", LexemeFormOfSelectedEntry);
+		}
+
+		[Test]
+		public void DeletingLastWordSelectsPreviousWordInList()
+		{
+			BindingListGridTester t = new BindingListGridTester("_recordsListBox");
+			t.Properties.SelectedIndex = 2;
+			Assert.AreEqual("Tertiary", LexemeFormOfSelectedEntry);
+			ClickDeleteWord();
+			Assert.AreEqual("Secondary", LexemeFormOfSelectedEntry);
+		}
+
+		[Test]
+		public void AddWordsThenDeleteDoesNotCrash()
+		{
+			ClickAddWord();
+			ClickDeleteWord();
+		}
+
+		[Test]
+		public void DeletingAllWordsThenAddingDoesNotCrash()
+		{
+			ClickDeleteWord();
+			ClickDeleteWord();
+			ClickAddWord();
+		}
+
+		[Test]
+		public void IfNoWordsDeleteButtonDisabled()
+		{
+			NUnit.Extensions.Forms.LinkLabelTester l = new LinkLabelTester("_btnDeleteWord");
+			Assert.IsTrue(l.Properties.Enabled);
+			ClickDeleteWord();
+			ClickDeleteWord();
+			ClickDeleteWord();
+			Assert.IsFalse(l.Properties.Enabled);
+		}
+
 		private string LexemeFormOfSelectedEntry
 		{
 			get
@@ -85,6 +146,12 @@ namespace WeSay.LexicalTools.Tests
 		private static void ClickAddWord()
 		{
 			NUnit.Extensions.Forms.LinkLabelTester l = new LinkLabelTester("_btnNewWord");
+			l.Click();
+		}
+
+		private void ClickDeleteWord()
+		{
+			NUnit.Extensions.Forms.LinkLabelTester l = new LinkLabelTester("_btnDeleteWord");
 			l.Click();
 		}
 	}

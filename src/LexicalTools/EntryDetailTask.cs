@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 using WeSay.Data;
@@ -11,20 +12,22 @@ namespace WeSay.LexicalTools
 	{
 
 		private IRecordList<LexEntry> _records;
-		private int _currentIndex;
+//        private int _currentIndex;
 
 		public EntryDetailTask(IRecordListManager recordListManager)
 		{
 			InitializeComponent();
 			_records = recordListManager.Get<LexEntry>();
 
+
 			_entryDetailPanel.BackColor = SystemColors.Control;//we like it to stand out at design time, but not runtime
 		}
 
 		void OnRecordSelectionChanged(object sender, EventArgs e)
 		{
-			_currentIndex = _recordsListBox.SelectedIndex;
+//            _currentIndex = _recordsListBox.SelectedIndex;
 			_entryDetailPanel.DataSource = CurrentRecord;
+			_btnDeleteWord.Enabled = (CurrentRecord != null);
 		}
 
 
@@ -89,8 +92,13 @@ namespace WeSay.LexicalTools
 				{
 					return null;
 				}
-				return _records[_currentIndex];
+				return _records[this.CurrentIndex];
 			}
+		}
+
+		protected int CurrentIndex
+		{
+			get { return _recordsListBox.SelectedIndex; }
 		}
 
 		private void _btnNewWord_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -102,7 +110,10 @@ namespace WeSay.LexicalTools
 
 		private void _btnDeleteWord_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
 		{
-
+			Debug.Assert(CurrentIndex != null);
+			_records.RemoveAt(CurrentIndex);
+			//hack until we can get selection change events sorted out in BindingGridList
+			OnRecordSelectionChanged(this, null);
 		}
 	}
 }

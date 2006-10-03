@@ -117,6 +117,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void Activate_Refreshes()
 		{
+			//JDH broke this Tuesday, but is at a loss to say why (it's fine in the real app)
 			LexFieldTask task = new LexFieldTask(_recordListManager, _filter, _label, _description, _fieldsToShow);
 			task.Activate();
 			Assert.IsTrue(((LexFieldTool)task.Control).ControlDetails.ControlFormattedView.Text.Contains(_lexicalForm));
