@@ -11,15 +11,15 @@ namespace WeSay.App
 		class CommandLineArguments
 		{
 			[DefaultArgument(ArgumentTypes.AtMostOnce,
-				DefaultValue=@"..\..\SampleProjects\Thai\WeSay\thai5000.words",
-				HelpText=@"Path to the words file (e.g. c:\thai\wesay\thai500.words).")]
-			public string wordsPath=null;
+				DefaultValue = @"..\..\SampleProjects\Thai\WeSay\thai5000.words",
+				HelpText = @"Path to the words file (e.g. c:\thai\wesay\thai500.words).")]
+			public string wordsPath = null;
 
 			[Argument(ArgumentTypes.AtMostOnce,
-				HelpText="Language to show the user interface in.",
-				LongName="ui",
-				ShortName="")]
-			public string ui=null;
+				HelpText = "Language to show the user interface in.",
+				LongName = "ui",
+				ShortName = "")]
+			public string ui = null;
 		}
 
 		static void ShowCommandLineError(string e)
@@ -27,7 +27,7 @@ namespace WeSay.App
 			CommandLine.Parser p = new Parser(typeof(CommandLineArguments), new ErrorReporter(ShowCommandLineError));
 			e = e.Replace("Duplicate 'wordsPath' argument", "Please enclose project path in quotes if it contains spaces.");
 			e += "\r\n\r\n" + p.GetUsageString(200);
-			MessageBox.Show(e,"WeSay Command Line Problem");
+			MessageBox.Show(e, "WeSay Command Line Problem");
 		}
 
 		[STAThread]
@@ -65,9 +65,8 @@ namespace WeSay.App
 				}
 				project.Tasks = builder.Tasks;
 
-
-				tabbedForm.InitializeTasks(project.Tasks);
 				Application.Run(tabbedForm);
+
 			}
 			finally
 			{

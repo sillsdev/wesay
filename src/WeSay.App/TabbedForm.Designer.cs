@@ -61,6 +61,7 @@ namespace WeSay.App
 			this.Controls.Add(this.tabControl1);
 			this.Name = "TabbedForm";
 			this.Text = "WeSay";
+			this.Load += new System.EventHandler(this.TabbedForm_Load);
 			this.tabControl1.ResumeLayout(false);
 			this.ResumeLayout(false);
 

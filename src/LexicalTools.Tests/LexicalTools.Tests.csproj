@@ -32,9 +32,17 @@
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\Db4o.dll</HintPath>
 	</Reference>
+	<Reference Include="DevAge.SourceGrid3, Version=1.0.0.11, Culture=neutral, PublicKeyToken=faad465d84242dbf">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\DevAge.SourceGrid\DevAge.SourceGrid3.dll</HintPath>
+	</Reference>
 	<Reference Include="nunit.framework, Version=2.2.8.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\nunit.framework.dll</HintPath>
+	</Reference>
+	<Reference Include="NUnitForms, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\NUnitForms.dll</HintPath>
 	</Reference>
 	<Reference Include="System" />
 	<Reference Include="System.Data" />
@@ -42,7 +50,9 @@
 	<Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+	<Compile Include="EntryDetailControlTests.cs" />
 	<Compile Include="LexFieldTaskTests.cs" />
+	<Compile Include="BindingListGridTester.cs" />
 	<Compile Include="TestFieldControl.cs" />
 	<Compile Include="LayouterTests.cs" />
 	<Compile Include="TestEntryView.cs" />
@@ -65,6 +75,10 @@
 	  <Project>{87AF0B02-2983-486D-857F-D1859535C234}</Project>
 	  <Name>LexicalTools</Name>
 	</ProjectReference>
+	<ProjectReference Include="..\ListBox\ListBox\ListBox.csproj">
+	  <Project>{3CB6560B-DA13-4348-BE4E-4E12E05A6559}</Project>
+	  <Name>ListBox</Name>
+	</ProjectReference>
 	<ProjectReference Include="..\WeSay.Data\WeSay.Data.csproj">
 	  <Project>{600D0FD4-D189-41A0-9BC5-FC79AD2CF1CD}</Project>
 	  <Name>WeSay.Data</Name>
@@ -73,6 +87,9 @@
 	  <Project>{AC8F284C-7B34-4AC9-A7DE-FAF765456DFF}</Project>
 	  <Name>WeSay.UI</Name>
 	</ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+	<None Include="app.config" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

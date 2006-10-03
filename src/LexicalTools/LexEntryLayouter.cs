@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Windows.Forms;
 using WeSay.Language;
 using WeSay.LexicalModel;
 using WeSay.UI;
@@ -37,7 +38,9 @@ namespace WeSay.LexicalTools
 			int rowCount = 0;
 			if (DetailList.ShowField("LexicalForm"))
 			{
-				DetailList.AddWidgetRow(StringCatalog.Get("Word"), true, MakeBoundEntry(entry.LexicalForm, BasilProject.Project.WritingSystems.VernacularWritingSystemDefault), insertAtRow);
+				Control box = MakeBoundEntry(entry.LexicalForm, BasilProject.Project.WritingSystems.VernacularWritingSystemDefault);
+				box.Name = "LexicalForm"; //so GUI unit tests can find it
+				DetailList.AddWidgetRow(StringCatalog.Get("Word"), true, box, insertAtRow);
 				++rowCount;
 			}
 			LexSenseLayouter layouter = new LexSenseLayouter(DetailList);

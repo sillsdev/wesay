@@ -95,7 +95,9 @@ namespace WeSay.LexicalTools
 
 		private void _btnNewWord_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
 		{
-			_records.Add(new LexEntry());
+			LexEntry entry = new LexEntry();
+			_records.Add(entry);
+			_recordsListBox.SelectedIndex = _records.IndexOf(entry);
 		}
 
 		private void _btnDeleteWord_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

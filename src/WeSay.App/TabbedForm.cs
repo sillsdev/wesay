@@ -9,6 +9,7 @@ namespace WeSay.App
 	{
 		private ITask _activeTask;
 		private TabPage _currentWorkTab;
+		private Timer _pacifierTimer;
 
 		public TabbedForm()
 		{
@@ -50,7 +51,8 @@ namespace WeSay.App
 
 		}
 
-		private TabPage CreateTabPageForTask(ITask t) {
+		private TabPage CreateTabPageForTask(ITask t)
+		{
 			//t.Container = container;
 			TabPage page = new TabPage(StringCatalog.Get(t.Label));
 			page.Tag = t;
@@ -64,7 +66,7 @@ namespace WeSay.App
 			{
 				foreach (TabPage page in this.tabControl1.TabPages)
 				{
-					if(page.Tag == value)
+					if (page.Tag == value)
 					{
 						ActivateTab(page);
 						break;
@@ -81,14 +83,15 @@ namespace WeSay.App
 				{
 					return null;
 				}
-				return (ITask) this._currentWorkTab.Tag;
+				return (ITask)this._currentWorkTab.Tag;
 			}
-			set {
-				if(value == null)
+			set
+			{
+				if (value == null)
 				{
 					throw new ArgumentNullException();
 				}
-				if(value.IsPinned)
+				if (value.IsPinned)
 				{
 					throw new ArgumentOutOfRangeException("A work task cannot be a pinned task.");
 				}
@@ -120,20 +123,68 @@ namespace WeSay.App
 
 		private void ActivateTab(TabPage page)
 		{
-			ITask t = (ITask)page.Tag;
-			if (_activeTask == t)
+			ITask task = (ITask)page.Tag;
+			if (_activeTask == task)
 				return; //debounce
 
 			if (_activeTask != null)
 				_activeTask.Deactivate();
-			if (t != null)
+			if (task != null)
 			{
-				t.Activate();
-				t.Control.Dock = DockStyle.Fill;
+				page.Cursor = Cursors.WaitCursor;
 				page.Controls.Clear();
-				page.Controls.Add(t.Control);
+				if (this.Visible)
+				{
+					ActivateAfterScreenDraw(page, task);
+				}
+				else
+				{
+					ActivateTask(page, task);
+				}
 			}
-			_activeTask = t;
+			_activeTask = task;
+		}
+
+		private void ActivateAfterScreenDraw(TabPage page, ITask task)
+		{
+			string previousTabText = page.Text;
+			page.Text += " Loading...";
+			System.Windows.Forms.Timer t = new System.Windows.Forms.Timer();
+			t.Tick+=new EventHandler(delegate
+										   {
+											   ActivateTask(page, task);
+												 t.Enabled = false;
+												page.Text = previousTabText;
+										 });
+			t.Interval = 1;
+			t.Enabled = true;
+
+		}
+
+		void ActivateTask(TabPage page, ITask task)
+		{
+			task.Activate();
+			task.Control.Dock = DockStyle.Fill;
+			page.Controls.Add(task.Control);
+			page.Cursor = Cursors.Default;
+		}
+
+
+		private void ContinueLaunchingAfterInitialDisplay()
+		{
+			System.Windows.Forms.Timer t = new System.Windows.Forms.Timer();
+			t.Tick += new EventHandler(delegate
+										   {
+											   InitializeTasks(WeSayWordsProject.Project.Tasks);
+											   t.Enabled = false;
+										   });
+			t.Interval = 1;
+			t.Enabled = true;
+		}
+
+		private void TabbedForm_Load(object sender, EventArgs e)
+		{
+			ContinueLaunchingAfterInitialDisplay();
 		}
 	}
 }

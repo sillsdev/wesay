@@ -12,16 +12,16 @@ namespace ListBox
 	public class BindingListGrid : GridVirtual
 	{
 		private IBindingList _list;
-		private int _selected;
+		private int _selectedRowIndex;
 		public event EventHandler SelectedIndexChanged;
 
 		public BindingListGrid()
 		{
-			_selected = 0;
+			this._selectedRowIndex = 0;
 			FixedRows = 0;
 			FixedColumns = 0;
 
-//			Controller.AddController(new DataGridCellController());
+			//			Controller.AddController(new DataGridCellController());
 
 			Selection.SelectionMode = GridSelectionMode.Row;
 			//Controller.AddController(new NewRowController());
@@ -37,7 +37,7 @@ namespace ListBox
 			{
 				Unbind();
 			}
-			base.Dispose (disposing);
+			base.Dispose(disposing);
 		}
 
 
@@ -49,18 +49,31 @@ namespace ListBox
 			//jdh
 			get
 			{
-				return _selected;
+				return this._selectedRowIndex;
 			}
 			set
 			{
-				_selected = value;
+				this._selectedRowIndex = value;
+				Selection.SelectRow(this._selectedRowIndex, true);
+				Selection.FocusRow(value);
 				if (SelectedIndexChanged != null)
 				{
 					SelectedIndexChanged.Invoke(this, null);
 				}
 			}
 		}
-
+		/// <summary>
+		/// the object at the index into the binding list of the currently selected item.
+		/// </summary>
+		public object SelectedObject
+		{
+			get
+			{
+				if (this._selectedRowIndex < 0 || this._selectedRowIndex >= _list.Count)
+					return null;
+				return _list[this._selectedRowIndex];
+			}
+		}
 
 		/// <summary>
 		/// Change the cell currently under the mouse
@@ -91,125 +104,125 @@ namespace ListBox
 			return new DataGridColumns(this);
 		}
 
-//		#region Cell Identifier abstract methods
-//		/// <summary>
-//		/// An abstract method that must return an object to identify a Position in the Grid. See also IdentifierToPosition. The identifier for Position.Empty must be null.
-//		/// The object returned must follow these rules:
-//		/// //The identifier of the same position is always the same
-//		/// object.Equals(Grid.IdentifierToPosition(new Position(x1, y1)), Grid.IdentifierToPosition(new Position(x1, y1))) == true
-//		/// //The identifier of a different position is always defferent
-//		/// object.Equals(Grid.IdentifierToPosition(new Position(x1, y1)), Grid.IdentifierToPosition(new Position(x2, y2))) == false
-//		/// </summary>
-//		/// <param name="position"></param>
-//		/// <returns></returns>
-//		public override object PositionToCellIdentifier(Position position)
-//		{
-//			if (position.IsEmpty())
-//				return null;
-//			else
-//				return new CellIdentifier(DataSource, Rows.IndexToDataSourceRow(position.Row), Columns.IndexToDataSourceColumn(position.Column), position.Row, position.Column);
-//		}
-//		/// <summary>
-//		/// An abstract method that must return a valid position if the identifier is valid, otherwise Position.Empty. The identifier object must be created with PositionToCellIdentifier. See also PositionToCellIdentifier. A null identifier must return Position.Empty.
-//		/// </summary>
-//		/// <param name="identifier"></param>
-//		/// <returns></returns>
-//		public override Position IdentifierToPosition(object identifier)
-//		{
-//			if (identifier == null)
-//				return Position.Empty;
-//			else
-//			{
-//				CellIdentifier cellId = ((CellIdentifier)identifier);
-//				if (object.Equals(cellId.DataSource, DataSource))
-//				{
-//					int col = cellId.ColumnIndex;
-//					int row = cellId.RowIndex;
-//					Position pos = new Position(cellId.RowIndex, cellId.ColumnIndex);
-//					if (cellId.Column != null)
-//						col = Columns.DataSourceColumnToIndex(cellId.Column);
-//					if (cellId.Row != null)
-//						row = Rows.DataSourceRowToIndex(cellId.Row);
-//
-//					return new Position(row, col);
-//				}
-//				else
-//					return Position.Empty;
-//			}
-//		}
-//		private class CellIdentifier
-//		{
-//			/// <summary>
-//			///
-//			/// </summary>
-//			/// <param name="dataSource"></param>
-//			/// <param name="row"></param>
-//			/// <param name="column"></param>
-//			/// <param name="rowIndex">Only used if row is null, otherwise is set to -1</param>
-//			/// <param name="columnIndex">Only used if column is null, otherwise is set to -1</param>
-//			public CellIdentifier(System.Data.DataView dataSource, System.Data.DataRowView row, System.Data.DataColumn column, int rowIndex, int columnIndex)
-//			{
-//				mDataSource = dataSource;
-//				mRow = row;
-//				mColumn = column;
-//				if (mRow == null)
-//					mRowIndex = rowIndex;
-//				if (mColumn == null)
-//					mColumnIndex = columnIndex;
-//			}
-//			private System.Data.DataView mDataSource;
-//			private System.Data.DataColumn mColumn;
-//			private System.Data.DataRowView mRow;
-//			private int mColumnIndex = -1;
-//			private int mRowIndex = -1;
-//
-//			public System.Data.DataView DataSource
-//			{
-//				get{return mDataSource;}
-//			}
-//			public System.Data.DataRowView Row
-//			{
-//				get{return mRow;}
-//			}
-//			public System.Data.DataColumn Column
-//			{
-//				get{return mColumn;}
-//			}
-//			/// <summary>
-//			/// Only used when Row is null.
-//			/// </summary>
-//			public int RowIndex
-//			{
-//				get{return mRowIndex;}
-//			}
-//			/// <summary>
-//			/// Only used when Column is null.
-//			/// </summary>
-//			public int ColumnIndex
-//			{
-//				get{return mColumnIndex;}
-//			}
-//
-//			public override int GetHashCode()
-//			{
-//				return mColumnIndex;
-//			}
-//
-//			public override bool Equals(object obj)
-//			{
-//				CellIdentifier other = obj as CellIdentifier;
-//				if (obj == null)
-//					return false;
-//				else
-//					return object.Equals(mDataSource, other.mDataSource) &&
-//						object.Equals(mColumn, other.mColumn) && object.Equals(mRow, other.mRow) &&
-//						mColumnIndex == other.mColumnIndex && mRowIndex == other.mRowIndex;
-//			}
-//		}
-//		#endregion
+		//		#region Cell Identifier abstract methods
+		//		/// <summary>
+		//		/// An abstract method that must return an object to identify a Position in the Grid. See also IdentifierToPosition. The identifier for Position.Empty must be null.
+		//		/// The object returned must follow these rules:
+		//		/// //The identifier of the same position is always the same
+		//		/// object.Equals(Grid.IdentifierToPosition(new Position(x1, y1)), Grid.IdentifierToPosition(new Position(x1, y1))) == true
+		//		/// //The identifier of a different position is always defferent
+		//		/// object.Equals(Grid.IdentifierToPosition(new Position(x1, y1)), Grid.IdentifierToPosition(new Position(x2, y2))) == false
+		//		/// </summary>
+		//		/// <param name="position"></param>
+		//		/// <returns></returns>
+		//		public override object PositionToCellIdentifier(Position position)
+		//		{
+		//			if (position.IsEmpty())
+		//				return null;
+		//			else
+		//				return new CellIdentifier(DataSource, Rows.IndexToDataSourceRow(position.Row), Columns.IndexToDataSourceColumn(position.Column), position.Row, position.Column);
+		//		}
+		//		/// <summary>
+		//		/// An abstract method that must return a valid position if the identifier is valid, otherwise Position.Empty. The identifier object must be created with PositionToCellIdentifier. See also PositionToCellIdentifier. A null identifier must return Position.Empty.
+		//		/// </summary>
+		//		/// <param name="identifier"></param>
+		//		/// <returns></returns>
+		//		public override Position IdentifierToPosition(object identifier)
+		//		{
+		//			if (identifier == null)
+		//				return Position.Empty;
+		//			else
+		//			{
+		//				CellIdentifier cellId = ((CellIdentifier)identifier);
+		//				if (object.Equals(cellId.DataSource, DataSource))
+		//				{
+		//					int col = cellId.ColumnIndex;
+		//					int row = cellId.RowIndex;
+		//					Position pos = new Position(cellId.RowIndex, cellId.ColumnIndex);
+		//					if (cellId.Column != null)
+		//						col = Columns.DataSourceColumnToIndex(cellId.Column);
+		//					if (cellId.Row != null)
+		//						row = Rows.DataSourceRowToIndex(cellId.Row);
+		//
+		//					return new Position(row, col);
+		//				}
+		//				else
+		//					return Position.Empty;
+		//			}
+		//		}
+		//		private class CellIdentifier
+		//		{
+		//			/// <summary>
+		//			///
+		//			/// </summary>
+		//			/// <param name="dataSource"></param>
+		//			/// <param name="row"></param>
+		//			/// <param name="column"></param>
+		//			/// <param name="rowIndex">Only used if row is null, otherwise is set to -1</param>
+		//			/// <param name="columnIndex">Only used if column is null, otherwise is set to -1</param>
+		//			public CellIdentifier(System.Data.DataView dataSource, System.Data.DataRowView row, System.Data.DataColumn column, int rowIndex, int columnIndex)
+		//			{
+		//				mDataSource = dataSource;
+		//				mRow = row;
+		//				mColumn = column;
+		//				if (mRow == null)
+		//					mRowIndex = rowIndex;
+		//				if (mColumn == null)
+		//					mColumnIndex = columnIndex;
+		//			}
+		//			private System.Data.DataView mDataSource;
+		//			private System.Data.DataColumn mColumn;
+		//			private System.Data.DataRowView mRow;
+		//			private int mColumnIndex = -1;
+		//			private int mRowIndex = -1;
+		//
+		//			public System.Data.DataView DataSource
+		//			{
+		//				get{return mDataSource;}
+		//			}
+		//			public System.Data.DataRowView Row
+		//			{
+		//				get{return mRow;}
+		//			}
+		//			public System.Data.DataColumn Column
+		//			{
+		//				get{return mColumn;}
+		//			}
+		//			/// <summary>
+		//			/// Only used when Row is null.
+		//			/// </summary>
+		//			public int RowIndex
+		//			{
+		//				get{return mRowIndex;}
+		//			}
+		//			/// <summary>
+		//			/// Only used when Column is null.
+		//			/// </summary>
+		//			public int ColumnIndex
+		//			{
+		//				get{return mColumnIndex;}
+		//			}
+		//
+		//			public override int GetHashCode()
+		//			{
+		//				return mColumnIndex;
+		//			}
+		//
+		//			public override bool Equals(object obj)
+		//			{
+		//				CellIdentifier other = obj as CellIdentifier;
+		//				if (obj == null)
+		//					return false;
+		//				else
+		//					return object.Equals(mDataSource, other.mDataSource) &&
+		//						object.Equals(mColumn, other.mColumn) && object.Equals(mRow, other.mRow) &&
+		//						mColumnIndex == other.mColumnIndex && mRowIndex == other.mRowIndex;
+		//			}
+		//		}
+		//		#endregion
 
 
-	//	private System.Data.DataView m_DataView;
+		//	private System.Data.DataView m_DataView;
 
 		/// <summary>
 		/// Gets or sets the DataView used for data binding.
@@ -217,7 +230,7 @@ namespace ListBox
 		[Browsable(false), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
 		public IBindingList DataSource
 		{
-			get{return _list;}
+			get { return _list; }
 			set
 			{
 				Unbind();
@@ -229,15 +242,15 @@ namespace ListBox
 
 		protected virtual void Unbind()
 		{
-//			if (m_DataView != null)
-//			{
-//				m_DataView.ListChanged -= new ListChangedEventHandler(m_DataView_ListChanged);
-//			}
+			//			if (m_DataView != null)
+			//			{
+			//				m_DataView.ListChanged -= new ListChangedEventHandler(m_DataView_ListChanged);
+			//			}
 			if (DataSource != null)
 			{
 				((IBindingList)DataSource).ListChanged -= new ListChangedEventHandler(BindingListGrid_ListChanged);
 			}
-			Rows.RowsChanged();
+			//JDH this leads to accessing disposed dataSource: Rows.RowsChanged();
 		}
 
 		void BindingListGrid_ListChanged(object sender, ListChangedEventArgs e)
@@ -251,7 +264,7 @@ namespace ListBox
 			if (Columns.Count == 0)
 				CreateColumns();
 
-			((IBindingList)DataSource).ListChanged -= new ListChangedEventHandler(BindingListGrid_ListChanged);
+			((IBindingList)DataSource).ListChanged += new ListChangedEventHandler(BindingListGrid_ListChanged);
 			Rows.RowsChanged();
 		}
 
@@ -260,7 +273,7 @@ namespace ListBox
 		/// </summary>
 		public new DataGridRows Rows
 		{
-			get{return (DataGridRows)base.Rows;}
+			get { return (DataGridRows)base.Rows; }
 		}
 
 		/// <summary>
@@ -268,7 +281,7 @@ namespace ListBox
 		/// </summary>
 		public new DataGridColumns Columns
 		{
-			get{return (DataGridColumns)base.Columns;}
+			get { return (DataGridColumns)base.Columns; }
 		}
 
 
@@ -282,7 +295,7 @@ namespace ListBox
 		{
 			try
 			{
-				if (_list  != null)
+				if (_list != null)
 				{
 					if (p_iRow < FixedRows)
 						return Columns[p_iCol].HeaderCell;
@@ -292,7 +305,7 @@ namespace ListBox
 				else
 					return null;
 			}
-			catch(Exception err)
+			catch (Exception err)
 			{
 				System.Diagnostics.Debug.Assert(false, err.Message);
 				return null;
@@ -351,9 +364,7 @@ namespace ListBox
 			}
 			set
 			{
-				//Selection.Focus(Position.Empty);
-				//Selection.Clear();
-
+				//ORIGINAL
 				//if (m_DataView != null && value != null)
 				//{
 				//    for (int i = 0; i < value.Length; i++)
@@ -375,28 +386,28 @@ namespace ListBox
 
 		public override void OnGridKeyDown(System.Windows.Forms.KeyEventArgs e)
 		{
-			base.OnGridKeyDown (e);
+			base.OnGridKeyDown(e);
 
-//			if (e.KeyCode == System.Windows.Forms.Keys.Delete &&
-//				_list != null &&
-//				//_list.AllowDelete &&
-//				e.Handled == false &&
-//				mDeleteRowsWithDeleteKey)
-//			{
-//				System.Data.DataRowView[] rows = SelectedDataRows;
-//				if (rows != null && rows.Length > 0)
-//					DeleteSelectedRows();
-//
-//				e.Handled = true;
-//			}
-//			else if (e.KeyCode == System.Windows.Forms.Keys.Escape &&
-//				e.Handled == false &&
-//				mCancelEditingWithEscapeKey)
-//			{
-//				EndEditingRow(true);
-//
-//				e.Handled = true;
-//			}
+			//			if (e.KeyCode == System.Windows.Forms.Keys.Delete &&
+			//				_list != null &&
+			//				//_list.AllowDelete &&
+			//				e.Handled == false &&
+			//				mDeleteRowsWithDeleteKey)
+			//			{
+			//				System.Data.DataRowView[] rows = SelectedDataRows;
+			//				if (rows != null && rows.Length > 0)
+			//					DeleteSelectedRows();
+			//
+			//				e.Handled = true;
+			//			}
+			//			else if (e.KeyCode == System.Windows.Forms.Keys.Escape &&
+			//				e.Handled == false &&
+			//				mCancelEditingWithEscapeKey)
+			//			{
+			//				EndEditingRow(true);
+			//
+			//				e.Handled = true;
+			//			}
 		}
 
 
@@ -416,23 +427,35 @@ namespace ListBox
 		public override void AutoSize()
 		{
 			Columns.AutoSizeView();
-			if (Rows.Count > 1)
-				Rows.AutoSizeRow(1);
-			else if (Rows.Count > 0)
-				Rows.AutoSizeRow(0);
+
+
+// original code from sourceGrid           if (Rows.Count > 1)
+//                Rows.AutoSizeRow(1);
+//            else if (Rows.Count > 0)
+//                Rows.AutoSizeRow(0);
+
+			//hack that won't last us long. We really need to base this on the font, not some string.
+			foreach (object o in _list)
+			{
+				string s = o.ToString();
+				if (s == null || s == String.Empty)
+					continue;
+				Rows.AutoSizeRow(_list.IndexOf(o));
+				break;
+			}
 		}
 
 		private void Selection_FocusRowLeaving(object sender, RowCancelEventArgs e)
 		{
-			if (e.Row == EditingRow )
+			if (e.Row == EditingRow)
 			{
 				try
 				{
 					EndEditingRow(false);
 				}
-				catch(Exception exc)
+				catch (Exception exc)
 				{
-					OnUserException(new ExceptionEventArgs(new EndEditingException( exc ) ) );
+					OnUserException(new ExceptionEventArgs(new EndEditingException(exc)));
 
 					e.Cancel = true;
 				}
@@ -470,7 +493,7 @@ namespace ListBox
 		[Browsable(false), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
 		public System.Data.DataRowView EditingDataRow
 		{
-			get{return mEditingInfo.mEditingDataRow;}
+			get { return mEditingInfo.mEditingDataRow; }
 		}
 		/// <summary>
 		/// Gets the currently editing row. Null if no row is in editing.
@@ -478,7 +501,7 @@ namespace ListBox
 		[Browsable(false), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
 		public int EditingRow
 		{
-			get{return mEditingInfo.mEditingRow;}
+			get { return mEditingInfo.mEditingRow; }
 		}
 
 

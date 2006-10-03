@@ -10,7 +10,7 @@ namespace WeSay.LexicalTools.Tests
 	[TestFixture]
 	public class EntryDetailControlTests : NUnit.Extensions.Forms.NUnitFormTest
 	{
-		private FormTester _mainWindowTester;
+	   // private FormTester _mainWindowTester;
 		private EntryDetailTask _control;
 		IRecordListManager _recordListManager;
 		string _filePath;
@@ -37,6 +37,7 @@ namespace WeSay.LexicalTools.Tests
 			Form f = new Form();
 			f.Controls.Add(this._control);
 			f.Show();
+			_control.Activate();
 		}
 
 		public override void TearDown()
@@ -57,7 +58,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void ClickingAddWordShowsEmptyRecord()
 		{
-			NUnit.Extensions.Forms.TextBoxTester t = new TextBoxTester("_vernacular");
+			NUnit.Extensions.Forms.TextBoxTester t = new TextBoxTester("LexicalForm");
 			Assert.AreEqual("Initial", t.Properties.Text);
 
 			ClickAddWord();
@@ -67,11 +68,18 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void ClickingAddWordSelectsNewWordInList()
 		{
-			BindingListGridTester t = new BindingListGridTester("_recordsListBox");
-			Assert.AreEqual("Initial", t.SelectedRowObject);
-
+			Assert.AreEqual("Initial", LexemeFormOfSelectedEntry);
 			ClickAddWord();
-			Assert.AreEqual("", t.Properties.Text);
+			Assert.AreEqual("", LexemeFormOfSelectedEntry);
+		}
+
+		private string LexemeFormOfSelectedEntry
+		{
+			get
+			{
+				BindingListGridTester t = new BindingListGridTester("_recordsListBox");
+				return ((LexEntry)t.Properties.SelectedObject).LexicalForm.GetAlternative(_vernacularWsId);
+			}
 		}
 
 		private static void ClickAddWord()

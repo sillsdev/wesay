@@ -31,6 +31,7 @@ namespace WeSay.LexicalTools
 
 
 			_recordsListBox.SelectedIndexChanged += new EventHandler(OnRecordSelectionChanged);
+
 		}
 
 		void OnRecordSelectionChanged(object sender, EventArgs e)

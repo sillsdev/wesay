@@ -34,23 +34,9 @@ namespace WeSay.LexicalTools
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this._lexFieldDetailPanel = new WeSay.LexicalTools.LexFieldControl();
 			this._recordsListBox = new ListBox.BindingListGrid();
+			this._lexFieldDetailPanel = new WeSay.LexicalTools.LexFieldControl();
 			this.SuspendLayout();
-			//
-			// _lexFieldDetailPanel
-			//
-			this._lexFieldDetailPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-						| System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
-			this._lexFieldDetailPanel.AutoScroll = true;
-			this._lexFieldDetailPanel.BackColor = System.Drawing.SystemColors.ActiveCaption;
-			this._lexFieldDetailPanel.ControlFormattedView.Text = "";
-			this._lexFieldDetailPanel.DataSource = null;
-			this._lexFieldDetailPanel.Location = new System.Drawing.Point(126, 5);
-			this._lexFieldDetailPanel.Name = "_lexFieldDetailPanel";
-			this._lexFieldDetailPanel.Size = new System.Drawing.Size(367, 122);
-			this._lexFieldDetailPanel.TabIndex = 4;
 			//
 			// _recordsListBox
 			//
@@ -58,6 +44,7 @@ namespace WeSay.LexicalTools
 						| System.Windows.Forms.AnchorStyles.Left)));
 			this._recordsListBox.GridToolTipActive = true;
 			this._recordsListBox.Location = new System.Drawing.Point(4, 5);
+			this._recordsListBox.MinimumSize = new System.Drawing.Size(0, 100);
 			this._recordsListBox.Name = "_recordsListBox";
 			this._recordsListBox.SelectedIndex = 0;
 			this._recordsListBox.Size = new System.Drawing.Size(116, 122);
@@ -70,13 +57,26 @@ namespace WeSay.LexicalTools
 			this._recordsListBox.StyleGrid = null;
 			this._recordsListBox.TabIndex = 5;
 			//
-			// LexFieldTask
+			// _lexFieldDetailPanel
+			//
+			this._lexFieldDetailPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+						| System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
+			this._lexFieldDetailPanel.AutoScroll = true;
+			this._lexFieldDetailPanel.BackColor = System.Drawing.SystemColors.ActiveCaption;
+			this._lexFieldDetailPanel.DataSource = null;
+			this._lexFieldDetailPanel.Location = new System.Drawing.Point(126, 5);
+			this._lexFieldDetailPanel.Name = "_lexFieldDetailPanel";
+			this._lexFieldDetailPanel.Size = new System.Drawing.Size(367, 122);
+			this._lexFieldDetailPanel.TabIndex = 4;
+			//
+			// LexFieldTool
 			//
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.Controls.Add(this._recordsListBox);
 			this.Controls.Add(this._lexFieldDetailPanel);
-			this.Name = "LexFieldTask";
+			this.Name = "LexFieldTool";
 			this.Size = new System.Drawing.Size(493, 169);
 			this.ResumeLayout(false);
 
