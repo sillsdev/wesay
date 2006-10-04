@@ -18,7 +18,7 @@ namespace WeSay.LexicalTools
 		{
 			get
 			{
-				return _description;
+				return StringCatalog.Get(_description);
 			}
 		}
 
@@ -91,7 +91,7 @@ namespace WeSay.LexicalTools
 		{
 			get
 			{
-				return _label;
+				return StringCatalog.Get(_label);
 			}
 		}
 

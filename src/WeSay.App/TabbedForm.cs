@@ -9,7 +9,6 @@ namespace WeSay.App
 	{
 		private ITask _activeTask;
 		private TabPage _currentWorkTab;
-		private Timer _pacifierTimer;
 
 		public TabbedForm()
 		{
@@ -22,56 +21,107 @@ namespace WeSay.App
 
 		public void InitializeTasks(IList<ITask> taskList)
 		{
-			TabPage selectedTab = null;
+			if(taskList == null)
+			{
+				throw new ArgumentNullException("taskList");
+			}
 			foreach (ITask t in taskList)
 			{
 				if (t.IsPinned)
 				{
-					selectedTab = CreateTabPageForTask(t);
+					CreateTabPageForTask(t);
 				}
 			}
 
+			InitializeCurrentWorkTaskFromLastSession(taskList);
+			if (CurrentWorkTask == null)
+			{
+				InitializeCurrentWorkTaskToFirstNonPinnedTask(taskList);
+			}
+
+			if(taskList.Count > 0){
+				this.tabControl1.SelectedIndex = 0;
+				ActiveTask = taskList[0];
+			}
+		}
+
+		private void InitializeCurrentWorkTaskToFirstNonPinnedTask(IList<ITask> taskList) {
+			// use first non-pinned task.
 			foreach (ITask t in taskList)
 			{
-				if (CurrentWorkTask == null && !t.IsPinned)
+				if (!t.IsPinned)
 				{
-					_currentWorkTab = new TabPage();
-					this.tabControl1.TabPages.Add(_currentWorkTab);
-					selectedTab = _currentWorkTab;
-					CurrentWorkTask = t; // default to first non-pinned task.
+					ActiveTask = t;
 					break;
 				}
 			}
-
-			if (selectedTab != null)
-			{
-				this.tabControl1.SelectedTab = selectedTab;
-				ActivateTab(selectedTab);
-			}
-
 		}
 
-		private TabPage CreateTabPageForTask(ITask t)
+		private void InitializeCurrentWorkTaskFromLastSession(IList<ITask> taskList) {
+			foreach (ITask task in taskList)
+			{
+				if (LastCurrentWorkTaskLabel == task.Label)
+				{
+					ActiveTask = task;
+					break;
+				}
+			}
+		}
+
+		private void CreateTabPageForTask(ITask t)
 		{
 			//t.Container = container;
-			TabPage page = new TabPage(StringCatalog.Get(t.Label));
+			TabPage page = new TabPage(t.Label);
 			page.Tag = t;
 			this.tabControl1.TabPages.Add(page);
-			return page;
 		}
 
 		public ITask ActiveTask
 		{
+			get
+			{
+				return _activeTask;
+			}
 			set
 			{
-				foreach (TabPage page in this.tabControl1.TabPages)
+				if(value == null)
 				{
-					if (page.Tag == value)
+					throw new ArgumentNullException();
+				}
+				TabPage tabPageToActivate = null;
+				if (value.IsPinned)
+				{
+					foreach (TabPage page in this.tabControl1.TabPages)
 					{
-						ActivateTab(page);
-						break;
+						if (page.Tag == value)
+						{
+							tabPageToActivate = page;
+							break;
+						}
 					}
 				}
+				else
+				{
+					if (_currentWorkTab == null)
+					{
+						_currentWorkTab = new TabPage();
+						this.tabControl1.TabPages.Add(_currentWorkTab);
+					}
+					_currentWorkTab.Tag = value;
+					_currentWorkTab.Text = value.Label;
+					tabPageToActivate = _currentWorkTab;
+					LastCurrentWorkTaskLabel = value.Label;
+				}
+
+				if (tabPageToActivate != null)
+				{
+					if (this.tabControl1.SelectedTab != tabPageToActivate)
+					{
+						this.tabControl1.SelectedTab = tabPageToActivate;
+					}
+					ActivateTab(tabPageToActivate);
+				}
+
 			}
 		}
 
@@ -85,20 +135,17 @@ namespace WeSay.App
 				}
 				return (ITask)this._currentWorkTab.Tag;
 			}
+		}
+
+		public string LastCurrentWorkTaskLabel
+		{
+			get
+			{
+				return WeSay.App.Properties.Settings.Default.CurrentWorkTask;
+			}
 			set
 			{
-				if (value == null)
-				{
-					throw new ArgumentNullException();
-				}
-				if (value.IsPinned)
-				{
-					throw new ArgumentOutOfRangeException("A work task cannot be a pinned task.");
-				}
-				_currentWorkTab.Tag = value;
-				_currentWorkTab.Text = StringCatalog.Get(value.Label);
-				this.tabControl1.SelectedTab = _currentWorkTab;
-				ActivateTab(_currentWorkTab);
+				WeSay.App.Properties.Settings.Default.CurrentWorkTask = value;
 			}
 		}
 
@@ -133,7 +180,7 @@ namespace WeSay.App
 			{
 				page.Cursor = Cursors.WaitCursor;
 				page.Controls.Clear();
-				if (this.Visible)
+				if (Visible)
 				{
 					ActivateAfterScreenDraw(page, task);
 				}
@@ -142,7 +189,6 @@ namespace WeSay.App
 					ActivateTask(page, task);
 				}
 			}
-			_activeTask = task;
 		}
 
 		private void ActivateAfterScreenDraw(TabPage page, ITask task)
@@ -161,12 +207,13 @@ namespace WeSay.App
 
 		}
 
-		void ActivateTask(TabPage page, ITask task)
+		private void ActivateTask(TabPage page, ITask task)
 		{
 			task.Activate();
 			task.Control.Dock = DockStyle.Fill;
 			page.Controls.Add(task.Control);
 			page.Cursor = Cursors.Default;
+			_activeTask = task;
 		}
 
 

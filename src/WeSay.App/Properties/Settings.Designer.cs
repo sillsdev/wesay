@@ -22,5 +22,17 @@ namespace WeSay.App.Properties {
 				return defaultInstance;
 			}
 		}
+
+		[global::System.Configuration.UserScopedSettingAttribute()]
+		[global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+		[global::System.Configuration.DefaultSettingValueAttribute("")]
+		public string CurrentWorkTask {
+			get {
+				return ((string)(this["CurrentWorkTask"]));
+			}
+			set {
+				this["CurrentWorkTask"] = value;
+			}
+		}
 	}
 }

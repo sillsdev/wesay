@@ -51,7 +51,7 @@ namespace WeSay.LexicalTools
 		{
 			get
 			{
-				return "Words";
+				return StringCatalog.Get("Dictionary");
 			}
 		}
 
@@ -59,7 +59,7 @@ namespace WeSay.LexicalTools
 		{
 			get
 			{
-				return "Edit all relevant fields for lexical entries.";
+				return String.Format(StringCatalog.Get("See all {0} {1} words."), _records.Count, BasilProject.Project.Name);
 			}
 		}
 
@@ -80,7 +80,7 @@ namespace WeSay.LexicalTools
 		{
 			get
 			{
-				return _records.Count.ToString();
+				return string.Empty;
 			}
 		}
 
@@ -110,7 +110,7 @@ namespace WeSay.LexicalTools
 
 		private void _btnDeleteWord_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
 		{
-			Debug.Assert(CurrentIndex != null);
+			Debug.Assert(CurrentIndex >= 0);
 			_records.RemoveAt(CurrentIndex);
 			//hack until we can get selection change events sorted out in BindingGridList
 			OnRecordSelectionChanged(this, null);

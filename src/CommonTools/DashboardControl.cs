@@ -40,7 +40,7 @@ namespace WeSay.CommonTools
 		void OnTaskIndicatorSelected(object sender, EventArgs e)
 		{
 			TaskIndicator taskIndicator = (TaskIndicator) sender;
-			_currentWorkTaskProvider.CurrentWorkTask = taskIndicator.Task;
+			_currentWorkTaskProvider.ActiveTask = taskIndicator.Task;
 		}
 
 		private void AddIndicator(TaskIndicator indicator)
@@ -69,7 +69,15 @@ namespace WeSay.CommonTools
 			IList<ITask> taskList = ((WeSayWordsProject)BasilProject.Project).Tasks;
 			foreach (ITask task in taskList)
 			{
-				if (!task.IsPinned && task != currentWorkTask)
+				if (task != this && task.IsPinned)
+				{
+					AddIndicator(TaskIndicatorFromTask(task));
+				}
+			}
+
+			foreach (ITask task in taskList)
+			{
+				if (task != this && !task.IsPinned)
 				{
 					AddIndicator(TaskIndicatorFromTask(task));
 				}
@@ -88,7 +96,7 @@ namespace WeSay.CommonTools
 
 		public string Label
 		{
-			get { return "Dashboard";}
+			get { return StringCatalog.Get("Dashboard");}
 		}
 
 		public Control Control
@@ -116,7 +124,7 @@ namespace WeSay.CommonTools
 		{
 			get
 			{
-				return "Switch tasks and see current status of tasks";
+				return StringCatalog.Get("Switch tasks and see current status of tasks");
 			}
 		}
 

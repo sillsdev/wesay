@@ -10,7 +10,6 @@ namespace WeSay.LexicalTools.Tests
 	public class LexFieldTaskTests
 	{
 		IRecordListManager _recordListManager;
-		string _filePath;
 
 		private IFilter<LexEntry> _filter;
 		private string _fieldsToShow;
@@ -24,8 +23,9 @@ namespace WeSay.LexicalTools.Tests
 		{
 			BasilProject.InitializeForTests();
 
-			this._filePath = System.IO.Path.GetTempFileName();
-			this._recordListManager = new Db4oRecordListManager(_filePath);
+			this._recordListManager = new InMemoryRecordListManager();
+			_filter = new MissingGlossFilter(BasilProject.Project.WritingSystems.VernacularWritingSystemDefault.Id);
+			this._recordListManager.Register<LexEntry>(_filter);
 
 			LexEntry entry = new LexEntry();
 			_lexicalForm = "vernacular";
@@ -36,14 +36,12 @@ namespace WeSay.LexicalTools.Tests
 			_fieldsToShow = "LexicalForm";
 			_label = "My label";
 			_description = "My description";
-			_filter = new MissingGlossFilter(BasilProject.Project.WritingSystems.VernacularWritingSystemDefault.Id);
 		}
 
 		[TearDown]
 		public void TearDown()
 		{
 			this._recordListManager.Dispose();
-			System.IO.File.Delete(_filePath);
 		}
 
 		[Test]
@@ -117,7 +115,6 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void Activate_Refreshes()
 		{
-			//JDH broke this Tuesday, but is at a loss to say why (it's fine in the real app)
 			LexFieldTask task = new LexFieldTask(_recordListManager, _filter, _label, _description, _fieldsToShow);
 			task.Activate();
 			Assert.IsTrue(((LexFieldTool)task.Control).ControlDetails.ControlFormattedView.Text.Contains(_lexicalForm));

@@ -5,6 +5,11 @@
 		WeSay.UI.ITask CurrentWorkTask
 		{
 			get;
+		}
+
+		WeSay.UI.ITask ActiveTask
+		{
+			get;
 			set;
 		}
 	}

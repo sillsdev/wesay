@@ -1,12 +1,8 @@
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Text;
 using System.Windows.Forms;
 using WeSay.UI;
 using WeSay.LexicalModel;
-using WeSay.Language;
 
 namespace WeSay.LexicalTools
 {

@@ -1,4 +1,3 @@
-using System;
 using System.Drawing;
 using System.Windows.Forms;
 using WeSay.UI;
@@ -7,7 +6,6 @@ namespace WeSay.CommonTools
 {
 	public partial class PictureControl : UserControl, ITask
 	{
-		int _i;
 		private string _label;
 		private string _description;
 
@@ -16,7 +14,6 @@ namespace WeSay.CommonTools
 			_label = label;
 			_description = description;
 			InitializeComponent(new Bitmap(pictureFilePath));
-			_i = new Random().Next(20, 100);
 		}
 
 		#region ITask Members
@@ -33,7 +30,7 @@ namespace WeSay.CommonTools
 		{
 			get
 			{
-				return _label;
+				return StringCatalog.Get(_label);
 			}
 		}
 
@@ -49,7 +46,7 @@ namespace WeSay.CommonTools
 		{
 			get
 			{
-				return _description;
+				return StringCatalog.Get(_description);
 			}
 		}
 
@@ -65,7 +62,7 @@ namespace WeSay.CommonTools
 		{
 			get
 			{
-				return _i.ToString();
+				return string.Empty;
 			}
 		}
 		#endregion
