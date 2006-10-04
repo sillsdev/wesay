@@ -36,6 +36,7 @@ namespace WeSay.UI
 		{
 			components = new System.ComponentModel.Container();
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.AutoScroll = true;
 		}
 
 		#endregion

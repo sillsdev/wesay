@@ -13,10 +13,8 @@ namespace WeSay.App
 		public TabbedForm()
 		{
 			InitializeComponent();
-
 			this.tabControl1.TabPages.Clear();
-
-			this.tabControl1.SelectedIndexChanged += new System.EventHandler(tabControl1_SelectedIndexChanged);
+			this.tabControl1.SelectedIndexChanged += new EventHandler(tabControl1_SelectedIndexChanged);
 		}
 
 		public void InitializeTasks(IList<ITask> taskList)
@@ -165,7 +163,7 @@ namespace WeSay.App
 			}
 		}
 
-		void tabControl1_SelectedIndexChanged(object sender, System.EventArgs e)
+		void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			TabPage page = ((TabControl)sender).SelectedTab;
 			ActivateTab(page);
@@ -200,7 +198,7 @@ namespace WeSay.App
 		private void ActivateAfterScreenDraw(TabPage page, ITask task)
 		{
 			page.Text += " Loading...";
-			System.Windows.Forms.Timer t = new System.Windows.Forms.Timer();
+			Timer t = new Timer();
 			t.Tick+=new EventHandler(delegate
 									 {
 											   t.Stop();
@@ -228,7 +226,7 @@ namespace WeSay.App
 
 		private void ContinueLaunchingAfterInitialDisplay()
 		{
-			System.Windows.Forms.Timer t = new System.Windows.Forms.Timer();
+			Timer t = new Timer();
 			t.Tick += new EventHandler(delegate
 									   {
 										   t.Stop();

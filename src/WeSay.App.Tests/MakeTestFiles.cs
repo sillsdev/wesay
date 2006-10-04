@@ -29,12 +29,12 @@ namespace WeSay.Data.Tests
 			string sourcePath = CombinePathParts(new string[] { "..", "..", "SampleProjects", "Thai", "WeSay", "thai5000.lift.xml"});
 			string destPath = CombinePathParts(new string[] { "..", "..", "SampleProjects", "Thai", "WeSay", "thai5000.words"});
 
-			if (System.IO.File.Exists(destPath))
+			if (File.Exists(destPath))
 			{
-				System.IO.File.Delete(destPath);
+				File.Delete(destPath);
 			}
 
-			using (Db4oDataSource ds = new WeSay.Data.Db4oDataSource(destPath))
+			using (Db4oDataSource ds = new Db4oDataSource(destPath))
 			{
 				using (Db4oRecordList<LexEntry> entries = new Db4oRecordList<LexEntry>(ds))
 				{
