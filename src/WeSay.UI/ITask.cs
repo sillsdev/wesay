@@ -6,6 +6,7 @@ namespace WeSay.UI
 	{
 		void Activate();
 		void Deactivate();
+		bool IsActive { get; }
 		string Label { get; }
 		string Description { get; }
 

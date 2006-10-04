@@ -49,7 +49,7 @@
 	<Compile Include="IProject.cs" />
 	<Compile Include="ISkin.cs" />
 	<Compile Include="ITaskBuilder.cs" />
-	<Compile Include="ITool.cs" />
+	<Compile Include="ITask.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />
 	<Compile Include="StringCatalog.cs" />
 	<Compile Include="VBox.cs">

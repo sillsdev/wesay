@@ -7,8 +7,9 @@ using NUnit.Framework;
 namespace WeSay.LexicalTools.Tests
 {
 	[TestFixture]
-	public class LexFieldTaskTests
+	public class LexFieldTaskTests : TaskBaseTests
 	{
+
 		IRecordListManager _recordListManager;
 
 		private IFilter<LexEntry> _filter;
@@ -36,6 +37,8 @@ namespace WeSay.LexicalTools.Tests
 			_fieldsToShow = "LexicalForm";
 			_label = "My label";
 			_description = "My description";
+			_task = new LexFieldTask(_recordListManager, _filter, _label, _description, _fieldsToShow);
+
 		}
 
 		[TearDown]
@@ -47,8 +50,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void Create()
 		{
-			LexFieldTask task = new LexFieldTask(_recordListManager, _filter, _label, _description, _fieldsToShow);
-			Assert.IsNotNull(task);
+			Assert.IsNotNull(_task);
 		}
 
 		[Test]
@@ -101,21 +103,19 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void Label_InitializedFromCreate()
 		{
-			LexFieldTask task = new LexFieldTask(_recordListManager, _filter, _label, _description, _fieldsToShow);
-			Assert.AreEqual(_label, task.Label);
+			Assert.AreEqual(_label, _task.Label);
 		}
 
 		[Test]
 		public void Description_InitializedFromCreate()
 		{
-			LexFieldTask task = new LexFieldTask(_recordListManager, _filter, _label, _description, _fieldsToShow);
-			Assert.AreEqual(_description, task.Description);
+			Assert.AreEqual(_description, _task.Description);
 		}
 
 		[Test]
 		public void Activate_Refreshes()
 		{
-			LexFieldTask task = new LexFieldTask(_recordListManager, _filter, _label, _description, _fieldsToShow);
+			LexFieldTask task = (LexFieldTask)_task;
 			task.Activate();
 			Assert.IsTrue(((LexFieldTool)task.Control).ControlDetails.ControlFormattedView.Text.Contains(_lexicalForm));
 			Assert.AreEqual(1, task.DataSource.Count);

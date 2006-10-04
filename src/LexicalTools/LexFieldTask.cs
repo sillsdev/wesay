@@ -23,6 +23,7 @@ namespace WeSay.LexicalTools
 		}
 
 		private Predicate<string> _showField;
+		private bool _isActive;
 
 		public Predicate<string> ShowField
 		{
@@ -77,14 +78,29 @@ namespace WeSay.LexicalTools
 
 		public void Activate()
 		{
+			if (IsActive)
+			{
+				throw new InvalidOperationException("Activate should not be called when object is active.");
+			}
 			_lexFieldTool = new LexFieldTool(DataSource, _showField);
+			_isActive = true;
 		}
 
 
 		public void Deactivate()
 		{
+			if (!IsActive)
+			{
+				throw new InvalidOperationException("Deactivate should only be called once after Activate.");
+			}
 			_lexFieldTool.Dispose();
 			_lexFieldTool = null;
+			_isActive = false;
+		}
+
+		public bool IsActive
+		{
+			get { return this._isActive; }
 		}
 
 		public string Label

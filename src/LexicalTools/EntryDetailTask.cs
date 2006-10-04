@@ -12,10 +12,15 @@ namespace WeSay.LexicalTools
 	{
 
 		private IRecordList<LexEntry> _records;
+		private bool _isActive;
 //        private int _currentIndex;
 
 		public EntryDetailTask(IRecordListManager recordListManager)
 		{
+			if (recordListManager == null)
+			{
+				throw new ArgumentNullException();
+			}
 			InitializeComponent();
 			_records = recordListManager.Get<LexEntry>();
 
@@ -33,6 +38,11 @@ namespace WeSay.LexicalTools
 
 		public void Activate()
 		{
+			if (IsActive)
+			{
+				throw new InvalidOperationException("Activate should not be called when object is active.");
+			}
+
 			_recordsListBox.DataSource = _records;
 			_entryDetailPanel.DataSource = CurrentRecord;
 			_recordsListBox.SelectedIndexChanged += new EventHandler(OnRecordSelectionChanged);
@@ -40,11 +50,22 @@ namespace WeSay.LexicalTools
 			_recordsListBox.Font = BasilProject.Project.WritingSystems.VernacularWritingSystemDefault.Font;
 			_recordsListBox.AutoSize();
 			_recordsListBox.Columns.StretchToFit();
+			_isActive = true;
 		}
 
 		public void Deactivate()
 		{
+			if (!IsActive)
+			{
+				throw new InvalidOperationException("Deactivate should only be called once after Activate.");
+			}
 			_recordsListBox.SelectedIndexChanged -= new EventHandler(OnRecordSelectionChanged);
+			_isActive = false;
+		}
+
+		public bool IsActive
+		{
+			get { return this._isActive; }
 		}
 
 		public string Label
@@ -92,7 +113,7 @@ namespace WeSay.LexicalTools
 				{
 					return null;
 				}
-				return _records[this.CurrentIndex];
+				return _records[CurrentIndex];
 			}
 		}
 

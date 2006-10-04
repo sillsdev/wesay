@@ -12,6 +12,7 @@ namespace WeSay.CommonTools
 		IRecordListManager _recordListManager;
 		ICurrentWorkTask _currentWorkTaskProvider;
 		IList<TaskIndicator> _taskIndicators;
+		private bool _isActive;
 
 		public DashboardControl(IRecordListManager recordListManager, ICurrentWorkTask currentWorkTaskProvider)
 		{
@@ -57,6 +58,10 @@ namespace WeSay.CommonTools
 		#region ITask
 		public void Activate()
 		{
+			if (IsActive)
+			{
+				throw new InvalidOperationException("Activate should not be called when object is active.");
+			}
 			this._projectNameLabel.Text = BasilProject.Project.Name;
 			DictionaryStatusControl status = new DictionaryStatusControl(_recordListManager.Get<LexEntry>());
 			this._vbox.AddControlToBottom(status);
@@ -82,16 +87,26 @@ namespace WeSay.CommonTools
 					AddIndicator(TaskIndicatorFromTask(task));
 				}
 			}
-
+			_isActive = true;
 		}
 
 		public void Deactivate()
 		{
+			if(!IsActive)
+			{
+				throw new InvalidOperationException("Deactivate should only be called once after Activate.");
+			}
 			foreach (TaskIndicator taskIndicator in _taskIndicators)
 			{
 				taskIndicator.selected -= OnTaskIndicatorSelected;
 			}
 			this._vbox.Clear();
+			_isActive = false;
+		}
+
+		public bool IsActive
+		{
+			get { return this._isActive; }
 		}
 
 		public string Label
