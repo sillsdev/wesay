@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using NUnit.Framework;
 
@@ -51,10 +52,22 @@ namespace WeSay.Data.Tests
 			masterRecordList[11].I = 10;
 			IRecordList<SimpleIntTestClass> recordList11to17 = RecordListManager.Get<SimpleIntTestClass>(Filter11to17);
 			Assert.AreEqual(6, recordList11to17.Count);
-			Assert.AreEqual(12, recordList11to17[0].I);
+
+			int recordList11to17Count11 = CountMatching<SimpleIntTestClass>(recordList11to17,
+									delegate(SimpleIntTestClass item)
+									{
+										return item.I == 11;
+									});
+			Assert.AreEqual(0, recordList11to17Count11);
+
 			IRecordList<SimpleIntTestClass> recordList11to20 = RecordListManager.Get<SimpleIntTestClass>(Filter11to20);
 			Assert.AreEqual(9, recordList11to20.Count);
-			Assert.AreEqual(12, recordList11to20[0].I);
+			int recordList11to20Count11 = CountMatching<SimpleIntTestClass>(recordList11to20,
+									delegate(SimpleIntTestClass item)
+									{
+										return item.I == 11;
+									});
+			Assert.AreEqual(0, recordList11to20Count11);
 		}
 
 		[Test]
@@ -66,8 +79,19 @@ namespace WeSay.Data.Tests
 			IRecordList<SimpleIntTestClass> recordList11to17 = RecordListManager.Get<SimpleIntTestClass>(Filter11to17);
 			Assert.AreEqual(8, recordList11to17.Count);
 			Assert.AreEqual(11, recordList11to20.Count);
-			Assert.AreEqual(12, recordList11to17[recordList11to17.Count-1].I);
-			Assert.AreEqual(12, recordList11to20[recordList11to20.Count-1].I);
+
+			int recordList11to17Count12 = CountMatching<SimpleIntTestClass>(recordList11to17,
+						delegate(SimpleIntTestClass item)
+						{
+							return item.I == 12;
+						});
+			Assert.AreEqual(2, recordList11to17Count12);
+			int recordList11to20Count12 = CountMatching<SimpleIntTestClass>(recordList11to20,
+									delegate(SimpleIntTestClass item)
+									{
+										return item.I == 12;
+									});
+			Assert.AreEqual(2, recordList11to20Count12);
 		}
 
 		[Test]
@@ -89,12 +113,23 @@ namespace WeSay.Data.Tests
 			IRecordList<SimpleIntTestClass> recordList10to19 = RecordListManager.Get<SimpleIntTestClass>(Filter10to19);
 			IRecordList<SimpleIntTestClass> recordList11to17 = RecordListManager.Get<SimpleIntTestClass>(Filter11to17);
 			Assert.AreEqual(6, recordList11to17.Count);
-			Assert.AreEqual(12, recordList11to17[0].I);
+			int recordList11to17Count11 = CountMatching<SimpleIntTestClass>(recordList11to17,
+						delegate(SimpleIntTestClass item)
+						{
+							return item.I == 11;
+						});
+			Assert.AreEqual(0, recordList11to17Count11);
+
 			Assert.AreEqual(9, recordList10to19.Count);
-			Assert.AreEqual(12, recordList10to19[1].I);
+			int recordList10to19Count11 = CountMatching<SimpleIntTestClass>(recordList10to19,
+			delegate(SimpleIntTestClass item)
+			{
+				return item.I == 11;
+			});
+			Assert.AreEqual(0, recordList10to19Count11);
 		}
 
-		private delegate void ChangeRecordList<T>(Db4oRecordList<T> recordList) where T:class, new();
+		private delegate void ChangeRecordList<T>(IRecordList<T> recordList) where T:class, new();
 
 		private void ChangeDatabaseOutFromUnderRecordListManager(ChangeRecordList<SimpleIntTestClass> change)
 		{
@@ -110,26 +145,37 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		[Ignore("To be fixed by WS-10")]
 		public void SomeoneElseChangedRecord_NoLongerMeetsFilterCriteria_RemovedFromCachedRecordLists()
 		{
-			ChangeDatabaseOutFromUnderRecordListManager(delegate(Db4oRecordList<SimpleIntTestClass> recordList)
+			ChangeDatabaseOutFromUnderRecordListManager(delegate(IRecordList<SimpleIntTestClass> recordList)
 														{
 															recordList[11].I = 10;
 														});
 			IRecordList<SimpleIntTestClass> recordList11to17 = RecordListManager.Get<SimpleIntTestClass>(Filter11to17);
+
+			int recordList11to17Count11 = CountMatching<SimpleIntTestClass>(recordList11to17,
+			delegate(SimpleIntTestClass item)
+			{
+				return item.I == 11;
+			});
+			Assert.AreEqual(0, recordList11to17Count11);
 			Assert.AreEqual(6, recordList11to17.Count);
-			Assert.AreEqual(12, recordList11to17[0].I);
+
 			IRecordList<SimpleIntTestClass> recordList11to20 = RecordListManager.Get<SimpleIntTestClass>(Filter11to20);
+			int recordList11to20Count11 = CountMatching<SimpleIntTestClass>(recordList11to20,
+													delegate(SimpleIntTestClass item)
+													{
+														return item.I == 11;
+													});
+
+			Assert.AreEqual(0, recordList11to20Count11);
 			Assert.AreEqual(9, recordList11to20.Count);
-			Assert.AreEqual(12, recordList11to20[0].I);
 		}
 
 		[Test]
-		[Ignore("To be fixed by WS-10")]
 		public void SomeoneElseChangedRecord_MeetsFilterCriteria_AddedToCachedRecordList()
 		{
-			ChangeDatabaseOutFromUnderRecordListManager(delegate(Db4oRecordList<SimpleIntTestClass> recordList)
+			ChangeDatabaseOutFromUnderRecordListManager(delegate(IRecordList<SimpleIntTestClass> recordList)
 														{
 															recordList[0].I = 12;
 														});
@@ -137,42 +183,74 @@ namespace WeSay.Data.Tests
 			IRecordList<SimpleIntTestClass> recordList11to17 = RecordListManager.Get<SimpleIntTestClass>(Filter11to17);
 			Assert.AreEqual(8, recordList11to17.Count);
 			Assert.AreEqual(11, recordList11to20.Count);
-			Assert.AreEqual(12, recordList11to17[recordList11to17.Count - 1].I);
-			Assert.AreEqual(12, recordList11to20[recordList11to20.Count - 1].I);
+			int recordList11to17Count12 = CountMatching<SimpleIntTestClass>(recordList11to17,
+			delegate(SimpleIntTestClass item)
+			{
+				return item.I == 12;
+			});
+			Assert.AreEqual(2, recordList11to17Count12);
+
+			int recordList11to20Count12 = CountMatching<SimpleIntTestClass>(recordList11to20,
+																delegate(SimpleIntTestClass item)
+																{
+																	return item.I == 12;
+																});
+			Assert.AreEqual(2, recordList11to20Count12);
 		}
 
 		[Test]
-		[Ignore("To be fixed by WS-10")]
 		public void SomeoneElseAddedRecord_AddedToCachedRecordLists()
 		{
-			ChangeDatabaseOutFromUnderRecordListManager(delegate(Db4oRecordList<SimpleIntTestClass> recordList)
+			ChangeDatabaseOutFromUnderRecordListManager(delegate(IRecordList<SimpleIntTestClass> recordList)
 											{
 												recordList.Add(new SimpleIntTestClass(15));
 											});
 
 			IRecordList<SimpleIntTestClass> recordList11to20 = RecordListManager.Get<SimpleIntTestClass>(Filter11to20);
 			IRecordList<SimpleIntTestClass> recordList11to17 = RecordListManager.Get<SimpleIntTestClass>(Filter11to17);
+			int recordList11to17Count15 = CountMatching<SimpleIntTestClass>(recordList11to17,
+										delegate(SimpleIntTestClass item)
+										{
+											return item.I == 15;
+										});
+			Assert.AreEqual(2, recordList11to17Count15);
+
 			Assert.AreEqual(8, recordList11to17.Count);
+
 			Assert.AreEqual(11, recordList11to20.Count);
+			int recordList11to20Count15 = CountMatching<SimpleIntTestClass>(recordList11to20,
+													delegate(SimpleIntTestClass item)
+													{
+														return item.I == 15;
+													});
+			Assert.AreEqual(2, recordList11to20Count15);
 		}
 
 		[Test]
-		[Ignore("To be fixed by WS-10")]
 		public void SomeoneElseRemovedRecord_RemovedFromCachedRecordLists()
 		{
-			ChangeDatabaseOutFromUnderRecordListManager(delegate(Db4oRecordList<SimpleIntTestClass> recordList)
+			ChangeDatabaseOutFromUnderRecordListManager(delegate(IRecordList<SimpleIntTestClass> recordList)
 											{
 												recordList.RemoveAt(11);
 											});
 
-			IRecordList<SimpleIntTestClass> masterRecordList = RecordListManager.Get<SimpleIntTestClass>();
-			masterRecordList.RemoveAt(11);
 			IRecordList<SimpleIntTestClass> recordList10to19 = RecordListManager.Get<SimpleIntTestClass>(Filter10to19);
 			IRecordList<SimpleIntTestClass> recordList11to17 = RecordListManager.Get<SimpleIntTestClass>(Filter11to17);
+			int recordList11to17Count11 = CountMatching<SimpleIntTestClass>(recordList11to17,
+																			delegate(SimpleIntTestClass item)
+																			{
+																				return item.I == 11;
+																			});
+			Assert.AreEqual(0, recordList11to17Count11);
 			Assert.AreEqual(6, recordList11to17.Count);
-			Assert.AreEqual(12, recordList11to17[0].I);
+
+			int recordList10to19Count11 = CountMatching<SimpleIntTestClass>(recordList10to19,
+																			delegate(SimpleIntTestClass item)
+																			{
+																				return item.I == 11;
+																			});
+			Assert.AreEqual(0, recordList10to19Count11);
 			Assert.AreEqual(9, recordList10to19.Count);
-			Assert.AreEqual(12, recordList10to19[1].I);
 		}
 	}
 
@@ -240,6 +318,18 @@ namespace WeSay.Data.Tests
 			}
 			System.IO.File.Delete(_filePath);
 		}
+		private int CountMatching<T>(IEnumerable<T> enumerable, Predicate<T> match)
+		{
+			int count = 0;
+			foreach (T t in enumerable)
+			{
+				if(match(t))
+				{
+					count++;
+				}
+			}
+			return count;
+		}
 
 		[Test]
 		public void FilterModified_ChangedRecord_NoLongerMeetsFilterCriteria_RemovedFromCachedRecordLists()
@@ -248,7 +338,12 @@ namespace WeSay.Data.Tests
 			masterRecordList[11].I = 10;
 			IRecordList<SimpleIntTestClass> recordList11to17 = RecordListManager.Get<SimpleIntTestClass>(Filter11to17);
 			Assert.AreEqual(6, recordList11to17.Count);
-			Assert.AreEqual(12, recordList11to17[0].I);
+			int count11 = CountMatching<SimpleIntTestClass>(recordList11to17,
+															delegate(SimpleIntTestClass item)
+															{
+																return item.I == 11;
+															});
+			Assert.AreEqual(0, count11);
 		}
 
 		[Test]
@@ -258,14 +353,12 @@ namespace WeSay.Data.Tests
 			masterRecordList[0].I = 12;
 			IRecordList<SimpleIntTestClass> recordList11to17 = RecordListManager.Get<SimpleIntTestClass>(Filter11to17);
 			Assert.AreEqual(8, recordList11to17.Count);
-			SimpleIntTestClass[] List11to17 = new SimpleIntTestClass[recordList11to17.Count];
-			recordList11to17.CopyTo(List11to17, 0);
-			SimpleIntTestClass[] ListOf12 = Array.FindAll<SimpleIntTestClass>(List11to17,
-														  delegate(SimpleIntTestClass testClass)
-														  {
-															  return testClass.I == 12;
-														  });
-			Assert.AreEqual(2, ListOf12.Length);
+			int count12 = CountMatching<SimpleIntTestClass>(recordList11to17,
+												delegate(SimpleIntTestClass item)
+												{
+													return item.I == 12;
+												});
+			Assert.AreEqual(2, count12);
 		}
 
 		[Test]
@@ -275,6 +368,13 @@ namespace WeSay.Data.Tests
 			masterRecordList.Add(new SimpleIntTestClass(15));
 			IRecordList<SimpleIntTestClass> recordList11to17 = RecordListManager.Get<SimpleIntTestClass>(Filter11to17);
 			Assert.AreEqual(8, recordList11to17.Count);
+			int count15 = CountMatching<SimpleIntTestClass>(recordList11to17,
+												delegate(SimpleIntTestClass item)
+												{
+													return item.I == 15;
+												});
+			Assert.AreEqual(2, count15);
+
 		}
 
 		[Test]
@@ -284,7 +384,12 @@ namespace WeSay.Data.Tests
 			masterRecordList.RemoveAt(11);
 			IRecordList<SimpleIntTestClass> recordList11to17 = RecordListManager.Get<SimpleIntTestClass>(Filter11to17);
 			Assert.AreEqual(6, recordList11to17.Count);
-			Assert.AreEqual(12, recordList11to17[0].I);
+			int count11 = CountMatching<SimpleIntTestClass>(recordList11to17,
+												delegate(SimpleIntTestClass item)
+												{
+													return item.I == 11;
+												});
+			Assert.AreEqual(0, count11);
 		}
 	}
 }

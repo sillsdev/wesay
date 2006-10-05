@@ -659,6 +659,29 @@ namespace WeSay.Data
 			return hasChanges;
 		}
 
+		private void SetDatabaseLastModified()
+		{
+			IList<DatabaseModified> modifiedList = Database.Query<DatabaseModified>();
+			DatabaseModified databaseModified;
+			int count = modifiedList.Count;
+			while(count > 1)
+			{
+				DatabaseModified modified = modifiedList[1];
+				Database.Delete(modified);
+				modifiedList.RemoveAt(1);
+			}
+			if (modifiedList.Count == 1)
+			{
+				databaseModified = modifiedList[0];
+			}
+			else
+			{
+				databaseModified = new DatabaseModified();
+			}
+			databaseModified.LastModified = DateTime.Now;
+			Database.Set(databaseModified);
+		}
+
 		/// <summary>
 		/// Rollbacks (voids) previously (from last <see cref="Commit"/> call which returned true or constructor call) made changes in <see cref="Database"/>, removes previously added items, adds previously removed items (to the end of list) and refreshes all items in list by calling <see cref="Refresh()"/>.
 		/// </summary>
@@ -1728,6 +1751,7 @@ namespace WeSay.Data
 		{
 			if (!OnStoring(item, propertyName))
 			{
+				SetDatabaseLastModified();
 				Database.Set(item, SetActivationDepth);
 			}
 		}
@@ -1756,6 +1780,7 @@ namespace WeSay.Data
 		{
 			if (!OnDeleting(item))
 			{
+				SetDatabaseLastModified();
 				Database.Delete(item);
 			}
 		}

@@ -13,6 +13,7 @@ namespace WeSay.LexicalTools
 		private IFilter<LexEntry> _filter;
 		private string _label;
 		private string _description;
+		bool _dataHasBeenRetrieved;
 
 		public string Description
 		{
@@ -135,7 +136,11 @@ namespace WeSay.LexicalTools
 		{
 			get
 			{
-				return DataSource.Count.ToString();
+				if (_dataHasBeenRetrieved)
+				{
+					return DataSource.Count.ToString();
+				}
+				return "?";
 			}
 		}
 
@@ -143,7 +148,9 @@ namespace WeSay.LexicalTools
 		{
 			get
 			{
-				return _recordListManager.Get<LexEntry>(_filter);
+				IRecordList<LexEntry> data = _recordListManager.Get<LexEntry>(_filter);
+				_dataHasBeenRetrieved = true;
+				return data;
 			}
 		}
 

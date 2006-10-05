@@ -20,7 +20,7 @@ namespace WeSay.Data
 
 		protected override IRecordList<T> CreateMasterRecordList<T>()
 		{
-			return new Db4oRecordList<T>(_dataSource);
+			return new Db4oRecordList<T>(this._dataSource);
 		}
 
 		protected override IRecordList<T> CreateFilteredRecordList<T>(IFilter<T> filter)
@@ -48,7 +48,6 @@ namespace WeSay.Data
 				_dataSource.Dispose();
 			}
 		}
-
 		class FilteredDb4oRecordList<T> : Db4oRecordList<T> where T : class, new()
 		{
 			IRecordList<T> _masterRecordList;
@@ -137,6 +136,7 @@ namespace WeSay.Data
 							BinaryFormatter formatter = new BinaryFormatter();
 							try
 							{
+								formatter.Serialize(fs, GetDatabaseLastModified());
 								formatter.Serialize(fs, GetFilterHashCode());
 								formatter.Serialize(fs, ((Db4oList<T>)Records).ItemIds);
 							}
@@ -177,12 +177,17 @@ namespace WeSay.Data
 						BinaryFormatter formatter = new BinaryFormatter();
 						try
 						{
-							int filterHashCode = (int)formatter.Deserialize(fs);
-							if (filterHashCode == GetFilterHashCode())
+							DateTime databaseLastModified = (DateTime)formatter.Deserialize(fs);
+							if (databaseLastModified == GetDatabaseLastModified())
 							{
-								itemIds = (List<long>)formatter.Deserialize(fs);
+								int filterHashCode = (int)formatter.Deserialize(fs);
+								if (filterHashCode == GetFilterHashCode())
+								{
+									itemIds = (List<long>)formatter.Deserialize(fs);
+								}
 							}
 						}
+						catch{}
 						finally
 						{
 							fs.Close();
@@ -190,6 +195,16 @@ namespace WeSay.Data
 					}
 				}
 				return itemIds;
+			}
+
+			private DateTime GetDatabaseLastModified()
+			{
+				IList<DatabaseModified> modifiedList = ((Db4oList<T>) Records).Database.Query<DatabaseModified>();
+				if (modifiedList.Count == 1)
+				{
+					return modifiedList[0].LastModified;
+				}
+				return DateTime.Now;
 			}
 
 			void OnMasterRecordListDeletingRecord(object sender, RecordListEventArgs<T> e)
@@ -327,6 +342,5 @@ namespace WeSay.Data
 			}
 			#endregion
 		}
-
 	}
 }

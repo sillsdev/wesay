@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using NUnit.Framework;
 
 namespace WeSay.Data.Tests
@@ -49,7 +50,7 @@ namespace WeSay.Data.Tests
 		private void PopupateMasterRecordList()
 		{
 			_sourceRecords = RecordListManager.Get<SimpleIntTestClass>();
-			if (_sourceRecords.Count != 50)
+			if (_sourceRecords.Count == 0)
 			{
 				for (int i = 0; i < 50; i++)
 				{
@@ -81,6 +82,20 @@ namespace WeSay.Data.Tests
 			RecordListManager.Dispose();
 		}
 
+		protected int CountMatching<T>(IEnumerable<T> enumerable, Predicate<T> match)
+		{
+			int count = 0;
+			foreach (T t in enumerable)
+			{
+				if (match(t))
+				{
+					count++;
+				}
+			}
+			return count;
+		}
+
+
 		[Test]
 		public void Create()
 		{
@@ -108,7 +123,14 @@ namespace WeSay.Data.Tests
 			IRecordList<SimpleIntTestClass> data = RecordListManager.Get<SimpleIntTestClass>(Filter11to20);
 			Assert.IsNotNull(data);
 			Assert.AreEqual(10, data.Count);
-			Assert.AreEqual(11, data[0].I);
+
+			int count11 = CountMatching<SimpleIntTestClass>(data,
+									delegate(SimpleIntTestClass item)
+									{
+										return item.I == 11;
+									});
+			Assert.AreEqual(1, count11);
+
 			Assert.AreNotEqual(_sourceRecords, data);
 		}
 
@@ -140,7 +162,13 @@ namespace WeSay.Data.Tests
 			Assert.AreEqual(10, recordList11to20.Count);
 			recordList11to20[0].I = 10;
 			Assert.AreEqual(9, recordList11to20.Count);
-			Assert.AreEqual(12, recordList11to20[0].I);
+
+			int count11 = CountMatching<SimpleIntTestClass>(recordList11to20,
+						delegate(SimpleIntTestClass item)
+						{
+							return item.I == 11;
+						});
+			Assert.AreEqual(0, count11);
 			Assert.AreEqual(50, _sourceRecords.Count);
 		}
 
@@ -151,8 +179,21 @@ namespace WeSay.Data.Tests
 			IRecordList<SimpleIntTestClass> recordList11to17 = RecordListManager.Get<SimpleIntTestClass>(Filter11to17);
 			recordList11to20[0].I = 10;
 			Assert.AreEqual(6, recordList11to17.Count);
-			Assert.AreEqual(12, recordList11to17[0].I);
-			Assert.AreEqual(12, recordList11to20[0].I);
+
+			int recordList11to17count11 = CountMatching<SimpleIntTestClass>(recordList11to17,
+																			delegate(SimpleIntTestClass item)
+																			{
+																				return item.I == 11;
+																			});
+			Assert.AreEqual(0, recordList11to17count11);
+
+
+			int recordList11to20count11 = CountMatching<SimpleIntTestClass>(recordList11to20,
+																			delegate(SimpleIntTestClass item)
+																			{
+																				return item.I == 11;
+																			});
+			Assert.AreEqual(0, recordList11to20count11);
 		}
 
 		[Test]
@@ -163,8 +204,20 @@ namespace WeSay.Data.Tests
 			recordList11to20[0].I = 12;
 			Assert.AreEqual(7, recordList11to17.Count);
 			Assert.AreEqual(10, recordList11to20.Count);
-			Assert.AreEqual(12, recordList11to17[0].I);
-			Assert.AreEqual(12, recordList11to20[0].I);
+			int recordList11to17count12 = CountMatching<SimpleIntTestClass>(recordList11to17,
+																delegate(SimpleIntTestClass item)
+																{
+																	return item.I == 12;
+																});
+			Assert.AreEqual(2, recordList11to17count12);
+
+
+			int recordList11to20count12 = CountMatching<SimpleIntTestClass>(recordList11to20,
+																			delegate(SimpleIntTestClass item)
+																			{
+																				return item.I == 12;
+																			});
+			Assert.AreEqual(2, recordList11to20count12);
 		}
 
 		[Test]
@@ -220,11 +273,29 @@ namespace WeSay.Data.Tests
 			IRecordList<SimpleIntTestClass> recordList11to17 = RecordListManager.Get<SimpleIntTestClass>(Filter11to17);
 			_sourceRecords.Remove(recordList10to19[1]);
 			Assert.AreEqual(49, _sourceRecords.Count);
-			Assert.AreEqual(12, _sourceRecords[11].I);
+
+			int masterRecordsCount11 = CountMatching<SimpleIntTestClass>(_sourceRecords,
+																delegate(SimpleIntTestClass item)
+																{
+																	return item.I == 11;
+																});
+			Assert.AreEqual(0, masterRecordsCount11);
+
 			Assert.AreEqual(6, recordList11to17.Count);
-			Assert.AreEqual(12, recordList11to17[0].I);
+			int recordList11to17Count11 = CountMatching<SimpleIntTestClass>(recordList11to17,
+																delegate(SimpleIntTestClass item)
+																{
+																	return item.I == 11;
+																});
+			Assert.AreEqual(0, recordList11to17Count11);
+
 			Assert.AreEqual(9, recordList10to19.Count);
-			Assert.AreEqual(12, recordList10to19[1].I);
+			int recordList10to19Count11 = CountMatching<SimpleIntTestClass>(recordList10to19,
+																delegate(SimpleIntTestClass item)
+																{
+																	return item.I == 11;
+																});
+			Assert.AreEqual(0, recordList10to19Count11);
 		}
 
 		[Test]
@@ -234,11 +305,26 @@ namespace WeSay.Data.Tests
 			IRecordList<SimpleIntTestClass> recordList11to17 = RecordListManager.Get<SimpleIntTestClass>(Filter11to17);
 			recordList10to19.Remove(recordList10to19[1]);
 			Assert.AreEqual(6, recordList11to17.Count);
-			Assert.AreEqual(12, recordList11to17[0].I);
+			int recordList11to17Count11 = CountMatching<SimpleIntTestClass>(recordList11to17,
+																delegate(SimpleIntTestClass item)
+																{
+																	return item.I == 11;
+																});
+			Assert.AreEqual(0, recordList11to17Count11);
 			Assert.AreEqual(9, recordList10to19.Count);
-			Assert.AreEqual(12, recordList10to19[1].I);
+			int recordList10to19Count11 = CountMatching<SimpleIntTestClass>(recordList10to19,
+																delegate(SimpleIntTestClass item)
+																{
+																	return item.I == 11;
+																});
+			Assert.AreEqual(0, recordList10to19Count11);
 			Assert.AreEqual(49, _sourceRecords.Count);
-			Assert.AreEqual(12, _sourceRecords[11].I);
+			int masterRecordsCount11 = CountMatching<SimpleIntTestClass>(_sourceRecords,
+																delegate(SimpleIntTestClass item)
+																{
+																	return item.I == 11;
+																});
+			Assert.AreEqual(0, masterRecordsCount11);
 		}
 	}
 }
