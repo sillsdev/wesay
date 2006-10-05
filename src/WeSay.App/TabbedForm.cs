@@ -109,7 +109,10 @@ namespace WeSay.App
 					{
 						this.tabControl1.SelectedTab = tabPageToActivate;
 					}
-					ActivateTab(tabPageToActivate);
+					else
+					{
+						ActivateTab(tabPageToActivate);
+					}
 				}
 
 			}
