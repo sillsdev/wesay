@@ -15,6 +15,11 @@ namespace WeSay.Data
 		  return new FilteredInMemoryRecordList<T>(Get<T>(), filter.Inquire);
 		}
 
+		protected override bool CommitIfNeeded()
+		{
+			return true;
+		}
+
 		class FilteredInMemoryRecordList<T> : InMemoryRecordList<T> where T : class, new()
 		{
 			IRecordList<T> _masterRecordList;
@@ -59,6 +64,8 @@ namespace WeSay.Data
 				}
 				_isSourceMasterRecord = false;
 			}
+
+
 
 			protected override bool ShouldAddRecord(T item)
 			{

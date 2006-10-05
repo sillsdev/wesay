@@ -14,6 +14,7 @@ namespace WeSay.LexicalTools
 		private IRecordList<LexEntry> _records;
 		private bool _isActive;
 //        private int _currentIndex;
+		protected IRecordListManager _recordListManager;
 
 		public EntryDetailTask(IRecordListManager recordListManager)
 		{
@@ -22,6 +23,7 @@ namespace WeSay.LexicalTools
 				throw new ArgumentNullException();
 			}
 			InitializeComponent();
+			_recordListManager = recordListManager;
 			_records = recordListManager.Get<LexEntry>();
 
 
@@ -33,6 +35,7 @@ namespace WeSay.LexicalTools
 //            _currentIndex = _recordsListBox.SelectedIndex;
 			_entryDetailPanel.DataSource = CurrentRecord;
 			_btnDeleteWord.Enabled = (CurrentRecord != null);
+			_recordListManager.GoodTimeToCommit();
 		}
 
 
@@ -61,6 +64,7 @@ namespace WeSay.LexicalTools
 			}
 			_recordsListBox.SelectedIndexChanged -= new EventHandler(OnRecordSelectionChanged);
 			_isActive = false;
+			_recordListManager.GoodTimeToCommit();
 		}
 
 		public bool IsActive

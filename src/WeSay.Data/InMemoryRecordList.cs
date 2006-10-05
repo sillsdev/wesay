@@ -26,10 +26,10 @@ namespace WeSay.Data
 			_isFiltered = original.IsFiltered;
 		}
 
-		public override bool Commit()
-		{
-			return true;
-		}
+//        public override bool Commit()
+//        {
+//            return true;
+//        }
 
 		protected override void DoSort(Comparison<T> sort)
 		{

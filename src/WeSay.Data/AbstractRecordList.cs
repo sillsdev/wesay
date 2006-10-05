@@ -53,7 +53,7 @@ namespace WeSay.Data
 		{
 		};
 
-		abstract public bool Commit();
+	  //  abstract public bool Commit();
 
 		/// <summary>
 		/// Determine if record should be allowed to be added

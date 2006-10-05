@@ -1,4 +1,4 @@
-using System;
+	using System;
 using System.Collections;
 
 namespace WeSay.Data
@@ -119,6 +119,34 @@ namespace WeSay.Data
 		}
 		#endregion
 
+		/// <summary>
+		/// Called whenever the record list knows some data was committed to the database
+		/// </summary>
+		public event EventHandler DataCommitted;
 
+//        protected void OnDataCommitted(object sender, EventArgs e)
+//        {
+//            if (this.DataCommitted != null)
+//            {
+//                this.DataCommitted.Invoke(this, null);
+//            }
+//        }
+
+		/// <summary>
+		/// Call this, for example, when switching records in the gui. You don't need to know
+		/// whether a commit is pending or not.
+		/// </summary>
+		public void GoodTimeToCommit()
+		{
+			if (CommitIfNeeded())
+			{
+				if (this.DataCommitted != null)
+				{
+					this.DataCommitted.Invoke(this, null);
+				}
+			}
+		}
+
+		abstract protected bool CommitIfNeeded();
 	}
 }

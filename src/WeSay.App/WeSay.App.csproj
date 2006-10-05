@@ -32,6 +32,10 @@
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\Db4o.dll</HintPath>
 	</Reference>
+	<Reference Include="ICSharpCode.SharpZipLib, Version=0.84.0.0, Culture=neutral, PublicKeyToken=1b03e6acf1164f73">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\ICSharpCode.SharpZipLib.dll</HintPath>
+	</Reference>
 	<Reference Include="PicoContainer, Version=1.0.2412.18537, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\PicoContainer\PicoContainer.dll</HintPath>
@@ -43,8 +47,15 @@
 	<Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+	<Compile Include="BackupService.cs" />
 	<Compile Include="CommandLineParser.cs" />
 	<Compile Include="ConfigFileTaskBuilder.cs" />
+	<Compile Include="ProgressDialog.cs">
+	  <SubType>Form</SubType>
+	</Compile>
+	<Compile Include="ProgressDialog.Designer.cs">
+	  <DependentUpon>ProgressDialog.cs</DependentUpon>
+	</Compile>
 	<Compile Include="SampleTaskBuilder.cs" />
 	<Compile Include="Settings.cs" />
 	<Compile Include="TabbedForm.cs">
@@ -86,6 +97,10 @@
 	</ProjectReference>
   </ItemGroup>
   <ItemGroup>
+	<EmbeddedResource Include="ProgressDialog.resx">
+	  <SubType>Designer</SubType>
+	  <DependentUpon>ProgressDialog.cs</DependentUpon>
+	</EmbeddedResource>
 	<EmbeddedResource Include="TabbedForm.resx">
 	  <SubType>Designer</SubType>
 	  <DependentUpon>TabbedForm.cs</DependentUpon>

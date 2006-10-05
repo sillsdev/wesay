@@ -8,7 +8,10 @@ namespace WeSay.UI
 	public partial class WeSayTextBox : TextBox
 	{
 	   // private bool _isGhost;
-
+		public WeSayTextBox()
+		{
+			InitializeComponent();
+		}
 		public WeSayTextBox(WritingSystem ws)
 		{
 		 //   _isGhost = false;

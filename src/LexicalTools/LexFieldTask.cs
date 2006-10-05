@@ -85,8 +85,14 @@ namespace WeSay.LexicalTools
 			}
 			_lexFieldTool = new LexFieldTool(DataSource, _showField);
 			_isActive = true;
+			_lexFieldTool.SelectedIndexChanged += new EventHandler(OnRecordSelectionChanged);
+
 		}
 
+		void OnRecordSelectionChanged(object sender, EventArgs e)
+		{
+			_recordListManager.GoodTimeToCommit();
+		}
 
 		public void Deactivate()
 		{
@@ -94,9 +100,11 @@ namespace WeSay.LexicalTools
 			{
 				throw new InvalidOperationException("Deactivate should only be called once after Activate.");
 			}
+			_lexFieldTool.SelectedIndexChanged -= new EventHandler(OnRecordSelectionChanged);
 			_lexFieldTool.Dispose();
 			_lexFieldTool = null;
 			_isActive = false;
+			_recordListManager.GoodTimeToCommit();
 		}
 
 		public bool IsActive

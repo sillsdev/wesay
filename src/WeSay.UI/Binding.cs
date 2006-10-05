@@ -42,7 +42,10 @@ namespace WeSay.UI
 		/// </summary>
 		void OnTextBoxTargetVisibilityChanged(object sender, EventArgs e)
 		{
-			TearDown();
+			if (!((Control)sender).Visible)
+			{
+				TearDown();
+			}
 		}
 
 		/// <summary>

@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using System.Xml;
@@ -11,7 +12,7 @@ namespace WeSay.LexicalModel
 
 		public LiftExporter(string path)
 		{
-			_writer = XmlWriter.Create(path, PrepareSettings(false));
+		   _writer = XmlWriter.Create(path, PrepareSettings(false));
 		   Start();
 		}
 
@@ -57,6 +58,14 @@ namespace WeSay.LexicalModel
 		}
 
 		public void Add(IList<LexEntry> entries)
+		{
+			foreach (LexEntry entry in entries)
+			{
+				Add(entry);
+			}
+		}
+
+		public void AddNoGeneric(IList entries)
 		{
 			foreach (LexEntry entry in entries)
 			{

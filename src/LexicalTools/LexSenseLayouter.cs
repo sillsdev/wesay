@@ -45,12 +45,14 @@ namespace WeSay.LexicalTools
 		public int AddGhost(IBindingList list)
 		{
 			int rowCount = 0;
-			if (DetailList.ShowField("GhostGloss"))
+//            if (DetailList.ShowField("GhostGloss"))
+			//TODO: only add this if there is no empty gloss in an existing sense (we
+			//run into this with the LexFieldTask, where we don't want to see two empty gloss boxes (one a ghost)
 			{
-			WeSayTextBox entry = new WeSayTextBox(BasilProject.Project.WritingSystems.AnalysisWritingSystemDefault);
-			GhostBinding g= MakeGhostBinding(list, "Gloss", BasilProject.Project.WritingSystems.AnalysisWritingSystemDefault, entry);
-			g.ReferenceControl = DetailList.AddWidgetRow(StringCatalog.Get("New Meaning"), true, entry);
-			++rowCount;
+				WeSayTextBox entry = new WeSayTextBox(BasilProject.Project.WritingSystems.AnalysisWritingSystemDefault);
+				GhostBinding g= MakeGhostBinding(list, "Gloss", BasilProject.Project.WritingSystems.AnalysisWritingSystemDefault, entry);
+				g.ReferenceControl = DetailList.AddWidgetRow(StringCatalog.Get("New Meaning"), true, entry);
+				++rowCount;
 			}
 			return rowCount;
 		}

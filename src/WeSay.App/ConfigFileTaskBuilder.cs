@@ -18,36 +18,12 @@ namespace WeSay.App
 		private IMutablePicoContainer _picoContext;
 		List<ITask> _tasks;
 
-		public ConfigFileTaskBuilder(Stream config, WeSayWordsProject project, ICurrentWorkTask currentWorkTask)
+		public ConfigFileTaskBuilder(Stream config, WeSayWordsProject project, ICurrentWorkTask currentWorkTask, IRecordListManager recordListManager)
 		{
 			_picoContext = new DefaultPicoContainer();
 			_picoContext.RegisterComponentInstance("Project", project);
 			_picoContext.RegisterComponentInstance("Current Task Provider", currentWorkTask);
 
-			IRecordListManager recordListManager;
-
-			if (project.PathToWeSaySpecificFilesDirectory.IndexOf("PRETEND") > -1)
-			{
-				IBindingList entries = new PretendRecordList();
-				recordListManager = new InMemoryRecordListManager();
-				IRecordList<LexEntry> masterRecordList = recordListManager.Get<LexEntry>();
-				foreach (LexEntry entry in entries)
-				{
-					masterRecordList.Add(entry);
-				}
-			}
-			else
-			{
-				com.db4o.config.Configuration db4oConfiguration = com.db4o.Db4o.Configure();
-				com.db4o.config.ObjectClass objectClass = db4oConfiguration.ObjectClass(typeof(Language.LanguageForm));
-				objectClass.ObjectField("_writingSystemId").Indexed(true);
-				objectClass.ObjectField("_form").Indexed(true);
-
-				objectClass = db4oConfiguration.ObjectClass(typeof(LexEntry));
-				objectClass.ObjectField("_modifiedDate").Indexed(true);
-
-				recordListManager = new Db4oRecordListManager(project.PathToLexicalModelDB);
-			}
 			_picoContext.RegisterComponentInstance("All Entries", recordListManager);
 			InitializeTaskList(config);
 		}

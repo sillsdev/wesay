@@ -5,6 +5,7 @@ namespace WeSay.Data
 {
 	public class Db4oRecordList<T> : AbstractRecordList<T> where T : class, new()
 	{
+
 		private static int defaultWriteCacheSize = 0;
 
 		private void Initialize(Db4oDataSource dataSource, Predicate<T> filter, Comparison<T> sort, SodaQueryProvider sodaQuery)
@@ -117,11 +118,19 @@ namespace WeSay.Data
 			}
 		}
 
-		public override bool Commit()
-		{
-			VerifyNotDisposed();
-			return ((Db4oList<T>)Records).Commit();
-		}
+//        public override bool Commit()
+//        {
+//            VerifyNotDisposed();
+//            if (((Db4oList<T>)Records).Commit())
+//            {
+//                if (DataCommitted != null)
+//                {
+//                    DataCommitted.Invoke(this,null);
+//                }
+//                return true;
+//            }
+//            return false;
+//        }
 
 		[CLSCompliant(false)]
 		public SodaQueryProvider SodaQuery

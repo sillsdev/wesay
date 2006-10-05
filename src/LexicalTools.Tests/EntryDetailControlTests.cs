@@ -11,11 +11,13 @@ namespace WeSay.LexicalTools.Tests
 	public class EntryDetailControlTests : NUnit.Extensions.Forms.NUnitFormTest
 	{
 	   // private FormTester _mainWindowTester;
-		private EntryDetailTask _control;
+		private EntryDetailTask _task;
 		IRecordListManager _recordListManager;
 		string _filePath;
 		private IRecordList<LexEntry> _records;
 		private string _vernacularWsId;
+		private TabControl _tabControl = new TabControl();
+		private Form _window;
 
 		public override void Setup()
 		{
@@ -32,12 +34,25 @@ namespace WeSay.LexicalTools.Tests
 			AddEntry("Secondary");
 			AddEntry("Tertiary");
 
-			this._control = new EntryDetailTask(_recordListManager);
-			this._control.Dock = DockStyle.Fill;
-			Form f = new Form();
-			f.Controls.Add(this._control);
-			f.Show();
-			_control.Activate();
+			try
+			{
+				this._task = new EntryDetailTask(_recordListManager);
+				this._task.Dock = DockStyle.Fill;
+				TabPage detailTaskPage = new TabPage();
+				detailTaskPage.Controls.Add(this._task);
+
+				this._tabControl.TabPages.Add(detailTaskPage);
+				this._tabControl.TabPages.Add("Dummy");
+				this._window = new Form();
+				this._window.Controls.Add(this._tabControl);
+				this._window.Show();
+				this._task.Activate();
+			}
+			catch
+			{
+				//_records.Dispose();
+				_recordListManager.Dispose();
+			}
 		}
 
 		private void AddEntry(string lexemeForm)
@@ -49,9 +64,15 @@ namespace WeSay.LexicalTools.Tests
 
 		public override void TearDown()
 		{
-			base.TearDown();
+			_window.Close();
+			_window.Dispose();
+			_window = null;
 			this._recordListManager.Dispose();
+			_recordListManager = null;
+			_records.Dispose();
+			_records = null;
 			System.IO.File.Delete(_filePath);
+			base.TearDown();
 		}
 
 		[Test]
@@ -65,11 +86,9 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void ClickingAddWordShowsEmptyRecord()
 		{
-			NUnit.Extensions.Forms.TextBoxTester t = new TextBoxTester("LexicalForm");
-			Assert.AreEqual("Initial", t.Properties.Text);
-
+			LexicalFormMustMatch("Initial");
 			ClickAddWord();
-			Assert.AreEqual("", t.Properties.Text);
+			LexicalFormMustMatch("");
 		}
 
 		[Test]
@@ -132,6 +151,44 @@ namespace WeSay.LexicalTools.Tests
 			ClickDeleteWord();
 			ClickDeleteWord();
 			Assert.IsFalse(l.Properties.Enabled);
+		}
+
+		[Test]
+		public void SwitchingToAnotherTaskDoesNotLooseBindings()
+		{
+			 NUnit.Extensions.Forms.TextBoxTester t = new TextBoxTester("LexicalForm");
+		   LexicalFormMustMatch("Initial");
+			TypeInLexicalForm("one");
+			this._task.Deactivate();
+			t.Properties.Visible = false;
+			_tabControl.SelectedIndex = 1;
+			_tabControl.SelectedIndex = 0;
+			this._task.Activate();
+			t.Properties.Visible = true;
+
+			LexicalFormMustMatch("one");
+
+			t = new TextBoxTester("LexicalForm");
+			TypeInLexicalForm("two");
+			this._task.Deactivate();
+			t.Properties.Visible = false;
+			_tabControl.SelectedIndex = 1;
+			_tabControl.SelectedIndex = 0;
+			this._task.Activate();
+			t.Properties.Visible = true;
+			LexicalFormMustMatch("two");
+		}
+
+		private static void LexicalFormMustMatch(string value)
+		{
+			NUnit.Extensions.Forms.TextBoxTester t = new TextBoxTester("LexicalForm");
+			Assert.AreEqual(value, t.Properties.Text);
+		}
+
+		private static void TypeInLexicalForm(string value)
+		{
+			NUnit.Extensions.Forms.TextBoxTester t = new TextBoxTester("LexicalForm");
+			t.Properties.Text = value;
 		}
 
 		private string LexemeFormOfSelectedEntry

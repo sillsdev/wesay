@@ -18,6 +18,11 @@ namespace WeSay.Data
 			_dataSource = new Db4oDataSource(filePath);
 		}
 
+		public Db4oDataSource DataSource
+		{
+			get { return this._dataSource; }
+		}
+
 		protected override IRecordList<T> CreateMasterRecordList<T>()
 		{
 			return new Db4oRecordList<T>(this._dataSource);
@@ -25,7 +30,9 @@ namespace WeSay.Data
 
 		protected override IRecordList<T> CreateFilteredRecordList<T>(IFilter<T> filter)
 		{
-			return new FilteredDb4oRecordList<T>(Get<T>(), filter, _dataPath, false);
+			FilteredDb4oRecordList<T> list = new FilteredDb4oRecordList<T>(Get<T>(), filter, this._dataPath, false);
+		  //  list.DataCommitted += new EventHandler(OnDataCommitted);
+			return list;
 		}
 
 		protected override IRecordList<T> CreateFilteredRecordListUnlessSlow<T>(IFilter<T> filter)
@@ -34,6 +41,7 @@ namespace WeSay.Data
 			try
 			{
 				recordList = new FilteredDb4oRecordList<T>(Get<T>(), filter, _dataPath, true);
+			   // ((FilteredDb4oRecordList<T>)recordList).DataCommitted += new EventHandler(OnDataCommitted);
 			}
 			catch (OperationCanceledException) {}
 			return recordList;
@@ -45,7 +53,7 @@ namespace WeSay.Data
 			base.Dispose(disposing);
 			if (canBeDisposed && disposing)
 			{
-				_dataSource.Dispose();
+				this.DataSource.Dispose();
 			}
 		}
 		class FilteredDb4oRecordList<T> : Db4oRecordList<T> where T : class, new()
@@ -341,6 +349,13 @@ namespace WeSay.Data
 				base.Dispose(disposing);
 			}
 			#endregion
+		}
+
+		protected override bool CommitIfNeeded()
+		{
+			//right now we don't check to see if committing is needed
+			_dataSource.Data.Commit();
+			return true;
 		}
 	}
 }

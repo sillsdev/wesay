@@ -108,5 +108,6 @@ namespace WeSay.UI.Tests
 		{
 			return _control.AddWidgetRow("blah", false, new WeSayTextBox(_ws), row);
 		}
+
 	}
 }

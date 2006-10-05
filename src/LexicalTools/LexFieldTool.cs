@@ -10,6 +10,8 @@ namespace WeSay.LexicalTools
 	public partial class LexFieldTool : UserControl
 	{
 		private IRecordList<LexEntry> _records;
+		public event EventHandler SelectedIndexChanged;
+
 		//private int _currentIndex;
 		public LexFieldTool(IRecordList<LexEntry> records, Predicate<string> fieldFilter)
 		{
@@ -38,6 +40,10 @@ namespace WeSay.LexicalTools
 		{
 			//_currentIndex = _recordsListBox.SelectedIndex;
 			_lexFieldDetailPanel.DataSource = CurrentRecord;
+			if (SelectedIndexChanged != null)
+			{
+				SelectedIndexChanged.Invoke(this,null);
+			}
 		}
 
 		protected int CurrentIndex

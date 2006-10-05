@@ -42,7 +42,7 @@ namespace WeSay.Data
 		/// Indicates that changes that have been made should be persisted if possible
 		/// </summary>
 		/// <returns>True if successful</returns>
-		bool Commit();
+  //      bool Commit();
 
 		/// <summary>
 		/// Gets count of elements in container

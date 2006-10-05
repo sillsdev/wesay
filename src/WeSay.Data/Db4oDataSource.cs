@@ -44,7 +44,7 @@ namespace WeSay.Data
 		}
 #endif
 
-		public object Data
+		public com.db4o.ObjectContainer Data
 		{
 			get
 			{

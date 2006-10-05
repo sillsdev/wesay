@@ -109,6 +109,14 @@ namespace WeSay.UI
 			}
 		}
 
+		public string PathToLocalBackup
+		{
+			get
+			{
+				return System.IO.Path.Combine(PathToWeSaySpecificFilesDirectory, "incremental xml backup");
+			}
+		}
+
 		public string PathToLexicalModelDB
 		{
 			get

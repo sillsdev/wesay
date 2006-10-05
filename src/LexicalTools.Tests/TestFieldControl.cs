@@ -66,7 +66,7 @@ namespace WeSay.LexicalTools.Tests
 			Assert.IsTrue(lexFieldControl.ControlFormattedView.Text.Contains(GetExampleSentence(entry)));
 		}
 
-		[Test]
+		[Test, Ignore("For now, we also show the ghost field in this situation.")]
 		public void EditField_SingleControl()
 		{
 			LexFieldControl lexFieldControl = CreateFilteredForm(apple, "Gloss");

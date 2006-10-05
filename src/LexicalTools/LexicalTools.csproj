@@ -47,6 +47,12 @@
 	<Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+	<Compile Include="GatherWordListControl.cs">
+	  <SubType>UserControl</SubType>
+	</Compile>
+	<Compile Include="GatherWordListControl.Designer.cs">
+	  <DependentUpon>GatherWordListControl.cs</DependentUpon>
+	</Compile>
 	<Compile Include="LexFieldTool.cs">
 	  <SubType>UserControl</SubType>
 	</Compile>
@@ -105,6 +111,10 @@
 	</ProjectReference>
   </ItemGroup>
   <ItemGroup>
+	<EmbeddedResource Include="GatherWordListControl.resx">
+	  <SubType>Designer</SubType>
+	  <DependentUpon>GatherWordListControl.cs</DependentUpon>
+	</EmbeddedResource>
 	<EmbeddedResource Include="LexFieldTool.resx">
 	  <DependentUpon>LexFieldTool.cs</DependentUpon>
 	  <SubType>Designer</SubType>

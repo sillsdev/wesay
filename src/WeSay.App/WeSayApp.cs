@@ -1,35 +1,16 @@
 using System;
+using System.ComponentModel;
 using System.Windows.Forms;
 using CommandLine;
+using WeSay.Data;
+using WeSay.LexicalModel;
+using WeSay.LexicalModel.Tests;
 using WeSay.UI;
 using System.IO;
 namespace WeSay.App
 {
 	class WeSayApp
 	{
-
-		class CommandLineArguments
-		{
-			[DefaultArgument(ArgumentTypes.AtMostOnce,
-				DefaultValue = @"..\..\SampleProjects\Thai\WeSay\thai5000.words",
-				HelpText = @"Path to the words file (e.g. c:\thai\wesay\thai500.words).")]
-			public string wordsPath = null;
-
-			[Argument(ArgumentTypes.AtMostOnce,
-				HelpText = "Language to show the user interface in.",
-				LongName = "ui",
-				ShortName = "")]
-			public string ui = null;
-		}
-
-		static void ShowCommandLineError(string e)
-		{
-			CommandLine.Parser p = new Parser(typeof(CommandLineArguments), new ErrorReporter(ShowCommandLineError));
-			e = e.Replace("Duplicate 'wordsPath' argument", "Please enclose project path in quotes if it contains spaces.");
-			e += "\r\n\r\n" + p.GetUsageString(200);
-			MessageBox.Show(e, "WeSay Command Line Problem");
-		}
-
 		[STAThread]
 		static void Main(string[] args)
 		{
@@ -58,15 +39,28 @@ namespace WeSay.App
 				Application.SetCompatibleTextRenderingDefault(false);
 				TabbedForm tabbedForm = new TabbedForm();
 
+				BackupService backupService=null;
+
 				//builder = new SampleTaskBuilder(project, tabbedForm);
 				using (FileStream config = new FileStream(project.PathToProjectTaskInventory, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete))
 				{
-					builder = new ConfigFileTaskBuilder(config, project, tabbedForm);
+					AbstractRecordListManager recordListManager =MakeRecordListManager(project);
+					builder = new ConfigFileTaskBuilder(config, project, tabbedForm, recordListManager);
+
+					Db4oRecordListManager ds = recordListManager as Db4oRecordListManager;
+					if(ds!=null)
+					{
+						backupService = new BackupService(project.PathToLocalBackup, ds.DataSource);
+						recordListManager.DataCommitted += new EventHandler(backupService.OnDataCommitted);
+					}
 				}
+
 				project.Tasks = builder.Tasks;
-
+				Application.DoEvents();
+				backupService.DoIncrementalXmlBackupNow(); //in case we are far behind
 				Application.Run(tabbedForm);
-
+				backupService.DoIncrementalXmlBackupNow();
+				backupService.BackupToExternal("f:\\"+project.Name+".zip");
 			}
 			finally
 			{
@@ -82,5 +76,59 @@ namespace WeSay.App
 					((IDisposable)builder).Dispose();
 			}
 		}
+
+
+
+		private static AbstractRecordListManager MakeRecordListManager(WeSayWordsProject project)
+		{
+			AbstractRecordListManager recordListManager;
+
+			if (project.PathToWeSaySpecificFilesDirectory.IndexOf("PRETEND") > -1)
+			{
+				IBindingList entries = new PretendRecordList();
+				recordListManager = new InMemoryRecordListManager();
+				IRecordList<LexEntry> masterRecordList = recordListManager.Get<LexEntry>();
+				foreach (LexEntry entry in entries)
+				{
+					masterRecordList.Add(entry);
+				}
+			}
+			else
+			{
+				com.db4o.config.Configuration db4oConfiguration = com.db4o.Db4o.Configure();
+				com.db4o.config.ObjectClass objectClass = db4oConfiguration.ObjectClass(typeof(Language.LanguageForm));
+				objectClass.ObjectField("_writingSystemId").Indexed(true);
+				objectClass.ObjectField("_form").Indexed(true);
+
+				objectClass = db4oConfiguration.ObjectClass(typeof(LexEntry));
+				objectClass.ObjectField("_modifiedDate").Indexed(true);
+
+				recordListManager = new Db4oRecordListManager(project.PathToLexicalModelDB);
+			}
+			return recordListManager;
+		}
+
+		class CommandLineArguments
+		{
+			[DefaultArgument(ArgumentTypes.AtMostOnce,
+				DefaultValue = @"..\..\SampleProjects\Thai\WeSay\thai5000.words",
+				HelpText = @"Path to the words file (e.g. c:\thai\wesay\thai500.words).")]
+			public string wordsPath = null;
+
+			[Argument(ArgumentTypes.AtMostOnce,
+				HelpText = "Language to show the user interface in.",
+				LongName = "ui",
+				ShortName = "")]
+			public string ui = null;
+		}
+
+		static void ShowCommandLineError(string e)
+		{
+			CommandLine.Parser p = new Parser(typeof(CommandLineArguments), new ErrorReporter(ShowCommandLineError));
+			e = e.Replace("Duplicate 'wordsPath' argument", "Please enclose project path in quotes if it contains spaces.");
+			e += "\r\n\r\n" + p.GetUsageString(200);
+			MessageBox.Show(e, "WeSay Command Line Problem");
+		}
 	}
+
 }
