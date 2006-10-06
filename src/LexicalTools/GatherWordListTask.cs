@@ -43,7 +43,7 @@ namespace WeSay.LexicalTools
 		   // _gatherControl.SelectedIndexChanged -= new EventHandler(OnRecordSelectionChanged);
 			_gatherControl.Dispose();
 			_gatherControl = null;
-			_recordListManager.GoodTimeToCommit();
+			this.RecordListManager.GoodTimeToCommit();
 		}
 	}
 }

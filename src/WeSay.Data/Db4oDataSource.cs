@@ -3,8 +3,6 @@
 #endif
 
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Runtime.Serialization;
 
 namespace WeSay.Data
@@ -43,7 +41,7 @@ namespace WeSay.Data
 			throw new Db4oException("Query not Optimized", args.Reason);
 		}
 #endif
-
+		[CLSCompliant(false)]
 		public com.db4o.ObjectContainer Data
 		{
 			get

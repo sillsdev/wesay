@@ -59,7 +59,7 @@ namespace WeSay.LexicalTools
 
 		void OnRecordSelectionChanged(object sender, EventArgs e)
 		{
-			_recordListManager.GoodTimeToCommit();
+			RecordListManager.GoodTimeToCommit();
 		}
 
 		public override void Deactivate()
@@ -68,7 +68,7 @@ namespace WeSay.LexicalTools
 		   _lexFieldTool.SelectedIndexChanged -= new EventHandler(OnRecordSelectionChanged);
 			_lexFieldTool.Dispose();
 			_lexFieldTool = null;
-			_recordListManager.GoodTimeToCommit();
+			RecordListManager.GoodTimeToCommit();
 		}
 
 		/// <summary>
@@ -87,7 +87,7 @@ namespace WeSay.LexicalTools
 		{
 			get
 			{
-				if (_dataHasBeenRetrieved)
+				if (DataHasBeenRetrieved)
 				{
 					return DataSource.Count.ToString();
 				}
@@ -99,8 +99,8 @@ namespace WeSay.LexicalTools
 		{
 			get
 			{
-				IRecordList<LexEntry> data = _recordListManager.Get<LexEntry>(_filter);
-				_dataHasBeenRetrieved = true;
+				IRecordList<LexEntry> data = RecordListManager.Get<LexEntry>(_filter);
+				DataHasBeenRetrieved = true;
 				return data;
 			}
 		}

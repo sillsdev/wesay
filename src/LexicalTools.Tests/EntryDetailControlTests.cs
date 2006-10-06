@@ -16,7 +16,7 @@ namespace WeSay.LexicalTools.Tests
 		string _filePath;
 		private IRecordList<LexEntry> _records;
 		private string _vernacularWsId;
-		private TabControl _tabControl = new TabControl();
+		private TabControl _tabControl;
 		private Form _window;
 
 		public override void Setup()
@@ -34,25 +34,18 @@ namespace WeSay.LexicalTools.Tests
 			AddEntry("Secondary");
 			AddEntry("Tertiary");
 
-			try
-			{
-				this._task = new EntryDetailTask(_recordListManager);
-				this._task.Dock = DockStyle.Fill;
-				TabPage detailTaskPage = new TabPage();
-				detailTaskPage.Controls.Add(this._task);
-
-				this._tabControl.TabPages.Add(detailTaskPage);
-				this._tabControl.TabPages.Add("Dummy");
-				this._window = new Form();
-				this._window.Controls.Add(this._tabControl);
-				this._window.Show();
-				this._task.Activate();
-			}
-			catch
-			{
-				//_records.Dispose();
-				_recordListManager.Dispose();
-			}
+			this._task = new EntryDetailTask(_recordListManager);
+			this._task.Dock = DockStyle.Fill;
+			TabPage detailTaskPage = new TabPage();
+			detailTaskPage.Controls.Add(this._task);
+			this._tabControl = new TabControl();
+			this._tabControl.Dock = DockStyle.Fill;
+			this._tabControl.TabPages.Add(detailTaskPage);
+			this._tabControl.TabPages.Add("Dummy");
+			this._window = new Form();
+			this._window.Controls.Add(this._tabControl);
+			this._window.Show();
+			this._task.Activate();
 		}
 
 		private void AddEntry(string lexemeForm)

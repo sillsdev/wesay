@@ -1,12 +1,9 @@
 using System;
 using PicoContainer;
 using PicoContainer.Defaults;
-using WeSay.LexicalModel;
-using WeSay.LexicalModel.Tests;
 using WeSay.UI;
 using System.IO;
 using System.Collections.Generic;
-using System.ComponentModel;
 using WeSay.Data;
 using System.Xml.XPath;
 
@@ -25,13 +22,32 @@ namespace WeSay.App
 			_picoContext.RegisterComponentInstance("Current Task Provider", currentWorkTask);
 
 			_picoContext.RegisterComponentInstance("All Entries", recordListManager);
-			InitializeTaskList(config);
+			XPathDocument doc = new XPathDocument(config);
+			InitializeComponents(doc);
+			InitializeTaskList(doc);
 		}
 
-		private void InitializeTaskList(Stream config)
+		private void InitializeComponents(XPathDocument doc)
+		{
+			XPathNavigator navigator = doc.CreateNavigator();
+			navigator = navigator.SelectSingleNode("//components");
+			if (navigator != null)
+			{
+				XPathNodeIterator componentList = navigator.SelectDescendants("*", string.Empty, false);
+				foreach (XPathNavigator component in componentList)
+				{
+					string id = RegisterComponent(component);
+
+					//typical error here: PicoInitializationException("Either do the specified parameters not match any of....
+					//may mean you have an extra (unused), missing, or out-of-order parameter element in the xml.
+					_picoContext.GetComponentInstance(id);
+				}
+			}
+		}
+
+		private void InitializeTaskList(XPathDocument doc)
 		{
 			_tasks = new List<ITask>();
-			XPathDocument doc = new XPathDocument(config);
 			XPathNavigator navigator = doc.CreateNavigator();
 			XPathNodeIterator taskList = navigator.SelectDescendants("task", string.Empty, false);
 			foreach (XPathNavigator task in taskList)

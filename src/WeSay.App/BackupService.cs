@@ -14,9 +14,9 @@ namespace WeSay.App
 	{
 		private const string s_backupPointFileName = "backuppoint";
 		private const int _checkFrequency = 10;
-		protected int _commitCount;
-		protected string _directory;
-		protected Db4oDataSource _datasource;
+		private int _commitCount;
+		private string _directory;
+		private Db4oDataSource _datasource;
 		private DateTime _timeOfLastQueryForNewRecords;
 
 		event EventHandler BackingUp;
@@ -52,8 +52,7 @@ namespace WeSay.App
 			if(!Directory.Exists(Path.GetPathRoot(path)))
 				return;
 
-			ProgressDialog dlg = null;
-			dlg = new ProgressDialog("Backing up to external...");
+			ProgressDialog dlg = new ProgressDialog("Backing up to external...");
 			dlg.Show();
 
 			try

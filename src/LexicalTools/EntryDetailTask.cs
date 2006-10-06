@@ -14,7 +14,7 @@ namespace WeSay.LexicalTools
 		private IRecordList<LexEntry> _records;
 		private bool _isActive;
 //        private int _currentIndex;
-		protected IRecordListManager _recordListManager;
+		private IRecordListManager _recordListManager;
 
 		public EntryDetailTask(IRecordListManager recordListManager)
 		{

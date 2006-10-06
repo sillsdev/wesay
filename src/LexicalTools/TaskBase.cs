@@ -7,10 +7,10 @@ namespace WeSay.LexicalTools
 {
 	public abstract class TaskBase : ITask
 	{
-		protected IRecordListManager _recordListManager;
-		protected string _label;
-		protected string _description;
-		protected bool _dataHasBeenRetrieved;
+		private IRecordListManager _recordListManager;
+		private string _label;
+		private string _description;
+		private bool _dataHasBeenRetrieved;
 
 		public TaskBase(string label, string description, IRecordListManager recordListManager)
 		{
@@ -30,8 +30,6 @@ namespace WeSay.LexicalTools
 			_recordListManager = recordListManager;
 			_label = label ;
 			_description = description;
-
-
 		}
 
 		public string Description
@@ -42,7 +40,7 @@ namespace WeSay.LexicalTools
 			}
 		}
 
-		protected bool _isActive;
+		private bool _isActive;
 
 		public virtual void Activate()
 		{
@@ -98,6 +96,17 @@ namespace WeSay.LexicalTools
 			{
 				return "?";
 			}
+		}
+
+		protected bool DataHasBeenRetrieved
+		{
+			get { return this._dataHasBeenRetrieved; }
+			set { this._dataHasBeenRetrieved = value; }
+		}
+
+		protected IRecordListManager RecordListManager
+		{
+			get { return this._recordListManager; }
 		}
 	}
 }
