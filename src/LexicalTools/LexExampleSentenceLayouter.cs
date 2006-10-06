@@ -1,6 +1,3 @@
-using System;
-using System.Windows.Forms;
-using WeSay.Language;
 using WeSay.LexicalModel;
 using WeSay.UI;
 using System.ComponentModel;

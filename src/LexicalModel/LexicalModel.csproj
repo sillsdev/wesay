@@ -37,6 +37,8 @@
 	<Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+	<Compile Include="Field.cs" />
+	<Compile Include="FieldInventory.cs" />
 	<Compile Include="MissingExampleSentenceFilter.cs" />
 	<Compile Include="LexEntry.cs" />
 	<Compile Include="LexExampleSentence.cs" />

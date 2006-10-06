@@ -1,7 +1,7 @@
 using System;
 using NUnit.Framework;
 
-namespace WeSay.UI.Tests
+namespace WeSay.LexicalModel.Tests
 {
 	[TestFixture]
 	public class FieldInventoryTests : WeSay.Data.Tests.IEnumerableTests.IEnumerableBaseTest<Field>
@@ -54,6 +54,48 @@ namespace WeSay.UI.Tests
 		{
 			FieldInventory fieldInventory = PopulateFieldInventory();
 			Assert.IsFalse(fieldInventory.Contains("none"));
+		}
+
+		[Test]
+		public void Index_HasFieldDefinition_FieldDefinition()
+		{
+			FieldInventory fieldInventory = PopulateFieldInventory();
+			Assert.IsNotNull(fieldInventory["field1"]);
+		}
+
+		[Test]
+		[ExpectedException(typeof(ArgumentOutOfRangeException))]
+		public void Index_DoesNotHaveFieldDefinition_Throws()
+		{
+			FieldInventory fieldInventory = PopulateFieldInventory();
+			Field field = fieldInventory["none"];
+		}
+
+		[Test]
+		public void TryGetField_DoesNotHaveFieldDefinition_False()
+		{
+			FieldInventory fieldInventory = PopulateFieldInventory();
+			Field field;
+			Assert.IsFalse(fieldInventory.TryGetField("none", out field));
+		}
+
+		[Test]
+		public void TryGetField_HasFieldDefinition_True()
+		{
+			FieldInventory fieldInventory = PopulateFieldInventory();
+			Field field;
+			Assert.IsTrue(fieldInventory.TryGetField("field2", out field));
+			Assert.IsNotNull(field);
+			Assert.AreEqual("field2", field.FieldName);
+		}
+
+		[Test]
+		[ExpectedException(typeof(ArgumentNullException))]
+		public void TryGetField_NullKey_Throws()
+		{
+			FieldInventory fieldInventory = PopulateFieldInventory();
+			Field field;
+			fieldInventory.TryGetField(null, out field);
 		}
 
 		private static FieldInventory PopulateFieldInventory() {

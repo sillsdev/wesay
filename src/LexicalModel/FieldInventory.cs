@@ -2,9 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace WeSay.UI
+namespace WeSay.LexicalModel
 {
-	public class FieldInventory : IList<Field>
+	public class FieldInventory : ICollection<Field>
 	{
 		private Field[] _fields;
 
@@ -29,54 +29,45 @@ namespace WeSay.UI
 		}
 
 		///<summary>
-		///Determines the index of a specific item in the <see cref="T:System.Collections.Generic.IList`1"></see>.
+		///Gets the field with the specified name.
 		///</summary>
 		///
 		///<returns>
-		///The index of item if found in the list; otherwise, -1.
+		///The field with the given field name.
 		///</returns>
 		///
-		///<param name="item">The object to locate in the <see cref="T:System.Collections.Generic.IList`1"></see>.</param>
-		public int IndexOf(Field item)
-		{
-			return Array.FindIndex<Field>(_fields,
-											   delegate(Field field)
-											   {
-												   return field == item;
-											   });
-		}
-
-		void IList<Field>.Insert(int index, Field item)
-		{
-			throw new NotSupportedException();
-		}
-
-		void IList<Field>.RemoveAt(int index)
-		{
-			throw new NotSupportedException();
-		}
-
-		///<summary>
-		///Gets or sets the element at the specified index.
-		///</summary>
-		///
-		///<returns>
-		///The element at the specified index.
-		///</returns>
-		///
-		///<param name="index">The zero-based index of the element to get or set.</param>
+		///<param name="index">The field name of the field to get.</param>
 		///<exception cref="T:System.ArgumentOutOfRangeException">index is not a valid index in the <see cref="T:System.Collections.Generic.IList`1"></see>.</exception>
-		///<exception cref="T:System.NotSupportedException">The property is set and the <see cref="T:System.Collections.Generic.IList`1"></see> is read-only.</exception>
-		public Field this[int index]
+		public Field this[string fieldName]
 		{
 			get
 			{
-				return _fields[index];
+				Field field;
+				if(!TryGetField(fieldName, out field))
+				{
+					throw new ArgumentOutOfRangeException();
+				}
+				return field;
 			}
-			set
+		}
+
+		public bool TryGetField(string fieldName, out Field field)
+		{
+			if(fieldName == null)
 			{
-				throw new NotSupportedException();
+				throw new ArgumentNullException();
 			}
+			field = Array.Find<Field>(_fields,
+						   delegate(Field f)
+						   {
+							   return f.FieldName == fieldName;
+						   });
+
+			if (field == default(Field))
+			{
+				return false;
+			}
+			return true;
 		}
 
 		void ICollection<Field>.Add(Field item)
@@ -100,11 +91,7 @@ namespace WeSay.UI
 		///<param name="item">The object to locate in the <see cref="T:System.Collections.Generic.ICollection`1"></see>.</param>
 		public bool Contains(Field item)
 		{
-			return Array.Exists<Field>(_fields,
-									   delegate(Field field)
-									   {
-										   return field == item;
-									   });
+			return -1 != Array.IndexOf<Field>(_fields, item);
 		}
 
 		public bool Contains(string fieldName)
@@ -195,5 +182,6 @@ namespace WeSay.UI
 		{
 			return _fields.GetEnumerator();
 		}
+
 	}
 }

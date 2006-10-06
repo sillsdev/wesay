@@ -1,12 +1,11 @@
 using System;
 
-namespace WeSay.UI
+namespace WeSay.LexicalModel
 {
 	public class Field
 	{
 		private string _fieldName;
 		private string[] _writingSystems;
-
 		public string FieldName
 		{
 			get

@@ -33,7 +33,7 @@ namespace WeSay.App
 			navigator = navigator.SelectSingleNode("//components");
 			if (navigator != null)
 			{
-				XPathNodeIterator componentList = navigator.SelectDescendants("*", string.Empty, false);
+				XPathNodeIterator componentList = navigator.SelectChildren(string.Empty, string.Empty);
 				foreach (XPathNavigator component in componentList)
 				{
 					string id = RegisterComponent(component);

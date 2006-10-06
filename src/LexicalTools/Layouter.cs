@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.ComponentModel;
 using System.Windows.Forms;
 using WeSay.Language;
@@ -41,8 +40,6 @@ namespace WeSay.LexicalTools
 		/// <summary>
 		/// actually add the widget's that are needed to the detailed list
 		/// </summary>
-		/// <param name="dataObject"></param>
-		/// <returns></returns>
 		public abstract int AddWidgets(IBindingList list, int index);
 
 		internal abstract int AddWidgets(IBindingList list, int index, int row);

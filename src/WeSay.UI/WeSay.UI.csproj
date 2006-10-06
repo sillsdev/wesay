@@ -48,8 +48,6 @@
 	<Compile Include="DetailList.Designer.cs">
 	  <DependentUpon>DetailList.cs</DependentUpon>
 	</Compile>
-	<Compile Include="Field.cs" />
-	<Compile Include="FieldInventory.cs" />
 	<Compile Include="GhostBinding.cs" />
 	<Compile Include="ICurrentWorkTask.cs" />
 	<Compile Include="IProject.cs" />
