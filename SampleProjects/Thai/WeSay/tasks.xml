@@ -21,9 +21,10 @@
 	  <description>Add meanings to entries where they are missing.</description>
 	  <showfields>Gloss</showfields>
 	</task>
-	<task id="Collect Words" class="WeSay.CommonTools.PictureControl" assembly="CommonTools">
+	<task id="Gather Words" class="WeSay.LexicalTools.GatherWordListTask" assembly="LexicalTools">
+	  <entries ref="All Entries"/>
 	  <label>Collect Words</label>
 	  <description>Collect new words given words in another language.</description>
-	  <picture>RealWord.gif</picture>
+	  <wordListFileName>sampleWordList.txt</wordListFileName>
 	</task>
   </tasks>

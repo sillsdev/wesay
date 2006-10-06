@@ -1,30 +1,16 @@
 using System;
 using System.Windows.Forms;
 using WeSay.LexicalModel;
-using WeSay.UI;
 using WeSay.Data;
 
 namespace WeSay.LexicalTools
 {
-	public partial class LexFieldTask : ITask
+	public class LexFieldTask : TaskBase
 	{
 		private LexFieldTool _lexFieldTool;
-		private IRecordListManager _recordListManager;
 		private IFilter<LexEntry> _filter;
-		private string _label;
-		private string _description;
-		bool _dataHasBeenRetrieved;
-
-		public string Description
-		{
-			get
-			{
-				return StringCatalog.Get(_description);
-			}
-		}
 
 		private Predicate<string> _showField;
-		private bool _isActive;
 
 		public Predicate<string> ShowField
 		{
@@ -35,31 +21,17 @@ namespace WeSay.LexicalTools
 		 }
 
 		public LexFieldTask(IRecordListManager recordListManager, IFilter<LexEntry> filter, string label, string description, string fieldsToShow)
+			:base(label, description, recordListManager)
 		{
-			if (recordListManager == null)
-			{
-				throw new ArgumentNullException("recordListManager");
-			}
 			if (filter == null)
 			{
 				throw new ArgumentNullException("filter");
 			}
-			if (label == null)
-			{
-				throw new ArgumentNullException("label");
-			}
-			if (description == null)
-			{
-				throw new ArgumentNullException("description");
-			}
-			if (fieldsToShow == null)
+			 if (fieldsToShow == null)
 			{
 				throw new ArgumentNullException("fieldsToShow");
 			}
-			_recordListManager = recordListManager;
-			recordListManager.Register<LexEntry>(filter);
-			_label = label;
-			_description = description;
+		   recordListManager.Register<LexEntry>(filter);
 			_filter = filter;
 			InitializeFieldFilter(fieldsToShow);
 		}
@@ -77,14 +49,10 @@ namespace WeSay.LexicalTools
 		}
 
 
-		public void Activate()
+		public override void Activate()
 		{
-			if (IsActive)
-			{
-				throw new InvalidOperationException("Activate should not be called when object is active.");
-			}
+			base.Activate();
 			_lexFieldTool = new LexFieldTool(DataSource, _showField);
-			_isActive = true;
 			_lexFieldTool.SelectedIndexChanged += new EventHandler(OnRecordSelectionChanged);
 
 		}
@@ -94,37 +62,20 @@ namespace WeSay.LexicalTools
 			_recordListManager.GoodTimeToCommit();
 		}
 
-		public void Deactivate()
+		public override void Deactivate()
 		{
-			if (!IsActive)
-			{
-				throw new InvalidOperationException("Deactivate should only be called once after Activate.");
-			}
-			_lexFieldTool.SelectedIndexChanged -= new EventHandler(OnRecordSelectionChanged);
+			base.Deactivate();
+		   _lexFieldTool.SelectedIndexChanged -= new EventHandler(OnRecordSelectionChanged);
 			_lexFieldTool.Dispose();
 			_lexFieldTool = null;
-			_isActive = false;
 			_recordListManager.GoodTimeToCommit();
-		}
-
-		public bool IsActive
-		{
-			get { return this._isActive; }
-		}
-
-		public string Label
-		{
-			get
-			{
-				return StringCatalog.Get(_label);
-			}
 		}
 
 		/// <summary>
 		/// The LexFieldTool associated with this task
 		/// </summary>
 		/// <remarks>Non null only when task is activated</remarks>
-		public Control Control
+		public override Control Control
 		{
 			get
 			{
@@ -132,15 +83,7 @@ namespace WeSay.LexicalTools
 			}
 		}
 
-		public bool IsPinned
-		{
-			get
-			{
-				return false;
-			}
-		}
-
-		public string Status
+		public override string Status
 		{
 			get
 			{

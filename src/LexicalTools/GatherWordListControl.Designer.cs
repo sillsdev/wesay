@@ -32,14 +32,14 @@ namespace WeSay.LexicalTools
 			System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("blah");
 			this.label1 = new System.Windows.Forms.Label();
 			this._listViewWords = new System.Windows.Forms.ListView();
-			this._btnPreviousWord = new ArrowButton.ArrowButton();
-			this._btnNextWord = new ArrowButton.ArrowButton();
-			this._btnAddWord = new ArrowButton.ArrowButton();
-			this._boxVernacularWord = new WeSay.UI.WeSayTextBox();
 			this.label3 = new System.Windows.Forms.Label();
 			this._boxForeignWord = new System.Windows.Forms.TextBox();
 			this.label2 = new System.Windows.Forms.Label();
 			this.panel1 = new System.Windows.Forms.Panel();
+			this._boxVernacularWord = new WeSay.UI.WeSayTextBox();
+			this._btnPreviousWord = new ArrowButton.ArrowButton();
+			this._btnNextWord = new ArrowButton.ArrowButton();
+			this._btnAddWord = new ArrowButton.ArrowButton();
 			this.SuspendLayout();
 			//
 			// label1
@@ -65,58 +65,6 @@ namespace WeSay.LexicalTools
 			this._listViewWords.Size = new System.Drawing.Size(315, 97);
 			this._listViewWords.TabIndex = 4;
 			this._listViewWords.UseCompatibleStateImageBehavior = false;
-			//
-			// _btnPreviousWord
-			//
-			this._btnPreviousWord.ArrowEnabled = true;
-			this._btnPreviousWord.HoverEndColor = System.Drawing.Color.DarkRed;
-			this._btnPreviousWord.HoverStartColor = System.Drawing.Color.WhiteSmoke;
-			this._btnPreviousWord.Location = new System.Drawing.Point(332, 69);
-			this._btnPreviousWord.Name = "_btnPreviousWord";
-			this._btnPreviousWord.NormalEndColor = System.Drawing.Color.DarkGray;
-			this._btnPreviousWord.NormalStartColor = System.Drawing.Color.WhiteSmoke;
-			this._btnPreviousWord.Rotation = 270;
-			this._btnPreviousWord.Size = new System.Drawing.Size(24, 24);
-			this._btnPreviousWord.StubbyStyle = false;
-			this._btnPreviousWord.TabIndex = 1;
-			//
-			// _btnNextWord
-			//
-			this._btnNextWord.ArrowEnabled = true;
-			this._btnNextWord.HoverEndColor = System.Drawing.Color.DarkRed;
-			this._btnNextWord.HoverStartColor = System.Drawing.Color.WhiteSmoke;
-			this._btnNextWord.Location = new System.Drawing.Point(381, 52);
-			this._btnNextWord.Name = "_btnNextWord";
-			this._btnNextWord.NormalEndColor = System.Drawing.Color.DarkGray;
-			this._btnNextWord.NormalStartColor = System.Drawing.Color.DarkRed;
-			this._btnNextWord.Rotation = 90;
-			this._btnNextWord.Size = new System.Drawing.Size(54, 54);
-			this._btnNextWord.StubbyStyle = false;
-			this._btnNextWord.TabIndex = 1;
-			//
-			// _btnAddWord
-			//
-			this._btnAddWord.ArrowEnabled = true;
-			this._btnAddWord.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this._btnAddWord.HoverEndColor = System.Drawing.Color.DarkRed;
-			this._btnAddWord.HoverStartColor = System.Drawing.Color.WhiteSmoke;
-			this._btnAddWord.Location = new System.Drawing.Point(329, 102);
-			this._btnAddWord.Name = "_btnAddWord";
-			this._btnAddWord.NormalEndColor = System.Drawing.Color.LightSkyBlue;
-			this._btnAddWord.NormalStartColor = System.Drawing.SystemColors.GradientInactiveCaption;
-			this._btnAddWord.Rotation = 270;
-			this._btnAddWord.Size = new System.Drawing.Size(48, 48);
-			this._btnAddWord.StubbyStyle = true;
-			this._btnAddWord.TabIndex = 0;
-			this._btnAddWord.Text = "   +";
-			//
-			// _boxVernacularWord
-			//
-			this._boxVernacularWord.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this._boxVernacularWord.Location = new System.Drawing.Point(78, 117);
-			this._boxVernacularWord.Name = "_boxVernacularWord";
-			this._boxVernacularWord.Size = new System.Drawing.Size(248, 26);
-			this._boxVernacularWord.TabIndex = 5;
 			//
 			// label3
 			//
@@ -158,6 +106,58 @@ namespace WeSay.LexicalTools
 			this.panel1.Name = "panel1";
 			this.panel1.Size = new System.Drawing.Size(497, 2);
 			this.panel1.TabIndex = 8;
+			//
+			// _boxVernacularWord
+			//
+			this._boxVernacularWord.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this._boxVernacularWord.Location = new System.Drawing.Point(78, 117);
+			this._boxVernacularWord.Name = "_boxVernacularWord";
+			this._boxVernacularWord.Size = new System.Drawing.Size(248, 26);
+			this._boxVernacularWord.TabIndex = 5;
+			//
+			// _btnPreviousWord
+			//
+			this._btnPreviousWord.ArrowEnabled = true;
+			this._btnPreviousWord.HoverEndColor = System.Drawing.Color.DarkRed;
+			this._btnPreviousWord.HoverStartColor = System.Drawing.Color.WhiteSmoke;
+			this._btnPreviousWord.Location = new System.Drawing.Point(332, 69);
+			this._btnPreviousWord.Name = "_btnPreviousWord";
+			this._btnPreviousWord.NormalEndColor = System.Drawing.SystemColors.ButtonShadow;
+			this._btnPreviousWord.NormalStartColor = System.Drawing.SystemColors.ButtonFace;
+			this._btnPreviousWord.Rotation = 270;
+			this._btnPreviousWord.Size = new System.Drawing.Size(24, 24);
+			this._btnPreviousWord.StubbyStyle = false;
+			this._btnPreviousWord.TabIndex = 1;
+			//
+			// _btnNextWord
+			//
+			this._btnNextWord.ArrowEnabled = true;
+			this._btnNextWord.HoverEndColor = System.Drawing.Color.DarkRed;
+			this._btnNextWord.HoverStartColor = System.Drawing.Color.WhiteSmoke;
+			this._btnNextWord.Location = new System.Drawing.Point(356, 60);
+			this._btnNextWord.Name = "_btnNextWord";
+			this._btnNextWord.NormalEndColor = System.Drawing.SystemColors.ButtonShadow;
+			this._btnNextWord.NormalStartColor = System.Drawing.SystemColors.ButtonFace;
+			this._btnNextWord.Rotation = 90;
+			this._btnNextWord.Size = new System.Drawing.Size(43, 43);
+			this._btnNextWord.StubbyStyle = false;
+			this._btnNextWord.TabIndex = 1;
+			//
+			// _btnAddWord
+			//
+			this._btnAddWord.ArrowEnabled = true;
+			this._btnAddWord.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this._btnAddWord.HoverEndColor = System.Drawing.Color.DarkRed;
+			this._btnAddWord.HoverStartColor = System.Drawing.Color.WhiteSmoke;
+			this._btnAddWord.Location = new System.Drawing.Point(319, 88);
+			this._btnAddWord.Name = "_btnAddWord";
+			this._btnAddWord.NormalEndColor = System.Drawing.SystemColors.ButtonFace;
+			this._btnAddWord.NormalStartColor = System.Drawing.SystemColors.ButtonShadow;
+			this._btnAddWord.Rotation = 270;
+			this._btnAddWord.Size = new System.Drawing.Size(80, 80);
+			this._btnAddWord.StubbyStyle = true;
+			this._btnAddWord.TabIndex = 0;
+			this._btnAddWord.Text = "   +";
 			//
 			// GatherWordListControl
 			//

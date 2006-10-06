@@ -270,6 +270,9 @@ namespace ArrowButton
 			// Build the graphical path out of the arrowpoints
 			GraphicsPathFromPoints ( m_pnts, m_gp, m_CntPnt );
 
+
+			// Change control region, now control is an arrow
+			Region = new Region(m_gp);
 		}
 
 		/// <summary>
@@ -349,12 +352,17 @@ namespace ArrowButton
 		{
 			// The arrow consist of eight points
 			m_pnts = new Point[8];
-
+			int stretch = 0;
+			if (m_isStubby)
+			{
+				dx -= 20;
+				stretch = 20;
+			}
 
 			// The initial points build an arrow in up-direction
-			m_pnts[0] = new Point (  - dx / 4,	+ dx / 2);
-			m_pnts[1] = new Point (  + dx / 4,	+ dx / 2);
-			m_pnts[2] = new Point (  + dx / 4,	0 );
+			m_pnts[0] = new Point((-dx / 4), +dx / 2 + stretch);
+			m_pnts[1] = new Point(+dx / 4, +dx / 2 + stretch);
+			m_pnts[2] = new Point(+dx / 4, 0);
 			if (m_isStubby)
 			{
 				m_pnts[3] = new Point(+dx / 4, 0);
@@ -365,10 +373,37 @@ namespace ArrowButton
 				m_pnts[3] = new Point(+dx / 2, 0);
 				m_pnts[5] = new Point(-dx / 2, 0);
 			}
-			m_pnts[4] = new Point (			0,	- dx / 2 );
+			m_pnts[4] = new Point(0, -dx / 2);
 
-			m_pnts[6] = new Point (  - dx / 4,	0 );
-			m_pnts[7] = new Point (  - dx / 4,	+ dx / 2 );
+			m_pnts[6] = new Point(-dx / 4, 0);
+			m_pnts[7] = m_pnts[0];
+
+
+//            int stretch = 0;
+//            if (m_isStubby)
+//            {
+//                dx -= 20;
+//                stretch = 20;
+//            }
+//
+//			// The initial points build an arrow in up-direction
+//            m_pnts[0] = new Point((-dx / 4) , +dx / 2 + stretch);
+//            m_pnts[1] = new Point(+dx / 4, +dx / 2 + stretch);
+//			m_pnts[2] = new Point (  + dx / 4,	0 );
+//            if (m_isStubby)
+//            {
+//                m_pnts[3] = new Point(+dx / 4, 0);
+//                m_pnts[5] = new Point(-dx / 4, 0);
+//            }
+//            else
+//            {
+//                m_pnts[3] = new Point(+dx / 2, 0);
+//                m_pnts[5] = new Point(-dx / 2, 0);
+//            }
+//			m_pnts[4] = new Point (			0,	- dx / 2 );
+//
+//			m_pnts[6] = new Point (  - dx / 4,	0 );
+//			m_pnts[7] = m_pnts[0];
 
 //            m_pnts[0] = new Point(-dx / 4, +dx / 2);
 //            m_pnts[1] = new Point(+dx / 4, +dx / 2);

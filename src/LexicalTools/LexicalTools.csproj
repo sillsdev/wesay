@@ -53,6 +53,7 @@
 	<Compile Include="GatherWordListControl.Designer.cs">
 	  <DependentUpon>GatherWordListControl.cs</DependentUpon>
 	</Compile>
+	<Compile Include="GatherWordListTask.cs" />
 	<Compile Include="LexFieldTool.cs">
 	  <SubType>UserControl</SubType>
 	</Compile>
@@ -87,6 +88,7 @@
 	  <DependentUpon>Resources.resx</DependentUpon>
 	</Compile>
 	<Compile Include="RtfRenderer.cs" />
+	<Compile Include="TaskBase.cs" />
   </ItemGroup>
   <ItemGroup>
 	<ProjectReference Include="..\Language\Language.csproj">
