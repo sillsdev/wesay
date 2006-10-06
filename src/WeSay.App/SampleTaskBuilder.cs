@@ -25,7 +25,7 @@ namespace WeSay.App
 			_picoContext.RegisterComponentInstance("Current Task Provider", currentWorkTask);
 			IRecordListManager recordListManager;
 
-			if (project.PathToWeSaySpecificFilesDirectory.IndexOf("PRETEND") > -1)
+			if (project.PathToWeSaySpecificFilesDirectoryInProject.IndexOf("PRETEND") > -1)
 			{
 				IBindingList entries = new PretendRecordList();
 				recordListManager = new InMemoryRecordListManager();

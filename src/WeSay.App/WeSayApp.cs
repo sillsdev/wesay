@@ -83,7 +83,7 @@ namespace WeSay.App
 		{
 			AbstractRecordListManager recordListManager;
 
-			if (project.PathToWeSaySpecificFilesDirectory.IndexOf("PRETEND") > -1)
+			if (project.PathToWeSaySpecificFilesDirectoryInProject.IndexOf("PRETEND") > -1)
 			{
 				IBindingList entries = new PretendRecordList();
 				recordListManager = new InMemoryRecordListManager();

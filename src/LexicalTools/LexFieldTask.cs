@@ -11,6 +11,7 @@ namespace WeSay.LexicalTools
 		private IFilter<LexEntry> _filter;
 
 		private Predicate<string> _showField;
+		protected bool _dataHasBeenRetrieved;
 
 		public Predicate<string> ShowField
 		{

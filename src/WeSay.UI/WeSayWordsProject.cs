@@ -61,7 +61,7 @@ namespace WeSay.UI
 			}
 
 			//use the first words file we do find
-			string[] p = Directory.GetFiles(PathToWeSaySpecificFilesDirectory, "*.words");
+			string[] p = Directory.GetFiles(PathToWeSaySpecificFilesDirectoryInProject, "*.words");
 			if (p.Length > 0)
 			{
 				this._lexiconDatabaseFileName = Path.GetFileName(p[0]);
@@ -86,7 +86,7 @@ namespace WeSay.UI
 		public override void Create(string projectDirectoryPath)
 		{
 			base.Create(projectDirectoryPath);
-			Directory.CreateDirectory(PathToWeSaySpecificFilesDirectory);
+			Directory.CreateDirectory(PathToWeSaySpecificFilesDirectoryInProject);
 		   // this._lexiconDatabaseFileName = this.Name+".words";
 	   }
 
@@ -105,7 +105,7 @@ namespace WeSay.UI
 		{
 			get
 			{
-				return System.IO.Path.Combine(PathToWeSaySpecificFilesDirectory, "tasks.xml");
+				return System.IO.Path.Combine(PathToWeSaySpecificFilesDirectoryInProject, "tasks.xml");
 			}
 		}
 
@@ -113,7 +113,7 @@ namespace WeSay.UI
 		{
 			get
 			{
-				return System.IO.Path.Combine(PathToWeSaySpecificFilesDirectory, "incremental xml backup");
+				return System.IO.Path.Combine(PathToWeSaySpecificFilesDirectoryInProject, "incremental xml backup");
 			}
 		}
 
@@ -123,22 +123,23 @@ namespace WeSay.UI
 			{
 				if (_lexiconDatabaseFileName != null)
 				{
-					return System.IO.Path.Combine(PathToWeSaySpecificFilesDirectory, this._lexiconDatabaseFileName);
+					return System.IO.Path.Combine(PathToWeSaySpecificFilesDirectoryInProject, this._lexiconDatabaseFileName);
 				}
 				else
 				{
-					return System.IO.Path.Combine(PathToWeSaySpecificFilesDirectory, Name+".words");
+					return System.IO.Path.Combine(PathToWeSaySpecificFilesDirectoryInProject, Name+".words");
 				}
 			}
 		}
 
-		public string PathToWeSaySpecificFilesDirectory
+		public string PathToWeSaySpecificFilesDirectoryInProject
 		{
 			get
 			{
 				return Path.Combine(ProjectDirectoryPath, "WeSay");
 			}
 		}
+
 
 	}
 }
