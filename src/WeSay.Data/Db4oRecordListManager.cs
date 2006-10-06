@@ -53,7 +53,7 @@ namespace WeSay.Data
 			base.Dispose(disposing);
 			if (canBeDisposed && disposing)
 			{
-				this.DataSource.Dispose();
+				DataSource.Dispose();
 			}
 		}
 		class FilteredDb4oRecordList<T> : Db4oRecordList<T> where T : class, new()
@@ -291,11 +291,17 @@ namespace WeSay.Data
 					if (!Contains(item))
 					{
 						Add(item);
+#if DEBUG
+						SerializeRecordIds();
+#endif
 					}
 				}
 				else if (Contains(item))
 				{
 					Remove(item);
+#if DEBUG
+					SerializeRecordIds();
+#endif
 				}
 			}
 
@@ -304,6 +310,9 @@ namespace WeSay.Data
 				if (Contains(item))
 				{
 					Remove(item);
+#if DEBUG
+					SerializeRecordIds();
+#endif
 				}
 			}
 
@@ -313,6 +322,9 @@ namespace WeSay.Data
 				if (masterRecordList.Count == 0)
 				{
 					Clear();
+#if DEBUG
+					SerializeRecordIds();
+#endif
 				}
 			}
 
