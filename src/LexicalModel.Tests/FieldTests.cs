@@ -94,7 +94,7 @@ namespace WeSay.LexicalModel.Tests
 		{
 			Field field = new Field("fieldName", new string[] {"writingSystemId1", "writingSystemId2", "writingSystemId3"});
 			Assert.AreEqual(3, field.WritingSystemIds.Count);
-			Assert.Contains("writingSystemId1", field.WritingSystemIds);
+			Assert.IsTrue(field.WritingSystemIds.Contains("writingSystemId1"));
 		}
 
 	}

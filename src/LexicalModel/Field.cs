@@ -53,7 +53,7 @@ namespace WeSay.LexicalModel
 
 
 		[ReflectorProperty("writingSystems", typeof(WsIdCollectionSerializerFactory))]
-		public List<string> WritingSystemIds
+		public IList<string> WritingSystemIds
 		{
 			get
 			{
@@ -71,7 +71,7 @@ namespace WeSay.LexicalModel
 														"Writing System argument" + i.ToString() + "is null");
 					}
 				}
-				_writingSystemIds = value;
+				_writingSystemIds = new List<string>(value);
 			}
 		}
 
