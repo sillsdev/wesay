@@ -267,7 +267,7 @@ namespace WeSay.LexicalModel
 			NetReflectorTypeTable t = new NetReflectorTypeTable();
 			t.Add(typeof(FieldInventory ));
 			t.Add(typeof(Field));
-			t.Add(typeof(Field.WritingSystemId));
+		 //   t.Add(typeof(Field.WritingSystemId));
 			return t;
 		}
 

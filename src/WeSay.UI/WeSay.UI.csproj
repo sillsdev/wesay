@@ -28,6 +28,14 @@
 	<WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+	<Reference Include="KeymanLink, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\KeymanLink.dll</HintPath>
+	</Reference>
+	<Reference Include="NetReflector, Version=1.0.0.0, Culture=neutral">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\NetReflector.dll</HintPath>
+	</Reference>
 	<Reference Include="System" />
 	<Reference Include="System.Data" />
 	<Reference Include="System.Design" />
@@ -88,6 +96,10 @@
 	<EmbeddedResource Include="DetailList.resx">
 	  <SubType>Designer</SubType>
 	  <DependentUpon>DetailList.cs</DependentUpon>
+	</EmbeddedResource>
+	<EmbeddedResource Include="WeSayTextBox.resx">
+	  <SubType>Designer</SubType>
+	  <DependentUpon>WeSayTextBox.cs</DependentUpon>
 	</EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

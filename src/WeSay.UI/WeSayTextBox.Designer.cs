@@ -28,7 +28,14 @@ namespace WeSay.UI
 		/// </summary>
 		private void InitializeComponent()
 		{
-			components = new System.ComponentModel.Container();
+			this.SuspendLayout();
+			//
+			// WeSayTextBox
+			//
+			this.Enter += new System.EventHandler(this.WeSayTextBox_Enter);
+			this.Leave += new System.EventHandler(this.WeSayTextBox_Leave);
+			this.ResumeLayout(false);
+
 		}
 
 		#endregion

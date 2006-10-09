@@ -7,7 +7,8 @@ namespace WeSay.UI
 {
 	public partial class WeSayTextBox : TextBox
 	{
-	   // private bool _isGhost;
+		private KeymanLink.KeymanLink _keymanLink;
+		// private bool _isGhost;
 		public WeSayTextBox()
 		{
 			InitializeComponent();
@@ -17,7 +18,7 @@ namespace WeSay.UI
 		 //   _isGhost = false;
 			InitializeComponent();
 			this.Font = ws.Font;
-
+			_keymanLink = new KeymanLink.KeymanLink();
 
 		}
 
@@ -88,6 +89,17 @@ namespace WeSay.UI
 		{
 				this.Text = ""; //ready for the next one
 				this.BackColor = SystemColors.Control;
+		}
+
+		private void WeSayTextBox_Enter(object sender, EventArgs e)
+		{
+			_keymanLink.SelectKeymanKeyboard("IPA Unicode 1.0.5",true );
+		}
+
+		private void WeSayTextBox_Leave(object sender, EventArgs e)
+		{
+			_keymanLink.SelectKeymanKeyboard(null, false);
+
 		}
 	}
 }

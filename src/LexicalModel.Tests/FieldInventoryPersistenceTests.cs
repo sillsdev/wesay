@@ -48,9 +48,9 @@ namespace WeSay.LexicalModel.Tests
 			Assert.AreEqual(1, doc.SelectNodes("field/name").Count);
 			Assert.AreEqual("one", doc.SelectNodes("field/name")[0].InnerText);
 
-			Assert.AreEqual(2, doc.SelectNodes("field/writingSystems/writingSystem/id").Count);
-			Assert.AreEqual("xx", doc.SelectNodes("field/writingSystems/writingSystem/id")[0].InnerText);
-			Assert.AreEqual("yy", doc.SelectNodes("field/writingSystems/writingSystem/id")[1].InnerText);
+			Assert.AreEqual(2, doc.SelectNodes("field/writingSystems/id").Count);
+			Assert.AreEqual("xx", doc.SelectNodes("field/writingSystems/id")[0].InnerText);
+			Assert.AreEqual("yy", doc.SelectNodes("field/writingSystems/id")[1].InnerText);
 		}
 
 

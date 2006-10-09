@@ -50,6 +50,9 @@ namespace WeSay.LexicalModel
 				_fieldName = value;
 			}
 		}
+
+
+		[ReflectorProperty("writingSystems", typeof(WsIdCollectionSerializerFactory))]
 		public List<string> WritingSystemIds
 		{
 			get
@@ -72,99 +75,6 @@ namespace WeSay.LexicalModel
 			}
 		}
 
-		/// <summary>
-		/// hack for netreflector use only
-		/// </summary>
-		[ReflectorProperty("writingSystems", Required = false)]
-		public List<WritingSystemId> WrappedWritingSystemIds
-		{
-			get
-			{
-				List<WritingSystemId> l = new List<WritingSystemId>();
-				foreach (string s in _writingSystemIds)
-				{
-					l.Add(new WritingSystemId(s));
-				}
-				return l;
-			}
-			set
-			{
-				_writingSystemIds.Clear();
-				foreach (WritingSystemId id in value)
-				{
-					_writingSystemIds.Add(id._id);
-				}
-			}
-		}
-
-		[ReflectorType("writingSystem")]
-		public class WritingSystemId
-		{
-		 [ReflectorProperty("id", typeof(WsIdFactory))]
-		  public  string _id;
-
-			public WritingSystemId()
-			{
-
-			}
-
-		   public WritingSystemId(string s)
-		   {
-			   _id = s;
-		   }
-
-
-			internal class WsIdFactory : ISerialiserFactory
-			{
-				public IXmlMemberSerialiser Create(ReflectorMember member, ReflectorPropertyAttribute attribute)
-				{
-					return new WsIdSerializer(member, attribute);
-				}
-			}
-
-			internal class WsIdSerializer : XmlMemberSerialiser
-			{
-				public WsIdSerializer(ReflectorMember member, ReflectorPropertyAttribute attribute)
-					: base(member, attribute)
-				{ }
-
-				public override void Write(XmlWriter writer, object target)
-				{
-					object value =target;
-					writer.WriteStartElement("id");
-					WriteValue(writer, value.ToString());
-					writer.WriteEndElement();
-				}
-
-				public override object Read(XmlNode node, NetReflectorTypeTable table)
-				{
-					System.Diagnostics.Debug.Assert(node.Name == "id");
-					System.Diagnostics.Debug.Assert(node != null);
-					return node.InnerText;
-				}
-			}
-		}
-
-//        public Field(string FieldName, params string[] writingSystems)
-//        {
-
-//            if(writingSystems == null)
-//            {
-//                throw new ArgumentNullException("writingSystems");
-//            }
-//            int i = 0;
-//            foreach (string s in writingSystems)
-//            {
-//                i++;
-//                if(s==null)
-//                {
-//                    throw new ArgumentNullException("writingSystem",
-//                                                    "Writing System argument" + i.ToString() + "is null");
-//                }
-//            }
-//            _fieldName = FieldName;
-//            _writingSystems = writingSystems;
-//        }
 
 		public bool HasWritingSystem(string writingSystemId)
 		{
@@ -174,5 +84,47 @@ namespace WeSay.LexicalModel
 											return s == writingSystemId;
 										});
 		}
+
+		#region persistence
+		internal class WsIdCollectionSerializerFactory : ISerialiserFactory
+		{
+			public IXmlMemberSerialiser Create(ReflectorMember member, ReflectorPropertyAttribute attribute)
+			{
+				return new WsIdCollectionSerializer(member, attribute);
+			}
+		}
+
+		internal class WsIdCollectionSerializer : XmlMemberSerialiser
+		{
+			public WsIdCollectionSerializer(ReflectorMember member, ReflectorPropertyAttribute attribute)
+				: base(member, attribute)
+			{ }
+
+			public override void Write(XmlWriter writer, object target)
+			{
+				object value = target;
+				writer.WriteStartElement("writingSystems");
+				foreach (string s in ((Field)target)._writingSystemIds)
+				{
+					writer.WriteElementString("id", s);
+				}
+				writer.WriteEndElement();
+			}
+
+			public override object Read(XmlNode node, NetReflectorTypeTable table)
+			{
+				System.Diagnostics.Debug.Assert(node.Name == "writingSystems");
+				System.Diagnostics.Debug.Assert(node != null);
+				List<string> l = new List<string>();
+				foreach (XmlNode n in node.SelectNodes("id"))
+				{
+					l.Add(n.InnerText);
+				}
+				return l;
+			}
+		}
+
+		#endregion
+
 	}
 }

@@ -4,18 +4,14 @@
 	<field class="WeSay.LexicalModel.Field" assembly="WeSay.LexicalModel">
 	  <name>LexicalForm</name>
 	  <writingSystems>
-		<writingSystem>
-		  <id>xx</id>
-		</writingSystem>
-		<writingSystem>
+		   <id>xx</id>
 		  <id>yy</id>
-		</writingSystem>
-	  </writingSystems>>
+	   </writingSystems>
 	</field>
 	<field class="WeSay.LexicalModel.Field" assembly="WeSay.LexicalModel">
 	  <name>Gloss</name>
 	  <writingSystems>
-		<writingSystem><id>zz</id></writingSystem>
+		<id>zz</id>
 	  </writingSystems>
 	</field>
   </fields>
