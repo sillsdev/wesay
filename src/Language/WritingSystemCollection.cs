@@ -146,6 +146,7 @@ namespace WeSay.Language
 			}
 			set
 			{
+				this.Clear();
 				foreach(WritingSystem w in value)
 				{
 					this.Add(w.Id,w);

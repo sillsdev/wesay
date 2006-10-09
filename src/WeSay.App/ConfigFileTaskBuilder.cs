@@ -1,6 +1,7 @@
 using System;
 using PicoContainer;
 using PicoContainer.Defaults;
+using WeSay.LexicalModel;
 using WeSay.UI;
 using System.IO;
 using System.Collections.Generic;
@@ -36,11 +37,10 @@ namespace WeSay.App
 				XPathNodeIterator componentList = navigator.SelectChildren(string.Empty, string.Empty);
 				foreach (XPathNavigator component in componentList)
 				{
-					string id = RegisterComponent(component);
-
-					//typical error here: PicoInitializationException("Either do the specified parameters not match any of....
-					//may mean you have an extra (unused), missing, or out-of-order parameter element in the xml.
-					_picoContext.GetComponentInstance(id);
+					System.Diagnostics.Debug.Assert(component.Name == "fieldInventory");
+					FieldInventory inventory = new FieldInventory();
+					inventory.LoadFromString(component.OuterXml);
+					_picoContext.RegisterComponentInstance(component.GetAttribute("id",String.Empty), inventory);
 				}
 			}
 		}

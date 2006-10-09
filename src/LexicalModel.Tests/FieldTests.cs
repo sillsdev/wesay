@@ -21,21 +21,21 @@ namespace WeSay.LexicalModel.Tests
 		[Test]
 		public void CreateNoWritingSystem()
 		{
-			Field field = new Field("fieldName");
+			Field field = new Field("fieldName", new string[] { });
 			Assert.IsNotNull(field);
 		}
 
 		[Test]
 		public void CreateSingleWritingSystem()
 		{
-			Field field = new Field("fieldName", "writingSystemId");
+			Field field = new Field("fieldName", new string[] { "writingSystemId" });
 			Assert.IsNotNull(field);
 		}
 
 		[Test]
 		public void CreateMultipleWritingSystems()
 		{
-			Field field = new Field("fieldName", "writingSystemId1", "writingSystemId2", "writingSystemId3");
+			Field field = new Field("fieldName", new string[] {"writingSystemId1", "writingSystemId2", "writingSystemId3"});
 			Assert.IsNotNull(field);
 		}
 
@@ -43,7 +43,7 @@ namespace WeSay.LexicalModel.Tests
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void Create_NullFieldName_Throws()
 		{
-			new Field(null, "writingSystem");
+			new Field(null, new string[] { "writingSystem" });
 		}
 
 		[Test]
@@ -57,27 +57,27 @@ namespace WeSay.LexicalModel.Tests
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void Create_NullWritingSystems_Throws()
 		{
-			new Field("fieldName", null, null);
+			new Field("fieldName", new string[] { null, null });
 		}
 
 		[Test]
 		public void HasWritingSystem_Null_False()
 		{
-			Field field = new Field("fieldName", "writingSystemId1", "writingSystemId2", "writingSystemId3");
+			Field field = new Field("fieldName", new string[] {"writingSystemId1", "writingSystemId2", "writingSystemId3"});
 			Assert.IsFalse(field.HasWritingSystem(null));
 		}
 
 		[Test]
 		public void HasWritingSystem_Exists_True()
 		{
-			Field field = new Field("fieldName", "writingSystemId1", "writingSystemId2", "writingSystemId3");
+			Field field = new Field("fieldName", new string[] {"writingSystemId1", "writingSystemId2", "writingSystemId3"});
 			Assert.IsTrue(field.HasWritingSystem("writingSystemId3"));
 		}
 
 		[Test]
 		public void HasWritingSystem_NotExists_False()
 		{
-			Field field = new Field("fieldName", "writingSystemId1", "writingSystemId2", "writingSystemId3");
+			Field field = new Field("fieldName", new string[] {"writingSystemId1", "writingSystemId2", "writingSystemId3"});
 			Assert.IsFalse(field.HasWritingSystem("3"));
 			Assert.IsFalse(field.HasWritingSystem(String.Empty));
 		}
@@ -85,16 +85,16 @@ namespace WeSay.LexicalModel.Tests
 		[Test]
 		public void GetFieldName_InitializedFromConstructor()
 		{
-			Field field = new Field("fieldName", "writingSystemId");
+			Field field = new Field("fieldName", new string[] { "writingSystemId" });
 			Assert.AreEqual("fieldName", field.FieldName);
 		}
 
 		[Test]
 		public void GetWritingSystems()
 		{
-			Field field = new Field("fieldName", "writingSystemId1", "writingSystemId2", "writingSystemId3");
-			Assert.AreEqual(3, field.WritingSystems.Length);
-			Assert.Contains("writingSystemId1", field.WritingSystems);
+			Field field = new Field("fieldName", new string[] {"writingSystemId1", "writingSystemId2", "writingSystemId3"});
+			Assert.AreEqual(3, field.WritingSystemIds.Count);
+			Assert.Contains("writingSystemId1", field.WritingSystemIds);
 		}
 
 	}

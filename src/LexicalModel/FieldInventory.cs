@@ -1,31 +1,66 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Xml;
+using Exortech.NetReflector;
+using WeSay.Language;
 
 namespace WeSay.LexicalModel
 {
-	public class FieldInventory : ICollection<Field>
+	[ReflectorType("fieldInventory")]
+	public class FieldInventory : List<Field>
 	{
-		private Field[] _fields;
 
-		public FieldInventory(params Field[] fields)
+		public FieldInventory()
 		{
-			if(fields == null)
+
+		}
+
+//        public FieldInventory(params Field[] fields)
+//        {
+//            if(fields == null)
+//            {
+//                throw new ArgumentNullException();
+//            }
+//            int i = 0;
+//            foreach (Field field in fields)
+//            {
+//                i++;
+//                if (field == null)
+//                {
+//                    throw new ArgumentNullException("field",
+//                                                    "field argument" + i.ToString() + "is null");
+//                }
+//            }
+//
+//            _fields = fields;
+//        }
+
+
+
+		/// <summary>
+		/// For serialization only
+		/// </summary>
+		[ReflectorCollection("fields", Required = true)]
+		public List<Field> Fields
+		{
+			get
 			{
-				throw new ArgumentNullException();
+				return this;
 			}
-			int i = 0;
-			foreach (Field field in fields)
+			set
 			{
-				i++;
-				if (field == null)
+				this.Clear();
+				foreach (Field  f in value)
 				{
-					throw new ArgumentNullException("field",
-													"field argument" + i.ToString() + "is null");
+					if (f == null)
+					{
+						throw new ArgumentNullException("field",
+														"one of the fields is null");
+					}
+					this.Add(f);
 				}
 			}
-
-			_fields = fields;
 		}
 
 		///<summary>
@@ -57,7 +92,7 @@ namespace WeSay.LexicalModel
 			{
 				throw new ArgumentNullException();
 			}
-			field = Array.Find<Field>(_fields,
+			field = Find(
 						   delegate(Field f)
 						   {
 							   return f.FieldName == fieldName;
@@ -70,15 +105,15 @@ namespace WeSay.LexicalModel
 			return true;
 		}
 
-		void ICollection<Field>.Add(Field item)
-		{
-			throw new NotSupportedException();
-		}
+//        public void ICollection<Field>.Add(Field item)
+//        {
+//            Fields.
+//        }
 
-		void ICollection<Field>.Clear()
-		{
-			throw new NotSupportedException();
-		}
+//        void ICollection<Field>.Clear()
+//        {
+//            throw new NotSupportedException();
+//        }
 
 		///<summary>
 		///Determines whether the <see cref="T:System.Collections.Generic.ICollection`1"></see> contains a specific value.
@@ -89,14 +124,14 @@ namespace WeSay.LexicalModel
 		///</returns>
 		///
 		///<param name="item">The object to locate in the <see cref="T:System.Collections.Generic.ICollection`1"></see>.</param>
-		public bool Contains(Field item)
-		{
-			return -1 != Array.IndexOf<Field>(_fields, item);
-		}
+//        public bool Contains(Field item)
+//        {
+//            return -1 != Array.IndexOf<Field>(_fields, item);
+//        }
 
 		public bool Contains(string fieldName)
 		{
-			return Array.Exists<Field>(_fields,
+			return Exists(
 									   delegate(Field field)
 									   {
 										   return field.FieldName == fieldName;
@@ -112,15 +147,15 @@ namespace WeSay.LexicalModel
 		///<exception cref="T:System.ArgumentOutOfRangeException">arrayIndex is less than 0.</exception>
 		///<exception cref="T:System.ArgumentNullException">array is null.</exception>
 		///<exception cref="T:System.ArgumentException">array is multidimensional.-or-arrayIndex is equal to or greater than the length of array.-or-The number of elements in the source <see cref="T:System.Collections.Generic.ICollection`1"></see> is greater than the available space from arrayIndex to the end of the destination array.-or-Type T cannot be cast automatically to the type of the destination array.</exception>
-		public void CopyTo(Field[] array, int arrayIndex)
-		{
-			_fields.CopyTo(array, arrayIndex);
-		}
+//        public void CopyTo(Field[] array, int arrayIndex)
+//        {
+//            _fields.CopyTo(array, arrayIndex);
+//        }
 
-		bool ICollection<Field>.Remove(Field item)
-		{
-			throw new NotSupportedException();
-		}
+//        bool ICollection<Field>.Remove(Field item)
+//        {
+//            throw new NotSupportedException();
+//        }
 
 		///<summary>
 		///Gets the number of elements contained in the <see cref="T:System.Collections.Generic.ICollection`1"></see>.
@@ -130,13 +165,13 @@ namespace WeSay.LexicalModel
 		///The number of elements contained in the <see cref="T:System.Collections.Generic.ICollection`1"></see>.
 		///</returns>
 		///
-		public int Count
-		{
-			get
-			{
-				return _fields.Length;
-			}
-		}
+//        public int Count
+//        {
+//            get
+//            {
+//                return _fields.Length;
+//            }
+//        }
 
 		///<summary>
 		///Gets a value indicating whether the <see cref="T:System.Collections.Generic.ICollection`1"></see> is read-only.
@@ -146,13 +181,13 @@ namespace WeSay.LexicalModel
 		///true
 		///</returns>
 		///
-		public bool IsReadOnly
-		{
-			get
-			{
-				return true;
-			}
-		}
+//        public bool IsReadOnly
+//        {
+//            get
+//            {
+//                return true;
+//            }
+//        }
 
 		///<summary>
 		///Returns an enumerator that iterates through the collection.
@@ -161,14 +196,14 @@ namespace WeSay.LexicalModel
 		///<returns>
 		///A <see cref="T:System.Collections.Generic.IEnumerator`1"></see> that can be used to iterate through the collection.
 		///</returns>
-		///<filterpriority>1</filterpriority>
-		IEnumerator<Field> IEnumerable<Field>.GetEnumerator()
-		{
-			foreach (Field field in _fields)
-			{
-				yield return field;
-			}
-		}
+//        ///<filterpriority>1</filterpriority>
+//        IEnumerator<Field> IEnumerable<Field>.GetEnumerator()
+//        {
+//            foreach (Field field in _fields)
+//            {
+//                yield return field;
+//            }
+//        }
 
 		///<summary>
 		///Returns an enumerator that iterates through a collection.
@@ -178,10 +213,65 @@ namespace WeSay.LexicalModel
 		///An <see cref="T:System.Collections.IEnumerator"></see> object that can be used to iterate through the collection.
 		///</returns>
 		///<filterpriority>2</filterpriority>
-		public IEnumerator GetEnumerator()
+//        public IEnumerator GetEnumerator()
+//        {
+//            return _fields.GetEnumerator();
+//        }
+//
+//
+		#region persistence
+
+		public void Load(string path)
 		{
-			return _fields.GetEnumerator();
+			NetReflectorReader r = new NetReflectorReader(MakeTypeTable());
+			XmlReader reader = XmlReader.Create(path);
+			try
+			{
+				r.Read(reader, this);
+			}
+			finally
+			{
+				reader.Close();
+			}
 		}
 
-	}
+		public void LoadFromString(string xml)
+		{
+			NetReflectorReader r = new NetReflectorReader(MakeTypeTable());
+			XmlReader reader = XmlReader.Create(new System.IO.StringReader(xml));
+			try
+			{
+				r.Read(reader, this);
+			}
+			finally
+			{
+				reader.Close();
+			}
+		}
+
+		public void Write(XmlWriter writer)
+		{
+			try
+			{
+				writer.WriteStartDocument();
+			   NetReflector.Write(writer, this);
+			}
+			finally
+			{
+				writer.Close();
+			}
+		}
+
+		private NetReflectorTypeTable MakeTypeTable()
+		{
+			NetReflectorTypeTable t = new NetReflectorTypeTable();
+			t.Add(typeof(FieldInventory ));
+			t.Add(typeof(Field));
+			t.Add(typeof(Field.WritingSystemId));
+			return t;
+		}
+
+		#endregion
+	 }
+
 }

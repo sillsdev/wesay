@@ -26,21 +26,21 @@ namespace WeSay.LexicalModel.Tests
 			Assert.IsNotNull(fieldInventory);
 		}
 
-		[Test]
-		[ExpectedException(typeof(ArgumentNullException))]
-		public void Create_NullFields_Throws()
-		{
-			FieldInventory fieldInventory = new FieldInventory(null);
-			Assert.IsNotNull(fieldInventory);
-		}
-
-		[Test]
-		[ExpectedException(typeof(ArgumentNullException))]
-		public void Create_NullField_Throws()
-		{
-			FieldInventory fieldInventory = new FieldInventory(null,null);
-			Assert.IsNotNull(fieldInventory);
-		}
+//        [Test]
+//        [ExpectedException(typeof(ArgumentNullException))]
+//        public void Create_NullFields_Throws()
+//        {
+//            FieldInventory fieldInventory = new FieldInventory(null);
+//            Assert.IsNotNull(fieldInventory);
+//        }
+//
+//        [Test]
+//        [ExpectedException(typeof(ArgumentNullException))]
+//        public void Create_NullField_Throws()
+//        {
+//            FieldInventory fieldInventory = new FieldInventory(null,null);
+//            Assert.IsNotNull(fieldInventory);
+//        }
 
 		[Test]
 		public void Contains_HasFieldDefinition_True()
@@ -99,10 +99,11 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		private static FieldInventory PopulateFieldInventory() {
-			Field field1 = new Field("field1", "en", "br", "th");
-			Field field2 = new Field("field2", "th");
-			Field field3 = new Field("field2", "en", "br");
-			return new FieldInventory(field1, field2, field3);
+			FieldInventory f = new FieldInventory();
+			f.Add(new Field("field1", new string[] { "en", "br", "th" }));
+			f.Add(new Field("field2",  new string[]{"th"}));
+			f.Add(new Field("field2",  new string[]{"en", "br"}));
+			return f;
 		}
 	}
 

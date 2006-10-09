@@ -2,15 +2,27 @@
   <tasks>
 	<components>
 	  <fieldInventory id="defaultFieldInventory" class="WeSay.UI.FieldInventory" assembly="WeSay.UI">
-		<field class="WeSay.LexicalModel.Field" assembly="WeSay.LexicalModel">
-		  <name>LexicalForm</name>
-		  <writingSystemId>th</writingSystemId>
-		  <writingSystemId>th-ipa</writingSystemId>
-		</field>
-		<field class="WeSay.LexicalModel.Field" assembly="WeSay.LexicalModel">
-		  <name>Gloss</name>
-		  <writingSystemId>en</writingSystemId>
-		</field>
+		<fields>
+		  <field class="WeSay.LexicalModel.Field" assembly="WeSay.LexicalModel">
+			<name>LexicalForm</name>
+			<writingSystems>
+			  <writingSystem>
+				<id>th</id>
+			  </writingSystem>
+			  <writingSystem>
+				<id>th-ipa</id>
+			  </writingSystem>
+			</writingSystems>
+		  </field>
+		  <field class="WeSay.LexicalModel.Field" assembly="WeSay.LexicalModel">
+			<name>Gloss</name>
+			<writingSystems>
+			  <writingSystem>
+				<id>en</id>
+			  </writingSystem>
+			</writingSystems>
+		  </field>
+		</fields>
 	  </fieldInventory>
 	</components>
 	<task id="Dashboard" class="WeSay.CommonTools.DashboardControl" assembly="CommonTools" default="true">
