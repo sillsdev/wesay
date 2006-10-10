@@ -47,5 +47,5 @@
 	<label>Add Meanings</label>
 	<description>Add meanings to entries where they are missing.</description>
 	<fieldInventory ref="Default Field Inventory"/>
-	<showfields>Gloss</showfields>
+	<showfields>SenseGloss</showfields>
   </task></tasks>

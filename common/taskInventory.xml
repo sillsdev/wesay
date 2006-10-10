@@ -23,7 +23,7 @@
 	<label>Add Meanings</label>
 	<description>Add meanings to entries where they are missing.</description>
 	<fieldInventory ref="Default Field Inventory"/>
-	<showfields>Gloss</showfields>
+	<showfields>SenseGloss</showfields>
   </task>
 
   <task id="AddExamples" class="WeSay.LexicalTools.LexFieldTask" assembly="LexicalTools">
@@ -34,7 +34,7 @@
 	<label>Add Examples</label>
 	<description>Add example sentences to entries where they are missing.</description>
 	<fieldInventory ref="Default Field Inventory"/>
-	<showfields>Sentence</showfields>
+	<showfields>ExampleSentence</showfields>
   </task>
 
   <task id="Gather Words" class="WeSay.LexicalTools.GatherWordListTask" assembly="LexicalTools">
