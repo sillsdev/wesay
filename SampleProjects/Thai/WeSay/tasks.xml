@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <tasks>
   <components>
-	<fieldInventory>
+	<fieldInventory id="Default Field Inventory">
 	  <fields>
 		<field>
 		  <name>EntryLexicalForm</name>
@@ -35,16 +35,18 @@
   </task>
   <task id="EntryDetail" class="WeSay.LexicalTools.EntryDetailTask" assembly="LexicalTools" default="true">
 	<entries ref="All Entries" />
+	<fieldInventory ref="Default Field Inventory"/>
 	<label UseInConstructor="false">Words</label>
 	<description UseInConstructor="false">This task allows the user to see and edit all enabled fields of all entries in the dictionary.  He can add, delete, and search for entries.</description>
   </task>
   <task id="AddMeanings" class="WeSay.LexicalTools.LexFieldTask" assembly="LexicalTools" default="true">
 	<entries ref="All Entries" />
 	<filter class="WeSay.LexicalModel.MissingGlossFilter" assembly="LexicalModel">
-	  <writingSystemId>en</writingSystemId>
+	  <fieldInventory ref="Default Field Inventory"/>
 	</filter>
 	<label>Add Meanings</label>
 	<description>Add meanings to entries where they are missing.</description>
+	<fieldInventory ref="Default Field Inventory"/>
 	<showfields>Gloss</showfields>
   </task>
   <task id="Gather Words" class="WeSay.LexicalTools.GatherWordListTask" assembly="LexicalTools">

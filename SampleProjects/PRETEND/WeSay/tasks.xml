@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <tasks>
   <components>
-	<fieldInventory>
+	<fieldInventory id="Default Field Inventory">
 	  <fields>
 		<field>
 		  <name>EntryLexicalForm</name>
@@ -25,4 +25,28 @@
 		</field>
 	  </fields>
 	</fieldInventory>
-  </components><task id="Dashboard" class="WeSay.CommonTools.DashboardControl" assembly="CommonTools" default="true"><entries ref="All Entries" /><currentTaskProvider ref="Current Task Provider" /><label UseInConstructor="false">Dashboard</label><description UseInConstructor="false">This task is normally the first thing the user sees when WeSay comes up.  It gives the user some status of the project, and reminds him what he was working on. Finally, this tab will allow him to switch to a different work task, if you have enabled more than one.</description><optional UseInConstructor="false">false</optional></task><task id="EntryDetail" class="WeSay.LexicalTools.EntryDetailTask" assembly="LexicalTools" default="true"><entries ref="All Entries" /><fieldInventory ref="defaultFieldInventory" /><label UseInConstructor="false">Words</label><description UseInConstructor="false">This task allows the user to see and edit all enabled fields of all entries in the dictionary.  He can add, delete, and search for entries.</description></task><task id="AddMeanings" class="WeSay.LexicalTools.LexFieldTask" assembly="LexicalTools" default="true"><entries ref="All Entries" /><filter class="WeSay.LexicalModel.MissingGlossFilter" assembly="LexicalModel"><fieldInventory ref="defaultFieldInventory" /></filter><label>Add Meanings</label><description>Add meanings to entries where they are missing.</description><fieldInventory ref="defaultFieldInventory" /><showfields>Gloss</showfields></task></tasks>
+  </components>
+  <task id="Dashboard" class="WeSay.CommonTools.DashboardControl" assembly="CommonTools" default="true">
+	<entries ref="All Entries" />
+	<currentTaskProvider ref="Current Task Provider" />
+	<label UseInConstructor="false">Dashboard</label>
+	<description UseInConstructor="false">This task is normally the first thing the user sees when WeSay comes up.  It gives the user some status of the project, and reminds him what he was working on. Finally, this tab will allow him to switch to a different work task, if you have enabled more than one.</description>
+	<optional UseInConstructor="false">false</optional>
+  </task>
+  <task id="EntryDetail" class="WeSay.LexicalTools.EntryDetailTask" assembly="LexicalTools" default="true">
+	<entries ref="All Entries" />
+	<fieldInventory ref="Default Field Inventory"/>
+	<label UseInConstructor="false">Words</label>
+	<description UseInConstructor="false">This task allows the user to see and edit all enabled fields of all entries in the dictionary.  He can add, delete, and search for entries.</description>
+  </task>
+  <task id="AddMeanings" class="WeSay.LexicalTools.LexFieldTask" assembly="LexicalTools" default="true">
+	<entries ref="All Entries" />
+	<filter class="WeSay.LexicalModel.MissingGlossFilter" assembly="LexicalModel">
+	  <fieldInventory ref="defaultFieldInventory" />
+	</filter>
+	<label>Add Meanings</label>
+	<description>Add meanings to entries where they are missing.</description>
+	<fieldInventory ref="defaultFieldInventory" />
+	<showfields>Gloss</showfields>
+  </task>
+</tasks>
