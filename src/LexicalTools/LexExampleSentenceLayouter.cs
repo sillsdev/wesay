@@ -26,7 +26,7 @@ namespace WeSay.LexicalTools
 			LexExampleSentence example = (LexExampleSentence)list[index];
 
 			Field field;
-			if (FieldInventory.TryGetField("Sentence", out field))
+			if (FieldInventory.TryGetField(Field.FieldNames.ExampleSentence.ToString(), out field))
 			{
 				foreach (string writingSystemId in field.WritingSystemIds)
 				{
@@ -37,7 +37,7 @@ namespace WeSay.LexicalTools
 				}
 			}
 
-			if (FieldInventory.TryGetField("Translation", out field))
+			if (FieldInventory.TryGetField(Field.FieldNames.ExampleTranslation.ToString(), out field))
 			{
 				foreach (string writingSystemId in field.WritingSystemIds)
 				{
@@ -55,7 +55,7 @@ namespace WeSay.LexicalTools
 		{
 			int rowCount = 0;
 			Field field;
-			if (FieldInventory.TryGetField("Sentence", out field))
+			if (FieldInventory.TryGetField(Field.FieldNames.ExampleSentence.ToString(), out field))
 			{
 				foreach (string writingSystemId in field.WritingSystemIds)
 				{

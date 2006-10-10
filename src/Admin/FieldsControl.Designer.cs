@@ -29,12 +29,12 @@ namespace WeSay.Admin
 		private void InitializeComponent()
 		{
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-			this.checkedListBox1 = new System.Windows.Forms.CheckedListBox();
+			this._fieldsListBox = new System.Windows.Forms.CheckedListBox();
 			this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
-			this.checkedListBox2 = new System.Windows.Forms.CheckedListBox();
+			this._writingSystemListBox = new System.Windows.Forms.CheckedListBox();
 			this.groupBox2 = new System.Windows.Forms.GroupBox();
-			this.label1 = new System.Windows.Forms.Label();
+			this._descriptionBox = new System.Windows.Forms.TextBox();
 			this.richTextBox1 = new System.Windows.Forms.RichTextBox();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
@@ -54,7 +54,7 @@ namespace WeSay.Admin
 			//
 			// splitContainer1.Panel1
 			//
-			this.splitContainer1.Panel1.Controls.Add(this.checkedListBox1);
+			this.splitContainer1.Panel1.Controls.Add(this._fieldsListBox);
 			//
 			// splitContainer1.Panel2
 			//
@@ -63,11 +63,11 @@ namespace WeSay.Admin
 			this.splitContainer1.SplitterDistance = 169;
 			this.splitContainer1.TabIndex = 0;
 			//
-			// checkedListBox1
+			// _fieldsListBox
 			//
-			this.checkedListBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.checkedListBox1.FormattingEnabled = true;
-			this.checkedListBox1.Items.AddRange(new object[] {
+			this._fieldsListBox.Dock = System.Windows.Forms.DockStyle.Fill;
+			this._fieldsListBox.FormattingEnabled = true;
+			this._fieldsListBox.Items.AddRange(new object[] {
 			"Word",
 			"Meaning (Gloss)",
 			"Definition",
@@ -75,10 +75,10 @@ namespace WeSay.Admin
 			"Translation of Example Sentence",
 			"Semantic Domains",
 			"Grammatical Category"});
-			this.checkedListBox1.Location = new System.Drawing.Point(0, 0);
-			this.checkedListBox1.Name = "checkedListBox1";
-			this.checkedListBox1.Size = new System.Drawing.Size(169, 259);
-			this.checkedListBox1.TabIndex = 0;
+			this._fieldsListBox.Location = new System.Drawing.Point(0, 0);
+			this._fieldsListBox.Name = "_fieldsListBox";
+			this._fieldsListBox.Size = new System.Drawing.Size(169, 259);
+			this._fieldsListBox.TabIndex = 0;
 			//
 			// tableLayoutPanel1
 			//
@@ -97,7 +97,7 @@ namespace WeSay.Admin
 			//
 			// groupBox1
 			//
-			this.groupBox1.Controls.Add(this.checkedListBox2);
+			this.groupBox1.Controls.Add(this._writingSystemListBox);
 			this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.groupBox1.Location = new System.Drawing.Point(3, 136);
 			this.groupBox1.Name = "groupBox1";
@@ -107,23 +107,25 @@ namespace WeSay.Admin
 			this.groupBox1.TabStop = false;
 			this.groupBox1.Text = "Show these Writing Systems in this field";
 			//
-			// checkedListBox2
+			// _writingSystemListBox
 			//
-			this.checkedListBox2.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.checkedListBox2.FormattingEnabled = true;
-			this.checkedListBox2.Items.AddRange(new object[] {
+			this._writingSystemListBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+						| System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
+			this._writingSystemListBox.FormattingEnabled = true;
+			this._writingSystemListBox.Items.AddRange(new object[] {
 			"Foo(IPA)",
 			"Foo(Thai)",
 			"Thai",
 			"English"});
-			this.checkedListBox2.Location = new System.Drawing.Point(7, 20);
-			this.checkedListBox2.Name = "checkedListBox2";
-			this.checkedListBox2.Size = new System.Drawing.Size(314, 94);
-			this.checkedListBox2.TabIndex = 0;
+			this._writingSystemListBox.Location = new System.Drawing.Point(7, 20);
+			this._writingSystemListBox.Name = "_writingSystemListBox";
+			this._writingSystemListBox.Size = new System.Drawing.Size(314, 94);
+			this._writingSystemListBox.TabIndex = 0;
 			//
 			// groupBox2
 			//
-			this.groupBox2.Controls.Add(this.label1);
+			this.groupBox2.Controls.Add(this._descriptionBox);
 			this.groupBox2.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.groupBox2.Location = new System.Drawing.Point(3, 3);
 			this.groupBox2.Name = "groupBox2";
@@ -132,14 +134,16 @@ namespace WeSay.Admin
 			this.groupBox2.TabStop = false;
 			this.groupBox2.Text = "About This Field";
 			//
-			// label1
+			// _descriptionBox
 			//
-			this.label1.AutoSize = true;
-			this.label1.Location = new System.Drawing.Point(20, 29);
-			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(83, 13);
-			this.label1.TabIndex = 0;
-			this.label1.Text = "Blah blah blah...";
+			this._descriptionBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+						| System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
+			this._descriptionBox.Location = new System.Drawing.Point(7, 20);
+			this._descriptionBox.Multiline = true;
+			this._descriptionBox.Name = "_descriptionBox";
+			this._descriptionBox.Size = new System.Drawing.Size(314, 101);
+			this._descriptionBox.TabIndex = 0;
 			//
 			// richTextBox1
 			//
@@ -163,6 +167,7 @@ namespace WeSay.Admin
 			this.Name = "FieldsControl";
 			this.Padding = new System.Windows.Forms.Padding(7);
 			this.Size = new System.Drawing.Size(521, 331);
+			this.Load += new System.EventHandler(this.FieldsControl_Load);
 			this.splitContainer1.Panel1.ResumeLayout(false);
 			this.splitContainer1.Panel2.ResumeLayout(false);
 			this.splitContainer1.ResumeLayout(false);
@@ -177,12 +182,12 @@ namespace WeSay.Admin
 		#endregion
 
 		private System.Windows.Forms.SplitContainer splitContainer1;
-		private System.Windows.Forms.CheckedListBox checkedListBox1;
+		private System.Windows.Forms.CheckedListBox _fieldsListBox;
 		private System.Windows.Forms.RichTextBox richTextBox1;
 		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
 		private System.Windows.Forms.GroupBox groupBox1;
-		private System.Windows.Forms.CheckedListBox checkedListBox2;
+		private System.Windows.Forms.CheckedListBox _writingSystemListBox;
 		private System.Windows.Forms.GroupBox groupBox2;
-		private System.Windows.Forms.Label label1;
+		private System.Windows.Forms.TextBox _descriptionBox;
 	}
 }

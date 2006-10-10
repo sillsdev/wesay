@@ -13,7 +13,7 @@ namespace WeSay.LexicalModel
 			{
 				throw new ArgumentNullException();
 			}
-			if(field.FieldName != "Gloss")
+			if (field.FieldName != Field.FieldNames.SenseGloss.ToString())
 			{
 				throw new ArgumentOutOfRangeException("field", "should be Gloss field definition");
 			}
@@ -26,12 +26,12 @@ namespace WeSay.LexicalModel
 			{
 				throw new ArgumentNullException();
 			}
-			if(!fieldInventory.Contains("Gloss"))
+			if (!fieldInventory.Contains(Field.FieldNames.SenseGloss.ToString()))
 			{
 				throw new ArgumentOutOfRangeException("field", "should contain Gloss field definition");
 			}
 			Field field;
-			if (!fieldInventory.TryGetField("Gloss", out field))
+			if (!fieldInventory.TryGetField(Field.FieldNames.SenseGloss.ToString(), out field))
 			{
 				throw new ArgumentOutOfRangeException("field", "should contain Sentence field definition");
 			}

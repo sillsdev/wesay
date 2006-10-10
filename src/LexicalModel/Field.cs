@@ -11,6 +11,17 @@ namespace WeSay.LexicalModel
 	{
 		private string _fieldName;
 		private List<string> _writingSystemIds;
+		private string _displayName="unknown";
+		private string _description="";
+		public enum VisibilitySetting {Invisible, Visible};
+		private VisibilitySetting _visibility=VisibilitySetting.Visible ;
+
+		/// <summary>
+		/// These are just for getting the strings right, using ToString(). In order
+		/// To allow extensions later, we aren't using these as a closed list of possible
+		/// values.
+		/// </summary>
+		public enum FieldNames {EntryLexicalForm, SenseGloss, ExampleSentence, ExampleTranslation};
 
 		public Field(string fieldName, IEnumerable<string> writingSystemIds)
 		{
@@ -51,6 +62,10 @@ namespace WeSay.LexicalModel
 			}
 		}
 
+		public override string ToString()
+		{
+			return _fieldName;
+		}
 
 		[ReflectorProperty("writingSystems", typeof(WsIdCollectionSerializerFactory))]
 		public IList<string> WritingSystemIds
@@ -73,6 +88,25 @@ namespace WeSay.LexicalModel
 				}
 				_writingSystemIds = new List<string>(value);
 			}
+		}
+
+		public string DisplayName
+		{
+			get { return _displayName; }
+			set { _displayName = value; }
+		}
+
+		public string Description
+		{
+			get { return _description; }
+			set { _description = value; }
+		}
+
+		[ReflectorCollection("visibility", Required=false)]
+		public VisibilitySetting Visibility
+		{
+			get { return _visibility; }
+			set { _visibility = value; }
 		}
 
 

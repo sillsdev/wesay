@@ -26,7 +26,7 @@ namespace WeSay.LexicalTools.Tests
 			BasilProject.InitializeForTests();
 
 			this._recordListManager = new InMemoryRecordListManager();
-			Field field = new Field("Gloss", new string[]{BasilProject.Project.WritingSystems.VernacularWritingSystemDefault.Id});
+			Field field = new Field(Field.FieldNames.SenseGloss.ToString() , new string[]{BasilProject.Project.WritingSystems.VernacularWritingSystemDefault.Id});
 			this._filter = new MissingGlossFilter(field);
 			this._recordListManager.Register<LexEntry>(_filter);
 
@@ -41,8 +41,8 @@ namespace WeSay.LexicalTools.Tests
 			this._description = "My description";
 
 			this._fieldInventory = new FieldInventory();
-			this._fieldInventory.Add(new Field("Gloss", new string[] { "en" }));
-			this._fieldInventory.Add(new Field("Sentence", new string[] { "th" }));
+			this._fieldInventory.Add(new Field(Field.FieldNames.SenseGloss.ToString(), new string[] { "en" }));
+			this._fieldInventory.Add(new Field(Field.FieldNames.ExampleSentence.ToString(), new string[] { "th" }));
 
 			this._task = new LexFieldTask(_recordListManager, _filter, _label, _description, _fieldInventory, _fieldsToShow);
 
@@ -189,12 +189,12 @@ namespace WeSay.LexicalTools.Tests
 		{
 			FieldInventory fieldInventory = new FieldInventory();
 			string[] writingSystemIds = new string[] { "en" };
-			fieldInventory.Add(new Field("Gloss", writingSystemIds));
-			fieldInventory.Add(new Field("PrefixGloss", writingSystemIds));
+			fieldInventory.Add(new Field("Dummy", writingSystemIds));
+			fieldInventory.Add(new Field("PrefixDummy", writingSystemIds));
 
-			LexFieldTask task = new LexFieldTask(_recordListManager, _filter, _label, _description, fieldInventory, "PrefixGloss Gloss");
-			Assert.AreEqual(true, task.FieldInventory.Contains("Gloss"));
-			Assert.AreEqual(true, task.FieldInventory.Contains("PrefixGloss"));
+			LexFieldTask task = new LexFieldTask(_recordListManager, _filter, _label, _description, fieldInventory, "PrefixDummy Dummy");
+			Assert.AreEqual(true, task.FieldInventory.Contains("Dummy"));
+			Assert.AreEqual(true, task.FieldInventory.Contains("PrefixDummy"));
 		}
 
 		[Test]
@@ -202,12 +202,12 @@ namespace WeSay.LexicalTools.Tests
 		{
 			FieldInventory fieldInventory = new FieldInventory();
 			string[] writingSystemIds = new string[] { "en" };
-			fieldInventory.Add(new Field("Gloss", writingSystemIds));
-			fieldInventory.Add(new Field("PrefixGloss", writingSystemIds));
+			fieldInventory.Add(new Field("Dummy", writingSystemIds));
+			fieldInventory.Add(new Field("PrefixDummy", writingSystemIds));
 
-			LexFieldTask task = new LexFieldTask(_recordListManager, _filter, _label, _description, fieldInventory, "Gloss");
-			Assert.AreEqual(true, task.FieldInventory.Contains("Gloss"));
-			Assert.AreEqual(false, task.FieldInventory.Contains("PrefixGloss"));
+			LexFieldTask task = new LexFieldTask(_recordListManager, _filter, _label, _description, fieldInventory, "Dummy");
+			Assert.AreEqual(true, task.FieldInventory.Contains("Dummy"));
+			Assert.AreEqual(false, task.FieldInventory.Contains("PrefixDummy"));
 		}
 
 	}

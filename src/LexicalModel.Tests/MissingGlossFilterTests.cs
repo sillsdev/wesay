@@ -10,7 +10,7 @@ namespace WeSay.LexicalModel.Tests
 		[SetUp]
 		public void Setup()
 		{
-			Field field = new Field("Gloss", new string[] { "analysis" });
+			Field field = new Field(Field.FieldNames.SenseGloss.ToString(), new string[] { "analysis" });
 			this._missingGlossFilter = new MissingGlossFilter(field);
 		}
 

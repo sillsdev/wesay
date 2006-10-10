@@ -35,7 +35,7 @@ namespace WeSay.LexicalTools
 		{
 			int rowCount = 0;
 			Field field;
-			if (FieldInventory.TryGetField("LexicalForm", out field))
+			if (FieldInventory.TryGetField(Field.FieldNames.EntryLexicalForm.ToString(), out field))
 			{
 				foreach (string writingSystemId in field.WritingSystemIds)
 				{

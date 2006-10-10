@@ -13,7 +13,7 @@ namespace WeSay.LexicalModel
 			{
 				throw new ArgumentNullException();
 			}
-			if (field.FieldName != "Sentence")
+			if (field.FieldName != Field.FieldNames.ExampleSentence.ToString())
 			{
 				throw new ArgumentOutOfRangeException("field", "should be Sentence field definition");
 			}
@@ -27,7 +27,7 @@ namespace WeSay.LexicalModel
 				throw new ArgumentNullException();
 			}
 			Field field;
-			if (!fieldInventory.TryGetField("Sentence", out field))
+			if (!fieldInventory.TryGetField(Field.FieldNames.ExampleSentence.ToString(), out field))
 			{
 				throw new ArgumentOutOfRangeException("field", "should contain Sentence field definition");
 			}

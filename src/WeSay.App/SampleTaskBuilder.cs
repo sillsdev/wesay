@@ -26,10 +26,10 @@ namespace WeSay.App
 			string[] analysisWritingSystemIds = new string[] { project.WritingSystems.AnalysisWritingSystemDefaultId };
 			string[] vernacularWritingSystemIds = new string[] {project.WritingSystems.VernacularWritingSystemDefaultId};
 			FieldInventory fieldInventory = new FieldInventory();
-			fieldInventory.Add(new Field("LexicalForm", vernacularWritingSystemIds));
-			fieldInventory.Add(new Field("Gloss", analysisWritingSystemIds));
-			fieldInventory.Add(new Field("Sentence", vernacularWritingSystemIds));
-			fieldInventory.Add(new Field("Translation", analysisWritingSystemIds));
+			fieldInventory.Add(new Field(Field.FieldNames.EntryLexicalForm.ToString(), vernacularWritingSystemIds));
+			fieldInventory.Add(new Field(Field.FieldNames.SenseGloss .ToString(), analysisWritingSystemIds));
+			fieldInventory.Add(new Field(Field.FieldNames.ExampleSentence.ToString(), vernacularWritingSystemIds));
+			fieldInventory.Add(new Field(Field.FieldNames.ExampleTranslation.ToString(), analysisWritingSystemIds));
 			_picoContext.RegisterComponentInstance("Default Field Inventory", fieldInventory);
 		}
 

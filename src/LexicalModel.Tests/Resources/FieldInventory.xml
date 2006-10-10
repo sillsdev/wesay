@@ -2,14 +2,16 @@
 <fieldInventory id="defaultFieldInventory" class="WeSay.UI.FieldInventory" assembly="WeSay.UI">
   <fields>
 	<field class="WeSay.LexicalModel.Field" assembly="WeSay.LexicalModel">
-	  <name>LexicalForm</name>
+	  <name>EntryLexicalForm</name>
+	  <visibility>Visible</visibility>
 	  <writingSystems>
 		   <id>xx</id>
 		  <id>yy</id>
 	   </writingSystems>
 	</field>
 	<field class="WeSay.LexicalModel.Field" assembly="WeSay.LexicalModel">
-	  <name>Gloss</name>
+	  <name>SenseGloss</name>
+	  <visibility>Invisible</visibility>
 	  <writingSystems>
 		<id>zz</id>
 	  </writingSystems>

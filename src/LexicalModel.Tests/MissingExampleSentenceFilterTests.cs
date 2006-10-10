@@ -10,7 +10,7 @@ namespace WeSay.LexicalModel.Tests
 		[SetUp]
 	public void Setup()
 		{
-			Field field = new Field("Sentence", new string[] { "vernacular" });
+			Field field = new Field(Field.FieldNames.ExampleSentence.ToString(), new string[] { "vernacular" });
 			this._missingExampleSentenceFilter = new MissingExampleSentenceFilter(field);
 
 		}

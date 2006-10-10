@@ -48,6 +48,8 @@ namespace WeSay.LexicalModel.Tests
 			Assert.AreEqual(1, doc.SelectNodes("field/name").Count);
 			Assert.AreEqual("one", doc.SelectNodes("field/name")[0].InnerText);
 
+			Assert.AreEqual("Visible", doc.SelectNodes("field/visibility")[0].InnerText);
+
 			Assert.AreEqual(2, doc.SelectNodes("field/writingSystems/id").Count);
 			Assert.AreEqual("xx", doc.SelectNodes("field/writingSystems/id")[0].InnerText);
 			Assert.AreEqual("yy", doc.SelectNodes("field/writingSystems/id")[1].InnerText);
@@ -87,15 +89,17 @@ namespace WeSay.LexicalModel.Tests
 			System.Text.StringBuilder builder = new System.Text.StringBuilder();
 			XmlWriter writer = XmlWriter.Create(builder);
 			f.Write(writer);
-
+			writer.Close();
 			return builder.ToString();
 		}
 
 		private static FieldInventory MakeSampleInventory()
 		{
 			FieldInventory f = new FieldInventory();
-			f.Add(new Field("LexicalForm", new string[] { "xx", "yy" }));
-			f.Add(new Field("Gloss", new string[] { "zz" }));
+			f.Add(new Field(Field.FieldNames.EntryLexicalForm.ToString(), new string[] { "xx", "yy" }));
+			Field field = new Field(Field.FieldNames.SenseGloss.ToString(), new string[] { "zz" });
+			field.Visibility = Field.VisibilitySetting.Invisible;
+			f.Add(field);
 			return f;
 		}
 
@@ -116,20 +120,23 @@ namespace WeSay.LexicalModel.Tests
 		private static void CheckInventoryMatchesDefinitionInResource(FieldInventory f)
 		{
 			Assert.AreEqual(2,f.Count);
-			Assert.AreEqual("LexicalForm", f[0].FieldName);
+			Assert.AreEqual(Field.FieldNames.EntryLexicalForm.ToString(), f[0].FieldName);
+			Assert.AreEqual(Field.VisibilitySetting.Visible, f[0].Visibility);
 			Assert.AreEqual(2, f[0].WritingSystemIds.Count);
 			Assert.AreEqual("xx", f[0].WritingSystemIds[0]);
 			Assert.AreEqual("yy", f[0].WritingSystemIds[1]);
-			Assert.AreEqual("Gloss", f[1].FieldName);
+			Assert.AreEqual(Field.FieldNames.SenseGloss.ToString(), f[1].FieldName);
 			Assert.AreEqual(1, f[1].WritingSystemIds.Count);
+			Assert.AreEqual(Field.VisibilitySetting.Invisible, f[1].Visibility);
 			Assert.AreEqual("zz", f[1].WritingSystemIds[0]);
 		}
 
 		[Test]
 		public void DeserializeInvAndLoadBackIn()
 		{
-			MakeSampleInventory().Write(XmlWriter.Create(_path));
-
+			XmlWriter writer = XmlWriter.Create(_path);
+			MakeSampleInventory().Write(writer);
+			writer.Close();
 			FieldInventory f = new FieldInventory();
 			f.Load(_path);
 			Assert.IsNotNull(f);

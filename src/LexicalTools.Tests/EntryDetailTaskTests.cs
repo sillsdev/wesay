@@ -19,10 +19,10 @@ namespace WeSay.LexicalTools.Tests
 			string[] analysisWritingSystemIds = new string[] { BasilProject.Project.WritingSystems.AnalysisWritingSystemDefaultId };
 			string[] vernacularWritingSystemIds = new string[] { BasilProject.Project.WritingSystems.VernacularWritingSystemDefaultId };
 			_fieldInventory = new FieldInventory();
-			this._fieldInventory.Add(new Field("LexicalForm", vernacularWritingSystemIds));
-			this._fieldInventory.Add(new Field("Gloss", analysisWritingSystemIds));
-			this._fieldInventory.Add(new Field("Sentence", vernacularWritingSystemIds));
-			this._fieldInventory.Add(new Field("Translation", analysisWritingSystemIds));
+			this._fieldInventory.Add(new Field(Field.FieldNames.EntryLexicalForm.ToString(), vernacularWritingSystemIds));
+			this._fieldInventory.Add(new Field(Field.FieldNames.SenseGloss.ToString(), analysisWritingSystemIds));
+			this._fieldInventory.Add(new Field(Field.FieldNames.ExampleSentence.ToString(), vernacularWritingSystemIds));
+			this._fieldInventory.Add(new Field(Field.FieldNames.ExampleTranslation.ToString(), analysisWritingSystemIds));
 
 			_recordListManager = new InMemoryRecordListManager();
 			_task = new EntryDetailTask(_recordListManager, this._fieldInventory);

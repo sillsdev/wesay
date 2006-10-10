@@ -131,11 +131,12 @@ namespace WeSay.LexicalModel
 
 		public bool Contains(string fieldName)
 		{
-			return Exists(
-									   delegate(Field field)
-									   {
-										   return field.FieldName == fieldName;
-									   });
+			Field field;
+			if (!TryGetField(fieldName, out field))
+			{
+				return false;
+			}
+			return field.Visibility == Field.VisibilitySetting.Visible;
 		}
 
 		///<summary>
@@ -249,17 +250,13 @@ namespace WeSay.LexicalModel
 			}
 		}
 
+		/// <summary>
+		/// Does not "start" the xml doc, no close the writer
+		/// </summary>
+		/// <param name="writer"></param>
 		public void Write(XmlWriter writer)
 		{
-			try
-			{
-				writer.WriteStartDocument();
-			   NetReflector.Write(writer, this);
-			}
-			finally
-			{
-				writer.Close();
-			}
+			 NetReflector.Write(writer, this);
 		}
 
 		private NetReflectorTypeTable MakeTypeTable()

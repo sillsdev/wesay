@@ -35,6 +35,14 @@ namespace WeSay.Admin
 			XmlWriter writer = XmlWriter.Create(WeSayWordsProject.Project.PathToProjectTaskInventory, settings);
 			writer.WriteStartDocument();
 			writer.WriteStartElement("tasks");
+
+			writer.WriteStartElement("components");
+			if (AdminWindow.SharedFieldInventory != null)
+			{
+				AdminWindow.SharedFieldInventory.Write(writer);
+			}
+			writer.WriteEndElement();
+
 			foreach (TaskInfo t in _taskList.Items)
 			{
 				if (_taskList.GetItemChecked(_taskList.Items.IndexOf(t)))
@@ -53,20 +61,7 @@ namespace WeSay.Admin
 			{
 				XmlDocument inventoryDoc = new XmlDocument();
 				inventoryDoc.Load(Path.Combine(BasilProject.Project.ApplicationCommonDirectory, "taskInventory.xml"));
-				XmlDocument projectDoc = null;
-				if (File.Exists(WeSayWordsProject.Project.PathToProjectTaskInventory))
-				{
-					try
-					{
-						projectDoc = new XmlDocument();
-						projectDoc.Load(WeSayWordsProject.Project.PathToProjectTaskInventory);
-					}
-					catch (Exception e)
-					{
-						MessageBox.Show("There was a problem reading the task xml. " + e.Message);
-						projectDoc = null;
-					}
-				}
+				XmlDocument projectDoc = GetProjectDoc();
 
 				//if there are no tasks, might as well be no document, so clear it out
 				if(projectDoc != null && (null == projectDoc.SelectSingleNode("tasks/task")))
@@ -97,6 +92,25 @@ namespace WeSay.Admin
 			{
 				MessageBox.Show("There may have been a problem reading the master task inventory xml. " + error.Message);
 			}
+		}
+
+		private static XmlDocument GetProjectDoc()
+		{
+			XmlDocument projectDoc = null;
+			if (File.Exists(WeSayWordsProject.Project.PathToProjectTaskInventory))
+			{
+				try
+				{
+					projectDoc = new XmlDocument();
+					projectDoc.Load(WeSayWordsProject.Project.PathToProjectTaskInventory);
+				}
+				catch (Exception e)
+				{
+					MessageBox.Show("There was a problem reading the task xml. " + e.Message);
+					projectDoc = null;
+				}
+			}
+			return projectDoc;
 		}
 
 		private void _taskList_SelectedIndexChanged(object sender, EventArgs e)

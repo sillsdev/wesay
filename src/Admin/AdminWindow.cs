@@ -15,6 +15,12 @@ namespace WeSay.Admin
 		private ProjectTabs _projectTabs;
 		private WeSayWordsProject _project;
 
+		/// <summary>
+		/// This is probably temporary while we transition to the tasks xml being
+		/// driven by some class model rather than just XML.
+		/// </summary>
+		public static FieldInventory SharedFieldInventory;
+
 		public AdminWindow()
 		{
 
