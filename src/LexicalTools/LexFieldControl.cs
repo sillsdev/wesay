@@ -1,111 +1,80 @@
 using System;
-using System.ComponentModel;
+using System.Drawing;
 using System.Windows.Forms;
-using WeSay.UI;
 using WeSay.LexicalModel;
+using WeSay.UI;
+using WeSay.Data;
 
 namespace WeSay.LexicalTools
 {
 	public partial class LexFieldControl : UserControl
 	{
-		private FieldInventory _fieldInventory;
-		LexEntry _record;
+		private IRecordList<LexEntry> _records;
+		private readonly FieldInventory _fieldInventory;
+		public event EventHandler SelectedIndexChanged;
 
-		private void Initialize()
+		public LexFieldControl(IRecordList<LexEntry> records, FieldInventory fieldInventory)
 		{
-			_entryDetailControl.CurrentItemChanged += new EventHandler<CurrentItemEventArgs>(OnCurrentItemChanged);
-		}
-
-		public LexFieldControl(FieldInventory fieldInventory)
-		{
+			if (records == null)
+			{
+				throw new ArgumentNullException("records");
+			}
+			if(fieldInventory == null)
+			{
+				throw new ArgumentNullException("fieldInventory");
+			}
+			_records = records;
 			_fieldInventory = fieldInventory;
+
 			InitializeComponent();
-			Initialize();
+			_lexFieldDetailPanel.BackColor = SystemColors.Control;//we like it to stand out at design time, but not runtime
+			_lexFieldDetailPanel.DataSource = CurrentRecord;
+
+			_recordsListBox.DataSource = _records;
+			_recordsListBox.Font = BasilProject.Project.WritingSystems.VernacularWritingSystemDefault.Font;
+			_recordsListBox.AutoSize();
+			_recordsListBox.Columns.StretchToFit();
+
+
+			_recordsListBox.SelectedIndexChanged += new EventHandler(OnRecordSelectionChanged);
+
 		}
 
-		[Browsable(false)]
-		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-		public FieldInventory  FieldInventory
+		void OnRecordSelectionChanged(object sender, EventArgs e)
+		{
+			_lexFieldDetailPanel.DataSource = CurrentRecord;
+			if (SelectedIndexChanged != null)
+			{
+				SelectedIndexChanged.Invoke(this,null);
+			}
+		}
+
+		protected int CurrentIndex
+		{
+			get { return _recordsListBox.SelectedIndex; }
+		}
+
+		public LexPreviewWithEntryControl ControlDetails
 		{
 			get
 			{
-				if(_fieldInventory == null)
-				{
-					throw new InvalidOperationException("FieldInventory must be initialized prior to being used.");
-				}
-				return _fieldInventory;
-			}
-			set
-			{
-				if (value == null)
-				{
-					throw new ArgumentNullException();
-				}
-				_fieldInventory = value;
-				Refresh();
+				return _lexFieldDetailPanel;
 			}
 		}
-
-		public RichTextBox ControlFormattedView
+		/// <summary>
+		/// Gets current record as selected in record list
+		/// </summary>
+		/// <value>null if record list is empty</value>
+		private LexEntry CurrentRecord
 		{
 			get
 			{
-				return _lexicalEntryView;
-			}
-		}
-
-		public EntryDetailControl ControlEntryDetail
-		{
-			get
-			{
-				return _entryDetailControl;
-			}
-		}
-
-		public LexEntry DataSource
-		{
-			get
-			{
-				return _record;
-			}
-			set
-			{
-				if (_record != null)
+				if (_records.Count == 0)
 				{
-					_record.PropertyChanged -= OnRecordPropertyChanged;
+					return null;
 				}
-				_record = value;
-				_entryDetailControl.DataSource = value;
-				_currentItem = null;
-				if (_record == null)
-				{
-					_lexicalEntryView.Text = String.Empty;
-				}
-				else
-				{
-					_record.PropertyChanged +=new PropertyChangedEventHandler(OnRecordPropertyChanged);
-
-					RefreshLexicalEntryView();
-				}
+				return _records[CurrentIndex];// _currentIndex];
 			}
 		}
-
-		private void OnRecordPropertyChanged(object sender, PropertyChangedEventArgs e)
-		{
-			RefreshLexicalEntryView();
-		}
-
-		private void RefreshLexicalEntryView()
-		{
-			_lexicalEntryView.Rtf = RtfRenderer.ToRtf(_record, _currentItem);
-		}
-
-		private void OnCurrentItemChanged(object sender, CurrentItemEventArgs e)
-		{
-			_currentItem = e;
-			RefreshLexicalEntryView();
-		}
-
-		private CurrentItemEventArgs _currentItem;
 	}
 }

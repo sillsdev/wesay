@@ -1,48 +1,83 @@
 using System;
+using System.Diagnostics;
+using System.Drawing;
+using System.Windows.Forms;
+using WeSay.Data;
 using WeSay.LexicalModel;
+using WeSay.UI;
 
 namespace WeSay.LexicalTools
 {
-	public partial class EntryDetailControl : WeSay.UI.DetailList
+	public partial class EntryDetailControl : UserControl
 	{
+		private IRecordList<LexEntry> _records;
 		private readonly FieldInventory _fieldInventory;
+		public event EventHandler SelectedIndexChanged;
 
-		public EntryDetailControl(FieldInventory fieldInventory)
-			: base()
+		public EntryDetailControl(IRecordList<LexEntry> records, FieldInventory fieldInventory)
 		{
-			if(fieldInventory == null)
+			if (records == null)
 			{
-				throw new ArgumentNullException();
+				throw new ArgumentNullException("records");
 			}
+			if (fieldInventory == null)
+			{
+				throw new ArgumentNullException("fieldInventory");
+			}
+			_records = records;
 			_fieldInventory = fieldInventory;
-		}
-		private LexEntry _record;
+			InitializeComponent();
+			_entryDetailPanel.BackColor = SystemColors.Control;//we like it to stand out at design time, but not runtime
+			_entryDetailPanel.DataSource = CurrentRecord;
 
-		public LexEntry DataSource{
+			_recordsListBox.DataSource = _records;
+			_recordsListBox.Font = BasilProject.Project.WritingSystems.VernacularWritingSystemDefault.Font;
+			_recordsListBox.AutoSize();
+			_recordsListBox.Columns.StretchToFit();
+
+			_recordsListBox.SelectedIndexChanged += new EventHandler(OnRecordSelectionChanged);
+		}
+
+		void OnRecordSelectionChanged(object sender, EventArgs e)
+		{
+			_entryDetailPanel.DataSource = CurrentRecord;
+			_btnDeleteWord.Enabled = (CurrentRecord != null);
+			if (SelectedIndexChanged != null)
+			{
+				SelectedIndexChanged.Invoke(this,null);
+			}
+		}
+
+		private LexEntry CurrentRecord
+		{
 			get
 			{
-				return _record;
-			}
-			set
-			{
-				_record = value;
-
-				Refresh();
+				if (_records.Count == 0)
+				{
+					return null;
+				}
+				return _records[CurrentIndex];
 			}
 		}
 
-		public override void Refresh()
+		protected int CurrentIndex
 		{
-			SuspendLayout();
-			Clear();
-			if (_record != null)
-			{
-				LexEntryLayouter layout = new LexEntryLayouter(this, _fieldInventory);
-				layout.AddWidgets(_record);
-			}
+			get { return _recordsListBox.SelectedIndex; }
+		}
 
-			ResumeLayout(true);
-			base.Refresh();
+		private void _btnNewWord_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+		{
+			LexEntry entry = new LexEntry();
+			_records.Add(entry);
+			_recordsListBox.SelectedIndex = _records.IndexOf(entry);
+		}
+
+		private void _btnDeleteWord_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+		{
+			Debug.Assert(CurrentIndex >= 0);
+			_records.RemoveAt(CurrentIndex);
+			//hack until we can get selection change events sorted out in BindingGridList
+			OnRecordSelectionChanged(this, null);
 		}
 	}
 }

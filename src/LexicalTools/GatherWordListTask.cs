@@ -15,7 +15,7 @@ namespace WeSay.LexicalTools
 		private List<string> _words;
 
 		public GatherWordListTask(IRecordListManager recordListManager, string label, string description, string wordListFileName)
-			: base(label, description, recordListManager)
+			: base(label, description, false, recordListManager)
 		{
 			_wordListFileName = wordListFileName;
 			_words = null;

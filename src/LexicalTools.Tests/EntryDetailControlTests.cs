@@ -10,7 +10,6 @@ namespace WeSay.LexicalTools.Tests
 	[TestFixture]
 	public class EntryDetailControlTests : NUnit.Extensions.Forms.NUnitFormTest
 	{
-	   // private FormTester _mainWindowTester;
 		private EntryDetailTask _task;
 		IRecordListManager _recordListManager;
 		string _filePath;
@@ -18,6 +17,7 @@ namespace WeSay.LexicalTools.Tests
 		private string _vernacularWsId;
 		private TabControl _tabControl;
 		private Form _window;
+		private TabPage _detailTaskPage;
 
 		public override void Setup()
 		{
@@ -44,17 +44,16 @@ namespace WeSay.LexicalTools.Tests
 
 
 			this._task = new EntryDetailTask(_recordListManager, fieldInventory);
-			this._task.Dock = DockStyle.Fill;
-			TabPage detailTaskPage = new TabPage();
-			detailTaskPage.Controls.Add(this._task);
+			this._detailTaskPage = new TabPage();
+			ActivateTask();
+
 			this._tabControl = new TabControl();
 			this._tabControl.Dock = DockStyle.Fill;
-			this._tabControl.TabPages.Add(detailTaskPage);
+			this._tabControl.TabPages.Add(this._detailTaskPage);
 			this._tabControl.TabPages.Add("Dummy");
 			this._window = new Form();
 			this._window.Controls.Add(this._tabControl);
 			this._window.Show();
-			this._task.Activate();
 		}
 
 		private void AddEntry(string lexemeForm)
@@ -158,27 +157,34 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void SwitchingToAnotherTaskDoesNotLooseBindings()
 		{
-			NUnit.Extensions.Forms.TextBoxTester t = new TextBoxTester(GetLexicalFormControlName());
 		   LexicalFormMustMatch("Initial");
 			TypeInLexicalForm("one");
 			this._task.Deactivate();
-			t.Properties.Visible = false;
 			_tabControl.SelectedIndex = 1;
 			_tabControl.SelectedIndex = 0;
-			this._task.Activate();
+			ActivateTask();
+
+			NUnit.Extensions.Forms.TextBoxTester t = new TextBoxTester(GetLexicalFormControlName());
 			t.Properties.Visible = true;
 
 			LexicalFormMustMatch("one");
 
-			t = new TextBoxTester(GetLexicalFormControlName());
 			TypeInLexicalForm("two");
 			this._task.Deactivate();
-			t.Properties.Visible = false;
 			_tabControl.SelectedIndex = 1;
 			_tabControl.SelectedIndex = 0;
-			this._task.Activate();
+			ActivateTask();
+			t = new TextBoxTester(GetLexicalFormControlName());
 			t.Properties.Visible = true;
 			LexicalFormMustMatch("two");
+		}
+
+		private void ActivateTask()
+		{
+			this._task.Activate();
+			this._task.Control.Dock = DockStyle.Fill;
+			this._detailTaskPage.Controls.Clear();
+			this._detailTaskPage.Controls.Add(this._task.Control);
 		}
 
 		private static void LexicalFormMustMatch(string value)

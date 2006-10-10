@@ -124,12 +124,12 @@ namespace WeSay.LexicalTools.Tests
 		{
 			LexFieldTask task = (LexFieldTask)_task;
 			task.Activate();
-			Assert.IsTrue(((LexFieldTool)task.Control).ControlDetails.ControlFormattedView.Text.Contains(_lexicalForm));
+			Assert.IsTrue(((LexFieldControl)task.Control).ControlDetails.ControlFormattedView.Text.Contains(_lexicalForm));
 			Assert.AreEqual(1, task.DataSource.Count);
 			task.Deactivate();
 			ClearMasterRecordList();
 			task.Activate();
-			Assert.AreEqual(string.Empty, ((LexFieldTool)task.Control).ControlDetails.ControlFormattedView.Text);
+			Assert.AreEqual(string.Empty, ((LexFieldControl)task.Control).ControlDetails.ControlFormattedView.Text);
 			Assert.AreEqual(0, task.DataSource.Count);
 			task.Deactivate();
 		}

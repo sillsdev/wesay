@@ -47,6 +47,9 @@
 	<Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+	<Compile Include="EntryDetailControl.Designer.cs">
+	  <DependentUpon>EntryDetailControl.cs</DependentUpon>
+	</Compile>
 	<Compile Include="GatherWordListControl.cs">
 	  <SubType>UserControl</SubType>
 	</Compile>
@@ -54,19 +57,15 @@
 	  <DependentUpon>GatherWordListControl.cs</DependentUpon>
 	</Compile>
 	<Compile Include="GatherWordListTask.cs" />
-	<Compile Include="LexFieldTool.cs">
+	<Compile Include="LexFieldControl.cs">
 	  <SubType>UserControl</SubType>
 	</Compile>
-	<Compile Include="LexFieldTool.Designer.cs">
-	  <DependentUpon>LexFieldTool.cs</DependentUpon>
+	<Compile Include="LexFieldControl.Designer.cs">
+	  <DependentUpon>LexFieldControl.cs</DependentUpon>
 	</Compile>
 	<Compile Include="LexFieldTask.cs">
 	</Compile>
 	<Compile Include="EntryDetailTask.cs">
-	  <SubType>UserControl</SubType>
-	</Compile>
-	<Compile Include="EntryDetailTask.Designer.cs">
-	  <DependentUpon>EntryDetailTask.cs</DependentUpon>
 	</Compile>
 	<Compile Include="EntryDetailControl.cs">
 	  <SubType>UserControl</SubType>
@@ -74,11 +73,11 @@
 	<Compile Include="Layouter.cs" />
 	<Compile Include="LexEntryLayouter.cs" />
 	<Compile Include="LexExampleSentenceLayouter.cs" />
-	<Compile Include="LexFieldControl.cs">
+	<Compile Include="LexPreviewWithEntryControl.cs">
 	  <SubType>UserControl</SubType>
 	</Compile>
-	<Compile Include="LexFieldControl.Designer.cs">
-	  <DependentUpon>LexFieldControl.cs</DependentUpon>
+	<Compile Include="LexPreviewWithEntryControl.Designer.cs">
+	  <DependentUpon>LexPreviewWithEntryControl.cs</DependentUpon>
 	</Compile>
 	<Compile Include="LexSenseLayouter.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />
@@ -116,10 +115,6 @@
 	<EmbeddedResource Include="GatherWordListControl.resx">
 	  <SubType>Designer</SubType>
 	  <DependentUpon>GatherWordListControl.cs</DependentUpon>
-	</EmbeddedResource>
-	<EmbeddedResource Include="LexFieldTool.resx">
-	  <DependentUpon>LexFieldTool.cs</DependentUpon>
-	  <SubType>Designer</SubType>
 	</EmbeddedResource>
 	<EmbeddedResource Include="Properties\Resources.resx">
 	  <SubType>Designer</SubType>

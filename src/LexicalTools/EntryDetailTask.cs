@@ -1,6 +1,4 @@
 using System;
-using System.Diagnostics;
-using System.Drawing;
 using System.Windows.Forms;
 using WeSay.Data;
 using WeSay.LexicalModel;
@@ -8,143 +6,83 @@ using WeSay.UI;
 
 namespace WeSay.LexicalTools
 {
-	public partial class EntryDetailTask : UserControl,ITask
+	public class EntryDetailTask : TaskBase
 	{
-
-		private IRecordList<LexEntry> _records;
-		private bool _isActive;
-//        private int _currentIndex;
-		private IRecordListManager _recordListManager;
+		private EntryDetailControl _entryDetailControl;
 		private readonly FieldInventory _fieldInventory;
 
-		public EntryDetailTask(IRecordListManager recordListManager, FieldInventory fieldInventory)
+		public EntryDetailTask(IRecordListManager recordListManager,
+							FieldInventory fieldInventory)
+			: base("Dictionary", string.Empty, true, recordListManager)
 		{
-			if (recordListManager == null)
-			{
-				throw new ArgumentNullException("recordListManager");
-			}
 			if (fieldInventory == null)
 			{
 				throw new ArgumentNullException("fieldInventory");
 			}
 			_fieldInventory = fieldInventory;
-			InitializeComponent();
-			_recordListManager = recordListManager;
-			_records = recordListManager.Get<LexEntry>();
+		}
 
-
-			_entryDetailPanel.BackColor = SystemColors.Control;//we like it to stand out at design time, but not runtime
+		public override void Activate()
+		{
+			base.Activate();
+			_entryDetailControl = new EntryDetailControl(DataSource, FieldInventory);
+			_entryDetailControl.SelectedIndexChanged += new EventHandler(OnRecordSelectionChanged);
 		}
 
 		void OnRecordSelectionChanged(object sender, EventArgs e)
 		{
-//            _currentIndex = _recordsListBox.SelectedIndex;
-			_entryDetailPanel.DataSource = CurrentRecord;
-			_btnDeleteWord.Enabled = (CurrentRecord != null);
-			_recordListManager.GoodTimeToCommit();
+			RecordListManager.GoodTimeToCommit();
 		}
 
-
-		public void Activate()
+		public override void Deactivate()
 		{
-			if (IsActive)
-			{
-				throw new InvalidOperationException("Activate should not be called when object is active.");
-			}
-
-			_recordsListBox.DataSource = _records;
-			_entryDetailPanel.DataSource = CurrentRecord;
-			_recordsListBox.SelectedIndexChanged += new EventHandler(OnRecordSelectionChanged);
-
-			_recordsListBox.Font = BasilProject.Project.WritingSystems.VernacularWritingSystemDefault.Font;
-			_recordsListBox.AutoSize();
-			_recordsListBox.Columns.StretchToFit();
-			_isActive = true;
+			base.Deactivate();
+			_entryDetailControl.SelectedIndexChanged -= new EventHandler(OnRecordSelectionChanged);
+			_entryDetailControl.Dispose();
+			_entryDetailControl = null;
+			RecordListManager.GoodTimeToCommit();
 		}
 
-		public void Deactivate()
-		{
-			if (!IsActive)
-			{
-				throw new InvalidOperationException("Deactivate should only be called once after Activate.");
-			}
-			_recordsListBox.SelectedIndexChanged -= new EventHandler(OnRecordSelectionChanged);
-			_isActive = false;
-			_recordListManager.GoodTimeToCommit();
-		}
-
-		public bool IsActive
-		{
-			get { return this._isActive; }
-		}
-
-		public string Label
+		/// <summary>
+		/// The entry detail control associated with this task
+		/// </summary>
+		/// <remarks>Non null only when task is activated</remarks>
+		public override Control Control
 		{
 			get
 			{
-				return StringCatalog.Get("Dictionary");
+				return _entryDetailControl;
 			}
 		}
 
-		public string Description
+		public override string Status
 		{
 			get
 			{
-				return String.Format(StringCatalog.Get("See all {0} {1} words."), _records.Count, BasilProject.Project.Name);
+				return DataSource.Count.ToString();
 			}
 		}
 
-		public Control Control
-		{
-			get { return this; }
-		}
-
-		public bool IsPinned
+		public override string Description
 		{
 			get
 			{
-				return true;
+				return String.Format(StringCatalog.Get("See all {0} {1} words."), DataSource.Count, BasilProject.Project.Name);
 			}
 		}
 
-		public string Status
+		public IRecordList<LexEntry> DataSource
 		{
 			get
 			{
-				return string.Empty;
+				IRecordList<LexEntry> data = RecordListManager.Get<LexEntry>();
+				return data;
 			}
 		}
 
-		private LexEntry CurrentRecord
+		public FieldInventory FieldInventory
 		{
-			get
-			{
-				if (_records.Count == 0)
-				{
-					return null;
-				}
-				return _records[CurrentIndex];
-			}
-		}
-
-		protected int CurrentIndex
-		{
-			get { return _recordsListBox.SelectedIndex; }
-		}
-
-		private void _btnNewWord_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-		{
-			LexEntry entry = new LexEntry();
-			_records.Add(entry);
-			_recordsListBox.SelectedIndex = _records.IndexOf(entry);
-		}
-
-		private void _btnDeleteWord_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-		{
-			Debug.Assert(CurrentIndex >= 0);
-			_records.RemoveAt(CurrentIndex);
-			//hack until we can get selection change events sorted out in BindingGridList
-			OnRecordSelectionChanged(this, null);
+			get { return this._fieldInventory; }
 		}
 	}
 }

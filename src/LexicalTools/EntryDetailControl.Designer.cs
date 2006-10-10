@@ -2,7 +2,7 @@ using System;
 
 namespace WeSay.LexicalTools
 {
-	partial class EntryDetailTask
+	partial class EntryDetailControl
 	{
 		/// <summary>
 		/// Required designer variable.
@@ -15,6 +15,10 @@ namespace WeSay.LexicalTools
 		/// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
 		protected override void Dispose(bool disposing)
 		{
+			if (disposing && !IsDisposed)
+			{
+				_recordsListBox.SelectedIndexChanged -= OnRecordSelectionChanged;
+			}
 			if (disposing && (components != null))
 			{
 				components.Dispose();
@@ -31,7 +35,8 @@ namespace WeSay.LexicalTools
 		private void InitializeComponent()
 		{
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EntryDetailTask));
-			this._entryDetailPanel = new WeSay.LexicalTools.EntryDetailControl(_fieldInventory);
+			this._entryDetailPanel = new WeSay.LexicalTools.LexPreviewWithEntryControl(_fieldInventory);
+
 			this.panel1 = new System.Windows.Forms.Panel();
 			this._recordsListBox = new ListBox.BindingListGrid();
 			this._btnNewWord = new System.Windows.Forms.LinkLabel();
@@ -125,7 +130,7 @@ namespace WeSay.LexicalTools
 
 		#endregion
 
-		private EntryDetailControl _entryDetailPanel;
+		private LexPreviewWithEntryControl _entryDetailPanel;
 		private System.Windows.Forms.Panel panel1;
 		private ListBox.BindingListGrid _recordsListBox;
 		private System.Windows.Forms.LinkLabel _btnDeleteWord;

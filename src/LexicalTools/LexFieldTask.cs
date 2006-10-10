@@ -7,16 +7,17 @@ namespace WeSay.LexicalTools
 {
 	public class LexFieldTask : TaskBase
 	{
-		private LexFieldTool _lexFieldTool;
+		private LexFieldControl _lexFieldControl;
 		private readonly IFilter<LexEntry> _filter;
 		private readonly FieldInventory _fieldInventory;
+		private bool _dataHasBeenRetrieved;
 
 		public LexFieldTask(IRecordListManager recordListManager,
 					IFilter<LexEntry> filter,
 					string label,
 					string description,
 					FieldInventory fieldInventory)
-			: base(label, description, recordListManager)
+			: base(label, description, false, recordListManager)
 		{
 			if (filter == null)
 			{
@@ -72,9 +73,8 @@ namespace WeSay.LexicalTools
 		public override void Activate()
 		{
 			base.Activate();
-			_lexFieldTool = new LexFieldTool(DataSource, FieldInventory);
-			_lexFieldTool.SelectedIndexChanged += new EventHandler(OnRecordSelectionChanged);
-
+			_lexFieldControl = new LexFieldControl(DataSource, FieldInventory);
+			_lexFieldControl.SelectedIndexChanged += new EventHandler(OnRecordSelectionChanged);
 		}
 
 		void OnRecordSelectionChanged(object sender, EventArgs e)
@@ -85,21 +85,21 @@ namespace WeSay.LexicalTools
 		public override void Deactivate()
 		{
 			base.Deactivate();
-		   _lexFieldTool.SelectedIndexChanged -= new EventHandler(OnRecordSelectionChanged);
-			_lexFieldTool.Dispose();
-			_lexFieldTool = null;
+		   _lexFieldControl.SelectedIndexChanged -= new EventHandler(OnRecordSelectionChanged);
+			_lexFieldControl.Dispose();
+			_lexFieldControl = null;
 			RecordListManager.GoodTimeToCommit();
 		}
 
 		/// <summary>
-		/// The LexFieldTool associated with this task
+		/// The LexFieldControl associated with this task
 		/// </summary>
 		/// <remarks>Non null only when task is activated</remarks>
 		public override Control Control
 		{
 			get
 			{
-				return _lexFieldTool;
+				return _lexFieldControl;
 			}
 		}
 
@@ -107,11 +107,11 @@ namespace WeSay.LexicalTools
 		{
 			get
 			{
-				if (DataHasBeenRetrieved)
+				if (_dataHasBeenRetrieved)
 				{
 					return DataSource.Count.ToString();
 				}
-				return "?";
+				return String.Empty;
 			}
 		}
 
@@ -120,7 +120,7 @@ namespace WeSay.LexicalTools
 			get
 			{
 				IRecordList<LexEntry> data = RecordListManager.Get<LexEntry>(_filter);
-				DataHasBeenRetrieved = true;
+				_dataHasBeenRetrieved = true;
 				return data;
 			}
 		}

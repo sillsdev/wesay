@@ -10,14 +10,10 @@ namespace WeSay.LexicalTools
 		private IRecordListManager _recordListManager;
 		private string _label;
 		private string _description;
-		private bool _dataHasBeenRetrieved;
+		private readonly bool _isPinned;
 
-		public TaskBase(string label, string description, IRecordListManager recordListManager)
+		public TaskBase(string label, string description, bool isPinned, IRecordListManager recordListManager)
 		{
-			if (recordListManager == null)
-			{
-				throw new ArgumentNullException("recordListManager");
-			}
 			if (label == null)
 			{
 				throw new ArgumentNullException("label");
@@ -26,13 +22,17 @@ namespace WeSay.LexicalTools
 			{
 				throw new ArgumentNullException("description");
 			}
-
+			if (recordListManager == null)
+			{
+				throw new ArgumentNullException("recordListManager");
+			}
 			_recordListManager = recordListManager;
-			_label = label ;
+			_label = label;
 			_description = description;
+			_isPinned = isPinned;
 		}
 
-		public string Description
+		public virtual string Description
 		{
 			get
 			{
@@ -74,7 +74,7 @@ namespace WeSay.LexicalTools
 		}
 
 		/// <summary>
-		/// The LexFieldTool associated with this task
+		/// The control associated with this task
 		/// </summary>
 		/// <remarks>Non null only when task is activated</remarks>
 		public abstract Control Control
@@ -86,7 +86,7 @@ namespace WeSay.LexicalTools
 		{
 			get
 			{
-				return false;
+				return _isPinned;
 			}
 		}
 
@@ -94,14 +94,8 @@ namespace WeSay.LexicalTools
 		{
 			get
 			{
-				return "?";
+				return string.Empty;
 			}
-		}
-
-		protected bool DataHasBeenRetrieved
-		{
-			get { return this._dataHasBeenRetrieved; }
-			set { this._dataHasBeenRetrieved = value; }
 		}
 
 		protected IRecordListManager RecordListManager

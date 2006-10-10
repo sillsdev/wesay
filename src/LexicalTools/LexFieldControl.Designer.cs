@@ -13,13 +13,9 @@ namespace WeSay.LexicalTools
 		/// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
 		protected override void Dispose(bool disposing)
 		{
-			if (disposing && !this.IsDisposed)
+			if (disposing && !IsDisposed)
 			{
-				if (_record != null)
-				{
-					_record.PropertyChanged -= OnRecordPropertyChanged;
-				}
-				_entryDetailControl.CurrentItemChanged -= OnCurrentItemChanged;
+				_recordsListBox.SelectedIndexChanged -= OnRecordSelectionChanged;
 			}
 			if (disposing && (components != null))
 			{
@@ -36,44 +32,57 @@ namespace WeSay.LexicalTools
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this._lexicalEntryView = new System.Windows.Forms.RichTextBox();
-			this._entryDetailControl = new EntryDetailControl(_fieldInventory);
+			this._recordsListBox = new ListBox.BindingListGrid();
+			this._lexFieldDetailPanel = new WeSay.LexicalTools.LexPreviewWithEntryControl(_fieldInventory);
 			this.SuspendLayout();
 			//
-			// _lexicalEntryView
+			// _recordsListBox
 			//
-			this._lexicalEntryView.BackColor = System.Drawing.SystemColors.Control;
-			this._lexicalEntryView.BorderStyle = System.Windows.Forms.BorderStyle.None;
-			this._lexicalEntryView.Location = new System.Drawing.Point(3, 3);
-			this._lexicalEntryView.Name = "_lexicalEntryView";
-			this._lexicalEntryView.ReadOnly = true;
-			this._lexicalEntryView.Size = new System.Drawing.Size(450, 85);
-			this._lexicalEntryView.Text = "";
+			this._recordsListBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+						| System.Windows.Forms.AnchorStyles.Left)));
+			this._recordsListBox.GridToolTipActive = true;
+			this._recordsListBox.Location = new System.Drawing.Point(4, 5);
+			this._recordsListBox.MinimumSize = new System.Drawing.Size(0, 100);
+			this._recordsListBox.Name = "_recordsListBox";
+			this._recordsListBox.SelectedIndex = 0;
+			this._recordsListBox.Size = new System.Drawing.Size(116, 122);
+			this._recordsListBox.SpecialKeys = ((SourceGrid3.GridSpecialKeys)(((((((SourceGrid3.GridSpecialKeys.Arrows | SourceGrid3.GridSpecialKeys.Tab)
+						| SourceGrid3.GridSpecialKeys.PageDownUp)
+						| SourceGrid3.GridSpecialKeys.Enter)
+						| SourceGrid3.GridSpecialKeys.Escape)
+						| SourceGrid3.GridSpecialKeys.Control)
+						| SourceGrid3.GridSpecialKeys.Shift)));
+			this._recordsListBox.StyleGrid = null;
+			this._recordsListBox.TabIndex = 5;
 			//
-			// _entryDetailControl
+			// _lexFieldDetailPanel
 			//
-			this._entryDetailControl.Location = new System.Drawing.Point(3, 95);
-			this._entryDetailControl.Name = "_entryDetailControl";
-			this._entryDetailControl.Size = new System.Drawing.Size(450, 250);
-			this._entryDetailControl.TabIndex = 1;
-			this._entryDetailControl.BackColor = System.Drawing.SystemColors.Control;
+			this._lexFieldDetailPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+						| System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
+			this._lexFieldDetailPanel.AutoScroll = true;
+			this._lexFieldDetailPanel.BackColor = System.Drawing.SystemColors.ActiveCaption;
+			this._lexFieldDetailPanel.DataSource = null;
+			this._lexFieldDetailPanel.Location = new System.Drawing.Point(126, 5);
+			this._lexFieldDetailPanel.Name = "_lexFieldDetailPanel";
+			this._lexFieldDetailPanel.Size = new System.Drawing.Size(367, 122);
+			this._lexFieldDetailPanel.TabIndex = 4;
 			//
-			// LexFieldControl
+			// LexFieldTool
 			//
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.Controls.Add(this._lexicalEntryView);
-			this.Controls.Add(this._entryDetailControl);
-			this.Name = "LexFieldControl";
-			this.Size = new System.Drawing.Size(474, 370);
+			this.Controls.Add(this._recordsListBox);
+			this.Controls.Add(this._lexFieldDetailPanel);
+			this.Name = "LexFieldTool";
+			this.Size = new System.Drawing.Size(493, 169);
 			this.ResumeLayout(false);
-			this.PerformLayout();
 
 		}
 
 		#endregion
 
-		private System.Windows.Forms.RichTextBox _lexicalEntryView;
-		private EntryDetailControl _entryDetailControl;
+		private LexPreviewWithEntryControl _lexFieldDetailPanel;
+		private ListBox.BindingListGrid _recordsListBox;
 	}
 }
