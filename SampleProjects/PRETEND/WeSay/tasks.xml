@@ -5,7 +5,7 @@
 	  <fields>
 		<field>
 		  <name>EntryLexicalForm</name>
-		  <visibility>Visible</visibility>
+		  <visibility>Invisible</visibility>
 		  <writingSystems />
 		</field>
 		<field>
@@ -20,7 +20,7 @@
 		</field>
 		<field>
 		  <name>ExampleTranslation</name>
-		  <visibility>Visible</visibility>
+		  <visibility>Invisible</visibility>
 		  <writingSystems />
 		</field>
 	  </fields>
