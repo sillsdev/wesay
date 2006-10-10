@@ -6,22 +6,30 @@
 		<field>
 		  <name>EntryLexicalForm</name>
 		  <visibility>Invisible</visibility>
-		  <writingSystems />
+		  <writingSystems>
+			<id>th</id>
+		  </writingSystems>
 		</field>
 		<field>
 		  <name>SenseGloss</name>
 		  <visibility>Visible</visibility>
-		  <writingSystems />
+		  <writingSystems>
+			<id>en</id>
+		  </writingSystems>
 		</field>
 		<field>
 		  <name>ExampleSentence</name>
 		  <visibility>Invisible</visibility>
-		  <writingSystems />
+		  <writingSystems>
+			<id>th</id>
+		  </writingSystems>
 		</field>
 		<field>
 		  <name>ExampleTranslation</name>
 		  <visibility>Invisible</visibility>
-		  <writingSystems />
+		  <writingSystems>
+			<id>en</id>
+		  </writingSystems>
 		</field>
 	  </fields>
 	</fieldInventory>
