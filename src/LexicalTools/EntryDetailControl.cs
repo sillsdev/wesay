@@ -1,20 +1,22 @@
 using System;
-using System.ComponentModel;
-using System.Drawing;
-using System.Windows.Forms;
 using WeSay.LexicalModel;
-using WeSay.UI;
 
 namespace WeSay.LexicalTools
 {
 	public partial class EntryDetailControl : WeSay.UI.DetailList
 	{
+		private readonly FieldInventory _fieldInventory;
 
-		private LexEntry _record;
-
-		public EntryDetailControl()
+		public EntryDetailControl(FieldInventory fieldInventory)
+			: base()
 		{
+			if(fieldInventory == null)
+			{
+				throw new ArgumentNullException();
+			}
+			_fieldInventory = fieldInventory;
 		}
+		private LexEntry _record;
 
 		public LexEntry DataSource{
 			get
@@ -31,15 +33,15 @@ namespace WeSay.LexicalTools
 
 		public override void Refresh()
 		{
-			this.SuspendLayout();
-			this.Clear();
+			SuspendLayout();
+			Clear();
 			if (_record != null)
 			{
-				LexEntryLayouter layout = new LexEntryLayouter(this);
+				LexEntryLayouter layout = new LexEntryLayouter(this, _fieldInventory);
 				layout.AddWidgets(_record);
 			}
 
-			this.ResumeLayout(true);
+			ResumeLayout(true);
 			base.Refresh();
 		}
 	}

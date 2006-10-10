@@ -140,9 +140,9 @@ namespace WeSay.Data
 		{
 			if (CommitIfNeeded())
 			{
-				if (this.DataCommitted != null)
+				if (DataCommitted != null)
 				{
-					this.DataCommitted.Invoke(this, null);
+					DataCommitted.Invoke(this, null);
 				}
 			}
 		}

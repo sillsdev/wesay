@@ -1,16 +1,41 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace WeSay.LexicalModel
 {
 	public class MissingGlossFilter : WeSay.Data.IFilter<LexEntry>
 	{
-		string _writingSystemId;
+		IList<string> _writingSystemIds;
 
-		public MissingGlossFilter(string writingSystemId)
+		public MissingGlossFilter(Field field)
 		{
-			_writingSystemId = writingSystemId;
+			if(field == null)
+			{
+				throw new ArgumentNullException();
+			}
+			if(field.FieldName != "Gloss")
+			{
+				throw new ArgumentOutOfRangeException("field", "should be Gloss field definition");
+			}
+			_writingSystemIds = field.WritingSystemIds;
+		}
+
+		public MissingGlossFilter(FieldInventory fieldInventory)
+		{
+			if (fieldInventory == null)
+			{
+				throw new ArgumentNullException();
+			}
+			if(!fieldInventory.Contains("Gloss"))
+			{
+				throw new ArgumentOutOfRangeException("field", "should contain Gloss field definition");
+			}
+			Field field;
+			if (!fieldInventory.TryGetField("Gloss", out field))
+			{
+				throw new ArgumentOutOfRangeException("field", "should contain Sentence field definition");
+			}
+			_writingSystemIds = field.WritingSystemIds;
 		}
 
 		#region IFilter<LexEntry> Members
@@ -19,7 +44,12 @@ namespace WeSay.LexicalModel
 		{
 			get
 			{
-				return this.ToString() + "writingSystemId";
+				string key = ToString();
+				foreach (string writingSystemId in _writingSystemIds)
+				{
+					key += writingSystemId;
+				}
+				return key;
 			}
 		}
 
@@ -43,9 +73,12 @@ namespace WeSay.LexicalModel
 			foreach (LexSense sense in entry.Senses)
 			{
 				hasSense = true;
-				if (sense.Gloss[_writingSystemId].Length == 0)
+				foreach (string writingSystemId in _writingSystemIds)
 				{
-					return true;
+					if (sense.Gloss[writingSystemId].Length == 0)
+					{
+						return true;
+					}
 				}
 			}
 			return !hasSense;

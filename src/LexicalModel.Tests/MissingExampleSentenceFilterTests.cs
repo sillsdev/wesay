@@ -1,17 +1,20 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
 using NUnit.Framework;
-using WeSay.Data;
-using System.Diagnostics;
-using WeSay.Language;
-using com.db4o.query;
 
 namespace WeSay.LexicalModel.Tests
 {
 	[TestFixture]
 	public class MissingExampleSentenceFilterTests
 	{
+		private MissingExampleSentenceFilter _missingExampleSentenceFilter;
+
+		[SetUp]
+	public void Setup()
+		{
+			Field field = new Field("Sentence", new string[] { "vernacular" });
+			this._missingExampleSentenceFilter = new MissingExampleSentenceFilter(field);
+
+		}
+
 		[Test]
 		public void SenseExampleSentenceHasVernacularWritingSystem()
 		{
@@ -20,27 +23,22 @@ namespace WeSay.LexicalModel.Tests
 			LexExampleSentence example = (LexExampleSentence) sense.ExampleSentences.AddNew();
 			example.Sentence["vernacular"] = "filler";
 
-			MissingExampleSentenceFilter missingExampleSentence = new MissingExampleSentenceFilter("vernacular");
-			Assert.AreEqual(false, missingExampleSentence.Inquire(entry));
+			Assert.AreEqual(false, this._missingExampleSentenceFilter.Inquire(entry));
 		}
 
 		[Test]
 		public void NoSenses()
 		{
 			LexEntry entry = new LexEntry();
-
-			MissingExampleSentenceFilter missingExampleSentence = new MissingExampleSentenceFilter("vernacular");
-			Assert.AreEqual(true, missingExampleSentence.Inquire(entry));
+			Assert.AreEqual(true, this._missingExampleSentenceFilter.Inquire(entry));
 		}
 
 		[Test]
 		public void NoExamples()
 		{
 			LexEntry entry = new LexEntry();
-			LexSense sense = (LexSense)entry.Senses.AddNew();
-
-			MissingExampleSentenceFilter missingExampleSentence = new MissingExampleSentenceFilter("vernacular");
-			Assert.AreEqual(true, missingExampleSentence.Inquire(entry));
+			entry.Senses.AddNew();
+			Assert.AreEqual(true, this._missingExampleSentenceFilter.Inquire(entry));
 		}
 
 		[Test]
@@ -48,10 +46,8 @@ namespace WeSay.LexicalModel.Tests
 		{
 			LexEntry entry = new LexEntry();
 			LexSense sense = (LexSense)entry.Senses.AddNew();
-			LexExampleSentence example = (LexExampleSentence)sense.ExampleSentences.AddNew();
-
-			MissingExampleSentenceFilter missingExampleSentence = new MissingExampleSentenceFilter("vernacular");
-			Assert.AreEqual(true, missingExampleSentence.Inquire(entry));
+			sense.ExampleSentences.AddNew();
+			Assert.AreEqual(true, this._missingExampleSentenceFilter.Inquire(entry));
 		}
 
 		[Test]
@@ -61,9 +57,7 @@ namespace WeSay.LexicalModel.Tests
 			LexSense sense = (LexSense)entry.Senses.AddNew();
 			LexExampleSentence example = (LexExampleSentence)sense.ExampleSentences.AddNew();
 			example.Sentence["analysis"] = "filler";
-
-			MissingExampleSentenceFilter missingExampleSentence = new MissingExampleSentenceFilter("vernacular");
-			Assert.AreEqual(true, missingExampleSentence.Inquire(entry));
+			Assert.AreEqual(true, this._missingExampleSentenceFilter.Inquire(entry));
 		}
 
 		[Test]
@@ -75,10 +69,9 @@ namespace WeSay.LexicalModel.Tests
 			example.Sentence["vernacular"] = "filler";
 
 			sense = (LexSense)entry.Senses.AddNew();
-			example = (LexExampleSentence)sense.ExampleSentences.AddNew();
+			sense.ExampleSentences.AddNew();
 
-			MissingExampleSentenceFilter missingExampleSentence = new MissingExampleSentenceFilter("vernacular");
-			Assert.AreEqual(true, missingExampleSentence.Inquire(entry));
+			Assert.AreEqual(true, this._missingExampleSentenceFilter.Inquire(entry));
 		}
 
 		[Test]
@@ -93,8 +86,7 @@ namespace WeSay.LexicalModel.Tests
 			example = (LexExampleSentence)sense.ExampleSentences.AddNew();
 			example.Sentence["analysis"] = "filler";
 
-			MissingExampleSentenceFilter missingExampleSentence = new MissingExampleSentenceFilter("vernacular");
-			Assert.AreEqual(true, missingExampleSentence.Inquire(entry));
+			Assert.AreEqual(true, this._missingExampleSentenceFilter.Inquire(entry));
 		}
 
 		[Test]
@@ -104,10 +96,8 @@ namespace WeSay.LexicalModel.Tests
 			LexSense sense = (LexSense)entry.Senses.AddNew();
 			LexExampleSentence example = (LexExampleSentence)sense.ExampleSentences.AddNew();
 			example.Sentence["vernacular"] = "filler";
-			example = (LexExampleSentence)sense.ExampleSentences.AddNew();
-
-			MissingExampleSentenceFilter missingExampleSentence = new MissingExampleSentenceFilter("vernacular");
-			Assert.AreEqual(true, missingExampleSentence.Inquire(entry));
+			sense.ExampleSentences.AddNew();
+			Assert.AreEqual(true, this._missingExampleSentenceFilter.Inquire(entry));
 		}
 
 		[Test]
@@ -121,10 +111,7 @@ namespace WeSay.LexicalModel.Tests
 			example = (LexExampleSentence)sense.ExampleSentences.AddNew();
 			example.Sentence["analysis"] = "filler";
 
-			MissingExampleSentenceFilter missingExampleSentence = new MissingExampleSentenceFilter("vernacular");
-			Assert.AreEqual(true, missingExampleSentence.Inquire(entry));
+			Assert.AreEqual(true, this._missingExampleSentenceFilter.Inquire(entry));
 		}
-
-
 	}
 }

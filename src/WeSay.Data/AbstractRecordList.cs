@@ -220,17 +220,6 @@ namespace WeSay.Data
 			OnListChanged(new ListChangedEventArgs(ListChangedType.ItemChanged, newIndex));
 		}
 
-		protected virtual void OnItemChanged(int newIndex, string field)
-		{
-			PropertyDescriptor propertyDescriptor = _propertyDescriptorCollectionForT.Find(field, false);
-			if (propertyDescriptor == null)
-			{
-				OnItemChanged(newIndex);
-			}
-
-			OnListChanged(new ListChangedEventArgs(ListChangedType.ItemChanged, newIndex, propertyDescriptor));
-		}
-
 		protected virtual void OnItemDeleted(int oldIndex)
 		{
 			OnListChanged(new ListChangedEventArgs(ListChangedType.ItemDeleted, oldIndex));

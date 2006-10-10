@@ -62,9 +62,22 @@ namespace WeSay.Language.Tests {
 
 		/// <summary>
 		///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
-		///&lt;writingSystemPrefs&gt;
-		///  &lt;font name=&quot;WindDings&quot; baseSize=&quot;20&quot;/&gt;
-		///&lt;/writingSystemPrefs&gt;.
+		///&lt;WritingSystemCollection&gt;
+		///  &lt;AnalysisWritingSystemDefaultId&gt;ANA&lt;/AnalysisWritingSystemDefaultId&gt;
+		///  &lt;VernacularWritingSystemDefaultId&gt;VER&lt;/VernacularWritingSystemDefaultId&gt;
+		///  &lt;members&gt;
+		///    &lt;WritingSystem&gt;
+		///      &lt;FontName&gt;WingDings&lt;/FontName&gt;
+		///      &lt;FontSize&gt;20&lt;/FontSize&gt;
+		///      &lt;Id&gt;ANA&lt;/Id&gt;
+		///    &lt;/WritingSystem&gt;
+		///    &lt;WritingSystem&gt;
+		///      &lt;FontName&gt;WingDings&lt;/FontName&gt;
+		///      &lt;FontSize&gt;20&lt;/FontSize&gt;
+		///      &lt;Id&gt;VER&lt;/Id&gt;
+		///    &lt;/WritingSystem&gt;
+		///  &lt;/members&gt;
+		///&lt;/Writ [rest of string was truncated]&quot;;.
 		/// </summary>
 		internal static string WritingSystemPrefs {
 			get {

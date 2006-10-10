@@ -1,5 +1,4 @@
 using System;
-using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -19,30 +18,8 @@ namespace WeSay.UI
 		private int _indexOfLabel = 0;
 		private int _indexOfTextBox = 1;
 
-		private Predicate<string> _filter;
-
-		[Browsable(false)]
-		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-		public Predicate<string> ShowField
+		public DetailList()
 		{
-			get
-			{
-				return _filter;
-			}
-			set
-			{
-				if (value == null)
-				{
-					throw new ArgumentNullException();
-				}
-				_filter = value;
-				Refresh();
-			}
-		}
-
-		private void Initialize(Predicate<string> filter)
-		{
-			_filter = filter;
 			InitializeComponent();
 
 			if (Environment.OSVersion.Platform != PlatformID.Unix)
@@ -51,24 +28,6 @@ namespace WeSay.UI
 			}
 			_fadeInTimer.Enabled = false;
 			_fadeInTimer.Interval = 500;
-
-		}
-
-		public DetailList()
-		{
-			Initialize(delegate(string s)
-						{
-							return true;
-						});
-		}
-
-		public DetailList(Predicate<string> filter)
-		{
-			if (filter == null)
-			{
-				throw new ArgumentNullException();
-			}
-			Initialize(filter);
 		}
 
 

@@ -10,20 +10,25 @@ namespace WeSay.LexicalTools
 	public partial class LexFieldTool : UserControl
 	{
 		private IRecordList<LexEntry> _records;
+		private readonly FieldInventory _fieldInventory;
 		public event EventHandler SelectedIndexChanged;
 
 		//private int _currentIndex;
-		public LexFieldTool(IRecordList<LexEntry> records, Predicate<string> fieldFilter)
+		public LexFieldTool(IRecordList<LexEntry> records, FieldInventory fieldInventory)
 		{
 			if (records == null)
 			{
 				throw new ArgumentNullException();
 			}
+			if(fieldInventory == null)
+			{
+				throw new ArgumentNullException();
+			}
 			_records = records;
+			_fieldInventory = fieldInventory;
 
 			InitializeComponent();
 			_lexFieldDetailPanel.BackColor = SystemColors.Control;//we like it to stand out at design time, but not runtime
-			_lexFieldDetailPanel.ShowField = fieldFilter;
 			_lexFieldDetailPanel.DataSource = CurrentRecord;
 
 			_recordsListBox.DataSource = _records;

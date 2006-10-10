@@ -97,6 +97,10 @@ namespace WeSay.Data
 					}
 					((Db4oList<T>)Records).ItemIds = itemIds;
 				}
+				else
+				{
+					SerializeRecordIds();
+				}
 				_masterRecordList = sourceRecords;
 				_masterRecordList.ListChanged += new ListChangedEventHandler(OnMasterRecordListListChanged);
 				_masterRecordList.DeletingRecord += new EventHandler<RecordListEventArgs<T>>(OnMasterRecordListDeletingRecord);
@@ -109,10 +113,10 @@ namespace WeSay.Data
 					return Path.Combine(_cachePath, _isRelevantFilter.Key + ".cache");
 				}
 			}
+
 			protected override void OnItemChanged(int newIndex)
 			{
 				base.OnItemChanged(newIndex);
-
 				TriggerChangeInMaster(newIndex);
 			}
 
@@ -121,12 +125,6 @@ namespace WeSay.Data
 				//trigger change in master (it may not be active in master and we need it to perculate to all filtered ones
 				int i = this._masterRecordList.IndexOf(item);
 				this._masterRecordList[i] = item;
-			}
-
-			protected override void OnItemChanged(int newIndex, string field)
-			{
-				base.OnItemChanged(newIndex, field);
-				TriggerChangeInMaster(newIndex);
 			}
 
 			void SerializeRecordIds()
@@ -291,14 +289,14 @@ namespace WeSay.Data
 					if (!Contains(item))
 					{
 						Add(item);
-#if DEBUG
-						SerializeRecordIds();
-#endif
 					}
+#if DEBUG
+					SerializeRecordIds();
+#endif
 				}
 				else if (Contains(item))
 				{
-					Remove(item);
+					((Db4oList<T>)Records).Refresh(item);
 #if DEBUG
 					SerializeRecordIds();
 #endif

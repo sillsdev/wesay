@@ -1,3 +1,5 @@
+using System;
+using System.Drawing;
 using System.Windows.Forms;
 using NUnit.Framework;
 using WeSay.Language;
@@ -8,7 +10,7 @@ namespace WeSay.UI.Tests
 	[TestFixture]
 	public class DetailListTests
 	{
-		private WritingSystem _ws = new WritingSystem("test", new System.Drawing.Font("Arial",30));
+		private WritingSystem _ws = new WritingSystem("test", new Font("Arial",30));
 		private DetailList _control;
 		private Control _focussedControl;
 		private System.Windows.Forms.Form _window;
@@ -56,17 +58,18 @@ namespace WeSay.UI.Tests
 			return box;
 		}
 
-		void box_GotFocus(object sender, System.EventArgs e)
+		void box_GotFocus(object sender, EventArgs e)
 		{
 			_focussedControl = (Control)sender;
 		}
 
-		[Test, NUnit.Framework.ExpectedException(typeof(System.ArgumentException))]
+		[Test]
+		[ExpectedException(typeof(ArgumentException))]
 		public void Clear()
 		{
 			Control rowOne = AddRow();
 			_control.Clear();
-			int r = _control.GetRowOfControl(rowOne); //should throw
+			_control.GetRowOfControl(rowOne); //should throw
 		}
 
 		[Test]

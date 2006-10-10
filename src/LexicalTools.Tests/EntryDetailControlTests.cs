@@ -34,7 +34,16 @@ namespace WeSay.LexicalTools.Tests
 			AddEntry("Secondary");
 			AddEntry("Tertiary");
 
-			this._task = new EntryDetailTask(_recordListManager);
+			string[] analysisWritingSystemIds = new string[] { BasilProject.Project.WritingSystems.AnalysisWritingSystemDefaultId };
+			string[] vernacularWritingSystemIds = new string[] { BasilProject.Project.WritingSystems.VernacularWritingSystemDefaultId };
+			FieldInventory fieldInventory = new FieldInventory();
+			fieldInventory.Add(new Field("LexicalForm", vernacularWritingSystemIds));
+			fieldInventory.Add(new Field("Gloss", analysisWritingSystemIds));
+			fieldInventory.Add(new Field("Sentence", vernacularWritingSystemIds));
+			fieldInventory.Add(new Field("Translation", analysisWritingSystemIds));
+
+
+			this._task = new EntryDetailTask(_recordListManager, fieldInventory);
 			this._task.Dock = DockStyle.Fill;
 			TabPage detailTaskPage = new TabPage();
 			detailTaskPage.Controls.Add(this._task);
@@ -149,7 +158,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void SwitchingToAnotherTaskDoesNotLooseBindings()
 		{
-			 NUnit.Extensions.Forms.TextBoxTester t = new TextBoxTester("LexicalForm");
+			NUnit.Extensions.Forms.TextBoxTester t = new TextBoxTester(GetLexicalFormControlName());
 		   LexicalFormMustMatch("Initial");
 			TypeInLexicalForm("one");
 			this._task.Deactivate();
@@ -161,7 +170,7 @@ namespace WeSay.LexicalTools.Tests
 
 			LexicalFormMustMatch("one");
 
-			t = new TextBoxTester("LexicalForm");
+			t = new TextBoxTester(GetLexicalFormControlName());
 			TypeInLexicalForm("two");
 			this._task.Deactivate();
 			t.Properties.Visible = false;
@@ -174,13 +183,18 @@ namespace WeSay.LexicalTools.Tests
 
 		private static void LexicalFormMustMatch(string value)
 		{
-			NUnit.Extensions.Forms.TextBoxTester t = new TextBoxTester("LexicalForm");
+			NUnit.Extensions.Forms.TextBoxTester t = new TextBoxTester(GetLexicalFormControlName());
 			Assert.AreEqual(value, t.Properties.Text);
+		}
+
+		private static string GetLexicalFormControlName()
+		{
+			return "LexicalForm_" + BasilProject.Project.WritingSystems.VernacularWritingSystemDefaultId;
 		}
 
 		private static void TypeInLexicalForm(string value)
 		{
-			NUnit.Extensions.Forms.TextBoxTester t = new TextBoxTester("LexicalForm");
+			NUnit.Extensions.Forms.TextBoxTester t = new TextBoxTester(GetLexicalFormControlName());
 			t.Properties.Text = value;
 		}
 

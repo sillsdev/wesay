@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using System.ComponentModel;
 using WeSay.LexicalModel;
 using WeSay.Language;
 using WeSay.UI;
@@ -36,8 +35,8 @@ namespace WeSay.LexicalTools
 					rtf.Append(RenderField(exampleSentence.Translation, currentItem));
 				}
 
-				rtf.Append(RenderGhostedField("Sentence", currentItem, sense.ExampleSentences.Count + 1));
-				rtf.Append(RenderGhostedField("Translation", currentItem, sense.ExampleSentences.Count + 1));
+				rtf.Append(RenderGhostedField("Sentence", currentItem, null));
+				rtf.Append(RenderGhostedField("Translation", currentItem, null));
 
 				++senseNumber;
 			}
@@ -102,13 +101,17 @@ namespace WeSay.LexicalTools
 			return rtf.ToString();
 		}
 
-		private static string RenderGhostedField(string property, CurrentItemEventArgs currentItem, int number)
+		private static string RenderGhostedField(string property, CurrentItemEventArgs currentItem, Nullable<int> number)
 		{
 			string rtf = string.Empty;
 			if (currentItem != null && property == currentItem.PropertyName)
 			{
 				rtf += SwitchToWritingSystem(BasilProject.Project.WritingSystems.AnalysisWritingSystemDefault.Id);
-				rtf += number.ToString() + RenderBlankPosition();
+				if (number != null)
+				{
+					rtf += number.ToString();
+				}
+				rtf += RenderBlankPosition();
 			}
 			return rtf;
 		}

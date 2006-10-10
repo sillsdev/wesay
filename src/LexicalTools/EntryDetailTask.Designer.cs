@@ -31,7 +31,7 @@ namespace WeSay.LexicalTools
 		private void InitializeComponent()
 		{
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EntryDetailTask));
-			this._entryDetailPanel = new WeSay.LexicalTools.EntryDetailControl();
+			this._entryDetailPanel = new WeSay.LexicalTools.EntryDetailControl(_fieldInventory);
 			this.panel1 = new System.Windows.Forms.Panel();
 			this._recordsListBox = new ListBox.BindingListGrid();
 			this._btnNewWord = new System.Windows.Forms.LinkLabel();

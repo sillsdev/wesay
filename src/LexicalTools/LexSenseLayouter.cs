@@ -11,8 +11,8 @@ namespace WeSay.LexicalTools
 	/// </summary>
 	public class LexSenseLayouter : Layouter
 	{
-		public LexSenseLayouter(DetailList builder)
-			: base(builder)
+		public LexSenseLayouter(DetailList builder, FieldInventory fieldInventory)
+			: base(builder, fieldInventory)
 		{
 		}
 
@@ -26,13 +26,19 @@ namespace WeSay.LexicalTools
 		{
 			 int rowCount = 0;
 		   LexSense sense = (LexSense)list[index];
-		   if (DetailList.ShowField("Gloss"))
+		   Field field;
+		   if (FieldInventory.TryGetField("Gloss", out field))
 		   {
-			Control c = DetailList.AddWidgetRow(StringCatalog.Get("Meaning") + " " + (index+1).ToString(), true,MakeBoundEntry(sense.Gloss, BasilProject.Project.WritingSystems.AnalysisWritingSystemDefault), insertAtRow);
-			   ++rowCount;
-			   insertAtRow = DetailList.GetRowOfControl(c);
+			   foreach (string writingSystemId in field.WritingSystemIds)
+			   {
+				   WritingSystem writingSystem = BasilProject.Project.WritingSystems[writingSystemId];
+				   Control entry = MakeBoundEntry(sense.Gloss, writingSystem);
+				   Control c = DetailList.AddWidgetRow(StringCatalog.Get("Meaning"), true, entry, insertAtRow);
+				   ++rowCount;
+				   insertAtRow = DetailList.GetRowOfControl(c);
+			   }
 		   }
-		   LexExampleSentenceLayouter exampleLayouter = new LexExampleSentenceLayouter(DetailList);
+		   LexExampleSentenceLayouter exampleLayouter = new LexExampleSentenceLayouter(DetailList, FieldInventory);
 
 			rowCount = AddChildrenWidgets(exampleLayouter, sense.ExampleSentences, insertAtRow, rowCount);
 
@@ -45,15 +51,21 @@ namespace WeSay.LexicalTools
 		public int AddGhost(IBindingList list)
 		{
 			int rowCount = 0;
-//            if (DetailList.ShowField("GhostGloss"))
-			//TODO: only add this if there is no empty gloss in an existing sense (we
-			//run into this with the LexFieldTask, where we don't want to see two empty gloss boxes (one a ghost)
-			{
-				WeSayTextBox entry = new WeSayTextBox(BasilProject.Project.WritingSystems.AnalysisWritingSystemDefault);
-				GhostBinding g= MakeGhostBinding(list, "Gloss", BasilProject.Project.WritingSystems.AnalysisWritingSystemDefault, entry);
-				g.ReferenceControl = DetailList.AddWidgetRow(StringCatalog.Get("New Meaning"), true, entry);
-				++rowCount;
-			}
+		   Field field;
+		   //TODO: only add this if there is no empty gloss in an existing sense (we
+		   //run into this with the LexFieldTask, where we don't want to see two empty gloss boxes (one a ghost)
+		   if (FieldInventory.TryGetField("Gloss", out field))
+		   {
+			   foreach (string writingSystemId in field.WritingSystemIds)
+			   {
+				   WritingSystem writingSystem = BasilProject.Project.WritingSystems[writingSystemId];
+
+				   WeSayTextBox entry = new WeSayTextBox(writingSystem);
+				   GhostBinding g = MakeGhostBinding(list, "Gloss", writingSystem, entry);
+				   g.ReferenceControl = DetailList.AddWidgetRow(StringCatalog.Get("New Meaning"), true, entry);
+				   ++rowCount;
+			   }
+		   }
 			return rowCount;
 		}
 

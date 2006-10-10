@@ -8,6 +8,7 @@ namespace WeSay.LexicalTools
 {
 	public partial class LexFieldControl : UserControl
 	{
+		private FieldInventory _fieldInventory;
 		LexEntry _record;
 
 		private void Initialize()
@@ -15,30 +16,33 @@ namespace WeSay.LexicalTools
 			_entryDetailControl.CurrentItemChanged += new EventHandler<CurrentItemEventArgs>(OnCurrentItemChanged);
 		}
 
-	   public LexFieldControl()
+		public LexFieldControl(FieldInventory fieldInventory)
 		{
+			_fieldInventory = fieldInventory;
 			InitializeComponent();
 			Initialize();
-		}
-
-		public LexFieldControl(Predicate<string> filter)
-		{
-			InitializeComponent();
-			Initialize();
-			_entryDetailControl.ShowField = filter;
 		}
 
 		[Browsable(false)]
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-		public Predicate<string>  ShowField
+		public FieldInventory  FieldInventory
 		{
 			get
 			{
-				return _entryDetailControl.ShowField;
+				if(_fieldInventory == null)
+				{
+					throw new InvalidOperationException("FieldInventory must be initialized prior to being used.");
+				}
+				return _fieldInventory;
 			}
 			set
 			{
-				_entryDetailControl.ShowField = value;
+				if (value == null)
+				{
+					throw new ArgumentNullException();
+				}
+				_fieldInventory = value;
+				Refresh();
 			}
 		}
 

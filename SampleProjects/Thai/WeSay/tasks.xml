@@ -7,13 +7,24 @@
 			<name>LexicalForm</name>
 			<writingSystems>
 				 <id>th</id>
-				  <id>th-ipa</id>
 			</writingSystems>
 		  </field>
 		  <field class="WeSay.LexicalModel.Field" assembly="WeSay.LexicalModel">
 			<name>Gloss</name>
 			<writingSystems>
 				 <id>en</id>
+			</writingSystems>
+		  </field>
+		  <field class="WeSay.LexicalModel.Field" assembly="WeSay.LexicalModel">
+			<name>Sentence</name>
+			<writingSystems>
+			  <id>th</id>
+			</writingSystems>
+		  </field>
+		  <field class="WeSay.LexicalModel.Field" assembly="WeSay.LexicalModel">
+			<name>Translation</name>
+			<writingSystems>
+			  <id>en</id>
 			</writingSystems>
 		  </field>
 		</fields>
@@ -28,19 +39,18 @@
 	</task>
 	<task id="EntryDetail" class="WeSay.LexicalTools.EntryDetailTask" assembly="LexicalTools" default="true">
 	  <entries ref="All Entries" />
-<!--      <fieldInventory ref="defaultFieldInventory"/> -->
+	  <fieldInventory ref="defaultFieldInventory"/>
 	  <label UseInConstructor="false">Words</label>
 	  <description UseInConstructor="false">This task allows the user to see and edit all enabled fields of all entries in the dictionary.  He can add, delete, and search for entries.</description>
 	</task>
 	<task id="AddMeanings" class="WeSay.LexicalTools.LexFieldTask" assembly="LexicalTools" default="true">
 	  <entries ref="All Entries" />
 	  <filter class="WeSay.LexicalModel.MissingGlossFilter" assembly="LexicalModel">
-		<writingSystemId>en</writingSystemId>
-<!--        <fieldInventory ref="defaultFieldInventory"/> -->
+		<fieldInventory ref="defaultFieldInventory"/>
 	  </filter>
 	  <label>Add Meanings</label>
 	  <description>Add meanings to entries where they are missing.</description>
-<!--      <fieldInventory ref="defaultFieldInventory"/> -->
+	  <fieldInventory ref="defaultFieldInventory"/>
 	  <showfields>Gloss</showfields>
 	</task>
 	<task id="Gather Words" class="WeSay.LexicalTools.GatherWordListTask" assembly="LexicalTools">

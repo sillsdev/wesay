@@ -12,7 +12,7 @@ namespace WeSay.LexicalModel
 		private string _fieldName;
 		private List<string> _writingSystemIds;
 
-		public Field(string fieldName, string[] writingSystemIds)
+		public Field(string fieldName, IEnumerable<string> writingSystemIds)
 		{
 			FieldName = fieldName;
 			if (writingSystemIds == null)
@@ -102,7 +102,6 @@ namespace WeSay.LexicalModel
 
 			public override void Write(XmlWriter writer, object target)
 			{
-				object value = target;
 				writer.WriteStartElement("writingSystems");
 				foreach (string s in ((Field)target)._writingSystemIds)
 				{

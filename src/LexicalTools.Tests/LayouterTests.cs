@@ -1,8 +1,8 @@
 
+using System;
 using System.Windows.Forms;
 using NUnit.Framework;
 using WeSay.LexicalModel;
-using WeSay.LexicalModel.Tests;
 using WeSay.UI;
 
 namespace WeSay.LexicalTools.Tests
@@ -16,6 +16,21 @@ namespace WeSay.LexicalTools.Tests
 		public void Setup()
 		{
 			BasilProject.InitializeForTests();
+		}
+
+		[Test]
+		[ExpectedException(typeof(ArgumentNullException))]
+		public void Create_NullBuilder_Throws()
+		{
+			new LexEntryLayouter(null, new FieldInventory());
+
+		}
+
+		[Test]
+		[ExpectedException(typeof(ArgumentNullException))]
+		public void Create_NullFieldInventory_Throws()
+		{
+			new LexEntryLayouter(new DetailList(), null);
 		}
 
 		[Test]
@@ -48,14 +63,22 @@ namespace WeSay.LexicalTools.Tests
 
 		private DetailList MakeDetailList()
 		{
+			string[] analysisWritingSystemIds = new string[] { BasilProject.Project.WritingSystems.AnalysisWritingSystemDefaultId };
+			string[] vernacularWritingSystemIds = new string[] { BasilProject.Project.WritingSystems.VernacularWritingSystemDefaultId };
+			FieldInventory fieldInventory = new FieldInventory();
+			fieldInventory.Add(new Field("LexicalForm", vernacularWritingSystemIds));
+			fieldInventory.Add(new Field("Gloss", analysisWritingSystemIds));
+			fieldInventory.Add(new Field("Sentence", vernacularWritingSystemIds));
+			fieldInventory.Add(new Field("Translation", analysisWritingSystemIds));
+
 			LexEntry entry = new LexEntry();
-			entry.LexicalForm[BasilProject.Project.WritingSystems.VernacularWritingSystemDefault.Id] = "WordInVernacular";
-			entry.LexicalForm[BasilProject.Project.WritingSystems.AnalysisWritingSystemDefault.Id] = "WordInAnalysis";
+			entry.LexicalForm[BasilProject.Project.WritingSystems.VernacularWritingSystemDefaultId] = "WordInVernacular";
+			entry.LexicalForm[BasilProject.Project.WritingSystems.AnalysisWritingSystemDefaultId] = "WordInAnalysis";
 			AddSense(entry);
 			AddSense(entry);
 
 			DetailList dl = new DetailList();
-			LexEntryLayouter layout = new LexEntryLayouter(dl);
+			LexEntryLayouter layout = new LexEntryLayouter(dl, fieldInventory);
 			_rowCount = layout.AddWidgets(entry);
 			return dl;
 		}

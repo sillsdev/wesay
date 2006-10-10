@@ -1,3 +1,5 @@
+using System.Windows.Forms;
+using WeSay.Language;
 using WeSay.LexicalModel;
 using WeSay.UI;
 using System.ComponentModel;
@@ -8,8 +10,8 @@ namespace WeSay.LexicalTools
 	/// </summary>
 	public class LexExampleSentenceLayouter : Layouter
 	{
-		public LexExampleSentenceLayouter(DetailList  builder)
-			: base(builder)
+		public LexExampleSentenceLayouter(DetailList  builder, FieldInventory fieldInventory)
+			: base(builder, fieldInventory)
 		{
 		}
 
@@ -20,32 +22,52 @@ namespace WeSay.LexicalTools
 
 		internal override int AddWidgets(IBindingList list, int index, int insertAtRow)
 		{
-			 int rowCount = 0;
-			 LexExampleSentence example = (LexExampleSentence)list[index];
-			 if (DetailList.ShowField("Sentence"))
-			 {
-				 DetailList.AddWidgetRow(StringCatalog.Get("Example"), false, MakeBoundEntry(example.Sentence, BasilProject.Project.WritingSystems.VernacularWritingSystemDefault), insertAtRow);
-				 ++rowCount;
-			 }
-			 if (DetailList.ShowField("Translation"))
-			 {
-				 DetailList.AddWidgetRow(StringCatalog.Get("Translation"), false, MakeBoundEntry(example.Translation, BasilProject.Project.WritingSystems.AnalysisWritingSystemDefault),insertAtRow+1 );
-				 ++rowCount;
-			 }
+			int rowCount = 0;
+			LexExampleSentence example = (LexExampleSentence)list[index];
+
+			Field field;
+			if (FieldInventory.TryGetField("Sentence", out field))
+			{
+				foreach (string writingSystemId in field.WritingSystemIds)
+				{
+					WritingSystem writingSystem = BasilProject.Project.WritingSystems[writingSystemId];
+					Control entry = MakeBoundEntry(example.Sentence, writingSystem);
+					DetailList.AddWidgetRow(StringCatalog.Get("Example"), false, entry, insertAtRow+rowCount);
+					++rowCount;
+				}
+			}
+
+			if (FieldInventory.TryGetField("Translation", out field))
+			{
+				foreach (string writingSystemId in field.WritingSystemIds)
+				{
+					WritingSystem writingSystem = BasilProject.Project.WritingSystems[writingSystemId];
+					Control entry = MakeBoundEntry(example.Translation, writingSystem);
+					DetailList.AddWidgetRow(StringCatalog.Get("Translation"), false, entry, insertAtRow+rowCount);
+					++rowCount;
+				}
+			}
+
 			return rowCount;
 		}
 
 		public int AddGhost(System.ComponentModel.IBindingList list, int insertAtRow)
 		{
 			int rowCount = 0;
-			if (DetailList.ShowField("GhostSentence"))
+			Field field;
+			if (FieldInventory.TryGetField("Sentence", out field))
 			{
-				WeSayTextBox entry = new WeSayTextBox(BasilProject.Project.WritingSystems.AnalysisWritingSystemDefault);
-				GhostBinding g = MakeGhostBinding(list, "Sentence", BasilProject.Project.WritingSystems.VernacularWritingSystemDefault, entry);
-				g.ReferenceControl = DetailList.AddWidgetRow(StringCatalog.Get("Example"), false, entry, insertAtRow);
-				// entry.PrepareForFadeIn();
-				++rowCount;
+				foreach (string writingSystemId in field.WritingSystemIds)
+				{
+					WritingSystem writingSystem = BasilProject.Project.WritingSystems[writingSystemId];
+					WeSayTextBox entry = new WeSayTextBox(writingSystem);
+					GhostBinding g = MakeGhostBinding(list, "Sentence", writingSystem, entry);
+					g.ReferenceControl = DetailList.AddWidgetRow(StringCatalog.Get("New Example"), false, entry, insertAtRow+rowCount);
+					// entry.PrepareForFadeIn();
+					++rowCount;
+				}
 			}
+
 			return rowCount;
 		}
 	}

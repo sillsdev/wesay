@@ -1,5 +1,3 @@
-using System;
-using System.Collections;
 using System.Windows.Forms;
 using WeSay.Language;
 using WeSay.LexicalModel;
@@ -13,8 +11,8 @@ namespace WeSay.LexicalTools
 	/// </summary>
 	public class LexEntryLayouter : Layouter
 	{
-		public LexEntryLayouter(DetailList builder)
-			: base(builder)
+		public LexEntryLayouter(DetailList builder, FieldInventory fieldInventory)
+			: base(builder, fieldInventory)
 		{
 		}
 
@@ -36,14 +34,19 @@ namespace WeSay.LexicalTools
 		internal int AddWidgets(LexEntry entry, int insertAtRow)
 		{
 			int rowCount = 0;
-			if (DetailList.ShowField("LexicalForm"))
+			Field field;
+			if (FieldInventory.TryGetField("LexicalForm", out field))
 			{
-				Control box = MakeBoundEntry(entry.LexicalForm, BasilProject.Project.WritingSystems.VernacularWritingSystemDefault);
-				box.Name = "LexicalForm"; //so GUI unit tests can find it
-				DetailList.AddWidgetRow(StringCatalog.Get("Word"), true, box, insertAtRow);
-				++rowCount;
+				foreach (string writingSystemId in field.WritingSystemIds)
+				{
+					WritingSystem writingSystem = BasilProject.Project.WritingSystems[writingSystemId];
+					Control box = MakeBoundEntry(entry.LexicalForm, writingSystem);
+					box.Name = "LexicalForm_" + writingSystemId; //so GUI unit tests can find it
+					DetailList.AddWidgetRow(StringCatalog.Get("Word"), true, box, insertAtRow);
+					++rowCount;
+				}
 			}
-			LexSenseLayouter layouter = new LexSenseLayouter(DetailList);
+			LexSenseLayouter layouter = new LexSenseLayouter(DetailList, FieldInventory);
 			rowCount = AddChildrenWidgets(layouter, entry.Senses, insertAtRow, rowCount);
 			//add a ghost
 			rowCount += layouter.AddGhost(entry.Senses);

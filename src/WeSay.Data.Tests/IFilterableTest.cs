@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using NUnit.Framework;
 
@@ -150,10 +149,10 @@ namespace WeSay.Data.Tests.Db4oBindingListTests
 			}
 		}
 
-		[Test, Ignore("Broken when JH removed commit")]
+		[Test]
 		public void ConstructWithFilter()
 		{
-		  //no longer implemented  _bindingList.Commit();
+			this._dataSource.Data.Commit();
 			using (Db4oRecordList<SimpleIntTestClass> newBindingList = new Db4oRecordList<SimpleIntTestClass>(this._dataSource, _filter))
 			{
 				Assert.AreEqual(100, newBindingList.Count);

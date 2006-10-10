@@ -37,7 +37,7 @@ namespace WeSay.LexicalTools
 		private void InitializeComponent()
 		{
 			this._lexicalEntryView = new System.Windows.Forms.RichTextBox();
-			this._entryDetailControl = new EntryDetailControl();
+			this._entryDetailControl = new EntryDetailControl(_fieldInventory);
 			this.SuspendLayout();
 			//
 			// _lexicalEntryView

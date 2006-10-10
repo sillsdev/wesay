@@ -107,14 +107,7 @@ namespace WeSay.Data
 			int index = Records.IndexOf(e.Item);
 			if (index != -1)
 			{
-				if (e.PropertyName.Length == 0)
-				{
-					OnItemChanged(index);
-				}
-				else
-				{
-					OnItemChanged(index, e.PropertyName);
-				}
+				OnItemChanged(index);
 			}
 		}
 

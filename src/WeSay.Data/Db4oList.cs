@@ -627,6 +627,15 @@ namespace WeSay.Data
 		public void Refresh(T item)
 		{
 			VerifyNotDisposed();
+			if (!FilteringInDatabase)
+			{
+				if (!Filter(item))
+				{
+					ItemIds.Remove(GetItemId(item));
+					RegisterItemPropertyChangedHandler(item, false);
+					return;
+				}
+			}
 			Database.Refresh(item, RefreshActivationDepth);
 		}
 
@@ -1222,16 +1231,16 @@ namespace WeSay.Data
 		{
 			VerifyNotDisposed();
 			int index = -1;
-			try
-			{
+			//try
+			//{
 				//ValidateItem(item);
 				long id = GetItemId(item);
 				if (id > 0)
 				{
 					index = ItemIds.IndexOf(id);
 				}
-			}
-			catch (ArgumentException) {}
+			//}
+			//catch (ArgumentException) {}
 			return index;
 		}
 
@@ -1782,6 +1791,7 @@ namespace WeSay.Data
 			{
 				SetDatabaseLastModified();
 				Database.Delete(item);
+				RegisterItemPropertyChangedHandler(item, false);
 			}
 		}
 

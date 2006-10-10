@@ -17,9 +17,12 @@ namespace WeSay.UI
 		{
 		 //   _isGhost = false;
 			InitializeComponent();
-			this.Font = ws.Font;
+			Font = ws.Font;
 			_keymanLink = new KeymanLink.KeymanLink();
-
+			if(!_keymanLink.Initialize(false))
+			{
+				_keymanLink = null;
+			}
 		}
 
 		public new string Text
@@ -30,11 +33,11 @@ namespace WeSay.UI
 
 				Bitmap  bitmap = new System.Drawing.Bitmap(10, 10);
 				System.Drawing.Graphics graphics = System.Drawing.Graphics.FromImage(bitmap);
-				SizeF sz = graphics.MeasureString(value, this.Font);
+				SizeF sz = graphics.MeasureString(value, Font);
 			  //  sz.Height += 5;
-				if (this.Height < sz.Height)
+				if (Height < sz.Height)
 				{
-					this.Height = (int)sz.Height;
+					Height = (int)sz.Height;
 				}
 			}
 			get
@@ -71,34 +74,40 @@ namespace WeSay.UI
 		public void FadeInSomeMore(Label label)
 		{
 			int interval = 2;
-			if (this.BackColor.R < SystemColors.Window.R)
+			if (BackColor.R < SystemColors.Window.R)
 			{
-				interval = Math.Min(interval, 255 - this.BackColor.R);
+				interval = Math.Min(interval, 255 - BackColor.R);
 
-				this.BackColor = Color.FromArgb(this.BackColor.R + interval,
-															 this.BackColor.G + interval,
-															 this.BackColor.B + interval);
+				BackColor = Color.FromArgb(BackColor.R + interval,
+															 BackColor.G + interval,
+															 BackColor.B + interval);
 			}
-			else if( this.BackColor != SystemColors.Window)
+			else if( BackColor != SystemColors.Window)
 			{
-				this.BackColor = SystemColors.Window;
+				BackColor = SystemColors.Window;
 			}
 		}
 
 		public void PrepareForFadeIn()
 		{
-				this.Text = ""; //ready for the next one
-				this.BackColor = SystemColors.Control;
+				Text = ""; //ready for the next one
+				BackColor = SystemColors.Control;
 		}
 
 		private void WeSayTextBox_Enter(object sender, EventArgs e)
 		{
-			_keymanLink.SelectKeymanKeyboard("IPA Unicode 1.0.5",true );
+			if (_keymanLink != null)
+			{
+				_keymanLink.SelectKeymanKeyboard("IPA Unicode 1.0.5", true);
+			}
 		}
 
 		private void WeSayTextBox_Leave(object sender, EventArgs e)
 		{
-			_keymanLink.SelectKeymanKeyboard(null, false);
+			if (_keymanLink != null)
+			{
+				_keymanLink.SelectKeymanKeyboard(null, false);
+			}
 
 		}
 	}

@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using NUnit.Framework;
 using WeSay.Data.Tests.IEnumerableTests;
@@ -210,7 +209,7 @@ namespace WeSay.Data.Tests.Db4oRecordListTests
 
 			this._recordList.Add(new TestItem("Gianna", 2, new DateTime(2006, 7, 17)));
 			this._recordList.Add(new TestItem("Jared", 1, new DateTime(2003, 7, 10)));
-			this.ResetListChanged();
+			ResetListChanged();
 		}
 
 		[TearDown]
@@ -233,11 +232,6 @@ namespace WeSay.Data.Tests.Db4oRecordListTests
 			Assert.AreEqual(2, _recordList[0].StoredInt);
 			Assert.AreEqual(1, _recordList[1].StoredInt);
 			base.VerifySortDescending();
-		}
-
-		protected override void VerifyUnsorted()
-		{
-			base.VerifyUnsorted();
 		}
 	}
 
@@ -292,7 +286,7 @@ namespace WeSay.Data.Tests.Db4oRecordListTests
 
 			this._db4oRecordList.Add(new TestItem("Gianna", 2, new DateTime(2006, 7, 17)));
 			this._db4oRecordList.Add(new TestItem("Jared", 1, new DateTime(2003, 7, 10)));
-			this.ResetListChanged();
+			ResetListChanged();
 		}
 
 		[TearDown]
@@ -404,7 +398,7 @@ namespace WeSay.Data.Tests.Db4oRecordListTests
 
 			PropertyDescriptorCollection pdc = TypeDescriptor.GetProperties(typeof(TestItem));
 			PropertyDescriptor pd = pdc.Find("StoredInt", false);
-			((IBindingList)this._recordList).ApplySort(pd, ListSortDirection.Ascending);
+			this._recordList.ApplySort(pd, ListSortDirection.Ascending);
 
 			Assert.AreEqual(_eric, this._recordList[0]);
 			Assert.AreEqual(_allison, this._recordList[1]);
@@ -420,7 +414,7 @@ namespace WeSay.Data.Tests.Db4oRecordListTests
 
 			PropertyDescriptorCollection pdc = TypeDescriptor.GetProperties(typeof(TestItem));
 			PropertyDescriptor pd = pdc.Find("StoredInt", false);
-			((IBindingList)this._recordList).ApplySort(pd, ListSortDirection.Descending);
+			this._recordList.ApplySort(pd, ListSortDirection.Descending);
 
 			Assert.AreEqual(_gianna, this._recordList[0]);
 			Assert.AreEqual(_jared, this._recordList[1]);
@@ -436,7 +430,7 @@ namespace WeSay.Data.Tests.Db4oRecordListTests
 
 			PropertyDescriptorCollection pdc = TypeDescriptor.GetProperties(typeof(TestItem));
 			PropertyDescriptor pd = pdc.Find("StoredDateTime", false);
-			((IBindingList)this._recordList).ApplySort(pd, ListSortDirection.Ascending);
+			this._recordList.ApplySort(pd, ListSortDirection.Ascending);
 
 			Assert.AreEqual(_allison, this._recordList[0]);
 			Assert.AreEqual(_eric, this._recordList[1]);
@@ -452,7 +446,7 @@ namespace WeSay.Data.Tests.Db4oRecordListTests
 
 			PropertyDescriptorCollection pdc = TypeDescriptor.GetProperties(typeof(TestItem));
 			PropertyDescriptor pd = pdc.Find("StoredDateTime", false);
-			((IBindingList)this._recordList).ApplySort(pd, ListSortDirection.Descending);
+			this._recordList.ApplySort(pd, ListSortDirection.Descending);
 
 			Assert.AreEqual(_gianna, this._recordList[0]);
 			Assert.AreEqual(_jared, this._recordList[1]);
@@ -468,7 +462,7 @@ namespace WeSay.Data.Tests.Db4oRecordListTests
 
 			PropertyDescriptorCollection pdc = TypeDescriptor.GetProperties(typeof(TestItem));
 			PropertyDescriptor pd = pdc.Find("StoredString", false);
-			((IBindingList)this._recordList).ApplySort(pd, ListSortDirection.Ascending);
+			this._recordList.ApplySort(pd, ListSortDirection.Ascending);
 
 			Assert.AreEqual(_allison, this._recordList[0]);
 			Assert.AreEqual(_eric, this._recordList[1]);
@@ -484,7 +478,7 @@ namespace WeSay.Data.Tests.Db4oRecordListTests
 
 			PropertyDescriptorCollection pdc = TypeDescriptor.GetProperties(typeof(TestItem));
 			PropertyDescriptor pd = pdc.Find("StoredString", false);
-			((IBindingList)this._recordList).ApplySort(pd, ListSortDirection.Descending);
+			this._recordList.ApplySort(pd, ListSortDirection.Descending);
 
 			Assert.AreEqual(_jared, this._recordList[0]);
 			Assert.AreEqual(_gianna, this._recordList[1]);

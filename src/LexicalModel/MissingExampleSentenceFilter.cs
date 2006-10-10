@@ -1,16 +1,37 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace WeSay.LexicalModel
 {
 	public class MissingExampleSentenceFilter : WeSay.Data.IFilter<LexEntry>
 	{
-		string _writingSystemId;
+		IList<string> _writingSystemIds;
 
-		public MissingExampleSentenceFilter(string writingSystemId)
+		public MissingExampleSentenceFilter(Field field)
 		{
-			_writingSystemId = writingSystemId;
+			if (field == null)
+			{
+				throw new ArgumentNullException();
+			}
+			if (field.FieldName != "Sentence")
+			{
+				throw new ArgumentOutOfRangeException("field", "should be Sentence field definition");
+			}
+			_writingSystemIds = field.WritingSystemIds;
+		}
+
+		public MissingExampleSentenceFilter(FieldInventory fieldInventory)
+		{
+			if (fieldInventory == null)
+			{
+				throw new ArgumentNullException();
+			}
+			Field field;
+			if (!fieldInventory.TryGetField("Sentence", out field))
+			{
+				throw new ArgumentOutOfRangeException("field", "should contain Sentence field definition");
+			}
+			_writingSystemIds = field.WritingSystemIds;
 		}
 
 		#region IFilter<LexEntry> Members
@@ -19,7 +40,12 @@ namespace WeSay.LexicalModel
 		{
 			get
 			{
-				return this.ToString() + _writingSystemId;
+				string key = ToString();
+				foreach (string writingSystemId in _writingSystemIds)
+				{
+					key += writingSystemId;
+				}
+				return key;
 			}
 		}
 
@@ -45,9 +71,12 @@ namespace WeSay.LexicalModel
 				foreach (LexExampleSentence example in sense.ExampleSentences)
 				{
 					hasExample = true;
-					if (example.Sentence[_writingSystemId].Length == 0)
+					foreach (string writingSystemId in _writingSystemIds)
 					{
-						return true;
+						if (example.Sentence[writingSystemId].Length == 0)
+						{
+							return true;
+						}
 					}
 				}
 			}

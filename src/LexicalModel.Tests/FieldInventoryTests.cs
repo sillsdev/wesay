@@ -26,22 +26,6 @@ namespace WeSay.LexicalModel.Tests
 			Assert.IsNotNull(fieldInventory);
 		}
 
-//        [Test]
-//        [ExpectedException(typeof(ArgumentNullException))]
-//        public void Create_NullFields_Throws()
-//        {
-//            FieldInventory fieldInventory = new FieldInventory(null);
-//            Assert.IsNotNull(fieldInventory);
-//        }
-//
-//        [Test]
-//        [ExpectedException(typeof(ArgumentNullException))]
-//        public void Create_NullField_Throws()
-//        {
-//            FieldInventory fieldInventory = new FieldInventory(null,null);
-//            Assert.IsNotNull(fieldInventory);
-//        }
-
 		[Test]
 		public void Contains_HasFieldDefinition_True()
 		{

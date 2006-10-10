@@ -33,7 +33,7 @@ namespace WeSay.LexicalTools
 		private void InitializeComponent()
 		{
 			this._recordsListBox = new ListBox.BindingListGrid();
-			this._lexFieldDetailPanel = new WeSay.LexicalTools.LexFieldControl();
+			this._lexFieldDetailPanel = new WeSay.LexicalTools.LexFieldControl(_fieldInventory);
 			this.SuspendLayout();
 			//
 			// _recordsListBox

@@ -71,6 +71,56 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
+		public void ChangeRecord_NoLongerMeetsFilterCriteria_RemainsInMasterRecordLists()
+		{
+			IRecordList<SimpleIntTestClass> masterRecordList = RecordListManager.Get<SimpleIntTestClass>();
+			masterRecordList[11].I = 10;
+
+			Assert.AreEqual(50, masterRecordList.Count);
+
+			int Count11 = CountMatching<SimpleIntTestClass>(masterRecordList,
+									delegate(SimpleIntTestClass item)
+									{
+										return item.I == 11;
+									});
+			Assert.AreEqual(0, Count11);
+
+			int Count10 = CountMatching<SimpleIntTestClass>(masterRecordList,
+									delegate(SimpleIntTestClass item)
+									{
+										return item.I == 10;
+									});
+			Assert.AreEqual(2, Count10);
+		}
+
+		[Test]
+		public void ChangeRecord_NoLongerMeetsFilterCriteria_RemovedFromNotifyListSoCanChangeAgain()
+		{
+			IRecordList<SimpleIntTestClass> recordList11to20 = RecordListManager.Get<SimpleIntTestClass>(Filter11to20);
+			SimpleIntTestClass record = recordList11to20[0];
+			record.I = 10;
+			RecordListManager.GoodTimeToCommit();
+			IRecordList<SimpleIntTestClass> masterRecordList = RecordListManager.Get<SimpleIntTestClass>();
+			int Count10 = CountMatching<SimpleIntTestClass>(masterRecordList,
+						delegate(SimpleIntTestClass item)
+						{
+							return item.I == 10;
+						});
+			Assert.AreEqual(2, Count10);
+
+			record.I = 11;
+
+			int Count11 = CountMatching<SimpleIntTestClass>(masterRecordList,
+						delegate(SimpleIntTestClass item)
+						{
+							return item.I == 11;
+						});
+			Assert.AreEqual(1, Count11);
+
+		}
+
+
+		[Test]
 		public void ChangeRecord_MeetsFilterCriteria_AddedToCachedRecordList()
 		{
 			IRecordList<SimpleIntTestClass> masterRecordList = RecordListManager.Get<SimpleIntTestClass>();

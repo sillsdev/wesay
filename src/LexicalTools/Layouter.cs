@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel;
 using System.Windows.Forms;
 using WeSay.Language;
+using WeSay.LexicalModel;
 using WeSay.UI;
 
 namespace WeSay.LexicalTools
@@ -20,7 +21,9 @@ namespace WeSay.LexicalTools
 		/// </summary>
 	  private DetailList _detailList;
 
-	  protected DetailList DetailList
+		private readonly FieldInventory _fieldInventory;
+
+		protected DetailList DetailList
 	  {
 		get
 		{
@@ -32,9 +35,23 @@ namespace WeSay.LexicalTools
 		}
 	  }
 
-		protected Layouter(DetailList builder)
+		public FieldInventory FieldInventory
 		{
+			get { return this._fieldInventory; }
+		}
+
+		protected Layouter(DetailList builder, FieldInventory fieldInventory)
+		{
+			if(builder == null)
+			{
+				throw new ArgumentNullException("builder");
+			}
+			if(fieldInventory == null)
+			{
+				throw new ArgumentNullException("fieldInventory");
+			}
 			_detailList = builder;
+			_fieldInventory = fieldInventory;
 		}
 
 		/// <summary>

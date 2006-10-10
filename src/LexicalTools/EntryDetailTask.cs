@@ -15,13 +15,19 @@ namespace WeSay.LexicalTools
 		private bool _isActive;
 //        private int _currentIndex;
 		private IRecordListManager _recordListManager;
+		private readonly FieldInventory _fieldInventory;
 
-		public EntryDetailTask(IRecordListManager recordListManager)
+		public EntryDetailTask(IRecordListManager recordListManager, FieldInventory fieldInventory)
 		{
 			if (recordListManager == null)
 			{
-				throw new ArgumentNullException();
+				throw new ArgumentNullException("recordListManager");
 			}
+			if (fieldInventory == null)
+			{
+				throw new ArgumentNullException("fieldInventory");
+			}
+			_fieldInventory = fieldInventory;
 			InitializeComponent();
 			_recordListManager = recordListManager;
 			_records = recordListManager.Get<LexEntry>();

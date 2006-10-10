@@ -1,12 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
 using PicoContainer;
 using PicoContainer.Defaults;
 using WeSay.Data;
 using WeSay.LexicalModel;
-using WeSay.LexicalModel.Tests;
 using WeSay.UI;
 
 namespace WeSay.App
@@ -18,36 +16,21 @@ namespace WeSay.App
 		private bool _disposed;
 		private IMutablePicoContainer _picoContext;
 
-		public SampleTaskBuilder(WeSayWordsProject project, ICurrentWorkTask currentWorkTask)
+		public SampleTaskBuilder(WeSayWordsProject project, ICurrentWorkTask currentWorkTask, IRecordListManager recordListManager)
 		{
 			_picoContext = CreateContainer();
 			_picoContext.RegisterComponentInstance("Project", project);
 			_picoContext.RegisterComponentInstance("Current Task Provider", currentWorkTask);
-			IRecordListManager recordListManager;
-
-			if (project.PathToWeSaySpecificFilesDirectoryInProject.IndexOf("PRETEND") > -1)
-			{
-				IBindingList entries = new PretendRecordList();
-				recordListManager = new InMemoryRecordListManager();
-				IRecordList<LexEntry> masterRecordList = recordListManager.Get<LexEntry>();
-				foreach (LexEntry entry in entries)
-				{
-					masterRecordList.Add(entry);
-				}
-			}
-			else
-			{
-				com.db4o.config.Configuration db4oConfiguration = com.db4o.Db4o.Configure();
-				com.db4o.config.ObjectClass objectClass = db4oConfiguration.ObjectClass(typeof(Language.LanguageForm));
-				objectClass.ObjectField("_writingSystemId").Indexed(true);
-				objectClass.ObjectField("_form").Indexed(true);
-
-				objectClass = db4oConfiguration.ObjectClass(typeof(LexEntry));
-				objectClass.ObjectField("_modifiedDate").Indexed(true);
-
-				recordListManager = new Db4oRecordListManager(project.PathToLexicalModelDB);
-			}
 			_picoContext.RegisterComponentInstance("Record List Manager", recordListManager);
+
+			string[] analysisWritingSystemIds = new string[] { project.WritingSystems.AnalysisWritingSystemDefaultId };
+			string[] vernacularWritingSystemIds = new string[] {project.WritingSystems.VernacularWritingSystemDefaultId};
+			FieldInventory fieldInventory = new FieldInventory();
+			fieldInventory.Add(new Field("LexicalForm", vernacularWritingSystemIds));
+			fieldInventory.Add(new Field("Gloss", analysisWritingSystemIds));
+			fieldInventory.Add(new Field("Sentence", vernacularWritingSystemIds));
+			fieldInventory.Add(new Field("Translation", analysisWritingSystemIds));
+			_picoContext.RegisterComponentInstance("Default Field Inventory", fieldInventory);
 		}
 
 
@@ -61,21 +44,31 @@ namespace WeSay.App
 				tools.Add(CreateTool("WeSay.LexicalTools.EntryDetailTask,LexicalTools"));
 
 
-				tools.Add(CreateLexFieldTask("AddMeanings", "WeSay.LexicalTools.LexFieldTask,LexicalTools",
-								"Add Meanings", "Add glosses to entries when missing.", "GhostGloss Gloss"));
+				_picoContext.RegisterComponentImplementation("GlossFilter", Type.GetType("WeSay.LexicalModel.MissingGlossFilter,LexicalModel", true),
+				new IParameter[]{
+					new ComponentParameter("Default Field Inventory"),
+				});
 
+				tools.Add(CreateLexFieldTask("AddMeanings", "WeSay.LexicalTools.LexFieldTask,LexicalTools", "GlossFilter",
+								"Add Meanings", "Add glosses to entries when missing.", "Gloss"));
+
+
+				_picoContext.RegisterComponentImplementation("ExampleFilter", Type.GetType("WeSay.LexicalModel.MissingExampleSentenceFilter,LexicalModel", true),
+				new IParameter[]{
+					new ComponentParameter("Default Field Inventory"),
+				});
+				tools.Add(CreateLexFieldTask("AddExampleSentences", "WeSay.LexicalTools.LexFieldTask,LexicalTools", "ExampleFilter",
+								"Add Examples", "Add example sentences to entries.", "Sentence"));
 
 				tools.Add(CreatePictureTask("CollectWords", "WeSay.CommonTools.PictureControl,CommonTools",
 					"Collect Words", "Collect words using words in another language.", "RealWord.gif"));
 				tools.Add(CreatePictureTask("SemDom", "WeSay.CommonTools.PictureControl,CommonTools",
-					"Semantic Domains", "Collect words using semantic domains.", "SemDom.gif"));
-				//tools.Add(CreateTool("WeSay.CommonTools.PictureControl,CommonTools",
-				//    CreatePictureConfiguration("Semantic Domains", "SemDom.gif")));
+					"Semantic Domains", "Collect words by domains.", "SemDom.gif"));
 				return tools;
 			}
 		}
 
-		//TODO(JH): having a builder than needs to be kept around so it can be disposed of is all wrong.
+		//TODO(JH): having a builder that needs to be kept around so it can be disposed of is all wrong.
 		//either I want to change it to something like TaskList rather than ITaskBuilder, or
 		//it needs to create some disposable object other than a IList<>.
 		//The reason we need to be able to dispose of it is because we need some way to
@@ -134,19 +127,15 @@ namespace WeSay.App
 			return i;
 		}
 
-		private ITask CreateLexFieldTask(string id, string fullToolClass, string label, string description, string fieldsToShow)
+		private ITask CreateLexFieldTask(string id, string fullToolClass, string filter, string label, string description, string fieldsToShow)
 		{
-			_picoContext.RegisterComponentImplementation("GlossFilter", Type.GetType("WeSay.LexicalModel.MissingGlossFilter,LexicalModel", true),
-				new IParameter[]{
-					new ConstantParameter("en"),
-				});
-
 			_picoContext.RegisterComponentImplementation(id, Type.GetType(fullToolClass, true),
 				new IParameter[]{
 					new ComponentParameter("Record List Manager"),
-					new ComponentParameter("GlossFilter"),
+					new ComponentParameter(filter),
 					new ConstantParameter(label),
 					new ConstantParameter(description),
+					new ComponentParameter("Default Field Inventory"),
 					new ConstantParameter(fieldsToShow)
 				});
 

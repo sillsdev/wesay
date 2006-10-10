@@ -18,6 +18,7 @@ namespace WeSay.LexicalTools.Tests
 		private string _description;
 
 		private string _lexicalForm;
+		private FieldInventory _fieldInventory;
 
 		[SetUp]
 		public void Setup()
@@ -25,19 +26,25 @@ namespace WeSay.LexicalTools.Tests
 			BasilProject.InitializeForTests();
 
 			this._recordListManager = new InMemoryRecordListManager();
-			_filter = new MissingGlossFilter(BasilProject.Project.WritingSystems.VernacularWritingSystemDefault.Id);
+			Field field = new Field("Gloss", new string[]{BasilProject.Project.WritingSystems.VernacularWritingSystemDefault.Id});
+			this._filter = new MissingGlossFilter(field);
 			this._recordListManager.Register<LexEntry>(_filter);
 
 			LexEntry entry = new LexEntry();
-			_lexicalForm = "vernacular";
+			this._lexicalForm = "vernacular";
 			entry.LexicalForm.SetAlternative(BasilProject.Project.WritingSystems.VernacularWritingSystemDefault.Id, _lexicalForm);
 			IRecordList<LexEntry> masterRecordList = this._recordListManager.Get<LexEntry>();
 			masterRecordList.Add(entry);
 
-			_fieldsToShow = "LexicalForm";
-			_label = "My label";
-			_description = "My description";
-			_task = new LexFieldTask(_recordListManager, _filter, _label, _description, _fieldsToShow);
+			this._fieldsToShow = "LexicalForm";
+			this._label = "My label";
+			this._description = "My description";
+
+			this._fieldInventory = new FieldInventory();
+			this._fieldInventory.Add(new Field("Gloss", new string[] { "en" }));
+			this._fieldInventory.Add(new Field("Sentence", new string[] { "th" }));
+
+			this._task = new LexFieldTask(_recordListManager, _filter, _label, _description, _fieldInventory, _fieldsToShow);
 
 		}
 
@@ -57,7 +64,7 @@ namespace WeSay.LexicalTools.Tests
 		public void Create_RecordsIsEmpty()
 		{
 			ClearMasterRecordList();
-			LexFieldTask task = new LexFieldTask(_recordListManager, _filter, _label, _description, _fieldsToShow);
+			LexFieldTask task = new LexFieldTask(_recordListManager, _filter, _label, _description, _fieldInventory, _fieldsToShow);
 			Assert.IsNotNull(task);
 		}
 
@@ -69,35 +76,35 @@ namespace WeSay.LexicalTools.Tests
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void Create_RecordsIsNull_ThrowsArgumentNullException()
 		{
-			new LexFieldTask(null, _filter, _label, _description, _fieldsToShow);
+			new LexFieldTask(null, _filter, _label, _description, _fieldInventory, _fieldsToShow);
 		}
 
 		[Test]
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void Create_FilterIsNull_ThrowsArgumentNullException()
 		{
-			new LexFieldTask(_recordListManager, null, _label, _description, _fieldsToShow);
+			new LexFieldTask(_recordListManager, null, _label, _description, _fieldInventory, _fieldsToShow);
 		}
 
 		[Test]
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void Create_LabelIsNull_ThrowsArgumentNullException()
 		{
-			new LexFieldTask(_recordListManager, _filter, null, _description, _fieldsToShow);
+			new LexFieldTask(_recordListManager, _filter, null, _description, _fieldInventory, _fieldsToShow);
 		}
 
 		[Test]
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void Create_DescriptionIsNull_ThrowsArgumentNullException()
 		{
-			new LexFieldTask(_recordListManager, _filter, _label, null, _fieldsToShow);
+			new LexFieldTask(_recordListManager, _filter, _label, null, _fieldInventory, _fieldsToShow);
 		}
 
 		[Test]
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void Create_FieldFilterIsNull_ThrowsArgumentNullException()
 		{
-			new LexFieldTask(_recordListManager, _filter, _label, _description, null);
+			new LexFieldTask(_recordListManager, _filter, _label, _description, _fieldInventory, null);
 		}
 
 		[Test]
@@ -130,45 +137,77 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void FieldsToShow_SingleField_InitializedFromCreate()
 		{
-			LexFieldTask task = new LexFieldTask(_recordListManager, _filter, _label, _description, "Single");
-			Assert.AreEqual(true, task.ShowField("Single"));
-			Assert.AreEqual(false, task.ShowField("SingleField"));
-			Assert.AreEqual(false, task.ShowField("Single Field"));
-			Assert.AreEqual(false, task.ShowField("Field"));
-			Assert.AreEqual(false, task.ShowField(" "));
-			Assert.AreEqual(false, task.ShowField(String.Empty));
+			FieldInventory fieldInventory = new FieldInventory();
+			string[] writingSystemIds = new string[] {"en"};
+			fieldInventory.Add(new Field("Single", writingSystemIds));
+			fieldInventory.Add(new Field("SingleField", writingSystemIds));
+			fieldInventory.Add(new Field("Field", writingSystemIds));
+
+			LexFieldTask task = new LexFieldTask(_recordListManager, _filter, _label, _description, fieldInventory, "Single");
+			Assert.AreEqual(true, task.FieldInventory.Contains("Single"));
+			Assert.AreEqual(false, task.FieldInventory.Contains("SingleField"));
+			Assert.AreEqual(false, task.FieldInventory.Contains("Field"));
 		}
 
 		[Test]
 		public void FieldsToShow_TwoFields_InitializedFromCreate()
 		{
-			LexFieldTask task = new LexFieldTask(_recordListManager, _filter, _label, _description, "First Second");
-			Assert.AreEqual(true, task.ShowField("First"));
-			Assert.AreEqual(true, task.ShowField("Second"));
-			Assert.AreEqual(false, task.ShowField("FirstSecond"));
-			Assert.AreEqual(false, task.ShowField(" "));
-			Assert.AreEqual(false, task.ShowField(String.Empty));
+			FieldInventory fieldInventory = new FieldInventory();
+			string[] writingSystemIds = new string[] { "en" };
+			fieldInventory.Add(new Field("First", writingSystemIds));
+			fieldInventory.Add(new Field("Second", writingSystemIds));
+			fieldInventory.Add(new Field("FirstSecond", writingSystemIds));
+
+			LexFieldTask task = new LexFieldTask(_recordListManager, _filter, _label, _description, fieldInventory, "First Second");
+			Assert.AreEqual(true, task.FieldInventory.Contains("First"));
+			Assert.AreEqual(true, task.FieldInventory.Contains("Second"));
+			Assert.AreEqual(false, task.FieldInventory.Contains("FirstSecond"));
 		}
 
 		[Test]
 		public void FieldsToShow_ThreeFields_InitializedFromCreate()
 		{
-			LexFieldTask task = new LexFieldTask(_recordListManager, _filter, _label, _description, "First Second Third");
-			Assert.AreEqual(true, task.ShowField("First"));
-			Assert.AreEqual(true, task.ShowField("Second"));
-			Assert.AreEqual(true, task.ShowField("Third"));
-			Assert.AreEqual(false, task.ShowField("FirstSecond"));
-			Assert.AreEqual(false, task.ShowField("SecondThird"));
-			Assert.AreEqual(false, task.ShowField(" "));
-			Assert.AreEqual(false, task.ShowField(String.Empty));
+			FieldInventory fieldInventory = new FieldInventory();
+			string[] writingSystemIds = new string[] { "en" };
+			fieldInventory.Add(new Field("First", writingSystemIds));
+			fieldInventory.Add(new Field("Second", writingSystemIds));
+			fieldInventory.Add(new Field("Third", writingSystemIds));
+			fieldInventory.Add(new Field("FirstSecond", writingSystemIds));
+			fieldInventory.Add(new Field("SecondThird", writingSystemIds));
+			fieldInventory.Add(new Field("FirstSecondThird", writingSystemIds));
+
+			LexFieldTask task = new LexFieldTask(_recordListManager, _filter, _label, _description, fieldInventory, "First Second Third");
+			Assert.AreEqual(true, task.FieldInventory.Contains("First"));
+			Assert.AreEqual(true, task.FieldInventory.Contains("Second"));
+			Assert.AreEqual(true, task.FieldInventory.Contains("Third"));
+			Assert.AreEqual(false, task.FieldInventory.Contains("FirstSecond"));
+			Assert.AreEqual(false, task.FieldInventory.Contains("SecondThird"));
 		}
 
 		[Test]
 		public void FieldsToShow_HidingField_InitializedFromCreate()
 		{
-			LexFieldTask task = new LexFieldTask(_recordListManager, _filter, _label, _description, "GhostGloss Gloss");
-			Assert.AreEqual(true, task.ShowField("Gloss"));
-			Assert.AreEqual(true, task.ShowField("GhostGloss"));
+			FieldInventory fieldInventory = new FieldInventory();
+			string[] writingSystemIds = new string[] { "en" };
+			fieldInventory.Add(new Field("Gloss", writingSystemIds));
+			fieldInventory.Add(new Field("PrefixGloss", writingSystemIds));
+
+			LexFieldTask task = new LexFieldTask(_recordListManager, _filter, _label, _description, fieldInventory, "PrefixGloss Gloss");
+			Assert.AreEqual(true, task.FieldInventory.Contains("Gloss"));
+			Assert.AreEqual(true, task.FieldInventory.Contains("PrefixGloss"));
+		}
+
+		[Test]
+		public void FieldsToShow_PrefixedField_InitializedFromCreate()
+		{
+			FieldInventory fieldInventory = new FieldInventory();
+			string[] writingSystemIds = new string[] { "en" };
+			fieldInventory.Add(new Field("Gloss", writingSystemIds));
+			fieldInventory.Add(new Field("PrefixGloss", writingSystemIds));
+
+			LexFieldTask task = new LexFieldTask(_recordListManager, _filter, _label, _description, fieldInventory, "Gloss");
+			Assert.AreEqual(true, task.FieldInventory.Contains("Gloss"));
+			Assert.AreEqual(false, task.FieldInventory.Contains("PrefixGloss"));
 		}
 
 	}

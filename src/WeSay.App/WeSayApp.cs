@@ -1,12 +1,12 @@
 using System;
 using System.ComponentModel;
+using System.IO;
 using System.Windows.Forms;
 using CommandLine;
 using WeSay.Data;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Tests;
 using WeSay.UI;
-using System.IO;
 namespace WeSay.App
 {
 	class WeSayApp
@@ -41,18 +41,18 @@ namespace WeSay.App
 
 				BackupService backupService=null;
 
-				//builder = new SampleTaskBuilder(project, tabbedForm);
+				IRecordListManager recordListManager = MakeRecordListManager(project);
+				Db4oRecordListManager ds = recordListManager as Db4oRecordListManager;
+				if (ds != null)
+				{
+					backupService = new BackupService(project.PathToLocalBackup, ds.DataSource);
+					ds.DataCommitted += new EventHandler(backupService.OnDataCommitted);
+				}
+
+				//builder = new SampleTaskBuilder(project, tabbedForm, recordListManager);
 				using (FileStream config = new FileStream(project.PathToProjectTaskInventory, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete))
 				{
-					AbstractRecordListManager recordListManager =MakeRecordListManager(project);
 					builder = new ConfigFileTaskBuilder(config, project, tabbedForm, recordListManager);
-
-					Db4oRecordListManager ds = recordListManager as Db4oRecordListManager;
-					if(ds!=null)
-					{
-						backupService = new BackupService(project.PathToLocalBackup, ds.DataSource);
-						recordListManager.DataCommitted += new EventHandler(backupService.OnDataCommitted);
-					}
 				}
 
 				project.Tasks = builder.Tasks;
@@ -79,9 +79,9 @@ namespace WeSay.App
 
 
 
-		private static AbstractRecordListManager MakeRecordListManager(WeSayWordsProject project)
+		private static IRecordListManager MakeRecordListManager(WeSayWordsProject project)
 		{
-			AbstractRecordListManager recordListManager;
+			IRecordListManager recordListManager;
 
 			if (project.PathToWeSaySpecificFilesDirectoryInProject.IndexOf("PRETEND") > -1)
 			{
