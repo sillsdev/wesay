@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
+using System.Xml;
 using NUnit.Framework;
 using NUnit.Extensions.Forms;
 using WeSay.UI;
@@ -75,7 +76,12 @@ namespace WeSay.Admin.Tests
 		[Test]
 		public void WalkTabsAfterOpeningPretendProject()
 		{
-			_window.OpenProject(BasilProject.GetPretendProjectDirectory());
+			  _window.OpenProject(BasilProject.GetPretendProjectDirectory());
+		  //create or overwrite the tasks with our stored resource
+			StreamWriter writer = File.CreateText(WeSayWordsProject.Project.PathToProjectTaskInventory);
+			writer.Write(TestResources.tasks);
+			writer.Close();
+
 			WalkTopLevelTabs();
 		}
 

@@ -10,33 +10,12 @@ namespace WeSay.LexicalModel
 	[ReflectorType("fieldInventory")]
 	public class FieldInventory : List<Field>
 	{
+		private string _id="Default Field Inventory";
 
 		public FieldInventory()
 		{
 
 		}
-
-//        public FieldInventory(params Field[] fields)
-//        {
-//            if(fields == null)
-//            {
-//                throw new ArgumentNullException();
-//            }
-//            int i = 0;
-//            foreach (Field field in fields)
-//            {
-//                i++;
-//                if (field == null)
-//                {
-//                    throw new ArgumentNullException("field",
-//                                                    "field argument" + i.ToString() + "is null");
-//                }
-//            }
-//
-//            _fields = fields;
-//        }
-
-
 
 		/// <summary>
 		/// For serialization only
@@ -61,6 +40,13 @@ namespace WeSay.LexicalModel
 					this.Add(f);
 				}
 			}
+		}
+
+		[ReflectorProperty("id", Required = false)]
+		public string Id
+		{
+			get { return _id; }
+			set { _id = value; }
 		}
 
 		///<summary>
@@ -105,29 +91,13 @@ namespace WeSay.LexicalModel
 			return true;
 		}
 
-//        public void ICollection<Field>.Add(Field item)
-//        {
-//            Fields.
-//        }
+		public Field GetField(string fieldName)
+		{
+			Field field = null;
+			TryGetField(fieldName, out field);
+			return field;
+		}
 
-//        void ICollection<Field>.Clear()
-//        {
-//            throw new NotSupportedException();
-//        }
-
-		///<summary>
-		///Determines whether the <see cref="T:System.Collections.Generic.ICollection`1"></see> contains a specific value.
-		///</summary>
-		///
-		///<returns>
-		///true if item is found in the <see cref="T:System.Collections.Generic.ICollection`1"></see>; otherwise, false.
-		///</returns>
-		///
-		///<param name="item">The object to locate in the <see cref="T:System.Collections.Generic.ICollection`1"></see>.</param>
-//        public bool Contains(Field item)
-//        {
-//            return -1 != Array.IndexOf<Field>(_fields, item);
-//        }
 
 		public bool Contains(string fieldName)
 		{
@@ -139,87 +109,56 @@ namespace WeSay.LexicalModel
 			return field.Visibility == Field.VisibilitySetting.Visible;
 		}
 
-		///<summary>
-		///Copies the elements of the <see cref="T:System.Collections.Generic.ICollection`1"></see> to an <see cref="T:System.Array"></see>, starting at a particular <see cref="T:System.Array"></see> index.
-		///</summary>
-		///
-		///<param name="array">The one-dimensional <see cref="T:System.Array"></see> that is the destination of the elements copied from <see cref="T:System.Collections.Generic.ICollection`1"></see>. The <see cref="T:System.Array"></see> must have zero-based indexing.</param>
-		///<param name="arrayIndex">The zero-based index in array at which copying begins.</param>
-		///<exception cref="T:System.ArgumentOutOfRangeException">arrayIndex is less than 0.</exception>
-		///<exception cref="T:System.ArgumentNullException">array is null.</exception>
-		///<exception cref="T:System.ArgumentException">array is multidimensional.-or-arrayIndex is equal to or greater than the length of array.-or-The number of elements in the source <see cref="T:System.Collections.Generic.ICollection`1"></see> is greater than the available space from arrayIndex to the end of the destination array.-or-Type T cannot be cast automatically to the type of the destination array.</exception>
-//        public void CopyTo(Field[] array, int arrayIndex)
-//        {
-//            _fields.CopyTo(array, arrayIndex);
-//        }
+		/// <summary>
+		/// used in the admin to make sure what we write out is based on the latest master inventory
+		/// </summary>
+		/// <param name="masterInventory"></param>
+		/// <param name="usersInventory"></param>
+		public static void ModifyMasterFromUser(FieldInventory masterInventory, FieldInventory usersInventory)
+		{
+			foreach (Field masterField in masterInventory)
+			{
+				Field userField = usersInventory.GetField(masterField.FieldName);
+				if (userField != null)
+				{
+					Field.ModifyMasterFromUser(masterField, userField);
+				}
+			}
+		}
 
-//        bool ICollection<Field>.Remove(Field item)
-//        {
-//            throw new NotSupportedException();
-//        }
 
-		///<summary>
-		///Gets the number of elements contained in the <see cref="T:System.Collections.Generic.ICollection`1"></see>.
-		///</summary>
-		///
-		///<returns>
-		///The number of elements contained in the <see cref="T:System.Collections.Generic.ICollection`1"></see>.
-		///</returns>
-		///
-//        public int Count
-//        {
-//            get
-//            {
-//                return _fields.Length;
-//            }
-//        }
 
-		///<summary>
-		///Gets a value indicating whether the <see cref="T:System.Collections.Generic.ICollection`1"></see> is read-only.
-		///</summary>
-		///
-		///<returns>
-		///true
-		///</returns>
-		///
-//        public bool IsReadOnly
-//        {
-//            get
-//            {
-//                return true;
-//            }
-//        }
+		public static FieldInventory MakeMasterInventory(WritingSystemCollection writingSystems)
+		{
+			FieldInventory masterInventory = new FieldInventory();
+			masterInventory.Add(MakeField(Field.FieldNames.EntryLexicalForm.ToString(), "Word", true,writingSystems));
+			masterInventory.Add(MakeField(Field.FieldNames.SenseGloss.ToString(), "Gloss", true,writingSystems));
+			masterInventory.Add(MakeField(Field.FieldNames.ExampleSentence.ToString(), "Example Sentence", true,writingSystems));
+			masterInventory.Add(MakeField(Field.FieldNames.ExampleTranslation.ToString(), "Translation", false,writingSystems));
+			return masterInventory;
+		}
 
-		///<summary>
-		///Returns an enumerator that iterates through the collection.
-		///</summary>
-		///
-		///<returns>
-		///A <see cref="T:System.Collections.Generic.IEnumerator`1"></see> that can be used to iterate through the collection.
-		///</returns>
-//        ///<filterpriority>1</filterpriority>
-//        IEnumerator<Field> IEnumerable<Field>.GetEnumerator()
-//        {
-//            foreach (Field field in _fields)
-//            {
-//                yield return field;
-//            }
-//        }
+		private static Field MakeField(string name, string displayName, bool defaultVisible, WritingSystemCollection writingSystems)
+		{
+			Field field = new Field();
+			field.FieldName = name;
+			field.DisplayName = displayName;
+			if (defaultVisible)
+			{
+				field.Visibility = Field.VisibilitySetting.Visible;
+			}
+			else
+			{
+				field.Visibility = Field.VisibilitySetting.Invisible;
+			}
 
-		///<summary>
-		///Returns an enumerator that iterates through a collection.
-		///</summary>
-		///
-		///<returns>
-		///An <see cref="T:System.Collections.IEnumerator"></see> object that can be used to iterate through the collection.
-		///</returns>
-		///<filterpriority>2</filterpriority>
-//        public IEnumerator GetEnumerator()
-//        {
-//            return _fields.GetEnumerator();
-//        }
-//
-//
+			foreach (string id in writingSystems.Keys)
+			{
+				field.WritingSystemIds.Add(id);
+			}
+			return field;
+		}
+
 		#region persistence
 
 		public void Load(string path)

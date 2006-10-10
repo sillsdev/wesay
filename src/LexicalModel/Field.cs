@@ -119,6 +119,25 @@ namespace WeSay.LexicalModel
 										});
 		}
 
+		public static void ModifyMasterFromUser(Field master, Field user)
+		{
+			master.WritingSystemIds = GetIntersectionOfWsIdLists(master, user);
+			master.Visibility = user.Visibility;
+		}
+
+		private static List<string> GetIntersectionOfWsIdLists(Field master, Field user)
+		{
+			List<string> l = new List<string>();
+			foreach (string id in master.WritingSystemIds)
+			{
+				if (user.WritingSystemIds.Contains(id))
+				{
+					l.Add(id);
+				}
+			}
+			return l;
+		}
+
 		#region persistence
 		internal class WsIdCollectionSerializerFactory : ISerialiserFactory
 		{

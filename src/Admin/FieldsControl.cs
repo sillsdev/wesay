@@ -1,12 +1,8 @@
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
 using System.IO;
-using System.Text;
 using System.Windows.Forms;
 using System.Xml;
+using WeSay.Language;
 using WeSay.LexicalModel;
 using WeSay.UI;
 
@@ -26,7 +22,11 @@ namespace WeSay.Admin
 
 			LoadInventory();
 			//nb: may important to do this after loading the inventory
-			this._fieldsListBox.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this._fieldsListBox_ItemCheck);
+			this._fieldsListBox.ItemCheck += new ItemCheckEventHandler(this._fieldsListBox_ItemCheck);
+			if (_fieldsListBox.Items.Count > 0)
+			{
+				_fieldsListBox.SelectedIndex = 0;
+			}
 
 		}
 
@@ -46,26 +46,19 @@ namespace WeSay.Admin
 
 			if (AdminWindow.SharedFieldInventory == null)
 			{
-				AdminWindow.SharedFieldInventory = MakeMasterInventory();
+				AdminWindow.SharedFieldInventory = FieldInventory.MakeMasterInventory(BasilProject.Project.WritingSystems);
 			}
 			FieldInventory oldInventory = GetUsersExistingInventory();
 
+			FieldInventory.ModifyMasterFromUser(AdminWindow.SharedFieldInventory, oldInventory);
 			foreach (Field field in AdminWindow.SharedFieldInventory)
 			{
-				bool showCheckMark = oldInventory.Contains(field.FieldName);
-				this._fieldsListBox.Items.Add(field, showCheckMark);
+				this._fieldsListBox.Items.Add(field, field.Visibility == Field.VisibilitySetting.Visible);
 			}
-		}
+	  }
 
-		private static FieldInventory MakeMasterInventory()
-		{
-			FieldInventory masterInventory = new FieldInventory();
-			masterInventory.Add(MakeField(Field.FieldNames.EntryLexicalForm.ToString(), "Word"));
-			masterInventory.Add(MakeField(Field.FieldNames.SenseGloss.ToString(), "Gloss"));
-			masterInventory.Add(MakeField(Field.FieldNames.ExampleSentence.ToString(), "Example Sentence"));
-			masterInventory.Add(MakeField(Field.FieldNames.ExampleTranslation.ToString(), "Translation"));
-			return masterInventory;
-		}
+
+
 
 		private static FieldInventory GetUsersExistingInventory()
 		{
@@ -86,14 +79,7 @@ namespace WeSay.Admin
 			return oldInventory;
 		}
 
-		private static Field MakeField(string name, string displayName)
-		{
-			Field field = new Field();
-			field.FieldName = name;
-			field.DisplayName = displayName;
-			field.Visibility = Field.VisibilitySetting.Invisible;
-			return field;
-		}
+
 
 		private static XmlDocument GetProjectDoc()
 		{
@@ -122,7 +108,56 @@ namespace WeSay.Admin
 			}
 			else
 			{
-				((Field)_fieldsListBox.SelectedItem).Visibility = Field.VisibilitySetting.Invisible;
+				CurrentField.Visibility = Field.VisibilitySetting.Invisible;
+			}
+		}
+
+		private Field CurrentField
+		{
+			get
+			{
+				return (Field)_fieldsListBox.SelectedItem;
+			}
+		}
+
+		private void _fieldsListBox_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			_descriptionBox.Text = CurrentField.Description;
+			LoadWritingSystemBox();
+		}
+
+
+		private void LoadWritingSystemBox()
+		{
+			_writingSystemListBox.Items.Clear();
+			foreach (WritingSystem ws in  BasilProject.Project.WritingSystems.Values)
+			{
+				int i= _writingSystemListBox.Items.Add(ws);
+				_writingSystemListBox.SetItemChecked(i, CurrentField.WritingSystemIds.Contains(ws.Id));
+			}
+		}
+
+		private void _writingSystemListBox_ItemCheck(object sender, ItemCheckEventArgs e)
+		{
+			//happens when we are setting initial checkbox states from code
+			if (_writingSystemListBox.SelectedItem == null)
+				return;
+
+			if (e.NewValue == CheckState.Checked)
+			{
+				CurrentField.WritingSystemIds.Add(CurrentWritingSystemId);
+			}
+			else
+			{
+				CurrentField.WritingSystemIds.Remove(CurrentWritingSystemId);
+			}
+		}
+
+		private string CurrentWritingSystemId
+		{
+			get
+			{
+				return _writingSystemListBox.SelectedItem.ToString();
 			}
 		}
 	}

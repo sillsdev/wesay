@@ -97,5 +97,28 @@ namespace WeSay.LexicalModel.Tests
 			Assert.IsTrue(field.WritingSystemIds.Contains("writingSystemId1"));
 		}
 
+
+		[Test]
+		public void InvalidWritingSystemNotConveyedToMaster()
+		{
+			Field master = new Field("foo", new string[] {"dropme", "keepme" });
+			Field user = new Field("foo", new string[] { "dropmetoo", "keepme" });
+			Field.ModifyMasterFromUser(master, user);
+
+			Assert.AreEqual(1, master.WritingSystemIds.Count);
+			Assert.IsTrue(master.WritingSystemIds.Contains("keepme"));
+		}
+
+		[Test]
+		public void MasterWritingSystemsTrimmedByUser()
+		{
+			Field master = new Field("foo", new string[] { "dropme", "keepme" });
+			Field user = new Field("foo", new string[] { "keepme" });
+			Field.ModifyMasterFromUser(master, user);
+
+			Assert.AreEqual(1, master.WritingSystemIds.Count);
+			Assert.IsTrue(master.WritingSystemIds.Contains("keepme"));
+			Assert.IsFalse(master.WritingSystemIds.Contains("dropme"));
+		}
 	}
 }

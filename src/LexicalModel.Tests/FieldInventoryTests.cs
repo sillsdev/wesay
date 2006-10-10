@@ -1,5 +1,6 @@
 using System;
 using NUnit.Framework;
+using WeSay.Language;
 
 namespace WeSay.LexicalModel.Tests
 {
@@ -89,6 +90,52 @@ namespace WeSay.LexicalModel.Tests
 			f.Add(new Field("field2",  new string[]{"en", "br"}));
 			return f;
 		}
+
+
+		[Test]
+		public void MergeWithEmptyInventory()
+		{
+			FieldInventory master = MakeMasterInventory();
+			int count = master.Count;
+			FieldInventory empty = new FieldInventory ();
+			FieldInventory.ModifyMasterFromUser(master, empty);
+
+			Assert.AreEqual(count, master.Count);
+		}
+
+		private static FieldInventory MakeMasterInventory()
+		{
+			WritingSystemCollection w = new WritingSystemCollection();
+			w.Add("red", new WritingSystem("red", new System.Drawing.Font("arial", 12)));
+			w.Add("white", new WritingSystem("white", new System.Drawing.Font("arial", 12)));
+			return FieldInventory.MakeMasterInventory(w);
+		}
+
+		[Test]
+		public void UserInvWithVisibleFieldConveyedToMaster()
+		{
+			FieldInventory master = MakeMasterInventory();
+			Assert.IsFalse(master.Contains(Field.FieldNames.ExampleTranslation.ToString()),"If translation is turned on by default, you must fix the test which sees if it is turned on by the user inventory");
+			int count = master.Count;
+			FieldInventory simple = new FieldInventory ();
+			simple.Add(new Field(Field.FieldNames.ExampleTranslation.ToString(), new String[] {"en"}));
+			FieldInventory.ModifyMasterFromUser(master, simple);
+
+			Assert.AreEqual(count, master.Count);
+			Assert.IsTrue(master.Contains(Field.FieldNames.ExampleTranslation.ToString()));
+		}
+
+		[Test]
+		public void ExtraFieldDiscarded()
+		{
+			FieldInventory master = MakeMasterInventory();
+			int count = master.Count;
+			FieldInventory simple = new FieldInventory();
+			simple.Add(new Field("dummy", new String[] { "en" }));
+			FieldInventory.ModifyMasterFromUser(master, simple);
+			Assert.IsFalse(master.Contains("dummy"));
+		}
+
 	}
 
 }

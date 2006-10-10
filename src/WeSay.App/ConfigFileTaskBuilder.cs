@@ -40,7 +40,7 @@ namespace WeSay.App
 					System.Diagnostics.Debug.Assert(component.Name == "fieldInventory");
 					FieldInventory inventory = new FieldInventory();
 					inventory.LoadFromString(component.OuterXml);
-					_picoContext.RegisterComponentInstance(component.GetAttribute("id",String.Empty), inventory);
+					_picoContext.RegisterComponentInstance(inventory.Id, inventory);
 				}
 			}
 		}

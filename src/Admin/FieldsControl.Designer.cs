@@ -79,6 +79,7 @@ namespace WeSay.Admin
 			this._fieldsListBox.Name = "_fieldsListBox";
 			this._fieldsListBox.Size = new System.Drawing.Size(169, 259);
 			this._fieldsListBox.TabIndex = 0;
+			this._fieldsListBox.SelectedIndexChanged += new System.EventHandler(this._fieldsListBox_SelectedIndexChanged);
 			//
 			// tableLayoutPanel1
 			//
@@ -122,6 +123,7 @@ namespace WeSay.Admin
 			this._writingSystemListBox.Name = "_writingSystemListBox";
 			this._writingSystemListBox.Size = new System.Drawing.Size(314, 94);
 			this._writingSystemListBox.TabIndex = 0;
+			this._writingSystemListBox.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this._writingSystemListBox_ItemCheck);
 			//
 			// groupBox2
 			//
