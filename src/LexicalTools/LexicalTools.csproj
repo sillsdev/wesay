@@ -116,10 +116,6 @@
 	  <SubType>Designer</SubType>
 	  <DependentUpon>GatherWordListControl.cs</DependentUpon>
 	</EmbeddedResource>
-	<EmbeddedResource Include="LexPreviewWithEntryControl.resx">
-	  <SubType>Designer</SubType>
-	  <DependentUpon>LexPreviewWithEntryControl.cs</DependentUpon>
-	</EmbeddedResource>
 	<EmbeddedResource Include="Properties\Resources.resx">
 	  <SubType>Designer</SubType>
 	  <Generator>ResXFileCodeGenerator</Generator>

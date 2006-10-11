@@ -1,6 +1,5 @@
 using System;
 using System.Diagnostics;
-using System.Drawing;
 using System.Windows.Forms;
 using WeSay.Data;
 using WeSay.LexicalModel;
@@ -27,7 +26,7 @@ namespace WeSay.LexicalTools
 			_records = records;
 			_fieldInventory = fieldInventory;
 			InitializeComponent();
-			this.BackColor = WeSay.UI.DisplaySettings.Default.BackgroundColor;
+			BackColor = WeSay.UI.DisplaySettings.Default.BackgroundColor;
 			_entryDetailPanel.BackColor = WeSay.UI.DisplaySettings.Default.BackgroundColor;
 			_entryDetailPanel.DataSource = CurrentRecord;
 

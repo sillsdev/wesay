@@ -33,16 +33,22 @@ namespace ListBox
 
 			//nb: this comes at a time that the Selection.GetRowsIndex() is empty,
 			//so it's not too useful!
-			//Selection.Changed += new EventHandler(Selection_Changed);
+			//ESA: I disagree this event is necessary in order to handle key presses in addition to mouse activity.
+			Selection.Changed += new EventHandler(Selection_Changed);
 
+			Selection.FocusBackColor = Color.FromArgb(75, 49, 106, 197);
 		}
-
 
 		void Selection_Changed(object sender, EventArgs e)
 		{
-			if (SelectedIndexChanged != null)
+			Selection selection = (Selection)sender;
+			if(selection.ActivePosition.Column != Position.c_EmptyIndex &&
+			   selection.ActivePosition.Row != Position.c_EmptyIndex)
 			{
-				SelectedIndexChanged.Invoke(this, null);
+				if (SelectedIndexChanged != null)
+				{
+					SelectedIndexChanged.Invoke(this, e);
+				}
 			}
 		}
 
@@ -287,25 +293,21 @@ namespace ListBox
 
 		void BindingListGrid_ListChanged(object sender, ListChangedEventArgs e)
 		{
-			Rows.RowsChanged();
-			InvalidateCells();
-			if (Selection.IsEmpty() && _list.Count > 0)
+			 Rows.RowsChanged();
+			 InvalidateCells();
+			 if (Selection.IsEmpty() && _list.Count > 0)
 			{
 				if (e.NewIndex == _list.Count)
 				{
 					//just deleted the last item in the list, so select the one above it
 					Selection.SelectRow(e.NewIndex -1, true); ;
-
 				}
 				else
 				{
-				  //does this ever happen?
-					Debug.Fail("it does happen");
 					Selection.SelectRow(0, true); ;
 				}
 			  //  SelectedIndex = 0;
 			}
-
 		}
 
 		protected virtual void Bind()
@@ -484,13 +486,19 @@ namespace ListBox
 //                Rows.AutoSizeRow(0);
 
 			//hack that won't last us long. We really need to base this on the font, not some string.
+			bool autosized = false;
 			foreach (object o in _list)
 			{
 				string s = o.ToString();
 				if (s == null || s == String.Empty)
 					continue;
 				Rows.AutoSizeRow(_list.IndexOf(o));
+				autosized = true;
 				break;
+			}
+			if(autosized == false)
+			{
+				Rows.RowHeight = 40;
 			}
 		}
 

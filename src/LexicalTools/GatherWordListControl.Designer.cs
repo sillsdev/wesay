@@ -1,3 +1,5 @@
+using WeSay.UI;
+
 namespace WeSay.LexicalTools
 {
 	partial class GatherWordListControl
@@ -57,7 +59,7 @@ namespace WeSay.LexicalTools
 			//
 			// _listViewWords
 			//
-			this._listViewWords.BackColor = System.Drawing.Color.AliceBlue;
+			this._listViewWords.BackColor = DisplaySettings.Default.BackgroundColor;
 			this._listViewWords.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this._listViewWords.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
 			listViewItem1,
@@ -82,7 +84,7 @@ namespace WeSay.LexicalTools
 			//
 			// _boxForeignWord
 			//
-			this._boxForeignWord.BackColor = System.Drawing.Color.AliceBlue;
+			this._boxForeignWord.BackColor = DisplaySettings.Default.BackgroundColor;
 			this._boxForeignWord.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this._boxForeignWord.Location = new System.Drawing.Point(78, 69);
 			this._boxForeignWord.Name = "_boxForeignWord";

@@ -73,7 +73,7 @@ namespace WeSay.LexicalTools
 		public override void Activate()
 		{
 			base.Activate();
-			_lexFieldControl = new LexFieldControl(DataSource, FieldInventory);
+			_lexFieldControl = new LexFieldControl(DataSource, FieldInventory, _filter.Inquire);
 			_lexFieldControl.SelectedIndexChanged += new EventHandler(OnRecordSelectionChanged);
 		}
 

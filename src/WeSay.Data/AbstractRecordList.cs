@@ -9,7 +9,6 @@ namespace WeSay.Data
 	{
 		protected AbstractRecordList()
 		{
-			_propertyDescriptorCollectionForT = TypeDescriptor.GetProperties(typeof(T));
 		}
 		private IList<T> _records;
 
@@ -44,7 +43,6 @@ namespace WeSay.Data
 				_listSortDirection = value;
 			}
 		}
-		readonly private PropertyDescriptorCollection _propertyDescriptorCollectionForT;
 
 		public event EventHandler<RecordListEventArgs<T>> AddingRecord = delegate
 		{

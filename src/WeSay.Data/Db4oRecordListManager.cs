@@ -296,7 +296,9 @@ namespace WeSay.Data
 				}
 				else if (Contains(item))
 				{
+					int index = IndexOf(item);
 					((Db4oList<T>)Records).Refresh(item);
+					OnItemDeleted(index);
 #if DEBUG
 					SerializeRecordIds();
 #endif

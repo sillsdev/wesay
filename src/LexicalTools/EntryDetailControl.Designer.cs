@@ -1,4 +1,4 @@
-using System;
+using WeSay.UI;
 
 namespace WeSay.LexicalTools
 {
@@ -43,6 +43,7 @@ namespace WeSay.LexicalTools
 			this._btnDeleteWord = new System.Windows.Forms.LinkLabel();
 			this.panel1.SuspendLayout();
 			this.SuspendLayout();
+
 			//
 			// _entryDetailPanel
 			//
@@ -66,6 +67,7 @@ namespace WeSay.LexicalTools
 			this.panel1.Name = "panel1";
 			this.panel1.Size = new System.Drawing.Size(493, 34);
 			this.panel1.TabIndex = 7;
+			this.panel1.BackColor = DisplaySettings.Default.BackgroundColor;
 			//
 			// _recordsListBox
 			//
@@ -117,6 +119,7 @@ namespace WeSay.LexicalTools
 			//
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.BackColor = DisplaySettings.Default.BackgroundColor;
 			this.Controls.Add(this._recordsListBox);
 			this.Controls.Add(this.panel1);
 			this.Controls.Add(this._entryDetailPanel);

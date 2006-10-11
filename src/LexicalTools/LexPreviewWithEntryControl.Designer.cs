@@ -1,3 +1,5 @@
+using WeSay.UI;
+
 namespace WeSay.LexicalTools
 {
 	partial class LexPreviewWithEntryControl
@@ -13,7 +15,7 @@ namespace WeSay.LexicalTools
 		/// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
 		protected override void Dispose(bool disposing)
 		{
-			if (disposing && !this.IsDisposed)
+			if (disposing && !IsDisposed)
 			{
 				if (_record != null)
 				{
@@ -59,6 +61,7 @@ namespace WeSay.LexicalTools
 			this._detailListControl.Name = "_detailListControl";
 			this._detailListControl.Size = new System.Drawing.Size(450, 250);
 			this._detailListControl.TabIndex = 1;
+
 			//
 			// LexPreviewWithEntryControl
 			//

@@ -48,6 +48,7 @@ namespace WeSay.LexicalTools.Tests
 			ActivateTask();
 
 			this._tabControl = new TabControl();
+
 			this._tabControl.Dock = DockStyle.Fill;
 			this._tabControl.TabPages.Add(this._detailTaskPage);
 			this._tabControl.TabPages.Add("Dummy");
