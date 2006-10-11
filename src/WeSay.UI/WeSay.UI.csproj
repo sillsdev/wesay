@@ -56,6 +56,7 @@
 	<Compile Include="DetailList.Designer.cs">
 	  <DependentUpon>DetailList.cs</DependentUpon>
 	</Compile>
+	<Compile Include="DisplaySettings.cs" />
 	<Compile Include="GhostBinding.cs" />
 	<Compile Include="ICurrentWorkTask.cs" />
 	<Compile Include="IProject.cs" />
