@@ -27,7 +27,8 @@ namespace WeSay.LexicalTools
 			_records = records;
 			_fieldInventory = fieldInventory;
 			InitializeComponent();
-			_entryDetailPanel.BackColor = SystemColors.Control;//we like it to stand out at design time, but not runtime
+			this.BackColor = WeSay.UI.DisplaySettings.Default.BackgroundColor;
+			_entryDetailPanel.BackColor = WeSay.UI.DisplaySettings.Default.BackgroundColor;
 			_entryDetailPanel.DataSource = CurrentRecord;
 
 			_recordsListBox.DataSource = _records;

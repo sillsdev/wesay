@@ -4,7 +4,7 @@ namespace WeSay.UI
 {
 	public class DisplaySettings
 	{
-		public static DisplaySettings Default = new DisplaySettings(Color.FromArgb(248,255,255));
+		public static DisplaySettings Default = new DisplaySettings(Color.FromArgb(235, 255, 215));//248,255,255));
 
 		public DisplaySettings()
 		{

@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 using WeSay.Language;
@@ -7,15 +8,21 @@ namespace WeSay.UI
 {
 	public partial class WeSayTextBox : TextBox
 	{
+		private readonly WritingSystem _writingSystem;
 		private KeymanLink.KeymanLink _keymanLink;
-		// private bool _isGhost;
 		public WeSayTextBox()
 		{
 			InitializeComponent();
+			Debug.Assert(this.DesignMode);
+			this.BorderStyle = BorderStyle.None;
+			this.BackColor = System.Drawing.Color.White;
+			//            this.Multiline = true;
+//            ComputeHeight();
 		}
+
 		public WeSayTextBox(WritingSystem ws)
 		{
-		 //   _isGhost = false;
+			_writingSystem = ws;
 			InitializeComponent();
 			Font = ws.Font;
 			_keymanLink = new KeymanLink.KeymanLink();
@@ -23,6 +30,10 @@ namespace WeSay.UI
 			{
 				_keymanLink = null;
 			}
+			this.BorderStyle = BorderStyle.None;
+			this.BackColor = System.Drawing.Color.White;
+	//        this.Multiline = true;
+	  //      ComputeHeight();
 		}
 
 		public new string Text
@@ -30,20 +41,31 @@ namespace WeSay.UI
 			set
 			{
 				base.Text = value;
-
-				Bitmap  bitmap = new System.Drawing.Bitmap(10, 10);
-				System.Drawing.Graphics graphics = System.Drawing.Graphics.FromImage(bitmap);
-				SizeF sz = graphics.MeasureString(value, Font);
-			  //  sz.Height += 5;
-				if (Height < sz.Height)
-				{
-					Height = (int)sz.Height;
-				}
 			}
 			get
 			{
 				return base.Text;
 			}
+		}
+
+		private void ComputeHeight()
+		{
+			System.Drawing.Graphics graphics = this.CreateGraphics();
+		  //  SizeF sz = graphics.MeasureString(this.Text, Font);
+
+			Graphics g = this.CreateGraphics();
+	//        int h = this.Font.FontFamily.GetEmHeight(this.Font.Style) - this.Font.FontFamily.GetLineSpacing(this.Font.Style);
+			int h = this.Font.FontFamily.GetCellAscent(this.Font.Style) + this.Font.FontFamily.GetCellDescent(this.Font.Style);
+			int hInPixels = (int)(this.Font.Size * h / this.Font.FontFamily.GetEmHeight(this.Font.Style));
+
+
+  //          Height = hInPixels;
+
+		}
+
+		public WritingSystem WritingSystem
+		{
+			get { return _writingSystem; }
 		}
 
 		//public bool IsGhost
@@ -110,5 +132,39 @@ namespace WeSay.UI
 			}
 
 		}
+
+	//        protected override Padding DefaultMargin
+//        {
+//            get
+//            {
+//                return new Padding(0);
+//            }
+//        }
+//        public override Size GetPreferredSize(Size proposedSize)
+//        {
+//            Size preferredSize = base.GetPreferredSize(proposedSize);
+//            preferredSize.Height = this.FontHeight;
+//            return preferredSize;
+//        }
+
+//        protected override Size DefaultSize
+//        {
+//            get
+//            {
+//                Size defaultSize =base.DefaultSize;
+//                defaultSize.Height = this.FontHeight;
+//                return defaultSize;
+//            }
+//        }
+//        protected override void OnFontChanged(EventArgs e)
+//        {
+//            base.OnFontChanged(e);
+//            Height = FontHeight;
+//        }
+//        protected override void OnSizeChanged(EventArgs e)
+//        {
+//            base.OnSizeChanged(e);
+//            Height = FontHeight;
+//        }
 	}
 }

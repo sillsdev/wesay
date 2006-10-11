@@ -50,10 +50,10 @@ namespace WeSay.UI
 		{
 			int top = 0;// AddHorizontalRule(panel, isHeader, _rowCount == 0);
 			if (isHeader)
-				top = 15;
+				top = 5;
 			Label label = new Label();
 			label.Text = fieldLabel;
-			label.Size = new Size(60, 50);
+			label.Size = new Size(75, 50);
 			label.Top = 9+top;
 
 			editWidget.Top = 6+top;
@@ -63,6 +63,7 @@ namespace WeSay.UI
 			editWidget.Anchor = AnchorStyles.Left | AnchorStyles.Right;
 
 			Panel panel = new Panel();
+			//            panel.Size = new Size(100, 10+editWidget.Height+(editWidget.Top-6) );//careful.. if width is too small, then editwidget grows to much.  Weird.
 			panel.Size = new Size(100, 10+editWidget.Height+(editWidget.Top-6) );//careful.. if width is too small, then editwidget grows to much.  Weird.
 			panel.Controls.Add(label);
 			panel.Controls.Add(editWidget);
@@ -130,11 +131,11 @@ namespace WeSay.UI
 			{
 				if (c.Controls.Count < 2)
 					continue;
-				WeSayTextBox tb = c.Controls[_indexOfTextBox] as WeSayTextBox;
-				if (tb == null)
-					continue;
-
-				tb.FadeInSomeMore((Label) c.Controls[_indexOfLabel]);
+//                WeSayTextBox tb = c.Controls[_indexOfTextBox] as WeSayTextBox;
+//                if (tb == null)
+//                    continue;
+//
+//                tb.FadeInSomeMore((Label) c.Controls[_indexOfLabel]);
 			}
 		}
 
@@ -143,7 +144,17 @@ namespace WeSay.UI
 		public void MoveInsertionPoint(int row)
 		{
 			Panel p = (Panel)ActualControls[RowToControlIndex(row)];
-			WeSayTextBox tb = (WeSayTextBox)GetEditControlFromReferenceControl(p);
+			Control c = GetEditControlFromReferenceControl(p);
+			WeSayTextBox tb = null;
+			if (c is MultiTextControl)
+			{
+				MultiTextControl multText = (MultiTextControl)c;
+				tb = multText.TextBoxes[0];
+			}
+			else
+			{
+				tb = (WeSayTextBox)c;
+			}
 			tb.Focus();
 			tb.Select(1000, 0);//go to end
 		}

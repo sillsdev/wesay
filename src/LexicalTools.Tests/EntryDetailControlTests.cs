@@ -56,6 +56,18 @@ namespace WeSay.LexicalTools.Tests
 			this._window.Show();
 		}
 
+
+		/// <summary>
+		/// DOESN'T WORK (this version of nunit forms seems broken in this respect)
+		/// </summary>
+		public override bool UseHidden
+		{
+			get
+			{
+				return true;
+			}
+		}
+
 		private void AddEntry(string lexemeForm)
 		{
 			LexEntry entry = new LexEntry();
@@ -195,7 +207,7 @@ namespace WeSay.LexicalTools.Tests
 
 		private static string GetLexicalFormControlName()
 		{
-			return "LexicalForm_" + BasilProject.Project.WritingSystems.VernacularWritingSystemDefaultId;
+			return Field.FieldNames.EntryLexicalForm.ToString() +"_" + BasilProject.Project.WritingSystems.VernacularWritingSystemDefaultId;
 		}
 
 		private static void TypeInLexicalForm(string value)

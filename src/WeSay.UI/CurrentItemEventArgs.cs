@@ -41,12 +41,21 @@ namespace WeSay.UI
 				_dataTarget = dataTarget;
 				_writingSystem = writingSystem;
 			}
+		public CurrentItemEventArgs(INotifyPropertyChanged dataTarget, string writingSystemId)
+			{
+				_dataTarget = dataTarget;
+				_writingSystem = BasilProject.Project.WritingSystems[writingSystemId];
+			}
 			public CurrentItemEventArgs(string propertyName, WritingSystem writingSystem)
 			{
 				_propertyName = propertyName;
 				_writingSystem = writingSystem;
 			}
-
+			public CurrentItemEventArgs(string propertyName, string writingSystemId)
+			{
+				_propertyName = propertyName;
+				_writingSystem = BasilProject.Project.WritingSystems[writingSystemId];
+			}
 			public bool IsGhosted()
 			{
 				return _propertyName != null;

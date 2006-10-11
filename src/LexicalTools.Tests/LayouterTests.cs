@@ -57,8 +57,8 @@ namespace WeSay.LexicalTools.Tests
 
 			Control rowControl = dl.GetControlOfRow(0);
 
-			WeSayTextBox box = (WeSayTextBox)dl.GetEditControlFromReferenceControl(rowControl);
-			Assert.AreEqual("WordInVernacular", box.Text);
+			MultiTextControl box = (MultiTextControl)dl.GetEditControlFromReferenceControl(rowControl);
+			Assert.AreEqual("WordInVernacular", box.TextBoxes[0].Text);
 	  }
 
 		private DetailList MakeDetailList()

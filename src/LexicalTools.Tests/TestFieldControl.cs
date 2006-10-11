@@ -93,8 +93,9 @@ namespace WeSay.LexicalTools.Tests
 			Control referenceControl = entryDetailControl.GetControlOfRow(0);
 			Label labelControl = entryDetailControl.GetLabelControlFromReferenceControl(referenceControl);
 			Assert.AreEqual("Meaning", labelControl.Text);
-			Control editControl = entryDetailControl.GetEditControlFromReferenceControl(referenceControl);
-			Assert.IsTrue(editControl.Text.Contains(GetGloss(entry)));
+			MultiTextControl editControl = (MultiTextControl)entryDetailControl.GetEditControlFromReferenceControl(referenceControl);
+			editControl.TextBoxes[0].Text = "test";
+			Assert.IsTrue(editControl.TextBoxes[0].Text.Contains(GetGloss(entry)));
 		}
 
 		[Test]
@@ -103,8 +104,8 @@ namespace WeSay.LexicalTools.Tests
 			LexPreviewWithEntryControl lexFieldControl = CreateFilteredForm(apple, Field.FieldNames.EntryLexicalForm .ToString(), BasilProject.Project.WritingSystems.VernacularWritingSystemDefaultId);
 			DetailList entryDetailControl = lexFieldControl.ControlEntryDetail;
 			Control referenceControl = entryDetailControl.GetControlOfRow(0);
-			Control editControl = entryDetailControl.GetEditControlFromReferenceControl(referenceControl);
-			editControl.Text = "test";
+			MultiTextControl editControl = (MultiTextControl)entryDetailControl.GetEditControlFromReferenceControl(referenceControl);
+			editControl.TextBoxes[0].Text = "test";
 			Assert.IsTrue(lexFieldControl.ControlFormattedView.Text.Contains("test"));
 	   }
 

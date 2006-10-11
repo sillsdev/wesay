@@ -25,27 +25,20 @@ namespace WeSay.LexicalTools
 			int rowCount = 0;
 			LexExampleSentence example = (LexExampleSentence)list[index];
 
-			Field field;
-			if (FieldInventory.TryGetField(Field.FieldNames.ExampleSentence.ToString(), out field))
+			Field field = FieldInventory.GetField(Field.FieldNames.ExampleSentence.ToString());
+			if (field != null && field.Visibility == Field.VisibilitySetting.Visible)
 			{
-				foreach (string writingSystemId in field.WritingSystemIds)
-				{
-					WritingSystem writingSystem = BasilProject.Project.WritingSystems[writingSystemId];
-					Control entry = MakeBoundEntry(example.Sentence, writingSystem);
-					DetailList.AddWidgetRow(StringCatalog.Get("Example"), false, entry, insertAtRow+rowCount);
-					++rowCount;
-				}
+				Control entry = MakeBoundEntry(example.Sentence, field);
+				DetailList.AddWidgetRow(StringCatalog.Get("Example"), false, entry, insertAtRow+rowCount);
+				++rowCount;
 			}
 
-			if (FieldInventory.TryGetField(Field.FieldNames.ExampleTranslation.ToString(), out field))
+			field = FieldInventory.GetField(Field.FieldNames.ExampleTranslation.ToString());
+			if (field != null && field.Visibility == Field.VisibilitySetting.Visible)
 			{
-				foreach (string writingSystemId in field.WritingSystemIds)
-				{
-					WritingSystem writingSystem = BasilProject.Project.WritingSystems[writingSystemId];
-					Control entry = MakeBoundEntry(example.Translation, writingSystem);
-					DetailList.AddWidgetRow(StringCatalog.Get("Translation"), false, entry, insertAtRow+rowCount);
-					++rowCount;
-				}
+				 Control entry = MakeBoundEntry(example.Translation, field);
+				DetailList.AddWidgetRow(StringCatalog.Get("Translation"), false, entry, insertAtRow+rowCount);
+				++rowCount;
 			}
 
 			return rowCount;
@@ -53,22 +46,9 @@ namespace WeSay.LexicalTools
 
 		public int AddGhost(System.ComponentModel.IBindingList list, int insertAtRow)
 		{
-			int rowCount = 0;
-			Field field;
-			if (FieldInventory.TryGetField(Field.FieldNames.ExampleSentence.ToString(), out field))
-			{
-				foreach (string writingSystemId in field.WritingSystemIds)
-				{
-					WritingSystem writingSystem = BasilProject.Project.WritingSystems[writingSystemId];
-					WeSayTextBox entry = new WeSayTextBox(writingSystem);
-					GhostBinding g = MakeGhostBinding(list, "Sentence", writingSystem, entry);
-					g.ReferenceControl = DetailList.AddWidgetRow(StringCatalog.Get("New Example"), false, entry, insertAtRow+rowCount);
-					// entry.PrepareForFadeIn();
-					++rowCount;
-				}
-			}
-
-			return rowCount;
+			return MakeGhostWidget(list, insertAtRow, Field.FieldNames.ExampleSentence.ToString(), "New Example", "Sentence");
 		}
+
+
 	}
 }

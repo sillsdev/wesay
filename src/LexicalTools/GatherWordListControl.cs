@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Data;
 using System.Text;
@@ -27,6 +28,17 @@ namespace WeSay.LexicalTools
 			_words = words;
 			_records = records;
 			InitializeComponent();
+			this.BackColor = WeSay.UI.DisplaySettings.Default.BackgroundColor;
+
+			//temp hack
+			_vernacularBox.WritingSystemIds = new string[] { WeSay.UI.BasilProject.Project.WritingSystems.VernacularWritingSystemDefaultId };
+			_vernacularBox.TextChanged += new EventHandler(_vernacularBox_TextChanged);
+			_vernacularBox.KeyDown += new KeyEventHandler(_boxVernacularWord_KeyDown);
+			UpdateStuff();
+		}
+
+		void _vernacularBox_TextChanged(object sender, EventArgs e)
+		{
 			UpdateStuff();
 		}
 
@@ -37,10 +49,16 @@ namespace WeSay.LexicalTools
 
 		private void UpdateStuff()
 		{
+			if (this.DesignMode)
+			{
+				return;
+			}
+
+			Debug.Assert(_vernacularBox.TextBoxes.Count == 1, "other code here (for now), assumes exactly one ws/text box");
 			 _boxForeignWord.Text = _words[_currentWordIndex];
 			 _btnNextWord.Enabled = _words.Count > (_currentWordIndex-1);
 			 _btnPreviousWord.Enabled = _currentWordIndex > 0;
-			 _btnAddWord.Enabled = _boxVernacularWord.Text.Trim() != "";
+			 _btnAddWord.Enabled = _vernacularBox.TextBoxes[0].Text.Trim() != "";
 	   }
 
 		private void _btnNextWord_Click(object sender, EventArgs e)
@@ -53,7 +71,8 @@ namespace WeSay.LexicalTools
 		{
 			_listViewWords.Items.Clear();
 			UpdateStuff();
-			_boxVernacularWord.Focus();
+			_vernacularBox.ClearAllText();
+			_vernacularBox.TextBoxes[0].Focus();
 		}
 
 		private void _btnPreviousWord_Click(object sender, EventArgs e)
@@ -62,14 +81,12 @@ namespace WeSay.LexicalTools
 			SourceWordChanged();
 		}
 
-		private void _boxVernacularWord_TextChanged(object sender, EventArgs e)
-		{
-			UpdateStuff();
-		}
+
 
 		private void _btnAddWord_Click(object sender, EventArgs e)
 		{
-			string s = _boxVernacularWord.Text.Trim();
+			Debug.Assert(_vernacularBox.TextBoxes.Count == 1, "other code here (for now), assumes exactly one ws/text box");
+			string s = _vernacularBox.TextBoxes[0].Text.Trim();
 			if(s == "")
 			{
 				return;
@@ -82,7 +99,7 @@ namespace WeSay.LexicalTools
 			_records.Add(entry);
 
 			_listViewWords.Items.Add(s);
-			_boxVernacularWord.Text = "";
+			_vernacularBox.TextBoxes[0].Text = "";
 
 			UpdateStuff();
 		}
@@ -116,10 +133,12 @@ namespace WeSay.LexicalTools
 			}
 		}
 
-		private void _boxVernacularWord_TextChanged_1(object sender, EventArgs e)
+		private void GatherWordListControl_BackColorChanged(object sender, EventArgs e)
 		{
-			UpdateStuff();
+			_listViewWords.BackColor = this.BackColor;
+			_boxForeignWord.BackColor = this.BackColor;
 		}
+
 
 //        private void GatherWordListControl_KeyUp(object sender, KeyEventArgs e)
 //        {

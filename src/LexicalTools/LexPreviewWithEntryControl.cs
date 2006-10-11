@@ -45,7 +45,7 @@ namespace WeSay.LexicalTools
 		{
 			get
 			{
-				return _lexicalEntryView;
+				return _lexicalEntryPreview;
 			}
 		}
 
@@ -73,7 +73,7 @@ namespace WeSay.LexicalTools
 				_currentItem = null;
 				if (_record == null)
 				{
-					_lexicalEntryView.Text = String.Empty;
+					_lexicalEntryPreview.Text = String.Empty;
 				}
 				else
 				{
@@ -91,7 +91,7 @@ namespace WeSay.LexicalTools
 
 		private void RefreshLexicalEntryView()
 		{
-			_lexicalEntryView.Rtf = RtfRenderer.ToRtf(_record, _currentItem);
+			_lexicalEntryPreview.Rtf = RtfRenderer.ToRtf(_record, _currentItem);
 		}
 
 		private void RefreshEntryDetail() {
@@ -114,5 +114,11 @@ namespace WeSay.LexicalTools
 		}
 
 		private CurrentItemEventArgs _currentItem;
+
+		private void LexPreviewWithEntryControl_BackColorChanged(object sender, EventArgs e)
+		{
+			_detailListControl.BackColor = this.BackColor;
+			_lexicalEntryPreview.BackColor = this.BackColor;
+		}
 	}
 }

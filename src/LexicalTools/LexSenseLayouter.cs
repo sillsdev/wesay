@@ -24,49 +24,49 @@ namespace WeSay.LexicalTools
 
 		internal override int AddWidgets(IBindingList list, int index, int insertAtRow)
 		{
-			 int rowCount = 0;
-		   LexSense sense = (LexSense)list[index];
-		   Field field;
-		   if (FieldInventory.TryGetField(Field.FieldNames.SenseGloss.ToString(), out field))
-		   {
-			   foreach (string writingSystemId in field.WritingSystemIds)
-			   {
-				   WritingSystem writingSystem = BasilProject.Project.WritingSystems[writingSystemId];
-				   Control entry = MakeBoundEntry(sense.Gloss, writingSystem);
-				   Control c = DetailList.AddWidgetRow(StringCatalog.Get("Meaning"), true, entry, insertAtRow);
-				   ++rowCount;
-				   insertAtRow = DetailList.GetRowOfControl(c);
-			   }
-		   }
-		   LexExampleSentenceLayouter exampleLayouter = new LexExampleSentenceLayouter(DetailList, FieldInventory);
+			int rowCount = 0;
+			LexSense sense = (LexSense)list[index];
+			Field field = FieldInventory.GetField(Field.FieldNames.SenseGloss.ToString());
+			if (field != null && field.Visibility == Field.VisibilitySetting.Visible)
+			{
+				Control entry = MakeBoundEntry(sense.Gloss, field);
+				Control c = DetailList.AddWidgetRow(StringCatalog.Get("Meaning"), true, entry, insertAtRow);
+				++rowCount;
+				insertAtRow = DetailList.GetRowOfControl(c);
+			}
+			LexExampleSentenceLayouter exampleLayouter = new LexExampleSentenceLayouter(DetailList, FieldInventory);
 
 			rowCount = AddChildrenWidgets(exampleLayouter, sense.ExampleSentences, insertAtRow, rowCount);
 
 			//add a ghost
-			rowCount += exampleLayouter.AddGhost(sense.ExampleSentences, insertAtRow+rowCount);
+			rowCount += exampleLayouter.AddGhost(sense.ExampleSentences, insertAtRow + rowCount);
 
 			return rowCount;
 		}
 
 		public int AddGhost(IBindingList list)
 		{
-			int rowCount = 0;
-		   Field field;
-		   //TODO: only add this if there is no empty gloss in an existing sense (we
-		   //run into this with the LexFieldTask, where we don't want to see two empty gloss boxes (one a ghost)
-		   if (FieldInventory.TryGetField(Field.FieldNames.SenseGloss.ToString(), out field))
-		   {
-			   foreach (string writingSystemId in field.WritingSystemIds)
-			   {
-				   WritingSystem writingSystem = BasilProject.Project.WritingSystems[writingSystemId];
+//            int rowCount = 0;
+//           Field field;
+//           //TODO: only add this if there is no empty gloss in an existing sense (we
+//           //run into this with the LexFieldTask, where we don't want to see two empty gloss boxes (one a ghost)
+//           if (FieldInventory.TryGetField(Field.FieldNames.SenseGloss.ToString(), out field))
+//           {
+//               foreach (string writingSystemId in field.WritingSystemIds)
+//               {
+//                   WritingSystem writingSystem = BasilProject.Project.WritingSystems[writingSystemId];
+//
+//                   WeSayTextBox entry = new WeSayTextBox(writingSystem);
+//                   GhostBinding g = MakeGhostBinding(list, "Gloss", writingSystem, entry);
+//                   g.ReferenceControl = DetailList.AddWidgetRow(StringCatalog.Get("New Meaning"), true, entry);
+//                   ++rowCount;
+//               }
+//           }
+//            return rowCount;
 
-				   WeSayTextBox entry = new WeSayTextBox(writingSystem);
-				   GhostBinding g = MakeGhostBinding(list, "Gloss", writingSystem, entry);
-				   g.ReferenceControl = DetailList.AddWidgetRow(StringCatalog.Get("New Meaning"), true, entry);
-				   ++rowCount;
-			   }
-		   }
-			return rowCount;
+			int insertAtRow = -1;//////REVIEW!!!!!!!!!!!!!!!!!!
+			return MakeGhostWidget(list, insertAtRow, Field.FieldNames.SenseGloss.ToString(), "New Meaning", "Gloss");
+
 		}
 
 		public static bool HasSenseWithEmptyGloss(IBindingList list)

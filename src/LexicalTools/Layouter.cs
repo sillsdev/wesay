@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Forms;
 using WeSay.Language;
@@ -61,21 +62,58 @@ namespace WeSay.LexicalTools
 
 		internal abstract int AddWidgets(IBindingList list, int index, int row);
 
-		protected Control MakeBoundEntry(WeSay.Language.MultiText text, WritingSystem writingSystem)
+		protected Control MakeBoundEntry(WeSay.Language.MultiText text, Field field)
 		{
-			WeSayTextBox textBox = new WeSayTextBox(writingSystem);
-			textBox.Text = text[writingSystem.Id];
+			MultiTextControl m = new MultiTextControl(field.WritingSystemIds, text, field.FieldName);
 
-			WeSay.UI.Binding binding = new WeSay.UI.Binding(text, writingSystem, textBox);
-			binding.CurrentItemChanged += new EventHandler<CurrentItemEventArgs>(_detailList.OnBindingCurrentItemChanged);
-			return textBox;
+			foreach (WeSayTextBox box in m.TextBoxes)
+			{
+				 WeSay.UI.Binding binding = new WeSay.UI.Binding(text, box.WritingSystem.Id, box);
+				 binding.CurrentItemChanged += new EventHandler<CurrentItemEventArgs>(_detailList.OnBindingCurrentItemChanged);
+			}
+		   return m;
 		}
 
-		protected Control MakeGhostEntry(IBindingList list, string ghostPropertyName, WritingSystem writingSystem)
+
+//        protected Control MakeGhostEntry(IBindingList list, string ghostPropertyName, IList<String> writingSystemIds)
+//        {
+//            WeSayMultiText m = new WeSayMultiText(writingSystemIds, new MultiText());
+////
+////            foreach (WeSayTextBox box in m.TextBoxes)
+////            {
+////                MakeGhostBinding(list, ghostPropertyName, box.WritingSystem, box);
+////            }
+////            GhostBinding g = MakeGhostBinding(list, "Sentence", writingSystem, entry);
+////            //!!!!!!!!!!!!!!!!! g.ReferenceControl =
+////                DetailList.AddWidgetRow(StringCatalog.Get("New Example"), false, entry, insertAtRow+rowCount);
+////
+//////            WeSayTextBox entry = new WeSayTextBox(writingSystem);
+////            MakeGhostBinding(list, ghostPropertyName, writingSystem, entry);
+//            return m;
+//        }
+
+		protected int MakeGhostWidget(IBindingList list, int insertAtRow, string fieldName, string label, string propertyName)
 		{
-			WeSayTextBox entry = new WeSayTextBox(writingSystem);
-			MakeGhostBinding(list, ghostPropertyName, writingSystem, entry);
-			return entry;
+			int rowCount = 0;
+			Field field = FieldInventory.GetField(fieldName);
+			if (field != null && field.Visibility == Field.VisibilitySetting.Visible)
+			{
+
+				MultiTextControl m = new MultiTextControl(field.WritingSystemIds, new MultiText());
+				Control refWidget = DetailList.AddWidgetRow(StringCatalog.Get(label), false, m, insertAtRow + rowCount);
+
+				foreach (WeSayTextBox box in m.TextBoxes)
+				{
+					GhostBinding g = MakeGhostBinding(list, propertyName, box.WritingSystem, box);
+					g.ReferenceControl = refWidget;
+				}
+				return 1;
+			}
+			else
+			{
+				return 0; //didn't add a row
+			}
+
 		}
 
 		protected GhostBinding MakeGhostBinding(IBindingList list, string ghostPropertyName, WritingSystem writingSystem,
@@ -117,5 +155,6 @@ namespace WeSay.LexicalTools
 			}
 			return rowCount;
 		}
+
 	}
 }

@@ -14,16 +14,16 @@ namespace WeSay.UI
 		public event EventHandler<CurrentItemEventArgs> CurrentItemChanged = delegate
 																			 {
 																			 };
-		private WritingSystem _writingSystem;
+		private string _writingSystemId;
 		private INotifyPropertyChanged _dataTarget;
 		private WeSayTextBox _textBoxTarget;
 		private bool _inMidstOfChange;
 
-		public Binding(INotifyPropertyChanged dataTarget, WritingSystem writingSystem, WeSayTextBox widgetTarget)
+		public Binding(INotifyPropertyChanged dataTarget, string writingSystemId, WeSayTextBox widgetTarget)
 		{
 			_dataTarget = dataTarget;
 			_dataTarget.PropertyChanged += new PropertyChangedEventHandler(OnDataPropertyChanged);
-			_writingSystem = writingSystem;
+			_writingSystemId = writingSystemId;
 			_textBoxTarget = widgetTarget;
 			_textBoxTarget.TextChanged += new EventHandler(OnTextBoxChanged);
 			_textBoxTarget.Disposed += new EventHandler(OnTextBoxTargetDisposed);
@@ -33,7 +33,7 @@ namespace WeSay.UI
 
 		void OnTextBoxEntered(object sender, EventArgs e)
 		{
-			CurrentItemChanged(sender, new CurrentItemEventArgs(DataTarget, _writingSystem));
+			CurrentItemChanged(sender, new CurrentItemEventArgs(DataTarget, _writingSystemId));
 		}
 
 		/// <summary>
@@ -81,7 +81,7 @@ namespace WeSay.UI
 		protected virtual void OnDataPropertyChanged(object sender, PropertyChangedEventArgs e)
 		{
 			if (_inMidstOfChange ||
-				e.PropertyName != _writingSystem.Id) //FIX THIS
+				e.PropertyName != _writingSystemId) //FIX THIS
 				return;
 
 			try
@@ -100,7 +100,7 @@ namespace WeSay.UI
 			MultiText text = _dataTarget as MultiText;
 			if (text == null)
 				throw new ArgumentException("Binding can't handle that type of target.");
-			return text[_writingSystem.Id];
+			return text[_writingSystemId];
 		}
 
 		protected virtual void SetTargetValue(string s)
@@ -115,7 +115,7 @@ namespace WeSay.UI
 				if (_dataTarget as MultiText != null)
 				{
 					MultiText text = _dataTarget as MultiText;
-					text[_writingSystem.Id] = s;
+					text[_writingSystemId] = s;
 				}
 				//else if (_dataTarget as IBindingList != null)
 				//{

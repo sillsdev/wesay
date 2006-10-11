@@ -36,44 +36,46 @@ namespace WeSay.LexicalTools
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this._lexicalEntryView = new System.Windows.Forms.RichTextBox();
+			this._lexicalEntryPreview = new System.Windows.Forms.RichTextBox();
 			this._detailListControl = new WeSay.UI.DetailList();
 			this.SuspendLayout();
 			//
 			// _lexicalEntryView
 			//
-			this._lexicalEntryView.BackColor = System.Drawing.SystemColors.Control;
-			this._lexicalEntryView.BorderStyle = System.Windows.Forms.BorderStyle.None;
-			this._lexicalEntryView.Location = new System.Drawing.Point(3, 3);
-			this._lexicalEntryView.Name = "_lexicalEntryView";
-			this._lexicalEntryView.ReadOnly = true;
-			this._lexicalEntryView.Size = new System.Drawing.Size(450, 85);
-			this._lexicalEntryView.Text = "";
+			this._lexicalEntryPreview.BackColor = System.Drawing.SystemColors.Control;
+			this._lexicalEntryPreview.BorderStyle = System.Windows.Forms.BorderStyle.None;
+			this._lexicalEntryPreview.Location = new System.Drawing.Point(3, 3);
+			this._lexicalEntryPreview.Name = "_lexicalEntryPreview";
+			this._lexicalEntryPreview.ReadOnly = true;
+			this._lexicalEntryPreview.Size = new System.Drawing.Size(450, 85);
+			this._lexicalEntryPreview.TabIndex = 0;
+			this._lexicalEntryPreview.Text = "";
 			//
-			// _entryDetailControl
+			// _detailListControl
 			//
+			this._detailListControl.AutoScroll = true;
+			this._detailListControl.BackColor = System.Drawing.SystemColors.Control;
 			this._detailListControl.Location = new System.Drawing.Point(3, 95);
-			this._detailListControl.Name = "_entryDetailControl";
+			this._detailListControl.Name = "_detailListControl";
 			this._detailListControl.Size = new System.Drawing.Size(450, 250);
 			this._detailListControl.TabIndex = 1;
-			this._detailListControl.BackColor = System.Drawing.SystemColors.Control;
 			//
-			// LexFieldControl
+			// LexPreviewWithEntryControl
 			//
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.Controls.Add(this._lexicalEntryView);
+			this.Controls.Add(this._lexicalEntryPreview);
 			this.Controls.Add(this._detailListControl);
-			this.Name = "LexFieldControl";
+			this.Name = "LexPreviewWithEntryControl";
 			this.Size = new System.Drawing.Size(474, 370);
+			this.BackColorChanged += new System.EventHandler(this.LexPreviewWithEntryControl_BackColorChanged);
 			this.ResumeLayout(false);
-			this.PerformLayout();
 
 		}
 
 		#endregion
 
-		private System.Windows.Forms.RichTextBox _lexicalEntryView;
+		private System.Windows.Forms.RichTextBox _lexicalEntryPreview;
 		private WeSay.UI.DetailList _detailListControl;
 	}
 }

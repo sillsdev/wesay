@@ -34,17 +34,12 @@ namespace WeSay.LexicalTools
 		internal int AddWidgets(LexEntry entry, int insertAtRow)
 		{
 			int rowCount = 0;
-			Field field;
-			if (FieldInventory.TryGetField(Field.FieldNames.EntryLexicalForm.ToString(), out field))
+			Field field = FieldInventory.GetField(Field.FieldNames.EntryLexicalForm.ToString());
+			if (field != null && field.Visibility == Field.VisibilitySetting.Visible)
 			{
-				foreach (string writingSystemId in field.WritingSystemIds)
-				{
-					WritingSystem writingSystem = BasilProject.Project.WritingSystems[writingSystemId];
-					Control box = MakeBoundEntry(entry.LexicalForm, writingSystem);
-					box.Name = "LexicalForm_" + writingSystemId; //so GUI unit tests can find it
-					DetailList.AddWidgetRow(StringCatalog.Get("Word"), true, box, insertAtRow);
-					++rowCount;
-				}
+				Control box = MakeBoundEntry(entry.LexicalForm, field);
+				DetailList.AddWidgetRow(StringCatalog.Get("Word"), true, box, insertAtRow);
+				++rowCount;
 			}
 			LexSenseLayouter layouter = new LexSenseLayouter(DetailList, FieldInventory);
 			rowCount = AddChildrenWidgets(layouter, entry.Senses, insertAtRow, rowCount);
