@@ -3,6 +3,7 @@ using NUnit.Framework;
 using NUnit.Extensions.Forms;
 using WeSay.Data;
 using WeSay.LexicalModel;
+using WeSay.Project;
 using WeSay.UI;
 
 namespace WeSay.LexicalTools.Tests

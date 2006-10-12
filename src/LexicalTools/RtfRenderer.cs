@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using WeSay.LexicalModel;
 using WeSay.Language;
+using WeSay.Project;
 using WeSay.UI;
 
 namespace WeSay.LexicalTools
@@ -134,7 +135,7 @@ namespace WeSay.LexicalTools
 			if (currentItem == null){
 				return false;
 			}
-			return (currentItem.DataTarget == text && currentItem.WritingSystem.Id == l.WritingSystemId);
+			return (currentItem.DataTarget == text && currentItem.WritingSystemId == l.WritingSystemId);
 		}
 
 

@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using WeSay.LexicalModel;
+using WeSay.Project;
 using WeSay.UI;
 using System.Windows.Forms;
 

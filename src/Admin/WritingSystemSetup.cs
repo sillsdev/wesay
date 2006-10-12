@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 using WeSay.Language;
-using WeSay.UI;
+using WeSay.Project;
 
 namespace WeSay.Admin
 {

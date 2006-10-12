@@ -41,9 +41,6 @@
 	<Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-	<Compile Include="Field.cs" />
-	<Compile Include="FieldInventory.cs" />
-	<Compile Include="MissingExampleSentenceFilter.cs" />
 	<Compile Include="LexEntry.cs" />
 	<Compile Include="LexExampleSentence.cs" />
 	<Compile Include="Lexicon.cs" />
@@ -52,7 +49,6 @@
 	<Compile Include="LiftImporter.cs" />
 	<Compile Include="PretendRecordList.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />
-	<Compile Include="MissingGlossFilter.cs" />
 	<Compile Include="WeSayDataObject.cs" />
   </ItemGroup>
   <ItemGroup>

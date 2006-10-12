@@ -3,6 +3,7 @@ using System;
 using System.Windows.Forms;
 using NUnit.Framework;
 using WeSay.LexicalModel;
+using WeSay.Project;
 using WeSay.UI;
 
 namespace WeSay.LexicalTools.Tests

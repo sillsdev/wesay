@@ -59,29 +59,5 @@ namespace WeSay.UI.Tests {
 				resourceCulture = value;
 			}
 		}
-
-		/// <summary>
-		///   Looks up a localized string similar to # SOME DESCRIPTIVE TITLE.
-		///# Copyright (C) YEAR THE PACKAGE&apos;S COPYRIGHT HOLDER
-		///# This file is distributed under the same license as the PACKAGE package.
-		///# FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.
-		///#
-		///#, fuzzy
-		///msgid &quot;&quot;
-		///msgstr &quot;&quot;
-		///&quot;Project-Id-Version: PACKAGE VERSION\n&quot;
-		///&quot;Report-Msgid-Bugs-To: blah balh\n&quot;
-		///&quot;POT-Creation-Date: 2005-09-20 20:52+0200\n&quot;
-		///&quot;PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n&quot;
-		///&quot;Last-Translator: FULL NAME &lt;EMAIL@ADDRESS&gt;\n&quot;
-		///&quot;Language-Team: LANGUAGE &lt;LL@li.org&gt;\n&quot;
-		///&quot;MIME-Version: 1.0\n&quot;
-		///&quot;Co [rest of string was truncated]&quot;;.
-		/// </summary>
-		internal static string poStrings {
-			get {
-				return ResourceManager.GetString("poStrings", resourceCulture);
-			}
-		}
 	}
 }

@@ -6,6 +6,7 @@ using CommandLine;
 using WeSay.Data;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Tests;
+using WeSay.Project;
 using WeSay.UI;
 namespace WeSay.App
 {
@@ -32,7 +33,7 @@ namespace WeSay.App
 #if GTK
 			Gdk.Threads.Enter();
 #endif
-			WeSay.UI.ITaskBuilder builder = null;
+			ITaskBuilder builder = null;
 			try
 			{
 				Application.EnableVisualStyles();

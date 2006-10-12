@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using NUnit.Framework;
-using WeSay.UI;
+using WeSay.Project;
 
 namespace WeSay.App.Tests
 {

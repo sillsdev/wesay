@@ -1,7 +1,9 @@
 using System;
 using System.Windows.Forms;
 using WeSay.Data;
+using WeSay.Language;
 using WeSay.LexicalModel;
+using WeSay.Project;
 using WeSay.UI;
 
 namespace WeSay.LexicalTools

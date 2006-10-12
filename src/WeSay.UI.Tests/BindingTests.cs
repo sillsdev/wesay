@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using WeSay.Language;
+using WeSay.Project;
 
 namespace WeSay.UI.Tests
 {

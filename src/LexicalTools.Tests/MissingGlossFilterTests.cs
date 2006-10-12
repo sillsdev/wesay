@@ -1,4 +1,6 @@
 using NUnit.Framework;
+using WeSay.LexicalTools;
+using WeSay.Project;
 
 namespace WeSay.LexicalModel.Tests
 {

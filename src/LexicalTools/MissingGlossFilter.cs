@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using WeSay.LexicalModel;
+using WeSay.Project;
 
-namespace WeSay.LexicalModel
+namespace WeSay.LexicalTools
 {
 	public class MissingGlossFilter : WeSay.Data.IFilter<LexEntry>
 	{

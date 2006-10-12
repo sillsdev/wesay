@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows.Forms;
 using WeSay.Data;
+using WeSay.Language;
 using WeSay.LexicalModel;
+using WeSay.Project;
 
 namespace WeSay.LexicalTools
 {
@@ -27,7 +29,7 @@ namespace WeSay.LexicalTools
 			BackColor = WeSay.UI.DisplaySettings.Default.BackgroundColor;
 
 			//TODO: this limits us to a single writing system, and relies on the deprecated "default"
-			_vernacularBox.WritingSystemIds = new string[] { WeSay.UI.BasilProject.Project.WritingSystems.VernacularWritingSystemDefaultId };
+			_vernacularBox.WritingSystems = new WritingSystem[] { BasilProject.Project.WritingSystems.VernacularWritingSystemDefault };
 			_vernacularBox.TextChanged += new EventHandler(_vernacularBox_TextChanged);
 			_vernacularBox.KeyDown += new KeyEventHandler(_boxVernacularWord_KeyDown);
 			UpdateStuff();
@@ -89,9 +91,9 @@ namespace WeSay.LexicalTools
 			}
 
 			LexEntry entry = new LexEntry();
-			entry.LexicalForm.SetAlternative(WeSay.UI.BasilProject.Project.WritingSystems.VernacularWritingSystemDefaultId, s);
+			entry.LexicalForm.SetAlternative(BasilProject.Project.WritingSystems.VernacularWritingSystemDefaultId, s);
 			LexSense sense = (LexSense) entry.Senses.AddNew();
-			sense.Gloss.SetAlternative(WeSay.UI.BasilProject.Project.WritingSystems.AnalysisWritingSystemDefaultId, _words[_currentWordIndex]);
+			sense.Gloss.SetAlternative(BasilProject.Project.WritingSystems.AnalysisWritingSystemDefaultId, _words[_currentWordIndex]);
 			_records.Add(entry);
 
 			_listViewWords.Items.Add(s);

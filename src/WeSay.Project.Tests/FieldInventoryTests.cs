@@ -1,8 +1,9 @@
 using System;
 using NUnit.Framework;
 using WeSay.Language;
+using WeSay.Project;
 
-namespace WeSay.LexicalModel.Tests
+namespace WeSay.Project.Tests
 {
 	[TestFixture]
 	public class FieldInventoryTests : WeSay.Data.Tests.IEnumerableTests.IEnumerableBaseTest<Field>

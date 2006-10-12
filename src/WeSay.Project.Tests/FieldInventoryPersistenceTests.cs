@@ -2,8 +2,10 @@ using System.IO;
 using System.Xml;
 using Exortech.NetReflector;
 using NUnit.Framework;
+using WeSay.Project;
+using WeSay.Project.Tests;
 
-namespace WeSay.LexicalModel.Tests
+namespace WeSay.Project.Tests
 {
 	[TestFixture]
 	public class FieldInventoryPeristenceTests

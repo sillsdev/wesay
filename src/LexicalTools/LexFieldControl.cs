@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using ListBox;
 using SourceGrid3;
 using WeSay.LexicalModel;
+using WeSay.Project;
 using WeSay.UI;
 using WeSay.Data;
 

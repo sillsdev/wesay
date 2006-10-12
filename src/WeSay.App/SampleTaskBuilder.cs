@@ -5,6 +5,7 @@ using PicoContainer;
 using PicoContainer.Defaults;
 using WeSay.Data;
 using WeSay.LexicalModel;
+using WeSay.Project;
 using WeSay.UI;
 
 namespace WeSay.App
@@ -44,7 +45,7 @@ namespace WeSay.App
 				tools.Add(CreateTool("WeSay.LexicalTools.EntryDetailTask,LexicalTools"));
 
 
-				_picoContext.RegisterComponentImplementation("GlossFilter", Type.GetType("WeSay.LexicalModel.MissingGlossFilter,LexicalModel", true),
+				_picoContext.RegisterComponentImplementation("GlossFilter", Type.GetType("WeSay.LexicalTools.MissingGlossFilter,LexicalTools", true),
 				new IParameter[]{
 					new ComponentParameter("Default Field Inventory"),
 				});
@@ -53,7 +54,7 @@ namespace WeSay.App
 								"Add Meanings", "Add glosses to entries when missing.", "Gloss"));
 
 
-				_picoContext.RegisterComponentImplementation("ExampleFilter", Type.GetType("WeSay.LexicalModel.MissingExampleSentenceFilter,LexicalModel", true),
+				_picoContext.RegisterComponentImplementation("ExampleFilter", Type.GetType("WeSay.LexicalTools.MissingExampleSentenceFilter,LexicalTools", true),
 				new IParameter[]{
 					new ComponentParameter("Default Field Inventory"),
 				});

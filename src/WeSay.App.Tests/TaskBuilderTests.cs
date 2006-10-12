@@ -4,6 +4,7 @@ using NUnit.Framework;
 using WeSay.Data;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Tests;
+using WeSay.Project;
 using WeSay.UI;
 
 namespace WeSay.App.Tests

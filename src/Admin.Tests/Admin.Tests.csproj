@@ -59,9 +59,9 @@
 	  <Project>{54C943DB-7725-4F52-BCE4-86C3D3D5A66E}</Project>
 	  <Name>Admin</Name>
 	</ProjectReference>
-	<ProjectReference Include="..\WeSay.UI\WeSay.UI.csproj">
-	  <Project>{AC8F284C-7B34-4AC9-A7DE-FAF765456DFF}</Project>
-	  <Name>WeSay.UI</Name>
+	<ProjectReference Include="..\WeSay.Project\WeSay.Project.csproj">
+	  <Project>{5CFD0BB3-5B2A-4911-B220-9C2286151BF0}</Project>
+	  <Name>WeSay.Project</Name>
 	</ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Windows.Forms;
 using WeSay.Language;
 using WeSay.LexicalModel;
+using WeSay.Project;
 using WeSay.UI;
 
 namespace WeSay.LexicalTools
@@ -64,7 +65,7 @@ namespace WeSay.LexicalTools
 
 		protected Control MakeBoundEntry(WeSay.Language.MultiText text, Field field)
 		{
-			MultiTextControl m = new MultiTextControl(field.WritingSystemIds, text, field.FieldName);
+			MultiTextControl m = new MultiTextControl(field.WritingSystems, text, field.FieldName);
 
 			foreach (WeSayTextBox box in m.TextBoxes)
 			{
@@ -99,7 +100,7 @@ namespace WeSay.LexicalTools
 			if (field != null && field.Visibility == Field.VisibilitySetting.Visible)
 			{
 
-				MultiTextControl m = new MultiTextControl(field.WritingSystemIds, new MultiText(), fieldName+"_ghost");
+				MultiTextControl m = new MultiTextControl(field.WritingSystems, new MultiText(), fieldName+"_ghost");
 				Control refWidget = DetailList.AddWidgetRow(StringCatalog.Get(label), false, m, insertAtRow + rowCount);
 
 				foreach (WeSayTextBox box in m.TextBoxes)

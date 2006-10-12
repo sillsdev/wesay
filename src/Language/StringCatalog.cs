@@ -1,6 +1,6 @@
 using System.IO;
 
-namespace WeSay.UI
+namespace WeSay.Language
 {
 
 	public class StringCatalog

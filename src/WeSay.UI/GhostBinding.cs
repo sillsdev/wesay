@@ -65,7 +65,7 @@ namespace WeSay.UI
 
 		void OnTextBoxEntered(object sender, EventArgs e)
 		{
-			CurrentItemChanged(sender, new CurrentItemEventArgs(_propertyName, _writingSystem));
+			CurrentItemChanged(sender, new CurrentItemEventArgs(_propertyName, _writingSystem.Id));
 		}
 
 		 /// <summary>

@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 using System.Xml;
-using WeSay.UI;
+using WeSay.Project;
 
 namespace WeSay.Admin
 {
@@ -37,10 +37,10 @@ namespace WeSay.Admin
 			writer.WriteStartElement("tasks");
 
 			writer.WriteStartElement("components");
-			if (AdminWindow.SharedFieldInventory != null)
-			{
-				AdminWindow.SharedFieldInventory.Write(writer);
-			}
+//            Debug.Assert(AdminWindow.SharedFieldInventory != null);
+//
+//            AdminWindow.SharedFieldInventory.Write(writer);
+
 			writer.WriteEndElement();
 
 			foreach (TaskInfo t in _taskList.Items)

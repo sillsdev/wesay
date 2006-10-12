@@ -2,6 +2,7 @@ using System;
 using System.Windows.Forms;
 using WeSay.LexicalModel;
 using WeSay.Data;
+using WeSay.Project;
 
 namespace WeSay.LexicalTools
 {

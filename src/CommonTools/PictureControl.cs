@@ -1,6 +1,8 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
+using WeSay.Language;
+using WeSay.Project;
 using WeSay.UI;
 
 namespace WeSay.CommonTools

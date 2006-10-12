@@ -12,7 +12,7 @@ namespace WeSay.UI
 {
 	public partial class MultiTextControl : UserControl
 	{
-		private IList<String> _writingSystemIds;
+		private IList<WritingSystem> _writingSystems;
 		private MultiText _multiText;
 		private List<WeSayTextBox> _textBoxes;
 	   public new event EventHandler TextChanged;
@@ -32,14 +32,15 @@ namespace WeSay.UI
 			_vbox.Name = "vbox of anonymous multitext";
 		 //   this.SetStyle(ControlStyles.Selectable, false);
 		}
-		public MultiTextControl(IList<String> writingSystemIds, MultiText text, string nameForTesting):this()
+		public MultiTextControl(IList<WritingSystem> writingSystems, MultiText text, string nameForTesting):this()
 		{
 			_vbox.Name = this.Name + "-vbox";
 			this.Name = nameForTesting+"-mtc";
-			_writingSystemIds = writingSystemIds;
+			_writingSystems = writingSystems;
 			MultiText = text;
 		}
-		public MultiTextControl(IList<String> writingSystemIds, MultiText text):this(writingSystemIds,text,"Unknown")
+		public MultiTextControl(IList<WritingSystem> writingSystems, MultiText text)
+			: this(writingSystems, text, "Unknown")
 		{
 		}
 
@@ -75,10 +76,11 @@ namespace WeSay.UI
 				_vbox.Clear();
 			}
 			this.Height = 0;
-			foreach (string writingSystemId in WritingSystemIds)
+			foreach (WritingSystem writingSystem in WritingSystems)
 			{
+				string writingSystemId =writingSystem.Id;
 				const int initialPanelWidth = 200;
-				WeSayTextBox box = new WeSayTextBox(BasilProject.Project.WritingSystems[writingSystemId]);
+				WeSayTextBox box = new WeSayTextBox(writingSystem);
 				_textBoxes.Add(box);
 				this.components.Add(box);//so it will get disposed of when we are
 				box.Name = this.Name.Replace("-mtc","") + "_" + writingSystemId; //for automated tests to find this particular guy
@@ -131,12 +133,12 @@ namespace WeSay.UI
 		}
 
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-		public IList<string> WritingSystemIds
+		public IList<WritingSystem> WritingSystems
 		{
-			get { return _writingSystemIds; }
+			get { return _writingSystems; }
 			set
 			{
-				_writingSystemIds = value;
+				_writingSystems = value;
 				BuildBoxes();
 			}
 		}

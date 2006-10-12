@@ -26,35 +26,35 @@ namespace WeSay.UI
 					return _dataTarget;
 				}
 			}
-			private WritingSystem _writingSystem;
+			private string _writingSystemId;
 
-			public WritingSystem WritingSystem
+			public string WritingSystemId
 			{
 				get
 				{
-					return _writingSystem;
+					return _writingSystemId;
 				}
 			}
 
-			public CurrentItemEventArgs(INotifyPropertyChanged dataTarget, WritingSystem writingSystem)
-			{
-				_dataTarget = dataTarget;
-				_writingSystem = writingSystem;
-			}
+//            public CurrentItemEventArgs(INotifyPropertyChanged dataTarget, WritingSystem writingSystem)
+//            {
+//                _dataTarget = dataTarget;
+//                _writingSystemId = writingSystem;
+//            }
 		public CurrentItemEventArgs(INotifyPropertyChanged dataTarget, string writingSystemId)
 			{
 				_dataTarget = dataTarget;
-				_writingSystem = BasilProject.Project.WritingSystems[writingSystemId];
+				_writingSystemId = writingSystemId;
 			}
-			public CurrentItemEventArgs(string propertyName, WritingSystem writingSystem)
-			{
-				_propertyName = propertyName;
-				_writingSystem = writingSystem;
-			}
+//            public CurrentItemEventArgs(string propertyName, WritingSystem writingSystem)
+//            {
+//                _propertyName = propertyName;
+//                _writingSystem = writingSystem;
+//            }
 			public CurrentItemEventArgs(string propertyName, string writingSystemId)
 			{
 				_propertyName = propertyName;
-				_writingSystem = BasilProject.Project.WritingSystems[writingSystemId];
+				_writingSystemId=writingSystemId;
 			}
 			public bool IsGhosted()
 			{

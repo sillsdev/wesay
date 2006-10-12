@@ -1,8 +1,9 @@
 using System.IO;
 using NUnit.Framework;
 using WeSay.Language;
+using WeSay.Project;
 
-namespace WeSay.UI.Tests
+namespace WeSay.Language.Tests
 {
 	[TestFixture]
 	public class StringCatalogTests

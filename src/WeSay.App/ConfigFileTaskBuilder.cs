@@ -2,6 +2,7 @@ using System;
 using PicoContainer;
 using PicoContainer.Defaults;
 using WeSay.LexicalModel;
+using WeSay.Project;
 using WeSay.UI;
 using System.IO;
 using System.Collections.Generic;
@@ -35,6 +36,7 @@ namespace WeSay.App
 			if (navigator != null)
 			{
 				XPathNodeIterator componentList = navigator.SelectChildren(string.Empty, string.Empty);
+				System.Diagnostics.Debug.Assert(componentList.Current.Name == "fieldInventory", "Currently, there must be exactly 1 FieldInventory in the tasks.xml");
 				foreach (XPathNavigator component in componentList)
 				{
 					System.Diagnostics.Debug.Assert(component.Name == "fieldInventory");

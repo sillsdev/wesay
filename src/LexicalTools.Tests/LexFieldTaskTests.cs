@@ -1,7 +1,7 @@
 using System;
 using WeSay.Data;
 using WeSay.LexicalModel;
-using WeSay.UI;
+using WeSay.Project;
 using NUnit.Framework;
 
 namespace WeSay.LexicalTools.Tests

@@ -5,6 +5,7 @@ using System.Text;
 using System.Windows.Forms;
 using WeSay.Data;
 using WeSay.LexicalModel;
+using WeSay.Project;
 
 namespace WeSay.LexicalTools
 {
@@ -24,10 +25,10 @@ namespace WeSay.LexicalTools
 		private void LoadWordList()
 		{
 			_words = new List<string>();
-			string path = Path.Combine(WeSay.UI.WeSayWordsProject.Project.PathToWeSaySpecificFilesDirectoryInProject, _wordListFileName);
+			string path = Path.Combine(WeSayWordsProject.Project.PathToWeSaySpecificFilesDirectoryInProject, _wordListFileName);
 			if (!File.Exists(path))
 			{
-				path = Path.Combine(WeSay.UI.WeSayWordsProject.Project.ApplicationCommonDirectory, _wordListFileName);
+				path = Path.Combine(WeSayWordsProject.Project.ApplicationCommonDirectory, _wordListFileName);
 			}
 			using (TextReader r = File.OpenText(path))
 			{

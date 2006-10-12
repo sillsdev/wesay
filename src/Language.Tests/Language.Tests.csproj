@@ -42,6 +42,7 @@
 	<Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+	<Compile Include="StringCatalogTests.cs" />
 	<Compile Include="TestResources.Designer.cs">
 	  <AutoGen>True</AutoGen>
 	  <DesignTime>True</DesignTime>
@@ -60,6 +61,10 @@
 	  <Project>{55E6BAB0-9B46-4C89-8773-4432417C1ADF}</Project>
 	  <Name>PlatformSpecific</Name>
 	</ProjectReference>
+	<ProjectReference Include="..\WeSay.Project\WeSay.Project.csproj">
+	  <Project>{5CFD0BB3-5B2A-4911-B220-9C2286151BF0}</Project>
+	  <Name>WeSay.Project</Name>
+	</ProjectReference>
   </ItemGroup>
   <ItemGroup>
 	<EmbeddedResource Include="TestResources.resx">
@@ -70,6 +75,9 @@
   </ItemGroup>
   <ItemGroup>
 	<None Include="Resources\WritingSystemPrefs.xml" />
+  </ItemGroup>
+  <ItemGroup>
+	<None Include="Resources\poStrings.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

@@ -3,8 +3,7 @@ using System.IO;
 using System.Windows.Forms;
 using System.Xml;
 using WeSay.Language;
-using WeSay.LexicalModel;
-using WeSay.UI;
+using WeSay.Project;
 
 namespace WeSay.Admin
 {
@@ -44,17 +43,13 @@ namespace WeSay.Admin
 		{
 			_fieldsListBox.Items.Clear();
 
-			if (AdminWindow.SharedFieldInventory == null)
-			{
-				AdminWindow.SharedFieldInventory = FieldInventory.MakeMasterInventory(BasilProject.Project.WritingSystems);
-			}
 			FieldInventory oldInventory = GetUsersExistingInventory();
-
-			FieldInventory.ModifyMasterFromUser(AdminWindow.SharedFieldInventory, oldInventory);
-			foreach (Field field in AdminWindow.SharedFieldInventory)
-			{
-				this._fieldsListBox.Items.Add(field, field.Visibility == Field.VisibilitySetting.Visible);
-			}
+//
+//            FieldInventory.ModifyMasterFromUser(AdminWindow.SharedFieldInventory, oldInventory);
+//            foreach (Field field in AdminWindow.SharedFieldInventory)
+//            {
+//                this._fieldsListBox.Items.Add(field, field.Visibility == Field.VisibilitySetting.Visible);
+//            }
 	  }
 
 

@@ -2,8 +2,10 @@ using System.IO;
 using NUnit.Framework;
 using WeSay.Language;
 using WeSay.Language.Tests;
+using WeSay.Project;
+using WeSay.Project.Tests;
 
-namespace WeSay.UI.Tests
+namespace WeSay.Project.Tests
 {
 	[TestFixture]
 	public class BasilProjectTests

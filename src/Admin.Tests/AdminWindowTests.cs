@@ -5,7 +5,7 @@ using System.Windows.Forms;
 using System.Xml;
 using NUnit.Framework;
 using NUnit.Extensions.Forms;
-using WeSay.UI;
+using WeSay.Project;
 
 namespace WeSay.Admin.Tests
 {

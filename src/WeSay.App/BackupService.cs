@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using com.db4o.query;
 using WeSay.Data;
 using WeSay.LexicalModel;
+using WeSay.Project;
 
 namespace WeSay.App
 {
@@ -58,7 +59,7 @@ namespace WeSay.App
 			try
 			{
 				ICSharpCode.SharpZipLib.Zip.FastZip f = new ICSharpCode.SharpZipLib.Zip.FastZip();
-				f.CreateZip(path, WeSay.UI.WeSayWordsProject.Project.PathToLocalBackup, true, null);
+				f.CreateZip(path, WeSayWordsProject.Project.PathToLocalBackup, true, null);
 			}
 			finally
 			{
