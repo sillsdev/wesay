@@ -1,3 +1,5 @@
+using System.Diagnostics;
+
 namespace WeSay.UI
 {
 	partial class MultiTextControl
@@ -13,6 +15,7 @@ namespace WeSay.UI
 		/// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
 		protected override void Dispose(bool disposing)
 		{
+			//Debug.WriteLine("Disposing " + Name + "   Disposing=" + disposing);
 			if (disposing && (components != null))
 			{
 				components.Dispose();
@@ -34,6 +37,8 @@ namespace WeSay.UI
 			// _vbox
 			//
 			this._vbox.AutoScroll = true;
+			this._vbox.BackColor = System.Drawing.Color.White;
+			this._vbox.Dock = System.Windows.Forms.DockStyle.Fill;
 			this._vbox.Location = new System.Drawing.Point(0, 0);
 			this._vbox.Name = "_vbox";
 			this._vbox.Size = new System.Drawing.Size(150, 69);
@@ -43,6 +48,7 @@ namespace WeSay.UI
 			//
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.BackColor = System.Drawing.Color.Transparent;
 			this.Controls.Add(this._vbox);
 			this.Name = "MultiTextControl";
 			this.Size = new System.Drawing.Size(150, 69);

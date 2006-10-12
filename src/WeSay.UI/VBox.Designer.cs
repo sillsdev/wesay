@@ -19,6 +19,8 @@ namespace WeSay.UI
 		/// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
 		protected override void Dispose(bool disposing)
 		{
+			Debug.WriteLine("Disposing " + Name + "   Disposing=" + disposing);
+
 			if (disposing && (components != null))
 			{
 				components.Dispose();
@@ -34,9 +36,16 @@ namespace WeSay.UI
 		/// </summary>
 		private void InitializeComponent()
 		{
-			components = new System.ComponentModel.Container();
+			this.SuspendLayout();
+			//
+			// VBox
+			//
+			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.AutoScroll = true;
+			this.Name = "VBox";
+			this.ResumeLayout(false);
+
 		}
 
 		#endregion

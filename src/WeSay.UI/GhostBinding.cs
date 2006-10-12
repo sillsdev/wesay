@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Reflection;
 using System.Windows.Forms;
 using WeSay.Language;
@@ -41,9 +42,17 @@ namespace WeSay.UI
 		   _textBoxTarget = textBoxTarget;
 		   _textBoxTarget.TextChanged += new EventHandler(_textBoxTarget_TextChanged);
 		   _textBoxTarget.Enter += new EventHandler(OnTextBoxEntered);
-		   // _textBoxTarget.Leave += new EventHandler(OnTextBoxTarget_Leave);
-		   _textBoxTarget.Disposed+=new EventHandler(_textBoxTarget_Disposed); //+= new EventHandler(_textBoxTarget_HandleDestroyed);
-		   _textBoxTarget.VisibleChanged += new EventHandler(_textBoxTarget_VisibleChanged);
+		   _textBoxTarget.HandleDestroyed += new EventHandler(_textBoxTarget_HandleDestroyed);
+		}
+
+		/// <summary>
+		/// this only gets called when the control is actually, like, maybe finalized
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		void _textBoxTarget_HandleDestroyed(object sender, EventArgs e)
+		{
+			TearDown();
 		}
 
 		void _textBoxTarget_TextChanged(object sender, EventArgs e)
@@ -59,42 +68,18 @@ namespace WeSay.UI
 			CurrentItemChanged(sender, new CurrentItemEventArgs(_propertyName, _writingSystem));
 		}
 
-		//void OnTextBoxTarget_Leave(object sender, EventArgs e)
-		//{
-		//    if (_textBoxTarget.Text.Trim().Length > 0)
-		//    {
-		//        TimeForRealObject();
-		//    }
-		//}
-
-		/// <summary>
+		 /// <summary>
 		/// Change of visibility is not a very satisfying to time to trigger this,
 		/// but it does the best I've found.
 		/// </summary>
 		 void _textBoxTarget_VisibleChanged(object sender, EventArgs e)
 		{
-			//once I wrapped textbox in wesaytextbox, this was never false anymore! if (((WeSayTextBox)sender).Visible == false)
+			//once I wrapped textbox in wesaytextbox, this was never false anymore!
+			 if (((WeSayTextBox)sender).Visible == false)
 			{
 				TearDown();
 			}
 		}
-
-	   /// <summary>
-		/// Drop our connections to everything so garbage collection can happen and we aren't
-		/// a zombie responding to data change events.
-		/// </summary>
-		private void TearDown()
-		{
-			_referenceControl = null;
-			_listTarget.ListChanged -=new ListChangedEventHandler(_listTarget_ListChanged);
-			_listTarget = null;
-		   // _textBoxTarget.Leave -= new EventHandler(OnTextBoxTarget_Leave);
-			_textBoxTarget.TextChanged -= new EventHandler(_textBoxTarget_TextChanged);
-			_textBoxTarget.Disposed -= new EventHandler(_textBoxTarget_Disposed); //+= new EventHandler(_textBoxTarget_HandleDestroyed);
-			_textBoxTarget.VisibleChanged -= new EventHandler(_textBoxTarget_VisibleChanged);
-			_textBoxTarget = null;
-		}
-
 
 		/// <summary>
 		/// We get this when closing the app, rather than the visibility changed event.
@@ -103,6 +88,27 @@ namespace WeSay.UI
 		{
 			TearDown();
 		}
+
+	   /// <summary>
+		/// Drop our connections to everything so garbage collection can happen and we aren't
+		/// a zombie responding to data change events.
+		/// </summary>
+		private void TearDown()
+		{
+		   // Debug.WriteLine(" GhostBindingTearDown boundTo: " + this._textBoxTarget.Name);
+
+			if (_listTarget == null)
+			{
+				return; //teardown was called twice
+			}
+			_referenceControl = null;
+			_listTarget.ListChanged -=new ListChangedEventHandler(_listTarget_ListChanged);
+			_listTarget = null;
+			_textBoxTarget.TextChanged -= new EventHandler(_textBoxTarget_TextChanged);
+			_textBoxTarget.HandleDestroyed -= new EventHandler(_textBoxTarget_HandleDestroyed);
+			_textBoxTarget = null;
+		}
+
 
 		/// <summary>
 		/// The reference control is the one we need to use when it comes time to insert
@@ -143,7 +149,7 @@ namespace WeSay.UI
 			//in addition to adding a list item, this will fire events on the object that owns the list
 			list.AddNew();
 			_textBoxTarget.Text = "";
-			_textBoxTarget.PrepareForFadeIn();
+			//_textBoxTarget.PrepareForFadeIn();
 		 }
 
 		private static void FillInMultiTextOfNewObject(object o, string propertyName, WritingSystem writingSystem, string value)

@@ -40,6 +40,11 @@ namespace WeSay.LexicalTools
 
 		void OnRecordSelectionChanged(object sender, EventArgs e)
 		{
+			if (_entryDetailPanel.DataSource == CurrentRecord)
+			{
+				//we were getting 3 calls to this for each click on a new word
+				return;
+			}
 			_entryDetailPanel.DataSource = CurrentRecord;
 			_btnDeleteWord.Enabled = (CurrentRecord != null);
 			if (SelectedIndexChanged != null)

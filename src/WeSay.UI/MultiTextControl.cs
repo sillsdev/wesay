@@ -20,17 +20,22 @@ namespace WeSay.UI
 
 		public MultiTextControl()
 		{
+			this.components = new System.ComponentModel.Container();
+			InitializeComponent();
 			_textBoxes = new List<WeSayTextBox>();
 			_multiText = new WeSay.Language.MultiText();
-		   InitializeComponent();
-			this.BackColor = System.Drawing.Color.Green;
-			this._vbox.BackColor = System.Drawing.Color.White;
-			this._vbox.Dock = DockStyle.Fill;
+//            this.SuspendLayout();
+//            this.BackColor = System.Drawing.Color.Green;
+//            this._vbox.BackColor = System.Drawing.Color.White;
+//            this._vbox.Dock = DockStyle.Fill;
+//            this.ResumeLayout(false);
+			_vbox.Name = "vbox of anonymous multitext";
 		 //   this.SetStyle(ControlStyles.Selectable, false);
 		}
 		public MultiTextControl(IList<String> writingSystemIds, MultiText text, string nameForTesting):this()
 		{
-			this.Name = nameForTesting;
+			_vbox.Name = this.Name + "-vbox";
+			this.Name = nameForTesting+"-mtc";
 			_writingSystemIds = writingSystemIds;
 			MultiText = text;
 		}
@@ -64,14 +69,19 @@ namespace WeSay.UI
 
 		private void BuildBoxes()
 		{
-			_vbox.Clear();
+			this.SuspendLayout();
+			if (_vbox.Count > 0)
+			{
+				_vbox.Clear();
+			}
 			this.Height = 0;
 			foreach (string writingSystemId in WritingSystemIds)
 			{
 				const int initialPanelWidth = 200;
 				WeSayTextBox box = new WeSayTextBox(BasilProject.Project.WritingSystems[writingSystemId]);
 				_textBoxes.Add(box);
-				box.Name = this.Name + "_" + writingSystemId; //for automated tests to find this particular guy
+				this.components.Add(box);//so it will get disposed of when we are
+				box.Name = this.Name.Replace("-mtc","") + "_" + writingSystemId; //for automated tests to find this particular guy
 				box.Text = _multiText[writingSystemId];
 				box.Location = new Point(30, 0);
 				box.Width = initialPanelWidth - box.Left;
@@ -100,6 +110,8 @@ namespace WeSay.UI
 				_vbox.AddControlToBottom(p);
 				this.Height += p.Height;
 			}
+			this.ResumeLayout(false);
+
 		}
 
 		void OnKeyDownInSomeBox(object sender, KeyEventArgs e)
@@ -144,6 +156,8 @@ namespace WeSay.UI
 				this.TextBoxes[0].Select();
 			}
 		}
+
+
 
 	}
 }

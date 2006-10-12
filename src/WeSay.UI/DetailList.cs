@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -21,7 +22,10 @@ namespace WeSay.UI
 		public DetailList()
 		{
 			InitializeComponent();
+			SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint
+				| ControlStyles.UserPaint, true);
 
+			this.Name = "DetailList";//for  debugging
 			if (Environment.OSVersion.Platform != PlatformID.Unix)
 			{
 				//this.Margin = new Padding(5, 5, 5, 5); //not implemented inn mono 1.16
@@ -46,6 +50,15 @@ namespace WeSay.UI
 			return panel;
 		}
 
+		class TestPanel : Panel
+		{
+			protected override void Dispose(bool disposing)
+			{
+				Debug.WriteLine("Disposing "+Name+"   Disposing="+disposing);
+				base.Dispose(disposing);
+			}
+		}
+
 		private Panel AddRowPanel(Control editWidget, string fieldLabel, bool isHeader)
 		{
 			int top = 0;// AddHorizontalRule(panel, isHeader, _rowCount == 0);
@@ -62,12 +75,14 @@ namespace WeSay.UI
 			editWidget.Left = label.Width + 10;
 			editWidget.Anchor = AnchorStyles.Left | AnchorStyles.Right;
 
-			Panel panel = new Panel();
+			Panel panel = new TestPanel();
+			panel.SuspendLayout();
+			panel.Name = fieldLabel+"_panel of detailList";
 			//            panel.Size = new Size(100, 10+editWidget.Height+(editWidget.Top-6) );//careful.. if width is too small, then editwidget grows to much.  Weird.
 			panel.Size = new Size(100, 10+editWidget.Height+(editWidget.Top-6) );//careful.. if width is too small, then editwidget grows to much.  Weird.
 			panel.Controls.Add(label);
 			panel.Controls.Add(editWidget);
-
+			panel.ResumeLayout(false);
 			return panel;
 		}
 

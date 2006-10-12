@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Windows.Forms;
 using WeSay.Language;
 
@@ -26,9 +27,13 @@ namespace WeSay.UI
 			_writingSystemId = writingSystemId;
 			_textBoxTarget = widgetTarget;
 			_textBoxTarget.TextChanged += new EventHandler(OnTextBoxChanged);
-			_textBoxTarget.Disposed += new EventHandler(OnTextBoxTargetDisposed);
-			_textBoxTarget.VisibleChanged += new EventHandler(OnTextBoxTargetVisibilityChanged);
+			_textBoxTarget.HandleDestroyed += new EventHandler(_textBoxTarget_HandleDestroyed);
 			_textBoxTarget.Enter += new EventHandler(OnTextBoxEntered);
+		}
+
+		void _textBoxTarget_HandleDestroyed(object sender, EventArgs e)
+		{
+			TearDown();
 		}
 
 		void OnTextBoxEntered(object sender, EventArgs e)
@@ -67,11 +72,17 @@ namespace WeSay.UI
 		/// </summary>
 		private void TearDown()
 		{
+			//Debug.WriteLine(" BindingTearDown boundTo: " + this._textBoxTarget.Name);
+
+			if (_dataTarget == null)
+			{
+				return; //teardown was called twice
+			}
+
 			_dataTarget.PropertyChanged -= new PropertyChangedEventHandler(OnDataPropertyChanged);
 			_dataTarget = null;
 			_textBoxTarget.TextChanged -= new EventHandler(OnTextBoxChanged);
-			_textBoxTarget.Disposed -= new EventHandler(OnTextBoxTargetDisposed);
-			_textBoxTarget.VisibleChanged -= new EventHandler(OnTextBoxTargetVisibilityChanged);
+			_textBoxTarget.HandleDestroyed -= new EventHandler(_textBoxTarget_HandleDestroyed);
 			_textBoxTarget = null;
 		}
 

@@ -42,8 +42,10 @@ namespace WeSay.LexicalTools
 			this._detailListControl = new WeSay.UI.DetailList();
 			this.SuspendLayout();
 			//
-			// _lexicalEntryView
+			// _lexicalEntryPreview
 			//
+			this._lexicalEntryPreview.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
 			this._lexicalEntryPreview.BackColor = System.Drawing.SystemColors.Control;
 			this._lexicalEntryPreview.BorderStyle = System.Windows.Forms.BorderStyle.None;
 			this._lexicalEntryPreview.Location = new System.Drawing.Point(3, 3);
@@ -55,13 +57,15 @@ namespace WeSay.LexicalTools
 			//
 			// _detailListControl
 			//
+			this._detailListControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+						| System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
 			this._detailListControl.AutoScroll = true;
 			this._detailListControl.BackColor = System.Drawing.SystemColors.Control;
 			this._detailListControl.Location = new System.Drawing.Point(3, 95);
 			this._detailListControl.Name = "_detailListControl";
 			this._detailListControl.Size = new System.Drawing.Size(450, 250);
 			this._detailListControl.TabIndex = 1;
-
 			//
 			// LexPreviewWithEntryControl
 			//

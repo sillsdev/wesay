@@ -48,8 +48,16 @@ namespace WeSay.UI
 
 		public void Clear()
 		{
+			//Debug.WriteLine("VBox " + Name + "   Clearing");
 			_rowCount = 0;
+
+			while(base.Controls.Count>0)
+			{
+			  //  Debug.WriteLine("  VBoxClear() calling dispose on " + base.Controls[0].Name);
+				base.Controls[0].Dispose();
+			}
 			base.Controls.Clear();
+		   // Debug.WriteLine("VBox " + Name + "   Clearing DONE");
 		}
 
 		public void AddControlToBottom(Control control)

@@ -99,7 +99,7 @@ namespace WeSay.LexicalTools
 			if (field != null && field.Visibility == Field.VisibilitySetting.Visible)
 			{
 
-				MultiTextControl m = new MultiTextControl(field.WritingSystemIds, new MultiText());
+				MultiTextControl m = new MultiTextControl(field.WritingSystemIds, new MultiText(), fieldName+"_ghost");
 				Control refWidget = DetailList.AddWidgetRow(StringCatalog.Get(label), false, m, insertAtRow + rowCount);
 
 				foreach (WeSayTextBox box in m.TextBoxes)

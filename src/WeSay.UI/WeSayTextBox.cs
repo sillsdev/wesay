@@ -36,6 +36,7 @@ namespace WeSay.UI
 	  //      ComputeHeight();
 		}
 
+
 		public new string Text
 		{
 			set

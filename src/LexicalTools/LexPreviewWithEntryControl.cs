@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Windows.Forms;
 using WeSay.UI;
 using WeSay.LexicalModel;
@@ -10,6 +11,14 @@ namespace WeSay.LexicalTools
 	{
 		private FieldInventory _fieldInventory;
 		private LexEntry _record;
+
+		public LexPreviewWithEntryControl()
+		{
+			Debug.Assert(DesignMode);
+			_fieldInventory = null;
+			InitializeComponent();
+		}
+
 
 		public LexPreviewWithEntryControl(FieldInventory fieldInventory)
 		{
@@ -78,18 +87,19 @@ namespace WeSay.LexicalTools
 				else
 				{
 					_record.PropertyChanged +=new PropertyChangedEventHandler(OnRecordPropertyChanged);
-					RefreshEntryDetail();
-					RefreshLexicalEntryView();
+					 RefreshLexicalEntryPreview();
+					 Application.DoEvents();
+				   RefreshEntryDetail();
 				}
 			}
 		}
 
 		private void OnRecordPropertyChanged(object sender, PropertyChangedEventArgs e)
 		{
-			RefreshLexicalEntryView();
+			RefreshLexicalEntryPreview();
 		}
 
-		private void RefreshLexicalEntryView()
+		private void RefreshLexicalEntryPreview()
 		{
 			_lexicalEntryPreview.Rtf = RtfRenderer.ToRtf(_record, _currentItem);
 		}
@@ -110,7 +120,7 @@ namespace WeSay.LexicalTools
 		private void OnCurrentItemChanged(object sender, CurrentItemEventArgs e)
 		{
 			_currentItem = e;
-			RefreshLexicalEntryView();
+			RefreshLexicalEntryPreview();
 		}
 
 		private CurrentItemEventArgs _currentItem;
