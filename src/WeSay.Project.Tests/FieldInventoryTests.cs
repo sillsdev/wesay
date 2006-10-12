@@ -99,7 +99,7 @@ namespace WeSay.Project.Tests
 			FieldInventory master = MakeMasterInventory();
 			int count = master.Count;
 			FieldInventory empty = new FieldInventory ();
-			FieldInventory.ModifyMasterFromUser(master, empty);
+			FieldInventory.SynchronizeInventories(master, empty);
 
 			Assert.AreEqual(count, master.Count);
 		}
@@ -120,7 +120,7 @@ namespace WeSay.Project.Tests
 			int count = master.Count;
 			FieldInventory simple = new FieldInventory ();
 			simple.Add(new Field(Field.FieldNames.ExampleTranslation.ToString(), new String[] {"en"}));
-			FieldInventory.ModifyMasterFromUser(master, simple);
+			FieldInventory.SynchronizeInventories(master, simple);
 
 			Assert.AreEqual(count, master.Count);
 			Assert.IsTrue(master.Contains(Field.FieldNames.ExampleTranslation.ToString()));
@@ -133,7 +133,7 @@ namespace WeSay.Project.Tests
 			int count = master.Count;
 			FieldInventory simple = new FieldInventory();
 			simple.Add(new Field("dummy", new String[] { "en" }));
-			FieldInventory.ModifyMasterFromUser(master, simple);
+			FieldInventory.SynchronizeInventories(master, simple);
 			Assert.IsFalse(master.Contains("dummy"));
 		}
 

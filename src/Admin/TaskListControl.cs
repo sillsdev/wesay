@@ -13,8 +13,6 @@ namespace WeSay.Admin
 		public TaskListControl()
 		{
 			InitializeComponent();
-
-
 		}
 
 		private void TaskList_Load(object sender, System.EventArgs e)
@@ -37,10 +35,8 @@ namespace WeSay.Admin
 			writer.WriteStartElement("tasks");
 
 			writer.WriteStartElement("components");
-//            Debug.Assert(AdminWindow.SharedFieldInventory != null);
-//
-//            AdminWindow.SharedFieldInventory.Write(writer);
-
+			Debug.Assert(WeSayWordsProject.Project.FieldInventory != null);
+			WeSayWordsProject.Project.FieldInventory.Write(writer);
 			writer.WriteEndElement();
 
 			foreach (TaskInfo t in _taskList.Items)

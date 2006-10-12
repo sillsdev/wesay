@@ -32,67 +32,14 @@ namespace WeSay.Admin
 		/// <summary>
 		/// Construct the list of fields to show.
 		/// </summary>
-		/// <remarks>
-		/// The algorithm here is to fill the list with all of the fields from the master inventory.
-		/// If a field is also found in the users existing inventory, turn on the checkbox,
-		/// and set all of the writing systems to match what the user had before.
-		/// Any fields that are in the user's inventory which are no longer in the
-		/// master inventory will be thrown away.
-		/// </remarks>
 		private void LoadInventory()
 		{
 			_fieldsListBox.Items.Clear();
 
-			FieldInventory oldInventory = GetUsersExistingInventory();
-//
-//            FieldInventory.ModifyMasterFromUser(AdminWindow.SharedFieldInventory, oldInventory);
-//            foreach (Field field in AdminWindow.SharedFieldInventory)
-//            {
-//                this._fieldsListBox.Items.Add(field, field.Visibility == Field.VisibilitySetting.Visible);
-//            }
-	  }
-
-
-
-
-		private static FieldInventory GetUsersExistingInventory()
-		{
-			FieldInventory oldInventory = new FieldInventory();
-			try
+			foreach (Field field in  WeSayWordsProject.Project.FieldInventory)
 			{
-				XmlDocument projectDoc = GetProjectDoc();
-				if (projectDoc != null)
-				{
-					XmlNode inventoryNode = projectDoc.SelectSingleNode("tasks/components/fieldInventory");
-					oldInventory.LoadFromString(inventoryNode.OuterXml);
-				}
+				this._fieldsListBox.Items.Add(field, field.Visibility == Field.VisibilitySetting.Visible);
 			}
-			catch (Exception error)
-			{
-				MessageBox.Show("There may have been a problem reading the master task inventory xml. " + error.Message);
-			}
-			return oldInventory;
-		}
-
-
-
-		private static XmlDocument GetProjectDoc()
-		{
-			XmlDocument projectDoc = null;
-			if (File.Exists(WeSayWordsProject.Project.PathToProjectTaskInventory))
-			{
-				try
-				{
-					projectDoc = new XmlDocument();
-					projectDoc.Load(WeSayWordsProject.Project.PathToProjectTaskInventory);
-				}
-				catch (Exception e)
-				{
-					MessageBox.Show("There was a problem reading the task xml. " + e.Message);
-					projectDoc = null;
-				}
-			}
-			return projectDoc;
 		}
 
 		private void _fieldsListBox_ItemCheck(object sender, ItemCheckEventArgs e)
