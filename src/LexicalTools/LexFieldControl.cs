@@ -15,6 +15,8 @@ namespace WeSay.LexicalTools
 		private IRecordList<LexEntry> _records;
 		private InMemoryBindingList<LexEntry> _completedRecords;
 		private LexEntry _currentRecord;
+		private LexEntry _previousRecord;
+		private LexEntry _nextRecord;
 
 		private readonly FieldInventory _fieldInventory;
 		private readonly Predicate<LexEntry> _isNotComplete;
@@ -29,6 +31,10 @@ namespace WeSay.LexicalTools
 			if(fieldInventory == null)
 			{
 				throw new ArgumentNullException("fieldInventory");
+			}
+			if(isNotComplete == null)
+			{
+				throw new ArgumentNullException("isNotComplete");
 			}
 			_records = records;
 			_records.ListChanged += OnRecordsListChanged;
@@ -67,9 +73,36 @@ namespace WeSay.LexicalTools
 			}
 		}
 
+		public void SetCurrentRecordToNext()
+		{
+			if (_records.Count > 0)
+			{
+				CurrentRecord = _nextRecord ?? _records[_records.Count-1];
+				SelectCurrentRecordInRecordList();
+				UpdatePreviousAndNextRecords();
+			}
+		}
+
+		public void SetCurrentRecordToPrevious()
+		{
+			if (_records.Count > 0)
+			{
+				CurrentRecord = _previousRecord ?? _records[0];
+				SelectCurrentRecordInRecordList();
+				UpdatePreviousAndNextRecords();
+			}
+		}
+
+		private void UpdatePreviousAndNextRecords()
+		{
+			int currentIndex = RecordListCurrentIndex;
+			_previousRecord = (currentIndex > 0) ? _records[currentIndex - 1]: null;
+			_nextRecord = (currentIndex < _records.Count - 1) ? _records[currentIndex + 1] : null;
+		}
+
 		private void SetCurrentRecordFromRecordList()
 		{
-			SetCurrentRecordListControl(_recordsListBox);
+			SwitchPrimaryRecordListControl(_recordsListBox);
 
 			if (this._records.Count == 0)
 			{
@@ -78,10 +111,11 @@ namespace WeSay.LexicalTools
 			else
 			{
 				CurrentRecord = _records[RecordListCurrentIndex];
+				UpdatePreviousAndNextRecords();
 			}
 		}
 
-		private void SetCurrentRecordListControl(BindingListGrid list)
+		private void SwitchPrimaryRecordListControl(BindingListGrid list)
 		{
 			BindingListGrid otherList = _recordsListBox;
 			if(list == _recordsListBox)
@@ -104,7 +138,7 @@ namespace WeSay.LexicalTools
 
 		private void SetCurrentRecordFromCompletedRecordList()
 		{
-			SetCurrentRecordListControl(_completedRecordsListBox);
+			SwitchPrimaryRecordListControl(_completedRecordsListBox);
 
 			if (this._completedRecords.Count == 0)
 			{
@@ -116,7 +150,6 @@ namespace WeSay.LexicalTools
 			}
 		}
 
-
 		protected int RecordListCurrentIndex
 		{
 			get { return _recordsListBox.SelectedIndex; }
@@ -124,26 +157,25 @@ namespace WeSay.LexicalTools
 
 		protected int CompletedRecordListCurrentIndex
 		{
-			get
-			{
-				return _completedRecordsListBox.SelectedIndex;
-			}
+			get { return _completedRecordsListBox.SelectedIndex; }
 		}
 
 		public LexPreviewWithEntryControl ControlDetails
 		{
-			get
-			{
-				return _lexFieldDetailPanel;
-			}
+			get { return _lexFieldDetailPanel; }
 		}
+
 		/// <summary>
 		/// Sets current record as selected in record list or completed record list
 		/// </summary>
 		/// <value>null if record list is empty</value>
-		private LexEntry CurrentRecord
+		public LexEntry CurrentRecord
 		{
-			set
+			get
+			{
+				return _currentRecord;
+			}
+			private set
 			{
 				if(_currentRecord != null)
 				{
@@ -162,37 +194,48 @@ namespace WeSay.LexicalTools
 		{
 			if(e.ListChangedType == System.ComponentModel.ListChangedType.ItemAdded)
 			{
-				int index = _records.IndexOf(_currentRecord);
-				_recordsListBox.Selection.Clear();
-				_recordsListBox.Selection.SelectRow(index, true);
-				_recordsListBox.ShowCell(new Position(index, 0));
+				SelectCurrentRecordInRecordList();
 			}
+		}
+
+		private void SelectCurrentRecordInRecordList() {
+			int index = this._records.IndexOf(this._currentRecord);
+			Debug.Assert(index != -1);
+			this._recordsListBox.Selection.Clear();
+			this._recordsListBox.Selection.SelectRow(index, true);
+			this._recordsListBox.ShowCell(new Position(index, 0));
 		}
 
 		void OnCurrentRecordPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
 		{
-			LexEntry entry = (LexEntry) sender;
+			Debug.Assert(sender == CurrentRecord);
+			LexEntry entry = (LexEntry)sender;
 			if (_isNotComplete(entry))
 			{
 				if (_completedRecords.Contains(entry))
 				{
-					_completedRecordsListBox.Selection.Clear();
-					_completedRecords.Remove(entry);
-					SetCurrentRecordListControl(_recordsListBox);
+					this._completedRecordsListBox.Selection.Clear();
+					this._completedRecords.Remove(entry);
+					SwitchPrimaryRecordListControl(_recordsListBox);
 				}
 			}
 			else
 			{
 			   if (!_completedRecords.Contains(entry))
 				{
-					_completedRecords.Add(entry);
-					int index = _completedRecords.IndexOf(entry);
-					_completedRecordsListBox.Selection.Clear();
-					_completedRecordsListBox.Selection.SelectRow(index, true);
-					_completedRecordsListBox.ShowCell(new Position(index, 0));
-					SetCurrentRecordListControl(_completedRecordsListBox);
+					this._completedRecords.Add(entry);
+					SelectCurrentRecordInCompletedRecordList();
+					SwitchPrimaryRecordListControl(_completedRecordsListBox);
 				}
 			}
+		}
+
+		private void SelectCurrentRecordInCompletedRecordList() {
+			int index = this._completedRecords.IndexOf(CurrentRecord);
+			Debug.Assert(index != -1);
+			this._completedRecordsListBox.Selection.Clear();
+			this._completedRecordsListBox.Selection.SelectRow(index, true);
+			this._completedRecordsListBox.ShowCell(new Position(index, 0));
 		}
 	}
 }

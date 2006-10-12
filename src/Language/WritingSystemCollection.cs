@@ -1,8 +1,4 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Text;
 using System.Xml;
 using Exortech.NetReflector;
 
@@ -86,7 +82,7 @@ namespace WeSay.Language
 			get
 			{
 				WritingSystem ws;
-				this.TryGetValue(_analysisWritingSystemDefaultId, out ws);
+				TryGetValue(_analysisWritingSystemDefaultId, out ws);
 				return ws;
 			}
 		}
@@ -96,7 +92,7 @@ namespace WeSay.Language
 			get
 			{
 				WritingSystem ws;
-				this.TryGetValue(_vernacularWritingSystemDefaultId, out ws);
+				TryGetValue(_vernacularWritingSystemDefaultId, out ws);
 				return ws;
 			}
 		}
@@ -140,29 +136,29 @@ namespace WeSay.Language
 		{
 			get
 			{
-				WritingSystem[] holder = new WritingSystem[this.Values.Count];
-				this.Values.CopyTo(holder,0);
+				WritingSystem[] holder = new WritingSystem[Values.Count];
+				Values.CopyTo(holder,0);
 				return holder;
 			}
 			set
 			{
-				this.Clear();
+				Clear();
 				foreach(WritingSystem w in value)
 				{
-					this.Add(w.Id,w);
+					Add(w.Id,w);
 				}
 			}
 		}
 
-		private WritingSystem GetWritingSystem(string id)
-		{
-			if (!this.ContainsKey(id))
-			{
-				System.Drawing.Font font = new System.Drawing.Font("Arial", 12, FontStyle.Italic);//italic 'cause something's wrong
-				this.Add(id, new WritingSystem(id, font));
-			}
-			return this[id];
-		}
+		//private WritingSystem GetWritingSystem(string id)
+		//{
+		//    if (!ContainsKey(id))
+		//    {
+		//        System.Drawing.Font font = new System.Drawing.Font("Arial", 12, FontStyle.Italic);//italic 'cause something's wrong
+		//        Add(id, new WritingSystem(id, font));
+		//    }
+		//    return this[id];
+		//}
 
 	}
 }

@@ -1,10 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
-using System.Drawing;
-using System.Data;
-using System.Text;
 using System.Windows.Forms;
 using WeSay.Data;
 using WeSay.LexicalModel;
@@ -28,7 +24,7 @@ namespace WeSay.LexicalTools
 			_words = words;
 			_records = records;
 			InitializeComponent();
-			this.BackColor = WeSay.UI.DisplaySettings.Default.BackgroundColor;
+			BackColor = WeSay.UI.DisplaySettings.Default.BackgroundColor;
 
 			//TODO: this limits us to a single writing system, and relies on the deprecated "default"
 			_vernacularBox.WritingSystemIds = new string[] { WeSay.UI.BasilProject.Project.WritingSystems.VernacularWritingSystemDefaultId };
@@ -49,7 +45,7 @@ namespace WeSay.LexicalTools
 
 		private void UpdateStuff()
 		{
-			if (this.DesignMode)
+			if (DesignMode)
 			{
 				return;
 			}
@@ -135,8 +131,8 @@ namespace WeSay.LexicalTools
 
 		private void GatherWordListControl_BackColorChanged(object sender, EventArgs e)
 		{
-			_listViewWords.BackColor = this.BackColor;
-			_boxForeignWord.BackColor = this.BackColor;
+			_listViewWords.BackColor = BackColor;
+			_boxForeignWord.BackColor = BackColor;
 		}
 
 

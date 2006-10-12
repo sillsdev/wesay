@@ -1,8 +1,5 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.ComponentModel;
-using com.db4o;
 using WeSay.Language;
 
 

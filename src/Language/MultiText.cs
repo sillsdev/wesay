@@ -1,7 +1,5 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Text;
 using System.Diagnostics;
 using System.ComponentModel;
 using System.Collections.ObjectModel;
@@ -92,7 +90,7 @@ namespace WeSay.Language
 		public string GetFirstAlternative()
 		{
 			if (Count > 0)
-				return ((LanguageForm) _forms[0]).Form;
+				return _forms[0].Form;
 			else
 				return string.Empty;
 		}

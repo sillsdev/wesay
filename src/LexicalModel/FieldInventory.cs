@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Xml;
 using Exortech.NetReflector;
@@ -29,7 +28,7 @@ namespace WeSay.LexicalModel
 			}
 			set
 			{
-				this.Clear();
+				Clear();
 				foreach (Field  f in value)
 				{
 					if (f == null)
@@ -37,7 +36,7 @@ namespace WeSay.LexicalModel
 						throw new ArgumentNullException("field",
 														"one of the fields is null");
 					}
-					this.Add(f);
+					Add(f);
 				}
 			}
 		}

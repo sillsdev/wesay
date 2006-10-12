@@ -6,7 +6,7 @@ using System.Windows.Forms;
 namespace WeSay.LexicalTools.Tests
 {
 	[TestFixture]
-	public class TestFieldControl
+	public class LexPreviewWithEntryControlTests
 	{
 		LexEntry empty;
 		LexEntry apple;
@@ -198,6 +198,5 @@ namespace WeSay.LexicalTools.Tests
 		{
 			return ((LexExampleSentence)((LexSense)entry.Senses[0]).ExampleSentences[0]).Sentence.GetFirstAlternative();
 		}
-
 	}
 }

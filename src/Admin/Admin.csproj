@@ -178,6 +178,7 @@
 	</ProjectReference>
   </ItemGroup>
   <ItemGroup>
+	<None Include="ClassDiagram1.cd" />
 	<None Include="Resources\RoundedBorder.PNG" />
 	<Content Include="Welcome.htm">
 	  <CopyToOutputDirectory>Always</CopyToOutputDirectory>

@@ -127,8 +127,8 @@ namespace WeSay.LexicalTools
 
 		private void LexPreviewWithEntryControl_BackColorChanged(object sender, EventArgs e)
 		{
-			_detailListControl.BackColor = this.BackColor;
-			_lexicalEntryPreview.BackColor = this.BackColor;
+			_detailListControl.BackColor = BackColor;
+			_lexicalEntryPreview.BackColor = BackColor;
 		}
 	}
 }

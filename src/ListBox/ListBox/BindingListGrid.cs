@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
@@ -54,7 +53,7 @@ namespace ListBox
 
 		protected override void Dispose(bool disposing)
 		{
-			if (disposing && !this.IsDisposed)
+			if (disposing && !IsDisposed)
 			{
 				Unbind();
 			}
@@ -273,7 +272,7 @@ namespace ListBox
 
 				if (_list.Count > 0)
 				{
-					this.SelectedIndex = 0;
+					SelectedIndex = 0;
 				}
 			}
 		}
@@ -286,7 +285,7 @@ namespace ListBox
 			//			}
 			if (DataSource != null)
 			{
-				((IBindingList)DataSource).ListChanged -= new ListChangedEventHandler(BindingListGrid_ListChanged);
+				DataSource.ListChanged -= new ListChangedEventHandler(BindingListGrid_ListChanged);
 			}
 			//JDH this leads to accessing disposed dataSource: Rows.RowsChanged();
 		}
@@ -315,7 +314,7 @@ namespace ListBox
 			if (Columns.Count == 0)
 				CreateColumns();
 
-			((IBindingList)DataSource).ListChanged += new ListChangedEventHandler(BindingListGrid_ListChanged);
+			DataSource.ListChanged += new ListChangedEventHandler(BindingListGrid_ListChanged);
 			Rows.RowsChanged();
 		}
 

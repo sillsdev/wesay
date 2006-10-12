@@ -57,12 +57,12 @@ namespace WeSay.LexicalModel
 		{
 			get
 			{
-				return Filter;
+				return IsMissingGloss;
 			}
 		}
 
 		#endregion
-		private bool Filter(LexEntry entry)
+		private bool IsMissingGloss(LexEntry entry)
 		{
 			if (entry == null)
 			{

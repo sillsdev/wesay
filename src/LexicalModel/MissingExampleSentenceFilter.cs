@@ -53,11 +53,11 @@ namespace WeSay.LexicalModel
 		{
 			get
 			{
-				return Filter;
+				return IsMissingExampleSentence;
 			}
 		}
 
-		private bool Filter(LexEntry entry)
+		private bool IsMissingExampleSentence(LexEntry entry)
 		{
 			if (entry == null)
 			{
