@@ -119,9 +119,9 @@ namespace WeSay.UI
 
 		private void WeSayTextBox_Enter(object sender, EventArgs e)
 		{
-			if (_keymanLink != null)
+			if (_keymanLink != null && _writingSystem.WindowsKeyman != null && _writingSystem.WindowsKeyman !="")
 			{
-				_keymanLink.SelectKeymanKeyboard("IPA Unicode 1.0.5", true);
+				_keymanLink.SelectKeymanKeyboard(_writingSystem.WindowsKeyman, true);
 			}
 		}
 

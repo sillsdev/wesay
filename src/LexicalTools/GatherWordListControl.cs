@@ -30,7 +30,7 @@ namespace WeSay.LexicalTools
 			InitializeComponent();
 			this.BackColor = WeSay.UI.DisplaySettings.Default.BackgroundColor;
 
-			//temp hack
+			//TODO: this limits us to a single writing system, and relies on the deprecated "default"
 			_vernacularBox.WritingSystemIds = new string[] { WeSay.UI.BasilProject.Project.WritingSystems.VernacularWritingSystemDefaultId };
 			_vernacularBox.TextChanged += new EventHandler(_vernacularBox_TextChanged);
 			_vernacularBox.KeyDown += new KeyEventHandler(_boxVernacularWord_KeyDown);
