@@ -28,6 +28,7 @@ namespace WeSay.App
 		/// </summary>
 		private void InitializeComponent()
 		{
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TabbedForm));
 			this.tabControl1 = new System.Windows.Forms.TabControl();
 			this.tabPage2 = new System.Windows.Forms.TabPage();
 			this.tabControl1.SuspendLayout();
@@ -59,6 +60,7 @@ namespace WeSay.App
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(631, 434);
 			this.Controls.Add(this.tabControl1);
+			this.Icon = WeSay.App.Properties.Resources.ApplicationIcon;
 			this.Name = "TabbedForm";
 			this.Text = "WeSay";
 			this.Load += new System.EventHandler(this.TabbedForm_Load);

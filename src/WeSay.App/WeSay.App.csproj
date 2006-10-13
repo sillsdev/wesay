@@ -9,6 +9,8 @@
 	<AppDesignerFolder>Properties</AppDesignerFolder>
 	<RootNamespace>WeSay.App</RootNamespace>
 	<AssemblyName>WeSay.App</AssemblyName>
+	<ApplicationIcon>
+	</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
 	<DebugSymbols>true</DebugSymbols>
@@ -55,6 +57,11 @@
 	</Compile>
 	<Compile Include="ProgressDialog.Designer.cs">
 	  <DependentUpon>ProgressDialog.cs</DependentUpon>
+	</Compile>
+	<Compile Include="Properties\Resources.Designer.cs">
+	  <AutoGen>True</AutoGen>
+	  <DesignTime>True</DesignTime>
+	  <DependentUpon>Resources.resx</DependentUpon>
 	</Compile>
 	<Compile Include="SampleTaskBuilder.cs" />
 	<Compile Include="Settings.cs" />
@@ -105,10 +112,18 @@
 	  <SubType>Designer</SubType>
 	  <DependentUpon>ProgressDialog.cs</DependentUpon>
 	</EmbeddedResource>
+	<EmbeddedResource Include="Properties\Resources.resx">
+	  <SubType>Designer</SubType>
+	  <Generator>ResXFileCodeGenerator</Generator>
+	  <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+	</EmbeddedResource>
 	<EmbeddedResource Include="TabbedForm.resx">
 	  <SubType>Designer</SubType>
 	  <DependentUpon>TabbedForm.cs</DependentUpon>
 	</EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+	<Content Include="Resources\WeSay.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
