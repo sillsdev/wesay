@@ -9,8 +9,7 @@
 	<AppDesignerFolder>Properties</AppDesignerFolder>
 	<RootNamespace>WeSay.App</RootNamespace>
 	<AssemblyName>WeSay.App</AssemblyName>
-	<ApplicationIcon>
-	</ApplicationIcon>
+	<ApplicationIcon>Resources\WeSay.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
 	<DebugSymbols>true</DebugSymbols>
