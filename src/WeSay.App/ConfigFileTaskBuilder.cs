@@ -1,9 +1,7 @@
 using System;
 using PicoContainer;
 using PicoContainer.Defaults;
-using WeSay.LexicalModel;
 using WeSay.Project;
-using WeSay.UI;
 using System.IO;
 using System.Collections.Generic;
 using WeSay.Data;

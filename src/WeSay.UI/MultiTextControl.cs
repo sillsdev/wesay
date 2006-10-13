@@ -1,10 +1,7 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
-using System.Data;
-using System.Text;
 using System.Windows.Forms;
 using WeSay.Language;
 
@@ -15,8 +12,8 @@ namespace WeSay.UI
 		private IList<WritingSystem> _writingSystems;
 		private MultiText _multiText;
 		private List<WeSayTextBox> _textBoxes;
-	   public new event EventHandler TextChanged;
-		public new event KeyEventHandler KeyDown;
+	   //public new event EventHandler TextChanged;
+	   // public new event KeyEventHandler KeyDown;
 
 		public MultiTextControl()
 		{
@@ -34,8 +31,8 @@ namespace WeSay.UI
 		}
 		public MultiTextControl(IList<WritingSystem> writingSystems, MultiText text, string nameForTesting):this()
 		{
-			_vbox.Name = this.Name + "-vbox";
-			this.Name = nameForTesting+"-mtc";
+			_vbox.Name = Name + "-vbox";
+			Name = nameForTesting+"-mtc";
 			_writingSystems = writingSystems;
 			MultiText = text;
 		}
@@ -70,12 +67,12 @@ namespace WeSay.UI
 
 		private void BuildBoxes()
 		{
-			this.SuspendLayout();
+			SuspendLayout();
 			if (_vbox.Count > 0)
 			{
 				_vbox.Clear();
 			}
-			this.Height = 0;
+			Height = 0;
 			foreach (WritingSystem writingSystem in WritingSystems)
 			{
 				string writingSystemId =writingSystem.Id;
@@ -83,7 +80,7 @@ namespace WeSay.UI
 				WeSayTextBox box = new WeSayTextBox(writingSystem);
 				_textBoxes.Add(box);
 				this.components.Add(box);//so it will get disposed of when we are
-				box.Name = this.Name.Replace("-mtc","") + "_" + writingSystemId; //for automated tests to find this particular guy
+				box.Name = Name.Replace("-mtc","") + "_" + writingSystemId; //for automated tests to find this particular guy
 				box.Text = _multiText[writingSystemId];
 				box.Location = new Point(30, 0);
 				box.Width = initialPanelWidth - box.Left;
@@ -96,7 +93,7 @@ namespace WeSay.UI
 				label.Text = writingSystemId;
 				label.ForeColor = System.Drawing.Color.LightGray;
 
-				Graphics g = this.CreateGraphics();
+				Graphics g = CreateGraphics();
 				int descent = box.Font.FontFamily.GetCellDescent(box.Font.Style);
 				int descentPixel = (int) (box.Font.Size * descent / box.Font.FontFamily.GetEmHeight(box.Font.Style));
 
@@ -110,26 +107,28 @@ namespace WeSay.UI
 				p.Size = new Size(initialPanelWidth,box.Height+0);
 
 				_vbox.AddControlToBottom(p);
-				this.Height += p.Height;
+				Height += p.Height;
 			}
-			this.ResumeLayout(false);
+			ResumeLayout(false);
 
 		}
 
 		void OnKeyDownInSomeBox(object sender, KeyEventArgs e)
 		{
-			if (this.KeyDown != null)
-			{
-				KeyDown.Invoke(sender, e);
-			}
+			OnKeyDown(e);
+			//if (this.KeyDown != null)
+			//{
+			//    KeyDown.Invoke(sender, e);
+			//}
 		}
 
 		void OnTextOfSomeBoxChanged(object sender, EventArgs e)
 		{
-			if (this.TextChanged != null)
-			{
-				TextChanged.Invoke(sender, e);
-			}
+			OnTextChanged(e);
+			//if (this.TextChanged != null)
+			//{
+			//    TextChanged.Invoke(sender, e);
+			//}
 		}
 
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
@@ -153,9 +152,9 @@ namespace WeSay.UI
 
 		private void MultiTextControl_Enter(object sender, EventArgs e)
 		{
-			if (this.TextBoxes.Count > 0)
+			if (TextBoxes.Count > 0)
 			{
-				this.TextBoxes[0].Select();
+				TextBoxes[0].Select();
 			}
 		}
 

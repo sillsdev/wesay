@@ -1,3 +1,4 @@
+using System.Windows.Forms;
 using WeSay.UI;
 
 namespace WeSay.LexicalTools
@@ -43,8 +44,12 @@ namespace WeSay.LexicalTools
 		{
 			this._recordsListBox = new ListBox.BindingListGrid();
 			this._completedRecordsListBox = new ListBox.BindingListGrid();
-			this._completedRecordsLabel = new System.Windows.Forms.Label();
+			this._completedRecordsLabel = new Label();
 			this._lexFieldDetailPanel = new WeSay.LexicalTools.LexPreviewWithEntryControl(_fieldInventory);
+			this._btnPreviousWord = new ArrowButton.ArrowButton();
+			this._btnNextWord = new ArrowButton.ArrowButton();
+			this.labelNextHotKey = new Label();
+
 			this.SuspendLayout();
 			//
 			// _recordsListBox
@@ -107,6 +112,50 @@ namespace WeSay.LexicalTools
 			this._lexFieldDetailPanel.Name = "_lexFieldDetailPanel";
 			this._lexFieldDetailPanel.Size = new System.Drawing.Size(367, 122);
 			this._lexFieldDetailPanel.TabIndex = 4;
+
+
+			//
+			// labelNextHotKey
+			//
+			this.labelNextHotKey.AutoSize = true;
+			this.labelNextHotKey.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.labelNextHotKey.ForeColor = System.Drawing.Color.DarkGray;
+			this.labelNextHotKey.Location = new System.Drawing.Point(495, 372);
+			this.labelNextHotKey.Name = "labelNextHotKey";
+			this.labelNextHotKey.Size = new System.Drawing.Size(102, 15);
+			this.labelNextHotKey.TabIndex = 3;
+			this.labelNextHotKey.Text = "(Page Down Key)";
+			//
+			// _btnPreviousWord
+			//
+			this._btnPreviousWord.ArrowEnabled = true;
+			this._btnPreviousWord.HoverEndColor = System.Drawing.Color.PeachPuff;
+			this._btnPreviousWord.HoverStartColor = System.Drawing.Color.Salmon;
+			this._btnPreviousWord.Location = new System.Drawing.Point(422, 369);
+			this._btnPreviousWord.Name = "_btnPreviousWord";
+			this._btnPreviousWord.NormalEndColor = System.Drawing.Color.FromArgb(((int)(((byte)(254)))), ((int)(((byte)(235)))), ((int)(((byte)(214)))));
+			this._btnPreviousWord.NormalStartColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(235)))), ((int)(((byte)(214)))));
+			this._btnPreviousWord.Rotation = 270;
+			this._btnPreviousWord.Size = new System.Drawing.Size(24, 24);
+			this._btnPreviousWord.StubbyStyle = false;
+			this._btnPreviousWord.TabIndex = 1;
+			this._btnPreviousWord.Click += new System.EventHandler(OnBtnPreviousWordClick);
+			//
+			// _btnNextWord
+			//
+			this._btnNextWord.ArrowEnabled = true;
+			this._btnNextWord.HoverEndColor = System.Drawing.Color.PeachPuff;
+			this._btnNextWord.HoverStartColor = System.Drawing.Color.Salmon;
+			this._btnNextWord.Location = new System.Drawing.Point(446, 360);
+			this._btnNextWord.Name = "_btnNextWord";
+			this._btnNextWord.NormalEndColor = System.Drawing.Color.FromArgb(((int)(((byte)(254)))), ((int)(((byte)(235)))), ((int)(((byte)(214)))));
+			this._btnNextWord.NormalStartColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(235)))), ((int)(((byte)(214)))));
+			this._btnNextWord.Rotation = 90;
+			this._btnNextWord.Size = new System.Drawing.Size(43, 43);
+			this._btnNextWord.StubbyStyle = false;
+			this._btnNextWord.TabIndex = 2;
+			this._btnNextWord.Click += new System.EventHandler(OnBtnNextWordClick);
+
 			//
 			// LexFieldTool
 			//
@@ -117,8 +166,13 @@ namespace WeSay.LexicalTools
 			this.Controls.Add(this._completedRecordsListBox);
 			this.Controls.Add(this._lexFieldDetailPanel);
 			this.Controls.Add(this._completedRecordsLabel);
+			this.Controls.Add(this._btnPreviousWord);
+			this.Controls.Add(this._btnNextWord);
+			this.Controls.Add(this.labelNextHotKey);
+
 			this.Name = "LexFieldTool";
 			this.Size = new System.Drawing.Size(493, 169);
+
 			this.ResumeLayout(false);
 		}
 
@@ -127,5 +181,9 @@ namespace WeSay.LexicalTools
 		private ListBox.BindingListGrid _recordsListBox;
 		private ListBox.BindingListGrid _completedRecordsListBox;
 		private System.Windows.Forms.Label _completedRecordsLabel;
+		private ArrowButton.ArrowButton _btnNextWord;
+		private ArrowButton.ArrowButton _btnPreviousWord;
+		private Label labelNextHotKey;
+
 	}
 }

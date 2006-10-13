@@ -25,7 +25,7 @@ namespace WeSay.UI
 			SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint
 				| ControlStyles.UserPaint, true);
 
-			this.Name = "DetailList";//for  debugging
+			Name = "DetailList";//for  debugging
 			if (Environment.OSVersion.Platform != PlatformID.Unix)
 			{
 				//this.Margin = new Padding(5, 5, 5, 5); //not implemented inn mono 1.16
@@ -74,6 +74,7 @@ namespace WeSay.UI
 			FixUpForMono(editWidget);
 			editWidget.Left = label.Width + 10;
 			editWidget.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+			editWidget.KeyDown += new KeyEventHandler(editWidget_KeyDown);
 
 			Panel panel = new TestPanel();
 			panel.SuspendLayout();
@@ -84,6 +85,11 @@ namespace WeSay.UI
 			panel.Controls.Add(editWidget);
 			panel.ResumeLayout(false);
 			return panel;
+		}
+
+		void editWidget_KeyDown(object sender, KeyEventArgs e)
+		{
+			OnKeyDown(e);
 		}
 
 		private static void FixUpForMono(Control control)
@@ -160,7 +166,7 @@ namespace WeSay.UI
 		{
 			Panel p = (Panel)ActualControls[RowToControlIndex(row)];
 			Control c = GetEditControlFromReferenceControl(p);
-			WeSayTextBox tb = null;
+			WeSayTextBox tb;
 			if (c is MultiTextControl)
 			{
 				MultiTextControl multText = (MultiTextControl)c;

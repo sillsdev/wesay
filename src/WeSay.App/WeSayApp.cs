@@ -7,7 +7,6 @@ using WeSay.Data;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Tests;
 using WeSay.Project;
-using WeSay.UI;
 namespace WeSay.App
 {
 	class WeSayApp
@@ -42,26 +41,28 @@ namespace WeSay.App
 
 				BackupService backupService=null;
 
-				IRecordListManager recordListManager = MakeRecordListManager(project);
-				Db4oRecordListManager ds = recordListManager as Db4oRecordListManager;
-				if (ds != null)
+				using (IRecordListManager recordListManager = MakeRecordListManager(project))
 				{
-					backupService = new BackupService(project.PathToLocalBackup, ds.DataSource);
-					ds.DataCommitted += new EventHandler(backupService.OnDataCommitted);
-				}
+					Db4oRecordListManager ds = recordListManager as Db4oRecordListManager;
+					if (ds != null)
+					{
+						backupService = new BackupService(project.PathToLocalBackup, ds.DataSource);
+						ds.DataCommitted += new EventHandler(backupService.OnDataCommitted);
+					}
 
-				//builder = new SampleTaskBuilder(project, tabbedForm, recordListManager);
-				using (FileStream config = new FileStream(project.PathToProjectTaskInventory, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete))
-				{
-					builder = new ConfigFileTaskBuilder(config, project, tabbedForm, recordListManager);
-				}
+					//builder = new SampleTaskBuilder(project, tabbedForm, recordListManager);
+					using (FileStream config = new FileStream(project.PathToProjectTaskInventory, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete))
+					{
+						builder = new ConfigFileTaskBuilder(config, project, tabbedForm, recordListManager);
+					}
 
-				project.Tasks = builder.Tasks;
-				Application.DoEvents();
-				backupService.DoIncrementalXmlBackupNow(); //in case we are far behind
-				Application.Run(tabbedForm);
-				backupService.DoIncrementalXmlBackupNow();
-				backupService.BackupToExternal("f:\\"+project.Name+".zip");
+					project.Tasks = builder.Tasks;
+					Application.DoEvents();
+					backupService.DoIncrementalXmlBackupNow(); //in case we are far behind
+					Application.Run(tabbedForm);
+					backupService.DoIncrementalXmlBackupNow();
+					backupService.BackupToExternal("f:\\" + project.Name + ".zip");
+				}
 			}
 			finally
 			{

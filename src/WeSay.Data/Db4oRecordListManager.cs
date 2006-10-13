@@ -31,7 +31,6 @@ namespace WeSay.Data
 		protected override IRecordList<T> CreateFilteredRecordList<T>(IFilter<T> filter)
 		{
 			FilteredDb4oRecordList<T> list = new FilteredDb4oRecordList<T>(Get<T>(), filter, this._dataPath, false);
-		  //  list.DataCommitted += new EventHandler(OnDataCommitted);
 			return list;
 		}
 
@@ -41,7 +40,6 @@ namespace WeSay.Data
 			try
 			{
 				recordList = new FilteredDb4oRecordList<T>(Get<T>(), filter, _dataPath, true);
-			   // ((FilteredDb4oRecordList<T>)recordList).DataCommitted += new EventHandler(OnDataCommitted);
 			}
 			catch (OperationCanceledException) {}
 			return recordList;

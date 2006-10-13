@@ -1,5 +1,3 @@
-using WeSay.UI;
-
 namespace WeSay.LexicalTools
 {
 	partial class LexPreviewWithEntryControl

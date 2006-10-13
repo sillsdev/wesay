@@ -30,6 +30,12 @@ namespace WeSay.LexicalTools
 			_fieldInventory = fieldInventory;
 			InitializeComponent();
 			_detailListControl.CurrentItemChanged += new EventHandler<CurrentItemEventArgs>(OnCurrentItemChanged);
+			_detailListControl.KeyDown += new KeyEventHandler(_detailListControl_KeyDown);
+		}
+
+		void _detailListControl_KeyDown(object sender, KeyEventArgs e)
+		{
+			OnKeyDown(e);
 		}
 
 		[Browsable(false)]

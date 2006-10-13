@@ -45,6 +45,7 @@ namespace WeSay.LexicalTools
 
 			InitializeComponent();
 			_lexFieldDetailPanel.BackColor = DisplaySettings.Default.BackgroundColor;//we like it to stand out at design time, but not runtime
+			_lexFieldDetailPanel.KeyDown += new KeyEventHandler(OnKeyDown);
 
 			_recordsListBox.DataSource = _records;
 			_recordsListBox.Font = BasilProject.Project.WritingSystems.VernacularWritingSystemDefault.Font;
@@ -205,6 +206,7 @@ namespace WeSay.LexicalTools
 			this._recordsListBox.Selection.Clear();
 			this._recordsListBox.Selection.SelectRow(index, true);
 			this._recordsListBox.ShowCell(new Position(index, 0));
+			SwitchPrimaryRecordListControl(_recordsListBox);
 		}
 
 		void OnCurrentRecordPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -217,7 +219,7 @@ namespace WeSay.LexicalTools
 				{
 					this._completedRecordsListBox.Selection.Clear();
 					this._completedRecords.Remove(entry);
-					SwitchPrimaryRecordListControl(_recordsListBox);
+				   // SwitchPrimaryRecordListControl(_recordsListBox);
 				}
 			}
 			else
@@ -226,7 +228,7 @@ namespace WeSay.LexicalTools
 				{
 					this._completedRecords.Add(entry);
 					SelectCurrentRecordInCompletedRecordList();
-					SwitchPrimaryRecordListControl(_completedRecordsListBox);
+					//SwitchPrimaryRecordListControl(_completedRecordsListBox);
 				}
 			}
 		}
@@ -237,6 +239,35 @@ namespace WeSay.LexicalTools
 			this._completedRecordsListBox.Selection.Clear();
 			this._completedRecordsListBox.Selection.SelectRow(index, true);
 			this._completedRecordsListBox.ShowCell(new Position(index, 0));
+			SwitchPrimaryRecordListControl(_completedRecordsListBox);
+		}
+
+		void OnBtnPreviousWordClick(object sender, System.EventArgs e)
+		{
+			SetCurrentRecordToPrevious();
+		}
+		void OnBtnNextWordClick(object sender, System.EventArgs e)
+		{
+			SetCurrentRecordToNext();
+		}
+		private void OnKeyDown(object sender, KeyEventArgs e)
+		{
+			e.Handled = true;
+			e.SuppressKeyPress = true;
+			switch (e.KeyCode)
+			{
+				case Keys.PageUp:
+					SetCurrentRecordToPrevious();
+					break;
+				case Keys.PageDown:
+					SetCurrentRecordToNext();
+					break;
+
+				default:
+					e.Handled = false;
+					e.SuppressKeyPress = false;
+					break;
+			}
 		}
 	}
 }
