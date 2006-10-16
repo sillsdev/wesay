@@ -47,6 +47,8 @@
 	<Compile Include="ArrowButton.cs">
 	  <SubType>Component</SubType>
 	</Compile>
+	<Compile Include="AsyncCommand.cs" />
+	<Compile Include="BasicCommand.cs" />
 	<Compile Include="Binding.cs" />
 	<Compile Include="CurrentItemEventArgs.cs" />
 	<Compile Include="DetailList.cs">
@@ -61,7 +63,12 @@
 	</Compile>
 	<Compile Include="GhostBinding.cs" />
 	<Compile Include="ISkin.cs" />
+	<Compile Include="ProgressDialog.cs">
+	  <SubType>Form</SubType>
+	</Compile>
+	<Compile Include="ProgressDialogHandler.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />
+	<Compile Include="SampleAsyncCommand.cs" />
 	<Compile Include="VBox.cs">
 	  <SubType>UserControl</SubType>
 	</Compile>
@@ -106,6 +113,13 @@
 	</EmbeddedResource>
 	<EmbeddedResource Include="MultiTextControl.resx">
 	  <DependentUpon>MultiTextControl.cs</DependentUpon>
+	  <SubType>Designer</SubType>
+	</EmbeddedResource>
+	<EmbeddedResource Include="ProgressDialog.resx">
+	  <DependentUpon>ProgressDialog.cs</DependentUpon>
+	  <SubType>Designer</SubType>
+	</EmbeddedResource>
+	<EmbeddedResource Include="ProgressStrings.resx">
 	  <SubType>Designer</SubType>
 	</EmbeddedResource>
 	<EmbeddedResource Include="VBox.resx">

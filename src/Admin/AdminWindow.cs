@@ -2,10 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
+using MultithreadProgress;
 using WeSay.Admin.Properties;
 using WeSay.Data;
 using WeSay.LexicalModel;
 using WeSay.Project;
+using ErrorEventHandler=System.IO.ErrorEventHandler;
 
 namespace WeSay.Admin
 {
@@ -14,6 +16,7 @@ namespace WeSay.Admin
 		private WelcomeControl _welcomePage = new WelcomeControl();
 		private ProjectTabs _projectTabs;
 		private WeSayWordsProject _project;
+		MultithreadProgress.ProgressDialogHandler _progressHandler;
 
 		/// <summary>
 		/// This is probably temporary while we transition to the tasks xml being
@@ -28,6 +31,7 @@ namespace WeSay.Admin
 
 			this.Project = null;
 
+
 //            if (this.DesignMode)
 //                return;
 //
@@ -40,9 +44,14 @@ namespace WeSay.Admin
 			set
 			{
 				this._project = value;
-				exportToLIFTXmlToolStripMenuItem.Enabled = (value != null);
-				importFromLIFTXMLToolStripMenuItem.Enabled = (value != null);
+				UpdateEnabledStates();
 			}
+		}
+
+		private void UpdateEnabledStates()
+		{
+			exportToLIFTXmlToolStripMenuItem.Enabled = (_project != null) && (_progressHandler == null);
+			importFromLIFTXMLToolStripMenuItem.Enabled = (_project != null) && (_progressHandler == null);
 		}
 
 		void OnOpenProject(object sender, EventArgs e)
@@ -184,6 +193,16 @@ namespace WeSay.Admin
 
 		private void AdminWindow_FormClosing(object sender, FormClosingEventArgs e)
 		{
+			if (_progressHandler != null)
+			{
+				// Then Close() the dialog, to force a cancel
+				// Note, we don't use ForceClose() because we
+				// want to invoke the cancel behaviour
+				_progressHandler.CloseByCancellingThenCloseParent();
+				e.Cancel = true;
+				return;
+			}
+
 			try
 			{
 				if (this.Project != null)
@@ -231,29 +250,23 @@ namespace WeSay.Admin
 				return;
 			}
 
-			ConvertWordsFileToLIFT(saveDialog.FileName, openDialog.FileName);
+			RunCommand(new ExportLIFTCommand(saveDialog.FileName, openDialog.FileName));
 		}
 
-		private static void ConvertWordsFileToLIFT(string destinationLIFTPath, string sourceWordsPath)
+		private void RunCommand(BasicCommand command)
 		{
-			LiftExporter exporter=null;
-			try
-			{
-				exporter = new LiftExporter(destinationLIFTPath);
-
-				using (Db4oDataSource ds = new Db4oDataSource(sourceWordsPath))
-				{
-					using (Db4oRecordList<LexEntry> entries = new Db4oRecordList<LexEntry>(ds))
-					{
-						exporter.Add(entries);
-					}
-				}
-			}
-			finally
-			{
-				exporter.End();
-			}
+			_progressHandler = new ProgressDialogHandler(this, command);
+			_progressHandler.Finished += new EventHandler(_progressHandler_Finished);
+			UpdateEnabledStates();
+			command.BeginInvoke();
 		}
+
+		void _progressHandler_Finished(object sender, EventArgs e)
+		{
+			_progressHandler = null;
+			UpdateEnabledStates();
+		}
+
 
 		private void ImportFromLiftXmlToolStripMenuItem_Click(object sender, EventArgs e)
 		{
@@ -273,23 +286,7 @@ namespace WeSay.Admin
 			{
 				return;
 			}
-			string sourceWordsPath = openDialog.FileName;
-			string destPath = saveDialog.FileName;
-			if (File.Exists(destPath)) // make backup of the file we're about to over-write
-			{
-				File.Move(destPath, destPath+".bak");
-			}
-
-			using (Db4oDataSource ds = new WeSay.Data.Db4oDataSource(destPath))
-			{
-				using (Db4oRecordList<LexEntry> entries = new Db4oRecordList<LexEntry>(ds))
-				{
-					LiftImporter importer = new LiftImporter(entries);
-					importer.ReadFile(sourceWordsPath);
-				}
-			}
-
+			RunCommand(new ImportLIFTCommand(saveDialog.FileName, openDialog.FileName));
 		}
-
 	}
 }

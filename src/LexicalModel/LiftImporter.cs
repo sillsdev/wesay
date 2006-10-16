@@ -9,6 +9,8 @@ namespace WeSay.LexicalModel
    public  class LiftImporter
 	{
 	   private IList<LexEntry> _entries;
+	   private int _nodesToImport;
+	   public event EventHandler Progress;
 
 	   /// <summary>
 	   ///
@@ -19,14 +21,38 @@ namespace WeSay.LexicalModel
 		   this._entries = entries;
 	   }
 
+	   public int NodesToImport
+	   {
+		   get { return _nodesToImport; }
+	   }
+
 	   public IList<LexEntry> ReadFile(string path)
 	   {
 		   XmlDocument doc =new XmlDocument();
 		   doc.Load(path);
 		   XmlNodeList entryNodes = doc.SelectNodes("./lift/entry");
+		   _nodesToImport = entryNodes.Count;
+		   int count = 0;
+		   const int kInterval = 50;
+		   int nextProgressPoint = count + kInterval;
+		   //tell anyonelistening that now is a good time to get our total expected cound
+		   Progress.Invoke(this, new ProgressEventArgs(0));
+
 		   foreach (XmlNode node in entryNodes)
 		   {
 			   this._entries.Add(this.ReadEntry(node));
+			   count++;
+			   if (count >= nextProgressPoint)
+			   {
+				   if (Progress != null)
+				   {
+					   ProgressEventArgs progressEventArgs = new ProgressEventArgs(count);
+					   Progress.Invoke(this, progressEventArgs);
+					   if (progressEventArgs.Cancel)
+						   break;
+				   }
+				   nextProgressPoint = count + kInterval;
+			   }
 		   }
 		   return this._entries;
 	   }
@@ -105,6 +131,29 @@ namespace WeSay.LexicalModel
 		   }
 
 		   return entry;
+	   }
+   }
+
+   public class ProgressEventArgs : EventArgs
+   {
+	   private int _progress;
+	   private bool _cancel=false;
+	   public ProgressEventArgs(int progress)
+	   {
+		   _progress = progress;
+	   }
+
+
+
+	   public int Progress
+	   {
+		   get { return _progress; }
+	   }
+
+	   public bool Cancel
+	   {
+		   get { return _cancel; }
+		   set { _cancel = value; }
 	   }
    }
 }
