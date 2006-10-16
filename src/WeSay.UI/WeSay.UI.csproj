@@ -68,7 +68,6 @@
 	</Compile>
 	<Compile Include="ProgressDialogHandler.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />
-	<Compile Include="SampleAsyncCommand.cs" />
 	<Compile Include="VBox.cs">
 	  <SubType>UserControl</SubType>
 	</Compile>

@@ -71,13 +71,36 @@ namespace WeSay
 				// Marshal exceptions back to the UI
 				OnError( new ErrorEventArgs( e ) );
 			}
-			catch
-			{
-				// Do our exception handling; include a default catch
-				// block because this is the final handler on the stack for this
-				// thread, and we need to log these kinds of problems
-				OnError( new ErrorEventArgs( null ) );
-			}
+//            catch
+//            {
+//                // Do our exception handling; include a default catch
+//                // block because this is the final handler on the stack for this
+//                // thread, and we need to log these kinds of problems
+//                OnError( new ErrorEventArgs( null ) );
+//            }
 		}
 	}
+
+	/// <summary>
+	/// Delegate for a method which allows the progress range to be reset
+	/// </summary>
+	public delegate void InitializeProgressCallback(int minimum, int maximum);
+	/// <summary>
+	/// Delegate for a method which allows the progress to be updated
+	/// </summary>
+	public delegate void ProgressCallback(int progress);
+	/// <summary>
+	/// Delegate for a method which allows the status text to be updated
+	/// </summary>
+	public delegate void StatusCallback(string statusText);
+
+	/// <summary>
+	/// Delegate for a worker method which provides additional callbacks
+	/// </summary>
+	public delegate void WorkInvoker(
+			InitializeProgressCallback initializeCallback,
+			ProgressCallback progressCallback,
+			StatusCallback primaryStatusTextCallback,
+			StatusCallback secondaryStatusTextCallback
+			);
 }
