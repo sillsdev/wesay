@@ -10,15 +10,16 @@ namespace WeSay.UI
 	{
 		private readonly WritingSystem _writingSystem;
 		private KeymanLink.KeymanLink _keymanLink;
+
 		public WeSayTextBox()
 		{
 			InitializeComponent();
 			Debug.Assert(this.DesignMode);
 			this.BorderStyle = BorderStyle.None;
 			this.BackColor = System.Drawing.Color.White;
-			//            this.Multiline = true;
-//            ComputeHeight();
 		}
+
+
 
 		public WeSayTextBox(WritingSystem ws)
 		{
@@ -32,8 +33,6 @@ namespace WeSay.UI
 			}
 			this.BorderStyle = BorderStyle.None;
 			this.BackColor = System.Drawing.Color.White;
-	//        this.Multiline = true;
-	  //      ComputeHeight();
 		}
 
 

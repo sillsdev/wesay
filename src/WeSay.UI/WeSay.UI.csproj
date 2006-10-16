@@ -56,6 +56,9 @@
 	  <DependentUpon>DetailList.cs</DependentUpon>
 	</Compile>
 	<Compile Include="DisplaySettings.cs" />
+	<Compile Include="FlagButton.cs">
+	  <SubType>Component</SubType>
+	</Compile>
 	<Compile Include="GhostBinding.cs" />
 	<Compile Include="ISkin.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />
@@ -96,6 +99,10 @@
 	<EmbeddedResource Include="DetailList.resx">
 	  <SubType>Designer</SubType>
 	  <DependentUpon>DetailList.cs</DependentUpon>
+	</EmbeddedResource>
+	<EmbeddedResource Include="FlagButton.resx">
+	  <DependentUpon>FlagButton.cs</DependentUpon>
+	  <SubType>Designer</SubType>
 	</EmbeddedResource>
 	<EmbeddedResource Include="MultiTextControl.resx">
 	  <DependentUpon>MultiTextControl.cs</DependentUpon>

@@ -73,15 +73,12 @@ namespace WeSay.UI
 				_vbox.Clear();
 			}
 			Height = 0;
+			const int initialPanelWidth = 200;
 			foreach (WritingSystem writingSystem in WritingSystems)
 			{
-				string writingSystemId =writingSystem.Id;
-				const int initialPanelWidth = 200;
-				WeSayTextBox box = new WeSayTextBox(writingSystem);
-				_textBoxes.Add(box);
-				this.components.Add(box);//so it will get disposed of when we are
-				box.Name = Name.Replace("-mtc","") + "_" + writingSystemId; //for automated tests to find this particular guy
-				box.Text = _multiText[writingSystemId];
+				WeSayTextBox box = AddTextBox(initialPanelWidth, writingSystem);
+				box.Name = Name.Replace("-mtc","") + "_" + writingSystem.Id; //for automated tests to find this particular guy
+				box.Text = _multiText[writingSystem.Id];
 				box.Location = new Point(30, 0);
 				box.Width = initialPanelWidth - box.Left;
 				box.Anchor = AnchorStyles.Left | AnchorStyles.Right |AnchorStyles.Top;
@@ -89,28 +86,87 @@ namespace WeSay.UI
 				box.TextChanged += new EventHandler(OnTextOfSomeBoxChanged);
 				box.KeyDown += new KeyEventHandler(OnKeyDownInSomeBox);
 
-				Label label = new System.Windows.Forms.Label();
-				label.Text = writingSystemId;
-				label.ForeColor = System.Drawing.Color.LightGray;
+				Label label = AddWritingSystemLabel(box);
 
 				Graphics g = CreateGraphics();
 				int descent = box.Font.FontFamily.GetCellDescent(box.Font.Style);
 				int descentPixel = (int) (box.Font.Size * descent / box.Font.FontFamily.GetEmHeight(box.Font.Style));
 
-				//todo: this only takes into account the textbox descent, not the label's!
-				label.Location = new Point(0, (int) (box.Bottom -
-													 ( g.MeasureString(label.Text, label.Font).Height + descentPixel )) );
+				this.components.Add(box);//so it will get disposed of when we are
 
 				Panel p = new Panel();
 				p.Controls.Add(box);
 				p.Controls.Add(label);
 				p.Size = new Size(initialPanelWidth,box.Height+0);
 
+				FlagButton flagButton = AddFlagButton(p.Size);
+				p.Controls.Add(flagButton);
+				this.components.Add(flagButton);//so it will get disposed of when we are
+
 				_vbox.AddControlToBottom(p);
 				Height += p.Height;
 			}
 			ResumeLayout(false);
+		}
 
+		private FlagButton AddFlagButton(Size panelSize)
+		{
+			FlagButton flagButton = new FlagButton();
+			flagButton.Size = new Size(20, 20);
+			flagButton.Location = new Point(
+					-1 + panelSize.Width - flagButton.Width,
+					-1 + panelSize.Height - flagButton.Height);
+			flagButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+			flagButton.Click += new EventHandler(OnClickFlagButton);
+
+			//            Panel panel = new Panel();
+			//            panel.Size = flagButton.Size;
+			//            panel.Location = flagButton.Location;
+			//            panel.Anchor = flagButton.Anchor;
+			//            panel.BackColor = System.Drawing.Color.Red;
+
+			return flagButton;
+		}
+
+		private Label AddWritingSystemLabel(WeSayTextBox box)
+		{
+			Label label = new System.Windows.Forms.Label();
+			label.Text = box.WritingSystem.Id;
+			label.ForeColor = System.Drawing.Color.LightGray;
+
+
+			Graphics g = this.CreateGraphics();
+			int descent = box.Font.FontFamily.GetCellDescent(box.Font.Style);
+			int descentPixel = (int) (box.Font.Size * descent / box.Font.FontFamily.GetEmHeight(box.Font.Style));
+
+			//todo: this only takes into account the textbox descent, not the label's!
+			label.Location = new Point(0, (int) (box.Bottom -
+												 ( g.MeasureString(label.Text, label.Font).Height + descentPixel )) );
+			return label;
+		}
+
+		private WeSayTextBox AddTextBox(int initialPanelWidth, WritingSystem writingSystem)
+		{
+			WeSayTextBox box = new WeSayTextBox(writingSystem);
+			_textBoxes.Add(box);
+			box.Name = this.Name.Replace("-mtc","") + "_" + writingSystem.Id; //for automated tests to find this particular guy
+			box.Text = _multiText[writingSystem.Id];
+			box.Location = new Point(30, 0);
+			const int kRightMargin = 25; // for flag button
+			box.Width = (initialPanelWidth - box.Left) - kRightMargin;
+			box.Anchor = AnchorStyles.Left | AnchorStyles.Right |AnchorStyles.Top;
+			//  box.BorderStyle = BorderStyle.FixedSingle;
+			box.TextChanged += new EventHandler(OnTextOfSomeBoxChanged);
+			box.KeyDown += new KeyEventHandler(OnKeyDownInSomeBox);
+			return box;
+		}
+
+
+
+		void OnClickFlagButton(object sender, EventArgs e)
+		{
+			FlagButton b = (FlagButton)sender;
+			b.IsSetOn = !b.IsSetOn;
 		}
 
 		void OnKeyDownInSomeBox(object sender, KeyEventArgs e)
