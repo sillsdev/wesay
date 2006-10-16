@@ -14,7 +14,8 @@
 //				| Bugfix with OnClickEvent
 //	2005/08/30	| Formating
 
-//  2006   | WeSay modified from "ArrowButton"
+//  2006   | WeSay modified from "ArrowButton".  Currently a good portion of this code is not needed,
+//                      as the arrow button did all kinds of rotation/shading stuff we don't need.
 
 #endregion
 
@@ -257,7 +258,7 @@ namespace WeSay.UI
 			}
 			else
 			{
-				int g = 200;
+				int g = 230;
 				pen = new Pen(Color.FromArgb(g, g, g), 1);
 			}
 
@@ -294,7 +295,7 @@ namespace WeSay.UI
 			// the diagonal from Flaghead to an edge from the Flagbottom,
 			// is bigger than the panelwidth and so the edges were clipped
 			// during rotation.
-			int dx = this.Width -10;
+			int dx = this.Width ;
 
 			// The Flag consist of eight points ( 0=7 )
 			MakeButtonShapePoints ( dx );
@@ -341,13 +342,35 @@ namespace WeSay.UI
 		/// <param name="dx">The maximum height and width of the panel</param>
 		private void MakeButtonShapePoints ( int dx )
 		{
-			// The Flag consist of eight points
-			_points = new Point[5];
-			_points[0] = new Point(0-dx/2, 0-dx/2);
-			_points[1] = new Point(dx/2, 0-dx/2);
-			_points[2] = new Point(dx/2, dx/2);
-			_points[3] = new Point(-dx/2,dx/2);
-			_points[4] = _points[0];
+			_points = new Point[11];
+			_points[0] = new Point(0,-46);
+			_points[1] = new Point(14,-14);
+			_points[2] = new Point(46,-11);
+			_points[3] = new Point(22,12);
+			_points[4] = new Point(30,46);
+			_points[5] = new Point(0,28);
+			_points[6] = new Point(-30,46);
+			_points[7] = new Point(-22,12);
+			_points[8] = new Point(-46,-11);
+			_points[9] = new Point(-14,-14);
+			_points[10] = _points[0];
+
+			for (int i = 0; i < _points.Length; i++)
+			{
+				_points[i].X = (int) ((_points[i].X/92.0)*(float) dx);
+				_points[i].Y = (int) ((_points[i].Y/92.0)*(float) dx);
+			}
+
+
+
+
+
+//            _points = new Point[5];
+//            _points[0] = new Point(0 - dx / 2, 0 - dx / 2);
+//            _points[1] = new Point(dx / 2, 0 - dx / 2);
+//            _points[2] = new Point(dx / 2, dx / 2);
+//            _points[3] = new Point(-dx / 2, dx / 2);
+//            _points[4] = _points[0];
 		}
 
 		/// <summary>
@@ -357,12 +380,12 @@ namespace WeSay.UI
 		private void MakeSquare ()
 		{
 			this.SuspendLayout ();
-			if ( this.Width < MINSIZE )
-			{
-				this.Size = new Size ( MINSIZE, MINSIZE );
-			}
-			else
-			{
+//			if ( this.Width < MINSIZE )
+//			{
+//				this.Size = new Size ( MINSIZE, MINSIZE );
+//			}
+//			else
+//			{
 				if ( this.Size.Width < this.Size.Height )
 				{
 					this.Size = new Size ( this.Size.Width, this.Size.Width );
@@ -371,7 +394,7 @@ namespace WeSay.UI
 				{
 					this.Size = new Size ( this.Size.Height, this.Size.Height );
 				}
-			}
+//			}
 			this.ResumeLayout ();
 		}
 
@@ -414,7 +437,7 @@ namespace WeSay.UI
 			Refresh();
 		}
 
-		private void FlagButton_MouseLeave(object sender, System.EventArgs e)
+		private void FlagButton_MouseLeave(object sender, EventArgs e)
 		{
 			m_ButtonState[ (int)eButtonAction.MOUSEOVER ] = false;
 			Refresh();

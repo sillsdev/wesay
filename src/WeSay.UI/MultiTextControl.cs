@@ -77,14 +77,6 @@ namespace WeSay.UI
 			foreach (WritingSystem writingSystem in WritingSystems)
 			{
 				WeSayTextBox box = AddTextBox(initialPanelWidth, writingSystem);
-				box.Name = Name.Replace("-mtc","") + "_" + writingSystem.Id; //for automated tests to find this particular guy
-				box.Text = _multiText[writingSystem.Id];
-				box.Location = new Point(30, 0);
-				box.Width = initialPanelWidth - box.Left;
-				box.Anchor = AnchorStyles.Left | AnchorStyles.Right |AnchorStyles.Top;
-				//  box.BorderStyle = BorderStyle.FixedSingle;
-				box.TextChanged += new EventHandler(OnTextOfSomeBoxChanged);
-				box.KeyDown += new KeyEventHandler(OnKeyDownInSomeBox);
 
 				Label label = AddWritingSystemLabel(box);
 
