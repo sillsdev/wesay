@@ -1,0 +1,60 @@
+using System;
+using MultithreadProgress;
+
+namespace WeSay.Foundation.Progress
+{
+	/// <summary>
+	/// Use this when you don't have an actual progressstate installed and don't
+	/// want to litter the code with if(_progressState != null)'s
+	/// </summary>
+	public class NullProgressState : ProgressState
+	{
+		public NullProgressState():base(null)
+		{
+		}
+
+
+		/// <summary>
+		/// How much the task is done
+		/// </summary>
+		public override int NumberOfStepsCompleted
+		{
+			get
+			{
+				return 0;
+			}
+			set
+			{
+			}
+		}
+
+		/// <summary>
+		/// a label which describes what we are busy doing
+		/// </summary>
+		public override string Status
+		{
+			get
+			{
+				return "";
+			}
+
+			set
+			{
+			}
+		}
+
+		public override int NumberOfSteps
+		{
+			get
+			{
+				return 0;
+			}
+			set
+			{
+			}
+		}
+
+
+
+	}
+}
