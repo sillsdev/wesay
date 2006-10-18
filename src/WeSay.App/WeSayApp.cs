@@ -104,6 +104,7 @@ namespace WeSay.App
 
 				objectClass = db4oConfiguration.ObjectClass(typeof(LexEntry));
 				objectClass.ObjectField("_modifiedDate").Indexed(true);
+				objectClass.ObjectField("_lexicalForm").Indexed(true);
 
 				recordListManager = new Db4oRecordListManager(project.PathToLexicalModelDB);
 			}

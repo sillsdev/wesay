@@ -17,7 +17,7 @@ namespace WeSay.LexicalModel
 		[Transient]
 		private ArrayList _listEventHelpers;
 
-	  [CLSCompliant(false)]
+		[CLSCompliant(false)]
 		public void ObjectOnActivate(ObjectContainer container)
 		{
 			container.Activate(this, int.MaxValue);

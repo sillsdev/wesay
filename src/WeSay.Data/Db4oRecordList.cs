@@ -15,7 +15,7 @@ namespace WeSay.Data
 				Dispose();
 				throw new ArgumentNullException("dataSource");
 			}
-			Db4oList<T> records = new Db4oList<T>((com.db4o.ObjectContainer)dataSource.Data, new List<T>(), filter, sort);
+			Db4oList<T> records = new Db4oList<T>(dataSource.Data, new List<T>(), filter, sort);
 			Records = records;
 			InitializeDb4oListBehavior(records);
 			try

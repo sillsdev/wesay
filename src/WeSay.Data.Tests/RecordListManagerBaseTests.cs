@@ -115,6 +115,10 @@ namespace WeSay.Data.Tests
 			IRecordList<SimpleIntTestClass> data = RecordListManager.Get<SimpleIntTestClass>();
 			Assert.IsNotNull(data);
 			Assert.AreEqual(_sourceRecords, data);
+
+			IRecordList<object> objectData = RecordListManager.Get<object>();
+			Assert.IsNotNull(objectData);
+			Assert.AreNotEqual(_sourceRecords, objectData);
 		}
 
 		[Test]

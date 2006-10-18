@@ -1,8 +1,6 @@
 using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.ComponentModel;
-using System.Collections.ObjectModel;
 
 namespace WeSay.Language
 {
@@ -20,7 +18,6 @@ namespace WeSay.Language
 		public string WritingSystemId
 		{
 			get { return _writingSystemId; }
-		  //  set { _writingSystemId = value; }
 		}
 
 		public string Form
@@ -34,21 +31,19 @@ namespace WeSay.Language
 	/// MultiText holds an array of strings, indexed by writing system ID.
 	/// These are simple, single language Unicode strings.
 	/// </summary>
-	public sealed class MultiText : INotifyPropertyChanged, IEnumerable<LanguageForm>
+	public /*sealed*/ class MultiText : INotifyPropertyChanged, IEnumerable
 	{
 		/// <summary>
 		/// For INotifyPropertyChanged
 		/// </summary>
 		public event PropertyChangedEventHandler PropertyChanged;
 
-		private Collection<LanguageForm> _forms;
-//        protected System.Collections.ArrayList _forms;
+		private LanguageForm[] _forms;
 
 		public MultiText()
 		{
-			_forms = new Collection<LanguageForm>();
-		 //    _forms = new ArrayList(1);
-	  }
+			_forms = new LanguageForm[0] ;
+		}
 
 		public string this[string writingSystemId]
 		{
@@ -99,7 +94,7 @@ namespace WeSay.Language
 		{
 			get
 			{
-				return _forms.Count;
+				return _forms.Length;
 			}
 		}
 
@@ -115,7 +110,7 @@ namespace WeSay.Language
 		   {
 			   if (alt != null)
 			   {
-				   _forms.Remove(alt);
+				   RemoveLanguageForm(alt);
 			   }
 		   }
 		   else
@@ -126,12 +121,38 @@ namespace WeSay.Language
 			   }
 			   else
 			   {
-				   _forms.Add(new LanguageForm(writingSystemId, form));
+				   AddLanguageForm(new LanguageForm(writingSystemId, form));
 			   }
 
 		   }
 
 		   NotifyPropertyChanged(writingSystemId);
+		}
+
+		private void RemoveLanguageForm(LanguageForm languageForm)
+		{
+			Debug.Assert(_forms.Length > 0);
+			LanguageForm[] forms = new LanguageForm[_forms.Length - 1];
+			for (int i = 0,j=0; i < forms.Length; i++,j++)
+			{
+				if (_forms[j] == languageForm)
+				{
+					j++;
+				}
+				forms[i] = _forms[j];
+			}
+			_forms = forms;
+		}
+
+		private void AddLanguageForm(LanguageForm languageForm)
+		{
+			LanguageForm[] forms = new LanguageForm[_forms.Length + 1];
+			for (int i = 0; i < _forms.Length; i++)
+			{
+				forms[i] = _forms[i];
+			}
+			forms[_forms.Length] = languageForm;
+			_forms = forms;
 		}
 
 		private void NotifyPropertyChanged(string writingSystemId)
@@ -144,21 +165,10 @@ namespace WeSay.Language
 		}
 
 		#region IEnumerable Members
-
-		IEnumerator IEnumerable.GetEnumerator()
+		public IEnumerator GetEnumerator()
 		{
 			return _forms.GetEnumerator();
 		}
-
-		#endregion
-
-		#region IEnumerable<LanguageForm> Members
-
-		public IEnumerator<LanguageForm> GetEnumerator()
-		{
-		  return _forms.GetEnumerator();
-		}
-
 		#endregion
 	  }
 }

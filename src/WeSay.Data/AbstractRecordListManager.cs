@@ -21,35 +21,40 @@ namespace WeSay.Data
 			return null;
 		}
 
+		private static string RecordListKey<T>(string filterName) where T : class, new()
+		{
+			return typeof(T).FullName + filterName;
+		}
+
 		public void Register<T>(IFilter<T> filter) where T : class, new()
 		{
-			if (!_filteredRecordLists.ContainsKey(filter.Key))
+			if (!_filteredRecordLists.ContainsKey(RecordListKey<T>(filter.Key)))
 			{
-				_filteredRecordLists.Add(filter.Key, CreateFilteredRecordListUnlessSlow<T>(filter));
+				_filteredRecordLists.Add(RecordListKey<T>(filter.Key), CreateFilteredRecordListUnlessSlow<T>(filter));
 			}
 		}
 
 		public IRecordList<T> Get<T>() where T : class, new()
 		{
-			if (!_filteredRecordLists.ContainsKey(String.Empty))
+			if (!_filteredRecordLists.ContainsKey(RecordListKey<T>(String.Empty)))
 			{
-				_filteredRecordLists.Add(String.Empty, CreateMasterRecordList<T>());
+				_filteredRecordLists.Add(RecordListKey<T>(String.Empty), CreateMasterRecordList<T>());
 			}
-			return (IRecordList<T>)_filteredRecordLists[String.Empty];
+			return (IRecordList<T>)_filteredRecordLists[RecordListKey<T>(String.Empty)];
 		}
 
 		public IRecordList<T> Get<T>(IFilter<T> filter) where T : class, new()
 		{
-			if (!_filteredRecordLists.ContainsKey(filter.Key))
+			if (!_filteredRecordLists.ContainsKey(RecordListKey<T>(filter.Key)))
 			{
 				throw new InvalidOperationException("Filter must be registered before it can be retrieved with Get.");
 			}
-			IRecordList<T> recordList = (IRecordList<T>)_filteredRecordLists[filter.Key];
+			IRecordList<T> recordList = (IRecordList<T>)_filteredRecordLists[RecordListKey<T>(filter.Key)];
 			if (recordList == null)
 			{
 				recordList = CreateFilteredRecordList<T>(filter);
 			}
-			_filteredRecordLists[filter.Key] = recordList;
+			_filteredRecordLists[RecordListKey<T>(filter.Key)] = recordList;
 			return recordList;
 		}
 

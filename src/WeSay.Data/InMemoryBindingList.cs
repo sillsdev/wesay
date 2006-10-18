@@ -17,7 +17,7 @@ namespace WeSay.Data
 			_list = new List<T>();
 		}
 
-		public InMemoryBindingList(IRecordList<T> original)
+		public InMemoryBindingList(IBindingList original)
 			: this()
 		{
 			AddRange(original);

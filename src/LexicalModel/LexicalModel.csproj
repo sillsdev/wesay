@@ -43,6 +43,7 @@
   <ItemGroup>
 	<Compile Include="LexEntry.cs" />
 	<Compile Include="LexExampleSentence.cs" />
+	<Compile Include="LexicalFormMultiText.cs" />
 	<Compile Include="Lexicon.cs" />
 	<Compile Include="LexSense.cs" />
 	<Compile Include="LiftExporter.cs" />

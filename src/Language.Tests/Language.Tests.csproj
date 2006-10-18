@@ -49,7 +49,7 @@
 	  <DependentUpon>TestResources.resx</DependentUpon>
 	</Compile>
 	<Compile Include="WritingSystemTests.cs" />
-	<Compile Include="Main.cs" />
+	<Compile Include="MultiTextTests.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

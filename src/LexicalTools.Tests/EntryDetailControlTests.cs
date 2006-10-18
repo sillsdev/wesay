@@ -1,3 +1,4 @@
+using System;
 using System.Windows.Forms;
 using NUnit.Framework;
 using NUnit.Extensions.Forms;
@@ -237,6 +238,69 @@ namespace WeSay.LexicalTools.Tests
 		{
 			NUnit.Extensions.Forms.LinkLabelTester l = new LinkLabelTester("_btnDeleteWord");
 			l.Click();
+		}
+
+		[Test]
+		public void FindTextChanged_ButtonSaysFind()
+		{
+			TextBoxTester t = new TextBoxTester("_findText");
+			t.Enter("changed");
+			ButtonTester b = new ButtonTester("_btnFind");
+			Assert.AreEqual("Find", b.Text);
+		}
+
+		[Test]
+		public void FindButtonSaysFind_Click_ButtonSaysClear()
+		{
+			ButtonTester b = new ButtonTester("_btnFind");
+			b.Click();
+			Assert.AreEqual("Clear", b.Text);
+		}
+
+		[Test]
+		public void FindButtonSaysClear_Click_ButtonSaysFind()
+		{
+			ButtonTester b = new ButtonTester("_btnFind");
+			b.Click();
+			b.Click();
+			Assert.AreEqual("Find", b.Text);
+		}
+
+		[Test]
+		public void FindButtonSaysClear_Click_FindTextCleared()
+		{
+			TextBoxTester t = new TextBoxTester("_findText");
+			ButtonTester b = new ButtonTester("_btnFind");
+			t.Enter("something");
+			b.Click(); // state is now clear
+			b.Click();
+			Assert.AreEqual(string.Empty, t.Text);
+		}
+
+
+		[Test]
+		public void EnterText_PressFindButton_Finds()
+		{
+			TextBoxTester t = new TextBoxTester("_findText");
+			t.Enter("Secondery");
+			ButtonTester b = new ButtonTester("_btnFind");
+			b.Click();
+			BindingListGridTester l = new BindingListGridTester("_recordsListBox");
+
+			Assert.AreEqual("Secondary", ((LexEntry)l.Properties.SelectedObject).ToString());
+			RichTextBoxTester r = new RichTextBoxTester("_lexicalEntryPreview");
+			Assert.IsTrue(r.Text.Contains("Secondary"));
+		}
+
+		[Test]
+		public void FindText_Enter_Finds()
+		{
+			TextBoxTester t = new TextBoxTester("_findText");
+			t.Enter("Secondery");
+			t.FireEvent("KeyDown", new KeyEventArgs(Keys.Enter));
+			BindingListGridTester l = new BindingListGridTester("_recordsListBox");
+
+			Assert.AreEqual("Secondary", ((LexEntry)l.Properties.SelectedObject).ToString());
 		}
 	}
 }

@@ -28,6 +28,10 @@
 	<WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+	<Reference Include="Db4o, Version=5.5.1.0, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\Db4o.dll</HintPath>
+	</Reference>
 	<Reference Include="DevAge.Core, Version=1.0.0.11, Culture=neutral, PublicKeyToken=faad465d84242dbf">
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\DevAge.SourceGrid\DevAge.Core.dll</HintPath>

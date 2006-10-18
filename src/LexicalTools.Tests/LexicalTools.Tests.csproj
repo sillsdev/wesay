@@ -50,6 +50,7 @@
 	<Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+	<Compile Include="EditDistanceTests.cs" />
 	<Compile Include="EntryDetailControlTests.cs" />
 	<Compile Include="EntryDetailTaskTests.cs" />
 	<Compile Include="LexFieldControlTests.cs" />

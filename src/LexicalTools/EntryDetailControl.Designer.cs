@@ -1,3 +1,4 @@
+using WeSay.Language;
 using WeSay.UI;
 
 namespace WeSay.LexicalTools
@@ -18,6 +19,9 @@ namespace WeSay.LexicalTools
 			if (disposing && !IsDisposed)
 			{
 				_recordsListBox.SelectedIndexChanged -= OnRecordSelectionChanged;
+				_findText.TextChanged -= _findText_TextChanged;
+				_findText.KeyDown -= _findText_KeyDown;
+
 			}
 			if (disposing && (components != null))
 			{
@@ -41,6 +45,9 @@ namespace WeSay.LexicalTools
 			this._recordsListBox = new ListBox.BindingListGrid();
 			this._btnNewWord = new System.Windows.Forms.LinkLabel();
 			this._btnDeleteWord = new System.Windows.Forms.LinkLabel();
+			this._btnFind = new System.Windows.Forms.Button();
+			this._findText = new System.Windows.Forms.TextBox();
+
 			this.panel1.SuspendLayout();
 			this.SuspendLayout();
 
@@ -74,10 +81,10 @@ namespace WeSay.LexicalTools
 			this._recordsListBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
 						| System.Windows.Forms.AnchorStyles.Left)));
 			this._recordsListBox.GridToolTipActive = true;
-			this._recordsListBox.Location = new System.Drawing.Point(3, 20);
+			this._recordsListBox.Location = new System.Drawing.Point(3, 30);
 			this._recordsListBox.Name = "_recordsListBox";
 			this._recordsListBox.SelectedIndex = 0;
-			this._recordsListBox.Size = new System.Drawing.Size(118, 110);
+			this._recordsListBox.Size = new System.Drawing.Size(118, 100);
 			this._recordsListBox.SpecialKeys = ((SourceGrid3.GridSpecialKeys)(((((((SourceGrid3.GridSpecialKeys.Arrows | SourceGrid3.GridSpecialKeys.Tab)
 						| SourceGrid3.GridSpecialKeys.PageDownUp)
 						| SourceGrid3.GridSpecialKeys.Enter)
@@ -114,6 +121,30 @@ namespace WeSay.LexicalTools
 			this._btnDeleteWord.Text = "Delete This Word";
 			this._btnDeleteWord.VisitedLinkColor = System.Drawing.Color.Black;
 			this._btnDeleteWord.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this._btnDeleteWord_LinkClicked);
+
+			//
+			// _btnFind
+			//
+			this._btnFind.AutoSize = true;
+			this._btnFind.Location = new System.Drawing.Point(80, 6);
+			this._btnFind.Name = "_btnFind";
+			this._btnFind.Size = new System.Drawing.Size(40, 13);
+			this._btnFind.TabIndex = 2;
+			this._btnFind.TabStop = true;
+			this._btnFind.Text = StringCatalog.Get("Find");
+			this._btnFind.Click += new System.EventHandler(_btnFind_Click);
+
+			//
+			// _findText
+			//
+			this._findText.Location = new System.Drawing.Point(3, 7);
+			this._findText.Name = "_findText";
+			this._findText.Size = new System.Drawing.Size(77, 13);
+			this._findText.TabIndex = 1;
+			this._findText.TabStop = true;
+			this._findText.Text = "";
+
+
 			//
 			// EntryDetailTask
 			//
@@ -123,6 +154,8 @@ namespace WeSay.LexicalTools
 			this.Controls.Add(this._recordsListBox);
 			this.Controls.Add(this.panel1);
 			this.Controls.Add(this._entryDetailPanel);
+			this.Controls.Add(this._btnFind);
+			this.Controls.Add(this._findText);
 			this.Name = "EntryDetailTask";
 			this.Size = new System.Drawing.Size(493, 169);
 			this.panel1.ResumeLayout(false);
@@ -138,5 +171,8 @@ namespace WeSay.LexicalTools
 		private ListBox.BindingListGrid _recordsListBox;
 		private System.Windows.Forms.LinkLabel _btnDeleteWord;
 		private System.Windows.Forms.LinkLabel _btnNewWord;
+		private System.Windows.Forms.Button _btnFind;
+		private System.Windows.Forms.TextBox _findText;
+
 	}
 }

@@ -1,6 +1,4 @@
 using NUnit.Framework;
-using System.Diagnostics;
-using System.Collections.Generic;
 using System.ComponentModel;
 using WeSay.Language;
 using System.Collections;

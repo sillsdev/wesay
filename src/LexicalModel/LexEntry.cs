@@ -7,7 +7,7 @@ namespace WeSay.LexicalModel
 {
 	sealed public class LexEntry : WeSayDataObject
 	{
-		private MultiText _lexicalForm;
+		private LexicalFormMultiText _lexicalForm;
 		private Guid _guid;
 		private WeSay.Data.InMemoryBindingList<LexSense> _senses;
 		private DateTime _creationDate;
@@ -26,7 +26,7 @@ namespace WeSay.LexicalModel
 		private void Init(Guid guid)
 		{
 			_guid = guid;
-			this._lexicalForm = new MultiText();
+			this._lexicalForm = new LexicalFormMultiText();
 			this._senses = new WeSay.Data.InMemoryBindingList<LexSense>();
 			this._creationDate = DateTime.Now;
 			this._modifiedDate = _creationDate;

@@ -27,7 +27,7 @@ namespace WeSay.LexicalTools
 		public override void Activate()
 		{
 			base.Activate();
-			_entryDetailControl = new EntryDetailControl(DataSource, FieldInventory);
+			_entryDetailControl = new EntryDetailControl(RecordListManager, FieldInventory);
 			_entryDetailControl.SelectedIndexChanged += new EventHandler(OnRecordSelectionChanged);
 		}
 
