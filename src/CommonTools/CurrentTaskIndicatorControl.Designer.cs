@@ -47,11 +47,11 @@ namespace WeSay.CommonTools
 			//
 			this._indicatorPanel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
 						| System.Windows.Forms.AnchorStyles.Right)));
-			this._indicatorPanel.AutoSize = true;
+			this._indicatorPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
 			this._indicatorPanel.BackColor = System.Drawing.Color.Transparent;
 			this._indicatorPanel.Location = new System.Drawing.Point(70, 35);
 			this._indicatorPanel.Name = "_indicatorPanel";
-			this._indicatorPanel.Size = new System.Drawing.Size(471, 62);
+			this._indicatorPanel.Size = new System.Drawing.Size(485, 100);
 			this._indicatorPanel.TabIndex = 1;
 			//
 			// CurrentTaskIndicatorControl
@@ -63,7 +63,8 @@ namespace WeSay.CommonTools
 			this.Controls.Add(this._indicatorPanel);
 			this.Controls.Add(this.label1);
 			this.Name = "CurrentTaskIndicatorControl";
-			this.Size = new System.Drawing.Size(563, 100);
+			this.Size = new System.Drawing.Size(563, 138);
+			this.SizeChanged += new System.EventHandler(this.CurrentTaskIndicatorControl_SizeChanged);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 

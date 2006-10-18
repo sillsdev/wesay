@@ -14,6 +14,10 @@ namespace WeSay.UI
 	/// </summary>
 	public class GhostBinding
 	{
+		/// <summary>
+		/// Can be used to track which data item the user is currently editting, to,
+		/// for example, hilight that piece in a preview control
+		/// </summary>
 		public event EventHandler<CurrentItemEventArgs> CurrentItemChanged = delegate
 																	 {
 																	 };
@@ -31,6 +35,8 @@ namespace WeSay.UI
 		/// (client should not count on the definition of when)
 		/// </summary>
 		public event GhostTriggered Triggered;
+
+		private bool _inMidstOfTrigger = false;
 
 		public GhostBinding(IBindingList targetList, string propertyName, WritingSystem writingSystem, WeSayTextBox textBoxTarget)
 		{
@@ -57,7 +63,7 @@ namespace WeSay.UI
 
 		void _textBoxTarget_TextChanged(object sender, EventArgs e)
 		{
-			if (_textBoxTarget.Text.Trim().Length > 0)
+			if ( _textBoxTarget.Text.Trim().Length > 0)
 			{
 				TimeForRealObject();
 			}
@@ -125,30 +131,54 @@ namespace WeSay.UI
 
 
 		/// <summary>
-		/// Handled the case where some mechanism (including this class) makes the list we are targeting nonempty.
-		/// Our job in this case is fire the events which switch the UI for this list over from Ghost to Real.
+		/// Handle the case where some mechanism (including this class) makes a change to the list we are
+		/// here to add items to.
+		/// Our job in this case is fire the events which switch the UI for the ghost widget over from Ghost to Real.
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
 		void  _listTarget_ListChanged(object sender, ListChangedEventArgs e)
 		{
-			if (e.ListChangedType == ListChangedType.ItemAdded)
-			{
-				object newGuy = _listTarget[e.NewIndex];
-				FillInMultiTextOfNewObject(newGuy, _propertyName, _writingSystem, _textBoxTarget.Text);
-				if (Triggered != null)
-				{
-					Triggered.Invoke(this, _listTarget, e.NewIndex, null);
-				}
-			}
+
+			//REVIEW: JH says... dont we only want to trigger if it was *this* guy that is responsible?)
+
+
+//            if (e.ListChangedType == ListChangedType.ItemAdded)
+//            {
+//                object newGuy = _listTarget[e.NewIndex];
+//                FillInMultiTextOfNewObject(newGuy, _propertyName, _writingSystem, _textBoxTarget.Text);
+//                if (Triggered != null)
+//                {
+//                    Triggered.Invoke(this, _listTarget, e.NewIndex, null);
+//                }
+//            }
 		}
 
 		protected  void TimeForRealObject()
 		{
+			//don't lett the code here trigger the ghost all over again
+			if (_inMidstOfTrigger)
+			{
+				return;
+			}
+
 			IBindingList list = _listTarget as IBindingList;
 			//in addition to adding a list item, this will fire events on the object that owns the list
-			list.AddNew();
+			Object newGuy = list.AddNew();
+
+
+		  //  object newGuy = _listTarget[e.NewIndex];
+			FillInMultiTextOfNewObject(newGuy, _propertyName, _writingSystem, _textBoxTarget.Text);
+			if (Triggered != null)
+			{
+				Triggered.Invoke(this, _listTarget, list.IndexOf(newGuy), null);
+			}
+
+
+
+			_inMidstOfTrigger = true;
 			_textBoxTarget.Text = "";
+			_inMidstOfTrigger = false;
 			//_textBoxTarget.PrepareForFadeIn();
 		 }
 

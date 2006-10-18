@@ -178,6 +178,8 @@ namespace WeSay.Data
 					RemoveFilter();
 				}
 			}
+
+			//here's the big long step
 			records.Filter = filter;
 		}
 		protected override void DoRemoveFilter()

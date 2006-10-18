@@ -51,10 +51,23 @@ namespace WeSay.CommonTools
 			Panel indentPanel = new Panel();
 			indicator.Left = 70;
 			indicator.Top = 0;
+		  //  indicator.BorderStyle = BorderStyle.Fixed3D;
+			indicator.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+		   // indicator.AutoSizeMode = AutoSizeMode.GrowAndShrink;
 			indentPanel.Size = new System.Drawing.Size(indicator.Right,indicator.Height);
-			indentPanel.AutoSize = true;
+			indentPanel.SizeChanged += new EventHandler(indentPanel_SizeChanged);
+		  //  indentPanel.AutoSize = true;
 			indentPanel.Controls.Add(indicator);
+		//    indentPanel.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+			//indentPanel.ForeColor = System.Drawing.Color.Aqua;
+		   // indentPanel.BorderStyle = BorderStyle.FixedSingle;
 			this._vbox.AddControlToBottom(indentPanel);
+		}
+
+		//I don't know why this was needed, but it works
+		void indentPanel_SizeChanged(object sender, EventArgs e)
+		{
+			((TaskIndicator)(((Panel)sender).Controls[0])).RecalcSize(this,null);
 		}
 
 		#region ITask

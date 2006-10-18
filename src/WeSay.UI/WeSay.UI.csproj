@@ -47,8 +47,6 @@
 	<Compile Include="ArrowButton.cs">
 	  <SubType>Component</SubType>
 	</Compile>
-	<Compile Include="AsyncCommand.cs" />
-	<Compile Include="BasicCommand.cs" />
 	<Compile Include="Binding.cs" />
 	<Compile Include="CurrentItemEventArgs.cs" />
 	<Compile Include="DetailList.cs">
@@ -63,10 +61,6 @@
 	</Compile>
 	<Compile Include="GhostBinding.cs" />
 	<Compile Include="ISkin.cs" />
-	<Compile Include="ProgressDialog.cs">
-	  <SubType>Form</SubType>
-	</Compile>
-	<Compile Include="ProgressDialogHandler.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />
 	<Compile Include="VBox.cs">
 	  <SubType>UserControl</SubType>
@@ -96,6 +90,10 @@
 	  <Project>{55E6BAB0-9B46-4C89-8773-4432417C1ADF}</Project>
 	  <Name>PlatformSpecific</Name>
 	</ProjectReference>
+	<ProjectReference Include="..\WeSay.Foundation\WeSay.Foundation.csproj">
+	  <Project>{F12EB680-0990-4900-B77E-0FBF2E28A815}</Project>
+	  <Name>WeSay.Foundation</Name>
+	</ProjectReference>
   </ItemGroup>
   <ItemGroup>
 	<EmbeddedResource Include="ArrowButton.resx">
@@ -112,13 +110,6 @@
 	</EmbeddedResource>
 	<EmbeddedResource Include="MultiTextControl.resx">
 	  <DependentUpon>MultiTextControl.cs</DependentUpon>
-	  <SubType>Designer</SubType>
-	</EmbeddedResource>
-	<EmbeddedResource Include="ProgressDialog.resx">
-	  <DependentUpon>ProgressDialog.cs</DependentUpon>
-	  <SubType>Designer</SubType>
-	</EmbeddedResource>
-	<EmbeddedResource Include="ProgressStrings.resx">
 	  <SubType>Designer</SubType>
 	</EmbeddedResource>
 	<EmbeddedResource Include="VBox.resx">

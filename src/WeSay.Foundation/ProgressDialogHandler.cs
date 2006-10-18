@@ -131,7 +131,7 @@ namespace MultithreadProgress
 			_progressDialog = null;
 			if (Finished != null)
 			{
-				Finished.Invoke(this, null);
+				Finished.BeginInvoke(this, null, null, null);//jh changed this from Invoke()
 			}
 
 			if (ParentFormIsClosing)

@@ -47,6 +47,7 @@ namespace WeSay.CommonTools
 			//
 			this._btnName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
 						| System.Windows.Forms.AnchorStyles.Right)));
+			this._btnName.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
 			this._btnName.BackColor = System.Drawing.Color.AliceBlue;
 			this._btnName.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this._btnName.Location = new System.Drawing.Point(79, 9);
@@ -65,8 +66,9 @@ namespace WeSay.CommonTools
 			this._textShortDescription.BorderStyle = System.Windows.Forms.BorderStyle.None;
 			this._textShortDescription.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this._textShortDescription.Location = new System.Drawing.Point(79, 48);
+			this._textShortDescription.Multiline = true;
 			this._textShortDescription.Name = "_textShortDescription";
-			this._textShortDescription.Size = new System.Drawing.Size(275, 15);
+			this._textShortDescription.Size = new System.Drawing.Size(275, 32);
 			this._textShortDescription.TabIndex = 2;
 			this._textShortDescription.Text = "See words in Foo, write the same words in Boo";
 			//
@@ -80,7 +82,7 @@ namespace WeSay.CommonTools
 			this.Controls.Add(this._btnName);
 			this.Controls.Add(this._count);
 			this.Name = "TaskIndicator";
-			this.Size = new System.Drawing.Size(357, 72);
+			this.Size = new System.Drawing.Size(357, 83);
 			this.BackColorChanged += new System.EventHandler(this.TaskIndicator_BackColorChanged);
 			this.ResumeLayout(false);
 			this.PerformLayout();

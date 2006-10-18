@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Xml;
+using WeSay.Foundation.Progress;
 using WeSay.Language;
 
 namespace WeSay.LexicalModel
@@ -9,8 +10,7 @@ namespace WeSay.LexicalModel
    public  class LiftImporter
 	{
 	   private IList<LexEntry> _entries;
-	   private int _nodesToImport;
-	   public event EventHandler Progress;
+	   private ProgressState _progressState = new NullProgressState();
 
 	   /// <summary>
 	   ///
@@ -21,37 +21,41 @@ namespace WeSay.LexicalModel
 		   this._entries = entries;
 	   }
 
-	   public int NodesToImport
+	   /// <summary>
+	   /// Optionally set this to a wiredup ProgressState to get UI feedback and user cancelling
+	   /// </summary>
+	   public ProgressState Progress
 	   {
-		   get { return _nodesToImport; }
+		   get
+		   {
+			   return _progressState;
+		   }
+		   set
+		   {
+			   _progressState = value;
+		   }
 	   }
+
 
 	   public IList<LexEntry> ReadFile(string path)
 	   {
 		   XmlDocument doc =new XmlDocument();
 		   doc.Load(path);
 		   XmlNodeList entryNodes = doc.SelectNodes("./lift/entry");
-		   _nodesToImport = entryNodes.Count;
 		   int count = 0;
 		   const int kInterval = 50;
 		   int nextProgressPoint = count + kInterval;
-		   //tell anyonelistening that now is a good time to get our total expected cound
-		   Progress.Invoke(this, new ProgressEventArgs(0));
-
+		   _progressState.NumberOfSteps = entryNodes.Count;
 		   foreach (XmlNode node in entryNodes)
 		   {
 			   this._entries.Add(this.ReadEntry(node));
 			   count++;
 			   if (count >= nextProgressPoint)
 			   {
-				   if (Progress != null)
-				   {
-					   ProgressEventArgs progressEventArgs = new ProgressEventArgs(count);
-					   Progress.Invoke(this, progressEventArgs);
-					   if (progressEventArgs.Cancel)
-						   break;
-				   }
+				   _progressState.NumberOfStepsCompleted = count;
 				   nextProgressPoint = count + kInterval;
+				   if (_progressState.Cancel)
+					   break;
 			   }
 		   }
 		   return this._entries;

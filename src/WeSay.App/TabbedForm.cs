@@ -1,5 +1,8 @@
 using System;
 using System.Collections.Generic;
+using MultithreadProgress;
+using WeSay.Foundation;
+using WeSay.Foundation.Progress;
 using WeSay.Project;
 using System.Windows.Forms;
 
@@ -9,6 +12,7 @@ namespace WeSay.App
 	{
 		private ITask _activeTask;
 		private TabPage _currentWorkTab;
+		private ProgressDialogHandler _progressHandler;
 
 		public TabbedForm()
 		{
@@ -172,6 +176,7 @@ namespace WeSay.App
 			ActivateTab(page);
 		}
 
+
 		private void ActivateTab(TabPage page)
 		{
 			ITask task = (ITask)page.Tag;
@@ -220,11 +225,41 @@ namespace WeSay.App
 				return;
 			}
 			task.Activate();
+		   // RunCommand(new ActivateTaskCommand(page, task));
 			task.Control.Dock = DockStyle.Fill;
 			page.Controls.Add(task.Control);
 			page.Cursor = Cursors.Default;
 			_activeTask = task;
 		}
+
+//        private void RunCommand(BasicCommand command)
+//        {
+//            _progressHandler = new ProgressDialogHandler(this, command);
+//            _progressHandler.Finished += new EventHandler(_progressHandler_Finished);
+//            ProgressState progress = new ProgressState(_progressHandler);
+//            // UpdateEnabledStates();
+//            command.BeginInvoke(progress);
+//        }
+//
+//        void _progressHandler_Finished(object sender, EventArgs e)
+//        {
+//            if (InvokeRequired)
+//            {
+//                BeginInvoke(new MethodInvoker(FinishButOnCorrectThread));
+//            }
+//            else
+//            {
+//                FinishButOnCorrectThread();
+//            }
+//        }
+//
+//        private void FinishButOnCorrectThread()
+//        {
+//            _progressHandler = null;
+//            _activeTask.Control.Dock = DockStyle.Fill;
+//            this.tabControl1.SelectedTab.Controls.Add(_activeTask.Control);
+//            this.tabControl1.SelectedTab.Cursor = Cursors.Default;
+//        }
 
 
 		private void ContinueLaunchingAfterInitialDisplay()
@@ -245,4 +280,31 @@ namespace WeSay.App
 			ContinueLaunchingAfterInitialDisplay();
 		}
 	}
+
+//    public class ActivateTaskCommand : BasicCommand
+//    {
+//        private readonly TabPage _page;
+//        private readonly ITask _task;
+//        protected WeSay.Foundation.Progress.ProgressState _progress;
+//
+//        public ActivateTaskCommand(TabPage page, ITask task)
+//        {
+//            _page = page;
+//            _task = task;
+//        }
+//
+//        protected override void DoWork2(ProgressState progress)
+//        {
+//            _progress = progress;
+//            _task.Activate();
+//
+//        }
+//
+//        protected override void DoWork(InitializeProgressCallback initializeCallback, ProgressCallback progressCallback,
+//                                       StatusCallback primaryStatusTextCallback,
+//                                       StatusCallback secondaryStatusTextCallback)
+//        {
+//            throw new NotImplementedException();
+//        }
+//    }
 }

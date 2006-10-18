@@ -112,7 +112,7 @@ namespace WeSay.LexicalTools
 				{
 					return DataSource.Count.ToString();
 				}
-				return String.Empty;
+				return "0";// String.Empty;
 			}
 		}
 

@@ -56,6 +56,7 @@ namespace WeSay.App
 			ProgressDialog dlg = new ProgressDialog("Backing up to external...");
 			dlg.Show();
 
+			Application.DoEvents();
 			try
 			{
 				ICSharpCode.SharpZipLib.Zip.FastZip f = new ICSharpCode.SharpZipLib.Zip.FastZip();

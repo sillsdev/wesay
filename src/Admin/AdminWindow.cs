@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using MultithreadProgress;
 using WeSay.Admin.Properties;
 using WeSay.Data;
+using WeSay.Foundation.Progress;
 using WeSay.LexicalModel;
 using WeSay.Project;
 using ErrorEventHandler=System.IO.ErrorEventHandler;
@@ -16,7 +17,7 @@ namespace WeSay.Admin
 		private WelcomeControl _welcomePage = new WelcomeControl();
 		private ProjectTabs _projectTabs;
 		private WeSayWordsProject _project;
-		MultithreadProgress.ProgressDialogHandler _progressHandler;
+		ProgressDialogHandler _progressHandler;
 
 		/// <summary>
 		/// This is probably temporary while we transition to the tasks xml being
@@ -253,12 +254,14 @@ namespace WeSay.Admin
 			RunCommand(new ExportLIFTCommand(saveDialog.FileName, openDialog.FileName));
 		}
 
+
 		private void RunCommand(BasicCommand command)
 		{
 			_progressHandler = new ProgressDialogHandler(this, command);
 			_progressHandler.Finished += new EventHandler(_progressHandler_Finished);
+			ProgressState progress = new ProgressState(_progressHandler);
 			UpdateEnabledStates();
-			command.BeginInvoke();
+			command.BeginInvoke(progress);
 		}
 
 		void _progressHandler_Finished(object sender, EventArgs e)

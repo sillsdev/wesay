@@ -32,5 +32,14 @@ namespace WeSay.CommonTools
 			_indicatorPanel.BackColor = s.BackColor;
 			_content.BackColor = s.BackColor;
 		}
+
+		 //I don't know why this was needed, but it works
+	   private void CurrentTaskIndicatorControl_SizeChanged(object sender, EventArgs e)
+		{
+			((TaskIndicator)_content).RecalcSize(this, null);
+
+		}
+
+
 	}
 }

@@ -83,6 +83,10 @@ namespace WeSay.Data
 
 				ApplyFilter(IsRelevant);
 
+				//At this point, either you have no records (either because constructOnlyIfFilterIsCached==true,
+				// or there just are no records that fit the filter), or you have some and they satisfy the
+				// filter.
+
 				if (constructOnlyIfFilterIsCached)
 				{
 					List<long> itemIds;
