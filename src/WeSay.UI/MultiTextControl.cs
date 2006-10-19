@@ -94,7 +94,7 @@ namespace WeSay.UI
 				FlagButton flagButton = AddFlagButton(p.Size);
 				p.Controls.Add(flagButton);
 				this.components.Add(flagButton);//so it will get disposed of when we are
-
+				flagButton.TabStop = false;
 				_vbox.AddControlToBottom(p);
 				Height += p.Height;
 			}
