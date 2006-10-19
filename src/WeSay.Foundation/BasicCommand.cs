@@ -3,18 +3,16 @@ using System.Runtime.Remoting.Messaging;
 using MultithreadProgress;
 using WeSay.Foundation;
 using WeSay.Foundation.Progress;
-//using WeSay.Data;
-//using WeSay.LexicalModel;
 
 namespace WeSay
 {
 
 	public abstract class BasicCommand : AsyncCommand, ILongRunningJob
 	{
-		protected InitializeProgressCallback _initializeCallback;
-		protected ProgressCallback _progressCallback;
-		protected StatusCallback _primaryStatusTextCallback;
-		protected   StatusCallback _secondaryStatusTextCallback;
+		private InitializeProgressCallback _initializeCallback;
+		private ProgressCallback _progressCallback;
+		private StatusCallback _primaryStatusTextCallback;
+		private StatusCallback _secondaryStatusTextCallback;
 
 		public InitializeProgressCallback InitializeCallback
 		{

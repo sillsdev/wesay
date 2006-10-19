@@ -52,9 +52,14 @@ namespace WeSay.LexicalModel
 		}
 
 
-		public override void SomethingWasModified()
+		public override void SomethingWasModified(string PropertyModified)
 		{
 			_modifiedDate = DateTime.Now;
+			if (PropertyModified != "senses")
+			{
+				RemoveEmptySenses();
+			}
+			base.SomethingWasModified(PropertyModified);
 		}
 
 		public MultiText LexicalForm
@@ -104,6 +109,28 @@ namespace WeSay.LexicalModel
 				{
 					_guid = value;
 					NotifyPropertyChanged("GUID");
+				}
+			}
+		}
+
+		public override bool Empty
+		{
+			get
+			{
+				return Senses.Count == 0 && LexicalForm.Empty;
+			}
+		}
+
+		public void RemoveEmptySenses()
+		{
+			// remove any senses that are empty
+			int count = this._senses.Count;
+
+			for (int i = count - 1; i >= 0; i--)
+			{
+				if (this._senses[i].Empty)
+				{
+					this._senses.RemoveAt(i);
 				}
 			}
 		}

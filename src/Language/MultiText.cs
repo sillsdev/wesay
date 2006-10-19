@@ -90,6 +90,14 @@ namespace WeSay.Language
 				return string.Empty;
 		}
 
+		public bool Empty
+		{
+			get
+			{
+				return Count == 0;
+			}
+		}
+
 		public int Count
 		{
 			get

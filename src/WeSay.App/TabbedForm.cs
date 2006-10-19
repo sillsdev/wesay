@@ -1,8 +1,5 @@
 using System;
 using System.Collections.Generic;
-using MultithreadProgress;
-using WeSay.Foundation;
-using WeSay.Foundation.Progress;
 using WeSay.Project;
 using System.Windows.Forms;
 
@@ -12,7 +9,7 @@ namespace WeSay.App
 	{
 		private ITask _activeTask;
 		private TabPage _currentWorkTab;
-		private ProgressDialogHandler _progressHandler;
+//        private ProgressDialogHandler _progressHandler;
 
 		public TabbedForm()
 		{

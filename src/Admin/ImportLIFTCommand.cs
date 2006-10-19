@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using MultithreadProgress;
 using WeSay.Data;
 using WeSay.Foundation;
 using WeSay.Foundation.Progress;

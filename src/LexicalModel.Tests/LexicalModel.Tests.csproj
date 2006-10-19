@@ -48,6 +48,7 @@
   </ItemGroup>
   <ItemGroup>
 	<Compile Include="Binding.cs" />
+	<Compile Include="LexEntryTests.cs" />
 	<Compile Include="LiftExportTests.cs" />
 	<Compile Include="EventsAndDates.cs" />
 	<Compile Include="LiftImportTests.cs" />

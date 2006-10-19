@@ -5,7 +5,7 @@ using com.db4o;
 
 namespace WeSay.LexicalModel
 {
-	public class WeSayDataObject : INotifyPropertyChanged
+	public abstract class WeSayDataObject : INotifyPropertyChanged
 	{
 		/// <summary>
 		/// For INotifyPropertyChanged
@@ -24,6 +24,8 @@ namespace WeSay.LexicalModel
 			WireUpEvents();
 		}
 
+		public abstract bool Empty{get;}
+
 		protected void WireUpList(IBindingList list, string listName)
 		{
 			_listEventHelpers.Add(new ListEventHelper(this, list, listName));
@@ -37,7 +39,7 @@ namespace WeSay.LexicalModel
 
 		private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
 		{
-			SomethingWasModified();
+			SomethingWasModified(e.PropertyName);
 		}
 
 		internal void WireUpChild(INotifyPropertyChanged child)
@@ -48,7 +50,7 @@ namespace WeSay.LexicalModel
 		/// <summary>
 		/// called by the binding list when senses are added, removed, reordered, etc.
 		/// </summary>
-		public virtual void SomethingWasModified()
+		public virtual void SomethingWasModified(string PropertyModified)
 		{
 		}
 
@@ -90,7 +92,7 @@ namespace WeSay.LexicalModel
 			{
 				IBindingList list = (IBindingList) sender;
 				_parent.WireUpChild((INotifyPropertyChanged)list[e.NewIndex]);
-				_parent.SomethingWasModified();
+//                _parent.SomethingWasModified(_listName);
 			}
 			_parent.NotifyPropertyChanged(_listName);
 		}

@@ -1,3 +1,4 @@
+using System;
 using WeSay.Language;
 
 namespace WeSay.LexicalModel
@@ -30,6 +31,14 @@ namespace WeSay.LexicalModel
 		public MultiText Translation
 		{
 			get { return _translation; }
+		}
+
+		public override bool Empty
+		{
+			get
+			{
+				return Sentence.Empty && Translation.Empty;
+			}
 		}
 	}
 }

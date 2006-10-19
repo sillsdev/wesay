@@ -10,8 +10,8 @@ namespace WeSay.Foundation.Progress
 	public class ProgressState : IDisposable
 	{
 		private readonly ProgressDialogHandler _progressHandler;
-		protected int _numberOfSteps;
-		protected int _numberOfStepsCompleted;
+		private int _numberOfSteps;
+		private int _numberOfStepsCompleted;
 		private string _status;
 
 		private bool _doCancel = false;

@@ -31,6 +31,14 @@ namespace WeSay.UI.Tests
 				get { return middle; }
 				set { middle = value; }
 			}
+
+			public override bool Empty
+			{
+				get
+				{
+					return First.Empty && Middle.Empty;
+				}
+			}
 		}
 
 		public class Papa : WeSay.LexicalModel.WeSayDataObject
@@ -47,6 +55,14 @@ namespace WeSay.UI.Tests
 			public WeSay.Data.InMemoryBindingList<Child> Children
 			{
 				get { return _children; }
+			}
+
+			public override bool Empty
+			{
+				get
+				{
+					return _children.Count == 0;
+				}
 			}
 
 			protected override void WireUpEvents()
