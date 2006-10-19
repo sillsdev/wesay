@@ -225,6 +225,7 @@ namespace WeSay.App
 		   // RunCommand(new ActivateTaskCommand(page, task));
 			task.Control.Dock = DockStyle.Fill;
 			page.Controls.Add(task.Control);
+			task.Control.Focus();
 			page.Cursor = Cursors.Default;
 			_activeTask = task;
 		}

@@ -1,5 +1,3 @@
-using System.Diagnostics;
-
 namespace WeSay.UI
 {
 	partial class MultiTextControl

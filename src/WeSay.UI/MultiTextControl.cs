@@ -80,9 +80,9 @@ namespace WeSay.UI
 
 				Label label = AddWritingSystemLabel(box);
 
-				Graphics g = CreateGraphics();
-				int descent = box.Font.FontFamily.GetCellDescent(box.Font.Style);
-				int descentPixel = (int) (box.Font.Size * descent / box.Font.FontFamily.GetEmHeight(box.Font.Style));
+				//Graphics g = CreateGraphics();
+				//int descent = box.Font.FontFamily.GetCellDescent(box.Font.Style);
+				//int descentPixel = (int) (box.Font.Size * descent / box.Font.FontFamily.GetEmHeight(box.Font.Style));
 
 				this.components.Add(box);//so it will get disposed of when we are
 
@@ -127,7 +127,7 @@ namespace WeSay.UI
 			label.ForeColor = System.Drawing.Color.LightGray;
 
 
-			Graphics g = this.CreateGraphics();
+			Graphics g = CreateGraphics();
 			int descent = box.Font.FontFamily.GetCellDescent(box.Font.Style);
 			int descentPixel = (int) (box.Font.Size * descent / box.Font.FontFamily.GetEmHeight(box.Font.Style));
 
@@ -141,7 +141,7 @@ namespace WeSay.UI
 		{
 			WeSayTextBox box = new WeSayTextBox(writingSystem);
 			_textBoxes.Add(box);
-			box.Name = this.Name.Replace("-mtc","") + "_" + writingSystem.Id; //for automated tests to find this particular guy
+			box.Name = Name.Replace("-mtc","") + "_" + writingSystem.Id; //for automated tests to find this particular guy
 			box.Text = _multiText[writingSystem.Id];
 			box.Location = new Point(30, 0);
 			const int kRightMargin = 25; // for flag button

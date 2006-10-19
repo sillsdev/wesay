@@ -63,12 +63,12 @@ namespace WeSay.LexicalTools
 			this._recordsListBox.Name = "_recordsListBox";
 			this._recordsListBox.SelectedIndex = 0;
 			this._recordsListBox.Size = new System.Drawing.Size(116, 170);
-			this._recordsListBox.SpecialKeys = ((SourceGrid3.GridSpecialKeys)(((((((SourceGrid3.GridSpecialKeys.Arrows | SourceGrid3.GridSpecialKeys.Tab)
+			this._recordsListBox.SpecialKeys = (SourceGrid3.GridSpecialKeys)((((((SourceGrid3.GridSpecialKeys.Arrows
 						| SourceGrid3.GridSpecialKeys.PageDownUp)
 						| SourceGrid3.GridSpecialKeys.Enter)
 						| SourceGrid3.GridSpecialKeys.Escape)
 						| SourceGrid3.GridSpecialKeys.Control)
-						| SourceGrid3.GridSpecialKeys.Shift)));
+						| SourceGrid3.GridSpecialKeys.Shift));
 			this._recordsListBox.StyleGrid = null;
 			this._recordsListBox.TabIndex = 5;
 			//
@@ -92,12 +92,12 @@ namespace WeSay.LexicalTools
 			this._completedRecordsListBox.Name = "_completedRecordsListBox";
 			this._completedRecordsListBox.SelectedIndex = 0;
 			this._completedRecordsListBox.Size = new System.Drawing.Size(116, 170);
-			this._completedRecordsListBox.SpecialKeys = ((SourceGrid3.GridSpecialKeys)(((((((SourceGrid3.GridSpecialKeys.Arrows | SourceGrid3.GridSpecialKeys.Tab)
+			this._completedRecordsListBox.SpecialKeys = (SourceGrid3.GridSpecialKeys)((((((SourceGrid3.GridSpecialKeys.Arrows
 						| SourceGrid3.GridSpecialKeys.PageDownUp)
 						| SourceGrid3.GridSpecialKeys.Enter)
 						| SourceGrid3.GridSpecialKeys.Escape)
 						| SourceGrid3.GridSpecialKeys.Control)
-						| SourceGrid3.GridSpecialKeys.Shift)));
+						| SourceGrid3.GridSpecialKeys.Shift));
 			this._completedRecordsListBox.StyleGrid = null;
 			this._completedRecordsListBox.TabIndex = 6;
 			//

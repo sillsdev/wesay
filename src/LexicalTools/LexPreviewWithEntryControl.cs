@@ -57,6 +57,11 @@ namespace WeSay.LexicalTools
 			}
 		}
 
+		public void FocusFirstField()
+		{
+			_detailListControl.Focus();
+		}
+
 		public RichTextBox ControlFormattedView
 		{
 			get

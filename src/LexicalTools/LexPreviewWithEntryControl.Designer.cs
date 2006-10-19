@@ -50,7 +50,7 @@ namespace WeSay.LexicalTools
 			this._lexicalEntryPreview.Name = "_lexicalEntryPreview";
 			this._lexicalEntryPreview.ReadOnly = true;
 			this._lexicalEntryPreview.Size = new System.Drawing.Size(450, 85);
-			this._lexicalEntryPreview.TabIndex = 0;
+			this._lexicalEntryPreview.TabStop = false;
 			this._lexicalEntryPreview.Text = "";
 			//
 			// _detailListControl

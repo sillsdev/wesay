@@ -14,9 +14,9 @@ namespace WeSay.UI
 		public WeSayTextBox()
 		{
 			InitializeComponent();
-			Debug.Assert(this.DesignMode);
-			this.BorderStyle = BorderStyle.None;
-			this.BackColor = System.Drawing.Color.White;
+			Debug.Assert(DesignMode);
+			BorderStyle = BorderStyle.None;
+			BackColor = System.Drawing.Color.White;
 		}
 
 
@@ -31,8 +31,8 @@ namespace WeSay.UI
 			{
 				_keymanLink = null;
 			}
-			this.BorderStyle = BorderStyle.None;
-			this.BackColor = System.Drawing.Color.White;
+			BorderStyle = BorderStyle.None;
+			BackColor = System.Drawing.Color.White;
 		}
 
 
@@ -48,20 +48,20 @@ namespace WeSay.UI
 			}
 		}
 
-		private void ComputeHeight()
-		{
-			System.Drawing.Graphics graphics = this.CreateGraphics();
-		  //  SizeF sz = graphics.MeasureString(this.Text, Font);
+  //      private void ComputeHeight()
+  //      {
+  //          System.Drawing.Graphics graphics = this.CreateGraphics();
+  //        //  SizeF sz = graphics.MeasureString(this.Text, Font);
 
-			Graphics g = this.CreateGraphics();
-	//        int h = this.Font.FontFamily.GetEmHeight(this.Font.Style) - this.Font.FontFamily.GetLineSpacing(this.Font.Style);
-			int h = this.Font.FontFamily.GetCellAscent(this.Font.Style) + this.Font.FontFamily.GetCellDescent(this.Font.Style);
-			int hInPixels = (int)(this.Font.Size * h / this.Font.FontFamily.GetEmHeight(this.Font.Style));
+  //          Graphics g = this.CreateGraphics();
+  //  //        int h = this.Font.FontFamily.GetEmHeight(this.Font.Style) - this.Font.FontFamily.GetLineSpacing(this.Font.Style);
+  //          int h = this.Font.FontFamily.GetCellAscent(this.Font.Style) + this.Font.FontFamily.GetCellDescent(this.Font.Style);
+  //          int hInPixels = (int)(this.Font.Size * h / this.Font.FontFamily.GetEmHeight(this.Font.Style));
 
 
-  //          Height = hInPixels;
+  ////          Height = hInPixels;
 
-		}
+  //      }
 
 		public WritingSystem WritingSystem
 		{
