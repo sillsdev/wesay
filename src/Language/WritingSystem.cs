@@ -12,7 +12,7 @@ namespace WeSay.Language
 
 		private Font _font;
 		private string _id;
-		private string _windowsKeyman;
+		private string _keyboardName;
 
 //        public WritingSystem(string filePath)
 //        {
@@ -90,15 +90,15 @@ namespace WeSay.Language
 
 		[Browsable(true)]
 		[ReflectorProperty("WindowsKeyman", Required = false)]
-		public string WindowsKeyman
+		public string KeyboardName
 		{
 			get
 			{
-				return _windowsKeyman;
+				return _keyboardName;
 			}
 			set
 			{
-				_windowsKeyman = value;
+				_keyboardName = value;
 			}
 		}
 

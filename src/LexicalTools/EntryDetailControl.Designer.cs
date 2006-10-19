@@ -46,7 +46,7 @@ namespace WeSay.LexicalTools
 			this._btnNewWord = new System.Windows.Forms.LinkLabel();
 			this._btnDeleteWord = new System.Windows.Forms.LinkLabel();
 			this._btnFind = new System.Windows.Forms.Button();
-			this._findText = new System.Windows.Forms.TextBox();
+			this._findText = new WeSay.UI.WeSayTextBox();
 
 			this.panel1.SuspendLayout();
 			this.SuspendLayout();
@@ -173,7 +173,7 @@ namespace WeSay.LexicalTools
 		private System.Windows.Forms.LinkLabel _btnDeleteWord;
 		private System.Windows.Forms.LinkLabel _btnNewWord;
 		private System.Windows.Forms.Button _btnFind;
-		private System.Windows.Forms.TextBox _findText;
+		private WeSayTextBox _findText;
 
 	}
 }

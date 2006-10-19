@@ -21,6 +21,12 @@ namespace WeSay.LexicalTools
 		public event EventHandler SelectedIndexChanged;
 		private IRecordListManager _recordManager;
 
+		public EntryDetailControl()
+		{
+			Debug.Assert(DesignMode);
+			InitializeComponent();
+		}
+
 		public EntryDetailControl(IRecordListManager recordManager, FieldInventory fieldInventory)
 		{
 			if (recordManager == null)
@@ -49,6 +55,7 @@ namespace WeSay.LexicalTools
 			_findText.KeyDown += new KeyEventHandler(_findText_KeyDown);
 			int originalHeight = _findText.Height;
 			_findText.Font = _recordsListBox.Font;
+			_findText.WritingSystem = _fieldInventory[Field.FieldNames.EntryLexicalForm.ToString()].WritingSystems[0];
 			int heightDifference = _findText.Height - originalHeight;
 			_recordsListBox.Height -= heightDifference;
 			_recordsListBox.Location = new Point(_recordsListBox.Location.X,

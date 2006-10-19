@@ -8,31 +8,27 @@ namespace WeSay.UI
 {
 	public partial class WeSayTextBox : TextBox
 	{
-		private readonly WritingSystem _writingSystem;
+		private WritingSystem _writingSystem;
 		private KeymanLink.KeymanLink _keymanLink;
 
 		public WeSayTextBox()
 		{
 			InitializeComponent();
-			Debug.Assert(DesignMode);
+		  //  Debug.Assert(DesignMode);
 			BorderStyle = BorderStyle.None;
 			BackColor = System.Drawing.Color.White;
-		}
-
-
-
-		public WeSayTextBox(WritingSystem ws)
-		{
-			_writingSystem = ws;
-			InitializeComponent();
-			Font = ws.Font;
 			_keymanLink = new KeymanLink.KeymanLink();
 			if(!_keymanLink.Initialize(false))
 			{
 				_keymanLink = null;
 			}
-			BorderStyle = BorderStyle.None;
-			BackColor = System.Drawing.Color.White;
+		}
+
+
+
+		public WeSayTextBox(WritingSystem ws):this()
+		{
+			 WritingSystem = ws;
 		}
 
 
@@ -66,6 +62,11 @@ namespace WeSay.UI
 		public WritingSystem WritingSystem
 		{
 			get { return _writingSystem; }
+			set
+			{
+				_writingSystem = value;
+				Font = value.Font;
+			}
 		}
 
 		//public bool IsGhost
@@ -126,16 +127,37 @@ namespace WeSay.UI
 		 //   Focus();
 
 
-			if (_keymanLink != null && _writingSystem.WindowsKeyman != null && _writingSystem.WindowsKeyman !="")
+			if (FindInputLanguage(_writingSystem.KeyboardName) != null)
 			{
-				_keymanLink.SelectKeymanKeyboard(_writingSystem.WindowsKeyman, true);
+				InputLanguage.CurrentInputLanguage= FindInputLanguage(_writingSystem.KeyboardName);
 			}
+			else if (_keymanLink != null && _writingSystem.KeyboardName != null && _writingSystem.KeyboardName !="")
+			{
+				_keymanLink.SelectKeymanKeyboard(_writingSystem.KeyboardName, true);
+			}
+		}
+
+		private InputLanguage FindInputLanguage(string name)
+		{
+			foreach (InputLanguage  l in InputLanguage.InstalledInputLanguages )
+			{
+				if (l.LayoutName == name)
+				{
+					return l;
+				}
+			}
+			return null;
 		}
 
 		private void WeSayTextBox_Leave(object sender, EventArgs e)
 		{
 		   // this.BackColor = System.Drawing.Color.White;
-			if (_keymanLink != null)
+
+			if (FindInputLanguage(_writingSystem.KeyboardName) != null)//just a weird way to know if we changed the keyboard when we came in
+			{
+				InputLanguage.CurrentInputLanguage = InputLanguage.DefaultInputLanguage;
+			}
+			else if (_keymanLink != null)
 			{
 				_keymanLink.SelectKeymanKeyboard(null, false);
 			}
