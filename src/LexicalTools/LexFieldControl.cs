@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using ListBox;
 using SourceGrid3;
+using WeSay.Language;
 using WeSay.LexicalModel;
 using WeSay.Project;
 using WeSay.UI;
@@ -83,6 +84,22 @@ namespace WeSay.LexicalTools
 				SelectCurrentRecordInRecordList();
 				UpdatePreviousAndNextRecords();
 			}
+			else
+			{
+				CurrentRecord = null;
+				ShowTaskComplete(StringCatalog.Get("Congratulations. You have completed this task."));
+			}
+		}
+
+		private void ShowTaskComplete(string message)
+		{
+			this._congratulationsMessage.Text = message;
+			this._congratulationsMessage.BringToFront();
+		}
+
+		private void HideTaskComplete()
+		{
+			this._congratulationsMessage.SendToBack();
 		}
 
 		public void SetCurrentRecordToPrevious()
@@ -109,6 +126,7 @@ namespace WeSay.LexicalTools
 			if (this._records.Count == 0)
 			{
 				CurrentRecord = null;
+				ShowTaskComplete(StringCatalog.Get("There is no work left to be done on this task."));
 			}
 			else
 			{
@@ -188,6 +206,7 @@ namespace WeSay.LexicalTools
 				if (_currentRecord != null)
 				{
 					_currentRecord.PropertyChanged += OnCurrentRecordPropertyChanged;
+					HideTaskComplete();
 				}
 			}
 		}

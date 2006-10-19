@@ -81,22 +81,21 @@ namespace WeSay.LexicalTools
 			}
 			set
 			{
-				if (_record != null)
+				if (_record != value)
 				{
-					_record.PropertyChanged -= OnRecordPropertyChanged;
-				}
-				_record = value;
-				_currentItem = null;
-				if (_record == null)
-				{
-					_lexicalEntryPreview.Text = String.Empty;
-				}
-				else
-				{
-					_record.PropertyChanged +=new PropertyChangedEventHandler(OnRecordPropertyChanged);
-					 RefreshLexicalEntryPreview();
-					 Application.DoEvents();
-				   RefreshEntryDetail();
+					if (_record != null)
+					{
+						_record.PropertyChanged -= OnRecordPropertyChanged;
+					}
+					_record = value;
+					_currentItem = null;
+					if (_record != null)
+					{
+						_record.PropertyChanged += new PropertyChangedEventHandler(OnRecordPropertyChanged);
+					}
+					RefreshLexicalEntryPreview();
+					Application.DoEvents();
+					RefreshEntryDetail();
 				}
 			}
 		}

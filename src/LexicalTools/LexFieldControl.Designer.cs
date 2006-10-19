@@ -49,6 +49,7 @@ namespace WeSay.LexicalTools
 			this._btnPreviousWord = new ArrowButton.ArrowButton();
 			this._btnNextWord = new ArrowButton.ArrowButton();
 			this.labelNextHotKey = new Label();
+			this._congratulationsMessage = new Label();
 
 			this.SuspendLayout();
 			//
@@ -156,6 +157,17 @@ namespace WeSay.LexicalTools
 			this._btnNextWord.TabIndex = 2;
 			this._btnNextWord.Click += new System.EventHandler(OnBtnNextWordClick);
 
+
+			//
+			// _congratulationsMessage
+			//
+			this._congratulationsMessage.Location = new System.Drawing.Point(126, 45);
+			this._congratulationsMessage.Name = "_congratulationsMessage";
+			this._congratulationsMessage.AutoSize = true;
+			this._congratulationsMessage.Font = new System.Drawing.Font("Microsoft Sans Serif", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this._congratulationsMessage.Size = new System.Drawing.Size(367, 82);
+			this._congratulationsMessage.Text = string.Empty;
+
 			//
 			// LexFieldTool
 			//
@@ -169,6 +181,7 @@ namespace WeSay.LexicalTools
 			this.Controls.Add(this._btnPreviousWord);
 			this.Controls.Add(this._btnNextWord);
 			this.Controls.Add(this.labelNextHotKey);
+			this.Controls.Add(this._congratulationsMessage);
 
 			this.Name = "LexFieldTool";
 			this.Size = new System.Drawing.Size(493, 169);
@@ -184,6 +197,7 @@ namespace WeSay.LexicalTools
 		private ArrowButton.ArrowButton _btnNextWord;
 		private ArrowButton.ArrowButton _btnPreviousWord;
 		private Label labelNextHotKey;
+		private Label _congratulationsMessage;
 
 	}
 }

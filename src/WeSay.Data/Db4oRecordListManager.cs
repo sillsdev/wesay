@@ -90,14 +90,20 @@ namespace WeSay.Data
 				if (constructOnlyIfFilterIsCached)
 				{
 					List<long> itemIds;
-					itemIds = GetDeserializedRecordIds();
-					if (itemIds == null)
+					if (!TryGetDeserializedRecordIds(out itemIds))
 					{
 						_isInitializingFromCache = true;
 						Dispose();
 						throw new OperationCanceledException("Filter is not cached.");
 					}
-					((Db4oList<T>)Records).ItemIds = itemIds;
+					if (itemIds == null)
+					{
+						((Db4oList<T>)Records).ItemIds.Clear();
+					}
+					else
+					{
+						((Db4oList<T>)Records).ItemIds = itemIds;
+					}
 				}
 				else
 				{
@@ -175,9 +181,10 @@ namespace WeSay.Data
 				return hashCode;
 			}
 
-			List<long> GetDeserializedRecordIds()
+			private bool TryGetDeserializedRecordIds(out List<long> itemIds)
 			{
-				List<long> itemIds = null;
+				bool successful = false;
+				itemIds = null;
 				if (File.Exists(CacheFilePath))
 				{
 					using (FileStream fs = File.Open(CacheFilePath, FileMode.Open))
@@ -192,6 +199,7 @@ namespace WeSay.Data
 								if (filterHashCode == GetFilterHashCode())
 								{
 									itemIds = (List<long>)formatter.Deserialize(fs);
+									successful = true;
 								}
 							}
 						}
@@ -202,7 +210,7 @@ namespace WeSay.Data
 						}
 					}
 				}
-				return itemIds;
+				return successful;
 			}
 
 			private DateTime GetDatabaseLastModified()

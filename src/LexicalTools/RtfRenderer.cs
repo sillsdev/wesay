@@ -12,7 +12,12 @@ namespace WeSay.LexicalTools
 	{
 		public static string ToRtf(LexEntry entry, CurrentItemEventArgs currentItem)
 		{
-		  StringBuilder rtf = new StringBuilder();
+			if(entry == null)
+			{
+				return string.Empty;
+			}
+
+			StringBuilder rtf = new StringBuilder();
 			rtf.Append(@"{\rtf1\ansi\fs28 ");
 			rtf.Append(MakeFontTable());
 
