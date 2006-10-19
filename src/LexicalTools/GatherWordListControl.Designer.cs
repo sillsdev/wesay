@@ -71,6 +71,7 @@ namespace WeSay.LexicalTools
 			this._listViewWords.TabIndex = 4;
 			this._listViewWords.TabStop = false;
 			this._listViewWords.UseCompatibleStateImageBehavior = false;
+			this._listViewWords.View = System.Windows.Forms.View.List;
 			//
 			// label3
 			//
