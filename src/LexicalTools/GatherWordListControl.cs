@@ -15,6 +15,8 @@ namespace WeSay.LexicalTools
 		private readonly IRecordList<LexEntry> _records;
 		private int _currentWordIndex=0;
 
+		public event EventHandler WordAdded;
+
 		public GatherWordListControl()
 		{
 			System.Diagnostics.Debug.Assert(DesignMode);
@@ -98,7 +100,11 @@ namespace WeSay.LexicalTools
 
 			_listViewWords.Items.Add(s);
 			_vernacularBox.TextBoxes[0].Text = "";
-
+			_vernacularBox.FlagIsOn = false;
+			if (WordAdded != null)
+			{
+				WordAdded.Invoke(this, null);
+			}
 			UpdateStuff();
 		}
 

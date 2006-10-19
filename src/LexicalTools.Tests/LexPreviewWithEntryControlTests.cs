@@ -120,7 +120,10 @@ namespace WeSay.LexicalTools.Tests
 			DetailList entryDetailControl = lexFieldControl.ControlEntryDetail;
 			Control referenceControl = entryDetailControl.GetControlOfRow(0);
 			Control editControl = entryDetailControl.GetEditControlFromReferenceControl(referenceControl);
-			editControl.Select();
+
+			//JDH added after we added multiple ws's per field. Was: editControl.Select();
+			((MultiTextControl)editControl).TextBoxes[0].Select();
+
 			Assert.AreNotEqual(rtfOriginal, lexFieldControl.ControlFormattedView.Rtf);
 		}
 
@@ -134,7 +137,10 @@ namespace WeSay.LexicalTools.Tests
 			DetailList entryDetailControl = lexFieldControl.ControlEntryDetail;
 			Control referenceControl = entryDetailControl.GetControlOfRow(0);
 			Control editControl = entryDetailControl.GetEditControlFromReferenceControl(referenceControl);
-			editControl.Select();
+
+			//JDH added after we added multiple ws's per field. Was: editControl.Select();
+			((MultiTextControl)editControl).TextBoxes[0].Select();
+
 			Assert.AreNotEqual(rtfAppleNothingHighlighted, lexFieldControl.ControlFormattedView.Rtf);
 
 			lexFieldControl.DataSource = banana;
@@ -152,7 +158,10 @@ namespace WeSay.LexicalTools.Tests
 			DetailList entryDetailControl = lexFieldControl.ControlEntryDetail;
 			Control referenceControl = entryDetailControl.GetControlOfRow(0);
 			Control editControl = entryDetailControl.GetEditControlFromReferenceControl(referenceControl);
-			editControl.Select();
+
+			//JDH added after we added multiple ws's per field. Was: editControl.Select();
+			((MultiTextControl)editControl).TextBoxes[0].Select();
+
 			Assert.AreNotEqual(rtfEmptyNothingHighlighted, lexFieldControl.ControlFormattedView.Rtf);
 		}
 

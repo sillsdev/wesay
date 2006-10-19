@@ -8,6 +8,7 @@
 		  <visibility>Visible</visibility>
 		  <writingSystems>
 			<id>th</id>
+			<id>en</id>
 			<id>IPA</id>
 		  </writingSystems>
 		</field>

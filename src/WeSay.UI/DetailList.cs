@@ -12,6 +12,10 @@ namespace WeSay.UI
 	/// </summary>
 	public partial class DetailList : VBox
 	{
+		/// <summary>
+		/// Can be used to track which data item the user is currently editting, to,
+		/// for example, hilight that piece in a preview control
+		/// </summary>
 		public event EventHandler<CurrentItemEventArgs> CurrentItemChanged = delegate
 																			 {
 																			 };

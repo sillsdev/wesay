@@ -118,6 +118,14 @@ namespace WeSay.UI
 
 		private void WeSayTextBox_Enter(object sender, EventArgs e)
 		{
+			//this.BackColor = System.Drawing.Color.Yellow;
+
+			//the following fixes some uknown problem where the cursor would be in this box,
+			//but when you type the text would always go to the firs ws alternative in the enclosing
+			//multitext
+		 //   Focus();
+
+
 			if (_keymanLink != null && _writingSystem.WindowsKeyman != null && _writingSystem.WindowsKeyman !="")
 			{
 				_keymanLink.SelectKeymanKeyboard(_writingSystem.WindowsKeyman, true);
@@ -126,6 +134,7 @@ namespace WeSay.UI
 
 		private void WeSayTextBox_Leave(object sender, EventArgs e)
 		{
+		   // this.BackColor = System.Drawing.Color.White;
 			if (_keymanLink != null)
 			{
 				_keymanLink.SelectKeymanKeyboard(null, false);

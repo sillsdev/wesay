@@ -41,25 +41,6 @@ namespace WeSay.UI
 			CurrentItemChanged(sender, new CurrentItemEventArgs(DataTarget, _writingSystemId));
 		}
 
-		/// <summary>
-		/// Change of visibility is not a very satisfying to time to trigger this,
-		/// but it does the best I've found.
-		/// </summary>
-		void OnTextBoxTargetVisibilityChanged(object sender, EventArgs e)
-		{
-			if (!((Control)sender).Visible)
-			{
-				TearDown();
-			}
-		}
-
-		/// <summary>
-		/// We get this when closing the app, rather than the visibility changed event.
-		/// </summary>
-		void OnTextBoxTargetDisposed(object sender, EventArgs e)
-		{
-			TearDown();
-		}
 
 		void OnTextBoxChanged(object sender, EventArgs e)
 		{

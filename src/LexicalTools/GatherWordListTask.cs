@@ -64,11 +64,18 @@ namespace WeSay.LexicalTools
 			}
 			base.Activate();
 			_gatherControl = new GatherWordListControl(_words, RecordListManager.Get<LexEntry>());
+			_gatherControl.WordAdded += new EventHandler(_gatherControl_WordAdded);
+		}
+
+		void _gatherControl_WordAdded(object sender, EventArgs e)
+		{
+			this.RecordListManager.GoodTimeToCommit();
 		}
 
 		public override void Deactivate()
 		{
 			base.Deactivate();
+			_gatherControl.WordAdded -= new EventHandler(_gatherControl_WordAdded);
 			_gatherControl.Dispose();
 			_gatherControl = null;
 			this.RecordListManager.GoodTimeToCommit();

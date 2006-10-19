@@ -12,7 +12,8 @@ namespace WeSay.UI
 		private IList<WritingSystem> _writingSystems;
 		private MultiText _multiText;
 		private List<WeSayTextBox> _textBoxes;
-	   //public new event EventHandler TextChanged;
+		private FlagButton _flagButton;
+		//public new event EventHandler TextChanged;
 	   // public new event KeyEventHandler KeyDown;
 
 		public MultiTextControl()
@@ -101,15 +102,27 @@ namespace WeSay.UI
 			ResumeLayout(false);
 		}
 
+		public bool FlagIsOn
+		{
+			get
+			{
+				return _flagButton.IsSetOn;
+			}
+
+			set
+			{
+				_flagButton.IsSetOn = value;
+			}
+		}
 		private FlagButton AddFlagButton(Size panelSize)
 		{
-			FlagButton flagButton = new FlagButton();
-			flagButton.Size = new Size(20, 20);
-			flagButton.Location = new Point(
-					-1 + panelSize.Width - flagButton.Width,
-					-1 + panelSize.Height - flagButton.Height);
-			flagButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-			flagButton.Click += new EventHandler(OnClickFlagButton);
+			_flagButton = new FlagButton();
+			_flagButton.Size = new Size(20, 20);
+			_flagButton.Location = new Point(
+					-1 + panelSize.Width - _flagButton.Width,
+					-1 + panelSize.Height - _flagButton.Height);
+			_flagButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+			_flagButton.Click += new EventHandler(OnClickFlagButton);
 
 			//            Panel panel = new Panel();
 			//            panel.Size = flagButton.Size;
@@ -117,7 +130,7 @@ namespace WeSay.UI
 			//            panel.Anchor = flagButton.Anchor;
 			//            panel.BackColor = System.Drawing.Color.Red;
 
-			return flagButton;
+			return _flagButton;
 		}
 
 		private Label AddWritingSystemLabel(WeSayTextBox box)
@@ -150,6 +163,7 @@ namespace WeSay.UI
 			//  box.BorderStyle = BorderStyle.FixedSingle;
 			box.TextChanged += new EventHandler(OnTextOfSomeBoxChanged);
 			box.KeyDown += new KeyEventHandler(OnKeyDownInSomeBox);
+
 			return box;
 		}
 
@@ -200,10 +214,11 @@ namespace WeSay.UI
 
 		private void MultiTextControl_Enter(object sender, EventArgs e)
 		{
-			if (TextBoxes.Count > 0)
-			{
-				TextBoxes[0].Select();
-			}
+			//this was evil!
+//            if (TextBoxes.Count > 0)
+//            {
+//                TextBoxes[0].Select();
+//            }
 		}
 
 
