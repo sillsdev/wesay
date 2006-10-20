@@ -12,7 +12,6 @@ namespace WeSay.UI
 		/// </summary>
 		private int _rowCount = 0;
 
-
 		public VBox()
 		{
 			InitializeComponent();
@@ -67,6 +66,7 @@ namespace WeSay.UI
 
 		public void AddControl(Control control, int insertAtRow)
 		{
+			SuspendLayout();
 			if (insertAtRow < 0)
 			{
 				insertAtRow = _rowCount;
@@ -77,8 +77,12 @@ namespace WeSay.UI
 			Debug.Assert(i >= 0, "A negative insertion value will fail under Mono.");
 
 			base.Controls.SetChildIndex(control, i);
-
+			foreach (Control c in base.Controls)
+			{
+				c.TabIndex = _rowCount - base.Controls.GetChildIndex(c);
+			}
 			++_rowCount;
+			ResumeLayout();
 		}
 
 		public int GetRowOfControl(Control control)

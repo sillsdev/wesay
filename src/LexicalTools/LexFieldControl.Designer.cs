@@ -53,6 +53,20 @@ namespace WeSay.LexicalTools
 
 			this.SuspendLayout();
 			//
+			// _lexFieldDetailPanel
+			//
+			this._lexFieldDetailPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+						| System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
+			this._lexFieldDetailPanel.AutoScroll = true;
+			this._lexFieldDetailPanel.BackColor = System.Drawing.SystemColors.ActiveCaption;
+			this._lexFieldDetailPanel.DataSource = null;
+			this._lexFieldDetailPanel.Location = new System.Drawing.Point(126, 5);
+			this._lexFieldDetailPanel.Name = "_lexFieldDetailPanel";
+			this._lexFieldDetailPanel.Size = new System.Drawing.Size(367, 122);
+			this._lexFieldDetailPanel.TabIndex = 0;
+
+			//
 			// _recordsListBox
 			//
 			this._recordsListBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top)
@@ -70,7 +84,7 @@ namespace WeSay.LexicalTools
 						| SourceGrid3.GridSpecialKeys.Control)
 						| SourceGrid3.GridSpecialKeys.Shift));
 			this._recordsListBox.StyleGrid = null;
-			this._recordsListBox.TabIndex = 5;
+			this._recordsListBox.TabIndex = 1;
 			//
 			// _completedRecordsLabel
 			//
@@ -99,21 +113,7 @@ namespace WeSay.LexicalTools
 						| SourceGrid3.GridSpecialKeys.Control)
 						| SourceGrid3.GridSpecialKeys.Shift));
 			this._completedRecordsListBox.StyleGrid = null;
-			this._completedRecordsListBox.TabIndex = 6;
-			//
-			// _lexFieldDetailPanel
-			//
-			this._lexFieldDetailPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-						| System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
-			this._lexFieldDetailPanel.AutoScroll = true;
-			this._lexFieldDetailPanel.BackColor = System.Drawing.SystemColors.ActiveCaption;
-			this._lexFieldDetailPanel.DataSource = null;
-			this._lexFieldDetailPanel.Location = new System.Drawing.Point(126, 5);
-			this._lexFieldDetailPanel.Name = "_lexFieldDetailPanel";
-			this._lexFieldDetailPanel.Size = new System.Drawing.Size(367, 122);
-			this._lexFieldDetailPanel.TabIndex = 4;
-
+			this._completedRecordsListBox.TabIndex = 2;
 
 			//
 			// labelNextHotKey
@@ -124,7 +124,6 @@ namespace WeSay.LexicalTools
 			this.labelNextHotKey.Location = new System.Drawing.Point(495, 372);
 			this.labelNextHotKey.Name = "labelNextHotKey";
 			this.labelNextHotKey.Size = new System.Drawing.Size(102, 15);
-			this.labelNextHotKey.TabIndex = 3;
 			this.labelNextHotKey.Text = "(Page Down Key)";
 			//
 			// _btnPreviousWord
@@ -139,8 +138,8 @@ namespace WeSay.LexicalTools
 			this._btnPreviousWord.Rotation = 270;
 			this._btnPreviousWord.Size = new System.Drawing.Size(24, 24);
 			this._btnPreviousWord.StubbyStyle = false;
-			this._btnPreviousWord.TabIndex = 1;
 			this._btnPreviousWord.Click += new System.EventHandler(OnBtnPreviousWordClick);
+			this._btnPreviousWord.TabStop = false;
 			//
 			// _btnNextWord
 			//
@@ -154,9 +153,8 @@ namespace WeSay.LexicalTools
 			this._btnNextWord.Rotation = 90;
 			this._btnNextWord.Size = new System.Drawing.Size(43, 43);
 			this._btnNextWord.StubbyStyle = false;
-			this._btnNextWord.TabIndex = 2;
 			this._btnNextWord.Click += new System.EventHandler(OnBtnNextWordClick);
-
+			this._btnNextWord.TabStop = false;
 
 			//
 			// _congratulationsMessage

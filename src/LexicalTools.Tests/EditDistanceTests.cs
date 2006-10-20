@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using NUnit.Framework;
 using WeSay.Data;
 using WeSay.LexicalModel;
@@ -41,11 +39,12 @@ namespace WeSay.LexicalTools.Tests
 			System.IO.File.Delete(_FilePath);
 		}
 
-		private void AddEntry(string lexicalForm)
+		private LexEntry AddEntry(string lexicalForm)
 		{
 			LexEntry entry = new LexEntry();
 			entry.LexicalForm[BasilProject.Project.WritingSystems.VernacularWritingSystemDefaultId] = lexicalForm;
 			this._records.Add(entry);
+			return entry;
 		}
 
 		private static bool ContainsEntryWithLexicalForm(IList<LexEntry> entries, string lexicalForm)
@@ -119,32 +118,49 @@ namespace WeSay.LexicalTools.Tests
 			Assert.IsTrue(ContainsEntryWithLexicalForm(closest, "1234567809"));
 		}
 
-
+		/// <summary>
+		/// This test was created after we found that LexEntries did not
+		/// cascade on their delete and so lexical forms could be found even when
+		/// their entry was deleted, causing a crash.
+		/// </summary>
 		[Test]
-		public void Time()
+		public void Find_AfterDeleted_NotFound()
 		{
-			Stopwatch stopwatch = new Stopwatch();
-			stopwatch.Start();
-			Random random = new Random();
-			for (int i = 0; i < 5000; i++)
-			{
-				string LexicalForm = string.Empty;
-				for (int j = 0; j < 10; j++) //average word length of 10 characters
-				{
-					LexicalForm += Convert.ToChar(random.Next(Convert.ToInt16('a'), Convert.ToInt16('z')));
-				}
-				AddEntry(LexicalForm);
-			}
+			LexEntry test = AddEntry("test");
+			AddEntry("test1");
+			this._records.Remove(test);
 
-			stopwatch.Stop();
-			Console.WriteLine("Time to initialize " + stopwatch.Elapsed.ToString());
-
-			stopwatch.Reset();
-			stopwatch.Start();
-			_entryDetailControl.FindClosest("something");
-			stopwatch.Stop();
-			Console.WriteLine("Time to find " + stopwatch.Elapsed.ToString());
+			IList<LexEntry> closest = _entryDetailControl.FindClosest("test");
+			Assert.AreEqual(1, closest.Count);
+			Assert.IsTrue(ContainsEntryWithLexicalForm(closest, "test1"));
 		}
+
+
+		//[Test]
+		//public void Time()
+		//{
+		//    Stopwatch stopwatch = new Stopwatch();
+		//    stopwatch.Start();
+		//    Random random = new Random();
+		//    for (int i = 0; i < 5000; i++)
+		//    {
+		//        string LexicalForm = string.Empty;
+		//        for (int j = 0; j < 10; j++) //average word length of 10 characters
+		//        {
+		//            LexicalForm += Convert.ToChar(random.Next(Convert.ToInt16('a'), Convert.ToInt16('z')));
+		//        }
+		//        AddEntry(LexicalForm);
+		//    }
+		//
+		//    stopwatch.Stop();
+		//    Console.WriteLine("Time to initialize " + stopwatch.Elapsed.ToString());
+		//
+		//    stopwatch.Reset();
+		//    stopwatch.Start();
+		//    _entryDetailControl.FindClosest("something");
+		//    stopwatch.Stop();
+		//    Console.WriteLine("Time to find " + stopwatch.Elapsed.ToString());
+		//}
 
 	}
 }

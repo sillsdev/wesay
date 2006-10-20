@@ -4,6 +4,7 @@ using System.IO;
 using System.Windows.Forms;
 using CommandLine;
 using WeSay.Data;
+using WeSay.Language;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Tests;
 using WeSay.Project;
@@ -97,6 +98,9 @@ namespace WeSay.App
 			}
 			else
 			{
+				// this configuration stuff should be moved down to a Db4oConfigurationClass in the LexicalModel
+				// that can be run
+				// I haven't done it yet because I'm still not entirely clear how it should get created.
 				com.db4o.config.Configuration db4oConfiguration = com.db4o.Db4o.Configure();
 				com.db4o.config.ObjectClass objectClass = db4oConfiguration.ObjectClass(typeof(Language.LanguageForm));
 				objectClass.ObjectField("_writingSystemId").Indexed(true);
@@ -105,6 +109,27 @@ namespace WeSay.App
 				objectClass = db4oConfiguration.ObjectClass(typeof(LexEntry));
 				objectClass.ObjectField("_modifiedDate").Indexed(true);
 				objectClass.ObjectField("_lexicalForm").Indexed(true);
+				objectClass.ObjectField("_sences").Indexed(true);
+				objectClass.CascadeOnDelete(true);
+
+				objectClass = db4oConfiguration.ObjectClass(typeof(LexSense));
+				objectClass.ObjectField("_gloss").Indexed(true);
+				objectClass.ObjectField("_exampleSentences").Indexed(true);
+				objectClass.CascadeOnDelete(true);
+
+				objectClass = db4oConfiguration.ObjectClass(typeof(LexExampleSentence));
+				objectClass.ObjectField("_sentence").Indexed(true);
+				objectClass.ObjectField("_translation").Indexed(true);
+				objectClass.CascadeOnDelete(true);
+
+				objectClass = db4oConfiguration.ObjectClass(typeof(MultiText));
+				objectClass.ObjectField("_forms").Indexed(true);
+				objectClass.CascadeOnDelete(true);
+
+				objectClass = db4oConfiguration.ObjectClass(typeof(LanguageForm));
+				objectClass.ObjectField("_writingSystemId").Indexed(true);
+				objectClass.ObjectField("_form").Indexed(true);
+				objectClass.CascadeOnDelete(true);
 
 				recordListManager = new Db4oRecordListManager(project.PathToLexicalModelDB);
 			}

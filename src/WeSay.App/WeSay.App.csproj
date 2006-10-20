@@ -70,9 +70,6 @@
 	<Compile Include="TabbedForm.Designer.cs">
 	  <DependentUpon>TabbedForm.cs</DependentUpon>
 	</Compile>
-	<Compile Include="TabStrip.cs">
-	  <SubType>Component</SubType>
-	</Compile>
 	<Compile Include="WeSayApp.cs">
 	</Compile>
 	<Compile Include="Properties\AssemblyInfo.cs" />

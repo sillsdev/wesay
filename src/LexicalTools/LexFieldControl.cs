@@ -82,6 +82,7 @@ namespace WeSay.LexicalTools
 			{
 				CurrentRecord = _nextRecord ?? _records[_records.Count-1];
 				SelectCurrentRecordInRecordList();
+				this._lexFieldDetailPanel.Focus();
 				UpdatePreviousAndNextRecords();
 			}
 			else
@@ -108,6 +109,7 @@ namespace WeSay.LexicalTools
 			{
 				CurrentRecord = _previousRecord ?? _records[0];
 				SelectCurrentRecordInRecordList();
+				this._lexFieldDetailPanel.Focus();
 				UpdatePreviousAndNextRecords();
 			}
 		}

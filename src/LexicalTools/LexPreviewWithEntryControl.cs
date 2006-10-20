@@ -57,11 +57,6 @@ namespace WeSay.LexicalTools
 			}
 		}
 
-		public void FocusFirstField()
-		{
-			_detailListControl.Focus();
-		}
-
 		public RichTextBox ControlFormattedView
 		{
 			get
@@ -99,7 +94,6 @@ namespace WeSay.LexicalTools
 						_record.PropertyChanged += new PropertyChangedEventHandler(OnRecordPropertyChanged);
 					}
 					RefreshLexicalEntryPreview();
-					Application.DoEvents();
 					RefreshEntryDetail();
 				}
 			}
@@ -113,6 +107,7 @@ namespace WeSay.LexicalTools
 		private void RefreshLexicalEntryPreview()
 		{
 			_lexicalEntryPreview.Rtf = RtfRenderer.ToRtf(_record, _currentItem);
+			_lexicalEntryPreview.Refresh();
 		}
 
 		private void RefreshEntryDetail() {

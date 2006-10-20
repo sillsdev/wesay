@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using NUnit.Framework;
 
 namespace WeSay.LexicalModel.Tests
@@ -20,12 +18,6 @@ namespace WeSay.LexicalModel.Tests
 			this._examples = (LexExampleSentence)this._sense.ExampleSentences.AddNew();
 			this._examples.Sentence["th"] = "example";
 			this._examples.Translation["en"] = "translation";
-		}
-
-		[TearDown]
-		public void TearDown()
-		{
-
 		}
 
 		[Test]

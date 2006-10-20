@@ -223,9 +223,9 @@ namespace WeSay.LexicalTools
 			return rows[curRow][n2];
 		}
 
-		private static void swap<T>(ref T x, ref T y)
+		private static void swap<A>(ref A x, ref A y)
 		{
-			T temp = x;
+			A temp = x;
 			x = y;
 			y = temp;
 		}
@@ -240,32 +240,13 @@ namespace WeSay.LexicalTools
 				Db4oDataSource db4oData = ((Db4oRecordListManager) _recordManager).DataSource;
 				IRecordList<LexicalFormMultiText> lexicalForms = _recordManager.Get<LexicalFormMultiText>();
 				ExtObjectContainer database = db4oData.Data.Ext();
-				IList<LexicalFormMultiText> best = new List<LexicalFormMultiText>();
-				foreach (LexicalFormMultiText lexicalForm in lexicalForms)
+				IList<LexicalFormMultiText> best;
+				bestEditDistance = GetClosestLexicalForms(lexicalForms, key, 0, bestEditDistance, out best);
+				GetEntriesFromLexicalForms(database, bestMatches, best);
+				if(bestMatches.Count == 0)
 				{
-					string vernacularLexicalForm = lexicalForm.ToString();
-					if (!string.IsNullOrEmpty(vernacularLexicalForm))
-					{
-						int editDistance = EditDistance(key, vernacularLexicalForm, bestEditDistance);
-						if (editDistance < bestEditDistance)
-						{
-							best.Clear();
-							bestEditDistance = editDistance;
-						}
-						if (editDistance == bestEditDistance)
-						{
-							best.Add(lexicalForm);
-						}
-					}
-				}
-				foreach (LexicalFormMultiText lexicalForm in best)
-				{
-					Query query = database.Query();
-					query.Constrain(typeof(LexEntry));
-					query.Descend("_lexicalForm").Constrain(lexicalForm).Identity();
-					ObjectSet entries = query.Execute();
-					Debug.Assert(entries.Count == 1);
-					bestMatches.Add((LexEntry)entries[0]);
+					GetClosestLexicalForms(lexicalForms, key, bestEditDistance + 1, int.MaxValue, out best);
+					GetEntriesFromLexicalForms(database, bestMatches, best);
 				}
 			}
 			else
@@ -285,6 +266,47 @@ namespace WeSay.LexicalTools
 				}
 			}
 			return bestMatches;
+		}
+
+		private static int GetClosestLexicalForms(IRecordList<LexicalFormMultiText> lexicalForms, string key, int minEditDistance, int maxEditDistance, out IList<LexicalFormMultiText> closestLexicalForms) {
+			int bestEditDistance = maxEditDistance;
+			closestLexicalForms = new List<LexicalFormMultiText>();
+
+			foreach (LexicalFormMultiText lexicalForm in lexicalForms)
+			{
+				string vernacularLexicalForm = lexicalForm.ToString();
+				if (!string.IsNullOrEmpty(vernacularLexicalForm))
+				{
+					int editDistance = EditDistance(key, vernacularLexicalForm, bestEditDistance);
+					if (minEditDistance <= editDistance && editDistance < bestEditDistance)
+					{
+						closestLexicalForms.Clear();
+						bestEditDistance = editDistance;
+					}
+					if (editDistance == bestEditDistance)
+					{
+						closestLexicalForms.Add(lexicalForm);
+					}
+				}
+			}
+			return bestEditDistance;
+		}
+
+		private static void GetEntriesFromLexicalForms(ExtObjectContainer database, IList<LexEntry> bestMatches, IList<LexicalFormMultiText> best) {
+			foreach (LexicalFormMultiText lexicalForm in best)
+			{
+				Query query = database.Query();
+				query.Constrain(typeof(LexEntry));
+				query.Descend("_lexicalForm").Constrain(lexicalForm).Identity();
+				ObjectSet entries = query.Execute();
+				// If LexEntry does not cascade delete it's lexicalForm then we could have a case where we
+				// don't have a entry associated with this lexicalForm.
+				if (entries.Count == 0)
+				{
+					continue;
+				}
+				bestMatches.Add((LexEntry)entries[0]);
+			}
 		}
 
 		void OnRecordSelectionChanged(object sender, EventArgs e)
@@ -332,6 +354,7 @@ namespace WeSay.LexicalTools
 			_records.RemoveAt(CurrentIndex);
 			//hack until we can get selection change events sorted out in BindingGridList
 			OnRecordSelectionChanged(this, null);
+			_recordsListBox.Refresh();
 		}
 	}
 }

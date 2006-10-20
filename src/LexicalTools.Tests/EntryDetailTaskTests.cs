@@ -1,9 +1,7 @@
 using System;
 using NUnit.Framework;
 using WeSay.Data;
-using WeSay.LexicalModel;
 using WeSay.Project;
-using WeSay.UI;
 
 namespace WeSay.LexicalTools.Tests
 {
