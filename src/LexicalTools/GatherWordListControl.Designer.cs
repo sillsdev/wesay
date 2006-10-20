@@ -191,7 +191,7 @@ namespace WeSay.LexicalTools
 			this._vernacularBox.Location = new System.Drawing.Point(78, 120);
 			this._vernacularBox.Name = "_vernacularBox";
 			this._vernacularBox.Size = new System.Drawing.Size(248, 30);
-			this._vernacularBox.TabIndex = 10;
+			this._vernacularBox.TabIndex = 0;
 			//
 			// GatherWordListControl
 			//

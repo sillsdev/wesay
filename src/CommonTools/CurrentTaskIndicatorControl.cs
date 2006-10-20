@@ -1,9 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Text;
 using System.Windows.Forms;
 
 namespace WeSay.CommonTools
@@ -16,18 +11,19 @@ namespace WeSay.CommonTools
 		{
 			_content = content;
 			InitializeComponent();
-			content.BackColor = this.BackColor;// System.Drawing.Color.Transparent;
+			content.BackColor = BackColor;// System.Drawing.Color.Transparent;
 			content.Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
 			this._indicatorPanel.Controls.Add(content);
 			ShapeControl.ShapeControl s = new ShapeControl.ShapeControl();
+			s.TabStop = false;
 			s.Shape = ShapeControl.ShapeType.RoundedRectangle;
 			s.BorderStyle = System.Drawing.Drawing2D.DashStyle.Dot;
 			s.BorderWidth = 1;
 			s.BorderColor = System.Drawing.Color.Black;
-			s.BackColor = this.BackColor;
-			this.BackColor = System.Drawing.Color.White;
+			s.BackColor = BackColor;
+			BackColor = System.Drawing.Color.White;
 			s.Dock = DockStyle.Fill;
-			this.Controls.Add(s);
+			Controls.Add(s);
 			label1.BackColor = s.BackColor;
 			_indicatorPanel.BackColor = s.BackColor;
 			_content.BackColor = s.BackColor;

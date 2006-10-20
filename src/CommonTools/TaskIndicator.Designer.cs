@@ -71,6 +71,7 @@ namespace WeSay.CommonTools
 			this._textShortDescription.Size = new System.Drawing.Size(275, 32);
 			this._textShortDescription.TabIndex = 2;
 			this._textShortDescription.Text = "See words in Foo, write the same words in Boo";
+			this._textShortDescription.TabStop = false;
 			//
 			// TaskIndicator
 			//

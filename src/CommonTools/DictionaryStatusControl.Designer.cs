@@ -51,6 +51,7 @@ namespace WeSay.CommonTools
 			this.Size = new System.Drawing.Size(538, 41);
 			this.ResumeLayout(false);
 			this.PerformLayout();
+			this.TabStop = false;
 
 		}
 

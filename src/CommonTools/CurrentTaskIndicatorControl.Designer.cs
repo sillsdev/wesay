@@ -53,6 +53,7 @@ namespace WeSay.CommonTools
 			this._indicatorPanel.Name = "_indicatorPanel";
 			this._indicatorPanel.Size = new System.Drawing.Size(485, 100);
 			this._indicatorPanel.TabIndex = 1;
+
 			//
 			// CurrentTaskIndicatorControl
 			//
@@ -67,7 +68,6 @@ namespace WeSay.CommonTools
 			this.SizeChanged += new System.EventHandler(this.CurrentTaskIndicatorControl_SizeChanged);
 			this.ResumeLayout(false);
 			this.PerformLayout();
-
 		}
 
 		#endregion
