@@ -110,7 +110,7 @@ namespace WeSay.LexicalTools
 			Cursor currentCursor = Cursor;
 			Cursor = Cursors.WaitCursor;
 			InMemoryBindingList<object> records = new InMemoryBindingList<object>();
-			records.AddRange(FindClosest(text));
+			records.AddRange(FindClosestAndNextClosest(text));
 			this._records = records;
 			this._recordsListBox.DataSource = this._records;
 
@@ -233,8 +233,17 @@ namespace WeSay.LexicalTools
 			y = temp;
 		}
 
-
 		public IList<LexEntry> FindClosest(string key)
+		{
+			return FindClosest(key, false);
+		}
+
+		public IList<LexEntry> FindClosestAndNextClosest(string key)
+		{
+			return FindClosest(key, true);
+		}
+
+		private IList<LexEntry> FindClosest(string key, bool includeNextClosest)
 		{
 			int bestEditDistance = int.MaxValue;
 			IList<LexEntry> bestMatches = new List<LexEntry>();
@@ -246,7 +255,7 @@ namespace WeSay.LexicalTools
 				IList<LexicalFormMultiText> best;
 				bestEditDistance = GetClosestLexicalForms(lexicalForms, key, 0, bestEditDistance, out best);
 				GetEntriesFromLexicalForms(database, bestMatches, best);
-				if(bestMatches.Count == 0)
+				if(includeNextClosest || bestMatches.Count == 0)
 				{
 					GetClosestLexicalForms(lexicalForms, key, bestEditDistance + 1, int.MaxValue, out best);
 					GetEntriesFromLexicalForms(database, bestMatches, best);
