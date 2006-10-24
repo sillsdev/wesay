@@ -57,8 +57,15 @@
 	<Compile Include="CongratulationsControl.Designer.cs">
 	  <DependentUpon>CongratulationsControl.cs</DependentUpon>
 	</Compile>
+	<Compile Include="GatherBySemanticDomainTask.cs" />
 	<Compile Include="EntryDetailControl.Designer.cs">
 	  <DependentUpon>EntryDetailControl.cs</DependentUpon>
+	</Compile>
+	<Compile Include="GatherBySemanticDomainsControl.cs">
+	  <SubType>UserControl</SubType>
+	</Compile>
+	<Compile Include="GatherBySemanticDomainsControl.Designer.cs">
+	  <DependentUpon>GatherBySemanticDomainsControl.cs</DependentUpon>
 	</Compile>
 	<Compile Include="GatherWordListControl.cs">
 	  <SubType>UserControl</SubType>
@@ -132,6 +139,10 @@
 	  <SubType>Designer</SubType>
 	  <DependentUpon>CongratulationsControl.cs</DependentUpon>
 	</EmbeddedResource>
+	<EmbeddedResource Include="GatherBySemanticDomainsControl.resx">
+	  <SubType>Designer</SubType>
+	  <DependentUpon>GatherBySemanticDomainsControl.cs</DependentUpon>
+	</EmbeddedResource>
 	<EmbeddedResource Include="GatherWordListControl.resx">
 	  <SubType>Designer</SubType>
 	  <DependentUpon>GatherWordListControl.cs</DependentUpon>
@@ -149,14 +160,6 @@
 	  <Generator>ResXFileCodeGenerator</Generator>
 	  <LastGenOutput>Resources.Designer.cs</LastGenOutput>
 	</EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-	<Content Include="RealWord.gif">
-	  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	</Content>
-	<Content Include="SemDom.gif">
-	  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	</Content>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

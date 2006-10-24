@@ -9,26 +9,28 @@ using WeSay.Project;
 
 namespace WeSay.LexicalTools
 {
-	public class GatherWordListTask : TaskBase
+	public class GatherBySemanticDomainTask : TaskBase
 	{
 		private readonly string _wordListFileName;
-		private GatherWordListControl _gatherControl;
-		private List<string> _words;
+		private GatherBySemanticDomainsControl  _gatherControl;
+		private List<string> _domains;
+		private List<string> _questions;
 
-		public GatherWordListTask(IRecordListManager recordListManager, string label, string description, string wordListFileName)
+		public GatherBySemanticDomainTask(IRecordListManager recordListManager, string label, string description, string wordListFileName)
 			: base(label, description, false, recordListManager)
 		{
 			_wordListFileName = wordListFileName;
-			_words = null;
+			_domains = null;
+			_questions = null;
 		}
 
-		private void LoadWordList()
+		private void LoadList(string listName, List<string> list)
 		{
-			_words = new List<string>();
-			string path = Path.Combine(WeSayWordsProject.Project.PathToWeSaySpecificFilesDirectoryInProject, _wordListFileName);
+			list.Clear();
+			string path = Path.Combine(WeSayWordsProject.Project.PathToWeSaySpecificFilesDirectoryInProject, listName);
 			if (!File.Exists(path))
 			{
-				path = Path.Combine(WeSayWordsProject.Project.ApplicationCommonDirectory, _wordListFileName);
+				path = Path.Combine(WeSayWordsProject.Project.ApplicationCommonDirectory, listName);
 			}
 			using (TextReader r = File.OpenText(path))
 			{
@@ -39,7 +41,7 @@ namespace WeSay.LexicalTools
 					{
 						break;
 					}
-					_words.Add(s);
+					list.Add(s);
 				} while (true);
 			}
 		}
@@ -58,12 +60,19 @@ namespace WeSay.LexicalTools
 
 		public override void Activate()
 		{
-			if (_words == null)
+			if (_domains == null)
 			{
-				LoadWordList();
+				_domains = new List<string>();
+				LoadList(_wordListFileName, _domains);
+				_questions = new List<string>();
+				LoadList("Q" + _wordListFileName, _questions);
 			}
 			base.Activate();
-			_gatherControl = new GatherWordListControl(_words, RecordListManager.Get<LexEntry>());
+			_gatherControl = new GatherBySemanticDomainsControl();
+			_gatherControl.Domains = _domains;
+			_gatherControl.Questions = _questions;
+			_gatherControl.Records = RecordListManager.Get<LexEntry>();
+
 			_gatherControl.WordAdded += new EventHandler(_gatherControl_WordAdded);
 		}
 

@@ -1,5 +1,6 @@
 using System;
 using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
 using WeSay.Language;
 using WeSay.Project;
@@ -17,7 +18,9 @@ namespace WeSay.CommonTools
 		{
 			_label = label;
 			_description = description;
-			InitializeComponent(new Bitmap(pictureFilePath));
+
+			string p = Path.Combine(BasilProject.Project.ApplicationCommonDirectory, pictureFilePath);
+			InitializeComponent(new Bitmap(p));
 		}
 
 		#region ITask Members

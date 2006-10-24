@@ -9,33 +9,52 @@ using WeSay.Project;
 
 namespace WeSay.LexicalTools
 {
-	public partial class GatherWordListControl : UserControl
+	public partial class GatherBySemanticDomainsControl : UserControl
 	{
-		private readonly List<string> _words;
-		private readonly IRecordList<LexEntry> _records;
-		private int _currentWordIndex=0;
+		private  List<string> _domains;
+		private  List<string> _questions;
+		private  IRecordList<LexEntry> _records;
+		private int _currentDomainIndex=0;
 
 		public event EventHandler WordAdded;
 
-		public GatherWordListControl()
+		public GatherBySemanticDomainsControl()
 		{
-			System.Diagnostics.Debug.Assert(DesignMode);
 			InitializeComponent();
-		}
+			if (DesignMode)
+			{
+				return;
+			}
 
-		public GatherWordListControl(List<string> words, IRecordList<LexEntry> records)
-		{
-			_words = words;
-			_records = records;
-			InitializeComponent();
 			BackColor = WeSay.UI.DisplaySettings.Default.BackgroundColor;
 
 			//TODO: this limits us to a single writing system, and relies on the deprecated "default"
 			_vernacularBox.WritingSystems = new WritingSystem[] { BasilProject.Project.WritingSystems.VernacularWritingSystemDefault };
 			_vernacularBox.TextChanged += new EventHandler(_vernacularBox_TextChanged);
 			_vernacularBox.KeyDown += new KeyEventHandler(_boxVernacularWord_KeyDown);
-			UpdateStuff();
 		}
+
+		public List<string> Domains
+		{
+			get { return _domains; }
+			set { _domains = value;
+			UpdateStuff();
+				}
+		}
+
+		public IRecordList<LexEntry> Records
+		{
+			get { return _records; }
+			set { _records = value; UpdateStuff(); }
+		}
+
+		public List<string> Questions
+		{
+			get { return _questions; }
+			set { _questions = value;
+				UpdateStuff(); }
+		}
+
 
 		void _vernacularBox_TextChanged(object sender, EventArgs e)
 		{
@@ -49,11 +68,11 @@ namespace WeSay.LexicalTools
 
 		private void UpdateStuff()
 		{
-			if (DesignMode)
+			if (DesignMode || _domains == null || _questions == null || _records ==null)
 			{
 				return;
 			}
-			if (_currentWordIndex >= _words.Count)
+			if (_currentDomainIndex >= _domains.Count)
 			{
 				_congratulationsControl.Show("Congratulations. You have completed this task.");
 			}
@@ -61,16 +80,17 @@ namespace WeSay.LexicalTools
 			{
 				_congratulationsControl.Hide();
 				Debug.Assert(_vernacularBox.TextBoxes.Count == 1, "other code here (for now), assumes exactly one ws/text box");
-				_boxForeignWord.Text = _words[_currentWordIndex];
-				_btnNextWord.Enabled = _words.Count > (_currentWordIndex - 1);
-				_btnPreviousWord.Enabled = _currentWordIndex > 0;
+				_domainName.Text = _domains[_currentDomainIndex];
+				_question.Text = _questions[_currentDomainIndex];
+				_btnNext.Enabled = _domains.Count > (_currentDomainIndex - 1);
+				_btnPrevious.Enabled = _currentDomainIndex > 0;
 				_btnAddWord.Enabled = _vernacularBox.TextBoxes[0].Text.Trim() != "";
 			}
 	   }
 
-		private void _btnNextWord_Click(object sender, EventArgs e)
+		private void _btnNext_Click(object sender, EventArgs e)
 		{
-		   _currentWordIndex++;
+		   _currentDomainIndex++;
 			   SourceWordChanged();
 		}
 
@@ -84,9 +104,9 @@ namespace WeSay.LexicalTools
 			_vernacularBox.TextBoxes[0].Focus();
 		}
 
-		private void _btnPreviousWord_Click(object sender, EventArgs e)
+		private void _btnPrevious_Click(object sender, EventArgs e)
 		{
-			_currentWordIndex--;
+			_currentDomainIndex--;
 			SourceWordChanged();
 		}
 
@@ -94,26 +114,26 @@ namespace WeSay.LexicalTools
 
 		private void _btnAddWord_Click(object sender, EventArgs e)
 		{
-			Debug.Assert(_vernacularBox.TextBoxes.Count == 1, "other code here (for now), assumes exactly one ws/text box");
-			string s = _vernacularBox.TextBoxes[0].Text.Trim();
-			if(s == "")
-			{
-				return;
-			}
-
-			LexEntry entry = new LexEntry();
-			entry.LexicalForm.SetAlternative(BasilProject.Project.WritingSystems.VernacularWritingSystemDefaultId, s);
-			LexSense sense = (LexSense) entry.Senses.AddNew();
-			sense.Gloss.SetAlternative(BasilProject.Project.WritingSystems.AnalysisWritingSystemDefaultId, _words[_currentWordIndex]);
-			_records.Add(entry);
-
-			_listViewWords.Items.Add(s);
+//            Debug.Assert(_vernacularBox.TextBoxes.Count == 1, "other code here (for now), assumes exactly one ws/text box");
+//            string s = _vernacularBox.TextBoxes[0].Text.Trim();
+//            if(s == "")
+//            {
+//                return;
+//            }
+//
+//            LexEntry entry = new LexEntry();
+//            entry.LexicalForm.SetAlternative(BasilProject.Project.WritingSystems.VernacularWritingSystemDefaultId, s);
+//            LexSense sense = (LexSense) entry.Senses.AddNew();
+//            sense.Gloss.SetAlternative(BasilProject.Project.WritingSystems.AnalysisWritingSystemDefaultId, _words[_currentWordIndex]);
+//            _records.Add(entry);
+//
+//            _listViewWords.Items.Add(s);
 			_vernacularBox.TextBoxes[0].Text = "";
 			_vernacularBox.FlagIsOn = false;
-			if (WordAdded != null)
-			{
-				WordAdded.Invoke(this, null);
-			}
+//            if (WordAdded != null)
+//            {
+//                WordAdded.Invoke(this, null);
+//            }
 			UpdateStuff();
 		}
 
@@ -130,12 +150,12 @@ namespace WeSay.LexicalTools
 						_btnAddWord_Click(this, null);
 					break;
 				case Keys.PageUp:
-					if(_btnPreviousWord.Enabled)
-						_btnPreviousWord_Click(this, null);
+					if(_btnPrevious.Enabled)
+						_btnPrevious_Click(this, null);
 					break;
 				case Keys.PageDown:
-					if(_btnNextWord.Enabled)
-					_btnNextWord_Click(this, null);
+					if(_btnNext.Enabled)
+					_btnNext_Click(this, null);
 					break;
 
 				default:
@@ -149,7 +169,8 @@ namespace WeSay.LexicalTools
 		private void GatherWordListControl_BackColorChanged(object sender, EventArgs e)
 		{
 			_listViewWords.BackColor = BackColor;
-			_boxForeignWord.BackColor = BackColor;
+			_domainName.BackColor = BackColor;
+			_question.BackColor = BackColor;
 		}
 	}
 }

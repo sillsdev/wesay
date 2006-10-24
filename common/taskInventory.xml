@@ -38,15 +38,16 @@
   </task>
 
   <task id="Gather Words" class="WeSay.LexicalTools.GatherWordListTask" assembly="LexicalTools">
-	<entries ref="All Entries"/>
-	<label>Collect Words</label>
+	<entries ref="All Entries" />
+	<label>Collect Word List</label>
 	<description>Collect new words given words in another language.</description>
 	<wordListFileName>sampleWordList.txt</wordListFileName>
   </task>
 
-  <task id="SemanticDomains" class="WeSay.CommonTools.PictureControl" assembly="CommonTools">
-	<label>Semantic Domains</label>
-	<description>Collect new words by semantic domain.</description>
-	<picture>SemDom.gif</picture>
+  <task id="GatherBySemanticDomain" class="WeSay.LexicalTools.GatherBySemanticDomainTask" assembly="LexicalTools">
+	<entries ref="All Entries" />
+	<label>Collect Words by Topic</label>
+	<description>Collect new words by thinking about topics.</description>
+	<wordListFileName>semanticDomainList.txt</wordListFileName>
   </task>
 </tasks>
