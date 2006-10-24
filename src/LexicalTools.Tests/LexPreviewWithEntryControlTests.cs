@@ -40,7 +40,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void CreateWithInventory()
 		{
-			LexPreviewWithEntryControl lexFieldControl = new LexPreviewWithEntryControl(_fieldInventory);
+			LexPreviewWithEntryControl lexFieldControl = new LexPreviewWithEntryControl();
 			Assert.IsNotNull(lexFieldControl);
 		}
 
@@ -167,7 +167,8 @@ namespace WeSay.LexicalTools.Tests
 
 		private LexPreviewWithEntryControl CreateForm(LexEntry entry)
 		{
-			LexPreviewWithEntryControl lexFieldControl = new LexPreviewWithEntryControl(_fieldInventory);
+			LexPreviewWithEntryControl lexFieldControl = new LexPreviewWithEntryControl();
+			lexFieldControl.FieldInventory = _fieldInventory;
 			lexFieldControl.DataSource = entry;
 
 			return lexFieldControl;
@@ -178,7 +179,8 @@ namespace WeSay.LexicalTools.Tests
 		{
 			FieldInventory fieldInventory = new FieldInventory();
 			fieldInventory.Add(new Field(field, writingSystems));
-			LexPreviewWithEntryControl lexFieldControl = new LexPreviewWithEntryControl(fieldInventory);
+			LexPreviewWithEntryControl lexFieldControl = new LexPreviewWithEntryControl();
+			lexFieldControl.FieldInventory = fieldInventory;
 			lexFieldControl.DataSource = entry;
 			return lexFieldControl;
 		}

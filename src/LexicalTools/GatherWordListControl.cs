@@ -53,23 +53,32 @@ namespace WeSay.LexicalTools
 			{
 				return;
 			}
-
-			Debug.Assert(_vernacularBox.TextBoxes.Count == 1, "other code here (for now), assumes exactly one ws/text box");
-			 _boxForeignWord.Text = _words[_currentWordIndex];
-			 _btnNextWord.Enabled = _words.Count > (_currentWordIndex-1);
-			 _btnPreviousWord.Enabled = _currentWordIndex > 0;
-			 _btnAddWord.Enabled = _vernacularBox.TextBoxes[0].Text.Trim() != "";
+			if (_currentWordIndex >= _words.Count)
+			{
+				_congratulationsControl.Show("Congratulations. You have completed this task.");
+			}
+			else
+			{
+				_congratulationsControl.Hide();
+				Debug.Assert(_vernacularBox.TextBoxes.Count == 1, "other code here (for now), assumes exactly one ws/text box");
+				_boxForeignWord.Text = _words[_currentWordIndex];
+				_btnNextWord.Enabled = _words.Count > (_currentWordIndex - 1);
+				_btnPreviousWord.Enabled = _currentWordIndex > 0;
+				_btnAddWord.Enabled = _vernacularBox.TextBoxes[0].Text.Trim() != "";
+			}
 	   }
 
 		private void _btnNextWord_Click(object sender, EventArgs e)
 		{
-			_currentWordIndex++;
-			SourceWordChanged();
+		   _currentWordIndex++;
+			   SourceWordChanged();
 		}
+
 
 		private void SourceWordChanged()
 		{
 			_listViewWords.Items.Clear();
+
 			UpdateStuff();
 			_vernacularBox.ClearAllText();
 			_vernacularBox.TextBoxes[0].Focus();

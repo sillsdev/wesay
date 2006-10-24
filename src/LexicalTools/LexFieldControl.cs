@@ -26,6 +26,12 @@ namespace WeSay.LexicalTools
 
 		public LexFieldControl(IRecordList<LexEntry> records, FieldInventory fieldInventory, Predicate<LexEntry> isNotComplete)
 		{
+			InitializeComponent();
+			if (this.DesignMode)
+			{
+				return;
+			}
+
 			if (records == null)
 			{
 				throw new ArgumentNullException("records");
@@ -38,15 +44,16 @@ namespace WeSay.LexicalTools
 			{
 				throw new ArgumentNullException("isNotComplete");
 			}
+
+
 			_records = records;
 			_records.ListChanged += OnRecordsListChanged;
 			_completedRecords = new InMemoryBindingList<LexEntry>();
 			_fieldInventory = fieldInventory;
-			_isNotComplete = isNotComplete;
-
-			InitializeComponent();
+			_isNotComplete = isNotComplete;            this.BackColor = DisplaySettings.Default.BackgroundColor;
 			_lexFieldDetailPanel.BackColor = DisplaySettings.Default.BackgroundColor;//we like it to stand out at design time, but not runtime
 			_lexFieldDetailPanel.KeyDown += new KeyEventHandler(OnKeyDown);
+			_lexFieldDetailPanel.FieldInventory = _fieldInventory;
 
 			_recordsListBox.DataSource = _records;
 			_recordsListBox.Font = BasilProject.Project.WritingSystems.VernacularWritingSystemDefault.Font;
@@ -88,20 +95,13 @@ namespace WeSay.LexicalTools
 			else
 			{
 				CurrentRecord = null;
-				ShowTaskComplete(StringCatalog.Get("Congratulations. You have completed this task."));
+				_congratulationsControl.Show(StringCatalog.Get("Congratulations. You have completed this task."));
 			}
 		}
 
-		private void ShowTaskComplete(string message)
-		{
-			this._congratulationsMessage.Text = message;
-			this._congratulationsMessage.BringToFront();
-		}
 
-		private void HideTaskComplete()
-		{
-			this._congratulationsMessage.SendToBack();
-		}
+
+
 
 		public void SetCurrentRecordToPrevious()
 		{
@@ -128,7 +128,7 @@ namespace WeSay.LexicalTools
 			if (this._records.Count == 0)
 			{
 				CurrentRecord = null;
-				ShowTaskComplete(StringCatalog.Get("There is no work left to be done on this task."));
+				_congratulationsControl.Show(StringCatalog.Get("There is no work left to be done on this task."));
 			}
 			else
 			{
@@ -208,7 +208,7 @@ namespace WeSay.LexicalTools
 				if (_currentRecord != null)
 				{
 					_currentRecord.PropertyChanged += OnCurrentRecordPropertyChanged;
-					HideTaskComplete();
+					_congratulationsControl.Hide();
 				}
 			}
 		}

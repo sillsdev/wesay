@@ -102,6 +102,7 @@ namespace WeSay.UI
 			ResumeLayout(false);
 		}
 
+		[Browsable(false)]
 		public bool FlagIsOn
 		{
 			get

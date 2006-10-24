@@ -3,7 +3,7 @@
   <task id="Dashboard" class="WeSay.CommonTools.DashboardControl" assembly="CommonTools" default="true">
 	<entries ref="All Entries" />
 	<currentTaskProvider ref="Current Task Provider"/>
-	<label UseInConstructor="false">Dashboard</label>
+	<label UseInConstructor="false">Home</label>
 	<description UseInConstructor="false">This task is normally the first thing the user sees when WeSay comes up.  It gives the user some status of the project, and reminds him what he was working on. Finally, this tab will allow him to switch to a different work task, if you have enabled more than one.</description>
 	<optional  UseInConstructor="false">false</optional>
   </task>

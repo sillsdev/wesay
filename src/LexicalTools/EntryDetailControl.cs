@@ -42,8 +42,11 @@ namespace WeSay.LexicalTools
 			_fieldInventory = fieldInventory;
 			InitializeComponent();
 			BackColor = WeSay.UI.DisplaySettings.Default.BackgroundColor;
+			_entryDetailPanel.FieldInventory = _fieldInventory;
 			_entryDetailPanel.BackColor = WeSay.UI.DisplaySettings.Default.BackgroundColor;
 			_entryDetailPanel.DataSource = CurrentRecord;
+			this._btnFind.Text = StringCatalog.Get("Find");
+
 
 			_recordsListBox.DataSource = _records;
 			_recordsListBox.Font = BasilProject.Project.WritingSystems.VernacularWritingSystemDefault.Font;

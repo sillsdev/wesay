@@ -35,7 +35,8 @@ namespace WeSay
 						 _progress.NumberOfSteps=entries.Count;
 						 for (int i = 0; i < entries.Count; )
 						 {
-							 const int howManyAtATime = 100;
+							 int howManyAtATime = 100;
+							 howManyAtATime = Math.Min(100, entries.Count - i);
 							 exporter.Add(entries, i, howManyAtATime);
 							 i += howManyAtATime;
 							 _progress.NumberOfStepsCompleted = i;

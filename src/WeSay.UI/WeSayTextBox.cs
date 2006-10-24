@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
@@ -32,6 +33,7 @@ namespace WeSay.UI
 		}
 
 
+		[Browsable(false)]
 		public new string Text
 		{
 			set
@@ -59,6 +61,7 @@ namespace WeSay.UI
 
   //      }
 
+		[Browsable(false)]
 		public WritingSystem WritingSystem
 		{
 			get { return _writingSystem; }

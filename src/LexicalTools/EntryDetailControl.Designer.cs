@@ -39,7 +39,7 @@ namespace WeSay.LexicalTools
 		private void InitializeComponent()
 		{
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EntryDetailTask));
-			this._entryDetailPanel = new WeSay.LexicalTools.LexPreviewWithEntryControl(_fieldInventory);
+			this._entryDetailPanel = new WeSay.LexicalTools.LexPreviewWithEntryControl();
 
 			this.panel1 = new System.Windows.Forms.Panel();
 			this._recordsListBox = new ListBox.BindingListGrid();
@@ -84,7 +84,7 @@ namespace WeSay.LexicalTools
 			this._btnFind.Size = new System.Drawing.Size(40, 13);
 			this._btnFind.TabIndex = 2;
 			this._btnFind.TabStop = true;
-			this._btnFind.Text = StringCatalog.Get("Find");
+			this._btnFind.Text = "xxFind";
 			this._btnFind.Click += new System.EventHandler(_btnFind_Click);
 
 			//

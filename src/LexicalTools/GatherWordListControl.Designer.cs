@@ -44,6 +44,7 @@ namespace WeSay.LexicalTools
 			this._btnNextWord = new ArrowButton.ArrowButton();
 			this._btnAddWord = new ArrowButton.ArrowButton();
 			this._vernacularBox = new WeSay.UI.MultiTextControl();
+			this._congratulationsControl = new WeSay.LexicalTools.CongratulationsControl();
 			this.SuspendLayout();
 			//
 			// label1
@@ -59,7 +60,6 @@ namespace WeSay.LexicalTools
 			//
 			// _listViewWords
 			//
-			this._listViewWords.BackColor = DisplaySettings.Default.BackgroundColor;
 			this._listViewWords.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this._listViewWords.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
 			listViewItem1,
@@ -85,7 +85,7 @@ namespace WeSay.LexicalTools
 			//
 			// _boxForeignWord
 			//
-			this._boxForeignWord.BackColor = DisplaySettings.Default.BackgroundColor;
+			this._boxForeignWord.BackColor = System.Drawing.SystemColors.Control;
 			this._boxForeignWord.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this._boxForeignWord.Location = new System.Drawing.Point(78, 69);
 			this._boxForeignWord.Name = "_boxForeignWord";
@@ -141,12 +141,12 @@ namespace WeSay.LexicalTools
 			// _btnPreviousWord
 			//
 			this._btnPreviousWord.ArrowEnabled = true;
-			this._btnPreviousWord.HoverEndColor = System.Drawing.Color.PeachPuff;
-			this._btnPreviousWord.HoverStartColor = System.Drawing.Color.Salmon;
+			this._btnPreviousWord.HoverEndColor = System.Drawing.Color.Blue;
+			this._btnPreviousWord.HoverStartColor = System.Drawing.Color.White;
 			this._btnPreviousWord.Location = new System.Drawing.Point(332, 69);
 			this._btnPreviousWord.Name = "_btnPreviousWord";
-			this._btnPreviousWord.NormalEndColor = System.Drawing.Color.FromArgb(((int)(((byte)(254)))), ((int)(((byte)(235)))), ((int)(((byte)(214)))));
-			this._btnPreviousWord.NormalStartColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(235)))), ((int)(((byte)(214)))));
+			this._btnPreviousWord.NormalEndColor = System.Drawing.Color.White;
+			this._btnPreviousWord.NormalStartColor = System.Drawing.Color.White;
 			this._btnPreviousWord.Rotation = 270;
 			this._btnPreviousWord.Size = new System.Drawing.Size(24, 24);
 			this._btnPreviousWord.StubbyStyle = false;
@@ -156,12 +156,12 @@ namespace WeSay.LexicalTools
 			// _btnNextWord
 			//
 			this._btnNextWord.ArrowEnabled = true;
-			this._btnNextWord.HoverEndColor = System.Drawing.Color.PeachPuff;
-			this._btnNextWord.HoverStartColor = System.Drawing.Color.Salmon;
+			this._btnNextWord.HoverEndColor = System.Drawing.Color.Blue;
+			this._btnNextWord.HoverStartColor = System.Drawing.Color.White;
 			this._btnNextWord.Location = new System.Drawing.Point(356, 60);
 			this._btnNextWord.Name = "_btnNextWord";
-			this._btnNextWord.NormalEndColor = System.Drawing.Color.FromArgb(((int)(((byte)(254)))), ((int)(((byte)(235)))), ((int)(((byte)(214)))));
-			this._btnNextWord.NormalStartColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(235)))), ((int)(((byte)(214)))));
+			this._btnNextWord.NormalEndColor = System.Drawing.Color.White;
+			this._btnNextWord.NormalStartColor = System.Drawing.Color.White;
 			this._btnNextWord.Rotation = 90;
 			this._btnNextWord.Size = new System.Drawing.Size(43, 43);
 			this._btnNextWord.StubbyStyle = false;
@@ -172,12 +172,12 @@ namespace WeSay.LexicalTools
 			//
 			this._btnAddWord.ArrowEnabled = true;
 			this._btnAddWord.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this._btnAddWord.HoverEndColor = System.Drawing.Color.PeachPuff;
-			this._btnAddWord.HoverStartColor = System.Drawing.Color.Salmon;
+			this._btnAddWord.HoverEndColor = System.Drawing.Color.Blue;
+			this._btnAddWord.HoverStartColor = System.Drawing.Color.White;
 			this._btnAddWord.Location = new System.Drawing.Point(319, 88);
 			this._btnAddWord.Name = "_btnAddWord";
-			this._btnAddWord.NormalEndColor = System.Drawing.Color.FromArgb(((int)(((byte)(254)))), ((int)(((byte)(235)))), ((int)(((byte)(214)))));
-			this._btnAddWord.NormalStartColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(235)))), ((int)(((byte)(214)))));
+			this._btnAddWord.NormalEndColor = System.Drawing.Color.White;
+			this._btnAddWord.NormalStartColor = System.Drawing.Color.White;
 			this._btnAddWord.Rotation = 270;
 			this._btnAddWord.Size = new System.Drawing.Size(80, 80);
 			this._btnAddWord.StubbyStyle = true;
@@ -187,11 +187,22 @@ namespace WeSay.LexicalTools
 			//
 			// _vernacularBox
 			//
+			this._vernacularBox.AutoValidate = System.Windows.Forms.AutoValidate.Disable;
 			this._vernacularBox.BackColor = System.Drawing.Color.Green;
 			this._vernacularBox.Location = new System.Drawing.Point(78, 120);
 			this._vernacularBox.Name = "_vernacularBox";
 			this._vernacularBox.Size = new System.Drawing.Size(248, 30);
 			this._vernacularBox.TabIndex = 0;
+			//
+			// _congratulationsControl
+			//
+			this._congratulationsControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+						| System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
+			this._congratulationsControl.Location = new System.Drawing.Point(0, 44);
+			this._congratulationsControl.Name = "_congratulationsControl";
+			this._congratulationsControl.Size = new System.Drawing.Size(495, 370);
+			this._congratulationsControl.TabIndex = 9;
 			//
 			// GatherWordListControl
 			//
@@ -210,6 +221,7 @@ namespace WeSay.LexicalTools
 			this.Controls.Add(this._btnPreviousWord);
 			this.Controls.Add(this._btnNextWord);
 			this.Controls.Add(this._btnAddWord);
+			this.Controls.Add(this._congratulationsControl);
 			this.Name = "GatherWordListControl";
 			this.Size = new System.Drawing.Size(499, 429);
 			this.Load += new System.EventHandler(this.GatherWordListControl_Load);
@@ -233,6 +245,7 @@ namespace WeSay.LexicalTools
 		private System.Windows.Forms.Label label4;
 		private System.Windows.Forms.Label label5;
 		private WeSay.UI.MultiTextControl _vernacularBox;
+		private CongratulationsControl _congratulationsControl;
 
 	 }
 }

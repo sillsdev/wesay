@@ -15,23 +15,24 @@ namespace WeSay.LexicalTools
 
 		public LexPreviewWithEntryControl()
 		{
-			Debug.Assert(DesignMode);
 			_fieldInventory = null;
-			InitializeComponent();
-		}
-
-
-		public LexPreviewWithEntryControl(FieldInventory fieldInventory)
-		{
-			if (fieldInventory == null)
-			{
-				throw new ArgumentNullException();
-			}
-			_fieldInventory = fieldInventory;
 			InitializeComponent();
 			_detailListControl.CurrentItemChanged += new EventHandler<CurrentItemEventArgs>(OnCurrentItemChanged);
 			_detailListControl.KeyDown += new KeyEventHandler(_detailListControl_KeyDown);
 		}
+
+
+//        public LexPreviewWithEntryControl(FieldInventory fieldInventory)
+//        {
+//            if (fieldInventory == null)
+//            {
+//                throw new ArgumentNullException();
+//            }
+//            FieldInventory = fieldInventory;
+//            InitializeComponent();
+//            _detailListControl.CurrentItemChanged += new EventHandler<CurrentItemEventArgs>(OnCurrentItemChanged);
+//            _detailListControl.KeyDown += new KeyEventHandler(_detailListControl_KeyDown);
+//        }
 
 		void _detailListControl_KeyDown(object sender, KeyEventArgs e)
 		{
@@ -99,6 +100,7 @@ namespace WeSay.LexicalTools
 			}
 		}
 
+
 		private void OnRecordPropertyChanged(object sender, PropertyChangedEventArgs e)
 		{
 			RefreshLexicalEntryPreview();
@@ -110,12 +112,13 @@ namespace WeSay.LexicalTools
 			_lexicalEntryPreview.Refresh();
 		}
 
-		private void RefreshEntryDetail() {
+		private void RefreshEntryDetail()
+		{
 			this._detailListControl.SuspendLayout();
 			this._detailListControl.Clear();
 			if (this._record != null)
 			{
-				LexEntryLayouter layout = new LexEntryLayouter(this._detailListControl, this._fieldInventory);
+				LexEntryLayouter layout = new LexEntryLayouter(this._detailListControl, this.FieldInventory);
 				layout.AddWidgets(this._record);
 			}
 

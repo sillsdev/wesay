@@ -93,11 +93,10 @@ namespace WeSay.Admin
 			//
 			this.richTextBox1.BackColor = System.Drawing.SystemColors.ControlLightLight;
 			this.richTextBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-			this.richTextBox1.Dock = System.Windows.Forms.DockStyle.Top;
-			this.richTextBox1.Location = new System.Drawing.Point(0, 0);
+			this.richTextBox1.Location = new System.Drawing.Point(0, 10);
 			this.richTextBox1.Name = "richTextBox1";
 			this.richTextBox1.ReadOnly = true;
-			this.richTextBox1.Size = new System.Drawing.Size(443, 45);
+			this.richTextBox1.Size = new System.Drawing.Size(443, 23);
 			this.richTextBox1.TabIndex = 2;
 			this.richTextBox1.Text = "Check each task you want to make available inside WeSay.";
 			//

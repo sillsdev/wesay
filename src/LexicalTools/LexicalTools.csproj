@@ -51,6 +51,12 @@
 	<Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+	<Compile Include="CongratulationsControl.cs">
+	  <SubType>UserControl</SubType>
+	</Compile>
+	<Compile Include="CongratulationsControl.Designer.cs">
+	  <DependentUpon>CongratulationsControl.cs</DependentUpon>
+	</Compile>
 	<Compile Include="EntryDetailControl.Designer.cs">
 	  <DependentUpon>EntryDetailControl.cs</DependentUpon>
 	</Compile>
@@ -122,9 +128,17 @@
 	</ProjectReference>
   </ItemGroup>
   <ItemGroup>
+	<EmbeddedResource Include="CongratulationsControl.resx">
+	  <SubType>Designer</SubType>
+	  <DependentUpon>CongratulationsControl.cs</DependentUpon>
+	</EmbeddedResource>
 	<EmbeddedResource Include="GatherWordListControl.resx">
 	  <SubType>Designer</SubType>
 	  <DependentUpon>GatherWordListControl.cs</DependentUpon>
+	</EmbeddedResource>
+	<EmbeddedResource Include="LexFieldControl.resx">
+	  <SubType>Designer</SubType>
+	  <DependentUpon>LexFieldControl.cs</DependentUpon>
 	</EmbeddedResource>
 	<EmbeddedResource Include="LexPreviewWithEntryControl.resx">
 	  <DependentUpon>LexPreviewWithEntryControl.cs</DependentUpon>

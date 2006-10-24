@@ -151,11 +151,10 @@ namespace WeSay.Admin
 			//
 			this.richTextBox1.BackColor = System.Drawing.SystemColors.ControlLightLight;
 			this.richTextBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-			this.richTextBox1.Dock = System.Windows.Forms.DockStyle.Top;
-			this.richTextBox1.Location = new System.Drawing.Point(7, 7);
+			this.richTextBox1.Location = new System.Drawing.Point(7, 10);
 			this.richTextBox1.Name = "richTextBox1";
 			this.richTextBox1.ReadOnly = true;
-			this.richTextBox1.Size = new System.Drawing.Size(507, 45);
+			this.richTextBox1.Size = new System.Drawing.Size(507, 42);
 			this.richTextBox1.TabIndex = 1;
 			this.richTextBox1.Text = "Check each field you want WeSay to display. ";
 			//
