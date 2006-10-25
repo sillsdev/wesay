@@ -1,3 +1,5 @@
+using System;
+
 namespace WeSay.UI
 {
 	partial class MultiTextControl
@@ -46,14 +48,25 @@ namespace WeSay.UI
 			//
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.AutoValidate = System.Windows.Forms.AutoValidate.Disable;
-			this.BackColor = System.Drawing.Color.Transparent;
+			if (Environment.OSVersion.Platform != PlatformID.Unix)
+			{
+				SetAutoValidateDisabled();
+				SetBackgroundColorTransparent();
+			}
 			this.Controls.Add(this._vbox);
 			this.Name = "MultiTextControl";
 			this.Size = new System.Drawing.Size(150, 69);
 			this.Enter += new System.EventHandler(this.MultiTextControl_Enter);
 			this.ResumeLayout(false);
 
+		}
+
+		private void SetBackgroundColorTransparent() {
+			this.BackColor = System.Drawing.Color.Transparent;
+		}
+
+		private void SetAutoValidateDisabled() {
+			this.AutoValidate = System.Windows.Forms.AutoValidate.Disable;
 		}
 
 		#endregion

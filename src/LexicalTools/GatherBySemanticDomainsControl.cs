@@ -142,7 +142,10 @@ namespace WeSay.LexicalTools
 		private void _boxVernacularWord_KeyDown(object sender, KeyEventArgs e)
 		{
 			e.Handled = true;
-			e.SuppressKeyPress = true;
+			if (Environment.OSVersion.Platform != PlatformID.Unix)
+			{
+				SetSuppressKeyPress(e, true);
+			}
 			switch (e.KeyCode)
 			{
 				case Keys.Return:
@@ -160,10 +163,18 @@ namespace WeSay.LexicalTools
 
 				default:
 					e.Handled = false;
-					e.SuppressKeyPress = false;
+					if (Environment.OSVersion.Platform != PlatformID.Unix)
+					{
+						SetSuppressKeyPress(e, false);
+					}
 
 					break;
 			}
+		}
+
+		private static void SetSuppressKeyPress(KeyEventArgs e, bool suppress)
+		{
+			e.SuppressKeyPress = suppress;
 		}
 
 		private void GatherWordListControl_BackColorChanged(object sender, EventArgs e)

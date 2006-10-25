@@ -16,6 +16,17 @@ namespace WeSay.App
 		static void Main(string[] args)
 		{
 
+#if DEBUG
+			if (Environment.OSVersion.Platform == PlatformID.Unix)
+			{
+				Console.WriteLine("running on Unix");
+			}
+			else
+			{
+				Console.WriteLine("running on Windows");
+			}
+#endif
+
 			CommandLineArguments cmdArgs = new CommandLineArguments();
 			if (!CommandLine.Parser.ParseArguments(args, cmdArgs, new ErrorReporter(ShowCommandLineError)))
 			{
@@ -52,7 +63,9 @@ namespace WeSay.App
 					}
 
 					//builder = new SampleTaskBuilder(project, tabbedForm, recordListManager);
-					using (FileStream config = new FileStream(project.PathToProjectTaskInventory, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete))
+					using (FileStream config = new FileStream(project.PathToProjectTaskInventory, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+//MONO bug as of 1.1.18 cannot bitwise or FileShare on FileStream constructor
+//                    using (FileStream config = new FileStream(project.PathToProjectTaskInventory, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete))
 					{
 						builder = new ConfigFileTaskBuilder(config, project, tabbedForm, recordListManager);
 					}

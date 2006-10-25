@@ -1,3 +1,5 @@
+using System;
+
 namespace WeSay.CommonTools
 {
 	partial class TaskIndicator
@@ -47,7 +49,10 @@ namespace WeSay.CommonTools
 			//
 			this._btnName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
 						| System.Windows.Forms.AnchorStyles.Right)));
-			this._btnName.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			if (Environment.OSVersion.Platform != PlatformID.Unix)
+			{
+				SetAutoSizeToGrowAndShrink();
+			}
 			this._btnName.BackColor = System.Drawing.Color.AliceBlue;
 			this._btnName.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this._btnName.Location = new System.Drawing.Point(79, 9);
@@ -88,6 +93,10 @@ namespace WeSay.CommonTools
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
+		}
+
+		private void SetAutoSizeToGrowAndShrink() {
+			this._btnName.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
 		}
 
 		#endregion

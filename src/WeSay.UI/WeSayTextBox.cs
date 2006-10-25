@@ -18,14 +18,15 @@ namespace WeSay.UI
 		  //  Debug.Assert(DesignMode);
 			BorderStyle = BorderStyle.None;
 			BackColor = System.Drawing.Color.White;
-			_keymanLink = new KeymanLink.KeymanLink();
-			if(!_keymanLink.Initialize(false))
+			if (Environment.OSVersion.Platform != PlatformID.Unix)
 			{
-				_keymanLink = null;
+				_keymanLink = new KeymanLink.KeymanLink();
+				if (!_keymanLink.Initialize(false))
+				{
+					_keymanLink = null;
+				}
 			}
 		}
-
-
 
 		public WeSayTextBox(WritingSystem ws):this()
 		{
@@ -64,9 +65,20 @@ namespace WeSay.UI
 		[Browsable(false)]
 		public WritingSystem WritingSystem
 		{
-			get { return _writingSystem; }
+			get
+			{
+				if(_writingSystem == null)
+				{
+					throw new InvalidOperationException("WritingSystem must be initialized prior to use.");
+				}
+				return _writingSystem;
+			}
 			set
 			{
+				if(value == null)
+				{
+					throw new ArgumentNullException();
+				}
 				_writingSystem = value;
 				Font = value.Font;
 			}
@@ -122,19 +134,21 @@ namespace WeSay.UI
 
 		private void WeSayTextBox_Enter(object sender, EventArgs e)
 		{
-			//this.BackColor = System.Drawing.Color.Yellow;
+			AssignKeyboardFromWritingSystem();
+		}
 
-			//the following fixes some uknown problem where the cursor would be in this box,
-			//but when you type the text would always go to the firs ws alternative in the enclosing
-			//multitext
-		 //   Focus();
-
-
-			if (FindInputLanguage(_writingSystem.KeyboardName) != null)
+		public void AssignKeyboardFromWritingSystem()
+		{
+			if (_writingSystem == null)
 			{
-				InputLanguage.CurrentInputLanguage= FindInputLanguage(_writingSystem.KeyboardName);
+				throw new InvalidOperationException("WritingSystem must be initialized prior to use.");
 			}
-			else if (_keymanLink != null && _writingSystem.KeyboardName != null && _writingSystem.KeyboardName !="")
+			InputLanguage inputLanguage = FindInputLanguage(this._writingSystem.KeyboardName);
+			if (inputLanguage != null)
+			{
+				InputLanguage.CurrentInputLanguage = inputLanguage;
+			}
+			else if (_keymanLink != null && !string.IsNullOrEmpty(_writingSystem.KeyboardName))
 			{
 				_keymanLink.SelectKeymanKeyboard(_writingSystem.KeyboardName, true);
 			}
@@ -142,11 +156,14 @@ namespace WeSay.UI
 
 		private InputLanguage FindInputLanguage(string name)
 		{
-			foreach (InputLanguage  l in InputLanguage.InstalledInputLanguages )
+			if(InputLanguage.InstalledInputLanguages != null) // as is the case on Linux
 			{
-				if (l.LayoutName == name)
+				foreach (InputLanguage  l in InputLanguage.InstalledInputLanguages )
 				{
-					return l;
+					if (l.LayoutName == name)
+					{
+						return l;
+					}
 				}
 			}
 			return null;
@@ -155,50 +172,22 @@ namespace WeSay.UI
 		private void WeSayTextBox_Leave(object sender, EventArgs e)
 		{
 		   // this.BackColor = System.Drawing.Color.White;
+			ClearKeyboard();
+		}
 
-			if (FindInputLanguage(_writingSystem.KeyboardName) != null)//just a weird way to know if we changed the keyboard when we came in
+		public void ClearKeyboard() {
+			if (_writingSystem == null)
+			{
+				throw new InvalidOperationException("WritingSystem must be initialized prior to use.");
+			}
+			if (FindInputLanguage(this._writingSystem.KeyboardName) != null)//just a weird way to know if we changed the keyboard when we came in
 			{
 				InputLanguage.CurrentInputLanguage = InputLanguage.DefaultInputLanguage;
 			}
-			else if (_keymanLink != null)
+			else if (this._keymanLink != null)
 			{
-				_keymanLink.SelectKeymanKeyboard(null, false);
+				this._keymanLink.SelectKeymanKeyboard(null, false);
 			}
-
 		}
-
-	//        protected override Padding DefaultMargin
-//        {
-//            get
-//            {
-//                return new Padding(0);
-//            }
-//        }
-//        public override Size GetPreferredSize(Size proposedSize)
-//        {
-//            Size preferredSize = base.GetPreferredSize(proposedSize);
-//            preferredSize.Height = this.FontHeight;
-//            return preferredSize;
-//        }
-
-//        protected override Size DefaultSize
-//        {
-//            get
-//            {
-//                Size defaultSize =base.DefaultSize;
-//                defaultSize.Height = this.FontHeight;
-//                return defaultSize;
-//            }
-//        }
-//        protected override void OnFontChanged(EventArgs e)
-//        {
-//            base.OnFontChanged(e);
-//            Height = FontHeight;
-//        }
-//        protected override void OnSizeChanged(EventArgs e)
-//        {
-//            base.OnSizeChanged(e);
-//            Height = FontHeight;
-//        }
 	}
 }

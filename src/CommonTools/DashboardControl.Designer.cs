@@ -1,3 +1,5 @@
+using System;
+
 namespace WeSay.CommonTools
 {
 	partial class DashboardControl
@@ -37,7 +39,10 @@ namespace WeSay.CommonTools
 			this._vbox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
 						| System.Windows.Forms.AnchorStyles.Left)
 						| System.Windows.Forms.AnchorStyles.Right)));
-			this._vbox.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			if (Environment.OSVersion.Platform != PlatformID.Unix)
+			{
+				SetAutoSizeToGrowAndShrink();
+			}
 			this._vbox.Location = new System.Drawing.Point(20, 62);
 			this._vbox.Name = "_vbox";
 			this._vbox.Size = new System.Drawing.Size(438, 258);
@@ -66,6 +71,11 @@ namespace WeSay.CommonTools
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
+		}
+
+		private void SetAutoSizeToGrowAndShrink()
+		{
+			this._vbox.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
 		}
 
 		#endregion

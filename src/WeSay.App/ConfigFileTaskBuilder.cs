@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.Diagnostics;
 using PicoContainer;
 using PicoContainer.Defaults;
 using WeSay.Project;
@@ -33,17 +35,17 @@ namespace WeSay.App
 			navigator = navigator.SelectSingleNode("//components");
 			if (navigator != null)
 			{
+				bool hasFieldInventory = false;
 				XPathNodeIterator componentList = navigator.SelectChildren(string.Empty, string.Empty);
-				componentList.MoveNext();
-				System.Diagnostics.Debug.Assert(componentList.Current.Name == "fieldInventory", "Currently, there must be exactly 1 FieldInventory in the tasks.xml");
-				componentList = navigator.SelectChildren(string.Empty, string.Empty);
 				foreach (XPathNavigator component in componentList)
 				{
-					System.Diagnostics.Debug.Assert(component.Name == "fieldInventory");
+					Debug.Assert(component.Name == "fieldInventory");
+					hasFieldInventory = true;
 					FieldInventory inventory = new FieldInventory();
 					inventory.LoadFromString(component.OuterXml);
 					_picoContext.RegisterComponentInstance(inventory.Id, inventory);
 				}
+				Debug.Assert(hasFieldInventory, "Currently, there must be exactly 1 FieldInventory in the tasks.xml");
 			}
 		}
 

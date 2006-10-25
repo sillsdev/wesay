@@ -1,3 +1,5 @@
+using System;
+
 namespace WeSay.CommonTools
 {
 	partial class CurrentTaskIndicatorControl
@@ -47,7 +49,11 @@ namespace WeSay.CommonTools
 			//
 			this._indicatorPanel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
 						| System.Windows.Forms.AnchorStyles.Right)));
-			this._indicatorPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+
+			if (Environment.OSVersion.Platform != PlatformID.Unix)
+			{
+				SetAutoSizeToGrowAndShrink();
+			}
 			this._indicatorPanel.BackColor = System.Drawing.Color.Transparent;
 			this._indicatorPanel.Location = new System.Drawing.Point(70, 35);
 			this._indicatorPanel.Name = "_indicatorPanel";
@@ -68,6 +74,11 @@ namespace WeSay.CommonTools
 			this.SizeChanged += new System.EventHandler(this.CurrentTaskIndicatorControl_SizeChanged);
 			this.ResumeLayout(false);
 			this.PerformLayout();
+		}
+
+		private void SetAutoSizeToGrowAndShrink()
+		{
+			this._indicatorPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
 		}
 
 		#endregion

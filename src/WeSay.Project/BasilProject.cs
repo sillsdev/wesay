@@ -171,7 +171,6 @@ namespace WeSay.Project
 				return Path.Combine(CommonDirectory, _stringCatalogSelector+".po");
 			}
 		}
-
 		public string ApplicationCommonDirectory
 		{
 			get
@@ -182,7 +181,18 @@ namespace WeSay.Project
 
 		protected static string GetTopAppDirectory()
 		{
-			string path = Assembly.GetExecutingAssembly().CodeBase.Replace("file:///", "");
+			string path;
+
+			bool unitTesting = Assembly.GetEntryAssembly() == null;
+			if (unitTesting)
+			{
+				path = new Uri(Assembly.GetExecutingAssembly().CodeBase).AbsolutePath;
+			}
+			else
+			{
+				path = Assembly.GetExecutingAssembly().Location;
+			}
+
 			//go up to dir containing the executable
 			path = Directory.GetParent(path).FullName;
 			if (path.ToLower().IndexOf("output") > -1)

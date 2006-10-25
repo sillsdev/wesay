@@ -1,4 +1,3 @@
-
 using System.ComponentModel;
 using System.Drawing;
 using System.Xml;
@@ -49,7 +48,7 @@ namespace WeSay.Language
 
 		public override string ToString()
 		{
-			return this.Id;
+			return Id;
 		}
 
 

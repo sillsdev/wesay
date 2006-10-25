@@ -274,7 +274,10 @@ namespace WeSay.LexicalTools
 		private void OnKeyDown(object sender, KeyEventArgs e)
 		{
 			e.Handled = true;
-			e.SuppressKeyPress = true;
+			if (Environment.OSVersion.Platform != PlatformID.Unix)
+			{
+				SetSuppressKeyPress(e, true);
+			}
 			switch (e.KeyCode)
 			{
 				case Keys.PageUp:
@@ -286,9 +289,17 @@ namespace WeSay.LexicalTools
 
 				default:
 					e.Handled = false;
-					e.SuppressKeyPress = false;
+					if (Environment.OSVersion.Platform != PlatformID.Unix)
+					{
+						SetSuppressKeyPress(e, false);
+					}
 					break;
 			}
 		}
+		private static void SetSuppressKeyPress(KeyEventArgs e, bool suppress)
+		{
+			e.SuppressKeyPress = suppress;
+		}
+
 	}
 }
