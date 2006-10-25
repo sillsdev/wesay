@@ -29,8 +29,10 @@ namespace WeSay.LexicalTools
 			foreach (LexSense sense in entry.Senses)
 			{
 				rtf.Append(SwitchToWritingSystem(BasilProject.Project.WritingSystems.AnalysisWritingSystemDefault.Id));
-				rtf.Append(senseNumber.ToString());
-
+				if (entry.Senses.Count > 1 || (currentItem != null && currentItem.PropertyName == "Gloss"))
+				{
+					rtf.Append(senseNumber.ToString());
+				}
 				rtf.Append(@" \i ");
 				rtf.Append(RenderField(sense.Gloss, currentItem));
 				rtf.Append(@"\i0 ");
@@ -92,16 +94,18 @@ namespace WeSay.LexicalTools
 				{
 					if (IsCurrentField(text, l, currentItem))
 					{
-						rtf.Append(@"\ul     ");
+						rtf.Append(@"\ul");
 					}
 					rtf.Append(SwitchToWritingSystem(l.WritingSystemId));
-					rtf.Append(l.Form + " ");
+					rtf.Append(l.Form);// + " ");
 					if (IsCurrentField(text, l, currentItem))
 					{
-					  rtf.Append("   ");
-					  rtf.Append(Convert.ToChar(160));
-					  rtf.Append(@"\ulnone  ");
-					}
+					  //rtf.Append(" ");
+						//rtf.Append(Convert.ToChar(160));
+						rtf.Append(@"\ulnone ");
+					  //rtf.Append(Convert.ToChar(160));
+				  }
+				  rtf.Append(" ");
 				}
 			}
 			return rtf.ToString();
