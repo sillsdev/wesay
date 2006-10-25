@@ -1,6 +1,5 @@
 using System;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Windows.Forms;
 using WeSay.Project;
 using WeSay.UI;

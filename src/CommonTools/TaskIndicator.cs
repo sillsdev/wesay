@@ -1,6 +1,6 @@
 using System;
 using System.Diagnostics;
-using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
 using WeSay.Project;
 
@@ -21,8 +21,53 @@ namespace WeSay.CommonTools
 			InitializeComponent();
 			_task = task;
 			this._count.Text = task.Status;
+			string cachePath = Path.Combine(Project.WeSayWordsProject.Project.PathToWeSaySpecificFilesDirectoryInProject, "Cache");
+			string cacheFilePath = Path.Combine(cachePath, task.Label + ".cache");
+
+			if (this._count.Text == "-")
+			{
+				this._count.Text = ReadCountFromCacheFile(cacheFilePath);
+			}
+			else
+			{
+				WriteCacheFile(cacheFilePath, cachePath);
+			}
 			this._btnName.Text = task.Label;
 			this._textShortDescription.Text = task.Description;
+		}
+
+		private void WriteCacheFile(string cacheFilePath, string cachePath) {
+			try
+			{
+				if (!Directory.Exists(cachePath))
+				{
+					Directory.CreateDirectory(cachePath);
+				}
+				using (StreamWriter sw = File.CreateText(cacheFilePath))
+				{
+					sw.Write(this._count.Text);
+				}
+			}
+			catch
+			{
+				Console.WriteLine("Could not write cache file: " + cacheFilePath);
+			}
+		}
+		private string ReadCountFromCacheFile(string cacheFilePath)
+		{
+			string s = string.Empty;
+			try
+			{
+				using (StreamReader sr = new StreamReader(cacheFilePath))
+				{
+					s= sr.ReadToEnd();
+				}
+			}
+			catch
+			{
+				Console.WriteLine("Could not read cache file: " + cacheFilePath);
+			}
+			return s;
 		}
 
 		public ITask Task
