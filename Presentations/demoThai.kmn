@@ -1,0 +1,33 @@
+﻿c TIKE will use the line above to identify this file as a Keyman Wizard file
+c Delete the first line to stop the file opening in the Wizard editor
+c (Created by Keyman Developer 6.2.183.0)
+
+
+NAME "DemoThai"
+VERSION 5.0
+
+BITMAP "demothai.bmp"
+begin Unicode > use(main)
+
+
+group(main) using keys
+
+"mo" + "t" > "มด"
+"blua" + "k" > "ปลวก"
+"bluaa" + "k" > "ปลวก"
+"bplua" + "k" > "ปลวก"
+"bpluaa" + "k" > "ปลวก"
+"apu" + "n" > "แอ๊ปเปิ้ล"
+"ke" + "n" > "แขน"
+"wor" + "m" > "หนอน"
+"na" + "n" > "หนอน"
+"m" + "a" > "หมะ"
+"m" + "A" > "หมา"
+
++ "1" > "และโรงเรียนของเราก็ยังมีกฎระเบียบอยู่มิใช่หรือ"
+"xrul" + "e" > "และโรงเรียนของเราก็ยังมีกฎระเบียบอยู่มิใช่หรือ"
+"xpres" + "s"    > "ทำไมเธอกล้าเข้าบ้านมาโดยไม่กดกริ่ง หา"
+"xdo" + "g" > "นี่เป็นหมาของฉัน...ชื่อโตโต้''โดโรธีตอบ"
+
+
+c EOF
