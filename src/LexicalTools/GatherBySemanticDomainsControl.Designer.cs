@@ -62,7 +62,7 @@ namespace WeSay.LexicalTools
 			this.panel1.ForeColor = System.Drawing.Color.Transparent;
 			this.panel1.Location = new System.Drawing.Point(3, 35);
 			this.panel1.Name = "panel1";
-			this.panel1.Size = new System.Drawing.Size(497, 1);
+			this.panel1.Size = new System.Drawing.Size(530, 1);
 			this.panel1.TabIndex = 21;
 			//
 			// _domainName
@@ -107,7 +107,7 @@ namespace WeSay.LexicalTools
 			this.label5.AutoSize = true;
 			this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.label5.ForeColor = System.Drawing.Color.DarkGray;
-			this.label5.Location = new System.Drawing.Point(408, 71);
+			this.label5.Location = new System.Drawing.Point(408, 63);
 			this.label5.Name = "label5";
 			this.label5.Size = new System.Drawing.Size(102, 15);
 			this.label5.TabIndex = 16;
@@ -140,7 +140,7 @@ namespace WeSay.LexicalTools
 			this._btnPrevious.ArrowEnabled = true;
 			this._btnPrevious.HoverEndColor = System.Drawing.Color.Blue;
 			this._btnPrevious.HoverStartColor = System.Drawing.Color.White;
-			this._btnPrevious.Location = new System.Drawing.Point(335, 68);
+			this._btnPrevious.Location = new System.Drawing.Point(335, 60);
 			this._btnPrevious.Name = "_btnPrevious";
 			this._btnPrevious.NormalEndColor = System.Drawing.Color.White;
 			this._btnPrevious.NormalStartColor = System.Drawing.Color.White;
@@ -155,7 +155,7 @@ namespace WeSay.LexicalTools
 			this._btnNext.ArrowEnabled = true;
 			this._btnNext.HoverEndColor = System.Drawing.Color.Blue;
 			this._btnNext.HoverStartColor = System.Drawing.Color.White;
-			this._btnNext.Location = new System.Drawing.Point(360, 59);
+			this._btnNext.Location = new System.Drawing.Point(360, 51);
 			this._btnNext.Name = "_btnNext";
 			this._btnNext.NormalEndColor = System.Drawing.Color.White;
 			this._btnNext.NormalStartColor = System.Drawing.Color.White;
@@ -171,7 +171,7 @@ namespace WeSay.LexicalTools
 			this._btnAddWord.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this._btnAddWord.HoverEndColor = System.Drawing.Color.Blue;
 			this._btnAddWord.HoverStartColor = System.Drawing.Color.White;
-			this._btnAddWord.Location = new System.Drawing.Point(322, 123);
+			this._btnAddWord.Location = new System.Drawing.Point(322, 132);
 			this._btnAddWord.Name = "_btnAddWord";
 			this._btnAddWord.NormalEndColor = System.Drawing.Color.White;
 			this._btnAddWord.NormalStartColor = System.Drawing.Color.White;
@@ -211,7 +211,8 @@ namespace WeSay.LexicalTools
 						| System.Windows.Forms.AnchorStyles.Right)));
 			this._question.BackColor = System.Drawing.Color.MistyRose;
 			this._question.BorderStyle = System.Windows.Forms.BorderStyle.None;
-			this._question.Location = new System.Drawing.Point(81, 97);
+			this._question.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this._question.Location = new System.Drawing.Point(85, 97);
 			this._question.Multiline = true;
 			this._question.Name = "_question";
 			this._question.ReadOnly = true;

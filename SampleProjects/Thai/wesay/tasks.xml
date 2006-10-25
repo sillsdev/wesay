@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <tasks>
   <components>
 	<fieldInventory>
@@ -71,7 +71,7 @@
   </task>
   <task id="Gather Words" class="WeSay.LexicalTools.GatherWordListTask" assembly="LexicalTools">
 	<entries ref="All Entries" />
-	<label>Collect Words</label>
+	<label>Collect Word List</label>
 	<description>Collect new words given words in another language.</description>
 	<wordListFileName>sampleWordList.txt</wordListFileName>
   </task>

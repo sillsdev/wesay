@@ -27,7 +27,7 @@ namespace WeSay.LexicalTools
 			}
 
 			BackColor = WeSay.UI.DisplaySettings.Default.BackgroundColor;
-
+			_listViewWords.Items.Clear();
 			//TODO: this limits us to a single writing system, and relies on the deprecated "default"
 			_vernacularBox.WritingSystems = new WritingSystem[] { BasilProject.Project.WritingSystems.VernacularWritingSystemDefault };
 			_vernacularBox.TextChanged += new EventHandler(_vernacularBox_TextChanged);
