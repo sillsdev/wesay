@@ -50,6 +50,10 @@ namespace WeSay.LexicalModel
 					this._exampleSentences.RemoveAt(i);
 				}
 			}
+			if(count != this._exampleSentences.Count)
+			{
+				OnEmptyObjectsRemoved();
+			}
 		}
 		public override void SomethingWasModified(string PropertyModified)
 		{

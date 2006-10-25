@@ -18,6 +18,7 @@ namespace WeSay.LexicalTools
 				if (_record != null)
 				{
 					_record.PropertyChanged -= OnRecordPropertyChanged;
+					_record.EmptyObjectsRemoved -= OnEmptyObjectsRemoved;
 				}
 				_detailListControl.CurrentItemChanged -= OnCurrentItemChanged;
 			}

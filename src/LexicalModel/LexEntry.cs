@@ -133,6 +133,10 @@ namespace WeSay.LexicalModel
 					this._senses.RemoveAt(i);
 				}
 			}
+			if(count != this._senses.Count)
+			{
+				OnEmptyObjectsRemoved();
+			}
 		}
 	}
 }

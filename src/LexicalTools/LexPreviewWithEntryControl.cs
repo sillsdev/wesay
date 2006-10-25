@@ -87,12 +87,14 @@ namespace WeSay.LexicalTools
 					if (_record != null)
 					{
 						_record.PropertyChanged -= OnRecordPropertyChanged;
+						_record.EmptyObjectsRemoved -= OnEmptyObjectsRemoved;
 					}
 					_record = value;
 					_currentItem = null;
 					if (_record != null)
 					{
 						_record.PropertyChanged += new PropertyChangedEventHandler(OnRecordPropertyChanged);
+						_record.EmptyObjectsRemoved +=new EventHandler(OnEmptyObjectsRemoved);
 					}
 					RefreshLexicalEntryPreview();
 					RefreshEntryDetail();
@@ -100,6 +102,21 @@ namespace WeSay.LexicalTools
 			}
 		}
 
+		private void OnEmptyObjectsRemoved(object sender, EventArgs e)
+		{
+			//find out where our current focus is and attempt to return to that place
+			int? row = null;
+			if (this._detailListControl.ContainsFocus)
+			{
+				row = this._detailListControl.GetRowOfControl(this._detailListControl.ActiveControl);
+			}
+			RefreshEntryDetail();
+			Application.DoEvents();
+			if (row != null)
+			{
+				this._detailListControl.MoveInsertionPoint((int)row);
+			}
+		}
 
 		private void OnRecordPropertyChanged(object sender, PropertyChangedEventArgs e)
 		{
@@ -118,7 +135,7 @@ namespace WeSay.LexicalTools
 			this._detailListControl.Clear();
 			if (this._record != null)
 			{
-				LexEntryLayouter layout = new LexEntryLayouter(this._detailListControl, this.FieldInventory);
+				LexEntryLayouter layout = new LexEntryLayouter(this._detailListControl, FieldInventory);
 				layout.AddWidgets(this._record);
 			}
 

@@ -87,7 +87,36 @@ namespace WeSay.UI
 
 		public int GetRowOfControl(Control control)
 		{
-			return (_rowCount - base.Controls.GetChildIndex(control)) - 1;
+			int index = base.Controls.GetChildIndex(control,false);
+			if(index == -1)
+			{
+				index = 0;
+				foreach (Control childControl in base.Controls)
+				{
+					if(HasDescendentControl(childControl, control))
+					{
+						break;
+					}
+					++index;
+				}
+				if(index == base.Controls.Count)
+				{
+					throw new ArgumentException("Control is not an owned descendant.");
+				}
+			}
+			return (_rowCount - index) - 1;
+		}
+
+		private static bool HasDescendentControl(Control current, Control control)
+		{
+			foreach (Control child in current.Controls)
+			{
+				if (child == control || HasDescendentControl(child, control))
+				{
+					return true;
+				}
+			}
+			return false;
 		}
 
 		/// <summary>
@@ -111,5 +140,6 @@ namespace WeSay.UI
 			//reverse order (that's how docking works)
 			return RowToControlInsertionIndex(row) - 1;
 		}
+
 	}
 }

@@ -10,9 +10,8 @@ namespace WeSay.LexicalModel
 		/// <summary>
 		/// For INotifyPropertyChanged
 		/// </summary>
-		public event PropertyChangedEventHandler PropertyChanged = delegate
-																	{
-																	};
+		public event PropertyChangedEventHandler PropertyChanged = delegate{};
+		public event EventHandler EmptyObjectsRemoved = delegate{};
 
 		[Transient]
 		private ArrayList _listEventHelpers;
@@ -21,6 +20,7 @@ namespace WeSay.LexicalModel
 		public void ObjectOnActivate(ObjectContainer container)
 		{
 			container.Activate(this, int.MaxValue);
+			EmptyObjectsRemoved = delegate{};
 			WireUpEvents();
 		}
 
@@ -37,6 +37,16 @@ namespace WeSay.LexicalModel
 			PropertyChanged += new PropertyChangedEventHandler(OnPropertyChanged);
 		}
 
+		void OnEmptyObjectsRemoved(object sender, EventArgs e)
+		{
+			// perculate up
+			EmptyObjectsRemoved(sender, e);
+		}
+
+		protected void OnEmptyObjectsRemoved() {
+			EmptyObjectsRemoved(this, new EventArgs());
+		}
+
 		private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
 		{
 			SomethingWasModified(e.PropertyName);
@@ -45,6 +55,10 @@ namespace WeSay.LexicalModel
 		internal void WireUpChild(INotifyPropertyChanged child)
 		{
 			child.PropertyChanged += new PropertyChangedEventHandler(OnChildObjectPropertyChanged);
+			if (child is WeSayDataObject)
+			{
+			   ((WeSayDataObject)child).EmptyObjectsRemoved += new EventHandler(OnEmptyObjectsRemoved);
+			}
 		}
 
 		/// <summary>
@@ -77,7 +91,8 @@ namespace WeSay.LexicalModel
 			list.ListChanged += new ListChangedEventHandler(OnListChanged);
 			foreach (INotifyPropertyChanged x in list)
 			{
-				x.PropertyChanged += new PropertyChangedEventHandler(OnListItemPropertyChanged);
+				_parent.WireUpChild(x);
+				//x.PropertyChanged += new PropertyChangedEventHandler(OnListItemPropertyChanged);
 			}
 		}
 
