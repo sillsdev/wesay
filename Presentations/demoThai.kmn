@@ -13,6 +13,7 @@ begin Unicode > use(main)
 group(main) using keys
 
 "mo" + "t" > "มด"
+"b" + "l" > "ปลวก"
 "blua" + "k" > "ปลวก"
 "bluaa" + "k" > "ปลวก"
 "bplua" + "k" > "ปลวก"
@@ -21,6 +22,7 @@ group(main) using keys
 "ke" + "n" > "แขน"
 "wor" + "m" > "หนอน"
 "na" + "n" > "หนอน"
+"naa" + "n" > "หนอน"
 "m" + "a" > "หมะ"
 "m" + "A" > "หมา"
 
