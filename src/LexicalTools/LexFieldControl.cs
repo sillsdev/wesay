@@ -61,6 +61,7 @@ namespace WeSay.LexicalTools
 			_recordsListBox.Columns.StretchToFit();
 			_recordsListBox.SelectedIndexChanged += new EventHandler(OnRecordSelectionChanged);
 			_recordsListBox.Selection.BorderMode = SelectionBorderMode.None;
+			_recordsListBox.Columns[0].Width = _recordsListBox.Width - _recordsListBox.VScrollBar.Width;
 
 			_completedRecordsListBox.DataSource = _completedRecords;
 			_completedRecordsListBox.Font = BasilProject.Project.WritingSystems.VernacularWritingSystemDefault.Font;
@@ -70,6 +71,7 @@ namespace WeSay.LexicalTools
 			_completedRecordsListBox.BackColor = DisplaySettings.Default.BackgroundColor;
 			_completedRecordsListBox.ForeColor = DisplaySettings.Default.BackgroundColor;
 			_completedRecordsListBox.Selection.BorderMode = SelectionBorderMode.None;
+			_completedRecordsListBox.Columns[0].Width = _completedRecordsListBox.Width - _completedRecordsListBox.VScrollBar.Width;
 
 			this.labelNextHotKey.BringToFront();
 			this._btnNextWord.BringToFront();

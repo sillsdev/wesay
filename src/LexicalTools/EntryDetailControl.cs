@@ -51,7 +51,7 @@ namespace WeSay.LexicalTools
 			_recordsListBox.DataSource = _records;
 			_recordsListBox.Font = BasilProject.Project.WritingSystems.VernacularWritingSystemDefault.Font;
 			_recordsListBox.AutoSize();
-			_recordsListBox.Columns.StretchToFit();
+			_recordsListBox.Columns[0].Width = _recordsListBox.Width- _recordsListBox.VScrollBar.Width;
 
 			_recordsListBox.SelectedIndexChanged += new EventHandler(OnRecordSelectionChanged);
 			_findText.TextChanged += new EventHandler(_findText_TextChanged);
@@ -83,7 +83,7 @@ namespace WeSay.LexicalTools
 			}
 		}
 
-		void _btnFind_Click(object sender, System.EventArgs e)
+		void _btnFind_Click(object sender, EventArgs e)
 		{
 			if (this._btnFind.Text == StringCatalog.Get("Find"))
 			{
