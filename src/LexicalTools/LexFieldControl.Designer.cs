@@ -1,5 +1,4 @@
 using System.Windows.Forms;
-using WeSay.UI;
 
 namespace WeSay.LexicalTools
 {
@@ -112,7 +111,7 @@ namespace WeSay.LexicalTools
 			this._btnPreviousWord.ArrowEnabled = true;
 			this._btnPreviousWord.HoverEndColor = System.Drawing.Color.Blue;
 			this._btnPreviousWord.HoverStartColor = System.Drawing.Color.White;
-			this._btnPreviousWord.Location = new System.Drawing.Point(422, 369);
+			this._btnPreviousWord.Location = new System.Drawing.Point(310, 130);
 			this._btnPreviousWord.Name = "_btnPreviousWord";
 			this._btnPreviousWord.NormalEndColor = System.Drawing.Color.White; ;
 			this._btnPreviousWord.NormalStartColor = System.Drawing.Color.White;
@@ -122,13 +121,14 @@ namespace WeSay.LexicalTools
 			this._btnPreviousWord.TabIndex = 4;
 			this._btnPreviousWord.TabStop = false;
 			this._btnPreviousWord.Click += new System.EventHandler(this.OnBtnPreviousWordClick);
+			this._btnPreviousWord.Anchor = (AnchorStyles.Bottom | AnchorStyles.Right);
 			//
 			// _btnNextWord
 			//
 			this._btnNextWord.ArrowEnabled = true;
 			this._btnNextWord.HoverEndColor = System.Drawing.Color.Blue;
 			this._btnNextWord.HoverStartColor = System.Drawing.Color.White;
-			this._btnNextWord.Location = new System.Drawing.Point(446, 360);
+			this._btnNextWord.Location = new System.Drawing.Point(340, 120);
 			this._btnNextWord.Name = "_btnNextWord";
 			this._btnNextWord.NormalEndColor = System.Drawing.Color.White; ;
 			this._btnNextWord.NormalStartColor = System.Drawing.Color.White;
@@ -138,18 +138,20 @@ namespace WeSay.LexicalTools
 			this._btnNextWord.TabIndex = 5;
 			this._btnNextWord.TabStop = false;
 			this._btnNextWord.Click += new System.EventHandler(this.OnBtnNextWordClick);
+			this._btnNextWord.Anchor = (AnchorStyles.Bottom | AnchorStyles.Right);
 			//
 			// labelNextHotKey
 			//
 			this.labelNextHotKey.AutoSize = true;
 			this.labelNextHotKey.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.labelNextHotKey.ForeColor = System.Drawing.Color.DarkGray;
-			this.labelNextHotKey.Location = new System.Drawing.Point(495, 372);
+			this.labelNextHotKey.Location = new System.Drawing.Point(385, 133);
 			this.labelNextHotKey.Name = "labelNextHotKey";
 			this.labelNextHotKey.Size = new System.Drawing.Size(102, 15);
 			this.labelNextHotKey.TabIndex = 6;
 			this.labelNextHotKey.Text = "(Page Down Key)";
-			//
+			this.labelNextHotKey.Anchor = (AnchorStyles.Bottom | AnchorStyles.Right);
+
 			// _congratulationsControl
 			//
 			this._congratulationsControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
@@ -183,7 +185,7 @@ namespace WeSay.LexicalTools
 		private LexPreviewWithEntryControl _lexFieldDetailPanel;
 		private ListBox.BindingListGrid _recordsListBox;
 		private ListBox.BindingListGrid _completedRecordsListBox;
-		private System.Windows.Forms.Label _completedRecordsLabel;
+		private Label _completedRecordsLabel;
 		private ArrowButton.ArrowButton _btnNextWord;
 		private ArrowButton.ArrowButton _btnPreviousWord;
 		private Label labelNextHotKey;

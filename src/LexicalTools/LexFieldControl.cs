@@ -27,7 +27,7 @@ namespace WeSay.LexicalTools
 		public LexFieldControl(IRecordList<LexEntry> records, FieldInventory fieldInventory, Predicate<LexEntry> isNotComplete)
 		{
 			InitializeComponent();
-			if (this.DesignMode)
+			if (DesignMode)
 			{
 				return;
 			}
@@ -45,12 +45,12 @@ namespace WeSay.LexicalTools
 				throw new ArgumentNullException("isNotComplete");
 			}
 
-
 			_records = records;
 			_records.ListChanged += OnRecordsListChanged;
 			_completedRecords = new InMemoryBindingList<LexEntry>();
 			_fieldInventory = fieldInventory;
-			_isNotComplete = isNotComplete;            this.BackColor = DisplaySettings.Default.BackgroundColor;
+			_isNotComplete = isNotComplete;
+			BackColor = DisplaySettings.Default.BackgroundColor;
 			_lexFieldDetailPanel.BackColor = DisplaySettings.Default.BackgroundColor;//we like it to stand out at design time, but not runtime
 			_lexFieldDetailPanel.KeyDown += new KeyEventHandler(OnKeyDown);
 			_lexFieldDetailPanel.FieldInventory = _fieldInventory;
@@ -71,6 +71,9 @@ namespace WeSay.LexicalTools
 			_completedRecordsListBox.ForeColor = DisplaySettings.Default.BackgroundColor;
 			_completedRecordsListBox.Selection.BorderMode = SelectionBorderMode.None;
 
+			this.labelNextHotKey.BringToFront();
+			this._btnNextWord.BringToFront();
+			this._btnPreviousWord.BringToFront();
 			SetCurrentRecordFromRecordList();
 		}
 
@@ -263,11 +266,11 @@ namespace WeSay.LexicalTools
 			SwitchPrimaryRecordListControl(_completedRecordsListBox);
 		}
 
-		void OnBtnPreviousWordClick(object sender, System.EventArgs e)
+		void OnBtnPreviousWordClick(object sender, EventArgs e)
 		{
 			SetCurrentRecordToPrevious();
 		}
-		void OnBtnNextWordClick(object sender, System.EventArgs e)
+		void OnBtnNextWordClick(object sender, EventArgs e)
 		{
 			SetCurrentRecordToNext();
 		}
