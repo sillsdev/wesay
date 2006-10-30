@@ -81,6 +81,7 @@ namespace WeSay.LexicalTools
 
 			UpdateStuff();
 			_vernacularBox.ClearAllText();
+			_vernacularBox.FlagIsOn = false;
 			_vernacularBox.TextBoxes[0].Focus();
 		}
 
