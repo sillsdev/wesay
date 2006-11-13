@@ -75,7 +75,7 @@ namespace WeSay.App
 					backupService.DoIncrementalXmlBackupNow(); //in case we are far behind
 					Application.Run(tabbedForm);
 					backupService.DoIncrementalXmlBackupNow();
-					backupService.BackupToExternal("f:\\" + project.Name + ".zip");
+					backupService.BackupToExternal("h:\\" + project.Name + ".zip");
 				}
 			}
 			finally

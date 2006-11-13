@@ -81,6 +81,14 @@ namespace WeSay.UI
 				}
 				_writingSystem = value;
 				Font = value.Font;
+				if (value.RightToLeft)
+				{
+					this.RightToLeft = RightToLeft.Yes;
+				}
+				else
+				{
+					this.RightToLeft = RightToLeft.No;
+				}
 			}
 		}
 

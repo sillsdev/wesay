@@ -12,6 +12,7 @@ namespace WeSay.Language
 		private Font _font;
 		private string _id;
 		private string _keyboardName;
+		private bool _rightToLeft = false;
 
 //        public WritingSystem(string filePath)
 //        {
@@ -59,6 +60,16 @@ namespace WeSay.Language
 			set
 			{
 				_id = value;
+			}
+		}
+
+		[ReflectorProperty("RightToLeft", Required = false)]
+		public bool RightToLeft
+		{
+			get { return _rightToLeft; }
+			set
+			{
+				_rightToLeft = value;
 			}
 		}
 
