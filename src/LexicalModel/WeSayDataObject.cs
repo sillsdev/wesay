@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using System.ComponentModel;
-using com.db4o;
+using WeSay.Foundation;
 
 namespace WeSay.LexicalModel
 {
@@ -13,11 +13,21 @@ namespace WeSay.LexicalModel
 		public event PropertyChangedEventHandler PropertyChanged = delegate{};
 		public event EventHandler EmptyObjectsRemoved = delegate{};
 
+		/// <summary>
+		/// see comment on _parent field of MultiText for an explanation of this field
+		/// </summary>
+		private WeSayDataObject _parent;
+
+		protected WeSayDataObject(WeSayDataObject parent)
+		{
+			_parent = parent;
+		}
+
 		[Transient]
 		private ArrayList _listEventHelpers;
 
 		[CLSCompliant(false)]
-		public void ObjectOnActivate(ObjectContainer container)
+		public void ObjectOnActivate(com.db4o.ObjectContainer container)
 		{
 			container.Activate(this, int.MaxValue);
 			EmptyObjectsRemoved = delegate{};
@@ -25,6 +35,19 @@ namespace WeSay.LexicalModel
 		}
 
 		public abstract bool Empty{get;}
+
+		/// <summary>
+		/// see comment on _parent field of MultiText for an explanation of this field
+		/// </summary>
+		public WeSayDataObject Parent
+		{
+			get { return _parent; }
+			set
+			{
+				System.Diagnostics.Debug.Assert(value != null);
+				_parent = value;
+			}
+	   }
 
 		protected void WireUpList(IBindingList list, string listName)
 		{
@@ -79,26 +102,32 @@ namespace WeSay.LexicalModel
 		}
 	}
 
+	/// <summary>
+	/// This class enables creating the necessary event subscriptions. It was added
+	/// before we were forced to add "parent" fields to everything.  I could probably
+	/// be removed now, since that field could be used by children to cause the wiring,
+	/// but we are hoping that the parent field might go away with future version of db4o.
+	/// </summary>
 	public class ListEventHelper
 	{
-		private WeSayDataObject _parent;
+		private WeSayDataObject _listOwner;
 		private string _listName;
 
-		public ListEventHelper(WeSayDataObject parent, IBindingList list, string listName)
+		public ListEventHelper(WeSayDataObject listOwner, IBindingList list, string listName)
 		{
-			_parent = parent;
+			_listOwner = listOwner;
 			_listName = listName;
 			list.ListChanged += new ListChangedEventHandler(OnListChanged);
 			foreach (INotifyPropertyChanged x in list)
 			{
-				_parent.WireUpChild(x);
+				_listOwner.WireUpChild(x);
 				//x.PropertyChanged += new PropertyChangedEventHandler(OnListItemPropertyChanged);
 			}
 		}
 
 		void OnListItemPropertyChanged(object sender, PropertyChangedEventArgs e)
 		{
-			_parent.NotifyPropertyChanged(e.PropertyName);
+			_listOwner.NotifyPropertyChanged(e.PropertyName);
 		}
 
 		void OnListChanged(object sender, ListChangedEventArgs e)
@@ -106,10 +135,15 @@ namespace WeSay.LexicalModel
 			if (e.ListChangedType == ListChangedType.ItemAdded)
 			{
 				IBindingList list = (IBindingList) sender;
-				_parent.WireUpChild((INotifyPropertyChanged)list[e.NewIndex]);
+				INotifyPropertyChanged newGuy = (INotifyPropertyChanged)list[e.NewIndex];
+				_listOwner.WireUpChild(newGuy);
+				if (newGuy is WeSayDataObject)
+				{
+					((WeSayDataObject) newGuy).Parent =  this._listOwner;
+				}
 //                _parent.SomethingWasModified(_listName);
 			}
-			_parent.NotifyPropertyChanged(_listName);
+			_listOwner.NotifyPropertyChanged(_listName);
 		}
 	}
 }

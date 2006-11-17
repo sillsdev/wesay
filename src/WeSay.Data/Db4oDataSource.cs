@@ -23,6 +23,9 @@ namespace WeSay.Data
 
 		public Db4oDataSource(string filePath)
 		{
+			com.db4o.config.Configuration db4oConfiguration = com.db4o.Db4o.Configure();
+			db4oConfiguration.MarkTransient("TransientAttribute"); // this name comes from "TransientAttribute.cs", in WeSay.Foundations
+
 			_db = com.db4o.Db4o.OpenFile(filePath);
 			if (_db == null)
 			{

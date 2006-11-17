@@ -64,7 +64,7 @@ namespace WeSay.Language.Tests
 		{
 			WritingSystem ws = new WritingSystem("one", new Font("Arial", 99));
 			string s = NetReflector.Write(ws);
-			Assert.AreEqual("<WritingSystem><FontName>Arial</FontName><FontSize>99</FontSize><Id>one</Id></WritingSystem>", s);
+			Assert.AreEqual("<WritingSystem><FontName>Arial</FontName><FontSize>99</FontSize><Id>one</Id><RightToLeft>False</RightToLeft></WritingSystem>", s);
 		}
 
 

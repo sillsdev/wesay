@@ -38,6 +38,7 @@
 	<Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+	<Compile Include="LanguageForm.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />
 	<Compile Include="MultiText.cs" />
 	<Compile Include="StringCatalog.cs" />

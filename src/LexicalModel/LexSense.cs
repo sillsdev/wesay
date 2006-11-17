@@ -5,14 +5,23 @@ namespace WeSay.LexicalModel
 {
 	sealed public class LexSense : WeSayDataObject
 	{
-		private MultiText _gloss;
+		private SenseGlossMultiText _gloss;
 		private WeSay.Data.InMemoryBindingList<LexExampleSentence> _exampleSentences;
 
-		 public LexSense()
+		public LexSense(WeSayDataObject parent)
+			: base(parent)
 		{
-			_gloss = new MultiText();
+			_gloss = new SenseGlossMultiText(this);
 			_exampleSentences = new WeSay.Data.InMemoryBindingList<LexExampleSentence>();
 			WireUpEvents();
+		}
+
+		/// <summary>
+		/// Used when a list of these items adds via "AddNew", where we have to have a default constructor.
+		/// The parent is added in an even handler, on the parent, which is called by the list.
+		/// </summary>
+		public LexSense(): this(null)
+		{
 		}
 
 		protected override void WireUpEvents()
@@ -62,6 +71,22 @@ namespace WeSay.LexicalModel
 				RemoveEmptyExampleSentences();
 			}
 			base.SomethingWasModified(PropertyModified);
+		}
+	}
+
+	/// <summary>
+	/// See comment in MultiText.cs for an explanation of this class.
+	/// </summary>
+	public class SenseGlossMultiText : MultiText
+	{
+		public SenseGlossMultiText(LexSense parent)
+			: base(parent)
+		{
+		}
+
+		public LexSense Parent
+		{
+			get { return _parent as LexSense; }
 		}
 	}
 }

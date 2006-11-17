@@ -28,7 +28,7 @@
 	<WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-	<Reference Include="Db4o, Version=5.4.8.0, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL">
+	<Reference Include="Db4o, Version=5.5.1.0, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\Db4o.dll</HintPath>
 	</Reference>
@@ -43,7 +43,6 @@
   <ItemGroup>
 	<Compile Include="LexEntry.cs" />
 	<Compile Include="LexExampleSentence.cs" />
-	<Compile Include="LexicalFormMultiText.cs" />
 	<Compile Include="Lexicon.cs" />
 	<Compile Include="LexSense.cs" />
 	<Compile Include="LiftExporter.cs" />

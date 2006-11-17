@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual Studio 2005
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MeasureDb4o", "MeasureDb4o.csproj", "{FA2760E0-98B8-477E-B076-5E3D8F9DF849}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApplication1", "ConsoleApplication1\ConsoleApplication1.csproj", "{991F9CF9-2653-4376-9570-79172E707880}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -13,6 +15,10 @@ Global
 		{FA2760E0-98B8-477E-B076-5E3D8F9DF849}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FA2760E0-98B8-477E-B076-5E3D8F9DF849}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FA2760E0-98B8-477E-B076-5E3D8F9DF849}.Release|Any CPU.Build.0 = Release|Any CPU
+		{991F9CF9-2653-4376-9570-79172E707880}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{991F9CF9-2653-4376-9570-79172E707880}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{991F9CF9-2653-4376-9570-79172E707880}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{991F9CF9-2653-4376-9570-79172E707880}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,6 +1,7 @@
 using System;
 using NUnit.Framework;
 using WeSay.Language;
+using WeSay.LexicalModel;
 using WeSay.Project;
 
 namespace WeSay.UI.Tests
@@ -19,6 +20,10 @@ namespace WeSay.UI.Tests
 		{
 			private MultiText first=new MultiText();
 			private MultiText middle=new MultiText();
+
+			public Child() : base(null)
+			{
+			}
 
 			public MultiText First
 			{
@@ -45,7 +50,7 @@ namespace WeSay.UI.Tests
 		{
 			private WeSay.Data.InMemoryBindingList<Child> _children = new WeSay.Data.InMemoryBindingList<Child>();
 
-			public Papa()
+			public Papa():base(null)
 			{
 				_children = new WeSay.Data.InMemoryBindingList<Child>();
 

@@ -5,6 +5,13 @@ using WeSay.Language;
 
 namespace WeSay.LexicalModel
 {
+
+
+	/// <summary>
+	/// A Lexical Entry is what makes up our lexicon/dictionary.  In
+	/// some languages/dictionaries, these will be indistinguishable from "words".
+	/// In others, words are made up of lexical entries.
+	/// </summary>
 	sealed public class LexEntry : WeSayDataObject
 	{
 		private LexicalFormMultiText _lexicalForm;
@@ -13,12 +20,12 @@ namespace WeSay.LexicalModel
 		private DateTime _creationDate;
 		private DateTime _modifiedDate;
 
-		public LexEntry()
+		public LexEntry(): base(null)
 		{
 			Init(Guid.NewGuid());
 		}
 
-		public LexEntry(Guid guid)
+		public LexEntry(Guid guid): base(null)
 		{
 			Init(guid);
 		}
@@ -26,7 +33,7 @@ namespace WeSay.LexicalModel
 		private void Init(Guid guid)
 		{
 			_guid = guid;
-			this._lexicalForm = new LexicalFormMultiText();
+			this._lexicalForm = new LexicalFormMultiText(this);
 			this._senses = new WeSay.Data.InMemoryBindingList<LexSense>();
 			this._creationDate = DateTime.Now;
 			this._modifiedDate = _creationDate;
@@ -137,6 +144,30 @@ namespace WeSay.LexicalModel
 			{
 				OnEmptyObjectsRemoved();
 			}
+		}
+	}
+
+	/// <summary>
+	/// See comment in MultiText.cs for an explanation of this class.
+	/// </summary>
+	public class LexicalFormMultiText : MultiText
+	{
+		public LexicalFormMultiText(LexEntry parent)
+			: base(parent)
+		{
+		}
+
+		/// <summary>
+		/// TODO: needed for GetClosestLexicalForms(IRecordList<LexicalFormMultiText> lexicalForms...)
+		/// </summary>
+		public LexicalFormMultiText()
+			: base(null)
+		{
+		}
+
+		public LexEntry Parent
+		{
+			get { return _parent as LexEntry; }
 		}
 	}
 }

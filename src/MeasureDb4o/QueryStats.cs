@@ -15,7 +15,10 @@ namespace MeasureDb4o
 
 		public void PrintReport()
 		{
-			Debug.WriteLine(_label + " " + this.ExecutionTime / 1000.0 + " seconds");
+		  // string s = String.Format(_label + " " + this.ExecutionTime / 1000.0 + " seconds " + _activationCount + " activations");
+		   string s = String.Format(_label + " " + this.ExecutionTime + " ms " + _activationCount + " activations");
+			 Debug.WriteLine(s);
+			 Console.WriteLine(s);
 		}
 
 		/// <summary>
@@ -27,6 +30,19 @@ namespace MeasureDb4o
 			{
 				return _watch.Elapsed();
 			}
+		}
+
+		/// <summary>
+		/// only here because the events don't actually fire in db4o 5.7!
+		/// </summary>
+		public void StartManually()
+		{
+			_watch.Start();
+		}
+
+		public void FinishManually()
+		{
+			_watch.Stop ();
 		}
 
 		/// <summary>

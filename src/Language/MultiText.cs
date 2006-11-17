@@ -4,35 +4,48 @@ using System.ComponentModel;
 
 namespace WeSay.Language
 {
-	public class LanguageForm
-	{
-		private string _writingSystemId;
-		private string _form;
-
-		public LanguageForm(string writingSystemId, string form)
+	/* ----------- ABOUT SUBCLASSES OF MULTITEXT ------------
+	* Subclasses of MultiText are used in many (most? all?)
+	* fields in WeSay exist to in order to make a
+	* signature for fields that we want to search on quickly.
+	* This is in influenced by the version of db4o we are using (5.5)
+	* as our persistence mechanism, which cannot do fast queries
+	* which span collections.
+	* For example, consider the following class definition.
+	* If we want to load all lexeme-forms into a
+	* datastructure for as-you-type approximate matching, we
+	* can just pull up all objects of this type from the database.
+		public class LexicalFormMultiText : MultiText
 		{
-			_writingSystemId = writingSystemId;
-			_form =  form;
 		}
-
-		public string WritingSystemId
-		{
-			get { return _writingSystemId; }
-		}
-
-		public string Form
-		{
-			get { return _form; }
-			set { _form = value; }
-		}
-	}
+	*/
 
 	/// <summary>
-	/// MultiText holds an array of strings, indexed by writing system ID.
-	/// These are simple, single language Unicode strings.
+	/// MultiText holds an array of LanguageForms, indexed by writing system ID.
 	/// </summary>
-	public /*sealed*/ class MultiText : INotifyPropertyChanged, IEnumerable
+	public class MultiText : INotifyPropertyChanged, IEnumerable
 	{
+		/// <summary>
+		/// We have this pesky "backreference" solely to enable fast
+		/// searching in our current version of db4o (5.5), which
+		/// can find strings fast, but can't be queried for the owner
+		/// quickly, if there is an intervening collection.  Since
+		/// each string in WeSay is part of a collection of writing
+		/// system alternatives, that means we can't quickly get
+		/// an answer, for example, to the question Get all
+		/// the Entries that contain a senes which matches the gloss "cat".
+		///
+		/// Using this field, we can do a query asking for all
+		/// the LanguageForms matching "cat".
+		/// This can all be done in a single, fast query.
+		///  In code, we can then follow the
+		/// LanguageForm._parent up to the multitext, then this _parent
+		/// up to it's owner, etc., on up the hierarchy to get the Entries.
+		///
+		/// Subclasses should provide a property which set the proper class.
+		/// </summary>
+		protected object _parent;
+
 		/// <summary>
 		/// For INotifyPropertyChanged
 		/// </summary>
@@ -40,9 +53,14 @@ namespace WeSay.Language
 
 		private LanguageForm[] _forms;
 
-		public MultiText()
+		public MultiText() : this(null)
 		{
-			_forms = new LanguageForm[0] ;
+		}
+
+		public MultiText(object parent)
+		{
+			_parent = parent;
+			_forms = new LanguageForm[0];
 		}
 
 		public string this[string writingSystemId]
@@ -106,6 +124,14 @@ namespace WeSay.Language
 			}
 		}
 
+		/// <summary>
+		/// Subclasses should provide a "Parent" property which set the proper class.
+		/// </summary>
+		public object ParentAsObject
+		{
+			get { return _parent; }
+		}
+
 		public void SetAlternative(string writingSystemId, string form)
 		{
 		   Debug.Assert(writingSystemId != null && writingSystemId.Length > 0, "The writing system id was empty.");
@@ -129,7 +155,7 @@ namespace WeSay.Language
 			   }
 			   else
 			   {
-				   AddLanguageForm(new LanguageForm(writingSystemId, form));
+				   AddLanguageForm(new LanguageForm(writingSystemId, form, this));
 			   }
 
 		   }
@@ -178,5 +204,10 @@ namespace WeSay.Language
 			return _forms.GetEnumerator();
 		}
 		#endregion
-	  }
+
+		public override string ToString()
+		{
+			return GetFirstAlternative();
+		}
+	}
 }
