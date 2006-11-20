@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using WeSay.Data;
 using WeSay.Language;
 using WeSay.LexicalModel;
+using WeSay.LexicalModel.Db4o_Specific;
 using WeSay.Project;
 
 namespace WeSay.LexicalTools
@@ -12,6 +13,7 @@ namespace WeSay.LexicalTools
 	public partial class GatherWordListControl : UserControl
 	{
 		private readonly List<string> _words;
+		private readonly IRecordListManager _recordManager;
 		private readonly IRecordList<LexEntry> _records;
 		private int _currentWordIndex=0;
 
@@ -23,13 +25,23 @@ namespace WeSay.LexicalTools
 			InitializeComponent();
 		}
 
-		public GatherWordListControl(List<string> words, IRecordList<LexEntry> records)
+		public GatherWordListControl(List<string> words, IRecordListManager recordManager)//IRecordList<LexEntry> records)
 		{
+			if (recordManager == null)
+			{
+				throw new ArgumentNullException("recordManager");
+			}
+			if (words == null)
+			{
+				throw new ArgumentNullException("words");
+			}
+			_recordManager = recordManager;
+			_records = recordManager.Get<LexEntry>();
+
 			_words = words;
-			_records = records;
 			InitializeComponent();
 			BackColor = WeSay.UI.DisplaySettings.Default.BackgroundColor;
-			_listViewWords.Items.Clear();
+			_listViewOfWordsMatchingCurrentItem.Items.Clear();
 			//TODO: this limits us to a single writing system, and relies on the deprecated "default"
 			_vernacularBox.WritingSystems = new WritingSystem[] { BasilProject.Project.WritingSystems.VernacularWritingSystemDefault };
 			_vernacularBox.TextChanged += new EventHandler(_vernacularBox_TextChanged);
@@ -77,12 +89,19 @@ namespace WeSay.LexicalTools
 
 		private void SourceWordChanged()
 		{
-			_listViewWords.Items.Clear();
+			PopulateWordsMatchingCurrentItem();
 
 			UpdateStuff();
 			_vernacularBox.ClearAllText();
 			_vernacularBox.FlagIsOn = false;
 			_vernacularBox.TextBoxes[0].Focus();
+		}
+
+		private void PopulateWordsMatchingCurrentItem()
+		{
+			_listViewOfWordsMatchingCurrentItem.Items.Clear();
+			//ENHANCE: this will only match on top ws, even if it is empty.
+			Db4oLexQueryHelper.FindObjectsFromLanguageForm<LexEntry, SenseGlossMultiText>(_recordManager, _vernacularBox.TextBoxes[0].Text);
 		}
 
 		private void _btnPreviousWord_Click(object sender, EventArgs e)
@@ -108,7 +127,7 @@ namespace WeSay.LexicalTools
 			sense.Gloss.SetAlternative(BasilProject.Project.WritingSystems.AnalysisWritingSystemDefaultId, _words[_currentWordIndex]);
 			_records.Add(entry);
 
-			_listViewWords.Items.Add(s);
+			_listViewOfWordsMatchingCurrentItem.Items.Add(s);
 			_vernacularBox.TextBoxes[0].Text = "";
 			_vernacularBox.FlagIsOn = false;
 			if (WordAdded != null)
@@ -158,7 +177,7 @@ namespace WeSay.LexicalTools
 
 		private void GatherWordListControl_BackColorChanged(object sender, EventArgs e)
 		{
-			_listViewWords.BackColor = BackColor;
+			_listViewOfWordsMatchingCurrentItem.BackColor = BackColor;
 			_boxForeignWord.BackColor = BackColor;
 		}
 	}

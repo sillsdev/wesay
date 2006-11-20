@@ -33,7 +33,7 @@ namespace WeSay.LexicalTools
 			System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("stuff");
 			System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("blah");
 			this.label1 = new System.Windows.Forms.Label();
-			this._listViewWords = new System.Windows.Forms.ListView();
+			this._listViewOfWordsMatchingCurrentItem = new System.Windows.Forms.ListView();
 			this.label3 = new System.Windows.Forms.Label();
 			this._boxForeignWord = new System.Windows.Forms.TextBox();
 			this.label2 = new System.Windows.Forms.Label();
@@ -60,18 +60,18 @@ namespace WeSay.LexicalTools
 			//
 			// _listViewWords
 			//
-			this._listViewWords.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this._listViewWords.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
+			this._listViewOfWordsMatchingCurrentItem.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this._listViewOfWordsMatchingCurrentItem.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
 			listViewItem1,
 			listViewItem2});
-			this._listViewWords.Location = new System.Drawing.Point(11, 169);
-			this._listViewWords.MultiSelect = false;
-			this._listViewWords.Name = "_listViewWords";
-			this._listViewWords.Size = new System.Drawing.Size(315, 97);
-			this._listViewWords.TabIndex = 4;
-			this._listViewWords.TabStop = false;
-			this._listViewWords.UseCompatibleStateImageBehavior = false;
-			this._listViewWords.View = System.Windows.Forms.View.List;
+			this._listViewOfWordsMatchingCurrentItem.Location = new System.Drawing.Point(11, 169);
+			this._listViewOfWordsMatchingCurrentItem.MultiSelect = false;
+			this._listViewOfWordsMatchingCurrentItem.Name = "_listViewOfWordsMatchingCurrentItem";
+			this._listViewOfWordsMatchingCurrentItem.Size = new System.Drawing.Size(315, 97);
+			this._listViewOfWordsMatchingCurrentItem.TabIndex = 4;
+			this._listViewOfWordsMatchingCurrentItem.TabStop = false;
+			this._listViewOfWordsMatchingCurrentItem.UseCompatibleStateImageBehavior = false;
+			this._listViewOfWordsMatchingCurrentItem.View = System.Windows.Forms.View.List;
 			//
 			// label3
 			//
@@ -213,7 +213,7 @@ namespace WeSay.LexicalTools
 			this.Controls.Add(this._boxForeignWord);
 			this.Controls.Add(this.label2);
 			this.Controls.Add(this.label3);
-			this.Controls.Add(this._listViewWords);
+			this.Controls.Add(this._listViewOfWordsMatchingCurrentItem);
 			this.Controls.Add(this.label5);
 			this.Controls.Add(this.label4);
 			this.Controls.Add(this.label1);
@@ -236,7 +236,7 @@ namespace WeSay.LexicalTools
 		private ArrowButton.ArrowButton _btnNextWord;
 		private ArrowButton.ArrowButton _btnPreviousWord;
 		private System.Windows.Forms.Label label1;
-		private System.Windows.Forms.ListView _listViewWords;
+		private System.Windows.Forms.ListView _listViewOfWordsMatchingCurrentItem;
 		private System.Windows.Forms.Label label3;
 		private System.Windows.Forms.TextBox _boxForeignWord;
 		private System.Windows.Forms.Label label2;

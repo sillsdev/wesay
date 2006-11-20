@@ -63,7 +63,7 @@ namespace WeSay.LexicalTools
 				LoadWordList();
 			}
 			base.Activate();
-			_gatherControl = new GatherWordListControl(_words, RecordListManager.Get<LexEntry>());
+			_gatherControl = new GatherWordListControl(_words, RecordListManager);
 			_gatherControl.WordAdded += new EventHandler(_gatherControl_WordAdded);
 		}
 

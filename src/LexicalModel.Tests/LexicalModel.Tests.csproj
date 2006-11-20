@@ -47,12 +47,15 @@
 	<Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+	<Compile Include="Db4o-Specific\BaseDb4oSpecificTests.cs" />
 	<Compile Include="Binding.cs" />
+	<Compile Include="Db4o-Specific\Db4oLexQueryHelperTests.cs" />
+	<Compile Include="EditDistanceTests.cs" />
 	<Compile Include="LexEntryTests.cs" />
 	<Compile Include="LiftExportTests.cs" />
 	<Compile Include="EventsAndDates.cs" />
 	<Compile Include="LiftImportTests.cs" />
-	<Compile Include="PersistenceTests.cs" />
+	<Compile Include="Db4o-Specific\PersistenceTests.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

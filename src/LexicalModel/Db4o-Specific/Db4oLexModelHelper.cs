@@ -13,9 +13,13 @@ namespace WeSay.LexicalModel.Db4o_Specific
 	{
 		static private Db4oLexModelHelper _singleton = null;
 		internal IObjectContainer _container;
+
+		/// <summary>
+		/// for tests
+		/// </summary>
 		private int _activationCount=0;
 
-
+		[CLSCompliant(false)]
 		public static void Initialize(Db4objects.Db4o.IObjectContainer container)
 		{
 			System.Diagnostics.Debug.Assert(container != null);
@@ -88,7 +92,7 @@ namespace WeSay.LexicalModel.Db4o_Specific
 			//activate all the children
 			_container.Activate(o, int.MaxValue);
 			o.FinishActivation();
-			_activationCount = ActivationCount + 1;;
+			_activationCount++;
 		}
 
 
