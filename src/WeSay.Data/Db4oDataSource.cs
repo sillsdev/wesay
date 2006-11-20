@@ -18,26 +18,26 @@ namespace WeSay.Data
   }
 	public class Db4oDataSource : IDisposable
 	{
-		com.db4o.ObjectContainer _db;
+		Db4objects.Db4o.IObjectContainer _db;
 		private bool _disposed;
 
 		public Db4oDataSource(string filePath)
 		{
-			com.db4o.config.Configuration db4oConfiguration = com.db4o.Db4o.Configure();
-			db4oConfiguration.MarkTransient("TransientAttribute"); // this name comes from "TransientAttribute.cs", in WeSay.Foundations
+			Db4objects.Db4o.Config.IConfiguration db4oConfiguration = Db4objects.Db4o.Db4oFactory.Configure();
+			db4oConfiguration.MarkTransient("NonSerialized"); // this attribute is build-in to .net
 
-			_db = com.db4o.Db4o.OpenFile(filePath);
+			_db = Db4objects.Db4o.Db4oFactory.OpenFile(filePath);
 			if (_db == null)
 			{
 				throw new System.IO.IOException("Problem opening " + filePath);
 			}
 #if THROW_ON_OPTIMIZATION_FAILURE
-			((com.db4o.YapStream)_db).GetNativeQueryHandler().QueryOptimizationFailure += new com.db4o.inside.query.QueryOptimizationFailureHandler(OnQueryOptimizationFailure);
+			((Db4objects.Db4o.YapStream)_db).GetNativeQueryHandler().QueryOptimizationFailure += new Db4objects.Db4o.Inside.Query.QueryOptimizationFailureHandler(OnQueryOptimizationFailure);
 #endif
 		}
 
 #if THROW_ON_OPTIMIZATION_FAILURE
-		void OnQueryOptimizationFailure(object sender, com.db4o.inside.query.QueryOptimizationFailureEventArgs args)
+		void OnQueryOptimizationFailure(object sender, Db4objects.Db4o.Inside.Query.QueryOptimizationFailureEventArgs args)
 		{
 			System.Diagnostics.Debug.WriteLine("Query not Optimized:");
 			System.Diagnostics.Debug.WriteLine(args.Reason);
@@ -45,7 +45,7 @@ namespace WeSay.Data
 		}
 #endif
 		[CLSCompliant(false)]
-		public com.db4o.ObjectContainer Data
+		public Db4objects.Db4o.IObjectContainer Data
 		{
 			get
 			{

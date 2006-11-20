@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Windows.Forms;
-using com.db4o.query;
+using Db4objects.Db4o.Query;
 using WeSay.Data;
 using WeSay.LexicalModel;
 using WeSay.Project;
@@ -158,7 +158,7 @@ namespace WeSay.App
 		public IList  GetRecordsNeedingBackup()
 		{
 			DateTime last = GetLastBackupTime();
-			Query q =this._datasource.Data.Query();
+			IQuery q =this._datasource.Data.Query();
 			q.Constrain(typeof(LexEntry));
 			//REVIEW: this is >, not >=. Could a change get lost if the
 			//record was modified milliseconds before the last backup?

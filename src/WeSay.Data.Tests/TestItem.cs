@@ -92,7 +92,7 @@ namespace WeSay.Data.Tests
 			}
 		}
 
-		public void ObjectOnActivate(com.db4o.ObjectContainer container)
+		public void ObjectOnActivate(Db4objects.Db4o.IObjectContainer container)
 		{
 			_onActivateDepth = Depth;
 		}

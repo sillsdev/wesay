@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Xml;
 using System.Collections.Generic;
 using WeSay.LexicalModel;
+using WeSay.LexicalModel.Db4o_Specific;
 
 namespace LexicalModel.Tests
 {
@@ -16,6 +17,7 @@ namespace LexicalModel.Tests
 		[SetUp]
 		public void Setup()
 		{
+			Db4oLexModelHelper.InitializeForNonDbTests();
 		   _entry = new LexEntry();
 		   _entry.PropertyChanged += new System.ComponentModel.PropertyChangedEventHandler(_entry_PropertyChanged);
 			_didNotify = false;

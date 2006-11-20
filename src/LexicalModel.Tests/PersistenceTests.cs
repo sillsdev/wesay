@@ -1,12 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using com.db4o;
-using com.db4o.query;
+using Db4objects.Db4o;
+using Db4objects.Db4o.Query;
 using NUnit.Framework;
 using WeSay.Data;
 using WeSay.Language;
 using WeSay.LexicalModel;
+using WeSay.LexicalModel.Db4o_Specific;
 
 namespace WeSay.LexicalTools.Tests
 {
@@ -45,11 +46,26 @@ namespace WeSay.LexicalTools.Tests
 				_dataSource.Dispose();
 			}
 			_dataSource = new WeSay.Data.Db4oDataSource(_filePath);
+			Db4oLexModelHelper.Initialize(_dataSource.Data);
+
 			_entriesList = new WeSay.Data.Db4oRecordList<LexEntry>(_dataSource);
 			if (_entriesList.Count > 0)
 				return _entriesList[0];
 			else
 				return null;
+		}
+
+
+		[Test]
+		public void HelperGetsActivationCall()
+		{
+			CycleDatabase();
+			LexEntry entry = new LexEntry();
+			_entriesList.Add(entry);
+			int activations = Db4oLexModelHelper.Singleton.ActivationCount;
+			entry = CycleDatabase();
+			Assert.AreEqual(1, _entriesList.Count);
+			Assert.AreEqual(activations + 1, Db4oLexModelHelper.Singleton.ActivationCount);
 		}
 
 		[Test]
@@ -136,16 +152,16 @@ namespace WeSay.LexicalTools.Tests
 
 		private List<AncestorType> FindObjectsFromLanguageForm<AncestorType,MultiTextType>(string match) where AncestorType : class where MultiTextType : MultiText
 		{
-			com.db4o.query.Query q = _dataSource.Data.Query();
+			Db4objects.Db4o.Query.IQuery q = _dataSource.Data.Query();
 			q.Constrain(typeof(LanguageForm));
 			q.Descend("_form").Constrain(match);
 			q.Descend("_parent").Constrain(typeof(MultiTextType));
-			ObjectSet matches = q.Execute();
+			IObjectSet matches = q.Execute();
 
 			return FindAncestorsOfLanguageForms<AncestorType, MultiTextType>(matches);
 		}
 
-		private static List<AncestorType> FindAncestorsOfLanguageForms<AncestorType, MultiTextType>(ObjectSet matches)
+		private static List<AncestorType> FindAncestorsOfLanguageForms<AncestorType, MultiTextType>(IObjectSet matches)
 			where AncestorType : class
 			where MultiTextType : MultiText
 		{

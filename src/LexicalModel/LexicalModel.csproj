@@ -28,9 +28,9 @@
 	<WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-	<Reference Include="Db4o, Version=5.5.1.0, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL">
+	<Reference Include="Db4objects.Db4o, Version=6.0.2.0, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\Db4o.dll</HintPath>
+	  <HintPath>..\..\lib\Db4objects.Db4o.dll</HintPath>
 	</Reference>
 	<Reference Include="NetReflector, Version=1.0.0.0, Culture=neutral">
 	  <SpecificVersion>False</SpecificVersion>
@@ -41,6 +41,7 @@
 	<Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+	<Compile Include="Db4o-Specific\Db4oLexModelHelper.cs" />
 	<Compile Include="LexEntry.cs" />
 	<Compile Include="LexExampleSentence.cs" />
 	<Compile Include="Lexicon.cs" />

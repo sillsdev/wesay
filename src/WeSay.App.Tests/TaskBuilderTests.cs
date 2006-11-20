@@ -3,6 +3,7 @@ using System.ComponentModel;
 using NUnit.Framework;
 using WeSay.Data;
 using WeSay.LexicalModel;
+using WeSay.LexicalModel.Db4o_Specific;
 using WeSay.LexicalModel.Tests;
 using WeSay.Project;
 using WeSay.UI;
@@ -56,6 +57,7 @@ namespace WeSay.App.Tests
 			{
 				IBindingList entries = new PretendRecordList();
 				recordListManager = new InMemoryRecordListManager();
+				Db4oLexModelHelper.InitializeForNonDbTests();
 				IRecordList<LexEntry> masterRecordList = recordListManager.Get<LexEntry>();
 				foreach (LexEntry entry in entries)
 				{
@@ -65,6 +67,7 @@ namespace WeSay.App.Tests
 			else
 			{
 				recordListManager = new Db4oRecordListManager(this._project.PathToLexicalModelDB);
+				Db4oLexModelHelper.Initialize(((Db4oRecordListManager)recordListManager).DataSource.Data);
 			}
 			return recordListManager;
 		}

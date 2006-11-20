@@ -5,6 +5,7 @@ using NUnit.Framework;
 using WeSay.Data;
 using WeSay.Language;
 using WeSay.LexicalModel;
+using WeSay.LexicalModel.Db4o_Specific;
 
 namespace WeSay.LexicalTools.Tests
 {
@@ -17,6 +18,7 @@ namespace WeSay.LexicalTools.Tests
 		[SetUp]
 		public void Setup()
 		{
+			Db4oLexModelHelper.InitializeForNonDbTests();
 			_stringBuilder = new StringBuilder();
 			PrepWriterForFragment();
 		}

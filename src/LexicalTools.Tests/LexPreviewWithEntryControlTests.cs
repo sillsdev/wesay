@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using WeSay.LexicalModel;
+using WeSay.LexicalModel.Db4o_Specific;
 using WeSay.Project;
 using WeSay.UI;
 using System.Windows.Forms;
@@ -19,6 +20,7 @@ namespace WeSay.LexicalTools.Tests
 		[SetUp]
 		public void SetUp()
 		{
+			Db4oLexModelHelper.InitializeForNonDbTests();
 			BasilProject.InitializeForTests();
 
 			empty = CreateTestEntry("", "", "");

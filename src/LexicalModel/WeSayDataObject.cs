@@ -23,13 +23,22 @@ namespace WeSay.LexicalModel
 			_parent = parent;
 		}
 
-		[Transient]
+		[NonSerialized]
 		private ArrayList _listEventHelpers;
+//
+//        [CLSCompliant(false)]
+//        public void objectOnActivate(Db4objects.Db4o.IObjectContainer container)
+//        {
+//            container.Activate(this, int.MaxValue);
+//            EmptyObjectsRemoved = delegate{};
+//            WireUpEvents();
+//        }
 
-		[CLSCompliant(false)]
-		public void ObjectOnActivate(com.db4o.ObjectContainer container)
+		/// <summary>
+		/// Do the non-db40-specific parts of becoming activated
+		/// </summary>
+		public void FinishActivation()
 		{
-			container.Activate(this, int.MaxValue);
 			EmptyObjectsRemoved = delegate{};
 			WireUpEvents();
 		}

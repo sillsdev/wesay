@@ -3,8 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using com.db4o;
-using com.db4o.query;
+using Db4objects.Db4o;
+using Db4objects.Db4o.Query;
 using NUnit.Framework;
 
 namespace WeSay.Data.Tests
@@ -40,7 +40,7 @@ namespace WeSay.Data.Tests
 			}
 		}
 
-		protected com.db4o.ObjectContainer _db;
+		protected Db4objects.Db4o.IObjectContainer _db;
 		protected string _filePath;
 
 
@@ -48,13 +48,13 @@ namespace WeSay.Data.Tests
 		public void SetUp()
 		{
 			_filePath = Path.GetTempFileName();
-			com.db4o.config.Configuration db4oConfiguration = com.db4o.Db4o.Configure();
-			com.db4o.config.ObjectClass objectClass = db4oConfiguration.ObjectClass(typeof(WeSay.Data.Tests.Db4oQueryPerformance.LanguageForm));
+			Db4objects.Db4o.Config.IConfiguration db4oConfiguration = Db4objects.Db4o.Db4oFactory.Configure();
+			Db4objects.Db4o.Config.IObjectClass objectClass = db4oConfiguration.ObjectClass(typeof(WeSay.Data.Tests.Db4oQueryPerformance.LanguageForm));
 		   // objectClass.ObjectField("_writingSystemId").Indexed(true);
 		   // objectClass.ObjectField("_form").Indexed(true);
 
-			_db = com.db4o.Db4oFactory.OpenFile(_filePath);
-			((com.db4o.YapStream)_db).GetNativeQueryHandler().QueryOptimizationFailure += new com.db4o.inside.query.QueryOptimizationFailureHandler(OnQueryOptimizationFailure);
+			_db = Db4objects.Db4o.Db4oFactory.OpenFile(_filePath);
+			((Db4objects.Db4o.YapStream)_db).GetNativeQueryHandler().QueryOptimizationFailure += new Db4objects.Db4o.Inside.Query.QueryOptimizationFailureHandler(OnQueryOptimizationFailure);
 
 			for (int i = 0; i < 10000; i++)
 			{
@@ -68,7 +68,7 @@ namespace WeSay.Data.Tests
 
 //            _db.Commit();
 //            _db.Dispose();
-//            _db = com.db4o.Db4oFactory.OpenFile(_filePath);
+//            _db = Db4objects.Db4o.Db4oFactory.OpenFile(_filePath);
 		}
 
 		[TearDown]
@@ -128,7 +128,7 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void SimpleStringSearch()
 		{
-			ObjectContainer db = MakeFlatStringDatabase(true);
+			IObjectContainer db = MakeFlatStringDatabase(true);
 			System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
 
 			stopwatch.Start();
@@ -143,21 +143,21 @@ namespace WeSay.Data.Tests
 			db.Dispose();
 		}
 
-		private ObjectContainer MakeFlatStringDatabase(bool doIndex)
+		private IObjectContainer MakeFlatStringDatabase(bool doIndex)
 		{
 			string path = Path.GetTempFileName();
-			com.db4o.config.Configuration db4oConfiguration = com.db4o.Db4o.Configure();
+			Db4objects.Db4o.Config.IConfiguration db4oConfiguration = Db4objects.Db4o.Db4oFactory.Configure();
 			if (doIndex)
 			{
-				com.db4o.config.ObjectClass objectClass = db4oConfiguration.ObjectClass(typeof(WeSay.Data.Tests.Db4oQueryPerformance.LanguageForm));
+				Db4objects.Db4o.Config.IObjectClass objectClass = db4oConfiguration.ObjectClass(typeof(WeSay.Data.Tests.Db4oQueryPerformance.LanguageForm));
 				objectClass.ObjectField("_form").Indexed(true);
 			}
 
-			com.db4o.diagnostic.DiagnosticToConsole listener = new com.db4o.diagnostic.DiagnosticToConsole();
+			Db4objects.Db4o.Diagnostic.DiagnosticToConsole listener = new Db4objects.Db4o.Diagnostic.DiagnosticToConsole();
 			db4oConfiguration.Diagnostic().AddListener(listener);
 
-			com.db4o.ObjectContainer db = com.db4o.Db4oFactory.OpenFile(path);
-			((com.db4o.YapStream)db).GetNativeQueryHandler().QueryOptimizationFailure += new com.db4o.inside.query.QueryOptimizationFailureHandler(OnQueryOptimizationFailure);
+			Db4objects.Db4o.IObjectContainer db = Db4objects.Db4o.Db4oFactory.OpenFile(path);
+			((Db4objects.Db4o.YapStream)db).GetNativeQueryHandler().QueryOptimizationFailure += new Db4objects.Db4o.Inside.Query.QueryOptimizationFailureHandler(OnQueryOptimizationFailure);
 
 			for (int i = 0; i < 10000; i++)
 			{
@@ -169,7 +169,7 @@ namespace WeSay.Data.Tests
 		}
 
 
-		void OnQueryOptimizationFailure(object sender, com.db4o.inside.query.QueryOptimizationFailureEventArgs args)
+		void OnQueryOptimizationFailure(object sender, Db4objects.Db4o.Inside.Query.QueryOptimizationFailureEventArgs args)
 		{
 			Console.WriteLine("Query not Optimized:");
 			Console.WriteLine(args.Reason);

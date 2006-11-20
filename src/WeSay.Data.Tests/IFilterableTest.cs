@@ -38,8 +38,8 @@ namespace WeSay.Data.Tests.Db4oBindingListTests
 		[TestFixtureSetUp]
 		public void TestFixtureSetup()
 		{
-			com.db4o.config.Configuration configuration = com.db4o.Db4o.Configure();
-			com.db4o.config.ObjectClass objectClass = configuration.ObjectClass(typeof(TestItem));
+			Db4objects.Db4o.Config.IConfiguration configuration = Db4objects.Db4o.Db4oFactory.Configure();
+			Db4objects.Db4o.Config.IObjectClass objectClass = configuration.ObjectClass(typeof(TestItem));
 			objectClass.ObjectField("_storedInt").Indexed(true);
 			objectClass.ObjectField("_storedString").Indexed(true);
 		}
@@ -119,8 +119,8 @@ namespace WeSay.Data.Tests.Db4oBindingListTests
 		[TestFixtureSetUp]
 		public void TestFixtureSetup()
 		{
-			com.db4o.config.Configuration configuration = com.db4o.Db4o.Configure();
-			com.db4o.config.ObjectClass objectClass = configuration.ObjectClass(typeof(SimpleIntTestClass));
+			Db4objects.Db4o.Config.IConfiguration configuration = Db4objects.Db4o.Db4oFactory.Configure();
+			Db4objects.Db4o.Config.IObjectClass objectClass = configuration.ObjectClass(typeof(SimpleIntTestClass));
 			objectClass.ObjectField("_i").Indexed(true);
 		}
 

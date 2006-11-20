@@ -1,7 +1,8 @@
 using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using WeSay.Language;
-
+using WeSay.LexicalModel.Db4o_Specific;
 
 namespace WeSay.LexicalModel
 {
@@ -73,6 +74,16 @@ namespace WeSay.LexicalModel
 		{
 			get
 			{
+#if DEBUG
+				//Why have this requirement, when the helper isn't needed in a non-db-test context?
+				//ONly because I don't know how else to make sure it is initialized when
+				// it *is* needed.
+				if (Db4oLexModelHelper.Singleton == null)
+				{
+					throw new ApplicationException("This class should not be used without initializing Db4oLexModelHelper.");
+				}
+#endif
+
 				return _lexicalForm;
 			}
 		}

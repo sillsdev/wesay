@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
-using com.db4o;
-using com.db4o.ext;
-using com.db4o.query;
+using Db4objects.Db4o;
+using Db4objects.Db4o.Ext;
+using Db4objects.Db4o.Query;
 using WeSay.Data;
 using WeSay.Language;
 using WeSay.LexicalModel;
@@ -251,7 +251,7 @@ namespace WeSay.LexicalTools
 			{
 				Db4oDataSource db4oData = ((Db4oRecordListManager) _recordManager).DataSource;
 				IRecordList<LexicalFormMultiText> lexicalForms = _recordManager.Get<LexicalFormMultiText>();
-				ExtObjectContainer database = db4oData.Data.Ext();
+				IExtObjectContainer database = db4oData.Data.Ext();
 				IList<LexicalFormMultiText> best;
 				bestEditDistance = GetClosestLexicalForms(lexicalForms, key, 0, bestEditDistance, out best);
 				GetEntriesFromLexicalForms(database, bestMatches, best);
@@ -304,13 +304,13 @@ namespace WeSay.LexicalTools
 			return bestEditDistance;
 		}
 
-		private static void GetEntriesFromLexicalForms(ExtObjectContainer database, IList<LexEntry> bestMatches, IList<LexicalFormMultiText> best) {
+		private static void GetEntriesFromLexicalForms(Db4objects.Db4o.Ext.IExtObjectContainer database, IList<LexEntry> bestMatches, IList<LexicalFormMultiText> best) {
 			foreach (LexicalFormMultiText lexicalForm in best)
 			{
-				Query query = database.Query();
+				IQuery query = database.Query();
 				query.Constrain(typeof(LexEntry));
 				query.Descend("_lexicalForm").Constrain(lexicalForm).Identity();
-				ObjectSet entries = query.Execute();
+				IObjectSet entries = query.Execute();
 				// If LexEntry does not cascade delete it's lexicalForm then we could have a case where we
 				// don't have a entry associated with this lexicalForm.
 				if (entries.Count == 0)

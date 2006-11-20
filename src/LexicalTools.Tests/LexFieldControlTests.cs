@@ -2,6 +2,7 @@ using System;
 using NUnit.Framework;
 using WeSay.Data;
 using WeSay.LexicalModel;
+using WeSay.LexicalModel.Db4o_Specific;
 using WeSay.Project;
 using WeSay.UI;
 
@@ -60,6 +61,7 @@ namespace WeSay.LexicalTools.Tests
 		[SetUp]
 		public void SetUp()
 		{
+			Db4oLexModelHelper.InitializeForNonDbTests();
 			BasilProject.InitializeForTests();
 			_recordListManager = new InMemoryRecordListManager();
 			this._missingTranslation = new MissingTranslationFilter();

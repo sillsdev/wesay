@@ -4,6 +4,7 @@ using NUnit.Framework;
 using WeSay.App;
 using WeSay.Data;
 using WeSay.LexicalModel;
+using WeSay.LexicalModel.Db4o_Specific;
 
 namespace WeSay.App.Tests
 {
@@ -21,6 +22,7 @@ namespace WeSay.App.Tests
 		{
 			_dbFile = Path.GetTempFileName();
 			_dataSource = new Db4oDataSource(_dbFile);
+			Db4oLexModelHelper.Initialize(_dataSource.Data);
 			this._records = new Db4oRecordList<LexEntry>(this._dataSource);
 
 			this._directory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());

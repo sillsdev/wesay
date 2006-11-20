@@ -1,6 +1,7 @@
 using System;
 using WeSay.Data;
 using WeSay.LexicalModel;
+using WeSay.LexicalModel.Db4o_Specific;
 using WeSay.Project;
 using NUnit.Framework;
 
@@ -23,6 +24,7 @@ namespace WeSay.LexicalTools.Tests
 		[SetUp]
 		public void Setup()
 		{
+			Db4oLexModelHelper.InitializeForNonDbTests();
 			BasilProject.InitializeForTests();
 
 			this._recordListManager = new InMemoryRecordListManager();

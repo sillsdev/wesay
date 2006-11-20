@@ -2,15 +2,15 @@ using System;
 using System.Collections.Generic;
 using System.Collections;
 using System.ComponentModel;
-using com.db4o;
-using com.db4o.ext;
-using com.db4o.inside.query;
-using com.db4o.query;
+using Db4objects.Db4o;
+using Db4objects.Db4o.Ext;
+using Db4objects.Db4o.Inside.Query;
+using Db4objects.Db4o.Query;
 
 namespace WeSay.Data
 {
 	[CLSCompliant(false)]
-	public delegate Query SodaQueryProvider(Query query);
+	public delegate IQuery SodaQueryProvider(IQuery query);
 
 	/// <summary>
 	/// db4o aware list with items stored in db4o database.
@@ -28,7 +28,7 @@ namespace WeSay.Data
 	/// * Optimized item activation - item is not searched in read cache.
 	/// * Added <see cref="StoreItemOnPropertyChanged"/> feature.
 	/// * Added <see cref="Db4oList<T>.Refresh"/>, <see cref="RefreshAt"/> and <see cref="RequeryAndRefresh"/> method.
-	/// * Bug removed: When <see cref="FilteringInDatabase"/> was true and <see cref="com.db4o.query.Query"/> was called, the result was endless loop.
+	/// * Bug removed: When <see cref="FilteringInDatabase"/> was true and <see cref="Db4objects.Db4o.Query.IQuery"/> was called, the result was endless loop.
 	/// * <see cref="Rollback"/> does not requery anymore, but uses new cache of deleted item identifiers to add those items back to this list.
 	/// _________________________________________
 	/// Version: 2006.04.10
@@ -57,7 +57,7 @@ namespace WeSay.Data
 		/// </summary>
 		/// <param name="database">See <see cref="Database"/>.</param>
 		/// <exception cref="ArgumentNullException"><paramref name="database"/> is null.</exception>
-		public Db4oList(ObjectContainer database)
+		public Db4oList(IObjectContainer database)
 		{
 			if (database == null)
 			{
@@ -77,7 +77,7 @@ namespace WeSay.Data
 		/// <param name="filter">Initial <see cref="Filter"/>.</param>
 		/// <param name="sorter">Initial <see cref="Sorter"/>.</param>
 		/// <exception cref="ArgumentNullException"><paramref name="database"/> is null.</exception>
-		public Db4oList(ObjectContainer database, IEnumerable items,
+		public Db4oList(IObjectContainer database, IEnumerable items,
 						Predicate<T> filter, Comparison<T> sorter)
 				: this(database)
 		{
@@ -93,7 +93,7 @@ namespace WeSay.Data
 		/// <param name="filter">Initial <see cref="Filter"/>.</param>
 		/// <param name="sorter">Initial <see cref="Sorter"/>.</param>
 		/// <exception cref="ArgumentNullException"><paramref name="database"/> is null.</exception>
-		public Db4oList(ObjectContainer database, IList<long> itemIds,
+		public Db4oList(IObjectContainer database, IList<long> itemIds,
 						Predicate<T> filter, Comparison<T> sorter)
 				: this(database)
 		{
@@ -230,7 +230,7 @@ namespace WeSay.Data
 		/// <summary>
 		/// db4o database object container used for items manipulation.
 		/// </summary>
-		public ExtObjectContainer Database
+		public IExtObjectContainer Database
 		{
 			get
 			{
@@ -348,7 +348,7 @@ namespace WeSay.Data
 		}
 
 		/// <summary>
-		/// Activation (instantiation) depth used when calling <see cref="ExtObjectContainer.PeekPersisted"/>.
+		/// Activation (instantiation) depth used when calling <see cref="IExtObjectContainer.PeekPersisted"/>.
 		/// </summary>
 		/// <remarks>
 		/// See <see cref="Db4oList<T>[]"/>.
@@ -444,7 +444,7 @@ namespace WeSay.Data
 		/// </summary>
 		/// <param name="items">
 		/// Collection of items to be added to the list.
-		/// If the collection comes from db4o query (ObjectSet or native query IList`1), no objects are instantiated and activated.
+		/// If the collection comes from db4o query (IObjectSet or native query IList`1), no objects are instantiated and activated.
 		/// </param>
 		/// <param name="filter">
 		/// Initial <see cref="Filter"/>.
@@ -524,7 +524,7 @@ namespace WeSay.Data
 
 			if (_SODAQuery != null)
 			{
-				Query query = _SODAQuery(Database.Query());
+				IQuery query = _SODAQuery(Database.Query());
 				list = query.Execute();
 			}
 			else
@@ -573,13 +573,13 @@ namespace WeSay.Data
 		private SodaQueryProvider _SODAQuery;
 
 		/// <summary>
-		/// Instantiates new <see cref="Db4oList{T}"/> object and calls its <see cref="com.db4o.query.Query"/> method without committing anything.
+		/// Instantiates new <see cref="Db4oList{T}"/> object and calls its <see cref="Db4objects.Db4o.Query.IQuery"/> method without committing anything.
 		/// </summary>
 		/// <param name="database">See <see cref="Database"/>.</param>
 		/// <param name="filter">Query filtering predicate (like <see cref="Filter"/>).</param>
 		/// <param name="sorter">Query sorting (like <see cref="Sorter"/>).</param>
 		/// <returns>List.</returns>
-		public static Db4oList<T> Query(ObjectContainer database, Predicate<T> filter, Comparison<T> sorter)
+		public static Db4oList<T> Query(IObjectContainer database, Predicate<T> filter, Comparison<T> sorter)
 		{
 			Db4oList<T> list = new Db4oList<T>(database);
 			list.Query(filter, sorter, false);
@@ -587,7 +587,7 @@ namespace WeSay.Data
 		}
 
 		/// <summary>
-		/// Calls <see cref="com.db4o.query.Query"/> method with current <see cref="Filter"/> and <see cref="Sorter"/>.
+		/// Calls <see cref="Db4objects.Db4o.Query.IQuery"/> method with current <see cref="Filter"/> and <see cref="Sorter"/>.
 		/// </summary>
 		/// <param name="commit">Whether to call <see cref="Commit"/>.</param>
 		public void Requery(bool commit)
@@ -621,7 +621,7 @@ namespace WeSay.Data
 		}
 
 		/// <summary>
-		/// Calls <see cref="ExtObjectContainer.Refresh"/> for <paramref name="item"/> with <see cref="RefreshActivationDepth"/>.
+		/// Calls <see cref="IExtObjectContainer.Refresh"/> for <paramref name="item"/> with <see cref="RefreshActivationDepth"/>.
 		/// </summary>
 		/// <param name="item">Item to be refreshed.</param>
 		public void Refresh(T item)
@@ -1020,7 +1020,7 @@ namespace WeSay.Data
 		}
 
 		/// <summary>
-		/// If true, filtering is done using <see cref="Database"/> by <see cref="com.db4o.query.Query"/>ing with current <see cref="Sorter"/>.
+		/// If true, filtering is done using <see cref="Database"/> by <see cref="Db4objects.Db4o.Query.IQuery"/>ing with current <see cref="Sorter"/>.
 		/// If false, it is done in memory.
 		/// </summary>
 		/// <value>Default: true.</value>
@@ -1114,7 +1114,7 @@ namespace WeSay.Data
 		}
 
 		/// <summary>
-		/// If true, sorting is done using <see cref="Database"/> by <see cref="com.db4o.query.Query"/>ing with current <see cref="Filter"/>.
+		/// If true, sorting is done using <see cref="Database"/> by <see cref="Db4objects.Db4o.Query.IQuery"/>ing with current <see cref="Filter"/>.
 		/// If false, it is done in memory.
 		/// See <see cref="Sort"/>.
 		/// </summary>
@@ -1280,7 +1280,7 @@ namespace WeSay.Data
 		/// List items indexer.
 		/// </summary>
 		/// <remarks>
-		/// set: Item is also stored to <see cref="Database"/> when it is not already stored there or it is different than already stored one (got by calling <see cref="ExtObjectContainer.PeekPersisted"/>), while the comparing is done using <see cref="Equaler"/>. If <see cref="Equaler"/> is null, item is always stored.
+		/// set: Item is also stored to <see cref="Database"/> when it is not already stored there or it is different than already stored one (got by calling <see cref="IExtObjectContainer.PeekPersisted"/>), while the comparing is done using <see cref="Equaler"/>. If <see cref="Equaler"/> is null, item is always stored.
 		/// If an item previously stored at specified <paramref name="index"/> exists only ones in this list, it is deleted from <see cref="Database"/> before setting new one.
 		/// </remarks>
 		/// <param name="index">Index of list item.</param>
@@ -1566,15 +1566,15 @@ namespace WeSay.Data
 		/// </summary>
 		/// <param name="items">Item collection.</param>
 		/// <returns>
-		/// Ids or null, if <paramref name="items"/> is not collection from <see cref="Database"/> query (ObjectSet or native query list).
+		/// Ids or null, if <paramref name="items"/> is not collection from <see cref="Database"/> query (IObjectSet or native query list).
 		/// </returns>
 		protected virtual IEnumerable<long> GetIds(IEnumerable items)
 		{
 			IEnumerable<long> ids = null;
 			// results from db4o SODA/QBE query
-			if (items is ObjectSet)
+			if (items is IObjectSet)
 			{
-				ObjectSet objectSet = items as ObjectSet;
+				IObjectSet objectSet = items as IObjectSet;
 				ids = objectSet.Ext().GetIDs();
 			}
 					// results from db4o native query
@@ -1679,7 +1679,7 @@ namespace WeSay.Data
 		/// Activates item.
 		/// </summary>
 		/// <remarks>
-		/// If item is not activated by calling <see cref="OnActivating"/>, it is activated using <see cref="ExtObjectContainer.Activate"/> with <see cref="ActivationDepth"/>.
+		/// If item is not activated by calling <see cref="OnActivating"/>, it is activated using <see cref="IExtObjectContainer.Activate"/> with <see cref="ActivationDepth"/>.
 		/// </remarks>
 		/// <param name="item">Item.</param>
 		protected virtual void DoActivateItem(T item)
@@ -1727,7 +1727,7 @@ namespace WeSay.Data
 		/// Deactivates item.
 		/// </summary>
 		/// <remarks>
-		/// If item is not deactivated by calling <see cref="OnDeactivating"/>, it is deactivated using <see cref="ExtObjectContainer.Deactivate"/> with <see cref="ActivationDepth"/>.
+		/// If item is not deactivated by calling <see cref="OnDeactivating"/>, it is deactivated using <see cref="IExtObjectContainer.Deactivate"/> with <see cref="ActivationDepth"/>.
 		/// </remarks>
 		/// <param name="item">Item.</param>
 		protected virtual void DoDeactivateItem(T item)
@@ -1753,7 +1753,7 @@ namespace WeSay.Data
 		/// Stores (adds or updates) item in <see cref="Database"/>.
 		/// </summary>
 		/// <remarks>
-		/// If item is not stored by calling <see cref="OnStoring"/>, it is stored by calling <see cref="com.db4o.ext.ExtObjectContainer.Set(object, int)"/>.
+		/// If item is not stored by calling <see cref="OnStoring"/>, it is stored by calling <see cref="Db4objects.Db4o.Ext.IExtObjectContainer.Set(object, int)"/>.
 		/// </remarks>
 		/// <param name="item">Item.</param>
 		protected virtual void DoStoreItem(T item, string propertyName)
@@ -1782,7 +1782,7 @@ namespace WeSay.Data
 		/// Deletes item from <see cref="Database"/>.
 		/// </summary>
 		/// <remarks>
-		/// If item is not deleted by calling <see cref="OnDeleting"/>, it is deleted by calling <see cref="ExtObjectContainer.Delete"/>.
+		/// If item is not deleted by calling <see cref="OnDeleting"/>, it is deleted by calling <see cref="IExtObjectContainer.Delete"/>.
 		/// </remarks>
 		/// <param name="item">Item (which is not activated).</param>
 		protected virtual void DoDeleteItem(T item)
@@ -1862,7 +1862,7 @@ namespace WeSay.Data
 		/// <summary>
 		/// See <see cref="Database"/>.
 		/// </summary>
-		private ExtObjectContainer _database;
+		private IExtObjectContainer _database;
 
 		/// <summary>
 		/// See <see cref="ReadCacheSize"/>.

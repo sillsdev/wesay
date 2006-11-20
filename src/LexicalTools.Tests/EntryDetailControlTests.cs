@@ -4,6 +4,7 @@ using NUnit.Framework;
 using NUnit.Extensions.Forms;
 using WeSay.Data;
 using WeSay.LexicalModel;
+using WeSay.LexicalModel.Db4o_Specific;
 using WeSay.Project;
 using WeSay.UI;
 
@@ -24,7 +25,7 @@ namespace WeSay.LexicalTools.Tests
 		public override void Setup()
 		{
 			base.Setup();
-
+			Db4oLexModelHelper.InitializeForNonDbTests();
 			BasilProject.InitializeForTests();
 			this._vernacularWsId = BasilProject.Project.WritingSystems.VernacularWritingSystemDefault.Id;
 
