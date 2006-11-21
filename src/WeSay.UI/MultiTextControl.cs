@@ -10,7 +10,6 @@ namespace WeSay.UI
 	public partial class MultiTextControl : UserControl
 	{
 		private IList<WritingSystem> _writingSystems;
-		private MultiText _multiText;
 		private List<WeSayTextBox> _textBoxes;
 		private FlagButton _flagButton;
 		//public new event EventHandler TextChanged;
@@ -21,7 +20,6 @@ namespace WeSay.UI
 			this.components = new System.ComponentModel.Container();
 			InitializeComponent();
 			_textBoxes = new List<WeSayTextBox>();
-			_multiText = new WeSay.Language.MultiText();
 //            this.SuspendLayout();
 //            this.BackColor = System.Drawing.Color.Green;
 //            this._vbox.BackColor = System.Drawing.Color.White;
@@ -56,17 +54,22 @@ namespace WeSay.UI
 		{
 			get
 			{
-				return _multiText;
+				//we don't have a binding that would keep an internal multitext up to date.
+				//This seems cleaner and sufficient, at the moment.
+				MultiText mt = new MultiText();
+				foreach (WeSayTextBox box in this.TextBoxes )
+				{
+					mt.SetAlternative(box.WritingSystem.Id, box.Text);
+				}
+				return mt;
 			}
 			set
 			{
-				//REVIEW: Should this be *copying* the multitext?
-				_multiText = value;
-				BuildBoxes();
+				BuildBoxes(value);
 			}
 		}
 
-		private void BuildBoxes()
+		private void BuildBoxes(MultiText multiText)
 		{
 			SuspendLayout();
 			if (_vbox.Count > 0)
@@ -77,7 +80,7 @@ namespace WeSay.UI
 			const int initialPanelWidth = 200;
 			foreach (WritingSystem writingSystem in WritingSystems)
 			{
-				WeSayTextBox box = AddTextBox(initialPanelWidth, writingSystem);
+				WeSayTextBox box = AddTextBox(initialPanelWidth, writingSystem, multiText);
 
 				Label label = AddWritingSystemLabel(box);
 
@@ -151,12 +154,12 @@ namespace WeSay.UI
 			return label;
 		}
 
-		private WeSayTextBox AddTextBox(int initialPanelWidth, WritingSystem writingSystem)
+		private WeSayTextBox AddTextBox(int initialPanelWidth, WritingSystem writingSystem, MultiText multiText)
 		{
 			WeSayTextBox box = new WeSayTextBox(writingSystem);
 			_textBoxes.Add(box);
 			box.Name = Name.Replace("-mtc","") + "_" + writingSystem.Id; //for automated tests to find this particular guy
-			box.Text = _multiText[writingSystem.Id];
+			box.Text = multiText[writingSystem.Id];
 			box.Location = new Point(30, 0);
 			const int kRightMargin = 25; // for flag button
 			box.Width = (initialPanelWidth - box.Left) - kRightMargin;
@@ -201,7 +204,7 @@ namespace WeSay.UI
 			set
 			{
 				_writingSystems = value;
-				BuildBoxes();
+				BuildBoxes(this.MultiText);
 			}
 		}
 

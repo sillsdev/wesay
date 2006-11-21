@@ -16,7 +16,6 @@ namespace WeSay.LexicalTools
 		private  IRecordList<LexEntry> _records;
 		private int _currentDomainIndex=0;
 
-		public event EventHandler WordAdded;
 
 		public GatherBySemanticDomainsControl()
 		{

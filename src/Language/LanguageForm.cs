@@ -1,3 +1,5 @@
+using System;
+
 namespace WeSay.Language
 {
 	/// <summary>
@@ -16,6 +18,10 @@ namespace WeSay.Language
 
 		public LanguageForm(string writingSystemId, string form, MultiText parent)
 		{
+			if (parent == null)
+			{
+				throw new ArgumentException("Cannot be null", "parent");
+			}
 			_parent = parent;
 			_writingSystemId = writingSystemId;
 			_form =  form;

@@ -1,6 +1,7 @@
 using System.IO;
 using NUnit.Framework;
 using WeSay.LexicalModel;
+using WeSay.LexicalModel.Db4o_Specific;
 
 namespace WeSay.Data.Tests
 {
@@ -36,6 +37,7 @@ namespace WeSay.Data.Tests
 
 			using (Db4oDataSource ds = new Db4oDataSource(destPath))
 			{
+				Db4oLexModelHelper.Initialize(ds.Data);
 				using (Db4oRecordList<LexEntry> entries = new Db4oRecordList<LexEntry>(ds))
 				{
 					LiftImporter importer = new LiftImporter(entries);

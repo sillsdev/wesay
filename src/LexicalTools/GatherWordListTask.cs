@@ -1,10 +1,11 @@
-using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Windows.Forms;
 using WeSay.Data;
+using WeSay.Language;
 using WeSay.LexicalModel;
+using WeSay.LexicalModel.Db4o_Specific;
 using WeSay.Project;
 
 namespace WeSay.LexicalTools
@@ -63,19 +64,28 @@ namespace WeSay.LexicalTools
 				LoadWordList();
 			}
 			base.Activate();
-			_gatherControl = new GatherWordListControl(_words, RecordListManager);
-			_gatherControl.WordAdded += new EventHandler(_gatherControl_WordAdded);
+			_gatherControl = new GatherWordListControl(this, _words);
 		}
 
-		void _gatherControl_WordAdded(object sender, EventArgs e)
+		public IList<LexEntry> GetMatchingRecords(MultiText gloss)
 		{
+			return Db4oLexQueryHelper.FindObjectsFromLanguageForm<LexEntry, SenseGlossMultiText>(this.RecordListManager, gloss.GetFirstAlternative());
+		}
+
+		public void WordCollected(MultiText word, MultiText gloss, bool flagIsOn)
+		{
+			LexSense sense = new LexSense();
+			sense.Gloss.MergeIn(gloss);
+
+			Db4oLexQueryHelper.AddSenseToLexicon(this.RecordListManager, word, sense);
 			this.RecordListManager.GoodTimeToCommit();
 		}
+
+
 
 		public override void Deactivate()
 		{
 			base.Deactivate();
-			_gatherControl.WordAdded -= new EventHandler(_gatherControl_WordAdded);
 			_gatherControl.Dispose();
 			_gatherControl = null;
 			this.RecordListManager.GoodTimeToCommit();

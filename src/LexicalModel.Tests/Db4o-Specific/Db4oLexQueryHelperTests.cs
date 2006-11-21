@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using NUnit.Framework;
+using WeSay.Data;
 using WeSay.Language;
 using WeSay.LexicalModel.Db4o_Specific;
 
@@ -19,7 +20,7 @@ namespace WeSay.LexicalModel.Tests
 			_entriesList.Add(entry);
 			CycleDatabase();
 			//don't want to find this one
-			_dataSource.Data.Set(new LanguageForm("en", "findme", null));
+			_dataSource.Data.Set(new LanguageForm("en", "findme", new MultiText()));
 			List<LexEntry> list = Db4oLexQueryHelper.FindObjectsFromLanguageForm<LexEntry, LexicalFormMultiText>(_dataSource, "findme");
 			Assert.AreEqual(1, list.Count);
 		}
@@ -32,7 +33,7 @@ namespace WeSay.LexicalModel.Tests
 			AddEntryWithGloss(gloss);
 			CycleDatabase();
 			//don't want to find this one
-			_dataSource.Data.Set(new LanguageForm("en", gloss, null));
+			_dataSource.Data.Set(new LanguageForm("en", gloss, new MultiText()));
 
 			List<LexEntry> list = Db4oLexQueryHelper.FindObjectsFromLanguageForm<LexEntry, SenseGlossMultiText>(_dataSource, gloss);
 			Assert.AreEqual(1, list.Count);
@@ -44,6 +45,36 @@ namespace WeSay.LexicalModel.Tests
 			LexSense sense = (LexSense)entry.Senses.AddNew();
 			sense.Gloss["en"] = gloss;
 			_entriesList.Add(entry);
+		}
+
+
+
+		[Test]
+		public void AddSenseAppendsToExistingLexEntry()
+		{
+			CycleDatabase();
+			string formToFind = "Bank";
+			AddEntryWithLexemeForm("ignore1");
+			LexEntry entryToMatch =AddEntryWithLexemeForm(formToFind);
+			AddEntryWithLexemeForm("ignore2");
+
+			LexSense sense = (LexSense) new LexSense();
+			sense.Gloss["en"] = "money place";
+
+			MultiText lexemeForm = new MultiText();
+			lexemeForm["en"] = formToFind;
+
+			Assert.AreEqual(0, entryToMatch.Senses.Count);
+			Db4oLexQueryHelper.AddSenseToLexicon(_recordListManager, lexemeForm, sense);
+			Assert.AreEqual(1, entryToMatch.Senses.Count);
+		}
+
+		private LexEntry AddEntryWithLexemeForm(string lexemeForm)
+		{
+			LexEntry entry = new LexEntry();
+			entry.LexicalForm["en"] = lexemeForm;
+			_entriesList.Add(entry);
+			return entry;
 		}
 
 	}

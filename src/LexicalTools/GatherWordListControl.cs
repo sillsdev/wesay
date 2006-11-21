@@ -5,7 +5,6 @@ using System.Windows.Forms;
 using WeSay.Data;
 using WeSay.Language;
 using WeSay.LexicalModel;
-using WeSay.LexicalModel.Db4o_Specific;
 using WeSay.Project;
 
 namespace WeSay.LexicalTools
@@ -13,11 +12,8 @@ namespace WeSay.LexicalTools
 	public partial class GatherWordListControl : UserControl
 	{
 		private readonly List<string> _words;
-		private readonly IRecordListManager _recordManager;
-		private readonly IRecordList<LexEntry> _records;
+		private readonly GatherWordListTask _task;
 		private int _currentWordIndex=0;
-
-		public event EventHandler WordAdded;
 
 		public GatherWordListControl()
 		{
@@ -25,18 +21,13 @@ namespace WeSay.LexicalTools
 			InitializeComponent();
 		}
 
-		public GatherWordListControl(List<string> words, IRecordListManager recordManager)//IRecordList<LexEntry> records)
+		public GatherWordListControl(GatherWordListTask task, List<string> words)
 		{
-			if (recordManager == null)
-			{
-				throw new ArgumentNullException("recordManager");
-			}
 			if (words == null)
 			{
 				throw new ArgumentNullException("words");
 			}
-			_recordManager = recordManager;
-			_records = recordManager.Get<LexEntry>();
+			_task = task;
 
 			_words = words;
 			InitializeComponent();
@@ -78,6 +69,9 @@ namespace WeSay.LexicalTools
 				_btnPreviousWord.Enabled = _currentWordIndex > 0;
 				_btnAddWord.Enabled = _vernacularBox.TextBoxes[0].Text.Trim() != "";
 			}
+
+			PopulateWordsMatchingCurrentItem();
+
 	   }
 
 		private void _btnNextWord_Click(object sender, EventArgs e)
@@ -89,19 +83,24 @@ namespace WeSay.LexicalTools
 
 		private void SourceWordChanged()
 		{
-			PopulateWordsMatchingCurrentItem();
-
 			UpdateStuff();
 			_vernacularBox.ClearAllText();
 			_vernacularBox.FlagIsOn = false;
 			_vernacularBox.TextBoxes[0].Focus();
 		}
 
+		/// <summary>
+		/// We want to show all words in the lexicon which match the current
+		/// gloss.
+		/// </summary>
 		private void PopulateWordsMatchingCurrentItem()
 		{
 			_listViewOfWordsMatchingCurrentItem.Items.Clear();
-			//ENHANCE: this will only match on top ws, even if it is empty.
-			Db4oLexQueryHelper.FindObjectsFromLanguageForm<LexEntry, SenseGlossMultiText>(_recordManager, _vernacularBox.TextBoxes[0].Text);
+
+			foreach (LexEntry entry in _task.GetMatchingRecords(ForeignWordAsMultiText))
+			{
+				_listViewOfWordsMatchingCurrentItem.Items.Add(entry.LexicalForm.GetFirstAlternative());
+			}
 		}
 
 		private void _btnPreviousWord_Click(object sender, EventArgs e)
@@ -120,21 +119,26 @@ namespace WeSay.LexicalTools
 			{
 				return;
 			}
+			_task.WordCollected(_vernacularBox.MultiText, ForeignWordAsMultiText, _vernacularBox.FlagIsOn);
 
-			LexEntry entry = new LexEntry();
-			entry.LexicalForm.SetAlternative(BasilProject.Project.WritingSystems.VernacularWritingSystemDefaultId, s);
-			LexSense sense = (LexSense) entry.Senses.AddNew();
-			sense.Gloss.SetAlternative(BasilProject.Project.WritingSystems.AnalysisWritingSystemDefaultId, _words[_currentWordIndex]);
-			_records.Add(entry);
-
-			_listViewOfWordsMatchingCurrentItem.Items.Add(s);
+			//_listViewOfWordsMatchingCurrentItem.Items.Add(s);
 			_vernacularBox.TextBoxes[0].Text = "";
 			_vernacularBox.FlagIsOn = false;
-			if (WordAdded != null)
-			{
-				WordAdded.Invoke(this, null);
-			}
 			UpdateStuff();
+		}
+
+		/// <summary>
+		/// Someday, we may indeed have multi-string foreign words
+		/// </summary>
+		private MultiText ForeignWordAsMultiText
+		{
+			get
+			{
+				MultiText m = new MultiText();
+				m.SetAlternative(BasilProject.Project.WritingSystems.AnalysisWritingSystemDefaultId,
+											   this._words[_currentWordIndex]);
+				return m;
+			}
 		}
 
 

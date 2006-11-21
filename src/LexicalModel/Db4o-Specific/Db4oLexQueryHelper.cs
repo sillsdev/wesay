@@ -13,6 +13,8 @@ namespace WeSay.LexicalModel.Db4o_Specific
 	public class Db4oLexQueryHelper
 	{
 
+		//TODO: this is not ws savvy yet
+
 		[CLSCompliant(false)]
 		static public List<AncestorType> FindObjectsFromLanguageForm<AncestorType, MultiTextType>(IRecordListManager recordManager, string match)
 			where AncestorType : class
@@ -62,6 +64,23 @@ namespace WeSay.LexicalModel.Db4o_Specific
 				}
 			}
 			return list;
+		}
+
+		static public void AddSenseToLexicon(IRecordListManager recordManager, MultiText lexemeForm, LexSense sense)
+		{
+			//review: the desired semantics of this find are unclear, if we have more than one ws
+			IList<LexEntry> entriesWithSameForm = Db4oLexQueryHelper.FindObjectsFromLanguageForm<LexEntry, LexicalFormMultiText>(recordManager, lexemeForm.GetFirstAlternative());
+			if (entriesWithSameForm.Count == 0)
+			{
+				LexEntry entry = new LexEntry();
+				entry.LexicalForm.MergeIn(lexemeForm);
+				entry.Senses.Add(sense);
+				recordManager.Get<LexEntry>().Add(entry);
+			}
+			else
+			{
+				entriesWithSameForm[0].Senses.Add(sense);
+			}
 		}
 
 		static public bool HasMatchingLexemeForm(LanguageForm form)

@@ -1,3 +1,4 @@
+using System;
 using NUnit.Framework;
 using System.ComponentModel;
 using WeSay.Language;
@@ -113,6 +114,49 @@ namespace Language.Tests
 			MultiText text = new MultiText();
 			IEnumerator ienumerator = text.GetEnumerator();
 			Assert.IsNotNull(ienumerator);
+		}
+
+
+		[Test]
+		public void MergedGuyHasCorrectParentsOnForms()
+		{
+			MultiText x = new MultiText();
+			x["a"] = "alpha";
+			MultiText y = new MultiText();
+			y["b"] = "beta";
+			x.MergeIn(y);
+			Assert.AreSame(y, y.Find("b").Parent);
+			Assert.AreSame(x, x.Find("b").Parent);
+		}
+
+
+
+		[Test]
+		public void MergeWithEmpty()
+		{
+			MultiText old = new MultiText();
+			MultiText newGuy = new MultiText();
+			old.MergeIn(newGuy);
+			Assert.AreEqual(0, old.Count);
+
+			old = new MultiText();
+			old["a"] = "alpha";
+			old.MergeIn(newGuy);
+			Assert.AreEqual(1, old.Count);
+		}
+
+		[Test]
+		public void MergeWithOverlap()
+		{
+			MultiText old = new MultiText();
+			old["a"] = "alpha";
+			old["b"] = "beta";
+			MultiText newGuy = new MultiText();
+			newGuy["b"] = "newbeta";
+			newGuy["c"] = "charlie";
+			old.MergeIn(newGuy);
+			Assert.AreEqual(3, old.Count);
+			Assert.AreEqual("newbeta", old["b"]);
 		}
 	}
 }

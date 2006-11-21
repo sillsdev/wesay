@@ -99,6 +99,8 @@ namespace WeSay.Language
 				return form;
 		}
 
+
+
 		//hack
 		public string GetFirstAlternative()
 		{
@@ -185,7 +187,9 @@ namespace WeSay.Language
 			{
 				forms[i] = _forms[i];
 			}
-			forms[_forms.Length] = languageForm;
+
+			//actually copy the contents, as we must now be the parent
+			forms[_forms.Length] = new LanguageForm(languageForm.WritingSystemId, languageForm.Form, this);
 			_forms = forms;
 		}
 
@@ -208,6 +212,22 @@ namespace WeSay.Language
 		public override string ToString()
 		{
 			return GetFirstAlternative();
+		}
+
+		public void MergeIn(MultiText incoming)
+		{
+			foreach (LanguageForm  form in incoming)
+			{
+				LanguageForm f = this.Find(form.WritingSystemId);
+				if (f != null)
+				{
+					f.Form = form.Form;
+				}
+				else
+				{
+					this.AddLanguageForm(form); //this actually copies the meat of the form
+				}
+			}
 		}
 	}
 }

@@ -71,9 +71,9 @@ namespace WeSay.LexicalTools
 			_gatherControl = new GatherBySemanticDomainsControl();
 			_gatherControl.Domains = _domains;
 			_gatherControl.Questions = _questions;
-			_gatherControl.Records = RecordListManager.Get<LexEntry>();
+		   // _gatherControl.Records = RecordListManager.Get<LexEntry>();
 
-			_gatherControl.WordAdded += new EventHandler(_gatherControl_WordAdded);
+		  //  _gatherControl.WordAdded += new EventHandler(_gatherControl_WordAdded);
 		}
 
 		void _gatherControl_WordAdded(object sender, EventArgs e)
@@ -84,7 +84,7 @@ namespace WeSay.LexicalTools
 		public override void Deactivate()
 		{
 			base.Deactivate();
-			_gatherControl.WordAdded -= new EventHandler(_gatherControl_WordAdded);
+		   // _gatherControl.WordAdded -= new EventHandler(_gatherControl_WordAdded);
 			_gatherControl.Dispose();
 			_gatherControl = null;
 			this.RecordListManager.GoodTimeToCommit();
