@@ -23,6 +23,13 @@ namespace WeSay.LexicalTools
 
 		private readonly FieldInventory _fieldInventory;
 
+		/// This field is for temporarily storing a ghost field about to become "real".
+		/// This is critical, though messy, because
+		/// otherwise, the first character typed into a ghost text field is not considered by
+		/// Keyman, since switching focus to a new, "real" box clears Keymans history of your typing.
+		/// See WS-23 for more info.
+		private MultiTextControl _previouslyGhostedControlToReuse=null;
+
 		protected DetailList DetailList
 	  {
 		get
@@ -61,16 +68,30 @@ namespace WeSay.LexicalTools
 
 		internal abstract int AddWidgets(IBindingList list, int index, int row);
 
-		protected Control MakeBoundEntry(WeSay.Language.MultiText text, Field field)
+		protected Control MakeBoundEntry(WeSay.Language.MultiText multiTextToBindTo, Field field)
 		{
-			MultiTextControl m = new MultiTextControl(field.WritingSystems, text, field.FieldName);
-
-			foreach (WeSayTextBox box in m.TextBoxes)
+			MultiTextControl m=null;
+			if (_previouslyGhostedControlToReuse == null)
 			{
-				 WeSay.UI.Binding binding = new WeSay.UI.Binding(text, box.WritingSystem.Id, box);
-				 binding.CurrentItemChanged += new EventHandler<CurrentItemEventArgs>(_detailList.OnBindingCurrentItemChanged);
+				m = new MultiTextControl(field.WritingSystems, multiTextToBindTo, field.FieldName);
 			}
-		   return m;
+			else
+			{
+				m = _previouslyGhostedControlToReuse;
+				_previouslyGhostedControlToReuse = null;
+			}
+
+			BindMultiTextControlToField(m, multiTextToBindTo);
+			return m;
+		}
+
+		private void BindMultiTextControlToField(MultiTextControl control, MultiText multiTextToBindTo)
+		{
+			foreach (WeSayTextBox box in control.TextBoxes)
+			{
+				WeSay.UI.Binding binding = new WeSay.UI.Binding(multiTextToBindTo, box.WritingSystem.Id, box);
+				binding.CurrentItemChanged += new EventHandler<CurrentItemEventArgs>(_detailList.OnBindingCurrentItemChanged);
+			}
 		}
 
 
@@ -124,8 +145,9 @@ namespace WeSay.LexicalTools
 			return binding;
 		}
 
-		protected virtual void OnGhostBindingTriggered(GhostBinding sender, IBindingList list, int index, System.EventArgs args)
+		protected virtual void OnGhostBindingTriggered(GhostBinding sender, IBindingList list, int index, MultiTextControl previouslyGhostedControlToReuse, System.EventArgs args)
 		{
+			_previouslyGhostedControlToReuse = previouslyGhostedControlToReuse;
 			AddWidgetsAfterGhostTrigger(list, index, sender.ReferenceControl);
 		}
 

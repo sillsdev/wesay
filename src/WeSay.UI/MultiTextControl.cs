@@ -28,12 +28,12 @@ namespace WeSay.UI
 			_vbox.Name = "vbox of anonymous multitext";
 		 //   this.SetStyle(ControlStyles.Selectable, false);
 		}
-		public MultiTextControl(IList<WritingSystem> writingSystems, MultiText text, string nameForTesting):this()
+		public MultiTextControl(IList<WritingSystem> writingSystems, MultiText multiTextToCopyFormsFrom, string nameForTesting):this()
 		{
 			_vbox.Name = Name + "-vbox";
 			Name = nameForTesting+"-mtc";
 			_writingSystems = writingSystems;
-			MultiText = text;
+			BuildBoxes(multiTextToCopyFormsFrom);
 		}
 		public MultiTextControl(IList<WritingSystem> writingSystems, MultiText text)
 			: this(writingSystems, text, "Unknown")
@@ -62,10 +62,6 @@ namespace WeSay.UI
 					mt.SetAlternative(box.WritingSystem.Id, box.Text);
 				}
 				return mt;
-			}
-			set
-			{
-				BuildBoxes(value);
 			}
 		}
 

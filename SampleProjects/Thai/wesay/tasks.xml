@@ -14,7 +14,7 @@
 		</field>
 		<field>
 		  <name>SenseGloss</name>
-		  <visibility>Invisible</visibility>
+		  <visibility>Visible</visibility>
 		  <writingSystems>
 			<id>en</id>
 		  </writingSystems>

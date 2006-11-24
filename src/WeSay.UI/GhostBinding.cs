@@ -28,7 +28,7 @@ namespace WeSay.UI
 		private WeSayTextBox _textBoxTarget;
 		private Control _referenceControl;
 
-		public delegate void GhostTriggered(GhostBinding sender, IBindingList list, int index, EventArgs args);
+		public delegate void GhostTriggered(GhostBinding sender, IBindingList list, int index, MultiTextControl previouslyGhostedControlToReuse, EventArgs args);
 
 		/// <summary>
 		/// Fires at some point after the user has entered some information in the ghost text box.
@@ -171,7 +171,7 @@ namespace WeSay.UI
 			FillInMultiTextOfNewObject(newGuy, _propertyName, _writingSystem, _textBoxTarget.Text);
 			if (Triggered != null)
 			{
-				Triggered.Invoke(this, _listTarget, list.IndexOf(newGuy), null);
+				Triggered.Invoke(this, _listTarget, list.IndexOf(newGuy), null/*todo*/, null);
 			}
 
 

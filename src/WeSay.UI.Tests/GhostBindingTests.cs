@@ -78,7 +78,7 @@ namespace WeSay.UI.Tests
 
 		}
 
-		void _binding_Triggered(object sender, System.ComponentModel.IBindingList list, int index, EventArgs args)
+		void _binding_Triggered(object sender, System.ComponentModel.IBindingList list, int index, MultiTextControl previouslyGhostedControlToReuse, EventArgs args)
 		{
 			_didNotify = true;
 		}
