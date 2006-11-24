@@ -25,14 +25,14 @@ namespace WeSay.LexicalModel.Tests
 			LexExampleSentence example = (LexExampleSentence) sense.ExampleSentences.AddNew();
 			example.Sentence["vernacular"] = "filler";
 
-			Assert.AreEqual(false, this._missingExampleSentenceFilter.Inquire(entry));
+			Assert.AreEqual(false, this._missingExampleSentenceFilter.FilteringPredicate(entry));
 		}
 
 		[Test]
 		public void NoSenses()
 		{
 			LexEntry entry = new LexEntry();
-			Assert.AreEqual(true, this._missingExampleSentenceFilter.Inquire(entry));
+			Assert.AreEqual(true, this._missingExampleSentenceFilter.FilteringPredicate(entry));
 		}
 
 		[Test]
@@ -40,7 +40,7 @@ namespace WeSay.LexicalModel.Tests
 		{
 			LexEntry entry = new LexEntry();
 			entry.Senses.AddNew();
-			Assert.AreEqual(true, this._missingExampleSentenceFilter.Inquire(entry));
+			Assert.AreEqual(true, this._missingExampleSentenceFilter.FilteringPredicate(entry));
 		}
 
 		[Test]
@@ -49,7 +49,7 @@ namespace WeSay.LexicalModel.Tests
 			LexEntry entry = new LexEntry();
 			LexSense sense = (LexSense)entry.Senses.AddNew();
 			sense.ExampleSentences.AddNew();
-			Assert.AreEqual(true, this._missingExampleSentenceFilter.Inquire(entry));
+			Assert.AreEqual(true, this._missingExampleSentenceFilter.FilteringPredicate(entry));
 		}
 
 		[Test]
@@ -59,7 +59,7 @@ namespace WeSay.LexicalModel.Tests
 			LexSense sense = (LexSense)entry.Senses.AddNew();
 			LexExampleSentence example = (LexExampleSentence)sense.ExampleSentences.AddNew();
 			example.Sentence["analysis"] = "filler";
-			Assert.AreEqual(true, this._missingExampleSentenceFilter.Inquire(entry));
+			Assert.AreEqual(true, this._missingExampleSentenceFilter.FilteringPredicate(entry));
 		}
 
 		[Test]
@@ -73,7 +73,7 @@ namespace WeSay.LexicalModel.Tests
 			sense = (LexSense)entry.Senses.AddNew();
 			sense.ExampleSentences.AddNew();
 
-			Assert.AreEqual(true, this._missingExampleSentenceFilter.Inquire(entry));
+			Assert.AreEqual(true, this._missingExampleSentenceFilter.FilteringPredicate(entry));
 		}
 
 		[Test]
@@ -88,7 +88,7 @@ namespace WeSay.LexicalModel.Tests
 			example = (LexExampleSentence)sense.ExampleSentences.AddNew();
 			example.Sentence["analysis"] = "filler";
 
-			Assert.AreEqual(true, this._missingExampleSentenceFilter.Inquire(entry));
+			Assert.AreEqual(true, this._missingExampleSentenceFilter.FilteringPredicate(entry));
 		}
 
 		[Test]
@@ -99,7 +99,7 @@ namespace WeSay.LexicalModel.Tests
 			LexExampleSentence example = (LexExampleSentence)sense.ExampleSentences.AddNew();
 			example.Sentence["vernacular"] = "filler";
 			sense.ExampleSentences.AddNew();
-			Assert.AreEqual(true, this._missingExampleSentenceFilter.Inquire(entry));
+			Assert.AreEqual(true, this._missingExampleSentenceFilter.FilteringPredicate(entry));
 		}
 
 		[Test]
@@ -113,7 +113,7 @@ namespace WeSay.LexicalModel.Tests
 			example = (LexExampleSentence)sense.ExampleSentences.AddNew();
 			example.Sentence["analysis"] = "filler";
 
-			Assert.AreEqual(true, this._missingExampleSentenceFilter.Inquire(entry));
+			Assert.AreEqual(true, this._missingExampleSentenceFilter.FilteringPredicate(entry));
 		}
 	}
 }

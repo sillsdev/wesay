@@ -74,7 +74,7 @@ namespace WeSay.LexicalTools
 		public override void Activate()
 		{
 			base.Activate();
-			_lexFieldControl = new LexFieldControl(DataSource, FieldInventory, _filter.Inquire);
+			_lexFieldControl = new LexFieldControl(DataSource, FieldInventory, _filter.FilteringPredicate);
 			_lexFieldControl.SelectedIndexChanged += new EventHandler(OnRecordSelectionChanged);
 		}
 
@@ -120,7 +120,7 @@ namespace WeSay.LexicalTools
 		{
 			get
 			{
-				IRecordList<LexEntry> data = RecordListManager.Get<LexEntry>(_filter);
+				IRecordList<LexEntry> data = RecordListManager.GetListOfTypeFilteredFurther<LexEntry>(_filter);
 				_dataHasBeenRetrieved = true;
 				return data;
 			}

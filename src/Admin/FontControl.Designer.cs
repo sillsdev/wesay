@@ -54,6 +54,7 @@ namespace WeSay.Admin
 			this._fontProperties.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
 						| System.Windows.Forms.AnchorStyles.Left)
 						| System.Windows.Forms.AnchorStyles.Right)));
+			this._fontProperties.Enabled = false;
 			this._fontProperties.HelpVisible = false;
 			this._fontProperties.Location = new System.Drawing.Point(4, 3);
 			this._fontProperties.Name = "_fontProperties";

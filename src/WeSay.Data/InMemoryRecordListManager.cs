@@ -12,7 +12,7 @@ namespace WeSay.Data
 
 		protected override IRecordList<T> CreateFilteredRecordList<T>(IFilter<T> filter)
 		{
-		  return new FilteredInMemoryRecordList<T>(Get<T>(), filter.Inquire);
+		  return new FilteredInMemoryRecordList<T>(GetListOfType<T>(), filter.FilteringPredicate);
 		}
 
 		protected override bool CommitIfNeeded()

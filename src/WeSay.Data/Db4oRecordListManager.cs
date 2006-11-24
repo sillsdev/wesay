@@ -30,7 +30,7 @@ namespace WeSay.Data
 
 		protected override IRecordList<T> CreateFilteredRecordList<T>(IFilter<T> filter)
 		{
-			FilteredDb4oRecordList<T> list = new FilteredDb4oRecordList<T>(Get<T>(), filter, this._dataPath, false);
+			FilteredDb4oRecordList<T> list = new FilteredDb4oRecordList<T>(GetListOfType<T>(), filter, this._dataPath, false);
 			return list;
 		}
 
@@ -39,7 +39,7 @@ namespace WeSay.Data
 			IRecordList<T> recordList = null;
 			try
 			{
-				recordList = new FilteredDb4oRecordList<T>(Get<T>(), filter, _dataPath, true);
+				recordList = new FilteredDb4oRecordList<T>(GetListOfType<T>(), filter, _dataPath, true);
 			}
 			catch (OperationCanceledException) {}
 			return recordList;
@@ -62,11 +62,11 @@ namespace WeSay.Data
 			string _cachePath;
 			bool _isInitializingFromCache;
 
-			public Predicate<T> IsRelevant
+			public Predicate<T> RelevancePredicate
 			{
 				get
 				{
-					return _isRelevantFilter.Inquire;
+					return _isRelevantFilter.FilteringPredicate;
 				}
 			}
 
@@ -81,7 +81,7 @@ namespace WeSay.Data
 					((Db4oList<T>)Records).ItemIds.Clear();
 				}
 
-				ApplyFilter(IsRelevant);
+				ApplyFilter(RelevancePredicate);
 
 				//At this point, either you have no records (either because constructOnlyIfFilterIsCached==true,
 				// or there just are no records that fit the filter), or you have some and they satisfy the
@@ -257,7 +257,7 @@ namespace WeSay.Data
 				bool shouldAdd = base.ShouldAddRecord(item);
 				if (shouldAdd)
 				{
-					if(IsRelevant(item))
+					if(RelevancePredicate(item))
 					{
 						shouldAdd = !Contains(item);
 					}
@@ -294,7 +294,7 @@ namespace WeSay.Data
 
 			private void AddIfRelevantElseRemove(T item)
 			{
-				if (IsRelevant(item))
+				if (RelevancePredicate(item))
 				{
 					if (!Contains(item))
 					{

@@ -9,11 +9,12 @@
 		  <writingSystems>
 			<id>th</id>
 			<id>IPA</id>
+			<id>xx</id>
 		  </writingSystems>
 		</field>
 		<field>
 		  <name>SenseGloss</name>
-		  <visibility>Visible</visibility>
+		  <visibility>Invisible</visibility>
 		  <writingSystems>
 			<id>en</id>
 		  </writingSystems>

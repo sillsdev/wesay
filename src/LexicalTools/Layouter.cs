@@ -84,7 +84,7 @@ namespace WeSay.LexicalTools
 ////            }
 ////            GhostBinding g = MakeGhostBinding(list, "Sentence", writingSystem, entry);
 ////            //!!!!!!!!!!!!!!!!! g.ReferenceControl =
-////                DetailList.AddWidgetRow(StringCatalog.Get("New Example"), false, entry, insertAtRow+rowCount);
+////                DetailList.AddWidgetRow(StringCatalog.GetListOfType("New Example"), false, entry, insertAtRow+rowCount);
 ////
 //////            WeSayTextBox entry = new WeSayTextBox(writingSystem);
 ////            MakeGhostBinding(list, ghostPropertyName, writingSystem, entry);

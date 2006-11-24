@@ -77,7 +77,7 @@ namespace WeSay.LexicalTools
 		{
 			get
 			{
-				IRecordList<LexEntry> data = RecordListManager.Get<LexEntry>();
+				IRecordList<LexEntry> data = RecordListManager.GetListOfType<LexEntry>();
 				return data;
 			}
 		}

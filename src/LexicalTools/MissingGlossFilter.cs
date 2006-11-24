@@ -55,7 +55,7 @@ namespace WeSay.LexicalTools
 			}
 		}
 
-		public Predicate<LexEntry> Inquire
+		public Predicate<LexEntry> FilteringPredicate
 		{
 			get
 			{

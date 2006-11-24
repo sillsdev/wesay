@@ -39,7 +39,7 @@ namespace WeSay.LexicalTools
 				throw new ArgumentNullException("fieldInventory");
 			}
 			_recordManager = recordManager;
-			_records = recordManager.Get<LexEntry>();
+			_records = recordManager.GetListOfType<LexEntry>();
 			_fieldInventory = fieldInventory;
 			InitializeComponent();
 			BackColor = WeSay.UI.DisplaySettings.Default.BackgroundColor;
@@ -99,7 +99,7 @@ namespace WeSay.LexicalTools
 
 		private void ClearLastFind() {
 			// reset to original records
-			this._records = this._recordManager.Get<LexEntry>();
+			this._records = this._recordManager.GetListOfType<LexEntry>();
 			this._recordsListBox.DataSource = this._records;
 			this._btnFind.Text = StringCatalog.Get("Find");
 

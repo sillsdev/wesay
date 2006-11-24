@@ -75,7 +75,7 @@ namespace WeSay.LexicalModel.Db4o_Specific
 				LexEntry entry = new LexEntry();
 				entry.LexicalForm.MergeIn(lexemeForm);
 				entry.Senses.Add(sense);
-				recordManager.Get<LexEntry>().Add(entry);
+				recordManager.GetListOfType<LexEntry>().Add(entry);
 			}
 			else
 			{

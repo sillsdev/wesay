@@ -35,7 +35,7 @@ namespace WeSay.LexicalTools.Tests
 			LexEntry entry = new LexEntry();
 			this._lexicalForm = "vernacular";
 			entry.LexicalForm.SetAlternative(BasilProject.Project.WritingSystems.VernacularWritingSystemDefault.Id, _lexicalForm);
-			IRecordList<LexEntry> masterRecordList = this._recordListManager.Get<LexEntry>();
+			IRecordList<LexEntry> masterRecordList = this._recordListManager.GetListOfType<LexEntry>();
 			masterRecordList.Add(entry);
 
 			this._fieldsToShow = "LexicalForm";
@@ -71,7 +71,7 @@ namespace WeSay.LexicalTools.Tests
 		}
 
 		private void ClearMasterRecordList() {
-			this._recordListManager.Get<LexEntry>().Clear();
+			this._recordListManager.GetListOfType<LexEntry>().Clear();
 		}
 
 		[Test]

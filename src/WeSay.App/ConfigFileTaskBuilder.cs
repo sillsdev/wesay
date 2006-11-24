@@ -60,8 +60,15 @@ namespace WeSay.App
 
 				//typical error here: PicoInitializationException("Either do the specified parameters not match any of....
 				//may mean you have an extra (unused), missing, or out-of-order parameter element in the xml.
-				ITask iTask = (ITask)_picoContext.GetComponentInstance(id);
-				System.Diagnostics.Debug.Assert(iTask != null);
+				ITask iTask=null;
+				try
+				{
+					iTask = (ITask)_picoContext.GetComponentInstance(id);
+				}
+				catch (Exception e)
+				{
+					iTask = new FailedLoadTask(id, e.Message);
+				}
 				_tasks.Add(iTask);
 			}
 		}

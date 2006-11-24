@@ -15,7 +15,7 @@ namespace WeSay.Data.Tests
 		}
 		#region IFilter<SimpleIntTestClass> Members
 
-		public Predicate<SimpleIntTestClass> Inquire
+		public Predicate<SimpleIntTestClass> FilteringPredicate
 		{
 			get
 			{

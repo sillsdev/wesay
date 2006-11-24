@@ -39,6 +39,7 @@
   </ItemGroup>
   <ItemGroup>
 	<Compile Include="BasilProject.cs" />
+	<Compile Include="FailedLoadTask.cs" />
 	<Compile Include="Field.cs" />
 	<Compile Include="FieldInventory.cs" />
 	<Compile Include="ICurrentWorkTask.cs" />

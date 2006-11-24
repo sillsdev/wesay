@@ -3,7 +3,7 @@ namespace WeSay.Data
 {
 	public interface IFilter<T>
 	{
-		Predicate<T> Inquire
+		Predicate<T> FilteringPredicate
 		{
 			get;
 		}

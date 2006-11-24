@@ -32,7 +32,7 @@ namespace WeSay.LexicalTools.Tests
 			this._filePath = System.IO.Path.GetTempFileName();
 			this._recordListManager = new Db4oRecordListManager(_filePath);
 
-			this._records = this._recordListManager.Get<LexEntry>();
+			this._records = this._recordListManager.GetListOfType<LexEntry>();
 			AddEntry("Initial");
 			AddEntry("Secondary");
 			AddEntry("Tertiary");

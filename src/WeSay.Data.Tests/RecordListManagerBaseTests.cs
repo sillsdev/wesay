@@ -49,7 +49,7 @@ namespace WeSay.Data.Tests
 
 		private void PopupateMasterRecordList()
 		{
-			_sourceRecords = RecordListManager.Get<SimpleIntTestClass>();
+			_sourceRecords = RecordListManager.GetListOfType<SimpleIntTestClass>();
 			if (_sourceRecords.Count == 0)
 			{
 				for (int i = 0; i < 50; i++)
@@ -106,17 +106,17 @@ namespace WeSay.Data.Tests
 		[ExpectedException(typeof (InvalidOperationException))]
 		public void Get_UnregisteredFilter_ThrowsException()
 		{
-			RecordListManager.Get<SimpleIntTestClass>(new SimpleIntFilter(21, 30));
+			RecordListManager.GetListOfTypeFilteredFurther<SimpleIntTestClass>(new SimpleIntFilter(21, 30));
 		}
 
 		[Test]
 		public void Get_NoFilter_GivesAllRecords()
 		{
-			IRecordList<SimpleIntTestClass> data = RecordListManager.Get<SimpleIntTestClass>();
+			IRecordList<SimpleIntTestClass> data = RecordListManager.GetListOfType<SimpleIntTestClass>();
 			Assert.IsNotNull(data);
 			Assert.AreEqual(_sourceRecords, data);
 
-			IRecordList<object> objectData = RecordListManager.Get<object>();
+			IRecordList<object> objectData = RecordListManager.GetListOfType<object>();
 			Assert.IsNotNull(objectData);
 			Assert.AreNotEqual(_sourceRecords, objectData);
 		}
@@ -124,7 +124,7 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void Get_Filter_GivesFilterdRecords()
 		{
-			IRecordList<SimpleIntTestClass> data = RecordListManager.Get<SimpleIntTestClass>(Filter11to20);
+			IRecordList<SimpleIntTestClass> data = RecordListManager.GetListOfTypeFilteredFurther<SimpleIntTestClass>(Filter11to20);
 			Assert.IsNotNull(data);
 			Assert.AreEqual(10, data.Count);
 
@@ -141,28 +141,28 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void Get_SecondTime_GivesSameRecordList()
 		{
-			IRecordList<SimpleIntTestClass> recordList = RecordListManager.Get<SimpleIntTestClass>();
-			Assert.AreSame(recordList, RecordListManager.Get<SimpleIntTestClass>());
+			IRecordList<SimpleIntTestClass> recordList = RecordListManager.GetListOfType<SimpleIntTestClass>();
+			Assert.AreSame(recordList, RecordListManager.GetListOfType<SimpleIntTestClass>());
 		}
 
 		[Test]
 		public void Get_SameFilter_GivesSameRecordList()
 		{
-			IRecordList<SimpleIntTestClass> recordList = RecordListManager.Get<SimpleIntTestClass>(Filter11to20);
-			Assert.AreSame(recordList, RecordListManager.Get<SimpleIntTestClass>(Filter11to20));
+			IRecordList<SimpleIntTestClass> recordList = RecordListManager.GetListOfTypeFilteredFurther<SimpleIntTestClass>(Filter11to20);
+			Assert.AreSame(recordList, RecordListManager.GetListOfTypeFilteredFurther<SimpleIntTestClass>(Filter11to20));
 		}
 
 		[Test]
 		public void Get_DifferentFilter_GivesDifferentRecordList()
 		{
-			IRecordList<SimpleIntTestClass> recordList = RecordListManager.Get(Filter11to20);
-			Assert.AreNotSame(recordList, RecordListManager.Get(Filter11to12));
+			IRecordList<SimpleIntTestClass> recordList = RecordListManager.GetListOfTypeFilteredFurther(Filter11to20);
+			Assert.AreNotSame(recordList, RecordListManager.GetListOfTypeFilteredFurther(Filter11to12));
 		}
 
 		[Test]
 		public void ChangeRecord_NoLongerMeetsFilterCriteria_RemovedFromRecordList_StillInMaster()
 		{
-			IRecordList<SimpleIntTestClass> recordList11to20 = RecordListManager.Get<SimpleIntTestClass>(Filter11to20);
+			IRecordList<SimpleIntTestClass> recordList11to20 = RecordListManager.GetListOfTypeFilteredFurther<SimpleIntTestClass>(Filter11to20);
 			Assert.AreEqual(10, recordList11to20.Count);
 			recordList11to20[0].I = 10;
 			Assert.AreEqual(9, recordList11to20.Count);
@@ -179,8 +179,8 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void ChangeRecord_NoLongerMeetsFilterCriteria_RemovedFromSimilarRecordList()
 		{
-			IRecordList<SimpleIntTestClass> recordList11to20 = RecordListManager.Get<SimpleIntTestClass>(Filter11to20);
-			IRecordList<SimpleIntTestClass> recordList11to17 = RecordListManager.Get<SimpleIntTestClass>(Filter11to17);
+			IRecordList<SimpleIntTestClass> recordList11to20 = RecordListManager.GetListOfTypeFilteredFurther<SimpleIntTestClass>(Filter11to20);
+			IRecordList<SimpleIntTestClass> recordList11to17 = RecordListManager.GetListOfTypeFilteredFurther<SimpleIntTestClass>(Filter11to17);
 			recordList11to20[0].I = 10;
 			Assert.AreEqual(6, recordList11to17.Count);
 
@@ -203,8 +203,8 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void ChangeRecord_MeetsFilterCriteria_RemainsInSimilarRecordList()
 		{
-			IRecordList<SimpleIntTestClass> recordList11to20 = RecordListManager.Get<SimpleIntTestClass>(Filter11to20);
-			IRecordList<SimpleIntTestClass> recordList11to17 = RecordListManager.Get<SimpleIntTestClass>(Filter11to17);
+			IRecordList<SimpleIntTestClass> recordList11to20 = RecordListManager.GetListOfTypeFilteredFurther<SimpleIntTestClass>(Filter11to20);
+			IRecordList<SimpleIntTestClass> recordList11to17 = RecordListManager.GetListOfTypeFilteredFurther<SimpleIntTestClass>(Filter11to17);
 			recordList11to20[0].I = 12;
 			Assert.AreEqual(7, recordList11to17.Count);
 			Assert.AreEqual(10, recordList11to20.Count);
@@ -227,7 +227,7 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void AddRecordToFiltered_AddedToMaster()
 		{
-			IRecordList<SimpleIntTestClass> recordList11to20 = RecordListManager.Get<SimpleIntTestClass>(Filter11to20);
+			IRecordList<SimpleIntTestClass> recordList11to20 = RecordListManager.GetListOfTypeFilteredFurther<SimpleIntTestClass>(Filter11to20);
 			recordList11to20.Add(new SimpleIntTestClass(15));
 			Assert.AreEqual(51, _sourceRecords.Count);
 		}
@@ -235,8 +235,8 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void AddRecordToFiltered_AddedToRelevantRecordLists()
 		{
-			IRecordList<SimpleIntTestClass> recordList11to20 = RecordListManager.Get<SimpleIntTestClass>(Filter11to20);
-			IRecordList<SimpleIntTestClass> recordList11to17 = RecordListManager.Get<SimpleIntTestClass>(Filter11to17);
+			IRecordList<SimpleIntTestClass> recordList11to20 = RecordListManager.GetListOfTypeFilteredFurther<SimpleIntTestClass>(Filter11to20);
+			IRecordList<SimpleIntTestClass> recordList11to17 = RecordListManager.GetListOfTypeFilteredFurther<SimpleIntTestClass>(Filter11to17);
 			recordList11to20.Add(new SimpleIntTestClass(15));
 			Assert.AreEqual(8, recordList11to17.Count);
 			Assert.AreEqual(11, recordList11to20.Count);
@@ -245,8 +245,8 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void AddRecordToMaster_AddedToRelevantRecordLists()
 		{
-			IRecordList<SimpleIntTestClass> recordList11to20 = RecordListManager.Get<SimpleIntTestClass>(Filter11to20);
-			IRecordList<SimpleIntTestClass> recordList11to17 = RecordListManager.Get<SimpleIntTestClass>(Filter11to17);
+			IRecordList<SimpleIntTestClass> recordList11to20 = RecordListManager.GetListOfTypeFilteredFurther<SimpleIntTestClass>(Filter11to20);
+			IRecordList<SimpleIntTestClass> recordList11to17 = RecordListManager.GetListOfTypeFilteredFurther<SimpleIntTestClass>(Filter11to17);
 			_sourceRecords.Add(new SimpleIntTestClass(15));
 			Assert.AreEqual(8, recordList11to17.Count);
 			Assert.AreEqual(11, recordList11to20.Count);
@@ -255,7 +255,7 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void AddRecordToFiltered_DoesNotMeetFilterCriteria_AddedToMasterOnly()
 		{
-			IRecordList<SimpleIntTestClass> recordList11to20 = RecordListManager.Get<SimpleIntTestClass>(Filter11to20);
+			IRecordList<SimpleIntTestClass> recordList11to20 = RecordListManager.GetListOfTypeFilteredFurther<SimpleIntTestClass>(Filter11to20);
 			recordList11to20.Add(new SimpleIntTestClass(50));
 			Assert.AreEqual(10, recordList11to20.Count);
 			Assert.AreEqual(51, _sourceRecords.Count);
@@ -264,7 +264,7 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void AddRecordToFiltered_AlreadyExists_NotAdded()
 		{
-			IRecordList<SimpleIntTestClass> recordList11to20 = RecordListManager.Get<SimpleIntTestClass>(Filter11to20);
+			IRecordList<SimpleIntTestClass> recordList11to20 = RecordListManager.GetListOfTypeFilteredFurther<SimpleIntTestClass>(Filter11to20);
 			recordList11to20.Add(_sourceRecords[12]);
 			Assert.AreEqual(10, recordList11to20.Count);
 			Assert.AreEqual(50, _sourceRecords.Count);
@@ -273,8 +273,8 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void RemoveRecordFromMaster_RemovedFromFilteredRecordLists()
 		{
-			IRecordList<SimpleIntTestClass> recordList10to19 = RecordListManager.Get<SimpleIntTestClass>(Filter10to19);
-			IRecordList<SimpleIntTestClass> recordList11to17 = RecordListManager.Get<SimpleIntTestClass>(Filter11to17);
+			IRecordList<SimpleIntTestClass> recordList10to19 = RecordListManager.GetListOfTypeFilteredFurther<SimpleIntTestClass>(Filter10to19);
+			IRecordList<SimpleIntTestClass> recordList11to17 = RecordListManager.GetListOfTypeFilteredFurther<SimpleIntTestClass>(Filter11to17);
 			_sourceRecords.Remove(recordList10to19[1]);
 			Assert.AreEqual(49, _sourceRecords.Count);
 
@@ -305,8 +305,8 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void RemoveRecordFromFiltered_RemovedFromFilteredRecordListsAndMaster()
 		{
-			IRecordList<SimpleIntTestClass> recordList10to19 = RecordListManager.Get<SimpleIntTestClass>(Filter10to19);
-			IRecordList<SimpleIntTestClass> recordList11to17 = RecordListManager.Get<SimpleIntTestClass>(Filter11to17);
+			IRecordList<SimpleIntTestClass> recordList10to19 = RecordListManager.GetListOfTypeFilteredFurther<SimpleIntTestClass>(Filter10to19);
+			IRecordList<SimpleIntTestClass> recordList11to17 = RecordListManager.GetListOfTypeFilteredFurther<SimpleIntTestClass>(Filter11to17);
 			recordList10to19.Remove(recordList10to19[1]);
 			Assert.AreEqual(6, recordList11to17.Count);
 			int recordList11to17Count11 = CountMatching<SimpleIntTestClass>(recordList11to17,

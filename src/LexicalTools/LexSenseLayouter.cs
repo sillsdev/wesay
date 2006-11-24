@@ -59,7 +59,7 @@ namespace WeSay.LexicalTools
 //
 //                   WeSayTextBox entry = new WeSayTextBox(writingSystem);
 //                   GhostBinding g = MakeGhostBinding(list, "Gloss", writingSystem, entry);
-//                   g.ReferenceControl = DetailList.AddWidgetRow(StringCatalog.Get("New Meaning"), true, entry);
+//                   g.ReferenceControl = DetailList.AddWidgetRow(StringCatalog.GetListOfType("New Meaning"), true, entry);
 //                   ++rowCount;
 //               }
 //           }

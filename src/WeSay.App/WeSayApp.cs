@@ -104,7 +104,7 @@ namespace WeSay.App
 			{
 				IBindingList entries = new PretendRecordList();
 				recordListManager = new InMemoryRecordListManager();
-				IRecordList<LexEntry> masterRecordList = recordListManager.Get<LexEntry>();
+				IRecordList<LexEntry> masterRecordList = recordListManager.GetListOfType<LexEntry>();
 				foreach (LexEntry entry in entries)
 				{
 					masterRecordList.Add(entry);

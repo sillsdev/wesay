@@ -34,7 +34,7 @@ namespace WeSay.Data
 			}
 		}
 
-		public IRecordList<T> Get<T>() where T : class, new()
+		public IRecordList<T> GetListOfType<T>() where T : class, new()
 		{
 			if (!_filteredRecordLists.ContainsKey(RecordListKey<T>(String.Empty)))
 			{
@@ -43,11 +43,11 @@ namespace WeSay.Data
 			return (IRecordList<T>)_filteredRecordLists[RecordListKey<T>(String.Empty)];
 		}
 
-		public IRecordList<T> Get<T>(IFilter<T> filter) where T : class, new()
+		public IRecordList<T> GetListOfTypeFilteredFurther<T>(IFilter<T> filter) where T : class, new()
 		{
 			if (!_filteredRecordLists.ContainsKey(RecordListKey<T>(filter.Key)))
 			{
-				throw new InvalidOperationException("Filter must be registered before it can be retrieved with Get.");
+				throw new InvalidOperationException("Filter must be registered before it can be retrieved with GetListOfType.");
 			}
 			IRecordList<T> recordList = (IRecordList<T>)_filteredRecordLists[RecordListKey<T>(filter.Key)];
 			if (recordList == null)

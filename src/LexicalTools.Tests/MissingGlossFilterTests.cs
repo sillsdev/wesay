@@ -23,14 +23,14 @@ namespace WeSay.LexicalModel.Tests
 			LexSense sense = (LexSense) entry.Senses.AddNew();
 			sense.Gloss["analysis"] = "filler";
 
-			Assert.AreEqual(false, _missingGlossFilter.Inquire(entry));
+			Assert.AreEqual(false, _missingGlossFilter.FilteringPredicate(entry));
 		}
 
 		[Test]
 		public void NoSenses()
 		{
 			LexEntry entry = new LexEntry();
-			Assert.AreEqual(true, _missingGlossFilter.Inquire(entry));
+			Assert.AreEqual(true, _missingGlossFilter.FilteringPredicate(entry));
 		}
 
 		[Test]
@@ -38,7 +38,7 @@ namespace WeSay.LexicalModel.Tests
 		{
 			LexEntry entry = new LexEntry();
 			entry.Senses.AddNew();
-			Assert.AreEqual(true, _missingGlossFilter.Inquire(entry));
+			Assert.AreEqual(true, _missingGlossFilter.FilteringPredicate(entry));
 		}
 
 		[Test]
@@ -47,7 +47,7 @@ namespace WeSay.LexicalModel.Tests
 			LexEntry entry = new LexEntry();
 			LexSense sense = (LexSense)entry.Senses.AddNew();
 			sense.Gloss["vernacular"] = "filler";
-			Assert.AreEqual(true, _missingGlossFilter.Inquire(entry));
+			Assert.AreEqual(true, _missingGlossFilter.FilteringPredicate(entry));
 		}
 
 		[Test]
@@ -57,7 +57,7 @@ namespace WeSay.LexicalModel.Tests
 			LexSense sense = (LexSense)entry.Senses.AddNew();
 			sense.Gloss["analysis"] = "filler";
 			entry.Senses.AddNew();
-			Assert.AreEqual(true, _missingGlossFilter.Inquire(entry));
+			Assert.AreEqual(true, _missingGlossFilter.FilteringPredicate(entry));
 		}
 
 		[Test]
@@ -68,7 +68,7 @@ namespace WeSay.LexicalModel.Tests
 			sense.Gloss["analysis"] = "filler";
 			sense = (LexSense)entry.Senses.AddNew();
 			sense.Gloss["vernacular"] = "filler";
-			Assert.AreEqual(true, _missingGlossFilter.Inquire(entry));
+			Assert.AreEqual(true, _missingGlossFilter.FilteringPredicate(entry));
 		}
 	}
 }

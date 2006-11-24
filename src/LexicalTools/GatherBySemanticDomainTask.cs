@@ -71,7 +71,7 @@ namespace WeSay.LexicalTools
 			_gatherControl = new GatherBySemanticDomainsControl();
 			_gatherControl.Domains = _domains;
 			_gatherControl.Questions = _questions;
-		   // _gatherControl.Records = RecordListManager.Get<LexEntry>();
+		   // _gatherControl.Records = RecordListManager.GetListOfType<LexEntry>();
 
 		  //  _gatherControl.WordAdded += new EventHandler(_gatherControl_WordAdded);
 		}
