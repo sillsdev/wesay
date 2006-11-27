@@ -687,7 +687,7 @@ namespace WeSay.Data
 			{
 				databaseModified = new DatabaseModified();
 			}
-			databaseModified.LastModified = DateTime.Now;
+			databaseModified.LastModified = DateTime.UtcNow;
 			Database.Set(databaseModified);
 		}
 

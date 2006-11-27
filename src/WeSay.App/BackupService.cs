@@ -124,7 +124,7 @@ namespace WeSay.App
 
 		private  string MakeBackupFileName()
 		{
-			string timeString = _timeOfLastQueryForNewRecords.ToString("yyyy'-'MM'-'dd'T'HH'-'mm'-'ss'-'FFFFF");
+			string timeString = _timeOfLastQueryForNewRecords.ToString("yyyy'-'MM'-'dd'T'HH'-'mm'-'ss'-'FFFFF UTC");
 			string path = Path.Combine(_directory, timeString);
 			path += ".lift.frag.xml";
 			return path;
@@ -138,7 +138,7 @@ namespace WeSay.App
 				File.Create(file).Close();
 			}
 
-			File.SetLastWriteTime(file, _timeOfLastQueryForNewRecords);
+			File.SetLastWriteTimeUtc(file, _timeOfLastQueryForNewRecords);
 		}
 
 		private  DateTime GetLastBackupTime()
@@ -151,7 +151,7 @@ namespace WeSay.App
 			}
 			else
 			{
-				return File.GetLastWriteTime(file);
+				return File.GetLastWriteTimeUtc(file);
 			}
 		}
 
@@ -163,7 +163,7 @@ namespace WeSay.App
 			//REVIEW: this is >, not >=. Could a change get lost if the
 			//record was modified milliseconds before the last backup?
 			q.Descend("_modifiedDate").Constrain(last).Greater();
-			_timeOfLastQueryForNewRecords = DateTime.Now;
+			_timeOfLastQueryForNewRecords = DateTime.UtcNow;
 			return q.Execute();
 		}
 	}

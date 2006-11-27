@@ -36,7 +36,7 @@ namespace WeSay.LexicalModel
 			_guid = guid;
 			this._lexicalForm = new LexicalFormMultiText(this);
 			this._senses = new WeSay.Data.InMemoryBindingList<LexSense>();
-			this._creationDate = DateTime.Now;
+			this._creationDate = DateTime.UtcNow;
 			this._modifiedDate = _creationDate;
 
 			WireUpEvents();
@@ -62,7 +62,7 @@ namespace WeSay.LexicalModel
 
 		public override void SomethingWasModified(string PropertyModified)
 		{
-			_modifiedDate = DateTime.Now;
+			_modifiedDate = DateTime.UtcNow;
 			if (PropertyModified != "senses")
 			{
 				RemoveEmptySenses();

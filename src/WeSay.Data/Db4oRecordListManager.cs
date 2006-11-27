@@ -220,7 +220,7 @@ namespace WeSay.Data
 				{
 					return modifiedList[0].LastModified;
 				}
-				return DateTime.Now;
+				return DateTime.UtcNow;
 			}
 
 			void OnMasterRecordListDeletingRecord(object sender, RecordListEventArgs<T> e)
