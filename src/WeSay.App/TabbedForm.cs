@@ -260,7 +260,7 @@ namespace WeSay.App
 //        }
 
 
-		private void ContinueLaunchingAfterInitialDisplay()
+		public void ContinueLaunchingAfterInitialDisplay()
 		{
 			Timer t = new Timer();
 			t.Tick += new EventHandler(delegate
@@ -275,7 +275,7 @@ namespace WeSay.App
 
 		private void TabbedForm_Load(object sender, EventArgs e)
 		{
-			ContinueLaunchingAfterInitialDisplay();
+			//ContinueLaunchingAfterInitialDisplay();
 		}
 	}
 

@@ -56,6 +56,9 @@ namespace WeSay.App
 
 				using (IRecordListManager recordListManager = MakeRecordListManager(project))
 				{
+					tabbedForm.Show(); // so the user sees that we did launch
+					Application.DoEvents();
+
 					Db4oRecordListManager ds = recordListManager as Db4oRecordListManager;
 					if (ds != null)
 					{
@@ -63,17 +66,19 @@ namespace WeSay.App
 						ds.DataCommitted += new EventHandler(backupService.OnDataCommitted);
 					}
 
-					//builder = new SampleTaskBuilder(project, tabbedForm, recordListManager);
+					//MONO bug as of 1.1.18 cannot bitwise or FileShare on FileStream constructor
+					//                    using (FileStream config = new FileStream(project.PathToProjectTaskInventory, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete))
 					using (FileStream config = new FileStream(project.PathToProjectTaskInventory, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-//MONO bug as of 1.1.18 cannot bitwise or FileShare on FileStream constructor
-//                    using (FileStream config = new FileStream(project.PathToProjectTaskInventory, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete))
 					{
 						builder = new ConfigFileTaskBuilder(config, project, tabbedForm, recordListManager);
 					}
 
 					project.Tasks = builder.Tasks;
 					Application.DoEvents();
-					backupService.DoIncrementalXmlBackupNow(); //in case we are far behind
+
+					//in case we are far behind, as in the case of a recent import or deleted backups
+					backupService.DoIncrementalXmlBackupNow();
+					tabbedForm.ContinueLaunchingAfterInitialDisplay();
 					Application.Run(tabbedForm);
 					backupService.DoIncrementalXmlBackupNow();
 					backupService.BackupToExternal("h:\\" + project.Name + ".zip");
