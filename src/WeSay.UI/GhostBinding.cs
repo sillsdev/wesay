@@ -46,10 +46,12 @@ namespace WeSay.UI
 		   _writingSystem = writingSystem;
 
 		   _textBoxTarget = textBoxTarget;
+		   _textBoxTarget.LostFocus += new EventHandler(_textBoxTarget_LostFocus);
 		   _textBoxTarget.TextChanged += new EventHandler(_textBoxTarget_TextChanged);
 		   _textBoxTarget.Enter += new EventHandler(OnTextBoxEntered);
 		   _textBoxTarget.HandleDestroyed += new EventHandler(_textBoxTarget_HandleDestroyed);
 		}
+
 
 		/// <summary>
 		/// this only gets called when the control is actually, like, maybe finalized
@@ -61,12 +63,20 @@ namespace WeSay.UI
 			TearDown();
 		}
 
-		void _textBoxTarget_TextChanged(object sender, EventArgs e)
+		void _textBoxTarget_LostFocus(object sender, EventArgs e)
 		{
-			if ( _textBoxTarget.Text.Trim().Length > 0)
+			if (_textBoxTarget.Text.Trim().Length > 0)
 			{
 				TimeForRealObject();
 			}
+		}
+
+		void _textBoxTarget_TextChanged(object sender, EventArgs e)
+		{
+//            if ( _textBoxTarget.Text.Trim().Length > 0)
+//            {
+//                TimeForRealObject();
+//            }
 		}
 
 		void OnTextBoxEntered(object sender, EventArgs e)

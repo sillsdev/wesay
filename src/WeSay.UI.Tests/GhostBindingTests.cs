@@ -115,6 +115,7 @@ namespace WeSay.UI.Tests
 		{
 			 Assert.AreEqual(0, _papa.Children.Count);
 		   _ghostFirstNameWidget.Text = "Samuel";
+			_ghostFirstNameWidget.PretendLostFocus();
 			Assert.AreEqual(1, _papa.Children.Count);
 		}
 
@@ -122,6 +123,7 @@ namespace WeSay.UI.Tests
 		public void NewItemGetsValue()
 		{
 			_ghostFirstNameWidget.Text = "Samuel";
+			_ghostFirstNameWidget.PretendLostFocus();
 			Assert.AreEqual("Samuel", _papa.Children[0].First["en"]);
 		}
 		 [Test]
@@ -129,6 +131,7 @@ namespace WeSay.UI.Tests
 		{
 			 _binding.Triggered += new GhostBinding.GhostTriggered(_binding_Triggered);
 			_ghostFirstNameWidget.Text = "Samuel";
+			_ghostFirstNameWidget.PretendLostFocus();
 			Assert.IsTrue(_didNotify);
 		}
 

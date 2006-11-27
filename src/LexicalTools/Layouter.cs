@@ -155,7 +155,7 @@ namespace WeSay.LexicalTools
 		{
 			int row    = _detailList.GetRowOfControl(refControl);
 			AddWidgets(list, index, row);
-			_detailList.MoveInsertionPoint(row);
+			_detailList.MoveInsertionPoint(row+1);
 		}
 
 		protected static int AddChildrenWidgets(Layouter layouter, IBindingList list, int insertAtRow , int rowCount)

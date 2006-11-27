@@ -197,5 +197,13 @@ namespace WeSay.UI
 				this._keymanLink.SelectKeymanKeyboard(null, false);
 			}
 		}
+
+		/// <summary>
+		/// for automated tests
+		/// </summary>
+		public void PretendLostFocus()
+		{
+			OnLostFocus(new EventArgs());
+		}
 	}
 }
