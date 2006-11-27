@@ -71,8 +71,8 @@ namespace WeSay.LexicalTools
 				PopulateWordsMatchingCurrentItem();
 				_btnAddWord.Enabled = _vernacularBox.TextBoxes[0].Text.Trim() != "";
 			}
-			_btnNextWord.Enabled = _task.NavigateNextEnabled;
-			_btnPreviousWord.Enabled = _task.NavigatePreviousEnabled;
+			_btnNextWord.Enabled = _task.CanNavigateNext;
+			_btnPreviousWord.Enabled = _task.CanNavigatePrevious;
 
 	   }
 
@@ -92,6 +92,7 @@ namespace WeSay.LexicalTools
 
 		private void _btnNextWord_Click(object sender, EventArgs e)
 		{
+			AddCurrentWord();//don't throw away what they were typing
 			_task.NavigateNext();
 		}
 		private void _btnPreviousWord_Click(object sender, EventArgs e)
@@ -102,6 +103,11 @@ namespace WeSay.LexicalTools
 
 
 		private void _btnAddWord_Click(object sender, EventArgs e)
+		{
+			AddCurrentWord();
+		}
+
+		private void AddCurrentWord()
 		{
 			Debug.Assert(_vernacularBox.TextBoxes.Count == 1, "other code here (for now), assumes exactly one ws/text box");
 			string s = _vernacularBox.TextBoxes[0].Text.Trim();

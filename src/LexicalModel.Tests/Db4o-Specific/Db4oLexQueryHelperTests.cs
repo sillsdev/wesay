@@ -58,15 +58,22 @@ namespace WeSay.LexicalModel.Tests
 			LexEntry entryToMatch =AddEntryWithLexemeForm(formToFind);
 			AddEntryWithLexemeForm("ignore2");
 
-			LexSense sense = (LexSense) new LexSense();
-			sense.Gloss["en"] = "money place";
-
 			MultiText lexemeForm = new MultiText();
 			lexemeForm["en"] = formToFind;
-
 			Assert.AreEqual(0, entryToMatch.Senses.Count);
+
+			//add sense to empty entry
+			LexSense sense = (LexSense) new LexSense();
+			sense.Gloss["en"] = "money place";
 			Db4oLexQueryHelper.AddSenseToLexicon(_recordListManager, lexemeForm, sense);
 			Assert.AreEqual(1, entryToMatch.Senses.Count);
+
+			//add sense to  entry which already has one sense
+			LexSense sense2 = (LexSense)new LexSense();
+			Db4oLexQueryHelper.AddSenseToLexicon(_recordListManager, lexemeForm, sense);
+			Assert.AreEqual(2, entryToMatch.Senses.Count);
+
+			sense.Gloss["en"] = "side of river";
 		}
 
 		private LexEntry AddEntryWithLexemeForm(string lexemeForm)

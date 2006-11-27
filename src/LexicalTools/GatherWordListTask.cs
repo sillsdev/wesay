@@ -51,6 +51,8 @@ namespace WeSay.LexicalTools
 					_words.Add(s);
 				} while (true);
 			}
+
+			NavigateFirst();
 		}
 
 
@@ -80,12 +82,12 @@ namespace WeSay.LexicalTools
 			get {return _words[CurrentWordIndex]; }
 		}
 
-		public bool NavigateNextEnabled
+		public bool CanNavigateNext
 		{
 			get { return _words.Count > CurrentWordIndex ; }
 		}
 
-		public bool NavigatePreviousEnabled
+		public bool CanNavigatePrevious
 		{
 			get { return CurrentWordIndex > 0; }
 		}
@@ -116,10 +118,7 @@ namespace WeSay.LexicalTools
 
 		}
 
-		public IList<LexEntry> GetMatchingRecords(MultiText gloss)
-		{
-			return Db4oLexQueryHelper.FindObjectsFromLanguageForm<LexEntry, SenseGlossMultiText>(this.RecordListManager, gloss.GetFirstAlternative());
-		}
+
 
 
 		/// <summary>
@@ -164,11 +163,21 @@ namespace WeSay.LexicalTools
 		public void NavigateNext()
 		{
 			CurrentWordIndex++;
+			while (CanNavigateNext && GetMatchingRecords(CurrentWordAsMultiText).Count > 0)
+			{
+				++CurrentWordIndex;
+			}
 		}
 
 		public void NavigateFirst()
 		{
-			CurrentWordIndex = 0;
+			_currentWordIndex = -1;
+			NavigateNext();
+		}
+
+		public IList<LexEntry> GetMatchingRecords(MultiText gloss)
+		{
+			return Db4oLexQueryHelper.FindObjectsFromLanguageForm<LexEntry, SenseGlossMultiText>(this.RecordListManager, gloss.GetFirstAlternative());
 		}
 	}
 }

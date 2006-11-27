@@ -14,7 +14,8 @@ namespace WeSay.LexicalTools.Tests
 	public class GatherWordListTaskTests : TaskBaseTests
 	{
 		IRecordListManager _recordListManager;
-		private string _filePath;
+		private string _wordListFilePath= Path.GetTempFileName();
+		private string _dbFilePath= Path.GetTempFileName();
 		private string[] _words=new string[] {"one","two","three"};
 
 		[SetUp]
@@ -23,18 +24,17 @@ namespace WeSay.LexicalTools.Tests
 			Db4oLexModelHelper.InitializeForNonDbTests();
 			WeSayWordsProject.InitializeForTests();
 
-			this._recordListManager = new InMemoryRecordListManager();
+			this._recordListManager = new Db4oRecordListManager(_dbFilePath);// InMemoryRecordListManager();
 
-			_filePath = Path.GetTempFileName();
-			File.WriteAllLines(_filePath, _words);
-			this._task = new GatherWordListTask(_recordListManager, "label", "description", _filePath);
+			File.WriteAllLines(_wordListFilePath, _words);
+			this._task = new GatherWordListTask(_recordListManager, "label", "description", _wordListFilePath);
 		}
 
 		[TearDown]
 		public void TearDown()
 		{
 			_recordListManager.Dispose();
-			File.Delete(_filePath);
+			File.Delete(_wordListFilePath);
 		}
 
 		[Test]
@@ -61,19 +61,19 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void InitiallyCanNavigateNext()
 		{
-			Assert.IsTrue(Task.NavigateNextEnabled);
+			Assert.IsTrue(Task.CanNavigateNext);
 		}
 		[Test]
 		public void InitiallyCannotNavigatePrevious()
 		{
-			Assert.IsFalse(Task.NavigatePreviousEnabled);
+			Assert.IsFalse(Task.CanNavigatePrevious);
 		}
 		[Test]
 		public void NavigateNextEnabledFalseAtEnd()
 		{
-			Assert.IsTrue(Task.NavigateNextEnabled);
+			Assert.IsTrue(Task.CanNavigateNext);
 			NextToEnd();
-			Assert.IsFalse(Task.NavigateNextEnabled);
+			Assert.IsFalse(Task.CanNavigateNext);
 	   }
 
 		private void NextToEnd()
@@ -83,6 +83,11 @@ namespace WeSay.LexicalTools.Tests
 				Task.NavigateNext();
 			}
 
+		}
+
+		[Test,Ignore("Can't be tested on task, make sure it is correct on view.")]
+		public void GoingToNextWordSavesCurrentGloss()
+		{
 		}
 
 		[Test]
@@ -101,35 +106,94 @@ namespace WeSay.LexicalTools.Tests
 			NextToEnd();
 			Task.NavigatePrevious();
 			Assert.IsFalse(Task.IsTaskComplete);
-			Assert.IsTrue(Task.NavigateNextEnabled);
+			Assert.IsTrue(Task.CanNavigateNext);
 		}
 
-		[Test,Ignore]
-		public void NoWorkAtStart()
+		[Test]
+		public void NoWorkToDo()
 		{
+			AddEntryAndSense("one");
+			AddEntryAndSense("two");
+			AddEntryAndSense("three");
+			Assert.IsTrue(Task.IsTaskComplete);
 		}
 
-		[Test, Ignore]
+		[Test]
 		public void FirstWordAlreadyCollected()
 		{
+			//add a word with the first wordlist-word already in a sense
+			AddEntryAndSense("one");
+			Assert.AreEqual("two", Task.CurrentWord);
 		}
 
-		[Test, Ignore]
+		[Test]
 		public void LastWordAlreadyCollected()
 		{
+			//add an entry with a sense using the last word in the list as a gloss
+			AddEntryAndSense("three");
+
+			Assert.AreEqual("one", Task.CurrentWord);
+			Task.NavigateNext();
+			Assert.IsTrue(Task.CanNavigateNext);
+			Assert.AreEqual("two", Task.CurrentWord);
+			Task.NavigateNext();
+			Assert.IsTrue(Task.IsTaskComplete);//we don't get to see "three"
 		}
 
-		[Test, Ignore]
+		[Test]
 		public void SkipMiddleWordAlreadyCollected()
 		{
+			AddEntryAndSense("two");
+			Assert.AreEqual("one", Task.CurrentWord);
+			Task.NavigateNext();
+			Assert.AreEqual("three", Task.CurrentWord);
 		}
 
-		[Test, ExpectedException(typeof(NotImplementedException))]
-		public void AddWordTestInMemoryNotPossibleYet()
+		[Test]
+		public void SkipFirstTwoWordsAlreadyCollected()
 		{
-			MultiText word=new MultiText();
+			AddEntryAndSense("one");
+			AddEntryAndSense("two");
+			Assert.AreEqual("three", Task.CurrentWord);
+		}
+
+		[Test]
+		public void AddWordNotInDB()
+		{
+			Assert.AreEqual(0, _recordListManager.GetListOfType<LexEntry>().Count);
+			MultiText word = new MultiText();
 			word["en"] = "uno";
 			Task.WordCollected(word, false);
+			Assert.AreEqual(1, _recordListManager.GetListOfType<LexEntry>().Count);
+		}
+
+		[Test]
+		public void AddWordAlreadyInDBAddsNewSense()
+		{
+			LexEntry e = (LexEntry)EntriesList.AddNew();
+			e.LexicalForm["en"] = "uno";
+			Assert.AreEqual(1, _recordListManager.GetListOfType<LexEntry>().Count);
+			MultiText word = new MultiText();
+			word["en"] = "uno";
+			Assert.AreEqual(0, e.Senses.Count);
+			Task.WordCollected(word, false);
+			Assert.AreEqual(1, e.Senses.Count);
+			Assert.AreEqual(1, _recordListManager.GetListOfType<LexEntry>().Count);
+	   }
+
+		private void AddEntryAndSense(string gloss)
+		{
+			LexEntry e = (LexEntry)EntriesList.AddNew();
+			((LexSense) e.Senses.AddNew()).Gloss["en"] = gloss;
+		}
+
+		private IRecordList<LexEntry> EntriesList
+		{
+			get
+			{
+				IRecordList<LexEntry> list = _recordListManager.GetListOfType<LexEntry>();
+				return list;
+			}
 		}
 
 		private GatherWordListTask Task
