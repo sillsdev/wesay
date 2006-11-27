@@ -26,6 +26,10 @@ namespace WeSay.LexicalModel.Db4o_Specific
 			}
 			else
 			{
+//                foreach (MultiTextType m in recordManager.GetListOfType<MultiTextType>() )
+//                {
+//
+//                }
 				throw new NotImplementedException("this search is not available for non-db4o sources");
 			}
 		}

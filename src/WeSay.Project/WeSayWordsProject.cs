@@ -37,6 +37,17 @@ namespace WeSay.Project
 			}
 		}
 
+
+		/// <summary>
+		/// See comment on BasilProject.InitializeForTests()
+		/// </summary>
+		public static new void InitializeForTests()
+		{
+			BasilProject project = new WeSayWordsProject();
+			project.LoadFromProjectDirectoryPath(GetPretendProjectDirectory());
+			project.StringCatalogSelector = "en";
+		}
+
 		public void LoadFromLexiconPath(string lexiconPath)
 		{
 			Debug.Assert(File.Exists(lexiconPath));

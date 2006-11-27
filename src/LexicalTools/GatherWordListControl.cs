@@ -11,9 +11,7 @@ namespace WeSay.LexicalTools
 {
 	public partial class GatherWordListControl : UserControl
 	{
-		private readonly List<string> _words;
 		private readonly GatherWordListTask _task;
-		private int _currentWordIndex=0;
 
 		public GatherWordListControl()
 		{
@@ -21,15 +19,11 @@ namespace WeSay.LexicalTools
 			InitializeComponent();
 		}
 
-		public GatherWordListControl(GatherWordListTask task, List<string> words)
+		public GatherWordListControl(GatherWordListTask task)
 		{
-			if (words == null)
-			{
-				throw new ArgumentNullException("words");
-			}
 			_task = task;
+			_task.UpdateSourceWord += new EventHandler(OnUpdateSourceWord);
 
-			_words = words;
 			InitializeComponent();
 			BackColor = WeSay.UI.DisplaySettings.Default.BackgroundColor;
 			_listViewOfWordsMatchingCurrentItem.Items.Clear();
@@ -40,6 +34,14 @@ namespace WeSay.LexicalTools
 			UpdateStuff();
 		}
 
+		void OnUpdateSourceWord(object sender, EventArgs e)
+		{
+			UpdateStuff();
+			_vernacularBox.ClearAllText();
+			_vernacularBox.FlagIsOn = false;
+			_vernacularBox.TextBoxes[0].Focus();
+		}
+
 		void _vernacularBox_TextChanged(object sender, EventArgs e)
 		{
 			UpdateStuff();
@@ -47,7 +49,7 @@ namespace WeSay.LexicalTools
 
 		private void GatherWordListControl_Load(object sender, EventArgs e)
 		{
-			SourceWordChanged();
+			_task.NavigateFirst();
 		}
 
 		private void UpdateStuff()
@@ -56,38 +58,23 @@ namespace WeSay.LexicalTools
 			{
 				return;
 			}
-			if (_currentWordIndex >= _words.Count)
+			if (_task.IsTaskComplete)
 			{
 				_congratulationsControl.Show("Congratulations. You have completed this task.");
+				_btnAddWord.Enabled = false;
 			}
 			else
 			{
 				_congratulationsControl.Hide();
 				Debug.Assert(_vernacularBox.TextBoxes.Count == 1, "other code here (for now), assumes exactly one ws/text box");
-				_boxForeignWord.Text = _words[_currentWordIndex];
-				_btnNextWord.Enabled = _words.Count > (_currentWordIndex - 1);
-				_btnPreviousWord.Enabled = _currentWordIndex > 0;
+				_boxForeignWord.Text = _task.CurrentWord;
+				PopulateWordsMatchingCurrentItem();
 				_btnAddWord.Enabled = _vernacularBox.TextBoxes[0].Text.Trim() != "";
 			}
-
-			PopulateWordsMatchingCurrentItem();
+			_btnNextWord.Enabled = _task.NavigateNextEnabled;
+			_btnPreviousWord.Enabled = _task.NavigatePreviousEnabled;
 
 	   }
-
-		private void _btnNextWord_Click(object sender, EventArgs e)
-		{
-		   _currentWordIndex++;
-			   SourceWordChanged();
-		}
-
-
-		private void SourceWordChanged()
-		{
-			UpdateStuff();
-			_vernacularBox.ClearAllText();
-			_vernacularBox.FlagIsOn = false;
-			_vernacularBox.TextBoxes[0].Focus();
-		}
 
 		/// <summary>
 		/// We want to show all words in the lexicon which match the current
@@ -97,16 +84,19 @@ namespace WeSay.LexicalTools
 		{
 			_listViewOfWordsMatchingCurrentItem.Items.Clear();
 
-			foreach (LexEntry entry in _task.GetMatchingRecords(ForeignWordAsMultiText))
+			foreach (LexEntry entry in _task.GetMatchingRecords(_task.CurrentWordAsMultiText))
 			{
 				_listViewOfWordsMatchingCurrentItem.Items.Add(entry.LexicalForm.GetFirstAlternative());
 			}
 		}
 
+		private void _btnNextWord_Click(object sender, EventArgs e)
+		{
+			_task.NavigateNext();
+		}
 		private void _btnPreviousWord_Click(object sender, EventArgs e)
 		{
-			_currentWordIndex--;
-			SourceWordChanged();
+			_task.NavigatePrevious();
 		}
 
 
@@ -119,29 +109,13 @@ namespace WeSay.LexicalTools
 			{
 				return;
 			}
-			_task.WordCollected(_vernacularBox.MultiText, ForeignWordAsMultiText, _vernacularBox.FlagIsOn);
+			_task.WordCollected(_vernacularBox.MultiText, _vernacularBox.FlagIsOn);
 
 			//_listViewOfWordsMatchingCurrentItem.Items.Add(s);
 			_vernacularBox.TextBoxes[0].Text = "";
 			_vernacularBox.FlagIsOn = false;
 			UpdateStuff();
 		}
-
-		/// <summary>
-		/// Someday, we may indeed have multi-string foreign words
-		/// </summary>
-		private MultiText ForeignWordAsMultiText
-		{
-			get
-			{
-				MultiText m = new MultiText();
-				m.SetAlternative(BasilProject.Project.WritingSystems.AnalysisWritingSystemDefaultId,
-											   this._words[_currentWordIndex]);
-				return m;
-			}
-		}
-
-
 
 		private void _boxVernacularWord_KeyDown(object sender, KeyEventArgs e)
 		{

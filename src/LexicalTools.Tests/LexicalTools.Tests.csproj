@@ -52,6 +52,7 @@
   <ItemGroup>
 	<Compile Include="EntryDetailControlTests.cs" />
 	<Compile Include="EntryDetailTaskTests.cs" />
+	<Compile Include="GatherWordListTaskTests.cs" />
 	<Compile Include="LexFieldControlTests.cs" />
 	<Compile Include="LexFieldTaskTests.cs" />
 	<Compile Include="BindingListGridTester.cs" />
