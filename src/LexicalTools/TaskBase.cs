@@ -42,7 +42,7 @@ namespace WeSay.LexicalTools
 			}
 		}
 
-		private bool _isActive;
+		private bool _isActive=false;
 
 		public virtual void Activate()
 		{

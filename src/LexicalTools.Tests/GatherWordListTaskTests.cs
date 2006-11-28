@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using NUnit.Framework;
 using WeSay.Data;
@@ -14,13 +15,16 @@ namespace WeSay.LexicalTools.Tests
 	public class GatherWordListTaskTests : TaskBaseTests
 	{
 		IRecordListManager _recordListManager;
-		private string _wordListFilePath= Path.GetTempFileName();
-		private string _dbFilePath= Path.GetTempFileName();
+		private string _wordListFilePath;
+		private string _dbFilePath;
 		private string[] _words=new string[] {"one","two","three"};
 
 		[SetUp]
 		public void Setup()
 		{
+			_wordListFilePath = Path.GetTempFileName();
+			_dbFilePath = Path.GetTempFileName();
+			Debug.WriteLine("setup");
 			Db4oLexModelHelper.InitializeForNonDbTests();
 			WeSayWordsProject.InitializeForTests();
 
@@ -35,6 +39,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			_recordListManager.Dispose();
 			File.Delete(_wordListFilePath);
+			File.Delete(_dbFilePath);
 		}
 
 		[Test]
@@ -121,8 +126,9 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void FirstWordAlreadyCollected()
 		{
-			//add a word with the first wordlist-word already in a sense
+			 //add a word with the first wordlist-word already in a sense
 			AddEntryAndSense("one");
+		   Task.NavigateFirst();
 			Assert.AreEqual("two", Task.CurrentWord);
 		}
 
@@ -132,6 +138,7 @@ namespace WeSay.LexicalTools.Tests
 			//add an entry with a sense using the last word in the list as a gloss
 			AddEntryAndSense("three");
 
+			Task.NavigateFirst();
 			Assert.AreEqual("one", Task.CurrentWord);
 			Task.NavigateNext();
 			Assert.IsTrue(Task.CanNavigateNext);
@@ -144,6 +151,8 @@ namespace WeSay.LexicalTools.Tests
 		public void SkipMiddleWordAlreadyCollected()
 		{
 			AddEntryAndSense("two");
+			Task.NavigateFirst();
+
 			Assert.AreEqual("one", Task.CurrentWord);
 			Task.NavigateNext();
 			Assert.AreEqual("three", Task.CurrentWord);
@@ -154,12 +163,14 @@ namespace WeSay.LexicalTools.Tests
 		{
 			AddEntryAndSense("one");
 			AddEntryAndSense("two");
+			Task.NavigateFirst();
 			Assert.AreEqual("three", Task.CurrentWord);
 		}
 
 		[Test]
 		public void AddWordNotInDB()
 		{
+			Task.NavigateFirst();
 			Assert.AreEqual(0, _recordListManager.GetListOfType<LexEntry>().Count);
 			MultiText word = new MultiText();
 			word["en"] = "uno";
@@ -176,6 +187,8 @@ namespace WeSay.LexicalTools.Tests
 			MultiText word = new MultiText();
 			word["en"] = "uno";
 			Assert.AreEqual(0, e.Senses.Count);
+
+			Task.NavigateFirst();
 			Task.WordCollected(word, false);
 			Assert.AreEqual(1, e.Senses.Count);
 			Assert.AreEqual(1, _recordListManager.GetListOfType<LexEntry>().Count);
