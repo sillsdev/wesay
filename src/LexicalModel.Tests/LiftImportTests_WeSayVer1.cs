@@ -1,41 +1,19 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Xml;
 using NUnit.Framework;
-using WeSay.Data;
 using WeSay.Language;
 using WeSay.LexicalModel;
-using WeSay.LexicalModel.Db4o_Specific;
 
 namespace WeSay.LexicalTools.Tests
 {
 	[TestFixture]
-	public class LiftImportTests
+	public class LiftImportTestsWeSayVer1 : LiftImportTestsBase
 	{
-		private LiftImporter _importer;
-		private XmlDocument _doc;
-		private IList<LexEntry> _entries;
-
-		[SetUp]
-		public void Setup()
+		protected override LiftImporter CreateImporter()
 		{
-			Db4oLexModelHelper.InitializeForNonDbTests();
-
-			_entries = new List<LexEntry>();
-			_importer = new LiftImporter(_entries);
-			_doc = new XmlDocument();
+			return new LiftImporterWeSay(_entries);
 		}
-
-
-
-		[TearDown]
-		public void TearDown()
-		{
-
-		}
-
 
 
 		[Test]
@@ -66,8 +44,8 @@ namespace WeSay.LexicalTools.Tests
 				writer.WriteEndDocument();
 				writer.Close();
 
-				_importer = new LiftImporter(_entries);
-				_importer.ReadFile(filePath);
+				LiftImporter.ReadFile(_entries, filePath, null);
+
 				Assert.AreEqual(2, this._entries.Count);
 
 				Assert.AreEqual("test word 2", this._entries[1].LexicalForm["xyz"]);
@@ -83,46 +61,19 @@ namespace WeSay.LexicalTools.Tests
 		{
 			this._doc.LoadXml("<wrap><form lang=\"blue\">ocean</form><form lang=\"red\">sunset</form></wrap>");
 			MultiText text = new MultiText();
-			LiftImporter.ReadMultiText(this._doc.SelectSingleNode("wrap"),text);
+			_importer.ReadMultiText(this._doc.SelectSingleNode("wrap"), text);
 			Assert.AreEqual("ocean", text["blue"]);
 			Assert.AreEqual("sunset", text["red"]);
 		}
 
 		[Test]
-		public void MissingMultiText()
-		{
-			_doc.LoadXml("<wrap></wrap>");
-			MultiText text = new MultiText();
-			LiftImporter.ReadMultiText(_doc.SelectSingleNode("wrap"),text);
-			Assert.AreEqual(0,text.Count);
-		}
-
-		[Test]
-		public void BlankExample()
-		{
-			_doc.LoadXml("<example></example>");
-			LexExampleSentence example = LiftImporter.ReadExample(_doc.SelectSingleNode("example"));
-			Assert.IsNotNull(example);
-		}
-
-
-
-		[Test]
 		public void FullExample()
 		{
 			_doc.LoadXml("<example><source><form lang=\"blue\">ocean's eleven</form><form lang=\"red\">red sunset tonight</form></source><trans><form lang=\"green\">blah blah</form></trans></example>");
-			LexExampleSentence example = LiftImporter.ReadExample(_doc.SelectSingleNode("example"));
+			LexExampleSentence example = _importer.ReadExample(_doc.SelectSingleNode("example"));
 			Assert.AreEqual("ocean's eleven",example.Sentence["blue"]);
 			Assert.AreEqual("red sunset tonight", example.Sentence["red"]);
 			Assert.AreEqual("blah blah", example.Translation["green"]);
-		}
-
-		[Test]
-		public void BlankSense()
-		{
-			_doc.LoadXml("<sense />");
-			LexSense sense = _importer.ReadSense(_doc.SelectSingleNode("sense"));
-			Assert.IsNotNull(sense);
 		}
 
 		[Test]
@@ -133,19 +84,9 @@ namespace WeSay.LexicalTools.Tests
 			Assert.IsNotNull(sense);
 			Assert.AreEqual("sunset",sense.Gloss["blue"]);
 			Assert.AreEqual(1, sense.ExampleSentences.Count);
-		   Assert.AreEqual("red sunset tonight", ((LexExampleSentence) sense.ExampleSentences[0]).Sentence["red"]);
+			Assert.AreEqual("red sunset tonight", ((LexExampleSentence) sense.ExampleSentences[0]).Sentence["red"]);
 		}
 
-
-		[Test]
-		public void BlankEntry()
-		{
-			Guid g = Guid.NewGuid();
-			_doc.LoadXml(string.Format("<entry id=\"{0}\" />", g.ToString()));
-			LexEntry entry = _importer.ReadEntry (_doc.SelectSingleNode("entry"));
-			Assert.IsNotNull(entry);
-			Assert.AreEqual(g.ToString(), entry.Guid.ToString());
-		}
 
 		[Test]
 		public void EntryWithSenses()
@@ -154,8 +95,6 @@ namespace WeSay.LexicalTools.Tests
 			LexEntry entry = _importer.ReadEntry(_doc.SelectSingleNode("entry"));
 			Assert.AreEqual("ocean",entry.LexicalForm["blue"]);
 			Assert.AreEqual(2, entry.Senses.Count);
-
 		}
-
 	}
 }

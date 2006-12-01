@@ -24,7 +24,6 @@ namespace WeSay.LexicalTools.Tests
 		{
 			_wordListFilePath = Path.GetTempFileName();
 			_dbFilePath = Path.GetTempFileName();
-			Debug.WriteLine("setup");
 			Db4oLexModelHelper.InitializeForNonDbTests();
 			WeSayWordsProject.InitializeForTests();
 

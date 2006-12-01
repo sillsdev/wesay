@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Xml;
 using WeSay.Data;
 using WeSay.Foundation.Progress;
 using WeSay.LexicalModel;
@@ -73,9 +74,7 @@ namespace Lift2WeSay
 			{
 				using (Db4oRecordList<LexEntry> entries = new Db4oRecordList<LexEntry>(ds))
 				{
-					LiftImporter importer = new LiftImporter(entries);
-					importer.Progress = new ConsoleProgress();
-					importer.ReadFile(sourcePath);
+					LiftImporter.ReadFile(entries, sourcePath, new ConsoleProgress());
 				}
 			}
 		}

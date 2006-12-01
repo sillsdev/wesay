@@ -44,6 +44,7 @@
 	<Compile Include="ProgressDialogHandler.cs" />
 	<Compile Include="ProgressState.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />
+	<Compile Include="XmlUtils.cs" />
   </ItemGroup>
   <ItemGroup>
 	<EmbeddedResource Include="ProgressDialog.resx">

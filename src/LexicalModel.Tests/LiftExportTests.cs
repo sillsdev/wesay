@@ -41,10 +41,12 @@ namespace WeSay.LexicalTools.Tests
 		}
 
 		[Test]
-		public void DocStructure()
+		public void DocumentStart()
 		{
 			PrepWriterForFullDocument();
-			CheckAnswer("<?xml version=\"1.0\" encoding=\"utf-16\"?><lift />");
+			//NOTE: the utf-16 here is an artifcat of the xmlwriter when writing to a stringbuilder,
+			//which is what we use for tests.  The file version puts out utf-8
+			CheckAnswer("<?xml version=\"1.0\" encoding=\"utf-16\"?><lift producer=\"WeSay.1Pt0Alpha\" />");
 		}
 
 
@@ -111,6 +113,24 @@ namespace WeSay.LexicalTools.Tests
 			CheckAnswer("<sense><gloss><form lang=\"blue\">ocean</form></gloss></sense>");
 		}
 
+
+		[Test]
+		public void MultiTextFormWithProblematicCharacters()
+		{
+			LexSense sense = new LexSense();
+			sense.Gloss["blue"] = "LessThan<GreaterThan>Ampersan&";
+			_exporter.Add(sense);
+			CheckAnswer("<sense><gloss><form lang=\"blue\">LessThan&lt;GreaterThan&gt;Ampersan&amp;</form></gloss></sense>");
+		}
+
+		[Test]
+		public void AttributesWithProblematicCharacters()
+		{
+			LexSense sense = new LexSense();
+			sense.Gloss["x\"y"] = "test";
+			_exporter.Add(sense);
+			CheckAnswer("<sense><gloss><form lang=\"x&quot;y\">test</form></gloss></sense>");
+		}
 
 		[Test]
 		public void BlankMultiText()

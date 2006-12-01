@@ -45,6 +45,7 @@ namespace WeSay.LexicalModel
 		{
 			_writer.WriteStartDocument();
 			_writer.WriteStartElement("lift");
+			_writer.WriteAttributeString("producer", "WeSay.1Pt0Alpha");
 		}
 
 		public void End()

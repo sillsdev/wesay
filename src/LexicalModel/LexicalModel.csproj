@@ -50,6 +50,8 @@
 	<Compile Include="LexSense.cs" />
 	<Compile Include="LiftExporter.cs" />
 	<Compile Include="LiftImporter.cs" />
+	<Compile Include="LiftImporterWeSay.cs" />
+	<Compile Include="LiftImporterFlexVer1Pt1.cs" />
 	<Compile Include="PretendRecordList.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />
 	<Compile Include="WeSayDataObject.cs" />

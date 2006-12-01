@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Xml;
 using WeSay.Data;
 using WeSay.Foundation;
 using WeSay.Foundation.Progress;
@@ -34,9 +35,11 @@ namespace WeSay
 			{
 				using (Db4oRecordList<LexEntry> entries = new Db4oRecordList<LexEntry>(ds))
 				{
-					_importer = new LiftImporter(entries);
+					XmlDocument doc = new XmlDocument();
+					doc.Load(_sourceLIFTPath);
+					_importer = LiftImporter.CreateCorrectImporter(entries,doc);
 					_importer.Progress = progress;
-					_importer.ReadFile(_sourceLIFTPath);
+					_importer.ReadFile(doc);
 				}
 			}
 		}

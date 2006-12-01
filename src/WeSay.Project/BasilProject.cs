@@ -179,6 +179,14 @@ namespace WeSay.Project
 			}
 		}
 
+		public string ApplicationTestDirectory
+		{
+			get
+			{
+				return Path.Combine(GetTopAppDirectory(), "test");
+			}
+		}
+
 		protected static string GetTopAppDirectory()
 		{
 			string path;
