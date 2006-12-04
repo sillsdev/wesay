@@ -44,7 +44,7 @@ namespace WeSay.LexicalTools.Tests
 		public void DocumentStart()
 		{
 			PrepWriterForFullDocument();
-			//NOTE: the utf-16 here is an artifcat of the xmlwriter when writing to a stringbuilder,
+			//NOTE: the utf-16 here is an artifact of the xmlwriter when writing to a stringbuilder,
 			//which is what we use for tests.  The file version puts out utf-8
 			CheckAnswer("<?xml version=\"1.0\" encoding=\"utf-16\"?><lift producer=\"WeSay.1Pt0Alpha\" />");
 		}
