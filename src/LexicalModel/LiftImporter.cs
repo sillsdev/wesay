@@ -9,16 +9,13 @@ namespace WeSay.LexicalModel
 {
 	public abstract class LiftImporter
 	{
-		private IList<LexEntry> _entries;
 		private ProgressState _progressState = new NullProgressState();
 
 		/// <summary>
 		///
 		/// </summary>
-		/// <param name="entries">An existing list to fill</param>
-		public LiftImporter(IList<LexEntry> entries)
+		public LiftImporter()
 		{
-			this._entries = entries;
 		}
 
 //        public LiftImporter()
@@ -43,17 +40,17 @@ namespace WeSay.LexicalModel
 		/// <summary>
 		/// Pick the best importer based on the version info in the file
 		/// </summary>
-		 public static LiftImporter CreateCorrectImporter(IList<LexEntry> entries, XmlDocument doc)
+		 public static LiftImporter CreateCorrectImporter( XmlDocument doc)
 		{
 			string version = XmlUtils.GetAttributeValue(doc.SelectSingleNode("lift"), "producer", "");
 			switch (version)
 			{
 				case "SIL.FLEx.V1Pt1":
-					return new LiftImporterFlexVer1Pt1(entries);
+					return new LiftImporterFlexVer1Pt1();
 				case "WeSay.1Pt0Alpha":
-					return new LiftImporterWeSay(entries);
+					return new LiftImporterWeSay();
 				default:
-					return new LiftImporterWeSay(entries);
+					return new LiftImporterWeSay();
 			}
 		}
 
@@ -65,16 +62,21 @@ namespace WeSay.LexicalModel
 			XmlDocument doc =new XmlDocument();
 			doc.Load(path);
 
-			LiftImporter importer = CreateCorrectImporter(entries,doc);
+			LiftImporter importer = CreateCorrectImporter(doc);
 			if (progressState != null)
 			{
 				importer.Progress = progressState;
 			}
-			importer.ReadFile(doc);
+			importer.ReadFile(doc, entries);
 			return importer;
 		}
 
-		public virtual IList<LexEntry> ReadFile(XmlDocument doc)
+		/// <summary>
+		///
+		/// </summary>
+		/// <param name="doc"></param>
+		/// <param name="entries">New items will be added to this list</param>
+		public virtual void ReadFile(XmlDocument doc, IList<LexEntry> entries)
 		{
 			XmlNodeList entryNodes = doc.SelectNodes("./lift/entry");
 			int count = 0;
@@ -83,7 +85,7 @@ namespace WeSay.LexicalModel
 			_progressState.NumberOfSteps = entryNodes.Count;
 			foreach (XmlNode node in entryNodes)
 			{
-				this._entries.Add(this.ReadEntry(node));
+				entries.Add(this.ReadEntry(node));
 				count++;
 				if (count >= nextProgressPoint)
 				{
@@ -93,7 +95,6 @@ namespace WeSay.LexicalModel
 						break;
 				}
 			}
-			return this._entries;
 		}
 
 		protected static string GetStringAttribute(XmlNode form, string attr)

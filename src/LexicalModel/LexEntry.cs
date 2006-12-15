@@ -94,6 +94,10 @@ namespace WeSay.LexicalModel
 			{
 				return _creationDate;
 			}
+			set
+			{
+				_creationDate = value;
+			}
 		}
 
 		public DateTime ModifiedDate
@@ -101,6 +105,10 @@ namespace WeSay.LexicalModel
 			get
 			{
 				return _modifiedDate;
+			}
+			set
+			{
+				_modifiedDate = value;
 			}
 		}
 

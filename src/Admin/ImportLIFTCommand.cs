@@ -37,9 +37,9 @@ namespace WeSay
 				{
 					XmlDocument doc = new XmlDocument();
 					doc.Load(_sourceLIFTPath);
-					_importer = LiftImporter.CreateCorrectImporter(entries,doc);
+					_importer = LiftImporter.CreateCorrectImporter(doc);
 					_importer.Progress = progress;
-					_importer.ReadFile(doc);
+					_importer.ReadFile(doc, entries);
 				}
 			}
 		}

@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Specialized;
 using System.Diagnostics;
 using System.ComponentModel;
 
@@ -57,12 +58,33 @@ namespace WeSay.Language
 		{
 		}
 
+
 		public MultiText(object parent)
 		{
-			_parent = parent;
+			_parent = parent; //ok for this to be null
 			_forms = new LanguageForm[0];
 		}
 
+		static public MultiText Create(StringDictionary forms)
+		{
+			MultiText m = new MultiText();
+			if (forms != null && forms.Keys != null)
+			{
+				foreach (string key in forms.Keys)
+				{
+					LanguageForm f = m.Find(key);
+					if (f != null)
+					{
+						f.Form = forms[key];
+					}
+					else
+					{
+						m.SetAlternative(key, forms[key]);
+					}
+				}
+			}
+			return m;
+		}
 		public string this[string writingSystemId]
 		{
 			get
@@ -229,5 +251,8 @@ namespace WeSay.Language
 				}
 			}
 		}
+
+
+
 	}
 }

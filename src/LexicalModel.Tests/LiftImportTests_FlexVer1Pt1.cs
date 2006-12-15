@@ -11,7 +11,7 @@ namespace WeSay.LexicalTools.Tests
 	{
 		protected override LiftImporter CreateImporter()
 		{
-			return new LiftImporterFlexVer1Pt1(_entries);
+			return new LiftImporterFlexVer1Pt1();
 		}
 
 		[Test]
@@ -36,15 +36,6 @@ namespace WeSay.LexicalTools.Tests
 			_importer.ReadMultiText(this._doc.SelectSingleNode("wrap"), text);
 			Assert.AreEqual("ocean", text["blue"]);
 			Assert.AreEqual("sunset", text["red"]);
-		}
-
-		[Test]
-		public void MissingMultiText()
-		{
-			_doc.LoadXml("<wrap></wrap>");
-			MultiText text = new MultiText();
-			_importer.ReadMultiText(_doc.SelectSingleNode("wrap"), text);
-			Assert.AreEqual(0, text.Count);
 		}
 
 		/// <summary>

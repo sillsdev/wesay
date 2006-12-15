@@ -58,6 +58,7 @@
 	<Compile Include="Db4o-Specific\PersistenceTests.cs" />
 	<Compile Include="LiftImportTests_FlexVer1Pt1.cs" />
 	<Compile Include="LiftImportTests_WeSayVer1.cs" />
+	<Compile Include="LiftMergerTests.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -68,6 +69,10 @@
 	<ProjectReference Include="..\LexicalModel\LexicalModel.csproj">
 	  <Project>{5F61C809-B6C0-4567-9603-B2198E1AD038}</Project>
 	  <Name>LexicalModel</Name>
+	</ProjectReference>
+	<ProjectReference Include="..\LiftIO\LiftIO.csproj">
+	  <Project>{A3A7698C-790B-4139-95C8-60380AF35F9C}</Project>
+	  <Name>LiftIO</Name>
 	</ProjectReference>
 	<ProjectReference Include="..\WeSay.Data.Tests\WeSay.Data.Tests.csproj">
 	  <Project>{8491FEEE-C311-4B64-BB30-A1F1C1802F45}</Project>

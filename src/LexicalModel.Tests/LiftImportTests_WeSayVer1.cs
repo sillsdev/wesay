@@ -12,7 +12,7 @@ namespace WeSay.LexicalTools.Tests
 	{
 		protected override LiftImporter CreateImporter()
 		{
-			return new LiftImporterWeSay(_entries);
+			return new LiftImporterWeSay();
 		}
 
 

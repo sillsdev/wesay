@@ -9,9 +9,8 @@ namespace WeSay.LexicalModel
 	   /// <summary>
 	   ///
 	   /// </summary>
-	   /// <param name="entries">An existing list to fill</param>
-	   public LiftImporterFlexVer1Pt1(IList<LexEntry> entries)
-		   : base(entries)
+	   public LiftImporterFlexVer1Pt1()
+		   : base()
 	   {
 	   }
 

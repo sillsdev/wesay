@@ -130,7 +130,6 @@ namespace Language.Tests
 		}
 
 
-
 		[Test]
 		public void MergeWithEmpty()
 		{
