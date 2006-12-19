@@ -28,6 +28,10 @@
 	<WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+	<Reference Include="NMock2, Version=1.0.2313.18049, Culture=neutral, processorArchitecture=MSIL">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\nmock\bin\NMock2.dll</HintPath>
+	</Reference>
 	<Reference Include="Nunit.Framework, Version=2.2.0.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77" />
 	<Reference Include="System" />
 	<Reference Include="System.Data" />

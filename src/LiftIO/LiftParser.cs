@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Diagnostics;
+using System.Reflection;
 using System.Xml;
 
 namespace LiftIO
@@ -11,13 +12,12 @@ namespace LiftIO
 		where TSense: class
 		where TExample : class
 	{
-	   public delegate void MultiTextMergeMethod(object parent, StringDictionary forms);
 
 		private ILexiconMerger<TEntry, TSense, TExample> _merger;
 		protected string wsAttributeLabel = "lang";
 
 		private bool _cancelNow = false;
-		private Dictionary<string, Delegate> _methods = new Dictionary<string, Delegate>();
+		private string _defaultLangId="??";
 
 
 		public LiftParser(ILexiconMerger<TEntry, TSense, TExample> merger)
@@ -25,24 +25,6 @@ namespace LiftIO
 			_merger = merger;
 		}
 
-		/// <summary>
-		/// this delegate business is sort of a macro substitute to keep from
-		/// repeating several lines of code
-		/// for every field. It may grow into yet more lines, so this keeps it well factored.
-		/// </summary>
-		/// <param name="methodName"></param>
-		/// <returns></returns>
-		private Delegate GetMergeDelegate(string methodName)
-		{
-			Delegate method;
-			if (!_methods.TryGetValue(methodName, out method))
-			{
-				method = Delegate.CreateDelegate(typeof (MultiTextMergeMethod), _merger, methodName);
-				_methods.Add(methodName, method);
-			}
-			Debug.Assert(method != null);
-			return method;
-		}
 
 		/// <summary>
 		///
@@ -71,11 +53,13 @@ namespace LiftIO
 		public TEntry ReadEntry(XmlNode node)
 		{
 			TEntry entry = _merger.GetOrMakeEntry(GetIdInfo(node));
-
-			ProcessMultiText(node, "lex", entry, "MergeInLexemeForm");
-			foreach (XmlNode n in node.SelectNodes("sense"))
+			if (entry != null)//not been pruned
 			{
-				ReadSense(n, entry);
+				_merger.MergeInLexemeForm(entry, ProcessMultiText(node, "lex"));
+				foreach (XmlNode n in node.SelectNodes("sense"))
+				{
+					ReadSense(n, entry);
+				}
 			}
 			return entry;
 		}
@@ -92,10 +76,14 @@ namespace LiftIO
 		public TSense ReadSense(XmlNode node, TEntry entry)
 		{
 			TSense sense = _merger.GetOrMergeSense(entry, GetIdInfo(node));
-			ProcessMultiText(node, "gloss", sense, "MergeInGloss");
-			foreach (XmlNode n in node.SelectNodes("example"))
+			if (sense != null)//not been pruned
 			{
-				ReadExample(n, sense);
+				_merger.MergeInGloss(sense, ProcessMultiText(node, "gloss"));
+
+				foreach (XmlNode n in node.SelectNodes("example"))
+				{
+					ReadExample(n, sense);
+				}
 			}
 			return sense;
 		}
@@ -103,20 +91,18 @@ namespace LiftIO
 		private TExample ReadExample(XmlNode node, TSense sense)
 		{
 			TExample example = _merger.GetOrMergeExample(sense, GetIdInfo(node));
-			ProcessMultiText(node, null, example, "MergeInExampleForm");
-			//NB: only one translation supported in LIFT at the moment
-			ProcessMultiText(node, "translation", example, "MergeInTranslationForm");
-
+			if (example != null)//not been pruned
+			{
+				_merger.MergeInExampleForm(example, ProcessMultiText(node, null));
+				//NB: only one translation supported in LIFT at the moment
+				_merger.MergeInTranslationForm(example, ProcessMultiText(node, "translation"));
+			}
 			return example;
 		}
 
-		protected void ProcessMultiText(XmlNode node, string fieldName, object parent, string methodName)
+		protected StringDictionary ProcessMultiText(XmlNode node, string fieldName)
 		{
-			StringDictionary forms = ReadMultiTextOrNull(node, fieldName);
-			if (forms != null)
-			{
-				GetMergeDelegate(methodName).DynamicInvoke(parent, forms);
-			}
+			return ReadMultiText(node, fieldName);
 		}
 
 
@@ -152,12 +138,13 @@ namespace LiftIO
 			XmlAttribute attr = xmlNode.Attributes[name];
 			if (attr == null)
 				return DateTime.MinValue;
+
+			/* if the incoming data lacks a time, we'll have a kind of 'unspecified', else utc */
 			return DateTime.Parse(attr.Value);
 		}
 
-		protected StringDictionary ReadMultiTextOrNull(XmlNode node, string query)
+		protected StringDictionary ReadMultiText(XmlNode node, string query)
 		{
-			StringDictionary text = new StringDictionary();
 			XmlNode element=null;
 			if (query == null)
 			{
@@ -172,7 +159,7 @@ namespace LiftIO
 			{
 				return ReadMultiText(element);
 			}
-			return null;
+			return new StringDictionary();
 		}
 
 		/// <summary>
@@ -195,7 +182,14 @@ namespace LiftIO
 			}
 			if (text.Count == 0)
 			{
-				return null;
+				if (node.InnerText != null && node.InnerText.Trim() != string.Empty)
+				{
+					text[_defaultLangId] = node.InnerText;
+				}
+				else
+				{
+					return null;
+				}
 			}
 
 			return text;
@@ -204,9 +198,9 @@ namespace LiftIO
 //        public LexExampleSentence ReadExample(XmlNode xmlNode)
 //        {
 //            LexExampleSentence example = new LexExampleSentence();
-//            ReadMultiTextOrNull(xmlNode, "source", example.Sentence);
+//            ReadMultiText(xmlNode, "source", example.Sentence);
 //            //NB: will only read in one translation
-//            ReadMultiTextOrNull(xmlNode, "trans", example.Translation);
+//            ReadMultiText(xmlNode, "trans", example.Translation);
 //            return example;
 //        }
 //

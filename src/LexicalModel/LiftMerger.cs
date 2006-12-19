@@ -1,7 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using LiftIO;
+using WeSay.Data;
 using WeSay.Language;
+using WeSay.LexicalModel.Db4o_Specific;
 
 namespace WeSay.LexicalModel
 {
@@ -11,35 +14,68 @@ namespace WeSay.LexicalModel
 	///
 	/// NB: this doesn't yet merge (dec 2006). Just blindly adds.
 	/// </summary>
-	public class LiftMerger : ILexiconMerger<LexEntry,LexSense,LexExampleSentence>
+	public class LiftMerger : ILexiconMerger<LexEntry,LexSense,LexExampleSentence>, IDisposable
 	{
+		private Db4oDataSource _dataSource;
+		private WeSay.Data.Db4oRecordList<LexEntry> _entries;
+
+
+		public LiftMerger(Db4oDataSource dataSource)
+		{
+			_dataSource = dataSource;
+			_entries = new WeSay.Data.Db4oRecordList<LexEntry>(_dataSource);
+		}
+
 		public LexEntry GetOrMakeEntry(IdentifyingInfo idInfo)
 		{
-			LexEntry e = new LexEntry(GetGuidFromIdString(idInfo.id));
+			Guid guid = GetGuidOrEmptyFromIdString(idInfo.id);
+			LexEntry entry = null;
+			if (guid != Guid.Empty)
+			{
+				entry = Db4oLexQueryHelper.FindObjectFromGuid<LexEntry>(_dataSource, guid);
+
+				if (CanSafelyPruneMerge(ref idInfo, entry))
+				{
+					return null; // no merging needed
+				}
+			}
+
+			if (entry == null)
+			{
+				entry = new LexEntry(guid);
+			}
 
 			if (idInfo.creationTime > DateTime.MinValue)
 			{
-				e.CreationDate = idInfo.creationTime;
+				entry.CreationTime = idInfo.creationTime;
 			}
 
 			if (idInfo.modificationTime > DateTime.MinValue)
 			{
-				e.ModifiedDate = idInfo.modificationTime;
+				entry.ModificationTime = idInfo.modificationTime;
 			}
 
-			return e;
+			return entry;
 		}
 
-		private Guid GetGuidFromIdString(string id)
+		private static bool CanSafelyPruneMerge(ref IdentifyingInfo idInfo, LexEntry entry)
+		{
+			return entry != null
+				&& entry.ModificationTime == idInfo.modificationTime
+				&& entry.ModificationTime.Kind != DateTimeKind.Unspecified
+				 && idInfo.modificationTime.Kind != DateTimeKind.Unspecified;
+		}
+
+		private Guid GetGuidOrEmptyFromIdString(string id)
 		{
 			try
 			{
-			   return new Guid(id);
+				return new Guid(id);
 			}
 			catch (Exception e)
 			{
 				//enchance: log this, we're throwing away the id they had
-				return new Guid();
+				return Guid.Empty;
 			}
 		}
 
@@ -60,10 +96,7 @@ namespace WeSay.LexicalModel
 			MergeIn(entry.LexicalForm, forms);
 		}
 
-		private static void MergeIn(MultiText multiText, StringDictionary forms)
-		{
-			multiText.MergeIn(MultiText.Create(forms));
-		}
+
 
 		public void MergeInGloss(LexSense sense, StringDictionary forms)
 		{
@@ -78,6 +111,15 @@ namespace WeSay.LexicalModel
 		public void MergeInTranslationForm(LexExampleSentence example, StringDictionary forms)
 		{
 			MergeIn(example.Translation, forms);
+		}
+		private static void MergeIn(MultiText multiText, StringDictionary forms)
+		{
+			multiText.MergeIn(MultiText.Create(forms));
+		}
+
+		 public void Dispose()
+		{
+			 _entries.Dispose();
 		}
 	}
 }

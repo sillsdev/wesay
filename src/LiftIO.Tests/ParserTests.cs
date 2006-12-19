@@ -12,7 +12,7 @@ namespace LiftIO.Tests
 	public class ParserTests
 	{
 		private TestLiftMerger _merger;
-		private LiftParser<object, object, object> _parser;
+		private LiftParser<Mute, Mute, Mute> _parser;
 		private XmlDocument _doc;
 	   // private List<Exception> _parsingErrors;
 		public StringBuilder _results;
@@ -25,11 +25,11 @@ namespace LiftIO.Tests
 			_doc = new XmlDocument();
 			_results = new StringBuilder();
 			_merger = new TestLiftMerger(_results);
-			_parser = new LiftParser<object, object, object>(_merger);
-			_parser.ParsingError += new EventHandler<LiftParser<object, object,object>.ErrorArgs>(OnParsingError);
+			_parser = new LiftParser<Mute, Mute, Mute>(_merger);
+			_parser.ParsingError += new EventHandler<LiftParser<Mute, Mute,Mute>.ErrorArgs>(OnParsingError);
 		}
 
-		void OnParsingError(object sender, LiftParser<object, object, object>.ErrorArgs e)
+		void OnParsingError(object sender, LiftParser<Mute, Mute, Mute>.ErrorArgs e)
 		{
 			_results.AppendFormat("Error");
 			//_parsingErrors.Add(e._exception);
@@ -86,14 +86,20 @@ namespace LiftIO.Tests
 		[Test]
 		public void EmptyFormOk()
 		{
-			ParseEntryAndCheck("<entry><lex><form lang='x'/></lex></entry>", "GetOrMakeEntry(;;;)MergeInLexemeForm(,x=|)");
+			ParseEntryAndCheck("<entry><lex><form lang='x'/></lex></entry>", "GetOrMakeEntry(;;;)MergeInLexemeForm(m,x=|)");
 			//Assert.AreEqual(1, _parsingErrors.Count);
 		}
 
 		[Test]
 		public void EntryWithLexemeForm()
 		{
-			ParseEntryAndCheck("<entry><lex><form lang='x'>hello</form><form lang='y'>bye</form></lex></entry>", "GetOrMakeEntry(;;;)MergeInLexemeForm(,x=hello|y=bye|)");
+			ParseEntryAndCheck("<entry><lex><form lang='x'>hello</form><form lang='y'>bye</form></lex></entry>", "GetOrMakeEntry(;;;)MergeInLexemeForm(m,x=hello|y=bye|)");
+		}
+
+		[Test]
+		public void EntryWithLexemeForm_NoFormTag()
+		{
+			ParseEntryAndCheck("<entry><lex>hello</lex></entry>", "GetOrMakeEntry(;;;)MergeInLexemeForm(m,??=hello)");
 		}
 
 		[Test]
@@ -109,20 +115,20 @@ namespace LiftIO.Tests
 		public void EntryWithSense()
 		{
 			ParseEntryAndCheck(string.Format("<entry><sense></sense></entry>"),
-				"GetOrMakeEntry(;;;)GetOrMergeSense(,)");
+				"GetOrMakeEntry(;;;)GetOrMergeSense(m,)");
 		}
 
 		[Test]
 		public void SenseWithGloss()
 		{
 			ParseEntryAndCheck(string.Format("<entry><sense><gloss><form lang='x'>hello</form></gloss></sense></entry>"),
-				"GetOrMakeEntry(;;;)GetOrMergeSense(,)MergeInGloss(,x=hello|)");
+				"GetOrMakeEntry(;;;)GetOrMergeSense(m,)MergeInGloss(m,x=hello|)");
 		}
 		[Test]
 		public void SenseWithDefintition()
 		{
 			ParseEntryAndCheck(string.Format("<entry><sense><def><form lang='x'>hello</form></def></sense></entry>"),
-				"GetOrMakeEntry(;;;)GetOrMergeSense(,)MergeInDefinition(,x=hello|)");
+				"GetOrMakeEntry(;;;)GetOrMergeSense(m,)MergeInDefinition(m,x=hello|)");
 		}
 
 		[Test, Ignore("Not implemented")]
@@ -136,28 +142,28 @@ namespace LiftIO.Tests
 		public void SenseWithGrammi()
 		{
 			ParseEntryAndCheck(string.Format("<entry><sense><grammi></grammi></sense></entry>"),
-				"GetOrMakeEntry(;;;)GetOrMergeSense(,)");
+				"GetOrMakeEntry(;;;)GetOrMergeSense(m,)");
 		}
 
 		[Test, Ignore("Not implemented")]
 		public void SenseWithEmptyGrammi()
 		{
 			ParseEntryAndCheck(string.Format("<entry><sense><grammi></grammi></sense></entry>"),
-				"GetOrMakeEntry(;;;)GetOrMergeSense(,)");
+				"GetOrMakeEntry(;;;)GetOrMergeSense(m,)");
 		}
 
 		[Test]
 		public void SenseWithExample()
 		{
 			ParseEntryAndCheck(string.Format("<entry><sense><example><form lang='x'>hello</form></example></sense></entry>"),
-				"GetOrMakeEntry(;;;)GetOrMergeSense(,)GetOrMergeExample(,)MergeInExampleForm(,x=hello|)");
+				"GetOrMakeEntry(;;;)GetOrMergeSense(m,)GetOrMergeExample(m,)MergeInExampleForm(m,x=hello|)");
 		}
 
 		[Test]
 		public void ExampleWithTranslation()
 		{
 			ParseEntryAndCheck(string.Format("<entry><sense><example><translation><form lang='x'>hello</form></translation></example></sense></entry>"),
-				"GetOrMakeEntry(;;;)GetOrMergeSense(,)GetOrMergeExample(,)MergeInTranslationForm(,x=hello|)");
+				"GetOrMakeEntry(;;;)GetOrMergeSense(m,)GetOrMergeExample(m,)MergeInTranslationForm(m,x=hello|)");
 		}
 
 		/*
@@ -210,7 +216,15 @@ namespace LiftIO.Tests
 		}
 	}
 
-	class TestLiftMerger : ILexiconMerger<object, object, object>
+	class Mute
+	{
+		public override string ToString()
+		{
+			return "m";
+		}
+	}
+
+	class TestLiftMerger : ILexiconMerger<Mute, Mute, Mute>
 	{
 		public StringBuilder _results;
 
@@ -219,13 +233,13 @@ namespace LiftIO.Tests
 			_results = results;
 		}
 
-		public object GetOrMakeEntry(IdentifyingInfo idInfo)
+		public Mute GetOrMakeEntry(IdentifyingInfo idInfo)
 		{
 			_results.AppendFormat("GetOrMakeEntry({0})",idInfo);
-			return null;
+			return new Mute();
 		}
 
-		public void MergeInLexemeForm(object entry, StringDictionary forms)
+		public void MergeInLexemeForm(Mute entry, StringDictionary forms)
 		{
 			_results.AppendFormat("MergeInLexemeForm({0},{1})", entry, GetStingFromMultiText(forms));
 	   }
@@ -240,30 +254,30 @@ namespace LiftIO.Tests
 			return s;
 		}
 
-		public object GetOrMergeSense(object entry, IdentifyingInfo idInfo)
+		public Mute GetOrMergeSense(Mute entry, IdentifyingInfo idInfo)
 		{
 			_results.AppendFormat("GetOrMergeSense({0},{1})", entry, idInfo);
-			return null;
+			return new Mute();
 		}
 
-		public object GetOrMergeExample(object sense, IdentifyingInfo idInfo)
+		public Mute GetOrMergeExample(Mute sense, IdentifyingInfo idInfo)
 		{
 			_results.AppendFormat("GetOrMergeExample({0},{1})", sense, idInfo);
-			return null;
+			return new Mute();
 		}
 
 
-		public void MergeInGloss(object sense, StringDictionary forms)
+		public void MergeInGloss(Mute sense, StringDictionary forms)
 		{
 			_results.AppendFormat("MergeInGloss({0},{1})", sense, GetStingFromMultiText(forms));
 		}
 
-		public void MergeInExampleForm(object example, StringDictionary forms)
+		public void MergeInExampleForm(Mute example, StringDictionary forms)
 		{
 			_results.AppendFormat("MergeInExampleForm({0},{1})", example, GetStingFromMultiText(forms));
 		}
 
-		public void MergeInTranslationForm(object example, StringDictionary forms)
+		public void MergeInTranslationForm(Mute example, StringDictionary forms)
 		{
 			_results.AppendFormat("MergeInTranslationForm({0},{1})", example, GetStingFromMultiText(forms));
 		}

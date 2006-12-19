@@ -26,6 +26,43 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
+		public void FindEntryFromGuid()
+		{
+			CycleDatabase();
+			Guid g = Guid.NewGuid();
+			LexEntry entry = new LexEntry(g);
+			entry.LexicalForm["en"] = "hello";
+			_entriesList.Add(new LexEntry());
+			_entriesList.Add(entry);
+			_entriesList.Add(new LexEntry());
+			CycleDatabase();
+			LexEntry found = Db4oLexQueryHelper.FindObjectFromGuid<LexEntry>(_dataSource, g);
+			Assert.AreEqual("hello", found.LexicalForm["en"]);
+		}
+
+		[Test]
+		public void CannotFindEntryFromGuid()
+		{
+			CycleDatabase();
+			Guid g = Guid.NewGuid();
+			_entriesList.Add(new LexEntry());
+			_entriesList.Add(new LexEntry(g));
+			_entriesList.Add(new LexEntry());
+			CycleDatabase();
+			LexEntry found = Db4oLexQueryHelper.FindObjectFromGuid<LexEntry>(_dataSource, Guid.NewGuid());
+			Assert.IsNull(found);
+		}
+		[Test,ExpectedException(typeof(ApplicationException))]
+		public void MultipleGuidMatchesThrows()
+		{
+			CycleDatabase();
+			Guid g = Guid.NewGuid();
+			_entriesList.Add(new LexEntry(g));
+			_entriesList.Add(new LexEntry(g));
+			CycleDatabase();
+			LexEntry found = Db4oLexQueryHelper.FindObjectFromGuid<LexEntry>(_dataSource, g);
+		}
+		[Test]
 		public void FindEntriesFromGloss()
 		{
 			CycleDatabase();

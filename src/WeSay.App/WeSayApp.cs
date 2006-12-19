@@ -127,8 +127,9 @@ namespace WeSay.App
 
 				objectClass = db4oConfiguration.ObjectClass(typeof(LexEntry));
 				objectClass.ObjectField("_modifiedDate").Indexed(true);
-				objectClass.ObjectField("_lexicalForm").Indexed(true);
-				objectClass.ObjectField("_sences").Indexed(true);
+				 objectClass.ObjectField("_guid").Indexed(true);
+			   objectClass.ObjectField("_lexicalForm").Indexed(true);
+				objectClass.ObjectField("_senses").Indexed(true);
 				objectClass.CascadeOnDelete(true);
 
 				objectClass = db4oConfiguration.ObjectClass(typeof(LexSense));

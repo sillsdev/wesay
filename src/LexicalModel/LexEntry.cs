@@ -18,8 +18,8 @@ namespace WeSay.LexicalModel
 		private LexicalFormMultiText _lexicalForm;
 		private Guid _guid;
 		private WeSay.Data.InMemoryBindingList<LexSense> _senses;
-		private DateTime _creationDate;
-		private DateTime _modifiedDate;
+		private DateTime _creationTime;
+		private DateTime _modificationTime;
 
 		public LexEntry(): base(null)
 		{
@@ -33,11 +33,18 @@ namespace WeSay.LexicalModel
 
 		private void Init(Guid guid)
 		{
-			_guid = guid;
+			if (guid == Guid.Empty)
+			{
+				_guid = Guid.NewGuid();
+			}
+			else
+			{
+				_guid = guid;
+			}
 			this._lexicalForm = new LexicalFormMultiText(this);
 			this._senses = new WeSay.Data.InMemoryBindingList<LexSense>();
-			this._creationDate = DateTime.UtcNow;
-			this._modifiedDate = _creationDate;
+			this._creationTime = DateTime.UtcNow;
+			this._modificationTime = _creationTime;
 
 			WireUpEvents();
 		}
@@ -62,7 +69,7 @@ namespace WeSay.LexicalModel
 
 		public override void SomethingWasModified(string PropertyModified)
 		{
-			_modifiedDate = DateTime.UtcNow;
+			_modificationTime = DateTime.UtcNow;
 			if (PropertyModified != "senses")
 			{
 				RemoveEmptySenses();
@@ -88,27 +95,27 @@ namespace WeSay.LexicalModel
 			}
 		}
 
-		public DateTime CreationDate
+		public DateTime CreationTime
 		{
 			get
 			{
-				return _creationDate;
+				return _creationTime;
 			}
 			set
 			{
-				_creationDate = value;
+				_creationTime = value;
 			}
 		}
 
-		public DateTime ModifiedDate
+		public DateTime ModificationTime
 		{
 			get
 			{
-				return _modifiedDate;
+				return _modificationTime;
 			}
 			set
 			{
-				_modifiedDate = value;
+				_modificationTime = value;
 			}
 		}
 

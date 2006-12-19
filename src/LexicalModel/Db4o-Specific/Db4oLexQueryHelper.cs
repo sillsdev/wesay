@@ -46,6 +46,24 @@ namespace WeSay.LexicalModel.Db4o_Specific
 			return FindAncestorsOfLanguageForms<AncestorType, MultiTextType>(matches);
 		}
 
+		public static T FindObjectFromGuid<T>(Db4oDataSource db, Guid guid)
+			where T : class
+		{
+			Db4objects.Db4o.Query.IQuery q = db.Data.Query();
+			q.Constrain(typeof(T));
+			q.Descend("_guid").Constrain(guid);
+			IObjectSet matches = q.Execute();
+			if (matches.Count == 0)
+			{
+				return null;
+			}
+			if (matches.Count > 1)
+			{
+				throw new ApplicationException(String.Format("There were {0} objects found with the guid {1}", matches.Count, guid.ToString()));
+			}
+			System.Diagnostics.Debug.Assert(matches[0].GetType() == typeof(T));
+			return (T)matches[0];
+		 }
 
 		static private List<AncestorType> FindAncestorsOfLanguageForms<AncestorType, MultiTextType>(IObjectSet matches)
 			where AncestorType : class
