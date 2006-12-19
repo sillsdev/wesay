@@ -90,7 +90,7 @@ namespace WeSay.LexicalModel.Tests
 		public void EntryGetsEmptyLexemeForm()
 		{
 			LexEntry e = MakeSimpleEntry();
-			_merger.MergeInLexemeForm(e, new StringDictionary());
+			_merger.MergeInLexemeForm(e, new SimpleMultiText());
 			Assert.AreEqual(0, e.LexicalForm.Count);
 		}
 
@@ -98,7 +98,7 @@ namespace WeSay.LexicalModel.Tests
 		public void EntryGetsLexemeFormWithUnheardOfLanguage()
 		{
 			LexEntry e = MakeSimpleEntry();
-			StringDictionary forms = new StringDictionary();
+			SimpleMultiText forms = new SimpleMultiText();
 			forms.Add("x99", "hello");
 			_merger.MergeInLexemeForm(e, forms);
 			Assert.AreEqual("hello", e.LexicalForm["x99"]);
@@ -108,7 +108,7 @@ namespace WeSay.LexicalModel.Tests
 		public void NewEntryGetsLexemeForm()
 		{
 			LexEntry e = MakeSimpleEntry();
-			StringDictionary forms = new StringDictionary();
+			SimpleMultiText forms = new SimpleMultiText();
 			forms.Add("x", "hello");
 			forms.Add("y", "bye");
 			_merger.MergeInLexemeForm(e, forms);
@@ -121,8 +121,8 @@ namespace WeSay.LexicalModel.Tests
 		{
 			IdentifyingInfo id = new IdentifyingInfo();
 			LexEntry e = MakeSimpleEntry();
-			LexSense s= _merger.GetOrMergeSense(e, id);
-			LexExampleSentence ex =_merger.GetOrMergeExample(s, id);
+			LexSense s= _merger.GetOrMakeSense(e, id);
+			LexExampleSentence ex =_merger.GetOrMakeExample(s, id);
 
 			Assert.AreEqual(e, ex.Parent.Parent);
 		}

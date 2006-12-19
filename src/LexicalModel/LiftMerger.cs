@@ -79,40 +79,46 @@ namespace WeSay.LexicalModel
 			}
 		}
 
-		public LexSense GetOrMergeSense(LexEntry entry, IdentifyingInfo idInfo)
+		public LexSense GetOrMakeSense(LexEntry entry, IdentifyingInfo idInfo)
 		{
 			//nb, has no guid or dates
 			return new LexSense(entry);
 		}
 
-		public LexExampleSentence GetOrMergeExample(LexSense sense, IdentifyingInfo idInfo)
+		public LexExampleSentence GetOrMakeExample(LexSense sense, IdentifyingInfo idInfo)
 		{
 			//nb, has no guid or dates
 			return new LexExampleSentence(sense);
 		}
 
-		public void MergeInLexemeForm(LexEntry entry, StringDictionary forms)
+		public void MergeInLexemeForm(LexEntry entry, SimpleMultiText forms)
 		{
 			MergeIn(entry.LexicalForm, forms);
 		}
 
 
 
-		public void MergeInGloss(LexSense sense, StringDictionary forms)
+		public void MergeInGloss(LexSense sense, SimpleMultiText forms)
 		{
 			MergeIn(sense.Gloss, forms);
 		}
 
-		public void MergeInExampleForm(LexExampleSentence example, StringDictionary forms)
+		public void MergeInExampleForm(LexExampleSentence example, SimpleMultiText forms)
 		{
 			MergeIn(example.Sentence, forms);
 		}
 
-		public void MergeInTranslationForm(LexExampleSentence example, StringDictionary forms)
+		public void MergeInTranslationForm(LexExampleSentence example, SimpleMultiText forms)
 		{
 			MergeIn(example.Translation, forms);
 		}
-		private static void MergeIn(MultiText multiText, StringDictionary forms)
+
+		public void MergeInDefinition(LexSense sense, SimpleMultiText simpleMultiText)
+		{
+			throw new NotImplementedException();
+		}
+
+		private static void MergeIn(MultiText multiText, SimpleMultiText forms)
 		{
 			multiText.MergeIn(MultiText.Create(forms));
 		}

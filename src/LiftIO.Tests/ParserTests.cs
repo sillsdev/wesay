@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Text;
 using System.Web;
+using LiftIO;
+using NMock2;
+using NMock2.Syntax;
 using NUnit.Framework;
 using System.Xml;
 
@@ -11,11 +14,12 @@ namespace LiftIO.Tests
 	[TestFixture]
 	public class ParserTests
 	{
-		private TestLiftMerger _merger;
+		private ILexiconMerger<Mute, Mute, Mute> _merger;
 		private LiftParser<Mute, Mute, Mute> _parser;
 		private XmlDocument _doc;
-	   // private List<Exception> _parsingErrors;
 		public StringBuilder _results;
+		private Mockery _mocks;
+		private List<LiftParser<Mute, Mute, Mute>.ErrorArgs> _parsingErrors;
 
 
 		[SetUp]
@@ -23,16 +27,16 @@ namespace LiftIO.Tests
 		{
 			//_parsingErrors = new List<Exception>();
 			_doc = new XmlDocument();
-			_results = new StringBuilder();
-			_merger = new TestLiftMerger(_results);
+			_mocks = new Mockery();
+			_merger = _mocks.NewMock<ILexiconMerger<Mute, Mute, Mute>>();
 			_parser = new LiftParser<Mute, Mute, Mute>(_merger);
+			_parsingErrors = new List<LiftParser<Mute, Mute, Mute>.ErrorArgs>();
 			_parser.ParsingError += new EventHandler<LiftParser<Mute, Mute,Mute>.ErrorArgs>(OnParsingError);
 		}
 
 		void OnParsingError(object sender, LiftParser<Mute, Mute, Mute>.ErrorArgs e)
 		{
-			_results.AppendFormat("Error");
-			//_parsingErrors.Add(e._exception);
+			_parsingErrors.Add(e);
 		}
 
 		[TearDown]
@@ -46,89 +50,270 @@ namespace LiftIO.Tests
 		[Test]
 		public void EmptyLiftOk()
 		{
-			ParseAndCheck("<lift/>","");
+			SimpleCheckGetOrMakeEntry("<lift/>", 0);
 		}
 
 		[Test]
 		public void EntryMissingIdNonFatal()
 		{
-			ParseAndCheck("<lift><entry/></lift>", "GetOrMakeEntry(;;;)");
+			SimpleCheckGetOrMakeEntry("<lift><entry/></lift>", 1);
 		}
-
 
 		[Test]
 		public void EmptyEntriesOk()
 		{
-			ParseAndCheck("<lift><entry/><entry/></lift>", "GetOrMakeEntry(;;;)GetOrMakeEntry(;;;)");
+			SimpleCheckGetOrMakeEntry("<lift><entry/><entry/></lift>", 2);
+		}
+
+		private void SimpleCheckGetOrMakeEntry(string content, int times)
+		{
+			_doc.LoadXml(content);
+			using (_mocks.Ordered)
+			{
+				Expect.Exactly(times).On(_merger)
+					.Method("GetOrMakeEntry")
+					.WithAnyArguments()
+					.Will(Return.Value(null));
+			}
+			_parser.ReadFile(_doc);
+			_mocks.VerifyAllExpectationsHaveBeenMet();
 		}
 
 		[Test]
 		public void EntryWithId()
 		{
 			Guid g = Guid.NewGuid();
+			ExpectMergeInLexemeForm();
 			ParseEntryAndCheck(string.Format("<entry id=\"{0}\" />", g.ToString()),
-				string.Format("GetOrMakeEntry({0};;;)", g.ToString()));
+				 string.Format("{0};;;",g.ToString()));
+//
+//            _doc.LoadXml(string.Format("<entry id=\"{0}\" />", g.ToString()));
+//            using (_mocks.Ordered)
+//            {
+//                string idInfoString = g.ToString();
+//                Expect.Exactly(1).On(_merger)
+//                    .Method("GetOrMakeEntry")
+//                    .With(Has.ToString(new NMock2.Matchers.StringContainsMatcher(idInfoString)))
+//                    .Will(Return.Value(null));
+//            }
+//            _parser.ReadEntry(_doc.FirstChild);
+//            _mocks.VerifyAllExpectationsHaveBeenMet();
 		}
 
+		private void ParseEntryAndCheck(string content, string expectedIdString)
+		{
+			ExpectGetOrMakeEntry(expectedIdString);
+
+			_doc.LoadXml(content);
+			_parser.ReadEntry(_doc.FirstChild);
+			_mocks.VerifyAllExpectationsHaveBeenMet();
+
+		}
+
+
+		private void ParseEntryAndCheck(string content)
+		{
+			_doc.LoadXml(content);
+			_parser.ReadEntry(_doc.FirstChild);
+			_mocks.VerifyAllExpectationsHaveBeenMet();
+		}
+
+		private void ExpectGetOrMakeEntry(string expectedIdString)
+		{
+			Expect.Exactly(1).On(_merger)
+				.Method("GetOrMakeEntry")
+			  //  .With(Is.Anything)
+				.With(Has.ToString(Is.EqualTo(expectedIdString)))
+				.Will(Return.Value(new Mute()));
+		}
+
+		private void ExpectGetOrMakeEntry()
+		{
+			Expect.Exactly(1).On(_merger)
+				.Method("GetOrMakeEntry")
+				.Will(Return.Value(new Mute()));
+		}
+
+		private void ExpectGetOrMakeSense()
+		{
+			Expect.Exactly(1).On(_merger)
+				.Method("GetOrMakeSense")
+				.Will(Return.Value(new Mute()));
+		}
+
+		private void ExpectGetOrMakeExample()
+		{
+			Expect.Exactly(1).On(_merger)
+				.Method("GetOrMakeExample")
+				.Will(Return.Value(new Mute()));
+		}
+
+		private void ExpectMergeInLexemeForm(string exactMultiTextToString)
+		{
+			Expect.Exactly(1).On(_merger)
+				.Method("MergeInLexemeForm")
+				.With(Is.Anything, Is.Same(exactMultiTextToString));
+		}
+		private void ExpectMergeInLexemeForm()
+		{
+			Expect.Exactly(1).On(_merger)
+				.Method("MergeInLexemeForm");
+		}
+		private void ExpectMergeGloss()
+		{
+			Expect.Exactly(1).On(_merger)
+				.Method("MergeInGloss");
+		}
+		private void ExpectMergeDefinition()
+		{
+			Expect.Exactly(1).On(_merger)
+				.Method("MergeInDefinition");
+		}
 		[Test]
 		public void EntryWithoutId()
 		{
-			ParseEntryAndCheck("<entry/>", "GetOrMakeEntry(;;;)");
+			ExpectMergeInLexemeForm();
+			ParseEntryAndCheck("<entry/>", ";;;");
 		}
+
 
 		[Test]
 		public void FormMissingLangGeneratesNonFatalError()
 		{
-			ParseEntryAndCheck("<entry><lex><form/></lex></entry>", "GetOrMakeEntry(;;;)Error");
+			ExpectGetOrMakeEntry();
+			ExpectMergeInLexemeForm();
+			ParseEntryAndCheck("<entry><lex><form/></lex></entry>");
+			Assert.AreEqual(1, _parsingErrors.Count);
 		}
 
 
 		[Test]
 		public void EmptyFormOk()
 		{
-			ParseEntryAndCheck("<entry><lex><form lang='x'/></lex></entry>", "GetOrMakeEntry(;;;)MergeInLexemeForm(m,x=|)");
-			//Assert.AreEqual(1, _parsingErrors.Count);
+		   using (_mocks.Ordered)
+			{
+				ExpectGetOrMakeEntry(";;;");
+				ExpectMergeInLexemeForm();
+			}
+			ParseEntryAndCheck("<entry><lex><form lang='x'/></lex></entry>");
 		}
 
 		[Test]
 		public void EntryWithLexemeForm()
 		{
-			ParseEntryAndCheck("<entry><lex><form lang='x'>hello</form><form lang='y'>bye</form></lex></entry>", "GetOrMakeEntry(;;;)MergeInLexemeForm(m,x=hello|y=bye|)");
+			ExpectGetOrMakeEntry();
+			ExpectMultiTextMergeIn("LexemeForm", Has.Property("Count", Is.EqualTo(2)));
+			ParseEntryAndCheck("<entry><lex><form lang='x'>hello</form><form lang='y'>bye</form></lex></entry>");
+ //           ParseEntryAndCheck("<entry><lex><form lang='x'>hello</form><form lang='y'>bye</form></lex></entry>", "GetOrMakeEntry(;;;)MergeInLexemeForm(m,x=hello|y=bye|)");
+		}
+
+		 private void ExpectEmptyMultiTextMergeIn(string MultiTextPropertyName)
+		{
+			Expect.Exactly(1).On(_merger)
+							.Method("MergeIn" + MultiTextPropertyName)
+							.With(Is.Anything, Has.Property("Count",Is.EqualTo(0)));
+
+		}
+
+		private void ExpectMultiTextMergeIn(string MultiTextPropertyName, string value)
+		{
+			 Expect.Exactly(1).On(_merger)
+							.Method("MergeIn" + MultiTextPropertyName)
+							.With(Is.Anything, Has.ToString(Is.EqualTo(value)));
+	   }
+
+		private void ExpectMultiTextMergeIn(string MultiTextPropertyName, NMock2.Matcher multiTextMatcher)
+		{
+			Expect.Exactly(1).On(_merger)
+						   .Method("MergeIn" + MultiTextPropertyName)
+						   .With(Is.Anything, multiTextMatcher);
 		}
 
 		[Test]
 		public void EntryWithLexemeForm_NoFormTag()
 		{
-			ParseEntryAndCheck("<entry><lex>hello</lex></entry>", "GetOrMakeEntry(;;;)MergeInLexemeForm(m,??=hello)");
+			ExpectGetOrMakeEntry();
+			ExpectMultiTextMergeIn("LexemeForm", "??=hello|");
+			ParseEntryAndCheck("<entry><lex>hello</lex></entry>");
+			//            ParseEntryAndCheck("<entry><lex>hello</lex></entry>","GetOrMakeEntry(;;;)MergeInLexemeForm(m,??=hello)");
+		}
+
+		[Test]
+		public void NonLiftDateError()
+		{
+			TryDateFormat("last tuesday");
+			TryDateFormat("2005-01-01T01:11:11");
+			TryDateFormat("1/2/2003");
+			Assert.AreEqual(3, _parsingErrors.Count);
+		}
+
+		private void TryDateFormat(string created)
+		{
+			ExpectGetOrMakeEntry();
+			ExpectMergeInLexemeForm();
+			ParseEntryAndCheck(
+				string.Format("<entry id='foo' dateCreated='{0}'></entry>", created));
+		}
+
+		[Test]
+		public void DateWithoutTimeOk()
+		{
+			ExpectGetOrMakeEntry();
+			ExpectMergeInLexemeForm();
+			ParseEntryAndCheck("<entry id='foo' dateCreated='2005-01-01'></entry>");
+			Assert.AreEqual(0, _parsingErrors.Count);
 		}
 
 		[Test]
 		public void EntryWithDates()
 		{
 			string created = "2003-08-07T08:42:42+07:00";
-			string mod ="2005-01-01T01:11:11+01:00";
-			ParseEntryAndCheck(string.Format("<entry id='foo' dateCreated='{0}' dateModified='{1}'></entry>", created, mod),
-				String.Format("GetOrMakeEntry(foo;{0};{1};)", created,mod));
+			string mod = "2005-01-01T01:11:11+07:00";
+			ExpectGetOrMakeEntry(String.Format("foo;{0};{1};", created, mod));
+			ExpectEmptyMultiTextMergeIn("LexemeForm");
+			ParseEntryAndCheck(
+				string.Format("<entry id='foo' dateCreated='{0}' dateModified='{1}'></entry>", created, mod));
+
+			 //   String.Format("GetOrMakeEntry(foo;{0};{1};)", created,mod));
+//            ParseEntryAndCheck(string.Format("<entry id='foo' dateCreated='{0}' dateModified='{1}'></entry>", created, mod),
+//                String.Format("GetOrMakeEntry(foo;{0};{1};)", created,mod));
 		}
 
 		[Test]
 		public void EntryWithSense()
 		{
-			ParseEntryAndCheck(string.Format("<entry><sense></sense></entry>"),
-				"GetOrMakeEntry(;;;)GetOrMergeSense(m,)");
+			ExpectGetOrMakeEntry();
+			ExpectMergeInLexemeForm();
+			ExpectGetOrMakeSense();
+			ExpectMergeGloss();
+			ExpectMergeDefinition();
+		   ParseEntryAndCheck(string.Format("<entry><sense></sense></entry>"));
 		}
 
 		[Test]
 		public void SenseWithGloss()
 		{
-			ParseEntryAndCheck(string.Format("<entry><sense><gloss><form lang='x'>hello</form></gloss></sense></entry>"),
-				"GetOrMakeEntry(;;;)GetOrMergeSense(m,)MergeInGloss(m,x=hello|)");
+			ExpectGetOrMakeEntry();
+			ExpectMergeInLexemeForm();
+			ExpectGetOrMakeSense();
+			ExpectMultiTextMergeIn("Gloss","x=hello|");
+			ExpectMergeDefinition();
+			ParseEntryAndCheck(string.Format("<entry><sense><gloss><form lang='x'>hello</form></gloss></sense></entry>"));
+//            ParseEntryAndCheck(string.Format("<entry><sense><gloss><form lang='x'>hello</form></gloss></sense></entry>"),
+//                "GetOrMakeEntry(;;;)GetOrMakeSense(m,)MergeInGloss(m,x=hello|)");
 		}
 		[Test]
 		public void SenseWithDefintition()
 		{
-			ParseEntryAndCheck(string.Format("<entry><sense><def><form lang='x'>hello</form></def></sense></entry>"),
-				"GetOrMakeEntry(;;;)GetOrMergeSense(m,)MergeInDefinition(m,x=hello|)");
+			ExpectGetOrMakeEntry();
+			ExpectMergeInLexemeForm();
+			ExpectGetOrMakeSense();
+			ExpectMergeGloss();
+			ExpectMultiTextMergeIn("Definition", "x=hello|");
+
+			ParseEntryAndCheck(string.Format("<entry><sense><def><form lang='x'>hello</form></def></sense></entry>"));
+
+			//    "GetOrMakeEntry(;;;)GetOrMakeSense(m,)MergeInDefinition(m,x=hello|)");
 		}
 
 		[Test, Ignore("Not implemented")]
@@ -142,28 +327,46 @@ namespace LiftIO.Tests
 		public void SenseWithGrammi()
 		{
 			ParseEntryAndCheck(string.Format("<entry><sense><grammi></grammi></sense></entry>"),
-				"GetOrMakeEntry(;;;)GetOrMergeSense(m,)");
+				"GetOrMakeEntry(;;;)GetOrMakeSense(m,)");
 		}
 
 		[Test, Ignore("Not implemented")]
 		public void SenseWithEmptyGrammi()
 		{
 			ParseEntryAndCheck(string.Format("<entry><sense><grammi></grammi></sense></entry>"),
-				"GetOrMakeEntry(;;;)GetOrMergeSense(m,)");
+				"GetOrMakeEntry(;;;)GetOrMakeSense(m,)");
 		}
 
 		[Test]
 		public void SenseWithExample()
 		{
-			ParseEntryAndCheck(string.Format("<entry><sense><example><form lang='x'>hello</form></example></sense></entry>"),
-				"GetOrMakeEntry(;;;)GetOrMergeSense(m,)GetOrMergeExample(m,)MergeInExampleForm(m,x=hello|)");
+			ExpectGetOrMakeEntry();
+			ExpectMergeInLexemeForm();
+			ExpectGetOrMakeSense();
+			ExpectMergeGloss();
+			ExpectMergeDefinition();
+			ExpectGetOrMakeExample();
+			ExpectMultiTextMergeIn("ExampleForm", "x=hello|");
+			ExpectMultiTextMergeIn("TranslationForm", "");
+
+			ParseEntryAndCheck(
+				string.Format("<entry><sense><example><form lang='x'>hello</form></example></sense></entry>"));
 		}
 
 		[Test]
 		public void ExampleWithTranslation()
 		{
-			ParseEntryAndCheck(string.Format("<entry><sense><example><translation><form lang='x'>hello</form></translation></example></sense></entry>"),
-				"GetOrMakeEntry(;;;)GetOrMergeSense(m,)GetOrMergeExample(m,)MergeInTranslationForm(m,x=hello|)");
+			ExpectGetOrMakeEntry();
+			ExpectMergeInLexemeForm();
+			ExpectGetOrMakeSense();
+			ExpectMergeGloss();
+			ExpectMergeDefinition();
+			ExpectGetOrMakeExample();
+			ExpectMultiTextMergeIn("ExampleForm", "");
+			ExpectMultiTextMergeIn("TranslationForm", "x=hello|");
+
+			ParseEntryAndCheck("<entry><sense><example><translation><form lang='x'>hello</form></translation></example></sense></entry>");
+			//    "GetOrMakeEntry(;;;)GetOrMakeSense(m,)GetOrMakeExample(m,)MergeInTranslationForm(m,x=hello|)");
 		}
 
 		/*
@@ -208,22 +411,22 @@ namespace LiftIO.Tests
 			Assert.AreEqual(expectedResults, _results.ToString());
 		}
 
-		private void ParseEntryAndCheck(string content, string expectedResults)
-		{
-			_doc.LoadXml(content);
-			_parser.ReadEntry(_doc.FirstChild);
-			Assert.AreEqual(expectedResults, _results.ToString());
-		}
+//        private void ParseEntryAndCheck(string content, string expectedResults)
+//        {
+//            _doc.LoadXml(content);
+//            _parser.ReadEntry(_doc.FirstChild);
+//            Assert.AreEqual(expectedResults, _results.ToString());
+//        }
 	}
 
-	class Mute
+	public class Mute
 	{
 		public override string ToString()
 		{
 			return "m";
 		}
 	}
-
+/*
 	class TestLiftMerger : ILexiconMerger<Mute, Mute, Mute>
 	{
 		public StringBuilder _results;
@@ -239,12 +442,12 @@ namespace LiftIO.Tests
 			return new Mute();
 		}
 
-		public void MergeInLexemeForm(Mute entry, StringDictionary forms)
+		public void MergeInLexemeForm(Mute entry, SimpleMultiText forms)
 		{
 			_results.AppendFormat("MergeInLexemeForm({0},{1})", entry, GetStingFromMultiText(forms));
 	   }
 
-		private static string GetStingFromMultiText(StringDictionary forms)
+		private static string GetStingFromMultiText(SimpleMultiText forms)
 		{
 			string s="";
 			foreach (string key in forms.Keys)
@@ -254,33 +457,33 @@ namespace LiftIO.Tests
 			return s;
 		}
 
-		public Mute GetOrMergeSense(Mute entry, IdentifyingInfo idInfo)
+		public Mute GetOrMakeSense(Mute entry, IdentifyingInfo idInfo)
 		{
-			_results.AppendFormat("GetOrMergeSense({0},{1})", entry, idInfo);
+			_results.AppendFormat("GetOrMakeSense({0},{1})", entry, idInfo);
 			return new Mute();
 		}
 
-		public Mute GetOrMergeExample(Mute sense, IdentifyingInfo idInfo)
+		public Mute GetOrMakeExample(Mute sense, IdentifyingInfo idInfo)
 		{
-			_results.AppendFormat("GetOrMergeExample({0},{1})", sense, idInfo);
+			_results.AppendFormat("GetOrMakeExample({0},{1})", sense, idInfo);
 			return new Mute();
 		}
 
 
-		public void MergeInGloss(Mute sense, StringDictionary forms)
+		public void MergeInGloss(Mute sense, SimpleMultiText forms)
 		{
 			_results.AppendFormat("MergeInGloss({0},{1})", sense, GetStingFromMultiText(forms));
 		}
 
-		public void MergeInExampleForm(Mute example, StringDictionary forms)
+		public void MergeInExampleForm(Mute example, SimpleMultiText forms)
 		{
 			_results.AppendFormat("MergeInExampleForm({0},{1})", example, GetStingFromMultiText(forms));
 		}
 
-		public void MergeInTranslationForm(Mute example, StringDictionary forms)
+		public void MergeInTranslationForm(Mute example, SimpleMultiText forms)
 		{
 			_results.AppendFormat("MergeInTranslationForm({0},{1})", example, GetStingFromMultiText(forms));
 		}
-	}
+	}*/
 
 }

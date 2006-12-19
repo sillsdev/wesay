@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Diagnostics;
+using System.Globalization;
 using System.Reflection;
 using System.Xml;
 
@@ -75,10 +76,11 @@ namespace LiftIO
 
 		public TSense ReadSense(XmlNode node, TEntry entry)
 		{
-			TSense sense = _merger.GetOrMergeSense(entry, GetIdInfo(node));
+			TSense sense = _merger.GetOrMakeSense(entry, GetIdInfo(node));
 			if (sense != null)//not been pruned
 			{
 				_merger.MergeInGloss(sense, ProcessMultiText(node, "gloss"));
+				_merger.MergeInDefinition(sense, ProcessMultiText(node, "def"));
 
 				foreach (XmlNode n in node.SelectNodes("example"))
 				{
@@ -90,7 +92,7 @@ namespace LiftIO
 
 		private TExample ReadExample(XmlNode node, TSense sense)
 		{
-			TExample example = _merger.GetOrMergeExample(sense, GetIdInfo(node));
+			TExample example = _merger.GetOrMakeExample(sense, GetIdInfo(node));
 			if (example != null)//not been pruned
 			{
 				_merger.MergeInExampleForm(example, ProcessMultiText(node, null));
@@ -100,13 +102,13 @@ namespace LiftIO
 			return example;
 		}
 
-		protected StringDictionary ProcessMultiText(XmlNode node, string fieldName)
+		protected SimpleMultiText ProcessMultiText(XmlNode node, string fieldName)
 		{
 			return ReadMultiText(node, fieldName);
 		}
 
 
-		protected virtual StringDictionary ReadLexemeForm(XmlNode node)
+		protected virtual SimpleMultiText ReadLexemeForm(XmlNode node)
 		{
 			//TODO in real lift it is wrapped!!!!!!
 			return ReadMultiText(node);
@@ -133,17 +135,33 @@ namespace LiftIO
 		/// <param name="xmlNode"></param>
 		/// <param name="name"></param>
 		/// <returns></returns>
-		protected static DateTime GetOptionalDate(XmlNode xmlNode, string name)
+		protected DateTime GetOptionalDate(XmlNode xmlNode, string name)
 		{
 			XmlAttribute attr = xmlNode.Attributes[name];
 			if (attr == null)
 				return DateTime.MinValue;
 
 			/* if the incoming data lacks a time, we'll have a kind of 'unspecified', else utc */
-			return DateTime.Parse(attr.Value);
+
+			try
+			{
+				return DateTime.ParseExact(attr.Value, IdentifyingInfo.LiftTimeFormat, CultureInfo.InvariantCulture);
+			}
+			catch (FormatException e)
+			{
+				try
+				{
+					return DateTime.ParseExact(attr.Value, IdentifyingInfo.LiftDateOnlyFormat, CultureInfo.InvariantCulture);
+				}
+				catch (Exception)
+				{
+					NotifyError(e);
+					return DateTime.MinValue;
+				}
+			}
 		}
 
-		protected StringDictionary ReadMultiText(XmlNode node, string query)
+		protected SimpleMultiText ReadMultiText(XmlNode node, string query)
 		{
 			XmlNode element=null;
 			if (query == null)
@@ -159,16 +177,16 @@ namespace LiftIO
 			{
 				return ReadMultiText(element);
 			}
-			return new StringDictionary();
+			return new SimpleMultiText();
 		}
 
 		/// <summary>
 		/// this takes a text, rather than returning one just because the
 		/// lexical model classes currently always create their MultiText fields during the constructor.
 		/// </summary>
-		protected  StringDictionary ReadMultiText(XmlNode node)
+		protected  SimpleMultiText ReadMultiText(XmlNode node)
 		{
-			StringDictionary text = new StringDictionary();
+			SimpleMultiText text = new SimpleMultiText();
 			foreach (XmlNode form in node.SelectNodes("form"))
 			{
 				try
@@ -182,13 +200,13 @@ namespace LiftIO
 			}
 			if (text.Count == 0)
 			{
-				if (node.InnerText != null && node.InnerText.Trim() != string.Empty)
+				if (node.InnerText != null && !node.HasChildNodes  && node.InnerText.Trim() != string.Empty)
 				{
 					text[_defaultLangId] = node.InnerText;
 				}
 				else
 				{
-					return null;
+					return new SimpleMultiText();
 				}
 			}
 
