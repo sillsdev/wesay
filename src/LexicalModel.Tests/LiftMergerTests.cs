@@ -11,7 +11,7 @@ using WeSay.Project;
 namespace WeSay.LexicalModel.Tests
 {
 	[TestFixture]
-	public class LiftMergerTests
+	public class LiftMergerTests : LiftIO.ILiftMergerTestSuite
 	{
 		private LiftMerger _merger;
 		protected Db4oDataSource _dataSource;
@@ -40,7 +40,7 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
-		public void NewEntryWithGuid()
+		public  void NewEntryWithGuid()
 		{
 			IdentifyingInfo idInfo = new IdentifyingInfo();
 			idInfo.id = Guid.NewGuid().ToString();
@@ -50,17 +50,18 @@ namespace WeSay.LexicalModel.Tests
 
 
 		[Test]
-		public void NewEntryWithTextIdIgnoresIt()
+		public  void NewEntryWithTextIdIgnoresIt()
 		{
 			IdentifyingInfo idInfo = new IdentifyingInfo();
 			idInfo.id = "hello";
 			LexEntry e = _merger.GetOrMakeEntry(idInfo);
 			//no attempt is made to use that id
 			Assert.IsNotNull(e.Guid);
+			Assert.AreNotSame(Guid.Empty, e.Guid);
 		}
 
 		[Test]
-		public void NewEntryTakesGivenDates()
+		public  void NewEntryTakesGivenDates()
 		{
 			IdentifyingInfo idInfo = new IdentifyingInfo();
 			idInfo = AddDates(idInfo);
@@ -72,12 +73,13 @@ namespace WeSay.LexicalModel.Tests
 
 
 
+
 		[Test]
-		public void NewEntryNoDatesUsesNow()
+		public  void NewEntryNoDatesUsesNow()
 		{
 			LexEntry e = MakeSimpleEntry();
-			Assert.IsTrue(DateTime.UtcNow.Ticks - e.CreationTime.Ticks < 10000);
-			Assert.IsTrue(DateTime.UtcNow.Ticks - e.ModificationTime.Ticks < 10000);
+			Assert.IsTrue(TimeSpan.FromTicks(DateTime.UtcNow.Ticks - e.CreationTime.Ticks).Seconds < 2);
+			Assert.IsTrue(TimeSpan.FromTicks(DateTime.UtcNow.Ticks - e.ModificationTime.Ticks).Seconds < 2);
 		}
 
 		private LexEntry MakeSimpleEntry()
@@ -87,7 +89,7 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
-		public void EntryGetsEmptyLexemeForm()
+		public  void EntryGetsEmptyLexemeForm()
 		{
 			LexEntry e = MakeSimpleEntry();
 			_merger.MergeInLexemeForm(e, new SimpleMultiText());
@@ -95,7 +97,7 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
-		public void EntryGetsLexemeFormWithUnheardOfLanguage()
+		public  void EntryGetsLexemeFormWithUnheardOfLanguage()
 		{
 			LexEntry e = MakeSimpleEntry();
 			SimpleMultiText forms = new SimpleMultiText();
@@ -105,7 +107,7 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
-		public void NewEntryGetsLexemeForm()
+		public  void NewEntryGetsLexemeForm()
 		{
 			LexEntry e = MakeSimpleEntry();
 			SimpleMultiText forms = new SimpleMultiText();
@@ -117,7 +119,7 @@ namespace WeSay.LexicalModel.Tests
 
 
 		[Test]
-		public void TryCompleteEntry()
+		public  void TryCompleteEntry()
 		{
 			IdentifyingInfo id = new IdentifyingInfo();
 			LexEntry e = MakeSimpleEntry();
@@ -128,12 +130,12 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test, Ignore("Haven't implemented protecting modified dates of, e.g., the entry as you add/merge its children.")]
-		public void ModifiedDatesRetained()
+		public  void ModifiedDatesRetained()
 		{
 		}
 
 		[Test]
-		public void ChangedEntryFound()
+		public  void ChangedEntryFound()
 		{
 			Guid g = Guid.NewGuid();
 			IdentifyingInfo idInfo = CreateFullIdInfo(g);
@@ -148,7 +150,7 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
-		public void UnchangedEntryPruned()
+		public  void UnchangedEntryPruned()
 		{
 			Guid g = Guid.NewGuid();
 			IdentifyingInfo idInfo = CreateFullIdInfo( g);
@@ -163,7 +165,7 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
-		public void EntryWithIncomingUnspecifiedModTimeNotPruned()
+		public  void EntryWithIncomingUnspecifiedModTimeNotPruned()
 		{
 			Guid g = Guid.NewGuid();
 			IdentifyingInfo idInfo = CreateFullIdInfo(g);
@@ -181,7 +183,7 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test, Ignore("Haven't implemented this.")]
-		public void MergingSameEntryLackingGuidId_TwiceFindMatch()
+		public  void MergingSameEntryLackingGuidId_TwiceFindMatch()
 		{
 		}
 

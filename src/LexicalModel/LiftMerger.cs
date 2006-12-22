@@ -34,7 +34,7 @@ namespace WeSay.LexicalModel
 			{
 				entry = Db4oLexQueryHelper.FindObjectFromGuid<LexEntry>(_dataSource, guid);
 
-				if (CanSafelyPruneMerge(ref idInfo, entry))
+				if (CanSafelyPruneMerge(idInfo, entry))
 				{
 					return null; // no merging needed
 				}
@@ -58,7 +58,7 @@ namespace WeSay.LexicalModel
 			return entry;
 		}
 
-		private static bool CanSafelyPruneMerge(ref IdentifyingInfo idInfo, LexEntry entry)
+		private static bool CanSafelyPruneMerge(IdentifyingInfo idInfo, LexEntry entry)
 		{
 			return entry != null
 				&& entry.ModificationTime == idInfo.modificationTime
