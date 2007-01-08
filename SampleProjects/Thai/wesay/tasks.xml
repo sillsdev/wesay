@@ -7,9 +7,8 @@
 		  <name>EntryLexicalForm</name>
 		  <visibility>Visible</visibility>
 		  <writingSystems>
-			<id>th</id>
 			<id>IPA</id>
-			<id>xx</id>
+			<id>th</id>
 		  </writingSystems>
 		</field>
 		<field>

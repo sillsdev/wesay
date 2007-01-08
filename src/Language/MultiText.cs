@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Diagnostics;
 using System.ComponentModel;
@@ -65,7 +66,7 @@ namespace WeSay.Language
 			_forms = new LanguageForm[0];
 		}
 
-		static public MultiText Create(StringDictionary forms)
+		static public MultiText Create(Dictionary<string,string> forms)
 		{
 			MultiText m = new MultiText();
 			if (forms != null && forms.Keys != null)

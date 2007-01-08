@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
 using LiftIO;
 using WeSay.Data;
 using WeSay.Language;
@@ -26,15 +24,15 @@ namespace WeSay.LexicalModel
 			_entries = new WeSay.Data.Db4oRecordList<LexEntry>(_dataSource);
 		}
 
-		public LexEntry GetOrMakeEntry(IdentifyingInfo idInfo)
+		public LexEntry GetOrMakeEntry(Extensible eInfo)
 		{
-			Guid guid = GetGuidOrEmptyFromIdString(idInfo.id);
+			Guid guid = GetGuidOrEmptyFromIdString(eInfo.Id);
 			LexEntry entry = null;
 			if (guid != Guid.Empty)
 			{
 				entry = Db4oLexQueryHelper.FindObjectFromGuid<LexEntry>(_dataSource, guid);
 
-				if (CanSafelyPruneMerge(idInfo, entry))
+				if (CanSafelyPruneMerge(eInfo, entry))
 				{
 					return null; // no merging needed
 				}
@@ -45,25 +43,25 @@ namespace WeSay.LexicalModel
 				entry = new LexEntry(guid);
 			}
 
-			if (idInfo.creationTime > DateTime.MinValue)
+			if (eInfo.CreationTime > DateTime.MinValue)
 			{
-				entry.CreationTime = idInfo.creationTime;
+				entry.CreationTime = eInfo.CreationTime;
 			}
 
-			if (idInfo.modificationTime > DateTime.MinValue)
+			if (eInfo.ModificationTime > DateTime.MinValue)
 			{
-				entry.ModificationTime = idInfo.modificationTime;
+				entry.ModificationTime = eInfo.ModificationTime;
 			}
 
 			return entry;
 		}
 
-		private static bool CanSafelyPruneMerge(IdentifyingInfo idInfo, LexEntry entry)
+		private static bool CanSafelyPruneMerge(Extensible eInfo, LexEntry entry)
 		{
 			return entry != null
-				&& entry.ModificationTime == idInfo.modificationTime
+				&& entry.ModificationTime == eInfo.ModificationTime
 				&& entry.ModificationTime.Kind != DateTimeKind.Unspecified
-				 && idInfo.modificationTime.Kind != DateTimeKind.Unspecified;
+				 && eInfo.ModificationTime.Kind != DateTimeKind.Unspecified;
 		}
 
 		private Guid GetGuidOrEmptyFromIdString(string id)
@@ -79,13 +77,13 @@ namespace WeSay.LexicalModel
 			}
 		}
 
-		public LexSense GetOrMakeSense(LexEntry entry, IdentifyingInfo idInfo)
+		public LexSense GetOrMakeSense(LexEntry entry, Extensible eInfo)
 		{
 			//nb, has no guid or dates
 			return new LexSense(entry);
 		}
 
-		public LexExampleSentence GetOrMakeExample(LexSense sense, IdentifyingInfo idInfo)
+		public LexExampleSentence GetOrMakeExample(LexSense sense, Extensible eInfo)
 		{
 			//nb, has no guid or dates
 			return new LexExampleSentence(sense);

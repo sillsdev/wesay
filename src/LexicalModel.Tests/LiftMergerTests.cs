@@ -42,19 +42,19 @@ namespace WeSay.LexicalModel.Tests
 		[Test]
 		public  void NewEntryWithGuid()
 		{
-			IdentifyingInfo idInfo = new IdentifyingInfo();
-			idInfo.id = Guid.NewGuid().ToString();
-			LexEntry e= _merger.GetOrMakeEntry(idInfo);
-			Assert.AreEqual(idInfo.id, e.Guid.ToString());
+			Extensible extensibleInfo = new Extensible();
+			extensibleInfo.Id = Guid.NewGuid().ToString();
+			LexEntry e= _merger.GetOrMakeEntry(extensibleInfo);
+			Assert.AreEqual(extensibleInfo.Id, e.Guid.ToString());
 		}
 
 
 		[Test]
 		public  void NewEntryWithTextIdIgnoresIt()
 		{
-			IdentifyingInfo idInfo = new IdentifyingInfo();
-			idInfo.id = "hello";
-			LexEntry e = _merger.GetOrMakeEntry(idInfo);
+			Extensible extensibleInfo = new Extensible();
+			extensibleInfo.Id = "hello";
+			LexEntry e = _merger.GetOrMakeEntry(extensibleInfo);
 			//no attempt is made to use that id
 			Assert.IsNotNull(e.Guid);
 			Assert.AreNotSame(Guid.Empty, e.Guid);
@@ -63,12 +63,12 @@ namespace WeSay.LexicalModel.Tests
 		[Test]
 		public  void NewEntryTakesGivenDates()
 		{
-			IdentifyingInfo idInfo = new IdentifyingInfo();
-			idInfo = AddDates(idInfo);
+			Extensible extensibleInfo = new Extensible();
+			extensibleInfo = AddDates(extensibleInfo);
 
-			LexEntry e = _merger.GetOrMakeEntry(idInfo);
-			Assert.AreEqual(idInfo.creationTime, e.CreationTime);
-			Assert.AreEqual(idInfo.modificationTime, e.ModificationTime);
+			LexEntry e = _merger.GetOrMakeEntry(extensibleInfo);
+			Assert.AreEqual(extensibleInfo.CreationTime, e.CreationTime);
+			Assert.AreEqual(extensibleInfo.ModificationTime, e.ModificationTime);
 		}
 
 
@@ -84,8 +84,8 @@ namespace WeSay.LexicalModel.Tests
 
 		private LexEntry MakeSimpleEntry()
 		{
-			IdentifyingInfo idInfo = new IdentifyingInfo();
-			return _merger.GetOrMakeEntry(idInfo);
+			Extensible extensibleInfo = new Extensible();
+			return _merger.GetOrMakeEntry(extensibleInfo);
 		}
 
 		[Test]
@@ -95,6 +95,15 @@ namespace WeSay.LexicalModel.Tests
 			_merger.MergeInLexemeForm(e, new SimpleMultiText());
 			Assert.AreEqual(0, e.LexicalForm.Count);
 		}
+
+		#region ILiftMergerTestSuite Members
+
+		[Test, Ignore("not yet")]
+		public void NewWritingSystemAlternativeHandled()
+		{
+		}
+
+		#endregion
 
 		[Test]
 		public  void EntryGetsLexemeFormWithUnheardOfLanguage()
@@ -121,10 +130,10 @@ namespace WeSay.LexicalModel.Tests
 		[Test]
 		public  void TryCompleteEntry()
 		{
-			IdentifyingInfo id = new IdentifyingInfo();
+			Extensible extensibleInfo = new Extensible();
 			LexEntry e = MakeSimpleEntry();
-			LexSense s= _merger.GetOrMakeSense(e, id);
-			LexExampleSentence ex =_merger.GetOrMakeExample(s, id);
+			LexSense s= _merger.GetOrMakeSense(e, extensibleInfo);
+			LexExampleSentence ex =_merger.GetOrMakeExample(s, extensibleInfo);
 
 			Assert.AreEqual(e, ex.Parent.Parent);
 		}
@@ -138,29 +147,29 @@ namespace WeSay.LexicalModel.Tests
 		public  void ChangedEntryFound()
 		{
 			Guid g = Guid.NewGuid();
-			IdentifyingInfo idInfo = CreateFullIdInfo(g);
+			Extensible extensibleInfo = CreateFullextensibleInfo(g);
 
 			LexEntry e = new LexEntry(g);
-			e.CreationTime = idInfo.creationTime;
+			e.CreationTime = extensibleInfo.CreationTime;
 			e.ModificationTime = new DateTime(e.CreationTime.Ticks + 100);
 			_entries.Add(e);
 
-			LexEntry found = _merger.GetOrMakeEntry(idInfo);
-			Assert.AreEqual(idInfo.creationTime, found.CreationTime);
+			LexEntry found = _merger.GetOrMakeEntry(extensibleInfo);
+			Assert.AreEqual(extensibleInfo.CreationTime, found.CreationTime);
 		}
 
 		[Test]
 		public  void UnchangedEntryPruned()
 		{
 			Guid g = Guid.NewGuid();
-			IdentifyingInfo idInfo = CreateFullIdInfo( g);
+			Extensible extensibleInfo = CreateFullextensibleInfo( g);
 
 			LexEntry e = new LexEntry(g);
-			e.CreationTime = idInfo.creationTime;
-			e.ModificationTime = idInfo.modificationTime;
+			e.CreationTime = extensibleInfo.CreationTime;
+			e.ModificationTime = extensibleInfo.ModificationTime;
 			_entries.Add(e);
 
-			LexEntry found = _merger.GetOrMakeEntry(idInfo);
+			LexEntry found = _merger.GetOrMakeEntry(extensibleInfo);
 			Assert.IsNull(found);
 		}
 
@@ -168,17 +177,17 @@ namespace WeSay.LexicalModel.Tests
 		public  void EntryWithIncomingUnspecifiedModTimeNotPruned()
 		{
 			Guid g = Guid.NewGuid();
-			IdentifyingInfo idInfo = CreateFullIdInfo(g);
+			Extensible extensibleInfo = CreateFullextensibleInfo(g);
 			LexEntry e = new LexEntry(g);
-			e.CreationTime = idInfo.creationTime;
-			e.ModificationTime = idInfo.modificationTime;
+			e.CreationTime = extensibleInfo.CreationTime;
+			e.ModificationTime = extensibleInfo.ModificationTime;
 			_entries.Add(e);
 
 		   //strip out the time
-			idInfo.modificationTime = DateTime.Parse("2005-01-01");
-			Assert.AreEqual(DateTimeKind.Unspecified ,idInfo.modificationTime.Kind );
+			extensibleInfo.ModificationTime = DateTime.Parse("2005-01-01");
+			Assert.AreEqual(DateTimeKind.Unspecified ,extensibleInfo.ModificationTime.Kind );
 
-			LexEntry found = _merger.GetOrMakeEntry(idInfo);
+			LexEntry found = _merger.GetOrMakeEntry(extensibleInfo);
 			Assert.IsNotNull(found);
 		}
 
@@ -187,19 +196,19 @@ namespace WeSay.LexicalModel.Tests
 		{
 		}
 
-		private static IdentifyingInfo AddDates(IdentifyingInfo idInfo)
+		private static Extensible AddDates(Extensible extensibleInfo)
 		{
-			idInfo.creationTime = DateTime.Parse("2003-08-07T08:42:42+07:00");
-			idInfo.modificationTime = DateTime.Parse("2005-01-01T01:11:11+01:00");
-			return idInfo;
+			extensibleInfo.CreationTime = DateTime.Parse("2003-08-07T08:42:42+07:00");
+			extensibleInfo.ModificationTime = DateTime.Parse("2005-01-01T01:11:11+01:00");
+			return extensibleInfo;
 		}
 
-		private static IdentifyingInfo CreateFullIdInfo(Guid g)
+		private static Extensible CreateFullextensibleInfo(Guid g)
 		{
-			IdentifyingInfo idInfo = new IdentifyingInfo();
-			idInfo.id = g.ToString();
-			idInfo = AddDates(idInfo);
-			return idInfo;
+			Extensible extensibleInfo = new Extensible();
+			extensibleInfo.Id = g.ToString();
+			extensibleInfo = AddDates(extensibleInfo);
+			return extensibleInfo;
 		}
 	}
 
