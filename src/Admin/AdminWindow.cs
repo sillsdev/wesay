@@ -23,7 +23,7 @@ namespace WeSay.Admin
 		/// This is probably temporary while we transition to the tasks xml being
 		/// driven by some class model rather than just XML.
 		/// </summary>
-		//public static FieldInventory SharedFieldInventory;
+		//public static ViewTemplate SharedviewTemplate;
 
 		public AdminWindow()
 		{
@@ -49,10 +49,23 @@ namespace WeSay.Admin
 			}
 		}
 
+		// This delegate enables asynchronous calls for setting
+		// the properties from another thread.
+		delegate void UpdateStuffCallback();
+
 		private void UpdateEnabledStates()
 		{
-			exportToLIFTXmlToolStripMenuItem.Enabled = (_project != null) && (_progressHandler == null);
-			importFromLIFTXMLToolStripMenuItem.Enabled = (_project != null) && (_progressHandler == null);
+			if (this.menuStrip1.InvokeRequired)
+			{
+				UpdateStuffCallback d = new UpdateStuffCallback(UpdateEnabledStates);
+				this.Invoke(d, new object[] {});
+			}
+			else
+			{
+				exportToLIFTXmlToolStripMenuItem.Enabled = (_project != null) && (_progressHandler == null);
+				importFromLIFTXMLToolStripMenuItem.Enabled = (_project != null) && (_progressHandler == null);
+			}
+
 		}
 
 		void OnOpenProject(object sender, EventArgs e)

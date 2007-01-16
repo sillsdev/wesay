@@ -36,7 +36,7 @@ namespace WeSay.Admin
 		{
 			_fieldsListBox.Items.Clear();
 
-			foreach (Field field in  WeSayWordsProject.Project.FieldInventory)
+			foreach (Field field in  WeSayWordsProject.Project.ViewTemplate)
 			{
 				this._fieldsListBox.Items.Add(field, field.Visibility == Field.VisibilitySetting.Visible);
 			}

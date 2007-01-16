@@ -35,8 +35,8 @@ namespace WeSay.Admin
 			writer.WriteStartElement("tasks");
 
 			writer.WriteStartElement("components");
-			Debug.Assert(WeSayWordsProject.Project.FieldInventory != null);
-			WeSayWordsProject.Project.FieldInventory.Write(writer);
+			Debug.Assert(WeSayWordsProject.Project.ViewTemplate != null);
+			WeSayWordsProject.Project.ViewTemplate.Write(writer);
 			writer.WriteEndElement();
 
 			foreach (TaskInfo t in _taskList.Items)

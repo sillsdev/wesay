@@ -5,6 +5,7 @@ using WeSay.Data;
 using WeSay.Foundation;
 using WeSay.Foundation.Progress;
 using WeSay.LexicalModel;
+using WeSay.LexicalModel.Db4o_Specific;
 
 namespace WeSay
 {
@@ -23,11 +24,15 @@ namespace WeSay
 
 		protected override void DoWork2(ProgressState progress)
 		{
+
+
 			_progress = progress;
 			if (File.Exists(_destinationDatabasePath)) // make backup of the file we're about to over-write
 			{
 				progress.Status = "Backing up existing file...";
-				File.Move(_destinationDatabasePath, _destinationDatabasePath + ".bak");
+				string backupPath = _destinationDatabasePath + ".bak";
+				File.Delete(backupPath);
+				File.Move(_destinationDatabasePath, backupPath);
 			}
 
 			progress.Status = "Importing...";
@@ -35,6 +40,11 @@ namespace WeSay
 			{
 				using (Db4oRecordList<LexEntry> entries = new Db4oRecordList<LexEntry>(ds))
 				{
+					if (Db4oLexModelHelper.Singleton == null)
+					{
+						Db4oLexModelHelper.Initialize(ds.Data);
+					}
+
 					XmlDocument doc = new XmlDocument();
 					doc.Load(_sourceLIFTPath);
 					_importer = LiftImporter.CreateCorrectImporter(doc);
