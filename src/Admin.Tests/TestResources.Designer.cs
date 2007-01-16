@@ -64,7 +64,7 @@ namespace WeSay.Admin.Tests {
 		///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
 		///&lt;tasks&gt;
 		///  &lt;components&gt;
-		///    &lt;fieldInventory id=&quot;Default Field Inventory&quot;&gt;
+		///    &lt;viewTemplate id=&quot;Default Field Inventory&quot;&gt;
 		///      &lt;fields&gt;
 		///        &lt;field&gt;
 		///          &lt;name&gt;EntryLexicalForm&lt;/name&gt;
