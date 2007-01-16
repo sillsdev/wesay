@@ -35,17 +35,17 @@ namespace WeSay.App
 			navigator = navigator.SelectSingleNode("//components");
 			if (navigator != null)
 			{
-				bool hasFieldInventory = false;
+				bool hasviewTemplate = false;
 				XPathNodeIterator componentList = navigator.SelectChildren(string.Empty, string.Empty);
 				foreach (XPathNavigator component in componentList)
 				{
-					Debug.Assert(component.Name == "fieldInventory");
-					hasFieldInventory = true;
-					FieldInventory inventory = new FieldInventory();
-					inventory.LoadFromString(component.OuterXml);
-					_picoContext.RegisterComponentInstance(inventory.Id, inventory);
+					Debug.Assert(component.Name == "viewTemplate");
+					hasviewTemplate = true;
+					ViewTemplate template = new ViewTemplate();
+					template.LoadFromString(component.OuterXml);
+					_picoContext.RegisterComponentInstance(template.Id, template);
 				}
-				Debug.Assert(hasFieldInventory, "Currently, there must be exactly 1 FieldInventory in the tasks.xml");
+				Debug.Assert(hasviewTemplate, "Currently, there must be exactly 1 viewTemplate in the tasks.xml");
 			}
 		}
 

@@ -162,7 +162,7 @@ namespace WeSay.App
 			q.Constrain(typeof(LexEntry));
 			//REVIEW: this is >, not >=. Could a change get lost if the
 			//record was modified milliseconds before the last backup?
-			q.Descend("_modifiedDate").Constrain(last).Greater();
+			q.Descend("_modificationTime").Constrain(last).Greater();
 			_timeOfLastQueryForNewRecords = DateTime.UtcNow;
 			return q.Execute();
 		}

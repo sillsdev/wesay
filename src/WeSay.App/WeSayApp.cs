@@ -126,7 +126,7 @@ namespace WeSay.App
 				objectClass.ObjectField("_form").Indexed(true);
 
 				objectClass = db4oConfiguration.ObjectClass(typeof(LexEntry));
-				objectClass.ObjectField("_modifiedDate").Indexed(true);
+				objectClass.ObjectField("_modificationTime").Indexed(true);
 				 objectClass.ObjectField("_guid").Indexed(true);
 			   objectClass.ObjectField("_lexicalForm").Indexed(true);
 				objectClass.ObjectField("_senses").Indexed(true);
