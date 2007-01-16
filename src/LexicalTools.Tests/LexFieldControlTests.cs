@@ -13,7 +13,7 @@ namespace WeSay.LexicalTools.Tests
 	{
 		InMemoryRecordListManager _recordListManager;
 		IRecordList<LexEntry> _missingTranslationRecordList;
-		FieldInventory _fieldInventory;
+		ViewTemplate _viewTemplate;
 		private MissingTranslationFilter _missingTranslation;
 
 		public class MissingTranslationFilter:IFilter<LexEntry>
@@ -74,11 +74,11 @@ namespace WeSay.LexicalTools.Tests
 
 			string[] analysisWritingSystemIds = new string[] { BasilProject.Project.WritingSystems.AnalysisWritingSystemDefaultId };
 			string[] vernacularWritingSystemIds = new string[] { BasilProject.Project.WritingSystems.VernacularWritingSystemDefaultId };
-			this._fieldInventory = new FieldInventory();
-			this._fieldInventory.Add(new Field(Field.FieldNames.EntryLexicalForm.ToString(), vernacularWritingSystemIds));
-			this._fieldInventory.Add(new Field(Field.FieldNames.SenseGloss.ToString(), analysisWritingSystemIds));
-			this._fieldInventory.Add(new Field(Field.FieldNames.ExampleSentence.ToString(), vernacularWritingSystemIds));
-			this._fieldInventory.Add(new Field(Field.FieldNames.ExampleTranslation.ToString(), analysisWritingSystemIds));
+			this._viewTemplate = new ViewTemplate();
+			this._viewTemplate.Add(new Field(Field.FieldNames.EntryLexicalForm.ToString(), vernacularWritingSystemIds));
+			this._viewTemplate.Add(new Field(Field.FieldNames.SenseGloss.ToString(), analysisWritingSystemIds));
+			this._viewTemplate.Add(new Field(Field.FieldNames.ExampleSentence.ToString(), vernacularWritingSystemIds));
+			this._viewTemplate.Add(new Field(Field.FieldNames.ExampleTranslation.ToString(), analysisWritingSystemIds));
 
 		}
 
@@ -110,7 +110,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void Create()
 		{
-			LexFieldControl lexFieldControl = new LexFieldControl(_missingTranslationRecordList, _fieldInventory, _missingTranslation.FilteringPredicate);
+			LexFieldControl lexFieldControl = new LexFieldControl(_missingTranslationRecordList, _viewTemplate, _missingTranslation.FilteringPredicate);
 			Assert.IsNotNull(lexFieldControl);
 		}
 
@@ -118,12 +118,12 @@ namespace WeSay.LexicalTools.Tests
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void Create_NullRecords_Throws()
 		{
-			new LexFieldControl(null, _fieldInventory, _missingTranslation.FilteringPredicate);
+			new LexFieldControl(null, _viewTemplate, _missingTranslation.FilteringPredicate);
 		}
 
 		[Test]
 		[ExpectedException(typeof(ArgumentNullException))]
-		public void Create_NullFieldInventory_Throws()
+		public void Create_NullviewTemplate_Throws()
 		{
 			new LexFieldControl(_missingTranslationRecordList, null, _missingTranslation.FilteringPredicate);
 		}
@@ -132,20 +132,20 @@ namespace WeSay.LexicalTools.Tests
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void Create_NullFilter_Throws()
 		{
-			new LexFieldControl(_missingTranslationRecordList, _fieldInventory, null);
+			new LexFieldControl(_missingTranslationRecordList, _viewTemplate, null);
 		}
 
 		[Test]
 		public void CurrentRecord_InitializedToFirst()
 		{
-			LexFieldControl lexFieldControl = new LexFieldControl(_missingTranslationRecordList, _fieldInventory, _missingTranslation.FilteringPredicate);
+			LexFieldControl lexFieldControl = new LexFieldControl(_missingTranslationRecordList, _viewTemplate, _missingTranslation.FilteringPredicate);
 			Assert.AreEqual(_missingTranslationRecordList[0], lexFieldControl.CurrentRecord);
 		}
 
 		[Test]
 		public void SetCurrentRecordToPrevious_AtFirst_StaysAtFirst()
 		{
-			LexFieldControl lexFieldControl = new LexFieldControl(_missingTranslationRecordList, _fieldInventory, _missingTranslation.FilteringPredicate);
+			LexFieldControl lexFieldControl = new LexFieldControl(_missingTranslationRecordList, _viewTemplate, _missingTranslation.FilteringPredicate);
 			lexFieldControl.SetCurrentRecordToPrevious();
 			Assert.AreEqual(_missingTranslationRecordList[0], lexFieldControl.CurrentRecord);
 		}
@@ -153,7 +153,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void SetCurrentRecordToNextThenPrevious_SamePlace()
 		{
-			LexFieldControl lexFieldControl = new LexFieldControl(_missingTranslationRecordList, _fieldInventory, _missingTranslation.FilteringPredicate);
+			LexFieldControl lexFieldControl = new LexFieldControl(_missingTranslationRecordList, _viewTemplate, _missingTranslation.FilteringPredicate);
 			lexFieldControl.SetCurrentRecordToNext();
 			lexFieldControl.SetCurrentRecordToPrevious();
 			Assert.AreEqual(_missingTranslationRecordList[0], lexFieldControl.CurrentRecord);
@@ -162,7 +162,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void SetCurrentRecordToNext_AtLast_StaysAtLast()
 		{
-			LexFieldControl lexFieldControl = new LexFieldControl(_missingTranslationRecordList, _fieldInventory, _missingTranslation.FilteringPredicate);
+			LexFieldControl lexFieldControl = new LexFieldControl(_missingTranslationRecordList, _viewTemplate, _missingTranslation.FilteringPredicate);
 			int count = _missingTranslationRecordList.Count;
 			for (int i = 0; i <= count; i++)
 			{
@@ -174,7 +174,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void SetCurrentRecordToNext_GoesToNext()
 		{
-			LexFieldControl lexFieldControl = new LexFieldControl(_missingTranslationRecordList, _fieldInventory, _missingTranslation.FilteringPredicate);
+			LexFieldControl lexFieldControl = new LexFieldControl(_missingTranslationRecordList, _viewTemplate, _missingTranslation.FilteringPredicate);
 			lexFieldControl.SetCurrentRecordToNext();
 			Assert.AreEqual(_missingTranslationRecordList[1], lexFieldControl.CurrentRecord);
 		}
@@ -182,7 +182,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void SetCurrentRecordToPrevious_AfterChangedSoNoLongerMeetsFilter_StaysAtFirst()
 		{
-			LexFieldControl lexFieldControl = new LexFieldControl(_missingTranslationRecordList, _fieldInventory, _missingTranslation.FilteringPredicate);
+			LexFieldControl lexFieldControl = new LexFieldControl(_missingTranslationRecordList, _viewTemplate, _missingTranslation.FilteringPredicate);
 			AddTranslationToEntry(lexFieldControl.CurrentRecord,"a bogus translation of example");
 			lexFieldControl.SetCurrentRecordToPrevious();
 			Assert.AreEqual(_missingTranslationRecordList[0], lexFieldControl.CurrentRecord);
@@ -191,7 +191,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void SetCurrentRecordToPrevious_AfterChangedSoNoLongerMeetsFilter_GoesToEntryBeforeChangedOne()
 		{
-			LexFieldControl lexFieldControl = new LexFieldControl(_missingTranslationRecordList, _fieldInventory, _missingTranslation.FilteringPredicate);
+			LexFieldControl lexFieldControl = new LexFieldControl(_missingTranslationRecordList, _viewTemplate, _missingTranslation.FilteringPredicate);
 			lexFieldControl.SetCurrentRecordToNext();
 			lexFieldControl.SetCurrentRecordToNext();
 			AddTranslationToEntry(lexFieldControl.CurrentRecord, "a bogus translation of example");
@@ -202,7 +202,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void SetCurrentRecordToNextThenPrevious_AfterChangedSoNoLongerMeetsFilter_SamePlace()
 		{
-			LexFieldControl lexFieldControl = new LexFieldControl(_missingTranslationRecordList, _fieldInventory, _missingTranslation.FilteringPredicate);
+			LexFieldControl lexFieldControl = new LexFieldControl(_missingTranslationRecordList, _viewTemplate, _missingTranslation.FilteringPredicate);
 			lexFieldControl.SetCurrentRecordToNext();
 			AddTranslationToEntry(lexFieldControl.CurrentRecord, "a bogus translation of example");
 			lexFieldControl.SetCurrentRecordToPrevious();
@@ -212,7 +212,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void SetCurrentRecordToPrevious_AtLast_AfterChangedSoNoLongerMeetsFilter_StaysAtLast()
 		{
-			LexFieldControl lexFieldControl = new LexFieldControl(_missingTranslationRecordList, _fieldInventory, _missingTranslation.FilteringPredicate);
+			LexFieldControl lexFieldControl = new LexFieldControl(_missingTranslationRecordList, _viewTemplate, _missingTranslation.FilteringPredicate);
 			int count = _missingTranslationRecordList.Count;
 			for (int i = 0; i < count; i++)
 			{
@@ -226,7 +226,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void SetCurrentRecordToPrevious_AtSecondToLast_AfterChangedSoNoLongerMeetsFilter_GoesToEntryBeforeChangedOne()
 		{
-			LexFieldControl lexFieldControl = new LexFieldControl(_missingTranslationRecordList, _fieldInventory, _missingTranslation.FilteringPredicate);
+			LexFieldControl lexFieldControl = new LexFieldControl(_missingTranslationRecordList, _viewTemplate, _missingTranslation.FilteringPredicate);
 			int count = _missingTranslationRecordList.Count;
 			for (int i = 0; i < count-2; i++)
 			{
@@ -241,7 +241,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void SetCurrentRecordToNext_AtLast_AfterChangedSoNoLongerMeetsFilter_StaysAtLast()
 		{
-			LexFieldControl lexFieldControl = new LexFieldControl(_missingTranslationRecordList, _fieldInventory, _missingTranslation.FilteringPredicate);
+			LexFieldControl lexFieldControl = new LexFieldControl(_missingTranslationRecordList, _viewTemplate, _missingTranslation.FilteringPredicate);
 			int count = _missingTranslationRecordList.Count;
 			for (int i = 0; i < count; i++)
 			{
@@ -255,7 +255,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void SetCurrentRecordToNext__AfterChangedSoNoLongerMeetsFilter_GoesToNext()
 		{
-			LexFieldControl lexFieldControl = new LexFieldControl(_missingTranslationRecordList, _fieldInventory, _missingTranslation.FilteringPredicate);
+			LexFieldControl lexFieldControl = new LexFieldControl(_missingTranslationRecordList, _viewTemplate, _missingTranslation.FilteringPredicate);
 			lexFieldControl.SetCurrentRecordToNext();
 			AddTranslationToEntry(lexFieldControl.CurrentRecord, "a bogus translation of example");
 			lexFieldControl.SetCurrentRecordToNext();

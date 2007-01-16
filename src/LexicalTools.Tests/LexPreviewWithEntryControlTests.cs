@@ -15,7 +15,7 @@ namespace WeSay.LexicalTools.Tests
 		LexEntry banana;
 		LexEntry car;
 		LexEntry bike;
-		private FieldInventory _fieldInventory;
+		private ViewTemplate _viewTemplate;
 
 		[SetUp]
 		public void SetUp()
@@ -31,11 +31,11 @@ namespace WeSay.LexicalTools.Tests
 
 			string[] analysisWritingSystemIds = new string[] { BasilProject.Project.WritingSystems.AnalysisWritingSystemDefaultId };
 			string[] vernacularWritingSystemIds = new string[] { BasilProject.Project.WritingSystems.VernacularWritingSystemDefaultId };
-			this._fieldInventory = new FieldInventory();
-			this._fieldInventory.Add(new Field(Field.FieldNames.EntryLexicalForm.ToString(), vernacularWritingSystemIds));
-			this._fieldInventory.Add(new Field(Field.FieldNames.SenseGloss.ToString(), analysisWritingSystemIds));
-			this._fieldInventory.Add(new Field(Field.FieldNames.ExampleSentence.ToString(), vernacularWritingSystemIds));
-			this._fieldInventory.Add(new Field(Field.FieldNames.ExampleTranslation.ToString(), analysisWritingSystemIds));
+			this._viewTemplate = new ViewTemplate();
+			this._viewTemplate.Add(new Field(Field.FieldNames.EntryLexicalForm.ToString(), vernacularWritingSystemIds));
+			this._viewTemplate.Add(new Field(Field.FieldNames.SenseGloss.ToString(), analysisWritingSystemIds));
+			this._viewTemplate.Add(new Field(Field.FieldNames.ExampleSentence.ToString(), vernacularWritingSystemIds));
+			this._viewTemplate.Add(new Field(Field.FieldNames.ExampleTranslation.ToString(), analysisWritingSystemIds));
 
 		}
 
@@ -170,7 +170,7 @@ namespace WeSay.LexicalTools.Tests
 		private LexPreviewWithEntryControl CreateForm(LexEntry entry)
 		{
 			LexPreviewWithEntryControl lexFieldControl = new LexPreviewWithEntryControl();
-			lexFieldControl.FieldInventory = _fieldInventory;
+			lexFieldControl.ViewTemplate = _viewTemplate;
 			lexFieldControl.DataSource = entry;
 
 			return lexFieldControl;
@@ -179,10 +179,10 @@ namespace WeSay.LexicalTools.Tests
 
 		private static LexPreviewWithEntryControl CreateFilteredForm(LexEntry entry, string field, params string[] writingSystems)
 		{
-			FieldInventory fieldInventory = new FieldInventory();
-			fieldInventory.Add(new Field(field, writingSystems));
+			ViewTemplate viewTemplate = new ViewTemplate();
+			viewTemplate.Add(new Field(field, writingSystems));
 			LexPreviewWithEntryControl lexFieldControl = new LexPreviewWithEntryControl();
-			lexFieldControl.FieldInventory = fieldInventory;
+			lexFieldControl.ViewTemplate = viewTemplate;
 			lexFieldControl.DataSource = entry;
 			return lexFieldControl;
 		}

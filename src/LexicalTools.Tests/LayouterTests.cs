@@ -25,13 +25,13 @@ namespace WeSay.LexicalTools.Tests
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void Create_NullBuilder_Throws()
 		{
-			new LexEntryLayouter(null, new FieldInventory());
+			new LexEntryLayouter(null, new ViewTemplate());
 
 		}
 
 		[Test]
 		[ExpectedException(typeof(ArgumentNullException))]
-		public void Create_NullFieldInventory_Throws()
+		public void Create_NullviewTemplate_Throws()
 		{
 			new LexEntryLayouter(new DetailList(), null);
 		}
@@ -68,11 +68,11 @@ namespace WeSay.LexicalTools.Tests
 		{
 			string[] analysisWritingSystemIds = new string[] { BasilProject.Project.WritingSystems.AnalysisWritingSystemDefaultId };
 			string[] vernacularWritingSystemIds = new string[] { BasilProject.Project.WritingSystems.VernacularWritingSystemDefaultId };
-			FieldInventory fieldInventory = new FieldInventory();
-			fieldInventory.Add(new Field(Field.FieldNames.EntryLexicalForm.ToString(), vernacularWritingSystemIds));
-			fieldInventory.Add(new Field(Field.FieldNames.SenseGloss.ToString(), analysisWritingSystemIds));
-			fieldInventory.Add(new Field(Field.FieldNames.ExampleSentence.ToString(), vernacularWritingSystemIds));
-			fieldInventory.Add(new Field(Field.FieldNames.ExampleTranslation.ToString(), analysisWritingSystemIds));
+			ViewTemplate viewTemplate = new ViewTemplate();
+			viewTemplate.Add(new Field(Field.FieldNames.EntryLexicalForm.ToString(), vernacularWritingSystemIds));
+			viewTemplate.Add(new Field(Field.FieldNames.SenseGloss.ToString(), analysisWritingSystemIds));
+			viewTemplate.Add(new Field(Field.FieldNames.ExampleSentence.ToString(), vernacularWritingSystemIds));
+			viewTemplate.Add(new Field(Field.FieldNames.ExampleTranslation.ToString(), analysisWritingSystemIds));
 
 			LexEntry entry = new LexEntry();
 			entry.LexicalForm[BasilProject.Project.WritingSystems.VernacularWritingSystemDefaultId] = "WordInVernacular";
@@ -81,7 +81,7 @@ namespace WeSay.LexicalTools.Tests
 			AddSense(entry);
 
 			DetailList dl = new DetailList();
-			LexEntryLayouter layout = new LexEntryLayouter(dl, fieldInventory);
+			LexEntryLayouter layout = new LexEntryLayouter(dl, viewTemplate);
 			_rowCount = layout.AddWidgets(entry);
 			return dl;
 		}
