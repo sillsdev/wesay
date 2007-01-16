@@ -42,6 +42,7 @@ namespace WeSay.LexicalModel.Tests
 		[Test]
 		public  void NewEntryWithGuid()
 		{
+
 			Extensible extensibleInfo = new Extensible();
 			extensibleInfo.Id = Guid.NewGuid().ToString();
 			LexEntry e= _merger.GetOrMakeEntry(extensibleInfo);

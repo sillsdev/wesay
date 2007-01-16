@@ -25,12 +25,12 @@ namespace WeSay.LexicalTools.Tests
 //            BasilProject.InitializeForTests();
 //
 //            string[] vernacularWritingSystemIds = new string[] { BasilProject.Project.WritingSystems.VernacularWritingSystemDefaultId };
-//            FieldInventory fieldInventory = new FieldInventory();
-//            fieldInventory.Add(new Field(Field.FieldNames.EntryLexicalForm.ToString(), vernacularWritingSystemIds));
+//            ViewTemplate viewTemplate = new viewTemplate();
+//            viewTemplate.Add(new Field(Field.FieldNames.EntryLexicalForm.ToString(), vernacularWritingSystemIds));
 //
 			this._recordListManager = new Db4oRecordListManager(_FilePath);
 			this._records = _recordListManager.GetListOfType<LexEntry>();
-		   // this.Db4oLexQueryHelper = new EntryDetailControl(this._recordListManager, fieldInventory);
+		   // this.Db4oLexQueryHelper = new EntryDetailControl(this._recordListManager, viewTemplate);
 		}
 		[TearDown]
 		public void TearDown()
