@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<fieldInventory id="defaultFieldInventory" class="WeSay.UI.FieldInventory" assembly="WeSay.UI">
+<viewTemplate id="defaultviewTemplate" class="WeSay.UI.viewTemplate" assembly="WeSay.UI">
   <fields>
 	<field class="WeSay.LexicalModel.Field" assembly="WeSay.LexicalModel">
 	  <name>EntryLexicalForm</name>
@@ -17,4 +17,4 @@
 	  </writingSystems>
 	</field>
   </fields>
-</fieldInventory>
+</viewTemplate>

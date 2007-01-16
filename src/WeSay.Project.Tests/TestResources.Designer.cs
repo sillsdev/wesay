@@ -61,27 +61,6 @@ namespace WeSay.Project.Tests {
 		}
 
 		/// <summary>
-		///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
-		///&lt;fieldInventory id=&quot;defaultFieldInventory&quot; class=&quot;WeSay.UI.FieldInventory&quot; assembly=&quot;WeSay.UI&quot;&gt;
-		///  &lt;fields&gt;
-		///    &lt;field class=&quot;WeSay.LexicalModel.Field&quot; assembly=&quot;WeSay.LexicalModel&quot;&gt;
-		///      &lt;name&gt;EntryLexicalForm&lt;/name&gt;
-		///      &lt;visibility&gt;Visible&lt;/visibility&gt;
-		///      &lt;writingSystems&gt;
-		///           &lt;id&gt;xx&lt;/id&gt;
-		///          &lt;id&gt;yy&lt;/id&gt;
-		///       &lt;/writingSystems&gt;
-		///    &lt;/field&gt;
-		///    &lt;field class=&quot;WeSay.LexicalModel.Field&quot; assembly=&quot;WeSay.LexicalModel&quot;&gt;
-		///      &lt;name&gt;SenseGloss&lt; [rest of string was truncated]&quot;;.
-		/// </summary>
-		internal static string FieldInventory {
-			get {
-				return ResourceManager.GetString("FieldInventory", resourceCulture);
-			}
-		}
-
-		/// <summary>
 		///   Looks up a localized string similar to # SOME DESCRIPTIVE TITLE.
 		///# Copyright (C) YEAR THE PACKAGE&apos;S COPYRIGHT HOLDER
 		///# This file is distributed under the same license as the PACKAGE package.
@@ -102,6 +81,27 @@ namespace WeSay.Project.Tests {
 		internal static string poStrings {
 			get {
 				return ResourceManager.GetString("poStrings", resourceCulture);
+			}
+		}
+
+		/// <summary>
+		///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+		///&lt;viewTemplate id=&quot;defaultviewTemplate&quot; class=&quot;WeSay.UI.viewTemplate&quot; assembly=&quot;WeSay.UI&quot;&gt;
+		///  &lt;fields&gt;
+		///    &lt;field class=&quot;WeSay.LexicalModel.Field&quot; assembly=&quot;WeSay.LexicalModel&quot;&gt;
+		///      &lt;name&gt;EntryLexicalForm&lt;/name&gt;
+		///      &lt;visibility&gt;Visible&lt;/visibility&gt;
+		///      &lt;writingSystems&gt;
+		///           &lt;id&gt;xx&lt;/id&gt;
+		///          &lt;id&gt;yy&lt;/id&gt;
+		///       &lt;/writingSystems&gt;
+		///    &lt;/field&gt;
+		///    &lt;field class=&quot;WeSay.LexicalModel.Field&quot; assembly=&quot;WeSay.LexicalModel&quot;&gt;
+		///      &lt;name&gt;SenseGloss&lt;/name&gt; [rest of string was truncated]&quot;;.
+		/// </summary>
+		internal static string viewTemplate {
+			get {
+				return ResourceManager.GetString("viewTemplate", resourceCulture);
 			}
 		}
 	}

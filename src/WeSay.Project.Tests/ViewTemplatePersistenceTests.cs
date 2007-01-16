@@ -8,17 +8,17 @@ using WeSay.Project.Tests;
 namespace WeSay.Project.Tests
 {
 	[TestFixture]
-	public class FieldInventoryPeristenceTests
+	public class viewTemplatePeristenceTests
 	{
 
 		private string _path;
-		private FieldInventory _collection;
+		private ViewTemplate _collection;
 
 		[SetUp]
 		public void Setup()
 		{
 			_path = Path.GetTempFileName();
-			_collection = new FieldInventory();
+			_collection = new ViewTemplate();
 
 		}
 
@@ -29,10 +29,10 @@ namespace WeSay.Project.Tests
 			File.Delete(_path);
 		}
 
-		public static void WriteSampleFieldInventoryFile(string path)
+		public static void WriteSampleviewTemplateFile(string path)
 		{
 			StreamWriter writer = File.CreateText(path);
-			writer.Write(TestResources.FieldInventory);
+			writer.Write(TestResources.viewTemplate);
 			writer.Close();
 		}
 
@@ -62,9 +62,9 @@ namespace WeSay.Project.Tests
 //        public void DeserializeOne()
 //        {
 //            NetReflectorTypeTable t = new NetReflectorTypeTable();
-//            t.Add(typeof(FieldInventory));
+//            t.Add(typeof(viewTemplate));
 //            NetReflectorReader r = new NetReflectorReader(t);
-//            FieldInventory ws = r.Read(TestResources.FieldInventory) as FieldInventory;
+//            viewTemplate ws = r.Read(TestResources.viewTemplate) as viewTemplate;
 //            Assert.IsNotNull(ws);
 //            Assert.AreEqual("Tahoma", ws.FontName);
 //            Assert.AreEqual("one", ws.Id);
@@ -81,12 +81,12 @@ namespace WeSay.Project.Tests
 			XmlDocument doc = new XmlDocument();
 			doc.LoadXml(s);
 
-			Assert.AreEqual(2, doc.SelectNodes("fieldInventory/fields/field").Count);
+			Assert.AreEqual(2, doc.SelectNodes("viewTemplate/fields/field").Count);
 		}
 
 		private static string MakeXmlFromInventory()
 		{
-			FieldInventory f = MakeSampleInventory();
+			ViewTemplate f = MakeSampleInventory();
 
 			System.Text.StringBuilder builder = new System.Text.StringBuilder();
 			XmlWriter writer = XmlWriter.Create(builder);
@@ -95,9 +95,9 @@ namespace WeSay.Project.Tests
 			return builder.ToString();
 		}
 
-		private static FieldInventory MakeSampleInventory()
+		private static ViewTemplate MakeSampleInventory()
 		{
-			FieldInventory f = new FieldInventory();
+			ViewTemplate f = new ViewTemplate();
 			f.Add(new Field(Field.FieldNames.EntryLexicalForm.ToString(), new string[] { "xx", "yy" }));
 			Field field = new Field(Field.FieldNames.SenseGloss.ToString(), new string[] { "zz" });
 			field.Visibility = Field.VisibilitySetting.Invisible;
@@ -112,14 +112,14 @@ namespace WeSay.Project.Tests
 		{
 			NetReflectorTypeTable t = new NetReflectorTypeTable();
 			t.Add(typeof(Field));
-			t.Add(typeof(FieldInventory));
+			t.Add(typeof(ViewTemplate));
 
-			FieldInventory f = new FieldInventory();
-			f.LoadFromString(TestResources.FieldInventory);
+			ViewTemplate f = new ViewTemplate();
+			f.LoadFromString(TestResources.viewTemplate);
 			CheckInventoryMatchesDefinitionInResource(f);
 		}
 
-		private static void CheckInventoryMatchesDefinitionInResource(FieldInventory f)
+		private static void CheckInventoryMatchesDefinitionInResource(ViewTemplate f)
 		{
 			Assert.AreEqual(2,f.Count);
 			Assert.AreEqual(Field.FieldNames.EntryLexicalForm.ToString(), f[0].FieldName);
@@ -139,7 +139,7 @@ namespace WeSay.Project.Tests
 			XmlWriter writer = XmlWriter.Create(_path);
 			MakeSampleInventory().Write(writer);
 			writer.Close();
-			FieldInventory f = new FieldInventory();
+			ViewTemplate f = new ViewTemplate();
 			f.Load(_path);
 			Assert.IsNotNull(f);
 			CheckInventoryMatchesDefinitionInResource(f);

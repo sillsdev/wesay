@@ -6,12 +6,12 @@ using WeSay.Project;
 namespace WeSay.Project.Tests
 {
 	[TestFixture]
-	public class FieldInventoryTests : WeSay.Data.Tests.IEnumerableTests.IEnumerableBaseTest<Field>
+	public class viewTemplateTests : WeSay.Data.Tests.IEnumerableTests.IEnumerableBaseTest<Field>
 	{
 		[SetUp]
 		public void Setup()
 		{
-			_enumerable = new FieldInventory();
+			_enumerable = new ViewTemplate();
 			_itemCount = 0;
 		}
 
@@ -24,53 +24,53 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void Create()
 		{
-			FieldInventory fieldInventory = new FieldInventory();
-			Assert.IsNotNull(fieldInventory);
+			ViewTemplate viewTemplate = new ViewTemplate();
+			Assert.IsNotNull(viewTemplate);
 		}
 
 		[Test]
 		public void Contains_HasFieldDefinition_True()
 		{
-			FieldInventory fieldInventory = PopulateFieldInventory();
-			Assert.IsTrue(fieldInventory.Contains("field1"));
+			ViewTemplate viewTemplate = PopulateViewTemplate();
+			Assert.IsTrue(viewTemplate.Contains("field1"));
 		}
 
 		[Test]
 		public void Contains_DoesNotHaveFieldDefinition_False()
 		{
-			FieldInventory fieldInventory = PopulateFieldInventory();
-			Assert.IsFalse(fieldInventory.Contains("none"));
+			ViewTemplate viewTemplate = PopulateViewTemplate();
+			Assert.IsFalse(viewTemplate.Contains("none"));
 		}
 
 		[Test]
 		public void Index_HasFieldDefinition_FieldDefinition()
 		{
-			FieldInventory fieldInventory = PopulateFieldInventory();
-			Assert.IsNotNull(fieldInventory["field1"]);
+			ViewTemplate viewTemplate = PopulateViewTemplate();
+			Assert.IsNotNull(viewTemplate["field1"]);
 		}
 
 		[Test]
 		[ExpectedException(typeof(ArgumentOutOfRangeException))]
 		public void Index_DoesNotHaveFieldDefinition_Throws()
 		{
-			FieldInventory fieldInventory = PopulateFieldInventory();
-			Field field = fieldInventory["none"];
+			ViewTemplate viewTemplate = PopulateViewTemplate();
+			Field field = viewTemplate["none"];
 		}
 
 		[Test]
 		public void TryGetField_DoesNotHaveFieldDefinition_False()
 		{
-			FieldInventory fieldInventory = PopulateFieldInventory();
+			ViewTemplate viewTemplate = PopulateViewTemplate();
 			Field field;
-			Assert.IsFalse(fieldInventory.TryGetField("none", out field));
+			Assert.IsFalse(viewTemplate.TryGetField("none", out field));
 		}
 
 		[Test]
 		public void TryGetField_HasFieldDefinition_True()
 		{
-			FieldInventory fieldInventory = PopulateFieldInventory();
+			ViewTemplate viewTemplate = PopulateViewTemplate();
 			Field field;
-			Assert.IsTrue(fieldInventory.TryGetField("field2", out field));
+			Assert.IsTrue(viewTemplate.TryGetField("field2", out field));
 			Assert.IsNotNull(field);
 			Assert.AreEqual("field2", field.FieldName);
 		}
@@ -79,13 +79,13 @@ namespace WeSay.Project.Tests
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void TryGetField_NullKey_Throws()
 		{
-			FieldInventory fieldInventory = PopulateFieldInventory();
+			ViewTemplate viewTemplate = PopulateViewTemplate();
 			Field field;
-			fieldInventory.TryGetField(null, out field);
+			viewTemplate.TryGetField(null, out field);
 		}
 
-		private static FieldInventory PopulateFieldInventory() {
-			FieldInventory f = new FieldInventory();
+		private static ViewTemplate PopulateViewTemplate() {
+			ViewTemplate f = new ViewTemplate();
 			f.Add(new Field("field1", new string[] { "en", "br", "th" }));
 			f.Add(new Field("field2",  new string[]{"th"}));
 			f.Add(new Field("field2",  new string[]{"en", "br"}));
@@ -96,31 +96,31 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void MergeWithEmptyInventory()
 		{
-			FieldInventory master = MakeMasterInventory();
+			ViewTemplate master = MakeMasterInventory();
 			int count = master.Count;
-			FieldInventory empty = new FieldInventory ();
-			FieldInventory.SynchronizeInventories(master, empty);
+			ViewTemplate empty = new ViewTemplate ();
+			ViewTemplate.SynchronizeInventories(master, empty);
 
 			Assert.AreEqual(count, master.Count);
 		}
 
-		private static FieldInventory MakeMasterInventory()
+		private static ViewTemplate MakeMasterInventory()
 		{
 			WritingSystemCollection w = new WritingSystemCollection();
 			w.Add("red", new WritingSystem("red", new System.Drawing.Font("arial", 12)));
 			w.Add("white", new WritingSystem("white", new System.Drawing.Font("arial", 12)));
-			return FieldInventory.MakeMasterInventory(w);
+			return ViewTemplate.MakeMasterTemplate(w);
 		}
 
 		[Test]
 		public void UserInvWithVisibleFieldConveyedToMaster()
 		{
-			FieldInventory master = MakeMasterInventory();
+			ViewTemplate master = MakeMasterInventory();
 			Assert.IsFalse(master.Contains(Field.FieldNames.ExampleTranslation.ToString()),"If translation is turned on by default, you must fix the test which sees if it is turned on by the user inventory");
 			int count = master.Count;
-			FieldInventory simple = new FieldInventory ();
+			ViewTemplate simple = new ViewTemplate ();
 			simple.Add(new Field(Field.FieldNames.ExampleTranslation.ToString(), new String[] {"en"}));
-			FieldInventory.SynchronizeInventories(master, simple);
+			ViewTemplate.SynchronizeInventories(master, simple);
 
 			Assert.AreEqual(count, master.Count);
 			Assert.IsTrue(master.Contains(Field.FieldNames.ExampleTranslation.ToString()));
@@ -129,11 +129,11 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void ExtraFieldDiscarded()
 		{
-			FieldInventory master = MakeMasterInventory();
+			ViewTemplate master = MakeMasterInventory();
 			int count = master.Count;
-			FieldInventory simple = new FieldInventory();
+			ViewTemplate simple = new ViewTemplate();
 			simple.Add(new Field("dummy", new String[] { "en" }));
-			FieldInventory.SynchronizeInventories(master, simple);
+			ViewTemplate.SynchronizeInventories(master, simple);
 			Assert.IsFalse(master.Contains("dummy"));
 		}
 

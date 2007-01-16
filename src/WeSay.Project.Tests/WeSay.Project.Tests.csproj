@@ -47,15 +47,15 @@
   </ItemGroup>
   <ItemGroup>
 	<Compile Include="BasilProjectTests.cs" />
-	<Compile Include="FieldInventoryPersistenceTests.cs" />
-	<Compile Include="FieldInventoryTests.cs" />
-	<Compile Include="FieldTests.cs" />
-	<Compile Include="Properties\AssemblyInfo.cs" />
 	<Compile Include="TestResources.Designer.cs">
-	  <DependentUpon>TestResources.resx</DependentUpon>
 	  <AutoGen>True</AutoGen>
 	  <DesignTime>True</DesignTime>
+	  <DependentUpon>TestResources.resx</DependentUpon>
 	</Compile>
+	<Compile Include="ViewTemplatePersistenceTests.cs" />
+	<Compile Include="ViewTemplateTests.cs" />
+	<Compile Include="FieldTests.cs" />
+	<Compile Include="Properties\AssemblyInfo.cs" />
 	<Compile Include="WeSayWordsProjectTests.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -77,14 +77,14 @@
 	</ProjectReference>
   </ItemGroup>
   <ItemGroup>
-	<Content Include="Resources\FieldInventory.xml" />
+	<Content Include="Resources\viewTemplate.xml" />
 	<None Include="Resources\poStrings.txt" />
   </ItemGroup>
   <ItemGroup>
 	<EmbeddedResource Include="TestResources.resx">
 	  <Generator>ResXFileCodeGenerator</Generator>
-	  <LastGenOutput>TestResources.Designer.cs</LastGenOutput>
 	  <SubType>Designer</SubType>
+	  <LastGenOutput>TestResources.Designer.cs</LastGenOutput>
 	</EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
