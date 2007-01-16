@@ -11,23 +11,23 @@ namespace WeSay.LexicalTools
 	public class EntryDetailTask : TaskBase
 	{
 		private EntryDetailControl _entryDetailControl;
-		private readonly FieldInventory _fieldInventory;
+		private readonly ViewTemplate _viewTemplate;
 
 		public EntryDetailTask(IRecordListManager recordListManager,
-							FieldInventory fieldInventory)
+							ViewTemplate viewTemplate)
 			: base("Dictionary", string.Empty, true, recordListManager)
 		{
-			if (fieldInventory == null)
+			if (viewTemplate == null)
 			{
-				throw new ArgumentNullException("fieldInventory");
+				throw new ArgumentNullException("viewTemplate");
 			}
-			_fieldInventory = fieldInventory;
+			_viewTemplate = viewTemplate;
 		}
 
 		public override void Activate()
 		{
 			base.Activate();
-			_entryDetailControl = new EntryDetailControl(RecordListManager, FieldInventory);
+			_entryDetailControl = new EntryDetailControl(RecordListManager, ViewTemplate);
 			_entryDetailControl.SelectedIndexChanged += new EventHandler(OnRecordSelectionChanged);
 		}
 
@@ -82,9 +82,9 @@ namespace WeSay.LexicalTools
 			}
 		}
 
-		public FieldInventory FieldInventory
+		public ViewTemplate ViewTemplate
 		{
-			get { return this._fieldInventory; }
+			get { return this._viewTemplate; }
 		}
 	}
 }

@@ -18,7 +18,7 @@ namespace WeSay.LexicalTools
 	public partial class EntryDetailControl : UserControl
 	{
 		private IBindingList _records;
-		private readonly FieldInventory _fieldInventory;
+		private readonly ViewTemplate _viewTemplate;
 		public event EventHandler SelectedIndexChanged;
 		private IRecordListManager _recordManager;
 
@@ -28,22 +28,22 @@ namespace WeSay.LexicalTools
 			InitializeComponent();
 		}
 
-		public EntryDetailControl(IRecordListManager recordManager, FieldInventory fieldInventory)
+		public EntryDetailControl(IRecordListManager recordManager, ViewTemplate viewTemplate)
 		{
 			if (recordManager == null)
 			{
 				throw new ArgumentNullException("recordManager");
 			}
-			if (fieldInventory == null)
+			if (viewTemplate == null)
 			{
-				throw new ArgumentNullException("fieldInventory");
+				throw new ArgumentNullException("viewTemplate");
 			}
 			_recordManager = recordManager;
 			_records = recordManager.GetListOfType<LexEntry>();
-			_fieldInventory = fieldInventory;
+			_viewTemplate = viewTemplate;
 			InitializeComponent();
 			BackColor = WeSay.UI.DisplaySettings.Default.BackgroundColor;
-			_entryDetailPanel.FieldInventory = _fieldInventory;
+			_entryDetailPanel.ViewTemplate = _viewTemplate;
 			_entryDetailPanel.BackColor = WeSay.UI.DisplaySettings.Default.BackgroundColor;
 			_entryDetailPanel.DataSource = CurrentRecord;
 			this._btnFind.Text = StringCatalog.Get("Find");
@@ -59,7 +59,7 @@ namespace WeSay.LexicalTools
 			_findText.KeyDown += new KeyEventHandler(_findText_KeyDown);
 			int originalHeight = _findText.Height;
 			_findText.Font = _recordsListBox.Font;
-			_findText.WritingSystem = _fieldInventory[Field.FieldNames.EntryLexicalForm.ToString()].WritingSystems[0];
+			_findText.WritingSystem = _viewTemplate[Field.FieldNames.EntryLexicalForm.ToString()].WritingSystems[0];
 			int heightDifference = _findText.Height - originalHeight;
 			_recordsListBox.Height -= heightDifference;
 			_recordsListBox.Location = new Point(_recordsListBox.Location.X,

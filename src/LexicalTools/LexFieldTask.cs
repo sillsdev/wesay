@@ -10,27 +10,27 @@ namespace WeSay.LexicalTools
 	{
 		private LexFieldControl _lexFieldControl;
 		private readonly IFilter<LexEntry> _filter;
-		private readonly FieldInventory _fieldInventory;
+		private readonly ViewTemplate _viewTemplate;
 		private bool _dataHasBeenRetrieved;
 
 		public LexFieldTask(IRecordListManager recordListManager,
 					IFilter<LexEntry> filter,
 					string label,
 					string description,
-					FieldInventory fieldInventory)
+					ViewTemplate viewTemplate)
 			: base(label, description, false, recordListManager)
 		{
 			if (filter == null)
 			{
 				throw new ArgumentNullException("filter");
 			}
-			if (fieldInventory == null)
+			if (viewTemplate == null)
 			{
-				throw new ArgumentNullException("fieldInventory");
+				throw new ArgumentNullException("viewTemplate");
 			}
 			recordListManager.Register<LexEntry>(filter);
 			_filter = filter;
-			_fieldInventory = fieldInventory;
+			_viewTemplate = viewTemplate;
 		}
 
 		/// <summary>
@@ -40,41 +40,41 @@ namespace WeSay.LexicalTools
 		/// <param name="filter">The filter that should be used to filter the data</param>
 		/// <param name="label">The task label</param>
 		/// <param name="description">The task description</param>
-		/// <param name="fieldInventory">The base FieldInventory</param>
+		/// <param name="viewTemplate">The base viewTemplate</param>
 		/// <param name="fieldsToShow">The fields to show from the base Field Inventory</param>
 		public LexFieldTask(IRecordListManager recordListManager,
 							IFilter<LexEntry> filter,
 							string label,
 							string description,
-							FieldInventory fieldInventory,
+							ViewTemplate viewTemplate,
 							string fieldsToShow)
-			:this(recordListManager, filter, label, description, fieldInventory)
+			:this(recordListManager, filter, label, description, viewTemplate)
 		{
 			if (fieldsToShow == null)
 			{
 				throw new ArgumentNullException("fieldsToShow");
 			}
-			_fieldInventory = FilterFieldInventory(fieldInventory, fieldsToShow);
+			_viewTemplate = FilterviewTemplate(viewTemplate, fieldsToShow);
 		}
 
-		private FieldInventory FilterFieldInventory(FieldInventory baseFieldInventory, string fieldsToShow)
+		private ViewTemplate FilterviewTemplate(ViewTemplate baseViewTemplate, string fieldsToShow)
 		{
 			string[] fields = fieldsToShow.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-			FieldInventory fieldInventory = new FieldInventory();
-			foreach (Field field in baseFieldInventory)
+			ViewTemplate viewTemplate = new ViewTemplate();
+			foreach (Field field in baseViewTemplate)
 			{
 				if(Array.IndexOf<string>(fields, field.FieldName) >= 0)
 				{
-					fieldInventory.Add(field);
+					viewTemplate.Add(field);
 				}
 			}
-			return fieldInventory;
+			return viewTemplate;
 		}
 
 		public override void Activate()
 		{
 			base.Activate();
-			_lexFieldControl = new LexFieldControl(DataSource, FieldInventory, _filter.FilteringPredicate);
+			_lexFieldControl = new LexFieldControl(DataSource, ViewTemplate, _filter.FilteringPredicate);
 			_lexFieldControl.SelectedIndexChanged += new EventHandler(OnRecordSelectionChanged);
 		}
 
@@ -126,9 +126,9 @@ namespace WeSay.LexicalTools
 			}
 		}
 
-		public FieldInventory FieldInventory
+		public ViewTemplate ViewTemplate
 		{
-			get { return this._fieldInventory; }
+			get { return this._viewTemplate; }
 		}
 	}
 }

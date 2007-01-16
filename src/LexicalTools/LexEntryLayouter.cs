@@ -12,8 +12,8 @@ namespace WeSay.LexicalTools
 	/// </summary>
 	public class LexEntryLayouter : Layouter
 	{
-		public LexEntryLayouter(DetailList builder, FieldInventory fieldInventory)
-			: base(builder, fieldInventory)
+		public LexEntryLayouter(DetailList builder, ViewTemplate viewTemplate)
+			: base(builder, viewTemplate)
 		{
 		}
 
@@ -35,14 +35,14 @@ namespace WeSay.LexicalTools
 		internal int AddWidgets(LexEntry entry, int insertAtRow)
 		{
 			int rowCount = 0;
-			Field field = FieldInventory.GetField(Field.FieldNames.EntryLexicalForm.ToString());
+			Field field = ViewTemplate.GetField(Field.FieldNames.EntryLexicalForm.ToString());
 			if (field != null && field.Visibility == Field.VisibilitySetting.Visible)
 			{
 				Control box = MakeBoundEntry(entry.LexicalForm, field);
 				DetailList.AddWidgetRow(StringCatalog.Get("Word"), true, box, insertAtRow);
 				++rowCount;
 			}
-			LexSenseLayouter layouter = new LexSenseLayouter(DetailList, FieldInventory);
+			LexSenseLayouter layouter = new LexSenseLayouter(DetailList, ViewTemplate);
 			rowCount = AddChildrenWidgets(layouter, entry.Senses, insertAtRow, rowCount);
 			//add a ghost
 			rowCount += layouter.AddGhost(entry.Senses);

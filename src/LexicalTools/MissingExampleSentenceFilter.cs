@@ -22,14 +22,14 @@ namespace WeSay.LexicalTools
 			_writingSystemIds = field.WritingSystemIds;
 		}
 
-		public MissingExampleSentenceFilter(FieldInventory fieldInventory)
+		public MissingExampleSentenceFilter(ViewTemplate viewTemplate)
 		{
-			if (fieldInventory == null)
+			if (viewTemplate == null)
 			{
 				throw new ArgumentNullException();
 			}
 			Field field;
-			if (!fieldInventory.TryGetField(Field.FieldNames.ExampleSentence.ToString(), out field))
+			if (!viewTemplate.TryGetField(Field.FieldNames.ExampleSentence.ToString(), out field))
 			{
 				throw new ArgumentOutOfRangeException("field", "should contain Sentence field definition");
 			}

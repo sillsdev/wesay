@@ -9,25 +9,25 @@ namespace WeSay.LexicalTools
 {
 	public partial class LexPreviewWithEntryControl : UserControl
 	{
-		private FieldInventory _fieldInventory;
+		private ViewTemplate _viewTemplate;
 		private LexEntry _record;
 
 		public LexPreviewWithEntryControl()
 		{
-			_fieldInventory = null;
+			_viewTemplate = null;
 			InitializeComponent();
 			_detailListControl.CurrentItemChanged += new EventHandler<CurrentItemEventArgs>(OnCurrentItemChanged);
 			_detailListControl.KeyDown += new KeyEventHandler(_detailListControl_KeyDown);
 		}
 
 
-//        public LexPreviewWithEntryControl(FieldInventory fieldInventory)
+//        public LexPreviewWithEntryControl(viewTemplate viewTemplate)
 //        {
-//            if (fieldInventory == null)
+//            if (viewTemplate == null)
 //            {
 //                throw new ArgumentNullException();
 //            }
-//            FieldInventory = fieldInventory;
+//            viewTemplate = viewTemplate;
 //            InitializeComponent();
 //            _detailListControl.CurrentItemChanged += new EventHandler<CurrentItemEventArgs>(OnCurrentItemChanged);
 //            _detailListControl.KeyDown += new KeyEventHandler(_detailListControl_KeyDown);
@@ -40,11 +40,11 @@ namespace WeSay.LexicalTools
 
 		[Browsable(false)]
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-		public FieldInventory  FieldInventory
+		public ViewTemplate  ViewTemplate
 		{
 			get
 			{
-				return _fieldInventory;
+				return _viewTemplate;
 			}
 			set
 			{
@@ -52,7 +52,7 @@ namespace WeSay.LexicalTools
 				{
 					throw new ArgumentNullException();
 				}
-				_fieldInventory = value;
+				_viewTemplate = value;
 				Refresh();
 			}
 		}
@@ -134,7 +134,7 @@ namespace WeSay.LexicalTools
 			this._detailListControl.Clear();
 			if (this._record != null)
 			{
-				LexEntryLayouter layout = new LexEntryLayouter(this._detailListControl, FieldInventory);
+				LexEntryLayouter layout = new LexEntryLayouter(this._detailListControl, ViewTemplate);
 				layout.AddWidgets(this._record);
 			}
 

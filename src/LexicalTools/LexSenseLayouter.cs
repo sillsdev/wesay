@@ -12,8 +12,8 @@ namespace WeSay.LexicalTools
 	/// </summary>
 	public class LexSenseLayouter : Layouter
 	{
-		public LexSenseLayouter(DetailList builder, FieldInventory fieldInventory)
-			: base(builder, fieldInventory)
+		public LexSenseLayouter(DetailList builder, ViewTemplate viewTemplate)
+			: base(builder, viewTemplate)
 		{
 		}
 
@@ -27,7 +27,7 @@ namespace WeSay.LexicalTools
 		{
 			int rowCount = 0;
 			LexSense sense = (LexSense)list[index];
-			Field field = FieldInventory.GetField(Field.FieldNames.SenseGloss.ToString());
+			Field field = ViewTemplate.GetField(Field.FieldNames.SenseGloss.ToString());
 			if (field != null && field.Visibility == Field.VisibilitySetting.Visible)
 			{
 				Control entry = MakeBoundEntry(sense.Gloss, field);
@@ -35,7 +35,7 @@ namespace WeSay.LexicalTools
 				++rowCount;
 				insertAtRow = DetailList.GetRowOfControl(c);
 			}
-			LexExampleSentenceLayouter exampleLayouter = new LexExampleSentenceLayouter(DetailList, FieldInventory);
+			LexExampleSentenceLayouter exampleLayouter = new LexExampleSentenceLayouter(DetailList, ViewTemplate);
 
 			rowCount = AddChildrenWidgets(exampleLayouter, sense.ExampleSentences, insertAtRow, rowCount);
 
@@ -51,7 +51,7 @@ namespace WeSay.LexicalTools
 //           Field field;
 //           //TODO: only add this if there is no empty gloss in an existing sense (we
 //           //run into this with the LexFieldTask, where we don't want to see two empty gloss boxes (one a ghost)
-//           if (FieldInventory.TryGetField(Field.FieldNames.SenseGloss.ToString(), out field))
+//           if (viewTemplate.TryGetField(Field.FieldNames.SenseGloss.ToString(), out field))
 //           {
 //               foreach (string writingSystemId in field.WritingSystemIds)
 //               {

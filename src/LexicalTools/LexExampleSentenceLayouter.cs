@@ -11,8 +11,8 @@ namespace WeSay.LexicalTools
 	/// </summary>
 	public class LexExampleSentenceLayouter : Layouter
 	{
-		public LexExampleSentenceLayouter(DetailList  builder, FieldInventory fieldInventory)
-			: base(builder, fieldInventory)
+		public LexExampleSentenceLayouter(DetailList  builder, ViewTemplate viewTemplate)
+			: base(builder, viewTemplate)
 		{
 		}
 
@@ -26,7 +26,7 @@ namespace WeSay.LexicalTools
 			int rowCount = 0;
 			LexExampleSentence example = (LexExampleSentence)list[index];
 
-			Field field = FieldInventory.GetField(Field.FieldNames.ExampleSentence.ToString());
+			Field field = ViewTemplate.GetField(Field.FieldNames.ExampleSentence.ToString());
 			if (field != null && field.Visibility == Field.VisibilitySetting.Visible)
 			{
 				Control entry = MakeBoundEntry(example.Sentence, field);
@@ -34,7 +34,7 @@ namespace WeSay.LexicalTools
 				++rowCount;
 			}
 
-			field = FieldInventory.GetField(Field.FieldNames.ExampleTranslation.ToString());
+			field = ViewTemplate.GetField(Field.FieldNames.ExampleTranslation.ToString());
 			if (field != null && field.Visibility == Field.VisibilitySetting.Visible)
 			{
 				 Control entry = MakeBoundEntry(example.Translation, field);

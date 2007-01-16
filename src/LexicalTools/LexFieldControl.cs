@@ -20,11 +20,11 @@ namespace WeSay.LexicalTools
 		private LexEntry _previousRecord;
 		private LexEntry _nextRecord;
 
-		private readonly FieldInventory _fieldInventory;
+		private readonly ViewTemplate _viewTemplate;
 		private readonly Predicate<LexEntry> _isNotComplete;
 		public event EventHandler SelectedIndexChanged;
 
-		public LexFieldControl(IRecordList<LexEntry> records, FieldInventory fieldInventory, Predicate<LexEntry> isNotComplete)
+		public LexFieldControl(IRecordList<LexEntry> records, ViewTemplate viewTemplate, Predicate<LexEntry> isNotComplete)
 		{
 			InitializeComponent();
 			if (DesignMode)
@@ -36,9 +36,9 @@ namespace WeSay.LexicalTools
 			{
 				throw new ArgumentNullException("records");
 			}
-			if(fieldInventory == null)
+			if(viewTemplate == null)
 			{
-				throw new ArgumentNullException("fieldInventory");
+				throw new ArgumentNullException("viewTemplate");
 			}
 			if(isNotComplete == null)
 			{
@@ -48,12 +48,12 @@ namespace WeSay.LexicalTools
 			_records = records;
 			_records.ListChanged += OnRecordsListChanged;
 			_completedRecords = new InMemoryBindingList<LexEntry>();
-			_fieldInventory = fieldInventory;
+			_viewTemplate = viewTemplate;
 			_isNotComplete = isNotComplete;
 			BackColor = DisplaySettings.Default.BackgroundColor;
 			_lexFieldDetailPanel.BackColor = DisplaySettings.Default.BackgroundColor;//we like it to stand out at design time, but not runtime
 			_lexFieldDetailPanel.KeyDown += new KeyEventHandler(OnKeyDown);
-			_lexFieldDetailPanel.FieldInventory = _fieldInventory;
+			_lexFieldDetailPanel.ViewTemplate = _viewTemplate;
 
 			_recordsListBox.DataSource = _records;
 			_recordsListBox.Font = BasilProject.Project.WritingSystems.VernacularWritingSystemDefault.Font;

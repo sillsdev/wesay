@@ -22,18 +22,18 @@ namespace WeSay.LexicalTools
 			_writingSystemIds = field.WritingSystemIds;
 		}
 
-		public MissingGlossFilter(FieldInventory fieldInventory)
+		public MissingGlossFilter(ViewTemplate viewTemplate)
 		{
-			if (fieldInventory == null)
+			if (viewTemplate == null)
 			{
 				throw new ArgumentNullException();
 			}
-			if (!fieldInventory.Contains(Field.FieldNames.SenseGloss.ToString()))
+			if (!viewTemplate.Contains(Field.FieldNames.SenseGloss.ToString()))
 			{
 				throw new ArgumentOutOfRangeException("field", "should contain Gloss field definition");
 			}
 			Field field;
-			if (!fieldInventory.TryGetField(Field.FieldNames.SenseGloss.ToString(), out field))
+			if (!viewTemplate.TryGetField(Field.FieldNames.SenseGloss.ToString(), out field))
 			{
 				throw new ArgumentOutOfRangeException("field", "should contain Sentence field definition");
 			}

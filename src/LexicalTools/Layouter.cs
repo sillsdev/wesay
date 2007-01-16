@@ -21,7 +21,7 @@ namespace WeSay.LexicalTools
 		/// </summary>
 	  private DetailList _detailList;
 
-		private readonly FieldInventory _fieldInventory;
+		private readonly ViewTemplate _viewTemplate;
 
 		/// This field is for temporarily storing a ghost field about to become "real".
 		/// This is critical, though messy, because
@@ -42,23 +42,23 @@ namespace WeSay.LexicalTools
 		}
 	  }
 
-		public FieldInventory FieldInventory
+		public ViewTemplate ViewTemplate
 		{
-			get { return this._fieldInventory; }
+			get { return this._viewTemplate; }
 		}
 
-		protected Layouter(DetailList builder, FieldInventory fieldInventory)
+		protected Layouter(DetailList builder, ViewTemplate viewTemplate)
 		{
 			if(builder == null)
 			{
 				throw new ArgumentNullException("builder");
 			}
-			if(fieldInventory == null)
+			if(viewTemplate == null)
 			{
-				throw new ArgumentNullException("fieldInventory");
+				throw new ArgumentNullException("viewTemplate");
 			}
 			_detailList = builder;
-			_fieldInventory = fieldInventory;
+			_viewTemplate = viewTemplate;
 		}
 
 		/// <summary>
@@ -115,7 +115,7 @@ namespace WeSay.LexicalTools
 		protected int MakeGhostWidget(IBindingList list, int insertAtRow, string fieldName, string label, string propertyName)
 		{
 			int rowCount = 0;
-			Field field = FieldInventory.GetField(fieldName);
+			Field field = ViewTemplate.GetField(fieldName);
 			if (field != null && field.Visibility == Field.VisibilitySetting.Visible)
 			{
 
