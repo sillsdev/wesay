@@ -11,7 +11,7 @@ namespace WeSay.Project
 	{
 		private string _lexiconDatabaseFileName = null;
 		private IList<ITask> _tasks;
-		private FieldInventory _fieldInventory;
+		private ViewTemplate _viewTemplate;
 
 		public IList<ITask> Tasks
 		{
@@ -66,30 +66,30 @@ namespace WeSay.Project
 			DetermineWordsFile();
 
 
-			FieldInventory inventoryAsFoundInProjectFiles = GetInventoryFromProjectFiles();
-			FieldInventory fullUpToDateInventory = FieldInventory.MakeMasterInventory(WritingSystems);
-			FieldInventory.SynchronizeInventories(fullUpToDateInventory, inventoryAsFoundInProjectFiles);
-			_fieldInventory = fullUpToDateInventory;
+			ViewTemplate templateAsFoundInProjectFiles = GetInventoryFromProjectFiles();
+			ViewTemplate fullUpToDateTemplate = ViewTemplate.MakeMasterTemplate(WritingSystems);
+			ViewTemplate.SynchronizeInventories(fullUpToDateTemplate, templateAsFoundInProjectFiles);
+			_viewTemplate = fullUpToDateTemplate;
 		}
 
 
-		private FieldInventory GetInventoryFromProjectFiles()
+		private ViewTemplate GetInventoryFromProjectFiles()
 		{
-			FieldInventory inventory = new FieldInventory();
+			ViewTemplate template = new ViewTemplate();
 			try
 			{
 				XmlDocument projectDoc = GetProjectDoc();
 				if (projectDoc != null)
 				{
-					XmlNode inventoryNode = projectDoc.SelectSingleNode("tasks/components/fieldInventory");
-					inventory.LoadFromString(inventoryNode.OuterXml);
+					XmlNode inventoryNode = projectDoc.SelectSingleNode("tasks/components/viewTemplate");
+					template.LoadFromString(inventoryNode.OuterXml);
 				}
 			}
 			catch (Exception error)
 			{
-				MessageBox.Show("There may have been a problem reading the field inventory xml. A default inventory will be created." + error.Message);
+				MessageBox.Show("There may have been a problem reading the field template xml. A default template will be created." + error.Message);
 			}
-			return inventory;
+			return template;
 		}
 
 
@@ -155,7 +155,7 @@ namespace WeSay.Project
 		{
 			base.Create(projectDirectoryPath);
 			Directory.CreateDirectory(PathToWeSaySpecificFilesDirectoryInProject);
-			_fieldInventory = FieldInventory.MakeMasterInventory(WritingSystems);
+			_viewTemplate = ViewTemplate.MakeMasterTemplate(WritingSystems);
 		   // this._lexiconDatabaseFileName = this.Name+".words";
 	   }
 
@@ -209,10 +209,10 @@ namespace WeSay.Project
 			}
 		}
 
-		public FieldInventory FieldInventory
+		public ViewTemplate ViewTemplate
 		{
-			get { return _fieldInventory; }
-			set { _fieldInventory = value; }
+			get { return _viewTemplate; }
+			set { _viewTemplate = value; }
 		}
 	}
 }

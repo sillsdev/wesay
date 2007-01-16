@@ -6,12 +6,12 @@ using WeSay.Language;
 
 namespace WeSay.Project
 {
-	[ReflectorType("fieldInventory")]
-	public class FieldInventory : List<Field>
+	[ReflectorType("viewTemplate")]
+	public class ViewTemplate : List<Field>
 	{
-		private string _id="Default Field Inventory";
+		private string _id="Default View Template";
 
-		public FieldInventory()
+		public ViewTemplate()
 		{
 
 		}
@@ -118,13 +118,13 @@ namespace WeSay.Project
 		/// Any fields that are in the user's inventory which are no longer in the
 		/// master inventory will be thrown away.
 		/// </remarks>
-		/// <param name="masterInventory"></param>
-		/// <param name="usersInventory"></param>
-		public static void SynchronizeInventories(FieldInventory masterInventory, FieldInventory usersInventory)
+		/// <param name="masterTemplate"></param>
+		/// <param name="usersTemplate"></param>
+		public static void SynchronizeInventories(ViewTemplate masterTemplate, ViewTemplate usersTemplate)
 		{
-			foreach (Field masterField in masterInventory)
+			foreach (Field masterField in masterTemplate)
 			{
-				Field userField = usersInventory.GetField(masterField.FieldName);
+				Field userField = usersTemplate.GetField(masterField.FieldName);
 				if (userField != null)
 				{
 					Field.ModifyMasterFromUser(masterField, userField);
@@ -134,14 +134,14 @@ namespace WeSay.Project
 
 
 
-		public static FieldInventory MakeMasterInventory(WritingSystemCollection writingSystems)
+		public static ViewTemplate MakeMasterTemplate(WritingSystemCollection writingSystems)
 		{
-			FieldInventory masterInventory = new FieldInventory();
-			masterInventory.Add(MakeField(Field.FieldNames.EntryLexicalForm.ToString(), "Word", true,writingSystems));
-			masterInventory.Add(MakeField(Field.FieldNames.SenseGloss.ToString(), "Gloss", true,writingSystems));
-			masterInventory.Add(MakeField(Field.FieldNames.ExampleSentence.ToString(), "Example Sentence", true,writingSystems));
-			masterInventory.Add(MakeField(Field.FieldNames.ExampleTranslation.ToString(), "Translation", false,writingSystems));
-			return masterInventory;
+			ViewTemplate masterTemplate = new ViewTemplate();
+			masterTemplate.Add(MakeField(Field.FieldNames.EntryLexicalForm.ToString(), "Word", true,writingSystems));
+			masterTemplate.Add(MakeField(Field.FieldNames.SenseGloss.ToString(), "Gloss", true,writingSystems));
+			masterTemplate.Add(MakeField(Field.FieldNames.ExampleSentence.ToString(), "Example Sentence", true,writingSystems));
+			masterTemplate.Add(MakeField(Field.FieldNames.ExampleTranslation.ToString(), "Translation", false,writingSystems));
+			return masterTemplate;
 		}
 
 		private static Field MakeField(string name, string displayName, bool defaultVisible, WritingSystemCollection writingSystems)
@@ -207,7 +207,7 @@ namespace WeSay.Project
 		private NetReflectorTypeTable MakeTypeTable()
 		{
 			NetReflectorTypeTable t = new NetReflectorTypeTable();
-			t.Add(typeof(FieldInventory ));
+			t.Add(typeof(ViewTemplate ));
 			t.Add(typeof(Field));
 		 //   t.Add(typeof(Field.WritingSystemId));
 			return t;
