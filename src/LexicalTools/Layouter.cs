@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel;
 using System.Windows.Forms;
+using WeSay.Foundation;
 using WeSay.Language;
 using WeSay.LexicalModel;
 using WeSay.Project;
@@ -70,6 +71,14 @@ namespace WeSay.LexicalTools
 			return AddWidgets(list, index, -1);
 		}
 		internal abstract int AddWidgets(IBindingList list, int index, int row);
+
+
+		protected Control MakeOptionWidget(WeSay.Foundation.OptionRef optionToBindTo, Field field)
+		{
+			SingleOptionControl c = new SingleOptionControl(optionToBindTo);
+			//TODO            BindOptionControlToField(c, optionToBindTo);
+			return c;
+		}
 
 		protected Control MakeBoundEntry(WeSay.Language.MultiText multiTextToBindTo, Field field)
 		{
@@ -185,8 +194,21 @@ namespace WeSay.LexicalTools
 			int rowCount = 0;
 			foreach (Field customField in ActiveViewTemplate.GetCustomFields(target.GetType().Name))
 			{
-				Control box = MakeBoundEntry(target.GetProperty<MultiText>(customField.FieldName), customField);
+				Control box = null;
+				switch (customField.DataTypeName)
+				{
+					case "Option":
+						box = MakeOptionWidget(target.GetProperty<WeSay.Foundation.OptionRef>(customField.FieldName), customField);
+						break;
+					case "MultiText":
+						 box = MakeBoundEntry(target.GetProperty<MultiText>(customField.FieldName), customField);
+					 break;
+					default:
+						throw new ApplicationException(
+							string.Format("WeSay doesn't understand how to a layout a {0}", customField.DataTypeName));
+				}
 				DetailList.AddWidgetRow(StringCatalog.Get(customField.DisplayName), true, box, insertAtRow);
+
 				++rowCount;
 			}
 			return rowCount;

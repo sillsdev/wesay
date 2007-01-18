@@ -7,11 +7,10 @@ using WeSay.Language;
 
 namespace WeSay.UI
 {
-	public partial class MultiTextControl : UserControl
+	public partial class MultiTextControl : Widget
 	{
 		private IList<WritingSystem> _writingSystems;
 		private List<WeSayTextBox> _textBoxes;
-		private FlagButton _flagButton;
 		//public new event EventHandler TextChanged;
 	   // public new event KeyEventHandler KeyDown;
 
@@ -101,38 +100,6 @@ namespace WeSay.UI
 			ResumeLayout(false);
 		}
 
-		[Browsable(false)]
-		public bool FlagIsOn
-		{
-			get
-			{
-				return _flagButton.IsSetOn;
-			}
-
-			set
-			{
-				_flagButton.IsSetOn = value;
-			}
-		}
-		private FlagButton AddFlagButton(Size panelSize)
-		{
-			_flagButton = new FlagButton();
-			_flagButton.Size = new Size(20, 20);
-			_flagButton.Location = new Point(
-					-1 + panelSize.Width - _flagButton.Width,
-					-1 + panelSize.Height - _flagButton.Height);
-			_flagButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-			_flagButton.Click += new EventHandler(OnClickFlagButton);
-
-			//            Panel panel = new Panel();
-			//            panel.Size = flagButton.Size;
-			//            panel.Location = flagButton.Location;
-			//            panel.Anchor = flagButton.Anchor;
-			//            panel.BackColor = System.Drawing.Color.Red;
-
-			return _flagButton;
-		}
-
 		private Label AddWritingSystemLabel(WeSayTextBox box)
 		{
 			Label label = new System.Windows.Forms.Label();
@@ -167,13 +134,6 @@ namespace WeSay.UI
 			return box;
 		}
 
-
-
-		void OnClickFlagButton(object sender, EventArgs e)
-		{
-			FlagButton b = (FlagButton)sender;
-			b.IsSetOn = !b.IsSetOn;
-		}
 
 		void OnKeyDownInSomeBox(object sender, KeyEventArgs e)
 		{

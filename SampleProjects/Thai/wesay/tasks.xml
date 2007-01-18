@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <tasks>
   <components>
 	<viewTemplate>
@@ -49,6 +49,17 @@
 			<id>en</id>
 			<id>IPA</id>
 			<id>xx</id>
+		  </writingSystems>
+		</field>
+		<field>
+		  <name>pos</name>
+		  <className>LexEntry</className>
+		  <dataType>Option</dataType>
+		  <Multiplicity>ZeroOrOne</Multiplicity>
+		  <displayName>POS</displayName>
+		  <visibility>Visible</visibility>
+		  <writingSystems>
+			<id>en</id>
 		  </writingSystems>
 		</field>
 		<field>

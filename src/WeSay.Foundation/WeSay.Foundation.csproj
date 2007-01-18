@@ -28,6 +28,10 @@
 	<WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+	<Reference Include="NetReflector, Version=1.0.0.0, Culture=neutral">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\NetReflector.dll</HintPath>
+	</Reference>
 	<Reference Include="System" />
 	<Reference Include="System.Data" />
 	<Reference Include="System.Windows.Forms" />
@@ -38,6 +42,7 @@
 	<Compile Include="BasicCommand.cs" />
 	<Compile Include="ILongRunningJob.cs" />
 	<Compile Include="NullProgressState.cs" />
+	<Compile Include="OptionsList.cs" />
 	<Compile Include="ProgressDialog.cs">
 	  <SubType>Form</SubType>
 	</Compile>

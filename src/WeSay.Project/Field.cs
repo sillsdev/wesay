@@ -16,6 +16,9 @@ namespace WeSay.Project
 		private string _displayName="";
 		private string _description="";
 		private string _className="";
+		private string _dataTypeName;
+		public enum MultiplicityType { ZeroOr1 = 0 }
+		private MultiplicityType _multiplicity = MultiplicityType.ZeroOr1;
 
 		public enum VisibilitySetting {Invisible, Visible};
 		private VisibilitySetting _visibility=VisibilitySetting.Visible ;
@@ -27,7 +30,18 @@ namespace WeSay.Project
 		/// </summary>
 		public enum FieldNames {EntryLexicalForm, SenseGloss, ExampleSentence, ExampleTranslation};
 
+		public Field()
+			:this("unknown",new List<string>(),MultiplicityType.ZeroOr1,"MultiText")
+		{
+		}
+
+
 		public Field(string fieldName, IEnumerable<string> writingSystemIds)
+			:this(fieldName,writingSystemIds,MultiplicityType.ZeroOr1,"MultiText")
+		{
+		}
+
+		public Field(string fieldName, IEnumerable<string> writingSystemIds, MultiplicityType multiplicity, string dataTypeName)
 		{
 			FieldName = fieldName;
 			if (writingSystemIds == null)
@@ -38,7 +52,10 @@ namespace WeSay.Project
 			{
 				WritingSystemIds = new List<string>(writingSystemIds);
 			}
+			_multiplicity = multiplicity;
+			DataTypeName = dataTypeName;
 		}
+
 
 		public bool IsCustom
 		{
@@ -61,10 +78,6 @@ namespace WeSay.Project
 			}
 		}
 
-		public Field()
-		{
-			_writingSystemIds = new List<string>();
-		}
 
 		[ReflectorCollection("name", Required = true)]
 		public string FieldName
@@ -153,6 +166,20 @@ namespace WeSay.Project
 				}
 				return l;
 			}
+		}
+
+		[ReflectorProperty("multiplicity", Required = false)]
+		public MultiplicityType Multiplicity
+		{
+			get { return _multiplicity; }
+			set { _multiplicity = value; }
+		}
+
+		[ReflectorProperty("dataType", Required = false)]
+		public string DataTypeName
+		{
+			get { return _dataTypeName; }
+			set { _dataTypeName = value; }
 		}
 
 
