@@ -10,7 +10,7 @@
 
   <task id="EntryDetail" class="WeSay.LexicalTools.EntryDetailTask" assembly="LexicalTools" default="true">
 	<entries ref="All Entries" />
-	<fieldInventory ref="Default Field Inventory"/>
+	<viewTemplate ref="Default View Template"/>
 	<label UseInConstructor="false">Words</label>
 	<description UseInConstructor="false">This task allows the user to see and edit all enabled fields of all entries in the dictionary.  He can add, delete, and search for entries.</description>
   </task>
@@ -18,22 +18,22 @@
   <task id="AddMeanings" class="WeSay.LexicalTools.LexFieldTask" assembly="LexicalTools" default="true">
 	<entries ref="All Entries"/>
 	<filter class="WeSay.LexicalTools.MissingGlossFilter" assembly="LexicalTools">
-	  <fieldInventory ref="Default Field Inventory"/>
+	  <viewTemplate ref="Default View Template"/>
 	</filter>
 	<label>Add Meanings</label>
 	<description>Add meanings to entries where they are missing.</description>
-	<fieldInventory ref="Default Field Inventory"/>
+	<viewTemplate ref="Default View Template"/>
 	<showfields>SenseGloss</showfields>
   </task>
 
   <task id="AddExamples" class="WeSay.LexicalTools.LexFieldTask" assembly="LexicalTools">
 	<entries ref="All Entries"/>
 	<filter class="WeSay.LexicalTools.MissingExampleSentenceFilter" assembly="LexicalTools">
-	  <fieldInventory ref="Default Field Inventory"/>
+	  <viewTemplate ref="Default View Template"/>
 	</filter>
 	<label>Add Examples</label>
 	<description>Add example sentences to entries where they are missing.</description>
-	<fieldInventory ref="Default Field Inventory"/>
+	<viewTemplate ref="Default View Template"/>
 	<showfields>ExampleSentence</showfields>
   </task>
 

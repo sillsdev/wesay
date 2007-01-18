@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel;
 using System.Windows.Forms;
 using WeSay.Language;
+using WeSay.LexicalModel;
 using WeSay.Project;
 using WeSay.UI;
 
@@ -42,7 +43,7 @@ namespace WeSay.LexicalTools
 		}
 	  }
 
-		public ViewTemplate ViewTemplate
+		public ViewTemplate ActiveViewTemplate
 		{
 			get { return this._viewTemplate; }
 		}
@@ -62,10 +63,12 @@ namespace WeSay.LexicalTools
 		}
 
 		/// <summary>
-		/// actually add the widget's that are needed to the detailed list
+		/// actually add the widgets that are needed to the detailed list
 		/// </summary>
-		public abstract int AddWidgets(IBindingList list, int index);
-
+		public  int AddWidgets(IBindingList list, int index)
+		{
+			return AddWidgets(list, index, -1);
+		}
 		internal abstract int AddWidgets(IBindingList list, int index, int row);
 
 		protected Control MakeBoundEntry(WeSay.Language.MultiText multiTextToBindTo, Field field)
@@ -115,7 +118,7 @@ namespace WeSay.LexicalTools
 		protected int MakeGhostWidget(IBindingList list, int insertAtRow, string fieldName, string label, string propertyName)
 		{
 			int rowCount = 0;
-			Field field = ViewTemplate.GetField(fieldName);
+			Field field = ActiveViewTemplate.GetField(fieldName);
 			if (field != null && field.Visibility == Field.VisibilitySetting.Visible)
 			{
 
@@ -177,5 +180,16 @@ namespace WeSay.LexicalTools
 			return rowCount;
 		}
 
+		protected int AddCustomFields(WeSayDataObject target, int insertAtRow)
+		{
+			int rowCount = 0;
+			foreach (Field customField in ActiveViewTemplate.GetCustomFields(target.GetType().Name))
+			{
+				Control box = MakeBoundEntry(target.GetProperty<MultiText>(customField.FieldName), customField);
+				DetailList.AddWidgetRow(StringCatalog.Get(customField.DisplayName), true, box, insertAtRow);
+				++rowCount;
+			}
+			return rowCount;
+		}
 	}
 }

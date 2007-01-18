@@ -16,17 +16,12 @@ namespace WeSay.LexicalTools
 		{
 		}
 
-		public override int AddWidgets(IBindingList list, int index)
-		{
-			return AddWidgets(list, index, -1);
-		}
-
 		internal override int AddWidgets(IBindingList list, int index, int insertAtRow)
 		{
 			int rowCount = 0;
 			LexExampleSentence example = (LexExampleSentence)list[index];
 
-			Field field = ViewTemplate.GetField(Field.FieldNames.ExampleSentence.ToString());
+			Field field = ActiveViewTemplate.GetField(Field.FieldNames.ExampleSentence.ToString());
 			if (field != null && field.Visibility == Field.VisibilitySetting.Visible)
 			{
 				Control entry = MakeBoundEntry(example.Sentence, field);
@@ -34,13 +29,15 @@ namespace WeSay.LexicalTools
 				++rowCount;
 			}
 
-			field = ViewTemplate.GetField(Field.FieldNames.ExampleTranslation.ToString());
+			field = ActiveViewTemplate.GetField(Field.FieldNames.ExampleTranslation.ToString());
 			if (field != null && field.Visibility == Field.VisibilitySetting.Visible)
 			{
 				 Control entry = MakeBoundEntry(example.Translation, field);
 				DetailList.AddWidgetRow(StringCatalog.Get("Translation"), false, entry, insertAtRow+rowCount);
 				++rowCount;
 			}
+
+			rowCount +=AddCustomFields(example, insertAtRow);
 
 			return rowCount;
 		}

@@ -18,16 +18,11 @@ namespace WeSay.LexicalTools
 		}
 
 
-		public override int AddWidgets(IBindingList list, int index)
-		{
-			return AddWidgets(list, index, -1);
-		}
-
 		internal override int AddWidgets(IBindingList list, int index, int insertAtRow)
 		{
 			int rowCount = 0;
 			LexSense sense = (LexSense)list[index];
-			Field field = ViewTemplate.GetField(Field.FieldNames.SenseGloss.ToString());
+			Field field = ActiveViewTemplate.GetField(Field.FieldNames.SenseGloss.ToString());
 			if (field != null && field.Visibility == Field.VisibilitySetting.Visible)
 			{
 				Control entry = MakeBoundEntry(sense.Gloss, field);
@@ -35,7 +30,10 @@ namespace WeSay.LexicalTools
 				++rowCount;
 				insertAtRow = DetailList.GetRowOfControl(c);
 			}
-			LexExampleSentenceLayouter exampleLayouter = new LexExampleSentenceLayouter(DetailList, ViewTemplate);
+
+			rowCount += AddCustomFields(sense, insertAtRow);
+
+			LexExampleSentenceLayouter exampleLayouter = new LexExampleSentenceLayouter(DetailList, ActiveViewTemplate);
 
 			rowCount = AddChildrenWidgets(exampleLayouter, sense.ExampleSentences, insertAtRow, rowCount);
 

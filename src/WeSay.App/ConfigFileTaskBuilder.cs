@@ -58,9 +58,23 @@ namespace WeSay.App
 			{
 				string id = RegisterComponent(task);
 
-				//typical error here: PicoInitializationException("Either do the specified parameters not match any of....
+				//typical errors here:
+
+
+				//PicoInitializationException("Either do the specified parameters not match any of....
 				//may mean you have an extra (unused), missing, or out-of-order parameter element in the xml.
-				ITask iTask=null;
+
+				//UnsatisfiableDependenciesException:
+				// (NB: the "unsatisfiableDependencyTypes" had two types but there was only one problem)
+				// Looking in the stack to this point, we see the id of the thing being created.
+				//Use that id to figure out which class was being named, and considering the "unsatisfiableDependencyTypes"
+				// from near the throw, see if some id
+				// used in the config xml for the id'd type doesn't match the target (an unsatisfiableDependencyType),
+				// defined elsewhere in the xml.
+				// E.g., the template says:     <id>Default View BLAH</id>
+				//  but the EntryDetailTask is lookinig for: <viewTemplate ref="Default View Template" />
+
+				 ITask iTask=null;
 				try
 				{
 					iTask = (ITask)_picoContext.GetComponentInstance(id);

@@ -77,6 +77,7 @@ namespace WeSay.Admin.Tests
 		{
 			  _window.OpenProject(BasilProject.GetPretendProjectDirectory());
 		  //create or overwrite the tasks with our stored resource
+			File.Delete(WeSayWordsProject.Project.PathToProjectTaskInventory);
 			StreamWriter writer = File.CreateText(WeSayWordsProject.Project.PathToProjectTaskInventory);
 			writer.Write(TestResources.tasks);
 			writer.Close();

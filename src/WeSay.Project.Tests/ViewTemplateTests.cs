@@ -127,14 +127,14 @@ namespace WeSay.Project.Tests
 		}
 
 		[Test]
-		public void ExtraFieldDiscarded()
+		public void CustomFieldRetained()
 		{
 			ViewTemplate master = MakeMasterInventory();
 			int count = master.Count;
 			ViewTemplate simple = new ViewTemplate();
 			simple.Add(new Field("dummy", new String[] { "en" }));
 			ViewTemplate.SynchronizeInventories(master, simple);
-			Assert.IsFalse(master.Contains("dummy"));
+			Assert.IsTrue(master.Contains("dummy"));
 		}
 
 	}

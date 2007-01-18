@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using WeSay.Foundation;
 
@@ -13,6 +14,8 @@ namespace WeSay.LexicalModel
 		public event PropertyChangedEventHandler PropertyChanged = delegate{};
 		public event EventHandler EmptyObjectsRemoved = delegate{};
 
+		private Dictionary<string,object> _properties;
+
 		/// <summary>
 		/// see comment on _parent field of MultiText for an explanation of this field
 		/// </summary>
@@ -20,6 +23,7 @@ namespace WeSay.LexicalModel
 
 		protected WeSayDataObject(WeSayDataObject parent)
 		{
+			_properties = new Dictionary<string, object>();
 			_parent = parent;
 		}
 
@@ -57,6 +61,18 @@ namespace WeSay.LexicalModel
 				_parent = value;
 			}
 	   }
+
+		protected Dictionary<string, object> Properties
+		{
+			get {
+				if (_properties == null)
+				{
+					_properties = new Dictionary<string, object>();
+				}
+
+				return _properties;
+			}
+		}
 
 		protected void WireUpList(IBindingList list, string listName)
 		{
@@ -109,6 +125,19 @@ namespace WeSay.LexicalModel
 		{
 			NotifyPropertyChanged(e.PropertyName);
 		}
+
+		public TContents GetProperty<TContents>(string fieldName) where TContents : class, new()
+		{
+			object val;
+			if (Properties.TryGetValue(fieldName, out val))
+			{
+				return val as TContents;
+			}
+			TContents newGuy = new TContents();
+			_properties.Add(fieldName, newGuy);
+
+			return newGuy;
+		}
 	}
 
 	/// <summary>
@@ -154,5 +183,6 @@ namespace WeSay.LexicalModel
 			}
 			_listOwner.NotifyPropertyChanged(_listName);
 		}
+
 	}
 }

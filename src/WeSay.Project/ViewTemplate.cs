@@ -97,6 +97,18 @@ namespace WeSay.Project
 			return field;
 		}
 
+		public List<Field> GetCustomFields(string className)
+		{
+			List<Field> customFields = new List<Field>();
+			foreach (Field field in this)
+			{
+				if (field.ClassName == className && field.IsCustom)
+				{
+					customFields.Add(field);
+				}
+			}
+			return customFields;
+		}
 
 		public bool Contains(string fieldName)
 		{
@@ -115,8 +127,6 @@ namespace WeSay.Project
 		/// The algorithm here is to fill the list with all of the fields from the master inventory.
 		/// If a field is also found in the users existing inventory, turn on the checkbox,
 		/// and set all of the writing systems to match what the user had before.
-		/// Any fields that are in the user's inventory which are no longer in the
-		/// master inventory will be thrown away.
 		/// </remarks>
 		/// <param name="masterTemplate"></param>
 		/// <param name="usersTemplate"></param>
@@ -128,6 +138,15 @@ namespace WeSay.Project
 				if (userField != null)
 				{
 					Field.ModifyMasterFromUser(masterField, userField);
+				}
+			}
+			//add custom fields (or out of date fields <--todo!)
+			foreach (Field userField in usersTemplate)
+			{
+				Field masterField = masterTemplate.GetField(userField.FieldName);
+				if (masterField == null)
+				{
+					masterTemplate.Add(userField);
 				}
 			}
 		}

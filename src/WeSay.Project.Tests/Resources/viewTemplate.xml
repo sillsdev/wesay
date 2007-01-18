@@ -3,6 +3,7 @@
   <fields>
 	<field class="WeSay.LexicalModel.Field" assembly="WeSay.LexicalModel">
 	  <name>EntryLexicalForm</name>
+	  <displayName>Word</displayName>
 	  <visibility>Visible</visibility>
 	  <writingSystems>
 		   <id>xx</id>

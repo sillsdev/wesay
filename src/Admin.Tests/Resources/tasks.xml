@@ -5,6 +5,7 @@
 	  <fields>
 		<field>
 		  <name>EntryLexicalForm</name>
+		  <displayName>Word</displayName>
 		  <visibility>Invisible</visibility>
 		  <writingSystems />
 		</field>

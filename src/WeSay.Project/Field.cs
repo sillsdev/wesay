@@ -13,8 +13,10 @@ namespace WeSay.Project
 	{
 		private string _fieldName;
 		private List<string> _writingSystemIds;
-		private string _displayName="unknown";
+		private string _displayName="";
 		private string _description="";
+		private string _className="";
+
 		public enum VisibilitySetting {Invisible, Visible};
 		private VisibilitySetting _visibility=VisibilitySetting.Visible ;
 
@@ -35,6 +37,27 @@ namespace WeSay.Project
 			else
 			{
 				WritingSystemIds = new List<string>(writingSystemIds);
+			}
+		}
+
+		public bool IsCustom
+		{
+			get
+			{
+				return this.ClassName != ""; //TEMP
+			}
+		}
+
+		[ReflectorCollection("className", Required = false)]
+		public string ClassName
+		{
+			get
+			{
+				return _className;
+			}
+			set
+			{
+				_className = value;
 			}
 		}
 
@@ -92,9 +115,17 @@ namespace WeSay.Project
 			}
 		}
 
+		[ReflectorCollection("displayName", Required=false)]
 		public string DisplayName
 		{
-			get { return _displayName; }
+			get
+			{
+				if(_displayName=="")
+				{
+					return "*"+FieldName;
+				}
+				return _displayName;
+			}
 			set { _displayName = value; }
 		}
 

@@ -6,6 +6,7 @@ using WeSay.Project;
 
 namespace WeSay.CommonTools
 {
+	//TODO: what is this user control doing writing the cache?
 	public partial class TaskIndicator : UserControl
 	{
 		public event EventHandler selected = delegate {};
@@ -22,6 +23,9 @@ namespace WeSay.CommonTools
 			_task = task;
 			this._count.Text = task.Status;
 			string cachePath = Path.Combine(Project.WeSayWordsProject.Project.PathToWeSaySpecificFilesDirectoryInProject, "Cache");
+
+
+			//TODO: this leads to a failure when the label isn't a valid path (like when it says "failed to load: blahblah"
 			string cacheFilePath = Path.Combine(cachePath, task.Label + ".cache");
 
 			if (this._count.Text == "-")

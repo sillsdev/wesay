@@ -69,7 +69,9 @@ namespace WeSay.LexicalTools.Tests
 			string[] analysisWritingSystemIds = new string[] { BasilProject.Project.WritingSystems.AnalysisWritingSystemDefaultId };
 			string[] vernacularWritingSystemIds = new string[] { BasilProject.Project.WritingSystems.VernacularWritingSystemDefaultId };
 			ViewTemplate viewTemplate = new ViewTemplate();
-			viewTemplate.Add(new Field(Field.FieldNames.EntryLexicalForm.ToString(), vernacularWritingSystemIds));
+			Field field = new Field(Field.FieldNames.EntryLexicalForm.ToString(), vernacularWritingSystemIds);
+			field.DisplayName = "Word";
+			viewTemplate.Add(field);
 			viewTemplate.Add(new Field(Field.FieldNames.SenseGloss.ToString(), analysisWritingSystemIds));
 			viewTemplate.Add(new Field(Field.FieldNames.ExampleSentence.ToString(), vernacularWritingSystemIds));
 			viewTemplate.Add(new Field(Field.FieldNames.ExampleTranslation.ToString(), analysisWritingSystemIds));
