@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Diagnostics;
 using System.ComponentModel;
+using WeSay.Foundation;
 
 namespace WeSay.Language
 {
@@ -25,7 +26,7 @@ namespace WeSay.Language
 	/// <summary>
 	/// MultiText holds an array of LanguageForms, indexed by writing system ID.
 	/// </summary>
-	public class MultiText : INotifyPropertyChanged, IEnumerable
+	public class MultiText : WeSay.Foundation.IParentable, INotifyPropertyChanged, IEnumerable
 	{
 		/// <summary>
 		/// We have this pesky "backreference" solely to enable fast
@@ -45,8 +46,10 @@ namespace WeSay.Language
 		/// up to it's owner, etc., on up the hierarchy to get the Entries.
 		///
 		/// Subclasses should provide a property which set the proper class.
+		///
+		/// 23 Jan 07, note: starting to switch to using these for notifying parent of changes, too.
 		/// </summary>
-		protected object _parent;
+		protected WeSayDataObject _parent;
 
 		/// <summary>
 		/// For INotifyPropertyChanged
@@ -60,7 +63,7 @@ namespace WeSay.Language
 		}
 
 
-		public MultiText(object parent)
+		public MultiText(WeSayDataObject parent)
 		{
 			_parent = parent; //ok for this to be null
 			_forms = new LanguageForm[0];
@@ -157,6 +160,18 @@ namespace WeSay.Language
 			get { return _parent; }
 		}
 
+		#region IParentable Members
+
+		public WeSayDataObject Parent
+		{
+			set
+			{
+				_parent = value;
+			}
+		}
+
+		#endregion
+
 		public void SetAlternative(string writingSystemId, string form)
 		{
 		   Debug.Assert(writingSystemId != null && writingSystemId.Length > 0, "The writing system id was empty.");
@@ -222,6 +237,12 @@ namespace WeSay.Language
 			{
 				PropertyChanged(this, new PropertyChangedEventArgs(writingSystemId));
 			}
+
+			//TODO:
+			//        /// 23 Jan 07, note: starting to switch to using these for notifying parent of changes, too.
+			//tell our parent
+			//this._parent.NotifyPropertyChanged("option");//todo
+
 
 		}
 
