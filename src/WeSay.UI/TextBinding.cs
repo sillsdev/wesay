@@ -1,7 +1,5 @@
 using System;
 using System.ComponentModel;
-using System.Diagnostics;
-using System.Windows.Forms;
 using WeSay.Language;
 
 namespace WeSay.UI
@@ -10,7 +8,7 @@ namespace WeSay.UI
 	/// This simple binding class connects a text box with a MultiText.
 	/// Changes in either one are reflected in the other.
 	/// </summary>
-	public class Binding
+	public class TextBinding
 	{
 		public event EventHandler<CurrentItemEventArgs> CurrentItemChanged = delegate
 																			 {
@@ -20,7 +18,7 @@ namespace WeSay.UI
 		private WeSayTextBox _textBoxTarget;
 		private bool _inMidstOfChange;
 
-		public Binding(INotifyPropertyChanged dataTarget, string writingSystemId, WeSayTextBox widgetTarget)
+		public TextBinding(INotifyPropertyChanged dataTarget, string writingSystemId, WeSayTextBox widgetTarget)
 		{
 			_dataTarget = dataTarget;
 			_dataTarget.PropertyChanged += new PropertyChangedEventHandler(OnDataPropertyChanged);
@@ -137,12 +135,12 @@ namespace WeSay.UI
 		//{
 		//    get { return _writingSystemId; }
 		//}
-		public WeSayTextBox TextBoxTarget
-		{
-			get
-			{
-				return _textBoxTarget;
-			}
-		}
+//        public WeSayTextBox TextBoxTarget
+//        {
+//            get
+//            {
+//                return _textBoxTarget;
+//            }
+//        }
 	}
 }

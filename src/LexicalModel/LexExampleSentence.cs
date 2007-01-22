@@ -1,4 +1,5 @@
 using System;
+using WeSay.Foundation;
 using WeSay.Language;
 
 namespace WeSay.LexicalModel

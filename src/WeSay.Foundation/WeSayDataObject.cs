@@ -4,8 +4,16 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using WeSay.Foundation;
 
-namespace WeSay.LexicalModel
+namespace WeSay.Foundation
 {
+	public interface IParentable
+	{
+		WeSayDataObject Parent
+		{
+			set;
+		}
+	}
+
 	public abstract class WeSayDataObject : INotifyPropertyChanged
 	{
 		/// <summary>
@@ -100,7 +108,7 @@ namespace WeSay.LexicalModel
 			SomethingWasModified(e.PropertyName);
 		}
 
-		internal void WireUpChild(INotifyPropertyChanged child)
+		public void WireUpChild(INotifyPropertyChanged child)
 		{
 			child.PropertyChanged += new PropertyChangedEventHandler(OnChildObjectPropertyChanged);
 			if (child is WeSayDataObject)
@@ -116,7 +124,7 @@ namespace WeSay.LexicalModel
 		{
 		}
 
-		internal void NotifyPropertyChanged(string propertyName)
+		public void NotifyPropertyChanged(string propertyName)
 		{
 			PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 		}
@@ -126,7 +134,7 @@ namespace WeSay.LexicalModel
 			NotifyPropertyChanged(e.PropertyName);
 		}
 
-		public TContents GetProperty<TContents>(string fieldName) where TContents : class, new()
+		public TContents GetProperty<TContents>(string fieldName) where TContents : class, IParentable, new()
 		{
 			object val;
 			if (Properties.TryGetValue(fieldName, out val))
@@ -135,6 +143,7 @@ namespace WeSay.LexicalModel
 			}
 			TContents newGuy = new TContents();
 			_properties.Add(fieldName, newGuy);
+			newGuy.Parent = this;
 
 			return newGuy;
 		}

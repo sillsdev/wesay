@@ -1,5 +1,6 @@
 using System;
 using NUnit.Framework;
+using WeSay.Foundation;
 using WeSay.Language;
 using WeSay.LexicalModel;
 using WeSay.Project;
@@ -16,7 +17,7 @@ namespace WeSay.UI.Tests
 		protected bool _didNotify;
 
 
-		public class Child : WeSay.LexicalModel.WeSayDataObject
+		public class Child : WeSayDataObject
 		{
 			private MultiText first=new MultiText();
 			private MultiText middle=new MultiText();
@@ -46,7 +47,7 @@ namespace WeSay.UI.Tests
 			}
 		}
 
-		public class Papa : WeSay.LexicalModel.WeSayDataObject
+		public class Papa : WeSayDataObject
 		{
 			private WeSay.Data.InMemoryBindingList<Child> _children = new WeSay.Data.InMemoryBindingList<Child>();
 

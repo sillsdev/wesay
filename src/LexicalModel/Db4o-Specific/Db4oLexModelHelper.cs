@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Db4objects.Db4o;
 using Db4objects.Db4o.Events;
+using WeSay.Foundation;
 
 namespace WeSay.LexicalModel.Db4o_Specific
 {

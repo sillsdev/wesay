@@ -73,11 +73,15 @@ namespace WeSay.LexicalTools
 		internal abstract int AddWidgets(IBindingList list, int index, int row);
 
 
-		protected Control MakeOptionWidget(WeSay.Foundation.OptionRef optionToBindTo, Field field)
+		protected Control MakeOptionWidget(WeSayDataObject target, Field field)
 		{
-			SingleOptionControl c = new SingleOptionControl(optionToBindTo);
-			//TODO            BindOptionControlToField(c, optionToBindTo);
-			return c;
+			WeSay.Foundation.OptionRef optionRefTarget=target.GetProperty<WeSay.Foundation.OptionRef>(field.FieldName);
+
+			OptionsList list= Project.WeSayWordsProject.Project.GetOptionsList();
+			SingleOptionControl control = new SingleOptionControl(optionRefTarget,list);
+			WeSay.UI.SingleOptionBinding binding = new WeSay.UI.SingleOptionBinding(optionRefTarget, control);
+			binding.CurrentItemChanged += new EventHandler<CurrentItemEventArgs>(_detailList.OnBindingCurrentItemChanged);
+			return control;
 		}
 
 		protected Control MakeBoundEntry(WeSay.Language.MultiText multiTextToBindTo, Field field)
@@ -101,7 +105,7 @@ namespace WeSay.LexicalTools
 		{
 			foreach (WeSayTextBox box in control.TextBoxes)
 			{
-				WeSay.UI.Binding binding = new WeSay.UI.Binding(multiTextToBindTo, box.WritingSystem.Id, box);
+				WeSay.UI.TextBinding binding = new WeSay.UI.TextBinding(multiTextToBindTo, box.WritingSystem.Id, box);
 				binding.CurrentItemChanged += new EventHandler<CurrentItemEventArgs>(_detailList.OnBindingCurrentItemChanged);
 			}
 		}
@@ -198,7 +202,7 @@ namespace WeSay.LexicalTools
 				switch (customField.DataTypeName)
 				{
 					case "Option":
-						box = MakeOptionWidget(target.GetProperty<WeSay.Foundation.OptionRef>(customField.FieldName), customField);
+						box = MakeOptionWidget(target, customField);
 						break;
 					case "MultiText":
 						 box = MakeBoundEntry(target.GetProperty<MultiText>(customField.FieldName), customField);
@@ -213,5 +217,7 @@ namespace WeSay.LexicalTools
 			}
 			return rowCount;
 		}
+
+
 	}
 }

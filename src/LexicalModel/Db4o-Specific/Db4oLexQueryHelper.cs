@@ -6,6 +6,7 @@ using Db4objects.Db4o;
 using Db4objects.Db4o.Ext;
 using Db4objects.Db4o.Query;
 using WeSay.Data;
+using WeSay.Foundation;
 using WeSay.Language;
 
 namespace WeSay.LexicalModel.Db4o_Specific

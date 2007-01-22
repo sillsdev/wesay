@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 using System.Xml;
+using WeSay.Foundation;
 
 namespace WeSay.Project
 {
@@ -214,5 +215,20 @@ namespace WeSay.Project
 			get { return _viewTemplate; }
 			set { _viewTemplate = value; }
 		}
+
+		OptionsList _testPOSList = null;
+		public OptionsList GetOptionsList()
+		{
+
+			if (_testPOSList == null)
+			{
+				//todo
+				_testPOSList = new OptionsList("PartsOfSpeech");
+				_testPOSList.Options.Add(new Option("Noun", "N", new Guid("C2E70350-5961-4728-BC02-2CC506C40C00")));
+				_testPOSList.Options.Add(new Option("Verb", "V", new Guid("C2E70350-5961-4728-BC02-2CC506C40C01")));
+				_testPOSList.Options.Add(new Option("Adjective", "Adj", new Guid("C2E70350-5961-4728-BC02-2CC506C40C02")));
+			}
+			return _testPOSList;
+	   }
 	}
 }

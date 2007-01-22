@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using WeSay.Foundation;
 using WeSay.Language;
 using WeSay.LexicalModel.Db4o_Specific;
 

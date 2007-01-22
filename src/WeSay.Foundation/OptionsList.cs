@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using Exortech.NetReflector;
 
 namespace WeSay.Foundation
@@ -16,6 +17,7 @@ namespace WeSay.Foundation
 		public OptionsList(string name)
 		{
 			Name = name;
+			_options = new List<Option>();
 		}
 
 		[ReflectorCollection("options", Required = true)]
@@ -36,23 +38,79 @@ namespace WeSay.Foundation
 	/// <summary>
 	/// Used to refer to this option from a field
 	/// </summary>
-	public class OptionRef
+	public class OptionRef : IParentable, INotifyPropertyChanged
 	{
 		private Guid _guid;
 
+		[NonSerialized]
+		private Option _option;
+
+		/// <summary>
+		/// This "backreference" is used to notify the parent of changes.
+		/// IParentable gives access to this during explicit construction.
+		/// </summary>
+		private WeSayDataObject _parent;
+
+		/// <summary>
+		/// For INotifyPropertyChanged
+		/// </summary>
+		public event PropertyChangedEventHandler PropertyChanged;
+
+
 		public OptionRef()
 		{
-
-		}
-		public OptionRef(Guid guid)
-		{
-			Guid = guid;
 		}
 
-		public Guid Guid
+//        public OptionRef(Guid guid)
+//        {
+//            Guid = guid;
+//        }
+
+		private Guid Guid
 		{
-			get { return _guid; }
-			set { _guid = value; }
+//            get { return _guid; }
+			set
+			{
+				_guid = value;
+				NotifyPropertyChanged();
+			}
+		}
+
+		#region IParentable Members
+
+		public WeSayDataObject Parent
+		{
+			set
+			{
+				_parent = value;
+			}
+		}
+
+		#endregion
+
+		private void NotifyPropertyChanged()
+		{
+			//tell any data binding
+			if (PropertyChanged != null)
+			{
+				PropertyChanged(this, new PropertyChangedEventArgs("option")); //todo
+			}
+
+			//tell our parent
+			this._parent.NotifyPropertyChanged("option");//todo
+		}
+
+		public Option Value
+		{
+			get
+			{
+				return this._option;
+			}
+			set
+			{
+				this._option = value;
+				this.Guid = value.Guid;
+			}
 		}
 	}
 
@@ -116,6 +174,11 @@ namespace WeSay.Foundation
 			t.Add(typeof(OptionsList));
 			t.Add(typeof(Option));
 			return t;
+		}
+
+		public override string ToString()
+		{
+			return _name;
 		}
 	}
 }

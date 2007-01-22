@@ -6,6 +6,7 @@ using Db4objects.Db4o;
 using Db4objects.Db4o.Query;
 using NUnit.Framework;
 using WeSay.Data;
+using WeSay.Foundation;
 using WeSay.Language;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Db4o_Specific;
@@ -70,6 +71,30 @@ namespace WeSay.LexicalModel.Tests
 			entry.LexicalForm["en"] = "x";
 			entry = CycleDatabase();
 			Assert.AreEqual("x", entry.LexicalForm["en"]);
+		}
+
+
+		[Test]
+		public void SaveCustomTextField()
+		{
+			CycleDatabase();
+			LexEntry entry = new LexEntry();
+			entry.GetProperty<MultiText>("testField")["en"] = "test";
+			_entriesList.Add(entry);
+			entry = CycleDatabase();
+			Assert.AreEqual("test", entry.GetProperty<MultiText>("testField")["en"]);
+		}
+
+		[Test]
+		public void SaveOptionRefField()
+		{
+			CycleDatabase();
+			LexEntry entry = new LexEntry();
+			Option z = new Option("test", "t", Guid.NewGuid());
+			entry.GetProperty<OptionRef>("testOption").Value = z;
+			_entriesList.Add(entry);
+			entry = CycleDatabase();
+			Assert.AreEqual("test", entry.GetProperty<OptionRef>("testOption").Value.Name);
 		}
 
 		[Test]

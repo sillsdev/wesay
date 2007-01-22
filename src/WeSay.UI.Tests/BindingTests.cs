@@ -18,7 +18,7 @@ namespace WeSay.UI.Tests
 		{
 			MultiText text = new MultiText();
 			WeSayTextBox widget = new WeSayTextBox(BasilProject.Project.WritingSystems.AnalysisWritingSystemDefault);
-			Binding binding = new Binding(text, BasilProject.Project.WritingSystems.AnalysisWritingSystemDefault.Id, widget);
+			TextBinding binding = new TextBinding(text, BasilProject.Project.WritingSystems.AnalysisWritingSystemDefault.Id, widget);
 
 			text[BasilProject.Project.WritingSystems.AnalysisWritingSystemDefault.Id] = "hello";
 			Assert.AreEqual("hello", widget.Text);
@@ -32,7 +32,7 @@ namespace WeSay.UI.Tests
 			MultiText text = new MultiText();
 			WeSayTextBox widget = new WeSayTextBox(BasilProject.Project.WritingSystems.AnalysisWritingSystemDefault);
 
-			Binding binding = new Binding(text, BasilProject.Project.WritingSystems.AnalysisWritingSystemDefault.Id, widget);
+			TextBinding binding = new TextBinding(text, BasilProject.Project.WritingSystems.AnalysisWritingSystemDefault.Id, widget);
 
 			widget.Text = "aaa";
 			Assert.AreEqual("aaa", text["en"]);

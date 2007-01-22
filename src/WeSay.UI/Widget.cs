@@ -23,7 +23,7 @@ namespace WeSay.UI
 			}
 		}
 
-		protected FlagButton AddFlagButton(Size panelSize)
+		protected FlagButton MakeFlagButton(Size panelSize)
 		{
 			_flagButton = new FlagButton();
 			_flagButton.Size = new Size(20, 20);
@@ -32,6 +32,8 @@ namespace WeSay.UI
 				-1 + panelSize.Height - _flagButton.Height);
 			_flagButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
 			_flagButton.Click += new EventHandler(OnClickFlagButton);
+			_flagButton.TabStop = false;
+
 
 			//            Panel panel = new Panel();
 			//            panel.Size = flagButton.Size;

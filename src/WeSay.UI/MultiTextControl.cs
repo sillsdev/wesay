@@ -90,10 +90,9 @@ namespace WeSay.UI
 				p.Controls.Add(label);
 				p.Size = new Size(initialPanelWidth,box.Height+0);
 
-				FlagButton flagButton = AddFlagButton(p.Size);
+				FlagButton flagButton = MakeFlagButton(p.Size);
 				p.Controls.Add(flagButton);
 				this.components.Add(flagButton);//so it will get disposed of when we are
-				flagButton.TabStop = false;
 				_vbox.AddControlToBottom(p);
 				Height += p.Height;
 			}

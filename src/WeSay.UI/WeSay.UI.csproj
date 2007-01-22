@@ -47,7 +47,8 @@
 	<Compile Include="ArrowButton.cs">
 	  <SubType>Component</SubType>
 	</Compile>
-	<Compile Include="Binding.cs" />
+	<Compile Include="SingleOptionBinding.cs" />
+	<Compile Include="TextBinding.cs" />
 	<Compile Include="CurrentItemEventArgs.cs" />
 	<Compile Include="DetailList.cs">
 	  <SubType>UserControl</SubType>
