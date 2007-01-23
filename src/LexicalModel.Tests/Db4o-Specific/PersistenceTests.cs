@@ -90,11 +90,11 @@ namespace WeSay.LexicalModel.Tests
 		{
 			CycleDatabase();
 			LexEntry entry = new LexEntry();
-			Option z = new Option("test", "t", Guid.NewGuid());
-			entry.GetProperty<OptionRef>("testOption").Value = z;
+			//Option z = new Option("test", "t", Guid.NewGuid());
+			entry.GetProperty<OptionRef>("testOption").Value = "test";
 			_entriesList.Add(entry);
 			entry = CycleDatabase();
-			Assert.AreEqual("test", entry.GetProperty<OptionRef>("testOption").Value.Name);
+			Assert.AreEqual("test", entry.GetProperty<OptionRef>("testOption").Value);
 		}
 
 		[Test]

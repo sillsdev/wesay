@@ -5,6 +5,90 @@ using Exortech.NetReflector;
 
 namespace WeSay.Foundation
 {
+
+
+	/// <summary>
+	/// Used to refer to this option from a field
+	/// </summary>
+	public class OptionRef : IParentable, INotifyPropertyChanged
+	{
+		// private Guid _guid;
+
+//        [NonSerialized]
+//        private Option _option;
+
+		private string _form; //todo make this multitext
+
+		/// <summary>
+		/// This "backreference" is used to notify the parent of changes.
+		/// IParentable gives access to this during explicit construction.
+		/// </summary>
+		private WeSayDataObject _parent;
+
+		/// <summary>
+		/// For INotifyPropertyChanged
+		/// </summary>
+		public event PropertyChangedEventHandler PropertyChanged;
+
+
+		public OptionRef()
+		{
+		}
+
+		//        public OptionRef(Guid guid)
+		//        {
+		//            Guid = guid;
+		//        }
+
+		//        private Guid Guid
+		//        {
+		////            get { return _guid; }
+		//            set
+		//            {
+		//                _guid = value;
+		//                NotifyPropertyChanged();
+		//            }
+		//        }
+
+		#region IParentable Members
+
+		public WeSayDataObject Parent
+		{
+			set
+			{
+				_parent = value;
+			}
+		}
+
+		#endregion
+
+		private void NotifyPropertyChanged()
+		{
+			//tell any data binding
+			if (PropertyChanged != null)
+			{
+				PropertyChanged(this, new PropertyChangedEventArgs("option")); //todo
+			}
+
+			//tell our parent
+			this._parent.NotifyPropertyChanged("option");//todo
+		}
+
+		public string Value
+		{
+			get
+			{
+				return this._form;
+			}
+			set
+			{
+				this._form = value;
+				// this.Guid = value.Guid;
+				NotifyPropertyChanged();
+			}
+		}
+	}
+
 	/// <summary>
 	/// This is like a PossibilityList in FieldWorks, or RangeSet in Toolbox
 	/// </summary>
@@ -35,84 +119,6 @@ namespace WeSay.Foundation
 		}
 	}
 
-	/// <summary>
-	/// Used to refer to this option from a field
-	/// </summary>
-	public class OptionRef : IParentable, INotifyPropertyChanged
-	{
-		private Guid _guid;
-
-		[NonSerialized]
-		private Option _option;
-
-		/// <summary>
-		/// This "backreference" is used to notify the parent of changes.
-		/// IParentable gives access to this during explicit construction.
-		/// </summary>
-		private WeSayDataObject _parent;
-
-		/// <summary>
-		/// For INotifyPropertyChanged
-		/// </summary>
-		public event PropertyChangedEventHandler PropertyChanged;
-
-
-		public OptionRef()
-		{
-		}
-
-//        public OptionRef(Guid guid)
-//        {
-//            Guid = guid;
-//        }
-
-		private Guid Guid
-		{
-//            get { return _guid; }
-			set
-			{
-				_guid = value;
-				NotifyPropertyChanged();
-			}
-		}
-
-		#region IParentable Members
-
-		public WeSayDataObject Parent
-		{
-			set
-			{
-				_parent = value;
-			}
-		}
-
-		#endregion
-
-		private void NotifyPropertyChanged()
-		{
-			//tell any data binding
-			if (PropertyChanged != null)
-			{
-				PropertyChanged(this, new PropertyChangedEventArgs("option")); //todo
-			}
-
-			//tell our parent
-			this._parent.NotifyPropertyChanged("option");//todo
-		}
-
-		public Option Value
-		{
-			get
-			{
-				return this._option;
-			}
-			set
-			{
-				this._option = value;
-				this.Guid = value.Guid;
-			}
-		}
-	}
 
 	[ReflectorType("option")]
 	public class Option

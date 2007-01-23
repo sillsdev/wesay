@@ -35,6 +35,29 @@ namespace WeSay.UI
 				_value = value;
 			}
 		}
+
+		public string ValueKey
+		{
+			get
+			{
+				return ((Option) (_control.SelectedItem)).Name;
+			}
+			set
+			{
+				foreach (Option option in _list.Options)
+				{
+					if (option.Name.Equals(value))
+					{
+						_control.SelectedItem = option;
+						return;
+					}
+				}
+				//Didn't find it
+				_control.BackColor = Color.Red;
+				_control.Text = value;
+			}
+		}
+
 		private void BuildBoxes(OptionRef optionRef)
 		{
 			SuspendLayout();
@@ -62,7 +85,7 @@ namespace WeSay.UI
 			foreach (Option o in _list.Options)
 			{
 				_control.Items.Add(o);
-				if (optionRef.Value != null && optionRef.Value.Guid == o.Guid)
+				if (optionRef.Value != null && optionRef.Value.Equals(o.Name))
 				{
 					_control.SelectedItem = o;
 				}

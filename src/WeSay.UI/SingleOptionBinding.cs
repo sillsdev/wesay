@@ -74,7 +74,7 @@ namespace WeSay.UI
 			try
 			{
 				_inMidstOfChange = true;
-				_widgetTarget.Value = GetTargetValue();
+				_widgetTarget.ValueKey = GetTargetValue();
 			}
 			finally
 			{
@@ -82,7 +82,7 @@ namespace WeSay.UI
 			}
 		}
 
-		protected Option GetTargetValue()
+		protected string GetTargetValue()
 		{
 			OptionRef v = _dataTarget as OptionRef;
 			if (v == null)
@@ -104,7 +104,7 @@ namespace WeSay.UI
 					OptionRef t = _dataTarget as OptionRef;
 					if (t == null)
 						throw new ArgumentException("Binding can't handle that type of target.");
-					t.Value =value;
+					t.Value =value.Name;
 				}
 
 				else
