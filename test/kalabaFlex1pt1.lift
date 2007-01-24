@@ -1,0 +1,752 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lift version="0.9" producer="SIL.FLEx.V1Pt1" lang='XKAL'>
+  <header>
+	<ranges>
+	  <range-set id="grammi"/>
+	</ranges>
+  </header>
+  <entry id='265f5359-8290-40d9-a708-641d474383aa'>
+	<form ws="Kal">bili</form>
+	<sense>
+	  <grammi type='trans'/>
+	  <gloss>
+		<form ws="Eng">to.see</form>
+	  </gloss>
+	  <def/>
+	</sense>
+	<sense>
+	  <grammi type='trans'/>
+	  <gloss>
+		<form ws="Eng">to.understand</form>
+	  </gloss>
+	  <def/>
+	</sense>
+	<dateCreated val='2003-08-07T08:42:42+07:00'/>
+	<dateModified val='2003-07-10T10:41:00+07:00'/>
+  </entry>
+  <entry id='0ef532e9-e312-40b6-ad6a-c0618820c3af'>
+	<form ws="Kal">nad</form>
+	<sense>
+	  <grammi type='intrans'/>
+	  <gloss>
+		<form ws="Eng">to.sleep</form>
+	  </gloss>
+	  <def/>
+	</sense>
+	<dateCreated val='2003-08-07T08:42:42+07:00'/>
+	<dateModified val='2003-07-10T11:41:00+07:00'/>
+  </entry>
+  <entry id='04758355-1e6c-49de-86f0-15d6347f25cd'>
+	<form ws="Kal">ni</form>
+	<sense>
+	  <gloss>
+		<form ws="Eng">1SgSubj</form>
+	  </gloss>
+	  <def/>
+	</sense>
+	<dateCreated val='2003-08-07T08:42:42+07:00'/>
+	<dateModified val='2003-07-09T01:20:00+07:00'/>
+  </entry>
+  <entry id='4a5858f4-3be4-42fc-b23a-e8a6f4d8694e'>
+	<form ws="Kal">hiN-</form>
+	<sense>
+	  <gloss>
+		<form ws="Eng">3SgObj</form>
+	  </gloss>
+	  <def/>
+	</sense>
+	<dateCreated val='2003-08-07T08:42:42+07:00'/>
+	<dateModified val='2003-07-09T03:50:05+07:00'/>
+  </entry>
+  <entry id='1c2cbb5d-f0d9-47ff-86af-38d0aae0c765'>
+	<form ws="Kal">ra</form>
+	<sense>
+	  <gloss>
+		<form ws="Eng">Pres</form>
+	  </gloss>
+	  <def/>
+	</sense>
+	<dateCreated val='2003-08-07T08:42:42+07:00'/>
+	<dateModified val='2003-08-07T09:18:00+07:00'/>
+  </entry>
+  <entry id='016f2759-ed12-42a5-abcb-7fe3f53d05b0'>
+	<form ws="Kal">dok</form>
+	<sense>
+	  <grammi type='trans'/>
+	  <gloss>
+		<form ws="Eng">to.think</form>
+	  </gloss>
+	  <def/>
+	</sense>
+	<dateCreated val='2003-08-07T08:42:42+07:00'/>
+	<dateModified val='2003-07-09T03:46:05+07:00'/>
+  </entry>
+  <entry id='cd97ed84-5265-4971-843c-72a1e2ae5add'>
+	<form ws="Kal">gabi</form>
+	<sense>
+	  <grammi type='trans'/>
+	  <gloss>
+		<form ws="Eng">to.hit</form>
+	  </gloss>
+	  <def/>
+	</sense>
+	<dateCreated val='2003-08-07T08:42:42+07:00'/>
+	<dateModified val='2003-08-07T08:42:42+07:00'/>
+  </entry>
+  <entry id='23151593-0c75-4359-a2bf-6220fc142d79'>
+	<form ws="Kal">lik</form>
+	<sense>
+	  <grammi type='trans'/>
+	  <gloss>
+		<form ws="Eng">to.eat</form>
+	  </gloss>
+	  <def/>
+	</sense>
+	<dateCreated val='2003-08-07T08:42:42+07:00'/>
+	<dateModified val='2003-08-07T08:42:42+07:00'/>
+  </entry>
+  <entry id='5c77efd9-8d14-4f19-a049-162588265cad'>
+	<form ws="Kal">yalo</form>
+	<sense>
+	  <grammi type='N'/>
+	  <gloss>
+		<form ws="Eng">mat</form>
+	  </gloss>
+	  <def/>
+	</sense>
+	<dateCreated val='2003-08-07T08:42:42+07:00'/>
+	<dateModified val='2003-08-07T08:42:42+07:00'/>
+  </entry>
+  <entry id='47359e87-527f-4105-8589-029ed0a08532'>
+	<form ws="Kal">kasa</form>
+	<sense>
+	  <grammi type='N'/>
+	  <gloss>
+		<form ws="Eng">house</form>
+	  </gloss>
+	  <def/>
+	</sense>
+	<dateCreated val='2003-08-07T08:42:42+07:00'/>
+	<dateModified val='2003-08-07T08:42:42+07:00'/>
+  </entry>
+  <entry id='82d6bc2e-768e-4ec4-95b8-2cff376208c4'>
+	<form ws="Kal">iŋ</form>
+	<sense>
+	  <grammi type='N'/>
+	  <gloss>
+		<form ws="Eng">water</form>
+	  </gloss>
+	  <def/>
+	</sense>
+	<dateCreated val='2003-08-07T08:42:42+07:00'/>
+	<dateModified val='2003-08-07T08:42:42+07:00'/>
+  </entry>
+  <entry id='7045f230-4b97-4f9c-9d5f-047e7d66a2df'>
+	<form ws="Kal">pal</form>
+	<sense>
+	  <grammi type='N'/>
+	  <gloss>
+		<form ws="Eng">tree</form>
+	  </gloss>
+	  <def/>
+	</sense>
+	<dateCreated val='2003-08-07T08:42:42+07:00'/>
+	<dateModified val='2003-08-07T08:42:42+07:00'/>
+  </entry>
+  <entry id='b660fb0e-2864-4219-a203-591fe644bb20'>
+	<form ws="Kal">ti</form>
+	<sense>
+	  <gloss>
+		<form ws="Eng">Caus</form>
+	  </gloss>
+	  <def/>
+	</sense>
+	<dateCreated val='2003-08-07T08:42:42+07:00'/>
+	<dateModified val='2003-08-07T08:42:42+07:00'/>
+  </entry>
+  <entry id='2703f3e7-5440-422c-8d25-455b4f4cc1b7'>
+	<form ws="Kal">xo</form>
+	<sense>
+	  <gloss>
+		<form ws="Eng">Pass</form>
+	  </gloss>
+	  <def/>
+	</sense>
+	<dateCreated val='2003-08-07T08:42:42+07:00'/>
+	<dateModified val='2003-08-07T08:42:42+07:00'/>
+  </entry>
+  <entry id='0e99a5be-aca0-4b04-8462-d6961c7428e8'>
+	<form ws="Kal">wu</form>
+	<sense>
+	  <gloss>
+		<form ws="Eng">Rapidly</form>
+	  </gloss>
+	  <def/>
+	</sense>
+	<dateCreated val='2003-08-07T08:42:42+07:00'/>
+	<dateModified val='2003-08-07T08:42:42+07:00'/>
+  </entry>
+  <entry id='d2036a5e-8ec7-4ab3-9d5e-434735abfcee'>
+	<form ws="Kal">lis</form>
+	<sense>
+	  <gloss>
+		<form ws="Eng">Nom</form>
+	  </gloss>
+	  <def/>
+	</sense>
+	<dateCreated val='2003-08-07T08:42:42+07:00'/>
+	<dateModified val='2003-08-07T08:42:42+07:00'/>
+  </entry>
+  <entry id='0fc019bf-7eb5-4038-9be6-63db1d502029'>
+	<form ws="Kal">ya</form>
+	<sense>
+	  <gloss>
+		<form ws="Eng">Adverbializer</form>
+	  </gloss>
+	  <def/>
+	</sense>
+	<dateCreated val='2003-08-07T08:42:42+07:00'/>
+	<dateModified val='2003-07-09T04:30:11+07:00'/>
+  </entry>
+  <entry id='05c54cf0-4e5a-4bf2-99f8-ec787e4113ac'>
+	<form ws="Kal">kes</form>
+	<sense>
+	  <gloss>
+		<form ws="Eng">???</form>
+	  </gloss>
+	  <def/>
+	</sense>
+	<dateCreated val='2003-08-07T08:42:42+07:00'/>
+	<dateModified val='2003-08-07T08:42:42+07:00'/>
+  </entry>
+  <entry id='d8c3cf2e-1c0f-4048-8023-944cc9095e06'>
+	<form ws="Kal">ti</form>
+	<sense>
+	  <gloss>
+		<form ws="Eng">2SgSubj</form>
+	  </gloss>
+	  <def/>
+	</sense>
+	<dateCreated val='2003-08-07T08:42:42+07:00'/>
+	<dateModified val='2003-07-09T04:37:39+07:00'/>
+  </entry>
+  <entry id='fa3c17eb-4160-428b-81eb-4c558e67e7c1'>
+	<form ws="Kal">mo</form>
+	<sense>
+	  <gloss>
+		<form ws="Eng">1PlSubj</form>
+	  </gloss>
+	  <def/>
+	</sense>
+	<dateCreated val='2003-08-07T08:42:42+07:00'/>
+	<dateModified val='2003-07-09T04:41:36+07:00'/>
+  </entry>
+  <entry id='05806ea3-ce01-41a6-b87a-94f17055df1a'>
+	<form ws="Kal">se</form>
+	<sense>
+	  <gloss>
+		<form ws="Eng">2PlSubj</form>
+	  </gloss>
+	  <def/>
+	</sense>
+	<dateCreated val='2003-08-07T08:42:42+07:00'/>
+	<dateModified val='2003-07-09T04:42:33+07:00'/>
+  </entry>
+  <entry id='3ab3e31e-eb2c-49c2-820b-8abe98221073'>
+	<form ws="Kal">mi</form>
+	<sense>
+	  <gloss>
+		<form ws="Eng">1SgObj</form>
+	  </gloss>
+	  <def/>
+	</sense>
+	<dateCreated val='2003-08-07T08:42:42+07:00'/>
+	<dateModified val='2003-07-09T04:45:11+07:00'/>
+  </entry>
+  <entry id='f8b09b4c-9017-4db7-a70b-1a7be236e742'>
+	<form ws="Kal">yu</form>
+	<sense>
+	  <gloss>
+		<form ws="Eng">2SgObj</form>
+	  </gloss>
+	  <def/>
+	</sense>
+	<dateCreated val='2003-08-07T08:42:42+07:00'/>
+	<dateModified val='2003-07-09T04:46:44+07:00'/>
+  </entry>
+  <entry id='c069c6d1-19d2-41a4-946a-060af2e350ba'>
+	<form ws="Kal">us</form>
+	<sense>
+	  <gloss>
+		<form ws="Eng">1PlObj</form>
+	  </gloss>
+	  <def/>
+	</sense>
+	<dateCreated val='2003-08-07T08:42:42+07:00'/>
+	<dateModified val='2003-07-09T04:48:28+07:00'/>
+  </entry>
+  <entry id='ce02e154-a2aa-48da-baaf-16c58c45072c'>
+	<form ws="Kal">yul</form>
+	<sense>
+	  <gloss>
+		<form ws="Eng">2PlObj</form>
+	  </gloss>
+	  <def/>
+	</sense>
+	<dateCreated val='2003-08-07T08:42:42+07:00'/>
+	<dateModified val='2003-07-09T04:50:10+07:00'/>
+  </entry>
+  <entry id='d6e17340-dc0f-458a-9fd6-c8de368918d5'>
+	<form ws="Kal">deN</form>
+	<sense>
+	  <gloss>
+		<form ws="Eng">3PlObj</form>
+	  </gloss>
+	  <def/>
+	  <trait range="semantic-domain" value='2'/>
+	  <trait range="semantic-domain" value='6.5.1.1'/>
+	  <trait range="semantic-domain" value='7'/>
+	</sense>
+	<dateCreated val='2003-08-07T08:42:42+07:00'/>
+	<dateModified val='2003-07-09T04:51:43+07:00'/>
+  </entry>
+  <entry id='c5b7c026-5f8f-4971-adc1-daf76422632f'>
+	<form ws="Kal">bi</form>
+	<sense>
+	  <gloss>
+		<form ws="Eng">Past</form>
+	  </gloss>
+	  <def/>
+	  <trait range="semantic-domain" value='6.5.1.1'/>
+	  <trait range="semantic-domain" value='9'/>
+	  <trait range="semantic-domain" value='9.1'/>
+	  <trait range="semantic-domain" value='9.6.2.5'/>
+	</sense>
+	<dateCreated val='2003-08-07T08:42:42+07:00'/>
+	<dateModified val='2003-07-09T04:55:02+07:00'/>
+  </entry>
+  <entry id='58a6c6c3-fdbd-4fef-b3de-43e849d6842f'>
+	<form ws="Kal">gu</form>
+	<sense>
+	  <gloss>
+		<form ws="Eng">Future</form>
+	  </gloss>
+	  <def/>
+	</sense>
+	<dateCreated val='2003-08-07T08:42:42+07:00'/>
+	<dateModified val='2003-07-09T04:57:15+07:00'/>
+  </entry>
+  <entry id='1cfcbd55-1b84-40db-8fbc-c91d1600c531'>
+	<form ws="Kal">la</form>
+	<sense>
+	  <gloss>
+		<form ws="Eng">1SgPoss</form>
+	  </gloss>
+	  <def/>
+	</sense>
+	<dateCreated val='2003-08-07T08:42:42+07:00'/>
+	<dateModified val='2003-07-09T04:58:56+07:00'/>
+  </entry>
+  <entry id='271d373b-e4b7-4c92-80a5-9c36dc8cc810'>
+	<form ws="Kal">or</form>
+	<sense>
+	  <gloss>
+		<form ws="Eng">2SgPoss</form>
+	  </gloss>
+	  <def/>
+	</sense>
+	<dateCreated val='2003-08-07T08:42:42+07:00'/>
+	<dateModified val='2003-07-09T05:00:36+07:00'/>
+  </entry>
+  <entry id='37e2ccb6-5432-4b80-a599-5dddace292d3'>
+	<form ws="Kal">vo</form>
+	<sense>
+	  <gloss>
+		<form ws="Eng">3SgPoss</form>
+	  </gloss>
+	  <def/>
+	</sense>
+	<dateCreated val='2003-08-07T08:42:42+07:00'/>
+	<dateModified val='2003-07-09T05:03:26+07:00'/>
+  </entry>
+  <entry id='f1895e27-1613-41d4-be06-6b5e075fb768'>
+	<form ws="Kal">ni</form>
+	<sense>
+	  <gloss>
+		<form ws="Eng">1PlPoss</form>
+	  </gloss>
+	  <def/>
+	</sense>
+	<dateCreated val='2003-08-07T08:42:42+07:00'/>
+	<dateModified val='2003-07-09T05:03:53+07:00'/>
+  </entry>
+  <entry id='377f0674-d454-4e37-b2d3-81096fabc84f'>
+	<form ws="Kal">tu</form>
+	<sense>
+	  <gloss>
+		<form ws="Eng">2PlPoss</form>
+	  </gloss>
+	  <def/>
+	</sense>
+	<dateCreated val='2003-08-07T08:42:42+07:00'/>
+	<dateModified val='2003-07-09T05:05:12+07:00'/>
+  </entry>
+  <entry id='ea4b87bf-6525-4e6d-9c9c-a44ff6097e94'>
+	<form ws="Kal">te</form>
+	<sense>
+	  <gloss>
+		<form ws="Eng">3PlPoss</form>
+	  </gloss>
+	  <def/>
+	</sense>
+	<dateCreated val='2003-08-07T08:42:42+07:00'/>
+	<dateModified val='2003-07-09T05:06:18+07:00'/>
+  </entry>
+  <entry id='3ea5b344-ec0b-4fd0-829b-02b6ee424b07'>
+	<form ws="Kal">ximu</form>
+	<sense>
+	  <grammi type='Adv'/>
+	  <gloss>
+		<form ws="Eng">slowly</form>
+	  </gloss>
+	  <def/>
+	</sense>
+	<dateCreated val='2003-08-07T08:42:42+07:00'/>
+	<dateModified val='2003-08-07T08:42:42+07:00'/>
+  </entry>
+  <entry id='fd42f793-7fe9-423e-8d7a-a3c280e5e11d'>
+	<form ws="Kal">CV</form>
+	<sense>
+	  <gloss>
+		<form ws="Eng">Intensifier</form>
+	  </gloss>
+	  <def/>
+	  <trait range="semantic-domain" value='6.5.1.1'/>
+	  <trait range="semantic-domain" value='9'/>
+	</sense>
+	<dateCreated val='2003-08-07T08:42:42+07:00'/>
+	<dateModified val='2003-08-15T12:03:21+07:00'/>
+  </entry>
+  <entry id='f764500c-a3cf-4b35-98bf-e39929f488f6'>
+	<form ws="Kal">de</form>
+	<sense>
+	  <gloss>
+		<form ws="Eng">3PlSubj</form>
+	  </gloss>
+	  <def/>
+	  <trait range="semantic-domain" value='8.4.6.1'/>
+	</sense>
+	<dateCreated val='2003-08-07T08:42:42+07:00'/>
+	<dateModified val='2003-08-07T08:42:42+07:00'/>
+  </entry>
+  <entry id='16c0e27c-9287-49e8-85bc-78c884607caa'>
+	<form ws="Kal">pone</form>
+	<sense>
+	  <grammi type='intrans'/>
+	  <gloss>
+		<form ws="Eng">to.stand</form>
+	  </gloss>
+	  <def/>
+	</sense>
+	<dateCreated val='2003-08-07T08:42:42+07:00'/>
+	<dateModified val='2003-08-07T08:42:42+07:00'/>
+  </entry>
+  <entry id='fd4f8fee-6da8-483b-910f-814becc80b13'>
+	<form ws="Kal">gel</form>
+	<sense>
+	  <grammi type='bitrans'/>
+	  <gloss>
+		<form ws="Eng">to.buy</form>
+	  </gloss>
+	  <def/>
+	</sense>
+	<dateCreated val='2003-08-13T10:37:25+07:00'/>
+	<dateModified val='2003-08-13T10:37:25+07:00'/>
+  </entry>
+  <entry id='0877c5fb-b2b8-452e-b286-0215018c0e27'>
+	<form ws="Kal">bako</form>
+	<sense>
+	  <grammi type='bitrans'/>
+	  <gloss>
+		<form ws="Eng">to.sell</form>
+	  </gloss>
+	  <def/>
+	</sense>
+	<dateCreated val='2003-08-13T10:37:25+07:00'/>
+	<dateModified val='2003-08-13T10:37:25+07:00'/>
+  </entry>
+  <entry id='ffc22c43-a24d-45fb-bc37-1e3e6b1c5560'>
+	<form ws="Kal">dok</form>
+	<sense>
+	  <grammi type='neg'/>
+	  <gloss>
+		<form ws="Eng">not</form>
+	  </gloss>
+	  <def/>
+	</sense>
+	<dateCreated val='2003-08-14T10:17:48+07:00'/>
+	<dateModified val='2003-08-14T10:17:48+07:00'/>
+  </entry>
+  <entry id='3c99c376-e6dc-45a5-aaa4-bde6808acdcb'>
+	<form ws="Kal">ke</form>
+	<sense>
+	  <grammi type='part'/>
+	  <gloss>
+		<form ws="Eng">Question</form>
+	  </gloss>
+	  <def/>
+	</sense>
+	<dateCreated val='2003-08-15T03:07:28+07:00'/>
+	<dateModified val='2003-08-15T02:01:17+07:00'/>
+  </entry>
+  <entry id='b3693338-1690-4bf2-9424-009e1e75398c'>
+	<form ws="Kal">lo</form>
+	<sense>
+	  <grammi type='part'/>
+	  <gloss>
+		<form ws="Eng">PhraseFinal</form>
+	  </gloss>
+	  <def/>
+	</sense>
+	<dateCreated val='2003-08-15T03:07:28+07:00'/>
+	<dateModified val='2003-08-15T03:07:28+07:00'/>
+  </entry>
+  <entry id='1067370f-fd9a-4240-9ba9-2c4fe002565c'>
+	<form ws="Kal">su</form>
+	<sense>
+	  <grammi type='part'/>
+	  <gloss>
+		<form ws="Eng">PhraseInitial</form>
+	  </gloss>
+	  <def/>
+	</sense>
+	<dateCreated val='2003-08-15T03:07:28+07:00'/>
+	<dateModified val='2003-08-15T03:07:28+07:00'/>
+  </entry>
+  <entry id='cabdcba8-bdb6-4005-9f02-e28b50366850'>
+	<form ws="Kal">zo</form>
+	<sense>
+	  <grammi type='part'/>
+	  <gloss>
+		<form ws="Eng">RelativeClause</form>
+	  </gloss>
+	  <def/>
+	</sense>
+	<dateCreated val='2003-08-15T03:07:28+07:00'/>
+	<dateModified val='2003-08-15T03:07:28+07:00'/>
+  </entry>
+  <entry id='e32d9cbb-79ab-422e-8cd4-005a2b1f3e29'>
+	<form ws="Kal">ul</form>
+	<sense>
+	  <gloss>
+		<form ws="Eng">Adjectivizer</form>
+	  </gloss>
+	  <def/>
+	</sense>
+	<dateCreated val='2003-08-19T03:40:57+07:00'/>
+	<dateModified val='2003-08-19T03:40:57+07:00'/>
+  </entry>
+  <entry id='631b3df9-81ff-43da-82cf-c323dbc72e80'>
+	<form ws="Kal">kala</form>
+	<sense>
+	  <grammi type='intrans'/>
+	  <gloss>
+		<form ws="Eng">to.be</form>
+	  </gloss>
+	  <def/>
+	</sense>
+	<dateCreated val='2003-09-16T02:09:26+07:00'/>
+	<dateModified val='2003-09-16T02:09:26+07:00'/>
+  </entry>
+  <entry id='0bfa5f0e-c655-46a3-9047-05bc21547002'>
+	<form ws="Kal">kalo</form>
+	<sense>
+	  <grammi type='V'/>
+	  <gloss>
+		<form ws="Eng">to.be.3SgSubj.Present</form>
+	  </gloss>
+	  <def/>
+	</sense>
+	<dateCreated val='2003-09-16T02:09:26+07:00'/>
+	<dateModified val='2003-09-16T02:09:26+07:00'/>
+  </entry>
+  <entry id='57e4edde-8c0c-441a-bac5-cb0fab50b5a5'>
+	<form ws="Kal">pus</form>
+	<sense>
+	  <grammi type='adj'/>
+	  <gloss>
+		<form ws="Eng">green</form>
+	  </gloss>
+	  <def/>
+	</sense>
+	<dateCreated val='2003-10-29T04:06:25+07:00'/>
+	<dateModified val='2003-10-29T04:06:25+07:00'/>
+  </entry>
+  <entry id='81a73bd1-9c25-4dc0-9396-3c58c7a75395'>
+	<form ws="Kal">o</form>
+	<sense>
+	  <gloss>
+		<form ws="Eng">Adverbializer2</form>
+	  </gloss>
+	  <def/>
+	</sense>
+	<dateCreated val='2004-02-11T02:59:59+07:00'/>
+	<dateModified val='2004-02-11T02:59:59+07:00'/>
+  </entry>
+  <entry id='e55e9139-d219-4359-8e36-355cfd423e74'>
+	<form ws="Kal">kola</form>
+	<sense>
+	  <grammi type='adj'/>
+	  <gloss>
+		<form ws="Eng">quick</form>
+	  </gloss>
+	  <def/>
+	</sense>
+	<dateCreated val='2004-02-11T02:59:59+07:00'/>
+	<dateModified val='2004-02-11T02:59:59+07:00'/>
+  </entry>
+  <entry id='e322312f-bcfb-42af-91fb-60973c86fea0'>
+	<form ws="Kal">palti</form>
+	<sense>
+	  <grammi type='trans'/>
+	  <gloss>
+		<form ws="Eng">to.strengthen</form>
+		<form ws="Kal">to.strengthen</form>
+	  </gloss>
+	  <def/>
+	</sense>
+	<dateCreated val='2004-02-11T02:59:59+07:00'/>
+	<dateModified val='2004-02-11T02:59:59+07:00'/>
+  </entry>
+  <entry id='ad7824e6-474b-45db-b19f-ca4deaed6902'>
+	<form ws="Kal">duro</form>
+	<sense>
+	  <grammi type='sta'/>
+	  <gloss>
+		<form ws="Eng">to.be.long</form>
+		<form ws="Kal">to.be.long</form>
+	  </gloss>
+	  <def/>
+	</sense>
+	<dateCreated val='2004-02-11T02:59:59+07:00'/>
+	<dateModified val='2004-02-11T02:59:59+07:00'/>
+  </entry>
+  <entry id='38ed6cca-8a56-481a-9292-2bd2b435dd36'>
+	<form ws="Kal">dok</form>
+	<sense>
+	  <grammi type='conc'/>
+	  <gloss>
+		<form ws="Eng">Doctor</form>
+	  </gloss>
+	  <def/>
+	</sense>
+	<dateCreated val='2004-09-16T01:49:37+07:00'/>
+	<dateModified val='2004-09-16T01:49:37+07:00'/>
+  </entry>
+  <entry id='3f2d918f-4650-4725-9923-7e423d57f59e'>
+	<form ws="Kal">pus</form>
+	<sense>
+	  <grammi type='conc'/>
+	  <gloss>
+		<form ws="Eng">cat</form>
+	  </gloss>
+	  <def>
+		<form ws="Eng">female feline</form>
+	  </def>
+	</sense>
+	<dateCreated val='2004-09-16T02:03:50+07:00'/>
+	<dateModified val='2004-09-16T02:03:50+07:00'/>
+  </entry>
+  <entry id='3133a72d-33c4-4b2b-a657-a33085e17465'>
+	<form ws="Kal">pus</form>
+	<sense>
+	  <grammi type='conc'/>
+	  <gloss>
+		<form ws="Eng">blood</form>
+	  </gloss>
+	  <def>
+		<form ws="Eng">ughly stuff from a wound</form>
+	  </def>
+	</sense>
+	<dateCreated val='2004-09-16T02:04:49+07:00'/>
+	<dateModified val='2004-09-16T02:04:49+07:00'/>
+  </entry>
+  <entry id='f61fc071-6b70-4375-9271-92a5fb04024c'>
+	<form ws="Kal">ni</form>
+	<sense>
+	  <gloss>
+		<form ws="Eng">who.knows</form>
+	  </gloss>
+	  <def/>
+	</sense>
+	<dateCreated val='2004-09-16T03:12:50+07:00'/>
+	<dateModified val='2004-09-16T03:12:50+07:00'/>
+  </entry>
+  <entry id='1a705846-a814-4289-8594-4b874faca6cc'>
+	<form ws="Kal">underlying form</form>
+	<sense>
+	  <grammi type='N'/>
+	  <gloss>
+		<form ws="Eng">English gloss</form>
+	  </gloss>
+	  <def>
+		<form ws="Eng">This is the English definition</form>
+	  </def>
+	  <example>
+		<form ws="Kal">Vernacular example</form>
+		<trans>
+		  <form ws="Eng">English translation</form>
+		</trans>
+	  </example>
+	  <example>
+		<form ws="Kal">Second vernacular example</form>
+		<trans>
+		  <form ws="Eng">Second English translation</form>
+		</trans>
+	  </example>
+	  <trait range="semantic-domain" value='1'/>
+	  <trait range="semantic-domain" value='7'/>
+	</sense>
+	<sense>
+	  <gloss>
+		<form ws="Eng">English gloss2</form>
+	  </gloss>
+	  <def>
+		<form ws="Eng">This is the English definition for 2.</form>
+	  </def>
+	</sense>
+	<dateCreated val='2004-10-18T09:42:02+07:00'/>
+	<dateModified val='2004-10-18T09:42:02+07:00'/>
+  </entry>
+  <entry id='157edd55-886f-4d91-b009-8e6b49991c85'>
+	<form ws="Kal">ztestsub</form>
+	<sense>
+	  <grammi type='N'/>
+	  <gloss>
+		<form ws="Eng">English gloss</form>
+	  </gloss>
+	  <def>
+		<form ws="Eng">English definition for subentry</form>
+	  </def>
+	</sense>
+	<dateCreated val='2004-10-29T08:03:28+07:00'/>
+	<dateModified val='2004-10-29T08:03:28+07:00'/>
+  </entry>
+  <entry id='a6babda6-6830-4ec0-a363-c7fba14268eb'>
+	<form ws="Kal">ztestminor</form>
+	<sense>
+	  <grammi type='trans'/>
+	  <gloss>
+		<form ws="Eng">English glos</form>
+	  </gloss>
+	  <def/>
+	</sense>
+	<dateCreated val='2004-10-29T08:05:18+07:00'/>
+	<dateModified val='2004-10-29T08:05:18+07:00'/>
+  </entry>
+  <entry id='97e6e1c7-0979-4a06-8891-a84e99b694e5'>
+	<form ws="Kal">variant</form>
+	<dateCreated val='2005-06-17T08:54:14+07:00'/>
+	<dateModified val='2005-06-17T08:54:14+07:00'/>
+  </entry>
+</lift>
