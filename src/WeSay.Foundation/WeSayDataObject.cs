@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using WeSay.Foundation;
+using WeSay.Language;
 
 namespace WeSay.Foundation
 {
@@ -139,11 +140,22 @@ namespace WeSay.Foundation
 			object val;
 			if (Properties.TryGetValue(fieldName, out val))
 			{
+				//temp hack until mt's use parents for notification
+				if (val is MultiText)
+				{
+					this.WireUpChild((INotifyPropertyChanged) val);
+				}
 				return val as TContents;
 			}
 			TContents newGuy = new TContents();
 			_properties.Add(fieldName, newGuy);
 			newGuy.Parent = this;
+
+			//temp hack until mt's use parents for notification
+			if (newGuy is MultiText)
+			{
+				this.WireUpChild((INotifyPropertyChanged) newGuy);
+			}
 
 			return newGuy;
 		}

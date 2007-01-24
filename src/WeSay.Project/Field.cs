@@ -22,6 +22,7 @@ namespace WeSay.Project
 
 		public enum VisibilitySetting {Invisible, Visible};
 		private VisibilitySetting _visibility=VisibilitySetting.Visible ;
+		private string _optionsListFile;
 
 		/// <summary>
 		/// These are just for getting the strings right, using ToString(). In order
@@ -180,6 +181,13 @@ namespace WeSay.Project
 		{
 			get { return _dataTypeName; }
 			set { _dataTypeName = value; }
+		}
+
+		[ReflectorProperty("optionsListFile", Required = false)]
+		public string OptionsListFile
+		{
+			get { return _optionsListFile; }
+			set { _optionsListFile = value; }
 		}
 
 

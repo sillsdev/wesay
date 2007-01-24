@@ -1,23 +1,23 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Xml;
 using Exortech.NetReflector;
+using WeSay.Language;
 
 namespace WeSay.Foundation
 {
-
-
 	/// <summary>
 	/// Used to refer to this option from a field
 	/// </summary>
-	public class OptionRef : IParentable, INotifyPropertyChanged
+	public class OptionRef : IParentable, IValueHolder<string>
 	{
 		// private Guid _guid;
 
 //        [NonSerialized]
 //        private Option _option;
 
-		private string _form; //todo make this multitext
+		private string _humanReadableKey;
 
 		/// <summary>
 		/// This "backreference" is used to notify the parent of changes.
@@ -78,11 +78,11 @@ namespace WeSay.Foundation
 		{
 			get
 			{
-				return this._form;
+				return this._humanReadableKey;
 			}
 			set
 			{
-				this._form = value;
+				this._humanReadableKey = value;
 				// this.Guid = value.Guid;
 				NotifyPropertyChanged();
 			}
@@ -100,7 +100,7 @@ namespace WeSay.Foundation
 
 		public OptionsList(string name)
 		{
-			Name = name;
+			_name = name;
 			_options = new List<Option>();
 		}
 
@@ -111,11 +111,34 @@ namespace WeSay.Foundation
 			set { _options = value; }
 		}
 
-		[ReflectorProperty("name", Required = true)]
-		public string Name
+//        [ReflectorProperty("name", Required = true)]
+//        public string Name
+//        {
+//            get { return _name; }
+//            set { _name = value; }
+//        }
+
+		public void LoadFromFile(string pathToOptionsList)
 		{
-			get { return _name; }
-			set { _name = value; }
+			NetReflectorReader r = new NetReflectorReader(MakeTypeTable());
+			XmlReader reader = XmlReader.Create(pathToOptionsList);
+			try
+			{
+				r.Read(reader, this);
+			}
+			finally
+			{
+				reader.Close();
+			}
+		}
+
+
+		private NetReflectorTypeTable MakeTypeTable()
+		{
+			NetReflectorTypeTable t = new NetReflectorTypeTable();
+			t.Add(typeof(OptionsList));
+			t.Add(typeof(Option));
+			return t;
 		}
 	}
 
@@ -137,6 +160,12 @@ namespace WeSay.Foundation
 			_name = name;
 			_abbreviation = abbreviation;
 			_guid = guid;
+		}
+
+		public string Key   //todo
+		{
+			get { return _name; }
+			set { _name = value; }
 		}
 
 		[ReflectorProperty("name", Required = true)]
@@ -174,13 +203,6 @@ namespace WeSay.Foundation
 			set { _guid = value; }
 		}
 
-		private NetReflectorTypeTable MakeTypeTable()
-		{
-			NetReflectorTypeTable t = new NetReflectorTypeTable();
-			t.Add(typeof(OptionsList));
-			t.Add(typeof(Option));
-			return t;
-		}
 
 		public override string ToString()
 		{

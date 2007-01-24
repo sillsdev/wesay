@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using NUnit.Framework;
+using WeSay.Foundation;
 using WeSay.Project;
 
 namespace WeSay.Project.Tests
@@ -79,6 +80,14 @@ namespace WeSay.Project.Tests
 			Assert.IsTrue(p.PathToLexicalModelDB.Contains("AAA.words"));
 		}
 
+		[Test]
+		public void LoadPartsOfSpeechList()
+		{
+			WeSayWordsProject p = CreateAndLoad(false);
+			OptionsList list = p.GetOptionsList("PartsOfSpeech.xml");
+			Assert.IsTrue(list.Options.Count>2);
+		}
+
 		private static WeSayWordsProject CreateAndLoad(bool doMakeFileMatchingProjectName)
 		{
 			string experimentDir = MakeDir(Path.GetTempPath(), Path.GetRandomFileName());
@@ -94,6 +103,8 @@ namespace WeSay.Project.Tests
 			p.LoadFromProjectDirectoryPath(projectDir);
 			return p;
 		}
+
+
 
 		private static void MakeDummyWordsFile(string fileName, string weSayDir)
 		{

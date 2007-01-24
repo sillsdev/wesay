@@ -53,10 +53,6 @@
 	<Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-	<ProjectReference Include="..\Language\Language.csproj">
-	  <Project>{39DF05AB-8B2E-4CCA-8525-E0D6473E6E65}</Project>
-	  <Name>Language</Name>
-	</ProjectReference>
 	<ProjectReference Include="..\PlatformSpecific\PlatformSpecific.csproj">
 	  <Project>{55E6BAB0-9B46-4C89-8773-4432417C1ADF}</Project>
 	  <Name>PlatformSpecific</Name>

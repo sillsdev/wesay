@@ -1,30 +1,32 @@
 using System;
 using System.ComponentModel;
 using WeSay.Foundation;
-using WeSay.Language;
 
 namespace WeSay.UI
 {
 	/// <summary>
-	/// This simple binding class connects a OptionRef with a SingleOptionControl
+	/// This simple binding class connects a IValueHolder<TValueType> (e.g. OptionRef)
+	/// with a Widget (e.g. SingleOptionControl)
 	/// Changes in either one are reflected in the other.
 	/// </summary>
-	public class SingleOptionBinding
-	{
-		public event EventHandler<CurrentItemEventArgs> CurrentItemChanged = delegate                                                                    {
-																				 };
-		private INotifyPropertyChanged _dataTarget;
-		private SingleOptionControl _widgetTarget;
+	public class SimpleBinding<TValueType>
+	 {
+		public event EventHandler<CurrentItemEventArgs> CurrentItemChanged = delegate
+		{
+		};
+
+		private IValueHolder<TValueType> _dataTarget;
+		private IBindableControl<TValueType> _widget;
 		private bool _inMidstOfChange;
 
-		public SingleOptionBinding(INotifyPropertyChanged dataTarget,SingleOptionControl widgetTarget)
+		public SimpleBinding(IValueHolder<TValueType> dataTarget, IBindableControl<TValueType> widgetTarget)
 		{
 			_dataTarget = dataTarget;
 			_dataTarget.PropertyChanged += new PropertyChangedEventHandler(OnDataPropertyChanged);
-			_widgetTarget = widgetTarget;
-			_widgetTarget.ValueChanged += new EventHandler(OnWidgetValueChanged);
-			_widgetTarget.HandleDestroyed += new EventHandler(_target_HandleDestroyed);
-		  //  _widgetTarget.Enter += new EventHandler(OnTextBoxEntered);
+			_widget = widgetTarget;
+			_widget.ValueChanged += new EventHandler(OnWidgetValueChanged);
+			_widget.GoingAway += new EventHandler(_target_HandleDestroyed);
+		  //  _widget.Enter += new EventHandler(OnTextBoxEntered);
 		}
 
 		void _target_HandleDestroyed(object sender, EventArgs e)
@@ -32,7 +34,7 @@ namespace WeSay.UI
 			TearDown();
 		}
 
-//        void OnTextBoxEntered(object sender, EventArgs e)
+//      todo: Make some kind of "infocus" event  void OnTextBoxEntered(object sender, EventArgs e)
 //        {
 //            CurrentItemChanged(sender, new CurrentItemEventArgs(DataTarget, _writingSystemId));
 //        }
@@ -40,7 +42,7 @@ namespace WeSay.UI
 
 		void OnWidgetValueChanged(object sender, EventArgs e)
 		{
-			SetDataTargetValue(_widgetTarget.Value);
+			SetDataTargetValue(_widget.Value);
 		}
 
 		/// <summary>
@@ -49,7 +51,7 @@ namespace WeSay.UI
 		/// </summary>
 		private void TearDown()
 		{
-			//Debug.WriteLine(" BindingTearDown boundTo: " + this._widgetTarget.Name);
+			//Debug.WriteLine(" BindingTearDown boundTo: " + this._widget.Name);
 
 			if (_dataTarget == null)
 			{
@@ -58,9 +60,9 @@ namespace WeSay.UI
 
 			_dataTarget.PropertyChanged -= new PropertyChangedEventHandler(OnDataPropertyChanged);
 			_dataTarget = null;
-			_widgetTarget.ValueChanged -= new EventHandler(OnWidgetValueChanged);
-			_widgetTarget.HandleDestroyed -= new EventHandler(_target_HandleDestroyed);
-			_widgetTarget = null;
+			_widget.ValueChanged -= new EventHandler(OnWidgetValueChanged);
+			_widget.GoingAway -= new EventHandler(_target_HandleDestroyed);
+			_widget = null;
 		}
 
 		/// <summary>
@@ -74,7 +76,7 @@ namespace WeSay.UI
 			try
 			{
 				_inMidstOfChange = true;
-				_widgetTarget.ValueKey = GetTargetValue();
+				_widget.Value = GetTargetValue();
 			}
 			finally
 			{
@@ -82,15 +84,15 @@ namespace WeSay.UI
 			}
 		}
 
-		protected string GetTargetValue()
+		protected TValueType GetTargetValue()
 		{
-			OptionRef v = _dataTarget as OptionRef;
-			if (v == null)
+			IValueHolder<TValueType> holder = _dataTarget;
+			if (holder == null)
 				throw new ArgumentException("Binding can't handle that type of target.");
-			return v.Value;
+			return holder.Value;
 		}
 
-		protected virtual void SetDataTargetValue(Option value)
+		protected virtual void SetDataTargetValue(TValueType value)
 		{
 			if (_inMidstOfChange)
 				return;
@@ -99,16 +101,11 @@ namespace WeSay.UI
 			{
 				_inMidstOfChange = true;
 
-				if (_dataTarget as OptionRef != null)
+				if (_dataTarget == null)
 				{
-					OptionRef t = _dataTarget as OptionRef;
-					if (t == null)
-						throw new ArgumentException("Binding can't handle that type of target.");
-					t.Value =value.Name;
+					throw new ArgumentException("Binding found data target null.");
 				}
-
-				else
-					throw new ArgumentException("Binding doesn't understand that type of target.");
+				_dataTarget.Value = value;
 
 			}
 			finally

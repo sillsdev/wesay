@@ -77,9 +77,9 @@ namespace WeSay.LexicalTools
 		{
 			WeSay.Foundation.OptionRef optionRefTarget=target.GetProperty<WeSay.Foundation.OptionRef>(field.FieldName);
 
-			OptionsList list= Project.WeSayWordsProject.Project.GetOptionsList();
+			OptionsList list= Project.WeSayWordsProject.Project.GetOptionsList(field.OptionsListFile);
 			SingleOptionControl control = new SingleOptionControl(optionRefTarget,list);
-			WeSay.UI.SingleOptionBinding binding = new WeSay.UI.SingleOptionBinding(optionRefTarget, control);
+			SimpleBinding<string> binding = new SimpleBinding<string>(optionRefTarget, control);
 			binding.CurrentItemChanged += new EventHandler<CurrentItemEventArgs>(_detailList.OnBindingCurrentItemChanged);
 			return control;
 		}

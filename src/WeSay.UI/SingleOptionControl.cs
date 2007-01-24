@@ -5,13 +5,18 @@ using System;
 
 namespace WeSay.UI
 {
-	public partial class SingleOptionControl : Widget
+	public partial class SingleOptionControl : Widget, IBindableControl<string>
 	{
-		private Option _value;
 		private OptionsList _list;
 		private ComboBox _control = new ComboBox();
 
-		public event EventHandler ValueChanged;
+		public  event EventHandler ValueChanged;
+
+		#region IBindableControl<string> Members
+
+		public event EventHandler GoingAway;
+
+		#endregion
 
 		public SingleOptionControl()
 		{
@@ -22,39 +27,60 @@ namespace WeSay.UI
 		{
 			_list = list;
 			InitializeComponent();
+		   //doesn't all old, non-valid values to be shown (can't set the text):  ComboBoxStyle.DropDownList;
+			_control.DropDownStyle = ComboBoxStyle.DropDown ;
+			_control.AutoCompleteMode = AutoCompleteMode.Append;
+			_control.AutoCompleteSource = AutoCompleteSource.ListItems;
 			BuildBoxes(optionRef);
 		}
-		public Option Value
-		{
-			get
-			{
-				return _control.SelectedItem as Option;
-			}
-			set
-			{
-				_value = value;
-			}
-		}
 
-		public string ValueKey
+		public string Value
 		{
 			get
 			{
-				return ((Option) (_control.SelectedItem)).Name;
+				//review
+				if (_control.SelectedItem != null)
+				{
+					return (_control.SelectedItem as Option).Key;
+				}
+				else
+				{
+					return _control.Text; // situation where the value isn't currently a member of the approved list
+				}
 			}
 			set
 			{
+				if (value != null && value.Length == 0)
+				{
+					_control.SelectedIndex = -1; //enhance: have a default value
+					return;
+				}
+
 				foreach (Option option in _list.Options)
 				{
 					if (option.Name.Equals(value))
 					{
 						_control.SelectedItem = option;
-						return;
+					   return;
 					}
 				}
+
 				//Didn't find it
-				_control.BackColor = Color.Red;
+
 				_control.Text = value;
+				SetStatusColor();
+			}
+		}
+
+		private void SetStatusColor()
+		{
+			if (this.Value != null && Value.Length > 0 &&_control.SelectedIndex == -1)
+			{
+				_control.BackColor = Color.Red;
+			}
+			else
+			{
+				_control.BackColor = Color.White;
 			}
 		}
 
@@ -85,17 +111,22 @@ namespace WeSay.UI
 			foreach (Option o in _list.Options)
 			{
 				_control.Items.Add(o);
-				if (optionRef.Value != null && optionRef.Value.Equals(o.Name))
-				{
-					_control.SelectedItem = o;
-				}
 			}
+			this.Value = optionRef.Value;
 
 			_control.SelectedValueChanged += new System.EventHandler(OnSelectedValueChanged);
+			_control.Validating += new System.ComponentModel.CancelEventHandler(_control_Validating);
+	   }
+
+		void _control_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+		{
+			//don't allow entering things that aren't options
+			e.Cancel = !(_control.SelectedIndex > -1 || _control.Text=="");
 		}
 
 		void OnSelectedValueChanged(object sender, System.EventArgs e)
 		{
+			SetStatusColor();
 			if (ValueChanged != null)
 			{
 				ValueChanged.Invoke(this,null);

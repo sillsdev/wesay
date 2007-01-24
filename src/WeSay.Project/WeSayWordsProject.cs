@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 using System.Xml;
+using Exortech.NetReflector;
 using WeSay.Foundation;
 
 namespace WeSay.Project
@@ -13,6 +14,12 @@ namespace WeSay.Project
 		private string _lexiconDatabaseFileName = null;
 		private IList<ITask> _tasks;
 		private ViewTemplate _viewTemplate;
+		private Dictionary<string, OptionsList> _optionLists;
+
+		public WeSayWordsProject()
+		{
+			_optionLists = new Dictionary<string, OptionsList>();
+		}
 
 		public IList<ITask> Tasks
 		{
@@ -216,19 +223,52 @@ namespace WeSay.Project
 			set { _viewTemplate = value; }
 		}
 
-		OptionsList _testPOSList = null;
-		public OptionsList GetOptionsList()
-		{
 
-			if (_testPOSList == null)
+
+
+		public OptionsList GetOptionsList(string name)
+		{
+			OptionsList list;
+			if(_optionLists.TryGetValue(name, out list))
 			{
-				//todo
-				_testPOSList = new OptionsList("PartsOfSpeech");
-				_testPOSList.Options.Add(new Option("Noun", "N", new Guid("C2E70350-5961-4728-BC02-2CC506C40C00")));
-				_testPOSList.Options.Add(new Option("Verb", "V", new Guid("C2E70350-5961-4728-BC02-2CC506C40C01")));
-				_testPOSList.Options.Add(new Option("Adjective", "Adj", new Guid("C2E70350-5961-4728-BC02-2CC506C40C02")));
+				return list;
 			}
-			return _testPOSList;
+
+			string pathInProject = Path.Combine(this.PathToWeSaySpecificFilesDirectoryInProject, name);
+			if (File.Exists(pathInProject))
+			{
+				LoadOptionsList(pathInProject);
+			}
+			else
+			{
+				string pathInProgramDir = Path.Combine(ApplicationCommonDirectory, name);
+				if (!File.Exists(pathInProgramDir))
+				{
+					throw new ApplicationException(
+						string.Format("Could not find the optionsList file {0}. Expected to find it at: {1} or {2}", name, pathInProject, pathInProgramDir));
+				}
+				LoadOptionsList(pathInProgramDir);
+			}
+
+			return _optionLists[name];
+//
+//            if (_testPOSList == null)
+//            {
+//                //todo
+//                _testPOSList = new OptionsList("PartsOfSpeech");
+//                _testPOSList.Options.Add(new Option("Noun", "N", new Guid("C2E70350-5961-4728-BC02-2CC506C40C00")));
+//                _testPOSList.Options.Add(new Option("Verb", "V", new Guid("C2E70350-5961-4728-BC02-2CC506C40C01")));
+//                _testPOSList.Options.Add(new Option("Adjective", "Adj", new Guid("C2E70350-5961-4728-BC02-2CC506C40C02")));
+//            }
+//            return _testPOSList;
 	   }
+
+		private void LoadOptionsList(string pathToOptionsList)
+		{
+			string name = Path.GetFileName(pathToOptionsList);
+			OptionsList list = new OptionsList(name);
+			list.LoadFromFile(pathToOptionsList);
+			_optionLists.Add(name, list);
+		}
 	}
 }

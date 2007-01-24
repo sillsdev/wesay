@@ -141,6 +141,14 @@ namespace WeSay.Project
 			}
 		}
 
+//        public string PathToOptionsLists
+//        {
+//            get
+//            {
+//                return GetPathToWritingSystemPrefs(CommonDirectory);
+//            }
+//        }
+
 		private static string GetPathToWritingSystemPrefs(string parentDir)
 		{
 			return Path.Combine(parentDir, "writingSystemPrefs.xml");
@@ -251,6 +259,13 @@ namespace WeSay.Project
 			}
 		}
 
+//        /// <summary>
+//        /// Get the options lists, e.g. PartsOfSpeech, from files
+//        /// </summary>
+//        private void InitOptionsLists()
+//        {
+//            Directory.
+//        }
 
 		public string StringCatalogSelector
 		{

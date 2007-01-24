@@ -65,10 +65,6 @@
 	<Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-	<ProjectReference Include="..\Language\Language.csproj">
-	  <Project>{39DF05AB-8B2E-4CCA-8525-E0D6473E6E65}</Project>
-	  <Name>Language</Name>
-	</ProjectReference>
 	<ProjectReference Include="..\LexicalModel.Tests\LexicalModel.Tests.csproj">
 	  <Project>{123D695C-0D5D-46E5-893F-39EC4E0B01B8}</Project>
 	  <Name>LexicalModel.Tests</Name>
