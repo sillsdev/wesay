@@ -70,7 +70,7 @@ namespace WeSay.LexicalModel
 			{
 				return new Guid(id);
 			}
-			catch (Exception e)
+			catch (Exception)
 			{
 				//enchance: log this, we're throwing away the id they had
 				return Guid.Empty;

@@ -85,7 +85,7 @@ namespace WeSay.LexicalModel
 		{
 		}
 
-		public LexSense Parent
+		public new LexSense Parent
 		{
 			get { return _parent as LexSense; }
 		}

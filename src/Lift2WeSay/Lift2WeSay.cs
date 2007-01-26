@@ -4,6 +4,7 @@ using System.Xml;
 using WeSay.Data;
 using WeSay.Foundation.Progress;
 using WeSay.LexicalModel;
+using WeSay.LexicalModel.Db4o_Specific;
 
 namespace Lift2WeSay
 {
@@ -65,6 +66,10 @@ namespace Lift2WeSay
 			string sourcePath = args[0];
 			string destPath = args[1];
 
+			Console.WriteLine("Lift2WeSay is converting");
+			Console.WriteLine("Lift: " + sourcePath);
+			Console.WriteLine("to WeSay: " + destPath);
+
 			if (File.Exists(destPath))
 			{
 				File.Delete(destPath);
@@ -74,9 +79,19 @@ namespace Lift2WeSay
 			{
 				using (Db4oRecordList<LexEntry> entries = new Db4oRecordList<LexEntry>(ds))
 				{
-					LiftImporter.ReadFile(entries, sourcePath, new ConsoleProgress());
+					if (Db4oLexModelHelper.Singleton == null)
+					{
+						Db4oLexModelHelper.Initialize(ds.Data);
+					}
+
+					XmlDocument doc = new XmlDocument();
+					doc.Load(sourcePath);
+					LiftImporter importer = LiftImporter.CreateCorrectImporter(doc);
+					importer.Progress = new ConsoleProgress();
+					importer.ReadFile(doc, entries);
 				}
 			}
+			Console.WriteLine("Done.");
 		}
 
 		private static void PrintUsage()

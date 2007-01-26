@@ -73,7 +73,6 @@ namespace WeSay.Project
 			base.LoadFromProjectDirectoryPath(projectDirectoryPath);
 			DetermineWordsFile();
 
-
 			ViewTemplate templateAsFoundInProjectFiles = GetInventoryFromProjectFiles();
 			ViewTemplate fullUpToDateTemplate = ViewTemplate.MakeMasterTemplate(WritingSystems);
 			ViewTemplate.SynchronizeInventories(fullUpToDateTemplate, templateAsFoundInProjectFiles);
@@ -213,7 +212,7 @@ namespace WeSay.Project
 		{
 			get
 			{
-				return Path.Combine(ProjectDirectoryPath, "WeSay");
+				return Path.Combine(ProjectDirectoryPath, "wesay");
 			}
 		}
 

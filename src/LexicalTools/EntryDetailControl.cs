@@ -1,11 +1,7 @@
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
-//using Db4objects.Db4o;
-//using Db4objects.Db4o.Ext;
-//using Db4objects.Db4o.Query;
 using WeSay.Data;
 using WeSay.Language;
 using WeSay.LexicalModel;
@@ -28,6 +24,31 @@ namespace WeSay.LexicalTools
 			InitializeComponent();
 		}
 
+		public int CompareMultiText(MultiText x, MultiText y)
+		{
+			if(x == null)
+			{
+				if (y == null)
+				{
+					return 0; // both null so equal
+				}
+				else
+				{
+					return -1; // x is null so y is greater
+				}
+			}
+			else
+			{
+				if(y == null)
+				{
+					return 1; // y is null so x is greater
+				}
+				else
+				{
+					return x.GetFirstAlternative().CompareTo(y.GetFirstAlternative());
+				}
+			}
+		}
 		public EntryDetailControl(IRecordListManager recordManager, ViewTemplate viewTemplate)
 		{
 			if (recordManager == null)
@@ -40,13 +61,14 @@ namespace WeSay.LexicalTools
 			}
 			_recordManager = recordManager;
 			_records = recordManager.GetListOfType<LexEntry>();
+
 			_viewTemplate = viewTemplate;
 			InitializeComponent();
 			BackColor = WeSay.UI.DisplaySettings.Default.BackgroundColor;
 			_entryDetailPanel.ViewTemplate = _viewTemplate;
 			_entryDetailPanel.BackColor = WeSay.UI.DisplaySettings.Default.BackgroundColor;
 			_entryDetailPanel.DataSource = CurrentRecord;
-			this._btnFind.Text = StringCatalog.Get("Find");
+			_btnFind.Text = StringCatalog.Get("Find");
 
 
 			_recordsListBox.DataSource = _records;
@@ -111,7 +133,7 @@ namespace WeSay.LexicalTools
 			Cursor currentCursor = Cursor;
 			Cursor = Cursors.WaitCursor;
 			InMemoryBindingList<object> records = new InMemoryBindingList<object>();
-			records.AddRange(ApproximateMatcher.FindClosestAndNextClosest(text,_recordManager,_records));
+			records.AddRange(ApproximateMatcher.FindClosestAndNextClosestAndPrefixed(text, _recordManager, _records));
 			this._records = records;
 			this._recordsListBox.DataSource = this._records;
 

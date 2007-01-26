@@ -1,6 +1,5 @@
 using System;
 using System.ComponentModel;
-using System.Diagnostics;
 using WeSay.Foundation;
 using WeSay.Language;
 using WeSay.LexicalModel.Db4o_Specific;
@@ -184,15 +183,15 @@ namespace WeSay.LexicalModel
 		{
 		}
 
-		/// <summary>
-		/// TODO: needed for GetClosestLexicalForms(IRecordList<LexicalFormMultiText> lexicalForms...)
-		/// </summary>
-		public LexicalFormMultiText()
-			: base(null)
-		{
-		}
+		///// <summary>
+		///// TODO: needed for GetClosestLexicalForms(IRecordList<LexicalFormMultiText> lexicalForms...)
+		///// </summary>
+		//public LexicalFormMultiText()
+		//    : base(null)
+		//{
+		//}
 
-		public LexEntry Parent
+		public new LexEntry Parent
 		{
 			get { return _parent as LexEntry; }
 		}

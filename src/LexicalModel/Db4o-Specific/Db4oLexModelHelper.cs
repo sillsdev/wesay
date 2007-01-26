@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
 using Db4objects.Db4o;
 using Db4objects.Db4o.Events;
 using WeSay.Foundation;
@@ -60,6 +59,14 @@ namespace WeSay.LexicalModel.Db4o_Specific
 			get { return _singleton; }
 		}
 
+		private List<Type> _doNotActivateTypes;
+
+		public List<Type> DoNotActivateTypes
+		{
+			get { return this._doNotActivateTypes; }
+			set { this._doNotActivateTypes = value; }
+		}
+
 		private Db4oLexModelHelper(Db4objects.Db4o.IObjectContainer container)
 		{
 			_container = container;
@@ -67,10 +74,21 @@ namespace WeSay.LexicalModel.Db4o_Specific
 			{
 				return; //for non-db tests
 			}
+			_doNotActivateTypes = new List<Type>();
 
 			IEventRegistry r = EventRegistryFactory.ForObjectContainer(container);
 			r.Activated += new ObjectEventHandler(OnActivated);
+			r.Activating += new CancellableObjectEventHandler(OnActivating);
 		}
+
+		void OnActivating(object sender, CancellableObjectEventArgs args)
+		{
+			if (_doNotActivateTypes.Contains(sender.GetType()))
+			{
+				args.Cancel();
+			}
+		}
+
 		public void Dispose()
 		{
 			if (_container == null)
@@ -95,7 +113,5 @@ namespace WeSay.LexicalModel.Db4o_Specific
 			o.FinishActivation();
 			_activationCount++;
 		}
-
-
 	}
 }

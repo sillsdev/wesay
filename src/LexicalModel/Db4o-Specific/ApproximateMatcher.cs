@@ -1,7 +1,7 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Text;
 using Db4objects.Db4o;
 using Db4objects.Db4o.Ext;
 using Db4objects.Db4o.Query;
@@ -13,30 +13,59 @@ namespace WeSay.LexicalModel.Db4o_Specific
 	{
 		static public IList<LexEntry> FindEntriesWithClosestLexemeForms(string key, IRecordListManager recordManager, IBindingList records)
 		{
-			return FindEntriesWithClosestLexemeForms(key, false, recordManager, records);
+			return FindEntriesWithClosestLexemeForms(key, false, false, recordManager, records);
+		}
+
+		static public IList<LexEntry> FindEntriesWithClosestAndPrefixedLexemeForms(string key, IRecordListManager recordManager, IBindingList records)
+		{
+			return FindEntriesWithClosestLexemeForms(key, false, true, recordManager, records);
 		}
 
 		static public IList<LexEntry> FindClosestAndNextClosest(string key, IRecordListManager recordManager, IBindingList records)
 		{
-			return FindEntriesWithClosestLexemeForms(key, true, recordManager, records);
+			return FindEntriesWithClosestLexemeForms(key, true, false, recordManager, records);
 		}
 
-		static public IList<LexEntry> FindEntriesWithClosestLexemeForms(string key, bool includeNextClosest, IRecordListManager recordManager, IBindingList records)
+		static public IList<LexEntry> FindClosestAndNextClosestAndPrefixed(string key, IRecordListManager recordManager, IBindingList records)
+		{
+			return FindEntriesWithClosestLexemeForms(key, true, true, recordManager, records);
+		}
+
+
+		static private IList<LexEntry> FindEntriesWithClosestLexemeForms(string key, bool includeNextClosest, bool includePrefixedForms, IRecordListManager recordManager, IBindingList records)
 		{
 			int bestEditDistance = int.MaxValue;
 			IList<LexEntry> bestMatches = new List<LexEntry>();
 			if (recordManager is Db4oRecordListManager)
 			{
 				Db4oDataSource db4oData = ((Db4oRecordListManager)recordManager).DataSource;
-				IRecordList<LexicalFormMultiText> lexicalForms = recordManager.GetListOfType<LexicalFormMultiText>();
+//                IRecordList<LexicalFormMultiText> lexicalForms = recordManager.GetListOfType<LexicalFormMultiText>();
 				IExtObjectContainer database = db4oData.Data.Ext();
-				IList<LexicalFormMultiText> best;
-				bestEditDistance = GetClosestLexicalForms(lexicalForms, key, 0, bestEditDistance, out best);
-				GetEntriesFromLexicalForms(database, bestMatches, best);
+				IList<int> bestLexicalFormIds;
+				List<string> lexicalFormsText = new List<string>();
+				List<Type> OriginalList = Db4oLexModelHelper.Singleton.DoNotActivateTypes;
+				Db4oLexModelHelper.Singleton.DoNotActivateTypes = new List<Type>();
+				Db4oLexModelHelper.Singleton.DoNotActivateTypes.Add(typeof(LexEntry));
+
+
+				IQuery query = database.Query();
+				query.Constrain(typeof(LexicalFormMultiText));
+				IObjectSet lexicalForms = query.Execute();
+
+
+
+				foreach (LexicalFormMultiText lexicalForm in lexicalForms)
+				{
+					lexicalFormsText.Add(lexicalForm.ToString());
+				}
+				Db4oLexModelHelper.Singleton.DoNotActivateTypes = OriginalList;
+
+				bestEditDistance = GetClosestLexicalForms(lexicalFormsText, key, 0, int.MaxValue, includePrefixedForms, out bestLexicalFormIds);
+				GetEntriesFromLexicalForms(database, bestMatches, lexicalForms, bestLexicalFormIds);
 				if (includeNextClosest || bestMatches.Count == 0)
 				{
-					GetClosestLexicalForms(lexicalForms, key, bestEditDistance + 1, int.MaxValue, out best);
-					GetEntriesFromLexicalForms(database, bestMatches, best);
+					GetClosestLexicalForms(lexicalFormsText, key, bestEditDistance + 1, int.MaxValue, false, out bestLexicalFormIds);
+					GetEntriesFromLexicalForms(database, bestMatches, lexicalForms, bestLexicalFormIds);
 				}
 			}
 			else
@@ -58,57 +87,71 @@ namespace WeSay.LexicalModel.Db4o_Specific
 			return bestMatches;
 		}
 
-		static public  int GetClosestLexicalForms(IRecordList<LexicalFormMultiText> lexicalForms, string key, int minEditDistance, int maxEditDistance, out IList<LexicalFormMultiText> closestLexicalForms)
+		static private int GetClosestLexicalForms(IList<string> lexicalForms, string key, int minEditDistance, int maxEditDistance, bool includePrefixedForms, out IList<int> closestLexicalFormIds)
 		{
 			int bestEditDistance = maxEditDistance;
-			closestLexicalForms = new List<LexicalFormMultiText>();
-
-			foreach (LexicalFormMultiText lexicalForm in lexicalForms)
+			closestLexicalFormIds = new List<int>();
+			int i = 0;
+			foreach (string lexicalForm in lexicalForms)
 			{
-				string vernacularLexicalForm = lexicalForm.ToString();
-				if (!string.IsNullOrEmpty(vernacularLexicalForm))
+				if (!string.IsNullOrEmpty(lexicalForm))
 				{
-					int editDistance = EditDistance(key, vernacularLexicalForm, bestEditDistance);
+					int editDistance;
+					if (includePrefixedForms && lexicalForm.StartsWith(key))
+					{
+						editDistance = 0;
+					}
+					else
+					{
+						editDistance = EditDistance(key, lexicalForm, bestEditDistance);
+					}
 					if (minEditDistance <= editDistance && editDistance < bestEditDistance)
 					{
-						closestLexicalForms.Clear();
+						closestLexicalFormIds.Clear();
 						bestEditDistance = editDistance;
 					}
 					if (editDistance == bestEditDistance)
 					{
-						closestLexicalForms.Add(lexicalForm);
+						closestLexicalFormIds.Add(i);
 					}
 				}
+				++i;
 			}
 			return bestEditDistance;
 		}
 
-		[CLSCompliant(false)]
-		static public  void GetEntriesFromLexicalForms(Db4objects.Db4o.Ext.IExtObjectContainer database, IList<LexEntry> bestMatches, IList<LexicalFormMultiText> best)
+		static private void GetEntriesFromLexicalForms(Db4objects.Db4o.Ext.IExtObjectContainer database, IList<LexEntry> bestMatches, IList LexicalForms, IList<int> bestIds)
 		{
 			//review: now that we have "parent" paths, would using that be faster than this?
-			foreach (LexicalFormMultiText lexicalForm in best)
+			foreach (int id in bestIds)
 			{
-				IQuery query = database.Query();
-				query.Constrain(typeof(LexEntry));
-				query.Descend("_lexicalForm").Constrain(lexicalForm).Identity();
-				IObjectSet entries = query.Execute();
-				// If LexEntry does not cascade delete its lexicalForm then we could have a case where we
-				// don't have a entry associated with this lexicalForm.
-				if (entries.Count == 0)
+				LexicalFormMultiText lexicalForm = (LexicalFormMultiText)LexicalForms[id];
+				database.Activate(lexicalForm, 99);
+				//IQuery query = database.Query();
+				//query.Constrain(typeof(LexEntry));
+				//query.Descend("_lexicalForm").Constrain(lexicalForm).Identity();
+				//IObjectSet entries = query.Execute();
+				//// If LexEntry does not cascade delete its lexicalForm then we could have a case where we
+				//// don't have a entry associated with this lexicalForm.
+				//if (entries.Count == 0)
+				//{
+				//    continue;
+				//}
+				//bestMatches.Add((LexEntry)entries[0]);
+				if (lexicalForm.Parent != null)
 				{
-					continue;
+					bestMatches.Add(lexicalForm.Parent);
 				}
-				bestMatches.Add((LexEntry)entries[0]);
 			}
 		}
 
-		private static int EditDistance(string list1, string list2, int cutoff)
+		private static int EditDistance(string list1, string list2, int maxEditDistance)
 		{
 			const int deletionCost = 1;
 			const int insertionCost = deletionCost; // should be symmetric
 			const int substitutionCost = 1;
 			const int transpositionCost = 1;
+			int lastColumnThatNeedsToBeEvaluated = 2;
 
 			// Validate parameters
 			if (list1 == null)
@@ -137,9 +180,14 @@ namespace WeSay.LexicalModel.Db4o_Specific
 			int prevRow = 0, curRow = 1, nextRow = 2;
 			int[][] rows = new int[][] { new int[n2 + 1], new int[n2 + 1], new int[n2 + 1] };
 			// Initialize the previous row.
-			for (int list2index = 0; list2index <= n2; ++list2index)
+			int maxIndex = Math.Min(n2, lastColumnThatNeedsToBeEvaluated);
+			for (int list2index = 0; list2index <= maxIndex; ++list2index)
 			{
 				rows[curRow][list2index] = list2index;
+				if (list2index <= maxEditDistance)
+				{
+					lastColumnThatNeedsToBeEvaluated = list2index;
+				}
 			}
 
 			// For each virtual row (since we only have physical storage for two)
@@ -147,7 +195,9 @@ namespace WeSay.LexicalModel.Db4o_Specific
 			{
 				// Fill in the values in the row
 				rows[nextRow][0] = list1index;
-				for (int list2index = 1; list2index <= n2; ++list2index)
+				maxIndex = Math.Min(n2, lastColumnThatNeedsToBeEvaluated + 1);
+				lastColumnThatNeedsToBeEvaluated = 0;
+				for (int list2index = 1; list2index <= maxIndex; ++list2index)
 				{
 					int distance;
 
@@ -171,6 +221,10 @@ namespace WeSay.LexicalModel.Db4o_Specific
 						}
 					}
 					rows[nextRow][list2index] = distance;
+					if (distance <= maxEditDistance)
+					{
+						lastColumnThatNeedsToBeEvaluated = list2index;
+					}
 				}
 
 				// cycle the previous, current and next rows
@@ -191,6 +245,11 @@ namespace WeSay.LexicalModel.Db4o_Specific
 						curRow = 1;
 						nextRow = 2;
 						break;
+				}
+
+				if(lastColumnThatNeedsToBeEvaluated == 0)
+				{
+					return int.MaxValue;
 				}
 			}
 

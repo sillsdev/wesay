@@ -18,10 +18,6 @@ namespace WeSay.LexicalModel
 		{
 		}
 
-//        public LiftImporter()
-//        {
-//        }
-
 		/// <summary>
 		/// Optionally set this to a wiredup ProgressState to get UI feedback and user cancelling
 		/// </summary>
@@ -85,7 +81,7 @@ namespace WeSay.LexicalModel
 			_progressState.NumberOfSteps = entryNodes.Count;
 			foreach (XmlNode node in entryNodes)
 			{
-				entries.Add(this.ReadEntry(node));
+				entries.Add(ReadEntry(node));
 				count++;
 				if (count >= nextProgressPoint)
 				{
@@ -161,11 +157,11 @@ namespace WeSay.LexicalModel
 				{
 					entry = new LexEntry(new Guid(id));
 				}
-				catch (FormatException e)
+				catch (FormatException)
 				{
 					//enchance: log this, we're throwing away the id they had
 				}
-				catch (OverflowException e)
+				catch (OverflowException)
 				{
 					//enchance: log this, we're throwing away the id they had
 				}

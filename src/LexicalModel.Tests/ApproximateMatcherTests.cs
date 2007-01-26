@@ -11,7 +11,6 @@ namespace WeSay.LexicalTools.Tests
 	{
 		private IRecordList<LexEntry> _records;
 		private IRecordListManager _recordListManager;
-		//private EntryDetailControl _entryDetailControl;
 		string _FilePath;
 
 
@@ -21,30 +20,20 @@ namespace WeSay.LexicalTools.Tests
 			Db4oLexModelHelper.InitializeForNonDbTests();
 			_FilePath = System.IO.Path.GetTempFileName();
 
-			//REVIEW EA (JH): is this ok?  these test are no longer reliant on the tool itself
-//            BasilProject.InitializeForTests();
-//
-//            string[] vernacularWritingSystemIds = new string[] { BasilProject.Project.WritingSystems.VernacularWritingSystemDefaultId };
-//            ViewTemplate viewTemplate = new viewTemplate();
-//            viewTemplate.Add(new Field(Field.FieldNames.EntryLexicalForm.ToString(), vernacularWritingSystemIds));
-//
 			this._recordListManager = new Db4oRecordListManager(_FilePath);
 			this._records = _recordListManager.GetListOfType<LexEntry>();
-		   // this.Db4oLexQueryHelper = new EntryDetailControl(this._recordListManager, viewTemplate);
 		}
 		[TearDown]
 		public void TearDown()
 		{
 			_recordListManager.Dispose();
 			_records.Dispose();
-		   // _entryDetailControl.Dispose();
 			System.IO.File.Delete(_FilePath);
 		}
 
 		private LexEntry AddEntry(string lexicalForm)
 		{
 			LexEntry entry = new LexEntry();
-		  //  entry.LexicalForm[BasilProject.Project.WritingSystems.VernacularWritingSystemDefaultId] = lexicalForm;
 			entry.LexicalForm["xyz"] = lexicalForm;
 			this._records.Add(entry);
 			return entry;
@@ -73,6 +62,22 @@ namespace WeSay.LexicalTools.Tests
 			IList<LexEntry> closest = ApproximateMatcher.FindEntriesWithClosestLexemeForms("distance",_recordListManager,_records );
 		   Assert.AreEqual(1, closest.Count);
 			Assert.IsTrue(ContainsEntryWithLexicalForm(closest, "distance"));
+		}
+
+		[Test]
+		public void Prefixes()
+		{
+			AddEntry("distance");
+			AddEntry("distances");
+			AddEntry("distane");
+			AddEntry("destance");
+			AddEntry("distence");
+			IList<LexEntry> closest = ApproximateMatcher.FindEntriesWithClosestAndPrefixedLexemeForms("dist", _recordListManager, _records);
+			Assert.AreEqual(4, closest.Count);
+			Assert.IsTrue(ContainsEntryWithLexicalForm(closest, "distance"));
+			Assert.IsTrue(ContainsEntryWithLexicalForm(closest, "distances"));
+			Assert.IsTrue(ContainsEntryWithLexicalForm(closest, "distane"));
+			Assert.IsTrue(ContainsEntryWithLexicalForm(closest, "distence"));
 		}
 
 
