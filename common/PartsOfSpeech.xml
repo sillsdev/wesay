@@ -1,14 +1,64 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <optionsList>
-  <options>
-	<option>
-	  <name>alpha</name>
-	</option>
-	<option>
-	  <name>beta</name>
-	</option>
-	<option>
-	  <name>gammayyy</name>
-	</option>
-  </options>
+	<options>
+		<option>
+			<key>verb</key>
+			<name>
+				<form ws='en'>verb</form>
+				<form ws='fr'>verbe</form>
+				<form ws='es'>verbo</form>
+				<form ws='th'>คำกริยา</form>
+			</name>
+		</option>
+		<option>
+			<key>noun</key>
+			<name>
+				<form ws='en'>noun</form>
+				<form ws='fr'>nom</form>
+				<form ws='es'>nombre</form>
+				<form ws='th'>นาม</form>
+			</name>
+		</option>
+		<!--<option>
+			<key>blah blah blah</key>
+			<name>
+				<form ws='en'>adverb</form>
+				<form ws='fr'>adverbe</form>
+				<form ws='es'>adverbio</form>
+			</name>
+		</option>
+		-->
+		<option>
+			<key>adverb</key>
+			<name>
+				<form ws='en'>adverb</form>
+				<form ws='fr'>adverbe</form>
+				<form ws='es'>adverbio</form>
+			</name>
+		</option>
+		<option>
+			<key>adjective</key>
+			<name>
+				<form ws='en'>adjective</form>
+				<form ws='fr'>adjectif</form>
+				<form ws='es'>adjectivo</form>
+			</name>
+		</option>
+		<option>
+			<key>preposition</key>
+			<name>
+				<form ws='en'>preposition</form>
+				<form ws='fr'>préposition</form>
+				<form ws='es'>preposición</form>
+			</name>
+		</option>
+		<option>
+			<key>pronoun</key>
+			<name>
+				<form ws='en'>pronoun</form>
+				<form ws='fr'>pronom</form>
+				<form ws='es'>pronombre</form>
+			</name>
+		</option>
+	</options>
 </optionsList>

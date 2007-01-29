@@ -7,7 +7,7 @@
 		  <className></className>
 		  <dataType>MultiText</dataType>
 		  <displayName>Word</displayName>
-		  <name>EntryLexicalForm</name>
+		  <fieldName>EntryLexicalForm</fieldName>
 		  <multiplicity>ZeroOr1</multiplicity>
 		  <visibility>Visible</visibility>
 		  <writingSystems>
@@ -21,7 +21,7 @@
 		  <className></className>
 		  <dataType>MultiText</dataType>
 		  <displayName>Gloss</displayName>
-		  <name>SenseGloss</name>
+		  <fieldName>SenseGloss</fieldName>
 		  <multiplicity>ZeroOr1</multiplicity>
 		  <visibility>Visible</visibility>
 		  <writingSystems>
@@ -35,7 +35,7 @@
 		  <className></className>
 		  <dataType>MultiText</dataType>
 		  <displayName>Example Sentence</displayName>
-		  <name>ExampleSentence</name>
+		  <fieldName>ExampleSentence</fieldName>
 		  <multiplicity>ZeroOr1</multiplicity>
 		  <visibility>Visible</visibility>
 		  <writingSystems>
@@ -49,7 +49,7 @@
 		  <className></className>
 		  <dataType>MultiText</dataType>
 		  <displayName>Translation</displayName>
-		  <name>ExampleTranslation</name>
+		  <fieldName>ExampleTranslation</fieldName>
 		  <multiplicity>ZeroOr1</multiplicity>
 		  <visibility>Invisible</visibility>
 		  <writingSystems>
@@ -60,12 +60,23 @@
 		  </writingSystems>
 		</field>
 		<field>
-		  <className>LexEntry</className>
+		  <className>LexSense</className>
 		  <dataType>Option</dataType>
 		  <optionsListFile>PartsOfSpeech.xml</optionsListFile>
 		  <displayName>POS</displayName>
-		  <name>pos</name>
+		  <fieldName>PartOfSpeech</fieldName>
 		  <multiplicity>ZeroOr1</multiplicity>
+		  <visibility>Visible</visibility>
+		  <writingSystems>
+			<id>th</id>
+		  </writingSystems>
+		</field>
+		<field>
+		  <className>LexSense</className>
+		  <dataType>OptionCollection</dataType>
+		  <optionsListFile>SemanticDomains.xml</optionsListFile>
+		  <displayName>Sem Dom</displayName>
+		  <fieldName>SemanticDomains</fieldName>
 		  <visibility>Visible</visibility>
 		  <writingSystems>
 			<id>en</id>
@@ -75,7 +86,7 @@
 		  <className>LexEntry</className>
 		  <dataType>MultiText</dataType>
 		  <displayName>Note</displayName>
-		  <name>note</name>
+		  <fieldName>note</fieldName>
 		  <multiplicity>ZeroOr1</multiplicity>
 		  <visibility>Visible</visibility>
 		  <writingSystems>
