@@ -265,7 +265,7 @@ namespace WeSay.Project
 		private void LoadOptionsList(string pathToOptionsList)
 		{
 			string name = Path.GetFileName(pathToOptionsList);
-			OptionsList list = new OptionsList(name);
+			OptionsList list = new OptionsList();
 			list.LoadFromFile(pathToOptionsList);
 			_optionLists.Add(name, list);
 		}

@@ -80,7 +80,7 @@ namespace WeSay.Project
 		}
 
 
-		[ReflectorCollection("name", Required = true)]
+		[ReflectorCollection("fieldName", Required = true)]
 		public string FieldName
 		{
 			get

@@ -158,15 +158,20 @@ namespace WeSay.Project
 			ViewTemplate masterTemplate = new ViewTemplate();
 			masterTemplate.Add(MakeField(Field.FieldNames.EntryLexicalForm.ToString(), "Word", true,writingSystems));
 			masterTemplate.Add(MakeField(Field.FieldNames.SenseGloss.ToString(), "Gloss", true,writingSystems));
+			Field posField = MakeField("PartOfSpeech", "POS", true,writingSystems);
+			posField.DataTypeName = "Option";
+			posField.ClassName = "LexSense";
+			posField.OptionsListFile = "PartsOfSpeech.xml";
+			masterTemplate.Add(posField);
 			masterTemplate.Add(MakeField(Field.FieldNames.ExampleSentence.ToString(), "Example Sentence", true,writingSystems));
 			masterTemplate.Add(MakeField(Field.FieldNames.ExampleTranslation.ToString(), "Translation", false,writingSystems));
 			return masterTemplate;
 		}
 
-		private static Field MakeField(string name, string displayName, bool defaultVisible, WritingSystemCollection writingSystems)
+		private static Field MakeField(string fieldName, string displayName, bool defaultVisible, WritingSystemCollection writingSystems)
 		{
 			Field field = new Field();
-			field.FieldName = name;
+			field.FieldName = fieldName;
 			field.DisplayName = displayName;
 			if (defaultVisible)
 			{
