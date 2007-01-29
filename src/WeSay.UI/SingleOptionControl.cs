@@ -9,6 +9,7 @@ namespace WeSay.UI
 	{
 		private OptionsList _list;
 		private ComboBox _control = new ComboBox();
+		private string _idOfPreferredWritingSystem;
 
 		public  event EventHandler ValueChanged;
 
@@ -21,14 +22,15 @@ namespace WeSay.UI
 		public SingleOptionControl()
 		{
 			InitializeComponent();
+			_idOfPreferredWritingSystem = "es";
 		}
 
-		public SingleOptionControl(OptionRef optionRef, OptionsList list)
+		public SingleOptionControl(OptionRef optionRef, OptionsList list, string idOfPreferredWritingSystem)
 		{
 			_list = list;
+			_idOfPreferredWritingSystem = idOfPreferredWritingSystem;
 			InitializeComponent();
-		   //doesn't all old, non-valid values to be shown (can't set the text):  ComboBoxStyle.DropDownList;
-			_control.DropDownStyle = ComboBoxStyle.DropDown ;
+		   //doesn't allow old, non-valid values to be shown (can't set the text):  ComboBoxStyle.DropDownList;
 			_control.AutoCompleteMode = AutoCompleteMode.Append;
 			_control.AutoCompleteSource = AutoCompleteSource.ListItems;
 			BuildBoxes(optionRef);
@@ -41,7 +43,7 @@ namespace WeSay.UI
 				//review
 				if (_control.SelectedItem != null)
 				{
-					return (_control.SelectedItem as Option).Key;
+					return (_control.SelectedItem as Option.OptionDisplayProxy).Key;
 				}
 				else
 				{
@@ -56,17 +58,18 @@ namespace WeSay.UI
 					return;
 				}
 
-				foreach (Option option in _list.Options)
+				foreach (Option.OptionDisplayProxy proxy in _control.Items)
 				{
-					if (option.Name.Equals(value))
+					if (proxy.Key.Equals(value))
 					{
-						_control.SelectedItem = option;
+						_control.SelectedItem = proxy;
 					   return;
 					}
 				}
 
 				//Didn't find it
 
+				_control.DropDownStyle = ComboBoxStyle.DropDown; //allow aberant old value
 				_control.Text = value;
 				SetStatusColor();
 			}
@@ -81,6 +84,7 @@ namespace WeSay.UI
 			else
 			{
 				_control.BackColor = Color.White;
+				_control.DropDownStyle = ComboBoxStyle.DropDownList; // can't type
 			}
 		}
 
@@ -110,7 +114,13 @@ namespace WeSay.UI
 		{
 			foreach (Option o in _list.Options)
 			{
-				_control.Items.Add(o);
+			   /* this won't work.  It doesn't give us a way to select which ws to display, as it will always
+					draw from ToString().  We can change which property (e.g. DisplayName(), but that doesn't
+					give us a way to choose the ws either.
+					_control.Items.Add(o);
+				*/
+				_control.Items.Add(o.GetDisplayProxy(_idOfPreferredWritingSystem));
+
 			}
 			this.Value = optionRef.Value;
 

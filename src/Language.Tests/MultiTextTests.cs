@@ -1,4 +1,9 @@
 using System;
+using System.Diagnostics;
+using System.IO;
+using System.Text;
+using System.Xml.Serialization;
+using Exortech.NetReflector;
 using NUnit.Framework;
 using System.ComponentModel;
 using WeSay.Language;
@@ -62,13 +67,13 @@ namespace Language.Tests
 			Assert.AreSame(string.Empty, text["foo"]);
 		}
 
-		[Test]
-		public void ImplementsIEnumerable()
-		{
-			MultiText text = new MultiText();
-			IEnumerable ienumerable = text;
-			Assert.IsNotNull(ienumerable);
-		}
+//        [Test]
+//        public void ImplementsIEnumerable()
+//        {
+//            MultiText text = new MultiText();
+//            IEnumerable ienumerable = text;
+//            Assert.IsNotNull(ienumerable);
+//        }
 
 		[Test]
 		public void Count()
@@ -156,6 +161,91 @@ namespace Language.Tests
 			old.MergeIn(newGuy);
 			Assert.AreEqual(3, old.Count);
 			Assert.AreEqual("newbeta", old["b"]);
+		}
+
+		[Test]
+		public void UsesNextAlternativeWhenMissing()
+		{
+			MultiText multiText = new MultiText();
+			multiText["wsWithNullElement"] = null;
+			 multiText["wsWithEmptyElement"] = "";
+		   multiText["wsWithContent"] = "hello";
+			Assert.AreEqual(String.Empty, multiText.GetAlternative("missingWs", false));
+			Assert.AreEqual(String.Empty, multiText.GetAlternative("wsWithEmptyElement", false));
+			Assert.AreEqual("hello", multiText.GetAlternative("missingWs",true));
+			Assert.AreEqual("hello", multiText.GetAlternative("wsWithEmptyElement",true));
+			Assert.AreEqual("hello", multiText.GetAlternative("wsWithNullElement",true));
+			Assert.AreEqual("hello", multiText.GetAlternative("wsWithContent", false));
+			Assert.AreEqual("hello", multiText.GetAlternative("wsWithContent", true));
+	  }
+
+
+		[Test]
+		public void SerializeWithXmlSerializer()
+		{
+			MultiText text = new MultiText();
+			text["foo"] = "alpha";
+			text["boo"] = "beta";
+
+			XmlSerializer ser = new XmlSerializer(typeof(TestMultiTextHolder));
+
+			StringWriter writer = new System.IO.StringWriter();
+			TestMultiTextHolder holder = new TestMultiTextHolder();
+			holder.Name = text;
+		   ser.Serialize(writer, holder);
+
+			string mtxml = writer.GetStringBuilder().ToString();
+			mtxml = mtxml.Replace('"', '\'');
+		 //   Debug.WriteLine(mtxml);
+		  string answer =
+				@"<?xml version='1.0' encoding='utf-16'?>
+<TestMultiTextHolder xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xmlns:xsd='http://www.w3.org/2001/XMLSchema'>
+  <name>
+	<form ws='foo'>alpha</form>
+	<form ws='boo'>beta</form>
+  </name>
+</TestMultiTextHolder>";
+			Assert.AreEqual(answer, mtxml);
+		}
+
+		[Test]
+		public void DeSerialize()
+		{
+			MultiText text = new MultiText();
+			text["foo"] = "alpha";
+
+			NetReflectorTypeTable t = new NetReflectorTypeTable();
+			t.Add(typeof(MultiText));
+			t.Add(typeof(TestMultiTextHolder));
+
+
+			string answer =
+				@"<testMultiTextHolder>
+					<name>
+						<form ws='en'>verb</form>
+						<form ws='fr'>verbe</form>
+						<form ws='es'>verbo</form>
+					</name>
+				</testMultiTextHolder>";
+			NetReflectorReader r = new NetReflectorReader(t);
+			TestMultiTextHolder h = (TestMultiTextHolder)r.Read(answer);
+			Assert.AreEqual(3, h._name.Count);
+			Assert.AreEqual("verbo",h._name["es"]);
+		}
+
+		[ReflectorType("testMultiTextHolder")]
+		public class TestMultiTextHolder
+		{
+			[XmlIgnore]
+			public MultiText _name;
+
+		   [XmlElement("name")]
+			[ReflectorProperty("name", typeof(MultiTextSerializorFactory), Required = true)]
+			public MultiText Name
+			{
+				get { return _name; }
+				set { _name = value; }
+			}
 		}
 	}
 }

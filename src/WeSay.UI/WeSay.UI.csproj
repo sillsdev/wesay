@@ -47,6 +47,12 @@
 	<Compile Include="ArrowButton.cs">
 	  <SubType>Component</SubType>
 	</Compile>
+	<Compile Include="OptionCollectionControl.cs">
+	  <SubType>UserControl</SubType>
+	</Compile>
+	<Compile Include="OptionCollectionControl.Designer.cs">
+	  <DependentUpon>OptionCollectionControl.cs</DependentUpon>
+	</Compile>
 	<Compile Include="SimpleBinding.cs" />
 	<Compile Include="TextBinding.cs" />
 	<Compile Include="CurrentItemEventArgs.cs" />
@@ -117,6 +123,10 @@
 	<EmbeddedResource Include="MultiTextControl.resx">
 	  <DependentUpon>MultiTextControl.cs</DependentUpon>
 	  <SubType>Designer</SubType>
+	</EmbeddedResource>
+	<EmbeddedResource Include="OptionCollectionControl.resx">
+	  <SubType>Designer</SubType>
+	  <DependentUpon>OptionCollectionControl.cs</DependentUpon>
 	</EmbeddedResource>
 	<EmbeddedResource Include="VBox.resx">
 	  <SubType>Designer</SubType>

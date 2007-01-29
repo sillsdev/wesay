@@ -73,16 +73,7 @@ namespace WeSay.LexicalTools
 		internal abstract int AddWidgets(IBindingList list, int index, int row);
 
 
-		protected Control MakeOptionWidget(WeSayDataObject target, Field field)
-		{
-			WeSay.Foundation.OptionRef optionRefTarget=target.GetProperty<WeSay.Foundation.OptionRef>(field.FieldName);
 
-			OptionsList list= Project.WeSayWordsProject.Project.GetOptionsList(field.OptionsListFile);
-			SingleOptionControl control = new SingleOptionControl(optionRefTarget,list);
-			SimpleBinding<string> binding = new SimpleBinding<string>(optionRefTarget, control);
-			binding.CurrentItemChanged += new EventHandler<CurrentItemEventArgs>(_detailList.OnBindingCurrentItemChanged);
-			return control;
-		}
 
 		protected Control MakeBoundEntry(WeSay.Language.MultiText multiTextToBindTo, Field field)
 		{
@@ -204,6 +195,9 @@ namespace WeSay.LexicalTools
 					case "Option":
 						box = MakeOptionWidget(target, customField);
 						break;
+					case "OptionCollection":
+						box = MakeOptionCollectionWidget(target, customField);
+						break;
 					case "MultiText":
 						 box = MakeBoundEntry(target.GetProperty<MultiText>(customField.FieldName), customField);
 					 break;
@@ -218,6 +212,24 @@ namespace WeSay.LexicalTools
 			return rowCount;
 		}
 
+		protected Control MakeOptionWidget(WeSayDataObject target, Field field)
+		{
+			WeSay.Foundation.OptionRef optionRefTarget = target.GetProperty<WeSay.Foundation.OptionRef>(field.FieldName);
 
+			OptionsList list = Project.WeSayWordsProject.Project.GetOptionsList(field.OptionsListFile);
+			SingleOptionControl control = new SingleOptionControl(optionRefTarget, list, field.WritingSystemIds[0]);
+			SimpleBinding<string> binding = new SimpleBinding<string>(optionRefTarget, control);
+			binding.CurrentItemChanged += new EventHandler<CurrentItemEventArgs>(_detailList.OnBindingCurrentItemChanged);
+			return control;
+		}
+
+		private Control MakeOptionCollectionWidget(WeSayDataObject target, Field field)
+		{
+			OptionsList list = Project.WeSayWordsProject.Project.GetOptionsList(field.OptionsListFile);
+			WeSay.Foundation.OptionRefCollection optionRefTarget = target.GetProperty<WeSay.Foundation.OptionRefCollection>(field.FieldName);
+			OptionCollectionControl control = new OptionCollectionControl(optionRefTarget, list, field.WritingSystemIds[0]);
+			return control;
+		}
 	}
+
 }

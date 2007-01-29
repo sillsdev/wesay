@@ -1,8 +1,13 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Diagnostics;
 using System.ComponentModel;
+using System.Xml;
+using System.Xml.Serialization;
+using Exortech.NetReflector;
+using Exortech.NetReflector.Util;
 using WeSay.Foundation;
 
 namespace WeSay.Language
@@ -26,7 +31,11 @@ namespace WeSay.Language
 	/// <summary>
 	/// MultiText holds an array of LanguageForms, indexed by writing system ID.
 	/// </summary>
-	public class MultiText : WeSay.Foundation.IParentable, INotifyPropertyChanged, IEnumerable
+	//NO: we haven't been able to do a reasonalbly compact xml representation except with custom deserializer
+	//[ReflectorType("multiText")]
+	[XmlInclude(typeof(LanguageForm))]
+	//[XmlRoot("blahblah")]
+	public class MultiText : WeSay.Foundation.IParentable, INotifyPropertyChanged//, IEnumerable
 	{
 		/// <summary>
 		/// We have this pesky "backreference" solely to enable fast
@@ -62,12 +71,17 @@ namespace WeSay.Language
 		{
 		}
 
-
 		public MultiText(WeSayDataObject parent)
 		{
 			_parent = parent; //ok for this to be null
 			_forms = new LanguageForm[0];
 		}
+
+			public void Add(Object objectFromSerializer)
+			{
+
+
+			}
 
 		static public MultiText Create(Dictionary<string,string> forms)
 		{
@@ -89,6 +103,8 @@ namespace WeSay.Language
 			}
 			return m;
 		}
+
+		[XmlArrayItem(typeof(LanguageForm), ElementName = "ppp")]
 		public string this[string writingSystemId]
 		{
 			get
@@ -112,28 +128,51 @@ namespace WeSay.Language
 
 		public string GetAlternative(string writingSystemId)
 		{
-			LanguageForm alt = Find(writingSystemId);
-			if (null == alt)
-				return string.Empty;
-
-			string form = alt.Form;
-			if (form == null)
-			{
-				return string.Empty;
-			}
-			else
-				return form;
+			return GetAlternative(writingSystemId, false);
 		}
 
+		public string GetAlternative(string writingSystemId, bool doShowSomethingElseIfMissing)
+		{
+			LanguageForm alt = Find(writingSystemId);
+			if (null == alt)
+			{
+				if (doShowSomethingElseIfMissing)
+				{
+					return GetFirstAlternative();
+				}
+				else
+				{
+					return string.Empty;
+				}
+			}
+			string form = alt.Form;
+			if (form == null || (form.Trim().Length == 0))
+			{
+				if (doShowSomethingElseIfMissing)
+				{
+					return GetFirstAlternative();
+				}
+				else
+				{
+					return string.Empty;
+				}
+			}
+			else
+			{
+				return form;
+			}
+		}
 
-
-		//hack
 		public string GetFirstAlternative()
 		{
-			if (Count > 0)
-				return _forms[0].Form;
-			else
-				return string.Empty;
+			foreach (LanguageForm form in this.Forms)
+			{
+				if (form.Form.Trim().Length>0)
+				{
+					return form.Form;
+				}
+			}
+			return string.Empty;
 		}
 
 		public bool Empty
@@ -167,6 +206,23 @@ namespace WeSay.Language
 			set
 			{
 				_parent = value;
+			}
+		}
+
+		/// <summary>
+		/// just for deserialization
+		/// </summary>
+		[XmlElement]
+		[XmlElement(typeof(LanguageForm), ElementName="form")]
+		public LanguageForm[] Forms
+		{
+			get
+			{
+				return _forms;
+			}
+			set
+			{
+				_forms = value;
 			}
 		}
 
@@ -273,8 +329,36 @@ namespace WeSay.Language
 				}
 			}
 		}
+	}
 
+	#region NetReflector
+	public class MultiTextSerializorFactory : ISerialiserFactory
+	{
+		public IXmlMemberSerialiser Create(ReflectorMember member, ReflectorPropertyAttribute attribute)
+		{
+			return new MultiTextSerialiser(member, attribute);
+		}
+	}
 
+	internal class MultiTextSerialiser : XmlMemberSerialiser
+	{
+		public MultiTextSerialiser(ReflectorMember member, ReflectorPropertyAttribute attribute)
+			: base(member, attribute)
+		{
+		}
+
+		public override object Read(XmlNode node, NetReflectorTypeTable table)
+		{
+			MultiText text = new MultiText();
+			foreach (XmlNode form in node.SelectNodes("form"))
+			{
+					text[form.Attributes["ws"].Value] = form.InnerText;
+			}
+			return text;
+		}
 
 	}
+	#endregion
+
+
 }
