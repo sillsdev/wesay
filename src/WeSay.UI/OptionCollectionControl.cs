@@ -22,7 +22,6 @@ namespace WeSay.UI
 			_list = list;
 			_idOfPreferredWritingSystem = idOfPreferredWritingSystem;
 			InitializeComponent();
-
 			LoadDisplay();
 		}
 
@@ -45,5 +44,18 @@ namespace WeSay.UI
 			LoadDisplay();
 			this.Refresh();
 		}
+
+		private void OptionCollectionControl_BackColorChanged(object sender, System.EventArgs e)
+		{
+			this._textBox.BackColor = this.BackColor;
+		}
+
+		private void OptionCollectionControl_Load(object sender, System.EventArgs e)
+		{
+			//read only
+			this.TabStop = false;
+			this.BackColor = this.Parent.BackColor;
+		}
+
 	}
 }
