@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<optionsList>
+	<options>
+		<option>
+			<key>an</key>
+			<name>
+				<form ws='en'>an</form>
+				<form ws='th'>อัน</form>
+			</name>
+		</option>
+		<option>
+					<key>pon</key>
+			<name>
+				<form ws='en'>pon</form>
+				<form ws='th'>ผล</form>
+			</name>
+		</option>
+		<option>
+					<key>kon</key>
+			<name>
+				<form ws='en'>kon</form>
+				<form ws='th'>คน</form>
+			</name>
+		</option>		<option>
+					<key>gau</key>
+			<name>
+				<form ws='en'>gau</form>
+				<form ws='th'>แก้ว</form>
+			</name>
+		</option>
+	</options>
+</optionsList>
