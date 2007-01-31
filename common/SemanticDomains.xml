@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<optionsList>
+	<options>
+		<option>
+			<key>earth</key>
+			<name>
+				<form ws="en">earth</form>
+			</name>
+		</option>
+		<option>
+			<key>fire</key>
+			<name>
+				<form ws="en">fire</form>
+			</name>
+		</option>
+		<option>
+			<key>water</key>
+			<name>
+				<form ws="en">water</form>
+			</name>
+		</option>
+	</options>
+</optionsList>
