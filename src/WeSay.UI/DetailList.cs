@@ -171,17 +171,24 @@ namespace WeSay.UI
 			Panel p = (Panel)ActualControls[RowToControlIndex(row)];
 			Control c = GetEditControlFromReferenceControl(p);
 			WeSayTextBox tb;
+
 			if (c is MultiTextControl)
 			{
 				MultiTextControl multText = (MultiTextControl)c;
 				tb = multText.TextBoxes[0];
+				tb.Focus();
+				tb.Select(1000, 0);//go to end
+			}
+			else if (c is WeSayTextBox)
+			{
+				tb = (WeSayTextBox)c;
+				tb.Focus();
+				tb.Select(1000, 0);//go to end
 			}
 			else
 			{
-				tb = (WeSayTextBox)c;
+				c.Focus();
 			}
-			tb.Focus();
-			tb.Select(1000, 0);//go to end
 		}
 
 		public void OnBindingCurrentItemChanged(object sender, CurrentItemEventArgs e)
