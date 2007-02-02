@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 using System.Xml;
-using Exortech.NetReflector;
 using WeSay.Foundation;
 
 namespace WeSay.Project

@@ -45,6 +45,10 @@ namespace WeSay.Data
 
 		public IRecordList<T> GetListOfTypeFilteredFurther<T>(IFilter<T> filter) where T : class, new()
 		{
+			if(filter == null)
+			{
+				throw new ArgumentNullException();
+			}
 			if (!_filteredRecordLists.ContainsKey(RecordListKey<T>(filter.Key)))
 			{
 				throw new InvalidOperationException("Filter must be registered before it can be retrieved with GetListOfType.");

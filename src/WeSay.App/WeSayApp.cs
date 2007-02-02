@@ -117,40 +117,7 @@ namespace WeSay.App
 			}
 			else
 			{
-				// this configuration stuff should be moved down to a Db4oConfigurationClass in the LexicalModel
-				// that can be run
-				// I haven't done it yet because I'm still not entirely clear how it should get created.
-				Db4objects.Db4o.Config.IConfiguration db4oConfiguration = Db4objects.Db4o.Db4oFactory.Configure();
-				db4oConfiguration.ClassActivationDepthConfigurable(true);
-
-				Db4objects.Db4o.Config.IObjectClass
-				objectClass = db4oConfiguration.ObjectClass(typeof(Language.LanguageForm));
-				objectClass.ObjectField("_writingSystemId").Indexed(true);
-				objectClass.ObjectField("_form").Indexed(true);
-				objectClass.CascadeOnDelete(true);
-
-				objectClass = db4oConfiguration.ObjectClass(typeof(LexEntry));
-				objectClass.ObjectField("_modificationTime").Indexed(true);
-				objectClass.ObjectField("_guid").Indexed(true);
-				objectClass.ObjectField("_lexicalForm").Indexed(true);
-				objectClass.ObjectField("_senses").Indexed(true);
-				objectClass.CascadeOnDelete(true);
-
-				objectClass = db4oConfiguration.ObjectClass(typeof(LexSense));
-				objectClass.ObjectField("_gloss").Indexed(true);
-				objectClass.ObjectField("_exampleSentences").Indexed(true);
-				objectClass.CascadeOnDelete(true);
-
-				objectClass = db4oConfiguration.ObjectClass(typeof(LexExampleSentence));
-				objectClass.ObjectField("_sentence").Indexed(true);
-				objectClass.ObjectField("_translation").Indexed(true);
-				objectClass.CascadeOnDelete(true);
-
-				objectClass = db4oConfiguration.ObjectClass(typeof(MultiText));
-				objectClass.ObjectField("_forms").Indexed(true);
-				objectClass.CascadeOnDelete(true);
-
-
+				Db4oModelConfiguration.Configure();
 				recordListManager = new Db4oRecordListManager(project.PathToLexicalModelDB);
 				Db4oLexModelHelper.Initialize(((Db4oRecordListManager)recordListManager).DataSource.Data);
 

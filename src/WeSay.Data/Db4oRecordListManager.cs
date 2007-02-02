@@ -23,6 +23,11 @@ namespace WeSay.Data
 			get { return this._dataSource; }
 		}
 
+		public string DataPath
+		{
+			get { return this._dataPath; }
+		}
+
 		protected override IRecordList<T> CreateMasterRecordList<T>()
 		{
 			return new Db4oRecordList<T>(this._dataSource);
@@ -30,7 +35,7 @@ namespace WeSay.Data
 
 		protected override IRecordList<T> CreateFilteredRecordList<T>(IFilter<T> filter)
 		{
-			FilteredDb4oRecordList<T> list = new FilteredDb4oRecordList<T>(GetListOfType<T>(), filter, this._dataPath, false);
+			FilteredDb4oRecordList<T> list = new FilteredDb4oRecordList<T>(GetListOfType<T>(), filter, this.DataPath, false);
 			return list;
 		}
 
@@ -39,7 +44,7 @@ namespace WeSay.Data
 			IRecordList<T> recordList = null;
 			try
 			{
-				recordList = new FilteredDb4oRecordList<T>(GetListOfType<T>(), filter, _dataPath, true);
+				recordList = new FilteredDb4oRecordList<T>(GetListOfType<T>(), filter, this.DataPath, true);
 			}
 			catch (OperationCanceledException) {}
 			return recordList;
@@ -54,6 +59,7 @@ namespace WeSay.Data
 				DataSource.Dispose();
 			}
 		}
+
 		class FilteredDb4oRecordList<T> : Db4oRecordList<T> where T : class, new()
 		{
 			IRecordList<T> _masterRecordList;
@@ -211,16 +217,6 @@ namespace WeSay.Data
 					}
 				}
 				return successful;
-			}
-
-			private DateTime GetDatabaseLastModified()
-			{
-				IList<DatabaseModified> modifiedList = ((Db4oList<T>) Records).Database.Query<DatabaseModified>();
-				if (modifiedList.Count == 1)
-				{
-					return modifiedList[0].LastModified;
-				}
-				return DateTime.UtcNow;
 			}
 
 			void OnMasterRecordListDeletingRecord(object sender, RecordListEventArgs<T> e)

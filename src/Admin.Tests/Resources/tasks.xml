@@ -4,24 +4,39 @@
 	<viewTemplate id="Default View Template">
 	  <fields>
 		<field>
-		  <name>EntryLexicalForm</name>
+		  <className></className>
+		  <dataType>MultiText</dataType>
 		  <displayName>Word</displayName>
-		  <visibility>Invisible</visibility>
-		  <writingSystems />
-		</field>
-		<field>
-		  <name>SenseGloss</name>
+		  <fieldName>EntryLexicalForm</fieldName>
+		  <multiplicity>ZeroOr1</multiplicity>
 		  <visibility>Visible</visibility>
 		  <writingSystems />
 		</field>
 		<field>
-		  <name>ExampleSentence</name>
+		  <className></className>
+		  <dataType>MultiText</dataType>
+		  <displayName>Gloss</displayName>
+		  <fieldName>SenseGloss</fieldName>
+		  <multiplicity>ZeroOr1</multiplicity>
 		  <visibility>Visible</visibility>
 		  <writingSystems />
 		</field>
 		<field>
-		  <name>ExampleTranslation</name>
-		  <visibility>Invisible</visibility>
+		  <className></className>
+		  <dataType>MultiText</dataType>
+		  <displayName>Example Sentence</displayName>
+		  <fieldName>ExampleSentence</fieldName>
+		  <multiplicity>ZeroOr1</multiplicity>
+		  <visibility>Visible</visibility>
+		  <writingSystems />
+		</field>
+		<field>
+		  <className></className>
+		  <dataType>MultiText</dataType>
+		  <displayName>Translation</displayName>
+		  <fieldName>ExampleTranslation</fieldName>
+		  <multiplicity>ZeroOr1</multiplicity>
+		  <visibility>Visible</visibility>
 		  <writingSystems />
 		</field>
 	  </fields>

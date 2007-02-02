@@ -88,6 +88,7 @@ namespace WeSay.Foundation
 
 		public OptionRef()
 		{
+			_humanReadableKey = string.Empty;
 		}
 
 		#region IParentable Members

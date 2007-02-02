@@ -117,6 +117,11 @@ namespace WeSay.Data
 			return false;
 		}
 
+		public override int GetIndexFromId(long id)
+		{
+			return (int)id;
+		}
+
 		public void RegisterItemPropertyChangedHandler(T item, bool register)
 		{
 			VerifyNotDisposed();

@@ -1,6 +1,8 @@
 using System;
+using System.IO;
 using NUnit.Framework;
 using WeSay.Data;
+using WeSay.LexicalModel.Db4o_Specific;
 using WeSay.Project;
 
 namespace WeSay.LexicalTools.Tests
@@ -10,10 +12,13 @@ namespace WeSay.LexicalTools.Tests
 	{
 		IRecordListManager _recordListManager;
 		ViewTemplate _viewTemplate;
+		private string _filePath;
 
 		[SetUp]
 		public void Setup()
 		{
+			_filePath = Path.GetTempFileName();
+
 			BasilProject.InitializeForTests();
 			string[] analysisWritingSystemIds = new string[] { BasilProject.Project.WritingSystems.AnalysisWritingSystemDefaultId };
 			string[] vernacularWritingSystemIds = new string[] { BasilProject.Project.WritingSystems.VernacularWritingSystemDefaultId };
@@ -23,7 +28,9 @@ namespace WeSay.LexicalTools.Tests
 			this._viewTemplate.Add(new Field(Field.FieldNames.ExampleSentence.ToString(), vernacularWritingSystemIds));
 			this._viewTemplate.Add(new Field(Field.FieldNames.ExampleTranslation.ToString(), analysisWritingSystemIds));
 
-			_recordListManager = new InMemoryRecordListManager();
+			_recordListManager = new Db4oRecordListManager(_filePath);
+			Db4oLexModelHelper.Initialize(((Db4oRecordListManager)_recordListManager).DataSource.Data);
+
 			_task = new EntryDetailTask(_recordListManager, this._viewTemplate);
 		}
 
@@ -31,6 +38,7 @@ namespace WeSay.LexicalTools.Tests
 		public void TearDown()
 		{
 			_recordListManager.Dispose();
+			File.Delete(_filePath);
 		}
 
 		[Test]

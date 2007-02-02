@@ -330,5 +330,13 @@ namespace WeSay.Data.Tests
 																});
 			Assert.AreEqual(0, masterRecordsCount11);
 		}
+
+		[Test]
+		[ExpectedException(typeof(ArgumentNullException))]
+		public void GetListOfTypeFilteredFurther_NullFilter_Throws()
+		{
+			RecordListManager.GetListOfTypeFilteredFurther<SimpleIntTestClass>(null);
+		}
+
 	}
 }

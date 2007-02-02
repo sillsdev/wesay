@@ -1,148 +1,84 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
-using Db4objects.Db4o;
-using Db4objects.Db4o.Ext;
-using Db4objects.Db4o.Query;
-using WeSay.Data;
 
 namespace WeSay.LexicalModel.Db4o_Specific
 {
 	public class ApproximateMatcher
 	{
-		static public IList<LexEntry> FindEntriesWithClosestLexemeForms(string key, IRecordListManager recordManager, IBindingList records)
+		static public IList<string> FindClosestForms(string key, IEnumerable<string> forms)
 		{
-			return FindEntriesWithClosestLexemeForms(key, false, false, recordManager, records);
+			return FindClosestForms(key, false, false, forms);
 		}
 
-		static public IList<LexEntry> FindEntriesWithClosestAndPrefixedLexemeForms(string key, IRecordListManager recordManager, IBindingList records)
+		static public IList<string> FindClosestAndPrefixedForms(string key, IEnumerable<string> forms)
 		{
-			return FindEntriesWithClosestLexemeForms(key, false, true, recordManager, records);
+			return FindClosestForms(key, false, true, forms);
 		}
 
-		static public IList<LexEntry> FindClosestAndNextClosest(string key, IRecordListManager recordManager, IBindingList records)
+		static public IList<string> FindClosestAndNextClosestForms(string key, IEnumerable<string> forms)
 		{
-			return FindEntriesWithClosestLexemeForms(key, true, false, recordManager, records);
+			return FindClosestForms(key, true, false, forms);
 		}
 
-		static public IList<LexEntry> FindClosestAndNextClosestAndPrefixed(string key, IRecordListManager recordManager, IBindingList records)
+		static public IList<string> FindClosestAndNextClosestAndPrefixedForms(string key, IEnumerable<string> forms)
 		{
-			return FindEntriesWithClosestLexemeForms(key, true, true, recordManager, records);
+			return FindClosestForms(key, true, true, forms);
 		}
 
 
-		static private IList<LexEntry> FindEntriesWithClosestLexemeForms(string key, bool includeNextClosest, bool includePrefixedForms, IRecordListManager recordManager, IBindingList records)
+		static private IList<string> FindClosestForms(string key, bool includeNextClosest, bool includePrefixedForms, IEnumerable<string> forms)
 		{
+			List<string> bestMatches = new List<string>();
+			List<string> secondBestMatches = new List<string>();
+
 			int bestEditDistance = int.MaxValue;
-			IList<LexEntry> bestMatches = new List<LexEntry>();
-			if (recordManager is Db4oRecordListManager)
+			int secondBestEditDistance = int.MaxValue;
+
+			foreach (string form in forms)
 			{
-				Db4oDataSource db4oData = ((Db4oRecordListManager)recordManager).DataSource;
-//                IRecordList<LexicalFormMultiText> lexicalForms = recordManager.GetListOfType<LexicalFormMultiText>();
-				IExtObjectContainer database = db4oData.Data.Ext();
-				IList<int> bestLexicalFormIds;
-				List<string> lexicalFormsText = new List<string>();
-				List<Type> OriginalList = Db4oLexModelHelper.Singleton.DoNotActivateTypes;
-				Db4oLexModelHelper.Singleton.DoNotActivateTypes = new List<Type>();
-				Db4oLexModelHelper.Singleton.DoNotActivateTypes.Add(typeof(LexEntry));
-
-
-				IQuery query = database.Query();
-				query.Constrain(typeof(LexicalFormMultiText));
-				IObjectSet lexicalForms = query.Execute();
-
-
-
-				foreach (LexicalFormMultiText lexicalForm in lexicalForms)
-				{
-					lexicalFormsText.Add(lexicalForm.ToString());
-				}
-				Db4oLexModelHelper.Singleton.DoNotActivateTypes = OriginalList;
-
-				bestEditDistance = GetClosestLexicalForms(lexicalFormsText, key, 0, int.MaxValue, includePrefixedForms, out bestLexicalFormIds);
-				GetEntriesFromLexicalForms(database, bestMatches, lexicalForms, bestLexicalFormIds);
-				if (includeNextClosest || bestMatches.Count == 0)
-				{
-					GetClosestLexicalForms(lexicalFormsText, key, bestEditDistance + 1, int.MaxValue, false, out bestLexicalFormIds);
-					GetEntriesFromLexicalForms(database, bestMatches, lexicalForms, bestLexicalFormIds);
-				}
-			}
-			else
-			{
-				foreach (LexEntry entry in records)
-				{
-					int editDistance = EditDistance(key, entry.ToString(), bestEditDistance);
-					if (editDistance < bestEditDistance)
-					{
-						bestMatches.Clear();
-						bestEditDistance = editDistance;
-					}
-					if (editDistance == bestEditDistance)
-					{
-						bestMatches.Add(entry);
-					}
-				}
-			}
-			return bestMatches;
-		}
-
-		static private int GetClosestLexicalForms(IList<string> lexicalForms, string key, int minEditDistance, int maxEditDistance, bool includePrefixedForms, out IList<int> closestLexicalFormIds)
-		{
-			int bestEditDistance = maxEditDistance;
-			closestLexicalFormIds = new List<int>();
-			int i = 0;
-			foreach (string lexicalForm in lexicalForms)
-			{
-				if (!string.IsNullOrEmpty(lexicalForm))
+				if (!string.IsNullOrEmpty(form))
 				{
 					int editDistance;
-					if (includePrefixedForms && lexicalForm.StartsWith(key))
+					if (includePrefixedForms && form.StartsWith(key))
 					{
 						editDistance = 0;
 					}
 					else
 					{
-						editDistance = EditDistance(key, lexicalForm, bestEditDistance);
+						editDistance = EditDistance(key, form, secondBestEditDistance);
 					}
-					if (minEditDistance <= editDistance && editDistance < bestEditDistance)
+					if (editDistance < bestEditDistance)
 					{
-						closestLexicalFormIds.Clear();
+						if (includeNextClosest && bestEditDistance != int.MaxValue)
+						{
+							// best becomes second best
+							secondBestMatches.Clear();
+							secondBestMatches.AddRange(bestMatches);
+							secondBestEditDistance = bestEditDistance;
+						}
+						bestMatches.Clear();
 						bestEditDistance = editDistance;
+					}
+					else if (includeNextClosest && editDistance < secondBestEditDistance)
+					{
+						secondBestEditDistance = editDistance;
+						secondBestMatches.Clear();
 					}
 					if (editDistance == bestEditDistance)
 					{
-						closestLexicalFormIds.Add(i);
+						bestMatches.Add(form);
+					}
+					else if (includeNextClosest && editDistance == secondBestEditDistance)
+					{
+						secondBestMatches.Add(form);
 					}
 				}
-				++i;
 			}
-			return bestEditDistance;
-		}
-
-		static private void GetEntriesFromLexicalForms(Db4objects.Db4o.Ext.IExtObjectContainer database, IList<LexEntry> bestMatches, IList LexicalForms, IList<int> bestIds)
-		{
-			//review: now that we have "parent" paths, would using that be faster than this?
-			foreach (int id in bestIds)
+			if (includeNextClosest)
 			{
-				LexicalFormMultiText lexicalForm = (LexicalFormMultiText)LexicalForms[id];
-				database.Activate(lexicalForm, 99);
-				//IQuery query = database.Query();
-				//query.Constrain(typeof(LexEntry));
-				//query.Descend("_lexicalForm").Constrain(lexicalForm).Identity();
-				//IObjectSet entries = query.Execute();
-				//// If LexEntry does not cascade delete its lexicalForm then we could have a case where we
-				//// don't have a entry associated with this lexicalForm.
-				//if (entries.Count == 0)
-				//{
-				//    continue;
-				//}
-				//bestMatches.Add((LexEntry)entries[0]);
-				if (lexicalForm.Parent != null)
-				{
-					bestMatches.Add(lexicalForm.Parent);
-				}
+				bestMatches.AddRange(secondBestMatches);
 			}
+			return bestMatches;
 		}
 
 		private static int EditDistance(string list1, string list2, int maxEditDistance)

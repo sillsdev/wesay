@@ -143,18 +143,18 @@ namespace WeSay.Foundation
 				//temp hack until mt's use parents for notification
 				if (val is MultiText)
 				{
-					this.WireUpChild((INotifyPropertyChanged) val);
+					WireUpChild((INotifyPropertyChanged) val);
 				}
 				return val as TContents;
 			}
 			TContents newGuy = new TContents();
-			_properties.Add(fieldName, newGuy);
 			newGuy.Parent = this;
+			_properties.Add(fieldName, newGuy);
 
 			//temp hack until mt's use parents for notification
 			if (newGuy is MultiText)
 			{
-				this.WireUpChild((INotifyPropertyChanged) newGuy);
+				WireUpChild((INotifyPropertyChanged) newGuy);
 			}
 
 			return newGuy;

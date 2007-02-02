@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel;
 using System.Drawing;
+using System.Globalization;
 using System.Windows.Forms;
 using WeSay.Data;
 using WeSay.Language;
@@ -14,9 +15,10 @@ namespace WeSay.LexicalTools
 	public partial class EntryDetailControl : UserControl
 	{
 		private IBindingList _records;
+//        private CachedSortedDb4oList<string, LexEntry> _originalRecordList;
+
 		private readonly ViewTemplate _viewTemplate;
 		public event EventHandler SelectedIndexChanged;
-		private IRecordListManager _recordManager;
 
 		public EntryDetailControl()
 		{
@@ -24,31 +26,12 @@ namespace WeSay.LexicalTools
 			InitializeComponent();
 		}
 
-		public int CompareMultiText(MultiText x, MultiText y)
+		public string KeyProvider(LexEntry entry)
 		{
-			if(x == null)
-			{
-				if (y == null)
-				{
-					return 0; // both null so equal
-				}
-				else
-				{
-					return -1; // x is null so y is greater
-				}
-			}
-			else
-			{
-				if(y == null)
-				{
-					return 1; // y is null so x is greater
-				}
-				else
-				{
-					return x.GetFirstAlternative().CompareTo(y.GetFirstAlternative());
-				}
-			}
+			return entry.LexicalForm.GetFirstAlternative();
 		}
+
+
 		public EntryDetailControl(IRecordListManager recordManager, ViewTemplate viewTemplate)
 		{
 			if (recordManager == null)
@@ -59,8 +42,23 @@ namespace WeSay.LexicalTools
 			{
 				throw new ArgumentNullException("viewTemplate");
 			}
-			_recordManager = recordManager;
-			_records = recordManager.GetListOfType<LexEntry>();
+
+			StringComparer comparer;
+			try
+			{
+				string WritingSystemId = viewTemplate.GetField("EntryLexicalForm").WritingSystemIds[0];
+				comparer = StringComparer.Create(CultureInfo.GetCultureInfo(WritingSystemId), false);
+			}
+			catch
+			{
+				comparer = StringComparer.InvariantCulture;
+			}
+
+			_records = new CachedSortedDb4oList<string, LexEntry>((Db4oRecordList<LexEntry>)recordManager.GetListOfType<LexEntry>(),
+																			 new LexicalFormToEntryIdInitializer((Db4oRecordListManager)recordManager).Initializer,
+																			 KeyProvider,
+																			 comparer,
+																			 ((Db4oRecordListManager)recordManager).DataPath);
 
 			_viewTemplate = viewTemplate;
 			InitializeComponent();
@@ -77,7 +75,6 @@ namespace WeSay.LexicalTools
 			_recordsListBox.Columns[0].Width = _recordsListBox.Width- _recordsListBox.VScrollBar.Width;
 
 			_recordsListBox.SelectedIndexChanged += new EventHandler(OnRecordSelectionChanged);
-			_findText.TextChanged += new EventHandler(_findText_TextChanged);
 			_findText.KeyDown += new KeyEventHandler(_findText_KeyDown);
 			int originalHeight = _findText.Height;
 			_findText.Font = _recordsListBox.Font;
@@ -87,6 +84,8 @@ namespace WeSay.LexicalTools
 			_recordsListBox.Location = new Point(_recordsListBox.Location.X,
 												 _recordsListBox.Location.Y + heightDifference);
 			_btnFind.Height += heightDifference;
+			this._findText.ItemFilterer = ApproximateMatcher.FindClosestAndNextClosestAndPrefixedForms;
+			this._findText.Items = (CachedSortedDb4oList<string, LexEntry>)_records;
 		}
 
 		void _findText_KeyDown(object sender, KeyEventArgs e)
@@ -98,48 +97,26 @@ namespace WeSay.LexicalTools
 			}
 		}
 
-		void _findText_TextChanged(object sender, EventArgs e)
-		{
-			if (_btnFind.Text == StringCatalog.Get("Clear"))
-			{
-				_btnFind.Text = StringCatalog.Get("Find");
-			}
-		}
-
 		void _btnFind_Click(object sender, EventArgs e)
 		{
-			if (this._btnFind.Text == StringCatalog.Get("Find"))
-			{
-				Find(this._findText.Text);
-			}
-			else
-			{
-				ClearLastFind();
-			}
+			Find(this._findText.Text);
 		}
 
-
-		private void ClearLastFind() {
-			// reset to original records
-			this._records = this._recordManager.GetListOfType<LexEntry>();
-			this._recordsListBox.DataSource = this._records;
-			this._btnFind.Text = StringCatalog.Get("Find");
-
-			// toggle state between clear and find
-			this._findText.ResetText();
-		}
 
 		private void Find(string text) {
-			Cursor currentCursor = Cursor;
-			Cursor = Cursors.WaitCursor;
-			InMemoryBindingList<object> records = new InMemoryBindingList<object>();
-			records.AddRange(ApproximateMatcher.FindClosestAndNextClosestAndPrefixed(text, _recordManager, _records));
-			this._records = records;
-			this._recordsListBox.DataSource = this._records;
-
-			// toggle state between find and clear
-			this._btnFind.Text = StringCatalog.Get("Clear");
-			Cursor = currentCursor;
+			int index = ((CachedSortedDb4oList<string, LexEntry>) _records).BinarySearch(text);
+			if (index < 0)
+			{
+				index = ~index;
+				if (index == _records.Count && index != 0)
+				{
+					index--;
+				}
+			}
+			if(index >=0)
+			{
+				_recordsListBox.SelectedIndex = index;
+			}
 		}
 
 

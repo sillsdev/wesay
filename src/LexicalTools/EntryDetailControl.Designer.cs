@@ -19,9 +19,7 @@ namespace WeSay.LexicalTools
 			if (disposing && !IsDisposed)
 			{
 				_recordsListBox.SelectedIndexChanged -= OnRecordSelectionChanged;
-				_findText.TextChanged -= _findText_TextChanged;
 				_findText.KeyDown -= _findText_KeyDown;
-
 			}
 			if (disposing && (components != null))
 			{
@@ -46,7 +44,7 @@ namespace WeSay.LexicalTools
 			this._btnNewWord = new System.Windows.Forms.LinkLabel();
 			this._btnDeleteWord = new System.Windows.Forms.LinkLabel();
 			this._btnFind = new System.Windows.Forms.Button();
-			this._findText = new WeSay.UI.WeSayTextBox();
+			this._findText = new WeSay.UI.WeSayAutoCompleteTextBox();
 
 			this.panel1.SuspendLayout();
 			this.SuspendLayout();
@@ -173,7 +171,7 @@ namespace WeSay.LexicalTools
 		private System.Windows.Forms.LinkLabel _btnDeleteWord;
 		private System.Windows.Forms.LinkLabel _btnNewWord;
 		private System.Windows.Forms.Button _btnFind;
-		private WeSayTextBox _findText;
+		private WeSayAutoCompleteTextBox _findText;
 
 	}
 }

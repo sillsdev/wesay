@@ -25,12 +25,14 @@ namespace WeSay.LexicalTools.Tests
 		public override void Setup()
 		{
 			base.Setup();
-			Db4oLexModelHelper.InitializeForNonDbTests();
+//            Db4oLexModelHelper.InitializeForNonDbTests();
 			BasilProject.InitializeForTests();
 			this._vernacularWsId = BasilProject.Project.WritingSystems.VernacularWritingSystemDefault.Id;
 
 			this._filePath = System.IO.Path.GetTempFileName();
+			Db4oModelConfiguration.Configure();
 			this._recordListManager = new Db4oRecordListManager(_filePath);
+			Db4oLexModelHelper.Initialize(((Db4oRecordListManager)_recordListManager).DataSource.Data);
 
 			this._records = this._recordListManager.GetListOfType<LexEntry>();
 			AddEntry("Initial");
@@ -185,14 +187,14 @@ namespace WeSay.LexicalTools.Tests
 
 			LexicalFormMustMatch("one");
 
-			TypeInLexicalForm("two");
+			TypeInLexicalForm("plus"); // need something that still sorts higher than Secondary and Tertiary
 			this._task.Deactivate();
 			_tabControl.SelectedIndex = 1;
 			_tabControl.SelectedIndex = 0;
 			ActivateTask();
 			t = new TextBoxTester(GetLexicalFormControlName());
 			t.Properties.Visible = true;
-			LexicalFormMustMatch("two");
+			LexicalFormMustMatch("plus");
 		}
 
 		private void ActivateTask()
@@ -250,40 +252,12 @@ namespace WeSay.LexicalTools.Tests
 			Assert.AreEqual("Find", b.Text);
 		}
 
-		[Test]
-		public void FindButtonSaysFind_Click_ButtonSaysClear()
-		{
-			ButtonTester b = new ButtonTester("_btnFind");
-			b.Click();
-			Assert.AreEqual("Clear", b.Text);
-		}
-
-		[Test]
-		public void FindButtonSaysClear_Click_ButtonSaysFind()
-		{
-			ButtonTester b = new ButtonTester("_btnFind");
-			b.Click();
-			b.Click();
-			Assert.AreEqual("Find", b.Text);
-		}
-
-		[Test]
-		public void FindButtonSaysClear_Click_FindTextCleared()
-		{
-			TextBoxTester t = new TextBoxTester("_findText");
-			ButtonTester b = new ButtonTester("_btnFind");
-			t.Enter("something");
-			b.Click(); // state is now clear
-			b.Click();
-			Assert.AreEqual(string.Empty, t.Text);
-		}
-
 
 		[Test]
 		public void EnterText_PressFindButton_Finds()
 		{
 			TextBoxTester t = new TextBoxTester("_findText");
-			t.Enter("Secondery");
+			t.Enter("Secondary");
 			ButtonTester b = new ButtonTester("_btnFind");
 			b.Click();
 			BindingListGridTester l = new BindingListGridTester("_recordsListBox");
@@ -297,7 +271,7 @@ namespace WeSay.LexicalTools.Tests
 		public void FindText_Enter_Finds()
 		{
 			TextBoxTester t = new TextBoxTester("_findText");
-			t.Enter("Secondery");
+			t.Enter("Secondary");
 			t.FireEvent("KeyDown", new KeyEventArgs(Keys.Enter));
 			BindingListGridTester l = new BindingListGridTester("_recordsListBox");
 

@@ -1,0 +1,1 @@
+The tasks.xml file is a resource in Admin.Tests

@@ -31,6 +31,8 @@ namespace WeSay.Data
 			}
 		}
 
+		public abstract int GetIndexFromId(long id);
+
 		private PropertyDescriptor _sortProperty;
 		private ListSortDirection _listSortDirection;
 
@@ -753,6 +755,8 @@ namespace WeSay.Data
 		}
 
 		#endregion
+
+
 
 	}
 }

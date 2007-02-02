@@ -3,7 +3,6 @@ using System.ComponentModel;
 using System.Windows.Forms;
 using WeSay.Foundation;
 using WeSay.Language;
-using WeSay.LexicalModel;
 using WeSay.Project;
 using WeSay.UI;
 
@@ -77,7 +76,7 @@ namespace WeSay.LexicalTools
 
 		protected Control MakeBoundEntry(WeSay.Language.MultiText multiTextToBindTo, Field field)
 		{
-			MultiTextControl m=null;
+			MultiTextControl m;
 			if (_previouslyGhostedControlToReuse == null)
 			{
 				m = new MultiTextControl(field.WritingSystems, multiTextToBindTo, field.FieldName);
@@ -189,7 +188,7 @@ namespace WeSay.LexicalTools
 			int rowCount = 0;
 			foreach (Field customField in ActiveViewTemplate.GetCustomFields(target.GetType().Name))
 			{
-				Control box = null;
+				Control box;
 				switch (customField.DataTypeName)
 				{
 					case "Option":

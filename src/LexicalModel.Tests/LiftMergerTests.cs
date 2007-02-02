@@ -21,12 +21,13 @@ namespace WeSay.LexicalModel.Tests
 		[SetUp]
 		public void Setup()
 		{
-			Db4oLexModelHelper.InitializeForNonDbTests();
 			WeSayWordsProject.InitializeForTests();
 
 			_tempFile = Path.GetTempFileName();
 			_dataSource = new Db4oDataSource(_tempFile);
 			_entries = new WeSay.Data.Db4oRecordList<LexEntry>(_dataSource);
+			Db4oLexModelHelper.Initialize(_dataSource.Data);
+
 			_merger = new LiftMerger(_dataSource);
 		}
 

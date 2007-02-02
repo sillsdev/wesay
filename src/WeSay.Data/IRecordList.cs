@@ -71,5 +71,7 @@ namespace WeSay.Data
 		/// Removes all items from the collection
 		/// </summary>
 		new void Clear();
+
+		int GetIndexFromId(long id);
 	}
 }

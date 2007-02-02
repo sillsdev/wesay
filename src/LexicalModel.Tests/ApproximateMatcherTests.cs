@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework;
 using WeSay.Data;
@@ -9,46 +10,17 @@ namespace WeSay.LexicalTools.Tests
 	[TestFixture]
 	public class ApproximateMatcherTests
 	{
-		private IRecordList<LexEntry> _records;
-		private IRecordListManager _recordListManager;
-		string _FilePath;
-
+		private IList<string> _forms;
 
 		[SetUp]
 		public void Setup()
 		{
-			Db4oLexModelHelper.InitializeForNonDbTests();
-			_FilePath = System.IO.Path.GetTempFileName();
-
-			this._recordListManager = new Db4oRecordListManager(_FilePath);
-			this._records = _recordListManager.GetListOfType<LexEntry>();
-		}
-		[TearDown]
-		public void TearDown()
-		{
-			_recordListManager.Dispose();
-			_records.Dispose();
-			System.IO.File.Delete(_FilePath);
+			_forms = new List<string>();
 		}
 
-		private LexEntry AddEntry(string lexicalForm)
+		private void AddEntry(string form)
 		{
-			LexEntry entry = new LexEntry();
-			entry.LexicalForm["xyz"] = lexicalForm;
-			this._records.Add(entry);
-			return entry;
-		}
-
-		private static bool ContainsEntryWithLexicalForm(IList<LexEntry> entries, string lexicalForm)
-		{
-			foreach (LexEntry entry in entries)
-			{
-				if (lexicalForm == entry.ToString())
-				{
-					return true;
-				}
-			}
-			return false;
+			_forms.Add(form);
 		}
 
 		[Test]
@@ -59,9 +31,9 @@ namespace WeSay.LexicalTools.Tests
 			AddEntry("distane");
 			AddEntry("destance");
 			AddEntry("distence");
-			IList<LexEntry> closest = ApproximateMatcher.FindEntriesWithClosestLexemeForms("distance",_recordListManager,_records );
+			IList closest = (IList) ApproximateMatcher.FindClosestForms("distance", _forms);
 		   Assert.AreEqual(1, closest.Count);
-			Assert.IsTrue(ContainsEntryWithLexicalForm(closest, "distance"));
+			Assert.Contains("distance", closest);
 		}
 
 		[Test]
@@ -72,12 +44,12 @@ namespace WeSay.LexicalTools.Tests
 			AddEntry("distane");
 			AddEntry("destance");
 			AddEntry("distence");
-			IList<LexEntry> closest = ApproximateMatcher.FindEntriesWithClosestAndPrefixedLexemeForms("dist", _recordListManager, _records);
+			IList closest = (IList) ApproximateMatcher.FindClosestAndPrefixedForms("dist", _forms);
 			Assert.AreEqual(4, closest.Count);
-			Assert.IsTrue(ContainsEntryWithLexicalForm(closest, "distance"));
-			Assert.IsTrue(ContainsEntryWithLexicalForm(closest, "distances"));
-			Assert.IsTrue(ContainsEntryWithLexicalForm(closest, "distane"));
-			Assert.IsTrue(ContainsEntryWithLexicalForm(closest, "distence"));
+			Assert.Contains("distance", closest);
+			Assert.Contains("distances", closest);
+			Assert.Contains("distane", closest);
+			Assert.Contains("distence", closest);
 		}
 
 
@@ -110,20 +82,20 @@ namespace WeSay.LexicalTools.Tests
 			AddEntry("1235467980");
 
 
-			IList<LexEntry> closest = ApproximateMatcher.FindEntriesWithClosestLexemeForms("1234567890",_recordListManager,_records);
+			IList closest = (IList)ApproximateMatcher.FindClosestForms("1234567890", _forms);
 			Assert.AreEqual(12, closest.Count);
-			Assert.IsTrue(ContainsEntryWithLexicalForm(closest, "a1234567890"));
-			Assert.IsTrue(ContainsEntryWithLexicalForm(closest, "1a234567890"));
-			Assert.IsTrue(ContainsEntryWithLexicalForm(closest, "1234567890a"));
-			Assert.IsTrue(ContainsEntryWithLexicalForm(closest, "234567890"));
-			Assert.IsTrue(ContainsEntryWithLexicalForm(closest, "123457890"));
-			Assert.IsTrue(ContainsEntryWithLexicalForm(closest, "123456789"));
-			Assert.IsTrue(ContainsEntryWithLexicalForm(closest, "a234567890"));
-			Assert.IsTrue(ContainsEntryWithLexicalForm(closest, "1234a67890"));
-			Assert.IsTrue(ContainsEntryWithLexicalForm(closest, "123456789a"));
-			Assert.IsTrue(ContainsEntryWithLexicalForm(closest, "2134567890"));
-			Assert.IsTrue(ContainsEntryWithLexicalForm(closest, "1234657890"));
-			Assert.IsTrue(ContainsEntryWithLexicalForm(closest, "1234567809"));
+			Assert.Contains("a1234567890", closest);
+			Assert.Contains("1a234567890", closest);
+			Assert.Contains("1234567890a", closest);
+			Assert.Contains("234567890", closest);
+			Assert.Contains("123457890", closest);
+			Assert.Contains("123456789", closest);
+			Assert.Contains("a234567890", closest);
+			Assert.Contains("1234a67890", closest);
+			Assert.Contains("123456789a", closest);
+			Assert.Contains("2134567890", closest);
+			Assert.Contains("1234657890", closest);
+			Assert.Contains("1234567809", closest);
 		}
 
 		[Test]
@@ -156,21 +128,21 @@ namespace WeSay.LexicalTools.Tests
 			AddEntry("1235467980");
 
 
-			IList<LexEntry> closest = ApproximateMatcher.FindClosestAndNextClosest("1234567890",_recordListManager,_records );
+			IList closest = (IList) ApproximateMatcher.FindClosestAndNextClosestForms("1234567890", _forms);
 			Assert.AreEqual(13, closest.Count);
-			Assert.IsTrue(ContainsEntryWithLexicalForm(closest, "1234567890"));
-			Assert.IsTrue(ContainsEntryWithLexicalForm(closest, "a1234567890"));
-			Assert.IsTrue(ContainsEntryWithLexicalForm(closest, "1a234567890"));
-			Assert.IsTrue(ContainsEntryWithLexicalForm(closest, "1234567890a"));
-			Assert.IsTrue(ContainsEntryWithLexicalForm(closest, "234567890"));
-			Assert.IsTrue(ContainsEntryWithLexicalForm(closest, "123457890"));
-			Assert.IsTrue(ContainsEntryWithLexicalForm(closest, "123456789"));
-			Assert.IsTrue(ContainsEntryWithLexicalForm(closest, "a234567890"));
-			Assert.IsTrue(ContainsEntryWithLexicalForm(closest, "1234a67890"));
-			Assert.IsTrue(ContainsEntryWithLexicalForm(closest, "123456789a"));
-			Assert.IsTrue(ContainsEntryWithLexicalForm(closest, "2134567890"));
-			Assert.IsTrue(ContainsEntryWithLexicalForm(closest, "1234657890"));
-			Assert.IsTrue(ContainsEntryWithLexicalForm(closest, "1234567809"));
+			Assert.Contains("1234567890", closest);
+			Assert.Contains("a1234567890", closest);
+			Assert.Contains("1a234567890", closest);
+			Assert.Contains("1234567890a", closest);
+			Assert.Contains("234567890", closest);
+			Assert.Contains("123457890", closest);
+			Assert.Contains("123456789", closest);
+			Assert.Contains("a234567890", closest);
+			Assert.Contains("1234a67890", closest);
+			Assert.Contains("123456789a", closest);
+			Assert.Contains("2134567890", closest);
+			Assert.Contains("1234657890", closest);
+			Assert.Contains("1234567809", closest);
 		}
 
 		[Test]
@@ -181,10 +153,10 @@ namespace WeSay.LexicalTools.Tests
 
 			AddEntry("aaa1234567890a"); // noise
 
-			IList<LexEntry> closest = ApproximateMatcher.FindClosestAndNextClosest("1234567890", _recordListManager, _records);
+			IList closest = (IList) ApproximateMatcher.FindClosestAndNextClosestForms("1234567890", _forms);
 			Assert.AreEqual(2, closest.Count);
-			Assert.IsTrue(ContainsEntryWithLexicalForm(closest, "a1234567890"));
-			Assert.IsTrue(ContainsEntryWithLexicalForm(closest, "aaa1234567890"));
+			Assert.Contains("a1234567890", closest);
+			Assert.Contains("aaa1234567890", closest);
 		}
 
 
@@ -194,15 +166,15 @@ namespace WeSay.LexicalTools.Tests
 		/// their entry was deleted, causing a crash.
 		/// </summary>
 		[Test]
-		public void Find_AfterDeleted_NotFound()
+		public void Find_AfterDeleted_NotFound() // move to sorted Cache Tests
 		{
-			LexEntry test = AddEntry("test");
-			AddEntry("test1");
-			this._records.Remove(test);
+			//LexEntry test = AddEntry("test");
+			//AddEntry("test1");
+			//this._records.Remove(test);
 
-			IList<LexEntry> closest = ApproximateMatcher.FindEntriesWithClosestLexemeForms("test", _recordListManager, _records);
-			Assert.AreEqual(1, closest.Count);
-			Assert.IsTrue(ContainsEntryWithLexicalForm(closest, "test1"));
+			//IList<LexEntry> closest = ApproximateMatcher.FindEntriesWithClosestLexemeForms("test", _forms);
+			//Assert.AreEqual(1, closest.Count);
+			//Assert.Contains("test1", closest);
 		}
 
 

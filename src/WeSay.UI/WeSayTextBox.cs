@@ -1,6 +1,5 @@
 using System;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 using WeSay.Language;
@@ -35,7 +34,7 @@ namespace WeSay.UI
 
 
 		[Browsable(false)]
-		public new string Text
+		public override string Text
 		{
 			set
 			{
@@ -83,11 +82,11 @@ namespace WeSay.UI
 				Font = value.Font;
 				if (value.RightToLeft)
 				{
-					this.RightToLeft = RightToLeft.Yes;
+					RightToLeft = RightToLeft.Yes;
 				}
 				else
 				{
-					this.RightToLeft = RightToLeft.No;
+					RightToLeft = RightToLeft.No;
 				}
 			}
 		}

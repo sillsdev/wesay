@@ -216,6 +216,26 @@ namespace WeSay.Data
 			}
 		}
 
+		public override int GetIndexFromId(long id)
+		{
+			return ((Db4oList<T>) Records).ItemIds.IndexOf(id);
+		}
+
+		public long GetId(T item)
+		{
+			return ((Db4oList<T>)Records).ItemIds[IndexOf(item)];
+		}
+
+		public DateTime GetDatabaseLastModified()
+		{
+			IList<DatabaseModified> modifiedList = ((Db4oList<T>)Records).Database.Query<DatabaseModified>();
+			if (modifiedList.Count == 1)
+			{
+				return modifiedList[0].LastModified;
+			}
+			return DateTime.UtcNow;
+		}
+
 		protected override void DoRemoveSort()
 		{
 			((Db4oList<T>)Records).RemoveSort();

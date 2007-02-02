@@ -294,19 +294,50 @@ namespace ListBox
 		{
 			 Rows.RowsChanged();
 			 InvalidateCells();
-			 if (Selection.IsEmpty() && _list.Count > 0)
-			{
-				if (e.NewIndex == _list.Count)
-				{
-					//just deleted the last item in the list, so select the one above it
-					Selection.SelectRow(e.NewIndex -1, true); ;
-				}
-				else
-				{
-					Selection.SelectRow(0, true); ;
-				}
-			  //  SelectedIndex = 0;
-			}
+			 if (_list.Count > 0)
+			 {
+				 if (Selection.IsEmpty())
+				 {
+					 if (e.NewIndex == _list.Count)
+					 {
+						 //just deleted the last item in the list, so select the one above it
+						 Selection.SelectRow(e.NewIndex - 1, true);
+						 ;
+					 }
+					 else
+					 {
+						 Selection.SelectRow(0, true);
+						 ;
+					 }
+					 //  SelectedIndex = 0;
+				 }
+				 else
+				 {
+					 switch (e.ListChangedType)
+					 {
+						 case ListChangedType.ItemAdded:
+							 if (e.NewIndex < SelectedIndex)
+							 {
+								 Selection.SelectRow(SelectedIndex + 1, true);
+							 }
+							 break;
+						 case ListChangedType.ItemDeleted:
+							 if (e.NewIndex < SelectedIndex)
+							 {
+								 Selection.SelectRow(SelectedIndex - 1, true);
+							 }
+							 break;
+						 case ListChangedType.ItemMoved:
+							 Selection.SelectRow(e.OldIndex, false);
+							 Selection.SelectRow(e.NewIndex, true);
+							 ShowCell(Selection.BorderRange.Start);
+							 //Selection.FocusRow(e.NewIndex);
+							 break;
+						 default:
+							 break;
+					 }
+				 }
+			 }
 		}
 
 		protected virtual void Bind()
@@ -486,12 +517,15 @@ namespace ListBox
 
 			//hack that won't last us long. We really need to base this on the font, not some string.
 			bool autosized = false;
+			int row = 0;
 			foreach (object o in _list)
 			{
-				string s = o.ToString();
-				if (s == null || s == String.Empty)
+				string s = _list[row].ToString();
+				if (s == null || s == String.Empty) {
+					++row;
 					continue;
-				Rows.AutoSizeRow(_list.IndexOf(o));
+				}
+				Rows.AutoSizeRow(row);
 				autosized = true;
 				break;
 			}

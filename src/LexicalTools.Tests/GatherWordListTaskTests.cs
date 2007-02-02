@@ -24,10 +24,12 @@ namespace WeSay.LexicalTools.Tests
 		{
 			_wordListFilePath = Path.GetTempFileName();
 			_dbFilePath = Path.GetTempFileName();
-			Db4oLexModelHelper.InitializeForNonDbTests();
+			//Db4oLexModelHelper.InitializeForNonDbTests();
 			WeSayWordsProject.InitializeForTests();
 
+			Db4oModelConfiguration.Configure();
 			this._recordListManager = new Db4oRecordListManager(_dbFilePath);// InMemoryRecordListManager();
+			Db4oLexModelHelper.Initialize(((Db4oRecordListManager)_recordListManager).DataSource.Data);
 
 			File.WriteAllLines(_wordListFilePath, _words);
 			this._task = new GatherWordListTask(_recordListManager, "label", "description", _wordListFilePath);
