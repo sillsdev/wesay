@@ -81,6 +81,7 @@ namespace WeSay.UI
 			}
 		}
 
+		private bool _autoSizePopup = true;
 		[Browsable(true)]
 		[Description("The width of the popup (-1 will auto-size the popup to the width of the textbox).")]
 		public int PopupWidth
@@ -93,10 +94,12 @@ namespace WeSay.UI
 			{
 				if (value == -1)
 				{
+					_autoSizePopup = true;
 					this.popup.Width = Width;
 				}
 				else
 				{
+					_autoSizePopup = false;
 					this.popup.Width = value;
 				}
 			}
@@ -114,7 +117,7 @@ namespace WeSay.UI
 			}
 		}
 
-		private Point popOffset = new Point(12, 0);
+		private Point popOffset = new Point(0, 0);
 		[Description("The popup defaults to the lower left edge of the textbox.")]
 		public Point PopupOffset
 		{
@@ -230,15 +233,20 @@ namespace WeSay.UI
 
 			// Add default triggers.
 			this.triggers.Add(new TextLengthTrigger(2));
-			this.triggers.Add(new ShortCutTrigger(Keys.Enter, TriggerState.SelectAndConsume));
+			this.triggers.Add(new ShortCutTrigger(Keys.Enter, TriggerState.Select));
 			this.triggers.Add(new ShortCutTrigger(Keys.Tab, TriggerState.Select));
 			this.triggers.Add(new ShortCutTrigger(Keys.Control | Keys.Space, TriggerState.ShowAndConsume));
 			this.triggers.Add(new ShortCutTrigger(Keys.Escape, TriggerState.HideAndConsume));
 		}
+
 		protected override void OnSizeChanged(EventArgs e)
 		{
 			base.OnSizeChanged(e);
 			this.list.ItemHeight = Height;
+			if(_autoSizePopup)
+			{
+				this.popup.Width = Width;
+			}
 		}
 		protected override void OnParentChanged(EventArgs e)
 		{
@@ -301,14 +309,14 @@ namespace WeSay.UI
 						if (this.list.Visible)
 						{
 							val = true;
-							SelectCurrentItem();
+							SelectCurrentItemAndHideList();
 						}
 					} break;
 					case TriggerState.Select:
 					{
 						if (this.list.Visible)
 						{
-							SelectCurrentItem();
+							SelectCurrentItemAndHideList();
 						}
 					} break;
 					default:
@@ -395,7 +403,16 @@ namespace WeSay.UI
 			{
 				SelectionStart = Text.Length;
 			}
+		}
 
+		protected void SelectCurrentItemAndHideList()
+		{
+			if (this.list.SelectedIndex == -1)
+			{
+				return;
+			}
+
+			SelectCurrentItem();
 			HideList();
 		}
 
@@ -507,6 +524,10 @@ namespace WeSay.UI
 		{
 			if (Mode != EntryMode.List)
 			{
+				SelectCurrentItemAndHideList();
+			}
+			else
+			{
 				SelectCurrentItem();
 			}
 		}
@@ -518,7 +539,7 @@ namespace WeSay.UI
 				if (this.list.GetItemRectangle(i).Contains(e.X, e.Y))
 				{
 					this.list.SelectedIndex = i;
-					SelectCurrentItem();
+					SelectCurrentItemAndHideList();
 				}
 			}
 			HideList();

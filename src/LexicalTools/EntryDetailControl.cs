@@ -93,6 +93,8 @@ namespace WeSay.LexicalTools
 			if(e.Modifiers == Keys.None &&
 			   e.KeyData == Keys.Enter)
 			{
+				e.Handled = true;
+				e.SuppressKeyPress = true; // otherwise it beeps!
 				Find(this._findText.Text);
 			}
 		}
