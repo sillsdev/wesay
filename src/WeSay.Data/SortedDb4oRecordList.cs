@@ -2,15 +2,15 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 
 
 namespace WeSay.Data
 {
-	public class CachedSortedDb4oList<K, T>: IBindingList, IEnumerable<K> where T : class, new()
+	public class CachedSortedDb4oList<K, T>: IBindingList, IEnumerable<K>, IDisposable where T : class, new()
 	{
-		public delegate List<KeyValuePair<K, long>> Initializer ();
 		public delegate K KeyProvider(T item);
 
 		class Comparer: IComparer<KeyValuePair<K, long>>{
@@ -46,22 +46,20 @@ namespace WeSay.Data
 		Db4oRecordList<T> _masterRecordList;
 		string _cachePath;
 		Comparer _sorter;
-		IComparer<K> _keySorter;
-		KeyProvider _keyProvider;
 		bool _temporary;
+		IDb4oSortHelper<K, T> _sortHelper;
 
-		public CachedSortedDb4oList(Db4oRecordList<T> masterRecordList, Initializer initializer, KeyProvider keyProvider, IComparer<K> sorter, string dataPath)
+		public CachedSortedDb4oList(Db4oRecordListManager recordListManager, IDb4oSortHelper<K, T> sortHelper)
 		{
-			_cachePath = Path.Combine(dataPath, "Cache");
-			_sorter = new Comparer(sorter);
-			_keySorter = sorter;
-			_keyProvider = keyProvider;
-			_masterRecordList = masterRecordList;
+			_sortHelper = sortHelper;
+			_cachePath = Path.Combine(recordListManager.DataPath, "Cache");
+			_sorter = new Comparer(sortHelper.KeyComparer);
+			_masterRecordList = (Db4oRecordList<T>)recordListManager.GetListOfType<T>();
 
 			Deserialize();
 			if(_keyIdMap == null)
 			{
-				_keyIdMap = initializer();
+				_keyIdMap = _sortHelper.GetKeyIdPairs();
 				Sort();
 				Serialize();
 			}
@@ -82,7 +80,7 @@ namespace WeSay.Data
 			}
 			_cachePath = template._cachePath;
 			_sorter = template._sorter;
-			_keyProvider = template._keyProvider;
+			_sortHelper = template._sortHelper;
 			_masterRecordList = template._masterRecordList;
 			_temporary = true;
 
@@ -96,7 +94,7 @@ namespace WeSay.Data
 		{
 			get
 			{
-				return Path.Combine(_cachePath, _sorter.GetType().Name + ".cache");
+				return Path.Combine(_cachePath, _sortHelper.Name + ".cache");
 			}
 		}
 
@@ -208,14 +206,17 @@ namespace WeSay.Data
 
 		private void Add(T item)
 		{
-			KeyValuePair<K, long> keyIdPair = new KeyValuePair<K,long>(_keyProvider(item),
-																	   this._masterRecordList.GetId(item));
-
-			int index = _keyIdMap.BinarySearch(keyIdPair, _sorter);
-			if(index < 0) // not found, index is bitwise complement of the place to insert
+			foreach (K key in _sortHelper.GetKeys(item))
 			{
-				_keyIdMap.Insert(~index, keyIdPair);
-				OnItemAdded(~index);
+				KeyValuePair<K, long> keyIdPair = new KeyValuePair<K, long>(key,
+																		   this._masterRecordList.GetId(item));
+
+				int index = _keyIdMap.BinarySearch(keyIdPair, _sorter);
+				if (index < 0) // not found, index is bitwise complement of the place to insert
+				{
+					_keyIdMap.Insert(~index, keyIdPair);
+					OnItemAdded(~index);
+				}
 			}
 		}
 
@@ -223,45 +224,76 @@ namespace WeSay.Data
 		{
 			long itemId = _masterRecordList.GetId(item);
 
-			KeyValuePair<K, long> keyIdPair = new KeyValuePair<K, long>(_keyProvider(item),
-														   itemId);
-			//see if we actually need to do anything. If the key has not changed, then it
-			//should be found
-			int index = _keyIdMap.BinarySearch(keyIdPair, _sorter);
-			if (index < 0) // not found, index is bitwise complement of the place to insert
-			{
-				//remove the old one first
-				KeyValuePair<K, long> match = _keyIdMap.Find(delegate(KeyValuePair<K, long> i)
-															 {
-																 return i.Value == itemId;
-															 });
-				int oldIndex = _keyIdMap.IndexOf(match);
-				if(oldIndex != -1)
-				{
-					_keyIdMap.RemoveAt(oldIndex);
-				}
+			List<int> indexesOfDeletedItems = new List<int>();
+			List<int> indexesOfAddedItems = new List<int>();
 
-				// just in case old one came before our insert location, our insert location may have gotten messed up
-				index = ~_keyIdMap.BinarySearch(keyIdPair, _sorter);
+			List<KeyValuePair<K, long>> oldItems = this._keyIdMap.FindAll(delegate(KeyValuePair<K, long> i)
+																		  {
+																			  return i.Value == itemId;
+																		  } );
+			foreach(KeyValuePair<K, long> toDelete in oldItems)
+			{
+				indexesOfDeletedItems.Add(_keyIdMap.IndexOf(toDelete));
+			}
+
+			indexesOfDeletedItems.Sort();
+
+			for (int i = indexesOfDeletedItems.Count - 1; i >= 0 ; i--)
+			{
+				_keyIdMap.RemoveAt(indexesOfDeletedItems[i]);
+			}
+
+			foreach (K key in _sortHelper.GetKeys(item))
+			{
+				KeyValuePair<K, long> keyIdPair = new KeyValuePair<K, long>(key, itemId);
+				//see if we actually need to do anything. If the key has not changed, then it
+				//should be found
+				int index = _keyIdMap.BinarySearch(keyIdPair, _sorter);
+				Debug.Assert(index < 0);
+
+				index = ~index;
 				_keyIdMap.Insert(index, keyIdPair);
-				if (oldIndex != -1 && index != oldIndex)
+
+				if(indexesOfDeletedItems.Contains(index))
 				{
-					OnItemMoved(index, oldIndex);
+					indexesOfDeletedItems.Remove(index);
+					OnItemChanged(index);
 				}
-				OnItemChanged(index);
+				else
+				{
+					indexesOfAddedItems.Add(index);
+				}
+			}
+
+			int itemsMoved = Math.Min(indexesOfAddedItems.Count, indexesOfDeletedItems.Count);
+			for (int i = 0; i < itemsMoved; i++)
+			{
+				OnItemMoved(indexesOfAddedItems[0],
+							indexesOfDeletedItems[0]);
+				indexesOfAddedItems.RemoveAt(0);
+				indexesOfDeletedItems.RemoveAt(0);
+			}
+			foreach(int index in indexesOfAddedItems)
+			{
+				OnItemAdded(index);
+			}
+			foreach(int index in indexesOfDeletedItems)
+			{
+				OnItemDeleted(index);
 			}
 		}
 
 		private void Remove(T item)
 		{
 			long itemId = _masterRecordList.GetId(item);
-			KeyValuePair<K, long> match = _keyIdMap.Find(delegate(KeyValuePair<K, long> i)
+			List<KeyValuePair<K, long>> matches = _keyIdMap.FindAll(delegate(KeyValuePair<K, long> i)
 														 {
 															 return i.Value == itemId;
 														 });
-			int index = _keyIdMap.IndexOf(match);
-			if(index != -1)
+			foreach (KeyValuePair<K, long> match in matches)
 			{
+				int index = _keyIdMap.IndexOf(match);
+				Debug.Assert(index != -1);
 				_keyIdMap.RemoveAt(index);
 				OnItemDeleted(index);
 			}
@@ -287,11 +319,13 @@ namespace WeSay.Data
 
 		public void AddIndex(PropertyDescriptor property)
 		{
+			VerifyNotDisposed();
 			throw new NotSupportedException();
 		}
 
 		public object AddNew()
 		{
+			VerifyNotDisposed();
 			throw new NotSupportedException();
 		}
 
@@ -299,6 +333,7 @@ namespace WeSay.Data
 		{
 			get
 			{
+				VerifyNotDisposed();
 				return false;
 			}
 		}
@@ -307,6 +342,7 @@ namespace WeSay.Data
 		{
 			get
 			{
+				VerifyNotDisposed();
 				return false;
 			}
 		}
@@ -315,17 +351,20 @@ namespace WeSay.Data
 		{
 			get
 			{
+				VerifyNotDisposed();
 				return false;
 			}
 		}
 
 		public void ApplySort(PropertyDescriptor property, ListSortDirection direction)
 		{
+			VerifyNotDisposed();
 			throw new NotSupportedException();
 		}
 
 		public int Find(PropertyDescriptor property, object key)
 		{
+			VerifyNotDisposed();
 			throw new NotSupportedException();
 		}
 
@@ -338,12 +377,13 @@ namespace WeSay.Data
 		/// or if there is no larger element, the bitwise complement of Count.</returns>
 		public int BinarySearch(K key)
 		{
+			VerifyNotDisposed();
 			KeyValuePair<K, long> keyIdPair = new KeyValuePair<K, long>(key, 0);
 
 			int index = _keyIdMap.BinarySearch(keyIdPair, _sorter);
 			if (index < 0)
 			{
-				if (_keySorter.Compare(_keyIdMap[~index].Key, key) == 0)
+				if (_sortHelper.KeyComparer.Compare(_keyIdMap[~index].Key, key) == 0)
 				{
 					index = ~index;
 				}
@@ -356,6 +396,7 @@ namespace WeSay.Data
 		{
 			get
 			{
+				VerifyNotDisposed();
 				return true;
 			}
 		}
@@ -394,11 +435,13 @@ namespace WeSay.Data
 
 		public void RemoveIndex(PropertyDescriptor property)
 		{
+			VerifyNotDisposed();
 			throw new NotSupportedException();
 		}
 
 		public void RemoveSort()
 		{
+			VerifyNotDisposed();
 			throw new NotSupportedException();
 		}
 
@@ -406,6 +449,7 @@ namespace WeSay.Data
 		{
 			get
 			{
+				VerifyNotDisposed();
 				throw new NotSupportedException();
 			}
 		}
@@ -414,6 +458,7 @@ namespace WeSay.Data
 		{
 			get
 			{
+				VerifyNotDisposed();
 				throw new NotSupportedException();
 			}
 		}
@@ -422,6 +467,7 @@ namespace WeSay.Data
 		{
 			get
 			{
+				VerifyNotDisposed();
 				return true;
 			}
 		}
@@ -430,6 +476,7 @@ namespace WeSay.Data
 		{
 			get
 			{
+				VerifyNotDisposed();
 				return false;
 			}
 		}
@@ -438,6 +485,7 @@ namespace WeSay.Data
 		{
 			get
 			{
+				VerifyNotDisposed();
 				return false;
 			}
 		}
@@ -448,21 +496,26 @@ namespace WeSay.Data
 
 		public int Add(object value)
 		{
+			VerifyNotDisposed();
 			return ((IList)_masterRecordList).Add(value);
 		}
 
 		public void Clear()
 		{
+			VerifyNotDisposed();
 			throw new NotSupportedException();
 		}
 
 		public bool Contains(object value)
 		{
+			VerifyNotDisposed();
 			throw new NotSupportedException();
 		}
 
 		public int IndexOf(object value)
 		{
+			VerifyNotDisposed();
+
 			if (value is KeyValuePair<K, long>)
 			{
 				return ((IList)_keyIdMap).IndexOf(value);
@@ -483,6 +536,7 @@ namespace WeSay.Data
 
 		public void Insert(int index, object value)
 		{
+			VerifyNotDisposed();
 			throw new NotSupportedException();
 		}
 
@@ -490,6 +544,7 @@ namespace WeSay.Data
 		{
 			get
 			{
+				VerifyNotDisposed();
 				return false;
 			}
 		}
@@ -498,39 +553,55 @@ namespace WeSay.Data
 		{
 			get
 			{
+				VerifyNotDisposed();
 				return true;
 			}
 		}
 
 		public void Remove(object value)
 		{
+			VerifyNotDisposed();
 			throw new NotSupportedException();
 		}
 
 		public void RemoveAt(int index)
 		{
-			((IList)_masterRecordList).Remove(this[index]);
+			VerifyNotDisposed();
+			((IList)_masterRecordList).Remove(GetValue(index));
 		}
 
+
+		// returns the key string. to get the value object use GetValue
+		// this is so bindinglistgrid will display the right thing.
 		public object this[int index]
 		{
 			get
 			{
-				return _masterRecordList[_masterRecordList.GetIndexFromId(_keyIdMap[index].Value)];
+				VerifyNotDisposed();
+				return GetKey(index);
 			}
 			set
 			{
+				VerifyNotDisposed();
 				throw new NotSupportedException();
 			}
 		}
 
 		public K GetKey(int index)
 		{
+			VerifyNotDisposed();
 			return _keyIdMap[index].Key;
+		}
+
+		public T GetValue(int index)
+		{
+			VerifyNotDisposed();
+			return _masterRecordList[_masterRecordList.GetIndexFromId(_keyIdMap[index].Value)];
 		}
 
 		public long GetId(int index)
 		{
+			VerifyNotDisposed();
 			return _keyIdMap[index].Value;
 		}
 
@@ -540,6 +611,7 @@ namespace WeSay.Data
 
 		public void CopyTo(Array array, int index)
 		{
+			VerifyNotDisposed();
 			throw new NotSupportedException();
 		}
 
@@ -547,6 +619,7 @@ namespace WeSay.Data
 		{
 			get
 			{
+				VerifyNotDisposed();
 				return _keyIdMap.Count;
 			}
 		}
@@ -555,6 +628,7 @@ namespace WeSay.Data
 		{
 			get
 			{
+				VerifyNotDisposed();
 				return false;
 			}
 		}
@@ -563,6 +637,7 @@ namespace WeSay.Data
 		{
 			get
 			{
+				VerifyNotDisposed();
 				throw new NotSupportedException();
 			}
 		}
@@ -573,6 +648,7 @@ namespace WeSay.Data
 
 		public System.Collections.IEnumerator GetEnumerator()
 		{
+			VerifyNotDisposed();
 			return _keyIdMap.GetEnumerator();
 		}
 
@@ -580,12 +656,56 @@ namespace WeSay.Data
 
 		IEnumerator<K> IEnumerable<K>.GetEnumerator()
 		{
+			VerifyNotDisposed();
 			int count = _keyIdMap.Count;
 			for (int i = 0; i < count; i++)
 			{
 				yield return _keyIdMap[i].Key;
 			}
 		}
+		#region IDisposable Members
+#if DEBUG
+		~CachedSortedDb4oList()
+		{
+			if (!this._disposed)
+			{
+				throw new ApplicationException("Disposed not explicitly called on CachedSortedDb4oList.");
+			}
+		}
+#endif
 
+		private bool _disposed = false;
+
+		public void Dispose()
+		{
+			Dispose(true);
+			GC.SuppressFinalize(this);
+		}
+
+		protected virtual void Dispose(bool disposing)
+		{
+			if (!this._disposed)
+			{
+				if (disposing)
+				{
+					// dispose-only, i.e. non-finalizable logic
+					_masterRecordList.ListChanged -= OnMasterRecordListListChanged;
+					_masterRecordList.DeletingRecord -= OnMasterRecordListDeletingRecord;
+					Serialize();
+				}
+
+				// shared (dispose and finalizable) cleanup logic
+				this._disposed = true;
+			}
+		}
+
+		protected void VerifyNotDisposed()
+		{
+			if (this._disposed)
+			{
+				throw new ObjectDisposedException("CachedSortedDb4oList");
+			}
+		}
+		#endregion
 	}
 }

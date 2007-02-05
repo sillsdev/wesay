@@ -78,6 +78,7 @@
 	  <DependentUpon>GatherWordListControl.cs</DependentUpon>
 	</Compile>
 	<Compile Include="GatherWordListTask.cs" />
+	<Compile Include="LexEntrySortHelper.cs" />
 	<Compile Include="LexFieldControl.cs">
 	  <SubType>UserControl</SubType>
 	</Compile>

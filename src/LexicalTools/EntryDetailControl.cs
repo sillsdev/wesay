@@ -1,7 +1,6 @@
 using System;
 using System.ComponentModel;
 using System.Drawing;
-using System.Globalization;
 using System.Windows.Forms;
 using WeSay.Data;
 using WeSay.Language;
@@ -15,7 +14,8 @@ namespace WeSay.LexicalTools
 	public partial class EntryDetailControl : UserControl
 	{
 		private IBindingList _records;
-//        private CachedSortedDb4oList<string, LexEntry> _originalRecordList;
+		WritingSystem _listWritingSystem;
+		//        private CachedSortedDb4oList<string, LexEntry> _originalRecordList;
 
 		private readonly ViewTemplate _viewTemplate;
 		public event EventHandler SelectedIndexChanged;
@@ -26,10 +26,6 @@ namespace WeSay.LexicalTools
 			InitializeComponent();
 		}
 
-		public string KeyProvider(LexEntry entry)
-		{
-			return entry.LexicalForm.GetFirstAlternative();
-		}
 
 
 		public EntryDetailControl(IRecordListManager recordManager, ViewTemplate viewTemplate)
@@ -42,50 +38,45 @@ namespace WeSay.LexicalTools
 			{
 				throw new ArgumentNullException("viewTemplate");
 			}
-
-			StringComparer comparer;
-			try
-			{
-				string WritingSystemId = viewTemplate.GetField("EntryLexicalForm").WritingSystemIds[0];
-				comparer = StringComparer.Create(CultureInfo.GetCultureInfo(WritingSystemId), false);
-			}
-			catch
-			{
-				comparer = StringComparer.InvariantCulture;
-			}
-
-			_records = new CachedSortedDb4oList<string, LexEntry>((Db4oRecordList<LexEntry>)recordManager.GetListOfType<LexEntry>(),
-																			 new LexicalFormToEntryIdInitializer((Db4oRecordListManager)recordManager).Initializer,
-																			 KeyProvider,
-																			 comparer,
-																			 ((Db4oRecordListManager)recordManager).DataPath);
-
 			_viewTemplate = viewTemplate;
+
+			_listWritingSystem = viewTemplate.GetField(Field.FieldNames.EntryLexicalForm.ToString()).WritingSystems[0];
+
+			LexEntrySortHelper sortHelper = new LexEntrySortHelper(((Db4oRecordListManager) recordManager).DataSource,
+																	viewTemplate,
+																	_listWritingSystem.Id);
+			_records = ((Db4oRecordListManager)recordManager).GetSortedList(sortHelper);
+
 			InitializeComponent();
 			BackColor = WeSay.UI.DisplaySettings.Default.BackgroundColor;
 			_entryDetailPanel.ViewTemplate = _viewTemplate;
 			_entryDetailPanel.BackColor = WeSay.UI.DisplaySettings.Default.BackgroundColor;
 			_entryDetailPanel.DataSource = CurrentRecord;
+
 			_btnFind.Text = StringCatalog.Get("Find");
 
 
 			_recordsListBox.DataSource = _records;
-			_recordsListBox.Font = BasilProject.Project.WritingSystems.VernacularWritingSystemDefault.Font;
+			_recordsListBox.Font = _listWritingSystem.Font;
 			_recordsListBox.AutoSize();
-			_recordsListBox.Columns[0].Width = _recordsListBox.Width- _recordsListBox.VScrollBar.Width;
 
+			_recordsListBox.Columns[0].Width = _recordsListBox.Width - _recordsListBox.VScrollBar.Width;
 			_recordsListBox.SelectedIndexChanged += new EventHandler(OnRecordSelectionChanged);
+
 			_findText.KeyDown += new KeyEventHandler(_findText_KeyDown);
+			_findText.ItemFilterer = ApproximateMatcher.FindClosestAndNextClosestAndPrefixedForms;
+			_findText.Items = (CachedSortedDb4oList<string, LexEntry>)_records;
+			_findText.Font = _listWritingSystem.Font;
+			_findText.WritingSystem = _listWritingSystem;
+
+
 			int originalHeight = _findText.Height;
-			_findText.Font = _recordsListBox.Font;
-			_findText.WritingSystem = _viewTemplate[Field.FieldNames.EntryLexicalForm.ToString()].WritingSystems[0];
+
 			int heightDifference = _findText.Height - originalHeight;
 			_recordsListBox.Height -= heightDifference;
 			_recordsListBox.Location = new Point(_recordsListBox.Location.X,
 												 _recordsListBox.Location.Y + heightDifference);
 			_btnFind.Height += heightDifference;
-			this._findText.ItemFilterer = ApproximateMatcher.FindClosestAndNextClosestAndPrefixedForms;
-			this._findText.Items = (CachedSortedDb4oList<string, LexEntry>)_records;
 		}
 
 		void _findText_KeyDown(object sender, KeyEventArgs e)
@@ -137,7 +128,7 @@ namespace WeSay.LexicalTools
 			}
 		}
 
-		private LexEntry CurrentRecord
+		public LexEntry CurrentRecord
 		{
 			get
 			{
@@ -145,7 +136,7 @@ namespace WeSay.LexicalTools
 				{
 					return null;
 				}
-				return (LexEntry)_records[CurrentIndex];
+				return ((CachedSortedDb4oList<string, LexEntry>)_records).GetValue(CurrentIndex);
 			}
 		}
 

@@ -27,7 +27,7 @@ namespace WeSay.LexicalTools.Tests
 			base.Setup();
 //            Db4oLexModelHelper.InitializeForNonDbTests();
 			BasilProject.InitializeForTests();
-			this._vernacularWsId = BasilProject.Project.WritingSystems.VernacularWritingSystemDefault.Id;
+			this._vernacularWsId = BasilProject.Project.WritingSystems.VernacularWritingSystemDefaultId;
 
 			this._filePath = System.IO.Path.GetTempFileName();
 			this._recordListManager = new Db4oRecordListManager(new WeSayWordsDb4oModelConfiguration(), _filePath);
@@ -39,7 +39,7 @@ namespace WeSay.LexicalTools.Tests
 			AddEntry("Tertiary");
 
 			string[] analysisWritingSystemIds = new string[] { BasilProject.Project.WritingSystems.AnalysisWritingSystemDefaultId };
-			string[] vernacularWritingSystemIds = new string[] { BasilProject.Project.WritingSystems.VernacularWritingSystemDefaultId };
+			string[] vernacularWritingSystemIds = new string[] { this._vernacularWsId };
 			ViewTemplate viewTemplate = new ViewTemplate();
 			viewTemplate.Add(new Field(Field.FieldNames.EntryLexicalForm.ToString(), vernacularWritingSystemIds));
 			viewTemplate.Add(new Field(Field.FieldNames.SenseGloss.ToString(), analysisWritingSystemIds));
@@ -226,7 +226,7 @@ namespace WeSay.LexicalTools.Tests
 			get
 			{
 				BindingListGridTester t = new BindingListGridTester("_recordsListBox");
-				return ((LexEntry)t.Properties.SelectedObject).LexicalForm.GetAlternative(_vernacularWsId);
+				return ((EntryDetailControl)_detailTaskPage.Controls[0]).CurrentRecord.LexicalForm.GetAlternative(_vernacularWsId);
 			}
 		}
 
@@ -261,7 +261,7 @@ namespace WeSay.LexicalTools.Tests
 			b.Click();
 			BindingListGridTester l = new BindingListGridTester("_recordsListBox");
 
-			Assert.AreEqual("Secondary", ((LexEntry)l.Properties.SelectedObject).ToString());
+			Assert.AreEqual("Secondary", l.Properties.SelectedObject);
 			RichTextBoxTester r = new RichTextBoxTester("_lexicalEntryPreview");
 			Assert.IsTrue(r.Text.Contains("Secondary"));
 		}
@@ -274,7 +274,7 @@ namespace WeSay.LexicalTools.Tests
 			t.FireEvent("KeyDown", new KeyEventArgs(Keys.Enter));
 			BindingListGridTester l = new BindingListGridTester("_recordsListBox");
 
-			Assert.AreEqual("Secondary", ((LexEntry)l.Properties.SelectedObject).ToString());
+			Assert.AreEqual("Secondary", l.Properties.SelectedObject);
 		}
 	}
 }

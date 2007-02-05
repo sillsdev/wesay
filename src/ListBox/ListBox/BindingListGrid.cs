@@ -502,6 +502,7 @@ namespace ListBox
 			return false;
 		}
 
+
 		/// <summary>
 		/// AutoSize the columns based on the visible range and autosize te rows based on the first row. (because there is only one height available)
 		/// </summary>

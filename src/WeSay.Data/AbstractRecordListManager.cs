@@ -5,7 +5,7 @@ namespace WeSay.Data
 {
 	public abstract class AbstractRecordListManager : IRecordListManager
 	{
-		Hashtable _filteredRecordLists;
+		private Hashtable _filteredRecordLists;
 		protected AbstractRecordListManager()
 		{
 			_filteredRecordLists = new Hashtable();
@@ -28,19 +28,19 @@ namespace WeSay.Data
 
 		public void Register<T>(IFilter<T> filter) where T : class, new()
 		{
-			if (!_filteredRecordLists.ContainsKey(RecordListKey<T>(filter.Key)))
+			if (!FilteredRecordLists.ContainsKey(RecordListKey<T>(filter.Key)))
 			{
-				_filteredRecordLists.Add(RecordListKey<T>(filter.Key), CreateFilteredRecordListUnlessSlow<T>(filter));
+				FilteredRecordLists.Add(RecordListKey<T>(filter.Key), CreateFilteredRecordListUnlessSlow<T>(filter));
 			}
 		}
 
 		public IRecordList<T> GetListOfType<T>() where T : class, new()
 		{
-			if (!_filteredRecordLists.ContainsKey(RecordListKey<T>(String.Empty)))
+			if (!this.FilteredRecordLists.ContainsKey(RecordListKey<T>(String.Empty)))
 			{
-				_filteredRecordLists.Add(RecordListKey<T>(String.Empty), CreateMasterRecordList<T>());
+				this.FilteredRecordLists.Add(RecordListKey<T>(String.Empty), CreateMasterRecordList<T>());
 			}
-			return (IRecordList<T>)_filteredRecordLists[RecordListKey<T>(String.Empty)];
+			return (IRecordList<T>)this.FilteredRecordLists[RecordListKey<T>(String.Empty)];
 		}
 
 		public IRecordList<T> GetListOfTypeFilteredFurther<T>(IFilter<T> filter) where T : class, new()
@@ -49,16 +49,16 @@ namespace WeSay.Data
 			{
 				throw new ArgumentNullException();
 			}
-			if (!_filteredRecordLists.ContainsKey(RecordListKey<T>(filter.Key)))
+			if (!this.FilteredRecordLists.ContainsKey(RecordListKey<T>(filter.Key)))
 			{
 				throw new InvalidOperationException("Filter must be registered before it can be retrieved with GetListOfType.");
 			}
-			IRecordList<T> recordList = (IRecordList<T>)_filteredRecordLists[RecordListKey<T>(filter.Key)];
+			IRecordList<T> recordList = (IRecordList<T>)this.FilteredRecordLists[RecordListKey<T>(filter.Key)];
 			if (recordList == null)
 			{
 				recordList = CreateFilteredRecordList<T>(filter);
 			}
-			_filteredRecordLists[RecordListKey<T>(filter.Key)] = recordList;
+			this.FilteredRecordLists[RecordListKey<T>(filter.Key)] = recordList;
 			return recordList;
 		}
 
@@ -96,6 +96,11 @@ namespace WeSay.Data
 			}
 		}
 
+		protected Hashtable FilteredRecordLists
+		{
+			get { return this._filteredRecordLists; }
+		}
+
 		protected virtual void Dispose(bool disposing)
 		{
 			if (!IsDisposed)
@@ -103,7 +108,7 @@ namespace WeSay.Data
 				if (disposing)
 				{
 					// dispose-only, i.e. non-finalizable logic
-					foreach (DictionaryEntry dictionaryEntry in _filteredRecordLists)
+					foreach (DictionaryEntry dictionaryEntry in this.FilteredRecordLists)
 					{
 						IDisposable disposable = dictionaryEntry.Value as IDisposable;
 						if (disposable != null)

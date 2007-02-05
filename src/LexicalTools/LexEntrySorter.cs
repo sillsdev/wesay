@@ -1,20 +1,24 @@
 using System;
 using System.Collections.Generic;
-using Db4objects.Db4o;
-using Db4objects.Db4o.Ext;
-using Db4objects.Db4o.Query;
+using System.Globalization;
 using WeSay.Data;
+using WeSay.LexicalModel;
+using WeSay.LexicalModel.Db4o_Specific;
+using WeSay.Project;
 
-namespace WeSay.LexicalModel.Db4o_Specific
+namespace WeSay.LexicalTools
 {
-	public class LexicalFormToEntryIdInitializer
+	class LexicalFormSorter
 	{
-		Db4oRecordListManager _recordManager;
-		public LexicalFormToEntryIdInitializer(Db4oRecordListManager recordManager)
+		ViewTemplate _viewTemplate;
+		public LexicalFormSorter (ViewTemplate viewTemplate)
 		{
-			_recordManager = recordManager;
+			_viewTemplate = viewTemplate;
 		}
-		private List<KeyValuePair<string, long>> Initialize()
+
+		Db4oRecordListManager _recordManager;
+
+		private List<KeyValuePair<string, long>> Initialize(Db4oRecordListManager recordManager)
 		{
 			Db4oDataSource db4oData = _recordManager.DataSource;
 			IExtObjectContainer database = db4oData.Data.Ext();
@@ -58,6 +62,30 @@ namespace WeSay.LexicalModel.Db4o_Specific
 			}
 		}
 
+		public IComparer<string> KeyComparer()
+			get
+		{
+			StringComparer comparer;
+			try
+			{
+				string WritingSystemId = _viewTemplate.GetField("EntryLexicalForm").WritingSystemIds[0];
+				comparer = StringComparer.Create(CultureInfo.GetCultureInfo(WritingSystemId), false);
+			}
+			catch
+			{
+				comparer = StringComparer.InvariantCulture;
+			}
+	return comparer;
+		}
+
+
+		public string KeyProvider(LexEntry entry)
+		{
+			return entry.LexicalForm.GetFirstAlternative();
+		}
+
+	}
+}
 
 	}
 }

@@ -46,6 +46,7 @@
 	<Compile Include="ComparisonHelper.cs" />
 	<Compile Include="DatabaseModified.cs" />
 	<Compile Include="Db4oRecordListManager.cs" />
+	<Compile Include="IDb4oSortHelper.cs" />
 	<Compile Include="InMemoryBindingList.cs" />
 	<Compile Include="Db4oRecordList.cs" />
 	<Compile Include="IFilter.cs" />

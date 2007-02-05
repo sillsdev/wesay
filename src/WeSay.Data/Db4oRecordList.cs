@@ -218,7 +218,12 @@ namespace WeSay.Data
 
 		public override int GetIndexFromId(long id)
 		{
-			return ((Db4oList<T>) Records).ItemIds.IndexOf(id);
+			int index = ((Db4oList<T>) Records).ItemIds.IndexOf(id);
+			if(index == -1)
+			{
+				throw new ArgumentOutOfRangeException("id not valid");
+			}
+			return index;
 		}
 
 		public long GetId(T item)

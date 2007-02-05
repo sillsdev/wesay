@@ -40,6 +40,15 @@ namespace WeSay.Data
 			get { return this._dataPath; }
 		}
 
+		public CachedSortedDb4oList<K, T> GetSortedList<K, T>(IDb4oSortHelper<K, T> sortHelper) where T : class, new()
+		{
+			string key = sortHelper.Name;
+			if (!FilteredRecordLists.ContainsKey(key))
+			{
+				FilteredRecordLists.Add(key, new CachedSortedDb4oList<K, T>(this, sortHelper));
+			}
+			return (CachedSortedDb4oList<K, T>)FilteredRecordLists[key];
+		}
 		protected override IRecordList<T> CreateMasterRecordList<T>()
 		{
 			return new Db4oRecordList<T>(this._dataSource);
