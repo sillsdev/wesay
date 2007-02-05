@@ -20,6 +20,7 @@ namespace WeSay.App.Tests
 		[SetUp]
 		public void Setup()
 		{
+			WeSay.Project.WeSayWordsProject.InitializeForTests();
 			_dbFile = Path.GetTempFileName();
 			_dataSource = new Db4oDataSource(_dbFile);
 			Db4oLexModelHelper.Initialize(_dataSource.Data);

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using NUnit.Framework;
 using WeSay.Foundation;
@@ -87,6 +88,17 @@ namespace WeSay.Project.Tests
 			OptionsList list = p.GetOptionsList("PartsOfSpeech.xml");
 			Assert.IsTrue(list.Options.Count>2);
 		}
+
+		[Test]
+		public void CorrectFieldToOptionListNameDictionary()
+		{
+			WeSayWordsProject p = CreateAndLoad(false);
+			OptionsList list = p.GetOptionsList("PartsOfSpeech.xml");
+			Dictionary<string, string> dict = p.GetFieldToOptionListNameDictionary();
+			Assert.AreEqual(1, dict.Count);
+			Assert.AreEqual("PartsOfSpeech", dict["PartOfSpeech"]);
+		}
+
 
 		private static WeSayWordsProject CreateAndLoad(bool doMakeFileMatchingProjectName)
 		{

@@ -28,7 +28,7 @@ namespace WeSay.LexicalTools.Tests
 			this._viewTemplate.Add(new Field(Field.FieldNames.ExampleSentence.ToString(), vernacularWritingSystemIds));
 			this._viewTemplate.Add(new Field(Field.FieldNames.ExampleTranslation.ToString(), analysisWritingSystemIds));
 
-			_recordListManager = new Db4oRecordListManager(_filePath);
+			_recordListManager = new Db4oRecordListManager(new WeSayWordsDb4oModelConfiguration(), _filePath);
 			Db4oLexModelHelper.Initialize(((Db4oRecordListManager)_recordListManager).DataSource.Data);
 
 			_task = new EntryDetailTask(_recordListManager, this._viewTemplate);

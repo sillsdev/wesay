@@ -42,7 +42,7 @@ namespace WeSay.Data.Tests
 
 		protected override IRecordListManager CreateRecordListManager()
 		{
-			return new Db4oRecordListManager(_filePath);
+			return new Db4oRecordListManager(new DoNothingModelConfiguration(), _filePath);
 		}
 
 		[Test]
@@ -332,7 +332,7 @@ namespace WeSay.Data.Tests
 		public void Setup()
 		{
 			_filePath = System.IO.Path.GetTempFileName();
-			_recordListManager = new Db4oRecordListManager(_filePath);
+			_recordListManager = new Db4oRecordListManager(new DoNothingModelConfiguration(), _filePath);
 			PopupateMasterRecordList();
 
 			_filter11to17 = new SimpleIntFilter(11, 17);
@@ -340,7 +340,7 @@ namespace WeSay.Data.Tests
 			RecordListManager.Register<SimpleIntTestClass>(Filter11to17);
 			RecordListManager.GetListOfTypeFilteredFurther<SimpleIntTestClass>(Filter11to17);
 			RecordListManager.Dispose();
-			_recordListManager = new Db4oRecordListManager(_filePath);
+			_recordListManager = new Db4oRecordListManager(new DoNothingModelConfiguration(), _filePath);
 
 			_filter11to17 = new SimpleIntFilter(11, 17);
 			RecordListManager.Register<SimpleIntTestClass>(Filter11to17);

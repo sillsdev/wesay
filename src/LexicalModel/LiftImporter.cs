@@ -10,12 +10,16 @@ namespace WeSay.LexicalModel
 	public abstract class LiftImporter
 	{
 		private ProgressState _progressState = new NullProgressState();
+		private IList<String> _expectedOptionTraits;
+		private IList<string> _expectedOptionCollectionTraits;
 
 		/// <summary>
 		///
 		/// </summary>
 		public LiftImporter()
 		{
+			_expectedOptionTraits = new List<string>();
+			_expectedOptionCollectionTraits = new List<string>();
 		}
 
 		/// <summary>
@@ -33,6 +37,26 @@ namespace WeSay.LexicalModel
 			}
 		}
 
+		public IList<string> ExpectedOptionTraits
+		{
+			get
+			{
+				return _expectedOptionTraits;
+			}
+//            set
+//            {
+//                _expectedOptionTraits = value;
+//            }
+		}
+
+		public IList<string> ExpectedOptionCollectionTraits
+		{
+			get
+			{
+				return _expectedOptionCollectionTraits;
+			}
+		}
+
 		/// <summary>
 		/// Pick the best importer based on the version info in the file
 		/// </summary>
@@ -41,9 +65,11 @@ namespace WeSay.LexicalModel
 			string version = XmlUtils.GetAttributeValue(doc.SelectSingleNode("lift"), "producer", "");
 			switch (version)
 			{
-				case "SIL.FLEx.V1Pt1":
+				case "SIL.FLEx.V1Pt2": // we'll try to get this version set to the correct number as the time approaches
+					return new LiftImporterFlexVer1Pt2();
+				 case "SIL.FLEx.V1Pt1": // this was actually released (without informing us in time) as 1.0.1
 					return new LiftImporterFlexVer1Pt1();
-				case "WeSay.1Pt0Alpha":
+			   case "WeSay.1Pt0Alpha":
 					return new LiftImporterWeSay();
 				default:
 					return new LiftImporterWeSay();
@@ -93,17 +119,45 @@ namespace WeSay.LexicalModel
 			}
 		}
 
-		protected static string GetStringAttribute(XmlNode form, string attr)
+		/// <summary>
+		/// Get an obligatory attribute value.
+		/// </summary>
+		/// <param name="node">The XmlNode to look in.</param>
+		/// <param name="attrName">The required attribute to find.</param>
+		/// <returns>The value of the attribute.</returns>
+		/// <exception cref="ApplicationException">
+		/// Thrown when the value is not found in the node.
+		/// </exception>
+		public static string GetManditoryAttributeValue(XmlNode node, string attrName)
 		{
-			return form.Attributes[attr].Value;
+			string retval = XmlUtils.GetOptionalAttributeValue(node, attrName, null);
+			if (retval == null)
+			{
+				throw new ApplicationException("The attribute'"
+					+ attrName
+					+ "' is mandatory, but was missing. "
+					+ node.OuterXml);
+			}
+			return retval;
 		}
 
-		protected static string GetOptionalAttributeString(XmlNode xmlNode, string name)
+
+
+		/// <summary>
+		/// Get an optional attribute value from an XmlNode.
+		/// </summary>
+		/// <param name="node">The XmlNode to look in.</param>
+		/// <param name="attrName">The attribute to find.</param>
+		/// <returns>The value of the attribute, or null, if not found.</returns>
+		public static string GetOptionalAttributeValue(XmlNode node, string attrName, string defaultString)
 		{
-			XmlAttribute attr= xmlNode.Attributes[name];
-			if (attr == null)
-				return null;
-			return attr.Value;
+			if (node != null && node.Attributes != null)
+			{
+				XmlAttribute xa = node.Attributes[attrName];
+				if (xa != null)
+					return xa.Value;
+			}
+			return defaultString;
 		}
 
 		public void ReadMultiTextOrNull(XmlNode node, string query, MultiText text)
@@ -123,34 +177,74 @@ namespace WeSay.LexicalModel
 		{
 			foreach (XmlNode form in node.SelectNodes("form"))
 			{
-				text.SetAlternative(GetStringAttribute(form, "lang"), form.InnerText);
+				text.SetAlternative(GetManditoryAttributeValue(form, "lang"), form.InnerText);
 			}
 		}
 
 		public LexExampleSentence ReadExample(XmlNode xmlNode)
 		{
 			LexExampleSentence example = new LexExampleSentence();
+			ReadTraits(example, xmlNode);
 			ReadMultiTextOrNull(xmlNode, "source", example.Sentence);
 			//NB: will only read in one translation
 			ReadMultiTextOrNull(xmlNode, "trans", example.Translation);
 			return example;
 		}
 
-		public LexSense ReadSense(XmlNode xmlNode)
+		public LexSense ReadSense(XmlNode node)
 		{
 			LexSense sense = new LexSense();
-			ReadMultiTextOrNull(xmlNode, "gloss", sense.Gloss);
-			foreach (XmlNode n in xmlNode.SelectNodes("example"))
+			ReadTraits(sense, node);
+			ReadMultiTextOrNull(node, "gloss", sense.Gloss);
+
+			ReadGrammi(sense, node);
+
+
+			foreach (XmlNode n in node.SelectNodes("example"))
 			{
 				sense.ExampleSentences.Add(ReadExample(n));
 			}
 			return sense;
 		}
 
+		private void ReadTraits(WeSayDataObject lexObject, XmlNode node)
+		{
+			foreach (XmlNode traitNode in node.SelectNodes("trait"))
+			{
+				//nb: name is not in the Dec 2006 version of lift
+				string name = GetOptionalAttributeValue(traitNode, "name",null);
+				if (name != null && ExpectedOptionTraits.Contains(name))
+				{
+					OptionRef o = lexObject.GetProperty<OptionRef>(name);
+					o.Value = GetManditoryAttributeValue(traitNode, "value");
+				}
+				else if (name != null && ExpectedOptionCollectionTraits.Contains(name))
+				{
+					OptionRefCollection c = lexObject.GetProperty<OptionRefCollection>(name);
+					c.Keys.Add(GetManditoryAttributeValue(traitNode, "value"));
+				}
+			   else
+				{
+					//"log skipping..."
+				}
+			}
+		}
+
+		protected virtual void ReadGrammi(LexSense sense, XmlNode senseNode)
+		{
+			XmlNode grammi = senseNode.SelectSingleNode("grammi");
+			if (grammi == null)
+			{
+				return;
+			}
+			OptionRef o = sense.GetProperty<OptionRef>("PartOfSpeech");
+			o.Value = GetManditoryAttributeValue(grammi, "value");
+		}
+
 		public LexEntry ReadEntry(XmlNode xmlNode)
 		{
 			LexEntry entry=null;
-			string id = GetOptionalAttributeString(xmlNode, "id");
+			string id = GetOptionalAttributeValue(xmlNode, "id", null);
 			if (id != null)
 			{
 				try
@@ -171,6 +265,7 @@ namespace WeSay.LexicalModel
 			{
 				entry = new LexEntry();
 			}
+			ReadTraits(entry, xmlNode);
 			ReadMultiText(xmlNode, entry.LexicalForm);
 
 			foreach (XmlNode n in xmlNode.SelectNodes("sense"))

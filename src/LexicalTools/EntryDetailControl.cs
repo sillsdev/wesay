@@ -169,5 +169,30 @@ namespace WeSay.LexicalTools
 			OnRecordSelectionChanged(this, null);
 			_recordsListBox.Refresh();
 		}
+		/*        private void _btnDeleteWord_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+		{
+			Debug.Assert(CurrentIndex >= 0);
+			((LexEntry) _records[3]).Properties.Add("test", "foo");
+			//_records.RemoveAt(CurrentIndex);
+
+			((LexEntry) _records[77]).LexicalForm["x"] = "hello";
+			((Db4oRecordListManager)_recordManager).DataSource.Data.Set(_records[77]);
+			((Db4oRecordListManager) _recordManager).DataSource.Data.Commit();
+		  ((Db4oRecordListManager) _recordManager).DataSource.Data.Delete(((LexEntry) _records[77]));
+			((Db4oRecordListManager) _recordManager).DataSource.Data.Commit();
+
+//            LexEntry one = new LexEntry();
+//            one.GetProperty<MultiText>("testField")["en"] = "test";
+		  //  ((Db4oRecordListManager) _recordManager).DataSource.Data.Set(one);
+ //           int pos =_records.Add(one);
+		   //((Db4oRecordListManager) _recordManager).DataSource.Data.Commit();
+			//((Db4oRecordListManager) _recordManager).DataSource.Data.Delete(_records[pos]);
+			//((Db4oRecordListManager)_recordManager).DataSource.Data.Commit();
+ //           _records.RemoveAt(pos);
+
+			//hack until we can get selection change events sorted out in BindingGridList
+			OnRecordSelectionChanged(this, null);
+			((LexEntry) _records[5]).Properties.Add("test", "foo");
+		   */
 	}
 }

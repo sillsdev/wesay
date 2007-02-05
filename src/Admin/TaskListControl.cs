@@ -27,6 +27,9 @@ namespace WeSay.Admin
 
 		void Project_HackedEditorsSaveNow(object sender, EventArgs e)
 		{
+			//nb do this before opening the writer, as that will empty our existing xml file
+			ViewTemplate vt = WeSayWordsProject.Project.ViewTemplate;
+
 			XmlWriterSettings settings = new XmlWriterSettings();
 			settings.Indent = true;
 
@@ -35,8 +38,7 @@ namespace WeSay.Admin
 			writer.WriteStartElement("tasks");
 
 			writer.WriteStartElement("components");
-			Debug.Assert(WeSayWordsProject.Project.ViewTemplate != null);
-			WeSayWordsProject.Project.ViewTemplate.Write(writer);
+			vt.Write(writer);
 			writer.WriteEndElement();
 
 			foreach (TaskInfo t in _taskList.Items)

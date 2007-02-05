@@ -86,7 +86,7 @@ namespace WeSay.Foundation
 		public event PropertyChangedEventHandler PropertyChanged;
 
 
-		public OptionRef()
+		public OptionRef()//WeSay.Foundation.WeSayDataObject parent)
 		{
 			_humanReadableKey = string.Empty;
 		}
@@ -128,6 +128,14 @@ namespace WeSay.Foundation
 				NotifyPropertyChanged();
 			}
 		}
+
+//        public string OptionListName
+//        {
+//            get
+//            {
+//                WeSay.
+//            }
+//        }
 	}
 
 	/// <summary>

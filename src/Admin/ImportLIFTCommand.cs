@@ -48,6 +48,15 @@ namespace WeSay
 					XmlDocument doc = new XmlDocument();
 					doc.Load(_sourceLIFTPath);
 					_importer = LiftImporter.CreateCorrectImporter(doc);
+
+					foreach (string name in WeSay.Project.WeSayWordsProject.Project.OptionFieldNames)
+					{
+						_importer.ExpectedOptionTraits.Add(name);
+					}
+					foreach (string name in WeSay.Project.WeSayWordsProject.Project.OptionCollectionFieldNames)
+					{
+						_importer.ExpectedOptionCollectionTraits.Add(name);
+					}
 					_importer.Progress = progress;
 					_importer.ReadFile(doc, entries);
 				}

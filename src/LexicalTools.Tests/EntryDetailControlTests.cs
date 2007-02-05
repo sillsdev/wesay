@@ -30,8 +30,7 @@ namespace WeSay.LexicalTools.Tests
 			this._vernacularWsId = BasilProject.Project.WritingSystems.VernacularWritingSystemDefault.Id;
 
 			this._filePath = System.IO.Path.GetTempFileName();
-			Db4oModelConfiguration.Configure();
-			this._recordListManager = new Db4oRecordListManager(_filePath);
+			this._recordListManager = new Db4oRecordListManager(new WeSayWordsDb4oModelConfiguration(), _filePath);
 			Db4oLexModelHelper.Initialize(((Db4oRecordListManager)_recordListManager).DataSource.Data);
 
 			this._records = this._recordListManager.GetListOfType<LexEntry>();

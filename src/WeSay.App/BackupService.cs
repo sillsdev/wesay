@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
@@ -100,7 +101,7 @@ namespace WeSay.App
 
 			try
 			{
-				LiftExporter exporter = new LiftExporter(MakeBackupFileName());
+				LiftExporter exporter = new LiftExporter(WeSayWordsProject.Project.GetFieldToOptionListNameDictionary(), MakeBackupFileName());
 				exporter.AddNoGeneric(records);
 				exporter.End();
 
@@ -121,6 +122,8 @@ namespace WeSay.App
 
 
 		}
+
+
 
 		private  string MakeBackupFileName()
 		{

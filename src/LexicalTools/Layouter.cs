@@ -188,25 +188,36 @@ namespace WeSay.LexicalTools
 			int rowCount = 0;
 			foreach (Field customField in ActiveViewTemplate.GetCustomFields(target.GetType().Name))
 			{
-				Control box;
-				switch (customField.DataTypeName)
+				try
 				{
-					case "Option":
-						box = MakeOptionWidget(target, customField);
-						break;
-					case "OptionCollection":
-						box = MakeOptionCollectionWidget(target, customField);
-						break;
-					case "MultiText":
-						 box = MakeBoundEntry(target.GetProperty<MultiText>(customField.FieldName), customField);
-					 break;
-					default:
-						throw new ApplicationException(
-							string.Format("WeSay doesn't understand how to a layout a {0}", customField.DataTypeName));
-				}
-				DetailList.AddWidgetRow(StringCatalog.Get(customField.DisplayName), true, box, insertAtRow);
+					if (customField.Visibility != Field.VisibilitySetting.Visible)
+					{
+						continue;
+					}
+					Control box = null;
+					switch (customField.DataTypeName)
+					{
+						case "Option":
+							box = MakeOptionWidget(target, customField);
+							break;
+						case "OptionCollection":
+							box = MakeOptionCollectionWidget(target, customField);
+							break;
+						case "MultiText":
+							box = MakeBoundEntry(target.GetProperty<MultiText>(customField.FieldName), customField);
+							break;
+						default:
+							throw new ApplicationException(
+								string.Format("WeSay doesn't understand how to a layout a {0}", customField.DataTypeName));
+					}
+					DetailList.AddWidgetRow(StringCatalog.Get(customField.DisplayName), true, box, insertAtRow);
 
-				++rowCount;
+					++rowCount;
+				}
+				catch (Exception e)
+				{
+					MessageBox.Show("There was an error loading this record.");
+				}
 			}
 			return rowCount;
 		}

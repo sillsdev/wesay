@@ -47,8 +47,8 @@ namespace WeSay.Project.Tests
 			XmlDocument doc = new XmlDocument();
 			doc.LoadXml(s);
 
-			Assert.AreEqual(1, doc.SelectNodes("field/name").Count);
-			Assert.AreEqual("one", doc.SelectNodes("field/name")[0].InnerText);
+			Assert.AreEqual(1, doc.SelectNodes("field/fieldName").Count);
+			Assert.AreEqual("one", doc.SelectNodes("field/fieldName")[0].InnerText);
 
 			Assert.AreEqual("Visible", doc.SelectNodes("field/visibility")[0].InnerText);
 

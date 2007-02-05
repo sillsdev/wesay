@@ -6,14 +6,26 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 namespace WeSay.Data
 {
+	public interface IDb4oModelConfiguration
+	{
+		void Configure();
+	}
+	public class DoNothingModelConfiguration : IDb4oModelConfiguration
+	{
+		public void Configure()
+		{
+		}
+	}
+
 	public class Db4oRecordListManager : AbstractRecordListManager
 	{
 		private Db4oDataSource _dataSource;
 		private string _dataPath;
 
-		public Db4oRecordListManager(string filePath)
+		public Db4oRecordListManager(IDb4oModelConfiguration config, string filePath)
 		: base()
 		{
+			config.Configure();
 			_dataPath = Path.GetDirectoryName(filePath);
 			_dataSource = new Db4oDataSource(filePath);
 		}

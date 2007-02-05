@@ -1,8 +1,11 @@
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Xml;
 using NUnit.Framework;
 using WeSay.Data;
+using WeSay.Foundation;
 using WeSay.Language;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Db4o_Specific;
@@ -14,23 +17,25 @@ namespace WeSay.LexicalTools.Tests
 	{
 		private LiftExporter _exporter;
 		private StringBuilder _stringBuilder;
+		private Dictionary<string, string> _fieldToOptionListName = new Dictionary<string, string>();
 
 		[SetUp]
 		public void Setup()
 		{
 			Db4oLexModelHelper.InitializeForNonDbTests();
+			WeSay.Project.WeSayWordsProject.InitializeForTests();
 			_stringBuilder = new StringBuilder();
 			PrepWriterForFragment();
 		}
 
 		private void PrepWriterForFragment()
 		{
-			_exporter = new LiftExporter(_stringBuilder, true);
+			_exporter = new LiftExporter(_fieldToOptionListName, _stringBuilder, true);
 		}
 
 		private void PrepWriterForFullDocument()
 		{
-			_exporter = new LiftExporter(_stringBuilder, false);
+			_exporter = new LiftExporter(_fieldToOptionListName, _stringBuilder, false);
 		}
 
 
@@ -46,7 +51,7 @@ namespace WeSay.LexicalTools.Tests
 			PrepWriterForFullDocument();
 			//NOTE: the utf-16 here is an artifact of the xmlwriter when writing to a stringbuilder,
 			//which is what we use for tests.  The file version puts out utf-8
-			CheckAnswer("<?xml version=\"1.0\" encoding=\"utf-16\"?><lift producer=\"WeSay.1Pt0Alpha\" />");
+			CheckAnswer("<?xml version=\"1.0\" encoding=\"utf-16\"?><lift producer=\"WeSay.1Pt0Alpha\" xmlns:flex=\"http://fieldworks.sil.org\" />");
 		}
 
 
@@ -66,7 +71,7 @@ namespace WeSay.LexicalTools.Tests
 			string filePath = Path.GetTempFileName();
 			try
 			{
-				_exporter = new LiftExporter(filePath);
+				_exporter = new LiftExporter(_fieldToOptionListName, filePath);
 				WriteTwoEntries();
 				XmlDocument doc = new XmlDocument();
 				doc.Load(filePath);
@@ -175,11 +180,11 @@ namespace WeSay.LexicalTools.Tests
 		}
 
 		[Test]
-		public void BlankEntry()
+		public void BlankEntryId()
 		{
 			LexEntry entry = new LexEntry();
 			_exporter.Add(entry);
-			CheckAnswer(string.Format("<entry id=\"{0}\" />", entry.Guid));
+			CheckAnswer(string.Format("<entry id=\"NoForm\" flex:id=\"{0}\" xmlns:flex=\"http://fieldworks.sil.org\" />", entry.Guid));
 		}
 
 		[Test]
@@ -188,8 +193,27 @@ namespace WeSay.LexicalTools.Tests
 			 LexEntry entry = new LexEntry();
 			 entry.LexicalForm["blue"] = "ocean";
 			 _exporter.Add(entry);
-			 string answer = string.Format("<entry id=\"{0}\"><form lang=\"blue\">ocean</form></entry>",entry.Guid);
+			 string answer = string.Format("<entry id=\"ocean\" flex:id=\"{0}\" xmlns:flex=\"http://fieldworks.sil.org\"><form lang=\"blue\">ocean</form></entry>",entry.Guid);
 			CheckAnswer(answer);
+		}
+
+		[Test]
+		public void DuplicateFormsGetHomographNumbers()
+		{
+			LexEntry entry = new LexEntry();
+			entry.LexicalForm["blue"] = "ocean";
+			_exporter.Add(entry);
+			entry = new LexEntry();
+			entry.LexicalForm["blue"] = "ocean";
+			_exporter.Add(entry);
+			entry = new LexEntry();
+			entry.LexicalForm["blue"] = "ocean";
+			_exporter.Add(entry);
+			  _exporter.End();
+			Debug.WriteLine(_stringBuilder.ToString());
+			Assert.IsTrue(_stringBuilder.ToString().Contains("\"ocean\""));
+			Assert.IsTrue(_stringBuilder.ToString().Contains("ocean_2"));
+			Assert.IsTrue(_stringBuilder.ToString().Contains("ocean_3"));
 		}
 
 		[Test]
@@ -205,9 +229,62 @@ namespace WeSay.LexicalTools.Tests
 			entry.Senses.Add(sense);
 			_exporter.Add(entry);
 
-			CheckAnswer(string.Format("<entry id=\"{0}\"><form lang=\"blue\">ocean</form><sense><gloss><form lang=\"a\">aaa</form></gloss></sense><sense><gloss><form lang=\"b\">bbb</form></gloss></sense></entry>",entry.Guid));
+			CheckAnswer(string.Format("<entry id=\"ocean\" flex:id=\"{0}\" xmlns:flex=\"http://fieldworks.sil.org\"><form lang=\"blue\">ocean</form><sense><gloss><form lang=\"a\">aaa</form></gloss></sense><sense><gloss><form lang=\"b\">bbb</form></gloss></sense></entry>", entry.Guid));
 		}
 
+		[Test]
+		public void CustomMultiText()
+		{
+			LexSense sense = new LexSense();
+			MultiText m = sense.GetProperty<MultiText>("flubadub");
+			m["zz"] = "orange";
+			_exporter.Add(sense);
+			_exporter.End();
+			Debug.WriteLine(_stringBuilder.ToString());
+			Assert.IsTrue(_stringBuilder.ToString().Contains("<flubadub><form lang=\"zz\">orange</form></flubadub>"));
+
+		}
+
+		[Test]
+		public void CustomOptionRef()
+		{
+			_fieldToOptionListName.Add("flub", "kindsOfFlubs");
+			LexSense sense = new LexSense();
+			OptionRef o = sense.GetProperty<OptionRef>("flub");
+			o.Value = "orange";
+			_exporter.Add(sense);
+			_exporter.End();
+			Debug.WriteLine(_stringBuilder.ToString());
+
+			Assert.AreEqual("<sense><trait name=\"flub\" value=\"orange\" range=\"kindsOfFlubs\" /></sense>", _stringBuilder.ToString());
+		}
+
+		[Test]
+		public void CustomOptionRefCollection()
+		{
+			_fieldToOptionListName.Add("flubs", "colors");
+			LexSense sense = new LexSense();
+			OptionRefCollection o = sense.GetProperty<OptionRefCollection>("flubs");
+			o.Keys.AddRange(new string[] {"orange", "blue"});
+			_exporter.Add(sense);
+			_exporter.End();
+			Debug.WriteLine(_stringBuilder.ToString());
+
+			Assert.AreEqual("<sense><trait name=\"flubs\" value=\"orange\" range=\"colors\" /><trait name=\"flubs\" value=\"blue\" range=\"colors\" /></sense>", _stringBuilder.ToString());
+		}
+
+		[Test]
+		public void GoodGrammi()
+		{
+			LexSense sense = new LexSense();
+			OptionRef o = sense.GetProperty<OptionRef>("PartOfSpeech");
+			o.Value = "orange";
+			_exporter.Add(sense);
+			 _exporter.End();
+			Debug.WriteLine(_stringBuilder.ToString());
+			Assert.AreEqual("<sense><grammi value=\"orange\" /></sense>", _stringBuilder.ToString());
+
+		}
 
 		[Test]
 		public void SenseWithExample()

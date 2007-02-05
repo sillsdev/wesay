@@ -27,8 +27,7 @@ namespace WeSay.LexicalTools.Tests
 			//Db4oLexModelHelper.InitializeForNonDbTests();
 			WeSayWordsProject.InitializeForTests();
 
-			Db4oModelConfiguration.Configure();
-			this._recordListManager = new Db4oRecordListManager(_dbFilePath);// InMemoryRecordListManager();
+			this._recordListManager = new Db4oRecordListManager(new WeSayWordsDb4oModelConfiguration(), _dbFilePath);// InMemoryRecordListManager();
 			Db4oLexModelHelper.Initialize(((Db4oRecordListManager)_recordListManager).DataSource.Data);
 
 			File.WriteAllLines(_wordListFilePath, _words);

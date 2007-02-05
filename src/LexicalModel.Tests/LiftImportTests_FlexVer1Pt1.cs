@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 using NUnit.Framework;
+using WeSay.Foundation;
 using WeSay.Language;
 using WeSay.LexicalModel;
 
@@ -99,6 +100,23 @@ namespace WeSay.LexicalTools.Tests
 			// Assert.AreEqual(1, s.
 		}
 
+		protected override string Adjust(string s)
+		{
+			return s.Replace("lang", "ws");
+		}
+
+		[Test]
+		public override void SenseWithGrammi()
+		{
+			_doc.LoadXml("<sense><grammi type=\"verb\"/></sense>");
+			LexSense sense = _importer.ReadSense(_doc.SelectSingleNode("sense"));
+			Assert.AreEqual("verb", sense.GetProperty<OptionRef>("PartOfSpeech").Value);
+
+			//something not in the exiting optionsList
+			_doc.LoadXml("<sense><grammi type=\"neverHeadOfThisBefore\"/></sense>");
+			sense = _importer.ReadSense(_doc.SelectSingleNode("sense"));
+			Assert.AreEqual("neverHeadOfThisBefore", sense.GetProperty<OptionRef>("PartOfSpeech").Value);
+		}
 
 	}
 }

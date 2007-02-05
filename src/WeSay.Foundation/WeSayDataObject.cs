@@ -71,12 +71,13 @@ namespace WeSay.Foundation
 			}
 	   }
 
-		protected Dictionary<string, object> Properties
+		public Dictionary<string, object> Properties
 		{
 			get {
 				if (_properties == null)
 				{
 					_properties = new Dictionary<string, object>();
+					NotifyPropertyChanged("properties dictionary");
 				}
 
 				return _properties;
@@ -138,6 +139,7 @@ namespace WeSay.Foundation
 		public TContents GetProperty<TContents>(string fieldName) where TContents : class, IParentable, new()
 		{
 			object val;
+
 			if (Properties.TryGetValue(fieldName, out val))
 			{
 				//temp hack until mt's use parents for notification
@@ -148,8 +150,8 @@ namespace WeSay.Foundation
 				return val as TContents;
 			}
 			TContents newGuy = new TContents();
+			Properties.Add(fieldName, newGuy);
 			newGuy.Parent = this;
-			_properties.Add(fieldName, newGuy);
 
 			//temp hack until mt's use parents for notification
 			if (newGuy is MultiText)

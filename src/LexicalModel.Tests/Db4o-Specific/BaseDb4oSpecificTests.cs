@@ -10,7 +10,7 @@ namespace WeSay.LexicalModel.Tests
 	{
 		protected Db4oRecordList<LexEntry> _entriesList;
 		protected Db4oDataSource _dataSource;
-		private string _filePath ;
+		protected string _filePath ;
 		protected Db4oRecordListManager _recordListManager=null;
 
 		[SetUp]
@@ -36,7 +36,7 @@ namespace WeSay.LexicalModel.Tests
 				_dataSource.Dispose();
 				_recordListManager.Dispose();
 			}
-			   _recordListManager = new Db4oRecordListManager(_filePath);
+			   _recordListManager = new Db4oRecordListManager(new DoNothingModelConfiguration(), _filePath);
 
 			   _dataSource = _recordListManager.DataSource;
 			Db4oLexModelHelper.Initialize(_dataSource.Data);

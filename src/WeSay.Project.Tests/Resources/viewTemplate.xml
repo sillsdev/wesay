@@ -2,7 +2,7 @@
 <viewTemplate id="defaultviewTemplate" class="WeSay.UI.viewTemplate" assembly="WeSay.UI">
   <fields>
 	<field class="WeSay.LexicalModel.Field" assembly="WeSay.LexicalModel">
-	  <name>EntryLexicalForm</name>
+	  <fieldName>EntryLexicalForm</fieldName>
 	  <displayName>Word</displayName>
 	  <visibility>Visible</visibility>
 	  <writingSystems>
@@ -11,7 +11,7 @@
 	   </writingSystems>
 	</field>
 	<field class="WeSay.LexicalModel.Field" assembly="WeSay.LexicalModel">
-	  <name>SenseGloss</name>
+	  <fieldName>SenseGloss</fieldName>
 	  <visibility>Invisible</visibility>
 	  <writingSystems>
 		<id>zz</id>

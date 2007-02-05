@@ -66,8 +66,7 @@ namespace WeSay.App.Tests
 			}
 			else
 			{
-				Db4oModelConfiguration.Configure();
-				recordListManager = new Db4oRecordListManager(this._project.PathToLexicalModelDB);
+				recordListManager = new Db4oRecordListManager(new WeSayWordsDb4oModelConfiguration(), this._project.PathToLexicalModelDB);
 				Db4oLexModelHelper.Initialize(((Db4oRecordListManager)recordListManager).DataSource.Data);
 			}
 			return recordListManager;

@@ -99,6 +99,7 @@ namespace WeSay.LexicalModel.Db4o_Specific
 			IEventRegistry r = EventRegistryFactory.ForObjectContainer(_container);
 			r.Activated -= new ObjectEventHandler(OnActivated);
 			_container = null;
+			_singleton = null;
 		}
 
 

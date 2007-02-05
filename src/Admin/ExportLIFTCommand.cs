@@ -4,6 +4,7 @@ using WeSay.Data;
 using WeSay.Foundation;
 using WeSay.Foundation.Progress;
 using WeSay.LexicalModel;
+using WeSay.Project;
 
 namespace WeSay
 {
@@ -26,7 +27,7 @@ namespace WeSay
 			 WeSay.LexicalModel.LiftExporter exporter = null;
 			 try
 			 {
-				 exporter = new LiftExporter(_destinationLIFTPath);
+				 exporter = new LiftExporter(WeSayWordsProject.Project.GetFieldToOptionListNameDictionary(), _destinationLIFTPath);
 
 				 using (Db4oDataSource ds = new Db4oDataSource(_sourceWordsPath))
 				 {

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Xml;
+using WeSay.Foundation;
 using WeSay.Language;
 
 namespace WeSay.LexicalModel
@@ -22,8 +23,20 @@ namespace WeSay.LexicalModel
 	   {
 		   foreach (XmlNode form in node.SelectNodes("form"))
 		   {
-			   text.SetAlternative(GetStringAttribute(form, "ws"), form.InnerText);
+			   text.SetAlternative(GetManditoryAttributeValue(form, "ws"), form.InnerText);
 		   }
+	   }
+
+	   protected override void ReadGrammi(LexSense sense, XmlNode senseNode)
+	   {
+		   XmlNode grammi = senseNode.SelectSingleNode("grammi");
+		   if (grammi == null)
+		   {
+			   return;
+		   }
+		   OptionRef o = sense.GetProperty<OptionRef>("PartOfSpeech");
+		   o.Value = GetManditoryAttributeValue(grammi, "type"); /////<----- this is the reason for the override.
+													//in later versions of lift, this was changed to "value"
 	   }
    }
 }

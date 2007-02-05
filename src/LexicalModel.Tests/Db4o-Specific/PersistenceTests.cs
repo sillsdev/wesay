@@ -74,6 +74,142 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 
+	[Test]
+	public void TempCreateLittleFile()
+	{
+		string path = @"C:\WeSay\SampleProjects\Thai\wesay\test.words";
+		using (Db4oDataSource ds = new WeSay.Data.Db4oDataSource(path))
+		{
+			if (Db4oLexModelHelper.Singleton != null)
+			{
+				Db4oLexModelHelper.Singleton.Dispose();
+			}
+
+			using (Db4oRecordList<LexEntry> entries = new Db4oRecordList<LexEntry>(ds))
+			{
+				Db4oLexModelHelper.Initialize(ds.Data);
+				LexEntry one = new LexEntry();
+				//one.GetProperty<MultiText>("testField")["en"] = "test";
+				entries.Add(one);
+				LexEntry two = new LexEntry();
+				// two.GetProperty<MultiText>("testField")["en"] = "test";
+				entries.Add(two);
+			}
+			ds.Data.Commit();
+			ds.Data.Close();
+		}
+	}
+
+//        [Test]
+//        public void DeletionCausesPropertyDictionaryCorruption()
+//        {
+//            _filePath = @"C:\WeSay\SampleProjects\Thai\wesay\xthai5000.words";
+//
+//            CycleDatabase();
+//            LexEntry die = _entriesList[19];
+//            _entriesList.Remove(die);
+//            // LexEntry entry = CycleDatabase();
+//            LexEntry entry = _entriesList[200];
+//            entry.Properties.Add("die!", new OptionRef());
+//            _filePath = "";
+//        }
+
+//        [Test]
+//        public void DeletionCausesPropertyDictionaryCorruption()
+//        {
+//            _filePath = Path.GetTempFileName();
+//            using (Db4oDataSource ds = new WeSay.Data.Db4oDataSource(_filePath))
+//            {
+//                if (Db4oLexModelHelper.Singleton != null)
+//                {
+//                    Db4oLexModelHelper.Singleton.Dispose();
+//                }
+//
+//                using (Db4oRecordList<LexEntry> entries = new Db4oRecordList<LexEntry>(ds))
+//                {
+//                    Db4oLexModelHelper.Initialize(ds.Data);
+//                    LexEntry one = new LexEntry();
+//                    //one.GetProperty<MultiText>("testField")["en"] = "test";
+//                    entries.Add(one);
+//                    LexEntry two = new LexEntry();
+//                    // two.GetProperty<MultiText>("testField")["en"] = "test";
+//                    entries.Add(two);
+//                }
+//                ds.Data.Commit();
+//                ds.Data.Close();
+//            }
+//            Db4oLexModelHelper.Singleton.Dispose();
+//
+//            CycleDatabase();
+//            LexEntry first = _entriesList[0];
+//            _entriesList.Remove(first);
+//           // LexEntry entry = CycleDatabase();
+//            LexEntry entry = _entriesList[0];
+//            entry.Properties.Add("die!", new OptionRef());
+//        }
+
+//        [Test]
+//        public void DeletionCausesPropertyDictionaryCorruption()
+//        {
+//            string path = Path.GetTempFileName();
+//            using (Db4oDataSource ds = new WeSay.Data.Db4oDataSource(path))
+//            {
+//                if (Db4oLexModelHelper.Singleton != null)
+//                {
+//                    Db4oLexModelHelper.Singleton.Dispose();
+//                }
+//
+//                using (Db4oRecordList<LexEntry> entries = new Db4oRecordList<LexEntry>(ds))
+//                {
+//                    Db4oLexModelHelper.Initialize(ds.Data);
+//                    LexEntry one = new LexEntry();
+//                    //one.GetProperty<MultiText>("testField")["en"] = "test";
+//                    entries.Add(one);
+//                    LexEntry two = new LexEntry();
+//                   // two.GetProperty<MultiText>("testField")["en"] = "test";
+//                    entries.Add(two);
+//
+//
+//                }
+//                ds.Data.Commit();
+//                ds.Data.Close();
+//            }
+//
+//            Db4oLexModelHelper.Singleton.Dispose();
+//            using (Db4oDataSource ds = new WeSay.Data.Db4oDataSource(path))
+//            {
+//                using (Db4oRecordList<LexEntry> entries = new Db4oRecordList<LexEntry>(ds))
+//                {
+//                    Db4oLexModelHelper.Initialize(ds.Data);
+//                    LexEntry one = entries[0];
+//                    entries.Remove(one);
+//                    LexEntry two = entries[0];
+//                    two.Properties.Add("die!", new OptionRef());
+//                }
+//            }
+//            File.Delete(path);
+//            CycleDatabase();//so teardown doesn't fail
+//        }
+//
+//        [Test]
+//        public void DeletionCausesPropertyDictionaryCorruption2()
+//        {
+//            CycleDatabase();
+//            LexEntry one = new LexEntry();
+//            one.GetProperty<MultiText>("testField")["en"] = "test";
+//            _entriesList.Add(one);
+//            LexEntry two = new LexEntry();
+//            two.GetProperty<MultiText>("testField")["en"] = "test";
+//            _entriesList.Add(two);
+//
+//            LexEntry entry = CycleDatabase();
+//            _entriesList.Remove(entry);
+//            entry = CycleDatabase();
+//
+//            entry.Properties.Add("die!", new OptionRef());
+//        }
+
+
 		[Test]
 		public void SaveCustomTextField()
 		{

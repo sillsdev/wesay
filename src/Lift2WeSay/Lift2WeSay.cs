@@ -5,6 +5,7 @@ using WeSay.Data;
 using WeSay.Foundation.Progress;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Db4o_Specific;
+using WeSay.Project;
 
 namespace Lift2WeSay
 {
@@ -63,6 +64,7 @@ namespace Lift2WeSay
 				PrintUsage();
 				return;
 			}
+			//string projectPath = args[0];
 			string sourcePath = args[0];
 			string destPath = args[1];
 
@@ -87,17 +89,37 @@ namespace Lift2WeSay
 					XmlDocument doc = new XmlDocument();
 					doc.Load(sourcePath);
 					LiftImporter importer = LiftImporter.CreateCorrectImporter(doc);
+
+					WeSayWordsProject project = new WeSayWordsProject();
+					WeSay.Project.WeSayWordsProject.Project.LoadFromProjectDirectoryPath(Directory.GetParent(Environment.CurrentDirectory).FullName);
+					foreach (string name in WeSay.Project.WeSayWordsProject.Project.OptionFieldNames)
+					{
+						importer.ExpectedOptionTraits.Add(name);
+					}
+					foreach (string name in WeSay.Project.WeSayWordsProject.Project.OptionCollectionFieldNames)
+					{
+						importer.ExpectedOptionCollectionTraits.Add(name);
+					}
 					importer.Progress = new ConsoleProgress();
 					importer.ReadFile(doc, entries);
+
+					///****************
+//                    if (destPath.IndexOf("tiny.words") > -1)
+//                    {
+//                        entries.RemoveAt(2);
+//                    }
 				}
+
+
 			}
 			Console.WriteLine("Done.");
 		}
 
 		private static void PrintUsage()
 		{
-			Console.WriteLine("Usage:");
+			Console.WriteLine("Usage: (must run from 'wesay' subdirectory of a basil project)");
 			Console.WriteLine("Lift2WeSay inputfile outputfile");
+//            Console.WriteLine("Lift2WeSay projectDirectory inputfile outputfile");
 		}
 	}
 }

@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Windows.Forms;
 using CommandLine;
+using Db4objects.Db4o.Query;
 using WeSay.Data;
 using WeSay.Language;
 using WeSay.LexicalModel;
@@ -60,6 +61,15 @@ namespace WeSay.App
 					Application.DoEvents();
 
 					Db4oRecordListManager ds = recordListManager as Db4oRecordListManager;
+
+
+//                    //*********************
+					MessageBox.Show("test");
+					IRecordList<LexEntry> l = ds.GetListOfType<LexEntry>();
+					l.RemoveAt(3);
+//                    //*********************
+
+
 					if (ds != null)
 					{
 						backupService = new BackupService(project.PathToLocalBackup, ds.DataSource);
@@ -117,8 +127,7 @@ namespace WeSay.App
 			}
 			else
 			{
-				Db4oModelConfiguration.Configure();
-				recordListManager = new Db4oRecordListManager(project.PathToLexicalModelDB);
+				recordListManager = new Db4oRecordListManager(new WeSayWordsDb4oModelConfiguration(), project.PathToLexicalModelDB);
 				Db4oLexModelHelper.Initialize(((Db4oRecordListManager)recordListManager).DataSource.Data);
 
 			}

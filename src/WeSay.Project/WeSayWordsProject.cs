@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -57,7 +58,10 @@ namespace WeSay.Project
 
 		public void LoadFromLexiconPath(string lexiconPath)
 		{
-			Debug.Assert(File.Exists(lexiconPath));
+			if (!File.Exists(lexiconPath))
+			{
+				throw new ApplicationException("WeSay cannot find a lexicon where it was looking, which is at "+lexiconPath);
+			}
 			lexiconPath = Path.GetFullPath(lexiconPath);
 
 			_lexiconDatabaseFileName = Path.GetFileName(lexiconPath);
@@ -72,10 +76,10 @@ namespace WeSay.Project
 			base.LoadFromProjectDirectoryPath(projectDirectoryPath);
 			DetermineWordsFile();
 
-			ViewTemplate templateAsFoundInProjectFiles = GetInventoryFromProjectFiles();
-			ViewTemplate fullUpToDateTemplate = ViewTemplate.MakeMasterTemplate(WritingSystems);
-			ViewTemplate.SynchronizeInventories(fullUpToDateTemplate, templateAsFoundInProjectFiles);
-			_viewTemplate = fullUpToDateTemplate;
+//            ViewTemplate templateAsFoundInProjectFiles = GetInventoryFromProjectFiles();
+//            ViewTemplate fullUpToDateTemplate = ViewTemplate.MakeMasterTemplate(WritingSystems);
+//            ViewTemplate.SynchronizeInventories(fullUpToDateTemplate, templateAsFoundInProjectFiles);
+//            _viewTemplate = fullUpToDateTemplate;
 		}
 
 
@@ -217,11 +221,53 @@ namespace WeSay.Project
 
 		public ViewTemplate ViewTemplate
 		{
-			get { return _viewTemplate; }
-			set { _viewTemplate = value; }
+			get
+			{
+				if(_viewTemplate==null)
+				{
+					ViewTemplate templateAsFoundInProjectFiles = GetInventoryFromProjectFiles();
+					ViewTemplate fullUpToDateTemplate = ViewTemplate.MakeMasterTemplate(WritingSystems);
+					ViewTemplate.SynchronizeInventories(fullUpToDateTemplate, templateAsFoundInProjectFiles);
+					_viewTemplate = fullUpToDateTemplate;
+				}
+				return _viewTemplate;
+			}
+		   // set { _viewTemplate = value; }
 		}
 
+		public IEnumerable OptionFieldNames
+		{
+			get
+			{
+				List<string> names = new List<string>();
 
+				foreach (Field field in ViewTemplate.Fields)
+				{
+					if(field.DataTypeName=="Option")
+					{
+						names.Add(field.FieldName);
+					}
+				}
+				return names;
+			}
+		}
+
+		public IEnumerable OptionCollectionFieldNames
+		{
+			get
+			{
+				List<string> names = new List<string>();
+
+				foreach (Field field in ViewTemplate.Fields)
+				{
+					if (field.DataTypeName == "OptionCollection")
+					{
+						names.Add(field.FieldName);
+					}
+				}
+				return names;
+			}
+		}
 
 
 		public OptionsList GetOptionsList(string name)
@@ -267,6 +313,28 @@ namespace WeSay.Project
 			OptionsList list = new OptionsList();
 			list.LoadFromFile(pathToOptionsList);
 			_optionLists.Add(name, list);
+		}
+
+		/// <summary>
+		/// Used with xml export, e.g. with LIFT to set the proper "range" for option fields
+		/// </summary>
+		/// <returns></returns>
+		public  Dictionary<string, string> GetFieldToOptionListNameDictionary()
+		{
+			Dictionary<string, string> fieldToOptionListName = new Dictionary<string, string>();
+			foreach (Field field in this.ViewTemplate.Fields)
+			{
+				if (field.OptionsListFile != null && field.OptionsListFile.Trim() != "")
+				{
+					fieldToOptionListName.Add(field.FieldName, GetListNameFromFileName(field.OptionsListFile));
+				}
+			}
+			return fieldToOptionListName;
+		}
+
+		private string GetListNameFromFileName(string file)
+		{
+			return file.Substring(0, file.IndexOf(".xml"));
 		}
 	}
 }

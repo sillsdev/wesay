@@ -1,10 +1,11 @@
+using WeSay.Data;
 using WeSay.Language;
 
 namespace WeSay.LexicalModel.Db4o_Specific
 {
-	public class Db4oModelConfiguration
+	public class WeSayWordsDb4oModelConfiguration : IDb4oModelConfiguration
 	{
-		public static void Configure()
+		public  void Configure()
 		{
 			Db4objects.Db4o.Config.IConfiguration db4oConfiguration = Db4objects.Db4o.Db4oFactory.Configure();
 			db4oConfiguration.ClassActivationDepthConfigurable(true);
