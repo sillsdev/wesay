@@ -64,9 +64,9 @@ namespace WeSay.App
 
 
 //                    //*********************
-					MessageBox.Show("test");
-					IRecordList<LexEntry> l = ds.GetListOfType<LexEntry>();
-					l.RemoveAt(3);
+//                    MessageBox.Show("test");
+//                    IRecordList<LexEntry> l = ds.GetListOfType<LexEntry>();
+//                    l.RemoveAt(3);
 //                    //*********************
 
 
