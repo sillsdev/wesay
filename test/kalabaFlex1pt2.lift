@@ -1,0 +1,440 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--See http://www.wesay.org/wiki/FLExLIFTInfo for more information on the format used here.--><lift version="0.02" producer="SIL.FLEx.V1Pt2" xmlns:hr="urn:wesay.org:HumanReadabilityOnly" xmlns:flex="http://fieldworks.sil.org" lang='XKAL'><ranges><range-set id="gramCat"><!--The FLEx exporter currently maps all affixes to one of these, since they are complicated objects.--><range-element id="inflAffix" name="inflectionalAffix" abbrev="inflAffix" description="See traits for details about this inflectional affix."/>
+<range-element id="derivAffix" name="derivationalAffix" abbrev="derivAffix" description="See traits for details about this derivational affix."/>
+<range-element id="affix" name="unclassifiedAffix" abbrev="affix" description="See traits for details about this unclassified affix."/>
+<range-element id="derivStepAffix" name="derivationalStepAffix" abbrev="derivSetpAffix" description="See traits for details about this DerivationalStep affix."/>
+<!--These are all the parts of speech in the FLEx db, used or unused.  Stems use these for their grammi values.--><range-element id='adjunct' label='adjunct' abbrev='adjunct' description='' flex:id='d7f7150d-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='article' label='article' abbrev='art' description='' flex:id='d7f7150e-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='definite article' label='definite article' abbrev='def' description='' flex:id='d7f7150f-e8cf-11d3-9764-00c04f186933' flex:parent='d7f7150e-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='indefinite article' label='indefinite article' abbrev='indef' description='' flex:id='d7f71510-e8cf-11d3-9764-00c04f186933' flex:parent='d7f7150e-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='disc' label='disc' abbrev='disc' description='' flex:id='d7f71511-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='interjection' label='interjection' abbrev='interj' description='' flex:id='d7f71512-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='marker' label='marker' abbrev='mkr' description='' flex:id='d7f71513-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='aspectual' label='aspectual' abbrev='asp' description='' flex:id='d7f71514-e8cf-11d3-9764-00c04f186933' flex:parent='d7f71513-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='case marker' label='case marker' abbrev='case' description='' flex:id='d7f71515-e8cf-11d3-9764-00c04f186933' flex:parent='d7f71513-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='focus marker' label='focus marker' abbrev='foc' description='' flex:id='d7f71516-e8cf-11d3-9764-00c04f186933' flex:parent='d7f71513-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='honorific marker' label='honorific marker' abbrev='hon' description='' flex:id='d7f71517-e8cf-11d3-9764-00c04f186933' flex:parent='d7f71513-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='modal' label='modal' abbrev='mod' description='' flex:id='d7f71518-e8cf-11d3-9764-00c04f186933' flex:parent='d7f71513-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='mood' label='mood' abbrev='mood' description='' flex:id='d7f71519-e8cf-11d3-9764-00c04f186933' flex:parent='d7f71513-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='negation' label='negation' abbrev='neg' description='' flex:id='d7f7151a-e8cf-11d3-9764-00c04f186933' flex:parent='d7f71513-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='number' label='number' abbrev='num' description='' flex:id='d7f7151b-e8cf-11d3-9764-00c04f186933' flex:parent='d7f71513-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='person' label='person' abbrev='pers' description='' flex:id='d7f7151c-e8cf-11d3-9764-00c04f186933' flex:parent='d7f71513-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='quotative' label='quotative' abbrev='quo' description='' flex:id='d7f7151d-e8cf-11d3-9764-00c04f186933' flex:parent='d7f71513-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='rank marker' label='rank marker' abbrev='rank' description='' flex:id='d7f7151e-e8cf-11d3-9764-00c04f186933' flex:parent='d7f71513-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='switch reference marker' label='switch reference marker' abbrev='sw ref' description='' flex:id='d7f7151f-e8cf-11d3-9764-00c04f186933' flex:parent='d7f71513-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='tense marker' label='tense marker' abbrev='tens' description='' flex:id='d7f71520-e8cf-11d3-9764-00c04f186933' flex:parent='d7f71513-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='topic marker' label='topic marker' abbrev='top' description='' flex:id='d7f71521-e8cf-11d3-9764-00c04f186933' flex:parent='d7f71513-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='voice marker' label='voice marker' abbrev='voice' description='' flex:id='d7f71522-e8cf-11d3-9764-00c04f186933' flex:parent='d7f71513-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='modifier' label='modifier' abbrev='mod' description='' flex:id='d7f71523-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='adjective' label='adjective' abbrev='adj' description='' flex:id='d7f71524-e8cf-11d3-9764-00c04f186933' flex:parent='d7f71523-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='adverb' label='adverb' abbrev='Adv' description='' flex:id='d7f71525-e8cf-11d3-9764-00c04f186933' flex:parent='d7f71523-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='negator' label='negator' abbrev='neg' description='' flex:id='d7f71526-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='noun' label='noun' abbrev='N' description='' flex:id='d7f71527-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='common noun' label='common noun' abbrev='comm' description='' flex:id='d7f71528-e8cf-11d3-9764-00c04f186933' flex:parent='d7f71527-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='concrete noun' label='concrete noun' abbrev='conc' description='' flex:id='d7f71529-e8cf-11d3-9764-00c04f186933' flex:parent='d7f71527-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='nominal' label='nominal' abbrev='nom' description='' flex:id='d7f7152a-e8cf-11d3-9764-00c04f186933' flex:parent='d7f71527-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='possessive noun' label='possessive noun' abbrev='poss' description='' flex:id='d7f7152b-e8cf-11d3-9764-00c04f186933' flex:parent='d7f71527-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='proper noun' label='proper noun' abbrev='prop' description='' flex:id='d7f7152c-e8cf-11d3-9764-00c04f186933' flex:parent='d7f71527-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='particle' label='particle' abbrev='part' description='' flex:id='d7f7152d-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='precategorial' label='precategorial' abbrev='precat' description='' flex:id='d7f7152e-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='pronoun' label='pronoun' abbrev='Pro' description='' flex:id='d7f7152f-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='demonstrative pronoun' label='demonstrative pronoun' abbrev='dem' description='' flex:id='d7f71530-e8cf-11d3-9764-00c04f186933' flex:parent='d7f7152f-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='indefinite pronoun' label='indefinite pronoun' abbrev='ind' description='' flex:id='d7f71531-e8cf-11d3-9764-00c04f186933' flex:parent='d7f7152f-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='interrogative pronoun' label='interrogative pronoun' abbrev='int' description='' flex:id='d7f71532-e8cf-11d3-9764-00c04f186933' flex:parent='d7f7152f-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='personal pronoun' label='personal pronoun' abbrev='pers' description='' flex:id='d7f71533-e8cf-11d3-9764-00c04f186933' flex:parent='d7f7152f-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='posessive pronoun' label='posessive pronoun' abbrev='pos pron' description='' flex:id='d7f71534-e8cf-11d3-9764-00c04f186933' flex:parent='d7f7152f-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='relative pronoun' label='relative pronoun' abbrev='rel' description='' flex:id='d7f71535-e8cf-11d3-9764-00c04f186933' flex:parent='d7f7152f-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='relator' label='relator' abbrev='rel' description='' flex:id='d7f71536-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='adposition' label='adposition' abbrev='adpos' description='' flex:id='d7f71537-e8cf-11d3-9764-00c04f186933' flex:parent='d7f71536-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='postposition' label='postposition' abbrev='post' description='' flex:id='d7f71538-e8cf-11d3-9764-00c04f186933' flex:parent='d7f71537-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='preposition' label='preposition' abbrev='prep' description='' flex:id='d7f71539-e8cf-11d3-9764-00c04f186933' flex:parent='d7f71537-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='conjunction' label='conjunction' abbrev='conj' description='' flex:id='d7f7153a-e8cf-11d3-9764-00c04f186933' flex:parent='d7f71536-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='verb' label='verb' abbrev='V' description='' flex:id='d7f7153b-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='auxiliary verb' label='auxiliary verb' abbrev='aux' description='' flex:id='d7f7153c-e8cf-11d3-9764-00c04f186933' flex:parent='d7f7153b-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='infinitive' label='infinitive' abbrev='inf' description='' flex:id='d7f7153e-e8cf-11d3-9764-00c04f186933' flex:parent='d7f7153b-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='intransitive verb' label='intransitive verb' abbrev='intrans' description='' flex:id='d7f7153f-e8cf-11d3-9764-00c04f186933' flex:parent='d7f7153b-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='participle' label='participle' abbrev='part' description='' flex:id='d7f71540-e8cf-11d3-9764-00c04f186933' flex:parent='d7f7153b-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='reflexive' label='reflexive' abbrev='ref' description='' flex:id='d7f71541-e8cf-11d3-9764-00c04f186933' flex:parent='d7f7153b-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='stative' label='stative' abbrev='sta' description='' flex:id='d7f71542-e8cf-11d3-9764-00c04f186933' flex:parent='d7f7153b-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='transitive verb' label='transitive verb' abbrev='trans' description='' flex:id='d7f71543-e8cf-11d3-9764-00c04f186933' flex:parent='d7f7153b-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='bitransitive verb' label='bitransitive verb' abbrev='bitrans' description='' flex:id='d7f7153d-e8cf-11d3-9764-00c04f186933' flex:parent='d7f7153b-e8cf-11d3-9764-00c04f186933'/>
+</range-set>
+<range-set id="partsOfSpeech"><range-element id='adjunct' label='adjunct' abbrev='adjunct' description='' flex:id='d7f7150d-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='article' label='article' abbrev='art' description='' flex:id='d7f7150e-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='definite article' label='definite article' abbrev='def' description='' flex:id='d7f7150f-e8cf-11d3-9764-00c04f186933' flex:parent='d7f7150e-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='indefinite article' label='indefinite article' abbrev='indef' description='' flex:id='d7f71510-e8cf-11d3-9764-00c04f186933' flex:parent='d7f7150e-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='disc' label='disc' abbrev='disc' description='' flex:id='d7f71511-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='interjection' label='interjection' abbrev='interj' description='' flex:id='d7f71512-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='marker' label='marker' abbrev='mkr' description='' flex:id='d7f71513-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='aspectual' label='aspectual' abbrev='asp' description='' flex:id='d7f71514-e8cf-11d3-9764-00c04f186933' flex:parent='d7f71513-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='case marker' label='case marker' abbrev='case' description='' flex:id='d7f71515-e8cf-11d3-9764-00c04f186933' flex:parent='d7f71513-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='focus marker' label='focus marker' abbrev='foc' description='' flex:id='d7f71516-e8cf-11d3-9764-00c04f186933' flex:parent='d7f71513-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='honorific marker' label='honorific marker' abbrev='hon' description='' flex:id='d7f71517-e8cf-11d3-9764-00c04f186933' flex:parent='d7f71513-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='modal' label='modal' abbrev='mod' description='' flex:id='d7f71518-e8cf-11d3-9764-00c04f186933' flex:parent='d7f71513-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='mood' label='mood' abbrev='mood' description='' flex:id='d7f71519-e8cf-11d3-9764-00c04f186933' flex:parent='d7f71513-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='negation' label='negation' abbrev='neg' description='' flex:id='d7f7151a-e8cf-11d3-9764-00c04f186933' flex:parent='d7f71513-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='number' label='number' abbrev='num' description='' flex:id='d7f7151b-e8cf-11d3-9764-00c04f186933' flex:parent='d7f71513-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='person' label='person' abbrev='pers' description='' flex:id='d7f7151c-e8cf-11d3-9764-00c04f186933' flex:parent='d7f71513-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='quotative' label='quotative' abbrev='quo' description='' flex:id='d7f7151d-e8cf-11d3-9764-00c04f186933' flex:parent='d7f71513-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='rank marker' label='rank marker' abbrev='rank' description='' flex:id='d7f7151e-e8cf-11d3-9764-00c04f186933' flex:parent='d7f71513-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='switch reference marker' label='switch reference marker' abbrev='sw ref' description='' flex:id='d7f7151f-e8cf-11d3-9764-00c04f186933' flex:parent='d7f71513-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='tense marker' label='tense marker' abbrev='tens' description='' flex:id='d7f71520-e8cf-11d3-9764-00c04f186933' flex:parent='d7f71513-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='topic marker' label='topic marker' abbrev='top' description='' flex:id='d7f71521-e8cf-11d3-9764-00c04f186933' flex:parent='d7f71513-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='voice marker' label='voice marker' abbrev='voice' description='' flex:id='d7f71522-e8cf-11d3-9764-00c04f186933' flex:parent='d7f71513-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='modifier' label='modifier' abbrev='mod' description='' flex:id='d7f71523-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='adjective' label='adjective' abbrev='adj' description='' flex:id='d7f71524-e8cf-11d3-9764-00c04f186933' flex:parent='d7f71523-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='adverb' label='adverb' abbrev='Adv' description='' flex:id='d7f71525-e8cf-11d3-9764-00c04f186933' flex:parent='d7f71523-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='negator' label='negator' abbrev='neg' description='' flex:id='d7f71526-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='noun' label='noun' abbrev='N' description='' flex:id='d7f71527-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='common noun' label='common noun' abbrev='comm' description='' flex:id='d7f71528-e8cf-11d3-9764-00c04f186933' flex:parent='d7f71527-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='concrete noun' label='concrete noun' abbrev='conc' description='' flex:id='d7f71529-e8cf-11d3-9764-00c04f186933' flex:parent='d7f71527-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='nominal' label='nominal' abbrev='nom' description='' flex:id='d7f7152a-e8cf-11d3-9764-00c04f186933' flex:parent='d7f71527-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='possessive noun' label='possessive noun' abbrev='poss' description='' flex:id='d7f7152b-e8cf-11d3-9764-00c04f186933' flex:parent='d7f71527-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='proper noun' label='proper noun' abbrev='prop' description='' flex:id='d7f7152c-e8cf-11d3-9764-00c04f186933' flex:parent='d7f71527-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='particle' label='particle' abbrev='part' description='' flex:id='d7f7152d-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='precategorial' label='precategorial' abbrev='precat' description='' flex:id='d7f7152e-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='pronoun' label='pronoun' abbrev='Pro' description='' flex:id='d7f7152f-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='demonstrative pronoun' label='demonstrative pronoun' abbrev='dem' description='' flex:id='d7f71530-e8cf-11d3-9764-00c04f186933' flex:parent='d7f7152f-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='indefinite pronoun' label='indefinite pronoun' abbrev='ind' description='' flex:id='d7f71531-e8cf-11d3-9764-00c04f186933' flex:parent='d7f7152f-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='interrogative pronoun' label='interrogative pronoun' abbrev='int' description='' flex:id='d7f71532-e8cf-11d3-9764-00c04f186933' flex:parent='d7f7152f-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='personal pronoun' label='personal pronoun' abbrev='pers' description='' flex:id='d7f71533-e8cf-11d3-9764-00c04f186933' flex:parent='d7f7152f-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='posessive pronoun' label='posessive pronoun' abbrev='pos pron' description='' flex:id='d7f71534-e8cf-11d3-9764-00c04f186933' flex:parent='d7f7152f-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='relative pronoun' label='relative pronoun' abbrev='rel' description='' flex:id='d7f71535-e8cf-11d3-9764-00c04f186933' flex:parent='d7f7152f-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='relator' label='relator' abbrev='rel' description='' flex:id='d7f71536-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='adposition' label='adposition' abbrev='adpos' description='' flex:id='d7f71537-e8cf-11d3-9764-00c04f186933' flex:parent='d7f71536-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='postposition' label='postposition' abbrev='post' description='' flex:id='d7f71538-e8cf-11d3-9764-00c04f186933' flex:parent='d7f71537-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='preposition' label='preposition' abbrev='prep' description='' flex:id='d7f71539-e8cf-11d3-9764-00c04f186933' flex:parent='d7f71537-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='conjunction' label='conjunction' abbrev='conj' description='' flex:id='d7f7153a-e8cf-11d3-9764-00c04f186933' flex:parent='d7f71536-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='verb' label='verb' abbrev='V' description='' flex:id='d7f7153b-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='auxiliary verb' label='auxiliary verb' abbrev='aux' description='' flex:id='d7f7153c-e8cf-11d3-9764-00c04f186933' flex:parent='d7f7153b-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='infinitive' label='infinitive' abbrev='inf' description='' flex:id='d7f7153e-e8cf-11d3-9764-00c04f186933' flex:parent='d7f7153b-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='intransitive verb' label='intransitive verb' abbrev='intrans' description='' flex:id='d7f7153f-e8cf-11d3-9764-00c04f186933' flex:parent='d7f7153b-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='participle' label='participle' abbrev='part' description='' flex:id='d7f71540-e8cf-11d3-9764-00c04f186933' flex:parent='d7f7153b-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='reflexive' label='reflexive' abbrev='ref' description='' flex:id='d7f71541-e8cf-11d3-9764-00c04f186933' flex:parent='d7f7153b-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='stative' label='stative' abbrev='sta' description='' flex:id='d7f71542-e8cf-11d3-9764-00c04f186933' flex:parent='d7f7153b-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='transitive verb' label='transitive verb' abbrev='trans' description='' flex:id='d7f71543-e8cf-11d3-9764-00c04f186933' flex:parent='d7f7153b-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='bitransitive verb' label='bitransitive verb' abbrev='bitrans' description='' flex:id='d7f7153d-e8cf-11d3-9764-00c04f186933' flex:parent='d7f7153b-e8cf-11d3-9764-00c04f186933'/>
+</range-set>
+<range-set id="partsOfSpeechForDerivationTo"><range-element id='adjunct' label='adjunct' abbrev='adjunct' description='' flex:id='d7f7150d-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='article' label='article' abbrev='art' description='' flex:id='d7f7150e-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='definite article' label='definite article' abbrev='def' description='' flex:id='d7f7150f-e8cf-11d3-9764-00c04f186933' flex:parent='d7f7150e-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='indefinite article' label='indefinite article' abbrev='indef' description='' flex:id='d7f71510-e8cf-11d3-9764-00c04f186933' flex:parent='d7f7150e-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='disc' label='disc' abbrev='disc' description='' flex:id='d7f71511-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='interjection' label='interjection' abbrev='interj' description='' flex:id='d7f71512-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='marker' label='marker' abbrev='mkr' description='' flex:id='d7f71513-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='aspectual' label='aspectual' abbrev='asp' description='' flex:id='d7f71514-e8cf-11d3-9764-00c04f186933' flex:parent='d7f71513-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='case marker' label='case marker' abbrev='case' description='' flex:id='d7f71515-e8cf-11d3-9764-00c04f186933' flex:parent='d7f71513-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='focus marker' label='focus marker' abbrev='foc' description='' flex:id='d7f71516-e8cf-11d3-9764-00c04f186933' flex:parent='d7f71513-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='honorific marker' label='honorific marker' abbrev='hon' description='' flex:id='d7f71517-e8cf-11d3-9764-00c04f186933' flex:parent='d7f71513-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='modal' label='modal' abbrev='mod' description='' flex:id='d7f71518-e8cf-11d3-9764-00c04f186933' flex:parent='d7f71513-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='mood' label='mood' abbrev='mood' description='' flex:id='d7f71519-e8cf-11d3-9764-00c04f186933' flex:parent='d7f71513-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='negation' label='negation' abbrev='neg' description='' flex:id='d7f7151a-e8cf-11d3-9764-00c04f186933' flex:parent='d7f71513-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='number' label='number' abbrev='num' description='' flex:id='d7f7151b-e8cf-11d3-9764-00c04f186933' flex:parent='d7f71513-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='person' label='person' abbrev='pers' description='' flex:id='d7f7151c-e8cf-11d3-9764-00c04f186933' flex:parent='d7f71513-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='quotative' label='quotative' abbrev='quo' description='' flex:id='d7f7151d-e8cf-11d3-9764-00c04f186933' flex:parent='d7f71513-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='rank marker' label='rank marker' abbrev='rank' description='' flex:id='d7f7151e-e8cf-11d3-9764-00c04f186933' flex:parent='d7f71513-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='switch reference marker' label='switch reference marker' abbrev='sw ref' description='' flex:id='d7f7151f-e8cf-11d3-9764-00c04f186933' flex:parent='d7f71513-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='tense marker' label='tense marker' abbrev='tens' description='' flex:id='d7f71520-e8cf-11d3-9764-00c04f186933' flex:parent='d7f71513-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='topic marker' label='topic marker' abbrev='top' description='' flex:id='d7f71521-e8cf-11d3-9764-00c04f186933' flex:parent='d7f71513-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='voice marker' label='voice marker' abbrev='voice' description='' flex:id='d7f71522-e8cf-11d3-9764-00c04f186933' flex:parent='d7f71513-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='modifier' label='modifier' abbrev='mod' description='' flex:id='d7f71523-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='adjective' label='adjective' abbrev='adj' description='' flex:id='d7f71524-e8cf-11d3-9764-00c04f186933' flex:parent='d7f71523-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='adverb' label='adverb' abbrev='Adv' description='' flex:id='d7f71525-e8cf-11d3-9764-00c04f186933' flex:parent='d7f71523-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='negator' label='negator' abbrev='neg' description='' flex:id='d7f71526-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='noun' label='noun' abbrev='N' description='' flex:id='d7f71527-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='common noun' label='common noun' abbrev='comm' description='' flex:id='d7f71528-e8cf-11d3-9764-00c04f186933' flex:parent='d7f71527-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='concrete noun' label='concrete noun' abbrev='conc' description='' flex:id='d7f71529-e8cf-11d3-9764-00c04f186933' flex:parent='d7f71527-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='nominal' label='nominal' abbrev='nom' description='' flex:id='d7f7152a-e8cf-11d3-9764-00c04f186933' flex:parent='d7f71527-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='possessive noun' label='possessive noun' abbrev='poss' description='' flex:id='d7f7152b-e8cf-11d3-9764-00c04f186933' flex:parent='d7f71527-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='proper noun' label='proper noun' abbrev='prop' description='' flex:id='d7f7152c-e8cf-11d3-9764-00c04f186933' flex:parent='d7f71527-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='particle' label='particle' abbrev='part' description='' flex:id='d7f7152d-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='precategorial' label='precategorial' abbrev='precat' description='' flex:id='d7f7152e-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='pronoun' label='pronoun' abbrev='Pro' description='' flex:id='d7f7152f-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='demonstrative pronoun' label='demonstrative pronoun' abbrev='dem' description='' flex:id='d7f71530-e8cf-11d3-9764-00c04f186933' flex:parent='d7f7152f-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='indefinite pronoun' label='indefinite pronoun' abbrev='ind' description='' flex:id='d7f71531-e8cf-11d3-9764-00c04f186933' flex:parent='d7f7152f-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='interrogative pronoun' label='interrogative pronoun' abbrev='int' description='' flex:id='d7f71532-e8cf-11d3-9764-00c04f186933' flex:parent='d7f7152f-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='personal pronoun' label='personal pronoun' abbrev='pers' description='' flex:id='d7f71533-e8cf-11d3-9764-00c04f186933' flex:parent='d7f7152f-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='posessive pronoun' label='posessive pronoun' abbrev='pos pron' description='' flex:id='d7f71534-e8cf-11d3-9764-00c04f186933' flex:parent='d7f7152f-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='relative pronoun' label='relative pronoun' abbrev='rel' description='' flex:id='d7f71535-e8cf-11d3-9764-00c04f186933' flex:parent='d7f7152f-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='relator' label='relator' abbrev='rel' description='' flex:id='d7f71536-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='adposition' label='adposition' abbrev='adpos' description='' flex:id='d7f71537-e8cf-11d3-9764-00c04f186933' flex:parent='d7f71536-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='postposition' label='postposition' abbrev='post' description='' flex:id='d7f71538-e8cf-11d3-9764-00c04f186933' flex:parent='d7f71537-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='preposition' label='preposition' abbrev='prep' description='' flex:id='d7f71539-e8cf-11d3-9764-00c04f186933' flex:parent='d7f71537-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='conjunction' label='conjunction' abbrev='conj' description='' flex:id='d7f7153a-e8cf-11d3-9764-00c04f186933' flex:parent='d7f71536-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='verb' label='verb' abbrev='V' description='' flex:id='d7f7153b-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='auxiliary verb' label='auxiliary verb' abbrev='aux' description='' flex:id='d7f7153c-e8cf-11d3-9764-00c04f186933' flex:parent='d7f7153b-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='infinitive' label='infinitive' abbrev='inf' description='' flex:id='d7f7153e-e8cf-11d3-9764-00c04f186933' flex:parent='d7f7153b-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='intransitive verb' label='intransitive verb' abbrev='intrans' description='' flex:id='d7f7153f-e8cf-11d3-9764-00c04f186933' flex:parent='d7f7153b-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='participle' label='participle' abbrev='part' description='' flex:id='d7f71540-e8cf-11d3-9764-00c04f186933' flex:parent='d7f7153b-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='reflexive' label='reflexive' abbrev='ref' description='' flex:id='d7f71541-e8cf-11d3-9764-00c04f186933' flex:parent='d7f7153b-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='stative' label='stative' abbrev='sta' description='' flex:id='d7f71542-e8cf-11d3-9764-00c04f186933' flex:parent='d7f7153b-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='transitive verb' label='transitive verb' abbrev='trans' description='' flex:id='d7f71543-e8cf-11d3-9764-00c04f186933' flex:parent='d7f7153b-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='bitransitive verb' label='bitransitive verb' abbrev='bitrans' description='' flex:id='d7f7153d-e8cf-11d3-9764-00c04f186933' flex:parent='d7f7153b-e8cf-11d3-9764-00c04f186933'/>
+</range-set>
+<range-set id="morphType"><range-element id='particle' label='particle' abbrev='part' description='' leadingSymbol='' trailingSymbol='' flex:id='56db04bf-3d58-44cc-b292-4c8aa68538f4'/>
+<range-element id='infix' label='infix' abbrev='ifx' description='' leadingSymbol='-' trailingSymbol='-' flex:id='d7f713da-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='prefix' label='prefix' abbrev='pfx' description='' leadingSymbol='' trailingSymbol='-' flex:id='d7f713db-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='simulfix' label='simulfix' abbrev='smfx' description='' leadingSymbol='=' trailingSymbol='=' flex:id='d7f713dc-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='suffix' label='suffix' abbrev='sfx' description='' leadingSymbol='-' trailingSymbol='' flex:id='d7f713dd-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='suprafix' label='suprafix' abbrev='spfx' description='' leadingSymbol='~' trailingSymbol='~' flex:id='d7f713de-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='circumfix' label='circumfix' abbrev='cfx' description='' leadingSymbol='' trailingSymbol='' flex:id='d7f713df-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='enclitic' label='enclitic' abbrev='enclit' description='' leadingSymbol='=' trailingSymbol='' flex:id='d7f713e1-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='proclitic' label='proclitic' abbrev='proclit' description='' leadingSymbol='' trailingSymbol='=' flex:id='d7f713e2-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='bound root' label='bound root' abbrev='bd root' description='' leadingSymbol='*' trailingSymbol='' flex:id='d7f713e4-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='root' label='root' abbrev='ubd root' description='' leadingSymbol='' trailingSymbol='' flex:id='d7f713e5-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='bound stem' label='bound stem' abbrev='bd stem' description='' leadingSymbol='*' trailingSymbol='' flex:id='d7f713e7-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='stem' label='stem' abbrev='ubd stem' description='' leadingSymbol='' trailingSymbol='' flex:id='d7f713e8-e8cf-11d3-9764-00c04f186933'/>
+<range-element id='infixing interfix' label='infixing interfix' abbrev='ifxnfx' description='' leadingSymbol='-' trailingSymbol='-' flex:id='18d9b1c3-b5b6-4c07-b92c-2fe1d2281bd4'/>
+<range-element id='prefixing interfix' label='prefixing interfix' abbrev='pfxnfx' description='' leadingSymbol='' trailingSymbol='-' flex:id='af6537b0-7175-4387-ba6a-36547d37fb13'/>
+<range-element id='suffixing interfix' label='suffixing interfix' abbrev='sfxnfx' description='' leadingSymbol='-' trailingSymbol='' flex:id='3433683d-08a9-4bae-ae53-2a7798f64068'/>
+<range-element id='phrase' label='phrase' abbrev='phr' description='' leadingSymbol='' trailingSymbol='' flex:id='a23b6faa-1052-4f4d-984b-4b338bdaf95f'/>
+<range-element id='discontiguous phrase' label='discontiguous phrase' abbrev='dis phr' description='' leadingSymbol='' trailingSymbol='' flex:id='0cc8c35a-cee9-434d-be58-5d29130fba5b'/>
+</range-set>
+</ranges>
+<entry id='*bili' flex:id='265f5359-8290-40d9-a708-641d474383aa' dateCreated='2003-08-07T08:42:42+07:00' dateModified='2007-01-05T03:45:00+07:00'><lex><form lang="x-Kal">*bili</form><trait range="morphType" value='bound root'/>
+</lex>
+<citation><form lang="x-Kal">himbilira</form></citation><ph flex:id='a98fa4a0-a89f-4779-b308-fba4a03455c5'><field tag="cvPattern">CVCCVCVC</field>
+<field tag="tone">HLHHL</field>
+<form lang="x-Kal">Pronunciation1</form><media loc='C:\Documents and Settings\John\My Documents\boy dog frog.wav'><form lang="x-Eng">The media Label</form></media>
+</ph>
+<sense><grammi value='transitive verb' flex:id='bfd7f99b-bc6d-4926-acee-0c1583c9170c'/>
+<gloss><form lang="x-Eng">to.see</form></gloss></sense><sense><grammi value='transitive verb' flex:id='bfd7f99b-bc6d-4926-acee-0c1583c9170c'/>
+<gloss><form lang="x-Eng">to.understand</form></gloss></sense></entry><entry id='nad' flex:id='0ef532e9-e312-40b6-ad6a-c0618820c3af' dateCreated='2003-08-07T08:42:42+07:00' dateModified='2003-07-10T11:41:00+07:00'><lex><form lang="x-Kal">nad</form><trait range="morphType" value='root'/>
+</lex>
+<citation><form lang="x-Kal">nadra</form></citation><sense><grammi value='intransitive verb' flex:id='32018d1e-e107-4250-9394-e49f41d5645d'/>
+<gloss><form lang="x-Eng">to.sleep</form></gloss></sense></entry><entry id='ni-' flex:id='04758355-1e6c-49de-86f0-15d6347f25cd' dateCreated='2003-08-07T08:42:42+07:00' dateModified='2003-07-09T01:20:00+07:00'><lex><form lang="x-Kal">ni-</form><trait range="morphType" value='prefix'/>
+</lex>
+<sense><grammi value="inflAffix" flex:id='069aee8f-8b79-4f8f-afb5-2c433ec4a9e1'/>
+<trait range="partsOfSpeech" value='verb'/>
+<gloss><form lang="x-Eng">1SgSubj</form></gloss></sense></entry><entry id='hiN-' flex:id='4a5858f4-3be4-42fc-b23a-e8a6f4d8694e' dateCreated='2003-08-07T08:42:42+07:00' dateModified='2003-07-09T03:50:05+07:00'><lex><form lang="x-Kal">hiN-</form><trait range="morphType"/>
+</lex>
+<citation><form lang="x-Kal">hiN</form></citation><sense><grammi value="inflAffix" flex:id='be41902f-590a-44a4-99d0-c511fa0f65e7'/>
+<trait range="partsOfSpeech" value='verb'/>
+<gloss><form lang="x-Eng">3SgObj</form></gloss></sense></entry><entry id='-ra' flex:id='1c2cbb5d-f0d9-47ff-86af-38d0aae0c765' dateCreated='2003-08-07T08:42:42+07:00' dateModified='2003-08-07T09:18:00+07:00'><lex><form lang="x-Kal">-ra</form><trait range="morphType" value='suffix'/>
+</lex>
+<sense><grammi value="inflAffix" flex:id='fa8d0d01-a92a-444d-be4d-f890aad342fa'/>
+<trait range="partsOfSpeech" value='stative'/>
+<gloss><form lang="x-Eng">Pres</form></gloss></sense></entry><entry id='*dok' flex:id='016f2759-ed12-42a5-abcb-7fe3f53d05b0' dateCreated='2003-08-07T08:42:42+07:00' dateModified='2003-07-09T03:46:05+07:00'><lex><form lang="x-Kal">*dok</form><trait range="morphType" value='bound root'/>
+</lex>
+<citation><form lang="x-Kal">hindoksa</form></citation><sense><grammi value='transitive verb' flex:id='f17bfe28-abef-40c8-b747-0367ac06c620'/>
+<gloss><form lang="x-Eng">to.think</form></gloss></sense></entry><entry id='*gabi' flex:id='cd97ed84-5265-4971-843c-72a1e2ae5add' dateCreated='2003-08-07T08:42:42+07:00' dateModified='2003-08-07T08:42:42+07:00'><lex><form lang="x-Kal">*gabi</form><trait range="morphType" value='bound root'/>
+</lex>
+<citation><form lang="x-Kal">hiŋgabira</form></citation><sense><grammi value='transitive verb' flex:id='dbbbe324-8e8c-4a21-84f3-467df33e3b7a'/>
+<gloss><form lang="x-Eng">to.hit</form></gloss></sense></entry><entry id='lik' flex:id='23151593-0c75-4359-a2bf-6220fc142d79' dateCreated='2003-08-07T08:42:42+07:00' dateModified='2003-08-07T08:42:42+07:00'><lex><form lang="x-Kal">lik</form><trait range="morphType" value='root'/>
+</lex>
+<citation><form lang="x-Kal">hinliksa</form></citation><sense><grammi value='transitive verb' flex:id='30e7bbb0-e5c3-4f58-b308-400ed55c5e62'/>
+<gloss><form lang="x-Eng">to.eat</form></gloss></sense></entry><entry id='yalo' flex:id='5c77efd9-8d14-4f19-a049-162588265cad' dateCreated='2003-08-07T08:42:42+07:00' dateModified='2003-08-07T08:42:42+07:00'><lex><form lang="x-Kal">yalo</form><trait range="morphType" value='root'/>
+</lex>
+<sense><grammi value='noun' flex:id='7a913885-3d98-4c33-bf6b-cfaec62395b8'/>
+<gloss><form lang="x-Eng">mat</form></gloss></sense></entry><entry id='kasa' flex:id='47359e87-527f-4105-8589-029ed0a08532' dateCreated='2003-08-07T08:42:42+07:00' dateModified='2003-08-07T08:42:42+07:00'><lex><form lang="x-Kal">kasa</form><trait range="morphType" value='root'/>
+</lex>
+<sense><grammi value='noun' flex:id='bdc76042-5f07-4772-82ba-91fd08862535'/>
+<gloss><form lang="x-Eng">house</form></gloss></sense></entry><entry id='iŋ' flex:id='82d6bc2e-768e-4ec4-95b8-2cff376208c4' dateCreated='2003-08-07T08:42:42+07:00' dateModified='2003-08-07T08:42:42+07:00'><lex><form lang="x-Kal">iŋ</form><trait range="morphType" value='root'/>
+</lex>
+<sense><grammi value='noun' flex:id='f5b2e173-202a-49da-8cab-d216ea79765b'/>
+<gloss><form lang="x-Eng">water</form></gloss></sense></entry><entry id='pal' flex:id='7045f230-4b97-4f9c-9d5f-047e7d66a2df' dateCreated='2003-08-07T08:42:42+07:00' dateModified='2003-08-07T08:42:42+07:00'><lex><form lang="x-Kal">pal</form><trait range="morphType" value='root'/>
+</lex>
+<sense><grammi value='noun' flex:id='a3e3e0c3-f3d0-464f-9b03-e6cd6713046a'/>
+<gloss><form lang="x-Eng">tree</form></gloss></sense></entry><entry id='-ti' flex:id='b660fb0e-2864-4219-a203-591fe644bb20' dateCreated='2003-08-07T08:42:42+07:00' dateModified='2003-08-07T08:42:42+07:00'><lex><form lang="x-Kal">-ti</form><trait range="morphType" value='suffix'/>
+</lex>
+<sense><grammi value="derivAffix" flex:id='af274eac-6aa2-4ede-acc4-ada3237f6588'/>
+<trait range="partsOfSpeech" value='intransitive verb'/>
+<trait range="partsOfSpeechDerivationTo" value='transitive verb'/>
+<gloss><form lang="x-Eng">Caus</form></gloss></sense></entry><entry id='xo-' flex:id='2703f3e7-5440-422c-8d25-455b4f4cc1b7' dateCreated='2003-08-07T08:42:42+07:00' dateModified='2003-08-07T08:42:42+07:00'><lex><form lang="x-Kal">xo-</form><trait range="morphType" value='prefix'/>
+</lex>
+<sense><grammi value="derivAffix" flex:id='6b1c89e8-94b2-4598-bc8a-551f1905d3a9'/>
+<trait range="partsOfSpeech" value='transitive verb'/>
+<trait range="partsOfSpeechDerivationTo" value='intransitive verb'/>
+<gloss><form lang="x-Eng">Pass</form></gloss></sense></entry><entry id='-wu' flex:id='0e99a5be-aca0-4b04-8462-d6961c7428e8' dateCreated='2003-08-07T08:42:42+07:00' dateModified='2003-08-07T08:42:42+07:00'><lex><form lang="x-Kal">-wu</form><trait range="morphType" value='suffix'/>
+</lex>
+<sense><grammi value="derivAffix" flex:id='fa222f19-c11a-4bf2-9846-a1ce45cd0f30'/>
+<trait range="partsOfSpeech" value='intransitive verb'/>
+<trait range="partsOfSpeechDerivationTo" value='intransitive verb'/>
+<gloss><form lang="x-Eng">Rapidly</form></gloss></sense></entry><entry id='-lis' flex:id='d2036a5e-8ec7-4ab3-9d5e-434735abfcee' dateCreated='2003-08-07T08:42:42+07:00' dateModified='2003-08-07T08:42:42+07:00'><lex><form lang="x-Kal">-lis</form><trait range="morphType" value='suffix'/>
+</lex>
+<sense><grammi value="derivAffix" flex:id='10465805-0e9a-4477-930f-4b54d60522d5'/>
+<trait range="partsOfSpeech" value='verb'/>
+<trait range="partsOfSpeechDerivationTo" value='noun'/>
+<gloss><form lang="x-Eng">Nom</form></gloss></sense></entry><entry id='-ya' flex:id='0fc019bf-7eb5-4038-9be6-63db1d502029' dateCreated='2003-08-07T08:42:42+07:00' dateModified='2003-07-09T04:30:11+07:00'><lex><form lang="x-Kal">-ya</form><trait range="morphType" value='suffix'/>
+</lex>
+<sense><grammi value="derivAffix" flex:id='6d3217da-43bd-46f2-8746-9422df8fa159'/>
+<trait range="partsOfSpeech" value='verb'/>
+<trait range="partsOfSpeechDerivationTo" value='adverb'/>
+<gloss><form lang="x-Eng">Adverbializer</form></gloss></sense></entry><entry id='-kes' flex:id='05c54cf0-4e5a-4bf2-99f8-ec787e4113ac' dateCreated='2003-08-07T08:42:42+07:00' dateModified='2003-08-07T08:42:42+07:00'><lex><form lang="x-Kal">-kes</form><trait range="morphType" value='suffix'/>
+</lex>
+<sense><grammi value="affix" flex:id='14565f93-d7de-4b1c-b62b-17c477d35d94'/>
+<trait range="partsOfSpeech" value='verb'/>
+<gloss><form lang="x-Eng">???</form></gloss></sense></entry><entry id='ti-' flex:id='d8c3cf2e-1c0f-4048-8023-944cc9095e06' dateCreated='2003-08-07T08:42:42+07:00' dateModified='2003-07-09T04:37:39+07:00'><lex><form lang="x-Kal">ti-</form><trait range="morphType" value='prefix'/>
+</lex>
+<sense><grammi value="inflAffix" flex:id='1af70026-0364-402d-9937-246ca89cfdab'/>
+<trait range="partsOfSpeech" value='verb'/>
+<gloss><form lang="x-Eng">2SgSubj</form></gloss></sense></entry><entry id='mo-' flex:id='fa3c17eb-4160-428b-81eb-4c558e67e7c1' dateCreated='2003-08-07T08:42:42+07:00' dateModified='2003-07-09T04:41:36+07:00'><lex><form lang="x-Kal">mo-</form><trait range="morphType" value='prefix'/>
+</lex>
+<sense><grammi value="inflAffix" flex:id='d4ec9b02-9a91-418f-ac42-9a79438b88e2'/>
+<trait range="partsOfSpeech" value='verb'/>
+<gloss><form lang="x-Eng">1PlSubj</form></gloss></sense></entry><entry id='se-' flex:id='05806ea3-ce01-41a6-b87a-94f17055df1a' dateCreated='2003-08-07T08:42:42+07:00' dateModified='2003-07-09T04:42:33+07:00'><lex><form lang="x-Kal">se-</form><trait range="morphType" value='prefix'/>
+</lex>
+<sense><grammi value="inflAffix" flex:id='3c2b9e2f-405c-4416-bae8-e50b95fb3b6d'/>
+<trait range="partsOfSpeech" value='verb'/>
+<gloss><form lang="x-Eng">2PlSubj</form></gloss></sense></entry><entry id='mi-' flex:id='3ab3e31e-eb2c-49c2-820b-8abe98221073' dateCreated='2003-08-07T08:42:42+07:00' dateModified='2003-07-09T04:45:11+07:00'><lex><form lang="x-Kal">mi-</form><trait range="morphType" value='prefix'/>
+</lex>
+<sense><grammi value="inflAffix" flex:id='8c98c459-33a4-41ad-9f06-217348bb18e5'/>
+<trait range="partsOfSpeech" value='verb'/>
+<gloss><form lang="x-Eng">1SgObj</form></gloss></sense></entry><entry id='yu-' flex:id='f8b09b4c-9017-4db7-a70b-1a7be236e742' dateCreated='2003-08-07T08:42:42+07:00' dateModified='2003-07-09T04:46:44+07:00'><lex><form lang="x-Kal">yu-</form><trait range="morphType" value='prefix'/>
+</lex>
+<sense><grammi value="inflAffix" flex:id='99b44a20-3fc6-43d7-9271-bffb30c2d66c'/>
+<trait range="partsOfSpeech" value='verb'/>
+<gloss><form lang="x-Eng">2SgObj</form></gloss></sense></entry><entry id='us-' flex:id='c069c6d1-19d2-41a4-946a-060af2e350ba' dateCreated='2003-08-07T08:42:42+07:00' dateModified='2003-07-09T04:48:28+07:00'><lex><form lang="x-Kal">us-</form><trait range="morphType" value='prefix'/>
+</lex>
+<sense><grammi value="inflAffix" flex:id='e4f26931-0e18-42a6-b898-8dc0d3746276'/>
+<trait range="partsOfSpeech" value='verb'/>
+<gloss><form lang="x-Eng">1PlObj</form></gloss></sense></entry><entry id='yul-' flex:id='ce02e154-a2aa-48da-baaf-16c58c45072c' dateCreated='2003-08-07T08:42:42+07:00' dateModified='2003-07-09T04:50:10+07:00'><lex><form lang="x-Kal">yul-</form><trait range="morphType" value='prefix'/>
+</lex>
+<sense><grammi value="inflAffix" flex:id='cf730e86-e5a8-4405-956e-e66417e51d68'/>
+<trait range="partsOfSpeech" value='verb'/>
+<gloss><form lang="x-Eng">2PlObj</form></gloss></sense></entry><entry id='deN' flex:id='d6e17340-dc0f-458a-9fd6-c8de368918d5' dateCreated='2003-08-07T08:42:42+07:00' dateModified='2003-07-09T04:51:43+07:00'><lex><form lang="x-Kal">deN</form><trait range="morphType"/>
+</lex>
+<sense><grammi value="inflAffix" flex:id='d170e517-38e1-4167-8e6c-14e03fbc0c11'/>
+<trait range="partsOfSpeech" value='verb'/>
+<gloss><form lang="x-Eng">3PlObj</form></gloss><trait range="semantic-domain" value='ba06de9e-63e1-43e6-ae94-77bea498379a' hr:abbr='2' hr:name='Person'/>
+<trait range="semantic-domain" value='191ca5a5-0a67-426e-adfc-6fdf7c2aaa2c' hr:abbr='6.5.1.1' hr:name='House'/>
+<trait range="semantic-domain" value='d60faf11-cc6e-48db-8a13-82f86d78ab00' hr:abbr='7' hr:name='Physical actions'/>
+</sense></entry><entry id='-bi' flex:id='c5b7c026-5f8f-4971-adc1-daf76422632f' dateCreated='2003-08-07T08:42:42+07:00' dateModified='2003-07-09T04:55:02+07:00'><lex><form lang="x-Kal">-bi</form><trait range="morphType" value='suffix'/>
+</lex>
+<sense><grammi value="inflAffix" flex:id='c274b2d9-740e-423f-a81f-cc06450a7061'/>
+<trait range="partsOfSpeech" value='stative'/>
+<gloss><form lang="x-Eng">Past</form></gloss><trait range="semantic-domain" value='191ca5a5-0a67-426e-adfc-6fdf7c2aaa2c' hr:abbr='6.5.1.1' hr:name='House'/>
+<trait range="semantic-domain" value='349f0278-7998-422a-9c3b-6053989cbb20' hr:abbr='9' hr:name='Grammar'/>
+<trait range="semantic-domain" value='3a2c0773-6b3e-4f8b-909d-c8f84d66d4f4' hr:abbr='9.1' hr:name='General words'/>
+<trait range="semantic-domain" value='23bc906d-c15a-4368-b0ca-7443d5e37b83' hr:abbr='9.6.2.5' hr:name='Cause'/>
+</sense></entry><entry id='-gu' flex:id='58a6c6c3-fdbd-4fef-b3de-43e849d6842f' dateCreated='2003-08-07T08:42:42+07:00' dateModified='2003-07-09T04:57:15+07:00'><lex><form lang="x-Kal">-gu</form><trait range="morphType" value='suffix'/>
+</lex>
+<sense><grammi value="inflAffix" flex:id='6be211bd-c7ae-4878-ac83-e43fa51f9a86'/>
+<trait range="partsOfSpeech" value='verb'/>
+<gloss><form lang="x-Eng">Future</form></gloss></sense></entry><entry id='-la' flex:id='1cfcbd55-1b84-40db-8fbc-c91d1600c531' dateCreated='2003-08-07T08:42:42+07:00' dateModified='2003-07-09T04:58:56+07:00'><lex><form lang="x-Kal">-la</form><trait range="morphType" value='suffix'/>
+</lex>
+<sense><grammi value="inflAffix" flex:id='4604b938-3880-4b15-b84e-62cdf0450913'/>
+<trait range="partsOfSpeech" value='noun'/>
+<gloss><form lang="x-Eng">1SgPoss</form></gloss></sense></entry><entry id='-or' flex:id='271d373b-e4b7-4c92-80a5-9c36dc8cc810' dateCreated='2003-08-07T08:42:42+07:00' dateModified='2003-07-09T05:00:36+07:00'><lex><form lang="x-Kal">-or</form><trait range="morphType" value='suffix'/>
+</lex>
+<sense><grammi value="inflAffix" flex:id='17e79a60-3539-4cbf-92ba-182bbda9de05'/>
+<trait range="partsOfSpeech" value='noun'/>
+<gloss><form lang="x-Eng">2SgPoss</form></gloss></sense></entry><entry id='-vo' flex:id='37e2ccb6-5432-4b80-a599-5dddace292d3' dateCreated='2003-08-07T08:42:42+07:00' dateModified='2003-07-09T05:03:26+07:00'><lex><form lang="x-Kal">-vo</form><trait range="morphType" value='suffix'/>
+</lex>
+<sense><grammi value="inflAffix" flex:id='1771c1af-1e67-48fd-b19f-98b10a59395a'/>
+<trait range="partsOfSpeech" value='noun'/>
+<gloss><form lang="x-Eng">3SgPoss</form></gloss></sense></entry><entry id='-ni' flex:id='f1895e27-1613-41d4-be06-6b5e075fb768' dateCreated='2003-08-07T08:42:42+07:00' dateModified='2003-07-09T05:03:53+07:00'><lex><form lang="x-Kal">-ni</form><trait range="morphType" value='suffix'/>
+</lex>
+<sense><grammi value="inflAffix" flex:id='fd350256-2838-4303-afc9-2d64b6daae75'/>
+<trait range="partsOfSpeech" value='noun'/>
+<gloss><form lang="x-Eng">1PlPoss</form></gloss></sense></entry><entry id='-tu' flex:id='377f0674-d454-4e37-b2d3-81096fabc84f' dateCreated='2003-08-07T08:42:42+07:00' dateModified='2003-07-09T05:05:12+07:00'><lex><form lang="x-Kal">-tu</form><trait range="morphType" value='suffix'/>
+</lex>
+<sense><grammi value="inflAffix" flex:id='2b559217-d31d-4a2e-865b-c189f5499b27'/>
+<trait range="partsOfSpeech" value='noun'/>
+<gloss><form lang="x-Eng">2PlPoss</form></gloss></sense></entry><entry id='-te' flex:id='ea4b87bf-6525-4e6d-9c9c-a44ff6097e94' dateCreated='2003-08-07T08:42:42+07:00' dateModified='2003-07-09T05:06:18+07:00'><lex><form lang="x-Kal">-te</form><trait range="morphType" value='suffix'/>
+</lex>
+<sense><grammi value="inflAffix" flex:id='f8e0cf27-4a52-49dd-a064-4576a379c03d'/>
+<trait range="partsOfSpeech" value='noun'/>
+<gloss><form lang="x-Eng">3PlPoss</form></gloss></sense></entry><entry id='ximu' flex:id='3ea5b344-ec0b-4fd0-829b-02b6ee424b07' dateCreated='2003-08-07T08:42:42+07:00' dateModified='2003-08-07T08:42:42+07:00'><lex><form lang="x-Kal">ximu</form><trait range="morphType" value='root'/>
+</lex>
+<sense><grammi value='adverb' flex:id='2d58f09e-228d-4e09-98b1-6d7e79b66ba7'/>
+<gloss><form lang="x-Eng">slowly</form></gloss></sense></entry><entry id='CV' flex:id='fd42f793-7fe9-423e-8d7a-a3c280e5e11d' dateCreated='2003-08-07T08:42:42+07:00' dateModified='2003-08-15T12:03:21+07:00'><lex><form lang="x-Kal">CV</form><trait range="morphType"/>
+</lex>
+<citation><form lang="x-Kal">CV reduplication</form></citation><sense><grammi value="derivAffix" flex:id='10736715-15e3-4a79-8a14-8b437830cba8'/>
+<trait range="partsOfSpeech" value='transitive verb'/>
+<trait range="partsOfSpeechDerivationTo" value='transitive verb'/>
+<gloss><form lang="x-Eng">Intensifier</form></gloss><trait range="semantic-domain" value='191ca5a5-0a67-426e-adfc-6fdf7c2aaa2c' hr:abbr='6.5.1.1' hr:name='House'/>
+<trait range="semantic-domain" value='349f0278-7998-422a-9c3b-6053989cbb20' hr:abbr='9' hr:name='Grammar'/>
+</sense></entry><entry id='de-' flex:id='f764500c-a3cf-4b35-98bf-e39929f488f6' dateCreated='2003-08-07T08:42:42+07:00' dateModified='2003-08-07T08:42:42+07:00'><lex><form lang="x-Kal">de-</form><trait range="morphType" value='prefix'/>
+</lex>
+<sense><grammi value="inflAffix" flex:id='f40536b7-4578-412a-bc75-52fbf10ca62d'/>
+<trait range="partsOfSpeech" value='verb'/>
+<gloss><form lang="x-Eng">3PlSubj</form></gloss><trait range="semantic-domain" value='3f37bb6f-cd32-4430-aa35-700acabbee15' hr:abbr='8.4.6.1' hr:name='Start something'/>
+</sense></entry><entry id='pone' flex:id='16c0e27c-9287-49e8-85bc-78c884607caa' dateCreated='2003-08-07T08:42:42+07:00' dateModified='2003-08-07T08:42:42+07:00'><lex><form lang="x-Kal">pone</form><trait range="morphType" value='stem'/>
+</lex>
+<citation><form lang="x-Kal">ponesa</form></citation><sense><grammi value='intransitive verb' flex:id='4fd14684-b1ed-4457-8784-491750354715'/>
+<gloss><form lang="x-Eng">to.stand</form></gloss></sense></entry><entry id='gel' flex:id='fd4f8fee-6da8-483b-910f-814becc80b13' dateCreated='2003-08-13T10:37:25+07:00' dateModified='2003-08-13T10:37:25+07:00'><lex><form lang="x-Kal">gel</form><trait range="morphType" value='stem'/>
+</lex>
+<citation><form lang="x-Kal">hiŋgelra</form></citation><sense><grammi value='bitransitive verb' flex:id='8b4dcdf5-b9fe-4670-be2b-38060056a6ca'/>
+<gloss><form lang="x-Eng">to.buy</form></gloss></sense></entry><entry id='bako' flex:id='0877c5fb-b2b8-452e-b286-0215018c0e27' dateCreated='2003-08-13T10:37:25+07:00' dateModified='2003-08-13T10:37:25+07:00'><lex><form lang="x-Kal">bako</form><trait range="morphType" value='stem'/>
+</lex>
+<citation><form lang="x-Kal">himbakosa</form></citation><sense><grammi value='bitransitive verb' flex:id='cfae7ea4-92ce-4235-922a-0e852f84ab1e'/>
+<gloss><form lang="x-Eng">to.sell</form></gloss></sense></entry><entry id='dok1' flex:id='ffc22c43-a24d-45fb-bc37-1e3e6b1c5560' dateCreated='2003-08-14T10:17:48+07:00' dateModified='2003-08-14T10:17:48+07:00'><lex><form lang="x-Kal">dok</form><trait range="morphType" value='particle'/>
+</lex>
+<sense><grammi value='negator' flex:id='8d90096e-d9fc-4377-ba55-da8c61d0b9e0'/>
+<gloss><form lang="x-Eng">not</form></gloss></sense></entry><entry id='ke=' flex:id='3c99c376-e6dc-45a5-aaa4-bde6808acdcb' dateCreated='2003-08-15T03:07:28+07:00' dateModified='2003-08-15T02:01:17+07:00'><lex><form lang="x-Kal">ke=</form><trait range="morphType" value='proclitic'/>
+</lex>
+<sense><grammi value='particle' flex:id='580a3aed-71bc-4f96-a179-e685c07d94f2'/>
+<gloss><form lang="x-Eng">Question</form></gloss></sense></entry><entry id='=lo' flex:id='b3693338-1690-4bf2-9424-009e1e75398c' dateCreated='2003-08-15T03:07:28+07:00' dateModified='2003-08-15T03:07:28+07:00'><lex><form lang="x-Kal">=lo</form><trait range="morphType" value='enclitic'/>
+</lex>
+<sense><grammi value='particle' flex:id='3bd2934e-e68a-46a3-9cd7-d78c0b383fe2'/>
+<gloss><form lang="x-Eng">PhraseFinal</form></gloss></sense></entry><entry id='su=' flex:id='1067370f-fd9a-4240-9ba9-2c4fe002565c' dateCreated='2003-08-15T03:07:28+07:00' dateModified='2003-08-15T03:07:28+07:00'><lex><form lang="x-Kal">su=</form><trait range="morphType" value='proclitic'/>
+</lex>
+<sense><grammi value='particle' flex:id='09477ee9-5488-4796-abdd-a4a06c75d219'/>
+<gloss><form lang="x-Eng">PhraseInitial</form></gloss></sense></entry><entry id='=zo' flex:id='cabdcba8-bdb6-4005-9f02-e28b50366850' dateCreated='2003-08-15T03:07:28+07:00' dateModified='2003-08-15T03:07:28+07:00'><lex><form lang="x-Kal">=zo</form><trait range="morphType" value='enclitic'/>
+</lex>
+<sense><grammi value='particle' flex:id='4a9f796c-1216-4ab1-b263-a892a1401a82'/>
+<gloss><form lang="x-Eng">RelativeClause</form></gloss></sense></entry><entry id='-ul-' flex:id='e32d9cbb-79ab-422e-8cd4-005a2b1f3e29' dateCreated='2003-08-19T03:40:57+07:00' dateModified='2003-08-19T03:40:57+07:00'><lex><form lang="x-Kal">-ul-</form><trait range="morphType" value='infix'/>
+</lex>
+<sense><grammi value="derivAffix" flex:id='f77a1f4f-18b7-48e4-b1c1-cf54fe56ea94'/>
+<trait range="partsOfSpeech" value='noun'/>
+<trait range="partsOfSpeechDerivationTo" value='adjective'/>
+<gloss><form lang="x-Eng">Adjectivizer</form></gloss></sense></entry><entry id='kala' flex:id='631b3df9-81ff-43da-82cf-c323dbc72e80' dateCreated='2003-09-16T02:09:26+07:00' dateModified='2003-09-16T02:09:26+07:00'><lex><form lang="x-Kal">kala</form><trait range="morphType" value='stem'/>
+</lex>
+<sense><grammi value='intransitive verb' flex:id='b656833a-b8e9-44a2-992a-5462d49fe67b'/>
+<gloss><form lang="x-Eng">to.be</form></gloss></sense></entry><entry id='kalo' flex:id='0bfa5f0e-c655-46a3-9047-05bc21547002' dateCreated='2003-09-16T02:09:26+07:00' dateModified='2003-09-16T02:09:26+07:00'><lex><form lang="x-Kal">kalo</form><trait range="morphType" value='stem'/>
+</lex>
+<sense><grammi value='verb' flex:id='833e5c0e-f62f-4ed1-ad00-1ccab13dfc16'/>
+<gloss><form lang="x-Eng">to.be.3SgSubj.Present</form></gloss></sense></entry><entry id='pus1' flex:id='57e4edde-8c0c-441a-bac5-cb0fab50b5a5' dateCreated='2003-10-29T04:06:25+07:00' dateModified='2003-10-29T04:06:25+07:00'><lex><form lang="x-Kal">pus</form><trait range="morphType" value='root'/>
+</lex>
+<sense><grammi value='adjective' flex:id='2c87ff16-70d3-488b-b3fb-72e3c64b01a6'/>
+<gloss><form lang="x-Eng">green</form></gloss></sense></entry><entry id='-o' flex:id='81a73bd1-9c25-4dc0-9396-3c58c7a75395' dateCreated='2004-02-11T02:59:59+07:00' dateModified='2004-02-11T02:59:59+07:00'><lex><form lang="x-Kal">-o</form><trait range="morphType" value='suffix'/>
+</lex>
+<sense><grammi value="derivAffix" flex:id='4280e494-7966-4e04-ba4c-798bfaee2cdd'/>
+<trait range="partsOfSpeech" value='adjective'/>
+<trait range="partsOfSpeechDerivationTo" value='adverb'/>
+<gloss><form lang="x-Eng">Adverbializer2</form></gloss></sense></entry><entry id='kola' flex:id='e55e9139-d219-4359-8e36-355cfd423e74' dateCreated='2004-02-11T02:59:59+07:00' dateModified='2004-02-11T02:59:59+07:00'><lex><form lang="x-Kal">kola</form><trait range="morphType" value='root'/>
+</lex>
+<sense><grammi value='adjective' flex:id='c5710b03-5da7-4152-83e8-d27be49a9cec'/>
+<gloss><form lang="x-Eng">quick</form></gloss></sense></entry><entry id='palti' flex:id='e322312f-bcfb-42af-91fb-60973c86fea0' dateCreated='2004-02-11T02:59:59+07:00' dateModified='2004-02-11T02:59:59+07:00'><lex><form lang="x-Kal">palti</form><trait range="morphType" value='root'/>
+</lex>
+<sense><grammi value='transitive verb' flex:id='3354a8dd-1aee-4834-a625-d05baca82451'/>
+<gloss><form lang="x-Eng">to.strengthen</form><form lang="x-Kal">to.strengthen</form></gloss></sense></entry><entry id='duro' flex:id='ad7824e6-474b-45db-b19f-ca4deaed6902' dateCreated='2004-02-11T02:59:59+07:00' dateModified='2004-02-11T02:59:59+07:00'><lex><form lang="x-Kal">duro</form><trait range="morphType" value='root'/>
+</lex>
+<citation><form lang="x-Kal">durora</form></citation><sense><grammi value='stative' flex:id='4f259db9-b821-45e3-be81-02a5e475f048'/>
+<gloss><form lang="x-Eng">to.be.long</form><form lang="x-Kal">to.be.long</form></gloss></sense></entry><entry id='dok2' flex:id='38ed6cca-8a56-481a-9292-2bd2b435dd36' dateCreated='2004-09-16T01:49:37+07:00' dateModified='2004-09-16T01:49:37+07:00'><lex><form lang="x-Kal">dok</form><trait range="morphType" value='stem'/>
+</lex>
+<sense><grammi value='concrete noun' flex:id='a6cff649-bf98-43ff-b323-be658b5f07c6'/>
+<gloss><form lang="x-Eng">Doctor</form></gloss></sense></entry><entry id='pus2' flex:id='3f2d918f-4650-4725-9923-7e423d57f59e' dateCreated='2004-09-16T02:03:50+07:00' dateModified='2004-09-16T02:03:50+07:00'><lex><form lang="x-Kal">pus</form><trait range="morphType" value='stem'/>
+</lex>
+<sense><grammi value='concrete noun' flex:id='f8ba641d-6f64-4081-9eca-4359ac40a4c3'/>
+<gloss><form lang="x-Eng">cat</form></gloss><def><form lang="x-Eng">female feline</form></def></sense></entry><entry id='pus3' flex:id='3133a72d-33c4-4b2b-a657-a33085e17465' dateCreated='2004-09-16T02:04:49+07:00' dateModified='2004-09-16T02:04:49+07:00'><lex><form lang="x-Kal">pus</form><trait range="morphType" value='stem'/>
+</lex>
+<sense><grammi value='concrete noun' flex:id='ed77747e-40fd-4a00-b275-20c5114344fd'/>
+<gloss><form lang="x-Eng">blood</form></gloss><def><form lang="x-Eng">ughly stuff from a wound</form></def></sense></entry><entry id='-ni-' flex:id='f61fc071-6b70-4375-9271-92a5fb04024c' dateCreated='2004-09-16T03:12:50+07:00' dateModified='2004-09-16T03:12:50+07:00'><lex><form lang="x-Kal">-ni-</form><trait range="morphType" value='infix'/>
+</lex>
+<sense><grammi value="affix" flex:id='51d80b28-2440-4ede-87e0-19a73ec93a9f'/>
+<trait range="partsOfSpeech"/>
+<gloss><form lang="x-Eng">who.knows</form></gloss></sense></entry><entry id='underlying form' flex:id='1a705846-a814-4289-8594-4b874faca6cc' dateCreated='2004-10-18T09:42:02+07:00' dateModified='2004-10-18T09:42:02+07:00'><lex><form lang="x-Kal">underlying form</form><trait range="morphType" value='root'/>
+</lex>
+<citation><form lang="x-Kal">ztestmain</form></citation><sense><grammi value='noun' flex:id='425ec2ef-f3be-4a00-be13-dbe678e6eb98'/>
+<gloss><form lang="x-Eng">English gloss</form></gloss><def><form lang="x-Eng">This is the English definition</form></def><example><form lang="x-Kal">Vernacular example</form><trans><form lang="x-Eng">English translation</form></trans>
+</example><example><form lang="x-Kal">Second vernacular example</form><trans><form lang="x-Eng">Second English translation</form></trans>
+</example><trait range="semantic-domain" value='63403699-07c1-43f3-a47c-069d6e4316e5' hr:abbr='1' hr:name='Universe, creation'/>
+<trait range="semantic-domain" value='d60faf11-cc6e-48db-8a13-82f86d78ab00' hr:abbr='7' hr:name='Physical actions'/>
+</sense><sense><gloss><form lang="x-Eng">English gloss2</form></gloss><def><form lang="x-Eng">This is the English definition for 2.</form></def></sense></entry><entry id='ztestsub' flex:id='157edd55-886f-4d91-b009-8e6b49991c85' dateCreated='2004-10-29T08:03:28+07:00' dateModified='2004-10-29T08:03:28+07:00'><lex><form lang="x-Kal">ztestsub</form><trait range="morphType" value='stem'/>
+</lex>
+<sense><grammi value='noun' flex:id='b7261799-50d0-4d4d-a546-3b73561daeaa'/>
+<gloss><form lang="x-Eng">English gloss</form></gloss><def><form lang="x-Eng">English definition for subentry</form></def></sense></entry><entry id='ztestminor' flex:id='a6babda6-6830-4ec0-a363-c7fba14268eb' dateCreated='2004-10-29T08:05:18+07:00' dateModified='2004-10-29T08:05:18+07:00'><lex><form lang="x-Kal">ztestminor</form><trait range="morphType" value='stem'/>
+</lex>
+<sense><grammi value='transitive verb' flex:id='5704a774-1a34-4d60-a868-d5c659eb7cc9'/>
+<gloss><form lang="x-Eng">English glos</form></gloss></sense></entry><entry id='variant' flex:id='97e6e1c7-0979-4a06-8891-a84e99b694e5' dateCreated='2005-06-17T08:54:14+07:00' dateModified='2005-06-17T08:54:14+07:00'><lex><form lang="x-Kal">variant</form><trait range="morphType"/>
+</lex>
+<ph flex:id='19aef42d-63ac-464d-8323-87a0adc808ff'><field tag="cvPattern"/>
+<field tag="tone"/>
+<form lang="x-Kal">Pronunciation</form></ph>
+</entry><entry id='johnjohn' flex:id='d3967aa9-c278-4860-9c1f-fa39baecc1f6' dateCreated='2007-01-08T08:57:26+07:00' dateModified='2007-01-08T08:57:26+07:00'><lex><form lang="x-Kal">johnjohn</form><trait range="morphType" value='stem'/>
+</lex>
+<sense><grammi value='&lt;Not Sure&gt;' flex:id='42bc35f8-1cb1-4f0a-9633-51a9df1f0cc2'/>
+<trait range="semantic-domain" value='63403699-07c1-43f3-a47c-069d6e4316e5' hr:abbr='1' hr:name='Universe, creation'/>
+</sense></entry></lift>
