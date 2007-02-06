@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.IO;
 using System.Xml;
 using WeSay.Data;
@@ -77,6 +78,53 @@ namespace Lift2WeSay
 				File.Delete(destPath);
 			}
 
+		   // DoImportUsingRecordListManager(destPath, sourcePath);
+			DoImportUsingRawDb4o(destPath, sourcePath);
+			Console.WriteLine("Done.");
+		}
+
+		private static void DoImportUsingRecordListManager(string destPath, string sourcePath)
+		{
+			using (IRecordListManager recordListManager = new Db4oRecordListManager(new WeSayWordsDb4oModelConfiguration(), destPath))
+		{
+			Db4oRecordListManager listManager = recordListManager as Db4oRecordListManager;
+			IRecordList<LexEntry> entries =  listManager.GetListOfType<LexEntry>();
+
+			Db4oLexModelHelper.Initialize(listManager.DataSource.Data);
+
+//           using (Db4oDataSource ds = new Db4oDataSource(destPath))
+//            {
+//                using (Db4oRecordList<LexEntry> entries = new Db4oRecordList<LexEntry>(ds))
+//                {
+					if (Db4oLexModelHelper.Singleton == null)
+					{
+					  //  Db4oLexModelHelper.Initialize(ds.Data);
+					}
+
+				XmlDocument doc = new XmlDocument();
+					doc.Load(sourcePath);
+					LiftImporter importer = LiftImporter.CreateCorrectImporter(doc);
+
+					WeSayWordsProject project = new WeSayWordsProject();
+					WeSay.Project.WeSayWordsProject.Project.LoadFromProjectDirectoryPath(Directory.GetParent(Environment.CurrentDirectory).FullName);
+					foreach (string name in WeSay.Project.WeSayWordsProject.Project.OptionFieldNames)
+					{
+						importer.ExpectedOptionTraits.Add(name);
+					}
+					foreach (string name in WeSay.Project.WeSayWordsProject.Project.OptionCollectionFieldNames)
+					{
+						importer.ExpectedOptionCollectionTraits.Add(name);
+					}
+					importer.Progress = new ConsoleProgress();
+					importer.ReadFile(doc, entries);
+				}
+			//}
+		}
+
+		private static void DoImportUsingRawDb4o(string destPath, string sourcePath)
+		{
+				DateTime time = new DateTime();
+			Lift2WeSay x = new Lift2WeSay();
 			using (Db4oDataSource ds = new Db4oDataSource(destPath))
 			{
 				using (Db4oRecordList<LexEntry> entries = new Db4oRecordList<LexEntry>(ds))
@@ -102,17 +150,8 @@ namespace Lift2WeSay
 					}
 					importer.Progress = new ConsoleProgress();
 					importer.ReadFile(doc, entries);
-
-					///****************
-//                    if (destPath.IndexOf("tiny.words") > -1)
-//                    {
-//                        entries.RemoveAt(2);
-//                    }
 				}
-
-
 			}
-			Console.WriteLine("Done.");
 		}
 
 		private static void PrintUsage()

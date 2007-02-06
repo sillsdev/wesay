@@ -10,6 +10,9 @@ namespace WeSay.LexicalModel.Db4o_Specific
 			Db4objects.Db4o.Config.IConfiguration db4oConfiguration = Db4objects.Db4o.Db4oFactory.Configure();
 			db4oConfiguration.ClassActivationDepthConfigurable(true);
 
+			db4oConfiguration.ActivationDepth(99);
+			db4oConfiguration.UpdateDepth(99);
+
 			Db4objects.Db4o.Config.IObjectClass
 			objectClass = db4oConfiguration.ObjectClass(typeof(Language.LanguageForm));
 			objectClass.ObjectField("_writingSystemId").Indexed(true);

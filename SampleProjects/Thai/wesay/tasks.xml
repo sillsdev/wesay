@@ -1,8 +1,20 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <tasks>
   <components>
 	<viewTemplate>
 	  <fields>
+			  <field>
+		  <className>LexEntry</className>
+		  <dataType>OptionCollection</dataType>
+		  <displayName>Corruption Test</displayName>
+		  <fieldName>CorruptionTest</fieldName>
+		  <multiplicity>ZeroOr1</multiplicity>
+		  <optionsListFile>SemanticDomains.xml</optionsListFile>
+		  <visibility>Visible</visibility>
+		  <writingSystems>
+			<id>en</id>
+		  </writingSystems>
+		</field>
 		<field>
 		  <className></className>
 		  <dataType>MultiText</dataType>

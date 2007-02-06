@@ -100,22 +100,80 @@ namespace WeSay.LexicalModel.Tests
 		}
 	}
 
-//        [Test]
-//        public void DeletionCausesPropertyDictionaryCorruption()
-//        {
-//            _filePath = @"C:\WeSay\SampleProjects\Thai\wesay\xthai5000.words";
+	[Test]
+	public void QueryAfterImportCrash()
+	{
+		string path = @"C:\WeSay\SampleProjects\Thai\wesay\tiny.words";
+		using (IRecordListManager recordListManager = new Db4oRecordListManager(new WeSayWordsDb4oModelConfiguration(), path))
+		{
+			Db4oRecordListManager listManager = recordListManager as Db4oRecordListManager;
+
+			IQuery q = listManager.DataSource.Data.Query();
+			q.Constrain(typeof (LexEntry));
+			IList records = q.Execute();
+
+			LexEntry entry = (LexEntry) records[0];
+//            listManager.DataSource.Data.Deactivate(entry, 99);
+//            listManager.DataSource.Data.Activate(entry, 99);
+			LexSense sense = (LexSense) entry.Senses[0];
+		 //   listManager.DataSource.Data.Activate(sense, 99);
+			CheckSense(sense);
+		}
+	}
+
+	[Test]
+	public void GetAfterImportCrash()
+	{
+		string path = @"C:\WeSay\SampleProjects\Thai\wesay\tiny.words";
+		using (IRecordListManager recordListManager = new Db4oRecordListManager(new WeSayWordsDb4oModelConfiguration(), path))
+		{
+			Db4oRecordListManager listManager = recordListManager as Db4oRecordListManager;
+
+			IList records = new WeSay.Data.Db4oRecordList<LexEntry>(listManager.DataSource);
+
+			LexEntry entry = (LexEntry)records[0];
+			LexSense sense = (LexSense)entry.Senses[0];
+			CheckSense(sense);
+		}
+	}
+
+	private void CheckSense(LexSense sense)
+	{
+		Assert.IsNotNull(sense.Properties);
+		Assert.AreNotEqual(0, sense.Properties.Count);
+		foreach (KeyValuePair<string, object> pair in sense.Properties)
+		{
+			if (pair.Value is OptionRefCollection)
+			{
+				OptionRefCollection c = pair.Value as OptionRefCollection;
+				Assert.AreEqual(2, c.Keys.Count);
+			}
+		}
+	}
 //
-//            CycleDatabase();
-//            LexEntry die = _entriesList[19];
-//            _entriesList.Remove(die);
-//            // LexEntry entry = CycleDatabase();
-//            LexEntry entry = _entriesList[200];
-//            entry.Properties.Add("die!", new OptionRef());
+//        [Test]
+//        public void LoadAfterImportCrash()
+//        {
+//            _filePath = @"C:\WeSay\SampleProjects\Thai\wesay\tiny.words";
+//
+//            LexEntry entry= CycleDatabase();
+//            _filePath = "";
+//            LexSense sense = (LexSense)entry.Senses[0];
+//            Assert.IsNotNull(sense.Properties);
+//            Assert.AreNotEqual(0, sense.Properties.Count);
+//            foreach (KeyValuePair<string, object> pair in sense.Properties)
+//            {
+//                if (pair.Value is OptionRefCollection)
+//                {
+//                    OptionRefCollection c = pair.Value as OptionRefCollection;
+//                    Assert.AreEqual(2, c.Keys.Count);
+//                }
+//            }
 //            _filePath = "";
 //        }
-
+//
 //        [Test]
-//        public void DeletionCausesPropertyDictionaryCorruption()
+//        public void DeletionCausesPropertyDictionaryCorruption2()
 //        {
 //            _filePath = Path.GetTempFileName();
 //            using (Db4oDataSource ds = new WeSay.Data.Db4oDataSource(_filePath))
@@ -147,9 +205,9 @@ namespace WeSay.LexicalModel.Tests
 //            LexEntry entry = _entriesList[0];
 //            entry.Properties.Add("die!", new OptionRef());
 //        }
-
+//
 //        [Test]
-//        public void DeletionCausesPropertyDictionaryCorruption()
+//        public void DeletionCausesPropertyDictionaryCorruption3()
 //        {
 //            string path = Path.GetTempFileName();
 //            using (Db4oDataSource ds = new WeSay.Data.Db4oDataSource(path))
@@ -192,7 +250,7 @@ namespace WeSay.LexicalModel.Tests
 //        }
 //
 //        [Test]
-//        public void DeletionCausesPropertyDictionaryCorruption2()
+//        public void DeletionCausesPropertyDictionaryCorruption4()
 //        {
 //            CycleDatabase();
 //            LexEntry one = new LexEntry();

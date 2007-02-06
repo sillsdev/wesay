@@ -22,10 +22,22 @@ namespace WeSay.LexicalModel.Tests
 		[TearDown]
 		public void TearDown()
 		{
-			this._entriesList.Dispose();
-		   this._dataSource.Dispose();
-			_recordListManager.Dispose();
-			File.Delete(_filePath);
+			if (_entriesList != null)
+			{
+				this._entriesList.Dispose();
+			}
+			if (_dataSource != null)
+			{
+				this._dataSource.Dispose();
+			}
+			if (_recordListManager != null)
+			{
+				_recordListManager.Dispose();
+			}
+			if (_filePath != "")
+			{
+				File.Delete(_filePath);
+			}
 		}
 
 		protected LexEntry CycleDatabase()

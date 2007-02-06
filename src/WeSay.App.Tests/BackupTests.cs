@@ -1,10 +1,15 @@
+using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
+using Db4objects.Db4o.Query;
 using NUnit.Framework;
 using WeSay.App;
 using WeSay.Data;
+using WeSay.Foundation;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Db4o_Specific;
+using WeSay.Project;
 
 namespace WeSay.App.Tests
 {
@@ -75,6 +80,22 @@ namespace WeSay.App.Tests
 			Assert.AreEqual(3, newGuys.Count);
 		}
 
+
+//
+//        [Test]
+//        public void BackupAfterImportCrashOriginal()
+//        {
+//            string path = @"C:\WeSay\SampleProjects\Thai\wesay\tiny.words";
+//            WeSayWordsProject project = new WeSayWordsProject();
+//            project.LoadFromLexiconPath(path);
+//            IRecordListManager recordListManager;
+//            recordListManager = new Db4oRecordListManager(new WeSayWordsDb4oModelConfiguration(), project.PathToLexicalModelDB);
+//            Db4oLexModelHelper.Initialize(((Db4oRecordListManager)recordListManager).DataSource.Data);
+//            Db4oRecordListManager ds = recordListManager as Db4oRecordListManager;
+//            BackupService backupService = new BackupService(project.PathToLocalBackup, ds.DataSource);
+//            ds.DataCommitted += new EventHandler(backupService.OnDataCommitted);
+//            backupService.DoIncrementalXmlBackupNow();
+//        }
 	}
 
 }
