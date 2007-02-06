@@ -113,12 +113,12 @@ namespace WeSay.LexicalTools.Tests
 		{
 			_doc.LoadXml("<sense><grammi value=\"verb\"/></sense>");
 			LexSense sense = _importer.ReadSense(_doc.SelectSingleNode("sense"));
-			Assert.AreEqual("verb", sense.GetProperty<OptionRef>("PartOfSpeech").Value);
+			Assert.AreEqual("verb", sense.GetOrCreateProperty<OptionRef>("PartOfSpeech").Value);
 
 			//something not in the exiting optionsList
 			_doc.LoadXml("<sense><grammi value=\"neverHeadOfThisBefore\"/></sense>");
 			sense = _importer.ReadSense(_doc.SelectSingleNode("sense"));
-			Assert.AreEqual("neverHeadOfThisBefore", sense.GetProperty<OptionRef>("PartOfSpeech").Value);
+			Assert.AreEqual("neverHeadOfThisBefore", sense.GetOrCreateProperty<OptionRef>("PartOfSpeech").Value);
 		}
 
 		[Test]
@@ -136,7 +136,7 @@ namespace WeSay.LexicalTools.Tests
 			_doc.LoadXml("<sense><trait name=\"flub\" value=\"flubadub\" range=\"flubs\"/></sense>");
 			LexSense sense = _importer.ReadSense(_doc.SelectSingleNode("sense"));
 			Assert.AreEqual(1, sense.Properties.Count);
-			Assert.AreEqual("flubadub", sense.GetProperty<OptionRef>("flub").Value);
+			Assert.AreEqual("flubadub", sense.GetOrCreateProperty<OptionRef>("flub").Value);
 		}
 
 
@@ -147,7 +147,7 @@ namespace WeSay.LexicalTools.Tests
 			_doc.LoadXml("<sense><trait name=\"SemanticDomain\" value=\"earth\" range=\"SemanticDomain\"/><trait name=\"SemanticDomain\" value=\"wind\" range=\"SemanticDomain\"/></sense>");
 			LexSense sense = _importer.ReadSense(_doc.SelectSingleNode("sense"));
 			Assert.AreEqual(1, sense.Properties.Count);
-			OptionRefCollection domains= sense.GetProperty<OptionRefCollection>("SemanticDomain");
+			OptionRefCollection domains= sense.GetOrCreateProperty<OptionRefCollection>("SemanticDomain");
 			Assert.AreEqual(2, domains.Keys.Count);
 			Assert.AreEqual("earth", domains.Keys[0]);
 			Assert.AreEqual("wind", domains.Keys[1]);

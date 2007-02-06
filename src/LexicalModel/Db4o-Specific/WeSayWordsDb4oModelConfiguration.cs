@@ -13,7 +13,12 @@ namespace WeSay.LexicalModel.Db4o_Specific
 			db4oConfiguration.ActivationDepth(99);
 			db4oConfiguration.UpdateDepth(99);
 
-			Db4objects.Db4o.Config.IObjectClass
+			Db4objects.Db4o.Config.IObjectClass objectClass;
+
+			//avoid crash after deleting item created in a previous run
+//            objectClass = db4oConfiguration.ObjectClass(typeof(System.Collections.Generic.Dictionary<string,object>));
+//            objectClass.ObjectField("comparer").CascadeOnDelete(false);
+
 			objectClass = db4oConfiguration.ObjectClass(typeof(Language.LanguageForm));
 			objectClass.ObjectField("_writingSystemId").Indexed(true);
 			objectClass.ObjectField("_form").Indexed(true);

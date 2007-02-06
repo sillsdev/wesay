@@ -110,12 +110,12 @@ namespace WeSay.LexicalTools.Tests
 		{
 			_doc.LoadXml("<sense><grammi type=\"verb\"/></sense>");
 			LexSense sense = _importer.ReadSense(_doc.SelectSingleNode("sense"));
-			Assert.AreEqual("verb", sense.GetProperty<OptionRef>("PartOfSpeech").Value);
+			Assert.AreEqual("verb", sense.GetOrCreateProperty<OptionRef>("PartOfSpeech").Value);
 
 			//something not in the exiting optionsList
 			_doc.LoadXml("<sense><grammi type=\"neverHeadOfThisBefore\"/></sense>");
 			sense = _importer.ReadSense(_doc.SelectSingleNode("sense"));
-			Assert.AreEqual("neverHeadOfThisBefore", sense.GetProperty<OptionRef>("PartOfSpeech").Value);
+			Assert.AreEqual("neverHeadOfThisBefore", sense.GetOrCreateProperty<OptionRef>("PartOfSpeech").Value);
 		}
 
 	}

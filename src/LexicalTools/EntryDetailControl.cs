@@ -173,7 +173,7 @@ namespace WeSay.LexicalTools
 			((Db4oRecordListManager) _recordManager).DataSource.Data.Commit();
 
 //            LexEntry one = new LexEntry();
-//            one.GetProperty<MultiText>("testField")["en"] = "test";
+//            one.GetOrCreateProperty<MultiText>("testField")["en"] = "test";
 		  //  ((Db4oRecordListManager) _recordManager).DataSource.Data.Set(one);
  //           int pos =_records.Add(one);
 		   //((Db4oRecordListManager) _recordManager).DataSource.Data.Commit();

@@ -236,7 +236,7 @@ namespace WeSay.LexicalTools.Tests
 		public void CustomMultiText()
 		{
 			LexSense sense = new LexSense();
-			MultiText m = sense.GetProperty<MultiText>("flubadub");
+			MultiText m = sense.GetOrCreateProperty<MultiText>("flubadub");
 			m["zz"] = "orange";
 			_exporter.Add(sense);
 			_exporter.End();
@@ -250,7 +250,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			_fieldToOptionListName.Add("flub", "kindsOfFlubs");
 			LexSense sense = new LexSense();
-			OptionRef o = sense.GetProperty<OptionRef>("flub");
+			OptionRef o = sense.GetOrCreateProperty<OptionRef>("flub");
 			o.Value = "orange";
 			_exporter.Add(sense);
 			_exporter.End();
@@ -264,7 +264,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			_fieldToOptionListName.Add("flubs", "colors");
 			LexSense sense = new LexSense();
-			OptionRefCollection o = sense.GetProperty<OptionRefCollection>("flubs");
+			OptionRefCollection o = sense.GetOrCreateProperty<OptionRefCollection>("flubs");
 			o.Keys.AddRange(new string[] {"orange", "blue"});
 			_exporter.Add(sense);
 			_exporter.End();
@@ -277,7 +277,7 @@ namespace WeSay.LexicalTools.Tests
 		public void GoodGrammi()
 		{
 			LexSense sense = new LexSense();
-			OptionRef o = sense.GetProperty<OptionRef>("PartOfSpeech");
+			OptionRef o = sense.GetOrCreateProperty<OptionRef>("PartOfSpeech");
 			o.Value = "orange";
 			_exporter.Add(sense);
 			 _exporter.End();

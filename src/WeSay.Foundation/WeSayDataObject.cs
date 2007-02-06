@@ -23,7 +23,11 @@ namespace WeSay.Foundation
 		public event PropertyChangedEventHandler PropertyChanged = delegate{};
 		public event EventHandler EmptyObjectsRemoved = delegate{};
 
-		private Dictionary<string,object> _properties;
+		// abandoned due to db4o difficulties
+		//          private  Dictionary<string,object>  _properties;
+
+		private List<KeyValuePair<string, object>> _properties;
+		//private Hashtable _properties;
 
 		/// <summary>
 		/// see comment on _parent field of MultiText for an explanation of this field
@@ -32,7 +36,7 @@ namespace WeSay.Foundation
 
 		protected WeSayDataObject(WeSayDataObject parent)
 		{
-			_properties = new Dictionary<string, object>();
+			_properties = new List<KeyValuePair<string, object>>();
 			_parent = parent;
 		}
 
@@ -71,12 +75,12 @@ namespace WeSay.Foundation
 			}
 	   }
 
-		public Dictionary<string, object> Properties
+		public List<KeyValuePair<string, object>> Properties
 		{
 			get {
 				if (_properties == null)
 				{
-					_properties = new Dictionary<string, object>();
+					_properties = new List<KeyValuePair<string, object>>();
 					NotifyPropertyChanged("properties dictionary");
 				}
 
@@ -136,21 +140,17 @@ namespace WeSay.Foundation
 			NotifyPropertyChanged(e.PropertyName);
 		}
 
-		public TContents GetProperty<TContents>(string fieldName) where TContents : class, IParentable, new()
+		public TContents GetOrCreateProperty<TContents>(string fieldName) where TContents : class, IParentable, new()
 		{
-			object val;
-
-			if (Properties.TryGetValue(fieldName, out val))
+			TContents value = GetProperty<TContents>(fieldName);
+			if (value != null)
 			{
-				//temp hack until mt's use parents for notification
-				if (val is MultiText)
-				{
-					WireUpChild((INotifyPropertyChanged) val);
-				}
-				return val as TContents;
+				return value;
 			}
+
 			TContents newGuy = new TContents();
-			Properties.Add(fieldName, newGuy);
+			//Properties.Add(fieldName, newGuy);
+			Properties.Add(new KeyValuePair<string, object>(fieldName, newGuy));
 			newGuy.Parent = this;
 
 			//temp hack until mt's use parents for notification
@@ -160,6 +160,28 @@ namespace WeSay.Foundation
 			}
 
 			return newGuy;
+		}
+
+		/// <summary>
+		/// Will return null if not found
+		/// </summary>
+		/// <typeparam name="TContents"></typeparam>
+		/// <returns></returns>
+		public TContents GetProperty<TContents>(string fieldName) where TContents : class, IParentable
+		{
+			KeyValuePair<string, object> found = Properties.Find(delegate(KeyValuePair<string, object> p) { return p.Key == fieldName; });
+			if (found.Key == fieldName)
+			//if (Properties.Exists(delegate(KeyValuePair<string,object> p) { return p.Key == fieldName; }))
+			//.TryGetValue(fieldName, out val))
+			{
+				//temp hack until mt's use parents for notification
+				if (found.Value is MultiText)
+				{
+					WireUpChild((INotifyPropertyChanged)found.Value);
+				}
+				return found.Value as TContents;
+			}
+			return null;
 		}
 	}
 

@@ -163,8 +163,8 @@ namespace WeSay.LexicalModel
 
 		private void WriteGrammi(LexSense sense)
 		{
-			object pos;
-			if (sense.Properties.TryGetValue("PartOfSpeech", out pos) && pos is OptionRef)
+			OptionRef pos = sense.GetProperty<OptionRef>("PartOfSpeech");
+			if (pos!=null)
 			{
 				_writer.WriteStartElement("grammi");
 				_writer.WriteAttributeString("value", ((OptionRef)pos).Value);

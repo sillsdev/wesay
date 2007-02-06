@@ -215,12 +215,12 @@ namespace WeSay.LexicalModel
 				string name = GetOptionalAttributeValue(traitNode, "name",null);
 				if (name != null && ExpectedOptionTraits.Contains(name))
 				{
-					OptionRef o = lexObject.GetProperty<OptionRef>(name);
+					OptionRef o = lexObject.GetOrCreateProperty<OptionRef>(name);
 					o.Value = GetManditoryAttributeValue(traitNode, "value");
 				}
 				else if (name != null && ExpectedOptionCollectionTraits.Contains(name))
 				{
-					OptionRefCollection c = lexObject.GetProperty<OptionRefCollection>(name);
+					OptionRefCollection c = lexObject.GetOrCreateProperty<OptionRefCollection>(name);
 					c.Keys.Add(GetManditoryAttributeValue(traitNode, "value"));
 				}
 			   else
@@ -237,7 +237,7 @@ namespace WeSay.LexicalModel
 			{
 				return;
 			}
-			OptionRef o = sense.GetProperty<OptionRef>("PartOfSpeech");
+			OptionRef o = sense.GetOrCreateProperty<OptionRef>("PartOfSpeech");
 			o.Value = GetManditoryAttributeValue(grammi, "value");
 		}
 

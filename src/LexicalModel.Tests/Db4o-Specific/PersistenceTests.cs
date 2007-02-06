@@ -89,10 +89,10 @@ namespace WeSay.LexicalModel.Tests
 			{
 				Db4oLexModelHelper.Initialize(ds.Data);
 				LexEntry one = new LexEntry();
-				//one.GetProperty<MultiText>("testField")["en"] = "test";
+				//one.GetOrCreateProperty<MultiText>("testField")["en"] = "test";
 				entries.Add(one);
 				LexEntry two = new LexEntry();
-				// two.GetProperty<MultiText>("testField")["en"] = "test";
+				// two.GetOrCreateProperty<MultiText>("testField")["en"] = "test";
 				entries.Add(two);
 			}
 			ds.Data.Commit();
@@ -100,56 +100,56 @@ namespace WeSay.LexicalModel.Tests
 		}
 	}
 
-	[Test]
-	public void QueryAfterImportCrash()
-	{
-		string path = @"C:\WeSay\SampleProjects\Thai\wesay\tiny.words";
-		using (IRecordListManager recordListManager = new Db4oRecordListManager(new WeSayWordsDb4oModelConfiguration(), path))
-		{
-			Db4oRecordListManager listManager = recordListManager as Db4oRecordListManager;
+//    [Test]
+//    public void QueryAfterImportCrash()
+//    {
+//        string path = @"C:\WeSay\SampleProjects\Thai\wesay\tiny.words";
+//        using (IRecordListManager recordListManager = new Db4oRecordListManager(new WeSayWordsDb4oModelConfiguration(), path))
+//        {
+//            Db4oRecordListManager listManager = recordListManager as Db4oRecordListManager;
+//
+//            IQuery q = listManager.DataSource.Data.Query();
+//            q.Constrain(typeof (LexEntry));
+//            IList records = q.Execute();
+//
+//            LexEntry entry = (LexEntry) records[0];
+////            listManager.DataSource.Data.Deactivate(entry, 99);
+////            listManager.DataSource.Data.Activate(entry, 99);
+//            LexSense sense = (LexSense) entry.Senses[0];
+//         //   listManager.DataSource.Data.Activate(sense, 99);
+//            CheckSense(sense);
+//        }
+//    }
 
-			IQuery q = listManager.DataSource.Data.Query();
-			q.Constrain(typeof (LexEntry));
-			IList records = q.Execute();
-
-			LexEntry entry = (LexEntry) records[0];
-//            listManager.DataSource.Data.Deactivate(entry, 99);
-//            listManager.DataSource.Data.Activate(entry, 99);
-			LexSense sense = (LexSense) entry.Senses[0];
-		 //   listManager.DataSource.Data.Activate(sense, 99);
-			CheckSense(sense);
-		}
-	}
-
-	[Test]
-	public void GetAfterImportCrash()
-	{
-		string path = @"C:\WeSay\SampleProjects\Thai\wesay\tiny.words";
-		using (IRecordListManager recordListManager = new Db4oRecordListManager(new WeSayWordsDb4oModelConfiguration(), path))
-		{
-			Db4oRecordListManager listManager = recordListManager as Db4oRecordListManager;
-
-			IList records = new WeSay.Data.Db4oRecordList<LexEntry>(listManager.DataSource);
-
-			LexEntry entry = (LexEntry)records[0];
-			LexSense sense = (LexSense)entry.Senses[0];
-			CheckSense(sense);
-		}
-	}
-
-	private void CheckSense(LexSense sense)
-	{
-		Assert.IsNotNull(sense.Properties);
-		Assert.AreNotEqual(0, sense.Properties.Count);
-		foreach (KeyValuePair<string, object> pair in sense.Properties)
-		{
-			if (pair.Value is OptionRefCollection)
-			{
-				OptionRefCollection c = pair.Value as OptionRefCollection;
-				Assert.AreEqual(2, c.Keys.Count);
-			}
-		}
-	}
+//    [Test]
+//    public void GetAfterImportCrash()
+//    {
+//        string path = @"C:\WeSay\SampleProjects\Thai\wesay\tiny.words";
+//        using (IRecordListManager recordListManager = new Db4oRecordListManager(new WeSayWordsDb4oModelConfiguration(), path))
+//        {
+//            Db4oRecordListManager listManager = recordListManager as Db4oRecordListManager;
+//
+//            IList records = new WeSay.Data.Db4oRecordList<LexEntry>(listManager.DataSource);
+//
+//            LexEntry entry = (LexEntry)records[0];
+//            LexSense sense = (LexSense)entry.Senses[0];
+//            CheckSense(sense);
+//        }
+//    }
+//
+//    private void CheckSense(LexSense sense)
+//    {
+//        Assert.IsNotNull(sense.Properties);
+//        Assert.AreNotEqual(0, sense.Properties.Count);
+//        foreach (KeyValuePair<string, object> pair in sense.Properties)
+//        {
+//            if (pair.Value is OptionRefCollection)
+//            {
+//                OptionRefCollection c = pair.Value as OptionRefCollection;
+//                Assert.AreEqual(2, c.Keys.Count);
+//            }
+//        }
+//    }
 //
 //        [Test]
 //        public void LoadAfterImportCrash()
@@ -187,10 +187,10 @@ namespace WeSay.LexicalModel.Tests
 //                {
 //                    Db4oLexModelHelper.Initialize(ds.Data);
 //                    LexEntry one = new LexEntry();
-//                    //one.GetProperty<MultiText>("testField")["en"] = "test";
+//                    //one.GetOrCreateProperty<MultiText>("testField")["en"] = "test";
 //                    entries.Add(one);
 //                    LexEntry two = new LexEntry();
-//                    // two.GetProperty<MultiText>("testField")["en"] = "test";
+//                    // two.GetOrCreateProperty<MultiText>("testField")["en"] = "test";
 //                    entries.Add(two);
 //                }
 //                ds.Data.Commit();
@@ -221,10 +221,10 @@ namespace WeSay.LexicalModel.Tests
 //                {
 //                    Db4oLexModelHelper.Initialize(ds.Data);
 //                    LexEntry one = new LexEntry();
-//                    //one.GetProperty<MultiText>("testField")["en"] = "test";
+//                    //one.GetOrCreateProperty<MultiText>("testField")["en"] = "test";
 //                    entries.Add(one);
 //                    LexEntry two = new LexEntry();
-//                   // two.GetProperty<MultiText>("testField")["en"] = "test";
+//                   // two.GetOrCreateProperty<MultiText>("testField")["en"] = "test";
 //                    entries.Add(two);
 //
 //
@@ -254,10 +254,10 @@ namespace WeSay.LexicalModel.Tests
 //        {
 //            CycleDatabase();
 //            LexEntry one = new LexEntry();
-//            one.GetProperty<MultiText>("testField")["en"] = "test";
+//            one.GetOrCreateProperty<MultiText>("testField")["en"] = "test";
 //            _entriesList.Add(one);
 //            LexEntry two = new LexEntry();
-//            two.GetProperty<MultiText>("testField")["en"] = "test";
+//            two.GetOrCreateProperty<MultiText>("testField")["en"] = "test";
 //            _entriesList.Add(two);
 //
 //            LexEntry entry = CycleDatabase();
@@ -273,10 +273,10 @@ namespace WeSay.LexicalModel.Tests
 		{
 			CycleDatabase();
 			LexEntry entry = new LexEntry();
-			entry.GetProperty<MultiText>("testField")["en"] = "test";
+			entry.GetOrCreateProperty<MultiText>("testField")["en"] = "test";
 			_entriesList.Add(entry);
 			entry = CycleDatabase();
-			Assert.AreEqual("test", entry.GetProperty<MultiText>("testField")["en"]);
+			Assert.AreEqual("test", entry.GetOrCreateProperty<MultiText>("testField")["en"]);
 		}
 
 		[Test]
@@ -285,10 +285,10 @@ namespace WeSay.LexicalModel.Tests
 			CycleDatabase();
 			LexEntry entry = new LexEntry();
 			//Option z = new Option("test", "t", Guid.NewGuid());
-			entry.GetProperty<OptionRef>("testOption").Value = "test";
+			entry.GetOrCreateProperty<OptionRef>("testOption").Value = "test";
 			_entriesList.Add(entry);
 			entry = CycleDatabase();
-			Assert.AreEqual("test", entry.GetProperty<OptionRef>("testOption").Value);
+			Assert.AreEqual("test", entry.GetOrCreateProperty<OptionRef>("testOption").Value);
 		}
 
 		[Test]

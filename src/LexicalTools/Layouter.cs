@@ -204,7 +204,7 @@ namespace WeSay.LexicalTools
 							box = MakeOptionCollectionWidget(target, customField);
 							break;
 						case "MultiText":
-							box = MakeBoundEntry(target.GetProperty<MultiText>(customField.FieldName), customField);
+							box = MakeBoundEntry(target.GetOrCreateProperty<MultiText>(customField.FieldName), customField);
 							break;
 						default:
 							throw new ApplicationException(
@@ -224,7 +224,7 @@ namespace WeSay.LexicalTools
 
 		protected Control MakeOptionWidget(WeSayDataObject target, Field field)
 		{
-			WeSay.Foundation.OptionRef optionRefTarget = target.GetProperty<WeSay.Foundation.OptionRef>(field.FieldName);
+			WeSay.Foundation.OptionRef optionRefTarget = target.GetOrCreateProperty<WeSay.Foundation.OptionRef>(field.FieldName);
 
 			OptionsList list = Project.WeSayWordsProject.Project.GetOptionsList(field.OptionsListFile);
 			SingleOptionControl control = new SingleOptionControl(optionRefTarget, list, field.WritingSystemIds[0]);
@@ -236,7 +236,7 @@ namespace WeSay.LexicalTools
 		private Control MakeOptionCollectionWidget(WeSayDataObject target, Field field)
 		{
 			OptionsList list = Project.WeSayWordsProject.Project.GetOptionsList(field.OptionsListFile);
-			WeSay.Foundation.OptionRefCollection optionRefTarget = target.GetProperty<WeSay.Foundation.OptionRefCollection>(field.FieldName);
+			WeSay.Foundation.OptionRefCollection optionRefTarget = target.GetOrCreateProperty<WeSay.Foundation.OptionRefCollection>(field.FieldName);
 			OptionCollectionControl control = new OptionCollectionControl(optionRefTarget, list, field.WritingSystemIds[0]);
 			return control;
 		}
