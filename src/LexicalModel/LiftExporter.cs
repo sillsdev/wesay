@@ -187,17 +187,17 @@ namespace WeSay.LexicalModel
 				}
 				if (pair.Value is MultiText)
 				{
-					this.WriteFormInElement(pair.Key, pair.Value as MultiText);
+					WriteFormInElement(pair.Key, pair.Value as MultiText);
 					continue;
 				}
 				if (pair.Value is OptionRef)
 				{
-					this.WriteOptionRef(pair.Key, pair.Value as OptionRef);
+					WriteOptionRef(pair.Key, pair.Value as OptionRef);
 					continue;
 				}
 				if (pair.Value is OptionRefCollection)
 				{
-					this.WriteOptionRefCollection(pair.Key, pair.Value as OptionRefCollection);
+					WriteOptionRefCollection(pair.Key, pair.Value as OptionRefCollection);
 					continue;
 				}
 				throw new ApplicationException(

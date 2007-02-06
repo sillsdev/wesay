@@ -42,7 +42,8 @@ namespace WeSay.Foundation
 			}
 		}
 
-	public List<string> Keys
+	  #endregion
+  public List<string> Keys
 	{
 		get
 		{
@@ -63,7 +64,6 @@ namespace WeSay.Foundation
 			//tell our parent
 			this._parent.NotifyPropertyChanged("option");
 		}
-	#endregion
 
 	}
 
