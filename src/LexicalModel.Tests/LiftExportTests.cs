@@ -184,18 +184,26 @@ namespace WeSay.LexicalTools.Tests
 		{
 			LexEntry entry = new LexEntry();
 			_exporter.Add(entry);
-			CheckAnswer(string.Format("<entry id=\"NoForm\" flex:id=\"{0}\" xmlns:flex=\"http://fieldworks.sil.org\" />", entry.Guid));
+			ShouldContain(string.Format("flex:id=\"{0}\"", entry.Guid));
+		}
+
+		private void ShouldContain(string s)
+		{
+			_exporter.End();
+			Assert.IsTrue(
+				_stringBuilder.ToString().Contains(
+					s));
 		}
 
 		[Test]
-		public void SmallEntry()
+		public void EntryHasDateTimes()
 		{
-			 LexEntry entry = new LexEntry();
-			 entry.LexicalForm["blue"] = "ocean";
-			 _exporter.Add(entry);
-			 string answer = string.Format("<entry id=\"ocean\" flex:id=\"{0}\" xmlns:flex=\"http://fieldworks.sil.org\"><form lang=\"blue\">ocean</form></entry>",entry.Guid);
-			CheckAnswer(answer);
-		}
+			LexEntry entry = new LexEntry();
+			_exporter.Add(entry);
+			_exporter.End();
+			ShouldContain(string.Format("dateCreated=\"{0}\"", entry.CreationTime.ToString("yyyy-MM-ddThh:mm:sszzzz")));
+			ShouldContain(string.Format("dateModified=\"{0}\"", entry.ModificationTime.ToString("yyyy-MM-ddThh:mm:sszzzz")));
+	   }
 
 		[Test]
 		public void DuplicateFormsGetHomographNumbers()
@@ -229,7 +237,7 @@ namespace WeSay.LexicalTools.Tests
 			entry.Senses.Add(sense);
 			_exporter.Add(entry);
 
-			CheckAnswer(string.Format("<entry id=\"ocean\" flex:id=\"{0}\" xmlns:flex=\"http://fieldworks.sil.org\"><form lang=\"blue\">ocean</form><sense><gloss><form lang=\"a\">aaa</form></gloss></sense><sense><gloss><form lang=\"b\">bbb</form></gloss></sense></entry>", entry.Guid));
+			ShouldContain(string.Format("<sense><gloss><form lang=\"a\">aaa</form></gloss></sense><sense><gloss><form lang=\"b\">bbb</form></gloss></sense>"));
 		}
 
 		[Test]
