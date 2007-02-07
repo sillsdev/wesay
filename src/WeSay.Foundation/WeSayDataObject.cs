@@ -27,7 +27,6 @@ namespace WeSay.Foundation
 		//          private  Dictionary<string,object>  _properties;
 
 		private List<KeyValuePair<string, object>> _properties;
-		//private Hashtable _properties;
 
 		/// <summary>
 		/// see comment on _parent field of MultiText for an explanation of this field

@@ -191,6 +191,7 @@ namespace WeSay.LexicalTools
 				if (customField.Visibility != Field.VisibilitySetting.Visible)
 				{
 					continue;
+
 				}
 				Control box = null;
 				switch (customField.DataTypeName)
@@ -208,7 +209,7 @@ namespace WeSay.LexicalTools
 						throw new ApplicationException(
 							string.Format("WeSay doesn't understand how to a layout a {0}", customField.DataTypeName));
 				}
-				DetailList.AddWidgetRow(StringCatalog.Get(customField.DisplayName), true, box, insertAtRow);
+				DetailList.AddWidgetRow(StringCatalog.Get(customField.DisplayName), true, box, insertAtRow+rowCount);
 
 				++rowCount;
 			}

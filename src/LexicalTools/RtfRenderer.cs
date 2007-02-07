@@ -131,9 +131,13 @@ namespace WeSay.LexicalTools
 			return @" \ul        " + Convert.ToChar(160) + @"\ulnone  ";
 		}
 
-		private static string SwitchToWritingSystem(string WritingSystemId)
+		private static string SwitchToWritingSystem(string writingSystemId)
 		{
-			WritingSystem writingSystem = BasilProject.Project.WritingSystems[WritingSystemId];
+			WritingSystem writingSystem;
+			if (!BasilProject.Project.WritingSystems.TryGetValue(writingSystemId, out writingSystem))
+			{
+				return "";//that ws isn't actually part of our configuration, so can't get a special font for it
+			}
 			string rtf = @"\f" + GetFontNumber(writingSystem);
 			rtf += @"\fs" + writingSystem.Font.SizeInPoints * 2 + " ";
 			return rtf;

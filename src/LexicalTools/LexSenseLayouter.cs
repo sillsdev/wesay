@@ -31,7 +31,7 @@ namespace WeSay.LexicalTools
 				insertAtRow = DetailList.GetRowOfControl(c);
 			}
 
-			rowCount += AddCustomFields(sense, insertAtRow);
+			rowCount += AddCustomFields(sense, insertAtRow+rowCount);
 
 			LexExampleSentenceLayouter exampleLayouter = new LexExampleSentenceLayouter(DetailList, ActiveViewTemplate);
 

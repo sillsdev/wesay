@@ -101,10 +101,11 @@ namespace WeSay.UI
 			Panel p = new Panel();
 			p.Controls.Add(_control);
 			p.Size = new Size(initialPanelWidth, _control.Height + 0);
-
+#if notyet
 			FlagButton flagButton = MakeFlagButton(p.Size);
 			p.Controls.Add(flagButton);
 			this.components.Add(flagButton);//so it will get disposed of when we are
+#endif
 			this.Controls.Add(p);
 			Height += p.Height;
 			ResumeLayout(false);

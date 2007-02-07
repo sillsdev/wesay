@@ -133,12 +133,22 @@ namespace WeSay.Language
 
 		public string GetAlternative(string writingSystemId, bool doShowSomethingElseIfMissing)
 		{
+			return GetAlternative(writingSystemId, doShowSomethingElseIfMissing, string.Empty);
+		}
+
+		public string GetAlternative(string writingSystemId, string appendIfFirstWritingSystemMissing)
+		{
+			return GetAlternative(writingSystemId, true, appendIfFirstWritingSystemMissing);
+		}
+
+		private string GetAlternative(string writingSystemId, bool doShowSomethingElseIfMissing, string appendIfFirstWritingSystemMissing)
+		{
 			LanguageForm alt = Find(writingSystemId);
 			if (null == alt)
 			{
 				if (doShowSomethingElseIfMissing)
 				{
-					return GetFirstAlternative();
+					return GetFirstAlternative() + appendIfFirstWritingSystemMissing; ;
 				}
 				else
 				{
@@ -150,7 +160,7 @@ namespace WeSay.Language
 			{
 				if (doShowSomethingElseIfMissing)
 				{
-					return GetFirstAlternative();
+					return GetFirstAlternative() + appendIfFirstWritingSystemMissing;
 				}
 				else
 				{

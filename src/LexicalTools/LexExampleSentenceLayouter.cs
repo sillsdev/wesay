@@ -37,7 +37,7 @@ namespace WeSay.LexicalTools
 				++rowCount;
 			}
 
-			rowCount +=AddCustomFields(example, insertAtRow);
+			rowCount += AddCustomFields(example, insertAtRow + rowCount);
 
 			return rowCount;
 		}

@@ -37,7 +37,7 @@ namespace WeSay.LexicalTools
 				DetailList.AddWidgetRow(StringCatalog.Get(field.DisplayName), true, box, insertAtRow);
 				++rowCount;
 			}
-			rowCount += AddCustomFields(entry, insertAtRow);
+			rowCount += AddCustomFields(entry, insertAtRow+rowCount);
 
 			LexSenseLayouter layouter = new LexSenseLayouter(DetailList, ActiveViewTemplate);
 			rowCount = AddChildrenWidgets(layouter, entry.Senses, insertAtRow, rowCount);
