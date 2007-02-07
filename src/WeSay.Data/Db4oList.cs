@@ -1758,9 +1758,13 @@ namespace WeSay.Data
 		/// <param name="item">Item.</param>
 		protected virtual void DoStoreItem(T item, string propertyName)
 		{
+			SetDatabaseLastModified();
 			if (!OnStoring(item, propertyName))
 			{
-				SetDatabaseLastModified();
+				if (!Database.IsActive(item))
+				{
+					DoActivateItem(item);
+				}
 				Database.Set(item, SetActivationDepth);
 			}
 		}
@@ -1787,9 +1791,9 @@ namespace WeSay.Data
 		/// <param name="item">Item (which is not activated).</param>
 		protected virtual void DoDeleteItem(T item)
 		{
+			SetDatabaseLastModified();
 			if (!OnDeleting(item))
 			{
-				SetDatabaseLastModified();
 				Database.Delete(item);
 				RegisterItemPropertyChangedHandler(item, false);
 			}

@@ -36,11 +36,11 @@ namespace WeSay.Data
 
 		public IRecordList<T> GetListOfType<T>() where T : class, new()
 		{
-			if (!this.FilteredRecordLists.ContainsKey(RecordListKey<T>(String.Empty)))
+			if (!FilteredRecordLists.ContainsKey(RecordListKey<T>(String.Empty)))
 			{
-				this.FilteredRecordLists.Add(RecordListKey<T>(String.Empty), CreateMasterRecordList<T>());
+				FilteredRecordLists.Add(RecordListKey<T>(String.Empty), CreateMasterRecordList<T>());
 			}
-			return (IRecordList<T>)this.FilteredRecordLists[RecordListKey<T>(String.Empty)];
+			return (IRecordList<T>)FilteredRecordLists[RecordListKey<T>(String.Empty)];
 		}
 
 		public IRecordList<T> GetListOfTypeFilteredFurther<T>(IFilter<T> filter) where T : class, new()
@@ -49,16 +49,16 @@ namespace WeSay.Data
 			{
 				throw new ArgumentNullException();
 			}
-			if (!this.FilteredRecordLists.ContainsKey(RecordListKey<T>(filter.Key)))
+			if (!FilteredRecordLists.ContainsKey(RecordListKey<T>(filter.Key)))
 			{
 				throw new InvalidOperationException("Filter must be registered before it can be retrieved with GetListOfType.");
 			}
-			IRecordList<T> recordList = (IRecordList<T>)this.FilteredRecordLists[RecordListKey<T>(filter.Key)];
+			IRecordList<T> recordList = (IRecordList<T>)FilteredRecordLists[RecordListKey<T>(filter.Key)];
 			if (recordList == null)
 			{
 				recordList = CreateFilteredRecordList<T>(filter);
+				FilteredRecordLists[RecordListKey<T>(filter.Key)] = recordList;
 			}
-			this.FilteredRecordLists[RecordListKey<T>(filter.Key)] = recordList;
 			return recordList;
 		}
 

@@ -16,6 +16,14 @@ namespace WeSay.Data.Tests
 			this._i = i;
 		}
 
+		public static PropertyDescriptor IPropertyDescriptor{
+			get
+			{
+				PropertyDescriptorCollection pdc = TypeDescriptor.GetProperties(typeof(SimpleIntTestClass));
+				return pdc.Find("I", false);
+			}
+		}
+
 		public int I
 		{
 			get

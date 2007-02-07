@@ -202,7 +202,15 @@ namespace WeSay.Data
 
 		protected int Find(PropertyDescriptor property, object key)
 		{
-			throw new NotSupportedException();
+
+			for (int i = 0; i < Count; ++i)
+			{
+				if (ComparisonHelper<object>.DefaultEqualityComparison(property.GetValue(_records[i]), key))
+				{
+					return i;
+				}
+			}
+			return -1;
 		}
 
 		abstract public bool IsSorted
@@ -306,7 +314,7 @@ namespace WeSay.Data
 		protected bool SupportsSearching
 		{
 			get {
-				return false;
+				return true;
 			}
 		}
 

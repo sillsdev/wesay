@@ -49,7 +49,8 @@ namespace WeSay.Data.Tests
 		public void ChangeRecord_NoLongerMeetsFilterCriteria_RemovedFromCachedRecordLists()
 		{
 			IRecordList<SimpleIntTestClass> masterRecordList = RecordListManager.GetListOfType<SimpleIntTestClass>();
-			masterRecordList[11].I = 10;
+			int index11 = masterRecordList.Find(SimpleIntTestClass.IPropertyDescriptor, 11);
+			masterRecordList[index11].I = 10;
 			IRecordList<SimpleIntTestClass> recordList11to17 = RecordListManager.GetListOfTypeFilteredFurther<SimpleIntTestClass>(Filter11to17);
 			Assert.AreEqual(6, recordList11to17.Count);
 
@@ -74,7 +75,8 @@ namespace WeSay.Data.Tests
 		public void ChangeRecord_NoLongerMeetsFilterCriteria_RemainsInMasterRecordLists()
 		{
 			IRecordList<SimpleIntTestClass> masterRecordList = RecordListManager.GetListOfType<SimpleIntTestClass>();
-			masterRecordList[11].I = 10;
+			int index11 = masterRecordList.Find(SimpleIntTestClass.IPropertyDescriptor, 11);
+			masterRecordList[index11].I = 10;
 
 			Assert.AreEqual(50, masterRecordList.Count);
 
@@ -159,7 +161,8 @@ namespace WeSay.Data.Tests
 		public void RemoveRecord_RemovedFromCachedRecordLists()
 		{
 			IRecordList<SimpleIntTestClass> masterRecordList = RecordListManager.GetListOfType<SimpleIntTestClass>();
-			masterRecordList.RemoveAt(11);
+			int index11 = masterRecordList.Find(SimpleIntTestClass.IPropertyDescriptor, 11);
+			masterRecordList.RemoveAt(index11);
 			IRecordList<SimpleIntTestClass> recordList10to19 = RecordListManager.GetListOfTypeFilteredFurther<SimpleIntTestClass>(Filter10to19);
 			IRecordList<SimpleIntTestClass> recordList11to17 = RecordListManager.GetListOfTypeFilteredFurther<SimpleIntTestClass>(Filter11to17);
 			Assert.AreEqual(6, recordList11to17.Count);
@@ -199,7 +202,8 @@ namespace WeSay.Data.Tests
 		{
 			ChangeDatabaseOutFromUnderRecordListManager(delegate(IRecordList<SimpleIntTestClass> recordList)
 														{
-															recordList[11].I = 10;
+															int index11 = recordList.Find(SimpleIntTestClass.IPropertyDescriptor, 11);
+															recordList[index11].I = 10;
 														});
 			IRecordList<SimpleIntTestClass> recordList11to17 = RecordListManager.GetListOfTypeFilteredFurther<SimpleIntTestClass>(Filter11to17);
 
@@ -281,7 +285,9 @@ namespace WeSay.Data.Tests
 		{
 			ChangeDatabaseOutFromUnderRecordListManager(delegate(IRecordList<SimpleIntTestClass> recordList)
 											{
-												recordList.RemoveAt(11);
+												int index11 = recordList.Find(SimpleIntTestClass.IPropertyDescriptor, 11);
+
+												recordList.RemoveAt(index11);
 											});
 
 			IRecordList<SimpleIntTestClass> recordList10to19 = RecordListManager.GetListOfTypeFilteredFurther<SimpleIntTestClass>(Filter10to19);
@@ -385,7 +391,8 @@ namespace WeSay.Data.Tests
 		public void FilterModified_ChangedRecord_NoLongerMeetsFilterCriteria_RemovedFromCachedRecordLists()
 		{
 			IRecordList<SimpleIntTestClass> masterRecordList = RecordListManager.GetListOfType<SimpleIntTestClass>();
-			masterRecordList[11].I = 10;
+			int index11 = masterRecordList.Find(SimpleIntTestClass.IPropertyDescriptor, 11);
+			masterRecordList[index11].I = 10;
 			IRecordList<SimpleIntTestClass> recordList11to17 = RecordListManager.GetListOfTypeFilteredFurther<SimpleIntTestClass>(Filter11to17);
 			Assert.AreEqual(6, recordList11to17.Count);
 			int count11 = CountMatching<SimpleIntTestClass>(recordList11to17,
@@ -431,7 +438,8 @@ namespace WeSay.Data.Tests
 		public void FilterModified_RemovedRecord_RemovedFromCachedRecordLists()
 		{
 			IRecordList<SimpleIntTestClass> masterRecordList = RecordListManager.GetListOfType<SimpleIntTestClass>();
-			masterRecordList.RemoveAt(11);
+			int index11 = masterRecordList.Find(SimpleIntTestClass.IPropertyDescriptor, 11);
+			masterRecordList.RemoveAt(index11);
 			IRecordList<SimpleIntTestClass> recordList11to17 = RecordListManager.GetListOfTypeFilteredFurther<SimpleIntTestClass>(Filter11to17);
 			Assert.AreEqual(6, recordList11to17.Count);
 			int count11 = CountMatching<SimpleIntTestClass>(recordList11to17,

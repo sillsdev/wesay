@@ -161,7 +161,14 @@ namespace WeSay.Data.Tests.IBindingListTests
 			{
 				Assert.IsNotNull(_property);
 				int row = _bindingList.Find(_property, _key);
-				Assert.Greater(row, 0);
+				if (_bindingList.Count > 1)
+				{
+					Assert.Greater(row, 0);
+				}
+				else
+				{
+					Assert.AreEqual(row, -1);
+				}
 			}
 			else
 			{

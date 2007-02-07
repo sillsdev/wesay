@@ -265,7 +265,9 @@ namespace WeSay.Data.Tests
 		public void AddRecordToFiltered_AlreadyExists_NotAdded()
 		{
 			IRecordList<SimpleIntTestClass> recordList11to20 = RecordListManager.GetListOfTypeFilteredFurther<SimpleIntTestClass>(Filter11to20);
-			recordList11to20.Add(_sourceRecords[12]);
+			int index12 = _sourceRecords.Find(SimpleIntTestClass.IPropertyDescriptor, 12);
+
+			recordList11to20.Add(_sourceRecords[index12]);
 			Assert.AreEqual(10, recordList11to20.Count);
 			Assert.AreEqual(50, _sourceRecords.Count);
 		}

@@ -336,7 +336,14 @@ namespace WeSay.Data
 			{
 				if (Contains(item))
 				{
-					Remove(item);
+					int index = Records.IndexOf(item);
+					if (index != -1)
+					{
+						((Db4oList<T>)Records).ItemIds.RemoveAt(index);
+						OnItemDeleted(index);
+					}
+
+//                    Remove(item);
 #if DEBUG
 					SerializeRecordIds();
 #endif

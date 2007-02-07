@@ -104,6 +104,7 @@ namespace WeSay.UI
 					throw new ArgumentException("Control is not an owned descendant.");
 				}
 			}
+			Debug.Assert(index < _rowCount);
 			return (_rowCount - index) - 1;
 		}
 
@@ -131,12 +132,14 @@ namespace WeSay.UI
 
 		private int RowToControlInsertionIndex(int row)
 		{
+			Debug.Assert(row <= _rowCount);
 			//reverse order (that's how docking works)
 			return ((_rowCount) - row);
 		}
 
 		protected int RowToControlIndex(int row)
 		{
+			Debug.Assert(row < _rowCount);
 			//reverse order (that's how docking works)
 			return RowToControlInsertionIndex(row) - 1;
 		}
