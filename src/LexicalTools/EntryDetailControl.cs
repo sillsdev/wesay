@@ -26,8 +26,6 @@ namespace WeSay.LexicalTools
 			InitializeComponent();
 		}
 
-
-
 		public EntryDetailControl(IRecordListManager recordManager, ViewTemplate viewTemplate)
 		{
 			if (recordManager == null)
@@ -49,9 +47,9 @@ namespace WeSay.LexicalTools
 
 			InitializeComponent();
 			BackColor = WeSay.UI.DisplaySettings.Default.BackgroundColor;
-			_entryDetailPanel.ViewTemplate = _viewTemplate;
-			_entryDetailPanel.BackColor = WeSay.UI.DisplaySettings.Default.BackgroundColor;
-			_entryDetailPanel.DataSource = CurrentRecord;
+			this.Control_EntryDetailPanel.ViewTemplate = _viewTemplate;
+			this.Control_EntryDetailPanel.BackColor = WeSay.UI.DisplaySettings.Default.BackgroundColor;
+			this.Control_EntryDetailPanel.DataSource = CurrentRecord;
 
 			_btnFind.Text = StringCatalog.Get("Find");
 
@@ -77,6 +75,15 @@ namespace WeSay.LexicalTools
 			_recordsListBox.Location = new Point(_recordsListBox.Location.X,
 												 _recordsListBox.Location.Y + heightDifference);
 			_btnFind.Height += heightDifference;
+		}
+
+		// primarily for testing
+		public LexPreviewWithEntryControl Control_EntryDetailPanel
+		{
+			get
+			{
+				return this._entryDetailPanel;
+			}
 		}
 
 		void _findText_KeyDown(object sender, KeyEventArgs e)
@@ -115,12 +122,12 @@ namespace WeSay.LexicalTools
 
 		void OnRecordSelectionChanged(object sender, EventArgs e)
 		{
-			if (_entryDetailPanel.DataSource == CurrentRecord)
+			if (this.Control_EntryDetailPanel.DataSource == CurrentRecord)
 			{
 				//we were getting 3 calls to this for each click on a new word
 				return;
 			}
-			_entryDetailPanel.DataSource = CurrentRecord;
+			this.Control_EntryDetailPanel.DataSource = CurrentRecord;
 			_btnDeleteWord.Enabled = (CurrentRecord != null);
 			if (SelectedIndexChanged != null)
 			{

@@ -168,6 +168,10 @@ namespace WeSay.UI
 
 		public void MoveInsertionPoint(int row)
 		{
+			if(0 > row || row >= Count)
+			{
+				throw new ArgumentOutOfRangeException("row", row, "row must be between 0 and Count-1 inclusive");
+			}
 			Panel p = (Panel)ActualControls[RowToControlIndex(row)];
 			Control c = GetEditControlFromReferenceControl(p);
 			WeSayTextBox tb;

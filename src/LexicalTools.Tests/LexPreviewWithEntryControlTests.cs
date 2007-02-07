@@ -21,7 +21,7 @@ namespace WeSay.LexicalTools.Tests
 		public void SetUp()
 		{
 			Db4oLexModelHelper.InitializeForNonDbTests();
-			BasilProject.InitializeForTests();
+			WeSayWordsProject.InitializeForTests();
 
 			empty = CreateTestEntry("", "", "");
 			apple = CreateTestEntry("apple", "red thing", "An apple a day keeps the doctor away.");
@@ -111,6 +111,33 @@ namespace WeSay.LexicalTools.Tests
 			editControl.TextBoxes[0].Text = "test";
 			Assert.IsTrue(lexFieldControl.ControlFormattedView.Text.Contains("test"));
 	   }
+
+		[Test]
+		public void EditField_RemoveContents_RemovesSense()
+		{
+			LexEntry meaningOnly = CreateTestEntry("word", "meaning", "");
+			LexPreviewWithEntryControl lexFieldControl = CreateForm(meaningOnly);
+			DetailList detailList = lexFieldControl.ControlEntryDetail;
+			MultiTextControl editControl = GetEditControl(detailList, "Meaning");
+			editControl.TextBoxes[0].Text = "";
+
+			Assert.IsNull(GetEditControl(detailList, "Meaning"));
+		}
+
+		private static MultiTextControl GetEditControl(DetailList detailList, string labelText) {
+			MultiTextControl editControl = null;
+			for (int i = 0; i < detailList.Count; i++)
+			{
+				Control referenceControl = detailList.GetControlOfRow(i);
+				Label label = detailList.GetLabelControlFromReferenceControl(referenceControl);
+				if(label.Text == labelText)
+				{
+					editControl = (MultiTextControl)detailList.GetEditControlFromReferenceControl(referenceControl);
+					break;
+				}
+			}
+			return editControl;
+		}
 
 		[Test]
 		public void FormattedView_FocusInControl_Displayed()

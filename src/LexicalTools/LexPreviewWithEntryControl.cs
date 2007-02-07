@@ -113,6 +113,7 @@ namespace WeSay.LexicalTools
 			Application.DoEvents();
 			if (row != null)
 			{
+				row = Math.Min((int)row, this._detailListControl.Count-1);
 				this._detailListControl.MoveInsertionPoint((int)row);
 			}
 		}

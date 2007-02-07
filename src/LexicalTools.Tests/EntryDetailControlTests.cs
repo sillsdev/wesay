@@ -25,7 +25,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			base.Setup();
 //            Db4oLexModelHelper.InitializeForNonDbTests();
-			BasilProject.InitializeForTests();
+			WeSayWordsProject.InitializeForTests();
 			this._vernacularWsId = BasilProject.Project.WritingSystems.VernacularWritingSystemDefaultId;
 
 			this._filePath = System.IO.Path.GetTempFileName();
@@ -33,18 +33,28 @@ namespace WeSay.LexicalTools.Tests
 			Db4oLexModelHelper.Initialize(((Db4oRecordListManager)_recordListManager).DataSource.Data);
 
 			this._records = this._recordListManager.GetListOfType<LexEntry>();
-			AddEntry("Initial");
-			AddEntry("Secondary");
-			AddEntry("Tertiary");
+			AddEntry("Initial", "meaning");
+			AddEntry("Secondary", string.Empty);
+			AddEntry("Tertiary", string.Empty);
 
 			string[] analysisWritingSystemIds = new string[] { BasilProject.Project.WritingSystems.AnalysisWritingSystemDefaultId };
 			string[] vernacularWritingSystemIds = new string[] { this._vernacularWsId };
 			ViewTemplate viewTemplate = new ViewTemplate();
 			viewTemplate.Add(new Field(Field.FieldNames.EntryLexicalForm.ToString(), vernacularWritingSystemIds));
+
 			viewTemplate.Add(new Field(Field.FieldNames.SenseGloss.ToString(), analysisWritingSystemIds));
+
+			Field customField;
+
 			viewTemplate.Add(new Field(Field.FieldNames.ExampleSentence.ToString(), vernacularWritingSystemIds));
+
 			viewTemplate.Add(new Field(Field.FieldNames.ExampleTranslation.ToString(), analysisWritingSystemIds));
 
+			customField = new Field("SemanticDomains", analysisWritingSystemIds, Field.MultiplicityType.ZeroOr1, "OptionCollection");
+			customField.ClassName = "LexSense";
+			customField.DisplayName = "Sem Dom";
+			customField.OptionsListFile = "SemanticDomains.xml";
+			viewTemplate.Add(customField);
 
 			this._task = new EntryDetailTask(_recordListManager, viewTemplate);
 			this._detailTaskPage = new TabPage();
@@ -72,10 +82,14 @@ namespace WeSay.LexicalTools.Tests
 			}
 		}
 
-		private void AddEntry(string lexemeForm)
+		private void AddEntry(string lexemeForm, string meaning)
 		{
 			LexEntry entry = new LexEntry();
 			entry.LexicalForm.SetAlternative(this._vernacularWsId, lexemeForm);
+
+			LexSense sense = (LexSense)entry.Senses.AddNew();
+			sense.Gloss[BasilProject.Project.WritingSystems.AnalysisWritingSystemDefault.Id] = meaning;
+
 			this._records.Add(entry);
 		}
 
@@ -220,6 +234,17 @@ namespace WeSay.LexicalTools.Tests
 			t.Properties.Text = value;
 		}
 
+		private static string GetMeaningControlName()
+		{
+			return Field.FieldNames.SenseGloss.ToString() + "_" + BasilProject.Project.WritingSystems.AnalysisWritingSystemDefaultId;
+		}
+
+		private static void TypeInMeaning(string value)
+		{
+			NUnit.Extensions.Forms.TextBoxTester t = new TextBoxTester(GetMeaningControlName());
+			t.Properties.Text = value;
+		}
+
 		private string LexemeFormOfSelectedEntry
 		{
 			get
@@ -275,5 +300,35 @@ namespace WeSay.LexicalTools.Tests
 
 			Assert.AreEqual("Secondary", l.Properties.SelectedObject);
 		}
+
+		[Test]
+		public void EditField_RemoveSenseContents_RemovesSense()
+		{
+			DetailList detailList = ((EntryDetailControl) _task.Control).Control_EntryDetailPanel.ControlEntryDetail;
+
+			MultiTextControl editControl = GetEditControl(detailList, "Meaning");
+			editControl.TextBoxes[0].Focus();
+			TypeInMeaning(string.Empty);
+
+			Assert.IsNull(GetEditControl(detailList, "Meaning"));
+		}
+
+
+		private static MultiTextControl GetEditControl(DetailList detailList, string labelText)
+		{
+			MultiTextControl editControl = null;
+			for (int i = 0; i < detailList.Count; i++)
+			{
+				Control referenceControl = detailList.GetControlOfRow(i);
+				Label label = detailList.GetLabelControlFromReferenceControl(referenceControl);
+				if (label.Text == labelText)
+				{
+					editControl = (MultiTextControl)detailList.GetEditControlFromReferenceControl(referenceControl);
+					break;
+				}
+			}
+			return editControl;
+		}
+
 	}
 }

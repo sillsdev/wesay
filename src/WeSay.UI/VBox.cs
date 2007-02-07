@@ -127,19 +127,22 @@ namespace WeSay.UI
 		/// <returns></returns>
 		public Control GetControlOfRow(int row)
 		{
+			if(0 > row || row >= _rowCount)
+			{
+				throw new ArgumentOutOfRangeException("row", row, "row must be between 0 and Count-1 inclusive");
+			}
 			return (base.Controls[RowToControlIndex(row)]);
 		}
 
 		private int RowToControlInsertionIndex(int row)
 		{
-			Debug.Assert(row <= _rowCount);
 			//reverse order (that's how docking works)
 			return ((_rowCount) - row);
 		}
 
 		protected int RowToControlIndex(int row)
 		{
-			Debug.Assert(row < _rowCount);
+			Debug.Assert(row < _rowCount); // if we assert here, we are probably missing an opportunity to throw an ArgumentOutOfrange exception in a public method
 			//reverse order (that's how docking works)
 			return RowToControlInsertionIndex(row) - 1;
 		}
