@@ -22,7 +22,7 @@ namespace WeSay.CommonTools
 			InitializeComponent();
 			_task = task;
 			this._count.Text = task.Status;
-			string cachePath = Path.Combine(Project.WeSayWordsProject.Project.PathToWeSaySpecificFilesDirectoryInProject, "Cache");
+			string cachePath = Project.WeSayWordsProject.Project.PathToCache;
 
 
 			//TODO: this leads to a failure when the label isn't a valid path (like when it says "failed to load: blahblah"

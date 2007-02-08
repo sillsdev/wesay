@@ -192,7 +192,15 @@ namespace WeSay.Project
 		{
 			get
 			{
-				return System.IO.Path.Combine(PathToWeSaySpecificFilesDirectoryInProject, "incremental xml backup");
+				return PathToLexicalModelDB + " incremental xml backup";
+			}
+		}
+
+		public string PathToCache
+		{
+			get
+			{
+				return PathToLexicalModelDB + " Cache";
 			}
 		}
 

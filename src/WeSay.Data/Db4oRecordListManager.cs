@@ -20,14 +20,22 @@ namespace WeSay.Data
 	public class Db4oRecordListManager : AbstractRecordListManager
 	{
 		private Db4oDataSource _dataSource;
-		private string _dataPath;
+		private string _cachePath;
 
 		public Db4oRecordListManager(IDb4oModelConfiguration config, string filePath)
 		: base()
 		{
-			config.Configure();
-			_dataPath = Path.GetDirectoryName(filePath);
-			_dataSource = new Db4oDataSource(filePath);
+			try
+			{
+				config.Configure();
+				_cachePath = filePath + " Cache";
+				_dataSource = new Db4oDataSource(filePath);
+			}
+			catch(Exception e)
+			{
+				Dispose();
+				throw e;
+			}
 		}
 
 		public Db4oDataSource DataSource
@@ -35,9 +43,9 @@ namespace WeSay.Data
 			get { return this._dataSource; }
 		}
 
-		public string DataPath
+		public string CachePath
 		{
-			get { return this._dataPath; }
+			get { return this._cachePath; }
 		}
 
 		public CachedSortedDb4oList<K, T> GetSortedList<K, T>(IDb4oSortHelper<K, T> sortHelper) where T : class, new()
@@ -56,7 +64,7 @@ namespace WeSay.Data
 
 		protected override IRecordList<T> CreateFilteredRecordList<T>(IFilter<T> filter)
 		{
-			FilteredDb4oRecordList<T> list = new FilteredDb4oRecordList<T>(GetListOfType<T>(), filter, this.DataPath, false);
+			FilteredDb4oRecordList<T> list = new FilteredDb4oRecordList<T>(GetListOfType<T>(), filter, CachePath, false);
 			return list;
 		}
 
@@ -65,7 +73,7 @@ namespace WeSay.Data
 			IRecordList<T> recordList = null;
 			try
 			{
-				recordList = new FilteredDb4oRecordList<T>(GetListOfType<T>(), filter, this.DataPath, true);
+				recordList = new FilteredDb4oRecordList<T>(GetListOfType<T>(), filter, CachePath, true);
 			}
 			catch (OperationCanceledException) {}
 			return recordList;
@@ -77,7 +85,10 @@ namespace WeSay.Data
 			base.Dispose(disposing);
 			if (canBeDisposed && disposing)
 			{
-				DataSource.Dispose();
+				if (DataSource != null)
+				{
+					DataSource.Dispose();
+				}
 			}
 		}
 
@@ -97,10 +108,10 @@ namespace WeSay.Data
 				}
 			}
 
-			public FilteredDb4oRecordList(IRecordList<T> sourceRecords, IFilter<T> filter, string dataPath, bool constructOnlyIfFilterIsCached)
+			public FilteredDb4oRecordList(IRecordList<T> sourceRecords, IFilter<T> filter, string cachePath, bool constructOnlyIfFilterIsCached)
 			: base((Db4oRecordList<T>)sourceRecords)
 			{
-				_cachePath = Path.Combine(dataPath, "Cache");
+				_cachePath = cachePath;
 				_isRelevantFilter = filter;
 
 				if (constructOnlyIfFilterIsCached)

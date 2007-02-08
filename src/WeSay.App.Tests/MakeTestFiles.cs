@@ -41,6 +41,7 @@ namespace WeSay.Data.Tests
 				Db4oLexModelHelper.Initialize(ds.Data);
 				using (Db4oRecordList<LexEntry> entries = new Db4oRecordList<LexEntry>(ds))
 				{
+					entries.WriteCacheSize = 0;//don't commit all the time
 					LiftImporter.ReadFile(entries, sourcePath, null);
 				}
 			}

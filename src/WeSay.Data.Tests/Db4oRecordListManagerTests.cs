@@ -32,7 +32,7 @@ namespace WeSay.Data.Tests
 		{
 			base.TearDown();
 
-			string cacheDirectory = Path.Combine(Path.GetDirectoryName(this._filePath), "Cache");
+			string cacheDirectory = this._filePath + " Cache";
 			if(Directory.Exists(cacheDirectory))
 			{
 				Directory.Delete(cacheDirectory, true);
@@ -367,7 +367,7 @@ namespace WeSay.Data.Tests
 		{
 			RecordListManager.Dispose();
 
-			string cacheDirectory = Path.Combine(Path.GetDirectoryName(this._filePath), "Cache");
+			string cacheDirectory = this._filePath+ " Cache";
 			if (Directory.Exists(cacheDirectory))
 			{
 				Directory.Delete(cacheDirectory, true);

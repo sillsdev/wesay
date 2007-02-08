@@ -52,7 +52,7 @@ namespace WeSay.Data
 		public CachedSortedDb4oList(Db4oRecordListManager recordListManager, IDb4oSortHelper<K, T> sortHelper)
 		{
 			_sortHelper = sortHelper;
-			_cachePath = Path.Combine(recordListManager.DataPath, "Cache");
+			_cachePath = recordListManager.CachePath;
 			_sorter = new Comparer(sortHelper.KeyComparer);
 			_masterRecordList = (Db4oRecordList<T>)recordListManager.GetListOfType<T>();
 

@@ -129,6 +129,8 @@ namespace Lift2WeSay
 			{
 				using (Db4oRecordList<LexEntry> entries = new Db4oRecordList<LexEntry>(ds))
 				{
+					entries.WriteCacheSize = 0; // don't commit all the time!
+
 					if (Db4oLexModelHelper.Singleton == null)
 					{
 						Db4oLexModelHelper.Initialize(ds.Data);

@@ -1,11 +1,10 @@
 using System;
 using System.ComponentModel;
 using System.IO;
+using System.Threading;
 using System.Windows.Forms;
 using CommandLine;
-using Db4objects.Db4o.Query;
 using WeSay.Data;
-using WeSay.Language;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Db4o_Specific;
 using WeSay.LexicalModel.Tests;
@@ -17,7 +16,6 @@ namespace WeSay.App
 		[STAThread]
 		static void Main(string[] args)
 		{
-
 #if DEBUG
 			if (Environment.OSVersion.Platform == PlatformID.Unix)
 			{
@@ -35,6 +33,30 @@ namespace WeSay.App
 				return;
 			}
 
+			bool mutexCreated;
+			string mutexId = cmdArgs.wordsPath;
+			mutexId = mutexId.Replace(Path.DirectorySeparatorChar, '-');
+			mutexId = mutexId.Replace(Path.VolumeSeparatorChar, '-');
+			Mutex mutex = new Mutex(true, mutexId, out mutexCreated);
+			if (!mutexCreated) // can I acquire?
+			{
+				//    Process[] processes = Process.GetProcessesByName("WeSay.App");
+				//    foreach (Process process in processes)
+				//    {
+
+				//        // we should make window title include the database name.
+				//        if(process.MainWindowTitle == "WeSay: " + project.Name)
+				//        {
+				//            process.WaitForInputIdle(4000); // wait four seconds at most
+				//            //process.MainWindowHandle;
+				//            break;
+				//        }
+				//    }
+
+				MessageBox.Show("WeSay is already open with " + cmdArgs.wordsPath + ".");
+				return;
+			}
+
 #if GTK
 			GLib.Thread.Init();
 			Gdk.Threads.Init();
@@ -43,6 +65,8 @@ namespace WeSay.App
 			WeSayWordsProject project = new WeSayWordsProject();
 			project.StringCatalogSelector = cmdArgs.ui;
 			project.LoadFromLexiconPath(cmdArgs.wordsPath);
+
+
 #if GTK
 			Gdk.Threads.Enter();
 #endif
@@ -58,6 +82,7 @@ namespace WeSay.App
 				using (IRecordListManager recordListManager = MakeRecordListManager(project))
 				{
 					tabbedForm.Show(); // so the user sees that we did launch
+					tabbedForm.Text = "WeSay: " + project.Name;
 					Application.DoEvents();
 
 					Db4oRecordListManager ds = recordListManager as Db4oRecordListManager;
@@ -107,6 +132,8 @@ namespace WeSay.App
 				if (builder is IDisposable)
 					((IDisposable)builder).Dispose();
 			}
+
+			mutex.ReleaseMutex();
 		}
 
 
