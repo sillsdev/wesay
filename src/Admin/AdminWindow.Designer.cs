@@ -31,6 +31,8 @@ namespace WeSay.Admin
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AdminWindow));
 			this.menuStrip1 = new System.Windows.Forms.MenuStrip();
 			this.projectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.openThisProjectInWeSayToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
 			this.newProjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.openProjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
@@ -59,6 +61,8 @@ namespace WeSay.Admin
 			// projectToolStripMenuItem
 			//
 			this.projectToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+			this.openThisProjectInWeSayToolStripMenuItem,
+			this.toolStripSeparator1,
 			this.newProjectToolStripMenuItem,
 			this.openProjectToolStripMenuItem,
 			this.toolStripMenuItem2,
@@ -70,48 +74,61 @@ namespace WeSay.Admin
 			this.projectToolStripMenuItem.Size = new System.Drawing.Size(53, 20);
 			this.projectToolStripMenuItem.Text = "&Project";
 			//
+			// openThisProjectInWeSayToolStripMenuItem
+			//
+			this.openThisProjectInWeSayToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("openThisProjectInWeSayToolStripMenuItem.Image")));
+			this.openThisProjectInWeSayToolStripMenuItem.Name = "openThisProjectInWeSayToolStripMenuItem";
+			this.openThisProjectInWeSayToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
+			this.openThisProjectInWeSayToolStripMenuItem.Text = "Open this Project in &WeSay";
+			this.openThisProjectInWeSayToolStripMenuItem.Click += new System.EventHandler(this.openThisProjectInWeSayToolStripMenuItem_Click);
+			//
+			// toolStripSeparator1
+			//
+			this.toolStripSeparator1.Name = "toolStripSeparator1";
+			this.toolStripSeparator1.Size = new System.Drawing.Size(202, 6);
+			//
 			// newProjectToolStripMenuItem
 			//
 			this.newProjectToolStripMenuItem.Name = "newProjectToolStripMenuItem";
-			this.newProjectToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
+			this.newProjectToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
 			this.newProjectToolStripMenuItem.Text = "&New Project...";
 			this.newProjectToolStripMenuItem.Click += new System.EventHandler(this.OnCreateProject);
 			//
 			// openProjectToolStripMenuItem
 			//
 			this.openProjectToolStripMenuItem.Name = "openProjectToolStripMenuItem";
-			this.openProjectToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
+			this.openProjectToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
 			this.openProjectToolStripMenuItem.Text = "&Open Project...";
 			this.openProjectToolStripMenuItem.Click += new System.EventHandler(this.OnOpenProject);
 			//
 			// toolStripMenuItem2
 			//
 			this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-			this.toolStripMenuItem2.Size = new System.Drawing.Size(188, 6);
+			this.toolStripMenuItem2.Size = new System.Drawing.Size(202, 6);
 			//
 			// exportToLIFTXmlToolStripMenuItem
 			//
 			this.exportToLIFTXmlToolStripMenuItem.Name = "exportToLIFTXmlToolStripMenuItem";
-			this.exportToLIFTXmlToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
+			this.exportToLIFTXmlToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
 			this.exportToLIFTXmlToolStripMenuItem.Text = "&Export To LIFT XML...";
 			this.exportToLIFTXmlToolStripMenuItem.Click += new System.EventHandler(this.ExportToLiftXmlToolStripMenuItem_Click);
 			//
 			// importFromLIFTXMLToolStripMenuItem
 			//
 			this.importFromLIFTXMLToolStripMenuItem.Name = "importFromLIFTXMLToolStripMenuItem";
-			this.importFromLIFTXMLToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
+			this.importFromLIFTXMLToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
 			this.importFromLIFTXMLToolStripMenuItem.Text = "&Import From LIFT XML...";
 			this.importFromLIFTXMLToolStripMenuItem.Click += new System.EventHandler(this.ImportFromLiftXmlToolStripMenuItem_Click);
 			//
 			// toolStripMenuItem1
 			//
 			this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-			this.toolStripMenuItem1.Size = new System.Drawing.Size(188, 6);
+			this.toolStripMenuItem1.Size = new System.Drawing.Size(202, 6);
 			//
 			// exitToolStripMenuItem
 			//
 			this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-			this.exitToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
+			this.exitToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
 			this.exitToolStripMenuItem.Text = "E&xit";
 			//
 			// helpToolStripMenuItem
@@ -163,5 +180,7 @@ namespace WeSay.Admin
 		private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem openThisProjectInWeSayToolStripMenuItem;
+		private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
 	}
 }

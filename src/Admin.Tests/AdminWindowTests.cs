@@ -27,12 +27,6 @@ namespace WeSay.Admin.Tests
 
 		}
 
-		private void CreateNewProject()
-		{
-			this._window.CreateNewProject(this._projectFolder);
-		}
-
-
 		public override void TearDown()
 		{
 			base.TearDown();
@@ -58,7 +52,7 @@ namespace WeSay.Admin.Tests
 		public void AfterCreateProjectAndQuitFilesExist()
 		{
 			List<string> paths = new List<string>();
-			CreateNewProject();
+			_window.CreateAndOpenProject(this._projectFolder);
 			paths.Add(BasilProject.Project.PathToWritingSystemPrefs);
 			paths.Add(WeSayWordsProject.Project.PathToProjectTaskInventory);
 			//paths.Add(WeSayWordsProject.Project.PathToLexicalModelDB);
@@ -88,14 +82,13 @@ namespace WeSay.Admin.Tests
 		[Test]
 		public void WalkTabsAfterCreateNewProject()
 		{
-			CreateNewProject();
+			_window.CreateAndOpenProject(_projectFolder);
 			WalkTopLevelTabs();
 		}
 		[Test]
 		public void CreateNewProjectThenOpen()
 		{
-			_window.CreateNewProject(_projectFolder);
-			_window.OpenProject(_projectFolder);
+			_window.CreateAndOpenProject(_projectFolder);
 		}
 
 		[Test]
@@ -116,8 +109,7 @@ namespace WeSay.Admin.Tests
 
 		private void CreateProjectAndGoToTaskControl()
 		{
-			this._window.CreateNewProject(this._projectFolder);
-			this._window.OpenProject(this._projectFolder);
+			_window.CreateAndOpenProject(_projectFolder);
 
 			GotoProjectTab("_tasksPage");
 		}
@@ -125,8 +117,7 @@ namespace WeSay.Admin.Tests
 		[Test]
 		public void NewProjectShowsOneWritingSystem()
 		{
-			_window.CreateNewProject(_projectFolder);
-			_window.OpenProject(_projectFolder);
+			_window.CreateAndOpenProject(_projectFolder);
 
 			GotoProjectTab("_writingSystemPage");
 			ListBoxTester c = new ListBoxTester("_wsListBox");

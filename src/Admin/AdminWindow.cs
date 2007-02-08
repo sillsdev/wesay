@@ -37,6 +37,7 @@ namespace WeSay.Admin
 //                return;
 //
 			InstallWelcomePage();
+			UpdateEnabledStates();
 		}
 
 		private WeSayWordsProject Project
@@ -62,6 +63,7 @@ namespace WeSay.Admin
 			}
 			else
 			{
+				this.openThisProjectInWeSayToolStripMenuItem.Enabled = (_project != null) && (_progressHandler == null);
 				exportToLIFTXmlToolStripMenuItem.Enabled = (_project != null) && (_progressHandler == null);
 				importFromLIFTXMLToolStripMenuItem.Enabled = (_project != null) && (_progressHandler == null);
 			}
@@ -102,13 +104,20 @@ namespace WeSay.Admin
 
 		private void OnCreateProject(object sender, EventArgs e)
 		{
-			if (DialogResult.OK != this._chooseProjectLocationDialog.ShowDialog())
+			NewProject dlg = new NewProject();
+			if (DialogResult.OK != dlg.ShowDialog())
 				return;
-			CreateNewProject(this._chooseProjectLocationDialog.SelectedPath);
-			OpenProject(this._chooseProjectLocationDialog.SelectedPath);
+			CreateAndOpenProject(dlg.SelectedPath);
 		}
 
-		public void CreateNewProject(string path)
+		public void CreateAndOpenProject(string path)
+		{
+			CreateNewProject(path);
+			OpenProject(path);
+			_project.Save();
+		}
+
+		private void CreateNewProject(string path)
 		{
 			WeSayWordsProject p;
 
@@ -116,6 +125,9 @@ namespace WeSay.Admin
 			{
 				p = new WeSayWordsProject();
 				p.Create(path);
+				Db4oDataSource d = new Db4oDataSource(p.PathToLexicalModelDB);
+				d.Data.Commit();
+				d.Data.Close();
 			}
 			catch (Exception e)
 			{
@@ -303,6 +315,15 @@ namespace WeSay.Admin
 				return;
 			}
 			RunCommand(new ImportLIFTCommand(saveDialog.FileName, openDialog.FileName));
+		}
+
+		private void openThisProjectInWeSayToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			string dir = System.IO.Directory.GetParent(Application.ExecutablePath).FullName;
+			System.Diagnostics.ProcessStartInfo startInfo =
+				new System.Diagnostics.ProcessStartInfo(System.IO.Path.Combine(dir, "WeSay.App.exe"),
+														string.Format("\"{0}\"", _project.PathToLexicalModelDB));
+			System.Diagnostics.Process.Start(startInfo);
 		}
 	}
 }
