@@ -44,10 +44,11 @@
 	<wordListFileName>sampleWordList.txt</wordListFileName>
   </task>
 
+  <!--
   <task id="GatherBySemanticDomain" class="WeSay.LexicalTools.GatherBySemanticDomainTask" assembly="LexicalTools">
 	<entries ref="All Entries" />
 	<label>Collect Words by Topic</label>
 	<description>Collect new words by thinking about topics.</description>
 	<wordListFileName>semanticDomainList.txt</wordListFileName>
-  </task>
+  </task>-->
 </tasks>

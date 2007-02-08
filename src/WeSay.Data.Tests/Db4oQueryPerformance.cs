@@ -50,8 +50,8 @@ namespace WeSay.Data.Tests
 			_filePath = Path.GetTempFileName();
 			Db4objects.Db4o.Config.IConfiguration db4oConfiguration = Db4objects.Db4o.Db4oFactory.Configure();
 			Db4objects.Db4o.Config.IObjectClass objectClass = db4oConfiguration.ObjectClass(typeof(WeSay.Data.Tests.Db4oQueryPerformance.LanguageForm));
-		   // objectClass.ObjectField("_writingSystemId").Indexed(true);
-		   // objectClass.ObjectField("_form").Indexed(true);
+			// objectClass.ObjectField("_writingSystemId").Indexed(true);
+			// objectClass.ObjectField("_form").Indexed(true);
 
 			_db = Db4objects.Db4o.Db4oFactory.OpenFile(_filePath);
 			((Db4objects.Db4o.YapStream)_db).GetNativeQueryHandler().QueryOptimizationFailure += new Db4objects.Db4o.Inside.Query.QueryOptimizationFailureHandler(OnQueryOptimizationFailure);
@@ -60,15 +60,15 @@ namespace WeSay.Data.Tests
 			{
 				Entry e = new Entry();
 				e.name = new MultiText();
-				e.name._forms[0] = new LanguageForm("en", "en-"+i.ToString());
+				e.name._forms[0] = new LanguageForm("en", "en-" + i.ToString());
 				//e.name._forms[1] = new LanguageForm("fr", "fr-"+i.ToString());
 				e.name._singleForm = new LanguageForm("en", i.ToString());
 				_db.Set(e);
 			}
 
-//            _db.Commit();
-//            _db.Dispose();
-//            _db = Db4objects.Db4o.Db4oFactory.OpenFile(_filePath);
+			//            _db.Commit();
+			//            _db.Dispose();
+			//            _db = Db4objects.Db4o.Db4oFactory.OpenFile(_filePath);
 		}
 
 		[TearDown]
@@ -90,7 +90,7 @@ namespace WeSay.Data.Tests
 								  });
 			stopwatch.Stop();
 			Assert.AreEqual(1, matches.Count);
-			Console.WriteLine("FindWithNativeUsingArray " + stopwatch.ElapsedMilliseconds/1000.0 + " seconds");
+			Console.WriteLine("FindWithNativeUsingArray " + stopwatch.ElapsedMilliseconds / 1000.0 + " seconds");
 		}
 
 		[Test]
@@ -105,7 +105,7 @@ namespace WeSay.Data.Tests
 								  });
 			stopwatch.Stop();
 			Assert.AreEqual(1, matches.Count);
-			Console.WriteLine("FindWithNativeNoArray " +stopwatch.ElapsedMilliseconds / 1000.0 + " seconds");
+			Console.WriteLine("FindWithNativeNoArray " + stopwatch.ElapsedMilliseconds / 1000.0 + " seconds");
 		}
 
 
@@ -134,13 +134,39 @@ namespace WeSay.Data.Tests
 			stopwatch.Start();
 			IList<LanguageForm> matches = db.Query<LanguageForm>(delegate(LanguageForm f)
 								  {
-									  return f._form  == "99";
+									  return f._form == "99";
 								  });
 			stopwatch.Stop();
 			Assert.AreEqual(1, matches.Count);
 			Console.WriteLine("SimpleStringSearch " + stopwatch.ElapsedMilliseconds / 1000.0 + " seconds");
 
 			db.Dispose();
+		}
+
+
+		class Foo
+		{
+			public DateTime _time;
+		}
+
+		[Test, Ignore("fails in db4o 6.0")]
+		public void DateTimeShouldNotLooseKind()
+		{
+			using (Db4oDataSource db1 = new Db4oDataSource("test.yap"))
+			{
+				Foo stored = new Foo();
+				stored._time = DateTime.UtcNow;
+				Assert.AreEqual(DateTimeKind.Utc, stored._time.Kind);
+				db1.Data.Set(stored);
+				db1.Data.Close();
+			}
+			using (Db4oDataSource db2 = new Db4oDataSource("test.yap"))
+			{
+				IObjectSet results = db2.Data.Get(null);
+				Foo retrieved = (Foo) results[0];
+				Assert.AreEqual(DateTimeKind.Utc, retrieved._time.Kind);
+				db2.Data.Close();
+			}
 		}
 
 		private IObjectContainer MakeFlatStringDatabase(bool doIndex)

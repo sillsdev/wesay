@@ -35,6 +35,7 @@ namespace WeSay.LexicalTools
 			{
 				Control box = MakeBoundEntry(entry.LexicalForm, field);
 				DetailList.AddWidgetRow(StringCatalog.Get(field.DisplayName), true, box, insertAtRow);
+				insertAtRow = DetailList.GetRowOfControl(box);
 				++rowCount;
 			}
 			rowCount += AddCustomFields(entry, insertAtRow+rowCount);

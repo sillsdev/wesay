@@ -43,8 +43,8 @@ namespace WeSay.LexicalModel
 			}
 			this._lexicalForm = new LexicalFormMultiText(this);
 			this._senses = new WeSay.Data.InMemoryBindingList<LexSense>();
-			this._creationTime = DateTime.UtcNow;
-			this._modificationTime = _creationTime;
+			this.CreationTime = DateTime.UtcNow;
+			this.ModificationTime = CreationTime;
 
 			WireUpEvents();
 		}
@@ -61,6 +61,18 @@ namespace WeSay.LexicalModel
 
 		protected override void WireUpEvents()
 		{
+			//workaround db4o 6 bug
+			if (_creationTime.Kind != DateTimeKind.Utc)
+			{
+				this.CreationTime = new DateTime(_creationTime.Ticks, DateTimeKind.Utc);
+			}
+			if (_modificationTime.Kind != DateTimeKind.Utc)
+			{
+				this.ModificationTime = new DateTime(_modificationTime.Ticks, DateTimeKind.Utc);
+			}
+
+			System.Diagnostics.Debug.Assert(this.CreationTime.Kind == DateTimeKind.Utc);
+			System.Diagnostics.Debug.Assert(this.ModificationTime.Kind == DateTimeKind.Utc);
 			base.WireUpEvents();
 			WireUpChild(_lexicalForm);
 			WireUpList(_senses, "senses");
@@ -69,7 +81,7 @@ namespace WeSay.LexicalModel
 
 		public override void SomethingWasModified(string PropertyModified)
 		{
-			_modificationTime = DateTime.UtcNow;
+			ModificationTime = DateTime.UtcNow;
 			if (PropertyModified != "senses")
 			{
 				RemoveEmptySenses();
@@ -103,6 +115,7 @@ namespace WeSay.LexicalModel
 			}
 			set
 			{
+				System.Diagnostics.Debug.Assert(value.Kind == DateTimeKind.Utc);
 				_creationTime = value;
 			}
 		}
@@ -115,6 +128,7 @@ namespace WeSay.LexicalModel
 			}
 			set
 			{
+				System.Diagnostics.Debug.Assert(value.Kind == DateTimeKind.Utc);
 				_modificationTime = value;
 			}
 		}

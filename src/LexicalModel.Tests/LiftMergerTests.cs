@@ -153,7 +153,7 @@ namespace WeSay.LexicalModel.Tests
 
 			LexEntry e = new LexEntry(g);
 			e.CreationTime = extensibleInfo.CreationTime;
-			e.ModificationTime = new DateTime(e.CreationTime.Ticks + 100);
+			e.ModificationTime = new DateTime(e.CreationTime.Ticks + 100, DateTimeKind.Utc);
 			_entries.Add(e);
 
 			LexEntry found = _merger.GetOrMakeEntry(extensibleInfo);
@@ -186,11 +186,21 @@ namespace WeSay.LexicalModel.Tests
 			_entries.Add(e);
 
 		   //strip out the time
-			extensibleInfo.ModificationTime = DateTime.Parse("2005-01-01");
-			Assert.AreEqual(DateTimeKind.Unspecified ,extensibleInfo.ModificationTime.Kind );
+			extensibleInfo.ModificationTime = Extensible.ParseDateTimeCorrectly("2005-01-01");
+			Assert.AreEqual(DateTimeKind.Utc ,extensibleInfo.ModificationTime.Kind );
 
 			LexEntry found = _merger.GetOrMakeEntry(extensibleInfo);
 			Assert.IsNotNull(found);
+		}
+
+		[Test]
+		public void ParseDateTimeCorrectly()
+		{
+			 Assert.AreEqual(DateTimeKind.Utc, Extensible.ParseDateTimeCorrectly("2003-08-07T08:42:42Z").Kind);
+			 Assert.AreEqual(DateTimeKind.Utc, Extensible.ParseDateTimeCorrectly("2005-01-01T01:11:11+8:00").Kind);
+			 Assert.AreEqual(DateTimeKind.Utc, Extensible.ParseDateTimeCorrectly("2005-01-01").Kind);
+			 Assert.AreEqual("00:00:00", Extensible.ParseDateTimeCorrectly("2005-01-01").TimeOfDay.ToString());
+
 		}
 
 		[Test, Ignore("Haven't implemented this.")]
@@ -200,8 +210,8 @@ namespace WeSay.LexicalModel.Tests
 
 		private static Extensible AddDates(Extensible extensibleInfo)
 		{
-			extensibleInfo.CreationTime = DateTime.Parse("2003-08-07T08:42:42+07:00");
-			extensibleInfo.ModificationTime = DateTime.Parse("2005-01-01T01:11:11+01:00");
+			extensibleInfo.CreationTime = Extensible.ParseDateTimeCorrectly("2003-08-07T08:42:42Z");
+			extensibleInfo.ModificationTime = Extensible.ParseDateTimeCorrectly("2005-01-01T01:11:11+8:00");
 			return extensibleInfo;
 		}
 
