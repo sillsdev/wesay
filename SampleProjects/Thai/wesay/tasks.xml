@@ -1,138 +1,92 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <tasks>
-	<components>
-		<viewTemplate>
-			<fields>
-				<field>
-					<className/>
-					<dataType>MultiText</dataType>
-					<displayName>Word</displayName>
-					<fieldName>EntryLexicalForm</fieldName>
-					<multiplicity>ZeroOr1</multiplicity>
-					<visibility>Visible</visibility>
-					<writingSystems>
-						<id>th</id>
-						<id>IPA</id>
-					</writingSystems>
-				</field>
-				<field>
-					<className/>
-					<dataType>MultiText</dataType>
-					<displayName>Gloss</displayName>
-					<fieldName>SenseGloss</fieldName>
-					<multiplicity>ZeroOr1</multiplicity>
-					<visibility>Visible</visibility>
-					<writingSystems>
-						<id>en</id>
-						<id>fr</id>
-					</writingSystems>
-				</field>
-				<field>
-					<className>LexSense</className>
-					<dataType>Option</dataType>
-					<displayName>POS</displayName>
-					<fieldName>PartOfSpeech</fieldName>
-					<multiplicity>ZeroOr1</multiplicity>
-					<optionsListFile>PartsOfSpeech.xml</optionsListFile>
-					<visibility>Visible</visibility>
-					<writingSystems>
-						<id>th</id>
-					</writingSystems>
-				</field>
-				<field>
-					<className/>
-					<dataType>MultiText</dataType>
-					<displayName>Example Sentence</displayName>
-					<fieldName>ExampleSentence</fieldName>
-					<multiplicity>ZeroOr1</multiplicity>
-					<visibility>Visible</visibility>
-					<writingSystems>
-						<id>th</id>
-					</writingSystems>
-				</field>
-				<field>
-					<className/>
-					<dataType>MultiText</dataType>
-					<displayName>Translation</displayName>
-					<fieldName>ExampleTranslation</fieldName>
-					<multiplicity>ZeroOr1</multiplicity>
-					<visibility>Visible</visibility>
-					<writingSystems>
-						<id>en</id>
-						<id>fr</id>
-					</writingSystems>
-				</field>
-				<field>
-					<className>LexSense</className>
-					<dataType>OptionCollection</dataType>
-					<displayName>Sem Dom</displayName>
-					<fieldName>SemanticDomains</fieldName>
-					<multiplicity>ZeroOr1</multiplicity>
-					<optionsListFile>SemanticDomains.xml</optionsListFile>
-					<visibility>Visible</visibility>
-					<writingSystems>
-						<id>en</id>
-					</writingSystems>
-				</field>
-				<field>
-					<className>LexEntry</className>
-					<dataType>MultiText</dataType>
-					<displayName>Note</displayName>
-					<fieldName>note</fieldName>
-					<multiplicity>ZeroOr1</multiplicity>
-					<visibility>Visible</visibility>
-					<writingSystems>
-						<id>en</id>
-						<id>xx</id>
-					</writingSystems>
-				</field>
-			</fields>
-			<id>Default View Template</id>
-		</viewTemplate>
-	</components>
-	<task id="Dashboard" class="WeSay.CommonTools.DashboardControl" assembly="CommonTools" default="true">
-		<entries ref="All Entries"/>
-		<currentTaskProvider ref="Current Task Provider"/>
-		<label UseInConstructor="false">Home</label>
-		<description UseInConstructor="false">This task is normally the first thing the user sees when WeSay comes up.  It gives the user some status of the project, and reminds him what he was working on. Finally, this tab will allow him to switch to a different work task, if you have enabled more than one.</description>
-		<optional UseInConstructor="false">false</optional>
-	</task>
-	<task id="EntryDetail" class="WeSay.LexicalTools.EntryDetailTask" assembly="LexicalTools" default="true">
-		<entries ref="All Entries"/>
-		<viewTemplate ref="Default View Template"/>
-		<label UseInConstructor="false">Words</label>
-		<description UseInConstructor="false">This task allows the user to see and edit all enabled fields of all entries in the dictionary.  He can add, delete, and search for entries.</description>
-	</task>
-	<task id="AddMeanings" class="WeSay.LexicalTools.LexFieldTask" assembly="LexicalTools" default="true">
-		<entries ref="All Entries"/>
-		<filter class="WeSay.LexicalTools.MissingGlossFilter" assembly="LexicalTools">
-			<viewTemplate ref="Default View Template"/>
-		</filter>
-		<label>Add Meanings</label>
-		<description>Add meanings to entries where they are missing.</description>
-		<viewTemplate ref="Default View Template"/>
-		<showfields>SenseGloss</showfields>
-	</task>
-	<task id="AddExamples" class="WeSay.LexicalTools.LexFieldTask" assembly="LexicalTools">
-		<entries ref="All Entries"/>
-		<filter class="WeSay.LexicalTools.MissingExampleSentenceFilter" assembly="LexicalTools">
-			<viewTemplate ref="Default View Template"/>
-		</filter>
-		<label>Add Examples</label>
-		<description>Add example sentences to entries where they are missing.</description>
-		<viewTemplate ref="Default View Template"/>
-		<showfields>ExampleSentence</showfields>
-	</task>
-	<task id="Gather Words" class="WeSay.LexicalTools.GatherWordListTask" assembly="LexicalTools">
-		<entries ref="All Entries"/>
-		<label>Collect Word List</label>
-		<description>Collect new words given words in another language.</description>
-		<wordListFileName>sampleWordList.txt</wordListFileName>
-	</task>
-	<task id="GatherBySemanticDomain" class="WeSay.LexicalTools.GatherBySemanticDomainTask" assembly="LexicalTools">
-		<entries ref="All Entries"/>
-		<label>Collect Words by Topic</label>
-		<description>Collect new words by thinking about topics.</description>
-		<wordListFileName>semanticDomainList.txt</wordListFileName>
-	</task>
-</tasks>
+  <components>
+	<viewTemplate>
+	  <fields>
+		<field>
+		  <className></className>
+		  <dataType>MultiText</dataType>
+		  <displayName>Word</displayName>
+		  <fieldName>EntryLexicalForm</fieldName>
+		  <multiplicity>ZeroOr1</multiplicity>
+		  <visibility>Visible</visibility>
+		  <writingSystems>
+			<id>th</id>
+			<id>IPA</id>
+		  </writingSystems>
+		</field>
+		<field>
+		  <className></className>
+		  <dataType>MultiText</dataType>
+		  <displayName>Gloss</displayName>
+		  <fieldName>SenseGloss</fieldName>
+		  <multiplicity>ZeroOr1</multiplicity>
+		  <visibility>Visible</visibility>
+		  <writingSystems>
+			<id>en</id>
+			<id>fr</id>
+		  </writingSystems>
+		</field>
+		<field>
+		  <className>LexSense</className>
+		  <dataType>Option</dataType>
+		  <displayName>POS</displayName>
+		  <fieldName>PartOfSpeech</fieldName>
+		  <multiplicity>ZeroOr1</multiplicity>
+		  <optionsListFile>PartsOfSpeech.xml</optionsListFile>
+		  <visibility>Visible</visibility>
+		  <writingSystems>
+			<id>th</id>
+		  </writingSystems>
+		</field>
+		<field>
+		  <className></className>
+		  <dataType>MultiText</dataType>
+		  <displayName>Example Sentence</displayName>
+		  <fieldName>ExampleSentence</fieldName>
+		  <multiplicity>ZeroOr1</multiplicity>
+		  <visibility>Visible</visibility>
+		  <writingSystems>
+			<id>th</id>
+		  </writingSystems>
+		</field>
+		<field>
+		  <className></className>
+		  <dataType>MultiText</dataType>
+		  <displayName>Translation</displayName>
+		  <fieldName>ExampleTranslation</fieldName>
+		  <multiplicity>ZeroOr1</multiplicity>
+		  <visibility>Visible</visibility>
+		  <writingSystems>
+			<id>en</id>
+			<id>fr</id>
+		  </writingSystems>
+		</field>
+		<field>
+		  <className>LexSense</className>
+		  <dataType>OptionCollection</dataType>
+		  <displayName>Sem Dom</displayName>
+		  <fieldName>SemanticDomains</fieldName>
+		  <multiplicity>ZeroOr1</multiplicity>
+		  <optionsListFile>SemanticDomains.xml</optionsListFile>
+		  <visibility>Visible</visibility>
+		  <writingSystems>
+			<id>en</id>
+		  </writingSystems>
+		</field>
+		<field>
+		  <className>LexEntry</className>
+		  <dataType>MultiText</dataType>
+		  <displayName>Note</displayName>
+		  <fieldName>note</fieldName>
+		  <multiplicity>ZeroOr1</multiplicity>
+		  <visibility>Visible</visibility>
+		  <writingSystems>
+			<id>en</id>
+			<id>xx</id>
+		  </writingSystems>
+		</field>
+	  </fields>
+	  <id>Default View Template</id>
+	</viewTemplate>
+  </components><task id="Dashboard" class="WeSay.CommonTools.DashboardControl" assembly="CommonTools" default="true"><entries ref="All Entries" /><currentTaskProvider ref="Current Task Provider" /><label UseInConstructor="false">Home</label><description UseInConstructor="false">This task is normally the first thing the user sees when WeSay comes up.  It gives the user some status of the project, and reminds him what he was working on. Finally, this tab will allow him to switch to a different work task, if you have enabled more than one.</description><optional UseInConstructor="false">false</optional></task><task id="EntryDetail" class="WeSay.LexicalTools.EntryDetailTask" assembly="LexicalTools" default="true"><entries ref="All Entries" /><viewTemplate ref="Default View Template" /><label UseInConstructor="false">Words</label><description UseInConstructor="false">This task allows the user to see and edit all enabled fields of all entries in the dictionary.  He can add, delete, and search for entries.</description></task><task id="AddMeanings" class="WeSay.LexicalTools.LexFieldTask" assembly="LexicalTools" default="true"><entries ref="All Entries" /><filter class="WeSay.LexicalTools.MissingGlossFilter" assembly="LexicalTools"><viewTemplate ref="Default View Template" /></filter><label>Add Meanings</label><description>Add meanings to entries where they are missing.</description><viewTemplate ref="Default View Template" /><showfields>SenseGloss</showfields></task><task id="AddExamples" class="WeSay.LexicalTools.LexFieldTask" assembly="LexicalTools"><entries ref="All Entries" /><filter class="WeSay.LexicalTools.MissingExampleSentenceFilter" assembly="LexicalTools"><viewTemplate ref="Default View Template" /></filter><label>Add Examples</label><description>Add example sentences to entries where they are missing.</description><viewTemplate ref="Default View Template" /><showfields>ExampleSentence</showfields></task><task id="Gather Words" class="WeSay.LexicalTools.GatherWordListTask" assembly="LexicalTools"><entries ref="All Entries" /><label>Collect Word List</label><description>Collect new words given words in another language.</description><wordListFileName>sampleWordList.txt</wordListFileName></task></tasks>
