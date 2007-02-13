@@ -748,6 +748,11 @@
 			"ComponentsUrl" = "8:"
 				"Items"
 				{
+					"{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.Net.Framework.2.0"
+					{
+					"Name" = "8:.NET Framework 2.0"
+					"ProductCode" = "8:Microsoft.Net.Framework.2.0"
+					}
 				}
 			}
 		}
@@ -1659,14 +1664,14 @@
 		{
 		"Name" = "8:Microsoft Visual Studio"
 		"ProductName" = "8:WeSay"
-		"ProductCode" = "8:{F92E4D30-DE84-45E2-902E-EA40E8CA4DCE}"
-		"PackageCode" = "8:{9D92B9D7-FC2F-4446-B4DC-E42561627A3B}"
+		"ProductCode" = "8:{7B84E8EE-0914-4FE3-AE8C-BF5073A0F438}"
+		"PackageCode" = "8:{4524D231-D01A-497E-A3C5-602A7E49C1F9}"
 		"UpgradeCode" = "8:{D7815987-1456-454A-A0D3-58AC042F385E}"
 		"RestartWWWService" = "11:FALSE"
 		"RemovePreviousVersions" = "11:TRUE"
 		"DetectNewerInstalledVersion" = "11:TRUE"
 		"InstallAllUsers" = "11:FALSE"
-		"ProductVersion" = "8:0.1.0"
+		"ProductVersion" = "8:0.1.1"
 		"Manufacturer" = "8:WeSay"
 		"ARPHELPTELEPHONE" = "8:"
 		"ARPHELPLINK" = "8:http://groups.google.com/group/wesay/"
