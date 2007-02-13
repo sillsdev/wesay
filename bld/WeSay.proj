@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+	<BaseDirectory>$(MSBuildProjectDirectory)\..</BaseDirectory>
+  </PropertyGroup>
+
+  <Import Project="$(BaseDirectory)\bld\UpdateCsProjs.Targets"/>
+
+  <Target Name="Compile" DependsOnTargets="UpdateCsProjs">
+	<MSBuild Projects="$(BaseDirectory)\src\WeSay.sln"
+			 Targets="Rebuild"
+			 Properties="Configuration=Debug" />
+	<MSBuild Projects="$(BaseDirectory)\src\WeSay.sln"
+			 Targets="Rebuild"
+			 Properties="Configuration=Release" />
+  </Target>
+
+  <Target Name="Test" DependsOnTargets="Compile">
+	<!-- collect up the test dlls that were generated in the Compile step
+	into the xTestAssemblies property-->
+	<CreateItem Include="$(BaseDirectory)\output\Debug\*.tests.dll">
+	  <Output TaskParameter="Include" ItemName="DebugTestAssemblies"/>
+	</CreateItem>
+	<CreateItem Include="$(BaseDirectory)\output\Release\*.tests.dll">
+	  <Output TaskParameter="Include" ItemName="ReleaseTestAssemblies"/>
+	</CreateItem>
+
+	<NUnit Assemblies="@(DebugTestAssemblies)" WorkingDirectory="$(BaseDirectory)\output\Debug"/>
+	<NUnit Assemblies="@(ReleaseTestAssemblies)" WorkingDirectory="$(BaseDirectory)\output\Release"/>
+  </Target>
+
+
+  <ItemGroup>
+	<SampleFiles Include="$(BaseDirectory)\SampleProjects\src\**\*.*"/>
+  </ItemGroup>
+
+  <Target Name="CreateSample" DependsOnTargets="Test">
+	<!-- lift to wesay.words-->
+	<!-- -->
+  </Target>
+
+  <Target Name="VerifySample" DependsOnTargets="CreateSample">
+  </Target>
+
+  <Target Name="Package" DependsOnTargets="VerifySample">
+  </Target>
+
+  <Target Name="Upload" DependsOnTargets="Package">
+  </Target>
+
+  <Target Name="Build" DependsOnTargets="Upload">
+
+	<!-- Mail email to list-->
+	<Message Text="Build Complete"/>
+<!--    <Message Text="Version: $(Major).$(Minor).$(Bug).$(Revision)"/> -->
+
+  </Target>
+
+  <Target Name="Clean">
+	<MSBuild Projects="$(BaseDirectory)\src\WeSay.sln"
+			   Targets="Clean"
+			   Properties="Configuration=Debug" />
+	<MSBuild Projects="$(BaseDirectory)\src\WeSay.sln"
+			   Targets="Clean"
+			   Properties="Configuration=Release" />
+  </Target>
+
+</Project>

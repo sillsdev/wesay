@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!-- From http://msbuildtasks.tigris.org/ -->
+  <Import Project="$(MSBuildExtensionsPath)\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets"/>
+
+  <PropertyGroup>
+	 <ApplicationName>WeSay</ApplicationName>
+	 <ApplicationDirectory>$(MSBuildProjectDirectory)\$(ApplicationName)</ApplicationDirectory>
+	 <RepositoryPath>http://code.wesay.org/WeSay/trunk</RepositoryPath>
+	 <LiftRepositoryPath>http://code.wesay.org/LIFT</LiftRepositoryPath>
+  </PropertyGroup>
+
+  <Target Name="Checkout">
+	<!--    <RemoveDir Directories="$(ApplicationDirectory)" /> -->
+	<!-- You must install the subversion package (not tortoise or another fancy gui version)
+	http://subversion.tigris.org/project_packages.html -->
+	<SvnCheckout RepositoryPath="$(RepositoryPath)"
+				 LocalPath="$(ApplicationDirectory)">
+	  <Output TaskParameter="Revision" PropertyName="Revision" />
+	</SvnCheckout>
+	<SvnCheckout RepositoryPath="$(LiftRepositoryPath)"
+				 LocalPath="$(ApplicationDirectory)\lib\lift"/>
+	<Message Text="Checked out code from $(RepositoryPath) and $(LiftRepositoryPath)"/>
+	<Message Text="Revision: $(Revision)"/>
+
+  </Target>
+
+  <Target Name="Update">
+	<!-- You must install the subversion package (not tortoise or another fancy gui version)
+	http://subversion.tigris.org/project_packages.html -->
+	<SvnUpdate RepositoryPath="$(RepositoryPath)"
+				 LocalPath="$(ApplicationDirectory)">
+	  <Output TaskParameter="Revision" PropertyName="Revision" />
+	</SvnUpdate>
+	<SvnUpdate RepositoryPath="$(LiftRepositoryPath)"
+				 LocalPath="$(ApplicationDirectory)\lib\lift"/>
+	<Message Text="Updated code from $(RepositoryPath) and $(LiftRepositoryPath)"/>
+	<Message Text="Revision: $(Revision)"/>
+  </Target>
+
+  <Target Name="Build">
+	<!-- DependsOnTargets="Checkout"> -->
+	<MSBuild Projects="$(ApplicationDirectory)\bld\WeSay.proj" />
+  </Target>
+
+</Project>
