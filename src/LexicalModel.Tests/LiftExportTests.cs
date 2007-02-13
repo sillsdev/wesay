@@ -201,8 +201,8 @@ namespace WeSay.LexicalTools.Tests
 			LexEntry entry = new LexEntry();
 			_exporter.Add(entry);
 			_exporter.End();
-			ShouldContain(string.Format("dateCreated=\"{0}\"", entry.CreationTime.ToString("yyyy-MM-ddThh:mm:sszzzz")));
-			ShouldContain(string.Format("dateModified=\"{0}\"", entry.ModificationTime.ToString("yyyy-MM-ddThh:mm:sszzzz")));
+			ShouldContain(string.Format("dateCreated=\"{0}\"", entry.CreationTime.ToString("yyyy-MM-ddThh:mm:ssZ")));
+			ShouldContain(string.Format("dateModified=\"{0}\"", entry.ModificationTime.ToString("yyyy-MM-ddThh:mm:ssZ")));
 	   }
 
 		[Test]
