@@ -1,7 +1,6 @@
 using System.IO;
 using NUnit.Framework;
 using WeSay.Language;
-using WeSay.Language.Tests;
 using WeSay.Project;
 using WeSay.Project.Tests;
 
