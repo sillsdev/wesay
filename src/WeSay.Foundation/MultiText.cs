@@ -222,7 +222,6 @@ namespace WeSay.Language
 		/// <summary>
 		/// just for deserialization
 		/// </summary>
-		[XmlElement]
 		[XmlElement(typeof(LanguageForm), ElementName="form")]
 		public LanguageForm[] Forms
 		{
