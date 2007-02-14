@@ -27,9 +27,28 @@
 	  <Output TaskParameter="Include" ItemName="ReleaseTestAssemblies"/>
 	</CreateItem>
 
-	<NUnit Assemblies="@(DebugTestAssemblies)" WorkingDirectory="$(BaseDirectory)\output\Debug"/>
-	<NUnit Assemblies="@(ReleaseTestAssemblies)" WorkingDirectory="$(BaseDirectory)\output\Release"/>
-  </Target>
+	<MakeDir Directories="$(BaseDirectory)\output\TestResults\Debug\;
+						  $(BaseDirectory)\output\TestResults\Release\"/>
+
+	<!-- run the tests individually -->
+	<NUnit ContinueOnError="true"
+		   OutputXmlFile="$(BaseDirectory)\output\TestResults\Debug\%(DebugTestAssemblies.Filename).xml"
+		   Assemblies="%(DebugTestAssemblies.FullPath)"
+		   WorkingDirectory="$(BaseDirectory)\output\Debug">
+	  <Output ItemName="UnitTestExitCode" TaskParameter="ExitCode"
+			Condition="$(UnitTestExitCode)=='' or $(UnitTestExitCode)=='0'"/>
+	</NUnit>
+	<NUnit ContinueOnError="true"
+		   OutputXmlFile="$(BaseDirectory)\output\TestResults\Release\%(ReleaseTestAssemblies.Filename).xml"
+		   Assemblies="%(ReleaseTestAssemblies.FullPath)"
+		   WorkingDirectory="$(BaseDirectory)\output\Release">
+	  <Output ItemName="UnitTestExitCode" TaskParameter="ExitCode"
+			  Condition="$(UnitTestExitCode)=='' or $(UnitTestExitCode)=='0'"/>
+	</NUnit>
+
+	<Error Condition="$(UnitTestExitCode) != '' and $(UnitTestExitCode) != '0'"
+		   Text="Some tests failed."/>
+	</Target>
 
 
   <ItemGroup>
