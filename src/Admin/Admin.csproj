@@ -204,6 +204,8 @@
   </ItemGroup>
   <ItemGroup>
 	<None Include="Resources\RoundedBorder.PNG" />
+  </ItemGroup>
+  <ItemGroup>
 	<Content Include="Resources\WeSay.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

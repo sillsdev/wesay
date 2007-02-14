@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+	<Fragment>
+	<DirectoryRef Id='ProgramDir'>
+	  <Directory Id="common" Name="common">
+		<Component Id="PartsOfSpeech.xml" Guid="{6B734BDE-1702-418D-93BC-40A7F310B14F}">
+		  <File Id="PartsOfSpeech.xml" Name="PartsOfSpeech.xml" KeyPath="yes" Source="c:\wesay\common\PartsOfSpeech.xml" />
+		</Component>
+		<Component Id="sampleWordList.txt" Guid="{0F09882D-8D30-49B9-90F6-61D20D17E14F}">
+		  <File Id="sampleWordList.txt" Name="sampleWordList.txt" KeyPath="yes" Source="c:\wesay\common\sampleWordList.txt" />
+		</Component>
+		<Component Id="SemanticDomains.xml" Guid="{0D314BE5-ABB3-4AB9-A698-F94FFA8B250C}">
+		  <File Id="SemanticDomains.xml" Name="SemanticDomains.xml" KeyPath="yes" Source="c:\wesay\common\SemanticDomains.xml" />
+		</Component>
+		<Component Id="taskInventory.xml" Guid="{4D0210A0-095D-48DE-9367-4074A97864A4}">
+		  <File Id="taskInventory.xml" Name="taskInventory.xml" KeyPath="yes" Source="c:\wesay\common\taskInventory.xml" />
+		</Component>
+		<Component Id="writingSystemPrefs.xml" Guid="{2D64A565-57BC-4D0C-BAAF-13AB5A686E9B}">
+		  <File Id="writingSystemPrefs.xml" Name="writingSystemPrefs.xml" KeyPath="yes" Source="c:\wesay\common\writingSystemPrefs.xml" />
+		</Component>
+	  </Directory>
+	</DirectoryRef>
+  </Fragment>
+</Wix>

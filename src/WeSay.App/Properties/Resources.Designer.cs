@@ -9,6 +9,7 @@
 //------------------------------------------------------------------------------
 
 namespace WeSay.App.Properties {
+	using System;
 
 
 	/// <summary>
@@ -62,6 +63,13 @@ namespace WeSay.App.Properties {
 		internal static System.Drawing.Icon ApplicationIcon {
 			get {
 				object obj = ResourceManager.GetObject("ApplicationIcon", resourceCulture);
+				return ((System.Drawing.Icon)(obj));
+			}
+		}
+
+		internal static System.Drawing.Icon WeSayWordsFile {
+			get {
+				object obj = ResourceManager.GetObject("WeSayWordsFile", resourceCulture);
 				return ((System.Drawing.Icon)(obj));
 			}
 		}
