@@ -7,15 +7,15 @@
 
   <ItemGroup>
 	<CsProjFiles Include="$(MSBuildProjectDirectory)\..\**\*.csproj"
-				   Exclude="$(MSBuildProjectDirectory)\..\**\lib\**"/>
+				   Exclude="$(MSBuildProjectDirectory)\..\**\lib\src\**"/>
   </ItemGroup>
 
   <Target Name="UpdateCsProjs" Inputs="@CsProjFiles" Outputs="@CsProjFiles">
 	<Xslt Inputs="%(CsProjFiles.FullPath)"
 		  Xsl="$(MSBuildProjectDirectory)\AddVersionImportToCsProj.xslt"
 		  Output="%(CsProjFiles.FullPath)"
-		  RootTag=""
-		  RootAttributes=""/>
+		  RootTag="mergedroot"
+		  RootAttributes="projectDirectory=$(MSBuildProjectDirectory)\.."/>
   </Target>
 
 </Project>

@@ -29,7 +29,12 @@
 	<xsl:copy>
 	  <xsl:apply-templates select="@*|node()"/>
 	  <xsl:if test="not(ms:Import[contains(@Project, '\bld\Version.Targets')])">
-		<Import Project="..\..\bld\Version.Targets"/>
+		<Import>
+		  <xsl:attribute name="Project">
+			<xsl:value-of select="/mergedroot/@projectDirectory"/>
+			<xsl:text>\bld\Version.Targets</xsl:text>
+		  </xsl:attribute>
+		</Import>
 	  </xsl:if>
 	</xsl:copy>
   </xsl:template>
@@ -40,11 +45,13 @@
 	  <xsl:choose>
 		<xsl:when test="parent::ms:PropertyGroup[contains(@Condition, 'Debug|AnyCPU')]">
 		  <xsl:apply-templates select="@*"/>
-		  <xsl:text>..\..\output\Debug\</xsl:text>
+		  <xsl:value-of select="/mergedroot/@projectDirectory"/>
+		  <xsl:text>\output\Debug\</xsl:text>
 		</xsl:when>
 		<xsl:when test="parent::ms:PropertyGroup[contains(@Condition, 'Release|AnyCPU')]">
 		  <xsl:apply-templates select="@*"/>
-		  <xsl:text>..\..\output\Release\</xsl:text>
+		  <xsl:value-of select="/mergedroot/@projectDirectory"/>
+		  <xsl:text>\output\Release\</xsl:text>
 		</xsl:when>
 		<xsl:otherwise>
 		  <xsl:apply-templates select="@*|node()"/>

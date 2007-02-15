@@ -9,9 +9,16 @@
   <Import Project="$(BaseDirectory)\bld\UpdateCsProjs.Targets"/>
 
   <Target Name="Compile" DependsOnTargets="UpdateCsProjs">
+	<MSBuild Projects="$(BaseDirectory)\lib\lift\LiftIO.sln"
+			 Targets="Rebuild"
+			 Properties="Configuration=Debug" />
 	<MSBuild Projects="$(BaseDirectory)\src\WeSay.sln"
 			 Targets="Rebuild"
 			 Properties="Configuration=Debug" />
+
+	<MSBuild Projects="$(BaseDirectory)\lib\lift\LiftIO.sln"
+			 Targets="Rebuild"
+			 Properties="Configuration=Release" />
 	<MSBuild Projects="$(BaseDirectory)\src\WeSay.sln"
 			 Targets="Rebuild"
 			 Properties="Configuration=Release" />
@@ -31,24 +38,15 @@
 						  $(BaseDirectory)\output\TestResults\Release\"/>
 
 	<!-- run the tests individually -->
-	<NUnit ContinueOnError="true"
-		   OutputXmlFile="$(BaseDirectory)\output\TestResults\Debug\%(DebugTestAssemblies.Filename).xml"
+	<NUnit OutputXmlFile="$(BaseDirectory)\output\TestResults\Debug\%(DebugTestAssemblies.Filename).xml"
 		   Assemblies="%(DebugTestAssemblies.FullPath)"
 		   WorkingDirectory="$(BaseDirectory)\output\Debug">
-	  <Output ItemName="UnitTestExitCode" TaskParameter="ExitCode"
-			Condition="$(UnitTestExitCode)=='' or $(UnitTestExitCode)=='0'"/>
 	</NUnit>
-	<NUnit ContinueOnError="true"
-		   OutputXmlFile="$(BaseDirectory)\output\TestResults\Release\%(ReleaseTestAssemblies.Filename).xml"
+	<NUnit OutputXmlFile="$(BaseDirectory)\output\TestResults\Release\%(ReleaseTestAssemblies.Filename).xml"
 		   Assemblies="%(ReleaseTestAssemblies.FullPath)"
 		   WorkingDirectory="$(BaseDirectory)\output\Release">
-	  <Output ItemName="UnitTestExitCode" TaskParameter="ExitCode"
-			  Condition="$(UnitTestExitCode)=='' or $(UnitTestExitCode)=='0'"/>
 	</NUnit>
-
-	<Error Condition="$(UnitTestExitCode) != '' and $(UnitTestExitCode) != '0'"
-		   Text="Some tests failed."/>
-	</Target>
+  </Target>
 
 
   <ItemGroup>
@@ -78,6 +76,13 @@
   </Target>
 
   <Target Name="Clean">
+	<MSBuild Projects="$(BaseDirectory)\lib\lift\LiftIO.sln"
+			 Targets="Clean"
+			 Properties="Configuration=Debug" />
+	<MSBuild Projects="$(BaseDirectory)\lib\lift\LiftIO.sln"
+			 Targets="Clean"
+			 Properties="Configuration=Release" />
+
 	<MSBuild Projects="$(BaseDirectory)\src\WeSay.sln"
 			   Targets="Clean"
 			   Properties="Configuration=Debug" />
