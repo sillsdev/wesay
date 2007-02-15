@@ -164,7 +164,7 @@ namespace WeSay.App
 		class CommandLineArguments
 		{
 			[DefaultArgument(ArgumentTypes.AtMostOnce,
-				DefaultValue = @"..\..\SampleProjects\Thai\WeSay\thai5000.words",
+			   // DefaultValue = @"..\..\SampleProjects\Thai\WeSay\thai5000.words",
 				HelpText = @"Path to the words file (e.g. c:\thai\wesay\thai500.words).")]
 			public string wordsPath = null;
 

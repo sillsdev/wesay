@@ -3,6 +3,12 @@
   <Product Id="*" Name="WeSay Words" Language="1033" Version="0.1.0.0" Manufacturer="SIL" UpgradeCode="{E98273E1-617B-4256-8A28-721F254D1A0B}">
 	<Package  Compressed="yes" InstallerVersion="200" />
 
+	<!--
+	"from the list: Don't use Advertise="yes" Advertised shortcuts are designed to allow
+users to install just the shortcut for your app, then demand-install the
+rest of the app the first time the icon is run.  If this is not behavior you
+are trying to support, you're better off using non-advertised shortcuts. "-->
+
 	<Condition Message="Before WeSay can install, you need to install Microsoft's free .NET Framework 2.0.">
 	  <![CDATA[MsiNetAssemblySupport >= "2.0.50727"]]>
 	</Condition>
@@ -11,11 +17,20 @@
 	<Property Id ="ALLUSERS">2</Property>
 
 	<Directory Id="TARGETDIR" Name="SourceDir">
-	  <Directory Id='ProgramMenuFolder' Name='PMenu' LongName='Programs'>
+	  <Directory Id='ProgramMenuFolder' Name='Programs'>
 		<Directory Id='WeSayShortcutDir' Name='WeSay'>
 		  <Component Id ='removeShortcutDir' Guid ="{6DB2042E-998C-482a-A46A-A1EC83C059E0}">
 			<RemoveFolder Id ="shortcutDirRemover" On ="uninstall"/>
+			<RegistryKey Id="keyPathForRemoveShortcutDir" Action ="createAndRemoveOnUninstall" Root="HKCU" Key="SOFTWARE\WeSay\Components\WeSayShortcutDir">
+			  <RegistryValue Type ="string" Value =""  Action ="write" KeyPath ="yes"/>
+			</RegistryKey>
 		  </Component>
+ <!--         <Component Id="Test" Guid ="{9483C884-78CF-4b1c-8886-6BE42E73DA65}">
+			<Shortcut Id="SetupThaiShortcut1"  Directory="WeSayShortcutDir" Name="Thai Sample Setup1"
+			 Arguments="[thai5000.words]"  Target="[!WeSay.App.exe]" Icon ="SampleSetupIcon" />
+			<Registry Root="HKCU" Key="SOFTWARE\WeSay\Components\Test" KeyPath="yes" />
+
+		  </Component>    -->
 		</Directory>
 	  </Directory>
 	  <Directory Id="ProgramFilesFolder" Name="PFiles">
@@ -24,36 +39,51 @@
 			<Directory Id="ThaiSamples" Name="Thai">
 			  <Directory Id="ThaiCommon" Name="common">
 				<Component Id="thaiCommonStuff" Guid="*">
-				  <File Id="WritingSystemPrefs.xml" Name ="WritingSystemPrefs.xml" src ="c:\wesay\SampleProjects\Thai\Common\WritingSystemPrefs.xml"/>
+				  <File Id="WritingSystemPrefs.xml" Name ="WritingSystemPrefs.xml" Source ="c:\wesay\SampleProjects\Thai\Common\WritingSystemPrefs.xml"/>
 				</Component>
 			  </Directory>
 			  <Directory Id="ThaiWeSay" Name="wesay">
+
+
+
+
 				<Component Id="thaiWeSayStuff" Guid="{9683C884-78CF-4b1c-8886-6BE42E73DA65}">
-				  <File Id="thai5000.words" Name ="thai5000.words" src ="c:\wesay\SampleProjects\Thai\WeSay\thai5000.words"/>
-				  <File Id="tasks.xml" Name ="tasks.xml" src ="c:\wesay\SampleProjects\Thai\WeSay\tasks.xml"/>
-				  <File Id="classifiers.xml" Name ="classifiers.xml" src ="c:\wesay\SampleProjects\Thai\WeSay\classifiers.xml"/>
+				  <File Id="thai5000.words" Name ="thai5000.words" Source ="c:\wesay\SampleProjects\Thai\WeSay\thai5000.words"/>
+				  <File Id="thaiTasks.xml" Name ="tasks.xml" Source ="c:\wesay\SampleProjects\Thai\WeSay\tasks.xml"/>
+				  <File Id="classifiers.xml" Name ="classifiers.xml" Source ="c:\wesay\SampleProjects\Thai\WeSay\classifiers.xml"/>
+
+				  <Shortcut Id="RunThaiShortcut"  Directory="WeSayShortcutDir" Name="Run Thai Sample"
+					  Target="[!WeSay.App.exe]" Arguments ='"[!thai5000.words]"' WorkingDirectory="ThaiWeSay" Icon ="SampleRunIcon" />
+
+				  <Shortcut Id="SetupThaiShortcut"  Directory="WeSayShortcutDir" Name="Setup Thai Sample"
+							Target="[!Admin.exe]"  Arguments ='"[thai5000.words]"'
+					 WorkingDirectory="ThaiWeSay" Icon ="SampleSetupIcon" />
+				  <!-- this Registry entry is required because we have shortcuts that aren't 'advertised',
+					  which we have because 'advertised shortcuts can't have targets. Don't as ME.
+					  See: http://www.nabble.com/ICE38-and-ICE43-on-Shortcuts-t1409061.html -->
+				  <Registry Root="HKCU" Key="SOFTWARE\WeSay\Components\ThaiSamples" KeyPath="yes" />
 				</Component>
 			  </Directory>
 			</Directory>
 		  </Directory>
 
 		  <Component Id="WeSay.App.exe" Guid="{406B533F-C5D5-49AD-9DC9-12375B80949F}">
+			<Registry Root="HKCU" Key="SOFTWARE\WeSay\Components\WeSay.App.exe" KeyPath="yes" />
 
-			<File Id="WeSay.App.exe" Name="WeSay.App.exe" KeyPath="yes" Source="c:\wesay\output\debug\WeSay.App.exe" />
+			<File Id="WeSay.App.exe" Name="WeSay.App.exe"  Source="c:\wesay\output\debug\WeSay.App.exe" />
 			<File Id="WeSayWordsIconFile" Name="WeSayWordsFile.ico" Source="c:\wesay\output\debug\resources\WeSayWordsFile.ico" />
 
 			<!--- connect file types to icons and program to launch -->
 
 			<ProgId Id='WeSay.wordsfile' Description='WeSay Words data file'>
 			  <Extension Id='words' ContentType='application/words'>
-				<Verb Id='open' Command='Open' Target='[!WeSay.App.exe]' Argument='"%1"' />
-				<Verb Id='setup' Command='Open' Target='[!WeSay.App.exe]' Argument='"%1"' />
+				<Verb Id='open' Command='Open' TargetFile ='WeSay.App.exe' Argument='"%1"' />
+				<Verb Id='configure' Command='Configure WeSay Project' TargetFile='Admin.exe' Argument='"%1"' />
 			  </Extension>
 			</ProgId>
 
 			<RemoveRegistryKey Action ='removeOnUninstall' Root ='HKCR' Key ='.words'/>
 			<RemoveRegistryKey Action ='removeOnUninstall' Root ='HKCR' Key ='WeSay.wordsfile'/>
-  <!--          <RemoveRegistryKey Action ='removeOnUninstall' Root ='HKCR' Key ='WeSay.wordsfile\DefaultIcon'/> -->
 
 			<Registry  Id='WordsIcon1' Root='HKCR' Key='.words' Action='write'
 			  Type='string' Value='WeSay.wordsfile' />
@@ -66,15 +96,17 @@
 					 Type='string' Value='"[ENVPATH_2005]" "%1"'/> -->
 
 			<Shortcut Id="startmenuShortcut"  Directory="WeSayShortcutDir" Name="WeSay Client"
-				 WorkingDirectory="ProgramDir" Advertise ="yes" Icon ="WeSay.App.exe" />
+				 WorkingDirectory="ProgramDir" Target="[!WeSay.App.exe]"  Icon ="WeSay.App.exe" />
 
 		  </Component>
 
 		  <Component Id="Admin.exe" Guid="{26CD1460-94D4-44CD-832A-EA750F5AA92A}">
-			<File Id="Admin.exe" Name="Admin.exe" KeyPath="yes" Source="c:\wesay\output\debug\Admin.exe" />
+			<Registry Root="HKCU" Key="SOFTWARE\WeSay\Components\Admin.exe" KeyPath="yes" />
 
-			<Shortcut Id="startmenuSplatt2"  Directory="WeSayShortcutDir" Name="WeSay Admin"
-	 WorkingDirectory="ProgramDir" Advertise ="yes" Icon ="IconAdmin.exe" />
+			<File Id="Admin.exe" Name="Admin.exe" Source="c:\wesay\output\debug\Admin.exe" />
+
+			<Shortcut Id="startmenuSplatt2"  Target ="[!Admin.exe]" Directory="WeSayShortcutDir" Name="WeSay Admin"
+	 WorkingDirectory="ProgramDir" Icon ="IconAdmin.exe" />
 
 		  </Component>
 		  <Component Id="Admin.exe.config" Guid="{3FD496AE-6B71-4213-B3FD-39CF62698642}">
@@ -278,10 +310,13 @@
 	  <ComponentRef Id="SemanticDomains.xml" />
 	  <ComponentRef Id="taskInventory.xml" />
 	  <ComponentRef Id="writingSystemPrefs.xml" />
+
 	</Feature>
 	<Media Id="1" Cabinet="product.cab" EmbedCab="yes" />
 	<Icon Id="WeSay.App.exe" SourceFile ="c:\wesay\output\debug\WeSay.App.exe" />
 	<Icon Id="IconAdmin.exe" SourceFile ="c:\wesay\output\debug\Admin.exe" />
+	<Icon Id="SampleSetupIcon" SourceFile ="c:\wesay\output\debug\Admin.exe" />
+	<Icon Id="SampleRunIcon" SourceFile ="c:\wesay\output\debug\resources\WeSayWordsFile.ico" />
   </Product>
 
   <!-- <Property Id="BROWSER">

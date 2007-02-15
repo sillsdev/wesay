@@ -30,7 +30,8 @@
 	<SuppressDroppingUnrealTables>False</SuppressDroppingUnrealTables>
 	<SuppressFileHashAndInfo>False</SuppressFileHashAndInfo>
 	<SuppressFiles>False</SuppressFiles>
-	<SuppressIces>ICE38</SuppressIces>
+	<SuppressIces>
+	</SuppressIces>
 	<LinkerSuppressIntermediateFileVersionMatching>False</LinkerSuppressIntermediateFileVersionMatching>
 	<SuppressLayout>False</SuppressLayout>
 	<SuppressMsiAssemblyTableProcessing>False</SuppressMsiAssemblyTableProcessing>
