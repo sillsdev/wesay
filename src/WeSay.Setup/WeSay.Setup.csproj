@@ -1,0 +1,223 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+	<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+	<ProductVersion>8.0.50727</ProductVersion>
+	<SchemaVersion>2.0</SchemaVersion>
+	<ProjectGuid>{54C943DB-7725-4F52-BCE4-86C3D3D5A66E}</ProjectGuid>
+	<OutputType>WinExe</OutputType>
+	<AppDesignerFolder>Properties</AppDesignerFolder>
+	<RootNamespace>WeSay.Setup</RootNamespace>
+	<AssemblyName>WeSay.Setup</AssemblyName>
+	<ApplicationIcon>Resources\WeSay.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+	<DebugSymbols>true</DebugSymbols>
+	<DebugType>full</DebugType>
+	<Optimize>false</Optimize>
+	<OutputPath>..\..\output\Debug\</OutputPath>
+	<DefineConstants>DEBUG;TRACE</DefineConstants>
+	<ErrorReport>prompt</ErrorReport>
+	<WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+	<DebugType>pdbonly</DebugType>
+	<Optimize>true</Optimize>
+	<OutputPath>bin\Release\</OutputPath>
+	<DefineConstants>TRACE</DefineConstants>
+	<ErrorReport>prompt</ErrorReport>
+	<WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+	<Reference Include="Db4objects.Db4o, Version=6.0.2.0, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\Db4objects.Db4o.dll</HintPath>
+	</Reference>
+	<Reference Include="Db4objects.Db4o.Tools, Version=6.0.2.0, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\Db4objects.Db4o.Tools.dll</HintPath>
+	</Reference>
+	<Reference Include="System" />
+	<Reference Include="System.Data" />
+	<Reference Include="System.Deployment" />
+	<Reference Include="System.Drawing" />
+	<Reference Include="System.Windows.Forms" />
+	<Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+	<Compile Include="AboutBox.cs">
+	  <SubType>Form</SubType>
+	</Compile>
+	<Compile Include="AboutBox.Designer.cs">
+	  <DependentUpon>AboutBox.cs</DependentUpon>
+	</Compile>
+	<Compile Include="AdminWindow.cs">
+	  <SubType>Form</SubType>
+	</Compile>
+	<Compile Include="AdminWindow.Designer.cs">
+	  <DependentUpon>AdminWindow.cs</DependentUpon>
+	</Compile>
+	<Compile Include="ExportLIFTCommand.cs" />
+	<Compile Include="FieldsControl.cs">
+	  <SubType>UserControl</SubType>
+	</Compile>
+	<Compile Include="FieldsControl.Designer.cs">
+	  <DependentUpon>FieldsControl.cs</DependentUpon>
+	</Compile>
+	<Compile Include="FontControl.cs">
+	  <SubType>UserControl</SubType>
+	</Compile>
+	<Compile Include="FontControl.designer.cs">
+	  <DependentUpon>FontControl.cs</DependentUpon>
+	</Compile>
+	<Compile Include="ImportLIFTCommand.cs" />
+	<Compile Include="NewProject.cs">
+	  <SubType>Form</SubType>
+	</Compile>
+	<Compile Include="NewProject.Designer.cs">
+	  <DependentUpon>NewProject.cs</DependentUpon>
+	</Compile>
+	<Compile Include="OtherControl.cs">
+	  <SubType>UserControl</SubType>
+	</Compile>
+	<Compile Include="OtherControl.Designer.cs">
+	  <DependentUpon>OtherControl.cs</DependentUpon>
+	</Compile>
+	<Compile Include="Program.cs" />
+	<Compile Include="ProjectTabs.cs">
+	  <SubType>UserControl</SubType>
+	</Compile>
+	<Compile Include="ProjectTabs.Designer.cs">
+	  <DependentUpon>ProjectTabs.cs</DependentUpon>
+	</Compile>
+	<Compile Include="Properties\AssemblyInfo.cs" />
+	<EmbeddedResource Include="AboutBox.resx">
+	  <SubType>Designer</SubType>
+	  <DependentUpon>AboutBox.cs</DependentUpon>
+	</EmbeddedResource>
+	<EmbeddedResource Include="AdminWindow.resx">
+	  <SubType>Designer</SubType>
+	  <DependentUpon>AdminWindow.cs</DependentUpon>
+	</EmbeddedResource>
+	<EmbeddedResource Include="FieldsControl.resx">
+	  <SubType>Designer</SubType>
+	  <DependentUpon>FieldsControl.cs</DependentUpon>
+	</EmbeddedResource>
+	<EmbeddedResource Include="FontControl.resx">
+	  <DependentUpon>FontControl.cs</DependentUpon>
+	  <SubType>Designer</SubType>
+	</EmbeddedResource>
+	<EmbeddedResource Include="NewProject.resx">
+	  <SubType>Designer</SubType>
+	  <DependentUpon>NewProject.cs</DependentUpon>
+	</EmbeddedResource>
+	<EmbeddedResource Include="OtherControl.resx">
+	  <SubType>Designer</SubType>
+	  <DependentUpon>OtherControl.cs</DependentUpon>
+	</EmbeddedResource>
+	<EmbeddedResource Include="ProjectTabs.resx">
+	  <SubType>Designer</SubType>
+	  <DependentUpon>ProjectTabs.cs</DependentUpon>
+	</EmbeddedResource>
+	<EmbeddedResource Include="Properties\Resources.resx">
+	  <Generator>ResXFileCodeGenerator</Generator>
+	  <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+	  <SubType>Designer</SubType>
+	</EmbeddedResource>
+	<EmbeddedResource Include="TaskListControl.resx">
+	  <SubType>Designer</SubType>
+	  <DependentUpon>TaskListControl.cs</DependentUpon>
+	</EmbeddedResource>
+	<EmbeddedResource Include="WelcomeControl.resx">
+	  <SubType>Designer</SubType>
+	  <DependentUpon>WelcomeControl.cs</DependentUpon>
+	</EmbeddedResource>
+	<EmbeddedResource Include="WritingSystemBasic.resx">
+	  <DependentUpon>WritingSystemBasic.cs</DependentUpon>
+	  <SubType>Designer</SubType>
+	</EmbeddedResource>
+	<EmbeddedResource Include="WritingSystemSetup.resx">
+	  <SubType>Designer</SubType>
+	  <DependentUpon>WritingSystemSetup.cs</DependentUpon>
+	</EmbeddedResource>
+	<Compile Include="Properties\Resources.Designer.cs">
+	  <AutoGen>True</AutoGen>
+	  <DependentUpon>Resources.resx</DependentUpon>
+	  <DesignTime>True</DesignTime>
+	</Compile>
+	<None Include="app.config" />
+	<None Include="Properties\Settings.settings">
+	  <Generator>SettingsSingleFileGenerator</Generator>
+	  <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+	</None>
+	<Compile Include="Properties\Settings.Designer.cs">
+	  <AutoGen>True</AutoGen>
+	  <DependentUpon>Settings.settings</DependentUpon>
+	  <DesignTimeSharedInput>True</DesignTimeSharedInput>
+	</Compile>
+	<Compile Include="TaskListControl.cs">
+	  <SubType>UserControl</SubType>
+	</Compile>
+	<Compile Include="TaskListControl.Designer.cs">
+	  <DependentUpon>TaskListControl.cs</DependentUpon>
+	</Compile>
+	<Compile Include="WelcomeControl.cs">
+	  <SubType>UserControl</SubType>
+	</Compile>
+	<Compile Include="WelcomeControl.Designer.cs">
+	  <DependentUpon>WelcomeControl.cs</DependentUpon>
+	</Compile>
+	<Compile Include="WritingSystemBasic.cs">
+	  <SubType>UserControl</SubType>
+	</Compile>
+	<Compile Include="WritingSystemBasic.designer.cs">
+	  <DependentUpon>WritingSystemBasic.cs</DependentUpon>
+	</Compile>
+	<Compile Include="WritingSystemSetup.cs">
+	  <SubType>UserControl</SubType>
+	</Compile>
+	<Compile Include="WritingSystemSetup.Designer.cs">
+	  <DependentUpon>WritingSystemSetup.cs</DependentUpon>
+	</Compile>
+  </ItemGroup>
+  <ItemGroup>
+	<ProjectReference Include="..\LexicalModel\LexicalModel.csproj">
+	  <Project>{5F61C809-B6C0-4567-9603-B2198E1AD038}</Project>
+	  <Name>LexicalModel</Name>
+	</ProjectReference>
+	<ProjectReference Include="..\Reporting\Reporting.csproj">
+	  <Project>{9CCBECEC-513C-4DA4-A4CE-F5361B633760}</Project>
+	  <Name>Reporting</Name>
+	</ProjectReference>
+	<ProjectReference Include="..\WeSay.Data\WeSay.Data.csproj">
+	  <Project>{600D0FD4-D189-41A0-9BC5-FC79AD2CF1CD}</Project>
+	  <Name>WeSay.Data</Name>
+	</ProjectReference>
+	<ProjectReference Include="..\WeSay.Foundation\WeSay.Foundation.csproj">
+	  <Project>{F12EB680-0990-4900-B77E-0FBF2E28A815}</Project>
+	  <Name>WeSay.Foundation</Name>
+	</ProjectReference>
+	<ProjectReference Include="..\WeSay.Project\WeSay.Project.csproj">
+	  <Project>{5CFD0BB3-5B2A-4911-B220-9C2286151BF0}</Project>
+	  <Name>WeSay.Project</Name>
+	</ProjectReference>
+	<ProjectReference Include="..\WeSay.UI\WeSay.UI.csproj">
+	  <Project>{AC8F284C-7B34-4AC9-A7DE-FAF765456DFF}</Project>
+	  <Name>WeSay.UI</Name>
+	</ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+	<None Include="Resources\RoundedBorder.PNG" />
+  </ItemGroup>
+  <ItemGroup>
+	<Content Include="Resources\WeSay.ico" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+	   Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
