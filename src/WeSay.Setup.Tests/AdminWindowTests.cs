@@ -5,6 +5,8 @@ using System.Windows.Forms;
 using NUnit.Framework;
 using NUnit.Extensions.Forms;
 using WeSay.Project;
+using WeSay.Setup;
+using WeSay.Setup.Tests;
 
 namespace WeSay.Admin.Tests
 {

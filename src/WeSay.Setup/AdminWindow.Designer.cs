@@ -156,7 +156,7 @@ namespace WeSay.Setup
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.MainMenuStrip = this.menuStrip1;
 			this.Name = "AdminWindow";
-			this.Text = "WeSay Admin";
+			this.Text = "WeSay Setup";
 			this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.AdminWindow_FormClosed);
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.AdminWindow_FormClosing);
 			this.menuStrip1.ResumeLayout(false);

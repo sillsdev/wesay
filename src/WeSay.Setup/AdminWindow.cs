@@ -1,16 +1,12 @@
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 using MultithreadProgress;
-using WeSay.Setup.Properties;
 using WeSay.Data;
 using WeSay.Foundation.Progress;
-using WeSay.LexicalModel;
 using WeSay.Project;
 using WeSay.Setup.Properties;
-using ErrorEventHandler=System.IO.ErrorEventHandler;
 
 namespace WeSay.Setup
 {
@@ -155,8 +151,8 @@ namespace WeSay.Setup
 			//System.Configuration.ConfigurationManager.AppSettings["LastProjectPath"] = path;
 
 			//strip off any trailing '\'
-			if (path[path.Length - 1] == System.IO.Path.DirectorySeparatorChar
-				|| path[path.Length - 1] == System.IO.Path.AltDirectorySeparatorChar)
+			if (path[path.Length - 1] == Path.DirectorySeparatorChar
+				|| path[path.Length - 1] == Path.AltDirectorySeparatorChar)
 			{
 				path = path.Substring(0, path.Length - 1);
 			}
@@ -180,7 +176,7 @@ namespace WeSay.Setup
 		{
 		   // try
 		   // {
-				this.Text = "WeSay Admin: " + this.Project.Name;
+				this.Text = "WeSay Setup: " + this.Project.Name;
 				RemoveExistingControls();
 				InstallProjectsControls();
 			//}
@@ -334,11 +330,11 @@ namespace WeSay.Setup
 		private void openThisProjectInWeSayToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			this._project.Save();//want the client to see the latest
-			string dir = System.IO.Directory.GetParent(Application.ExecutablePath).FullName;
+			string dir = Directory.GetParent(Application.ExecutablePath).FullName;
 			ProcessStartInfo startInfo =
-				new System.Diagnostics.ProcessStartInfo(System.IO.Path.Combine(dir, "WeSay.App.exe"),
+				new ProcessStartInfo(Path.Combine(dir, "WeSay.App.exe"),
 														string.Format("\"{0}\"", _project.PathToLexicalModelDB));
-			System.Diagnostics.Process.Start(startInfo);
+			Process.Start(startInfo);
 		}
 	}
 }

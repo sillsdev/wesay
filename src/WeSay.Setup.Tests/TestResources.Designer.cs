@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace WeSay.Admin.Tests {
+namespace WeSay.Setup.Tests {
 	using System;
 
 
@@ -39,7 +39,7 @@ namespace WeSay.Admin.Tests {
 		internal static global::System.Resources.ResourceManager ResourceManager {
 			get {
 				if (object.ReferenceEquals(resourceMan, null)) {
-					global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("WeSay.Admin.Tests.TestResources", typeof(TestResources).Assembly);
+					global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("WeSay.Setup.Tests.TestResources", typeof(TestResources).Assembly);
 					resourceMan = temp;
 				}
 				return resourceMan;
@@ -64,21 +64,20 @@ namespace WeSay.Admin.Tests {
 		///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
 		///&lt;tasks&gt;
 		///  &lt;components&gt;
-		///    &lt;viewTemplate id=&quot;Default Field Inventory&quot;&gt;
+		///    &lt;viewTemplate id=&quot;Default View Template&quot;&gt;
 		///      &lt;fields&gt;
 		///        &lt;field&gt;
-		///          &lt;name&gt;EntryLexicalForm&lt;/name&gt;
-		///          &lt;visibility&gt;Invisible&lt;/visibility&gt;
-		///          &lt;writingSystems /&gt;
-		///        &lt;/field&gt;
-		///        &lt;field&gt;
-		///          &lt;name&gt;SenseGloss&lt;/name&gt;
+		///          &lt;className&gt;&lt;/className&gt;
+		///          &lt;dataType&gt;MultiText&lt;/dataType&gt;
+		///          &lt;displayName&gt;Word&lt;/displayName&gt;
+		///          &lt;fieldName&gt;EntryLexicalForm&lt;/fieldName&gt;
+		///          &lt;multiplicity&gt;ZeroOr1&lt;/multiplicity&gt;
 		///          &lt;visibility&gt;Visible&lt;/visibility&gt;
 		///          &lt;writingSystems /&gt;
 		///        &lt;/field&gt;
 		///        &lt;field&gt;
-		///          &lt;name&gt;ExampleSentence&lt;/name&gt;
-		///          &lt;visibility&gt;Visib [rest of string was truncated]&quot;;.
+		///          &lt;className&gt;&lt;/className&gt;
+		///     [rest of string was truncated]&quot;;.
 		/// </summary>
 		internal static string tasks {
 			get {

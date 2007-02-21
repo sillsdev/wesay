@@ -7,8 +7,8 @@
 	<ProjectGuid>{FB7CFBB8-D7D0-4E9D-96CF-7D3D0D947EB5}</ProjectGuid>
 	<OutputType>Library</OutputType>
 	<AppDesignerFolder>Properties</AppDesignerFolder>
-	<RootNamespace>WeSay.Admin.Tests</RootNamespace>
-	<AssemblyName>Admin.Tests</AssemblyName>
+	<RootNamespace>WeSay.Setup.Tests</RootNamespace>
+	<AssemblyName>WeSay.Setup.Tests</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
 	<DebugSymbols>true</DebugSymbols>
@@ -55,13 +55,13 @@
 	<None Include="app.config" />
   </ItemGroup>
   <ItemGroup>
-	<ProjectReference Include="..\Admin\Admin.csproj">
-	  <Project>{54C943DB-7725-4F52-BCE4-86C3D3D5A66E}</Project>
-	  <Name>Admin</Name>
-	</ProjectReference>
 	<ProjectReference Include="..\WeSay.Project\WeSay.Project.csproj">
 	  <Project>{5CFD0BB3-5B2A-4911-B220-9C2286151BF0}</Project>
 	  <Name>WeSay.Project</Name>
+	</ProjectReference>
+	<ProjectReference Include="..\WeSay.Setup\WeSay.Setup.csproj">
+	  <Project>{54C943DB-7725-4F52-BCE4-86C3D3D5A66E}</Project>
+	  <Name>WeSay.Setup</Name>
 	</ProjectReference>
   </ItemGroup>
   <ItemGroup>

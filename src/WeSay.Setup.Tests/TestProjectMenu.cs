@@ -1,6 +1,8 @@
 using System.IO;
 using NUnit.Framework;
 using NUnit.Extensions.Forms;
+using WeSay.Setup;
+
 namespace WeSay.Admin.Tests
 {
 	[TestFixture]

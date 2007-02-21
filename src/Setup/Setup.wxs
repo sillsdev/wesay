@@ -56,7 +56,7 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 					  Target="[!WeSay.App.exe]" Arguments ='"[!thai5000.words]"' WorkingDirectory="ThaiWeSay" Icon ="SampleRunIcon" />
 
 				  <Shortcut Id="SetupThaiShortcut"  Directory="WeSayShortcutDir" Name="Setup Thai Sample"
-							Target="[!Admin.exe]"  Arguments ='"[ThaiSampleDir]"'
+							Target="[!WeSay.Setup.exe]"  Arguments ='"[ThaiSampleDir]"'
 					 WorkingDirectory="ThaiWeSay" Icon ="SampleSetupIcon" />
 				  <!-- this Registry entry is required because we have shortcuts that aren't 'advertised',
 					  which we have because 'advertised shortcuts can't have targets. Don't as ME.
@@ -78,7 +78,7 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 			<ProgId Id='WeSay.wordsfile' Description='WeSay Words data file'>
 			  <Extension Id='words' ContentType='application/words'>
 				<Verb Id='open' Command='Open' TargetFile ='WeSay.App.exe' Argument='"%1"' />
-				<Verb Id='configure' Command='Configure WeSay Project' TargetFile='Admin.exe' Argument='"%1"' />
+				<Verb Id='configure' Command='Configure WeSay Project' TargetFile='WeSay.Setup.exe' Argument='"%1"' />
 			  </Extension>
 			</ProgId>
 
@@ -100,20 +100,20 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 
 		  </Component>
 
-		  <Component Id="Admin.exe" Guid="{26CD1460-94D4-44CD-832A-EA750F5AA92A}">
-			<Registry Root="HKCU" Key="SOFTWARE\WeSay\Components\Admin.exe" KeyPath="yes" />
+		  <Component Id="WeSay.Setup.exe" Guid="{26CD1460-94D4-44CD-832A-EA750F5AA92A}">
+			<Registry Root="HKCU" Key="SOFTWARE\WeSay\Components\WeSay.Setup.exe" KeyPath="yes" />
 
-			<File Id="Admin.exe" Name="Admin.exe" Source="c:\wesay\output\debug\Admin.exe" />
+			<File Id="WeSay.Setup.exe" Name="WeSay.Setup.exe" Source="c:\wesay\output\debug\WeSay.Setup.exe" />
 
-			<Shortcut Id="startmenuSplatt2"  Target ="[!Admin.exe]" Directory="WeSayShortcutDir" Name="WeSay Admin"
-	 WorkingDirectory="ProgramDir" Icon ="IconAdmin.exe" />
+			<Shortcut Id="startmenuSplatt2"  Target ="[!WeSay.Setup.exe]" Directory="WeSayShortcutDir" Name="WeSay Setup"
+	 WorkingDirectory="ProgramDir" Icon ="IconSetup.exe" />
 
 		  </Component>
-		  <Component Id="Admin.exe.config" Guid="{3FD496AE-6B71-4213-B3FD-39CF62698642}">
-			<File Id="Admin.exe.config" Name="Admin.exe.config" KeyPath="yes" Source="c:\wesay\output\debug\Admin.exe.config" />
+		  <Component Id="WeSay.Setup.exe.config" Guid="{3FD496AE-6B71-4213-B3FD-39CF62698642}">
+			<File Id="WeSay.Setup.exe.config" Name="WeSay.Setup.exe.config" KeyPath="yes" Source="c:\wesay\output\debug\WeSay.Setup.exe.config" />
 		  </Component>
-		  <Component Id="Admin.pdb" Guid="{FA331270-82EF-4BB8-878C-724442249466}">
-			<File Id="Admin.pdb" Name="Admin.pdb" KeyPath="yes" Source="c:\wesay\output\debug\Admin.pdb" />
+		  <Component Id="WeSay.Setup.pdb" Guid="{FA331270-82EF-4BB8-878C-724442249466}">
+			<File Id="WeSay.Setup.pdb" Name="WeSay.Setup.pdb" KeyPath="yes" Source="c:\wesay\output\debug\WeSay.Setup.pdb" />
 		  </Component>
 		  <Component Id="Castle.DynamicProxy.dll" Guid="{871D566A-F864-4946-AA65-6A7E07D24E1B}">
 			<File Id="Castle.DynamicProxy.dll" Name="Castle.DynamicProxy.dll" KeyPath="yes" Source="c:\wesay\output\debug\Castle.DynamicProxy.dll" />
@@ -259,9 +259,9 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 
 
 	  <!-- assemblies -->
-	  <ComponentRef Id="Admin.exe" />
-	  <ComponentRef Id="Admin.exe.config" />
-	  <ComponentRef Id="Admin.pdb" />
+	  <ComponentRef Id="WeSay.Setup.exe" />
+	  <ComponentRef Id="WeSay.Setup.exe.config" />
+	  <ComponentRef Id="WeSay.Setup.pdb" />
 
 	  <ComponentRef Id="Castle.DynamicProxy.dll" />
 	  <ComponentRef Id="CommonTools.dll" />
@@ -318,8 +318,8 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 	</Feature>
 	<Media Id="1" Cabinet="product.cab" EmbedCab="yes" />
 	<Icon Id="WeSay.App.exe" SourceFile ="c:\wesay\output\debug\WeSay.App.exe" />
-	<Icon Id="IconAdmin.exe" SourceFile ="c:\wesay\output\debug\Admin.exe" />
-	<Icon Id="SampleSetupIcon" SourceFile ="c:\wesay\output\debug\Admin.exe" />
+	<Icon Id="IconSetup.exe" SourceFile ="c:\wesay\output\debug\WeSay.Setup.exe" />
+	<Icon Id="SampleSetupIcon" SourceFile ="c:\wesay\output\debug\WeSay.Setup.exe" />
 	<Icon Id="SampleRunIcon" SourceFile ="c:\wesay\output\debug\resources\WeSayWordsFile.ico" />
   </Product>
 

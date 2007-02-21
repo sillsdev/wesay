@@ -100,12 +100,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ListBox.Tests", "ListBox.Te
 		Release.AspNetCompiler.Debug = "False"
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Admin", "Admin\Admin.csproj", "{54C943DB-7725-4F52-BCE4-86C3D3D5A66E}"
-	ProjectSection(WebsiteProperties) = preProject
-		Debug.AspNetCompiler.Debug = "True"
-		Release.AspNetCompiler.Debug = "False"
-	EndProjectSection
-EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "SetupForWindows", "SetupForWindows\SetupForWindows.vdproj", "{25681973-4376-4BA1-BE26-C404EDF52F8B}"
 	ProjectSection(WebsiteProperties) = preProject
 		Debug.AspNetCompiler.Debug = "True"
@@ -113,12 +107,6 @@ Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "SetupForWindows", "SetupFor
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeSay.UI", "WeSay.UI\WeSay.UI.csproj", "{AC8F284C-7B34-4AC9-A7DE-FAF765456DFF}"
-	ProjectSection(WebsiteProperties) = preProject
-		Debug.AspNetCompiler.Debug = "True"
-		Release.AspNetCompiler.Debug = "False"
-	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Admin.Tests", "Admin.Tests\Admin.Tests.csproj", "{FB7CFBB8-D7D0-4E9D-96CF-7D3D0D947EB5}"
 	ProjectSection(WebsiteProperties) = preProject
 		Debug.AspNetCompiler.Debug = "True"
 		Release.AspNetCompiler.Debug = "False"
@@ -183,6 +171,18 @@ Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "Setup", "Setup\Setup.wixpro
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reporting", "Reporting\Reporting.csproj", "{9CCBECEC-513C-4DA4-A4CE-F5361B633760}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeSay.Setup", "WeSay.Setup\WeSay.Setup.csproj", "{54C943DB-7725-4F52-BCE4-86C3D3D5A66E}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeSay.Setup.Tests", "WeSay.Setup.Tests\WeSay.Setup.Tests.csproj", "{FB7CFBB8-D7D0-4E9D-96CF-7D3D0D947EB5}"
 	ProjectSection(WebsiteProperties) = preProject
 		Debug.AspNetCompiler.Debug = "True"
 		Release.AspNetCompiler.Debug = "False"
@@ -254,20 +254,12 @@ Global
 		{8265C439-E652-4F70-A8D2-BFE7A2CA65E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8265C439-E652-4F70-A8D2-BFE7A2CA65E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8265C439-E652-4F70-A8D2-BFE7A2CA65E7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{54C943DB-7725-4F52-BCE4-86C3D3D5A66E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{54C943DB-7725-4F52-BCE4-86C3D3D5A66E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{54C943DB-7725-4F52-BCE4-86C3D3D5A66E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{54C943DB-7725-4F52-BCE4-86C3D3D5A66E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{25681973-4376-4BA1-BE26-C404EDF52F8B}.Debug|Any CPU.ActiveCfg = Debug
 		{25681973-4376-4BA1-BE26-C404EDF52F8B}.Release|Any CPU.ActiveCfg = Release
 		{AC8F284C-7B34-4AC9-A7DE-FAF765456DFF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{AC8F284C-7B34-4AC9-A7DE-FAF765456DFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AC8F284C-7B34-4AC9-A7DE-FAF765456DFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AC8F284C-7B34-4AC9-A7DE-FAF765456DFF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FB7CFBB8-D7D0-4E9D-96CF-7D3D0D947EB5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FB7CFBB8-D7D0-4E9D-96CF-7D3D0D947EB5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FB7CFBB8-D7D0-4E9D-96CF-7D3D0D947EB5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FB7CFBB8-D7D0-4E9D-96CF-7D3D0D947EB5}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5CFD0BB3-5B2A-4911-B220-9C2286151BF0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5CFD0BB3-5B2A-4911-B220-9C2286151BF0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5CFD0BB3-5B2A-4911-B220-9C2286151BF0}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -296,6 +288,14 @@ Global
 		{9CCBECEC-513C-4DA4-A4CE-F5361B633760}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9CCBECEC-513C-4DA4-A4CE-F5361B633760}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9CCBECEC-513C-4DA4-A4CE-F5361B633760}.Release|Any CPU.Build.0 = Release|Any CPU
+		{54C943DB-7725-4F52-BCE4-86C3D3D5A66E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{54C943DB-7725-4F52-BCE4-86C3D3D5A66E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{54C943DB-7725-4F52-BCE4-86C3D3D5A66E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{54C943DB-7725-4F52-BCE4-86C3D3D5A66E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FB7CFBB8-D7D0-4E9D-96CF-7D3D0D947EB5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FB7CFBB8-D7D0-4E9D-96CF-7D3D0D947EB5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FB7CFBB8-D7D0-4E9D-96CF-7D3D0D947EB5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FB7CFBB8-D7D0-4E9D-96CF-7D3D0D947EB5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
