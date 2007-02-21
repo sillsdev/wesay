@@ -18,7 +18,7 @@ namespace WeSay.Admin.Tests
 		public override void Setup()
 		{
 			base.Setup();
-			_window = new AdminWindow();
+			_window = new AdminWindow(new string[] { });
 			_window.Show();
 			string name = new Finder().Name(_window);
 			_mainWindowTester = new FormTester(name);

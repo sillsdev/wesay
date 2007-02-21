@@ -217,6 +217,7 @@ namespace WeSay.App
 
 		private void ActivateTask(TabPage page, ITask task)
 		{
+			Reporting.Logger.WriteEvent("Activating " + page.Text);//enhance: get in English always
 			if (ActiveTask == task)
 			{
 				return;
@@ -228,6 +229,7 @@ namespace WeSay.App
 			task.Control.Focus();
 			page.Cursor = Cursors.Default;
 			_activeTask = task;
+			Reporting.Logger.WriteEvent("Done Activating");
 		}
 
 //        private void RunCommand(BasicCommand command)

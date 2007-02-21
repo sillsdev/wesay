@@ -15,10 +15,9 @@ namespace WeSay.Admin.Tests
 		[SetUp]
 		public void Setup()
 		{
-			_window = new AdminWindow();
+			_window = new AdminWindow(new string[] { });
 			_window.Show();
-
-		}
+		 }
 
 
 

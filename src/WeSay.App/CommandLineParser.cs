@@ -370,7 +370,7 @@ namespace CommandLine
 	/// <summary>
 	/// A delegate used in error reporting.
 	/// </summary>
-	public delegate void ErrorReporter(string message);
+	public delegate void ReportError(string message);
 
 	/// <summary>
 	/// Parser for command line arguments.
@@ -439,7 +439,7 @@ namespace CommandLine
 		/// <returns> true if no errors were detected. </returns>
 		public static bool ParseArguments(string [] arguments, object destination)
 		{
-			return Parser.ParseArguments(arguments, destination, new ErrorReporter(Console.Error.WriteLine));
+			return Parser.ParseArguments(arguments, destination, new ReportError(Console.Error.WriteLine));
 		}
 
 		/// <summary>
@@ -450,13 +450,13 @@ namespace CommandLine
 		/// <param name="destination"> The resulting parsed arguments. </param>
 		/// <param name="reporter"> The destination for parse errors. </param>
 		/// <returns> true if no errors were detected. </returns>
-		public static bool ParseArguments(string[] arguments, object destination, ErrorReporter reporter)
+		public static bool ParseArguments(string[] arguments, object destination, ReportError reporter)
 		{
 			Parser parser = new Parser(destination.GetType(), reporter);
 			return parser.Parse(arguments, destination);
 		}
 
-		private static void NullErrorReporter(string message)
+		private static void NullReportError(string message)
 		{
 		}
 
@@ -473,7 +473,7 @@ namespace CommandLine
 		/// <returns> Returns true if args contains /? or /help. </returns>
 		public static bool ParseHelp(string[] args)
 		{
-			Parser helpParser = new Parser(typeof(HelpArgument), new ErrorReporter(NullErrorReporter));
+			Parser helpParser = new Parser(typeof(HelpArgument), new ReportError(NullReportError));
 			HelpArgument helpArgument = new HelpArgument();
 			helpParser.Parse(args, helpArgument);
 			return helpArgument.help;
@@ -597,7 +597,7 @@ namespace CommandLine
 		/// </summary>
 		/// <param name="argumentSpecification"> The type of object to  parse. </param>
 		/// <param name="reporter"> The destination for parse errors. </param>
-		public Parser(Type argumentSpecification, ErrorReporter reporter)
+		public Parser(Type argumentSpecification, ReportError reporter)
 		{
 			this.reporter = reporter;
 			this.arguments = new ArrayList();
@@ -1088,7 +1088,7 @@ namespace CommandLine
 
 		private class Argument
 		{
-			public Argument(ArgumentAttribute attribute, FieldInfo field, ErrorReporter reporter)
+			public Argument(ArgumentAttribute attribute, FieldInfo field, ReportError reporter)
 			{
 				this.longName = Parser.LongName(attribute, field);
 				this.explicitShortName = Parser.ExplicitShortName(attribute);
@@ -1450,13 +1450,13 @@ namespace CommandLine
 			private Type elementType;
 			private ArgumentTypes flags;
 			private ArrayList collectionValues;
-			private ErrorReporter reporter;
+			private ReportError reporter;
 			private bool isDefault;
 		}
 
 		private ArrayList arguments;
 		private Hashtable argumentMap;
 		private Argument defaultArgument;
-		private ErrorReporter reporter;
+		private ReportError reporter;
 	}
 }

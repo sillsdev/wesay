@@ -1,9 +1,15 @@
 using System;
 using System.ComponentModel;
+using System.Configuration;
+using System.Diagnostics;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
+using System.Reflection;
+
 using CommandLine;
+using Reporting;
 using WeSay.Data;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Db4o_Specific;
@@ -11,52 +17,56 @@ using WeSay.LexicalModel.Tests;
 using WeSay.Project;
 namespace WeSay.App
 {
+
+	internal class ThreadExceptionHandler
+	{
+		///
+		/// Handles the thread exception.
+		///
+		public void Application_ThreadException(
+			object sender, ThreadExceptionEventArgs e)
+		{
+			MessageBox.Show("caught");
+		}
+	}
 	class WeSayApp
 	{
+		private static Mutex _oneInstancePerProjectMutex;
+
+
+
 		[STAThread]
 		static void Main(string[] args)
 		{
-#if DEBUG
-			if (Environment.OSVersion.Platform == PlatformID.Unix)
-			{
-				Console.WriteLine("running on Unix");
-			}
-			else
-			{
-				Console.WriteLine("running on Windows");
-			}
-#endif
+			Application.EnableVisualStyles();
+			Application.SetCompatibleTextRenderingDefault(false);
+
+			//problems with user.config: http://blogs.msdn.com/rprabhu/articles/433979.aspx
+
+			OsCheck();
+			Reporting.Logger.Init();
+		   SetupErrorHandling();
+
+		   //bring in settings from any previous version
+		   if (Properties.Settings.Default.NeedUpgrade)
+		   {
+			   WeSay.App.Properties.Settings.Default.Upgrade();
+			   Properties.Settings.Default.NeedUpgrade = false;
+		   }
+
+			UsageEmailDialog.IncrementLaunchCount();
+			UsageEmailDialog.DoTrivialUsageReport("issues@wesay.org", "(This will not be asked of users in the released version.)", new int[] { 1,5,20,40,60,80,100 });
 
 			CommandLineArguments cmdArgs = new CommandLineArguments();
-			if (!CommandLine.Parser.ParseArguments(args, cmdArgs, new ErrorReporter(ShowCommandLineError)))
+			if (!CommandLine.Parser.ParseArguments(args, cmdArgs, new ReportError(ShowCommandLineError)))
 			{
 				return;
 			}
 
-			bool mutexCreated;
-			string mutexId = cmdArgs.wordsPath;
-			mutexId = mutexId.Replace(Path.DirectorySeparatorChar, '-');
-			mutexId = mutexId.Replace(Path.VolumeSeparatorChar, '-');
-			Mutex mutex = new Mutex(true, mutexId, out mutexCreated);
-			if (!mutexCreated) // can I acquire?
+			if (!GrabTokenForThisProject(cmdArgs))
 			{
-				//    Process[] processes = Process.GetProcessesByName("WeSay.App");
-				//    foreach (Process process in processes)
-				//    {
-
-				//        // we should make window title include the database name.
-				//        if(process.MainWindowTitle == "WeSay: " + project.Name)
-				//        {
-				//            process.WaitForInputIdle(4000); // wait four seconds at most
-				//            //process.MainWindowHandle;
-				//            break;
-				//        }
-				//    }
-
-				MessageBox.Show("WeSay is already open with " + cmdArgs.wordsPath + ".");
 				return;
 			}
-
 #if GTK
 			GLib.Thread.Init();
 			Gdk.Threads.Init();
@@ -64,7 +74,12 @@ namespace WeSay.App
 #endif
 			WeSayWordsProject project = new WeSayWordsProject();
 			project.StringCatalogSelector = cmdArgs.ui;
-			project.LoadFromLexiconPath(cmdArgs.wordsPath);
+
+			string path = cmdArgs.wordsPath;
+			if (!TryToLoad(cmdArgs, path, project))
+			{
+				return;
+			}
 
 
 #if GTK
@@ -73,8 +88,6 @@ namespace WeSay.App
 			ITaskBuilder builder = null;
 			try
 			{
-				Application.EnableVisualStyles();
-				Application.SetCompatibleTextRenderingDefault(false);
 				TabbedForm tabbedForm = new TabbedForm();
 
 				BackupService backupService=null;
@@ -86,14 +99,6 @@ namespace WeSay.App
 					Application.DoEvents();
 
 					Db4oRecordListManager ds = recordListManager as Db4oRecordListManager;
-
-
-//                    //*********************
-//                    MessageBox.Show("test");
-//                    IRecordList<LexEntry> l = ds.GetListOfType<LexEntry>();
-//                    l.RemoveAt(3);
-//                    //*********************
-
 
 					if (ds != null)
 					{
@@ -114,13 +119,18 @@ namespace WeSay.App
 					//in case we are far behind, as in the case of a recent import or deleted backups
 					backupService.DoIncrementalXmlBackupNow();
 					tabbedForm.ContinueLaunchingAfterInitialDisplay();
+
+					//run the ui
 					Application.Run(tabbedForm);
+
+					//do a last backup before exiting
 					backupService.DoIncrementalXmlBackupNow();
 					backupService.BackupToExternal("h:\\" + project.Name + ".zip");
 				}
 			}
 			finally
 			{
+
 #if GTK
 				Gdk.Threads.Leave();
 #endif
@@ -133,9 +143,116 @@ namespace WeSay.App
 					((IDisposable)builder).Dispose();
 			}
 
-			mutex.ReleaseMutex();
+			Reporting.Logger.WriteEvent("App Exiting Normally.");
+			Reporting.Logger.ShutDown();
+			WeSay.App.Properties.Settings.Default.Save();
+			ReleaseMutexForThisProject();
 		}
 
+		private static bool TryToLoad(CommandLineArguments cmdArgs, string path, WeSayWordsProject project)
+		{
+			if (path == null)
+			{
+				if (WeSay.App.Properties.Settings.Default.PreviousDBPath != null
+					&& WeSay.App.Properties.Settings.Default.PreviousDBPath != string.Empty)
+				{
+					path = WeSay.App.Properties.Settings.Default.PreviousDBPath;
+				}
+				else
+				{
+					MessageBox.Show(
+						String.Format(
+							"WeSay was unable to figure out what lexicon to work on. It will use an argument if given one, otherwise it tries to find the lexicon that it was last used with.  In this, case, it found neither.  You can use the WeSay Admin program to reset the location of the project.",
+							cmdArgs.wordsPath), "WeSay error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+					return false;
+				}
+			}
+
+			if (!File.Exists(path))
+			{
+				MessageBox.Show(String.Format("WeSay tried to find the lexicon at '{0}', but could not find it.\r\n\r\nOn Windows, the location argument can be specified like this:\r\n wesay.exe \"c:\\some directory\\mylanguage\\wesay\\mylanguage.words\". \r\n\r\nSince WeSay intentionally does not ask users to ever deal with the file system of their computer, you need to setup a shortcut to WeSay which gives the correct path, or use the WeSay Admin program to launch WeSay once. After that, WeSay will remember where it is.",
+					path), "WeSay error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+				return false;
+			}
+
+			project.LoadFromLexiconPath(path);
+			WeSay.App.Properties.Settings.Default.PreviousDBPath = path;
+			//WeSay.App.Properties.Settings.Default.Save();
+			//MessageBox.Show("saved " + WeSay.App.Properties.Settings.Default.PreviousDBPath);
+			//WeSay.App.Properties.Settings.Default.Reload();
+			//Debug.Assert(WeSay.App.Properties.Settings.Default.PreviousDBPath == path);
+			return true;
+		}
+
+		private static void OsCheck()
+		{
+#if DEBUG
+			if (Environment.OSVersion.Platform == PlatformID.Unix)
+			{
+				Console.WriteLine("running on Unix");
+			}
+			else
+			{
+				Console.WriteLine("running on Windows");
+			}
+#endif
+		}
+
+		private static void ReleaseMutexForThisProject()
+		{
+			if (_oneInstancePerProjectMutex != null)
+			{
+				_oneInstancePerProjectMutex.ReleaseMutex();
+			}
+		}
+
+		private static bool GrabTokenForThisProject(CommandLineArguments cmdArgs)
+		{
+			string mutexId = cmdArgs.wordsPath;
+			if (mutexId != null)
+			{
+				 bool mutexCreated;
+				mutexId = mutexId.Replace(Path.DirectorySeparatorChar, '-');
+				mutexId = mutexId.Replace(Path.VolumeSeparatorChar, '-');
+				_oneInstancePerProjectMutex = new Mutex(true, mutexId, out mutexCreated);
+				if (!mutexCreated) // can I acquire?
+				{
+					//    Process[] processes = Process.GetProcessesByName("WeSay.App");
+					//    foreach (Process process in processes)
+					//    {
+
+					//        // we should make window title include the database name.
+					//        if(process.MainWindowTitle == "WeSay: " + project.Name)
+					//        {
+					//            process.WaitForInputIdle(4000); // wait four seconds at most
+					//            //process.MainWindowHandle;
+					//            break;
+					//        }
+					//    }
+
+					MessageBox.Show("WeSay is already open with " + cmdArgs.wordsPath + ".");
+					return false;
+				}
+			 }
+			 return true;
+		}
+
+
+		private static void SetupErrorHandling()
+		{
+			ErrorReporter.EmailAddress = "issues@wesay.org";
+			if (BasilProject.IsInitialized)
+			{
+				ErrorReporter.AddProperty("ProjectPath", BasilProject.Project.ProjectDirectoryPath);
+			}
+			ErrorReporter.AddStandardProperties();
+			ExceptionHandler.Init();
+		}
+
+		private static void HandleTopLevelError(object sender, ThreadExceptionEventArgs e)
+		{
+			throw new NotImplementedException();
+		}
 
 
 		private static IRecordListManager MakeRecordListManager(WeSayWordsProject project)
@@ -156,7 +273,6 @@ namespace WeSay.App
 			{
 				recordListManager = new Db4oRecordListManager(new WeSayWordsDb4oModelConfiguration(), project.PathToLexicalModelDB);
 				Db4oLexModelHelper.Initialize(((Db4oRecordListManager)recordListManager).DataSource.Data);
-
 			}
 			return recordListManager;
 		}
@@ -165,7 +281,7 @@ namespace WeSay.App
 		{
 			[DefaultArgument(ArgumentTypes.AtMostOnce,
 			   // DefaultValue = @"..\..\SampleProjects\Thai\WeSay\thai5000.words",
-				HelpText = @"Path to the words file (e.g. c:\thai\wesay\thai500.words).")]
+				HelpText = "Path to the words file (e.g. on windows, \"c:\\thai\\wesay\\thai.words\").")]
 			public string wordsPath = null;
 
 			[Argument(ArgumentTypes.AtMostOnce,
@@ -177,7 +293,7 @@ namespace WeSay.App
 
 		static void ShowCommandLineError(string e)
 		{
-			CommandLine.Parser p = new Parser(typeof(CommandLineArguments), new ErrorReporter(ShowCommandLineError));
+			CommandLine.Parser p = new Parser(typeof(CommandLineArguments), new ReportError(ShowCommandLineError));
 			e = e.Replace("Duplicate 'wordsPath' argument", "Please enclose project path in quotes if it contains spaces.");
 			e += "\r\n\r\n" + p.GetUsageString(200);
 			MessageBox.Show(e, "WeSay Command Line Problem");

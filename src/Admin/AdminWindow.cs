@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 using MultithreadProgress;
@@ -25,9 +26,8 @@ namespace WeSay.Admin
 		/// </summary>
 		//public static ViewTemplate SharedviewTemplate;
 
-		public AdminWindow()
+		public AdminWindow(string[] args)
 		{
-
 			InitializeComponent();
 
 			this.Project = null;
@@ -38,6 +38,12 @@ namespace WeSay.Admin
 //
 			InstallWelcomePage();
 			UpdateEnabledStates();
+
+			if (args.Length > 0)
+			{
+				OpenProject(args[0].Trim(new char[] { '"' }));
+			}
+
 		}
 
 		private WeSayWordsProject Project
@@ -146,7 +152,13 @@ namespace WeSay.Admin
 		public void OpenProject(string path)
 		{
 			//System.Configuration.ConfigurationManager.AppSettings["LastProjectPath"] = path;
-			Settings.Default.LastProjectPath = path;
+
+			//strip off any trailing '\'
+			if (path[path.Length - 1] == System.IO.Path.DirectorySeparatorChar
+				|| path[path.Length - 1] == System.IO.Path.AltDirectorySeparatorChar)
+			{
+				path = path.Substring(0, path.Length - 1);
+			}
 
 			try
 			{
@@ -160,20 +172,21 @@ namespace WeSay.Admin
 			}
 
 			SetupProjectControls();
+			Settings.Default.LastProjectPath = path;
 		}
 
 		private void SetupProjectControls()
 		{
-			try
-			{
+		   // try
+		   // {
 				this.Text = "WeSay Admin: " + this.Project.Name;
 				RemoveExistingControls();
 				InstallProjectsControls();
-			}
-			catch (Exception e)
-			{
-				MessageBox.Show("WeSay was not able to display that project. \r\n"+e.Message);
-			}
+			//}
+//            catch (Exception e)
+//            {
+//                MessageBox.Show("WeSay was not able to display that project. \r\n"+e.Message);
+//            }
 		}
 
 
@@ -239,7 +252,7 @@ namespace WeSay.Admin
 			}
 			catch (Exception error)
 			{
-				e.Cancel = true;
+				//would make it impossible to quit. e.Cancel = true;
 				MessageBox.Show(error.Message);
 			}
 
@@ -319,8 +332,9 @@ namespace WeSay.Admin
 
 		private void openThisProjectInWeSayToolStripMenuItem_Click(object sender, EventArgs e)
 		{
+			this._project.Save();//want the client to see the latest
 			string dir = System.IO.Directory.GetParent(Application.ExecutablePath).FullName;
-			System.Diagnostics.ProcessStartInfo startInfo =
+			ProcessStartInfo startInfo =
 				new System.Diagnostics.ProcessStartInfo(System.IO.Path.Combine(dir, "WeSay.App.exe"),
 														string.Format("\"{0}\"", _project.PathToLexicalModelDB));
 			System.Diagnostics.Process.Start(startInfo);

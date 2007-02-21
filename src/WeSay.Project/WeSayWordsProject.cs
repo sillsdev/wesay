@@ -60,7 +60,7 @@ namespace WeSay.Project
 		{
 			if (!File.Exists(lexiconPath))
 			{
-				throw new ApplicationException("WeSay cannot find a lexicon where it was looking, which is at "+lexiconPath);
+			   throw new ApplicationException("WeSay cannot find a lexicon where it was looking, which is at "+lexiconPath);
 			}
 			lexiconPath = Path.GetFullPath(lexiconPath);
 

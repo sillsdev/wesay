@@ -42,6 +42,7 @@
 	  <HintPath>..\..\lib\PicoContainer\PicoContainer.dll</HintPath>
 	</Reference>
 	<Reference Include="System" />
+	<Reference Include="System.configuration" />
 	<Reference Include="System.Data" />
 	<Reference Include="System.Drawing" />
 	<Reference Include="System.Windows.Forms" />
@@ -62,6 +63,7 @@
 	  <DesignTime>True</DesignTime>
 	  <DependentUpon>Resources.resx</DependentUpon>
 	</Compile>
+	<Compile Include="registrySettingsProvider.cs" />
 	<Compile Include="SampleTaskBuilder.cs" />
 	<Compile Include="Settings.cs" />
 	<Compile Include="TabbedForm.cs">
@@ -88,6 +90,10 @@
 	<ProjectReference Include="..\LexicalModel\LexicalModel.csproj">
 	  <Project>{5F61C809-B6C0-4567-9603-B2198E1AD038}</Project>
 	  <Name>LexicalModel</Name>
+	</ProjectReference>
+	<ProjectReference Include="..\Reporting\Reporting.csproj">
+	  <Project>{9CCBECEC-513C-4DA4-A4CE-F5361B633760}</Project>
+	  <Name>Reporting</Name>
 	</ProjectReference>
 	<ProjectReference Include="..\WeSay.Data\WeSay.Data.csproj">
 	  <Project>{600D0FD4-D189-41A0-9BC5-FC79AD2CF1CD}</Project>

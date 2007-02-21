@@ -54,6 +54,8 @@ namespace WeSay.App
 			if(!Directory.Exists(Path.GetPathRoot(path)))
 				return;
 
+			Reporting.Logger.WriteEvent("Incremental Backup Start");
+
 			ProgressDialog dlg = new ProgressDialog("Backing up to external...");
 			dlg.Show();
 
@@ -71,10 +73,15 @@ namespace WeSay.App
 					dlg.Dispose();
 				}
 			}
+
+			Reporting.Logger.WriteEvent("Incremental Backup Done");
+
 		}
 
 		public void DoIncrementalXmlBackupNow( )
 		{
+			Reporting.Logger.WriteEvent("Incremental Backup Start");
+
 			if (BackingUp != null)
 			{
 				BackingUp.Invoke(this, null);
@@ -115,6 +122,8 @@ namespace WeSay.App
 					dlg.Dispose();
 				}
 			}
+
+			Reporting.Logger.WriteEvent("Incremental Backup Done");
 
 			//the granularity of the file access time stamp is too blunt, so we
 			//avoid missing changes with this hack, for now (have *not* tested how small it could be)

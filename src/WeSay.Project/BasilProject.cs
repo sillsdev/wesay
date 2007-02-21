@@ -47,6 +47,13 @@ namespace WeSay.Project
 			}
 		}
 
+		public static bool IsInitialized
+		{
+			get
+			{
+				return _singleton != null;
+			}
+		}
 
 		public BasilProject()
 		{
@@ -125,7 +132,7 @@ namespace WeSay.Project
 			}
 		}
 
-		protected string ProjectDirectoryPath
+		public string ProjectDirectoryPath
 		{
 			get
 			{

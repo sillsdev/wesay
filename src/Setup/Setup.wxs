@@ -36,13 +36,13 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 	  <Directory Id="ProgramFilesFolder" Name="PFiles">
 		<Directory Id="ProgramDir" Name="WeSayWords">
 		  <Directory Id="SampleDirRoot" Name="Samples">
-			<Directory Id="ThaiSamples" Name="Thai">
+			<Directory Id="ThaiSampleDir" Name="Thai">
 			  <Directory Id="ThaiCommon" Name="common">
 				<Component Id="thaiCommonStuff" Guid="*">
 				  <File Id="WritingSystemPrefs.xml" Name ="WritingSystemPrefs.xml" Source ="c:\wesay\SampleProjects\Thai\Common\WritingSystemPrefs.xml"/>
 				</Component>
 			  </Directory>
-			  <Directory Id="ThaiWeSay" Name="wesay">
+			  <Directory Id="ThaiWeSayDir" Name="wesay">
 
 
 
@@ -56,7 +56,7 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 					  Target="[!WeSay.App.exe]" Arguments ='"[!thai5000.words]"' WorkingDirectory="ThaiWeSay" Icon ="SampleRunIcon" />
 
 				  <Shortcut Id="SetupThaiShortcut"  Directory="WeSayShortcutDir" Name="Setup Thai Sample"
-							Target="[!Admin.exe]"  Arguments ='"[thai5000.words]"'
+							Target="[!Admin.exe]"  Arguments ='"[ThaiSampleDir]"'
 					 WorkingDirectory="ThaiWeSay" Icon ="SampleSetupIcon" />
 				  <!-- this Registry entry is required because we have shortcuts that aren't 'advertised',
 					  which we have because 'advertised shortcuts can't have targets. Don't as ME.
@@ -211,6 +211,9 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 		  <Component Id="PlatformSpecific.pdb" Guid="{66142923-BAE1-4884-957C-11F6F2A3E800}">
 			<File Id="PlatformSpecific.pdb" Name="PlatformSpecific.pdb" KeyPath="yes" Source="c:\wesay\output\debug\PlatformSpecific.pdb" />
 		  </Component>
+		  <Component Id="Reporting.dll" Guid="{63142923-BAE1-4884-957C-11F6F2A3E800}">
+			<File Id="Reporting.dll" Name="Reporting.dll" KeyPath="yes" Source="c:\wesay\output\debug\Reporting.dll" />
+		  </Component>
 
 		  <Component Id="WeSay.App.exe.config" Guid="{ED8319B8-8325-4598-8E4C-004D3356E373}">
 			<File Id="WeSay.App.exe.config" Name="WeSay.App.exe.config" KeyPath="yes" Source="c:\wesay\output\debug\WeSay.App.exe.config" />
@@ -292,6 +295,7 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 	  <ComponentRef Id="PicoContainer.pdb" />
 	  <ComponentRef Id="PlatformSpecific.dll" />
 	  <ComponentRef Id="PlatformSpecific.pdb" />
+	  <ComponentRef Id="Reporting.dll" />
 	  <ComponentRef Id="WeSay.App.exe" />
 	  <ComponentRef Id="WeSay.App.exe.config" />
 	  <ComponentRef Id="WeSay.App.pdb" />

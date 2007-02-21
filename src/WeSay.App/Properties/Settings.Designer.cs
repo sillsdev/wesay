@@ -34,5 +34,29 @@ namespace WeSay.App.Properties {
 				this["CurrentWorkTask"] = value;
 			}
 		}
+
+		[global::System.Configuration.UserScopedSettingAttribute()]
+		[global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+		[global::System.Configuration.DefaultSettingValueAttribute("")]
+		public string PreviousDBPath {
+			get {
+				return ((string)(this["PreviousDBPath"]));
+			}
+			set {
+				this["PreviousDBPath"] = value;
+			}
+		}
+
+		[global::System.Configuration.UserScopedSettingAttribute()]
+		[global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+		[global::System.Configuration.DefaultSettingValueAttribute("True")]
+		public bool NeedUpgrade {
+			get {
+				return ((bool)(this["NeedUpgrade"]));
+			}
+			set {
+				this["NeedUpgrade"] = value;
+			}
+		}
 	}
 }
