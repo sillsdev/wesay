@@ -351,6 +351,18 @@
 		}
 		"Entry"
 		{
+		"MsmKey" = "8:_9E7F981242F4B9C24AA55E9877CE9F02"
+		"OwnerKey" = "8:_0064D0869A8A4B809C3904DD9C7EFF0D"
+		"MsmSig" = "8:_UNDEFINED"
+		}
+		"Entry"
+		{
+		"MsmKey" = "8:_9E7F981242F4B9C24AA55E9877CE9F02"
+		"OwnerKey" = "8:_43A7A198B9B94EA3876A4F967061C5C0"
+		"MsmSig" = "8:_UNDEFINED"
+		}
+		"Entry"
+		{
 		"MsmKey" = "8:_AD78027885455FE2A00094AA8FE196E6"
 		"OwnerKey" = "8:_43A7A198B9B94EA3876A4F967061C5C0"
 		"MsmSig" = "8:_UNDEFINED"
@@ -671,6 +683,12 @@
 		{
 		"MsmKey" = "8:_UNDEFINED"
 		"OwnerKey" = "8:_E7CA1BF366C7EE499321F2858F27EF69"
+		"MsmSig" = "8:_UNDEFINED"
+		}
+		"Entry"
+		{
+		"MsmKey" = "8:_UNDEFINED"
+		"OwnerKey" = "8:_9E7F981242F4B9C24AA55E9877CE9F02"
 		"MsmSig" = "8:_UNDEFINED"
 		}
 		"Entry"
@@ -1243,6 +1261,37 @@
 			"IsDependency" = "11:FALSE"
 			"IsolateTo" = "8:"
 			}
+			"{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_9E7F981242F4B9C24AA55E9877CE9F02"
+			{
+			"AssemblyRegister" = "3:1"
+			"AssemblyIsInGAC" = "11:FALSE"
+			"AssemblyAsmDisplayName" = "8:Reporting, Version=1.0.2607.27248, Culture=neutral, processorArchitecture=MSIL"
+				"ScatterAssemblies"
+				{
+					"_9E7F981242F4B9C24AA55E9877CE9F02"
+					{
+					"Name" = "8:Reporting.dll"
+					"Attributes" = "3:512"
+					}
+				}
+			"SourcePath" = "8:Reporting.dll"
+			"TargetName" = "8:"
+			"Tag" = "8:"
+			"Folder" = "8:_493C6CB7197C47FF8D71ED99C441EB17"
+			"Condition" = "8:"
+			"Transitive" = "11:FALSE"
+			"Vital" = "11:TRUE"
+			"ReadOnly" = "11:FALSE"
+			"Hidden" = "11:FALSE"
+			"System" = "11:FALSE"
+			"Permanent" = "11:FALSE"
+			"SharedLegacy" = "11:FALSE"
+			"PackageAs" = "3:1"
+			"Register" = "3:1"
+			"Exclude" = "11:FALSE"
+			"IsDependency" = "11:TRUE"
+			"IsolateTo" = "8:"
+			}
 			"{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_AD78027885455FE2A00094AA8FE196E6"
 			{
 			"AssemblyRegister" = "3:1"
@@ -1340,7 +1389,7 @@
 			{
 			"AssemblyRegister" = "3:1"
 			"AssemblyIsInGAC" = "11:FALSE"
-			"AssemblyAsmDisplayName" = "8:LiftIO, Version=1.0.2595.17100, Culture=neutral, processorArchitecture=MSIL"
+			"AssemblyAsmDisplayName" = "8:LiftIO, Version=1.0.2602.27233, Culture=neutral, processorArchitecture=MSIL"
 				"ScatterAssemblies"
 				{
 					"_D37D915AA86F2A20F3A1844693B87CE2"
@@ -2351,34 +2400,6 @@
 				{
 				}
 			}
-			"{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_5F444970BF0948F7BCE5118C3C8F590D"
-			{
-			"SourcePath" = "8:"
-			"TargetName" = "8:"
-			"Tag" = "8:"
-			"Folder" = "8:_F844E5B119E84B51A689616B9B475F7E"
-			"Condition" = "8:"
-			"Transitive" = "11:FALSE"
-			"Vital" = "11:TRUE"
-			"ReadOnly" = "11:FALSE"
-			"Hidden" = "11:FALSE"
-			"System" = "11:FALSE"
-			"Permanent" = "11:FALSE"
-			"SharedLegacy" = "11:FALSE"
-			"PackageAs" = "3:1"
-			"Register" = "3:1"
-			"Exclude" = "11:FALSE"
-			"IsDependency" = "11:FALSE"
-			"IsolateTo" = "8:"
-			"ProjectOutputGroupRegister" = "3:1"
-			"OutputConfiguration" = "8:"
-			"OutputGroupCanonicalName" = "8:ContentFiles"
-			"OutputProjectGuid" = "8:{40C302FD-71F6-4779-B055-A6ADE2678204}"
-			"ShowKeyOutput" = "11:TRUE"
-				"ExcludeFilters"
-				{
-				}
-			}
 			"{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_662464CDC87B42558227C434D0445A2E"
 			{
 			"SourcePath" = "8:..\\ListBox\\ListBox\\obj\\Debug\\ListBox.dll"
@@ -2486,34 +2507,6 @@
 			"OutputConfiguration" = "8:"
 			"OutputGroupCanonicalName" = "8:Built"
 			"OutputProjectGuid" = "8:{5F61C809-B6C0-4567-9603-B2198E1AD038}"
-			"ShowKeyOutput" = "11:TRUE"
-				"ExcludeFilters"
-				{
-				}
-			}
-			"{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_F931B4288158455FACF265D0F7F156D1"
-			{
-			"SourcePath" = "8:"
-			"TargetName" = "8:"
-			"Tag" = "8:"
-			"Folder" = "8:_F844E5B119E84B51A689616B9B475F7E"
-			"Condition" = "8:"
-			"Transitive" = "11:FALSE"
-			"Vital" = "11:TRUE"
-			"ReadOnly" = "11:FALSE"
-			"Hidden" = "11:FALSE"
-			"System" = "11:FALSE"
-			"Permanent" = "11:FALSE"
-			"SharedLegacy" = "11:FALSE"
-			"PackageAs" = "3:1"
-			"Register" = "3:1"
-			"Exclude" = "11:FALSE"
-			"IsDependency" = "11:FALSE"
-			"IsolateTo" = "8:"
-			"ProjectOutputGroupRegister" = "3:1"
-			"OutputConfiguration" = "8:"
-			"OutputGroupCanonicalName" = "8:ContentFiles"
-			"OutputProjectGuid" = "8:{40C302FD-71F6-4779-B055-A6ADE2678204}"
 			"ShowKeyOutput" = "11:TRUE"
 				"ExcludeFilters"
 				{

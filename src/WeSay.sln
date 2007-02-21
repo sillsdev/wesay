@@ -160,12 +160,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiftIO", "..\lib\LIFT\LiftI
 		Release.AspNetCompiler.Debug = "False"
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleContent", "SampleContent\SampleContent.csproj", "{40C302FD-71F6-4779-B055-A6ADE2678204}"
-	ProjectSection(WebsiteProperties) = preProject
-		Debug.AspNetCompiler.Debug = "True"
-		Release.AspNetCompiler.Debug = "False"
-	EndProjectSection
-EndProject
 Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "Setup", "Setup\Setup.wixproj", "{BE2C52BC-6B66-4F8B-8B50-2CBA58A8027D}"
 	ProjectSection(WebsiteProperties) = preProject
 		Debug.AspNetCompiler.Debug = "True"
@@ -186,6 +180,12 @@ Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "Setup", "Setup\Setup.wixpro
 		{5CFD0BB3-5B2A-4911-B220-9C2286151BF0} = {5CFD0BB3-5B2A-4911-B220-9C2286151BF0}
 		{600D0FD4-D189-41A0-9BC5-FC79AD2CF1CD} = {600D0FD4-D189-41A0-9BC5-FC79AD2CF1CD}
 		{54C943DB-7725-4F52-BCE4-86C3D3D5A66E} = {54C943DB-7725-4F52-BCE4-86C3D3D5A66E}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reporting", "Reporting\Reporting.csproj", "{9CCBECEC-513C-4DA4-A4CE-F5361B633760}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
 	EndProjectSection
 EndProject
 Global
@@ -288,14 +288,14 @@ Global
 		{A3A7698C-790B-4139-95C8-60380AF35F9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A3A7698C-790B-4139-95C8-60380AF35F9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A3A7698C-790B-4139-95C8-60380AF35F9C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{40C302FD-71F6-4779-B055-A6ADE2678204}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{40C302FD-71F6-4779-B055-A6ADE2678204}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{40C302FD-71F6-4779-B055-A6ADE2678204}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{40C302FD-71F6-4779-B055-A6ADE2678204}.Release|Any CPU.Build.0 = Release|Any CPU
 		{BE2C52BC-6B66-4F8B-8B50-2CBA58A8027D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{BE2C52BC-6B66-4F8B-8B50-2CBA58A8027D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BE2C52BC-6B66-4F8B-8B50-2CBA58A8027D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BE2C52BC-6B66-4F8B-8B50-2CBA58A8027D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9CCBECEC-513C-4DA4-A4CE-F5361B633760}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9CCBECEC-513C-4DA4-A4CE-F5361B633760}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9CCBECEC-513C-4DA4-A4CE-F5361B633760}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9CCBECEC-513C-4DA4-A4CE-F5361B633760}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
