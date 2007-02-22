@@ -141,7 +141,9 @@ namespace Lift2WeSay
 					LiftImporter importer = LiftImporter.CreateCorrectImporter(doc);
 
 					WeSayWordsProject project = new WeSayWordsProject();
-					WeSay.Project.WeSayWordsProject.Project.LoadFromProjectDirectoryPath(Directory.GetParent(Environment.CurrentDirectory).FullName);
+//                    WeSay.Project.WeSayWordsProject.Project.LoadFromProjectDirectoryPath(Directory.GetParent(Environment.CurrentDirectory).FullName);
+					//go up two levels from the output file to get the basil project root
+					WeSayWordsProject.Project.LoadFromProjectDirectoryPath(Directory.GetParent(destPath).Parent.FullName);
 					foreach (string name in WeSay.Project.WeSayWordsProject.Project.OptionFieldNames)
 					{
 						importer.ExpectedOptionTraits.Add(name);

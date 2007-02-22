@@ -15,10 +15,20 @@
 		<Component Id="taskInventory.xml" Guid="{4D0210A0-095D-48DE-9367-4074A97864A4}">
 		  <File Id="taskInventory.xml" Name="taskInventory.xml" KeyPath="yes" Source="c:\wesay\common\taskInventory.xml" />
 		</Component>
-		<Component Id="writingSystemPrefs.xml" Guid="{2D64A565-57BC-4D0C-BAAF-13AB5A686E9B}">
-		  <File Id="writingSystemPrefs.xml" Name="writingSystemPrefs.xml" KeyPath="yes" Source="c:\wesay\common\writingSystemPrefs.xml" />
+		<Component Id="CommonWritingSystemPrefs.xml" Guid="{2D64A565-57BC-4D0C-BAAF-13AB5A686E9B}">
+		  <File Id="CommonwritingSystemPrefs.xml" Name="writingSystemPrefs.xml" KeyPath="yes" Source="c:\wesay\common\writingSystemPrefs.xml" />
 		</Component>
 	  </Directory>
 	</DirectoryRef>
+
+ <!--   <FeatureRef Id="ProductFeature">
+	  <ComponentRef Id="PartsOfSpeech.xml" />
+	  <ComponentRef Id="sampleWordList.txt" />
+	  <ComponentRef Id="SemanticDomains.xml" />
+	  <ComponentRef Id="taskInventory.xml" />
+	  <ComponentRef Id="CommonWritingSystemPrefs.xml" />
+	</FeatureRef>
+
+	-->
   </Fragment>
 </Wix>

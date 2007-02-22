@@ -54,40 +54,11 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 	  </Directory>
 	  <Directory Id="ProgramFilesFolder" Name="PFiles">
 		<Directory Id="ProgramDir" Name="WeSay">
-		  <Directory Id="SampleDirRoot" Name="Samples">
-			<Directory Id="ThaiSampleDir" Name="Thai">
-			  <Directory Id="ThaiCommon" Name="common">
-				<Component Id="thaiCommonStuff" Guid="*">
-				  <File Id="WritingSystemPrefs.xml" Name ="WritingSystemPrefs.xml" Source ="c:\wesay\SampleProjects\Thai\Common\WritingSystemPrefs.xml"/>
-				</Component>
-			  </Directory>
-			  <Directory Id="ThaiWeSayDir" Name="wesay">
-
-				<Component Id="DocFiles" Guid="{F533B47C-A6F4-4284-A257-59C3C9B54526}">
-				  <File Id="Welcome.htm" Name="Welcome.htm" KeyPath="yes" Source="c:\wesay\doc\Welcome.htm" />
-				</Component>
 
 
-
-				<Component Id="thaiWeSayStuff" Guid="{9683C884-78CF-4b1c-8886-6BE42E73DA65}">
-				  <File Id="thai5000.words" Name ="thai5000.words" Source ="c:\wesay\SampleProjects\Thai\WeSay\thai5000.words"/>
-				  <File Id="thaiTasks.xml" Name ="tasks.xml" Source ="c:\wesay\SampleProjects\Thai\WeSay\tasks.xml"/>
-				  <File Id="classifiers.xml" Name ="classifiers.xml" Source ="c:\wesay\SampleProjects\Thai\WeSay\classifiers.xml"/>
-
-				  <Shortcut Id="RunThaiShortcut"  Directory="WeSayShortcutDir" Name="Run Thai Sample"
-					  Target="[!WeSay.App.exe]" Arguments ='"[!thai5000.words]"' WorkingDirectory="ThaiWeSay" Icon ="SampleRunIcon" />
-
-				  <Shortcut Id="SetupThaiShortcut"  Directory="WeSayShortcutDir" Name="Setup Thai Sample"
-							Target="[!WeSay.Setup.exe]"  Arguments ='"[ThaiSampleDir]"'
-					 WorkingDirectory="ThaiWeSay" Icon ="SampleSetupIcon" />
-				  <!-- this Registry entry is required because we have shortcuts that aren't 'advertised',
-					  which we have because 'advertised shortcuts can't have targets. Don't as ME.
-					  See: http://www.nabble.com/ICE38-and-ICE43-on-Shortcuts-t1409061.html -->
-				  <Registry Root="HKCU" Key="SOFTWARE\WeSay\Components\ThaiSamples" KeyPath="yes" />
-				</Component>
-			  </Directory>
-			</Directory>
-		  </Directory>
+		  <Component Id="DocFiles" Guid="{F533B47C-A6F4-4284-A257-59C3C9B54526}">
+			<File Id="Welcome.htm" Name="Welcome.htm" KeyPath="yes" Source="c:\wesay\doc\Welcome.htm" />
+		  </Component>
 
 		  <Component Id="WeSay.App.exe" Guid="{406B533F-C5D5-49AD-9DC9-12375B80949F}">
 			<Registry Root="HKCU" Key="SOFTWARE\WeSay\Components\WeSay.App.exe" KeyPath="yes" />
@@ -277,12 +248,7 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 
 	  <ComponentRef Id="DocFiles"/>
 
-	  <!-- samples-->
-	  <ComponentRef Id="thaiWeSayStuff"/>
-	  <ComponentRef Id="thaiCommonStuff"/>
-
-
-	  <!-- assemblies -->
+	   <!-- assemblies -->
 	  <ComponentRef Id="WeSay.Setup.exe" />
 	  <ComponentRef Id="WeSay.Setup.exe.config" />
 	  <ComponentRef Id="WeSay.Setup.pdb" />
@@ -332,12 +298,21 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 	  <ComponentRef Id="WeSay.UI.dll" />
 	  <ComponentRef Id="WeSay.UI.pdb" />
 
-	  <!-- common dir -->
+	  <!-- i tried to FeatureRef these from their own files but it didn't work -->
+
 	  <ComponentRef Id="PartsOfSpeech.xml" />
 	  <ComponentRef Id="sampleWordList.txt" />
 	  <ComponentRef Id="SemanticDomains.xml" />
 	  <ComponentRef Id="taskInventory.xml" />
-	  <ComponentRef Id="writingSystemPrefs.xml" />
+	  <ComponentRef Id="CommonWritingSystemPrefs.xml" />
+
+	  <!-- i tried to FeatureRef these from their own files but it didn't work -->
+
+	  <ComponentRef Id ="biatahShortcuts"/>
+	  <ComponentRef Id ="biatahWritingSystemPrefs"/>
+	  <ComponentRef Id ="biatahWesayDir"/>
+	  <ComponentRef Id ="biatahWordsCache"/>
+	  <ComponentRef Id ="biatahIncrementalXmlBackup"/>
 
 	</Feature>
 	<Media Id="1" Cabinet="product.cab" EmbedCab="yes" />

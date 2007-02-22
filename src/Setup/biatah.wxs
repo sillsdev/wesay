@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Fragment>
+  <!-- didn't work
+	  <FeatureRef Id ="ProductFeature">
+	  <ComponentRef Id ="biatahWritingSystemPrefs"/>
+	  <ComponentRef Id ="biatahWesayDir"/>
+	  <ComponentRef Id ="biatahWordsCache"/>
+	  <ComponentRef Id ="biatahIncrementalXmlBackup"/>
+	</FeatureRef>
+	-->
+
+	<DirectoryRef Id="biatahSampleDir" >
+
+	  <Component Id ="biatahShortcuts" Guid ="FB0973B3-8502-42ea-9B78-0879A3CAD40B">
+		<Shortcut Id="RunBiatahShortcut"  Directory="WeSayShortcutDir" Name="Run Biatah Sample"
+			Target="[!WeSay.App.exe]" Arguments ='"[!biatah.words]"' WorkingDirectory="biatahWeSay" Icon ="SampleRunIcon" />
+
+		<Shortcut Id="SetupBiatahShortcut"  Directory="WeSayShortcutDir" Name="Setup Biatah Sample"
+				  Target="[!WeSay.Setup.exe]"  Arguments ='"[biatahSampleDir]"'
+		   WorkingDirectory="biatahWeSay" Icon ="SampleSetupIcon" />
+		<!-- this Registry entry is required because we have shortcuts that aren't 'advertised',
+					  which we have because 'advertised shortcuts can't have targets. Don't as ME.
+					  See: http://www.nabble.com/ICE38-and-ICE43-on-Shortcuts-t1409061.html -->
+		<Registry Root="HKCU" Key="SOFTWARE\WeSay\Components\BiatahSamples" KeyPath="yes" />
+
+	  </Component>
+
+	  <Directory Id="BiatahCommon" Name="common">
+		<Component Id="biatahWritingSystemPrefs" Guid="{DFC212BA-EBF6-41BD-A015-94BF95D3B27A}">
+		  <File Id="writingSystemPrefs.xml" Name="writingSystemPrefs.xml" KeyPath="yes" Source="c:\wesay\sampleprojects\biatah\common\writingSystemPrefs.xml" />
+		</Component>
+	  </Directory>
+	  <Directory Id="biatahWeSay" Name="wesay">
+		<Component Id="biatahWesayDir" Guid="{5008C03F-7946-4147-96B1-442AD4999FA9}">
+		  <File Id="biatah.lift.xml" Name="biatah.lift.xml" KeyPath="yes" Source="c:\wesay\sampleprojects\biatah\wesay\biatah.lift.xml" />
+		  <File Id="biatah.words" Name="biatah.words" Source="c:\wesay\sampleprojects\biatah\wesay\biatah.words" />
+		  <File Id="tasks.xml" Name="tasks.xml"  Source="c:\wesay\sampleprojects\biatah\wesay\tasks.xml" />
+		</Component>
+		<Directory Id="biatahWordsCacheDir" Name="biatah.words Cache">
+		  <Component Id="biatahWordsCache" Guid="{EF2EBD26-0A05-4DC1-8B74-C4EFDA1547F6}">
+			<File Id="AddExamples.cache" Name="Add Examples.cache" KeyPath="yes" Source="c:\wesay\sampleprojects\biatah\wesay\biatah.words Cache\Add Examples.cache" />
+			<File Id="AddMeanings.cache" Name="Add Meanings.cache" Source="c:\wesay\sampleprojects\biatah\wesay\biatah.words Cache\Add Meanings.cache" />
+			<File Id="Dictionary.cache" Name="Dictionary.cache"  Source="c:\wesay\sampleprojects\biatah\wesay\biatah.words Cache\Dictionary.cache" />
+			<File Id="LexEntrysortedbybth.cache" Name="LexEntry sorted by bth.cache"  Source="c:\wesay\sampleprojects\biatah\wesay\biatah.words Cache\LexEntry sorted by bth.cache" />
+			<File Id="WeSay.LexicalTools.MissingExampleSentenceFilterbth.cache" Name="WeSay.LexicalTools.MissingExampleSentenceFilterbth.cache" Source="c:\wesay\sampleprojects\biatah\wesay\biatah.words Cache\WeSay.LexicalTools.MissingExampleSentenceFilterbth.cache" />
+			<File Id="WeSay.LexicalTools.MissingGlossFilteren.cache" Name="WeSay.LexicalTools.MissingGlossFilteren.cache" Source="c:\wesay\sampleprojects\biatah\wesay\biatah.words Cache\WeSay.LexicalTools.MissingGlossFilteren.cache" />
+		  </Component>
+		</Directory>
+		<Directory Id="biatahIncrementalXmlBackupDir" Name="biatah.words incremental xml backup">
+		  <Component Id="biatahIncrementalXmlBackup" Guid="{4251BE9A-DAED-4EA8-90E8-54282864A8C8}">
+			<File Id="File20070222T08095857812UTC.lift.frag.xml" Name="2007-02-22T08-09-58-57812 UTC.lift.frag.xml" KeyPath="yes" Source="c:\wesay\sampleprojects\biatah\wesay\biatah.words incremental xml backup\2007-02-22T08-09-58-57812 UTC.lift.frag.xml" />
+			<File Id="backuppoint" Name="backuppoint" Source="c:\wesay\sampleprojects\biatah\wesay\biatah.words incremental xml backup\backuppoint" />
+		  </Component>
+		</Directory>
+	  </Directory>
+	</DirectoryRef>
+  </Fragment>
+</Wix>

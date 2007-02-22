@@ -58,6 +58,8 @@
 	<IntermediateOutputPath>obj\Release\</IntermediateOutputPath>
   </PropertyGroup>
   <ItemGroup>
+	<Compile Include="biatah.wxs" />
+	<Compile Include="SampleData.wxs" />
 	<Compile Include="Setup.wxs" />
 	<Compile Include="CommonDir.wxs" />
   </ItemGroup>
