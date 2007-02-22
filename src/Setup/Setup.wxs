@@ -1,7 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- These variables define the Windows Installer product version, product code and upgrade code. They   -->
+<!-- will be used later on in this file.                                                                 -->
+<?define Property_ProductVersion = "0.0.2" ?>
+<?define Property_ProductCode = "9F47781C-9D4B-43d0-9A8F-D4571A7CEFED" ?>
+<?define Property_UpgradeCode = "E98273E1-617B-4256-8A28-721F254D1A0B" ?>
+
+
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-  <Product Id="*" Name="WeSay Words" Language="1033" Version="0.1.0.0" Manufacturer="SIL" UpgradeCode="{E98273E1-617B-4256-8A28-721F254D1A0B}">
+  <Product Id="$(var.Property_ProductCode)" Name="WeSay" Language="1033"
+		   Version="$(var.Property_ProductVersion)" Manufacturer="SIL"
+		   UpgradeCode="$(var.Property_UpgradeCode)">
 	<Package  Compressed="yes" InstallerVersion="200" />
+
+
+	<!-- This information enables Windows Installer major upgrade functionality so users can seamlessly  -->
+	<!-- install a new version of the product and have the old version automatically uninstall behind    -->
+	<!-- the scenes. See the following topic in the MSDN Library for additional information:             -->
+	<!-- http://msdn.microsoft.com/library/default.asp?url=/library/en-us/msi/setup/major_upgrades.asp   -->
+	<Upgrade Id="$(var.Property_UpgradeCode)">
+	  <UpgradeVersion Minimum="$(var.Property_ProductVersion)" OnlyDetect="yes" Property="NEWERVERSIONDETECTED" />
+	  <UpgradeVersion Minimum="0.0.0" IncludeMinimum="yes" Maximum="$(var.Property_ProductVersion)" IncludeMaximum="no" Property="OLDERVERSIONBEINGUPGRADED" />
+	</Upgrade>
 
 	<!--
 	"from the list: Don't use Advertise="yes" Advertised shortcuts are designed to allow
@@ -25,7 +44,7 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 			  <RegistryValue Type ="string" Value =""  Action ="write" KeyPath ="yes"/>
 			</RegistryKey>
 		  </Component>
- <!--         <Component Id="Test" Guid ="{9483C884-78CF-4b1c-8886-6BE42E73DA65}">
+		  <!--         <Component Id="Test" Guid ="{9483C884-78CF-4b1c-8886-6BE42E73DA65}">
 			<Shortcut Id="SetupThaiShortcut1"  Directory="WeSayShortcutDir" Name="Thai Sample Setup1"
 			 Arguments="[thai5000.words]"  Target="[!WeSay.App.exe]" Icon ="SampleSetupIcon" />
 			<Registry Root="HKCU" Key="SOFTWARE\WeSay\Components\Test" KeyPath="yes" />
@@ -34,7 +53,7 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 		</Directory>
 	  </Directory>
 	  <Directory Id="ProgramFilesFolder" Name="PFiles">
-		<Directory Id="ProgramDir" Name="WeSayWords">
+		<Directory Id="ProgramDir" Name="WeSay">
 		  <Directory Id="SampleDirRoot" Name="Samples">
 			<Directory Id="ThaiSampleDir" Name="Thai">
 			  <Directory Id="ThaiCommon" Name="common">
@@ -44,6 +63,9 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 			  </Directory>
 			  <Directory Id="ThaiWeSayDir" Name="wesay">
 
+				<Component Id="DocFiles" Guid="{F533B47C-A6F4-4284-A257-59C3C9B54526}">
+				  <File Id="Welcome.htm" Name="Welcome.htm" KeyPath="yes" Source="c:\wesay\doc\Welcome.htm" />
+				</Component>
 
 
 
@@ -253,6 +275,8 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 	<Feature Id="ProductFeature" Level="1" Title="Basic Stuff">
 	  <ComponentRef Id ="removeShortcutDir"/>
 
+	  <ComponentRef Id="DocFiles"/>
+
 	  <!-- samples-->
 	  <ComponentRef Id="thaiWeSayStuff"/>
 	  <ComponentRef Id="thaiCommonStuff"/>
@@ -321,18 +345,29 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 	<Icon Id="IconSetup.exe" SourceFile ="c:\wesay\output\debug\WeSay.Setup.exe" />
 	<Icon Id="SampleSetupIcon" SourceFile ="c:\wesay\output\debug\WeSay.Setup.exe" />
 	<Icon Id="SampleRunIcon" SourceFile ="c:\wesay\output\debug\resources\WeSayWordsFile.ico" />
-  </Product>
 
-  <!-- <Property Id="BROWSER">
-  <RegistrySearch Id='DefaultBrowser' Type='raw'
-  Root='HKCR' Key='http\shell\open\command' />
-</Property>
-
-<CustomAction Id='LaunchBrowser' Property='BROWSER' ExeCommand='www.something.com' Return='asyncNoWait' />
-
-<InstallExecuteSequence>
-  ...
-  <Custom Action='LaunchBrowser' After='InstallFinalize'>NOT Installed</Custom>
-</InstallExecuteSequence>
+	<!--   <Property Id="BROWSER">
+	  <RegistrySearch Id='DefaultBrowser' Type='raw'
+	  Root='HKCR' Key='http\shell\open\command' />
+	</Property>
+	<CustomAction Id='LaunchWelcomePage' Property='BROWSER' ExeCommand='www.google.com' Return='asyncNoWait' />
 -->
-</Wix>
+	<InstallExecuteSequence>
+	  <RemoveExistingProducts After="InstallInitialize" />
+
+	  <!--We need the condition here so that we only launch the executable when we make an installation but not when we remove the product-->
+	  <Custom Action='LaunchWelcomePage' After='InstallFinalize'>NOT Installed</Custom>
+	</InstallExecuteSequence>
+
+
+	<CustomAction Id="LaunchWelcomePage" BinaryKey="WixCA" DllEntry="WixShellExec" Execute="immediate" Return="check" Impersonate="yes" />
+	<Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT" Value="Open readme" />
+	<Property Id="WixShellExecTarget" Value="[!Welcome.htm]" />
+	<!--<Property Id="WixShellExecTarget" Value="[#readme]" />-->
+	<!--<UI>
+	  <UIRef Id="WixUI_Minimal" />
+	  <Publish Dialog="ExitDialog" Control="Finish" Event="DoAction" Value="LaunchReadme" Order="1">NOT Installed</Publish>
+	</UI>
+	-->
+  </Product>
+  </Wix>

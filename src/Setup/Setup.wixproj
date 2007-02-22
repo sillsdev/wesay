@@ -61,5 +61,11 @@
 	<Compile Include="Setup.wxs" />
 	<Compile Include="CommonDir.wxs" />
   </ItemGroup>
+  <ItemGroup>
+	<WixExtension Include="C:\Program Files\Windows Installer XML v3\bin\WixUtilExtension.dll" />
+  </ItemGroup>
+  <ItemGroup>
+	<Content Include="Welcome.htm" />
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WiX\v3.0\Wix.targets" />
 </Project>

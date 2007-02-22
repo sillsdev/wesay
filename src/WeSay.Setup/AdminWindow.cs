@@ -96,9 +96,15 @@ namespace WeSay.Setup
 			{
 				OpenProject(selectedPath);
 			}
+				//allow them to click the "wesay" subdirectory, since that's a reasonable thing to try
+			else if (WeSayWordsProject.IsValidProjectDirectory(System.IO.Directory.GetParent(selectedPath).FullName))
+			{
+				OpenProject(System.IO.Directory.GetParent(selectedPath).FullName);
+			}
+
 			else
 			{
-				MessageBox.Show("That directory does not appear to be a valid WeSay Project directory.");
+				MessageBox.Show("That directory does not appear to be a valid WeSay or Basil Project directory.");
 			}
 		}
 
