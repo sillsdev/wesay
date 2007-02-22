@@ -13,9 +13,11 @@
   </PropertyGroup>
 
   <Target Name="Checkout">
-	<!--    <RemoveDir Directories="$(ApplicationDirectory)" /> -->
+	<!--
+	<RemoveDir Directories="$(ApplicationDirectory)" /> -->
 	<!-- You must install the subversion package (not tortoise or another fancy gui version)
 	http://subversion.tigris.org/project_packages.html -->
+	<!-- we can't just export since later we will use SvnVersion to pick up the revision number-->
 	<SvnCheckout RepositoryPath="$(RepositoryPath)"
 				 LocalPath="$(ApplicationDirectory)">
 	  <Output TaskParameter="Revision" PropertyName="Revision" />
@@ -23,40 +25,9 @@
 	<SvnCheckout RepositoryPath="$(LiftRepositoryPath)"
 				 LocalPath="$(ApplicationDirectory)\lib\lift"/>
 	<Message Text="Checked out code from $(RepositoryPath) and $(LiftRepositoryPath)"/>
-	<Message Text="Revision: $(Revision)"/>
-
   </Target>
 
-  <Target Name="Update">
-	<!-- You must install the subversion package (not tortoise or another fancy gui version)
-	http://subversion.tigris.org/project_packages.html -->
-	<SvnUpdate RepositoryPath="$(RepositoryPath)"
-				 LocalPath="$(ApplicationDirectory)">
-	  <Output TaskParameter="Revision" PropertyName="Revision" />
-	</SvnUpdate>
-	<SvnUpdate RepositoryPath="$(LiftRepositoryPath)"
-				 LocalPath="$(ApplicationDirectory)\lib\lift"/>
-	<Message Text="Updated code from $(RepositoryPath) and $(LiftRepositoryPath)"/>
-	<Message Text="Revision: $(Revision)"/>
-  </Target>
-
-
-  <Target Name="Export">
-	<RemoveDir Directories="$(ApplicationDirectory)" />
-	<!-- You must install the subversion package (not tortoise or another fancy gui version)
-	http://subversion.tigris.org/project_packages.html -->
-	<SvnExport RepositoryPath="$(RepositoryPath)"
-				 LocalPath="$(ApplicationDirectory)">
-	  <Output TaskParameter="Revision" PropertyName="Revision" />
-	</SvnExport>
-	<SvnExport RepositoryPath="$(LiftRepositoryPath)"
-				 LocalPath="$(ApplicationDirectory)\lib\lift"/>
-	<Message Text="Exported code from $(RepositoryPath) and $(LiftRepositoryPath)"/>
-	<Message Text="Revision: $(Revision)"/>
-
-  </Target>
-
-  <Target Name="Build" DependsOnTargets="Update">
+  <Target Name="Build" DependsOnTargets="Checkout">
 	<MSBuild Projects="$(ApplicationDirectory)\bld\WeSay.proj" />
   </Target>
 
