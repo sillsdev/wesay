@@ -55,7 +55,7 @@ namespace WeSay.App
 		   }
 
 			UsageEmailDialog.IncrementLaunchCount();
-			UsageEmailDialog.DoTrivialUsageReport("issues@wesay.org", "(This will not be asked of users in the released version.)", new int[] { 1,5,20,40,60,80,100 });
+			UsageEmailDialog.DoTrivialUsageReport("usage@wesay.org", "(This will not be asked of users in the released version.)", new int[] { 1,5,20,40,60,80,100 });
 
 			CommandLineArguments cmdArgs = new CommandLineArguments();
 			if (!CommandLine.Parser.ParseArguments(args, cmdArgs, new ReportError(ShowCommandLineError)))

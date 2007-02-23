@@ -28,7 +28,7 @@ namespace WeSay.Setup
 			}
 
 			Reporting.UsageEmailDialog.IncrementLaunchCount();
-			Reporting.UsageEmailDialog.DoTrivialUsageReport("issues@wesay.org", "Thank you for helping us test WeSay!", new int[] { 1, 5, 20, 40, 60, 80, 100 });
+			Reporting.UsageEmailDialog.DoTrivialUsageReport("usage@wesay.org", "Thank you for helping us test WeSay!", new int[] { 1, 5, 20, 40, 60, 80, 100 });
 
 			Application.Run(new AdminWindow(args));
 
