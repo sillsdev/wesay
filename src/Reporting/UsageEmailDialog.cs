@@ -268,7 +268,7 @@ namespace Reporting
 				d.TopLineText = topMessage;
 				d.EmailMessage.Address = emailAddress;
 				d.EmailMessage.Subject = string.Format("{0} {1} Report {2} Launches", Application.ProductName, version, launchCount);
-				d.EmailMessage.Body = string.Format("<report app='{0}' version='{1}'><stat type='launches' value='{2}'/></report>", Application.ProductName, version, launchCount);
+				d.EmailMessage.Body = string.Format("app={0} version={1} launches={2}", Application.ProductName, version, launchCount);
 				d.ShowDialog();
 			}
 		}
