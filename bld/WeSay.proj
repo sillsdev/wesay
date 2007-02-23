@@ -87,7 +87,7 @@
 		  WorkingDirectory="$(BaseDirectory)\output\Release"/>
   </Target>
 
-  <Target Name="Package" >
+  <Target Name="Package" DependsOnTargets="VerifySample" >
 	<CreateItem Include="$(BaseDirectory)\SampleProjects\**\*.lift.frag.xml"
 				Exclude="$(BaseDirectory)\SampleProjects\src\**\*.*">
 	  <Output TaskParameter="Include" ItemName="liftFragments"/>

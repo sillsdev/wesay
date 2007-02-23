@@ -13,8 +13,7 @@
   </PropertyGroup>
 
   <Target Name="Checkout">
-	<!--
-	<RemoveDir Directories="$(ApplicationDirectory)" /> -->
+	<RemoveDir Directories="$(ApplicationDirectory)" />
 	<!-- You must install the subversion package (not tortoise or another fancy gui version)
 	http://subversion.tigris.org/project_packages.html -->
 	<!-- we can't just export since later we will use SvnVersion to pick up the revision number-->
