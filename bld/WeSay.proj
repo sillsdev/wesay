@@ -50,15 +50,41 @@
 
 
   <ItemGroup>
-	<SampleFiles Include="$(BaseDirectory)\SampleProjects\src\**\*.*"/>
+	<SampleFiles Include="$(BaseDirectory)\SampleProjects\src\**\*.*"
+				 Exclude="$(BaseDirectory)\SampleProjects\src\**\.svn\*.*"/>
+  </ItemGroup>
+
+
+  <ItemGroup>
+	<SampleProjects Include="$(BaseDirectory)\SampleProjects\src\*.*"
+					Exclude="$(BaseDirectory)\SampleProjects\src\.svn"/>
   </ItemGroup>
 
   <Target Name="CreateSample" DependsOnTargets="Test">
+	<Copy SourceFiles="@(SampleFiles)"
+		  DestinationFolder="$(BaseDirectory)\SampleProjects\%(RecursiveDir)" />
+
+	<CreateItem Include="$(BaseDirectory)\SampleProjects\**\*.lift"
+				Exclude="$(BaseDirectory)\SampleProjects\src\**\*.*">
+	  <Output TaskParameter="Include" ItemName="LiftFiles"/>
+	</CreateItem>
+
 	<!-- lift to wesay.words-->
-	<!-- -->
+	<Exec Command="$(BaseDirectory)\output\Release\Lift2WeSay.exe %(LiftFiles.FullPath) %(LiftFiles.RootDir)%(LiftFiles.Directory)%(LiftFiles.Filename).words"
+		  WorkingDirectory="$(BaseDirectory)\output\Release"/>
+
   </Target>
 
+
   <Target Name="VerifySample" DependsOnTargets="CreateSample">
+	<CreateItem Include="$(BaseDirectory)\SampleProjects\**\*.words"
+				Exclude="$(BaseDirectory)\SampleProjects\src\**\*.*">
+	  <Output TaskParameter="Include" ItemName="WeSayFiles"/>
+	</CreateItem>
+
+	<!-- open using wesay -->
+	<Exec Command="$(BaseDirectory)\output\Release\WeSay.App.exe %(WeSayFiles.FullPath)"
+		  WorkingDirectory="$(BaseDirectory)\output\Release"/>
   </Target>
 
   <Target Name="Package" DependsOnTargets="VerifySample">
@@ -70,6 +96,12 @@
   <Target Name="Build" DependsOnTargets="Upload">
 
 	<!-- Mail email to list-->
+<!--    <Mail Body="A new version of WeSay has been deployed. Check it out."
+		  SmtpServer="localhost"
+		  From="admin@wesay.org"
+		  Subject="New version of WeSay"
+		  To="wesay@google-groups.com"/>
+	-->
 	<Message Text="Build Complete"/>
 <!--    <Message Text="Version: $(Major).$(Minor).$(Bug).$(Revision)"/> -->
 

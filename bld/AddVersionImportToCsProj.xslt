@@ -27,15 +27,13 @@
   <!-- make sure we include the update version targets-->
   <xsl:template match="/ms:Project | mergedroot/ms:Project">
 	<xsl:copy>
-	  <xsl:apply-templates select="@*|node()"/>
-	  <xsl:if test="not(ms:Import[contains(@Project, '\bld\Version.Targets')])">
+	  <xsl:apply-templates select="@*|node()[not(self::ms:Import[contains(@Project, '\bld\Version.Targets')])]"/>
 		<Import>
 		  <xsl:attribute name="Project">
 			<xsl:value-of select="/mergedroot/@projectDirectory"/>
 			<xsl:text>\bld\Version.Targets</xsl:text>
 		  </xsl:attribute>
 		</Import>
-	  </xsl:if>
 	</xsl:copy>
   </xsl:template>
 
