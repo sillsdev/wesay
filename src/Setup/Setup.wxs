@@ -57,14 +57,14 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 
 
 		  <Component Id="DocFiles" Guid="{F533B47C-A6F4-4284-A257-59C3C9B54526}">
-			<File Id="Welcome.htm" Name="Welcome.htm" KeyPath="yes" Source="c:\wesay\doc\Welcome.htm" />
+			<File Id="Welcome.htm" Name="Welcome.htm" KeyPath="yes" Source="..\..\doc\Welcome.htm" />
 		  </Component>
 
 		  <Component Id="WeSay.App.exe" Guid="{406B533F-C5D5-49AD-9DC9-12375B80949F}">
 			<Registry Root="HKCU" Key="SOFTWARE\WeSay\Components\WeSay.App.exe" KeyPath="yes" />
 
-			<File Id="WeSay.App.exe" Name="WeSay.App.exe"  Source="c:\wesay\output\debug\WeSay.App.exe" />
-			<File Id="WeSayWordsIconFile" Name="WeSayWordsFile.ico" Source="c:\wesay\output\debug\resources\WeSayWordsFile.ico" />
+			<File Id="WeSay.App.exe" Name="WeSay.App.exe"  Source="..\..\output\release\WeSay.App.exe" />
+			<File Id="WeSayWordsIconFile" Name="WeSayWordsFile.ico" Source="..\..\output\release\resources\WeSayWordsFile.ico" />
 
 			<!--- connect file types to icons and program to launch -->
 
@@ -96,147 +96,159 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 		  <Component Id="WeSay.Setup.exe" Guid="{26CD1460-94D4-44CD-832A-EA750F5AA92A}">
 			<Registry Root="HKCU" Key="SOFTWARE\WeSay\Components\WeSay.Setup.exe" KeyPath="yes" />
 
-			<File Id="WeSay.Setup.exe" Name="WeSay.Setup.exe" Source="c:\wesay\output\debug\WeSay.Setup.exe" />
+			<File Id="WeSay.Setup.exe" Name="WeSay.Setup.exe" Source="..\..\output\release\WeSay.Setup.exe" />
 
 			<Shortcut Id="startmenuSplatt2"  Target ="[!WeSay.Setup.exe]" Directory="WeSayShortcutDir" Name="WeSay Setup"
 	 WorkingDirectory="ProgramDir" Icon ="IconSetup.exe" />
 
 		  </Component>
 		  <Component Id="WeSay.Setup.exe.config" Guid="{3FD496AE-6B71-4213-B3FD-39CF62698642}">
-			<File Id="WeSay.Setup.exe.config" Name="WeSay.Setup.exe.config" KeyPath="yes" Source="c:\wesay\output\debug\WeSay.Setup.exe.config" />
+			<File Id="WeSay.Setup.exe.config" Name="WeSay.Setup.exe.config" KeyPath="yes" Source="..\..\output\release\WeSay.Setup.exe.config" />
 		  </Component>
 		  <Component Id="WeSay.Setup.pdb" Guid="{FA331270-82EF-4BB8-878C-724442249466}">
-			<File Id="WeSay.Setup.pdb" Name="WeSay.Setup.pdb" KeyPath="yes" Source="c:\wesay\output\debug\WeSay.Setup.pdb" />
+			<File Id="WeSay.Setup.pdb" Name="WeSay.Setup.pdb" KeyPath="yes" Source="..\..\output\release\WeSay.Setup.pdb" />
 		  </Component>
 		  <Component Id="Castle.DynamicProxy.dll" Guid="{871D566A-F864-4946-AA65-6A7E07D24E1B}">
-			<File Id="Castle.DynamicProxy.dll" Name="Castle.DynamicProxy.dll" KeyPath="yes" Source="c:\wesay\output\debug\Castle.DynamicProxy.dll" />
+			<File Id="Castle.DynamicProxy.dll" Name="Castle.DynamicProxy.dll" KeyPath="yes" Source="..\..\output\release\Castle.DynamicProxy.dll" />
 		  </Component>
 		  <Component Id="CommonTools.dll" Guid="{C9296169-583C-4302-8504-ED2DEC99558B}">
-			<File Id="CommonTools.dll" Name="CommonTools.dll" KeyPath="yes" Source="c:\wesay\output\debug\CommonTools.dll" />
+			<File Id="CommonTools.dll" Name="CommonTools.dll" KeyPath="yes" Source="..\..\output\release\CommonTools.dll" />
 		  </Component>
 		  <Component Id="CommonTools.pdb" Guid="{3B8D43F0-7A64-4AC7-82A9-2A334E53F5AC}">
-			<File Id="CommonTools.pdb" Name="CommonTools.pdb" KeyPath="yes" Source="c:\wesay\output\debug\CommonTools.pdb" />
+			<File Id="CommonTools.pdb" Name="CommonTools.pdb" KeyPath="yes" Source="..\..\output\release\CommonTools.pdb" />
 		  </Component>
 		  <Component Id="Db4objects.Db4o.dll" Guid="{A519B18E-56D3-45FA-A2C9-BA7A524259B2}">
-			<File Id="Db4objects.Db4o.dll" Name="Db4objects.Db4o.dll" KeyPath="yes" Source="c:\wesay\output\debug\Db4objects.Db4o.dll" />
+			<File Id="Db4objects.Db4o.dll" Name="Db4objects.Db4o.dll" KeyPath="yes" Source="..\..\output\release\Db4objects.Db4o.dll" />
 		  </Component>
 		  <Component Id="Db4objects.Db4o.Tools.dll" Guid="{43EEAD0E-79B9-4E40-9FE0-BDEE34173B92}">
-			<File Id="Db4objects.Db4o.Tools.dll" Name="Db4objects.Db4o.Tools.dll" KeyPath="yes" Source="c:\wesay\output\debug\Db4objects.Db4o.Tools.dll" />
+			<File Id="Db4objects.Db4o.Tools.dll" Name="Db4objects.Db4o.Tools.dll" KeyPath="yes" Source="..\..\output\release\Db4objects.Db4o.Tools.dll" />
 		  </Component>
 		  <Component Id="DevAge.Core.dll" Guid="{E1DF2139-71A1-4D2A-897C-48C98479E2EA}">
-			<File Id="DevAge.Core.dll" Name="DevAge.Core.dll" KeyPath="yes" Source="c:\wesay\output\debug\DevAge.Core.dll" />
+			<File Id="DevAge.Core.dll" Name="DevAge.Core.dll" KeyPath="yes" Source="..\..\output\release\DevAge.Core.dll" />
 		  </Component>
+		  <!--
 		  <Component Id="DevAge.Core.pdb" Guid="{5C06D692-6A1C-4ABE-80F4-A3FEA71B3565}">
-			<File Id="DevAge.Core.pdb" Name="DevAge.Core.pdb" KeyPath="yes" Source="c:\wesay\output\debug\DevAge.Core.pdb" />
+			<File Id="DevAge.Core.pdb" Name="DevAge.Core.pdb" KeyPath="yes" Source="..\..\output\release\DevAge.Core.pdb" />
 		  </Component>
+		  -->
 		  <Component Id="DevAge.Drawing.dll" Guid="{594FE7E6-FAD3-485B-AACD-8D592C44308C}">
-			<File Id="DevAge.Drawing.dll" Name="DevAge.Drawing.dll" KeyPath="yes" Source="c:\wesay\output\debug\DevAge.Drawing.dll" />
+			<File Id="DevAge.Drawing.dll" Name="DevAge.Drawing.dll" KeyPath="yes" Source="..\..\output\release\DevAge.Drawing.dll" />
 		  </Component>
 		  <Component Id="DevAge.SourceGrid3.dll" Guid="{7BD35851-4F16-4D82-A374-18FDF6D50B44}">
-			<File Id="DevAge.SourceGrid3.dll" Name="DevAge.SourceGrid3.dll" KeyPath="yes" Source="c:\wesay\output\debug\DevAge.SourceGrid3.dll" />
+			<File Id="DevAge.SourceGrid3.dll" Name="DevAge.SourceGrid3.dll" KeyPath="yes" Source="..\..\output\release\DevAge.SourceGrid3.dll" />
 		  </Component>
+		  <!--
 		  <Component Id="DevAge.SourceGrid3.pdb" Guid="{913F7110-0788-44DD-BDE0-7FC57DEA6385}">
-			<File Id="DevAge.SourceGrid3.pdb" Name="DevAge.SourceGrid3.pdb" KeyPath="yes" Source="c:\wesay\output\debug\DevAge.SourceGrid3.pdb" />
+			<File Id="DevAge.SourceGrid3.pdb" Name="DevAge.SourceGrid3.pdb" KeyPath="yes" Source="..\..\output\release\DevAge.SourceGrid3.pdb" />
 		  </Component>
+		  -->
 		  <Component Id="DevAge.Windows.Forms.dll" Guid="{F8CBCDA7-0C25-4A85-96D7-4FBC2D86356D}">
-			<File Id="DevAge.Windows.Forms.dll" Name="DevAge.Windows.Forms.dll" KeyPath="yes" Source="c:\wesay\output\debug\DevAge.Windows.Forms.dll" />
+			<File Id="DevAge.Windows.Forms.dll" Name="DevAge.Windows.Forms.dll" KeyPath="yes" Source="..\..\output\release\DevAge.Windows.Forms.dll" />
 		  </Component>
+		  <!--
 		  <Component Id="DevAge.Windows.Forms.pdb" Guid="{BBB76710-4DC1-4C15-91A8-7B6C25F6C5F3}">
-			<File Id="DevAge.Windows.Forms.pdb" Name="DevAge.Windows.Forms.pdb" KeyPath="yes" Source="c:\wesay\output\debug\DevAge.Windows.Forms.pdb" />
+			<File Id="DevAge.Windows.Forms.pdb" Name="DevAge.Windows.Forms.pdb" KeyPath="yes" Source="..\..\output\release\DevAge.Windows.Forms.pdb" />
 		  </Component>
+		  -->
 		  <Component Id="ICSharpCode.SharpZipLib.dll" Guid="{6254D0F2-A7AF-411C-801E-30EBB1E6D9D7}">
-			<File Id="ICSharpCode.SharpZipLib.dll" Name="ICSharpCode.SharpZipLib.dll" KeyPath="yes" Source="c:\wesay\output\debug\ICSharpCode.SharpZipLib.dll" />
+			<File Id="ICSharpCode.SharpZipLib.dll" Name="ICSharpCode.SharpZipLib.dll" KeyPath="yes" Source="..\..\output\release\ICSharpCode.SharpZipLib.dll" />
 		  </Component>
 		  <Component Id="KeymanLink.dll" Guid="{1720BDF8-C1A3-436A-8E32-00C871230230}">
-			<File Id="KeymanLink.dll" Name="KeymanLink.dll" KeyPath="yes" Source="c:\wesay\output\debug\KeymanLink.dll" />
+			<File Id="KeymanLink.dll" Name="KeymanLink.dll" KeyPath="yes" Source="..\..\output\release\KeymanLink.dll" />
 		  </Component>
+		  <!--
 		  <Component Id="KeymanLink.pdb" Guid="{267F7819-B00C-4D02-B305-5C62A6E0F816}">
-			<File Id="KeymanLink.pdb" Name="KeymanLink.pdb" KeyPath="yes" Source="c:\wesay\output\debug\KeymanLink.pdb" />
+			<File Id="KeymanLink.pdb" Name="KeymanLink.pdb" KeyPath="yes" Source="..\..\output\release\KeymanLink.pdb" />
 		  </Component>
+		  -->
+		  <!--
 		  <Component Id="KeymanLink.xml" Guid="{35D8CFC7-72A3-4948-824A-3035BB11CAD0}">
-			<File Id="KeymanLink.xml" Name="KeymanLink.xml" KeyPath="yes" Source="c:\wesay\output\debug\KeymanLink.xml" />
+			<File Id="KeymanLink.xml" Name="KeymanLink.xml" KeyPath="yes" Source="..\..\output\release\KeymanLink.xml" />
 		  </Component>
+		  -->
 		  <Component Id="LexicalModel.dll" Guid="{A685F027-A948-4045-A9B9-3DF8823E7E82}">
-			<File Id="LexicalModel.dll" Name="LexicalModel.dll" KeyPath="yes" Source="c:\wesay\output\debug\LexicalModel.dll" />
+			<File Id="LexicalModel.dll" Name="LexicalModel.dll" KeyPath="yes" Source="..\..\output\release\LexicalModel.dll" />
 		  </Component>
 		  <Component Id="LexicalModel.pdb" Guid="{4717CE8D-4BD8-46FB-8A47-1C6C2C459377}">
-			<File Id="LexicalModel.pdb" Name="LexicalModel.pdb" KeyPath="yes" Source="c:\wesay\output\debug\LexicalModel.pdb" />
+			<File Id="LexicalModel.pdb" Name="LexicalModel.pdb" KeyPath="yes" Source="..\..\output\release\LexicalModel.pdb" />
 		  </Component>
 		  <Component Id="LexicalTools.dll" Guid="{B21B6EE7-28A6-4E01-AFEB-B1A72FD4A41F}">
-			<File Id="LexicalTools.dll" Name="LexicalTools.dll" KeyPath="yes" Source="c:\wesay\output\debug\LexicalTools.dll" />
+			<File Id="LexicalTools.dll" Name="LexicalTools.dll" KeyPath="yes" Source="..\..\output\release\LexicalTools.dll" />
 		  </Component>
 		  <Component Id="LexicalTools.pdb" Guid="{DB30AF44-2E65-49AB-84E4-969CB6605CCA}">
-			<File Id="LexicalTools.pdb" Name="LexicalTools.pdb" KeyPath="yes" Source="c:\wesay\output\debug\LexicalTools.pdb" />
+			<File Id="LexicalTools.pdb" Name="LexicalTools.pdb" KeyPath="yes" Source="..\..\output\release\LexicalTools.pdb" />
 		  </Component>
 		  <Component Id="Lift2WeSay.exe" Guid="{A3903C9B-D674-4F98-A9E3-41E39F0E399A}">
-			<File Id="Lift2WeSay.exe" Name="Lift2WeSay.exe" KeyPath="yes" Source="c:\wesay\output\debug\Lift2WeSay.exe" />
+			<File Id="Lift2WeSay.exe" Name="Lift2WeSay.exe" KeyPath="yes" Source="..\..\output\release\Lift2WeSay.exe" />
 		  </Component>
 		  <Component Id="Lift2WeSay.pdb" Guid="{186678D2-D634-4055-AD75-7A0CF76C62ED}">
-			<File Id="Lift2WeSay.pdb" Name="Lift2WeSay.pdb" KeyPath="yes" Source="c:\wesay\output\debug\Lift2WeSay.pdb" />
+			<File Id="Lift2WeSay.pdb" Name="Lift2WeSay.pdb" KeyPath="yes" Source="..\..\output\release\Lift2WeSay.pdb" />
 		  </Component>
 		  <Component Id="LiftIO.dll" Guid="{EC2E5E3E-19E8-4680-8377-447DBDDE9BDF}">
-			<File Id="LiftIO.dll" Name="LiftIO.dll" KeyPath="yes" Source="c:\wesay\output\debug\LiftIO.dll" />
+			<File Id="LiftIO.dll" Name="LiftIO.dll" KeyPath="yes" Source="..\..\output\release\LiftIO.dll" />
 		  </Component>
 		  <Component Id="LiftIO.pdb" Guid="{68959BF8-AC50-47FD-8B06-718B3E7FC6B6}">
-			<File Id="LiftIO.pdb" Name="LiftIO.pdb" KeyPath="yes" Source="c:\wesay\output\debug\LiftIO.pdb" />
+			<File Id="LiftIO.pdb" Name="LiftIO.pdb" KeyPath="yes" Source="..\..\output\release\LiftIO.pdb" />
 		  </Component>
 		  <Component Id="ListBox.dll" Guid="{E145E8AD-F60E-49A0-8B5D-A513BBDBAF99}">
-			<File Id="ListBox.dll" Name="ListBox.dll" KeyPath="yes" Source="c:\wesay\output\debug\ListBox.dll" />
+			<File Id="ListBox.dll" Name="ListBox.dll" KeyPath="yes" Source="..\..\output\release\ListBox.dll" />
 		  </Component>
 		  <Component Id="ListBox.pdb" Guid="{FB40B28A-27FE-4DC9-9CE3-5A4F7B4512A4}">
-			<File Id="ListBox.pdb" Name="ListBox.pdb" KeyPath="yes" Source="c:\wesay\output\debug\ListBox.pdb" />
+			<File Id="ListBox.pdb" Name="ListBox.pdb" KeyPath="yes" Source="..\..\output\release\ListBox.pdb" />
 		  </Component>
 		  <Component Id="NetReflector.dll" Guid="{AE9F3A6E-390F-46B3-AFCB-CE8A2E8EC769}">
-			<File Id="NetReflector.dll" Name="NetReflector.dll" KeyPath="yes" Source="c:\wesay\output\debug\NetReflector.dll" />
+			<File Id="NetReflector.dll" Name="NetReflector.dll" KeyPath="yes" Source="..\..\output\release\NetReflector.dll" />
 		  </Component>
+		  <!--
 		  <Component Id="NetReflector.pdb" Guid="{92497411-A442-436D-9421-FC99DF5298DA}">
-			<File Id="NetReflector.pdb" Name="NetReflector.pdb" KeyPath="yes" Source="c:\wesay\output\debug\NetReflector.pdb" />
+			<File Id="NetReflector.pdb" Name="NetReflector.pdb" KeyPath="yes" Source="..\..\output\release\NetReflector.pdb" />
 		  </Component>
+		  -->
 		  <Component Id="PicoContainer.dll" Guid="{44CA9A8F-DF0D-4870-95F2-BDB6C56551D7}">
-			<File Id="PicoContainer.dll" Name="PicoContainer.dll" KeyPath="yes" Source="c:\wesay\output\debug\PicoContainer.dll" />
+			<File Id="PicoContainer.dll" Name="PicoContainer.dll" KeyPath="yes" Source="..\..\output\release\PicoContainer.dll" />
 		  </Component>
 		  <Component Id="PicoContainer.pdb" Guid="{4C7A63B8-B4EC-485A-8709-B4F5807181C2}">
-			<File Id="PicoContainer.pdb" Name="PicoContainer.pdb" KeyPath="yes" Source="c:\wesay\output\debug\PicoContainer.pdb" />
+			<File Id="PicoContainer.pdb" Name="PicoContainer.pdb" KeyPath="yes" Source="..\..\output\release\PicoContainer.pdb" />
 		  </Component>
 		  <Component Id="PlatformSpecific.dll" Guid="{CEE389B4-D9AD-40CE-9055-C44C2042CB83}">
-			<File Id="PlatformSpecific.dll" Name="PlatformSpecific.dll" KeyPath="yes" Source="c:\wesay\output\debug\PlatformSpecific.dll" />
+			<File Id="PlatformSpecific.dll" Name="PlatformSpecific.dll" KeyPath="yes" Source="..\..\output\release\PlatformSpecific.dll" />
 		  </Component>
 		  <Component Id="PlatformSpecific.pdb" Guid="{66142923-BAE1-4884-957C-11F6F2A3E800}">
-			<File Id="PlatformSpecific.pdb" Name="PlatformSpecific.pdb" KeyPath="yes" Source="c:\wesay\output\debug\PlatformSpecific.pdb" />
+			<File Id="PlatformSpecific.pdb" Name="PlatformSpecific.pdb" KeyPath="yes" Source="..\..\output\release\PlatformSpecific.pdb" />
 		  </Component>
 		  <Component Id="Reporting.dll" Guid="{63142923-BAE1-4884-957C-11F6F2A3E800}">
-			<File Id="Reporting.dll" Name="Reporting.dll" KeyPath="yes" Source="c:\wesay\output\debug\Reporting.dll" />
+			<File Id="Reporting.dll" Name="Reporting.dll" KeyPath="yes" Source="..\..\output\release\Reporting.dll" />
 		  </Component>
 
 		  <Component Id="WeSay.App.exe.config" Guid="{ED8319B8-8325-4598-8E4C-004D3356E373}">
-			<File Id="WeSay.App.exe.config" Name="WeSay.App.exe.config" KeyPath="yes" Source="c:\wesay\output\debug\WeSay.App.exe.config" />
+			<File Id="WeSay.App.exe.config" Name="WeSay.App.exe.config" KeyPath="yes" Source="..\..\output\release\WeSay.App.exe.config" />
 		  </Component>
 		  <Component Id="WeSay.App.pdb" Guid="{09985277-021A-445A-AB0F-E3563C536042}">
-			<File Id="WeSay.App.pdb" Name="WeSay.App.pdb" KeyPath="yes" Source="c:\wesay\output\debug\WeSay.App.pdb" />
+			<File Id="WeSay.App.pdb" Name="WeSay.App.pdb" KeyPath="yes" Source="..\..\output\release\WeSay.App.pdb" />
 		  </Component>
 		  <Component Id="WeSay.Data.dll" Guid="{9D7FBFF9-17CD-4242-8B35-83EE310890E4}">
-			<File Id="WeSay.Data.dll" Name="WeSay.Data.dll" KeyPath="yes" Source="c:\wesay\output\debug\WeSay.Data.dll" />
+			<File Id="WeSay.Data.dll" Name="WeSay.Data.dll" KeyPath="yes" Source="..\..\output\release\WeSay.Data.dll" />
 		  </Component>
 		  <Component Id="WeSay.Data.pdb" Guid="{AB4A19B4-6282-4880-BA85-8F95C97D2A20}">
-			<File Id="WeSay.Data.pdb" Name="WeSay.Data.pdb" KeyPath="yes" Source="c:\wesay\output\debug\WeSay.Data.pdb" />
+			<File Id="WeSay.Data.pdb" Name="WeSay.Data.pdb" KeyPath="yes" Source="..\..\output\release\WeSay.Data.pdb" />
 		  </Component>
 		  <Component Id="WeSay.Foundation.dll" Guid="{D496A907-0424-4A9C-9A85-E4B100CD4E6F}">
-			<File Id="WeSay.Foundation.dll" Name="WeSay.Foundation.dll" KeyPath="yes" Source="c:\wesay\output\debug\WeSay.Foundation.dll" />
+			<File Id="WeSay.Foundation.dll" Name="WeSay.Foundation.dll" KeyPath="yes" Source="..\..\output\release\WeSay.Foundation.dll" />
 		  </Component>
 		  <Component Id="WeSay.Foundation.pdb" Guid="{B747F20D-2079-489F-98D2-330E01D168CB}">
-			<File Id="WeSay.Foundation.pdb" Name="WeSay.Foundation.pdb" KeyPath="yes" Source="c:\wesay\output\debug\WeSay.Foundation.pdb" />
+			<File Id="WeSay.Foundation.pdb" Name="WeSay.Foundation.pdb" KeyPath="yes" Source="..\..\output\release\WeSay.Foundation.pdb" />
 		  </Component>
 		  <Component Id="WeSay.Project.dll" Guid="{F7D8A8F2-C244-472F-A184-426A6E4EDEDE}">
-			<File Id="WeSay.Project.dll" Name="WeSay.Project.dll" KeyPath="yes" Source="c:\wesay\output\debug\WeSay.Project.dll" />
+			<File Id="WeSay.Project.dll" Name="WeSay.Project.dll" KeyPath="yes" Source="..\..\output\release\WeSay.Project.dll" />
 		  </Component>
 		  <Component Id="WeSay.Project.pdb" Guid="{AC3C456E-89AD-4D23-A628-FEBC28445AAD}">
-			<File Id="WeSay.Project.pdb" Name="WeSay.Project.pdb" KeyPath="yes" Source="c:\wesay\output\debug\WeSay.Project.pdb" />
+			<File Id="WeSay.Project.pdb" Name="WeSay.Project.pdb" KeyPath="yes" Source="..\..\output\release\WeSay.Project.pdb" />
 		  </Component>
 		  <Component Id="WeSay.UI.dll" Guid="{8597A830-9A97-4A74-A25F-3FEDF790B782}">
-			<File Id="WeSay.UI.dll" Name="WeSay.UI.dll" KeyPath="yes" Source="c:\wesay\output\debug\WeSay.UI.dll" />
+			<File Id="WeSay.UI.dll" Name="WeSay.UI.dll" KeyPath="yes" Source="..\..\output\release\WeSay.UI.dll" />
 		  </Component>
 		  <Component Id="WeSay.UI.pdb" Guid="{3A0709F0-361F-49F9-B50E-877BDA266A22}">
-			<File Id="WeSay.UI.pdb" Name="WeSay.UI.pdb" KeyPath="yes" Source="c:\wesay\output\debug\WeSay.UI.pdb" />
+			<File Id="WeSay.UI.pdb" Name="WeSay.UI.pdb" KeyPath="yes" Source="..\..\output\release\WeSay.UI.pdb" />
 		  </Component>
 		</Directory>
 	  </Directory>
@@ -259,16 +271,16 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 	  <ComponentRef Id="Db4objects.Db4o.dll" />
 	  <ComponentRef Id="Db4objects.Db4o.Tools.dll" />
 	  <ComponentRef Id="DevAge.Core.dll" />
-	  <ComponentRef Id="DevAge.Core.pdb" />
+<!--      <ComponentRef Id="DevAge.Core.pdb" />-->
 	  <ComponentRef Id="DevAge.Drawing.dll" />
 	  <ComponentRef Id="DevAge.SourceGrid3.dll" />
-	  <ComponentRef Id="DevAge.SourceGrid3.pdb" />
+	  <!--<ComponentRef Id="DevAge.SourceGrid3.pdb" />-->
 	  <ComponentRef Id="DevAge.Windows.Forms.dll" />
-	  <ComponentRef Id="DevAge.Windows.Forms.pdb" />
+	  <!--<ComponentRef Id="DevAge.Windows.Forms.pdb" />-->
 	  <ComponentRef Id="ICSharpCode.SharpZipLib.dll" />
 	  <ComponentRef Id="KeymanLink.dll" />
-	  <ComponentRef Id="KeymanLink.pdb" />
-	  <ComponentRef Id="KeymanLink.xml" />
+	  <!--<ComponentRef Id="KeymanLink.pdb" />-->
+	  <!--<ComponentRef Id="KeymanLink.xml" />-->
 	  <ComponentRef Id="LexicalModel.dll" />
 	  <ComponentRef Id="LexicalModel.pdb" />
 	  <ComponentRef Id="LexicalTools.dll" />
@@ -280,7 +292,7 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 	  <ComponentRef Id="ListBox.dll" />
 	  <ComponentRef Id="ListBox.pdb" />
 	  <ComponentRef Id="NetReflector.dll" />
-	  <ComponentRef Id="NetReflector.pdb" />
+	  <!--<ComponentRef Id="NetReflector.pdb" />-->
 	  <ComponentRef Id="PicoContainer.dll" />
 	  <ComponentRef Id="PicoContainer.pdb" />
 	  <ComponentRef Id="PlatformSpecific.dll" />
@@ -316,10 +328,10 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 
 	</Feature>
 	<Media Id="1" Cabinet="product.cab" EmbedCab="yes" />
-	<Icon Id="WeSay.App.exe" SourceFile ="c:\wesay\output\debug\WeSay.App.exe" />
-	<Icon Id="IconSetup.exe" SourceFile ="c:\wesay\output\debug\WeSay.Setup.exe" />
-	<Icon Id="SampleSetupIcon" SourceFile ="c:\wesay\output\debug\WeSay.Setup.exe" />
-	<Icon Id="SampleRunIcon" SourceFile ="c:\wesay\output\debug\resources\WeSayWordsFile.ico" />
+	<Icon Id="WeSay.App.exe" SourceFile ="..\..\output\release\WeSay.App.exe" />
+	<Icon Id="IconSetup.exe" SourceFile ="..\..\output\release\WeSay.Setup.exe" />
+	<Icon Id="SampleSetupIcon" SourceFile ="..\..\output\release\WeSay.Setup.exe" />
+	<Icon Id="SampleRunIcon" SourceFile ="..\..\output\release\resources\WeSayWordsFile.ico" />
 
 	<!--   <Property Id="BROWSER">
 	  <RegistrySearch Id='DefaultBrowser' Type='raw'
