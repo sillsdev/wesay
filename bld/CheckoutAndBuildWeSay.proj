@@ -27,7 +27,8 @@
   </Target>
 
   <Target Name="Build" DependsOnTargets="Checkout">
-	<MSBuild Projects="$(ApplicationDirectory)\bld\WeSay.proj" />
+	<MSBuild Projects="$(ApplicationDirectory)\bld\WeSay.proj"
+			 Properties="user=$(user);password=$(password)" />
   </Target>
 
 </Project>
