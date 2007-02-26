@@ -14,12 +14,19 @@ namespace WeSay.UI
 		{
 			get
 			{
-				return _flagButton.IsSetOn;
+				if (_flagButton != null)
+				{
+					return _flagButton.IsSetOn;
+				}
+				return false;
 			}
 
 			set
 			{
-				_flagButton.IsSetOn = value;
+				if (_flagButton != null)
+				{
+					_flagButton.IsSetOn = value;
+				}
 			}
 		}
 
