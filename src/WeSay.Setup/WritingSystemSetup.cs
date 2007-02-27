@@ -207,7 +207,7 @@ namespace WeSay.Setup
 //            {
 //                s += " (A)";
 //            }
-			if (s == WritingSystem.IdForUnknownAnalysis)
+			if (s == WritingSystem.IdForUnknownVernacular)
 				s += "<-- Change This";
 			return s;
 		}
