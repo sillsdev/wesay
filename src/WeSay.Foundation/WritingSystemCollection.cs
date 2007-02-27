@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Drawing;
 using System.Xml;
 using Exortech.NetReflector;
 
@@ -23,6 +24,23 @@ namespace WeSay.Language
 			{
 				reader.Close();
 			}
+		}
+
+
+		public new WritingSystem this[string key]
+		{
+			get
+			{
+				WritingSystem val;
+				if (this.TryGetValue(key, out val))
+				{
+					return val;
+				}
+				WritingSystem ws = new WritingSystem(key, new Font(System.Drawing.FontFamily.GenericSansSerif, 12));
+				this.Add(key, ws);
+				return ws;
+			}
+			set { base[key] = value; }
 		}
 
 		public void Write(XmlWriter writer)

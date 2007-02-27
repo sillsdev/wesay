@@ -162,7 +162,7 @@ namespace WeSay.App
 				{
 					MessageBox.Show(
 						String.Format(
-							"WeSay was unable to figure out what lexicon to work on. It will use an argument if given one, otherwise it tries to find the lexicon that it was last used with.  In this, case, it found neither.  You can use the WeSay Admin program to reset the location of the project.",
+							"WeSay was unable to figure out what lexicon to work on. It will use an argument from a shortcut if given one, otherwise it tries to find the lexicon that it was last used with.  In this, case, it found neither.  You can use the WeSay Setup program to reset the location of the project.",
 							cmdArgs.wordsPath), "WeSay error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 					return false;
 				}

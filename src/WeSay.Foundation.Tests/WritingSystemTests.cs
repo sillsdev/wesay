@@ -45,6 +45,15 @@ namespace WeSay.Language.Tests
 			Assert.AreEqual(33, ws.Font.Size);
 		}
 
+		[Test]
+		public void MissingIdIsHandledOk()
+		{
+			WritingSystemCollection x = new WritingSystemCollection();
+			WritingSystem ws = x["unheardof"];
+			Assert.IsNotNull(ws);
+			Assert.AreSame(ws, x["unheardof"],"Expected to get exactly the same one each time");
+		}
+
 
 		[Test]
 		public void RightFont()
