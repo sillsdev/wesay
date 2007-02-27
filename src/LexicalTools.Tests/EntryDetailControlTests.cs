@@ -107,6 +107,14 @@ namespace WeSay.LexicalTools.Tests
 		}
 
 		[Test]
+		public void ClickingAddWordFocusesFirstField()
+		{
+			ClickAddWord();
+			NUnit.Extensions.Forms.TextBoxTester t = new TextBoxTester(GetLexicalFormControlName());
+			Assert.IsTrue(t.Properties.Focused);
+		}
+
+		[Test]
 		public void ClickingAddWordIncreasesRecordsByOne()
 		{
 			int before = _records.Count;
@@ -138,6 +146,13 @@ namespace WeSay.LexicalTools.Tests
 			Assert.AreEqual(before-1, _records.Count);
 		}
 
+		[Test]
+		public void ClickingDeleteWordFocusesFirstField()
+		{
+			ClickDeleteWord();
+			NUnit.Extensions.Forms.TextBoxTester t = new TextBoxTester(GetLexicalFormControlName());
+			Assert.IsTrue(t.Properties.Focused);
+		}
 
 
 		[Test]
