@@ -148,8 +148,7 @@
 						 CreateSample;
 						 VerifySample;
 						 Package;
-						 Upload;
-						 Mail"/>
+						 Upload"/>
 	<Message Text="Build Complete"/>
   </Target>
 
