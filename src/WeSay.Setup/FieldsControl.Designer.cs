@@ -141,11 +141,13 @@ namespace WeSay.Setup
 			this._descriptionBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
 						| System.Windows.Forms.AnchorStyles.Left)
 						| System.Windows.Forms.AnchorStyles.Right)));
+			this._descriptionBox.Enabled = false;
 			this._descriptionBox.Location = new System.Drawing.Point(7, 20);
 			this._descriptionBox.Multiline = true;
 			this._descriptionBox.Name = "_descriptionBox";
 			this._descriptionBox.Size = new System.Drawing.Size(314, 101);
 			this._descriptionBox.TabIndex = 0;
+			this._descriptionBox.Text = "hello";
 			//
 			// richTextBox1
 			//

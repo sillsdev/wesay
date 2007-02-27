@@ -8,6 +8,9 @@ namespace WeSay.Language
 	[ReflectorType("WritingSystem")]
 	public class WritingSystem
 	{
+		public static string IdForUnknownVernacular = "*V*";
+		public static string IdForUnknownAnalysis = "en";
+
 
 		private Font _font;
 		private string _id;
@@ -153,8 +156,6 @@ namespace WeSay.Language
 				_font = new Font(FontName, value);
 			}
 		}
-
-
 
 
 	}

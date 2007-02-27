@@ -12,6 +12,9 @@ namespace WeSay.Setup
 		public FieldsControl()
 		{
 			InitializeComponent();
+			//don't want grey
+			_descriptionBox.BackColor = System.Drawing.SystemColors.Window;
+			_descriptionBox.ForeColor = System.Drawing.SystemColors.WindowText;
 		}
 
 		private void FieldsControl_Load(object sender, EventArgs e)
@@ -66,6 +69,7 @@ namespace WeSay.Setup
 		{
 			_descriptionBox.Text = CurrentField.Description;
 			LoadWritingSystemBox();
+			LoadAboutFieldBox();
 		}
 
 
@@ -78,7 +82,10 @@ namespace WeSay.Setup
 				_writingSystemListBox.SetItemChecked(i, CurrentField.WritingSystemIds.Contains(ws.Id));
 			}
 		}
-
+		private void LoadAboutFieldBox()
+		{
+			_descriptionBox.Text = String.Format("{0} ({1}).  {2}", CurrentField.DisplayName, CurrentField.FieldName, CurrentField.Description);
+		}
 		private void _writingSystemListBox_ItemCheck(object sender, ItemCheckEventArgs e)
 		{
 			//happens when we are setting initial checkbox states from code

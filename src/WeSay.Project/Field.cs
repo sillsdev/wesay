@@ -103,7 +103,7 @@ namespace WeSay.Project
 
 		public override string ToString()
 		{
-			return _fieldName;
+			return string.Format(_displayName);
 		}
 
 		[ReflectorProperty("writingSystems", typeof(WsIdCollectionSerializerFactory))]
@@ -202,22 +202,24 @@ namespace WeSay.Project
 
 		public static void ModifyMasterFromUser(Field master, Field user)
 		{
-			master.WritingSystemIds = GetIntersectionOfWsIdLists(master, user);
+			// this worked so long as the master had all possible valid writing systems in each field
+			//          master.WritingSystemIds = GetIntersectionOfWsIdLists(master, user);
+			master.WritingSystemIds = user.WritingSystemIds;
 			master.Visibility = user.Visibility;
 		}
 
-		private static List<string> GetIntersectionOfWsIdLists(Field master, Field user)
-		{
-			List<string> l = new List<string>();
-			foreach (string id in master.WritingSystemIds)
-			{
-				if (user.WritingSystemIds.Contains(id))
-				{
-					l.Add(id);
-				}
-			}
-			return l;
-		}
+//        private static List<string> GetIntersectionOfWsIdLists(Field master, Field user)
+//        {
+//            List<string> l = new List<string>();
+//            foreach (string id in master.WritingSystemIds)
+//            {
+//                if (user.WritingSystemIds.Contains(id))
+//                {
+//                    l.Add(id);
+//                }
+//            }
+//            return l;
+//        }
 
 		#region persistence
 		internal class WsIdCollectionSerializerFactory : ISerialiserFactory

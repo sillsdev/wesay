@@ -199,14 +199,16 @@ namespace WeSay.Setup
 		public override string ToString()
 		{
 			string s = this._writingSystem.ToString();
-			if (IsVernacularDefault )
-			{
-				s += " (V)";
-			}
-			 if (IsAnalysisDefault)
-			{
-				s += " (A)";
-			}
+//            if (IsVernacularDefault )
+//            {
+//                s += " (V)";
+//            }
+//             if (IsAnalysisDefault)
+//            {
+//                s += " (A)";
+//            }
+			if (s == WritingSystem.IdForUnknownAnalysis)
+				s += "<-- Change This";
 			return s;
 		}
 	}

@@ -137,7 +137,7 @@ namespace WeSay.Project
 				Field userField = usersTemplate.GetField(masterField.FieldName);
 				if (userField != null)
 				{
-					Field.ModifyMasterFromUser(masterField, userField);
+					Field.ModifyMasterFromUser( masterField, userField);
 				}
 			}
 			//add custom fields (or out of date fields <--todo!)
@@ -151,43 +151,71 @@ namespace WeSay.Project
 			}
 		}
 
-
-
 		public static ViewTemplate MakeMasterTemplate(WritingSystemCollection writingSystems)
 		{
+			List<String> defaultVernacularSet = new List<string>();
+			defaultVernacularSet.Add(WritingSystem.IdForUnknownVernacular);
+
+			List<String> defaultAnalysisSet = new List<string>();
+			defaultAnalysisSet.Add(WritingSystem.IdForUnknownAnalysis);
+
 			ViewTemplate masterTemplate = new ViewTemplate();
-			masterTemplate.Add(MakeField(Field.FieldNames.EntryLexicalForm.ToString(), "Word", true,writingSystems));
-			masterTemplate.Add(MakeField(Field.FieldNames.SenseGloss.ToString(), "Gloss", true,writingSystems));
-			Field posField = MakeField("PartOfSpeech", "POS", true,writingSystems);
+
+			Field lexicalFormField = new Field(Field.FieldNames.EntryLexicalForm.ToString(), defaultVernacularSet);
+			lexicalFormField.DisplayName = "Word";
+			lexicalFormField.Visibility = Field.VisibilitySetting.Visible;
+			masterTemplate.Add(lexicalFormField);
+
+			Field glossField = new Field(Field.FieldNames.SenseGloss.ToString(), defaultAnalysisSet);
+			glossField.DisplayName = "Gloss";
+			glossField.Visibility = Field.VisibilitySetting.Visible;
+			masterTemplate.Add(glossField);
+
+			Field posField = new Field("PartOfSpeech", defaultAnalysisSet);
+			posField.DisplayName = "POS";
+			posField.Description = "The grammatical category of the entry (Noun, Verb, etc.).";
+			//MakeField("PartOfSpeech", "POS", true, defaultAnalysisSet);
 			posField.DataTypeName = "Option";
 			posField.ClassName = "LexSense";
 			posField.OptionsListFile = "PartsOfSpeech.xml";
 			masterTemplate.Add(posField);
-			masterTemplate.Add(MakeField(Field.FieldNames.ExampleSentence.ToString(), "Example Sentence", true,writingSystems));
-			masterTemplate.Add(MakeField(Field.FieldNames.ExampleTranslation.ToString(), "Translation", false,writingSystems));
+
+			Field exampleField = new Field(Field.FieldNames.ExampleSentence.ToString(), defaultVernacularSet);
+			exampleField.DisplayName = "Example Sentence";
+			exampleField.Visibility = Field.VisibilitySetting.Visible;
+			masterTemplate.Add(exampleField);
+
+		   // masterTemplate.Add(MakeField(Field.FieldNames.ExampleSentence.ToString(), "Example Sentence", true, writingSystems));
+
+			Field translationField = new Field(Field.FieldNames.ExampleTranslation.ToString(), defaultAnalysisSet);
+			translationField.DisplayName = "Translation";
+			translationField.Visibility = Field.VisibilitySetting.Visible;
+			masterTemplate.Add(translationField);
+
+			//masterTemplate.Add(MakeField(Field.FieldNames.ExampleTranslation.ToString(), "Translation", true, writingSystems));
 			return masterTemplate;
 		}
 
-		private static Field MakeField(string fieldName, string displayName, bool defaultVisible, WritingSystemCollection writingSystems)
-		{
-			Field field = new Field();
-			field.FieldName = fieldName;
-			field.DisplayName = displayName;
-			if (defaultVisible)
-			{
-				field.Visibility = Field.VisibilitySetting.Visible;
-			}
-			else
-			{
-				field.Visibility = Field.VisibilitySetting.Invisible;
-			}
-
-			foreach (string id in writingSystems.Keys)
-			{
-				field.WritingSystemIds.Add(id);
-			}
-			return field;
-		}
+//        private static Field MakeField(string fieldName, string displayName, bool defaultVisible, WritingSystemCollection writingSystems)
+//        {
+//            Field field = new Field();
+//            field.FieldName = fieldName;
+//            field.DisplayName = displayName;
+//            if (defaultVisible)
+//            {
+//                field.Visibility = Field.VisibilitySetting.Visible;
+//            }
+//            else
+//            {
+//                field.Visibility = Field.VisibilitySetting.Invisible;
+//            }
+//
+//            foreach (string id in writingSystems.Keys)
+//            {
+//                field.WritingSystemIds.Add(id);
+//            }
+//            return field;
+//        }
 
 		#region persistence
 

@@ -117,13 +117,13 @@ namespace WeSay.Admin.Tests
 		}
 
 		[Test]
-		public void NewProjectShowsOneWritingSystem()
+		public void NewProjectShowsTwoWritingSystems()
 		{
 			_window.CreateAndOpenProject(_projectFolder);
 
 			GotoProjectTab("_writingSystemPage");
 			ListBoxTester c = new ListBoxTester("_wsListBox");
-			Assert.AreEqual(1, c.Properties.Items.Count);
+			Assert.AreEqual(2, c.Properties.Items.Count);
 		}
 
 		private static void GotoProjectTab(string projectTabName)
