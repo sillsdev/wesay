@@ -45,6 +45,7 @@ namespace WeSay.LexicalTools
 			this._btnDeleteWord = new System.Windows.Forms.LinkLabel();
 			this._btnFind = new System.Windows.Forms.Button();
 			this._findText = new WeSay.UI.WeSayAutoCompleteTextBox();
+			this._findText.AutoCompleteChoiceSelected += new System.EventHandler(_findText_AutoCompleteChoiceSelected);
 
 			this.panel1.SuspendLayout();
 			this.SuspendLayout();

@@ -106,6 +106,13 @@ namespace WeSay.LexicalTools
 			}
 		}
 
+		void _findText_AutoCompleteChoiceSelected(object sender, System.EventArgs e)
+		{
+			Find(this._findText.Text);
+		}
+
+
+
 		void _btnFind_Click(object sender, EventArgs e)
 		{
 			Find(this._findText.Text);

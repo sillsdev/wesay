@@ -28,9 +28,9 @@ namespace WeSay.UI
 
 		#region Members
 
-		private ListBox list;
-		protected Form popup;
-		private Control popupParent;
+		private ListBox _list;
+		private Form _popup;
+		private Control _popupParent;
 
 		#endregion
 
@@ -88,19 +88,19 @@ namespace WeSay.UI
 		{
 			get
 			{
-				return this.popup.Width;
+				return this._popup.Width;
 			}
 			set
 			{
 				if (value == -1)
 				{
 					_autoSizePopup = true;
-					this.popup.Width = Width;
+					this._popup.Width = Width;
 				}
 				else
 				{
 					_autoSizePopup = false;
-					this.popup.Width = value;
+					this._popup.Width = value;
 				}
 			}
 		}
@@ -109,11 +109,11 @@ namespace WeSay.UI
 		{
 			get
 			{
-				return this.list.BorderStyle;
+				return this._list.BorderStyle;
 			}
 			set
 			{
-				this.list.BorderStyle = value;
+				this._list.BorderStyle = value;
 			}
 		}
 
@@ -210,26 +210,26 @@ namespace WeSay.UI
 			_itemFilterDelegate = FilterList;
 
 			// Create the form that will hold the list
-			this.popup = new Form();
-			this.popup.StartPosition = FormStartPosition.Manual;
-			this.popup.ShowInTaskbar = false;
-			this.popup.FormBorderStyle = FormBorderStyle.None;
-			this.popup.TopMost = true;
-			this.popup.Deactivate += new EventHandler(Popup_Deactivate);
+			this._popup = new Form();
+			this._popup.StartPosition = FormStartPosition.Manual;
+			this._popup.ShowInTaskbar = false;
+			this._popup.FormBorderStyle = FormBorderStyle.None;
+			this._popup.TopMost = true;
+			this._popup.Deactivate += new EventHandler(Popup_Deactivate);
 
 			// Create the list box that will hold mathcing items
-			this.list = new ListBox();
-			this.list.Cursor = Cursors.Hand;
-			this.list.BorderStyle = BorderStyle.FixedSingle;
-			this.list.SelectedIndexChanged += new EventHandler(List_SelectedIndexChanged);
-			this.list.MouseDown += new MouseEventHandler(List_MouseDown);
-			this.list.DrawMode = DrawMode.OwnerDrawFixed;
-			this.list.DrawItem += new DrawItemEventHandler(List_DrawItem);
-			this.list.ItemHeight = Height;
-			this.list.Dock = DockStyle.Fill;
+			this._list = new ListBox();
+			this._list.Cursor = Cursors.Hand;
+			this._list.BorderStyle = BorderStyle.FixedSingle;
+			this._list.SelectedIndexChanged += new EventHandler(List_SelectedIndexChanged);
+			this._list.MouseClick += new MouseEventHandler(List_MouseClick);
+			this._list.DrawMode = DrawMode.OwnerDrawFixed;
+			this._list.DrawItem += new DrawItemEventHandler(List_DrawItem);
+			this._list.ItemHeight = Height;
+			this._list.Dock = DockStyle.Fill;
 
 			// Add the list box to the popup form
-			this.popup.Controls.Add(this.list);
+			this._popup.Controls.Add(this._list);
 
 			// Add default triggers.
 			this.triggers.Add(new TextLengthTrigger(2));
@@ -242,29 +242,29 @@ namespace WeSay.UI
 		protected override void OnSizeChanged(EventArgs e)
 		{
 			base.OnSizeChanged(e);
-			this.list.ItemHeight = Height;
+			this._list.ItemHeight = Height;
 			if(_autoSizePopup)
 			{
-				this.popup.Width = Width;
+				this._popup.Width = Width;
 			}
 		}
 		protected override void OnParentChanged(EventArgs e)
 		{
 			base.OnParentChanged(e);
-			if (this.popupParent != null)
+			if (this._popupParent != null)
 			{
-				this.popupParent.Move -= Parent_Move;
-				this.popupParent.ParentChanged -= popupParent_ParentChanged;
+				this._popupParent.Move -= Parent_Move;
+				this._popupParent.ParentChanged -= popupParent_ParentChanged;
 			}
-			this.popupParent = Parent;
-			if (this.popupParent != null)
+			this._popupParent = Parent;
+			if (this._popupParent != null)
 			{
-				while (this.popupParent.Parent != null)
+				while (this._popupParent.Parent != null)
 				{
-					this.popupParent = this.popupParent.Parent;
+					this._popupParent = this._popupParent.Parent;
 				}
-				this.popupParent.Move += Parent_Move;
-				this.popupParent.ParentChanged += new EventHandler(popupParent_ParentChanged);
+				this._popupParent.Move += Parent_Move;
+				this._popupParent.ParentChanged += new EventHandler(popupParent_ParentChanged);
 			}
 		}
 
@@ -306,7 +306,7 @@ namespace WeSay.UI
 					} break;
 					case TriggerState.SelectAndConsume:
 					{
-						if (this.list.Visible)
+						if (this._list.Visible)
 						{
 							val = true;
 							SelectCurrentItemAndHideList();
@@ -314,7 +314,7 @@ namespace WeSay.UI
 					} break;
 					case TriggerState.Select:
 					{
-						if (this.list.Visible)
+						if (this._list.Visible)
 						{
 							SelectCurrentItemAndHideList();
 						}
@@ -334,18 +334,18 @@ namespace WeSay.UI
 				case Keys.Up:
 				{
 					Mode = EntryMode.List;
-					if (this.list.SelectedIndex > 0)
+					if (this._list.SelectedIndex > 0)
 					{
-						this.list.SelectedIndex--;
+						this._list.SelectedIndex--;
 					}
 					return true;
 				}
 				case Keys.Down:
 				{
 					Mode = EntryMode.List;
-					if (this.list.SelectedIndex < this.list.Items.Count - 1)
+					if (this._list.SelectedIndex < this._list.Items.Count - 1)
 					{
-						this.list.SelectedIndex++;
+						this._list.SelectedIndex++;
 					}
 					return true;
 				}
@@ -384,7 +384,7 @@ namespace WeSay.UI
 		{
 			base.OnLostFocus (e);
 
-			if (!(Focused || this.popup.Focused || this.list.Focused))
+			if (!(Focused || this._popup.Focused || this._list.Focused))
 			{
 				HideList();
 			}
@@ -392,13 +392,13 @@ namespace WeSay.UI
 
 		protected virtual void SelectCurrentItem()
 		{
-			if (this.list.SelectedIndex == -1)
+			if (this._list.SelectedIndex == -1)
 			{
 				return;
 			}
 
 			Focus();
-			Text = this.list.SelectedItem.ToString();
+			Text = this._list.SelectedItem.ToString();
 			if (Text.Length > 0)
 			{
 				SelectionStart = Text.Length;
@@ -407,7 +407,7 @@ namespace WeSay.UI
 
 		protected void SelectCurrentItemAndHideList()
 		{
-			if (this.list.SelectedIndex == -1)
+			if (this._list.SelectedIndex == -1)
 			{
 				return;
 			}
@@ -418,18 +418,18 @@ namespace WeSay.UI
 
 		protected virtual void ShowList()
 		{
-			if (this.list.Visible == false)
+			if (this._list.Visible == false)
 			{
-				this.list.SelectedItem = null;
+				this._list.SelectedItem = null;
 				//this.list.SelectedIndex = -1;
 				UpdateList();
 				Point p = PointToScreen(new Point(0,0));
 				p.X += PopupOffset.X;
 				p.Y += Height + PopupOffset.Y;
-				this.popup.Location = p;
-				if (this.list.Items.Count > 0)
+				this._popup.Location = p;
+				if (this._list.Items.Count > 0)
 				{
-					this.popup.Show();
+					this._popup.Show();
 					//this.list.BringToFront();
 					Focus();
 				}
@@ -443,17 +443,17 @@ namespace WeSay.UI
 		protected virtual void HideList()
 		{
 			Mode = EntryMode.Text;
-			this.popup.Hide();
+			this._popup.Hide();
 		}
 
 		protected virtual void UpdateList()
 		{
 			//object selectedItem = this.list.SelectedItem;
 
-			this.list.Items.Clear();
+			this._list.Items.Clear();
 			foreach (string item in ItemFilterer.Invoke(Text, Items))
 			{
-				this.list.Items.Add(item);
+				this._list.Items.Add(item);
 			}
 
 			//if (selectedItem != null &&
@@ -465,34 +465,34 @@ namespace WeSay.UI
 			//    Mode = oldMode;
 			//}
 
-			this.list.SelectedIndex = -1;
+			this._list.SelectedIndex = -1;
 
-			if (this.list.Items.Count == 0)
+			if (this._list.Items.Count == 0)
 			{
 				HideList();
 			}
 			else
 			{
-				int visItems = this.list.Items.Count;
+				int visItems = this._list.Items.Count;
 				if (visItems > 8)
 					visItems = 8;
 
-				this.popup.Height = (visItems * this.list.ItemHeight) + 2;
+				this._popup.Height = (visItems * this._list.ItemHeight) + 2;
 				switch (BorderStyle)
 				{
 					case BorderStyle.FixedSingle:
 					{
-						this.popup.Height += 2;
+						this._popup.Height += 2;
 						break;
 					}
 					case BorderStyle.Fixed3D:
 					{
-						this.popup.Height += 4;
+						this._popup.Height += 4;
 						break;
 					}
 				}
 
-				this.popup.Width = PopupWidth;
+				this._popup.Width = PopupWidth;
 
 				//if (this.list.Items.Count > 0 &&
 				//    this.list.SelectedIndex == -1)
@@ -532,14 +532,18 @@ namespace WeSay.UI
 			}
 		}
 
-		private void List_MouseDown(object sender, MouseEventArgs e)
+		public event EventHandler AutoCompleteChoiceSelected = delegate {};
+
+		private void List_MouseClick(object sender, MouseEventArgs e)
 		{
-			for (int i=0; i<this.list.Items.Count; i++)
+			for (int i=0; i<this._list.Items.Count; i++)
 			{
-				if (this.list.GetItemRectangle(i).Contains(e.X, e.Y))
+				if (this._list.GetItemRectangle(i).Contains(e.X, e.Y))
 				{
-					this.list.SelectedIndex = i;
+					this._list.SelectedIndex = i;
 					SelectCurrentItemAndHideList();
+					AutoCompleteChoiceSelected.Invoke(this, new EventArgs());
+					return;
 				}
 			}
 			HideList();
@@ -552,7 +556,7 @@ namespace WeSay.UI
 			{
 //                e.Graphics.FillRectangle(new SolidBrush(PopupSelectionBackColor), e.Bounds);
 				TextRenderer.DrawText(e.Graphics,
-									  this.list.Items[e.Index].ToString(),
+									  this._list.Items[e.Index].ToString(),
 									  Font,
 									  e.Bounds,
 									  PopupSelectionForeColor,
@@ -563,7 +567,7 @@ namespace WeSay.UI
 			{
 				//e.DrawBackground();
 				TextRenderer.DrawText(e.Graphics,
-									  this.list.Items[e.Index].ToString(),
+									  this._list.Items[e.Index].ToString(),
 									  Font,
 									  e.Bounds,
 									  ForeColor,
@@ -575,7 +579,7 @@ namespace WeSay.UI
 
 		private void Popup_Deactivate(object sender, EventArgs e)
 		{
-			if (!(Focused || this.popup.Focused || this.list.Focused))
+			if (!(Focused || this._popup.Focused || this._list.Focused))
 			{
 				HideList();
 			}
