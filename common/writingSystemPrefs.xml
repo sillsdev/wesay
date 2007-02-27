@@ -5,6 +5,11 @@
 	<WritingSystem>
 	  <FontName>Doulos SIL</FontName>
 	  <FontSize>12</FontSize>
+	  <Id>*V*</Id>
+	</WritingSystem>
+	<WritingSystem>
+	  <FontName>Doulos SIL</FontName>
+	  <FontSize>12</FontSize>
 	  <Id>en</Id>
 	</WritingSystem>
   </members>
