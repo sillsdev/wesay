@@ -100,6 +100,7 @@ namespace WeSay.Project.Tests
 
 
 		[Test]
+		[Ignore("Semantics have changed, per John")]
 		public void InvalidWritingSystemNotConveyedToMaster()
 		{
 			Field master = new Field("foo", new string[] {"dropme", "keepme" });

@@ -20,6 +20,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Text;
 using System.Configuration;
 using System.Windows.Forms;
@@ -46,7 +47,17 @@ namespace Microsoft.Samples.Windows.Forms.RegistrySettingsProvider
 	{
 		public override string ApplicationName
 		{
-			get { return Application.ProductName; }
+			get
+			{
+				if (Application.ProductName != string.Empty)
+				{
+					return Application.ProductName;
+				}
+
+				Assembly assembly = Assembly.GetExecutingAssembly();
+				AssemblyName name = assembly.GetName();
+				return name.Name;
+			}
 			set { }
 		}
 
