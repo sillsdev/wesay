@@ -108,7 +108,7 @@ namespace WeSay.Data
 				if (disposing)
 				{
 					// dispose-only, i.e. non-finalizable logic
-					foreach (DictionaryEntry dictionaryEntry in this.FilteredRecordLists)
+					foreach (DictionaryEntry dictionaryEntry in FilteredRecordLists)
 					{
 						IDisposable disposable = dictionaryEntry.Value as IDisposable;
 						if (disposable != null)

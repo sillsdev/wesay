@@ -46,11 +46,20 @@ namespace WeSay.Data
 		Db4oRecordList<T> _masterRecordList;
 		string _cachePath;
 		Comparer _sorter;
-		bool _temporary;
 		IDb4oSortHelper<K, T> _sortHelper;
 
 		public CachedSortedDb4oList(Db4oRecordListManager recordListManager, IDb4oSortHelper<K, T> sortHelper)
 		{
+			if (recordListManager == null)
+			{
+				Dispose();
+				throw new ArgumentNullException("recordListManager");
+			}
+			if (sortHelper == null)
+			{
+				Dispose();
+				throw new ArgumentNullException("sortHelper");
+			}
 			_sortHelper = sortHelper;
 			_cachePath = recordListManager.CachePath;
 			_sorter = new Comparer(sortHelper.KeyComparer);
@@ -68,28 +77,6 @@ namespace WeSay.Data
 			_masterRecordList.DeletingRecord += new EventHandler<RecordListEventArgs<T>>(OnMasterRecordListDeletingRecord);
 		}
 
-		public CachedSortedDb4oList(CachedSortedDb4oList<K, T> template, IEnumerable<KeyValuePair<K, long>> initialData)
-		{
-			if(template == null)
-			{
-				throw new ArgumentNullException("template");
-			}
-			if (initialData == null)
-			{
-				throw new ArgumentNullException("initialData");
-			}
-			_cachePath = template._cachePath;
-			_sorter = template._sorter;
-			_sortHelper = template._sortHelper;
-			_masterRecordList = template._masterRecordList;
-			_temporary = true;
-
-			_keyIdMap = new List<KeyValuePair<K, long>>(initialData);
-
-			_masterRecordList.ListChanged += new ListChangedEventHandler(OnMasterRecordListListChanged);
-			_masterRecordList.DeletingRecord += new EventHandler<RecordListEventArgs<T>>(OnMasterRecordListDeletingRecord);
-		}
-
 		private string CacheFilePath
 		{
 			get
@@ -100,10 +87,6 @@ namespace WeSay.Data
 
 		private void Serialize()
 		{
-			if (_temporary)
-			{
-				return;
-			}
 			try
 			{
 				if (!Directory.Exists(_cachePath))
@@ -143,10 +126,6 @@ namespace WeSay.Data
 
 		private void Deserialize()
 		{
-			if (_temporary)
-			{
-				return;
-			}
 			_keyIdMap = null;
 			if (File.Exists(CacheFilePath))
 			{
@@ -312,7 +291,6 @@ namespace WeSay.Data
 			}
 			OnListReset();
 			Serialize();
-
 		}
 
 		#region IBindingList Members
@@ -516,22 +494,18 @@ namespace WeSay.Data
 		{
 			VerifyNotDisposed();
 
-			if (value is KeyValuePair<K, long>)
+			if (!(value is T))
 			{
-				return ((IList)_keyIdMap).IndexOf(value);
+				throw new ArgumentException("value must be of type T");
 			}
-			else
-			{
-				long itemId = this._masterRecordList.GetId((T)value);
+			long itemId = this._masterRecordList.GetId((T)value);
 
-				KeyValuePair<K, long> match = _keyIdMap.Find(delegate(KeyValuePair<K, long> i)
-															 {
-																 return i.Value == itemId;
-															 });
+			KeyValuePair<K, long> match = _keyIdMap.Find(delegate(KeyValuePair<K, long> i)
+														 {
+															 return i.Value == itemId;
+														 });
 
-				return ((IList)_keyIdMap).IndexOf(match);
-
-			}
+			return ((IList)_keyIdMap).IndexOf(match);
 		}
 
 		public void Insert(int index, object value)
@@ -689,8 +663,11 @@ namespace WeSay.Data
 				if (disposing)
 				{
 					// dispose-only, i.e. non-finalizable logic
-					_masterRecordList.ListChanged -= OnMasterRecordListListChanged;
-					_masterRecordList.DeletingRecord -= OnMasterRecordListDeletingRecord;
+					if (_masterRecordList != null)
+					{
+						_masterRecordList.ListChanged -= OnMasterRecordListListChanged;
+						_masterRecordList.DeletingRecord -= OnMasterRecordListDeletingRecord;
+					}
 					Serialize();
 				}
 

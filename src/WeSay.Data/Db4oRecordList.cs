@@ -75,6 +75,7 @@ namespace WeSay.Data
 		{
 			if (filter == null)
 			{
+				this.Dispose();
 				throw new ArgumentNullException("filter");
 			}
 			Initialize(dataSource, filter, null, null);
@@ -84,10 +85,12 @@ namespace WeSay.Data
 		{
 			if (filter == null)
 			{
+				this.Dispose();
 				throw new ArgumentNullException("filter");
 			}
 			if (sort == null)
 			{
+				this.Dispose();
 				throw new ArgumentNullException("sort");
 			}
 			Initialize(dataSource, filter, sort, null);
@@ -97,6 +100,7 @@ namespace WeSay.Data
 		{
 			if (sort == null)
 			{
+				this.Dispose();
 				throw new ArgumentNullException("sort");
 			}
 			Initialize(dataSource, null, sort, null);

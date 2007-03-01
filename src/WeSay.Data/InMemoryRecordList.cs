@@ -17,6 +17,11 @@ namespace WeSay.Data
 		public InMemoryRecordList(IRecordList<T> original)
 			: this()
 		{
+			if(original == null)
+			{
+				Dispose();
+				throw new ArgumentNullException();
+			}
 			AddRange(original);
 
 			_isSorted = original.IsSorted;

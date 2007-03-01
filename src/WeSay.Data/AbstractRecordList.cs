@@ -90,6 +90,10 @@ namespace WeSay.Data
 		public void AddRange(IEnumerable<T> collection)
 		{
 			VerifyNotDisposed();
+			if(collection == null)
+			{
+				throw new ArgumentNullException();
+			}
 			IEnumerator<T> enumerator = collection.GetEnumerator();
 			while (enumerator.MoveNext())
 			{
@@ -100,6 +104,10 @@ namespace WeSay.Data
 		public void AddRange(IEnumerable collection)
 		{
 			VerifyNotDisposed();
+			if (collection == null)
+			{
+				throw new ArgumentNullException();
+			}
 			IEnumerator enumerator = collection.GetEnumerator();
 			while (enumerator.MoveNext())
 			{
