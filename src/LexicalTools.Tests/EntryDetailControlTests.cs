@@ -166,7 +166,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void DeletingLastWordSelectsPreviousWordInList()
 		{
-			BindingListGridTester t = new BindingListGridTester("_recordsListBox");
+			ListBoxTester t = new ListBoxTester("_recordsListBox");
 			t.Properties.SelectedIndex = 2;
 			Assert.AreEqual("Tertiary", LexemeFormOfSelectedEntry);
 			ClickDeleteWord();
@@ -298,9 +298,9 @@ namespace WeSay.LexicalTools.Tests
 			t.Enter("Secondary");
 			ButtonTester b = new ButtonTester("_btnFind");
 			b.Click();
-			BindingListGridTester l = new BindingListGridTester("_recordsListBox");
+			ListBoxTester l = new ListBoxTester("_recordsListBox");
 
-			Assert.AreEqual("Secondary", l.Properties.SelectedObject);
+			Assert.AreEqual("Secondary", l.Properties.SelectedItem);
 			RichTextBoxTester r = new RichTextBoxTester("_lexicalEntryPreview");
 			Assert.IsTrue(r.Text.Contains("Secondary"));
 		}
@@ -311,9 +311,9 @@ namespace WeSay.LexicalTools.Tests
 			TextBoxTester t = new TextBoxTester("_findText");
 			t.Enter("Secondary");
 			t.FireEvent("KeyDown", new KeyEventArgs(Keys.Enter));
-			BindingListGridTester l = new BindingListGridTester("_recordsListBox");
+			ListBoxTester l = new ListBoxTester("_recordsListBox");
 
-			Assert.AreEqual("Secondary", l.Properties.SelectedObject);
+			Assert.AreEqual("Secondary", l.Properties.SelectedItem);
 		}
 
 		[Test]

@@ -98,7 +98,6 @@ namespace WeSay.Project.Tests
 			Assert.IsTrue(field.WritingSystemIds.Contains("writingSystemId1"));
 		}
 
-
 		[Test]
 		[Ignore("Semantics have changed, per John")]
 		public void InvalidWritingSystemNotConveyedToMaster()

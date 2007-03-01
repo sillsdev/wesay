@@ -1,4 +1,3 @@
-using WeSay.Language;
 using WeSay.UI;
 
 namespace WeSay.LexicalTools
@@ -40,7 +39,7 @@ namespace WeSay.LexicalTools
 			this._entryDetailPanel = new WeSay.LexicalTools.LexPreviewWithEntryControl();
 
 			this.panel1 = new System.Windows.Forms.Panel();
-			this._recordsListBox = new ListBox.BindingListGrid();
+			this._recordsListBox = new System.Windows.Forms.ListBox();
 			this._btnNewWord = new System.Windows.Forms.LinkLabel();
 			this._btnDeleteWord = new System.Windows.Forms.LinkLabel();
 			this._btnFind = new System.Windows.Forms.Button();
@@ -91,19 +90,10 @@ namespace WeSay.LexicalTools
 			//
 			this._recordsListBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
 						| System.Windows.Forms.AnchorStyles.Left)));
-			this._recordsListBox.GridToolTipActive = true;
 			this._recordsListBox.Location = new System.Drawing.Point(3, 30);
 			this._recordsListBox.Name = "_recordsListBox";
-			this._recordsListBox.SelectedIndex = 0;
 			this._recordsListBox.Size = new System.Drawing.Size(118, 100);
-			this._recordsListBox.SpecialKeys = (SourceGrid3.GridSpecialKeys)((((SourceGrid3.GridSpecialKeys.Arrows
-						| SourceGrid3.GridSpecialKeys.Enter)
-						| SourceGrid3.GridSpecialKeys.Escape)
-						| SourceGrid3.GridSpecialKeys.Control)
-						| SourceGrid3.GridSpecialKeys.Shift);
-			this._recordsListBox.StyleGrid = null;
 			this._recordsListBox.TabIndex = 3;
-
 			//
 			// panel1
 			//
@@ -168,7 +158,7 @@ namespace WeSay.LexicalTools
 
 		private LexPreviewWithEntryControl _entryDetailPanel;
 		private System.Windows.Forms.Panel panel1;
-		private ListBox.BindingListGrid _recordsListBox;
+		private System.Windows.Forms.ListBox _recordsListBox;
 		private System.Windows.Forms.LinkLabel _btnDeleteWord;
 		private System.Windows.Forms.LinkLabel _btnNewWord;
 		private System.Windows.Forms.Button _btnFind;

@@ -55,6 +55,10 @@ namespace WeSay.LexicalTools
 			_records = ((Db4oRecordListManager)recordManager).GetSortedList(sortHelper);
 
 			InitializeComponent();
+
+			_recordsListBox.DataSource = _records;
+
+
 			BackColor = WeSay.UI.DisplaySettings.Default.BackgroundColor;
 			this.Control_EntryDetailPanel.ViewTemplate = _viewTemplate;
 			this.Control_EntryDetailPanel.BackColor = WeSay.UI.DisplaySettings.Default.BackgroundColor;
@@ -63,11 +67,8 @@ namespace WeSay.LexicalTools
 			_btnFind.Text = StringCatalog.Get("Find");
 
 
-			_recordsListBox.DataSource = _records;
 			_recordsListBox.Font = _listWritingSystem.Font;
-			_recordsListBox.AutoSize();
 
-			_recordsListBox.Columns[0].Width = _recordsListBox.Width - _recordsListBox.VScrollBar.Width;
 			_recordsListBox.SelectedIndexChanged += new EventHandler(OnRecordSelectionChanged);
 
 			_findText.KeyDown += new KeyEventHandler(_findText_KeyDown);
@@ -165,7 +166,14 @@ namespace WeSay.LexicalTools
 
 		protected int CurrentIndex
 		{
-			get { return _recordsListBox.SelectedIndex; }
+			get
+			{
+				if (_records.Count > 0 && _recordsListBox.SelectedIndex == -1)
+				{
+					_recordsListBox.SelectedIndex = 0;
+				}
+				return _recordsListBox.SelectedIndex;
+			}
 		}
 
 		private void _btnNewWord_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
