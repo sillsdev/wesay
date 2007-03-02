@@ -28,13 +28,13 @@ namespace WeSay.LexicalTools.Tests
 			BasilProject.InitializeForTests();
 
 			this._recordListManager = new InMemoryRecordListManager();
-			Field field = new Field(Field.FieldNames.SenseGloss.ToString() , new string[]{BasilProject.Project.WritingSystems.VernacularWritingSystemDefault.Id});
+			Field field = new Field(Field.FieldNames.SenseGloss.ToString() , new string[]{BasilProject.Project.WritingSystems.TestGetWritingSystemVern.Id});
 			this._filter = new MissingGlossFilter(field);
 			this._recordListManager.Register<LexEntry>(_filter);
 
 			LexEntry entry = new LexEntry();
 			this._lexicalForm = "vernacular";
-			entry.LexicalForm.SetAlternative(BasilProject.Project.WritingSystems.VernacularWritingSystemDefault.Id, _lexicalForm);
+			entry.LexicalForm.SetAlternative(BasilProject.Project.WritingSystems.TestGetWritingSystemVern.Id, _lexicalForm);
 			IRecordList<LexEntry> masterRecordList = this._recordListManager.GetListOfType<LexEntry>();
 			masterRecordList.Add(entry);
 

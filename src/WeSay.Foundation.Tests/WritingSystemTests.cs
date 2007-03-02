@@ -60,10 +60,10 @@ namespace WeSay.Language.Tests
 		{
 			WriteSampleWritingSystemFile(_path);
 			_collection.Load(_path);
-			WritingSystem ws = _collection.AnalysisWritingSystemDefault;
-			Assert.AreEqual("ANA", ws.Id);
+			WritingSystem ws = _collection["PretendAnalysis"];
+			Assert.AreEqual("PretendAnalysis", ws.Id);
 			Assert.AreEqual("Wingdings", ws.Font.Name);
-			Assert.AreEqual(20, ws.Font.Size);
+			Assert.AreEqual(10, ws.Font.Size);
 
 		}
 
@@ -100,8 +100,8 @@ namespace WeSay.Language.Tests
 			XmlDocument doc = new XmlDocument();
 			doc.LoadXml(s);
 
-			Assert.AreEqual(1, doc.SelectNodes("WritingSystemCollection/AnalysisWritingSystemDefaultId").Count);
-			Assert.AreEqual(1, doc.SelectNodes("WritingSystemCollection/VernacularWritingSystemDefaultId").Count);
+//            Assert.AreEqual(1, doc.SelectNodes("WritingSystemCollection/AnalysisWritingSystemDefaultId").Count);
+//            Assert.AreEqual(1, doc.SelectNodes("WritingSystemCollection/VernacularWritingSystemDefaultId").Count);
 			Assert.AreEqual(2, doc.SelectNodes("WritingSystemCollection/members/WritingSystem").Count);
 		}
 
@@ -121,8 +121,6 @@ namespace WeSay.Language.Tests
 			WritingSystemCollection c = new WritingSystemCollection();
 			c.Add("one", new WritingSystem("one", new Font("Arial", 11)));
 			c.Add("two", new WritingSystem("two", new Font("Times New Roman", 22)));
-			c.AnalysisWritingSystemDefaultId = "one";
-			c.VernacularWritingSystemDefaultId = "two";
 			return c;
 		}
 
@@ -139,7 +137,6 @@ namespace WeSay.Language.Tests
 			WritingSystemCollection c = r.Read(MakeXmlFromCollection()) as WritingSystemCollection;
 			Assert.IsNotNull(c);
 			Assert.AreEqual(2,c.Values.Count);
-			Assert.AreEqual("one", c.AnalysisWritingSystemDefaultId);
 		}
 		[Test]
 		public void DeserializeCollectionViaLoad()
@@ -150,7 +147,6 @@ namespace WeSay.Language.Tests
 			c.Load(_path);
 			Assert.IsNotNull(c);
 			Assert.AreEqual(2, c.Values.Count);
-			Assert.AreEqual("one", c.AnalysisWritingSystemDefaultId);
 		}
 	}
 }

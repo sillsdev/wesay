@@ -26,7 +26,7 @@ namespace WeSay.LexicalTools.Tests
 			base.Setup();
 //            Db4oLexModelHelper.InitializeForNonDbTests();
 			WeSayWordsProject.InitializeForTests();
-			this._vernacularWsId = BasilProject.Project.WritingSystems.VernacularWritingSystemDefaultId;
+			this._vernacularWsId = BasilProject.Project.WritingSystems.TestWritingSystemVernId;
 
 			this._filePath = System.IO.Path.GetTempFileName();
 			this._recordListManager = new Db4oRecordListManager(new WeSayWordsDb4oModelConfiguration(), _filePath);
@@ -37,7 +37,7 @@ namespace WeSay.LexicalTools.Tests
 			AddEntry("Secondary", string.Empty);
 			AddEntry("Tertiary", string.Empty);
 
-			string[] analysisWritingSystemIds = new string[] { BasilProject.Project.WritingSystems.AnalysisWritingSystemDefaultId };
+			string[] analysisWritingSystemIds = new string[] { BasilProject.Project.WritingSystems.TestWritingSystemAnalId };
 			string[] vernacularWritingSystemIds = new string[] { this._vernacularWsId };
 			ViewTemplate viewTemplate = new ViewTemplate();
 			viewTemplate.Add(new Field(Field.FieldNames.EntryLexicalForm.ToString(), vernacularWritingSystemIds));
@@ -88,7 +88,7 @@ namespace WeSay.LexicalTools.Tests
 			entry.LexicalForm.SetAlternative(this._vernacularWsId, lexemeForm);
 
 			LexSense sense = (LexSense)entry.Senses.AddNew();
-			sense.Gloss[BasilProject.Project.WritingSystems.AnalysisWritingSystemDefault.Id] = meaning;
+			sense.Gloss[WeSay.Project.WeSayWordsProject.Project.ViewTemplate.GetField("SenseGloss").WritingSystemIds[0]] = meaning;
 
 			this._records.Add(entry);
 		}
@@ -240,7 +240,7 @@ namespace WeSay.LexicalTools.Tests
 
 		private static string GetLexicalFormControlName()
 		{
-			return Field.FieldNames.EntryLexicalForm.ToString() +"_" + BasilProject.Project.WritingSystems.VernacularWritingSystemDefaultId;
+			return Field.FieldNames.EntryLexicalForm.ToString() +"_" + BasilProject.Project.WritingSystems.TestWritingSystemVernId;
 		}
 
 		private static void TypeInLexicalForm(string value)
@@ -251,7 +251,7 @@ namespace WeSay.LexicalTools.Tests
 
 		private static string GetMeaningControlName()
 		{
-			return Field.FieldNames.SenseGloss.ToString() + "_" + BasilProject.Project.WritingSystems.AnalysisWritingSystemDefaultId;
+			return Field.FieldNames.SenseGloss.ToString() + "_" + BasilProject.Project.WritingSystems.TestWritingSystemAnalId;
 		}
 
 		private static void TypeInMeaning(string value)

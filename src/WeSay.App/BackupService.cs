@@ -138,7 +138,7 @@ namespace WeSay.App
 		{
 			string timeString = _timeOfLastQueryForNewRecords.ToString("yyyy'-'MM'-'dd'T'HH'-'mm'-'ss'-'FFFFF UTC");
 			string path = Path.Combine(_directory, timeString);
-			path += ".lift.frag.xml";
+			path += ".lift.xml";
 			return path;
 		}
 

@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using NUnit.Framework;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Db4o_Specific;
@@ -29,8 +30,8 @@ namespace WeSay.LexicalTools.Tests
 			car = CreateTestEntry("car", "small motorized vehicle", "Watch out for cars when you cross the street.");
 			bike = CreateTestEntry("bike", "vehicle with two wheels", "He rides his bike to school.");
 
-			string[] analysisWritingSystemIds = new string[] { BasilProject.Project.WritingSystems.AnalysisWritingSystemDefaultId };
-			string[] vernacularWritingSystemIds = new string[] { BasilProject.Project.WritingSystems.VernacularWritingSystemDefaultId };
+			string[] analysisWritingSystemIds = new string[] { BasilProject.Project.WritingSystems.TestWritingSystemAnalId };
+			string[] vernacularWritingSystemIds = new string[] { BasilProject.Project.WritingSystems.TestWritingSystemVernId };
 			this._viewTemplate = new ViewTemplate();
 			this._viewTemplate.Add(new Field(Field.FieldNames.EntryLexicalForm.ToString(), vernacularWritingSystemIds));
 			this._viewTemplate.Add(new Field(Field.FieldNames.SenseGloss.ToString(), analysisWritingSystemIds));
@@ -71,14 +72,14 @@ namespace WeSay.LexicalTools.Tests
 		[Test, Ignore("For now, we also show the ghost field in this situation.")]
 		public void EditField_SingleControl()
 		{
-			LexPreviewWithEntryControl lexFieldControl = CreateFilteredForm(apple, Field.FieldNames.SenseGloss.ToString(), BasilProject.Project.WritingSystems.AnalysisWritingSystemDefaultId);
+			LexPreviewWithEntryControl lexFieldControl = CreateFilteredForm(apple, Field.FieldNames.SenseGloss.ToString(), BasilProject.Project.WritingSystems.TestWritingSystemAnalId);
 			Assert.AreEqual(1, lexFieldControl.ControlEntryDetail.Count);
 		}
 
 		[Test]
 		public void EditField_SingleControlWithGhost()
 		{
-			LexPreviewWithEntryControl lexFieldControl = CreateFilteredForm(apple, Field.FieldNames.SenseGloss.ToString(), BasilProject.Project.WritingSystems.AnalysisWritingSystemDefaultId);
+			LexPreviewWithEntryControl lexFieldControl = CreateFilteredForm(apple, Field.FieldNames.SenseGloss.ToString(), BasilProject.Project.WritingSystems.TestWritingSystemAnalId);
 			Assert.AreEqual(2, lexFieldControl.ControlEntryDetail.Count);
 		}
 
@@ -91,7 +92,7 @@ namespace WeSay.LexicalTools.Tests
 
 		private static void TestEditFieldMapsToLexicalForm(LexEntry entry)
 		{
-			LexPreviewWithEntryControl lexFieldControl = CreateFilteredForm(entry, Field.FieldNames.SenseGloss.ToString(), BasilProject.Project.WritingSystems.AnalysisWritingSystemDefaultId);
+			LexPreviewWithEntryControl lexFieldControl = CreateFilteredForm(entry, Field.FieldNames.SenseGloss.ToString(), BasilProject.Project.WritingSystems.TestWritingSystemAnalId);
 			DetailList entryDetailControl = lexFieldControl.ControlEntryDetail;
 			Control referenceControl = entryDetailControl.GetControlOfRow(0);
 			Label labelControl = entryDetailControl.GetLabelControlFromReferenceControl(referenceControl);
@@ -104,7 +105,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void EditField_Change_DisplayedInFormattedView()
 		{
-			LexPreviewWithEntryControl lexFieldControl = CreateFilteredForm(apple, Field.FieldNames.EntryLexicalForm .ToString(), BasilProject.Project.WritingSystems.VernacularWritingSystemDefaultId);
+			LexPreviewWithEntryControl lexFieldControl = CreateFilteredForm(apple, Field.FieldNames.EntryLexicalForm .ToString(), BasilProject.Project.WritingSystems.TestWritingSystemVernId);
 			DetailList entryDetailControl = lexFieldControl.ControlEntryDetail;
 			Control referenceControl = entryDetailControl.GetControlOfRow(0);
 			MultiTextControl editControl = (MultiTextControl)entryDetailControl.GetEditControlFromReferenceControl(referenceControl);
@@ -142,7 +143,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void FormattedView_FocusInControl_Displayed()
 		{
-			LexPreviewWithEntryControl lexFieldControl = CreateFilteredForm(apple, Field.FieldNames.EntryLexicalForm.ToString(), BasilProject.Project.WritingSystems.VernacularWritingSystemDefaultId);
+			LexPreviewWithEntryControl lexFieldControl = CreateFilteredForm(apple, Field.FieldNames.EntryLexicalForm.ToString(), BasilProject.Project.WritingSystems.TestWritingSystemVernId);
 			lexFieldControl.ControlFormattedView.Select();
 			string rtfOriginal = lexFieldControl.ControlFormattedView.Rtf;
 
@@ -156,10 +157,15 @@ namespace WeSay.LexicalTools.Tests
 			Assert.AreNotEqual(rtfOriginal, lexFieldControl.ControlFormattedView.Rtf);
 		}
 
+		[Test, Ignore("Not implemented yet.")]
+		public void DoSomethingSensibleWhenWSInFieldWasntListedInProjectCollection()
+		{
+		}
+
 		[Test]
 		public void FormattedView_ChangeRecordThenBack_NothingHighlighted()
 		{
-			LexPreviewWithEntryControl lexFieldControl = CreateFilteredForm(apple, Field.FieldNames.EntryLexicalForm.ToString(), BasilProject.Project.WritingSystems.VernacularWritingSystemDefaultId);
+			LexPreviewWithEntryControl lexFieldControl = CreateFilteredForm(apple, Field.FieldNames.EntryLexicalForm.ToString(), BasilProject.Project.WritingSystems.TestWritingSystemVernId);
 			lexFieldControl.ControlFormattedView.Select();
 			string rtfAppleNothingHighlighted = lexFieldControl.ControlFormattedView.Rtf;
 
@@ -174,13 +180,15 @@ namespace WeSay.LexicalTools.Tests
 
 			lexFieldControl.DataSource = banana;
 			lexFieldControl.DataSource = apple;
+//            Debug.WriteLine("Expected: "+rtfAppleNothingHighlighted);
+//            Debug.WriteLine("Actual:" + lexFieldControl.ControlFormattedView.Rtf);
 			Assert.AreEqual(rtfAppleNothingHighlighted, lexFieldControl.ControlFormattedView.Rtf);
 		}
 
 		[Test]
 		public void FormattedView_EmptyField_StillHighlighted()
 		{
-			LexPreviewWithEntryControl lexFieldControl = CreateFilteredForm(empty, Field.FieldNames.EntryLexicalForm.ToString(), BasilProject.Project.WritingSystems.VernacularWritingSystemDefaultId);
+			LexPreviewWithEntryControl lexFieldControl = CreateFilteredForm(empty, Field.FieldNames.EntryLexicalForm.ToString(), BasilProject.Project.WritingSystems.TestWritingSystemVernId);
 			lexFieldControl.ControlFormattedView.Select();
 			string rtfEmptyNothingHighlighted = lexFieldControl.ControlFormattedView.Rtf;
 
@@ -217,12 +225,17 @@ namespace WeSay.LexicalTools.Tests
 		private static LexEntry CreateTestEntry(string lexicalForm, string gloss, string exampleSentence)
 		{
 			LexEntry entry = new LexEntry();
-			entry.LexicalForm[BasilProject.Project.WritingSystems.VernacularWritingSystemDefault.Id] = lexicalForm;
+			entry.LexicalForm[GetSomeValidWsIdForField("EntryLexicalForm")] = lexicalForm;
 			LexSense sense = (LexSense)entry.Senses.AddNew();
-			sense.Gloss[BasilProject.Project.WritingSystems.AnalysisWritingSystemDefault.Id] = gloss;
+			sense.Gloss[GetSomeValidWsIdForField("SenseGloss")] = gloss;
 			LexExampleSentence example = (LexExampleSentence)sense.ExampleSentences.AddNew();
-			example.Sentence[BasilProject.Project.WritingSystems.VernacularWritingSystemDefault.Id] = exampleSentence;
+			example.Sentence[GetSomeValidWsIdForField("ExampleSentence")] = exampleSentence;
 			return entry;
+		}
+
+		private static string GetSomeValidWsIdForField(string fieldName)
+		{
+			return WeSay.Project.WeSayWordsProject.Project.ViewTemplate.GetField(fieldName).WritingSystemIds[0];
 		}
 
 		private static string GetLexicalForm(LexEntry entry)

@@ -267,10 +267,12 @@ namespace WeSay.LexicalModel
 
 		private void WriteForm(MultiText text)
 		{
+			_writer.WriteStartElement("lex");
 			if (text != null && text.Count > 0)
 			{
 				Add(text);
 			}
+		   _writer.WriteEndElement();
 		}
 
 		private void WriteFormInElement(string name, MultiText text)

@@ -89,10 +89,10 @@ namespace WeSay.UI.Tests
 		{
 			BasilProject.InitializeForTests();
 
-			_papaNameWidget = new WeSayTextBox(BasilProject.Project.WritingSystems.AnalysisWritingSystemDefault);
+			_papaNameWidget = new WeSayTextBox(BasilProject.Project.WritingSystems.TestGetWritingSystemAnal);
 			_papaNameWidget.Text  =  "John";
-			_ghostFirstNameWidget = new WeSayTextBox(BasilProject.Project.WritingSystems.AnalysisWritingSystemDefault);
-			_binding = new GhostBinding(_papa.Children, "First", BasilProject.Project.WritingSystems.AnalysisWritingSystemDefault, _ghostFirstNameWidget);
+			_ghostFirstNameWidget = new WeSayTextBox(BasilProject.Project.WritingSystems.TestGetWritingSystemAnal);
+			_binding = new GhostBinding(_papa.Children, "First", BasilProject.Project.WritingSystems.TestGetWritingSystemAnal, _ghostFirstNameWidget);
 			_didNotify = false;
 			//Window w = new Window("test");
 			//VBox box = new VBox();
@@ -125,7 +125,7 @@ namespace WeSay.UI.Tests
 		{
 			_ghostFirstNameWidget.Text = "Samuel";
 			_ghostFirstNameWidget.PretendLostFocus();
-			Assert.AreEqual("Samuel", _papa.Children[0].First["en"]);
+			Assert.AreEqual("Samuel", _papa.Children[0].First[BasilProject.Project.WritingSystems.TestGetWritingSystemAnal.Id]);
 		}
 		 [Test]
 		public void NewItemTriggersEvent()

@@ -9,8 +9,8 @@ namespace WeSay.Language
 	public class WritingSystemCollection : Dictionary<string, WritingSystem>
 	{
 
-		private string _vernacularWritingSystemDefaultId;
-		private string _analysisWritingSystemDefaultId;
+//        private string _vernacularWritingSystemDefaultId;
+//        private string _analysisWritingSystemDefaultId;
 
 		public void Load(string path)
 		{
@@ -67,14 +67,14 @@ namespace WeSay.Language
 		public void IdOfWritingSystemChanged(WritingSystem ws, string oldKey)
 		{
 			Remove(oldKey);
-			if (_analysisWritingSystemDefaultId == oldKey)
-			{
-				_analysisWritingSystemDefaultId = ws.Id;
-			}
-			if (_vernacularWritingSystemDefaultId  == oldKey)
-			{
-				_vernacularWritingSystemDefaultId = ws.Id;
-			}
+//            if (_analysisWritingSystemDefaultId == oldKey)
+//            {
+//                _analysisWritingSystemDefaultId = ws.Id;
+//            }
+//            if (_vernacularWritingSystemDefaultId  == oldKey)
+//            {
+//                _vernacularWritingSystemDefaultId = ws.Id;
+//            }
 			Add(ws.Id, ws);
 		}
 
@@ -95,56 +95,107 @@ namespace WeSay.Language
 //            return _fontPrefsDoc.SelectSingleNode("prefs").Attributes[label].Value;
 //        }
 
-		public WritingSystem AnalysisWritingSystemDefault
+//        public WritingSystem AnalysisWritingSystemDefault
+//        {
+//            get
+//            {
+//                WritingSystem ws;
+//                TryGetValue(_analysisWritingSystemDefaultId, out ws);
+//                return ws;
+//            }
+//        }
+//
+//        public WritingSystem VernacularWritingSystemDefault
+//        {
+//            get
+//            {
+//                WritingSystem ws;
+//                TryGetValue(_vernacularWritingSystemDefaultId, out ws);
+//                return ws;
+//            }
+//        }
+
+//        [ReflectorProperty("AnalysisWritingSystemDefaultId", Required = true)]
+//        public string AnalysisWritingSystemDefaultId
+//        {
+//            get
+//            {
+//                if (_analysisWritingSystemDefaultId == null)
+//                    return "";//a null would omit the xml attribute when serializing
+//
+//                return _analysisWritingSystemDefaultId;
+//            }
+//            set
+//            {
+//                _analysisWritingSystemDefaultId = value;
+//            }
+//        }
+//
+//        [ReflectorProperty("VernacularWritingSystemDefaultId", Required = true)]
+//        public string VernacularWritingSystemDefaultId
+//        {
+//            get
+//            {
+//                if (_vernacularWritingSystemDefaultId == null)
+//                    return "";//a null would omit the xml attribute when serializing
+//                return _vernacularWritingSystemDefaultId;
+//            }
+//            set
+//            {
+//                _vernacularWritingSystemDefaultId = value;
+//            }
+//        }
+
+#if DEBUG
+		public string TestWritingSystemAnalId
+		{
+			get
+			{
+				return "PretendAnalysis";
+			}
+		}
+		public string TestWritingSystemVernId
+		{
+			get
+			{
+				return "PretendVernacular";
+			}
+		}
+
+		public WritingSystem TestGetWritingSystemAnal
 		{
 			get
 			{
 				WritingSystem ws;
-				TryGetValue(_analysisWritingSystemDefaultId, out ws);
-				return ws;
+				if (this.TryGetValue(TestWritingSystemAnalId, out ws))
+				{
+					return ws;
+				}
+//                foreach (WritingSystem value in this.Values )
+//                {
+//                    return value;
+//                }
+				return null;
 			}
 		}
 
-		public WritingSystem VernacularWritingSystemDefault
+		public WritingSystem TestGetWritingSystemVern
 		{
 			get
 			{
 				WritingSystem ws;
-				TryGetValue(_vernacularWritingSystemDefaultId, out ws);
-				return ws;
+				if (this.TryGetValue(TestWritingSystemVernId, out ws))
+				{
+					return ws;
+				}
+				return null;
 			}
 		}
 
-		[ReflectorProperty("AnalysisWritingSystemDefaultId", Required = true)]
-		public string AnalysisWritingSystemDefaultId
-		{
-			get
-			{
-				if (_analysisWritingSystemDefaultId == null)
-					return "";//a null would omit the xml attribute when serializing
 
-				return _analysisWritingSystemDefaultId;
-			}
-			set
-			{
-				_analysisWritingSystemDefaultId = value;
-			}
-		}
+#endif
 
-		[ReflectorProperty("VernacularWritingSystemDefaultId", Required = true)]
-		public string VernacularWritingSystemDefaultId
-		{
-			get
-			{
-				if (_vernacularWritingSystemDefaultId == null)
-					return "";//a null would omit the xml attribute when serializing
-				return _vernacularWritingSystemDefaultId;
-			}
-			set
-			{
-				_vernacularWritingSystemDefaultId = value;
-			}
-		}
+
 
 		/// <summary>
 		/// For serialization only

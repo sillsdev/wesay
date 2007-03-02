@@ -54,9 +54,9 @@ namespace WeSay.Setup
 				return;
 			}
 
-			_btnRemove.Enabled =
-				(SelectedWritingSystem != BasilProject.Project.WritingSystems.AnalysisWritingSystemDefault)
-			  && (SelectedWritingSystem != BasilProject.Project.WritingSystems.VernacularWritingSystemDefault);
+			_btnRemove.Enabled = true;
+//                (SelectedWritingSystem != BasilProject.Project.WritingSystems.AnalysisWritingSystemDefault)
+//              && (SelectedWritingSystem != BasilProject.Project.WritingSystems.VernacularWritingSystemDefault);
 
 			_basicControl.WritingSystem = this.SelectedWritingSystem;
 			_fontControl.WritingSystem = this.SelectedWritingSystem;
@@ -153,42 +153,42 @@ namespace WeSay.Setup
 			_collection = collection;
 		}
 
-		public bool IsAnalysisDefault
-		{
-			get
-			{
-				return _collection.AnalysisWritingSystemDefault == _writingSystem;
-			}
-			set
-			{
-				if (value)
-				{
-					_collection.AnalysisWritingSystemDefaultId = _writingSystem.Id;
-				}
-				else
-				{
-					Debug.Fail("Can't really handle setting to false.");
-				}
-			}
-		}
-		public bool IsVernacularDefault
-		{
-			get
-			{
-				return _collection.VernacularWritingSystemDefault == _writingSystem;
-			}
-			set
-			{
-				if (value)
-				{
-					_collection.VernacularWritingSystemDefaultId = _writingSystem.Id;
-				}
-				else
-				{
-					Debug.Fail("Can't really handle setting to false.");
-				}
-			}
-		}
+//        public bool IsAnalysisDefault
+//        {
+//            get
+//            {
+//                return _collection.AnalysisWritingSystemDefault == _writingSystem;
+//            }
+//            set
+//            {
+//                if (value)
+//                {
+//                    _collection.AnalysisWritingSystemDefaultId = _writingSystem.Id;
+//                }
+//                else
+//                {
+//                    Debug.Fail("Can't really handle setting to false.");
+//                }
+//            }
+//        }
+//        public bool IsVernacularDefault
+//        {
+//            get
+//            {
+//                return _collection.VernacularWritingSystemDefault == _writingSystem;
+//            }
+//            set
+//            {
+//                if (value)
+//                {
+//                    _collection.VernacularWritingSystemDefaultId = _writingSystem.Id;
+//                }
+//                else
+//                {
+//                    Debug.Fail("Can't really handle setting to false.");
+//                }
+//            }
+//        }
 
 		public WritingSystem WritingSystem
 		{

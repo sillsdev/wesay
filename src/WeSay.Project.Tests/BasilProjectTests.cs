@@ -55,18 +55,19 @@ namespace WeSay.Project.Tests
 			Directory.Delete(_projectDirectory, true);
 		}
 
-		[Test]
-		public void NoSetupDefaultWritingSystems()
-		{
-			InitializeSampleProject();
-
-			BasilProject project = new BasilProject();
-			project.LoadFromProjectDirectoryPath(_projectDirectory);
-			WritingSystem ws = BasilProject.Project.WritingSystems.AnalysisWritingSystemDefault;
-			Assert.IsNotNull(ws);
-			ws = BasilProject.Project.WritingSystems.VernacularWritingSystemDefault;
-			Assert.IsNotNull(ws);
-		}
+//  not relevant anymore
+//        [Test]
+//        public void NoSetupDefaultWritingSystems()
+//        {
+//            InitializeSampleProject();
+//
+//            BasilProject project = new BasilProject();
+//            project.LoadFromProjectDirectoryPath(_projectDirectory);
+//            WritingSystem ws = BasilProject.Project.WritingSystems.AnalysisWritingSystemDefault;
+//            Assert.IsNotNull(ws);
+//            ws = BasilProject.Project.WritingSystems.VernacularWritingSystemDefault;
+//            Assert.IsNotNull(ws);
+//        }
 
 		[Test]
 		public void LocalizedStringsDuringTests()

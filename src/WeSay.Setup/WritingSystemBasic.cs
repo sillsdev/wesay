@@ -64,26 +64,26 @@ namespace WeSay.Setup
 				}
 			}
 		}
-
-		private void btnUseForVernacular_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-		{
-			_writingSystemCollection.VernacularWritingSystemDefaultId  = _writingSystem.Id;
-
-			if (DisplayPropertiesChanged != null)
-			{
-				DisplayPropertiesChanged.Invoke(_writingSystem, null);
-			}
-		}
-
-		private void btnUseForAnalysis_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-		{
-			_writingSystemCollection.AnalysisWritingSystemDefaultId = _writingSystem.Id;
-
-			if (DisplayPropertiesChanged != null)
-			{
-				DisplayPropertiesChanged.Invoke(_writingSystem, null);
-			}
-		}
+//
+//        private void btnUseForVernacular_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+//        {
+//            _writingSystemCollection.VernacularWritingSystemDefaultId  = _writingSystem.Id;
+//
+//            if (DisplayPropertiesChanged != null)
+//            {
+//                DisplayPropertiesChanged.Invoke(_writingSystem, null);
+//            }
+//        }
+//
+//        private void btnUseForAnalysis_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+//        {
+//            _writingSystemCollection.AnalysisWritingSystemDefaultId = _writingSystem.Id;
+//
+//            if (DisplayPropertiesChanged != null)
+//            {
+//                DisplayPropertiesChanged.Invoke(_writingSystem, null);
+//            }
+//        }
 
 
 

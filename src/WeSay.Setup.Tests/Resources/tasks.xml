@@ -10,7 +10,9 @@
 		  <fieldName>EntryLexicalForm</fieldName>
 		  <multiplicity>ZeroOr1</multiplicity>
 		  <visibility>Visible</visibility>
-		  <writingSystems />
+		  <writingSystems>
+			<id>PretendVernacular</id>
+		  </writingSystems>
 		</field>
 		<field>
 		  <className></className>
@@ -19,7 +21,9 @@
 		  <fieldName>SenseGloss</fieldName>
 		  <multiplicity>ZeroOr1</multiplicity>
 		  <visibility>Visible</visibility>
-		  <writingSystems />
+		  <writingSystems>
+			<id>PretendAnalysis</id>
+		  </writingSystems>
 		</field>
 		<field>
 		  <className></className>
@@ -28,7 +32,9 @@
 		  <fieldName>ExampleSentence</fieldName>
 		  <multiplicity>ZeroOr1</multiplicity>
 		  <visibility>Visible</visibility>
-		  <writingSystems />
+		  <writingSystems>
+			<id>PretendVernacular</id>
+		  </writingSystems>
 		</field>
 		<field>
 		  <className></className>
@@ -37,7 +43,9 @@
 		  <fieldName>ExampleTranslation</fieldName>
 		  <multiplicity>ZeroOr1</multiplicity>
 		  <visibility>Visible</visibility>
-		  <writingSystems />
+		  <writingSystems>
+			<id>PretendAnalysis</id>
+		  </writingSystems>
 		</field>
 	  </fields>
 	</viewTemplate>

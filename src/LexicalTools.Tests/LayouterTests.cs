@@ -18,7 +18,7 @@ namespace WeSay.LexicalTools.Tests
 		public void Setup()
 		{
 			Db4oLexModelHelper.InitializeForNonDbTests();
-			BasilProject.InitializeForTests();
+			WeSay.Project.WeSayWordsProject.InitializeForTests();
 		}
 
 		[Test]
@@ -66,8 +66,8 @@ namespace WeSay.LexicalTools.Tests
 
 		private DetailList MakeDetailList()
 		{
-			string[] analysisWritingSystemIds = new string[] { BasilProject.Project.WritingSystems.AnalysisWritingSystemDefaultId };
-			string[] vernacularWritingSystemIds = new string[] { BasilProject.Project.WritingSystems.VernacularWritingSystemDefaultId };
+			string[] analysisWritingSystemIds = new string[] { BasilProject.Project.WritingSystems.TestWritingSystemAnalId };
+			string[] vernacularWritingSystemIds = new string[] { BasilProject.Project.WritingSystems.TestWritingSystemVernId };
 			ViewTemplate viewTemplate = new ViewTemplate();
 			Field field = new Field(Field.FieldNames.EntryLexicalForm.ToString(), vernacularWritingSystemIds);
 			field.DisplayName = "Word";
@@ -77,8 +77,8 @@ namespace WeSay.LexicalTools.Tests
 			viewTemplate.Add(new Field(Field.FieldNames.ExampleTranslation.ToString(), analysisWritingSystemIds));
 
 			LexEntry entry = new LexEntry();
-			entry.LexicalForm[BasilProject.Project.WritingSystems.VernacularWritingSystemDefaultId] = "WordInVernacular";
-			entry.LexicalForm[BasilProject.Project.WritingSystems.AnalysisWritingSystemDefaultId] = "WordInAnalysis";
+			entry.LexicalForm[BasilProject.Project.WritingSystems.TestWritingSystemVernId] = "WordInVernacular";
+			entry.LexicalForm[BasilProject.Project.WritingSystems.TestWritingSystemAnalId] = "WordInAnalysis";
 			AddSense(entry);
 			AddSense(entry);
 
@@ -91,7 +91,7 @@ namespace WeSay.LexicalTools.Tests
 		private static void AddSense(LexEntry entry)
 		{
 			LexSense sense = (LexSense) entry.Senses.AddNew();
-			sense.Gloss[BasilProject.Project.WritingSystems.AnalysisWritingSystemDefault.Id] = "GlossInAnalysis";
+			sense.Gloss[WeSay.Project.WeSayWordsProject.Project.ViewTemplate.GetField("SenseGloss").WritingSystemIds[0]] = "GlossInAnalysis";
 			AddExample(sense);
 			AddExample(sense);
 		}
@@ -99,7 +99,7 @@ namespace WeSay.LexicalTools.Tests
 		private static void AddExample(LexSense sense)
 		{
 			LexExampleSentence example = (LexExampleSentence) sense.ExampleSentences.AddNew();
-			example.Sentence[BasilProject.Project.WritingSystems.VernacularWritingSystemDefault.Id] = "sentence";
+			example.Sentence[BasilProject.Project.WritingSystems.TestGetWritingSystemVern.Id] = "sentence";
 		}
 	}
 }

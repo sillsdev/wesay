@@ -28,7 +28,7 @@ namespace WeSay.LexicalTools
 			int senseNumber = 1;
 			foreach (LexSense sense in entry.Senses)
 			{
-				rtf.Append(SwitchToWritingSystem(BasilProject.Project.WritingSystems.AnalysisWritingSystemDefault.Id));
+				//rtf.Append(SwitchToWritingSystem(BasilProject.Project.WritingSystems.AnalysisWritingSystemDefault.Id));
 				if (entry.Senses.Count > 1 || (currentItem != null && currentItem.PropertyName == "Gloss"))
 				{
 					rtf.Append(senseNumber.ToString());
@@ -116,7 +116,7 @@ namespace WeSay.LexicalTools
 			string rtf = string.Empty;
 			if (currentItem != null && property == currentItem.PropertyName)
 			{
-				rtf += SwitchToWritingSystem(BasilProject.Project.WritingSystems.AnalysisWritingSystemDefault.Id);
+				//REVIEW: is a ws switch needed for a blank? rtf += SwitchToWritingSystem(BasilProject.Project.WritingSystems.AnalysisWritingSystemDefault.Id);
 				if (number != null)
 				{
 					rtf += number.ToString();

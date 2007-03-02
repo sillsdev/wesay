@@ -33,7 +33,7 @@ namespace WeSay.LexicalTools.Tests
 					foreach (LexExampleSentence exampleSentence in sense.ExampleSentences)
 					{
 						hasExample = true;
-						if (exampleSentence.Translation[BasilProject.Project.WritingSystems.AnalysisWritingSystemDefaultId].Length == 0)
+						if (exampleSentence.Translation[BasilProject.Project.WritingSystems.TestWritingSystemAnalId].Length == 0)
 						{
 							return true;
 						}
@@ -72,8 +72,8 @@ namespace WeSay.LexicalTools.Tests
 			_missingTranslationRecordList.Add(CreateTestEntry("car", "small motorized vehicle", "Watch out for cars when you cross the street."));
 			_missingTranslationRecordList.Add(CreateTestEntry("bike", "vehicle with two wheels", "He rides his bike to school."));
 
-			string[] analysisWritingSystemIds = new string[] { BasilProject.Project.WritingSystems.AnalysisWritingSystemDefaultId };
-			string[] vernacularWritingSystemIds = new string[] { BasilProject.Project.WritingSystems.VernacularWritingSystemDefaultId };
+			string[] analysisWritingSystemIds = new string[] { BasilProject.Project.WritingSystems.TestWritingSystemAnalId };
+			string[] vernacularWritingSystemIds = new string[] { BasilProject.Project.WritingSystems.TestWritingSystemVernId };
 			this._viewTemplate = new ViewTemplate();
 			this._viewTemplate.Add(new Field(Field.FieldNames.EntryLexicalForm.ToString(), vernacularWritingSystemIds));
 			this._viewTemplate.Add(new Field(Field.FieldNames.SenseGloss.ToString(), analysisWritingSystemIds));
@@ -85,11 +85,11 @@ namespace WeSay.LexicalTools.Tests
 		private static LexEntry CreateTestEntry(string lexicalForm, string gloss, string exampleSentence)
 		{
 			LexEntry entry = new LexEntry();
-			entry.LexicalForm[BasilProject.Project.WritingSystems.VernacularWritingSystemDefaultId] = lexicalForm;
+			entry.LexicalForm[BasilProject.Project.WritingSystems.TestWritingSystemVernId] = lexicalForm;
 			LexSense sense = (LexSense)entry.Senses.AddNew();
-			sense.Gloss[BasilProject.Project.WritingSystems.AnalysisWritingSystemDefaultId] = gloss;
+			sense.Gloss[BasilProject.Project.WritingSystems.TestWritingSystemAnalId] = gloss;
 			LexExampleSentence example = (LexExampleSentence)sense.ExampleSentences.AddNew();
-			example.Sentence[BasilProject.Project.WritingSystems.VernacularWritingSystemDefaultId] = exampleSentence;
+			example.Sentence[BasilProject.Project.WritingSystems.TestWritingSystemVernId] = exampleSentence;
 			return entry;
 		}
 
@@ -97,7 +97,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			LexSense sense = (LexSense)entry.Senses[0];
 			LexExampleSentence example = (LexExampleSentence)sense.ExampleSentences[0];
-			example.Translation[BasilProject.Project.WritingSystems.AnalysisWritingSystemDefaultId] = translation;
+			example.Translation[BasilProject.Project.WritingSystems.TestWritingSystemAnalId] = translation;
 		}
 
 		[TearDown]

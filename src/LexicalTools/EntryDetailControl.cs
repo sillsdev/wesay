@@ -46,7 +46,7 @@ namespace WeSay.LexicalTools
 			else
 			{
 				MessageBox.Show(String.Format("There are no writing systems enabled for the Field '{0}'",field.FieldName),"Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);//review
-				_listWritingSystem = BasilProject.Project.WritingSystems.VernacularWritingSystemDefault;
+				_listWritingSystem = BasilProject.Project.WritingSystems.TestGetWritingSystemVern;
 			}
 
 			LexEntrySortHelper sortHelper = new LexEntrySortHelper(((Db4oRecordListManager) recordManager).DataSource,

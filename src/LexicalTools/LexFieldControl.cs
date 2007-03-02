@@ -56,7 +56,7 @@ namespace WeSay.LexicalTools
 			_lexFieldDetailPanel.ViewTemplate = _viewTemplate;
 
 			_recordsListBox.DataSource = _records;
-			_recordsListBox.Font = BasilProject.Project.WritingSystems.VernacularWritingSystemDefault.Font;
+			_recordsListBox.Font = BasilProject.Project.WritingSystems.TestGetWritingSystemVern.Font;
 			_recordsListBox.AutoSize();
 			_recordsListBox.Columns.StretchToFit();
 			_recordsListBox.SelectedIndexChanged += new EventHandler(OnRecordSelectionChanged);
@@ -64,7 +64,7 @@ namespace WeSay.LexicalTools
 			_recordsListBox.Columns[0].Width = _recordsListBox.Width - _recordsListBox.VScrollBar.Width;
 
 			_completedRecordsListBox.DataSource = _completedRecords;
-			_completedRecordsListBox.Font = BasilProject.Project.WritingSystems.VernacularWritingSystemDefault.Font;
+			_completedRecordsListBox.Font = BasilProject.Project.WritingSystems.TestGetWritingSystemVern.Font;
 			_completedRecordsListBox.AutoSize();
 			_completedRecordsListBox.Columns.StretchToFit();
 			_completedRecordsListBox.SelectedIndexChanged += new EventHandler(OnCompletedRecordSelectionChanged);

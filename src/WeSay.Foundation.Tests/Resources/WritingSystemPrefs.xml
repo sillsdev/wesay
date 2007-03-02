@@ -1,17 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <WritingSystemCollection>
-  <AnalysisWritingSystemDefaultId>ANA</AnalysisWritingSystemDefaultId>
-  <VernacularWritingSystemDefaultId>VER</VernacularWritingSystemDefaultId>
   <members>
 	<WritingSystem>
 	  <FontName>WingDings</FontName>
-	  <FontSize>20</FontSize>
-	  <Id>ANA</Id>
+	  <FontSize>10</FontSize>
+	  <Id>PretendAnalysis</Id>
 	</WritingSystem>
 	<WritingSystem>
 	  <FontName>WingDings</FontName>
 	  <FontSize>20</FontSize>
-	  <Id>VER</Id>
+	  <Id>PretendVernacular</Id>
 	</WritingSystem>
   </members>
 </WritingSystemCollection>

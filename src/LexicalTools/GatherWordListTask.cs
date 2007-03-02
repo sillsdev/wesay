@@ -129,7 +129,7 @@ namespace WeSay.LexicalTools
 			get
 			{
 				MultiText m = new MultiText();
-				m.SetAlternative(BasilProject.Project.WritingSystems.AnalysisWritingSystemDefaultId,
+				m.SetAlternative(BasilProject.Project.WritingSystems.TestWritingSystemAnalId,
 											  CurrentWord);
 				return m;
 			}

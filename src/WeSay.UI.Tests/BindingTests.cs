@@ -17,12 +17,12 @@ namespace WeSay.UI.Tests
 		public void TargetToWidget()
 		{
 			MultiText text = new MultiText();
-			WeSayTextBox widget = new WeSayTextBox(BasilProject.Project.WritingSystems.AnalysisWritingSystemDefault);
-			TextBinding binding = new TextBinding(text, BasilProject.Project.WritingSystems.AnalysisWritingSystemDefault.Id, widget);
+			WeSayTextBox widget = new WeSayTextBox(BasilProject.Project.WritingSystems.TestGetWritingSystemAnal);
+			TextBinding binding = new TextBinding(text, BasilProject.Project.WritingSystems.TestGetWritingSystemAnal.Id, widget);
 
-			text[BasilProject.Project.WritingSystems.AnalysisWritingSystemDefault.Id] = "hello";
+			text[BasilProject.Project.WritingSystems.TestGetWritingSystemAnal.Id] = "hello";
 			Assert.AreEqual("hello", widget.Text);
-			text["en"] = null;
+			text[BasilProject.Project.WritingSystems.TestGetWritingSystemAnal.Id] = null;
 			Assert.AreEqual("",widget.Text);
 		}
 
@@ -30,14 +30,14 @@ namespace WeSay.UI.Tests
 		public void WidgetToTarget()
 		{
 			MultiText text = new MultiText();
-			WeSayTextBox widget = new WeSayTextBox(BasilProject.Project.WritingSystems.AnalysisWritingSystemDefault);
+			WeSayTextBox widget = new WeSayTextBox(BasilProject.Project.WritingSystems.TestGetWritingSystemAnal);
 
-			TextBinding binding = new TextBinding(text, BasilProject.Project.WritingSystems.AnalysisWritingSystemDefault.Id, widget);
+			TextBinding binding = new TextBinding(text, BasilProject.Project.WritingSystems.TestGetWritingSystemAnal.Id, widget);
 
 			widget.Text = "aaa";
-			Assert.AreEqual("aaa", text["en"]);
+			Assert.AreEqual("aaa", text[BasilProject.Project.WritingSystems.TestGetWritingSystemAnal.Id]);
 			widget.Text = "";
-			Assert.AreEqual("", text["en"]);
+			Assert.AreEqual("", text[BasilProject.Project.WritingSystems.TestGetWritingSystemAnal.Id]);
 		}
 	}
 }

@@ -27,28 +27,8 @@ namespace WeSay.App.Tests
 			_project.Dispose();
 		}
 
-		[Test]
-		public void ThaiTest()
-		{
-			_project.LoadFromProjectDirectoryPath(@"..\..\SampleProjects\Thai");
-			TabbedForm tabbedForm = new TabbedForm();
 
-			using (SampleTaskBuilder builder = new SampleTaskBuilder(_project, tabbedForm, GetRecordListManager()))
-			{
-				Assert.Greater(builder.Tasks.Count, 0);
-			}
-		}
-		[Test]
-		public void PretendTest()
-		{
-			_project.LoadFromProjectDirectoryPath(@"..\..\SampleProjects\PRETEND");
-			TabbedForm tabbedForm = new TabbedForm();
 
-			using (SampleTaskBuilder builder = new SampleTaskBuilder(_project, tabbedForm, GetRecordListManager()))
-			{
-				Assert.Greater(builder.Tasks.Count, 0);
-			}
-		}
 
 		private IRecordListManager GetRecordListManager()
 		{
