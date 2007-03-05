@@ -1,3 +1,4 @@
+using System.IO;
 using System.Windows.Forms;
 using NUnit.Framework;
 using NUnit.Extensions.Forms;
@@ -21,8 +22,16 @@ namespace WeSay.LexicalTools.Tests
 		private Form _window;
 		private TabPage _detailTaskPage;
 
+		[TestFixtureSetUp]
+		public  void SetupFixture()
+		{
+			WeSayWordsProject.InitializeForTests();
+			File.Copy(Path.Combine(WeSayWordsProject.Project.ApplicationTestDirectory, "tasks.xml"), WeSayWordsProject.Project.PathToProjectTaskInventory, true);
+		}
+
 		public override void Setup()
 		{
+			WeSayWordsProject.InitializeForTests();
 			base.Setup();
 //            Db4oLexModelHelper.InitializeForNonDbTests();
 			WeSayWordsProject.InitializeForTests();

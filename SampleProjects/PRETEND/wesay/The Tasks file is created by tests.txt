@@ -1,1 +1,1 @@
-The tasks.xml file is a resource in Admin.Tests
+The tasks.xml file is created by copying it from the WeSay\Tests directory, in the setup of tests that need it.
