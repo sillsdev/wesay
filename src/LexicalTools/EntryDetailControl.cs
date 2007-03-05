@@ -170,7 +170,7 @@ namespace WeSay.LexicalTools
 			{
 				if (_records.Count > 0 && _recordsListBox.SelectedIndex == -1)
 				{
-					_recordsListBox.SelectedIndex = 0;
+					return 0;
 				}
 				return _recordsListBox.SelectedIndex;
 			}
@@ -179,8 +179,16 @@ namespace WeSay.LexicalTools
 		private void _btnNewWord_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
 		{
 			LexEntry entry = new LexEntry();
+			bool NoPriorSelection = _recordsListBox.SelectedIndex == -1;
 			_records.Add(entry);
 			_recordsListBox.SelectedIndex = _records.IndexOf(entry);
+			if(NoPriorSelection)
+			{
+				// Windows.Forms.Listbox does not consider it a change of Selection
+				// index if the index was -1 and a record is added.
+				// (No event is sent so we must do it ourselves)
+				OnRecordSelectionChanged(this, new EventArgs());
+			}
 			_entryDetailPanel.Focus();
 		}
 

@@ -618,12 +618,120 @@ namespace WeSay.Data
 
 		#endregion
 
-		#region IEnumerable Members
+		#region IEnumerable Members        #region IEnumerable Members
 
-		public System.Collections.IEnumerator GetEnumerator()
+		#region Enumerator
+
+		public struct Enumerator : IEnumerator<K>
+		{
+			CachedSortedDb4oList<K, T> _collection;
+			int _index;
+			bool _isDisposed;
+
+			public Enumerator(CachedSortedDb4oList<K, T> collection)
+			{
+				if (collection == null)
+				{
+					throw new ArgumentNullException();
+				}
+				_collection = collection;
+				_index = -1;
+				_isDisposed = false;
+			}
+
+			private void CheckValidIndex(int validMinimum)
+			{
+				if (_index < validMinimum || _index >= _collection.Count)
+				{
+					throw new InvalidOperationException();
+				}
+			}
+
+			private void CheckCollectionUnchanged()
+			{
+				if (!_collection._isEnumerating)
+				{
+					throw new InvalidOperationException();
+				}
+			}
+
+			private void VerifyNotDisposed()
+			{
+				if (_isDisposed)
+				{
+					throw new ObjectDisposedException("CachedSortedDb4oList<K, T>.Enumerator");
+				}
+			}
+
+			#region IEnumerator<T> Members
+
+			public K Current
+			{
+				get
+				{
+					VerifyNotDisposed();
+					CheckValidIndex(0);
+					CheckCollectionUnchanged();
+					return _collection.GetKey(_index);
+				}
+			}
+
+			#endregion
+
+			#region IDisposable Members
+
+			void IDisposable.Dispose()
+			{
+				_collection = null;
+			}
+
+			#endregion
+
+			#region IEnumerator Members
+
+			object System.Collections.IEnumerator.Current
+			{
+				get
+				{
+					VerifyNotDisposed();
+					return Current;
+				}
+			}
+
+			public bool MoveNext()
+			{
+				VerifyNotDisposed();
+				CheckValidIndex(-1);
+				CheckCollectionUnchanged();
+				return (++_index < _collection.Count);
+			}
+
+			public void Reset()
+			{
+				VerifyNotDisposed();
+				CheckCollectionUnchanged();
+				_index = -1;
+			}
+
+			#endregion
+		}
+
+		private bool _isEnumerating;
+
+		#endregion
+
+		public Enumerator GetEnumerator()
 		{
 			VerifyNotDisposed();
-			return _keyIdMap.GetEnumerator();
+			_isEnumerating = true;
+			return new Enumerator(this);
+		}
+
+
+		IEnumerator IEnumerable.GetEnumerator()
+		{
+			VerifyNotDisposed();
+			return GetEnumerator();
 		}
 
 		#endregion

@@ -65,7 +65,7 @@ namespace WeSay.Data.Tests
 	}
 
 	[TestFixture]
-	public class CachedSortedDb4oListIEnumerableTests : IEnumerableBaseTest<KeyValuePair<int, long>>
+	public class CachedSortedDb4oListIEnumerableTests : IEnumerableBaseTest<int>
 	{
 		Db4oDataSource _dataSource;
 		CachedSortedDb4oList<int, SimpleIntTestClass> _recordList;
@@ -96,7 +96,7 @@ namespace WeSay.Data.Tests
 	}
 
 	[TestFixture]
-	public class CachedSortedDb4oListIEnumerableWithNoDataTests : IEnumerableBaseTest<KeyValuePair<int, long>>
+	public class CachedSortedDb4oListIEnumerableWithNoDataTests : IEnumerableBaseTest<int>
 	{
 		Db4oDataSource _dataSource;
 		CachedSortedDb4oList<int, SimpleIntTestClass> _recordList;

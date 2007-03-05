@@ -192,9 +192,43 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void DeletingAllWordsThenAddingDoesNotCrash()
 		{
-			ClickDeleteWord();
-			ClickDeleteWord();
+			DeleteAllEntries();
 			ClickAddWord();
+		}
+
+		private void DeleteAllEntries() {
+			ClickDeleteWord();
+			ClickDeleteWord();
+			ClickDeleteWord();
+		}
+
+		[Test]
+		public void EmptyDictionary_AddWords_NewWordSelectedInListBox()
+		{
+			DeleteAllEntries();
+			ClickAddWord();
+			ListBoxTester t = new ListBoxTester("_recordsListBox");
+			Assert.AreEqual(0, t.Properties.SelectedIndex);
+			Assert.AreEqual("*", t.Properties.SelectedItem);
+		}
+
+		[Test]
+		public void EmptyDictionary_AddWords_FieldsExist()
+		{
+			DeleteAllEntries();
+			ClickAddWord();
+			TextBoxTester t = new TextBoxTester(GetLexicalFormControlName());
+			Assert.IsTrue(t.Properties.Visible);
+		}
+
+		[Test]
+		public void EmptyDictionary_AddWords_CanTypeInFirstField()
+		{
+			DeleteAllEntries();
+			ClickAddWord();
+			TextBoxTester t = new TextBoxTester(GetLexicalFormControlName());
+			t.Enter("test");
+			Assert.AreEqual("test", t.Text);
 		}
 
 		[Test]
@@ -202,9 +236,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			NUnit.Extensions.Forms.LinkLabelTester l = new LinkLabelTester("_btnDeleteWord");
 			Assert.IsTrue(l.Properties.Enabled);
-			ClickDeleteWord();
-			ClickDeleteWord();
-			ClickDeleteWord();
+			DeleteAllEntries();
 			Assert.IsFalse(l.Properties.Enabled);
 		}
 
