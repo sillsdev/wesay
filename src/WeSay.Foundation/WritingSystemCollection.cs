@@ -146,7 +146,7 @@ namespace WeSay.Language
 //            }
 //        }
 
-#if DEBUG
+
 		public string TestWritingSystemAnalId
 		{
 			get
@@ -191,11 +191,6 @@ namespace WeSay.Language
 				return null;
 			}
 		}
-
-
-#endif
-
-
 
 		/// <summary>
 		/// For serialization only
