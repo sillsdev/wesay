@@ -1,8 +1,6 @@
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows.Forms;
-using WeSay.Data;
 using WeSay.Language;
 using WeSay.LexicalModel;
 using WeSay.Project;
@@ -19,7 +17,7 @@ namespace WeSay.LexicalTools
 			InitializeComponent();
 		}
 
-		public GatherWordListControl(GatherWordListTask task)
+		public GatherWordListControl(GatherWordListTask task, ViewTemplate viewTemplate)
 		{
 			_task = task;
 			_task.UpdateSourceWord += new EventHandler(OnUpdateSourceWord);
@@ -27,8 +25,16 @@ namespace WeSay.LexicalTools
 			InitializeComponent();
 			BackColor = WeSay.UI.DisplaySettings.Default.BackgroundColor;
 			_listViewOfWordsMatchingCurrentItem.Items.Clear();
-			//TODO: this limits us to a single writing system, and relies on the deprecated "default"
-			_vernacularBox.WritingSystems = new WritingSystem[] { BasilProject.Project.WritingSystems.TestGetWritingSystemVern };
+
+			Field lexicalFormField = viewTemplate.GetField(Field.FieldNames.EntryLexicalForm.ToString());
+			if (lexicalFormField == null)
+			{
+				_vernacularBox.WritingSystems = new WritingSystem[] { BasilProject.Project.WritingSystems.UnknownVernacularWritingSystem };
+			}
+			else
+			{
+				_vernacularBox.WritingSystems = lexicalFormField.WritingSystems;
+			}
 			_vernacularBox.TextChanged += new EventHandler(_vernacularBox_TextChanged);
 			_vernacularBox.KeyDown += new KeyEventHandler(_boxVernacularWord_KeyDown);
 			UpdateStuff();

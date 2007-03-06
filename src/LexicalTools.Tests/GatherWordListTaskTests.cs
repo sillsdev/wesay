@@ -18,6 +18,7 @@ namespace WeSay.LexicalTools.Tests
 		private string _wordListFilePath;
 		private string _dbFilePath;
 		private string[] _words=new string[] {"one","two","three"};
+		ViewTemplate _viewTemplate;
 
 		[SetUp]
 		public void Setup()
@@ -31,7 +32,15 @@ namespace WeSay.LexicalTools.Tests
 			Db4oLexModelHelper.Initialize(((Db4oRecordListManager)_recordListManager).DataSource.Data);
 
 			File.WriteAllLines(_wordListFilePath, _words);
-			this._task = new GatherWordListTask(_recordListManager, "label", "description", _wordListFilePath);
+			_viewTemplate = new ViewTemplate();
+			this._viewTemplate.Add(new Field(Field.FieldNames.EntryLexicalForm.ToString(), new string[] { BasilProject.Project.WritingSystems.TestWritingSystemVernId }));
+
+			this._task = new GatherWordListTask(_recordListManager,
+												"label",
+												"description",
+												_wordListFilePath,
+												BasilProject.Project.WritingSystems.TestWritingSystemVernId,
+												_viewTemplate);
 		}
 
 		[TearDown]
@@ -40,6 +49,19 @@ namespace WeSay.LexicalTools.Tests
 			_recordListManager.Dispose();
 			File.Delete(_wordListFilePath);
 			File.Delete(_dbFilePath);
+		}
+
+		[Test]
+		public void EmptyTemplate()
+		{
+			GatherWordListTask g = new GatherWordListTask(_recordListManager,
+														  "label",
+														  "description",
+														  _wordListFilePath,
+														  WritingSystem.IdForUnknownAnalysis,
+														  new ViewTemplate());
+
+			Assert.IsNotNull(g);
 		}
 
 		[Test]

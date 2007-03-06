@@ -116,6 +116,13 @@ namespace WeSay.LexicalTools.Tests
 		}
 
 		[Test]
+		public void Construct_EmptyViewTemplate_NoCrash()
+		{
+			EntryDetailControl e = new EntryDetailControl(_recordListManager, new ViewTemplate());
+			Assert.IsNotNull(e);
+		}
+
+		[Test]
 		public void ClickingAddWordFocusesFirstField()
 		{
 			ClickAddWord();

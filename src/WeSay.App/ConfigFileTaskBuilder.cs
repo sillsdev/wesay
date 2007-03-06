@@ -74,14 +74,23 @@ namespace WeSay.App
 				// E.g., the template says:     <id>Default View BLAH</id>
 				//  but the EntryDetailTask is lookinig for: <viewTemplate ref="Default View Template" />
 
-				 ITask iTask=null;
+				ITask iTask=null;
 				try
 				{
 					iTask = (ITask)_picoContext.GetComponentInstance(id);
 				}
 				catch (Exception e)
 				{
-					iTask = new FailedLoadTask(id, e.Message);
+					string message;
+					if(e.Message.StartsWith("Either do the specified parameters not match any of"))
+					{
+						message = "The parameters given in " + id + " (" + task.InnerXml + ") do not match those required by " + task.GetAttribute("class", string.Empty);
+					}
+					else
+					{
+						message = e.Message;
+					}
+					iTask = new FailedLoadTask(id, message);
 				}
 				_tasks.Add(iTask);
 			}

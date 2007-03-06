@@ -92,6 +92,10 @@ namespace WeSay.Language
 		{
 			get
 			{
+				if(_font == null)
+				{
+					_font = new Font(FontFamily.GenericSansSerif, FontSize);
+				}
 				return _font;
 			}
 			set

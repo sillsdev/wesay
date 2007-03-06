@@ -132,6 +132,14 @@ namespace WeSay.Project
 		/// <param name="usersTemplate"></param>
 		public static void SynchronizeInventories(ViewTemplate masterTemplate, ViewTemplate usersTemplate)
 		{
+			if(masterTemplate == null)
+			{
+				throw new ArgumentNullException();
+			}
+			if(usersTemplate == null)
+			{
+				throw new ArgumentNullException();
+			}
 			foreach (Field masterField in masterTemplate)
 			{
 				Field userField = usersTemplate.GetField(masterField.FieldName);

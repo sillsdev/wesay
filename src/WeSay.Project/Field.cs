@@ -62,7 +62,7 @@ namespace WeSay.Project
 		{
 			get
 			{
-				return this.ClassName != ""; //TEMP
+				return ClassName != string.Empty; //TEMP
 			}
 		}
 

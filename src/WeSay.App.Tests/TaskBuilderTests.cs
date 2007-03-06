@@ -1,4 +1,3 @@
-//using Gtk;
 using System.ComponentModel;
 using NUnit.Framework;
 using WeSay.Data;
@@ -6,7 +5,6 @@ using WeSay.LexicalModel;
 using WeSay.LexicalModel.Db4o_Specific;
 using WeSay.LexicalModel.Tests;
 using WeSay.Project;
-using WeSay.UI;
 
 namespace WeSay.App.Tests
 {

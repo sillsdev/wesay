@@ -92,6 +92,27 @@ namespace WeSay.Project.Tests
 			return f;
 		}
 
+		[Test]
+		[ExpectedException(typeof(ArgumentNullException))]
+		public void SynchronizeInventories_nullMasterTemplate_throws()
+		{
+			ViewTemplate.SynchronizeInventories(null, new ViewTemplate());
+		}
+
+		[Test]
+		[ExpectedException(typeof(ArgumentNullException))]
+		public void SynchronizeInventories_nullUserTemplate_throws()
+		{
+			ViewTemplate.SynchronizeInventories(new ViewTemplate(), null);
+		}
+
+		[Test]
+		public void SynchronizeInventories_empty_empty()
+		{
+			ViewTemplate v = new ViewTemplate();
+			ViewTemplate.SynchronizeInventories(v, new ViewTemplate());
+			Assert.IsEmpty(v);
+		}
 
 		[Test]
 		public void MergeWithEmptyInventory()

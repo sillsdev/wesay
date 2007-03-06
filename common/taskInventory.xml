@@ -42,6 +42,8 @@
 	<label>Collect Word List</label>
 	<description>Collect new words given words in another language.</description>
 	<wordListFileName>sampleWordList.txt</wordListFileName>
+	<wordListWritingSystemId>en</wordListWritingSystemId>
+	<viewTemplate ref="Default View Template"/>
   </task>
 
   <!--

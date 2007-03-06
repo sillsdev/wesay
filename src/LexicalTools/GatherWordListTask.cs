@@ -17,18 +17,38 @@ namespace WeSay.LexicalTools
 		private GatherWordListControl _gatherControl;
 		private List<string> _words;
 		private int _currentWordIndex = 0;
-
+		private ViewTemplate _viewTemplate;
+		private string _wordListWritingSystemId;
 		/// <summary>
 		/// Fires when the user navigates to a new word from the wordlist
 		/// </summary>
 		public event EventHandler UpdateSourceWord;
 
 
-		public GatherWordListTask(IRecordListManager recordListManager, string label, string description, string wordListFileName)
+		public GatherWordListTask(IRecordListManager recordListManager,
+								  string label,
+								  string description,
+								  string wordListFileName,
+								  string wordListWritingSystemId,
+								  ViewTemplate viewTemplate)
 			: base(label, description, false, recordListManager)
 		{
+			if (wordListFileName == null)
+			{
+				throw new ArgumentNullException("wordListFileName");
+			}
+			if (wordListWritingSystemId == null)
+			{
+				throw new ArgumentNullException("wordListWritingSystemId");
+			}
+			if (viewTemplate == null)
+			{
+				throw new ArgumentNullException("viewTemplate");
+			}
 			_wordListFileName = wordListFileName;
 			_words = null;
+			_wordListWritingSystemId = wordListWritingSystemId;
+			_viewTemplate = viewTemplate;
 		}
 
 		private void LoadWordList()
@@ -71,7 +91,7 @@ namespace WeSay.LexicalTools
 			{
 				if (_gatherControl==null)
 			   {
-				   _gatherControl = new GatherWordListControl(this);
+				   _gatherControl = new GatherWordListControl(this, _viewTemplate);
 			   }
 			   return _gatherControl;
 			}
@@ -129,8 +149,7 @@ namespace WeSay.LexicalTools
 			get
 			{
 				MultiText m = new MultiText();
-				m.SetAlternative(BasilProject.Project.WritingSystems.TestWritingSystemAnalId,
-											  CurrentWord);
+				m.SetAlternative(_wordListWritingSystemId, CurrentWord);
 				return m;
 			}
 		}
@@ -140,8 +159,8 @@ namespace WeSay.LexicalTools
 			LexSense sense = new LexSense();
 			sense.Gloss.MergeIn(CurrentWordAsMultiText);
 
-			Db4oLexQueryHelper.AddSenseToLexicon(this.RecordListManager, newVernacularWord, sense);
-			this.RecordListManager.GoodTimeToCommit();
+			Db4oLexQueryHelper.AddSenseToLexicon(RecordListManager, newVernacularWord, sense);
+			RecordListManager.GoodTimeToCommit();
 		}
 
 		public override void Deactivate()
@@ -152,7 +171,7 @@ namespace WeSay.LexicalTools
 				_gatherControl.Dispose();
 			}
 			_gatherControl = null;
-			this.RecordListManager.GoodTimeToCommit();
+			RecordListManager.GoodTimeToCommit();
 		}
 
 		public void NavigatePrevious()

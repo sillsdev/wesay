@@ -64,6 +64,26 @@ namespace WeSay.LexicalTools.Tests
 			Assert.AreEqual("WordInVernacular", box.TextBoxes[0].Text);
 	  }
 
+		[Test]
+		public void EmptyViewTemplate()
+		{
+			LexEntry entry = GetNewEntry();
+
+			DetailList dl = new DetailList();
+			LexEntryLayouter layout = new LexEntryLayouter(dl, new ViewTemplate());
+			_rowCount = layout.AddWidgets(entry);
+			Assert.AreEqual(0, _rowCount);
+		}
+
+		private static LexEntry GetNewEntry() {
+			LexEntry entry = new LexEntry();
+			entry.LexicalForm[BasilProject.Project.WritingSystems.TestWritingSystemVernId] = "WordInVernacular";
+			entry.LexicalForm[BasilProject.Project.WritingSystems.TestWritingSystemAnalId] = "WordInAnalysis";
+			AddSense(entry);
+			AddSense(entry);
+			return entry;
+		}
+
 		private DetailList MakeDetailList()
 		{
 			string[] analysisWritingSystemIds = new string[] { BasilProject.Project.WritingSystems.TestWritingSystemAnalId };
@@ -76,11 +96,7 @@ namespace WeSay.LexicalTools.Tests
 			viewTemplate.Add(new Field(Field.FieldNames.ExampleSentence.ToString(), vernacularWritingSystemIds));
 			viewTemplate.Add(new Field(Field.FieldNames.ExampleTranslation.ToString(), analysisWritingSystemIds));
 
-			LexEntry entry = new LexEntry();
-			entry.LexicalForm[BasilProject.Project.WritingSystems.TestWritingSystemVernId] = "WordInVernacular";
-			entry.LexicalForm[BasilProject.Project.WritingSystems.TestWritingSystemAnalId] = "WordInAnalysis";
-			AddSense(entry);
-			AddSense(entry);
+			LexEntry entry = GetNewEntry();
 
 			DetailList dl = new DetailList();
 			LexEntryLayouter layout = new LexEntryLayouter(dl, viewTemplate);

@@ -46,6 +46,14 @@ namespace WeSay.Language.Tests
 		}
 
 		[Test]
+		public void Construct_DefaultFont()
+		{
+			WritingSystem ws = new WritingSystem();
+			Assert.IsNotNull(ws.Font);
+		}
+
+
+		[Test]
 		public void MissingIdIsHandledOk()
 		{
 			WritingSystemCollection x = new WritingSystemCollection();
@@ -124,7 +132,19 @@ namespace WeSay.Language.Tests
 			return c;
 		}
 
+		[Test]
+		public void WritingSystemCollection_HasUnknownVernacular()
+		{
+			WritingSystemCollection c = new WritingSystemCollection();
+			Assert.IsNotNull(c.UnknownVernacularWritingSystem);
+		}
 
+		[Test]
+		public void WritingSystemCollection_HasUnknownAnalysis()
+		{
+			WritingSystemCollection c = new WritingSystemCollection();
+			Assert.IsNotNull(c.UnknownAnalysisWritingSystem);
+		}
 
 		[Test]
 		public void DeserializeCollection()
@@ -148,5 +168,6 @@ namespace WeSay.Language.Tests
 			Assert.IsNotNull(c);
 			Assert.AreEqual(2, c.Values.Count);
 		}
+
 	}
 }

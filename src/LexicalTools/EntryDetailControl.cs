@@ -39,19 +39,26 @@ namespace WeSay.LexicalTools
 			_viewTemplate = viewTemplate;
 
 			Field field = viewTemplate.GetField(Field.FieldNames.EntryLexicalForm.ToString());
-			if(field.WritingSystems.Count > 0)
+			if (field != null)
 			{
-				_listWritingSystem = field.WritingSystems[0];
+				if (field.WritingSystems.Count > 0)
+				{
+					_listWritingSystem = field.WritingSystems[0];
+				}
+				else
+				{
+					MessageBox.Show(String.Format("There are no writing systems enabled for the Field '{0}'", field.FieldName), "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);//review
+				}
 			}
-			else
+			if (_listWritingSystem == null)
 			{
-				MessageBox.Show(String.Format("There are no writing systems enabled for the Field '{0}'",field.FieldName),"Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);//review
-				_listWritingSystem = BasilProject.Project.WritingSystems.TestGetWritingSystemVern;
+				_listWritingSystem = BasilProject.Project.WritingSystems.UnknownVernacularWritingSystem;
 			}
 
+
 			LexEntrySortHelper sortHelper = new LexEntrySortHelper(((Db4oRecordListManager) recordManager).DataSource,
-																	viewTemplate,
-																	_listWritingSystem.Id);
+																	_listWritingSystem.Id,
+																   true);
 			_records = ((Db4oRecordListManager)recordManager).GetSortedList(sortHelper);
 
 			InitializeComponent();

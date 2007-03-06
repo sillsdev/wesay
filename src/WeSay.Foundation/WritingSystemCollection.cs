@@ -31,13 +31,12 @@ namespace WeSay.Language
 		{
 			get
 			{
-				WritingSystem val;
-				if (this.TryGetValue(key, out val))
+				WritingSystem ws;
+				if (!TryGetValue(key, out ws))
 				{
-					return val;
+					ws = new WritingSystem(key, new Font(FontFamily.GenericSansSerif, 12));
+					Add(key, ws);
 				}
-				WritingSystem ws = new WritingSystem(key, new Font(System.Drawing.FontFamily.GenericSansSerif, 12));
-				this.Add(key, ws);
 				return ws;
 			}
 			set { base[key] = value; }
@@ -95,7 +94,21 @@ namespace WeSay.Language
 //            return _fontPrefsDoc.SelectSingleNode("prefs").Attributes[label].Value;
 //        }
 
-//        public WritingSystem AnalysisWritingSystemDefault
+		public WritingSystem UnknownAnalysisWritingSystem
+		{
+			get
+			{
+				return this[WritingSystem.IdForUnknownAnalysis];
+			}
+		}
+		public WritingSystem UnknownVernacularWritingSystem
+		{
+			get
+			{
+				return this[WritingSystem.IdForUnknownVernacular];
+			}
+		}
+		//        public WritingSystem AnalysisWritingSystemDefault
 //        {
 //            get
 //            {
