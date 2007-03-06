@@ -28,7 +28,7 @@ namespace WeSay.UI
 		private WeSayTextBox _textBoxTarget;
 		private Control _referenceControl;
 
-		public delegate void GhostTriggered(GhostBinding sender, IBindingList list, int index, MultiTextControl previouslyGhostedControlToReuse, EventArgs args);
+		public delegate void GhostTriggered(GhostBinding sender, IBindingList list, int index, MultiTextControl previouslyGhostedControlToReuse, bool doGoToNextField, EventArgs args);
 
 		/// <summary>
 		/// Fires at some point after the user has entered some information in the ghost text box.
@@ -46,10 +46,25 @@ namespace WeSay.UI
 		   _writingSystem = writingSystem;
 
 		   _textBoxTarget = textBoxTarget;
+		   _textBoxTarget.KeyDown += new KeyEventHandler(_textBoxTarget_KeyDown);
 		   _textBoxTarget.LostFocus += new EventHandler(_textBoxTarget_LostFocus);
 		   _textBoxTarget.TextChanged += new EventHandler(_textBoxTarget_TextChanged);
 		   _textBoxTarget.Enter += new EventHandler(OnTextBoxEntered);
 		   _textBoxTarget.HandleDestroyed += new EventHandler(_textBoxTarget_HandleDestroyed);
+		}
+
+		void _textBoxTarget_KeyDown(object sender, KeyEventArgs e)
+		{
+			if (e.KeyCode == Keys.Return)
+			{
+				e.Handled = true;
+				e.SuppressKeyPress = true; //none of this
+				this.TimeForRealObject(false);
+			}
+			else
+			{
+				e.Handled = false;
+			}
 		}
 
 
@@ -65,10 +80,7 @@ namespace WeSay.UI
 
 		void _textBoxTarget_LostFocus(object sender, EventArgs e)
 		{
-			if (_textBoxTarget.Text.Trim().Length > 0)
-			{
-				TimeForRealObject();
-			}
+				TimeForRealObject(true);
 		}
 
 		void _textBoxTarget_TextChanged(object sender, EventArgs e)
@@ -164,13 +176,19 @@ namespace WeSay.UI
 //            }
 		}
 
-		protected  void TimeForRealObject()
+		protected  void TimeForRealObject(bool doGoToNextField)
 		{
-			//don't lett the code here trigger the ghost all over again
+			if (_textBoxTarget.Text.Trim().Length == 0)
+			{
+				return;
+			}
+
+			//don't let the code here trigger the ghost all over again
 			if (_inMidstOfTrigger)
 			{
 				return;
 			}
+			_inMidstOfTrigger = true;
 
 			IBindingList list = _listTarget as IBindingList;
 			//in addition to adding a list item, this will fire events on the object that owns the list
@@ -181,12 +199,9 @@ namespace WeSay.UI
 			FillInMultiTextOfNewObject(newGuy, _propertyName, _writingSystem, _textBoxTarget.Text);
 			if (Triggered != null)
 			{
-				Triggered.Invoke(this, _listTarget, list.IndexOf(newGuy), null/*todo*/, null);
+				Triggered.Invoke(this, _listTarget, list.IndexOf(newGuy), null/*todo*/, doGoToNextField, null);
 			}
 
-
-
-			_inMidstOfTrigger = true;
 			_textBoxTarget.Text = "";
 			_inMidstOfTrigger = false;
 			//_textBoxTarget.PrepareForFadeIn();

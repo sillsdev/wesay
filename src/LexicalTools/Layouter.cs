@@ -151,17 +151,24 @@ namespace WeSay.LexicalTools
 			return binding;
 		}
 
-		protected virtual void OnGhostBindingTriggered(GhostBinding sender, IBindingList list, int index, MultiTextControl previouslyGhostedControlToReuse, System.EventArgs args)
+		protected virtual void OnGhostBindingTriggered(GhostBinding sender, IBindingList list, int index, MultiTextControl previouslyGhostedControlToReuse, bool doGoToNextField, System.EventArgs args)
 		{
 			_previouslyGhostedControlToReuse = previouslyGhostedControlToReuse;
-			AddWidgetsAfterGhostTrigger(list, index, sender.ReferenceControl);
+			AddWidgetsAfterGhostTrigger(list, index, sender.ReferenceControl, doGoToNextField);
 		}
 
-		protected void AddWidgetsAfterGhostTrigger(IBindingList list, int index, Control refControl)
+		protected void AddWidgetsAfterGhostTrigger(IBindingList list, int index, Control refControl, bool doGoToNextField)
 		{
 			int row    = _detailList.GetRowOfControl(refControl);
 			AddWidgets(list, index, row);
-			_detailList.MoveInsertionPoint(row+1);
+			if (doGoToNextField)
+			{
+				_detailList.MoveInsertionPoint(row + 1);
+			}
+			else
+			{
+				_detailList.MoveInsertionPoint(row);
+			}
 		}
 
 		protected static int AddChildrenWidgets(Layouter layouter, IBindingList list, int insertAtRow , int rowCount)

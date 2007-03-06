@@ -14,6 +14,8 @@ namespace WeSay.UI
 		//public new event EventHandler TextChanged;
 	   // public new event KeyEventHandler KeyDown;
 
+//        public event System.EventHandler SpecialKeyPress;
+
 		public MultiTextControl()
 		{
 			this.components = new System.ComponentModel.Container();
@@ -138,11 +140,30 @@ namespace WeSay.UI
 
 		void OnKeyDownInSomeBox(object sender, KeyEventArgs e)
 		{
-			OnKeyDown(e);
-			//if (this.KeyDown != null)
-			//{
-			//    KeyDown.Invoke(sender, e);
-			//}
+		  OnKeyDown(e);
+//
+////            if (Environment.OSVersion.Platform != PlatformID.Unix)
+////            {
+////                SetSuppressKeyPress(e, true);
+////            }
+//            switch (e.KeyCode)
+//            {
+//                case Keys.Return:
+//                    e.Handled = true;
+//                    if (SpecialKeyPress != null)
+//                    {
+//                        SpecialKeyPress.Invoke(this, e.KeyCode);
+//                    }
+//                    break;
+//
+//                default:
+//                    e.Handled = false;
+////                    if (Environment.OSVersion.Platform != PlatformID.Unix)
+////                    {
+////                        SetSuppressKeyPress(e, false);
+////                    }
+//                    break;
+//            }
 		}
 
 		void OnTextOfSomeBoxChanged(object sender, EventArgs e)

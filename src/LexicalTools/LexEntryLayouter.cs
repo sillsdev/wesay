@@ -43,7 +43,7 @@ namespace WeSay.LexicalTools
 			LexSenseLayouter layouter = new LexSenseLayouter(DetailList, ActiveViewTemplate);
 			rowCount = AddChildrenWidgets(layouter, entry.Senses, insertAtRow, rowCount);
 			//add a ghost
-			rowCount += layouter.AddGhost(entry.Senses);
+			rowCount += layouter.AddGhost(entry.Senses, true);
 
 
 			return rowCount;

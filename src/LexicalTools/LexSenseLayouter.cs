@@ -43,7 +43,7 @@ namespace WeSay.LexicalTools
 			return rowCount;
 		}
 
-		public int AddGhost(IBindingList list)
+		public int AddGhost(IBindingList list, bool isHeading)
 		{
 //            int rowCount = 0;
 //           Field field;
@@ -64,7 +64,7 @@ namespace WeSay.LexicalTools
 //            return rowCount;
 
 			int insertAtRow = -1;//////REVIEW!!!!!!!!!!!!!!!!!!
-			return MakeGhostWidget(list, insertAtRow, Field.FieldNames.SenseGloss.ToString(), "Meaning", "Gloss", false);
+			return MakeGhostWidget(list, insertAtRow, Field.FieldNames.SenseGloss.ToString(), "Meaning", "Gloss", isHeading);
 
 		}
 

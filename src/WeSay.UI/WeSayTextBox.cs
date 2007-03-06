@@ -27,6 +27,8 @@ namespace WeSay.UI
 			}
 		}
 
+
+
 		public WeSayTextBox(WritingSystem ws):this()
 		{
 			 WritingSystem = ws;
