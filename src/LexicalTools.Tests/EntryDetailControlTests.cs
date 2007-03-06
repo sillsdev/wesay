@@ -366,7 +366,7 @@ namespace WeSay.LexicalTools.Tests
 			editControl.TextBoxes[0].Focus();
 			TypeInMeaning(string.Empty);
 
-			Assert.IsNull(GetEditControl(detailList, "Meaning"));
+			Assert.IsTrue(GetEditControl(detailList, "Meaning").Name.Contains("ghost"),"Only ghost should remain");
 		}
 
 

@@ -59,30 +59,5 @@ namespace WeSay.Setup.Tests {
 				resourceCulture = value;
 			}
 		}
-
-		/// <summary>
-		///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
-		///&lt;tasks&gt;
-		///  &lt;components&gt;
-		///    &lt;viewTemplate id=&quot;Default View Template&quot;&gt;
-		///      &lt;fields&gt;
-		///        &lt;field&gt;
-		///          &lt;className&gt;&lt;/className&gt;
-		///          &lt;dataType&gt;MultiText&lt;/dataType&gt;
-		///          &lt;displayName&gt;Word&lt;/displayName&gt;
-		///          &lt;fieldName&gt;EntryLexicalForm&lt;/fieldName&gt;
-		///          &lt;multiplicity&gt;ZeroOr1&lt;/multiplicity&gt;
-		///          &lt;visibility&gt;Visible&lt;/visibility&gt;
-		///          &lt;writingSystems /&gt;
-		///        &lt;/field&gt;
-		///        &lt;field&gt;
-		///          &lt;className&gt;&lt;/className&gt;
-		///     [rest of string was truncated]&quot;;.
-		/// </summary>
-		internal static string tasks {
-			get {
-				return ResourceManager.GetString("tasks", resourceCulture);
-			}
-		}
 	}
 }

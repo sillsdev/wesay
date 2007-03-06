@@ -122,7 +122,7 @@ namespace WeSay.LexicalTools.Tests
 			MultiTextControl editControl = GetEditControl(detailList, "Meaning");
 			editControl.TextBoxes[0].Text = "";
 
-			Assert.IsNull(GetEditControl(detailList, "Meaning"));
+			Assert.IsTrue(GetEditControl(detailList, "Meaning").Name.Contains("ghost"), "Only ghost should remain");
 		}
 
 		private static MultiTextControl GetEditControl(DetailList detailList, string labelText) {

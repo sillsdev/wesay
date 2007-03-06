@@ -67,13 +67,21 @@ namespace WeSay.UI
 		{
 			int top = 0;// AddHorizontalRule(panel, isHeader, _rowCount == 0);
 			if (isHeader)
-				top = 5;
+			{
+				int beforeHeadingPadding = 8;
+				top = beforeHeadingPadding;
+			}
 			Label label = new Label();
+			if (isHeader)
+			{
+				label.Font = new Font(label.Font, FontStyle.Bold);
+			}
 			label.Text = fieldLabel;
 			label.Size = new Size(75, 50);
-			label.Top = 9+top;
+			int verticalPadding = 0;
+			label.Top = verticalPadding+3+top;
 
-			editWidget.Top = 6+top;
+			editWidget.Top = verticalPadding + top;
 			editWidget.Width = 5;
 			FixUpForMono(editWidget);
 			editWidget.Left = label.Width + 10;

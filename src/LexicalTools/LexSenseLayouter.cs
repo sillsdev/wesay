@@ -64,7 +64,7 @@ namespace WeSay.LexicalTools
 //            return rowCount;
 
 			int insertAtRow = -1;//////REVIEW!!!!!!!!!!!!!!!!!!
-			return MakeGhostWidget(list, insertAtRow, Field.FieldNames.SenseGloss.ToString(), "New Meaning", "Gloss");
+			return MakeGhostWidget(list, insertAtRow, Field.FieldNames.SenseGloss.ToString(), "Meaning", "Gloss", false);
 
 		}
 

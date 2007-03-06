@@ -25,6 +25,15 @@ namespace WeSay.UI
 			_idOfPreferredWritingSystem = "es";
 		}
 
+		protected override void OnHandleDestroyed(EventArgs e)
+		{
+			if (GoingAway != null)
+			{
+				GoingAway.Invoke(this, null);
+			}
+			base.OnHandleDestroyed(e);
+		}
+
 		public SingleOptionControl(OptionRef optionRef, OptionsList list, string idOfPreferredWritingSystem)
 		{
 			_list = list;
@@ -55,6 +64,7 @@ namespace WeSay.UI
 				if (value != null && value.Length == 0)
 				{
 					_control.SelectedIndex = -1; //enhance: have a default value
+					SetStatusColor();
 					return;
 				}
 
@@ -63,15 +73,21 @@ namespace WeSay.UI
 					if (proxy.Key.Equals(value))
 					{
 						_control.SelectedItem = proxy;
+						SetStatusColor();
 					   return;
 					}
 				}
 
 				//Didn't find it
 
-				_control.DropDownStyle = ComboBoxStyle.DropDown; //allow aberant old value
-				_control.Text = value;
-				SetStatusColor();
+			   _control.DropDownStyle = ComboBoxStyle.DropDown; //allow abberant old value NB: don't remove just because SetStatusCOlor looks like it will set this
+			   //this was needed to fix ws-115, which appear to be related to changing the
+				//DropDownStyle + having autocomplete on.  Sadly, it means a bad (red) key can't be fixed just by typing. Must
+				//select a good value.
+				_control.AutoCompleteMode = AutoCompleteMode.None;
+
+			   _control.Text = value;
+			   SetStatusColor(); //must do this before trying to change to a non-list value
 			}
 		}
 
@@ -80,11 +96,12 @@ namespace WeSay.UI
 			if (this.Value != null && Value.Length > 0 &&_control.SelectedIndex == -1)
 			{
 				_control.BackColor = Color.Red;
+				_control.DropDownStyle = ComboBoxStyle.DropDown; //allow abberant old value
 			}
 			else
 			{
 				_control.BackColor = Color.White;
-				_control.DropDownStyle = ComboBoxStyle.DropDownList; // can't type
+			   _control.DropDownStyle = ComboBoxStyle.DropDownList; // can't type
 			}
 		}
 

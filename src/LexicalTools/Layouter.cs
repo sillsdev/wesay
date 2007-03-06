@@ -118,7 +118,7 @@ namespace WeSay.LexicalTools
 //            return m;
 //        }
 
-		protected int MakeGhostWidget(IBindingList list, int insertAtRow, string fieldName, string label, string propertyName)
+		protected int MakeGhostWidget(IBindingList list, int insertAtRow, string fieldName, string label, string propertyName, bool isHeading)
 		{
 			int rowCount = 0;
 			Field field = ActiveViewTemplate.GetField(fieldName);
@@ -126,7 +126,7 @@ namespace WeSay.LexicalTools
 			{
 
 				MultiTextControl m = new MultiTextControl(field.WritingSystems, new MultiText(), fieldName+"_ghost");
-				Control refWidget = DetailList.AddWidgetRow(StringCatalog.Get(label), false, m, insertAtRow + rowCount);
+				Control refWidget = DetailList.AddWidgetRow(StringCatalog.Get(label), isHeading, m, insertAtRow + rowCount);
 
 				foreach (WeSayTextBox box in m.TextBoxes)
 				{
@@ -209,7 +209,7 @@ namespace WeSay.LexicalTools
 						throw new ApplicationException(
 							string.Format("WeSay doesn't understand how to a layout a {0}", customField.DataTypeName));
 				}
-				DetailList.AddWidgetRow(StringCatalog.Get(customField.DisplayName), true, box, insertAtRow+rowCount);
+				DetailList.AddWidgetRow(StringCatalog.Get(customField.DisplayName), false, box, insertAtRow+rowCount);
 
 				++rowCount;
 			}

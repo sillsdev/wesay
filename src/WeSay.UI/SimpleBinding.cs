@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using WeSay.Foundation;
 
 namespace WeSay.UI
@@ -26,7 +27,8 @@ namespace WeSay.UI
 			_widget = widgetTarget;
 			_widget.ValueChanged += new EventHandler(OnWidgetValueChanged);
 			_widget.GoingAway += new EventHandler(_target_HandleDestroyed);
-		  //  _widget.Enter += new EventHandler(OnTextBoxEntered);
+
+			Debug.WriteLine("++++++Constructed SimpleBinding boundTo: " + this._widget.Value);
 		}
 
 		void _target_HandleDestroyed(object sender, EventArgs e)
@@ -51,7 +53,7 @@ namespace WeSay.UI
 		/// </summary>
 		private void TearDown()
 		{
-			//Debug.WriteLine(" BindingTearDown boundTo: " + this._widget.Name);
+			Debug.WriteLine("-----TearDown SimpleBinding  boundTo: " + this._widget.Value);
 
 			if (_dataTarget == null)
 			{
