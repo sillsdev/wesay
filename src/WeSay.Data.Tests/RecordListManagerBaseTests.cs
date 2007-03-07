@@ -334,6 +334,20 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
+		public void RemoveRecord_Notified()
+		{
+			_recordListManager.DataDeleted += new EventHandler<DeletedItemEventArgs>(_recordListManager_DataDeleted);
+			IRecordList<SimpleIntTestClass> recordList10to19 = RecordListManager.GetListOfTypeFilteredFurther<SimpleIntTestClass>(Filter10to19);
+			recordList10to19.Remove(recordList10to19[1]);
+		}
+
+
+		void _recordListManager_DataDeleted(object sender, DeletedItemEventArgs e)
+		{
+			throw new Exception("The method or operation is not implemented.");
+		}
+
+		[Test]
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void GetListOfTypeFilteredFurther_NullFilter_Throws()
 		{

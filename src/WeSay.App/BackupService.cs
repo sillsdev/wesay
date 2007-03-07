@@ -49,6 +49,11 @@ namespace WeSay.App
 			DoIncrementalXmlBackupNow();
 		}
 
+		public void OnDataDeleted(object sender, DeletedItemEventArgs e)
+		{
+
+		}
+
 		public void BackupToExternal(string path)
 		{
 			if(!Directory.Exists(Path.GetPathRoot(path)))

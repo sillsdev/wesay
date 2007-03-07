@@ -13,5 +13,9 @@ namespace WeSay.Data
 		/// whether a commit is pending or not.
 		/// </summary>
 		void GoodTimeToCommit();
+
+		event EventHandler DataCommitted;
+		event EventHandler<DeletedItemEventArgs> DataDeleted;
+
 	}
 }

@@ -104,6 +104,7 @@ namespace WeSay.App
 					{
 						backupService = new BackupService(project.PathToLocalBackup, ds.DataSource);
 						ds.DataCommitted += new EventHandler(backupService.OnDataCommitted);
+						ds.DataDeleted +=new EventHandler<DeletedItemEventArgs>(backupService.OnDataDeleted);
 					}
 
 					//MONO bug as of 1.1.18 cannot bitwise or FileShare on FileStream constructor

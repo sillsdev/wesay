@@ -3,6 +3,18 @@ using System.Collections;
 
 namespace WeSay.Data
 {
+	public class DeletedItemEventArgs:EventArgs
+	{
+		private readonly object _itemDeleted;
+		public DeletedItemEventArgs(object itemDeleted)
+		{
+			_itemDeleted = itemDeleted;
+		}
+		public object ItemDeleted
+		{
+			get { return this._itemDeleted; }
+		}
+	}
 	public abstract class AbstractRecordListManager : IRecordListManager
 	{
 		private Hashtable _filteredRecordLists;
@@ -38,9 +50,16 @@ namespace WeSay.Data
 		{
 			if (!FilteredRecordLists.ContainsKey(RecordListKey<T>(String.Empty)))
 			{
-				FilteredRecordLists.Add(RecordListKey<T>(String.Empty), CreateMasterRecordList<T>());
+				IRecordList<T> MasterRecordList = CreateMasterRecordList<T>();
+				MasterRecordList.DeletingRecord += new EventHandler<RecordListEventArgs<T>>(MasterRecordList_DeletingRecord<T>);
+				FilteredRecordLists.Add(RecordListKey<T>(String.Empty), MasterRecordList);
 			}
 			return (IRecordList<T>)FilteredRecordLists[RecordListKey<T>(String.Empty)];
+		}
+
+		void MasterRecordList_DeletingRecord<T>(object sender, RecordListEventArgs<T> e) where T : class, new()
+		{
+			DataDeleted.Invoke(this, new DeletedItemEventArgs(e.Item));
 		}
 
 		public IRecordList<T> GetListOfTypeFilteredFurther<T>(IFilter<T> filter) where T : class, new()
@@ -136,7 +155,10 @@ namespace WeSay.Data
 		/// <summary>
 		/// Called whenever the record list knows some data was committed to the database
 		/// </summary>
-		public event EventHandler DataCommitted;
+		public event EventHandler DataCommitted = delegate {};
+		public event EventHandler<DeletedItemEventArgs> DataDeleted = delegate
+		{
+		};
 
 //        protected void OnDataCommitted(object sender, EventArgs e)
 //        {
@@ -154,10 +176,7 @@ namespace WeSay.Data
 		{
 			if (CommitIfNeeded())
 			{
-				if (DataCommitted != null)
-				{
-					DataCommitted.Invoke(this, null);
-				}
+				DataCommitted.Invoke(this, null);
 			}
 		}
 
