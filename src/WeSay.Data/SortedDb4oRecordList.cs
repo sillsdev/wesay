@@ -5,7 +5,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
-
+using System.Text;
 
 namespace WeSay.Data
 {
@@ -81,7 +81,7 @@ namespace WeSay.Data
 		{
 			get
 			{
-				return Path.Combine(_cachePath, _sortHelper.Name + ".cache");
+				return Path.Combine(_cachePath, CacheHelper.EscapeFileNameString(_sortHelper.Name) + ".cache");
 			}
 		}
 
@@ -359,7 +359,7 @@ namespace WeSay.Data
 			KeyValuePair<K, long> keyIdPair = new KeyValuePair<K, long>(key, 0);
 
 			int index = _keyIdMap.BinarySearch(keyIdPair, _sorter);
-			if (index < 0)
+			if (index < 0 && ~index !=_keyIdMap.Count)
 			{
 				if (_sortHelper.KeyComparer.Compare(_keyIdMap[~index].Key, key) == 0)
 				{

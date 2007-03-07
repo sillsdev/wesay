@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace WeSay.LexicalModel.Db4o_Specific
 {
@@ -59,7 +60,9 @@ namespace WeSay.LexicalModel.Db4o_Specific
 						bestMatches.Clear();
 						bestEditDistance = editDistance;
 					}
-					else if (includeNextClosest && editDistance < secondBestEditDistance)
+					else if (includeNextClosest &&
+							 editDistance > bestEditDistance &&
+							 editDistance < secondBestEditDistance)
 					{
 						secondBestEditDistance = editDistance;
 						secondBestMatches.Clear();
@@ -72,6 +75,7 @@ namespace WeSay.LexicalModel.Db4o_Specific
 					{
 						secondBestMatches.Add(form);
 					}
+					Debug.Assert(bestEditDistance != secondBestEditDistance);
 				}
 			}
 			if (includeNextClosest)
@@ -80,8 +84,9 @@ namespace WeSay.LexicalModel.Db4o_Specific
 			}
 			return bestMatches;
 		}
+		public const int EditDistanceLargerThanMax = int.MaxValue;
 
-		private static int EditDistance(string list1, string list2, int maxEditDistance)
+		public static int EditDistance(string list1, string list2, int maxEditDistance)
 		{
 			const int deletionCost = 1;
 			const int insertionCost = deletionCost; // should be symmetric
@@ -132,6 +137,13 @@ namespace WeSay.LexicalModel.Db4o_Specific
 				// Fill in the values in the row
 				rows[nextRow][0] = list1index;
 				maxIndex = Math.Min(n2, lastColumnThatNeedsToBeEvaluated + 1);
+				// if we are on the last row and we don't need to evaluate to the end of
+				// the column to determine if our edit distance is larger than the max
+				// then the edit distance is larger than the max
+				if(list1index == n1 && maxIndex < n2)
+				{
+					return EditDistanceLargerThanMax;
+				}
 				lastColumnThatNeedsToBeEvaluated = 0;
 				for (int list2index = 1; list2index <= maxIndex; ++list2index)
 				{
@@ -185,7 +197,7 @@ namespace WeSay.LexicalModel.Db4o_Specific
 
 				if(lastColumnThatNeedsToBeEvaluated == 0)
 				{
-					return int.MaxValue;
+					return EditDistanceLargerThanMax;
 				}
 			}
 

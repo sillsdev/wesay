@@ -43,6 +43,7 @@
   <ItemGroup>
 	<Compile Include="AbstractRecordList.cs" />
 	<Compile Include="AbstractRecordListManager.cs" />
+	<Compile Include="CacheHelper.cs" />
 	<Compile Include="ComparisonHelper.cs" />
 	<Compile Include="DatabaseModified.cs" />
 	<Compile Include="Db4oRecordListManager.cs" />

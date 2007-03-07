@@ -10,7 +10,7 @@ namespace WeSay.LexicalModel
 {
 	public class LiftExporter
 	{
-		public const string _LIFTDateTimeFormat = "yyyy-MM-ddThh:mm:ssZ";
+		public const string LiftDateTimeFormat = "yyyy-MM-ddThh:mm:ssZ";
 		private XmlWriter _writer;
 		private Dictionary<string, int> _forms;
 		static List<string> _reservedNames = new List<string>(new string[] { "PartOfSpeech" });
@@ -113,10 +113,10 @@ namespace WeSay.LexicalModel
 		{
 			_writer.WriteStartElement("entry");
 			_writer.WriteAttributeString("id", MakeHumanReadableId(entry));
-			_writer.WriteAttributeString("dateCreated", entry.CreationTime.ToString(_LIFTDateTimeFormat));
+			_writer.WriteAttributeString("dateCreated", entry.CreationTime.ToString(LiftDateTimeFormat));
 			System.Diagnostics.Debug.Assert(entry.CreationTime.Kind == DateTimeKind.Utc);
 			 System.Diagnostics.Debug.Assert(entry.ModificationTime.Kind == DateTimeKind.Utc);
-		   _writer.WriteAttributeString("dateModified", entry.ModificationTime.ToString(_LIFTDateTimeFormat));
+		   _writer.WriteAttributeString("dateModified", entry.ModificationTime.ToString(LiftDateTimeFormat));
 			_writer.WriteAttributeString("flex", "id", "http: //fieldworks.sil.org", entry.Guid.ToString());
 			WriteForm(entry.LexicalForm);
 

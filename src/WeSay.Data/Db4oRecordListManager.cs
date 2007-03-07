@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Text;
 
 namespace WeSay.Data
 {
@@ -156,7 +157,7 @@ namespace WeSay.Data
 			{
 				get
 				{
-					return Path.Combine(_cachePath, _isRelevantFilter.Key + ".cache");
+					return Path.Combine(_cachePath, CacheHelper.EscapeFileNameString(_isRelevantFilter.Key) + ".cache");
 				}
 			}
 

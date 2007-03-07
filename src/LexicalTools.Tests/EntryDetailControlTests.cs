@@ -23,7 +23,7 @@ namespace WeSay.LexicalTools.Tests
 		private TabPage _detailTaskPage;
 
 		[TestFixtureSetUp]
-		public  void SetupFixture()
+		public void SetupFixture()
 		{
 			WeSayWordsProject.InitializeForTests();
 			File.Copy(Path.Combine(WeSayWordsProject.Project.ApplicationTestDirectory, "tasks.xml"), WeSayWordsProject.Project.PathToProjectTaskInventory, true);
@@ -33,7 +33,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			WeSayWordsProject.InitializeForTests();
 			base.Setup();
-//            Db4oLexModelHelper.InitializeForNonDbTests();
+			//            Db4oLexModelHelper.InitializeForNonDbTests();
 			WeSayWordsProject.InitializeForTests();
 			this._vernacularWsId = BasilProject.Project.WritingSystems.TestWritingSystemVernId;
 
@@ -159,7 +159,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			int before = _records.Count;
 			ClickDeleteWord();
-			Assert.AreEqual(before-1, _records.Count);
+			Assert.AreEqual(before - 1, _records.Count);
 		}
 
 		[Test]
@@ -203,12 +203,19 @@ namespace WeSay.LexicalTools.Tests
 			ClickAddWord();
 		}
 
-		private void DeleteAllEntries() {
+		private void DeleteAllEntries()
+		{
 			ClickDeleteWord();
 			ClickDeleteWord();
 			ClickDeleteWord();
 		}
 
+		private void StartWithEmpty()
+		{
+			DeleteAllEntries();
+			this._task.Deactivate();
+			ActivateTask();
+		}
 		[Test]
 		public void EmptyDictionary_AddWords_NewWordSelectedInListBox()
 		{
@@ -239,6 +246,14 @@ namespace WeSay.LexicalTools.Tests
 		}
 
 		[Test]
+		public void EmptyDictionary_DeleteButtonDisabled()
+		{
+			StartWithEmpty();
+			NUnit.Extensions.Forms.LinkLabelTester l = new LinkLabelTester("_btnDeleteWord");
+			Assert.IsFalse(l.Properties.Enabled);
+		}
+
+		[Test]
 		public void IfNoWordsDeleteButtonDisabled()
 		{
 			NUnit.Extensions.Forms.LinkLabelTester l = new LinkLabelTester("_btnDeleteWord");
@@ -250,7 +265,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void SwitchingToAnotherTaskDoesNotLooseBindings()
 		{
-		   LexicalFormMustMatch("Initial");
+			LexicalFormMustMatch("Initial");
 			TypeInLexicalForm("one");
 			this._task.Deactivate();
 			_tabControl.SelectedIndex = 1;
@@ -288,7 +303,7 @@ namespace WeSay.LexicalTools.Tests
 
 		private static string GetLexicalFormControlName()
 		{
-			return Field.FieldNames.EntryLexicalForm.ToString() +"_" + BasilProject.Project.WritingSystems.TestWritingSystemVernId;
+			return Field.FieldNames.EntryLexicalForm.ToString() + "_" + BasilProject.Project.WritingSystems.TestWritingSystemVernId;
 		}
 
 		private static void TypeInLexicalForm(string value)
@@ -367,13 +382,13 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void EditField_RemoveSenseContents_RemovesSense()
 		{
-			DetailList detailList = ((EntryDetailControl) _task.Control).Control_EntryDetailPanel.ControlEntryDetail;
+			DetailList detailList = ((EntryDetailControl)_task.Control).Control_EntryDetailPanel.ControlEntryDetail;
 
 			MultiTextControl editControl = GetEditControl(detailList, "Meaning");
 			editControl.TextBoxes[0].Focus();
 			TypeInMeaning(string.Empty);
 
-			Assert.IsTrue(GetEditControl(detailList, "Meaning").Name.Contains("ghost"),"Only ghost should remain");
+			Assert.IsTrue(GetEditControl(detailList, "Meaning").Name.Contains("ghost"), "Only ghost should remain");
 		}
 
 
@@ -394,4 +409,5 @@ namespace WeSay.LexicalTools.Tests
 		}
 
 	}
+
 }

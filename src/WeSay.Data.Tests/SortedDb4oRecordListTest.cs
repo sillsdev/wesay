@@ -227,6 +227,25 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
+		public void BinarySearch_SearchItemBeforeBegin()
+		{
+			Assert.AreEqual(~0, _sortedList.BinarySearch(-1));
+		}
+
+		[Test]
+		public void BinarySearch_SearchItemNotFound()
+		{
+			_sortedList.RemoveAt(12);
+			Assert.AreEqual(~12, _sortedList.BinarySearch(12));
+		}
+
+		[Test]
+		public void BinarySearch_SearchItemPastEnd()
+		{
+			Assert.AreEqual(~_sortedList.Count, _sortedList.BinarySearch(50));
+		}
+
+		[Test]
 		public void IsSorted()
 		{
 			Assert.IsTrue(_sortedList.IsSorted);

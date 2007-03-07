@@ -18,7 +18,7 @@ namespace WeSay.LexicalTools
 		//        private CachedSortedDb4oList<string, LexEntry> _originalRecordList;
 
 		private readonly ViewTemplate _viewTemplate;
-		public event EventHandler SelectedIndexChanged;
+		public event EventHandler SelectedIndexChanged = delegate {};
 
 		public EntryDetailControl()
 		{
@@ -67,9 +67,9 @@ namespace WeSay.LexicalTools
 
 
 			BackColor = WeSay.UI.DisplaySettings.Default.BackgroundColor;
-			this.Control_EntryDetailPanel.ViewTemplate = _viewTemplate;
-			this.Control_EntryDetailPanel.BackColor = WeSay.UI.DisplaySettings.Default.BackgroundColor;
-			this.Control_EntryDetailPanel.DataSource = CurrentRecord;
+			Control_EntryDetailPanel.ViewTemplate = _viewTemplate;
+			Control_EntryDetailPanel.BackColor = WeSay.UI.DisplaySettings.Default.BackgroundColor;
+			Control_EntryDetailPanel.DataSource = CurrentRecord;
 
 			_btnFind.Text = StringCatalog.Get("Find");
 
@@ -84,7 +84,6 @@ namespace WeSay.LexicalTools
 			_findText.Font = _listWritingSystem.Font;
 			_findText.WritingSystem = _listWritingSystem;
 
-
 			int originalHeight = _findText.Height;
 
 			int heightDifference = _findText.Height - originalHeight;
@@ -92,6 +91,8 @@ namespace WeSay.LexicalTools
 			_recordsListBox.Location = new Point(_recordsListBox.Location.X,
 												 _recordsListBox.Location.Y + heightDifference);
 			_btnFind.Height += heightDifference;
+
+			_btnDeleteWord.Enabled = (CurrentRecord != null);
 		}
 
 		// primarily for testing
@@ -119,13 +120,10 @@ namespace WeSay.LexicalTools
 			Find(this._findText.Text);
 		}
 
-
-
 		void _btnFind_Click(object sender, EventArgs e)
 		{
 			Find(this._findText.Text);
 		}
-
 
 		private void Find(string text) {
 			int index = ((CachedSortedDb4oList<string, LexEntry>) _records).BinarySearch(text);
@@ -151,19 +149,28 @@ namespace WeSay.LexicalTools
 				//we were getting 3 calls to this for each click on a new word
 				return;
 			}
-			this.Control_EntryDetailPanel.DataSource = CurrentRecord;
 			_btnDeleteWord.Enabled = (CurrentRecord != null);
-			if (SelectedIndexChanged != null)
+			if (this.Control_EntryDetailPanel.ContainsFocus)
 			{
-				SelectedIndexChanged.Invoke(this,null);
+				// When we change the content of the displayed string,
+				// Windows.Forms.ListBox removes the item (and sends
+				// the new selection event) then adds it in to the right
+				// place (and sends the new selection event again)
+				// We don't want to know about this case
+				// There is nothing which can originate a change in
+				// record selection while the entry detail panel
+				// contains the focus so this is safe for now.
+				return;
 			}
+			this.Control_EntryDetailPanel.DataSource = CurrentRecord;
+			SelectedIndexChanged.Invoke(this,null);
 		}
 
 		public LexEntry CurrentRecord
 		{
 			get
 			{
-				if (_records.Count == 0)
+				if (_records.Count == 0 || CurrentIndex == -1)
 				{
 					return null;
 				}
@@ -175,11 +182,7 @@ namespace WeSay.LexicalTools
 		{
 			get
 			{
-				if (_records.Count > 0 && _recordsListBox.SelectedIndex == -1)
-				{
-					return 0;
-				}
-				return _recordsListBox.SelectedIndex;
+			   return _recordsListBox.SelectedIndex;
 			}
 		}
 
@@ -194,7 +197,7 @@ namespace WeSay.LexicalTools
 				// Windows.Forms.Listbox does not consider it a change of Selection
 				// index if the index was -1 and a record is added.
 				// (No event is sent so we must do it ourselves)
-				OnRecordSelectionChanged(this, new EventArgs());
+				OnRecordSelectionChanged(this, null);
 			}
 			_entryDetailPanel.Focus();
 		}
@@ -202,6 +205,10 @@ namespace WeSay.LexicalTools
 		private void _btnDeleteWord_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
 		{
 			Debug.Assert(CurrentIndex >= 0);
+			if(CurrentIndex == -1)
+			{
+				return;
+			}
 			_records.RemoveAt(CurrentIndex);
 			//hack until we can get selection change events sorted out in BindingGridList
 			OnRecordSelectionChanged(this, null);

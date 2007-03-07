@@ -407,12 +407,10 @@ namespace WeSay.UI
 
 		protected void SelectCurrentItemAndHideList()
 		{
-			if (this._list.SelectedIndex == -1)
+			if (this._list.SelectedIndex != -1)
 			{
-				return;
+				SelectCurrentItem();
 			}
-
-			SelectCurrentItem();
 			HideList();
 		}
 
@@ -420,8 +418,7 @@ namespace WeSay.UI
 		{
 			if (this._list.Visible == false)
 			{
-				this._list.SelectedItem = null;
-				//this.list.SelectedIndex = -1;
+				this._list.SelectedIndex = -1;
 				UpdateList();
 				Point p = PointToScreen(new Point(0,0));
 				p.X += PopupOffset.X;
