@@ -338,13 +338,15 @@ namespace WeSay.Data.Tests
 		{
 			_recordListManager.DataDeleted += new EventHandler<DeletedItemEventArgs>(_recordListManager_DataDeleted);
 			IRecordList<SimpleIntTestClass> recordList10to19 = RecordListManager.GetListOfTypeFilteredFurther<SimpleIntTestClass>(Filter10to19);
-			recordList10to19.Remove(recordList10to19[1]);
+			SimpleIntTestClass i = recordList10to19[1];
+			recordList10to19.Remove(i);
+			Assert.AreEqual(i, _lastDeletedItem);
 		}
 
-
+		SimpleIntTestClass _lastDeletedItem;
 		void _recordListManager_DataDeleted(object sender, DeletedItemEventArgs e)
 		{
-			throw new Exception("The method or operation is not implemented.");
+			_lastDeletedItem = (SimpleIntTestClass) e.ItemDeleted;
 		}
 
 		[Test]
