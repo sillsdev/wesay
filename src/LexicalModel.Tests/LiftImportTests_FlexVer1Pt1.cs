@@ -15,6 +15,11 @@ namespace WeSay.LexicalTools.Tests
 			return new LiftImporterFlexVer1Pt1();
 		}
 
+		protected override string PreprocessTestDataForVersionUnderTest(string xml)
+		{
+			return xml.Replace("lang=", "ws=");
+		}
+
 		[Test]
 		public void LoadKalabaFromFLEx1pt1()
 		{

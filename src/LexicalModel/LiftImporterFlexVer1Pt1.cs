@@ -23,7 +23,7 @@ namespace WeSay.LexicalModel
 	   {
 		   foreach (XmlNode form in node.SelectNodes("form"))
 		   {
-			   text.SetAlternative(GetManditoryAttributeValue(form, "ws"), form.InnerText);
+			   text.SetAlternative(GetManditoryAttributeValue(form,  "ws"), form.InnerText);
 		   }
 	   }
 

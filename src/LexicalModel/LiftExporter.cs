@@ -286,5 +286,15 @@ namespace WeSay.LexicalModel
 		}
 
 
+		public void AddDeletedEntry(LexEntry entry)
+		{
+			_writer.WriteStartElement("entry");
+			_writer.WriteAttributeString("id", MakeHumanReadableId(entry));
+			_writer.WriteAttributeString("dateCreated", entry.CreationTime.ToString(LiftDateTimeFormat));
+			_writer.WriteAttributeString("dateModified", entry.ModificationTime.ToString(LiftDateTimeFormat));
+			_writer.WriteAttributeString("flex", "id", "http: //fieldworks.sil.org", entry.Guid.ToString());
+			_writer.WriteRaw("<trait range='status' value='deleted'/>"); //REVIEW
+			_writer.WriteEndElement();
+		}
 	}
 }

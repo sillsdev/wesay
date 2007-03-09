@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Xml;
 using WeSay.Foundation;
 using WeSay.Foundation.Progress;
@@ -12,6 +13,7 @@ namespace WeSay.LexicalModel
 		private ProgressState _progressState = new NullProgressState();
 		private IList<String> _expectedOptionTraits;
 		private IList<string> _expectedOptionCollectionTraits;
+		private string _queryForCustomFields;
 
 		/// <summary>
 		///
@@ -20,6 +22,7 @@ namespace WeSay.LexicalModel
 		{
 			_expectedOptionTraits = new List<string>();
 			_expectedOptionCollectionTraits = new List<string>();
+			MakeQueryForCustomFields();
 		}
 
 		/// <summary>
@@ -185,6 +188,7 @@ namespace WeSay.LexicalModel
 		{
 			LexExampleSentence example = new LexExampleSentence();
 			ReadTraits(example, xmlNode);
+			ReadCustomFields(example, xmlNode);
 			ReadMultiTextOrNull(xmlNode, "source", example.Sentence);
 			//NB: will only read in one translation
 			ReadMultiTextOrNull(xmlNode, "trans", example.Translation);
@@ -195,6 +199,7 @@ namespace WeSay.LexicalModel
 		{
 			LexSense sense = new LexSense();
 			ReadTraits(sense, node);
+			ReadCustomFields(sense, node);
 			ReadMultiTextOrNull(node, "gloss", sense.Gloss);
 
 			ReadGrammi(sense, node);
@@ -228,6 +233,31 @@ namespace WeSay.LexicalModel
 					//"log skipping..."
 				}
 			}
+		}
+
+		private void ReadCustomFields(WeSayDataObject lexObject, XmlNode node)
+		{
+			foreach (XmlNode customNode in node.SelectNodes(_queryForCustomFields))
+			{
+				MultiText mt = new MultiText();
+				ReadMultiText(customNode, mt);
+				lexObject.Properties.Add(new KeyValuePair<string, object>(customNode.Name, mt));
+			}
+		}
+
+		private void MakeQueryForCustomFields()
+		{
+			string[] knownElementNames =
+				new string[] {"trait", "lex", "sense", "subentry", "gloss", "grammi", "example", "subsense"};
+
+			StringBuilder builder = new StringBuilder();
+			builder.Append("*[not (");
+			foreach (string s in knownElementNames)
+			{
+				builder.AppendFormat("self::{0} or ", s);
+			}
+			builder.Append("false)]");
+			_queryForCustomFields = builder.ToString();
 		}
 
 		protected virtual void ReadGrammi(LexSense sense, XmlNode senseNode)
@@ -266,6 +296,7 @@ namespace WeSay.LexicalModel
 				entry = new LexEntry();
 			}
 			ReadTraits(entry, xmlNode);
+			ReadCustomFields(entry, xmlNode);
 			ReadMultiText(xmlNode, entry.LexicalForm);
 
 			foreach (XmlNode n in xmlNode.SelectNodes("sense"))

@@ -31,6 +31,10 @@ namespace WeSay.LexicalTools.Tests
 		protected abstract  LiftImporter CreateImporter();
 
 
+		protected virtual string PreprocessTestDataForVersionUnderTest(string xml)
+		{
+			return xml;
+		}
 
 		[TearDown]
 		public void TearDown()
@@ -127,6 +131,17 @@ namespace WeSay.LexicalTools.Tests
 			_doc.LoadXml("<sense><trait name=\"flub\" value=\"flubadub\" range=\"flubs\"/></sense>");
 			LexSense sense = _importer.ReadSense(_doc.SelectSingleNode("sense"));
 			Assert.AreEqual(0, sense.Properties.Count);
+		}
+
+
+		[Test]
+		public void ExpectedCustomField()
+		{
+			_importer.ExpectedOptionTraits.Add("flub");
+			_doc.LoadXml(PreprocessTestDataForVersionUnderTest("<sense><color><form lang='mylang'>red</form></color></sense>"));
+			LexSense sense = _importer.ReadSense(_doc.SelectSingleNode("sense"));
+			Assert.AreEqual(1, sense.Properties.Count);
+			Assert.AreEqual("red", sense.GetOrCreateProperty<MultiText>("color")["mylang"]);
 		}
 
 		[Test]

@@ -187,6 +187,14 @@ namespace WeSay.LexicalTools.Tests
 			ShouldContain(string.Format("flex:id=\"{0}\"", entry.Guid));
 		}
 
+		[Test]
+		public void DeletedEntry()
+		{
+			LexEntry entry = new LexEntry();
+			_exporter.AddDeletedEntry(entry);
+			ShouldContain(string.Format("<trait range='status' value='deleted'", entry.Guid));
+		}
+
 		private void ShouldContain(string s)
 		{
 			_exporter.End();

@@ -118,14 +118,14 @@ namespace WeSay.App
 					Application.DoEvents();
 
 					//in case we are far behind, as in the case of a recent import or deleted backups
-					backupService.DoIncrementalXmlBackupNow();
+					backupService.DoIncrementalXmlBackupNow(false);
 					tabbedForm.ContinueLaunchingAfterInitialDisplay();
 
 					//run the ui
 					Application.Run(tabbedForm);
 
 					//do a last backup before exiting
-					backupService.DoIncrementalXmlBackupNow();
+					backupService.DoIncrementalXmlBackupNow(true);
 					backupService.BackupToExternal("h:\\" + project.Name + ".zip");
 				}
 			}

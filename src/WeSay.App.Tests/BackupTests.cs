@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Xml;
 using Db4objects.Db4o.Query;
 using NUnit.Framework;
 using WeSay.App;
@@ -70,7 +71,7 @@ namespace WeSay.App.Tests
 		{
 			_records.Add(new LexEntry());
 			_records.Add(new LexEntry());
-			_service.DoIncrementalXmlBackupNow();
+			_service.DoIncrementalXmlBackupNow(false);
 
 			_records.Add(new LexEntry());
 			_records.Add(new LexEntry());
@@ -78,6 +79,61 @@ namespace WeSay.App.Tests
 
 			IList newGuys = _service.GetRecordsNeedingBackup();
 			Assert.AreEqual(3, newGuys.Count);
+		}
+
+
+
+		[Test]
+		public void DeletionIsRecorded()
+		{
+			SetupDeletionSituation();
+			Assert.AreEqual(1,
+							GetBackupDoc().SelectNodes("//entry[@id='boo']/trait[@range='status' and @value='deleted']")
+								.Count);
+		}
+
+		private void SetupDeletionSituation()
+		{
+			_records.Add(new LexEntry());
+			//create and backup an entry
+			LexEntry entryToDelete = MakeEntry("boo");
+			_records.Add(new LexEntry());
+
+			_service.DoIncrementalXmlBackupNow(false);
+
+			//now delete it
+			_records.Remove(entryToDelete);
+			//this deletion even comes from a higher-level class we aren't using, so we raise it ourselves here:
+			_service.OnDataDeleted(this, new DeletedItemEventArgs(entryToDelete));
+			_service.DoIncrementalXmlBackupNow(true);
+		}
+
+		[Test]
+		public void DeletionIsExpungedIfSameIdReused()
+		{
+			SetupDeletionSituation();
+
+			//now make an entry with the same id and add it
+			MakeEntry("boo");
+			_service.DoIncrementalXmlBackupNow(true);
+			Assert.AreEqual(0, GetBackupDoc().SelectNodes("//entry[@id='boo']/trait[@range='status' and @value='deleted']").Count);
+			Assert.AreEqual(1, GetBackupDoc().SelectNodes("//entry[@id='boo']").Count);
+		}
+
+		private LexEntry MakeEntry(string id)
+		{
+			LexEntry entry = new LexEntry();
+			entry.LexicalForm["zzz"] = id;
+			_records.Add(entry);
+			return entry;
+		}
+
+		private XmlDocument GetBackupDoc()
+		{
+			XmlDocument doc = new XmlDocument();
+			doc.Load(_service.PathToBaseLiftFile);
+			//Console.WriteLine(doc.OuterXml);
+			return doc;
 		}
 
 

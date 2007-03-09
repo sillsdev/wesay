@@ -46,12 +46,20 @@ namespace WeSay.App
 				return;
 			}
 			_commitCount = 0;
-			DoIncrementalXmlBackupNow();
+			DoIncrementalXmlBackupNow(false);
 		}
 
 		public void OnDataDeleted(object sender, DeletedItemEventArgs e)
 		{
+			LexEntry entry = e.ItemDeleted as LexEntry;
+			if (entry == null)
+			{
+				return;
+			}
 
+			LiftExporter exporter = new LiftExporter(WeSayWordsProject.Project.GetFieldToOptionListNameDictionary(), MakeBackupFileName());
+			exporter.AddDeletedEntry(entry);
+			exporter.End();
 		}
 
 		public void BackupToExternal(string path)
@@ -83,7 +91,7 @@ namespace WeSay.App
 
 		}
 
-		public void DoIncrementalXmlBackupNow( )
+		public void DoIncrementalXmlBackupNow(bool mergeIntoSingleFileBeforeReturning)
 		{
 			Reporting.Logger.WriteEvent("Incremental Backup Start");
 
@@ -98,34 +106,42 @@ namespace WeSay.App
 			}
 
 			IList records = GetRecordsNeedingBackup();
-			if (records.Count == 0)
+			if (records.Count != 0)
 			{
-				return;
-			}
-
-			ProgressDialog dlg=null;
-			if (records.Count > 50)
-			{
-				dlg = new ProgressDialog(string.Format("Doing incremental backup of {0} records...", records.Count));
-				dlg.Show();
-				Application.DoEvents();
-			}
-
-			try
-			{
-				LiftExporter exporter = new LiftExporter(WeSayWordsProject.Project.GetFieldToOptionListNameDictionary(), MakeBackupFileName());
-				exporter.AddNoGeneric(records);
-				exporter.End();
-
-				WriteBackupPointFile();
-			}
-			finally
-			{
-				if (dlg != null)
+				ProgressDialog dlg = null;
+				if (records.Count > 50)
 				{
-					dlg.Close();
-					dlg.Dispose();
+					dlg = new ProgressDialog(string.Format("Doing incremental backup of {0} records...", records.Count));
+					dlg.Show();
+					Application.DoEvents();
 				}
+
+				try
+				{
+					LiftExporter exporter =
+						new LiftExporter(WeSayWordsProject.Project.GetFieldToOptionListNameDictionary(),
+										 MakeBackupFileName());
+					exporter.AddNoGeneric(records);
+					exporter.End();
+
+					WriteBackupPointFile();
+				}
+				finally
+				{
+					if (dlg != null)
+					{
+						dlg.Close();
+						dlg.Dispose();
+					}
+				}
+			}
+
+			if (mergeIntoSingleFileBeforeReturning)
+			{
+				Reporting.Logger.WriteEvent("Running Synchronic Merger");
+				//merge the incremental backups
+				LiftIO.SynchronicMerger merger = new LiftIO.SynchronicMerger();
+				merger.MergeDirectory(_directory);
 			}
 
 			Reporting.Logger.WriteEvent("Incremental Backup Done");
@@ -141,10 +157,25 @@ namespace WeSay.App
 
 		private  string MakeBackupFileName()
 		{
-			string timeString = _timeOfLastQueryForNewRecords.ToString("yyyy'-'MM'-'dd'T'HH'-'mm'-'ss'-'FFFFF UTC");
-			string path = Path.Combine(_directory, timeString);
-			path += ".lift.xml";
-			return path;
+			if (File.Exists(LiftIO.SynchronicMerger.BaseLiftFileName))
+			{
+				string timeString = _timeOfLastQueryForNewRecords.ToString("yyyy'-'MM'-'dd'T'HH'-'mm'-'ss'-'FFFFF UTC");
+				string path = Path.Combine(_directory, timeString);
+				path += ".lift.xml";
+				return path;
+			}
+			else
+			{
+				return PathToBaseLiftFile;
+			}
+		}
+
+		public string PathToBaseLiftFile
+		{
+			get
+			{
+				return Path.Combine(_directory, LiftIO.SynchronicMerger.BaseLiftFileName);
+			}
 		}
 
 		private  void WriteBackupPointFile()
