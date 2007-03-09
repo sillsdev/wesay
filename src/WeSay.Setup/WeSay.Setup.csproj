@@ -9,7 +9,7 @@
 	<AppDesignerFolder>Properties</AppDesignerFolder>
 	<RootNamespace>WeSay.Setup</RootNamespace>
 	<AssemblyName>WeSay.Setup</AssemblyName>
-	<ApplicationIcon>Resources\WeSay.ico</ApplicationIcon>
+	<ApplicationIcon>..\..\artwork\WeSay.Setup.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
 	<DebugSymbols>true</DebugSymbols>
@@ -208,9 +208,6 @@
   </ItemGroup>
   <ItemGroup>
 	<None Include="Resources\RoundedBorder.PNG" />
-  </ItemGroup>
-  <ItemGroup>
-	<Content Include="Resources\WeSay.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

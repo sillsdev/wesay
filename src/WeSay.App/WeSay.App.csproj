@@ -9,7 +9,7 @@
 	<AppDesignerFolder>Properties</AppDesignerFolder>
 	<RootNamespace>WeSay.App</RootNamespace>
 	<AssemblyName>WeSay.App</AssemblyName>
-	<ApplicationIcon>Resources\WeSayApp.ico</ApplicationIcon>
+	<ApplicationIcon>..\..\artwork\WeSay.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
 	<DebugSymbols>true</DebugSymbols>
@@ -126,12 +126,6 @@
 	  <SubType>Designer</SubType>
 	  <DependentUpon>TabbedForm.cs</DependentUpon>
 	</EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-	<EmbeddedResource Include="Resources\WeSayApp.ico" />
-	<Content Include="Resources\WeSayWordsFile.ico">
-	  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	</Content>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

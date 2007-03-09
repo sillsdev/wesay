@@ -6,6 +6,7 @@ using WeSay.Data;
 using WeSay.Language;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Db4o_Specific;
+using WeSay.LexicalTools.Properties;
 using WeSay.Project;
 using Debug=System.Diagnostics.Debug;
 
@@ -14,8 +15,10 @@ namespace WeSay.LexicalTools
 	public partial class EntryDetailControl : UserControl
 	{
 		private IBindingList _records;
-		WritingSystem _listWritingSystem;
-		//        private CachedSortedDb4oList<string, LexEntry> _originalRecordList;
+		private WritingSystem _listWritingSystem;
+		private ContextMenu _cmWritingSystems;
+
+		private Db4oRecordListManager _recordManager;
 
 		private readonly ViewTemplate _viewTemplate;
 		public event EventHandler SelectedIndexChanged = delegate {};
@@ -37,62 +40,139 @@ namespace WeSay.LexicalTools
 				throw new ArgumentNullException("viewTemplate");
 			}
 			_viewTemplate = viewTemplate;
+			_recordManager = (Db4oRecordListManager)recordManager;
+
+			WritingSystem listWritingSystem = null;
+			_cmWritingSystems = new ContextMenu();
 
 			Field field = viewTemplate.GetField(Field.FieldNames.EntryLexicalForm.ToString());
 			if (field != null)
 			{
 				if (field.WritingSystems.Count > 0)
 				{
-					_listWritingSystem = field.WritingSystems[0];
+					listWritingSystem = field.WritingSystems[0];
+					foreach (WritingSystem writingSystem in field.WritingSystems)
+					{
+						MakeContextMenuItemForWritingSystemAndField(field, writingSystem);
+					}
 				}
 				else
 				{
 					MessageBox.Show(String.Format("There are no writing systems enabled for the Field '{0}'", field.FieldName), "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);//review
 				}
 			}
-			if (_listWritingSystem == null)
+			Field glossfield = viewTemplate.GetField(Field.FieldNames.SenseGloss.ToString());
+			if (glossfield != null)
 			{
-				_listWritingSystem = BasilProject.Project.WritingSystems.UnknownVernacularWritingSystem;
+				foreach (WritingSystem writingSystem in glossfield.WritingSystems)
+				{
+					MakeContextMenuItemForWritingSystemAndField(glossfield, writingSystem);
+				}
 			}
 
-
-			LexEntrySortHelper sortHelper = new LexEntrySortHelper(((Db4oRecordListManager) recordManager).DataSource,
-																	_listWritingSystem.Id,
-																   true);
-			_records = ((Db4oRecordListManager)recordManager).GetSortedList(sortHelper);
+			if (listWritingSystem == null)
+			{
+				listWritingSystem = BasilProject.Project.WritingSystems.UnknownVernacularWritingSystem;
+			}
 
 			InitializeComponent();
 
-			_recordsListBox.DataSource = _records;
-
-
-			BackColor = WeSay.UI.DisplaySettings.Default.BackgroundColor;
 			Control_EntryDetailPanel.ViewTemplate = _viewTemplate;
-			Control_EntryDetailPanel.BackColor = WeSay.UI.DisplaySettings.Default.BackgroundColor;
-			Control_EntryDetailPanel.DataSource = CurrentRecord;
 
-			_btnFind.Text = StringCatalog.Get("Find");
-
-
-			_recordsListBox.Font = _listWritingSystem.Font;
-
-			_recordsListBox.SelectedIndexChanged += new EventHandler(OnRecordSelectionChanged);
+			SetListWritingSystem(listWritingSystem);
 
 			_findText.KeyDown += new KeyEventHandler(_findText_KeyDown);
-			_findText.ItemFilterer = ApproximateMatcher.FindClosestAndNextClosestAndPrefixedForms;
-			_findText.Items = (CachedSortedDb4oList<string, LexEntry>)_records;
-			_findText.Font = _listWritingSystem.Font;
-			_findText.WritingSystem = _listWritingSystem;
-
-			int originalHeight = _findText.Height;
-
-			int heightDifference = _findText.Height - originalHeight;
-			_recordsListBox.Height -= heightDifference;
-			_recordsListBox.Location = new Point(_recordsListBox.Location.X,
-												 _recordsListBox.Location.Y + heightDifference);
-			_btnFind.Height += heightDifference;
-
+			_recordsListBox.SelectedIndexChanged += new EventHandler(OnRecordSelectionChanged);
 			_btnDeleteWord.Enabled = (CurrentRecord != null);
+		}
+
+		private void MakeContextMenuItemForWritingSystemAndField(Field field, WritingSystem writingSystem) {
+			MenuItem item =
+					new MenuItem(writingSystem.Id + "\t" + StringCatalog.Get(field.DisplayName),
+								 OnCmWritingSystemClicked);
+			item.Checked = (this._listWritingSystem == writingSystem);
+			item.RadioCheck = true;
+			item.Tag = writingSystem;
+			this._cmWritingSystems.MenuItems.Add(item);
+		}
+
+		private bool IsWritingSystemUsedInLexicalForm(WritingSystem writingSystem)
+		{
+			Field field = _viewTemplate.GetField(Field.FieldNames.EntryLexicalForm.ToString());
+			if (field != null)
+			{
+				return field.WritingSystems.Contains(writingSystem);
+			}
+			return false;
+		}
+
+		public void SetListWritingSystem(WritingSystem writingSystem) {
+			if(writingSystem == null)
+			{
+				throw new ArgumentNullException();
+			}
+			if(_listWritingSystem == writingSystem)
+			{
+				return;
+			}
+			_listWritingSystem = writingSystem;
+
+			LexEntrySortHelper sortHelper = new LexEntrySortHelper(_recordManager.DataSource,
+																   this._listWritingSystem.Id,
+																   IsWritingSystemUsedInLexicalForm(_listWritingSystem));
+			this._records = _recordManager.GetSortedList(sortHelper);
+
+			this._recordsListBox.DataSource = this._records;
+
+			Control_EntryDetailPanel.DataSource = CurrentRecord;
+
+			this._recordsListBox.Font = this._listWritingSystem.Font;
+
+			this._findText.ItemFilterer = ApproximateMatcher.FindClosestAndNextClosestAndPrefixedForms;
+			this._findText.Items = (CachedSortedDb4oList<string, LexEntry>)this._records;
+			int originalHeight = this._findText.Height;
+			this._findText.Font = this._listWritingSystem.Font;
+			this._findText.WritingSystem = this._listWritingSystem;
+
+			this._findWritingSystemId.Text = this._listWritingSystem.Id;
+			this._findText.Left = this._findWritingSystemId.Right;
+			int width = this._findText.Width;
+			this._findWritingSystemId.AutoSize = false;
+			this._findWritingSystemId.Height = this._findText.Height;
+			this._findWritingSystemId.Width = Math.Min(width, 35);
+
+			int heightDifference = this._findText.Height - originalHeight;
+			this._recordsListBox.Height -= heightDifference;
+			this._recordsListBox.Location = new Point(this._recordsListBox.Location.X,
+												 this._recordsListBox.Location.Y + heightDifference);
+			this._btnFind.Height = this._findText.Height;
+			this._btnFind.Width = this._findText.Height;
+			this._writingSystemChooser.Height = this._findText.Height;
+			this._btnFind.Image = Resources.Find.GetThumbnailImage(this._btnFind.Width - 2,
+																   this._btnFind.Height - 2,
+																   ReturnFalse, IntPtr.Zero);
+
+			this._btnFind.Left = this._writingSystemChooser.Left - this._btnFind.Width;
+			this._findText.Width = this._btnFind.Left - this._findText.Left;
+		}
+
+		void OnCmWritingSystemClicked(object sender, EventArgs e)
+		{
+			MenuItem item = (MenuItem) sender;
+			if (_listWritingSystem != item.Tag)
+			{
+				SetListWritingSystem((WritingSystem)item.Tag);
+			}
+		}
+
+		void _writingSystemChooser_Click(object sender, EventArgs e)
+		{
+			this._cmWritingSystems.Show(_writingSystemChooser, new Point(0,_writingSystemChooser.Height), LeftRightAlignment.Right);
+		}
+
+		void _findWritingSystemId_MouseClick(object sender, MouseEventArgs e)
+		{
+			_findText.Focus();
 		}
 
 		// primarily for testing
@@ -144,13 +224,13 @@ namespace WeSay.LexicalTools
 
 		void OnRecordSelectionChanged(object sender, EventArgs e)
 		{
-			if (this.Control_EntryDetailPanel.DataSource == CurrentRecord)
+			if (Control_EntryDetailPanel.DataSource == CurrentRecord)
 			{
 				//we were getting 3 calls to this for each click on a new word
 				return;
 			}
 			_btnDeleteWord.Enabled = (CurrentRecord != null);
-			if (this.Control_EntryDetailPanel.ContainsFocus)
+			if (Control_EntryDetailPanel.ContainsFocus)
 			{
 				// When we change the content of the displayed string,
 				// Windows.Forms.ListBox removes the item (and sends
@@ -162,7 +242,7 @@ namespace WeSay.LexicalTools
 				// contains the focus so this is safe for now.
 				return;
 			}
-			this.Control_EntryDetailPanel.DataSource = CurrentRecord;
+			Control_EntryDetailPanel.DataSource = CurrentRecord;
 			SelectedIndexChanged.Invoke(this,null);
 		}
 
@@ -186,8 +266,14 @@ namespace WeSay.LexicalTools
 			}
 		}
 
-		private void _btnNewWord_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+		private void _btnNewWord_LinkClicked(object sender, EventArgs e)
 		{
+			if (!this._btnNewWord.Focused)
+			{
+				// if we use a hot key, it may not have received the focus
+				// but we assume it has the focus when we do our selection change event
+				this._btnNewWord.Focus();
+			}
 			LexEntry entry = new LexEntry();
 			bool NoPriorSelection = _recordsListBox.SelectedIndex == -1;
 			_records.Add(entry);
@@ -202,12 +288,18 @@ namespace WeSay.LexicalTools
 			_entryDetailPanel.Focus();
 		}
 
-		private void _btnDeleteWord_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+		private void _btnDeleteWord_LinkClicked(object sender, EventArgs e)
 		{
 			Debug.Assert(CurrentIndex >= 0);
 			if(CurrentIndex == -1)
 			{
 				return;
+			}
+			if (!this._btnDeleteWord.Focused)
+			{
+				// if we use a hot key, it may not have received the focus
+				// but we assume it has the focus when we do our selection change event
+				this._btnDeleteWord.Focus();
 			}
 			_records.RemoveAt(CurrentIndex);
 			//hack until we can get selection change events sorted out in BindingGridList

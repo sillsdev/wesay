@@ -50,7 +50,7 @@
 	<Compile Include="AutoCompleteTextBox\AutoCompleteTextBox.cs">
 	  <SubType>Component</SubType>
 	</Compile>
-	 <Compile Include="AutoCompleteTextBox\AutoCompleteTrigger.cs" />
+	<Compile Include="AutoCompleteTextBox\AutoCompleteTrigger.cs" />
 	<Compile Include="AutoCompleteTextBox\AutoCompleteTriggerCollection.cs" />
 	<Compile Include="AutoCompleteTextBox\ShortCutTrigger.cs" />
 	<Compile Include="AutoCompleteTextBox\TextLengthTrigger.cs" />
@@ -83,7 +83,7 @@
 	<Compile Include="SingleOptionControl.Designer.cs">
 	  <DependentUpon>SingleOptionControl.cs</DependentUpon>
 	</Compile>
-  <Compile Include="VBox.cs">
+	<Compile Include="VBox.cs">
 	  <SubType>UserControl</SubType>
 	</Compile>
 	<Compile Include="VBox.Designer.cs">

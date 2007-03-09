@@ -59,5 +59,33 @@ namespace WeSay.LexicalTools.Properties {
 				resourceCulture = value;
 			}
 		}
+
+		internal static System.Drawing.Bitmap DeleteWord {
+			get {
+				object obj = ResourceManager.GetObject("DeleteWord", resourceCulture);
+				return ((System.Drawing.Bitmap)(obj));
+			}
+		}
+
+		internal static System.Drawing.Bitmap Expand {
+			get {
+				object obj = ResourceManager.GetObject("Expand", resourceCulture);
+				return ((System.Drawing.Bitmap)(obj));
+			}
+		}
+
+		internal static System.Drawing.Bitmap Find {
+			get {
+				object obj = ResourceManager.GetObject("Find", resourceCulture);
+				return ((System.Drawing.Bitmap)(obj));
+			}
+		}
+
+		internal static System.Drawing.Bitmap NewWord {
+			get {
+				object obj = ResourceManager.GetObject("NewWord", resourceCulture);
+				return ((System.Drawing.Bitmap)(obj));
+			}
+		}
 	}
 }

@@ -26,7 +26,7 @@ namespace WeSay.LexicalTools
 		public override void Activate()
 		{
 			base.Activate();
-			_entryDetailControl = new EntryDetailControl(RecordListManager, ViewTemplate);
+			_entryDetailControl = new EntryDetailControl((Db4oRecordListManager)RecordListManager, ViewTemplate);
 			_entryDetailControl.SelectedIndexChanged += new EventHandler(OnRecordSelectionChanged);
 		}
 

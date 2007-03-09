@@ -249,14 +249,14 @@ namespace WeSay.LexicalTools.Tests
 		public void EmptyDictionary_DeleteButtonDisabled()
 		{
 			StartWithEmpty();
-			NUnit.Extensions.Forms.LinkLabelTester l = new LinkLabelTester("_btnDeleteWord");
+			NUnit.Extensions.Forms.ButtonTester l = new ButtonTester("_btnDeleteWord");
 			Assert.IsFalse(l.Properties.Enabled);
 		}
 
 		[Test]
 		public void IfNoWordsDeleteButtonDisabled()
 		{
-			NUnit.Extensions.Forms.LinkLabelTester l = new LinkLabelTester("_btnDeleteWord");
+			NUnit.Extensions.Forms.ButtonTester l = new ButtonTester("_btnDeleteWord");
 			Assert.IsTrue(l.Properties.Enabled);
 			DeleteAllEntries();
 			Assert.IsFalse(l.Properties.Enabled);
@@ -334,25 +334,15 @@ namespace WeSay.LexicalTools.Tests
 
 		private static void ClickAddWord()
 		{
-			NUnit.Extensions.Forms.LinkLabelTester l = new LinkLabelTester("_btnNewWord");
+			NUnit.Extensions.Forms.ButtonTester l = new ButtonTester("_btnNewWord");
 			l.Click();
 		}
 
 		private void ClickDeleteWord()
 		{
-			NUnit.Extensions.Forms.LinkLabelTester l = new LinkLabelTester("_btnDeleteWord");
+			NUnit.Extensions.Forms.ButtonTester l = new ButtonTester("_btnDeleteWord");
 			l.Click();
 		}
-
-		[Test]
-		public void FindTextChanged_ButtonSaysFind()
-		{
-			TextBoxTester t = new TextBoxTester("_findText");
-			t.Enter("changed");
-			ButtonTester b = new ButtonTester("_btnFind");
-			Assert.AreEqual("Find", b.Text);
-		}
-
 
 		[Test]
 		public void EnterText_PressFindButton_Finds()
