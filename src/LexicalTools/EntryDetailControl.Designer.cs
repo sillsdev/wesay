@@ -8,6 +8,7 @@ namespace WeSay.LexicalTools
 {
 	partial class EntryDetailControl
 	{
+		const int recordListBoxHeight = 120;
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
@@ -136,7 +137,7 @@ namespace WeSay.LexicalTools
 						| System.Windows.Forms.AnchorStyles.Left)));
 			this._recordsListBox.Location = new System.Drawing.Point(3, 20);
 			this._recordsListBox.Name = "_recordsListBox";
-			this._recordsListBox.Size = new System.Drawing.Size(118, 120);
+			this._recordsListBox.Size = new System.Drawing.Size(118, recordListBoxHeight);
 			this._recordsListBox.TabIndex = 4;
 			//
 			// panel1

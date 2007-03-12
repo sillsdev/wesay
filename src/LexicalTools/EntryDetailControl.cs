@@ -53,7 +53,7 @@ namespace WeSay.LexicalTools
 					listWritingSystem = field.WritingSystems[0];
 					foreach (WritingSystem writingSystem in field.WritingSystems)
 					{
-						MakeContextMenuItemForWritingSystemAndField(field, writingSystem);
+						RegisterWritingSystemAndField(field, writingSystem);
 					}
 				}
 				else
@@ -66,7 +66,7 @@ namespace WeSay.LexicalTools
 			{
 				foreach (WritingSystem writingSystem in glossfield.WritingSystems)
 				{
-					MakeContextMenuItemForWritingSystemAndField(glossfield, writingSystem);
+					RegisterWritingSystemAndField(glossfield, writingSystem);
 				}
 			}
 
@@ -86,7 +86,7 @@ namespace WeSay.LexicalTools
 			_btnDeleteWord.Enabled = (CurrentRecord != null);
 		}
 
-		private void MakeContextMenuItemForWritingSystemAndField(Field field, WritingSystem writingSystem) {
+		private void RegisterWritingSystemAndField(Field field, WritingSystem writingSystem) {
 			MenuItem item =
 					new MenuItem(writingSystem.Id + "\t" + StringCatalog.Get(field.DisplayName),
 								 OnCmWritingSystemClicked);
@@ -94,6 +94,13 @@ namespace WeSay.LexicalTools
 			item.RadioCheck = true;
 			item.Tag = writingSystem;
 			this._cmWritingSystems.MenuItems.Add(item);
+
+
+			LexEntrySortHelper sortHelper = new LexEntrySortHelper(_recordManager.DataSource,
+													   writingSystem.Id,
+													   IsWritingSystemUsedInLexicalForm(writingSystem));
+			_recordManager.GetSortedList(sortHelper);
+
 		}
 
 		private bool IsWritingSystemUsedInLexicalForm(WritingSystem writingSystem)
@@ -142,7 +149,6 @@ namespace WeSay.LexicalTools
 			this._findWritingSystemId.Width = Math.Min(width, 35);
 
 			int heightDifference = this._findText.Height - originalHeight;
-			this._recordsListBox.Height -= heightDifference;
 			this._recordsListBox.Location = new Point(this._recordsListBox.Location.X,
 												 this._recordsListBox.Location.Y + heightDifference);
 			this._btnFind.Height = this._findText.Height;

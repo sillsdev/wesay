@@ -37,7 +37,9 @@
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\ICSharpCode.SharpZipLib.dll</HintPath>
 	</Reference>
-	<Reference Include="LiftIO, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL" />
+	<Reference Include="LiftIO, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+	  <SpecificVersion>False</SpecificVersion>
+	</Reference>
 	<Reference Include="PicoContainer, Version=1.0.2412.18537, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\PicoContainer\PicoContainer.dll</HintPath>
