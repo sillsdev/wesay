@@ -64,7 +64,7 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 			<Registry Root="HKCU" Key="SOFTWARE\WeSay\Components\WeSay.App.exe" KeyPath="yes" />
 
 			<File Id="WeSay.App.exe" Name="WeSay.App.exe"  Source="..\..\output\release\WeSay.App.exe" />
-			<File Id="WeSayWordsIconFile" Name="WeSayWordsFile.ico" Source="..\..\output\release\resources\WeSayWordsFile.ico" />
+			<File Id="WeSayWordsIconFile" Name="WeSayWordsFile.ico" Source="..\..\artwork\WeSay.File.ico" />
 
 			<!--- connect file types to icons and program to launch -->
 
@@ -331,7 +331,7 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 	<Icon Id="WeSay.App.exe" SourceFile ="..\..\output\release\WeSay.App.exe" />
 	<Icon Id="IconSetup.exe" SourceFile ="..\..\output\release\WeSay.Setup.exe" />
 	<Icon Id="SampleSetupIcon" SourceFile ="..\..\output\release\WeSay.Setup.exe" />
-	<Icon Id="SampleRunIcon" SourceFile ="..\..\output\release\resources\WeSayWordsFile.ico" />
+	<Icon Id="SampleRunIcon" SourceFile ="..\..\artwork\WeSay.File.ico" />
 
 	<!--   <Property Id="BROWSER">
 	  <RegistrySearch Id='DefaultBrowser' Type='raw'
