@@ -33,9 +33,9 @@ namespace WeSay.LexicalTools
 			Field field = ActiveViewTemplate.GetField(Field.FieldNames.EntryLexicalForm.ToString());
 			if (field != null && field.Visibility == Field.VisibilitySetting.Visible)
 			{
-				Control box = MakeBoundEntry(entry.LexicalForm, field);
-				DetailList.AddWidgetRow(StringCatalog.Get(field.DisplayName), true, box, insertAtRow);
-				insertAtRow = DetailList.GetRowOfControl(box);
+				Control formControl = MakeBoundControl(entry.LexicalForm, field);
+				DetailList.AddWidgetRow(StringCatalog.Get(field.DisplayName), true, formControl, insertAtRow);
+				insertAtRow = DetailList.GetRowOfControl(formControl);
 				++rowCount;
 			}
 			rowCount += AddCustomFields(entry, insertAtRow+rowCount);

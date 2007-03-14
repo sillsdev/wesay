@@ -118,11 +118,20 @@ namespace WeSay.UI
 			Panel p = new Panel();
 			p.Controls.Add(_control);
 			p.Size = new Size(initialPanelWidth, _control.Height + 0);
-#if notyet
-			FlagButton flagButton = MakeFlagButton(p.Size);
-			p.Controls.Add(flagButton);
-			this.components.Add(flagButton);//so it will get disposed of when we are
-#endif
+
+
+//            FlagButton flagButton = MakeFlagButton(p.Size);
+//            p.Controls.Add(flagButton);
+//            this.components.Add(flagButton);//so it will get disposed of when we are
+
+
+//            //TODO: THIS IS TRANSITIONAL CODE... AnnotationWidget should probably become a full control (or go away)
+//            AnnotationWidget aw = new AnnotationWidget(multiText, writingSystem.Id);
+//            Control annotationControl = aw.MakeControl(p.Size);
+//            p.Controls.Add(annotationControl);
+//            this.components.Add(annotationControl);//so it will get disposed of when we are
+
+
 			this.Controls.Add(p);
 			Height += p.Height;
 			ResumeLayout(false);

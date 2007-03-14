@@ -45,7 +45,7 @@ namespace WeSay.Language.Tests
 					</options>
 				</optionsList>");
 
-			Assert.AreEqual("verb", list.Options[0].Name.GetAlternative("en"));
+			Assert.AreEqual("verb", list.Options[0].Name.GetBestAlternative("en"));
 
 		}
 

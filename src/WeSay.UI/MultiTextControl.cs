@@ -13,21 +13,14 @@ namespace WeSay.UI
 		private List<WeSayTextBox> _textBoxes;
 		//public new event EventHandler TextChanged;
 	   // public new event KeyEventHandler KeyDown;
-
-//        public event System.EventHandler SpecialKeyPress;
+		// public event System.EventHandler SpecialKeyPress;
 
 		public MultiTextControl()
 		{
 			this.components = new System.ComponentModel.Container();
 			InitializeComponent();
 			_textBoxes = new List<WeSayTextBox>();
-//            this.SuspendLayout();
-//            this.BackColor = System.Drawing.Color.Green;
-//            this._vbox.BackColor = System.Drawing.Color.White;
-//            this._vbox.Dock = DockStyle.Fill;
-//            this.ResumeLayout(false);
 			_vbox.Name = "vbox of anonymous multitext";
-		 //   this.SetStyle(ControlStyles.Selectable, false);
 		}
 		public MultiTextControl(IList<WritingSystem> writingSystems, MultiText multiTextToCopyFormsFrom, string nameForTesting):this()
 		{
@@ -92,11 +85,12 @@ namespace WeSay.UI
 				p.Controls.Add(label);
 				p.Size = new Size(initialPanelWidth,box.Height+0);
 
-#if notyet
-				FlagButton flagButton = MakeFlagButton(p.Size);
-				p.Controls.Add(flagButton);
-				this.components.Add(flagButton);//so it will get disposed of when we are
-#endif
+				//TODO: THIS IS TRANSITIONAL CODE... AnnotationWidget should probably become a full control (or go away)
+				AnnotationWidget aw = new AnnotationWidget(multiText,writingSystem.Id);
+				Control annotationControl = aw.MakeControl(p.Size);
+				p.Controls.Add(annotationControl);
+				this.components.Add(annotationControl);//so it will get disposed of when we are
+
 				_vbox.AddControlToBottom(p);
 				Height += p.Height;
 			}
@@ -127,6 +121,7 @@ namespace WeSay.UI
 			box.Name = Name.Replace("-mtc","") + "_" + writingSystem.Id; //for automated tests to find this particular guy
 			box.Text = multiText[writingSystem.Id];
 			box.Location = new Point(30, 0);
+
 			const int kRightMargin = 25; // for flag button
 			box.Width = (initialPanelWidth - box.Left) - kRightMargin;
 			box.Anchor = AnchorStyles.Left | AnchorStyles.Right |AnchorStyles.Top;

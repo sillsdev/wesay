@@ -74,7 +74,7 @@ namespace WeSay.LexicalTools
 
 
 
-		protected Control MakeBoundEntry(WeSay.Language.MultiText multiTextToBindTo, Field field)
+		protected Control MakeBoundControl(WeSay.Language.MultiText multiTextToBindTo, Field field)
 		{
 			MultiTextControl m;
 			if (_previouslyGhostedControlToReuse == null)
@@ -210,7 +210,7 @@ namespace WeSay.LexicalTools
 						box = MakeOptionCollectionWidget(target, customField);
 						break;
 					case "MultiText":
-						box = MakeBoundEntry(target.GetOrCreateProperty<MultiText>(customField.FieldName), customField);
+						box = MakeBoundControl(target.GetOrCreateProperty<MultiText>(customField.FieldName), customField);
 						break;
 					default:
 						throw new ApplicationException(

@@ -39,6 +39,7 @@
 	<Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+	<Compile Include="Annotation.cs" />
 	<Compile Include="AsyncCommand.cs" />
 	<Compile Include="BasicCommand.cs" />
 	<Compile Include="IBindableControl.cs" />

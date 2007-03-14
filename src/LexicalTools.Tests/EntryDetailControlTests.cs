@@ -328,7 +328,7 @@ namespace WeSay.LexicalTools.Tests
 			get
 			{
 				BindingListGridTester t = new BindingListGridTester("_recordsListBox");
-				return ((EntryDetailControl)_detailTaskPage.Controls[0]).CurrentRecord.LexicalForm.GetAlternative(_vernacularWsId);
+				return ((EntryDetailControl)_detailTaskPage.Controls[0]).CurrentRecord.LexicalForm.GetBestAlternative(_vernacularWsId);
 			}
 		}
 

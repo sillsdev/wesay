@@ -12,6 +12,7 @@ namespace WeSay.Language
 	{
 		private string _writingSystemId;
 		private string _form;
+		private Annotation _annotation;
 
 		/// <summary>
 		/// See the comment on MultiText._parent for information on
@@ -35,6 +36,31 @@ namespace WeSay.Language
 			_parent = parent;
 			_writingSystemId = writingSystemId;
 			_form =  form;
+		}
+
+		[XmlAttribute("starred")]
+		public bool IsStarred
+		{
+			get
+			{
+				if (_annotation == null)
+				{
+					return false; // don't bother making one yet
+				}
+				return _annotation.IsOn;
+			}
+			set
+			{
+				if (!value)
+				{
+					_annotation = null; //free it up
+				}
+				else if (_annotation == null)
+				{
+					_annotation = new Annotation();
+					_annotation.IsOn = true;
+				}
+			}
 		}
 
 		[ReflectorProperty("ws", Required = true)]

@@ -25,10 +25,10 @@ namespace WeSay.LexicalTools
 			Field field = ActiveViewTemplate.GetField(Field.FieldNames.SenseGloss.ToString());
 			if (field != null && field.Visibility == Field.VisibilitySetting.Visible)
 			{
-				Control entry = MakeBoundEntry(sense.Gloss, field);
-				Control c = DetailList.AddWidgetRow(StringCatalog.Get("Meaning"), true, entry, insertAtRow);
+				Control glossControl = MakeBoundControl(sense.Gloss, field);
+				Control glossRowControl = DetailList.AddWidgetRow(StringCatalog.Get("Meaning"), true, glossControl, insertAtRow);
 				++rowCount;
-				insertAtRow = DetailList.GetRowOfControl(c);
+				insertAtRow = DetailList.GetRowOfControl(glossRowControl);
 			}
 
 			rowCount += AddCustomFields(sense, insertAtRow+rowCount);

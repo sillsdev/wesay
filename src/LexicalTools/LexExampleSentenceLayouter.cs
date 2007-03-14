@@ -24,7 +24,7 @@ namespace WeSay.LexicalTools
 			Field field = ActiveViewTemplate.GetField(Field.FieldNames.ExampleSentence.ToString());
 			if (field != null && field.Visibility == Field.VisibilitySetting.Visible)
 			{
-				Control entry = MakeBoundEntry(example.Sentence, field);
+				Control entry = MakeBoundControl(example.Sentence, field);
 				DetailList.AddWidgetRow(StringCatalog.Get("Example"), false, entry, insertAtRow+rowCount);
 				++rowCount;
 			}
@@ -32,7 +32,7 @@ namespace WeSay.LexicalTools
 			field = ActiveViewTemplate.GetField(Field.FieldNames.ExampleTranslation.ToString());
 			if (field != null && field.Visibility == Field.VisibilitySetting.Visible)
 			{
-				 Control entry = MakeBoundEntry(example.Translation, field);
+				 Control entry = MakeBoundControl(example.Translation, field);
 				DetailList.AddWidgetRow(StringCatalog.Get("Translation"), false, entry, insertAtRow+rowCount);
 				++rowCount;
 			}

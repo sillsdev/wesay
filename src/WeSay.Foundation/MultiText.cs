@@ -12,6 +12,14 @@ using WeSay.Foundation;
 
 namespace WeSay.Language
 {
+	/*
+	 * Important: This class purposly hides the implementation of MultiText as a collection of LanguageForms.
+	 *
+	 * Thus it
+	 * 1) only refers to "alternatives" in public methods and
+	 * 2) has some otherwise ugly methods for getting at the innards (e.g. annotations) of them.
+	 */
+
 	/* ----------- ABOUT SUBCLASSES OF MULTITEXT ------------
 	* Subclasses of MultiText are used in many (most? all?)
 	* fields in WeSay exist to in order to make a
@@ -34,7 +42,6 @@ namespace WeSay.Language
 	//NO: we haven't been able to do a reasonalbly compact xml representation except with custom deserializer
 	//[ReflectorType("multiText")]
 	[XmlInclude(typeof(LanguageForm))]
-	//[XmlRoot("blahblah")]
 	public class MultiText : WeSay.Foundation.IParentable, INotifyPropertyChanged//, IEnumerable
 	{
 		/// <summary>
@@ -104,12 +111,12 @@ namespace WeSay.Language
 			return m;
 		}
 
-		[XmlArrayItem(typeof(LanguageForm), ElementName = "ppp")]
+		[XmlArrayItem(typeof(LanguageForm), ElementName = "tobedetermined")]
 		public string this[string writingSystemId]
 		{
 			get
 			{
-				return GetAlternative(writingSystemId);
+				return GetExactAlternative(writingSystemId);
 			}
 			set
 			{
@@ -126,29 +133,108 @@ namespace WeSay.Language
 			return null;
 		}
 
-		public string GetAlternative(string writingSystemId)
+		/// <summary>
+		/// Throws exception if alternative does not exist.
+		/// </summary>
+		/// <param name="writingSystemId"></param>
+		/// <returns></returns>
+//        public string GetExactAlternative(string writingSystemId)
+//        {
+//            if (!Contains(writingSystemId))
+//            {
+//                throw new ArgumentOutOfRangeException("Use Contains() to first check if the multitext has a language form for this writing system.");
+//            }
+//
+//            return GetBestAlternative(writingSystemId, false, null);
+//        }
+
+		public bool ContainsAlternative(string writingSystemId)
 		{
-			return GetAlternative(writingSystemId, false);
+			return (Find(writingSystemId) != null);
 		}
 
-		public string GetAlternative(string writingSystemId, bool doShowSomethingElseIfMissing)
+		public bool GetAnnotationOfAlternativeIsStarred(string id)
 		{
-			return GetAlternative(writingSystemId, doShowSomethingElseIfMissing, string.Empty);
+			LanguageForm alt = Find(id);
+			if (alt == null)
+			{
+				return false;
+			}
+			return alt.IsStarred;
 		}
 
-		public string GetAlternative(string writingSystemId, string appendIfFirstWritingSystemMissing)
+		public void SetAnnotationOfAlternativeIsStarred(string id, bool isStarred)
 		{
-			return GetAlternative(writingSystemId, true, appendIfFirstWritingSystemMissing);
+			LanguageForm alt = Find(id);
+			if (isStarred)
+			{
+				if (alt == null)
+				{
+					AddLanguageForm(new LanguageForm(id, String.Empty, this));
+					alt = Find(id);
+					Debug.Assert(alt != null);
+				}
+				alt.IsStarred = true;
+			}
+			else
+			{
+				if (alt != null)
+				{
+					if (alt.Form == String.Empty)   //non-starred and empty? Nuke it.
+					{
+						this.RemoveLanguageForm(alt);
+					}
+					else
+					{
+						alt.IsStarred = false;
+					}
+				}
+				else
+				{
+					//nothing to do.  Missing altertive == not starred.
+				}
+			}
+			NotifyPropertyChanged(id);
 		}
 
-		private string GetAlternative(string writingSystemId, bool doShowSomethingElseIfMissing, string appendIfFirstWritingSystemMissing)
+		/// <summary>
+		/// Get exact alternative or String.Empty
+		/// </summary>
+		/// <param name="writingSystemId"></param>
+		/// <returns></returns>
+		public string GetExactAlternative(string writingSystemId)
+		{
+			return GetAlternative(writingSystemId, false, null);
+		}
+
+		/// <summary>
+		/// Gives the string of the requested id if it exists, else the 'first'(?) one that does exist, else Empty String
+		/// </summary>
+		/// <returns></returns>
+		public string GetBestAlternative(string writingSystemId)
+		{
+			return GetAlternative(writingSystemId, true, string.Empty);
+		}
+
+		public string GetBestAlternative(string writingSystemId, string notFirstChoiceSuffix)
+		{
+			return GetAlternative(writingSystemId, true, notFirstChoiceSuffix);
+		}
+
+		/// <summary>
+		/// Get a string out
+		/// </summary>
+		/// <returns>the string of the requested id if it exists,
+		/// else the 'first'(?) one that does exist + the suffix,
+		/// else the given suffix </returns>
+		private string GetAlternative(string writingSystemId, bool doShowSomethingElseIfMissing, string notFirstChoiceSuffix)
 		{
 			LanguageForm alt = Find(writingSystemId);
 			if (null == alt)
 			{
 				if (doShowSomethingElseIfMissing)
 				{
-					return GetFirstAlternative() + appendIfFirstWritingSystemMissing; ;
+					return GetFirstAlternative() + notFirstChoiceSuffix; ;
 				}
 				else
 				{
@@ -160,7 +246,7 @@ namespace WeSay.Language
 			{
 				if (doShowSomethingElseIfMissing)
 				{
-					return GetFirstAlternative() + appendIfFirstWritingSystemMissing;
+					return GetFirstAlternative() + notFirstChoiceSuffix;
 				}
 				else
 				{
@@ -338,6 +424,8 @@ namespace WeSay.Language
 				}
 			}
 		}
+
+
 	}
 
 	#region NetReflector

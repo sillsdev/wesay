@@ -14,6 +14,10 @@ namespace WeSay.UI
 		public WeSayTextBox()
 		{
 			InitializeComponent();
+
+
+	   //     this.Controls.Add(_annotationWidget.MakeFlagButton(40));
+
 		  //  Debug.Assert(DesignMode);
 			BorderStyle = BorderStyle.None;
 			BackColor = System.Drawing.Color.White;
