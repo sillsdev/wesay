@@ -822,7 +822,22 @@ namespace Reporting
 			return "unknown";
 		}
 
-
-
+		/// <summary>
+		/// Put up a message box, unless OkToInteractWithUser is false, in which case throw an Appliciation Exception
+		/// </summary>
+		/// <param name="message"></param>
+		public static void ReportNonFatalMessage(string message)
+		{
+			if (Reporting.ErrorReporter.OkToInteractWithUser)
+			{
+				MessageBox.Show(
+					message,
+					 Application.ProductName+" Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+			}
+			else
+			{
+				throw new ApplicationException(message);
+			}
+		}
 	}
 }
