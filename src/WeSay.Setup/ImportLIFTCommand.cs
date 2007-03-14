@@ -24,19 +24,11 @@ namespace WeSay
 
 		protected override void DoWork2(ProgressState progress)
 		{
-
-
 			_progress = progress;
-			if (File.Exists(_destinationDatabasePath)) // make backup of the file we're about to over-write
-			{
-				progress.Status = "Backing up existing file...";
-				string backupPath = _destinationDatabasePath + ".bak";
-				File.Delete(backupPath);
-				File.Move(_destinationDatabasePath, backupPath);
-			}
 
 			progress.Status = "Importing...";
-			using (Db4oDataSource ds = new WeSay.Data.Db4oDataSource(_destinationDatabasePath))
+			string tempTarget = Path.GetTempFileName();
+			using (Db4oDataSource ds = new WeSay.Data.Db4oDataSource(tempTarget))
 			{
 				using (Db4oRecordList<LexEntry> entries = new Db4oRecordList<LexEntry>(ds))
 				{
@@ -62,6 +54,42 @@ namespace WeSay
 					_importer.ReadFile(doc, entries);
 				}
 			}
+			ClearTheIncrementalBackupDirectory();
+
+			//if we got this far without an error, move it
+			string backupPath = _destinationDatabasePath + ".bak";
+		   //not needed File.Delete(backupPath);
+			if (File.Exists(_destinationDatabasePath))
+			{
+				File.Replace(tempTarget, _destinationDatabasePath, backupPath);
+			}
+			else
+			{
+				File.Move(tempTarget, _destinationDatabasePath);
+			}
+		}
+
+		/*public for unit-tests */
+		public static void ClearTheIncrementalBackupDirectory()
+		{
+			if (!Directory.Exists(WeSay.Project.WeSayWordsProject.Project.PathToLiftBackupDir))
+			{
+				return;
+			}
+			string[] p = Directory.GetFiles(WeSay.Project.WeSayWordsProject.Project.PathToLiftBackupDir, "*.*");
+			if(p.Length>0)
+			{
+				string newPath = WeSay.Project.WeSayWordsProject.Project.PathToLiftBackupDir + ".old";
+
+				int i = 0;
+				while(Directory.Exists(newPath+i))
+				{
+					i++;
+				}
+				newPath += i;
+				Directory.Move(WeSay.Project.WeSayWordsProject.Project.PathToLiftBackupDir,
+							   newPath);
+			}
 		}
 
 		protected override void DoWork(InitializeProgressCallback initializeCallback, ProgressCallback progressCallback,
@@ -70,6 +98,8 @@ namespace WeSay
 		{
 			throw new NotImplementedException();
 		}
+
+
 	}
 
 }

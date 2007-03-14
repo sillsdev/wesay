@@ -102,7 +102,7 @@ namespace WeSay.App
 
 					if (ds != null)
 					{
-						backupService = new BackupService(project.PathToLocalBackup, ds.DataSource);
+						backupService = new BackupService(project.PathToLiftBackupDir, ds.DataSource);
 						ds.DataCommitted += new EventHandler(backupService.OnDataCommitted);
 						ds.DataDeleted +=new EventHandler<DeletedItemEventArgs>(backupService.OnDataDeleted);
 					}
@@ -161,28 +161,33 @@ namespace WeSay.App
 				}
 				else
 				{
-					MessageBox.Show(
-						String.Format(
-							"WeSay was unable to figure out what lexicon to work on. It will use an argument from a shortcut if given one, otherwise it tries to find the lexicon that it was last used with.  In this, case, it found neither.  You can use the WeSay Setup program to reset the location of the project.",
-							cmdArgs.wordsPath), "WeSay error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+					Reporting.ErrorReporter.ReportNonFatalMessage("WeSay was unable to figure out what lexicon to work on. It will use an argument from a shortcut if given one, otherwise it tries to find the lexicon that it was last used with.  In this, case, it found neither.  You can use the WeSay Setup program to reset the location of the project.");
 					return false;
 				}
 			}
 
 			if (!File.Exists(path))
 			{
-				MessageBox.Show(String.Format("WeSay tried to find the lexicon at '{0}', but could not find it.\r\n\r\nOn Windows, the location argument can be specified like this:\r\n wesay.exe \"c:\\some directory\\mylanguage\\wesay\\mylanguage.words\". \r\n\r\nSince WeSay intentionally does not ask users to ever deal with the file system of their computer, you need to setup a shortcut to WeSay which gives the correct path, or use the WeSay Admin program to launch WeSay once. After that, WeSay will remember where it is.",
-					path), "WeSay error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+				Reporting.ErrorReporter.ReportNonFatalMessage(
+					String.Format(
+						"WeSay tried to find the lexicon at '{0}', but could not find it.\r\n\r\nOn Windows, the location argument can be specified like this:\r\n wesay.exe \"c:\\some directory\\mylanguage\\wesay\\mylanguage.words\". \r\n\r\nSince WeSay intentionally does not ask users to ever deal with the file system of their computer, you need to setup a shortcut to WeSay which gives the correct path, or use the WeSay Admin program to launch WeSay once. After that, WeSay will remember where it is.",
+						path));
 				return false;
 			}
 
-			project.LoadFromLexiconPath(path);
-			WeSay.App.Properties.Settings.Default.PreviousDBPath = path;
-			//WeSay.App.Properties.Settings.Default.Save();
-			//MessageBox.Show("saved " + WeSay.App.Properties.Settings.Default.PreviousDBPath);
-			//WeSay.App.Properties.Settings.Default.Reload();
-			//Debug.Assert(WeSay.App.Properties.Settings.Default.PreviousDBPath == path);
-			return true;
+			if (project.LoadFromLexiconPath(path))
+			{
+				WeSay.App.Properties.Settings.Default.PreviousDBPath = path;
+				//WeSay.App.Properties.Settings.Default.Save();
+				//MessageBox.Show("saved " + WeSay.App.Properties.Settings.Default.PreviousDBPath);
+				//WeSay.App.Properties.Settings.Default.Reload();
+				//Debug.Assert(WeSay.App.Properties.Settings.Default.PreviousDBPath == path);
+				return true;
+			}
+			else
+			{
+				return false;
+			}
 		}
 
 		private static void OsCheck()

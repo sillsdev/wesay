@@ -76,7 +76,7 @@ namespace WeSay.App
 			try
 			{
 				ICSharpCode.SharpZipLib.Zip.FastZip f = new ICSharpCode.SharpZipLib.Zip.FastZip();
-				f.CreateZip(path, WeSayWordsProject.Project.PathToLocalBackup, true, null);
+				f.CreateZip(path, WeSayWordsProject.Project.PathToLiftBackupDir, true, null);
 			}
 			finally
 			{

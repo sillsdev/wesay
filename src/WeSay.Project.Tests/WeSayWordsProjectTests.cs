@@ -15,6 +15,7 @@ namespace WeSay.Project.Tests
 		[SetUp]
 		public void Setup()
 		{
+			Reporting.ErrorReporter.OkToInteractWithUser = false;
 			DirectoryInfo dirProject = Directory.CreateDirectory(Path.Combine(Path.GetTempPath(), Path.GetRandomFileName()));
 			this._projectDirectory = dirProject.FullName;
 		}
@@ -130,12 +131,12 @@ namespace WeSay.Project.Tests
 			return dir;
 		}
 
-		private static void TryLoading(string lexiconPath, string experimentDir)
+		private static bool TryLoading(string lexiconPath, string experimentDir)
 		{
 			try
 			{
 				WeSayWordsProject p = new WeSayWordsProject();
-				p.LoadFromLexiconPath(lexiconPath);
+				return p.LoadFromLexiconPath(lexiconPath);
 			}
 			finally
 			{

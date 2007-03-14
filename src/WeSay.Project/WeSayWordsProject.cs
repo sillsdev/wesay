@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 using System.Xml;
+using Reporting;
 using WeSay.Foundation;
 
 namespace WeSay.Project
@@ -51,12 +52,13 @@ namespace WeSay.Project
 		/// </summary>
 		public static new void InitializeForTests()
 		{
+			Reporting.ErrorReporter.OkToInteractWithUser = false;
 			BasilProject project = new WeSayWordsProject();
 			project.LoadFromProjectDirectoryPath(GetPretendProjectDirectory());
 			project.StringCatalogSelector = "en";
 		}
 
-		public void LoadFromLexiconPath(string lexiconPath)
+		public bool LoadFromLexiconPath(string lexiconPath)
 		{
 			if (!File.Exists(lexiconPath))
 			{
@@ -65,11 +67,19 @@ namespace WeSay.Project
 			lexiconPath = Path.GetFullPath(lexiconPath);
 
 			_lexiconDatabaseFileName = Path.GetFileName(lexiconPath);
-			CheckLexiconIsInValidProjectDirectory(lexiconPath);
-			//walk up from file to /wesay to /<project>
-			base.LoadFromProjectDirectoryPath(Directory.GetParent(Directory.GetParent(lexiconPath).FullName).FullName);
-			Debug.Assert(PathToLexicalModelDB.ToLower() == Path.GetFullPath(lexiconPath).ToLower());
-	   }
+			if (CheckLexiconIsInValidProjectDirectory(lexiconPath))
+			{
+				//walk up from file to /wesay to /<project>
+				base.LoadFromProjectDirectoryPath(
+					Directory.GetParent(Directory.GetParent(lexiconPath).FullName).FullName);
+				Debug.Assert(PathToLexicalModelDB.ToLower() == Path.GetFullPath(lexiconPath).ToLower());
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
 
 		public override  void LoadFromProjectDirectoryPath(string projectDirectoryPath)
 		{
@@ -115,7 +125,7 @@ namespace WeSay.Project
 				}
 				catch (Exception e)
 				{
-					MessageBox.Show("There was a problem reading the task xml. " + e.Message);
+					Reporting.ErrorReporter.ReportNonFatalMessage("There was a problem reading the task xml. " + e.Message);
 					projectDoc = null;
 				}
 			}
@@ -142,7 +152,7 @@ namespace WeSay.Project
 			}
 		}
 
-		private void CheckLexiconIsInValidProjectDirectory(string p)
+		private bool CheckLexiconIsInValidProjectDirectory(string p)
 		{
 			DirectoryInfo lexiconDirectoryInfo = Directory.GetParent(p);
 			DirectoryInfo projectRootDirectoryInfo = lexiconDirectoryInfo.Parent;
@@ -157,8 +167,11 @@ namespace WeSay.Project
 				lexiconDirectoryName != "wesay" ||
 				(!IsValidProjectDirectory(projectRootDirectoryInfo.FullName)))
 			{
-				throw new ApplicationException("WeSay cannot open the lexicon, because it is not in a proper WeSay/Basil project structure.");
+				string message = "WeSay cannot open the lexicon, because it is not in a proper WeSay/Basil project structure.";
+				ErrorReporter.ReportNonFatalMessage(message);
+				return false;
 			}
+			return true;
 		}
 
 		public override void Create(string projectDirectoryPath)
@@ -188,7 +201,7 @@ namespace WeSay.Project
 			}
 		}
 
-		public string PathToLocalBackup
+		public string PathToLiftBackupDir
 		{
 			get
 			{

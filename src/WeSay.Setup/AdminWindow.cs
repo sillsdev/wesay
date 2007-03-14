@@ -104,7 +104,7 @@ namespace WeSay.Setup
 
 			else
 			{
-				MessageBox.Show("That directory does not appear to be a valid WeSay or Basil Project directory.");
+				Reporting.ErrorReporter.ReportNonFatalMessage("That directory does not appear to be a valid WeSay or Basil Project directory.");
 			}
 		}
 
@@ -140,7 +140,7 @@ namespace WeSay.Setup
 			}
 			catch (Exception e)
 			{
-				MessageBox.Show("WeSay was not able to create a project there. \r\n"+e.Message);
+				Reporting.ErrorReporter.ReportNonFatalMessage("WeSay was not able to create a project there. \r\n" + e.Message);
 				return;
 			}
 
@@ -170,7 +170,7 @@ namespace WeSay.Setup
 			}
 			catch (Exception e)
 			{
-				MessageBox.Show("WeSay was not able to open that project. \r\n"+e.Message);
+				Reporting.ErrorReporter.ReportNonFatalMessage("WeSay was not able to open that project. \r\n" + e.Message);
 				return;
 			}
 
@@ -256,7 +256,7 @@ namespace WeSay.Setup
 			catch (Exception error)
 			{
 				//would make it impossible to quit. e.Cancel = true;
-				MessageBox.Show(error.Message);
+				Reporting.ErrorReporter.ReportNonFatalMessage(error.Message);
 			}
 
 

@@ -114,6 +114,7 @@ namespace WeSay.Project
 		/// </summary>
 		public static void InitializeForTests()
 		{
+			Reporting.ErrorReporter.OkToInteractWithUser = false;
 			BasilProject project = new BasilProject();
 			project.LoadFromProjectDirectoryPath(GetPretendProjectDirectory());
 			project.StringCatalogSelector = "en";
@@ -121,7 +122,7 @@ namespace WeSay.Project
 
 		public static string GetPretendProjectDirectory()
 		{
-			return Path.Combine(GetTopAppDirectory(), "SampleProjects/PRETEND");
+			return Path.Combine(GetTopAppDirectory(), Path.Combine("SampleProjects","PRETEND"));
 		}
 
 		public WritingSystemCollection WritingSystems

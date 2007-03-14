@@ -31,9 +31,11 @@ namespace WeSay.Project.Tests
 
 		public static void WriteSampleviewTemplateFile(string path)
 		{
-			StreamWriter writer = File.CreateText(path);
-			writer.Write(TestResources.viewTemplate);
-			writer.Close();
+			using(StreamWriter writer = File.CreateText(path))
+			{
+				writer.Write(TestResources.viewTemplate);
+				writer.Close();
+			}
 		}
 
 

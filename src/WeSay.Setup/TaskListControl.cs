@@ -88,7 +88,7 @@ namespace WeSay.Setup
 			}
 			catch (Exception error)
 			{
-				MessageBox.Show("There may have been a problem reading the master task inventory xml. " + error.Message);
+				Reporting.ErrorReporter.ReportNonFatalMessage("There may have been a problem reading the master task inventory xml. " + error.Message);
 			}
 		}
 
@@ -104,7 +104,7 @@ namespace WeSay.Setup
 				}
 				catch (Exception e)
 				{
-					MessageBox.Show("There was a problem reading the task xml. " + e.Message);
+					Reporting.ErrorReporter.ReportNonFatalMessage("There was a problem reading the task xml. " + e.Message);
 					projectDoc = null;
 				}
 			}

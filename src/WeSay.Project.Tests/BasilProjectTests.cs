@@ -36,9 +36,11 @@ namespace WeSay.Project.Tests
 			Directory.CreateDirectory(_projectDirectory);
 			Directory.CreateDirectory(GetCommonDirectory());
 			string pathToStringCatalogInProjectDir = Path.Combine(GetCommonDirectory(), "th.po");
-			StreamWriter writer = File.CreateText(pathToStringCatalogInProjectDir);
-			writer.Write(TestResources.poStrings);
-			writer.Close();
+			using (StreamWriter writer = File.CreateText(pathToStringCatalogInProjectDir))
+			{
+				writer.Write(TestResources.poStrings);
+				writer.Close();
+			}
 		}
 
 		private void WriteSampleWritingSystemFile()

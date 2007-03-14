@@ -33,9 +33,11 @@ namespace WeSay.Language.Tests
 
 		public static void WriteSampleWritingSystemFile(string path)
 		{
-			StreamWriter writer = File.CreateText(path);
-			writer.Write(TestResources.WritingSystemPrefs);
-			writer.Close();
+			using (StreamWriter writer = File.CreateText(path))
+			{
+				writer.Write(TestResources.WritingSystemPrefs);
+				writer.Close();
+			}
 		}
 
 		[Test]

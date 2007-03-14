@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using WeSay.Foundation.Progress;
 
 namespace MultithreadProgress
@@ -148,6 +149,8 @@ namespace MultithreadProgress
 
 		protected abstract void BeginInvokeCore2(ProgressState progress);
 
+		private bool _isFinished = false;
+
 		/// <summary>
 		/// Raises the Finish event.
 		/// </summary>
@@ -159,6 +162,7 @@ namespace MultithreadProgress
 			{
 				finish( this, e );
 			}
+			_isFinished = true;
 		}
 
 		/// <summary>
@@ -191,6 +195,8 @@ namespace MultithreadProgress
 				enabledChanged( this, e );
 			}
 		}
+
+
 	}
 
 	/// <summary>
