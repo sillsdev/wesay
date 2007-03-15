@@ -31,6 +31,7 @@ namespace WeSay.Setup
 			{
 				this._wsListBox.Items.Add(new WsDisplayProxy(w, BasilProject.Project.WritingSystems));
 			}
+			_wsListBox.Sorted = true;
 			if (this._wsListBox.Items.Count > 0)
 			{
 				this._wsListBox.SelectedIndex = 0;
@@ -42,24 +43,24 @@ namespace WeSay.Setup
 			UpdateSelection();
 		}
 
+
 		/// <summary>
 		/// nb: seperate from the event handler because the handler isn't called if the last item is deleted
 		/// </summary>
 		private void UpdateSelection()
 		{
-			this._tabControl.Visible = this.SelectedWritingSystem != null;
-			if (this.SelectedWritingSystem == null)
+			this._tabControl.Visible = SelectedWritingSystem != null;
+			if (SelectedWritingSystem == null)
 			{
-				this.Refresh();
+				Refresh();
 				return;
 			}
 
 			_btnRemove.Enabled = true;
 //                (SelectedWritingSystem != BasilProject.Project.WritingSystems.AnalysisWritingSystemDefault)
 //              && (SelectedWritingSystem != BasilProject.Project.WritingSystems.VernacularWritingSystemDefault);
-
-			_basicControl.WritingSystem = this.SelectedWritingSystem;
-			_fontControl.WritingSystem = this.SelectedWritingSystem;
+			_basicControl.WritingSystem = SelectedWritingSystem;
+			_fontControl.WritingSystem = SelectedWritingSystem;
 		}
 
 		private WritingSystem SelectedWritingSystem
@@ -132,8 +133,19 @@ namespace WeSay.Setup
 			{
 				_wsListBox.Items[i] = _wsListBox.Items[i];
 			}
-
 			UpdateSelection();
+			if (args != null && args.ChangedItem.PropertyDescriptor.Name == "Id")
+			{
+				LoadWritingSystemListBox();
+				foreach (WsDisplayProxy o in _wsListBox.Items)
+				{
+					if(o.WritingSystem == ws)
+					{
+						_wsListBox.SelectedItem = o;
+						break;
+					}
+				}
+			}
 		}
 
 

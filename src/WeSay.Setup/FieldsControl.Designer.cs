@@ -1,3 +1,5 @@
+using WeSay.Setup.Properties;
+
 namespace WeSay.Setup
 {
 	partial class FieldsControl
@@ -28,14 +30,19 @@ namespace WeSay.Setup
 		/// </summary>
 		private void InitializeComponent()
 		{
+			this.components = new System.ComponentModel.Container();
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FieldsControl));
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
 			this._fieldsListBox = new System.Windows.Forms.CheckedListBox();
 			this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
+			this.btnMoveDown = new System.Windows.Forms.Button();
+			this.btnMoveUp = new System.Windows.Forms.Button();
 			this._writingSystemListBox = new System.Windows.Forms.CheckedListBox();
 			this.groupBox2 = new System.Windows.Forms.GroupBox();
 			this._descriptionBox = new System.Windows.Forms.TextBox();
 			this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+			this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
 			this.splitContainer1.SuspendLayout();
@@ -98,6 +105,8 @@ namespace WeSay.Setup
 			//
 			// groupBox1
 			//
+			this.groupBox1.Controls.Add(this.btnMoveDown);
+			this.groupBox1.Controls.Add(this.btnMoveUp);
 			this.groupBox1.Controls.Add(this._writingSystemListBox);
 			this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.groupBox1.Location = new System.Drawing.Point(3, 136);
@@ -107,6 +116,38 @@ namespace WeSay.Setup
 			this.groupBox1.TabIndex = 0;
 			this.groupBox1.TabStop = false;
 			this.groupBox1.Text = "Show these Writing Systems in this field";
+			//
+			// btnMoveDown
+			//
+			this.btnMoveDown.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
+			this.btnMoveDown.FlatAppearance.BorderSize = 0;
+			this.btnMoveDown.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
+			this.btnMoveDown.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+			this.btnMoveDown.Image = ((System.Drawing.Image)(resources.GetObject("btnMoveDown.Image")));
+			this.btnMoveDown.Location = new System.Drawing.Point(7, 46);
+			this.btnMoveDown.Name = "btnMoveDown";
+			this.btnMoveDown.Size = new System.Drawing.Size(18, 21);
+			this.btnMoveDown.TabIndex = 2;
+			this.toolTip1.SetToolTip(this.btnMoveDown, "List this writing system later");
+			this.btnMoveDown.UseVisualStyleBackColor = true;
+			this.btnMoveDown.Click += new System.EventHandler(this.OnBtnMoveDownClick);
+			//
+			// btnMoveUp
+			//
+			this.btnMoveUp.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
+			this.btnMoveUp.FlatAppearance.BorderSize = 0;
+			this.btnMoveUp.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
+			this.btnMoveUp.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+			this.btnMoveUp.Image = ((System.Drawing.Image)(resources.GetObject("btnMoveUp.Image")));
+			this.btnMoveUp.Location = new System.Drawing.Point(8, 21);
+			this.btnMoveUp.Name = "btnMoveUp";
+			this.btnMoveUp.Size = new System.Drawing.Size(17, 19);
+			this.btnMoveUp.TabIndex = 1;
+			this.toolTip1.SetToolTip(this.btnMoveUp, "List this writing system earlier");
+			this.btnMoveUp.UseVisualStyleBackColor = true;
+			this.btnMoveUp.Click += new System.EventHandler(this.OnBtnMoveUpClick);
 			//
 			// _writingSystemListBox
 			//
@@ -119,10 +160,11 @@ namespace WeSay.Setup
 			"Foo(Thai)",
 			"Thai",
 			"English"});
-			this._writingSystemListBox.Location = new System.Drawing.Point(7, 20);
+			this._writingSystemListBox.Location = new System.Drawing.Point(31, 20);
 			this._writingSystemListBox.Name = "_writingSystemListBox";
-			this._writingSystemListBox.Size = new System.Drawing.Size(314, 94);
+			this._writingSystemListBox.Size = new System.Drawing.Size(290, 94);
 			this._writingSystemListBox.TabIndex = 0;
+			this._writingSystemListBox.SelectedIndexChanged += new System.EventHandler(this._writingSystemListBox_SelectedIndexChanged);
 			this._writingSystemListBox.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this._writingSystemListBox_ItemCheck);
 			//
 			// groupBox2
@@ -182,6 +224,8 @@ namespace WeSay.Setup
 
 		}
 
+
+
 		#endregion
 
 		private System.Windows.Forms.SplitContainer splitContainer1;
@@ -192,5 +236,8 @@ namespace WeSay.Setup
 		private System.Windows.Forms.CheckedListBox _writingSystemListBox;
 		private System.Windows.Forms.GroupBox groupBox2;
 		private System.Windows.Forms.TextBox _descriptionBox;
+		private System.Windows.Forms.Button btnMoveUp;
+		private System.Windows.Forms.Button btnMoveDown;
+		private System.Windows.Forms.ToolTip toolTip1;
 	}
 }

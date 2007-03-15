@@ -66,5 +66,33 @@ namespace WeSay.Setup.Properties {
 				return ((System.Drawing.Bitmap)(obj));
 			}
 		}
+
+		internal static System.Drawing.Icon WeSayApplicationIcon {
+			get {
+				object obj = ResourceManager.GetObject("WeSayApplicationIcon", resourceCulture);
+				return ((System.Drawing.Icon)(obj));
+			}
+		}
+
+		internal static System.Drawing.Bitmap WeSayImage {
+			get {
+				object obj = ResourceManager.GetObject("WeSayImage", resourceCulture);
+				return ((System.Drawing.Bitmap)(obj));
+			}
+		}
+
+		internal static System.Drawing.Icon WeSaySetupApplicationIcon {
+			get {
+				object obj = ResourceManager.GetObject("WeSaySetupApplicationIcon", resourceCulture);
+				return ((System.Drawing.Icon)(obj));
+			}
+		}
+
+		internal static System.Drawing.Bitmap WeSaySetupImage {
+			get {
+				object obj = ResourceManager.GetObject("WeSaySetupImage", resourceCulture);
+				return ((System.Drawing.Bitmap)(obj));
+			}
+		}
 	}
 }

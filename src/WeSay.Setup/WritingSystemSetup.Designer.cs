@@ -31,8 +31,6 @@ namespace WeSay.Setup
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(WritingSystemSetup));
 			this.toolStrip1 = new System.Windows.Forms.ToolStrip();
 			this._btnAddWritingSystem = new System.Windows.Forms.ToolStripButton();
-			this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
-			this.toolStripButton3 = new System.Windows.Forms.ToolStripButton();
 			this._btnRemove = new System.Windows.Forms.ToolStripButton();
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
 			this._wsListBox = new System.Windows.Forms.ListBox();
@@ -57,8 +55,6 @@ namespace WeSay.Setup
 			this.toolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
 			this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
 			this._btnAddWritingSystem,
-			this.toolStripButton2,
-			this.toolStripButton3,
 			this._btnRemove});
 			this.toolStrip1.Location = new System.Drawing.Point(0, 0);
 			this.toolStrip1.Name = "toolStrip1";
@@ -75,26 +71,6 @@ namespace WeSay.Setup
 			this._btnAddWritingSystem.Size = new System.Drawing.Size(123, 22);
 			this._btnAddWritingSystem.Text = "New Writing System";
 			this._btnAddWritingSystem.Click += new System.EventHandler(this._btnAddWritingSystem_Click);
-			//
-			// toolStripButton2
-			//
-			this.toolStripButton2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.toolStripButton2.Enabled = false;
-			this.toolStripButton2.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton2.Image")));
-			this.toolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.toolStripButton2.Name = "toolStripButton2";
-			this.toolStripButton2.Size = new System.Drawing.Size(23, 22);
-			this.toolStripButton2.Text = "Move Up";
-			//
-			// toolStripButton3
-			//
-			this.toolStripButton3.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.toolStripButton3.Enabled = false;
-			this.toolStripButton3.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton3.Image")));
-			this.toolStripButton3.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.toolStripButton3.Name = "toolStripButton3";
-			this.toolStripButton3.Size = new System.Drawing.Size(23, 22);
-			this.toolStripButton3.Text = "Move Down";
 			//
 			// _btnRemove
 			//
@@ -226,6 +202,7 @@ namespace WeSay.Setup
 
 		}
 
+
 		#endregion
 
 		private System.Windows.Forms.SplitContainer splitContainer1;
@@ -237,8 +214,6 @@ namespace WeSay.Setup
 		private System.Windows.Forms.TabPage _typingPage;
 		private System.Windows.Forms.ToolStrip toolStrip1;
 		private System.Windows.Forms.ToolStripButton _btnAddWritingSystem;
-		private System.Windows.Forms.ToolStripButton toolStripButton2;
-		private System.Windows.Forms.ToolStripButton toolStripButton3;
 		private System.Windows.Forms.ToolStripButton _btnRemove;
 		private WritingSystemBasic _basicControl;
 		private FontControl _fontControl;

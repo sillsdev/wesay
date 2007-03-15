@@ -1,3 +1,5 @@
+using WeSay.Setup.Properties;
+
 namespace WeSay.Setup
 {
 	partial class AdminWindow
@@ -76,7 +78,7 @@ namespace WeSay.Setup
 			//
 			// openThisProjectInWeSayToolStripMenuItem
 			//
-			this.openThisProjectInWeSayToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("openThisProjectInWeSayToolStripMenuItem.Image")));
+			this.openThisProjectInWeSayToolStripMenuItem.Image = Resources.WeSayApplicationIcon.ToBitmap();
 			this.openThisProjectInWeSayToolStripMenuItem.Name = "openThisProjectInWeSayToolStripMenuItem";
 			this.openThisProjectInWeSayToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
 			this.openThisProjectInWeSayToolStripMenuItem.Text = "Open this Project in &WeSay";
@@ -153,7 +155,7 @@ namespace WeSay.Setup
 			this.BackColor = System.Drawing.SystemColors.ControlLightLight;
 			this.ClientSize = new System.Drawing.Size(538, 312);
 			this.Controls.Add(this.menuStrip1);
-			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+			this.Icon = Resources.WeSaySetupApplicationIcon;
 			this.MainMenuStrip = this.menuStrip1;
 			this.Name = "AdminWindow";
 			this.Text = "WeSay Setup";
