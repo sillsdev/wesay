@@ -146,7 +146,7 @@ namespace WeSay.LexicalTools
 			int width = this._findText.Width;
 			this._findWritingSystemId.AutoSize = false;
 			this._findWritingSystemId.Height = this._findText.Height;
-			this._findWritingSystemId.Width = Math.Min(width, 35);
+			this._findWritingSystemId.Width = Math.Min(width, 25);
 
 			int heightDifference = this._findText.Height - originalHeight;
 			this._recordsListBox.Location = new Point(this._recordsListBox.Location.X,
@@ -160,6 +160,7 @@ namespace WeSay.LexicalTools
 
 			this._btnFind.Left = this._writingSystemChooser.Left - this._btnFind.Width;
 			this._findText.Width = this._btnFind.Left - this._findText.Left;
+			this._findText.PopupWidth = this._recordsListBox.Width;
 		}
 
 		void OnCmWritingSystemClicked(object sender, EventArgs e)

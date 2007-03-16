@@ -52,7 +52,9 @@ namespace WeSay.UI
 		}
 
 		private IEnumerable<string> items = new Collection<string>();
-		public IEnumerable<string> Items
+	[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+	[Browsable(false)]
+	public IEnumerable<string> Items
 		{
 			get
 			{
@@ -69,7 +71,9 @@ namespace WeSay.UI
 		}
 
 		private AutoCompleteTriggerCollection triggers = new AutoCompleteTriggerCollection();
-		public AutoCompleteTriggerCollection Triggers
+	[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+	[Browsable(false)]
+	public AutoCompleteTriggerCollection Triggers
 		{
 			get
 			{
@@ -172,6 +176,9 @@ namespace WeSay.UI
 
 		public delegate IEnumerable<string> ItemFilterDelegate(string text, IEnumerable<string> items);
 		private ItemFilterDelegate _itemFilterDelegate;
+
+	  [Browsable(false)]
+	[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
 		public ItemFilterDelegate ItemFilterer
 		{
 			get
@@ -333,21 +340,29 @@ namespace WeSay.UI
 			{
 				case Keys.Up:
 				{
-					Mode = EntryMode.List;
+		  Mode = EntryMode.List;
 					if (this._list.SelectedIndex > 0)
 					{
 						this._list.SelectedIndex--;
 					}
-					return true;
+		  if (this._list.Visible == false)
+		  {
+			ShowList();
+		  }
+		  return true;
 				}
 				case Keys.Down:
 				{
-					Mode = EntryMode.List;
+		  Mode = EntryMode.List;
 					if (this._list.SelectedIndex < this._list.Items.Count - 1)
 					{
 						this._list.SelectedIndex++;
 					}
-					return true;
+		  if (this._list.Visible == false)
+		  {
+			ShowList();
+		  }
+		  return true;
 				}
 				default:
 				{

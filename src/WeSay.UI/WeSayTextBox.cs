@@ -68,6 +68,9 @@ namespace WeSay.UI
   //      }
 
 		[Browsable(false)]
+
+	  [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+
 		public WritingSystem WritingSystem
 		{
 			get

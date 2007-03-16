@@ -8,7 +8,6 @@ namespace WeSay.LexicalTools
 {
 	partial class EntryDetailControl
 	{
-		const int recordListBoxHeight = 120;
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
@@ -60,17 +59,17 @@ namespace WeSay.LexicalTools
 			//
 			// _entryDetailPanel
 			//
-			this.Control_EntryDetailPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+			this._entryDetailPanel.Anchor = ((System.Windows.Forms.AnchorStyles) ((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
 						| System.Windows.Forms.AnchorStyles.Left)
 						| System.Windows.Forms.AnchorStyles.Right)));
-			this.Control_EntryDetailPanel.AutoScroll = true;
-			this.Control_EntryDetailPanel.BackColor = System.Drawing.SystemColors.ActiveCaption;
-			this.Control_EntryDetailPanel.DataSource = null;
-			this.Control_EntryDetailPanel.Location = new System.Drawing.Point(126, 0);
-			this.Control_EntryDetailPanel.Name = "_entryDetailPanel";
-			this.Control_EntryDetailPanel.Size = new System.Drawing.Size(367, 127);
-			this.Control_EntryDetailPanel.TabIndex = 0;
-			this.Control_EntryDetailPanel.BackColor = WeSay.UI.DisplaySettings.Default.BackgroundColor;
+			this._entryDetailPanel.AutoScroll = true;
+			this._entryDetailPanel.BackColor = System.Drawing.SystemColors.ActiveCaption;
+			this._entryDetailPanel.DataSource = null;
+			this._entryDetailPanel.Location = new System.Drawing.Point(126, 0);
+			this._entryDetailPanel.Name = "_entryDetailPanel";
+			this._entryDetailPanel.Size = new System.Drawing.Size(367, 127);
+			this._entryDetailPanel.TabIndex = 0;
+			this._entryDetailPanel.BackColor = WeSay.UI.DisplaySettings.Default.BackgroundColor;
 
 			//
 			// _findWritingSystemId
@@ -137,7 +136,7 @@ namespace WeSay.LexicalTools
 						| System.Windows.Forms.AnchorStyles.Left)));
 			this._recordsListBox.Location = new System.Drawing.Point(3, 20);
 			this._recordsListBox.Name = "_recordsListBox";
-			this._recordsListBox.Size = new System.Drawing.Size(118, recordListBoxHeight);
+			this._recordsListBox.Size = new System.Drawing.Size(118, 120);
 			this._recordsListBox.TabIndex = 4;
 			//
 			// panel1
@@ -202,7 +201,7 @@ namespace WeSay.LexicalTools
 			this.BackColor = DisplaySettings.Default.BackgroundColor;
 			this.Controls.Add(this._recordsListBox);
 			this.Controls.Add(this.panel1);
-			this.Controls.Add(this.Control_EntryDetailPanel);
+			this.Controls.Add(this._entryDetailPanel);
 			this.Controls.Add(this._btnFind);
 			this.Controls.Add(this._findText);
 			this.Controls.Add(this._writingSystemChooser);
