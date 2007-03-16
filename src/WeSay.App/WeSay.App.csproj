@@ -37,9 +37,6 @@
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\ICSharpCode.SharpZipLib.dll</HintPath>
 	</Reference>
-	<Reference Include="LiftIO, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-	  <SpecificVersion>False</SpecificVersion>
-	</Reference>
 	<Reference Include="PicoContainer, Version=1.0.2412.18537, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\PicoContainer\PicoContainer.dll</HintPath>
@@ -89,6 +86,10 @@
 	</Compile>
   </ItemGroup>
   <ItemGroup>
+	<ProjectReference Include="..\..\lib\lift\LiftIO\LiftIO.csproj">
+	  <Project>{A3A7698C-790B-4139-95C8-60380AF35F9C}</Project>
+	  <Name>LiftIO</Name>
+	</ProjectReference>
 	<ProjectReference Include="..\LexicalModel\LexicalModel.csproj">
 	  <Project>{5F61C809-B6C0-4567-9603-B2198E1AD038}</Project>
 	  <Name>LexicalModel</Name>
