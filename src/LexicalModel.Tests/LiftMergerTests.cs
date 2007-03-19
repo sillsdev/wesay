@@ -1,17 +1,17 @@
 using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.IO;
 using LiftIO;
 using NUnit.Framework;
 using WeSay.Data;
+using WeSay.Foundation;
+using WeSay.Language;
 using WeSay.LexicalModel.Db4o_Specific;
 using WeSay.Project;
 
 namespace WeSay.LexicalModel.Tests
 {
 	[TestFixture]
-	public class LiftMergerTests : LiftIO.ILiftMergerTestSuite
+	public class LiftMergerTests : ILiftMergerTestSuite
 	{
 		private LiftMerger _merger;
 		protected Db4oDataSource _dataSource;
@@ -25,10 +25,16 @@ namespace WeSay.LexicalModel.Tests
 
 			_tempFile = Path.GetTempFileName();
 			_dataSource = new Db4oDataSource(_tempFile);
-			_entries = new WeSay.Data.Db4oRecordList<LexEntry>(_dataSource);
+			_entries = new Db4oRecordList<LexEntry>(_dataSource);
 			Db4oLexModelHelper.Initialize(_dataSource.Data);
 
 			_merger = new LiftMerger(_dataSource);
+		}
+
+		protected void RefreshEntriesList()
+		{
+			_entries.Dispose();
+			_entries = new Db4oRecordList<LexEntry>(_dataSource);
 		}
 
 		[TearDown]
@@ -43,11 +49,12 @@ namespace WeSay.LexicalModel.Tests
 		[Test]
 		public  void NewEntryWithGuid()
 		{
-
 			Extensible extensibleInfo = new Extensible();
 			extensibleInfo.Id = Guid.NewGuid().ToString();
 			LexEntry e= _merger.GetOrMakeEntry(extensibleInfo);
 			Assert.AreEqual(extensibleInfo.Id, e.Guid.ToString());
+			RefreshEntriesList();
+			Assert.AreEqual(1, _entries.Count);
 		}
 
 
@@ -73,9 +80,6 @@ namespace WeSay.LexicalModel.Tests
 			Assert.AreEqual(extensibleInfo.ModificationTime, e.ModificationTime);
 		}
 
-
-
-
 		[Test]
 		public  void NewEntryNoDatesUsesNow()
 		{
@@ -90,6 +94,7 @@ namespace WeSay.LexicalModel.Tests
 			return _merger.GetOrMakeEntry(extensibleInfo);
 		}
 
+
 		[Test]
 		public  void EntryGetsEmptyLexemeForm()
 		{
@@ -97,6 +102,120 @@ namespace WeSay.LexicalModel.Tests
 			_merger.MergeInLexemeForm(e, new SimpleMultiText());
 			Assert.AreEqual(0, e.LexicalForm.Count);
 		}
+
+		[Test]
+		public void EntryGetsNote()
+		{
+			LexEntry e = MakeSimpleEntry();
+			_merger.MergeInNote(e, null, MakeBasicSimpleMultiText());
+			AssertPropertyHasExpectedMultiText(e, WeSayDataObject.WellKnownProperties.Note);
+		}
+
+		[Test]
+		public void TypeOfNoteEmbedded()
+		{
+			LexEntry e = MakeSimpleEntry();
+			_merger.MergeInNote(e, "red", MakeBasicSimpleMultiText());
+			MultiText mt = e.GetProperty<MultiText>(WeSayDataObject.WellKnownProperties.Note);
+			Assert.AreEqual("(red) uno", mt["ws-one"]);
+			Assert.AreEqual("(red) dos", mt["ws-two"]);
+		}
+
+		[Test]
+		public void SenseGetsGrammi()
+		{
+			LexSense sense = new LexSense();
+			_merger.MergeInGrammaticalInfo(sense, "red");
+			OptionRef optionRef = sense.GetProperty<OptionRef>(LexSense.WellKnownProperties.PartOfSpeech);
+			Assert.IsNotNull(optionRef);
+			Assert.AreEqual("red", optionRef.Value);
+		}
+
+		[Test]
+		public void SenseGetsExample()
+		{
+			LexSense sense = new LexSense();
+			Extensible x = new Extensible();
+			LexExampleSentence ex = _merger.GetOrMakeExample(sense, x);
+			Assert.IsNotNull(ex);
+			_merger.MergeInExampleForm(ex, MakeBasicSimpleMultiText());
+			Assert.AreEqual(2, ex.Sentence.Forms.Length);
+			Assert.AreEqual("dos", ex.Sentence["ws-two"]);
+		}
+
+		[Test, Ignore("waiting on lift model discussion")]
+		public void ExampleSourcePreserved()
+		{
+			LexExampleSentence ex = new LexExampleSentence();
+			_merger.MergeInExampleForm(ex, MakeBasicSimpleMultiText());//, "fred");
+
+//            Assert.AreEqual(2, ex.GetProperty<String>(LexExampleSentence.WellKnownProperties.Source));
+//            Assert.AreEqual("dos", ex.Sentence["ws-two"]);
+		}
+
+		[Test]
+		public void SenseGetsDef()
+		{
+			LexSense sense = new LexSense();
+			_merger.MergeInDefinition(sense, MakeBasicSimpleMultiText());
+			AssertPropertyHasExpectedMultiText(sense, WeSayDataObject.WellKnownProperties.Note);
+		}
+
+		[Test]
+		public void SenseGetsNote()
+		{
+			LexSense sense = new LexSense();
+			_merger.MergeInNote(sense, null, MakeBasicSimpleMultiText());
+			AssertPropertyHasExpectedMultiText(sense, WeSayDataObject.WellKnownProperties.Note);
+		}
+
+		[Test]
+		public void MultipleNotesCombined()
+		{
+			LexSense sense = new LexSense();
+			_merger.MergeInNote(sense, null, MakeBasicSimpleMultiText());
+			SimpleMultiText secondNote = new SimpleMultiText();
+			secondNote.Add("ws-one", "UNO");
+			secondNote.Add("ws-three", "tres");
+			_merger.MergeInNote(sense, null, secondNote);
+
+			MultiText mt = sense.GetProperty<MultiText>(LexSense.WellKnownProperties.Note);
+			Assert.AreEqual(3, mt.Forms.Length);
+			Assert.AreEqual("uno; UNO", mt["ws-one"]);
+		}
+
+		[Test]
+		public void MultipleGlossesCombined()
+		{
+			LexSense sense = new LexSense();
+			_merger.MergeInGloss(sense, MakeBasicSimpleMultiText());
+			SimpleMultiText secondGloss = new SimpleMultiText();
+			secondGloss.Add("ws-one", "UNO");
+			secondGloss.Add("ws-three", "tres");
+			_merger.MergeInGloss(sense, secondGloss);
+
+			MultiText mt = sense.GetProperty<MultiText>(LexSense.WellKnownProperties.Note);
+			Assert.AreEqual(3, sense.Gloss.Forms.Length);
+			Assert.AreEqual("uno; UNO", sense.Gloss["ws-one"]);
+		}
+
+		private static void AssertPropertyHasExpectedMultiText(WeSayDataObject dataObject, string name)
+		{
+			//must match what is created by MakeBasicSimpleMultiText()
+			MultiText mt = dataObject.GetProperty<MultiText>(name);
+			Assert.AreEqual(2, mt.Forms.Length);
+			Assert.AreEqual("dos", mt["ws-two"]);
+		}
+
+		private static SimpleMultiText MakeBasicSimpleMultiText()
+		{
+			SimpleMultiText forms = new SimpleMultiText();
+			forms.Add("ws-one", "uno");
+			forms.Add("ws-two", "dos");
+			return forms;
+		}
+
+
 
 		#region ILiftMergerTestSuite Members
 
@@ -152,12 +271,22 @@ namespace WeSay.LexicalModel.Tests
 			Extensible extensibleInfo = CreateFullextensibleInfo(g);
 
 			LexEntry e = new LexEntry(g);
+			e.Senses.AddNew();
+			e.Senses.AddNew();
 			e.CreationTime = extensibleInfo.CreationTime;
 			e.ModificationTime = new DateTime(e.CreationTime.Ticks + 100, DateTimeKind.Utc);
 			_entries.Add(e);
 
 			LexEntry found = _merger.GetOrMakeEntry(extensibleInfo);
-			Assert.AreEqual(extensibleInfo.CreationTime, found.CreationTime);
+			Assert.AreSame(found, e);
+			Assert.AreEqual(2, found.Senses.Count);
+
+			//this is a temp side track
+			Assert.AreEqual(1, _entries.Count);
+			Extensible xInfo = CreateFullextensibleInfo(Guid.NewGuid());
+			LexEntry x = _merger.GetOrMakeEntry(xInfo);
+			RefreshEntriesList();
+			Assert.AreEqual(2, _entries.Count);
 		}
 
 		[Test]
@@ -222,6 +351,75 @@ namespace WeSay.LexicalModel.Tests
 			extensibleInfo = AddDates(extensibleInfo);
 			return extensibleInfo;
 		}
+
+
+		[Test]
+		public void ExpectedAtomicTraitOnEntry()
+		{
+			_merger.ExpectedOptionTraits.Add("flub");
+			LexEntry e = this.MakeSimpleEntry();
+			_merger.MergeInTrait(e, "flub", "dub", null);
+			Assert.AreEqual(1, e.Properties.Count);
+			Assert.AreEqual("flub", e.Properties[0].Key);
+			OptionRef option = e.GetProperty<OptionRef>("flub");
+			Assert.AreEqual("dub", option.Value);
+		}
+
+		[Test]
+		public void UnexpectedAtomicTraitDropped()
+		{
+			LexEntry e = this.MakeSimpleEntry();
+			_merger.MergeInTrait(e, "flub", "dub", null);
+			Assert.AreEqual(0, e.Properties.Count);
+		}
+
+		[Test]
+		public void ExpectedCollectionTrait()
+		{
+			_merger.ExpectedOptionCollectionTraits.Add("flub");
+			LexEntry e = this.MakeSimpleEntry();
+			_merger.MergeInTrait(e, "flub", "dub", null);
+			_merger.MergeInTrait(e, "flub", "stub", null);
+			Assert.AreEqual(1, e.Properties.Count);
+			Assert.AreEqual("flub", e.Properties[0].Key);
+			OptionRefCollection options = e.GetProperty<OptionRefCollection>("flub");
+			Assert.AreEqual(2, options.Keys.Count);
+			Assert.AreEqual("dub", options.Keys[0]);
+			Assert.AreEqual("stub", options.Keys[1]);
+		}
+
+		[Test]
+		public void UnexpectedAtomicCollectionDropped()
+		{
+			LexEntry e = this.MakeSimpleEntry();
+			_merger.MergeInTrait(e, "flub", "dub", null);
+			_merger.MergeInTrait(e, "flub", "stub", null);
+			Assert.AreEqual(0, e.Properties.Count);
+		}
+
+		[Test]
+		public void ExpectedCustomField()
+		{
+			LexEntry e = this.MakeSimpleEntry();
+			SimpleMultiText t = new SimpleMultiText();
+			t["z"] = "dub";
+			_merger.MergeInField(e, "flub", default(DateTime), default(DateTime), t);
+			Assert.AreEqual(1, e.Properties.Count);
+			Assert.AreEqual("flub", e.Properties[0].Key);
+			MultiText mt = e.GetProperty<MultiText>("flub");
+			Assert.AreEqual("dub", mt["z"]);
+		}
+
+		[Test, Ignore("doesn't drop yet")]
+		public void UnexpectedCustomFieldDropped()
+		{
+			LexEntry e = this.MakeSimpleEntry();
+			_merger.MergeInTrait(e, "flub", "dub", null);
+			_merger.MergeInTrait(e, "flub", "stub", null);
+			Assert.AreEqual(0, e.Properties.Count);
+		}
+
+
 	}
 
 }
