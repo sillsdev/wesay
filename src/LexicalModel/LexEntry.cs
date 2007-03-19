@@ -21,6 +21,11 @@ namespace WeSay.LexicalModel
 		private DateTime _creationTime;
 		private DateTime _modificationTime;
 
+		public class WellKnownProperties
+		{
+			//static public string Citation = "cit";
+		} ;
+
 		public LexEntry(): base(null)
 		{
 			Init(Guid.NewGuid());

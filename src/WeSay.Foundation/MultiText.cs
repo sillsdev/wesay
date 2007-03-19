@@ -409,6 +409,22 @@ namespace WeSay.Language
 			return GetFirstAlternative();
 		}
 
+		public void MergeInWithAppend(MultiText incoming, string separator)
+		{
+			foreach (LanguageForm form in incoming)
+			{
+				LanguageForm f = this.Find(form.WritingSystemId);
+				if (f != null)
+				{
+					f.Form += separator + form.Form;
+				}
+				else
+				{
+					this.AddLanguageForm(form); //this actually copies the meat of the form
+				}
+			}
+		}
+
 		public void MergeIn(MultiText incoming)
 		{
 			foreach (LanguageForm  form in incoming)

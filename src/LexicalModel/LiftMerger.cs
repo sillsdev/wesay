@@ -1,6 +1,9 @@
 using System;
+using System.Collections.Generic;
 using LiftIO;
 using WeSay.Data;
+using WeSay.Foundation;
+using WeSay.Foundation.Progress;
 using WeSay.Language;
 using WeSay.LexicalModel.Db4o_Specific;
 
@@ -12,16 +15,21 @@ namespace WeSay.LexicalModel
 	///
 	/// NB: this doesn't yet merge (dec 2006). Just blindly adds.
 	/// </summary>
-	public class LiftMerger : ILexiconMerger<LexEntry,LexSense,LexExampleSentence>, IDisposable
+	public class LiftMerger : ILexiconMerger<WeSay.Foundation.WeSayDataObject, LexEntry,LexSense,LexExampleSentence>, IDisposable
 	{
 		private Db4oDataSource _dataSource;
-		private WeSay.Data.Db4oRecordList<LexEntry> _entries;
-
+	   // private WeSay.Data.Db4oRecordList<LexEntry> _entries;
+		private IList<String> _expectedOptionTraits;
+		private IList<string> _expectedOptionCollectionTraits;
+//        private ProgressState _progressState = new NullProgressState();
 
 		public LiftMerger(Db4oDataSource dataSource)
 		{
 			_dataSource = dataSource;
-			_entries = new WeSay.Data.Db4oRecordList<LexEntry>(_dataSource);
+//            _entries = new WeSay.Data.Db4oRecordList<LexEntry>(_dataSource);
+//            _entries.WriteCacheSize = 0;
+			_expectedOptionTraits = new List<string>();
+			_expectedOptionCollectionTraits = new List<string>();
 		}
 
 		public LexEntry GetOrMakeEntry(Extensible eInfo)
@@ -41,20 +49,30 @@ namespace WeSay.LexicalModel
 			if (entry == null)
 			{
 				entry = new LexEntry(guid);
+				_dataSource.Data.Set(entry);
 			}
 
-			if (eInfo.CreationTime > DateTime.MinValue)
+			if (eInfo.CreationTime != default(DateTime))
 			{
 				entry.CreationTime = eInfo.CreationTime;
 			}
 
-			if (eInfo.ModificationTime > DateTime.MinValue)
+			if (eInfo.ModificationTime != default(DateTime))
 			{
 				entry.ModificationTime = eInfo.ModificationTime;
 			}
 
 			return entry;
 		}
+
+		#region ILexiconMerger<WeSayDataObject,LexEntry,LexSense,LexExampleSentence> Members
+
+		public LexEntry EntryWasDeleted(Extensible info, DateTime dateDeleted)
+		{
+			throw new NotImplementedException();
+		}
+
+		#endregion
 
 		private static bool CanSafelyPruneMerge(Extensible eInfo, LexEntry entry)
 		{
@@ -98,10 +116,10 @@ namespace WeSay.LexicalModel
 
 		public void MergeInGloss(LexSense sense, SimpleMultiText forms)
 		{
-			MergeIn(sense.Gloss, forms);
+		   sense.Gloss.MergeInWithAppend(MultiText.Create(forms), "; ");
 		}
 
-		public void MergeInExampleForm(LexExampleSentence example, SimpleMultiText forms)
+		public void MergeInExampleForm(LexExampleSentence example, SimpleMultiText forms)//, string optionalSource)
 		{
 			MergeIn(example.Sentence, forms);
 		}
@@ -111,19 +129,119 @@ namespace WeSay.LexicalModel
 			MergeIn(example.Translation, forms);
 		}
 
-		public void MergeInDefinition(LexSense sense, SimpleMultiText simpleMultiText)
+		public void MergeInDefinition(LexSense sense, SimpleMultiText contents)
 		{
-			throw new NotImplementedException();
+			AddOrAppendMultiTextProperty(sense, contents, LexSense.WellKnownProperties.Note);
 		}
+
+		/// <summary>
+		/// Handle LIFT's "note" entity
+		/// </summary>
+		public void MergeInNote(WeSayDataObject extensible, string type, SimpleMultiText contents)
+		{
+			if (type != null && type != string.Empty)
+			{
+				List<String> keys = new List<string>(contents.Count);
+				foreach (KeyValuePair<string, string> pair in contents)
+				{
+					keys.Add(pair.Key);
+				}
+				foreach (string s in keys)
+				{
+					contents.Prepend(s, "(" + type + ") ");
+				}
+			}
+			AddOrAppendMultiTextProperty(extensible, contents, WeSayDataObject.WellKnownProperties.Note);
+		}
+
+		public void MergeInGrammaticalInfo(LexSense sense, string val)
+		{
+			OptionRef o = sense.GetOrCreateProperty<OptionRef>(LexSense.WellKnownProperties.PartOfSpeech);
+			o.Value = val;
+		}
+
+		private static void AddOrAppendMultiTextProperty(WeSayDataObject dataObject, SimpleMultiText contents, string propertyName)
+		{
+			MultiText mt = dataObject.GetOrCreateProperty<MultiText>(propertyName);
+			mt.MergeInWithAppend(MultiText.Create(contents), "; ");
+			//dataObject.GetOrCreateProperty<string>(propertyName) mt));
+		}
+
+		private static void AddMultiTextProperty(WeSayDataObject dataObject, SimpleMultiText contents, string propertyName)
+		{
+			dataObject.Properties.Add(
+				new KeyValuePair<string, object>(propertyName,
+												 MultiText.Create(contents)));
+		}
+
+		/// <summary>
+		/// Handle LIFT's "field" entity which can be found on any subclass of "extensible"
+		/// </summary>
+		public void MergeInField(WeSayDataObject extensible, string tagAttribute, DateTime dateCreated,
+								 DateTime dateModified, SimpleMultiText contents)
+		{
+			MultiText t = MultiText.Create(contents);
+			extensible.Properties.Add(new KeyValuePair<string, object>(tagAttribute, t));
+		}
+
+		/// <summary>
+		/// Handle LIFT's "trait" entity,
+		/// which can be found on any subclass of "extensible", on any "field", and as
+		/// a subclass of "annotation".
+		/// </summary>
+		public void MergeInTrait(WeSayDataObject extensible, string name, string valueAttribute, string optionalId)
+		{
+				if (name != null && ExpectedOptionTraits.Contains(name))
+				{
+					OptionRef o = extensible.GetOrCreateProperty<OptionRef>(name);
+					o.Value = valueAttribute;
+				}
+				else if (name != null && ExpectedOptionCollectionTraits.Contains(name))
+				{
+					OptionRefCollection c = extensible.GetOrCreateProperty<OptionRefCollection>(name);
+					c.Keys.Add(valueAttribute);
+				}
+				else
+				{
+					//"log skipping..."
+					//log optionalId
+				}
+		}
+
+		public IList<string> ExpectedOptionTraits
+		{
+			get
+			{
+				return _expectedOptionTraits;
+			}
+		}
+
+		public IList<string> ExpectedOptionCollectionTraits
+		{
+			get
+			{
+				return _expectedOptionCollectionTraits;
+			}
+		}
+
+//        public ProgressState ProgressState
+//        {
+//            set
+//            {
+//                _progressState = value;
+//            }
+//        }
+
 
 		private static void MergeIn(MultiText multiText, SimpleMultiText forms)
 		{
+
 			multiText.MergeIn(MultiText.Create(forms));
 		}
 
 		 public void Dispose()
 		{
-			 _entries.Dispose();
+			 //_entries.Dispose();
 		}
 	}
 }

@@ -4,10 +4,16 @@ using WeSay.Language;
 
 namespace WeSay.LexicalModel
 {
-	sealed public class LexSense : WeSayDataObject
+	public sealed class LexSense : WeSayDataObject
 	{
 		private SenseGlossMultiText _gloss;
 		private WeSay.Data.InMemoryBindingList<LexExampleSentence> _exampleSentences;
+
+		new public class WellKnownProperties : WeSayDataObject.WellKnownProperties
+		{
+			static public string PartOfSpeech = "pos";
+			static public string Definition = "def";
+		} ;
 
 		public LexSense(WeSayDataObject parent)
 			: base(parent)

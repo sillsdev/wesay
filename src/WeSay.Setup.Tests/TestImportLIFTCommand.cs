@@ -12,10 +12,10 @@ namespace WeSay.Setup.Tests
 	[TestFixture]
 	public class TestImportLIFTCommand
 	{
-		private string _outputPath;
+		private string _outputDb4oPath;
 		private string _sourcePath;
 		private ProgressDialogHandler _progressHandler;
-		private ImportLIFTCommand _command;
+		private ImportLIFTCommand _importCommand;
 		private bool _finished;
 		private ProgressState _progress;
 		private string _backupPath;
@@ -24,14 +24,14 @@ namespace WeSay.Setup.Tests
 		public void Setup()
 		{
 			WeSay.Project.WeSayWordsProject.InitializeForTests();
-			_outputPath = Path.GetTempFileName();
+			_outputDb4oPath = Path.GetTempFileName();
 			_sourcePath = Path.GetTempFileName();
-			_command = new ImportLIFTCommand(_outputPath, _sourcePath);
-			_progressHandler = new ProgressDialogHandler(new System.Windows.Forms.Form(), _command);
+			_importCommand = new ImportLIFTCommand(_outputDb4oPath, _sourcePath);
+			_progressHandler = new ProgressDialogHandler(new System.Windows.Forms.Form(), _importCommand);
 			_progressHandler.Finished += new EventHandler(_progressHandler_Finished);
 			_progress = new ProgressState(_progressHandler);
 			_finished=false;
-			_backupPath = _outputPath + ".bak";
+			_backupPath = _outputDb4oPath + ".bak";
 
 		}
 
@@ -44,7 +44,7 @@ namespace WeSay.Setup.Tests
 		public void TearDown()
 		{
 			_progress.Dispose();
-			File.Delete(_outputPath);
+			File.Delete(_outputDb4oPath);
 			File.Delete(_sourcePath);
 			string dirToEmptyOfBackupDirs = Directory.GetParent(WeSay.Project.WeSayWordsProject.Project.PathToLiftBackupDir).FullName;
 			string[] backUpDirs = Directory.GetDirectories(dirToEmptyOfBackupDirs, "*incremental*");
@@ -59,9 +59,9 @@ namespace WeSay.Setup.Tests
 		{
 			File.WriteAllText(_sourcePath, "<?xml version='1.0' encoding='utf-8'?><lift/>");
 
-			_command.BeginInvoke(_progress);
+			_importCommand.BeginInvoke(_progress);
 			WaitForFinish();
-			Assert.IsTrue(File.ReadAllText(_outputPath).Length > 10);
+			Assert.IsTrue(File.ReadAllText(_outputDb4oPath).Length > 10);
 		}
 
 		[Test]
@@ -74,7 +74,7 @@ namespace WeSay.Setup.Tests
 		[Test]
 		public void OkIfHasExistingDbToBackup()
 		{
-			File.WriteAllText(_outputPath, "old current");
+			File.WriteAllText(_outputDb4oPath, "old current");
 			File.Delete(_backupPath);
 			MakeBackupOfExistingDBCore(_backupPath);
 			Assert.IsTrue(File.Exists(_backupPath));
@@ -84,8 +84,9 @@ namespace WeSay.Setup.Tests
 		[Test]
 		public void OkIfHasExistingBackupToRemoveFirst()
 		{
+
 			File.WriteAllText(_backupPath, "old backup");
-			File.WriteAllText(_outputPath, "old current");
+			File.WriteAllText(_outputDb4oPath, "old current");
 			MakeBackupOfExistingDBCore(_backupPath);
 			Assert.IsTrue(File.Exists(_backupPath));
 			Assert.IsTrue(File.ReadAllText(_backupPath) == "old current");
@@ -103,7 +104,7 @@ namespace WeSay.Setup.Tests
 		private void MakeBackupOfExistingDBCore(string backupPath)
 		{
 			File.WriteAllText(_sourcePath, "<?xml version='1.0' encoding='utf-8'?><lift/>");
-			_command.BeginInvoke(_progress);
+			_importCommand.BeginInvoke(_progress);
 			WaitForFinish();
 		}
 
@@ -128,7 +129,7 @@ namespace WeSay.Setup.Tests
 			File.WriteAllText(deleteThisGuy,"doesn't matter");
 			File.WriteAllText(_sourcePath, "<?xml version='1.0' encoding='utf-8'?><lift/>");
 
-			_command.BeginInvoke(_progress);
+			_importCommand.BeginInvoke(_progress);
 			WaitForFinish();
 			Assert.IsFalse(File.Exists(deleteThisGuy));
 	   }

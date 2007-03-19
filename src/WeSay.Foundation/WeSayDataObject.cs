@@ -17,6 +17,11 @@ namespace WeSay.Foundation
 
 	public abstract class WeSayDataObject : INotifyPropertyChanged
 	{
+		public class WellKnownProperties
+		{
+			static public string Note = "note";
+		} ;
+
 		/// <summary>
 		/// For INotifyPropertyChanged
 		/// </summary>

@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Xml;
+using LiftIO;
 using WeSay.Data;
 using WeSay.Foundation;
 using WeSay.Foundation.Progress;
@@ -13,7 +14,7 @@ namespace WeSay
 	{
 		protected string _destinationDatabasePath;
 		protected string _sourceLIFTPath;
-		private LiftImporter _importer;
+		//private LiftImporter _importer;
 		protected WeSay.Foundation.Progress.ProgressState _progress;
 
 		public ImportLIFTCommand(string destinationDatabasePath, string sourceLIFTPath)
@@ -30,9 +31,9 @@ namespace WeSay
 			string tempTarget = Path.GetTempFileName();
 			using (Db4oDataSource ds = new WeSay.Data.Db4oDataSource(tempTarget))
 			{
-				using (Db4oRecordList<LexEntry> entries = new Db4oRecordList<LexEntry>(ds))
-				{
-					entries.WriteCacheSize = 0; // don't commit all the time.
+//                using (Db4oRecordList<LexEntry> entries = new Db4oRecordList<LexEntry>(ds))
+//                {
+//                    entries.WriteCacheSize = 0; // don't commit all the time.
 					if (Db4oLexModelHelper.Singleton == null)
 					{
 						Db4oLexModelHelper.Initialize(ds.Data);
@@ -40,21 +41,41 @@ namespace WeSay
 
 					XmlDocument doc = new XmlDocument();
 					doc.Load(_sourceLIFTPath);
-					_importer = LiftImporter.CreateCorrectImporter(doc);
+				using(LiftMerger merger = new LiftMerger(ds))
+				{
+				   // _importer = LiftImporter.CreateCorrectImporter(doc);
 
 					foreach (string name in WeSay.Project.WeSayWordsProject.Project.OptionFieldNames)
 					{
-						_importer.ExpectedOptionTraits.Add(name);
+						merger.ExpectedOptionTraits.Add(name);
+						//_importer.ExpectedOptionTraits.Add(name);
 					}
 					foreach (string name in WeSay.Project.WeSayWordsProject.Project.OptionCollectionFieldNames)
 					{
-						_importer.ExpectedOptionCollectionTraits.Add(name);
+						merger.ExpectedOptionCollectionTraits.Add(name);
+						// _importer.ExpectedOptionCollectionTraits.Add(name);
 					}
-					_importer.Progress = progress;
-					_importer.ReadFile(doc, entries);
+					//  merger.ProgressState = progress;
+					// _importer.Progress = progress;
+					//_importer.ReadFile(doc, entries);
+
+
+					LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence> parser =
+						new LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence>(merger);
+
+					parser.SetTotalNumberSteps +=
+						new EventHandler<LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence>.StepsArgs>(
+							parser_SetTotalNumberSteps);
+					parser.SetStepsCompleted +=
+						new EventHandler
+							<LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence>.ProgressEventArgs>(
+							parser_SetStepsCompleted);
+					parser.ReadFile(doc);
+
+					//               }
 				}
 			}
-			ClearTheIncrementalBackupDirectory();
+		  ClearTheIncrementalBackupDirectory();
 
 			//if we got this far without an error, move it
 			string backupPath = _destinationDatabasePath + ".bak";
@@ -67,6 +88,16 @@ namespace WeSay
 			{
 				File.Move(tempTarget, _destinationDatabasePath);
 			}
+		}
+
+		void parser_SetStepsCompleted(object sender, LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence>.ProgressEventArgs e)
+		{
+			_progress.NumberOfStepsCompleted = e.Progress;
+		}
+
+		void parser_SetTotalNumberSteps(object sender, LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence>.StepsArgs e)
+		{
+			_progress.NumberOfSteps = e.Steps;
 		}
 
 		/*public for unit-tests */

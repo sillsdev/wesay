@@ -9,6 +9,12 @@ namespace WeSay.LexicalModel
 		private MultiText _sentence;
 		private MultiText _translation;
 
+
+		new public class WellKnownProperties : WeSayDataObject.WellKnownProperties
+		{
+			static public string Source = "source";
+		} ;
+
 		public LexExampleSentence(WeSayDataObject parent)
 			: base(parent)
 		{
