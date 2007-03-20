@@ -88,6 +88,38 @@
 	  </fields>
 	  <id>Default View Template</id>
 	</viewTemplate>
+	<viewTemplate>
+	  <fields>
+		<field>
+		  <className>LexExampleSentence</className>
+		  <dataType>MultiText</dataType>
+		  <displayName>Example Sentence</displayName>
+		  <fieldName>ExampleSentence</fieldName>
+		  <multiplicity>ZeroOr1</multiplicity>
+		  <visibility>Visible</visibility>
+		  <writingSystems>
+			<id>th</id>
+		  </writingSystems>
+		</field>
+	  </fields>
+	  <id>Thai Example View Template</id>
+	</viewTemplate>
+	<viewTemplate>
+	  <fields>
+		<field>
+		  <className>LexExampleSentence</className>
+		  <dataType>MultiText</dataType>
+		  <displayName>Example Sentence</displayName>
+		  <fieldName>ExampleSentence</fieldName>
+		  <multiplicity>ZeroOr1</multiplicity>
+		  <visibility>Visible</visibility>
+		  <writingSystems>
+			<id>*V*</id>
+		  </writingSystems>
+		</field>
+	  </fields>
+	  <id>V Example View Template</id>
+	</viewTemplate>
   </components>
   <task id="Dashboard" class="WeSay.CommonTools.DashboardControl" assembly="CommonTools" default="true">
 	<entries ref="All Entries" />
@@ -113,21 +145,48 @@
 	<viewTemplate ref="Default View Template" />
 	<showfields>SenseGloss</showfields>
   </task>
-  <task id="AddExamples" class="WeSay.LexicalTools.LexFieldTask" assembly="LexicalTools">
+  <task id="AddPOS" class="WeSay.LexicalTools.LexFieldTask" assembly="LexicalTools" default="true">
 	<entries ref="All Entries" />
 	<filter class="WeSay.LexicalTools.MissingItemFilter" assembly="LexicalTools">
 	  <viewTemplate ref="Default View Template" />
+	  <field>PartOfSpeech</field>
+	</filter>
+	<label>Add Part of Speech</label>
+	<description>Add part of speech to entries where they are missing.</description>
+	<viewTemplate ref="Default View Template" />
+	<showfields>PartOfSpeech</showfields>
+  </task>
+
+  <task id="AddThaiExamples" class="WeSay.LexicalTools.LexFieldTask" assembly="LexicalTools">
+	<entries ref="All Entries" />
+	<filter class="WeSay.LexicalTools.MissingItemFilter" assembly="LexicalTools">
+	  <viewTemplate ref="Thai Example View Template" />
 	  <field>ExampleSentence</field>
 	</filter>
-	<label>Add Examples</label>
-	<description>Add example sentences to entries where they are missing.</description>
-	<viewTemplate ref="Default View Template" />
+	<label>Add Examples in Thai</label>
+	<description>Add example sentences in Thai to entries where they are missing.</description>
+	<viewTemplate ref="Thai Example View Template" />
 	<showfields>ExampleSentence</showfields>
   </task>
+
+  <task id="AddVExamples" class="WeSay.LexicalTools.LexFieldTask" assembly="LexicalTools">
+	<entries ref="All Entries" />
+	<filter class="WeSay.LexicalTools.MissingItemFilter" assembly="LexicalTools">
+	  <viewTemplate ref="V Example View Template" />
+	  <field>ExampleSentence</field>
+	</filter>
+	<label>Add Examples in V</label>
+	<description>Add example sentences in V to entries where they are missing.</description>
+	<viewTemplate ref="V Example View Template" />
+	<showfields>ExampleSentence</showfields>
+  </task>
+
   <task id="Gather Words" class="WeSay.LexicalTools.GatherWordListTask" assembly="LexicalTools">
 	<entries ref="All Entries" />
 	<label>Collect Word List</label>
 	<description>Collect new words given words in another language.</description>
 	<wordListFileName>sampleWordList.txt</wordListFileName>
+	<wordListWritingSystemId>en</wordListWritingSystemId>
+	<viewTemplate ref="Default View Template" />
   </task>
 </tasks>

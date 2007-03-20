@@ -45,7 +45,7 @@ namespace WeSay.App
 					template.LoadFromString(component.OuterXml);
 					_picoContext.RegisterComponentInstance(template.Id, template);
 				}
-				Debug.Assert(hasviewTemplate, "Currently, there must be exactly 1 viewTemplate in the tasks.xml");
+				Debug.Assert(hasviewTemplate, "Currently, there must be at least 1 viewTemplate in the tasks.xml");
 			}
 		}
 
