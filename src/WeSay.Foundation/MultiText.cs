@@ -182,7 +182,7 @@ namespace WeSay.Language
 				{
 					if (alt.Form == String.Empty)   //non-starred and empty? Nuke it.
 					{
-						this.RemoveLanguageForm(alt);
+						RemoveLanguageForm(alt);
 					}
 					else
 					{

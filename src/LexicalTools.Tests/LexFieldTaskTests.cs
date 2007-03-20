@@ -28,8 +28,8 @@ namespace WeSay.LexicalTools.Tests
 			BasilProject.InitializeForTests();
 
 			this._recordListManager = new InMemoryRecordListManager();
-			Field field = new Field(Field.FieldNames.SenseGloss.ToString() , new string[]{BasilProject.Project.WritingSystems.TestGetWritingSystemVern.Id});
-			this._filter = new MissingGlossFilter(field);
+			Field field = new Field(Field.FieldNames.SenseGloss.ToString(),"LexSense" , new string[]{BasilProject.Project.WritingSystems.TestGetWritingSystemVern.Id});
+			this._filter = new MissingItemFilter(field);
 			this._recordListManager.Register<LexEntry>(_filter);
 
 			LexEntry entry = new LexEntry();
@@ -43,8 +43,8 @@ namespace WeSay.LexicalTools.Tests
 			this._description = "My description";
 
 			this._viewTemplate = new ViewTemplate();
-			this._viewTemplate.Add(new Field(Field.FieldNames.SenseGloss.ToString(), new string[] { "en" }));
-			this._viewTemplate.Add(new Field(Field.FieldNames.ExampleSentence.ToString(), new string[] { "th" }));
+			this._viewTemplate.Add(new Field(Field.FieldNames.SenseGloss.ToString(), "LexSense",new string[] { "en" }));
+			this._viewTemplate.Add(new Field(Field.FieldNames.ExampleSentence.ToString(), "LexExampleSentence",new string[] { "th" }));
 
 			this._task = new LexFieldTask(_recordListManager, _filter, _label, _description, _viewTemplate, _fieldsToShow);
 
@@ -141,9 +141,9 @@ namespace WeSay.LexicalTools.Tests
 		{
 			ViewTemplate viewTemplate = new ViewTemplate();
 			string[] writingSystemIds = new string[] {"en"};
-			viewTemplate.Add(new Field("Single", writingSystemIds));
-			viewTemplate.Add(new Field("SingleField", writingSystemIds));
-			viewTemplate.Add(new Field("Field", writingSystemIds));
+			viewTemplate.Add(new Field("Single", "LexSense", writingSystemIds));
+			viewTemplate.Add(new Field("SingleField", "LexSense", writingSystemIds));
+			viewTemplate.Add(new Field("Field", "LexSense", writingSystemIds));
 
 			LexFieldTask task = new LexFieldTask(_recordListManager, _filter, _label, _description, viewTemplate, "Single");
 			Assert.AreEqual(true, task.ViewTemplate.Contains("Single"));
@@ -156,9 +156,9 @@ namespace WeSay.LexicalTools.Tests
 		{
 			ViewTemplate viewTemplate = new ViewTemplate();
 			string[] writingSystemIds = new string[] { "en" };
-			viewTemplate.Add(new Field("First", writingSystemIds));
-			viewTemplate.Add(new Field("Second", writingSystemIds));
-			viewTemplate.Add(new Field("FirstSecond", writingSystemIds));
+			viewTemplate.Add(new Field("First", "LexSense", writingSystemIds));
+			viewTemplate.Add(new Field("Second", "LexSense", writingSystemIds));
+			viewTemplate.Add(new Field("FirstSecond", "LexSense", writingSystemIds));
 
 			LexFieldTask task = new LexFieldTask(_recordListManager, _filter, _label, _description, viewTemplate, "First Second");
 			Assert.AreEqual(true, task.ViewTemplate.Contains("First"));
@@ -171,12 +171,12 @@ namespace WeSay.LexicalTools.Tests
 		{
 			ViewTemplate viewTemplate = new ViewTemplate();
 			string[] writingSystemIds = new string[] { "en" };
-			viewTemplate.Add(new Field("First", writingSystemIds));
-			viewTemplate.Add(new Field("Second", writingSystemIds));
-			viewTemplate.Add(new Field("Third", writingSystemIds));
-			viewTemplate.Add(new Field("FirstSecond", writingSystemIds));
-			viewTemplate.Add(new Field("SecondThird", writingSystemIds));
-			viewTemplate.Add(new Field("FirstSecondThird", writingSystemIds));
+			viewTemplate.Add(new Field("First", "LexSense", writingSystemIds));
+			viewTemplate.Add(new Field("Second", "LexSense", writingSystemIds));
+			viewTemplate.Add(new Field("Third", "LexSense", writingSystemIds));
+			viewTemplate.Add(new Field("FirstSecond", "LexSense", writingSystemIds));
+			viewTemplate.Add(new Field("SecondThird", "LexSense", writingSystemIds));
+			viewTemplate.Add(new Field("FirstSecondThird", "LexSense", writingSystemIds));
 
 			LexFieldTask task = new LexFieldTask(_recordListManager, _filter, _label, _description, viewTemplate, "First Second Third");
 			Assert.AreEqual(true, task.ViewTemplate.Contains("First"));
@@ -191,8 +191,8 @@ namespace WeSay.LexicalTools.Tests
 		{
 			ViewTemplate viewTemplate = new ViewTemplate();
 			string[] writingSystemIds = new string[] { "en" };
-			viewTemplate.Add(new Field("Dummy", writingSystemIds));
-			viewTemplate.Add(new Field("PrefixDummy", writingSystemIds));
+			viewTemplate.Add(new Field("Dummy", "LexSense", writingSystemIds));
+			viewTemplate.Add(new Field("PrefixDummy", "LexSense", writingSystemIds));
 
 			LexFieldTask task = new LexFieldTask(_recordListManager, _filter, _label, _description, viewTemplate, "PrefixDummy Dummy");
 			Assert.AreEqual(true, task.ViewTemplate.Contains("Dummy"));
@@ -204,8 +204,8 @@ namespace WeSay.LexicalTools.Tests
 		{
 			ViewTemplate viewTemplate = new ViewTemplate();
 			string[] writingSystemIds = new string[] { "en" };
-			viewTemplate.Add(new Field("Dummy", writingSystemIds));
-			viewTemplate.Add(new Field("PrefixDummy", writingSystemIds));
+			viewTemplate.Add(new Field("Dummy", "LexSense", writingSystemIds));
+			viewTemplate.Add(new Field("PrefixDummy", "LexSense", writingSystemIds));
 
 			LexFieldTask task = new LexFieldTask(_recordListManager, _filter, _label, _description, viewTemplate, "Dummy");
 			Assert.AreEqual(true, task.ViewTemplate.Contains("Dummy"));

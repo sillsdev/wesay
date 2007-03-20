@@ -44,7 +44,7 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void SerializedFieldHasExpectedXml()
 		{
-			Field f = new Field("one", new string[] { "xx", "yy" });
+			Field f = new Field("one", "LexEntry", new string[] { "xx", "yy" });
 			string s = NetReflector.Write(f);
 			XmlDocument doc = new XmlDocument();
 			doc.LoadXml(s);
@@ -100,8 +100,8 @@ namespace WeSay.Project.Tests
 		private static ViewTemplate MakeSampleInventory()
 		{
 			ViewTemplate f = new ViewTemplate();
-			f.Add(new Field(Field.FieldNames.EntryLexicalForm.ToString(), new string[] { "xx", "yy" }));
-			Field field = new Field(Field.FieldNames.SenseGloss.ToString(), new string[] { "zz" });
+			f.Add(new Field(Field.FieldNames.EntryLexicalForm.ToString(), "LexEntry", new string[] { "xx", "yy" }));
+			Field field = new Field(Field.FieldNames.SenseGloss.ToString(), "LexSense", new string[] { "zz" });
 			field.Visibility = Field.VisibilitySetting.Invisible;
 			f.Add(field);
 			return f;

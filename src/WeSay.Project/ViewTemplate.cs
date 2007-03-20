@@ -169,61 +169,36 @@ namespace WeSay.Project
 
 			ViewTemplate masterTemplate = new ViewTemplate();
 
-			Field lexicalFormField = new Field(Field.FieldNames.EntryLexicalForm.ToString(), defaultVernacularSet);
+			Field lexicalFormField = new Field(Field.FieldNames.EntryLexicalForm.ToString(), "LexEntry", defaultVernacularSet);
 			lexicalFormField.DisplayName = "Word";
 			lexicalFormField.Visibility = Field.VisibilitySetting.Visible;
 			masterTemplate.Add(lexicalFormField);
 
-			Field glossField = new Field(Field.FieldNames.SenseGloss.ToString(), defaultAnalysisSet);
+			Field glossField = new Field(Field.FieldNames.SenseGloss.ToString(), "LexSense", defaultAnalysisSet);
 			glossField.DisplayName = "Gloss";
 			glossField.Visibility = Field.VisibilitySetting.Visible;
 			masterTemplate.Add(glossField);
 
-			Field posField = new Field("PartOfSpeech", defaultAnalysisSet);
+			Field posField = new Field("PartOfSpeech", "LexSense", defaultAnalysisSet);
 			posField.DisplayName = "POS";
 			posField.Description = "The grammatical category of the entry (Noun, Verb, etc.).";
-			//MakeField("PartOfSpeech", "POS", true, defaultAnalysisSet);
 			posField.DataTypeName = "Option";
-			posField.ClassName = "LexSense";
 			posField.OptionsListFile = "PartsOfSpeech.xml";
 			masterTemplate.Add(posField);
 
-			Field exampleField = new Field(Field.FieldNames.ExampleSentence.ToString(), defaultVernacularSet);
+			Field exampleField = new Field(Field.FieldNames.ExampleSentence.ToString(), "LexExampleSentence", defaultVernacularSet);
 			exampleField.DisplayName = "Example Sentence";
 			exampleField.Visibility = Field.VisibilitySetting.Visible;
 			masterTemplate.Add(exampleField);
 
-		   // masterTemplate.Add(MakeField(Field.FieldNames.ExampleSentence.ToString(), "Example Sentence", true, writingSystems));
 
-			Field translationField = new Field(Field.FieldNames.ExampleTranslation.ToString(), defaultAnalysisSet);
+			Field translationField = new Field(Field.FieldNames.ExampleTranslation.ToString(), "LexExampleSentence", defaultAnalysisSet);
 			translationField.DisplayName = "Translation";
 			translationField.Visibility = Field.VisibilitySetting.Visible;
 			masterTemplate.Add(translationField);
 
-			//masterTemplate.Add(MakeField(Field.FieldNames.ExampleTranslation.ToString(), "Translation", true, writingSystems));
 			return masterTemplate;
 		}
-
-//        private static Field MakeField(string fieldName, string displayName, bool defaultVisible, WritingSystemCollection writingSystems)
-//        {
-//            Field field = new Field();
-//            field.FieldName = fieldName;
-//            field.DisplayName = displayName;
-//            if (defaultVisible)
-//            {
-//                field.Visibility = Field.VisibilitySetting.Visible;
-//            }
-//            else
-//            {
-//                field.Visibility = Field.VisibilitySetting.Invisible;
-//            }
-//
-//            foreach (string id in writingSystems.Keys)
-//            {
-//                field.WritingSystemIds.Add(id);
-//            }
-//            return field;
-//        }
 
 		#region persistence
 

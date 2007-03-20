@@ -86,9 +86,9 @@ namespace WeSay.Project.Tests
 
 		private static ViewTemplate PopulateViewTemplate() {
 			ViewTemplate f = new ViewTemplate();
-			f.Add(new Field("field1", new string[] { "en", "br", "th" }));
-			f.Add(new Field("field2",  new string[]{"th"}));
-			f.Add(new Field("field2",  new string[]{"en", "br"}));
+			f.Add(new Field("field1", "LexEntry", new string[] { "en", "br", "th" }));
+			f.Add(new Field("field2", "LexEntry",  new string[]{"th"}));
+			f.Add(new Field("field2", "LexEntry",  new string[]{"en", "br"}));
 			return f;
 		}
 
@@ -140,7 +140,7 @@ namespace WeSay.Project.Tests
 			Assert.IsFalse(master.Contains(Field.FieldNames.ExampleTranslation.ToString()),"If translation is turned on by default, you must fix the test which sees if it is turned on by the user inventory");
 			int count = master.Count;
 			ViewTemplate simple = new ViewTemplate ();
-			simple.Add(new Field(Field.FieldNames.ExampleTranslation.ToString(), new String[] {"en"}));
+			simple.Add(new Field(Field.FieldNames.ExampleTranslation.ToString(), "LexExampleSentence", new String[] {"en"}));
 			ViewTemplate.SynchronizeInventories(master, simple);
 
 			Assert.AreEqual(count, master.Count);
@@ -153,7 +153,7 @@ namespace WeSay.Project.Tests
 			ViewTemplate master = MakeMasterInventory();
 			int count = master.Count;
 			ViewTemplate simple = new ViewTemplate();
-			simple.Add(new Field("dummy", new String[] { "en" }));
+			simple.Add(new Field("dummy", "LexEntry", new String[] { "en" }));
 			ViewTemplate.SynchronizeInventories(master, simple);
 			Assert.IsTrue(master.Contains("dummy"));
 		}

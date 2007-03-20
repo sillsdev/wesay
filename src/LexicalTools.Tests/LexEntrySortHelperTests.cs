@@ -20,7 +20,7 @@ namespace WeSay.LexicalTools.Tests
 			string[] vernacularWritingSystemIds = new string[] { "pretendVernacular" };
 
 			_viewTemplate = new ViewTemplate();
-			_viewTemplate.Add(new Field(Field.FieldNames.EntryLexicalForm.ToString(), vernacularWritingSystemIds));
+			_viewTemplate.Add(new Field(Field.FieldNames.EntryLexicalForm.ToString(), "LexEntry", vernacularWritingSystemIds));
 
 			_filePath = Path.GetTempFileName();
 

@@ -55,8 +55,11 @@ namespace WeSay.LexicalModel
 		{
 			get
 			{
-				return Sentence.Empty && Translation.Empty;
+				return Sentence.Empty &&
+					   Translation.Empty &&
+					   !HasProperties;
 			}
 		}
+
 	}
 }

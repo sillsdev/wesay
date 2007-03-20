@@ -33,7 +33,7 @@ namespace WeSay.LexicalTools.Tests
 
 			File.WriteAllLines(_wordListFilePath, _words);
 			_viewTemplate = new ViewTemplate();
-			this._viewTemplate.Add(new Field(Field.FieldNames.EntryLexicalForm.ToString(), new string[] { BasilProject.Project.WritingSystems.TestWritingSystemVernId }));
+			this._viewTemplate.Add(new Field(Field.FieldNames.EntryLexicalForm.ToString(), "LexEntry", new string[] { BasilProject.Project.WritingSystems.TestWritingSystemVernId }));
 
 			this._task = new GatherWordListTask(_recordListManager,
 												"label",

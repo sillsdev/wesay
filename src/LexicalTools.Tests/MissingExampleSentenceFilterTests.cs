@@ -1,20 +1,20 @@
 using NUnit.Framework;
+using WeSay.LexicalModel;
 using WeSay.LexicalTools;
 using WeSay.Project;
 
-namespace WeSay.LexicalModel.Tests
+namespace WeSay.LexicalTools.Tests
 {
 	[TestFixture]
 	public class MissingExampleSentenceFilterTests
 	{
-		private MissingExampleSentenceFilter _missingExampleSentenceFilter;
+		private MissingItemFilter _missingExampleSentenceFilter;
 
 		[SetUp]
 	public void Setup()
 		{
-			Field field = new Field(Field.FieldNames.ExampleSentence.ToString(), new string[] { "vernacular" });
-			this._missingExampleSentenceFilter = new MissingExampleSentenceFilter(field);
-
+			Field field = new Field(Field.FieldNames.ExampleSentence.ToString(), "LexExampleSentence", new string[] { "vernacular" });
+			this._missingExampleSentenceFilter = new MissingItemFilter(field);
 		}
 
 		[Test]
@@ -32,7 +32,7 @@ namespace WeSay.LexicalModel.Tests
 		public void NoSenses()
 		{
 			LexEntry entry = new LexEntry();
-			Assert.AreEqual(true, this._missingExampleSentenceFilter.FilteringPredicate(entry));
+			Assert.AreEqual(false, this._missingExampleSentenceFilter.FilteringPredicate(entry));
 		}
 
 		[Test]
@@ -103,7 +103,7 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
-		public void SenseOneExampleSentenceWritingSystemWithOneWithoutAnalysis()
+		public void SenseOneExampleSentenceWritingSystemWithOneWithoutVernacular()
 		{
 			LexEntry entry = new LexEntry();
 			LexSense sense = (LexSense)entry.Senses.AddNew();

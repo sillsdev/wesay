@@ -51,7 +51,9 @@ namespace WeSay.LexicalModel
 		public override bool Empty
 		{
 			get {
-				return Gloss.Empty && ExampleSentences.Count == 0;
+				return Gloss.Empty &&
+					   ExampleSentences.Count == 0 &&
+					   !HasProperties;
 			}
 		}
 
@@ -73,11 +75,11 @@ namespace WeSay.LexicalModel
 		}
 		public override void SomethingWasModified(string PropertyModified)
 		{
+			base.SomethingWasModified(PropertyModified);
 			if (PropertyModified != "exampleSentences")
 			{
 				RemoveEmptyExampleSentences();
 			}
-			base.SomethingWasModified(PropertyModified);
 		}
 	}
 

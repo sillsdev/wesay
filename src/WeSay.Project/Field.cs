@@ -13,9 +13,9 @@ namespace WeSay.Project
 	{
 		private string _fieldName;
 		private List<string> _writingSystemIds;
-		private string _displayName="";
-		private string _description="";
-		private string _className="";
+		private string _displayName=string.Empty;
+		private string _description=string.Empty;
+		private string _className=string.Empty;
 		private string _dataTypeName;
 		public enum MultiplicityType { ZeroOr1 = 0 }
 		private MultiplicityType _multiplicity = MultiplicityType.ZeroOr1;
@@ -32,50 +32,88 @@ namespace WeSay.Project
 		public enum FieldNames {EntryLexicalForm, SenseGloss, ExampleSentence, ExampleTranslation};
 
 		public Field()
-			:this("unknown",new List<string>(),MultiplicityType.ZeroOr1,"MultiText")
 		{
+			Initialize("unknown", "MultiText", MultiplicityType.ZeroOr1, new List<string>());
 		}
 
 
-		public Field(string fieldName, IEnumerable<string> writingSystemIds)
-			:this(fieldName,writingSystemIds,MultiplicityType.ZeroOr1,"MultiText")
+		public Field(string fieldName, string className, IEnumerable<string> writingSystemIds)
+			:this(fieldName, className, writingSystemIds,MultiplicityType.ZeroOr1,"MultiText")
 		{
 		}
 
-		public Field(string fieldName, IEnumerable<string> writingSystemIds, MultiplicityType multiplicity, string dataTypeName)
+		public Field(string fieldName, string className, IEnumerable<string> writingSystemIds, MultiplicityType multiplicity, string dataTypeName)
 		{
-			FieldName = fieldName;
 			if (writingSystemIds == null)
 			{
 				throw new ArgumentNullException();
 			}
-			else
-			{
-				WritingSystemIds = new List<string>(writingSystemIds);
-			}
-			_multiplicity = multiplicity;
-			DataTypeName = dataTypeName;
+			ClassName = className;
+			Initialize(fieldName, dataTypeName, multiplicity, writingSystemIds);
 		}
 
+		private void Initialize(string fieldName, string dataTypeName, MultiplicityType multiplicity, IEnumerable<string> writingSystemIds)
+		{
+			FieldName = fieldName;
+			WritingSystemIds = new List<string>(writingSystemIds);
+			this._multiplicity = multiplicity;
+			DataTypeName = dataTypeName;
+		}
 
 		public bool IsCustom
 		{
 			get
 			{
-				return ClassName != string.Empty; //TEMP
+				if (FieldName == FieldNames.EntryLexicalForm.ToString())
+				{
+					return false;
+				}
+
+				if (FieldName == FieldNames.ExampleSentence.ToString())
+				{
+					return false;
+				}
+
+				if (FieldName == FieldNames.ExampleTranslation.ToString())
+				{
+					return false;
+				}
+
+				if (FieldName == FieldNames.SenseGloss.ToString())
+				{
+					return false;
+				}
+
+				return true;
 			}
 		}
 
-		[ReflectorCollection("className", Required = false)]
+		[ReflectorCollection("className", Required = true)]
 		public string ClassName
 		{
 			get
 			{
+				if(_className.Length == 0)
+				{
+					throw new InvalidOperationException("className has not been initialized correctly");
+				}
 				return _className;
 			}
 			set
 			{
-				_className = value;
+				switch(value)
+				{
+					case null:
+						throw new ArgumentNullException();
+					case "LexEntry":
+					case "LexSense":
+					case "LexExampleSentence":
+						_className = value;
+						break;
+					default:
+						throw new ArgumentOutOfRangeException("className must be LexEntry or LexSense or LexExampleSentence");
+
+				}
 			}
 		}
 
@@ -176,7 +214,7 @@ namespace WeSay.Project
 			set { _multiplicity = value; }
 		}
 
-		[ReflectorProperty("dataType", Required = false)]
+		[ReflectorProperty("dataType", Required = true)]
 		public string DataTypeName
 		{
 			get { return _dataTypeName; }

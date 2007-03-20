@@ -316,16 +316,6 @@ namespace WeSay.Project
 			}
 
 			return _optionLists[name];
-//
-//            if (_testPOSList == null)
-//            {
-//                //todo
-//                _testPOSList = new OptionsList("PartsOfSpeech");
-//                _testPOSList.Options.Add(new Option("Noun", "N", new Guid("C2E70350-5961-4728-BC02-2CC506C40C00")));
-//                _testPOSList.Options.Add(new Option("Verb", "V", new Guid("C2E70350-5961-4728-BC02-2CC506C40C01")));
-//                _testPOSList.Options.Add(new Option("Adjective", "Adj", new Guid("C2E70350-5961-4728-BC02-2CC506C40C02")));
-//            }
-//            return _testPOSList;
 	   }
 
 		private void LoadOptionsList(string pathToOptionsList)

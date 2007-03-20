@@ -1,19 +1,20 @@
 using NUnit.Framework;
+using WeSay.LexicalModel;
 using WeSay.LexicalTools;
 using WeSay.Project;
 
-namespace WeSay.LexicalModel.Tests
+namespace WeSay.LexicalTools.Tests
 {
 	[TestFixture]
 	public class MissingGlossFilterTests
 	{
-		private MissingGlossFilter _missingGlossFilter;
+		private MissingItemFilter _missingGlossFilter;
 
 		[SetUp]
 		public void Setup()
 		{
-			Field field = new Field(Field.FieldNames.SenseGloss.ToString(), new string[] { "analysis" });
-			this._missingGlossFilter = new MissingGlossFilter(field);
+			Field field = new Field(Field.FieldNames.SenseGloss.ToString(), "LexSense", new string[] { "analysis" });
+			this._missingGlossFilter = new MissingItemFilter(field);
 		}
 
 		[Test]

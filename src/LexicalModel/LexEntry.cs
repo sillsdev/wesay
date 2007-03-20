@@ -86,12 +86,12 @@ namespace WeSay.LexicalModel
 
 		public override void SomethingWasModified(string PropertyModified)
 		{
+			base.SomethingWasModified(PropertyModified);
 			ModificationTime = DateTime.UtcNow;
 			if (PropertyModified != "senses")
 			{
 				RemoveEmptySenses();
 			}
-			base.SomethingWasModified(PropertyModified);
 		}
 
 		public MultiText LexicalForm
@@ -169,7 +169,9 @@ namespace WeSay.LexicalModel
 		{
 			get
 			{
-				return Senses.Count == 0 && LexicalForm.Empty;
+				return Senses.Count == 0 &&
+					   LexicalForm.Empty &&
+					   !HasProperties;
 			}
 		}
 

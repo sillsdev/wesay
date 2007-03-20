@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using WeSay.Foundation;
 using WeSay.Language;
 
@@ -132,6 +133,58 @@ namespace WeSay.Foundation
 		/// </summary>
 		public virtual void SomethingWasModified(string PropertyModified)
 		{
+			RemoveEmptyProperties();
+		}
+
+		public void RemoveEmptyProperties()
+		{
+			// remove any custom fields that are empty
+			int count = Properties.Count;
+
+			for (int i = count - 1; i >= 0; i--)
+			{
+				if (IsPropertyEmpty(Properties[i].Value))
+				{
+					Properties.RemoveAt(i);
+				}
+			}
+			if (count != Properties.Count)
+			{
+				OnEmptyObjectsRemoved();
+			}
+		}
+
+		private bool IsPropertyEmpty(object property)
+		{
+			if (property is MultiText)
+			{
+				return ((MultiText)property).Empty;
+			}
+			else if (property is OptionRef)
+			{
+				return ((OptionRef)property).Empty;
+			}
+			else if (property is OptionRefCollection)
+			{
+				return ((OptionRefCollection)property).Empty;
+			}
+			Debug.Fail("Unknown property type");
+			return true;
+		}
+
+		public bool HasProperties
+		{
+			get
+			{
+				foreach (KeyValuePair<string, object> pair in _properties)
+				{
+					if(!IsPropertyEmpty(pair.Value))
+					{
+						return true;
+					}
+				}
+				return false;
+			}
 		}
 
 		public void NotifyPropertyChanged(string propertyName)

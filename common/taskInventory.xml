@@ -17,8 +17,9 @@
 
   <task id="AddMeanings" class="WeSay.LexicalTools.LexFieldTask" assembly="LexicalTools" default="true">
 	<entries ref="All Entries"/>
-	<filter class="WeSay.LexicalTools.MissingGlossFilter" assembly="LexicalTools">
+	<filter class="WeSay.LexicalTools.MissingItemFilter" assembly="LexicalTools">
 	  <viewTemplate ref="Default View Template"/>
+	  <field>SenseGloss</field>
 	</filter>
 	<label>Add Meanings</label>
 	<description>Add meanings to entries where they are missing.</description>
@@ -28,8 +29,9 @@
 
   <task id="AddExamples" class="WeSay.LexicalTools.LexFieldTask" assembly="LexicalTools">
 	<entries ref="All Entries"/>
-	<filter class="WeSay.LexicalTools.MissingExampleSentenceFilter" assembly="LexicalTools">
+	<filter class="WeSay.LexicalTools.MissingItemFilter" assembly="LexicalTools">
 	  <viewTemplate ref="Default View Template"/>
+	  <field>ExampleSentence</field>
 	</filter>
 	<label>Add Examples</label>
 	<description>Add example sentences to entries where they are missing.</description>

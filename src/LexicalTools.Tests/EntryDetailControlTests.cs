@@ -49,17 +49,17 @@ namespace WeSay.LexicalTools.Tests
 			string[] analysisWritingSystemIds = new string[] { BasilProject.Project.WritingSystems.TestWritingSystemAnalId };
 			string[] vernacularWritingSystemIds = new string[] { this._vernacularWsId };
 			ViewTemplate viewTemplate = new ViewTemplate();
-			viewTemplate.Add(new Field(Field.FieldNames.EntryLexicalForm.ToString(), vernacularWritingSystemIds));
+			viewTemplate.Add(new Field(Field.FieldNames.EntryLexicalForm.ToString(), "LexEntry",vernacularWritingSystemIds));
 
-			viewTemplate.Add(new Field(Field.FieldNames.SenseGloss.ToString(), analysisWritingSystemIds));
+			viewTemplate.Add(new Field(Field.FieldNames.SenseGloss.ToString(), "LexSense",analysisWritingSystemIds));
 
 			Field customField;
 
-			viewTemplate.Add(new Field(Field.FieldNames.ExampleSentence.ToString(), vernacularWritingSystemIds));
+			viewTemplate.Add(new Field(Field.FieldNames.ExampleSentence.ToString(), "LexExampleSentence",vernacularWritingSystemIds));
 
-			viewTemplate.Add(new Field(Field.FieldNames.ExampleTranslation.ToString(), analysisWritingSystemIds));
+			viewTemplate.Add(new Field(Field.FieldNames.ExampleTranslation.ToString(), "LexExampleSentence",analysisWritingSystemIds));
 
-			customField = new Field("SemanticDomains", analysisWritingSystemIds, Field.MultiplicityType.ZeroOr1, "OptionCollection");
+			customField = new Field("SemanticDomains", "LexSense", analysisWritingSystemIds, Field.MultiplicityType.ZeroOr1, "OptionCollection");
 			customField.ClassName = "LexSense";
 			customField.DisplayName = "Sem Dom";
 			customField.OptionsListFile = "SemanticDomains.xml";
