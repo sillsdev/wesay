@@ -254,6 +254,20 @@ namespace WeSay.LexicalTools.Tests
 		}
 
 		[Test]
+		public void EmptyDictionary_EnterText_PressFindButton_NoCrash()
+		{
+			StartWithEmpty();
+			TextBoxTester t = new TextBoxTester("_findText");
+			t.Enter("blah");
+			ButtonTester b = new ButtonTester("_btnFind");
+			b.Click();
+			ListBoxTester l = new ListBoxTester("_recordsListBox");
+
+			Assert.AreEqual(-1,l.Properties.SelectedIndex);
+		}
+
+
+		[Test]
 		public void IfNoWordsDeleteButtonDisabled()
 		{
 			NUnit.Extensions.Forms.ButtonTester l = new ButtonTester("_btnDeleteWord");

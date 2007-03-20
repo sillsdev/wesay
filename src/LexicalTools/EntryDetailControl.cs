@@ -222,7 +222,7 @@ namespace WeSay.LexicalTools
 					index--;
 				}
 			}
-			if(index >=0)
+			if(0 <= index && index < _recordsListBox.Items.Count)
 			{
 				_recordsListBox.SelectedIndex = index;
 			}
