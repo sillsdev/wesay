@@ -90,7 +90,7 @@
   </task>
   <task id="AddExamples" class="WeSay.LexicalTools.LexFieldTask" assembly="LexicalTools">
 	<entries ref="All Entries" />
-	<filter class="WeSay.LexicalTools.MissingExampleSentenceFilter" assembly="LexicalTools">
+	<filter class="WeSay.LexicalTools.MissingItemFilter" assembly="LexicalTools">
 	  <viewTemplate ref="Default View Template" />
 	  <field>ExampleSentence</field>
 	</filter>
