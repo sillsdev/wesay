@@ -88,7 +88,7 @@ namespace WeSay.App.Tests
 		{
 			SetupDeletionSituation();
 			Assert.AreEqual(1,
-							GetBackupDoc().SelectNodes("//entry[@id='boo']/trait[@range='status' and @value='deleted']")
+							GetBackupDoc().SelectNodes("//entry[@id='boo' and @dateDeleted]")
 								.Count);
 		}
 
@@ -116,8 +116,8 @@ namespace WeSay.App.Tests
 			//now make an entry with the same id and add it
 			MakeEntry("boo");
 			_service.DoIncrementalXmlBackupNow(true);
-			Assert.AreEqual(0, GetBackupDoc().SelectNodes("//entry[@id='boo']/trait[@range='status' and @value='deleted']").Count);
-			Assert.AreEqual(1, GetBackupDoc().SelectNodes("//entry[@id='boo']").Count);
+			Assert.AreEqual(0, GetBackupDoc().SelectNodes("//entry[@id='boo' and @dateDeleted]").Count);
+			Assert.AreEqual(1, GetBackupDoc().SelectNodes("//entry[@id='boo' and not(@dateDeleted)]").Count);
 		}
 
 		private LexEntry MakeEntry(string id)

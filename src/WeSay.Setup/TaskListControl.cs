@@ -45,7 +45,8 @@ namespace WeSay.Setup
 			{
 				if (_taskList.GetItemChecked(_taskList.Items.IndexOf(t)))
 				{
-					writer.WriteRaw(t.Node.OuterXml);
+					t.Node.WriteContentTo(writer);
+//                    writer.WriteRaw(t.Node.OuterXml);
 				}
 			}
 			writer.WriteEndElement();

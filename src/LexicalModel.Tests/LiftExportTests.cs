@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -110,6 +111,34 @@ namespace WeSay.LexicalTools.Tests
 
 
 		[Test]
+		public void LexemeForm()
+		{
+			LexEntry e = new LexEntry();
+			e.LexicalForm["xx"] = "foo";
+			_exporter.Add(e);
+			_exporter.End();
+
+			AssertXPathNotNull("//lexical-unit/form[@lang='xx']");
+		}
+
+		private void AssertXPathNotNull(string xpath)
+		{
+			XmlDocument doc = new XmlDocument();
+			doc.LoadXml(_stringBuilder.ToString());
+			XmlNode node = doc.SelectSingleNode(xpath);
+			if (node == null)
+			{
+				XmlWriterSettings settings = new XmlWriterSettings();
+				settings.Indent = true;
+				settings.ConformanceLevel = ConformanceLevel.Fragment;
+				XmlWriter writer = XmlTextWriter.Create(Console.Out, settings);
+				doc.WriteContentTo(writer);
+				writer.Flush();
+		   }
+			Assert.IsNotNull(node);
+		}
+
+		[Test]
 		public void Sense()
 		{
 			LexSense sense = new LexSense();
@@ -158,7 +187,7 @@ namespace WeSay.LexicalTools.Tests
 			example.Sentence["blue"] = "ocean's eleven";
 			example.Sentence["red"] = "red sunset tonight";
 			_exporter.Add(example);
-			CheckAnswer("<example><source><form lang=\"blue\">ocean's eleven</form><form lang=\"red\">red sunset tonight</form></source></example>");
+			CheckAnswer("<example><form lang=\"blue\">ocean's eleven</form><form lang=\"red\">red sunset tonight</form></example>");
 		}
 
 		[Test]
@@ -169,7 +198,7 @@ namespace WeSay.LexicalTools.Tests
 			example.Sentence["red"] = "red sunset tonight";
 			example.Translation["green"] = "blah blah";
 			_exporter.Add(example);
-			CheckAnswer("<example><source><form lang=\"blue\">ocean's eleven</form><form lang=\"red\">red sunset tonight</form></source><trans><form lang=\"green\">blah blah</form></trans></example>");
+			CheckAnswer("<example><form lang=\"blue\">ocean's eleven</form><form lang=\"red\">red sunset tonight</form><translation><form lang=\"green\">blah blah</form></translation></example>");
 		}
 
 		[Test]
@@ -192,7 +221,15 @@ namespace WeSay.LexicalTools.Tests
 		{
 			LexEntry entry = new LexEntry();
 			_exporter.AddDeletedEntry(entry);
-			ShouldContain(string.Format("<trait range='status' value='deleted'", entry.Guid));
+			_exporter.End();
+			Assert.IsNotNull(GetStringAttributeOfTopElement("dateDeleted"));
+		}
+
+		private string GetStringAttributeOfTopElement(string attribute)
+		{
+			XmlDocument doc = new XmlDocument();
+			doc.LoadXml(_stringBuilder.ToString());
+			return doc.FirstChild.Attributes[attribute].ToString();
 		}
 
 		private void ShouldContain(string s)
@@ -293,13 +330,11 @@ namespace WeSay.LexicalTools.Tests
 		public void GoodGrammi()
 		{
 			LexSense sense = new LexSense();
-			OptionRef o = sense.GetOrCreateProperty<OptionRef>("PartOfSpeech");
+			OptionRef o = sense.GetOrCreateProperty<OptionRef>(LexSense.WellKnownProperties.PartOfSpeech);
 			o.Value = "orange";
 			_exporter.Add(sense);
 			 _exporter.End();
-			Debug.WriteLine(_stringBuilder.ToString());
-			Assert.AreEqual("<sense><grammi value=\"orange\" /></sense>", _stringBuilder.ToString());
-
+			AssertXPathNotNull("sense/grammatical-info[@value='orange']");
 		}
 
 		[Test]
@@ -310,7 +345,7 @@ namespace WeSay.LexicalTools.Tests
 			example.Sentence["red"] = "red sunset tonight";
 			sense.ExampleSentences.Add(example);
 			_exporter.Add(sense);
-			CheckAnswer("<sense><example><source><form lang=\"red\">red sunset tonight</form></source></example></sense>");
+			CheckAnswer("<sense><example><form lang=\"red\">red sunset tonight</form></example></sense>");
 		}
 
 

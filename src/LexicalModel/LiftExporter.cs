@@ -118,7 +118,7 @@ namespace WeSay.LexicalModel
 			 System.Diagnostics.Debug.Assert(entry.ModificationTime.Kind == DateTimeKind.Utc);
 		   _writer.WriteAttributeString("dateModified", entry.ModificationTime.ToString(LiftDateTimeFormat));
 			_writer.WriteAttributeString("flex", "id", "http: //fieldworks.sil.org", entry.Guid.ToString());
-			WriteForm(entry.LexicalForm);
+			WriteMultiWithWrapperIfNonEmpty( "lexical-unit",entry.LexicalForm);
 
 			foreach(LexSense sense in entry.Senses)
 			{
@@ -157,7 +157,7 @@ namespace WeSay.LexicalModel
 		{
 			_writer.WriteStartElement("sense");
 			WriteGrammi(sense);
-			WriteFormInElement("gloss", sense.Gloss);
+			WriteMultiWithWrapperIfNonEmpty("gloss", sense.Gloss);
 			foreach (LexExampleSentence example in sense.ExampleSentences)
 			{
 				Add(example);
@@ -168,10 +168,10 @@ namespace WeSay.LexicalModel
 
 		private void WriteGrammi(LexSense sense)
 		{
-			OptionRef pos = sense.GetProperty<OptionRef>("PartOfSpeech");
+			OptionRef pos = sense.GetProperty<OptionRef>(LexSense.WellKnownProperties.PartOfSpeech);
 			if (pos!=null)
 			{
-				_writer.WriteStartElement("grammi");
+				_writer.WriteStartElement("grammatical-info");
 				_writer.WriteAttributeString("value", ((OptionRef)pos).Value);
 				//todo add flex:id
 				_writer.WriteEndElement();
@@ -192,7 +192,7 @@ namespace WeSay.LexicalModel
 				}
 				if (pair.Value is MultiText)
 				{
-					WriteFormInElement(pair.Key, pair.Value as MultiText);
+					WriteMultiWithWrapperIfNonEmpty(pair.Key, pair.Value as MultiText);
 					continue;
 				}
 				if (pair.Value is OptionRef)
@@ -247,8 +247,8 @@ namespace WeSay.LexicalModel
 		public void Add(LexExampleSentence example)
 		{
 			_writer.WriteStartElement("example");
-			WriteFormInElement("source", example.Sentence);
-			WriteFormInElement("trans", example.Translation);
+			WriteMultiTextNoWrapper(example.Sentence);
+			WriteMultiWithWrapperIfNonEmpty("translation", example.Translation);
 			WriteCustomProperties(example);
 			_writer.WriteEndElement();
 		}
@@ -265,26 +265,22 @@ namespace WeSay.LexicalModel
 		}
 
 
-		private void WriteForm(MultiText text)
+		private void WriteMultiTextNoWrapper(MultiText text)
 		{
-			_writer.WriteStartElement("lex");
-			if (text != null && text.Count > 0)
+			if (!MultiText.IsEmpty(text))
 			{
 				Add(text);
 			}
-		   _writer.WriteEndElement();
 		}
-
-		private void WriteFormInElement(string name, MultiText text)
+		private void WriteMultiWithWrapperIfNonEmpty(string wrapperName, MultiText text)
 		{
-			if (text != null && text.Count > 0)
+			if (!MultiText.IsEmpty(text))
 			{
-				_writer.WriteStartElement(name);
+				_writer.WriteStartElement(wrapperName);
 				Add(text);
 				_writer.WriteEndElement();
 			}
 		}
-
 
 		public void AddDeletedEntry(LexEntry entry)
 		{
@@ -293,7 +289,8 @@ namespace WeSay.LexicalModel
 			_writer.WriteAttributeString("dateCreated", entry.CreationTime.ToString(LiftDateTimeFormat));
 			_writer.WriteAttributeString("dateModified", entry.ModificationTime.ToString(LiftDateTimeFormat));
 			_writer.WriteAttributeString("flex", "id", "http: //fieldworks.sil.org", entry.Guid.ToString());
-			_writer.WriteRaw("<trait range='status' value='deleted'/>"); //REVIEW
+			 _writer.WriteAttributeString("dateDeleted", DateTime.UtcNow.ToString(LiftDateTimeFormat));
+
 			_writer.WriteEndElement();
 		}
 	}

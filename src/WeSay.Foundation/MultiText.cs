@@ -90,6 +90,11 @@ namespace WeSay.Language
 
 			}
 
+		public static bool IsEmpty(MultiText mt)
+		{
+				return mt == null || mt.Count == 0;
+		}
+
 		static public MultiText Create(Dictionary<string,string> forms)
 		{
 			MultiText m = new MultiText();
