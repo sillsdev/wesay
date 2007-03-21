@@ -117,7 +117,7 @@ namespace WeSay.LexicalModel
 			System.Diagnostics.Debug.Assert(entry.CreationTime.Kind == DateTimeKind.Utc);
 			 System.Diagnostics.Debug.Assert(entry.ModificationTime.Kind == DateTimeKind.Utc);
 		   _writer.WriteAttributeString("dateModified", entry.ModificationTime.ToString(LiftDateTimeFormat));
-			_writer.WriteAttributeString("flex", "id", "http: //fieldworks.sil.org", entry.Guid.ToString());
+			_writer.WriteAttributeString("flex", "id", "http://fieldworks.sil.org", entry.Guid.ToString());
 			WriteMultiWithWrapperIfNonEmpty( "lexical-unit",entry.LexicalForm);
 
 			foreach(LexSense sense in entry.Senses)
@@ -288,7 +288,7 @@ namespace WeSay.LexicalModel
 			_writer.WriteAttributeString("id", MakeHumanReadableId(entry));
 			_writer.WriteAttributeString("dateCreated", entry.CreationTime.ToString(LiftDateTimeFormat));
 			_writer.WriteAttributeString("dateModified", entry.ModificationTime.ToString(LiftDateTimeFormat));
-			_writer.WriteAttributeString("flex", "id", "http: //fieldworks.sil.org", entry.Guid.ToString());
+			_writer.WriteAttributeString("flex", "id", "http://fieldworks.sil.org", entry.Guid.ToString());
 			 _writer.WriteAttributeString("dateDeleted", DateTime.UtcNow.ToString(LiftDateTimeFormat));
 
 			_writer.WriteEndElement();
