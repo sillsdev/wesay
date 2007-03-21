@@ -75,7 +75,12 @@ namespace WeSay.LexicalTools
 				listWritingSystem = BasilProject.Project.WritingSystems.UnknownVernacularWritingSystem;
 			}
 
+			this.BackColor = WeSay.UI.DisplaySettings.Default.BackgroundColor;
 			InitializeComponent();
+			this._writingSystemChooser.Image = Resources.Expand.GetThumbnailImage(6, 6, ReturnFalse, IntPtr.Zero);
+			this._btnFind.Image = Resources.Find.GetThumbnailImage(22, 22, ReturnFalse, IntPtr.Zero);
+			this._btnDeleteWord.Image = Resources.DeleteWord.GetThumbnailImage(22, 22, ReturnFalse, IntPtr.Zero);
+			this._btnNewWord.Image = Resources.NewWord.GetThumbnailImage(22, 22, ReturnFalse, IntPtr.Zero);
 
 			Control_EntryDetailPanel.ViewTemplate = _viewTemplate;
 
@@ -142,7 +147,6 @@ namespace WeSay.LexicalTools
 			this._findText.WritingSystem = this._listWritingSystem;
 
 			this._findWritingSystemId.Text = this._listWritingSystem.Id;
-			this._findText.Left = this._findWritingSystemId.Right;
 			int width = this._findText.Width;
 			this._findWritingSystemId.AutoSize = false;
 			this._findWritingSystemId.Height = this._findText.Height;
@@ -151,6 +155,7 @@ namespace WeSay.LexicalTools
 			int heightDifference = this._findText.Height - originalHeight;
 			this._recordsListBox.Location = new Point(this._recordsListBox.Location.X,
 												 this._recordsListBox.Location.Y + heightDifference);
+			this._recordsListBox.Height -= heightDifference;
 			this._btnFind.Height = this._findText.Height;
 			this._btnFind.Width = this._findText.Height;
 			this._writingSystemChooser.Height = this._findText.Height;
@@ -159,7 +164,6 @@ namespace WeSay.LexicalTools
 																   ReturnFalse, IntPtr.Zero);
 
 			this._btnFind.Left = this._writingSystemChooser.Left - this._btnFind.Width;
-			this._findText.Width = this._btnFind.Left - this._findText.Left;
 			this._findText.PopupWidth = this._recordsListBox.Width;
 		}
 
@@ -187,7 +191,7 @@ namespace WeSay.LexicalTools
 		{
 			get
 			{
-				return this._entryDetailPanel;
+				return this._entryDetailControl;
 			}
 		}
 
@@ -273,7 +277,7 @@ namespace WeSay.LexicalTools
 			}
 		}
 
-		private void _btnNewWord_LinkClicked(object sender, EventArgs e)
+		private void _btnNewWord_Click(object sender, EventArgs e)
 		{
 			if (!this._btnNewWord.Focused)
 			{
@@ -292,10 +296,10 @@ namespace WeSay.LexicalTools
 				// (No event is sent so we must do it ourselves)
 				OnRecordSelectionChanged(this, null);
 			}
-			_entryDetailPanel.Focus();
+			_entryDetailControl.Focus();
 		}
 
-		private void _btnDeleteWord_LinkClicked(object sender, EventArgs e)
+		private void _btnDeleteWord_Click(object sender, EventArgs e)
 		{
 			Debug.Assert(CurrentIndex >= 0);
 			if(CurrentIndex == -1)
@@ -312,7 +316,8 @@ namespace WeSay.LexicalTools
 			//hack until we can get selection change events sorted out in BindingGridList
 			OnRecordSelectionChanged(this, null);
 			_recordsListBox.Refresh();
-			_entryDetailPanel.Focus();
+			_entryDetailControl.Focus();
 		}
+
 	}
 }

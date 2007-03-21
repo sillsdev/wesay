@@ -56,6 +56,9 @@
 	<Compile Include="AutoCompleteTextBox\ShortCutTrigger.cs" />
 	<Compile Include="AutoCompleteTextBox\TextLengthTrigger.cs" />
 	<Compile Include="AutoCompleteTextBox\TriggerState.cs" />
+	<Compile Include="CollapsibleSplitter.cs">
+	  <SubType>Component</SubType>
+	</Compile>
 	<Compile Include="OptionCollectionControl.cs">
 	  <SubType>UserControl</SubType>
 	</Compile>
