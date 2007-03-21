@@ -226,11 +226,14 @@ namespace WeSay.Data
 			{
 				KeyValuePair<K, long> keyIdPair = new KeyValuePair<K, long>(key, itemId);
 				//see if we actually need to do anything. If the key has not changed, then it
-				//should be found
+				//should be found except in the weird case where there are two keys of
+				// the same value in the same record.
 				int index = _keyIdMap.BinarySearch(keyIdPair, _sorter);
-				Debug.Assert(index < 0);
+				if (index < 0)
+				{
+					index = ~index;
+				}
 
-				index = ~index;
 				_keyIdMap.Insert(index, keyIdPair);
 
 				if(indexesOfDeletedItems.Contains(index))

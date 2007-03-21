@@ -55,6 +55,7 @@ namespace WeSay.Data.Tests
 		DateTime _storedDateTime;
 		ChildTestItem _childTestItem;
 		int _onActivateDepth;
+		private List<string> _storedList;
 
 		List<ChildTestItem> _childTestItems;
 
@@ -209,6 +210,14 @@ namespace WeSay.Data.Tests
 					OnPropertyChanged(new PropertyChangedEventArgs("StoredDateTime"));
 				}
 			}
+		}
+
+		public List<string> StoredList
+		{
+			get { return this._storedList; }
+			set { this._storedList = value;
+					OnPropertyChanged(new PropertyChangedEventArgs("StoredList"));
+				}
 		}
 
 		#region INotifyPropertyChanged Members

@@ -383,4 +383,111 @@ namespace WeSay.Data.Tests
 			object o = _sortedList.SyncRoot;
 		}
 	}
+
+
+	class TestItemSortHelper : IDb4oSortHelper<string, TestItem>
+	{
+		IExtObjectContainer _database;
+		public TestItemSortHelper(IExtObjectContainer database)
+		{
+			if (database == null)
+			{
+				throw new ArgumentNullException();
+			}
+			_database = database;
+		}
+		#region IDb4oSortHelper<int,TestItem> Members
+
+		public IComparer<string> KeyComparer
+		{
+			get
+			{
+				return Comparer<string>.Default;
+			}
+		}
+
+		public System.Collections.Generic.List<System.Collections.Generic.KeyValuePair<string, long>> GetKeyIdPairs()
+		{
+			IQuery query = _database.Query();
+			query.Constrain(typeof(TestItem));
+			IObjectSet testItems = query.Execute();
+
+			List<KeyValuePair<string, long>> result = new List<KeyValuePair<string, long>>();
+
+			foreach (TestItem item in testItems)
+			{
+				foreach (string s in item.StoredList)
+				{
+					result.Add(new KeyValuePair<string, long>(s, _database.GetID(item)));
+				}
+			}
+
+			return result;
+		}
+
+		public System.Collections.Generic.IEnumerable<string> GetKeys(TestItem item)
+		{
+			return item.StoredList;
+		}
+
+		public string Name
+		{
+			get
+			{
+				return "storedList";
+			}
+		}
+		#endregion
+	}
+
+	[TestFixture]
+	public class SortedDb4oRecordListTestComplexData
+	{
+		Db4oDataSource _dataSource;
+		string _FilePath;
+		Db4oRecordListManager _manager;
+		CachedSortedDb4oList<string, TestItem> _sortedList;
+
+		[SetUp]
+		public void SetUp()
+		{
+			_FilePath = System.IO.Path.GetTempFileName();
+			this._dataSource = new Db4oDataSource(_FilePath);
+
+			for (int i = 50 - 1; i >= 0; i--)
+			{
+				TestItem item = new TestItem(i.ToString(), i, DateTime.Now);
+				item.StoredList = new List<string>();
+				item.StoredList.Add(i.ToString());
+				this._dataSource.Data.Set(item);
+			}
+			this._dataSource.Data.Commit();
+
+			this._manager = new Db4oRecordListManager(new DoNothingModelConfiguration(), this._FilePath);
+
+			this._sortedList = this._manager.GetSortedList<string, TestItem>(new TestItemSortHelper(_dataSource.Data.Ext()));
+		}
+
+		[TearDown]
+		public void TearDown()
+		{
+			_manager.Dispose();
+			this._dataSource.Dispose();
+			System.IO.File.Delete(_FilePath);
+		}
+
+		[Test]
+		public void Update_AddsKeyValuePairThatAlreadyExists()
+		{
+			TestItem item = _sortedList.GetValue(1);
+			int items = _sortedList.Count;
+			List<string> list = new List<string>();
+			list.Add("one");
+			list.Add("one");
+			item.StoredList = list;
+			Assert.AreEqual(items + 1, _sortedList.Count);
+
+		}
+	}
+
 }
