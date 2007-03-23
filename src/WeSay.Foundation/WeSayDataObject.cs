@@ -148,10 +148,6 @@ namespace WeSay.Foundation
 					Properties.RemoveAt(i);
 				}
 			}
-			if (count != Properties.Count)
-			{
-				OnEmptyObjectsRemoved();
-			}
 		}
 
 		private bool IsPropertyEmpty(object property)

@@ -32,6 +32,10 @@
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\Db4objects.Db4o.dll</HintPath>
 	</Reference>
+	<Reference Include="LiftIO, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\LiftIO.dll</HintPath>
+	</Reference>
 	<Reference Include="NetReflector, Version=1.0.0.0, Culture=neutral">
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\NetReflector.dll</HintPath>
@@ -63,10 +67,6 @@
 	<Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-	<ProjectReference Include="..\..\lib\LIFT\LiftIO\LiftIO.csproj">
-	  <Project>{A3A7698C-790B-4139-95C8-60380AF35F9C}</Project>
-	  <Name>LiftIO</Name>
-	</ProjectReference>
 	<ProjectReference Include="..\LexicalModel\LexicalModel.csproj">
 	  <Project>{5F61C809-B6C0-4567-9603-B2198E1AD038}</Project>
 	  <Name>LexicalModel</Name>

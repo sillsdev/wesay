@@ -123,6 +123,7 @@ namespace WeSay.UI
 		/// </summary>
 		private void TearDown()
 		{
+			Debug.Assert(!_inMidstOfTrigger);
 		   // Debug.WriteLine(" GhostBindingTearDown boundTo: " + this._textBoxTarget.Name);
 
 			if (_listTarget == null)

@@ -59,7 +59,7 @@ namespace WeSay.UI
 	  base.MinSize = 0;
 	  lastGoodSplitPosition = null;
 	  borderStyle = Border3DStyle.Flat;
-
+	  BorderStyle = BorderStyle.Fixed3D;
 	  gripLength = 90;
 	  minSize = 25;
 	}
@@ -510,17 +510,26 @@ namespace WeSay.UI
 
 	protected override void OnPaintBackground(PaintEventArgs e)
 	{
-	  // draw the background color for our control image
-	  e.Graphics.FillRectangle(new SolidBrush(this.BackColor), this.ClientRectangle);
-	  if (IsSplitterVertical())
-	  {
-		ControlPaint.DrawBorder3D(e.Graphics, this.ClientRectangle, borderStyle, Border3DSide.Left|Border3DSide.Right);
-	  }
-	  else
-	  {
-		ControlPaint.DrawBorder3D(e.Graphics, this.ClientRectangle, borderStyle, Border3DSide.Top | Border3DSide.Bottom);
-	  }
-	  return;
+		// draw the background color for our control image
+		e.Graphics.FillRectangle(new SolidBrush(BackColor), ClientRectangle);
+		Border3DStyle style = this.borderStyle;
+		switch (BorderStyle)
+		{
+			case BorderStyle.FixedSingle:
+				style = Border3DStyle.Flat;
+				break;
+			case BorderStyle.None:
+				return;
+		}
+		if (IsSplitterVertical())
+		{
+			ControlPaint.DrawBorder3D(e.Graphics, ClientRectangle, style, Border3DSide.Left|Border3DSide.Right);
+		}
+		else
+		{
+			ControlPaint.DrawBorder3D(e.Graphics, ClientRectangle, style, Border3DSide.Top | Border3DSide.Bottom);
+		}
+		return;
 	}
 
 	public override DockStyle Dock

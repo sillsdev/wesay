@@ -32,6 +32,10 @@
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\Db4objects.Db4o.dll</HintPath>
 	</Reference>
+	<Reference Include="LiftIO, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\LiftIO.dll</HintPath>
+	</Reference>
 	<Reference Include="NetReflector, Version=1.0.0.0, Culture=neutral">
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\NetReflector.dll</HintPath>
@@ -60,10 +64,6 @@
 	<Compile Include="LiftMerger.cs" />
   </ItemGroup>
   <ItemGroup>
-	<ProjectReference Include="..\..\lib\LIFT\LiftIO\LiftIO.csproj">
-	  <Project>{A3A7698C-790B-4139-95C8-60380AF35F9C}</Project>
-	  <Name>LiftIO</Name>
-	</ProjectReference>
 	<ProjectReference Include="..\PlatformSpecific\PlatformSpecific.csproj">
 	  <Project>{55E6BAB0-9B46-4C89-8773-4432417C1ADF}</Project>
 	  <Name>PlatformSpecific</Name>

@@ -2,7 +2,6 @@ Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual Studio 2005
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LexicalModel", "LexicalModel\LexicalModel.csproj", "{5F61C809-B6C0-4567-9603-B2198E1AD038}"
 	ProjectSection(ProjectDependencies) = postProject
-		{A3A7698C-790B-4139-95C8-60380AF35F9C} = {A3A7698C-790B-4139-95C8-60380AF35F9C}
 		{600D0FD4-D189-41A0-9BC5-FC79AD2CF1CD} = {600D0FD4-D189-41A0-9BC5-FC79AD2CF1CD}
 	EndProjectSection
 EndProject
@@ -52,15 +51,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lift2WeSay", "Lift2WeSay\Li
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1E233883-3ED1-4890-84BD-F39747A5F0D2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiftIO", "..\lib\lift\LiftIO\LiftIO.csproj", "{A3A7698C-790B-4139-95C8-60380AF35F9C}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reporting", "Reporting\Reporting.csproj", "{9CCBECEC-513C-4DA4-A4CE-F5361B633760}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeSay.Setup", "WeSay.Setup\WeSay.Setup.csproj", "{54C943DB-7725-4F52-BCE4-86C3D3D5A66E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeSay.Setup.Tests", "WeSay.Setup.Tests\WeSay.Setup.Tests.csproj", "{FB7CFBB8-D7D0-4E9D-96CF-7D3D0D947EB5}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiftIO.Tests", "..\lib\LIFT\LiftIO.Tests\LiftIO.Tests.csproj", "{4B53D74B-557E-4E6E-A23E-2FF93DD10F8F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -148,10 +143,6 @@ Global
 		{4408C857-0371-42BF-A635-E23C8A99A803}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4408C857-0371-42BF-A635-E23C8A99A803}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4408C857-0371-42BF-A635-E23C8A99A803}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A3A7698C-790B-4139-95C8-60380AF35F9C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A3A7698C-790B-4139-95C8-60380AF35F9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A3A7698C-790B-4139-95C8-60380AF35F9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A3A7698C-790B-4139-95C8-60380AF35F9C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9CCBECEC-513C-4DA4-A4CE-F5361B633760}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9CCBECEC-513C-4DA4-A4CE-F5361B633760}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9CCBECEC-513C-4DA4-A4CE-F5361B633760}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -164,10 +155,6 @@ Global
 		{FB7CFBB8-D7D0-4E9D-96CF-7D3D0D947EB5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FB7CFBB8-D7D0-4E9D-96CF-7D3D0D947EB5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FB7CFBB8-D7D0-4E9D-96CF-7D3D0D947EB5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4B53D74B-557E-4E6E-A23E-2FF93DD10F8F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4B53D74B-557E-4E6E-A23E-2FF93DD10F8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4B53D74B-557E-4E6E-A23E-2FF93DD10F8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4B53D74B-557E-4E6E-A23E-2FF93DD10F8F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

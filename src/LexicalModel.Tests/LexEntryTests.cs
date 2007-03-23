@@ -74,6 +74,7 @@ namespace WeSay.LexicalModel.Tests
 		{
 			ClearExampleTranslation();
 			ClearExampleCustom();
+			Assert.IsFalse(this._removed);
 			Assert.IsFalse(this._examples.Empty);
 		}
 
@@ -82,6 +83,7 @@ namespace WeSay.LexicalModel.Tests
 		{
 			ClearExampleSentence();
 			ClearExampleCustom();
+			Assert.IsFalse(this._removed);
 			Assert.IsFalse(this._examples.Empty);
 		}
 		[Test]
@@ -89,6 +91,7 @@ namespace WeSay.LexicalModel.Tests
 		{
 			ClearExampleSentence();
 			ClearExampleTranslation();
+			Assert.IsFalse(this._removed);
 			Assert.IsFalse(this._examples.Empty);
 		}
 
@@ -98,6 +101,7 @@ namespace WeSay.LexicalModel.Tests
 			ClearExampleSentence();
 			ClearExampleTranslation();
 			ClearExampleCustom();
+			Assert.IsTrue(this._removed);
 			Assert.IsTrue(this._examples.Empty);
 		}
 
@@ -117,6 +121,7 @@ namespace WeSay.LexicalModel.Tests
 		{
 			ClearSenseExample();
 			ClearSenseCustom();
+			Assert.IsFalse(this._removed);
 			Assert.IsFalse(this._sense.Empty);
 		}
 
@@ -125,6 +130,7 @@ namespace WeSay.LexicalModel.Tests
 		{
 			ClearSenseGloss();
 			ClearSenseCustom();
+			Assert.IsFalse(this._removed);
 			Assert.IsFalse(this._sense.Empty);
 		}
 
@@ -133,6 +139,7 @@ namespace WeSay.LexicalModel.Tests
 		{
 			ClearSenseGloss();
 			ClearSenseExample();
+			Assert.IsFalse(this._removed);
 			Assert.IsFalse(this._sense.Empty);
 		}
 
@@ -142,6 +149,7 @@ namespace WeSay.LexicalModel.Tests
 			ClearSenseGloss();
 			ClearSenseExample();
 			ClearSenseCustom();
+			Assert.IsTrue(this._removed);
 			Assert.IsTrue(this._sense.Empty);
 		}
 
