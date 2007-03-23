@@ -110,7 +110,7 @@ namespace WeSay.Setup
 
 			if (e.NewValue == CheckState.Checked)
 			{
-				SaveWritingSystemIdsForField();
+				SaveWritingSystemIdsForField(e.Index);
 				//CurrentField.WritingSystemIds.Add(CurrentWritingSystemId);
 			}
 			else
@@ -119,11 +119,18 @@ namespace WeSay.Setup
 			}
 		}
 
-		private void SaveWritingSystemIdsForField() {
+		private void SaveWritingSystemIdsForField()
+		{
+			SaveWritingSystemIdsForField(-1);
+		}
+
+
+		private void SaveWritingSystemIdsForField(int aboutToBeCheckedItemIndex) {
 			CurrentField.WritingSystemIds.Clear();
 			for (int i = 0; i < this._writingSystemListBox.Items.Count; i++)
 			{
-				if(this._writingSystemListBox.GetItemChecked(i))
+				if(this._writingSystemListBox.GetItemChecked(i) ||
+						i == aboutToBeCheckedItemIndex)
 				{
 					WritingSystem ws = (WritingSystem) this._writingSystemListBox.Items[i];
 					CurrentField.WritingSystemIds.Add(ws.Id);
