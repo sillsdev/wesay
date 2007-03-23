@@ -37,6 +37,14 @@ namespace WeSay.Setup
 			}
 
 		}
+		protected override void OnVisibleChanged(EventArgs e)
+		{
+			if (Visible)
+			{
+				LoadWritingSystemBox(); // refresh these since they might have changed on another tab
+			}
+			base.OnVisibleChanged(e);
+		}
 
 		/// <summary>
 		/// Construct the list of fields to show.
