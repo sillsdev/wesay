@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using NUnit.Framework;
 using WeSay.Data;
+using WeSay.LexicalModel;
 using WeSay.LexicalModel.Db4o_Specific;
 using WeSay.Project;
 
@@ -56,5 +57,19 @@ namespace WeSay.LexicalTools.Tests
 		{
 			new LexEntrySortHelper(((Db4oRecordListManager)_recordListManager).DataSource, null, true);
 		}
+
+		[Test]
+		public void GetKeys_ForGloss_LexEntryHasNoSenses_NotEmpty()
+		{
+			LexEntrySortHelper h = new LexEntrySortHelper(((Db4oRecordListManager)_recordListManager).DataSource, "pretendAnalysis", false);
+			int count = 0;
+			foreach (string s in h.GetKeys(new LexEntry()))
+			{
+				Assert.AreEqual("*", s);
+				count++;
+			}
+			Assert.AreEqual(1, count);
+		}
+
 	}
 }
