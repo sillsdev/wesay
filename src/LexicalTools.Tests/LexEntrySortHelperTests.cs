@@ -71,5 +71,53 @@ namespace WeSay.LexicalTools.Tests
 			Assert.AreEqual(1, count);
 		}
 
+		[Test]
+		public void GetKeys_ForCompoundGlossExactWritingSystem_SeparateKeys()
+		{
+			LexEntrySortHelper h = new LexEntrySortHelper(((Db4oRecordListManager)_recordListManager).DataSource, "pretendAnalysis", false);
+			LexEntry e = new LexEntry();
+			LexSense s = (LexSense) e.Senses.AddNew();
+			s.Gloss.SetAlternative("pretendAnalysis", "gloss 1; gloss 2");
+			int count = 0;
+			foreach (string k in h.GetKeys(e))
+			{
+				switch(count)
+				{
+					case 0:
+						Assert.AreEqual("gloss 1", k);
+						break;
+					case 1:
+						Assert.AreEqual("gloss 2", k);
+						break;
+				}
+				count++;
+			}
+			Assert.AreEqual(2, count);
+		}
+
+		[Test]
+		public void GetKeys_ForCompoundGlossFallBackWritingSystem_SeparateKeys()
+		{
+			LexEntrySortHelper h = new LexEntrySortHelper(((Db4oRecordListManager)_recordListManager).DataSource, "pretendAnalysis", false);
+			LexEntry e = new LexEntry();
+			LexSense s = (LexSense)e.Senses.AddNew();
+			s.Gloss.SetAlternative("analysis", "gloss 1; gloss 2");
+			int count = 0;
+			foreach (string k in h.GetKeys(e))
+			{
+				switch (count)
+				{
+					case 0:
+						Assert.AreEqual("gloss 1*", k);
+						break;
+					case 1:
+						Assert.AreEqual("gloss 2*", k);
+						break;
+				}
+				count++;
+			}
+			Assert.AreEqual(2, count);
+		}
+
 	}
 }
