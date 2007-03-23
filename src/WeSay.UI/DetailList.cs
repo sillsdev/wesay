@@ -58,7 +58,7 @@ namespace WeSay.UI
 		{
 			protected override void Dispose(bool disposing)
 			{
-				Debug.WriteLine("Disposing "+Name+"   Disposing="+disposing);
+				//Debug.WriteLine("Disposing "+Name+"   Disposing="+disposing);
 				base.Dispose(disposing);
 			}
 		}

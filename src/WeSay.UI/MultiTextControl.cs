@@ -24,8 +24,8 @@ namespace WeSay.UI
 		}
 		public MultiTextControl(IList<WritingSystem> writingSystems, MultiText multiTextToCopyFormsFrom, string nameForTesting):this()
 		{
-			_vbox.Name = Name + "-vbox";
 			Name = nameForTesting+"-mtc";
+			_vbox.Name = Name + "-vbox";
 			_writingSystems = writingSystems;
 			BuildBoxes(multiTextToCopyFormsFrom);
 		}
@@ -86,7 +86,7 @@ namespace WeSay.UI
 				p.Size = new Size(initialPanelWidth,box.Height+0);
 
 				//TODO: THIS IS TRANSITIONAL CODE... AnnotationWidget should probably become a full control (or go away)
-				AnnotationWidget aw = new AnnotationWidget(multiText,writingSystem.Id);
+				AnnotationWidget aw = new AnnotationWidget(multiText,writingSystem.Id, box.Name+"-annotationWidget");
 				Control annotationControl = aw.MakeControl(p.Size);
 				p.Controls.Add(annotationControl);
 				this.components.Add(annotationControl);//so it will get disposed of when we are

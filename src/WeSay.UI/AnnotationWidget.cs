@@ -16,9 +16,11 @@ namespace WeSay.UI
 
 		private MultiText _multitext;
 		private string _writingSystemId;
+		private string _nameForTesting;
 
-		public AnnotationWidget(MultiText multitext, string writingSystemId)
+		public AnnotationWidget(MultiText multitext, string writingSystemId, string nameForTesting)
 		{
+			_nameForTesting = nameForTesting;
 			_multitext = multitext;
 			_writingSystemId = writingSystemId;
 		}
@@ -56,7 +58,7 @@ namespace WeSay.UI
 			_flagButton.Click += new EventHandler(OnClickFlagButton);
 			_flagButton.TabStop = false;
 			_flagButton.IsSetOn = this.FlagIsOn;
-
+			_flagButton.Name = _nameForTesting;
 
 			//            Panel panel = new Panel();
 			//            panel.Size = flagButton.Size;

@@ -20,31 +20,30 @@ namespace WeSay
 		public ImportLIFTCommand(string destinationDatabasePath, string sourceLIFTPath)
 		{
 			_destinationDatabasePath = destinationDatabasePath;
-			_sourceLIFTPath =sourceLIFTPath;
+			_sourceLIFTPath = sourceLIFTPath;
 		}
 
 		protected override void DoWork2(ProgressState progress)
 		{
 			_progress = progress;
 
+			if (!Validates(_sourceLIFTPath))
+			{
+				return;
+			}
 			progress.Status = "Importing...";
 			string tempTarget = Path.GetTempFileName();
 			using (Db4oDataSource ds = new WeSay.Data.Db4oDataSource(tempTarget))
 			{
-//                using (Db4oRecordList<LexEntry> entries = new Db4oRecordList<LexEntry>(ds))
-//                {
-//                    entries.WriteCacheSize = 0; // don't commit all the time.
-					if (Db4oLexModelHelper.Singleton == null)
-					{
-						Db4oLexModelHelper.Initialize(ds.Data);
-					}
-
-					XmlDocument doc = new XmlDocument();
-					doc.Load(_sourceLIFTPath);
-				using(LiftMerger merger = new LiftMerger(ds))
+				if (Db4oLexModelHelper.Singleton == null)
 				{
-				   // _importer = LiftImporter.CreateCorrectImporter(doc);
+					Db4oLexModelHelper.Initialize(ds.Data);
+				}
 
+				XmlDocument doc = new XmlDocument();
+				doc.Load(_sourceLIFTPath);
+				using (LiftMerger merger = new LiftMerger(ds))
+				{
 					foreach (string name in WeSay.Project.WeSayWordsProject.Project.OptionFieldNames)
 					{
 						merger.ExpectedOptionTraits.Add(name);
@@ -53,12 +52,7 @@ namespace WeSay
 					foreach (string name in WeSay.Project.WeSayWordsProject.Project.OptionCollectionFieldNames)
 					{
 						merger.ExpectedOptionCollectionTraits.Add(name);
-						// _importer.ExpectedOptionCollectionTraits.Add(name);
 					}
-					//  merger.ProgressState = progress;
-					// _importer.Progress = progress;
-					//_importer.ReadFile(doc, entries);
-
 
 					LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence> parser =
 						new LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence>(merger);
@@ -71,15 +65,13 @@ namespace WeSay
 							<LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence>.ProgressEventArgs>(
 							parser_SetStepsCompleted);
 					parser.ReadFile(doc);
-
-					//               }
 				}
 			}
-		  ClearTheIncrementalBackupDirectory();
+			ClearTheIncrementalBackupDirectory();
 
 			//if we got this far without an error, move it
 			string backupPath = _destinationDatabasePath + ".bak";
-		   //not needed File.Delete(backupPath);
+			//not needed File.Delete(backupPath);
 			if (File.Exists(_destinationDatabasePath))
 			{
 				File.Replace(tempTarget, _destinationDatabasePath, backupPath);
@@ -88,6 +80,12 @@ namespace WeSay
 			{
 				File.Move(tempTarget, _destinationDatabasePath);
 			}
+		}
+
+		private bool Validates(string path)
+		{
+			// throw new EXCEPTION();
+			return true;
 		}
 
 		void parser_SetStepsCompleted(object sender, LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence>.ProgressEventArgs e)
@@ -108,12 +106,12 @@ namespace WeSay
 				return;
 			}
 			string[] p = Directory.GetFiles(WeSay.Project.WeSayWordsProject.Project.PathToLiftBackupDir, "*.*");
-			if(p.Length>0)
+			if (p.Length > 0)
 			{
 				string newPath = WeSay.Project.WeSayWordsProject.Project.PathToLiftBackupDir + ".old";
 
 				int i = 0;
-				while(Directory.Exists(newPath+i))
+				while (Directory.Exists(newPath + i))
 				{
 					i++;
 				}

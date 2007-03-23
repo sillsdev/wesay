@@ -1,3 +1,4 @@
+using Db4objects.Db4o.Diagnostic;
 using WeSay.Data;
 using WeSay.Language;
 
@@ -44,6 +45,7 @@ namespace WeSay.LexicalModel.Db4o_Specific
 			objectClass = db4oConfiguration.ObjectClass(typeof(MultiText));
 			objectClass.ObjectField("_forms").Indexed(true);
 			objectClass.CascadeOnDelete(true);
+
 		}
 	}
 }

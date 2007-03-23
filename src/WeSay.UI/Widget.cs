@@ -30,26 +30,26 @@ namespace WeSay.UI
 			}
 		}
 
-		protected FlagButton MakeFlagButton(Size panelSize)
-		{
-			_flagButton = new FlagButton();
-			_flagButton.Size = new Size(20, 20);
-			_flagButton.Location = new Point(
-				-1 + panelSize.Width - _flagButton.Width,
-				-1 + panelSize.Height - _flagButton.Height);
-			_flagButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-			_flagButton.Click += new EventHandler(OnClickFlagButton);
-			_flagButton.TabStop = false;
-
-
-			//            Panel panel = new Panel();
-			//            panel.Size = flagButton.Size;
-			//            panel.Location = flagButton.Location;
-			//            panel.Anchor = flagButton.Anchor;
-			//            panel.BackColor = System.Drawing.Color.Red;
-
-			return _flagButton;
-		}
+//        protected FlagButton MakeFlagButton(Size panelSize)
+//        {
+//            _flagButton = new FlagButton();
+//            _flagButton.Size = new Size(20, 20);
+//            _flagButton.Location = new Point(
+//                -1 + panelSize.Width - _flagButton.Width,
+//                -1 + panelSize.Height - _flagButton.Height);
+//            _flagButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+//            _flagButton.Click += new EventHandler(OnClickFlagButton);
+//            _flagButton.TabStop = false;
+//
+//
+//            //            Panel panel = new Panel();
+//            //            panel.Size = flagButton.Size;
+//            //            panel.Location = flagButton.Location;
+//            //            panel.Anchor = flagButton.Anchor;
+//            //            panel.BackColor = System.Drawing.Color.Red;
+//
+//            return _flagButton;
+//        }
 
 		private void OnClickFlagButton(object sender, EventArgs e)
 		{

@@ -17,6 +17,12 @@ namespace WeSay.LexicalModel
 	{
 		private LexicalFormMultiText _lexicalForm;
 		private Guid _guid;
+		/// <summary>
+		/// This use for keeping track of the item when importing an then exporting again,
+		/// like for merging. The user doesn't edit this, and if it is null that's fine,
+		/// the exporter will make up a reasonable one.
+		/// </summary>
+		private string _id;
 		private WeSay.Data.InMemoryBindingList<LexSense> _senses;
 		private DateTime _creationTime;
 		private DateTime _modificationTime;
@@ -28,16 +34,17 @@ namespace WeSay.LexicalModel
 
 		public LexEntry(): base(null)
 		{
-			Init(Guid.NewGuid());
+			Init(null, Guid.NewGuid());
 		}
 
-		public LexEntry(Guid guid): base(null)
+		public LexEntry(string id, Guid guid): base(null)
 		{
-			Init(guid);
+			Init(id, guid);
 		}
 
-		private void Init(Guid guid)
+		private void Init(string id,Guid guid)
 		{
+			_id = id;
 			if (guid == Guid.Empty)
 			{
 				_guid = Guid.NewGuid();
@@ -172,6 +179,19 @@ namespace WeSay.LexicalModel
 				return Senses.Count == 0 &&
 					   LexicalForm.Empty &&
 					   !HasProperties;
+			}
+		}
+
+		/// <summary>
+		/// This use for keeping track of the item when importing an then exporting again,
+		/// like for merging. The user doesn't edit this, and if it is null that's fine,
+		/// the exporter will make up a reasonable one.
+		/// </summary>
+		public string Id
+		{
+			get
+			{
+				return _id;
 			}
 		}
 

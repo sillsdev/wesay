@@ -28,7 +28,7 @@ namespace WeSay.UI
 			_widget.ValueChanged += new EventHandler(OnWidgetValueChanged);
 			_widget.GoingAway += new EventHandler(_target_HandleDestroyed);
 
-			Debug.WriteLine("++++++Constructed SimpleBinding boundTo: " + this._widget.Value);
+			//Debug.WriteLine("++++++Constructed SimpleBinding boundTo: " + this._widget.Value);
 		}
 
 		void _target_HandleDestroyed(object sender, EventArgs e)
@@ -53,7 +53,7 @@ namespace WeSay.UI
 		/// </summary>
 		private void TearDown()
 		{
-			Debug.WriteLine("-----TearDown SimpleBinding  boundTo: " + this._widget.Value);
+		  //  Debug.WriteLine("-----TearDown SimpleBinding  boundTo: " + this._widget.Value);
 
 			if (_dataTarget == null)
 			{

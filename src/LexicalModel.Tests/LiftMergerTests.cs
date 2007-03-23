@@ -47,12 +47,25 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
-		public  void NewEntryWithGuid()
+		public void NewEntryGetsId()
 		{
 			Extensible extensibleInfo = new Extensible();
-			extensibleInfo.Id = Guid.NewGuid().ToString();
+			extensibleInfo.Id = "foo";
+			LexEntry e = _merger.GetOrMakeEntry(extensibleInfo);
+			Assert.AreEqual(extensibleInfo.Id, e.Id);
+			_merger.FinishEntry(e);
+			RefreshEntriesList();
+			Assert.AreEqual(1, _entries.Count);
+		}
+
+		[Test]
+		public  void NewEntryGetsGuid()
+		{
+			Extensible extensibleInfo = new Extensible();
+			extensibleInfo.Guid = Guid.NewGuid();
 			LexEntry e= _merger.GetOrMakeEntry(extensibleInfo);
-			Assert.AreEqual(extensibleInfo.Id, e.Guid.ToString());
+			Assert.AreEqual(extensibleInfo.Guid, e.Guid);
+			_merger.FinishEntry(e);
 			RefreshEntriesList();
 			Assert.AreEqual(1, _entries.Count);
 		}
@@ -249,14 +262,35 @@ namespace WeSay.LexicalModel.Tests
 
 
 		[Test]
-		public  void TryCompleteEntry()
+		public  void EntryWithChildren()
 		{
 			Extensible extensibleInfo = new Extensible();
 			LexEntry e = MakeSimpleEntry();
 			LexSense s= _merger.GetOrMakeSense(e, extensibleInfo);
-			LexExampleSentence ex =_merger.GetOrMakeExample(s, extensibleInfo);
 
-			Assert.AreEqual(e, ex.Parent.Parent);
+			LexExampleSentence ex = _merger.GetOrMakeExample(s, new Extensible());
+			ex.Sentence["foo"] = "this is a sentence";
+			ex.Translation["aa"] = "aaaa";
+			_merger.FinishEntry(e);
+			CheckCompleteEntry(e);
+
+			RefreshEntriesList();
+			Assert.AreEqual(1, _entries.Count);
+
+			//now check it again, from the list
+			CheckCompleteEntry(_entries[0]);
+		}
+
+		private static void CheckCompleteEntry(LexEntry entry)
+		{
+			Assert.AreEqual(1, entry.Senses.Count);
+			LexSense sense = (LexSense)entry.Senses[0];
+			Assert.AreEqual(1, sense.ExampleSentences.Count);
+			LexExampleSentence  example = (LexExampleSentence)sense.ExampleSentences[0];
+			Assert.AreEqual("this is a sentence", example.Sentence["foo"]);
+			Assert.AreEqual("aaaa", example.Translation["aa"]);
+			Assert.AreEqual(entry, sense.Parent);
+			Assert.AreEqual(entry, example.Parent.Parent);
 		}
 
 		[Test, Ignore("Haven't implemented protecting modified dates of, e.g., the entry as you add/merge its children.")]
@@ -270,7 +304,7 @@ namespace WeSay.LexicalModel.Tests
 			Guid g = Guid.NewGuid();
 			Extensible extensibleInfo = CreateFullextensibleInfo(g);
 
-			LexEntry e = new LexEntry(g);
+			LexEntry e = new LexEntry(null, g);
 			e.Senses.AddNew();
 			e.Senses.AddNew();
 			e.CreationTime = extensibleInfo.CreationTime;
@@ -278,6 +312,7 @@ namespace WeSay.LexicalModel.Tests
 			_entries.Add(e);
 
 			LexEntry found = _merger.GetOrMakeEntry(extensibleInfo);
+			_merger.FinishEntry(found);
 			Assert.AreSame(found, e);
 			Assert.AreEqual(2, found.Senses.Count);
 
@@ -285,6 +320,7 @@ namespace WeSay.LexicalModel.Tests
 			Assert.AreEqual(1, _entries.Count);
 			Extensible xInfo = CreateFullextensibleInfo(Guid.NewGuid());
 			LexEntry x = _merger.GetOrMakeEntry(xInfo);
+			_merger.FinishEntry(x);
 			RefreshEntriesList();
 			Assert.AreEqual(2, _entries.Count);
 		}
@@ -295,7 +331,7 @@ namespace WeSay.LexicalModel.Tests
 			Guid g = Guid.NewGuid();
 			Extensible extensibleInfo = CreateFullextensibleInfo( g);
 
-			LexEntry e = new LexEntry(g);
+			LexEntry e = new LexEntry(null, g);
 			e.CreationTime = extensibleInfo.CreationTime;
 			e.ModificationTime = extensibleInfo.ModificationTime;
 			_entries.Add(e);
@@ -309,7 +345,7 @@ namespace WeSay.LexicalModel.Tests
 		{
 			Guid g = Guid.NewGuid();
 			Extensible extensibleInfo = CreateFullextensibleInfo(g);
-			LexEntry e = new LexEntry(g);
+			LexEntry e = new LexEntry(null, g);
 			e.CreationTime = extensibleInfo.CreationTime;
 			e.ModificationTime = extensibleInfo.ModificationTime;
 			_entries.Add(e);
@@ -347,7 +383,7 @@ namespace WeSay.LexicalModel.Tests
 		private static Extensible CreateFullextensibleInfo(Guid g)
 		{
 			Extensible extensibleInfo = new Extensible();
-			extensibleInfo.Id = g.ToString();
+			extensibleInfo.Guid = g;
 			extensibleInfo = AddDates(extensibleInfo);
 			return extensibleInfo;
 		}

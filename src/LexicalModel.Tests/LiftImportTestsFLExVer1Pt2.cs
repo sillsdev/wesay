@@ -5,7 +5,8 @@ using WeSay.LexicalModel;
 
 namespace WeSay.LexicalTools.Tests
 {
-	[TestFixture]
+   /* the class this tests is being retired
+	* [TestFixture]
 	public class LiftImportTestsFLExVer1Pt2 : LiftImportTestsBase
 	{
 		protected override LiftImporter CreateImporter()
@@ -23,4 +24,5 @@ namespace WeSay.LexicalTools.Tests
 			Assert.Greater(entries.Count,60);
 		}
 	}
+	* */
 }

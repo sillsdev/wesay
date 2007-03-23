@@ -34,7 +34,7 @@ namespace WeSay.LexicalModel
 		   {
 			   return;
 		   }
-		   OptionRef o = sense.GetOrCreateProperty<OptionRef>("PartOfSpeech");
+		   OptionRef o = sense.GetOrCreateProperty<OptionRef>(LexSense.WellKnownProperties.PartOfSpeech );
 		   o.Value = GetManditoryAttributeValue(grammi, "type"); /////<----- this is the reason for the override.
 													//in later versions of lift, this was changed to "value"
 	   }

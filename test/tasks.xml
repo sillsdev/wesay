@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <tasks>
   <components>
-	<viewTemplate id="Default View Template">
+	<viewTemplate>
 	  <fields>
 		<field>
 		  <className>LexEntry</className>
@@ -26,6 +26,18 @@
 		  </writingSystems>
 		</field>
 		<field>
+		  <className>LexSense</className>
+		  <dataType>Option</dataType>
+		  <displayName>POS</displayName>
+		  <fieldName>POS</fieldName>
+		  <multiplicity>ZeroOr1</multiplicity>
+		  <optionsListFile>PartsOfSpeech.xml</optionsListFile>
+		  <visibility>Visible</visibility>
+		  <writingSystems>
+			<id>en</id>
+		  </writingSystems>
+		</field>
+		<field>
 		  <className>LexExampleSentence</className>
 		  <dataType>MultiText</dataType>
 		  <displayName>Example Sentence</displayName>
@@ -47,31 +59,44 @@
 			<id>PretendAnalysis</id>
 		  </writingSystems>
 		</field>
+		<field>
+		  <className>LexSense</className>
+		  <dataType>MultiText</dataType>
+		  <displayName>Note</displayName>
+		  <fieldName>note</fieldName>
+		  <multiplicity>ZeroOr1</multiplicity>
+		  <visibility>Visible</visibility>
+		  <writingSystems>
+			<id>en</id>
+		  </writingSystems>
+		</field>
+		   <field>
+		  <className>LexSense</className>
+		  <dataType>OptionCollection</dataType>
+		  <displayName>Sem Dom</displayName>
+		  <fieldName>SemanticDomains</fieldName>
+		  <multiplicity>ZeroOr1</multiplicity>
+		  <optionsListFile>SemanticDomains.xml</optionsListFile>
+		  <visibility>Visible</visibility>
+		  <writingSystems>
+			<id>en</id>
+		  </writingSystems>
+		</field>
 	  </fields>
+	  <id>Default View Template</id>
 	</viewTemplate>
   </components>
   <task id="Dashboard" class="WeSay.CommonTools.DashboardControl" assembly="CommonTools" default="true">
 	<entries ref="All Entries" />
 	<currentTaskProvider ref="Current Task Provider" />
-	<label UseInConstructor="false">Dashboard</label>
+	<label UseInConstructor="false">Home</label>
 	<description UseInConstructor="false">This task is normally the first thing the user sees when WeSay comes up.  It gives the user some status of the project, and reminds him what he was working on. Finally, this tab will allow him to switch to a different work task, if you have enabled more than one.</description>
 	<optional UseInConstructor="false">false</optional>
   </task>
   <task id="EntryDetail" class="WeSay.LexicalTools.EntryDetailTask" assembly="LexicalTools" default="true">
 	<entries ref="All Entries" />
-	<viewTemplate ref="Default View Template"/>
-	<label UseInConstructor="false">Words</label>
-	<description UseInConstructor="false">This task allows the user to see and edit all enabled fields of all entries in the dictionary.  He can add, delete, and search for entries.</description>
-  </task>
-  <task id="AddMeanings" class="WeSay.LexicalTools.LexFieldTask" assembly="LexicalTools" default="true">
-	<entries ref="All Entries" />
-	<filter class="WeSay.LexicalModel.MissingItemFilter" assembly="LexicalModel">
-	  <viewTemplate ref="Default View Template"/>
-	  <field>SenseGloss</field>
-	</filter>
-	<label>Add Meanings</label>
-	<description>Add meanings to entries where they are missing.</description>
-	<viewTemplate ref="Default View Template"/>
-	<showfields>SenseGloss</showfields>
+	<viewTemplate ref="Default View Template" />
+	<label UseInConstructor="false">Dictionary</label>
+	<description UseInConstructor="false">This task allows advanced users to see and edit all enabled fields of all entries in the dictionary.  He can add, delete, and search for entries.  NOTE: while this task may be very enticing to those familiar with traditional programs, this is *not* intended to be a primary way of working with WeSay.</description>
   </task>
 </tasks>

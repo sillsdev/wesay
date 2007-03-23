@@ -92,7 +92,7 @@ namespace WeSay.Language
 
 		public static bool IsEmpty(MultiText mt)
 		{
-				return mt == null || mt.Count == 0;
+				return mt == null || mt.Empty;
 		}
 
 		static public MultiText Create(Dictionary<string,string> forms)
@@ -280,7 +280,7 @@ namespace WeSay.Language
 		{
 			get
 			{
-				return Count == 0;
+				return Count == 0 ;
 			}
 		}
 
@@ -338,7 +338,7 @@ namespace WeSay.Language
 		   LanguageForm alt = Find(writingSystemId);
 		   if (form == null || form.Length == 0) // we don't use space to store empty strings.
 		   {
-			   if (alt != null)
+			   if (alt != null && !alt.IsStarred )
 			   {
 				   RemoveLanguageForm(alt);
 			   }

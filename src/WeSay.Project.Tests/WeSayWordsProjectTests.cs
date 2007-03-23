@@ -97,7 +97,7 @@ namespace WeSay.Project.Tests
 			OptionsList list = p.GetOptionsList("PartsOfSpeech.xml");
 			Dictionary<string, string> dict = p.GetFieldToOptionListNameDictionary();
 			Assert.AreEqual(1, dict.Count);
-			Assert.AreEqual("PartsOfSpeech", dict["PartOfSpeech"]);
+			Assert.AreEqual("PartsOfSpeech", dict[LexicalModel.LexSense.WellKnownProperties.PartOfSpeech]);
 		}
 
 

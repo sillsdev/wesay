@@ -20,6 +20,7 @@ namespace WeSay.UI
 
 		public TextBinding(INotifyPropertyChanged dataTarget, string writingSystemId, WeSayTextBox widgetTarget)
 		{
+			System.Diagnostics.Debug.Assert(dataTarget != null);
 			_dataTarget = dataTarget;
 			_dataTarget.PropertyChanged += new PropertyChangedEventHandler(OnDataPropertyChanged);
 			_writingSystemId = writingSystemId;
@@ -87,6 +88,7 @@ namespace WeSay.UI
 
 		protected string GetTargetValue()
 		{
+			System.Diagnostics.Debug.Assert(_dataTarget != null, "Perhaps the binding was already torn down?");
 			MultiText text = _dataTarget as MultiText;
 			if (text == null)
 				throw new ArgumentException("Binding can't handle that type of target.");
@@ -95,6 +97,7 @@ namespace WeSay.UI
 
 		protected virtual void SetTargetValue(string s)
 		{
+			System.Diagnostics.Debug.Assert(_dataTarget != null, "Perhaps the binding was already torn down?");
 			if (_inMidstOfChange)
 				return;
 

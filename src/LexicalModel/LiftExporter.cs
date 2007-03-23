@@ -12,14 +12,14 @@ namespace WeSay.LexicalModel
 	{
 		public const string LiftDateTimeFormat = "yyyy-MM-ddThh:mm:ssZ";
 		private XmlWriter _writer;
-		private Dictionary<string, int> _forms;
-		static List<string> _reservedNames = new List<string>(new string[] { "PartOfSpeech" });
+		private Dictionary<string, int> _allIdsExportedSoFar;
+		static List<string> _reservedNames = new List<string>(new string[] {LexSense.WellKnownProperties.PartOfSpeech});
 		private Dictionary<string, string> _fieldToRangeSetPairs;
 
 		public LiftExporter(Dictionary<string, string> fieldToOptionListName, string path)
 		{
 			_fieldToRangeSetPairs = fieldToOptionListName;
-			_forms = new Dictionary<string, int>();
+			_allIdsExportedSoFar = new Dictionary<string, int>();
 		   _writer = XmlWriter.Create(path, PrepareSettings(false));
 		   Start();
 		}
@@ -31,7 +31,7 @@ namespace WeSay.LexicalModel
 		{
 			_fieldToRangeSetPairs = fieldToOptionListName;
 
-			_forms = new Dictionary<string, int>();
+			_allIdsExportedSoFar = new Dictionary<string, int>();
 			_writer = XmlWriter.Create(builder, PrepareSettings(produceFragmentOnly));
 			if (!produceFragmentOnly)
 			{
@@ -130,27 +130,31 @@ namespace WeSay.LexicalModel
 
 		private string MakeHumanReadableId(LexEntry entry)
 		{
-
-			string form = entry.LexicalForm.GetFirstAlternative().Trim();
-			if (form == "")
+			string id = entry.Id;
+			if (id == null || id == String.Empty)       // if the entry doesn't claim to have an id
 			{
-				form = "NoForm"; //review
+				id = entry.LexicalForm.GetFirstAlternative().Trim(); // use the first form as an id
+				if (id == "")
+				{
+					id = "NoForm"; //review
+				}
 			}
 
+			//make this id unique
 			int count=0;
-			if (_forms.TryGetValue(form, out count))
+			if (_allIdsExportedSoFar.TryGetValue(id, out count))
 			{
 				++count;
-				_forms.Remove(form);
-				_forms.Add(form, count);
-				form = string.Format("{0}_{1}", form, count);
+				_allIdsExportedSoFar.Remove(id);
+				_allIdsExportedSoFar.Add(id, count);
+				id = string.Format("{0}_{1}", id, count);
 			}
 			else
 			{
-				_forms.Add(form, 1);
+				_allIdsExportedSoFar.Add(id, 1);
 			}
 
-			return form;
+			return id;
 		}
 
 		public void Add(LexSense sense)

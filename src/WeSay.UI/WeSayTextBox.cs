@@ -159,14 +159,28 @@ namespace WeSay.UI
 			{
 				throw new InvalidOperationException("WritingSystem must be initialized prior to use.");
 			}
+//
+//            if (_writingSystem.KeyboardName == null || _writingSystem.KeyboardName == string.Empty)
+//            {
+//                InputLanguage.CurrentInputLanguage = InputLanguage.DefaultInputLanguage;
+//                return;
+//            }
+
 			InputLanguage inputLanguage = FindInputLanguage(this._writingSystem.KeyboardName);
 			if (inputLanguage != null)
 			{
 				InputLanguage.CurrentInputLanguage = inputLanguage;
 			}
-			else if (_keymanLink != null && !string.IsNullOrEmpty(_writingSystem.KeyboardName))
+			else
 			{
-				_keymanLink.SelectKeymanKeyboard(_writingSystem.KeyboardName, true);
+				//set the windows back to default so it doesn't interfere
+				//nice idea but is unneeded... perhaps keyman is calling this too
+				//InputLanguage.CurrentInputLanguage = InputLanguage.DefaultInputLanguage;
+
+				if (_keymanLink != null && !string.IsNullOrEmpty(_writingSystem.KeyboardName))
+				{
+					_keymanLink.SelectKeymanKeyboard(_writingSystem.KeyboardName, true);
+				}
 			}
 		}
 

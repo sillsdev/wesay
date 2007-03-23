@@ -36,6 +36,10 @@
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\LiftIO.dll</HintPath>
 	</Reference>
+	<Reference Include="mono.relaxng, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\mono.relaxng.dll</HintPath>
+	</Reference>
 	<Reference Include="NetReflector, Version=1.0.0.0, Culture=neutral">
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\NetReflector.dll</HintPath>
@@ -85,4 +89,8 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <PropertyGroup>
+	<PreBuildEvent>copy $(SolutionDir)\..\lib\lift\liftdotnet\output\debug\*.dll $(SolutionDir)\..\lib
+copy $(SolutionDir)\..\lib\lift\liftdotnet\output\debug\*.pdb $(TargetDir)\..\lib</PreBuildEvent>
+  </PropertyGroup>
 </Project>

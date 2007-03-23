@@ -19,7 +19,7 @@ namespace WeSay.UI
 		/// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
 		protected override void Dispose(bool disposing)
 		{
-			Debug.WriteLine("Disposing " + Name + "   Disposing=" + disposing);
+			//Debug.WriteLine("Disposing " + Name + "   Disposing=" + disposing);
 
 			if (disposing && (components != null))
 			{

@@ -179,7 +179,7 @@ namespace WeSay.Project
 			glossField.Visibility = Field.VisibilitySetting.Visible;
 			masterTemplate.Add(glossField);
 
-			Field posField = new Field("PartOfSpeech", "LexSense", defaultAnalysisSet);
+			Field posField = new Field("POS", "LexSense", defaultAnalysisSet);
 			posField.DisplayName = "POS";
 			posField.Description = "The grammatical category of the entry (Noun, Verb, etc.).";
 			posField.DataTypeName = "Option";

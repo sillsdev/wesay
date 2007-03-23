@@ -4,6 +4,7 @@
 
 using System;
 using System.Runtime.Serialization;
+using Db4objects.Db4o.Diagnostic;
 
 namespace WeSay.Data
 {
@@ -34,6 +35,9 @@ namespace WeSay.Data
 #if THROW_ON_OPTIMIZATION_FAILURE
 			((Db4objects.Db4o.YapStream)_db).GetNativeQueryHandler().QueryOptimizationFailure += new Db4objects.Db4o.Inside.Query.QueryOptimizationFailureHandler(OnQueryOptimizationFailure);
 #endif
+
+			//remove diagnostic messages which slow down the tests
+			db4oConfiguration.Diagnostic().RemoveAllListeners();
 		}
 
 #if THROW_ON_OPTIMIZATION_FAILURE

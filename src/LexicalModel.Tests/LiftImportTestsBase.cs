@@ -117,12 +117,12 @@ namespace WeSay.LexicalTools.Tests
 		{
 			_doc.LoadXml("<sense><grammi value=\"verb\"/></sense>");
 			LexSense sense = _importer.ReadSense(_doc.SelectSingleNode("sense"));
-			Assert.AreEqual("verb", sense.GetOrCreateProperty<OptionRef>("PartOfSpeech").Value);
+			Assert.AreEqual("verb", sense.GetOrCreateProperty<OptionRef>(LexSense.WellKnownProperties.PartOfSpeech).Value);
 
 			//something not in the exiting optionsList
 			_doc.LoadXml("<sense><grammi value=\"neverHeadOfThisBefore\"/></sense>");
 			sense = _importer.ReadSense(_doc.SelectSingleNode("sense"));
-			Assert.AreEqual("neverHeadOfThisBefore", sense.GetOrCreateProperty<OptionRef>("PartOfSpeech").Value);
+			Assert.AreEqual("neverHeadOfThisBefore", sense.GetOrCreateProperty<OptionRef>(LexSense.WellKnownProperties.PartOfSpeech).Value);
 		}
 
 		[Test]

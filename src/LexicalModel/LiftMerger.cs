@@ -34,11 +34,11 @@ namespace WeSay.LexicalModel
 
 		public LexEntry GetOrMakeEntry(Extensible eInfo)
 		{
-			Guid guid = GetGuidOrEmptyFromIdString(eInfo.Id);
+			//Guid guid = GetGuidOrEmptyFromIdString(eInfo.Id);
 			LexEntry entry = null;
-			if (guid != Guid.Empty)
+			if (eInfo.Guid != Guid.Empty)
 			{
-				entry = Db4oLexQueryHelper.FindObjectFromGuid<LexEntry>(_dataSource, guid);
+				entry = Db4oLexQueryHelper.FindObjectFromGuid<LexEntry>(_dataSource, eInfo.Guid);
 
 				if (CanSafelyPruneMerge(eInfo, entry))
 				{
@@ -48,8 +48,7 @@ namespace WeSay.LexicalModel
 
 			if (entry == null)
 			{
-				entry = new LexEntry(guid);
-				_dataSource.Data.Set(entry);
+				entry = new LexEntry(eInfo.Id, eInfo.Guid);
 			}
 
 			if (eInfo.CreationTime != default(DateTime))
@@ -61,7 +60,6 @@ namespace WeSay.LexicalModel
 			{
 				entry.ModificationTime = eInfo.ModificationTime;
 			}
-
 			return entry;
 		}
 
@@ -98,13 +96,17 @@ namespace WeSay.LexicalModel
 		public LexSense GetOrMakeSense(LexEntry entry, Extensible eInfo)
 		{
 			//nb, has no guid or dates
-			return new LexSense(entry);
+			LexSense s= new LexSense(entry);
+			entry.Senses.Add(s);
+
+			return s;
 		}
 
 		public LexExampleSentence GetOrMakeExample(LexSense sense, Extensible eInfo)
 		{
-			//nb, has no guid or dates
-			return new LexExampleSentence(sense);
+			LexExampleSentence ex = new LexExampleSentence(sense);
+			sense.ExampleSentences.Add(ex);
+			return ex;
 		}
 
 		public void MergeInLexemeForm(LexEntry entry, SimpleMultiText forms)
@@ -243,5 +245,15 @@ namespace WeSay.LexicalModel
 		{
 			 //_entries.Dispose();
 		}
+
+		#region ILexiconMerger<WeSayDataObject,LexEntry,LexSense,LexExampleSentence> Members
+
+
+		public void FinishEntry(LexEntry entry)
+		{
+			_dataSource.Data.Set(entry);
+		}
+
+		#endregion
 	}
 }

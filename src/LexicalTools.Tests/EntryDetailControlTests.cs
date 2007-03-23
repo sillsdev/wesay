@@ -26,6 +26,7 @@ namespace WeSay.LexicalTools.Tests
 		public void SetupFixture()
 		{
 			WeSayWordsProject.InitializeForTests();
+			File.Delete(WeSayWordsProject.Project.PathToProjectTaskInventory);
 			File.Copy(Path.Combine(WeSayWordsProject.Project.ApplicationTestDirectory, "tasks.xml"), WeSayWordsProject.Project.PathToProjectTaskInventory, true);
 		}
 
@@ -53,17 +54,30 @@ namespace WeSay.LexicalTools.Tests
 
 			viewTemplate.Add(new Field(Field.FieldNames.SenseGloss.ToString(), "LexSense",analysisWritingSystemIds));
 
-			Field customField;
+
 
 			viewTemplate.Add(new Field(Field.FieldNames.ExampleSentence.ToString(), "LexExampleSentence",vernacularWritingSystemIds));
 
 			viewTemplate.Add(new Field(Field.FieldNames.ExampleTranslation.ToString(), "LexExampleSentence",analysisWritingSystemIds));
 
-			customField = new Field("SemanticDomains", "LexSense", analysisWritingSystemIds, Field.MultiplicityType.ZeroOr1, "OptionCollection");
+			Field customField = new Field("SemanticDomains", "LexSense", analysisWritingSystemIds, Field.MultiplicityType.ZeroOr1, "OptionCollection");
 			customField.ClassName = "LexSense";
 			customField.DisplayName = "Sem Dom";
 			customField.OptionsListFile = "SemanticDomains.xml";
 			viewTemplate.Add(customField);
+
+
+			Field customPOSField = new Field("pos", "LexSense", analysisWritingSystemIds, Field.MultiplicityType.ZeroOr1, "Option");
+			customPOSField.ClassName = "LexSense";
+			customPOSField.DisplayName = "POS";
+			customPOSField.OptionsListFile = "PartsOfSpeech.xml";
+			viewTemplate.Add(customPOSField);
+
+
+			Field customNotesField = new Field("Note", "LexSense", analysisWritingSystemIds);
+			customNotesField.ClassName = "LexSense";
+			customNotesField.DisplayName = "note";
+			viewTemplate.Add(customNotesField);
 
 			this._task = new EntryDetailTask(_recordListManager, viewTemplate);
 			this._detailTaskPage = new TabPage();
@@ -76,6 +90,8 @@ namespace WeSay.LexicalTools.Tests
 			this._tabControl.TabPages.Add("Dummy");
 			this._window = new Form();
 			this._window.Controls.Add(this._tabControl);
+			_window.Width = 500;
+			_window.Height = 500;
 			this._window.Show();
 		}
 
@@ -277,6 +293,37 @@ namespace WeSay.LexicalTools.Tests
 		}
 
 		[Test]
+		public void ClickingTheStarButton_AfterTyping_SetsAnnotation()
+		{
+			TypeInLexicalForm("one");
+			ClickStarOfLexemeForm();
+			Assert.IsTrue(this._records[0].LexicalForm.GetAnnotationOfAlternativeIsStarred(_vernacularWsId));
+		}
+
+		[Test]
+		public void ClickingTheStarButton_WithEmptySenseBelow_RegressionTest()
+		{
+	  //      this._records[0].Senses.AddNew();
+   //         this._records[0].NotifyPropertyChanged("senses");
+		   // Application.DoEvents();
+			ClickStarOfLexemeForm();
+			Assert.IsTrue(this._records[0].LexicalForm.GetAnnotationOfAlternativeIsStarred(_vernacularWsId));
+		}
+
+		private void ClickStarOfLexemeForm()
+		{
+			NUnit.Extensions.Forms.ControlTester t = new ControlTester(GetNameOfLexicalFormAnnotationControl());
+			t.Click();
+			MultiTextControl control = GetEditControl(Field.FieldNames.EntryLexicalForm.ToString());
+		}
+
+		private static string GetNameOfLexicalFormAnnotationControl()
+		{
+			return GetLexicalFormControlName()+"-annotationWidget";
+		}
+
+
+		[Test]
 		public void SwitchingToAnotherTaskDoesNotLooseBindings()
 		{
 			LexicalFormMustMatch("Initial");
@@ -386,18 +433,62 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void EditField_RemoveSenseContents_RemovesSense()
 		{
-			DetailList detailList = ((EntryDetailControl)_task.Control).Control_EntryDetailPanel.ControlEntryDetail;
-
-			MultiTextControl editControl = GetEditControl(detailList, "Meaning");
+			MultiTextControl editControl = GetEditControl("Meaning");
 			editControl.TextBoxes[0].Focus();
 			TypeInMeaning(string.Empty);
 
-			Assert.IsTrue(GetEditControl(detailList, "Meaning").Name.Contains("ghost"), "Only ghost should remain");
+			Assert.IsTrue(GetEditControl("Meaning").Name.Contains("ghost"), "Only ghost should remain");
 		}
 
-
-		private static MultiTextControl GetEditControl(DetailList detailList, string labelText)
+		/// <summary>
+		/// Actually, I never was able to get this test to fail. Sigh.
+		/// </summary>
+		[Test]
+		public void GhostField_Trigger_RegressionTest()
 		{
+			ClickAddWord();
+
+			DetailList detailList = ((EntryDetailControl)_task.Control).Control_EntryDetailPanel.ControlEntryDetail;
+			int initialCount = detailList.Count;
+
+			MultiTextControl editControl = GetEditControl("Meaning");
+			Assert.IsTrue(GetEditControl("Meaning").Name.Contains("ghost"));
+			 editControl.TextBoxes[0].Focus();
+			 TextBoxTester t = new TextBoxTester(editControl.TextBoxes[0].Name);
+		  //didn''t work  t.FireEvent("KeyPress", new KeyPressEventArgs('a'));
+		   t.Properties.Text = "foo";
+//            Application.DoEvents();
+//            t.FireEvent("KeyDown", new KeyEventArgs(Keys.Tab));
+//            Application.DoEvents();
+//            t.FireEvent("KeyUp", new KeyEventArgs(Keys.Tab));
+//            Application.DoEvents();
+			NUnit.Extensions.Forms.TextBoxTester lxt = new TextBoxTester(GetLexicalFormControlName());
+			lxt.Properties.Focus();
+			//ghost really did fire
+			Assert.IsTrue(detailList.Count > initialCount);
+
+			//now do another one
+			initialCount = detailList.Count;
+			MultiTextControl editControl2 = GetEditControl("Meaning",true);
+			Assert.IsTrue(editControl2.Name.Contains("ghost"));
+			editControl2.TextBoxes[0].Focus();
+			Application.DoEvents();
+			TextBoxTester t2 = new TextBoxTester(editControl2.TextBoxes[0].Name);
+			t2.Properties.Text = "bar";
+			Application.DoEvents();
+			lxt.Properties.Focus();
+			Application.DoEvents();
+			Assert.IsTrue(detailList.Count > initialCount);
+		}
+
+		private MultiTextControl GetEditControl(string labelText)
+		{
+			return GetEditControl(labelText, false);
+		}
+
+		private  MultiTextControl GetEditControl(string labelText, bool lookingForGhostVersion)
+		{
+			DetailList detailList = ((EntryDetailControl)_task.Control).Control_EntryDetailPanel.ControlEntryDetail;
 			MultiTextControl editControl = null;
 			for (int i = 0; i < detailList.Count; i++)
 			{
@@ -406,6 +497,14 @@ namespace WeSay.LexicalTools.Tests
 				if (label.Text == labelText)
 				{
 					editControl = (MultiTextControl)detailList.GetEditControlFromReferenceControl(referenceControl);
+					if (lookingForGhostVersion)
+					{
+						if (!editControl.Name.Contains("ghost"))
+						{
+							editControl = null;
+							continue;
+						}
+					}
 					break;
 				}
 			}

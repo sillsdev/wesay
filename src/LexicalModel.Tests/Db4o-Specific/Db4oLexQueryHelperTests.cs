@@ -30,7 +30,7 @@ namespace WeSay.LexicalModel.Tests
 		{
 			CycleDatabase();
 			Guid g = Guid.NewGuid();
-			LexEntry entry = new LexEntry(g);
+			LexEntry entry = new LexEntry(null, g);
 			entry.LexicalForm["en"] = "hello";
 			_entriesList.Add(new LexEntry());
 			_entriesList.Add(entry);
@@ -46,7 +46,7 @@ namespace WeSay.LexicalModel.Tests
 			CycleDatabase();
 			Guid g = Guid.NewGuid();
 			_entriesList.Add(new LexEntry());
-			_entriesList.Add(new LexEntry(g));
+			_entriesList.Add(new LexEntry(null, g));
 			_entriesList.Add(new LexEntry());
 			CycleDatabase();
 			LexEntry found = Db4oLexQueryHelper.FindObjectFromGuid<LexEntry>(_dataSource, Guid.NewGuid());
@@ -57,8 +57,8 @@ namespace WeSay.LexicalModel.Tests
 		{
 			CycleDatabase();
 			Guid g = Guid.NewGuid();
-			_entriesList.Add(new LexEntry(g));
-			_entriesList.Add(new LexEntry(g));
+			_entriesList.Add(new LexEntry(null, g));
+			_entriesList.Add(new LexEntry(null, g));
 			CycleDatabase();
 			LexEntry found = Db4oLexQueryHelper.FindObjectFromGuid<LexEntry>(_dataSource, g);
 		}

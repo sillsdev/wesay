@@ -8,7 +8,8 @@ using WeSay.LexicalModel;
 
 namespace WeSay.LexicalTools.Tests
 {
-	[TestFixture]
+  /* the class this tests is being retired
+   * [TestFixture]
 	public class LiftImportTestsWeSayVer1 : LiftImportTestsBase
 	{
 		protected override LiftImporter CreateImporter()
@@ -25,4 +26,5 @@ namespace WeSay.LexicalTools.Tests
 			Assert.IsNotNull(sense.GetProperty<MultiText>("SemanticDomainsx"));
 		}
 	}
+   * */
 }

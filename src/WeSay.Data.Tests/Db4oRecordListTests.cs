@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel;
+using Db4objects.Db4o.Diagnostic;
 using NUnit.Framework;
 using WeSay.Data.Tests.IEnumerableTests;
 using WeSay.Data.Tests.ICollectionTests;

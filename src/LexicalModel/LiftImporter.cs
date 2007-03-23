@@ -279,7 +279,7 @@ namespace WeSay.LexicalModel
 			{
 				try
 				{
-					entry = new LexEntry(new Guid(id));
+					entry = new LexEntry(id, new Guid(id));
 				}
 				catch (FormatException)
 				{

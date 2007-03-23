@@ -11,7 +11,7 @@ namespace WeSay.LexicalModel
 
 		new public class WellKnownProperties : WeSayDataObject.WellKnownProperties
 		{
-			static public string PartOfSpeech = "pos";
+			static public string PartOfSpeech = "POS";
 			static public string Definition = "def";
 		} ;
 
