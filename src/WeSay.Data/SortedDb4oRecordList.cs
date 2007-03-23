@@ -70,7 +70,6 @@ namespace WeSay.Data
 			{
 				_keyIdMap = _sortHelper.GetKeyIdPairs();
 				Sort();
-				Serialize();
 			}
 
 			_masterRecordList.ListChanged += new ListChangedEventHandler(OnMasterRecordListListChanged);

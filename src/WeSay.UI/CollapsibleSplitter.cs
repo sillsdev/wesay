@@ -44,7 +44,8 @@ namespace WeSay.UI
 		private Control controlToHide;
 		private VisualStyles visualStyle;
 
-	private Border3DStyle borderStyle;
+	private Border3DStyle border3DStyle;
+	private BorderStyle borderStyle;
 
 	private int? lastGoodSplitPosition;
 	private int hiddenControlWidth;
@@ -58,7 +59,8 @@ namespace WeSay.UI
 	{
 	  base.MinSize = 0;
 	  lastGoodSplitPosition = null;
-	  borderStyle = Border3DStyle.Flat;
+	  border3DStyle = Border3DStyle.Flat;
+	  base.BorderStyle = BorderStyle.None;
 	  BorderStyle = BorderStyle.Fixed3D;
 	  gripLength = 90;
 	  minSize = 25;
@@ -147,11 +149,11 @@ namespace WeSay.UI
 	{
 	  get
 	  {
-		return this.borderStyle;
+		return this.border3DStyle;
 	  }
 	  set
 	  {
-		this.borderStyle = value;
+		this.border3DStyle = value;
 		this.Invalidate();
 	  }
 	}
@@ -512,7 +514,7 @@ namespace WeSay.UI
 	{
 		// draw the background color for our control image
 		e.Graphics.FillRectangle(new SolidBrush(BackColor), ClientRectangle);
-		Border3DStyle style = this.borderStyle;
+		Border3DStyle style = this.border3DStyle;
 		switch (BorderStyle)
 		{
 			case BorderStyle.FixedSingle:
@@ -552,7 +554,14 @@ namespace WeSay.UI
 		}
 	  }
 	}
-			#endregion
+
+		public new BorderStyle BorderStyle
+		{
+			get { return this.borderStyle; }
+			set { this.borderStyle = value; }
+		}
+
+		#endregion
 
 		#endregion
 	}

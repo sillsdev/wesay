@@ -35,7 +35,12 @@ namespace WeSay.Data
 
 		private static string RecordListKey<T>(string filterName) where T : class, new()
 		{
-			return typeof(T).FullName + filterName;
+			return ((filterName == string.Empty)?'#':'!') + typeof(T).FullName + filterName;
+		}
+
+		public static bool IsMasterRecordList(DictionaryEntry dictionaryEntry)
+		{
+			return ((string) dictionaryEntry.Key).StartsWith("#");
 		}
 
 		public void Register<T>(IFilter<T> filter) where T : class, new()
@@ -127,14 +132,30 @@ namespace WeSay.Data
 				if (disposing)
 				{
 					// dispose-only, i.e. non-finalizable logic
+					// we need to dispose masters last
 					foreach (DictionaryEntry dictionaryEntry in FilteredRecordLists)
 					{
-						IDisposable disposable = dictionaryEntry.Value as IDisposable;
-						if (disposable != null)
+						if (!IsMasterRecordList(dictionaryEntry))
 						{
-							disposable.Dispose();
+							IDisposable disposable = dictionaryEntry.Value as IDisposable;
+							if (disposable != null)
+							{
+								disposable.Dispose();
+							}
 						}
 					}
+					foreach (DictionaryEntry dictionaryEntry in FilteredRecordLists)
+					{
+						if (IsMasterRecordList(dictionaryEntry))
+						{
+							IDisposable disposable = dictionaryEntry.Value as IDisposable;
+							if (disposable != null)
+							{
+								disposable.Dispose();
+							}
+						}
+					}
+
 					_filteredRecordLists = null;
 				}
 
