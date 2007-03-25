@@ -13,7 +13,7 @@
    height="48.000000px"
    id="svg249"
    sodipodi:version="0.32"
-   inkscape:version="0.44.1"
+   inkscape:version="0.44"
    sodipodi:docbase="C:\WeSay\artwork"
    sodipodi:docname="delete-word.svg"
    inkscape:export-filename="c:\wesay\artwork\delete-word.png"
@@ -299,17 +299,17 @@
 	 borderopacity="0.32941176"
 	 inkscape:pageopacity="0.0"
 	 inkscape:pageshadow="2"
-	 inkscape:zoom="4"
-	 inkscape:cx="-26.649738"
-	 inkscape:cy="32.430403"
+	 inkscape:zoom="9.6458333"
+	 inkscape:cx="24"
+	 inkscape:cy="24"
 	 inkscape:current-layer="svg249"
 	 showgrid="false"
 	 inkscape:grid-bbox="true"
 	 inkscape:document-units="px"
 	 inkscape:window-width="872"
 	 inkscape:window-height="659"
-	 inkscape:window-x="177"
-	 inkscape:window-y="55"
+	 inkscape:window-x="26"
+	 inkscape:window-y="-17"
 	 inkscape:showpageshadow="false" />
   <metadata
 	 id="metadata4">
@@ -467,7 +467,7 @@
   </g>
   <g
 	 id="g3854"
-	 transform="matrix(2.123784,0,0,2.123784,137.8666,-9.30603)">
+	 transform="matrix(2.123784,0,0,2.123784,137.6593,-8.446419)">
 	<path
 	   style="fill:gray;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
 	   d="M -55.862087,19.849251 L -54.566716,21.851188 C -52.74724,18.334827 -47.172887,10.424595 -42.383738,7.0705456 C -42.215705,6.9528649 -42.424705,6.5854329 -42.68847,6.7429148 C -48.751523,10.36288 -51.853846,13.769299 -55.862087,19.849251 z "
@@ -482,7 +482,7 @@
 	   sodipodi:nodetypes="ccssc"
 	   id="path1939"
 	   d="M -56.657582,19.363115 L -55.362211,21.365052 C -53.542735,17.848691 -47.968382,9.9384592 -43.179233,6.5844096 C -43.0112,6.4667289 -43.2202,6.0992969 -43.483965,6.2567788 C -49.547018,9.8767441 -52.649341,13.283163 -56.657582,19.363115 z "
-	   style="fill:url(#linearGradient2876);fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;opacity:1"
+	   style="opacity:1;fill:url(#linearGradient2876);fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
 	   inkscape:export-filename="C:\WeSay\artwork\delete-word.png"
 	   inkscape:export-xdpi="240"
 	   inkscape:export-ydpi="240" />

@@ -56,7 +56,6 @@ namespace WeSay.UI
 			this.Controls.Add(this._vbox);
 			this.Name = "MultiTextControl";
 			this.Size = new System.Drawing.Size(150, 69);
-			this.Enter += new System.EventHandler(this.MultiTextControl_Enter);
 			this.ResumeLayout(false);
 
 		}

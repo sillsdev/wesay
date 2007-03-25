@@ -2,12 +2,13 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 using WeSay.Language;
+using WeSay.UI.Properties;
 
 namespace WeSay.UI
 {
 	public class AnnotationWidget
 	{
-		private FlagButton _flagButton;
+		private CheckBox _flagButton;
 
 		/// <summary>
 		/// This will be referencing the actual annotation of the object
@@ -17,8 +18,15 @@ namespace WeSay.UI
 		private MultiText _multitext;
 		private string _writingSystemId;
 		private string _nameForTesting;
+	  private bool _hot;
+		private static Image CheckedImage = Resources.FlagOn.GetThumbnailImage(20, 20, ReturnFalse, IntPtr.Zero);
+		private static Image HotCheckedImage = Resources.HotFlagOn.GetThumbnailImage(20, 20, ReturnFalse, IntPtr.Zero);
+		private static Image UncheckedImage = Resources.FlagOff.GetThumbnailImage(20, 20, ReturnFalse, IntPtr.Zero);
+		private static Image HotUncheckedImage = Resources.HotFlagOff.GetThumbnailImage(20, 20, ReturnFalse, IntPtr.Zero);
 
-		public AnnotationWidget(MultiText multitext, string writingSystemId, string nameForTesting)
+		public AnnotationWidget(MultiText multitext,
+								string writingSystemId,
+								string nameForTesting)
 		{
 			_nameForTesting = nameForTesting;
 			_multitext = multitext;
@@ -40,8 +48,6 @@ namespace WeSay.UI
 			{
 				if (_flagButton != null)
 				{
-					_flagButton.IsSetOn = value;
-
 					_multitext.SetAnnotationOfAlternativeIsStarred(_writingSystemId, value);
 				}
 			}
@@ -49,30 +55,84 @@ namespace WeSay.UI
 
 		public Control MakeControl(Size panelSize)
 		{
-			_flagButton = new FlagButton();
-			_flagButton.Size = new Size(20, 20);
-			_flagButton.Location = new Point(
-				-1 + panelSize.Width - _flagButton.Width,
-				-1 + panelSize.Height - _flagButton.Height);
-			_flagButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-			_flagButton.Click += new EventHandler(OnClickFlagButton);
-			_flagButton.TabStop = false;
-			_flagButton.IsSetOn = this.FlagIsOn;
-			_flagButton.Name = _nameForTesting;
+			_flagButton = new CheckBox();
+			_flagButton.Appearance = Appearance.Button;
+		  _flagButton.AutoCheck = true;
+		  _flagButton.Size = new Size(20, 20);
+		  _flagButton.ThreeState = false;
+		  _flagButton.Text = string.Empty;
+		  _flagButton.FlatStyle = FlatStyle.Flat;
+		  _flagButton.FlatAppearance.BorderSize = 0;
+		  _flagButton.FlatAppearance.MouseOverBackColor = Color.White;
+		  _flagButton.FlatAppearance.MouseDownBackColor = Color.White;
+		  _flagButton.Location = new Point(
+			  -1 + panelSize.Width - _flagButton.Width,
+			  -1 + panelSize.Height - _flagButton.Height);
 
-			//            Panel panel = new Panel();
-			//            panel.Size = flagButton.Size;
-			//            panel.Location = flagButton.Location;
-			//            panel.Anchor = flagButton.Anchor;
-			//            panel.BackColor = System.Drawing.Color.Red;
+			_flagButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+			_flagButton.CheckedChanged += new EventHandler(OnFlagButtonCheckedChanged);
+			_flagButton.TabStop = false;
+			_flagButton.Checked = this.FlagIsOn;
+			_flagButton.Name = _nameForTesting;
+			_flagButton.MouseEnter += new EventHandler(_flagButton_MouseEnter);
+			_flagButton.MouseLeave += new EventHandler(_flagButton_MouseLeave);
+			_flagButton.Paint += new PaintEventHandler(_flagButton_Paint);
 
 			return _flagButton;
 		}
 
-		private void OnClickFlagButton(object sender, EventArgs e)
+	  void _flagButton_Paint(object sender, PaintEventArgs e)
+	  {
+		SetFlagImage();
+	  }
+
+	  void _flagButton_MouseLeave(object sender, EventArgs e)
+	  {
+		_hot = false;
+	  }
+
+	  void _flagButton_MouseEnter(object sender, EventArgs e)
+	  {
+		_hot = true;
+	  }
+
+	  void OnFlagButtonCheckedChanged(object sender, EventArgs e)
+	  {
+		SetFlagImage();
+		_flagButton.Refresh(); // give visual feedback right away since the next action can take some time
+		FlagIsOn = _flagButton.Checked;
+	  }
+
+	  private void SetFlagImage()
+	  {
+		if (_flagButton.Checked)
 		{
-			FlagButton b = (FlagButton)sender;
-			this.FlagIsOn = !b.IsSetOn;
+		  if (_hot)
+		  {
+			_flagButton.Image = HotCheckedImage;
+		  }
+		  else
+		  {
+			_flagButton.Image = CheckedImage;
+		  }
 		}
+		else
+		{
+		  if (_hot)
+		  {
+			_flagButton.Image = HotUncheckedImage;
+		  }
+		  else
+		  {
+			_flagButton.Image = UncheckedImage;
+		  }
+		}
+	  }
+
+	  private static bool ReturnFalse()
+	  {
+		return false;
+	  }
+
 	}
 }

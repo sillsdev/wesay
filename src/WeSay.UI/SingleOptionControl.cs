@@ -5,7 +5,7 @@ using System;
 
 namespace WeSay.UI
 {
-	public partial class SingleOptionControl : Widget, IBindableControl<string>
+	public partial class SingleOptionControl : UserControl, IBindableControl<string>
 	{
 		private OptionsList _list;
 		private ComboBox _control = new ComboBox();

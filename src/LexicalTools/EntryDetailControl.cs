@@ -147,7 +147,7 @@ namespace WeSay.LexicalTools
 			this._findText.WritingSystem = this._listWritingSystem;
 
 			this._findWritingSystemId.Text = this._listWritingSystem.Id;
-			int width = this._findText.Width;
+			int width = this._findWritingSystemId.Width;
 			this._findWritingSystemId.AutoSize = false;
 			this._findWritingSystemId.Height = this._findText.Height;
 			this._findWritingSystemId.Width = Math.Min(width, 25);

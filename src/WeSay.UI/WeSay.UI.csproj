@@ -44,7 +44,8 @@
 	<Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-	<Compile Include="AnnotationWidget.cs" />
+	<Compile Include="AnnotationWidget.cs">
+	</Compile>
 	<Compile Include="ArrowButton.cs">
 	  <SubType>Component</SubType>
 	</Compile>
@@ -65,6 +66,11 @@
 	<Compile Include="OptionCollectionControl.Designer.cs">
 	  <DependentUpon>OptionCollectionControl.cs</DependentUpon>
 	</Compile>
+	<Compile Include="Properties\Resources.Designer.cs">
+	  <AutoGen>True</AutoGen>
+	  <DesignTime>True</DesignTime>
+	  <DependentUpon>Resources.resx</DependentUpon>
+	</Compile>
 	<Compile Include="SimpleBinding.cs" />
 	<Compile Include="TextBinding.cs" />
 	<Compile Include="CurrentItemEventArgs.cs" />
@@ -75,9 +81,6 @@
 	  <DependentUpon>DetailList.cs</DependentUpon>
 	</Compile>
 	<Compile Include="DisplaySettings.cs" />
-	<Compile Include="FlagButton.cs">
-	  <SubType>Component</SubType>
-	</Compile>
 	<Compile Include="GhostBinding.cs" />
 	<Compile Include="ISkin.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />
@@ -105,9 +108,6 @@
 	<Compile Include="WeSayTextBox.Designer.cs">
 	  <DependentUpon>WeSayTextBox.cs</DependentUpon>
 	</Compile>
-	<Compile Include="Widget.cs">
-	  <SubType>UserControl</SubType>
-	</Compile>
   </ItemGroup>
   <ItemGroup>
 	<ProjectReference Include="..\PlatformSpecific\PlatformSpecific.csproj">
@@ -128,10 +128,6 @@
 	  <SubType>Designer</SubType>
 	  <DependentUpon>DetailList.cs</DependentUpon>
 	</EmbeddedResource>
-	<EmbeddedResource Include="FlagButton.resx">
-	  <DependentUpon>FlagButton.cs</DependentUpon>
-	  <SubType>Designer</SubType>
-	</EmbeddedResource>
 	<EmbeddedResource Include="MultiTextControl.resx">
 	  <DependentUpon>MultiTextControl.cs</DependentUpon>
 	  <SubType>Designer</SubType>
@@ -139,6 +135,11 @@
 	<EmbeddedResource Include="OptionCollectionControl.resx">
 	  <SubType>Designer</SubType>
 	  <DependentUpon>OptionCollectionControl.cs</DependentUpon>
+	</EmbeddedResource>
+	<EmbeddedResource Include="Properties\Resources.resx">
+	  <SubType>Designer</SubType>
+	  <Generator>ResXFileCodeGenerator</Generator>
+	  <LastGenOutput>Resources.Designer.cs</LastGenOutput>
 	</EmbeddedResource>
 	<EmbeddedResource Include="VBox.resx">
 	  <SubType>Designer</SubType>

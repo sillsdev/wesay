@@ -7,7 +7,7 @@ using WeSay.Language;
 
 namespace WeSay.UI
 {
-	public partial class MultiTextControl : Widget
+	public partial class MultiTextControl : UserControl
 	{
 		private IList<WritingSystem> _writingSystems;
 		private List<WeSayTextBox> _textBoxes;
@@ -17,7 +17,7 @@ namespace WeSay.UI
 
 		public MultiTextControl()
 		{
-			this.components = new System.ComponentModel.Container();
+			this.components = new Container();
 			InitializeComponent();
 			_textBoxes = new List<WeSayTextBox>();
 			_vbox.Name = "vbox of anonymous multitext";
@@ -99,9 +99,9 @@ namespace WeSay.UI
 
 		private Label AddWritingSystemLabel(WeSayTextBox box)
 		{
-			Label label = new System.Windows.Forms.Label();
+			Label label = new Label();
 			label.Text = box.WritingSystem.Id;
-			label.ForeColor = System.Drawing.Color.LightGray;
+			label.ForeColor = Color.LightGray;
 
 
 			Graphics g = CreateGraphics();
@@ -188,17 +188,5 @@ namespace WeSay.UI
 				box.Text = "";
 			}
 		}
-
-		private void MultiTextControl_Enter(object sender, EventArgs e)
-		{
-			//this was evil!
-//            if (TextBoxes.Count > 0)
-//            {
-//                TextBoxes[0].Select();
-//            }
-		}
-
-
-
 	}
 }

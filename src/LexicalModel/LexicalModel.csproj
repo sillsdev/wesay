@@ -90,7 +90,7 @@
   </Target>
   -->
   <PropertyGroup>
-	<PreBuildEvent>copy $(SolutionDir)\..\lib\lift\liftdotnet\output\debug\*.dll $(SolutionDir)\..\lib
-copy $(SolutionDir)\..\lib\lift\liftdotnet\output\debug\*.pdb $(TargetDir)\..\lib</PreBuildEvent>
+	<PreBuildEvent>if exist $(SolutionDir)..\lib\lift\liftdotnet\output\debug\*.dll copy $(SolutionDir)..\lib\lift\liftdotnet\output\debug\*.dll $(SolutionDir)..\lib
+if exist $(SolutionDir)..\lib\lift\liftdotnet\output\debug\*.pdb copy $(SolutionDir)..\lib\lift\liftdotnet\output\debug\*.pdb $(TargetDir)..\lib</PreBuildEvent>
   </PropertyGroup>
 </Project>
