@@ -25,6 +25,7 @@ namespace WeSay.LexicalModel.Tests
 			this._examples.Translation["en"] = "translation";
 			MultiText customFieldInExample = this._examples.GetOrCreateProperty<MultiText>("customFieldInExample");
 			customFieldInExample["th"] = "custom";
+			this._removed = false;
 		}
 
 		void _entry_EmptyObjectsRemoved(object sender, System.EventArgs e)
