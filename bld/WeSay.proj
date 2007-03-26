@@ -9,16 +9,10 @@
   <Import Project="$(BaseDirectory)\bld\UpdateCsProjs.Targets"/>
 
   <Target Name="Compile">
-	<MSBuild Projects="$(BaseDirectory)\lib\lift\LiftIO.sln"
-			 Targets="Rebuild"
-			 Properties="Configuration=Debug" />
 	<MSBuild Projects="$(BaseDirectory)\src\WeSay.sln"
 			 Targets="Rebuild"
 			 Properties="Configuration=Debug" />
 
-	<MSBuild Projects="$(BaseDirectory)\lib\lift\LiftIO.sln"
-			 Targets="Rebuild"
-			 Properties="Configuration=Release" />
 	<MSBuild Projects="$(BaseDirectory)\src\WeSay.sln"
 			 Targets="Rebuild"
 			 Properties="Configuration=Release" />

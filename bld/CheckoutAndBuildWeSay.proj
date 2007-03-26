@@ -9,7 +9,6 @@
 	 <ApplicationName>WeSay</ApplicationName>
 	 <ApplicationDirectory>$(MSBuildProjectDirectory)\$(ApplicationName)</ApplicationDirectory>
 	 <RepositoryPath>http://code.wesay.org/WeSay/trunk</RepositoryPath>
-	 <LiftRepositoryPath>http://code.wesay.org/LIFT</LiftRepositoryPath>
   </PropertyGroup>
 
   <Target Name="Checkout">
@@ -21,9 +20,6 @@
 				 LocalPath="$(ApplicationDirectory)">
 	  <Output TaskParameter="Revision" PropertyName="Revision" />
 	</SvnCheckout>
-	<SvnCheckout RepositoryPath="$(LiftRepositoryPath)"
-				 LocalPath="$(ApplicationDirectory)\lib\lift"/>
-	<Message Text="Checked out code from $(RepositoryPath) and $(LiftRepositoryPath)"/>
   </Target>
 
   <Target Name="Build" DependsOnTargets="Checkout">
