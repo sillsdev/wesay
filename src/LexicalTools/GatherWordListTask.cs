@@ -154,7 +154,7 @@ namespace WeSay.LexicalTools
 			}
 		}
 
-		public void WordCollected(MultiText newVernacularWord, bool flagIsOn)
+		public void WordCollected(MultiText newVernacularWord)
 		{
 			LexSense sense = new LexSense();
 			sense.Gloss.MergeIn(CurrentWordAsMultiText);

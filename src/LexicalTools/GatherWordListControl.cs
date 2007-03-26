@@ -44,7 +44,6 @@ namespace WeSay.LexicalTools
 		{
 			UpdateStuff();
 			_vernacularBox.ClearAllText();
-			_vernacularBox.FlagIsOn = false;
 			_vernacularBox.TextBoxes[0].Focus();
 		}
 
@@ -121,11 +120,10 @@ namespace WeSay.LexicalTools
 			{
 				return;
 			}
-			_task.WordCollected(_vernacularBox.MultiText, _vernacularBox.FlagIsOn);
+			_task.WordCollected(_vernacularBox.MultiText);
 
 			//_listViewOfWordsMatchingCurrentItem.Items.Add(s);
 			_vernacularBox.TextBoxes[0].Text = "";
-			_vernacularBox.FlagIsOn = false;
 			UpdateStuff();
 		}
 

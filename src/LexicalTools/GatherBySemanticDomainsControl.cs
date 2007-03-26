@@ -128,7 +128,6 @@ namespace WeSay.LexicalTools
 //
 //            _listViewWords.Items.Add(s);
 			_vernacularBox.TextBoxes[0].Text = "";
-			_vernacularBox.FlagIsOn = false;
 //            if (WordAdded != null)
 //            {
 //                WordAdded.Invoke(this, null);

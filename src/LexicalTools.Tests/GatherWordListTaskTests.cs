@@ -196,7 +196,7 @@ namespace WeSay.LexicalTools.Tests
 			Assert.AreEqual(0, _recordListManager.GetListOfType<LexEntry>().Count);
 			MultiText word = new MultiText();
 			word["en"] = "uno";
-			Task.WordCollected(word, false);
+			Task.WordCollected(word);
 			Assert.AreEqual(1, _recordListManager.GetListOfType<LexEntry>().Count);
 		}
 
@@ -211,7 +211,7 @@ namespace WeSay.LexicalTools.Tests
 			Assert.AreEqual(0, e.Senses.Count);
 
 			Task.NavigateFirst();
-			Task.WordCollected(word, false);
+			Task.WordCollected(word);
 			Assert.AreEqual(1, e.Senses.Count);
 			Assert.AreEqual(1, _recordListManager.GetListOfType<LexEntry>().Count);
 	   }
