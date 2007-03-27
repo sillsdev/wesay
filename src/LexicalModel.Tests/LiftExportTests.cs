@@ -397,7 +397,8 @@ namespace WeSay.LexicalTools.Tests
 			_exporter.Add(sense);
 			 _exporter.End();
 			AssertXPathNotNull("sense/grammatical-info[@value='orange']");
-		}
+			AssertXPathNotNull("sense[not(trait/@name='POS')]");
+	   }
 
 		[Test]
 		public void SenseWithExample()

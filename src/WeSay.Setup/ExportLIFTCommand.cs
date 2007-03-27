@@ -58,10 +58,29 @@ namespace WeSay
 			 catch (Exception e)
 			 {
 				 _progress.Status = ProgressState.StatusValue.StoppedWithError;
+				 return; //don't go on to try to validate
 			 }
 			 finally
 			 {
-				 exporter.End();
+				 if (exporter != null)
+				 {
+					 exporter.End();
+				 }
+			 }
+
+			 try
+			 {
+				 _progress.StatusLabel = "Validating...";
+				 string errors = LiftIO.Validator.GetAnyValidationErrors(_destinationLIFTPath);
+				 if (errors != null && errors != String.Empty)
+				 {
+					 _progress.WriteToLog(errors);
+				 }
+			 }
+			 catch
+			 {
+				 _progress.WriteToLog("Could not run validator.");
+				 _progress.Status = ProgressState.StatusValue.StoppedWithError;
 			 }
 		 }
 

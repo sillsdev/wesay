@@ -56,8 +56,14 @@ namespace WeSay.LexicalModel
 		{
 			XmlWriterSettings settings = new XmlWriterSettings();
 			if (produceFragmentOnly)
+			{
 				settings.ConformanceLevel = ConformanceLevel.Fragment;
-
+				settings.Indent = false;//helps with tests that just do a string compare
+			}
+			else
+			{
+				settings.Indent = true;
+			}
 			settings.Encoding = Encoding.UTF8;
 			settings.CloseOutput = true;
 			return settings;
@@ -170,6 +176,8 @@ namespace WeSay.LexicalModel
 
 			_writer.WriteStartElement("sense");
 			WriteGrammi(sense);
+			propertiesAlreadyOutput.Add(LexSense.WellKnownProperties.PartOfSpeech);
+
 			WriteOneElementPerFormIfNonEmpty("gloss", sense.Gloss, ';');
 			foreach (LexExampleSentence example in sense.ExampleSentences)
 			{
