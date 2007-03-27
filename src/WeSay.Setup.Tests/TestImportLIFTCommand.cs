@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Windows.Forms;
+using Db4objects.Db4o;
 using MultithreadProgress;
 using NUnit.Framework;
 using WeSay.Foundation.Progress;
+using WeSay.LexicalModel;
 
 namespace WeSay.Setup.Tests
 {
@@ -19,6 +21,8 @@ namespace WeSay.Setup.Tests
 		private bool _finished;
 		private ProgressState _progress;
 		private string _backupPath;
+		private string _simpleGoodLiftContents = string.Format("<?xml version='1.0' encoding='utf-8'?><lift version='{0}'><entry id='one'><sense><gloss lang='en'>hello</gloss></sense></entry><entry id='two'/></lift>", LiftIO.Validator.LiftVersion);
+		private string _log;
 
 		[SetUp]
 		public void Setup()
@@ -30,7 +34,8 @@ namespace WeSay.Setup.Tests
 			_progressHandler = new ProgressDialogHandler(new System.Windows.Forms.Form(), _importCommand);
 			_progressHandler.Finished += new EventHandler(_progressHandler_Finished);
 			_progress = new ProgressState(_progressHandler);
-			_finished=false;
+			_progress.Log += new EventHandler<ProgressState.LogEvent>(OnLog);
+			_finished = false;
 			_backupPath = _outputDb4oPath + ".bak";
 
 		}
@@ -53,15 +58,59 @@ namespace WeSay.Setup.Tests
 				Directory.Delete(dir,true);
 			}
 		}
+		[Test]
+		public void GoodLiftStopsWithProgressInFinishedState()
+		{
+			File.WriteAllText(_sourcePath, _simpleGoodLiftContents);
+			Assert.AreEqual(ProgressState.StatusValue.NotStarted, _progress.Status);
+			_importCommand.BeginInvoke(_progress);
+			WaitForFinish();
+		  //  Console.WriteLine(_log);
+			Assert.AreEqual(ProgressState.StatusValue.Finished, _progress.Status, _log);
+		}
 
 		[Test]
-		public void WritesSomething()
+		public void BadLiftStopsWithProgressInErrorState()
 		{
-			File.WriteAllText(_sourcePath, "<?xml version='1.0' encoding='utf-8'?><lift/>");
+			TryToLoadBadLift();
+			Assert.AreEqual(ProgressState.StatusValue.StoppedWithError, _progress.Status);
+		}
+
+		[Test]
+		public void BadLiftOutputsToLog()
+		{
+			TryToLoadBadLift();
+		  //  System.Diagnostics.Debug.WriteLine(_log);
+			Assert.IsTrue(_log.Contains("Invalid") );
+		}
+
+		private void TryToLoadBadLift()
+		{
+			File.WriteAllText(_sourcePath, _simpleGoodLiftContents.Replace("</lift>", "<x/></lift>"));
+			Assert.AreEqual(ProgressState.StatusValue.NotStarted, _progress.Status);
+			_importCommand.BeginInvoke(_progress);
+			WaitForFinish();
+		}
+
+		void OnLog(object sender, ProgressState.LogEvent e)
+		{
+			_log += e.message;
+		}
+
+		[Test]
+		public void CreatesDb4oFileWhichContainsEntriesAndSenses()
+		{
+			File.WriteAllText(_sourcePath, _simpleGoodLiftContents);
 
 			_importCommand.BeginInvoke(_progress);
 			WaitForFinish();
-			Assert.IsTrue(File.ReadAllText(_outputDb4oPath).Length > 10);
+			using(IObjectContainer db = Db4objects.Db4o.Db4oFactory.OpenFile(_outputDb4oPath))
+			{
+				IList<LexEntry> x = db.Query<LexEntry>();
+				Assert.AreEqual(2, x.Count);
+				Assert.AreEqual(1, x[0].Senses.Count); // sensitive to order (shame)
+			}
+			Assert.AreEqual(ProgressState.StatusValue.Finished, _progress.Status);
 		}
 
 		[Test]
@@ -103,7 +152,7 @@ namespace WeSay.Setup.Tests
 
 		private void MakeBackupOfExistingDBCore(string backupPath)
 		{
-			File.WriteAllText(_sourcePath, "<?xml version='1.0' encoding='utf-8'?><lift/>");
+			File.WriteAllText(_sourcePath, _simpleGoodLiftContents);
 			_importCommand.BeginInvoke(_progress);
 			WaitForFinish();
 		}
@@ -127,7 +176,7 @@ namespace WeSay.Setup.Tests
 			Directory.CreateDirectory(dir);
 			string deleteThisGuy = Path.Combine(dir, "deleteMe.txt");
 			File.WriteAllText(deleteThisGuy,"doesn't matter");
-			File.WriteAllText(_sourcePath, "<?xml version='1.0' encoding='utf-8'?><lift/>");
+			File.WriteAllText(_sourcePath, _simpleGoodLiftContents);
 
 			_importCommand.BeginInvoke(_progress);
 			WaitForFinish();

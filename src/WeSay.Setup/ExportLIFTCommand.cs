@@ -4,6 +4,7 @@ using WeSay.Data;
 using WeSay.Foundation;
 using WeSay.Foundation.Progress;
 using WeSay.LexicalModel;
+using WeSay.LexicalModel.Db4o_Specific;
 using WeSay.Project;
 
 namespace WeSay
@@ -23,7 +24,8 @@ namespace WeSay
 		 protected override void DoWork2(ProgressState progress)
 		 {
 			 _progress = progress;
-			 _progress.Status="Exporting...";
+			 _progress.StatusLabel="Exporting...";
+			 _progress.Status = ProgressState.StatusValue.Busy;
 			 WeSay.LexicalModel.LiftExporter exporter = null;
 			 try
 			 {
@@ -31,9 +33,11 @@ namespace WeSay
 
 				 using (Db4oDataSource ds = new Db4oDataSource(_sourceWordsPath))
 				 {
+				   Db4oLexModelHelper.Initialize(ds.Data);
+
 					 using (Db4oRecordList<LexEntry> entries = new Db4oRecordList<LexEntry>(ds))
 					 {
-						 _progress.NumberOfSteps=entries.Count;
+						 _progress.NumberOfSteps = entries.Count;
 						 for (int i = 0; i < entries.Count; )
 						 {
 							 int howManyAtATime = 100;
@@ -48,6 +52,12 @@ namespace WeSay
 						 }
 					 }
 				 }
+				 _progress.Status = ProgressState.StatusValue.Finished;
+
+			 }
+			 catch (Exception e)
+			 {
+				 _progress.Status = ProgressState.StatusValue.StoppedWithError;
 			 }
 			 finally
 			 {

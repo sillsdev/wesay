@@ -19,6 +19,17 @@ namespace WeSay.LexicalModel.Db4o_Specific
 		/// </summary>
 		private int _activationCount=0;
 
+		/// <summary>
+		/// used by test setups to avoid hiding bugs that would be found if we didn't have to initialize in
+		/// order to create the test database.
+		/// </summary>
+		/// <param name="container"></param>
+		public static void Deinitialize(Db4objects.Db4o.IObjectContainer container)
+		{
+			System.Diagnostics.Debug.Assert(_singleton._container == container);
+			_singleton = null;
+		}
+
 		[CLSCompliant(false)]
 		public static void Initialize(Db4objects.Db4o.IObjectContainer container)
 		{

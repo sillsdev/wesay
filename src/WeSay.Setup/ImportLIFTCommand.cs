@@ -26,67 +26,83 @@ namespace WeSay
 		protected override void DoWork2(ProgressState progress)
 		{
 			_progress = progress;
-
-			if (!Validates(_sourceLIFTPath))
+			_progress.Status = ProgressState.StatusValue.Busy;
+			string errors = Validator.GetAnyValidationErrors(_sourceLIFTPath);
+			if (errors != null && errors != string.Empty)
 			{
+				progress.StatusLabel = "Problem with file format...";
+				_progress.Status = ProgressState.StatusValue.StoppedWithError;
+				_progress.WriteToLog(errors);
 				return;
 			}
-			progress.Status = "Importing...";
-			string tempTarget = Path.GetTempFileName();
-			using (Db4oDataSource ds = new WeSay.Data.Db4oDataSource(tempTarget))
+			try
 			{
-				if (Db4oLexModelHelper.Singleton == null)
+				progress.StatusLabel = "Importing...";
+				string tempTarget = Path.GetTempFileName();
+				using (Db4oDataSource ds = new WeSay.Data.Db4oDataSource(tempTarget))
 				{
-					Db4oLexModelHelper.Initialize(ds.Data);
-				}
-
-				XmlDocument doc = new XmlDocument();
-				doc.Load(_sourceLIFTPath);
-				using (LiftMerger merger = new LiftMerger(ds))
-				{
-					foreach (string name in WeSay.Project.WeSayWordsProject.Project.OptionFieldNames)
+					if (Db4oLexModelHelper.Singleton == null)
 					{
-						merger.ExpectedOptionTraits.Add(name);
-						//_importer.ExpectedOptionTraits.Add(name);
-					}
-					foreach (string name in WeSay.Project.WeSayWordsProject.Project.OptionCollectionFieldNames)
-					{
-						merger.ExpectedOptionCollectionTraits.Add(name);
+						Db4oLexModelHelper.Initialize(ds.Data);
 					}
 
-					LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence> parser =
-						new LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence>(merger);
+					XmlDocument doc = new XmlDocument();
+					doc.Load(_sourceLIFTPath);
+					using (LiftMerger merger = new LiftMerger(ds))
+					{
+						foreach (string name in WeSay.Project.WeSayWordsProject.Project.OptionFieldNames)
+						{
+							merger.ExpectedOptionTraits.Add(name);
+							//_importer.ExpectedOptionTraits.Add(name);
+						}
+						foreach (string name in WeSay.Project.WeSayWordsProject.Project.OptionCollectionFieldNames)
+						{
+							merger.ExpectedOptionCollectionTraits.Add(name);
+						}
 
-					parser.SetTotalNumberSteps +=
-						new EventHandler<LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence>.StepsArgs>(
-							parser_SetTotalNumberSteps);
-					parser.SetStepsCompleted +=
-						new EventHandler
-							<LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence>.ProgressEventArgs>(
-							parser_SetStepsCompleted);
-					parser.ReadFile(doc);
+						LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence> parser =
+							new LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence>(merger);
+
+						parser.SetTotalNumberSteps +=
+							new EventHandler
+								<LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence>.StepsArgs>(
+								parser_SetTotalNumberSteps);
+						parser.SetStepsCompleted +=
+							new EventHandler
+								<LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence>.ProgressEventArgs>(
+								parser_SetStepsCompleted);
+
+						parser.ParsingError += new EventHandler<LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence>.ErrorArgs>(parser_ParsingError);
+						parser.ReadFile(doc);
+					}
 				}
-			}
-			ClearTheIncrementalBackupDirectory();
+				ClearTheIncrementalBackupDirectory();
 
-			//if we got this far without an error, move it
-			string backupPath = _destinationDatabasePath + ".bak";
-			//not needed File.Delete(backupPath);
-			if (File.Exists(_destinationDatabasePath))
-			{
-				File.Replace(tempTarget, _destinationDatabasePath, backupPath);
+				//if we got this far without an error, move it
+				string backupPath = _destinationDatabasePath + ".bak";
+				//not needed File.Delete(backupPath);
+				if (File.Exists(_destinationDatabasePath))
+				{
+					File.Replace(tempTarget, _destinationDatabasePath, backupPath);
+				}
+				else
+				{
+					File.Move(tempTarget, _destinationDatabasePath);
+				}
+				_progress.Status = ProgressState.StatusValue.Finished;
 			}
-			else
+			catch (Exception e)
 			{
-				File.Move(tempTarget, _destinationDatabasePath);
+				_progress.Status = ProgressState.StatusValue.StoppedWithError;
 			}
 		}
 
-		private bool Validates(string path)
+		void parser_ParsingError(object sender, LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence>.ErrorArgs e)
 		{
-			// throw new EXCEPTION();
-			return true;
+			_progress.WriteToLog(e.Exception.Message);
 		}
+
+
 
 		void parser_SetStepsCompleted(object sender, LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence>.ProgressEventArgs e)
 		{

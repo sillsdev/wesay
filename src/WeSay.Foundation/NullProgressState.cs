@@ -31,7 +31,7 @@ namespace WeSay.Foundation.Progress
 		/// <summary>
 		/// a label which describes what we are busy doing
 		/// </summary>
-		public override string Status
+		public override string StatusLabel
 		{
 			get
 			{

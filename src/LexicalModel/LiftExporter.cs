@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Text;
 using System.Xml;
 using WeSay.Foundation;
@@ -13,7 +14,7 @@ namespace WeSay.LexicalModel
 		public const string LiftDateTimeFormat = "yyyy-MM-ddThh:mm:ssZ";
 		private XmlWriter _writer;
 		private Dictionary<string, int> _allIdsExportedSoFar;
-		static List<string> _reservedNames = new List<string>(new string[] {LexSense.WellKnownProperties.PartOfSpeech});
+	 //   static List<string> _reservedNames = new List<string>(new string[] {WeSayDataObject.WellKnownProperties.Note, LexSense.WellKnownProperties.PartOfSpeech});
 		private Dictionary<string, string> _fieldToRangeSetPairs;
 
 		public LiftExporter(Dictionary<string, string> fieldToOptionListName, string path)
@@ -67,9 +68,11 @@ namespace WeSay.LexicalModel
 
 			_writer.WriteStartDocument();
 			_writer.WriteStartElement("lift");
-			_writer.WriteAttributeString("producer", "WeSay.1Pt0Alpha");
-			_writer.WriteAttributeString("xmlns", "flex", null, "http://fieldworks.sil.org");
-
+			_writer.WriteAttributeString("version", LiftIO.Validator.LiftVersion);
+			_writer.WriteAttributeString("producer",
+										 "WeSay " +
+										 Assembly.GetExecutingAssembly().GetName().Version);
+		   // _writer.WriteAttributeString("xmlns", "flex", null, "http://fieldworks.sil.org");
 		}
 
 		public void End()
@@ -111,20 +114,24 @@ namespace WeSay.LexicalModel
 
 		public void Add(LexEntry entry)
 		{
+			List<string> propertiesAlreadyOutput=new List<string>();
+
 			_writer.WriteStartElement("entry");
 			_writer.WriteAttributeString("id", MakeHumanReadableId(entry));
 			_writer.WriteAttributeString("dateCreated", entry.CreationTime.ToString(LiftDateTimeFormat));
 			System.Diagnostics.Debug.Assert(entry.CreationTime.Kind == DateTimeKind.Utc);
 			 System.Diagnostics.Debug.Assert(entry.ModificationTime.Kind == DateTimeKind.Utc);
 		   _writer.WriteAttributeString("dateModified", entry.ModificationTime.ToString(LiftDateTimeFormat));
-			_writer.WriteAttributeString("flex", "id", "http://fieldworks.sil.org", entry.Guid.ToString());
+			_writer.WriteAttributeString("guid", entry.Guid.ToString());
+		   // _writer.WriteAttributeString("flex", "id", "http://fieldworks.sil.org", entry.Guid.ToString());
 			WriteMultiWithWrapperIfNonEmpty( "lexical-unit",entry.LexicalForm);
 
 			foreach(LexSense sense in entry.Senses)
 			{
 				Add(sense);
 			}
-			WriteCustomProperties(entry);
+			WriteWellKnownCustomMultiText(entry, "citation", propertiesAlreadyOutput);
+			WriteCustomProperties(entry, propertiesAlreadyOutput);
 			_writer.WriteEndElement();
 		}
 
@@ -159,14 +166,18 @@ namespace WeSay.LexicalModel
 
 		public void Add(LexSense sense)
 		{
+			List<string> propertiesAlreadyOutput = new List<string>();
+
 			_writer.WriteStartElement("sense");
 			WriteGrammi(sense);
-			WriteMultiWithWrapperIfNonEmpty("gloss", sense.Gloss);
+			WriteOneElementPerFormIfNonEmpty("gloss", sense.Gloss, ';');
 			foreach (LexExampleSentence example in sense.ExampleSentences)
 			{
 				Add(example);
 			}
-			WriteCustomProperties(sense);
+			WriteWellKnownCustomMultiText(sense, "def", propertiesAlreadyOutput);
+			WriteWellKnownCustomMultiText(sense, "note", propertiesAlreadyOutput);
+			WriteCustomProperties(sense, propertiesAlreadyOutput);
 			_writer.WriteEndElement();
 		}
 
@@ -186,17 +197,26 @@ namespace WeSay.LexicalModel
 			}
 		}
 
-		private void WriteCustomProperties(WeSayDataObject item)
+		private void WriteWellKnownCustomMultiText(WeSayDataObject item, string property, List<string> propertiesAlreadyOutput)
+		{
+			MultiText m = item.GetProperty<MultiText>(property);
+			if (WriteMultiWithWrapperIfNonEmpty(property, m))
+			{
+				propertiesAlreadyOutput.Add(property);
+			}
+		}
+
+		private void WriteCustomProperties(WeSayDataObject item, List<string> propertiesAlreadyOutput)
 		{
 			foreach (KeyValuePair<string, object> pair in item.Properties)
 			{
-				if (_reservedNames.Contains(pair.Key))
+				if (propertiesAlreadyOutput.Contains(pair.Key))
 				{
 					continue;
 				}
 				if (pair.Value is MultiText)
 				{
-					WriteMultiWithWrapperIfNonEmpty(pair.Key, pair.Value as MultiText);
+					WriteCustomMultiTextField(pair.Key, pair.Value as MultiText);
 					continue;
 				}
 				if (pair.Value is OptionRef)
@@ -222,38 +242,44 @@ namespace WeSay.LexicalModel
 				_writer.WriteStartElement("trait");
 				_writer.WriteAttributeString("name", key);
 				_writer.WriteAttributeString("value", value);
-				WriteRangeName(key);
+			   // WriteRangeName(key);
 				_writer.WriteEndElement();
 			}
 		}
+
+		private void WriteCustomMultiTextField(string key, MultiText text)
+		{
+			_writer.WriteStartElement("field");
+			_writer.WriteAttributeString("tag", key);
+			WriteMultiTextNoWrapper(text);
+			_writer.WriteEndElement();
+	   }
 
 		private void WriteOptionRef(string key, OptionRef optionRef)
 		{
 			_writer.WriteStartElement("trait");
 			_writer.WriteAttributeString("name", key);
 			_writer.WriteAttributeString("value", optionRef.Value);
-			string rangeSet;
-			WriteRangeName(key);
+		  //  WriteRangeName(key);
 			_writer.WriteEndElement();
+	   }
 
-			//todo add range name
-		}
-
-		private void WriteRangeName(string key)
-		{
-			string rangeSet;
-			if (_fieldToRangeSetPairs.TryGetValue(key, out rangeSet))
-			{
-				_writer.WriteAttributeString("range", rangeSet);
-			}
-		}
+//        private void WriteRangeName(string key)
+//        {
+//            string rangeSet;
+//            if (_fieldToRangeSetPairs.TryGetValue(key, out rangeSet))
+//            {
+//                _writer.WriteAttributeString("range", rangeSet);
+//            }
+//        }
 
 		public void Add(LexExampleSentence example)
 		{
+			List<string> propertiesAlreadyOutput = new List<string>();
 			_writer.WriteStartElement("example");
 			WriteMultiTextNoWrapper(example.Sentence);
 			WriteMultiWithWrapperIfNonEmpty("translation", example.Translation);
-			WriteCustomProperties(example);
+			WriteCustomProperties(example, propertiesAlreadyOutput);
 			_writer.WriteEndElement();
 		}
 
@@ -276,14 +302,39 @@ namespace WeSay.LexicalModel
 				Add(text);
 			}
 		}
-		private void WriteMultiWithWrapperIfNonEmpty(string wrapperName, MultiText text)
+
+		private void WriteOneElementPerFormIfNonEmpty(string wrapperName, MultiText text, char delimeter)
+		{
+			if (!MultiText.IsEmpty(text))
+			{
+				foreach (LanguageForm form in text)
+				{
+					foreach (string part in form.Form.Split(new char[]{delimeter}))
+					{
+						string trimmed = part.Trim();
+						if (part != string.Empty)
+						{
+							_writer.WriteStartElement(wrapperName);
+							_writer.WriteAttributeString("lang", form.WritingSystemId);
+							_writer.WriteString(trimmed);
+							_writer.WriteEndElement();
+						}
+					}
+				}
+			}
+		}
+
+
+		private bool WriteMultiWithWrapperIfNonEmpty(string wrapperName, MultiText text)
 		{
 			if (!MultiText.IsEmpty(text))
 			{
 				_writer.WriteStartElement(wrapperName);
 				Add(text);
 				_writer.WriteEndElement();
+				return true;
 			}
+			return false;
 		}
 
 		public void AddDeletedEntry(LexEntry entry)
@@ -292,7 +343,7 @@ namespace WeSay.LexicalModel
 			_writer.WriteAttributeString("id", MakeHumanReadableId(entry));
 			_writer.WriteAttributeString("dateCreated", entry.CreationTime.ToString(LiftDateTimeFormat));
 			_writer.WriteAttributeString("dateModified", entry.ModificationTime.ToString(LiftDateTimeFormat));
-			_writer.WriteAttributeString("flex", "id", "http://fieldworks.sil.org", entry.Guid.ToString());
+			_writer.WriteAttributeString("guid", entry.Guid.ToString());
 			 _writer.WriteAttributeString("dateDeleted", DateTime.UtcNow.ToString(LiftDateTimeFormat));
 
 			_writer.WriteEndElement();

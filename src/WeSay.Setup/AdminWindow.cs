@@ -16,6 +16,8 @@ namespace WeSay.Setup
 		private ProjectTabs _projectTabs;
 		private WeSayWordsProject _project;
 		ProgressDialogHandler _progressHandler;
+		private ProgressState _progressState;
+		private string _progressLog;
 
 		/// <summary>
 		/// This is probably temporary while we transition to the tasks xml being
@@ -298,17 +300,28 @@ namespace WeSay.Setup
 
 		private void RunCommand(BasicCommand command)
 		{
+			_progressLog = "";
 			_progressHandler = new ProgressDialogHandler(this, command);
-			_progressHandler.Finished += new EventHandler(_progressHandler_Finished);
-			ProgressState progress = new ProgressState(_progressHandler);
+			_progressHandler.Finished += new EventHandler(OnProgressHandler_Finished);
+			_progressState = new ProgressState(_progressHandler);
+			_progressState.Log += new EventHandler<ProgressState.LogEvent>(OnProgressState_Log);
 			UpdateEnabledStates();
-			command.BeginInvoke(progress);
+			command.BeginInvoke(_progressState);
 		}
 
-		void _progressHandler_Finished(object sender, EventArgs e)
+		void OnProgressState_Log(object sender, ProgressState.LogEvent e)
+		{
+			_progressLog += e.message + "\r\n";
+		}
+
+		void OnProgressHandler_Finished(object sender, EventArgs e)
 		{
 			_progressHandler = null;
 			UpdateEnabledStates();
+			if (_progressState.Status == ProgressState.StatusValue.StoppedWithError)
+			{
+				Reporting.ErrorReporter.ReportNonFatalMessage("WeSay ran into a problem.\r\n"+_progressLog);
+			}
 		}
 
 

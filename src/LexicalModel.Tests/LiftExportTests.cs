@@ -52,7 +52,10 @@ namespace WeSay.LexicalTools.Tests
 			PrepWriterForFullDocument();
 			//NOTE: the utf-16 here is an artifact of the xmlwriter when writing to a stringbuilder,
 			//which is what we use for tests.  The file version puts out utf-8
-			CheckAnswer("<?xml version=\"1.0\" encoding=\"utf-16\"?><lift producer=\"WeSay.1Pt0Alpha\" xmlns:flex=\"http://fieldworks.sil.org\" />");
+			//CheckAnswer("<?xml version=\"1.0\" encoding=\"utf-16\"?><lift producer=\"WeSay.1Pt0Alpha\"/>");// xmlns:flex=\"http://fieldworks.sil.org\" />");
+			_exporter.End();
+			AssertXPathNotNull(string.Format("lift[@version='{0}']", LiftIO.Validator.LiftVersion));
+			AssertXPathNotNull("lift[@producer]");
 		}
 
 
@@ -144,17 +147,18 @@ namespace WeSay.LexicalTools.Tests
 			LexSense sense = new LexSense();
 			sense.Gloss["blue"] = "ocean";
 			_exporter.Add(sense);
-			CheckAnswer("<sense><gloss><form lang=\"blue\">ocean</form></gloss></sense>");
+			_exporter.End();
+			AssertXPathNotNull("sense/gloss[@lang='blue']");
 		}
 
 
 		[Test]
-		public void MultiTextFormWithProblematicCharacters()
+		public void GlossWithProblematicCharacters()
 		{
 			LexSense sense = new LexSense();
 			sense.Gloss["blue"] = "LessThan<GreaterThan>Ampersan&";
 			_exporter.Add(sense);
-			CheckAnswer("<sense><gloss><form lang=\"blue\">LessThan&lt;GreaterThan&gt;Ampersan&amp;</form></gloss></sense>");
+			CheckAnswer("<sense><gloss lang=\"blue\">LessThan&lt;GreaterThan&gt;Ampersan&amp;</gloss></sense>");
 		}
 
 		[Test]
@@ -163,7 +167,7 @@ namespace WeSay.LexicalTools.Tests
 			LexSense sense = new LexSense();
 			sense.Gloss["x\"y"] = "test";
 			_exporter.Add(sense);
-			CheckAnswer("<sense><gloss><form lang=\"x&quot;y\">test</form></gloss></sense>");
+			CheckAnswer("<sense><gloss lang=\"x&quot;y\">test</gloss></sense>");
 		}
 
 		[Test]
@@ -213,7 +217,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			LexEntry entry = new LexEntry();
 			_exporter.Add(entry);
-			ShouldContain(string.Format("flex:id=\"{0}\"", entry.Guid));
+			ShouldContain(string.Format("guid=\"{0}\"", entry.Guid));
 		}
 
 		[Test]
@@ -282,7 +286,65 @@ namespace WeSay.LexicalTools.Tests
 			entry.Senses.Add(sense);
 			_exporter.Add(entry);
 
-			ShouldContain(string.Format("<sense><gloss><form lang=\"a\">aaa</form></gloss></sense><sense><gloss><form lang=\"b\">bbb</form></gloss></sense>"));
+			ShouldContain(string.Format("<sense><gloss lang=\"a\">aaa</gloss></sense><sense><gloss lang=\"b\">bbb</gloss></sense>"));
+		}
+
+		[Test]
+		public void MultipleGlossesSplitIntoSeparateEntries()
+		{
+			LexSense sense = new LexSense();
+			sense.Gloss["a"] = "aaa; bbb; ccc";
+			sense.Gloss["x"] = "xx";
+			_exporter.Add(sense);
+			_exporter.End();
+			AssertXPathNotNull("sense[count(gloss)=4]");
+			AssertXPathNotNull("sense/gloss[@lang='a' and text()='aaa']");
+			AssertXPathNotNull("sense/gloss[@lang='a' and text()='bbb']");
+			AssertXPathNotNull("sense/gloss[@lang='a' and text()='ccc']");
+			AssertXPathNotNull("sense/gloss[@lang='x' and text()='xx']");
+	  }
+
+		[Test]
+		public void NoteOnSenseOutputAsNote()
+		{
+			LexSense sense = new LexSense();
+			MultiText m = sense.GetOrCreateProperty<MultiText>(WeSayDataObject.WellKnownProperties.Note);
+			m["zz"] = "orange";
+			_exporter.Add(sense);
+			_exporter.End();
+			AssertXPathNotNull("sense/note");
+			AssertXPathNotNull("sense/note/form[@lang='zz']");
+			AssertXPathNotNull("sense/note/form[text()='orange']");
+			AssertXPathNotNull("sense[not(field)]");
+		}
+
+
+		[Test]
+		public void DefinitionOnSenseOutputAsDef()
+		{
+			LexSense sense = new LexSense();
+			MultiText m = sense.GetOrCreateProperty<MultiText>(LexSense.WellKnownProperties.Definition);
+			m["zz"] = "orange";
+			_exporter.Add(sense);
+			_exporter.End();
+			AssertXPathNotNull("sense/def");
+			AssertXPathNotNull("sense/def/form[@lang='zz']");
+			AssertXPathNotNull("sense/def/form[text()='orange']");
+			AssertXPathNotNull("sense[not(field)]");
+		}
+
+		[Test]
+		public void CitationOnEntryOutputAsCitation()
+		{
+			LexEntry entry = new LexEntry();
+			MultiText m = entry.GetOrCreateProperty<MultiText>(LexEntry.WellKnownProperties.Citation);
+			m["zz"] = "orange";
+			_exporter.Add(entry);
+			_exporter.End();
+			AssertXPathNotNull("entry/citation");
+			AssertXPathNotNull("entry/citation/form[@lang='zz']");
+			AssertXPathNotNull("entry/citation/form[text()='orange']");
+			AssertXPathNotNull("entry[not(field)]");
 		}
 
 		[Test]
@@ -293,10 +355,10 @@ namespace WeSay.LexicalTools.Tests
 			m["zz"] = "orange";
 			_exporter.Add(sense);
 			_exporter.End();
-			Debug.WriteLine(_stringBuilder.ToString());
-			Assert.IsTrue(_stringBuilder.ToString().Contains("<flubadub><form lang=\"zz\">orange</form></flubadub>"));
-
-		}
+			AssertXPathNotNull("sense/field");
+			AssertXPathNotNull("sense/field[@tag='flubadub']");
+			AssertXPathNotNull("sense/field/form[@lang='zz']");
+		 }
 
 		[Test]
 		public void CustomOptionRef()
@@ -309,7 +371,7 @@ namespace WeSay.LexicalTools.Tests
 			_exporter.End();
 			Debug.WriteLine(_stringBuilder.ToString());
 
-			Assert.AreEqual("<sense><trait name=\"flub\" value=\"orange\" range=\"kindsOfFlubs\" /></sense>", _stringBuilder.ToString());
+			Assert.AreEqual("<sense><trait name=\"flub\" value=\"orange\" /></sense>", _stringBuilder.ToString());
 		}
 
 		[Test]
@@ -323,7 +385,7 @@ namespace WeSay.LexicalTools.Tests
 			_exporter.End();
 			Debug.WriteLine(_stringBuilder.ToString());
 
-			Assert.AreEqual("<sense><trait name=\"flubs\" value=\"orange\" range=\"colors\" /><trait name=\"flubs\" value=\"blue\" range=\"colors\" /></sense>", _stringBuilder.ToString());
+			Assert.AreEqual("<sense><trait name=\"flubs\" value=\"orange\" /><trait name=\"flubs\" value=\"blue\" /></sense>", _stringBuilder.ToString());
 		}
 
 		[Test]

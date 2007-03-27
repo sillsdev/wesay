@@ -12,7 +12,28 @@ namespace WeSay.Foundation.Progress
 		private readonly ProgressDialogHandler _progressHandler;
 		private int _numberOfSteps;
 		private int _numberOfStepsCompleted;
-		private string _status;
+		private string _statusLabel;
+
+		public class LogEvent : System.EventArgs
+		{
+			public string message;
+
+			public LogEvent(string message)
+			{
+				this.message = message;
+			}
+		}
+		public event System.EventHandler<LogEvent> Log;
+
+		public enum StatusValue
+		{
+			NotStarted=0,
+			Busy,
+			Finished,
+			StoppedWithError
+		} ;
+
+		private StatusValue _status= StatusValue.NotStarted;
 
 		private bool _doCancel = false;
 
@@ -32,6 +53,13 @@ namespace WeSay.Foundation.Progress
 			_doCancel = true;
 		}
 
+		public void WriteToLog(string message)
+		{
+			if (this.Log != null)
+			{
+				Log.Invoke(this, new LogEvent(message));
+			}
+		}
 
 		/// <summary>
 		/// How much the task is done
@@ -52,17 +80,17 @@ namespace WeSay.Foundation.Progress
 		/// <summary>
 		/// a label which describes what we are busy doing
 		/// </summary>
-		public virtual string Status
+		public virtual string StatusLabel
 		{
 			get
 			{
-				return _status;
+				return _statusLabel;
 			}
 
 			set
 			{
-				_status = value;
-				_progressHandler.UpdateStatus1(_status);
+				_statusLabel = value;
+				_progressHandler.UpdateStatus1(_statusLabel);
 			}
 		}
 
@@ -140,6 +168,18 @@ namespace WeSay.Foundation.Progress
 			get { return _isDisposed; }
 		}
 
+		public StatusValue Status
+		{
+			get
+			{
+				return _status;
+			}
+			set
+			{
+				_status = value;
+			}
+		}
+
 		/// <summary>
 		/// Finalizer, in case client doesn't dispose it.
 		/// Force Dispose(false) if not already called (i.e. _isDisposed is true)
@@ -208,7 +248,7 @@ namespace WeSay.Foundation.Progress
 
 			// Dispose unmanaged resources here, whether disposing is true or false.
 			//            _progressBar = null;
-			_status = null;
+			_statusLabel = null;
 
 			_isDisposed = true;
 		}

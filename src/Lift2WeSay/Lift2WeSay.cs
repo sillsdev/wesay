@@ -14,7 +14,7 @@ namespace Lift2WeSay
 	{
 		int _numberOfSteps;
 		int _numberOfStepsCompleted;
-		string _status;
+		string _statusLabel;
 
 		public ConsoleProgress() : base(null)
 		{
@@ -31,16 +31,16 @@ namespace Lift2WeSay
 				_numberOfSteps = value;
 			}
 		}
-		public override string Status
+		public override string StatusLabel
 		{
 			get
 			{
-				return _status;
+				return _statusLabel;
 			}
 			set
 			{
 				Console.WriteLine(value);
-				_status = value;
+				_statusLabel = value;
 			}
 		}
 		public override int NumberOfStepsCompleted

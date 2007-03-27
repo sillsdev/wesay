@@ -27,9 +27,9 @@ namespace WeSay.LexicalModel
 		private DateTime _creationTime;
 		private DateTime _modificationTime;
 
-		public class WellKnownProperties
+		new public class WellKnownProperties
 		{
-			//static public string Citation = "cit";
+			static public string Citation = "citation";
 		} ;
 
 		public LexEntry(): base(null)

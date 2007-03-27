@@ -1,1 +1,31 @@
-﻿<?xml version="1.0" encoding="utf-8"?><WritingSystemCollection><AnalysisWritingSystemDefaultId>en</AnalysisWritingSystemDefaultId><members><WritingSystem><FontName>Doulos SIL</FontName><FontSize>12</FontSize><Id>en</Id><RightToLeft>False</RightToLeft></WritingSystem><WritingSystem><FontName>Doulos SIL</FontName><FontSize>12</FontSize><Id>bth</Id><RightToLeft>False</RightToLeft></WritingSystem><WritingSystem><FontName>Doulos SIL</FontName><FontSize>12</FontSize><Id>bth-qipa-phonetic</Id><RightToLeft>False</RightToLeft></WritingSystem><WritingSystem><FontName>Doulos SIL</FontName><FontSize>12</FontSize><Id>bth-qipa-phonemic</Id><RightToLeft>False</RightToLeft></WritingSystem></members><VernacularWritingSystemDefaultId>bth</VernacularWritingSystemDefaultId></WritingSystemCollection>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<WritingSystemCollection>
+  <AnalysisWritingSystemDefaultId>en</AnalysisWritingSystemDefaultId>
+  <members>
+	<WritingSystem>
+	  <FontName>Doulos SIL</FontName>
+	  <FontSize>12</FontSize>
+	  <Id>en</Id>
+	  <RightToLeft>False</RightToLeft>
+	</WritingSystem>
+	<WritingSystem>
+	  <FontName>Doulos SIL</FontName>
+	  <FontSize>12</FontSize>
+	  <Id>bth</Id>
+	  <RightToLeft>False</RightToLeft>
+	</WritingSystem>
+	<WritingSystem>
+	  <FontName>Doulos SIL</FontName>
+	  <FontSize>12</FontSize>
+	  <Id>bth-qipa-phonetic</Id>
+	  <RightToLeft>False</RightToLeft>
+	</WritingSystem>
+	<WritingSystem>
+	  <FontName>Doulos SIL</FontName>
+	  <FontSize>12</FontSize>
+	  <Id>bth-qipa-phonemic</Id>
+	  <RightToLeft>False</RightToLeft>
+	</WritingSystem>
+  </members>
+  <VernacularWritingSystemDefaultId>bth</VernacularWritingSystemDefaultId>
+</WritingSystemCollection>

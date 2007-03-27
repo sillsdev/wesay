@@ -122,6 +122,12 @@ namespace WeSay.LexicalModel.Tests
 			LexEntry e = MakeSimpleEntry();
 			_merger.MergeInNote(e, null, MakeBasicSimpleMultiText());
 			AssertPropertyHasExpectedMultiText(e, WeSayDataObject.WellKnownProperties.Note);
+			MultiText m = e.GetProperty<MultiText>(WeSayDataObject.WellKnownProperties.Note);
+			Assert.IsTrue(m.ContainsAlternative("ws-one"));
+			Assert.IsTrue(m.ContainsAlternative("ws-two"));
+			Assert.AreEqual("uno",m["ws-one"]);
+			Assert.AreEqual("dos",m["ws-two"]);
+
 		}
 
 		[Test]
