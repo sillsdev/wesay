@@ -109,29 +109,36 @@ namespace WeSay.LexicalModel
 			return ex;
 		}
 
-		public void MergeInLexemeForm(LexEntry entry, SimpleMultiText forms)
+		public void MergeInLexemeForm(LexEntry entry, LiftMultiText forms)
 		{
 			MergeIn(entry.LexicalForm, forms);
 		}
 
 
 
-		public void MergeInGloss(LexSense sense, SimpleMultiText forms)
+		public void MergeInGloss(LexSense sense, LiftMultiText forms)
 		{
 		   sense.Gloss.MergeInWithAppend(MultiText.Create(forms), "; ");
+			foreach (Trait trait in forms.Traits )
+			{
+				if (trait.Name == "flag")
+				{
+					sense.Gloss.SetAnnotationOfAlternativeIsStarred(trait.Language, trait.Value == "1");
+				}
+			}
 		}
 
-		public void MergeInExampleForm(LexExampleSentence example, SimpleMultiText forms)//, string optionalSource)
+		public void MergeInExampleForm(LexExampleSentence example, LiftMultiText forms)//, string optionalSource)
 		{
 			MergeIn(example.Sentence, forms);
 		}
 
-		public void MergeInTranslationForm(LexExampleSentence example, SimpleMultiText forms)
+		public void MergeInTranslationForm(LexExampleSentence example, LiftMultiText forms)
 		{
 			MergeIn(example.Translation, forms);
 		}
 
-		public void MergeInDefinition(LexSense sense, SimpleMultiText contents)
+		public void MergeInDefinition(LexSense sense, LiftMultiText contents)
 		{
 			AddOrAppendMultiTextProperty(sense, contents, LexSense.WellKnownProperties.Note);
 		}
@@ -139,7 +146,7 @@ namespace WeSay.LexicalModel
 		/// <summary>
 		/// Handle LIFT's "note" entity
 		/// </summary>
-		public void MergeInNote(WeSayDataObject extensible, string type, SimpleMultiText contents)
+		public void MergeInNote(WeSayDataObject extensible, string type, LiftMultiText contents)
 		{
 			if (type != null && type != string.Empty)
 			{
@@ -162,14 +169,14 @@ namespace WeSay.LexicalModel
 			o.Value = val;
 		}
 
-		private static void AddOrAppendMultiTextProperty(WeSayDataObject dataObject, SimpleMultiText contents, string propertyName)
+		private static void AddOrAppendMultiTextProperty(WeSayDataObject dataObject, LiftMultiText contents, string propertyName)
 		{
 			MultiText mt = dataObject.GetOrCreateProperty<MultiText>(propertyName);
 			mt.MergeInWithAppend(MultiText.Create(contents), "; ");
 			//dataObject.GetOrCreateProperty<string>(propertyName) mt));
 		}
 
-		private static void AddMultiTextProperty(WeSayDataObject dataObject, SimpleMultiText contents, string propertyName)
+		private static void AddMultiTextProperty(WeSayDataObject dataObject, LiftMultiText contents, string propertyName)
 		{
 			dataObject.Properties.Add(
 				new KeyValuePair<string, object>(propertyName,
@@ -180,7 +187,7 @@ namespace WeSay.LexicalModel
 		/// Handle LIFT's "field" entity which can be found on any subclass of "extensible"
 		/// </summary>
 		public void MergeInField(WeSayDataObject extensible, string tagAttribute, DateTime dateCreated,
-								 DateTime dateModified, SimpleMultiText contents)
+								 DateTime dateModified, LiftMultiText contents)
 		{
 			MultiText t = MultiText.Create(contents);
 			extensible.Properties.Add(new KeyValuePair<string, object>(tagAttribute, t));
@@ -191,7 +198,7 @@ namespace WeSay.LexicalModel
 		/// which can be found on any subclass of "extensible", on any "field", and as
 		/// a subclass of "annotation".
 		/// </summary>
-		public void MergeInTrait(WeSayDataObject extensible, string name, string valueAttribute, string optionalId)
+		public void MergeInTrait(WeSayDataObject extensible, string name, string valueAttribute)
 		{
 				if (name != null && ExpectedOptionTraits.Contains(name))
 				{
@@ -206,7 +213,6 @@ namespace WeSay.LexicalModel
 				else
 				{
 					//"log skipping..."
-					//log optionalId
 				}
 		}
 
@@ -235,7 +241,7 @@ namespace WeSay.LexicalModel
 //        }
 
 
-		private static void MergeIn(MultiText multiText, SimpleMultiText forms)
+		private static void MergeIn(MultiText multiText, LiftMultiText forms)
 		{
 
 			multiText.MergeIn(MultiText.Create(forms));

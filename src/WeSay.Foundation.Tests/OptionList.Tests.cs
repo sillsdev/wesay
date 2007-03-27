@@ -39,7 +39,7 @@ namespace WeSay.Language.Tests
 						<option>
 							<key>verb</key>
 							<name>
-								<form ws='en'>verb</form>
+								<form ws='en'><text>verb</text></form>
 							</name>
 						</option>
 					</options>

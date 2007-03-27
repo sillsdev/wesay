@@ -109,7 +109,7 @@ namespace WeSay.LexicalTools.Tests
 			text["blue"] = "ocean";
 			text ["red"] = "sunset";
 			_exporter.Add(text);
-			CheckAnswer("<form lang=\"blue\">ocean</form><form lang=\"red\">sunset</form>");
+			CheckAnswer("<form lang=\"blue\"><text>ocean</text></form><form lang=\"red\"><text>sunset</text></form>");
 		}
 
 
@@ -151,6 +151,30 @@ namespace WeSay.LexicalTools.Tests
 			AssertXPathNotNull("sense/gloss[@lang='blue']");
 		}
 
+		[Test]
+		public void LexicalUnitNoStar()
+		{
+			LexEntry e = new LexEntry();
+			e.LexicalForm.SetAlternative("x", "orange");
+			e.LexicalForm.SetAnnotationOfAlternativeIsStarred("x", false);
+			_exporter.Add(e);
+			_exporter.End();
+			AssertXPathNotNull("entry/lexical-unit/form[@lang='x']/text[text()='orange']");
+			AssertXPathNotNull("entry/lexical-unit/form[not(trait)]");
+		}
+
+		[Test]
+		public void LexicalUnitWithStarredForm()
+		{
+			LexEntry e = new LexEntry();
+			e.LexicalForm.SetAlternative("x", "orange");
+			e.LexicalForm.SetAnnotationOfAlternativeIsStarred("x", true);
+			_exporter.Add(e);
+			_exporter.End();
+			AssertXPathNotNull("entry/lexical-unit/form[@lang='x']/text");
+			AssertXPathNotNull("entry/lexical-unit/form[@lang='x']/trait[@name='flag' and @value='1']");
+		}
+
 
 		[Test]
 		public void GlossWithProblematicCharacters()
@@ -158,7 +182,7 @@ namespace WeSay.LexicalTools.Tests
 			LexSense sense = new LexSense();
 			sense.Gloss["blue"] = "LessThan<GreaterThan>Ampersan&";
 			_exporter.Add(sense);
-			CheckAnswer("<sense><gloss lang=\"blue\">LessThan&lt;GreaterThan&gt;Ampersan&amp;</gloss></sense>");
+			CheckAnswer("<sense><gloss lang=\"blue\"><text>LessThan&lt;GreaterThan&gt;Ampersan&amp;</text></gloss></sense>");
 		}
 
 		[Test]
@@ -167,7 +191,7 @@ namespace WeSay.LexicalTools.Tests
 			LexSense sense = new LexSense();
 			sense.Gloss["x\"y"] = "test";
 			_exporter.Add(sense);
-			CheckAnswer("<sense><gloss lang=\"x&quot;y\">test</gloss></sense>");
+			CheckAnswer("<sense><gloss lang=\"x&quot;y\"><text>test</text></gloss></sense>");
 		}
 
 		[Test]
@@ -191,7 +215,7 @@ namespace WeSay.LexicalTools.Tests
 			example.Sentence["blue"] = "ocean's eleven";
 			example.Sentence["red"] = "red sunset tonight";
 			_exporter.Add(example);
-			CheckAnswer("<example><form lang=\"blue\">ocean's eleven</form><form lang=\"red\">red sunset tonight</form></example>");
+			CheckAnswer("<example><form lang=\"blue\"><text>ocean's eleven</text></form><form lang=\"red\"><text>red sunset tonight</text></form></example>");
 		}
 
 		[Test]
@@ -202,7 +226,7 @@ namespace WeSay.LexicalTools.Tests
 			example.Sentence["red"] = "red sunset tonight";
 			example.Translation["green"] = "blah blah";
 			_exporter.Add(example);
-			CheckAnswer("<example><form lang=\"blue\">ocean's eleven</form><form lang=\"red\">red sunset tonight</form><translation><form lang=\"green\">blah blah</form></translation></example>");
+			CheckAnswer("<example><form lang=\"blue\"><text>ocean's eleven</text></form><form lang=\"red\"><text>red sunset tonight</text></form><translation><form lang=\"green\"><text>blah blah</text></form></translation></example>");
 		}
 
 		[Test]
@@ -239,9 +263,14 @@ namespace WeSay.LexicalTools.Tests
 		private void ShouldContain(string s)
 		{
 			_exporter.End();
+			bool found = _stringBuilder.ToString().Contains(
+				s);
+			if (!found)
+			{
+				Console.WriteLine(_stringBuilder.ToString());
+			}
 			Assert.IsTrue(
-				_stringBuilder.ToString().Contains(
-					s));
+				found);
 		}
 
 		[Test]
@@ -286,7 +315,7 @@ namespace WeSay.LexicalTools.Tests
 			entry.Senses.Add(sense);
 			_exporter.Add(entry);
 
-			ShouldContain(string.Format("<sense><gloss lang=\"a\">aaa</gloss></sense><sense><gloss lang=\"b\">bbb</gloss></sense>"));
+			ShouldContain(string.Format("<sense><gloss lang=\"a\"><text>aaa</text></gloss></sense><sense><gloss lang=\"b\"><text>bbb</text></gloss></sense>"));
 		}
 
 		[Test]
@@ -314,7 +343,7 @@ namespace WeSay.LexicalTools.Tests
 			_exporter.End();
 			AssertXPathNotNull("sense/note");
 			AssertXPathNotNull("sense/note/form[@lang='zz']");
-			AssertXPathNotNull("sense/note/form[text()='orange']");
+			AssertXPathNotNull("sense/note/form/text[text()='orange']");
 			AssertXPathNotNull("sense[not(field)]");
 		}
 
@@ -329,7 +358,7 @@ namespace WeSay.LexicalTools.Tests
 			_exporter.End();
 			AssertXPathNotNull("sense/def");
 			AssertXPathNotNull("sense/def/form[@lang='zz']");
-			AssertXPathNotNull("sense/def/form[text()='orange']");
+			AssertXPathNotNull("sense/def/form/text[text()='orange']");
 			AssertXPathNotNull("sense[not(field)]");
 		}
 
@@ -343,7 +372,7 @@ namespace WeSay.LexicalTools.Tests
 			_exporter.End();
 			AssertXPathNotNull("entry/citation");
 			AssertXPathNotNull("entry/citation/form[@lang='zz']");
-			AssertXPathNotNull("entry/citation/form[text()='orange']");
+			AssertXPathNotNull("entry/citation/form/text[text()='orange']");
 			AssertXPathNotNull("entry[not(field)]");
 		}
 
@@ -408,7 +437,7 @@ namespace WeSay.LexicalTools.Tests
 			example.Sentence["red"] = "red sunset tonight";
 			sense.ExampleSentences.Add(example);
 			_exporter.Add(sense);
-			CheckAnswer("<sense><example><form lang=\"red\">red sunset tonight</form></example></sense>");
+			CheckAnswer("<sense><example><form lang=\"red\"><text>red sunset tonight</text></form></example></sense>");
 		}
 
 

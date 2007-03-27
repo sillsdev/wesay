@@ -297,7 +297,20 @@ namespace WeSay.LexicalModel
 			{
 				_writer.WriteStartElement("form");
 				_writer.WriteAttributeString("lang", form.WritingSystemId);
+
+				_writer.WriteStartElement("text");
 				_writer.WriteString(form.Form);
+				_writer.WriteEndElement();
+
+				if (form.IsStarred)
+				{
+
+					_writer.WriteStartElement("trait");
+					_writer.WriteAttributeString("name", "flag");
+					_writer.WriteAttributeString("value", "1");
+					_writer.WriteEndElement();
+				}
+
 				_writer.WriteEndElement();
 			}
 		}
@@ -324,7 +337,9 @@ namespace WeSay.LexicalModel
 						{
 							_writer.WriteStartElement(wrapperName);
 							_writer.WriteAttributeString("lang", form.WritingSystemId);
+							_writer.WriteStartElement("text");
 							_writer.WriteString(trimmed);
+							_writer.WriteEndElement();
 							_writer.WriteEndElement();
 						}
 					}
