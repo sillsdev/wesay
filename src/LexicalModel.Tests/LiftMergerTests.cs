@@ -145,10 +145,19 @@ namespace WeSay.LexicalModel.Tests
 		public void SenseGetsGrammi()
 		{
 			LexSense sense = new LexSense();
-			_merger.MergeInGrammaticalInfo(sense, "red");
+			_merger.MergeInGrammaticalInfo(sense, "red", null);
 			OptionRef optionRef = sense.GetProperty<OptionRef>(LexSense.WellKnownProperties.PartOfSpeech);
 			Assert.IsNotNull(optionRef);
 			Assert.AreEqual("red", optionRef.Value);
+		}
+
+		[Test]
+		public void GrammiGetsFlagTrait()
+		{
+			LexSense sense = new LexSense();
+			_merger.MergeInGrammaticalInfo(sense, "red", new List<Trait>(new Trait[]{new Trait("flag", "1")}));
+			OptionRef optionRef = sense.GetProperty<OptionRef>(LexSense.WellKnownProperties.PartOfSpeech);
+			Assert.IsTrue(optionRef.IsStarred);
 		}
 
 		[Test]
@@ -227,15 +236,33 @@ namespace WeSay.LexicalModel.Tests
 		{
 			LexSense sense = new LexSense();
 			LiftMultiText text = MakeBasicLiftMultiText();
-			text.Traits.Add(new Trait("ws-one", "flag", "1"));
+			AddTraitToLiftMultiText(text, "ws-one", "flag", "1");
 			_merger.MergeInGloss(sense, text);
 			Assert.IsTrue(sense.Gloss.GetAnnotationOfAlternativeIsStarred("ws-one"));
 			Assert.IsFalse(sense.Gloss.GetAnnotationOfAlternativeIsStarred("ws-two"));
 
 			text = MakeBasicLiftMultiText();
-			text.Traits.Add(new Trait("ws-one", "flag", "0"));
+			AddTraitToLiftMultiText(text, "ws-one", "flag", "0");
 			_merger.MergeInGloss(sense, text);
 			Assert.IsFalse(sense.Gloss.GetAnnotationOfAlternativeIsStarred("ws-one"));
+		}
+
+		[Test]
+		public void LexicalUntiGetsFlag()
+		{
+			LexEntry entry = this.MakeSimpleEntry();
+			LiftMultiText text = MakeBasicLiftMultiText();
+			AddTraitToLiftMultiText(text, "ws-one", "flag", "1");
+			_merger.MergeInLexemeForm(entry, text);
+			Assert.IsTrue(entry.LexicalForm.GetAnnotationOfAlternativeIsStarred("ws-one"));
+			Assert.IsFalse(entry.LexicalForm.GetAnnotationOfAlternativeIsStarred("ws-two"));
+		}
+
+		private static void AddTraitToLiftMultiText(LiftMultiText text, string languageHint, string name, string value)
+		{
+			Trait trait = new Trait(name, value);
+			trait.LanguageHint = languageHint;
+			text.Traits.Add(trait);
 		}
 
 		[Test]
@@ -435,7 +462,7 @@ namespace WeSay.LexicalModel.Tests
 		{
 			_merger.ExpectedOptionTraits.Add("flub");
 			LexEntry e = this.MakeSimpleEntry();
-			_merger.MergeInTrait(e, "flub", "dub");
+			_merger.MergeInTrait(e, new Trait("flub", "dub"));
 			Assert.AreEqual(1, e.Properties.Count);
 			Assert.AreEqual("flub", e.Properties[0].Key);
 			OptionRef option = e.GetProperty<OptionRef>("flub");
@@ -446,7 +473,7 @@ namespace WeSay.LexicalModel.Tests
 		public void UnexpectedAtomicTraitDropped()
 		{
 			LexEntry e = this.MakeSimpleEntry();
-			_merger.MergeInTrait(e, "flub", "dub");
+			_merger.MergeInTrait(e, new Trait("flub", "dub"));
 			Assert.AreEqual(0, e.Properties.Count);
 		}
 
@@ -455,8 +482,8 @@ namespace WeSay.LexicalModel.Tests
 		{
 			_merger.ExpectedOptionCollectionTraits.Add("flub");
 			LexEntry e = this.MakeSimpleEntry();
-			_merger.MergeInTrait(e, "flub", "dub");
-			_merger.MergeInTrait(e, "flub", "stub");
+			_merger.MergeInTrait(e, new Trait("flub", "dub"));
+			_merger.MergeInTrait(e, new Trait("flub", "stub"));
 			Assert.AreEqual(1, e.Properties.Count);
 			Assert.AreEqual("flub", e.Properties[0].Key);
 			OptionRefCollection options = e.GetProperty<OptionRefCollection>("flub");
@@ -469,8 +496,8 @@ namespace WeSay.LexicalModel.Tests
 		public void UnexpectedAtomicCollectionDropped()
 		{
 			LexEntry e = this.MakeSimpleEntry();
-			_merger.MergeInTrait(e, "flub", "dub");
-			_merger.MergeInTrait(e, "flub", "stub");
+			_merger.MergeInTrait(e, new Trait("flub", "dub"));
+			_merger.MergeInTrait(e, new Trait("flub", "stub"));
 			Assert.AreEqual(0, e.Properties.Count);
 		}
 
@@ -491,8 +518,8 @@ namespace WeSay.LexicalModel.Tests
 		public void UnexpectedCustomFieldDropped()
 		{
 			LexEntry e = this.MakeSimpleEntry();
-			_merger.MergeInTrait(e, "flub", "dub");
-			_merger.MergeInTrait(e, "flub", "stub");
+			_merger.MergeInTrait(e, new Trait("flub", "dub"));
+			_merger.MergeInTrait(e, new Trait("flub", "stub"));
 			Assert.AreEqual(0, e.Properties.Count);
 		}
 

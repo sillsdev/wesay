@@ -196,7 +196,7 @@ namespace WeSay.LexicalModel
 			{
 				_writer.WriteStartElement("grammatical-info");
 				_writer.WriteAttributeString("value", ((OptionRef)pos).Value);
-				//todo add flex:id
+				WriteFlags(pos);
 				_writer.WriteEndElement();
 			}
 			else
@@ -302,15 +302,18 @@ namespace WeSay.LexicalModel
 				_writer.WriteString(form.Form);
 				_writer.WriteEndElement();
 
-				if (form.IsStarred)
-				{
+				WriteFlags(form);
+				_writer.WriteEndElement();
+			}
+		}
 
-					_writer.WriteStartElement("trait");
-					_writer.WriteAttributeString("name", "flag");
-					_writer.WriteAttributeString("value", "1");
-					_writer.WriteEndElement();
-				}
-
+		private void WriteFlags(Annotatable thing)
+		{
+			if (thing.IsStarred )
+			{
+				_writer.WriteStartElement("trait");
+				_writer.WriteAttributeString("name", "flag");
+				_writer.WriteAttributeString("value", "1");
 				_writer.WriteEndElement();
 			}
 		}
@@ -340,7 +343,9 @@ namespace WeSay.LexicalModel
 							_writer.WriteStartElement("text");
 							_writer.WriteString(trimmed);
 							_writer.WriteEndElement();
+							WriteFlags(form);
 							_writer.WriteEndElement();
+
 						}
 					}
 				}

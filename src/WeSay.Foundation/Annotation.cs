@@ -1,5 +1,39 @@
-namespace WeSay.Language
+using System.Xml.Serialization;
+
+namespace WeSay.Foundation
 {
+
+	public class Annotatable
+	{
+		private Annotation _annotation;
+
+
+		[XmlAttribute("starred")]
+		public bool IsStarred
+		{
+			get
+			{
+				if (_annotation == null)
+				{
+					return false; // don't bother making one yet
+				}
+				return _annotation.IsOn;
+			}
+			set
+			{
+				if (!value)
+				{
+					_annotation = null; //free it up
+				}
+				else if (_annotation == null)
+				{
+					_annotation = new Annotation();
+					_annotation.IsOn = true;
+				}
+			}
+		}
+	}
+
 	/// <summary>
 	/// An annotation is a like a "flag" on a field. You can say, e.g., "I'm not sure about this"
 	/// </summary>

@@ -1,6 +1,7 @@
 using System;
 using System.Xml.Serialization;
 using Exortech.NetReflector;
+using WeSay.Foundation;
 
 namespace WeSay.Language
 {
@@ -8,11 +9,10 @@ namespace WeSay.Language
 	/// A LanguageForm is a unicode string plus the id of its writing system
 	/// </summary>
 	[ReflectorType("alt")]
-	public class LanguageForm
+	public class LanguageForm : Annotatable
 	{
 		private string _writingSystemId;
 		private string _form;
-		private Annotation _annotation;
 
 		/// <summary>
 		/// See the comment on MultiText._parent for information on
@@ -38,30 +38,6 @@ namespace WeSay.Language
 			_form =  form;
 		}
 
-		[XmlAttribute("starred")]
-		public bool IsStarred
-		{
-			get
-			{
-				if (_annotation == null)
-				{
-					return false; // don't bother making one yet
-				}
-				return _annotation.IsOn;
-			}
-			set
-			{
-				if (!value)
-				{
-					_annotation = null; //free it up
-				}
-				else if (_annotation == null)
-				{
-					_annotation = new Annotation();
-					_annotation.IsOn = true;
-				}
-			}
-		}
 
 		[ReflectorProperty("ws", Required = true)]
 		[XmlAttribute("ws")]

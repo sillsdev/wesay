@@ -119,11 +119,20 @@ namespace WeSay.LexicalModel
 		public void MergeInGloss(LexSense sense, LiftMultiText forms)
 		{
 		   sense.Gloss.MergeInWithAppend(MultiText.Create(forms), "; ");
+		   AddTraitsToMultiText(forms, sense.Gloss);
+		}
+
+		private static void AddTraitsToMultiText(LiftMultiText forms,  MultiText text)
+		{
 			foreach (Trait trait in forms.Traits )
 			{
 				if (trait.Name == "flag")
 				{
-					sense.Gloss.SetAnnotationOfAlternativeIsStarred(trait.Language, trait.Value == "1");
+					text.SetAnnotationOfAlternativeIsStarred(trait.LanguageHint, int.Parse(trait.Value) > 0);
+				}
+				else
+				{
+					//log dropped
 				}
 			}
 		}
@@ -163,10 +172,24 @@ namespace WeSay.LexicalModel
 			AddOrAppendMultiTextProperty(extensible, contents, WeSayDataObject.WellKnownProperties.Note);
 		}
 
-		public void MergeInGrammaticalInfo(LexSense sense, string val)
+		public void MergeInGrammaticalInfo(LexSense sense, string val, List<Trait> traits)
 		{
 			OptionRef o = sense.GetOrCreateProperty<OptionRef>(LexSense.WellKnownProperties.PartOfSpeech);
 			o.Value = val;
+			if (traits != null)
+			{
+				foreach (Trait trait in traits)
+				{
+					if (trait.Name == "flag" && int.Parse(trait.Value) > 0)
+					{
+						o.IsStarred = true;
+					}
+					else
+					{
+						//log skipping
+					}
+				}
+			}
 		}
 
 		private static void AddOrAppendMultiTextProperty(WeSayDataObject dataObject, LiftMultiText contents, string propertyName)
@@ -198,17 +221,17 @@ namespace WeSay.LexicalModel
 		/// which can be found on any subclass of "extensible", on any "field", and as
 		/// a subclass of "annotation".
 		/// </summary>
-		public void MergeInTrait(WeSayDataObject extensible, string name, string valueAttribute)
+		public void MergeInTrait(WeSayDataObject extensible, LiftIO.Trait trait)
 		{
-				if (name != null && ExpectedOptionTraits.Contains(name))
+				if (trait.Name != null && ExpectedOptionTraits.Contains(trait.Name))
 				{
-					OptionRef o = extensible.GetOrCreateProperty<OptionRef>(name);
-					o.Value = valueAttribute;
+					OptionRef o = extensible.GetOrCreateProperty<OptionRef>(trait.Name);
+					o.Value = trait.Value;
 				}
-				else if (name != null && ExpectedOptionCollectionTraits.Contains(name))
+				else if (trait.Name != null && ExpectedOptionCollectionTraits.Contains(trait.Name))
 				{
-					OptionRefCollection c = extensible.GetOrCreateProperty<OptionRefCollection>(name);
-					c.Keys.Add(valueAttribute);
+					OptionRefCollection c = extensible.GetOrCreateProperty<OptionRefCollection>(trait.Name);
+					c.Keys.Add(trait.Value);
 				}
 				else
 				{
@@ -245,6 +268,7 @@ namespace WeSay.LexicalModel
 		{
 
 			multiText.MergeIn(MultiText.Create(forms));
+			AddTraitsToMultiText(forms, multiText);
 		}
 
 		 public void Dispose()

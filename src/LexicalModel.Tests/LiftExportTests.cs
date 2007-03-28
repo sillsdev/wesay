@@ -175,6 +175,30 @@ namespace WeSay.LexicalTools.Tests
 			AssertXPathNotNull("entry/lexical-unit/form[@lang='x']/trait[@name='flag' and @value='1']");
 		}
 
+		[Test]
+		public void GlossWithStarredForm()
+		{
+			LexSense sense = new LexSense();
+			sense.Gloss.SetAlternative("x", "orange");
+			sense.Gloss.SetAnnotationOfAlternativeIsStarred("x", true);
+			_exporter.Add(sense);
+			_exporter.End();
+			AssertXPathNotNull("sense/gloss/trait[@name='flag' and @value='1']");
+		}
+
+
+		[Test]
+		public void GrammiWithStarredForm()
+		{
+			LexSense sense = new LexSense();
+			OptionRef o = sense.GetOrCreateProperty<OptionRef>(LexSense.WellKnownProperties.PartOfSpeech);
+			o.Value = "orange";
+			o.IsStarred = true;
+			_exporter.Add(sense);
+			_exporter.End();
+			AssertXPathNotNull("sense/grammatical-info/trait[@name='flag' and @value='1']");
+		}
+
 
 		[Test]
 		public void GlossWithProblematicCharacters()
@@ -327,10 +351,10 @@ namespace WeSay.LexicalTools.Tests
 			_exporter.Add(sense);
 			_exporter.End();
 			AssertXPathNotNull("sense[count(gloss)=4]");
-			AssertXPathNotNull("sense/gloss[@lang='a' and text()='aaa']");
-			AssertXPathNotNull("sense/gloss[@lang='a' and text()='bbb']");
-			AssertXPathNotNull("sense/gloss[@lang='a' and text()='ccc']");
-			AssertXPathNotNull("sense/gloss[@lang='x' and text()='xx']");
+			AssertXPathNotNull("sense/gloss[@lang='a' and text='aaa']");
+			AssertXPathNotNull("sense/gloss[@lang='a' and text='bbb']");
+			AssertXPathNotNull("sense/gloss[@lang='a' and text='ccc']");
+			AssertXPathNotNull("sense/gloss[@lang='x' and text='xx']");
 	  }
 
 		[Test]
