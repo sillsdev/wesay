@@ -22,15 +22,15 @@ namespace WeSay.UI
 			_textBoxes = new List<WeSayTextBox>();
 			_vbox.Name = "vbox of anonymous multitext";
 		}
-		public MultiTextControl(IList<WritingSystem> writingSystems, MultiText multiTextToCopyFormsFrom, string nameForTesting):this()
+		public MultiTextControl(IList<WritingSystem> writingSystems, MultiText multiTextToCopyFormsFrom, string nameForTesting, bool showAnnotationWidget):this()
 		{
 			Name = nameForTesting+"-mtc";
 			_vbox.Name = Name + "-vbox";
 			_writingSystems = writingSystems;
-			BuildBoxes(multiTextToCopyFormsFrom);
+			BuildBoxes(multiTextToCopyFormsFrom,showAnnotationWidget);
 		}
 		public MultiTextControl(IList<WritingSystem> writingSystems, MultiText text)
-			: this(writingSystems, text, "Unknown")
+			: this(writingSystems, text, "Unknown", true)
 		{
 		}
 
@@ -59,7 +59,7 @@ namespace WeSay.UI
 			}
 		}
 
-		private void BuildBoxes(MultiText multiText)
+		private void BuildBoxes(MultiText multiText, bool showAnnotationWidget)
 		{
 			SuspendLayout();
 			if (_vbox.Count > 0)
@@ -85,11 +85,18 @@ namespace WeSay.UI
 				p.Controls.Add(label);
 				p.Size = new Size(initialPanelWidth,box.Height+0);
 
-				//TODO: THIS IS TRANSITIONAL CODE... AnnotationWidget should probably become a full control (or go away)
-				AnnotationWidget aw = new AnnotationWidget(multiText,writingSystem.Id, box.Name+"-annotationWidget");
-				Control annotationControl = aw.MakeControl(p.Size);
-				p.Controls.Add(annotationControl);
-				this.components.Add(annotationControl);//so it will get disposed of when we are
+				//does this work?
+				p.AutoSize = true;
+
+				if (showAnnotationWidget) //false for ghosts
+				{
+					//TODO: THIS IS TRANSITIONAL CODE... AnnotationWidget should probably become a full control (or go away)
+					AnnotationWidget aw =
+						new AnnotationWidget(multiText, writingSystem.Id, box.Name + "-annotationWidget");
+					Control annotationControl = aw.MakeControl(p.Size);
+					p.Controls.Add(annotationControl);
+					this.components.Add(annotationControl); //so it will get disposed of when we are
+				}
 
 				_vbox.AddControlToBottom(p);
 				Height += p.Height;
@@ -177,7 +184,7 @@ namespace WeSay.UI
 			set
 			{
 				_writingSystems = value;
-				BuildBoxes(this.MultiText);
+				BuildBoxes(this.MultiText, true);
 			}
 		}
 

@@ -21,7 +21,7 @@ namespace WeSay.Setup.Tests
 		private bool _finished;
 		private ProgressState _progress;
 		private string _backupPath;
-		private string _simpleGoodLiftContents = string.Format("<?xml version='1.0' encoding='utf-8'?><lift version='{0}'><entry id='one'><sense><gloss lang='en'>hello</gloss></sense></entry><entry id='two'/></lift>", LiftIO.Validator.LiftVersion);
+		private string _simpleGoodLiftContents = string.Format("<?xml version='1.0' encoding='utf-8'?><lift version='{0}'><entry id='one'><sense><gloss lang='en'><text>hello</text></gloss></sense></entry><entry id='two'/></lift>", LiftIO.Validator.LiftVersion);
 		private string _log;
 
 		[SetUp]

@@ -79,7 +79,7 @@ namespace WeSay.LexicalTools
 			MultiTextControl m;
 			if (_previouslyGhostedControlToReuse == null)
 			{
-				m = new MultiTextControl(field.WritingSystems, multiTextToBindTo, field.FieldName);
+				m = new MultiTextControl(field.WritingSystems, multiTextToBindTo, field.FieldName, true);
 			}
 			else
 			{
@@ -125,7 +125,7 @@ namespace WeSay.LexicalTools
 			if (field != null && field.Visibility == Field.VisibilitySetting.Visible)
 			{
 
-				MultiTextControl m = new MultiTextControl(field.WritingSystems, new MultiText(), fieldName+"_ghost");
+				MultiTextControl m = new MultiTextControl(field.WritingSystems, new MultiText(), fieldName+"_ghost", false);
 				Control refWidget = DetailList.AddWidgetRow(StringCatalog.Get(label), isHeading, m, insertAtRow + rowCount);
 
 				foreach (WeSayTextBox box in m.TextBoxes)

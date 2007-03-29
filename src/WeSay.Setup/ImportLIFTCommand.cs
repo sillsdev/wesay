@@ -27,6 +27,7 @@ namespace WeSay
 		{
 			_progress = progress;
 			_progress.Status = ProgressState.StatusValue.Busy;
+			_progress.StatusLabel = "Validating...";
 			string errors = Validator.GetAnyValidationErrors(_sourceLIFTPath);
 			if (errors != null && errors != string.Empty)
 			{

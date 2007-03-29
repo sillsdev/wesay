@@ -120,7 +120,7 @@ namespace WeSay.Setup
 			this.importFromLIFTXMLToolStripMenuItem.Name = "importFromLIFTXMLToolStripMenuItem";
 			this.importFromLIFTXMLToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
 			this.importFromLIFTXMLToolStripMenuItem.Text = "&Import From LIFT XML...";
-			this.importFromLIFTXMLToolStripMenuItem.Click += new System.EventHandler(this.ImportFromLiftXmlToolStripMenuItem_Click);
+			this.importFromLIFTXMLToolStripMenuItem.Click += new System.EventHandler(this.OnImportFromLiftXml);
 			//
 			// toolStripMenuItem1
 			//

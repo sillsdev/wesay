@@ -249,8 +249,11 @@ namespace WeSay.UI
 		protected override void OnSizeChanged(EventArgs e)
 		{
 			base.OnSizeChanged(e);
-			this._list.ItemHeight = Height;
-			if(_autoSizePopup)
+			if (_list != null)
+			{
+				this._list.ItemHeight = Height;
+			}
+			if(_popup !=null && _autoSizePopup)
 			{
 				this._popup.Width = Width;
 			}

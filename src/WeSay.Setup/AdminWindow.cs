@@ -325,7 +325,7 @@ namespace WeSay.Setup
 		}
 
 
-		private void ImportFromLiftXmlToolStripMenuItem_Click(object sender, EventArgs e)
+		private void OnImportFromLiftXml(object sender, EventArgs e)
 		{
 			OpenFileDialog openDialog = new OpenFileDialog();
 			openDialog.Title = "Choose the LIFT xml file to convert to a WeSay Words file";
