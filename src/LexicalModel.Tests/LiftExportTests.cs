@@ -231,6 +231,18 @@ namespace WeSay.LexicalTools.Tests
 			_exporter.Add(new LexExampleSentence());
 			CheckAnswer("<example />");
 		}
+		[Test]
+		public void ExampleSourceAsAttribute()
+		{
+			LexExampleSentence ex = new LexExampleSentence();
+			OptionRef z = new OptionRef();
+			z.Value = "hearsay";
+			ex.Properties.Add(new KeyValuePair<string, object>("source", z));
+			_exporter.Add(ex);
+			_exporter.End();
+			AssertXPathNotNull("example[@source='hearsay']");
+		}
+
 
 		[Test]
 		public void SmallExample()

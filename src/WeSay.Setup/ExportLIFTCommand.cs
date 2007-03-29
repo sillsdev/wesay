@@ -1,5 +1,5 @@
 using System;
-using MultithreadProgress;
+using System.IO;
 using WeSay.Data;
 using WeSay.Foundation;
 using WeSay.Foundation.Progress;
@@ -31,6 +31,10 @@ namespace WeSay
 			 {
 				 exporter = new LiftExporter(WeSayWordsProject.Project.GetFieldToOptionListNameDictionary(), _destinationLIFTPath);
 
+				 if(!VerifyWeCanOpenTheFile())
+				 {
+					 return;
+				 }
 				 using (Db4oDataSource ds = new Db4oDataSource(_sourceWordsPath))
 				 {
 				   Db4oLexModelHelper.Initialize(ds.Data);
@@ -55,8 +59,9 @@ namespace WeSay
 				 _progress.Status = ProgressState.StatusValue.Finished;
 
 			 }
-			 catch (Exception)
+			 catch (Exception e)
 			 {
+				   _progress.WriteToLog(e.Message);
 				 _progress.Status = ProgressState.StatusValue.StoppedWithError;
 				 return; //don't go on to try to validate
 			 }
@@ -84,7 +89,25 @@ namespace WeSay
 			 }
 		 }
 
-		protected override void DoWork(
+		 private bool VerifyWeCanOpenTheFile()
+		 {
+			 try
+			 {
+				 using (FileStream fs = File.OpenWrite(_sourceWordsPath))
+				 {
+					 fs.Close();
+				 }
+			 }
+			 catch
+			 {
+				 _progress.WriteToLog("The Exporter could not open the file. Make sure no other program (e.g. WeSay) has it open.");
+				 _progress.Status = ProgressState.StatusValue.StoppedWithError;
+				 return false;
+			 }
+			 return true;
+		 }
+
+		 protected override void DoWork(
 			InitializeProgressCallback initializeCallback,
 			ProgressCallback progressCallback,
 			StatusCallback primaryStatusTextCallback,

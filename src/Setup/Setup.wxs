@@ -187,11 +187,9 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 		  <Component Id="LiftIO.dll" Guid="{EC2E5E3E-19E8-4680-8377-447DBDDE9BDF}">
 			<File Id="LiftIO.dll" Name="LiftIO.dll" KeyPath="yes" Source="..\..\output\release\LiftIO.dll" />
 		  </Component>
-		  <!--
-		  <Component Id="LiftIO.pdb" Guid="{68959BF8-AC50-47FD-8B06-718B3E7FC6B6}">
-			<File Id="LiftIO.pdb" Name="LiftIO.pdb" KeyPath="yes" Source="..\..\output\release\LiftIO.pdb" />
+		   <Component Id="mono.relaxng.dll" Guid="{68959BF8-AC50-47FD-8B06-718B3E7FC6B6}">
+			<File Id="mono.relaxng.dll" Name="mono.relaxng.dll" KeyPath="yes" Source="..\..\output\release\mono.relaxng.dll" />
 		  </Component>
-		  -->
 		  <Component Id="ListBox.dll" Guid="{E145E8AD-F60E-49A0-8B5D-A513BBDBAF99}">
 			<File Id="ListBox.dll" Name="ListBox.dll" KeyPath="yes" Source="..\..\output\release\ListBox.dll" />
 		  </Component>
@@ -290,6 +288,7 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 	  <ComponentRef Id="Lift2WeSay.exe" />
 	  <ComponentRef Id="Lift2WeSay.pdb" />
 	  <ComponentRef Id="LiftIO.dll" />
+	  <ComponentRef Id="mono.relaxng.dll" />
 	  <!--<ComponentRef Id="LiftIO.pdb" />-->
 	  <ComponentRef Id="ListBox.dll" />
 	  <ComponentRef Id="ListBox.pdb" />

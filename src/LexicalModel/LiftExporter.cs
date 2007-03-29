@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Reflection;
 using System.Text;
 using System.Xml;
@@ -192,7 +193,26 @@ namespace WeSay.LexicalModel
 		private void WriteGrammi(LexSense sense)
 		{
 			OptionRef pos = sense.GetProperty<OptionRef>(LexSense.WellKnownProperties.PartOfSpeech);
-			if (pos!=null)
+
+			//For Dennis
+				OptionRef oldpos = sense.GetProperty<OptionRef>("PartOfSpeech");
+				if (oldpos != null)
+				{
+					//move it
+					sense.Properties.Remove(
+						new KeyValuePair<string, object>("PartOfSpeech", oldpos));
+
+					OptionRef existingPos = sense.GetProperty<OptionRef>(LexSense.WellKnownProperties.PartOfSpeech);
+					if (existingPos == null)
+					{
+						sense.Properties.Add(
+							new KeyValuePair<string, object>(LexSense.WellKnownProperties.PartOfSpeech, oldpos));
+						pos = oldpos;
+					}
+				}
+
+
+			if (pos != null)
 			{
 				_writer.WriteStartElement("grammatical-info");
 				_writer.WriteAttributeString("value", ((OptionRef)pos).Value);
@@ -257,11 +277,15 @@ namespace WeSay.LexicalModel
 
 		private void WriteCustomMultiTextField(string key, MultiText text)
 		{
-			_writer.WriteStartElement("field");
-			_writer.WriteAttributeString("tag", key);
-			WriteMultiTextNoWrapper(text);
-			_writer.WriteEndElement();
-	   }
+			if (!MultiText.IsEmpty(text))
+			{
+				_writer.WriteStartElement("field");
+
+				_writer.WriteAttributeString("tag", key);
+				WriteMultiTextNoWrapper(text);
+				_writer.WriteEndElement();
+			}
+		}
 
 		private void WriteOptionRef(string key, OptionRef optionRef)
 		{
@@ -285,8 +309,47 @@ namespace WeSay.LexicalModel
 		{
 			List<string> propertiesAlreadyOutput = new List<string>();
 			_writer.WriteStartElement("example");
+
+			OptionRef source;
+			//convert for dennis
+			MultiText sourceAsMt = example.GetProperty<MultiText>(LexExampleSentence.WellKnownProperties.Source);
+			if (!MultiText.IsEmpty(sourceAsMt))
+			{
+				example.Properties.Remove(new KeyValuePair<string, object>("source", sourceAsMt));
+
+//                source = new OptionRef();
+//
+//               //take the old one out
+//
+//                example.Properties.Remove(new KeyValuePair<string, object>("source", sourceAsMt));
+//
+//                //put this one in
+//                example.Properties.Add(
+//                        new KeyValuePair<string, object>(LexExampleSentence.WellKnownProperties.Source, source));
+//
+//                source.Parent = example;
+//                source.Value = sourceAsMt.GetFirstAlternative();
+			}
+ //           else
+			{
+				source = example.GetProperty<OptionRef>(LexExampleSentence.WellKnownProperties.Source);
+			}
+			if (source != null)
+			{
+				_writer.WriteAttributeString("source", source.Value);
+				propertiesAlreadyOutput.Add("source");
+			}
+
 			WriteMultiTextNoWrapper(example.Sentence);
 			WriteMultiWithWrapperIfNonEmpty("translation", example.Translation);
+
+			//for Dennis
+			MultiText t = example.GetProperty<MultiText>("trans");
+			if(t!=null)
+			{
+				Debug.Assert(!MultiText.IsEmpty( example.Translation));
+				example.Properties.Remove(new KeyValuePair<string, object>("trans", t));
+			}
 			WriteCustomProperties(example, propertiesAlreadyOutput);
 			_writer.WriteEndElement();
 		}
