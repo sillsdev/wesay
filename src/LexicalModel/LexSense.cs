@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using WeSay.Data;
 using WeSay.Foundation;
 using WeSay.Language;
 
@@ -7,7 +8,7 @@ namespace WeSay.LexicalModel
 	public sealed class LexSense : WeSayDataObject
 	{
 		private SenseGlossMultiText _gloss;
-		private WeSay.Data.InMemoryBindingList<LexExampleSentence> _exampleSentences;
+		private InMemoryBindingList<LexExampleSentence> _exampleSentences;
 
 		new public class WellKnownProperties : WeSayDataObject.WellKnownProperties
 		{

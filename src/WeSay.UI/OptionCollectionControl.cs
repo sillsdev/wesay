@@ -29,7 +29,7 @@ namespace WeSay.UI
 		{
 			StringBuilder builder = new StringBuilder();
 
-			foreach (string key in _optionRefCollection.Keys)
+			foreach (string key in _optionRefCollection)
 			{
 				builder.AppendFormat("{0} | ", key);
 			}
@@ -39,8 +39,7 @@ namespace WeSay.UI
 		private void button1_Click(object sender, System.EventArgs e)
 		{
 
-			_optionRefCollection.Keys.Add(_list.Options[0].Key);
-			_optionRefCollection.NotifyPropertyChanged();
+			_optionRefCollection.Add(_list.Options[0].Key);
 			LoadDisplay();
 			this.Refresh();
 		}

@@ -42,7 +42,7 @@ namespace WeSay.Language
 	//NO: we haven't been able to do a reasonalbly compact xml representation except with custom deserializer
 	//[ReflectorType("multiText")]
 	[XmlInclude(typeof(LanguageForm))]
-	public class MultiText : WeSay.Foundation.IParentable, INotifyPropertyChanged//, IEnumerable
+	public class MultiText : WeSay.Foundation.IParentable, INotifyPropertyChanged// IEquatable<MultiText>//, IEnumerable
 	{
 		/// <summary>
 		/// We have this pesky "backreference" solely to enable fast
@@ -432,7 +432,7 @@ namespace WeSay.Language
 
 		public void MergeIn(MultiText incoming)
 		{
-			foreach (LanguageForm  form in incoming)
+			foreach (LanguageForm form in incoming)
 			{
 				LanguageForm f = this.Find(form.WritingSystemId);
 				if (f != null)
@@ -447,7 +447,52 @@ namespace WeSay.Language
 		}
 
 
+
+		#region IEquatable<MultiText> Members
+
+		public bool Equals(MultiText other)
+		{
+			if (other.Count != Count)
+			{
+				return false;
+			}
+			foreach (LanguageForm form in other)
+			{
+				if (!ContainsEqualForm(form))
+				{
+					return false;
+				}
+			}
+			return true;
+		}
+
+		#endregion
+
+		public bool HasFormWithSameContent(MultiText other)
+		{
+			foreach (LanguageForm form in other)
+			{
+				if (ContainsEqualForm(form))
+				{
+					return true;
+				}
+			}
+			return false;
+		}
+
+		public bool ContainsEqualForm(LanguageForm other)
+		{
+			foreach(LanguageForm form in _forms)
+			{
+				if(other.Equals(form))
+				{
+					return true;
+				}
+			}
+			return false;
+		}
 	}
+
 
 	#region NetReflector
 	public class MultiTextSerializorFactory : ISerialiserFactory

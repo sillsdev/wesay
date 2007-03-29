@@ -163,9 +163,9 @@ namespace WeSay.LexicalTools.Tests
 			LexSense sense = _importer.ReadSense(_doc.SelectSingleNode("sense"));
 			Assert.AreEqual(1, sense.Properties.Count);
 			OptionRefCollection domains= sense.GetOrCreateProperty<OptionRefCollection>("SemanticDomain");
-			Assert.AreEqual(2, domains.Keys.Count);
-			Assert.AreEqual("earth", domains.Keys[0]);
-			Assert.AreEqual("wind", domains.Keys[1]);
+			Assert.AreEqual(2, domains.Count);
+			Assert.IsTrue(domains.Contains("earth"));
+			Assert.IsTrue(domains.Contains("wind"));
 		}
 		////////////////////
 

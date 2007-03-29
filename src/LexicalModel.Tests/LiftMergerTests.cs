@@ -487,9 +487,9 @@ namespace WeSay.LexicalModel.Tests
 			Assert.AreEqual(1, e.Properties.Count);
 			Assert.AreEqual("flub", e.Properties[0].Key);
 			OptionRefCollection options = e.GetProperty<OptionRefCollection>("flub");
-			Assert.AreEqual(2, options.Keys.Count);
-			Assert.AreEqual("dub", options.Keys[0]);
-			Assert.AreEqual("stub", options.Keys[1]);
+			Assert.AreEqual(2, options.Count);
+			Assert.IsTrue(options.Contains("dub"));
+			Assert.IsTrue(options.Contains("stub"));
 		}
 
 		[Test]

@@ -245,7 +245,7 @@ namespace WeSay.LexicalModel
 
 		private void WriteOptionRefCollection(string key, OptionRefCollection collection)
 		{
-			foreach (string value in collection.Keys)
+			foreach (string value in collection)
 			{
 				_writer.WriteStartElement("trait");
 				_writer.WriteAttributeString("name", key);

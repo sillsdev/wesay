@@ -317,10 +317,16 @@ namespace WeSay.Data.Tests
 			_sortedList.Insert(0, null);
 		}
 		[Test]
-		[ExpectedException(typeof(NotSupportedException))]
-		public void Remove()
+		public void Remove_NotInCollection_DoesNothing()
 		{
 			_sortedList.Remove(null);
+		}
+		[Test]
+		public void Remove()
+		{
+			_sortedList.Remove(_sortedList.GetValue(12));
+			Assert.AreEqual(49, _sortedList.Count);
+			Assert.AreEqual(13, _sortedList.GetKey(12));
 		}
 		[Test]
 		public void RemoveAt()

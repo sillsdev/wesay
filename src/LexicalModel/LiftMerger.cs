@@ -183,7 +183,7 @@ namespace WeSay.LexicalModel
 					if (trait.Name == "flag" && int.Parse(trait.Value) > 0)
 					{
 						o.IsStarred = true;
-					}
+		}
 					else
 					{
 						//log skipping
@@ -231,7 +231,7 @@ namespace WeSay.LexicalModel
 				else if (trait.Name != null && ExpectedOptionCollectionTraits.Contains(trait.Name))
 				{
 					OptionRefCollection c = extensible.GetOrCreateProperty<OptionRefCollection>(trait.Name);
-					c.Keys.Add(trait.Value);
+					c.Add(trait.Value);
 				}
 				else
 				{

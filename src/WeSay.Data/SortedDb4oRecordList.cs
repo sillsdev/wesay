@@ -5,7 +5,6 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Text;
 
 namespace WeSay.Data
 {
@@ -266,17 +265,18 @@ namespace WeSay.Data
 
 		private void Remove(T item)
 		{
-			long itemId = _masterRecordList.GetId(item);
-			List<KeyValuePair<K, long>> matches = _keyIdMap.FindAll(delegate(KeyValuePair<K, long> i)
-														 {
-															 return i.Value == itemId;
-														 });
-			foreach (KeyValuePair<K, long> match in matches)
+			if (_masterRecordList.Contains(item))
 			{
-				int index = _keyIdMap.IndexOf(match);
-				Debug.Assert(index != -1);
-				_keyIdMap.RemoveAt(index);
-				OnItemDeleted(index);
+				long itemId = _masterRecordList.GetId(item);
+				List<KeyValuePair<K, long>> matches =
+						_keyIdMap.FindAll(delegate(KeyValuePair<K, long> i) { return i.Value == itemId; });
+				foreach (KeyValuePair<K, long> match in matches)
+				{
+					int index = _keyIdMap.IndexOf(match);
+					Debug.Assert(index != -1);
+					_keyIdMap.RemoveAt(index);
+					OnItemDeleted(index);
+				}
 			}
 		}
 
@@ -537,7 +537,7 @@ namespace WeSay.Data
 		public void Remove(object value)
 		{
 			VerifyNotDisposed();
-			throw new NotSupportedException();
+			((IList)_masterRecordList).Remove(value);
 		}
 
 		public void RemoveAt(int index)

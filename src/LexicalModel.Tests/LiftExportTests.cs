@@ -433,7 +433,7 @@ namespace WeSay.LexicalTools.Tests
 			_fieldToOptionListName.Add("flubs", "colors");
 			LexSense sense = new LexSense();
 			OptionRefCollection o = sense.GetOrCreateProperty<OptionRefCollection>("flubs");
-			o.Keys.AddRange(new string[] {"orange", "blue"});
+			o.AddRange(new string[] {"orange", "blue"});
 			_exporter.Add(sense);
 			_exporter.End();
 			Debug.WriteLine(_stringBuilder.ToString());

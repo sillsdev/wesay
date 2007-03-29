@@ -226,7 +226,7 @@ namespace WeSay.LexicalModel
 				else if (name != null && ExpectedOptionCollectionTraits.Contains(name))
 				{
 					OptionRefCollection c = lexObject.GetOrCreateProperty<OptionRefCollection>(name);
-					c.Keys.Add(GetManditoryAttributeValue(traitNode, "value"));
+					c.Add(GetManditoryAttributeValue(traitNode, "value"));
 				}
 			   else
 				{

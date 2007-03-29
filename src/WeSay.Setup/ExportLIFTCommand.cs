@@ -55,7 +55,7 @@ namespace WeSay
 				 _progress.Status = ProgressState.StatusValue.Finished;
 
 			 }
-			 catch (Exception e)
+			 catch (Exception)
 			 {
 				 _progress.Status = ProgressState.StatusValue.StoppedWithError;
 				 return; //don't go on to try to validate

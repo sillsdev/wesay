@@ -212,6 +212,21 @@ namespace WeSay.LexicalModel
 				OnEmptyObjectsRemoved();
 			}
 		}
+
+		public LexSense GetOrCreateSenseWithGloss(MultiText gloss)
+		{
+			foreach (LexSense sense in Senses)
+			{
+				if (gloss.HasFormWithSameContent(sense.Gloss))
+				{
+					return sense;
+				}
+			}
+			LexSense newSense = (LexSense)Senses.AddNew();
+			newSense.Gloss.MergeIn(gloss);
+			return newSense;
+		}
+
 	}
 
 	/// <summary>

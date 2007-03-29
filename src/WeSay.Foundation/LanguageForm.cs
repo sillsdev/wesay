@@ -69,5 +69,26 @@ namespace WeSay.Language
 		{
 			get { return _parent; }
 		}
+
+		#region IEquatable<LanguageForm> Members
+
+		public bool Equals(LanguageForm other)
+		{
+			if (IsStarred != other.IsStarred)
+			{
+				return false;
+			}
+			if (WritingSystemId != other.WritingSystemId)
+			{
+				return false;
+			}
+			if(Form != other.Form)
+			{
+				return false;
+			}
+			return true;
+		}
+
+		#endregion
 	}
 }
