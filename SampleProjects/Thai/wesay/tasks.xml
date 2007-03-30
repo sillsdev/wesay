@@ -77,9 +77,9 @@
 		  <className>LexSense</className>
 		  <dataType>OptionCollection</dataType>
 		  <displayName>Sem Dom</displayName>
-		  <fieldName>SemanticDomains</fieldName>
+		  <fieldName>SemanticDomainDdp4</fieldName>
 		  <multiplicity>ZeroOr1</multiplicity>
-		  <optionsListFile>SemanticDomains.xml</optionsListFile>
+		  <optionsListFile>Ddp4.xml</optionsListFile>
 		  <visibility>Visible</visibility>
 		  <writingSystems>
 			<id>en</id>
@@ -133,4 +133,14 @@
 	<wordListWritingSystemId>en</wordListWritingSystemId>
 	<viewTemplate ref="Default View Template" />
   </task>
+  <task id="Gather Words By Domain" class="WeSay.LexicalTools.GatherBySemanticDomainTask" assembly="LexicalTools">
+	<entries ref="All Entries" />
+	<label>Collect Words By Semantic Domain</label>
+	<description>Collect new words organized by semantic domains and questions about those domains.</description>
+	<semanticDomainsQuestionFileName>Ddp4Questions-en.xml</semanticDomainsQuestionFileName>
+	<lexicalFormWritingSystemId>th</lexicalFormWritingSystemId>
+	<viewTemplate ref="Default View Template" />
+	<semanticDomainFieldName>SemanticDomainDdp4</semanticDomainFieldName>
+  </task>
+
 </tasks>

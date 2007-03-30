@@ -49,12 +49,12 @@ namespace WeSay.Data
 			records.Storing += new EventHandler<Db4oListEventArgs<T>>(OnRecordStoring);
 		}
 
-		public Db4oRecordList(Db4oDataSource dataSource):base()
+		public Db4oRecordList(Db4oDataSource dataSource)
 		{
 			Initialize(dataSource, null, null, null);
 		}
 
-		public Db4oRecordList(Db4oRecordList<T> source ):base()
+		public Db4oRecordList(Db4oRecordList<T> source )
 		{
 			ListSortDirection = source.ListSortDirection;
 			SortProperty = source.SortProperty;
@@ -75,7 +75,7 @@ namespace WeSay.Data
 		{
 			if (filter == null)
 			{
-				this.Dispose();
+				Dispose();
 				throw new ArgumentNullException("filter");
 			}
 			Initialize(dataSource, filter, null, null);
@@ -85,12 +85,12 @@ namespace WeSay.Data
 		{
 			if (filter == null)
 			{
-				this.Dispose();
+				Dispose();
 				throw new ArgumentNullException("filter");
 			}
 			if (sort == null)
 			{
-				this.Dispose();
+				Dispose();
 				throw new ArgumentNullException("sort");
 			}
 			Initialize(dataSource, filter, sort, null);
@@ -100,7 +100,7 @@ namespace WeSay.Data
 		{
 			if (sort == null)
 			{
-				this.Dispose();
+				Dispose();
 				throw new ArgumentNullException("sort");
 			}
 			Initialize(dataSource, null, sort, null);

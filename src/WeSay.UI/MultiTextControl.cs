@@ -14,6 +14,7 @@ namespace WeSay.UI
 		//public new event EventHandler TextChanged;
 	   // public new event KeyEventHandler KeyDown;
 		// public event System.EventHandler SpecialKeyPress;
+		private bool _showAnnotationWidget;
 
 		public MultiTextControl()
 		{
@@ -27,7 +28,8 @@ namespace WeSay.UI
 			Name = nameForTesting+"-mtc";
 			_vbox.Name = Name + "-vbox";
 			_writingSystems = writingSystems;
-			BuildBoxes(multiTextToCopyFormsFrom,showAnnotationWidget);
+			_showAnnotationWidget = showAnnotationWidget;
+			BuildBoxes(multiTextToCopyFormsFrom);
 		}
 		public MultiTextControl(IList<WritingSystem> writingSystems, MultiText text)
 			: this(writingSystems, text, "Unknown", true)
@@ -59,7 +61,7 @@ namespace WeSay.UI
 			}
 		}
 
-		private void BuildBoxes(MultiText multiText, bool showAnnotationWidget)
+		private void BuildBoxes(MultiText multiText)
 		{
 			SuspendLayout();
 			if (_vbox.Count > 0)
@@ -88,7 +90,7 @@ namespace WeSay.UI
 				//does this work?
 				p.AutoSize = true;
 
-				if (showAnnotationWidget) //false for ghosts
+				if (_showAnnotationWidget) //false for ghosts
 				{
 					//TODO: THIS IS TRANSITIONAL CODE... AnnotationWidget should probably become a full control (or go away)
 					AnnotationWidget aw =
@@ -184,7 +186,19 @@ namespace WeSay.UI
 			set
 			{
 				_writingSystems = value;
-				BuildBoxes(this.MultiText, true);
+				BuildBoxes(MultiText);
+			}
+		}
+
+		public bool ShowAnnotationWidget
+		{
+			get { return this._showAnnotationWidget; }
+			set {
+				if (this._showAnnotationWidget != value)
+				{
+					this._showAnnotationWidget = value;
+					BuildBoxes(MultiText);
+				}
 			}
 		}
 

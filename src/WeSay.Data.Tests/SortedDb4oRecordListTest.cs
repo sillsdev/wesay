@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using Db4objects.Db4o;
@@ -78,7 +77,7 @@ namespace WeSay.Data.Tests
 			_FilePath = System.IO.Path.GetTempFileName();
 			this._dataSource = new Db4oDataSource(_FilePath);
 			this._manager = new Db4oRecordListManager(new DoNothingModelConfiguration(), this._FilePath);
-			this._recordList = this._manager.GetSortedList<int, SimpleIntTestClass>(new TestSortHelper(_dataSource.Data.Ext()));
+			this._recordList = this._manager.GetSortedList(new TestSortHelper(_dataSource.Data.Ext()));
 
 			this._enumerable = this._recordList;
 			this._recordList.Add(new SimpleIntTestClass(12));
@@ -109,7 +108,7 @@ namespace WeSay.Data.Tests
 			_FilePath = System.IO.Path.GetTempFileName();
 			this._dataSource = new Db4oDataSource(_FilePath);
 			this._manager = new Db4oRecordListManager(new DoNothingModelConfiguration(), this._FilePath);
-			this._recordList = this._manager.GetSortedList<int, SimpleIntTestClass>(new TestSortHelper(_dataSource.Data.Ext()));
+			this._recordList = this._manager.GetSortedList(new TestSortHelper(_dataSource.Data.Ext()));
 
 
 			this._enumerable = this._recordList;
@@ -148,7 +147,7 @@ namespace WeSay.Data.Tests
 
 			this._manager = new Db4oRecordListManager(new DoNothingModelConfiguration(), this._FilePath);
 
-			this._sortedList = this._manager.GetSortedList<int, SimpleIntTestClass>(new TestSortHelper(_dataSource.Data.Ext()));
+			this._sortedList = this._manager.GetSortedList(new TestSortHelper(_dataSource.Data.Ext()));
 		}
 
 		[TearDown]
@@ -340,7 +339,7 @@ namespace WeSay.Data.Tests
 		public void Get_Indexer()
 		{
 			object o = _sortedList[12];
-			Assert.AreEqual((object) 12, o);
+			Assert.AreEqual(12, o);
 		}
 
 		[Test]
@@ -471,7 +470,7 @@ namespace WeSay.Data.Tests
 
 			this._manager = new Db4oRecordListManager(new DoNothingModelConfiguration(), this._FilePath);
 
-			this._sortedList = this._manager.GetSortedList<string, TestItem>(new TestItemSortHelper(_dataSource.Data.Ext()));
+			this._sortedList = this._manager.GetSortedList(new TestItemSortHelper(_dataSource.Data.Ext()));
 		}
 
 		[TearDown]

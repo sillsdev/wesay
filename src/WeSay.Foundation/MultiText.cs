@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Diagnostics;
 using System.ComponentModel;
 using System.Xml;
@@ -239,7 +238,7 @@ namespace WeSay.Language
 			{
 				if (doShowSomethingElseIfMissing)
 				{
-					return GetFirstAlternative() + notFirstChoiceSuffix; ;
+					return GetFirstAlternative() + notFirstChoiceSuffix;
 				}
 				else
 				{
@@ -266,7 +265,7 @@ namespace WeSay.Language
 
 		public string GetFirstAlternative()
 		{
-			foreach (LanguageForm form in this.Forms)
+			foreach (LanguageForm form in Forms)
 			{
 				if (form.Form.Trim().Length>0)
 				{
@@ -418,14 +417,14 @@ namespace WeSay.Language
 		{
 			foreach (LanguageForm form in incoming)
 			{
-				LanguageForm f = this.Find(form.WritingSystemId);
+				LanguageForm f = Find(form.WritingSystemId);
 				if (f != null)
 				{
 					f.Form += separator + form.Form;
 				}
 				else
 				{
-					this.AddLanguageForm(form); //this actually copies the meat of the form
+					AddLanguageForm(form); //this actually copies the meat of the form
 				}
 			}
 		}
@@ -434,14 +433,14 @@ namespace WeSay.Language
 		{
 			foreach (LanguageForm form in incoming)
 			{
-				LanguageForm f = this.Find(form.WritingSystemId);
+				LanguageForm f = Find(form.WritingSystemId);
 				if (f != null)
 				{
 					f.Form = form.Form;
 				}
 				else
 				{
-					this.AddLanguageForm(form); //this actually copies the meat of the form
+					AddLanguageForm(form); //this actually copies the meat of the form
 				}
 			}
 		}
@@ -513,9 +512,12 @@ namespace WeSay.Language
 		public override object Read(XmlNode node, NetReflectorTypeTable table)
 		{
 			MultiText text = new MultiText();
-			foreach (XmlNode form in node.SelectNodes("form"))
+			if (node != null)
 			{
-					text[form.Attributes["ws"].Value] = form.InnerText;
+				foreach (XmlNode form in node.SelectNodes("form"))
+				{
+					text[form.Attributes["ws"].Value] = form.InnerText.Trim().Replace('\n', ' ').Replace("  ", " ");
+				}
 			}
 			return text;
 		}

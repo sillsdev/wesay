@@ -56,7 +56,6 @@ namespace WeSay.App
 			XPathNodeIterator taskList = navigator.SelectDescendants("task", string.Empty, false);
 			foreach (XPathNavigator task in taskList)
 			{
-				string id = RegisterComponent(task);
 
 				//typical errors here:
 
@@ -74,10 +73,12 @@ namespace WeSay.App
 				// E.g., the template says:     <id>Default View BLAH</id>
 				//  but the EntryDetailTask is lookinig for: <viewTemplate ref="Default View Template" />
 
-				ITask iTask=null;
+				ITask iTask;
+				string id = string.Empty;
 				try
 				{
-					iTask = (ITask)_picoContext.GetComponentInstance(id);
+					id = RegisterComponent(task);
+					iTask = (ITask) _picoContext.GetComponentInstance(id);
 				}
 				catch (Exception e)
 				{
@@ -99,6 +100,10 @@ namespace WeSay.App
 		private string RegisterComponent(XPathNavigator component)
 		{
 			string id = component.GetAttribute("id", string.Empty);
+			if (_picoContext.GetComponentInstance(id) != null)
+			{
+				throw new ApplicationException("The id '" + id + "' already exists (" + component.OuterXml +")");
+			}
 			if (id.Length == 0)
 			{
 				id = Guid.NewGuid().ToString();

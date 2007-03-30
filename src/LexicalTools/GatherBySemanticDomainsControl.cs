@@ -1,141 +1,88 @@
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Windows.Forms;
-using WeSay.Data;
 using WeSay.Language;
-using WeSay.LexicalModel;
-using WeSay.Project;
 
 namespace WeSay.LexicalTools
 {
 	public partial class GatherBySemanticDomainsControl : UserControl
 	{
-		private  List<string> _domains;
-		private  List<string> _questions;
-		private  IRecordList<LexEntry> _records;
-		private int _currentDomainIndex=0;
-
+		private GatherBySemanticDomainTask _presentationModel;
 
 		public GatherBySemanticDomainsControl()
 		{
 			InitializeComponent();
-			if (DesignMode)
+			if (!DesignMode)
 			{
-				return;
+				throw new InvalidOperationException("should only be called by Designer");
 			}
+		}
 
-			BackColor = WeSay.UI.DisplaySettings.Default.BackgroundColor;
-			_listViewWords.Items.Clear();
-			//TODO: this limits us to a single writing system, and relies on the deprecated "default"
-			_vernacularBox.WritingSystems = new WritingSystem[] { BasilProject.Project.WritingSystems.UnknownVernacularWritingSystem };
-			_vernacularBox.TextChanged += new EventHandler(_vernacularBox_TextChanged);
+		public GatherBySemanticDomainsControl(GatherBySemanticDomainTask presentationModel)
+		{
+			_presentationModel = presentationModel;
+			InitializeComponent();
+			InitializeDisplaySettings();
+			RefreshCurrentWords();
+			RefreshCurrentDomainAndQuestion();
+			this._congratulationsControl.Visible = false;
+			bool showDescription = false;
+			if (!showDescription)
+			{
+				_listViewWords.Anchor |= AnchorStyles.Top;
+				int height = _question.Top - _description.Top;
+
+				_question.Top -= height;
+				_question.Height -= 5;
+				_listViewWords.Top -= height;
+				_listViewWords.Height += height;
+				_description.Visible = false;
+
+			}
 			_vernacularBox.KeyDown += new KeyEventHandler(_boxVernacularWord_KeyDown);
+			_vernacularBox.WritingSystems = new WritingSystem[] {_presentationModel.WordWritingSystem};
 		}
 
-		public List<string> Domains
-		{
-			get { return _domains; }
-			set { _domains = value;
-			UpdateStuff();
-				}
+		private void InitializeDisplaySettings() {
+			BackColor = WeSay.UI.DisplaySettings.Default.BackgroundColor;
 		}
 
-		public IRecordList<LexEntry> Records
+		private void RefreshCurrentDomainAndQuestion()
 		{
-			get { return _records; }
-			set { _records = value; UpdateStuff(); }
+			_domainName.Text = _presentationModel.CurrentDomainName;
+			_description.Text = _presentationModel.CurrentDomainDescription;
+			_question.Text = _presentationModel.CurrentQuestion;
+			_btnNext.Enabled = _presentationModel.HasNextDomainQuestion;
+			_btnPrevious.Enabled = _presentationModel.HasPreviousDomainQuestion;
+			RefreshCurrentWords();
 		}
 
-		public List<string> Questions
-		{
-			get { return _questions; }
-			set { _questions = value;
-				UpdateStuff(); }
-		}
+		private void RefreshCurrentWords() {
+			this._listViewWords.Items.Clear();
 
-
-		void _vernacularBox_TextChanged(object sender, EventArgs e)
-		{
-			UpdateStuff();
-		}
-
-		private void GatherWordListControl_Load(object sender, EventArgs e)
-		{
-			SourceWordChanged();
-		}
-
-		private void UpdateStuff()
-		{
-			if (DesignMode || _domains == null || _questions == null || _records ==null)
+			foreach (string word in this._presentationModel.CurrentWords)
 			{
-				return;
+				this._listViewWords.Items.Add(word);
 			}
-			if (_currentDomainIndex >= _domains.Count)
-			{
-				_congratulationsControl.Show("Congratulations. You have completed this task.");
-			}
-			else
-			{
-				_congratulationsControl.Hide();
-				Debug.Assert(_vernacularBox.TextBoxes.Count == 1, "other code here (for now), assumes exactly one ws/text box");
-				_domainName.Text = _domains[_currentDomainIndex];
-				_question.Text = _questions[_currentDomainIndex];
-				_btnNext.Enabled = _domains.Count > (_currentDomainIndex - 1);
-				_btnPrevious.Enabled = _currentDomainIndex > 0;
-				_btnAddWord.Enabled = _vernacularBox.TextBoxes[0].Text.Trim() != "";
-			}
-	   }
+		}
 
 		private void _btnNext_Click(object sender, EventArgs e)
 		{
-		   _currentDomainIndex++;
-			   SourceWordChanged();
-		}
-
-
-		private void SourceWordChanged()
-		{
-			_listViewWords.Items.Clear();
-
-			UpdateStuff();
-			_vernacularBox.ClearAllText();
-			_vernacularBox.TextBoxes[0].Focus();
+			_presentationModel.GotoNextDomainQuestion();
+			RefreshCurrentDomainAndQuestion();
 		}
 
 		private void _btnPrevious_Click(object sender, EventArgs e)
 		{
-			_currentDomainIndex--;
-			SourceWordChanged();
+			_presentationModel.GotoPreviousDomainQuestion();
+			RefreshCurrentDomainAndQuestion();
 		}
-
-
 
 		private void _btnAddWord_Click(object sender, EventArgs e)
 		{
-//            Debug.Assert(_vernacularBox.TextBoxes.Count == 1, "other code here (for now), assumes exactly one ws/text box");
-//            string s = _vernacularBox.TextBoxes[0].Text.Trim();
-//            if(s == "")
-//            {
-//                return;
-//            }
-//
-//            LexEntry entry = new LexEntry();
-//            entry.LexicalForm.SetAlternative(BasilProject.Project.WritingSystems.VernacularWritingSystemDefaultId, s);
-//            LexSense sense = (LexSense) entry.Senses.AddNew();
-//            sense.Gloss.SetAlternative(BasilProject.Project.WritingSystems.AnalysisWritingSystemDefaultId, _words[_currentWordIndex]);
-//            _records.Add(entry);
-//
-//            _listViewWords.Items.Add(s);
-			_vernacularBox.TextBoxes[0].Text = "";
-//            if (WordAdded != null)
-//            {
-//                WordAdded.Invoke(this, null);
-//            }
-			UpdateStuff();
+			_presentationModel.AddWord(_vernacularBox.TextBoxes[0].Text);
+			_vernacularBox.ClearAllText();
+			RefreshCurrentWords();
 		}
-
-
 
 		private void _boxVernacularWord_KeyDown(object sender, KeyEventArgs e)
 		{
@@ -165,7 +112,6 @@ namespace WeSay.LexicalTools
 					{
 						SetSuppressKeyPress(e, false);
 					}
-
 					break;
 			}
 		}
@@ -177,9 +123,35 @@ namespace WeSay.LexicalTools
 
 		private void GatherWordListControl_BackColorChanged(object sender, EventArgs e)
 		{
-			_listViewWords.BackColor = BackColor;
+			//_listViewWords.BackColor = BackColor;
 			_domainName.BackColor = BackColor;
+			_description.BackColor = BackColor;
 			_question.BackColor = BackColor;
+		}
+
+		void _listViewWords_KeyPress(object sender, System.Windows.Forms.KeyPressEventArgs e)
+		{
+			e.Handled = true;
+			switch (e.KeyChar)
+			{
+				case '\r':
+					_listViewWords_Click(this, null);
+					break;
+				default:
+					e.Handled = false;
+					break;
+			}
+		}
+
+		void _listViewWords_Click(object sender, System.EventArgs e)
+		{
+			if(_listViewWords.SelectedItem != null)
+			{
+				string word = (string) _listViewWords.SelectedItem;
+				_presentationModel.RemoveWord(word);
+				_vernacularBox.TextBoxes[0].Text = word;
+				RefreshCurrentWords();
+			}
 		}
 	}
 }
