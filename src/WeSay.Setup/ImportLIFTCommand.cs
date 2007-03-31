@@ -92,8 +92,9 @@ namespace WeSay
 				}
 				_progress.Status = ProgressState.StatusValue.Finished;
 			}
-			catch (Exception)
+			catch (Exception e)
 			{
+				_progress.WriteToLog(e.Message);
 				_progress.Status = ProgressState.StatusValue.StoppedWithError;
 			}
 		}

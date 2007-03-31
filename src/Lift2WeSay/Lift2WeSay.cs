@@ -1,11 +1,7 @@
 using System;
-using System.Collections;
 using System.IO;
-using System.Xml;
-using WeSay.Data;
+using WeSay;
 using WeSay.Foundation.Progress;
-using WeSay.LexicalModel;
-using WeSay.LexicalModel.Db4o_Specific;
 using WeSay.Project;
 
 namespace Lift2WeSay
@@ -65,104 +61,79 @@ namespace Lift2WeSay
 				PrintUsage();
 				return;
 			}
-			//string projectPath = args[0];
 			string sourcePath = args[0];
 			string destPath = args[1];
+			string projectPath = Path.GetDirectoryName(destPath);
+			if(projectPath.Length == 0)
+			{
+			  projectPath = Environment.CurrentDirectory;
+			}
+			projectPath = Path.Combine(projectPath, "..");
+			projectPath = Path.GetFullPath(projectPath);
 
 			Console.WriteLine("Lift2WeSay is converting");
 			Console.WriteLine("Lift: " + sourcePath);
 			Console.WriteLine("to WeSay: " + destPath);
+			Console.WriteLine("in project: " + projectPath);
+
+			if(!WeSayWordsProject.IsValidProjectDirectory(projectPath))
+			{
+			  Console.Error.WriteLine("destination must be in 'wesay' subdirectory of a basil project");
+			  return;
+			}
+
+			try{
+			  WeSayWordsProject project = new WeSayWordsProject();
+			  project.LoadFromProjectDirectoryPath(projectPath);
+			}
+			catch (Exception e)
+			{
+			  Console.Error.WriteLine("WeSay was not able to open that project. \r\n" + e.Message);
+			  return;
+			}
 
 			if (File.Exists(destPath))
 			{
 				File.Delete(destPath);
 			}
 
-		   // DoImportUsingRecordListManager(destPath, sourcePath);
-			DoImportUsingRawDb4o(destPath, sourcePath);
-			Console.WriteLine("Done.");
-		}
+			ConsoleProgress progress = new ConsoleProgress();
+			progress.Log += new EventHandler<ProgressState.LogEvent>(progress_Log);
 
-		private static void DoImportUsingRecordListManager(string destPath, string sourcePath)
-		{
-			using (IRecordListManager recordListManager = new Db4oRecordListManager(new WeSayWordsDb4oModelConfiguration(), destPath))
-		{
-			Db4oRecordListManager listManager = recordListManager as Db4oRecordListManager;
-			IRecordList<LexEntry> entries =  listManager.GetListOfType<LexEntry>();
+			ImportLIFTCommand command = new ImportLIFTCommand(destPath, sourcePath);
+			command.BeginInvoke(progress);
 
-			Db4oLexModelHelper.Initialize(listManager.DataSource.Data);
-
-//           using (Db4oDataSource ds = new Db4oDataSource(destPath))
-//            {
-//                using (Db4oRecordList<LexEntry> entries = new Db4oRecordList<LexEntry>(ds))
-//                {
-					if (Db4oLexModelHelper.Singleton == null)
-					{
-					  //  Db4oLexModelHelper.Initialize(ds.Data);
-					}
-
-				XmlDocument doc = new XmlDocument();
-					doc.Load(sourcePath);
-					LiftImporter importer = LiftImporter.CreateCorrectImporter(doc);
-
-					WeSayWordsProject project = new WeSayWordsProject();
-					WeSay.Project.WeSayWordsProject.Project.LoadFromProjectDirectoryPath(Directory.GetParent(Environment.CurrentDirectory).FullName);
-					foreach (string name in WeSay.Project.WeSayWordsProject.Project.OptionFieldNames)
-					{
-						importer.ExpectedOptionTraits.Add(name);
-					}
-					foreach (string name in WeSay.Project.WeSayWordsProject.Project.OptionCollectionFieldNames)
-					{
-						importer.ExpectedOptionCollectionTraits.Add(name);
-					}
-					importer.Progress = new ConsoleProgress();
-					importer.ReadFile(doc, entries);
-				}
-			//}
-		}
-
-		private static void DoImportUsingRawDb4o(string destPath, string sourcePath)
-		{
-				DateTime time = new DateTime();
-			Lift2WeSay x = new Lift2WeSay();
-			using (Db4oDataSource ds = new Db4oDataSource(destPath))
+			while (true)
 			{
-				using (Db4oRecordList<LexEntry> entries = new Db4oRecordList<LexEntry>(ds))
-				{
-					entries.WriteCacheSize = 0; // don't commit all the time!
-
-					if (Db4oLexModelHelper.Singleton == null)
-					{
-						Db4oLexModelHelper.Initialize(ds.Data);
-					}
-
-					XmlDocument doc = new XmlDocument();
-					doc.Load(sourcePath);
-					LiftImporter importer = LiftImporter.CreateCorrectImporter(doc);
-
-					WeSayWordsProject project = new WeSayWordsProject();
-//                    WeSay.Project.WeSayWordsProject.Project.LoadFromProjectDirectoryPath(Directory.GetParent(Environment.CurrentDirectory).FullName);
-					//go up two levels from the output file to get the basil project root
-					WeSayWordsProject.Project.LoadFromProjectDirectoryPath(Directory.GetParent(destPath).Parent.FullName);
-					foreach (string name in WeSay.Project.WeSayWordsProject.Project.OptionFieldNames)
-					{
-						importer.ExpectedOptionTraits.Add(name);
-					}
-					foreach (string name in WeSay.Project.WeSayWordsProject.Project.OptionCollectionFieldNames)
-					{
-						importer.ExpectedOptionCollectionTraits.Add(name);
-					}
-					importer.Progress = new ConsoleProgress();
-					importer.ReadFile(doc, entries);
-				}
+			  switch (progress.Status)
+			  {
+				case ProgressState.StatusValue.NotStarted:
+				  break;
+				case ProgressState.StatusValue.Busy:
+				  break;
+				case ProgressState.StatusValue.Finished:
+				  Console.WriteLine(string.Empty);
+				  Console.WriteLine("Done.");
+				  return;
+				case ProgressState.StatusValue.StoppedWithError:
+				  Console.Error.WriteLine(string.Empty);
+				  Console.Error.WriteLine("Error. Unable to complete inport.");
+				  return;
+				default:
+				  break;
+			  }
 			}
 		}
 
+	  static void progress_Log(object sender, ProgressState.LogEvent e)
+	  {
+		Console.Error.WriteLine(e.message);
+	  }
+
 		private static void PrintUsage()
 		{
-			Console.WriteLine("Usage: (must run from 'wesay' subdirectory of a basil project)");
+			Console.WriteLine("Usage: (outputfile must be in 'wesay' subdirectory of a basil project)");
 			Console.WriteLine("Lift2WeSay inputfile outputfile");
-//            Console.WriteLine("Lift2WeSay projectDirectory inputfile outputfile");
 		}
 	}
 }
