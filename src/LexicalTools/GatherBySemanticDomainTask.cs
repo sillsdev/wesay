@@ -321,6 +321,18 @@ namespace WeSay.LexicalTools
 			get { return this._domainQuestions[_domainKeys[_currentDomainIndex]]; }
 		}
 
+		public int WordsInDomain(int domainIndex)
+		{
+			if(domainIndex < 0 || domainIndex >= _domainKeys.Count)
+			{
+				throw new ArgumentOutOfRangeException();
+			}
+			int beginIndex;
+			int pastEndIndex;
+			GetWordsIndexes(domainIndex, out beginIndex, out pastEndIndex);
+			return pastEndIndex - beginIndex;
+		}
+
 		public List<string> CurrentWords
 		{
 			get {
@@ -330,7 +342,7 @@ namespace WeSay.LexicalTools
 
 					int beginIndex;
 					int pastEndIndex;
-					GetWordsIndexes(out beginIndex, out pastEndIndex);
+					GetWordsIndexes(CurrentDomainIndex, out beginIndex, out pastEndIndex);
 					for (int i = beginIndex; i < pastEndIndex; i++)
 					{
 						_words.Add(_entries.GetValue(i).LexicalForm.GetBestAlternative(WordWritingSystemId, "*"));
@@ -581,8 +593,10 @@ namespace WeSay.LexicalTools
 			}
 		}
 
-		private void GetWordsIndexes(out int beginIndex, out int pastEndIndex) {
-			beginIndex = this._entries.BinarySearch(CurrentDomainKey);
+		private void GetWordsIndexes(int domainIndex, out int beginIndex, out int pastEndIndex) {
+			string domainKey = DomainKeys[domainIndex];
+
+			beginIndex = this._entries.BinarySearch(domainKey);
 			if(beginIndex < 0)
 			{
 				pastEndIndex = beginIndex;
@@ -590,7 +604,7 @@ namespace WeSay.LexicalTools
 			}
 			pastEndIndex = beginIndex + 1;
 			while (pastEndIndex < this._entries.Count &&
-				   this._entries.GetKey(pastEndIndex) == CurrentDomainKey)
+				   this._entries.GetKey(pastEndIndex) == domainKey)
 			{
 				++pastEndIndex;
 			}

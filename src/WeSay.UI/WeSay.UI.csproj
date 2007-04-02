@@ -66,6 +66,12 @@
 	<Compile Include="OptionCollectionControl.Designer.cs">
 	  <DependentUpon>OptionCollectionControl.cs</DependentUpon>
 	</Compile>
+	<Compile Include="ProgressIndicator.cs">
+	  <SubType>UserControl</SubType>
+	</Compile>
+	<Compile Include="ProgressIndicator.Designer.cs">
+	  <DependentUpon>ProgressIndicator.cs</DependentUpon>
+	</Compile>
 	<Compile Include="Properties\Resources.Designer.cs">
 	  <AutoGen>True</AutoGen>
 	  <DesignTime>True</DesignTime>

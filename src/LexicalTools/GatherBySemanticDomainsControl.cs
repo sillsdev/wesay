@@ -1,4 +1,5 @@
 using System;
+using System.Drawing;
 using System.Windows.Forms;
 using WeSay.Language;
 
@@ -23,22 +24,31 @@ namespace WeSay.LexicalTools
 			InitializeComponent();
 			InitializeDisplaySettings();
 			RefreshCurrentWords();
+			_domainName.Items.Clear();
+			foreach (string domainName in _presentationModel.DomainNames)
+			{
+				_domainName.Items.Add(domainName);
+			}
 			RefreshCurrentDomainAndQuestion();
-			this._congratulationsControl.Visible = false;
 			bool showDescription = false;
 			if (!showDescription)
 			{
 				_listViewWords.Anchor |= AnchorStyles.Top;
-				int height = _question.Top - _description.Top;
+				_question.Anchor |= AnchorStyles.Top;
+				_question.Anchor &= ~AnchorStyles.Bottom;
+				_questionIndicator.Anchor |= AnchorStyles.Top;
+				_questionIndicator.Anchor &= ~AnchorStyles.Bottom;
 
+				int height = _question.Top - _description.Top;
 				_question.Top -= height;
 				_question.Height -= 5;
+				_questionIndicator.Top -= height;
 				_listViewWords.Top -= height;
 				_listViewWords.Height += height;
+
 				_description.Visible = false;
 
 			}
-			_vernacularBox.KeyDown += new KeyEventHandler(_boxVernacularWord_KeyDown);
 			_vernacularBox.WritingSystems = new WritingSystem[] {_presentationModel.WordWritingSystem};
 		}
 
@@ -48,11 +58,15 @@ namespace WeSay.LexicalTools
 
 		private void RefreshCurrentDomainAndQuestion()
 		{
-			_domainName.Text = _presentationModel.CurrentDomainName;
+			//_domainName.Text = _presentationModel.CurrentDomainName;
+			_domainName.SelectedIndex = _presentationModel.CurrentDomainIndex;
 			_description.Text = _presentationModel.CurrentDomainDescription;
 			_question.Text = _presentationModel.CurrentQuestion;
 			_btnNext.Enabled = _presentationModel.HasNextDomainQuestion;
 			_btnPrevious.Enabled = _presentationModel.HasPreviousDomainQuestion;
+			_questionIndicator.Minimum = 1;
+			_questionIndicator.Maximum = _presentationModel.Questions.Count;
+			_questionIndicator.Value = _presentationModel.CurrentQuestionIndex+1;
 			RefreshCurrentWords();
 		}
 
@@ -153,5 +167,55 @@ namespace WeSay.LexicalTools
 				RefreshCurrentWords();
 			}
 		}
+
+		void _domainName_DrawItem(object sender, DrawItemEventArgs e)
+		{
+			if (e.State ==  DrawItemState.ComboBoxEdit)
+			{
+				if (e.Index >= 0)
+				{
+					TextRenderer.DrawText(e.Graphics,
+										  this._presentationModel.DomainNames[e.Index],
+										  e.Font,
+										  e.Bounds,
+										  e.ForeColor,
+										  e.BackColor,
+										  TextFormatFlags.Left);
+				}
+			}
+			else
+			{
+				TextRenderer.DrawText(e.Graphics,
+									  DomainNameAndCount(e.Index),
+									  e.Font,
+									  e.Bounds,
+									  e.ForeColor,
+									  e.BackColor,
+									  TextFormatFlags.Left);
+			}
+		}
+		void _domainName_MeasureItem(object sender, MeasureItemEventArgs e)
+		{
+			Size size = TextRenderer.MeasureText(DomainNameAndCount(e.Index), _domainName.Font);
+			e.ItemHeight = size.Height;
+			e.ItemWidth = size.Width;
+		}
+
+		private string DomainNameAndCount(int index)
+		{
+			if(index == -1)
+			{
+				return string.Empty;
+			}
+			return "(" + this._presentationModel.WordsInDomain(index) + ") " +
+				this._presentationModel.DomainNames[index];
+		}
+
+		void _domainName_SelectedIndexChanged(object sender, System.EventArgs e)
+		{
+			_presentationModel.CurrentDomainIndex = _domainName.SelectedIndex;
+			RefreshCurrentDomainAndQuestion();
+		}
+
 	}
 }

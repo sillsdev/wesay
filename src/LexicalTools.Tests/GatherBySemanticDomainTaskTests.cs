@@ -104,7 +104,7 @@ namespace WeSay.LexicalTools.Tests
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void ConstructWithTemplate_NullRecordListManager_Throws()
 		{
-			this._task = new GatherBySemanticDomainTask(null,
+			new GatherBySemanticDomainTask(null,
 												"label",
 												"description",
 												_semanticDomainFilePath,
@@ -116,7 +116,7 @@ namespace WeSay.LexicalTools.Tests
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void ConstructWithTemplate_NullLabel_Throws()
 		{
-			this._task = new GatherBySemanticDomainTask(_recordListManager,
+			new GatherBySemanticDomainTask(_recordListManager,
 												null,
 												"description",
 												_semanticDomainFilePath,
@@ -128,7 +128,7 @@ namespace WeSay.LexicalTools.Tests
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void ConstructWithTemplate_NullDescription_Throws()
 		{
-			this._task = new GatherBySemanticDomainTask(_recordListManager,
+			new GatherBySemanticDomainTask(_recordListManager,
 												"label",
 												null,
 												_semanticDomainFilePath,
@@ -140,7 +140,7 @@ namespace WeSay.LexicalTools.Tests
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void ConstructWithTemplate_NullSemanticDomainFilePath_Throws()
 		{
-			this._task = new GatherBySemanticDomainTask(_recordListManager,
+			new GatherBySemanticDomainTask(_recordListManager,
 												"label",
 												"description",
 												null,
@@ -152,7 +152,7 @@ namespace WeSay.LexicalTools.Tests
 		[ExpectedException(typeof(ApplicationException))]
 		public void ConstructWithTemplate_NonExistantSemanticDomainFilePath_Throws()
 		{
-			this._task = new GatherBySemanticDomainTask(_recordListManager,
+			new GatherBySemanticDomainTask(_recordListManager,
 												"label",
 												"description",
 												Path.GetRandomFileName(),
@@ -165,7 +165,7 @@ namespace WeSay.LexicalTools.Tests
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void ConstructWithTemplate_NullLexicalFormWritingSystemId_Throws()
 		{
-			this._task = new GatherBySemanticDomainTask(_recordListManager,
+			new GatherBySemanticDomainTask(_recordListManager,
 												"label",
 												"description",
 												_semanticDomainFilePath,
@@ -177,7 +177,7 @@ namespace WeSay.LexicalTools.Tests
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void ConstructWithTemplate_NullTemplate_Throws()
 		{
-			this._task = new GatherBySemanticDomainTask(_recordListManager,
+			new GatherBySemanticDomainTask(_recordListManager,
 												"label",
 												"description",
 												_semanticDomainFilePath,
@@ -189,7 +189,7 @@ namespace WeSay.LexicalTools.Tests
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void ConstructWithTemplate_NullFieldName_Throws()
 		{
-			this._task = new GatherBySemanticDomainTask(_recordListManager,
+			new GatherBySemanticDomainTask(_recordListManager,
 												"label",
 												"description",
 												_semanticDomainFilePath,
@@ -213,7 +213,7 @@ namespace WeSay.LexicalTools.Tests
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void ConstructWithField_NullRecordListManager_Throws()
 		{
-			this._task = new GatherBySemanticDomainTask(null,
+			new GatherBySemanticDomainTask(null,
 												"label",
 												"description",
 												_semanticDomainFilePath,
@@ -224,7 +224,7 @@ namespace WeSay.LexicalTools.Tests
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void ConstructWithField_NullLabel_Throws()
 		{
-			this._task = new GatherBySemanticDomainTask(_recordListManager,
+			new GatherBySemanticDomainTask(_recordListManager,
 												null,
 												"description",
 												_semanticDomainFilePath,
@@ -235,7 +235,7 @@ namespace WeSay.LexicalTools.Tests
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void ConstructWithField_NullDescription_Throws()
 		{
-			this._task = new GatherBySemanticDomainTask(_recordListManager,
+			new GatherBySemanticDomainTask(_recordListManager,
 												"label",
 												null,
 												_semanticDomainFilePath,
@@ -246,7 +246,7 @@ namespace WeSay.LexicalTools.Tests
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void ConstructWithField_NullSemanticDomainFilePath_Throws()
 		{
-			this._task = new GatherBySemanticDomainTask(_recordListManager,
+			new GatherBySemanticDomainTask(_recordListManager,
 												"label",
 												"description",
 												null,
@@ -257,7 +257,7 @@ namespace WeSay.LexicalTools.Tests
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void ConstructWithField_NullLexicalFormWritingSystemId_Throws()
 		{
-			this._task = new GatherBySemanticDomainTask(_recordListManager,
+			new GatherBySemanticDomainTask(_recordListManager,
 												"label",
 												"description",
 												_semanticDomainFilePath,
@@ -268,7 +268,7 @@ namespace WeSay.LexicalTools.Tests
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void ConstructWithField_NullSemanticDomainField_Throws()
 		{
-			this._task = new GatherBySemanticDomainTask(_recordListManager,
+			new GatherBySemanticDomainTask(_recordListManager,
 												"label",
 												"description",
 												_semanticDomainFilePath,
@@ -415,6 +415,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void CurrentWords_HasWords_ContainsWord()
 		{
+			Task.CurrentDomainIndex = 1;
 			IRecordList<LexEntry> recordList = _recordListManager.GetListOfType<LexEntry>();
 			LexEntry e = (LexEntry)recordList.AddNew();
 			e.LexicalForm.SetAlternative("br", "peixe");
@@ -447,12 +448,13 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void CurrentWords_WordExistsWithTwoGlossesHavingSemanticDomain_ShowsUpOnce()
 		{
+			Task.CurrentDomainIndex = 1;
 			IRecordList<LexEntry> recordList = _recordListManager.GetListOfType<LexEntry>();
 			AddEntryToRecordList(recordList, "peixe", "fish");
 			LexEntry e = AddEntryToRecordList(recordList, "raposa", "fox");
 			AddSenseToEntry(e, "special");
 			AddEntryToRecordList(recordList, "cachorro", "dog");
-
+			Task.CurrentDomainIndex = 0;
 			Assert.AreEqual(3, Task.CurrentWords.Count);
 		}
 
@@ -847,6 +849,37 @@ namespace WeSay.LexicalTools.Tests
 
 		#endregion
 
+		[Test]
+		[ExpectedException(typeof(ArgumentOutOfRangeException))]
+		public void WordsInDomain_NegativeIndex_Throws()
+		{
+			Task.WordsInDomain(-1);
+		}
+
+		[Test]
+		[ExpectedException(typeof(ArgumentOutOfRangeException))]
+		public void WordsInDomain_IndexBeyondDomainCount_Throws()
+		{
+			Task.WordsInDomain(Task.DomainKeys.Count);
+		}
+
+		[Test]
+		public void WordsInDomain_NoWords_Zero()
+		{
+			Assert.AreEqual(0, Task.WordsInDomain(0));
+		}
+
+		[Test]
+		public void WordsInDomain_ThreeWords_Three()
+		{
+			IRecordList<LexEntry> recordList = _recordListManager.GetListOfType<LexEntry>();
+			AddEntryToRecordList(recordList, "peixe", "fish");
+			AddEntryToRecordList(recordList, "raposa", "fox");
+			AddEntryToRecordList(recordList, "cachorro", "dog");
+
+			Assert.AreEqual(3, Task.WordsInDomain(0));
+		}
+
 		#endregion
 
 		[Test]
@@ -875,7 +908,7 @@ namespace WeSay.LexicalTools.Tests
 		public void ParseEmptySemanticDomainFile()
 		{
 			string emptySemanticDomainFilePath = Path.GetTempFileName();
-			using (StreamWriter streamWriter = File.CreateText(this._semanticDomainFilePath))
+			using (StreamWriter streamWriter = File.CreateText(emptySemanticDomainFilePath))
 			{
 				streamWriter.Write("");
 			}
@@ -899,7 +932,7 @@ namespace WeSay.LexicalTools.Tests
 		public void ParseFrenchSemanticDomainFile_Localized()
 		{
 			string frenchSemanticDomainFilePath = Path.GetTempFileName();
-			using (StreamWriter streamWriter = File.CreateText(this._semanticDomainFilePath))
+			using (StreamWriter streamWriter = File.CreateText(frenchSemanticDomainFilePath))
 			{
 				streamWriter.Write(@"<?xml version='1.0' encoding='utf-8'?>
 <semantic-domain-questions semantic-domain-type='DDP4' lang='fr'>
@@ -924,7 +957,7 @@ namespace WeSay.LexicalTools.Tests
 			task.Activate();
 			Assert.AreEqual("L'univers physique", task.DomainNames[0]);
 			Assert.AreEqual("Ciel", task.DomainNames[1]);
-			Assert.AreEqual("en", task.SemanticDomainWritingSystemId);
+			Assert.AreEqual("fr", task.SemanticDomainWritingSystemId);
 
 			File.Delete(frenchSemanticDomainFilePath);
 		}
