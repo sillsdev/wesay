@@ -1,0 +1,166 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+	<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+	<ProductVersion>8.0.50727</ProductVersion>
+	<SchemaVersion>2.0</SchemaVersion>
+	<ProjectGuid>{3E3A7412-7C72-4381-BF5F-3E76636D6E14}</ProjectGuid>
+	<OutputType>WinExe</OutputType>
+	<AppDesignerFolder>Properties</AppDesignerFolder>
+	<RootNamespace>JiraClient</RootNamespace>
+	<AssemblyName>JiraClient</AssemblyName>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+	<DebugSymbols>true</DebugSymbols>
+	<DebugType>full</DebugType>
+	<Optimize>false</Optimize>
+	<OutputPath>bin\Debug\</OutputPath>
+	<DefineConstants>DEBUG;TRACE</DefineConstants>
+	<ErrorReport>prompt</ErrorReport>
+	<WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+	<DebugType>pdbonly</DebugType>
+	<Optimize>true</Optimize>
+	<OutputPath>bin\Release\</OutputPath>
+	<DefineConstants>TRACE</DefineConstants>
+	<ErrorReport>prompt</ErrorReport>
+	<WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+	<Reference Include="System" />
+	<Reference Include="System.Data" />
+	<Reference Include="System.Deployment" />
+	<Reference Include="System.Drawing" />
+	<Reference Include="System.EnterpriseServices" />
+	<Reference Include="System.Web.Services" />
+	<Reference Include="System.Windows.Forms" />
+	<Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+	<Compile Include="Form1.cs">
+	  <SubType>Form</SubType>
+	</Compile>
+	<Compile Include="Form1.Designer.cs">
+	  <DependentUpon>Form1.cs</DependentUpon>
+	</Compile>
+	<Compile Include="Program.cs" />
+	<Compile Include="Properties\AssemblyInfo.cs" />
+	<EmbeddedResource Include="Form1.resx">
+	  <SubType>Designer</SubType>
+	  <DependentUpon>Form1.cs</DependentUpon>
+	</EmbeddedResource>
+	<EmbeddedResource Include="Properties\Resources.resx">
+	  <Generator>ResXFileCodeGenerator</Generator>
+	  <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+	  <SubType>Designer</SubType>
+	</EmbeddedResource>
+	<Compile Include="Properties\Resources.Designer.cs">
+	  <AutoGen>True</AutoGen>
+	  <DependentUpon>Resources.resx</DependentUpon>
+	  <DesignTime>True</DesignTime>
+	</Compile>
+	<None Include="app.config" />
+	<None Include="Properties\DataSources\Form1.datasource" />
+	<None Include="Properties\Settings.settings">
+	  <Generator>SettingsSingleFileGenerator</Generator>
+	  <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+	</None>
+	<None Include="Web References\org.wesay.www\jirasoapservice-v2.wsdl" />
+	<None Include="Web References\org.wesay.www\Reference.map">
+	  <Generator>MSDiscoCodeGenerator</Generator>
+	  <LastGenOutput>Reference.cs</LastGenOutput>
+	</None>
+	<None Include="Web References\org.wesay.www\RemoteComment1.datasource">
+	  <DependentUpon>Reference.map</DependentUpon>
+	</None>
+	<None Include="Web References\org.wesay.www\RemoteComponent1.datasource">
+	  <DependentUpon>Reference.map</DependentUpon>
+	</None>
+	<None Include="Web References\org.wesay.www\RemoteConfiguration1.datasource">
+	  <DependentUpon>Reference.map</DependentUpon>
+	</None>
+	<None Include="Web References\org.wesay.www\RemoteField1.datasource">
+	  <DependentUpon>Reference.map</DependentUpon>
+	</None>
+	<None Include="Web References\org.wesay.www\RemoteFilter1.datasource">
+	  <DependentUpon>Reference.map</DependentUpon>
+	</None>
+	<None Include="Web References\org.wesay.www\RemoteGroup1.datasource">
+	  <DependentUpon>Reference.map</DependentUpon>
+	</None>
+	<None Include="Web References\org.wesay.www\RemoteIssue1.datasource">
+	  <DependentUpon>Reference.map</DependentUpon>
+	</None>
+	<None Include="Web References\org.wesay.www\RemoteIssueType1.datasource">
+	  <DependentUpon>Reference.map</DependentUpon>
+	</None>
+	<None Include="Web References\org.wesay.www\RemoteNamedObject1.datasource">
+	  <DependentUpon>Reference.map</DependentUpon>
+	</None>
+	<None Include="Web References\org.wesay.www\RemotePermission1.datasource">
+	  <DependentUpon>Reference.map</DependentUpon>
+	</None>
+	<None Include="Web References\org.wesay.www\RemotePermissionScheme1.datasource">
+	  <DependentUpon>Reference.map</DependentUpon>
+	</None>
+	<None Include="Web References\org.wesay.www\RemotePriority1.datasource">
+	  <DependentUpon>Reference.map</DependentUpon>
+	</None>
+	<None Include="Web References\org.wesay.www\RemoteProject1.datasource">
+	  <DependentUpon>Reference.map</DependentUpon>
+	</None>
+	<None Include="Web References\org.wesay.www\RemoteResolution1.datasource">
+	  <DependentUpon>Reference.map</DependentUpon>
+	</None>
+	<None Include="Web References\org.wesay.www\RemoteScheme1.datasource">
+	  <DependentUpon>Reference.map</DependentUpon>
+	</None>
+	<None Include="Web References\org.wesay.www\RemoteServerInfo1.datasource">
+	  <DependentUpon>Reference.map</DependentUpon>
+	</None>
+	<None Include="Web References\org.wesay.www\RemoteStatus1.datasource">
+	  <DependentUpon>Reference.map</DependentUpon>
+	</None>
+	<None Include="Web References\org.wesay.www\RemoteUser1.datasource">
+	  <DependentUpon>Reference.map</DependentUpon>
+	</None>
+	<None Include="Web References\org.wesay.www\RemoteVersion1.datasource">
+	  <DependentUpon>Reference.map</DependentUpon>
+	</None>
+	<Compile Include="Properties\Settings.Designer.cs">
+	  <AutoGen>True</AutoGen>
+	  <DependentUpon>Settings.settings</DependentUpon>
+	  <DesignTimeSharedInput>True</DesignTimeSharedInput>
+	</Compile>
+	<Compile Include="Web References\org.wesay.www\Reference.cs">
+	  <AutoGen>True</AutoGen>
+	  <DesignTime>True</DesignTime>
+	  <DependentUpon>Reference.map</DependentUpon>
+	</Compile>
+  </ItemGroup>
+  <ItemGroup>
+	<WebReferences Include="Web References\" />
+  </ItemGroup>
+  <ItemGroup>
+	<WebReferenceUrl Include="http://www.wesay.org/issues/rpc/soap/jirasoapservice-v2%3fwsdl">
+	  <UrlBehavior>Dynamic</UrlBehavior>
+	  <RelPath>Web References\org.wesay.www\</RelPath>
+	  <UpdateFromURL>http://www.wesay.org/issues/rpc/soap/jirasoapservice-v2%3fwsdl</UpdateFromURL>
+	  <ServiceLocationURL>
+	  </ServiceLocationURL>
+	  <CachedDynamicPropName>
+	  </CachedDynamicPropName>
+	  <CachedAppSettingsObjectName>Settings</CachedAppSettingsObjectName>
+	  <CachedSettingsPropName>JiraCLient_org_wesay_www_JiraSoapServiceService</CachedSettingsPropName>
+	</WebReferenceUrl>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+	   Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
