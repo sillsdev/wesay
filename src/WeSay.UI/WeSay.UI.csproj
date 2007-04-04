@@ -60,7 +60,6 @@
 	<Compile Include="CollapsibleSplitter.cs">
 	  <SubType>Component</SubType>
 	</Compile>
-	<Compile Include="ColorHelper.cs" />
 	<Compile Include="OptionCollectionControl.cs">
 	  <SubType>UserControl</SubType>
 	</Compile>
