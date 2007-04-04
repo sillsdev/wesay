@@ -135,6 +135,10 @@
 	  <SubType>Designer</SubType>
 	  <DependentUpon>CongratulationsControl.cs</DependentUpon>
 	</EmbeddedResource>
+	<EmbeddedResource Include="EntryDetailControl.resx">
+	  <SubType>Designer</SubType>
+	  <DependentUpon>EntryDetailControl.cs</DependentUpon>
+	</EmbeddedResource>
 	<EmbeddedResource Include="GatherBySemanticDomainsControl.resx">
 	  <SubType>Designer</SubType>
 	  <DependentUpon>GatherBySemanticDomainsControl.cs</DependentUpon>

@@ -9,6 +9,8 @@
 
 */
 
+using System.Drawing.Drawing2D;
+
 namespace WeSay.UI
 {
 	using System;
@@ -46,6 +48,8 @@ namespace WeSay.UI
 
 	private Border3DStyle border3DStyle;
 	private BorderStyle borderStyle;
+
+		private Color _backgroundColorEnd;
 
 	private int? lastGoodSplitPosition;
 	private int hiddenControlWidth;
@@ -513,7 +517,12 @@ namespace WeSay.UI
 	protected override void OnPaintBackground(PaintEventArgs e)
 	{
 		// draw the background color for our control image
-		e.Graphics.FillRectangle(new SolidBrush(BackColor), ClientRectangle);
+		LinearGradientBrush brush = new LinearGradientBrush(ClientRectangle,
+									  BackColor,
+									  BackColorEnd,
+									  (IsSplitterVertical())?LinearGradientMode.Horizontal:LinearGradientMode.Vertical);
+
+		e.Graphics.FillRectangle(brush, ClientRectangle);
 		Border3DStyle style = this.border3DStyle;
 		switch (BorderStyle)
 		{
@@ -559,6 +568,12 @@ namespace WeSay.UI
 		{
 			get { return this.borderStyle; }
 			set { this.borderStyle = value; }
+		}
+
+		public Color BackColorEnd
+		{
+			get { return this._backgroundColorEnd; }
+			set { this._backgroundColorEnd = value; }
 		}
 
 		#endregion
