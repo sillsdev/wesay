@@ -48,11 +48,13 @@
 	<viewTemplate ref="Default View Template"/>
   </task>
 
-  <!--
-  <task id="GatherBySemanticDomain" class="WeSay.LexicalTools.GatherBySemanticDomainTask" assembly="LexicalTools">
+  <task id="Gather Words By Domain" class="WeSay.LexicalTools.GatherBySemanticDomainTask" assembly="LexicalTools">
 	<entries ref="All Entries" />
-	<label>Collect Words by Topic</label>
-	<description>Collect new words by thinking about topics.</description>
-	<wordListFileName>semanticDomainList.txt</wordListFileName>
-  </task>-->
+	<label>Collect Words By Semantic Domain</label>
+	<description>Collect new words organized by semantic domains and questions about those domains.</description>
+	<semanticDomainsQuestionFileName>Ddp4Questions-en.xml</semanticDomainsQuestionFileName>
+	<viewTemplate ref="Default View Template" />
+	<semanticDomainFieldName>SemanticDomainDdp4</semanticDomainFieldName>
+  </task>
+
 </tasks>

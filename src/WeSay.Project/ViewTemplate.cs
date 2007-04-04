@@ -191,11 +191,17 @@ namespace WeSay.Project
 			exampleField.Visibility = Field.VisibilitySetting.Visible;
 			masterTemplate.Add(exampleField);
 
-
 			Field translationField = new Field(Field.FieldNames.ExampleTranslation.ToString(), "LexExampleSentence", defaultAnalysisSet);
 			translationField.DisplayName = "Translation";
 			translationField.Visibility = Field.VisibilitySetting.Visible;
 			masterTemplate.Add(translationField);
+
+			Field ddp4Field = new Field("SemanticDomainDdp4", "LexSense", defaultAnalysisSet);
+			ddp4Field.DisplayName = "Sem Dom";
+			ddp4Field.Description = "The semantic domain using Ron Moe's Dictionary Development Process version 4.";
+			ddp4Field.DataTypeName = "OptionCollection";
+			ddp4Field.OptionsListFile = "Ddp4.xml";
+			masterTemplate.Add(ddp4Field);
 
 			return masterTemplate;
 		}

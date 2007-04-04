@@ -60,15 +60,12 @@
 	<Compile Include="CollapsibleSplitter.cs">
 	  <SubType>Component</SubType>
 	</Compile>
-<<<<<<< .mine
-	<Compile Include="VBoxFlow.cs">
+	<Compile Include="VBox.cs">
 	  <SubType>Component</SubType>
 	</Compile>
-	<Compile Include="VBoxFlow.Designer.cs">
-	  <DependentUpon>VBoxFlow.cs</DependentUpon>
+	<Compile Include="VBox.Designer.cs">
+	  <DependentUpon>VBox.cs</DependentUpon>
 	</Compile>
-=======
->>>>>>> .r623
 	<Compile Include="OptionCollectionControl.cs">
 	  <SubType>UserControl</SubType>
 	</Compile>
@@ -105,12 +102,6 @@
 	<Compile Include="SingleOptionControl.Designer.cs">
 	  <DependentUpon>SingleOptionControl.cs</DependentUpon>
 	</Compile>
-	<Compile Include="VBox.cs">
-	  <SubType>UserControl</SubType>
-	</Compile>
-	<Compile Include="VBox.Designer.cs">
-	  <DependentUpon>VBox.cs</DependentUpon>
-	</Compile>
 	<Compile Include="MultiTextControl.cs">
 	  <SubType>UserControl</SubType>
 	</Compile>
@@ -139,8 +130,8 @@
 	  <DependentUpon>ArrowButton.cs</DependentUpon>
 	  <SubType>Designer</SubType>
 	</EmbeddedResource>
-	<EmbeddedResource Include="VBoxFlow.resx">
-	  <DependentUpon>VBoxFlow.cs</DependentUpon>
+	<EmbeddedResource Include="VBox.resx">
+	  <DependentUpon>VBox.cs</DependentUpon>
 	  <SubType>Designer</SubType>
 	</EmbeddedResource>
 	<EmbeddedResource Include="DetailList.resx">
@@ -159,10 +150,6 @@
 	  <SubType>Designer</SubType>
 	  <Generator>ResXFileCodeGenerator</Generator>
 	  <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-	</EmbeddedResource>
-	<EmbeddedResource Include="VBox.resx">
-	  <SubType>Designer</SubType>
-	  <DependentUpon>VBox.cs</DependentUpon>
 	</EmbeddedResource>
 	<EmbeddedResource Include="WeSayTextBox.resx">
 	  <SubType>Designer</SubType>

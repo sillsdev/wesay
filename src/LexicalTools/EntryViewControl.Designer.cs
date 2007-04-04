@@ -59,14 +59,13 @@ namespace WeSay.LexicalTools
 			this._detailListControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
 						| System.Windows.Forms.AnchorStyles.Left)
 						| System.Windows.Forms.AnchorStyles.Right)));
-			//this._detailListControl.AutoScroll = true;
 			this._detailListControl.BackColor =  System.Drawing.SystemColors.Control;
 			this._detailListControl.Location = new System.Drawing.Point(3, 95);
 			this._detailListControl.Name = "_detailListControl";
 			this._detailListControl.Size = new System.Drawing.Size(450, 250);
 			this._detailListControl.TabIndex = 1;
 			//
-			// LexPreviewWithEntryControl
+			// EntryViewControl
 			//
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;

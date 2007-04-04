@@ -17,28 +17,36 @@ namespace WeSay.LexicalTools
 			InitializeComponent();
 		}
 
-		public GatherWordListControl(GatherWordListTask task, ViewTemplate viewTemplate)
+		public GatherWordListControl(GatherWordListTask task,
+									 ViewTemplate viewTemplate)
 		{
 			_task = task;
 			_task.UpdateSourceWord += new EventHandler(OnUpdateSourceWord);
 
 			InitializeComponent();
-			BackColor = WeSay.UI.DisplaySettings.Default.BackgroundColor;
+			InitializeDisplaySettings();
 			_listViewOfWordsMatchingCurrentItem.Items.Clear();
 
 			Field lexicalFormField = viewTemplate.GetField(Field.FieldNames.EntryLexicalForm.ToString());
-			if (lexicalFormField == null)
+			if (lexicalFormField == null || lexicalFormField.WritingSystems.Count < 1)
 			{
 				_vernacularBox.WritingSystems = new WritingSystem[] { BasilProject.Project.WritingSystems.UnknownVernacularWritingSystem };
 			}
 			else
 			{
-				_vernacularBox.WritingSystems = lexicalFormField.WritingSystems;
+				_vernacularBox.WritingSystems = new WritingSystem[] { lexicalFormField.WritingSystems[0] };
 			}
+			_vernacularBox.BackColor = System.Drawing.Color.Red;
 			_vernacularBox.TextChanged += new EventHandler(_vernacularBox_TextChanged);
 			_vernacularBox.KeyDown += new KeyEventHandler(_boxVernacularWord_KeyDown);
 			UpdateStuff();
 		}
+
+		private void InitializeDisplaySettings()
+		{
+			BackColor = WeSay.UI.DisplaySettings.Default.BackgroundColor;
+		}
+
 
 		void OnUpdateSourceWord(object sender, EventArgs e)
 		{

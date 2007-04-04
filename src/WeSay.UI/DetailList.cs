@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -10,7 +9,7 @@ namespace WeSay.UI
 	/// It supports dynamically removing and inserting new rows, to support
 	/// "ghost" fields
 	/// </summary>
-	public partial class DetailList : VBoxFlow
+	public partial class DetailList : VBox
 	{
 		/// <summary>
 		/// Can be used to track which data item the user is currently editting, to,
@@ -26,36 +25,18 @@ namespace WeSay.UI
 		public DetailList()
 		{
 			InitializeComponent();
-			SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint
-				| ControlStyles.UserPaint, true);
+			SetStyle(ControlStyles.OptimizedDoubleBuffer |
+					 ControlStyles.AllPaintingInWmPaint |
+					 ControlStyles.UserPaint,
+					 true);
 
 			Name = "DetailList";//for  debugging
-			if (Environment.OSVersion.Platform != PlatformID.Unix)
-			{
-				//this.Margin = new Padding(5, 5, 5, 5); //not implemented inn mono 1.16
-			}
 			_fadeInTimer.Enabled = false;
 			_fadeInTimer.Interval = 500;
 
-		   this.AutoScroll = true; //but we need to make sure children are never wider than we are
-//            this.VerticalScroll.Enabled = true;
-//            this.VerticalScroll.Visible = true;
-//
-//
-//            this.VerticalScroll.Maximum = 1000;
-//            this.VerticalScroll.Minimum = 0;
-//            this.VerticalScroll.Value = this.VerticalScroll.Minimum;
-//            this.VerticalScroll.LargeChange = 30;
-//            this.VerticalScroll.SmallChange = 10;
-//            this.Scroll += new ScrollEventHandler(OnScroll);
-
-			this.HScroll = false;
+		   AutoScroll = true; //but we need to make sure children are never wider than we are
+		   HScroll = false;
 		}
-
-		void OnScroll(object sender, ScrollEventArgs e)
-		{
-		}
-
 
 		public Control AddWidgetRow(string label, bool isHeader, Control control)
 		{
@@ -69,15 +50,6 @@ namespace WeSay.UI
 			Panel panel = AddRowPanel(editWidget, fieldLabel, isHeader);
 			AddControl(panel, insertAtRow);
 			return panel;
-		}
-
-		class TestPanel : Panel
-		{
-			protected override void Dispose(bool disposing)
-			{
-				//Debug.WriteLine("Disposing "+Name+"   Disposing="+disposing);
-				base.Dispose(disposing);
-			}
 		}
 
 		private Panel AddRowPanel(Control editWidget, string fieldLabel, bool isHeader)
@@ -102,38 +74,19 @@ namespace WeSay.UI
 			editWidget.Top = verticalPadding + top;
 			int padding = 2;
 			editWidget.Left = label.Left + label.Width + padding;
-			editWidget.Width = (this.Width - editWidget.Left) - 20;
+			editWidget.Width = (Width - editWidget.Left) - 20;
 			FixUpForMono(editWidget);
 			editWidget.Anchor = AnchorStyles.Left | AnchorStyles.Right;
 			editWidget.KeyDown += new KeyEventHandler(OnEditWidget_KeyDown);
 
 //            FlexibleHeightPanel panel = new FlexibleHeightPanel(100, 10 + (editWidget.Top/*-6*/), editWidget);
-			FlexibleHeightPanel panel = new FlexibleHeightPanel(this.Width, 10, editWidget);
+			FlexibleHeightPanel panel = new FlexibleHeightPanel(Width, 10, editWidget);
 			panel.Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top ;
-		   // panel.SuspendLayout();
 			panel.Name = fieldLabel+"_panel of detailList";
-			//            panel.Size = new Size(100, 10+editWidget.Height+(editWidget.Top-6) );//careful.. if width is too small, then editwidget grows to much.  Weird.
-		   // panel.Size = new Size(100, 10+editWidget.Height+(editWidget.Top-6) );//careful.. if width is too small, then editwidget grows to much.  Weird.
 			panel.Controls.Add(label);
-		   // panel.ResumeLayout(false);
-
-
-			UpdateScrollBar();
-
 
 			return panel;
 		}
-
-		private void UpdateScrollBar()
-		{
-			if (ActualControls.Count > 0)
-			{
-//                this.VerticalScroll.Maximum = ActualControls[ActualControls.Count - 1].Bottom;
-//                this.VerticalScroll.Minimum = this.Height;
-//                this.VerticalScroll.Value = this.VerticalScroll.Minimum;
-			}
-		}
-
 
 		void OnEditWidget_KeyDown(object sender, KeyEventArgs e)
 		{

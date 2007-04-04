@@ -63,11 +63,11 @@
 		</field>
 		<field>
 		  <className>LexSense</className>
-		  <dataType>Option</dataType>
-		  <displayName>POS</displayName>
-		  <fieldName>PartOfSpeech</fieldName>
+		  <dataType>OptionCollection</dataType>
+		  <displayName>Sem Dom</displayName>
+		  <fieldName>SemanticDomainDdp4</fieldName>
 		  <multiplicity>ZeroOr1</multiplicity>
-		  <optionsListFile>PartsOfSpeech.xml</optionsListFile>
+		  <optionsListFile>Ddp4.xml</optionsListFile>
 		  <visibility>Invisible</visibility>
 		  <writingSystems>
 			<id>en</id>
@@ -75,11 +75,11 @@
 		</field>
 		<field>
 		  <className>LexSense</className>
-		  <dataType>OptionCollection</dataType>
-		  <displayName>Sem Dom</displayName>
-		  <fieldName>SemanticDomainDdp4</fieldName>
+		  <dataType>Option</dataType>
+		  <displayName>POS</displayName>
+		  <fieldName>PartOfSpeech</fieldName>
 		  <multiplicity>ZeroOr1</multiplicity>
-		  <optionsListFile>Ddp4.xml</optionsListFile>
+		  <optionsListFile>PartsOfSpeech.xml</optionsListFile>
 		  <visibility>Visible</visibility>
 		  <writingSystems>
 			<id>en</id>
@@ -138,9 +138,7 @@
 	<label>Collect Words By Semantic Domain</label>
 	<description>Collect new words organized by semantic domains and questions about those domains.</description>
 	<semanticDomainsQuestionFileName>Ddp4Questions-en.xml</semanticDomainsQuestionFileName>
-	<lexicalFormWritingSystemId>th</lexicalFormWritingSystemId>
 	<viewTemplate ref="Default View Template" />
 	<semanticDomainFieldName>SemanticDomainDdp4</semanticDomainFieldName>
   </task>
-
 </tasks>

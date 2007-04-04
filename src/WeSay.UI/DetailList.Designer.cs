@@ -40,7 +40,7 @@ namespace WeSay.UI
 			// DetailList
 			//
 			this.AutoScroll = false;
-			this.BackColor = System.Drawing.SystemColors.ActiveCaption;
+			//this.BackColor = System.Drawing.SystemColors.ActiveCaption;
 			this.Name = "DetailList";
 			this.ResumeLayout(false);
 

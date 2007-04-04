@@ -5,11 +5,12 @@
 	<ProductVersion>8.0.50727</ProductVersion>
 	<SchemaVersion>2.0</SchemaVersion>
 	<ProjectGuid>{6AED6785-CC6F-4A6A-BDB1-1895C6DA1090}</ProjectGuid>
-	<OutputType>WinExe</OutputType>
+	<OutputType>Library</OutputType>
 	<AppDesignerFolder>Properties</AppDesignerFolder>
 	<RootNamespace>WeSay.UI.Tests</RootNamespace>
 	<AssemblyName>WeSay.UI.Tests</AssemblyName>
-	<StartupObject>WeSay.UI.Tests.vboxFlowTest</StartupObject>
+	<StartupObject>
+	</StartupObject>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
 	<DebugSymbols>true</DebugSymbols>
@@ -48,12 +49,6 @@
 	  <AutoGen>True</AutoGen>
 	  <DesignTime>True</DesignTime>
 	  <DependentUpon>TestResources.resx</DependentUpon>
-	</Compile>
-	<Compile Include="vboxFlowTest.cs">
-	  <SubType>Form</SubType>
-	</Compile>
-	<Compile Include="vboxFlowTest.Designer.cs">
-	  <DependentUpon>vboxFlowTest.cs</DependentUpon>
 	</Compile>
 	<Compile Include="WeSayTextBoxTests.cs" />
   </ItemGroup>

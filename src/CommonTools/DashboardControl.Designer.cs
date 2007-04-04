@@ -30,7 +30,7 @@ namespace WeSay.CommonTools
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this._vbox = new WeSay.UI.VBoxFlow();
+			this._vbox = new WeSay.UI.VBox();
 			this._projectNameLabel = new System.Windows.Forms.Label();
 			this.SuspendLayout();
 			//
@@ -39,13 +39,13 @@ namespace WeSay.CommonTools
 			this._vbox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
 						| System.Windows.Forms.AnchorStyles.Left)
 						| System.Windows.Forms.AnchorStyles.Right)));
-			if (Environment.OSVersion.Platform != PlatformID.Unix)
-			{
-				SetAutoSizeToGrowAndShrink();
-			}
-			this._vbox.Location = new System.Drawing.Point(20, 62);
+			this._vbox.AutoScroll = true;
+			this._vbox.ColumnCount = 1;
+			this._vbox.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 476F));
+			this._vbox.FocussedImmediateChild = null;
+			this._vbox.Location = new System.Drawing.Point(3, 62);
 			this._vbox.Name = "_vbox";
-			this._vbox.Size = new System.Drawing.Size(438, 258);
+			this._vbox.Size = new System.Drawing.Size(493, 277);
 			this._vbox.TabIndex = 3;
 			//
 			// _projectNameLabel
@@ -73,14 +73,9 @@ namespace WeSay.CommonTools
 
 		}
 
-		private void SetAutoSizeToGrowAndShrink()
-		{
-			this._vbox.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-		}
-
 		#endregion
 
-		private WeSay.UI.VBoxFlow _vbox;
+		private WeSay.UI.VBox _vbox;
 		private System.Windows.Forms.Label _projectNameLabel;
 
 	}

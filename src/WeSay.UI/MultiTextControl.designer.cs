@@ -31,7 +31,7 @@ namespace WeSay.UI
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this._vbox = new WeSay.UI.VBoxFlow();
+			this._vbox = new WeSay.UI.VBox();
 			this.SuspendLayout();
 			//
 			// _vbox
@@ -68,7 +68,7 @@ namespace WeSay.UI
 
 		#endregion
 
-		private VBoxFlow _vbox;
+		private VBox _vbox;
 
 	}
 }

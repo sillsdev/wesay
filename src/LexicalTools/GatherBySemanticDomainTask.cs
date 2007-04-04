@@ -49,16 +49,7 @@ namespace WeSay.LexicalTools
 
 		public List<KeyValuePair<string, long>> GetKeyIdPairs()
 		{
-			// there isn't actually a very efficient way to do this yet.
-			List<KeyValuePair<string, long>> result = new List<KeyValuePair<string, long>>();
-			foreach (KeyValuePair<LexEntry, long> entryToId in KeyToEntryIdInitializer.GetEntryToEntryIdPairs(_db4oData))
-			{
-				foreach (string s in GetKeys(entryToId.Key))
-				{
-					result.Add(new KeyValuePair<string, long>(s, entryToId.Value));
-				}
-			}
-			return result;
+			return KeyToEntryIdInitializer.GetKeyToEntryIdPairs(_db4oData, GetKeys);
 		}
 
 		public IEnumerable<string> GetKeys(LexEntry item)
@@ -116,37 +107,27 @@ namespace WeSay.LexicalTools
 										  string label,
 										  string description,
 										  string semanticDomainQuestionsFileName,
-										  string lexicalFormWritingSystemId,
 										  ViewTemplate viewTemplate,
 										  string semanticDomainFieldName)
-			:this(recordListManager,
-				  label,
-				  description,
-				  semanticDomainQuestionsFileName,
-				  lexicalFormWritingSystemId,
-				  (viewTemplate == null)? null : viewTemplate.GetField(semanticDomainFieldName))
-		{
-		}
-
-		public GatherBySemanticDomainTask(IRecordListManager recordListManager,
-										  string label,
-										  string description,
-										  string semanticDomainQuestionsFileName,
-										  string lexicalFormWritingSystemId,
-										  Field semanticDomainField)
 			: base(label, description, false, recordListManager)
 		{
 			if(semanticDomainQuestionsFileName == null)
 			{
 				throw new ArgumentNullException("semanticDomainQuestionsFileName");
 			}
-			if (lexicalFormWritingSystemId == null)
+			if (viewTemplate == null)
 			{
-				throw new ArgumentNullException("lexicalFormWritingSystemId");
+				throw new ArgumentNullException("viewTemplate");
 			}
-			if (semanticDomainField == null)
+
+			Field lexicalFormField = viewTemplate.GetField(Field.FieldNames.EntryLexicalForm.ToString());
+			if (lexicalFormField == null || lexicalFormField.WritingSystems.Count < 1)
 			{
-				throw new ArgumentNullException(); // can be because viewTemplate was null
+				_lexicalFormWritingSystem = BasilProject.Project.WritingSystems.UnknownVernacularWritingSystem;
+			}
+			else
+			{
+				_lexicalFormWritingSystem = lexicalFormField.WritingSystems[0];
 			}
 
 			_currentDomainIndex = 0;
@@ -172,8 +153,7 @@ namespace WeSay.LexicalTools
 				}
 			}
 
-			_semanticDomainField = semanticDomainField;
-			_lexicalFormWritingSystem = Project.BasilProject.Project.WritingSystems[lexicalFormWritingSystemId];
+			_semanticDomainField = viewTemplate.GetField(semanticDomainFieldName);
 		}
 
 		private new Db4oRecordListManager RecordListManager
