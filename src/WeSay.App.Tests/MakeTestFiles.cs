@@ -42,7 +42,8 @@ namespace WeSay.Data.Tests
 				using (Db4oRecordList<LexEntry> entries = new Db4oRecordList<LexEntry>(ds))
 				{
 					entries.WriteCacheSize = 0;//don't commit all the time
-					LiftImporter.ReadFile(entries, sourcePath, null);
+					Assert.Fail("this has fallen out of repair. Needs to be hooked up to new merger");
+		//            LiftImporter.ReadFile(entries, sourcePath, null);
 				}
 			}
 		}

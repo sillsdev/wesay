@@ -29,8 +29,46 @@ namespace WeSay.UI
 					_keymanLink = null;
 				}
 			}
+
+			this.Multiline = true;
+			//this.AcceptsReturn = true;
+			this.WordWrap = true;
+//            this.BackColor = System.Drawing.Color.AliceBlue;
+
+			CalculateMinimumSize();
+
+			this.TextChanged += new EventHandler(OnTextChanged);
+			this.Resize += new EventHandler(OnResize);
 		}
 
+		void OnResize(object sender, EventArgs e)
+		{
+			UpdateHeight();
+		}
+		void OnTextChanged(object sender, EventArgs e)
+		{
+			UpdateHeight();
+		}
+		private void CalculateMinimumSize()
+		{
+			using (Graphics g = this.CreateGraphics())
+			{
+				SizeF sz = g.MeasureString("x", this.Font, this.Width, StringFormat.GenericTypographic);
+				int margin = 12;
+				this.MinimumSize = new Size(this.Width, margin + (int)sz.Height);
+			}
+		}
+
+
+		private void UpdateHeight()
+		{
+			using (Graphics g = this.CreateGraphics())
+			{
+				//we add an extran line feed here because this always trims off the last line if it was empty
+				SizeF sz = g.MeasureString(this.Text+"\n", this.Font, this.Width, StringFormat.GenericTypographic);
+				this.Height = 5+ (int) Math.Ceiling(sz.Height);
+			}
+		}
 
 
 		public WeSayTextBox(WritingSystem ws):this()

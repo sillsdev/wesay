@@ -60,6 +60,15 @@
 	<Compile Include="CollapsibleSplitter.cs">
 	  <SubType>Component</SubType>
 	</Compile>
+<<<<<<< .mine
+	<Compile Include="VBoxFlow.cs">
+	  <SubType>Component</SubType>
+	</Compile>
+	<Compile Include="VBoxFlow.Designer.cs">
+	  <DependentUpon>VBoxFlow.cs</DependentUpon>
+	</Compile>
+=======
+>>>>>>> .r623
 	<Compile Include="OptionCollectionControl.cs">
 	  <SubType>UserControl</SubType>
 	</Compile>
@@ -81,7 +90,7 @@
 	<Compile Include="TextBinding.cs" />
 	<Compile Include="CurrentItemEventArgs.cs" />
 	<Compile Include="DetailList.cs">
-	  <SubType>UserControl</SubType>
+	  <SubType>Component</SubType>
 	</Compile>
 	<Compile Include="DetailList.Designer.cs">
 	  <DependentUpon>DetailList.cs</DependentUpon>
@@ -128,6 +137,10 @@
   <ItemGroup>
 	<EmbeddedResource Include="ArrowButton.resx">
 	  <DependentUpon>ArrowButton.cs</DependentUpon>
+	  <SubType>Designer</SubType>
+	</EmbeddedResource>
+	<EmbeddedResource Include="VBoxFlow.resx">
+	  <DependentUpon>VBoxFlow.cs</DependentUpon>
 	  <SubType>Designer</SubType>
 	</EmbeddedResource>
 	<EmbeddedResource Include="DetailList.resx">

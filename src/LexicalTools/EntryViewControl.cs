@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel;
+using System.Drawing;
 using System.Windows.Forms;
 using WeSay.Project;
 using WeSay.UI;
@@ -7,21 +8,23 @@ using WeSay.LexicalModel;
 
 namespace WeSay.LexicalTools
 {
-	public partial class LexPreviewWithEntryControl : UserControl
+	public partial class EntryViewControl : UserControl
 	{
 		private ViewTemplate _viewTemplate;
 		private LexEntry _record;
 
-		public LexPreviewWithEntryControl()
+		public EntryViewControl()
 		{
 			_viewTemplate = null;
 			InitializeComponent();
-			_detailListControl.CurrentItemChanged += new EventHandler<CurrentItemEventArgs>(OnCurrentItemChanged);
+			_detailListControl.Size = new Size((this.Right-10)-_detailListControl.Left, (this.Bottom-10) - _detailListControl.Top);
+			_detailListControl.Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top | AnchorStyles.Bottom;
+			_detailListControl.ChangeOfWhichItemIsInFocus += new EventHandler<CurrentItemEventArgs>(OnChangeOfWhichItemIsInFocus);
 			_detailListControl.KeyDown += new KeyEventHandler(_detailListControl_KeyDown);
 		}
 
 
-//        public LexPreviewWithEntryControl(viewTemplate viewTemplate)
+//        public EntryViewControl(viewTemplate viewTemplate)
 //        {
 //            if (viewTemplate == null)
 //            {
@@ -85,11 +88,12 @@ namespace WeSay.LexicalTools
 				{
 					if (_record != null)
 					{
+						_record.CleanUpAfterEditting();
 						_record.PropertyChanged -= OnRecordPropertyChanged;
 						_record.EmptyObjectsRemoved -= OnEmptyObjectsRemoved;
 					}
 					_record = value;
-					_currentItem = null;
+					_currentItemInFocus = null;
 					if (_record != null)
 					{
 						_record.PropertyChanged += new PropertyChangedEventHandler(OnRecordPropertyChanged);
@@ -107,7 +111,7 @@ namespace WeSay.LexicalTools
 			int? row = null;
 			if (this._detailListControl.ContainsFocus)
 			{
-				row = this._detailListControl.GetRowOfControl(this._detailListControl.ActiveControl);
+				row = this._detailListControl.GetRowOfControl(this._detailListControl.FocussedImmediateChild);
 			}
 			RefreshEntryDetail();
 			Application.DoEvents();
@@ -125,7 +129,7 @@ namespace WeSay.LexicalTools
 
 		private void RefreshLexicalEntryPreview()
 		{
-			_lexicalEntryPreview.Rtf = RtfRenderer.ToRtf(_record, _currentItem);
+			_lexicalEntryPreview.Rtf = RtfRenderer.ToRtf(_record, _currentItemInFocus);
 			_lexicalEntryPreview.Refresh();
 		}
 
@@ -143,17 +147,17 @@ namespace WeSay.LexicalTools
 			this._detailListControl.Refresh();
 		}
 
-		private void OnCurrentItemChanged(object sender, CurrentItemEventArgs e)
+		private void OnChangeOfWhichItemIsInFocus(object sender, CurrentItemEventArgs e)
 		{
-			_currentItem = e;
+			_currentItemInFocus = e;
 			RefreshLexicalEntryPreview();
 		}
 
-		private CurrentItemEventArgs _currentItem;
+		private CurrentItemEventArgs _currentItemInFocus;
 
 		private void LexPreviewWithEntryControl_BackColorChanged(object sender, EventArgs e)
 		{
-			_detailListControl.BackColor = BackColor;
+			_detailListControl.BackColor = Color.Linen ;// BackColor;
 			_lexicalEntryPreview.BackColor = BackColor;
 		}
 	}

@@ -139,18 +139,7 @@ namespace WeSay.Project
 			{
 				return;
 			}
-
-			//use the first words file we do find
-			string[] p = Directory.GetFiles(PathToWeSaySpecificFilesDirectoryInProject, "*.words");
-			if (p.Length > 0)
-			{
-				this._lexiconDatabaseFileName = Path.GetFileName(p[0]);
-			}
-			else
-			{
-				//just leave as is, couldn't find one.
-			}
-		}
+	   }
 
 		private bool CheckLexiconIsInValidProjectDirectory(string p)
 		{

@@ -7,12 +7,12 @@ using WeSay.Project;
 
 namespace WeSay.LexicalTools
 {
-	public class EntryDetailTask : TaskBase
+	public class DictionaryTask : TaskBase
 	{
-		private EntryDetailControl _entryDetailControl;
+		private DictionaryControl _dictionaryControl;
 		private readonly ViewTemplate _viewTemplate;
 
-		public EntryDetailTask(IRecordListManager recordListManager,
+		public DictionaryTask(IRecordListManager recordListManager,
 							ViewTemplate viewTemplate)
 			: base("Dictionary", string.Empty, true, recordListManager)
 		{
@@ -26,8 +26,8 @@ namespace WeSay.LexicalTools
 		public override void Activate()
 		{
 			base.Activate();
-			_entryDetailControl = new EntryDetailControl((Db4oRecordListManager)RecordListManager, ViewTemplate);
-			_entryDetailControl.SelectedIndexChanged += new EventHandler(OnRecordSelectionChanged);
+			_dictionaryControl = new DictionaryControl((Db4oRecordListManager)RecordListManager, ViewTemplate);
+			_dictionaryControl.SelectedIndexChanged += new EventHandler(OnRecordSelectionChanged);
 		}
 
 		void OnRecordSelectionChanged(object sender, EventArgs e)
@@ -38,9 +38,9 @@ namespace WeSay.LexicalTools
 		public override void Deactivate()
 		{
 			base.Deactivate();
-			_entryDetailControl.SelectedIndexChanged -= new EventHandler(OnRecordSelectionChanged);
-			_entryDetailControl.Dispose();
-			_entryDetailControl = null;
+			_dictionaryControl.SelectedIndexChanged -= new EventHandler(OnRecordSelectionChanged);
+			_dictionaryControl.Dispose();
+			_dictionaryControl = null;
 			RecordListManager.GoodTimeToCommit();
 		}
 
@@ -52,7 +52,7 @@ namespace WeSay.LexicalTools
 		{
 			get
 			{
-				return _entryDetailControl;
+				return _dictionaryControl;
 			}
 		}
 

@@ -112,6 +112,7 @@ namespace WeSay.Data
 			public FilteredDb4oRecordList(IRecordList<T> sourceRecords, IFilter<T> filter, string cachePath, bool constructOnlyIfFilterIsCached)
 			: base((Db4oRecordList<T>)sourceRecords)
 			{
+				this.WriteCacheSize = 0;
 				_cachePath = cachePath;
 				_isRelevantFilter = filter;
 

@@ -58,7 +58,16 @@ namespace WeSay.LexicalModel
 			}
 		}
 
-		public void RemoveEmptyExampleSentences() {
+		public override void CleanUpAfterEditting()
+		{
+			base.CleanUpAfterEditting();
+			foreach (LexExampleSentence sentence in _exampleSentences)
+			{
+				sentence.CleanUpAfterEditting();
+			}
+		}
+
+		private void RemoveEmptyExampleSentences() {
 			// remove any example sentences that are empty
 			int count = this._exampleSentences.Count;
 
@@ -74,10 +83,10 @@ namespace WeSay.LexicalModel
 				OnEmptyObjectsRemoved();
 			}
 		}
-		public override void SomethingWasModified(string PropertyModified)
+		public override void SomethingWasModified(string propertyModified)
 		{
-			base.SomethingWasModified(PropertyModified);
-			if (PropertyModified != "exampleSentences")
+			base.SomethingWasModified(propertyModified);
+			if (propertyModified != "exampleSentences")
 			{
 				RemoveEmptyExampleSentences();
 			}

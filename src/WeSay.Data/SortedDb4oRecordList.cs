@@ -178,7 +178,7 @@ namespace WeSay.Data
 					Sort();
 					break;
 			}
-			Serialize();
+			//Serialize();
 		}
 
 		private void Add(T item)
@@ -292,7 +292,7 @@ namespace WeSay.Data
 				_keyIdMap.Sort(_sorter);
 			}
 			OnListReset();
-			Serialize();
+			//Serialize();
 		}
 
 		#region IBindingList Members

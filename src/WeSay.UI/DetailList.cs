@@ -10,18 +10,18 @@ namespace WeSay.UI
 	/// It supports dynamically removing and inserting new rows, to support
 	/// "ghost" fields
 	/// </summary>
-	public partial class DetailList : VBox
+	public partial class DetailList : VBoxFlow
 	{
 		/// <summary>
 		/// Can be used to track which data item the user is currently editting, to,
 		/// for example, hilight that piece in a preview control
 		/// </summary>
-		public event EventHandler<CurrentItemEventArgs> CurrentItemChanged = delegate
+		public event EventHandler<CurrentItemEventArgs> ChangeOfWhichItemIsInFocus = delegate
 																			 {
 																			 };
 
-		private int _indexOfLabel = 0;
-		private int _indexOfTextBox = 1;
+		private int _indexOfLabel = 1;
+		private int _indexOfTextBox = 0;
 
 		public DetailList()
 		{
@@ -36,6 +36,24 @@ namespace WeSay.UI
 			}
 			_fadeInTimer.Enabled = false;
 			_fadeInTimer.Interval = 500;
+
+		   this.AutoScroll = true; //but we need to make sure children are never wider than we are
+//            this.VerticalScroll.Enabled = true;
+//            this.VerticalScroll.Visible = true;
+//
+//
+//            this.VerticalScroll.Maximum = 1000;
+//            this.VerticalScroll.Minimum = 0;
+//            this.VerticalScroll.Value = this.VerticalScroll.Minimum;
+//            this.VerticalScroll.LargeChange = 30;
+//            this.VerticalScroll.SmallChange = 10;
+//            this.Scroll += new ScrollEventHandler(OnScroll);
+
+			this.HScroll = false;
+		}
+
+		void OnScroll(object sender, ScrollEventArgs e)
+		{
 		}
 
 
@@ -47,10 +65,9 @@ namespace WeSay.UI
 
 		public Control AddWidgetRow(string fieldLabel, bool isHeader, Control editWidget, int insertAtRow)
 		{
+			//Debug.WriteLine(String.Format("AddWidgetRow({0}, header={1}, , row={2}", fieldLabel, isHeader, insertAtRow));
 			Panel panel = AddRowPanel(editWidget, fieldLabel, isHeader);
-
 			AddControl(panel, insertAtRow);
-
 			return panel;
 		}
 
@@ -78,28 +95,47 @@ namespace WeSay.UI
 			}
 			label.Text = fieldLabel;
 			label.Size = new Size(75, 50);
+			label.Anchor = AnchorStyles.Left | AnchorStyles.Top;
 			int verticalPadding = 0;
 			label.Top = verticalPadding+3+top;
 
 			editWidget.Top = verticalPadding + top;
-			editWidget.Width = 5;
+			int padding = 2;
+			editWidget.Left = label.Left + label.Width + padding;
+			editWidget.Width = (this.Width - editWidget.Left) - 20;
 			FixUpForMono(editWidget);
-			editWidget.Left = label.Width + 10;
 			editWidget.Anchor = AnchorStyles.Left | AnchorStyles.Right;
-			editWidget.KeyDown += new KeyEventHandler(editWidget_KeyDown);
+			editWidget.KeyDown += new KeyEventHandler(OnEditWidget_KeyDown);
 
-			Panel panel = new TestPanel();
-			panel.SuspendLayout();
+//            FlexibleHeightPanel panel = new FlexibleHeightPanel(100, 10 + (editWidget.Top/*-6*/), editWidget);
+			FlexibleHeightPanel panel = new FlexibleHeightPanel(this.Width, 10, editWidget);
+			panel.Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top ;
+		   // panel.SuspendLayout();
 			panel.Name = fieldLabel+"_panel of detailList";
 			//            panel.Size = new Size(100, 10+editWidget.Height+(editWidget.Top-6) );//careful.. if width is too small, then editwidget grows to much.  Weird.
-			panel.Size = new Size(100, 10+editWidget.Height+(editWidget.Top-6) );//careful.. if width is too small, then editwidget grows to much.  Weird.
+		   // panel.Size = new Size(100, 10+editWidget.Height+(editWidget.Top-6) );//careful.. if width is too small, then editwidget grows to much.  Weird.
 			panel.Controls.Add(label);
-			panel.Controls.Add(editWidget);
-			panel.ResumeLayout(false);
+		   // panel.ResumeLayout(false);
+
+
+			UpdateScrollBar();
+
+
 			return panel;
 		}
 
-		void editWidget_KeyDown(object sender, KeyEventArgs e)
+		private void UpdateScrollBar()
+		{
+			if (ActualControls.Count > 0)
+			{
+//                this.VerticalScroll.Maximum = ActualControls[ActualControls.Count - 1].Bottom;
+//                this.VerticalScroll.Minimum = this.Height;
+//                this.VerticalScroll.Value = this.VerticalScroll.Minimum;
+			}
+		}
+
+
+		void OnEditWidget_KeyDown(object sender, KeyEventArgs e)
 		{
 			OnKeyDown(e);
 		}
@@ -203,9 +239,9 @@ namespace WeSay.UI
 			}
 		}
 
-		public void OnBindingCurrentItemChanged(object sender, CurrentItemEventArgs e)
+		public void OnBinding_ChangeOfWhichItemIsInFocus(object sender, CurrentItemEventArgs e)
 		{
-			CurrentItemChanged(sender, e);
+			ChangeOfWhichItemIsInFocus(sender, e);
 		}
 
 		/// <summary>

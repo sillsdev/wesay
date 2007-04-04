@@ -1,7 +1,12 @@
 using System;
 using System.IO;
+using System.Threading;
 using WeSay;
+using WeSay.App;
+using WeSay.Data;
 using WeSay.Foundation.Progress;
+using WeSay.LexicalModel;
+using WeSay.LexicalModel.Db4o_Specific;
 using WeSay.Project;
 
 namespace Lift2WeSay
@@ -54,6 +59,7 @@ namespace Lift2WeSay
 	}
 	class Lift2WeSay
 	{
+		[STAThread]
 		static void Main(string[] args)
 		{
 			if (args.Length != 2)
@@ -82,8 +88,14 @@ namespace Lift2WeSay
 			  return;
 			}
 
-			try{
-			  WeSayWordsProject project = new WeSayWordsProject();
+//            if (File.Exists(destPath))
+//            {
+//                File.Delete(destPath);
+//            }
+
+			WeSayWordsProject project = new WeSayWordsProject();
+			try
+			{
 			  project.LoadFromProjectDirectoryPath(projectPath);
 			}
 			catch (Exception e)
@@ -92,37 +104,35 @@ namespace Lift2WeSay
 			  return;
 			}
 
-			if (File.Exists(destPath))
-			{
-				File.Delete(destPath);
-			}
 
 			ConsoleProgress progress = new ConsoleProgress();
 			progress.Log += new EventHandler<ProgressState.LogEvent>(progress_Log);
 
-			ImportLIFTCommand command = new ImportLIFTCommand(destPath, sourcePath);
-			command.BeginInvoke(progress);
+				ImportLIFTCommand command = new ImportLIFTCommand(destPath, sourcePath);
+				command.BeginInvoke(progress);
 
-			while (true)
-			{
-			  switch (progress.Status)
-			  {
-				case ProgressState.StatusValue.NotStarted:
-				  break;
-				case ProgressState.StatusValue.Busy:
-				  break;
-				case ProgressState.StatusValue.Finished:
-				  Console.WriteLine(string.Empty);
-				  Console.WriteLine("Done.");
-				  return;
-				case ProgressState.StatusValue.StoppedWithError:
-				  Console.Error.WriteLine(string.Empty);
-				  Console.Error.WriteLine("Error. Unable to complete inport.");
-				  return;
-				default:
-				  break;
-			  }
-			}
+				while (true)
+				{
+					switch (progress.Status)
+					{
+						case ProgressState.StatusValue.NotStarted:
+							break;
+						case ProgressState.StatusValue.Busy:
+							break;
+						case ProgressState.StatusValue.Finished:
+							Console.WriteLine(string.Empty);
+							Console.WriteLine("Done.");
+							return;
+						case ProgressState.StatusValue.StoppedWithError:
+							Console.Error.WriteLine(string.Empty);
+							Console.Error.WriteLine("Error. Unable to complete import.");
+							return;
+						default:
+							break;
+					}
+					Thread.Sleep(10);
+				}
+
 		}
 
 	  static void progress_Log(object sender, ProgressState.LogEvent e)

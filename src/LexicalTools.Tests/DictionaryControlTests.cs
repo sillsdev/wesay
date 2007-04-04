@@ -11,9 +11,9 @@ using WeSay.UI;
 namespace WeSay.LexicalTools.Tests
 {
 	[TestFixture]
-	public class EntryDetailControlTests : NUnit.Extensions.Forms.NUnitFormTest
+	public class DictionaryControlTests : NUnit.Extensions.Forms.NUnitFormTest
 	{
-		private EntryDetailTask _task;
+		private DictionaryTask _task;
 		IRecordListManager _recordListManager;
 		string _filePath;
 		private IRecordList<LexEntry> _records;
@@ -43,43 +43,46 @@ namespace WeSay.LexicalTools.Tests
 			Db4oLexModelHelper.Initialize(((Db4oRecordListManager)_recordListManager).DataSource.Data);
 
 			this._records = this._recordListManager.GetListOfType<LexEntry>();
-			AddEntry("Initial", "meaning");
-			AddEntry("Secondary", string.Empty);
-			AddEntry("Tertiary", string.Empty);
+			AddEntry("Initial", "meaning", true);
+			AddEntry("Secondary", "meaning", false);
+			AddEntry("Tertiary", "meaning", true);
 
 			string[] analysisWritingSystemIds = new string[] { BasilProject.Project.WritingSystems.TestWritingSystemAnalId };
 			string[] vernacularWritingSystemIds = new string[] { this._vernacularWsId };
 			ViewTemplate viewTemplate = new ViewTemplate();
 			viewTemplate.Add(new Field(Field.FieldNames.EntryLexicalForm.ToString(), "LexEntry",vernacularWritingSystemIds));
 
+			viewTemplate.Add(new Field("EntryNote", "LexEntry", new string[]{"en"}, Field.MultiplicityType.ZeroOr1, "MultiText" ));
+
 			viewTemplate.Add(new Field(Field.FieldNames.SenseGloss.ToString(), "LexSense",analysisWritingSystemIds));
 
-
+			viewTemplate.Add(new Field("SenseNote", "LexSense", new string[]{"en"}, Field.MultiplicityType.ZeroOr1, "MultiText" ));
 
 			viewTemplate.Add(new Field(Field.FieldNames.ExampleSentence.ToString(), "LexExampleSentence",vernacularWritingSystemIds));
 
 			viewTemplate.Add(new Field(Field.FieldNames.ExampleTranslation.ToString(), "LexExampleSentence",analysisWritingSystemIds));
 
 			Field customField = new Field("SemanticDomains", "LexSense", analysisWritingSystemIds, Field.MultiplicityType.ZeroOr1, "OptionCollection");
-			customField.ClassName = "LexSense";
 			customField.DisplayName = "Sem Dom";
 			customField.OptionsListFile = "SemanticDomains.xml";
 			viewTemplate.Add(customField);
 
 
-			Field customPOSField = new Field("pos", "LexSense", analysisWritingSystemIds, Field.MultiplicityType.ZeroOr1, "Option");
-			customPOSField.ClassName = "LexSense";
+			Field customPOSField = new Field(LexSense.WellKnownProperties.PartOfSpeech, "LexSense", analysisWritingSystemIds, Field.MultiplicityType.ZeroOr1, "Option");
 			customPOSField.DisplayName = "POS";
 			customPOSField.OptionsListFile = "PartsOfSpeech.xml";
 			viewTemplate.Add(customPOSField);
 
 
-			Field customNotesField = new Field("Note", "LexSense", analysisWritingSystemIds);
-			customNotesField.ClassName = "LexSense";
-			customNotesField.DisplayName = "note";
+			Field customNotesField = new Field(LexSense.WellKnownProperties.Note, "LexSense", analysisWritingSystemIds);
+			customNotesField.DisplayName = "s-note";
 			viewTemplate.Add(customNotesField);
 
-			this._task = new EntryDetailTask(_recordListManager, viewTemplate);
+			Field exampleNotesField = new Field(LexSense.WellKnownProperties.Note, "LexExampleSentence", analysisWritingSystemIds);
+			exampleNotesField.DisplayName = "ex-note";
+			viewTemplate.Add(exampleNotesField);
+
+			this._task = new DictionaryTask(_recordListManager, viewTemplate);
 			this._detailTaskPage = new TabPage();
 			ActivateTask();
 
@@ -107,14 +110,21 @@ namespace WeSay.LexicalTools.Tests
 			}
 		}
 
-		private void AddEntry(string lexemeForm, string meaning)
+		private void AddEntry(string lexemeForm, string meaning, bool includeExample)
 		{
 			LexEntry entry = new LexEntry();
 			entry.LexicalForm.SetAlternative(this._vernacularWsId, lexemeForm);
 
-			LexSense sense = (LexSense)entry.Senses.AddNew();
-			sense.Gloss[WeSay.Project.WeSayWordsProject.Project.ViewTemplate.GetField("SenseGloss").WritingSystemIds[0]] = meaning;
+			LexSense sense = (LexSense) entry.Senses.AddNew();
+			sense.Gloss[
+				WeSay.Project.WeSayWordsProject.Project.ViewTemplate.GetField("SenseGloss").WritingSystemIds[0]] =
+				meaning;
 
+			if (includeExample)
+			{
+				LexExampleSentence ex = (LexExampleSentence) sense.ExampleSentences.AddNew();
+				ex.Sentence.SetAlternative("x", "hello");
+			}
 			this._records.Add(entry);
 		}
 
@@ -134,7 +144,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void Construct_EmptyViewTemplate_NoCrash()
 		{
-			EntryDetailControl e = new EntryDetailControl(_recordListManager, new ViewTemplate());
+			DictionaryControl e = new DictionaryControl(_recordListManager, new ViewTemplate());
 			Assert.IsNotNull(e);
 		}
 
@@ -293,6 +303,100 @@ namespace WeSay.LexicalTools.Tests
 		}
 
 		[Test]
+		public void CustomTextFieldPreservedNoOtherEditting()
+		{
+			CustomTextFieldPreservedCore("*EntryNote");
+		}
+
+		[Test]
+		public void CustomTextFieldPreserved()
+		{
+			TextBoxTester t = new TextBoxTester(GetLexicalFormControlName());
+			t.Enter("test");
+
+			CustomTextFieldPreservedCore("*EntryNote");
+		}
+
+		private void CustomTextFieldPreservedCore(string fieldLabel)
+		{
+			MultiTextControl note= GetEditControl(fieldLabel);
+			WeSayTextBox box = note.TextBoxes[0];
+			box.Focus();
+			box.Text = "a note";
+			LexEntry entry = GetCurrentEntry();
+			Assert.AreEqual(1, GetCurrentEntry().Properties.Count);
+
+			CycleTheCurrentEntryOutAndBackIn(entry);
+
+			note = GetEditControl(fieldLabel);
+			Assert.AreEqual("a note", note.TextBoxes[0].Text);
+		}
+
+		private void CustomOptionRefPreservedCore(string fieldLabel)
+		{
+			SingleOptionControl combo = GetOptionControl(fieldLabel);
+
+			combo.Value = "verb";
+
+			LexEntry entry = GetCurrentEntry();
+			Assert.AreEqual(1, GetCurrentEntry().Properties.Count);
+
+			CycleTheCurrentEntryOutAndBackIn(entry);
+
+			combo = GetOptionControl(fieldLabel);
+			Assert.AreEqual("verb", combo.Value);
+		}
+
+		[Test]
+		public void CustomOptionRefOnSensePreserved()
+		{
+			CustomOptionRefPreservedCore("POS");
+		}
+
+		[Test]
+		public void CustomTextFieldOnSensePreserved()
+		{
+			CustomTextFieldPreservedCore("s-note");
+		}
+
+		private void CycleTheCurrentEntryOutAndBackIn(LexEntry entry)
+		{
+//cycle out this record
+			EntryViewControl parentControl = ((DictionaryControl) _task.Control).Control_EntryDetailPanel;
+			parentControl.DataSource = new LexEntry();
+			//bring this record back in
+			parentControl.DataSource = entry;
+		}
+
+		private LexEntry GetCurrentEntry()
+		{
+			EntryViewControl parentControl = ((DictionaryControl) _task.Control).Control_EntryDetailPanel;
+			return parentControl.DataSource;
+		}
+
+		[Test]
+		public void EmptyProperitesRemovedAfterEditting()
+		{
+
+			EntryViewControl parentControl = ((DictionaryControl)_task.Control).Control_EntryDetailPanel;
+			LexEntry entry = parentControl.DataSource;
+			Assert.Less(0, entry.Properties.Count, "the setup of this test should have some custom properties");
+		   TextBoxTester t = new TextBoxTester(GetLexicalFormControlName());
+			t.Enter("test");
+			Assert.Less(0, entry.Properties.Count, "the setup of this test should have some custom properties");
+
+			//cycle out this record
+			parentControl.DataSource = new LexEntry();
+
+			Assert.AreEqual(0, entry.Properties.Count);
+			Assert.AreEqual(0, ((LexSense)entry.Senses[0]).Properties.Count);
+			Assert.AreEqual(0, ((LexSense)entry.Senses[0]).Properties.Count);
+
+		}
+
+
+
+		[Test]
 		public void ClickingTheStarButton_AfterTyping_SetsAnnotation()
 		{
 			TypeInLexicalForm("one");
@@ -389,7 +493,7 @@ namespace WeSay.LexicalTools.Tests
 			get
 			{
 				BindingListGridTester t = new BindingListGridTester("_recordsListBox");
-				return ((EntryDetailControl)_detailTaskPage.Controls[0]).CurrentRecord.LexicalForm.GetBestAlternative(_vernacularWsId);
+				return ((DictionaryControl)_detailTaskPage.Controls[0]).CurrentRecord.LexicalForm.GetBestAlternative(_vernacularWsId);
 			}
 		}
 
@@ -433,6 +537,12 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void EditField_RemoveSenseContents_RemovesSense()
 		{
+			//skip to second word (first has extra stuff in the sense)
+			ListBoxTester t = new ListBoxTester("_recordsListBox");
+			t.Properties.SelectedIndex = 1;
+			Assert.AreEqual("Secondary", LexemeFormOfSelectedEntry);
+			Assert.AreEqual(1, GetCurrentEntry().Senses.Count, "this test assumes an entry with 1 sense");
+			Assert.AreEqual(0, ((LexSense)(GetCurrentEntry().Senses[0])).ExampleSentences.Count, "this test assumes a sense w/ no example");
 			MultiTextControl editControl = GetEditControl("Meaning");
 			editControl.TextBoxes[0].Focus();
 			TypeInMeaning(string.Empty);
@@ -448,7 +558,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			ClickAddWord();
 
-			DetailList detailList = ((EntryDetailControl)_task.Control).Control_EntryDetailPanel.ControlEntryDetail;
+			DetailList detailList = GetDetailList();
 			int initialCount = detailList.Count;
 
 			MultiTextControl editControl = GetEditControl("Meaning");
@@ -469,7 +579,7 @@ namespace WeSay.LexicalTools.Tests
 
 			//now do another one
 			initialCount = detailList.Count;
-			MultiTextControl editControl2 = GetEditControl("Meaning",true);
+			MultiTextControl editControl2 = (MultiTextControl) GetEditControl("Meaning",true);
 			Assert.IsTrue(editControl2.Name.Contains("ghost"));
 			editControl2.TextBoxes[0].Focus();
 			Application.DoEvents();
@@ -481,34 +591,43 @@ namespace WeSay.LexicalTools.Tests
 			Assert.IsTrue(detailList.Count > initialCount);
 		}
 
-		private MultiTextControl GetEditControl(string labelText)
+		private DetailList GetDetailList()
 		{
-			return GetEditControl(labelText, false);
+			return ((DictionaryControl)_task.Control).Control_EntryDetailPanel.ControlEntryDetail;
 		}
 
-		private  MultiTextControl GetEditControl(string labelText, bool lookingForGhostVersion)
+		private SingleOptionControl GetOptionControl(string labelText)
 		{
-			DetailList detailList = ((EntryDetailControl)_task.Control).Control_EntryDetailPanel.ControlEntryDetail;
-			MultiTextControl editControl = null;
+			return (SingleOptionControl )GetEditControl(labelText, false);
+		}
+		private MultiTextControl GetEditControl(string labelText)
+		{
+			return (MultiTextControl)GetEditControl(labelText, false);
+		}
+
+		private Control GetEditControl(string labelText, bool lookingForGhostVersion)
+		{
+			DetailList detailList = ((DictionaryControl)_task.Control).Control_EntryDetailPanel.ControlEntryDetail;
+			Control foundControl = null;
 			for (int i = 0; i < detailList.Count; i++)
 			{
 				Control referenceControl = detailList.GetControlOfRow(i);
 				Label label = detailList.GetLabelControlFromReferenceControl(referenceControl);
 				if (label.Text == labelText)
 				{
-					editControl = (MultiTextControl)detailList.GetEditControlFromReferenceControl(referenceControl);
+					foundControl = detailList.GetEditControlFromReferenceControl(referenceControl);
 					if (lookingForGhostVersion)
 					{
-						if (!editControl.Name.Contains("ghost"))
+						if (!foundControl.Name.Contains("ghost"))
 						{
-							editControl = null;
+							foundControl = null;
 							continue;
 						}
 					}
 					break;
 				}
 			}
-			return editControl;
+			return foundControl;
 		}
 
 	}

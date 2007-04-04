@@ -9,7 +9,7 @@ using WeSay.UI;
 namespace WeSay.LexicalTools.Tests
 {
 	[TestFixture]
-	public class LexFieldControlTests
+	public class MissingInfoControlTests
 	{
 		InMemoryRecordListManager _recordListManager;
 		IRecordList<LexEntry> _missingTranslationRecordList;
@@ -110,156 +110,156 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void Create()
 		{
-			LexFieldControl lexFieldControl = new LexFieldControl(_missingTranslationRecordList, _viewTemplate, _missingTranslation.FilteringPredicate);
-			Assert.IsNotNull(lexFieldControl);
+			MissingInfoControl missingInfoControl = new MissingInfoControl(_missingTranslationRecordList, _viewTemplate, _missingTranslation.FilteringPredicate);
+			Assert.IsNotNull(missingInfoControl);
 		}
 
 		[Test]
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void Create_NullRecords_Throws()
 		{
-			new LexFieldControl(null, _viewTemplate, _missingTranslation.FilteringPredicate);
+			new MissingInfoControl(null, _viewTemplate, _missingTranslation.FilteringPredicate);
 		}
 
 		[Test]
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void Create_NullviewTemplate_Throws()
 		{
-			new LexFieldControl(_missingTranslationRecordList, null, _missingTranslation.FilteringPredicate);
+			new MissingInfoControl(_missingTranslationRecordList, null, _missingTranslation.FilteringPredicate);
 		}
 
 		[Test]
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void Create_NullFilter_Throws()
 		{
-			new LexFieldControl(_missingTranslationRecordList, _viewTemplate, null);
+			new MissingInfoControl(_missingTranslationRecordList, _viewTemplate, null);
 		}
 
 		[Test]
 		public void CurrentRecord_InitializedToFirst()
 		{
-			LexFieldControl lexFieldControl = new LexFieldControl(_missingTranslationRecordList, _viewTemplate, _missingTranslation.FilteringPredicate);
-			Assert.AreEqual(_missingTranslationRecordList[0], lexFieldControl.CurrentRecord);
+			MissingInfoControl missingInfoControl = new MissingInfoControl(_missingTranslationRecordList, _viewTemplate, _missingTranslation.FilteringPredicate);
+			Assert.AreEqual(_missingTranslationRecordList[0], missingInfoControl.CurrentRecord);
 		}
 
 		[Test]
 		public void SetCurrentRecordToPrevious_AtFirst_StaysAtFirst()
 		{
-			LexFieldControl lexFieldControl = new LexFieldControl(_missingTranslationRecordList, _viewTemplate, _missingTranslation.FilteringPredicate);
-			lexFieldControl.SetCurrentRecordToPrevious();
-			Assert.AreEqual(_missingTranslationRecordList[0], lexFieldControl.CurrentRecord);
+			MissingInfoControl missingInfoControl = new MissingInfoControl(_missingTranslationRecordList, _viewTemplate, _missingTranslation.FilteringPredicate);
+			missingInfoControl.SetCurrentRecordToPrevious();
+			Assert.AreEqual(_missingTranslationRecordList[0], missingInfoControl.CurrentRecord);
 		}
 
 		[Test]
 		public void SetCurrentRecordToNextThenPrevious_SamePlace()
 		{
-			LexFieldControl lexFieldControl = new LexFieldControl(_missingTranslationRecordList, _viewTemplate, _missingTranslation.FilteringPredicate);
-			lexFieldControl.SetCurrentRecordToNext();
-			lexFieldControl.SetCurrentRecordToPrevious();
-			Assert.AreEqual(_missingTranslationRecordList[0], lexFieldControl.CurrentRecord);
+			MissingInfoControl missingInfoControl = new MissingInfoControl(_missingTranslationRecordList, _viewTemplate, _missingTranslation.FilteringPredicate);
+			missingInfoControl.SetCurrentRecordToNext();
+			missingInfoControl.SetCurrentRecordToPrevious();
+			Assert.AreEqual(_missingTranslationRecordList[0], missingInfoControl.CurrentRecord);
 		}
 
 		[Test]
 		public void SetCurrentRecordToNext_AtLast_StaysAtLast()
 		{
-			LexFieldControl lexFieldControl = new LexFieldControl(_missingTranslationRecordList, _viewTemplate, _missingTranslation.FilteringPredicate);
+			MissingInfoControl missingInfoControl = new MissingInfoControl(_missingTranslationRecordList, _viewTemplate, _missingTranslation.FilteringPredicate);
 			int count = _missingTranslationRecordList.Count;
 			for (int i = 0; i <= count; i++)
 			{
-				lexFieldControl.SetCurrentRecordToNext();
+				missingInfoControl.SetCurrentRecordToNext();
 			}
-			Assert.AreEqual(_missingTranslationRecordList[count - 1], lexFieldControl.CurrentRecord);
+			Assert.AreEqual(_missingTranslationRecordList[count - 1], missingInfoControl.CurrentRecord);
 		}
 
 		[Test]
 		public void SetCurrentRecordToNext_GoesToNext()
 		{
-			LexFieldControl lexFieldControl = new LexFieldControl(_missingTranslationRecordList, _viewTemplate, _missingTranslation.FilteringPredicate);
-			lexFieldControl.SetCurrentRecordToNext();
-			Assert.AreEqual(_missingTranslationRecordList[1], lexFieldControl.CurrentRecord);
+			MissingInfoControl missingInfoControl = new MissingInfoControl(_missingTranslationRecordList, _viewTemplate, _missingTranslation.FilteringPredicate);
+			missingInfoControl.SetCurrentRecordToNext();
+			Assert.AreEqual(_missingTranslationRecordList[1], missingInfoControl.CurrentRecord);
 		}
 
 		[Test]
 		public void SetCurrentRecordToPrevious_AfterChangedSoNoLongerMeetsFilter_StaysAtFirst()
 		{
-			LexFieldControl lexFieldControl = new LexFieldControl(_missingTranslationRecordList, _viewTemplate, _missingTranslation.FilteringPredicate);
-			AddTranslationToEntry(lexFieldControl.CurrentRecord,"a bogus translation of example");
-			lexFieldControl.SetCurrentRecordToPrevious();
-			Assert.AreEqual(_missingTranslationRecordList[0], lexFieldControl.CurrentRecord);
+			MissingInfoControl missingInfoControl = new MissingInfoControl(_missingTranslationRecordList, _viewTemplate, _missingTranslation.FilteringPredicate);
+			AddTranslationToEntry(missingInfoControl.CurrentRecord,"a bogus translation of example");
+			missingInfoControl.SetCurrentRecordToPrevious();
+			Assert.AreEqual(_missingTranslationRecordList[0], missingInfoControl.CurrentRecord);
 		}
 
 		[Test]
 		public void SetCurrentRecordToPrevious_AfterChangedSoNoLongerMeetsFilter_GoesToEntryBeforeChangedOne()
 		{
-			LexFieldControl lexFieldControl = new LexFieldControl(_missingTranslationRecordList, _viewTemplate, _missingTranslation.FilteringPredicate);
-			lexFieldControl.SetCurrentRecordToNext();
-			lexFieldControl.SetCurrentRecordToNext();
-			AddTranslationToEntry(lexFieldControl.CurrentRecord, "a bogus translation of example");
-			lexFieldControl.SetCurrentRecordToPrevious();
-			Assert.AreEqual(_missingTranslationRecordList[1], lexFieldControl.CurrentRecord);
+			MissingInfoControl missingInfoControl = new MissingInfoControl(_missingTranslationRecordList, _viewTemplate, _missingTranslation.FilteringPredicate);
+			missingInfoControl.SetCurrentRecordToNext();
+			missingInfoControl.SetCurrentRecordToNext();
+			AddTranslationToEntry(missingInfoControl.CurrentRecord, "a bogus translation of example");
+			missingInfoControl.SetCurrentRecordToPrevious();
+			Assert.AreEqual(_missingTranslationRecordList[1], missingInfoControl.CurrentRecord);
 		}
 
 		[Test]
 		public void SetCurrentRecordToNextThenPrevious_AfterChangedSoNoLongerMeetsFilter_SamePlace()
 		{
-			LexFieldControl lexFieldControl = new LexFieldControl(_missingTranslationRecordList, _viewTemplate, _missingTranslation.FilteringPredicate);
-			lexFieldControl.SetCurrentRecordToNext();
-			AddTranslationToEntry(lexFieldControl.CurrentRecord, "a bogus translation of example");
-			lexFieldControl.SetCurrentRecordToPrevious();
-			Assert.AreEqual(_missingTranslationRecordList[0], lexFieldControl.CurrentRecord);
+			MissingInfoControl missingInfoControl = new MissingInfoControl(_missingTranslationRecordList, _viewTemplate, _missingTranslation.FilteringPredicate);
+			missingInfoControl.SetCurrentRecordToNext();
+			AddTranslationToEntry(missingInfoControl.CurrentRecord, "a bogus translation of example");
+			missingInfoControl.SetCurrentRecordToPrevious();
+			Assert.AreEqual(_missingTranslationRecordList[0], missingInfoControl.CurrentRecord);
 		}
 
 		[Test]
 		public void SetCurrentRecordToPrevious_AtLast_AfterChangedSoNoLongerMeetsFilter_StaysAtLast()
 		{
-			LexFieldControl lexFieldControl = new LexFieldControl(_missingTranslationRecordList, _viewTemplate, _missingTranslation.FilteringPredicate);
+			MissingInfoControl missingInfoControl = new MissingInfoControl(_missingTranslationRecordList, _viewTemplate, _missingTranslation.FilteringPredicate);
 			int count = _missingTranslationRecordList.Count;
 			for (int i = 0; i < count; i++)
 			{
-				lexFieldControl.SetCurrentRecordToNext();
+				missingInfoControl.SetCurrentRecordToNext();
 			}
-			AddTranslationToEntry(lexFieldControl.CurrentRecord, "a bogus translation of example");
-			lexFieldControl.SetCurrentRecordToPrevious();
-			Assert.AreEqual(_missingTranslationRecordList[count - 2], lexFieldControl.CurrentRecord);
+			AddTranslationToEntry(missingInfoControl.CurrentRecord, "a bogus translation of example");
+			missingInfoControl.SetCurrentRecordToPrevious();
+			Assert.AreEqual(_missingTranslationRecordList[count - 2], missingInfoControl.CurrentRecord);
 		}
 
 		[Test]
 		public void SetCurrentRecordToPrevious_AtSecondToLast_AfterChangedSoNoLongerMeetsFilter_GoesToEntryBeforeChangedOne()
 		{
-			LexFieldControl lexFieldControl = new LexFieldControl(_missingTranslationRecordList, _viewTemplate, _missingTranslation.FilteringPredicate);
+			MissingInfoControl missingInfoControl = new MissingInfoControl(_missingTranslationRecordList, _viewTemplate, _missingTranslation.FilteringPredicate);
 			int count = _missingTranslationRecordList.Count;
 			for (int i = 0; i < count-2; i++)
 			{
-				lexFieldControl.SetCurrentRecordToNext();
+				missingInfoControl.SetCurrentRecordToNext();
 			}
-			AddTranslationToEntry(lexFieldControl.CurrentRecord, "a bogus translation of example");
-			lexFieldControl.SetCurrentRecordToPrevious();
-			Assert.AreEqual(_missingTranslationRecordList[count - 3], lexFieldControl.CurrentRecord);
+			AddTranslationToEntry(missingInfoControl.CurrentRecord, "a bogus translation of example");
+			missingInfoControl.SetCurrentRecordToPrevious();
+			Assert.AreEqual(_missingTranslationRecordList[count - 3], missingInfoControl.CurrentRecord);
 		}
 
 
 		[Test]
 		public void SetCurrentRecordToNext_AtLast_AfterChangedSoNoLongerMeetsFilter_StaysAtLast()
 		{
-			LexFieldControl lexFieldControl = new LexFieldControl(_missingTranslationRecordList, _viewTemplate, _missingTranslation.FilteringPredicate);
+			MissingInfoControl missingInfoControl = new MissingInfoControl(_missingTranslationRecordList, _viewTemplate, _missingTranslation.FilteringPredicate);
 			int count = _missingTranslationRecordList.Count;
 			for (int i = 0; i < count; i++)
 			{
-				lexFieldControl.SetCurrentRecordToNext();
+				missingInfoControl.SetCurrentRecordToNext();
 			}
-			AddTranslationToEntry(lexFieldControl.CurrentRecord, "a bogus translation of example");
-			lexFieldControl.SetCurrentRecordToNext();
-			Assert.AreEqual(_missingTranslationRecordList[count - 2], lexFieldControl.CurrentRecord);
+			AddTranslationToEntry(missingInfoControl.CurrentRecord, "a bogus translation of example");
+			missingInfoControl.SetCurrentRecordToNext();
+			Assert.AreEqual(_missingTranslationRecordList[count - 2], missingInfoControl.CurrentRecord);
 		}
 
 		[Test]
 		public void SetCurrentRecordToNext__AfterChangedSoNoLongerMeetsFilter_GoesToNext()
 		{
-			LexFieldControl lexFieldControl = new LexFieldControl(_missingTranslationRecordList, _viewTemplate, _missingTranslation.FilteringPredicate);
-			lexFieldControl.SetCurrentRecordToNext();
-			AddTranslationToEntry(lexFieldControl.CurrentRecord, "a bogus translation of example");
-			lexFieldControl.SetCurrentRecordToNext();
-			Assert.AreEqual(_missingTranslationRecordList[1], lexFieldControl.CurrentRecord);
+			MissingInfoControl missingInfoControl = new MissingInfoControl(_missingTranslationRecordList, _viewTemplate, _missingTranslation.FilteringPredicate);
+			missingInfoControl.SetCurrentRecordToNext();
+			AddTranslationToEntry(missingInfoControl.CurrentRecord, "a bogus translation of example");
+			missingInfoControl.SetCurrentRecordToNext();
+			Assert.AreEqual(_missingTranslationRecordList[1], missingInfoControl.CurrentRecord);
 		}
 
 

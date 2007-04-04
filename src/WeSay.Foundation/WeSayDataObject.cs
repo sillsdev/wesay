@@ -130,12 +130,23 @@ namespace WeSay.Foundation
 
 		/// <summary>
 		/// called by the binding list when senses are added, removed, reordered, etc.
+		/// Also called when the user types in fields, etc.
 		/// </summary>
-		public virtual void SomethingWasModified(string PropertyModified)
+		public virtual void SomethingWasModified(string propertyModified)
+		{
+		   //NO: can't do this until really putting the record to bed;
+			//only the display code knows when to do that.      RemoveEmptyProperties();
+		}
+
+		public virtual void CleanUpAfterEditting()
 		{
 			RemoveEmptyProperties();
 		}
 
+		/// <summary>
+		/// BE CAREFUL about when this is called. Empty properties *should exist*
+		/// as long as the record is being editted
+		/// </summary>
 		public void RemoveEmptyProperties()
 		{
 			// remove any custom fields that are empty

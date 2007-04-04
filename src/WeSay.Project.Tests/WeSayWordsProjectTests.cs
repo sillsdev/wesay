@@ -72,15 +72,6 @@ namespace WeSay.Project.Tests
 			Assert.IsTrue(p.PathToLexicalModelDB.Contains("TestProj.words"));
 		}
 
-		/// <summary>
-		/// This may be a bad idea, but this test at least nails current behavior
-		/// </summary>
-		[Test]
-		public void UseSomethingIfPreferedNameMissing()
-		{
-			WeSayWordsProject p = CreateAndLoad(false);
-			Assert.IsTrue(p.PathToLexicalModelDB.Contains("AAA.words"));
-		}
 
 		[Test]
 		public void LoadPartsOfSpeechList()

@@ -185,6 +185,10 @@
 	</Compile>
   </ItemGroup>
   <ItemGroup>
+	<ProjectReference Include="..\CommonTools\CommonTools.csproj">
+	  <Project>{64726381-FEA8-47D5-A884-18AED42E93B6}</Project>
+	  <Name>CommonTools</Name>
+	</ProjectReference>
 	<ProjectReference Include="..\LexicalModel\LexicalModel.csproj">
 	  <Project>{5F61C809-B6C0-4567-9603-B2198E1AD038}</Project>
 	  <Name>LexicalModel</Name>
@@ -192,6 +196,10 @@
 	<ProjectReference Include="..\Reporting\Reporting.csproj">
 	  <Project>{9CCBECEC-513C-4DA4-A4CE-F5361B633760}</Project>
 	  <Name>Reporting</Name>
+	</ProjectReference>
+	<ProjectReference Include="..\WeSay.App\WeSay.App.csproj">
+	  <Project>{EFB9D66D-AF0F-4E45-A1AC-DB32981711D2}</Project>
+	  <Name>WeSay.App</Name>
 	</ProjectReference>
 	<ProjectReference Include="..\WeSay.Data\WeSay.Data.csproj">
 	  <Project>{600D0FD4-D189-41A0-9BC5-FC79AD2CF1CD}</Project>

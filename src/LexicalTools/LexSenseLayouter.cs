@@ -48,7 +48,7 @@ namespace WeSay.LexicalTools
 //            int rowCount = 0;
 //           Field field;
 //           //TODO: only add this if there is no empty gloss in an existing sense (we
-//           //run into this with the LexFieldTask, where we don't want to see two empty gloss boxes (one a ghost)
+//           //run into this with the MissingInfoTask, where we don't want to see two empty gloss boxes (one a ghost)
 //           if (viewTemplate.TryGetField(Field.FieldNames.SenseGloss.ToString(), out field))
 //           {
 //               foreach (string writingSystemId in field.WritingSystemIds)

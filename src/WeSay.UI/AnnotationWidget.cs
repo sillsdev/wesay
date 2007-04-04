@@ -68,9 +68,12 @@ namespace WeSay.UI
 		  _flagButton.FlatAppearance.MouseDownBackColor = Color.White;
 		  _flagButton.Location = new Point(
 			  -1 + panelSize.Width - _flagButton.Width,
-			  -1 + panelSize.Height - _flagButton.Height);
+				1);
+//          _flagButton.Location = new Point(
+//              -1 + panelSize.Width - _flagButton.Width,
+//              -1 + panelSize.Height - _flagButton.Height);
 
-			_flagButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+			_flagButton.Anchor = AnchorStyles.Top | AnchorStyles.Right;
 			_flagButton.CheckedChanged += new EventHandler(OnFlagButtonCheckedChanged);
 			_flagButton.TabStop = false;
 			_flagButton.Checked = this.FlagIsOn;

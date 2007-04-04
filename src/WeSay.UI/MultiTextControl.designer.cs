@@ -31,14 +31,12 @@ namespace WeSay.UI
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this._vbox = new WeSay.UI.VBox();
+			this._vbox = new WeSay.UI.VBoxFlow();
 			this.SuspendLayout();
 			//
 			// _vbox
 			//
-			this._vbox.AutoScroll = true;
 			this._vbox.BackColor = System.Drawing.Color.White;
-			this._vbox.Dock = System.Windows.Forms.DockStyle.Fill;
 			this._vbox.Location = new System.Drawing.Point(0, 0);
 			this._vbox.Name = "_vbox";
 			this._vbox.Size = new System.Drawing.Size(150, 69);
@@ -70,7 +68,7 @@ namespace WeSay.UI
 
 		#endregion
 
-		private VBox _vbox;
+		private VBoxFlow _vbox;
 
 	}
 }

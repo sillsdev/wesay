@@ -8,14 +8,14 @@
 	<optional  UseInConstructor="false">false</optional>
   </task>
 
-  <task id="EntryDetail" class="WeSay.LexicalTools.EntryDetailTask" assembly="LexicalTools" default="true">
+  <task id="Dictionary" class="WeSay.LexicalTools.DictionaryTask" assembly="LexicalTools" default="true">
 	<entries ref="All Entries" />
 	<viewTemplate ref="Default View Template"/>
 	<label UseInConstructor="false">Dictionary</label>
 	<description UseInConstructor="false">This task allows advanced users to see and edit all enabled fields of all entries in the dictionary.  He can add, delete, and search for entries.  NOTE: while this task may be very enticing to those familiar with traditional programs, this is *not* intended to be a primary way of working with WeSay.</description>
   </task>
 
-  <task id="AddMeanings" class="WeSay.LexicalTools.LexFieldTask" assembly="LexicalTools" default="true">
+  <task id="AddMeanings" class="WeSay.LexicalTools.MissingInfoTask" assembly="LexicalTools" default="true">
 	<entries ref="All Entries"/>
 	<filter class="WeSay.LexicalTools.MissingItemFilter" assembly="LexicalTools">
 	  <viewTemplate ref="Default View Template"/>
@@ -27,7 +27,7 @@
 	<showfields>SenseGloss</showfields>
   </task>
 
-  <task id="AddExamples" class="WeSay.LexicalTools.LexFieldTask" assembly="LexicalTools">
+  <task id="AddExamples" class="WeSay.LexicalTools.MissingInfoTask" assembly="LexicalTools">
 	<entries ref="All Entries"/>
 	<filter class="WeSay.LexicalTools.MissingItemFilter" assembly="LexicalTools">
 	  <viewTemplate ref="Default View Template"/>

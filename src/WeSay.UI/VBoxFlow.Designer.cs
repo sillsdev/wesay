@@ -1,11 +1,17 @@
+using System;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Windows.Forms;
+
 namespace WeSay.UI
 {
-	partial class DetailList
+	partial class VBoxFlow
 	{
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
 		private System.ComponentModel.IContainer components = null;
+
 
 		/// <summary>
 		/// Clean up any resources being used.
@@ -13,6 +19,8 @@ namespace WeSay.UI
 		/// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
 		protected override void Dispose(bool disposing)
 		{
+			//Debug.WriteLine("Disposing " + Name + "   Disposing=" + disposing);
+
 			if (disposing && (components != null))
 			{
 				components.Dispose();
@@ -28,26 +36,17 @@ namespace WeSay.UI
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this.components = new System.ComponentModel.Container();
-			this._fadeInTimer = new System.Windows.Forms.Timer(this.components);
 			this.SuspendLayout();
 			//
-			// _fadeInTimer
+			// VBox
 			//
-			this._fadeInTimer.Enabled = true;
-			this._fadeInTimer.Tick += new System.EventHandler(this._fadeInTimer_Tick);
-			//
-			// DetailList
-			//
-			this.AutoScroll = false;
-			this.BackColor = System.Drawing.SystemColors.ActiveCaption;
-			this.Name = "DetailList";
+			this.Name = "VBox";
 			this.ResumeLayout(false);
 
 		}
 
 		#endregion
 
-		private System.Windows.Forms.Timer _fadeInTimer;
+
 	}
 }

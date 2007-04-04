@@ -30,7 +30,7 @@ namespace WeSay.CommonTools
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this._vbox = new WeSay.UI.VBox();
+			this._vbox = new WeSay.UI.VBoxFlow();
 			this._projectNameLabel = new System.Windows.Forms.Label();
 			this.SuspendLayout();
 			//
@@ -80,7 +80,7 @@ namespace WeSay.CommonTools
 
 		#endregion
 
-		private WeSay.UI.VBox _vbox;
+		private WeSay.UI.VBoxFlow _vbox;
 		private System.Windows.Forms.Label _projectNameLabel;
 
 	}

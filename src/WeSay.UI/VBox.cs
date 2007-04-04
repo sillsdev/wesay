@@ -14,7 +14,13 @@ namespace WeSay.UI
 
 		public VBox()
 		{
+			this.components = new System.ComponentModel.Container();
 			InitializeComponent();
+			this.BackColor = System.Drawing.Color.LightYellow;
+			//does nothing this.Margin = new Padding(900);
+
+		   //seems to be ignored this.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+		  //  this.DoubleBuffered = true;
 		}
 
 		public int Count
@@ -64,6 +70,27 @@ namespace WeSay.UI
 			AddControl(control, -1);
 		}
 
+		void OnChildResize(object sender, EventArgs e)
+		{
+			this.SuspendLayout();
+			int h = 0;
+			foreach (Control control in ActualControls)
+			{
+				h += control.Height;
+			}
+			this.Height = h;
+			//hack need to goose it some better way...
+			this.Visible = false;
+			this.Visible = true;
+//   doesn't do it
+			//this.SuspendLayout();
+//            this.ResumeLayout(true);
+		  //doesn't do it  this.Refresh();
+
+			this.ResumeLayout();
+
+		}
+
 		public void AddControl(Control control, int insertAtRow)
 		{
 			SuspendLayout();
@@ -73,6 +100,7 @@ namespace WeSay.UI
 			}
 			control.Dock = DockStyle.Top;
 			base.Controls.Add(control);
+			this.components.Add(control);//dispose when we are
 			int i = RowToControlInsertionIndex(insertAtRow);
 			Debug.Assert(i >= 0, "A negative insertion value will fail under Mono.");
 
@@ -82,6 +110,9 @@ namespace WeSay.UI
 				c.TabIndex = _rowCount - base.Controls.GetChildIndex(c);
 			}
 			++_rowCount;
+
+			control.Resize += new EventHandler(OnChildResize);
+
 			ResumeLayout();
 		}
 

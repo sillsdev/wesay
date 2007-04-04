@@ -1,4 +1,6 @@
-﻿namespace WeSay.Project
+﻿using System;
+
+namespace WeSay.Project
 {
 	public interface ICurrentWorkTask
 	{
@@ -12,5 +14,31 @@
 			get;
 			set;
 		}
+	}
+
+	public class EmptyCurrentWorkTask : ICurrentWorkTask
+	{
+		#region ICurrentWorkTask Members
+
+		public ITask CurrentWorkTask
+		{
+			get
+			{
+				return null;
+			}
+		}
+
+		public ITask ActiveTask
+		{
+			get
+			{
+				return null;
+			}
+			set
+			{
+			}
+		}
+
+		#endregion
 	}
 }

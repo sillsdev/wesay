@@ -93,8 +93,10 @@ namespace WeSay.CommonTools
 		//hack 'cause it wasn't resizing (well, it grew, just never shrank (no, not a simple case of wrong AutoSizeMode))
 		public void RecalcSize(object sender, EventArgs e)
 		{
-			this.Size = new System.Drawing.Size(this.Parent.Width - this.Left, this.Parent.Height - this.Top);
-			//the following kinda worked, but the panelenclosing this ignored our new size, so that would
+		   //---this worked with the old vbox, but doesn't seem to do anyting the tablelayout one
+			//this.Size = new System.Drawing.Size(this.Parent.Width - this.Left, this.Parent.Height - this.Top);
+
+			//---the following kinda worked, but the panelenclosing this ignored our new size, so that would
 			//be need to be worked out to make this worth doing.  It would allow us to increase the distance
 			//between indicators when the box was thin enough to need 2 lines for description
 //            using(Graphics g = this.CreateGraphics())

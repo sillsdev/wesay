@@ -12,7 +12,7 @@ using WeSay.Data;
 
 namespace WeSay.LexicalTools
 {
-	public partial class LexFieldControl : UserControl
+	public partial class MissingInfoControl : UserControl
 	{
 		private IRecordList<LexEntry> _records;
 		private InMemoryBindingList<LexEntry> _completedRecords;
@@ -24,7 +24,7 @@ namespace WeSay.LexicalTools
 		private readonly Predicate<LexEntry> _isNotComplete;
 		public event EventHandler SelectedIndexChanged;
 
-		public LexFieldControl(IRecordList<LexEntry> records, ViewTemplate viewTemplate, Predicate<LexEntry> isNotComplete)
+		public MissingInfoControl(IRecordList<LexEntry> records, ViewTemplate viewTemplate, Predicate<LexEntry> isNotComplete)
 		{
 			InitializeComponent();
 			if (DesignMode)
@@ -51,9 +51,9 @@ namespace WeSay.LexicalTools
 			_viewTemplate = viewTemplate;
 			_isNotComplete = isNotComplete;
 			BackColor = DisplaySettings.Default.BackgroundColor;
-			_lexFieldDetailPanel.BackColor = DisplaySettings.Default.BackgroundColor;//we like it to stand out at design time, but not runtime
-			_lexFieldDetailPanel.KeyDown += new KeyEventHandler(OnKeyDown);
-			_lexFieldDetailPanel.ViewTemplate = _viewTemplate;
+			_entryViewControl.BackColor = DisplaySettings.Default.BackgroundColor;//we like it to stand out at design time, but not runtime
+			_entryViewControl.KeyDown += new KeyEventHandler(OnKeyDown);
+			_entryViewControl.ViewTemplate = _viewTemplate;
 
 			_recordsListBox.DataSource = _records;
 
@@ -106,7 +106,7 @@ namespace WeSay.LexicalTools
 			{
 				CurrentRecord = _nextRecord ?? _records[_records.Count-1];
 				SelectCurrentRecordInRecordList();
-				this._lexFieldDetailPanel.Focus();
+				this._entryViewControl.Focus();
 				UpdatePreviousAndNextRecords();
 			}
 			else
@@ -126,7 +126,7 @@ namespace WeSay.LexicalTools
 			{
 				CurrentRecord = _previousRecord ?? _records[0];
 				SelectCurrentRecordInRecordList();
-				this._lexFieldDetailPanel.Focus();
+				this._entryViewControl.Focus();
 				UpdatePreviousAndNextRecords();
 			}
 		}
@@ -199,9 +199,9 @@ namespace WeSay.LexicalTools
 			get { return _completedRecordsListBox.SelectedIndex; }
 		}
 
-		public LexPreviewWithEntryControl ControlDetails
+		public EntryViewControl EntryViewControl
 		{
-			get { return _lexFieldDetailPanel; }
+			get { return _entryViewControl; }
 		}
 
 		/// <summary>
@@ -221,7 +221,7 @@ namespace WeSay.LexicalTools
 					_currentRecord.PropertyChanged -= OnCurrentRecordPropertyChanged;
 				}
 				_currentRecord = value;
-				_lexFieldDetailPanel.DataSource = value;
+				_entryViewControl.DataSource = value;
 				if (_currentRecord != null)
 				{
 					_currentRecord.PropertyChanged += OnCurrentRecordPropertyChanged;

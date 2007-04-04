@@ -91,11 +91,11 @@ namespace WeSay.LexicalModel
 		}
 
 
-		public override void SomethingWasModified(string PropertyModified)
+		public override void SomethingWasModified(string propertyModified)
 		{
-			base.SomethingWasModified(PropertyModified);
+			base.SomethingWasModified(propertyModified);
 			ModificationTime = DateTime.UtcNow;
-			if (PropertyModified != "senses")
+			if (propertyModified != "senses")
 			{
 				RemoveEmptySenses();
 			}
@@ -195,7 +195,16 @@ namespace WeSay.LexicalModel
 			}
 		}
 
-		public void RemoveEmptySenses()
+		public override void CleanUpAfterEditting()
+		{
+			base.CleanUpAfterEditting();
+			foreach (LexSense sense in _senses)
+			{
+				sense.CleanUpAfterEditting();
+			}
+		}
+
+		private void RemoveEmptySenses()
 		{
 			// remove any senses that are empty
 			int count = this._senses.Count;

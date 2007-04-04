@@ -22,6 +22,26 @@ namespace WeSay.UI
 			InitializeComponent();
 			_textBoxes = new List<WeSayTextBox>();
 			_vbox.Name = "vbox of anonymous multitext";
+			_vbox.Resize += new EventHandler(OnVbox_Resize);
+		   // this.BackColor = System.Drawing.Color.Crimson;
+			//_vbox.BackColor = System.Drawing.Color.Yellow;
+			_vbox.Location = new Point(0, 0);
+			_vbox.Size = this.Size;
+		   _vbox.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+			this.Resize += new EventHandler(MultiTextControl_Resize);
+		}
+
+		void MultiTextControl_Resize(object sender, EventArgs e)
+		{
+//            _vbox.Size = new Size(this.Width, _vbox.Height);
+
+		}
+
+		void OnVbox_Resize(object sender, EventArgs e)
+		{
+			//todo: WHY IS THE CLASS A CONTROL? IT DISPLAYS NOTHING!
+			//this.Size = new Size(this.Width, ((Control) sender).Size.Height);
+			this.Height = 10 + ((Control) sender).Size.Height;
 		}
 		public MultiTextControl(IList<WritingSystem> writingSystems, MultiText multiTextToCopyFormsFrom, string nameForTesting, bool showAnnotationWidget):this()
 		{
@@ -69,7 +89,7 @@ namespace WeSay.UI
 				_vbox.Clear();
 			}
 			Height = 0;
-			const int initialPanelWidth = 200;
+			int initialPanelWidth = this.Width;// 200;
 			foreach (WritingSystem writingSystem in WritingSystems)
 			{
 				WeSayTextBox box = AddTextBox(initialPanelWidth, writingSystem, multiText);
@@ -83,14 +103,12 @@ namespace WeSay.UI
 
 				this.components.Add(box);//so it will get disposed of when we are
 
-				Panel p = new Panel();
+				FlexibleHeightPanel p = new FlexibleHeightPanel(initialPanelWidth, 0, box);
+				p.Anchor = AnchorStyles.Left | AnchorStyles.Right;
 				p.Click += panel_Click;
-				p.Controls.Add(box);
 				p.Controls.Add(label);
-				p.Size = new Size(initialPanelWidth,box.Height+0);
-
-				//does this work?
-				p.AutoSize = true;
+		   //     p.BackColor = System.Drawing.Color.LightSteelBlue;
+			   // p.AutoSize = true;
 
 				if (_showAnnotationWidget) //false for ghosts
 				{
@@ -99,13 +117,16 @@ namespace WeSay.UI
 						new AnnotationWidget(multiText, writingSystem.Id, box.Name + "-annotationWidget");
 					Control annotationControl = aw.MakeControl(p.Size);
 					annotationControl.Click +=new EventHandler(subControl_Click);
+					annotationControl.Anchor = AnchorStyles.Right | AnchorStyles.Top ;
 					p.Controls.Add(annotationControl);
 					this.components.Add(annotationControl); //so it will get disposed of when we are
 				}
 
 				_vbox.AddControlToBottom(p);
-				Height += p.Height;
+			   // Height += p.Height;
 			}
+		  //  Height = _vbox.Height + 100;
+
 			ResumeLayout(false);
 		}
 
@@ -140,15 +161,23 @@ namespace WeSay.UI
 			Label label = new Label();
 			label.Text = box.WritingSystem.Id;
 			label.ForeColor = Color.LightGray;
+			label.Anchor = AnchorStyles.Left | AnchorStyles.Top;
+//
+//
+//            Graphics g = CreateGraphics();
+//            int descent = box.Font.FontFamily.GetCellDescent(box.Font.Style);
+//            int descentPixel = (int) (box.Font.Size * descent / box.Font.FontFamily.GetEmHeight(box.Font.Style));
+//
+//            //todo: this only takes into account the textbox descent, not the label's!
+//            label.Location = new Point(0, (int) (box.Bottom -
+//                                                 ( g.MeasureString(label.Text, label.Font).Height + descentPixel )) );
 
+			//todo: switch to TextRenderer.Measure
+			int labelAscentInPixels = (int)(label.Font.Size * label.Font.FontFamily.GetCellAscent(label.Font.Style) / label.Font.FontFamily.GetEmHeight(box.Font.Style));
+			int contentAscentInPixels = (int)(box.Font.Size * box.Font.FontFamily.GetCellAscent(box.Font.Style) / label.Font.FontFamily.GetEmHeight(box.Font.Style));
+			int howMuchFartherDownToPlaceLabelThanText = Math.Max(0, contentAscentInPixels - labelAscentInPixels);
 
-			Graphics g = CreateGraphics();
-			int descent = box.Font.FontFamily.GetCellDescent(box.Font.Style);
-			int descentPixel = (int) (box.Font.Size * descent / box.Font.FontFamily.GetEmHeight(box.Font.Style));
-
-			//todo: this only takes into account the textbox descent, not the label's!
-			label.Location = new Point(0, (int) (box.Bottom -
-												 ( g.MeasureString(label.Text, label.Font).Height + descentPixel )) );
+			label.Location = new Point(0, (int)(box.Top + howMuchFartherDownToPlaceLabelThanText));
 			return label;
 		}
 
@@ -162,7 +191,7 @@ namespace WeSay.UI
 
 			const int kRightMargin = 25; // for flag button
 			box.Width = (initialPanelWidth - box.Left) - kRightMargin;
-			box.Anchor = AnchorStyles.Left | AnchorStyles.Right |AnchorStyles.Top;
+			box.Anchor = AnchorStyles.Left | AnchorStyles.Right;
 			//  box.BorderStyle = BorderStyle.FixedSingle;
 			box.TextChanged += new EventHandler(OnTextOfSomeBoxChanged);
 			box.KeyDown += new KeyEventHandler(OnKeyDownInSomeBox);

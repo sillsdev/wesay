@@ -12,7 +12,7 @@ using Debug=System.Diagnostics.Debug;
 
 namespace WeSay.LexicalTools
 {
-	public partial class EntryDetailControl : UserControl
+	public partial class DictionaryControl : UserControl
 	{
 		private IBindingList _records;
 		private WritingSystem _listWritingSystem;
@@ -23,13 +23,13 @@ namespace WeSay.LexicalTools
 		private readonly ViewTemplate _viewTemplate;
 		public event EventHandler SelectedIndexChanged = delegate {};
 
-		public EntryDetailControl()
+		public DictionaryControl()
 		{
 			Debug.Assert(DesignMode);
 			InitializeComponent();
 		}
 
-		public EntryDetailControl(IRecordListManager recordManager, ViewTemplate viewTemplate)
+		public DictionaryControl(IRecordListManager recordManager, ViewTemplate viewTemplate)
 		{
 			if (recordManager == null)
 			{
@@ -187,11 +187,11 @@ namespace WeSay.LexicalTools
 		}
 
 		// primarily for testing
-		public LexPreviewWithEntryControl Control_EntryDetailPanel
+		public EntryViewControl Control_EntryDetailPanel
 		{
 			get
 			{
-				return this._entryDetailControl;
+				return this._entryViewControl;
 			}
 		}
 
@@ -296,7 +296,7 @@ namespace WeSay.LexicalTools
 				// (No event is sent so we must do it ourselves)
 				OnRecordSelectionChanged(this, null);
 			}
-			_entryDetailControl.Focus();
+			_entryViewControl.Focus();
 		}
 
 		private void _btnDeleteWord_Click(object sender, EventArgs e)
@@ -316,7 +316,7 @@ namespace WeSay.LexicalTools
 			//hack until we can get selection change events sorted out in BindingGridList
 			OnRecordSelectionChanged(this, null);
 			_recordsListBox.Refresh();
-			_entryDetailControl.Focus();
+			_entryViewControl.Focus();
 		}
 
 	}

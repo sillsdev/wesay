@@ -10,7 +10,7 @@ namespace WeSay.UI
 	/// </summary>
 	public class TextBinding
 	{
-		public event EventHandler<CurrentItemEventArgs> CurrentItemChanged = delegate
+		public event EventHandler<CurrentItemEventArgs> ChangeOfWhichItemIsInFocus = delegate
 																			 {
 																			 };
 		private string _writingSystemId;
@@ -37,7 +37,7 @@ namespace WeSay.UI
 
 		void OnTextBoxEntered(object sender, EventArgs e)
 		{
-			CurrentItemChanged(sender, new CurrentItemEventArgs(DataTarget, _writingSystemId));
+			ChangeOfWhichItemIsInFocus(sender, new CurrentItemEventArgs(DataTarget, _writingSystemId));
 		}
 
 

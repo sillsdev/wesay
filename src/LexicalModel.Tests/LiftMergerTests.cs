@@ -29,7 +29,7 @@ namespace WeSay.LexicalModel.Tests
 			_entries = new Db4oRecordList<LexEntry>(_dataSource);
 			Db4oLexModelHelper.Initialize(_dataSource.Data);
 
-			_merger = new LiftMerger(_dataSource);
+			_merger = new LiftMerger(_dataSource, _entries);
 		}
 
 		protected void RefreshEntriesList()

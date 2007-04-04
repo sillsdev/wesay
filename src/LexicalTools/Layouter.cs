@@ -96,7 +96,7 @@ namespace WeSay.LexicalTools
 			foreach (WeSayTextBox box in control.TextBoxes)
 			{
 				WeSay.UI.TextBinding binding = new WeSay.UI.TextBinding(multiTextToBindTo, box.WritingSystem.Id, box);
-				binding.CurrentItemChanged += new EventHandler<CurrentItemEventArgs>(_detailList.OnBindingCurrentItemChanged);
+				binding.ChangeOfWhichItemIsInFocus += new EventHandler<CurrentItemEventArgs>(_detailList.OnBinding_ChangeOfWhichItemIsInFocus);
 			}
 		}
 
@@ -147,7 +147,7 @@ namespace WeSay.LexicalTools
 		{
 			WeSay.UI.GhostBinding binding = new WeSay.UI.GhostBinding(list, ghostPropertyName, writingSystem, entry);
 			binding.Triggered += new GhostBinding.GhostTriggered(OnGhostBindingTriggered);
-			binding.CurrentItemChanged += new EventHandler<CurrentItemEventArgs>(_detailList.OnBindingCurrentItemChanged);
+			binding.CurrentItemChanged += new EventHandler<CurrentItemEventArgs>(_detailList.OnBinding_ChangeOfWhichItemIsInFocus);
 			return binding;
 		}
 
@@ -230,7 +230,7 @@ namespace WeSay.LexicalTools
 			OptionsList list = Project.WeSayWordsProject.Project.GetOptionsList(field.OptionsListFile);
 			SingleOptionControl control = new SingleOptionControl(optionRefTarget, list, field.WritingSystemIds[0]);
 			SimpleBinding<string> binding = new SimpleBinding<string>(optionRefTarget, control);
-			binding.CurrentItemChanged += new EventHandler<CurrentItemEventArgs>(_detailList.OnBindingCurrentItemChanged);
+			binding.CurrentItemChanged += new EventHandler<CurrentItemEventArgs>(_detailList.OnBinding_ChangeOfWhichItemIsInFocus);
 			return control;
 		}
 

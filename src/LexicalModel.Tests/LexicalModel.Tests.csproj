@@ -58,11 +58,7 @@
 	<Compile Include="LexEntryTests.cs" />
 	<Compile Include="LiftExportTests.cs" />
 	<Compile Include="EventsAndDates.cs" />
-	<Compile Include="LiftImportTestsBase.cs" />
 	<Compile Include="Db4o-Specific\PersistenceTests.cs" />
-	<Compile Include="LiftImportTestsFLExVer1Pt2.cs" />
-	<Compile Include="LiftImportTests_FlexVer1Pt1.cs" />
-	<Compile Include="LiftImportTests_WeSayVer1.cs" />
 	<Compile Include="LiftMergerTests.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

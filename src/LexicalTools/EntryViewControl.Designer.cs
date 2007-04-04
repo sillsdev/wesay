@@ -1,6 +1,6 @@
 namespace WeSay.LexicalTools
 {
-	partial class LexPreviewWithEntryControl
+	partial class EntryViewControl
 	{
 		/// <summary>
 		/// Required designer variable.
@@ -20,7 +20,7 @@ namespace WeSay.LexicalTools
 					_record.PropertyChanged -= OnRecordPropertyChanged;
 					_record.EmptyObjectsRemoved -= OnEmptyObjectsRemoved;
 				}
-				_detailListControl.CurrentItemChanged -= OnCurrentItemChanged;
+				_detailListControl.ChangeOfWhichItemIsInFocus -= OnChangeOfWhichItemIsInFocus;
 			}
 			if (disposing && (components != null))
 			{
@@ -59,8 +59,8 @@ namespace WeSay.LexicalTools
 			this._detailListControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
 						| System.Windows.Forms.AnchorStyles.Left)
 						| System.Windows.Forms.AnchorStyles.Right)));
-			this._detailListControl.AutoScroll = true;
-			this._detailListControl.BackColor = System.Drawing.SystemColors.Control;
+			//this._detailListControl.AutoScroll = true;
+			this._detailListControl.BackColor =  System.Drawing.SystemColors.Control;
 			this._detailListControl.Location = new System.Drawing.Point(3, 95);
 			this._detailListControl.Name = "_detailListControl";
 			this._detailListControl.Size = new System.Drawing.Size(450, 250);

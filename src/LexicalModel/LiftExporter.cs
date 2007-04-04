@@ -195,7 +195,7 @@ namespace WeSay.LexicalModel
 			OptionRef pos = sense.GetProperty<OptionRef>(LexSense.WellKnownProperties.PartOfSpeech);
 
 			//For Dennis
-				OptionRef oldpos = sense.GetProperty<OptionRef>("PartOfSpeech");
+ /*               OptionRef oldpos = sense.GetProperty<OptionRef>("PartOfSpeech");
 				if (oldpos != null)
 				{
 					//move it
@@ -210,7 +210,7 @@ namespace WeSay.LexicalModel
 						pos = oldpos;
 					}
 				}
-
+*/
 
 			if (pos != null)
 			{
@@ -312,7 +312,7 @@ namespace WeSay.LexicalModel
 
 			OptionRef source;
 			//convert for dennis
-			MultiText sourceAsMt = example.GetProperty<MultiText>(LexExampleSentence.WellKnownProperties.Source);
+/*            MultiText sourceAsMt = example.GetProperty<MultiText>(LexExampleSentence.WellKnownProperties.Source);
 			if (!MultiText.IsEmpty(sourceAsMt))
 			{
 				example.Properties.Remove(new KeyValuePair<string, object>("source", sourceAsMt));
@@ -331,7 +331,7 @@ namespace WeSay.LexicalModel
 //                source.Value = sourceAsMt.GetFirstAlternative();
 			}
  //           else
-			{
+*/            {
 				source = example.GetProperty<OptionRef>(LexExampleSentence.WellKnownProperties.Source);
 			}
 			if (source != null)
@@ -344,12 +344,13 @@ namespace WeSay.LexicalModel
 			WriteMultiWithWrapperIfNonEmpty("translation", example.Translation);
 
 			//for Dennis
-			MultiText t = example.GetProperty<MultiText>("trans");
+			/*MultiText t = example.GetProperty<MultiText>("trans");
 			if(t!=null)
 			{
 				Debug.Assert(!MultiText.IsEmpty( example.Translation));
 				example.Properties.Remove(new KeyValuePair<string, object>("trans", t));
 			}
+			*/
 			WriteCustomProperties(example, propertiesAlreadyOutput);
 			_writer.WriteEndElement();
 		}

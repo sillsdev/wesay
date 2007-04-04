@@ -6,14 +6,14 @@ using WeSay.Project;
 
 namespace WeSay.LexicalTools
 {
-	public class LexFieldTask : TaskBase
+	public class MissingInfoTask : TaskBase
 	{
-		private LexFieldControl _lexFieldControl;
+		private MissingInfoControl _missingInfoControl;
 		private readonly IFilter<LexEntry> _filter;
 		private readonly ViewTemplate _viewTemplate;
 		private bool _dataHasBeenRetrieved;
 
-		public LexFieldTask(IRecordListManager recordListManager,
+		public MissingInfoTask(IRecordListManager recordListManager,
 					IFilter<LexEntry> filter,
 					string label,
 					string description,
@@ -42,7 +42,7 @@ namespace WeSay.LexicalTools
 		/// <param name="description">The task description</param>
 		/// <param name="viewTemplate">The base viewTemplate</param>
 		/// <param name="fieldsToShow">The fields to show from the base Field Inventory</param>
-		public LexFieldTask(IRecordListManager recordListManager,
+		public MissingInfoTask(IRecordListManager recordListManager,
 							IFilter<LexEntry> filter,
 							string label,
 							string description,
@@ -74,8 +74,8 @@ namespace WeSay.LexicalTools
 		public override void Activate()
 		{
 			base.Activate();
-			_lexFieldControl = new LexFieldControl(DataSource, ViewTemplate, _filter.FilteringPredicate);
-			_lexFieldControl.SelectedIndexChanged += new EventHandler(OnRecordSelectionChanged);
+			_missingInfoControl = new MissingInfoControl(DataSource, ViewTemplate, _filter.FilteringPredicate);
+			_missingInfoControl.SelectedIndexChanged += new EventHandler(OnRecordSelectionChanged);
 		}
 
 		void OnRecordSelectionChanged(object sender, EventArgs e)
@@ -86,21 +86,21 @@ namespace WeSay.LexicalTools
 		public override void Deactivate()
 		{
 			base.Deactivate();
-		   _lexFieldControl.SelectedIndexChanged -= new EventHandler(OnRecordSelectionChanged);
-			_lexFieldControl.Dispose();
-			_lexFieldControl = null;
+		   _missingInfoControl.SelectedIndexChanged -= new EventHandler(OnRecordSelectionChanged);
+			_missingInfoControl.Dispose();
+			_missingInfoControl = null;
 			RecordListManager.GoodTimeToCommit();
 		}
 
 		/// <summary>
-		/// The LexFieldControl associated with this task
+		/// The MissingInfoControl associated with this task
 		/// </summary>
 		/// <remarks>Non null only when task is activated</remarks>
 		public override Control Control
 		{
 			get
 			{
-				return _lexFieldControl;
+				return _missingInfoControl;
 			}
 		}
 

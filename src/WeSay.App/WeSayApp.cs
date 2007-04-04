@@ -109,9 +109,10 @@ namespace WeSay.App
 
 					//MONO bug as of 1.1.18 cannot bitwise or FileShare on FileStream constructor
 					//                    using (FileStream config = new FileStream(project.PathToProjectTaskInventory, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete))
-					using (FileStream config = new FileStream(project.PathToProjectTaskInventory, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+					using (FileStream configFile = new FileStream(project.PathToProjectTaskInventory, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
 					{
-						builder = new ConfigFileTaskBuilder(config, project, tabbedForm, recordListManager);
+						builder = new ConfigFileTaskBuilder(configFile, project,
+							tabbedForm as ICurrentWorkTask, recordListManager);
 					}
 
 					project.Tasks = builder.Tasks;

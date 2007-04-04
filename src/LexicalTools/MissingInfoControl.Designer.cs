@@ -2,7 +2,7 @@ using System.Windows.Forms;
 
 namespace WeSay.LexicalTools
 {
-	partial class LexFieldControl
+	partial class MissingInfoControl
 	{
 		/// <summary>
 		/// Required designer variable.
@@ -44,7 +44,7 @@ namespace WeSay.LexicalTools
 			this._recordsListBox = new ListBox.BindingListGrid();
 			this._completedRecordsListBox = new ListBox.BindingListGrid();
 			this._completedRecordsLabel = new System.Windows.Forms.Label();
-			this._lexFieldDetailPanel = new WeSay.LexicalTools.LexPreviewWithEntryControl();
+			this._entryViewControl = new WeSay.LexicalTools.EntryViewControl();
 			this._btnPreviousWord = new ArrowButton.ArrowButton();
 			this._btnNextWord = new ArrowButton.ArrowButton();
 			this.labelNextHotKey = new System.Windows.Forms.Label();
@@ -93,18 +93,18 @@ namespace WeSay.LexicalTools
 			this._completedRecordsLabel.TabIndex = 3;
 			this._completedRecordsLabel.Text = "Completed:";
 			//
-			// _lexFieldDetailPanel
+			// _entryViewControl
 			//
-			this._lexFieldDetailPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+			this._entryViewControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
 						| System.Windows.Forms.AnchorStyles.Left)
 						| System.Windows.Forms.AnchorStyles.Right)));
-			this._lexFieldDetailPanel.AutoScroll = true;
-			this._lexFieldDetailPanel.BackColor = System.Drawing.SystemColors.ActiveCaption;
-			this._lexFieldDetailPanel.DataSource = null;
-			this._lexFieldDetailPanel.Location = new System.Drawing.Point(126, 5);
-			this._lexFieldDetailPanel.Name = "_lexFieldDetailPanel";
-			this._lexFieldDetailPanel.Size = new System.Drawing.Size(367, 122);
-			this._lexFieldDetailPanel.TabIndex = 0;
+			this._entryViewControl.AutoScroll = true;
+			this._entryViewControl.BackColor = System.Drawing.SystemColors.ActiveCaption;
+			this._entryViewControl.DataSource = null;
+			this._entryViewControl.Location = new System.Drawing.Point(126, 5);
+			this._entryViewControl.Name = "_entryViewControl";
+			this._entryViewControl.Size = new System.Drawing.Size(367, 122);
+			this._entryViewControl.TabIndex = 0;
 			//
 			// _btnPreviousWord
 			//
@@ -168,7 +168,7 @@ namespace WeSay.LexicalTools
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.Controls.Add(this._recordsListBox);
 			this.Controls.Add(this._completedRecordsListBox);
-			this.Controls.Add(this._lexFieldDetailPanel);
+			this.Controls.Add(this._entryViewControl);
 			this.Controls.Add(this._completedRecordsLabel);
 			this.Controls.Add(this._btnPreviousWord);
 			this.Controls.Add(this._btnNextWord);
@@ -182,7 +182,7 @@ namespace WeSay.LexicalTools
 		}
 
 		#endregion
-		private LexPreviewWithEntryControl _lexFieldDetailPanel;
+		private EntryViewControl _entryViewControl;
 		private ListBox.BindingListGrid _recordsListBox;
 		private ListBox.BindingListGrid _completedRecordsListBox;
 		private Label _completedRecordsLabel;

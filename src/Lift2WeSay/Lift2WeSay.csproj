@@ -28,6 +28,10 @@
 	<WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+	<Reference Include="Db4objects.Db4o, Version=6.0.2.0, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\Db4objects.Db4o.dll</HintPath>
+	</Reference>
 	<Reference Include="System" />
 	<Reference Include="System.Data" />
 	<Reference Include="System.Xml" />
@@ -37,6 +41,18 @@
 	<Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+	<ProjectReference Include="..\LexicalModel\LexicalModel.csproj">
+	  <Project>{5F61C809-B6C0-4567-9603-B2198E1AD038}</Project>
+	  <Name>LexicalModel</Name>
+	</ProjectReference>
+	<ProjectReference Include="..\WeSay.App\WeSay.App.csproj">
+	  <Project>{EFB9D66D-AF0F-4E45-A1AC-DB32981711D2}</Project>
+	  <Name>WeSay.App</Name>
+	</ProjectReference>
+	<ProjectReference Include="..\WeSay.Data\WeSay.Data.csproj">
+	  <Project>{600D0FD4-D189-41A0-9BC5-FC79AD2CF1CD}</Project>
+	  <Name>WeSay.Data</Name>
+	</ProjectReference>
 	<ProjectReference Include="..\WeSay.Foundation\WeSay.Foundation.csproj">
 	  <Project>{F12EB680-0990-4900-B77E-0FBF2E28A815}</Project>
 	  <Name>WeSay.Foundation</Name>

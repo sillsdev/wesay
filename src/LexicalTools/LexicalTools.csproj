@@ -54,8 +54,8 @@
 	  <DependentUpon>CongratulationsControl.cs</DependentUpon>
 	</Compile>
 	<Compile Include="GatherBySemanticDomainTask.cs" />
-	<Compile Include="EntryDetailControl.Designer.cs">
-	  <DependentUpon>EntryDetailControl.cs</DependentUpon>
+	<Compile Include="DictionaryControl.Designer.cs">
+	  <DependentUpon>DictionaryControl.cs</DependentUpon>
 	</Compile>
 	<Compile Include="GatherBySemanticDomainsControl.cs">
 	  <SubType>UserControl</SubType>
@@ -71,27 +71,27 @@
 	</Compile>
 	<Compile Include="GatherWordListTask.cs" />
 	<Compile Include="LexEntrySortHelper.cs" />
-	<Compile Include="LexFieldControl.cs">
+	<Compile Include="MissingInfoControl.cs">
 	  <SubType>UserControl</SubType>
 	</Compile>
-	<Compile Include="LexFieldControl.Designer.cs">
-	  <DependentUpon>LexFieldControl.cs</DependentUpon>
+	<Compile Include="MissingInfoControl.Designer.cs">
+	  <DependentUpon>MissingInfoControl.cs</DependentUpon>
 	</Compile>
-	<Compile Include="LexFieldTask.cs">
+	<Compile Include="MissingInfoTask.cs">
 	</Compile>
-	<Compile Include="EntryDetailTask.cs">
+	<Compile Include="DictionaryTask.cs">
 	</Compile>
-	<Compile Include="EntryDetailControl.cs">
+	<Compile Include="DictionaryControl.cs">
 	  <SubType>UserControl</SubType>
 	</Compile>
 	<Compile Include="Layouter.cs" />
 	<Compile Include="LexEntryLayouter.cs" />
 	<Compile Include="LexExampleSentenceLayouter.cs" />
-	<Compile Include="LexPreviewWithEntryControl.cs">
+	<Compile Include="EntryViewControl.cs">
 	  <SubType>UserControl</SubType>
 	</Compile>
-	<Compile Include="LexPreviewWithEntryControl.Designer.cs">
-	  <DependentUpon>LexPreviewWithEntryControl.cs</DependentUpon>
+	<Compile Include="EntryViewControl.Designer.cs">
+	  <DependentUpon>EntryViewControl.cs</DependentUpon>
 	</Compile>
 	<Compile Include="LexSenseLayouter.cs" />
 	<Compile Include="MissingItemFilter.cs" />
@@ -135,10 +135,6 @@
 	  <SubType>Designer</SubType>
 	  <DependentUpon>CongratulationsControl.cs</DependentUpon>
 	</EmbeddedResource>
-	<EmbeddedResource Include="EntryDetailControl.resx">
-	  <SubType>Designer</SubType>
-	  <DependentUpon>EntryDetailControl.cs</DependentUpon>
-	</EmbeddedResource>
 	<EmbeddedResource Include="GatherBySemanticDomainsControl.resx">
 	  <SubType>Designer</SubType>
 	  <DependentUpon>GatherBySemanticDomainsControl.cs</DependentUpon>
@@ -147,12 +143,12 @@
 	  <SubType>Designer</SubType>
 	  <DependentUpon>GatherWordListControl.cs</DependentUpon>
 	</EmbeddedResource>
-	<EmbeddedResource Include="LexFieldControl.resx">
+	<EmbeddedResource Include="MissingInfoControl.resx">
 	  <SubType>Designer</SubType>
-	  <DependentUpon>LexFieldControl.cs</DependentUpon>
+	  <DependentUpon>MissingInfoControl.cs</DependentUpon>
 	</EmbeddedResource>
-	<EmbeddedResource Include="LexPreviewWithEntryControl.resx">
-	  <DependentUpon>LexPreviewWithEntryControl.cs</DependentUpon>
+	<EmbeddedResource Include="EntryViewControl.resx">
+	  <DependentUpon>EntryViewControl.cs</DependentUpon>
 	  <SubType>Designer</SubType>
 	</EmbeddedResource>
 	<EmbeddedResource Include="Properties\Resources.resx">

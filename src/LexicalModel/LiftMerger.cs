@@ -18,16 +18,15 @@ namespace WeSay.LexicalModel
 	public class LiftMerger : ILexiconMerger<WeSay.Foundation.WeSayDataObject, LexEntry,LexSense,LexExampleSentence>, IDisposable
 	{
 		private Db4oDataSource _dataSource;
-	   // private WeSay.Data.Db4oRecordList<LexEntry> _entries;
+		private WeSay.Data.IRecordList<LexEntry> _entries;
 		private IList<String> _expectedOptionTraits;
 		private IList<string> _expectedOptionCollectionTraits;
 //        private ProgressState _progressState = new NullProgressState();
 
-		public LiftMerger(Db4oDataSource dataSource)
+		public LiftMerger(Db4oDataSource dataSource,  WeSay.Data.IRecordList<LexEntry> entries)
 		{
 			_dataSource = dataSource;
-//            _entries = new WeSay.Data.Db4oRecordList<LexEntry>(_dataSource);
-//            _entries.WriteCacheSize = 0;
+			_entries = entries;
 			_expectedOptionTraits = new List<string>();
 			_expectedOptionCollectionTraits = new List<string>();
 		}
@@ -281,7 +280,13 @@ namespace WeSay.LexicalModel
 
 		public void FinishEntry(LexEntry entry)
 		{
-			_dataSource.Data.Set(entry);
+			if (!_entries.Contains(entry))
+			{
+				_entries.Add(entry);
+			}
+
+//Review Eric: is this needed?
+		   // _dataSource.Data.Set(entry);
 		}
 
 		#endregion
