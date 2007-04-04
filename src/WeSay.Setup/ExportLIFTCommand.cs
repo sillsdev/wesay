@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Windows.Forms;
 using WeSay.Data;
 using WeSay.Foundation;
 using WeSay.Foundation.Progress;
@@ -91,6 +92,16 @@ namespace WeSay
 
 		 private bool VerifyWeCanOpenTheFile()
 		 {
+			 if (!File.Exists(_sourceWordsPath))
+			 {
+				 Reporting.ErrorReporter.ReportNonFatalMessage(
+					 string.Format(
+						 "Sorry, {0} cannot find a file which is necessary to perform the export on this project ({1})",
+						 Application.ProductName, _sourceWordsPath));
+				 return false;
+			 }
+
+
 			 try
 			 {
 				 using (FileStream fs = File.OpenWrite(_sourceWordsPath))
@@ -100,7 +111,7 @@ namespace WeSay
 			 }
 			 catch
 			 {
-				 _progress.WriteToLog("The Exporter could not open the file. Make sure no other program (e.g. WeSay) has it open.");
+				 _progress.WriteToLog(String.Format("The Exporter could not open the file. Make sure no other program (e.g. WeSay) has it open. As a last resort, restart your computer. ({0})", _sourceWordsPath));
 				 _progress.Status = ProgressState.StatusValue.StoppedWithError;
 				 return false;
 			 }

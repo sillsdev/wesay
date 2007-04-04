@@ -17,5 +17,13 @@ namespace WeSay.Data
 		event EventHandler DataCommitted;
 		event EventHandler<DeletedItemEventArgs> DataDeleted;
 
+		/// <summary>
+		/// Used when importing, where we want to go fast and don't care to have a good cache if we crash
+		/// </summary>
+		bool DelayWritingCachesUntilDispose
+		{
+			get;
+			set;
+		}
 	}
 }

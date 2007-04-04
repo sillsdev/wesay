@@ -82,7 +82,7 @@ namespace WeSay.Setup
 			this.openThisProjectInWeSayToolStripMenuItem.Name = "openThisProjectInWeSayToolStripMenuItem";
 			this.openThisProjectInWeSayToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
 			this.openThisProjectInWeSayToolStripMenuItem.Text = "Open this Project in &WeSay";
-			this.openThisProjectInWeSayToolStripMenuItem.Click += new System.EventHandler(this.openThisProjectInWeSayToolStripMenuItem_Click);
+			this.openThisProjectInWeSayToolStripMenuItem.Click += new System.EventHandler(this.OnOpenThisProjectInWeSayToolStripMenuItem_Click);
 			//
 			// toolStripSeparator1
 			//
@@ -113,7 +113,7 @@ namespace WeSay.Setup
 			this.exportToLIFTXmlToolStripMenuItem.Name = "exportToLIFTXmlToolStripMenuItem";
 			this.exportToLIFTXmlToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
 			this.exportToLIFTXmlToolStripMenuItem.Text = "&Export To LIFT XML...";
-			this.exportToLIFTXmlToolStripMenuItem.Click += new System.EventHandler(this.ExportToLiftXmlToolStripMenuItem_Click);
+			this.exportToLIFTXmlToolStripMenuItem.Click += new System.EventHandler(this.OnExportToLiftXmlToolStripMenuItem_Click);
 			//
 			// importFromLIFTXMLToolStripMenuItem
 			//
@@ -146,7 +146,7 @@ namespace WeSay.Setup
 			this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
 			this.aboutToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
 			this.aboutToolStripMenuItem.Text = "&About WeSay...";
-			this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
+			this.aboutToolStripMenuItem.Click += new System.EventHandler(this.OnAboutToolStripMenuItem_Click);
 			//
 			// AdminWindow
 			//

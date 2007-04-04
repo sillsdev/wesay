@@ -46,5 +46,29 @@ namespace WeSay.Setup.Properties {
 				this["NeedUpgrade"] = value;
 			}
 		}
+
+		[global::System.Configuration.UserScopedSettingAttribute()]
+		[global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+		[global::System.Configuration.DefaultSettingValueAttribute("")]
+		public string LastLiftImportPath {
+			get {
+				return ((string)(this["LastLiftImportPath"]));
+			}
+			set {
+				this["LastLiftImportPath"] = value;
+			}
+		}
+
+		[global::System.Configuration.UserScopedSettingAttribute()]
+		[global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+		[global::System.Configuration.DefaultSettingValueAttribute("")]
+		public string LastLiftExportPath {
+			get {
+				return ((string)(this["LastLiftExportPath"]));
+			}
+			set {
+				this["LastLiftExportPath"] = value;
+			}
+		}
 	}
 }

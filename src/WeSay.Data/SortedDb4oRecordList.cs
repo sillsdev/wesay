@@ -292,7 +292,10 @@ namespace WeSay.Data
 				_keyIdMap.Sort(_sorter);
 			}
 			OnListReset();
-			//Serialize();
+			if (this._masterRecordList.DelayWritingCachesUntilDispose)
+			{
+				Serialize();
+			}
 		}
 
 		#region IBindingList Members

@@ -74,7 +74,6 @@
 	<Compile Include="FontControl.designer.cs">
 	  <DependentUpon>FontControl.cs</DependentUpon>
 	</Compile>
-	<Compile Include="ImportLIFTCommand.cs" />
 	<Compile Include="NewProject.cs">
 	  <SubType>Form</SubType>
 	</Compile>
@@ -185,10 +184,6 @@
 	</Compile>
   </ItemGroup>
   <ItemGroup>
-	<ProjectReference Include="..\CommonTools\CommonTools.csproj">
-	  <Project>{64726381-FEA8-47D5-A884-18AED42E93B6}</Project>
-	  <Name>CommonTools</Name>
-	</ProjectReference>
 	<ProjectReference Include="..\LexicalModel\LexicalModel.csproj">
 	  <Project>{5F61C809-B6C0-4567-9603-B2198E1AD038}</Project>
 	  <Name>LexicalModel</Name>

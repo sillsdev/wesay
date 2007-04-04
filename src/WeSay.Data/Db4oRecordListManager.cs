@@ -66,6 +66,7 @@ namespace WeSay.Data
 		protected override IRecordList<T> CreateFilteredRecordList<T>(IFilter<T> filter)
 		{
 			FilteredDb4oRecordList<T> list = new FilteredDb4oRecordList<T>(GetListOfType<T>(), filter, CachePath, false);
+			list.DelayWritingCachesUntilDispose = this.DelayWritingCachesUntilDispose;
 			return list;
 		}
 
@@ -75,6 +76,7 @@ namespace WeSay.Data
 			try
 			{
 				recordList = new FilteredDb4oRecordList<T>(GetListOfType<T>(), filter, CachePath, true);
+				recordList.DelayWritingCachesUntilDispose = this.DelayWritingCachesUntilDispose;
 			}
 			catch (OperationCanceledException) {}
 			return recordList;

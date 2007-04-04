@@ -33,7 +33,7 @@ namespace WeSay.Data
 	}
 
 
-	public interface IRecordList<T> : IBindingList, IList<T>, ICollection<T>, IFilterable<T>, IDisposable, IEquatable<IRecordList<T>>, IEnumerable<T> where T : class, new()
+	public interface IRecordList<T> : IBindingList, IControlCachingBehavior, IList<T>, ICollection<T>, IFilterable<T>, IDisposable, IEquatable<IRecordList<T>>, IEnumerable<T> where T : class, new()
 	{
 		event EventHandler<RecordListEventArgs<T>> AddingRecord;
 		event EventHandler<RecordListEventArgs<T>> DeletingRecord;
@@ -51,6 +51,9 @@ namespace WeSay.Data
 		{
 			get;
 		}
+
+
+
 
 		/// <summary>
 		/// Gets or sets the element at the specified index.
@@ -73,5 +76,17 @@ namespace WeSay.Data
 		new void Clear();
 
 		int GetIndexFromId(long id);
+	}
+
+	public interface IControlCachingBehavior
+	{
+		/// <summary>
+		/// Used when importing, where we want to go fast and don't care to have a good cache if we crash
+		/// </summary>
+		bool DelayWritingCachesUntilDispose
+		{
+			get;
+			set;
+		}
 	}
 }

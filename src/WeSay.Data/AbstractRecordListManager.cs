@@ -17,6 +17,7 @@ namespace WeSay.Data
 	}
 	public abstract class AbstractRecordListManager : IRecordListManager
 	{
+		private bool _delayWritingCachesUntilDispose=false;
 		private Hashtable _filteredRecordLists;
 		protected AbstractRecordListManager()
 		{
@@ -27,6 +28,25 @@ namespace WeSay.Data
 		abstract protected IRecordList<T> CreateFilteredRecordList<T>(IFilter<T> filter) where T : class, new();
 
 		#region IRecordListManager Members
+
+		/// <summary>
+		/// Used when importing, where we want to go fast and don't care to have a good cache if we crash
+		/// </summary>
+		public bool DelayWritingCachesUntilDispose
+		{
+			get
+			{
+				return _delayWritingCachesUntilDispose;
+			}
+			set
+			{
+				_delayWritingCachesUntilDispose = value;
+				foreach (IControlCachingBehavior list in _filteredRecordLists)
+				{
+					list.DelayWritingCachesUntilDispose = value;
+				}
+			}
+		}
 
 		protected virtual IRecordList<T> CreateFilteredRecordListUnlessSlow<T>(IFilter<T> filter) where T: class, new()
 		{

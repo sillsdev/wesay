@@ -69,10 +69,16 @@ namespace Lift2WeSay
 			}
 			string sourcePath = args[0];
 			string destPath = args[1];
-			string projectPath = Path.GetDirectoryName(destPath);
-			if(projectPath.Length == 0)
+
+			if (Path.GetFileName(destPath) != string.Empty)
 			{
-			  projectPath = Environment.CurrentDirectory;
+				Console.WriteLine(string.Format("You can only specify a directory for the output, not the name of the output. ({0})",destPath));
+				return;
+			}
+			string projectPath = Path.GetDirectoryName(destPath);
+			if (projectPath.Length == 0)
+			{
+				projectPath = Environment.CurrentDirectory;
 			}
 			projectPath = Path.Combine(projectPath, "..");
 			projectPath = Path.GetFullPath(projectPath);
@@ -82,60 +88,54 @@ namespace Lift2WeSay
 			Console.WriteLine("to WeSay: " + destPath);
 			Console.WriteLine("in project: " + projectPath);
 
-			if(!WeSayWordsProject.IsValidProjectDirectory(projectPath))
+			if (!WeSayWordsProject.IsValidProjectDirectory(projectPath))
 			{
-			  Console.Error.WriteLine("destination must be in 'wesay' subdirectory of a basil project");
-			  return;
+				Console.Error.WriteLine("destination must be in 'wesay' subdirectory of a basil project");
+				return;
 			}
-
-//            if (File.Exists(destPath))
-//            {
-//                File.Delete(destPath);
-//            }
 
 			WeSayWordsProject project = new WeSayWordsProject();
 			try
 			{
-			  project.LoadFromProjectDirectoryPath(projectPath);
+				project.LoadFromProjectDirectoryPath(projectPath);
 			}
 			catch (Exception e)
 			{
-			  Console.Error.WriteLine("WeSay was not able to open that project. \r\n" + e.Message);
-			  return;
+				Console.Error.WriteLine("WeSay was not able to open that project. \r\n" + e.Message);
+				return;
 			}
 
 
 			ConsoleProgress progress = new ConsoleProgress();
 			progress.Log += new EventHandler<ProgressState.LogEvent>(progress_Log);
 
-				ImportLIFTCommand command = new ImportLIFTCommand(destPath, sourcePath);
-				command.BeginInvoke(progress);
+			ImportLIFTCommand command = new ImportLIFTCommand(project.PathToLexicalModelDB, sourcePath);
+			command.BeginInvoke(progress);
 
-				while (true)
+			while (true)
+			{
+				switch (progress.Status)
 				{
-					switch (progress.Status)
-					{
-						case ProgressState.StatusValue.NotStarted:
-							break;
-						case ProgressState.StatusValue.Busy:
-							break;
-						case ProgressState.StatusValue.Finished:
-							Console.WriteLine(string.Empty);
-							Console.WriteLine("Done.");
-							return;
-						case ProgressState.StatusValue.StoppedWithError:
-							Console.Error.WriteLine(string.Empty);
-							Console.Error.WriteLine("Error. Unable to complete import.");
-							return;
-						default:
-							break;
-					}
-					Thread.Sleep(10);
+					case ProgressState.StatusValue.NotStarted:
+						break;
+					case ProgressState.StatusValue.Busy:
+						break;
+					case ProgressState.StatusValue.Finished:
+						Console.WriteLine(string.Empty);
+						Console.WriteLine("Done.");
+						return;
+					case ProgressState.StatusValue.StoppedWithError:
+						Console.Error.WriteLine(string.Empty);
+						Console.Error.WriteLine("Error. Unable to complete import.");
+						return;
+					default:
+						break;
 				}
-
+				Thread.Sleep(10);
+			}
 		}
 
-	  static void progress_Log(object sender, ProgressState.LogEvent e)
+		static void progress_Log(object sender, ProgressState.LogEvent e)
 	  {
 		Console.Error.WriteLine(e.message);
 	  }
@@ -143,7 +143,7 @@ namespace Lift2WeSay
 		private static void PrintUsage()
 		{
 			Console.WriteLine("Usage: (outputfile must be in 'wesay' subdirectory of a basil project)");
-			Console.WriteLine("Lift2WeSay inputfile outputfile");
+			Console.WriteLine("Lift2WeSay inputLiftFilePath targetWeSayDirectory");
 		}
 	}
 }

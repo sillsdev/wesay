@@ -9,7 +9,7 @@ using NUnit.Framework;
 using WeSay.Foundation.Progress;
 using WeSay.LexicalModel;
 
-namespace WeSay.Setup.Tests
+namespace WeSay.App.Tests
 {
 	[TestFixture]
 	public class TestImportLIFTCommand

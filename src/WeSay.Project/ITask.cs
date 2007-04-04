@@ -15,4 +15,12 @@ namespace WeSay.Project
 		bool IsPinned { get; }
 		string Status { get; }
 	}
+
+	/// <summary>
+	/// Used to help the dashboard update its stats after all the other tasks have good counts to give it
+	/// </summary>
+	public interface IFinishCacheSetup
+	{
+		void FinishCacheSetup();
+	}
 }

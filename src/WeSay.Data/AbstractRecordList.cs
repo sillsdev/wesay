@@ -53,6 +53,21 @@ namespace WeSay.Data
 		{
 		};
 
+
+		/// <summary>
+		/// Used when importing, where we want to go fast and don't care to have a good cache if we crash
+		/// </summary>
+		public bool DelayWritingCachesUntilDispose
+		{
+			get
+			{
+				return _delayWritingCachesUntilDispose;
+			}
+			set
+			{
+				_delayWritingCachesUntilDispose = value;
+			}
+		}
 	  //  abstract public bool Commit();
 
 		/// <summary>
@@ -733,6 +748,7 @@ namespace WeSay.Data
 		#endif
 
 		private bool _disposed = false;
+		private bool _delayWritingCachesUntilDispose = false;
 
 		public bool IsDisposed
 		{

@@ -3,7 +3,6 @@ using System.IO;
 using System.Xml;
 using LiftIO;
 using WeSay.App;
-using WeSay.CommonTools;
 using WeSay.Data;
 using WeSay.Foundation;
 using WeSay.Foundation.Progress;
@@ -90,35 +89,7 @@ namespace WeSay
 					XmlDocument doc = new XmlDocument();
 					doc.Load(_sourceLIFTPath);
 
-					Db4oRecordList<LexEntry> entriesList = GetEntries(ds);
-					try
-					{
-						entriesList.WriteCacheSize = 0; //don't write after every record
-						using (LiftMerger merger = new LiftMerger(ds, entriesList))
-						{
-							foreach (string name in WeSay.Project.WeSayWordsProject.Project.OptionFieldNames)
-							{
-								merger.ExpectedOptionTraits.Add(name);
-								//_importer.ExpectedOptionTraits.Add(name);
-							}
-							foreach (
-								string name in WeSay.Project.WeSayWordsProject.Project.OptionCollectionFieldNames)
-							{
-								merger.ExpectedOptionCollectionTraits.Add(name);
-							}
-
-							RunParser(doc, merger);
-						}
-
-						UpdateDashboardStats();
-					}
-					finally
-					{
-						if (entriesList != _prewiredEntries) //did we create it?
-						{
-							entriesList.Dispose();
-						}
-					}
+					DoParsing(doc, ds);
 				}
 				ClearTheIncrementalBackupDirectory();
 
@@ -126,8 +97,11 @@ namespace WeSay
 				string backupPath = _destinationDatabasePath + ".bak";
 				//not needed File.Delete(backupPath);
 				string cacheFolderName = _destinationDatabasePath + " Cache";
-				Directory.Delete(cacheFolderName, true);
-				Directory.Move(tempTarget + " Cache", cacheFolderName);
+				if (Directory.Exists(cacheFolderName))
+				{
+					Directory.Delete(cacheFolderName, true);
+					Directory.Move(tempTarget + " Cache", cacheFolderName);
+			   }
 
 				if (File.Exists(_destinationDatabasePath))
 				{
@@ -146,20 +120,53 @@ namespace WeSay
 			}
 		}
 
+		private void DoParsing(XmlDocument doc, Db4oDataSource ds)
+		{
+			Db4oRecordList<LexEntry> entriesList = GetEntries(ds);
+			try
+			{
+				entriesList.WriteCacheSize = 0; //don't write after every record
+				using (LiftMerger merger = new LiftMerger(ds, entriesList))
+				{
+					foreach (string name in WeSay.Project.WeSayWordsProject.Project.OptionFieldNames)
+					{
+						merger.ExpectedOptionTraits.Add(name);
+						//_importer.ExpectedOptionTraits.Add(name);
+					}
+					foreach (
+						string name in WeSay.Project.WeSayWordsProject.Project.OptionCollectionFieldNames)
+					{
+						merger.ExpectedOptionCollectionTraits.Add(name);
+					}
+
+					RunParser(doc, merger);
+				}
+
+				UpdateDashboardStats();
+			}
+			finally
+			{
+				if (entriesList != _prewiredEntries) //did we create it?
+				{
+					entriesList.Dispose();
+				}
+			}
+		}
+
 		private void UpdateDashboardStats()
 		{
 			foreach (ITask task in WeSayWordsProject.Project.Tasks)
 			{
-				if (task is DashboardControl)
+				if (task is IFinishCacheSetup)
 				{
-					task.Activate();
-					task.Deactivate();
+					((IFinishCacheSetup) task).FinishCacheSetup();
 				}
 			}
 		}
 
 		private static void SetupTasksToBuildCaches(IRecordListManager recordListManager)
 		{
+			recordListManager.DelayWritingCachesUntilDispose = true;
 			ConfigFileTaskBuilder taskBuilder;
 			using (
 				FileStream configFile =
