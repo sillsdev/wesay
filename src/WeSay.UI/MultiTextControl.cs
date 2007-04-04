@@ -75,6 +75,7 @@ namespace WeSay.UI
 				WeSayTextBox box = AddTextBox(initialPanelWidth, writingSystem, multiText);
 
 				Label label = AddWritingSystemLabel(box);
+				label.Click += new EventHandler(subControl_Click);
 
 				//Graphics g = CreateGraphics();
 				//int descent = box.Font.FontFamily.GetCellDescent(box.Font.Style);
@@ -83,6 +84,7 @@ namespace WeSay.UI
 				this.components.Add(box);//so it will get disposed of when we are
 
 				Panel p = new Panel();
+				p.Click += panel_Click;
 				p.Controls.Add(box);
 				p.Controls.Add(label);
 				p.Size = new Size(initialPanelWidth,box.Height+0);
@@ -96,6 +98,7 @@ namespace WeSay.UI
 					AnnotationWidget aw =
 						new AnnotationWidget(multiText, writingSystem.Id, box.Name + "-annotationWidget");
 					Control annotationControl = aw.MakeControl(p.Size);
+					annotationControl.Click +=new EventHandler(subControl_Click);
 					p.Controls.Add(annotationControl);
 					this.components.Add(annotationControl); //so it will get disposed of when we are
 				}
@@ -104,6 +107,32 @@ namespace WeSay.UI
 				Height += p.Height;
 			}
 			ResumeLayout(false);
+		}
+
+		static void panel_Click(object sender, EventArgs e)
+		{
+			Control control = (Control)sender;
+			foreach (Control c in control.Controls)
+			{
+				if (c.TabStop)
+				{
+					c.Focus();
+					break;
+				}
+			}
+		}
+
+		static void subControl_Click(object sender, EventArgs e)
+		{
+			Control control = (Control) sender;
+			foreach (Control c in control.Parent.Controls)
+			{
+				if(c.TabStop)
+				{
+					c.Focus();
+					break;
+				}
+			}
 		}
 
 		private Label AddWritingSystemLabel(WeSayTextBox box)
