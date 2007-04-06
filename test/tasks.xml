@@ -93,7 +93,7 @@
 	<description UseInConstructor="false">This task is normally the first thing the user sees when WeSay comes up.  It gives the user some status of the project, and reminds him what he was working on. Finally, this tab will allow him to switch to a different work task, if you have enabled more than one.</description>
 	<optional UseInConstructor="false">false</optional>
   </task>
-  <task id="EntryDetail" class="WeSay.LexicalTools.EntryDetailTask" assembly="LexicalTools" default="true">
+  <task id="Dictionary" class="WeSay.LexicalTools.DictionaryTask" assembly="LexicalTools" default="true">
 	<entries ref="All Entries" />
 	<viewTemplate ref="Default View Template" />
 	<label UseInConstructor="false">Dictionary</label>

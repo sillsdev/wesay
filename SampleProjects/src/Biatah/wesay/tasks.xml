@@ -60,6 +60,18 @@
 			<id>en</id>
 		  </writingSystems>
 		</field>
+		<field>
+		  <className>LexSense</className>
+		  <dataType>OptionCollection</dataType>
+		  <displayName>Sem Dom</displayName>
+		  <fieldName>SemanticDomainDdp4</fieldName>
+		  <multiplicity>ZeroOr1</multiplicity>
+		  <optionsListFile>Ddp4.xml</optionsListFile>
+		  <visibility>Visible</visibility>
+		  <writingSystems>
+			<id>en</id>
+		  </writingSystems>
+		</field>
 	  </fields>
 	  <id>Default View Template</id>
 	</viewTemplate>

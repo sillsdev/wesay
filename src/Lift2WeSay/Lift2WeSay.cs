@@ -109,7 +109,7 @@ namespace Lift2WeSay
 			ConsoleProgress progress = new ConsoleProgress();
 			progress.Log += new EventHandler<ProgressState.LogEvent>(progress_Log);
 
-			ImportLIFTCommand command = new ImportLIFTCommand(project.PathToLexicalModelDB, sourcePath);
+			ImportLIFTCommand command = new ImportLIFTCommand(project.PathToDb4oLexicalModelDB, sourcePath);
 			command.BeginInvoke(progress);
 
 			while (true)

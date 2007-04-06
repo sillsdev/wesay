@@ -12,7 +12,7 @@ namespace WeSay.Project
 {
 	public class WeSayWordsProject : BasilProject
 	{
-		private string _lexiconDatabaseFileName = null;
+		//private string _lexiconDatabaseFileName = null;
 		private IList<ITask> _tasks;
 		private ViewTemplate _viewTemplate;
 		private Dictionary<string, OptionsList> _optionLists;
@@ -52,27 +52,35 @@ namespace WeSay.Project
 		/// </summary>
 		public static new void InitializeForTests()
 		{
-			Reporting.ErrorReporter.OkToInteractWithUser = false;
-			BasilProject project = new WeSayWordsProject();
-			project.LoadFromProjectDirectoryPath(GetPretendProjectDirectory());
-			project.StringCatalogSelector = "en";
+			WeSayWordsProject project = new WeSayWordsProject();
+			project.ContinueInitializeForTests();
 		}
 
-		public bool LoadFromLexiconPath(string lexiconPath)
+		internal void ContinueInitializeForTests()
 		{
-			if (!File.Exists(lexiconPath))
-			{
-			   throw new ApplicationException("WeSay cannot find a lexicon where it was looking, which is at "+lexiconPath);
-			}
-			lexiconPath = Path.GetFullPath(lexiconPath);
+			_projectDirectoryPath = GetPretendProjectDirectory();
+			File.Delete(PathToProjectTaskInventory);
+			File.Copy(Path.Combine(ApplicationTestDirectory, "tasks.xml"), WeSayWordsProject.Project.PathToProjectTaskInventory, true);
 
-			_lexiconDatabaseFileName = Path.GetFileName(lexiconPath);
-			if (CheckLexiconIsInValidProjectDirectory(lexiconPath))
+			Reporting.ErrorReporter.OkToInteractWithUser = false;
+			LoadFromProjectDirectoryPath(GetPretendProjectDirectory());
+			StringCatalogSelector = "en";
+		}
+
+		public bool LoadFromLiftLexiconPath(string liftPath)
+		{
+			if (!File.Exists(liftPath))
+			{
+			   throw new ApplicationException("WeSay cannot find a lexicon where it was looking, which is at "+liftPath);
+			}
+			liftPath = Path.GetFullPath(liftPath);
+
+			if (CheckLexiconIsInValidProjectDirectory(liftPath))
 			{
 				//walk up from file to /wesay to /<project>
 				base.LoadFromProjectDirectoryPath(
-					Directory.GetParent(Directory.GetParent(lexiconPath).FullName).FullName);
-				Debug.Assert(PathToLexicalModelDB.ToLower() == Path.GetFullPath(lexiconPath).ToLower());
+					Directory.GetParent(Directory.GetParent(liftPath).FullName).FullName);
+				//_lexiconDatabaseFileName = Path.GetFileName(liftPath);
 				return true;
 			}
 			else
@@ -135,7 +143,7 @@ namespace WeSay.Project
 		private void DetermineWordsFile()
 		{
 			//try to use the one implied by the project name (e.g. thai.words)
-			if (File.Exists(PathToLexicalModelDB))
+			if (File.Exists(PathToDb4oLexicalModelDB))
 			{
 				return;
 			}
@@ -190,11 +198,19 @@ namespace WeSay.Project
 			}
 		}
 
+		public string PathToLiftFile
+		{
+			get
+			{
+				return System.IO.Path.Combine(PathToWeSaySpecificFilesDirectoryInProject,  this.Name + ".lift");
+			}
+		}
+
 		public string PathToLiftBackupDir
 		{
 			get
 			{
-				return PathToLexicalModelDB + " incremental xml backup";
+				return PathToDb4oLexicalModelDB + " incremental xml backup";
 			}
 		}
 
@@ -202,22 +218,22 @@ namespace WeSay.Project
 		{
 			get
 			{
-				return PathToLexicalModelDB + " Cache";
+				return PathToDb4oLexicalModelDB + " Cache";
 			}
 		}
 
-		public string PathToLexicalModelDB
+		public string PathToDb4oLexicalModelDB
 		{
 			get
 			{
-				if (_lexiconDatabaseFileName != null)
-				{
-					return System.IO.Path.Combine(PathToWeSaySpecificFilesDirectoryInProject, this._lexiconDatabaseFileName);
-				}
-				else
-				{
+//                if (_lexiconDatabaseFileName != null)
+//                {
+//                    return System.IO.Path.Combine(PathToWeSaySpecificFilesDirectoryInProject, this._lexiconDatabaseFileName);
+//                }
+//                else
+//                {
 					return System.IO.Path.Combine(PathToWeSaySpecificFilesDirectoryInProject, Name+".words");
-				}
+//                }
 			}
 		}
 

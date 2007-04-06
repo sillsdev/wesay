@@ -26,8 +26,6 @@ namespace WeSay.LexicalTools.Tests
 		public void SetupFixture()
 		{
 			WeSayWordsProject.InitializeForTests();
-			File.Delete(WeSayWordsProject.Project.PathToProjectTaskInventory);
-			File.Copy(Path.Combine(WeSayWordsProject.Project.ApplicationTestDirectory, "tasks.xml"), WeSayWordsProject.Project.PathToProjectTaskInventory, true);
 		}
 
 		public override void Setup()

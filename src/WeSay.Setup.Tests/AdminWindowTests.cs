@@ -57,7 +57,7 @@ namespace WeSay.Admin.Tests
 			_window.CreateAndOpenProject(this._projectFolder);
 			paths.Add(BasilProject.Project.PathToWritingSystemPrefs);
 			paths.Add(WeSayWordsProject.Project.PathToProjectTaskInventory);
-			//paths.Add(WeSayWordsProject.Project.PathToLexicalModelDB);
+			//paths.Add(WeSayWordsProject.Project.PathToDb4oLexicalModelDB);
 			_mainWindowTester.Close();
 			foreach (string p in paths)
 			{

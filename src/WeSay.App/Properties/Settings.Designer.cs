@@ -37,18 +37,6 @@ namespace WeSay.App.Properties {
 
 		[global::System.Configuration.UserScopedSettingAttribute()]
 		[global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-		[global::System.Configuration.DefaultSettingValueAttribute("")]
-		public string PreviousDBPath {
-			get {
-				return ((string)(this["PreviousDBPath"]));
-			}
-			set {
-				this["PreviousDBPath"] = value;
-			}
-		}
-
-		[global::System.Configuration.UserScopedSettingAttribute()]
-		[global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
 		[global::System.Configuration.DefaultSettingValueAttribute("True")]
 		public bool NeedUpgrade {
 			get {
@@ -56,6 +44,18 @@ namespace WeSay.App.Properties {
 			}
 			set {
 				this["NeedUpgrade"] = value;
+			}
+		}
+
+		[global::System.Configuration.UserScopedSettingAttribute()]
+		[global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+		[global::System.Configuration.DefaultSettingValueAttribute("")]
+		public string PreviousLiftPath {
+			get {
+				return ((string)(this["PreviousLiftPath"]));
+			}
+			set {
+				this["PreviousLiftPath"] = value;
 			}
 		}
 	}

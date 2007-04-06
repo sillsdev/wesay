@@ -19,18 +19,11 @@ namespace WeSay.Setup
 		private ProgressState _progressState;
 		private string _progressLog;
 
-		/// <summary>
-		/// This is probably temporary while we transition to the tasks xml being
-		/// driven by some class model rather than just XML.
-		/// </summary>
-		//public static ViewTemplate SharedviewTemplate;
-
-		public AdminWindow(string[] args)
+ public AdminWindow(string[] args)
 		{
 			InitializeComponent();
 
 			this.Project = null;
-
 
 //            if (this.DesignMode)
 //                return;
@@ -136,7 +129,7 @@ namespace WeSay.Setup
 			{
 				p = new WeSayWordsProject();
 				p.Create(path);
-				Db4oDataSource d = new Db4oDataSource(p.PathToLexicalModelDB);
+				Db4oDataSource d = new Db4oDataSource(p.PathToDb4oLexicalModelDB);
 				d.Data.Commit();
 				d.Data.Close();
 			}
@@ -270,12 +263,12 @@ namespace WeSay.Setup
 
 		private void OnExportToLiftXmlToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			if (!File.Exists(_project.PathToLexicalModelDB))
+			if (!File.Exists(_project.PathToDb4oLexicalModelDB))
 			{
 				Reporting.ErrorReporter.ReportNonFatalMessage(
 					string.Format(
 						"Sorry, {0} cannot find a file which is necessary to perform the export on this project ({1})",
-						Application.ProductName, _project.PathToLexicalModelDB));
+						Application.ProductName, _project.PathToDb4oLexicalModelDB));
 				return;
 			}
 
@@ -306,7 +299,7 @@ namespace WeSay.Setup
 			}
 			Settings.Default.LastLiftExportPath = Path.GetDirectoryName(saveDialog.FileName);
 
-			RunCommand(new ExportLIFTCommand(saveDialog.FileName, _project.PathToLexicalModelDB));
+			RunCommand(new ExportLIFTCommand(saveDialog.FileName, _project.PathToDb4oLexicalModelDB));
 		}
 
 
@@ -367,7 +360,7 @@ namespace WeSay.Setup
 //                return;
 //            }
 //            RunCommand(new ImportLIFTCommand(saveDialog.FileName, openDialog.FileName));
-			RunCommand(new ImportLIFTCommand(WeSayWordsProject.Project.PathToLexicalModelDB, openDialog.FileName));
+			RunCommand(new ImportLIFTCommand(WeSayWordsProject.Project.PathToDb4oLexicalModelDB, openDialog.FileName));
 		}
 
 		private void OnOpenThisProjectInWeSayToolStripMenuItem_Click(object sender, EventArgs e)
@@ -376,7 +369,7 @@ namespace WeSay.Setup
 			string dir = Directory.GetParent(Application.ExecutablePath).FullName;
 			ProcessStartInfo startInfo =
 				new ProcessStartInfo(Path.Combine(dir, "WeSay.App.exe"),
-														string.Format("\"{0}\"", _project.PathToLexicalModelDB));
+														string.Format("\"{0}\"", _project.PathToLiftFile));
 			Process.Start(startInfo);
 		}
 	}

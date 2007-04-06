@@ -292,7 +292,7 @@ namespace WeSay.Data
 				_keyIdMap.Sort(_sorter);
 			}
 			OnListReset();
-			if (this._masterRecordList.DelayWritingCachesUntilDispose)
+			if (!this._masterRecordList.DelayWritingCachesUntilDispose)
 			{
 				Serialize();
 			}
@@ -781,7 +781,7 @@ namespace WeSay.Data
 						_masterRecordList.ListChanged -= OnMasterRecordListListChanged;
 						_masterRecordList.DeletingRecord -= OnMasterRecordListDeletingRecord;
 					}
-					Serialize();
+				   Serialize();
 				}
 
 				// shared (dispose and finalizable) cleanup logic

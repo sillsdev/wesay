@@ -1,13 +1,8 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.IO;
 using System.Xml;
-using Db4objects.Db4o.Query;
 using NUnit.Framework;
-using WeSay.App;
 using WeSay.Data;
-using WeSay.Foundation;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Db4o_Specific;
 using WeSay.Project;
@@ -26,7 +21,7 @@ namespace WeSay.App.Tests
 		[SetUp]
 		public void Setup()
 		{
-			WeSay.Project.WeSayWordsProject.InitializeForTests();
+			WeSayWordsProject.InitializeForTests();
 			_dbFile = Path.GetTempFileName();
 			_dataSource = new Db4oDataSource(_dbFile);
 			Db4oLexModelHelper.Initialize(_dataSource.Data);
@@ -143,9 +138,9 @@ namespace WeSay.App.Tests
 //        {
 //            string path = @"C:\WeSay\SampleProjects\Thai\wesay\tiny.words";
 //            WeSayWordsProject project = new WeSayWordsProject();
-//            project.LoadFromLexiconPath(path);
+//            project.LoadFromLiftLexiconPath(path);
 //            IRecordListManager recordListManager;
-//            recordListManager = new Db4oRecordListManager(new WeSayWordsDb4oModelConfiguration(), project.PathToLexicalModelDB);
+//            recordListManager = new Db4oRecordListManager(new WeSayWordsDb4oModelConfiguration(), project.PathToDb4oLexicalModelDB);
 //            Db4oLexModelHelper.Initialize(((Db4oRecordListManager)recordListManager).DataSource.Data);
 //            Db4oRecordListManager ds = recordListManager as Db4oRecordListManager;
 //            BackupService backupService = new BackupService(project.PathToLocalBackup, ds.DataSource);

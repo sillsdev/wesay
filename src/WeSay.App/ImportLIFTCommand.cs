@@ -14,8 +14,8 @@ namespace WeSay
 {
 	public class ImportLIFTCommand : BasicCommand
 	{
-		protected string _destinationDatabasePath;
-		protected string _sourceLIFTPath;
+		private string _destinationDatabasePath;
+		private string _sourceLIFTPath;
 		//private LiftImporter _importer;
 		protected WeSay.Foundation.Progress.ProgressState _progress;
 		private WeSay.Data.Db4oRecordList<LexEntry> _prewiredEntries=null;
@@ -36,6 +36,30 @@ namespace WeSay
 			set
 			{
 				_prewiredEntries = value;
+			}
+		}
+
+		public string SourceLIFTPath
+		{
+			get
+			{
+				return _sourceLIFTPath;
+			}
+			set
+			{
+				_sourceLIFTPath = value;
+			}
+		}
+
+		public string DestinationDatabasePath
+		{
+			get
+			{
+				return _destinationDatabasePath;
+			}
+			set
+			{
+				_destinationDatabasePath = value;
 			}
 		}
 
@@ -100,8 +124,10 @@ namespace WeSay
 				if (Directory.Exists(cacheFolderName))
 				{
 					Directory.Delete(cacheFolderName, true);
-					Directory.Move(tempTarget + " Cache", cacheFolderName);
+					//fails if temp dir is on a different volume:
+					//Directory.Move(tempTarget + " Cache", cacheFolderName);
 			   }
+			   SafeMoveDirectory(tempTarget + " Cache", cacheFolderName);
 
 				if (File.Exists(_destinationDatabasePath))
 				{
@@ -259,6 +285,30 @@ namespace WeSay
 		}
 
 
+
+		/// <summary>
+		/// Recursive procedure to copy folder to another volume
+		/// cleaned up from http://www.codeproject.com/cs/files/CopyFiles.asp
+		/// </summary>
+		private static void SafeMoveDirectory(string sourceDir,
+				string destinationDir)
+		{
+			DirectoryInfo sourceDirInfo = new DirectoryInfo(sourceDir);
+			FileInfo[] files = sourceDirInfo.GetFiles();
+			Directory.CreateDirectory(destinationDir);
+			foreach (FileInfo file in files)
+			{
+				file.CopyTo(Path.Combine(destinationDir,file.Name));
+				file.Delete();
+			}
+			// Recursive copy children dirs
+			DirectoryInfo[] directories = sourceDirInfo.GetDirectories();
+			foreach (DirectoryInfo di in directories)
+			{
+				SafeMoveDirectory(di.FullName, Path.Combine(destinationDir, di.Name));
+			}
+			sourceDirInfo.Delete();
+		}
 	}
 
 }

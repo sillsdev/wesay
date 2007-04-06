@@ -69,7 +69,7 @@ namespace WeSay.Project.Tests
 		public void PreferWordsFileMatchingProjectName()
 		{
 			WeSayWordsProject p = CreateAndLoad(true);
-			Assert.IsTrue(p.PathToLexicalModelDB.Contains("TestProj.words"));
+			Assert.IsTrue(p.PathToDb4oLexicalModelDB.Contains("TestProj.words"));
 		}
 
 
@@ -126,7 +126,7 @@ namespace WeSay.Project.Tests
 			try
 			{
 				WeSayWordsProject p = new WeSayWordsProject();
-				return p.LoadFromLexiconPath(lexiconPath);
+				return p.LoadFromLiftLexiconPath(lexiconPath);
 			}
 			finally
 			{
