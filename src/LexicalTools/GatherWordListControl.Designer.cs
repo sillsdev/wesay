@@ -32,7 +32,7 @@ namespace WeSay.LexicalTools
 		{
 			System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("stuff");
 			System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("blah");
-			this.label1 = new System.Windows.Forms.Label();
+			this._instructionLabel = new System.Windows.Forms.Label();
 			this._listViewOfWordsMatchingCurrentItem = new System.Windows.Forms.ListView();
 			this.label3 = new System.Windows.Forms.Label();
 			this._boxForeignWord = new System.Windows.Forms.TextBox();
@@ -47,16 +47,16 @@ namespace WeSay.LexicalTools
 			this._congratulationsControl = new WeSay.LexicalTools.CongratulationsControl();
 			this.SuspendLayout();
 			//
-			// label1
+			// _instructionLabel
 			//
-			this.label1.AutoSize = true;
-			this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label1.ForeColor = System.Drawing.Color.DarkGray;
-			this.label1.Location = new System.Drawing.Point(8, 8);
-			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(406, 20);
-			this.label1.TabIndex = 2;
-			this.label1.Text = "Try thinking of ways to say these words in your language.";
+			this._instructionLabel.AutoSize = true;
+			this._instructionLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte) (0)));
+			this._instructionLabel.ForeColor = System.Drawing.Color.DarkGray;
+			this._instructionLabel.Location = new System.Drawing.Point(8, 8);
+			this._instructionLabel.Name = "_instructionLabel";
+			this._instructionLabel.Size = new System.Drawing.Size(406, 20);
+			this._instructionLabel.TabIndex = 2;
+			this._instructionLabel.Text = "Try thinking of ways to say these words in your language.";
 			//
 			// _listViewWords
 			//
@@ -216,7 +216,7 @@ namespace WeSay.LexicalTools
 			this.Controls.Add(this._listViewOfWordsMatchingCurrentItem);
 			this.Controls.Add(this.label5);
 			this.Controls.Add(this.label4);
-			this.Controls.Add(this.label1);
+			this.Controls.Add(this._instructionLabel);
 			this.Controls.Add(this._btnPreviousWord);
 			this.Controls.Add(this._btnNextWord);
 			this.Controls.Add(this._btnAddWord);
@@ -235,7 +235,7 @@ namespace WeSay.LexicalTools
 		private ArrowButton.ArrowButton _btnAddWord;
 		private ArrowButton.ArrowButton _btnNextWord;
 		private ArrowButton.ArrowButton _btnPreviousWord;
-		private System.Windows.Forms.Label label1;
+	  private System.Windows.Forms.Label _instructionLabel;
 		private System.Windows.Forms.ListView _listViewOfWordsMatchingCurrentItem;
 		private System.Windows.Forms.Label label3;
 		private System.Windows.Forms.TextBox _boxForeignWord;

@@ -1,4 +1,6 @@
+using System.Drawing;
 using System.Windows.Forms;
+using WeSay.Ui.Animation;
 
 namespace WeSay.LexicalTools
 {
@@ -37,7 +39,7 @@ namespace WeSay.LexicalTools
 			this._listViewWords = new System.Windows.Forms.ListBox();
 			this.label5 = new System.Windows.Forms.Label();
 			this.label4 = new System.Windows.Forms.Label();
-			this.label1 = new System.Windows.Forms.Label();
+			this._instructionLabel = new System.Windows.Forms.Label();
 			this._question = new System.Windows.Forms.Label();
 			this._description = new System.Windows.Forms.Label();
 			this._vernacularBox = new WeSay.UI.MultiTextControl();
@@ -45,6 +47,8 @@ namespace WeSay.LexicalTools
 			this._btnNext = new ArrowButton.ArrowButton();
 			this._btnAddWord = new ArrowButton.ArrowButton();
 			this._questionIndicator = new WeSay.UI.ProgressIndicator();
+		  this._animatedText = new Label();
+		  this._animator = new Animator();
 			this.SuspendLayout();
 			//
 			// _domainName
@@ -93,6 +97,14 @@ namespace WeSay.LexicalTools
 			this._listViewWords.TabIndex = 17;
 			this._listViewWords.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this._listViewWords_KeyPress);
 			this._listViewWords.Click += new System.EventHandler(this._listViewWords_Click);
+		  //
+			//_animatedText
+		  //
+		  this._animatedText.AutoSize = true;
+		  this._animatedText.Name = "_animatedText";
+		  this._animatedText.Visible = false;
+		  this._animatedText.BackColor = Color.White;
+
 			//
 			// label5
 			//
@@ -118,16 +130,16 @@ namespace WeSay.LexicalTools
 			this.label4.TabIndex = 14;
 			this.label4.Text = "(Enter Key)";
 			//
-			// label1
+			// _instructionLabel
 			//
-			this.label1.AutoSize = true;
-			this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label1.ForeColor = System.Drawing.Color.DarkGray;
-			this.label1.Location = new System.Drawing.Point(11, 7);
-			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(399, 20);
-			this.label1.TabIndex = 15;
-			this.label1.Text = "Try thinking of words you use to talk about these things.";
+			this._instructionLabel.AutoSize = true;
+			this._instructionLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte) (0)));
+			this._instructionLabel.ForeColor = System.Drawing.Color.DarkGray;
+			this._instructionLabel.Location = new System.Drawing.Point(11, 7);
+			this._instructionLabel.Name = "_instructionLabel";
+			this._instructionLabel.Size = new System.Drawing.Size(399, 20);
+			this._instructionLabel.TabIndex = 15;
+			this._instructionLabel.Text = "Try thinking of words you use to talk about these things.";
 			//
 			// _question
 			//
@@ -230,11 +242,23 @@ namespace WeSay.LexicalTools
 			this._questionIndicator.Size = new System.Drawing.Size(14, 35);
 			this._questionIndicator.TabIndex = 0;
 			this._questionIndicator.TabStop = false;
+
+			CubicBezierCurve c = new CubicBezierCurve(new PointF(0, 0),
+	  new PointF(0.5f, 0f), new PointF(.5f, 1f), new PointF(1, 1));
+			this._animator.PointFromDistanceFunction = c.GetPointOnCurve;
+
+		  this._animator.Animate += new Animator.AnimateEventDelegate(_animator_Animate);
+		  this._animator.Duration = 750;
+		  this._animator.Finished += new System.EventHandler(_animator_Finished);
+		  this._animator.FrameRate = 30;
+		  this._animator.SpeedFunction = Animator.SpeedFunctions.SinSpeed;
+
 			//
 			// GatherBySemanticDomainsControl
 			//
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.Controls.Add(this._animatedText);
 			this.Controls.Add(this._questionIndicator);
 			this.Controls.Add(this._description);
 			this.Controls.Add(this._question);
@@ -244,7 +268,7 @@ namespace WeSay.LexicalTools
 			this.Controls.Add(this._listViewWords);
 			this.Controls.Add(this.label5);
 			this.Controls.Add(this.label4);
-			this.Controls.Add(this.label1);
+			this.Controls.Add(this._instructionLabel);
 			this.Controls.Add(this._btnPrevious);
 			this.Controls.Add(this._btnNext);
 			this.Controls.Add(this._btnAddWord);
@@ -256,7 +280,11 @@ namespace WeSay.LexicalTools
 
 		}
 
+
+
 		#endregion
+
+	  private Animator _animator;
 
 		private WeSay.UI.MultiTextControl _vernacularBox;
 		private System.Windows.Forms.ComboBox _domainName;
@@ -264,12 +292,13 @@ namespace WeSay.LexicalTools
 		private System.Windows.Forms.ListBox _listViewWords;
 		private System.Windows.Forms.Label label5;
 		private System.Windows.Forms.Label label4;
-		private System.Windows.Forms.Label label1;
+	  private System.Windows.Forms.Label _instructionLabel;
 		private ArrowButton.ArrowButton _btnPrevious;
 		private ArrowButton.ArrowButton _btnNext;
 		private ArrowButton.ArrowButton _btnAddWord;
 		private System.Windows.Forms.Label _question;
 		private System.Windows.Forms.Label _description;
 		private WeSay.UI.ProgressIndicator _questionIndicator;
+	  private System.Windows.Forms.Label _animatedText;
 	}
 }

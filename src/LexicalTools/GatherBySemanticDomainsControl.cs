@@ -2,6 +2,7 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 using WeSay.Language;
+using WeSay.Ui.Animation;
 
 namespace WeSay.LexicalTools
 {
@@ -50,6 +51,8 @@ namespace WeSay.LexicalTools
 
 			}
 			_vernacularBox.WritingSystems = new WritingSystem[] {_presentationModel.WordWritingSystem};
+		  _listViewWords.Font = _presentationModel.WordWritingSystem.Font;
+		  _animatedText.Font = _presentationModel.WordWritingSystem.Font;
 		}
 
 		private void InitializeDisplaySettings() {
@@ -89,13 +92,6 @@ namespace WeSay.LexicalTools
 		{
 			_presentationModel.GotoPreviousDomainQuestion();
 			RefreshCurrentDomainAndQuestion();
-		}
-
-		private void _btnAddWord_Click(object sender, EventArgs e)
-		{
-			_presentationModel.AddWord(_vernacularBox.TextBoxes[0].Text);
-			_vernacularBox.ClearAllText();
-			RefreshCurrentWords();
 		}
 
 		private void _boxVernacularWord_KeyDown(object sender, KeyEventArgs e)
@@ -157,20 +153,77 @@ namespace WeSay.LexicalTools
 			}
 		}
 
-		void _listViewWords_Click(object sender, System.EventArgs e)
+		void _listViewWords_Click(object sender, EventArgs e)
 		{
 			if(_listViewWords.SelectedItem != null)
 			{
 				string word = (string) _listViewWords.SelectedItem;
 				_presentationModel.RemoveWord(word);
-				_vernacularBox.TextBoxes[0].Text = word;
+   //            _vernacularBox.TextBoxes[0].Text = word;
+
+				this.destination = this._vernacularBox.Location;
+				this.destination.X += this._vernacularBox.TextBoxes[0].Location.X;
+				this.destination.Y += this._vernacularBox.TextBoxes[0].Location.Y;
+				this.start = this._listViewWords.GetItemRectangle(_listViewWords.SelectedIndex).Location;
+				this.start.X += this._listViewWords.Location.X;
+				this.start.Y += this._listViewWords.Location.Y;
+
+				_animatedText.Text = (string) this._listViewWords.SelectedItem;
+				_animatedText.Location = start;
+				_animatedText.Visible = true;
+
 				RefreshCurrentWords();
+			  _addingWordAnimation = false;
+				this._animator.Start();
 			}
 		}
 
+		private Point destination;
+		private Point start;
+	  private bool _addingWordAnimation;
+
+	  void _animator_Animate(object sender, Animator.AnimatorEventArgs e)
+	  {
+		this._animatedText.Location = new Point(Animator.GetValue(e.Point.X, start.X, destination.X),
+												Animator.GetValue(e.Point.Y, start.Y, destination.Y));
+	  }
+
+	  private void _btnAddWord_Click(object sender, EventArgs e)
+	  {
+		string word = this._vernacularBox.TextBoxes[0].Text;
+		_presentationModel.AddWord(word);
+		_vernacularBox.ClearAllText();
+		RefreshCurrentWords();
+
+		int index = _listViewWords.FindStringExact(word);
+		this.destination = this._listViewWords.GetItemRectangle(index).Location;
+		this.destination.X += this._listViewWords.Location.X;
+		this.destination.Y += this._listViewWords.Location.Y;
+		this.start = this._vernacularBox.Location;
+		this.start.X += this._vernacularBox.TextBoxes[0].Location.X;
+		this.start.Y += this._vernacularBox.TextBoxes[0].Location.Y;
+
+		this._animatedText.Text = word;
+		_animatedText.Font = this._vernacularBox.TextBoxes[0].Font;
+		_animatedText.Location = start;
+		_animatedText.Visible = true;
+		_addingWordAnimation = true;
+		this._animator.Start();
+	  }
+	  void _animator_Finished(object sender, EventArgs e)
+	  {
+		_animatedText.Visible = false;
+		_animator.Reset();
+		if (!_addingWordAnimation)
+		{
+		  _vernacularBox.TextBoxes[0].Text = _animatedText.Text;
+		}
+	  }
+
+
 		void _domainName_DrawItem(object sender, DrawItemEventArgs e)
 		{
-			if (e.State ==  DrawItemState.ComboBoxEdit)
+			if ((e.State & DrawItemState.ComboBoxEdit) ==  DrawItemState.ComboBoxEdit)
 			{
 				if (e.Index >= 0)
 				{
