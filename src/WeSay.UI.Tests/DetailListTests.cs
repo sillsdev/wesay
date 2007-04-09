@@ -13,7 +13,7 @@ namespace WeSay.UI.Tests
 		private WritingSystem _ws = new WritingSystem("test", new Font("Arial",30));
 		private DetailList _control;
 		private Control _focussedControl;
-		private System.Windows.Forms.Form _window;
+		private Form _window;
 
 		[SetUp]
 		public void Setup()
@@ -43,11 +43,11 @@ namespace WeSay.UI.Tests
 
 			_control.MoveInsertionPoint(0);
 
-			Assert.AreSame(_control.GetEditControlFromRow(1), _focussedControl);
+			Assert.AreSame(_control.GetEditControlFromRow(0), _focussedControl);
 			 _control.MoveInsertionPoint(1);
-			Assert.AreSame(_control.GetEditControlFromRow(2), _focussedControl);
+			Assert.AreSame(_control.GetEditControlFromRow(1), _focussedControl);
 			 _control.MoveInsertionPoint(2);
-			Assert.AreSame(_control.GetEditControlFromRow(3), _focussedControl);
+			Assert.AreSame(_control.GetEditControlFromRow(2), _focussedControl);
 			_window.Close();
 	  }
 
@@ -69,15 +69,15 @@ namespace WeSay.UI.Tests
 		[ExpectedException(typeof(ArgumentOutOfRangeException))]
 		public void MoveInsertionPoint_PastLastRow_throws()
 		{
-			Control rowOne = _control.AddWidgetRow("blah", false, MakeWiredUpTextBox());
-			Control rowTwo = _control.AddWidgetRow("blah", false, MakeWiredUpTextBox());
+			_control.AddWidgetRow("blah", false, MakeWiredUpTextBox());
+			_control.AddWidgetRow("blah", false, MakeWiredUpTextBox());
 			_control.MoveInsertionPoint(2);
 		}
 
 		private WeSayTextBox MakeWiredUpTextBox()
 		{
 			WeSayTextBox box = new WeSayTextBox(_ws);
-			box.GotFocus+=new System.EventHandler(box_GotFocus);
+			box.GotFocus+=new EventHandler(box_GotFocus);
 			return box;
 		}
 
@@ -91,7 +91,7 @@ namespace WeSay.UI.Tests
 		{
 			Control rowOne = AddRow();
 			_control.Clear();
-			Assert.IsNull(_control.GetRow(rowOne));
+		  Assert.IsFalse(_control.Contains(rowOne));
 		}
 
 		[Test]
