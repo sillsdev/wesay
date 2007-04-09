@@ -100,13 +100,12 @@ namespace WeSay.UI
 					annotationControl.Anchor = AnchorStyles.Right | AnchorStyles.Top;
 					Controls.Add(annotationControl, 2, RowCount);
 
-					//                    p.Controls.Add(annotationControl);
 					this.components.Add(annotationControl); //so it will get disposed of when we are
 				}
-				else
-				{
-					SetColumnSpan(box, 2);
-				}
+				//else
+				//{
+				//    SetColumnSpan(box, 2);
+				//}
 			}
 
 			ResumeLayout(false);
@@ -162,7 +161,7 @@ namespace WeSay.UI
 			int contentAscentInPixels = (int)(box.Font.Size * box.Font.FontFamily.GetCellAscent(box.Font.Style) / label.Font.FontFamily.GetEmHeight(box.Font.Style));
 			int howMuchFartherDownToPlaceLabelThanText = Math.Max(0, contentAscentInPixels - labelAscentInPixels);
 
-			label.Location = new Point(0, box.Top + howMuchFartherDownToPlaceLabelThanText);
+			label.Margin = new Padding(0, box.Top + howMuchFartherDownToPlaceLabelThanText,0,0);
 			return label;
 		}
 

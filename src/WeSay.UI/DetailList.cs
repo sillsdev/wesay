@@ -16,12 +16,10 @@ namespace WeSay.UI
 		/// Can be used to track which data item the user is currently editting, to,
 		/// for example, hilight that piece in a preview control
 		/// </summary>
-		public event EventHandler<CurrentItemEventArgs> ChangeOfWhichItemIsInFocus = delegate
-																			 {
-																			 };
+		public event EventHandler<CurrentItemEventArgs> ChangeOfWhichItemIsInFocus = delegate{};
 
-		private int _indexOfLabel = 1;
-		private int _indexOfTextBox = 0;
+		private int _indexOfLabel = 0;
+		private int _indexOfWidget = 1;
 
 		public DetailList()
 		{
@@ -35,19 +33,18 @@ namespace WeSay.UI
 			_fadeInTimer.Enabled = false;
 			_fadeInTimer.Interval = 500;
 
-		   AutoScroll = true; //but we need to make sure children are never wider than we are
-		   HScroll = false;
-			VerticalScroll.Enabled = true;
-			VerticalScroll.Visible = true;
-		   ColumnCount = 2;
-			AutoSize = true;
-			AutoSizeMode = AutoSizeMode.GrowAndShrink;
-		   Padding = new Padding(20, 0,0,0);
 
-		   ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
-		   ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100f));
-
-	   }
+		   if (_indexOfLabel == 0)
+		   {
+			 ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
+			 ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
+		   }
+		   else
+		   {
+			 ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
+			 ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
+		   }
+		}
 
 		protected override void OnPaddingChanged(EventArgs e)
 		{
@@ -108,37 +105,6 @@ namespace WeSay.UI
 		public Control AddWidgetRow(string fieldLabel, bool isHeader, Control editWidget, int insertAtRow)
 		{
 			//Debug.WriteLine(String.Format("AddWidgetRow({0}, header={1}, , row={2}", fieldLabel, isHeader, insertAtRow));
-			return /*Panel panel = */AddRowPanel(editWidget, fieldLabel, isHeader, insertAtRow);
-			//AddControl(panel, insertAtRow);
-			//return panel;
-		}
-		//protected override void OnClientSizeChanged(EventArgs e)
-		//{
-		//    base.OnClientSizeChanged(e);
-		//    int widthDifference = Width - ClientSize.Width;
-		//    if(widthDifference > 0)
-		//    {
-		//        foreach (Control control in this.ActualControls)
-		//        {
-		//            AdjustWidthsOfControlAndDescendants(control, widthDifference);
-		//        }
-		//    }
-		//}
-
-		//static private void AdjustWidthsOfControlAndDescendants(Control control, int widthDifference) {
-		//    if((control.Anchor & (AnchorStyles.Left | AnchorStyles.Right))
-		//       == (AnchorStyles.Left | AnchorStyles.Right))
-		//    {
-		//        control.Width -= widthDifference;
-		//        foreach (Control child in control.Controls)
-		//        {
-		//            AdjustWidthsOfControlAndDescendants(child, widthDifference);
-		//        }
-		//    }
-		//}
-
-		private Control AddRowPanel(Control editWidget, string fieldLabel, bool isHeader, int insertAtRow)
-		{
 			RowStyles.Add(new RowStyle(SizeType.AutoSize));
 
 			if (insertAtRow >= RowCount)
@@ -159,14 +125,7 @@ namespace WeSay.UI
 						for (int col = 0; col < ColumnCount; col++)
 						{
 							Control c = GetControlFromPosition(col, row - 1);
-							//if (row == RowCount - 1)
-							//{
-							//    SetRow(c, -1);
-							//}
-							//else
-							//{
 							this.SetCellPosition(c, new TableLayoutPanelCellPosition(col, row));
-							//}
 						}
 					}
 				}
@@ -188,38 +147,18 @@ namespace WeSay.UI
 			label.Text = fieldLabel;
 			label.Size = new Size(75, 50);
 			label.AutoSize = true;
-//            label.Anchor = AnchorStyles.Left | AnchorStyles.Top;
-//            label.Dock = DockStyle.Left;
 			int verticalPadding = 0;
 			label.Top = verticalPadding+3+top;
 
 
-			Controls.Add(label, 0, insertAtRow);
-
-
-//            editWidget.Top = verticalPadding + top;
-//            int padding = 2;
-//            editWidget.Left = label.Left + label.Width + padding;
-//            editWidget.Width = (ClientSize.Width - editWidget.Left) - 20;
-//            editWidget.Width = GetColumnWidths()[1];
-			FixUpForMono(editWidget);
-			//editWidget.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-			editWidget.Dock = DockStyle.Fill;
+			Controls.Add(label, _indexOfLabel, insertAtRow);
+			editWidget.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
 
 			editWidget.KeyDown += new KeyEventHandler(OnEditWidget_KeyDown);
 
-			Debug.Assert(GetControlFromPosition(1, insertAtRow) == null);
-			Controls.Add(editWidget, 1, insertAtRow);
+			Debug.Assert(GetControlFromPosition(_indexOfWidget, insertAtRow) == null);
+			Controls.Add(editWidget, _indexOfWidget, insertAtRow);
 
-//            FlexibleHeightPanel panel = new FlexibleHeightPanel(100, 10 + (editWidget.Top/*-6*/), editWidget);
-
-//            FlexibleHeightPanel panel = new FlexibleHeightPanel(ClientSize.Width, 10, editWidget);
-			//panel.Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top ;
-//            panel.Dock = DockStyle.Fill;
-//            panel.Name = fieldLabel+"_panel of detailList";
-//            panel.Controls.Add(label);
-
-//            return panel;
 			return editWidget;
 		}
 
@@ -227,26 +166,6 @@ namespace WeSay.UI
 		{
 			OnKeyDown(e);
 		}
-
-		private static void FixUpForMono(Control control)
-		{
-// in mono 1.16,  controls with was something like zero,
-			//such that the the child width was something like -3.
-			//we tried various things to work around this and couldn't get anything smart to work.
-			if (Environment.OSVersion.Platform == PlatformID.Unix)
-			{
-				//didn't work
-				//ResumeLayout(true);
-				//this.Refresh();
-
-				////for mono debugging. Indications were that this was coming out negative on mono.
-				if (control.Width < 0)
-					control.Width = 400;
-
-				//didn't help    control.Dock = DockStyle.Fill;
-			}
-		}
-
 
 		private void _fadeInTimer_Tick(object sender, EventArgs e)
 		{

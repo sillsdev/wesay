@@ -1,3 +1,5 @@
+using System.Windows.Forms;
+
 namespace WeSay.UI
 {
 	partial class DetailList
@@ -39,9 +41,16 @@ namespace WeSay.UI
 			//
 			// DetailList
 			//
-			this.AutoScroll = false;
-			//this.BackColor = System.Drawing.SystemColors.ActiveCaption;
+			AutoScroll = true; //but we need to make sure children are never wider than we are
 			this.Name = "DetailList";
+			//AutoSize = true;
+			//AutoSizeMode = AutoSizeMode.GrowAndShrink;
+			Padding = new Padding(20, 0, 0, 0);
+			HScroll = false;
+			//VerticalScroll.Enabled = true;
+			//VerticalScroll.Visible = true;
+			ColumnCount = 2;
+
 			this.ResumeLayout(false);
 
 		}

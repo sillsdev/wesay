@@ -69,6 +69,8 @@ namespace WeSay.LexicalTools
 			this._detailListControl.Margin = new System.Windows.Forms.Padding(0);
 			this._detailListControl.Name = "_detailListControl";
 			this._detailListControl.Size = new System.Drawing.Size(474, 277);
+			//this._detailListControl.AutoSize = true;
+			//this._detailListControl.AutoSizeMode = AutoSizeMode.GrowAndShrink;
 			this._detailListControl.TabIndex = 1;
 			//
 			// _splitter
@@ -87,7 +89,7 @@ namespace WeSay.LexicalTools
 			//
 			// _panelEntry
 			//
-			this._panelEntry.AutoScroll = true;
+//            this._panelEntry.AutoScroll = true;
 			this._panelEntry.Controls.Add(this._detailListControl);
 			this._panelEntry.Dock = System.Windows.Forms.DockStyle.Fill;
 			this._panelEntry.Location = new System.Drawing.Point(0, 93);

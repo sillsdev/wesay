@@ -78,7 +78,7 @@ namespace WeSay.LexicalTools
 			this._btnFind.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
 			this._btnFind.Location = new System.Drawing.Point(105, 3);
 			this._btnFind.Name = "_btnFind";
-			this._btnFind.Size = new System.Drawing.Size(19, 19);
+			this._btnFind.Size = new System.Drawing.Size(11, 11);
 			this._btnFind.TabIndex = 2;
 			this._btnFind.UseVisualStyleBackColor = false;
 			this._btnFind.Click += new System.EventHandler(this._btnFind_Click);
@@ -184,6 +184,7 @@ namespace WeSay.LexicalTools
 			this._btnNewWord.Text = "&New Word";
 			this._btnNewWord.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
 			this._btnNewWord.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+			this._btnNewWord.Click += new System.EventHandler(this._btnNewWord_Click);
 			//
 			// panelDetail
 			//
