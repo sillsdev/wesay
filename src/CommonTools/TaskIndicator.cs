@@ -20,6 +20,10 @@ namespace WeSay.CommonTools
 				throw new ArgumentNullException();
 			}
 			InitializeComponent();
+			//if (Environment.OSVersion.Platform != PlatformID.Unix)
+			//{
+			//    SetAutoSizeToGrowAndShrink();
+			//}
 			_task = task;
 			this._count.Text = task.Status;
 			string cachePath = Project.WeSayWordsProject.Project.PathToCache;
@@ -40,6 +44,12 @@ namespace WeSay.CommonTools
 			this._textShortDescription.Text = task.Description;
 		}
 
+		//private void SetAutoSizeToGrowAndShrink() {
+		//    //this._btnName.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+		//}
+
+
+
 		private void WriteCacheFile(string cacheFilePath, string cachePath) {
 			try
 			{
@@ -57,14 +67,17 @@ namespace WeSay.CommonTools
 				Console.WriteLine("Could not write cache file: " + cacheFilePath);
 			}
 		}
-		private string ReadCountFromCacheFile(string cacheFilePath)
+		private static string ReadCountFromCacheFile(string cacheFilePath)
 		{
 			string s = string.Empty;
 			try
 			{
-				using (StreamReader sr = new StreamReader(cacheFilePath))
+				if (File.Exists(cacheFilePath))
 				{
-					s= sr.ReadToEnd();
+					using (StreamReader sr = new StreamReader(cacheFilePath))
+					{
+						s = sr.ReadToEnd();
+					}
 				}
 			}
 			catch
@@ -91,8 +104,8 @@ namespace WeSay.CommonTools
 		}
 
 		//hack 'cause it wasn't resizing (well, it grew, just never shrank (no, not a simple case of wrong AutoSizeMode))
-		public void RecalcSize(object sender, EventArgs e)
-		{
+		//public void RecalcSize(object sender, EventArgs e)
+		//{
 		   //---this worked with the old vbox, but doesn't seem to do anyting the tablelayout one
 			//this.Size = new System.Drawing.Size(this.Parent.Width - this.Left, this.Parent.Height - this.Top);
 
@@ -109,6 +122,6 @@ namespace WeSay.CommonTools
 //               }
 			// notice nothing has been written yet to shrink it back if it gets wider
 //            }
-		}
+		//}
 	}
 }

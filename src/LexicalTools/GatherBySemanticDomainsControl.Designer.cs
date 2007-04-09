@@ -170,7 +170,6 @@ namespace WeSay.LexicalTools
 			//
 			this._vernacularBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
 						| System.Windows.Forms.AnchorStyles.Right)));
-			this._vernacularBox.AutoValidate = System.Windows.Forms.AutoValidate.Disable;
 			this._vernacularBox.BackColor = System.Drawing.Color.Green;
 			this._vernacularBox.Location = new System.Drawing.Point(49, 344);
 			this._vernacularBox.Name = "_vernacularBox";

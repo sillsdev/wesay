@@ -5,32 +5,32 @@ using System.Windows.Forms;
 
 namespace WeSay.UI
 {
-	public class FlexibleHeightPanel : Panel
-	{
-		private int _heightDifferenceFromControllingChild;
+//    public class FlexibleHeightPanel : Panel
+//    {
+//        private int _heightDifferenceFromControllingChild;
 
-		public FlexibleHeightPanel(int initialWidth, int heightDifferenceFromControllingChild, Control controllingChild)
-		{
-			Size = new Size(initialWidth, controllingChild.Height + _heightDifferenceFromControllingChild);
-			Anchor = AnchorStyles.Left | AnchorStyles.Right;
+//        public FlexibleHeightPanel(int initialWidth, int heightDifferenceFromControllingChild, Control controllingChild)
+//        {
+//            Size = new Size(initialWidth, controllingChild.Height + _heightDifferenceFromControllingChild);
+//            Anchor = AnchorStyles.Left | AnchorStyles.Right;
 
-			Controls.Add(controllingChild);
-//            this.BackColor = Color.Wheat;
-			controllingChild.Resize += new EventHandler(OnChildResize);
-			_heightDifferenceFromControllingChild = heightDifferenceFromControllingChild;
-		}
+//            Controls.Add(controllingChild);
+////            this.BackColor = Color.Wheat;
+//            controllingChild.Resize += new EventHandler(OnChildResize);
+//            _heightDifferenceFromControllingChild = heightDifferenceFromControllingChild;
+//        }
 
-		void OnChildResize(object sender, EventArgs e)
-		{
-			Control c = (Control)sender;
-			Debug.Assert(Controls.Contains(c));
-			//if(c.Height > this.Height)
-			{
-				Height = c.Height + _heightDifferenceFromControllingChild;
-				Invalidate();
-			}
-		}
-	}
+//        void OnChildResize(object sender, EventArgs e)
+//        {
+//            Control c = (Control)sender;
+//            Debug.Assert(Controls.Contains(c));
+//            //if(c.Height > this.Height)
+//            {
+//                Height = c.Height + _heightDifferenceFromControllingChild;
+//                Invalidate();
+//            }
+//        }
+//    }
 
 	public partial class VBox : TableLayoutPanel//, IContainerControl
 	{
@@ -46,10 +46,8 @@ namespace WeSay.UI
 
 			InitializeComponent();
 			ColumnCount = 1;// = FlowDirection.TopDown;
-
 		//    this.CellBorderStyle = TableLayoutPanelCellBorderStyle.OutsetPartial;
 		}
-
 
 //        //from http://yortondotnet.blogspot.com/2007/01/when-activecontrol-is-not-active.html
 //        public bool ActivateControl(Control active)
@@ -72,27 +70,6 @@ namespace WeSay.UI
 //            return retVal;
 //        }
 
-		public Control FocussedImmediateChild
-		{
-			get
-			{
-				foreach (Control child in ActualControls)
-				{
-					if (child.ContainsFocus)
-					{
-						return child;
-					}
-				}
-				return null;
-			}
-			set
-			{
-				//Keep track of the active control ourselves by storing it in a private member, note that
-				//that we only allow the active control to be set if it is actually a child of ours.
-				if (Contains(value))
-					_focussedImmediateChild = value;
-			}
-		}
 
 //        public Control ActiveControl
 //        {
@@ -133,7 +110,7 @@ namespace WeSay.UI
 			}
 		}
 
-		protected ControlCollection ActualControls
+		protected TableLayoutControlCollection ActualControls
 		{
 			get
 			{
@@ -173,7 +150,8 @@ namespace WeSay.UI
 				insertAtRow = _rowCount;
 			}
 			base.Controls.Add(control);
-			int i = RowToControlInsertionIndex(insertAtRow);
+
+			int i = /*RowToControlInsertionIndex(*/insertAtRow;//);
 			Debug.Assert(i >= 0, "A negative insertion value will fail under Mono.");
 
 			base.Controls.SetChildIndex(control, i);
@@ -182,7 +160,7 @@ namespace WeSay.UI
 				c.TabIndex = base.Controls.GetChildIndex(c); //_rowCount - base.Controls.GetChildIndex(c);
 			}
 			++_rowCount;
-			control.Resize += new EventHandler(OnChildControlResized);
+			// control.Resize += new EventHandler(OnChildControlResized);
 
 			//VerticalScroll.Enabled = false;
 			//HorizontalScroll.Enabled = false;
@@ -190,85 +168,89 @@ namespace WeSay.UI
 			ResumeLayout();
 		}
 
-		void OnChildControlResized(object sender, EventArgs e)
-		{
-			//an outermost control (eg the stack of form fields)
-			//can have a height fixed to its container, not its contents
-			if ((Anchor & AnchorStyles.Bottom) == AnchorStyles.Bottom )
-			{
-				return;
-			}
+		//void OnChildControlResized(object sender, EventArgs e)
+		//{
+		//    //an outermost control (eg the stack of form fields)
+		//    //can have a height fixed to its container, not its contents
+		//    if ((Anchor & AnchorStyles.Bottom) == AnchorStyles.Bottom )
+		//    {
+		//        return;
+		//    }
 
-			int h = 0;
-			foreach (Control child in ActualControls)
-			{
-				h += child.Height ;
-			}
-			Height = h + Margin.Top + Margin.Bottom+ (5 * (ActualControls.Count - 1));
-		}
+		//    int h = 0;
+		//    foreach (Control child in ActualControls)
+		//    {
+		//        h += child.Height ;
+		//    }
+		//    Height = h + Margin.Top + Margin.Bottom+ (5 * (ActualControls.Count - 1));
+		//}
 
-		public int GetRowOfControl(Control control)
-		{
-			int index = base.Controls.GetChildIndex(control,false);
-			if(index == -1)
-			{
-				index = 0;
-				foreach (Control childControl in base.Controls)
-				{
-					if(HasDescendentControl(childControl, control))
-					{
-						break;
-					}
-					++index;
-				}
-				if(index == base.Controls.Count)
-				{
-					throw new ArgumentException("Control is not an owned descendant.");
-				}
-			}
-			Debug.Assert(index < _rowCount);
-			return index; // (_rowCount - index) - 1;
-		}
+		//public int GetRowOfControl(Control control)
+		//{
+		//    return GetRow(control);
 
-		private static bool HasDescendentControl(Control current, Control control)
-		{
-			foreach (Control child in current.Controls)
-			{
-				if (child == control || HasDescendentControl(child, control))
-				{
-					return true;
-				}
-			}
-			return false;
-		}
+		//    int index = base.Controls.GetChildIndex(control,false);
+		//    if(index == -1)
+		//    {
+		//        index = 0;
+		//        foreach (Control childControl in base.Controls)
+		//        {
+		//            if(HasDescendentControl(childControl, control))
+		//            {
+		//                break;
+		//            }
+		//            ++index;
+		//        }
+		//        if(index == base.Controls.Count)
+		//        {
+		//            throw new ArgumentException("Control is not an owned descendant.");
+		//        }
+		//    }
+		//    Debug.Assert(index < _rowCount);
+		//    return index; // (_rowCount - index) - 1;
+		//}
 
-		/// <summary>
-		/// for unit testing
-		/// </summary>
-		/// <param name="row"></param>
-		/// <returns></returns>
-		public Control GetControlOfRow(int row)
-		{
-			if(0 > row || row >= _rowCount)
-			{
-				throw new ArgumentOutOfRangeException("row", row, "row must be between 0 and Count-1 inclusive");
-			}
-			return (base.Controls[RowToControlIndex(row)]);
-		}
+		//private static bool HasDescendentControl(Control current, Control control)
+		//{
+		//    if (current == control)
+		//        return true;
+		//    foreach (Control child in current.Controls)
+		//    {
+		//        if (child == control || HasDescendentControl(child, control))
+		//        {
+		//            return true;
+		//        }
+		//    }
+		//    return false;
+		//}
 
-		private int RowToControlInsertionIndex(int row)
-		{
-			//reverse order
-		   // return ((_rowCount) - row);
-			return row;
-		}
+		///// <summary>
+		///// for unit testing
+		///// </summary>
+		///// <param name="row"></param>
+		///// <returns></returns>
+		//public Control GetControlOfRow(int row)
+		//{
+		//    if(0 > row || row >= _rowCount)
+		//    {
+		//        throw new ArgumentOutOfRangeException("row", row, "row must be between 0 and Count-1 inclusive");
+		//    }
+		//    return (base.Controls[RowToControlIndex(row)]);
+		//}
 
-		protected int RowToControlIndex(int row)
-		{
-			Debug.Assert(row < _rowCount); // if we assert here, we are probably missing an opportunity to throw an ArgumentOutOfrange exception in a public method
-			//reverse order (that's how docking works)
-			return row;// RowToControlInsertionIndex(row) - 1;
-		}
+		//private int RowToControlInsertionIndex(int row)
+		//{
+		//    //reverse order
+		//   // return ((_rowCount) - row);
+		//    return row;
+		//}
+
+		//protected int RowToControlIndex(int row)
+		//{
+		//    Debug.Assert(row < _rowCount); // if we assert here, we are probably missing an opportunity to throw an ArgumentOutOfrange exception in a public method
+		//    //reverse order (that's how docking works)
+		//    return row;// RowToControlInsertionIndex(row) - 1;
+		//}
 
 	}
 }

@@ -61,6 +61,12 @@
 	<Compile Include="CollapsibleSplitter.cs">
 	  <SubType>Component</SubType>
 	</Compile>
+	<Compile Include="RoundButton.cs">
+	  <SubType>UserControl</SubType>
+	</Compile>
+	<Compile Include="RoundButton.Designer.cs">
+	  <DependentUpon>RoundButton.cs</DependentUpon>
+	</Compile>
 	<Compile Include="VBox.cs">
 	  <SubType>Component</SubType>
 	</Compile>
@@ -104,7 +110,7 @@
 	  <DependentUpon>SingleOptionControl.cs</DependentUpon>
 	</Compile>
 	<Compile Include="MultiTextControl.cs">
-	  <SubType>UserControl</SubType>
+	  <SubType>Component</SubType>
 	</Compile>
 	<Compile Include="MultiTextControl.designer.cs">
 	  <DependentUpon>MultiTextControl.cs</DependentUpon>

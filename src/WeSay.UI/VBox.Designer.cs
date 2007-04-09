@@ -42,7 +42,6 @@ namespace WeSay.UI
 			//
 			this.Name = "VBox";
 			this.ResumeLayout(false);
-
 		}
 
 		#endregion

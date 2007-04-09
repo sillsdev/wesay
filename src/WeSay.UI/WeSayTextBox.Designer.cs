@@ -33,8 +33,17 @@ namespace WeSay.UI
 			//
 			// WeSayTextBox
 			//
+			BackColor = System.Drawing.Color.White;
+			BackColor = System.Drawing.Color.AliceBlue;
+			Multiline = true;
+			WordWrap = true;
+
+
 			this.Enter += new System.EventHandler(this.WeSayTextBox_Enter);
 			this.Leave += new System.EventHandler(this.WeSayTextBox_Leave);
+			TextChanged += new System.EventHandler(OnTextChanged);
+			Resize += new System.EventHandler(OnResize);
+
 			this.ResumeLayout(false);
 
 		}

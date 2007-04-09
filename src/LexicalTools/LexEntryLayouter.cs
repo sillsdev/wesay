@@ -29,14 +29,14 @@ namespace WeSay.LexicalTools
 
 		internal int AddWidgets(LexEntry entry, int insertAtRow)
 		{
-			DetailList.SuspendLayout();
+			//DetailList.SuspendLayout();
 			int rowCount = 0;
 			Field field = ActiveViewTemplate.GetField(Field.FieldNames.EntryLexicalForm.ToString());
 			if (field != null && field.Visibility == Field.VisibilitySetting.Visible)
 			{
 				Control formControl = MakeBoundControl(entry.LexicalForm, field);
 				DetailList.AddWidgetRow(StringCatalog.Get(field.DisplayName), true, formControl, insertAtRow);
-				insertAtRow = DetailList.GetRowOfControl(formControl);
+				insertAtRow = DetailList.GetRow(formControl);
 				++rowCount;
 			}
 			rowCount += AddCustomFields(entry, insertAtRow+rowCount);
@@ -46,7 +46,7 @@ namespace WeSay.LexicalTools
 			//add a ghost
 			rowCount += layouter.AddGhost(entry.Senses, true);
 
-			DetailList.ResumeLayout();
+			//DetailList.ResumeLayout();
 			return rowCount;
 		}
 	}

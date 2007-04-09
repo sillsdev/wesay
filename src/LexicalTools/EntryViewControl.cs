@@ -17,8 +17,8 @@ namespace WeSay.LexicalTools
 		{
 			_viewTemplate = null;
 			InitializeComponent();
-			_detailListControl.Size = new Size((this.Right-10)-_detailListControl.Left, (this.Bottom-10) - _detailListControl.Top);
-			_detailListControl.Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top | AnchorStyles.Bottom;
+			//_detailListControl.Size = new Size((this.Right-10)-_detailListControl.Left, (this.Bottom-10) - _detailListControl.Top);
+			//_detailListControl.Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top | AnchorStyles.Bottom;
 			_detailListControl.ChangeOfWhichItemIsInFocus += new EventHandler<CurrentItemEventArgs>(OnChangeOfWhichItemIsInFocus);
 			_detailListControl.KeyDown += new KeyEventHandler(_detailListControl_KeyDown);
 		}
@@ -111,7 +111,7 @@ namespace WeSay.LexicalTools
 			int? row = null;
 			if (this._detailListControl.ContainsFocus)
 			{
-				row = this._detailListControl.GetRowOfControl(this._detailListControl.FocussedImmediateChild);
+				row = this._detailListControl.GetRow(this._detailListControl.FocussedImmediateChild);
 			}
 			RefreshEntryDetail();
 			Application.DoEvents();
@@ -136,6 +136,7 @@ namespace WeSay.LexicalTools
 		private void RefreshEntryDetail()
 		{
 			this._detailListControl.SuspendLayout();
+
 			this._detailListControl.Clear();
 			this._detailListControl.VerticalScroll.Value = this._detailListControl.VerticalScroll.Minimum;
 			if (this._record != null)
@@ -144,7 +145,7 @@ namespace WeSay.LexicalTools
 				layout.AddWidgets(this._record);
 			}
 			this._detailListControl.ResumeLayout(true);
-			this._detailListControl.Refresh();
+//            this._detailListControl.Refresh();
 		}
 
 		private void OnChangeOfWhichItemIsInFocus(object sender, CurrentItemEventArgs e)

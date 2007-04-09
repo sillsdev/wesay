@@ -1,5 +1,3 @@
-using System;
-
 namespace WeSay.UI
 {
 	partial class MultiTextControl
@@ -31,44 +29,20 @@ namespace WeSay.UI
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this._vbox = new WeSay.UI.VBox();
 			this.SuspendLayout();
-			//
-			// _vbox
-			//
-			this._vbox.BackColor = System.Drawing.Color.White;
-			this._vbox.Location = new System.Drawing.Point(0, 0);
-			this._vbox.Name = "_vbox";
-			this._vbox.Size = new System.Drawing.Size(150, 69);
-			this._vbox.TabIndex = 0;
 			//
 			// MultiTextControl
 			//
-			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			if (Environment.OSVersion.Platform != PlatformID.Unix)
-			{
-				SetAutoValidateDisabled();
-				SetBackgroundColorTransparent();
-			}
-			this.Controls.Add(this._vbox);
+			this.BackColor = System.Drawing.Color.White;
 			this.Name = "MultiTextControl";
-			this.Size = new System.Drawing.Size(150, 69);
+			this.AutoSize = true;
+			this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
 			this.ResumeLayout(false);
 
 		}
 
-		private void SetBackgroundColorTransparent() {
-			this.BackColor = System.Drawing.Color.Transparent;
-		}
-
-		private void SetAutoValidateDisabled() {
-			this.AutoValidate = System.Windows.Forms.AutoValidate.Disable;
-		}
-
 		#endregion
 
-		private VBox _vbox;
 
 	}
 }

@@ -15,12 +15,8 @@ namespace WeSay.UI
 		{
 			InitializeComponent();
 
-
-	   //     this.Controls.Add(_annotationWidget.MakeFlagButton(40));
-
 		  //  Debug.Assert(DesignMode);
 			BorderStyle = BorderStyle.None;
-			BackColor = System.Drawing.Color.White;
 			if (Environment.OSVersion.Platform != PlatformID.Unix)
 			{
 				_keymanLink = new KeymanLink.KeymanLink();
@@ -30,15 +26,8 @@ namespace WeSay.UI
 				}
 			}
 
-			this.Multiline = true;
-			//this.AcceptsReturn = true;
-			this.WordWrap = true;
-//            this.BackColor = System.Drawing.Color.AliceBlue;
-
 			CalculateMinimumSize();
 
-			this.TextChanged += new EventHandler(OnTextChanged);
-			this.Resize += new EventHandler(OnResize);
 		}
 
 		void OnResize(object sender, EventArgs e)
@@ -49,33 +38,32 @@ namespace WeSay.UI
 		{
 			UpdateHeight();
 		}
+
 		private void CalculateMinimumSize()
 		{
-			using (Graphics g = this.CreateGraphics())
+			using (Graphics g = CreateGraphics())
 			{
-				SizeF sz = g.MeasureString("x", this.Font, this.Width, StringFormat.GenericTypographic);
+				SizeF sz = g.MeasureString("x", Font, Width, StringFormat.GenericTypographic);
 				int margin = 12;
-				this.MinimumSize = new Size(this.Width, margin + (int)sz.Height);
+				MinimumSize = new Size(Width, margin + (int)sz.Height);
 			}
 		}
 
 
 		private void UpdateHeight()
 		{
-			using (Graphics g = this.CreateGraphics())
+			using (Graphics g = CreateGraphics())
 			{
 				//we add an extran line feed here because this always trims off the last line if it was empty
-				SizeF sz = g.MeasureString(this.Text+"\n", this.Font, this.Width, StringFormat.GenericTypographic);
-				this.Height = 5+ (int) Math.Ceiling(sz.Height);
+				SizeF sz = g.MeasureString(Text+"\n", Font, Width, StringFormat.GenericTypographic);
+				Height = 5+ (int) Math.Ceiling(sz.Height);
 			}
 		}
-
 
 		public WeSayTextBox(WritingSystem ws):this()
 		{
 			 WritingSystem = ws;
 		}
-
 
 		[Browsable(false)]
 		public override string Text
@@ -106,9 +94,7 @@ namespace WeSay.UI
   //      }
 
 		[Browsable(false)]
-
-	  [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-
+		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
 		public WritingSystem WritingSystem
 		{
 			get

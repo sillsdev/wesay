@@ -450,7 +450,7 @@ namespace WeSay.UI
 
 		  case VisualStyles.DoubleDots:
 					{
-					  int dotCount = gripLength / 30;
+					  int dotCount = gripLength / 3;
 					  for (int i = 0; i < dotCount; i++)
 					  {
 						// light dot
@@ -519,7 +519,7 @@ namespace WeSay.UI
 		// draw the background color for our control image
 		LinearGradientBrush brush = new LinearGradientBrush(ClientRectangle,
 									  BackColor,
-									  BackColorEnd,
+									  (BackColorEnd == Color.Empty)?BackColor:BackColorEnd,
 									  (IsSplitterVertical())?LinearGradientMode.Horizontal:LinearGradientMode.Vertical);
 
 		e.Graphics.FillRectangle(brush, ClientRectangle);

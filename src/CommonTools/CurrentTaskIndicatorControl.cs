@@ -12,7 +12,6 @@ namespace WeSay.CommonTools
 			_content = content;
 			InitializeComponent();
 			content.BackColor = BackColor;// System.Drawing.Color.Transparent;
-			content.Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
 			this._indicatorPanel.Controls.Add(content);
 			ShapeControl.ShapeControl s = new ShapeControl.ShapeControl();
 			s.TabStop = false;
@@ -23,18 +22,31 @@ namespace WeSay.CommonTools
 			s.BackColor = BackColor;
 			BackColor = System.Drawing.Color.White;
 			s.Dock = DockStyle.Fill;
+//            s.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
 			Controls.Add(s);
 			label1.BackColor = s.BackColor;
 			_indicatorPanel.BackColor = s.BackColor;
 			_content.BackColor = s.BackColor;
-		}
 
-		 //I don't know why this was needed, but it works
-	   private void CurrentTaskIndicatorControl_SizeChanged(object sender, EventArgs e)
+
+			if (Environment.OSVersion.Platform != PlatformID.Unix)
+			{
+				SetAutoSizeToGrowAndShrink();
+			}
+
+		}
+		private void SetAutoSizeToGrowAndShrink()
 		{
-			((TaskIndicator)_content).RecalcSize(this, null);
-
+			this._indicatorPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
 		}
+
+
+	   //  //I don't know why this was needed, but it works
+	   //private void CurrentTaskIndicatorControl_SizeChanged(object sender, EventArgs e)
+	   // {
+	   //     ((TaskIndicator)_content).RecalcSize(this, null);
+
+	   // }
 
 
 	}

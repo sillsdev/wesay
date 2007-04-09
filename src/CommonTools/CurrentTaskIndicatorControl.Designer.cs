@@ -1,4 +1,5 @@
 using System;
+using System.Windows.Forms;
 
 namespace WeSay.CommonTools
 {
@@ -50,10 +51,6 @@ namespace WeSay.CommonTools
 			this._indicatorPanel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
 						| System.Windows.Forms.AnchorStyles.Right)));
 
-			if (Environment.OSVersion.Platform != PlatformID.Unix)
-			{
-				SetAutoSizeToGrowAndShrink();
-			}
 			this._indicatorPanel.BackColor = System.Drawing.Color.Transparent;
 			this._indicatorPanel.Location = new System.Drawing.Point(70, 35);
 			this._indicatorPanel.Name = "_indicatorPanel";
@@ -71,14 +68,11 @@ namespace WeSay.CommonTools
 			this.Controls.Add(this.label1);
 			this.Name = "CurrentTaskIndicatorControl";
 			this.Size = new System.Drawing.Size(563, 138);
-			this.SizeChanged += new System.EventHandler(this.CurrentTaskIndicatorControl_SizeChanged);
+			Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
+
+//            this.SizeChanged += new System.EventHandler(this.CurrentTaskIndicatorControl_SizeChanged);
 			this.ResumeLayout(false);
 			this.PerformLayout();
-		}
-
-		private void SetAutoSizeToGrowAndShrink()
-		{
-			this._indicatorPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
 		}
 
 		#endregion

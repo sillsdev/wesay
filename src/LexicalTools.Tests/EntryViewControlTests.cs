@@ -93,10 +93,9 @@ namespace WeSay.LexicalTools.Tests
 		{
 			EntryViewControl entryViewControl = CreateFilteredForm(entry, Field.FieldNames.SenseGloss.ToString(), "LexSense", BasilProject.Project.WritingSystems.TestWritingSystemAnalId);
 			DetailList entryDetailControl = entryViewControl.ControlEntryDetail;
-			Control referenceControl = entryDetailControl.GetControlOfRow(0);
-			Label labelControl = entryDetailControl.GetLabelControlFromReferenceControl(referenceControl);
+			Label labelControl = entryDetailControl.GetLabelControlFromRow(0);
 			Assert.AreEqual("Meaning", labelControl.Text);
-			MultiTextControl editControl = (MultiTextControl)entryDetailControl.GetEditControlFromReferenceControl(referenceControl);
+			MultiTextControl editControl = (MultiTextControl)entryDetailControl.GetEditControlFromRow(0);
 			editControl.TextBoxes[0].Text = "test";
 			Assert.IsTrue(editControl.TextBoxes[0].Text.Contains(GetGloss(entry)));
 		}
@@ -106,8 +105,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			EntryViewControl entryViewControl = CreateFilteredForm(apple, Field.FieldNames.EntryLexicalForm .ToString(), "LexEntry", BasilProject.Project.WritingSystems.TestWritingSystemVernId);
 			DetailList entryDetailControl = entryViewControl.ControlEntryDetail;
-			Control referenceControl = entryDetailControl.GetControlOfRow(0);
-			MultiTextControl editControl = (MultiTextControl)entryDetailControl.GetEditControlFromReferenceControl(referenceControl);
+			MultiTextControl editControl = (MultiTextControl)entryDetailControl.GetEditControlFromRow(0);
 			editControl.TextBoxes[0].Text = "test";
 			Assert.IsTrue(entryViewControl.ControlFormattedView.Text.Contains("test"));
 	   }
@@ -128,11 +126,10 @@ namespace WeSay.LexicalTools.Tests
 			MultiTextControl editControl = null;
 			for (int i = 0; i < detailList.Count; i++)
 			{
-				Control referenceControl = detailList.GetControlOfRow(i);
-				Label label = detailList.GetLabelControlFromReferenceControl(referenceControl);
+				Label label = detailList.GetLabelControlFromRow(i);
 				if(label.Text == labelText)
 				{
-					editControl = (MultiTextControl)detailList.GetEditControlFromReferenceControl(referenceControl);
+					editControl = (MultiTextControl)detailList.GetEditControlFromRow(i);
 					break;
 				}
 			}
@@ -147,8 +144,7 @@ namespace WeSay.LexicalTools.Tests
 			string rtfOriginal = entryViewControl.ControlFormattedView.Rtf;
 
 			DetailList entryDetailControl = entryViewControl.ControlEntryDetail;
-			Control referenceControl = entryDetailControl.GetControlOfRow(0);
-			Control editControl = entryDetailControl.GetEditControlFromReferenceControl(referenceControl);
+			Control editControl = entryDetailControl.GetEditControlFromRow(0);
 
 			//JDH added after we added multiple ws's per field. Was: editControl.Select();
 			((MultiTextControl)editControl).TextBoxes[0].Select();
@@ -169,8 +165,7 @@ namespace WeSay.LexicalTools.Tests
 			string rtfAppleNothingHighlighted = entryViewControl.ControlFormattedView.Rtf;
 
 			DetailList entryDetailControl = entryViewControl.ControlEntryDetail;
-			Control referenceControl = entryDetailControl.GetControlOfRow(0);
-			Control editControl = entryDetailControl.GetEditControlFromReferenceControl(referenceControl);
+			Control editControl = entryDetailControl.GetEditControlFromRow(0);
 
 			//JDH added after we added multiple ws's per field. Was: editControl.Select();
 			((MultiTextControl)editControl).TextBoxes[0].Select();
@@ -192,8 +187,7 @@ namespace WeSay.LexicalTools.Tests
 			string rtfEmptyNothingHighlighted = entryViewControl.ControlFormattedView.Rtf;
 
 			DetailList entryDetailControl = entryViewControl.ControlEntryDetail;
-			Control referenceControl = entryDetailControl.GetControlOfRow(0);
-			Control editControl = entryDetailControl.GetEditControlFromReferenceControl(referenceControl);
+			Control editControl = entryDetailControl.GetEditControlFromRow(0);
 
 			//JDH added after we added multiple ws's per field. Was: editControl.Select();
 			((MultiTextControl)editControl).TextBoxes[0].Select();
@@ -234,7 +228,7 @@ namespace WeSay.LexicalTools.Tests
 
 		private static string GetSomeValidWsIdForField(string fieldName)
 		{
-			return WeSay.Project.WeSayWordsProject.Project.ViewTemplate.GetField(fieldName).WritingSystemIds[0];
+			return WeSayWordsProject.Project.ViewTemplate.GetField(fieldName).WritingSystemIds[0];
 		}
 
 		private static string GetLexicalForm(LexEntry entry)

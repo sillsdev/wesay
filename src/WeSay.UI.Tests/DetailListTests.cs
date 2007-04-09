@@ -37,17 +37,17 @@ namespace WeSay.UI.Tests
 		public void MoveInsertionPoint()
 		{
 			ActuallyShowOnScreen();
-			Control rowOne = _control.AddWidgetRow("blah", false, MakeWiredUpTextBox());
-			Control rowTwo = _control.AddWidgetRow("blah", false, MakeWiredUpTextBox());
-			Control rowThree = _control.AddWidgetRow("blah", false, MakeWiredUpTextBox());
+			_control.AddWidgetRow("blah", false, MakeWiredUpTextBox());
+			_control.AddWidgetRow("blah", false, MakeWiredUpTextBox());
+			_control.AddWidgetRow("blah", false, MakeWiredUpTextBox());
 
 			_control.MoveInsertionPoint(0);
 
-			Assert.AreSame(_control.GetEditControlFromReferenceControl(rowOne), _focussedControl);
+			Assert.AreSame(_control.GetEditControlFromRow(1), _focussedControl);
 			 _control.MoveInsertionPoint(1);
-			Assert.AreSame(_control.GetEditControlFromReferenceControl(rowTwo), _focussedControl);
+			Assert.AreSame(_control.GetEditControlFromRow(2), _focussedControl);
 			 _control.MoveInsertionPoint(2);
-			Assert.AreSame(_control.GetEditControlFromReferenceControl(rowThree), _focussedControl);
+			Assert.AreSame(_control.GetEditControlFromRow(3), _focussedControl);
 			_window.Close();
 	  }
 
@@ -87,12 +87,11 @@ namespace WeSay.UI.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof(ArgumentException))]
 		public void Clear()
 		{
 			Control rowOne = AddRow();
 			_control.Clear();
-			_control.GetRowOfControl(rowOne); //should throw
+			Assert.IsNull(_control.GetRow(rowOne));
 		}
 
 		[Test]
@@ -100,29 +99,29 @@ namespace WeSay.UI.Tests
 		{
 			Control rowOne = AddRow();
 			Control rowTwo = AddRow();
-			Assert.AreEqual(0,_control.GetRowOfControl(rowOne));
-			Assert.AreEqual(1,_control.GetRowOfControl(rowTwo));
+			Assert.AreEqual(0,_control.GetRow(rowOne));
+			Assert.AreEqual(1,_control.GetRow(rowTwo));
 
 			//insert one in between
 			Control rowOneHalf = AddRow(1);
-			 Assert.AreEqual(0,_control.GetRowOfControl(rowOne));
-		   Assert.AreEqual(1, _control.GetRowOfControl(rowOneHalf));
-			Assert.AreEqual(2,_control.GetRowOfControl(rowTwo));
+			 Assert.AreEqual(0,_control.GetRow(rowOne));
+		   Assert.AreEqual(1, _control.GetRow(rowOneHalf));
+			Assert.AreEqual(2,_control.GetRow(rowTwo));
 
 			//stick one at the end
 			Control rowLast = AddRow(-1);
-		   Assert.AreEqual(0,_control.GetRowOfControl(rowOne));
-		   Assert.AreEqual(1, _control.GetRowOfControl(rowOneHalf));
-		   Assert.AreEqual(2,_control.GetRowOfControl(rowTwo));
-		   Assert.AreEqual(3,_control.GetRowOfControl(rowLast));
+		   Assert.AreEqual(0,_control.GetRow(rowOne));
+		   Assert.AreEqual(1, _control.GetRow(rowOneHalf));
+		   Assert.AreEqual(2, _control.GetRow(rowTwo));
+		   Assert.AreEqual(3, _control.GetRow(rowLast));
 
 			//insert one before all of the others
 		   Control rowFirst= AddRow(0);
-		   Assert.AreEqual(0,_control.GetRowOfControl(rowFirst));
-		   Assert.AreEqual(1,_control.GetRowOfControl(rowOne));
-		   Assert.AreEqual(2, _control.GetRowOfControl(rowOneHalf));
-		   Assert.AreEqual(3,_control.GetRowOfControl(rowTwo));
-		   Assert.AreEqual(4,_control.GetRowOfControl(rowLast));
+		   Assert.AreEqual(0, _control.GetRow(rowFirst));
+		   Assert.AreEqual(1, _control.GetRow(rowOne));
+		   Assert.AreEqual(2, _control.GetRow(rowOneHalf));
+		   Assert.AreEqual(3, _control.GetRow(rowTwo));
+		   Assert.AreEqual(4, _control.GetRow(rowLast));
 	  }
 
 		private Control AddRow()

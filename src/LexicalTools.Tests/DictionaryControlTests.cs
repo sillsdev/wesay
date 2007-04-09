@@ -609,11 +609,10 @@ namespace WeSay.LexicalTools.Tests
 			Control foundControl = null;
 			for (int i = 0; i < detailList.Count; i++)
 			{
-				Control referenceControl = detailList.GetControlOfRow(i);
-				Label label = detailList.GetLabelControlFromReferenceControl(referenceControl);
+				Label label = detailList.GetLabelControlFromRow(i);
 				if (label.Text == labelText)
 				{
-					foundControl = detailList.GetEditControlFromReferenceControl(referenceControl);
+					foundControl = detailList.GetEditControlFromRow(i);
 					if (lookingForGhostVersion)
 					{
 						if (!foundControl.Name.Contains("ghost"))

@@ -159,7 +159,7 @@ namespace WeSay.LexicalTools
 
 		protected void AddWidgetsAfterGhostTrigger(IBindingList list, int index, Control refControl, bool doGoToNextField)
 		{
-			int row    = _detailList.GetRowOfControl(refControl);
+			int row    = _detailList.GetRow(refControl);
 			AddWidgets(list, index, row);
 			if (doGoToNextField)
 			{

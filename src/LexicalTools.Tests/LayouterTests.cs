@@ -18,7 +18,7 @@ namespace WeSay.LexicalTools.Tests
 		public void Setup()
 		{
 			Db4oLexModelHelper.InitializeForNonDbTests();
-			WeSay.Project.WeSayWordsProject.InitializeForTests();
+			WeSayWordsProject.InitializeForTests();
 		}
 
 		[Test]
@@ -48,8 +48,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			DetailList dl = MakeDetailList();
 
-			Control rowControl = dl.GetControlOfRow(0);
-			Label l = dl.GetLabelControlFromReferenceControl(rowControl);
+			Label l = dl.GetLabelControlFromRow(0);
 			Assert.AreEqual("Word", l.Text);
 		}
 
@@ -58,9 +57,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			DetailList dl = MakeDetailList();
 
-			Control rowControl = dl.GetControlOfRow(0);
-
-			MultiTextControl box = (MultiTextControl)dl.GetEditControlFromReferenceControl(rowControl);
+			MultiTextControl box = (MultiTextControl)dl.GetEditControlFromRow(0);
 			Assert.AreEqual("WordInVernacular", box.TextBoxes[0].Text);
 	  }
 
@@ -107,7 +104,7 @@ namespace WeSay.LexicalTools.Tests
 		private static void AddSense(LexEntry entry)
 		{
 			LexSense sense = (LexSense) entry.Senses.AddNew();
-			sense.Gloss[WeSay.Project.WeSayWordsProject.Project.ViewTemplate.GetField("SenseGloss").WritingSystemIds[0]] = "GlossInAnalysis";
+			sense.Gloss[WeSayWordsProject.Project.ViewTemplate.GetField("SenseGloss").WritingSystemIds[0]] = "GlossInAnalysis";
 			AddExample(sense);
 			AddExample(sense);
 		}

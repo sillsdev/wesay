@@ -7,13 +7,10 @@ using WeSay.Language;
 
 namespace WeSay.UI
 {
-	public partial class MultiTextControl : UserControl
+	public partial class MultiTextControl : TableLayoutPanel
 	{
 		private IList<WritingSystem> _writingSystems;
 		private List<WeSayTextBox> _textBoxes;
-		//public new event EventHandler TextChanged;
-	   // public new event KeyEventHandler KeyDown;
-		// public event System.EventHandler SpecialKeyPress;
 		private bool _showAnnotationWidget;
 
 		public MultiTextControl()
@@ -21,32 +18,17 @@ namespace WeSay.UI
 			this.components = new Container();
 			InitializeComponent();
 			_textBoxes = new List<WeSayTextBox>();
-			_vbox.Name = "vbox of anonymous multitext";
-			_vbox.Resize += new EventHandler(OnVbox_Resize);
 		   // this.BackColor = System.Drawing.Color.Crimson;
-			//_vbox.BackColor = System.Drawing.Color.Yellow;
-			_vbox.Location = new Point(0, 0);
-			_vbox.Size = this.Size;
-		   _vbox.Anchor = AnchorStyles.Left | AnchorStyles.Right;
-			this.Resize += new EventHandler(MultiTextControl_Resize);
+			ColumnCount = 3;
+			ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
+			ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
+			ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
 		}
 
-		void MultiTextControl_Resize(object sender, EventArgs e)
-		{
-//            _vbox.Size = new Size(this.Width, _vbox.Height);
 
-		}
-
-		void OnVbox_Resize(object sender, EventArgs e)
-		{
-			//todo: WHY IS THE CLASS A CONTROL? IT DISPLAYS NOTHING!
-			//this.Size = new Size(this.Width, ((Control) sender).Size.Height);
-			this.Height = 10 + ((Control) sender).Size.Height;
-		}
 		public MultiTextControl(IList<WritingSystem> writingSystems, MultiText multiTextToCopyFormsFrom, string nameForTesting, bool showAnnotationWidget):this()
 		{
 			Name = nameForTesting+"-mtc";
-			_vbox.Name = Name + "-vbox";
 			_writingSystems = writingSystems;
 			_showAnnotationWidget = showAnnotationWidget;
 			BuildBoxes(multiTextToCopyFormsFrom);
@@ -73,7 +55,7 @@ namespace WeSay.UI
 				//we don't have a binding that would keep an internal multitext up to date.
 				//This seems cleaner and sufficient, at the moment.
 				MultiText mt = new MultiText();
-				foreach (WeSayTextBox box in this.TextBoxes )
+				foreach (WeSayTextBox box in TextBoxes )
 				{
 					mt.SetAlternative(box.WritingSystem.Id, box.Text);
 				}
@@ -84,79 +66,82 @@ namespace WeSay.UI
 		private void BuildBoxes(MultiText multiText)
 		{
 			SuspendLayout();
-			if (_vbox.Count > 0)
+
+			if (Controls.Count > 0)
 			{
-				_vbox.Clear();
+				Controls.Clear();
+				RowCount = 0;
+				RowStyles.Clear();
 			}
-			Height = 0;
-			int initialPanelWidth = this.Width;// 200;
+
 			foreach (WritingSystem writingSystem in WritingSystems)
 			{
-				WeSayTextBox box = AddTextBox(initialPanelWidth, writingSystem, multiText);
+				RowCount++;
+				RowStyles.Add(new RowStyle(SizeType.AutoSize));
+
+				WeSayTextBox box = AddTextBox(writingSystem, multiText);
+				box.Dock = DockStyle.Fill;
 
 				Label label = AddWritingSystemLabel(box);
 				label.Click += new EventHandler(subControl_Click);
+				label.AutoSize = true;
 
-				//Graphics g = CreateGraphics();
-				//int descent = box.Font.FontFamily.GetCellDescent(box.Font.Style);
-				//int descentPixel = (int) (box.Font.Size * descent / box.Font.FontFamily.GetEmHeight(box.Font.Style));
-
+				Controls.Add(label, 0, RowCount);
+				Controls.Add(box, 1, RowCount);
 				this.components.Add(box);//so it will get disposed of when we are
-
-				FlexibleHeightPanel p = new FlexibleHeightPanel(initialPanelWidth, 0, box);
-				p.Anchor = AnchorStyles.Left | AnchorStyles.Right;
-				p.Click += panel_Click;
-				p.Controls.Add(label);
-		   //     p.BackColor = System.Drawing.Color.LightSteelBlue;
-			   // p.AutoSize = true;
 
 				if (_showAnnotationWidget) //false for ghosts
 				{
 					//TODO: THIS IS TRANSITIONAL CODE... AnnotationWidget should probably become a full control (or go away)
 					AnnotationWidget aw =
 						new AnnotationWidget(multiText, writingSystem.Id, box.Name + "-annotationWidget");
-					Control annotationControl = aw.MakeControl(p.Size);
-					annotationControl.Click +=new EventHandler(subControl_Click);
-					annotationControl.Anchor = AnchorStyles.Right | AnchorStyles.Top ;
-					p.Controls.Add(annotationControl);
+					Control annotationControl = aw.MakeControl(new Size());//p.Size);
+					annotationControl.Click += new EventHandler(subControl_Click);
+					annotationControl.Anchor = AnchorStyles.Right | AnchorStyles.Top;
+					Controls.Add(annotationControl, 2, RowCount);
+
+					//                    p.Controls.Add(annotationControl);
 					this.components.Add(annotationControl); //so it will get disposed of when we are
 				}
-
-				_vbox.AddControlToBottom(p);
-			   // Height += p.Height;
+				else
+				{
+					SetColumnSpan(box, 2);
+				}
 			}
-		  //  Height = _vbox.Height + 100;
 
 			ResumeLayout(false);
 		}
 
-		static void panel_Click(object sender, EventArgs e)
+
+		protected override void OnMouseClick(MouseEventArgs e)
 		{
-			Control control = (Control)sender;
-			foreach (Control c in control.Controls)
+			base.OnMouseClick(e);
+			foreach (Control c in Controls)
 			{
 				if (c.TabStop)
 				{
-					c.Focus();
+					FocusWithInsertionPointAtEnd(c);
 					break;
 				}
 			}
 		}
 
-		static void subControl_Click(object sender, EventArgs e)
+		void subControl_Click(object sender, EventArgs e)
 		{
-			Control control = (Control) sender;
-			foreach (Control c in control.Parent.Controls)
+			Control c = GetControlFromPosition(1, GetRow((Control)sender));
+			FocusWithInsertionPointAtEnd(c);
+		}
+
+		private static void FocusWithInsertionPointAtEnd(Control c) {
+			c.Focus();
+			TextBox tb = c as TextBox;
+			if(tb != null)
 			{
-				if(c.TabStop)
-				{
-					c.Focus();
-					break;
-				}
+				tb.Select(1000, 0);//go to end}
 			}
 		}
 
-		private Label AddWritingSystemLabel(WeSayTextBox box)
+		static private Label AddWritingSystemLabel(WeSayTextBox box)
 		{
 			Label label = new Label();
 			label.Text = box.WritingSystem.Id;
@@ -177,22 +162,18 @@ namespace WeSay.UI
 			int contentAscentInPixels = (int)(box.Font.Size * box.Font.FontFamily.GetCellAscent(box.Font.Style) / label.Font.FontFamily.GetEmHeight(box.Font.Style));
 			int howMuchFartherDownToPlaceLabelThanText = Math.Max(0, contentAscentInPixels - labelAscentInPixels);
 
-			label.Location = new Point(0, (int)(box.Top + howMuchFartherDownToPlaceLabelThanText));
+			label.Location = new Point(0, box.Top + howMuchFartherDownToPlaceLabelThanText);
 			return label;
 		}
 
-		private WeSayTextBox AddTextBox(int initialPanelWidth, WritingSystem writingSystem, MultiText multiText)
+		private WeSayTextBox AddTextBox(WritingSystem writingSystem, MultiText multiText)
 		{
 			WeSayTextBox box = new WeSayTextBox(writingSystem);
 			_textBoxes.Add(box);
 			box.Name = Name.Replace("-mtc","") + "_" + writingSystem.Id; //for automated tests to find this particular guy
 			box.Text = multiText[writingSystem.Id];
-			box.Location = new Point(30, 0);
 
-			const int kRightMargin = 25; // for flag button
-			box.Width = (initialPanelWidth - box.Left) - kRightMargin;
-			box.Anchor = AnchorStyles.Left | AnchorStyles.Right;
-			//  box.BorderStyle = BorderStyle.FixedSingle;
+			box.Dock = DockStyle.Fill;
 			box.TextChanged += new EventHandler(OnTextOfSomeBoxChanged);
 			box.KeyDown += new KeyEventHandler(OnKeyDownInSomeBox);
 

@@ -1,4 +1,5 @@
 using System;
+using System.Windows.Forms;
 
 namespace WeSay.CommonTools
 {
@@ -49,15 +50,11 @@ namespace WeSay.CommonTools
 			//
 			this._btnName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
 						| System.Windows.Forms.AnchorStyles.Right)));
-			if (Environment.OSVersion.Platform != PlatformID.Unix)
-			{
-				SetAutoSizeToGrowAndShrink();
-			}
 			this._btnName.BackColor = System.Drawing.Color.AliceBlue;
 			this._btnName.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this._btnName.Location = new System.Drawing.Point(79, 9);
 			this._btnName.Name = "_btnName";
-			this._btnName.Size = new System.Drawing.Size(275, 33);
+			this._btnName.Size = new System.Drawing.Size(407, 33);
 			this._btnName.TabIndex = 1;
 			this._btnName.Text = "Gather from Foo words";
 			this._btnName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -73,30 +70,26 @@ namespace WeSay.CommonTools
 			this._textShortDescription.Location = new System.Drawing.Point(79, 48);
 			this._textShortDescription.Multiline = true;
 			this._textShortDescription.Name = "_textShortDescription";
-			this._textShortDescription.Size = new System.Drawing.Size(275, 32);
+			this._textShortDescription.Size = new System.Drawing.Size(407, 32);
 			this._textShortDescription.TabIndex = 2;
-			this._textShortDescription.Text = "See words in Foo, write the same words in Boo";
 			this._textShortDescription.TabStop = false;
+			this._textShortDescription.Text = "See words in Foo, write the same words in Boo";
 			//
 			// TaskIndicator
 			//
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.AutoSize = true;
-			this.BackColor = System.Drawing.Color.White;
+			this.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+
 			this.Controls.Add(this._textShortDescription);
 			this.Controls.Add(this._btnName);
 			this.Controls.Add(this._count);
 			this.Name = "TaskIndicator";
-			this.Size = new System.Drawing.Size(357, 83);
+			this.Size = new System.Drawing.Size(489, 83);
 			this.BackColorChanged += new System.EventHandler(this.TaskIndicator_BackColorChanged);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
-		}
-
-		private void SetAutoSizeToGrowAndShrink() {
-			this._btnName.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
 		}
 
 		#endregion

@@ -42,7 +42,6 @@ namespace WeSay.CommonTools
 			this._vbox.AutoScroll = true;
 			this._vbox.ColumnCount = 1;
 			this._vbox.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 476F));
-			this._vbox.FocussedImmediateChild = null;
 			this._vbox.Location = new System.Drawing.Point(3, 62);
 			this._vbox.Name = "_vbox";
 			this._vbox.Size = new System.Drawing.Size(493, 277);

@@ -28,7 +28,7 @@ namespace WeSay.LexicalTools
 				Control glossControl = MakeBoundControl(sense.Gloss, field);
 				Control glossRowControl = DetailList.AddWidgetRow(StringCatalog.Get("Meaning"), true, glossControl, insertAtRow);
 				++rowCount;
-				insertAtRow = DetailList.GetRowOfControl(glossRowControl);
+				insertAtRow = DetailList.GetRow(glossRowControl);
 			}
 
 			rowCount += AddCustomFields(sense, insertAtRow+rowCount);
