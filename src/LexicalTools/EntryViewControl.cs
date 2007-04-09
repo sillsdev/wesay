@@ -137,12 +137,12 @@ namespace WeSay.LexicalTools
 		{
 			this._detailListControl.SuspendLayout();
 			this._detailListControl.Clear();
+			this._detailListControl.VerticalScroll.Value = this._detailListControl.VerticalScroll.Minimum;
 			if (this._record != null)
 			{
 				LexEntryLayouter layout = new LexEntryLayouter(this._detailListControl, ViewTemplate);
 				layout.AddWidgets(this._record);
 			}
-
 			this._detailListControl.ResumeLayout(true);
 			this._detailListControl.Refresh();
 		}
