@@ -23,14 +23,15 @@ namespace WeSay.Data
 		private Db4oDataSource _dataSource;
 		private string _cachePath;
 
-		public Db4oRecordListManager(IDb4oModelConfiguration config, string filePath)
+		public Db4oRecordListManager(IDb4oModelConfiguration config, string pathToDb4oFile)
 		: base()
 		{
 			try
 			{
 				config.Configure();
-				_cachePath = filePath + " Cache";
-				_dataSource = new Db4oDataSource(filePath);
+			   // _cachePath = pathToDb4oFile + " Cache";
+				_cachePath = Path.GetDirectoryName(pathToDb4oFile); // use same dir
+				_dataSource = new Db4oDataSource(pathToDb4oFile);
 			}
 			catch(Exception e)
 			{

@@ -4,9 +4,11 @@ using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 using CommandLine;
+using MultithreadProgress;
 using Reporting;
 using WeSay.App.Properties;
 using WeSay.Data;
+using WeSay.Foundation.Progress;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Db4o_Specific;
 using WeSay.LexicalModel.Tests;
@@ -166,14 +168,14 @@ namespace WeSay.App
 				parentName = parentName.ToLower();
 			}
 
-			if (parentName != name)
-			{
-				ErrorReporter.ReportNonFatalMessage(
-					String.Format(
-						"WeSay requires the lift file to be inside a project directory, like {0}\\WeSay\\{1}", name,
-						Path.GetFileName(liftPath)));
-				return false;
-			}
+//don't need the project folder to match the lift file            if (parentName != name)
+//            {
+//                ErrorReporter.ReportNonFatalMessage(
+//                    String.Format(
+//                        "WeSay requires the lift file to be inside a project directory, like {0}\\WeSay\\{1}", name,
+//                        Path.GetFileName(liftPath)));
+//                return false;
+//            }
 
 			if (!File.Exists(liftPath))
 			{
@@ -184,6 +186,25 @@ namespace WeSay.App
 				return false;
 			}
 
+
+
+			CacheBuilder builder = project.GetCacheBuilderIfNeeded(liftPath);
+			if (builder != null)
+			{
+	/*            ProgressDialogHandler progressDialogHandler = new ProgressDialogHandler(null, command);
+				// progressDialogHandler.Finished += new EventHandler(progressDialogHandler_Finished);
+	 */           ProgressState progressState = new WeSay.Foundation.ConsoleProgress();//new ProgressState(progressDialogHandler);
+				// progressState.Log += new EventHandler<ProgressState.LogEvent>(OnProgressState_Log);
+
+//                command.BeginInvoke(progressState);
+//                while ((progressState.Status == ProgressState.StatusValue.Busy)
+//                    || (progressState.Status == ProgressState.StatusValue.NotStarted))
+//                {
+//                    Thread.Sleep(10);
+//                }
+
+				builder.DoWork(progressState);
+			}
 			if (project.LoadFromLiftLexiconPath(liftPath))
 			{
 				Settings.Default.PreviousLiftPath = liftPath;
@@ -194,6 +215,9 @@ namespace WeSay.App
 				return false;
 			}
 		}
+
+
+
 
 		private static void OsCheck()
 		{

@@ -55,8 +55,6 @@
   <ItemGroup>
 	<Compile Include="BackupService.cs" />
 	<Compile Include="CommandLineParser.cs" />
-	<Compile Include="ConfigFileTaskBuilder.cs" />
-	<Compile Include="ImportLIFTCommand.cs" />
 	<Compile Include="ProgressDialog.cs">
 	  <SubType>Form</SubType>
 	</Compile>

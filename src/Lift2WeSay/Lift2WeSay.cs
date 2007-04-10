@@ -2,61 +2,12 @@ using System;
 using System.IO;
 using System.Threading;
 using WeSay;
-using WeSay.App;
-using WeSay.Data;
+using WeSay.Foundation;
 using WeSay.Foundation.Progress;
-using WeSay.LexicalModel;
-using WeSay.LexicalModel.Db4o_Specific;
 using WeSay.Project;
 
 namespace Lift2WeSay
 {
-	class ConsoleProgress : ProgressState
-	{
-		int _numberOfSteps;
-		int _numberOfStepsCompleted;
-		string _statusLabel;
-
-		public ConsoleProgress() : base(null)
-		{
-
-		}
-		public override int NumberOfSteps
-		{
-			get
-			{
-				return _numberOfSteps;
-			}
-			set
-			{
-				_numberOfSteps = value;
-			}
-		}
-		public override string StatusLabel
-		{
-			get
-			{
-				return _statusLabel;
-			}
-			set
-			{
-				Console.WriteLine(value);
-				_statusLabel = value;
-			}
-		}
-		public override int NumberOfStepsCompleted
-		{
-			get
-			{
-				return _numberOfStepsCompleted;
-			}
-			set
-			{
-				Console.Write('.');
-				_numberOfStepsCompleted = value;
-			}
-		}
-	}
 	class Lift2WeSay
 	{
 		[STAThread]
@@ -114,7 +65,7 @@ namespace Lift2WeSay
 			ConsoleProgress progress = new ConsoleProgress();
 			progress.Log += new EventHandler<ProgressState.LogEvent>(progress_Log);
 
-			ImportLIFTCommand command = new ImportLIFTCommand(project.PathToDb4oLexicalModelDB, sourcePath);
+			ImportLIFTCommand command = new ImportLIFTCommand(sourcePath);
 			command.BeginInvoke(progress);
 
 			while (true)

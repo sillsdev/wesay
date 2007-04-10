@@ -6,7 +6,7 @@ using System.Windows.Forms;
 
 namespace WeSay.UI
 {
-  public partial class ProgressIndicator : UserControl
+  public partial class CirclesProgressIndicator : UserControl
   {
 	private int _maximum;
 	private int _minimum;
@@ -17,7 +17,7 @@ namespace WeSay.UI
 	private Color _bulletColor;
 	private Color _bulletColorEnd;
 	private bool _highlightCurrentOnly;
-	public ProgressIndicator()
+	public CirclesProgressIndicator()
 	{
 	  _maximum = 10;
 	  _minimum = 1;

@@ -9,7 +9,7 @@ namespace WeSay.Foundation.Progress
 	/// </summary>
 	public class NullProgressState : ProgressState
 	{
-		public NullProgressState():base(null)
+		public NullProgressState():base()
 		{
 		}
 

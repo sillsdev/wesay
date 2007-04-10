@@ -28,9 +28,21 @@
 	<WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+	<Reference Include="Db4objects.Db4o, Version=6.0.2.0, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\Db4objects.Db4o.dll</HintPath>
+	</Reference>
+	<Reference Include="LiftIO, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\LiftIO.dll</HintPath>
+	</Reference>
 	<Reference Include="NetReflector, Version=1.0.0.0, Culture=neutral">
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\NetReflector.dll</HintPath>
+	</Reference>
+	<Reference Include="PicoContainer, Version=1.0.2412.18537, Culture=neutral, processorArchitecture=MSIL">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\PicoContainer\PicoContainer.dll</HintPath>
 	</Reference>
 	<Reference Include="System" />
 	<Reference Include="System.Data" />
@@ -39,8 +51,11 @@
   </ItemGroup>
   <ItemGroup>
 	<Compile Include="BasilProject.cs" />
+	<Compile Include="CacheBuilder.cs" />
+	<Compile Include="ConfigFileTaskBuilder.cs" />
 	<Compile Include="FailedLoadTask.cs" />
 	<Compile Include="Field.cs" />
+	<Compile Include="ImportLIFTCommand.cs" />
 	<Compile Include="ViewTemplate.cs" />
 	<Compile Include="ICurrentWorkTask.cs" />
 	<Compile Include="IProject.cs" />
@@ -50,9 +65,17 @@
 	<Compile Include="WeSayWordsProject.cs" />
   </ItemGroup>
   <ItemGroup>
+	<ProjectReference Include="..\LexicalModel\LexicalModel.csproj">
+	  <Project>{5F61C809-B6C0-4567-9603-B2198E1AD038}</Project>
+	  <Name>LexicalModel</Name>
+	</ProjectReference>
 	<ProjectReference Include="..\Reporting\Reporting.csproj">
 	  <Project>{9CCBECEC-513C-4DA4-A4CE-F5361B633760}</Project>
 	  <Name>Reporting</Name>
+	</ProjectReference>
+	<ProjectReference Include="..\WeSay.Data\WeSay.Data.csproj">
+	  <Project>{600D0FD4-D189-41A0-9BC5-FC79AD2CF1CD}</Project>
+	  <Name>WeSay.Data</Name>
 	</ProjectReference>
 	<ProjectReference Include="..\WeSay.Foundation\WeSay.Foundation.csproj">
 	  <Project>{F12EB680-0990-4900-B77E-0FBF2E28A815}</Project>

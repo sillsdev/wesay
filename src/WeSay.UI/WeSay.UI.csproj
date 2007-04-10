@@ -73,11 +73,11 @@
 	<Compile Include="OptionCollectionControl.Designer.cs">
 	  <DependentUpon>OptionCollectionControl.cs</DependentUpon>
 	</Compile>
-	<Compile Include="ProgressIndicator.cs">
+	<Compile Include="CirclesProgressIndicator.cs">
 	  <SubType>UserControl</SubType>
 	</Compile>
-	<Compile Include="ProgressIndicator.Designer.cs">
-	  <DependentUpon>ProgressIndicator.cs</DependentUpon>
+	<Compile Include="CirclesProgressIndicator.Designer.cs">
+	  <DependentUpon>CirclesProgressIndicator.cs</DependentUpon>
 	</Compile>
 	<Compile Include="Properties\Resources.Designer.cs">
 	  <AutoGen>True</AutoGen>

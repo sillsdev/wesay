@@ -22,10 +22,10 @@ namespace MultithreadProgress
 			command.PrimaryStatusTextCallback = new StatusCallback(UpdateStatus1);
 			command.SecondaryStatusTextCallback = new StatusCallback(UpdateStatus2);
 
-			_currentCommand.BeginCancel += new EventHandler(OnExportCommand_BeginCancel);
-			_currentCommand.EnabledChanged += new EventHandler(OnExportCommand_EnabledChanged);
-			_currentCommand.Error += new MultithreadProgress.ErrorEventHandler(OnExportCommand_Error);
-			_currentCommand.Finish += new EventHandler(OnExportCommand_Finish);
+			_currentCommand.BeginCancel += new EventHandler(OnCommand_BeginCancel);
+			_currentCommand.EnabledChanged += new EventHandler(OnCommand_EnabledChanged);
+			_currentCommand.Error += new MultithreadProgress.ErrorEventHandler(OnCommand_Error);
+			_currentCommand.Finish += new EventHandler(OnCommand_Finish);
 
 			_progressDialog = new ProgressDialog();
 			_progressDialog.Cancelled += new EventHandler(_progressDialog_Cancelled);
@@ -48,7 +48,7 @@ namespace MultithreadProgress
 		public void InitializeProgress(int minimum, int maximum)
 		{
 
-			if (_parentForm.InvokeRequired)
+			if (NeedInvoke())
 			{
 				_parentForm.BeginInvoke(
 					new InitializeProgressCallback(InitializeProgressCore),
@@ -62,7 +62,7 @@ namespace MultithreadProgress
 
 		public void UpdateProgress(int progress)
 		{
-			if (_parentForm.InvokeRequired)
+			if (NeedInvoke())
 			{
 				_parentForm.BeginInvoke(
 					new ProgressCallback(UpdateProgressCore),
@@ -76,7 +76,10 @@ namespace MultithreadProgress
 
 		public void UpdateStatus1(string statusText)
 		{
-			if (_parentForm.InvokeRequired)
+			if (_parentForm == null)
+				return;
+
+			if (NeedInvoke())
 			{
 				_parentForm.BeginInvoke(
 					new StatusCallback(UpdateStatus1Core),
@@ -88,9 +91,15 @@ namespace MultithreadProgress
 			}
 		}
 
+		private bool NeedInvoke()
+		{
+			return _progressDialog.InvokeRequired;
+		   //  return _parentForm != null && _parentForm.InvokeRequired;
+	   }
+
 		private void UpdateStatus2(string statusText)
 		{
-			if (_parentForm.InvokeRequired)
+			if (NeedInvoke())
 			{
 				_parentForm.BeginInvoke(
 					new StatusCallback(UpdateStatus2Core),
@@ -178,21 +187,21 @@ namespace MultithreadProgress
 
 
 
-		private void OnExportCommand_BeginCancel(object sender, EventArgs e)
+		private void OnCommand_BeginCancel(object sender, EventArgs e)
 		{
 			Close();
 		}
 
-		private void OnExportCommand_EnabledChanged(object sender, EventArgs e)
+		private void OnCommand_EnabledChanged(object sender, EventArgs e)
 		{
 			// button1.Enabled = _currentCommand.Enabled;
 		}
 
-		private void OnExportCommand_Error(object sender, MultithreadProgress.ErrorEventArgs e)
+		private void OnCommand_Error(object sender, MultithreadProgress.ErrorEventArgs e)
 		{
 			if (e.Exception == null)
 			{
-				if (_parentForm.InvokeRequired)
+				if (NeedInvoke())
 				{
 					_parentForm.BeginInvoke(new MethodInvoker(FinishWithUnspecifiedError));
 				}
@@ -203,9 +212,10 @@ namespace MultithreadProgress
 			}
 			else
 			{
-				if (_parentForm.InvokeRequired)
+
+				if (_parentForm != null && NeedInvoke())
 				{
-					_parentForm.BeginInvoke(new ProgressDialogHandler.ExceptionMethodInvoker(Finish), new object[] { e.Exception });
+					 _parentForm.BeginInvoke(new ProgressDialogHandler.ExceptionMethodInvoker(Finish), new object[] { e.Exception });
 				}
 				else
 				{
@@ -214,9 +224,9 @@ namespace MultithreadProgress
 			}
 		}
 
-		private void OnExportCommand_Finish(object sender, EventArgs e)
+		private void OnCommand_Finish(object sender, EventArgs e)
 		{
-			if (_parentForm.InvokeRequired)
+			if (NeedInvoke())
 			{
 				_parentForm.BeginInvoke(new MethodInvoker(Finish));
 			}

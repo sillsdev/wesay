@@ -5,7 +5,7 @@ using MultithreadProgress;
 namespace WeSay.Foundation.Progress
 {
 	/// <summary>
-	/// Summary description for ProgressState.
+	/// Long-running tasks can be written to take one of these as an argument, and use it to notify others of their progress
 	/// </summary>
 	public class ProgressState : IDisposable
 	{
@@ -35,23 +35,14 @@ namespace WeSay.Foundation.Progress
 
 		private StatusValue _status= StatusValue.NotStarted;
 
-		private bool _doCancel = false;
+		protected  bool _doCancel = false;
 
-		public ProgressState(ProgressDialogHandler _progressHandler)
+		public ProgressState()
 		{
-			this._progressHandler = _progressHandler;
-			//System.Windows.Forms.Cursor.Current = System.Windows.Forms.Cursors.WaitCursor;
 			_numberOfStepsCompleted = 0;
-			if (_progressHandler != null)
-			{
-				_progressHandler.Cancelled += new EventHandler(_progressHandler_Cancelled);
-			}
 		}
 
-		void _progressHandler_Cancelled(object sender, EventArgs e)
-		{
-			_doCancel = true;
-		}
+
 
 		public void WriteToLog(string message)
 		{
@@ -73,7 +64,6 @@ namespace WeSay.Foundation.Progress
 			set
 			{
 				_numberOfStepsCompleted = value;
-				_progressHandler.UpdateProgress(_numberOfStepsCompleted);
 			}
 		}
 
@@ -90,11 +80,20 @@ namespace WeSay.Foundation.Progress
 			set
 			{
 				_statusLabel = value;
-				_progressHandler.UpdateStatus1(_statusLabel);
 			}
 		}
 
-
+		public virtual int NumberOfSteps
+		{
+			get
+			{
+				return _numberOfSteps;
+			}
+			set
+			{
+				_numberOfSteps = value;
+			}
+		}
 		public virtual bool Cancel
 		{
 			get
@@ -108,48 +107,6 @@ namespace WeSay.Foundation.Progress
 		}
 
 
-		public virtual int NumberOfSteps
-		{
-			get
-			{
-				return _numberOfSteps;
-			}
-			set
-			{
-				_numberOfSteps = value;
-			  _progressHandler.InitializeProgress(0, value);
-				//_initializeCallback(0, value);
-			}
-		}
-/*
-		#region Stuff for Matthew Adams' dialog box
-
-		protected InitializeProgressCallback _initializeCallback;
-		protected ProgressCallback _progressCallback;
-		protected StatusCallback _primaryStatusTextCallback;
-		protected StatusCallback _secondaryStatusTextCallback;
-
-		public InitializeProgressCallback InitializeCallback
-		{
-			set { _initializeCallback = value; }
-		}
-
-		public ProgressCallback ProgressCallback
-		{
-			set { _progressCallback = value; }
-		}
-
-		public StatusCallback PrimaryStatusTextCallback
-		{
-			set { _primaryStatusTextCallback = value; }
-		}
-
-		public StatusCallback SecondaryStatusTextCallback
-		{
-			set { _secondaryStatusTextCallback = value; }
-		}
-		#endregion
-*/
 		#region IDisposable & Co. implementation
 		//Courtesy  of Randy Regnier
 
@@ -258,4 +215,5 @@ namespace WeSay.Foundation.Progress
 
 
 	}
+
 }

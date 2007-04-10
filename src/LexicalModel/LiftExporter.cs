@@ -77,9 +77,17 @@ namespace WeSay.LexicalModel
 			_writer.WriteStartElement("lift");
 			_writer.WriteAttributeString("version", LiftIO.Validator.LiftVersion);
 			_writer.WriteAttributeString("producer",
-										 "WeSay " +
-										 Assembly.GetExecutingAssembly().GetName().Version);
+										 ProducerString);
 		   // _writer.WriteAttributeString("xmlns", "flex", null, "http://fieldworks.sil.org");
+		}
+
+		public static string ProducerString
+		{
+			get
+			{
+				return "WeSay " +
+					   Assembly.GetExecutingAssembly().GetName().Version;
+			}
 		}
 
 		public void End()

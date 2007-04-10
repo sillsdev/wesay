@@ -46,7 +46,7 @@ namespace WeSay.LexicalTools
 			this._btnPrevious = new ArrowButton.ArrowButton();
 			this._btnNext = new ArrowButton.ArrowButton();
 			this._btnAddWord = new ArrowButton.ArrowButton();
-			this._questionIndicator = new WeSay.UI.ProgressIndicator();
+			this._questionIndicator = new WeSay.UI.CirclesProgressIndicator();
 		  this._animatedText = new Label();
 		  this._animator = new Animator();
 			this.SuspendLayout();
@@ -297,7 +297,7 @@ namespace WeSay.LexicalTools
 		private ArrowButton.ArrowButton _btnAddWord;
 		private System.Windows.Forms.Label _question;
 		private System.Windows.Forms.Label _description;
-		private WeSay.UI.ProgressIndicator _questionIndicator;
+		private WeSay.UI.CirclesProgressIndicator _questionIndicator;
 	  private System.Windows.Forms.Label _animatedText;
 	}
 }

@@ -81,7 +81,7 @@ namespace WeSay.Project
 			}
 		}
 
-		public virtual void Create(string projectDirectoryPath)
+		public virtual void CreateEmptyProjectFiles(string projectDirectoryPath)
 		{
 			this._projectDirectoryPath = projectDirectoryPath;
 			Directory.CreateDirectory(CommonDirectory);

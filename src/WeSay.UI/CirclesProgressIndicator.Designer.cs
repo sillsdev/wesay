@@ -1,6 +1,6 @@
 namespace WeSay.UI
 {
-  partial class ProgressIndicator
+  partial class CirclesProgressIndicator
   {
 	/// <summary>
 	/// Required designer variable.

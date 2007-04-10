@@ -19,6 +19,8 @@ namespace WeSay.Language
 //
 		public static string Get(string id)
 		{
+			if (_singleton == null)//todo: this should not be needed
+				return id;
 			return _singleton[id];
 		}
 

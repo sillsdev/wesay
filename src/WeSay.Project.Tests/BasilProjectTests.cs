@@ -101,7 +101,7 @@ namespace WeSay.Project.Tests
 			{
 				Directory.CreateDirectory(path);
 				BasilProject project = new BasilProject();
-				project.Create(path);
+				project.CreateEmptyProjectFiles(path);
 				Assert.IsTrue(Directory.Exists(path));
 				Assert.IsTrue(Directory.Exists(project.ApplicationCommonDirectory));
 				Assert.IsTrue(File.Exists(project.PathToWritingSystemPrefs));

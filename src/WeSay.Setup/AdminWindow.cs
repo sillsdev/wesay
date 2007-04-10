@@ -4,6 +4,7 @@ using System.IO;
 using System.Windows.Forms;
 using MultithreadProgress;
 using WeSay.Data;
+using WeSay.Foundation;
 using WeSay.Foundation.Progress;
 using WeSay.Project;
 using WeSay.Setup.Properties;
@@ -16,7 +17,7 @@ namespace WeSay.Setup
 		private ProjectTabs _projectTabs;
 		private WeSayWordsProject _project;
 		ProgressDialogHandler _progressHandler;
-		private ProgressState _progressState;
+		private ProgressDialogProgressState _progressState;
 		private string _progressLog;
 
  public AdminWindow(string[] args)
@@ -128,10 +129,11 @@ namespace WeSay.Setup
 			try
 			{
 				p = new WeSayWordsProject();
-				p.Create(path);
-				Db4oDataSource d = new Db4oDataSource(p.PathToDb4oLexicalModelDB);
-				d.Data.Commit();
-				d.Data.Close();
+				p.CreateEmptyProjectFiles(path);
+
+//                Db4oDataSource d = new Db4oDataSource(p.PathToDb4oLexicalModelDB);
+//                d.Data.Commit();
+//                d.Data.Close();
 			}
 			catch (Exception e)
 			{
@@ -308,7 +310,7 @@ namespace WeSay.Setup
 			_progressLog = "";
 			_progressHandler = new ProgressDialogHandler(this, command);
 			_progressHandler.Finished += new EventHandler(OnProgressHandler_Finished);
-			_progressState = new ProgressState(_progressHandler);
+			_progressState = new WeSay.Foundation.ProgressDialogProgressState(_progressHandler);
 			_progressState.Log += new EventHandler<ProgressState.LogEvent>(OnProgressState_Log);
 			UpdateEnabledStates();
 			command.BeginInvoke(_progressState);
@@ -360,10 +362,10 @@ namespace WeSay.Setup
 //                return;
 //            }
 //            RunCommand(new ImportLIFTCommand(saveDialog.FileName, openDialog.FileName));
-			RunCommand(new ImportLIFTCommand(WeSayWordsProject.Project.PathToDb4oLexicalModelDB, openDialog.FileName));
+			RunCommand(new ImportLIFTCommand(openDialog.FileName));
 		}
 
-		private void OnOpenThisProjectInWeSayToolStripMenuItem_Click(object sender, EventArgs e)
+		private void OnOpenThisProjectInWeSay(object sender, EventArgs e)
 		{
 			this._project.Save();//want the client to see the latest
 			string dir = Directory.GetParent(Application.ExecutablePath).FullName;

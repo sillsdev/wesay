@@ -82,7 +82,7 @@ namespace WeSay.Setup
 			this.openThisProjectInWeSayToolStripMenuItem.Name = "openThisProjectInWeSayToolStripMenuItem";
 			this.openThisProjectInWeSayToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
 			this.openThisProjectInWeSayToolStripMenuItem.Text = "Open this Project in &WeSay";
-			this.openThisProjectInWeSayToolStripMenuItem.Click += new System.EventHandler(this.OnOpenThisProjectInWeSayToolStripMenuItem_Click);
+			this.openThisProjectInWeSayToolStripMenuItem.Click += new System.EventHandler(this.OnOpenThisProjectInWeSay);
 			//
 			// toolStripSeparator1
 			//

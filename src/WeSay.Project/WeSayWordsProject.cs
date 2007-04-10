@@ -7,6 +7,8 @@ using System.Windows.Forms;
 using System.Xml;
 using Reporting;
 using WeSay.Foundation;
+using WeSay.Foundation.Progress;
+using WeSay.LexicalModel;
 
 namespace WeSay.Project
 {
@@ -16,6 +18,8 @@ namespace WeSay.Project
 		private IList<ITask> _tasks;
 		private ViewTemplate _viewTemplate;
 		private Dictionary<string, OptionsList> _optionLists;
+		private string _pathToLiftFile;
+		private string _cacheLocationOverride;
 
 		public WeSayWordsProject()
 		{
@@ -53,55 +57,112 @@ namespace WeSay.Project
 		public static new void InitializeForTests()
 		{
 			WeSayWordsProject project = new WeSayWordsProject();
-			project.ContinueInitializeForTests();
+			string s = Path.Combine(GetPretendProjectDirectory(),"WeSay");
+			s = Path.Combine(s,"pretend.lift");
+			project.SetupProjectDirForTests(s);
 		}
 
-		internal void ContinueInitializeForTests()
+		public void SetupProjectDirForTests(string pathToLift)
 		{
-			_projectDirectoryPath = GetPretendProjectDirectory();
-			File.Delete(PathToProjectTaskInventory);
+			_projectDirectoryPath = Directory.GetParent(pathToLift).Parent.FullName;
+			PathToLiftFile = pathToLift;
+//            if (!Directory.Exists(pathToLift))
+//            {
+//                Directory.CreateDirectory(pathToLift);
+//            }
+			if (File.Exists(PathToProjectTaskInventory))
+			{
+				File.Delete(PathToProjectTaskInventory);
+			}
 			File.Copy(Path.Combine(ApplicationTestDirectory, "tasks.xml"), WeSayWordsProject.Project.PathToProjectTaskInventory, true);
 
 			Reporting.ErrorReporter.OkToInteractWithUser = false;
-			LoadFromProjectDirectoryPath(GetPretendProjectDirectory());
+			LoadFromProjectDirectoryPath(_projectDirectoryPath);
 			StringCatalogSelector = "en";
 		}
 
 		public bool LoadFromLiftLexiconPath(string liftPath)
 		{
-			if (!File.Exists(liftPath))
+			try
 			{
-			   throw new ApplicationException("WeSay cannot find a lexicon where it was looking, which is at "+liftPath);
-			}
-			liftPath = Path.GetFullPath(liftPath);
+				PathToLiftFile = liftPath;
+				if (!File.Exists(liftPath))
+				{
+					throw new ApplicationException("WeSay cannot find a lexicon where it was looking, which is at " +
+												   liftPath);
+				}
 
-			if (CheckLexiconIsInValidProjectDirectory(liftPath))
-			{
 				//walk up from file to /wesay to /<project>
-				base.LoadFromProjectDirectoryPath(
-					Directory.GetParent(Directory.GetParent(liftPath).FullName).FullName);
-				//_lexiconDatabaseFileName = Path.GetFileName(liftPath);
-				return true;
+				_projectDirectoryPath = Directory.GetParent(Directory.GetParent(liftPath).FullName).FullName;
+
+				if (CheckLexiconIsInValidProjectDirectory(liftPath))
+				{
+					this._projectDirectoryPath = ProjectDirectoryPath;
+
+					if (GetCacheIsOutOfDate(liftPath))
+					{
+						throw new ApplicationException(
+							"Possible programming error. The cache should be up-to-date before calling this method.");
+					}
+
+					base.LoadFromProjectDirectoryPath(
+						ProjectDirectoryPath);
+					return true;
+				}
+				else
+				{
+					PathToLiftFile = null;
+					_projectDirectoryPath = null;
+					return false;
+				}
 			}
-			else
+			catch (Exception e)
 			{
+				ErrorReporter.ReportNonFatalMessage(e.Message);
 				return false;
 			}
 		}
 
+		public CacheBuilder GetCacheBuilderIfNeeded(string pathToLift)
+		{
+			PathToLiftFile = pathToLift;
+			string pathToCacheDirectory = GetPathToCacheFromPathToLift(pathToLift);
+			if (GetCacheIsOutOfDate(pathToLift))
+			{
+				if (Directory.Exists(pathToCacheDirectory))
+				{
+					Directory.Delete(pathToCacheDirectory, true);
+				}
+			}
+			if (!Directory.Exists(pathToCacheDirectory))
+			{
+			   return new CacheBuilder(pathToLift);
+			}
+			return null;
+		}
+
+		public bool GetCacheIsOutOfDate(string pathToLift)
+		{
+			string pathToCacheDirectory = GetPathToCacheFromPathToLift(pathToLift);
+			string db4oPath = GetPathToDb4oLexicalModelDBFromPathToLift(pathToLift);
+			return Directory.Exists(pathToCacheDirectory) &&
+				   (!File.Exists(db4oPath)
+					|| (File.GetLastWriteTimeUtc(pathToLift) > File.GetLastWriteTimeUtc(db4oPath)));
+		}
+
+
 		public override  void LoadFromProjectDirectoryPath(string projectDirectoryPath)
 		{
 			base.LoadFromProjectDirectoryPath(projectDirectoryPath);
-			DetermineWordsFile();
 
-//            ViewTemplate templateAsFoundInProjectFiles = GetInventoryFromProjectFiles();
+//            ViewTemplate templateAsFoundInProjectFiles = GetViewTemplateFromProjectFiles();
 //            ViewTemplate fullUpToDateTemplate = ViewTemplate.MakeMasterTemplate(WritingSystems);
 //            ViewTemplate.SynchronizeInventories(fullUpToDateTemplate, templateAsFoundInProjectFiles);
 //            _viewTemplate = fullUpToDateTemplate;
 		}
 
 
-		private ViewTemplate GetInventoryFromProjectFiles()
+		private ViewTemplate GetViewTemplateFromProjectFiles()
 		{
 			ViewTemplate template = new ViewTemplate();
 			try
@@ -109,8 +170,8 @@ namespace WeSay.Project
 				XmlDocument projectDoc = GetProjectDoc();
 				if (projectDoc != null)
 				{
-					XmlNode inventoryNode = projectDoc.SelectSingleNode("tasks/components/viewTemplate");
-					template.LoadFromString(inventoryNode.OuterXml);
+					XmlNode node = projectDoc.SelectSingleNode("tasks/components/viewTemplate");
+					template.LoadFromString(node.OuterXml);
 				}
 			}
 			catch (Exception error)
@@ -140,18 +201,10 @@ namespace WeSay.Project
 			return projectDoc;
 		}
 
-		private void DetermineWordsFile()
-		{
-			//try to use the one implied by the project name (e.g. thai.words)
-			if (File.Exists(PathToDb4oLexicalModelDB))
-			{
-				return;
-			}
-	   }
 
-		private bool CheckLexiconIsInValidProjectDirectory(string p)
+		private bool CheckLexiconIsInValidProjectDirectory(string liftPath)
 		{
-			DirectoryInfo lexiconDirectoryInfo = Directory.GetParent(p);
+			DirectoryInfo lexiconDirectoryInfo = Directory.GetParent(liftPath);
 			DirectoryInfo projectRootDirectoryInfo = lexiconDirectoryInfo.Parent;
 			string lexiconDirectoryName = lexiconDirectoryInfo.Name;
 			if (Environment.OSVersion.Platform != PlatformID.Unix)
@@ -171,13 +224,20 @@ namespace WeSay.Project
 			return true;
 		}
 
-		public override void Create(string projectDirectoryPath)
+		public override void CreateEmptyProjectFiles(string projectDirectoryPath)
 		{
-			base.Create(projectDirectoryPath);
+			base.CreateEmptyProjectFiles(projectDirectoryPath);
 			Directory.CreateDirectory(PathToWeSaySpecificFilesDirectoryInProject);
 			_viewTemplate = ViewTemplate.MakeMasterTemplate(WritingSystems);
 		   // this._lexiconDatabaseFileName = this.Name+".words";
-	   }
+
+
+			if (!File.Exists(PathToLiftFile))
+			{
+				LiftIO.Utilities.CreateEmptyLiftFile(PathToLiftFile, LiftExporter.ProducerString, false);
+			}
+
+		}
 
 		public static bool IsValidProjectDirectory(string dir)
 		{
@@ -202,7 +262,25 @@ namespace WeSay.Project
 		{
 			get
 			{
-				return System.IO.Path.Combine(PathToWeSaySpecificFilesDirectoryInProject,  this.Name + ".lift");
+				if (String.IsNullOrEmpty(_pathToLiftFile))
+				{
+					_pathToLiftFile =
+						Path.Combine(PathToWeSaySpecificFilesDirectoryInProject, Path.GetFileName(ProjectDirectoryPath ) + ".lift");
+				}
+				return _pathToLiftFile;
+			}
+
+			protected set
+			{
+				_pathToLiftFile = value;
+				if (value == null)
+				{
+					_projectDirectoryPath = null;
+				}
+				else
+				{
+					_projectDirectoryPath = Directory.GetParent(value).Parent.FullName;
+				}
 			}
 		}
 
@@ -210,7 +288,7 @@ namespace WeSay.Project
 		{
 			get
 			{
-				return PathToDb4oLexicalModelDB + " incremental xml backup";
+				return PathToLiftFile + " incremental xml backup";
 			}
 		}
 
@@ -218,24 +296,37 @@ namespace WeSay.Project
 		{
 			get
 			{
-				return PathToDb4oLexicalModelDB + " Cache";
+				if (_cacheLocationOverride != null)
+				{
+				   return _cacheLocationOverride;
+				}
+				else
+				{
+					 return GetPathToCacheFromPathToLift(PathToLiftFile);
+				}
 			}
+		}
+
+		private static string GetPathToCacheFromPathToLift(string pathToLift)
+		{
+			return Path.Combine(Path.GetDirectoryName(pathToLift), "Cache");
 		}
 
 		public string PathToDb4oLexicalModelDB
 		{
 			get
 			{
-//                if (_lexiconDatabaseFileName != null)
-//                {
-//                    return System.IO.Path.Combine(PathToWeSaySpecificFilesDirectoryInProject, this._lexiconDatabaseFileName);
-//                }
-//                else
-//                {
-					return System.IO.Path.Combine(PathToWeSaySpecificFilesDirectoryInProject, Name+".words");
-//                }
+				return GetPathToDb4oLexicalModelDBFromPathToLift(PathToLiftFile);
 			}
 		}
+
+		public string GetPathToDb4oLexicalModelDBFromPathToLift(string pathToLift)
+		{
+				return System.IO.Path.Combine(GetPathToCacheFromPathToLift(pathToLift), Path.GetFileNameWithoutExtension(pathToLift) + ".words");
+		}
+
+
+
 
 		public string PathToWeSaySpecificFilesDirectoryInProject
 		{
@@ -251,14 +342,13 @@ namespace WeSay.Project
 			{
 				if(_viewTemplate==null)
 				{
-					ViewTemplate templateAsFoundInProjectFiles = GetInventoryFromProjectFiles();
+					ViewTemplate templateAsFoundInProjectFiles = GetViewTemplateFromProjectFiles();
 					ViewTemplate fullUpToDateTemplate = ViewTemplate.MakeMasterTemplate(WritingSystems);
 					ViewTemplate.SynchronizeInventories(fullUpToDateTemplate, templateAsFoundInProjectFiles);
 					_viewTemplate = fullUpToDateTemplate;
 				}
 				return _viewTemplate;
 			}
-		   // set { _viewTemplate = value; }
 		}
 
 		public IEnumerable OptionFieldNames
@@ -292,6 +382,15 @@ namespace WeSay.Project
 					}
 				}
 				return names;
+			}
+		}
+
+		//used when building the cache, so we can build it in a temp directory
+		public string CacheLocationOverride
+		{
+			set
+			{
+				_cacheLocationOverride = value;
 			}
 		}
 

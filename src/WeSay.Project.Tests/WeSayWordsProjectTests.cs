@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using NUnit.Framework;
 using WeSay.Foundation;
+using WeSay.Foundation.Progress;
 using WeSay.Project;
 
 namespace WeSay.Project.Tests
@@ -35,7 +36,7 @@ namespace WeSay.Project.Tests
 			{
 				Directory.CreateDirectory(Directory.GetParent(path).FullName);
 				WeSayWordsProject p = new WeSayWordsProject();
-				p.Create(path);
+				p.CreateEmptyProjectFiles(path);
 				Assert.IsTrue(Directory.Exists(path));
 				Assert.IsTrue(Directory.Exists(p.PathToWeSaySpecificFilesDirectoryInProject));
 			}

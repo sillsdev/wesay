@@ -10,19 +10,17 @@ using WeSay.LexicalModel;
 using WeSay.LexicalModel.Db4o_Specific;
 using WeSay.Project;
 
-namespace WeSay
+namespace WeSay.Project
 {
-	public class ImportLIFTCommand : BasicCommand
+	public class CacheBuilder
 	{
-		private string _destinationDatabasePath;
 		private string _sourceLIFTPath;
-		//private LiftImporter _importer;
-		protected ProgressState _progress;
-		private Db4oRecordList<LexEntry> _prewiredEntries=null;
+		protected WeSay.Foundation.Progress.ProgressState _progress;
+		private WeSay.Data.Db4oRecordList<LexEntry> _prewiredEntries=null;
 
-		public ImportLIFTCommand(string destinationDatabasePath, string sourceLIFTPath)
+		public CacheBuilder(string sourceLIFTPath)
 		{
-			_destinationDatabasePath = destinationDatabasePath;
+		   // _destinationDatabasePath = destinationDatabasePath;
 			_sourceLIFTPath = sourceLIFTPath;
 		}
 
@@ -51,18 +49,6 @@ namespace WeSay
 			}
 		}
 
-		public string DestinationDatabasePath
-		{
-			get
-			{
-				return _destinationDatabasePath;
-			}
-			set
-			{
-				_destinationDatabasePath = value;
-			}
-		}
-
 		public Db4oRecordList<LexEntry> GetEntries(Db4oDataSource ds)
 		{
 
@@ -74,7 +60,7 @@ namespace WeSay
 			return _prewiredEntries;
 		}
 
-		protected override void DoWork2(ProgressState progress)
+		public void DoWork(ProgressState progress)
 		{
 			_progress = progress;
 			_progress.Status = ProgressState.StatusValue.Busy;
@@ -90,19 +76,25 @@ namespace WeSay
 			try
 			{
 				progress.StatusLabel = "Importing...";
-				string tempTarget = Path.GetTempFileName();
+				string tempCacheDirectory = Directory.CreateDirectory(Path.Combine(Path.GetTempPath(), Path.GetRandomFileName())).FullName;
+				Project.WeSayWordsProject.Project.CacheLocationOverride = tempCacheDirectory;
+
+				//same name, but in a temp directory
+				string db4oFileName = Path.GetFileName(WeSayWordsProject.Project.PathToDb4oLexicalModelDB);
+				string tempDb4oFilePath = Path.Combine(tempCacheDirectory, db4oFileName);
 
 				using (IRecordListManager recordListManager =
-					new Db4oRecordListManager(new WeSayWordsDb4oModelConfiguration(), tempTarget))
+					new Db4oRecordListManager(new WeSayWordsDb4oModelConfiguration(), tempDb4oFilePath))
 				{
-					Db4oDataSource ds = ((Db4oRecordListManager) recordListManager).DataSource;
+					Db4oDataSource ds = ((Db4oRecordListManager)recordListManager).DataSource;
 					Db4oLexModelHelper.Initialize(ds.Data);
+					//  Db4oRecordListManager ds = recordListManager as Db4oRecordListManager;
 
 					//MONO bug as of 1.1.18 cannot bitwise or FileShare on FileStream constructor
 					//                    using (FileStream config = new FileStream(project.PathToProjectTaskInventory, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete))
 					SetupTasksToBuildCaches(recordListManager);
 
-					EntriesAlreadyWiredUp = (Db4oRecordList<LexEntry>) recordListManager.GetListOfType<LexEntry>();
+					EntriesAlreadyWiredUp = (Db4oRecordList<LexEntry>)recordListManager.GetListOfType<LexEntry>();
 
 					if (Db4oLexModelHelper.Singleton == null)
 					{
@@ -114,34 +106,40 @@ namespace WeSay
 
 					DoParsing(doc, ds);
 				}
+				 Project.WeSayWordsProject.Project.CacheLocationOverride = null;
 				ClearTheIncrementalBackupDirectory();
 
 				//if we got this far without an error, move it
-				string backupPath = _destinationDatabasePath + ".bak";
+				//string backupPath = _destinationDatabasePath + ".bak";
 				//not needed File.Delete(backupPath);
-				string cacheFolderName = _destinationDatabasePath + " Cache";
+			   string cacheFolderName = WeSayWordsProject.Project.PathToCache;// _destinationDatabasePath + " Cache";
 				if (Directory.Exists(cacheFolderName))
 				{
 					Directory.Delete(cacheFolderName, true);
 					//fails if temp dir is on a different volume:
 					//Directory.Move(tempTarget + " Cache", cacheFolderName);
-			   }
-			   SafeMoveDirectory(tempTarget + " Cache", cacheFolderName);
+				}
+				//SafeMoveDirectory(tempTarget + " Cache", cacheFolderName);
+				SafeMoveDirectory(tempCacheDirectory, cacheFolderName);
 
-				if (File.Exists(_destinationDatabasePath))
-				{
-					File.Replace(tempTarget, _destinationDatabasePath, backupPath);
-				}
-				else
-				{
-					File.Move(tempTarget, _destinationDatabasePath);
-				}
+				//                if (File.Exists(_destinationDatabasePath))
+				//                {
+				//                    File.Replace(tempDb4oFilePath, _destinationDatabasePath, backupPath);
+				//                }
+				//                else
+				//                {
+				//                    File.Move(tempDb4oFilePath, _destinationDatabasePath);
+				//                }
 				_progress.Status = ProgressState.StatusValue.Finished;
 			}
 			catch (Exception e)
 			{
 				_progress.WriteToLog(e.Message);
 				_progress.Status = ProgressState.StatusValue.StoppedWithError;
+			}
+			finally
+			{
+				Project.WeSayWordsProject.Project.CacheLocationOverride = null;
 			}
 		}
 
@@ -178,14 +176,8 @@ namespace WeSay
 			}
 		}
 
-		static private void UpdateDashboardStats()
+		private void UpdateDashboardStats()
 		{
-			// the tasks aren't able to display their stats until after they have been activated
-			foreach (ITask task in WeSayWordsProject.Project.Tasks)
-			{
-				string s = task.ExactStatus;
-			}
-
 			foreach (ITask task in WeSayWordsProject.Project.Tasks)
 			{
 				if (task is IFinishCacheSetup)
@@ -247,6 +239,8 @@ namespace WeSay
 			_progress.WriteToLog(e.Exception.Message);
 		}
 
+
+
 		void parser_SetStepsCompleted(object sender, LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence>.ProgressEventArgs e)
 		{
 			_progress.NumberOfStepsCompleted = e.Progress;
@@ -260,14 +254,14 @@ namespace WeSay
 		/*public for unit-tests */
 		public static void ClearTheIncrementalBackupDirectory()
 		{
-			if (!Directory.Exists(WeSayWordsProject.Project.PathToLiftBackupDir))
+			if (!Directory.Exists(WeSay.Project.WeSayWordsProject.Project.PathToLiftBackupDir))
 			{
 				return;
 			}
-			string[] p = Directory.GetFiles(WeSayWordsProject.Project.PathToLiftBackupDir, "*.*");
+			string[] p = Directory.GetFiles(WeSay.Project.WeSayWordsProject.Project.PathToLiftBackupDir, "*.*");
 			if (p.Length > 0)
 			{
-				string newPath = WeSayWordsProject.Project.PathToLiftBackupDir + ".old";
+				string newPath = WeSay.Project.WeSayWordsProject.Project.PathToLiftBackupDir + ".old";
 
 				int i = 0;
 				while (Directory.Exists(newPath + i))
@@ -275,18 +269,10 @@ namespace WeSay
 					i++;
 				}
 				newPath += i;
-				Directory.Move(WeSayWordsProject.Project.PathToLiftBackupDir,
+				Directory.Move(WeSay.Project.WeSayWordsProject.Project.PathToLiftBackupDir,
 							   newPath);
 			}
 		}
-
-		protected override void DoWork(InitializeProgressCallback initializeCallback, ProgressCallback progressCallback,
-									   StatusCallback primaryStatusTextCallback,
-									   StatusCallback secondaryStatusTextCallback)
-		{
-			throw new NotImplementedException();
-		}
-
 
 
 		/// <summary>

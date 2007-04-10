@@ -119,4 +119,12 @@
 	<wordListWritingSystemId>en</wordListWritingSystemId>
 	<viewTemplate ref="Default View Template" />
   </task>
+  <task id="Gather Words By Domain" class="WeSay.LexicalTools.GatherBySemanticDomainTask" assembly="LexicalTools">
+	<entries ref="All Entries" />
+	<label>Collect Words By Semantic Domain</label>
+	<description>Collect new words organized by semantic domains and questions about those domains.</description>
+	<semanticDomainsQuestionFileName>Ddp4Questions-en.xml</semanticDomainsQuestionFileName>
+	<viewTemplate ref="Default View Template" />
+	<semanticDomainFieldName>SemanticDomainDdp4</semanticDomainFieldName>
+  </task>
 </tasks>
