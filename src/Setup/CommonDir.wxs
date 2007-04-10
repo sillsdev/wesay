@@ -22,11 +22,11 @@
 		<Component Id="Ddp4.xml" Guid="{0036EBE1-93B6-463e-A089-8DB1201E61A6}">
 		  <File Id="Ddp4.xml" Name="Ddp4.xml" KeyPath="yes" Source="..\..\common\Ddp4.xml" />
 		</Component>
-		<Component Id="Ddp4Questions-en.xml" Guid="{D89FD082-3189-4ade-8477-A07B60C99790}">
-		  <File Id="Ddp4Questions-en.xml" Name="Ddp4Questions-en.xml" KeyPath="yes" Source="..\..\common\Ddp4Questions-en.xml" />
+		<Component Id="Ddp4Questions_en.xml" Guid="{D89FD082-3189-4ade-8477-A07B60C99790}">
+		  <File Id="Ddp4Questions_en.xml" Name="Ddp4Questions-en.xml" KeyPath="yes" Source="..\..\common\Ddp4Questions-en.xml" />
 		</Component>
-		<Component Id="Ddp4Questions-fr.xml" Guid="{48879B52-29CB-4197-B238-5276AFB8CB4B}">
-		  <File Id="Ddp4Questions-fr.xml" Name="Ddp4Questions-fr.xml" KeyPath="yes" Source="..\..\common\Ddp4Questions-fr.xml" />
+		<Component Id="Ddp4Questions_fr.xml" Guid="{48879B52-29CB-4197-B238-5276AFB8CB4B}">
+		  <File Id="Ddp4Questions_fr.xml" Name="Ddp4Questions-fr.xml" KeyPath="yes" Source="..\..\common\Ddp4Questions-fr.xml" />
 		</Component>
 
 	  </Directory>
