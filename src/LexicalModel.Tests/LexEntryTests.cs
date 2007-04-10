@@ -163,5 +163,39 @@ namespace WeSay.LexicalModel.Tests
 			Assert.IsTrue(this._removed);
 			Assert.AreEqual(0, _entry.Senses.Count);
 		}
+
+		[Test]
+		public void GetOrCreateSenseWithGloss_SenseDoesNotExist_NewSenseWithGloss()
+		{
+			MultiText gloss = new MultiText();
+			gloss.SetAlternative("th", "new");
+
+			LexSense sense = _entry.GetOrCreateSenseWithGloss(gloss);
+			Assert.AreNotSame(_sense, sense);
+			Assert.AreEqual("new", sense.Gloss.GetExactAlternative("th"));
+		}
+
+		[Test]
+		public void GetOrCreateSenseWithGloss_SenseWithEmptyStringExists_ExistingSense()
+		{
+			ClearSenseGloss();
+
+			MultiText gloss = new MultiText();
+			gloss.SetAlternative("th", string.Empty);
+
+			LexSense sense = _entry.GetOrCreateSenseWithGloss(gloss);
+			Assert.AreSame(_sense, sense);
+		}
+
+		[Test]
+		public void GetOrCreateSenseWithGloss_SenseDoesExists_ExistingSense()
+		{
+			MultiText gloss = new MultiText();
+			gloss.SetAlternative("th", "sense");
+
+			LexSense sense = _entry.GetOrCreateSenseWithGloss(gloss);
+			Assert.AreSame(_sense, sense);
+		}
+
 	}
 }

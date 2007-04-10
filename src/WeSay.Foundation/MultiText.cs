@@ -469,6 +469,10 @@ namespace WeSay.Language
 
 		public bool HasFormWithSameContent(MultiText other)
 		{
+			if (other.Count == 0 && Count == 0)
+			{
+				return true;
+			}
 			foreach (LanguageForm form in other)
 			{
 				if (ContainsEqualForm(form))
