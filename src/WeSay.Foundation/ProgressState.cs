@@ -1,6 +1,6 @@
 using System;
 using System.Diagnostics;
-using MultithreadProgress;
+
 
 namespace WeSay.Foundation.Progress
 {
@@ -9,10 +9,18 @@ namespace WeSay.Foundation.Progress
 	/// </summary>
 	public class ProgressState : IDisposable
 	{
-		private readonly ProgressDialogHandler _progressHandler;
 		private int _numberOfSteps;
 		private int _numberOfStepsCompleted;
 		private string _statusLabel;
+		private StateValue _state= StateValue.NotStarted;
+		protected  bool _doCancel = false;
+
+		public event EventHandler StatusLabelChanged;
+		public event EventHandler TotalNumberOfStepsChanged;
+		public event EventHandler NumberOfStepsCompletedChanged;
+
+		public event EventHandler StateChanged;
+		public event System.EventHandler<LogEvent> Log;
 
 		public class LogEvent : System.EventArgs
 		{
@@ -23,9 +31,8 @@ namespace WeSay.Foundation.Progress
 				this.message = message;
 			}
 		}
-		public event System.EventHandler<LogEvent> Log;
 
-		public enum StatusValue
+		public enum StateValue
 		{
 			NotStarted=0,
 			Busy,
@@ -33,9 +40,7 @@ namespace WeSay.Foundation.Progress
 			StoppedWithError
 		} ;
 
-		private StatusValue _status= StatusValue.NotStarted;
 
-		protected  bool _doCancel = false;
 
 		public ProgressState()
 		{
@@ -64,6 +69,10 @@ namespace WeSay.Foundation.Progress
 			set
 			{
 				_numberOfStepsCompleted = value;
+				if (this.NumberOfStepsCompletedChanged != null)
+				{
+					NumberOfStepsCompletedChanged(this, null);
+				}
 			}
 		}
 
@@ -80,6 +89,10 @@ namespace WeSay.Foundation.Progress
 			set
 			{
 				_statusLabel = value;
+				if (StatusLabelChanged != null)
+				{
+					StatusLabelChanged(this, null);
+				}
 			}
 		}
 
@@ -92,8 +105,24 @@ namespace WeSay.Foundation.Progress
 			set
 			{
 				_numberOfSteps = value;
+				if (TotalNumberOfStepsChanged != null)
+				{
+					TotalNumberOfStepsChanged(this, null);
+				}
 			}
 		}
+
+		/// <summary>
+		/// Normally, you'll wire the cancel button or whatever of the ui to this,
+		/// then let the worker check our Cancel status in its inner loop.
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		public void CancelRequested(object sender, EventArgs e)
+		{
+			_doCancel = true;
+		}
+
 		public virtual bool Cancel
 		{
 			get
@@ -125,15 +154,19 @@ namespace WeSay.Foundation.Progress
 			get { return _isDisposed; }
 		}
 
-		public StatusValue Status
+		public StateValue State
 		{
 			get
 			{
-				return _status;
+				return _state;
 			}
 			set
 			{
-				_status = value;
+				_state = value;
+				if(StateChanged!=null)
+				{
+					StateChanged(this, null);
+				}
 			}
 		}
 
@@ -192,26 +225,13 @@ namespace WeSay.Foundation.Progress
 			// Must not be run more than once.
 			if (_isDisposed)
 				return;
-			//
-			//            if (disposing)
-			//            {
-			//                // Dispose managed resources here.
-			//                if (_progressBar != null)
-			//                {
-			//                    _progressBar.ClearStateProvider();
-			//                    //_progressBar.Dispose(); // We don't own this!! (JohnT)
-			//                }
-			//            }
 
-			// Dispose unmanaged resources here, whether disposing is true or false.
-			//            _progressBar = null;
 			_statusLabel = null;
 
 			_isDisposed = true;
 		}
 
 		#endregion IDisposable & Co. implementation
-
 
 
 	}

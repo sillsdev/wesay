@@ -6,8 +6,9 @@ using System.Collections;
 using System.ComponentModel;
 using System.Windows.Forms;
 using WeSay;
+using WeSay.Foundation.Progress;
 
-namespace MultithreadProgress
+namespace WeSay.UI
 {
 	/// <summary>
 	/// Provides a progress dialog similar to the one shown by Windows
@@ -185,7 +186,7 @@ namespace MultithreadProgress
 		/// <summary>
 		/// Raised when the cancel button is clicked
 		/// </summary>
-		public event EventHandler Cancelled;
+		public event EventHandler CancelRequested;
 
 		/// <summary>
 		/// Raises the cancelled event
@@ -193,7 +194,7 @@ namespace MultithreadProgress
 		/// <param name="e">Event data</param>
 		protected virtual void OnCancelled( EventArgs e )
 		{
-			EventHandler cancelled = Cancelled;
+			EventHandler cancelled = CancelRequested;
 			if( cancelled != null )
 			{
 				cancelled( this, e );
@@ -322,11 +323,11 @@ namespace MultithreadProgress
 			this.Controls.Add(this.pictureBox);
 			this.Controls.Add(this.statusLabel2);
 			this.Controls.Add(this.statusLabel1);
-			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
 			this.Name = "ProgressDialog";
-			this.ShowInTaskbar = false;
+			this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox)).EndInit();
 			this.ResumeLayout(false);
 
@@ -398,6 +399,26 @@ namespace MultithreadProgress
 		{
 			System.Resources.ResourceManager resourceManager = new System.Resources.ResourceManager( "MultiThreadProgress.Strings", typeof( ProgressDialog ).Assembly );
 			return resourceManager.GetString( name, System.Globalization.CultureInfo.CurrentUICulture );
+		}
+
+		public void OnNumberOfStepsCompletedChanged(object sender, EventArgs e)
+		{
+			this.Progress = ((ProgressState) sender).NumberOfStepsCompleted;
+			//in case there is no event pump showing us (mono-threaded)
+			progressTimer_Tick(this, null);
+			this.Refresh();
+		}
+
+		public void OnTotalNumberOfStepsChanged(object sender, EventArgs e)
+		{
+			this.ProgressRangeMaximum = ((ProgressState)sender).NumberOfSteps;
+			this.Refresh();
+		}
+
+		public void OnStatusLabelChanged(object sender, EventArgs e)
+		{
+			this.StatusText1 = ((ProgressState)sender).StatusLabel;
+			this.Refresh();
 		}
 	}
 }

@@ -1,8 +1,7 @@
 using System;
-using MultithreadProgress;
 using WeSay.Foundation.Progress;
 
-namespace WeSay.Foundation
+namespace WeSay.UI
 {
 	public class ProgressDialogProgressState : ProgressState
 	{

@@ -334,7 +334,10 @@ namespace WeSay.Data
 						Add(item);
 					}
 #if DEBUG
-					SerializeRecordIds();
+					if (!_masterRecordList.DelayWritingCachesUntilDispose)
+					{
+						SerializeRecordIds();
+					}
 #endif
 				}
 				else if (Contains(item))
@@ -343,7 +346,10 @@ namespace WeSay.Data
 					((Db4oList<T>)Records).Refresh(item);
 					OnItemDeleted(index);
 #if DEBUG
-					SerializeRecordIds();
+					if (!_masterRecordList.DelayWritingCachesUntilDispose)
+					{
+						SerializeRecordIds();
+					}
 #endif
 				}
 			}
@@ -361,7 +367,10 @@ namespace WeSay.Data
 
 //                    Remove(item);
 #if DEBUG
-					SerializeRecordIds();
+					if (!_masterRecordList.DelayWritingCachesUntilDispose)
+					{
+						SerializeRecordIds();
+					}
 #endif
 				}
 			}
@@ -373,7 +382,10 @@ namespace WeSay.Data
 				{
 					Clear();
 #if DEBUG
-					SerializeRecordIds();
+					if (!_masterRecordList.DelayWritingCachesUntilDispose)
+					{
+						SerializeRecordIds();
+					}
 #endif
 				}
 			}

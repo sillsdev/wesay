@@ -70,17 +70,17 @@ namespace Lift2WeSay
 
 			while (true)
 			{
-				switch (progress.Status)
+				switch (progress.State)
 				{
-					case ProgressState.StatusValue.NotStarted:
+					case ProgressState.StateValue.NotStarted:
 						break;
-					case ProgressState.StatusValue.Busy:
+					case ProgressState.StateValue.Busy:
 						break;
-					case ProgressState.StatusValue.Finished:
+					case ProgressState.StateValue.Finished:
 						Console.WriteLine(string.Empty);
 						Console.WriteLine("Done.");
 						return;
-					case ProgressState.StatusValue.StoppedWithError:
+					case ProgressState.StateValue.StoppedWithError:
 						Console.Error.WriteLine(string.Empty);
 						Console.Error.WriteLine("Error. Unable to complete import.");
 						return;

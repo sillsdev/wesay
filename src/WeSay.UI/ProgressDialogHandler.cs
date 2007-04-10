@@ -1,9 +1,10 @@
 using System;
 using System.Windows.Forms;
+using MultithreadProgress;
 using WeSay;
 using WeSay.Foundation;
 
-namespace MultithreadProgress
+namespace WeSay.UI
 {
 	public class ProgressDialogHandler
 	{
@@ -28,7 +29,7 @@ namespace MultithreadProgress
 			_currentCommand.Finish += new EventHandler(OnCommand_Finish);
 
 			_progressDialog = new ProgressDialog();
-			_progressDialog.Cancelled += new EventHandler(_progressDialog_Cancelled);
+			_progressDialog.CancelRequested += new EventHandler(_progressDialog_Cancelled);
 			_progressDialog.Owner = parentForm ;
 			_progressDialog.CanCancel = true;
 			//we don't yet have any actual background-safe stuff, but this dialog

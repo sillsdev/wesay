@@ -191,17 +191,19 @@ namespace WeSay.App
 			CacheBuilder builder = project.GetCacheBuilderIfNeeded(liftPath);
 			if (builder != null)
 			{
-	/*            ProgressDialogHandler progressDialogHandler = new ProgressDialogHandler(null, command);
-				// progressDialogHandler.Finished += new EventHandler(progressDialogHandler_Finished);
-	 */           ProgressState progressState = new WeSay.Foundation.ConsoleProgress();//new ProgressState(progressDialogHandler);
+				ProgressState progressState = new WeSay.Foundation.ConsoleProgress();//new ProgressState(progressDialogHandler);
 				// progressState.Log += new EventHandler<ProgressState.LogEvent>(OnProgressState_Log);
 
-//                command.BeginInvoke(progressState);
-//                while ((progressState.Status == ProgressState.StatusValue.Busy)
-//                    || (progressState.Status == ProgressState.StatusValue.NotStarted))
-//                {
-//                    Thread.Sleep(10);
-//                }
+
+				WeSay.UI.ProgressDialog dlg = new WeSay.UI.ProgressDialog();
+				dlg.Show();
+				progressState = new ProgressState();
+				dlg.CanCancel = false;
+				//nb on 10/april/2007, the parer didn't have a way of listening for cancel
+				dlg.CancelRequested += new EventHandler(progressState.CancelRequested);
+				progressState.NumberOfStepsCompletedChanged += new EventHandler(dlg.OnNumberOfStepsCompletedChanged);
+				progressState.TotalNumberOfStepsChanged += new EventHandler(dlg.OnTotalNumberOfStepsChanged);
+				progressState.StatusLabelChanged +=new EventHandler(dlg.OnStatusLabelChanged);
 
 				builder.DoWork(progressState);
 			}
@@ -215,8 +217,6 @@ namespace WeSay.App
 				return false;
 			}
 		}
-
-
 
 
 		private static void OsCheck()

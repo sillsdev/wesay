@@ -10,6 +10,7 @@ using WeSay.Foundation;
 using WeSay.Foundation.Progress;
 using WeSay.LexicalModel;
 using WeSay.Project;
+using WeSay.UI;
 
 namespace WeSay.App.Tests
 {
@@ -96,11 +97,11 @@ namespace WeSay.App.Tests
 			}
 
 			File.WriteAllText(_cacheBuilder.SourceLIFTPath, _simpleGoodLiftContents);
-			Assert.AreEqual(ProgressState.StatusValue.NotStarted, _progress.Status);
+			Assert.AreEqual(ProgressState.StateValue.NotStarted, _progress.State);
 			_cacheBuilder.DoWork(_progress);
 			//WaitForFinish();
 			//  Console.WriteLine(_log);
-			Assert.AreEqual(ProgressState.StatusValue.Finished, _progress.Status, _log);
+			Assert.AreEqual(ProgressState.StateValue.Finished, _progress.State, _log);
 		}
 
 		[Test]//, Ignore("Run this by hand if you have an E: volume (windows only)")]
@@ -121,7 +122,7 @@ namespace WeSay.App.Tests
 		public void BadLiftStopsWithProgressInErrorState()
 		{
 			TryToLoadBadLift();
-			Assert.AreEqual(ProgressState.StatusValue.StoppedWithError, _progress.Status);
+			Assert.AreEqual(ProgressState.StateValue.StoppedWithError, _progress.State);
 		}
 
 		[Test]
@@ -135,7 +136,7 @@ namespace WeSay.App.Tests
 		private void TryToLoadBadLift()
 		{
 			File.WriteAllText(_cacheBuilder.SourceLIFTPath, _simpleGoodLiftContents.Replace("</lift>", "<x/></lift>"));
-			Assert.AreEqual(ProgressState.StatusValue.NotStarted, _progress.Status);
+			Assert.AreEqual(ProgressState.StateValue.NotStarted, _progress.State);
 			_cacheBuilder.DoWork(_progress);
 		   // WaitForFinish();
 		}
@@ -160,7 +161,7 @@ namespace WeSay.App.Tests
 				Assert.AreEqual("one", x[1].Id); //got the wrong order here
 				Assert.AreEqual(1, x[1].Senses.Count); // sensitive to order (shame)
 			}
-			Assert.AreEqual(ProgressState.StatusValue.Finished, _progress.Status);
+			Assert.AreEqual(ProgressState.StateValue.Finished, _progress.State);
 		}
 
 		[Test]

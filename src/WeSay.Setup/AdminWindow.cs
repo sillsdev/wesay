@@ -8,6 +8,7 @@ using WeSay.Foundation;
 using WeSay.Foundation.Progress;
 using WeSay.Project;
 using WeSay.Setup.Properties;
+using WeSay.UI;
 
 namespace WeSay.Setup
 {
@@ -64,7 +65,7 @@ namespace WeSay.Setup
 			{
 				this.openThisProjectInWeSayToolStripMenuItem.Enabled = (_project != null) && (_progressHandler == null);
 				exportToLIFTXmlToolStripMenuItem.Enabled = (_project != null) && (_progressHandler == null);
-				importFromLIFTXMLToolStripMenuItem.Enabled = (_project != null) && (_progressHandler == null);
+			   // importFromLIFTXMLToolStripMenuItem.Enabled = (_project != null) && (_progressHandler == null);
 			}
 
 		}
@@ -310,7 +311,7 @@ namespace WeSay.Setup
 			_progressLog = "";
 			_progressHandler = new ProgressDialogHandler(this, command);
 			_progressHandler.Finished += new EventHandler(OnProgressHandler_Finished);
-			_progressState = new WeSay.Foundation.ProgressDialogProgressState(_progressHandler);
+			_progressState = new WeSay.UI.ProgressDialogProgressState(_progressHandler);
 			_progressState.Log += new EventHandler<ProgressState.LogEvent>(OnProgressState_Log);
 			UpdateEnabledStates();
 			command.BeginInvoke(_progressState);
@@ -325,7 +326,7 @@ namespace WeSay.Setup
 		{
 			_progressHandler = null;
 			UpdateEnabledStates();
-			if (_progressState.Status == ProgressState.StatusValue.StoppedWithError)
+			if (_progressState.State == ProgressState.StateValue.StoppedWithError)
 			{
 				Reporting.ErrorReporter.ReportNonFatalMessage("WeSay ran into a problem.\r\n"+_progressLog);
 			}

@@ -26,7 +26,7 @@ namespace WeSay
 		 {
 			 _progress = progress;
 			 _progress.StatusLabel="Exporting...";
-			 _progress.Status = ProgressState.StatusValue.Busy;
+			 _progress.State = ProgressState.StateValue.Busy;
 			 WeSay.LexicalModel.LiftExporter exporter = null;
 			 try
 			 {
@@ -57,13 +57,13 @@ namespace WeSay
 						 }
 					 }
 				 }
-				 _progress.Status = ProgressState.StatusValue.Finished;
+				 _progress.State = ProgressState.StateValue.Finished;
 
 			 }
 			 catch (Exception e)
 			 {
 				   _progress.WriteToLog(e.Message);
-				 _progress.Status = ProgressState.StatusValue.StoppedWithError;
+				 _progress.State = ProgressState.StateValue.StoppedWithError;
 				 return; //don't go on to try to validate
 			 }
 			 finally
@@ -86,7 +86,7 @@ namespace WeSay
 			 catch
 			 {
 				 _progress.WriteToLog("Could not run validator.");
-				 _progress.Status = ProgressState.StatusValue.StoppedWithError;
+				 _progress.State = ProgressState.StateValue.StoppedWithError;
 			 }
 		 }
 
@@ -112,7 +112,7 @@ namespace WeSay
 			 catch
 			 {
 				 _progress.WriteToLog(String.Format("The Exporter could not open the file. Make sure no other program (e.g. WeSay) has it open. As a last resort, restart your computer. ({0})", _sourceWordsPath));
-				 _progress.Status = ProgressState.StatusValue.StoppedWithError;
+				 _progress.State = ProgressState.StateValue.StoppedWithError;
 				 return false;
 			 }
 			 return true;

@@ -63,19 +63,19 @@ namespace WeSay.Project
 		public void DoWork(ProgressState progress)
 		{
 			_progress = progress;
-			_progress.Status = ProgressState.StatusValue.Busy;
+			_progress.State = ProgressState.StateValue.Busy;
 			_progress.StatusLabel = "Validating...";
 			string errors = Validator.GetAnyValidationErrors(_sourceLIFTPath);
 			if (errors != null && errors != string.Empty)
 			{
 				progress.StatusLabel = "Problem with file format...";
-				_progress.Status = ProgressState.StatusValue.StoppedWithError;
+				_progress.State = ProgressState.StateValue.StoppedWithError;
 				_progress.WriteToLog(errors);
 				return;
 			}
 			try
 			{
-				progress.StatusLabel = "Importing...";
+				progress.StatusLabel = "Building Caches...";
 				string tempCacheDirectory = Directory.CreateDirectory(Path.Combine(Path.GetTempPath(), Path.GetRandomFileName())).FullName;
 				Project.WeSayWordsProject.Project.CacheLocationOverride = tempCacheDirectory;
 
@@ -130,12 +130,12 @@ namespace WeSay.Project
 				//                {
 				//                    File.Move(tempDb4oFilePath, _destinationDatabasePath);
 				//                }
-				_progress.Status = ProgressState.StatusValue.Finished;
+				_progress.State = ProgressState.StateValue.Finished;
 			}
 			catch (Exception e)
 			{
 				_progress.WriteToLog(e.Message);
-				_progress.Status = ProgressState.StatusValue.StoppedWithError;
+				_progress.State = ProgressState.StateValue.StoppedWithError;
 			}
 			finally
 			{

@@ -14,7 +14,7 @@ namespace WeSay.Project
 		Control Control { get;}
 		bool IsPinned { get; }
 		string Status { get; }
-		string ExactStatus // this may take awhile to get but will be correct (Status may give you nothing if it takes awhile to get)
+		string ExactStatus // this may take awhile to get but will be correct (State may give you nothing if it takes awhile to get)
 		{
 			get;
 		}
