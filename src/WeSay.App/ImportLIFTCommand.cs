@@ -17,8 +17,8 @@ namespace WeSay
 		private string _destinationDatabasePath;
 		private string _sourceLIFTPath;
 		//private LiftImporter _importer;
-		protected WeSay.Foundation.Progress.ProgressState _progress;
-		private WeSay.Data.Db4oRecordList<LexEntry> _prewiredEntries=null;
+		protected ProgressState _progress;
+		private Db4oRecordList<LexEntry> _prewiredEntries=null;
 
 		public ImportLIFTCommand(string destinationDatabasePath, string sourceLIFTPath)
 		{
@@ -97,7 +97,6 @@ namespace WeSay
 				{
 					Db4oDataSource ds = ((Db4oRecordListManager) recordListManager).DataSource;
 					Db4oLexModelHelper.Initialize(ds.Data);
-					//  Db4oRecordListManager ds = recordListManager as Db4oRecordListManager;
 
 					//MONO bug as of 1.1.18 cannot bitwise or FileShare on FileStream constructor
 					//                    using (FileStream config = new FileStream(project.PathToProjectTaskInventory, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete))
@@ -154,13 +153,13 @@ namespace WeSay
 				entriesList.WriteCacheSize = 0; //don't write after every record
 				using (LiftMerger merger = new LiftMerger(ds, entriesList))
 				{
-					foreach (string name in WeSay.Project.WeSayWordsProject.Project.OptionFieldNames)
+					foreach (string name in WeSayWordsProject.Project.OptionFieldNames)
 					{
 						merger.ExpectedOptionTraits.Add(name);
 						//_importer.ExpectedOptionTraits.Add(name);
 					}
 					foreach (
-						string name in WeSay.Project.WeSayWordsProject.Project.OptionCollectionFieldNames)
+						string name in WeSayWordsProject.Project.OptionCollectionFieldNames)
 					{
 						merger.ExpectedOptionCollectionTraits.Add(name);
 					}
@@ -179,8 +178,15 @@ namespace WeSay
 			}
 		}
 
-		private void UpdateDashboardStats()
+		static private void UpdateDashboardStats()
 		{
+			// the tasks aren't able to display their stats until after they have been activated
+			foreach (ITask task in WeSayWordsProject.Project.Tasks)
+			{
+				task.Activate();
+				task.Deactivate();
+			}
+
 			foreach (ITask task in WeSayWordsProject.Project.Tasks)
 			{
 				if (task is IFinishCacheSetup)
@@ -196,7 +202,7 @@ namespace WeSay
 			ConfigFileTaskBuilder taskBuilder;
 			using (
 				FileStream configFile =
-					new FileStream(WeSay.Project.WeSayWordsProject.Project.PathToProjectTaskInventory,
+					new FileStream(WeSayWordsProject.Project.PathToProjectTaskInventory,
 								   FileMode.Open, FileAccess.Read,
 								   FileShare.ReadWrite))
 			{
@@ -242,8 +248,6 @@ namespace WeSay
 			_progress.WriteToLog(e.Exception.Message);
 		}
 
-
-
 		void parser_SetStepsCompleted(object sender, LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence>.ProgressEventArgs e)
 		{
 			_progress.NumberOfStepsCompleted = e.Progress;
@@ -257,14 +261,14 @@ namespace WeSay
 		/*public for unit-tests */
 		public static void ClearTheIncrementalBackupDirectory()
 		{
-			if (!Directory.Exists(WeSay.Project.WeSayWordsProject.Project.PathToLiftBackupDir))
+			if (!Directory.Exists(WeSayWordsProject.Project.PathToLiftBackupDir))
 			{
 				return;
 			}
-			string[] p = Directory.GetFiles(WeSay.Project.WeSayWordsProject.Project.PathToLiftBackupDir, "*.*");
+			string[] p = Directory.GetFiles(WeSayWordsProject.Project.PathToLiftBackupDir, "*.*");
 			if (p.Length > 0)
 			{
-				string newPath = WeSay.Project.WeSayWordsProject.Project.PathToLiftBackupDir + ".old";
+				string newPath = WeSayWordsProject.Project.PathToLiftBackupDir + ".old";
 
 				int i = 0;
 				while (Directory.Exists(newPath + i))
@@ -272,7 +276,7 @@ namespace WeSay
 					i++;
 				}
 				newPath += i;
-				Directory.Move(WeSay.Project.WeSayWordsProject.Project.PathToLiftBackupDir,
+				Directory.Move(WeSayWordsProject.Project.PathToLiftBackupDir,
 							   newPath);
 			}
 		}

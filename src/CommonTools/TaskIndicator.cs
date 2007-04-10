@@ -20,13 +20,9 @@ namespace WeSay.CommonTools
 				throw new ArgumentNullException();
 			}
 			InitializeComponent();
-			//if (Environment.OSVersion.Platform != PlatformID.Unix)
-			//{
-			//    SetAutoSizeToGrowAndShrink();
-			//}
 			_task = task;
 			this._count.Text = task.Status;
-			string cachePath = Project.WeSayWordsProject.Project.PathToCache;
+			string cachePath = WeSayWordsProject.Project.PathToCache;
 
 
 			//TODO: this leads to a failure when the label isn't a valid path (like when it says "failed to load: blahblah"
@@ -43,12 +39,6 @@ namespace WeSay.CommonTools
 			this._btnName.Text = task.Label;
 			this._textShortDescription.Text = task.Description;
 		}
-
-		//private void SetAutoSizeToGrowAndShrink() {
-		//    //this._btnName.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-		//}
-
-
 
 		private void WriteCacheFile(string cacheFilePath, string cachePath) {
 			try
@@ -103,25 +93,5 @@ namespace WeSay.CommonTools
 			selected(this, e);
 		}
 
-		//hack 'cause it wasn't resizing (well, it grew, just never shrank (no, not a simple case of wrong AutoSizeMode))
-		//public void RecalcSize(object sender, EventArgs e)
-		//{
-		   //---this worked with the old vbox, but doesn't seem to do anyting the tablelayout one
-			//this.Size = new System.Drawing.Size(this.Parent.Width - this.Left, this.Parent.Height - this.Top);
-
-			//---the following kinda worked, but the panelenclosing this ignored our new size, so that would
-			//be need to be worked out to make this worth doing.  It would allow us to increase the distance
-			//between indicators when the box was thin enough to need 2 lines for description
-//            using(Graphics g = this.CreateGraphics())
-//            {
-//               SizeF sz= g.MeasureString(this._textShortDescription.Text, this._textShortDescription.Font);
-//               if (this.Width < sz.Width)
-//               {
-//                   this._textShortDescription.Height = (int)sz.Height*2;
-//                   this.Height = this._textShortDescription.Bottom + 30;
-//               }
-			// notice nothing has been written yet to shrink it back if it gets wider
-//            }
-		//}
 	}
 }

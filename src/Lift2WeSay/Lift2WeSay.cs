@@ -72,7 +72,7 @@ namespace Lift2WeSay
 
 			if (Path.GetFileName(destPath) != string.Empty)
 			{
-				Console.WriteLine(string.Format("You can only specify a directory for the output, not the name of the output. ({0})",destPath));
+				Console.WriteLine(string.Format("You can only specify a directory for the output, not the name of the output. (eg. {0} instead of {1})", Path.GetDirectoryName(destPath), destPath));
 				return;
 			}
 			string projectPath = Path.GetDirectoryName(destPath);

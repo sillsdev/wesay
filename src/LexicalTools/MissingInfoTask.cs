@@ -28,7 +28,7 @@ namespace WeSay.LexicalTools
 			{
 				throw new ArgumentNullException("viewTemplate");
 			}
-			recordListManager.Register<LexEntry>(filter);
+			recordListManager.Register(filter);
 			_filter = filter;
 			_viewTemplate = viewTemplate;
 		}
@@ -57,13 +57,13 @@ namespace WeSay.LexicalTools
 			_viewTemplate = FilterviewTemplate(viewTemplate, fieldsToShow);
 		}
 
-		private ViewTemplate FilterviewTemplate(ViewTemplate baseViewTemplate, string fieldsToShow)
+		static private ViewTemplate FilterviewTemplate(ViewTemplate baseViewTemplate, string fieldsToShow)
 		{
 			string[] fields = fieldsToShow.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 			ViewTemplate viewTemplate = new ViewTemplate();
 			foreach (Field field in baseViewTemplate)
 			{
-				if(Array.IndexOf<string>(fields, field.FieldName) >= 0)
+				if(Array.IndexOf(fields, field.FieldName) >= 0)
 				{
 					viewTemplate.Add(field);
 				}
@@ -120,7 +120,7 @@ namespace WeSay.LexicalTools
 		{
 			get
 			{
-				IRecordList<LexEntry> data = RecordListManager.GetListOfTypeFilteredFurther<LexEntry>(_filter);
+				IRecordList<LexEntry> data = RecordListManager.GetListOfTypeFilteredFurther(_filter);
 				_dataHasBeenRetrieved = true;
 				return data;
 			}
