@@ -187,7 +187,7 @@ namespace WeSay.LexicalTools
 			//
 			// _vernacularBox
 			//
-			this._vernacularBox.BackColor = System.Drawing.Color.Green;
+			//this._vernacularBox.BackColor = System.Drawing.Color.Green;
 			this._vernacularBox.Location = new System.Drawing.Point(78, 120);
 			this._vernacularBox.Name = "_vernacularBox";
 			this._vernacularBox.Size = new System.Drawing.Size(248, 30);

@@ -34,7 +34,7 @@ namespace WeSay.UI
 			// WeSayTextBox
 			//
 			BackColor = System.Drawing.Color.White;
-			BackColor = System.Drawing.Color.AliceBlue;
+			//BackColor = System.Drawing.Color.AliceBlue;
 			Multiline = true;
 			WordWrap = true;
 
