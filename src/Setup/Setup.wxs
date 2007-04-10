@@ -318,6 +318,10 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 	  <ComponentRef Id="SemanticDomains.xml" />
 	  <ComponentRef Id="taskInventory.xml" />
 	  <ComponentRef Id="CommonWritingSystemPrefs.xml" />
+	  <ComponentRef Id="Ddp4.xml"/>
+	  <ComponentRef Id="Ddp4Questions_en.xml"/>
+	  <ComponentRef Id="Ddp4Questions_fr.xml"/>
+
 
 	  <!-- i tried to FeatureRef these from their own files but it didn't work -->
 
