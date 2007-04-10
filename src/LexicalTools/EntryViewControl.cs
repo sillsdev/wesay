@@ -139,18 +139,18 @@ namespace WeSay.LexicalTools
 			this._detailListControl.SuspendLayout();
 
 			this._detailListControl.Clear();
-		  this._panelEntry.Controls.Remove(this._detailListControl);
-			this._detailListControl = new DetailList();
-			this._detailListControl.AutoScroll = true;
-			this._detailListControl.BackColor = BackColor;
-			this._detailListControl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this._detailListControl.Location = new System.Drawing.Point(0, 0);
-			this._detailListControl.Margin = new System.Windows.Forms.Padding(0);
-			this._detailListControl.Name = "_detailListControl";
-			this._detailListControl.Size = new System.Drawing.Size(474, 277);
-			this._detailListControl.TabIndex = 1;
-		  this._detailListControl.AutoSize = true;
-		  this._detailListControl.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+		  //this._panelEntry.Controls.Remove(this._detailListControl);
+		  //  this._detailListControl = new DetailList();
+		  //  this._detailListControl.AutoScroll = true;
+		  //  this._detailListControl.BackColor = BackColor;
+		  //  this._detailListControl.Dock = System.Windows.Forms.DockStyle.Fill;
+		  //  this._detailListControl.Location = new System.Drawing.Point(0, 0);
+		  //  this._detailListControl.Margin = new System.Windows.Forms.Padding(0);
+		  //  this._detailListControl.Name = "_detailListControl";
+		  //  this._detailListControl.Size = new System.Drawing.Size(474, 277);
+		  //  this._detailListControl.TabIndex = 1;
+		  //this._detailListControl.AutoSize = true;
+		  //this._detailListControl.AutoSizeMode = AutoSizeMode.GrowAndShrink;
 
 		  this._panelEntry.Controls.Add(_detailListControl);
 			if (this._record != null)

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Text;
 
 namespace WeSay.LexicalModel.Db4o_Specific
 {
@@ -27,16 +28,18 @@ namespace WeSay.LexicalModel.Db4o_Specific
 		}
 
 
-		static private IList<string> FindClosestForms(string key, bool includeNextClosest, bool includePrefixedForms, IEnumerable<string> forms)
+		static private IList<string> FindClosestForms(string notNormalizedkey, bool includeNextClosest, bool includePrefixedForms, IEnumerable<string> forms)
 		{
+			string key = notNormalizedkey.Normalize(NormalizationForm.FormD);
 			List<string> bestMatches = new List<string>();
 			List<string> secondBestMatches = new List<string>();
 
 			int bestEditDistance = int.MaxValue;
 			int secondBestEditDistance = int.MaxValue;
 
-			foreach (string form in forms)
+			foreach (string notNormalizedForm in forms)
 			{
+				string form = notNormalizedForm.Normalize(NormalizationForm.FormD);
 				if (!string.IsNullOrEmpty(form))
 				{
 					int editDistance;

@@ -80,11 +80,9 @@ namespace WeSay.UI
 				RowStyles.Add(new RowStyle(SizeType.AutoSize));
 
 				WeSayTextBox box = AddTextBox(writingSystem, multiText);
-				box.Dock = DockStyle.Fill;
 
 				Label label = AddWritingSystemLabel(box);
 				label.Click += new EventHandler(subControl_Click);
-				label.AutoSize = true;
 
 				Controls.Add(label, 0, RowCount);
 				Controls.Add(box, 1, RowCount);
@@ -146,8 +144,9 @@ namespace WeSay.UI
 			label.Text = box.WritingSystem.Id;
 			label.ForeColor = Color.LightGray;
 			label.Anchor = AnchorStyles.Left | AnchorStyles.Top;
-//
-//
+
+			label.AutoSize = true;
+
 //            Graphics g = CreateGraphics();
 //            int descent = box.Font.FontFamily.GetCellDescent(box.Font.Style);
 //            int descentPixel = (int) (box.Font.Size * descent / box.Font.FontFamily.GetEmHeight(box.Font.Style));
