@@ -64,7 +64,7 @@
 	</CreateItem>
 
 	<!-- lift to wesay.words-->
-	<Exec Command="$(BaseDirectory)\output\Release\Lift2WeSay.exe %(LiftFiles.FullPath) %(LiftFiles.RootDir)%(LiftFiles.Directory)%(LiftFiles.Filename).words"
+	<Exec Command="$(BaseDirectory)\output\Release\Lift2WeSay.exe %(LiftFiles.FullPath) %(LiftFiles.RootDir)%(LiftFiles.Directory)"
 		  WorkingDirectory="$(BaseDirectory)\output\Release"/>
 
   </Target>
