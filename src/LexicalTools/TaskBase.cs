@@ -100,6 +100,14 @@ namespace WeSay.LexicalTools
 			}
 		}
 
+		public virtual string ExactStatus
+		{
+			get
+			{
+				return Status;
+			}
+		}
+
 		protected IRecordListManager RecordListManager
 		{
 			get { return this._recordListManager; }

@@ -68,6 +68,14 @@ namespace WeSay.App.Tests
 				return "12";
 			}
 		}
+		public string ExactStatus
+		{
+			get
+			{
+				return Status;
+			}
+		}
+
 	}
 
 	[TestFixture]

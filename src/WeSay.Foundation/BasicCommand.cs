@@ -51,7 +51,7 @@ namespace WeSay
 				new AsyncCallback( EndWork ), null );
 		}
 
-		protected override void BeginInvokeCore2(WeSay.Foundation.Progress.ProgressState progress)
+		protected override void BeginInvokeCore2(ProgressState progress)
 		{
 			WorkInvoker2 worker = new WorkInvoker2(DoWork2);
 			worker.BeginInvoke(progress, new AsyncCallback(EndWork2), null);
@@ -125,7 +125,7 @@ namespace WeSay
 			StatusCallback secondaryStatusTextCallback
 			);
 
-	public delegate void WorkInvoker2(WeSay.Foundation.Progress.ProgressState progress);
+	public delegate void WorkInvoker2(ProgressState progress);
 
 	public delegate void WorkInvoker3(
 		InitializeProgressCallback initializeCallback,

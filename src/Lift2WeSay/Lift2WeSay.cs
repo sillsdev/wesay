@@ -68,14 +68,19 @@ namespace Lift2WeSay
 				return;
 			}
 			string sourcePath = args[0];
-			string destPath = args[1];
-
-			if (Path.GetFileName(destPath) != string.Empty)
+			if (!File.Exists(sourcePath))
 			{
-				Console.WriteLine(string.Format("You can only specify a directory for the output, not the name of the output. (eg. {0} instead of {1})", Path.GetDirectoryName(destPath), destPath));
+				Console.WriteLine(string.Format("Cannot find file {0})", sourcePath));
 				return;
 			}
-			string projectPath = Path.GetDirectoryName(destPath);
+
+			string destPath = args[1];
+			if (!Directory.Exists(destPath) && Path.GetFileName(destPath) != string.Empty)
+			{
+				Console.WriteLine(string.Format("You can only specify a directory for the output, not the name of the output. (eg. {0}{1} instead of {2})", Path.GetDirectoryName(destPath), Path.DirectorySeparatorChar, destPath));
+				return;
+			}
+			string projectPath = destPath;
 			if (projectPath.Length == 0)
 			{
 				projectPath = Environment.CurrentDirectory;

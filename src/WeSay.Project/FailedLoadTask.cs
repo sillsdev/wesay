@@ -62,5 +62,10 @@ namespace WeSay.Project
 		{
 			get { return ""; }
 		}
+
+		public string ExactStatus
+		{
+			get { return Status; }
+		}
 	}
 }

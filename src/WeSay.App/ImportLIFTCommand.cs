@@ -183,8 +183,7 @@ namespace WeSay
 			// the tasks aren't able to display their stats until after they have been activated
 			foreach (ITask task in WeSayWordsProject.Project.Tasks)
 			{
-				task.Activate();
-				task.Deactivate();
+				string s = task.ExactStatus;
 			}
 
 			foreach (ITask task in WeSayWordsProject.Project.Tasks)

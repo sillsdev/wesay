@@ -115,7 +115,13 @@ namespace WeSay.LexicalTools
 				return "-";// String.Empty;
 			}
 		}
-
+		public override string ExactStatus
+		{
+			get
+			{
+				return DataSource.Count.ToString();
+			}
+		}
 		public IRecordList<LexEntry> DataSource
 		{
 			get

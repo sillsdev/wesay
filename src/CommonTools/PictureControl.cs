@@ -92,6 +92,14 @@ namespace WeSay.CommonTools
 				return string.Empty;
 			}
 		}
+		public string ExactStatus
+		{
+			get
+			{
+				return Status;
+			}
+		}
+
 		#endregion
 	}
 }
