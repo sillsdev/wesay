@@ -2,6 +2,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using WeSay.Foundation;
 using System;
+using WeSay.Language;
 
 namespace WeSay.UI
 {
@@ -61,12 +62,12 @@ namespace WeSay.UI
 			}
 			set
 			{
-				if (value != null && value.Length == 0)
-				{
-					_control.SelectedIndex = -1; //enhance: have a default value
-					SetStatusColor();
-					return;
-				}
+				//if (value != null && value.Length == 0)
+				//{
+				//    _control.SelectedIndex = -1; //enhance: have a default value
+				//    SetStatusColor();
+				//    return;
+				//}
 
 				foreach (Option.OptionDisplayProxy proxy in _control.Items)
 				{
@@ -147,19 +148,29 @@ namespace WeSay.UI
 					_control.Items.Add(o);
 				*/
 				_control.Items.Add(o.GetDisplayProxy(_idOfPreferredWritingSystem));
-
 			}
+
+			if (!_list.Options.Exists(delegate(Option o) {return (o.Key == string.Empty);}))
+			{
+				MultiText unspecifiedMultiText = new MultiText();
+				unspecifiedMultiText.SetAlternative(_idOfPreferredWritingSystem, StringCatalog.Get("unknown"));
+				Option unspecifiedOption = new Option(string.Empty, unspecifiedMultiText);
+				_control.Items.Add(
+						new Option.OptionDisplayProxy(unspecifiedOption,
+													  _idOfPreferredWritingSystem));
+			}
+
 			this.Value = optionRef.Value;
 
 			_control.SelectedValueChanged += new System.EventHandler(OnSelectedValueChanged);
-			_control.Validating += new System.ComponentModel.CancelEventHandler(_control_Validating);
+//            _control.Validating += new System.ComponentModel.CancelEventHandler(_control_Validating);
 	   }
 
-		void _control_Validating(object sender, System.ComponentModel.CancelEventArgs e)
-		{
-			//don't allow entering things that aren't options
-			e.Cancel = !(_control.SelectedIndex > -1 || _control.Text=="");
-		}
+		//void _control_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+		//{
+		//    //don't allow entering things that aren't options
+		//      e.Cancel = !(_control.SelectedIndex > -1 || _control.Text=="");
+		//}
 
 		void OnSelectedValueChanged(object sender, System.EventArgs e)
 		{

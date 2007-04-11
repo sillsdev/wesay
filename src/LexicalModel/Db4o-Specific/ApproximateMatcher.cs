@@ -37,9 +37,9 @@ namespace WeSay.LexicalModel.Db4o_Specific
 			int bestEditDistance = int.MaxValue;
 			int secondBestEditDistance = int.MaxValue;
 
-			foreach (string notNormalizedForm in forms)
+			foreach (string originalForm in forms)
 			{
-				string form = notNormalizedForm.Normalize(NormalizationForm.FormD);
+				string form = originalForm.Normalize(NormalizationForm.FormD);
 				if (!string.IsNullOrEmpty(form))
 				{
 					int editDistance;
@@ -72,11 +72,11 @@ namespace WeSay.LexicalModel.Db4o_Specific
 					}
 					if (editDistance == bestEditDistance)
 					{
-						bestMatches.Add(form);
+						bestMatches.Add(originalForm);
 					}
 					else if (includeNextClosest && editDistance == secondBestEditDistance)
 					{
-						secondBestMatches.Add(form);
+						secondBestMatches.Add(originalForm);
 					}
 					Debug.Assert(bestEditDistance != secondBestEditDistance);
 				}

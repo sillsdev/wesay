@@ -37,7 +37,6 @@ namespace WeSay.UI
 			//BackColor = System.Drawing.Color.AliceBlue;
 			Multiline = true;
 			WordWrap = true;
-			AcceptsReturn = false;
 			BorderStyle = System.Windows.Forms.BorderStyle.None;
 
 
