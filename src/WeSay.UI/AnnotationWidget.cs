@@ -76,7 +76,7 @@ namespace WeSay.UI
 			_flagButton.Anchor = AnchorStyles.Top | AnchorStyles.Right;
 			_flagButton.CheckedChanged += new EventHandler(OnFlagButtonCheckedChanged);
 			_flagButton.TabStop = false;
-			_flagButton.Checked = this.FlagIsOn;
+			_flagButton.Checked = FlagIsOn;
 			_flagButton.Name = _nameForTesting;
 			_flagButton.MouseEnter += new EventHandler(_flagButton_MouseEnter);
 			_flagButton.MouseLeave += new EventHandler(_flagButton_MouseLeave);

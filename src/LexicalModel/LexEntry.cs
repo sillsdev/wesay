@@ -217,7 +217,7 @@ namespace WeSay.LexicalModel
 			{
 				if (this._senses[i].Empty)
 				{
-					this._senses.RemoveAt(i);
+				   this._senses.RemoveAt(i);
 				}
 			}
 			if(count != this._senses.Count)

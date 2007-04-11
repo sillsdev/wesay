@@ -10,13 +10,13 @@ namespace WeSay.UI
 	{
 		private WritingSystem _writingSystem;
 		private KeymanLink.KeymanLink _keymanLink;
+		private bool _multiParagraph;
 
 		public WeSayTextBox()
 		{
 			InitializeComponent();
 
 		  //  Debug.Assert(DesignMode);
-			BorderStyle = BorderStyle.None;
 			if (Environment.OSVersion.Platform != PlatformID.Unix)
 			{
 				_keymanLink = new KeymanLink.KeymanLink();
@@ -25,38 +25,39 @@ namespace WeSay.UI
 					_keymanLink = null;
 				}
 			}
-
-			CalculateMinimumSize();
-
 		}
 
-		void OnResize(object sender, EventArgs e)
+		protected override void OnTextChanged(EventArgs e)
 		{
-			UpdateHeight();
-		}
-		void OnTextChanged(object sender, EventArgs e)
-		{
+			base.OnTextChanged(e);
 			UpdateHeight();
 		}
 
-		private void CalculateMinimumSize()
+		protected override void OnResize(EventArgs e)
 		{
-			using (Graphics g = CreateGraphics())
-			{
-				SizeF sz = g.MeasureString("x", Font, Width, StringFormat.GenericTypographic);
-				int margin = 12;
-				MinimumSize = new Size(Width, margin + (int)sz.Height);
-			}
+			base.OnResize(e);
+			UpdateHeight();
 		}
-
 
 		private void UpdateHeight()
 		{
+			if (Text.Length == 0)
+			{
+				Height = PreferredHeight;
+				return;
+			}
 			using (Graphics g = CreateGraphics())
 			{
-				//we add an extran line feed here because this always trims off the last line if it was empty
-				SizeF sz = g.MeasureString(Text+"\n", Font, Width, StringFormat.GenericTypographic);
-				Height = 5+ (int) Math.Ceiling(sz.Height);
+				Size sz = TextRenderer.MeasureText(g,
+									Text + "\n",  // need extra new line to handle case where ends in new line (since last newline is ignored)
+									Font,
+									new Size(Width, int.MinValue),
+									TextFormatFlags.TextBoxControl |
+										TextFormatFlags.Default |
+										TextFormatFlags.NoClipping |
+										TextFormatFlags.WordBreak);
+
+				Height = Math.Max(MinimumSize.Height, sz.Height);
 			}
 		}
 
@@ -77,21 +78,6 @@ namespace WeSay.UI
 				return base.Text;
 			}
 		}
-
-  //      private void ComputeHeight()
-  //      {
-  //          System.Drawing.Graphics graphics = this.CreateGraphics();
-  //        //  SizeF sz = graphics.MeasureString(this.Text, Font);
-
-  //          Graphics g = this.CreateGraphics();
-  //  //        int h = this.Font.FontFamily.GetEmHeight(this.Font.Style) - this.Font.FontFamily.GetLineSpacing(this.Font.Style);
-  //          int h = this.Font.FontFamily.GetCellAscent(this.Font.Style) + this.Font.FontFamily.GetCellDescent(this.Font.Style);
-  //          int hInPixels = (int)(this.Font.Size * h / this.Font.FontFamily.GetEmHeight(this.Font.Style));
-
-
-  ////          Height = hInPixels;
-
-  //      }
 
 		[Browsable(false)]
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
@@ -124,6 +110,19 @@ namespace WeSay.UI
 			}
 		}
 
+		public bool MultiParagraph
+		{
+			get { return this._multiParagraph; }
+			set { this._multiParagraph = value; }
+		}
+		protected override void OnKeyPress(KeyPressEventArgs e)
+		{
+			if (!MultiParagraph && (e.KeyChar == '\r' || e.KeyChar == '\n')) // carriage return
+			{
+				e.Handled = true;
+			}
+			base.OnKeyPress(e);
+		}
 		//public bool IsGhost
 		//{
 		//    get
@@ -172,8 +171,9 @@ namespace WeSay.UI
 				BackColor = SystemColors.Control;
 		}
 
-		private void WeSayTextBox_Enter(object sender, EventArgs e)
+		protected override void OnEnter(EventArgs e)
 		{
+			base.OnEnter(e);
 			AssignKeyboardFromWritingSystem();
 		}
 
@@ -208,7 +208,7 @@ namespace WeSay.UI
 			}
 		}
 
-		private InputLanguage FindInputLanguage(string name)
+		static private InputLanguage FindInputLanguage(string name)
 		{
 			if(InputLanguage.InstalledInputLanguages != null) // as is the case on Linux
 			{
@@ -223,9 +223,11 @@ namespace WeSay.UI
 			return null;
 		}
 
-		private void WeSayTextBox_Leave(object sender, EventArgs e)
+		protected override void OnLeave(EventArgs e)
 		{
-		   // this.BackColor = System.Drawing.Color.White;
+			base.OnLeave(e);
+
+			// this.BackColor = System.Drawing.Color.White;
 			ClearKeyboard();
 		}
 

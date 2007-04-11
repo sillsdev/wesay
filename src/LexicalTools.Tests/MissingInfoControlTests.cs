@@ -65,7 +65,7 @@ namespace WeSay.LexicalTools.Tests
 			BasilProject.InitializeForTests();
 			_recordListManager = new InMemoryRecordListManager();
 			this._missingTranslation = new MissingTranslationFilter();
-			_recordListManager.Register<LexEntry>(this._missingTranslation);
+			_recordListManager.Register(this._missingTranslation);
 			_missingTranslationRecordList = _recordListManager.GetListOfTypeFilteredFurther<LexEntry>(this._missingTranslation);
 			_missingTranslationRecordList.Add(CreateTestEntry("apple", "red thing", "An apple a day keeps the doctor away."));
 			_missingTranslationRecordList.Add(CreateTestEntry("banana", "yellow food", "Monkeys like to eat bananas."));

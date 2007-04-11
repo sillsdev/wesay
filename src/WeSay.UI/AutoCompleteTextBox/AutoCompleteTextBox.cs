@@ -224,7 +224,7 @@ namespace WeSay.UI
 			this._popup.TopMost = true;
 			this._popup.Deactivate += new EventHandler(Popup_Deactivate);
 
-			// Create the list box that will hold mathcing items
+			// Create the list box that will hold matching items
 			this._list = new ListBox();
 			this._list.Cursor = Cursors.Hand;
 			this._list.BorderStyle = BorderStyle.FixedSingle;
@@ -492,6 +492,8 @@ namespace WeSay.UI
 				if (visItems > 8)
 					visItems = 8;
 
+				this._list.ItemHeight = Height;
+
 				this._popup.Height = (visItems * this._list.ItemHeight) + 2;
 				switch (BorderStyle)
 				{
@@ -576,7 +578,7 @@ namespace WeSay.UI
 									  e.Bounds,
 									  PopupSelectionForeColor,
 									  PopupSelectionBackColor,
-									  TextFormatFlags.Default);
+									  TextFormatFlags.Default | TextFormatFlags.TextBoxControl);
 			}
 			else
 			{
@@ -587,7 +589,7 @@ namespace WeSay.UI
 									  e.Bounds,
 									  ForeColor,
 									  BackColor,
-									  TextFormatFlags.Default);
+									  TextFormatFlags.Default | TextFormatFlags.TextBoxControl);
 //                e.Graphics.DrawString(this.list.Items[e.Index].ToString(), e.Font, new SolidBrush(e.ForeColor), e.Bounds, StringFormat.GenericDefault);
 			}
 		}

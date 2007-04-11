@@ -282,10 +282,23 @@ namespace WeSay.LexicalTools
 
 		void OnBtnPreviousWordClick(object sender, EventArgs e)
 		{
+			if (!_btnPreviousWord.Focused)
+			{
+				// we need to make sure that any ghosts have lost their focus and triggered updates before
+				// we do anything else
+				_btnPreviousWord.Focus();
+			}
 			SetCurrentRecordToPrevious();
 		}
 		void OnBtnNextWordClick(object sender, EventArgs e)
 		{
+			if (!_btnNextWord.Focused)
+			{
+				// we need to make sure that any ghosts have lost their focus and triggered updates before
+				// we do anything else
+				_btnNextWord.Focus();
+			}
+
 			SetCurrentRecordToNext();
 		}
 		private void OnKeyDown(object sender, KeyEventArgs e)
