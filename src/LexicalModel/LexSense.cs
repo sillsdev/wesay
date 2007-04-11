@@ -20,7 +20,7 @@ namespace WeSay.LexicalModel
 			: base(parent)
 		{
 			_gloss = new SenseGlossMultiText(this);
-			_exampleSentences = new WeSay.Data.InMemoryBindingList<LexExampleSentence>();
+			_exampleSentences = new InMemoryBindingList<LexExampleSentence>();
 			WireUpEvents();
 		}
 
@@ -65,9 +65,17 @@ namespace WeSay.LexicalModel
 			{
 				sentence.CleanUpAfterEditting();
 			}
+			CleanUpEmptyObjects();
 		}
+		public override void CleanUpEmptyObjects()
+		{
+			base.CleanUpEmptyObjects();
 
-		private void RemoveEmptyExampleSentences() {
+			for (int i = 0; i < this._exampleSentences.Count; i++)
+			{
+				_exampleSentences[i].CleanUpEmptyObjects();
+			}
+
 			// remove any example sentences that are empty
 			int count = this._exampleSentences.Count;
 
@@ -81,14 +89,6 @@ namespace WeSay.LexicalModel
 			if(count != this._exampleSentences.Count)
 			{
 				OnEmptyObjectsRemoved();
-			}
-		}
-		public override void SomethingWasModified(string propertyModified)
-		{
-			base.SomethingWasModified(propertyModified);
-			if (propertyModified != "exampleSentences")
-			{
-				RemoveEmptyExampleSentences();
 			}
 		}
 	}

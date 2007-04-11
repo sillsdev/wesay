@@ -1,4 +1,3 @@
-using System;
 using WeSay.Foundation;
 using WeSay.Language;
 

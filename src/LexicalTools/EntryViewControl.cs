@@ -1,6 +1,5 @@
 using System;
 using System.ComponentModel;
-using System.Drawing;
 using System.Windows.Forms;
 using WeSay.Project;
 using WeSay.UI;
@@ -17,26 +16,12 @@ namespace WeSay.LexicalTools
 		{
 			_viewTemplate = null;
 			InitializeComponent();
-			//_detailListControl.Size = new Size((this.Right-10)-_detailListControl.Left, (this.Bottom-10) - _detailListControl.Top);
-			//_detailListControl.Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top | AnchorStyles.Bottom;
 			_detailListControl.ChangeOfWhichItemIsInFocus += new EventHandler<CurrentItemEventArgs>(OnChangeOfWhichItemIsInFocus);
 			_detailListControl.KeyDown += new KeyEventHandler(_detailListControl_KeyDown);
 		}
 
 
-//        public EntryViewControl(viewTemplate viewTemplate)
-//        {
-//            if (viewTemplate == null)
-//            {
-//                throw new ArgumentNullException();
-//            }
-//            viewTemplate = viewTemplate;
-//            InitializeComponent();
-//            _detailListControl.CurrentItemChanged += new EventHandler<CurrentItemEventArgs>(OnCurrentItemChanged);
-//            _detailListControl.KeyDown += new KeyEventHandler(_detailListControl_KeyDown);
-//        }
-
-		void _detailListControl_KeyDown(object sender, KeyEventArgs e)
+	  void _detailListControl_KeyDown(object sender, KeyEventArgs e)
 		{
 			OnKeyDown(e);
 		}
@@ -47,6 +32,10 @@ namespace WeSay.LexicalTools
 		{
 			get
 			{
+				if(_viewTemplate == null)
+				{
+					throw new InvalidOperationException("ViewTemplate must be initialized");
+				}
 				return _viewTemplate;
 			}
 			set
@@ -124,6 +113,18 @@ namespace WeSay.LexicalTools
 
 		private void OnRecordPropertyChanged(object sender, PropertyChangedEventArgs e)
 		{
+			LexEntry entry = (LexEntry) sender;
+			switch (e.PropertyName)
+			{
+				// these are changes to the list not a change that needs to clean up
+				// and can actually have very detrimental effect if we do.
+				case "exampleSentences":
+				case "senses":
+					break;
+				default:
+					entry.CleanUpEmptyObjects();
+					break;
+			}
 			RefreshLexicalEntryPreview();
 		}
 
@@ -139,19 +140,7 @@ namespace WeSay.LexicalTools
 			this._detailListControl.SuspendLayout();
 
 			this._detailListControl.Clear();
-		  //this._panelEntry.Controls.Remove(this._detailListControl);
-		  //  this._detailListControl = new DetailList();
-		  //  this._detailListControl.AutoScroll = true;
-		  //  this._detailListControl.BackColor = BackColor;
-		  //  this._detailListControl.Dock = System.Windows.Forms.DockStyle.Fill;
-		  //  this._detailListControl.Location = new System.Drawing.Point(0, 0);
-		  //  this._detailListControl.Margin = new System.Windows.Forms.Padding(0);
-		  //  this._detailListControl.Name = "_detailListControl";
-		  //  this._detailListControl.Size = new System.Drawing.Size(474, 277);
-		  //  this._detailListControl.TabIndex = 1;
-		  //this._detailListControl.AutoSize = true;
-		  //this._detailListControl.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-
+		  this._detailListControl.VerticalScroll.Value = this._detailListControl.VerticalScroll.Minimum;
 		  this._panelEntry.Controls.Add(_detailListControl);
 			if (this._record != null)
 			{

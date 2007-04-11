@@ -11,7 +11,7 @@ using WeSay.UI;
 namespace WeSay.LexicalTools.Tests
 {
 	[TestFixture]
-	public class DictionaryControlTests : NUnit.Extensions.Forms.NUnitFormTest
+	public class DictionaryControlTests : NUnitFormTest
 	{
 		private DictionaryTask _task;
 		IRecordListManager _recordListManager;
@@ -32,11 +32,10 @@ namespace WeSay.LexicalTools.Tests
 		{
 			WeSayWordsProject.InitializeForTests();
 			base.Setup();
-			//            Db4oLexModelHelper.InitializeForNonDbTests();
 			WeSayWordsProject.InitializeForTests();
 			this._vernacularWsId = BasilProject.Project.WritingSystems.TestWritingSystemVernId;
 
-			this._filePath = System.IO.Path.GetTempFileName();
+			this._filePath = Path.GetTempFileName();
 			this._recordListManager = new Db4oRecordListManager(new WeSayWordsDb4oModelConfiguration(), _filePath);
 			Db4oLexModelHelper.Initialize(((Db4oRecordListManager)_recordListManager).DataSource.Data);
 
@@ -49,15 +48,10 @@ namespace WeSay.LexicalTools.Tests
 			string[] vernacularWritingSystemIds = new string[] { this._vernacularWsId };
 			ViewTemplate viewTemplate = new ViewTemplate();
 			viewTemplate.Add(new Field(Field.FieldNames.EntryLexicalForm.ToString(), "LexEntry",vernacularWritingSystemIds));
-
 			viewTemplate.Add(new Field("EntryNote", "LexEntry", new string[]{"en"}, Field.MultiplicityType.ZeroOr1, "MultiText" ));
-
 			viewTemplate.Add(new Field(Field.FieldNames.SenseGloss.ToString(), "LexSense",analysisWritingSystemIds));
-
 			viewTemplate.Add(new Field("SenseNote", "LexSense", new string[]{"en"}, Field.MultiplicityType.ZeroOr1, "MultiText" ));
-
 			viewTemplate.Add(new Field(Field.FieldNames.ExampleSentence.ToString(), "LexExampleSentence",vernacularWritingSystemIds));
-
 			viewTemplate.Add(new Field(Field.FieldNames.ExampleTranslation.ToString(), "LexExampleSentence",analysisWritingSystemIds));
 
 			Field customField = new Field("SemanticDomains", "LexSense", analysisWritingSystemIds, Field.MultiplicityType.ZeroOr1, "OptionCollection");
@@ -65,12 +59,10 @@ namespace WeSay.LexicalTools.Tests
 			customField.OptionsListFile = "SemanticDomains.xml";
 			viewTemplate.Add(customField);
 
-
 			Field customPOSField = new Field(LexSense.WellKnownProperties.PartOfSpeech, "LexSense", analysisWritingSystemIds, Field.MultiplicityType.ZeroOr1, "Option");
 			customPOSField.DisplayName = "POS";
 			customPOSField.OptionsListFile = "PartsOfSpeech.xml";
 			viewTemplate.Add(customPOSField);
-
 
 			Field customNotesField = new Field(LexSense.WellKnownProperties.Note, "LexSense", analysisWritingSystemIds);
 			customNotesField.DisplayName = "s-note";
@@ -115,7 +107,7 @@ namespace WeSay.LexicalTools.Tests
 
 			LexSense sense = (LexSense) entry.Senses.AddNew();
 			sense.Gloss[
-				WeSay.Project.WeSayWordsProject.Project.ViewTemplate.GetField("SenseGloss").WritingSystemIds[0]] =
+				WeSayWordsProject.Project.ViewTemplate.GetField("SenseGloss").WritingSystemIds[0]] =
 				meaning;
 
 			if (includeExample)
@@ -135,7 +127,7 @@ namespace WeSay.LexicalTools.Tests
 			_recordListManager = null;
 			_records.Dispose();
 			_records = null;
-			System.IO.File.Delete(_filePath);
+			File.Delete(_filePath);
 			base.TearDown();
 		}
 
@@ -150,7 +142,7 @@ namespace WeSay.LexicalTools.Tests
 		public void ClickingAddWordFocusesFirstField()
 		{
 			ClickAddWord();
-			NUnit.Extensions.Forms.TextBoxTester t = new TextBoxTester(GetLexicalFormControlName());
+			TextBoxTester t = new TextBoxTester(GetLexicalFormControlName());
 			Assert.IsTrue(t.Properties.Focused);
 		}
 
@@ -190,7 +182,7 @@ namespace WeSay.LexicalTools.Tests
 		public void ClickingDeleteWordFocusesFirstField()
 		{
 			ClickDeleteWord();
-			NUnit.Extensions.Forms.TextBoxTester t = new TextBoxTester(GetLexicalFormControlName());
+			TextBoxTester t = new TextBoxTester(GetLexicalFormControlName());
 			Assert.IsTrue(t.Properties.Focused);
 		}
 
@@ -227,7 +219,7 @@ namespace WeSay.LexicalTools.Tests
 			ClickAddWord();
 		}
 
-		private void DeleteAllEntries()
+		static private void DeleteAllEntries()
 		{
 			ClickDeleteWord();
 			ClickDeleteWord();
@@ -273,7 +265,7 @@ namespace WeSay.LexicalTools.Tests
 		public void EmptyDictionary_DeleteButtonDisabled()
 		{
 			StartWithEmpty();
-			NUnit.Extensions.Forms.ButtonTester l = new ButtonTester("_btnDeleteWord");
+			ButtonTester l = new ButtonTester("_btnDeleteWord");
 			Assert.IsFalse(l.Properties.Enabled);
 		}
 
@@ -294,14 +286,14 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void IfNoWordsDeleteButtonDisabled()
 		{
-			NUnit.Extensions.Forms.ButtonTester l = new ButtonTester("_btnDeleteWord");
+			ButtonTester l = new ButtonTester("_btnDeleteWord");
 			Assert.IsTrue(l.Properties.Enabled);
 			DeleteAllEntries();
 			Assert.IsFalse(l.Properties.Enabled);
 		}
 
 		[Test]
-		public void CustomTextFieldPreservedNoOtherEditting()
+		public void CustomTextFieldPreservedNoOtherEditing()
 		{
 			CustomTextFieldPreservedCore("*EntryNote");
 		}
@@ -414,9 +406,9 @@ namespace WeSay.LexicalTools.Tests
 
 		private void ClickStarOfLexemeForm()
 		{
-			NUnit.Extensions.Forms.ControlTester t = new ControlTester(GetNameOfLexicalFormAnnotationControl());
+			ControlTester t = new ControlTester(GetNameOfLexicalFormAnnotationControl());
 			t.Click();
-			MultiTextControl control = GetEditControl(Field.FieldNames.EntryLexicalForm.ToString());
+			GetEditControl(Field.FieldNames.EntryLexicalForm.ToString());
 		}
 
 		private static string GetNameOfLexicalFormAnnotationControl()
@@ -435,7 +427,7 @@ namespace WeSay.LexicalTools.Tests
 			_tabControl.SelectedIndex = 0;
 			ActivateTask();
 
-			NUnit.Extensions.Forms.TextBoxTester t = new TextBoxTester(GetLexicalFormControlName());
+			TextBoxTester t = new TextBoxTester(GetLexicalFormControlName());
 			t.Properties.Visible = true;
 
 			LexicalFormMustMatch("one");
@@ -460,29 +452,29 @@ namespace WeSay.LexicalTools.Tests
 
 		private static void LexicalFormMustMatch(string value)
 		{
-			NUnit.Extensions.Forms.TextBoxTester t = new TextBoxTester(GetLexicalFormControlName());
+			TextBoxTester t = new TextBoxTester(GetLexicalFormControlName());
 			Assert.AreEqual(value, t.Properties.Text);
 		}
 
 		private static string GetLexicalFormControlName()
 		{
-			return Field.FieldNames.EntryLexicalForm.ToString() + "_" + BasilProject.Project.WritingSystems.TestWritingSystemVernId;
+			return Field.FieldNames.EntryLexicalForm + "_" + BasilProject.Project.WritingSystems.TestWritingSystemVernId;
 		}
 
 		private static void TypeInLexicalForm(string value)
 		{
-			NUnit.Extensions.Forms.TextBoxTester t = new TextBoxTester(GetLexicalFormControlName());
+			TextBoxTester t = new TextBoxTester(GetLexicalFormControlName());
 			t.Properties.Text = value;
 		}
 
 		private static string GetMeaningControlName()
 		{
-			return Field.FieldNames.SenseGloss.ToString() + "_" + BasilProject.Project.WritingSystems.TestWritingSystemAnalId;
+			return Field.FieldNames.SenseGloss + "_" + BasilProject.Project.WritingSystems.TestWritingSystemAnalId;
 		}
 
 		private static void TypeInMeaning(string value)
 		{
-			NUnit.Extensions.Forms.TextBoxTester t = new TextBoxTester(GetMeaningControlName());
+			TextBoxTester t = new TextBoxTester(GetMeaningControlName());
 			t.Properties.Text = value;
 		}
 
@@ -490,20 +482,19 @@ namespace WeSay.LexicalTools.Tests
 		{
 			get
 			{
-				BindingListGridTester t = new BindingListGridTester("_recordsListBox");
 				return ((DictionaryControl)_detailTaskPage.Controls[0]).CurrentRecord.LexicalForm.GetBestAlternative(_vernacularWsId);
 			}
 		}
 
 		private static void ClickAddWord()
 		{
-			NUnit.Extensions.Forms.ButtonTester l = new ButtonTester("_btnNewWord");
+			ButtonTester l = new ButtonTester("_btnNewWord");
 			l.Click();
 		}
 
-		private void ClickDeleteWord()
+		static private void ClickDeleteWord()
 		{
-			NUnit.Extensions.Forms.ButtonTester l = new ButtonTester("_btnDeleteWord");
+			ButtonTester l = new ButtonTester("_btnDeleteWord");
 			l.Click();
 		}
 
@@ -570,7 +561,7 @@ namespace WeSay.LexicalTools.Tests
 //            Application.DoEvents();
 //            t.FireEvent("KeyUp", new KeyEventArgs(Keys.Tab));
 //            Application.DoEvents();
-			NUnit.Extensions.Forms.TextBoxTester lxt = new TextBoxTester(GetLexicalFormControlName());
+			TextBoxTester lxt = new TextBoxTester(GetLexicalFormControlName());
 			lxt.Properties.Focus();
 			//ghost really did fire
 			Assert.IsTrue(detailList.Count > initialCount);

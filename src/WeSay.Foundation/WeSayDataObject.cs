@@ -75,7 +75,7 @@ namespace WeSay.Foundation
 			get { return _parent; }
 			set
 			{
-				System.Diagnostics.Debug.Assert(value != null);
+				Debug.Assert(value != null);
 				_parent = value;
 			}
 	   }
@@ -132,6 +132,7 @@ namespace WeSay.Foundation
 		/// called by the binding list when senses are added, removed, reordered, etc.
 		/// Also called when the user types in fields, etc.
 		/// </summary>
+		/// <remarks>The only side effect of this should be to update the dateModified fields</remarks>
 		public virtual void SomethingWasModified(string propertyModified)
 		{
 		   //NO: can't do this until really putting the record to bed;
@@ -142,6 +143,8 @@ namespace WeSay.Foundation
 		{
 			RemoveEmptyProperties();
 		}
+
+		public virtual void CleanUpEmptyObjects() {}
 
 		/// <summary>
 		/// BE CAREFUL about when this is called. Empty properties *should exist*
@@ -161,7 +164,7 @@ namespace WeSay.Foundation
 			}
 		}
 
-		private bool IsPropertyEmpty(object property)
+		static private bool IsPropertyEmpty(object property)
 		{
 			if (property is MultiText)
 			{
@@ -268,13 +271,7 @@ namespace WeSay.Foundation
 			foreach (INotifyPropertyChanged x in list)
 			{
 				_listOwner.WireUpChild(x);
-				//x.PropertyChanged += new PropertyChangedEventHandler(OnListItemPropertyChanged);
 			}
-		}
-
-		void OnListItemPropertyChanged(object sender, PropertyChangedEventArgs e)
-		{
-			_listOwner.NotifyPropertyChanged(e.PropertyName);
 		}
 
 		void OnListChanged(object sender, ListChangedEventArgs e)
@@ -288,7 +285,6 @@ namespace WeSay.Foundation
 				{
 					((WeSayDataObject) newGuy).Parent =  this._listOwner;
 				}
-//                _parent.SomethingWasModified(_listName);
 			}
 			_listOwner.NotifyPropertyChanged(_listName);
 		}

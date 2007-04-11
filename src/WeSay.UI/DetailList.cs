@@ -125,7 +125,7 @@ namespace WeSay.UI
 						for (int col = 0; col < ColumnCount; col++)
 						{
 							Control c = GetControlFromPosition(col, row - 1);
-							this.SetCellPosition(c, new TableLayoutPanelCellPosition(col, row));
+							SetCellPosition(c, new TableLayoutPanelCellPosition(col, row));
 						}
 					}
 				}

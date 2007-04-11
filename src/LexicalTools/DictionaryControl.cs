@@ -75,7 +75,7 @@ namespace WeSay.LexicalTools
 				listWritingSystem = BasilProject.Project.WritingSystems.UnknownVernacularWritingSystem;
 			}
 
-			this.BackColor = WeSay.UI.DisplaySettings.Default.BackgroundColor;
+			BackColor = WeSay.UI.DisplaySettings.Default.BackgroundColor;
 			InitializeComponent();
 			this._writingSystemChooser.Image = Resources.Expand.GetThumbnailImage(6, 6, ReturnFalse, IntPtr.Zero);
 			this._btnFind.Image = Resources.Find.GetThumbnailImage(11, 11, ReturnFalse, IntPtr.Zero);

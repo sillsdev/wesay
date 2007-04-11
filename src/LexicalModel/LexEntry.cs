@@ -76,15 +76,15 @@ namespace WeSay.LexicalModel
 			//workaround db4o 6 bug
 			if (_creationTime.Kind != DateTimeKind.Utc)
 			{
-				this.CreationTime = new DateTime(_creationTime.Ticks, DateTimeKind.Utc);
+				CreationTime = new DateTime(_creationTime.Ticks, DateTimeKind.Utc);
 			}
 			if (_modificationTime.Kind != DateTimeKind.Utc)
 			{
-				this.ModificationTime = new DateTime(_modificationTime.Ticks, DateTimeKind.Utc);
+				ModificationTime = new DateTime(_modificationTime.Ticks, DateTimeKind.Utc);
 			}
 
-			System.Diagnostics.Debug.Assert(this.CreationTime.Kind == DateTimeKind.Utc);
-			System.Diagnostics.Debug.Assert(this.ModificationTime.Kind == DateTimeKind.Utc);
+			System.Diagnostics.Debug.Assert(CreationTime.Kind == DateTimeKind.Utc);
+			System.Diagnostics.Debug.Assert(ModificationTime.Kind == DateTimeKind.Utc);
 			base.WireUpEvents();
 			WireUpChild(_lexicalForm);
 			WireUpList(_senses, "senses");
@@ -95,10 +95,6 @@ namespace WeSay.LexicalModel
 		{
 			base.SomethingWasModified(propertyModified);
 			ModificationTime = DateTime.UtcNow;
-			if (propertyModified != "senses")
-			{
-				RemoveEmptySenses();
-			}
 		}
 
 		public MultiText LexicalForm
@@ -202,13 +198,21 @@ namespace WeSay.LexicalModel
 			{
 				sense.CleanUpAfterEditting();
 			}
+			CleanUpEmptyObjects();
 		}
 
-		private void RemoveEmptySenses()
+		public override void CleanUpEmptyObjects()
 		{
+			base.CleanUpEmptyObjects();
+
+
+			for (int i = 0; i < this._senses.Count; i++)
+			{
+				_senses[i].CleanUpEmptyObjects();
+			}
+
 			// remove any senses that are empty
 			int count = this._senses.Count;
-
 			for (int i = count - 1; i >= 0; i--)
 			{
 				if (this._senses[i].Empty)
@@ -247,14 +251,6 @@ namespace WeSay.LexicalModel
 			: base(parent)
 		{
 		}
-
-		///// <summary>
-		///// TODO: needed for GetClosestLexicalForms(IRecordList<LexicalFormMultiText> lexicalForms...)
-		///// </summary>
-		//public LexicalFormMultiText()
-		//    : base(null)
-		//{
-		//}
 
 		public new LexEntry Parent
 		{

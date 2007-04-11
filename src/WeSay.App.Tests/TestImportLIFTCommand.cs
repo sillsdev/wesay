@@ -1,34 +1,30 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Threading;
-using System.Windows.Forms;
 using Db4objects.Db4o;
-using MultithreadProgress;
 using NUnit.Framework;
 using WeSay.Foundation;
 using WeSay.Foundation.Progress;
 using WeSay.LexicalModel;
 using WeSay.Project;
-using WeSay.UI;
 
 namespace WeSay.App.Tests
 {
 	[TestFixture]
 	public class TestImportLIFTCommand
 	{
-		private ProgressDialogHandler _progressHandler;
+//        private ProgressDialogHandler _progressHandler;
 		private CacheBuilder _cacheBuilder;
 		//private bool _finished;
 		private ProgressState _progress;
 		private string _simpleGoodLiftContents = string.Format("<?xml version='1.0' encoding='utf-8'?><lift version='{0}'><entry id='one'><sense><gloss lang='en'><text>hello</text></gloss></sense></entry><entry id='two'/></lift>", LiftIO.Validator.LiftVersion);
 		private string _log;
 
-		protected string BackupPath
+		static protected string BackupPath
 		{
 			get
 			{
-				return Project.WeSayWordsProject.Project.PathToLiftBackupDir;
+				return WeSayWordsProject.Project.PathToLiftBackupDir;
 				//return _cacheBuilder.DestinationDatabasePath + ".bak";
 			}
 		}
@@ -36,7 +32,7 @@ namespace WeSay.App.Tests
 		[SetUp]
 		public void Setup()
 		{
-			WeSay.Project.WeSayWordsProject.InitializeForTests();
+			WeSayWordsProject.InitializeForTests();
 			_cacheBuilder = new CacheBuilder(Path.GetTempFileName());
 			_progress = new ConsoleProgress();// ProgressState(_progressHandler);
 			_progress.Log += new EventHandler<ProgressState.LogEvent>(OnLog);
@@ -52,9 +48,9 @@ namespace WeSay.App.Tests
 		public void TearDown()
 		{
 			_progress.Dispose();
-			if (Directory.Exists(WeSay.Project.WeSayWordsProject.Project.PathToCache))
+			if (Directory.Exists(WeSayWordsProject.Project.PathToCache))
 			{
-				Directory.Delete(WeSay.Project.WeSayWordsProject.Project.PathToCache, true);
+				Directory.Delete(WeSayWordsProject.Project.PathToCache, true);
 			}
 //            if (File.Exists(_cacheBuilder.DestinationDatabasePath))
 //            {
@@ -64,11 +60,15 @@ namespace WeSay.App.Tests
 			{
 				File.Delete(_cacheBuilder.SourceLIFTPath);
 			}
-			string dirToEmptyOfBackupDirs = Directory.GetParent(WeSay.Project.WeSayWordsProject.Project.PathToLiftBackupDir).FullName;
-			string[] backUpDirs = Directory.GetDirectories(dirToEmptyOfBackupDirs, "*incremental*");
-			foreach (string dir in backUpDirs)
+			if (Directory.Exists(WeSayWordsProject.Project.PathToLiftBackupDir))
 			{
-				Directory.Delete(dir,true);
+				string dirToEmptyOfBackupDirs =
+						Directory.GetParent(WeSayWordsProject.Project.PathToLiftBackupDir).FullName;
+				string[] backUpDirs = Directory.GetDirectories(dirToEmptyOfBackupDirs, "*incremental*");
+				foreach (string dir in backUpDirs)
+				{
+					Directory.Delete(dir, true);
+				}
 			}
 		}
 		[Test]
@@ -87,9 +87,9 @@ namespace WeSay.App.Tests
 			if (doMakeExistingFilesThatNeedToBeReplaced)
 			{
 //                string dir = Path.GetDirectoryName(_cacheBuilder.DestinationDatabasePath);
-				string dir = Project.WeSayWordsProject.Project.PathToCache;
+				string dir = WeSayWordsProject.Project.PathToCache;
 				Directory.CreateDirectory(dir);
-				string oldCache = Project.WeSayWordsProject.Project.PathToCache;
+				string oldCache = WeSayWordsProject.Project.PathToCache;
 				// _cacheBuilder.DestinationDatabasePath + " Cache";
 				Directory.CreateDirectory(oldCache);
 
@@ -107,16 +107,57 @@ namespace WeSay.App.Tests
 		[Test]//, Ignore("Run this by hand if you have an E: volume (windows only)")]
 		public void WorksWithTempDirectoryOnADifferentVolumne()
 	   {
-			//testing approach: it's harder to get the temp locaiton changed, so we
-			// instead put the destination project over on the non-default volume
+		   if (Environment.OSVersion.Platform == PlatformID.Unix)
+		   {
+			   Console.WriteLine("Ignored on non-Windows");
+		   }
+		   else
+		   {
+			   //testing approach: it's harder to get the temp locaiton changed, so we
+			   // instead put the destination project over on the non-default volume
+			   DriveInfo[] drives = DriveInfo.GetDrives();
 
-			string target = "E:\\WeSayTest\\WeSay\\pretend.lift";
-			Directory.CreateDirectory("E:\\WeSayTest");
-			Directory.CreateDirectory("E:\\WeSayTest\\WeSay");
-			Project.WeSayWordsProject.Project.SetupProjectDirForTests(target);
-			Assert.AreEqual(Project.WeSayWordsProject.Project.ProjectDirectoryPath, "E:\\WeSayTest");
-			SimpleGoodLiftCore(true);
-		}
+			   // get a drive I might be able to use
+			   string driveName = string.Empty;
+			   foreach (DriveInfo drive in drives)
+			   {
+				   if (drive.IsReady &&
+					   drive.DriveType != DriveType.CDRom &&
+					   drive.Name != "C:\\")
+				   {
+					   driveName = drive.Name;
+					   break;
+				   }
+			   }
+			   if (driveName.Length == 0)
+			   {
+				   Console.WriteLine("Ignored when there is not an additional volume");
+			   }
+			   else
+			   {
+				   string directory;
+				   do
+				   {
+					   directory = Path.Combine(driveName, Path.GetRandomFileName());
+
+				   } while(Directory.Exists(directory));
+
+				   string target = Path.Combine(directory, "WeSay\\pretend.lift");
+				   Directory.CreateDirectory(directory);
+				   try
+				   {
+					   Directory.CreateDirectory(Path.Combine(directory, "WeSay"));
+					   WeSayWordsProject.Project.SetupProjectDirForTests(target);
+					   Assert.AreEqual(directory, WeSayWordsProject.Project.ProjectDirectoryPath);
+					   SimpleGoodLiftCore(true);
+				   }
+				   finally
+				   {
+					   Directory.Delete(directory, true);
+				   }
+			   }
+		   }
+	   }
 
 		[Test]
 		public void BadLiftStopsWithProgressInErrorState()
@@ -153,8 +194,8 @@ namespace WeSay.App.Tests
 
 			_cacheBuilder.DoWork(_progress);
 		 //   WaitForFinish();
-			string dbPath =Project.WeSayWordsProject.Project.PathToDb4oLexicalModelDB;
-			using (IObjectContainer db = Db4objects.Db4o.Db4oFactory.OpenFile(dbPath))
+			string dbPath = WeSayWordsProject.Project.PathToDb4oLexicalModelDB;
+			using (IObjectContainer db = Db4oFactory.OpenFile(dbPath))
 			{
 				IList<LexEntry> x = db.Query<LexEntry>();
 				Assert.AreEqual(2, x.Count);
@@ -212,7 +253,7 @@ namespace WeSay.App.Tests
 		[Test]
 		public void ClearIncrementalBackupCache_Command_DeletesIt()
 		{
-			string dir = WeSay.Project.WeSayWordsProject.Project.PathToLiftBackupDir;
+			string dir = WeSayWordsProject.Project.PathToLiftBackupDir;
 			Directory.CreateDirectory(dir);
 			string deleteThisGuy = Path.Combine(dir, "deleteMe.txt");
 			File.WriteAllText(deleteThisGuy, "hello");
@@ -223,7 +264,7 @@ namespace WeSay.App.Tests
 		[Test]
 		public void ClearsIncrementalBackupCache()
 		{
-			string dir = WeSay.Project.WeSayWordsProject.Project.PathToLiftBackupDir;
+			string dir = WeSayWordsProject.Project.PathToLiftBackupDir;
 			Directory.CreateDirectory(dir);
 			string deleteThisGuy = Path.Combine(dir, "deleteMe.txt");
 			File.WriteAllText(deleteThisGuy,"doesn't matter");

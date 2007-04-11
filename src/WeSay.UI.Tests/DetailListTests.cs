@@ -95,6 +95,12 @@ namespace WeSay.UI.Tests
 		}
 
 		[Test]
+		public void Test()
+		{
+			AddRow(0);
+		}
+
+		[Test]
 		public void RowOrder()
 		{
 			Control rowOne = AddRow();

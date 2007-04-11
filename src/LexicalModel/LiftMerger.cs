@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using LiftIO;
 using WeSay.Data;
 using WeSay.Foundation;
-using WeSay.Foundation.Progress;
 using WeSay.Language;
 using WeSay.LexicalModel.Db4o_Specific;
 
@@ -15,15 +14,15 @@ namespace WeSay.LexicalModel
 	///
 	/// NB: this doesn't yet merge (dec 2006). Just blindly adds.
 	/// </summary>
-	public class LiftMerger : ILexiconMerger<WeSay.Foundation.WeSayDataObject, LexEntry,LexSense,LexExampleSentence>, IDisposable
+	public class LiftMerger : ILexiconMerger<WeSayDataObject, LexEntry,LexSense,LexExampleSentence>, IDisposable
 	{
 		private Db4oDataSource _dataSource;
-		private WeSay.Data.IRecordList<LexEntry> _entries;
+		private IRecordList<LexEntry> _entries;
 		private IList<String> _expectedOptionTraits;
 		private IList<string> _expectedOptionCollectionTraits;
 //        private ProgressState _progressState = new NullProgressState();
 
-		public LiftMerger(Db4oDataSource dataSource,  WeSay.Data.IRecordList<LexEntry> entries)
+		public LiftMerger(Db4oDataSource dataSource,  IRecordList<LexEntry> entries)
 		{
 			_dataSource = dataSource;
 			_entries = entries;
@@ -79,7 +78,7 @@ namespace WeSay.LexicalModel
 				 && eInfo.ModificationTime.Kind != DateTimeKind.Unspecified;
 		}
 
-		private Guid GetGuidOrEmptyFromIdString(string id)
+		static private Guid GetGuidOrEmptyFromIdString(string id)
 		{
 			try
 			{
@@ -112,8 +111,6 @@ namespace WeSay.LexicalModel
 		{
 			MergeIn(entry.LexicalForm, forms);
 		}
-
-
 
 		public void MergeInGloss(LexSense sense, LiftMultiText forms)
 		{
@@ -148,7 +145,7 @@ namespace WeSay.LexicalModel
 
 		public void MergeInDefinition(LexSense sense, LiftMultiText contents)
 		{
-			AddOrAppendMultiTextProperty(sense, contents, LexSense.WellKnownProperties.Note);
+			AddOrAppendMultiTextProperty(sense, contents, LexSense.WellKnownProperties.Definition);
 		}
 
 		/// <summary>
@@ -182,7 +179,7 @@ namespace WeSay.LexicalModel
 					if (trait.Name == "flag" && int.Parse(trait.Value) > 0)
 					{
 						o.IsStarred = true;
-		}
+					}
 					else
 					{
 						//log skipping
@@ -220,22 +217,22 @@ namespace WeSay.LexicalModel
 		/// which can be found on any subclass of "extensible", on any "field", and as
 		/// a subclass of "annotation".
 		/// </summary>
-		public void MergeInTrait(WeSayDataObject extensible, LiftIO.Trait trait)
+		public void MergeInTrait(WeSayDataObject extensible, Trait trait)
 		{
-				if (trait.Name != null && ExpectedOptionTraits.Contains(trait.Name))
-				{
-					OptionRef o = extensible.GetOrCreateProperty<OptionRef>(trait.Name);
-					o.Value = trait.Value;
-				}
-				else if (trait.Name != null && ExpectedOptionCollectionTraits.Contains(trait.Name))
-				{
-					OptionRefCollection c = extensible.GetOrCreateProperty<OptionRefCollection>(trait.Name);
-					c.Add(trait.Value);
-				}
-				else
-				{
-					//"log skipping..."
-				}
+			if (trait.Name != null && ExpectedOptionTraits.Contains(trait.Name))
+			{
+				OptionRef o = extensible.GetOrCreateProperty<OptionRef>(trait.Name);
+				o.Value = trait.Value;
+			}
+			else if (trait.Name != null && ExpectedOptionCollectionTraits.Contains(trait.Name))
+			{
+				OptionRefCollection c = extensible.GetOrCreateProperty<OptionRefCollection>(trait.Name);
+				c.Add(trait.Value);
+			}
+			else
+			{
+				//"log skipping..."
+			}
 		}
 
 		public IList<string> ExpectedOptionTraits
@@ -284,9 +281,6 @@ namespace WeSay.LexicalModel
 			{
 				_entries.Add(entry);
 			}
-
-//Review Eric: is this needed?
-		   // _dataSource.Data.Set(entry);
 		}
 
 		#endregion

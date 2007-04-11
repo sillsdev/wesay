@@ -70,6 +70,7 @@ namespace WeSay.LexicalTools
 			_questionIndicator.Minimum = 1;
 			_questionIndicator.Maximum = _presentationModel.Questions.Count;
 			_questionIndicator.Value = _presentationModel.CurrentQuestionIndex+1;
+			_vernacularBox.ClearAllText();
 			RefreshCurrentWords();
 		}
 
@@ -113,7 +114,7 @@ namespace WeSay.LexicalTools
 					break;
 				case Keys.PageDown:
 					if(_btnNext.Enabled)
-					_btnNext_Click(this, null);
+						_btnNext_Click(this, null);
 					break;
 
 				default:
@@ -139,7 +140,7 @@ namespace WeSay.LexicalTools
 			_question.BackColor = BackColor;
 		}
 
-		void _listViewWords_KeyPress(object sender, System.Windows.Forms.KeyPressEventArgs e)
+		void _listViewWords_KeyPress(object sender, KeyPressEventArgs e)
 		{
 			e.Handled = true;
 			switch (e.KeyChar)
@@ -159,7 +160,6 @@ namespace WeSay.LexicalTools
 			{
 				string word = (string) _listViewWords.SelectedItem;
 				_presentationModel.RemoveWord(word);
-   //            _vernacularBox.TextBoxes[0].Text = word;
 
 				this.destination = this._vernacularBox.Location;
 				this.destination.X += this._vernacularBox.TextBoxes[0].Location.X;

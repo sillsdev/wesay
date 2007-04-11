@@ -187,7 +187,7 @@ namespace WeSay.LexicalModel.Tests
 		{
 			LexSense sense = new LexSense();
 			_merger.MergeInDefinition(sense, MakeBasicLiftMultiText());
-			AssertPropertyHasExpectedMultiText(sense, WeSayDataObject.WellKnownProperties.Note);
+			AssertPropertyHasExpectedMultiText(sense, LexSense.WellKnownProperties.Definition);
 		}
 
 		[Test]
@@ -248,9 +248,9 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
-		public void LexicalUntiGetsFlag()
+		public void LexicalUnitGetsFlag()
 		{
-			LexEntry entry = this.MakeSimpleEntry();
+			LexEntry entry = MakeSimpleEntry();
 			LiftMultiText text = MakeBasicLiftMultiText();
 			AddTraitToLiftMultiText(text, "ws-one", "flag", "1");
 			_merger.MergeInLexemeForm(entry, text);
@@ -461,7 +461,7 @@ namespace WeSay.LexicalModel.Tests
 		public void ExpectedAtomicTraitOnEntry()
 		{
 			_merger.ExpectedOptionTraits.Add("flub");
-			LexEntry e = this.MakeSimpleEntry();
+			LexEntry e = MakeSimpleEntry();
 			_merger.MergeInTrait(e, new Trait("flub", "dub"));
 			Assert.AreEqual(1, e.Properties.Count);
 			Assert.AreEqual("flub", e.Properties[0].Key);
@@ -472,7 +472,7 @@ namespace WeSay.LexicalModel.Tests
 		[Test]
 		public void UnexpectedAtomicTraitDropped()
 		{
-			LexEntry e = this.MakeSimpleEntry();
+			LexEntry e = MakeSimpleEntry();
 			_merger.MergeInTrait(e, new Trait("flub", "dub"));
 			Assert.AreEqual(0, e.Properties.Count);
 		}
@@ -481,7 +481,7 @@ namespace WeSay.LexicalModel.Tests
 		public void ExpectedCollectionTrait()
 		{
 			_merger.ExpectedOptionCollectionTraits.Add("flub");
-			LexEntry e = this.MakeSimpleEntry();
+			LexEntry e = MakeSimpleEntry();
 			_merger.MergeInTrait(e, new Trait("flub", "dub"));
 			_merger.MergeInTrait(e, new Trait("flub", "stub"));
 			Assert.AreEqual(1, e.Properties.Count);
@@ -495,7 +495,7 @@ namespace WeSay.LexicalModel.Tests
 		[Test]
 		public void UnexpectedAtomicCollectionDropped()
 		{
-			LexEntry e = this.MakeSimpleEntry();
+			LexEntry e = MakeSimpleEntry();
 			_merger.MergeInTrait(e, new Trait("flub", "dub"));
 			_merger.MergeInTrait(e, new Trait("flub", "stub"));
 			Assert.AreEqual(0, e.Properties.Count);
@@ -504,7 +504,7 @@ namespace WeSay.LexicalModel.Tests
 		[Test]
 		public void ExpectedCustomField()
 		{
-			LexEntry e = this.MakeSimpleEntry();
+			LexEntry e = MakeSimpleEntry();
 			LiftMultiText t = new LiftMultiText();
 			t["z"] = "dub";
 			_merger.MergeInField(e, "flub", default(DateTime), default(DateTime), t);
@@ -517,7 +517,7 @@ namespace WeSay.LexicalModel.Tests
 		[Test, Ignore("doesn't drop yet")]
 		public void UnexpectedCustomFieldDropped()
 		{
-			LexEntry e = this.MakeSimpleEntry();
+			LexEntry e = MakeSimpleEntry();
 			_merger.MergeInTrait(e, new Trait("flub", "dub"));
 			_merger.MergeInTrait(e, new Trait("flub", "stub"));
 			Assert.AreEqual(0, e.Properties.Count);

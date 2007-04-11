@@ -72,7 +72,7 @@ namespace WeSay.CommonTools
 			}
 			catch
 			{
-				Console.WriteLine("Could not read cache file: " + cacheFilePath);
+				// Console.WriteLine("Could not read cache file: " + cacheFilePath);
 			}
 			return s;
 		}

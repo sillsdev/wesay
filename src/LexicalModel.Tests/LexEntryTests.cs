@@ -15,7 +15,6 @@ namespace WeSay.LexicalModel.Tests
 		public void Setup()
 		{
 			this._entry = new LexEntry();
-			this._entry.EmptyObjectsRemoved += new System.EventHandler(_entry_EmptyObjectsRemoved);
 			this._sense = (LexSense) this._entry.Senses.AddNew();
 			this._sense.Gloss["th"] = "sense";
 			MultiText customFieldInSense = this._sense.GetOrCreateProperty<MultiText>("customFieldInSense");
@@ -25,7 +24,14 @@ namespace WeSay.LexicalModel.Tests
 			this._examples.Translation["en"] = "translation";
 			MultiText customFieldInExample = this._examples.GetOrCreateProperty<MultiText>("customFieldInExample");
 			customFieldInExample["th"] = "custom";
+			this._entry.EmptyObjectsRemoved += new System.EventHandler(_entry_EmptyObjectsRemoved);
+			this._entry.PropertyChanged += new System.ComponentModel.PropertyChangedEventHandler(_entry_PropertyChanged);
 			this._removed = false;
+		}
+
+		void _entry_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+		{
+			_entry.CleanUpEmptyObjects();
 		}
 
 		void _entry_EmptyObjectsRemoved(object sender, System.EventArgs e)
@@ -45,6 +51,7 @@ namespace WeSay.LexicalModel.Tests
 		{
 			MultiText customFieldInExample = this._examples.GetOrCreateProperty<MultiText>("customFieldInExample");
 			customFieldInExample["th"] = string.Empty;
+			_entry.CleanUpAfterEditting();
 		}
 		private void ClearSenseGloss()
 		{
@@ -61,6 +68,7 @@ namespace WeSay.LexicalModel.Tests
 		{
 			MultiText customFieldInSense = this._sense.GetOrCreateProperty<MultiText>("customFieldInSense");
 			customFieldInSense["th"] = string.Empty;
+			_entry.CleanUpAfterEditting();
 		}
 
 		[Test]

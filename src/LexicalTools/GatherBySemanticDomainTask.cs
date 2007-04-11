@@ -543,6 +543,7 @@ namespace WeSay.LexicalTools
 					semanticDomains.Remove(CurrentDomainKey);
 				}
 			}
+			entry.CleanUpAfterEditting();
 		}
 
 		private List<LexEntry> GetEntriesHavingLexicalForm(string lexicalForm)
