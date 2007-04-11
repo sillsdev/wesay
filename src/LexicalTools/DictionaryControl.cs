@@ -95,7 +95,6 @@ namespace WeSay.LexicalTools
 			MenuItem item =
 					new MenuItem(writingSystem.Id + "\t" + StringCatalog.Get(field.DisplayName),
 								 OnCmWritingSystemClicked);
-			item.Checked = (this._listWritingSystem == writingSystem);
 			item.RadioCheck = true;
 			item.Tag = writingSystem;
 			this._cmWritingSystems.MenuItems.Add(item);
@@ -178,6 +177,10 @@ namespace WeSay.LexicalTools
 
 		void _writingSystemChooser_Click(object sender, EventArgs e)
 		{
+			foreach (MenuItem menuItem in _cmWritingSystems.MenuItems)
+			{
+			  menuItem.Checked = (this._listWritingSystem == menuItem.Tag);
+			}
 			this._cmWritingSystems.Show(_writingSystemChooser, new Point(0,_writingSystemChooser.Height), LeftRightAlignment.Right);
 		}
 
