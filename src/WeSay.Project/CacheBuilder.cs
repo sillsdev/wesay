@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 using System.IO;
 using System.Xml;
 using LiftIO;
@@ -17,11 +18,31 @@ namespace WeSay.Project
 		private string _sourceLIFTPath;
 		protected WeSay.Foundation.Progress.ProgressState _progress;
 		private WeSay.Data.Db4oRecordList<LexEntry> _prewiredEntries=null;
+		private BackgroundWorker _backgroundWorker;
 
 		public CacheBuilder(string sourceLIFTPath)
 		{
 		   // _destinationDatabasePath = destinationDatabasePath;
 			_sourceLIFTPath = sourceLIFTPath;
+		}
+
+
+		/// <summary>
+		/// Used when staring this from a "System.ComponentModel.BackgroundWorker"
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		public void OnDoWork(object sender, DoWorkEventArgs e)
+		{
+			_backgroundWorker = sender as BackgroundWorker;
+			DoWork(e.Argument as ProgressState);
+
+			//this is weird, but needed for the caller to know that we quite because
+			// of a cancellation
+			if (_backgroundWorker.CancellationPending)
+			{
+				e.Cancel = true;
+			}
 		}
 
 		/// <summary>
@@ -105,6 +126,10 @@ namespace WeSay.Project
 					doc.Load(_sourceLIFTPath);
 
 					DoParsing(doc, ds);
+					if (_backgroundWorker!=null && _backgroundWorker.CancellationPending)
+					{
+						return;
+					}
 				}
 				 Project.WeSayWordsProject.Project.CacheLocationOverride = null;
 				ClearTheIncrementalBackupDirectory();
@@ -244,11 +269,12 @@ namespace WeSay.Project
 		void parser_SetStepsCompleted(object sender, LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence>.ProgressEventArgs e)
 		{
 			_progress.NumberOfStepsCompleted = e.Progress;
+			e.Cancel = _backgroundWorker.CancellationPending;
 		}
 
 		void parser_SetTotalNumberSteps(object sender, LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence>.StepsArgs e)
 		{
-			_progress.NumberOfSteps = e.Steps;
+			_progress.TotalNumberOfSteps =e.Steps;
 		}
 
 		/*public for unit-tests */

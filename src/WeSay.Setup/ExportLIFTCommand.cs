@@ -42,7 +42,7 @@ namespace WeSay
 
 					 using (Db4oRecordList<LexEntry> entries = new Db4oRecordList<LexEntry>(ds))
 					 {
-						 _progress.NumberOfSteps = entries.Count;
+						 _progress.TotalNumberOfSteps = entries.Count;
 						 for (int i = 0; i < entries.Count; )
 						 {
 							 int howManyAtATime = 100;

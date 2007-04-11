@@ -195,17 +195,19 @@ namespace WeSay.App
 				// progressState.Log += new EventHandler<ProgressState.LogEvent>(OnProgressState_Log);
 
 
-				WeSay.UI.ProgressDialog dlg = new WeSay.UI.ProgressDialog();
-				dlg.Show();
-				progressState = new ProgressState();
-				dlg.CanCancel = false;
-				//nb on 10/april/2007, the parer didn't have a way of listening for cancel
-				dlg.CancelRequested += new EventHandler(progressState.CancelRequested);
-				progressState.NumberOfStepsCompletedChanged += new EventHandler(dlg.OnNumberOfStepsCompletedChanged);
-				progressState.TotalNumberOfStepsChanged += new EventHandler(dlg.OnTotalNumberOfStepsChanged);
-				progressState.StatusLabelChanged +=new EventHandler(dlg.OnStatusLabelChanged);
-
-				builder.DoWork(progressState);
+				using (WeSay.UI.ProgressDialog dlg = new WeSay.UI.ProgressDialog())
+				{
+					dlg.Overview = "Please wait while WeSay updates its caches to match the new or modified LIFT file.";
+					BackgroundWorker worker = new BackgroundWorker();
+					worker.DoWork += new DoWorkEventHandler(builder.OnDoWork);
+					dlg.BackgroundWorker = worker;
+					dlg.CanCancel = true;
+					dlg.ShowDialog();
+					if (dlg.DialogResult != DialogResult.OK)
+					{
+						return false;
+					}
+				}
 			}
 			if (project.LoadFromLiftLexiconPath(liftPath))
 			{
@@ -217,6 +219,7 @@ namespace WeSay.App
 				return false;
 			}
 		}
+
 
 
 		private static void OsCheck()

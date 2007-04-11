@@ -43,7 +43,7 @@ namespace WeSay.Foundation.Progress
 			}
 		}
 
-		public override int NumberOfSteps
+		public override int TotalNumberOfSteps
 		{
 			get
 			{

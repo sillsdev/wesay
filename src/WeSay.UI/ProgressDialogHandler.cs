@@ -21,7 +21,7 @@ namespace WeSay.UI
 			command.InitializeCallback = new InitializeProgressCallback(InitializeProgress);
 			command.ProgressCallback = new ProgressCallback(UpdateProgress);
 			command.PrimaryStatusTextCallback = new StatusCallback(UpdateStatus1);
-			command.SecondaryStatusTextCallback = new StatusCallback(UpdateStatus2);
+			command.SecondaryStatusTextCallback = new StatusCallback(UpdateOverview);
 
 			_currentCommand.BeginCancel += new EventHandler(OnCommand_BeginCancel);
 			_currentCommand.EnabledChanged += new EventHandler(OnCommand_EnabledChanged);
@@ -83,12 +83,12 @@ namespace WeSay.UI
 			if (NeedInvoke())
 			{
 				_parentForm.BeginInvoke(
-					new StatusCallback(UpdateStatus1Core),
+					new StatusCallback(UpdateStatusCore),
 					new object[] { statusText });
 			}
 			else
 			{
-				UpdateStatus1Core(statusText);
+				UpdateStatusCore(statusText);
 			}
 		}
 
@@ -98,17 +98,17 @@ namespace WeSay.UI
 		   //  return _parentForm != null && _parentForm.InvokeRequired;
 	   }
 
-		private void UpdateStatus2(string statusText)
+		private void UpdateOverview(string text)
 		{
 			if (NeedInvoke())
 			{
 				_parentForm.BeginInvoke(
-					new StatusCallback(UpdateStatus2Core),
-					new object[] { statusText });
+					new StatusCallback(UpdateOverviewCore),
+					new object[] { text });
 			}
 			else
 			{
-				UpdateStatus2Core(statusText);
+				UpdateOverviewCore(text);
 			}
 		}
 
@@ -124,14 +124,14 @@ namespace WeSay.UI
 			_progressDialog.Progress = progress;
 		}
 
-		private void UpdateStatus1Core(string statusText)
+		private void UpdateStatusCore(string statusText)
 		{
-			_progressDialog.StatusText1 = statusText;
+			_progressDialog.StatusText = statusText;
 		}
 
-		private void UpdateStatus2Core(string statusText)
+		private void UpdateOverviewCore(string text)
 		{
-			_progressDialog.StatusText2 = statusText;
+			_progressDialog.Overview = text;
 		}
 
 

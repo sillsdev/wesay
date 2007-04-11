@@ -15,18 +15,18 @@ namespace WeSay.UI
 	/// </summary>
 	public class ProgressDialog : System.Windows.Forms.Form
 	{
-		private System.Windows.Forms.PictureBox pictureBox;
-		private System.Windows.Forms.Label statusLabel1;
-		private System.Windows.Forms.Label statusLabel2;
-		private System.Windows.Forms.ProgressBar progressBar;
-		private System.Windows.Forms.Label progressLabel;
-		private System.Windows.Forms.Button cancelButton;
-		private System.Windows.Forms.Timer timer1;
+		private System.Windows.Forms.Label _statusLabel;
+		private System.Windows.Forms.ProgressBar _progressBar;
+		private System.Windows.Forms.Label _progressLabel;
+		private System.Windows.Forms.Button _cancelButton;
+		private System.Windows.Forms.Timer _showWindowIfTakingLongTimeTimer;
+		private bool _showOnce;
+		private System.Windows.Forms.Timer _progressTimer;
+		private bool _isClosing;
+		private Label _overviewLabel;
+		private DateTime _startTime = DateTime.Now;
 		private System.ComponentModel.IContainer components;
-		private bool showOnce;
-		private System.Windows.Forms.Timer progressTimer;
-		private bool isClosing;
-		private DateTime startTime = DateTime.Now;
+		private BackgroundWorker _backgroundWorker;
 
 		/// <summary>
 		/// Standard constructor
@@ -37,6 +37,10 @@ namespace WeSay.UI
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
+			_statusLabel.BackColor = System.Drawing.SystemColors.Control;
+			_progressLabel.BackColor = System.Drawing.SystemColors.Control;
+			_overviewLabel.BackColor = System.Drawing.SystemColors.Control;
+
 		}
 
 		/// <summary>
@@ -47,56 +51,41 @@ namespace WeSay.UI
 		{
 			get
 			{
-				return timer1.Interval;
+				return _showWindowIfTakingLongTimeTimer.Interval;
 			}
 			set
 			{
-				timer1.Interval = value;
+				_showWindowIfTakingLongTimeTimer.Interval = value;
 			}
 		}
-
-//		/// <summary>
-//		/// Get / set the image to display in the animation control area
-//		/// </summary>
-//		public Image ProgressImage
-//		{
-//			get
-//			{
-//				return pictureBox.Image;
-//			}
-//			set
-//			{
-//				pictureBox.Image = value;
-//			}
-//		}
 
 		/// <summary>
 		/// Get / set the text to display in the first status panel
 		/// </summary>
-		public string StatusText1
+		public string StatusText
 		{
 			get
 			{
-				return statusLabel1.Text;
+				return _statusLabel.Text;
 			}
 			set
 			{
-				statusLabel1.Text = value;
+				_statusLabel.Text = value;
 			}
 		}
 
 		/// <summary>
-		/// Get / set the text to display in the second status panel
+		/// Description of why this dialog is even showing
 		/// </summary>
-		public string StatusText2
+		public string Overview
 		{
 			get
 			{
-				return statusLabel2.Text;
+				return _overviewLabel.Text;
 			}
 			set
 			{
-				statusLabel2.Text = value;
+				_overviewLabel.Text = value;
 			}
 		}
 
@@ -107,11 +96,11 @@ namespace WeSay.UI
 		{
 			get
 			{
-				return progressBar.Minimum;
+				return _progressBar.Minimum;
 			}
 			set
 			{
-				progressBar.Minimum = value;
+				_progressBar.Minimum = value;
 			}
 		}
 
@@ -122,11 +111,11 @@ namespace WeSay.UI
 		{
 			get
 			{
-				return progressBar.Maximum;
+				return _progressBar.Maximum;
 			}
 			set
 			{
-				progressBar.Maximum = value;
+				_progressBar.Maximum = value;
 			}
 		}
 
@@ -137,11 +126,11 @@ namespace WeSay.UI
 		{
 			get
 			{
-				return progressBar.Value;
+				return _progressBar.Value;
 			}
 			set
 			{
-				progressBar.Value = value;
+				_progressBar.Value = value;
 			}
 		}
 
@@ -153,11 +142,60 @@ namespace WeSay.UI
 		{
 			get
 			{
-				return cancelButton.Enabled;
+				return _cancelButton.Enabled;
 			}
 			set
 			{
-				cancelButton.Enabled = value;
+				_cancelButton.Enabled = value;
+			}
+		}
+
+		/// <summary>
+		/// If this is set before showing, the dialog will run the worker and respond
+		/// to its events
+		/// </summary>
+		public BackgroundWorker BackgroundWorker
+		{
+			get
+			{
+				return _backgroundWorker;
+			}
+			set
+			{
+				_backgroundWorker = value;
+			}
+		}
+
+		void OnBackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+		{
+			if(e.Cancelled )
+			{
+				this.DialogResult = DialogResult.Cancel;
+			}
+			else if (e.Error != null)
+			{
+				this.DialogResult = DialogResult.Abort;//not really matching semantics
+			}
+			else
+			{
+				this.DialogResult = DialogResult.OK;
+			}
+			_isClosing = true;
+			Close();
+		}
+
+		void OnBackgroundWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+		{
+			ProgressState state = e.UserState as ProgressState;
+			if (state != null)
+			{
+				ProgressRangeMaximum = state.TotalNumberOfSteps;
+				Progress = state.NumberOfStepsCompleted;
+				StatusText = state.StatusLabel;
+			}
+			else
+			{
+				Progress = e.ProgressPercentage;
 			}
 		}
 
@@ -179,7 +217,7 @@ namespace WeSay.UI
 		/// </summary>
 		public void ForceClose()
 		{
-			isClosing = true;
+			_isClosing = true;
 			Close();
 		}
 
@@ -223,13 +261,13 @@ namespace WeSay.UI
 		protected override void OnHandleCreated(EventArgs e)
 		{
 			base.OnHandleCreated (e);
-			if( !showOnce )
+			if( !_showOnce )
 			{
 				// First, we don't want this to happen again
-				showOnce = true;
+				_showOnce = true;
 				// Then, start the timer which will determine whether
 				// we are going to show this again
-				timer1.Start();
+				_showWindowIfTakingLongTimeTimer.Start();
 			}
 		}
 
@@ -239,10 +277,10 @@ namespace WeSay.UI
 		/// <param name="e">Event data</param>
 		protected override void OnClosing(CancelEventArgs e)
 		{
-			if( !isClosing )
+			if( !_isClosing )
 			{
 				e.Cancel = true;
-				cancelButton.PerformClick();
+				_cancelButton.PerformClick();
 			}
 			base.OnClosing( e );
 		}
@@ -257,78 +295,71 @@ namespace WeSay.UI
 		{
 			this.components = new System.ComponentModel.Container();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ProgressDialog));
-			this.statusLabel1 = new System.Windows.Forms.Label();
-			this.statusLabel2 = new System.Windows.Forms.Label();
-			this.pictureBox = new System.Windows.Forms.PictureBox();
-			this.progressBar = new System.Windows.Forms.ProgressBar();
-			this.cancelButton = new System.Windows.Forms.Button();
-			this.progressLabel = new System.Windows.Forms.Label();
-			this.timer1 = new System.Windows.Forms.Timer(this.components);
-			this.progressTimer = new System.Windows.Forms.Timer(this.components);
-			((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
+			this._statusLabel = new System.Windows.Forms.Label();
+			this._progressBar = new System.Windows.Forms.ProgressBar();
+			this._cancelButton = new System.Windows.Forms.Button();
+			this._progressLabel = new System.Windows.Forms.Label();
+			this._showWindowIfTakingLongTimeTimer = new System.Windows.Forms.Timer(this.components);
+			this._progressTimer = new System.Windows.Forms.Timer(this.components);
+			this._overviewLabel = new System.Windows.Forms.Label();
 			this.SuspendLayout();
 			//
-			// statusLabel1
+			// _statusLabel
 			//
-			resources.ApplyResources(this.statusLabel1, "statusLabel1");
-			this.statusLabel1.Name = "statusLabel1";
+			this._statusLabel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+			resources.ApplyResources(this._statusLabel, "_statusLabel");
+			this._statusLabel.Name = "_statusLabel";
 			//
-			// statusLabel2
+			// _progressBar
 			//
-			resources.ApplyResources(this.statusLabel2, "statusLabel2");
-			this.statusLabel2.Name = "statusLabel2";
+			resources.ApplyResources(this._progressBar, "_progressBar");
+			this._progressBar.Name = "_progressBar";
 			//
-			// pictureBox
+			// _cancelButton
 			//
-			resources.ApplyResources(this.pictureBox, "pictureBox");
-			this.pictureBox.Name = "pictureBox";
-			this.pictureBox.TabStop = false;
+			this._cancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+			resources.ApplyResources(this._cancelButton, "_cancelButton");
+			this._cancelButton.Name = "_cancelButton";
+			this._cancelButton.Click += new System.EventHandler(this.OnCancelButton_Click);
 			//
-			// progressBar
+			// _progressLabel
 			//
-			resources.ApplyResources(this.progressBar, "progressBar");
-			this.progressBar.Name = "progressBar";
+			this._progressLabel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+			resources.ApplyResources(this._progressLabel, "_progressLabel");
+			this._progressLabel.Name = "_progressLabel";
 			//
-			// cancelButton
+			// _showWindowIfTakingLongTimeTimer
 			//
-			resources.ApplyResources(this.cancelButton, "cancelButton");
-			this.cancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-			this.cancelButton.Name = "cancelButton";
-			this.cancelButton.Click += new System.EventHandler(this.cancelButton_Click);
+			this._showWindowIfTakingLongTimeTimer.Interval = 2000;
+			this._showWindowIfTakingLongTimeTimer.Tick += new System.EventHandler(this.timer1_Tick);
 			//
-			// progressLabel
+			// _progressTimer
 			//
-			resources.ApplyResources(this.progressLabel, "progressLabel");
-			this.progressLabel.Name = "progressLabel";
+			this._progressTimer.Enabled = true;
+			this._progressTimer.Interval = 1000;
+			this._progressTimer.Tick += new System.EventHandler(this.progressTimer_Tick);
 			//
-			// timer1
+			// _overviewLabel
 			//
-			this.timer1.Interval = 2000;
-			this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
-			//
-			// progressTimer
-			//
-			this.progressTimer.Enabled = true;
-			this.progressTimer.Interval = 1000;
-			this.progressTimer.Tick += new System.EventHandler(this.progressTimer_Tick);
+			this._overviewLabel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
+			resources.ApplyResources(this._overviewLabel, "_overviewLabel");
+			this._overviewLabel.Name = "_overviewLabel";
 			//
 			// ProgressDialog
 			//
 			resources.ApplyResources(this, "$this");
-			this.CancelButton = this.cancelButton;
 			this.ControlBox = false;
-			this.Controls.Add(this.progressLabel);
-			this.Controls.Add(this.cancelButton);
-			this.Controls.Add(this.progressBar);
-			this.Controls.Add(this.pictureBox);
-			this.Controls.Add(this.statusLabel2);
-			this.Controls.Add(this.statusLabel1);
+			this.Controls.Add(this._overviewLabel);
+			this.Controls.Add(this._progressLabel);
+			this.Controls.Add(this._cancelButton);
+			this.Controls.Add(this._progressBar);
+			this.Controls.Add(this._statusLabel);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
 			this.Name = "ProgressDialog";
 			this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
-			((System.ComponentModel.ISupportInitialize)(this.pictureBox)).EndInit();
+			this.Shown += new System.EventHandler(this.OnShow);
 			this.ResumeLayout(false);
 
 		}
@@ -338,40 +369,44 @@ namespace WeSay.UI
 		private void timer1_Tick(object sender, System.EventArgs e)
 		{
 			// Show the window now the timer has elapsed, and stop the timer
-			timer1.Stop();
+			_showWindowIfTakingLongTimeTimer.Stop();
 			this.Show();
 		}
 
-		private void cancelButton_Click(object sender, System.EventArgs e)
+		private void OnCancelButton_Click(object sender, System.EventArgs e)
 		{
 			// Prevent further cancellation
-			CanCancel = false;
-			progressTimer.Stop();
-			progressLabel.Text =  "Canceling...";
+			_cancelButton.Enabled = false;
+			_progressTimer.Stop();
+			_progressLabel.Text =  "Canceling...";
 			// Tell people we're canceling
 			OnCancelled( e );
+			if (_backgroundWorker != null)
+			{
+				_backgroundWorker.CancelAsync();
+			}
 		}
 
 		private void progressTimer_Tick(object sender, System.EventArgs e)
 		{
-			int range = progressBar.Maximum - progressBar.Minimum;
+			int range = _progressBar.Maximum - _progressBar.Minimum;
 			if( range <= 0 )
 			{
 				return;
 			}
-			if( progressBar.Value <= 0 )
+			if( _progressBar.Value <= 0 )
 			{
 				return;
 			}
-			TimeSpan elapsed = DateTime.Now - startTime;
-			double estimatedSeconds = (elapsed.TotalSeconds * (double) range) / (double)progressBar.Value;
+			TimeSpan elapsed = DateTime.Now - _startTime;
+			double estimatedSeconds = (elapsed.TotalSeconds * (double) range) / (double)_progressBar.Value;
 			TimeSpan estimatedToGo = new TimeSpan(0,0,0,(int)(estimatedSeconds - elapsed.TotalSeconds),0);
-//			progressLabel.Text = String.Format(
+//			_progressLabel.Text = String.Format(
 //				System.Globalization.CultureInfo.CurrentUICulture,
 //                "Elapsed: {0} Remaining: {1}",
 //				GetStringFor(elapsed),
 //				GetStringFor(estimatedToGo) );
-			progressLabel.Text = String.Format(
+			_progressLabel.Text = String.Format(
 				System.Globalization.CultureInfo.CurrentUICulture,
 				"{0}",
 				//GetStringFor(elapsed),
@@ -411,14 +446,33 @@ namespace WeSay.UI
 
 		public void OnTotalNumberOfStepsChanged(object sender, EventArgs e)
 		{
-			this.ProgressRangeMaximum = ((ProgressState)sender).NumberOfSteps;
+			this.ProgressRangeMaximum = ((ProgressState)sender).TotalNumberOfSteps;
 			this.Refresh();
 		}
 
 		public void OnStatusLabelChanged(object sender, EventArgs e)
 		{
-			this.StatusText1 = ((ProgressState)sender).StatusLabel;
+			this.StatusText = ((ProgressState)sender).StatusLabel;
 			this.Refresh();
+		}
+
+		private void OnShow(object sender, EventArgs e)
+		{
+			if (_backgroundWorker != null)
+			{
+				ProgressState progressState = new BackgroundWorkerState(_backgroundWorker);
+
+				//BW uses percentages (unless it's using our custom ProgressState in the UserState member)
+				ProgressRangeMinimum = 0;
+				ProgressRangeMaximum = 100;
+
+				//if the actual task can't take cancelling, the caller of this should set CanCancel to false;
+				_backgroundWorker.WorkerSupportsCancellation = this.CanCancel;
+
+				_backgroundWorker.ProgressChanged += new ProgressChangedEventHandler(OnBackgroundWorker_ProgressChanged);
+				_backgroundWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(OnBackgroundWorker_RunWorkerCompleted);
+				_backgroundWorker.RunWorkerAsync(progressState);
+			}
 		}
 	}
 }

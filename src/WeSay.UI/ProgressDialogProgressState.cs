@@ -56,15 +56,15 @@ namespace WeSay.UI
 			}
 		}
 
-		public override int NumberOfSteps
+		public override int TotalNumberOfSteps
 		{
 			get
 			{
-				return base.NumberOfSteps;
+				return base.TotalNumberOfSteps;
 			}
 			set
 			{
-				base.NumberOfSteps = value;
+				base.TotalNumberOfSteps = value;
 				_progressHandler.InitializeProgress(0, value);
 			}
 		}

@@ -9,7 +9,7 @@ namespace WeSay.Foundation.Progress
 	/// </summary>
 	public class ProgressState : IDisposable
 	{
-		private int _numberOfSteps;
+		private int _totalNumberOfSteps;
 		private int _numberOfStepsCompleted;
 		private string _statusLabel;
 		private StateValue _state= StateValue.NotStarted;
@@ -96,15 +96,15 @@ namespace WeSay.Foundation.Progress
 			}
 		}
 
-		public virtual int NumberOfSteps
+		public virtual int TotalNumberOfSteps
 		{
 			get
 			{
-				return _numberOfSteps;
+				return _totalNumberOfSteps;
 			}
 			set
 			{
-				_numberOfSteps = value;
+				_totalNumberOfSteps = value;
 				if (TotalNumberOfStepsChanged != null)
 				{
 					TotalNumberOfStepsChanged(this, null);
