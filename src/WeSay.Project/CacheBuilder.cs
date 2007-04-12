@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Xml;
@@ -13,6 +14,94 @@ using WeSay.Project;
 
 namespace WeSay.Project
 {
+	public class CacheManager
+	{
+		public static CacheBuilder GetCacheBuilderIfNeeded(WeSayWordsProject project)
+		{
+			string pathToCacheDirectory = project.PathToCache;
+			if (GetCacheIsOutOfDate(project))
+			{
+				if (Directory.Exists(pathToCacheDirectory))
+				{
+					Directory.Delete(pathToCacheDirectory, true);
+				}
+			}
+			if (!Directory.Exists(pathToCacheDirectory))
+			{
+				return new CacheBuilder(project.PathToLiftFile);
+			}
+			return null;
+		}
+
+		public static bool GetCacheIsOutOfDate(WeSayWordsProject project)
+		{
+			string pathToCacheDirectory = project.PathToCache;
+			string db4oPath = project.PathToDb4oLexicalModelDB;
+			if (!Directory.Exists(pathToCacheDirectory) ||
+				   (!File.Exists(db4oPath)))
+			{
+				return true;
+			}
+		//|| (File.GetLastWriteTimeUtc(project.PathToLiftFile) > File.GetLastWriteTimeUtc(db4oPath)));
+
+			using (Db4oDataSource ds = new Db4oDataSource(project.PathToDb4oLexicalModelDB))
+			{
+				return !GetSyncPointInCacheMatches(ds, File.GetLastWriteTimeUtc(project.PathToLiftFile));
+			}
+		}
+
+		class SyncPoint
+		{
+			public DateTime when;
+		}
+
+		public static void UpdateSyncPointInCache(Db4objects.Db4o.IObjectContainer db, DateTime when)
+		{
+			SyncPoint point;
+			IList<SyncPoint> result = db.Query<SyncPoint>();
+			if (result.Count > 1)
+			{
+				throw new ApplicationException("The cache should not have more than 1 syncpoint.");
+			}
+			if (result.Count == 0)
+			{
+				point = new SyncPoint();
+			}
+			else
+			{
+				point = result[0];
+			}
+
+			point.when = when;
+			db.Set(point);
+			db.Commit();
+		}
+
+		public static bool  GetSyncPointInCacheMatches(Db4oDataSource dataSource, DateTime when)
+		{
+			SyncPoint point;
+			IList<SyncPoint> result = dataSource.Data.Query<SyncPoint>();
+			if (result.Count > 1)
+			{
+				throw new ApplicationException("The cache should not have more than 1 syncpoint.");
+			}
+			if (result.Count == 0)
+			{
+				return false;
+			}
+			else
+			{
+				//workaround db4o 6 bug that loses the utc bit
+				if (result[0].when.Kind != DateTimeKind.Utc)
+				{
+					result[0].when = new DateTime(result[0].when.Ticks, DateTimeKind.Utc);
+				}
+
+				return result[0].when == when;
+			}
+		}
+	}
+
 	public class CacheBuilder
 	{
 		private string _sourceLIFTPath;
@@ -145,17 +234,13 @@ namespace WeSay.Project
 					//fails if temp dir is on a different volume:
 					//Directory.Move(tempTarget + " Cache", cacheFolderName);
 				}
-				//SafeMoveDirectory(tempTarget + " Cache", cacheFolderName);
 				SafeMoveDirectory(tempCacheDirectory, cacheFolderName);
 
-				//                if (File.Exists(_destinationDatabasePath))
-				//                {
-				//                    File.Replace(tempDb4oFilePath, _destinationDatabasePath, backupPath);
-				//                }
-				//                else
-				//                {
-				//                    File.Move(tempDb4oFilePath, _destinationDatabasePath);
-				//                }
+				using (Db4oDataSource ds = new Db4oDataSource(WeSayWordsProject.Project.PathToDb4oLexicalModelDB))
+				{
+					CacheManager.UpdateSyncPointInCache(ds.Data, File.GetLastWriteTimeUtc(_sourceLIFTPath));
+				}
+
 				_progress.State = ProgressState.StateValue.Finished;
 			}
 			catch (Exception e)

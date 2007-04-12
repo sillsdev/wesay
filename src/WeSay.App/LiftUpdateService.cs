@@ -1,14 +1,15 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Windows.Forms;
+using Db4objects.Db4o;
 using Db4objects.Db4o.Query;
 using WeSay.Data;
 using WeSay.LexicalModel;
 using WeSay.Project;
+using Debug=System.Diagnostics.Debug;
 
 namespace WeSay.App
 {
@@ -26,6 +27,8 @@ namespace WeSay.App
 		{
 			_datasource = datasource;
 		}
+
+
 
 		private static string LiftDirectory
 		{
@@ -116,8 +119,20 @@ namespace WeSay.App
 			{
 				Reporting.Logger.WriteEvent("Running Synchronic Merger");
 				//merge the increment files
-				LiftIO.SynchronicMerger merger = new LiftIO.SynchronicMerger();
-				merger.MergeUpdatesIntoFile(Project.WeSayWordsProject.Project.PathToLiftFile);
+
+				try
+				{
+					WeSayWordsProject.Project.ReleaseLockOnLift();
+					LiftIO.SynchronicMerger merger = new LiftIO.SynchronicMerger();
+					merger.MergeUpdatesIntoFile(Project.WeSayWordsProject.Project.PathToLiftFile);
+					CacheManager.UpdateSyncPointInCache(_datasource.Data,
+														File.GetLastWriteTimeUtc(
+															WeSayWordsProject.Project.PathToLiftFile));
+				}
+				finally
+				{
+					WeSayWordsProject.Project.LockLift();
+				}
 			}
 
 			Reporting.Logger.WriteEvent("Incremental Update Done");

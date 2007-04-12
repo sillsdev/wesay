@@ -8,10 +8,10 @@ using WeSay.Foundation.Progress;
 using WeSay.LexicalModel;
 using WeSay.Project;
 
-namespace WeSay.App.Tests
+namespace WeSay.Project.Tests
 {
 	[TestFixture]
-	public class TestImportLIFTCommand
+	public class CacheBuilderTests
 	{
 //        private ProgressDialogHandler _progressHandler;
 		private CacheBuilder _cacheBuilder;
@@ -33,7 +33,7 @@ namespace WeSay.App.Tests
 		public void Setup()
 		{
 			WeSayWordsProject.InitializeForTests();
-			_cacheBuilder = new CacheBuilder(Path.GetTempFileName());
+			_cacheBuilder = new CacheBuilder(WeSayWordsProject.Project.PathToLiftFile);//Path.GetTempFileName());
 			_progress = new ConsoleProgress();// ProgressState(_progressHandler);
 			_progress.Log += new EventHandler<ProgressState.LogEvent>(OnLog);
 //            _finished = false;
@@ -70,12 +70,21 @@ namespace WeSay.App.Tests
 					Directory.Delete(dir, true);
 				}
 			}
+			WeSayWordsProject.Project.Dispose();
 		}
 		[Test]
 		public void GoodLiftStopsWithProgressInFinishedState()
 		{
 			SimpleGoodLiftCore(false);
 		}
+
+		[Test]
+		public void LeavesSynchronized()
+		{
+			SimpleGoodLiftCore(false);
+			Assert.IsFalse(CacheManager.GetCacheIsOutOfDate(WeSayWordsProject.Project));
+		}
+
 		[Test]
 		public void ReplacesExistingFiles()
 		{

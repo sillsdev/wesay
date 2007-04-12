@@ -101,8 +101,9 @@ namespace WeSay.App.Tests
 
 			//now delete it
 			_records.Remove(entryToDelete);
-			//this deletion even comes from a higher-level class we aren't using, so we raise it ourselves here:
+			//this deletion event comes from a higher-level class we aren't using, so we raise it ourselves here:
 			_service.OnDataDeleted(this, new DeletedItemEventArgs(entryToDelete));
+			Project.WeSayWordsProject.Project.LockLift();//the next call will expect this to be locked
 			_service.DoLiftUpdateNow(true);
 		}
 

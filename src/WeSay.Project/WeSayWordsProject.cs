@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Threading;
 using System.Windows.Forms;
 using System.Xml;
 using Reporting;
@@ -20,6 +21,7 @@ namespace WeSay.Project
 		private Dictionary<string, OptionsList> _optionLists;
 		private string _pathToLiftFile;
 		private string _cacheLocationOverride;
+		private FileStream _liftFileStreamForLocking;
 
 		public WeSayWordsProject()
 		{
@@ -99,12 +101,12 @@ namespace WeSay.Project
 				{
 					this._projectDirectoryPath = ProjectDirectoryPath;
 
-					if (GetCacheIsOutOfDate(liftPath))
+					/*if (GetCacheIsOutOfDate(liftPath))
 					{
 						throw new ApplicationException(
 							"Possible programming error. The cache should be up-to-date before calling this method.");
 					}
-
+					*/
 					base.LoadFromProjectDirectoryPath(
 						ProjectDirectoryPath);
 					return true;
@@ -123,32 +125,7 @@ namespace WeSay.Project
 			}
 		}
 
-		public CacheBuilder GetCacheBuilderIfNeeded(string pathToLift)
-		{
-			PathToLiftFile = pathToLift;
-			string pathToCacheDirectory = GetPathToCacheFromPathToLift(pathToLift);
-			if (GetCacheIsOutOfDate(pathToLift))
-			{
-				if (Directory.Exists(pathToCacheDirectory))
-				{
-					Directory.Delete(pathToCacheDirectory, true);
-				}
-			}
-			if (!Directory.Exists(pathToCacheDirectory))
-			{
-			   return new CacheBuilder(pathToLift);
-			}
-			return null;
-		}
 
-		public bool GetCacheIsOutOfDate(string pathToLift)
-		{
-			string pathToCacheDirectory = GetPathToCacheFromPathToLift(pathToLift);
-			string db4oPath = GetPathToDb4oLexicalModelDBFromPathToLift(pathToLift);
-			return (!Directory.Exists(pathToCacheDirectory)) ||
-				   (!File.Exists(db4oPath)
-					|| (File.GetLastWriteTimeUtc(pathToLift) > File.GetLastWriteTimeUtc(db4oPath)));
-		}
 
 		private ViewTemplate GetViewTemplateFromProjectFiles()
 		{
@@ -246,6 +223,35 @@ namespace WeSay.Project
 			}
 		}
 
+		public override void Dispose()
+		{
+			base.Dispose();
+			if (_liftFileStreamForLocking != null)
+			{
+				ReleaseLockOnLift();
+			}
+		}
+
+		/// <remark>
+		/// The protection provided by this simple opproach is obviously limitted;
+		/// it will keep the lift file safe normally... but could lead to non-data-loosing crashes
+		/// if some automated process was sitting out there, just waiting to open as soon as we realease
+		/// </summary>
+		public void ReleaseLockOnLift()
+		{
+			Debug.Assert(_liftFileStreamForLocking != null);
+			_liftFileStreamForLocking.Close();
+			_liftFileStreamForLocking.Dispose();
+			_liftFileStreamForLocking = null;
+		}
+
+
+		public void LockLift()
+		{
+			Debug.Assert(_liftFileStreamForLocking == null);
+			 _liftFileStreamForLocking = File.OpenRead(PathToLiftFile);
+		}
+
 		public string PathToLiftFile
 		{
 			get
@@ -258,7 +264,7 @@ namespace WeSay.Project
 				return _pathToLiftFile;
 			}
 
-			protected set
+			set
 			{
 				_pathToLiftFile = value;
 				if (value == null)
@@ -439,5 +445,7 @@ namespace WeSay.Project
 		{
 			return file.Substring(0, file.IndexOf(".xml"));
 		}
+
+
 	}
 }

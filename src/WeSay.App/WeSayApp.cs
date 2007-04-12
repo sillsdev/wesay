@@ -82,14 +82,8 @@ namespace WeSay.App
 					tabbedForm.Text = "WeSay: " + project.Name;
 					Application.DoEvents();
 
-					Db4oRecordListManager ds = recordListManager as Db4oRecordListManager;
-
-					if (ds != null)
-					{
-						liftUpdateService = new LiftUpdateService(ds.DataSource);
-						ds.DataCommitted += new EventHandler(liftUpdateService.OnDataCommitted);
-						ds.DataDeleted +=new EventHandler<DeletedItemEventArgs>(liftUpdateService.OnDataDeleted);
-					}
+					liftUpdateService = SetupUpdateService(recordListManager);
+					liftUpdateService.DoLiftUpdateNow(true);
 
 					//MONO bug as of 1.1.18 cannot bitwise or FileShare on FileStream constructor
 					//                    using (FileStream config = new FileStream(project.PathToProjectTaskInventory, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete))
@@ -98,15 +92,8 @@ namespace WeSay.App
 						builder = new ConfigFileTaskBuilder(configFile, project,
 							tabbedForm as ICurrentWorkTask, recordListManager);
 					}
-
 					project.Tasks = builder.Tasks;
 					Application.DoEvents();
-
-					//in case we are far behind, as in the case of a recent import or deleted backups
-					if (liftUpdateService!=null)
-					{
-						liftUpdateService.DoLiftUpdateNow(false);
-					}
 					tabbedForm.ContinueLaunchingAfterInitialDisplay();
 
 					//run the ui
@@ -136,6 +123,16 @@ namespace WeSay.App
 			Logger.ShutDown();
 			Settings.Default.Save();
 			ReleaseMutexForThisProject();
+		}
+
+		private static LiftUpdateService SetupUpdateService(IRecordListManager recordListManager)
+		{
+			LiftUpdateService liftUpdateService;
+			Db4oRecordListManager ds = (Db4oRecordListManager)    recordListManager;
+			liftUpdateService = new LiftUpdateService(ds.DataSource);
+			ds.DataCommitted += new EventHandler(liftUpdateService.OnDataCommitted);
+			ds.DataDeleted +=new EventHandler<DeletedItemEventArgs>(liftUpdateService.OnDataDeleted);
+			return liftUpdateService;
 		}
 
 		private static bool TryToLoad(CommandLineArguments cmdArgs, string liftPath, WeSayWordsProject project)
@@ -183,6 +180,7 @@ namespace WeSay.App
 			{
 				return false;
 			}
+			WeSayWordsProject.Project.LockLift();
 			if (project.LoadFromLiftLexiconPath(liftPath))
 			{
 				Settings.Default.PreviousLiftPath = liftPath;
@@ -196,7 +194,8 @@ namespace WeSay.App
 
 		private static bool BringCachesUpToDate(string liftPath, WeSayWordsProject project)
 		{
-			CacheBuilder builder = project.GetCacheBuilderIfNeeded(liftPath);
+			project.PathToLiftFile = liftPath;
+			CacheBuilder builder = CacheManager.GetCacheBuilderIfNeeded(project);
 			if (builder == null)
 			{
 				return true;
