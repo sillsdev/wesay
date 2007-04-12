@@ -36,6 +36,7 @@ namespace WeSay.Project
 		{
 			_backgroundWorker = sender as BackgroundWorker;
 			DoWork(e.Argument as ProgressState);
+			e.Result = e.Argument as ProgressState;
 
 			//this is weird, but needed for the caller to know that we quite because
 			// of a cancellation
@@ -159,6 +160,11 @@ namespace WeSay.Project
 			}
 			catch (Exception e)
 			{
+				//currently, error reporter can choke because this is
+				//being called from a non sta thread.
+				//so let's leave it to the progress dialog to report the error
+//                Reporting.ErrorReporter.ReportException(e,null, false);
+				_progress.ExceptionThatWasEncountered = e;
 				_progress.WriteToLog(e.Message);
 				_progress.State = ProgressState.StateValue.StoppedWithError;
 			}

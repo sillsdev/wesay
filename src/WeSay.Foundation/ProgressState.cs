@@ -144,6 +144,7 @@ namespace WeSay.Foundation.Progress
 		/// </summary>
 		private bool _isDisposed = false;
 
+		private Exception _encounteredException;
 
 
 		/// <summary>
@@ -154,7 +155,7 @@ namespace WeSay.Foundation.Progress
 			get { return _isDisposed; }
 		}
 
-		public StateValue State
+		public virtual StateValue State
 		{
 			get
 			{
@@ -167,6 +168,18 @@ namespace WeSay.Foundation.Progress
 				{
 					StateChanged(this, null);
 				}
+			}
+		}
+
+		public Exception ExceptionThatWasEncountered
+		{
+			get
+			{
+				return _encounteredException;
+			}
+			set
+			{
+				_encounteredException = value;
 			}
 		}
 

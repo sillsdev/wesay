@@ -27,6 +27,18 @@ namespace WeSay.Foundation.Progress
 				_worker.ReportProgress(this.PercentCompleted, this);
 			}
 		}
+		public override StateValue State
+		{
+
+			set
+			{
+				base.State = value;
+				if (value == StateValue.StoppedWithError)
+				{
+					_worker.ReportProgress(0, this);
+				}
+			}
+		}
 
 		private int PercentCompleted
 		{

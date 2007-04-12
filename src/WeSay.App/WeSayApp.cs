@@ -75,7 +75,7 @@ namespace WeSay.App
 			{
 				TabbedForm tabbedForm = new TabbedForm();
 
-				BackupService backupService=null;
+				LiftUpdateService liftUpdateService=null;
 
 				using (IRecordListManager recordListManager = MakeRecordListManager(project))
 				{
@@ -87,9 +87,9 @@ namespace WeSay.App
 
 					if (ds != null)
 					{
-						backupService = new BackupService(project.PathToLiftBackupDir, ds.DataSource);
-						ds.DataCommitted += new EventHandler(backupService.OnDataCommitted);
-						ds.DataDeleted +=new EventHandler<DeletedItemEventArgs>(backupService.OnDataDeleted);
+						liftUpdateService = new LiftUpdateService(ds.DataSource);
+						ds.DataCommitted += new EventHandler(liftUpdateService.OnDataCommitted);
+						ds.DataDeleted +=new EventHandler<DeletedItemEventArgs>(liftUpdateService.OnDataDeleted);
 					}
 
 					//MONO bug as of 1.1.18 cannot bitwise or FileShare on FileStream constructor
@@ -104,15 +104,18 @@ namespace WeSay.App
 					Application.DoEvents();
 
 					//in case we are far behind, as in the case of a recent import or deleted backups
-					backupService.DoIncrementalXmlBackupNow(false);
+					if (liftUpdateService!=null)
+					{
+						liftUpdateService.DoLiftUpdateNow(false);
+					}
 					tabbedForm.ContinueLaunchingAfterInitialDisplay();
 
 					//run the ui
 					Application.Run(tabbedForm);
 
 					//do a last backup before exiting
-					backupService.DoIncrementalXmlBackupNow(true);
-					backupService.BackupToExternal("h:\\" + project.Name + ".zip");
+					liftUpdateService.DoLiftUpdateNow(true);
+					BackupService.BackupToExternal("h:\\" + project.Name + ".zip");
 				}
 			}
 			finally
@@ -191,23 +194,8 @@ namespace WeSay.App
 			CacheBuilder builder = project.GetCacheBuilderIfNeeded(liftPath);
 			if (builder != null)
 			{
-				ProgressState progressState = new WeSay.Foundation.ConsoleProgress();//new ProgressState(progressDialogHandler);
-				// progressState.Log += new EventHandler<ProgressState.LogEvent>(OnProgressState_Log);
-
-
-				using (WeSay.UI.ProgressDialog dlg = new WeSay.UI.ProgressDialog())
-				{
-					dlg.Overview = "Please wait while WeSay updates its caches to match the new or modified LIFT file.";
-					BackgroundWorker worker = new BackgroundWorker();
-					worker.DoWork += new DoWorkEventHandler(builder.OnDoWork);
-					dlg.BackgroundWorker = worker;
-					dlg.CanCancel = true;
-					dlg.ShowDialog();
-					if (dlg.DialogResult != DialogResult.OK)
-					{
-						return false;
-					}
-				}
+				if (!BuildCaches(builder))
+					return false;
 			}
 			if (project.LoadFromLiftLexiconPath(liftPath))
 			{
@@ -220,6 +208,71 @@ namespace WeSay.App
 			}
 		}
 
+		private static bool BuildCaches(CacheBuilder builder)
+		{
+			ProgressState progressState = new WeSay.Foundation.ConsoleProgress();//new ProgressState(progressDialogHandler);
+			using (WeSay.UI.ProgressDialog dlg = new WeSay.UI.ProgressDialog())
+			{
+				if (!PreprocessLift())
+				{
+					return false;
+				}
+
+				dlg.Overview = "Please wait while WeSay updates its caches to match the new or modified LIFT file.";
+				BackgroundWorker cacheBuildingWork = new BackgroundWorker();
+				cacheBuildingWork.DoWork += new DoWorkEventHandler(builder.OnDoWork);
+				dlg.BackgroundWorker = cacheBuildingWork;
+				dlg.CanCancel = true;
+				dlg.ShowDialog();
+				if (dlg.DialogResult != DialogResult.OK)
+				{
+					return false;
+				}
+				LiftUpdateService.LiftIsFreshNow();
+			}
+			return true;
+		}
+
+		private static bool PreprocessLift()
+		{
+			using (WeSay.UI.ProgressDialog dlg = new WeSay.UI.ProgressDialog())
+			{
+				dlg.Overview = "Please wait while WeSay preprocesses your LIFT file.";
+				BackgroundWorker preprocessWorker = new BackgroundWorker();
+				preprocessWorker.DoWork += new DoWorkEventHandler(OnDoPreprocessLiftWork);
+				dlg.BackgroundWorker = preprocessWorker;
+				dlg.CanCancel = true;
+				dlg.ShowDialog();
+				return (dlg.DialogResult == DialogResult.OK);
+			}
+		}
+
+		static void OnDoPreprocessLiftWork(object sender, DoWorkEventArgs e)
+		{
+			//((BackgroundWorker)sender).ReportProgress(
+			((BackgroundWorkerState) e.Argument).StatusLabel = "Preprocessing...";
+			string lift = Project.WeSayWordsProject.Project.PathToLiftFile;
+			string output = LiftIO.Utilities.ProcessLiftForLaterMerging(lift);
+			MoveTempOverRealAndBackup(lift, output);
+		}
+
+
+		private static void MoveTempOverRealAndBackup(string existingPath, string newFilePath)
+		{
+			string backupName = existingPath + ".old";
+
+			int i = 0;
+			while (File.Exists(backupName + i))
+			{
+				i++;
+			}
+			backupName += i;
+
+			File.Move(existingPath, backupName);
+
+			File.Copy(newFilePath, existingPath);
+			File.Delete(newFilePath);
+		}
 
 
 		private static void OsCheck()

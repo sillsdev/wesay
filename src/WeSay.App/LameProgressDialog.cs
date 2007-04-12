@@ -8,9 +8,9 @@ using System.Windows.Forms;
 
 namespace WeSay.App
 {
-	public partial class ProgressDialog : Form
+	public partial class LameProgressDialog : Form
 	{
-		public ProgressDialog(string msg)
+		public LameProgressDialog(string msg)
 		{
 			InitializeComponent();
 			this.label1.Text = msg;

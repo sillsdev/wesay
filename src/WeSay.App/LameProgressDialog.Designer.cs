@@ -1,6 +1,6 @@
 namespace WeSay.App
 {
-	partial class ProgressDialog
+	partial class LameProgressDialog
 	{
 		/// <summary>
 		/// Required designer variable.

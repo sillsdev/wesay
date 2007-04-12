@@ -50,7 +50,7 @@
 	<Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-	<Compile Include="BackupTests.cs" />
+	<Compile Include="LiftUpdateTests.cs" />
 	<Compile Include="FullUIAppTests.cs" />
 	<Compile Include="TabbedFormTests.cs" />
 	<Compile Include="MakeTestFiles.cs" />

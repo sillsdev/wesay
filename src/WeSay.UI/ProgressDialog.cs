@@ -27,6 +27,7 @@ namespace WeSay.UI
 		private DateTime _startTime = DateTime.Now;
 		private System.ComponentModel.IContainer components;
 		private BackgroundWorker _backgroundWorker;
+		private ProgressState _lastHeardFromProgressState;
 
 		/// <summary>
 		/// Standard constructor
@@ -166,14 +167,27 @@ namespace WeSay.UI
 			}
 		}
 
+		public ProgressState ProgressStateResult
+		{
+			get
+			{
+				return _lastHeardFromProgressState;
+			}
+		}
+
 		void OnBackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
 		{
+			//BackgroundWorkerState progressState = e.Result as ProgressState;
+
 			if(e.Cancelled )
 			{
 				this.DialogResult = DialogResult.Cancel;
 			}
-			else if (e.Error != null)
+			//NB: I don't know how to actually let the BW know there was an error
+			//else if (e.Error != null ||
+			else if (ProgressStateResult != null && ProgressStateResult.ExceptionThatWasEncountered != null)
 			{
+				Reporting.ErrorReporter.ReportException(ProgressStateResult.ExceptionThatWasEncountered, this, false);
 				this.DialogResult = DialogResult.Abort;//not really matching semantics
 			}
 			else
@@ -189,9 +203,11 @@ namespace WeSay.UI
 			ProgressState state = e.UserState as ProgressState;
 			if (state != null)
 			{
+				_lastHeardFromProgressState = state;
 				ProgressRangeMaximum = state.TotalNumberOfSteps;
 				Progress = state.NumberOfStepsCompleted;
 				StatusText = state.StatusLabel;
+
 			}
 			else
 			{
@@ -331,7 +347,7 @@ namespace WeSay.UI
 			// _showWindowIfTakingLongTimeTimer
 			//
 			this._showWindowIfTakingLongTimeTimer.Interval = 2000;
-			this._showWindowIfTakingLongTimeTimer.Tick += new System.EventHandler(this.timer1_Tick);
+			this._showWindowIfTakingLongTimeTimer.Tick += new System.EventHandler(this.OnTakingLongTimeTimerClick);
 			//
 			// _progressTimer
 			//
@@ -366,7 +382,7 @@ namespace WeSay.UI
 		#endregion
 
 
-		private void timer1_Tick(object sender, System.EventArgs e)
+		private void OnTakingLongTimeTimerClick(object sender, System.EventArgs e)
 		{
 			// Show the window now the timer has elapsed, and stop the timer
 			_showWindowIfTakingLongTimeTimer.Stop();

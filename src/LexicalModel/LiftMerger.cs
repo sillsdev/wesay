@@ -63,9 +63,9 @@ namespace WeSay.LexicalModel
 
 		#region ILexiconMerger<WeSayDataObject,LexEntry,LexSense,LexExampleSentence> Members
 
-		public LexEntry EntryWasDeleted(Extensible info, DateTime dateDeleted)
+		public void  EntryWasDeleted(Extensible info, DateTime dateDeleted)
 		{
-			throw new NotImplementedException();
+			//there isn't anything we need to do; we just don't import it
 		}
 
 		#endregion

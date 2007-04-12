@@ -1,4 +1,6 @@
+using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 using NUnit.Framework;
@@ -10,13 +12,14 @@ using WeSay.Project;
 namespace WeSay.App.Tests
 {
 	[TestFixture]
-	public class BackupTests
+	public class LiftUpdateTests
 	{
 		protected string _dbFile;
 		protected string _directory;
 		protected Db4oDataSource _dataSource;
 		private Db4oRecordList<LexEntry> _records;
-		private BackupService _service;
+		private LiftUpdateService _service;
+		private Dictionary<string, Guid> _guidDictionary = new Dictionary<string, Guid>();
 
 		[SetUp]
 		public void Setup()
@@ -30,7 +33,7 @@ namespace WeSay.App.Tests
 			this._directory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
 			Directory.CreateDirectory(_directory);
 
-			_service = new BackupService(_directory, _dataSource);
+			_service = new LiftUpdateService(_dataSource);
 
 		}
 
@@ -46,33 +49,33 @@ namespace WeSay.App.Tests
 		[Test]
 		public void MissingFileAndEmptyRecordList()
 		{
-			IList newGuys = _service.GetRecordsNeedingBackup();
+			IList newGuys = _service.GetRecordsNeedingUpdateInLift();
 
 			Assert.AreEqual(_dataSource.Data.Query<LexEntry>().Count, newGuys.Count);
 		}
 
+//        [Test]
+//        public void MissingLIFTFileWouldUpdateAllRecords()
+//        {
+//            _records.Add(new LexEntry());
+//            _records.Add(new LexEntry());
+//
+//            IList newGuys= _service.GetRecordsNeedingUpdateInLift();
+//            Assert.AreEqual(_records.Count, newGuys.Count);
+//        }
+
 		[Test]
-		public void MissingBackupFileWouldBackUpAllRecords()
+		public void WouldUpdateOnlyNewRecords()
 		{
 			_records.Add(new LexEntry());
 			_records.Add(new LexEntry());
-
-			IList newGuys= _service.GetRecordsNeedingBackup();
-			Assert.AreEqual(_records.Count, newGuys.Count);
-		}
-
-		[Test]
-		public void WouldBackUpOnlyNewRecords()
-		{
-			_records.Add(new LexEntry());
-			_records.Add(new LexEntry());
-			_service.DoIncrementalXmlBackupNow(false);
+			_service.DoLiftUpdateNow(false);
 
 			_records.Add(new LexEntry());
 			_records.Add(new LexEntry());
 			_records.Add(new LexEntry());
 
-			IList newGuys = _service.GetRecordsNeedingBackup();
+			IList newGuys = _service.GetRecordsNeedingUpdateInLift();
 			Assert.AreEqual(3, newGuys.Count);
 		}
 
@@ -83,24 +86,24 @@ namespace WeSay.App.Tests
 		{
 			SetupDeletionSituation();
 			Assert.AreEqual(1,
-							GetBackupDoc().SelectNodes("//entry[@id='boo' and @dateDeleted]")
+							GetLiftDoc().SelectNodes("//entry[@id='boo' and @dateDeleted]")
 								.Count);
 		}
 
 		private void SetupDeletionSituation()
 		{
+			LiftIO.Utilities.CreateEmptyLiftFile(Project.WeSayWordsProject.Project.PathToLiftFile, "test", true);
 			_records.Add(new LexEntry());
-			//create and backup an entry
 			LexEntry entryToDelete = MakeEntry("boo");
 			_records.Add(new LexEntry());
 
-			_service.DoIncrementalXmlBackupNow(false);
+			_service.DoLiftUpdateNow(false);
 
 			//now delete it
 			_records.Remove(entryToDelete);
 			//this deletion even comes from a higher-level class we aren't using, so we raise it ourselves here:
 			_service.OnDataDeleted(this, new DeletedItemEventArgs(entryToDelete));
-			_service.DoIncrementalXmlBackupNow(true);
+			_service.DoLiftUpdateNow(true);
 		}
 
 		[Test]
@@ -110,23 +113,32 @@ namespace WeSay.App.Tests
 
 			//now make an entry with the same id and add it
 			MakeEntry("boo");
-			_service.DoIncrementalXmlBackupNow(true);
-			Assert.AreEqual(0, GetBackupDoc().SelectNodes("//entry[@id='boo' and @dateDeleted]").Count);
-			Assert.AreEqual(1, GetBackupDoc().SelectNodes("//entry[@id='boo' and not(@dateDeleted)]").Count);
+			_service.DoLiftUpdateNow(true);
+			Assert.AreEqual(0, GetLiftDoc().SelectNodes("//entry[@id='boo' and @dateDeleted]").Count);
+			Assert.AreEqual(1, GetLiftDoc().SelectNodes("//entry[@id='boo' and not(@dateDeleted)]").Count);
 		}
 
 		private LexEntry MakeEntry(string id)
 		{
 			LexEntry entry = new LexEntry();
 			entry.LexicalForm["zzz"] = id;
+
+			Guid g;
+			if (!_guidDictionary.TryGetValue(id, out g))
+			{
+				g = Guid.NewGuid();
+				_guidDictionary.Add(id,g);
+			}
+
+			entry.Guid = g;
 			_records.Add(entry);
 			return entry;
 		}
 
-		private XmlDocument GetBackupDoc()
+		private XmlDocument GetLiftDoc()
 		{
 			XmlDocument doc = new XmlDocument();
-			doc.Load(_service.PathToBaseLiftFile);
+			doc.Load(Project.WeSayWordsProject.Project.PathToLiftFile);// _service.PathToBaseLiftFile);
 			//Console.WriteLine(doc.OuterXml);
 			return doc;
 		}
@@ -145,7 +157,7 @@ namespace WeSay.App.Tests
 //            Db4oRecordListManager ds = recordListManager as Db4oRecordListManager;
 //            BackupService backupService = new BackupService(project.PathToLocalBackup, ds.DataSource);
 //            ds.DataCommitted += new EventHandler(backupService.OnDataCommitted);
-//            backupService.DoIncrementalXmlBackupNow();
+//            backupService.DoLiftUpdateNow();
 //        }
 	}
 
