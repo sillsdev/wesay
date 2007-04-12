@@ -56,24 +56,6 @@ namespace WeSay.Project.Tests
 			TryLoading(wordsPath, experimentDir);
 		}
 
-		[Test, ExpectedException(typeof(ApplicationException))]
-		public void WordsFileNotInValidWeSayDir()
-		{
-			string experimentDir = MakeDir(Path.GetTempPath(), Path.GetRandomFileName());
-			string wordsPath = Path.Combine(experimentDir, "test.words");
-			File.Create(wordsPath).Close();
-			TryLoading(wordsPath, experimentDir);
-		}
-
-
-		[Test]
-		public void PreferWordsFileMatchingProjectName()
-		{
-			WeSayWordsProject p = CreateAndLoad(true);
-			Assert.IsTrue(p.PathToDb4oLexicalModelDB.Contains("TestProj.words"));
-		}
-
-
 		[Test]
 		public void LoadPartsOfSpeechList()
 		{
@@ -97,12 +79,12 @@ namespace WeSay.Project.Tests
 			string experimentDir = MakeDir(Path.GetTempPath(), Path.GetRandomFileName());
 			string projectDir = MakeDir(experimentDir, "TestProj");
 			string weSayDir = MakeDir(projectDir, "WeSay");
-			MakeDummyWordsFile("AAA.words", weSayDir);
-			if (doMakeFileMatchingProjectName)
-			{
-				MakeDummyWordsFile("TestProj.words", weSayDir);
-			}
-			MakeDummyWordsFile("ZZZ.words", weSayDir);
+//            MakeDummyWordsFile("AAA.words", weSayDir);
+//            if (doMakeFileMatchingProjectName)
+//            {
+//                MakeDummyWordsFile("TestProj.words", weSayDir);
+//            }
+//            MakeDummyWordsFile("ZZZ.words", weSayDir);
 			WeSayWordsProject p = new WeSayWordsProject();
 			p.LoadFromProjectDirectoryPath(projectDir);
 			return p;

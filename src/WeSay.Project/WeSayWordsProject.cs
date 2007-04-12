@@ -145,22 +145,10 @@ namespace WeSay.Project
 		{
 			string pathToCacheDirectory = GetPathToCacheFromPathToLift(pathToLift);
 			string db4oPath = GetPathToDb4oLexicalModelDBFromPathToLift(pathToLift);
-			return Directory.Exists(pathToCacheDirectory) &&
+			return (!Directory.Exists(pathToCacheDirectory)) ||
 				   (!File.Exists(db4oPath)
 					|| (File.GetLastWriteTimeUtc(pathToLift) > File.GetLastWriteTimeUtc(db4oPath)));
 		}
-
-
-		public override  void LoadFromProjectDirectoryPath(string projectDirectoryPath)
-		{
-			base.LoadFromProjectDirectoryPath(projectDirectoryPath);
-
-//            ViewTemplate templateAsFoundInProjectFiles = GetViewTemplateFromProjectFiles();
-//            ViewTemplate fullUpToDateTemplate = ViewTemplate.MakeMasterTemplate(WritingSystems);
-//            ViewTemplate.SynchronizeInventories(fullUpToDateTemplate, templateAsFoundInProjectFiles);
-//            _viewTemplate = fullUpToDateTemplate;
-		}
-
 
 		private ViewTemplate GetViewTemplateFromProjectFiles()
 		{

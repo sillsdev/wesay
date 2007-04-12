@@ -48,6 +48,7 @@
   </ItemGroup>
   <ItemGroup>
 	<Compile Include="BasilProjectTests.cs" />
+	<Compile Include="CacheUpdatingTests.cs" />
 	<Compile Include="TestResources.Designer.cs">
 	  <AutoGen>True</AutoGen>
 	  <DesignTime>True</DesignTime>

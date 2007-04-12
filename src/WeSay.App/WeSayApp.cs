@@ -4,7 +4,6 @@ using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 using CommandLine;
-using MultithreadProgress;
 using Reporting;
 using WeSay.App.Properties;
 using WeSay.Data;
@@ -171,15 +170,6 @@ namespace WeSay.App
 				parentName = parentName.ToLower();
 			}
 
-//don't need the project folder to match the lift file            if (parentName != name)
-//            {
-//                ErrorReporter.ReportNonFatalMessage(
-//                    String.Format(
-//                        "WeSay requires the lift file to be inside a project directory, like {0}\\WeSay\\{1}", name,
-//                        Path.GetFileName(liftPath)));
-//                return false;
-//            }
-
 			if (!File.Exists(liftPath))
 			{
 				ErrorReporter.ReportNonFatalMessage(
@@ -189,13 +179,9 @@ namespace WeSay.App
 				return false;
 			}
 
-
-
-			CacheBuilder builder = project.GetCacheBuilderIfNeeded(liftPath);
-			if (builder != null)
+			if (!BringCachesUpToDate(liftPath, project))
 			{
-				if (!BuildCaches(builder))
-					return false;
+				return false;
 			}
 			if (project.LoadFromLiftLexiconPath(liftPath))
 			{
@@ -208,8 +194,14 @@ namespace WeSay.App
 			}
 		}
 
-		private static bool BuildCaches(CacheBuilder builder)
+		private static bool BringCachesUpToDate(string liftPath, WeSayWordsProject project)
 		{
+			CacheBuilder builder = project.GetCacheBuilderIfNeeded(liftPath);
+			if (builder == null)
+			{
+				return true;
+			}
+
 			ProgressState progressState = new WeSay.Foundation.ConsoleProgress();//new ProgressState(progressDialogHandler);
 			using (WeSay.UI.ProgressDialog dlg = new WeSay.UI.ProgressDialog())
 			{
