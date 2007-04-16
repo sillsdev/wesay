@@ -329,7 +329,6 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 	  <ComponentRef Id ="biatahWritingSystemPrefs"/>
 	  <ComponentRef Id ="biatahWesayDir"/>
 	  <ComponentRef Id ="biatahWordsCache"/>
-	  <ComponentRef Id ="biatahIncrementalXmlBackup"/>
 
 	</Feature>
 	<Media Id="1" Cabinet="product.cab" EmbedCab="yes" />

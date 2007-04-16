@@ -360,7 +360,10 @@ namespace WeSay.Project
 		void parser_SetStepsCompleted(object sender, LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence>.ProgressEventArgs e)
 		{
 			_progress.NumberOfStepsCompleted = e.Progress;
-			e.Cancel = _backgroundWorker.CancellationPending;
+			if (_backgroundWorker != null)
+			{
+				e.Cancel = _backgroundWorker.CancellationPending;
+			}
 		}
 
 		void parser_SetTotalNumberSteps(object sender, LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence>.StepsArgs e)

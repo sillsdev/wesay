@@ -11,25 +11,25 @@ namespace Lift2WeSay
 	class Lift2WeSay
 	{
 		[STAThread]
-		static void Main(string[] args)
+		static int Main(string[] args)
 		{
 			if (args.Length != 2)
 			{
 				PrintUsage();
-				return;
+				return 1;
 			}
 			string sourcePath = args[0];
 			if (!File.Exists(sourcePath))
 			{
 				Console.WriteLine(string.Format("Cannot find file {0})", sourcePath));
-				return;
+				return 1;
 			}
 
 			string destPath = args[1];
 			if (!Directory.Exists(destPath) && Path.GetFileName(destPath) != string.Empty)
 			{
 				Console.WriteLine(string.Format("You can only specify a directory for the output, not the name of the output. (eg. {0}{1} instead of {2})", Path.GetDirectoryName(destPath), Path.DirectorySeparatorChar, destPath));
-				return;
+				return 1;
 			}
 			string projectPath = destPath;
 			if (projectPath.Length == 0)
@@ -47,7 +47,7 @@ namespace Lift2WeSay
 			if (!WeSayWordsProject.IsValidProjectDirectory(projectPath))
 			{
 				Console.Error.WriteLine("destination must be in 'wesay' subdirectory of a basil project");
-				return;
+				return 1;
 			}
 
 			WeSayWordsProject project = new WeSayWordsProject();
@@ -58,7 +58,7 @@ namespace Lift2WeSay
 			catch (Exception e)
 			{
 				Console.Error.WriteLine("WeSay was not able to open that project. \r\n" + e.Message);
-				return;
+				return 2;
 			}
 
 
@@ -79,11 +79,11 @@ namespace Lift2WeSay
 					case ProgressState.StateValue.Finished:
 						Console.WriteLine(string.Empty);
 						Console.WriteLine("Done.");
-						return;
+						return 0;
 					case ProgressState.StateValue.StoppedWithError:
 						Console.Error.WriteLine(string.Empty);
 						Console.Error.WriteLine("Error. Unable to complete import.");
-						return;
+						return 3;
 					default:
 						break;
 				}

@@ -33,12 +33,13 @@
 	  </Directory>
 	  <Directory Id="biatahWeSay" Name="wesay">
 		<Component Id="biatahWesayDir" Guid="{5008C03F-7946-4147-96B1-442AD4999FA9}">
-		  <File Id="biatah.lift.xml" Name="biatah.lift.xml" KeyPath="yes" Source="..\..\sampleprojects\biatah\wesay\biatah.lift" />
-		  <File Id="biatah.words" Name="biatah.words" Source="..\..\sampleprojects\biatah\wesay\biatah.words" />
+		  <File Id="biatah.lift" Name="biatah.lift" KeyPath="yes" Source="..\..\sampleprojects\biatah\wesay\biatah.lift" />
 		  <File Id="tasks.xml" Name="tasks.xml"  Source="..\..\sampleprojects\biatah\wesay\tasks.xml" />
 		</Component>
 		<Directory Id="biatahWordsCacheDir" Name="biatah.words Cache">
 		  <Component Id="biatahWordsCache" Guid="{EF2EBD26-0A05-4DC1-8B74-C4EFDA1547F6}">
+			<File Id="biatah.words" Name="biatah.words" Source="..\..\sampleprojects\biatah\wesay\cache\biatah.words" />
+			<File Id="updatePoint" Name="updatePoint" Source="..\..\sampleprojects\biatah\wesay\updatePoint" />
 			<File Id="AddExamples.cache" Name="Add Examples.cache" KeyPath="yes" Source="..\..\sampleprojects\biatah\wesay\biatah.words Cache\Add Examples.cache" />
 			<File Id="AddMeanings.cache" Name="Add Meanings.cache" Source="..\..\sampleprojects\biatah\wesay\biatah.words Cache\Add Meanings.cache" />
 			<File Id="Dictionary.cache" Name="Dictionary.cache"  Source="..\..\sampleprojects\biatah\wesay\biatah.words Cache\Dictionary.cache" />
@@ -47,12 +48,6 @@
 			<File Id="LexEntrysortedbyen.cache" Name="LexEntry sorted by en.cache"  Source="..\..\sampleprojects\biatah\wesay\biatah.words Cache\LexEntry sorted by en.cache" />
 			<File Id="WeSay.LexicalTools.MissingExampleSentenceFilterbth.cache" Name="WeSay.LexicalTools.MissingExampleSentenceFilterbth.cache" Source="..\..\sampleprojects\biatah\wesay\biatah.words Cache\Missing ExampleSentence [bth] Filter.cache" />
 			<File Id="WeSay.LexicalTools.MissingGlossFilteren.cache" Name="WeSay.LexicalTools.MissingGlossFilteren.cache" Source="..\..\sampleprojects\biatah\wesay\biatah.words Cache\Missing SenseGloss [en] Filter.cache" />
-		  </Component>
-		</Directory>
-		<Directory Id="biatahIncrementalXmlBackupDir" Name="biatah.words incremental xml backup">
-		  <Component Id="biatahIncrementalXmlBackup" Guid="{4251BE9A-DAED-4EA8-90E8-54282864A8C8}">
-			<File Id="Filebase.lift.xml" Name="base.lift.xml" KeyPath="yes" Source="..\..\sampleprojects\biatah\wesay\biatah.words incremental xml backup\base.lift.xml" />
-			<File Id="backuppoint" Name="backuppoint" Source="..\..\sampleprojects\biatah\wesay\biatah.words incremental xml backup\backuppoint" />
 		  </Component>
 		</Directory>
 	  </Directory>
