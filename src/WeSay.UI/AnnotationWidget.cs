@@ -1,7 +1,6 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
-using WeSay.Foundation;
 using WeSay.Language;
 using WeSay.UI.Properties;
 
@@ -14,7 +13,7 @@ namespace WeSay.UI
 		/// <summary>
 		/// This will be referencing the actual annotation of the object
 		/// </summary>
-		private Annotation _annotation;
+		//private Annotation _annotation;
 
 		private MultiText _multitext;
 		private string _writingSystemId;

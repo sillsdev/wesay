@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Xml;
@@ -18,13 +17,14 @@ namespace WeSay.LexicalTools.Tests
 	{
 		private LiftExporter _exporter;
 		private StringBuilder _stringBuilder;
-		private Dictionary<string, string> _fieldToOptionListName = new Dictionary<string, string>();
+		private Dictionary<string, string> _fieldToOptionListName;
 
 		[SetUp]
 		public void Setup()
 		{
 			Db4oLexModelHelper.InitializeForNonDbTests();
 			WeSay.Project.WeSayWordsProject.InitializeForTests();
+			_fieldToOptionListName = new Dictionary<string, string>();
 			_stringBuilder = new StringBuilder();
 			PrepWriterForFragment();
 		}
@@ -55,18 +55,93 @@ namespace WeSay.LexicalTools.Tests
 			//CheckAnswer("<?xml version=\"1.0\" encoding=\"utf-16\"?><lift producer=\"WeSay.1Pt0Alpha\"/>");// xmlns:flex=\"http://fieldworks.sil.org\" />");
 			_exporter.End();
 			AssertXPathNotNull(string.Format("lift[@version='{0}']", LiftIO.Validator.LiftVersion));
-			AssertXPathNotNull("lift[@producer]");
+			AssertXPathNotNull(string.Format("lift[@producer='{0}']", LiftExporter.ProducerString));
 		}
 
 
 		[Test]
-		public void TwoEntries()
+		public void AddUsingWholeList_TwoEntries_HasTwoEntries()
 		{
 			PrepWriterForFullDocument();
 			WriteTwoEntries();
 			XmlDocument doc = new XmlDocument();
 			doc.LoadXml(_stringBuilder.ToString());
 			Assert.AreEqual(2, doc.SelectNodes("lift/entry").Count);
+		}
+
+
+		[Test]
+		public void AddUsingPartialList_OneEntries_HasOneEntries()
+		{
+			PrepWriterForFullDocument();
+			using (InMemoryRecordList<LexEntry> entries = new InMemoryRecordList<LexEntry>())
+			{
+				MakeTestLexEntry(entries, "sunset");
+				MakeTestLexEntry(entries, "flower");
+				MakeTestLexEntry(entries, "orange");
+				_exporter.Add(entries, 1, 1);
+				_exporter.End();
+			}
+			XmlDocument doc = new XmlDocument();
+			doc.LoadXml(_stringBuilder.ToString());
+			Assert.AreEqual(1, doc.SelectNodes("lift/entry").Count);
+			Assert.AreEqual(1, doc.SelectNodes("lift/entry//*[text()='flower']").Count);
+		}
+
+
+		[Test]
+		public void AddUsingPartialList_NoEntries_HasNoEntries()
+		{
+			PrepWriterForFullDocument();
+			using (InMemoryRecordList<LexEntry> entries = new InMemoryRecordList<LexEntry>())
+			{
+				MakeTestLexEntry(entries, "sunset");
+				MakeTestLexEntry(entries, "flower");
+				MakeTestLexEntry(entries, "orange");
+
+				_exporter.Add(entries, 1, 0);
+				_exporter.End();
+			}
+			XmlDocument doc = new XmlDocument();
+			doc.LoadXml(_stringBuilder.ToString());
+			Assert.AreEqual(0, doc.SelectNodes("lift/entry").Count);
+		}
+
+		[Test]
+		[ExpectedException(typeof(ArgumentOutOfRangeException))]
+		public void AddUsingPartialList_BadStart_Throws()
+		{
+			PrepWriterForFullDocument();
+			using (InMemoryRecordList<LexEntry> entries = new InMemoryRecordList<LexEntry>())
+			{
+				MakeTestLexEntry(entries, "sunset");
+				MakeTestLexEntry(entries, "flower");
+				MakeTestLexEntry(entries, "orange");
+
+				_exporter.Add(entries, 3, 1);
+				_exporter.End();
+			}
+		}
+
+		[Test]
+		[ExpectedException(typeof(ArgumentOutOfRangeException))]
+		public void AddUsingPartialList_BadCount_Throws()
+		{
+			PrepWriterForFullDocument();
+			using (InMemoryRecordList<LexEntry> entries = new InMemoryRecordList<LexEntry>())
+			{
+				MakeTestLexEntry(entries, "sunset");
+				MakeTestLexEntry(entries, "flower");
+				MakeTestLexEntry(entries, "orange");
+
+				_exporter.Add(entries, 1, 4);
+				_exporter.End();
+			}
+		}
+
+		private static void MakeTestLexEntry(InMemoryRecordList<LexEntry> entries, string lexicalForm) {
+			LexEntry entry = entries.AddNew();
+			entry.LexicalForm["test"] = lexicalForm;
 		}
 
 		[Test]
@@ -91,10 +166,8 @@ namespace WeSay.LexicalTools.Tests
 		{
 			using (InMemoryRecordList<LexEntry> entries = new InMemoryRecordList<LexEntry>())
 			{
-				LexEntry entry = entries.AddNew();
-				entry.LexicalForm["red"] = "sunset";
-				entry = entries.AddNew();
-				entry.LexicalForm["yellow"] = "flower";
+				MakeTestLexEntry(entries, "sunset");
+				MakeTestLexEntry(entries, "flower");
 
 				_exporter.Add(entries);
 				_exporter.End();
@@ -142,25 +215,24 @@ namespace WeSay.LexicalTools.Tests
 		}
 
 		[Test]
-		public void Sense()
+		public void LexSense_becomes_sense()
 		{
 			LexSense sense = new LexSense();
-			sense.Gloss["blue"] = "ocean";
 			_exporter.Add(sense);
 			_exporter.End();
-			AssertXPathNotNull("sense/gloss[@lang='blue']");
+			Assert.IsTrue(_stringBuilder.ToString().StartsWith("<sense"));
 		}
 
+
 		[Test]
-		public void LexicalUnitNoStar()
+		public void LexicalUnit()
 		{
 			LexEntry e = new LexEntry();
 			e.LexicalForm.SetAlternative("x", "orange");
-			e.LexicalForm.SetAnnotationOfAlternativeIsStarred("x", false);
 			_exporter.Add(e);
 			_exporter.End();
 			AssertXPathNotNull("entry/lexical-unit/form[@lang='x']/text[text()='orange']");
-			AssertXPathNotNull("entry/lexical-unit/form[not(trait)]");
+			AssertXPathNotNull("entry/lexical-unit/form[@lang='x'][not(trait)]");
 		}
 
 		[Test]
@@ -171,8 +243,44 @@ namespace WeSay.LexicalTools.Tests
 			e.LexicalForm.SetAnnotationOfAlternativeIsStarred("x", true);
 			_exporter.Add(e);
 			_exporter.End();
-			AssertXPathNotNull("entry/lexical-unit/form[@lang='x']/text");
 			AssertXPathNotNull("entry/lexical-unit/form[@lang='x']/trait[@name='flag' and @value='1']");
+		}
+
+		[Test]
+		public void Citation()
+		{
+			LexEntry entry = new LexEntry();
+			MultiText citation = entry.GetOrCreateProperty<MultiText>(LexEntry.WellKnownProperties.Citation);
+			citation["zz"] = "orange";
+			_exporter.Add(entry);
+			_exporter.End();
+			AssertXPathNotNull("entry/citation/form[@lang='zz']/text[text()='orange']");
+			AssertXPathNotNull("entry/citation/form[@lang='zz'][not(trait)]");
+			AssertXPathNotNull("entry[not(field)]");
+		}
+
+
+		[Test]
+		public void CitationWithStarredForm()
+		{
+			LexEntry e = new LexEntry();
+			MultiText citation = e.GetOrCreateProperty<MultiText>(LexEntry.WellKnownProperties.Citation);
+
+			citation.SetAlternative("x", "orange");
+			citation.SetAnnotationOfAlternativeIsStarred("x", true);
+			_exporter.Add(e);
+			_exporter.End();
+			AssertXPathNotNull("entry/citation/form[@lang='x']/trait[@name='flag' and @value='1']");
+		}
+
+		[Test]
+		public void Gloss()
+		{
+			LexSense sense = new LexSense();
+			sense.Gloss["blue"] = "ocean";
+			_exporter.Add(sense);
+			_exporter.End();
+			AssertXPathNotNull("sense/gloss[@lang='blue']/text[text()='ocean']");
 		}
 
 		[Test]
@@ -183,7 +291,46 @@ namespace WeSay.LexicalTools.Tests
 			sense.Gloss.SetAnnotationOfAlternativeIsStarred("x", true);
 			_exporter.Add(sense);
 			_exporter.End();
-			AssertXPathNotNull("sense/gloss/trait[@name='flag' and @value='1']");
+			AssertXPathNotNull("sense/gloss[@lang='x']/trait[@name='flag' and @value='1']");
+		}
+
+		[Test]
+		public void Gloss_MultipleGlossesSplitIntoSeparateEntries()
+		{
+			LexSense sense = new LexSense();
+			sense.Gloss["a"] = "aaa; bbb; ccc";
+			sense.Gloss["x"] = "xx";
+			_exporter.Add(sense);
+			_exporter.End();
+			AssertXPathNotNull("sense[count(gloss)=4]");
+			AssertXPathNotNull("sense/gloss[@lang='a' and text='aaa']");
+			AssertXPathNotNull("sense/gloss[@lang='a' and text='bbb']");
+			AssertXPathNotNull("sense/gloss[@lang='a' and text='ccc']");
+			AssertXPathNotNull("sense/gloss[@lang='x' and text='xx']");
+		}
+
+		[Test]
+		public void Grammi()
+		{
+			LexSense sense = new LexSense();
+			OptionRef o = sense.GetOrCreateProperty<OptionRef>(LexSense.WellKnownProperties.PartOfSpeech);
+			o.Value = "orange";
+			_exporter.Add(sense);
+			_exporter.End();
+			AssertXPathNotNull("sense/grammatical-info[@value='orange']");
+			AssertXPathNotNull("sense[not(trait)]");
+		}
+
+		[Test]
+		public void BlankGrammi()
+		{
+			LexSense sense = new LexSense();
+			OptionRef o = sense.GetOrCreateProperty<OptionRef>(LexSense.WellKnownProperties.PartOfSpeech);
+			o.Value = string.Empty;
+			_exporter.Add(sense);
+			_exporter.End();
+			AssertXPathNotNull("sense[not(grammatical-info)]");
+			AssertXPathNotNull("sense[not(trait)]");
 		}
 
 
@@ -196,7 +343,7 @@ namespace WeSay.LexicalTools.Tests
 			o.IsStarred = true;
 			_exporter.Add(sense);
 			_exporter.End();
-			AssertXPathNotNull("sense/grammatical-info/trait[@name='flag' and @value='1']");
+			AssertXPathNotNull("sense/grammatical-info[@value='orange']/trait[@name='flag' and @value='1']");
 		}
 
 
@@ -235,9 +382,9 @@ namespace WeSay.LexicalTools.Tests
 		public void ExampleSourceAsAttribute()
 		{
 			LexExampleSentence ex = new LexExampleSentence();
-			OptionRef z = new OptionRef();
+			OptionRef z = ex.GetOrCreateProperty<OptionRef>(LexExampleSentence.WellKnownProperties.Source);
 			z.Value = "hearsay";
-			ex.Properties.Add(new KeyValuePair<string, object>("source", z));
+
 			_exporter.Add(ex);
 			_exporter.End();
 			AssertXPathNotNull("example[@source='hearsay']");
@@ -245,7 +392,17 @@ namespace WeSay.LexicalTools.Tests
 
 
 		[Test]
-		public void SmallExample()
+		public void EmptyExampleSource_NoAttribute()
+		{
+			LexExampleSentence ex = new LexExampleSentence();
+			OptionRef z = ex.GetOrCreateProperty<OptionRef>(LexExampleSentence.WellKnownProperties.Source);
+			_exporter.Add(ex);
+			_exporter.End();
+			AssertXPathNotNull("example[not(@source)]");
+		}
+
+		[Test]
+		public void ExampleSentence()
 		{
 			LexExampleSentence example = new LexExampleSentence();
 			example.Sentence["blue"] = "ocean's eleven";
@@ -255,7 +412,7 @@ namespace WeSay.LexicalTools.Tests
 		}
 
 		[Test]
-		public void FullExample()
+		public void ExampleSentenceWithTranslation()
 		{
 			LexExampleSentence example = new LexExampleSentence();
 			example.Sentence["blue"] = "ocean's eleven";
@@ -273,11 +430,20 @@ namespace WeSay.LexicalTools.Tests
 		}
 
 		[Test]
-		public void BlankEntryId()
+		public void EntryGuid()
 		{
 			LexEntry entry = new LexEntry();
 			_exporter.Add(entry);
 			ShouldContain(string.Format("guid=\"{0}\"", entry.Guid));
+		}
+
+		[Test]
+		public void LexEntry_becomes_entry()
+		{
+			LexEntry entry = new LexEntry();
+			_exporter.Add(entry);
+			_exporter.End();
+			Assert.IsTrue(_stringBuilder.ToString().StartsWith("<entry"));
 		}
 
 		[Test]
@@ -299,25 +465,58 @@ namespace WeSay.LexicalTools.Tests
 		private void ShouldContain(string s)
 		{
 			_exporter.End();
-			bool found = _stringBuilder.ToString().Contains(
-				s);
-			if (!found)
-			{
-				Console.WriteLine(_stringBuilder.ToString());
-			}
-			Assert.IsTrue(
-				found);
+			Assert.IsTrue(_stringBuilder.ToString().Contains(s), "\n'{0}' is not contained in\n'{1}'", s, _stringBuilder.ToString());
 		}
 
 		[Test]
-		public void EntryHasDateTimes()
+		public void EntryHasDateCreated()
 		{
 			LexEntry entry = new LexEntry();
 			_exporter.Add(entry);
 			_exporter.End();
 			ShouldContain(string.Format("dateCreated=\"{0}\"", entry.CreationTime.ToString("yyyy-MM-ddThh:mm:ssZ")));
-			ShouldContain(string.Format("dateModified=\"{0}\"", entry.ModificationTime.ToString("yyyy-MM-ddThh:mm:ssZ")));
 	   }
+
+		[Test]
+		public void EntryHasDateModified()
+		{
+			LexEntry entry = new LexEntry();
+			entry.LexicalForm["test"] = "lexicalForm"; // make dateModified different than dateCreated
+			_exporter.Add(entry);
+			_exporter.End();
+			ShouldContain(string.Format("dateModified=\"{0}\"", entry.ModificationTime.ToString("yyyy-MM-ddThh:mm:ssZ")));
+		}
+
+		[Test]
+		public void Entry_HasId_RemembersId()
+		{
+			LexEntry entry = new LexEntry("my id", Guid.NewGuid());
+			_exporter.Add(entry);
+			_exporter.End();
+			ShouldContain("id=\"my id\"");
+		}
+
+		[Test]
+		public void Entry_EntryHasIdWithInvalidXMLCharacters_CharactersEscaped()
+		{
+			// technically the only invalid characters in an attribute are & < and " (when surrounded by ")
+			LexEntry entry = new LexEntry("<>&\"\'", Guid.NewGuid());
+			_exporter.Add(entry);
+			_exporter.End();
+			ShouldContain("id=\"&lt;&gt;&amp;&quot;'\"");
+		}
+
+
+		[Test]
+		public void Entry_NoId_GetsHumanReadableId()
+		{
+			LexEntry entry = new LexEntry();
+			entry.LexicalForm["test"] = "lexicalForm"; // make dateModified different than dateCreated
+			_exporter.Add(entry);
+			_exporter.End();
+			ShouldContain(string.Format("id=\"{0}\"", LiftExporter.GetHumanReadableId(entry, new Dictionary<string, int>())));
+		}
+
 
 		[Test]
 		public void DuplicateFormsGetHomographNumbers()
@@ -325,17 +524,131 @@ namespace WeSay.LexicalTools.Tests
 			LexEntry entry = new LexEntry();
 			entry.LexicalForm["blue"] = "ocean";
 			_exporter.Add(entry);
-			entry = new LexEntry();
-			entry.LexicalForm["blue"] = "ocean";
 			_exporter.Add(entry);
-			entry = new LexEntry();
-			entry.LexicalForm["blue"] = "ocean";
 			_exporter.Add(entry);
-			  _exporter.End();
-			Debug.WriteLine(_stringBuilder.ToString());
-			Assert.IsTrue(_stringBuilder.ToString().Contains("\"ocean\""));
-			Assert.IsTrue(_stringBuilder.ToString().Contains("ocean_2"));
-			Assert.IsTrue(_stringBuilder.ToString().Contains("ocean_3"));
+		  _exporter.End();
+		  Assert.IsTrue(_stringBuilder.ToString().Contains("\"ocean\""), "ocean not contained in {0}", _stringBuilder.ToString());
+		  Assert.IsTrue(_stringBuilder.ToString().Contains("ocean_2"), "ocean_2 not contained in {0}", _stringBuilder.ToString());
+		  Assert.IsTrue(_stringBuilder.ToString().Contains("ocean_3"), "ocean_3 not contained in {0}", _stringBuilder.ToString());
+		}
+
+		[Test]
+		public void GetHumanReadableId_EntryHasId_GivesId()
+		{
+			LexEntry entry = new LexEntry("my id", Guid.NewGuid());
+			Assert.AreEqual("my id", LiftExporter.GetHumanReadableId(entry, new Dictionary<string, int>()));
+		}
+
+		[Test]
+		public void GetHumanReadableId_EntryHasId_RegistersId()
+		{
+			LexEntry entry = new LexEntry("my id", Guid.NewGuid());
+			Dictionary<string, int> idCounts = new Dictionary<string, int>();
+			LiftExporter.GetHumanReadableId(entry, idCounts);
+			Assert.AreEqual(1, idCounts["my id"]);
+		}
+
+		[Test]
+		public void GetHumanReadableId_EntryHasAlreadyUsedId_GivesIncrementedId()
+		{
+			LexEntry entry = new LexEntry("my id", Guid.NewGuid());
+			Dictionary<string, int> idCounts = new Dictionary<string, int>();
+			LiftExporter.GetHumanReadableId(entry, idCounts);
+			Assert.AreEqual("my id_2", LiftExporter.GetHumanReadableId(entry, idCounts));
+		}
+
+		[Test]
+		public void GetHumanReadableId_EntryHasAlreadyUsedId_IncrementsIdCount()
+		{
+			LexEntry entry = new LexEntry("my id", Guid.NewGuid());
+			Dictionary<string, int> idCounts = new Dictionary<string, int>();
+			LiftExporter.GetHumanReadableId(entry, idCounts);
+			LiftExporter.GetHumanReadableId(entry, idCounts);
+			Assert.AreEqual(2, idCounts["my id"]);
+		}
+
+
+		[Test]
+		public void GetHumanReadableId_EntryHasNoIdAndNoLexicalForms_GivesDefaultId()
+		{
+			LexEntry entry = new LexEntry();
+			Assert.AreEqual("NoForm", LiftExporter.GetHumanReadableId(entry, new Dictionary<string, int>()));
+		}
+
+		[Test]
+		public void GetHumanReadableId_EntryHasNoIdAndNoLexicalFormsButAlreadyUsedId_GivesIncrementedDefaultId()
+		{
+			LexEntry entry = new LexEntry();
+			Dictionary<string, int> idCounts = new Dictionary<string, int>();
+			LiftExporter.GetHumanReadableId(entry, idCounts);
+			Assert.AreEqual("NoForm_2", LiftExporter.GetHumanReadableId(entry, idCounts));
+		}
+
+		[Test]
+		public void GetHumanReadableId_EntryHasNoId_GivesIdMadeFromFirstLexicalForm()
+		{
+			LexEntry entry = new LexEntry();
+			entry.LexicalForm["green"] = "grass";
+			entry.LexicalForm["blue"] = "ocean";
+
+			Assert.AreEqual("grass", LiftExporter.GetHumanReadableId(entry, new Dictionary<string, int>()));
+		}
+
+		[Test]
+		public void GetHumanReadableId_EntryHasNoId_RegistersIdMadeFromFirstLexicalForm()
+		{
+			LexEntry entry = new LexEntry();
+			entry.LexicalForm["green"] = "grass";
+			entry.LexicalForm["blue"] = "ocean";
+			Dictionary<string, int> idCounts = new Dictionary<string, int>();
+			LiftExporter.GetHumanReadableId(entry, idCounts);
+			Assert.AreEqual(1, idCounts["grass"]);
+		}
+
+		[Test]
+		public void GetHumanReadableId_EntryHasNoIdAndIsSameAsAlreadyEncountered_GivesIncrementedId()
+		{
+			LexEntry entry = new LexEntry();
+			entry.LexicalForm["green"] = "grass";
+			entry.LexicalForm["blue"] = "ocean";
+			Dictionary<string, int> idCounts = new Dictionary<string, int>();
+			LiftExporter.GetHumanReadableId(entry, idCounts);
+			Assert.AreEqual("grass_2", LiftExporter.GetHumanReadableId(entry, idCounts));
+		}
+
+		[Test]
+		public void GetHumanReadableId_EntryHasNoIdAndIsSameAsAlreadyEncountered_IncrementsIdCount()
+		{
+			LexEntry entry = new LexEntry();
+			entry.LexicalForm["green"] = "grass";
+			entry.LexicalForm["blue"] = "ocean";
+			Dictionary<string, int> idCounts = new Dictionary<string, int>();
+			LiftExporter.GetHumanReadableId(entry, idCounts);
+			LiftExporter.GetHumanReadableId(entry, idCounts);
+			Assert.AreEqual(2, idCounts["grass"]);
+		}
+
+		[Test]
+		public void GetHumanReadableId_IdsDifferByWhiteSpaceTypeOnly_WhitespaceTreatedAsSpaces()
+		{
+			LexEntry entry = new LexEntry();
+			entry.LexicalForm["green"] = "string\t1\n2\r3 4";
+			Assert.AreEqual("string 1 2 3 4", LiftExporter.GetHumanReadableId(entry, new Dictionary<string, int>()));
+		}
+
+		[Test]
+		public void GetHumanReadableId_IdIsSpace_NoForm()
+		{
+			LexEntry entry = new LexEntry(" ",Guid.NewGuid());
+			Assert.AreEqual("NoForm", LiftExporter.GetHumanReadableId(entry, new Dictionary<string, int>()));
+		}
+
+		[Test]
+		public void GetHumanReadableId_IdIsSpace_TreatedAsThoughNonExistentId()
+		{
+			LexEntry entry = new LexEntry(" ", Guid.NewGuid());
+			entry.LexicalForm["green"] = "string";
+			Assert.AreEqual("string", LiftExporter.GetHumanReadableId(entry, new Dictionary<string, int>()));
 		}
 
 		[Test]
@@ -351,82 +664,177 @@ namespace WeSay.LexicalTools.Tests
 			entry.Senses.Add(sense);
 			_exporter.Add(entry);
 
-			ShouldContain(string.Format("<sense><gloss lang=\"a\"><text>aaa</text></gloss></sense><sense><gloss lang=\"b\"><text>bbb</text></gloss></sense>"));
+			ShouldContain(string.Format("<sense><gloss lang=\"a\"><text>aaa</text></gloss></sense><sense><gloss lang=\"b\"><text>bbb</text></gloss></sense></entry>"));
+			AssertXPathNotNull("entry[count(sense)=2]");
 		}
 
 		[Test]
-		public void MultipleGlossesSplitIntoSeparateEntries()
+		public void SensesAreLastObjectsInEntry() // this helps conversions to sfm
 		{
+			LexEntry entry = new LexEntry();
+			entry.LexicalForm["blue"] = "ocean";
+
 			LexSense sense = new LexSense();
-			sense.Gloss["a"] = "aaa; bbb; ccc";
-			sense.Gloss["x"] = "xx";
-			_exporter.Add(sense);
-			_exporter.End();
-			AssertXPathNotNull("sense[count(gloss)=4]");
-			AssertXPathNotNull("sense/gloss[@lang='a' and text='aaa']");
-			AssertXPathNotNull("sense/gloss[@lang='a' and text='bbb']");
-			AssertXPathNotNull("sense/gloss[@lang='a' and text='ccc']");
-			AssertXPathNotNull("sense/gloss[@lang='x' and text='xx']");
-	  }
+			sense.Gloss["a"] = "aaa";
+			entry.Senses.Add(sense);
+			sense = new LexSense();
+			sense.Gloss["b"] = "bbb";
+			entry.Senses.Add(sense);
+
+			MultiText citation = entry.GetOrCreateProperty<MultiText>(LexEntry.WellKnownProperties.Citation);
+			citation["zz"] = "orange";
+
+			MultiText note = entry.GetOrCreateProperty<MultiText>(LexEntry.WellKnownProperties.Note);
+			note["zz"] = "orange";
+
+			MultiText field = entry.GetOrCreateProperty<MultiText>("custom");
+			field["zz"] = "orange";
+
+			_exporter.Add(entry);
+
+			ShouldContain(string.Format("<sense><gloss lang=\"a\"><text>aaa</text></gloss></sense><sense><gloss lang=\"b\"><text>bbb</text></gloss></sense></entry>"));
+		}
+
 
 		[Test]
-		public void NoteOnSenseOutputAsNote()
+		public void NoteOnEntry_OutputAsNote()
+		{
+			LexEntry entry = new LexEntry();
+			MultiText m = entry.GetOrCreateProperty<MultiText>(LexEntry.WellKnownProperties.Note);
+			m["zz"] = "orange";
+			_exporter.Add(entry);
+			_exporter.End();
+			AssertXPathNotNull("entry/note/form[@lang='zz' and text='orange']");
+			AssertXPathNotNull("entry[not(field)]");
+		}
+
+		[Test]
+		public void EmptyNoteOnEntry_NoOutput()
+		{
+			LexEntry entry = new LexEntry();
+			MultiText m = entry.GetOrCreateProperty<MultiText>(LexEntry.WellKnownProperties.Note);
+			_exporter.Add(entry);
+			_exporter.End();
+			AssertXPathNotNull("entry[not(note)]");
+			AssertXPathNotNull("entry[not(field)]");
+		}
+
+
+		[Test]
+		public void NoteOnSense_OutputAsNote()
 		{
 			LexSense sense = new LexSense();
-			MultiText m = sense.GetOrCreateProperty<MultiText>(WeSayDataObject.WellKnownProperties.Note);
+			MultiText m = sense.GetOrCreateProperty<MultiText>(LexSense.WellKnownProperties.Note);
 			m["zz"] = "orange";
 			_exporter.Add(sense);
 			_exporter.End();
-			AssertXPathNotNull("sense/note");
-			AssertXPathNotNull("sense/note/form[@lang='zz']");
-			AssertXPathNotNull("sense/note/form/text[text()='orange']");
+			AssertXPathNotNull("sense/note/form[@lang='zz' and text='orange']");
 			AssertXPathNotNull("sense[not(field)]");
+		}
+
+		[Test]
+		public void NoteOnExample_OutputAsNote()
+		{
+			LexExampleSentence example = new LexExampleSentence();
+			MultiText m = example.GetOrCreateProperty<MultiText>(LexExampleSentence.WellKnownProperties.Note);
+			m["zz"] = "orange";
+			_exporter.Add(example);
+			_exporter.End();
+			AssertXPathNotNull("example/note/form[@lang='zz' and text='orange']");
+			AssertXPathNotNull("example[not(field)]");
 		}
 
 
 		[Test]
-		public void DefinitionOnSenseOutputAsDef()
+		public void DefinitionOnSense_OutputAsDefinition()
 		{
 			LexSense sense = new LexSense();
 			MultiText m = sense.GetOrCreateProperty<MultiText>(LexSense.WellKnownProperties.Definition);
 			m["zz"] = "orange";
 			_exporter.Add(sense);
 			_exporter.End();
-			AssertXPathNotNull("sense/def");
-			AssertXPathNotNull("sense/def/form[@lang='zz']");
-			AssertXPathNotNull("sense/def/form/text[text()='orange']");
+			AssertXPathNotNull("sense/definition/form[@lang='zz']/text[text()='orange']");
 			AssertXPathNotNull("sense[not(field)]");
 		}
 
 		[Test]
-		public void CitationOnEntryOutputAsCitation()
+		public void EmptyDefinitionOnSense_NotOutput()
 		{
-			LexEntry entry = new LexEntry();
-			MultiText m = entry.GetOrCreateProperty<MultiText>(LexEntry.WellKnownProperties.Citation);
-			m["zz"] = "orange";
-			_exporter.Add(entry);
+			LexSense sense = new LexSense();
+			sense.GetOrCreateProperty<MultiText>(LexSense.WellKnownProperties.Definition);
+			_exporter.Add(sense);
 			_exporter.End();
-			AssertXPathNotNull("entry/citation");
-			AssertXPathNotNull("entry/citation/form[@lang='zz']");
-			AssertXPathNotNull("entry/citation/form/text[text()='orange']");
-			AssertXPathNotNull("entry[not(field)]");
+			AssertXPathNotNull("sense[not(definition)]");
+			AssertXPathNotNull("sense[not(field)]");
 		}
 
 		[Test]
-		public void CustomMultiText()
+		public void EmptyCustomMultiText()
+		{
+			LexSense sense = new LexSense();
+			sense.GetOrCreateProperty<MultiText>("flubadub");
+			_exporter.Add(sense);
+			_exporter.End();
+			AssertXPathNotNull("sense[not(field)]");
+		}
+
+
+		[Test]
+		public void CustomMultiTextOnSense()
 		{
 			LexSense sense = new LexSense();
 			MultiText m = sense.GetOrCreateProperty<MultiText>("flubadub");
 			m["zz"] = "orange";
 			_exporter.Add(sense);
 			_exporter.End();
-			AssertXPathNotNull("sense/field");
-			AssertXPathNotNull("sense/field[@tag='flubadub']");
-			AssertXPathNotNull("sense/field/form[@lang='zz']");
+			AssertXPathNotNull("sense/field[@tag='flubadub']/form[@lang='zz' and text='orange']");
 		 }
 
 		[Test]
-		public void CustomOptionRef()
+		public void CustomMultiTextOnEntry()
+		{
+			LexEntry entry = new LexEntry();
+			MultiText m = entry.GetOrCreateProperty<MultiText>("flubadub");
+			m["zz"] = "orange";
+			_exporter.Add(entry);
+			_exporter.End();
+			AssertXPathNotNull("entry/field[@tag='flubadub']/form[@lang='zz' and text='orange']");
+		}
+
+		[Test]
+		public void CustomMultiTextOnExample()
+		{
+			LexExampleSentence example = new LexExampleSentence();
+			MultiText m = example.GetOrCreateProperty<MultiText>("flubadub");
+			m["zz"] = "orange";
+			_exporter.Add(example);
+			_exporter.End();
+			AssertXPathNotNull("example/field[@tag='flubadub']/form[@lang='zz' and text='orange']");
+		}
+
+		[Test]
+		public void EmptyCustomOptionRef()
+		{
+			LexSense sense = new LexSense();
+			sense.GetOrCreateProperty<OptionRef>("flubadub");
+			_exporter.Add(sense);
+			_exporter.End();
+			AssertXPathNotNull("sense[not(trait)]");
+		}
+
+		[Test]
+		public void CustomOptionRefOnEntry()
+		{
+			_fieldToOptionListName.Add("flub", "kindsOfFlubs");
+			LexEntry entry = new LexEntry();
+			OptionRef o = entry.GetOrCreateProperty<OptionRef>("flub");
+			o.Value = "orange";
+			_exporter.Add(entry);
+			_exporter.End();
+			AssertXPathNotNull("entry/trait[@name='flub' and @value='orange']");
+		}
+		[Test]
+		public void CustomOptionRefOnSense()
 		{
 			_fieldToOptionListName.Add("flub", "kindsOfFlubs");
 			LexSense sense = new LexSense();
@@ -434,36 +842,85 @@ namespace WeSay.LexicalTools.Tests
 			o.Value = "orange";
 			_exporter.Add(sense);
 			_exporter.End();
-			Debug.WriteLine(_stringBuilder.ToString());
-
 			Assert.AreEqual("<sense><trait name=\"flub\" value=\"orange\" /></sense>", _stringBuilder.ToString());
 		}
 
 		[Test]
-		public void CustomOptionRefCollection()
+		public void CustomOptionRefOnSenseWithGrammi()
+		{
+			_fieldToOptionListName.Add("flub", "kindsOfFlubs");
+			LexSense sense = new LexSense();
+			OptionRef grammi = sense.GetOrCreateProperty<OptionRef>(LexSense.WellKnownProperties.PartOfSpeech);
+			grammi.Value = "verb";
+
+			OptionRef o = sense.GetOrCreateProperty<OptionRef>("flub");
+			o.Value = "orange";
+			_exporter.Add(sense);
+			_exporter.End();
+			AssertXPathNotNull("sense/trait[@name='flub' and @value='orange']");
+			AssertXPathNotNull("sense[count(trait)=1]");
+		}
+
+		[Test]
+		public void CustomOptionRefOnExample()
+		{
+			_fieldToOptionListName.Add("flub", "kindsOfFlubs");
+			LexExampleSentence example = new LexExampleSentence();
+			OptionRef o = example.GetOrCreateProperty<OptionRef>("flub");
+			o.Value = "orange";
+			_exporter.Add(example);
+			_exporter.End();
+			Assert.AreEqual("<example><trait name=\"flub\" value=\"orange\" /></example>", _stringBuilder.ToString());
+		}
+
+		[Test]
+		public void EmptyCustomOptionRefCollection()
+		{
+			LexSense sense = new LexSense();
+			sense.GetOrCreateProperty<OptionRefCollection>("flubadub");
+			_exporter.Add(sense);
+			_exporter.End();
+			AssertXPathNotNull("sense[not(trait)]");
+		}
+
+
+		[Test]
+		public void CustomOptionRefCollectionOnEntry()
+		{
+			_fieldToOptionListName.Add("flubs", "colors");
+			LexEntry entry = new LexEntry();
+			OptionRefCollection o = entry.GetOrCreateProperty<OptionRefCollection>("flubs");
+			o.AddRange(new string[] { "orange", "blue" });
+			_exporter.Add(entry);
+			_exporter.End();
+			AssertXPathNotNull("entry/trait[@name='flubs' and @value='orange']");
+			AssertXPathNotNull("entry/trait[@name='flubs' and @value='blue']");
+			AssertXPathNotNull("entry[count(trait) =2]");
+		}
+
+		[Test]
+		public void CustomOptionRefCollectionOnSense()
 		{
 			_fieldToOptionListName.Add("flubs", "colors");
 			LexSense sense = new LexSense();
 			OptionRefCollection o = sense.GetOrCreateProperty<OptionRefCollection>("flubs");
-			o.AddRange(new string[] {"orange", "blue"});
+			o.AddRange(new string[] { "orange", "blue" });
 			_exporter.Add(sense);
 			_exporter.End();
-			Debug.WriteLine(_stringBuilder.ToString());
-
 			Assert.AreEqual("<sense><trait name=\"flubs\" value=\"orange\" /><trait name=\"flubs\" value=\"blue\" /></sense>", _stringBuilder.ToString());
 		}
 
 		[Test]
-		public void GoodGrammi()
+		public void CustomOptionRefCollectionOnExample()
 		{
-			LexSense sense = new LexSense();
-			OptionRef o = sense.GetOrCreateProperty<OptionRef>(LexSense.WellKnownProperties.PartOfSpeech);
-			o.Value = "orange";
-			_exporter.Add(sense);
-			 _exporter.End();
-			AssertXPathNotNull("sense/grammatical-info[@value='orange']");
-			AssertXPathNotNull("sense[not(trait/@name='POS')]");
-	   }
+			_fieldToOptionListName.Add("flubs", "colors");
+			LexExampleSentence example = new LexExampleSentence();
+			OptionRefCollection o = example.GetOrCreateProperty<OptionRefCollection>("flubs");
+			o.AddRange(new string[] {"orange", "blue"});
+			_exporter.Add(example);
+			_exporter.End();
+			Assert.AreEqual("<example><trait name=\"flubs\" value=\"orange\" /><trait name=\"flubs\" value=\"blue\" /></example>", _stringBuilder.ToString());
+		}
 
 		[Test]
 		public void SenseWithExample()
@@ -481,8 +938,7 @@ namespace WeSay.LexicalTools.Tests
 		private void CheckAnswer(string answer)
 		{
 			_exporter.End();
-			Assert.AreEqual(answer,
-							_stringBuilder.ToString());
+			Assert.AreEqual(answer, _stringBuilder.ToString());
 		}
 	}
 }

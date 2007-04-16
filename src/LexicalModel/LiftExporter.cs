@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Reflection;
 using System.Text;
 using System.Xml;
@@ -15,7 +14,6 @@ namespace WeSay.LexicalModel
 		public const string LiftDateTimeFormat = "yyyy-MM-ddThh:mm:ssZ";
 		private XmlWriter _writer;
 		private Dictionary<string, int> _allIdsExportedSoFar;
-	 //   static List<string> _reservedNames = new List<string>(new string[] {WeSayDataObject.WellKnownProperties.Note, LexSense.WellKnownProperties.PartOfSpeech});
 		private Dictionary<string, string> _fieldToRangeSetPairs;
 
 		public LiftExporter(Dictionary<string, string> fieldToOptionListName, string path)
@@ -33,7 +31,7 @@ namespace WeSay.LexicalModel
 		{
 			_fieldToRangeSetPairs = fieldToOptionListName;
 
-			_allIdsExportedSoFar = new Dictionary<string, int>();
+			_allIdsExportedSoFar = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
 			_writer = XmlWriter.Create(builder, PrepareSettings(produceFragmentOnly));
 			if (!produceFragmentOnly)
 			{
@@ -107,11 +105,10 @@ namespace WeSay.LexicalModel
 			for (int i = startIndex; i < startIndex+howMany; i++)
 			{
 				Add(entries[i]);
-
 			}
 		 }
 
-		public void Add(IList<LexEntry> entries)
+		public void Add(IEnumerable<LexEntry> entries)
 		{
 			foreach (LexEntry entry in entries)
 			{
@@ -119,7 +116,7 @@ namespace WeSay.LexicalModel
 			}
 		}
 
-		public void AddNoGeneric(IList entries)
+		public void AddNoGeneric(IEnumerable entries)
 		{
 			foreach (LexEntry entry in entries)
 			{
@@ -132,48 +129,61 @@ namespace WeSay.LexicalModel
 			List<string> propertiesAlreadyOutput=new List<string>();
 
 			_writer.WriteStartElement("entry");
-			_writer.WriteAttributeString("id", MakeHumanReadableId(entry));
-			_writer.WriteAttributeString("dateCreated", entry.CreationTime.ToString(LiftDateTimeFormat));
+			_writer.WriteAttributeString("id", GetHumanReadableId(entry, _allIdsExportedSoFar));
 			System.Diagnostics.Debug.Assert(entry.CreationTime.Kind == DateTimeKind.Utc);
-			 System.Diagnostics.Debug.Assert(entry.ModificationTime.Kind == DateTimeKind.Utc);
-		   _writer.WriteAttributeString("dateModified", entry.ModificationTime.ToString(LiftDateTimeFormat));
+			_writer.WriteAttributeString("dateCreated", entry.CreationTime.ToString(LiftDateTimeFormat));
+			System.Diagnostics.Debug.Assert(entry.ModificationTime.Kind == DateTimeKind.Utc);
+			_writer.WriteAttributeString("dateModified", entry.ModificationTime.ToString(LiftDateTimeFormat));
 			_writer.WriteAttributeString("guid", entry.Guid.ToString());
 		   // _writer.WriteAttributeString("flex", "id", "http://fieldworks.sil.org", entry.Guid.ToString());
 			WriteMultiWithWrapperIfNonEmpty( "lexical-unit",entry.LexicalForm);
 
-			foreach(LexSense sense in entry.Senses)
+			WriteWellKnownCustomMultiText(entry, LexEntry.WellKnownProperties.Citation, propertiesAlreadyOutput);
+			WriteWellKnownCustomMultiText(entry, LexEntry.WellKnownProperties.Note, propertiesAlreadyOutput);
+			WriteCustomProperties(entry, propertiesAlreadyOutput);
+			foreach (LexSense sense in entry.Senses)
 			{
 				Add(sense);
 			}
-			WriteWellKnownCustomMultiText(entry, "citation", propertiesAlreadyOutput);
-			WriteCustomProperties(entry, propertiesAlreadyOutput);
 			_writer.WriteEndElement();
 		}
 
-		private string MakeHumanReadableId(LexEntry entry)
+		/// <summary>
+		/// Get a human readable identifier for this entry taking into account all the rest of the
+		/// identifiers that this has seen
+		/// </summary>
+		/// <param name="entry">the entry to </param>
+		/// <param name="idsAndCounts">the base ids that have been used so far and how many times</param>
+		/// <remarks>This function alters the idsAndCounts and thus is not stable if the entry
+		/// does not already have an id and the same idsAndCounts dictionary is provided.
+		/// A second call to this function with the same entry that lacks an id and the same
+		/// idsAndCounts will produce different results each time it runs
+		/// </remarks>
+		/// <returns>A base id composed with its count</returns>
+		static public string GetHumanReadableId(LexEntry entry, Dictionary<string, int> idsAndCounts)
 		{
 			string id = entry.Id;
-			if (id == null || id == String.Empty)       // if the entry doesn't claim to have an id
+			if (id == null || id.Length == 0)       // if the entry doesn't claim to have an id
 			{
-				id = entry.LexicalForm.GetFirstAlternative().Trim(); // use the first form as an id
+				id = entry.LexicalForm.GetFirstAlternative().Trim().Normalize(NormalizationForm.FormD); // use the first form as an id
 				if (id == "")
 				{
 					id = "NoForm"; //review
 				}
 			}
-
+			id = id.Replace('\r', ' ').Replace('\n', ' ').Replace('\t', ' ');
 			//make this id unique
-			int count=0;
-			if (_allIdsExportedSoFar.TryGetValue(id, out count))
+			int count;
+			if (idsAndCounts.TryGetValue(id, out count))
 			{
 				++count;
-				_allIdsExportedSoFar.Remove(id);
-				_allIdsExportedSoFar.Add(id, count);
+				idsAndCounts.Remove(id);
+				idsAndCounts.Add(id, count);
 				id = string.Format("{0}_{1}", id, count);
 			}
 			else
 			{
-				_allIdsExportedSoFar.Add(id, 1);
+				idsAndCounts.Add(id, 1);
 			}
 
 			return id;
@@ -192,8 +202,8 @@ namespace WeSay.LexicalModel
 			{
 				Add(example);
 			}
-			WriteWellKnownCustomMultiText(sense, "def", propertiesAlreadyOutput);
-			WriteWellKnownCustomMultiText(sense, "note", propertiesAlreadyOutput);
+			WriteWellKnownCustomMultiText(sense, LexSense.WellKnownProperties.Definition, propertiesAlreadyOutput);
+			WriteWellKnownCustomMultiText(sense, LexSense.WellKnownProperties.Note, propertiesAlreadyOutput);
 			WriteCustomProperties(sense, propertiesAlreadyOutput);
 			_writer.WriteEndElement();
 		}
@@ -220,16 +230,17 @@ namespace WeSay.LexicalModel
 				}
 */
 
-			if (pos != null)
+			if (pos != null && pos.Value.Length > 0)
 			{
 				_writer.WriteStartElement("grammatical-info");
-				_writer.WriteAttributeString("value", ((OptionRef)pos).Value);
+				_writer.WriteAttributeString("value", pos.Value);
 				WriteFlags(pos);
 				_writer.WriteEndElement();
 			}
 			else
 			{
 				//review
+				// I think this is right (Eric)
 			}
 		}
 
@@ -297,12 +308,15 @@ namespace WeSay.LexicalModel
 
 		private void WriteOptionRef(string key, OptionRef optionRef)
 		{
-			_writer.WriteStartElement("trait");
-			_writer.WriteAttributeString("name", key);
-			_writer.WriteAttributeString("value", optionRef.Value);
-		  //  WriteRangeName(key);
-			_writer.WriteEndElement();
-	   }
+			if (optionRef.Value.Length > 0)
+			{
+				_writer.WriteStartElement("trait");
+				_writer.WriteAttributeString("name", key);
+				_writer.WriteAttributeString("value", optionRef.Value);
+				//  WriteRangeName(key);
+				_writer.WriteEndElement();
+			}
+		}
 
 //        private void WriteRangeName(string key)
 //        {
@@ -342,7 +356,7 @@ namespace WeSay.LexicalModel
 */            {
 				source = example.GetProperty<OptionRef>(LexExampleSentence.WellKnownProperties.Source);
 			}
-			if (source != null)
+			if (source != null && source.Value.Length > 0)
 			{
 				_writer.WriteAttributeString("source", source.Value);
 				propertiesAlreadyOutput.Add("source");
@@ -350,6 +364,7 @@ namespace WeSay.LexicalModel
 
 			WriteMultiTextNoWrapper(example.Sentence);
 			WriteMultiWithWrapperIfNonEmpty("translation", example.Translation);
+			WriteWellKnownCustomMultiText(example, LexExampleSentence.WellKnownProperties.Note, propertiesAlreadyOutput);
 
 			//for Dennis
 			/*MultiText t = example.GetProperty<MultiText>("trans");
@@ -440,7 +455,7 @@ namespace WeSay.LexicalModel
 		public void AddDeletedEntry(LexEntry entry)
 		{
 			_writer.WriteStartElement("entry");
-			_writer.WriteAttributeString("id", MakeHumanReadableId(entry));
+			_writer.WriteAttributeString("id", GetHumanReadableId(entry, _allIdsExportedSoFar));
 			_writer.WriteAttributeString("dateCreated", entry.CreationTime.ToString(LiftDateTimeFormat));
 			_writer.WriteAttributeString("dateModified", entry.ModificationTime.ToString(LiftDateTimeFormat));
 			_writer.WriteAttributeString("guid", entry.Guid.ToString());

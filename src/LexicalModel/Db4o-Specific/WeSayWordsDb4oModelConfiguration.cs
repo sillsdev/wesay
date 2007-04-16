@@ -1,4 +1,3 @@
-using Db4objects.Db4o.Diagnostic;
 using WeSay.Data;
 using WeSay.Language;
 
@@ -20,7 +19,7 @@ namespace WeSay.LexicalModel.Db4o_Specific
 //            objectClass = db4oConfiguration.ObjectClass(typeof(System.Collections.Generic.Dictionary<string,object>));
 //            objectClass.ObjectField("comparer").CascadeOnDelete(false);
 
-			objectClass = db4oConfiguration.ObjectClass(typeof(Language.LanguageForm));
+			objectClass = db4oConfiguration.ObjectClass(typeof(LanguageForm));
 			objectClass.ObjectField("_writingSystemId").Indexed(true);
 			objectClass.ObjectField("_form").Indexed(true);
 			objectClass.CascadeOnDelete(true);

@@ -8,8 +8,20 @@ namespace WeSay.Data
 
 		public DateTime LastModified
 		{
-			get { return this._lastModified; }
-			set { this._lastModified = value; }
+			get
+			{
+				//workaround db4o 6 bug
+				if (_lastModified.Kind != DateTimeKind.Utc)
+				{
+					LastModified = new DateTime(_lastModified.Ticks, DateTimeKind.Utc);
+				}
+				return this._lastModified;
+			}
+			set
+			{
+				System.Diagnostics.Debug.Assert(value.Kind == DateTimeKind.Utc);
+				this._lastModified = value;
+			}
 		}
 	}
 }

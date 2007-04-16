@@ -41,14 +41,14 @@ namespace WeSay.UI
 		public GhostBinding(IBindingList targetList, string propertyName, WritingSystem writingSystem, WeSayTextBox textBoxTarget)
 		{
 		   _listTarget= targetList;
-		   _listTarget.ListChanged +=new ListChangedEventHandler(_listTarget_ListChanged);
+//           _listTarget.ListChanged +=new ListChangedEventHandler(_listTarget_ListChanged);
 		   _propertyName=propertyName;
 		   _writingSystem = writingSystem;
 
 		   _textBoxTarget = textBoxTarget;
 		   _textBoxTarget.KeyDown += new KeyEventHandler(_textBoxTarget_KeyDown);
 		   _textBoxTarget.LostFocus += new EventHandler(_textBoxTarget_LostFocus);
-		   _textBoxTarget.TextChanged += new EventHandler(_textBoxTarget_TextChanged);
+//           _textBoxTarget.TextChanged += new EventHandler(_textBoxTarget_TextChanged);
 		   _textBoxTarget.Enter += new EventHandler(OnTextBoxEntered);
 		   _textBoxTarget.HandleDestroyed += new EventHandler(_textBoxTarget_HandleDestroyed);
 		}
@@ -59,7 +59,7 @@ namespace WeSay.UI
 			{
 				e.Handled = true;
 				e.SuppressKeyPress = true; //none of this
-				this.TimeForRealObject(false);
+				TimeForRealObject(false);
 			}
 			else
 			{
@@ -83,39 +83,39 @@ namespace WeSay.UI
 				TimeForRealObject(true);
 		}
 
-		void _textBoxTarget_TextChanged(object sender, EventArgs e)
-		{
+		//void _textBoxTarget_TextChanged(object sender, EventArgs e)
+		//{
 //            if ( _textBoxTarget.Text.Trim().Length > 0)
 //            {
 //                TimeForRealObject();
 //            }
-		}
+		//}
 
 		void OnTextBoxEntered(object sender, EventArgs e)
 		{
 			CurrentItemChanged(sender, new CurrentItemEventArgs(_propertyName, _writingSystem.Id));
 		}
 
-		 /// <summary>
-		/// Change of visibility is not a very satisfying to time to trigger this,
-		/// but it does the best I've found.
-		/// </summary>
-		 void _textBoxTarget_VisibleChanged(object sender, EventArgs e)
-		{
-			//once I wrapped textbox in wesaytextbox, this was never false anymore!
-			 if (((WeSayTextBox)sender).Visible == false)
-			{
-				TearDown();
-			}
-		}
+		// /// <summary>
+		///// Change of visibility is not a very satisfying to time to trigger this,
+		///// but it does the best I've found.
+		///// </summary>
+		// void _textBoxTarget_VisibleChanged(object sender, EventArgs e)
+		//{
+		//    //once I wrapped textbox in wesaytextbox, this was never false anymore!
+		//     if (((WeSayTextBox)sender).Visible == false)
+		//    {
+		//        TearDown();
+		//    }
+		//}
 
-		/// <summary>
-		/// We get this when closing the app, rather than the visibility changed event.
-		/// </summary>
-		void _textBoxTarget_Disposed(object sender, EventArgs e)
-		{
-			TearDown();
-		}
+		///// <summary>
+		///// We get this when closing the app, rather than the visibility changed event.
+		///// </summary>
+		//void _textBoxTarget_Disposed(object sender, EventArgs e)
+		//{
+		//    TearDown();
+		//}
 
 	   /// <summary>
 		/// Drop our connections to everything so garbage collection can happen and we aren't
@@ -131,9 +131,9 @@ namespace WeSay.UI
 				return; //teardown was called twice
 			}
 			_referenceControl = null;
-			_listTarget.ListChanged -=new ListChangedEventHandler(_listTarget_ListChanged);
+//            _listTarget.ListChanged -=new ListChangedEventHandler(_listTarget_ListChanged);
 			_listTarget = null;
-			_textBoxTarget.TextChanged -= new EventHandler(_textBoxTarget_TextChanged);
+//            _textBoxTarget.TextChanged -= new EventHandler(_textBoxTarget_TextChanged);
 			_textBoxTarget.HandleDestroyed -= new EventHandler(_textBoxTarget_HandleDestroyed);
 			_textBoxTarget = null;
 		}
@@ -153,29 +153,29 @@ namespace WeSay.UI
 
 
 
-		/// <summary>
-		/// Handle the case where some mechanism (including this class) makes a change to the list we are
-		/// here to add items to.
-		/// Our job in this case is fire the events which switch the UI for the ghost widget over from Ghost to Real.
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		void  _listTarget_ListChanged(object sender, ListChangedEventArgs e)
-		{
+//        /// <summary>
+//        /// Handle the case where some mechanism (including this class) makes a change to the list we are
+//        /// here to add items to.
+//        /// Our job in this case is fire the events which switch the UI for the ghost widget over from Ghost to Real.
+//        /// </summary>
+//        /// <param name="sender"></param>
+//        /// <param name="e"></param>
+//        void  _listTarget_ListChanged(object sender, ListChangedEventArgs e)
+//        {
 
-			//REVIEW: JH says... dont we only want to trigger if it was *this* guy that is responsible?)
+//            //REVIEW: JH says... dont we only want to trigger if it was *this* guy that is responsible?)
 
 
-//            if (e.ListChangedType == ListChangedType.ItemAdded)
-//            {
-//                object newGuy = _listTarget[e.NewIndex];
-//                FillInMultiTextOfNewObject(newGuy, _propertyName, _writingSystem, _textBoxTarget.Text);
-//                if (Triggered != null)
-//                {
-//                    Triggered.Invoke(this, _listTarget, e.NewIndex, null);
-//                }
-//            }
-		}
+////            if (e.ListChangedType == ListChangedType.ItemAdded)
+////            {
+////                object newGuy = _listTarget[e.NewIndex];
+////                FillInMultiTextOfNewObject(newGuy, _propertyName, _writingSystem, _textBoxTarget.Text);
+////                if (Triggered != null)
+////                {
+////                    Triggered.Invoke(this, _listTarget, e.NewIndex, null);
+////                }
+////            }
+//        }
 
 		protected  void TimeForRealObject(bool doGoToNextField)
 		{
@@ -191,7 +191,7 @@ namespace WeSay.UI
 			}
 			_inMidstOfTrigger = true;
 
-			IBindingList list = _listTarget as IBindingList;
+			IBindingList list = _listTarget;
 			//in addition to adding a list item, this will fire events on the object that owns the list
 			Object newGuy = list.AddNew();
 

@@ -296,29 +296,29 @@ namespace WeSay.Data
 
 		#region IList Members
 
-		int System.Collections.IList.Add(object value)
+		int IList.Add(object value)
 		{
 			T item = (T)value;
 			Add(item);
 			return IndexOf(item);
 		}
 
-		void System.Collections.IList.Clear()
+		void IList.Clear()
 		{
 			Clear();
 		}
 
-		bool System.Collections.IList.Contains(object value)
+		bool IList.Contains(object value)
 		{
 			return Contains((T)value);
 		}
 
-		int System.Collections.IList.IndexOf(object value)
+		int IList.IndexOf(object value)
 		{
 			return IndexOf((T)value);
 		}
 
-		void System.Collections.IList.Insert(int index, object value)
+		void IList.Insert(int index, object value)
 		{
 			Insert(index, (T)value);
 		}
@@ -331,7 +331,7 @@ namespace WeSay.Data
 			}
 		}
 
-		bool System.Collections.IList.IsReadOnly
+		bool IList.IsReadOnly
 		{
 			get
 			{
@@ -339,7 +339,7 @@ namespace WeSay.Data
 			}
 		}
 
-		void System.Collections.IList.Remove(object value)
+		void IList.Remove(object value)
 		{
 			Remove((T)value);
 		}
@@ -352,13 +352,13 @@ namespace WeSay.Data
 			}
 		}
 
-		void System.Collections.IList.RemoveAt(int index)
+		void IList.RemoveAt(int index)
 		{
 			CheckIndex(index);
 			RemoveAt(index);
 		}
 
-		object System.Collections.IList.this[int index]
+		object IList.this[int index]
 		{
 			get
 			{
@@ -430,7 +430,7 @@ namespace WeSay.Data
 
 		#region ICollection Members
 
-		void System.Collections.ICollection.CopyTo(Array array, int index)
+		void ICollection.CopyTo(Array array, int index)
 		{
 			if (array == null)
 			{
@@ -457,7 +457,7 @@ namespace WeSay.Data
 			}
 		}
 
-		int System.Collections.ICollection.Count
+		int ICollection.Count
 		{
 			get
 			{
@@ -465,7 +465,7 @@ namespace WeSay.Data
 			}
 		}
 
-		bool System.Collections.ICollection.IsSynchronized
+		bool ICollection.IsSynchronized
 		{
 			get
 			{
@@ -481,7 +481,7 @@ namespace WeSay.Data
 		}
 	  }
 
-		object System.Collections.ICollection.SyncRoot
+		object ICollection.SyncRoot
 		{
 		  get
 		  {
@@ -501,14 +501,14 @@ namespace WeSay.Data
 
 		#region IEnumerable Members
 
-		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+		IEnumerator IEnumerable.GetEnumerator()
 		{
 		  return GetEnumerator();
 		}
 
-	  protected virtual System.Collections.IEnumerator GetEnumerator()
+	  protected virtual IEnumerator GetEnumerator()
 	  {
-		return ((System.Collections.IEnumerable) _list).GetEnumerator();
+		return ((IEnumerable) _list).GetEnumerator();
 	  }
 
 	  #endregion

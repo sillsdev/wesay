@@ -5,6 +5,7 @@ using System.Threading;
 using System.Windows.Forms;
 using CommandLine;
 using Reporting;
+using WeSay.App;
 using WeSay.App.Properties;
 using WeSay.Data;
 using WeSay.Foundation.Progress;
@@ -12,6 +13,7 @@ using WeSay.LexicalModel;
 using WeSay.LexicalModel.Db4o_Specific;
 using WeSay.LexicalModel.Tests;
 using WeSay.Project;
+using WeSay.UI;
 
 namespace WeSay.App
 {
@@ -74,7 +76,6 @@ namespace WeSay.App
 			{
 				TabbedForm tabbedForm = new TabbedForm();
 
-				LiftUpdateService liftUpdateService=null;
 
 				using (IRecordListManager recordListManager = MakeRecordListManager(project))
 				{
@@ -82,7 +83,7 @@ namespace WeSay.App
 					tabbedForm.Text = "WeSay: " + project.Name;
 					Application.DoEvents();
 
-					liftUpdateService = SetupUpdateService(recordListManager);
+					LiftUpdateService liftUpdateService = SetupUpdateService(recordListManager);
 					liftUpdateService.DoLiftUpdateNow(true);
 
 					//MONO bug as of 1.1.18 cannot bitwise or FileShare on FileStream constructor
@@ -94,6 +95,7 @@ namespace WeSay.App
 					}
 					project.Tasks = builder.Tasks;
 					Application.DoEvents();
+
 					tabbedForm.ContinueLaunchingAfterInitialDisplay();
 
 					//run the ui
@@ -103,6 +105,11 @@ namespace WeSay.App
 					liftUpdateService.DoLiftUpdateNow(true);
 					BackupService.BackupToExternal("h:\\" + project.Name + ".zip");
 				}
+				Logger.WriteEvent("App Exiting Normally.");
+			}
+			catch (IOException e)
+			{
+				ErrorReporter.ReportNonFatalMessage(e.Message);
 			}
 			finally
 			{
@@ -119,7 +126,6 @@ namespace WeSay.App
 					((IDisposable)builder).Dispose();
 			}
 
-			Logger.WriteEvent("App Exiting Normally.");
 			Logger.ShutDown();
 			Settings.Default.Save();
 			ReleaseMutexForThisProject();
@@ -159,13 +165,13 @@ namespace WeSay.App
 				return false;
 			}
 
-			string name =Path.GetFileNameWithoutExtension(liftPath);
-			string parentName = Directory.GetParent(liftPath).Parent.Name;
-			if (!(Environment.OSVersion.Platform == PlatformID.Unix))
-			{
-				name = name.ToLower();
-				parentName = parentName.ToLower();
-			}
+			//string name =Path.GetFileNameWithoutExtension(liftPath);
+			//string parentName = Directory.GetParent(liftPath).Parent.Name;
+			//if (!(Environment.OSVersion.Platform == PlatformID.Unix))
+			//{
+			//    name = name.ToLower();
+			//    parentName = parentName.ToLower();
+			//}
 
 			if (!File.Exists(liftPath))
 			{
@@ -201,32 +207,32 @@ namespace WeSay.App
 				return true;
 			}
 
-			ProgressState progressState = new WeSay.Foundation.ConsoleProgress();//new ProgressState(progressDialogHandler);
-			using (WeSay.UI.ProgressDialog dlg = new WeSay.UI.ProgressDialog())
-			{
-				if (!PreprocessLift())
+				//ProgressState progressState = new WeSay.Foundation.ConsoleProgress();//new ProgressState(progressDialogHandler);
+				using (ProgressDialog dlg = new ProgressDialog())
 				{
-					return false;
-				}
+					if (!PreprocessLift())
+					{
+						return false;
+					}
 
-				dlg.Overview = "Please wait while WeSay updates its caches to match the new or modified LIFT file.";
-				BackgroundWorker cacheBuildingWork = new BackgroundWorker();
-				cacheBuildingWork.DoWork += new DoWorkEventHandler(builder.OnDoWork);
-				dlg.BackgroundWorker = cacheBuildingWork;
-				dlg.CanCancel = true;
-				dlg.ShowDialog();
-				if (dlg.DialogResult != DialogResult.OK)
-				{
-					return false;
+					dlg.Overview = "Please wait while WeSay updates its caches to match the new or modified LIFT file.";
+					BackgroundWorker cacheBuildingWork = new BackgroundWorker();
+					cacheBuildingWork.DoWork += new DoWorkEventHandler(builder.OnDoWork);
+					dlg.BackgroundWorker = cacheBuildingWork;
+					dlg.CanCancel = true;
+					dlg.ShowDialog();
+					if (dlg.DialogResult != DialogResult.OK)
+					{
+						return false;
+					}
+					LiftUpdateService.LiftIsFreshNow();
 				}
-				LiftUpdateService.LiftIsFreshNow();
-			}
 			return true;
-		}
+			}
 
 		private static bool PreprocessLift()
-		{
-			using (WeSay.UI.ProgressDialog dlg = new WeSay.UI.ProgressDialog())
+			{
+			using (ProgressDialog dlg = new ProgressDialog())
 			{
 				dlg.Overview = "Please wait while WeSay preprocesses your LIFT file.";
 				BackgroundWorker preprocessWorker = new BackgroundWorker();
@@ -239,13 +245,13 @@ namespace WeSay.App
 		}
 
 		static void OnDoPreprocessLiftWork(object sender, DoWorkEventArgs e)
-		{
+			{
 			//((BackgroundWorker)sender).ReportProgress(
 			((BackgroundWorkerState) e.Argument).StatusLabel = "Preprocessing...";
-			string lift = Project.WeSayWordsProject.Project.PathToLiftFile;
+			string lift = WeSayWordsProject.Project.PathToLiftFile;
 			string output = LiftIO.Utilities.ProcessLiftForLaterMerging(lift);
 			MoveTempOverRealAndBackup(lift, output);
-		}
+			}
 
 
 		private static void MoveTempOverRealAndBackup(string existingPath, string newFilePath)
@@ -256,7 +262,7 @@ namespace WeSay.App
 			while (File.Exists(backupName + i))
 			{
 				i++;
-			}
+		}
 			backupName += i;
 
 			File.Move(existingPath, backupName);
@@ -331,10 +337,10 @@ namespace WeSay.App
 			ExceptionHandler.Init();
 		}
 
-		private static void HandleTopLevelError(object sender, ThreadExceptionEventArgs e)
-		{
-			throw new NotImplementedException();
-		}
+		//private static void HandleTopLevelError(object sender, ThreadExceptionEventArgs e)
+		//{
+		//    throw new NotImplementedException();
+		//}
 
 
 		private static IRecordListManager MakeRecordListManager(WeSayWordsProject project)

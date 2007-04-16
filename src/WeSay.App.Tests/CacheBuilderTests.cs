@@ -208,8 +208,10 @@ namespace WeSay.Project.Tests
 			{
 				IList<LexEntry> x = db.Query<LexEntry>();
 				Assert.AreEqual(2, x.Count);
-				Assert.AreEqual("one", x[1].Id); //got the wrong order here
-				Assert.AreEqual(1, x[1].Senses.Count); // sensitive to order (shame)
+
+				int index = (x[0].Id == "one")?0:1;
+				Assert.AreEqual("one", x[index].Id); //got the wrong order here
+				Assert.AreEqual(1, x[index].Senses.Count); // sensitive to order (shame)
 			}
 			Assert.AreEqual(ProgressState.StateValue.Finished, _progress.State);
 		}

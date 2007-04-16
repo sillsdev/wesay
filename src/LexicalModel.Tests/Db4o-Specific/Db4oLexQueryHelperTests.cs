@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using NUnit.Framework;
-using WeSay.Data;
 using WeSay.Language;
 using WeSay.LexicalModel.Db4o_Specific;
 
@@ -60,7 +59,7 @@ namespace WeSay.LexicalModel.Tests
 			_entriesList.Add(new LexEntry(null, g));
 			_entriesList.Add(new LexEntry(null, g));
 			CycleDatabase();
-			LexEntry found = Db4oLexQueryHelper.FindObjectFromGuid<LexEntry>(_dataSource, g);
+			Db4oLexQueryHelper.FindObjectFromGuid<LexEntry>(_dataSource, g);
 		}
 		[Test]
 		public void FindEntriesFromGloss()
@@ -100,14 +99,14 @@ namespace WeSay.LexicalModel.Tests
 			Assert.AreEqual(0, entryToMatch.Senses.Count);
 
 			//add sense to empty entry
-			LexSense sense = (LexSense) new LexSense();
+			LexSense sense = new LexSense();
 			sense.Gloss["en"] = "money place";
 			Db4oLexQueryHelper.AddSenseToLexicon(_recordListManager, lexemeForm, sense);
 			Assert.AreEqual(1, entryToMatch.Senses.Count);
 
 			//add sense to  entry which already has one sense
-			LexSense sense2 = (LexSense)new LexSense();
-			Db4oLexQueryHelper.AddSenseToLexicon(_recordListManager, lexemeForm, sense);
+			LexSense sense2 = new LexSense();
+			Db4oLexQueryHelper.AddSenseToLexicon(_recordListManager, lexemeForm, sense2);
 			Assert.AreEqual(2, entryToMatch.Senses.Count);
 
 			sense.Gloss["en"] = "side of river";

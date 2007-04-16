@@ -1,9 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using Db4objects.Db4o;
-using Db4objects.Db4o.Query;
 using NUnit.Framework;
 using WeSay.Data;
 using WeSay.Foundation;
@@ -53,10 +47,10 @@ namespace WeSay.LexicalModel.Tests
 			_entriesList.Add(entry);
 
 			int activations = Db4oLexModelHelper.Singleton.ActivationCount;
-			entry = CycleDatabase();
+			CycleDatabase();
 			Assert.AreEqual(activations + 1, Db4oLexModelHelper.Singleton.ActivationCount);
 			//get the same entry again
-			IList<LexEntry> matches = _dataSource.Data.Query<LexEntry>();
+			_dataSource.Data.Query<LexEntry>();
 			Assert.AreEqual(activations+1, Db4oLexModelHelper.Singleton.ActivationCount);
 		}
 
@@ -78,7 +72,7 @@ namespace WeSay.LexicalModel.Tests
 	public void TempCreateLittleFile()
 	{
 		string path = @"C:\WeSay\SampleProjects\Thai\wesay\test.words";
-		using (Db4oDataSource ds = new WeSay.Data.Db4oDataSource(path))
+		using (Db4oDataSource ds = new Db4oDataSource(path))
 		{
 			if (Db4oLexModelHelper.Singleton != null)
 			{

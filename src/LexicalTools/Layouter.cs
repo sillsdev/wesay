@@ -74,7 +74,7 @@ namespace WeSay.LexicalTools
 
 
 
-		protected Control MakeBoundControl(WeSay.Language.MultiText multiTextToBindTo, Field field)
+		protected Control MakeBoundControl(MultiText multiTextToBindTo, Field field)
 		{
 			MultiTextControl m;
 			if (_previouslyGhostedControlToReuse == null)
@@ -95,7 +95,7 @@ namespace WeSay.LexicalTools
 		{
 			foreach (WeSayTextBox box in control.TextBoxes)
 			{
-				WeSay.UI.TextBinding binding = new WeSay.UI.TextBinding(multiTextToBindTo, box.WritingSystem.Id, box);
+				TextBinding binding = new TextBinding(multiTextToBindTo, box.WritingSystem.Id, box);
 				binding.ChangeOfWhichItemIsInFocus += new EventHandler<CurrentItemEventArgs>(_detailList.OnBinding_ChangeOfWhichItemIsInFocus);
 			}
 		}
@@ -145,13 +145,13 @@ namespace WeSay.LexicalTools
 		protected GhostBinding MakeGhostBinding(IBindingList list, string ghostPropertyName, WritingSystem writingSystem,
 			WeSayTextBox entry)
 		{
-			WeSay.UI.GhostBinding binding = new WeSay.UI.GhostBinding(list, ghostPropertyName, writingSystem, entry);
+			GhostBinding binding = new GhostBinding(list, ghostPropertyName, writingSystem, entry);
 			binding.Triggered += new GhostBinding.GhostTriggered(OnGhostBindingTriggered);
 			binding.CurrentItemChanged += new EventHandler<CurrentItemEventArgs>(_detailList.OnBinding_ChangeOfWhichItemIsInFocus);
 			return binding;
 		}
 
-		protected virtual void OnGhostBindingTriggered(GhostBinding sender, IBindingList list, int index, MultiTextControl previouslyGhostedControlToReuse, bool doGoToNextField, System.EventArgs args)
+		protected virtual void OnGhostBindingTriggered(GhostBinding sender, IBindingList list, int index, MultiTextControl previouslyGhostedControlToReuse, bool doGoToNextField, EventArgs args)
 		{
 			_previouslyGhostedControlToReuse = previouslyGhostedControlToReuse;
 			AddWidgetsAfterGhostTrigger(list, index, sender.ReferenceControl, doGoToNextField);
@@ -173,10 +173,10 @@ namespace WeSay.LexicalTools
 
 		protected static int AddChildrenWidgets(Layouter layouter, IBindingList list, int insertAtRow , int rowCount)
 		{
-			int r;
 
 			for (int i = 0; i < list.Count; i++)
 			{
+			  int r;
 			  if (insertAtRow < 0)
 			  {
 				r = insertAtRow;    // just stick at the end
@@ -200,7 +200,7 @@ namespace WeSay.LexicalTools
 					continue;
 
 				}
-				Control box = null;
+				Control box;
 				switch (customField.DataTypeName)
 				{
 					case "Option":
@@ -225,19 +225,19 @@ namespace WeSay.LexicalTools
 
 		protected Control MakeOptionWidget(WeSayDataObject target, Field field)
 		{
-			WeSay.Foundation.OptionRef optionRefTarget = target.GetOrCreateProperty<WeSay.Foundation.OptionRef>(field.FieldName);
+			OptionRef optionRefTarget = target.GetOrCreateProperty<OptionRef>(field.FieldName);
 
-			OptionsList list = Project.WeSayWordsProject.Project.GetOptionsList(field.OptionsListFile);
+			OptionsList list = WeSayWordsProject.Project.GetOptionsList(field.OptionsListFile);
 			SingleOptionControl control = new SingleOptionControl(optionRefTarget, list, field.WritingSystemIds[0]);
 			SimpleBinding<string> binding = new SimpleBinding<string>(optionRefTarget, control);
 			binding.CurrentItemChanged += new EventHandler<CurrentItemEventArgs>(_detailList.OnBinding_ChangeOfWhichItemIsInFocus);
 			return control;
 		}
 
-		private Control MakeOptionCollectionWidget(WeSayDataObject target, Field field)
+		static private Control MakeOptionCollectionWidget(WeSayDataObject target, Field field)
 		{
-			OptionsList list = Project.WeSayWordsProject.Project.GetOptionsList(field.OptionsListFile);
-			WeSay.Foundation.OptionRefCollection optionRefTarget = target.GetOrCreateProperty<WeSay.Foundation.OptionRefCollection>(field.FieldName);
+			OptionsList list = WeSayWordsProject.Project.GetOptionsList(field.OptionsListFile);
+			OptionRefCollection optionRefTarget = target.GetOrCreateProperty<OptionRefCollection>(field.FieldName);
 			OptionCollectionControl control = new OptionCollectionControl(optionRefTarget, list, field.WritingSystemIds[0]);
 			return control;
 		}

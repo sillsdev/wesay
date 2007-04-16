@@ -30,7 +30,7 @@ namespace WeSay.Data.Tests
 			}
 		}
 
-		public System.Collections.Generic.List<System.Collections.Generic.KeyValuePair<int, long>> GetKeyIdPairs()
+		public List<KeyValuePair<int, long>> GetKeyIdPairs()
 		{
 			IQuery query = _database.Query();
 			query.Constrain(typeof(SimpleIntTestClass));
@@ -46,7 +46,7 @@ namespace WeSay.Data.Tests
 			return result;
 		}
 
-		public System.Collections.Generic.IEnumerable<int> GetKeys(SimpleIntTestClass item)
+		public IEnumerable<int> GetKeys(SimpleIntTestClass item)
 		{
 			List<int> result = new List<int>();
 			result.Add(item.I);
@@ -209,7 +209,7 @@ namespace WeSay.Data.Tests
 		[ExpectedException(typeof(NotSupportedException))]
 		public void ApplySort()
 		{
-			_sortedList.ApplySort(null, System.ComponentModel.ListSortDirection.Ascending);
+			_sortedList.ApplySort(null, ListSortDirection.Ascending);
 		}
 
 		[Test]
@@ -411,7 +411,7 @@ namespace WeSay.Data.Tests
 			}
 		}
 
-		public System.Collections.Generic.List<System.Collections.Generic.KeyValuePair<string, long>> GetKeyIdPairs()
+		public List<KeyValuePair<string, long>> GetKeyIdPairs()
 		{
 			IQuery query = _database.Query();
 			query.Constrain(typeof(TestItem));
@@ -430,7 +430,7 @@ namespace WeSay.Data.Tests
 			return result;
 		}
 
-		public System.Collections.Generic.IEnumerable<string> GetKeys(TestItem item)
+		public IEnumerable<string> GetKeys(TestItem item)
 		{
 			return item.StoredList;
 		}

@@ -78,6 +78,7 @@ namespace WeSay.LexicalModel
 				 && eInfo.ModificationTime.Kind != DateTimeKind.Unspecified;
 		}
 
+/*
 		static private Guid GetGuidOrEmptyFromIdString(string id)
 		{
 			try
@@ -90,6 +91,7 @@ namespace WeSay.LexicalModel
 				return Guid.Empty;
 			}
 		}
+*/
 
 		public LexSense GetOrMakeSense(LexEntry entry, Extensible eInfo)
 		{
@@ -195,12 +197,14 @@ namespace WeSay.LexicalModel
 			//dataObject.GetOrCreateProperty<string>(propertyName) mt));
 		}
 
+/*
 		private static void AddMultiTextProperty(WeSayDataObject dataObject, LiftMultiText contents, string propertyName)
 		{
 			dataObject.Properties.Add(
 				new KeyValuePair<string, object>(propertyName,
 												 MultiText.Create(contents)));
 		}
+*/
 
 		/// <summary>
 		/// Handle LIFT's "field" entity which can be found on any subclass of "extensible"

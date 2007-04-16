@@ -1,10 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Text;
 using Db4objects.Db4o;
-using Db4objects.Db4o.Ext;
-using Db4objects.Db4o.Query;
 using WeSay.Data;
 using WeSay.Foundation;
 using WeSay.Language;
@@ -60,7 +56,7 @@ namespace WeSay.LexicalModel.Db4o_Specific
 			}
 			if (matches.Count > 1)
 			{
-				throw new ApplicationException(String.Format("There were {0} objects found with the guid {1}", matches.Count, guid.ToString()));
+				throw new ApplicationException(String.Format("There were {0} objects found with the guid {1}", matches.Count, guid));
 			}
 			System.Diagnostics.Debug.Assert(matches[0].GetType() == typeof(T));
 			return (T)matches[0];
@@ -73,7 +69,7 @@ namespace WeSay.LexicalModel.Db4o_Specific
 			List<AncestorType> list = new List<AncestorType>(matches.Count);
 			foreach (LanguageForm languageForm in matches)
 			{
-				MultiTextType multiText = languageForm.Parent as MultiTextType;
+				MultiTextType multiText = (MultiTextType)languageForm.Parent;
 
 				//walk up the tree until we find a parent of the desired class
 				WeSayDataObject parent = multiText.ParentAsObject as WeSayDataObject;
@@ -92,7 +88,7 @@ namespace WeSay.LexicalModel.Db4o_Specific
 		static public void AddSenseToLexicon(IRecordListManager recordManager, MultiText lexemeForm, LexSense sense)
 		{
 			//review: the desired semantics of this find are unclear, if we have more than one ws
-			IList<LexEntry> entriesWithSameForm = Db4oLexQueryHelper.FindObjectsFromLanguageForm<LexEntry, LexicalFormMultiText>(recordManager, lexemeForm.GetFirstAlternative());
+			IList<LexEntry> entriesWithSameForm = FindObjectsFromLanguageForm<LexEntry, LexicalFormMultiText>(recordManager, lexemeForm.GetFirstAlternative());
 			if (entriesWithSameForm.Count == 0)
 			{
 				LexEntry entry = new LexEntry();
@@ -110,18 +106,5 @@ namespace WeSay.LexicalModel.Db4o_Specific
 		{
 			return form.Form == "findme" && form.Parent.GetType() == typeof(LexicalFormMultiText);
 		}
-
-		// The Damerau-Levenshtein distance is equal to the minimal number of insertions, deletions, substitutions and transpositions needed to transform one string into anothe
-		// http://en.wikipedia.org/wiki/Damerau-Levenshtein_distance
-		// This algorithm is O(|x||y|) time and O(min(|x|,|y|)) space in worst and average case
-		// Ukkonen 1985 Algorithms for approximate string matching. Information and Control 64, 100-118.
-		// Eugene W. Myers 1986. An O (N D) difference algorithm and its variations. Algorithmica 1:2, 251-266.
-		// are algorithm that can compute the edit distance in O(editdistance(x,y)^2) time
-		// and O(k) space
-		// using a diagonal transition algorithm
-
-		// Ukkonen's cut-off heuristic is faster than the original Sellers 1980
-
-		// returns int.MaxValue if distance is greater than cutoff.
 	}
 }

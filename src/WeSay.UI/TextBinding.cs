@@ -105,9 +105,9 @@ namespace WeSay.UI
 			{
 				_inMidstOfChange = true;
 
-				if (_dataTarget as MultiText != null)
+				if (_dataTarget is MultiText)
 				{
-					MultiText text = _dataTarget as MultiText;
+					MultiText text = (MultiText)_dataTarget;
 					text[_writingSystemId] = s;
 				}
 				//else if (_dataTarget as IBindingList != null)

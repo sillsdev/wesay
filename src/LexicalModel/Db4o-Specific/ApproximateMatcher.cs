@@ -87,8 +87,23 @@ namespace WeSay.LexicalModel.Db4o_Specific
 			}
 			return bestMatches;
 		}
+
+
 		public const int EditDistanceLargerThanMax = int.MaxValue;
 
+
+		// The Damerau-Levenshtein distance is equal to the minimal number of insertions, deletions, substitutions and transpositions needed to transform one string into anothe
+		// http://en.wikipedia.org/wiki/Damerau-Levenshtein_distance
+		// This algorithm is O(|x||y|) time and O(min(|x|,|y|)) space in worst and average case
+		// Ukkonen 1985 Algorithms for approximate string matching. Information and Control 64, 100-118.
+		// Eugene W. Myers 1986. An O (N D) difference algorithm and its variations. Algorithmica 1:2, 251-266.
+		// are algorithm that can compute the edit distance in O(editdistance(x,y)^2) time
+		// and O(k) space
+		// using a diagonal transition algorithm
+
+		// Ukkonen's cut-off heuristic is faster than the original Sellers 1980
+
+		// returns int.MaxValue if distance is greater than cutoff.
 		public static int EditDistance(string list1, string list2, int maxEditDistance)
 		{
 			const int deletionCost = 1;

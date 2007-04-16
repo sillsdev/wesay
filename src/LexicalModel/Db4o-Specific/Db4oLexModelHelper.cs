@@ -24,14 +24,14 @@ namespace WeSay.LexicalModel.Db4o_Specific
 		/// order to create the test database.
 		/// </summary>
 		/// <param name="container"></param>
-		public static void Deinitialize(Db4objects.Db4o.IObjectContainer container)
+		public static void Deinitialize(IObjectContainer container)
 		{
 			System.Diagnostics.Debug.Assert(_singleton._container == container);
 			_singleton = null;
 		}
 
 		[CLSCompliant(false)]
-		public static void Initialize(Db4objects.Db4o.IObjectContainer container)
+		public static void Initialize(IObjectContainer container)
 		{
 			System.Diagnostics.Debug.Assert(container != null);
 			if (_singleton != null && container == _singleton._container)
@@ -78,7 +78,7 @@ namespace WeSay.LexicalModel.Db4o_Specific
 			set { this._doNotActivateTypes = value; }
 		}
 
-		private Db4oLexModelHelper(Db4objects.Db4o.IObjectContainer container)
+		private Db4oLexModelHelper(IObjectContainer container)
 		{
 			_container = container;
 			if (container == null)

@@ -136,14 +136,14 @@ namespace WeSay.LexicalTools
 			_semanticDomainQuestionsFileName = semanticDomainQuestionsFileName;
 			if (!File.Exists(semanticDomainQuestionsFileName))
 			{
-				string pathInProject = Path.Combine(Project.WeSayWordsProject.Project.PathToWeSaySpecificFilesDirectoryInProject, semanticDomainQuestionsFileName);
+				string pathInProject = Path.Combine(WeSayWordsProject.Project.PathToWeSaySpecificFilesDirectoryInProject, semanticDomainQuestionsFileName);
 				if (File.Exists(pathInProject))
 				{
 					_semanticDomainQuestionsFileName = pathInProject;
 				}
 				else
 				{
-					string pathInProgramDir = Path.Combine(Project.WeSayWordsProject.Project.ApplicationCommonDirectory, semanticDomainQuestionsFileName);
+					string pathInProgramDir = Path.Combine(WeSayWordsProject.Project.ApplicationCommonDirectory, semanticDomainQuestionsFileName);
 					if (!File.Exists(pathInProgramDir))
 					{
 						throw new ApplicationException(
@@ -596,7 +596,7 @@ namespace WeSay.LexicalTools
 			XmlTextReader reader = null;
 			try
 			{
-				reader = new System.Xml.XmlTextReader(_semanticDomainQuestionsFileName);
+				reader = new XmlTextReader(_semanticDomainQuestionsFileName);
 				reader.MoveToContent();
 				if (!reader.IsStartElement("semantic-domain-questions"))
 				{
@@ -605,7 +605,7 @@ namespace WeSay.LexicalTools
 				}
 				string ws = reader.GetAttribute("lang");
 				// should verify that this writing system is in optionslist
-				_semanticDomainWritingSystem = Project.BasilProject.Project.WritingSystems[ws];
+				_semanticDomainWritingSystem = BasilProject.Project.WritingSystems[ws];
 				string semanticDomainType = reader.GetAttribute("semantic-domain-type");
 				// should verify that domain type matches type of optionList in semantic domain field
 
@@ -669,7 +669,7 @@ namespace WeSay.LexicalTools
 			if (_semanticDomainOptionsList == null)
 			{
 				_semanticDomainOptionsList =
-						Project.WeSayWordsProject.Project.GetOptionsList(_semanticDomainField.OptionsListFile);
+						WeSayWordsProject.Project.GetOptionsList(_semanticDomainField.OptionsListFile);
 			}
 			_entries = RecordListManager.GetSortedList(new SemanticDomainSortHelper(RecordListManager.DataSource, _semanticDomainField.FieldName));
 

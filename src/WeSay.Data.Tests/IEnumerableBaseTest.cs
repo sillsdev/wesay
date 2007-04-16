@@ -17,7 +17,7 @@ namespace WeSay.Data.Tests.IEnumerableTests
 		[Test]
 		public void Enumerator()
 		{
-			System.Collections.IEnumerator enumerator = this._enumerable.GetEnumerator();
+			IEnumerator enumerator = this._enumerable.GetEnumerator();
 			Assert.IsNotNull(enumerator);
 		}
 
@@ -36,7 +36,7 @@ namespace WeSay.Data.Tests.IEnumerableTests
 		[Test]
 		public void Current()
 		{
-			System.Collections.IEnumerator enumerator = this._enumerable.GetEnumerator();
+			IEnumerator enumerator = this._enumerable.GetEnumerator();
 			T prevCurrent = default(T);
 			for (int i = 0; i < _itemCount; ++i)
 			{
@@ -52,7 +52,7 @@ namespace WeSay.Data.Tests.IEnumerableTests
 		[Test]
 		public void MoveNext()
 		{
-			System.Collections.IEnumerator enumerator = this._enumerable.GetEnumerator();
+			IEnumerator enumerator = this._enumerable.GetEnumerator();
 			int i = 0;
 			while (enumerator.MoveNext())
 			{
@@ -64,7 +64,7 @@ namespace WeSay.Data.Tests.IEnumerableTests
 		[Test]
 		public void Reset()
 		{
-			System.Collections.IEnumerator enumerator = this._enumerable.GetEnumerator();
+			IEnumerator enumerator = this._enumerable.GetEnumerator();
 			enumerator.Reset();
 			if (this._itemCount > 0)
 			{
@@ -91,7 +91,7 @@ namespace WeSay.Data.Tests.IEnumerableTests
 		[ExpectedException(typeof(InvalidOperationException))]
 		public void CurrentThrowsBeforeMoveNext()
 		{
-			System.Collections.IEnumerator enumerator = this._enumerable.GetEnumerator();
+			IEnumerator enumerator = this._enumerable.GetEnumerator();
 			T current = (T)enumerator.Current;
 		}
 
@@ -104,7 +104,7 @@ namespace WeSay.Data.Tests.IEnumerableTests
 		[ExpectedException(typeof(InvalidOperationException))]
 		public void CurrentThrowsAfterResetBeforeMoveNext()
 		{
-			System.Collections.IEnumerator enumerator = this._enumerable.GetEnumerator();
+			IEnumerator enumerator = this._enumerable.GetEnumerator();
 			enumerator.MoveNext();
 			enumerator.Reset();
 			T current = (T)enumerator.Current;
@@ -118,7 +118,7 @@ namespace WeSay.Data.Tests.IEnumerableTests
 		[ExpectedException(typeof(InvalidOperationException))]
 		public void CurrentThrowsAtEndOfCollection()
 		{
-			System.Collections.IEnumerator enumerator = this._enumerable.GetEnumerator();
+			IEnumerator enumerator = this._enumerable.GetEnumerator();
 			while (enumerator.MoveNext())
 			{
 			}

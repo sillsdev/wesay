@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
 using NUnit.Framework;
 
 namespace WeSay.Data.Tests.Db4oBindingListTests
@@ -73,11 +72,11 @@ namespace WeSay.Data.Tests.Db4oBindingListTests
 		public void TestItemHasChildWithEmptyString()
 		{
 			_bindingList.SodaQuery = TestItemHasChildWithEmptyString;
-			Console.WriteLine("Items having child with empty string:");
-			foreach (TestItem item in _bindingList)
-			{
-				Console.WriteLine("  {0}", item);
-			}
+			//Console.WriteLine("Items having child with empty string:");
+			//foreach (TestItem item in _bindingList)
+			//{
+			//    Console.WriteLine("  {0}", item);
+			//}
 			Assert.AreEqual(1, _bindingList.Count);
 			Assert.AreEqual("Gianna", _bindingList[0].StoredString);
 		}
@@ -98,11 +97,11 @@ namespace WeSay.Data.Tests.Db4oBindingListTests
 		public void TestItemWithNoChildren()
 		{
 			_bindingList.SodaQuery = TestItemWithNoChildren;
-			Console.WriteLine("Items with no children:");
-			foreach (TestItem item in _bindingList)
-			{
-				Console.WriteLine("  {0}", item);
-			}
+			//Console.WriteLine("Items with no children:");
+			//foreach (TestItem item in _bindingList)
+			//{
+			//    Console.WriteLine("  {0}", item);
+			//}
 			Assert.AreEqual(1, _bindingList.Count);
 			Assert.AreEqual("Third", _bindingList[0].StoredString);
 		}
@@ -124,11 +123,11 @@ namespace WeSay.Data.Tests.Db4oBindingListTests
 		public void TestItemWithNoChildrenOrWithChildWithEmptyString()
 		{
 			_bindingList.SodaQuery = TestItemWithNoChildrenOrWithChildWithEmptyString;
-			Console.WriteLine("Items with no children or having child with empty string:");
-			foreach (TestItem item in _bindingList)
-			{
-				Console.WriteLine("  {0}", item);
-			}
+			//Console.WriteLine("Items with no children or having child with empty string:");
+			//foreach (TestItem item in _bindingList)
+			//{
+			//    Console.WriteLine("  {0}", item);
+			//}
 			Assert.AreEqual(2, _bindingList.Count);
 			Assert.AreEqual("Gianna", _bindingList[0].StoredString);
 			Assert.AreEqual("Third", _bindingList[1].StoredString);
@@ -161,7 +160,7 @@ namespace WeSay.Data.Tests.Db4oBindingListTests
 			}
 			public override string ToString()
 			{
-				return Hour.ToString() + ":" + Minute.ToString();
+				return Hour + ":" + Minute;
 			}
 		}
 
@@ -173,7 +172,7 @@ namespace WeSay.Data.Tests.Db4oBindingListTests
 			{
 				string result = Label;
 				foreach(Time time in Times){
-					result += " " + time.ToString();
+					result += " " + time;
 				}
 				return result;
 			}

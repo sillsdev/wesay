@@ -53,7 +53,7 @@ namespace WeSay.LexicalModel.Tests
 			   _dataSource = _recordListManager.DataSource;
 			Db4oLexModelHelper.Initialize(_dataSource.Data);
 
-			_entriesList = new WeSay.Data.Db4oRecordList<LexEntry>(_dataSource);
+			_entriesList = new Db4oRecordList<LexEntry>(_dataSource);
 			if (_entriesList.Count > 0)
 				return _entriesList[0];
 			else

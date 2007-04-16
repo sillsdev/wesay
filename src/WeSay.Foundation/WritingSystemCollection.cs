@@ -8,10 +8,6 @@ namespace WeSay.Language
 	[ReflectorType("WritingSystemCollection")]
 	public class WritingSystemCollection : Dictionary<string, WritingSystem>
 	{
-
-//        private string _vernacularWritingSystemDefaultId;
-//        private string _analysisWritingSystemDefaultId;
-
 		public void Load(string path)
 		{
 			NetReflectorReader r = new NetReflectorReader(MakeTypeTable());
@@ -55,7 +51,7 @@ namespace WeSay.Language
 			}
 		}
 
-		private NetReflectorTypeTable MakeTypeTable()
+		static private NetReflectorTypeTable MakeTypeTable()
 		{
 			NetReflectorTypeTable t = new NetReflectorTypeTable();
 			t.Add(typeof(WritingSystemCollection));
@@ -180,7 +176,7 @@ namespace WeSay.Language
 			get
 			{
 				WritingSystem ws;
-				if (this.TryGetValue(TestWritingSystemAnalId, out ws))
+				if (TryGetValue(TestWritingSystemAnalId, out ws))
 				{
 					return ws;
 				}
@@ -197,7 +193,7 @@ namespace WeSay.Language
 			get
 			{
 				WritingSystem ws;
-				if (this.TryGetValue(TestWritingSystemVernId, out ws))
+				if (TryGetValue(TestWritingSystemVernId, out ws))
 				{
 					return ws;
 				}

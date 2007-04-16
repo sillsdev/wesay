@@ -1,17 +1,19 @@
 #if DEBUG
-#define THROW_ON_OPTIMIZATION_FAILURE
+//#define THROW_ON_OPTIMIZATION_FAILURE
 #endif
 
 using System;
 using System.Runtime.Serialization;
+#if THROW_ON_OPTIMIZATION_FAILURE
 using Db4objects.Db4o.Diagnostic;
+#endif
 
 namespace WeSay.Data
 {
   [Serializable]
   public class Db4oException : System.Data.Common.DbException
   {
-	public Db4oException() : base() {}
+	public Db4oException() {}
 	public Db4oException(string message):base(message) {}
 	protected Db4oException(SerializationInfo info, StreamingContext context) : base(info, context) {}
 	public Db4oException(string message, Exception innerException) : base(message, innerException) {}
@@ -30,7 +32,7 @@ namespace WeSay.Data
 			_db = Db4objects.Db4o.Db4oFactory.OpenFile(filePath);
 			if (_db == null)
 			{
-				throw new System.IO.IOException("Problem opening " + filePath);
+				throw new System.IO.IOException("Problem opening " + filePath + ". Maybe it is in use by another program.");
 			}
 #if THROW_ON_OPTIMIZATION_FAILURE
 			((Db4objects.Db4o.YapStream)_db).GetNativeQueryHandler().QueryOptimizationFailure += new Db4objects.Db4o.Inside.Query.QueryOptimizationFailureHandler(OnQueryOptimizationFailure);

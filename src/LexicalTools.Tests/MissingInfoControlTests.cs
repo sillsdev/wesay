@@ -4,7 +4,6 @@ using WeSay.Data;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Db4o_Specific;
 using WeSay.Project;
-using WeSay.UI;
 
 namespace WeSay.LexicalTools.Tests
 {
@@ -19,7 +18,7 @@ namespace WeSay.LexicalTools.Tests
 		public class MissingTranslationFilter:IFilter<LexEntry>
 		{
 
-			private bool IsMissingTranslation(LexEntry entry)
+			static private bool IsMissingTranslation(LexEntry entry)
 			{
 				if (entry == null)
 				{
@@ -66,7 +65,7 @@ namespace WeSay.LexicalTools.Tests
 			_recordListManager = new InMemoryRecordListManager();
 			this._missingTranslation = new MissingTranslationFilter();
 			_recordListManager.Register(this._missingTranslation);
-			_missingTranslationRecordList = _recordListManager.GetListOfTypeFilteredFurther<LexEntry>(this._missingTranslation);
+			_missingTranslationRecordList = _recordListManager.GetListOfTypeFilteredFurther(this._missingTranslation);
 			_missingTranslationRecordList.Add(CreateTestEntry("apple", "red thing", "An apple a day keeps the doctor away."));
 			_missingTranslationRecordList.Add(CreateTestEntry("banana", "yellow food", "Monkeys like to eat bananas."));
 			_missingTranslationRecordList.Add(CreateTestEntry("car", "small motorized vehicle", "Watch out for cars when you cross the street."));

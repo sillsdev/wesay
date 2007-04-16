@@ -13,7 +13,7 @@ namespace WeSay.LexicalModel
 		new public class WellKnownProperties : WeSayDataObject.WellKnownProperties
 		{
 			static public string PartOfSpeech = "POS";
-			static public string Definition = "def";
+			static public string Definition = "definition";
 		} ;
 
 		public LexSense(WeSayDataObject parent)
@@ -26,7 +26,7 @@ namespace WeSay.LexicalModel
 
 		/// <summary>
 		/// Used when a list of these items adds via "AddNew", where we have to have a default constructor.
-		/// The parent is added in an even handler, on the parent, which is called by the list.
+		/// The parent is added in an event handler, on the parent, which is called by the list.
 		/// </summary>
 		public LexSense(): this(null)
 		{

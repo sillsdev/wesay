@@ -1,5 +1,7 @@
 using System;
 using System.ComponentModel;
+using System.Text;
+using WeSay.Data;
 using WeSay.Foundation;
 using WeSay.Language;
 using WeSay.LexicalModel.Db4o_Specific;
@@ -23,11 +25,11 @@ namespace WeSay.LexicalModel
 		/// the exporter will make up a reasonable one.
 		/// </summary>
 		private string _id;
-		private WeSay.Data.InMemoryBindingList<LexSense> _senses;
+		private InMemoryBindingList<LexSense> _senses;
 		private DateTime _creationTime;
 		private DateTime _modificationTime;
 
-		new public class WellKnownProperties
+		new public class WellKnownProperties : WeSayDataObject.WellKnownProperties
 		{
 			static public string Citation = "citation";
 		} ;
@@ -45,6 +47,10 @@ namespace WeSay.LexicalModel
 		private void Init(string id,Guid guid)
 		{
 			_id = id;
+			if (_id != null)
+			{
+				_id = _id.Trim().Normalize(NormalizationForm.FormD);
+			}
 			if (guid == Guid.Empty)
 			{
 				_guid = Guid.NewGuid();
@@ -54,9 +60,9 @@ namespace WeSay.LexicalModel
 				_guid = guid;
 			}
 			this._lexicalForm = new LexicalFormMultiText(this);
-			this._senses = new WeSay.Data.InMemoryBindingList<LexSense>();
-			this.CreationTime = DateTime.UtcNow;
-			this.ModificationTime = CreationTime;
+			this._senses = new InMemoryBindingList<LexSense>();
+			CreationTime = DateTime.UtcNow;
+			ModificationTime = CreationTime;
 
 			WireUpEvents();
 		}

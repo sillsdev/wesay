@@ -264,7 +264,7 @@ namespace WeSay.LexicalTools
 				this._presentationModel.DomainNames[index];
 		}
 
-		void _domainName_SelectedIndexChanged(object sender, System.EventArgs e)
+		void _domainName_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			_presentationModel.CurrentDomainIndex = _domainName.SelectedIndex;
 			RefreshCurrentDomainAndQuestion();

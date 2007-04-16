@@ -36,10 +36,10 @@ namespace WeSay.UI
 
 		#region Properties
 
-		private WeSayAutoCompleteTextBox.EntryMode mode = EntryMode.Text;
+		private EntryMode mode = EntryMode.Text;
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
 		[Browsable(false)]
-		public WeSayAutoCompleteTextBox.EntryMode Mode
+		public EntryMode Mode
 		{
 			get
 			{

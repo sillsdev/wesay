@@ -694,7 +694,7 @@ namespace WeSay.Data
 
 			#region IEnumerator Members
 
-			object System.Collections.IEnumerator.Current
+			object IEnumerator.Current
 			{
 				get
 				{

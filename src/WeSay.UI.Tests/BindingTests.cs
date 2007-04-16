@@ -1,3 +1,4 @@
+using System.Drawing;
 using NUnit.Framework;
 using WeSay.Language;
 using WeSay.Project;
@@ -17,12 +18,12 @@ namespace WeSay.UI.Tests
 		public void TargetToWidget()
 		{
 			MultiText text = new MultiText();
-			WeSayTextBox widget = new WeSayTextBox(BasilProject.Project.WritingSystems.TestGetWritingSystemAnal);
-			TextBinding binding = new TextBinding(text, BasilProject.Project.WritingSystems.TestGetWritingSystemAnal.Id, widget);
+			WeSayTextBox widget = new WeSayTextBox(new WritingSystem("vernacular", new Font("Arial", 12)));
+			new TextBinding(text, "vernacular", widget);
 
-			text[BasilProject.Project.WritingSystems.TestGetWritingSystemAnal.Id] = "hello";
+			text["vernacular"] = "hello";
 			Assert.AreEqual("hello", widget.Text);
-			text[BasilProject.Project.WritingSystems.TestGetWritingSystemAnal.Id] = null;
+			text["vernacular"] = null;
 			Assert.AreEqual("",widget.Text);
 		}
 
@@ -30,14 +31,14 @@ namespace WeSay.UI.Tests
 		public void WidgetToTarget()
 		{
 			MultiText text = new MultiText();
-			WeSayTextBox widget = new WeSayTextBox(BasilProject.Project.WritingSystems.TestGetWritingSystemAnal);
+			WeSayTextBox widget = new WeSayTextBox(new WritingSystem("vernacular", new Font("Arial", 12)));
 
-			TextBinding binding = new TextBinding(text, BasilProject.Project.WritingSystems.TestGetWritingSystemAnal.Id, widget);
+			new TextBinding(text, "vernacular", widget);
 
 			widget.Text = "aaa";
-			Assert.AreEqual("aaa", text[BasilProject.Project.WritingSystems.TestGetWritingSystemAnal.Id]);
+			Assert.AreEqual("aaa", text["vernacular"]);
 			widget.Text = "";
-			Assert.AreEqual("", text[BasilProject.Project.WritingSystems.TestGetWritingSystemAnal.Id]);
+			Assert.AreEqual("", text["vernacular"]);
 		}
 	}
 }

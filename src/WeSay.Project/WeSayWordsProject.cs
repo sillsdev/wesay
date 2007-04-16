@@ -3,12 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Threading;
 using System.Windows.Forms;
 using System.Xml;
 using Reporting;
 using WeSay.Foundation;
-using WeSay.Foundation.Progress;
 using WeSay.LexicalModel;
 
 namespace WeSay.Project
@@ -76,9 +74,9 @@ namespace WeSay.Project
 			{
 				File.Delete(PathToProjectTaskInventory);
 			}
-			File.Copy(Path.Combine(ApplicationTestDirectory, "tasks.xml"), WeSayWordsProject.Project.PathToProjectTaskInventory, true);
+			File.Copy(Path.Combine(ApplicationTestDirectory, "tasks.xml"), Project.PathToProjectTaskInventory, true);
 
-			Reporting.ErrorReporter.OkToInteractWithUser = false;
+			ErrorReporter.OkToInteractWithUser = false;
 			LoadFromProjectDirectoryPath(_projectDirectoryPath);
 			StringCatalogSelector = "en";
 		}
@@ -155,11 +153,11 @@ namespace WeSay.Project
 				try
 				{
 					projectDoc = new XmlDocument();
-					projectDoc.Load(WeSayWordsProject.Project.PathToProjectTaskInventory);
+					projectDoc.Load(Project.PathToProjectTaskInventory);
 				}
 				catch (Exception e)
 				{
-					Reporting.ErrorReporter.ReportNonFatalMessage("There was a problem reading the task xml. " + e.Message);
+					ErrorReporter.ReportNonFatalMessage("There was a problem reading the task xml. " + e.Message);
 					projectDoc = null;
 				}
 			}
@@ -167,7 +165,7 @@ namespace WeSay.Project
 		}
 
 
-		private bool CheckLexiconIsInValidProjectDirectory(string liftPath)
+		static private bool CheckLexiconIsInValidProjectDirectory(string liftPath)
 		{
 			DirectoryInfo lexiconDirectoryInfo = Directory.GetParent(liftPath);
 			DirectoryInfo projectRootDirectoryInfo = lexiconDirectoryInfo.Parent;
@@ -219,7 +217,7 @@ namespace WeSay.Project
 		{
 			get
 			{
-				return System.IO.Path.Combine(PathToWeSaySpecificFilesDirectoryInProject, "tasks.xml");
+				return Path.Combine(PathToWeSaySpecificFilesDirectoryInProject, "tasks.xml");
 			}
 		}
 
@@ -316,7 +314,7 @@ namespace WeSay.Project
 
 		public string GetPathToDb4oLexicalModelDBFromPathToLift(string pathToLift)
 		{
-				return System.IO.Path.Combine(GetPathToCacheFromPathToLift(pathToLift), Path.GetFileNameWithoutExtension(pathToLift) + ".words");
+				return Path.Combine(GetPathToCacheFromPathToLift(pathToLift), Path.GetFileNameWithoutExtension(pathToLift) + ".words");
 		}
 
 
@@ -397,7 +395,7 @@ namespace WeSay.Project
 				return list;
 			}
 
-			string pathInProject = Path.Combine(this.PathToWeSaySpecificFilesDirectoryInProject, name);
+			string pathInProject = Path.Combine(PathToWeSaySpecificFilesDirectoryInProject, name);
 			if (File.Exists(pathInProject))
 			{
 				LoadOptionsList(pathInProject);
@@ -431,7 +429,7 @@ namespace WeSay.Project
 		public  Dictionary<string, string> GetFieldToOptionListNameDictionary()
 		{
 			Dictionary<string, string> fieldToOptionListName = new Dictionary<string, string>();
-			foreach (Field field in this.ViewTemplate.Fields)
+			foreach (Field field in ViewTemplate.Fields)
 			{
 				if (field.OptionsListFile != null && field.OptionsListFile.Trim() != "")
 				{
@@ -441,7 +439,7 @@ namespace WeSay.Project
 			return fieldToOptionListName;
 		}
 
-		private string GetListNameFromFileName(string file)
+		static private string GetListNameFromFileName(string file)
 		{
 			return file.Substring(0, file.IndexOf(".xml"));
 		}

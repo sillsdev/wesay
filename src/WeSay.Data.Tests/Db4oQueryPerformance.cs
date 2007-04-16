@@ -1,10 +1,8 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using Db4objects.Db4o;
-using Db4objects.Db4o.Query;
+using Db4objects.Db4o.Config;
 using NUnit.Framework;
 
 namespace WeSay.Data.Tests
@@ -30,38 +28,48 @@ namespace WeSay.Data.Tests
 
 		class LanguageForm
 		{
-			public string _writingSystemId;
-			public string _form;
+			private string _writingSystemId;
+			private string _form;
 
 			public LanguageForm(string writingSystemId, string form)
 			{
 				_writingSystemId = writingSystemId;
 				_form = form;
 			}
+
+			public string WritingSystemId
+			{
+				get { return this._writingSystemId; }
+			}
+
+			public string Form
+			{
+				get { return this._form; }
+			}
 		}
 
-		protected Db4objects.Db4o.IObjectContainer _db;
+		protected IObjectContainer _db;
 		protected string _filePath;
-
+		private static IConfiguration _db4oConfiguration;
 
 		[SetUp]
 		public void SetUp()
 		{
 			_filePath = Path.GetTempFileName();
-			Db4objects.Db4o.Config.IConfiguration db4oConfiguration = Db4objects.Db4o.Db4oFactory.Configure();
-			Db4objects.Db4o.Config.IObjectClass objectClass = db4oConfiguration.ObjectClass(typeof(WeSay.Data.Tests.Db4oQueryPerformance.LanguageForm));
+			//Db4objects.Db4o.Config.IConfiguration db4oConfiguration = Db4oFactory.Configure();
+			//Db4objects.Db4o.Config.IObjectClass objectClass = db4oConfiguration.ObjectClass(typeof(LanguageForm));
 			// objectClass.ObjectField("_writingSystemId").Indexed(true);
 			// objectClass.ObjectField("_form").Indexed(true);
 
-			_db = Db4objects.Db4o.Db4oFactory.OpenFile(_filePath);
-			((Db4objects.Db4o.YapStream)_db).GetNativeQueryHandler().QueryOptimizationFailure += new Db4objects.Db4o.Inside.Query.QueryOptimizationFailureHandler(OnQueryOptimizationFailure);
+			_db = Db4oFactory.OpenFile(_filePath);
+			((YapStream)_db).GetNativeQueryHandler().QueryOptimizationFailure += new Db4objects.Db4o.Inside.Query.QueryOptimizationFailureHandler(OnQueryOptimizationFailure);
 
 			for (int i = 0; i < 10000; i++)
 			{
 				Entry e = new Entry();
 				e.name = new MultiText();
-				e.name._forms[0] = new LanguageForm("en", "en-" + i.ToString());
-				//e.name._forms[1] = new LanguageForm("fr", "fr-"+i.ToString());
+				e.name._forms[0] = new LanguageForm("en", "en-" + i);
+				//e.name._forms[1] = new LanguageForm("fr", "fr-"+i);
 				e.name._singleForm = new LanguageForm("en", i.ToString());
 				_db.Set(e);
 			}
@@ -86,7 +94,7 @@ namespace WeSay.Data.Tests
 			stopwatch.Start();
 			IList<Entry> matches = _db.Query<Entry>(delegate(Entry e)
 								  {
-									  return e.name._forms[0]._form == "en-99";
+									  return e.name._forms[0].Form == "en-99";
 								  });
 			stopwatch.Stop();
 			Assert.AreEqual(1, matches.Count);
@@ -101,7 +109,7 @@ namespace WeSay.Data.Tests
 			stopwatch.Start();
 			IList<Entry> matches = _db.Query<Entry>(delegate(Entry e)
 								  {
-									  return e.name._singleForm._form == "99";
+									  return e.name._singleForm.Form == "99";
 								  });
 			stopwatch.Stop();
 			Assert.AreEqual(1, matches.Count);
@@ -117,7 +125,7 @@ namespace WeSay.Data.Tests
 			stopwatch.Start();
 			IList<LanguageForm> matches = _db.Query<LanguageForm>(delegate(LanguageForm f)
 								  {
-									  return f._form == "99";
+									  return f.Form == "99";
 								  });
 			stopwatch.Stop();
 			Assert.AreEqual(1, matches.Count);
@@ -134,13 +142,14 @@ namespace WeSay.Data.Tests
 			stopwatch.Start();
 			IList<LanguageForm> matches = db.Query<LanguageForm>(delegate(LanguageForm f)
 								  {
-									  return f._form == "99";
+									  return f.Form == "99";
 								  });
 			stopwatch.Stop();
 			Assert.AreEqual(1, matches.Count);
 			Console.WriteLine("SimpleStringSearch " + stopwatch.ElapsedMilliseconds / 1000.0 + " seconds");
 
 			db.Dispose();
+			_db4oConfiguration.Diagnostic().RemoveAllListeners();
 		}
 
 
@@ -169,21 +178,21 @@ namespace WeSay.Data.Tests
 			}
 		}
 
-		private IObjectContainer MakeFlatStringDatabase(bool doIndex)
+		static private IObjectContainer MakeFlatStringDatabase(bool doIndex)
 		{
 			string path = Path.GetTempFileName();
-			Db4objects.Db4o.Config.IConfiguration db4oConfiguration = Db4objects.Db4o.Db4oFactory.Configure();
+			_db4oConfiguration = Db4oFactory.Configure();
 			if (doIndex)
 			{
-				Db4objects.Db4o.Config.IObjectClass objectClass = db4oConfiguration.ObjectClass(typeof(WeSay.Data.Tests.Db4oQueryPerformance.LanguageForm));
+				IObjectClass objectClass = _db4oConfiguration.ObjectClass(typeof(LanguageForm));
 				objectClass.ObjectField("_form").Indexed(true);
 			}
 
 			Db4objects.Db4o.Diagnostic.DiagnosticToConsole listener = new Db4objects.Db4o.Diagnostic.DiagnosticToConsole();
-			db4oConfiguration.Diagnostic().AddListener(listener);
+			_db4oConfiguration.Diagnostic().AddListener(listener);
 
-			Db4objects.Db4o.IObjectContainer db = Db4objects.Db4o.Db4oFactory.OpenFile(path);
-			((Db4objects.Db4o.YapStream)db).GetNativeQueryHandler().QueryOptimizationFailure += new Db4objects.Db4o.Inside.Query.QueryOptimizationFailureHandler(OnQueryOptimizationFailure);
+			IObjectContainer db = Db4oFactory.OpenFile(path);
+			((YapStream)db).GetNativeQueryHandler().QueryOptimizationFailure += new Db4objects.Db4o.Inside.Query.QueryOptimizationFailureHandler(OnQueryOptimizationFailure);
 
 			for (int i = 0; i < 10000; i++)
 			{
@@ -195,7 +204,7 @@ namespace WeSay.Data.Tests
 		}
 
 
-		void OnQueryOptimizationFailure(object sender, Db4objects.Db4o.Inside.Query.QueryOptimizationFailureEventArgs args)
+		static void OnQueryOptimizationFailure(object sender, Db4objects.Db4o.Inside.Query.QueryOptimizationFailureEventArgs args)
 		{
 			Console.WriteLine("Query not Optimized:");
 			Console.WriteLine(args.Reason);
