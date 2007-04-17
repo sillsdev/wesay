@@ -12,6 +12,7 @@
 		  <visibility>Visible</visibility>
 		  <writingSystems>
 			<id>bth</id>
+			<id>bth-fonipa</id>
 		  </writingSystems>
 		</field>
 		<field>
@@ -113,7 +114,7 @@
   <task id="Gather Words" class="WeSay.LexicalTools.GatherWordListTask" assembly="LexicalTools">
 	<entries ref="All Entries" />
 	<label>Collect Word List</label>
-	<description>Collect new words given words in another language.</description>
+	<description>Collect new words by translating from words in another language.</description>
 	<wordListFileName>sampleWordList.txt</wordListFileName>
 	<wordListWritingSystemId>en</wordListWritingSystemId>
 	<viewTemplate ref="Default View Template" />
