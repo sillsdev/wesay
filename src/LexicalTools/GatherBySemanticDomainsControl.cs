@@ -190,7 +190,13 @@ namespace WeSay.LexicalTools
 
 	  private void _btnAddWord_Click(object sender, EventArgs e)
 	  {
-		string word = this._vernacularBox.TextBoxes[0].Text;
+
+		string word = this._vernacularBox.TextBoxes[0].Text.Trim();
+		if (String.IsNullOrEmpty(word))
+		{
+			return;
+		}
+
 		_presentationModel.AddWord(word);
 		_vernacularBox.ClearAllText();
 		RefreshCurrentWords();
