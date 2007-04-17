@@ -71,7 +71,7 @@
 
 
   <Target Name="VerifySample">
-	<CreateItem Include="$(BaseDirectory)\SampleProjects\**\*.words"
+	<CreateItem Include="$(BaseDirectory)\SampleProjects\**\*.lift"
 				Exclude="$(BaseDirectory)\SampleProjects\src\**\*.*">
 	  <Output TaskParameter="Include" ItemName="WeSayFiles"/>
 	</CreateItem>
@@ -82,19 +82,7 @@
   </Target>
 
   <Target Name="Package">
-<!--    <CreateItem Include="$(BaseDirectory)\SampleProjects\**\*.lift.xml"
-				Exclude="$(BaseDirectory)\SampleProjects\src\**\*.*">
-	  <Output TaskParameter="Include" ItemName="liftFragments"/>
-	</CreateItem>
-
-	<Move SourceFiles="@(liftFragments)"
-		  DestinationFiles="$(BaseDirectory)\SampleProjects\%(liftFragments.RecursiveDir)\base.lift.xml"/>
-		  -->
-	<!-- The above is a work around for the time being. When we no longer create time sensitive names, then
-		 this will not be a problem and can be removed -->
-
 	<MSBuild Projects="$(BaseDirectory)\src\Setup\Setup.wixproj"/>
-
   </Target>
 
   <Import Project="$(BaseDirectory)\bld\Version.Targets"/>
