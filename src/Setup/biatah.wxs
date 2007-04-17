@@ -14,7 +14,7 @@
 
 	  <Component Id ="biatahShortcuts" Guid ="FB0973B3-8502-42ea-9B78-0879A3CAD40B">
 		<Shortcut Id="RunBiatahShortcut"  Directory="WeSayShortcutDir" Name="Run Biatah Sample"
-			Target="[!WeSay.App.exe]" Arguments ='"[!biatah.words]"' WorkingDirectory="biatahWeSay" Icon ="SampleRunIcon" />
+			Target="[!WeSay.App.exe]" Arguments ='"[!biatah.lift]"' WorkingDirectory="biatahWeSay" Icon ="SampleRunIcon" />
 
 		<Shortcut Id="SetupBiatahShortcut"  Directory="WeSayShortcutDir" Name="Setup Biatah Sample"
 				  Target="[!WeSay.Setup.exe]"  Arguments ='"[biatahSampleDir]"'
@@ -39,7 +39,6 @@
 		<Directory Id="biatahWordsCacheDir" Name="Cache">
 		  <Component Id="biatahWordsCache" Guid="{EF2EBD26-0A05-4DC1-8B74-C4EFDA1547F6}">
 			<File Id="biatah.words" Name="biatah.words" Source="..\..\sampleprojects\biatah\wesay\cache\biatah.words" />
-			<File Id="updatePoint" Name="updatePoint" Source="..\..\sampleprojects\biatah\wesay\updatePoint" />
 			<File Id="AddExamples.cache" Name="Add Examples.cache" KeyPath="yes" Source="..\..\sampleprojects\biatah\wesay\Cache\Add Examples.cache" />
 			<File Id="AddMeanings.cache" Name="Add Meanings.cache" Source="..\..\sampleprojects\biatah\wesay\Cache\Add Meanings.cache" />
 			<File Id="Dictionary.cache" Name="Dictionary.cache"  Source="..\..\sampleprojects\biatah\wesay\Cache\Dictionary.cache" />

@@ -59,6 +59,10 @@ namespace WeSay.Project
 			WeSayWordsProject project = new WeSayWordsProject();
 			string s = Path.Combine(GetPretendProjectDirectory(),"WeSay");
 			s = Path.Combine(s,"pretend.lift");
+
+			//jdh added, amidst some confusion about why it was suddenly needed, on april 17,2007
+		  //  LiftIO.Utilities.CreateEmptyLiftFile(s, "InitializeForTests()", true);
+
 			project.SetupProjectDirForTests(s);
 		}
 
@@ -224,7 +228,7 @@ namespace WeSay.Project
 		public override void Dispose()
 		{
 			base.Dispose();
-			if (_liftFileStreamForLocking != null)
+			if (LiftIsLocked)
 			{
 				ReleaseLockOnLift();
 			}
@@ -243,6 +247,13 @@ namespace WeSay.Project
 			_liftFileStreamForLocking = null;
 		}
 
+		public bool LiftIsLocked
+		{
+			get
+			{
+				return _liftFileStreamForLocking != null;
+			}
+		}
 
 		public void LockLift()
 		{

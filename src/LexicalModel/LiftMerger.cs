@@ -34,6 +34,9 @@ namespace WeSay.LexicalModel
 		{
 			//Guid guid = GetGuidOrEmptyFromIdString(eInfo.Id);
 			LexEntry entry = null;
+#if merging
+	 This really slows us down to a crawl if the incoming lift has guids, yet
+	 we aren't really merging, so its a waste of time.
 			if (eInfo.Guid != Guid.Empty)
 			{
 				entry = Db4oLexQueryHelper.FindObjectFromGuid<LexEntry>(_dataSource, eInfo.Guid);
@@ -43,7 +46,7 @@ namespace WeSay.LexicalModel
 					return null; // no merging needed
 				}
 			}
-
+#endif
 			if (entry == null)
 			{
 				entry = new LexEntry(eInfo.Id, eInfo.Guid);

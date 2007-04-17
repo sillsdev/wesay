@@ -366,9 +366,11 @@ namespace WeSay.LexicalModel.Tests
 		{
 		}
 
+
 		[Test]
 		public  void ChangedEntryFound()
 		{
+#if merging
 			Guid g = Guid.NewGuid();
 			Extensible extensibleInfo = CreateFullextensibleInfo(g);
 
@@ -391,11 +393,13 @@ namespace WeSay.LexicalModel.Tests
 			_merger.FinishEntry(x);
 			RefreshEntriesList();
 			Assert.AreEqual(2, _entries.Count);
+#endif
 		}
 
 		[Test]
 		public  void UnchangedEntryPruned()
 		{
+#if merging
 			Guid g = Guid.NewGuid();
 			Extensible extensibleInfo = CreateFullextensibleInfo( g);
 
@@ -406,6 +410,7 @@ namespace WeSay.LexicalModel.Tests
 
 			LexEntry found = _merger.GetOrMakeEntry(extensibleInfo);
 			Assert.IsNull(found);
+#endif
 		}
 
 		[Test]

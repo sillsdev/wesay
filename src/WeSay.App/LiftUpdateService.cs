@@ -15,7 +15,7 @@ namespace WeSay.App
 {
 	public class LiftUpdateService
 	{
-		private const string s_updatePointFileName = "updatePoint";
+		//private const string s_updatePointFileName = "updatePoint";
 		private const int _checkFrequency = 10;
 		private int _commitCount;
 		private Db4oDataSource _datasource;
@@ -103,7 +103,7 @@ namespace WeSay.App
 					exporter.AddNoGeneric(records);
 					exporter.End();
 
-					WriteUpdatePointFile(_timeOfLastQueryForNewRecords);
+					RecordUpdateTime(_timeOfLastQueryForNewRecords);
 				}
 				finally
 				{
@@ -174,32 +174,45 @@ namespace WeSay.App
 		/// </summary>
 		public static void LiftIsFreshNow()
 		{
-			WriteUpdatePointFile(DateTime.UtcNow);
+			RecordUpdateTime(DateTime.UtcNow);
 		}
 
-		protected static void WriteUpdatePointFile(DateTime time)
+		protected static void RecordUpdateTime(DateTime time)
 		{
-			string file = Path.Combine(LiftDirectory, s_updatePointFileName);
-			if (!File.Exists(file))
-			{
-				File.Create(file).Close();
-			}
+//            string file = Path.Combine(LiftDirectory, s_updatePointFileName);
+//            if (!File.Exists(file))
+//            {
+//                File.Create(file).Close();
+//            }
+//
+//            File.SetLastWriteTimeUtc(file, time);
 
-			File.SetLastWriteTimeUtc(file, time);
+			bool wasLocked = WeSayWordsProject.Project.LiftIsLocked;
+			if (wasLocked)
+			{
+				WeSayWordsProject.Project.ReleaseLockOnLift();
+			}
+			File.SetLastWriteTimeUtc(WeSayWordsProject.Project.PathToLiftFile, time);
+			if (wasLocked)
+			{
+				WeSayWordsProject.Project.LockLift();
+			}
 		}
 
 		private  DateTime GetLastUpdateTime()
 		{
 			Debug.Assert(Directory.Exists(LiftDirectory));
-			string file = Path.Combine(LiftDirectory, s_updatePointFileName);
-			if (!File.Exists(file))
-			{
-				return DateTime.MinValue;
-			}
-			else
-			{
-				return File.GetLastWriteTimeUtc(file);
-			}
+//            string file = Path.Combine(LiftDirectory, s_updatePointFileName);
+//            if (!File.Exists(file))
+//            {
+//                return DateTime.MinValue;
+//            }
+//            else
+//            {
+//                return File.GetLastWriteTimeUtc(file);
+//            }
+
+			return File.GetLastWriteTimeUtc(WeSayWordsProject.Project.PathToLiftFile);
 		}
 
 		public IList  GetRecordsNeedingUpdateInLift()

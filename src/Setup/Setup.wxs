@@ -64,26 +64,26 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 			<Registry Root="HKCU" Key="SOFTWARE\WeSay\Components\WeSay.App.exe" KeyPath="yes" />
 
 			<File Id="WeSay.App.exe" Name="WeSay.App.exe"  Source="..\..\output\release\WeSay.App.exe" />
-			<File Id="WeSayWordsIconFile" Name="WeSayWordsFile.ico" Source="..\..\artwork\WeSay.File.ico" />
+			<File Id="WeSayLiftIconFile" Name="WeSayLIFTFile.ico" Source="..\..\artwork\WeSay.File.ico" />
 
 			<!--- connect file types to icons and program to launch -->
 
-			<ProgId Id='WeSay.wordsfile' Description='WeSay Words data file'>
-			  <Extension Id='words' ContentType='application/words'>
+			<ProgId Id='WeSay.LIFTFile' Description='Lexical Interchange FormaT file'>
+			  <Extension Id='lift' ContentType='application/words'>
 				<Verb Id='open' Command='Open' TargetFile ='WeSay.App.exe' Argument='"%1"' />
 				<Verb Id='configure' Command='Configure WeSay Project' TargetFile='WeSay.Setup.exe' Argument='"%1"' />
 			  </Extension>
 			</ProgId>
 
-			<RemoveRegistryKey Action ='removeOnUninstall' Root ='HKCR' Key ='.words'/>
-			<RemoveRegistryKey Action ='removeOnUninstall' Root ='HKCR' Key ='WeSay.wordsfile'/>
+			<RemoveRegistryKey Action ='removeOnUninstall' Root ='HKCR' Key ='.lift'/>
+			<RemoveRegistryKey Action ='removeOnUninstall' Root ='HKCR' Key ='WeSay.LIFTFile'/>
 
-			<Registry  Id='WordsIcon1' Root='HKCR' Key='.words' Action='write'
-			  Type='string' Value='WeSay.wordsfile' />
-			<Registry Id='WordsIcon2' Root='HKCR' Key='WeSay.wordsfile' Action='write'
-			  Type='string' Value='WeSay Words data file' />
-			<Registry Id='WordsIcon3' Root='HKCR' Key='WeSay.wordsfile\DefaultIcon' Action='write'
-			  Type='string' Value='[!WeSayWordsIconFile], 0' />
+			<Registry  Id='WordsIcon1' Root='HKCR' Key='.lift' Action='write'
+			  Type='string' Value='WeSay.LIFTFile' />
+			<Registry Id='WordsIcon2' Root='HKCR' Key='WeSay.LIFTFile' Action='write'
+			  Type='string' Value='Lexical Interchange FormaT file' />
+			<Registry Id='WordsIcon3' Root='HKCR' Key='WeSay.LIFTFile\DefaultIcon' Action='write'
+			  Type='string' Value='[!WeSayLiftIconFile], 0' />
 
 			<!-- another way:                 <Registry Id='LuaReg8' Root='HKCR' Key='VisualStudio.luaproj.8.0\Shell\Open\Command' Action='write'
 					 Type='string' Value='"[ENVPATH_2005]" "%1"'/> -->

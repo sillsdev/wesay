@@ -164,7 +164,15 @@ namespace WeSay.Setup
 			try
 			{
 				this.Project = new WeSayWordsProject();
-				this.Project.LoadFromProjectDirectoryPath(path);
+
+				if (path.Contains(".lift"))
+				{
+					this.Project.LoadFromLiftLexiconPath(path);
+				}
+				else
+				{
+					this.Project.LoadFromProjectDirectoryPath(path);
+				}
 			}
 			catch (Exception e)
 			{

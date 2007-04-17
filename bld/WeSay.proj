@@ -148,13 +148,6 @@
   </Target>
 
   <Target Name="Clean">
-	<MSBuild Projects="$(BaseDirectory)\lib\lift\LiftIO.sln"
-			 Targets="Clean"
-			 Properties="Configuration=Debug" />
-	<MSBuild Projects="$(BaseDirectory)\lib\lift\LiftIO.sln"
-			 Targets="Clean"
-			 Properties="Configuration=Release" />
-
 	<MSBuild Projects="$(BaseDirectory)\src\WeSay.sln"
 			 Targets="Clean"
 			 Properties="Configuration=Debug" />

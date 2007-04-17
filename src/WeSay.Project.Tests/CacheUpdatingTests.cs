@@ -41,7 +41,6 @@ namespace WeSay.Project.Tests
 		{
 			_project.Dispose();
 			Directory.Delete(_experimentDir, true);
-			_project.Dispose();
 		}
 		private static string MakeDir(string existingParent, string newChild)
 		{
@@ -84,9 +83,10 @@ namespace WeSay.Project.Tests
 		public void OlderLiftFileTriggersUpdate()
 		{
 			MakeDir(_weSayDir, "Cache");
-			IObjectContainer db = Db4oFactory.OpenFile(Project.WeSayWordsProject.Project.PathToDb4oLexicalModelDB);
-			db.Close();
-			db.Dispose();
+			using (IObjectContainer db = Db4oFactory.OpenFile(Project.WeSayWordsProject.Project.PathToDb4oLexicalModelDB))
+			{
+				db.Close();
+			}
 
 			File.SetLastWriteTimeUtc(_liftPath, TimeOfUpdate.Subtract(new TimeSpan(1)));
 			OutOfDate();
