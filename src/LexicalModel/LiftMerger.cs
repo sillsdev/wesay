@@ -117,6 +117,12 @@ namespace WeSay.LexicalModel
 			MergeIn(entry.LexicalForm, forms);
 		}
 
+		public void MergeInCitationForm(LexEntry entry, LiftMultiText contents)
+		{
+			MultiText m = entry.GetOrCreateProperty<MultiText>(LexEntry.WellKnownProperties.Citation);
+			MergeIn(m, contents);
+		}
+
 		public void MergeInGloss(LexSense sense, LiftMultiText forms)
 		{
 		   sense.Gloss.MergeInWithAppend(MultiText.Create(forms), "; ");
@@ -146,6 +152,12 @@ namespace WeSay.LexicalModel
 		public void MergeInTranslationForm(LexExampleSentence example, LiftMultiText forms)
 		{
 			MergeIn(example.Translation, forms);
+		}
+
+		public void MergeInSource(LexExampleSentence example, string source)
+		{
+			OptionRef o = example.GetOrCreateProperty<OptionRef>(LexExampleSentence.WellKnownProperties.Source);
+			o.Value = source;
 		}
 
 		public void MergeInDefinition(LexSense sense, LiftMultiText contents)

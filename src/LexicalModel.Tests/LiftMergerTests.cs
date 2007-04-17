@@ -172,14 +172,13 @@ namespace WeSay.LexicalModel.Tests
 			Assert.AreEqual("dos", ex.Sentence["ws-two"]);
 		}
 
-		[Test, Ignore("waiting on lift model discussion")]
+		[Test]
 		public void ExampleSourcePreserved()
 		{
 			LexExampleSentence ex = new LexExampleSentence();
-			_merger.MergeInExampleForm(ex, MakeBasicLiftMultiText());//, "fred");
+			_merger.MergeInSource(ex, "fred");
 
-//            Assert.AreEqual(2, ex.GetProperty<String>(LexExampleSentence.WellKnownProperties.Source));
-//            Assert.AreEqual("dos", ex.Sentence["ws-two"]);
+			Assert.AreEqual("fred", ex.GetProperty<OptionRef>(LexExampleSentence.WellKnownProperties.Source).Value);
 		}
 
 		[Test]
@@ -328,6 +327,22 @@ namespace WeSay.LexicalModel.Tests
 			Assert.AreEqual(2, e.LexicalForm.Count);
 		}
 
+
+		[Test]
+		public void EntryWithCitation()
+		{
+			LexEntry entry = MakeSimpleEntry();
+			LiftMultiText forms = new LiftMultiText();
+			forms.Add("x", "hello");
+			forms.Add("y", "bye");
+			_merger.MergeInCitationForm(entry, forms);
+
+			MultiText citation = entry.GetProperty<MultiText>(LexEntry.WellKnownProperties.Citation);
+			Assert.AreEqual(2, citation.Forms.Length);
+			Assert.AreEqual("hello", citation["x"]);
+			Assert.AreEqual("bye", citation["y"]);
+
+		}
 
 		[Test]
 		public  void EntryWithChildren()

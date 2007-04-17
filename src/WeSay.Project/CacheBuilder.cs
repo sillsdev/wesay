@@ -79,7 +79,7 @@ namespace WeSay.Project
 
 		public static bool  GetSyncPointInCacheMatches(Db4oDataSource dataSource, DateTime when)
 		{
-			SyncPoint point;
+//            SyncPoint point;
 			IList<SyncPoint> result = dataSource.Data.Query<SyncPoint>();
 			if (result.Count > 1)
 			{
@@ -105,8 +105,8 @@ namespace WeSay.Project
 	public class CacheBuilder
 	{
 		private string _sourceLIFTPath;
-		protected WeSay.Foundation.Progress.ProgressState _progress;
-		private WeSay.Data.Db4oRecordList<LexEntry> _prewiredEntries=null;
+		protected ProgressState _progress;
+		private Db4oRecordList<LexEntry> _prewiredEntries=null;
 		private BackgroundWorker _backgroundWorker;
 
 		public CacheBuilder(string sourceLIFTPath)
@@ -188,7 +188,7 @@ namespace WeSay.Project
 			{
 				progress.StatusLabel = "Building Caches...";
 				string tempCacheDirectory = Directory.CreateDirectory(Path.Combine(Path.GetTempPath(), Path.GetRandomFileName())).FullName;
-				Project.WeSayWordsProject.Project.CacheLocationOverride = tempCacheDirectory;
+				WeSayWordsProject.Project.CacheLocationOverride = tempCacheDirectory;
 
 				//same name, but in a temp directory
 				string db4oFileName = Path.GetFileName(WeSayWordsProject.Project.PathToDb4oLexicalModelDB);
@@ -221,7 +221,7 @@ namespace WeSay.Project
 						return;
 					}
 				}
-				 Project.WeSayWordsProject.Project.CacheLocationOverride = null;
+				 WeSayWordsProject.Project.CacheLocationOverride = null;
 				ClearTheIncrementalBackupDirectory();
 
 				//if we got this far without an error, move it
@@ -255,7 +255,7 @@ namespace WeSay.Project
 			}
 			finally
 			{
-				Project.WeSayWordsProject.Project.CacheLocationOverride = null;
+				WeSayWordsProject.Project.CacheLocationOverride = null;
 			}
 		}
 
@@ -292,7 +292,7 @@ namespace WeSay.Project
 			}
 		}
 
-		private void UpdateDashboardStats()
+		static private void UpdateDashboardStats()
 		{
 			foreach (ITask task in WeSayWordsProject.Project.Tasks)
 			{
@@ -343,14 +343,14 @@ namespace WeSay.Project
 							ProgressEventArgs>(
 					parser_SetStepsCompleted);
 
-			parser.ParsingError +=
+			parser.ParsingWarning +=
 				new EventHandler
 					<LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence>.ErrorArgs>(
-					parser_ParsingError);
+					parser_ParsingWarning);
 			parser.ReadFile(doc);
 		}
 
-		void parser_ParsingError(object sender, LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence>.ErrorArgs e)
+		void parser_ParsingWarning(object sender, LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence>.ErrorArgs e)
 		{
 			_progress.WriteToLog(e.Exception.Message);
 		}
@@ -374,14 +374,14 @@ namespace WeSay.Project
 		/*public for unit-tests */
 		public static void ClearTheIncrementalBackupDirectory()
 		{
-			if (!Directory.Exists(WeSay.Project.WeSayWordsProject.Project.PathToLiftBackupDir))
+			if (!Directory.Exists(WeSayWordsProject.Project.PathToLiftBackupDir))
 			{
 				return;
 			}
-			string[] p = Directory.GetFiles(WeSay.Project.WeSayWordsProject.Project.PathToLiftBackupDir, "*.*");
+			string[] p = Directory.GetFiles(WeSayWordsProject.Project.PathToLiftBackupDir, "*.*");
 			if (p.Length > 0)
 			{
-				string newPath = WeSay.Project.WeSayWordsProject.Project.PathToLiftBackupDir + ".old";
+				string newPath = WeSayWordsProject.Project.PathToLiftBackupDir + ".old";
 
 				int i = 0;
 				while (Directory.Exists(newPath + i))
@@ -389,7 +389,7 @@ namespace WeSay.Project
 					i++;
 				}
 				newPath += i;
-				Directory.Move(WeSay.Project.WeSayWordsProject.Project.PathToLiftBackupDir,
+				Directory.Move(WeSayWordsProject.Project.PathToLiftBackupDir,
 							   newPath);
 			}
 		}
