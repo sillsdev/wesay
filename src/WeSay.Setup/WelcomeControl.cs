@@ -77,5 +77,17 @@ namespace WeSay.Setup
 				NewProjectClicked.Invoke(this, null);
 			}
 		}
+
+		private void WelcomeControl_Load(object sender, EventArgs e)
+		{
+			if (openRecentProject.Visible = true)
+			{
+				openRecentProject.Focus();
+			}
+			else
+			{
+				openDifferentProject.Focus();
+			}
+		}
 	}
 }

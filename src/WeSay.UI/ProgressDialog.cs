@@ -187,7 +187,8 @@ namespace WeSay.UI
 			//else if (e.Error != null ||
 			else if (ProgressStateResult != null && ProgressStateResult.ExceptionThatWasEncountered != null)
 			{
-				Reporting.ErrorReporter.ReportException(ProgressStateResult.ExceptionThatWasEncountered, this, false);
+			   //this dialog really can't know whether this was an unexpected exception or not
+				//so don't do this:  Reporting.ErrorReporter.ReportException(ProgressStateResult.ExceptionThatWasEncountered, this, false);
 				this.DialogResult = DialogResult.Abort;//not really matching semantics
 			}
 			else

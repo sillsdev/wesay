@@ -61,7 +61,7 @@ namespace WeSay.Project
 			s = Path.Combine(s,"pretend.lift");
 
 			//jdh added, amidst some confusion about why it was suddenly needed, on april 17,2007
-		  //  LiftIO.Utilities.CreateEmptyLiftFile(s, "InitializeForTests()", true);
+			LiftIO.Utilities.CreateEmptyLiftFile(s, "InitializeForTests()", true);
 
 			project.SetupProjectDirForTests(s);
 		}

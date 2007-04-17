@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Reporting {
+namespace SIL.Utils {
 	using System;
 
 
@@ -70,13 +70,13 @@ namespace Reporting {
 		}
 
 		/// <summary>
-		///   Looks up a localized string similar to Please e-mail this to {0} with this exact subject:  {1}
+		///   Looks up a localized string similar to Please e-mail this to {0}
 		///
-		///{2}.
+		///{1}.
 		/// </summary>
-		internal static string ksPleaseEMailThisTo0WithThisExactSubject12 {
+		internal static string ksPleaseEMailThisToUs {
 			get {
-				return ResourceManager.GetString("ksPleaseEMailThisTo0WithThisExactSubject12", resourceCulture);
+				return ResourceManager.GetString("ksPleaseEMailThisToUs", resourceCulture);
 			}
 		}
 

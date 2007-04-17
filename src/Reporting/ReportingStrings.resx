@@ -120,10 +120,10 @@
   <data name="ks_Ok" xml:space="preserve">
 	<value>&amp;Ok</value>
   </data>
-  <data name="ksPleaseEMailThisTo0WithThisExactSubject12" xml:space="preserve">
-	<value>Please e-mail this to {0} with this exact subject:  {1}
+  <data name="ksPleaseEMailThisToUs" xml:space="preserve">
+	<value>Please e-mail this to {0}
 
-{2}</value>
+{1}</value>
 	<comment>{0}, {1}, and {2} will probably be in English, or at least be readable by English speakers.</comment>
   </data>
   <data name="kstidFieldWorksErrorCaption" xml:space="preserve">

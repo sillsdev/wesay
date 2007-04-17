@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
+using SIL.Utils;
 
 namespace Reporting
 {
@@ -727,7 +728,7 @@ namespace Reporting
 
 			if(s_emailAddress != null)
 			{
-				m_details.Text =String.Format (ReportingStrings.ksPleaseEMailThisTo0WithThisExactSubject12,s_emailAddress, s_emailSubject, m_details.Text);
+				m_details.Text =String.Format (ReportingStrings.ksPleaseEMailThisToUs,s_emailAddress, m_details.Text);
 			}
 			Clipboard.SetDataObject(m_details.Text, true);
 

@@ -44,7 +44,7 @@ namespace WeSay.Setup
 			this.panel1.Location = new System.Drawing.Point(0, 0);
 			this.panel1.Name = "panel1";
 			this.panel1.Size = new System.Drawing.Size(530, 45);
-			this.panel1.TabIndex = 1;
+			this.panel1.TabIndex = 0;
 			//
 			// pictureBox1
 			//
@@ -67,7 +67,7 @@ namespace WeSay.Setup
 			this.textBox1.Name = "textBox1";
 			this.textBox1.ReadOnly = true;
 			this.textBox1.Size = new System.Drawing.Size(411, 20);
-			this.textBox1.TabIndex = 2;
+			this.textBox1.TabIndex = 1;
 			this.textBox1.TabStop = false;
 			this.textBox1.Text = "Use this tool to create and configure WeSay Projects.";
 			//
@@ -94,7 +94,7 @@ namespace WeSay.Setup
 			this.openDifferentProject.Location = new System.Drawing.Point(112, 182);
 			this.openDifferentProject.Name = "openDifferentProject";
 			this.openDifferentProject.Size = new System.Drawing.Size(167, 20);
-			this.openDifferentProject.TabIndex = 3;
+			this.openDifferentProject.TabIndex = 1;
 			this.openDifferentProject.TabStop = true;
 			this.openDifferentProject.Text = "Open Different Project";
 			this.openDifferentProject.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.openDifferentProject_LinkClicked);
@@ -108,7 +108,7 @@ namespace WeSay.Setup
 			this.createNewProject.Location = new System.Drawing.Point(112, 212);
 			this.createNewProject.Name = "createNewProject";
 			this.createNewProject.Size = new System.Drawing.Size(145, 20);
-			this.createNewProject.TabIndex = 3;
+			this.createNewProject.TabIndex = 2;
 			this.createNewProject.TabStop = true;
 			this.createNewProject.Text = "Create New Project";
 			this.createNewProject.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.createNewProject_LinkClicked);
@@ -126,6 +126,7 @@ namespace WeSay.Setup
 			this.Controls.Add(this.panel1);
 			this.Name = "WelcomeControl";
 			this.Size = new System.Drawing.Size(530, 338);
+			this.Load += new System.EventHandler(this.WelcomeControl_Load);
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();

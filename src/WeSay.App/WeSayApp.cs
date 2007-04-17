@@ -58,6 +58,7 @@ namespace WeSay.App
 			Gdk.Threads.Init();
 			Application.Init();
 #endif
+
 			WeSayWordsProject project = new WeSayWordsProject();
 			project.StringCatalogSelector = cmdArgs.ui;
 
@@ -164,23 +165,22 @@ namespace WeSay.App
 						liftPath));
 				return false;
 			}
-
-			//string name =Path.GetFileNameWithoutExtension(liftPath);
-			//string parentName = Directory.GetParent(liftPath).Parent.Name;
-			//if (!(Environment.OSVersion.Platform == PlatformID.Unix))
-			//{
-			//    name = name.ToLower();
-			//    parentName = parentName.ToLower();
-			//}
-
-			if (!File.Exists(liftPath))
+			try
 			{
-				ErrorReporter.ReportNonFatalMessage(
-					String.Format(
-						"WeSay tried to find the lexicon at '{0}', but could not find it.\r\n\r\nOn Windows, the location argument can be specified like this:\r\n wesay.exe \"c:\\some directory\\mylanguage\\wesay\\mylanguage.lift\". \r\n\r\nSince WeSay intentionally does not ask users to ever deal with the file system of their computer, you need to setup a shortcut to WeSay which gives the correct path, or use the WeSay Setup program to launch WeSay once. After that, WeSay will remember where it is.",
-						liftPath));
-				return false;
+				using(FileStream fs = File.OpenWrite(liftPath))
+				{
+					fs.Close();
+				}
 			}
+			catch(UnauthorizedAccessException error)
+			{
+						ErrorReporter.ReportNonFatalMessage(
+							String.Format(
+								"WeSay was unable to open the the lexicon at '{0}' for writing, probably because it is locked (ReadOnly is on or another application has it open).",
+								liftPath));
+						return false;
+			}
+
 
 			if (!BringCachesUpToDate(liftPath, project))
 			{
@@ -240,18 +240,34 @@ namespace WeSay.App
 				dlg.BackgroundWorker = preprocessWorker;
 				dlg.CanCancel = true;
 				dlg.ShowDialog();
+				if (dlg.ProgressStateResult.ExceptionThatWasEncountered != null)
+				{
+					Reporting.ErrorReporter.ReportNonFatalMessage(
+						String.Format("WeSay encountered an error while preprocessing the file '{0}'.  Error was: {1}",
+						Project.WeSayWordsProject.Project.PathToLiftFile,
+						dlg.ProgressStateResult.ExceptionThatWasEncountered.Message));
+				}
 				return (dlg.DialogResult == DialogResult.OK);
 			}
 		}
 
 		static void OnDoPreprocessLiftWork(object sender, DoWorkEventArgs e)
+		{
+			BackgroundWorkerState state = (BackgroundWorkerState) e.Argument;
+			state.StatusLabel = "Preprocessing...";
+			try
 			{
-			//((BackgroundWorker)sender).ReportProgress(
-			((BackgroundWorkerState) e.Argument).StatusLabel = "Preprocessing...";
-			string lift = WeSayWordsProject.Project.PathToLiftFile;
-			string output = LiftIO.Utilities.ProcessLiftForLaterMerging(lift);
-			MoveTempOverRealAndBackup(lift, output);
+				string lift = WeSayWordsProject.Project.PathToLiftFile;
+				string output = LiftIO.Utilities.ProcessLiftForLaterMerging(lift);
+				MoveTempOverRealAndBackup(lift, output);
 			}
+			catch (Exception error)
+			{
+				state.ExceptionThatWasEncountered = error;
+				state.State = ProgressState.StateValue.StoppedWithError;
+				throw error; // this will put the exception in the e.Error arg of the RunWorkerCompletedEventArgs
+			}
+		}
 
 
 		private static void MoveTempOverRealAndBackup(string existingPath, string newFilePath)
