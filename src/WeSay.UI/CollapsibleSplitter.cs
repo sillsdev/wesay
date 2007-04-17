@@ -22,14 +22,18 @@ namespace WeSay.UI
 	/// <summary>
 	/// Enumeration to sepcify the visual style to be applied to the CollapsibleSplitter control
 	/// </summary>
-	public enum VisualStyles
+	public enum GripperStyles
 	{
 		Mozilla = 0,
 		XP,
 		Win9x,
 		DoubleDots,
-		Lines
+		Lines,
+		None
 	}
+
+	public enum GripperLocations { Center = 0, LeftOrTop, RightOrBottom };
+
 
 	#endregion
 
@@ -44,7 +48,8 @@ namespace WeSay.UI
 
 		// declare and define some base properties
 		private Control controlToHide;
-		private VisualStyles visualStyle;
+		private GripperStyles _gripperStyle;
+		private GripperLocations _gripperLocation;
 
 	private Border3DStyle border3DStyle;
 	private BorderStyle borderStyle;
@@ -57,8 +62,9 @@ namespace WeSay.UI
 
 	private int gripLength;
 	private int minSize;
+		private int _marginBetweenGripperAndSide = 5;
 
-	  #endregion
+		#endregion
 	public CollapsibleSplitter()
 	{
 	  base.MinSize = 0;
@@ -130,14 +136,31 @@ namespace WeSay.UI
 		/// </summary>
 		[Bindable(true)]
 	  [Category("Collapsing Options")]
-	  [DefaultValue("VisualStyles.XP")]
-		[Description("The visual style that will be painted on the control")]
-		public VisualStyles VisualStyle
+	  [DefaultValue("GripperStyles.XP")]
+		[Description("The visual style of the gripper")]
+		public GripperStyles GripperStyle
 		{
-			get{ return this.visualStyle; }
+			get{ return this._gripperStyle; }
 			set
 			{
-				this.visualStyle = value;
+				this._gripperStyle = value;
+				this.Invalidate();
+			}
+		}
+
+		/// <summary>
+		/// The visual style that will be painted on the control
+		/// </summary>
+		[Bindable(true)]
+		[DefaultValue("GripperStyles.XP")]
+		[Description("Where the gripper shows up")]
+		public GripperLocations GripperLocation
+		{
+			get {
+				return this._gripperLocation; }
+			set
+			{
+				this._gripperLocation = value;
 				this.Invalidate();
 			}
 		}
@@ -340,173 +363,185 @@ namespace WeSay.UI
 
 			#region Vertical Splitter
 			// Check the docking style and create the control rectangle accordingly
-	  if (IsSplitterVertical())
+			if (IsSplitterVertical())
 			{
-				// draw the dots for our control image using a loop
-				int x = r.X+((r.Width - 2) / 2) ;
-		int y = r.Y + ((r.Height - gripLength) / 2);
 
-				switch(visualStyle)
+			// draw the dots for our control image using a loop
+				int x = r.X + ((r.Width - 2)/2);
+				int y = DetermineYCoordForGripperOnVerticalBar(r);
+
+				switch (_gripperStyle)
 				{
-		  case VisualStyles.Mozilla:
-					{
-			  int dotCount = gripLength / 3;
-					  for (int i = 0; i < dotCount; i++)
-					  {
-						// light dot
-						bg.DrawLine(new Pen(SystemColors.ControlLightLight), x, y + (i * 3), x + 1, y + 1 + (i * 3));
-						// dark dot
-						bg.DrawLine(new Pen(SystemColors.ControlDarkDark), x + 1, y + 1 + (i * 3), x + 2, y + 2 + (i * 3));
-						// overdraw the background color as we actually drew 2px diagonal lines, not just dots
-						bg.DrawLine(new Pen(this.BackColor), x + 2, y + 1 + (i * 3), x + 2, y + 2 + (i * 3));
-					  }
-					}
-			break;
-
-		  case VisualStyles.DoubleDots:
-					{
-			  int dotCount = gripLength / 3;
-					  for (int i = 0; i < dotCount; i++)
-					  {
-						// light dot
-						bg.DrawRectangle(new Pen(SystemColors.ControlLightLight), x, y + 1 + (i * 3), 1, 1);
-						// dark dot
-						bg.DrawRectangle(new Pen(SystemColors.ControlDark), x - 1, y + (i * 3), 1, 1);
-						i++;
-						// light dot
-						bg.DrawRectangle(new Pen(SystemColors.ControlLightLight), x + 2, y + 1 + (i * 3), 1, 1);
-						// dark dot
-						bg.DrawRectangle(new Pen(SystemColors.ControlDark), x + 1, y + (i * 3), 1, 1);
-					  }
-					}
-			break;
-
-					case VisualStyles.Win9x:
-
-						bg.DrawLine(new Pen(SystemColors.ControlLightLight), x, y, x + 2, y);
-			bg.DrawLine(new Pen(SystemColors.ControlLightLight), x, y, x, y + gripLength );
-			bg.DrawLine(new Pen(SystemColors.ControlDark), x + 2, y, x + 2, y + gripLength);
-			bg.DrawLine(new Pen(SystemColors.ControlDark), x, y + gripLength, x + 2, y + gripLength);
+					case GripperStyles.Mozilla:
+						{
+							int dotCount = gripLength/3;
+							for (int i = 0; i < dotCount; i++)
+							{
+								// light dot
+								bg.DrawLine(new Pen(SystemColors.ControlLightLight), x, y + (i*3), x + 1, y + 1 + (i*3));
+								// dark dot
+								bg.DrawLine(new Pen(SystemColors.ControlDarkDark), x + 1, y + 1 + (i*3), x + 2,
+											y + 2 + (i*3));
+								// overdraw the background color as we actually drew 2px diagonal lines, not just dots
+								bg.DrawLine(new Pen(this.BackColor), x + 2, y + 1 + (i*3), x + 2, y + 2 + (i*3));
+							}
+						}
 						break;
 
-		  case VisualStyles.XP:
-					{
-			  int dotCount = gripLength / 5;
+					case GripperStyles.DoubleDots:
+						{
+							int dotCount = gripLength/3;
+							for (int i = 0; i < dotCount; i++)
+							{
+								// light dot
+								bg.DrawRectangle(new Pen(SystemColors.ControlLightLight), x, y + 1 + (i*3), 1, 1);
+								// dark dot
+								bg.DrawRectangle(new Pen(SystemColors.ControlDark), x - 1, y + (i*3), 1, 1);
+								i++;
+								// light dot
+								bg.DrawRectangle(new Pen(SystemColors.ControlLightLight), x + 2, y + 1 + (i*3), 1, 1);
+								// dark dot
+								bg.DrawRectangle(new Pen(SystemColors.ControlDark), x + 1, y + (i*3), 1, 1);
+							}
+						}
+						break;
 
-					  for (int i = 0; i < dotCount; i++)
-					  {
-						// light dot
-						bg.DrawRectangle(new Pen(SystemColors.ControlLight), x, y + (i * 5), 2, 2);
-						// light light dot
-						bg.DrawRectangle(new Pen(SystemColors.ControlLightLight), x + 1, y + 1 + (i * 5), 1, 1);
-						// dark dark dot
-						bg.DrawRectangle(new Pen(SystemColors.ControlDarkDark), x, y + (i * 5), 1, 1);
-						// dark fill
-						bg.DrawLine(new Pen(SystemColors.ControlDark), x, y + (i * 5), x, y + (i * 5) + 1);
-						bg.DrawLine(new Pen(SystemColors.ControlDark), x, y + (i * 5), x + 1, y + (i * 5));
-					  }
-					}
-			break;
+					case GripperStyles.Win9x:
 
-					case VisualStyles.Lines:
-					{
-			  int lineCount = gripLength / 2;
-					  for(int i=0; i < lineCount; i++)
-					  {
-						bg.DrawLine(new Pen(SystemColors.ControlDark), x, y + (i*2), x + 2, y + (i*2));
-					  }
-					}
+						bg.DrawLine(new Pen(SystemColors.ControlLightLight), x, y, x + 2, y);
+						bg.DrawLine(new Pen(SystemColors.ControlLightLight), x, y, x, y + gripLength);
+						bg.DrawLine(new Pen(SystemColors.ControlDark), x + 2, y, x + 2, y + gripLength);
+						bg.DrawLine(new Pen(SystemColors.ControlDark), x, y + gripLength, x + 2, y + gripLength);
+						break;
+
+					case GripperStyles.XP:
+						{
+							int dotCount = gripLength/5;
+
+							for (int i = 0; i < dotCount; i++)
+							{
+								// light dot
+								bg.DrawRectangle(new Pen(SystemColors.ControlLight), x, y + (i*5), 2, 2);
+								// light light dot
+								bg.DrawRectangle(new Pen(SystemColors.ControlLightLight), x + 1, y + 1 + (i*5), 1, 1);
+								// dark dark dot
+								bg.DrawRectangle(new Pen(SystemColors.ControlDarkDark), x, y + (i*5), 1, 1);
+								// dark fill
+								bg.DrawLine(new Pen(SystemColors.ControlDark), x, y + (i*5), x, y + (i*5) + 1);
+								bg.DrawLine(new Pen(SystemColors.ControlDark), x, y + (i*5), x + 1, y + (i*5));
+							}
+						}
+						break;
+
+					case GripperStyles.Lines:
+						{
+							int lineCount = gripLength/2;
+							for (int i = 0; i < lineCount; i++)
+							{
+								bg.DrawLine(new Pen(SystemColors.ControlDark), x, y + (i*2), x + 2, y + (i*2));
+							}
+						}
+						break;
+
+					case GripperStyles.None:
+						{
+						}
 						break;
 				}
 			}
 
 				#endregion
 
-				// Horizontal Splitter support added in v1.2
-				#region Horizontal Splitter
+			// Horizontal Splitter support added in v1.2
+			#region Horizontal Splitter
 
 			else
 			{
+				int y=r.Y + ((r.Height - 2)/2);
 				// draw the dots for our control image using a loop
-		int x = r.X + ((r.Width - gripLength) / 2);
-				int y = r.Y + ((r.Height - 2) / 2);
+				int x = DetermineXCoordForGripperOnHorizontalBar(r);
 
-				switch(visualStyle)
+				switch (_gripperStyle)
 				{
-		  case VisualStyles.Mozilla:
-					{
-					  int dotCount = gripLength / 3;
-					  for (int i = 0; i < dotCount; i++)
-					  {
-						// light dot
-						bg.DrawLine(new Pen(SystemColors.ControlLightLight), x + (i * 3), y, x + 1 + (i * 3), y + 1);
-						// dark dot
-						bg.DrawLine(new Pen(SystemColors.ControlDarkDark), x + 1 + (i * 3), y + 1, x + 2 + (i * 3), y + 2);
-						// overdraw the background color as we actually drew 2px diagonal lines, not just dots
-						bg.DrawLine(new Pen(this.BackColor), x + 1 + (i * 3), y + 2, x + 2 + (i * 3), y + 2);
-					  }
-					}
-			break;
+					case GripperStyles.Mozilla:
+						{
+							int dotCount = gripLength / 3;
+							for (int i = 0; i < dotCount; i++)
+							{
+								// light dot
+								bg.DrawLine(new Pen(SystemColors.ControlLightLight), x + (i * 3), y, x + 1 + (i * 3), y + 1);
+								// dark dot
+								bg.DrawLine(new Pen(SystemColors.ControlDarkDark), x + 1 + (i * 3), y + 1, x + 2 + (i * 3), y + 2);
+								// overdraw the background color as we actually drew 2px diagonal lines, not just dots
+								bg.DrawLine(new Pen(this.BackColor), x + 1 + (i * 3), y + 2, x + 2 + (i * 3), y + 2);
+							}
+						}
+						break;
 
-		  case VisualStyles.DoubleDots:
-					{
-					  int dotCount = gripLength / 3;
-					  for (int i = 0; i < dotCount; i++)
-					  {
-						// light dot
-						bg.DrawRectangle(new Pen(SystemColors.ControlLightLight), x + 1 + (i * 3), y, 1, 1);
-						// dark dot
-						bg.DrawRectangle(new Pen(SystemColors.ControlDark), x + (i * 3), y - 1, 1, 1);
-						i++;
-						// light dot
-						bg.DrawRectangle(new Pen(SystemColors.ControlLightLight), x + 1 + (i * 3), y + 2, 1, 1);
-						// dark dot
-						bg.DrawRectangle(new Pen(SystemColors.ControlDark), x + (i * 3), y + 1, 1, 1);
-					  }
-					}
-			break;
+					case GripperStyles.DoubleDots:
+						{
+							int dotCount = gripLength / 3;
+							for (int i = 0; i < dotCount; i++)
+							{
+								// light dot
+								bg.DrawRectangle(new Pen(SystemColors.ControlLightLight), x + 1 + (i * 3), y, 1, 1);
+								// dark dot
+								bg.DrawRectangle(new Pen(SystemColors.ControlDark), x + (i * 3), y - 1, 1, 1);
+								i++;
+								// light dot
+								bg.DrawRectangle(new Pen(SystemColors.ControlLightLight), x + 1 + (i * 3), y + 2, 1, 1);
+								// dark dot
+								bg.DrawRectangle(new Pen(SystemColors.ControlDark), x + (i * 3), y + 1, 1, 1);
+							}
+						}
+						break;
 
-					case VisualStyles.Win9x:
+					case GripperStyles.Win9x:
 
 						bg.DrawLine(new Pen(SystemColors.ControlLightLight), x, y, x, y + 2);
-			bg.DrawLine(new Pen(SystemColors.ControlLightLight), x, y, x + gripLength, y);
-			bg.DrawLine(new Pen(SystemColors.ControlDark), x, y + 2, x + gripLength, y + 2);
-			bg.DrawLine(new Pen(SystemColors.ControlDark), x + gripLength, y, x + gripLength, y + 2);
+						bg.DrawLine(new Pen(SystemColors.ControlLightLight), x, y, x + gripLength, y);
+						bg.DrawLine(new Pen(SystemColors.ControlDark), x, y + 2, x + gripLength, y + 2);
+						bg.DrawLine(new Pen(SystemColors.ControlDark), x + gripLength, y, x + gripLength, y + 2);
 						break;
 
-					case VisualStyles.XP:
-					{
-					  int dotCount = gripLength/5;
-					  for(int i=0; i < dotCount; i++)
-					  {
-						// light dot
-						bg.DrawRectangle(new Pen(SystemColors.ControlLight), x + (i*5), y, 2, 2 );
-						// light light dot
-						bg.DrawRectangle(new Pen(SystemColors.ControlLightLight), x + 1 + (i*5), y + 1, 1, 1 );
-						// dark dark dot
-						bg.DrawRectangle(new Pen(SystemColors.ControlDarkDark), x +(i*5), y, 1, 1 );
-						// dark fill
-						bg.DrawLine(new Pen(SystemColors.ControlDark), x + (i*5), y, x + (i*5) + 1, y);
-						bg.DrawLine(new Pen(SystemColors.ControlDark), x + (i*5), y, x + (i*5), y + 1);
-					  }
-					}
+					case GripperStyles.XP:
+						{
+							int dotCount = gripLength / 5;
+							for (int i = 0; i < dotCount; i++)
+							{
+								// light dot
+								bg.DrawRectangle(new Pen(SystemColors.ControlLight), x + (i * 5), y, 2, 2);
+								// light light dot
+								bg.DrawRectangle(new Pen(SystemColors.ControlLightLight), x + 1 + (i * 5), y + 1, 1, 1);
+								// dark dark dot
+								bg.DrawRectangle(new Pen(SystemColors.ControlDarkDark), x + (i * 5), y, 1, 1);
+								// dark fill
+								bg.DrawLine(new Pen(SystemColors.ControlDark), x + (i * 5), y, x + (i * 5) + 1, y);
+								bg.DrawLine(new Pen(SystemColors.ControlDark), x + (i * 5), y, x + (i * 5), y + 1);
+							}
+						}
 						break;
 
-		  case VisualStyles.Lines:
-					{
-					  int lineCount = gripLength / 2;
-					  for (int i = 0; i < lineCount; i++)
-					  {
-						bg.DrawLine(new Pen(SystemColors.ControlDark), x + (i * 2), y, x + (i * 2), y + 2);
-					  }
-					}
-			break;
+					case GripperStyles.Lines:
+						{
+							int lineCount = gripLength / 2;
+							for (int i = 0; i < lineCount; i++)
+							{
+								bg.DrawLine(new Pen(SystemColors.ControlDark), x + (i * 2), y, x + (i * 2), y + 2);
+							}
+						}
+						break;
+
+					case GripperStyles.None:
+						{
+						}
+						break;
 				}
 			}
 
 				#endregion
 
-		  g.DrawImage(b, 0, 0);
+	  g.DrawImage(b, 0, 0);
 	  bg.Dispose();
 	  b.Dispose();
 
@@ -514,7 +549,45 @@ namespace WeSay.UI
 			g.Dispose();
 		}
 
-	protected override void OnPaintBackground(PaintEventArgs e)
+		private int DetermineYCoordForGripperOnVerticalBar(Rectangle r)
+		{
+			int y ;
+			switch (_gripperLocation)
+			{
+				default:
+				case GripperLocations.Center:
+					y = r.Y + ((r.Height - gripLength)/2);
+					break;
+				case GripperLocations.LeftOrTop:
+					y  = r.Y + _marginBetweenGripperAndSide;
+					break;
+				case GripperLocations.RightOrBottom:
+					y  = r.Y + r.Height  - (_marginBetweenGripperAndSide + gripLength);
+					break;
+			}
+			return y ;
+		}
+
+		private int DetermineXCoordForGripperOnHorizontalBar(Rectangle r)
+		{
+			int x;
+			switch (_gripperLocation)
+			{
+				default:
+				case GripperLocations.Center:
+					x = r.X + ((r.Width - gripLength)/2);
+					break;
+				case GripperLocations.LeftOrTop:
+					x = r.X + _marginBetweenGripperAndSide;
+					break;
+				case GripperLocations.RightOrBottom:
+					x = r.X + r.Width -(_marginBetweenGripperAndSide+ gripLength);
+					break;
+			}
+			return x;
+		}
+
+		protected override void OnPaintBackground(PaintEventArgs e)
 	{
 		// draw the background color for our control image
 		LinearGradientBrush brush = new LinearGradientBrush(ClientRectangle,

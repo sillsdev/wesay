@@ -93,6 +93,7 @@ namespace WeSay.LexicalTools
 			this._findText.Location = new System.Drawing.Point(24, 3);
 			this._findText.MinimumSize = new System.Drawing.Size(100, 24);
 			this._findText.Multiline = true;
+			this._findText.MultiParagraph = false;
 			this._findText.Name = "_findText";
 			this._findText.PopupBorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 			this._findText.PopupOffset = new System.Drawing.Point(0, 0);
@@ -199,22 +200,22 @@ namespace WeSay.LexicalTools
 			// _splitter
 			//
 			this._splitter.BackColorEnd = System.Drawing.Color.Empty;
-			this._splitter.BorderStyle3D = System.Windows.Forms.Border3DStyle.Flat;
+			this._splitter.BorderStyle3D = System.Windows.Forms.Border3DStyle.Adjust;
 			this._splitter.ControlToHide = this.panelWordList;
-			this._splitter.GripLength = 30;
+			this._splitter.GripLength = 15;
+			this._splitter.GripperLocation = WeSay.UI.GripperLocations.RightOrBottom;
+			this._splitter.GripperStyle = WeSay.UI.GripperStyles.DoubleDots;
 			this._splitter.Location = new System.Drawing.Point(140, 0);
 			this._splitter.MinSize = 50;
 			this._splitter.Name = "_splitter";
 			this._splitter.TabIndex = 1;
 			this._splitter.TabStop = false;
-			this._splitter.VisualStyle = WeSay.UI.VisualStyles.DoubleDots;
 			//
 			// _entryViewControl
 			//
 			this._entryViewControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
 						| System.Windows.Forms.AnchorStyles.Left)
 						| System.Windows.Forms.AnchorStyles.Right)));
-			this._entryViewControl.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
 			this._entryViewControl.DataSource = null;
 			this._entryViewControl.Location = new System.Drawing.Point(0, 0);
 			this._entryViewControl.Margin = new System.Windows.Forms.Padding(0);
