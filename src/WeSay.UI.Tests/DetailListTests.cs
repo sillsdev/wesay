@@ -76,7 +76,7 @@ namespace WeSay.UI.Tests
 
 		private WeSayTextBox MakeWiredUpTextBox()
 		{
-			WeSayTextBox box = new WeSayTextBox(_ws);
+			WeSayTextBox box = new WeSayTextBox(_ws, null);
 			box.GotFocus+=new EventHandler(box_GotFocus);
 			return box;
 		}
@@ -133,11 +133,11 @@ namespace WeSay.UI.Tests
 		private Control AddRow()
 		{
 			//don't factor this to use the version that calls with an explicit row!
-			return _control.AddWidgetRow("blah", false, new WeSayTextBox(_ws));
+			return _control.AddWidgetRow("blah", false, new WeSayTextBox(_ws, null));
 		}
 		 private Control AddRow(int row)
 		{
-			return _control.AddWidgetRow("blah", false, new WeSayTextBox(_ws), row);
+			return _control.AddWidgetRow("blah", false, new WeSayTextBox(_ws, null), row);
 		}
 	}
 }

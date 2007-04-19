@@ -81,7 +81,7 @@ namespace WeSay.LexicalTools
 			this._btnFind.Size = new System.Drawing.Size(11, 11);
 			this._btnFind.TabIndex = 2;
 			this._btnFind.UseVisualStyleBackColor = false;
-			this._btnFind.Click += new System.EventHandler(this._btnFind_Click);
+			this._btnFind.Click += new System.EventHandler(this.OnFind_Click);
 			//
 			// _findText
 			//
@@ -116,7 +116,7 @@ namespace WeSay.LexicalTools
 			this._writingSystemChooser.Size = new System.Drawing.Size(15, 19);
 			this._writingSystemChooser.TabIndex = 3;
 			this._writingSystemChooser.UseVisualStyleBackColor = false;
-			this._writingSystemChooser.Click += new System.EventHandler(this._writingSystemChooser_Click);
+			this._writingSystemChooser.Click += new System.EventHandler(this.OnWritingSystemChooser_Click);
 			//
 			// _findWritingSystemId
 			//
@@ -128,7 +128,7 @@ namespace WeSay.LexicalTools
 			this._findWritingSystemId.TabIndex = 6;
 			this._findWritingSystemId.Text = "en";
 			this._findWritingSystemId.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			this._findWritingSystemId.MouseClick += new System.Windows.Forms.MouseEventHandler(this._findWritingSystemId_MouseClick);
+			this._findWritingSystemId.MouseClick += new System.Windows.Forms.MouseEventHandler(this.OnFindWritingSystemId_MouseClick);
 			//
 			// _recordsListBox
 			//
@@ -167,7 +167,7 @@ namespace WeSay.LexicalTools
 			this._btnDeleteWord.Text = "&Delete This Word";
 			this._btnDeleteWord.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
 			this._btnDeleteWord.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-			this._btnDeleteWord.Click += new System.EventHandler(this._btnDeleteWord_Click);
+			this._btnDeleteWord.Click += new System.EventHandler(this.OnDeleteWord_Click);
 			//
 			// _btnNewWord
 			//
@@ -185,7 +185,7 @@ namespace WeSay.LexicalTools
 			this._btnNewWord.Text = "&New Word";
 			this._btnNewWord.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
 			this._btnNewWord.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-			this._btnNewWord.Click += new System.EventHandler(this._btnNewWord_Click);
+			this._btnNewWord.Click += new System.EventHandler(this.OnNewWord_Click);
 			//
 			// panelDetail
 			//

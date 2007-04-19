@@ -11,10 +11,16 @@ namespace WeSay.UI
 		private WritingSystem _writingSystem;
 		private KeymanLink.KeymanLink _keymanLink;
 		private bool _multiParagraph;
+		private string _nameForLogging;
+		private bool _haveAlreadyLoggedTextChanged = false;
 
 		public WeSayTextBox()
 		{
 			InitializeComponent();
+			this.GotFocus += new EventHandler(OnGotFocus);
+			this.LostFocus += new EventHandler(OnLostFocus);
+			this.KeyPress += new KeyPressEventHandler(WeSayTextBox_KeyPress);
+
 
 		  //  Debug.Assert(DesignMode);
 			if (Environment.OSVersion.Platform != PlatformID.Unix)
@@ -25,6 +31,32 @@ namespace WeSay.UI
 					_keymanLink = null;
 				}
 			}
+
+			if (_nameForLogging == null)
+			{
+				_nameForLogging = "??";
+			}
+		}
+
+		void WeSayTextBox_KeyPress(object sender, KeyPressEventArgs e)
+		{
+			//only first change per focus session will be logged
+			if (!_haveAlreadyLoggedTextChanged)
+			{
+				_haveAlreadyLoggedTextChanged = true;
+				Reporting.Logger.WriteMinorEvent("First_KeyPress {0}:{1}", _nameForLogging, _writingSystem.Id);
+			}
+		}
+
+		void OnLostFocus(object sender, EventArgs e)
+		{
+			Reporting.Logger.WriteMinorEvent("LostFocus {0}:{1}", _nameForLogging, _writingSystem.Id);
+		}
+
+		void OnGotFocus(object sender, EventArgs e)
+		{
+			Reporting.Logger.WriteMinorEvent("Focus {0}:{1}", _nameForLogging, _writingSystem.Id);
+			_haveAlreadyLoggedTextChanged = false;
 		}
 
 		protected override void OnTextChanged(EventArgs e)
@@ -61,8 +93,9 @@ namespace WeSay.UI
 			}
 		}
 
-		public WeSayTextBox(WritingSystem ws):this()
+		public WeSayTextBox(WritingSystem ws, string nameForLogging):this()
 		{
+			_nameForLogging = nameForLogging;
 			 WritingSystem = ws;
 		}
 

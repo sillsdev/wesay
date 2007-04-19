@@ -80,7 +80,7 @@ namespace WeSay.Setup
 
 		private void WelcomeControl_Load(object sender, EventArgs e)
 		{
-			if (openRecentProject.Visible = true)
+			if (openRecentProject.Visible == true)
 			{
 				openRecentProject.Focus();
 			}

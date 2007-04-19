@@ -228,7 +228,7 @@ namespace WeSay.LexicalTools
 			OptionRef optionRefTarget = target.GetOrCreateProperty<OptionRef>(field.FieldName);
 
 			OptionsList list = WeSayWordsProject.Project.GetOptionsList(field.OptionsListFile);
-			SingleOptionControl control = new SingleOptionControl(optionRefTarget, list, field.WritingSystemIds[0]);
+			SingleOptionControl control = new SingleOptionControl(optionRefTarget, list, field.WritingSystemIds[0], field.FieldName);
 			SimpleBinding<string> binding = new SimpleBinding<string>(optionRefTarget, control);
 			binding.CurrentItemChanged += new EventHandler<CurrentItemEventArgs>(_detailList.OnBinding_ChangeOfWhichItemIsInFocus);
 			return control;

@@ -124,7 +124,11 @@ namespace WeSay.Setup
 			PropertyValueChangedEventArgs args = e as PropertyValueChangedEventArgs;
 			if (args!=null && args.ChangedItem.PropertyDescriptor.Name == "Id")
 			{
-				 BasilProject.Project.WritingSystems.IdOfWritingSystemChanged(ws, args.OldValue.ToString() );
+				string oldId = args.OldValue.ToString();
+				WeSayWordsProject.Project.MakeWritingSystemIdChange(ws, oldId);
+//                Reporting.ErrorReporter.ReportNonFatalMessage(
+//                    "Currently, WeSay does not make a corresponding change to the id of this writing system in your LIFT xml file.  Please do that yourself, using something like NotePad to search for lang=\"{0}\" and change to lang=\"{1}\"",
+//                    ws.Id, oldId);
 			}
 
 			//_wsListBox.Refresh(); didn't work
@@ -149,6 +153,13 @@ namespace WeSay.Setup
 		}
 
 
+		private void MakeWritingSystemIdChange(string oldId, string newId)
+		{
+			foreach (Field field in WeSayWordsProject.Project.ViewTemplate)
+			{
+				field.ChangeWritingSystemId(oldId, newId);
+			}
+		}
 	}
 
 	/// <summary>
@@ -220,7 +231,7 @@ namespace WeSay.Setup
 //                s += " (A)";
 //            }
 			if (s == WritingSystem.IdForUnknownVernacular)
-				s += "<-- Change This";
+				s += "<-- Consider Changing This";
 			return s;
 		}
 	}

@@ -14,7 +14,22 @@ namespace WeSay.Setup
 		private WritingSystem _writingSystem;
 		private WritingSystemCollection _writingSystemCollection;
 
-		public event System.EventHandler DisplayPropertiesChanged;
+		public event System.EventHandler WritingSystemIdChanged;
+
+//        public class PropertyChangingEventArgs : PropertyChangedEventArgs
+//        {
+//            public bool Cancel = false;
+//
+//            public PropertyChangingEventArgs(string propertyName)
+//                : base(propertyName)
+//            {
+//            }
+//        }
+
+		/// <summary>
+		/// called when the user wants to change the actual id of a ws, which has large reprocussions
+		/// </summary>
+	  //  public event System.EventHandler IdChanging;
 
 		public WritingSystemBasic()
 		{
@@ -44,7 +59,7 @@ namespace WeSay.Setup
 			set { this._writingSystemCollection = value; }
 		}
 
-		private void _fontProperties_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)
+		private void OnPropertyValueChanged(object s, PropertyValueChangedEventArgs e)
 		{
 			if (e.ChangedItem.PropertyDescriptor.Name != "Id")
 				return;
@@ -58,36 +73,12 @@ namespace WeSay.Setup
 			}
 			else
 			{
-				if (DisplayPropertiesChanged != null)
+				if (WritingSystemIdChanged != null)
 				{
-					DisplayPropertiesChanged.Invoke(_writingSystem,e);
+					WritingSystemIdChanged.Invoke(_writingSystem,e);
 				}
 			}
 		}
-//
-//        private void btnUseForVernacular_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-//        {
-//            _writingSystemCollection.VernacularWritingSystemDefaultId  = _writingSystem.Id;
-//
-//            if (DisplayPropertiesChanged != null)
-//            {
-//                DisplayPropertiesChanged.Invoke(_writingSystem, null);
-//            }
-//        }
-//
-//        private void btnUseForAnalysis_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-//        {
-//            _writingSystemCollection.AnalysisWritingSystemDefaultId = _writingSystem.Id;
-//
-//            if (DisplayPropertiesChanged != null)
-//            {
-//                DisplayPropertiesChanged.Invoke(_writingSystem, null);
-//            }
-//        }
-
-
-
-
 	}
 
 

@@ -101,6 +101,7 @@ namespace WeSay.UI
 
 	  void OnFlagButtonCheckedChanged(object sender, EventArgs e)
 	  {
+		  Reporting.Logger.WriteMinorEvent("OnFlagButtonCheckedChanged ({0})", _flagButton.Checked);
 		SetFlagImage();
 		_flagButton.Refresh(); // give visual feedback right away since the next action can take some time
 		FlagIsOn = _flagButton.Checked;

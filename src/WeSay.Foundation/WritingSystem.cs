@@ -8,7 +8,7 @@ namespace WeSay.Language
 	[ReflectorType("WritingSystem")]
 	public class WritingSystem
 	{
-		public static string IdForUnknownVernacular = "*V*";
+		public static string IdForUnknownVernacular = "v";
 		public static string IdForUnknownAnalysis = "en";
 
 

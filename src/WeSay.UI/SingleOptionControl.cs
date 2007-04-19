@@ -11,6 +11,7 @@ namespace WeSay.UI
 		private OptionsList _list;
 		private ComboBox _control = new ComboBox();
 		private string _idOfPreferredWritingSystem;
+		private string _nameForLogging;
 
 		public  event EventHandler ValueChanged;
 
@@ -20,10 +21,11 @@ namespace WeSay.UI
 
 		#endregion
 
-		public SingleOptionControl()
+		public SingleOptionControl(string nameForLogging)
 		{
 			InitializeComponent();
 			_idOfPreferredWritingSystem = "es";
+			_nameForLogging = nameForLogging;
 		}
 
 		protected override void OnHandleDestroyed(EventArgs e)
@@ -35,9 +37,10 @@ namespace WeSay.UI
 			base.OnHandleDestroyed(e);
 		}
 
-		public SingleOptionControl(OptionRef optionRef, OptionsList list, string idOfPreferredWritingSystem)
+		public SingleOptionControl(OptionRef optionRef, OptionsList list, string idOfPreferredWritingSystem, string nameForLogging)
 		{
 			_list = list;
+			_nameForLogging = nameForLogging;
 			_idOfPreferredWritingSystem = idOfPreferredWritingSystem;
 			InitializeComponent();
 		   //doesn't allow old, non-valid values to be shown (can't set the text):  ComboBoxStyle.DropDownList;
@@ -174,6 +177,7 @@ namespace WeSay.UI
 
 		void OnSelectedValueChanged(object sender, System.EventArgs e)
 		{
+			Reporting.Logger.WriteMinorEvent("SingleOptionControl_SelectionChanged ({0})", this._nameForLogging);
 			SetStatusColor();
 			if (ValueChanged != null)
 			{

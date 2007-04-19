@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 using Db4objects.Db4o;
 using NUnit.Framework;
 
@@ -40,7 +41,32 @@ namespace WeSay.Project.Tests
 		public void TearDown()
 		{
 			_project.Dispose();
-			Directory.Delete(_experimentDir, true);
+
+			//this is a source of frequent but hard to fix failures where the dir is locked for some reason,
+			//hence all the silly code
+			try
+			{
+				Directory.Delete(_experimentDir, true);
+			}
+			catch (Exception e)
+			{
+				try
+				{
+					Console.WriteLine(e.Message);
+					//maybe we can at least clear it out a bit
+					string[] files = Directory.GetFiles(_experimentDir, "*.*", SearchOption.AllDirectories);
+					foreach (string s in files)
+					{
+						File.Delete(s);
+					}
+					//sleep and try again (seems to work)
+					Thread.Sleep(1000);
+					Directory.Delete(_experimentDir, true);
+				}
+				catch (Exception)
+				{
+				}
+			}
 		}
 		private static string MakeDir(string existingParent, string newChild)
 		{

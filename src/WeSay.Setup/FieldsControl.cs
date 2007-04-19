@@ -30,7 +30,7 @@ namespace WeSay.Setup
 
 			LoadInventory();
 			//nb: may important to do this after loading the inventory
-			this._fieldsListBox.ItemCheck += new ItemCheckEventHandler(this._fieldsListBox_ItemCheck);
+			this._fieldsListBox.ItemCheck += new ItemCheckEventHandler(this.OnFieldsListBox_ItemCheck);
 			if (_fieldsListBox.Items.Count > 0)
 			{
 				_fieldsListBox.SelectedIndex = 0;
@@ -59,7 +59,8 @@ namespace WeSay.Setup
 			}
 		}
 
-		private void _fieldsListBox_ItemCheck(object sender, ItemCheckEventArgs e)
+
+		private void OnFieldsListBox_ItemCheck(object sender, ItemCheckEventArgs e)
 		{
 			if (e.NewValue== CheckState.Checked)
 			{

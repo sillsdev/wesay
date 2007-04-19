@@ -32,7 +32,7 @@ namespace WeSay.UI.Tests
 		public void CreateWithWritingSystem()
 		{
 			WritingSystem ws = new WritingSystem();
-			WeSayTextBox textBox = new WeSayTextBox(ws);
+			WeSayTextBox textBox = new WeSayTextBox(ws, null);
 			Assert.IsNotNull(textBox);
 			Assert.AreSame(ws, textBox.WritingSystem);
 		}

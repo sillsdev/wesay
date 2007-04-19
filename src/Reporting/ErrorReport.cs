@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
+using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -793,28 +794,42 @@ namespace Reporting
 			if (assembly != null)
 			{
 				object[] attributes =
-					assembly.GetCustomAttributes(typeof(AssemblyFileVersionAttribute), false);
+					assembly.GetCustomAttributes(typeof (AssemblyFileVersionAttribute), false);
 				string version;
 				if (attributes != null && attributes.Length > 0)
-					version = ((AssemblyFileVersionAttribute)attributes[0]).Version;
+					version = ((AssemblyFileVersionAttribute) attributes[0]).Version;
 				else
 					version = Application.ProductVersion;
+//       wesay doesn't encode the date in the product version
 				// Extract the fourth (and final) field of the version to get a date value.
-				int ich = version.IndexOf('.');
-				if (ich >= 0)
-					ich = version.IndexOf('.', ich + 1);
-				if (ich >= 0)
-					ich = version.IndexOf('.', ich + 1);
-				if (ich >= 0)
+//                int ich = version.IndexOf('.');
+//                if (ich >= 0)
+//                    ich = version.IndexOf('.', ich + 1);
+//                if (ich >= 0)
+//                    ich = version.IndexOf('.', ich + 1);
+//                if (ich >= 0)
+//                {
+//                    int iDate = Convert.ToInt32(version.Substring(ich + 1));
+//                    if (iDate > 0)
+//                    {
+//                        double oadate = Convert.ToDouble(iDate);
+//                        DateTime dt = DateTime.FromOADate(oadate);
+//                        version += string.Format("  {0}", dt.ToString("yyyy/MM/dd"));
+//                    }
+//                }
+
+				version += " (apparent build date: ";
+				try
 				{
-					int iDate = Convert.ToInt32(version.Substring(ich + 1));
-					if (iDate > 0)
-					{
-						double oadate = Convert.ToDouble(iDate);
-						DateTime dt = DateTime.FromOADate(oadate);
-						version += string.Format("  {0}", dt.ToString("yyyy/MM/dd"));
-					}
+					string path = assembly.CodeBase.Replace(@"file:///", "");
+					version +=  File.GetLastWriteTimeUtc(path).Date.ToShortDateString() +")";
 				}
+				catch
+				{
+					version += "???";
+				}
+
+
 #if DEBUG
 				version += "  (Debug version)";
 #endif
@@ -827,12 +842,12 @@ namespace Reporting
 		/// Put up a message box, unless OkToInteractWithUser is false, in which case throw an Appliciation Exception
 		/// </summary>
 		/// <param name="message"></param>
-		public static void ReportNonFatalMessage(string message)
+		public static void ReportNonFatalMessage(string message, params object[] args)
 		{
 			if (Reporting.ErrorReporter.OkToInteractWithUser)
 			{
 				MessageBox.Show(
-					message,
+					String.Format(message,args),
 					 Application.ProductName+" Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 			}
 			else

@@ -43,7 +43,7 @@ namespace WeSay.Setup
 			this._fontProperties.Size = new System.Drawing.Size(130, 144);
 			this._fontProperties.TabIndex = 2;
 			this._fontProperties.ToolbarVisible = false;
-			this._fontProperties.PropertyValueChanged += new System.Windows.Forms.PropertyValueChangedEventHandler(this._fontProperties_PropertyValueChanged);
+			this._fontProperties.PropertyValueChanged += new System.Windows.Forms.PropertyValueChangedEventHandler(this.OnPropertyValueChanged);
 			//
 			// WritingSystemBasic
 			//

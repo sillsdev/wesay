@@ -100,7 +100,11 @@ namespace WeSay.LexicalTools
 			int? row = null;
 			if (this._detailListControl.ContainsFocus)
 			{
-				row = this._detailListControl.GetRow(this._detailListControl.FocussedImmediateChild);
+				Control focussedControl = this._detailListControl.FocussedImmediateChild;
+				if (focussedControl != null)
+				{
+					row = this._detailListControl.GetRow(focussedControl);
+				}
 			}
 			RefreshEntryDetail();
 			Application.DoEvents();

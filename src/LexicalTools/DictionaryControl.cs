@@ -175,8 +175,10 @@ namespace WeSay.LexicalTools
 			}
 		}
 
-		void _writingSystemChooser_Click(object sender, EventArgs e)
+		void OnWritingSystemChooser_Click(object sender, EventArgs e)
 		{
+			Reporting.Logger.WriteMinorEvent("WritingSystemChooser_Click");
+
 			foreach (MenuItem menuItem in _cmWritingSystems.MenuItems)
 			{
 			  menuItem.Checked = (this._listWritingSystem == menuItem.Tag);
@@ -184,8 +186,9 @@ namespace WeSay.LexicalTools
 			this._cmWritingSystems.Show(_writingSystemChooser, new Point(0,_writingSystemChooser.Height), LeftRightAlignment.Right);
 		}
 
-		void _findWritingSystemId_MouseClick(object sender, MouseEventArgs e)
+		void OnFindWritingSystemId_MouseClick(object sender, MouseEventArgs e)
 		{
+			Reporting.Logger.WriteMinorEvent("FindWritingSystemId_MouseClick");
 			_findText.Focus();
 		}
 
@@ -214,12 +217,16 @@ namespace WeSay.LexicalTools
 			Find(this._findText.Text);
 		}
 
-		void _btnFind_Click(object sender, EventArgs e)
+		void OnFind_Click(object sender, EventArgs e)
 		{
+			Reporting.Logger.WriteMinorEvent("FindButton_Click");
+
 			Find(this._findText.Text);
 		}
 
-		private void Find(string text) {
+		private void Find(string text)
+		{
+			Reporting.Logger.WriteMinorEvent("Find");
 			int index = ((CachedSortedDb4oList<string, LexEntry>) _records).BinarySearch(text);
 			if (index < 0)
 			{
@@ -256,6 +263,7 @@ namespace WeSay.LexicalTools
 				// contains the focus so this is safe for now.
 				return;
 			}
+			Reporting.Logger.WriteEvent("RecordSelectionChanged to "+CurrentRecord.LexicalForm.GetFirstAlternative() );
 			Control_EntryDetailPanel.DataSource = CurrentRecord;
 			SelectedIndexChanged.Invoke(this,null);
 		}
@@ -280,8 +288,10 @@ namespace WeSay.LexicalTools
 			}
 		}
 
-		private void _btnNewWord_Click(object sender, EventArgs e)
+		private void OnNewWord_Click(object sender, EventArgs e)
 		{
+			Reporting.Logger.WriteEvent("NewWord_Click");
+
 			if (!this._btnNewWord.Focused)
 			{
 				// if we use a hot key, it may not have received the focus
@@ -302,8 +312,10 @@ namespace WeSay.LexicalTools
 			_entryViewControl.Focus();
 		}
 
-		private void _btnDeleteWord_Click(object sender, EventArgs e)
+		private void OnDeleteWord_Click(object sender, EventArgs e)
 		{
+			Reporting.Logger.WriteEvent("DeleteWord_Clicked");
+
 			Debug.Assert(CurrentIndex >= 0);
 			if(CurrentIndex == -1)
 			{

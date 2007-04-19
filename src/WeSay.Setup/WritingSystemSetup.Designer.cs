@@ -139,7 +139,7 @@ namespace WeSay.Setup
 			this._basicControl.Size = new System.Drawing.Size(208, 99);
 			this._basicControl.TabIndex = 0;
 			this._basicControl.WritingSystemCollection = null;
-			this._basicControl.DisplayPropertiesChanged += new System.EventHandler(this._basicControl_DisplayPropertiesChanged);
+			this._basicControl.WritingSystemIdChanged += new System.EventHandler(this._basicControl_DisplayPropertiesChanged);
 			//
 			// _fontsPage
 			//

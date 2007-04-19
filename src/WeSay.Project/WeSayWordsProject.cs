@@ -3,10 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Xml;
 using Reporting;
 using WeSay.Foundation;
+using WeSay.Language;
 using WeSay.LexicalModel;
 
 namespace WeSay.Project
@@ -455,6 +457,54 @@ namespace WeSay.Project
 			return file.Substring(0, file.IndexOf(".xml"));
 		}
 
+		public void MakeWritingSystemIdChange(WritingSystem ws, string oldId)
+		{
+			//Todo: WS-227 Before changing a ws id in a lift file, ensure that it isn't already in use
 
+			this.WritingSystems.IdOfWritingSystemChanged(ws, oldId);
+
+			foreach (Field field in this.ViewTemplate)
+			{
+				field.ChangeWritingSystemId(oldId, ws.Id);
+			}
+
+			if (File.Exists(PathToLiftFile))
+			{
+				//todo: expand the regular expression here to account for all reasonable patterns
+				GrepLift(PathToLiftFile, string.Format("lang\\s*=\\s*[\"']{0}[\"']", oldId), string.Format("lang=\"{0}\"", ws.Id));
+			}
+		}
+
+		private void GrepLift(string inputPath, string pattern, string replaceWith)
+		{
+			Regex regex = new Regex(pattern, RegexOptions.Compiled);
+			string tempPath = inputPath + ".tmp";
+
+			using (StreamReader reader = File.OpenText(inputPath))
+			{
+				using (StreamWriter writer = new StreamWriter(tempPath))
+				{
+					while (!reader.EndOfStream)
+					{
+						writer.WriteLine(regex.Replace(reader.ReadLine(), replaceWith));
+					}
+					writer.Close();
+				}
+				reader.Close();
+			}
+		   string backupPath = GetUniqueFileName(inputPath);
+		   File.Replace(tempPath, inputPath, backupPath);
+		}
+
+
+		private static string GetUniqueFileName(string path)
+		{
+			int i = 1;
+			while (File.Exists(path + "old" + i))
+			{
+				++i;
+			}
+			return path + "old" + i;
+		}
 	}
 }

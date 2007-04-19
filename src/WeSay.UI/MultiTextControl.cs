@@ -166,7 +166,7 @@ namespace WeSay.UI
 
 		private WeSayTextBox AddTextBox(WritingSystem writingSystem, MultiText multiText)
 		{
-			WeSayTextBox box = new WeSayTextBox(writingSystem);
+			WeSayTextBox box = new WeSayTextBox(writingSystem, this.Name);
 			_textBoxes.Add(box);
 			box.Name = Name.Replace("-mtc","") + "_" + writingSystem.Id; //for automated tests to find this particular guy
 			box.Text = multiText[writingSystem.Id];

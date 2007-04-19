@@ -52,6 +52,7 @@ namespace WeSay.Project
 			Initialize(fieldName, dataTypeName, multiplicity, writingSystemIds);
 		}
 
+
 		private void Initialize(string fieldName, string dataTypeName, MultiplicityType multiplicity, IEnumerable<string> writingSystemIds)
 		{
 			FieldName = fieldName;
@@ -194,6 +195,14 @@ namespace WeSay.Project
 			set { _visibility = value; }
 		}
 
+		public void ChangeWritingSystemId(string oldId, string newId)
+		{
+			int i = _writingSystemIds.FindIndex(delegate(string id) { return id == oldId; });
+			if(i>-1)
+			{
+				_writingSystemIds[i] = newId;
+			}
+		}
 		public IList<WritingSystem> WritingSystems
 		{
 			get

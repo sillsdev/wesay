@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Text;
 using System.Windows.Forms;
 
 
@@ -16,6 +17,8 @@ namespace Reporting
 	{
 		private static Logger _singleton;
 		protected StreamWriter m_out;
+		private StringBuilder m_minorEvents;
+		//protected MemoryStream m_minorEvents;
 
 		/// ------------------------------------------------------------------------------------
 		/// <summary>
@@ -61,6 +64,7 @@ namespace Reporting
 				else
 					m_out = File.AppendText(LogPath);
 
+				m_minorEvents = new StringBuilder();
 				WriteEvent("App Launched with [" + System.Environment.CommandLine + "]");
 			}
 			catch
@@ -195,13 +199,16 @@ namespace Reporting
 			m_out.Close();
 
 			//get the old
-			string contents;
+			StringBuilder contents = new StringBuilder();
 			using (StreamReader reader = File.OpenText(LogPath))
 			{
-				contents = reader.ReadToEnd();
+				contents.Append(reader.ReadToEnd());
+				contents.AppendLine("Details of most recent events:");
+				contents.AppendLine(m_minorEvents.ToString());
+				m_minorEvents = new StringBuilder();
 			}
 			_singleton = new Logger(false);
-			return contents;
+			return contents.ToString();
 		}
 
 		private static string LogPath
@@ -226,10 +233,10 @@ namespace Reporting
 		public static void WriteEvent(string message)
 		{
 			if (_singleton != null)
-				_singleton.WriteEvent2(message);
+				_singleton.WriteEventCore(message);
 		}
 
-		private void WriteEvent2(string message)
+		private void WriteEventCore(string message)
 		{
 			CheckDisposed();
 			if (m_out != null)
@@ -237,7 +244,50 @@ namespace Reporting
 				m_out.Write(DateTime.Now.ToLongTimeString() + "\t");
 				m_out.WriteLine(message);
 				m_out.Flush();//in case we crash
+
+				//want this to show up in the proper order in the minor event list, too
+				WriteMinorEvent(message);
+
+				Debug.WriteLine("-----"+"\r\n"+m_minorEvents.ToString());
 			}
+		}
+
+		/// <summary>
+		/// only a limitted number of the most recent of these events will show up in the log
+		/// </summary>
+		public static void WriteMinorEvent(string message, params object[] args)
+		{
+			if (_singleton != null)
+				_singleton.WriteMinorEventCore(message,args);
+		}
+
+		private void WriteMinorEventCore(string message, params object[] args)
+		{
+			CheckDisposed();
+			if (m_minorEvents != null)
+			{
+#if !DEBUG
+				try
+				{
+#endif
+				if (m_minorEvents.Length > 5000)
+					{
+						int roughlyHowMuchToCut = 500;
+						int cutoff = m_minorEvents.ToString().IndexOf(System.Environment.NewLine, roughlyHowMuchToCut);
+						m_minorEvents.Remove(0, cutoff);
+					}
+					m_minorEvents.Append(DateTime.Now.ToLongTimeString() + "\t");
+					m_minorEvents.AppendFormat(message, args);
+					m_minorEvents.AppendLine();
+#if !DEBUG
+				}
+				catch(Exception)
+				{
+				 //swallow
+				}
+#endif
+			}
+
 		}
 	}
 }

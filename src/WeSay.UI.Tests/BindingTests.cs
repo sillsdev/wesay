@@ -18,7 +18,7 @@ namespace WeSay.UI.Tests
 		public void TargetToWidget()
 		{
 			MultiText text = new MultiText();
-			WeSayTextBox widget = new WeSayTextBox(new WritingSystem("vernacular", new Font("Arial", 12)));
+			WeSayTextBox widget = new WeSayTextBox(new WritingSystem("vernacular", new Font("Arial", 12)), null);
 			new TextBinding(text, "vernacular", widget);
 
 			text["vernacular"] = "hello";
@@ -31,7 +31,7 @@ namespace WeSay.UI.Tests
 		public void WidgetToTarget()
 		{
 			MultiText text = new MultiText();
-			WeSayTextBox widget = new WeSayTextBox(new WritingSystem("vernacular", new Font("Arial", 12)));
+			WeSayTextBox widget = new WeSayTextBox(new WritingSystem("vernacular", new Font("Arial", 12)), null);
 
 			new TextBinding(text, "vernacular", widget);
 
