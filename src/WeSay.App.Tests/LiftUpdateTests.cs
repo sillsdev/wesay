@@ -92,7 +92,7 @@ namespace WeSay.App.Tests
 
 		private void SetupDeletionSituation()
 		{
-			LiftIO.Utilities.CreateEmptyLiftFile(Project.WeSayWordsProject.Project.PathToLiftFile, "test", true);
+			LiftIO.Utilities.CreateEmptyLiftFile(WeSayWordsProject.Project.PathToLiftFile, "test", true);
 			_records.Add(new LexEntry());
 			LexEntry entryToDelete = MakeEntry("boo");
 			_records.Add(new LexEntry());
@@ -103,7 +103,7 @@ namespace WeSay.App.Tests
 			_records.Remove(entryToDelete);
 			//this deletion event comes from a higher-level class we aren't using, so we raise it ourselves here:
 			_service.OnDataDeleted(this, new DeletedItemEventArgs(entryToDelete));
-			Project.WeSayWordsProject.Project.LockLift();//the next call will expect this to be locked
+			WeSayWordsProject.Project.LockLift();//the next call will expect this to be locked
 			_service.DoLiftUpdateNow(true);
 		}
 
@@ -136,10 +136,10 @@ namespace WeSay.App.Tests
 			return entry;
 		}
 
-		private XmlDocument GetLiftDoc()
+		static private XmlDocument GetLiftDoc()
 		{
 			XmlDocument doc = new XmlDocument();
-			doc.Load(Project.WeSayWordsProject.Project.PathToLiftFile);// _service.PathToBaseLiftFile);
+			doc.Load(WeSayWordsProject.Project.PathToLiftFile);// _service.PathToBaseLiftFile);
 			//Console.WriteLine(doc.OuterXml);
 			return doc;
 		}

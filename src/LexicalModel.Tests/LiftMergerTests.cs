@@ -273,7 +273,7 @@ namespace WeSay.LexicalModel.Tests
 			secondGloss.Add("ws-three", "tres");
 			_merger.MergeInGloss(sense, secondGloss);
 
-			MultiText mt = sense.GetProperty<MultiText>(LexSense.WellKnownProperties.Note);
+			//MultiText mt = sense.GetProperty<MultiText>(LexSense.WellKnownProperties.Note);
 			Assert.AreEqual(3, sense.Gloss.Forms.Length);
 			Assert.AreEqual("uno; UNO", sense.Gloss["ws-one"]);
 		}

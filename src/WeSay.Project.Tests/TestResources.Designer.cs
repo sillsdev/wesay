@@ -89,15 +89,15 @@ namespace WeSay.Project.Tests {
 		///&lt;viewTemplate id=&quot;defaultviewTemplate&quot; class=&quot;WeSay.UI.viewTemplate&quot; assembly=&quot;WeSay.UI&quot;&gt;
 		///  &lt;fields&gt;
 		///    &lt;field class=&quot;WeSay.LexicalModel.Field&quot; assembly=&quot;WeSay.LexicalModel&quot;&gt;
-		///      &lt;name&gt;EntryLexicalForm&lt;/name&gt;
+		///      &lt;className&gt;LexEntry&lt;/className&gt;
+		///      &lt;fieldName&gt;EntryLexicalForm&lt;/fieldName&gt;
+		///      &lt;displayName&gt;Word&lt;/displayName&gt;
+		///      &lt;dataType&gt;MultiText&lt;/dataType&gt;
 		///      &lt;visibility&gt;Visible&lt;/visibility&gt;
 		///      &lt;writingSystems&gt;
 		///           &lt;id&gt;xx&lt;/id&gt;
 		///          &lt;id&gt;yy&lt;/id&gt;
-		///       &lt;/writingSystems&gt;
-		///    &lt;/field&gt;
-		///    &lt;field class=&quot;WeSay.LexicalModel.Field&quot; assembly=&quot;WeSay.LexicalModel&quot;&gt;
-		///      &lt;name&gt;SenseGloss&lt;/name&gt; [rest of string was truncated]&quot;;.
+		///       &lt;/writingSys [rest of string was truncated]&quot;;.
 		/// </summary>
 		internal static string viewTemplate {
 			get {
