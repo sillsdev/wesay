@@ -30,16 +30,23 @@ namespace WeSay.Setup
 		{
 			this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
+			this.label2 = new System.Windows.Forms.Label();
+			this.pictureBox2 = new System.Windows.Forms.PictureBox();
 			this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
 			this.panel1 = new System.Windows.Forms.Panel();
 			this.button1 = new System.Windows.Forms.Button();
 			this.textBox1 = new System.Windows.Forms.TextBox();
 			this.label1 = new System.Windows.Forms.Label();
 			this.groupBox2 = new System.Windows.Forms.GroupBox();
+			this.label3 = new System.Windows.Forms.Label();
+			this.pictureBox1 = new System.Windows.Forms.PictureBox();
 			this.tableLayoutPanel1.SuspendLayout();
 			this.groupBox1.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
 			this.tableLayoutPanel2.SuspendLayout();
 			this.panel1.SuspendLayout();
+			this.groupBox2.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
 			this.SuspendLayout();
 			//
 			// tableLayoutPanel1
@@ -59,6 +66,8 @@ namespace WeSay.Setup
 			//
 			// groupBox1
 			//
+			this.groupBox1.Controls.Add(this.label2);
+			this.groupBox1.Controls.Add(this.pictureBox2);
 			this.groupBox1.Controls.Add(this.tableLayoutPanel2);
 			this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.groupBox1.Location = new System.Drawing.Point(3, 3);
@@ -68,6 +77,28 @@ namespace WeSay.Setup
 			this.groupBox1.TabStop = false;
 			this.groupBox1.Text = "Backup";
 			//
+			// label2
+			//
+			this.label2.AutoSize = true;
+			this.label2.Location = new System.Drawing.Point(34, 68);
+			this.label2.MaximumSize = new System.Drawing.Size(250, 0);
+			this.label2.Name = "label2";
+			this.label2.Size = new System.Drawing.Size(236, 26);
+			this.label2.TabIndex = 12;
+			this.label2.Text = "This will be the path to a usb key or sd card that you want WeSay to automaticall" +
+				"y backup to.";
+			//
+			// pictureBox2
+			//
+			this.pictureBox2.BackColor = System.Drawing.Color.Transparent;
+			this.pictureBox2.Image = global::WeSay.Setup.Properties.Resources.construction;
+			this.pictureBox2.Location = new System.Drawing.Point(7, 68);
+			this.pictureBox2.Name = "pictureBox2";
+			this.pictureBox2.Size = new System.Drawing.Size(22, 25);
+			this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+			this.pictureBox2.TabIndex = 10;
+			this.pictureBox2.TabStop = false;
+			//
 			// tableLayoutPanel2
 			//
 			this.tableLayoutPanel2.ColumnCount = 2;
@@ -75,13 +106,12 @@ namespace WeSay.Setup
 			this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
 			this.tableLayoutPanel2.Controls.Add(this.panel1, 1, 0);
 			this.tableLayoutPanel2.Controls.Add(this.label1, 0, 0);
-			this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.tableLayoutPanel2.Location = new System.Drawing.Point(3, 16);
 			this.tableLayoutPanel2.Name = "tableLayoutPanel2";
 			this.tableLayoutPanel2.RowCount = 2;
 			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel2.Size = new System.Drawing.Size(432, 92);
+			this.tableLayoutPanel2.Size = new System.Drawing.Size(432, 46);
 			this.tableLayoutPanel2.TabIndex = 0;
 			//
 			// panel1
@@ -126,6 +156,8 @@ namespace WeSay.Setup
 			//
 			// groupBox2
 			//
+			this.groupBox2.Controls.Add(this.label3);
+			this.groupBox2.Controls.Add(this.pictureBox1);
 			this.groupBox2.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.groupBox2.Location = new System.Drawing.Point(3, 120);
 			this.groupBox2.Name = "groupBox2";
@@ -133,6 +165,29 @@ namespace WeSay.Setup
 			this.groupBox2.TabIndex = 1;
 			this.groupBox2.TabStop = false;
 			this.groupBox2.Text = "Email";
+			//
+			// label3
+			//
+			this.label3.AutoSize = true;
+			this.label3.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			this.label3.Location = new System.Drawing.Point(35, 46);
+			this.label3.MaximumSize = new System.Drawing.Size(250, 0);
+			this.label3.Name = "label3";
+			this.label3.Size = new System.Drawing.Size(237, 39);
+			this.label3.TabIndex = 13;
+			this.label3.Text = "Here you will put an email address, for use when the WeSay user chooses to send y" +
+				"ou email updates of their work.";
+			//
+			// pictureBox1
+			//
+			this.pictureBox1.BackColor = System.Drawing.Color.Transparent;
+			this.pictureBox1.Image = global::WeSay.Setup.Properties.Resources.construction;
+			this.pictureBox1.Location = new System.Drawing.Point(7, 46);
+			this.pictureBox1.Name = "pictureBox1";
+			this.pictureBox1.Size = new System.Drawing.Size(22, 25);
+			this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+			this.pictureBox1.TabIndex = 8;
+			this.pictureBox1.TabStop = false;
 			//
 			// OtherControl
 			//
@@ -143,10 +198,15 @@ namespace WeSay.Setup
 			this.Size = new System.Drawing.Size(444, 235);
 			this.tableLayoutPanel1.ResumeLayout(false);
 			this.groupBox1.ResumeLayout(false);
+			this.groupBox1.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
 			this.tableLayoutPanel2.ResumeLayout(false);
 			this.tableLayoutPanel2.PerformLayout();
 			this.panel1.ResumeLayout(false);
 			this.panel1.PerformLayout();
+			this.groupBox2.ResumeLayout(false);
+			this.groupBox2.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
 			this.ResumeLayout(false);
 
 		}
@@ -161,5 +221,9 @@ namespace WeSay.Setup
 		private System.Windows.Forms.Panel panel1;
 		private System.Windows.Forms.Button button1;
 		private System.Windows.Forms.TextBox textBox1;
+		private System.Windows.Forms.PictureBox pictureBox2;
+		private System.Windows.Forms.PictureBox pictureBox1;
+		private System.Windows.Forms.Label label2;
+		private System.Windows.Forms.Label label3;
 	}
 }

@@ -72,7 +72,9 @@ namespace WeSay.Setup
 			//
 			// _fieldsListBox
 			//
-			this._fieldsListBox.Dock = System.Windows.Forms.DockStyle.Fill;
+			this._fieldsListBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+						| System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
 			this._fieldsListBox.FormattingEnabled = true;
 			this._fieldsListBox.Items.AddRange(new object[] {
 			"Word",
@@ -82,7 +84,7 @@ namespace WeSay.Setup
 			"Translation of Example Sentence",
 			"Semantic Domains",
 			"Grammatical Category"});
-			this._fieldsListBox.Location = new System.Drawing.Point(0, 0);
+			this._fieldsListBox.Location = new System.Drawing.Point(0, 10);
 			this._fieldsListBox.Name = "_fieldsListBox";
 			this._fieldsListBox.Size = new System.Drawing.Size(169, 259);
 			this._fieldsListBox.TabIndex = 0;
@@ -119,8 +121,6 @@ namespace WeSay.Setup
 			//
 			// btnMoveDown
 			//
-			this.btnMoveDown.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
 			this.btnMoveDown.FlatAppearance.BorderSize = 0;
 			this.btnMoveDown.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
 			this.btnMoveDown.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -135,8 +135,6 @@ namespace WeSay.Setup
 			//
 			// btnMoveUp
 			//
-			this.btnMoveUp.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
 			this.btnMoveUp.FlatAppearance.BorderSize = 0;
 			this.btnMoveUp.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
 			this.btnMoveUp.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -183,10 +181,11 @@ namespace WeSay.Setup
 			this._descriptionBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
 						| System.Windows.Forms.AnchorStyles.Left)
 						| System.Windows.Forms.AnchorStyles.Right)));
-			this._descriptionBox.Enabled = false;
+			this._descriptionBox.BackColor = System.Drawing.SystemColors.Window;
 			this._descriptionBox.Location = new System.Drawing.Point(7, 20);
 			this._descriptionBox.Multiline = true;
 			this._descriptionBox.Name = "_descriptionBox";
+			this._descriptionBox.ReadOnly = true;
 			this._descriptionBox.Size = new System.Drawing.Size(314, 101);
 			this._descriptionBox.TabIndex = 0;
 			this._descriptionBox.Text = "hello";

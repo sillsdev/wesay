@@ -55,6 +55,12 @@
 	<Compile Include="AboutBox.Designer.cs">
 	  <DependentUpon>AboutBox.cs</DependentUpon>
 	</Compile>
+	<Compile Include="ActionsControl.cs">
+	  <SubType>UserControl</SubType>
+	</Compile>
+	<Compile Include="ActionsControl.Designer.cs">
+	  <DependentUpon>ActionsControl.cs</DependentUpon>
+	</Compile>
 	<Compile Include="AdminWindow.cs">
 	  <SubType>Form</SubType>
 	</Compile>
@@ -97,6 +103,10 @@
 	<EmbeddedResource Include="AboutBox.resx">
 	  <SubType>Designer</SubType>
 	  <DependentUpon>AboutBox.cs</DependentUpon>
+	</EmbeddedResource>
+	<EmbeddedResource Include="ActionsControl.resx">
+	  <SubType>Designer</SubType>
+	  <DependentUpon>ActionsControl.cs</DependentUpon>
 	</EmbeddedResource>
 	<EmbeddedResource Include="AdminWindow.resx">
 	  <SubType>Designer</SubType>
@@ -215,6 +225,9 @@
   </ItemGroup>
   <ItemGroup>
 	<None Include="Resources\RoundedBorder.PNG" />
+  </ItemGroup>
+  <ItemGroup>
+	<None Include="Resources\construction.png" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

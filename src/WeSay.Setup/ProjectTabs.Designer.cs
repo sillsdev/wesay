@@ -37,12 +37,14 @@ namespace WeSay.Setup
 			this._writingSystemSetupControl = new WeSay.Setup.WritingSystemSetup();
 			this._otherPage = new System.Windows.Forms.TabPage();
 			this.otherControl1 = new WeSay.Setup.OtherControl();
-			this._transferPage = new System.Windows.Forms.TabPage();
+			this._actionsPage = new System.Windows.Forms.TabPage();
+			this.actionsControl1 = new WeSay.Setup.ActionsControl();
 			this._projectTabControl.SuspendLayout();
 			this._tasksPage.SuspendLayout();
 			this._fieldsPage.SuspendLayout();
 			this._writingSystemPage.SuspendLayout();
 			this._otherPage.SuspendLayout();
+			this._actionsPage.SuspendLayout();
 			this.SuspendLayout();
 			//
 			// _projectTabControl
@@ -51,7 +53,7 @@ namespace WeSay.Setup
 			this._projectTabControl.Controls.Add(this._fieldsPage);
 			this._projectTabControl.Controls.Add(this._writingSystemPage);
 			this._projectTabControl.Controls.Add(this._otherPage);
-			this._projectTabControl.Controls.Add(this._transferPage);
+			this._projectTabControl.Controls.Add(this._actionsPage);
 			this._projectTabControl.Dock = System.Windows.Forms.DockStyle.Fill;
 			this._projectTabControl.Location = new System.Drawing.Point(0, 0);
 			this._projectTabControl.Name = "_projectTabControl";
@@ -138,14 +140,23 @@ namespace WeSay.Setup
 			this.otherControl1.Size = new System.Drawing.Size(704, 421);
 			this.otherControl1.TabIndex = 0;
 			//
-			// _transferPage
+			// _actionsPage
 			//
-			this._transferPage.Location = new System.Drawing.Point(4, 22);
-			this._transferPage.Name = "_transferPage";
-			this._transferPage.Size = new System.Drawing.Size(704, 421);
-			this._transferPage.TabIndex = 2;
-			this._transferPage.Text = "Transfer";
-			this._transferPage.UseVisualStyleBackColor = true;
+			this._actionsPage.Controls.Add(this.actionsControl1);
+			this._actionsPage.Location = new System.Drawing.Point(4, 22);
+			this._actionsPage.Name = "_actionsPage";
+			this._actionsPage.Size = new System.Drawing.Size(704, 421);
+			this._actionsPage.TabIndex = 2;
+			this._actionsPage.Text = "Actions";
+			this._actionsPage.UseVisualStyleBackColor = true;
+			//
+			// actionsControl1
+			//
+			this.actionsControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.actionsControl1.Location = new System.Drawing.Point(0, 0);
+			this.actionsControl1.Name = "actionsControl1";
+			this.actionsControl1.Size = new System.Drawing.Size(704, 421);
+			this.actionsControl1.TabIndex = 0;
 			//
 			// ProjectTabs
 			//
@@ -159,6 +170,7 @@ namespace WeSay.Setup
 			this._fieldsPage.ResumeLayout(false);
 			this._writingSystemPage.ResumeLayout(false);
 			this._otherPage.ResumeLayout(false);
+			this._actionsPage.ResumeLayout(false);
 			this.ResumeLayout(false);
 
 		}
@@ -174,6 +186,7 @@ namespace WeSay.Setup
 		private WritingSystemSetup _writingSystemSetupControl;
 		private System.Windows.Forms.TabPage _otherPage;
 		private OtherControl otherControl1;
-		private System.Windows.Forms.TabPage _transferPage;
+		private System.Windows.Forms.TabPage _actionsPage;
+		private ActionsControl actionsControl1;
 	}
 }

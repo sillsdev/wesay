@@ -32,6 +32,8 @@ namespace WeSay.Admin.Tests
 		public override void TearDown()
 		{
 			base.TearDown();
+			Project.WeSayWordsProject.Project.Dispose();
+
 			if (Directory.Exists(_projectFolder))
 			{
 				Directory.Delete(_projectFolder, true);

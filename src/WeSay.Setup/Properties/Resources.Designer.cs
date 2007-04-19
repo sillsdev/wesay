@@ -60,6 +60,13 @@ namespace WeSay.Setup.Properties {
 			}
 		}
 
+		internal static System.Drawing.Bitmap construction {
+			get {
+				object obj = ResourceManager.GetObject("construction", resourceCulture);
+				return ((System.Drawing.Bitmap)(obj));
+			}
+		}
+
 		internal static System.Drawing.Bitmap RoundedBorder {
 			get {
 				object obj = ResourceManager.GetObject("RoundedBorder", resourceCulture);
