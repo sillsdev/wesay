@@ -4,7 +4,6 @@ using LiftIO;
 using WeSay.Data;
 using WeSay.Foundation;
 using WeSay.Language;
-using WeSay.LexicalModel.Db4o_Specific;
 
 namespace WeSay.LexicalModel
 {
@@ -32,11 +31,14 @@ namespace WeSay.LexicalModel
 
 		public LexEntry GetOrMakeEntry(Extensible eInfo)
 		{
-			//Guid guid = GetGuidOrEmptyFromIdString(eInfo.Id);
 			LexEntry entry = null;
 #if merging
 	 This really slows us down to a crawl if the incoming lift has guids, yet
 	 we aren't really merging, so its a waste of time.
+
+			If or when we do need to handle merging, this can probably be sped up by getting
+			the entire list of guids all in one go and then checking
+
 			if (eInfo.Guid != Guid.Empty)
 			{
 				entry = Db4oLexQueryHelper.FindObjectFromGuid<LexEntry>(_dataSource, eInfo.Guid);
@@ -69,10 +71,13 @@ namespace WeSay.LexicalModel
 		public void  EntryWasDeleted(Extensible info, DateTime dateDeleted)
 		{
 			//there isn't anything we need to do; we just don't import it
+			// since we always update file in place, the info will still stay in the lift file
+			// even though we don't import it.
 		}
 
 		#endregion
 
+#if merging
 		private static bool CanSafelyPruneMerge(Extensible eInfo, LexEntry entry)
 		{
 			return entry != null
@@ -80,21 +85,7 @@ namespace WeSay.LexicalModel
 				&& entry.ModificationTime.Kind != DateTimeKind.Unspecified
 				 && eInfo.ModificationTime.Kind != DateTimeKind.Unspecified;
 		}
-
-/*
-		static private Guid GetGuidOrEmptyFromIdString(string id)
-		{
-			try
-			{
-				return new Guid(id);
-			}
-			catch (Exception)
-			{
-				//enchance: log this, we're throwing away the id they had
-				return Guid.Empty;
-			}
-		}
-*/
+#endif
 
 		public LexSense GetOrMakeSense(LexEntry entry, Extensible eInfo)
 		{
@@ -119,8 +110,7 @@ namespace WeSay.LexicalModel
 
 		public void MergeInCitationForm(LexEntry entry, LiftMultiText contents)
 		{
-			MultiText m = entry.GetOrCreateProperty<MultiText>(LexEntry.WellKnownProperties.Citation);
-			MergeIn(m, contents);
+			AddOrAppendMultiTextProperty(entry, contents, LexEntry.WellKnownProperties.Citation);
 		}
 
 		public void MergeInGloss(LexSense sense, LiftMultiText forms)
@@ -238,20 +228,25 @@ namespace WeSay.LexicalModel
 		/// </summary>
 		public void MergeInTrait(WeSayDataObject extensible, Trait trait)
 		{
-			if (trait.Name != null && ExpectedOptionTraits.Contains(trait.Name))
+			if(String.IsNullOrEmpty(trait.Name))
+			{
+				return;
+			}
+			if (ExpectedOptionTraits.Contains(trait.Name))
 			{
 				OptionRef o = extensible.GetOrCreateProperty<OptionRef>(trait.Name);
 				o.Value = trait.Value;
 			}
-			else if (trait.Name != null && ExpectedOptionCollectionTraits.Contains(trait.Name))
+			// if it is unknown assume it is a collection.
+			else //if (ExpectedOptionCollectionTraits.Contains(trait.Name))
 			{
 				OptionRefCollection c = extensible.GetOrCreateProperty<OptionRefCollection>(trait.Name);
 				c.Add(trait.Value);
 			}
-			else
-			{
-				//"log skipping..."
-			}
+			//else
+			//{
+			//    //"log skipping..."
+			//}
 		}
 
 		public IList<string> ExpectedOptionTraits

@@ -128,7 +128,6 @@ namespace WeSay.LexicalModel.Tests
 			Assert.IsTrue(m.ContainsAlternative("ws-two"));
 			Assert.AreEqual("uno",m["ws-one"]);
 			Assert.AreEqual("dos",m["ws-two"]);
-
 		}
 
 		[Test]
@@ -490,11 +489,14 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
-		public void UnexpectedAtomicTraitDropped()
+		public void UnexpectedAtomicTraitRetained()
 		{
 			LexEntry e = MakeSimpleEntry();
 			_merger.MergeInTrait(e, new Trait("flub", "dub"));
-			Assert.AreEqual(0, e.Properties.Count);
+			Assert.AreEqual(1, e.Properties.Count);
+			Assert.AreEqual("flub", e.Properties[0].Key);
+			OptionRefCollection option = e.GetProperty<OptionRefCollection>("flub");
+			Assert.IsTrue(option.Contains("dub"));
 		}
 
 		[Test]
@@ -513,12 +515,17 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
-		public void UnexpectedAtomicCollectionDropped()
+		public void UnexpectedAtomicCollectionRetained()
 		{
 			LexEntry e = MakeSimpleEntry();
 			_merger.MergeInTrait(e, new Trait("flub", "dub"));
 			_merger.MergeInTrait(e, new Trait("flub", "stub"));
-			Assert.AreEqual(0, e.Properties.Count);
+			Assert.AreEqual(1, e.Properties.Count);
+			Assert.AreEqual("flub", e.Properties[0].Key);
+			OptionRefCollection option = e.GetProperty<OptionRefCollection>("flub");
+			Assert.IsTrue(option.Contains("dub"));
+			Assert.IsTrue(option.Contains("stub"));
+
 		}
 
 		[Test]
@@ -534,13 +541,17 @@ namespace WeSay.LexicalModel.Tests
 			Assert.AreEqual("dub", mt["z"]);
 		}
 
-		[Test, Ignore("doesn't drop yet")]
-		public void UnexpectedCustomFieldDropped()
+		[Test]
+		public void UnexpectedCustomFieldRetained()
 		{
 			LexEntry e = MakeSimpleEntry();
-			_merger.MergeInTrait(e, new Trait("flub", "dub"));
-			_merger.MergeInTrait(e, new Trait("flub", "stub"));
-			Assert.AreEqual(0, e.Properties.Count);
+			LiftMultiText t = new LiftMultiText();
+			t["z"] = "dub";
+			_merger.MergeInField(e, "flub", default(DateTime), default(DateTime), t);
+			Assert.AreEqual(1, e.Properties.Count);
+			Assert.AreEqual("flub", e.Properties[0].Key);
+			MultiText mt = e.GetProperty<MultiText>("flub");
+			Assert.AreEqual("dub", mt["z"]);
 		}
 
 
