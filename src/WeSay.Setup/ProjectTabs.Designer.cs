@@ -39,12 +39,15 @@ namespace WeSay.Setup
 			this.otherControl1 = new WeSay.Setup.OtherControl();
 			this._actionsPage = new System.Windows.Forms.TabPage();
 			this.actionsControl1 = new WeSay.Setup.ActionsControl();
+			this._optionListPage = new System.Windows.Forms.TabPage();
+			this.optionListControl1 = new WeSay.Setup.OptionListControl();
 			this._projectTabControl.SuspendLayout();
 			this._tasksPage.SuspendLayout();
 			this._fieldsPage.SuspendLayout();
 			this._writingSystemPage.SuspendLayout();
 			this._otherPage.SuspendLayout();
 			this._actionsPage.SuspendLayout();
+			this._optionListPage.SuspendLayout();
 			this.SuspendLayout();
 			//
 			// _projectTabControl
@@ -52,6 +55,7 @@ namespace WeSay.Setup
 			this._projectTabControl.Controls.Add(this._tasksPage);
 			this._projectTabControl.Controls.Add(this._fieldsPage);
 			this._projectTabControl.Controls.Add(this._writingSystemPage);
+			this._projectTabControl.Controls.Add(this._optionListPage);
 			this._projectTabControl.Controls.Add(this._otherPage);
 			this._projectTabControl.Controls.Add(this._actionsPage);
 			this._projectTabControl.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -152,11 +156,32 @@ namespace WeSay.Setup
 			//
 			// actionsControl1
 			//
+			this.actionsControl1.BackColor = System.Drawing.SystemColors.Window;
 			this.actionsControl1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.actionsControl1.Location = new System.Drawing.Point(0, 0);
 			this.actionsControl1.Name = "actionsControl1";
 			this.actionsControl1.Size = new System.Drawing.Size(704, 421);
 			this.actionsControl1.TabIndex = 0;
+			//
+			// _optionListPage
+			//
+			this._optionListPage.Controls.Add(this.optionListControl1);
+			this._optionListPage.Location = new System.Drawing.Point(4, 22);
+			this._optionListPage.Name = "_optionListPage";
+			this._optionListPage.Padding = new System.Windows.Forms.Padding(3);
+			this._optionListPage.Size = new System.Drawing.Size(704, 421);
+			this._optionListPage.TabIndex = 5;
+			this._optionListPage.Text = "Option Lists";
+			this._optionListPage.UseVisualStyleBackColor = true;
+			//
+			// optionListControl1
+			//
+			this.optionListControl1.BackColor = System.Drawing.SystemColors.ControlLightLight;
+			this.optionListControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.optionListControl1.Location = new System.Drawing.Point(3, 3);
+			this.optionListControl1.Name = "optionListControl1";
+			this.optionListControl1.Size = new System.Drawing.Size(698, 415);
+			this.optionListControl1.TabIndex = 0;
 			//
 			// ProjectTabs
 			//
@@ -171,6 +196,7 @@ namespace WeSay.Setup
 			this._writingSystemPage.ResumeLayout(false);
 			this._otherPage.ResumeLayout(false);
 			this._actionsPage.ResumeLayout(false);
+			this._optionListPage.ResumeLayout(false);
 			this.ResumeLayout(false);
 
 		}
@@ -188,5 +214,7 @@ namespace WeSay.Setup
 		private OtherControl otherControl1;
 		private System.Windows.Forms.TabPage _actionsPage;
 		private ActionsControl actionsControl1;
+		private System.Windows.Forms.TabPage _optionListPage;
+		private OptionListControl optionListControl1;
 	}
 }

@@ -43,12 +43,15 @@ namespace WeSay.Setup
 			this._descriptionBox = new System.Windows.Forms.TextBox();
 			this.richTextBox1 = new System.Windows.Forms.RichTextBox();
 			this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+			this.pictureBox1 = new System.Windows.Forms.PictureBox();
+			this.label2 = new System.Windows.Forms.Label();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
 			this.splitContainer1.SuspendLayout();
 			this.tableLayoutPanel1.SuspendLayout();
 			this.groupBox1.SuspendLayout();
 			this.groupBox2.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
 			this.SuspendLayout();
 			//
 			// splitContainer1
@@ -56,7 +59,7 @@ namespace WeSay.Setup
 			this.splitContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
 						| System.Windows.Forms.AnchorStyles.Left)
 						| System.Windows.Forms.AnchorStyles.Right)));
-			this.splitContainer1.Location = new System.Drawing.Point(7, 57);
+			this.splitContainer1.Location = new System.Drawing.Point(7, 27);
 			this.splitContainer1.Name = "splitContainer1";
 			//
 			// splitContainer1.Panel1
@@ -66,7 +69,7 @@ namespace WeSay.Setup
 			// splitContainer1.Panel2
 			//
 			this.splitContainer1.Panel2.Controls.Add(this.tableLayoutPanel1);
-			this.splitContainer1.Size = new System.Drawing.Size(507, 267);
+			this.splitContainer1.Size = new System.Drawing.Size(507, 279);
 			this.splitContainer1.SplitterDistance = 169;
 			this.splitContainer1.TabIndex = 0;
 			//
@@ -102,7 +105,7 @@ namespace WeSay.Setup
 			this.tableLayoutPanel1.RowCount = 2;
 			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
 			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-			this.tableLayoutPanel1.Size = new System.Drawing.Size(334, 267);
+			this.tableLayoutPanel1.Size = new System.Drawing.Size(334, 279);
 			this.tableLayoutPanel1.TabIndex = 0;
 			//
 			// groupBox1
@@ -111,10 +114,10 @@ namespace WeSay.Setup
 			this.groupBox1.Controls.Add(this.btnMoveUp);
 			this.groupBox1.Controls.Add(this._writingSystemListBox);
 			this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.groupBox1.Location = new System.Drawing.Point(3, 136);
+			this.groupBox1.Location = new System.Drawing.Point(3, 142);
 			this.groupBox1.Name = "groupBox1";
 			this.groupBox1.Padding = new System.Windows.Forms.Padding(7);
-			this.groupBox1.Size = new System.Drawing.Size(328, 128);
+			this.groupBox1.Size = new System.Drawing.Size(328, 134);
 			this.groupBox1.TabIndex = 0;
 			this.groupBox1.TabStop = false;
 			this.groupBox1.Text = "Show these Writing Systems in this field";
@@ -160,7 +163,7 @@ namespace WeSay.Setup
 			"English"});
 			this._writingSystemListBox.Location = new System.Drawing.Point(31, 20);
 			this._writingSystemListBox.Name = "_writingSystemListBox";
-			this._writingSystemListBox.Size = new System.Drawing.Size(290, 94);
+			this._writingSystemListBox.Size = new System.Drawing.Size(290, 109);
 			this._writingSystemListBox.TabIndex = 0;
 			this._writingSystemListBox.SelectedIndexChanged += new System.EventHandler(this._writingSystemListBox_SelectedIndexChanged);
 			this._writingSystemListBox.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this._writingSystemListBox_ItemCheck);
@@ -171,7 +174,7 @@ namespace WeSay.Setup
 			this.groupBox2.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.groupBox2.Location = new System.Drawing.Point(3, 3);
 			this.groupBox2.Name = "groupBox2";
-			this.groupBox2.Size = new System.Drawing.Size(328, 127);
+			this.groupBox2.Size = new System.Drawing.Size(328, 133);
 			this.groupBox2.TabIndex = 1;
 			this.groupBox2.TabStop = false;
 			this.groupBox2.Text = "About This Field";
@@ -186,7 +189,7 @@ namespace WeSay.Setup
 			this._descriptionBox.Multiline = true;
 			this._descriptionBox.Name = "_descriptionBox";
 			this._descriptionBox.ReadOnly = true;
-			this._descriptionBox.Size = new System.Drawing.Size(314, 101);
+			this._descriptionBox.Size = new System.Drawing.Size(314, 107);
 			this._descriptionBox.TabIndex = 0;
 			this._descriptionBox.Text = "hello";
 			//
@@ -194,23 +197,52 @@ namespace WeSay.Setup
 			//
 			this.richTextBox1.BackColor = System.Drawing.SystemColors.ControlLightLight;
 			this.richTextBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-			this.richTextBox1.Location = new System.Drawing.Point(7, 10);
+			this.richTextBox1.Location = new System.Drawing.Point(7, 0);
 			this.richTextBox1.Name = "richTextBox1";
 			this.richTextBox1.ReadOnly = true;
-			this.richTextBox1.Size = new System.Drawing.Size(507, 42);
+			this.richTextBox1.Size = new System.Drawing.Size(507, 21);
 			this.richTextBox1.TabIndex = 1;
 			this.richTextBox1.Text = "Check each field you want WeSay to display. ";
+			//
+			// pictureBox1
+			//
+			this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.pictureBox1.Image = global::WeSay.Setup.Properties.Resources.construction;
+			this.pictureBox1.Location = new System.Drawing.Point(7, 316);
+			this.pictureBox1.Name = "pictureBox1";
+			this.pictureBox1.Size = new System.Drawing.Size(29, 28);
+			this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+			this.pictureBox1.TabIndex = 16;
+			this.pictureBox1.TabStop = false;
+			//
+			// label2
+			//
+			this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
+			this.label2.AutoSize = true;
+			this.label2.BackColor = System.Drawing.Color.Transparent;
+			this.label2.ForeColor = System.Drawing.Color.Gray;
+			this.label2.Location = new System.Drawing.Point(40, 316);
+			this.label2.MaximumSize = new System.Drawing.Size(250, 0);
+			this.label2.MinimumSize = new System.Drawing.Size(350, 0);
+			this.label2.Name = "label2";
+			this.label2.Size = new System.Drawing.Size(350, 26);
+			this.label2.TabIndex = 15;
+			this.label2.Text = "You will be able to add custom fields here. For now, you can add them by editting" +
+				" the tasks.xml file directly.";
 			//
 			// FieldsControl
 			//
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.SystemColors.ControlLightLight;
+			this.Controls.Add(this.pictureBox1);
+			this.Controls.Add(this.label2);
 			this.Controls.Add(this.richTextBox1);
 			this.Controls.Add(this.splitContainer1);
 			this.Name = "FieldsControl";
 			this.Padding = new System.Windows.Forms.Padding(7);
-			this.Size = new System.Drawing.Size(521, 331);
+			this.Size = new System.Drawing.Size(521, 348);
 			this.Load += new System.EventHandler(this.FieldsControl_Load);
 			this.splitContainer1.Panel1.ResumeLayout(false);
 			this.splitContainer1.Panel2.ResumeLayout(false);
@@ -219,7 +251,9 @@ namespace WeSay.Setup
 			this.groupBox1.ResumeLayout(false);
 			this.groupBox2.ResumeLayout(false);
 			this.groupBox2.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
 			this.ResumeLayout(false);
+			this.PerformLayout();
 
 		}
 
@@ -238,5 +272,7 @@ namespace WeSay.Setup
 		private System.Windows.Forms.Button btnMoveUp;
 		private System.Windows.Forms.Button btnMoveDown;
 		private System.Windows.Forms.ToolTip toolTip1;
+		private System.Windows.Forms.PictureBox pictureBox1;
+		private System.Windows.Forms.Label label2;
 	}
 }

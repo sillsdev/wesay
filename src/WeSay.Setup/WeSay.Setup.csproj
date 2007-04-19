@@ -86,6 +86,12 @@
 	<Compile Include="NewProject.Designer.cs">
 	  <DependentUpon>NewProject.cs</DependentUpon>
 	</Compile>
+	<Compile Include="OptionListControl.cs">
+	  <SubType>UserControl</SubType>
+	</Compile>
+	<Compile Include="OptionListControl.Designer.cs">
+	  <DependentUpon>OptionListControl.cs</DependentUpon>
+	</Compile>
 	<Compile Include="OtherControl.cs">
 	  <SubType>UserControl</SubType>
 	</Compile>
@@ -123,6 +129,10 @@
 	<EmbeddedResource Include="NewProject.resx">
 	  <SubType>Designer</SubType>
 	  <DependentUpon>NewProject.cs</DependentUpon>
+	</EmbeddedResource>
+	<EmbeddedResource Include="OptionListControl.resx">
+	  <SubType>Designer</SubType>
+	  <DependentUpon>OptionListControl.cs</DependentUpon>
 	</EmbeddedResource>
 	<EmbeddedResource Include="OtherControl.resx">
 	  <SubType>Designer</SubType>
