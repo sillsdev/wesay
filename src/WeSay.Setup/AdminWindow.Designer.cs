@@ -38,7 +38,6 @@ namespace WeSay.Setup
 			this.newProjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.openProjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
-			this.exportToLIFTXmlToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
 			this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -67,7 +66,6 @@ namespace WeSay.Setup
 			this.newProjectToolStripMenuItem,
 			this.openProjectToolStripMenuItem,
 			this.toolStripMenuItem2,
-			this.exportToLIFTXmlToolStripMenuItem,
 			this.toolStripMenuItem1,
 			this.exitToolStripMenuItem});
 			this.projectToolStripMenuItem.Name = "projectToolStripMenuItem";
@@ -105,13 +103,6 @@ namespace WeSay.Setup
 			//
 			this.toolStripMenuItem2.Name = "toolStripMenuItem2";
 			this.toolStripMenuItem2.Size = new System.Drawing.Size(202, 6);
-			//
-			// exportToLIFTXmlToolStripMenuItem
-			//
-			this.exportToLIFTXmlToolStripMenuItem.Name = "exportToLIFTXmlToolStripMenuItem";
-			this.exportToLIFTXmlToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
-			this.exportToLIFTXmlToolStripMenuItem.Text = "&Export To LIFT XML...";
-			this.exportToLIFTXmlToolStripMenuItem.Click += new System.EventHandler(this.OnExportToLiftXmlToolStripMenuItem_Click);
 			//
 			// toolStripMenuItem1
 			//
@@ -167,7 +158,6 @@ namespace WeSay.Setup
 		private System.Windows.Forms.ToolStripMenuItem openProjectToolStripMenuItem;
 		private System.Windows.Forms.FolderBrowserDialog _chooseProjectLocationDialog;
 		private System.Windows.Forms.ToolStripSeparator toolStripMenuItem2;
-		private System.Windows.Forms.ToolStripMenuItem exportToLIFTXmlToolStripMenuItem;
 		private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
 		private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;

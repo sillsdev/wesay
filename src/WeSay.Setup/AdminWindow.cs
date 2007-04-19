@@ -64,7 +64,7 @@ namespace WeSay.Setup
 			else
 			{
 				this.openThisProjectInWeSayToolStripMenuItem.Enabled = (_project != null) && (_progressHandler == null);
-				exportToLIFTXmlToolStripMenuItem.Enabled = (_project != null) && (_progressHandler == null);
+			 //   exportToLIFTXmlToolStripMenuItem.Enabled = (_project != null) && (_progressHandler == null);
 			   // importFromLIFTXMLToolStripMenuItem.Enabled = (_project != null) && (_progressHandler == null);
 			}
 
