@@ -6,7 +6,6 @@ using NUnit.Framework;
 using NUnit.Extensions.Forms;
 using WeSay.Project;
 using WeSay.Setup;
-using WeSay.Setup.Tests;
 
 namespace WeSay.Admin.Tests
 {
@@ -32,7 +31,7 @@ namespace WeSay.Admin.Tests
 		public override void TearDown()
 		{
 			base.TearDown();
-			Project.WeSayWordsProject.Project.Dispose();
+			WeSayWordsProject.Project.Dispose();
 
 			if (Directory.Exists(_projectFolder))
 			{
@@ -137,7 +136,7 @@ namespace WeSay.Admin.Tests
 			Assert.IsNotNull(t.Properties.SelectedTab, "Couldn't find "+projectTabName);
 		}
 
-		private void WalkTopLevelTabs()
+		static private void WalkTopLevelTabs()
 		{
 //            for(int i = 0; i<10000;i++)
 //            {
@@ -154,6 +153,7 @@ namespace WeSay.Admin.Tests
 		public void RunAndExitWithoutOpening()
 		{
 			_mainWindowTester.Close();
+			WeSayWordsProject.InitializeForTests(); // for Teardown
 		}
 
 

@@ -1,10 +1,5 @@
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
 using System.IO;
-using System.Text;
 using System.Windows.Forms;
 
 namespace WeSay.Setup
@@ -32,25 +27,25 @@ namespace WeSay.Setup
 
 		}
 
-		private void webBrowser1_Navigating(object sender, WebBrowserNavigatingEventArgs e)
-		{
-			string s = e.Url.AbsolutePath;
-			e.Cancel = true;
-			if(s.IndexOf("CreateProject")>-1)
-			{
-				if (NewProjectClicked != null)
-				{
-					NewProjectClicked.Invoke(this, null);
-				}
-			}
-			else if(s.IndexOf("OpenProject")>-1)
-			{
-				if (OpenProjectClicked != null)
-				{
-					OpenProjectClicked.Invoke(this, null);
-				}
-			}
-		}
+		//private void webBrowser1_Navigating(object sender, WebBrowserNavigatingEventArgs e)
+		//{
+		//    string s = e.Url.AbsolutePath;
+		//    e.Cancel = true;
+		//    if(s.IndexOf("CreateProject")>-1)
+		//    {
+		//        if (NewProjectClicked != null)
+		//        {
+		//            NewProjectClicked.Invoke(this, null);
+		//        }
+		//    }
+		//    else if(s.IndexOf("OpenProject")>-1)
+		//    {
+		//        if (OpenProjectClicked != null)
+		//        {
+		//            OpenProjectClicked.Invoke(this, null);
+		//        }
+		//    }
+		//}
 
 
 		private void openRecentProject_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -80,7 +75,7 @@ namespace WeSay.Setup
 
 		private void WelcomeControl_Load(object sender, EventArgs e)
 		{
-			if (openRecentProject.Visible == true)
+			if (openRecentProject.Visible)
 			{
 				openRecentProject.Focus();
 			}

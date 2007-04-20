@@ -461,9 +461,9 @@ namespace WeSay.Project
 		{
 			//Todo: WS-227 Before changing a ws id in a lift file, ensure that it isn't already in use
 
-			this.WritingSystems.IdOfWritingSystemChanged(ws, oldId);
+			WritingSystems.IdOfWritingSystemChanged(ws, oldId);
 
-			foreach (Field field in this.ViewTemplate)
+			foreach (Field field in ViewTemplate)
 			{
 				field.ChangeWritingSystemId(oldId, ws.Id);
 			}
@@ -475,7 +475,7 @@ namespace WeSay.Project
 			}
 		}
 
-		private void GrepLift(string inputPath, string pattern, string replaceWith)
+		static private void GrepLift(string inputPath, string pattern, string replaceWith)
 		{
 			Regex regex = new Regex(pattern, RegexOptions.Compiled);
 			string tempPath = inputPath + ".tmp";
