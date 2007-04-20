@@ -72,7 +72,8 @@
 
   <Target Name="VerifySample">
 	<CreateItem Include="$(BaseDirectory)\SampleProjects\**\*.lift"
-				Exclude="$(BaseDirectory)\SampleProjects\src\**\*.*">
+				Exclude="$(BaseDirectory)\SampleProjects\src\**\*.*;
+				$(BaseDirectory)\SampleProjects\PRETEND\**\*.*">
 	  <Output TaskParameter="Include" ItemName="WeSayFiles"/>
 	</CreateItem>
 
