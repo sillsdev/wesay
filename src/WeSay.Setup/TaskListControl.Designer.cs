@@ -76,11 +76,13 @@ namespace WeSay.Setup
 			//
 			// groupBox1
 			//
+			this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+						| System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
 			this.groupBox1.Controls.Add(this._description);
-			this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.groupBox1.Location = new System.Drawing.Point(0, 0);
 			this.groupBox1.Name = "groupBox1";
-			this.groupBox1.Size = new System.Drawing.Size(317, 290);
+			this.groupBox1.Size = new System.Drawing.Size(317, 280);
 			this.groupBox1.TabIndex = 0;
 			this.groupBox1.TabStop = false;
 			this.groupBox1.Text = "About this Task";
@@ -92,7 +94,7 @@ namespace WeSay.Setup
 			this._description.Location = new System.Drawing.Point(3, 16);
 			this._description.Multiline = true;
 			this._description.Name = "_description";
-			this._description.Size = new System.Drawing.Size(311, 271);
+			this._description.Size = new System.Drawing.Size(311, 261);
 			this._description.TabIndex = 0;
 			//
 			// richTextBox1
@@ -119,8 +121,9 @@ namespace WeSay.Setup
 			this.textBox1.ReadOnly = true;
 			this.textBox1.Size = new System.Drawing.Size(443, 51);
 			this.textBox1.TabIndex = 5;
-			this.textBox1.Text = "Eventually, you\'ll have more control over the details of a task, as well as creat" +
-				"e new ones.  For now, you can only do this by editting the tasks.xml file.";
+			this.textBox1.Text = "Eventually, you\'ll have more control over the details of a task and be able to cr" +
+				"eate new tasks.  For now, you can only do this by editting the WeSayConfig file." +
+				"";
 			this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
 			//
 			// pictureBox1

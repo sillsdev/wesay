@@ -229,7 +229,7 @@ namespace WeSay.Setup
 			this.label2.Size = new System.Drawing.Size(350, 26);
 			this.label2.TabIndex = 15;
 			this.label2.Text = "You will be able to add custom fields here. For now, you can add them by editting" +
-				" the tasks.xml file directly.";
+				" the WeSayConfig file directly.";
 			//
 			// FieldsControl
 			//

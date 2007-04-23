@@ -121,8 +121,14 @@
   <data name="WeSayImage" type="System.Resources.ResXFileRef, System.Windows.Forms">
 	<value>..\..\..\artwork\WeSay.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="Config Tool Welcome Image" type="System.Resources.ResXFileRef, System.Windows.Forms">
+	<value>..\Resources\Config Tool Welcome Image1.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="WeSayApplicationIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
 	<value>..\..\..\artwork\WeSay.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="construction" type="System.Resources.ResXFileRef, System.Windows.Forms">
+	<value>..\Resources\construction.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="RoundedBorder" type="System.Resources.ResXFileRef, System.Windows.Forms">
 	<value>..\Resources\RoundedBorder.PNG;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -133,7 +139,7 @@
   <data name="WeSaySetupApplicationIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
 	<value>..\..\..\artwork\WeSay.Setup.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="construction" type="System.Resources.ResXFileRef, System.Windows.Forms">
-	<value>..\Resources\construction.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="WelcomeImage" type="System.Resources.ResXFileRef, System.Windows.Forms">
+	<value>..\Resources\WelcomeImage.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

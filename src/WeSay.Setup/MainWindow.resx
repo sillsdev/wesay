@@ -117,7 +117,7 @@
   <resheader name="writer">
 	<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="label1.Text" xml:space="preserve">
-	<value>WeSay is developed under the Payap University Linguistics Institute Software Unit. The Linguistics Institute is a partnership between Payap University (Chiang Mai, Thailand) and SIL International with the mandate to serve the language communities of Southeast Asia through linguistic research and language development. The Software Unit designs new software to aid language research and development.</value>
-  </data>
+  <metadata name="menuStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+	<value>17, 17</value>
+  </metadata>
 </root>

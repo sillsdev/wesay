@@ -29,33 +29,22 @@ namespace WeSay.Setup
 		private void InitializeComponent()
 		{
 			this.panel1 = new System.Windows.Forms.Panel();
-			this.pictureBox1 = new System.Windows.Forms.PictureBox();
 			this.textBox1 = new System.Windows.Forms.TextBox();
 			this.openRecentProject = new System.Windows.Forms.LinkLabel();
 			this.openDifferentProject = new System.Windows.Forms.LinkLabel();
 			this.createNewProject = new System.Windows.Forms.LinkLabel();
+			this.pictureBox1 = new System.Windows.Forms.PictureBox();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
 			this.SuspendLayout();
 			//
 			// panel1
 			//
-			this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+			this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(63)))), ((int)(((byte)(111)))), ((int)(((byte)(167)))));
 			this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
 			this.panel1.Location = new System.Drawing.Point(0, 0);
 			this.panel1.Name = "panel1";
 			this.panel1.Size = new System.Drawing.Size(530, 45);
 			this.panel1.TabIndex = 0;
-			//
-			// pictureBox1
-			//
-			this.pictureBox1.BackColor = System.Drawing.Color.Transparent;
-			this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-			this.pictureBox1.Image = global::WeSay.Setup.Properties.Resources.RoundedBorder;
-			this.pictureBox1.Location = new System.Drawing.Point(27, 14);
-			this.pictureBox1.Name = "pictureBox1";
-			this.pictureBox1.Size = new System.Drawing.Size(60, 79);
-			this.pictureBox1.TabIndex = 0;
-			this.pictureBox1.TabStop = false;
 			//
 			// textBox1
 			//
@@ -112,6 +101,18 @@ namespace WeSay.Setup
 			this.createNewProject.TabStop = true;
 			this.createNewProject.Text = "Create New Project";
 			this.createNewProject.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.createNewProject_LinkClicked);
+			//
+			// pictureBox1
+			//
+			this.pictureBox1.BackColor = System.Drawing.Color.Transparent;
+			this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+			this.pictureBox1.Image = global::WeSay.Setup.Properties.Resources.WelcomeImage;
+			this.pictureBox1.InitialImage = null;
+			this.pictureBox1.Location = new System.Drawing.Point(27, 21);
+			this.pictureBox1.Name = "pictureBox1";
+			this.pictureBox1.Size = new System.Drawing.Size(70, 70);
+			this.pictureBox1.TabIndex = 0;
+			this.pictureBox1.TabStop = false;
 			//
 			// WelcomeControl
 			//

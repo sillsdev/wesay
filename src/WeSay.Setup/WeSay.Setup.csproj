@@ -80,6 +80,12 @@
 	<Compile Include="FontControl.designer.cs">
 	  <DependentUpon>FontControl.cs</DependentUpon>
 	</Compile>
+	<Compile Include="MainWindow.cs">
+	  <SubType>Form</SubType>
+	</Compile>
+	<Compile Include="MainWindow.Designer.cs">
+	  <DependentUpon>MainWindow.cs</DependentUpon>
+	</Compile>
 	<Compile Include="NewProject.cs">
 	  <SubType>Form</SubType>
 	</Compile>
@@ -124,6 +130,10 @@
 	</EmbeddedResource>
 	<EmbeddedResource Include="FontControl.resx">
 	  <DependentUpon>FontControl.cs</DependentUpon>
+	  <SubType>Designer</SubType>
+	</EmbeddedResource>
+	<EmbeddedResource Include="MainWindow.resx">
+	  <DependentUpon>MainWindow.cs</DependentUpon>
 	  <SubType>Designer</SubType>
 	</EmbeddedResource>
 	<EmbeddedResource Include="NewProject.resx">
@@ -238,6 +248,12 @@
   </ItemGroup>
   <ItemGroup>
 	<None Include="Resources\construction.png" />
+  </ItemGroup>
+  <ItemGroup>
+	<None Include="Resources\Config Tool Welcome Image1.png" />
+  </ItemGroup>
+  <ItemGroup>
+	<None Include="Resources\WelcomeImage.png" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

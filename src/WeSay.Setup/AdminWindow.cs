@@ -38,6 +38,11 @@ namespace WeSay.Setup
 				OpenProject(args[0].Trim(new char[] { '"' }));
 			}
 
+
+			if (!this.DesignMode)
+			{
+				UpdateWindowCaption();
+			}
 		}
 
 		private WeSayWordsProject Project
@@ -72,37 +77,53 @@ namespace WeSay.Setup
 
 		void OnOpenProject(object sender, EventArgs e)
 		{
-			string selectedPath = sender as string;
-			if (selectedPath == null)
-			{
-				string s = Settings.Default.LastProjectPath;
+//            string selectedPath = sender as string;
+//            if (selectedPath == null)
+//            {
+				string initialDirectory = Settings.Default.LastProjectPath;
 
-				if (s == null || s == "")
+				if (initialDirectory == null || initialDirectory == "")
 				{
-					s = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+					initialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 				}
-				this._chooseProjectLocationDialog.SelectedPath = s;
+//                this._chooseProjectLocationDialog.SelectedPath = s;
 
-				if (DialogResult.OK != this._chooseProjectLocationDialog.ShowDialog())
-					return;
+//                if (DialogResult.OK != this._chooseProjectLocationDialog.ShowDialog())
+//                    return;
+//
+//                selectedPath = this._chooseProjectLocationDialog.SelectedPath;
+//            }
 
-				selectedPath = this._chooseProjectLocationDialog.SelectedPath;
-			}
+			System.Windows.Forms.OpenFileDialog dlg = new OpenFileDialog();
+			dlg.DefaultExt = ".WeSayConfig";
+			dlg.Filter = "WeSay Configuration File (*.WeSayConfig)|*.WeSayConfig";
+			dlg.Multiselect = false;
+			dlg.InitialDirectory = initialDirectory;
+			if (DialogResult.OK != dlg.ShowDialog(this))
+				return;
 
-			if (WeSayWordsProject.IsValidProjectDirectory(selectedPath))
+
+			if (WeSayWordsProject.IsValidProjectDirectory(System.IO.Directory.GetParent(dlg.FileName).FullName))
 			{
-				OpenProject(selectedPath);
-			}
-				//allow them to click the "wesay" subdirectory, since that's a reasonable thing to try
-			else if (WeSayWordsProject.IsValidProjectDirectory(System.IO.Directory.GetParent(selectedPath).FullName))
-			{
-				OpenProject(System.IO.Directory.GetParent(selectedPath).FullName);
+				OpenProject(dlg.FileName);
 			}
 
-			else
-			{
-				Reporting.ErrorReporter.ReportNonFatalMessage("That directory does not appear to be a valid WeSay or Basil Project directory.");
-			}
+			Settings.Default.LastProjectPath = dlg.FileName;
+
+//            if (WeSayWordsProject.IsValidProjectDirectory(selectedPath))
+//            {
+//                OpenProject(selectedPath);
+//            }
+//                //allow them to click the "wesay" subdirectory, since that's a reasonable thing to try
+//            else if (WeSayWordsProject.IsValidProjectDirectory(System.IO.Directory.GetParent(selectedPath).FullName))
+//            {
+//                OpenProject(System.IO.Directory.GetParent(selectedPath).FullName);
+//            }
+//
+//            else
+//            {
+//                Reporting.ErrorReporter.ReportNonFatalMessage("That directory does not appear to be a valid WeSay or Basil Project directory.");
+//            }
 		}
 
 
@@ -165,13 +186,24 @@ namespace WeSay.Setup
 			{
 				this.Project = new WeSayWordsProject();
 
+				//just open the accompanying lift file.
+				path = path.Replace(".WeSayConfig", ".lift");
+
 				if (path.Contains(".lift"))
 				{
 					this.Project.LoadFromLiftLexiconPath(path);
 				}
-				else
+//                else if (path.Contains(".WeSayConfig"))
+//                {
+//                    this.Project.LoadFromConfigFilePath(path);
+//                }
+				else if (Directory.Exists(path))
 				{
 					this.Project.LoadFromProjectDirectoryPath(path);
+				}
+				else
+				{
+					throw new ApplicationException(path + " is not named as a .lift file or .WeSayConfig file.");
 				}
 			}
 			catch (Exception e)
@@ -188,14 +220,24 @@ namespace WeSay.Setup
 		{
 		   // try
 		   // {
-				this.Text = "WeSay Setup: " + this.Project.Name;
-				RemoveExistingControls();
+			UpdateWindowCaption();
+			RemoveExistingControls();
 				InstallProjectsControls();
 			//}
 //            catch (Exception e)
 //            {
 //                MessageBox.Show("WeSay was not able to display that project. \r\n"+e.Message);
 //            }
+		}
+
+		private void UpdateWindowCaption()
+		{
+			string projectName="";
+			if (this.Project != null)
+			{
+				projectName = this.Project.Name;
+			}
+			this.Text = "WeSay Configuration Tool: " + projectName+ "   "+ Reporting.ErrorReporter.UserFriendlyVersionString;
 		}
 
 
@@ -382,6 +424,13 @@ namespace WeSay.Setup
 				new ProcessStartInfo(Path.Combine(dir, "WeSay.App.exe"),
 														string.Format("\"{0}\"", _project.PathToLiftFile));
 			Process.Start(startInfo);
+		}
+
+
+
+		void OnExit_Click(object sender, System.EventArgs e)
+		{
+			this.Close();
 		}
 	}
 }
