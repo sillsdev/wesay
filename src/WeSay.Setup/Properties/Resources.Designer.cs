@@ -60,23 +60,9 @@ namespace WeSay.Setup.Properties {
 			}
 		}
 
-		internal static System.Drawing.Bitmap Config_Tool_Welcome_Image {
-			get {
-				object obj = ResourceManager.GetObject("Config Tool Welcome Image", resourceCulture);
-				return ((System.Drawing.Bitmap)(obj));
-			}
-		}
-
 		internal static System.Drawing.Bitmap construction {
 			get {
 				object obj = ResourceManager.GetObject("construction", resourceCulture);
-				return ((System.Drawing.Bitmap)(obj));
-			}
-		}
-
-		internal static System.Drawing.Bitmap RoundedBorder {
-			get {
-				object obj = ResourceManager.GetObject("RoundedBorder", resourceCulture);
 				return ((System.Drawing.Bitmap)(obj));
 			}
 		}
@@ -95,9 +81,23 @@ namespace WeSay.Setup.Properties {
 			}
 		}
 
+		internal static System.Drawing.Bitmap WeSayConfigMenuSized {
+			get {
+				object obj = ResourceManager.GetObject("WeSayConfigMenuSized", resourceCulture);
+				return ((System.Drawing.Bitmap)(obj));
+			}
+		}
+
 		internal static System.Drawing.Bitmap WeSayImage {
 			get {
 				object obj = ResourceManager.GetObject("WeSayImage", resourceCulture);
+				return ((System.Drawing.Bitmap)(obj));
+			}
+		}
+
+		internal static System.Drawing.Bitmap WeSayMenuSized {
+			get {
+				object obj = ResourceManager.GetObject("WeSayMenuSized", resourceCulture);
 				return ((System.Drawing.Bitmap)(obj));
 			}
 		}

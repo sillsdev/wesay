@@ -31,7 +31,10 @@ namespace WeSay.Admin.Tests
 		public override void TearDown()
 		{
 			base.TearDown();
-			WeSayWordsProject.Project.Dispose();
+			if (WeSayWordsProject.IsInitialized)
+			{
+				WeSayWordsProject.Project.Dispose();
+			}
 
 			if (Directory.Exists(_projectFolder))
 			{
@@ -78,7 +81,7 @@ namespace WeSay.Admin.Tests
 //            StreamWriter writer = File.CreateText(WeSayWordsProject.Project.PathToProjectTaskInventory);
 //            writer.Write(TestResources.tasks);
 //            writer.Close();
-			File.Copy(Path.Combine(WeSayWordsProject.Project.ApplicationTestDirectory,"tasks.xml") , WeSayWordsProject.Project.PathToProjectTaskInventory, true);
+			  File.Copy(Path.Combine(WeSayWordsProject.Project.ApplicationTestDirectory, "pretend.WeSayConfig"), WeSayWordsProject.Project.PathToProjectTaskInventory, true);
 			WalkTopLevelTabs();
 		}
 

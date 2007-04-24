@@ -80,12 +80,14 @@ namespace WeSay.Project
 			{
 				File.Delete(PathToProjectTaskInventory);
 			}
-			File.Copy(Path.Combine(ApplicationTestDirectory, "tasks.xml"), Project.PathToProjectTaskInventory, true);
+			string configName = Path.GetFileName(Project.PathToProjectTaskInventory);
+			File.Copy(Path.Combine(ApplicationTestDirectory, configName), Project.PathToProjectTaskInventory, true);
 
 			ErrorReporter.OkToInteractWithUser = false;
 			LoadFromProjectDirectoryPath(_projectDirectoryPath);
 			StringCatalogSelector = "en";
 		}
+
 
 		public bool LoadFromLiftLexiconPath(string liftPath)
 		{
@@ -128,6 +130,12 @@ namespace WeSay.Project
 				return false;
 			}
 		}
+
+//        public void LoadFromConfigFilePath(string path)
+//        {
+//            DirectoryInfo weSayDirectoryInfo = Directory.GetParent(path);
+//
+//        }
 
 
 
@@ -220,6 +228,18 @@ namespace WeSay.Project
 		}
 
 		public string PathToProjectTaskInventory
+		{
+			get
+			{
+				string name = Path.GetFileNameWithoutExtension(PathToLiftFile);
+				return Path.Combine(PathToWeSaySpecificFilesDirectoryInProject, name + ".WeSayConfig");
+			}
+		}
+
+		/// <summary>
+		/// used for upgrading
+		/// </summary>
+		public string PathToOldProjectTaskInventory
 		{
 			get
 			{
@@ -506,5 +526,7 @@ namespace WeSay.Project
 			}
 			return path + "old" + i;
 		}
+
+
 	}
 }

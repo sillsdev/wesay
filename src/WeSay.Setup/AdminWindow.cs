@@ -14,7 +14,7 @@ namespace WeSay.Setup
 {
 	public partial class AdminWindow : Form
 	{
-		private WelcomeControl _welcomePage = new WelcomeControl();
+		private WelcomeControl _welcomePage;
 		private ProjectTabs _projectTabs;
 		private WeSayWordsProject _project;
 		ProgressDialogHandler _progressHandler;
@@ -69,32 +69,20 @@ namespace WeSay.Setup
 			else
 			{
 				this.openThisProjectInWeSayToolStripMenuItem.Enabled = (_project != null) && (_progressHandler == null);
-			 //   exportToLIFTXmlToolStripMenuItem.Enabled = (_project != null) && (_progressHandler == null);
-			   // importFromLIFTXMLToolStripMenuItem.Enabled = (_project != null) && (_progressHandler == null);
 			}
 
 		}
-
-		void OnOpenProject(object sender, EventArgs e)
+		void OnChooseProject(object sender, EventArgs e)
 		{
-//            string selectedPath = sender as string;
-//            if (selectedPath == null)
-//            {
-				string initialDirectory = Settings.Default.LastProjectPath;
+			string initialDirectory = Settings.Default.LastConfigFilePath;
 
-				if (initialDirectory == null || initialDirectory == "")
-				{
-					initialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-				}
-//                this._chooseProjectLocationDialog.SelectedPath = s;
-
-//                if (DialogResult.OK != this._chooseProjectLocationDialog.ShowDialog())
-//                    return;
-//
-//                selectedPath = this._chooseProjectLocationDialog.SelectedPath;
-//            }
+			if (initialDirectory == null || initialDirectory == "")
+			{
+				initialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+			}
 
 			System.Windows.Forms.OpenFileDialog dlg = new OpenFileDialog();
+			dlg.Title = "Open WeSay Project...";
 			dlg.DefaultExt = ".WeSayConfig";
 			dlg.Filter = "WeSay Configuration File (*.WeSayConfig)|*.WeSayConfig";
 			dlg.Multiselect = false;
@@ -102,32 +90,24 @@ namespace WeSay.Setup
 			if (DialogResult.OK != dlg.ShowDialog(this))
 				return;
 
-
-			if (WeSayWordsProject.IsValidProjectDirectory(System.IO.Directory.GetParent(dlg.FileName).FullName))
-			{
-				OpenProject(dlg.FileName);
-			}
-
-			Settings.Default.LastProjectPath = dlg.FileName;
-
-//            if (WeSayWordsProject.IsValidProjectDirectory(selectedPath))
-//            {
-//                OpenProject(selectedPath);
-//            }
-//                //allow them to click the "wesay" subdirectory, since that's a reasonable thing to try
-//            else if (WeSayWordsProject.IsValidProjectDirectory(System.IO.Directory.GetParent(selectedPath).FullName))
-//            {
-//                OpenProject(System.IO.Directory.GetParent(selectedPath).FullName);
-//            }
-//
-//            else
-//            {
-//                Reporting.ErrorReporter.ReportNonFatalMessage("That directory does not appear to be a valid WeSay or Basil Project directory.");
-//            }
+			OnOpenProject(dlg.FileName, null);
 		}
 
 
-
+		void OnOpenProject(object sender, EventArgs e)
+		{
+			string configFilePath = (string)sender;
+			string first = System.IO.Directory.GetParent(configFilePath).FullName;
+			if (WeSayWordsProject.IsValidProjectDirectory(System.IO.Directory.GetParent(first).FullName))
+			{
+				OpenProject(configFilePath);
+			}
+			else
+			{
+				Reporting.ErrorReporter.ReportNonFatalMessage("Sorry, that file does not appear to be located in a valid WeSay Project directory.");
+			}
+			Settings.Default.LastConfigFilePath = configFilePath;
+		}
 
 		private void OnCreateProject(object sender, EventArgs e)
 		{
@@ -152,10 +132,6 @@ namespace WeSay.Setup
 			{
 				p = new WeSayWordsProject();
 				p.CreateEmptyProjectFiles(path);
-
-//                Db4oDataSource d = new Db4oDataSource(p.PathToDb4oLexicalModelDB);
-//                d.Data.Commit();
-//                d.Data.Close();
 			}
 			catch (Exception e)
 			{
@@ -173,7 +149,7 @@ namespace WeSay.Setup
 
 		public void OpenProject(string path)
 		{
-			//System.Configuration.ConfigurationManager.AppSettings["LastProjectPath"] = path;
+			//System.Configuration.ConfigurationManager.AppSettings["LastConfigFilePath"] = path;
 
 			//strip off any trailing '\'
 			if (path[path.Length - 1] == Path.DirectorySeparatorChar
@@ -213,7 +189,7 @@ namespace WeSay.Setup
 			}
 
 			SetupProjectControls();
-			Settings.Default.LastProjectPath = path;
+			Settings.Default.LastConfigFilePath = path;
 		}
 
 		private void SetupProjectControls()
@@ -237,17 +213,20 @@ namespace WeSay.Setup
 			{
 				projectName = this.Project.Name;
 			}
-			this.Text = "WeSay Configuration Tool: " + projectName+ "   "+ Reporting.ErrorReporter.UserFriendlyVersionString;
+			this.Text = projectName + " - WeSay Configuration Tool";
+			_versionToolStripMenuItem.Text = Reporting.ErrorReporter.UserFriendlyVersionString;
 		}
 
 
 		private void InstallWelcomePage()
 		{
+			_welcomePage = new WelcomeControl();
 			this.Controls.Add(this._welcomePage);
 			this._welcomePage.BringToFront();
 			this._welcomePage.Dock = DockStyle.Fill;
 			this._welcomePage.NewProjectClicked += new EventHandler(OnCreateProject);
-			this._welcomePage.OpenProjectClicked += new EventHandler(OnOpenProject);
+			this._welcomePage.OpenPreviousProjectClicked  += new EventHandler(OnOpenProject);
+			this._welcomePage.ChooseProjectClicked   += new EventHandler(OnChooseProject);
 		}
 		private void InstallProjectsControls()
 		{

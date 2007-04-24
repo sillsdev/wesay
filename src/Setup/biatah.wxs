@@ -16,8 +16,8 @@
 		<Shortcut Id="RunBiatahShortcut"  Directory="WeSayShortcutDir" Name="Run Biatah Sample"
 			Target="[!WeSay.App.exe]" Arguments ='"[!biatah.lift]"' WorkingDirectory="biatahWeSay" Icon ="SampleRunIcon" />
 
-		<Shortcut Id="SetupBiatahShortcut"  Directory="WeSayShortcutDir" Name="Setup Biatah Sample"
-				  Target="[!WeSay.Setup.exe]"  Arguments ='"[biatahSampleDir]"'
+		<Shortcut Id="SetupBiatahShortcut"  Directory="WeSayShortcutDir" Name="Configure Biatah Sample"
+				  Target="[!WeSayConfigurationTool]"  Arguments ='"[!biatah.WeSayConfig]"'
 		   WorkingDirectory="biatahWeSay" Icon ="SampleSetupIcon" />
 		<!-- this Registry entry is required because we have shortcuts that aren't 'advertised',
 					  which we have because 'advertised shortcuts can't have targets. Don't as ME.
@@ -34,7 +34,7 @@
 	  <Directory Id="biatahWeSay" Name="wesay">
 		<Component Id="biatahWesayDir" Guid="{5008C03F-7946-4147-96B1-442AD4999FA9}">
 		  <File Id="biatah.lift" Name="biatah.lift" KeyPath="yes" Source="..\..\sampleprojects\biatah\wesay\biatah.lift" />
-		  <File Id="tasks.xml" Name="tasks.xml"  Source="..\..\sampleprojects\biatah\wesay\tasks.xml" />
+		  <File Id="biatah.WeSayConfig" Name="biatah.WeSayConfig"  Source="..\..\sampleprojects\biatah\wesay\biatah.WeSayConfig" />
 		</Component>
 		<Directory Id="biatahWordsCacheDir" Name="Cache">
 		  <Component Id="biatahWordsCache" Guid="{EF2EBD26-0A05-4DC1-8B74-C4EFDA1547F6}">

@@ -8,7 +8,7 @@
 	<OutputType>WinExe</OutputType>
 	<AppDesignerFolder>Properties</AppDesignerFolder>
 	<RootNamespace>WeSay.Setup</RootNamespace>
-	<AssemblyName>WeSay.Setup</AssemblyName>
+	<AssemblyName>WeSay Configuration Tool</AssemblyName>
 	<ApplicationIcon>..\..\artwork\WeSay.Setup.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -80,12 +80,6 @@
 	<Compile Include="FontControl.designer.cs">
 	  <DependentUpon>FontControl.cs</DependentUpon>
 	</Compile>
-	<Compile Include="MainWindow.cs">
-	  <SubType>Form</SubType>
-	</Compile>
-	<Compile Include="MainWindow.Designer.cs">
-	  <DependentUpon>MainWindow.cs</DependentUpon>
-	</Compile>
 	<Compile Include="NewProject.cs">
 	  <SubType>Form</SubType>
 	</Compile>
@@ -130,10 +124,6 @@
 	</EmbeddedResource>
 	<EmbeddedResource Include="FontControl.resx">
 	  <DependentUpon>FontControl.cs</DependentUpon>
-	  <SubType>Designer</SubType>
-	</EmbeddedResource>
-	<EmbeddedResource Include="MainWindow.resx">
-	  <DependentUpon>MainWindow.cs</DependentUpon>
 	  <SubType>Designer</SubType>
 	</EmbeddedResource>
 	<EmbeddedResource Include="NewProject.resx">
@@ -250,10 +240,13 @@
 	<None Include="Resources\construction.png" />
   </ItemGroup>
   <ItemGroup>
-	<None Include="Resources\Config Tool Welcome Image1.png" />
+	<None Include="Resources\WelcomeImage.png" />
   </ItemGroup>
   <ItemGroup>
-	<None Include="Resources\WelcomeImage.png" />
+	<None Include="Resources\WeSayMenuSized.png" />
+  </ItemGroup>
+  <ItemGroup>
+	<None Include="Resources\WeSayConfigMenuSized.png" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

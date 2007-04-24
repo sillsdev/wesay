@@ -71,7 +71,7 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 			<ProgId Id='WeSay.LIFTFile' Description='Lexical Interchange FormaT file'>
 			  <Extension Id='lift' ContentType='application/words'>
 				<Verb Id='open' Command='Open' TargetFile ='WeSay.App.exe' Argument='"%1"' />
-				<Verb Id='configure' Command='Configure WeSay Project' TargetFile='WeSay.Setup.exe' Argument='"%1"' />
+				<Verb Id='configure' Command='Configure WeSay Project' TargetFile='WeSayConfigurationTool' Argument='"%1"' />
 			  </Extension>
 			</ProgId>
 
@@ -88,17 +88,37 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 			<!-- another way:                 <Registry Id='LuaReg8' Root='HKCR' Key='VisualStudio.luaproj.8.0\Shell\Open\Command' Action='write'
 					 Type='string' Value='"[ENVPATH_2005]" "%1"'/> -->
 
-			<Shortcut Id="startmenuShortcut"  Directory="WeSayShortcutDir" Name="WeSay Client"
+			<Shortcut Id="startmenuShortcut"  Directory="WeSayShortcutDir" Name="WeSay"
 				 WorkingDirectory="ProgramDir" Target="[!WeSay.App.exe]"  Icon ="WeSay.App.exe" />
 
 		  </Component>
 
-		  <Component Id="WeSay.Setup.exe" Guid="{26CD1460-94D4-44CD-832A-EA750F5AA92A}">
-			<Registry Root="HKCU" Key="SOFTWARE\WeSay\Components\WeSay.Setup.exe" KeyPath="yes" />
+		  <Component Id="WeSayConfigurationTool" Guid="{26CD1460-94D4-44CD-832A-EA750F5AA92A}">
+			<Registry Root="HKCU" Key="SOFTWARE\WeSay\Components\WeSayConfigurationTool" KeyPath="yes" />
 
-			<File Id="WeSay.Setup.exe" Name="WeSay.Setup.exe" Source="..\..\output\release\WeSay.Setup.exe" />
+			<File Id="WeSayConfigurationTool" Name="WeSay Configuration Tool.exe" Source="..\..\output\release\WeSay Configuration Tool.exe" />
+			<File Id="WeSayConfigIconFile" Name="WeSayConfigFile.ico" Source="..\..\artwork\WeSay.Config.File.ico" />
 
-			<Shortcut Id="startmenuSplatt2"  Target ="[!WeSay.Setup.exe]" Directory="WeSayShortcutDir" Name="WeSay Setup"
+			<!--- connect file types to icons and program to launch -->
+
+			<ProgId Id='WeSay.ConfigFile' Description='Configuration for a WeSay project'>
+			  <Extension Id='WeSayConfig' ContentType='application/config'>
+				<Verb Id='open' Command='Open' TargetFile ='WeSayConfigurationTool' Argument='"%1"' />
+			  </Extension>
+			</ProgId>
+
+			<RemoveRegistryKey Action ='removeOnUninstall' Root ='HKCR' Key ='.WeSayConfig'/>
+			<RemoveRegistryKey Action ='removeOnUninstall' Root ='HKCR' Key ='WeSay.ConfigFile'/>
+
+			<Registry  Id='WeSayConfigIcon1' Root='HKCR' Key='.WeSayConfig' Action='write'
+			  Type='string' Value='WeSay.ConfigFile' />
+			<Registry Id='WeSayConfigIcon2' Root='HKCR' Key='WeSay.ConfigFile' Action='write'
+			  Type='string' Value='WeSay configuration file' />
+			<Registry Id='WeSayConfigIcon3' Root='HKCR' Key='WeSay.ConfigFile\DefaultIcon' Action='write'
+			  Type='string' Value='[!WeSayConfigIconFile], 0' />
+
+
+			<Shortcut Id="startmenuSplatt2"  Target ="[!WeSayConfigurationTool]" Directory="WeSayShortcutDir" Name="WeSay Configuration Tool"
 	 WorkingDirectory="ProgramDir" Icon ="IconSetup.exe" />
 
 		  </Component>
@@ -261,7 +281,7 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 	  <ComponentRef Id="DocFiles"/>
 
 	   <!-- assemblies -->
-	  <ComponentRef Id="WeSay.Setup.exe" />
+	  <ComponentRef Id="WeSayConfigurationTool" />
 	  <ComponentRef Id="WeSay.Setup.exe.config" />
 	  <ComponentRef Id="WeSay.Setup.pdb" />
 
@@ -333,8 +353,8 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 	</Feature>
 	<Media Id="1" Cabinet="product.cab" EmbedCab="yes" />
 	<Icon Id="WeSay.App.exe" SourceFile ="..\..\output\release\WeSay.App.exe" />
-	<Icon Id="IconSetup.exe" SourceFile ="..\..\output\release\WeSay.Setup.exe" />
-	<Icon Id="SampleSetupIcon" SourceFile ="..\..\output\release\WeSay.Setup.exe" />
+	<Icon Id="IconSetup.exe" SourceFile ="..\..\output\release\WeSay Configuration Tool.exe" />
+	<Icon Id="SampleSetupIcon" SourceFile ="..\..\artwork\WeSay.Config.File.ico" />
 	<Icon Id="SampleRunIcon" SourceFile ="..\..\artwork\WeSay.File.ico" />
 
 	<!--   <Property Id="BROWSER">

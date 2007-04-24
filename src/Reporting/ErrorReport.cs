@@ -518,6 +518,9 @@ namespace Reporting
 			set {s_emailSubject = value;}
 			get {return s_emailSubject;}
 		}
+
+
+
 		#endregion
 
 		#region Methods
@@ -793,30 +796,7 @@ namespace Reporting
 			Assembly assembly = Assembly.GetEntryAssembly();
 			if (assembly != null)
 			{
-				object[] attributes =
-					assembly.GetCustomAttributes(typeof (AssemblyFileVersionAttribute), false);
-				string version;
-				if (attributes != null && attributes.Length > 0)
-					version = ((AssemblyFileVersionAttribute) attributes[0]).Version;
-				else
-					version = Application.ProductVersion;
-//       wesay doesn't encode the date in the product version
-				// Extract the fourth (and final) field of the version to get a date value.
-//                int ich = version.IndexOf('.');
-//                if (ich >= 0)
-//                    ich = version.IndexOf('.', ich + 1);
-//                if (ich >= 0)
-//                    ich = version.IndexOf('.', ich + 1);
-//                if (ich >= 0)
-//                {
-//                    int iDate = Convert.ToInt32(version.Substring(ich + 1));
-//                    if (iDate > 0)
-//                    {
-//                        double oadate = Convert.ToDouble(iDate);
-//                        DateTime dt = DateTime.FromOADate(oadate);
-//                        version += string.Format("  {0}", dt.ToString("yyyy/MM/dd"));
-//                    }
-//                }
+				string version = versionNumberString;
 
 				version += " (apparent build date: ";
 				try
@@ -829,13 +809,46 @@ namespace Reporting
 					version += "???";
 				}
 
-
 #if DEBUG
 				version += "  (Debug version)";
 #endif
 				return version;
 			}
 			return "unknown";
+		}
+
+		private static string versionNumberString
+		{
+			get
+			{
+				Assembly assembly = Assembly.GetEntryAssembly();
+				if (assembly != null)
+				{
+					object[] attributes =
+						assembly.GetCustomAttributes(typeof (AssemblyFileVersionAttribute), false);
+					string version;
+					if (attributes != null && attributes.Length > 0)
+					{
+						version = ((AssemblyFileVersionAttribute) attributes[0]).Version;
+					}
+					else
+					{
+						version = Application.ProductVersion;
+					}
+					return version;
+				}
+				return "unknown";
+			}
+		}
+
+		public static string UserFriendlyVersionString
+		{
+			get
+			{
+				string v = versionNumberString;
+				string build = v.Substring(v.LastIndexOf('.') + 1);
+				return "Version 1 Preview, build " + build;
+			}
 		}
 
 		/// <summary>

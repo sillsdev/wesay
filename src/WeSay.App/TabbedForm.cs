@@ -279,7 +279,7 @@ namespace WeSay.App
 
 		private void TabbedForm_Load(object sender, EventArgs e)
 		{
-			//ContinueLaunchingAfterInitialDisplay();
+
 		}
 	}
 

@@ -26,12 +26,12 @@ namespace WeSay.Setup.Properties {
 		[global::System.Configuration.UserScopedSettingAttribute()]
 		[global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
 		[global::System.Configuration.DefaultSettingValueAttribute("")]
-		public string LastProjectPath {
+		public string LastConfigFilePath {
 			get {
-				return ((string)(this["LastProjectPath"]));
+				return ((string)(this["LastConfigFilePath"]));
 			}
 			set {
-				this["LastProjectPath"] = value;
+				this["LastConfigFilePath"] = value;
 			}
 		}
 

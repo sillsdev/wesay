@@ -54,6 +54,10 @@ namespace WeSay.Project.Tests
 		[TearDown]
 		public void TearDown()
 		{
+			if (BasilProject.IsInitialized)
+			{
+				BasilProject.Project.Dispose();
+			}
 			Directory.Delete(_projectDirectory, true);
 		}
 

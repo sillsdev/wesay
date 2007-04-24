@@ -7,17 +7,17 @@ namespace WeSay.Setup
 	public partial class WelcomeControl : UserControl
 	{
 		public event EventHandler NewProjectClicked;
-		public event EventHandler OpenProjectClicked;
+		public event EventHandler OpenPreviousProjectClicked;
+		public event EventHandler ChooseProjectClicked;
 
 		public WelcomeControl()
 		{
 			InitializeComponent();
 
-		   string s = WeSay.Setup.Properties.Settings.Default.LastProjectPath;
-		   if (s != null && s.Length > 0 && Directory.Exists(s))
+		   string s = WeSay.Setup.Properties.Settings.Default.LastConfigFilePath;
+		   if (s != null && s.Length > 0 && File.Exists(s))
 		   {
-			   string[] directories = s.Split('\\');
-			   this.openRecentProject.Text = "Open " + directories[directories.Length-1];
+			   this.openRecentProject.Text = "Open " + Path.GetFileNameWithoutExtension(s);
 		   }
 		   else
 		   {
@@ -27,41 +27,20 @@ namespace WeSay.Setup
 
 		}
 
-		//private void webBrowser1_Navigating(object sender, WebBrowserNavigatingEventArgs e)
-		//{
-		//    string s = e.Url.AbsolutePath;
-		//    e.Cancel = true;
-		//    if(s.IndexOf("CreateProject")>-1)
-		//    {
-		//        if (NewProjectClicked != null)
-		//        {
-		//            NewProjectClicked.Invoke(this, null);
-		//        }
-		//    }
-		//    else if(s.IndexOf("OpenProject")>-1)
-		//    {
-		//        if (OpenProjectClicked != null)
-		//        {
-		//            OpenProjectClicked.Invoke(this, null);
-		//        }
-		//    }
-		//}
-
-
 		private void openRecentProject_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
 		{
-		   if (OpenProjectClicked != null)
+			if (OpenPreviousProjectClicked != null)
 			{
-				OpenProjectClicked.Invoke(WeSay.Setup.Properties.Settings.Default.LastProjectPath, null);
+				OpenPreviousProjectClicked.Invoke(WeSay.Setup.Properties.Settings.Default.LastConfigFilePath, null);
 			}
 
 		}
 
 		private void openDifferentProject_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
 		{
-			if (OpenProjectClicked != null)
+			if (ChooseProjectClicked  != null)
 			{
-				OpenProjectClicked.Invoke(this, null);
+				ChooseProjectClicked.Invoke(this, null);
 			}
 		}
 

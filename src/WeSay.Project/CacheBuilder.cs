@@ -16,6 +16,23 @@ namespace WeSay.Project
 {
 	public class CacheManager
 	{
+		/// <summary>
+		/// This is used to let us ship, with the installer, a version
+		/// which won't rebuild the cache just because the installer maker
+		/// changed the modified dates so the don't match anymore.
+		/// </summary>
+		public const string kCacheIsFreshIndicator = "AssumeCacheIsFresh";
+
+
+		public static void RemoveAssumeCacheIsFreshIndicator()
+		{
+			string s = Path.Combine(Project.WeSayWordsProject.Project.PathToCache, kCacheIsFreshIndicator);
+			if(File.Exists(s))
+			{
+				File.Delete(s);
+			}
+		}
+
 		public static CacheBuilder GetCacheBuilderIfNeeded(WeSayWordsProject project)
 		{
 			string pathToCacheDirectory = project.PathToCache;
@@ -42,12 +59,22 @@ namespace WeSay.Project
 			{
 				return true;
 			}
-		//|| (File.GetLastWriteTimeUtc(project.PathToLiftFile) > File.GetLastWriteTimeUtc(db4oPath)));
+
+			if (AssumeCacheIsFresh(pathToCacheDirectory))
+			{
+				return false;
+			}
+			//|| (File.GetLastWriteTimeUtc(project.PathToLiftFile) > File.GetLastWriteTimeUtc(db4oPath)));
 
 			using (Db4oDataSource ds = new Db4oDataSource(project.PathToDb4oLexicalModelDB))
 			{
 				return !GetSyncPointInCacheMatches(ds, File.GetLastWriteTimeUtc(project.PathToLiftFile));
 			}
+		}
+
+		public static bool AssumeCacheIsFresh(string pathToCacheDirectory)
+		{
+			return File.Exists(Path.Combine(pathToCacheDirectory, kCacheIsFreshIndicator));
 		}
 
 		class SyncPoint
@@ -239,6 +266,8 @@ namespace WeSay.Project
 				using (Db4oDataSource ds = new Db4oDataSource(WeSayWordsProject.Project.PathToDb4oLexicalModelDB))
 				{
 					CacheManager.UpdateSyncPointInCache(ds.Data, File.GetLastWriteTimeUtc(_sourceLIFTPath));
+					File.WriteAllText(
+						Path.Combine(Project.WeSayWordsProject.Project.PathToCache, CacheManager.kCacheIsFreshIndicator), "");
 				}
 
 				_progress.State = ProgressState.StateValue.Finished;

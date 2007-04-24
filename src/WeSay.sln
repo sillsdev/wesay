@@ -1,61 +1,157 @@
 Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual Studio 2005
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LexicalModel", "LexicalModel\LexicalModel.csproj", "{5F61C809-B6C0-4567-9603-B2198E1AD038}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
 	ProjectSection(ProjectDependencies) = postProject
 		{600D0FD4-D189-41A0-9BC5-FC79AD2CF1CD} = {600D0FD4-D189-41A0-9BC5-FC79AD2CF1CD}
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LexicalModel.Tests", "LexicalModel.Tests\LexicalModel.Tests.csproj", "{123D695C-0D5D-46E5-893F-39EC4E0B01B8}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
 	ProjectSection(ProjectDependencies) = postProject
 		{600D0FD4-D189-41A0-9BC5-FC79AD2CF1CD} = {600D0FD4-D189-41A0-9BC5-FC79AD2CF1CD}
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeSay.Foundation.Tests", "WeSay.Foundation.Tests\WeSay.Foundation.Tests.csproj", "{6366719E-DA80-4680-9E06-D9BC6F340DE3}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeSay.UI.Tests", "WeSay.UI.Tests\WeSay.UI.Tests.csproj", "{6AED6785-CC6F-4A6A-BDB1-1895C6DA1090}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeSay.App", "WeSay.App\WeSay.App.csproj", "{EFB9D66D-AF0F-4E45-A1AC-DB32981711D2}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LexicalTools", "LexicalTools\LexicalTools.csproj", "{87AF0B02-2983-486D-857F-D1859535C234}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
 	ProjectSection(ProjectDependencies) = postProject
 		{600D0FD4-D189-41A0-9BC5-FC79AD2CF1CD} = {600D0FD4-D189-41A0-9BC5-FC79AD2CF1CD}
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonTools", "CommonTools\CommonTools.csproj", "{64726381-FEA8-47D5-A884-18AED42E93B6}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeSay.Data", "WeSay.Data\WeSay.Data.csproj", "{600D0FD4-D189-41A0-9BC5-FC79AD2CF1CD}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeSay.Data.Tests", "WeSay.Data.Tests\WeSay.Data.Tests.csproj", "{8491FEEE-C311-4B64-BB30-A1F1C1802F45}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LexicalTools.Tests", "LexicalTools.Tests\LexicalTools.Tests.csproj", "{9936180C-90A7-467C-B761-EC184EFE1F9F}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeSay.App.Tests", "WeSay.App.Tests\WeSay.App.Tests.csproj", "{7DA57D98-255B-46DE-BF94-D163695A0568}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlatformSpecific", "PlatformSpecific\PlatformSpecific.csproj", "{55E6BAB0-9B46-4C89-8773-4432417C1ADF}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonoSpecific", "MonoSpecific\MonoSpecific.csproj", "{C7C9A512-40CE-4D8C-A8DE-48F41572E007}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ListBox", "ListBox\ListBox\ListBox.csproj", "{3CB6560B-DA13-4348-BE4E-4E12E05A6559}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ListBox.Tests", "ListBox.Tests\ListBox.Tests.csproj", "{8265C439-E652-4F70-A8D2-BFE7A2CA65E7}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeSay.UI", "WeSay.UI\WeSay.UI.csproj", "{AC8F284C-7B34-4AC9-A7DE-FAF765456DFF}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeSay.Project", "WeSay.Project\WeSay.Project.csproj", "{5CFD0BB3-5B2A-4911-B220-9C2286151BF0}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeSay.Project.Tests", "WeSay.Project.Tests\WeSay.Project.Tests.csproj", "{F644C902-A952-4797-9E2D-19D6051DD032}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeSay.Foundation", "WeSay.Foundation\WeSay.Foundation.csproj", "{F12EB680-0990-4900-B77E-0FBF2E28A815}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lift2WeSay", "Lift2WeSay\Lift2WeSay.csproj", "{4408C857-0371-42BF-A635-E23C8A99A803}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleDataProcessor", "Lift2WeSay\SampleDataProcessor.csproj", "{4408C857-0371-42BF-A635-E23C8A99A803}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1E233883-3ED1-4890-84BD-F39747A5F0D2}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reporting", "Reporting\Reporting.csproj", "{9CCBECEC-513C-4DA4-A4CE-F5361B633760}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeSay.Setup", "WeSay.Setup\WeSay.Setup.csproj", "{54C943DB-7725-4F52-BCE4-86C3D3D5A66E}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeSay.Setup.Tests", "WeSay.Setup.Tests\WeSay.Setup.Tests.csproj", "{FB7CFBB8-D7D0-4E9D-96CF-7D3D0D947EB5}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

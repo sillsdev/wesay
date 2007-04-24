@@ -33,6 +33,7 @@ namespace WeSay.Setup
 			this.btnOK = new System.Windows.Forms.Button();
 			this.btnCancel = new System.Windows.Forms.Button();
 			this._textProjectName = new System.Windows.Forms.TextBox();
+			this._pathLabel = new System.Windows.Forms.Label();
 			this.SuspendLayout();
 			//
 			// label1
@@ -74,6 +75,16 @@ namespace WeSay.Setup
 			this._textProjectName.TabIndex = 0;
 			this._textProjectName.TextChanged += new System.EventHandler(this._textProjectName_TextChanged);
 			//
+			// _pathLabel
+			//
+			this._pathLabel.AutoSize = true;
+			this._pathLabel.ForeColor = System.Drawing.SystemColors.ControlDark;
+			this._pathLabel.Location = new System.Drawing.Point(20, 94);
+			this._pathLabel.Name = "_pathLabel";
+			this._pathLabel.Size = new System.Drawing.Size(46, 13);
+			this._pathLabel.TabIndex = 4;
+			this._pathLabel.Text = "pathInfo";
+			//
 			// NewProject
 			//
 			this.AcceptButton = this.btnOK;
@@ -82,6 +93,7 @@ namespace WeSay.Setup
 			this.AutoScroll = true;
 			this.CancelButton = this.btnCancel;
 			this.ClientSize = new System.Drawing.Size(359, 171);
+			this.Controls.Add(this._pathLabel);
 			this.Controls.Add(this._textProjectName);
 			this.Controls.Add(this.btnCancel);
 			this.Controls.Add(this.btnOK);
@@ -100,5 +112,6 @@ namespace WeSay.Setup
 		private System.Windows.Forms.Button btnOK;
 		private System.Windows.Forms.Button btnCancel;
 		private System.Windows.Forms.TextBox _textProjectName;
+		private System.Windows.Forms.Label _pathLabel;
 	}
 }

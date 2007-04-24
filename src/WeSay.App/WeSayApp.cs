@@ -81,7 +81,7 @@ namespace WeSay.App
 				using (IRecordListManager recordListManager = MakeRecordListManager(project))
 				{
 					tabbedForm.Show(); // so the user sees that we did launch
-					tabbedForm.Text = "WeSay: " + project.Name;
+					tabbedForm.Text = "WeSay: " + project.Name + "        "  + Reporting.ErrorReporter.UserFriendlyVersionString;
 					Application.DoEvents();
 
 					LiftUpdateService liftUpdateService = SetupUpdateService(recordListManager);
@@ -186,6 +186,17 @@ namespace WeSay.App
 			{
 				return false;
 			}
+			if (CacheManager.AssumeCacheIsFresh(Project.WeSayWordsProject.Project.PathToCache))
+			{
+				//prevent the update service from thinking the LIFT file is really old
+				//compared to the cache, due to the installer messing with the dates.
+				LiftUpdateService.LiftIsFreshNow();
+			}
+			//whether or not we're out of date, remove this indicator file, which is only to get
+			//fresh-from-install launchign without an installer-induced
+			//false dirty cache signal
+			CacheManager.RemoveAssumeCacheIsFreshIndicator();
+
 			WeSayWordsProject.Project.LockLift();
 			if (project.LoadFromLiftLexiconPath(liftPath))
 			{
@@ -202,6 +213,7 @@ namespace WeSay.App
 		{
 			project.PathToLiftFile = liftPath;
 			CacheBuilder builder = CacheManager.GetCacheBuilderIfNeeded(project);
+
 			if (builder == null)
 			{
 				return true;
