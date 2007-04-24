@@ -122,11 +122,11 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 	 WorkingDirectory="ProgramDir" Icon ="IconSetup.exe" />
 
 		  </Component>
-		  <Component Id="WeSay.Setup.exe.config" Guid="{3FD496AE-6B71-4213-B3FD-39CF62698642}">
-			<File Id="WeSay.Setup.exe.config" Name="WeSay.Setup.exe.config" KeyPath="yes" Source="..\..\output\release\WeSay.Setup.exe.config" />
+		  <Component Id="WeSayConfigurationTool.exe.config" Guid="{3FD496AE-6B71-4213-B3FD-39CF62698642}">
+			<File Id="WeSayConfigurationTool.exe.config" Name="WeSay Configuration Tool.exe.config" KeyPath="yes" Source="..\..\output\release\WeSay Configuration Tool.exe.config" />
 		  </Component>
-		  <Component Id="WeSay.Setup.pdb" Guid="{FA331270-82EF-4BB8-878C-724442249466}">
-			<File Id="WeSay.Setup.pdb" Name="WeSay.Setup.pdb" KeyPath="yes" Source="..\..\output\release\WeSay.Setup.pdb" />
+		  <Component Id="WeSayConfigurationTool.pdb" Guid="{FA331270-82EF-4BB8-878C-724442249466}">
+			<File Id="WeSayConfigurationTool.pdb" Name="WeSay Configuration Tool.pdb" KeyPath="yes" Source="..\..\output\release\WeSay Configuration Tool.pdb" />
 		  </Component>
 		  <Component Id="Castle.DynamicProxy.dll" Guid="{871D566A-F864-4946-AA65-6A7E07D24E1B}">
 			<File Id="Castle.DynamicProxy.dll" Name="Castle.DynamicProxy.dll" KeyPath="yes" Source="..\..\output\release\Castle.DynamicProxy.dll" />
@@ -282,8 +282,8 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 
 	   <!-- assemblies -->
 	  <ComponentRef Id="WeSayConfigurationTool" />
-	  <ComponentRef Id="WeSay.Setup.exe.config" />
-	  <ComponentRef Id="WeSay.Setup.pdb" />
+	  <ComponentRef Id="WeSayConfigurationTool.exe.config" />
+	  <ComponentRef Id="WeSayConfigurationTool.pdb" />
 
 	  <ComponentRef Id="Castle.DynamicProxy.dll" />
 	  <ComponentRef Id="CommonTools.dll" />
