@@ -40,6 +40,7 @@
 		  <Component Id="biatahWordsCache" Guid="{EF2EBD26-0A05-4DC1-8B74-C4EFDA1547F6}">
 			<File Id="biatah.words" Name="biatah.words" Source="..\..\sampleprojects\biatah\wesay\cache\biatah.words" />
 			<File Id="AddExamples.cache" Name="Add Examples.cache" KeyPath="yes" Source="..\..\sampleprojects\biatah\wesay\Cache\Add Examples.cache" />
+			<File Id="AssumeCacheIsFresh" Name="AssumeCacheIsFresh" Source="..\..\sampleprojects\biatah\wesay\Cache\AssumeCacheIsFresh" />
 			<File Id="AddMeanings.cache" Name="Add Meanings.cache" Source="..\..\sampleprojects\biatah\wesay\Cache\Add Meanings.cache" />
 			<File Id="Dictionary.cache" Name="Dictionary.cache"  Source="..\..\sampleprojects\biatah\wesay\Cache\Dictionary.cache" />
 			<File Id="LexEntrysortedbybth.cache" Name="LexEntry sorted by bth.cache"  Source="..\..\sampleprojects\biatah\wesay\Cache\LexEntry sorted by bth.cache" />

@@ -7,8 +7,8 @@
 	<ProjectGuid>{4408C857-0371-42BF-A635-E23C8A99A803}</ProjectGuid>
 	<OutputType>Exe</OutputType>
 	<AppDesignerFolder>Properties</AppDesignerFolder>
-	<RootNamespace>Lift2WeSay</RootNamespace>
-	<AssemblyName>Lift2WeSay</AssemblyName>
+	<RootNamespace>SampleDataProcessor</RootNamespace>
+	<AssemblyName>SampleDataProcessor</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
 	<DebugSymbols>true</DebugSymbols>
