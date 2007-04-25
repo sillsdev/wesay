@@ -35,7 +35,7 @@
 			<Output TaskParameter="Include" ItemName="LiftFiles"/>
 		</CreateItem>
 		<!-- lift to wesay.words-->
-		<Exec Command="$(BaseDirectory)\output\Release\SampleDataProcessor.exe %(LiftFiles.FullPath) %(LiftFiles.RootDir)%(LiftFiles.Directory)" WorkingDirectory="$(BaseDirectory)\output\Release"/>
+		<Exec Command="$(BaseDirectory)\output\Release\SampleDataProcessor.exe %(LiftFiles.FullPath)" WorkingDirectory="$(BaseDirectory)\output\Release"/>
 	</Target>
 	<Target Name="VerifySample">
 		<CreateItem Include="$(BaseDirectory)\SampleProjects\**\*.lift" Exclude="$(BaseDirectory)\SampleProjects\src\**\*.*;
