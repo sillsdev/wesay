@@ -1,3 +1,4 @@
+using System.Threading;
 using NUnit.Framework;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Db4o_Specific;
@@ -118,6 +119,8 @@ namespace WeSay.LexicalTools.Tests
 			DetailList detailList = entryViewControl.ControlEntryDetail;
 			MultiTextControl editControl = GetEditControl(detailList, "Meaning");
 			editControl.TextBoxes[0].Text = "";
+			Thread.Sleep(1000);
+			Application.DoEvents();
 
 			Assert.IsTrue(GetEditControl(detailList, "Meaning").Name.Contains("ghost"), "Only ghost should remain");
 		}

@@ -1,4 +1,5 @@
 using System.IO;
+using System.Threading;
 using System.Windows.Forms;
 using NUnit.Framework;
 using NUnit.Extensions.Forms;
@@ -524,9 +525,46 @@ namespace WeSay.LexicalTools.Tests
 		}
 
 		[Test]
+		public void BaselineForRemovingSenseTests()
+		{
+			RemovingSenseTestCore();
+			TypeInMeaning("samo");
+			TextBoxTester tb2 = new TextBoxTester(GetMeaningControlName());
+			Assert.AreEqual("samo", tb2.Properties.Text);
+		}
+
+		[Test]
 		public void EditField_RemoveSenseContents_RemovesSense()
 		{
-			//skip to second word (first has extra stuff in the sense)
+			RemovingSenseTestCore();
+			TypeInMeaning(string.Empty);
+			Thread.Sleep(1000);
+			Application.DoEvents();
+			Assert.IsTrue(GetEditControl("Meaning").Name.Contains("ghost"), "Only ghost should remain");
+		}
+
+		[Test]  //regression test
+		public void PastingBlankOverAMeaningOfEmptySenseDoesntCrash()
+		{
+			RemovingSenseTestCore();
+			TextBoxTester tb = new TextBoxTester(GetMeaningControlName());
+			tb.Properties.Paste(" ");
+		}
+
+		[Test]  //regression test
+		public void PastingTextOverAMeaningOfEmptySenseDoesntJustChangesMeaning()
+		{
+			RemovingSenseTestCore();
+			TextBoxTester tb = new TextBoxTester(GetMeaningControlName());
+			tb.Properties.Paste("samo");
+			TextBoxTester tb2 = new TextBoxTester(GetMeaningControlName());
+			Assert.AreEqual("samo", tb2.Properties.Text);
+		}
+
+
+		private void RemovingSenseTestCore()
+		{
+//skip to second word (first has extra stuff in the sense)
 			ListBoxTester t = new ListBoxTester("_recordsListBox");
 			t.Properties.SelectedIndex = 1;
 			Assert.AreEqual("Secondary", LexemeFormOfSelectedEntry);
@@ -534,9 +572,6 @@ namespace WeSay.LexicalTools.Tests
 			Assert.AreEqual(0, ((LexSense)(GetCurrentEntry().Senses[0])).ExampleSentences.Count, "this test assumes a sense w/ no example");
 			MultiTextControl editControl = GetEditControl("Meaning");
 			editControl.TextBoxes[0].Focus();
-			TypeInMeaning(string.Empty);
-
-			Assert.IsTrue(GetEditControl("Meaning").Name.Contains("ghost"), "Only ghost should remain");
 		}
 
 		/// <summary>

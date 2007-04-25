@@ -11,6 +11,7 @@ namespace WeSay.LexicalTools
 	{
 		private ViewTemplate _viewTemplate;
 		private LexEntry _record;
+		private System.Windows.Forms.Timer _cleanupTimer;
 
 		public EntryViewControl()
 		{
@@ -20,6 +21,14 @@ namespace WeSay.LexicalTools
 			_detailListControl.KeyDown += new KeyEventHandler(_detailListControl_KeyDown);
 		}
 
+		protected override void OnHandleDestroyed(EventArgs e)
+		{
+			if (_cleanupTimer != null)
+			{
+				_cleanupTimer.Dispose();
+			}
+			base.OnHandleDestroyed(e);
+		}
 
 	  void _detailListControl_KeyDown(object sender, KeyEventArgs e)
 		{
@@ -126,10 +135,30 @@ namespace WeSay.LexicalTools
 				case "senses":
 					break;
 				default:
-					entry.CleanUpEmptyObjects();
+					//this is to fix WS-238. The scenario is this:
+					//a paste operation starts by erasing the target... this fired off a cleanup
+					//and then the new text came in so fast that we got various crashes.
+					//With this, we just schedule a cleanup, as a ui event handler, for
+					//a moment in the future.  The interval is chosen to allow even a quick
+					//backspace followed by typing, without wiping out the sense/example.
+					if (_cleanupTimer == null)
+					{
+						_cleanupTimer = new Timer();
+						_cleanupTimer.Tick += new EventHandler(_cleanupTimer_Tick);
+					 _cleanupTimer.Interval = 500;
+					 }
+					_cleanupTimer.Tag = entry;
+					_cleanupTimer.Start();
 					break;
 			}
 			RefreshLexicalEntryPreview();
+		}
+
+		void _cleanupTimer_Tick(object sender, EventArgs e)
+		{
+			LexEntry entry = (LexEntry) _cleanupTimer.Tag;
+			_cleanupTimer.Stop();
+			entry.CleanUpEmptyObjects();
 		}
 
 		private void RefreshLexicalEntryPreview()
