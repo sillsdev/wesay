@@ -1,0 +1,1 @@
+The pretend.WeSayConfig file is created by copying it from the WeSay\Tests directory, in the setup of tests that need it.
