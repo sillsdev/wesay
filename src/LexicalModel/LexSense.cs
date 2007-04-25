@@ -49,7 +49,7 @@ namespace WeSay.LexicalModel
 			get { return _exampleSentences; }
 		}
 
-		public override bool Empty
+		public override bool IsEmpty
 		{
 			get {
 				return Gloss.Empty &&
@@ -81,13 +81,14 @@ namespace WeSay.LexicalModel
 
 			for (int i = count - 1; i >= 0 ; i--)
 			{
-				if(this._exampleSentences[i].Empty)
+				if(this._exampleSentences[i].IsEmpty)
 				{
 					this._exampleSentences.RemoveAt(i);
 				}
 			}
 			if(count != this._exampleSentences.Count)
 			{
+				Reporting.Logger.WriteMinorEvent("Empty example removed");
 				OnEmptyObjectsRemoved();
 			}
 		}

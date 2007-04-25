@@ -20,6 +20,8 @@ namespace WeSay.UI
 			this.GotFocus += new EventHandler(OnGotFocus);
 			this.LostFocus += new EventHandler(OnLostFocus);
 			this.KeyPress += new KeyPressEventHandler(WeSayTextBox_KeyPress);
+			this.TextChanged += new EventHandler(WeSayTextBox_TextChanged);
+
 
 
 		  //  Debug.Assert(DesignMode);
@@ -35,6 +37,17 @@ namespace WeSay.UI
 			if (_nameForLogging == null)
 			{
 				_nameForLogging = "??";
+			}
+		}
+
+		void WeSayTextBox_TextChanged(object sender, EventArgs e)
+		{
+			//only first change per focus session will be logged
+			if (!_haveAlreadyLoggedTextChanged &&
+				this.Focused/*try not to report when code is changing us*/)
+			{
+				_haveAlreadyLoggedTextChanged = true;
+				Reporting.Logger.WriteMinorEvent("First_TextChange (could be paste via mouse) {0}:{1}", _nameForLogging, _writingSystem.Id);
 			}
 		}
 

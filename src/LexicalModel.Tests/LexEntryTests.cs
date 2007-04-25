@@ -74,7 +74,7 @@ namespace WeSay.LexicalModel.Tests
 		[Test]
 		public void Example_Empty_False()
 		{
-			Assert.IsFalse(this._examples.Empty);
+			Assert.IsFalse(this._examples.IsEmpty);
 		}
 
 
@@ -84,7 +84,7 @@ namespace WeSay.LexicalModel.Tests
 			ClearExampleTranslation();
 			ClearExampleCustom();
 			Assert.IsFalse(this._removed);
-			Assert.IsFalse(this._examples.Empty);
+			Assert.IsFalse(this._examples.IsEmpty);
 		}
 
 		[Test]
@@ -93,7 +93,7 @@ namespace WeSay.LexicalModel.Tests
 			ClearExampleSentence();
 			ClearExampleCustom();
 			Assert.IsFalse(this._removed);
-			Assert.IsFalse(this._examples.Empty);
+			Assert.IsFalse(this._examples.IsEmpty);
 		}
 		[Test]
 		public void ExampleWithOnlyCustomField_Empty_False()
@@ -101,7 +101,7 @@ namespace WeSay.LexicalModel.Tests
 			ClearExampleSentence();
 			ClearExampleTranslation();
 			Assert.IsFalse(this._removed);
-			Assert.IsFalse(this._examples.Empty);
+			Assert.IsFalse(this._examples.IsEmpty);
 		}
 
 		[Test]
@@ -111,7 +111,7 @@ namespace WeSay.LexicalModel.Tests
 			ClearExampleTranslation();
 			ClearExampleCustom();
 			Assert.IsTrue(this._removed);
-			Assert.IsTrue(this._examples.Empty);
+			Assert.IsTrue(this._examples.IsEmpty);
 		}
 
 		[Test]
@@ -131,7 +131,7 @@ namespace WeSay.LexicalModel.Tests
 			ClearSenseExample();
 			ClearSenseCustom();
 			Assert.IsFalse(this._removed);
-			Assert.IsFalse(this._sense.Empty);
+			Assert.IsFalse(this._sense.IsEmpty);
 		}
 
 		[Test]
@@ -140,7 +140,7 @@ namespace WeSay.LexicalModel.Tests
 			ClearSenseGloss();
 			ClearSenseCustom();
 			Assert.IsFalse(this._removed);
-			Assert.IsFalse(this._sense.Empty);
+			Assert.IsFalse(this._sense.IsEmpty);
 		}
 
 		[Test]
@@ -149,7 +149,7 @@ namespace WeSay.LexicalModel.Tests
 			ClearSenseGloss();
 			ClearSenseExample();
 			Assert.IsFalse(this._removed);
-			Assert.IsFalse(this._sense.Empty);
+			Assert.IsFalse(this._sense.IsEmpty);
 		}
 
 		[Test]
@@ -159,7 +159,7 @@ namespace WeSay.LexicalModel.Tests
 			ClearSenseExample();
 			ClearSenseCustom();
 			Assert.IsTrue(this._removed);
-			Assert.IsTrue(this._sense.Empty);
+			Assert.IsTrue(this._sense.IsEmpty);
 		}
 
 		[Test]

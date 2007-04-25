@@ -38,7 +38,7 @@ namespace WeSay.UI.Tests
 				set { middle = value; }
 			}
 
-			public override bool Empty
+			public override bool IsEmpty
 			{
 				get
 				{
@@ -63,7 +63,7 @@ namespace WeSay.UI.Tests
 				get { return _children; }
 			}
 
-			public override bool Empty
+			public override bool IsEmpty
 			{
 				get
 				{

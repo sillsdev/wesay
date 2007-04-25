@@ -65,7 +65,7 @@ namespace WeSay.Foundation
 			WireUpEvents();
 		}
 
-		public abstract bool Empty{get;}
+		public abstract bool IsEmpty{get;}
 
 		/// <summary>
 		/// see comment on _parent field of MultiText for an explanation of this field

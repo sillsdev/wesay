@@ -65,7 +65,7 @@ namespace Reporting
 					m_out = File.AppendText(LogPath);
 
 				m_minorEvents = new StringBuilder();
-				WriteEvent("App Launched with [" + System.Environment.CommandLine + "]");
+				this.WriteEventCore("App Launched with [" + System.Environment.CommandLine + "]");
 			}
 			catch
 			{

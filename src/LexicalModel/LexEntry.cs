@@ -174,7 +174,7 @@ namespace WeSay.LexicalModel
 			}
 		}
 
-		public override bool Empty
+		public override bool IsEmpty
 		{
 			get
 			{
@@ -221,13 +221,14 @@ namespace WeSay.LexicalModel
 			int count = this._senses.Count;
 			for (int i = count - 1; i >= 0; i--)
 			{
-				if (this._senses[i].Empty)
+				if (this._senses[i].IsEmpty)
 				{
 				   this._senses.RemoveAt(i);
 				}
 			}
 			if(count != this._senses.Count)
 			{
+				Reporting.Logger.WriteMinorEvent("Empty sense removed");
 				OnEmptyObjectsRemoved();
 			}
 		}

@@ -50,7 +50,7 @@ namespace WeSay.LexicalModel
 			get { return _translation; }
 		}
 
-		public override bool Empty
+		public override bool IsEmpty
 		{
 			get
 			{

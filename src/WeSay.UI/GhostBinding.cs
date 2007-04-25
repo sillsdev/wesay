@@ -183,6 +183,7 @@ namespace WeSay.UI
 			{
 				return;
 			}
+			Reporting.Logger.WriteMinorEvent("TimeForRealObject:"+_propertyName);
 
 			//don't let the code here trigger the ghost all over again
 			if (_inMidstOfTrigger)
@@ -195,8 +196,12 @@ namespace WeSay.UI
 			//in addition to adding a list item, this will fire events on the object that owns the list
 			Object newGuy = list.AddNew();
 
+			if (_textBoxTarget == null)
+			{
+				throw new ApplicationException(string.Format("This is a bug we're having trouble reproducing.  PLEASE TELL US HOW YOU DID THIS (related to issue ws-238) property={0}", this._propertyName));
+			}
 
-		  //  object newGuy = _listTarget[e.NewIndex];
+			//  object newGuy = _listTarget[e.NewIndex];
 			FillInMultiTextOfNewObject(newGuy, _propertyName, _writingSystem, _textBoxTarget.Text);
 			if (Triggered != null)
 			{

@@ -235,6 +235,10 @@ namespace WeSay.App
 					dlg.ShowDialog();
 					if (dlg.DialogResult != DialogResult.OK)
 					{
+						if (dlg.ProgressStateResult.ExceptionThatWasEncountered !=null)
+						{
+							Reporting.ErrorReporter.ReportException(dlg.ProgressStateResult.ExceptionThatWasEncountered, null, false);
+						}
 						return false;
 					}
 					LiftUpdateService.LiftIsFreshNow();
