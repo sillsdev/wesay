@@ -299,8 +299,6 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 	  <ComponentRef Id="LexicalModel.pdb" />
 	  <ComponentRef Id="LexicalTools.dll" />
 	  <ComponentRef Id="LexicalTools.pdb" />
-	  <ComponentRef Id="Lift2WeSay.exe" />
-	  <ComponentRef Id="Lift2WeSay.pdb" />
 	  <ComponentRef Id="LiftIO.dll" />
 	  <ComponentRef Id="mono.relaxng.dll" />
 	  <!--<ComponentRef Id="LiftIO.pdb" />-->
