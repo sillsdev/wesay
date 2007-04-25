@@ -43,7 +43,6 @@ namespace WeSay.Setup
 			this.aboutWeSayConfigurationToolToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this._versionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.projectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.openThisProjectInWeSayToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
 			this.newProjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.openProjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -149,14 +148,6 @@ namespace WeSay.Setup
 			this.projectToolStripMenuItem.Size = new System.Drawing.Size(53, 20);
 			this.projectToolStripMenuItem.Text = "&Project";
 			//
-			// openThisProjectInWeSayToolStripMenuItem
-			//
-			this.openThisProjectInWeSayToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("openThisProjectInWeSayToolStripMenuItem.Image")));
-			this.openThisProjectInWeSayToolStripMenuItem.Name = "openThisProjectInWeSayToolStripMenuItem";
-			this.openThisProjectInWeSayToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
-			this.openThisProjectInWeSayToolStripMenuItem.Text = "Open this Project in &WeSay";
-			this.openThisProjectInWeSayToolStripMenuItem.Click += new System.EventHandler(this.OnOpenThisProjectInWeSay);
-			//
 			// toolStripSeparator1
 			//
 			this.toolStripSeparator1.Name = "toolStripSeparator1";
@@ -234,7 +225,6 @@ namespace WeSay.Setup
 		private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem openThisProjectInWeSayToolStripMenuItem;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
 		private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem1;

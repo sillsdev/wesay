@@ -68,7 +68,7 @@ namespace WeSay.Setup
 			}
 			else
 			{
-				this.openThisProjectInWeSayToolStripMenuItem.Enabled = (_project != null) && (_progressHandler == null);
+				this.openProjectInWeSayToolStripMenuItem.Enabled = (_project != null) && (_progressHandler == null);
 			}
 
 		}
