@@ -1,87 +1,167 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-	<PropertyGroup>
-		<BaseDirectory>$(MSBuildProjectDirectory)\..</BaseDirectory>
-	</PropertyGroup>
-	<Import Project="$(BaseDirectory)\bld\UpdateCsProjs.Targets"/>
-	<Target Name="Compile">
-		<MSBuild Projects="$(BaseDirectory)\src\WeSay.sln" Targets="Rebuild" Properties="Configuration=Debug"/>
-		<MSBuild Projects="$(BaseDirectory)\src\WeSay.sln" Targets="Rebuild" Properties="Configuration=Release"/>
-	</Target>
-	<Target Name="Test">
-		<!-- collect up the test dlls that were generated in the Compile step
+
+  <PropertyGroup>
+	<BaseDirectory>$(MSBuildProjectDirectory)\..</BaseDirectory>
+  </PropertyGroup>
+
+  <PropertyGroup>
+	<NUnitPath>c:\program files\NUnit 2.4\bin\</NUnitPath>
+  </PropertyGroup>
+
+  <Import Project="$(BaseDirectory)\bld\UpdateCsProjs.Targets"/>
+
+  <Target Name="Compile">
+	<MSBuild Projects="$(BaseDirectory)\src\WeSay.sln"
+			 Targets="Rebuild"
+			 Properties="Configuration=Debug" />
+
+	<MSBuild Projects="$(BaseDirectory)\src\WeSay.sln"
+			 Targets="Rebuild"
+			 Properties="Configuration=Release" />
+  </Target>
+
+  <Target Name="Test">
+	<!-- collect up the test dlls that were generated in the Compile step
 	into the xTestAssemblies property-->
-		<CreateItem Include="$(BaseDirectory)\output\Debug\*.tests.dll">
-			<Output TaskParameter="Include" ItemName="DebugTestAssemblies"/>
-		</CreateItem>
-		<CreateItem Include="$(BaseDirectory)\output\Release\*.tests.dll">
-			<Output TaskParameter="Include" ItemName="ReleaseTestAssemblies"/>
-		</CreateItem>
-		<MakeDir Directories="$(BaseDirectory)\output\TestResults\Debug\;
+	<CreateItem Include="$(BaseDirectory)\output\Debug\*.tests.dll">
+	  <Output TaskParameter="Include" ItemName="DebugTestAssemblies"/>
+	</CreateItem>
+	<CreateItem Include="$(BaseDirectory)\output\Release\*.tests.dll">
+	  <Output TaskParameter="Include" ItemName="ReleaseTestAssemblies"/>
+	</CreateItem>
+
+	<MakeDir Directories="$(BaseDirectory)\output\TestResults\Debug\;
 						  $(BaseDirectory)\output\TestResults\Release\"/>
-		<!-- run the tests individually -->
-		<NUnit OutputXmlFile="$(BaseDirectory)\output\TestResults\Debug\%(DebugTestAssemblies.Filename).xml" Assemblies="%(DebugTestAssemblies.FullPath)" WorkingDirectory="$(BaseDirectory)\output\Debug"/>
-		<NUnit OutputXmlFile="$(BaseDirectory)\output\TestResults\Release\%(ReleaseTestAssemblies.Filename).xml" Assemblies="%(ReleaseTestAssemblies.FullPath)" WorkingDirectory="$(BaseDirectory)\output\Release"/>
-	</Target>
-	<ItemGroup>
-		<SampleFiles Include="$(BaseDirectory)\SampleProjects\src\**\*.*" Exclude="$(BaseDirectory)\SampleProjects\src\**\.svn\*.*"/>
-	</ItemGroup>
-	<ItemGroup>
-		<SampleProjects Include="$(BaseDirectory)\SampleProjects\src\*.*" Exclude="$(BaseDirectory)\SampleProjects\src\.svn"/>
-	</ItemGroup>
-	<Target Name="CreateSample">
-		<Copy SourceFiles="@(SampleFiles)" DestinationFolder="$(BaseDirectory)\SampleProjects\%(RecursiveDir)"/>
-		<CreateItem Include="$(BaseDirectory)\SampleProjects\**\*.lift" Exclude="$(BaseDirectory)\SampleProjects\src\**\*.*">
-			<Output TaskParameter="Include" ItemName="LiftFiles"/>
-		</CreateItem>
-		<!-- lift to wesay.words-->
-		<Exec Command="$(BaseDirectory)\output\Release\SampleDataProcessor.exe %(LiftFiles.FullPath)" WorkingDirectory="$(BaseDirectory)\output\Release"/>
-	</Target>
-	<Target Name="VerifySample">
-		<CreateItem Include="$(BaseDirectory)\SampleProjects\**\*.lift" Exclude="$(BaseDirectory)\SampleProjects\src\**\*.*;
+
+
+	<!-- run the tests individually -->
+	<!-- without path to Tool-->
+	<NUnit OutputXmlFile="$(BaseDirectory)\output\TestResults\Debug\%(DebugTestAssemblies.Filename).xml"
+		   Assemblies="%(DebugTestAssemblies.FullPath)"
+		   WorkingDirectory="$(BaseDirectory)\output\Debug" Condition="$(NUnitPath)==''">
+	</NUnit>
+	<NUnit OutputXmlFile="$(BaseDirectory)\output\TestResults\Release\%(ReleaseTestAssemblies.Filename).xml"
+		   Assemblies="%(ReleaseTestAssemblies.FullPath)"
+		   WorkingDirectory="$(BaseDirectory)\output\Release" Condition="$(NUnitPath)==''">
+	</NUnit>
+
+	<!-- with explicit path to Tool-->
+	<NUnit OutputXmlFile="$(BaseDirectory)\output\TestResults\Debug\%(DebugTestAssemblies.Filename).xml"
+		   Assemblies="%(DebugTestAssemblies.FullPath)"
+		   WorkingDirectory="$(BaseDirectory)\output\Debug"
+		   ToolPath="$(NUnitPath)" Condition="$(NUnitPath)!=''">
+	</NUnit>
+	<NUnit OutputXmlFile="$(BaseDirectory)\output\TestResults\Release\%(ReleaseTestAssemblies.Filename).xml"
+		   Assemblies="%(ReleaseTestAssemblies.FullPath)"
+		   WorkingDirectory="$(BaseDirectory)\output\Release"
+		   ToolPath="$(NUnitPath)" Condition="$(NUnitPath) != ''">
+	</NUnit>
+
+  </Target>
+
+
+  <ItemGroup>
+	<SampleFiles Include="$(BaseDirectory)\SampleProjects\src\**\*.*"
+				 Exclude="$(BaseDirectory)\SampleProjects\src\**\.svn\*.*"/>
+  </ItemGroup>
+
+
+  <ItemGroup>
+	<SampleProjects Include="$(BaseDirectory)\SampleProjects\src\*.*"
+					Exclude="$(BaseDirectory)\SampleProjects\src\.svn"/>
+  </ItemGroup>
+
+  <Target Name="CreateSample">
+	<Copy SourceFiles="@(SampleFiles)"
+		  DestinationFolder="$(BaseDirectory)\SampleProjects\%(RecursiveDir)" />
+
+	<CreateItem Include="$(BaseDirectory)\SampleProjects\**\*.lift"
+				Exclude="$(BaseDirectory)\SampleProjects\src\**\*.*">
+	  <Output TaskParameter="Include" ItemName="LiftFiles"/>
+	</CreateItem>
+
+	<!-- lift to wesay.words-->
+	<Exec Command="$(BaseDirectory)\output\Release\Lift2WeSay.exe %(LiftFiles.FullPath) %(LiftFiles.RootDir)%(LiftFiles.Directory)"
+		  WorkingDirectory="$(BaseDirectory)\output\Release"/>
+
+  </Target>
+
+
+  <Target Name="VerifySample">
+	<CreateItem Include="$(BaseDirectory)\SampleProjects\**\*.lift"
+				Exclude="$(BaseDirectory)\SampleProjects\src\**\*.*;
 				$(BaseDirectory)\SampleProjects\PRETEND\**\*.*">
-			<Output TaskParameter="Include" ItemName="WeSayFiles"/>
-		</CreateItem>
-		<!-- open using wesay -->
-		<Exec Command="$(BaseDirectory)\output\Release\WeSay.App.exe %(WeSayFiles.FullPath)" WorkingDirectory="$(BaseDirectory)\output\Release"/>
-	</Target>
-	<Target Name="Package">
-		<MSBuild Projects="$(BaseDirectory)\src\Setup\Setup.wixproj"/>
-	</Target>
-	<Import Project="$(BaseDirectory)\bld\Version.Targets"/>
-	<Target Name="Upload">
-		<SvnVersion LocalPath="$(BaseDirectory)">
-			<Output TaskParameter="Revision" PropertyName="Revision"/>
-		</SvnVersion>
-		<CreateProperty Value="$(Major).$(Minor).$(Bug).$(Revision)">
-			<Output PropertyName="Version" TaskParameter="Value"/>
-		</CreateProperty>
-		<Message Text="Version: $(Version)"/>
-		<Move SourceFiles="$(BaseDirectory)\output\installer\SetupWeSay.msi" DestinationFiles="$(BaseDirectory)\output\installer\SetupWeSay.$(Version).msi"/>
-		<Exec Command="pscp.exe -pw $(password) $(BaseDirectory)\output\installer\SetupWeSay.$(Version).msi $(user)@wesay.org:/var/www/downloads" WorkingDirectory="c:\program files\PuTTY\"/>
-	</Target>
-	<Target Name="Mail">
-		<SvnVersion LocalPath="$(BaseDirectory)">
-			<Output TaskParameter="Revision" PropertyName="Revision"/>
-		</SvnVersion>
-		<CreateProperty Value="$(Major).$(Minor).$(Bug).$(Revision)">
-			<Output PropertyName="Version" TaskParameter="Value"/>
-		</CreateProperty>
-		<!-- Mail email to list-->
-		<Mail Body="This is an automated message.  WeSay version $(Version) is now available." SmtpServer="wesay.org" Username="$(user)" Password="$(password)" From="$(user)@wesay.org" Subject="New version of WeSay ($(Version))" To="wesay@googlegroups.com"/>
-	</Target>
-	<Target Name="Build">
-		<CallTarget Targets="UpdateCsProjs;
+	  <Output TaskParameter="Include" ItemName="WeSayFiles"/>
+	</CreateItem>
+
+	<!-- open using wesay -->
+	<Exec Command="$(BaseDirectory)\output\Release\WeSay.App.exe %(WeSayFiles.FullPath)"
+		  WorkingDirectory="$(BaseDirectory)\output\Release"/>
+  </Target>
+
+  <Target Name="Package">
+	<MSBuild Projects="$(BaseDirectory)\src\Setup\Setup.wixproj"/>
+  </Target>
+
+  <Import Project="$(BaseDirectory)\bld\Version.Targets"/>
+
+  <Target Name="Upload">
+	<SvnVersion LocalPath="$(BaseDirectory)">
+	  <Output TaskParameter="Revision" PropertyName="Revision" />
+	</SvnVersion>
+
+	<CreateProperty Value="$(Major).$(Minor).$(Bug).$(Revision)">
+	  <Output PropertyName="Version" TaskParameter="Value"/>
+	</CreateProperty>
+
+	<Message Text="Version: $(Version)"/>
+
+	<Move SourceFiles="$(BaseDirectory)\output\installer\SetupWeSay.msi"
+		  DestinationFiles="$(BaseDirectory)\output\installer\SetupWeSay.$(Version).msi"/>
+
+	<Exec Command="pscp.exe -pw $(password) $(BaseDirectory)\output\installer\SetupWeSay.$(Version).msi $(user)@wesay.org:/var/www/downloads"
+		   WorkingDirectory="c:\program files\PuTTY\" />
+  </Target>
+
+  <Target Name="Mail">
+	<SvnVersion LocalPath="$(BaseDirectory)">
+	  <Output TaskParameter="Revision" PropertyName="Revision" />
+	</SvnVersion>
+
+	<CreateProperty Value="$(Major).$(Minor).$(Bug).$(Revision)">
+	  <Output PropertyName="Version" TaskParameter="Value"/>
+	</CreateProperty>
+
+	<!-- Mail email to list-->
+	<Mail Body="WeSay version $(Version) has been deployed. Check it out."
+		  SmtpServer="wesay.org"
+		  Username="$(user)"
+		  Password="$(password)"
+		  From="$(user)@wesay.org"
+		  Subject="New version of WeSay ($(Version))"
+		  To="wesay@googlegroups.com"/>
+  </Target>
+
+  <Target Name="Build">
+	<CallTarget Targets="UpdateCsProjs;
 						 Compile;
 						 Test;
 						 CreateSample;
 						 VerifySample;
 						 Package;
 						 Upload"/>
-		<Message Text="Build Complete"/>
-	</Target>
-	<Target Name="Clean">
-		<MSBuild Projects="$(BaseDirectory)\src\WeSay.sln" Targets="Clean" Properties="Configuration=Debug"/>
-		<MSBuild Projects="$(BaseDirectory)\src\WeSay.sln" Targets="Clean" Properties="Configuration=Release"/>
-	</Target>
+	<Message Text="Build Complete"/>
+  </Target>
+
+  <Target Name="Clean">
+	<MSBuild Projects="$(BaseDirectory)\src\WeSay.sln"
+			 Targets="Clean"
+			 Properties="Configuration=Debug" />
+	<MSBuild Projects="$(BaseDirectory)\src\WeSay.sln"
+			 Targets="Clean"
+			 Properties="Configuration=Release" />
+  </Target>
+
 </Project>

@@ -31,7 +31,7 @@ namespace LexicalModel.Tests
 		[Test]
 		public void CreationDate()
 		{
-			Assert.AreEqual(_entry.CreationTime.Date, DateTime.Today);
+			Assert.AreEqual(_entry.CreationTime.Date, DateTime.UtcNow.Date);
 		}
 
 		[Test]

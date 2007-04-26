@@ -7,6 +7,8 @@ using WeSay.LexicalModel.Db4o_Specific;
 
 namespace WeSay.LexicalModel.Tests
 {
+	using System.IO;
+
 	[TestFixture]
 	public class PersistenceTests : BaseDb4oSpecificTests
 	{
@@ -71,7 +73,7 @@ namespace WeSay.LexicalModel.Tests
 	[Test]
 	public void TempCreateLittleFile()
 	{
-		string path = @"C:\WeSay\SampleProjects\Thai\wesay\test.words";
+		string path = Path.GetTempFileName();
 		using (Db4oDataSource ds = new Db4oDataSource(path))
 		{
 			if (Db4oLexModelHelper.Singleton != null)
@@ -92,6 +94,7 @@ namespace WeSay.LexicalModel.Tests
 			ds.Data.Commit();
 			ds.Data.Close();
 		}
+		File.Delete(path);
 	}
 
 //    [Test]

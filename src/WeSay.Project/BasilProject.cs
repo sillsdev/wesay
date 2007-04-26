@@ -210,7 +210,11 @@ namespace WeSay.Project
 			bool unitTesting = Assembly.GetEntryAssembly() == null;
 			if (unitTesting)
 			{
+				//string s = Assembly.GetExecutingAssembly().CodeBase;
+				//s = Path.GetDirectoryName(s);
 				path = new Uri(Assembly.GetExecutingAssembly().CodeBase).AbsolutePath;
+				path = Uri.UnescapeDataString(path);
+				//path = s;
 			}
 			else
 			{
