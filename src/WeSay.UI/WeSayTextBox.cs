@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel;
 using System.Drawing;
+using System.Reflection;
 using System.Windows.Forms;
 using WeSay.Language;
 
@@ -22,7 +23,7 @@ namespace WeSay.UI
 			this.KeyPress += new KeyPressEventHandler(WeSayTextBox_KeyPress);
 			this.TextChanged += new EventHandler(WeSayTextBox_TextChanged);
 
-
+			this.KeyDown += new KeyEventHandler(OnKeyDown);
 
 		  //  Debug.Assert(DesignMode);
 			if (Environment.OSVersion.Platform != PlatformID.Unix)
@@ -37,6 +38,48 @@ namespace WeSay.UI
 			if (_nameForLogging == null)
 			{
 				_nameForLogging = "??";
+			}
+		}
+
+		void OnKeyDown(object sender, KeyEventArgs e)
+		{
+			if (e.KeyCode == Keys.F4)
+			{
+				if (this.SelectionLength == 0)
+				{
+					if (this.Text !=null)   //grab the whole field
+					{
+						this.DoToolboxJump(this.Text.Trim());
+					}
+				}
+				else if (this.SelectedText != null)
+				{
+					this.DoToolboxJump(this.SelectedText);
+				}
+			}
+		}
+
+
+		protected void DoToolboxJump(string word)
+		{
+			try
+			{
+				Reporting.Logger.WriteMinorEvent("Jumping to Toolbox");
+				Type toolboxJumperType = Type.GetTypeFromProgID("Toolbox.Jump");
+				if (toolboxJumperType != null)
+				{
+					Object toolboxboxJumper = Activator.CreateInstance(toolboxJumperType);
+					if ((toolboxboxJumper != null))
+					{
+						object[] args = new object[] { word };
+						toolboxJumperType.InvokeMember("Jump", BindingFlags.InvokeMethod, null, toolboxboxJumper, args);
+					}
+				}
+			}
+			catch (Exception)
+			{
+				Reporting.ErrorReporter.ReportNonFatalMessage("Could not get a connection to Toolbox.");
+				throw;
 			}
 		}
 
@@ -168,6 +211,7 @@ namespace WeSay.UI
 				e.Handled = true;
 			}
 			base.OnKeyPress(e);
+
 		}
 		//public bool IsGhost
 		//{
