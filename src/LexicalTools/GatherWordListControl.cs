@@ -39,6 +39,7 @@ namespace WeSay.LexicalTools
 //            _vernacularBox.BackColor = System.Drawing.Color.Red;
 			_vernacularBox.TextChanged += new EventHandler(_vernacularBox_TextChanged);
 			_vernacularBox.KeyDown += new KeyEventHandler(_boxVernacularWord_KeyDown);
+			_vernacularBox.MinimumSize = this._boxForeignWord.Size;
 			UpdateStuff();
 		}
 

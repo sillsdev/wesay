@@ -36,7 +36,6 @@ namespace WeSay.LexicalTools
 			this._listViewOfWordsMatchingCurrentItem = new System.Windows.Forms.ListView();
 			this.label3 = new System.Windows.Forms.Label();
 			this._boxForeignWord = new System.Windows.Forms.TextBox();
-			this.label2 = new System.Windows.Forms.Label();
 			this.panel1 = new System.Windows.Forms.Panel();
 			this.label4 = new System.Windows.Forms.Label();
 			this.label5 = new System.Windows.Forms.Label();
@@ -50,7 +49,7 @@ namespace WeSay.LexicalTools
 			// _instructionLabel
 			//
 			this._instructionLabel.AutoSize = true;
-			this._instructionLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte) (0)));
+			this._instructionLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this._instructionLabel.ForeColor = System.Drawing.Color.DarkGray;
 			this._instructionLabel.Location = new System.Drawing.Point(8, 8);
 			this._instructionLabel.Name = "_instructionLabel";
@@ -58,7 +57,7 @@ namespace WeSay.LexicalTools
 			this._instructionLabel.TabIndex = 2;
 			this._instructionLabel.Text = "Try thinking of ways to say these words in your language.";
 			//
-			// _listViewWords
+			// _listViewOfWordsMatchingCurrentItem
 			//
 			this._listViewOfWordsMatchingCurrentItem.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this._listViewOfWordsMatchingCurrentItem.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
@@ -77,11 +76,11 @@ namespace WeSay.LexicalTools
 			//
 			this.label3.AutoSize = true;
 			this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label3.Location = new System.Drawing.Point(7, 121);
+			this.label3.Location = new System.Drawing.Point(8, 120);
 			this.label3.Name = "label3";
-			this.label3.Size = new System.Drawing.Size(43, 20);
+			this.label3.Size = new System.Drawing.Size(51, 20);
 			this.label3.TabIndex = 6;
-			this.label3.Text = "Thai:";
+			this.label3.Text = "Word:";
 			//
 			// _boxForeignWord
 			//
@@ -94,16 +93,6 @@ namespace WeSay.LexicalTools
 			this._boxForeignWord.TabIndex = 7;
 			this._boxForeignWord.TabStop = false;
 			this._boxForeignWord.Text = "Foobar";
-			//
-			// label2
-			//
-			this.label2.AutoSize = true;
-			this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label2.Location = new System.Drawing.Point(7, 72);
-			this.label2.Name = "label2";
-			this.label2.Size = new System.Drawing.Size(65, 20);
-			this.label2.TabIndex = 6;
-			this.label2.Text = "English:";
 			//
 			// panel1
 			//
@@ -121,7 +110,7 @@ namespace WeSay.LexicalTools
 			this.label4.AutoSize = true;
 			this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.label4.ForeColor = System.Drawing.Color.DarkGray;
-			this.label4.Location = new System.Drawing.Point(405, 120);
+			this.label4.Location = new System.Drawing.Point(405, 125);
 			this.label4.Name = "label4";
 			this.label4.Size = new System.Drawing.Size(67, 15);
 			this.label4.TabIndex = 2;
@@ -174,7 +163,7 @@ namespace WeSay.LexicalTools
 			this._btnAddWord.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this._btnAddWord.HoverEndColor = System.Drawing.Color.Blue;
 			this._btnAddWord.HoverStartColor = System.Drawing.Color.White;
-			this._btnAddWord.Location = new System.Drawing.Point(319, 88);
+			this._btnAddWord.Location = new System.Drawing.Point(319, 93);
 			this._btnAddWord.Name = "_btnAddWord";
 			this._btnAddWord.NormalEndColor = System.Drawing.Color.White;
 			this._btnAddWord.NormalStartColor = System.Drawing.Color.White;
@@ -187,10 +176,24 @@ namespace WeSay.LexicalTools
 			//
 			// _vernacularBox
 			//
-			//this._vernacularBox.BackColor = System.Drawing.Color.Green;
+			this._vernacularBox.AutoSize = true;
+			this._vernacularBox.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			this._vernacularBox.BackColor = System.Drawing.Color.White;
+			this._vernacularBox.ColumnCount = 3;
+			this._vernacularBox.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this._vernacularBox.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this._vernacularBox.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this._vernacularBox.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this._vernacularBox.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this._vernacularBox.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this._vernacularBox.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this._vernacularBox.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this._vernacularBox.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
 			this._vernacularBox.Location = new System.Drawing.Point(78, 120);
+			this._vernacularBox.MinimumSize = new System.Drawing.Size(50, 20);
 			this._vernacularBox.Name = "_vernacularBox";
-			this._vernacularBox.Size = new System.Drawing.Size(248, 30);
+			this._vernacularBox.ShowAnnotationWidget = false;
+			this._vernacularBox.Size = new System.Drawing.Size(50, 20);
 			this._vernacularBox.TabIndex = 0;
 			//
 			// _congratulationsControl
@@ -211,7 +214,6 @@ namespace WeSay.LexicalTools
 			this.Controls.Add(this._vernacularBox);
 			this.Controls.Add(this.panel1);
 			this.Controls.Add(this._boxForeignWord);
-			this.Controls.Add(this.label2);
 			this.Controls.Add(this.label3);
 			this.Controls.Add(this._listViewOfWordsMatchingCurrentItem);
 			this.Controls.Add(this.label5);
@@ -239,7 +241,6 @@ namespace WeSay.LexicalTools
 		private System.Windows.Forms.ListView _listViewOfWordsMatchingCurrentItem;
 		private System.Windows.Forms.Label label3;
 		private System.Windows.Forms.TextBox _boxForeignWord;
-		private System.Windows.Forms.Label label2;
 		private System.Windows.Forms.Panel panel1;
 		private System.Windows.Forms.Label label4;
 		private System.Windows.Forms.Label label5;

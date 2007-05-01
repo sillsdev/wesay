@@ -1,12 +1,6 @@
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Diagnostics;
-using System.Drawing;
 using System.IO;
-using System.Text;
-using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 namespace WeSay.Setup
@@ -28,7 +22,8 @@ namespace WeSay.Setup
 				string[] dirs = SelectedPath.Split(Path.DirectorySeparatorChar);
 				if (dirs.Length > 1)
 				{
-					_pathLabel.Text = String.Format("Project will be created at: {0}", Path.Combine(dirs[dirs.Length - 2], dirs[dirs.Length - 1]));
+					string root = Path.Combine(dirs[dirs.Length - 3], dirs[dirs.Length - 2]);
+					_pathLabel.Text = String.Format("Project will be created at: {0}", Path.Combine(root, dirs[dirs.Length - 1]));
 				}
 
 				_pathLabel.Invalidate();
@@ -69,7 +64,7 @@ namespace WeSay.Setup
 				   return false;
 			   }
 
-				if (System.IO.Directory.Exists(SelectedPath) || System.IO.File.Exists(SelectedPath))
+				if (Directory.Exists(SelectedPath) || File.Exists(SelectedPath))
 				{
 					return false;
 				}
@@ -81,7 +76,7 @@ namespace WeSay.Setup
 		{
 			get
 			{
-				return System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+				return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "WeSay");
 
 			}
 		}
@@ -90,7 +85,7 @@ namespace WeSay.Setup
 		{
 			get
 			{
-				return System.IO.Path.Combine(DestinationDirectory, _textProjectName.Text);
+				return Path.Combine(DestinationDirectory, _textProjectName.Text);
 			}
 		}
 

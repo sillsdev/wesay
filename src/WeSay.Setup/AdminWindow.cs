@@ -119,6 +119,12 @@ namespace WeSay.Setup
 
 		public void CreateAndOpenProject(string path)
 		{
+			//the "wesay" part my not exist yet
+			if (!Directory.GetParent(path).Exists)
+			{
+				Directory.GetParent(path).Create();
+			}
+
 			CreateNewProject(path);
 			OpenProject(path);
 			_project.Save();
