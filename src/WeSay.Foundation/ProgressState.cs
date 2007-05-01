@@ -1,6 +1,6 @@
 using System;
 using System.Diagnostics;
-
+using System.Text;
 
 namespace WeSay.Foundation.Progress
 {
@@ -13,6 +13,8 @@ namespace WeSay.Foundation.Progress
 		private int _numberOfStepsCompleted;
 		private string _statusLabel;
 		private StateValue _state= StateValue.NotStarted;
+		private StringBuilder _logBuilder;
+
 		protected  bool _doCancel = false;
 
 		public event EventHandler StatusLabelChanged;
@@ -45,8 +47,8 @@ namespace WeSay.Foundation.Progress
 		public ProgressState()
 		{
 			_numberOfStepsCompleted = 0;
+			_logBuilder = new StringBuilder();
 		}
-
 
 
 		public void WriteToLog(string message)
@@ -55,6 +57,7 @@ namespace WeSay.Foundation.Progress
 			{
 				Log.Invoke(this, new LogEvent(message));
 			}
+			_logBuilder.AppendLine(message);
 		}
 
 		/// <summary>
@@ -180,6 +183,14 @@ namespace WeSay.Foundation.Progress
 			set
 			{
 				_encounteredException = value;
+			}
+		}
+
+		public string LogString
+		{
+			get
+			{
+				return _logBuilder.ToString();
 			}
 		}
 

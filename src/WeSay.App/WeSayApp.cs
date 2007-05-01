@@ -152,7 +152,7 @@ namespace WeSay.App
 				}
 				else
 				{
-					ErrorReporter.ReportNonFatalMessage("WeSay was unable to figure out what lexicon to work on. It will use an argument from a shortcut if given one, otherwise it tries to find the lexicon that it was last used with.  In this, case, it found neither.  You can use the WeSay Setup program to reset the location of the lift file of the project.");
+					ErrorReporter.ReportNonFatalMessage("WeSay was unable to figure out what lexicon to work on. Try opening the LIFT file by double clicking on it. If you don't have one yet, run the WeSay Configuration Tool to make a new WeSay proejct.");
 					return false;
 				}
 			}
@@ -161,7 +161,7 @@ namespace WeSay.App
 			{
 				ErrorReporter.ReportNonFatalMessage(
 					String.Format(
-						"WeSay tried to find the lexicon at '{0}', but could not find it.\r\n\r\nOn Windows, the location argument can be specified like this:\r\n wesay.exe \"c:\\some directory\\mylanguage\\wesay\\mylanguage.lift\". \r\n\r\nSince WeSay intentionally does not ask users to ever deal with the file system of their computer, you need to setup a shortcut to WeSay which gives the correct path, or use the WeSay Setup program to launch WeSay once. After that, WeSay will remember where it is.",
+						"WeSay tried to find the lexicon at '{0}', but could not find it.\r\n\r\nTry opening the LIFT file by double clicking on it.",
 						liftPath));
 				return false;
 			}
@@ -174,13 +174,20 @@ namespace WeSay.App
 			}
 			catch(UnauthorizedAccessException error)
 			{
-						ErrorReporter.ReportNonFatalMessage(
-							String.Format(
-								"WeSay was unable to open the the lexicon at '{0}' for writing, probably because it is locked (ReadOnly is on or another application has it open).",
+				ErrorReporter.ReportNonFatalMessage(
+					String.Format(
+						"WeSay was unable to open the the file at '{0}' for writing, because the system won't allow it. Check that 'ReadOnly' is cleared, otherwise investigate your user permissions to write to this file.",
 								liftPath));
 						return false;
 			}
-
+			catch (IOException error)
+			{
+				ErrorReporter.ReportNonFatalMessage(
+					String.Format(
+						"WeSay was unable to open the the file at '{0}' for writing, probably because it is locked by some other process on your computer (maybe a recently crashed run of WeSay?). If you can't figure out what has it locked, restart your computer.",
+						liftPath));
+				return false;
+			}
 
 			if (!BringCachesUpToDate(liftPath, project))
 			{
@@ -238,6 +245,10 @@ namespace WeSay.App
 						if (dlg.ProgressStateResult.ExceptionThatWasEncountered !=null)
 						{
 							Reporting.ErrorReporter.ReportException(dlg.ProgressStateResult.ExceptionThatWasEncountered, null, false);
+						}
+						else if (dlg.ProgressStateResult.State == ProgressState.StateValue.StoppedWithError)
+						{
+							Reporting.ErrorReporter.ReportNonFatalMessage("Could not build caches. " + dlg.ProgressStateResult.LogString, null, false);
 						}
 						return false;
 					}

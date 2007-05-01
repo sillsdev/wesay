@@ -28,48 +28,73 @@ namespace WeSay.Setup
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this._btnFont = new System.Windows.Forms.Button();
 			this._fontDialog = new System.Windows.Forms.FontDialog();
-			this._fontProperties = new System.Windows.Forms.PropertyGrid();
+			this._fontInfoDisplay = new System.Windows.Forms.TextBox();
+			this.button1 = new System.Windows.Forms.Button();
+			this.label1 = new System.Windows.Forms.Label();
+			this._sampleTextBox = new WeSay.UI.WeSayTextBox();
 			this.SuspendLayout();
-			//
-			// _btnFont
-			//
-			this._btnFont.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this._btnFont.AutoSize = true;
-			this._btnFont.Location = new System.Drawing.Point(9, 124);
-			this._btnFont.Name = "_btnFont";
-			this._btnFont.Size = new System.Drawing.Size(99, 23);
-			this._btnFont.TabIndex = 1;
-			this._btnFont.Text = "&Change Font...";
-			this._btnFont.UseVisualStyleBackColor = true;
-			this._btnFont.Click += new System.EventHandler(this._btnFont_Click);
 			//
 			// _fontDialog
 			//
-			this._fontDialog.ShowColor = true;
+			this._fontDialog.ShowEffects = false;
 			//
-			// _fontProperties
+			// _fontInfoDisplay
 			//
-			this._fontProperties.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+			this._fontInfoDisplay.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
+			this._fontInfoDisplay.BackColor = System.Drawing.SystemColors.Window;
+			this._fontInfoDisplay.Location = new System.Drawing.Point(13, 16);
+			this._fontInfoDisplay.Name = "_fontInfoDisplay";
+			this._fontInfoDisplay.ReadOnly = true;
+			this._fontInfoDisplay.Size = new System.Drawing.Size(205, 20);
+			this._fontInfoDisplay.TabIndex = 2;
+			//
+			// button1
+			//
+			this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.button1.Location = new System.Drawing.Point(224, 16);
+			this.button1.Name = "button1";
+			this.button1.Size = new System.Drawing.Size(27, 23);
+			this.button1.TabIndex = 3;
+			this.button1.Text = "...";
+			this.button1.UseVisualStyleBackColor = true;
+			this.button1.Click += new System.EventHandler(this._btnFont_Click);
+			//
+			// label1
+			//
+			this.label1.AutoSize = true;
+			this.label1.Location = new System.Drawing.Point(10, 59);
+			this.label1.Name = "label1";
+			this.label1.Size = new System.Drawing.Size(94, 13);
+			this.label1.TabIndex = 5;
+			this.label1.Text = "Text Sample Area:";
+			//
+			// _sampleTextBox
+			//
+			this._sampleTextBox.AcceptsReturn = true;
+			this._sampleTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
 						| System.Windows.Forms.AnchorStyles.Left)
 						| System.Windows.Forms.AnchorStyles.Right)));
-			this._fontProperties.Enabled = false;
-			this._fontProperties.HelpVisible = false;
-			this._fontProperties.Location = new System.Drawing.Point(4, 3);
-			this._fontProperties.Name = "_fontProperties";
-			this._fontProperties.PropertySort = System.Windows.Forms.PropertySort.NoSort;
-			this._fontProperties.Size = new System.Drawing.Size(130, 115);
-			this._fontProperties.TabIndex = 3;
-			this._fontProperties.ToolbarVisible = false;
+			this._sampleTextBox.BackColor = System.Drawing.Color.White;
+			this._sampleTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+			this._sampleTextBox.Location = new System.Drawing.Point(13, 75);
+			this._sampleTextBox.Multiline = true;
+			this._sampleTextBox.MultiParagraph = false;
+			this._sampleTextBox.Name = "_sampleTextBox";
+			this._sampleTextBox.Size = new System.Drawing.Size(238, 13);
+			this._sampleTextBox.TabIndex = 6;
 			//
 			// FontControl
 			//
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.Controls.Add(this._fontProperties);
-			this.Controls.Add(this._btnFont);
+			this.Controls.Add(this._sampleTextBox);
+			this.Controls.Add(this.label1);
+			this.Controls.Add(this.button1);
+			this.Controls.Add(this._fontInfoDisplay);
 			this.Name = "FontControl";
+			this.Size = new System.Drawing.Size(254, 150);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -77,8 +102,10 @@ namespace WeSay.Setup
 
 		#endregion
 
-		private System.Windows.Forms.Button _btnFont;
 		private System.Windows.Forms.FontDialog _fontDialog;
-		private System.Windows.Forms.PropertyGrid _fontProperties;
+		private System.Windows.Forms.TextBox _fontInfoDisplay;
+		private System.Windows.Forms.Button button1;
+		private System.Windows.Forms.Label label1;
+		private WeSay.UI.WeSayTextBox _sampleTextBox;
 	}
 }

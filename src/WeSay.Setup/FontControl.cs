@@ -26,20 +26,30 @@ namespace WeSay.Setup
 			set
 			{
 				this._writingSystem = value;
-				_fontProperties.SelectedObject = _writingSystem.Font;
-				this.Refresh();
+
+				UpdateFontDisplay();
 			}
 		}
 
 		private void _btnFont_Click(object sender, EventArgs e)
 		{
 			_fontDialog.Font = _writingSystem.Font;
+			_fontDialog.ShowColor = false;
+			_fontDialog.ShowEffects = false;
 			if (DialogResult.OK != _fontDialog.ShowDialog())
 			{
 				return;
 			}
 			_writingSystem.Font = _fontDialog.Font;
-			_fontProperties.SelectedObject = _writingSystem.Font;
+			UpdateFontDisplay();
+		  }
+
+		private void UpdateFontDisplay()
+		{
+			_fontInfoDisplay.Text =
+				string.Format("{0}, {1}", this.WritingSystem.Font.Name, Math.Round(this.WritingSystem.Font.Size));
+			_sampleTextBox.WritingSystem =WritingSystem;
+			this.Invalidate();
 		}
 	}
 }

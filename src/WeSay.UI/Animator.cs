@@ -4,7 +4,7 @@ using System.Drawing;
 using Timer=System.Windows.Forms.Timer;
 
 
-namespace WeSay.Ui.Animation
+namespace WeSay.UI.Animation
 {
   public class CubicBezierCurve
   {

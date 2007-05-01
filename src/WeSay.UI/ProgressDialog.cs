@@ -185,7 +185,8 @@ namespace WeSay.UI
 			}
 			//NB: I don't know how to actually let the BW know there was an error
 			//else if (e.Error != null ||
-			else if (ProgressStateResult != null && ProgressStateResult.ExceptionThatWasEncountered != null)
+			else if (ProgressStateResult != null && (ProgressStateResult.State == ProgressState.StateValue.StoppedWithError
+				|| ProgressStateResult.ExceptionThatWasEncountered != null))
 			{
 			   //this dialog really can't know whether this was an unexpected exception or not
 				//so don't do this:  Reporting.ErrorReporter.ReportException(ProgressStateResult.ExceptionThatWasEncountered, this, false);

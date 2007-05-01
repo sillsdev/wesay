@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 using System.Windows.Forms;
 using NUnit.Framework;
 using NUnit.Extensions.Forms;
@@ -38,7 +39,29 @@ namespace WeSay.Admin.Tests
 
 			if (Directory.Exists(_projectFolder))
 			{
-				Directory.Delete(_projectFolder, true);
+				try
+				{
+					Directory.Delete(_projectFolder, true);
+				}
+				catch (Exception e)
+				{
+					try
+					{
+						Console.WriteLine(e.Message);
+						//maybe we can at least clear it out a bit
+						string[] files = Directory.GetFiles(_projectFolder, "*.*", SearchOption.AllDirectories);
+						foreach (string s in files)
+						{
+							File.Delete(s);
+						}
+						//sleep and try again (seems to work)
+						Thread.Sleep(1000);
+						Directory.Delete(_projectFolder, true);
+					}
+					catch (Exception)
+					{
+					}
+				}
 			}
 	   }
 

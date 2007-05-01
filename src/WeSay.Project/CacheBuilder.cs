@@ -208,7 +208,7 @@ namespace WeSay.Project
 			{
 				progress.StatusLabel = "Problem with file format...";
 				_progress.State = ProgressState.StateValue.StoppedWithError;
-				_progress.WriteToLog(errors);
+				_progress.WriteToLog(string.Format("There is a problem with the format of {0}. {1}", _sourceLIFTPath, errors));
 				return;
 			}
 			try

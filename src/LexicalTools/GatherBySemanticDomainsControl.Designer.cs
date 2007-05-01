@@ -1,6 +1,6 @@
 using System.Drawing;
 using System.Windows.Forms;
-using WeSay.Ui.Animation;
+using WeSay.UI.Animation;
 
 namespace WeSay.LexicalTools
 {

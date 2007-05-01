@@ -361,39 +361,39 @@ namespace WeSay.Setup
 			}
 		}
 
-
-		private void OnImportFromLiftXml(object sender, EventArgs e)
-		{
-			OpenFileDialog openDialog = new OpenFileDialog();
-			openDialog.Title = "Choose the LIFT xml file to convert to a WeSay Words file";
-
-			if (Settings.Default.LastLiftImportPath == String.Empty || !Directory.Exists(Settings.Default.LastLiftImportPath))
-			{
-				openDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-			}
-			else
-			{
-				openDialog.InitialDirectory = Settings.Default.LastLiftImportPath;
-			}
-
-			openDialog.Filter = "LIFT XML (*.xml;*.lift)|*.xml;*.lift";
-			if (openDialog.ShowDialog() != DialogResult.OK)
-			{
-				return;
-			}
-			Settings.Default.LastLiftImportPath = Path.GetDirectoryName(openDialog.FileName);
-
-//            SaveFileDialog saveDialog = new SaveFileDialog();
-//            saveDialog.Title = "Save WeSay Words file as";
-//            saveDialog.Filter = "WeSay Words(*.words)|*.words";
-//            saveDialog.InitialDirectory = WeSayWordsProject.Project.PathToLexicalModelDB;
-//            if (saveDialog.ShowDialog() != DialogResult.OK)
+//
+//        private void OnImportFromLiftXml(object sender, EventArgs e)
+//        {
+//            OpenFileDialog openDialog = new OpenFileDialog();
+//            openDialog.Title = "Choose the LIFT xml file to convert to a WeSay Words file";
+//
+//            if (Settings.Default.LastLiftImportPath == String.Empty || !Directory.Exists(Settings.Default.LastLiftImportPath))
+//            {
+//                openDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+//            }
+//            else
+//            {
+//                openDialog.InitialDirectory = Settings.Default.LastLiftImportPath;
+//            }
+//
+//            openDialog.Filter = "LIFT XML (*.xml;*.lift)|*.xml;*.lift";
+//            if (openDialog.ShowDialog() != DialogResult.OK)
 //            {
 //                return;
 //            }
-//            RunCommand(new ImportLIFTCommand(saveDialog.FileName, openDialog.FileName));
-			RunCommand(new ImportLIFTCommand(openDialog.FileName));
-		}
+//            Settings.Default.LastLiftImportPath = Path.GetDirectoryName(openDialog.FileName);
+//
+////            SaveFileDialog saveDialog = new SaveFileDialog();
+////            saveDialog.Title = "Save WeSay Words file as";
+////            saveDialog.Filter = "WeSay Words(*.words)|*.words";
+////            saveDialog.InitialDirectory = WeSayWordsProject.Project.PathToLexicalModelDB;
+////            if (saveDialog.ShowDialog() != DialogResult.OK)
+////            {
+////                return;
+////            }
+////            RunCommand(new ImportLIFTCommand(saveDialog.FileName, openDialog.FileName));
+//            RunCommand(new ImportLIFTCommand(openDialog.FileName));
+//        }
 
 		private void OnOpenThisProjectInWeSay(object sender, EventArgs e)
 		{

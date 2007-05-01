@@ -2,7 +2,7 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 using WeSay.Language;
-using WeSay.Ui.Animation;
+using WeSay.UI.Animation;
 
 namespace WeSay.LexicalTools
 {
