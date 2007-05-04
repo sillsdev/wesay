@@ -118,7 +118,7 @@ namespace WeSay.LexicalTools
 //            return m;
 //        }
 
-		protected int MakeGhostWidget(IBindingList list, int insertAtRow, string fieldName, string label, string propertyName, bool isHeading)
+		protected int MakeGhostWidget<T>(IBindingList list, int insertAtRow, string fieldName, string label, string propertyName, bool isHeading) where T:new()
 		{
 			int rowCount = 0;
 			Field field = ActiveViewTemplate.GetField(fieldName);
@@ -126,11 +126,12 @@ namespace WeSay.LexicalTools
 			{
 
 				MultiTextControl m = new MultiTextControl(field.WritingSystems, new MultiText(), fieldName+"_ghost", false);
+
 				Control refWidget = DetailList.AddWidgetRow(StringCatalog.Get(label), isHeading, m, insertAtRow + rowCount);
 
 				foreach (WeSayTextBox box in m.TextBoxes)
 				{
-					GhostBinding g = MakeGhostBinding(list, propertyName, box.WritingSystem, box);
+					GhostBinding<T> g = MakeGhostBinding<T>(list, propertyName, box.WritingSystem, box);
 					g.ReferenceControl = refWidget;
 				}
 				return 1;
@@ -142,16 +143,16 @@ namespace WeSay.LexicalTools
 
 		}
 
-		protected GhostBinding MakeGhostBinding(IBindingList list, string ghostPropertyName, WritingSystem writingSystem,
-			WeSayTextBox entry)
+		protected GhostBinding<T> MakeGhostBinding<T>(IBindingList list, string ghostPropertyName, WritingSystem writingSystem,
+			WeSayTextBox entry) where T: new()
 		{
-			GhostBinding binding = new GhostBinding(list, ghostPropertyName, writingSystem, entry);
-			binding.Triggered += new GhostBinding.GhostTriggered(OnGhostBindingTriggered);
+			GhostBinding<T> binding = new GhostBinding<T>(list, ghostPropertyName, writingSystem, entry);
+			binding.LayoutNeededAfterMadeReal += new GhostBinding<T>.LayoutNeededHandler(OnGhostBindingLayoutNeeded<T>);
 			binding.CurrentItemChanged += new EventHandler<CurrentItemEventArgs>(_detailList.OnBinding_ChangeOfWhichItemIsInFocus);
 			return binding;
 		}
 
-		protected virtual void OnGhostBindingTriggered(GhostBinding sender, IBindingList list, int index, MultiTextControl previouslyGhostedControlToReuse, bool doGoToNextField, EventArgs args)
+		protected virtual void OnGhostBindingLayoutNeeded<T>(GhostBinding<T> sender, IBindingList list, int index, MultiTextControl previouslyGhostedControlToReuse, bool doGoToNextField, EventArgs args) where T:new()
 		{
 			_previouslyGhostedControlToReuse = previouslyGhostedControlToReuse;
 			AddWidgetsAfterGhostTrigger(list, index, sender.ReferenceControl, doGoToNextField);

@@ -82,10 +82,14 @@ namespace WeSay.LexicalTools
 			}
 			set
 			{
+				Reporting.Logger.WriteMinorEvent("In DataSource Set");
+
 				if (_record != value)
 				{
 					if (_record != null)
 					{
+						Reporting.Logger.WriteMinorEvent("Datasource set calling _record.CleanUpAfterEditting()");
+
 						_record.CleanUpAfterEditting();
 						_record.PropertyChanged -= OnRecordPropertyChanged;
 						_record.EmptyObjectsRemoved -= OnEmptyObjectsRemoved;
@@ -97,9 +101,14 @@ namespace WeSay.LexicalTools
 						_record.PropertyChanged += new PropertyChangedEventHandler(OnRecordPropertyChanged);
 						_record.EmptyObjectsRemoved +=new EventHandler(OnEmptyObjectsRemoved);
 					}
+					Reporting.Logger.WriteMinorEvent("Datasource set calling RefreshLexicalEntryPreview()");
 					RefreshLexicalEntryPreview();
+					Reporting.Logger.WriteMinorEvent("Datasource set calling RefreshEntryDetail()");
 					RefreshEntryDetail();
 				}
+
+				Reporting.Logger.WriteMinorEvent("Exit DataSource Set");
+
 			}
 		}
 
@@ -115,13 +124,18 @@ namespace WeSay.LexicalTools
 					row = this._detailListControl.GetRow(focussedControl);
 				}
 			}
+			Reporting.Logger.WriteMinorEvent("OnEmptyObjectsRemoved: b4 RefreshEntryDetial");
 			RefreshEntryDetail();
-			Application.DoEvents();
+			Reporting.Logger.WriteMinorEvent("OnEmptyObjectsRemoved: b4  Application.DoEvents()");
+			for(int i=0; i< 1000;i++)
+				Application.DoEvents(); //TODO: We need to remove this.  It's a dangerous thing in a historically buggy spot
+			Reporting.Logger.WriteMinorEvent("OnEmptyObjectsRemoved: b4 MoveInsertionPoint");
 			if (row != null)
 			{
 				row = Math.Min((int)row, this._detailListControl.Count-1);
 				this._detailListControl.MoveInsertionPoint((int)row);
 			}
+			Reporting.Logger.WriteMinorEvent("OnEmptyObjectsRemoved end");
 		}
 
 		private void OnRecordPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -144,7 +158,7 @@ namespace WeSay.LexicalTools
 					if (_cleanupTimer == null)
 					{
 						_cleanupTimer = new Timer();
-						_cleanupTimer.Tick += new EventHandler(_cleanupTimer_Tick);
+						_cleanupTimer.Tick += new EventHandler(OnCleanupTimer_Tick);
 					 _cleanupTimer.Interval = 500;
 					 }
 					_cleanupTimer.Tag = entry;
@@ -154,9 +168,10 @@ namespace WeSay.LexicalTools
 			RefreshLexicalEntryPreview();
 		}
 
-		void _cleanupTimer_Tick(object sender, EventArgs e)
+		void OnCleanupTimer_Tick(object sender, EventArgs e)
 		{
-			LexEntry entry = (LexEntry) _cleanupTimer.Tag;
+			Reporting.Logger.WriteMinorEvent("OnCleanupTimer_Tick");
+			LexEntry entry = (LexEntry)_cleanupTimer.Tag;
 			_cleanupTimer.Stop();
 			entry.CleanUpEmptyObjects();
 		}

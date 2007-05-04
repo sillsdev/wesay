@@ -129,12 +129,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleDataProcessor", "Lift
 		Release.AspNetCompiler.Debug = "False"
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1E233883-3ED1-4890-84BD-F39747A5F0D2}"
-	ProjectSection(WebsiteProperties) = preProject
-		Debug.AspNetCompiler.Debug = "True"
-		Release.AspNetCompiler.Debug = "False"
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reporting", "Reporting\Reporting.csproj", "{9CCBECEC-513C-4DA4-A4CE-F5361B633760}"
 	ProjectSection(WebsiteProperties) = preProject
 		Debug.AspNetCompiler.Debug = "True"

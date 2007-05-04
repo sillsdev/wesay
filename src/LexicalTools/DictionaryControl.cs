@@ -263,9 +263,19 @@ namespace WeSay.LexicalTools
 				// contains the focus so this is safe for now.
 				return;
 			}
-			Reporting.Logger.WriteEvent("RecordSelectionChanged to "+CurrentRecord.LexicalForm.GetFirstAlternative() );
-			Control_EntryDetailPanel.DataSource = CurrentRecord;
-			SelectedIndexChanged.Invoke(this,null);
+
+			if (CurrentRecord != null)
+			{
+				Reporting.Logger.WriteEvent("RecordSelectionChanged to " +
+											CurrentRecord.LexicalForm.GetFirstAlternative());
+				Control_EntryDetailPanel.DataSource = CurrentRecord;
+			}
+			else
+			{
+				Reporting.Logger.WriteEvent("RecordSelectionChanged Skipping because record is null");
+			}
+
+			SelectedIndexChanged.Invoke(this, null);
 		}
 
 		public LexEntry CurrentRecord
@@ -331,6 +341,13 @@ namespace WeSay.LexicalTools
 			//hack until we can get selection change events sorted out in BindingGridList
 			OnRecordSelectionChanged(this, null);
 			_recordsListBox.Refresh();
+
+
+			if (CurrentRecord == null)
+			{
+				Control_EntryDetailPanel.DataSource = CurrentRecord;
+			}
+
 			_entryViewControl.Focus();
 		}
 

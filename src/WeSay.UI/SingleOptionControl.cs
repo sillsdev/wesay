@@ -143,6 +143,16 @@ namespace WeSay.UI
 
 		private void SetupComboControl(int initialPanelWidth, OptionRef optionRef)
 		{
+			if (!_list.Options.Exists(delegate(Option o) {return (o.Key == string.Empty);}))
+			{
+				MultiText unspecifiedMultiText = new MultiText();
+				unspecifiedMultiText.SetAlternative(_idOfPreferredWritingSystem, StringCatalog.Get("unknown"));
+				Option unspecifiedOption = new Option(string.Empty, unspecifiedMultiText);
+				_control.Items.Add(
+						new Option.OptionDisplayProxy(unspecifiedOption,
+													  _idOfPreferredWritingSystem));
+			}
+
 			foreach (Option o in _list.Options)
 			{
 			   /* this won't work.  It doesn't give us a way to select which ws to display, as it will always
@@ -153,15 +163,7 @@ namespace WeSay.UI
 				_control.Items.Add(o.GetDisplayProxy(_idOfPreferredWritingSystem));
 			}
 
-			if (!_list.Options.Exists(delegate(Option o) {return (o.Key == string.Empty);}))
-			{
-				MultiText unspecifiedMultiText = new MultiText();
-				unspecifiedMultiText.SetAlternative(_idOfPreferredWritingSystem, StringCatalog.Get("unknown"));
-				Option unspecifiedOption = new Option(string.Empty, unspecifiedMultiText);
-				_control.Items.Add(
-						new Option.OptionDisplayProxy(unspecifiedOption,
-													  _idOfPreferredWritingSystem));
-			}
+
 
 			this.Value = optionRef.Value;
 

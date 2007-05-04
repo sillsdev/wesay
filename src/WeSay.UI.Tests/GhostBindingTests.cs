@@ -13,7 +13,7 @@ namespace WeSay.UI.Tests
 		private Papa _papa = new Papa();
 		private WeSayTextBox _ghostFirstNameWidget;
 		private WeSayTextBox _papaNameWidget;
-	   private GhostBinding _binding;
+	   private GhostBinding<Child> _binding;
 		protected bool _didNotify;
 
 
@@ -79,7 +79,7 @@ namespace WeSay.UI.Tests
 
 		}
 
-		void _binding_Triggered(object sender, System.ComponentModel.IBindingList list, int index, MultiTextControl previouslyGhostedControlToReuse, bool doGoToNextField, EventArgs args)
+		void _binding_LayoutNeededAfterMadeReal(object sender, System.ComponentModel.IBindingList list, int index, MultiTextControl previouslyGhostedControlToReuse, bool doGoToNextField, EventArgs args)
 		{
 			_didNotify = true;
 		}
@@ -92,7 +92,7 @@ namespace WeSay.UI.Tests
 			_papaNameWidget = new WeSayTextBox(BasilProject.Project.WritingSystems.TestGetWritingSystemAnal, null);
 			_papaNameWidget.Text  =  "John";
 			_ghostFirstNameWidget = new WeSayTextBox(BasilProject.Project.WritingSystems.TestGetWritingSystemAnal, null);
-			_binding = new GhostBinding(_papa.Children, "First", BasilProject.Project.WritingSystems.TestGetWritingSystemAnal, _ghostFirstNameWidget);
+			_binding = new GhostBinding<Child>(_papa.Children, "First", BasilProject.Project.WritingSystems.TestGetWritingSystemAnal, _ghostFirstNameWidget);
 			_didNotify = false;
 			//Window w = new Window("test");
 			//VBox box = new VBox();
@@ -130,7 +130,9 @@ namespace WeSay.UI.Tests
 		 [Test]
 		public void NewItemTriggersEvent()
 		{
-			 _binding.Triggered += new GhostBinding.GhostTriggered(_binding_Triggered);
+			_binding.ReferenceControl = this._papaNameWidget;//just has to be *something*, else the trigger won't call us back
+
+			 _binding.LayoutNeededAfterMadeReal += new GhostBinding<Child>.LayoutNeededHandler(_binding_LayoutNeededAfterMadeReal);
 			_ghostFirstNameWidget.Text = "Samuel";
 			_ghostFirstNameWidget.PretendLostFocus();
 			Assert.IsTrue(_didNotify);

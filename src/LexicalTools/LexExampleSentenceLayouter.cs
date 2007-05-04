@@ -18,6 +18,7 @@ namespace WeSay.LexicalTools
 
 		internal override int AddWidgets(IBindingList list, int index, int insertAtRow)
 		{
+			DetailList.SuspendLayout();
 			int rowCount = 0;
 			LexExampleSentence example = (LexExampleSentence)list[index];
 
@@ -38,13 +39,13 @@ namespace WeSay.LexicalTools
 			}
 
 			rowCount += AddCustomFields(example, insertAtRow + rowCount);
-
+			DetailList.ResumeLayout(false);
 			return rowCount;
 		}
 
 		public int AddGhost(System.ComponentModel.IBindingList list, int insertAtRow)
 		{
-			return MakeGhostWidget(list, insertAtRow, Field.FieldNames.ExampleSentence.ToString(), "Example", "Sentence", false);
+			return MakeGhostWidget<LexExampleSentence>(list, insertAtRow, Field.FieldNames.ExampleSentence.ToString(), "Example", "Sentence", false);
 		}
 
 

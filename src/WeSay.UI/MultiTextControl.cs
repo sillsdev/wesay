@@ -18,11 +18,13 @@ namespace WeSay.UI
 			this.components = new Container();
 			InitializeComponent();
 			_textBoxes = new List<WeSayTextBox>();
-		   // this.BackColor = System.Drawing.Color.Crimson;
+//            this.BackColor = System.Drawing.Color.Crimson;
+			SuspendLayout();
 			ColumnCount = 3;
 			ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
 			ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
 			ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
+			ResumeLayout(false);
 		}
 
 

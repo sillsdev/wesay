@@ -37,6 +37,8 @@ namespace WeSay.UI
 			this.Name = "MultiTextControl";
 			this.AutoSize = true;
 			this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			this.Height = 1;
+			this.Width = 1;
 			this.ResumeLayout(false);
 
 		}

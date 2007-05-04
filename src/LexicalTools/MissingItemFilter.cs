@@ -70,9 +70,9 @@ namespace WeSay.LexicalTools
 			switch (_field.DataTypeName)
 			{
 				case "Option":
-					return ((OptionRef) field).Empty;
+					return ((OptionRef) field).IsEmpty;
 				case "OptionCollection":
-					return ((OptionRefCollection)field).Empty;
+					return ((OptionRefCollection)field).IsEmpty;
 				case "MultiText":
 					return IsMissingWritingSystem((MultiText)field);
 				default:

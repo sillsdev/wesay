@@ -12,7 +12,7 @@ namespace WeSay.UI
 	/// when the user enters information in this "ghost" text box, events are fired that will cause the
 	/// actual object to the created and filled in with the data the user has entered.
 	/// </summary>
-	public class GhostBinding
+	public class GhostBinding<T> where T: new()
 	{
 		/// <summary>
 		/// Can be used to track which data item the user is currently editting, to,
@@ -28,13 +28,13 @@ namespace WeSay.UI
 		private WeSayTextBox _textBoxTarget;
 		private Control _referenceControl;
 
-		public delegate void GhostTriggered(GhostBinding sender, IBindingList list, int index, MultiTextControl previouslyGhostedControlToReuse, bool doGoToNextField, EventArgs args);
+		public delegate void LayoutNeededHandler(GhostBinding<T> sender, IBindingList list, int index, MultiTextControl previouslyGhostedControlToReuse, bool doGoToNextField, EventArgs args);
 
 		/// <summary>
 		/// Fires at some point after the user has entered some information in the ghost text box.
 		/// (client should not count on the definition of when)
 		/// </summary>
-		public event GhostTriggered Triggered;
+		public event LayoutNeededHandler LayoutNeededAfterMadeReal;
 
 		private bool _inMidstOfTrigger = false;
 
@@ -123,7 +123,7 @@ namespace WeSay.UI
 		/// </summary>
 		private void TearDown()
 		{
-			Debug.Assert(!_inMidstOfTrigger);
+		 //   Debug.Assert(!_inMidstOfTrigger);
 		   // Debug.WriteLine(" GhostBindingTearDown boundTo: " + this._textBoxTarget.Name);
 
 			if (_listTarget == null)
@@ -170,16 +170,17 @@ namespace WeSay.UI
 ////            {
 ////                object newGuy = _listTarget[e.NewIndex];
 ////                FillInMultiTextOfNewObject(newGuy, _propertyName, _writingSystem, _textBoxTarget.Text);
-////                if (Triggered != null)
+////                if (LayoutNeededAfterMadeReal != null)
 ////                {
-////                    Triggered.Invoke(this, _listTarget, e.NewIndex, null);
+////                    LayoutNeededAfterMadeReal.Invoke(this, _listTarget, e.NewIndex, null);
 ////                }
 ////            }
 //        }
 
 		protected  void TimeForRealObject(bool doGoToNextField)
 		{
-			if (_textBoxTarget.Text.Trim().Length == 0)
+			WeSayTextBox textBoxTarget = _textBoxTarget;
+			if (textBoxTarget.Text.Trim().Length == 0)
 			{
 				return;
 			}
@@ -194,21 +195,27 @@ namespace WeSay.UI
 
 			IBindingList list = _listTarget;
 			//in addition to adding a list item, this will fire events on the object that owns the list
-			Object newGuy = list.AddNew();
+			Reporting.Logger.WriteMinorEvent("Before AddNew in TimeForRealObject");
 
-			if (_textBoxTarget == null)
-			{
-				throw new ApplicationException(string.Format("This is a bug we're having trouble reproducing.  PLEASE TELL US HOW YOU DID THIS (related to issue ws-238) property={0}", this._propertyName));
-			}
+//!!!! Anything can happen to our internal state after this point so don't rely on any objects sticking
+// around and not being null!
+			T newGuy = new T();
+			Reporting.Logger.WriteMinorEvent("After AddNew in TimeForRealObject");
+
+			//if (_textBoxTarget == null)
+			//{
+			//    Reporting.Logger.WriteMinorEvent("Looks like this ghost was disposed while its method was running.");
+			//    throw new ApplicationException(string.Format("PLEASE HELP. This is a bug we're having trouble reproducing.  PLEASE TELL US HOW YOU DID THIS (related to issue ws-306) property={0}. CAN YOU DO IT AGAIN?", this._propertyName));
+			//}
 
 			//  object newGuy = _listTarget[e.NewIndex];
-			FillInMultiTextOfNewObject(newGuy, _propertyName, _writingSystem, _textBoxTarget.Text);
-			if (Triggered != null)
+			FillInMultiTextOfNewObject(newGuy, _propertyName, _writingSystem, textBoxTarget.Text);
+			list.Add(newGuy);
+			if (LayoutNeededAfterMadeReal != null && ReferenceControl != null)
 			{
-				Triggered.Invoke(this, _listTarget, list.IndexOf(newGuy), null/*todo*/, doGoToNextField, null);
+				LayoutNeededAfterMadeReal.Invoke(this, list, list.IndexOf(newGuy), null/*todo*/, doGoToNextField, null);
 			}
-
-			_textBoxTarget.Text = "";
+			textBoxTarget.Text = "";
 			_inMidstOfTrigger = false;
 			//_textBoxTarget.PrepareForFadeIn();
 		 }

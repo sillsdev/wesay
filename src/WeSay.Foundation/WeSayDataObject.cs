@@ -168,15 +168,15 @@ namespace WeSay.Foundation
 		{
 			if (property is MultiText)
 			{
-				return ((MultiText)property).Empty;
+				return MultiText.IsEmpty((MultiText) property);
 			}
 			else if (property is OptionRef)
 			{
-				return ((OptionRef)property).Empty;
+				return ((OptionRef)property).IsEmpty;
 			}
 			else if (property is OptionRefCollection)
 			{
-				return ((OptionRefCollection)property).Empty;
+				return ((OptionRefCollection)property).IsEmpty;
 			}
 			Debug.Fail("Unknown property type");
 			return true;

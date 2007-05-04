@@ -20,6 +20,7 @@ namespace WeSay.LexicalTools
 
 		internal override int AddWidgets(IBindingList list, int index, int insertAtRow)
 		{
+			DetailList.SuspendLayout();
 			int rowCount = 0;
 			LexSense sense = (LexSense)list[index];
 			Field field = ActiveViewTemplate.GetField(Field.FieldNames.SenseGloss.ToString());
@@ -39,7 +40,7 @@ namespace WeSay.LexicalTools
 
 			//add a ghost
 			rowCount += exampleLayouter.AddGhost(sense.ExampleSentences, insertAtRow + rowCount);
-
+			DetailList.ResumeLayout(true);
 			return rowCount;
 		}
 
@@ -64,7 +65,7 @@ namespace WeSay.LexicalTools
 //            return rowCount;
 
 			int insertAtRow = -1;//////REVIEW!!!!!!!!!!!!!!!!!!
-			return MakeGhostWidget(list, insertAtRow, Field.FieldNames.SenseGloss.ToString(), "Meaning", "Gloss", isHeading);
+			return MakeGhostWidget<LexSense>(list, insertAtRow, Field.FieldNames.SenseGloss.ToString(), "Meaning", "Gloss", isHeading);
 
 		}
 

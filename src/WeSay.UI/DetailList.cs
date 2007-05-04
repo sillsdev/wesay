@@ -157,9 +157,13 @@ namespace WeSay.UI
 			editWidget.KeyDown += new KeyEventHandler(OnEditWidget_KeyDown);
 
 			Debug.Assert(GetControlFromPosition(_indexOfWidget, insertAtRow) == null);
+
+			// At this point, multitext controls were being displayed on the screen.
+			// We weren't able to get around this by simply using SuspendLayout and ResumeLayout
+			// But finally made MultiText default to have a size of 1,1.
 			Controls.Add(editWidget, _indexOfWidget, insertAtRow);
 
-			return editWidget;
+		   return editWidget;
 		}
 
 		void OnEditWidget_KeyDown(object sender, KeyEventArgs e)

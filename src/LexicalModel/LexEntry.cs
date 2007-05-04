@@ -209,6 +209,7 @@ namespace WeSay.LexicalModel
 
 		public override void CleanUpEmptyObjects()
 		{
+			Reporting.Logger.WriteMinorEvent("LexEntry CleanUpEmptyObjects()");
 			base.CleanUpEmptyObjects();
 
 

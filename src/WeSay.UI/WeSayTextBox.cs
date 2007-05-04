@@ -129,6 +129,7 @@ namespace WeSay.UI
 
 		private void UpdateHeight()
 		{
+			SuspendLayout();
 			if (Text.Length == 0)
 			{
 				Height = PreferredHeight;
@@ -147,6 +148,7 @@ namespace WeSay.UI
 
 				Height = Math.Max(MinimumSize.Height, sz.Height);
 			}
+			ResumeLayout(false);
 		}
 
 		public WeSayTextBox(WritingSystem ws, string nameForLogging):this()
