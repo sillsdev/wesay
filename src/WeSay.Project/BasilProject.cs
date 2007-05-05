@@ -22,8 +22,8 @@ namespace WeSay.Project
 		}
 	  }
 		private WritingSystemCollection _writingSystems;
-		protected  string _projectDirectoryPath;
-		private string _stringCatalogSelector;
+		protected  string _projectDirectoryPath = string.Empty;
+		private string _stringCatalogSelector = string.Empty;
 
 		public event EventHandler HackedEditorsSaveNow;
 

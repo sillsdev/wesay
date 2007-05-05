@@ -1,6 +1,5 @@
-using System.Drawing;
-using System.Windows.Forms;
-using WeSay.UI.Animation;
+using WeSay.UI;
+using WeSay.UI.Buttons;
 
 namespace WeSay.LexicalTools
 {
@@ -34,21 +33,21 @@ namespace WeSay.LexicalTools
 		{
 			System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("blah");
 			System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("stuff");
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GatherBySemanticDomainsControl));
 			this._domainName = new System.Windows.Forms.ComboBox();
 			this.label3 = new System.Windows.Forms.Label();
-			this._listViewWords = new System.Windows.Forms.ListBox();
+			this._listViewWords = new WeSayListBox();
 			this.label5 = new System.Windows.Forms.Label();
 			this.label4 = new System.Windows.Forms.Label();
 			this._instructionLabel = new System.Windows.Forms.Label();
 			this._question = new System.Windows.Forms.Label();
 			this._description = new System.Windows.Forms.Label();
-			this._vernacularBox = new WeSay.UI.MultiTextControl();
-			this._btnPrevious = new ArrowButton.ArrowButton();
-			this._btnNext = new ArrowButton.ArrowButton();
-			this._btnAddWord = new ArrowButton.ArrowButton();
+			this._animatedText = new System.Windows.Forms.Label();
 			this._questionIndicator = new WeSay.UI.CirclesProgressIndicator();
-		  this._animatedText = new Label();
-		  this._animator = new Animator();
+			this._vernacularBox = new WeSay.UI.MultiTextControl();
+			this._btnPrevious = new WeSay.UI.Buttons.PreviousButton();
+			this._btnNext = new WeSay.UI.Buttons.NextButton();
+			this._btnAddWord = new WeSay.UI.Buttons.AddButton();
 			this.SuspendLayout();
 			//
 			// _domainName
@@ -62,7 +61,7 @@ namespace WeSay.LexicalTools
 			this._domainName.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this._domainName.Location = new System.Drawing.Point(13, 47);
 			this._domainName.Name = "_domainName";
-			this._domainName.Size = new System.Drawing.Size(441, 27);
+			this._domainName.Size = new System.Drawing.Size(434, 27);
 			this._domainName.TabIndex = 20;
 			this._domainName.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this._domainName_DrawItem);
 			this._domainName.SelectedIndexChanged += new System.EventHandler(this._domainName_SelectedIndexChanged);
@@ -97,14 +96,6 @@ namespace WeSay.LexicalTools
 			this._listViewWords.TabIndex = 17;
 			this._listViewWords.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this._listViewWords_KeyPress);
 			this._listViewWords.Click += new System.EventHandler(this._listViewWords_Click);
-		  //
-			//_animatedText
-		  //
-		  this._animatedText.AutoSize = true;
-		  this._animatedText.Name = "_animatedText";
-		  this._animatedText.Visible = false;
-		  this._animatedText.BackColor = Color.White;
-
 			//
 			// label5
 			//
@@ -133,7 +124,7 @@ namespace WeSay.LexicalTools
 			// _instructionLabel
 			//
 			this._instructionLabel.AutoSize = true;
-			this._instructionLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte) (0)));
+			this._instructionLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this._instructionLabel.ForeColor = System.Drawing.Color.DarkGray;
 			this._instructionLabel.Location = new System.Drawing.Point(11, 7);
 			this._instructionLabel.Name = "_instructionLabel";
@@ -148,9 +139,9 @@ namespace WeSay.LexicalTools
 			this._question.AutoEllipsis = true;
 			this._question.BackColor = System.Drawing.Color.MistyRose;
 			this._question.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this._question.Location = new System.Drawing.Point(45, 177);
+			this._question.Location = new System.Drawing.Point(15, 189);
 			this._question.Name = "_question";
-			this._question.Size = new System.Drawing.Size(592, 51);
+			this._question.Size = new System.Drawing.Size(622, 39);
 			this._question.TabIndex = 23;
 			//
 			// _description
@@ -166,92 +157,80 @@ namespace WeSay.LexicalTools
 			this._description.Size = new System.Drawing.Size(622, 90);
 			this._description.TabIndex = 24;
 			//
-			// _vernacularBox
+			// _animatedText
 			//
-			this._vernacularBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
-//            this._vernacularBox.BackColor = System.Drawing.Color.Green;
-			this._vernacularBox.Location = new System.Drawing.Point(49, 344);
-			this._vernacularBox.Name = "_vernacularBox";
-			this._vernacularBox.ShowAnnotationWidget = false;
-			this._vernacularBox.Size = new System.Drawing.Size(439, 30);
-			this._vernacularBox.TabIndex = 1;
-			this._vernacularBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this._boxVernacularWord_KeyDown);
-			//
-			// _btnPrevious
-			//
-			this._btnPrevious.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this._btnPrevious.ArrowEnabled = true;
-			this._btnPrevious.HoverEndColor = System.Drawing.Color.Blue;
-			this._btnPrevious.HoverStartColor = System.Drawing.Color.White;
-			this._btnPrevious.Location = new System.Drawing.Point(462, 50);
-			this._btnPrevious.Name = "_btnPrevious";
-			this._btnPrevious.NormalEndColor = System.Drawing.Color.White;
-			this._btnPrevious.NormalStartColor = System.Drawing.Color.White;
-			this._btnPrevious.Rotation = 270;
-			this._btnPrevious.Size = new System.Drawing.Size(24, 24);
-			this._btnPrevious.StubbyStyle = false;
-			this._btnPrevious.TabIndex = 12;
-			this._btnPrevious.Click += new System.EventHandler(this._btnPrevious_Click);
-			//
-			// _btnNext
-			//
-			this._btnNext.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this._btnNext.ArrowEnabled = true;
-			this._btnNext.HoverEndColor = System.Drawing.Color.Blue;
-			this._btnNext.HoverStartColor = System.Drawing.Color.White;
-			this._btnNext.Location = new System.Drawing.Point(487, 41);
-			this._btnNext.Name = "_btnNext";
-			this._btnNext.NormalEndColor = System.Drawing.Color.White;
-			this._btnNext.NormalStartColor = System.Drawing.Color.White;
-			this._btnNext.Rotation = 90;
-			this._btnNext.Size = new System.Drawing.Size(43, 43);
-			this._btnNext.StubbyStyle = false;
-			this._btnNext.TabIndex = 13;
-			this._btnNext.Click += new System.EventHandler(this._btnNext_Click);
-			//
-			// _btnAddWord
-			//
-			this._btnAddWord.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this._btnAddWord.ArrowEnabled = true;
-			this._btnAddWord.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this._btnAddWord.HoverEndColor = System.Drawing.Color.Blue;
-			this._btnAddWord.HoverStartColor = System.Drawing.Color.White;
-			this._btnAddWord.Location = new System.Drawing.Point(487, 321);
-			this._btnAddWord.Name = "_btnAddWord";
-			this._btnAddWord.NormalEndColor = System.Drawing.Color.White;
-			this._btnAddWord.NormalStartColor = System.Drawing.Color.White;
-			this._btnAddWord.Rotation = 270;
-			this._btnAddWord.Size = new System.Drawing.Size(80, 80);
-			this._btnAddWord.StubbyStyle = true;
-			this._btnAddWord.TabIndex = 10;
-			this._btnAddWord.Text = "   +";
-			this._btnAddWord.Click += new System.EventHandler(this._btnAddWord_Click);
+			this._animatedText.AutoSize = true;
+			this._animatedText.BackColor = System.Drawing.Color.White;
+			this._animatedText.Location = new System.Drawing.Point(0, 0);
+			this._animatedText.Name = "_animatedText";
+			this._animatedText.Size = new System.Drawing.Size(0, 13);
+			this._animatedText.TabIndex = 0;
+			this._animatedText.Visible = false;
 			//
 			// _questionIndicator
 			//
-			this._questionIndicator.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this._questionIndicator.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
 			this._questionIndicator.AutoSize = true;
 			this._questionIndicator.BulletColor = System.Drawing.Color.Azure;
 			this._questionIndicator.BulletColorEnd = System.Drawing.Color.MediumBlue;
 			this._questionIndicator.BulletPadding = new System.Windows.Forms.Padding(1);
 			this._questionIndicator.Location = new System.Drawing.Point(15, 179);
 			this._questionIndicator.Name = "_questionIndicator";
-			this._questionIndicator.Rows = 5;
-			this._questionIndicator.Size = new System.Drawing.Size(14, 35);
+			this._questionIndicator.Size = new System.Drawing.Size(70, 7);
 			this._questionIndicator.TabIndex = 0;
 			this._questionIndicator.TabStop = false;
-
-			CubicBezierCurve c = new CubicBezierCurve(new PointF(0, 0),
-	  new PointF(0.5f, 0f), new PointF(.5f, 1f), new PointF(1, 1));
-			this._animator.PointFromDistanceFunction = c.GetPointOnCurve;
-
-		  this._animator.Animate += new Animator.AnimateEventDelegate(_animator_Animate);
-		  this._animator.Duration = 750;
-		  this._animator.Finished += new System.EventHandler(_animator_Finished);
-		  this._animator.FrameRate = 30;
-		  this._animator.SpeedFunction = Animator.SpeedFunctions.SinSpeed;
-
+			//
+			// _vernacularBox
+			//
+			this._vernacularBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
+			this._vernacularBox.AutoSize = true;
+			this._vernacularBox.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			this._vernacularBox.BackColor = System.Drawing.Color.White;
+			this._vernacularBox.ColumnCount = 3;
+			this._vernacularBox.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this._vernacularBox.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this._vernacularBox.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this._vernacularBox.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this._vernacularBox.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this._vernacularBox.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this._vernacularBox.Location = new System.Drawing.Point(49, 374);
+			this._vernacularBox.Name = "_vernacularBox";
+			this._vernacularBox.ShowAnnotationWidget = false;
+			this._vernacularBox.Size = new System.Drawing.Size(439, 0);
+			this._vernacularBox.TabIndex = 1;
+			this._vernacularBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this._boxVernacularWord_KeyDown);
+			//
+			// _btnPrevious
+			//
+			this._btnPrevious.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this._btnPrevious.Location = new System.Drawing.Point(453, 45);
+			this._btnPrevious.Name = "_btnPrevious";
+			this._btnPrevious.Size = new System.Drawing.Size(30, 30);
+			this._btnPrevious.TabIndex = 12;
+			this._btnPrevious.Click += new System.EventHandler(this._btnPrevious_Click);
+			//
+			// _btnNext
+			//
+			this._btnNext.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this._btnNext.Location = new System.Drawing.Point(485, 35);
+			this._btnNext.Name = "_btnNext";
+			this._btnNext.Size = new System.Drawing.Size(50, 50);
+			this._btnNext.TabIndex = 13;
+			this._btnNext.Click += new System.EventHandler(this._btnNext_Click);
+			//
+			// _btnAddWord
+			//
+			this._btnAddWord.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this._btnAddWord.ArrowHeadHeight = 15;
+			this._btnAddWord.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this._btnAddWord.Location = new System.Drawing.Point(496, 348);
+			this._btnAddWord.Name = "_btnAddWord";
+			this._btnAddWord.PointingDirection = WeSay.UI.Buttons.PointingDirection.Left;
+			this._btnAddWord.Size = new System.Drawing.Size(70, 27);
+			this._btnAddWord.TabIndex = 10;
+			this._btnAddWord.Click += new System.EventHandler(this._btnAddWord_Click);
 			//
 			// GatherBySemanticDomainsControl
 			//
@@ -283,18 +262,17 @@ namespace WeSay.LexicalTools
 
 		#endregion
 
-	  private Animator _animator;
 
 		private WeSay.UI.MultiTextControl _vernacularBox;
 		private System.Windows.Forms.ComboBox _domainName;
 		private System.Windows.Forms.Label label3;
-		private System.Windows.Forms.ListBox _listViewWords;
+		private WeSayListBox _listViewWords;
 		private System.Windows.Forms.Label label5;
 		private System.Windows.Forms.Label label4;
 	  private System.Windows.Forms.Label _instructionLabel;
-		private ArrowButton.ArrowButton _btnPrevious;
-		private ArrowButton.ArrowButton _btnNext;
-		private ArrowButton.ArrowButton _btnAddWord;
+		private PreviousButton _btnPrevious;
+		private NextButton _btnNext;
+		private AddButton _btnAddWord;
 		private System.Windows.Forms.Label _question;
 		private System.Windows.Forms.Label _description;
 		private WeSay.UI.CirclesProgressIndicator _questionIndicator;

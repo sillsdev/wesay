@@ -94,11 +94,71 @@ namespace WeSay.Project
 			try
 			{
 				PathToLiftFile = liftPath;
+
 				if (!File.Exists(liftPath))
 				{
-					throw new ApplicationException("WeSay cannot find a lexicon where it was looking, which is at " +
-												   liftPath);
+				  ErrorReporter.ReportNonFatalMessage(
+					  String.Format(
+						  "WeSay tried to find the lexicon at '{0}', but could not find it.\r\n\r\nTry opening the LIFT file by double clicking on it.",
+						  liftPath));
+				  return false;
 				}
+				try
+				{
+				  using (FileStream fs = File.OpenWrite(liftPath))
+				  {
+					fs.Close();
+				  }
+				}
+				catch (UnauthorizedAccessException)
+				{
+				  ErrorReporter.ReportNonFatalMessage(
+					  String.Format(
+						  "WeSay was unable to open the file at '{0}' for writing, because the system won't allow it. Check that 'ReadOnly' is cleared, otherwise investigate your user permissions to write to this file.",
+								  liftPath));
+				  return false;
+				}
+				catch (IOException)
+				{
+				  ErrorReporter.ReportNonFatalMessage(
+					  String.Format(
+						  "WeSay was unable to open the file at '{0}' for writing, probably because it is locked by some other process on your computer (maybe a recently crashed run of WeSay?). If you can't figure out what has it locked, restart your computer.",
+						  liftPath));
+				  return false;
+				}
+
+				if (!File.Exists(PathToProjectTaskInventory))
+				{
+				  ErrorReporter.ReportNonFatalMessage(
+					  String.Format(
+						  "WeSay tried to find the WeSay configuration file at '{0}', but could not find it.\r\n\r\nTry using the configuration Tool to create one.",
+						  PathToProjectTaskInventory));
+				  return false;
+				}
+				try
+				{
+				  using (FileStream fs = File.OpenRead(PathToProjectTaskInventory))
+				  {
+					fs.Close();
+				  }
+				}
+				catch (UnauthorizedAccessException)
+				{
+				  ErrorReporter.ReportNonFatalMessage(
+					  String.Format(
+						  "WeSay was unable to open the file at '{0}' for reading, because the system won't allow it. Investigate your user permissions to write to this file.",
+								  PathToProjectTaskInventory));
+				  return false;
+				}
+				catch (IOException e)
+				{
+				  ErrorReporter.ReportNonFatalMessage(
+					  String.Format(
+						  "WeSay was unable to open the file at '{0}' for reading. \n Further information: {1}",
+						  PathToProjectTaskInventory, e.Message));
+				  return false;
+				}
+
 
 				//walk up from file to /wesay to /<project>
 				_projectDirectoryPath = Directory.GetParent(Directory.GetParent(liftPath).FullName).FullName;

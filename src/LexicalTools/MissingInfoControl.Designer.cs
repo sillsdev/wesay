@@ -1,4 +1,5 @@
 using System.Windows.Forms;
+using WeSay.UI.Buttons;
 
 namespace WeSay.LexicalTools
 {
@@ -41,12 +42,13 @@ namespace WeSay.LexicalTools
 		/// </summary>
 		private void InitializeComponent()
 		{
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MissingInfoControl));
 			this._recordsListBox = new ListBox.BindingListGrid();
 			this._completedRecordsListBox = new ListBox.BindingListGrid();
 			this._completedRecordsLabel = new System.Windows.Forms.Label();
 			this._entryViewControl = new WeSay.LexicalTools.EntryViewControl();
-			this._btnPreviousWord = new ArrowButton.ArrowButton();
-			this._btnNextWord = new ArrowButton.ArrowButton();
+			this._btnPreviousWord = new WeSay.UI.Buttons.PreviousButton();
+			this._btnNextWord = new WeSay.UI.Buttons.NextButton();
 			this.labelNextHotKey = new System.Windows.Forms.Label();
 			this._congratulationsControl = new WeSay.LexicalTools.CongratulationsControl();
 			this.SuspendLayout();
@@ -103,55 +105,41 @@ namespace WeSay.LexicalTools
 			this._entryViewControl.DataSource = null;
 			this._entryViewControl.Location = new System.Drawing.Point(126, 5);
 			this._entryViewControl.Name = "_entryViewControl";
-			this._entryViewControl.Size = new System.Drawing.Size(367, 122);
+			this._entryViewControl.Size = new System.Drawing.Size(367, 334);
 			this._entryViewControl.TabIndex = 0;
 			//
 			// _btnPreviousWord
 			//
-			this._btnPreviousWord.ArrowEnabled = true;
-			this._btnPreviousWord.HoverEndColor = System.Drawing.Color.Blue;
-			this._btnPreviousWord.HoverStartColor = System.Drawing.Color.White;
-			this._btnPreviousWord.Location = new System.Drawing.Point(310, 130);
+			this._btnPreviousWord.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this._btnPreviousWord.Location = new System.Drawing.Point(303, 354);
 			this._btnPreviousWord.Name = "_btnPreviousWord";
-			this._btnPreviousWord.NormalEndColor = System.Drawing.Color.White; ;
-			this._btnPreviousWord.NormalStartColor = System.Drawing.Color.White;
-			this._btnPreviousWord.Rotation = 270;
-			this._btnPreviousWord.Size = new System.Drawing.Size(24, 24);
-			this._btnPreviousWord.StubbyStyle = false;
+			this._btnPreviousWord.Size = new System.Drawing.Size(30, 30);
 			this._btnPreviousWord.TabIndex = 4;
 			this._btnPreviousWord.TabStop = false;
 			this._btnPreviousWord.Click += new System.EventHandler(this.OnBtnPreviousWordClick);
-			this._btnPreviousWord.Anchor = (AnchorStyles.Bottom | AnchorStyles.Right);
 			//
 			// _btnNextWord
 			//
-			this._btnNextWord.ArrowEnabled = true;
-			this._btnNextWord.HoverEndColor = System.Drawing.Color.Blue;
-			this._btnNextWord.HoverStartColor = System.Drawing.Color.White;
-			this._btnNextWord.Location = new System.Drawing.Point(340, 120);
+			this._btnNextWord.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this._btnNextWord.Location = new System.Drawing.Point(336, 344);
 			this._btnNextWord.Name = "_btnNextWord";
-			this._btnNextWord.NormalEndColor = System.Drawing.Color.White; ;
-			this._btnNextWord.NormalStartColor = System.Drawing.Color.White;
-			this._btnNextWord.Rotation = 90;
-			this._btnNextWord.Size = new System.Drawing.Size(43, 43);
-			this._btnNextWord.StubbyStyle = false;
+			this._btnNextWord.Size = new System.Drawing.Size(50, 50);
 			this._btnNextWord.TabIndex = 5;
 			this._btnNextWord.TabStop = false;
 			this._btnNextWord.Click += new System.EventHandler(this.OnBtnNextWordClick);
-			this._btnNextWord.Anchor = (AnchorStyles.Bottom | AnchorStyles.Right);
 			//
 			// labelNextHotKey
 			//
+			this.labelNextHotKey.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.labelNextHotKey.AutoSize = true;
 			this.labelNextHotKey.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.labelNextHotKey.ForeColor = System.Drawing.Color.DarkGray;
-			this.labelNextHotKey.Location = new System.Drawing.Point(385, 133);
+			this.labelNextHotKey.Location = new System.Drawing.Point(387, 363);
 			this.labelNextHotKey.Name = "labelNextHotKey";
 			this.labelNextHotKey.Size = new System.Drawing.Size(102, 15);
 			this.labelNextHotKey.TabIndex = 6;
 			this.labelNextHotKey.Text = "(Page Down Key)";
-			this.labelNextHotKey.Anchor = (AnchorStyles.Bottom | AnchorStyles.Right);
-
+			//
 			// _congratulationsControl
 			//
 			this._congratulationsControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
@@ -159,10 +147,10 @@ namespace WeSay.LexicalTools
 						| System.Windows.Forms.AnchorStyles.Right)));
 			this._congratulationsControl.Location = new System.Drawing.Point(126, 9);
 			this._congratulationsControl.Name = "_congratulationsControl";
-			this._congratulationsControl.Size = new System.Drawing.Size(367, 144);
+			this._congratulationsControl.Size = new System.Drawing.Size(367, 370);
 			this._congratulationsControl.TabIndex = 8;
 			//
-			// LexFieldControl
+			// MissingInfoControl
 			//
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -174,8 +162,8 @@ namespace WeSay.LexicalTools
 			this.Controls.Add(this._btnNextWord);
 			this.Controls.Add(this.labelNextHotKey);
 			this.Controls.Add(this._congratulationsControl);
-			this.Name = "LexFieldControl";
-			this.Size = new System.Drawing.Size(493, 169);
+			this.Name = "MissingInfoControl";
+			this.Size = new System.Drawing.Size(493, 395);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -186,8 +174,8 @@ namespace WeSay.LexicalTools
 		private ListBox.BindingListGrid _recordsListBox;
 		private ListBox.BindingListGrid _completedRecordsListBox;
 		private Label _completedRecordsLabel;
-		private ArrowButton.ArrowButton _btnNextWord;
-		private ArrowButton.ArrowButton _btnPreviousWord;
+		private NextButton _btnNextWord;
+		private PreviousButton _btnPreviousWord;
 		private Label labelNextHotKey;
 		private CongratulationsControl _congratulationsControl;
 

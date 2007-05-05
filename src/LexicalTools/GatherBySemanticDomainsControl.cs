@@ -9,6 +9,8 @@ namespace WeSay.LexicalTools
 	public partial class GatherBySemanticDomainsControl : UserControl
 	{
 		private GatherBySemanticDomainTask _presentationModel;
+		private Animator _animator;
+
 
 		public GatherBySemanticDomainsControl()
 		{
@@ -23,6 +25,8 @@ namespace WeSay.LexicalTools
 		{
 			_presentationModel = presentationModel;
 			InitializeComponent();
+			InitializeAnimator();
+
 			InitializeDisplaySettings();
 			RefreshCurrentWords();
 			_domainName.Items.Clear();
@@ -51,8 +55,22 @@ namespace WeSay.LexicalTools
 
 			}
 			_vernacularBox.WritingSystems = new WritingSystem[] {_presentationModel.WordWritingSystem};
-		  _listViewWords.Font = _presentationModel.WordWritingSystem.Font;
+		  _listViewWords.WritingSystem = _presentationModel.WordWritingSystem;
 		  _animatedText.Font = _presentationModel.WordWritingSystem.Font;
+		}
+
+		private void InitializeAnimator()
+		{
+			this._animator = new Animator();
+			CubicBezierCurve c = new CubicBezierCurve(new PointF(0, 0),
+													  new PointF(0.5f, 0f), new PointF(.5f, 1f), new PointF(1, 1));
+			this._animator.PointFromDistanceFunction = c.GetPointOnCurve;
+
+			this._animator.Duration = 750;
+			this._animator.FrameRate = 30;
+			this._animator.SpeedFunction = Animator.SpeedFunctions.SinSpeed;
+			this._animator.Animate += new Animator.AnimateEventDelegate(_animator_Animate);
+			this._animator.Finished += new EventHandler(_animator_Finished);
 		}
 
 		private void InitializeDisplaySettings() {
@@ -138,6 +156,8 @@ namespace WeSay.LexicalTools
 			_domainName.BackColor = BackColor;
 			_description.BackColor = BackColor;
 			_question.BackColor = BackColor;
+			_questionIndicator.BulletColor = ControlPaint.Light(BackColor);
+			_questionIndicator.BulletColorEnd = ControlPaint.Dark(BackColor);
 		}
 
 		void _listViewWords_KeyPress(object sender, KeyPressEventArgs e)

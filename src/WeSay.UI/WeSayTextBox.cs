@@ -18,12 +18,12 @@ namespace WeSay.UI
 		public WeSayTextBox()
 		{
 			InitializeComponent();
-			this.GotFocus += new EventHandler(OnGotFocus);
-			this.LostFocus += new EventHandler(OnLostFocus);
-			this.KeyPress += new KeyPressEventHandler(WeSayTextBox_KeyPress);
-			this.TextChanged += new EventHandler(WeSayTextBox_TextChanged);
+			GotFocus += new EventHandler(OnGotFocus);
+			LostFocus += new EventHandler(OnLostFocus);
+			KeyPress += new KeyPressEventHandler(WeSayTextBox_KeyPress);
+			TextChanged += new EventHandler(WeSayTextBox_TextChanged);
 
-			this.KeyDown += new KeyEventHandler(OnKeyDown);
+			KeyDown += new KeyEventHandler(OnKeyDown);
 
 		  //  Debug.Assert(DesignMode);
 			if (Environment.OSVersion.Platform != PlatformID.Unix)
@@ -45,22 +45,22 @@ namespace WeSay.UI
 		{
 			if (e.KeyCode == Keys.F4)
 			{
-				if (this.SelectionLength == 0)
+				if (SelectionLength == 0)
 				{
-					if (this.Text !=null)   //grab the whole field
+					if (Text !=null)   //grab the whole field
 					{
-						this.DoToolboxJump(this.Text.Trim());
+						DoToolboxJump(Text.Trim());
 					}
 				}
-				else if (this.SelectedText != null)
+				else if (SelectedText != null)
 				{
-					this.DoToolboxJump(this.SelectedText);
+					DoToolboxJump(SelectedText);
 				}
 			}
 		}
 
 
-		protected void DoToolboxJump(string word)
+		static private void DoToolboxJump(string word)
 		{
 			try
 			{
@@ -87,7 +87,7 @@ namespace WeSay.UI
 		{
 			//only first change per focus session will be logged
 			if (!_haveAlreadyLoggedTextChanged &&
-				this.Focused/*try not to report when code is changing us*/)
+				Focused/*try not to report when code is changing us*/)
 			{
 				_haveAlreadyLoggedTextChanged = true;
 				Reporting.Logger.WriteMinorEvent("First_TextChange (could be paste via mouse) {0}:{1}", _nameForLogging, _writingSystem.Id);
@@ -135,10 +135,13 @@ namespace WeSay.UI
 				Height = PreferredHeight;
 				return;
 			}
+
+
 			using (Graphics g = CreateGraphics())
 			{
 				Size sz = TextRenderer.MeasureText(g,
-									Text + "\n",  // need extra new line to handle case where ends in new line (since last newline is ignored)
+												   Text + "\n",
+												   // need extra new line to handle case where ends in new line (since last newline is ignored)
 									Font,
 									new Size(Width, int.MinValue),
 									TextFormatFlags.TextBoxControl |

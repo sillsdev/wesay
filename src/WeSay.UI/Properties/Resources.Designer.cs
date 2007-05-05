@@ -87,5 +87,26 @@ namespace WeSay.UI.Properties {
 				return ((System.Drawing.Bitmap)(obj));
 			}
 		}
+
+		internal static System.Drawing.Bitmap LeftArrow {
+			get {
+				object obj = ResourceManager.GetObject("LeftArrow", resourceCulture);
+				return ((System.Drawing.Bitmap)(obj));
+			}
+		}
+
+		internal static System.Drawing.Bitmap Plus {
+			get {
+				object obj = ResourceManager.GetObject("Plus", resourceCulture);
+				return ((System.Drawing.Bitmap)(obj));
+			}
+		}
+
+		internal static System.Drawing.Bitmap RightArrow {
+			get {
+				object obj = ResourceManager.GetObject("RightArrow", resourceCulture);
+				return ((System.Drawing.Bitmap)(obj));
+			}
+		}
 	}
 }

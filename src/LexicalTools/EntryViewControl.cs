@@ -195,7 +195,7 @@ namespace WeSay.LexicalTools
 				LexEntryLayouter layout = new LexEntryLayouter(this._detailListControl, ViewTemplate);
 				layout.AddWidgets(this._record);
 			}
-			this._detailListControl.ResumeLayout(true);
+			this._detailListControl.ResumeLayout();
 		  this._panelEntry.ResumeLayout(true);
 		}
 

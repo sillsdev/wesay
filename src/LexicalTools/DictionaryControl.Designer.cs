@@ -44,13 +44,13 @@ namespace WeSay.LexicalTools
 			this._findText = new WeSay.UI.WeSayAutoCompleteTextBox();
 			this._writingSystemChooser = new System.Windows.Forms.Button();
 			this._findWritingSystemId = new System.Windows.Forms.Label();
-			this._recordsListBox = new System.Windows.Forms.ListBox();
+			this._recordsListBox = new WeSayListBox();
 			this.panelTools = new System.Windows.Forms.Panel();
 			this._btnDeleteWord = new System.Windows.Forms.Button();
 			this._btnNewWord = new System.Windows.Forms.Button();
 			this.panelDetail = new System.Windows.Forms.Panel();
-			this._splitter = new WeSay.UI.CollapsibleSplitter();
 			this._entryViewControl = new WeSay.LexicalTools.EntryViewControl();
+			this._splitter = new WeSay.UI.CollapsibleSplitter();
 			this.panelWordList.SuspendLayout();
 			this.panelTools.SuspendLayout();
 			this.panelDetail.SuspendLayout();
@@ -136,9 +136,9 @@ namespace WeSay.LexicalTools
 						| System.Windows.Forms.AnchorStyles.Left)
 						| System.Windows.Forms.AnchorStyles.Right)));
 			this._recordsListBox.IntegralHeight = false;
-			this._recordsListBox.Location = new System.Drawing.Point(3, 25);
+			this._recordsListBox.Location = new System.Drawing.Point(3, 28);
 			this._recordsListBox.Name = "_recordsListBox";
-			this._recordsListBox.Size = new System.Drawing.Size(136, 239);
+			this._recordsListBox.Size = new System.Drawing.Size(136, 236);
 			this._recordsListBox.TabIndex = 4;
 			//
 			// panelTools
@@ -197,6 +197,18 @@ namespace WeSay.LexicalTools
 			this.panelDetail.Size = new System.Drawing.Size(345, 264);
 			this.panelDetail.TabIndex = 0;
 			//
+			// _entryViewControl
+			//
+			this._entryViewControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+						| System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
+			this._entryViewControl.DataSource = null;
+			this._entryViewControl.Location = new System.Drawing.Point(0, 0);
+			this._entryViewControl.Margin = new System.Windows.Forms.Padding(0);
+			this._entryViewControl.Name = "_entryViewControl";
+			this._entryViewControl.Size = new System.Drawing.Size(345, 264);
+			this._entryViewControl.TabIndex = 0;
+			//
 			// _splitter
 			//
 			this._splitter.BackColorEnd = System.Drawing.Color.Empty;
@@ -210,18 +222,6 @@ namespace WeSay.LexicalTools
 			this._splitter.Name = "_splitter";
 			this._splitter.TabIndex = 1;
 			this._splitter.TabStop = false;
-			//
-			// _entryViewControl
-			//
-			this._entryViewControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-						| System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
-			this._entryViewControl.DataSource = null;
-			this._entryViewControl.Location = new System.Drawing.Point(0, 0);
-			this._entryViewControl.Margin = new System.Windows.Forms.Padding(0);
-			this._entryViewControl.Name = "_entryViewControl";
-			this._entryViewControl.Size = new System.Drawing.Size(345, 264);
-			this._entryViewControl.TabIndex = 0;
 			//
 			// DictionaryControl
 			//
@@ -252,7 +252,7 @@ namespace WeSay.LexicalTools
 		private Panel panelWordList;
 		private Panel panelDetail;
 		private Panel panelTools;
-		private System.Windows.Forms.ListBox _recordsListBox;
+		private WeSayListBox _recordsListBox;
 		private Button _btnDeleteWord;
 		private Button _btnNewWord;
 		private Button _btnFind;

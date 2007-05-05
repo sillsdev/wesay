@@ -81,7 +81,7 @@ namespace WeSay.App
 				using (IRecordListManager recordListManager = MakeRecordListManager(project))
 				{
 					tabbedForm.Show(); // so the user sees that we did launch
-					tabbedForm.Text = "WeSay: " + project.Name + "        "  + Reporting.ErrorReporter.UserFriendlyVersionString;
+					tabbedForm.Text = "WeSay: " + project.Name + "        "  + ErrorReporter.UserFriendlyVersionString;
 					Application.DoEvents();
 
 					LiftUpdateService liftUpdateService = SetupUpdateService(recordListManager);
@@ -144,56 +144,35 @@ namespace WeSay.App
 
 		private static bool TryToLoad(CommandLineArguments cmdArgs, string liftPath, WeSayWordsProject project)
 		{
-			if (liftPath == null)
+		  if (liftPath == null)
+		  {
+			if (!String.IsNullOrEmpty(Settings.Default.PreviousLiftPath))
 			{
-				if (!String.IsNullOrEmpty(Settings.Default.PreviousLiftPath))
-				{
-					liftPath = Settings.Default.PreviousLiftPath;
-				}
-				else
-				{
-					ErrorReporter.ReportNonFatalMessage("WeSay was unable to figure out what lexicon to work on. Try opening the LIFT file by double clicking on it. If you don't have one yet, run the WeSay Configuration Tool to make a new WeSay proejct.");
-					return false;
-				}
+			  liftPath = Settings.Default.PreviousLiftPath;
 			}
+			else
+			{
+			  ErrorReporter.ReportNonFatalMessage("WeSay was unable to figure out what lexicon to work on. Try opening the LIFT file by double clicking on it. If you don't have one yet, run the WeSay Configuration Tool to make a new WeSay proejct.");
+			  return false;
+			}
+		  }
 
-			if (!File.Exists(liftPath))
-			{
-				ErrorReporter.ReportNonFatalMessage(
-					String.Format(
-						"WeSay tried to find the lexicon at '{0}', but could not find it.\r\n\r\nTry opening the LIFT file by double clicking on it.",
-						liftPath));
-				return false;
-			}
-			try
-			{
-				using(FileStream fs = File.OpenWrite(liftPath))
-				{
-					fs.Close();
-				}
-			}
-			catch(UnauthorizedAccessException error)
-			{
-				ErrorReporter.ReportNonFatalMessage(
-					String.Format(
-						"WeSay was unable to open the the file at '{0}' for writing, because the system won't allow it. Check that 'ReadOnly' is cleared, otherwise investigate your user permissions to write to this file.",
-								liftPath));
-						return false;
-			}
-			catch (IOException error)
-			{
-				ErrorReporter.ReportNonFatalMessage(
-					String.Format(
-						"WeSay was unable to open the the file at '{0}' for writing, probably because it is locked by some other process on your computer (maybe a recently crashed run of WeSay?). If you can't figure out what has it locked, restart your computer.",
-						liftPath));
-				return false;
-			}
+		  if (project.LoadFromLiftLexiconPath(liftPath))
+		  {
+			Settings.Default.PreviousLiftPath = liftPath;
+		  }
+		  else
+		  {
+			return false;
+		  }
+
+
 
 			if (!BringCachesUpToDate(liftPath, project))
 			{
 				return false;
 			}
-			if (CacheManager.AssumeCacheIsFresh(Project.WeSayWordsProject.Project.PathToCache))
+			if (CacheManager.AssumeCacheIsFresh(WeSayWordsProject.Project.PathToCache))
 			{
 				//prevent the update service from thinking the LIFT file is really old
 				//compared to the cache, due to the installer messing with the dates.
@@ -205,15 +184,7 @@ namespace WeSay.App
 			CacheManager.RemoveAssumeCacheIsFreshIndicator();
 
 			WeSayWordsProject.Project.LockLift();
-			if (project.LoadFromLiftLexiconPath(liftPath))
-			{
-				Settings.Default.PreviousLiftPath = liftPath;
-				return true;
-			}
-			else
-			{
-				return false;
-			}
+		  return true;
 		}
 
 		private static bool BringCachesUpToDate(string liftPath, WeSayWordsProject project)
@@ -244,11 +215,11 @@ namespace WeSay.App
 					{
 						if (dlg.ProgressStateResult.ExceptionThatWasEncountered !=null)
 						{
-							Reporting.ErrorReporter.ReportException(dlg.ProgressStateResult.ExceptionThatWasEncountered, null, false);
+							ErrorReporter.ReportException(dlg.ProgressStateResult.ExceptionThatWasEncountered, null, false);
 						}
 						else if (dlg.ProgressStateResult.State == ProgressState.StateValue.StoppedWithError)
 						{
-							Reporting.ErrorReporter.ReportNonFatalMessage("Could not build caches. " + dlg.ProgressStateResult.LogString, null, false);
+							ErrorReporter.ReportNonFatalMessage("Could not build caches. " + dlg.ProgressStateResult.LogString, null, false);
 						}
 						return false;
 					}
@@ -269,9 +240,9 @@ namespace WeSay.App
 				dlg.ShowDialog();
 				if (dlg.ProgressStateResult.ExceptionThatWasEncountered != null)
 				{
-					Reporting.ErrorReporter.ReportNonFatalMessage(
+					ErrorReporter.ReportNonFatalMessage(
 						String.Format("WeSay encountered an error while preprocessing the file '{0}'.  Error was: {1}",
-						Project.WeSayWordsProject.Project.PathToLiftFile,
+						WeSayWordsProject.Project.PathToLiftFile,
 						dlg.ProgressStateResult.ExceptionThatWasEncountered.Message));
 				}
 				return (dlg.DialogResult == DialogResult.OK);
@@ -292,7 +263,7 @@ namespace WeSay.App
 			{
 				state.ExceptionThatWasEncountered = error;
 				state.State = ProgressState.StateValue.StoppedWithError;
-				throw error; // this will put the exception in the e.Error arg of the RunWorkerCompletedEventArgs
+				throw; // this will put the exception in the e.Error arg of the RunWorkerCompletedEventArgs
 			}
 		}
 

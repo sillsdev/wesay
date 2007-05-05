@@ -1,6 +1,5 @@
 using System;
 using System.Diagnostics;
-using System.Drawing;
 using System.Windows.Forms;
 
 namespace WeSay.UI
@@ -39,7 +38,7 @@ namespace WeSay.UI
 		/// </summary>
 		private int _rowCount = 0;
 
-		private Control _focussedImmediateChild;
+//        private Control _focussedImmediateChild;
 
 		public VBox()
 		{

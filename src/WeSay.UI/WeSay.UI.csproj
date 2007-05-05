@@ -58,6 +58,24 @@
 	<Compile Include="AutoCompleteTextBox\ShortCutTrigger.cs" />
 	<Compile Include="AutoCompleteTextBox\TextLengthTrigger.cs" />
 	<Compile Include="AutoCompleteTextBox\TriggerState.cs" />
+	<Compile Include="Buttons\AddButton.cs">
+	  <SubType>Component</SubType>
+	</Compile>
+	<Compile Include="Buttons\NextButton.cs">
+	  <SubType>Component</SubType>
+	</Compile>
+	<Compile Include="Buttons\PreviousButton.cs">
+	  <SubType>Component</SubType>
+	</Compile>
+	<Compile Include="Buttons\RegionButton.cs">
+	  <SubType>Component</SubType>
+	</Compile>
+	<Compile Include="Buttons\RoundButton.cs">
+	  <SubType>Component</SubType>
+	</Compile>
+	<Compile Include="Buttons\TagButton.cs">
+	  <SubType>Component</SubType>
+	</Compile>
 	<Compile Include="CollapsibleSplitter.cs">
 	  <SubType>Component</SubType>
 	</Compile>
@@ -113,6 +131,12 @@
 	</Compile>
 	<Compile Include="MultiTextControl.designer.cs">
 	  <DependentUpon>MultiTextControl.cs</DependentUpon>
+	</Compile>
+	<Compile Include="WeSayListBox.cs">
+	  <SubType>Component</SubType>
+	</Compile>
+	<Compile Include="WeSayListBox.Designer.cs">
+	  <DependentUpon>WeSayListBox.cs</DependentUpon>
 	</Compile>
 	<Compile Include="WeSayTextBox.cs">
 	  <SubType>Component</SubType>

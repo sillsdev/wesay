@@ -13,7 +13,7 @@ namespace WeSay.LexicalTools
 
 		public GatherWordListControl()
 		{
-			System.Diagnostics.Debug.Assert(DesignMode);
+			Debug.Assert(DesignMode);
 			InitializeComponent();
 		}
 

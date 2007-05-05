@@ -78,7 +78,7 @@ namespace WeSay.LexicalTools
 			BackColor = WeSay.UI.DisplaySettings.Default.BackgroundColor;
 			InitializeComponent();
 			this._writingSystemChooser.Image = Resources.Expand.GetThumbnailImage(6, 6, ReturnFalse, IntPtr.Zero);
-			this._btnFind.Image = Resources.Find.GetThumbnailImage(11, 11, ReturnFalse, IntPtr.Zero);
+			this._btnFind.Image = Resources.Find.GetThumbnailImage(22, 22, ReturnFalse, IntPtr.Zero);
 			this._btnDeleteWord.Image = Resources.DeleteWord.GetThumbnailImage(22, 22, ReturnFalse, IntPtr.Zero);
 			this._btnNewWord.Image = Resources.NewWord.GetThumbnailImage(22, 22, ReturnFalse, IntPtr.Zero);
 
@@ -137,7 +137,7 @@ namespace WeSay.LexicalTools
 
 			Control_EntryDetailPanel.DataSource = CurrentRecord;
 
-			this._recordsListBox.Font = this._listWritingSystem.Font;
+			this._recordsListBox.WritingSystem = this._listWritingSystem;
 
 			this._findText.ItemFilterer = ApproximateMatcher.FindClosestAndNextClosestAndPrefixedForms;
 			this._findText.Items = (CachedSortedDb4oList<string, LexEntry>)this._records;
