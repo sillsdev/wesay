@@ -126,6 +126,7 @@ namespace WeSay.UI
 						{
 							Control c = GetControlFromPosition(col, row - 1);
 							SetCellPosition(c, new TableLayoutPanelCellPosition(col, row));
+							c.TabIndex = row;
 						}
 					}
 				}
@@ -157,6 +158,9 @@ namespace WeSay.UI
 			editWidget.KeyDown += new KeyEventHandler(OnEditWidget_KeyDown);
 
 			Debug.Assert(GetControlFromPosition(_indexOfWidget, insertAtRow) == null);
+
+			//test
+			editWidget.TabIndex = insertAtRow;
 
 			// At this point, multitext controls were being displayed on the screen.
 			// We weren't able to get around this by simply using SuspendLayout and ResumeLayout

@@ -280,14 +280,27 @@ namespace WeSay.App
 		{
 			string backupName = existingPath + ".old";
 
-			int i = 0;
-			while (File.Exists(backupName + i))
-			{
-				i++;
-		}
-			backupName += i;
+			//this was just making a mess
+//            int i = 0;
+//            while (File.Exists(backupName + i))
+//            {
+//                i++;
+//            }
+//            backupName += i;
 
-			File.Move(existingPath, backupName);
+			try
+			{
+				if (File.Exists(backupName))
+				{
+					File.Delete(backupName);
+				}
+
+				File.Move(existingPath, backupName);
+			}
+			catch (Exception e)
+			{
+				Reporting.Logger.WriteEvent(String.Format("Couldn't write out to {0} ", backupName));
+			}
 
 			File.Copy(newFilePath, existingPath);
 			File.Delete(newFilePath);
