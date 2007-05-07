@@ -1,16 +1,32 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Windows.Forms;
-using Db4objects.Db4o;
 using Db4objects.Db4o.Query;
+using LiftIO;
+using Reporting;
 using WeSay.Data;
 using WeSay.LexicalModel;
 using WeSay.Project;
-using Debug=System.Diagnostics.Debug;
 
+
+/*  Analysis of what happens to the data when there is a crash
+ *              (Note, you can simulate crash by doing shift-pause from a WeSayTextBox)
+ *
+ *  Analysis of what happens to the data when there is a crash
+ *
+ * DB Committed?    Lift Update File Written?   Update File Consumed yet?   Result
+ * -------------    -------------------------   -------------------------   ------
+ * N                N                           N                           No data to loose.
+ * N                Y                           N                           On restart, we must consume update file first, then rebuild cache (see ws-281)
+ * N                Y                           Y                           Cache will rebuild with correct data on restart
+ * Y                N                           N                           On restart, find newer changes than LIFT has, create update and consume it
+ * Y                Y                           N                           On restart, will consume update file.
+ * Y                Y                           Y                           No data to loose.
+ *
+ */
 namespace WeSay.App
 {
 	public class LiftUpdateService
@@ -34,7 +50,7 @@ namespace WeSay.App
 		{
 			get
 			{
-				return Path.GetDirectoryName(Project.WeSayWordsProject.Project.PathToLiftFile);
+				return Path.GetDirectoryName(WeSayWordsProject.Project.PathToLiftFile);
 			}
 		}
 
@@ -76,7 +92,7 @@ namespace WeSay.App
 
 		public void DoLiftUpdateNow(bool mergeIntoSingleFileBeforeReturning)
 		{
-			Reporting.Logger.WriteEvent("Incremental Update Start");
+			Logger.WriteEvent("Incremental Update Start");
 
 			if (Updating != null)
 			{
@@ -117,25 +133,13 @@ namespace WeSay.App
 
 			if (mergeIntoSingleFileBeforeReturning)
 			{
-				Reporting.Logger.WriteEvent("Running Synchronic Merger");
-				//merge the increment files
-
-				try
-				{
-					WeSayWordsProject.Project.ReleaseLockOnLift();
-					LiftIO.SynchronicMerger merger = new LiftIO.SynchronicMerger();
-					merger.MergeUpdatesIntoFile(Project.WeSayWordsProject.Project.PathToLiftFile);
-					CacheManager.UpdateSyncPointInCache(_datasource.Data,
+				ConsumePendingLiftUpdates();
+				CacheManager.UpdateSyncPointInCache(_datasource.Data,
 														File.GetLastWriteTimeUtc(
 															WeSayWordsProject.Project.PathToLiftFile));
-				}
-				finally
-				{
-					WeSayWordsProject.Project.LockLift();
-				}
 			}
 
-			Reporting.Logger.WriteEvent("Incremental Update Done");
+			Logger.WriteEvent("Incremental Update Done");
 
 			//the granularity of the file access time stamp is too blunt, so we
 			//avoid missing changes with this hack, for now (have *not* tested how small it could be)
@@ -144,6 +148,25 @@ namespace WeSay.App
 
 		}
 
+		public static void ConsumePendingLiftUpdates()
+		{
+			//merge the increment files
+
+			if (SynchronicMerger.GetPendingUpdateFiles(WeSayWordsProject.Project.PathToLiftFile).Length > 0)
+			{
+				Logger.WriteEvent("Running Synchronic Merger");
+				try
+				{
+					SynchronicMerger merger = new SynchronicMerger();
+					WeSayWordsProject.Project.ReleaseLockOnLift();
+					merger.MergeUpdatesIntoFile(WeSayWordsProject.Project.PathToLiftFile);
+				}
+				finally
+				{
+					WeSayWordsProject.Project.LockLift();
+				}
+			}
+		}
 
 
 		private  string MakeIncrementFileName(DateTime time)
@@ -152,7 +175,7 @@ namespace WeSay.App
 //            {
 				string timeString = time.ToString("yyyy'-'MM'-'dd'T'HH'-'mm'-'ss'-'FFFFF UTC");
 				string path = Path.Combine(LiftDirectory, timeString);
-				path += LiftIO.SynchronicMerger.ExtensionOfIncrementalFiles;
+				path += SynchronicMerger.ExtensionOfIncrementalFiles;
 				return path;
 //            }
 //            else

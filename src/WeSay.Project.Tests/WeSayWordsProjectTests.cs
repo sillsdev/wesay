@@ -46,7 +46,7 @@ namespace WeSay.Project.Tests
 			}
 		}
 
-		[Test, ExpectedException(typeof(ApplicationException))]
+		[Test, ExpectedException(typeof(Reporting.ErrorReporter.NonFatalMessageSentToUserException))]
 		public void WeSayDirNotInValidBasilDir()
 		{
 			string experimentDir = MakeDir(Path.GetTempPath(), Path.GetRandomFileName());

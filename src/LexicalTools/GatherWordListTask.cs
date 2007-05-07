@@ -18,7 +18,7 @@ namespace WeSay.LexicalTools
 		private List<string> _words;
 		private int _currentWordIndex = 0;
 		private ViewTemplate _viewTemplate;
-		private string _wordListWritingSystemId;
+		private string _writingSystemIdForGlossingLanguage;
 		/// <summary>
 		/// Fires when the user navigates to a new word from the wordlist
 		/// </summary>
@@ -29,7 +29,7 @@ namespace WeSay.LexicalTools
 								  string label,
 								  string description,
 								  string wordListFileName,
-								  string wordListWritingSystemId,
+								  string writingSystemIdForGlossingLanguage,
 								  ViewTemplate viewTemplate)
 			: base(label, description, false, recordListManager)
 		{
@@ -37,7 +37,7 @@ namespace WeSay.LexicalTools
 			{
 				throw new ArgumentNullException("wordListFileName");
 			}
-			if (wordListWritingSystemId == null)
+			if (writingSystemIdForGlossingLanguage == null)
 			{
 				throw new ArgumentNullException("wordListWritingSystemId");
 			}
@@ -47,19 +47,31 @@ namespace WeSay.LexicalTools
 			}
 			_wordListFileName = wordListFileName;
 			_words = null;
-			_wordListWritingSystemId = wordListWritingSystemId;
+			_writingSystemIdForGlossingLanguage = writingSystemIdForGlossingLanguage;
 			_viewTemplate = viewTemplate;
 		}
 
 		private void LoadWordList()
 		{
-			_words = new List<string>();
-			string path = Path.Combine(WeSayWordsProject.Project.PathToWeSaySpecificFilesDirectoryInProject, _wordListFileName);
-			if (!File.Exists(path))
+			string pathLocal = Path.Combine(WeSayWordsProject.Project.PathToWeSaySpecificFilesDirectoryInProject, _wordListFileName);
+			string pathToUse = pathLocal;
+			if (!File.Exists(pathLocal))
 			{
-				path = Path.Combine(WeSayWordsProject.Project.ApplicationCommonDirectory, _wordListFileName);
+				string pathInProgramDir =
+					Path.Combine(WeSayWordsProject.Project.ApplicationCommonDirectory, _wordListFileName);
+				pathToUse = pathInProgramDir;
+				if (!File.Exists(pathToUse))
+				{
+					Reporting.ErrorReporter.ReportNonFatalMessage(
+						"WeSay could not find the wordlist.  It expected to find it either at {0} or {1}.", pathLocal,
+						pathInProgramDir);
+					return;
+				}
 			}
-			using (TextReader r = File.OpenText(path))
+
+			_words = new List<string>();
+
+			using (TextReader r = File.OpenText(pathToUse))
 			{
 				do
 				{
@@ -78,7 +90,14 @@ namespace WeSay.LexicalTools
 
 		public bool IsTaskComplete
 		{
-			get { return CurrentWordIndex >= _words.Count; }
+			get {
+				if (_words != null)
+				{
+					return CurrentWordIndex >= _words.Count;
+				}
+				else
+					return true;
+			}
 		}
 
 		/// <summary>
@@ -104,7 +123,14 @@ namespace WeSay.LexicalTools
 
 		public bool CanNavigateNext
 		{
-			get { return _words.Count > CurrentWordIndex ; }
+			get
+			{
+				if (_words == null)
+				{
+					return false;
+				}
+				return _words.Count > CurrentWordIndex;
+			}
 		}
 
 		public bool CanNavigatePrevious
@@ -130,12 +156,16 @@ namespace WeSay.LexicalTools
 
 		public override void Activate()
 		{
+			if (!Project.WeSayWordsProject.Project.WritingSystems.ContainsKey(_writingSystemIdForGlossingLanguage))
+			{
+				Reporting.ErrorReporter.ReportNonFatalMessage("The writing system of the words in the word list will be used to add glosses.  Therefore, it needs to be in the list of writing systems for this project.  Either change the writing system that this task uses for the word list (currently '{0}') or add a writing system with this id to the project.", _writingSystemIdForGlossingLanguage);
+			}
+
 			if (_words == null)
 			{
 				LoadWordList();
 			}
 			base.Activate();
-
 		}
 
 
@@ -149,7 +179,7 @@ namespace WeSay.LexicalTools
 			get
 			{
 				MultiText m = new MultiText();
-				m.SetAlternative(_wordListWritingSystemId, CurrentWord);
+				m.SetAlternative(_writingSystemIdForGlossingLanguage, CurrentWord);
 				return m;
 			}
 		}

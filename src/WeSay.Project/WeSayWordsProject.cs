@@ -76,12 +76,12 @@ namespace WeSay.Project
 //            {
 //                Directory.CreateDirectory(pathToLift);
 //            }
-			if (File.Exists(PathToProjectTaskInventory))
+			if (File.Exists(PathToConfigFile))
 			{
-				File.Delete(PathToProjectTaskInventory);
+				File.Delete(PathToConfigFile);
 			}
-			string configName = Path.GetFileName(Project.PathToProjectTaskInventory);
-			File.Copy(Path.Combine(ApplicationTestDirectory, configName), Project.PathToProjectTaskInventory, true);
+			string configName = Path.GetFileName(Project.PathToConfigFile);
+			File.Copy(Path.Combine(ApplicationTestDirectory, configName), Project.PathToConfigFile, true);
 
 			ErrorReporter.OkToInteractWithUser = false;
 			LoadFromProjectDirectoryPath(_projectDirectoryPath);
@@ -127,17 +127,17 @@ namespace WeSay.Project
 				  return false;
 				}
 
-				if (!File.Exists(PathToProjectTaskInventory))
+				if (!File.Exists(PathToConfigFile))
 				{
 				  ErrorReporter.ReportNonFatalMessage(
 					  String.Format(
 						  "WeSay tried to find the WeSay configuration file at '{0}', but could not find it.\r\n\r\nTry using the configuration Tool to create one.",
-						  PathToProjectTaskInventory));
+						  PathToConfigFile));
 				  return false;
 				}
 				try
 				{
-				  using (FileStream fs = File.OpenRead(PathToProjectTaskInventory))
+				  using (FileStream fs = File.OpenRead(PathToConfigFile))
 				  {
 					fs.Close();
 				  }
@@ -147,7 +147,7 @@ namespace WeSay.Project
 				  ErrorReporter.ReportNonFatalMessage(
 					  String.Format(
 						  "WeSay was unable to open the file at '{0}' for reading, because the system won't allow it. Investigate your user permissions to write to this file.",
-								  PathToProjectTaskInventory));
+								  PathToConfigFile));
 				  return false;
 				}
 				catch (IOException e)
@@ -155,7 +155,7 @@ namespace WeSay.Project
 				  ErrorReporter.ReportNonFatalMessage(
 					  String.Format(
 						  "WeSay was unable to open the file at '{0}' for reading. \n Further information: {1}",
-						  PathToProjectTaskInventory, e.Message));
+						  PathToConfigFile, e.Message));
 				  return false;
 				}
 
@@ -222,12 +222,12 @@ namespace WeSay.Project
 		private XmlDocument GetProjectDoc()
 		{
 			XmlDocument projectDoc = null;
-			if (File.Exists(PathToProjectTaskInventory))
+			if (File.Exists(PathToConfigFile))
 			{
 				try
 				{
 					projectDoc = new XmlDocument();
-					projectDoc.Load(Project.PathToProjectTaskInventory);
+					projectDoc.Load(Project.PathToConfigFile);
 				}
 				catch (Exception e)
 				{
@@ -287,7 +287,7 @@ namespace WeSay.Project
 			return true;
 		}
 
-		public string PathToProjectTaskInventory
+		public string PathToConfigFile
 		{
 			get
 			{

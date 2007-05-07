@@ -74,7 +74,8 @@ namespace WeSay.Setup
 		}
 		void OnChooseProject(object sender, EventArgs e)
 		{
-			string initialDirectory = Settings.Default.LastConfigFilePath;
+
+			string initialDirectory = Path.GetDirectoryName(Settings.Default.LastConfigFilePath);
 
 			if (initialDirectory == null || initialDirectory == "")
 			{
@@ -106,7 +107,7 @@ namespace WeSay.Setup
 			{
 				Reporting.ErrorReporter.ReportNonFatalMessage("Sorry, that file does not appear to be located in a valid WeSay Project directory.");
 			}
-			Settings.Default.LastConfigFilePath = configFilePath;
+			Settings.Default.LastConfigFilePath = Project.PathToConfigFile;
 		}
 
 		private void OnCreateProject(object sender, EventArgs e)
@@ -187,6 +188,7 @@ namespace WeSay.Setup
 				{
 					throw new ApplicationException(path + " is not named as a .lift file or .WeSayConfig file.");
 				}
+
 			}
 			catch (Exception e)
 			{
@@ -195,7 +197,7 @@ namespace WeSay.Setup
 			}
 
 			SetupProjectControls();
-			Settings.Default.LastConfigFilePath = path;
+			Settings.Default.LastConfigFilePath = this.Project.PathToConfigFile;
 		}
 
 		private void SetupProjectControls()

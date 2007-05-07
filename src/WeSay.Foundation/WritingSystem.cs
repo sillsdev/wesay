@@ -66,6 +66,16 @@ namespace WeSay.Language
 			}
 		}
 
+	   // [ReflectorProperty("Abbreviation", Required = true)]
+		public string Abbreviation
+		{
+			get { return _id; }
+			set
+			{
+				_id = value;
+			}
+		}
+
 		[ReflectorProperty("RightToLeft", Required = false)]
 		public bool RightToLeft
 		{

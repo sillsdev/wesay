@@ -854,7 +854,6 @@ namespace Reporting
 		/// <summary>
 		/// Put up a message box, unless OkToInteractWithUser is false, in which case throw an Appliciation Exception
 		/// </summary>
-		/// <param name="message"></param>
 		public static void ReportNonFatalMessage(string message, params object[] args)
 		{
 			if (Reporting.ErrorReporter.OkToInteractWithUser)
@@ -865,7 +864,15 @@ namespace Reporting
 			}
 			else
 			{
-				throw new ApplicationException(message);
+				throw new NonFatalMessageSentToUserException(String.Format(message,args));
+			}
+		}
+
+		//for tests to catch
+		public class NonFatalMessageSentToUserException : ApplicationException
+		{
+			public NonFatalMessageSentToUserException(string message) :base(message)
+			{
 			}
 		}
 	}

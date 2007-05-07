@@ -200,6 +200,7 @@ namespace WeSay.Project
 
 		public void DoWork(ProgressState progress)
 		{
+			Reporting.Logger.WriteEvent("Building Caches");
 			_progress = progress;
 			_progress.State = ProgressState.StateValue.Busy;
 			_progress.StatusLabel = "Validating...";
@@ -209,6 +210,7 @@ namespace WeSay.Project
 				progress.StatusLabel = "Problem with file format...";
 				_progress.State = ProgressState.StateValue.StoppedWithError;
 				_progress.WriteToLog(string.Format("There is a problem with the format of {0}. {1}", _sourceLIFTPath, errors));
+				Reporting.Logger.WriteEvent("LIFT failed to validate.");
 				return;
 			}
 			try
@@ -286,6 +288,7 @@ namespace WeSay.Project
 			{
 				WeSayWordsProject.Project.CacheLocationOverride = null;
 			}
+			Reporting.Logger.WriteEvent("Done Building Caches");
 		}
 
 		private void DoParsing(XmlDocument doc, Db4oDataSource ds)
@@ -338,7 +341,7 @@ namespace WeSay.Project
 			ConfigFileTaskBuilder taskBuilder;
 			using (
 				FileStream configFile =
-					new FileStream(WeSayWordsProject.Project.PathToProjectTaskInventory,
+					new FileStream(WeSayWordsProject.Project.PathToConfigFile,
 								   FileMode.Open, FileAccess.Read,
 								   FileShare.ReadWrite))
 			{

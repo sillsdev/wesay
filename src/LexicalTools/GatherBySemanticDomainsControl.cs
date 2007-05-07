@@ -54,7 +54,7 @@ namespace WeSay.LexicalTools
 				_description.Visible = false;
 
 			}
-			_vernacularBox.WritingSystems = new WritingSystem[] {_presentationModel.WordWritingSystem};
+			_vernacularBox.WritingSystemsForThisField = new WritingSystem[] {_presentationModel.WordWritingSystem};
 		  _listViewWords.WritingSystem = _presentationModel.WordWritingSystem;
 		  _animatedText.Font = _presentationModel.WordWritingSystem.Font;
 		}

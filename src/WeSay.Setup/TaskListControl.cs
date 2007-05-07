@@ -33,7 +33,7 @@ namespace WeSay.Setup
 			XmlWriterSettings settings = new XmlWriterSettings();
 			settings.Indent = true;
 
-			XmlWriter writer = XmlWriter.Create(WeSayWordsProject.Project.PathToProjectTaskInventory, settings);
+			XmlWriter writer = XmlWriter.Create(WeSayWordsProject.Project.PathToConfigFile, settings);
 			writer.WriteStartDocument();
 			writer.WriteStartElement("tasks");
 
@@ -96,12 +96,12 @@ namespace WeSay.Setup
 		private static XmlDocument GetProjectDoc()
 		{
 			XmlDocument projectDoc = null;
-			if (File.Exists(WeSayWordsProject.Project.PathToProjectTaskInventory))
+			if (File.Exists(WeSayWordsProject.Project.PathToConfigFile))
 			{
 				try
 				{
 					projectDoc = new XmlDocument();
-					projectDoc.Load(WeSayWordsProject.Project.PathToProjectTaskInventory);
+					projectDoc.Load(WeSayWordsProject.Project.PathToConfigFile);
 				}
 				catch (Exception e)
 				{

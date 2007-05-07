@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Reflection;
+using System.Threading;
 using System.Windows.Forms;
 using WeSay.Language;
 
@@ -57,6 +58,12 @@ namespace WeSay.UI
 					DoToolboxJump(SelectedText);
 				}
 			}
+
+			if (e.KeyCode == Keys.Pause && e.Modifiers == Keys.Shift)
+			{
+				System.Diagnostics.Process.GetCurrentProcess().Kill();
+			}
+
 		}
 
 

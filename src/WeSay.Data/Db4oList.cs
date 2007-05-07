@@ -176,7 +176,7 @@ namespace WeSay.Data
 		/// </summary>
 		/// <param name="item">List item.</param>
 		/// <returns>true, if <paramref name="item"/> was stored.</returns>
-		protected virtual bool OnStoring(T item, string propertyName)
+		protected virtual bool NotifyStoring(T item, string propertyName)
 		{
 			bool cancel;
 			Db4oListEventArgs<T> args = new Db4oListEventArgs<T>(item, propertyName);
@@ -1753,13 +1753,13 @@ namespace WeSay.Data
 		/// Stores (adds or updates) item in <see cref="Database"/>.
 		/// </summary>
 		/// <remarks>
-		/// If item is not stored by calling <see cref="OnStoring"/>, it is stored by calling <see cref="Db4objects.Db4o.Ext.IExtObjectContainer.Set(object, int)"/>.
+		/// If item is not stored by calling <see cref="NotifyStoring"/>, it is stored by calling <see cref="Db4objects.Db4o.Ext.IExtObjectContainer.Set(object, int)"/>.
 		/// </remarks>
 		/// <param name="item">Item.</param>
 		protected virtual void DoStoreItem(T item, string propertyName)
 		{
 			SetDatabaseLastModified();
-			if (!OnStoring(item, propertyName))
+			if (!NotifyStoring(item, propertyName))
 			{
 				if (!Database.IsActive(item))
 				{

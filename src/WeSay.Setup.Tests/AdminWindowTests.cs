@@ -83,7 +83,7 @@ namespace WeSay.Admin.Tests
 			List<string> paths = new List<string>();
 			_window.CreateAndOpenProject(this._projectFolder);
 			paths.Add(BasilProject.Project.PathToWritingSystemPrefs);
-			paths.Add(WeSayWordsProject.Project.PathToProjectTaskInventory);
+			paths.Add(WeSayWordsProject.Project.PathToConfigFile);
 			//paths.Add(WeSayWordsProject.Project.PathToDb4oLexicalModelDB);
 			_mainWindowTester.Close();
 			foreach (string p in paths)
@@ -104,7 +104,7 @@ namespace WeSay.Admin.Tests
 //            StreamWriter writer = File.CreateText(WeSayWordsProject.Project.PathToProjectTaskInventory);
 //            writer.Write(TestResources.tasks);
 //            writer.Close();
-			  File.Copy(Path.Combine(WeSayWordsProject.Project.ApplicationTestDirectory, "pretend.WeSayConfig"), WeSayWordsProject.Project.PathToProjectTaskInventory, true);
+			  File.Copy(Path.Combine(WeSayWordsProject.Project.ApplicationTestDirectory, "pretend.WeSayConfig"), WeSayWordsProject.Project.PathToConfigFile, true);
 			WalkTopLevelTabs();
 		}
 

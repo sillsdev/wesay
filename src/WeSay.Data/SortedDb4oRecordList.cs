@@ -246,6 +246,7 @@ namespace WeSay.Data
 			}
 
 			int itemsMoved = Math.Min(indexesOfAddedItems.Count, indexesOfDeletedItems.Count);
+
 			for (int i = 0; i < itemsMoved; i++)
 			{
 				OnItemMoved(indexesOfAddedItems[0],

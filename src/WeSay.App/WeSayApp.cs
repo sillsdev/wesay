@@ -89,7 +89,7 @@ namespace WeSay.App
 
 					//MONO bug as of 1.1.18 cannot bitwise or FileShare on FileStream constructor
 					//                    using (FileStream config = new FileStream(project.PathToProjectTaskInventory, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete))
-					using (FileStream configFile = new FileStream(project.PathToProjectTaskInventory, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+					using (FileStream configFile = new FileStream(project.PathToConfigFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
 					{
 						builder = new ConfigFileTaskBuilder(configFile, project,
 							tabbedForm as ICurrentWorkTask, recordListManager);
@@ -166,7 +166,11 @@ namespace WeSay.App
 			return false;
 		  }
 
+			WeSayWordsProject.Project.LockLift(); // Consume will expect it to be locked already
 
+			//NB: it's very important that any updates are consumed before the cache is rebuilt.
+			//Otherwise, the cache and lift will fall out of sync.
+			LiftUpdateService.ConsumePendingLiftUpdates();
 
 			if (!BringCachesUpToDate(liftPath, project))
 			{
@@ -183,7 +187,6 @@ namespace WeSay.App
 			//false dirty cache signal
 			CacheManager.RemoveAssumeCacheIsFreshIndicator();
 
-			WeSayWordsProject.Project.LockLift();
 		  return true;
 		}
 
@@ -255,6 +258,7 @@ namespace WeSay.App
 			state.StatusLabel = "Preprocessing...";
 			try
 			{
+				WeSayWordsProject.Project.ReleaseLockOnLift();
 				string lift = WeSayWordsProject.Project.PathToLiftFile;
 				string output = LiftIO.Utilities.ProcessLiftForLaterMerging(lift);
 				MoveTempOverRealAndBackup(lift, output);
@@ -264,6 +268,10 @@ namespace WeSay.App
 				state.ExceptionThatWasEncountered = error;
 				state.State = ProgressState.StateValue.StoppedWithError;
 				throw; // this will put the exception in the e.Error arg of the RunWorkerCompletedEventArgs
+			}
+			finally
+			{
+				WeSayWordsProject.Project.LockLift();
 			}
 		}
 

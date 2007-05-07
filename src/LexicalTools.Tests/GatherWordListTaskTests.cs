@@ -64,6 +64,30 @@ namespace WeSay.LexicalTools.Tests
 			Assert.IsNotNull(g);
 		}
 
+		[Test, ExpectedException(typeof(Reporting.ErrorReporter.NonFatalMessageSentToUserException))]
+		public void MissingWordListFileGivesMessage()
+		{
+			GatherWordListTask g = new GatherWordListTask(_recordListManager,
+														  "label",
+														  "description",
+														  "NotThere.txt",
+														  WritingSystem.IdForUnknownAnalysis,
+														  new ViewTemplate());
+			g.Activate();//should give a box to user, an exception in this text environment
+		}
+
+		[Test, ExpectedException(typeof(Reporting.ErrorReporter.NonFatalMessageSentToUserException))]
+		public void WritingSystemNotInCurrentListGivesMessage()
+		{
+			GatherWordListTask g = new GatherWordListTask(_recordListManager,
+														  "label",
+														  "description",
+														  _wordListFilePath,
+														  "z7z",
+														  new ViewTemplate());
+			g.Activate();//should give a box to user, an exception in this text environment
+		}
+
 		[Test]
 		public void InitiallyWordIsCorrect()
 		{

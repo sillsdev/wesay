@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Drawing;
 using System.Windows.Forms;
 using WeSay.Foundation;
 using WeSay.Language;
@@ -31,6 +33,8 @@ namespace WeSay.LexicalTools
 		/// See WS-23 for more info.
 		private MultiTextControl _previouslyGhostedControlToReuse=null;
 
+		static private int _widthForWritingSystemLabels=-1;
+
 		protected DetailList DetailList
 	  {
 		get
@@ -47,6 +51,8 @@ namespace WeSay.LexicalTools
 		{
 			get { return this._viewTemplate; }
 		}
+
+
 
 		protected Layouter(DetailList builder, ViewTemplate viewTemplate)
 		{
@@ -79,7 +85,7 @@ namespace WeSay.LexicalTools
 			MultiTextControl m;
 			if (_previouslyGhostedControlToReuse == null)
 			{
-				m = new MultiTextControl(field.WritingSystems, multiTextToBindTo, field.FieldName, true);
+				m = new MultiTextControl(field.WritingSystems, multiTextToBindTo, field.FieldName, true, BasilProject.Project.WritingSystems);
 			}
 			else
 			{
@@ -125,7 +131,7 @@ namespace WeSay.LexicalTools
 			if (field != null && field.Visibility == Field.VisibilitySetting.Visible)
 			{
 
-				MultiTextControl m = new MultiTextControl(field.WritingSystems, new MultiText(), fieldName+"_ghost", false);
+				MultiTextControl m = new MultiTextControl(field.WritingSystems, new MultiText(), fieldName+"_ghost", false, BasilProject.Project.WritingSystems);
 
 				Control refWidget = DetailList.AddWidgetRow(StringCatalog.Get(label), isHeading, m, insertAtRow + rowCount);
 

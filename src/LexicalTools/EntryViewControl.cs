@@ -127,8 +127,7 @@ namespace WeSay.LexicalTools
 			Reporting.Logger.WriteMinorEvent("OnEmptyObjectsRemoved: b4 RefreshEntryDetial");
 			RefreshEntryDetail();
 			Reporting.Logger.WriteMinorEvent("OnEmptyObjectsRemoved: b4  Application.DoEvents()");
-			for(int i=0; i< 1000;i++)
-				Application.DoEvents(); //TODO: We need to remove this.  It's a dangerous thing in a historically buggy spot
+			Application.DoEvents(); //TODO: We need to remove this.  It's a dangerous thing in a historically buggy spot
 			Reporting.Logger.WriteMinorEvent("OnEmptyObjectsRemoved: b4 MoveInsertionPoint");
 			if (row != null)
 			{

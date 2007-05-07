@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
@@ -9,36 +10,55 @@ namespace WeSay.UI
 {
 	public partial class MultiTextControl : TableLayoutPanel
 	{
-		private IList<WritingSystem> _writingSystems;
+		private IList<WritingSystem> _writingSystemsForThisFIeld;
 		private List<WeSayTextBox> _textBoxes;
 		private bool _showAnnotationWidget;
+		private static int _widthForWritingSystemLabels=-1;
+		private static WritingSystemCollection _allWritingSystems;
+		private static Font _writingSystemLabelFont;
 
-		public MultiTextControl()
+		public MultiTextControl() :this(null)
 		{
+		}
+
+		public MultiTextControl(WritingSystemCollection allWritingSystems)
+		{
+			_allWritingSystems = allWritingSystems;
 			this.components = new Container();
 			InitializeComponent();
 			_textBoxes = new List<WeSayTextBox>();
 //            this.BackColor = System.Drawing.Color.Crimson;
 			SuspendLayout();
+
+			_writingSystemLabelFont = new Font(FontFamily.GenericSansSerif, 9);
 			ColumnCount = 3;
-			ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
-			ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
-			ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
+
+			if (-1 == MultiTextControl.WidthForWritingSystemLabels)
+			{
+				//happens when this is from a hand-placed designer piece,
+				//in which case we don't really care about aligning anyhow
+				ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));//ws label
+			}
+			else
+			{
+				ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, MultiTextControl.WidthForWritingSystemLabels));
+			}
+			ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));//text
+			ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));//annotation widget
 			ResumeLayout(false);
 		}
 
 
-		public MultiTextControl(IList<WritingSystem> writingSystems, MultiText multiTextToCopyFormsFrom, string nameForTesting, bool showAnnotationWidget):this()
+		public MultiTextControl(IList<WritingSystem> writingSystems, MultiText multiTextToCopyFormsFrom, string nameForTesting,
+			bool showAnnotationWidget, WritingSystemCollection allWritingSystems)
+			: this(allWritingSystems)
 		{
 			Name = nameForTesting+"-mtc";
-			_writingSystems = writingSystems;
+			_writingSystemsForThisFIeld = writingSystems;
 			_showAnnotationWidget = showAnnotationWidget;
 			BuildBoxes(multiTextToCopyFormsFrom);
 		}
-		public MultiTextControl(IList<WritingSystem> writingSystems, MultiText text)
-			: this(writingSystems, text, "Unknown", true)
-		{
-		}
+
 
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
 		public List<WeSayTextBox> TextBoxes
@@ -76,7 +96,7 @@ namespace WeSay.UI
 				RowStyles.Clear();
 			}
 
-			foreach (WritingSystem writingSystem in WritingSystems)
+			foreach (WritingSystem writingSystem in WritingSystemsForThisField)
 			{
 				RowCount++;
 				RowStyles.Add(new RowStyle(SizeType.AutoSize));
@@ -140,12 +160,41 @@ namespace WeSay.UI
 			}
 		}
 
+		/// <summary>
+		/// We want all the texts to line up, so we have to take into account the maximum
+		/// width of all the ws's that might be on the form, not just in this multitext
+		/// </summary>
+		protected static int WidthForWritingSystemLabels
+		{
+			get
+			{
+				if (_widthForWritingSystemLabels == -1)
+				{
+					//null happens when this is from a hand-placed designer piece,
+					//in which case we don't really care about aligning anyhow
+					if (_allWritingSystems != null)
+					{
+						foreach (WritingSystem ws in _allWritingSystems.Values)
+						{
+							Size size = TextRenderer.MeasureText(ws.Abbreviation, _writingSystemLabelFont);
+
+							if (size.Width > _widthForWritingSystemLabels)
+							{
+								_widthForWritingSystemLabels = size.Width;
+							}
+						}
+					}
+				}
+				return _widthForWritingSystemLabels;
+			}
+		}
 		static private Label AddWritingSystemLabel(WeSayTextBox box)
 		{
 			Label label = new Label();
-			label.Text = box.WritingSystem.Id;
+			label.Text = box.WritingSystem.Abbreviation;
 			label.ForeColor = Color.LightGray;
 			label.Anchor = AnchorStyles.Left | AnchorStyles.Top;
+			label.Font = _writingSystemLabelFont;
 
 			label.AutoSize = true;
 
@@ -219,12 +268,12 @@ namespace WeSay.UI
 		}
 
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-		public IList<WritingSystem> WritingSystems
+		public IList<WritingSystem> WritingSystemsForThisField
 		{
-			get { return _writingSystems; }
+			get { return _writingSystemsForThisFIeld; }
 			set
 			{
-				_writingSystems = value;
+				_writingSystemsForThisFIeld = value;
 				BuildBoxes(MultiText);
 			}
 		}

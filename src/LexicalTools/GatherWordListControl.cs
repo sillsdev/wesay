@@ -30,11 +30,11 @@ namespace WeSay.LexicalTools
 			Field lexicalFormField = viewTemplate.GetField(Field.FieldNames.EntryLexicalForm.ToString());
 			if (lexicalFormField == null || lexicalFormField.WritingSystems.Count < 1)
 			{
-				_vernacularBox.WritingSystems = new WritingSystem[] { BasilProject.Project.WritingSystems.UnknownVernacularWritingSystem };
+				_vernacularBox.WritingSystemsForThisField = new WritingSystem[] { BasilProject.Project.WritingSystems.UnknownVernacularWritingSystem };
 			}
 			else
 			{
-				_vernacularBox.WritingSystems = new WritingSystem[] { lexicalFormField.WritingSystems[0] };
+				_vernacularBox.WritingSystemsForThisField = new WritingSystem[] { lexicalFormField.WritingSystems[0] };
 			}
 //            _vernacularBox.BackColor = System.Drawing.Color.Red;
 			_vernacularBox.TextChanged += new EventHandler(_vernacularBox_TextChanged);
