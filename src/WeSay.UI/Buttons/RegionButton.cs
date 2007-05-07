@@ -17,6 +17,7 @@ namespace WeSay.UI.Buttons
 			Path = new GraphicsPath();
 			Path.AddRectangle(ClientRectangle);
 			_textAndImageRectangle = ClientRectangle;
+			FlatStyle = FlatStyle.Flat;
 		}
 
 		protected abstract void MakeRegion();
@@ -72,8 +73,14 @@ namespace WeSay.UI.Buttons
 			float depth = 4;
 			ShrinkAndOffsetGraphicsPathByDepth(buttonPath, depth);
 
-			Color startColor = (IsDown) ? ControlPaint.Dark(BackColor) : ControlPaint.Light(BackColor,1f);
 			Color hotColor = Color.Orange;
+			Color activeColor = Color.LightBlue;
+			Color startColor = BackColor;
+			if (FlatStyle != FlatStyle.Flat)
+			{
+			  startColor = (IsDown) ? ControlPaint.Dark(BackColor) : ControlPaint.Light(BackColor, 1f);
+			}
+
 			if (!IsDown)
 			{
 				if (IsHot)
@@ -82,12 +89,15 @@ namespace WeSay.UI.Buttons
 				}
 				else if(IsDefault)
 				{
-					startColor = ControlPaint.Light(Color.LightBlue, 1);
+					startColor = ControlPaint.Light(activeColor, 1);
 				}
 			}
 
-
-			Color endColor = (IsDown) ? ControlPaint.LightLight(BackColor) : ControlPaint.Dark(BackColor);
+			Color endColor = BackColor;
+			if (FlatStyle != FlatStyle.Flat)
+			{
+			  endColor = (IsDown) ? ControlPaint.LightLight(BackColor) : ControlPaint.Dark(BackColor);
+			}
 			if (!IsDown)
 			{
 				if (IsHot)
@@ -96,7 +106,7 @@ namespace WeSay.UI.Buttons
 				}
 				else if (IsDefault)
 				{
-					endColor = Color.LightBlue;
+					endColor = activeColor;
 				}
 			}
 
@@ -109,7 +119,7 @@ namespace WeSay.UI.Buttons
 				g.FillPath(brush, buttonPath); // 3d effect
 			}
 
-			using (Pen pen = new Pen(ControlPaint.Dark(BackColor), 1))
+			using (Pen pen = new Pen(ControlPaint.DarkDark(BackColor), 1))
 			{
 				g.DrawPath(pen, buttonPath); //outline
 			}

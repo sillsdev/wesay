@@ -24,12 +24,12 @@
 	<linearGradient
 	   id="linearGradient2591">
 	  <stop
-		 style="stop-color:#73d216"
+		 style="stop-color:#73a344;stop-opacity:1;"
 		 offset="0"
 		 id="stop2593" />
 	  <stop
-		 style="stop-color:#4e9a06"
-		 offset="1.0000000"
+		 style="stop-color:#4e752b;stop-opacity:1;"
+		 offset="1"
 		 id="stop2595" />
 	</linearGradient>
 	<linearGradient
@@ -754,10 +754,10 @@
 	   gradientUnits="userSpaceOnUse" />
   </defs>
   <sodipodi:namedview
-	 inkscape:window-y="25"
-	 inkscape:window-x="0"
-	 inkscape:window-height="885"
-	 inkscape:window-width="1280"
+	 inkscape:window-y="-4"
+	 inkscape:window-x="-4"
+	 inkscape:window-height="742"
+	 inkscape:window-width="1024"
 	 inkscape:showpageshadow="false"
 	 inkscape:document-units="px"
 	 inkscape:grid-bbox="true"
@@ -837,7 +837,7 @@
 	   sodipodi:nodetypes="cccccccc"
 	   id="path8643"
 	   d="M 39.490316,15.496821 L 39.490316,32.491241 L 26.537753,32.491241 L 26.537753,40.973779 L 6.577917,23.973588 L 26.531563,6.7295901 L 26.531563,15.502125 L 39.490316,15.496821 z "
-	   style="opacity:1.0000000;color:#000000;fill:url(#radialGradient2597);fill-opacity:1.0000000;fill-rule:evenodd;stroke:#3a7304;stroke-width:1.0000004;stroke-linecap:round;stroke-linejoin:round;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:10.000000;stroke-dasharray:none;stroke-dashoffset:0.0000000;stroke-opacity:1;visibility:visible;display:inline;overflow:visible" />
+	   style="opacity:1.0000000;color:#000000;fill:url(#radialGradient2597);fill-opacity:1.0000000;fill-rule:evenodd;stroke:#3b561f;stroke-width:1.0000004;stroke-linecap:round;stroke-linejoin:round;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:10.000000;stroke-dasharray:none;stroke-dashoffset:0.0000000;stroke-opacity:1;visibility:visible;display:inline;overflow:visible" />
 	<path
 	   sodipodi:nodetypes="cccccc"
 	   id="path8645"

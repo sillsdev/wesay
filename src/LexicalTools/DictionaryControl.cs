@@ -78,9 +78,9 @@ namespace WeSay.LexicalTools
 			BackColor = WeSay.UI.DisplaySettings.Default.BackgroundColor;
 			InitializeComponent();
 			this._writingSystemChooser.Image = Resources.Expand.GetThumbnailImage(6, 6, ReturnFalse, IntPtr.Zero);
-			this._btnFind.Image = Resources.Find.GetThumbnailImage(22, 22, ReturnFalse, IntPtr.Zero);
-			this._btnDeleteWord.Image = Resources.DeleteWord.GetThumbnailImage(22, 22, ReturnFalse, IntPtr.Zero);
-			this._btnNewWord.Image = Resources.NewWord.GetThumbnailImage(22, 22, ReturnFalse, IntPtr.Zero);
+			this._btnFind.Image = Resources.Find.GetThumbnailImage(18, 18, ReturnFalse, IntPtr.Zero);
+			this._btnDeleteWord.Image = Resources.DeleteWord.GetThumbnailImage(18, 18, ReturnFalse, IntPtr.Zero);
+			this._btnNewWord.Image = Resources.NewWord.GetThumbnailImage(18, 18, ReturnFalse, IntPtr.Zero);
 
 			Control_EntryDetailPanel.ViewTemplate = _viewTemplate;
 
@@ -156,10 +156,10 @@ namespace WeSay.LexicalTools
 												 this._recordsListBox.Location.Y + heightDifference);
 			this._recordsListBox.Height -= heightDifference;
 			this._btnFind.Height = this._findText.Height;
-			this._btnFind.Width = 14;
+			this._btnFind.Width = 20;
 			this._writingSystemChooser.Height = this._findText.Height;
-			this._btnFind.Image = Resources.Find.GetThumbnailImage(11, //this._btnFind.Width - 2,
-																   11, //this._btnFind.Height - 2,
+			this._btnFind.Image = Resources.Find.GetThumbnailImage(this._btnFind.Width - 2,
+																   this._btnFind.Width - 2,
 																   ReturnFalse, IntPtr.Zero);
 
 			this._btnFind.Left = this._writingSystemChooser.Left - this._btnFind.Width;
