@@ -264,6 +264,17 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 		  <Component Id="WeSay.UI.pdb" Guid="{3A0709F0-361F-49F9-B50E-877BDA266A22}">
 			<File Id="WeSay.UI.pdb" Name="WeSay.UI.pdb" KeyPath="yes" Source="..\..\output\release\WeSay.UI.pdb" />
 		  </Component>
+
+
+		  <Component Id="Addin.LiftReports.dll" Guid="{8597A830-9A97-4A74-A25F-3FEDF7901111}">
+			<File Id="Addin.LiftReports.dll" Name="Addin.LiftReports.dll" KeyPath="yes" Source="..\..\output\release\Addin.LiftReports.dll" />
+		  </Component>
+		  <Component Id="WeSay.AddinLib.dll" Guid="{8597A830-9A97-4A74-A25F-3FEDF7902222}">
+			<File Id="WeSay.AddinLib.dll" Name="WeSay.AddinLib.dll" KeyPath="yes" Source="..\..\output\release\WeSay.AddinLib.dll" />
+		  </Component>
+		  <Component Id="Mono.Addins.exe" Guid="{8597A830-9A97-4A74-A25F-3FEDF7903333}">
+			<File Id="Mono.Addins.exe" Name="Mono.Addins.exe" KeyPath="yes" Source="..\..\output\release\Mono.Addins.exe" />
+		  </Component>
 		</Directory>
 	  </Directory>
 	</Directory>

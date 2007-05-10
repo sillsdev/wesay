@@ -1,0 +1,194 @@
+<VisualStudioProject>
+	<CSHARP
+		ProjectType = "Local"
+		ProductVersion = "7.10.3077"
+		SchemaVersion = "2.0"
+		ProjectGuid = "{ADB98F2B-764D-4E27-B941-0153F6672DF6}"
+	>
+		<Build>
+			<Settings
+				ApplicationIcon = ""
+				AssemblyKeyContainerName = ""
+				AssemblyName = "GraphComponents"
+				AssemblyOriginatorKeyFile = ""
+				DefaultClientScript = "JScript"
+				DefaultHTMLPageLayout = "Grid"
+				DefaultTargetSchema = "IE50"
+				DelaySign = "false"
+				OutputType = "Library"
+				PreBuildEvent = ""
+				PostBuildEvent = ""
+				RootNamespace = "GraphComponents"
+				RunPostBuildEvent = "OnBuildSuccess"
+				StartupObject = ""
+			>
+				<Config
+					Name = "Debug"
+					AllowUnsafeBlocks = "false"
+					BaseAddress = "285212672"
+					CheckForOverflowUnderflow = "false"
+					ConfigurationOverrideFile = ""
+					DefineConstants = "DEBUG;TRACE"
+					DocumentationFile = ""
+					DebugSymbols = "true"
+					FileAlignment = "4096"
+					IncrementalBuild = "false"
+					NoStdLib = "false"
+					NoWarn = ""
+					Optimize = "false"
+					OutputPath = "bin\Debug\"
+					RegisterForComInterop = "false"
+					RemoveIntegerChecks = "false"
+					TreatWarningsAsErrors = "false"
+					WarningLevel = "4"
+				/>
+				<Config
+					Name = "Release"
+					AllowUnsafeBlocks = "false"
+					BaseAddress = "285212672"
+					CheckForOverflowUnderflow = "false"
+					ConfigurationOverrideFile = ""
+					DefineConstants = "TRACE"
+					DocumentationFile = ""
+					DebugSymbols = "false"
+					FileAlignment = "4096"
+					IncrementalBuild = "false"
+					NoStdLib = "false"
+					NoWarn = ""
+					Optimize = "true"
+					OutputPath = "bin\Release\"
+					RegisterForComInterop = "false"
+					RemoveIntegerChecks = "false"
+					TreatWarningsAsErrors = "false"
+					WarningLevel = "4"
+				/>
+			</Settings>
+			<References>
+				<Reference
+					Name = "System"
+					AssemblyName = "System"
+					HintPath = "C:\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.dll"
+				/>
+				<Reference
+					Name = "System.Data"
+					AssemblyName = "System.Data"
+					HintPath = "C:\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Data.dll"
+				/>
+				<Reference
+					Name = "System.XML"
+					AssemblyName = "System.Xml"
+					HintPath = "C:\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
+				/>
+				<Reference
+					Name = "System.Drawing"
+					AssemblyName = "System.Drawing"
+					HintPath = "C:\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Drawing.dll"
+				/>
+				<Reference
+					Name = "System.Windows.Forms"
+					AssemblyName = "System.Windows.Forms"
+					HintPath = "C:\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Windows.Forms.dll"
+				/>
+			</References>
+		</Build>
+		<Files>
+			<Include>
+				<File
+					RelPath = "AssemblyInfo.cs"
+					SubType = "Code"
+					BuildAction = "Compile"
+				/>
+				<File
+					RelPath = "Bar.cs"
+					SubType = "Code"
+					BuildAction = "Compile"
+				/>
+				<File
+					RelPath = "BarCollection.cs"
+					SubType = "Code"
+					BuildAction = "Compile"
+				/>
+				<File
+					RelPath = "BarGraph.cs"
+					SubType = "UserControl"
+					BuildAction = "Compile"
+				/>
+				<File
+					RelPath = "BarGraph.resx"
+					DependentUpon = "BarGraph.cs"
+					BuildAction = "EmbeddedResource"
+				/>
+				<File
+					RelPath = "BasicBar.cs"
+					SubType = "Code"
+					BuildAction = "Compile"
+				/>
+				<File
+					RelPath = "Channel.cs"
+					SubType = "Code"
+					BuildAction = "Compile"
+				/>
+				<File
+					RelPath = "ChannelCollection.cs"
+					SubType = "Code"
+					BuildAction = "Compile"
+				/>
+				<File
+					RelPath = "Graph.cs"
+					SubType = "UserControl"
+					BuildAction = "Compile"
+				/>
+				<File
+					RelPath = "GraphTypedefs.cs"
+					SubType = "Code"
+					BuildAction = "Compile"
+				/>
+				<File
+					RelPath = "IGraphElement.cs"
+					SubType = "Code"
+					BuildAction = "Compile"
+				/>
+				<File
+					RelPath = "Plotter.cs"
+					SubType = "UserControl"
+					BuildAction = "Compile"
+				/>
+				<File
+					RelPath = "Plotter.resx"
+					DependentUpon = "Plotter.cs"
+					BuildAction = "EmbeddedResource"
+				/>
+				<File
+					RelPath = "PlotterEventArgs.cs"
+					SubType = "Code"
+					BuildAction = "Compile"
+				/>
+				<File
+					RelPath = "StackedBarGraph.cs"
+					SubType = "UserControl"
+					BuildAction = "Compile"
+				/>
+				<File
+					RelPath = "StackedBarGraph.resx"
+					DependentUpon = "StackedBarGraph.cs"
+					BuildAction = "EmbeddedResource"
+				/>
+				<File
+					RelPath = "GraphDecorators\AxisLine.cs"
+					SubType = "Code"
+					BuildAction = "Compile"
+				/>
+				<File
+					RelPath = "GraphDecorators\Cursor.cs"
+					SubType = "Code"
+					BuildAction = "Compile"
+				/>
+				<File
+					RelPath = "GraphDecorators\Gridline.cs"
+					SubType = "Code"
+					BuildAction = "Compile"
+				/>
+			</Include>
+		</Files>
+	</CSHARP>
+</VisualStudioProject>

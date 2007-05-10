@@ -230,25 +230,25 @@ namespace Reporting
 		/// </summary>
 		/// <param name="message"></param>
 		/// ------------------------------------------------------------------------------------
-		public static void WriteEvent(string message)
+		public static void WriteEvent(string message, params object[] args)
 		{
 			if (_singleton != null)
-				_singleton.WriteEventCore(message);
+				_singleton.WriteEventCore(message,args);
 		}
 
-		private void WriteEventCore(string message)
+		private void WriteEventCore(string message, params object[] args)
 		{
 			CheckDisposed();
 			if (m_out != null)
 			{
 				m_out.Write(DateTime.Now.ToLongTimeString() + "\t");
-				m_out.WriteLine(message);
+				m_out.WriteLine(message,args);
 				m_out.Flush();//in case we crash
 
 				//want this to show up in the proper order in the minor event list, too
-				WriteMinorEvent(message);
+				WriteMinorEvent(message,args);
 
-				Debug.WriteLine("-----"+"\r\n"+m_minorEvents.ToString());
+				//Debug.WriteLine("-----"+"\r\n"+m_minorEvents.ToString());
 			}
 		}
 

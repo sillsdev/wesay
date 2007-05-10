@@ -41,6 +41,7 @@
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\LiftIO.dll</HintPath>
 	</Reference>
+	<Reference Include="Mono.Addins, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL" />
 	<Reference Include="System" />
 	<Reference Include="System.Data" />
 	<Reference Include="System.Deployment" />
@@ -211,6 +212,10 @@
 	<ProjectReference Include="..\Reporting\Reporting.csproj">
 	  <Project>{9CCBECEC-513C-4DA4-A4CE-F5361B633760}</Project>
 	  <Name>Reporting</Name>
+	</ProjectReference>
+	<ProjectReference Include="..\WeSay.AddinLib\WeSay.AddinLib.csproj">
+	  <Project>{E651E83C-94DD-4D6D-ABA2-C9FDA34FBA55}</Project>
+	  <Name>WeSay.AddinLib</Name>
 	</ProjectReference>
 	<ProjectReference Include="..\WeSay.App\WeSay.App.csproj">
 	  <Project>{EFB9D66D-AF0F-4E45-A1AC-DB32981711D2}</Project>

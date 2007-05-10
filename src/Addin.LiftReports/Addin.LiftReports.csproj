@@ -1,0 +1,132 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+	<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+	<ProductVersion>8.0.50727</ProductVersion>
+	<SchemaVersion>2.0</SchemaVersion>
+	<ProjectGuid>{3CB2F52D-739C-442F-9C63-F38694690AC6}</ProjectGuid>
+	<OutputType>Library</OutputType>
+	<AppDesignerFolder>Properties</AppDesignerFolder>
+	<RootNamespace>Addin.LiftReports</RootNamespace>
+	<AssemblyName>Addin.LiftReports</AssemblyName>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+	<DebugSymbols>true</DebugSymbols>
+	<DebugType>full</DebugType>
+	<Optimize>false</Optimize>
+	<OutputPath>..\..\output\debug\</OutputPath>
+	<DefineConstants>DEBUG;TRACE</DefineConstants>
+	<ErrorReport>prompt</ErrorReport>
+	<WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+	<DebugType>pdbonly</DebugType>
+	<Optimize>true</Optimize>
+	<OutputPath>bin\Release\</OutputPath>
+	<DefineConstants>TRACE</DefineConstants>
+	<ErrorReport>prompt</ErrorReport>
+	<WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+	<Reference Include="Mono.Addins, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\Mono.Addins.exe</HintPath>
+	</Reference>
+	<Reference Include="System" />
+	<Reference Include="System.Data" />
+	<Reference Include="System.Drawing" />
+	<Reference Include="System.Windows.Forms" />
+	<Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+	<Compile Include="GraphComponents\AxisLine.cs" />
+	<Compile Include="GraphComponents\Bar.cs" />
+	<Compile Include="GraphComponents\BarCollection.cs" />
+	<Compile Include="GraphComponents\BarGraph.cs">
+	  <SubType>UserControl</SubType>
+	</Compile>
+	<Compile Include="GraphComponents\BasicBar.cs" />
+	<Compile Include="GraphComponents\Channel.cs" />
+	<Compile Include="GraphComponents\ChannelCollection.cs" />
+	<Compile Include="GraphComponents\Cursor.cs" />
+	<Compile Include="GraphComponents\Graph.cs">
+	  <SubType>UserControl</SubType>
+	</Compile>
+	<Compile Include="GraphComponents\GraphTypedefs.cs" />
+	<Compile Include="GraphComponents\Gridline.cs" />
+	<Compile Include="GraphComponents\IGraphElement.cs" />
+	<Compile Include="GraphComponents\Plotter.cs">
+	  <SubType>UserControl</SubType>
+	</Compile>
+	<Compile Include="GraphComponents\PlotterEventArgs.cs" />
+	<Compile Include="GraphComponents\StackedBarGraph.cs">
+	  <SubType>UserControl</SubType>
+	</Compile>
+	<Compile Include="ReportMaker.cs" />
+	<Compile Include="Properties\AssemblyInfo.cs" />
+	<Compile Include="Properties\Resources.Designer.cs">
+	  <AutoGen>True</AutoGen>
+	  <DesignTime>True</DesignTime>
+	  <DependentUpon>Resources.resx</DependentUpon>
+	</Compile>
+	<Compile Include="Report.cs">
+	  <SubType>UserControl</SubType>
+	</Compile>
+	<Compile Include="Report.Designer.cs">
+	  <DependentUpon>Report.cs</DependentUpon>
+	</Compile>
+	<Compile Include="XPathChart.cs">
+	  <SubType>UserControl</SubType>
+	</Compile>
+	<Compile Include="XPathChart.Designer.cs">
+	  <DependentUpon>XPathChart.cs</DependentUpon>
+	</Compile>
+  </ItemGroup>
+  <ItemGroup>
+	<EmbeddedResource Include="GraphComponents\BarGraph.resx">
+	  <DependentUpon>BarGraph.cs</DependentUpon>
+	  <SubType>Designer</SubType>
+	</EmbeddedResource>
+	<EmbeddedResource Include="GraphComponents\Plotter.resx">
+	  <DependentUpon>Plotter.cs</DependentUpon>
+	  <SubType>Designer</SubType>
+	</EmbeddedResource>
+	<EmbeddedResource Include="GraphComponents\StackedBarGraph.resx">
+	  <DependentUpon>StackedBarGraph.cs</DependentUpon>
+	  <SubType>Designer</SubType>
+	</EmbeddedResource>
+	<EmbeddedResource Include="Properties\Resources.resx">
+	  <SubType>Designer</SubType>
+	  <Generator>ResXFileCodeGenerator</Generator>
+	  <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+	</EmbeddedResource>
+	<EmbeddedResource Include="Report.resx">
+	  <SubType>Designer</SubType>
+	  <DependentUpon>Report.cs</DependentUpon>
+	</EmbeddedResource>
+	<EmbeddedResource Include="XPathChart.resx">
+	  <DependentUpon>XPathChart.cs</DependentUpon>
+	  <SubType>Designer</SubType>
+	</EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+	<None Include="Resources\WeSay.png" />
+  </ItemGroup>
+  <ItemGroup>
+	<ProjectReference Include="..\WeSay.AddinLib\WeSay.AddinLib.csproj">
+	  <Project>{E651E83C-94DD-4D6D-ABA2-C9FDA34FBA55}</Project>
+	  <Name>WeSay.AddinLib</Name>
+	</ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+	<None Include="Resources\buttonImage.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+	   Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
