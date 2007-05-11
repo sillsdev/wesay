@@ -1,7 +1,6 @@
-Microsoft Visual Studio Solution File, Format Version 8.00
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GraphComponents", "GraphComponents.csproj", "{ADB98F2B-764D-4E27-B941-0153F6672DF6}"
-	ProjectSection(ProjectDependencies) = postProject
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GraphUsageDemo", "GraphUsageDemo\GraphUsageDemo.csproj", "{CD11EFF1-9137-4A84-9997-1D8DF8EF6F5A}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -9,46 +8,31 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GraphUsageDemo", "GraphUsag
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StackedBarGraphWalkThrough", "StackedBarGraphWalkThrough\StackedBarGraphWalkThrough.csproj", "{EF58CA1A-5134-402B-B88A-FA9172303B75}"
-	ProjectSection(ProjectDependencies) = postProject
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BarGraphWalkThrough", "BarGraphWalkThrough\BarGraphWalkThrough.csproj", "{321226D3-703A-49F9-BF2E-46E79277C01A}"
-	ProjectSection(ProjectDependencies) = postProject
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlotterWalkThrough", "PlotterWalkThrough\PlotterWalkThrough.csproj", "{8B477C30-8C23-4D4B-A2DD-5A94D8A83AEF}"
-	ProjectSection(ProjectDependencies) = postProject
-	EndProjectSection
 EndProject
 Global
-	GlobalSection(SolutionConfiguration) = preSolution
-		Debug = Debug
-		Release = Release
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
-	GlobalSection(ProjectConfiguration) = postSolution
-		{ADB98F2B-764D-4E27-B941-0153F6672DF6}.Debug.ActiveCfg = Debug|.NET
-		{ADB98F2B-764D-4E27-B941-0153F6672DF6}.Debug.Build.0 = Debug|.NET
-		{ADB98F2B-764D-4E27-B941-0153F6672DF6}.Release.ActiveCfg = Release|.NET
-		{ADB98F2B-764D-4E27-B941-0153F6672DF6}.Release.Build.0 = Release|.NET
-		{CD11EFF1-9137-4A84-9997-1D8DF8EF6F5A}.Debug.ActiveCfg = Debug|.NET
-		{CD11EFF1-9137-4A84-9997-1D8DF8EF6F5A}.Debug.Build.0 = Debug|.NET
-		{CD11EFF1-9137-4A84-9997-1D8DF8EF6F5A}.Release.ActiveCfg = Release|.NET
-		{CD11EFF1-9137-4A84-9997-1D8DF8EF6F5A}.Release.Build.0 = Release|.NET
-		{EF58CA1A-5134-402B-B88A-FA9172303B75}.Debug.ActiveCfg = Debug|.NET
-		{EF58CA1A-5134-402B-B88A-FA9172303B75}.Debug.Build.0 = Debug|.NET
-		{EF58CA1A-5134-402B-B88A-FA9172303B75}.Release.ActiveCfg = Release|.NET
-		{EF58CA1A-5134-402B-B88A-FA9172303B75}.Release.Build.0 = Release|.NET
-		{321226D3-703A-49F9-BF2E-46E79277C01A}.Debug.ActiveCfg = Debug|.NET
-		{321226D3-703A-49F9-BF2E-46E79277C01A}.Debug.Build.0 = Debug|.NET
-		{321226D3-703A-49F9-BF2E-46E79277C01A}.Release.ActiveCfg = Release|.NET
-		{321226D3-703A-49F9-BF2E-46E79277C01A}.Release.Build.0 = Release|.NET
-		{8B477C30-8C23-4D4B-A2DD-5A94D8A83AEF}.Debug.ActiveCfg = Debug|.NET
-		{8B477C30-8C23-4D4B-A2DD-5A94D8A83AEF}.Debug.Build.0 = Debug|.NET
-		{8B477C30-8C23-4D4B-A2DD-5A94D8A83AEF}.Release.ActiveCfg = Release|.NET
-		{8B477C30-8C23-4D4B-A2DD-5A94D8A83AEF}.Release.Build.0 = Release|.NET
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{ADB98F2B-764D-4E27-B941-0153F6672DF6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ADB98F2B-764D-4E27-B941-0153F6672DF6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ADB98F2B-764D-4E27-B941-0153F6672DF6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ADB98F2B-764D-4E27-B941-0153F6672DF6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CD11EFF1-9137-4A84-9997-1D8DF8EF6F5A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD11EFF1-9137-4A84-9997-1D8DF8EF6F5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EF58CA1A-5134-402B-B88A-FA9172303B75}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EF58CA1A-5134-402B-B88A-FA9172303B75}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{321226D3-703A-49F9-BF2E-46E79277C01A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{321226D3-703A-49F9-BF2E-46E79277C01A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8B477C30-8C23-4D4B-A2DD-5A94D8A83AEF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8B477C30-8C23-4D4B-A2DD-5A94D8A83AEF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 	EndGlobalSection
-	GlobalSection(ExtensibilityGlobals) = postSolution
-	EndGlobalSection
-	GlobalSection(ExtensibilityAddIns) = postSolution
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 EndGlobal
