@@ -29,13 +29,13 @@ namespace WeSay.Setup
 					LoadAddins();
 					_loaded = true;
 				}
-				UpdateStatesOfThings();
+			   // UpdateStatesOfThings();
 			}
 		}
 
 		private void LoadAddins()
 		{
-			_listView.Items.Clear();
+			_addinsList.Clear();
 			if(!AddinManager.IsInitialized)
 			{
 				AddinManager.Initialize(Application.UserAppDataPath);
@@ -64,19 +64,17 @@ namespace WeSay.Setup
 
 		private void AddAddin(IWeSayAddin addin)
 		{
-			ListViewItem item = new ListViewItem(addin.Name);
-			item.SubItems.Add(addin.ShortDescription);
-			item.Tag = addin;
-			if (!addin.Available)
-			{
-				item.ForeColor = System.Drawing.Color.Gray;
-			}
-			if (addin.ButtonImage != null)
-			{
-				item.ImageIndex = _imageList.Images.Count;
-				_imageList.Images.Add(addin.ButtonImage);
-			}
-			_listView.Items.Add(item);
+			ActionItemControl control = new ActionItemControl(addin);
+			_addinsList.AddControlToBottom(control);
+			control.Launch += new EventHandler(OnLaunchAction);
+		}
+
+		void OnLaunchAction(object sender, EventArgs e)
+		{
+			IWeSayAddin addin = sender as IWeSayAddin;
+
+			addin.Launch(Project.WeSayWordsProject.Project.ProjectDirectoryPath,
+												Project.WeSayWordsProject.Project.PathToLiftFile);
 		}
 
 		void AddinManager_ExtensionChanged(object sender, ExtensionEventArgs args)
@@ -99,46 +97,46 @@ namespace WeSay.Setup
 			Reporting.Logger.WriteEvent("Addin loaded: {0}", args.AddinId);
 		}
 
-		protected IWeSayAddin CurrentAddin
-		{
-			get
-			{
-				if (_listView.SelectedItems != null && _listView.SelectedItems.Count == 1)
-				{
-					IWeSayAddin addin= _listView.SelectedItems[0].Tag as IWeSayAddin;
-					if (addin.Available)
-						return addin;
-					else return null;
-				}
-				return null;
-			}
-		}
-
-
-		private void OnLaunch(object sender, EventArgs e)
-		{
-			if (CurrentAddin == null)
-				return;
-
-			try
-			{
-				CurrentAddin.Launch(Project.WeSayWordsProject.Project.ProjectDirectoryPath,
-									Project.WeSayWordsProject.Project.PathToLiftFile);
-			}
-			catch(Exception err)
-			{
-				Reporting.ErrorReporter.ReportNonFatalMessage(err.Message);
-			}
-		}
-
-		private void OnListView_SelectedIndexChanged(object sender, EventArgs e)
-		{
-			UpdateStatesOfThings();
-		}
-
-		private void UpdateStatesOfThings()
-		{
-			_launchButton.Enabled = (CurrentAddin != null);
-		}
+//        protected IWeSayAddin CurrentAddin
+//        {
+//            get
+//            {
+//                if (_listView.SelectedItems != null && _listView.SelectedItems.Count == 1)
+//                {
+//                    IWeSayAddin addin= _listView.SelectedItems[0].Tag as IWeSayAddin;
+//                    if (addin.Available)
+//                        return addin;
+//                    else return null;
+//                }
+//                return null;
+//            }
+//        }
+//
+//
+//        private void OnLaunch(object sender, EventArgs e)
+//        {
+//            if (CurrentAddin == null)
+//                return;
+//
+//            try
+//            {
+//                CurrentAddin.Launch(Project.WeSayWordsProject.Project.ProjectDirectoryPath,
+//                                    Project.WeSayWordsProject.Project.PathToLiftFile);
+//            }
+//            catch(Exception err)
+//            {
+//                Reporting.ErrorReporter.ReportNonFatalMessage(err.Message);
+//            }
+//        }
+//
+//        private void OnListView_SelectedIndexChanged(object sender, EventArgs e)
+//        {
+//            UpdateStatesOfThings();
+//        }
+//
+//        private void UpdateStatesOfThings()
+//        {
+//          //  _launchButton.Enabled = (CurrentAddin != null);
+//        }
 	}
 }

@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Addin.LiftReports.Properties {
+namespace WeSay.AddinLib.Properties {
 	using System;
 
 
@@ -39,7 +39,7 @@ namespace Addin.LiftReports.Properties {
 		internal static global::System.Resources.ResourceManager ResourceManager {
 			get {
 				if (object.ReferenceEquals(resourceMan, null)) {
-					global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Addin.LiftReports.Properties.Resources", typeof(Resources).Assembly);
+					global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("WeSay.AddinLib.Properties.Resources", typeof(Resources).Assembly);
 					resourceMan = temp;
 				}
 				return resourceMan;
@@ -60,16 +60,9 @@ namespace Addin.LiftReports.Properties {
 			}
 		}
 
-		internal static System.Drawing.Bitmap image {
+		internal static System.Drawing.Bitmap construction {
 			get {
-				object obj = ResourceManager.GetObject("image", resourceCulture);
-				return ((System.Drawing.Bitmap)(obj));
-			}
-		}
-
-		internal static System.Drawing.Bitmap WeSay {
-			get {
-				object obj = ResourceManager.GetObject("WeSay", resourceCulture);
+				object obj = ResourceManager.GetObject("construction", resourceCulture);
 				return ((System.Drawing.Bitmap)(obj));
 			}
 		}

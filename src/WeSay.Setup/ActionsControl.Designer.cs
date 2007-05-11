@@ -29,45 +29,11 @@ namespace WeSay.Setup
 		private void InitializeComponent()
 		{
 			this.components = new System.ComponentModel.Container();
-			this._listView = new System.Windows.Forms.ListView();
-			this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
-			this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
 			this._imageList = new System.Windows.Forms.ImageList(this.components);
 			this.label2 = new System.Windows.Forms.Label();
-			this._launchButton = new System.Windows.Forms.Button();
 			this.label1 = new System.Windows.Forms.Label();
+			this._addinsList = new WindowsApplication2.ControlListBox();
 			this.SuspendLayout();
-			//
-			// _listView
-			//
-			this._listView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-						| System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
-			this._listView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-			this.columnHeader1,
-			this.columnHeader2});
-			this._listView.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this._listView.HideSelection = false;
-			this._listView.Location = new System.Drawing.Point(7, 28);
-			this._listView.MultiSelect = false;
-			this._listView.Name = "_listView";
-			this._listView.Size = new System.Drawing.Size(559, 189);
-			this._listView.SmallImageList = this._imageList;
-			this._listView.TabIndex = 15;
-			this._listView.UseCompatibleStateImageBehavior = false;
-			this._listView.View = System.Windows.Forms.View.Details;
-			this._listView.DoubleClick += new System.EventHandler(this.OnLaunch);
-			this._listView.SelectedIndexChanged += new System.EventHandler(this.OnListView_SelectedIndexChanged);
-			//
-			// columnHeader1
-			//
-			this.columnHeader1.Text = "Action";
-			this.columnHeader1.Width = 180;
-			//
-			// columnHeader2
-			//
-			this.columnHeader2.Text = "Description";
-			this.columnHeader2.Width = 500;
 			//
 			// _imageList
 			//
@@ -84,17 +50,6 @@ namespace WeSay.Setup
 			this.label2.TabIndex = 16;
 			this.label2.Text = "The following action addins are installed:";
 			//
-			// _launchButton
-			//
-			this._launchButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this._launchButton.Location = new System.Drawing.Point(491, 223);
-			this._launchButton.Name = "_launchButton";
-			this._launchButton.Size = new System.Drawing.Size(75, 23);
-			this._launchButton.TabIndex = 17;
-			this._launchButton.Text = "&Launch";
-			this._launchButton.UseVisualStyleBackColor = true;
-			this._launchButton.Click += new System.EventHandler(this.OnLaunch);
-			//
 			// label1
 			//
 			this.label1.AutoSize = true;
@@ -104,15 +59,25 @@ namespace WeSay.Setup
 			this.label1.TabIndex = 16;
 			this.label1.Text = "If you are or know a programmer, you can create your own actions.";
 			//
+			// _addinsList
+			//
+			this._addinsList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+						| System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
+			this._addinsList.AutoScroll = true;
+			this._addinsList.Location = new System.Drawing.Point(8, 37);
+			this._addinsList.Name = "_addinsList";
+			this._addinsList.Size = new System.Drawing.Size(558, 177);
+			this._addinsList.TabIndex = 19;
+			//
 			// ActionsControl
 			//
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.SystemColors.Window;
-			this.Controls.Add(this._launchButton);
+			this.Controls.Add(this._addinsList);
 			this.Controls.Add(this.label1);
 			this.Controls.Add(this.label2);
-			this.Controls.Add(this._listView);
 			this.Name = "ActionsControl";
 			this.Size = new System.Drawing.Size(583, 264);
 			this.VisibleChanged += new System.EventHandler(this.OnVisibleChanged);
@@ -123,12 +88,9 @@ namespace WeSay.Setup
 
 		#endregion
 
-		private System.Windows.Forms.ListView _listView;
 		private System.Windows.Forms.ImageList _imageList;
-		private System.Windows.Forms.ColumnHeader columnHeader1;
-		private System.Windows.Forms.ColumnHeader columnHeader2;
 		private System.Windows.Forms.Label label2;
-		private System.Windows.Forms.Button _launchButton;
 		private System.Windows.Forms.Label label1;
+		private WindowsApplication2.ControlListBox _addinsList;
 	}
 }

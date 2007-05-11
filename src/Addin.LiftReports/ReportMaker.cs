@@ -17,7 +17,7 @@ namespace Addin.LiftReports
 		{
 			get
 			{
-				return Resources.buttonImage;
+				return Resources.image;
 			}
 		}
 
