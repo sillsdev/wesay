@@ -1,8 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework;
-using WeSay.Data;
-using WeSay.LexicalModel;
 using WeSay.LexicalModel.Db4o_Specific;
 
 namespace WeSay.LexicalTools.Tests
@@ -80,7 +78,7 @@ namespace WeSay.LexicalTools.Tests
 			AddEntry("past"); //2
 			AddEntry("dest"); //1
 			AddEntry("dits"); //1
-			AddEntry("noise"); //4
+			AddEntry("noise"); //3
 			IList closest = (IList)ApproximateMatcher.FindClosestAndNextClosestAndPrefixedForms("dist", _forms);
 			Assert.AreEqual(3, closest.Count);
 			Assert.Contains("past", closest);
@@ -197,7 +195,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void EditDistance_Same_0()
 		{
-			int editDistance = ApproximateMatcher.EditDistance("abo", "abo", 0);
+			int editDistance = ApproximateMatcher.EditDistance("abo", "abo", 0, false);
 			Assert.AreEqual(0, editDistance);
 		}
 
@@ -205,281 +203,328 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void EditDistance_SingleInsertionAtStart_1()
 		{
-			int editDistance = ApproximateMatcher.EditDistance("abo", "habo", 1);
+			int editDistance = ApproximateMatcher.EditDistance("abo", "habo", 1, false);
 			Assert.AreEqual(1, editDistance);
 		}
 
 		[Test]
 		public void EditDistance_SingleInsertionAtStart_0Max_EditDistanceLargerThanMax()
 		{
-			int editDistance = ApproximateMatcher.EditDistance("abo", "habo", 0);
+			int editDistance = ApproximateMatcher.EditDistance("abo", "habo", 0, false);
 			Assert.AreEqual(ApproximateMatcher.EditDistanceLargerThanMax, editDistance);
 		}
 
 		[Test]
 		public void EditDistance_SingleInsertionAtMiddle_1()
 		{
-			int editDistance = ApproximateMatcher.EditDistance("abo", "abho", 1);
+			int editDistance = ApproximateMatcher.EditDistance("abo", "abho", 1, false);
 			Assert.AreEqual(1, editDistance);
 		}
 
 		[Test]
 		public void EditDistance_SingleInsertionAtMiddle_0Max_EditDistanceLargerThanMax()
 		{
-			int editDistance = ApproximateMatcher.EditDistance("abo", "abho", 0);
+			int editDistance = ApproximateMatcher.EditDistance("abo", "abho", 0, false);
 			Assert.AreEqual(ApproximateMatcher.EditDistanceLargerThanMax, editDistance);
 		}
 
 		[Test]
 		public void EditDistance_SingleInsertionAtEnd_1()
 		{
-			int editDistance = ApproximateMatcher.EditDistance("abo", "aboh", 1);
+			int editDistance = ApproximateMatcher.EditDistance("abo", "aboh", 1, false);
 			Assert.AreEqual(1, editDistance);
 		}
 
 		[Test]
 		public void EditDistance_SingleInsertionAtStartAndMiddle_2()
 		{
-			int editDistance = ApproximateMatcher.EditDistance("abo", "habho", 2);
+			int editDistance = ApproximateMatcher.EditDistance("abo", "habho", 2, false);
 			Assert.AreEqual(2, editDistance);
 		}
 
 		[Test]
 		public void EditDistance_SingleInsertionAtStartAndMiddle_1Max_EditDistanceLargerThanMax()
 		{
-			int editDistance = ApproximateMatcher.EditDistance("abo", "habho", 1);
+			int editDistance = ApproximateMatcher.EditDistance("abo", "habho", 1, false);
 			Assert.AreEqual(ApproximateMatcher.EditDistanceLargerThanMax, editDistance);
 		}
 
 		[Test]
 		public void EditDistance_SingleInsertionAtMiddleAndEnd_2()
 		{
-			int editDistance = ApproximateMatcher.EditDistance("abo", "abhoh", 2);
+			int editDistance = ApproximateMatcher.EditDistance("abo", "abhoh", 2, false);
 			Assert.AreEqual(2, editDistance);
 		}
 
 		[Test]
 		public void EditDistance_SingleInsertionAtMiddleAndEnd_1Max_EditDistanceLargerThanMax()
 		{
-			int editDistance = ApproximateMatcher.EditDistance("abo", "abhoh", 1);
+			int editDistance = ApproximateMatcher.EditDistance("abo", "abhoh", 1, false);
 			Assert.AreEqual(ApproximateMatcher.EditDistanceLargerThanMax, editDistance);
 		}
 
 		[Test]
 		public void EditDistance_SingleInsertionAtStartAndEnd_2()
 		{
-			int editDistance = ApproximateMatcher.EditDistance("abo", "haboh", 2);
+			int editDistance = ApproximateMatcher.EditDistance("abo", "haboh", 2, false);
 			Assert.AreEqual(2, editDistance);
 		}
 
 		[Test]
 		public void EditDistance_SingleInsertionAtStartAndEnd_1Max_EditDistanceLargerThanMax()
 		{
-			int editDistance = ApproximateMatcher.EditDistance("abo", "haboh", 1);
+			int editDistance = ApproximateMatcher.EditDistance("abo", "haboh", 1, false);
 			Assert.AreEqual(ApproximateMatcher.EditDistanceLargerThanMax, editDistance);
 		}
 
 		[Test]
 		public void EditDistance_SingleDeletionAtStart_1()
 		{
-			int editDistance = ApproximateMatcher.EditDistance("abo", "bo", 1);
+			int editDistance = ApproximateMatcher.EditDistance("abo", "bo", 1, false);
 			Assert.AreEqual(1, editDistance);
 		}
 
 		[Test]
 		public void EditDistance_SingleDeletionAtMiddle_1()
 		{
-			int editDistance = ApproximateMatcher.EditDistance("abo", "ao", 1);
+			int editDistance = ApproximateMatcher.EditDistance("abo", "ao", 1, false);
 			Assert.AreEqual(1, editDistance);
 		}
 
 		[Test]
 		public void EditDistance_SingleDeletionAtEnd_1()
 		{
-			int editDistance = ApproximateMatcher.EditDistance("abo", "ab", 1);
+			int editDistance = ApproximateMatcher.EditDistance("abo", "ab", 1, false);
 			Assert.AreEqual(1, editDistance);
 		}
 
 		[Test]
 		public void EditDistance_SingleDeletionAtStartAndMiddle_2()
 		{
-			int editDistance = ApproximateMatcher.EditDistance("aboh", "bh", 2);
+			int editDistance = ApproximateMatcher.EditDistance("aboh", "bh", 2, false);
 			Assert.AreEqual(2, editDistance);
 		}
 
 		[Test]
 		public void EditDistance_SingleDeletionAtMiddleAndEnd_2()
 		{
-			int editDistance = ApproximateMatcher.EditDistance("aboh", "ao", 2);
+			int editDistance = ApproximateMatcher.EditDistance("aboh", "ao", 2, false);
 			Assert.AreEqual(2, editDistance);
 		}
 
 		[Test]
 		public void EditDistance_SingleDeletionAtStartAndEnd_2()
 		{
-			int editDistance = ApproximateMatcher.EditDistance("aboh", "bo", 2);
+			int editDistance = ApproximateMatcher.EditDistance("aboh", "bo", 2, false);
 			Assert.AreEqual(2, editDistance);
 		}
 
 		[Test]
 		public void EditDistance_SingleSubstitutionAtStart_1()
 		{
-			int editDistance = ApproximateMatcher.EditDistance("abo", "sbo", 1);
+			int editDistance = ApproximateMatcher.EditDistance("abo", "sbo", 1, false);
 			Assert.AreEqual(1, editDistance);
 		}
 
 		[Test]
 		public void EditDistance_SingleSubstitutionAtMiddle_1()
 		{
-			int editDistance = ApproximateMatcher.EditDistance("abo", "aso", 1);
+			int editDistance = ApproximateMatcher.EditDistance("abo", "aso", 1, false);
 			Assert.AreEqual(1, editDistance);
 		}
 
 		[Test]
 		public void EditDistance_SingleSubstitutionAtEnd_1()
 		{
-			int editDistance = ApproximateMatcher.EditDistance("abo", "abs", 1);
+			int editDistance = ApproximateMatcher.EditDistance("abo", "abs", 1, false);
 			Assert.AreEqual(1, editDistance);
 		}
 
 		[Test]
 		public void EditDistance_SingleSubstitutionAtStartAndMiddle_2()
 		{
-			int editDistance = ApproximateMatcher.EditDistance("aboh", "sbsh", 2);
+			int editDistance = ApproximateMatcher.EditDistance("aboh", "sbsh", 2, false);
 			Assert.AreEqual(2, editDistance);
 		}
 
 		[Test]
 		public void EditDistance_SingleSubstitutionAtMiddleAndEnd_2()
 		{
-			int editDistance = ApproximateMatcher.EditDistance("aboh", "asos", 2);
+			int editDistance = ApproximateMatcher.EditDistance("aboh", "asos", 2, false);
 			Assert.AreEqual(2, editDistance);
 		}
 
 		[Test]
 		public void EditDistance_SingleSubstitutionAtStartAndEnd_2()
 		{
-			int editDistance = ApproximateMatcher.EditDistance("aboh", "sbos", 2);
+			int editDistance = ApproximateMatcher.EditDistance("aboh", "sbos", 2, false);
 			Assert.AreEqual(2, editDistance);
 		}
 
 		[Test]
 		public void EditDistance_SingleTranspositionAtStart_1()
 		{
-			int editDistance = ApproximateMatcher.EditDistance("abo", "bao", 1);
+			int editDistance = ApproximateMatcher.EditDistance("abo", "bao", 1, false);
 			Assert.AreEqual(1, editDistance);
 		}
 
 		[Test]
 		public void EditDistance_SingleTranspositionAtMiddle_1()
 		{
-			int editDistance = ApproximateMatcher.EditDistance("aboh", "aobh", 1);
+			int editDistance = ApproximateMatcher.EditDistance("aboh", "aobh", 1, false);
 			Assert.AreEqual(1, editDistance);
 		}
 
 		[Test]
 		public void EditDistance_SingleTranspositionAtEnd_1()
 		{
-			int editDistance = ApproximateMatcher.EditDistance("abo", "aob", 1);
+			int editDistance = ApproximateMatcher.EditDistance("abo", "aob", 1, false);
 			Assert.AreEqual(1, editDistance);
 		}
 
 		[Test]
 		public void EditDistance_SingleTranspositionAtStartAndMiddle_2()
 		{
-			int editDistance = ApproximateMatcher.EditDistance("abohor", "baoohr", 2);
+			int editDistance = ApproximateMatcher.EditDistance("abohor", "baoohr", 2, false);
 			Assert.AreEqual(2, editDistance);
 		}
 
 		[Test]
 		public void EditDistance_SingleTranspositionAtMiddleAndEnd_2()
 		{
-			int editDistance = ApproximateMatcher.EditDistance("abohor", "aobhro", 2);
+			int editDistance = ApproximateMatcher.EditDistance("abohor", "aobhro", 2, false);
 			Assert.AreEqual(2, editDistance);
 		}
 
 		[Test]
 		public void EditDistance_SingleTranspositionAtStartAndEnd_2()
 		{
-			int editDistance = ApproximateMatcher.EditDistance("abohor", "baohro", 2);
+			int editDistance = ApproximateMatcher.EditDistance("abohor", "baohro", 2, false);
 			Assert.AreEqual(2, editDistance);
 		}
 
 		[Test]
 		public void EditDistance_SingleDeletionAtStartAndSingleInsertionAtEnd_2()
 		{
-			int editDistance = ApproximateMatcher.EditDistance("abo", "boh", 2);
+			int editDistance = ApproximateMatcher.EditDistance("abo", "boh", 2, false);
 			Assert.AreEqual(2, editDistance);
 		}
 
 		[Test]
 		public void EditDistance_SingleDeletionAtStartAndSingleInsertionAtEnd_1Max_EditDistanceLargerThanMax()
 		{
-			int editDistance = ApproximateMatcher.EditDistance("abo", "boh", 1);
+			int editDistance = ApproximateMatcher.EditDistance("abo", "boh", 1, false);
 			Assert.AreEqual(ApproximateMatcher.EditDistanceLargerThanMax, editDistance);
 		}
 
 		[Test]
 		public void EditDistance_SingleDeletionAtStartAndDoubleInsertionAtEnd_3()
 		{
-			int editDistance = ApproximateMatcher.EditDistance("abo", "boha", 3);
+			int editDistance = ApproximateMatcher.EditDistance("abo", "boha", 3, false);
 			Assert.AreEqual(3, editDistance);
 		}
 
 		[Test]
 		public void EditDistance_SingleDeletionAtStartAndDoubleInsertionAtEnd_2Max_EditDistanceLargerThanMax()
 		{
-			int editDistance = ApproximateMatcher.EditDistance("abo", "boha", 2);
+			int editDistance = ApproximateMatcher.EditDistance("abo", "boha", 2, false);
 			Assert.AreEqual(ApproximateMatcher.EditDistanceLargerThanMax, editDistance);
 		}
 
 		[Test]
 		public void EditDistance_SingleDeletionAtStartAndSingleTranspositionAtEnd_2()
 		{
-			int editDistance = ApproximateMatcher.EditDistance("aboh", "bho", 2);
+			int editDistance = ApproximateMatcher.EditDistance("aboh", "bho", 2, false);
 			Assert.AreEqual(2, editDistance);
 		}
 
 		[Test]
 		public void EditDistance_SingleDeletionAtStartAndSingleTranspositionAtEnd_1Max_EditDistanceLargerThanMax()
 		{
-			int editDistance = ApproximateMatcher.EditDistance("aboh", "bho", 1);
+			int editDistance = ApproximateMatcher.EditDistance("aboh", "bho", 1, false);
 			Assert.AreEqual(ApproximateMatcher.EditDistanceLargerThanMax, editDistance);
 		}
 
 		[Test]
 		public void EditDistance_SingleDeletionAtStartAndSingleSubstitutionAtEnd_2()
 		{
-			int editDistance = ApproximateMatcher.EditDistance("abo", "bi", 2);
+			int editDistance = ApproximateMatcher.EditDistance("abo", "bi", 2, false);
 			Assert.AreEqual(2, editDistance);
 		}
 
 		[Test]
 		public void EditDistance_SingleDeletionAtStartAndSingleSubstitutionAtEnd_1Max_EditDistanceLargerThanMax()
 		{
-			int editDistance = ApproximateMatcher.EditDistance("abo", "bi", 1);
+			int editDistance = ApproximateMatcher.EditDistance("abo", "bi", 1, false);
 			Assert.AreEqual(ApproximateMatcher.EditDistanceLargerThanMax, editDistance);
 		}
 
 		[Test]
 		public void EditDistance_SingleInsertionAtStartAndSingleDeletionAtEnd_2()
 		{
-			int editDistance = ApproximateMatcher.EditDistance("abo", "rab", 2);
+			int editDistance = ApproximateMatcher.EditDistance("abo", "rab", 2, false);
 			Assert.AreEqual(2, editDistance);
 		}
 
 		[Test]
 		public void EditDistance_SingleInsertionAtStartAndSingleTranspositionAtEnd_2()
 		{
-			int editDistance = ApproximateMatcher.EditDistance("abo", "raob", 2);
+			int editDistance = ApproximateMatcher.EditDistance("abo", "raob", 2, false);
 			Assert.AreEqual(2, editDistance);
 		}
 
 		[Test]
 		public void EditDistance_SingleInsertionAtStartAndSingleSubstitutionAtEnd_2()
 		{
-			int editDistance = ApproximateMatcher.EditDistance("abo", "rabi", 2);
+			int editDistance = ApproximateMatcher.EditDistance("abo", "rabi", 2, false);
 			Assert.AreEqual(2, editDistance);
+		}
+
+		[Test]
+		public void EditDistance_SingleInsertionAtEndWithSuffixTreatedAsZeroDistance_1()
+		{
+			Assert.AreEqual(1, ApproximateMatcher.EditDistance("cased", "case", 1, true));
+		}
+
+		[Test]
+		public void EditDistance_SingleInsertionAtEndWithSuffixTreatedAsZeroDistance_0()
+		{
+			Assert.AreEqual(0, ApproximateMatcher.EditDistance("case", "cased", 1, true));
+		}
+
+		[Test]
+		public void EditDistance_SingleInsertionAtBeginningWithSuffixTreatedAsZeroDistance_1()
+		{
+			// has suffix to ignore on the second word
+			Assert.AreEqual(1, ApproximateMatcher.EditDistance("case", "acaseinfact", 1, true));
+		}
+
+		[Test]
+		public void EditDistance_SingleDeletionAtBeginningWithSixInsertionsAtEndAndSuffixTreatedAsZeroDistance_7()
+		{
+			// no suffix to ignore on the second word
+			Assert.AreEqual(7, ApproximateMatcher.EditDistance("acaseinfact", "case", int.MaxValue, true));
+		}
+
+		[Test]
+		public void EditDistance_SingleInsertionSingleSubstitutionAtBeginningSingleSubstitutionAtEndWithSuffixTreatedAsZeroDistance_3()
+		{
+			// has suffix to ignore on the second word
+			Assert.AreEqual(3, ApproximateMatcher.EditDistance("dist", "noise", 4, true));
+		}
+
+		[Test]
+		public void EditDistance_SingleDeletionSingleSubstitutionAtBeginningSingleSubstitutionAtEndWithSuffixTreatedAsZeroDistance_3()
+		{
+			// no suffix to ignore on the second word
+			Assert.AreEqual(3, ApproximateMatcher.EditDistance("noise", "dist", 4, true));
+		}
+
+		[Test]
+		public void EditDistance_SingleInsertionSingleSubstitutionAtBeginningSingleSubstitutionAtEndWithSuffixTreatedAsZeroDistance_2Cutoff_EditDistanceLargerThanMax()
+		{
+			Assert.AreEqual(ApproximateMatcher.EditDistanceLargerThanMax, ApproximateMatcher.EditDistance("noise", "dist", 2, true));
+			Assert.AreEqual(ApproximateMatcher.EditDistanceLargerThanMax, ApproximateMatcher.EditDistance("dist", "noise", 2, true));
 		}
 
 		/// <summary>

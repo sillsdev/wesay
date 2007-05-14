@@ -28,7 +28,7 @@ namespace WeSay.LexicalModel.Db4o_Specific
 		}
 
 
-		static private IList<string> FindClosestForms(string notNormalizedkey, bool includeNextClosest, bool includePrefixedForms, IEnumerable<string> forms)
+		static private IList<string> FindClosestForms(string notNormalizedkey, bool includeNextClosest, bool includeApproximatePrefixedForms, IEnumerable<string> forms)
 		{
 			string key = notNormalizedkey.Normalize(NormalizationForm.FormD);
 			List<string> bestMatches = new List<string>();
@@ -43,14 +43,7 @@ namespace WeSay.LexicalModel.Db4o_Specific
 				if (!string.IsNullOrEmpty(form))
 				{
 					int editDistance;
-					if (includePrefixedForms && form.StartsWith(key))
-					{
-						editDistance = 0;
-					}
-					else
-					{
-						editDistance = EditDistance(key, form, secondBestEditDistance);
-					}
+					editDistance = EditDistance(key, form, secondBestEditDistance, includeApproximatePrefixedForms);
 					if (editDistance < bestEditDistance)
 					{
 						if (includeNextClosest && bestEditDistance != int.MaxValue)
@@ -104,13 +97,13 @@ namespace WeSay.LexicalModel.Db4o_Specific
 		// Ukkonen's cut-off heuristic is faster than the original Sellers 1980
 
 		// returns int.MaxValue if distance is greater than cutoff.
-		public static int EditDistance(string list1, string list2, int maxEditDistance)
+		public static int EditDistance(string list1, string list2, int maxEditDistance, bool treatSuffixAsZeroDistance)
 		{
 			const int deletionCost = 1;
 			const int insertionCost = deletionCost; // should be symmetric
 			const int substitutionCost = 1;
 			const int transpositionCost = 1;
-			int lastColumnThatNeedsToBeEvaluated = 2;
+			int lastColumnThatNeedsToBeEvaluated = 3;
 
 			// Validate parameters
 			if (list1 == null)
@@ -118,19 +111,32 @@ namespace WeSay.LexicalModel.Db4o_Specific
 			if (list2 == null)
 				throw new ArgumentNullException("y");
 
-			// list2 is the one that we are actually using storage space for so we want it to be the smaller of the two
-			if (list1.Length < list2.Length)
+			if (!treatSuffixAsZeroDistance) // this is not a reflexive operation so swap isn't allowed
 			{
-				swap(ref list1, ref list2);
+				// list2 is the one that we are actually using storage space for so we want it to be the smaller of the two
+				if (list1.Length < list2.Length)
+				{
+					swap(ref list1, ref list2);
+				}
 			}
+
 			int n1 = list1.Length, n2 = list2.Length;
 			if (n1 == 0)
 			{
+				if (treatSuffixAsZeroDistance)
+				{
+					return 0;
+				}
 				return n2 * insertionCost;
 			}
+
 			if (n2 == 0)
 			{
-				return n1 * deletionCost;
+				if (treatSuffixAsZeroDistance)
+				{
+					return 0;
+				}
+				return n1*deletionCost;
 			}
 
 			// Rather than maintain an entire matrix (which would require O(x*y) space),
@@ -138,8 +144,8 @@ namespace WeSay.LexicalModel.Db4o_Specific
 			// so just O(min(x,y)) space.
 			int prevRow = 0, curRow = 1, nextRow = 2;
 			int[][] rows = new int[][] { new int[n2 + 1], new int[n2 + 1], new int[n2 + 1] };
-			// Initialize the previous row.
 			int maxIndex = Math.Min(n2, lastColumnThatNeedsToBeEvaluated);
+			// Initialize the cur row.
 			for (int list2index = 0; list2index <= maxIndex; ++list2index)
 			{
 				rows[curRow][list2index] = list2index;
@@ -154,15 +160,16 @@ namespace WeSay.LexicalModel.Db4o_Specific
 			{
 				// Fill in the values in the row
 				rows[nextRow][0] = list1index;
-				maxIndex = Math.Min(n2, lastColumnThatNeedsToBeEvaluated + 1);
+				maxIndex = Math.Min(n2, lastColumnThatNeedsToBeEvaluated + 2);
 				// if we are on the last row and we don't need to evaluate to the end of
 				// the column to determine if our edit distance is larger than the max
 				// then the edit distance is larger than the max
-				if(list1index == n1 && maxIndex < n2)
+				if (!treatSuffixAsZeroDistance && list1index == n1 && maxIndex < n2)
 				{
 					return EditDistanceLargerThanMax;
 				}
 				lastColumnThatNeedsToBeEvaluated = 0;
+				int minDistance = int.MaxValue;
 				for (int list2index = 1; list2index <= maxIndex; ++list2index)
 				{
 					int distance;
@@ -185,6 +192,11 @@ namespace WeSay.LexicalModel.Db4o_Specific
 						{
 							distance = Math.Min(distance, rows[prevRow][list2index - 2] + transpositionCost);
 						}
+					}
+					// only relevant if treatSuffixAsZeroDistance
+					if (treatSuffixAsZeroDistance && distance < minDistance)
+					{
+						minDistance = distance;
 					}
 					rows[nextRow][list2index] = distance;
 					if (distance <= maxEditDistance)
@@ -217,10 +229,22 @@ namespace WeSay.LexicalModel.Db4o_Specific
 				{
 					return EditDistanceLargerThanMax;
 				}
+
+				if (treatSuffixAsZeroDistance && list1index == n1)
+				{
+					return minDistance;
+				}
+
 			}
 
 			// Return the computed edit distance
-			return rows[curRow][n2];
+			int editDistance = rows[curRow][n2];
+
+			if(editDistance > maxEditDistance)
+			{
+				return EditDistanceLargerThanMax;
+			}
+			return editDistance;
 		}
 
 		private static void swap<A>(ref A x, ref A y)
