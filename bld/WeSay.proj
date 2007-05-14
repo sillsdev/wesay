@@ -6,10 +6,6 @@
 	<BaseDirectory>$(MSBuildProjectDirectory)\..</BaseDirectory>
   </PropertyGroup>
 
-  <PropertyGroup>
-	<NUnitPath>c:\program files\NUnit 2.4\bin\</NUnitPath>
-  </PropertyGroup>
-
   <Import Project="$(BaseDirectory)\bld\UpdateCsProjs.Targets"/>
 
   <Target Name="Compile">
@@ -56,7 +52,7 @@
 	<NUnit OutputXmlFile="$(BaseDirectory)\output\TestResults\Release\%(ReleaseTestAssemblies.Filename).xml"
 		   Assemblies="%(ReleaseTestAssemblies.FullPath)"
 		   WorkingDirectory="$(BaseDirectory)\output\Release"
-		   ToolPath="$(NUnitPath)" Condition="$(NUnitPath) != ''">
+		   ToolPath="$(NUnitPath)" Condition="$(NUnitPath)!= ''">
 	</NUnit>
 
   </Target>
