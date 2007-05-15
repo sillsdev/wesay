@@ -353,6 +353,14 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 	  <ComponentRef Id="WeSay.UI.dll" />
 	  <ComponentRef Id="WeSay.UI.pdb" />
 
+	  <ComponentRef Id="Addin.Backup.dll"/>
+	  <ComponentRef Id="Addin.LiftReports.dll"/>
+	  <ComponentRef Id="NVelocity.dll"/>
+	  <ComponentRef Id="log4net.dll"/>
+	  <ComponentRef Id="commons.dll"/>
+	  <ComponentRef Id="WeSay.AddinLib.dll"/>
+	  <ComponentRef Id="Mono.Addins.exe"/>
+
 	  <!-- i tried to FeatureRef these from their own files but it didn't work -->
 
 	  <ComponentRef Id="PartsOfSpeech.xml" />
@@ -363,6 +371,7 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 	  <ComponentRef Id="Ddp4.xml"/>
 	  <ComponentRef Id="Ddp4Questions_en.xml"/>
 	  <ComponentRef Id="Ddp4Questions_fr.xml"/>
+
 
 
 	  <!-- i tried to FeatureRef these from their own files but it didn't work -->
