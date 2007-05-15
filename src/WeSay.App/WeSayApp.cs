@@ -85,8 +85,8 @@ namespace WeSay.App
 					tabbedForm.Text = "WeSay: " + project.Name + "        "  + ErrorReporter.UserFriendlyVersionString;
 					Application.DoEvents();
 
-					LiftUpdateService liftUpdateService = SetupUpdateService(recordListManager);
-					liftUpdateService.DoLiftUpdateNow(true);
+					project.LiftUpdateService = SetupUpdateService(recordListManager);
+					project.LiftUpdateService.DoLiftUpdateNow(true);
 
 					//MONO bug as of 1.1.18 cannot bitwise or FileShare on FileStream constructor
 					//                    using (FileStream config = new FileStream(project.PathToProjectTaskInventory, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete))
@@ -104,7 +104,7 @@ namespace WeSay.App
 					Application.Run(tabbedForm);
 
 					//do a last backup before exiting
-					liftUpdateService.DoLiftUpdateNow(true);
+					project.LiftUpdateService.DoLiftUpdateNow(true);
 			  //      BackupMaker.BackupToExternal(_filesToBackup,project.ProjectDirectoryPath, "h:\\" + project.Name + ".zip");
 				}
 				Logger.WriteEvent("App Exiting Normally.");

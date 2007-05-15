@@ -41,9 +41,9 @@ namespace WeSay.CommonTools
 						| System.Windows.Forms.AnchorStyles.Left)
 						| System.Windows.Forms.AnchorStyles.Right)));
 			this._addinsList.AutoScroll = true;
-			this._addinsList.Location = new System.Drawing.Point(0, 0);
+			this._addinsList.Location = new System.Drawing.Point(0, 19);
 			this._addinsList.Name = "_addinsList";
-			this._addinsList.Size = new System.Drawing.Size(485, 327);
+			this._addinsList.Size = new System.Drawing.Size(485, 308);
 			this._addinsList.TabIndex = 0;
 			//
 			// ActionsControl

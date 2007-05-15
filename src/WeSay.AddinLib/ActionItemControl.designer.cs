@@ -45,6 +45,7 @@ namespace WeSay.AddinLib
 			this._description.ReadOnly = true;
 			this._description.Size = new System.Drawing.Size(302, 42);
 			this._description.TabIndex = 1;
+			this._description.TabStop = false;
 			this._description.Text = "blah blah blah";
 			//
 			// _launchButton
@@ -53,7 +54,7 @@ namespace WeSay.AddinLib
 			this._launchButton.Location = new System.Drawing.Point(3, 4);
 			this._launchButton.Name = "_launchButton";
 			this._launchButton.Size = new System.Drawing.Size(75, 65);
-			this._launchButton.TabIndex = 2;
+			this._launchButton.TabIndex = 0;
 			this._launchButton.UseVisualStyleBackColor = true;
 			this._launchButton.Click += new System.EventHandler(this._launchButton_Click);
 			//

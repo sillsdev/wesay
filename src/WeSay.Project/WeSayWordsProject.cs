@@ -22,6 +22,7 @@ namespace WeSay.Project
 		private string _pathToLiftFile;
 		private string _cacheLocationOverride;
 		private FileStream _liftFileStreamForLocking;
+		private LiftUpdateService _liftUpdateService;
 
 		public WeSayWordsProject()
 		{
@@ -476,6 +477,18 @@ namespace WeSay.Project
 			set
 			{
 				_cacheLocationOverride = value;
+			}
+		}
+
+		public LiftUpdateService LiftUpdateService
+		{
+			get
+			{
+				return _liftUpdateService;
+			}
+			set
+			{
+				_liftUpdateService = value;
 			}
 		}
 

@@ -51,6 +51,12 @@
 	<Compile Include="BackgroundWorkerState.cs" />
 	<Compile Include="IBindableControl.cs" />
 	<Compile Include="ILongRunningJob.cs" />
+	<Compile Include="LameProgressDialog.cs">
+	  <SubType>Form</SubType>
+	</Compile>
+	<Compile Include="LameProgressDialog.Designer.cs">
+	  <DependentUpon>LameProgressDialog.cs</DependentUpon>
+	</Compile>
 	<Compile Include="LanguageForm.cs" />
 	<Compile Include="MultiText.cs" />
 	<Compile Include="NullProgressState.cs" />
@@ -72,6 +78,12 @@
 	  <Project>{9CCBECEC-513C-4DA4-A4CE-F5361B633760}</Project>
 	  <Name>Reporting</Name>
 	</ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+	<EmbeddedResource Include="LameProgressDialog.resx">
+	  <DependentUpon>LameProgressDialog.cs</DependentUpon>
+	  <SubType>Designer</SubType>
+	</EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

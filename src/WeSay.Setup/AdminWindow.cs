@@ -74,8 +74,21 @@ namespace WeSay.Setup
 		}
 		void OnChooseProject(object sender, EventArgs e)
 		{
-
-			string initialDirectory = Path.GetDirectoryName(Settings.Default.LastConfigFilePath);
+			string initialDirectory=null;
+			if (!String.IsNullOrEmpty(Settings.Default.LastConfigFilePath))
+			{
+				try
+				{
+					if (File.Exists(Settings.Default.LastConfigFilePath))
+					{
+						initialDirectory = Path.GetDirectoryName(Settings.Default.LastConfigFilePath);
+					}
+				}
+				catch (Exception)
+				{
+					//swallow
+				}
+			}
 
 			if (initialDirectory == null || initialDirectory == "")
 			{

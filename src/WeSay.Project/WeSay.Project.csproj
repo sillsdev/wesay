@@ -55,6 +55,7 @@
 	<Compile Include="ConfigFileTaskBuilder.cs" />
 	<Compile Include="FailedLoadTask.cs" />
 	<Compile Include="Field.cs" />
+	<Compile Include="LiftUpdateService.cs" />
 	<Compile Include="ViewTemplate.cs" />
 	<Compile Include="ICurrentWorkTask.cs" />
 	<Compile Include="IProject.cs" />

@@ -64,6 +64,12 @@
 	<Compile Include="DictionaryStatusControl.Designer.cs">
 	  <DependentUpon>DictionaryStatusControl.cs</DependentUpon>
 	</Compile>
+	<Compile Include="GroupHeader.cs">
+	  <SubType>UserControl</SubType>
+	</Compile>
+	<Compile Include="GroupHeader.Designer.cs">
+	  <DependentUpon>GroupHeader.cs</DependentUpon>
+	</Compile>
 	<Compile Include="PictureControl.cs">
 	  <SubType>UserControl</SubType>
 	</Compile>
@@ -132,6 +138,10 @@
 	<EmbeddedResource Include="DictionaryStatusControl.resx">
 	  <SubType>Designer</SubType>
 	  <DependentUpon>DictionaryStatusControl.cs</DependentUpon>
+	</EmbeddedResource>
+	<EmbeddedResource Include="GroupHeader.resx">
+	  <SubType>Designer</SubType>
+	  <DependentUpon>GroupHeader.cs</DependentUpon>
 	</EmbeddedResource>
 	<EmbeddedResource Include="Properties\Resources.resx">
 	  <SubType>Designer</SubType>
