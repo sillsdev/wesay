@@ -30,7 +30,7 @@
   <ItemGroup>
 	<Reference Include="Commons, Version=0.4.2.8580, Culture=neutral, PublicKeyToken=44382d1b57473eda">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>.\Commons.dll</HintPath>
+	  <HintPath>..\..\lib\Commons.dll</HintPath>
 	</Reference>
 	<Reference Include="Mono.Addins, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
@@ -39,7 +39,7 @@
 	</Reference>
 	<Reference Include="NVelocity, Version=0.4.2.8580, Culture=neutral, PublicKeyToken=44382d1b57473eda">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>.\NVelocity.dll</HintPath>
+	  <HintPath>..\..\lib\NVelocity.dll</HintPath>
 	</Reference>
 	<Reference Include="System" />
 	<Reference Include="System.Data" />
