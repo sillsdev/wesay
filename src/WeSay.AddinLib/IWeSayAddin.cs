@@ -1,7 +1,5 @@
-using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Text;
+using System.Windows.Forms;
 using Mono.Addins;
 
 namespace WeSay.AddinLib
@@ -23,6 +21,15 @@ namespace WeSay.AddinLib
 			get;
 		}
 
-		void Launch(string pathToTopLevelDirectory, string pathToLIFT);
+		void Launch(Form parentForm, ProjectInfo projectInfo);
 	}
+
+
+//    public interface IWeSayProjectAwareAddin
+//    {
+//        WeSay.Project.WeSayWordsProject Project
+//        {
+//            set;
+//        }
+//    }
 }

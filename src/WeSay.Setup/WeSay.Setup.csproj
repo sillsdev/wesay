@@ -205,6 +205,10 @@
 	</Compile>
   </ItemGroup>
   <ItemGroup>
+	<ProjectReference Include="..\Addin.Backup\Addin.Backup.csproj">
+	  <Project>{42FB4CC3-F2D1-4509-87DD-6BBD430CD4AB}</Project>
+	  <Name>Addin.Backup</Name>
+	</ProjectReference>
 	<ProjectReference Include="..\LexicalModel\LexicalModel.csproj">
 	  <Project>{5F61C809-B6C0-4567-9603-B2198E1AD038}</Project>
 	  <Name>LexicalModel</Name>

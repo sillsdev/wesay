@@ -52,10 +52,7 @@ namespace WeSay.Project.Tests
 			{
 				Directory.Delete(WeSayWordsProject.Project.PathToCache, true);
 			}
-//            if (File.Exists(_cacheBuilder.DestinationDatabasePath))
-//            {
-//                File.Delete(_cacheBuilder.DestinationDatabasePath );
-//            }
+
 			if (File.Exists(_cacheBuilder.SourceLIFTPath))
 			{
 				File.Delete(_cacheBuilder.SourceLIFTPath);

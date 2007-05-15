@@ -1,4 +1,7 @@
 using System;
+using System.Collections;
+using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
 using System.Xml;
 using GraphComponents;
@@ -49,6 +52,45 @@ namespace Addin.LiftReports
 			set
 			{
 				_label.Text = value;
+			}
+		}
+
+		/// <summary>
+		/// Used from html templates to make an inline image
+		/// </summary>
+		/// <param name="orientation"></param>
+		/// <returns></returns>
+		public string MakeBitmapFile(string orientation)
+		{
+			this._graph.BarOrientation = (GraphComponents.Orientation)Enum.Parse(typeof(GraphComponents.Orientation), orientation);
+
+			using (Graphics g = this.CreateGraphics())
+			{
+				using (Bitmap bm = new Bitmap(this.Width, this.Height, g))
+				{
+					ReverseBarOrder();
+					this.DrawToBitmap(bm, new Rectangle(0, 0, this.Width, this.Height));
+					this._graph.Bars.Clear();
+					string path = Path.GetTempFileName();
+					bm.Save(path);
+					return path;
+				}
+			}
+		}
+
+		/// <summary>
+		/// The lib we are using draws the bars in reverse order, so this is handy
+		/// </summary>
+		private void ReverseBarOrder()
+		{
+			ArrayList l = new ArrayList();
+			l.AddRange(_graph.Bars);
+			_graph.Bars.Clear();
+			l.Reverse();
+
+			foreach (Bar bar in l)
+			{
+				_graph.Bars.Add(bar);
 			}
 		}
 

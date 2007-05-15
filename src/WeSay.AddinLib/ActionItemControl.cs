@@ -16,9 +16,12 @@ namespace WeSay.AddinLib
 		public ActionItemControl()
 		{
 			InitializeComponent();
-			_description.ForeColor = Color.Blue;
+		   // _description.ForeColor = Color.Blue;
 		}
-
+		private static bool ReturnFalse()
+		{
+			return false;
+		}
 		public ActionItemControl(IWeSayAddin addin) : this()
 		{
 			_addin = addin;
@@ -26,7 +29,10 @@ namespace WeSay.AddinLib
 			_description.Text = addin.ShortDescription;
 			if (addin.ButtonImage != null)
 			{
-				_launchButton.Image = addin.ButtonImage;
+				//review: will these be disposed when the button is disposed?
+				_launchButton.Image =
+					addin.ButtonImage.GetThumbnailImage(_launchButton.Width-10, _launchButton.Height-10, ReturnFalse,
+														IntPtr.Zero);
 			}
 			if (!addin.Available)
 			{

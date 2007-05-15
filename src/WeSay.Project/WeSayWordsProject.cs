@@ -588,5 +588,36 @@ namespace WeSay.Project
 		}
 
 
+		/// <summary>
+		/// Files to process when backing up or checking in
+		/// </summary>
+		/// <param name="pathToProjectRoot"></param>
+		/// <returns></returns>
+		public static string[] GetFilesBelongingToProject(string pathToProjectRoot)
+		{
+			List<String> files = new List<string>();
+			string wesay = Path.Combine(pathToProjectRoot, "wesay");
+			string[] allFiles =Directory.GetFiles(pathToProjectRoot, "*", SearchOption.AllDirectories);
+			string[] antipatterns = {"Cache", "cache", ".bak", ".old"};
+
+			foreach (string file in allFiles)
+			{
+			   if(!Matches(file, antipatterns))
+				{
+					files.Add(file);
+				}
+			}
+			return files.ToArray();
+		}
+
+		private static bool Matches(string file, string[] antipatterns)
+		{
+			foreach (string s in antipatterns)
+			{
+				if (file.Contains(s))
+					return true;
+			}
+			return false;
+		}
 	}
 }

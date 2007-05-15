@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Addin.LiftReports.Properties {
+namespace Addin.Backup {
 	using System;
 
 
@@ -39,7 +39,7 @@ namespace Addin.LiftReports.Properties {
 		internal static global::System.Resources.ResourceManager ResourceManager {
 			get {
 				if (object.ReferenceEquals(resourceMan, null)) {
-					global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Addin.LiftReports.Properties.Resources", typeof(Resources).Assembly);
+					global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Addin.Backup.Resources", typeof(Resources).Assembly);
 					resourceMan = temp;
 				}
 				return resourceMan;
@@ -60,41 +60,9 @@ namespace Addin.LiftReports.Properties {
 			}
 		}
 
-		internal static System.Drawing.Bitmap image {
+		internal static System.Drawing.Bitmap buttonImage {
 			get {
-				object obj = ResourceManager.GetObject("image", resourceCulture);
-				return ((System.Drawing.Bitmap)(obj));
-			}
-		}
-
-		/// <summary>
-		///   Looks up a localized string similar to &lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0 Transitional//EN&quot;&gt;
-		///&lt;HTML&gt;
-		///&lt;HEAD&gt;
-		///	&lt;META HTTP-EQUIV=&quot;CONTENT-TYPE&quot; CONTENT=&quot;text/html; charset=windows-1252&quot;&gt;
-		///	&lt;TITLE&gt;&lt;/TITLE&gt;
-		///	&lt;META NAME=&quot;GENERATOR&quot; CONTENT=&quot;OpenOffice.org 2.0  (Win32)&quot;&gt;
-		///	&lt;META NAME=&quot;CREATED&quot; CONTENT=&quot;20070511;12454487&quot;&gt;
-		///	&lt;META NAME=&quot;CHANGED&quot; CONTENT=&quot;20070511;14221334&quot;&gt;
-		///	&lt;STYLE&gt;
-		///	&lt;!--
-		///		@page { size: 8.5in 11in; margin: 0.79in }
-		///		P { margin-bottom: 0.08in }
-		///	--&gt;
-		///	&lt;/STYLE&gt;
-		///&lt;/HEAD&gt;
-		///&lt;BODY LANG=&quot;en-US&quot; DIR=&quot;LTR&quot;&gt;
-		///&lt;P STYLE=&quot;margin-b [rest of string was truncated]&quot;;.
-		/// </summary>
-		internal static string reportTemplate {
-			get {
-				return ResourceManager.GetString("reportTemplate", resourceCulture);
-			}
-		}
-
-		internal static System.Drawing.Bitmap WeSay {
-			get {
-				object obj = ResourceManager.GetObject("WeSay", resourceCulture);
+				object obj = ResourceManager.GetObject("buttonImage", resourceCulture);
 				return ((System.Drawing.Bitmap)(obj));
 			}
 		}

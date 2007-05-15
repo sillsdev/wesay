@@ -1,10 +1,6 @@
-using System;
 using System.Drawing;
-using System.IO;
 using System.Windows.Forms;
 using Addin.LiftReports.Properties;
-using LiftReports;
-
 using Mono.Addins;
 using WeSay.AddinLib;
 
@@ -33,7 +29,7 @@ namespace Addin.LiftReports
 		{
 			get
 			{
-				return "Report Maker";
+				return "View Report";
 			}
 		}
 
@@ -60,24 +56,26 @@ namespace Addin.LiftReports
 
 		}
 */
-		public void Launch(string pathToTopLevelDirectory, string pathToLIFT)
+		public void Launch(Form parentForm, ProjectInfo projectInfo)
 		{
-			Form f = new Form();
-			f.Size = new Size(400, 400);
-			f.SuspendLayout();
-			Panel panel = new Panel();
-			panel.BackColor = Color.White;
-			panel.Dock = DockStyle.Fill;
-			f.Controls.Add(panel);
-			Report r = new Report();
-			r.PathToLift = pathToLIFT;
-			r.Size = new Size(400, 1000);
-			panel.Controls.Add(r) ;
-			f.ResumeLayout();
-			panel.VerticalScroll.Value = 0;
-			panel.AutoScroll = true;
-			f.ShowDialog();
+//            Form f = new Form();
+//            f.Size = new Size(400, 400);
+//            f.SuspendLayout();
+//            Panel panel = new Panel();
+//            panel.BackColor = Color.White;
+//            panel.Dock = DockStyle.Fill;
+//            f.Controls.Add(panel);
+//            Report r = new Report();
+//            r.PathToLift = pathToLIFT;
+//            r.Size = new Size(400, 1000);
+//            panel.Controls.Add(r) ;
+//            f.ResumeLayout();
+//            panel.VerticalScroll.Value = 0;
+//            panel.AutoScroll = true;
+//            f.ShowDialog();
 
+			HtmlReport r = new HtmlReport();
+			r.DisplayReport(projectInfo.PathToLIFT);
 		}
 	}
 }

@@ -37,33 +37,10 @@ namespace WeSay.Admin.Tests
 				WeSayWordsProject.Project.Dispose();
 			}
 
-			if (Directory.Exists(_projectFolder))
-			{
-				try
-				{
-					Directory.Delete(_projectFolder, true);
-				}
-				catch (Exception e)
-				{
-					try
-					{
-						Console.WriteLine(e.Message);
-						//maybe we can at least clear it out a bit
-						string[] files = Directory.GetFiles(_projectFolder, "*.*", SearchOption.AllDirectories);
-						foreach (string s in files)
-						{
-							File.Delete(s);
-						}
-						//sleep and try again (seems to work)
-						Thread.Sleep(1000);
-						Directory.Delete(_projectFolder, true);
-					}
-					catch (Exception)
-					{
-					}
-				}
-			}
-	   }
+			WeSay.Foundation.Tests.TestUtilities.DeleteFolderThatMayBeInUse(_projectFolder);
+		}
+
+
 
 		[Test]
 		public void ProjectFilesTouched()

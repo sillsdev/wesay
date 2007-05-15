@@ -8,6 +8,7 @@ using Reporting;
 using WeSay.App;
 using WeSay.App.Properties;
 using WeSay.Data;
+using WeSay.Foundation;
 using WeSay.Foundation.Progress;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Db4o_Specific;
@@ -104,7 +105,7 @@ namespace WeSay.App
 
 					//do a last backup before exiting
 					liftUpdateService.DoLiftUpdateNow(true);
-					BackupService.BackupToExternal("h:\\" + project.Name + ".zip");
+			  //      BackupMaker.BackupToExternal(_filesToBackup,project.ProjectDirectoryPath, "h:\\" + project.Name + ".zip");
 				}
 				Logger.WriteEvent("App Exiting Normally.");
 			}

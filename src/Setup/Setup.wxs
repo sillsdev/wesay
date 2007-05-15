@@ -170,6 +170,8 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 			<File Id="DevAge.Windows.Forms.pdb" Name="DevAge.Windows.Forms.pdb" KeyPath="yes" Source="..\..\output\release\DevAge.Windows.Forms.pdb" />
 		  </Component>
 		  -->
+
+
 		  <Component Id="ICSharpCode.SharpZipLib.dll" Guid="{6254D0F2-A7AF-411C-801E-30EBB1E6D9D7}">
 			<File Id="ICSharpCode.SharpZipLib.dll" Name="ICSharpCode.SharpZipLib.dll" KeyPath="yes" Source="..\..\output\release\ICSharpCode.SharpZipLib.dll" />
 		  </Component>
@@ -201,7 +203,7 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 		  <Component Id="LiftIO.dll" Guid="{EC2E5E3E-19E8-4680-8377-447DBDDE9BDF}">
 			<File Id="LiftIO.dll" Name="LiftIO.dll" KeyPath="yes" Source="..\..\output\release\LiftIO.dll" />
 		  </Component>
-		   <Component Id="mono.relaxng.dll" Guid="{68959BF8-AC50-47FD-8B06-718B3E7FC6B6}">
+		  <Component Id="mono.relaxng.dll" Guid="{68959BF8-AC50-47FD-8B06-718B3E7FC6B6}">
 			<File Id="mono.relaxng.dll" Name="mono.relaxng.dll" KeyPath="yes" Source="..\..\output\release\mono.relaxng.dll" />
 		  </Component>
 		  <Component Id="ListBox.dll" Guid="{E145E8AD-F60E-49A0-8B5D-A513BBDBAF99}">
@@ -266,9 +268,26 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 		  </Component>
 
 
+		  <Component Id="Addin.Backup.dll" Guid="{8597A830-9A97-4A74-A25F-3FEDF7901122}">
+			<File Id="Addin.Backup.dll" Name="Addin.Backup.dll" KeyPath="yes" Source="..\..\output\release\Addin.Backup.dll" />
+		  </Component>
+
 		  <Component Id="Addin.LiftReports.dll" Guid="{8597A830-9A97-4A74-A25F-3FEDF7901111}">
 			<File Id="Addin.LiftReports.dll" Name="Addin.LiftReports.dll" KeyPath="yes" Source="..\..\output\release\Addin.LiftReports.dll" />
 		  </Component>
+		  <!-- this is a LiftReports requirement -->
+		  <Component Id="NVelocity.dll" Guid="{6254D0F2-A7AF-411C-801E-30EBB1E6D444}">
+			<File Id="NVelocity.dll" Name="NVelocity.dll" KeyPath="yes" Source="..\..\output\release\NVelocity.dll" />
+		  </Component>
+		  <!-- this is an nvelocity requirement -->
+		  <Component Id="log4net.dll" Guid="{6254D0F2-A7AF-411C-801E-30EBB1E6D555}">
+			<File Id="log4net.dll" Name="log4net.dll" KeyPath="yes" Source="..\..\output\release\log4net.dll" />
+		  </Component>
+		  <!-- this is an nvelocity requirement -->
+		  <Component Id="commons.dll" Guid="{6254D0F2-A7AF-411C-801E-30EBB1E6D666}">
+			<File Id="commons.dll" Name="commons.dll" KeyPath="yes" Source="..\..\output\release\commons.dll" />
+		  </Component>
+
 		  <Component Id="WeSay.AddinLib.dll" Guid="{8597A830-9A97-4A74-A25F-3FEDF7902222}">
 			<File Id="WeSay.AddinLib.dll" Name="WeSay.AddinLib.dll" KeyPath="yes" Source="..\..\output\release\WeSay.AddinLib.dll" />
 		  </Component>

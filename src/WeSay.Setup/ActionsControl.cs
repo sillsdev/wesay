@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using Mono.Addins;
 using WeSay.AddinLib;
+using WeSay.Project;
 
 namespace WeSay.Setup
 {
@@ -73,8 +74,14 @@ namespace WeSay.Setup
 		{
 			IWeSayAddin addin = sender as IWeSayAddin;
 
-			addin.Launch(Project.WeSayWordsProject.Project.ProjectDirectoryPath,
-												Project.WeSayWordsProject.Project.PathToLiftFile);
+			WeSayWordsProject project = Project.WeSayWordsProject.Project;
+			ProjectInfo projectInfo = new ProjectInfo(project.Name,
+										 project.ProjectDirectoryPath,
+										 project.PathToLiftFile,
+										 WeSayWordsProject.GetFilesBelongingToProject(project.ProjectDirectoryPath));
+
+
+			addin.Launch(this.ParentForm, projectInfo);
 		}
 
 		void AddinManager_ExtensionChanged(object sender, ExtensionEventArgs args)

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
+using System.Windows.Forms;
 
 namespace WeSay.AddinLib
 {
@@ -49,7 +50,7 @@ namespace WeSay.AddinLib
 			}
 		}
 
-		public void Launch(string pathToTopLevelDirectory, string pathToLIFT)
+		public void Launch(Form parentForm, ProjectInfo projectInfo)
 		{
 		}
 	}

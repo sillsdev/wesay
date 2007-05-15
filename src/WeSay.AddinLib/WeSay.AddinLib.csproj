@@ -48,6 +48,7 @@
 	</Compile>
 	<Compile Include="ComingSomedayAddin.cs" />
 	<Compile Include="IWeSayAddin.cs" />
+	<Compile Include="ProjectInfo.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />
 	<Compile Include="Properties\Resources.Designer.cs">
 	  <AutoGen>True</AutoGen>
@@ -68,6 +69,12 @@
   </ItemGroup>
   <ItemGroup>
 	<None Include="Resources\construction.png" />
+  </ItemGroup>
+  <ItemGroup>
+	<ProjectReference Include="..\WeSay.Project\WeSay.Project.csproj">
+	  <Project>{5CFD0BB3-5B2A-4911-B220-9C2286151BF0}</Project>
+	  <Name>WeSay.Project</Name>
+	</ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

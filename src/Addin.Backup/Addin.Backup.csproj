@@ -4,17 +4,17 @@
 	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
 	<ProductVersion>8.0.50727</ProductVersion>
 	<SchemaVersion>2.0</SchemaVersion>
-	<ProjectGuid>{F12EB680-0990-4900-B77E-0FBF2E28A815}</ProjectGuid>
+	<ProjectGuid>{42FB4CC3-F2D1-4509-87DD-6BBD430CD4AB}</ProjectGuid>
 	<OutputType>Library</OutputType>
 	<AppDesignerFolder>Properties</AppDesignerFolder>
-	<RootNamespace>WeSay.Foundation</RootNamespace>
-	<AssemblyName>WeSay.Foundation</AssemblyName>
+	<RootNamespace>Addin.Backup</RootNamespace>
+	<AssemblyName>Addin.Backup</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
 	<DebugSymbols>true</DebugSymbols>
 	<DebugType>full</DebugType>
 	<Optimize>false</Optimize>
-	<OutputPath>..\..\output\Debug\</OutputPath>
+	<OutputPath>..\..\output\debug\</OutputPath>
 	<DefineConstants>DEBUG;TRACE</DefineConstants>
 	<ErrorReport>prompt</ErrorReport>
 	<WarningLevel>4</WarningLevel>
@@ -28,50 +28,63 @@
 	<WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-	<Reference Include="ICSharpCode.SharpZipLib, Version=0.85.1.271, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
+	<Reference Include="Mono.Addins, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\ICSharpCode.SharpZipLib.dll</HintPath>
-	</Reference>
-	<Reference Include="NetReflector, Version=1.0.0.0, Culture=neutral">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\NetReflector.dll</HintPath>
+	  <HintPath>..\..\lib\Mono.Addins.exe</HintPath>
 	</Reference>
 	<Reference Include="System" />
 	<Reference Include="System.Data" />
 	<Reference Include="System.Drawing" />
+	<Reference Include="System.Management" />
 	<Reference Include="System.Windows.Forms" />
 	<Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-	<Compile Include="Annotation.cs" />
-	<Compile Include="AsyncCommand.cs" />
-	<Compile Include="BackupMaker.cs" />
-	<Compile Include="BasicCommand.cs" />
-	<Compile Include="ConsoleProgressState.cs" />
-	<Compile Include="BackgroundWorkerState.cs" />
-	<Compile Include="IBindableControl.cs" />
-	<Compile Include="ILongRunningJob.cs" />
-	<Compile Include="LanguageForm.cs" />
-	<Compile Include="MultiText.cs" />
-	<Compile Include="NullProgressState.cs" />
-	<Compile Include="OptionsList.cs" />
-	<Compile Include="ProgressState.cs" />
+	<Compile Include="BackupToDevice.cs" />
+	<Compile Include="BackupDialog.cs">
+	  <SubType>Form</SubType>
+	</Compile>
+	<Compile Include="BackupDialog.Designer.cs">
+	  <DependentUpon>BackupDialog.cs</DependentUpon>
+	</Compile>
 	<Compile Include="Properties\AssemblyInfo.cs" />
-	<Compile Include="StringCatalog.cs" />
-	<Compile Include="WeSayDataObject.cs" />
-	<Compile Include="WritingSystem.cs" />
-	<Compile Include="WritingSystemCollection.cs" />
-	<Compile Include="XmlUtils.cs" />
+	<Compile Include="Resources.Designer.cs">
+	  <AutoGen>True</AutoGen>
+	  <DesignTime>True</DesignTime>
+	  <DependentUpon>Resources.resx</DependentUpon>
+	</Compile>
   </ItemGroup>
   <ItemGroup>
-	<ProjectReference Include="..\PlatformSpecific\PlatformSpecific.csproj">
-	  <Project>{55E6BAB0-9B46-4C89-8773-4432417C1ADF}</Project>
-	  <Name>PlatformSpecific</Name>
-	</ProjectReference>
 	<ProjectReference Include="..\Reporting\Reporting.csproj">
 	  <Project>{9CCBECEC-513C-4DA4-A4CE-F5361B633760}</Project>
 	  <Name>Reporting</Name>
 	</ProjectReference>
+	<ProjectReference Include="..\WeSay.AddinLib\WeSay.AddinLib.csproj">
+	  <Project>{E651E83C-94DD-4D6D-ABA2-C9FDA34FBA55}</Project>
+	  <Name>WeSay.AddinLib</Name>
+	</ProjectReference>
+	<ProjectReference Include="..\WeSay.Foundation\WeSay.Foundation.csproj">
+	  <Project>{F12EB680-0990-4900-B77E-0FBF2E28A815}</Project>
+	  <Name>WeSay.Foundation</Name>
+	</ProjectReference>
+	<ProjectReference Include="..\WeSay.Project\WeSay.Project.csproj">
+	  <Project>{5CFD0BB3-5B2A-4911-B220-9C2286151BF0}</Project>
+	  <Name>WeSay.Project</Name>
+	</ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+	<EmbeddedResource Include="BackupDialog.resx">
+	  <SubType>Designer</SubType>
+	  <DependentUpon>BackupDialog.cs</DependentUpon>
+	</EmbeddedResource>
+	<EmbeddedResource Include="Resources.resx">
+	  <SubType>Designer</SubType>
+	  <Generator>ResXFileCodeGenerator</Generator>
+	  <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+	</EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+	<None Include="buttonImage.png" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

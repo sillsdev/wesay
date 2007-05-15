@@ -51,11 +51,14 @@ namespace WindowsApplication2
 				c.TabIndex = _table.Controls.GetChildIndex(c);
 			}
 
-			Layout();
+			LayoutRows();
 			_table.ResumeLayout();
+			_table.Invalidate();
+			_table.Visible = false;
+			_table.Visible = true;
 		}
 
-		private void Layout()
+		private void LayoutRows()
 		{
 			float h = 0;
 			_table.RowStyles.Clear();
@@ -68,5 +71,25 @@ namespace WindowsApplication2
 			}
 			_table.Height = (int)h;
 		 }
+
+		private void _table_Resize(object sender, EventArgs e)
+		{
+
+		}
+
+		private void _panel_Resize(object sender, EventArgs e)
+		{
+
+		}
+
+		private void ControlListBox_Resize(object sender, EventArgs e)
+		{
+
+		}
+
+		private void tableLayoutPanel1_Paint(object sender, PaintEventArgs e)
+		{
+
+		}
 	}
 }

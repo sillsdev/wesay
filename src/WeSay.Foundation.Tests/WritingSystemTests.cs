@@ -4,6 +4,7 @@ using System.IO;
 using System.Xml;
 using Exortech.NetReflector;
 using NUnit.Framework;
+using WeSay.Foundation.Tests;
 using WeSay.Language;
 using System.Collections;
 

@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace WeSay.Language.Tests {
+namespace WeSay.Foundation.Tests {
 	using System;
 
 
@@ -39,7 +39,7 @@ namespace WeSay.Language.Tests {
 		internal static global::System.Resources.ResourceManager ResourceManager {
 			get {
 				if (object.ReferenceEquals(resourceMan, null)) {
-					global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("WeSay.Language.Tests.TestResources", typeof(TestResources).Assembly);
+					global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("WeSay.Foundation.Tests.TestResources", typeof(TestResources).Assembly);
 					resourceMan = temp;
 				}
 				return resourceMan;
@@ -87,21 +87,19 @@ namespace WeSay.Language.Tests {
 		/// <summary>
 		///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
 		///&lt;WritingSystemCollection&gt;
-		///  &lt;AnalysisWritingSystemDefaultId&gt;ANA&lt;/AnalysisWritingSystemDefaultId&gt;
-		///  &lt;VernacularWritingSystemDefaultId&gt;VER&lt;/VernacularWritingSystemDefaultId&gt;
 		///  &lt;members&gt;
 		///    &lt;WritingSystem&gt;
 		///      &lt;FontName&gt;WingDings&lt;/FontName&gt;
-		///      &lt;FontSize&gt;20&lt;/FontSize&gt;
-		///      &lt;Id&gt;ANA&lt;/Id&gt;
+		///      &lt;FontSize&gt;10&lt;/FontSize&gt;
+		///      &lt;Id&gt;PretendAnalysis&lt;/Id&gt;
 		///    &lt;/WritingSystem&gt;
 		///    &lt;WritingSystem&gt;
 		///      &lt;FontName&gt;WingDings&lt;/FontName&gt;
 		///      &lt;FontSize&gt;20&lt;/FontSize&gt;
-		///      &lt;Id&gt;VER&lt;/Id&gt;
+		///      &lt;Id&gt;PretendVernacular&lt;/Id&gt;
 		///    &lt;/WritingSystem&gt;
 		///  &lt;/members&gt;
-		///&lt;/Writ [rest of string was truncated]&quot;;.
+		///&lt;/WritingSystemCollection&gt;.
 		/// </summary>
 		internal static string WritingSystemPrefs {
 			get {
