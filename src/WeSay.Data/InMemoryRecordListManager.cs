@@ -10,7 +10,7 @@ namespace WeSay.Data
 		  return new InMemoryRecordList<T>();
 		}
 
-		protected override IRecordList<T> CreateFilteredRecordList<T>(IFilter<T> filter)
+		protected override IRecordList<T> CreateFilteredRecordList<Key, T>(IFilter<T> filter, ISortHelper<Key, T> sortHelper)
 		{
 		  return new FilteredInMemoryRecordList<T>(GetListOfType<T>(), filter.FilteringPredicate);
 		}

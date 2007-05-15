@@ -5,10 +5,11 @@ using WeSay.Foundation;
 using WeSay.Language;
 using WeSay.LexicalModel;
 using WeSay.Project;
+using WeSay.Data;
 
 namespace WeSay.LexicalTools
 {
-	public class MissingItemFilter : WeSay.Data.IFilter<LexEntry>
+	public class MissingItemFilter : IFilter<LexEntry>
 	{
 		Field _field;
 

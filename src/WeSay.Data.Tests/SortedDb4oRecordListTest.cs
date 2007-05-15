@@ -9,7 +9,7 @@ using WeSay.Data.Tests.IEnumerableTests;
 
 namespace WeSay.Data.Tests
 {
-	class TestSortHelper : IDb4oSortHelper<int, SimpleIntTestClass>
+	class TestSortHelper : ISortHelper<int, SimpleIntTestClass>
 	{
 		IExtObjectContainer _database;
 		public TestSortHelper(IExtObjectContainer database)
@@ -390,7 +390,7 @@ namespace WeSay.Data.Tests
 	}
 
 
-	class TestItemSortHelper : IDb4oSortHelper<string, TestItem>
+	class TestItemSortHelper : ISortHelper<string, TestItem>
 	{
 		IExtObjectContainer _database;
 		public TestItemSortHelper(IExtObjectContainer database)

@@ -13,7 +13,7 @@ using WeSay.Project;
 
 namespace WeSay.LexicalTools
 {
-	public class SemanticDomainSortHelper : IDb4oSortHelper<string, LexEntry>
+	public class SemanticDomainSortHelper : ISortHelper<string, LexEntry>
 	{
 		Db4oDataSource _db4oData;
 		string _semanticDomainFieldName;

@@ -32,7 +32,7 @@ namespace WeSay.LexicalTools.Tests
 					foreach (LexExampleSentence exampleSentence in sense.ExampleSentences)
 					{
 						hasExample = true;
-						if (exampleSentence.Translation[BasilProject.Project.WritingSystems.TestWritingSystemAnalId].Length == 0)
+						if (exampleSentence.Translation["analysis"].Length == 0)
 						{
 							return true;
 						}
@@ -64,15 +64,16 @@ namespace WeSay.LexicalTools.Tests
 			BasilProject.InitializeForTests();
 			_recordListManager = new InMemoryRecordListManager();
 			this._missingTranslation = new MissingTranslationFilter();
-			_recordListManager.Register(this._missingTranslation);
-			_missingTranslationRecordList = _recordListManager.GetListOfTypeFilteredFurther(this._missingTranslation);
+			LexEntrySortHelper lexEntrySortHelper = new LexEntrySortHelper("vernacular", true);
+			_recordListManager.Register(this._missingTranslation, lexEntrySortHelper);
+			_missingTranslationRecordList = _recordListManager.GetListOfTypeFilteredFurther(this._missingTranslation, lexEntrySortHelper);
 			_missingTranslationRecordList.Add(CreateTestEntry("apple", "red thing", "An apple a day keeps the doctor away."));
 			_missingTranslationRecordList.Add(CreateTestEntry("banana", "yellow food", "Monkeys like to eat bananas."));
 			_missingTranslationRecordList.Add(CreateTestEntry("car", "small motorized vehicle", "Watch out for cars when you cross the street."));
 			_missingTranslationRecordList.Add(CreateTestEntry("bike", "vehicle with two wheels", "He rides his bike to school."));
 
-			string[] analysisWritingSystemIds = new string[] { BasilProject.Project.WritingSystems.TestWritingSystemAnalId };
-			string[] vernacularWritingSystemIds = new string[] { BasilProject.Project.WritingSystems.TestWritingSystemVernId };
+			string[] analysisWritingSystemIds = new string[] { "analysis" };
+			string[] vernacularWritingSystemIds = new string[] { "vernacular" };
 			this._viewTemplate = new ViewTemplate();
 			this._viewTemplate.Add(new Field(Field.FieldNames.EntryLexicalForm.ToString(), "LexEntry",vernacularWritingSystemIds));
 			this._viewTemplate.Add(new Field(Field.FieldNames.SenseGloss.ToString(), "LexSense",analysisWritingSystemIds));
@@ -84,11 +85,11 @@ namespace WeSay.LexicalTools.Tests
 		private static LexEntry CreateTestEntry(string lexicalForm, string gloss, string exampleSentence)
 		{
 			LexEntry entry = new LexEntry();
-			entry.LexicalForm[BasilProject.Project.WritingSystems.TestWritingSystemVernId] = lexicalForm;
+			entry.LexicalForm["vernacular"] = lexicalForm;
 			LexSense sense = (LexSense)entry.Senses.AddNew();
-			sense.Gloss[BasilProject.Project.WritingSystems.TestWritingSystemAnalId] = gloss;
+			sense.Gloss["analysis"] = gloss;
 			LexExampleSentence example = (LexExampleSentence)sense.ExampleSentences.AddNew();
-			example.Sentence[BasilProject.Project.WritingSystems.TestWritingSystemVernId] = exampleSentence;
+			example.Sentence["vernacular"] = exampleSentence;
 			return entry;
 		}
 
@@ -96,7 +97,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			LexSense sense = (LexSense)entry.Senses[0];
 			LexExampleSentence example = (LexExampleSentence)sense.ExampleSentences[0];
-			example.Translation[BasilProject.Project.WritingSystems.TestWritingSystemAnalId] = translation;
+			example.Translation["analysis"] = translation;
 		}
 
 		[TearDown]
@@ -252,7 +253,7 @@ namespace WeSay.LexicalTools.Tests
 		}
 
 		[Test]
-		public void SetCurrentRecordToNext__AfterChangedSoNoLongerMeetsFilter_GoesToNext()
+		public void SetCurrentRecordToNext_AfterChangedSoNoLongerMeetsFilter_GoesToNext()
 		{
 			MissingInfoControl missingInfoControl = new MissingInfoControl(_missingTranslationRecordList, _viewTemplate, _missingTranslation.FilteringPredicate);
 			missingInfoControl.SetCurrentRecordToNext();

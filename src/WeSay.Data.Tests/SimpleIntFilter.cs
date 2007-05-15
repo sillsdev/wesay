@@ -31,7 +31,7 @@ namespace WeSay.Data.Tests
 		{
 			get
 			{
-				return ToString() + _lowerBound.ToString() + "-" + _upperBound.ToString();
+				return ToString() + _lowerBound + "-" + _upperBound;
 			}
 		}
 

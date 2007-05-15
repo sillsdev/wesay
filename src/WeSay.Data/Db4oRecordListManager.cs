@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Text;
 
 namespace WeSay.Data
 {
@@ -11,6 +11,7 @@ namespace WeSay.Data
 	{
 		void Configure();
 	}
+
 	public class DoNothingModelConfiguration : IDb4oModelConfiguration
 	{
 		public void Configure()
@@ -24,7 +25,6 @@ namespace WeSay.Data
 		private string _cachePath;
 
 		public Db4oRecordListManager(IDb4oModelConfiguration config, string pathToDb4oFile)
-		: base()
 		{
 			try
 			{
@@ -33,10 +33,10 @@ namespace WeSay.Data
 				_cachePath = Path.GetDirectoryName(pathToDb4oFile); // use same dir
 				_dataSource = new Db4oDataSource(pathToDb4oFile);
 			}
-			catch(Exception e)
+			catch
 			{
 				Dispose();
-				throw e;
+				throw;
 			}
 		}
 
@@ -50,34 +50,42 @@ namespace WeSay.Data
 			get { return this._cachePath; }
 		}
 
-		public CachedSortedDb4oList<K, T> GetSortedList<K, T>(IDb4oSortHelper<K, T> sortHelper) where T : class, new()
+		public CachedSortedDb4oList<K, T> GetSortedList<K, T>(ISortHelper<K, T> sortHelper) where T : class, new()
 		{
-			string key = sortHelper.Name;
-			if (!FilteredRecordLists.ContainsKey(key))
+			if (sortHelper == null)
 			{
-				FilteredRecordLists.Add(key, new CachedSortedDb4oList<K, T>(this, sortHelper));
+				throw new ArgumentNullException();
 			}
-			return (CachedSortedDb4oList<K, T>)FilteredRecordLists[key];
+			string key = sortHelper.Name;
+			if (!RecordLists.ContainsKey(key))
+			{
+				RecordLists.Add(key, new CachedSortedDb4oList<K, T>(this, sortHelper));
+			}
+			return (CachedSortedDb4oList<K, T>)RecordLists[key];
 		}
+
 		protected override IRecordList<T> CreateMasterRecordList<T>()
 		{
 			return new Db4oRecordList<T>(this._dataSource);
 		}
 
-		protected override IRecordList<T> CreateFilteredRecordList<T>(IFilter<T> filter)
+		protected override IRecordList<T> CreateFilteredRecordList<Key, T>(IFilter<T> filter, ISortHelper<Key, T> sortHelper)
 		{
-			FilteredDb4oRecordList<T> list = new FilteredDb4oRecordList<T>(GetListOfType<T>(), filter, CachePath, false);
-			list.DelayWritingCachesUntilDispose = this.DelayWritingCachesUntilDispose;
+			CachedSortedDb4oList<Key, T> sortedList = GetSortedList(sortHelper);
+			FilteredDb4oRecordList<Key, T> list = new FilteredDb4oRecordList<Key, T>(GetListOfType<T>(), filter, sortedList, CachePath, false);
+			list.DelayWritingCachesUntilDispose = DelayWritingCachesUntilDispose;
 			return list;
 		}
 
-		protected override IRecordList<T> CreateFilteredRecordListUnlessSlow<T>(IFilter<T> filter)
+		protected override IRecordList<T> CreateFilteredRecordListUnlessSlow<Key, T>(IFilter<T> filter, ISortHelper<Key, T> sortHelper)
 		{
 			IRecordList<T> recordList = null;
 			try
 			{
-				recordList = new FilteredDb4oRecordList<T>(GetListOfType<T>(), filter, CachePath, true);
-				recordList.DelayWritingCachesUntilDispose = this.DelayWritingCachesUntilDispose;
+				CachedSortedDb4oList<Key, T> sortedList = GetSortedList(sortHelper);
+
+				recordList = new FilteredDb4oRecordList<Key, T>(GetListOfType<T>(), filter, sortedList, CachePath, true);
+				recordList.DelayWritingCachesUntilDispose = DelayWritingCachesUntilDispose;
 			}
 			catch (OperationCanceledException) {}
 			return recordList;
@@ -96,13 +104,14 @@ namespace WeSay.Data
 			}
 		}
 
-		class FilteredDb4oRecordList<T> : Db4oRecordList<T> where T : class, new()
+		class FilteredDb4oRecordList<Key, T> : Db4oRecordList<T> where T : class, new()
 		{
 			IRecordList<T> _masterRecordList;
 			bool _isSourceMasterRecord;
 			IFilter<T> _isRelevantFilter;
 			string _cachePath;
 			bool _isInitializingFromCache;
+			private CachedSortedDb4oList<Key, T> _sortedList;
 
 			public Predicate<T> RelevancePredicate
 			{
@@ -112,12 +121,17 @@ namespace WeSay.Data
 				}
 			}
 
-			public FilteredDb4oRecordList(IRecordList<T> sourceRecords, IFilter<T> filter, string cachePath, bool constructOnlyIfFilterIsCached)
+			public FilteredDb4oRecordList(IRecordList<T> sourceRecords, IFilter<T> filter,
+							CachedSortedDb4oList<Key, T> sortedList,
+
+				string cachePath, bool constructOnlyIfFilterIsCached)
 			: base((Db4oRecordList<T>)sourceRecords)
 			{
-				this.WriteCacheSize = 0;
+				WriteCacheSize = 0;
 				_cachePath = cachePath;
 				_isRelevantFilter = filter;
+				_sortedList = sortedList;
+				_masterRecordList = sourceRecords;
 
 				if (constructOnlyIfFilterIsCached)
 				{
@@ -125,6 +139,7 @@ namespace WeSay.Data
 				}
 
 				ApplyFilter(RelevancePredicate);
+				Sort();
 
 				//At this point, either you have no records (either because constructOnlyIfFilterIsCached==true,
 				// or there just are no records that fit the filter), or you have some and they satisfy the
@@ -152,9 +167,35 @@ namespace WeSay.Data
 				{
 					SerializeRecordIds();
 				}
-				_masterRecordList = sourceRecords;
 				_masterRecordList.ListChanged += new ListChangedEventHandler(OnMasterRecordListListChanged);
 				_masterRecordList.DeletingRecord += new EventHandler<RecordListEventArgs<T>>(OnMasterRecordListDeletingRecord);
+			}
+
+			// use the SortedList to determine the order of the filtered list items.
+			private void Sort()
+			{
+				int oldCount = Count;
+
+				((Db4oList<T>)Records).ItemIds.Sort(new IdListComparer(_sortedList.GetIds()));
+				Debug.Assert(oldCount == Count);
+			}
+
+			private class IdListComparer: IComparer<long>
+			{
+				private IList<long> _baseList;
+				public IdListComparer(IList<long> baseList)
+				{
+					_baseList = baseList;
+				}
+
+				#region IComparer<long> Members
+
+				public int  Compare(long x, long y)
+				{
+					return Comparer<long>.Default.Compare(_baseList.IndexOf(x), _baseList.IndexOf(y));
+				}
+
+				#endregion
 			}
 
 			private string CacheFilePath
@@ -333,6 +374,7 @@ namespace WeSay.Data
 					{
 						Add(item);
 					}
+					Sort();
 #if DEBUG
 					if (!_masterRecordList.DelayWritingCachesUntilDispose)
 					{

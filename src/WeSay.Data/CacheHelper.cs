@@ -12,7 +12,7 @@ namespace WeSay.Data
 			StringBuilder result = new StringBuilder(fileName.Length + 10);
 			foreach (char c in fileName)
 			{
-				if (c != '%' && Array.IndexOf<char>(invalid, c) == -1)
+				if (c != '%' && Array.IndexOf(invalid, c) == -1)
 				{
 					result.Append(c);
 				}

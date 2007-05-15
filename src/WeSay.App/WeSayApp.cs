@@ -297,9 +297,9 @@ namespace WeSay.App
 
 				File.Move(existingPath, backupName);
 			}
-			catch (Exception e)
+			catch
 			{
-				Reporting.Logger.WriteEvent(String.Format("Couldn't write out to {0} ", backupName));
+				Logger.WriteEvent(String.Format("Couldn't write out to {0} ", backupName));
 			}
 
 			File.Copy(newFilePath, existingPath);

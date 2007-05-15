@@ -45,9 +45,9 @@ namespace WeSay.Data
 		Db4oRecordList<T> _masterRecordList;
 		string _cachePath;
 		Comparer _sorter;
-		IDb4oSortHelper<K, T> _sortHelper;
+		ISortHelper<K, T> _sortHelper;
 
-		public CachedSortedDb4oList(Db4oRecordListManager recordListManager, IDb4oSortHelper<K, T> sortHelper)
+		public CachedSortedDb4oList(Db4oRecordListManager recordListManager, ISortHelper<K, T> sortHelper)
 		{
 			if (recordListManager == null)
 			{
@@ -512,6 +512,16 @@ namespace WeSay.Data
 														 });
 
 			return ((IList)_keyIdMap).IndexOf(match);
+		}
+
+		public IList<long> GetIds()
+		{
+			List<long> result = new List<long>();
+			foreach (KeyValuePair<K, long> pair in _keyIdMap)
+			{
+				result.Add(pair.Value);
+			}
+			return result;
 		}
 
 		public void Insert(int index, object value)

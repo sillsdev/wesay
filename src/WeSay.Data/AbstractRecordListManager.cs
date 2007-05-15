@@ -25,7 +25,7 @@ namespace WeSay.Data
 		}
 
 		abstract protected IRecordList<T> CreateMasterRecordList<T>() where T : class, new();
-		abstract protected IRecordList<T> CreateFilteredRecordList<T>(IFilter<T> filter) where T : class, new();
+		abstract protected IRecordList<T> CreateFilteredRecordList<Key, T>(IFilter<T> filter, ISortHelper<Key, T> sortHelper) where T : class, new();
 
 		#region IRecordListManager Members
 
@@ -48,7 +48,7 @@ namespace WeSay.Data
 			}
 		}
 
-		protected virtual IRecordList<T> CreateFilteredRecordListUnlessSlow<T>(IFilter<T> filter) where T: class, new()
+		protected virtual IRecordList<T> CreateFilteredRecordListUnlessSlow<Key, T>(IFilter<T> filter, ISortHelper<Key, T> sortHelper) where T : class, new()
 		{
 			return null;
 		}
@@ -63,23 +63,32 @@ namespace WeSay.Data
 			return ((string) dictionaryEntry.Key).StartsWith("#");
 		}
 
-		public void Register<T>(IFilter<T> filter) where T : class, new()
+		public void Register<Key, T>(IFilter<T> filter, ISortHelper<Key, T> sortHelper) where T : class, new()
 		{
-			if (!FilteredRecordLists.ContainsKey(RecordListKey<T>(filter.Key)))
+			if (filter == null)
 			{
-				FilteredRecordLists.Add(RecordListKey<T>(filter.Key), CreateFilteredRecordListUnlessSlow<T>(filter));
+				throw new ArgumentNullException("filter");
+			}
+			if (sortHelper == null)
+			{
+				throw new ArgumentNullException("sortHelper");
+			}
+
+			if (!RecordLists.ContainsKey(RecordListKey<T>(filter.Key)))
+			{
+				RecordLists.Add(RecordListKey<T>(filter.Key), CreateFilteredRecordListUnlessSlow(filter, sortHelper));
 			}
 		}
 
 		public IRecordList<T> GetListOfType<T>() where T : class, new()
 		{
-			if (!FilteredRecordLists.ContainsKey(RecordListKey<T>(String.Empty)))
+			if (!RecordLists.ContainsKey(RecordListKey<T>(String.Empty)))
 			{
 				IRecordList<T> MasterRecordList = CreateMasterRecordList<T>();
 				MasterRecordList.DeletingRecord += new EventHandler<RecordListEventArgs<T>>(MasterRecordList_DeletingRecord<T>);
-				FilteredRecordLists.Add(RecordListKey<T>(String.Empty), MasterRecordList);
+				RecordLists.Add(RecordListKey<T>(String.Empty), MasterRecordList);
 			}
-			return (IRecordList<T>)FilteredRecordLists[RecordListKey<T>(String.Empty)];
+			return (IRecordList<T>)RecordLists[RecordListKey<T>(String.Empty)];
 		}
 
 		void MasterRecordList_DeletingRecord<T>(object sender, RecordListEventArgs<T> e) where T : class, new()
@@ -87,21 +96,25 @@ namespace WeSay.Data
 			DataDeleted.Invoke(this, new DeletedItemEventArgs(e.Item));
 		}
 
-		public IRecordList<T> GetListOfTypeFilteredFurther<T>(IFilter<T> filter) where T : class, new()
+		public IRecordList<T> GetListOfTypeFilteredFurther<Key, T>(IFilter<T> filter, ISortHelper<Key, T> sortHelper) where T : class, new()
 		{
 			if(filter == null)
 			{
-				throw new ArgumentNullException();
+				throw new ArgumentNullException("filter");
 			}
-			if (!FilteredRecordLists.ContainsKey(RecordListKey<T>(filter.Key)))
+			if (sortHelper == null)
+			{
+				throw new ArgumentNullException("sortHelper");
+			}
+			if (!RecordLists.ContainsKey(RecordListKey<T>(filter.Key)))
 			{
 				throw new InvalidOperationException("Filter must be registered before it can be retrieved with GetListOfType.");
 			}
-			IRecordList<T> recordList = (IRecordList<T>)FilteredRecordLists[RecordListKey<T>(filter.Key)];
+			IRecordList<T> recordList = (IRecordList<T>)RecordLists[RecordListKey<T>(filter.Key)];
 			if (recordList == null)
 			{
-				recordList = CreateFilteredRecordList<T>(filter);
-				FilteredRecordLists[RecordListKey<T>(filter.Key)] = recordList;
+				recordList = CreateFilteredRecordList(filter, sortHelper);
+				RecordLists[RecordListKey<T>(filter.Key)] = recordList;
 			}
 			return recordList;
 		}
@@ -140,7 +153,7 @@ namespace WeSay.Data
 			}
 		}
 
-		protected Hashtable FilteredRecordLists
+		protected Hashtable RecordLists
 		{
 			get { return this._filteredRecordLists; }
 		}
@@ -153,7 +166,7 @@ namespace WeSay.Data
 				{
 					// dispose-only, i.e. non-finalizable logic
 					// we need to dispose masters last
-					foreach (DictionaryEntry dictionaryEntry in FilteredRecordLists)
+					foreach (DictionaryEntry dictionaryEntry in RecordLists)
 					{
 						if (!IsMasterRecordList(dictionaryEntry))
 						{
@@ -164,7 +177,7 @@ namespace WeSay.Data
 							}
 						}
 					}
-					foreach (DictionaryEntry dictionaryEntry in FilteredRecordLists)
+					foreach (DictionaryEntry dictionaryEntry in RecordLists)
 					{
 						if (IsMasterRecordList(dictionaryEntry))
 						{

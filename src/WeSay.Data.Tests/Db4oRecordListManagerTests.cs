@@ -13,31 +13,37 @@ namespace WeSay.Data.Tests
 		[SetUp]
 		public override void Setup()
 		{
-			_filePath = System.IO.Path.GetTempFileName();
+			_filePath = Path.GetTempFileName();
 			ForceCreateFilterCaches();
 			base.Setup();
 		}
 
 		private void ForceCreateFilterCaches() {
 			base.Setup();
-			RecordListManager.GetListOfTypeFilteredFurther<SimpleIntTestClass>(Filter10to19);
-			RecordListManager.GetListOfTypeFilteredFurther<SimpleIntTestClass>(Filter11to12);
-			RecordListManager.GetListOfTypeFilteredFurther<SimpleIntTestClass>(Filter11to17);
-			RecordListManager.GetListOfTypeFilteredFurther<SimpleIntTestClass>(Filter11to20);
+			RecordListManager.GetListOfTypeFilteredFurther(Filter10to19, SortHelper);
+			RecordListManager.GetListOfTypeFilteredFurther(Filter11to12, SortHelper);
+			RecordListManager.GetListOfTypeFilteredFurther(Filter11to17, SortHelper);
+			RecordListManager.GetListOfTypeFilteredFurther(Filter11to20, SortHelper);
 			base.TearDown();
 		}
 
 		[TearDown]
 		public override void TearDown()
 		{
+			string cacheDirectory = ((Db4oRecordListManager)RecordListManager).CachePath;
+
 			base.TearDown();
 
-			string cacheDirectory = this._filePath + " Cache";
-			if(Directory.Exists(cacheDirectory))
+			//if(Directory.Exists(cacheDirectory))
+			//{
+			//    Directory.Delete(cacheDirectory, true);
+			//}
+			DirectoryInfo di = new DirectoryInfo(cacheDirectory);
+			foreach (FileInfo fileInfo in di.GetFiles("*.cache"))
 			{
-				Directory.Delete(cacheDirectory, true);
+				fileInfo.Delete();
 			}
-			System.IO.File.Delete(_filePath);
+			File.Delete(_filePath);
 		}
 
 		protected override IRecordListManager CreateRecordListManager()
@@ -51,19 +57,19 @@ namespace WeSay.Data.Tests
 			IRecordList<SimpleIntTestClass> masterRecordList = RecordListManager.GetListOfType<SimpleIntTestClass>();
 			int index11 = masterRecordList.Find(SimpleIntTestClass.IPropertyDescriptor, 11);
 			masterRecordList[index11].I = 10;
-			IRecordList<SimpleIntTestClass> recordList11to17 = RecordListManager.GetListOfTypeFilteredFurther<SimpleIntTestClass>(Filter11to17);
+			IRecordList<SimpleIntTestClass> recordList11to17 = RecordListManager.GetListOfTypeFilteredFurther(Filter11to17, SortHelper);
 			Assert.AreEqual(6, recordList11to17.Count);
 
-			int recordList11to17Count11 = CountMatching<SimpleIntTestClass>(recordList11to17,
+			int recordList11to17Count11 = CountMatching(recordList11to17,
 									delegate(SimpleIntTestClass item)
 									{
 										return item.I == 11;
 									});
 			Assert.AreEqual(0, recordList11to17Count11);
 
-			IRecordList<SimpleIntTestClass> recordList11to20 = RecordListManager.GetListOfTypeFilteredFurther<SimpleIntTestClass>(Filter11to20);
+			IRecordList<SimpleIntTestClass> recordList11to20 = RecordListManager.GetListOfTypeFilteredFurther(Filter11to20, SortHelper);
 			Assert.AreEqual(9, recordList11to20.Count);
-			int recordList11to20Count11 = CountMatching<SimpleIntTestClass>(recordList11to20,
+			int recordList11to20Count11 = CountMatching(recordList11to20,
 									delegate(SimpleIntTestClass item)
 									{
 										return item.I == 11;
@@ -80,14 +86,14 @@ namespace WeSay.Data.Tests
 
 			Assert.AreEqual(50, masterRecordList.Count);
 
-			int Count11 = CountMatching<SimpleIntTestClass>(masterRecordList,
+			int Count11 = CountMatching(masterRecordList,
 									delegate(SimpleIntTestClass item)
 									{
 										return item.I == 11;
 									});
 			Assert.AreEqual(0, Count11);
 
-			int Count10 = CountMatching<SimpleIntTestClass>(masterRecordList,
+			int Count10 = CountMatching(masterRecordList,
 									delegate(SimpleIntTestClass item)
 									{
 										return item.I == 10;
@@ -98,12 +104,12 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void ChangeRecord_NoLongerMeetsFilterCriteria_RemovedFromNotifyListSoCanChangeAgain()
 		{
-			IRecordList<SimpleIntTestClass> recordList11to20 = RecordListManager.GetListOfTypeFilteredFurther<SimpleIntTestClass>(Filter11to20);
+			IRecordList<SimpleIntTestClass> recordList11to20 = RecordListManager.GetListOfTypeFilteredFurther(Filter11to20, SortHelper);
 			SimpleIntTestClass record = recordList11to20[0];
 			record.I = 10;
 			RecordListManager.GoodTimeToCommit();
 			IRecordList<SimpleIntTestClass> masterRecordList = RecordListManager.GetListOfType<SimpleIntTestClass>();
-			int Count10 = CountMatching<SimpleIntTestClass>(masterRecordList,
+			int Count10 = CountMatching(masterRecordList,
 						delegate(SimpleIntTestClass item)
 						{
 							return item.I == 10;
@@ -112,7 +118,7 @@ namespace WeSay.Data.Tests
 
 			record.I = 11;
 
-			int Count11 = CountMatching<SimpleIntTestClass>(masterRecordList,
+			int Count11 = CountMatching(masterRecordList,
 						delegate(SimpleIntTestClass item)
 						{
 							return item.I == 11;
@@ -127,18 +133,18 @@ namespace WeSay.Data.Tests
 		{
 			IRecordList<SimpleIntTestClass> masterRecordList = RecordListManager.GetListOfType<SimpleIntTestClass>();
 			masterRecordList[0].I = 12;
-			IRecordList<SimpleIntTestClass> recordList11to20 = RecordListManager.GetListOfTypeFilteredFurther<SimpleIntTestClass>(Filter11to20);
-			IRecordList<SimpleIntTestClass> recordList11to17 = RecordListManager.GetListOfTypeFilteredFurther<SimpleIntTestClass>(Filter11to17);
+			IRecordList<SimpleIntTestClass> recordList11to20 = RecordListManager.GetListOfTypeFilteredFurther(Filter11to20, SortHelper);
+			IRecordList<SimpleIntTestClass> recordList11to17 = RecordListManager.GetListOfTypeFilteredFurther(Filter11to17, SortHelper);
 			Assert.AreEqual(8, recordList11to17.Count);
 			Assert.AreEqual(11, recordList11to20.Count);
 
-			int recordList11to17Count12 = CountMatching<SimpleIntTestClass>(recordList11to17,
+			int recordList11to17Count12 = CountMatching(recordList11to17,
 						delegate(SimpleIntTestClass item)
 						{
 							return item.I == 12;
 						});
 			Assert.AreEqual(2, recordList11to17Count12);
-			int recordList11to20Count12 = CountMatching<SimpleIntTestClass>(recordList11to20,
+			int recordList11to20Count12 = CountMatching(recordList11to20,
 									delegate(SimpleIntTestClass item)
 									{
 										return item.I == 12;
@@ -151,8 +157,8 @@ namespace WeSay.Data.Tests
 		{
 			IRecordList<SimpleIntTestClass> masterRecordList = RecordListManager.GetListOfType<SimpleIntTestClass>();
 			masterRecordList.Add(new SimpleIntTestClass(15));
-			IRecordList<SimpleIntTestClass> recordList11to20 = RecordListManager.GetListOfTypeFilteredFurther<SimpleIntTestClass>(Filter11to20);
-			IRecordList<SimpleIntTestClass> recordList11to17 = RecordListManager.GetListOfTypeFilteredFurther<SimpleIntTestClass>(Filter11to17);
+			IRecordList<SimpleIntTestClass> recordList11to20 = RecordListManager.GetListOfTypeFilteredFurther(Filter11to20, SortHelper);
+			IRecordList<SimpleIntTestClass> recordList11to17 = RecordListManager.GetListOfTypeFilteredFurther(Filter11to17, SortHelper);
 			Assert.AreEqual(8, recordList11to17.Count);
 			Assert.AreEqual(11, recordList11to20.Count);
 		}
@@ -163,10 +169,10 @@ namespace WeSay.Data.Tests
 			IRecordList<SimpleIntTestClass> masterRecordList = RecordListManager.GetListOfType<SimpleIntTestClass>();
 			int index11 = masterRecordList.Find(SimpleIntTestClass.IPropertyDescriptor, 11);
 			masterRecordList.RemoveAt(index11);
-			IRecordList<SimpleIntTestClass> recordList10to19 = RecordListManager.GetListOfTypeFilteredFurther<SimpleIntTestClass>(Filter10to19);
-			IRecordList<SimpleIntTestClass> recordList11to17 = RecordListManager.GetListOfTypeFilteredFurther<SimpleIntTestClass>(Filter11to17);
+			IRecordList<SimpleIntTestClass> recordList10to19 = RecordListManager.GetListOfTypeFilteredFurther(Filter10to19, SortHelper);
+			IRecordList<SimpleIntTestClass> recordList11to17 = RecordListManager.GetListOfTypeFilteredFurther(Filter11to17, SortHelper);
 			Assert.AreEqual(6, recordList11to17.Count);
-			int recordList11to17Count11 = CountMatching<SimpleIntTestClass>(recordList11to17,
+			int recordList11to17Count11 = CountMatching(recordList11to17,
 						delegate(SimpleIntTestClass item)
 						{
 							return item.I == 11;
@@ -174,7 +180,7 @@ namespace WeSay.Data.Tests
 			Assert.AreEqual(0, recordList11to17Count11);
 
 			Assert.AreEqual(9, recordList10to19.Count);
-			int recordList10to19Count11 = CountMatching<SimpleIntTestClass>(recordList10to19,
+			int recordList10to19Count11 = CountMatching(recordList10to19,
 			delegate(SimpleIntTestClass item)
 			{
 				return item.I == 11;
@@ -205,9 +211,9 @@ namespace WeSay.Data.Tests
 															int index11 = recordList.Find(SimpleIntTestClass.IPropertyDescriptor, 11);
 															recordList[index11].I = 10;
 														});
-			IRecordList<SimpleIntTestClass> recordList11to17 = RecordListManager.GetListOfTypeFilteredFurther<SimpleIntTestClass>(Filter11to17);
+			IRecordList<SimpleIntTestClass> recordList11to17 = RecordListManager.GetListOfTypeFilteredFurther(Filter11to17, SortHelper);
 
-			int recordList11to17Count11 = CountMatching<SimpleIntTestClass>(recordList11to17,
+			int recordList11to17Count11 = CountMatching(recordList11to17,
 			delegate(SimpleIntTestClass item)
 			{
 				return item.I == 11;
@@ -215,8 +221,8 @@ namespace WeSay.Data.Tests
 			Assert.AreEqual(0, recordList11to17Count11);
 			Assert.AreEqual(6, recordList11to17.Count);
 
-			IRecordList<SimpleIntTestClass> recordList11to20 = RecordListManager.GetListOfTypeFilteredFurther<SimpleIntTestClass>(Filter11to20);
-			int recordList11to20Count11 = CountMatching<SimpleIntTestClass>(recordList11to20,
+			IRecordList<SimpleIntTestClass> recordList11to20 = RecordListManager.GetListOfTypeFilteredFurther(Filter11to20, SortHelper);
+			int recordList11to20Count11 = CountMatching(recordList11to20,
 													delegate(SimpleIntTestClass item)
 													{
 														return item.I == 11;
@@ -233,18 +239,18 @@ namespace WeSay.Data.Tests
 														{
 															recordList[0].I = 12;
 														});
-			IRecordList<SimpleIntTestClass> recordList11to20 = RecordListManager.GetListOfTypeFilteredFurther<SimpleIntTestClass>(Filter11to20);
-			IRecordList<SimpleIntTestClass> recordList11to17 = RecordListManager.GetListOfTypeFilteredFurther<SimpleIntTestClass>(Filter11to17);
+			IRecordList<SimpleIntTestClass> recordList11to20 = RecordListManager.GetListOfTypeFilteredFurther(Filter11to20, SortHelper);
+			IRecordList<SimpleIntTestClass> recordList11to17 = RecordListManager.GetListOfTypeFilteredFurther(Filter11to17, SortHelper);
 			Assert.AreEqual(8, recordList11to17.Count);
 			Assert.AreEqual(11, recordList11to20.Count);
-			int recordList11to17Count12 = CountMatching<SimpleIntTestClass>(recordList11to17,
+			int recordList11to17Count12 = CountMatching(recordList11to17,
 			delegate(SimpleIntTestClass item)
 			{
 				return item.I == 12;
 			});
 			Assert.AreEqual(2, recordList11to17Count12);
 
-			int recordList11to20Count12 = CountMatching<SimpleIntTestClass>(recordList11to20,
+			int recordList11to20Count12 = CountMatching(recordList11to20,
 																delegate(SimpleIntTestClass item)
 																{
 																	return item.I == 12;
@@ -260,9 +266,9 @@ namespace WeSay.Data.Tests
 												recordList.Add(new SimpleIntTestClass(15));
 											});
 
-			IRecordList<SimpleIntTestClass> recordList11to20 = RecordListManager.GetListOfTypeFilteredFurther<SimpleIntTestClass>(Filter11to20);
-			IRecordList<SimpleIntTestClass> recordList11to17 = RecordListManager.GetListOfTypeFilteredFurther<SimpleIntTestClass>(Filter11to17);
-			int recordList11to17Count15 = CountMatching<SimpleIntTestClass>(recordList11to17,
+			IRecordList<SimpleIntTestClass> recordList11to20 = RecordListManager.GetListOfTypeFilteredFurther(Filter11to20, SortHelper);
+			IRecordList<SimpleIntTestClass> recordList11to17 = RecordListManager.GetListOfTypeFilteredFurther(Filter11to17, SortHelper);
+			int recordList11to17Count15 = CountMatching(recordList11to17,
 										delegate(SimpleIntTestClass item)
 										{
 											return item.I == 15;
@@ -272,7 +278,7 @@ namespace WeSay.Data.Tests
 			Assert.AreEqual(8, recordList11to17.Count);
 
 			Assert.AreEqual(11, recordList11to20.Count);
-			int recordList11to20Count15 = CountMatching<SimpleIntTestClass>(recordList11to20,
+			int recordList11to20Count15 = CountMatching(recordList11to20,
 													delegate(SimpleIntTestClass item)
 													{
 														return item.I == 15;
@@ -290,9 +296,9 @@ namespace WeSay.Data.Tests
 												recordList.RemoveAt(index11);
 											});
 
-			IRecordList<SimpleIntTestClass> recordList10to19 = RecordListManager.GetListOfTypeFilteredFurther<SimpleIntTestClass>(Filter10to19);
-			IRecordList<SimpleIntTestClass> recordList11to17 = RecordListManager.GetListOfTypeFilteredFurther<SimpleIntTestClass>(Filter11to17);
-			int recordList11to17Count11 = CountMatching<SimpleIntTestClass>(recordList11to17,
+			IRecordList<SimpleIntTestClass> recordList10to19 = RecordListManager.GetListOfTypeFilteredFurther(Filter10to19, SortHelper);
+			IRecordList<SimpleIntTestClass> recordList11to17 = RecordListManager.GetListOfTypeFilteredFurther(Filter11to17, SortHelper);
+			int recordList11to17Count11 = CountMatching(recordList11to17,
 																			delegate(SimpleIntTestClass item)
 																			{
 																				return item.I == 11;
@@ -300,7 +306,7 @@ namespace WeSay.Data.Tests
 			Assert.AreEqual(0, recordList11to17Count11);
 			Assert.AreEqual(6, recordList11to17.Count);
 
-			int recordList10to19Count11 = CountMatching<SimpleIntTestClass>(recordList10to19,
+			int recordList10to19Count11 = CountMatching(recordList10to19,
 																			delegate(SimpleIntTestClass item)
 																			{
 																				return item.I == 11;
@@ -317,6 +323,7 @@ namespace WeSay.Data.Tests
 		private IRecordListManager _recordListManager;
 		private IRecordList<SimpleIntTestClass> _sourceRecords;
 		private SimpleIntFilter _filter11to17;
+		private SimpleIntSortHelper _sortHelper;
 
 		protected IRecordListManager RecordListManager
 		{
@@ -333,23 +340,33 @@ namespace WeSay.Data.Tests
 				return _filter11to17;
 			}
 		}
+		protected SimpleIntSortHelper SortHelper
+		{
+			get
+			{
+				return this._sortHelper;
+			}
+		}
 
 		[SetUp]
 		public void Setup()
 		{
-			_filePath = System.IO.Path.GetTempFileName();
+			_filePath = Path.GetTempFileName();
+
 			_recordListManager = new Db4oRecordListManager(new DoNothingModelConfiguration(), _filePath);
 			PopupateMasterRecordList();
 
 			_filter11to17 = new SimpleIntFilter(11, 17);
+			_sortHelper = new SimpleIntSortHelper(_recordListManager);
 			Filter11to17.UseInverseFilter = true;
-			RecordListManager.Register<SimpleIntTestClass>(Filter11to17);
-			RecordListManager.GetListOfTypeFilteredFurther<SimpleIntTestClass>(Filter11to17);
+			RecordListManager.Register(Filter11to17, SortHelper);
+			RecordListManager.GetListOfTypeFilteredFurther(Filter11to17, SortHelper);
 			RecordListManager.Dispose();
 			_recordListManager = new Db4oRecordListManager(new DoNothingModelConfiguration(), _filePath);
 
 			_filter11to17 = new SimpleIntFilter(11, 17);
-			RecordListManager.Register<SimpleIntTestClass>(Filter11to17);
+			_sortHelper = new SimpleIntSortHelper(RecordListManager);
+			RecordListManager.Register(Filter11to17, SortHelper);
 
 		}
 
@@ -365,16 +382,20 @@ namespace WeSay.Data.Tests
 		[TearDown]
 		public void TearDown()
 		{
+			string cacheDirectory = ((Db4oRecordListManager)RecordListManager).CachePath;
 			RecordListManager.Dispose();
-
-			string cacheDirectory = this._filePath+ " Cache";
-			if (Directory.Exists(cacheDirectory))
+			DirectoryInfo di = new DirectoryInfo(cacheDirectory);
+			foreach (FileInfo fileInfo in di.GetFiles("*.cache"))
 			{
-				Directory.Delete(cacheDirectory, true);
+				fileInfo.Delete();
 			}
-			System.IO.File.Delete(_filePath);
+			//if (Directory.Exists(cacheDirectory))
+			//{
+			//    Directory.Delete(cacheDirectory, true);
+			//}
+			File.Delete(_filePath);
 		}
-		private int CountMatching<T>(IEnumerable<T> enumerable, Predicate<T> match)
+		static private int CountMatching<T>(IEnumerable<T> enumerable, Predicate<T> match)
 		{
 			int count = 0;
 			foreach (T t in enumerable)
@@ -393,9 +414,9 @@ namespace WeSay.Data.Tests
 			IRecordList<SimpleIntTestClass> masterRecordList = RecordListManager.GetListOfType<SimpleIntTestClass>();
 			int index11 = masterRecordList.Find(SimpleIntTestClass.IPropertyDescriptor, 11);
 			masterRecordList[index11].I = 10;
-			IRecordList<SimpleIntTestClass> recordList11to17 = RecordListManager.GetListOfTypeFilteredFurther<SimpleIntTestClass>(Filter11to17);
+			IRecordList<SimpleIntTestClass> recordList11to17 = RecordListManager.GetListOfTypeFilteredFurther(Filter11to17, SortHelper);
 			Assert.AreEqual(6, recordList11to17.Count);
-			int count11 = CountMatching<SimpleIntTestClass>(recordList11to17,
+			int count11 = CountMatching(recordList11to17,
 															delegate(SimpleIntTestClass item)
 															{
 																return item.I == 11;
@@ -408,9 +429,9 @@ namespace WeSay.Data.Tests
 		{
 			IRecordList<SimpleIntTestClass> masterRecordList = RecordListManager.GetListOfType<SimpleIntTestClass>();
 			masterRecordList[0].I = 12;
-			IRecordList<SimpleIntTestClass> recordList11to17 = RecordListManager.GetListOfTypeFilteredFurther<SimpleIntTestClass>(Filter11to17);
+			IRecordList<SimpleIntTestClass> recordList11to17 = RecordListManager.GetListOfTypeFilteredFurther(Filter11to17, SortHelper);
 			Assert.AreEqual(8, recordList11to17.Count);
-			int count12 = CountMatching<SimpleIntTestClass>(recordList11to17,
+			int count12 = CountMatching(recordList11to17,
 												delegate(SimpleIntTestClass item)
 												{
 													return item.I == 12;
@@ -423,9 +444,9 @@ namespace WeSay.Data.Tests
 		{
 			IRecordList<SimpleIntTestClass> masterRecordList = RecordListManager.GetListOfType<SimpleIntTestClass>();
 			masterRecordList.Add(new SimpleIntTestClass(15));
-			IRecordList<SimpleIntTestClass> recordList11to17 = RecordListManager.GetListOfTypeFilteredFurther<SimpleIntTestClass>(Filter11to17);
+			IRecordList<SimpleIntTestClass> recordList11to17 = RecordListManager.GetListOfTypeFilteredFurther(Filter11to17, SortHelper);
 			Assert.AreEqual(8, recordList11to17.Count);
-			int count15 = CountMatching<SimpleIntTestClass>(recordList11to17,
+			int count15 = CountMatching(recordList11to17,
 												delegate(SimpleIntTestClass item)
 												{
 													return item.I == 15;
@@ -440,9 +461,9 @@ namespace WeSay.Data.Tests
 			IRecordList<SimpleIntTestClass> masterRecordList = RecordListManager.GetListOfType<SimpleIntTestClass>();
 			int index11 = masterRecordList.Find(SimpleIntTestClass.IPropertyDescriptor, 11);
 			masterRecordList.RemoveAt(index11);
-			IRecordList<SimpleIntTestClass> recordList11to17 = RecordListManager.GetListOfTypeFilteredFurther<SimpleIntTestClass>(Filter11to17);
+			IRecordList<SimpleIntTestClass> recordList11to17 = RecordListManager.GetListOfTypeFilteredFurther(Filter11to17, SortHelper);
 			Assert.AreEqual(6, recordList11to17.Count);
-			int count11 = CountMatching<SimpleIntTestClass>(recordList11to17,
+			int count11 = CountMatching(recordList11to17,
 												delegate(SimpleIntTestClass item)
 												{
 													return item.I == 11;

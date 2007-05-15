@@ -1,5 +1,6 @@
 using System;
 using System.Windows.Forms;
+using WeSay.Language;
 using WeSay.LexicalModel;
 using WeSay.Data;
 using WeSay.Project;
@@ -12,6 +13,8 @@ namespace WeSay.LexicalTools
 		private readonly IFilter<LexEntry> _filter;
 		private readonly ViewTemplate _viewTemplate;
 		private bool _dataHasBeenRetrieved;
+		private LexEntrySortHelper _sortHelper;
+
 
 		public MissingInfoTask(IRecordListManager recordListManager,
 					IFilter<LexEntry> filter,
@@ -28,9 +31,38 @@ namespace WeSay.LexicalTools
 			{
 				throw new ArgumentNullException("viewTemplate");
 			}
-			recordListManager.Register(filter);
+
 			_filter = filter;
 			_viewTemplate = viewTemplate;
+
+
+			WritingSystem listWritingSystem = BasilProject.Project.WritingSystems.UnknownVernacularWritingSystem;
+			Field field = viewTemplate.GetField(Field.FieldNames.EntryLexicalForm.ToString());
+			if (field != null)
+			{
+				if (field.WritingSystems.Count > 0)
+				{
+					listWritingSystem = field.WritingSystems[0];
+				}
+				else
+				{
+					MessageBox.Show(String.Format("There are no writing systems enabled for the Field '{0}'", field.FieldName), "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);//review
+				}
+			}
+
+			if (recordListManager is Db4oRecordListManager)
+			{
+				_sortHelper =
+						new LexEntrySortHelper(((Db4oRecordListManager)recordListManager).DataSource,
+											   listWritingSystem.Id,
+											   true);
+			}
+			else
+			{
+				_sortHelper = new LexEntrySortHelper(listWritingSystem.Id, true);
+			}
+
+			recordListManager.Register(filter, _sortHelper);
 		}
 
 		/// <summary>
@@ -126,7 +158,7 @@ namespace WeSay.LexicalTools
 		{
 			get
 			{
-				IRecordList<LexEntry> data = RecordListManager.GetListOfTypeFilteredFurther(_filter);
+				IRecordList<LexEntry> data = RecordListManager.GetListOfTypeFilteredFurther(_filter, _sortHelper);
 				_dataHasBeenRetrieved = true;
 				return data;
 			}
