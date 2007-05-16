@@ -54,7 +54,7 @@ namespace WeSay.UI
 
 		public Control AddWidgetRow(string label, bool isHeader, Control control)
 		{
-			return AddWidgetRow(label, isHeader, control, RowCount);
+			return AddWidgetRow(label, isHeader, control, RowCount, false);
 		}
 
 		public int Count
@@ -102,7 +102,7 @@ namespace WeSay.UI
 			RowStyles.Clear();
 		}
 
-		public Control AddWidgetRow(string fieldLabel, bool isHeader, Control editWidget, int insertAtRow)
+		public Control AddWidgetRow(string fieldLabel, bool isHeader, Control editWidget, int insertAtRow, bool isGhostField)
 		{
 			//Debug.WriteLine(String.Format("AddWidgetRow({0}, header={1}, , row={2}", fieldLabel, isHeader, insertAtRow));
 			RowStyles.Add(new RowStyle(SizeType.AutoSize));
@@ -150,7 +150,10 @@ namespace WeSay.UI
 			label.AutoSize = true;
 			int verticalPadding = 0;
 			label.Top = verticalPadding+3+top;
-
+			if (isGhostField)
+			{
+				label.ForeColor = System.Drawing.Color.Gray;
+			}
 
 			Controls.Add(label, _indexOfLabel, insertAtRow);
 			editWidget.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;

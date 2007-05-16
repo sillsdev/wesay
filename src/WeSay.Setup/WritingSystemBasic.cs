@@ -44,7 +44,7 @@ namespace WeSay.Setup
 			set
 			{
 				this._writingSystem = value;
-				_fontProperties.SelectedObject = _writingSystem;
+				_writingSystemProperties.SelectedObject = _writingSystem;
 			   // _fontProperties.SelectedObjects = new object[] { _writingSystem, helper };
 				this.Refresh();
 			}

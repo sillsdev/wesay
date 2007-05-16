@@ -32,6 +32,10 @@
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\ICSharpCode.SharpZipLib.dll</HintPath>
 	</Reference>
+	<Reference Include="KeymanLink, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\KeymanLink.dll</HintPath>
+	</Reference>
 	<Reference Include="NetReflector, Version=1.0.0.0, Culture=neutral">
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\NetReflector.dll</HintPath>
@@ -47,6 +51,7 @@
 	<Compile Include="AsyncCommand.cs" />
 	<Compile Include="BackupMaker.cs" />
 	<Compile Include="BasicCommand.cs" />
+	<Compile Include="CommonEnumerations.cs" />
 	<Compile Include="ConsoleProgressState.cs" />
 	<Compile Include="BackgroundWorkerState.cs" />
 	<Compile Include="IBindableControl.cs" />

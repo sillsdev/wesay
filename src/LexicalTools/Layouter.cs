@@ -85,7 +85,9 @@ namespace WeSay.LexicalTools
 			MultiTextControl m;
 			if (_previouslyGhostedControlToReuse == null)
 			{
-				m = new MultiTextControl(field.WritingSystems, multiTextToBindTo, field.FieldName, true, BasilProject.Project.WritingSystems);
+				m = new MultiTextControl(field.WritingSystems, multiTextToBindTo, field.FieldName,
+					field.Visibility != CommonEnumerations.VisibilitySetting.ReadOnly, //show annotation
+					BasilProject.Project.WritingSystems, field.Visibility);
 			}
 			else
 			{
@@ -128,12 +130,13 @@ namespace WeSay.LexicalTools
 		{
 			int rowCount = 0;
 			Field field = ActiveViewTemplate.GetField(fieldName);
-			if (field != null && field.Visibility == Field.VisibilitySetting.Visible)
+			if (field != null && field.Visibility == CommonEnumerations.VisibilitySetting.Visible)
 			{
+				MultiTextControl m =
+					new MultiTextControl(field.WritingSystems, new MultiText(), fieldName + "_ghost", false,
+										 BasilProject.Project.WritingSystems, field.Visibility);
 
-				MultiTextControl m = new MultiTextControl(field.WritingSystems, new MultiText(), fieldName+"_ghost", false, BasilProject.Project.WritingSystems);
-
-				Control refWidget = DetailList.AddWidgetRow(StringCatalog.Get(label), isHeading, m, insertAtRow + rowCount);
+				Control refWidget = DetailList.AddWidgetRow(StringCatalog.Get(label), isHeading, m, insertAtRow + rowCount, true);
 
 				foreach (WeSayTextBox box in m.TextBoxes)
 				{
@@ -202,10 +205,9 @@ namespace WeSay.LexicalTools
 			int rowCount = 0;
 			foreach (Field customField in ActiveViewTemplate.GetCustomFields(target.GetType().Name))
 			{
-				if (customField.Visibility != Field.VisibilitySetting.Visible)
+				if (!customField.DoShow )
 				{
 					continue;
-
 				}
 				Control box;
 				switch (customField.DataTypeName)
@@ -223,7 +225,7 @@ namespace WeSay.LexicalTools
 						throw new ApplicationException(
 							string.Format("WeSay doesn't understand how to a layout a {0}", customField.DataTypeName));
 				}
-				DetailList.AddWidgetRow(StringCatalog.Get(customField.DisplayName), false, box, insertAtRow+rowCount);
+				DetailList.AddWidgetRow(StringCatalog.Get(customField.DisplayName), false, box, insertAtRow+rowCount, false);
 
 				++rowCount;
 			}

@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Windows.Forms;
 using System.Xml;
+using WeSay.Foundation;
 using WeSay.Language;
 using WeSay.Project;
 
@@ -55,7 +56,7 @@ namespace WeSay.Setup
 
 			foreach (Field field in  WeSayWordsProject.Project.ViewTemplate)
 			{
-				this._fieldsListBox.Items.Add(field, field.Visibility == Field.VisibilitySetting.Visible);
+				this._fieldsListBox.Items.Add(field, field.Visibility == CommonEnumerations.VisibilitySetting.Visible);
 			}
 		}
 
@@ -64,11 +65,11 @@ namespace WeSay.Setup
 		{
 			if (e.NewValue== CheckState.Checked)
 			{
-				((Field)_fieldsListBox.SelectedItem).Visibility = Field.VisibilitySetting.Visible;
+				((Field)_fieldsListBox.SelectedItem).Visibility = CommonEnumerations.VisibilitySetting.Visible;
 			}
 			else
 			{
-				CurrentField.Visibility = Field.VisibilitySetting.Invisible;
+				CurrentField.Visibility = CommonEnumerations.VisibilitySetting.Invisible;
 			}
 		}
 

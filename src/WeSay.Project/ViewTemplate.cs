@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Xml;
 using Exortech.NetReflector;
+using WeSay.Foundation;
 using WeSay.Language;
 
 namespace WeSay.Project
@@ -117,7 +118,7 @@ namespace WeSay.Project
 			{
 				return false;
 			}
-			return field.Visibility == Field.VisibilitySetting.Visible;
+			return field.Visibility == CommonEnumerations.VisibilitySetting.Visible;
 		}
 
 		/// <summary>
@@ -171,12 +172,12 @@ namespace WeSay.Project
 
 			Field lexicalFormField = new Field(Field.FieldNames.EntryLexicalForm.ToString(), "LexEntry", defaultVernacularSet);
 			lexicalFormField.DisplayName = "Word";
-			lexicalFormField.Visibility = Field.VisibilitySetting.Visible;
+			lexicalFormField.Visibility = CommonEnumerations.VisibilitySetting.Visible;
 			masterTemplate.Add(lexicalFormField);
 
 			Field glossField = new Field(Field.FieldNames.SenseGloss.ToString(), "LexSense", defaultAnalysisSet);
 			glossField.DisplayName = "Gloss";
-			glossField.Visibility = Field.VisibilitySetting.Visible;
+			glossField.Visibility = CommonEnumerations.VisibilitySetting.Visible;
 			masterTemplate.Add(glossField);
 
 			Field posField = new Field("POS", "LexSense", defaultAnalysisSet);
@@ -188,12 +189,12 @@ namespace WeSay.Project
 
 			Field exampleField = new Field(Field.FieldNames.ExampleSentence.ToString(), "LexExampleSentence", defaultVernacularSet);
 			exampleField.DisplayName = "Example Sentence";
-			exampleField.Visibility = Field.VisibilitySetting.Visible;
+			exampleField.Visibility = CommonEnumerations.VisibilitySetting.Visible;
 			masterTemplate.Add(exampleField);
 
 			Field translationField = new Field(Field.FieldNames.ExampleTranslation.ToString(), "LexExampleSentence", defaultAnalysisSet);
 			translationField.DisplayName = "Translation";
-			translationField.Visibility = Field.VisibilitySetting.Visible;
+			translationField.Visibility = CommonEnumerations.VisibilitySetting.Visible;
 			masterTemplate.Add(translationField);
 
 			Field ddp4Field = new Field("SemanticDomainDdp4", "LexSense", defaultAnalysisSet);

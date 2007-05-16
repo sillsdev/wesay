@@ -1,4 +1,5 @@
 using System.Windows.Forms;
+using WeSay.Foundation;
 using WeSay.Language;
 using WeSay.LexicalModel;
 using WeSay.Project;
@@ -32,10 +33,10 @@ namespace WeSay.LexicalTools
 			DetailList.SuspendLayout();
 			int rowCount = 0;
 			Field field = ActiveViewTemplate.GetField(Field.FieldNames.EntryLexicalForm.ToString());
-			if (field != null && field.Visibility == Field.VisibilitySetting.Visible)
+			if (field != null && field.DoShow )
 			{
 				Control formControl = MakeBoundControl(entry.LexicalForm, field);
-				DetailList.AddWidgetRow(StringCatalog.Get(field.DisplayName), true, formControl, insertAtRow);
+				DetailList.AddWidgetRow(StringCatalog.Get(field.DisplayName), true, formControl, insertAtRow, false);
 				insertAtRow = DetailList.GetRow(formControl);
 				++rowCount;
 			}

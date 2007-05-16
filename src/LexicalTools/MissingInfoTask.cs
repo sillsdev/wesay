@@ -89,9 +89,36 @@ namespace WeSay.LexicalTools
 			_viewTemplate = FilterviewTemplate(viewTemplate, fieldsToShow);
 		}
 
+		public MissingInfoTask(IRecordListManager recordListManager,
+					IFilter<LexEntry> filter,
+					string label,
+					string description,
+					ViewTemplate viewTemplate,
+					string fieldsToShowEditable,
+					string fieldsToShowReadOnly)
+			: this(recordListManager, filter, label, description, viewTemplate, fieldsToShowEditable+" "+fieldsToShowReadOnly)
+		{
+			string[] readOnlyFields = SplitUpFieldNames(fieldsToShowReadOnly);
+
+			for (int i = 0; i < _viewTemplate.Count; i++)
+			{
+				Field field = _viewTemplate[i];
+			   foreach (string s in readOnlyFields)
+				{
+					if(s==field.FieldName)
+					{
+						Field readOnlyVersion = new Field(field);
+						readOnlyVersion.Visibility = WeSay.Foundation.CommonEnumerations.VisibilitySetting.ReadOnly;
+						_viewTemplate.Remove(field);
+						_viewTemplate.Insert(i, readOnlyVersion);
+					}
+				}
+			}
+		}
+
 		static private ViewTemplate FilterviewTemplate(ViewTemplate baseViewTemplate, string fieldsToShow)
 		{
-			string[] fields = fieldsToShow.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+			string[] fields = SplitUpFieldNames(fieldsToShow);
 			ViewTemplate viewTemplate = new ViewTemplate();
 			foreach (Field field in baseViewTemplate)
 			{
@@ -101,6 +128,11 @@ namespace WeSay.LexicalTools
 				}
 			}
 			return viewTemplate;
+		}
+
+		private static string[] SplitUpFieldNames(string fieldsToShow)
+		{
+			return fieldsToShow.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 		}
 
 		public override void Activate()

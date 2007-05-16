@@ -1,5 +1,8 @@
+using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.Windows.Forms;
 using System.Xml;
 using Exortech.NetReflector;
 
@@ -114,7 +117,7 @@ namespace WeSay.Language
 			}
 		}
 
-
+		[TypeConverter(typeof(KeyboardListHelper))]
 		[Browsable(true)]
 		[ReflectorProperty("WindowsKeyman", Required = false)]
 		public string KeyboardName
@@ -171,6 +174,77 @@ namespace WeSay.Language
 			}
 		}
 
+		 public class KeyboardListHelper : StringConverter
+		{
+			public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
+			{
+				//true means show a combobox
+				return true;
+			}
 
+			 public override object ConvertTo(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value, Type destinationType)
+			 {
+				 if ((String)value == String.Empty)
+				 {
+					 return "default";
+				 }
+				 else
+				 {
+					 return value;
+				 }
+			 }
+
+			public override object ConvertFrom(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
+			  {
+				 if ((String)value == "default")
+				 {
+					 return String.Empty;
+				 }
+				 else
+				 {
+					 return value;
+				 }
+			 }
+
+			 public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
+			 {
+				 return true;
+			 }
+
+			 public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType)
+			 {
+				 return true;
+			 }
+
+			 public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
+			 {
+				 //true will limit to list. false will show the list,
+				 //but allow free-form entry
+				 return true;
+			 }
+
+			 public override System.ComponentModel.TypeConverter.StandardValuesCollection
+				   GetStandardValues(ITypeDescriptorContext context)
+			{
+				KeymanLink.KeymanLink _keymanLink = new KeymanLink.KeymanLink();
+				if (!_keymanLink.Initialize(false))
+				{
+					_keymanLink = null;
+				}
+
+				List<String> keyboards = new List<string>();
+				keyboards.Add(String.Empty); // for 'default'
+				foreach (KeymanLink.KeymanLink.KeymanKeyboard keyboard in _keymanLink.Keyboards)
+				{
+					keyboards.Add(keyboard.KbdName);
+				}
+
+				foreach (InputLanguage lang in InputLanguage.InstalledInputLanguages )
+				{
+					keyboards.Add(lang.LayoutName);
+				}
+				return new StandardValuesCollection(keyboards);
+			}
+		}
 	}
 }

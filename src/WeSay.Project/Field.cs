@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Xml;
 using Exortech.NetReflector;
 using Exortech.NetReflector.Util;
+using WeSay.Foundation;
 using WeSay.Language;
 
 
@@ -20,8 +21,7 @@ namespace WeSay.Project
 		public enum MultiplicityType { ZeroOr1 = 0 }
 		private MultiplicityType _multiplicity = MultiplicityType.ZeroOr1;
 
-		public enum VisibilitySetting {Invisible, Visible};
-		private VisibilitySetting _visibility=VisibilitySetting.Visible ;
+		private CommonEnumerations.VisibilitySetting _visibility=CommonEnumerations.VisibilitySetting.Visible ;
 		private string _optionsListFile;
 
 		/// <summary>
@@ -50,6 +50,24 @@ namespace WeSay.Project
 			}
 			ClassName = className;
 			Initialize(fieldName, dataTypeName, multiplicity, writingSystemIds);
+
+		}
+
+		public Field(Field field)
+		{
+			FieldName = field.FieldName;
+			ClassName = field.ClassName;
+			_writingSystemIds = new List<string>();
+			foreach (string id in field.WritingSystemIds)
+			{
+				WritingSystemIds.Add(id);
+			}
+			Description =  field.Description;
+			DisplayName = field.DisplayName;
+			Multiplicity= field.Multiplicity;
+			Visibility =  field.Visibility;
+			DataTypeName = field.DataTypeName;
+			OptionsListFile = field.OptionsListFile;
 		}
 
 
@@ -189,7 +207,7 @@ namespace WeSay.Project
 		}
 
 		[ReflectorCollection("visibility", Required=false)]
-		public VisibilitySetting Visibility
+		public CommonEnumerations.VisibilitySetting Visibility
 		{
 			get { return _visibility; }
 			set { _visibility = value; }
@@ -235,6 +253,15 @@ namespace WeSay.Project
 		{
 			get { return _optionsListFile; }
 			set { _optionsListFile = value; }
+		}
+
+		public bool DoShow
+		{
+			get
+			{
+				return _visibility == CommonEnumerations.VisibilitySetting.Visible ||
+					_visibility == CommonEnumerations.VisibilitySetting.ReadOnly;
+			}
 		}
 
 

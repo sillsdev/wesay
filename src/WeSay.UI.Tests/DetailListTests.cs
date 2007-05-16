@@ -137,7 +137,7 @@ namespace WeSay.UI.Tests
 		}
 		 private Control AddRow(int row)
 		{
-			return _control.AddWidgetRow("blah", false, new WeSayTextBox(_ws, null), row);
+			return _control.AddWidgetRow("blah", false, new WeSayTextBox(_ws, null), row, false);
 		}
 	}
 }

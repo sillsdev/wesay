@@ -1,4 +1,5 @@
 using System.Windows.Forms;
+using WeSay.Foundation;
 using WeSay.Language;
 using WeSay.LexicalModel;
 using WeSay.Project;
@@ -23,18 +24,18 @@ namespace WeSay.LexicalTools
 			LexExampleSentence example = (LexExampleSentence)list[index];
 
 			Field field = ActiveViewTemplate.GetField(Field.FieldNames.ExampleSentence.ToString());
-			if (field != null && field.Visibility == Field.VisibilitySetting.Visible)
+			if (field != null && field.DoShow )
 			{
 				Control entry = MakeBoundControl(example.Sentence, field);
-				DetailList.AddWidgetRow(StringCatalog.Get("Example"), false, entry, insertAtRow+rowCount);
+				DetailList.AddWidgetRow(StringCatalog.Get("Example"), false, entry, insertAtRow+rowCount, false);
 				++rowCount;
 			}
 
 			field = ActiveViewTemplate.GetField(Field.FieldNames.ExampleTranslation.ToString());
-			if (field != null && field.Visibility == Field.VisibilitySetting.Visible)
+			if (field != null && field.DoShow)
 			{
 				 Control entry = MakeBoundControl(example.Translation, field);
-				DetailList.AddWidgetRow(StringCatalog.Get("Translation"), false, entry, insertAtRow+rowCount);
+				DetailList.AddWidgetRow(StringCatalog.Get("Translation"), false, entry, insertAtRow+rowCount, false);
 				++rowCount;
 			}
 

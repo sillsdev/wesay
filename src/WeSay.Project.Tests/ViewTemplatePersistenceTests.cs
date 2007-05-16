@@ -2,6 +2,7 @@ using System.IO;
 using System.Xml;
 using Exortech.NetReflector;
 using NUnit.Framework;
+using WeSay.Foundation;
 using WeSay.Project;
 using WeSay.Project.Tests;
 
@@ -102,7 +103,7 @@ namespace WeSay.Project.Tests
 			ViewTemplate f = new ViewTemplate();
 			f.Add(new Field(Field.FieldNames.EntryLexicalForm.ToString(), "LexEntry", new string[] { "xx", "yy" }));
 			Field field = new Field(Field.FieldNames.SenseGloss.ToString(), "LexSense", new string[] { "zz" });
-			field.Visibility = Field.VisibilitySetting.Invisible;
+			field.Visibility = CommonEnumerations.VisibilitySetting.Invisible;
 			f.Add(field);
 			return f;
 		}
@@ -125,13 +126,13 @@ namespace WeSay.Project.Tests
 		{
 			Assert.AreEqual(2,f.Count);
 			Assert.AreEqual(Field.FieldNames.EntryLexicalForm.ToString(), f[0].FieldName);
-			Assert.AreEqual(Field.VisibilitySetting.Visible, f[0].Visibility);
+			Assert.AreEqual(CommonEnumerations.VisibilitySetting.Visible, f[0].Visibility);
 			Assert.AreEqual(2, f[0].WritingSystemIds.Count);
 			Assert.AreEqual("xx", f[0].WritingSystemIds[0]);
 			Assert.AreEqual("yy", f[0].WritingSystemIds[1]);
 			Assert.AreEqual(Field.FieldNames.SenseGloss.ToString(), f[1].FieldName);
 			Assert.AreEqual(1, f[1].WritingSystemIds.Count);
-			Assert.AreEqual(Field.VisibilitySetting.Invisible, f[1].Visibility);
+			Assert.AreEqual(CommonEnumerations.VisibilitySetting.Invisible, f[1].Visibility);
 			Assert.AreEqual("zz", f[1].WritingSystemIds[0]);
 		}
 

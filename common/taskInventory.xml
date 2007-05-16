@@ -25,6 +25,7 @@
 	<description>Add meanings to entries where they are missing.</description>
 	<viewTemplate ref="Default View Template"/>
 	<showfields>SenseGloss</showfields>
+	<readOnly>SemanticDomainDdp4</readOnly>
   </task>
 
   <task id="AddExamples" class="WeSay.LexicalTools.MissingInfoTask" assembly="LexicalTools">
@@ -37,6 +38,7 @@
 	<description>Add example sentences to entries where they are missing.</description>
 	<viewTemplate ref="Default View Template"/>
 	<showfields>ExampleSentence</showfields>
+	<readOnly>SenseGloss</readOnly>
   </task>
 
   <task id="Gather Words" class="WeSay.LexicalTools.GatherWordListTask" assembly="LexicalTools">

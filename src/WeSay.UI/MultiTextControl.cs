@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
+using WeSay.Foundation;
 using WeSay.Language;
 
 namespace WeSay.UI
@@ -13,6 +14,7 @@ namespace WeSay.UI
 		private IList<WritingSystem> _writingSystemsForThisFIeld;
 		private List<WeSayTextBox> _textBoxes;
 		private bool _showAnnotationWidget;
+		private CommonEnumerations.VisibilitySetting _visibility= CommonEnumerations.VisibilitySetting.Visible;
 		private static int _widthForWritingSystemLabels=-1;
 		private static WritingSystemCollection _allWritingSystems;
 		private static Font _writingSystemLabelFont;
@@ -29,6 +31,8 @@ namespace WeSay.UI
 			_textBoxes = new List<WeSayTextBox>();
 //            this.BackColor = System.Drawing.Color.Crimson;
 			SuspendLayout();
+
+			this.ParentChanged += new EventHandler(OnParentChanged);
 
 			_writingSystemLabelFont = new Font(FontFamily.GenericSansSerif, 9);
 			ColumnCount = 3;
@@ -49,15 +53,33 @@ namespace WeSay.UI
 		}
 
 
+		///<remarks>This can't be done during construction... we have to wait until
+		///we actually have a parent to do this.</remarks>
+		private void OnParentChanged(object sender, EventArgs e)
+		{
+			if (this.Parent !=null && _visibility == CommonEnumerations.VisibilitySetting.ReadOnly)
+			{
+				BackColor = this.Parent.BackColor;
+				foreach (WeSayTextBox box in _textBoxes)
+				{
+					box.BackColor = this.Parent.BackColor;
+					box.TabStop = false;
+				}
+			}
+		}
+
+
 		public MultiTextControl(IList<WritingSystem> writingSystems, MultiText multiTextToCopyFormsFrom, string nameForTesting,
-			bool showAnnotationWidget, WritingSystemCollection allWritingSystems)
+			bool showAnnotationWidget, WritingSystemCollection allWritingSystems, CommonEnumerations.VisibilitySetting visibility)
 			: this(allWritingSystems)
 		{
 			Name = nameForTesting+"-mtc";
 			_writingSystemsForThisFIeld = writingSystems;
 			_showAnnotationWidget = showAnnotationWidget;
-			BuildBoxes(multiTextToCopyFormsFrom);
+			_visibility = visibility;
+			 BuildBoxes(multiTextToCopyFormsFrom);
 		}
+
 
 
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
@@ -218,6 +240,10 @@ namespace WeSay.UI
 		private WeSayTextBox AddTextBox(WritingSystem writingSystem, MultiText multiText)
 		{
 			WeSayTextBox box = new WeSayTextBox(writingSystem, Name);
+			box.ReadOnly = (_visibility == CommonEnumerations.VisibilitySetting.ReadOnly);
+			//box.Enabled = !box.ReadOnly;
+
+
 			_textBoxes.Add(box);
 			box.Name = Name.Replace("-mtc","") + "_" + writingSystem.Id; //for automated tests to find this particular guy
 			box.Text = multiText[writingSystem.Id];

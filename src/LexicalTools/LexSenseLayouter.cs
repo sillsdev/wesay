@@ -1,4 +1,5 @@
 using System.Windows.Forms;
+using WeSay.Foundation;
 using WeSay.Language;
 using WeSay.LexicalModel;
 using WeSay.Project;
@@ -24,10 +25,10 @@ namespace WeSay.LexicalTools
 			int rowCount = 0;
 			LexSense sense = (LexSense)list[index];
 			Field field = ActiveViewTemplate.GetField(Field.FieldNames.SenseGloss.ToString());
-			if (field != null && field.Visibility == Field.VisibilitySetting.Visible)
+			if (field != null && field.DoShow )
 			{
 				Control glossControl = MakeBoundControl(sense.Gloss, field);
-				Control glossRowControl = DetailList.AddWidgetRow(StringCatalog.Get("Meaning"), true, glossControl, insertAtRow);
+				Control glossRowControl = DetailList.AddWidgetRow(StringCatalog.Get("Meaning"), true, glossControl, insertAtRow, false);
 				++rowCount;
 				insertAtRow = DetailList.GetRow(glossRowControl);
 			}

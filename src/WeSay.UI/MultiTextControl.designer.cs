@@ -1,3 +1,5 @@
+using WeSay.Foundation;
+
 namespace WeSay.UI
 {
 	partial class MultiTextControl
