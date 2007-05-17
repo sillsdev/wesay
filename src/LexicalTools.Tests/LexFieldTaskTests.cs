@@ -25,7 +25,7 @@ namespace WeSay.LexicalTools.Tests
 		public void Setup()
 		{
 			Db4oLexModelHelper.InitializeForNonDbTests();
-			BasilProject.InitializeForTests();
+			WeSayWordsProject.InitializeForTests();
 
 			this._recordListManager = new InMemoryRecordListManager();
 			Field field = new Field(Field.FieldNames.SenseGloss.ToString(),"LexSense" , new string[]{"analysis"});

@@ -61,7 +61,7 @@ namespace WeSay.LexicalTools.Tests
 		public void SetUp()
 		{
 			Db4oLexModelHelper.InitializeForNonDbTests();
-			BasilProject.InitializeForTests();
+			WeSayWordsProject.InitializeForTests();
 			_recordListManager = new InMemoryRecordListManager();
 			this._missingTranslation = new MissingTranslationFilter();
 			LexEntrySortHelper lexEntrySortHelper = new LexEntrySortHelper("vernacular", true);
