@@ -70,6 +70,12 @@
 	<Compile Include="GroupHeader.Designer.cs">
 	  <DependentUpon>GroupHeader.cs</DependentUpon>
 	</Compile>
+	<Compile Include="ItemsToDoIndicator.cs">
+	  <SubType>UserControl</SubType>
+	</Compile>
+	<Compile Include="ItemsToDoIndicator.designer.cs">
+	  <DependentUpon>ItemsToDoIndicator.cs</DependentUpon>
+	</Compile>
 	<Compile Include="PictureControl.cs">
 	  <SubType>UserControl</SubType>
 	</Compile>
@@ -142,6 +148,10 @@
 	<EmbeddedResource Include="GroupHeader.resx">
 	  <SubType>Designer</SubType>
 	  <DependentUpon>GroupHeader.cs</DependentUpon>
+	</EmbeddedResource>
+	<EmbeddedResource Include="ItemsToDoIndicator.resx">
+	  <DependentUpon>ItemsToDoIndicator.cs</DependentUpon>
+	  <SubType>Designer</SubType>
 	</EmbeddedResource>
 	<EmbeddedResource Include="Properties\Resources.resx">
 	  <SubType>Designer</SubType>

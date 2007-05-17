@@ -2,6 +2,7 @@ using System;
 using System.Windows.Forms;
 using WeSay.Data;
 using WeSay.Language;
+using WeSay.LexicalModel;
 using WeSay.Project;
 using WeSay.UI;
 
@@ -105,6 +106,18 @@ namespace WeSay.LexicalTools
 			get
 			{
 				return Status;
+			}
+		}
+
+		/// <summary>
+		/// Gives a sense of the overall size of the task versus what's left to do
+		/// </summary>
+		public virtual int ReferenceCount
+		{
+			get
+			{
+				//this is obviously flawed ;-)
+				return _recordListManager.GetListOfType<LexEntry>().Count;
 			}
 		}
 

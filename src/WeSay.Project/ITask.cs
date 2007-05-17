@@ -18,6 +18,14 @@ namespace WeSay.Project
 		{
 			get;
 		}
+
+		/// <summary>
+		/// Gives a sense of the overall size of the task versus what's left to do
+		/// </summary>
+		int ReferenceCount
+		{
+			get;
+		}
 	}
 
 	/// <summary>

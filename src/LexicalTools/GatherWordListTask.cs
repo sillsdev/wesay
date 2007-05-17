@@ -228,5 +228,16 @@ namespace WeSay.LexicalTools
 		{
 			return Db4oLexQueryHelper.FindObjectsFromLanguageForm<LexEntry, SenseGlossMultiText>(this.RecordListManager, gloss.GetFirstAlternative());
 		}
+
+		/// <summary>
+		/// Gives a sense of the overall size of the task versus what's left to do
+		/// </summary>
+		public override int ReferenceCount
+		{
+			get
+			{
+				return -1; //todo
+			}
+		}
 	}
 }

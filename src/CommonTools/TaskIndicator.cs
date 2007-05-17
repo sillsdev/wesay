@@ -21,16 +21,19 @@ namespace WeSay.CommonTools
 			}
 			InitializeComponent();
 			_task = task;
-			this._count.Text = task.Status;
+		   // this._count.Text = task.Status;
+			_intray.Status = task.Status;
+			_intray.ReferenceCount = task.ReferenceCount;
+
 			string cachePath = WeSayWordsProject.Project.PathToCache;
 
 
 			//TODO: this leads to a failure when the label isn't a valid path (like when it says "failed to load: blahblah"
 			string cacheFilePath = Path.Combine(cachePath, task.Label + ".cache");
 
-			if (this._count.Text == "-")
+			if (task.Status == "-")
 			{
-				this._count.Text = ReadCountFromCacheFile(cacheFilePath);
+				ReadCountFromCacheFile(cacheFilePath);
 			}
 			else
 			{
@@ -49,7 +52,7 @@ namespace WeSay.CommonTools
 				}
 				using (StreamWriter sw = File.CreateText(cacheFilePath))
 				{
-					sw.Write(this._count.Text);
+					sw.Write(_intray.Count.ToString() +", "+_intray.ReferenceCount.ToString());
 				}
 			}
 			catch
@@ -57,7 +60,7 @@ namespace WeSay.CommonTools
 				Console.WriteLine("Could not write cache file: " + cacheFilePath);
 			}
 		}
-		private static string ReadCountFromCacheFile(string cacheFilePath)
+		private  void ReadCountFromCacheFile(string cacheFilePath)
 		{
 			string s = string.Empty;
 			try
@@ -67,6 +70,18 @@ namespace WeSay.CommonTools
 					using (StreamReader sr = new StreamReader(cacheFilePath))
 					{
 						s = sr.ReadToEnd();
+						string[] values = s.Split(',');
+						if (values.Length > 1) //old style didn't have reference
+						{
+							int r=0;
+							bool gotIt = int.TryParse(values[1], out r);
+							_intray.ReferenceCount = r;
+							Debug.Assert(gotIt);
+						}
+						if (values.Length > 0) //old style didn't have reference
+						{
+							_intray.Status = values[0]; // will convert and fill in count if it can
+						}
 					}
 				}
 			}
@@ -74,7 +89,6 @@ namespace WeSay.CommonTools
 			{
 				// Console.WriteLine("Could not read cache file: " + cacheFilePath);
 			}
-			return s;
 		}
 
 		public ITask Task
@@ -86,6 +100,7 @@ namespace WeSay.CommonTools
 		{
 		   Debug.Assert(BackColor != System.Drawing.Color.Transparent);
 		   this._textShortDescription.BackColor = BackColor;
+		   _intray.BackColor = BackColor;
 		}
 
 		private void OnBtnNameClick(object sender, EventArgs e)

@@ -53,6 +53,18 @@ namespace WeSay.CommonTools
 			}
 		}
 
+
+		/// <summary>
+		/// Not relevant for this task
+		/// </summary>
+		public int ReferenceCount
+		{
+			get
+			{
+				return -1;
+			}
+		}
+
 		public string Label
 		{
 			get

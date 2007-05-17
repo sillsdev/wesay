@@ -51,6 +51,14 @@ namespace WeSay.App.Tests
 			get { return this._label; }
 		}
 
+		public int ReferenceCount
+		{
+			get
+			{
+				return -1;
+			}
+		}
+
 		public string Description
 		{
 			get { return this._description; }

@@ -31,20 +31,10 @@ namespace WeSay.CommonTools
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this._count = new System.Windows.Forms.Label();
 			this._btnName = new System.Windows.Forms.Button();
 			this._textShortDescription = new System.Windows.Forms.TextBox();
+			this._intray = new WindowsControlLibrary1.ItemsToDoIndicator();
 			this.SuspendLayout();
-			//
-			// _count
-			//
-			this._count.AutoSize = true;
-			this._count.Font = new System.Drawing.Font("Verdana", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this._count.Location = new System.Drawing.Point(-5, 10);
-			this._count.Name = "_count";
-			this._count.Size = new System.Drawing.Size(70, 23);
-			this._count.TabIndex = 0;
-			this._count.Text = "12345";
 			//
 			// _btnName
 			//
@@ -54,7 +44,7 @@ namespace WeSay.CommonTools
 			this._btnName.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this._btnName.Location = new System.Drawing.Point(79, 9);
 			this._btnName.Name = "_btnName";
-			this._btnName.Size = new System.Drawing.Size(407, 33);
+			this._btnName.Size = new System.Drawing.Size(1421, 33);
 			this._btnName.TabIndex = 1;
 			this._btnName.Text = "Gather from Foo words";
 			this._btnName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -70,22 +60,32 @@ namespace WeSay.CommonTools
 			this._textShortDescription.Location = new System.Drawing.Point(79, 48);
 			this._textShortDescription.Multiline = true;
 			this._textShortDescription.Name = "_textShortDescription";
-			this._textShortDescription.Size = new System.Drawing.Size(407, 32);
+			this._textShortDescription.Size = new System.Drawing.Size(1421, 32);
 			this._textShortDescription.TabIndex = 2;
 			this._textShortDescription.TabStop = false;
 			this._textShortDescription.Text = "See words in Foo, write the same words in Boo";
+			//
+			// _intray
+			//
+			this._intray.BackColor = System.Drawing.SystemColors.Window;
+			this._intray.Count = 327;
+			this._intray.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this._intray.Location = new System.Drawing.Point(7, 15);
+			this._intray.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this._intray.Name = "_intray";
+			this._intray.ReferenceCount = 1000;
+			this._intray.Size = new System.Drawing.Size(57, 21);
+			this._intray.TabIndex = 3;
 			//
 			// TaskIndicator
 			//
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-
+			this.Controls.Add(this._intray);
 			this.Controls.Add(this._textShortDescription);
 			this.Controls.Add(this._btnName);
-			this.Controls.Add(this._count);
 			this.Name = "TaskIndicator";
-			this.Size = new System.Drawing.Size(489, 83);
+			this.Size = new System.Drawing.Size(1503, 83);
 			this.BackColorChanged += new System.EventHandler(this.TaskIndicator_BackColorChanged);
 			this.ResumeLayout(false);
 			this.PerformLayout();
@@ -94,8 +94,8 @@ namespace WeSay.CommonTools
 
 		#endregion
 
-		private System.Windows.Forms.Label _count;
 		private System.Windows.Forms.Button _btnName;
 		private System.Windows.Forms.TextBox _textShortDescription;
+		private WindowsControlLibrary1.ItemsToDoIndicator _intray;
 	}
 }
