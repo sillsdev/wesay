@@ -13,4 +13,23 @@ namespace WeSay.Data
 			get;
 		}
 	}
+
+	public class AllItems<T> : IFilter<T>
+	{
+		public Predicate<T> FilteringPredicate
+		{
+			get { return ReturnTrue; }
+		}
+
+		static private bool ReturnTrue<T>(T t)
+		{
+			return true;
+		}
+
+		public string Key
+		{
+			get { return "AllItems"; }
+		}
+	}
+
 }

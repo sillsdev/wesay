@@ -28,14 +28,6 @@
 	<WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-	<Reference Include="DevAge.Core, Version=1.0.0.11, Culture=neutral, PublicKeyToken=faad465d84242dbf">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\DevAge.SourceGrid\DevAge.Core.dll</HintPath>
-	</Reference>
-	<Reference Include="DevAge.SourceGrid3, Version=1.0.0.11, Culture=neutral, PublicKeyToken=faad465d84242dbf">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\DevAge.SourceGrid\DevAge.SourceGrid3.dll</HintPath>
-	</Reference>
 	<Reference Include="DevAge.Windows.Forms, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\DevAge.SourceGrid\DevAge.Windows.Forms.dll</HintPath>
@@ -108,10 +100,6 @@
 	<ProjectReference Include="..\LexicalModel\LexicalModel.csproj">
 	  <Project>{5F61C809-B6C0-4567-9603-B2198E1AD038}</Project>
 	  <Name>LexicalModel</Name>
-	</ProjectReference>
-	<ProjectReference Include="..\ListBox\ListBox\ListBox.csproj">
-	  <Project>{3CB6560B-DA13-4348-BE4E-4E12E05A6559}</Project>
-	  <Name>ListBox</Name>
 	</ProjectReference>
 	<ProjectReference Include="..\Reporting\Reporting.csproj">
 	  <Project>{9CCBECEC-513C-4DA4-A4CE-F5361B633760}</Project>

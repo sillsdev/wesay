@@ -566,6 +566,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 //skip to second word (first has extra stuff in the sense)
 			ListBoxTester t = new ListBoxTester("_recordsListBox");
+			t.Properties.Focus();
 			t.Properties.SelectedIndex = 1;
 			Assert.AreEqual("Secondary", LexemeFormOfSelectedEntry);
 			Assert.AreEqual(1, GetCurrentEntry().Senses.Count, "this test assumes an entry with 1 sense");

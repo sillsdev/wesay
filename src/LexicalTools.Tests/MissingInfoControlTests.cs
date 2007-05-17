@@ -70,7 +70,7 @@ namespace WeSay.LexicalTools.Tests
 			_missingTranslationRecordList.Add(CreateTestEntry("apple", "red thing", "An apple a day keeps the doctor away."));
 			_missingTranslationRecordList.Add(CreateTestEntry("banana", "yellow food", "Monkeys like to eat bananas."));
 			_missingTranslationRecordList.Add(CreateTestEntry("car", "small motorized vehicle", "Watch out for cars when you cross the street."));
-			_missingTranslationRecordList.Add(CreateTestEntry("bike", "vehicle with two wheels", "He rides his bike to school."));
+			_missingTranslationRecordList.Add(CreateTestEntry("dog", "animal with four legs; man's best friend", "He walked his dog."));
 
 			string[] analysisWritingSystemIds = new string[] { "analysis" };
 			string[] vernacularWritingSystemIds = new string[] { "vernacular" };

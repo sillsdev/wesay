@@ -1,4 +1,6 @@
+using System.Diagnostics;
 using System.Windows.Forms;
+using WeSay.UI;
 using WeSay.UI.Buttons;
 
 namespace WeSay.LexicalTools
@@ -21,7 +23,19 @@ namespace WeSay.LexicalTools
 				_records.ListChanged -= OnRecordsListChanged;
 
 				_recordsListBox.SelectedIndexChanged -= OnRecordSelectionChanged;
+				_recordsListBox.Enter += _recordsListBox_Enter;
+				_recordsListBox.Leave += _recordsListBox_Leave;
+				_recordsListBox.DataSource = null; // without this, the currency manager keeps trying to work
+
 				_completedRecordsListBox.SelectedIndexChanged -= OnCompletedRecordSelectionChanged;
+				_completedRecordsListBox.Enter += _completedRecordsListBox_Enter;
+				_completedRecordsListBox.Leave += _completedRecordsListBox_Leave;
+
+			   // Debug.Assert(_recordsListBox.BindingContext.Contains(_records) == false);
+				((CurrencyManager) _recordsListBox.BindingContext[_records]).SuspendBinding();
+				_recordsListBox.BindingContext = new BindingContext();
+
+
 				if (_currentRecord != null)
 				{
 					_currentRecord.PropertyChanged -= OnCurrentRecordPropertyChanged;
@@ -43,8 +57,8 @@ namespace WeSay.LexicalTools
 		private void InitializeComponent()
 		{
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MissingInfoControl));
-			this._recordsListBox = new ListBox.BindingListGrid();
-			this._completedRecordsListBox = new ListBox.BindingListGrid();
+			this._recordsListBox = new WeSayListBox();
+			this._completedRecordsListBox = new WeSayListBox();
 			this._completedRecordsLabel = new System.Windows.Forms.Label();
 			this._entryViewControl = new WeSay.LexicalTools.EntryViewControl();
 			this._btnPreviousWord = new WeSay.UI.Buttons.PreviousButton();
@@ -55,34 +69,18 @@ namespace WeSay.LexicalTools
 			//
 			// _recordsListBox
 			//
-			this._recordsListBox.GridToolTipActive = true;
 			this._recordsListBox.Location = new System.Drawing.Point(4, 5);
 			this._recordsListBox.MinimumSize = new System.Drawing.Size(0, 50);
 			this._recordsListBox.Name = "_recordsListBox";
-			this._recordsListBox.SelectedIndex = 0;
 			this._recordsListBox.Size = new System.Drawing.Size(116, 170);
-			this._recordsListBox.SpecialKeys = ((SourceGrid3.GridSpecialKeys)((((((SourceGrid3.GridSpecialKeys.Arrows | SourceGrid3.GridSpecialKeys.PageDownUp)
-						| SourceGrid3.GridSpecialKeys.Enter)
-						| SourceGrid3.GridSpecialKeys.Escape)
-						| SourceGrid3.GridSpecialKeys.Control)
-						| SourceGrid3.GridSpecialKeys.Shift)));
-			this._recordsListBox.StyleGrid = null;
 			this._recordsListBox.TabIndex = 1;
 			//
 			// _completedRecordsListBox
 			//
-			this._completedRecordsListBox.GridToolTipActive = true;
 			this._completedRecordsListBox.Location = new System.Drawing.Point(4, 220);
 			this._completedRecordsListBox.MinimumSize = new System.Drawing.Size(0, 50);
 			this._completedRecordsListBox.Name = "_completedRecordsListBox";
-			this._completedRecordsListBox.SelectedIndex = 0;
 			this._completedRecordsListBox.Size = new System.Drawing.Size(116, 170);
-			this._completedRecordsListBox.SpecialKeys = ((SourceGrid3.GridSpecialKeys)((((((SourceGrid3.GridSpecialKeys.Arrows | SourceGrid3.GridSpecialKeys.PageDownUp)
-						| SourceGrid3.GridSpecialKeys.Enter)
-						| SourceGrid3.GridSpecialKeys.Escape)
-						| SourceGrid3.GridSpecialKeys.Control)
-						| SourceGrid3.GridSpecialKeys.Shift)));
-			this._completedRecordsListBox.StyleGrid = null;
 			this._completedRecordsListBox.TabIndex = 2;
 			//
 			// _completedRecordsLabel
@@ -171,8 +169,8 @@ namespace WeSay.LexicalTools
 
 		#endregion
 		private EntryViewControl _entryViewControl;
-		private ListBox.BindingListGrid _recordsListBox;
-		private ListBox.BindingListGrid _completedRecordsListBox;
+		private WeSayListBox _recordsListBox;
+		private WeSayListBox _completedRecordsListBox;
 		private Label _completedRecordsLabel;
 		private NextButton _btnNextWord;
 		private PreviousButton _btnPreviousWord;

@@ -1,7 +1,4 @@
-using System;
-using System.Drawing;
 using System.Windows.Forms;
-using WeSay.LexicalTools.Properties;
 using WeSay.UI;
 
 namespace WeSay.LexicalTools
@@ -22,6 +19,11 @@ namespace WeSay.LexicalTools
 			if (disposing && !IsDisposed)
 			{
 				_recordsListBox.SelectedIndexChanged -= OnRecordSelectionChanged;
+				_recordsListBox.Enter -= _recordsListBox_Enter;
+				_recordsListBox.Leave -= _recordsListBox_Leave;
+				_recordsListBox.DataSource = null; // without this, the currency manager keeps trying to work
+
+
 				_findText.KeyDown -= _findText_KeyDown;
 			}
 			if (disposing && (components != null))

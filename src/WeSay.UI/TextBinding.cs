@@ -27,7 +27,13 @@ namespace WeSay.UI
 			_textBoxTarget = widgetTarget;
 			_textBoxTarget.TextChanged += new EventHandler(OnTextBoxChanged);
 			_textBoxTarget.HandleDestroyed += new EventHandler(_textBoxTarget_HandleDestroyed);
+			_textBoxTarget.Disposed += new EventHandler(_textBoxTarget_Disposed);
 			_textBoxTarget.Enter += new EventHandler(OnTextBoxEntered);
+		}
+
+		void _textBoxTarget_Disposed(object sender, EventArgs e)
+		{
+			TearDown();
 		}
 
 		void _textBoxTarget_HandleDestroyed(object sender, EventArgs e)
@@ -63,6 +69,7 @@ namespace WeSay.UI
 			_dataTarget = null;
 			_textBoxTarget.TextChanged -= new EventHandler(OnTextBoxChanged);
 			_textBoxTarget.HandleDestroyed -= new EventHandler(_textBoxTarget_HandleDestroyed);
+			_textBoxTarget.Disposed -= new EventHandler(_textBoxTarget_Disposed);
 			_textBoxTarget = null;
 		}
 
@@ -71,7 +78,11 @@ namespace WeSay.UI
 		/// </summary>
 		protected virtual void OnDataPropertyChanged(object sender, PropertyChangedEventArgs e)
 		{
-			if (_inMidstOfChange ||
+			// _dataTarget should not normally be null. However, there is a strange case where it can
+			// be: the teardown happens as a result of code which is also listening to the notifypropertychanged event
+			// but which happens before this. Even though the event handler has been removed, it will
+			// still fire this event.
+			if (_dataTarget == null || _inMidstOfChange ||
 				e.PropertyName != _writingSystemId) //FIX THIS
 				return;
 

@@ -22,6 +22,7 @@ namespace WeSay.LexicalTools
 
 		private readonly ViewTemplate _viewTemplate;
 		public event EventHandler SelectedIndexChanged = delegate {};
+		private bool _recordListBoxActive;
 
 		public DictionaryControl()
 		{
@@ -75,7 +76,7 @@ namespace WeSay.LexicalTools
 				listWritingSystem = BasilProject.Project.WritingSystems.UnknownVernacularWritingSystem;
 			}
 
-			BackColor = WeSay.UI.DisplaySettings.Default.BackgroundColor;
+			InitializeDisplaySettings();
 			InitializeComponent();
 			this._writingSystemChooser.Image = Resources.Expand.GetThumbnailImage(6, 6, ReturnFalse, IntPtr.Zero);
 			this._btnFind.Image = Resources.Find.GetThumbnailImage(18, 18, ReturnFalse, IntPtr.Zero);
@@ -88,7 +89,13 @@ namespace WeSay.LexicalTools
 
 			_findText.KeyDown += new KeyEventHandler(_findText_KeyDown);
 			_recordsListBox.SelectedIndexChanged += new EventHandler(OnRecordSelectionChanged);
+			_recordsListBox.Enter += new EventHandler(_recordsListBox_Enter);
+			_recordsListBox.Leave += new EventHandler(_recordsListBox_Leave);
 			_btnDeleteWord.Enabled = (CurrentRecord != null);
+		}
+
+		private void InitializeDisplaySettings() {
+			BackColor = WeSay.UI.DisplaySettings.Default.BackgroundColor;
 		}
 
 		private void RegisterWritingSystemAndField(Field field, WritingSystem writingSystem) {
@@ -238,8 +245,22 @@ namespace WeSay.LexicalTools
 			}
 			if(0 <= index && index < _recordsListBox.Items.Count)
 			{
+				_recordListBoxActive = true;// allow onRecordSelectionChanged
 				_recordsListBox.SelectedIndex = index;
+				_recordListBoxActive = false;
+
 			}
+		}
+
+
+		void _recordsListBox_Enter(object sender, EventArgs e)
+		{
+			_recordListBoxActive = true;
+		}
+
+		void _recordsListBox_Leave(object sender, EventArgs e)
+		{
+			_recordListBoxActive = false;
 		}
 
 
@@ -251,16 +272,16 @@ namespace WeSay.LexicalTools
 				return;
 			}
 			_btnDeleteWord.Enabled = (CurrentRecord != null);
-			if (Control_EntryDetailPanel.ContainsFocus)
+			if (!_recordListBoxActive)
 			{
 				// When we change the content of the displayed string,
 				// Windows.Forms.ListBox removes the item (and sends
 				// the new selection event) then adds it in to the right
 				// place (and sends the new selection event again)
 				// We don't want to know about this case
-				// There is nothing which can originate a change in
-				// record selection while the entry detail panel
-				// contains the focus so this is safe for now.
+				// We only want to know about the case where the user
+				// has selected a record in the list box itself (so has to enter
+				// the list box first)
 				return;
 			}
 
@@ -310,6 +331,7 @@ namespace WeSay.LexicalTools
 			}
 			LexEntry entry = new LexEntry();
 			bool NoPriorSelection = _recordsListBox.SelectedIndex == -1;
+			_recordListBoxActive = true;// allow onRecordSelectionChanged
 			_records.Add(entry);
 			_recordsListBox.SelectedIndex = _records.IndexOf(entry);
 			if(NoPriorSelection)
@@ -319,6 +341,8 @@ namespace WeSay.LexicalTools
 				// (No event is sent so we must do it ourselves)
 				OnRecordSelectionChanged(this, null);
 			}
+			_recordListBoxActive = false;
+
 			_entryViewControl.Focus();
 		}
 
@@ -337,10 +361,15 @@ namespace WeSay.LexicalTools
 				// but we assume it has the focus when we do our selection change event
 				this._btnDeleteWord.Focus();
 			}
+			_recordListBoxActive = true; // allow onRecordSelectionChanged
 			_records.RemoveAt(CurrentIndex);
+			_recordListBoxActive = false;
+
 			//hack until we can get selection change events sorted out in BindingGridList
-			OnRecordSelectionChanged(this, null);
-			_recordsListBox.Refresh();
+			//_recordListBoxActive = true;
+			//OnRecordSelectionChanged(this, null);
+			//_recordListBoxActive = false;
+			//_recordsListBox.Refresh();
 
 
 			if (CurrentRecord == null)

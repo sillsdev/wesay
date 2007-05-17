@@ -1,15 +1,12 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Collections;
 
 namespace WeSay.Data
 {
 	public abstract class AbstractRecordList<T> : IRecordList<T> where T : class, new()
 	{
-		protected AbstractRecordList()
-		{
-		}
 		private IList<T> _records;
 
 		protected IList<T> Records
@@ -138,7 +135,7 @@ namespace WeSay.Data
 			AddIndex(property);
 		}
 
-		protected void AddIndex(PropertyDescriptor property)
+		static protected void AddIndex(PropertyDescriptor property)
 		{
 		}
 
@@ -163,7 +160,7 @@ namespace WeSay.Data
 				return AllowEdit;
 			}
 		}
-		protected bool AllowEdit
+		static protected bool AllowEdit
 		{
 			get {
 				return true;
@@ -177,7 +174,7 @@ namespace WeSay.Data
 				return AllowNew;
 			}
 		}
-		protected bool AllowNew
+		static protected bool AllowNew
 		{
 			get {
 				return true;
@@ -190,7 +187,7 @@ namespace WeSay.Data
 				return AllowRemove;
 			}
 		}
-		protected bool AllowRemove
+		static protected bool AllowRemove
 		{
 			get {
 				return true;
@@ -275,7 +272,7 @@ namespace WeSay.Data
 			VerifyNotDisposed();
 			RemoveIndex(property);
 		}
-		protected void RemoveIndex(PropertyDescriptor property)
+		static protected void RemoveIndex(PropertyDescriptor property)
 		{
 		}
 
@@ -319,7 +316,7 @@ namespace WeSay.Data
 			}
 		}
 
-		protected bool SupportsChangeNotification
+		static protected bool SupportsChangeNotification
 		{
 			get {
 				return true;
@@ -334,7 +331,7 @@ namespace WeSay.Data
 			}
 		}
 
-		protected bool SupportsSearching
+		static protected bool SupportsSearching
 		{
 			get {
 				return true;
@@ -348,7 +345,7 @@ namespace WeSay.Data
 				return SupportsSorting;
 			}
 		}
-		protected bool SupportsSorting
+		static protected bool SupportsSorting
 		{
 			get {
 				return true;
@@ -410,7 +407,7 @@ namespace WeSay.Data
 			Remove(this[index]);
 		}
 
-		public T this[int index]
+		public virtual T this[int index]
 		{
 			get {
 				VerifyNotDisposed();
@@ -430,7 +427,7 @@ namespace WeSay.Data
 
 		#region IList Members
 
-		int System.Collections.IList.Add(object value)
+		int IList.Add(object value)
 		{
 			VerifyNotDisposed();
 			T item = (T)value;
@@ -438,25 +435,25 @@ namespace WeSay.Data
 			return IndexOf(item);
 		}
 
-		void System.Collections.IList.Clear()
+		void IList.Clear()
 		{
 			VerifyNotDisposed();
 			Clear();
 		}
 
-		bool System.Collections.IList.Contains(object value)
+		bool IList.Contains(object value)
 		{
 			VerifyNotDisposed();
 			return Contains((T)value);
 		}
 
-		int System.Collections.IList.IndexOf(object value)
+		int IList.IndexOf(object value)
 		{
 			VerifyNotDisposed();
 			return IndexOf((T)value);
 		}
 
-		void System.Collections.IList.Insert(int index, object value)
+		void IList.Insert(int index, object value)
 		{
 			VerifyNotDisposed();
 			Insert(index, (T)value);
@@ -470,7 +467,7 @@ namespace WeSay.Data
 			}
 		}
 
-		bool System.Collections.IList.IsReadOnly
+		bool IList.IsReadOnly
 		{
 			get {
 				VerifyNotDisposed();
@@ -478,7 +475,7 @@ namespace WeSay.Data
 			}
 		}
 
-		void System.Collections.IList.Remove(object value)
+		void IList.Remove(object value)
 		{
 			VerifyNotDisposed();
 			Remove((T)value);
@@ -492,14 +489,14 @@ namespace WeSay.Data
 			}
 		}
 
-		void System.Collections.IList.RemoveAt(int index)
+		void IList.RemoveAt(int index)
 		{
 			VerifyNotDisposed();
 			CheckIndex(index);
 			RemoveAt(index);
 		}
 
-		object System.Collections.IList.this[int index]
+		object IList.this[int index]
 		{
 			get {
 				VerifyNotDisposed();
@@ -588,7 +585,7 @@ namespace WeSay.Data
 
 		#region ICollection Members
 
-		void System.Collections.ICollection.CopyTo(Array array, int index)
+		void ICollection.CopyTo(Array array, int index)
 		{
 			VerifyNotDisposed();
 			if (array == null)
@@ -616,7 +613,7 @@ namespace WeSay.Data
 			}
 		}
 
-		int System.Collections.ICollection.Count
+		int ICollection.Count
 		{
 			get {
 				VerifyNotDisposed();
@@ -624,7 +621,7 @@ namespace WeSay.Data
 			}
 		}
 
-		bool System.Collections.ICollection.IsSynchronized
+		bool ICollection.IsSynchronized
 		{
 			get {
 				VerifyNotDisposed();
@@ -632,14 +629,14 @@ namespace WeSay.Data
 			}
 		}
 
-		protected bool IsSynchronized
+		static protected bool IsSynchronized
 		{
 			get {
 				return false;
 			}
 		}
 
-		object System.Collections.ICollection.SyncRoot
+		object ICollection.SyncRoot
 		{
 			get {
 				VerifyNotDisposed();
@@ -658,15 +655,15 @@ namespace WeSay.Data
 
 		#region IEnumerable Members
 
-		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+		IEnumerator IEnumerable.GetEnumerator()
 		{
 			VerifyNotDisposed();
 			return GetEnumerator();
 		}
 
-		protected System.Collections.IEnumerator GetEnumerator()
+		protected IEnumerator GetEnumerator()
 		{
-			return ((System.Collections.IEnumerable) _records).GetEnumerator();
+			return ((IEnumerable) _records).GetEnumerator();
 		}
 
 		#endregion

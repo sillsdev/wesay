@@ -1,6 +1,5 @@
 using System;
 using System.ComponentModel;
-using System.Diagnostics;
 using WeSay.Foundation;
 
 namespace WeSay.UI

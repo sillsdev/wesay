@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Collections;
 
 namespace WeSay.Data
 {
@@ -56,24 +57,25 @@ namespace WeSay.Data
 			{
 				throw new ArgumentNullException();
 			}
-			string key = sortHelper.Name;
-			if (!RecordLists.ContainsKey(key))
+			string recordListKey = RecordListKey<T>(null, sortHelper.Name);
+			if (!RecordLists.ContainsKey(recordListKey))
 			{
-				RecordLists.Add(key, new CachedSortedDb4oList<K, T>(this, sortHelper));
+				RecordLists.Add(recordListKey, new CachedSortedDb4oList<K, T>(this, sortHelper));
 			}
-			return (CachedSortedDb4oList<K, T>)RecordLists[key];
+			return (CachedSortedDb4oList<K, T>)RecordLists[recordListKey];
 		}
 
 		protected override IRecordList<T> CreateMasterRecordList<T>()
 		{
-			return new Db4oRecordList<T>(this._dataSource);
+			Db4oRecordList<T> recordList = new Db4oRecordList<T>(this._dataSource);
+			recordList.DelayWritingCachesUntilDispose = DelayWritingCachesUntilDispose;
+			return recordList;
 		}
 
 		protected override IRecordList<T> CreateFilteredRecordList<Key, T>(IFilter<T> filter, ISortHelper<Key, T> sortHelper)
 		{
 			CachedSortedDb4oList<Key, T> sortedList = GetSortedList(sortHelper);
 			FilteredDb4oRecordList<Key, T> list = new FilteredDb4oRecordList<Key, T>(GetListOfType<T>(), filter, sortedList, CachePath, false);
-			list.DelayWritingCachesUntilDispose = DelayWritingCachesUntilDispose;
 			return list;
 		}
 
@@ -85,7 +87,6 @@ namespace WeSay.Data
 				CachedSortedDb4oList<Key, T> sortedList = GetSortedList(sortHelper);
 
 				recordList = new FilteredDb4oRecordList<Key, T>(GetListOfType<T>(), filter, sortedList, CachePath, true);
-				recordList.DelayWritingCachesUntilDispose = DelayWritingCachesUntilDispose;
 			}
 			catch (OperationCanceledException) {}
 			return recordList;
@@ -104,8 +105,9 @@ namespace WeSay.Data
 			}
 		}
 
-		class FilteredDb4oRecordList<Key, T> : Db4oRecordList<T> where T : class, new()
+		class FilteredDb4oRecordList<Key, T> : Db4oRecordList<T>, IBindingList where T : class, new()
 		{
+			private bool _isSorted;
 			IRecordList<T> _masterRecordList;
 			bool _isSourceMasterRecord;
 			IFilter<T> _isRelevantFilter;
@@ -138,8 +140,10 @@ namespace WeSay.Data
 					((Db4oList<T>)Records).ItemIds.Clear();
 				}
 
+				DelayWritingCachesUntilDispose = _masterRecordList.DelayWritingCachesUntilDispose;
+
 				ApplyFilter(RelevancePredicate);
-				Sort();
+				_isSorted = false;
 
 				//At this point, either you have no records (either because constructOnlyIfFilterIsCached==true,
 				// or there just are no records that fit the filter), or you have some and they satisfy the
@@ -178,6 +182,7 @@ namespace WeSay.Data
 
 				((Db4oList<T>)Records).ItemIds.Sort(new IdListComparer(_sortedList.GetIds()));
 				Debug.Assert(oldCount == Count);
+				OnListReset();
 			}
 
 			private class IdListComparer: IComparer<long>
@@ -236,6 +241,7 @@ namespace WeSay.Data
 							{
 								formatter.Serialize(fs, GetDatabaseLastModified());
 								formatter.Serialize(fs, GetFilterHashCode());
+								VerifySorted();
 								formatter.Serialize(fs, ((Db4oList<T>)Records).ItemIds);
 							}
 							finally
@@ -284,6 +290,7 @@ namespace WeSay.Data
 								{
 									itemIds = (List<long>)formatter.Deserialize(fs);
 									successful = true;
+									_isSorted = true;
 								}
 							}
 						}
@@ -345,6 +352,10 @@ namespace WeSay.Data
 					}
 
 				}
+				if (shouldAdd)
+				{
+					_isSorted = false;
+				}
 				return shouldAdd;
 			}
 			protected override bool ShouldDeleteRecord(T item)
@@ -374,7 +385,6 @@ namespace WeSay.Data
 					{
 						Add(item);
 					}
-					Sort();
 #if DEBUG
 					if (!_masterRecordList.DelayWritingCachesUntilDispose)
 					{
@@ -434,13 +444,77 @@ namespace WeSay.Data
 
 			protected override void OnItemAdded(int newIndex)
 			{
-				base.OnItemAdded(newIndex);
+				_isSorted = true; //allow me to get the record associated with newIndex
+								  //without triggering a sort and changing it from out
+								  //from under me
 				if (!_isSourceMasterRecord && _masterRecordList != null)
 				{
 					_masterRecordList.Add(this[newIndex]);
 				}
+				_isSorted = false; // may have lost sort order.
+				base.OnItemAdded(newIndex);
 			}
 
+			public Key GetKey(int index)
+			{
+				long id = ((Db4oList<T>) Records).ItemIds[index];
+				return _sortedList.GetKeyFromId(id);
+			}
+
+			// returns the key string. to get the value object use GetValue
+			// this is so bindinglistgrid will display the right thing.
+			object IList.this[int index]
+			{
+				get
+				{
+					VerifyNotDisposed();
+					VerifySorted();
+					return GetKey(index);
+				}
+				set
+				{
+					VerifyNotDisposed();
+					throw new NotSupportedException();
+				}
+			}
+
+			int IList.IndexOf(object value)
+			{
+				VerifyNotDisposed();
+				VerifySorted();
+				return IndexOf((T)value);
+			}
+
+
+			protected override bool ShouldReplaceRecord(int index, T value)
+			{
+				_isSorted = false;
+				return true;
+			}
+
+			public override T this[int index]
+			{
+				get
+				{
+					VerifyNotDisposed();
+					VerifySorted();
+					return base[index];
+				}
+				set
+				{
+					VerifyNotDisposed();
+					_isSorted = false;
+					base[index] = value;
+				}
+			}
+
+			private void VerifySorted() {
+				if(!this._isSorted)
+				{
+					_isSorted = true; // this needs to come before the so
+					Sort();
+				}
+			}
 
 			#region IDisposable Members
 

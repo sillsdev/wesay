@@ -187,8 +187,8 @@ namespace WeSay.LexicalTools
 			this._detailListControl.SuspendLayout();
 
 			this._detailListControl.Clear();
-		  this._detailListControl.VerticalScroll.Value = this._detailListControl.VerticalScroll.Minimum;
-		  this._panelEntry.Controls.Add(_detailListControl);
+			this._detailListControl.VerticalScroll.Value = this._detailListControl.VerticalScroll.Minimum;
+			this._panelEntry.Controls.Add(_detailListControl);
 			if (this._record != null)
 			{
 				LexEntryLayouter layout = new LexEntryLayouter(this._detailListControl, ViewTemplate);

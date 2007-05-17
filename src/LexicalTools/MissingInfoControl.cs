@@ -1,9 +1,6 @@
 using System;
 using System.Diagnostics;
-using System.Drawing;
 using System.Windows.Forms;
-using ListBox;
-using SourceGrid3;
 using WeSay.Language;
 using WeSay.LexicalModel;
 using WeSay.Project;
@@ -46,44 +43,43 @@ namespace WeSay.LexicalTools
 			}
 
 			_records = records;
-			_records.ListChanged += OnRecordsListChanged;
 			_completedRecords = new InMemoryBindingList<LexEntry>();
 			_viewTemplate = viewTemplate;
 			_isNotComplete = isNotComplete;
-			BackColor = DisplaySettings.Default.BackgroundColor;
-			_entryViewControl.BackColor = DisplaySettings.Default.BackgroundColor;//we like it to stand out at design time, but not runtime
+			InitializeDisplaySettings();
 			_entryViewControl.KeyDown += new KeyEventHandler(OnKeyDown);
 			_entryViewControl.ViewTemplate = _viewTemplate;
 
 			_recordsListBox.DataSource = _records;
+			_records.ListChanged += OnRecordsListChanged; // this needs to be after so it will get change event after the ListBox
 
-			if (_viewTemplate.Fields.Count > 0)
+			WritingSystem listWritingSystem = BasilProject.Project.WritingSystems.UnknownVernacularWritingSystem;
+
+			Field field = _viewTemplate.GetField(Field.FieldNames.EntryLexicalForm.ToString());
+			if (field != null)
 			{
-				if (_viewTemplate.Fields[0].WritingSystems.Count > 0)
+				if (field.WritingSystems.Count > 0)
 				{
-					_recordsListBox.Font = _viewTemplate.Fields[0].WritingSystems[0].Font;
-					_completedRecordsListBox.Font = _recordsListBox.Font;
+					listWritingSystem = field.WritingSystems[0];
 				}
 				else
 				{
-					MessageBox.Show(String.Format("There are no writing systems enabled for the Field '{0}'", _viewTemplate.Fields[0].FieldName), "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);//review
+					MessageBox.Show(String.Format("There are no writing systems enabled for the Field '{0}'", field.FieldName), "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);//review
 				}
 			}
 
-			_recordsListBox.AutoSize();
-			_recordsListBox.Columns.StretchToFit();
-			_recordsListBox.SelectedIndexChanged += new EventHandler(OnRecordSelectionChanged);
-			_recordsListBox.Selection.BorderMode = SelectionBorderMode.None;
-			_recordsListBox.Columns[0].Width = _recordsListBox.Width - _recordsListBox.VScrollBar.Width;
+			this._recordsListBox.BorderStyle = BorderStyle.None;
+			this._recordsListBox.SelectedIndexChanged += new EventHandler(OnRecordSelectionChanged);
+			this._recordsListBox.Enter += new EventHandler(_recordsListBox_Enter);
+			this._recordsListBox.Leave += new EventHandler(_recordsListBox_Leave);
+			this._recordsListBox.WritingSystem = listWritingSystem;
 
-			_completedRecordsListBox.DataSource = _completedRecords;
-			_completedRecordsListBox.AutoSize();
-			_completedRecordsListBox.Columns.StretchToFit();
-			_completedRecordsListBox.SelectedIndexChanged += new EventHandler(OnCompletedRecordSelectionChanged);
-			_completedRecordsListBox.BackColor = DisplaySettings.Default.BackgroundColor;
-			_completedRecordsListBox.ForeColor = DisplaySettings.Default.BackgroundColor;
-			_completedRecordsListBox.Selection.BorderMode = SelectionBorderMode.None;
-			_completedRecordsListBox.Columns[0].Width = _completedRecordsListBox.Width - _completedRecordsListBox.VScrollBar.Width;
+			this._completedRecordsListBox.DataSource = _completedRecords;
+			this._completedRecordsListBox.BorderStyle = BorderStyle.None;
+			this._completedRecordsListBox.SelectedIndexChanged += new EventHandler(OnCompletedRecordSelectionChanged);
+			this._completedRecordsListBox.Enter += new EventHandler(_completedRecordsListBox_Enter);
+			this._completedRecordsListBox.Leave += new EventHandler(_completedRecordsListBox_Leave);
+			this._completedRecordsListBox.WritingSystem = listWritingSystem;
 
 			this.labelNextHotKey.BringToFront();
 			this._btnNextWord.BringToFront();
@@ -91,8 +87,48 @@ namespace WeSay.LexicalTools
 			SetCurrentRecordFromRecordList();
 		}
 
+		private bool _recordsListBoxActive;
+		private bool _completedRecordsListBoxActive;
+
+		void _recordsListBox_Leave(object sender, EventArgs e)
+		{
+			_recordsListBoxActive = false;
+		}
+
+		void _recordsListBox_Enter(object sender, EventArgs e)
+		{
+			_recordsListBoxActive = true;
+		}
+
+		void _completedRecordsListBox_Leave(object sender, EventArgs e)
+		{
+			_completedRecordsListBoxActive = false;
+		}
+
+		void _completedRecordsListBox_Enter(object sender, EventArgs e)
+		{
+			_completedRecordsListBoxActive = true;
+		}
+
+		private void InitializeDisplaySettings() {
+			BackColor = DisplaySettings.Default.BackgroundColor;
+			_entryViewControl.BackColor = DisplaySettings.Default.BackgroundColor;//we like it to stand out at design time, but not runtime
+		}
+
 		private void OnRecordSelectionChanged(object sender, EventArgs e)
 		{
+			if (!_recordsListBoxActive)
+			{
+				// When we change the content of the displayed string,
+				// Windows.Forms.ListBox removes the item (and sends
+				// the new selection event) then adds it in to the right
+				// place (and sends the new selection event again)
+				// We don't want to know about this case
+				// We only want to know about the case where the user
+				// has selected a record in the list box itself (so has to enter
+				// the list box first)
+				return;
+			}
 			SetCurrentRecordFromRecordList();
 			if (SelectedIndexChanged != null)
 			{
@@ -102,10 +138,18 @@ namespace WeSay.LexicalTools
 
 		public void SetCurrentRecordToNext()
 		{
+			if (!_btnNextWord.Focused)
+			{
+				// we need to make sure that any ghosts have lost their focus and triggered updates before
+				// we do anything else
+				_btnNextWord.Focus();
+			}
+
 			if (_records.Count > 0)
 			{
 				CurrentRecord = _nextRecord ?? _records[_records.Count-1];
 				SelectCurrentRecordInRecordList();
+				this._recordsListBox.Focus(); // change the focus so that the next focus event will for sure work
 				this._entryViewControl.Focus();
 				UpdatePreviousAndNextRecords();
 			}
@@ -116,16 +160,20 @@ namespace WeSay.LexicalTools
 			}
 		}
 
-
-
-
-
 		public void SetCurrentRecordToPrevious()
 		{
 			if (_records.Count > 0)
 			{
+				if (!_btnPreviousWord.Focused)
+				{
+					// we need to make sure that any ghosts have lost their focus and triggered updates before
+					// we do anything else
+					_btnPreviousWord.Focus();
+				}
+
 				CurrentRecord = _previousRecord ?? _records[0];
 				SelectCurrentRecordInRecordList();
+				this._recordsListBox.Focus(); // change the focus so that the next focus event will for sure work
 				this._entryViewControl.Focus();
 				UpdatePreviousAndNextRecords();
 			}
@@ -140,7 +188,7 @@ namespace WeSay.LexicalTools
 
 		private void SetCurrentRecordFromRecordList()
 		{
-			SwitchPrimaryRecordListControl(_recordsListBox);
+			ClearSelectionForCompletedRecordsListBox();
 
 			if (this._records.Count == 0)
 			{
@@ -154,31 +202,22 @@ namespace WeSay.LexicalTools
 			}
 		}
 
-		private void SwitchPrimaryRecordListControl(BindingListGrid list)
-		{
-			BindingListGrid otherList = _recordsListBox;
-			if(list == _recordsListBox)
-			{
-				otherList = _completedRecordsListBox;
-			}
-
-			list.Selection.BackColor = list.Selection.FocusBackColor;
-			otherList.Selection.BackColor = Color.White;
-		}
-
 		private void OnCompletedRecordSelectionChanged(object sender, EventArgs e)
 		{
-			SetCurrentRecordFromCompletedRecordList();
-			if (SelectedIndexChanged != null)
+			if (!_completedRecordsListBoxActive)
 			{
-				SelectedIndexChanged.Invoke(this, null);
+				// When we change the content of the displayed string,
+				// Windows.Forms.ListBox removes the item (and sends
+				// the new selection event) then adds it in to the right
+				// place (and sends the new selection event again)
+				// We don't want to know about this case
+				// We only want to know about the case where the user
+				// has selected a record in the list box itself (so has to enter
+				// the list box first)
+				return;
 			}
-		}
 
-		private void SetCurrentRecordFromCompletedRecordList()
-		{
-			SwitchPrimaryRecordListControl(_completedRecordsListBox);
-
+			ClearSelectionForRecordsListBox();
 			if (this._completedRecords.Count == 0)
 			{
 				CurrentRecord = null;
@@ -187,7 +226,13 @@ namespace WeSay.LexicalTools
 			{
 				CurrentRecord = _completedRecords[CompletedRecordListCurrentIndex];
 			}
+
+			if (SelectedIndexChanged != null)
+			{
+				SelectedIndexChanged.Invoke(this, null);
+			}
 		}
+
 
 		protected int RecordListCurrentIndex
 		{
@@ -216,48 +261,52 @@ namespace WeSay.LexicalTools
 			}
 			private set
 			{
-				if(_currentRecord != null)
+				if (_currentRecord != value)
 				{
-					_currentRecord.PropertyChanged -= OnCurrentRecordPropertyChanged;
-				}
-				_currentRecord = value;
-				_entryViewControl.DataSource = value;
-				if (_currentRecord != null)
-				{
-					_currentRecord.PropertyChanged += OnCurrentRecordPropertyChanged;
-					_congratulationsControl.Hide();
+					if (_currentRecord != null)
+					{
+						_currentRecord.PropertyChanged -= OnCurrentRecordPropertyChanged;
+					}
+					_currentRecord = value;
+					_entryViewControl.DataSource = value;
+					if (_currentRecord != null)
+					{
+						_currentRecord.PropertyChanged += OnCurrentRecordPropertyChanged;
+						_congratulationsControl.Hide();
+					}
 				}
 			}
 		}
 
 		void OnRecordsListChanged(object sender, System.ComponentModel.ListChangedEventArgs e)
 		{
-			if(e.ListChangedType == System.ComponentModel.ListChangedType.ItemAdded)
+			if (e.ListChangedType == System.ComponentModel.ListChangedType.ItemAdded)
 			{
 				SelectCurrentRecordInRecordList();
 			}
+			else if (e.ListChangedType == System.ComponentModel.ListChangedType.ItemDeleted)
+			{
+				ClearSelectionForRecordsListBox();
+			}
 		}
 
-		private void SelectCurrentRecordInRecordList() {
-			int index = this._records.IndexOf(this._currentRecord);
+		private void SelectCurrentRecordInRecordList()
+		{
+			int index = this._records.IndexOf(CurrentRecord);
 			Debug.Assert(index != -1);
-			this._recordsListBox.Selection.Clear();
-			this._recordsListBox.Selection.SelectRow(index, true);
-			this._recordsListBox.ShowCell(new Position(index, 0));
-			SwitchPrimaryRecordListControl(_recordsListBox);
+			this._recordsListBox.SelectedIndex = index;
+			ClearSelectionForCompletedRecordsListBox();
 		}
 
 		void OnCurrentRecordPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
 		{
-			Debug.Assert(sender == CurrentRecord);
 			LexEntry entry = (LexEntry)sender;
 			if (_isNotComplete(entry))
 			{
 				if (_completedRecords.Contains(entry))
 				{
-					this._completedRecordsListBox.Selection.Clear();
 					this._completedRecords.Remove(entry);
-				   // SwitchPrimaryRecordListControl(_recordsListBox);
+					ClearSelectionForCompletedRecordsListBox();
 				}
 			}
 			else
@@ -265,39 +314,35 @@ namespace WeSay.LexicalTools
 			   if (!_completedRecords.Contains(entry))
 				{
 					this._completedRecords.Add(entry);
-					SelectCurrentRecordInCompletedRecordList();
-					//SwitchPrimaryRecordListControl(_completedRecordsListBox);
+					int index = this._completedRecords.IndexOf(CurrentRecord);
+					Debug.Assert(index != -1);
+					this._completedRecordsListBox.SelectedIndex = index;
+					ClearSelectionForRecordsListBox();
 				}
 			}
 		}
 
-		private void SelectCurrentRecordInCompletedRecordList() {
-			int index = this._completedRecords.IndexOf(CurrentRecord);
-			Debug.Assert(index != -1);
-			this._completedRecordsListBox.Selection.Clear();
-			this._completedRecordsListBox.Selection.SelectRow(index, true);
-			this._completedRecordsListBox.ShowCell(new Position(index, 0));
-			SwitchPrimaryRecordListControl(_completedRecordsListBox);
+		private void ClearSelectionForCompletedRecordsListBox() {
+			int topIndex = this._completedRecordsListBox.TopIndex;
+			this._completedRecordsListBox.ClearSelected();
+			this._completedRecordsListBox.ClearSelected();
+			this._completedRecordsListBox.TopIndex = topIndex;
+		}
+
+		private void ClearSelectionForRecordsListBox()
+		{
+			int topIndex = this._recordsListBox.TopIndex;
+			this._recordsListBox.ClearSelected();
+			this._recordsListBox.ClearSelected();
+			this._recordsListBox.TopIndex = topIndex;
 		}
 
 		void OnBtnPreviousWordClick(object sender, EventArgs e)
 		{
-			if (!_btnPreviousWord.Focused)
-			{
-				// we need to make sure that any ghosts have lost their focus and triggered updates before
-				// we do anything else
-				_btnPreviousWord.Focus();
-			}
 			SetCurrentRecordToPrevious();
 		}
 		void OnBtnNextWordClick(object sender, EventArgs e)
 		{
-			if (!_btnNextWord.Focused)
-			{
-				// we need to make sure that any ghosts have lost their focus and triggered updates before
-				// we do anything else
-				_btnNextWord.Focus();
-			}
 
 			SetCurrentRecordToNext();
 		}

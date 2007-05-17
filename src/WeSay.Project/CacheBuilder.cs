@@ -26,7 +26,7 @@ namespace WeSay.Project
 
 		public static void RemoveAssumeCacheIsFreshIndicator()
 		{
-			string s = Path.Combine(Project.WeSayWordsProject.Project.PathToCache, kCacheIsFreshIndicator);
+			string s = Path.Combine(WeSayWordsProject.Project.PathToCache, kCacheIsFreshIndicator);
 			if(File.Exists(s))
 			{
 				File.Delete(s);

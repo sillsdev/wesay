@@ -34,6 +34,7 @@ namespace WeSay.UI
 			{
 				GoingAway.Invoke(this, null);
 			}
+			GoingAway = null;
 			base.OnHandleDestroyed(e);
 		}
 
@@ -56,7 +57,7 @@ namespace WeSay.UI
 				//review
 				if (_control.SelectedItem != null)
 				{
-					return (_control.SelectedItem as Option.OptionDisplayProxy).Key;
+					return ((Option.OptionDisplayProxy)_control.SelectedItem).Key;
 				}
 				else
 				{
@@ -97,7 +98,7 @@ namespace WeSay.UI
 
 		private void SetStatusColor()
 		{
-			if (this.Value != null && Value.Length > 0 &&_control.SelectedIndex == -1)
+			if (Value != null && Value.Length > 0 &&_control.SelectedIndex == -1)
 			{
 				_control.BackColor = Color.Red;
 				_control.DropDownStyle = ComboBoxStyle.DropDown; //allow abberant old value
@@ -136,7 +137,7 @@ namespace WeSay.UI
 //            this.components.Add(annotationControl);//so it will get disposed of when we are
 
 
-			this.Controls.Add(p);
+			Controls.Add(p);
 			Height += p.Height;
 			ResumeLayout(false);
 		}
@@ -165,9 +166,9 @@ namespace WeSay.UI
 
 
 
-			this.Value = optionRef.Value;
+			Value = optionRef.Value;
 
-			_control.SelectedValueChanged += new System.EventHandler(OnSelectedValueChanged);
+			_control.SelectedValueChanged += new EventHandler(OnSelectedValueChanged);
 //            _control.Validating += new System.ComponentModel.CancelEventHandler(_control_Validating);
 	   }
 
@@ -177,7 +178,7 @@ namespace WeSay.UI
 		//      e.Cancel = !(_control.SelectedIndex > -1 || _control.Text=="");
 		//}
 
-		void OnSelectedValueChanged(object sender, System.EventArgs e)
+		void OnSelectedValueChanged(object sender, EventArgs e)
 		{
 			Reporting.Logger.WriteMinorEvent("SingleOptionControl_SelectionChanged ({0})", this._nameForLogging);
 			SetStatusColor();

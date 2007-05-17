@@ -53,14 +53,46 @@ namespace WeSay.Data
 			return null;
 		}
 
-		private static string RecordListKey<T>(string filterName) where T : class, new()
+		protected static string RecordListKey<T>(string filterName, string sorterName) where T : class, new()
 		{
-			return ((filterName == string.Empty)?'#':'!') + typeof(T).FullName + filterName;
+			string prefix = "!"; // for normal filtered, sorted lists
+			if(string.IsNullOrEmpty(filterName))
+			{
+				if (string.IsNullOrEmpty(sorterName))
+				{
+					// this is our master record list
+					prefix = "#";
+				}
+				else
+				{
+					// this is a master sorted list
+					prefix = "@";
+				}
+			}
+			else
+			{
+				if (string.IsNullOrEmpty(sorterName))
+				{
+					throw new ArgumentOutOfRangeException("sorterName","cannot be null or empty when filterName is present");
+				}
+			}
+
+			return prefix + typeof(T).FullName + filterName + sorterName;
 		}
 
 		public static bool IsMasterRecordList(DictionaryEntry dictionaryEntry)
 		{
 			return ((string) dictionaryEntry.Key).StartsWith("#");
+		}
+
+		public static bool IsMasterSortedRecordList(DictionaryEntry dictionaryEntry)
+		{
+			return ((string)dictionaryEntry.Key).StartsWith("@");
+		}
+
+		public static bool IsFilteredRecordList(DictionaryEntry dictionaryEntry)
+		{
+			return ((string)dictionaryEntry.Key).StartsWith("!");
 		}
 
 		public void Register<Key, T>(IFilter<T> filter, ISortHelper<Key, T> sortHelper) where T : class, new()
@@ -74,21 +106,23 @@ namespace WeSay.Data
 				throw new ArgumentNullException("sortHelper");
 			}
 
-			if (!RecordLists.ContainsKey(RecordListKey<T>(filter.Key)))
+			string recordListKey = RecordListKey<T>(filter.Key, sortHelper.Name);
+			if (!RecordLists.ContainsKey(recordListKey))
 			{
-				RecordLists.Add(RecordListKey<T>(filter.Key), CreateFilteredRecordListUnlessSlow(filter, sortHelper));
+				RecordLists.Add(recordListKey, CreateFilteredRecordListUnlessSlow(filter, sortHelper));
 			}
 		}
 
 		public IRecordList<T> GetListOfType<T>() where T : class, new()
 		{
-			if (!RecordLists.ContainsKey(RecordListKey<T>(String.Empty)))
+			string recordListKey = RecordListKey<T>(null, null);
+			if (!RecordLists.ContainsKey(recordListKey))
 			{
 				IRecordList<T> MasterRecordList = CreateMasterRecordList<T>();
 				MasterRecordList.DeletingRecord += new EventHandler<RecordListEventArgs<T>>(MasterRecordList_DeletingRecord<T>);
-				RecordLists.Add(RecordListKey<T>(String.Empty), MasterRecordList);
+				RecordLists.Add(recordListKey, MasterRecordList);
 			}
-			return (IRecordList<T>)RecordLists[RecordListKey<T>(String.Empty)];
+			return (IRecordList<T>)RecordLists[recordListKey];
 		}
 
 		void MasterRecordList_DeletingRecord<T>(object sender, RecordListEventArgs<T> e) where T : class, new()
@@ -106,15 +140,16 @@ namespace WeSay.Data
 			{
 				throw new ArgumentNullException("sortHelper");
 			}
-			if (!RecordLists.ContainsKey(RecordListKey<T>(filter.Key)))
+			string recordListKey = RecordListKey<T>(filter.Key, sortHelper.Name);
+			if (!RecordLists.ContainsKey(recordListKey))
 			{
 				throw new InvalidOperationException("Filter must be registered before it can be retrieved with GetListOfType.");
 			}
-			IRecordList<T> recordList = (IRecordList<T>)RecordLists[RecordListKey<T>(filter.Key)];
+			IRecordList<T> recordList = (IRecordList<T>)RecordLists[recordListKey];
 			if (recordList == null)
 			{
 				recordList = CreateFilteredRecordList(filter, sortHelper);
-				RecordLists[RecordListKey<T>(filter.Key)] = recordList;
+				RecordLists[recordListKey] = recordList;
 			}
 			return recordList;
 		}
@@ -168,7 +203,7 @@ namespace WeSay.Data
 					// we need to dispose masters last
 					foreach (DictionaryEntry dictionaryEntry in RecordLists)
 					{
-						if (!IsMasterRecordList(dictionaryEntry))
+						if (IsFilteredRecordList(dictionaryEntry))
 						{
 							IDisposable disposable = dictionaryEntry.Value as IDisposable;
 							if (disposable != null)
@@ -177,6 +212,18 @@ namespace WeSay.Data
 							}
 						}
 					}
+					foreach (DictionaryEntry dictionaryEntry in RecordLists)
+					{
+						if (IsMasterSortedRecordList(dictionaryEntry))
+						{
+							IDisposable disposable = dictionaryEntry.Value as IDisposable;
+							if (disposable != null)
+							{
+								disposable.Dispose();
+							}
+						}
+					}
+
 					foreach (DictionaryEntry dictionaryEntry in RecordLists)
 					{
 						if (IsMasterRecordList(dictionaryEntry))

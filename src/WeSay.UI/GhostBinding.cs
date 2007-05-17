@@ -1,6 +1,5 @@
 using System;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Reflection;
 using System.Windows.Forms;
 using WeSay.Language;
@@ -51,7 +50,9 @@ namespace WeSay.UI
 //           _textBoxTarget.TextChanged += new EventHandler(_textBoxTarget_TextChanged);
 		   _textBoxTarget.Enter += new EventHandler(OnTextBoxEntered);
 		   _textBoxTarget.HandleDestroyed += new EventHandler(_textBoxTarget_HandleDestroyed);
+		   _textBoxTarget.Disposed += new EventHandler(_textBoxTarget_Disposed);
 		}
+
 
 		void _textBoxTarget_KeyDown(object sender, KeyEventArgs e)
 		{
@@ -78,9 +79,14 @@ namespace WeSay.UI
 			TearDown();
 		}
 
+		void _textBoxTarget_Disposed(object sender, EventArgs e)
+		{
+			TearDown();
+		}
+
 		void _textBoxTarget_LostFocus(object sender, EventArgs e)
 		{
-				TimeForRealObject(true);
+			 TimeForRealObject(true);
 		}
 
 		//void _textBoxTarget_TextChanged(object sender, EventArgs e)
@@ -135,6 +141,7 @@ namespace WeSay.UI
 			_listTarget = null;
 //            _textBoxTarget.TextChanged -= new EventHandler(_textBoxTarget_TextChanged);
 			_textBoxTarget.HandleDestroyed -= new EventHandler(_textBoxTarget_HandleDestroyed);
+			_textBoxTarget.Disposed -= new EventHandler(_textBoxTarget_Disposed);
 			_textBoxTarget = null;
 		}
 
@@ -179,6 +186,11 @@ namespace WeSay.UI
 
 		protected  void TimeForRealObject(bool doGoToNextField)
 		{
+			if (_listTarget == null)
+			{
+				return; //teardown was already called
+			}
+
 			WeSayTextBox textBoxTarget = _textBoxTarget;
 			if (textBoxTarget.Text.Trim().Length == 0)
 			{
