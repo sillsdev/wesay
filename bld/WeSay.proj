@@ -79,7 +79,7 @@
 	</CreateItem>
 
 	<!-- lift to wesay.words-->
-	<Exec Command="$(BaseDirectory)\output\Release\SampleDataProcessor.exe %(LiftFiles.FullPath) %(LiftFiles.RootDir)%(LiftFiles.Directory)"
+	<Exec Command="$(BaseDirectory)\output\Release\SampleDataProcessor.exe %(LiftFiles.FullPath) %(LiftFiles.RootDir)%(LiftFiles.Directory)\biatah.lift"
 		  WorkingDirectory="$(BaseDirectory)\output\Release"/>
 
   </Target>
