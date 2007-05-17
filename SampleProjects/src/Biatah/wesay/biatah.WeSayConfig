@@ -129,4 +129,8 @@
 	<viewTemplate ref="Default View Template" />
 	<semanticDomainFieldName>SemanticDomainDdp4</semanticDomainFieldName>
   </task>
+  <task id="Actions" class="WeSay.CommonTools.ActionsControl" assembly="CommonTools">
+	<label UseInConstructor="false">Actions</label>
+	<description UseInConstructor="false">Perform actions on the project as a whole. For example backup, produce a report, print out a simple dictionary, etc.</description>
+  </task>
 </tasks>
