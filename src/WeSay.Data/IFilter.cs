@@ -21,7 +21,7 @@ namespace WeSay.Data
 			get { return ReturnTrue; }
 		}
 
-		static private bool ReturnTrue<T>(T t)
+		static private bool ReturnTrue(T t)
 		{
 			return true;
 		}
