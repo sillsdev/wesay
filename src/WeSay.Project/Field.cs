@@ -1,11 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Xml;
 using Exortech.NetReflector;
 using Exortech.NetReflector.Util;
 using WeSay.Foundation;
 using WeSay.Language;
-
+using WeSay.LexicalModel;
 
 namespace WeSay.Project
 {
@@ -20,6 +21,11 @@ namespace WeSay.Project
 		private string _dataTypeName;
 		public enum MultiplicityType { ZeroOr1 = 0 }
 		private MultiplicityType _multiplicity = MultiplicityType.ZeroOr1;
+
+		public enum BuiltInDataType
+		{
+			MultiText, Option, OptionCollection
+		}
 
 		private CommonEnumerations.VisibilitySetting _visibility=CommonEnumerations.VisibilitySetting.Visible ;
 		private string _optionsListFile;
@@ -79,34 +85,45 @@ namespace WeSay.Project
 			DataTypeName = dataTypeName;
 		}
 
-		public bool IsCustom
+
+		[Description("The name of the field, as it will appear in the LIFT file. This is not visible to the WeSay user.")]
+		[ReflectorCollection("fieldName", Required = true)]
+		public string FieldName
 		{
 			get
 			{
-				if (FieldName == FieldNames.EntryLexicalForm.ToString())
+				if (_fieldName == null)
 				{
-					return false;
+					throw new ArgumentNullException("FieldName");
 				}
-
-				if (FieldName == FieldNames.ExampleSentence.ToString())
+				return _fieldName;
+			}
+			set
+			{
+				if (value == null)
 				{
-					return false;
+					throw new ArgumentNullException("FieldName");
 				}
-
-				if (FieldName == FieldNames.ExampleTranslation.ToString())
-				{
-					return false;
-				}
-
-				if (FieldName == FieldNames.SenseGloss.ToString())
-				{
-					return false;
-				}
-
-				return true;
+				_fieldName = value.Replace(" ","").Trim();//helpful when exposed to UI for user editting
 			}
 		}
+		[Description("The label of the field as it will be displayed to the user.")]
+		[ReflectorCollection("displayName", Required=false)]
+		public string DisplayName
+		{
+			get
+			{
+				if(_displayName=="")
+				{
+					return "*"+FieldName;
+				}
+				return _displayName;
+			}
+			set { _displayName = value; }
+		}
 
+		[TypeConverter(typeof(ParentClassConverter))]
+		[Description("The parent of this field. E.g. Entry, Sense, Example.")]
 		[ReflectorCollection("className", Required = true)]
 		public string ClassName
 		{
@@ -136,33 +153,80 @@ namespace WeSay.Project
 			}
 		}
 
-
-		[ReflectorCollection("fieldName", Required = true)]
-		public string FieldName
+		[Browsable(false)]
+		public bool UserCanDeleteOrModify
 		{
 			get
 			{
-				if (_fieldName == null)
-				{
-					throw new ArgumentNullException("FieldName");
-				}
-				return _fieldName;
-			}
-			set
-			{
-				if (value == null)
-				{
-					throw new ArgumentNullException("FieldName");
-				}
-				_fieldName = value;
+				if(IsBuiltInViaCode)
+					return false;
+
+				if (LexEntry.WellKnownProperties.Contains(this.FieldName))
+					return false;
+
+				if (LexSense.WellKnownProperties.Contains(this.FieldName))
+					return false;
+
+				if (LexExampleSentence.WellKnownProperties.Contains(this.FieldName))
+					return false;
+
+				return true;
 			}
 		}
+
+		[TypeConverter(typeof(DataTypeClassConverter))]
+		[Description("The type of the field. E.g. multilingual text, option, option collection.")]
+		[ReflectorProperty("dataType", Required = true)]
+		public string DataTypeName
+		{
+			get { return _dataTypeName; }
+			set { _dataTypeName = value; }
+		}
+
+		[Description("For options and option collections, the name of the xml file containing the valid set of options.")]
+		[ReflectorProperty("optionsListFile", Required = false)]
+		public string OptionsListFile
+		{
+			get { return _optionsListFile; }
+			set { _optionsListFile = value; }
+		}
+
+		[Browsable(false)]
+		public bool IsBuiltInViaCode
+		{
+			get
+			{
+				if (FieldName == FieldNames.EntryLexicalForm.ToString())
+				{
+					return true;
+				}
+
+				if (FieldName == FieldNames.ExampleSentence.ToString())
+				{
+					return true;
+				}
+
+				if (FieldName == FieldNames.ExampleTranslation.ToString())
+				{
+					return true;
+				}
+
+				if (FieldName == FieldNames.SenseGloss.ToString())
+				{
+					return true;
+				}
+
+				return false;
+			}
+		}
+
 
 		public override string ToString()
 		{
-			return string.Format(_displayName);
+			return DisplayName;
 		}
 
+		[Browsable(false)]
 		[ReflectorProperty("writingSystems", typeof(WsIdCollectionSerializerFactory))]
 		public IList<string> WritingSystemIds
 		{
@@ -186,27 +250,16 @@ namespace WeSay.Project
 			}
 		}
 
-		[ReflectorCollection("displayName", Required=false)]
-		public string DisplayName
-		{
-			get
-			{
-				if(_displayName=="")
-				{
-					return "*"+FieldName;
-				}
-				return _displayName;
-			}
-			set { _displayName = value; }
-		}
 
+		[Browsable(false)]
 		public string Description
 		{
 			get { return _description; }
 			set { _description = value; }
 		}
 
-		[ReflectorCollection("visibility", Required=false)]
+		[Browsable(false)]
+		[ReflectorCollection("visibility", Required = false)]
 		public CommonEnumerations.VisibilitySetting Visibility
 		{
 			get { return _visibility; }
@@ -221,6 +274,7 @@ namespace WeSay.Project
 				_writingSystemIds[i] = newId;
 			}
 		}
+		[Browsable(false)]
 		public IList<WritingSystem> WritingSystems
 		{
 			get
@@ -234,6 +288,7 @@ namespace WeSay.Project
 			}
 		}
 
+		[Browsable(false)]
 		[ReflectorProperty("multiplicity", Required = false)]
 		public MultiplicityType Multiplicity
 		{
@@ -241,20 +296,9 @@ namespace WeSay.Project
 			set { _multiplicity = value; }
 		}
 
-		[ReflectorProperty("dataType", Required = true)]
-		public string DataTypeName
-		{
-			get { return _dataTypeName; }
-			set { _dataTypeName = value; }
-		}
 
-		[ReflectorProperty("optionsListFile", Required = false)]
-		public string OptionsListFile
-		{
-			get { return _optionsListFile; }
-			set { _optionsListFile = value; }
-		}
 
+		[Browsable(false)]
 		public bool DoShow
 		{
 			get
@@ -265,6 +309,7 @@ namespace WeSay.Project
 		}
 
 
+		[Browsable(false)]
 		public bool HasWritingSystem(string writingSystemId)
 		{
 			return _writingSystemIds.Exists(
@@ -335,5 +380,88 @@ namespace WeSay.Project
 
 		#endregion
 
+	}
+
+	class ParentClassConverter : WeSayStringConverter
+	{
+		public override string[] ValidStrings
+		{
+			get
+			{
+				return new string[] { "LexEntry", "LexSense", "LexExampleSentence" };
+			}
+		}
+	}
+
+	class DataTypeClassConverter : WeSayStringConverter
+	{
+		public override string[] ValidStrings
+		{
+			get
+			{
+				return new string[] { "MultiText", "Option", "OptionCollection" };
+			}
+		}
+	}
+
+	abstract class WeSayStringConverter : StringConverter
+	{
+		abstract public string[] ValidStrings
+		{
+			get;
+		}
+		public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
+		{
+			//true means show a combobox
+			return true;
+		}
+
+		//        public override object ConvertTo(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value, Type destinationType)
+		//        {
+		//            if ((String)value == String.Empty)
+		//            {
+		//                return "default";
+		//            }
+		//            else
+		//            {
+		//                return value;
+		//            }
+		//        }
+		//
+		//        public override object ConvertFrom(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
+		//        {
+		//            if ((String)value == "default")
+		//            {
+		//                return String.Empty;
+		//            }
+		//            else
+		//            {
+		//                return value;
+		//            }
+		//        }
+
+		public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
+		{
+			return true;
+		}
+
+		public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType)
+		{
+			return true;
+		}
+
+		public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
+		{
+			//true will limit to list. false will show the list,
+			//but allow free-form entry
+			return true;
+		}
+
+		public override System.ComponentModel.TypeConverter.StandardValuesCollection
+			  GetStandardValues(ITypeDescriptorContext context)
+		{
+
+			return new StandardValuesCollection(ValidStrings);
+		}
 	}
 }

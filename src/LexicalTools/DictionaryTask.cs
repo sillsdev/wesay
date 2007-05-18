@@ -25,9 +25,17 @@ namespace WeSay.LexicalTools
 
 		public override void Activate()
 		{
-			base.Activate();
-			_dictionaryControl = new DictionaryControl((Db4oRecordListManager)RecordListManager, ViewTemplate);
-			_dictionaryControl.SelectedIndexChanged += new EventHandler(OnRecordSelectionChanged);
+			try
+			{
+				base.Activate();
+				_dictionaryControl = new DictionaryControl((Db4oRecordListManager)RecordListManager, ViewTemplate);
+				_dictionaryControl.SelectedIndexChanged += new EventHandler(OnRecordSelectionChanged);
+			}
+			catch (Reporting.ConfigurationException e)
+			{
+				_isActive = false;
+				throw e;
+			}
 		}
 
 		void OnRecordSelectionChanged(object sender, EventArgs e)

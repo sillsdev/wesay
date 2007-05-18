@@ -526,31 +526,34 @@ namespace WeSay.Project
 		}
 
 
-		public OptionsList GetOptionsList(string name)
+		public OptionsList GetOptionsList(Field field)
 		{
+			if (String.IsNullOrEmpty(field.OptionsListFile))
+			{
+				throw new Reporting.ConfigurationException("The administrator needs to declare an options list file for the field {0}. This can be done under the Fields tab of the WeSay Configuration Tool.", field.FieldName);
+			}
 			OptionsList list;
-			if(_optionLists.TryGetValue(name, out list))
+			if(_optionLists.TryGetValue(field.OptionsListFile, out list))
 			{
 				return list;
 			}
 
-			string pathInProject = Path.Combine(PathToWeSaySpecificFilesDirectoryInProject, name);
+			string pathInProject = Path.Combine(PathToWeSaySpecificFilesDirectoryInProject, field.OptionsListFile);
 			if (File.Exists(pathInProject))
 			{
 				LoadOptionsList(pathInProject);
 			}
 			else
 			{
-				string pathInProgramDir = Path.Combine(ApplicationCommonDirectory, name);
+				string pathInProgramDir = Path.Combine(ApplicationCommonDirectory, field.OptionsListFile);
 				if (!File.Exists(pathInProgramDir))
 				{
-					throw new ApplicationException(
-						string.Format("Could not find the optionsList file {0}. Expected to find it at: {1} or {2}", name, pathInProject, pathInProgramDir));
+					throw new Reporting.ConfigurationException("Could not find the optionsList file {0}. Expected to find it at: {1} or {2}", field.OptionsListFile, pathInProject, pathInProgramDir);
 				}
 				LoadOptionsList(pathInProgramDir);
 			}
 
-			return _optionLists[name];
+			return _optionLists[field.OptionsListFile];
 	   }
 
 		private void LoadOptionsList(string pathToOptionsList)
@@ -581,6 +584,28 @@ namespace WeSay.Project
 		static private string GetListNameFromFileName(string file)
 		{
 			return file.Substring(0, file.IndexOf(".xml"));
+		}
+
+		public void MakeFieldNameChange(Field field, string oldName)
+		{
+			//NB: we're just using regex, here, not xpaths which in this case
+			//would be nice (e.g., "name" is a pretty generic thing to be changing)
+		   if (File.Exists(PathToLiftFile))
+			{
+				//traits
+			   if(field.DataTypeName == Field.BuiltInDataType.Option.ToString()
+				   || field.DataTypeName == Field.BuiltInDataType.OptionCollection.ToString())
+			   {
+				   GrepLift(PathToLiftFile, string.Format("name\\s*=\\s*[\"']{0}[\"']", oldName),
+							string.Format("name=\"{0}\"", field.FieldName));
+			   }
+			   else
+				{
+					//<field>s
+					GrepLift(PathToLiftFile, string.Format("tag\\s*=\\s*[\"']{0}[\"']", oldName),
+							 string.Format("tag=\"{0}\"", field.FieldName));
+				}
+			}
 		}
 
 		public void MakeWritingSystemIdChange(WritingSystem ws, string oldId)
@@ -622,6 +647,21 @@ namespace WeSay.Project
 		   File.Replace(tempPath, inputPath, backupPath);
 		}
 
+		public bool LiftHasMatchingElement(string element, string attribute, string attributeValue)
+		{
+			using (XmlReader reader = XmlReader.Create(PathToLiftFile))
+			{
+				while (reader.ReadToFollowing(element))
+				{
+					string v = reader.GetAttribute(attribute);
+					if (!String.IsNullOrEmpty(v) && v == attributeValue)
+					{
+						return true; //found it
+					}
+				}
+			}
+			return false;
+		}
 
 		private static string GetUniqueFileName(string path)
 		{

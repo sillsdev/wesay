@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.ComponentModel;
 using WeSay.Data;
 using WeSay.Foundation;
@@ -12,8 +13,15 @@ namespace WeSay.LexicalModel
 
 		new public class WellKnownProperties : WeSayDataObject.WellKnownProperties
 		{
+
 			static public string PartOfSpeech = "POS";
+			static public string SemanticDomainsDdp4 = "SemanticDomainDdp4";
 			static public string Definition = "definition";
+			static public bool Contains(string fieldName)
+			{
+				List<string> list = new List<string>(new string[] { PartOfSpeech, Definition, SemanticDomainsDdp4 });
+				return list.Contains(fieldName);
+			}
 		} ;
 
 		public LexSense(WeSayDataObject parent)

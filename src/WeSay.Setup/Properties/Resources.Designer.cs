@@ -67,6 +67,20 @@ namespace WeSay.Setup.Properties {
 			}
 		}
 
+		internal static System.Drawing.Bitmap GenericLittleDeletionButton {
+			get {
+				object obj = ResourceManager.GetObject("GenericLittleDeletionButton", resourceCulture);
+				return ((System.Drawing.Bitmap)(obj));
+			}
+		}
+
+		internal static System.Drawing.Bitmap genericLittleNewButton {
+			get {
+				object obj = ResourceManager.GetObject("genericLittleNewButton", resourceCulture);
+				return ((System.Drawing.Bitmap)(obj));
+			}
+		}
+
 		internal static System.Drawing.Bitmap WelcomeImage {
 			get {
 				object obj = ResourceManager.GetObject("WelcomeImage", resourceCulture);

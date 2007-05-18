@@ -224,8 +224,18 @@ namespace WeSay.App
 			{
 				return;
 			}
-			task.Activate();
-		   // RunCommand(new ActivateTaskCommand(page, task));
+			try
+			{
+				task.Activate();
+			}
+			catch (Reporting.ConfigurationException e) //let others go through the normal bug reporting system
+			{
+				Reporting.ErrorReporter.ReportNonFatalMessage(e.Message);
+				Reporting.Logger.WriteEvent("Failed Activating");
+				return;
+			}
+
+			// RunCommand(new ActivateTaskCommand(page, task));
 			task.Control.Dock = DockStyle.Fill;
 			page.Controls.Add(task.Control);
 			task.Control.Focus();

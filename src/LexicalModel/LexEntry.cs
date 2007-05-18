@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
 using WeSay.Data;
@@ -32,6 +33,11 @@ namespace WeSay.LexicalModel
 		new public class WellKnownProperties : WeSayDataObject.WellKnownProperties
 		{
 			static public string Citation = "citation";
+			static public bool Contains(string fieldName)
+			{
+				List<string> list = new List<string>(new string[] { Citation });
+				return list.Contains(fieldName);
+			}
 		} ;
 
 		public LexEntry(): base(null)

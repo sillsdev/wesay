@@ -58,7 +58,9 @@ namespace WeSay.Project.Tests
 		public void LoadPartsOfSpeechList()
 		{
 			WeSayWordsProject p = CreateAndLoad(false);
-			OptionsList list = p.GetOptionsList("PartsOfSpeech.xml");
+			Field f = new Field();
+			f.OptionsListFile = "PartsOfSpeech.xml";
+			OptionsList list = p.GetOptionsList(f);
 			Assert.IsTrue(list.Options.Count>2);
 		}
 
@@ -66,7 +68,9 @@ namespace WeSay.Project.Tests
 		public void CorrectFieldToOptionListNameDictionary()
 		{
 			WeSayWordsProject p = CreateAndLoad(false);
-			OptionsList list = p.GetOptionsList("PartsOfSpeech.xml");
+			Field f = new Field();
+			f.OptionsListFile = "PartsOfSpeech.xml";
+			OptionsList list = p.GetOptionsList(f);
 			Dictionary<string, string> dict = p.GetFieldToOptionListNameDictionary();
 			Assert.AreEqual("PartsOfSpeech", dict[LexicalModel.LexSense.WellKnownProperties.PartOfSpeech]);
 		}

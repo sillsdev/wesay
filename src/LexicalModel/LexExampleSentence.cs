@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using WeSay.Foundation;
 using WeSay.Language;
 
@@ -12,6 +13,12 @@ namespace WeSay.LexicalModel
 		new public class WellKnownProperties : WeSayDataObject.WellKnownProperties
 		{
 			static public string Source = "source";
+			static public bool Contains(string fieldName)
+			{
+				List<string> list = new List<string>(new string[] { Source });
+				return list.Contains(fieldName);
+			}
+
 		} ;
 
 		public LexExampleSentence(WeSayDataObject parent)

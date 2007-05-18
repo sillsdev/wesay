@@ -141,7 +141,7 @@ namespace WeSay.LexicalTools
 
 		private bool IsMissingLexExampleSentenceField(LexExampleSentence example)
 		{
-			if (this._field.IsCustom)
+			if (!this._field.IsBuiltInViaCode)
 			{
 				return IsMissingCustomField(example);
 			}
@@ -164,7 +164,7 @@ namespace WeSay.LexicalTools
 		}
 
 		private bool IsMissingLexSenseField(LexSense sense) {
-			if (this._field.IsCustom)
+			if (!this._field.IsBuiltInViaCode)
 			{
 				return IsMissingCustomField(sense);
 			}
@@ -183,7 +183,7 @@ namespace WeSay.LexicalTools
 		}
 
 		private bool IsMissingLexEntryField(LexEntry entry) {
-			if (this._field.IsCustom)
+			if (!this._field.IsBuiltInViaCode)
 			{
 				return IsMissingCustomField(entry);
 			}

@@ -236,7 +236,7 @@ namespace WeSay.LexicalTools
 		{
 			OptionRef optionRefTarget = target.GetOrCreateProperty<OptionRef>(field.FieldName);
 
-			OptionsList list = WeSayWordsProject.Project.GetOptionsList(field.OptionsListFile);
+			OptionsList list = WeSayWordsProject.Project.GetOptionsList(field);
 			SingleOptionControl control = new SingleOptionControl(optionRefTarget, list, field.WritingSystemIds[0], field.FieldName);
 			SimpleBinding<string> binding = new SimpleBinding<string>(optionRefTarget, control);
 			binding.CurrentItemChanged += new EventHandler<CurrentItemEventArgs>(_detailList.OnBinding_ChangeOfWhichItemIsInFocus);
@@ -245,7 +245,7 @@ namespace WeSay.LexicalTools
 
 		static private Control MakeOptionCollectionWidget(WeSayDataObject target, Field field)
 		{
-			OptionsList list = WeSayWordsProject.Project.GetOptionsList(field.OptionsListFile);
+			OptionsList list = WeSayWordsProject.Project.GetOptionsList(field);
 			OptionRefCollection optionRefTarget = target.GetOrCreateProperty<OptionRefCollection>(field.FieldName);
 			OptionCollectionControl control = new OptionCollectionControl(optionRefTarget, list, field.WritingSystemIds[0]);
 			return control;

@@ -103,7 +103,7 @@ namespace WeSay.Project
 			List<Field> customFields = new List<Field>();
 			foreach (Field field in this)
 			{
-				if (field.ClassName == className && field.IsCustom)
+				if (field.ClassName == className && !field.IsBuiltInViaCode)
 				{
 					customFields.Add(field);
 				}

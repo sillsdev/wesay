@@ -1,7 +1,8 @@
 using System;
-using System.IO;
+using System.Collections.Generic;
+using System.Drawing;
 using System.Windows.Forms;
-using System.Xml;
+using Reporting;
 using WeSay.Foundation;
 using WeSay.Language;
 using WeSay.Project;
@@ -14,8 +15,8 @@ namespace WeSay.Setup
 		{
 			InitializeComponent();
 			//don't want grey
-			_descriptionBox.BackColor = System.Drawing.SystemColors.Window;
-			_descriptionBox.ForeColor = System.Drawing.SystemColors.WindowText;
+			_descriptionBox.BackColor = SystemColors.Window;
+			_descriptionBox.ForeColor = SystemColors.WindowText;
 			RefreshMoveButtons();
 		}
 
@@ -32,11 +33,6 @@ namespace WeSay.Setup
 			LoadInventory();
 			//nb: may important to do this after loading the inventory
 			this._fieldsListBox.ItemCheck += new ItemCheckEventHandler(this.OnFieldsListBox_ItemCheck);
-			if (_fieldsListBox.Items.Count > 0)
-			{
-				_fieldsListBox.SelectedIndex = 0;
-			}
-
 		}
 		protected override void OnVisibleChanged(EventArgs e)
 		{
@@ -58,11 +54,20 @@ namespace WeSay.Setup
 			{
 				this._fieldsListBox.Items.Add(field, field.Visibility == CommonEnumerations.VisibilitySetting.Visible);
 			}
+
+			if (_fieldsListBox.Items.Count > 0)
+			{
+				_fieldsListBox.SelectedIndex = 0;
+			}
 		}
 
 
 		private void OnFieldsListBox_ItemCheck(object sender, ItemCheckEventArgs e)
 		{
+			if (_fieldsListBox.SelectedItem == null)//this gets called during population of the list,too
+			{
+				return;
+			}
 			if (e.NewValue== CheckState.Checked)
 			{
 				((Field)_fieldsListBox.SelectedItem).Visibility = CommonEnumerations.VisibilitySetting.Visible;
@@ -77,15 +82,22 @@ namespace WeSay.Setup
 		{
 			get
 			{
+				if (_fieldsListBox.SelectedItem == null && _fieldsListBox.Items.Count>0)
+				{
+					_fieldsListBox.SelectedItem = _fieldsListBox.Items[0];
+				}
 				return (Field)_fieldsListBox.SelectedItem;
 			}
 		}
 
-		private void _fieldsListBox_SelectedIndexChanged(object sender, EventArgs e)
+		private void OnSelectedFieldChanged(object sender, EventArgs e)
 		{
+			_btnDeleteField.Enabled = CurrentField.UserCanDeleteOrModify;
 			_descriptionBox.Text = CurrentField.Description;
 			LoadWritingSystemBox();
 			LoadAboutFieldBox();
+			_fieldPropertyGrid.Enabled = CurrentField.UserCanDeleteOrModify;
+			_fieldPropertyGrid.SelectedObject = CurrentField;
 		}
 
 
@@ -156,12 +168,12 @@ namespace WeSay.Setup
 			}
 		}
 
-		void _writingSystemListBox_SelectedIndexChanged(object sender, System.EventArgs e)
+		void _writingSystemListBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			RefreshMoveButtons();
 		}
 
-		void OnBtnMoveUpClick(object sender, System.EventArgs e)
+		void OnBtnMoveUpClick(object sender, EventArgs e)
 		{
 			object item = _writingSystemListBox.SelectedItem;
 			int index = _writingSystemListBox.SelectedIndex;
@@ -183,7 +195,7 @@ namespace WeSay.Setup
 			RefreshMoveButtons();
 		}
 
-		void OnBtnMoveDownClick(object sender, System.EventArgs e)
+		void OnBtnMoveDownClick(object sender, EventArgs e)
 		{
 			object item = _writingSystemListBox.SelectedItem;
 			int index = _writingSystemListBox.SelectedIndex;
@@ -204,5 +216,144 @@ namespace WeSay.Setup
 			}
 			RefreshMoveButtons();
 		}
+
+		private void groupBox2_SizeChanged(object sender, EventArgs e)
+		{
+			_descriptionBox.MaximumSize  = new Size(groupBox1.Width - 30,groupBox1.Height -30);
+		}
+
+		private void _btnAddField_Click(object sender, EventArgs e)
+		{
+			Field f = new Field(MakeUniqueFieldName(), "LexEntry", WeSayWordsProject.Project.WritingSystems.Keys);
+			WeSayWordsProject.Project.DefaultViewTemplate.Fields.Add(f);
+			LoadInventory();
+			MakeFieldTheSelectedOne(f);
+		}
+		private string MakeUniqueFieldName()
+		{
+			string baseName = "newField";
+			for (int count = 0; count<1000 ; count++)
+			{
+				string check = baseName;
+				if (count > 0)
+				{
+					check += count.ToString();
+				}
+				if (null == FindFieldWithFieldName(check))
+				{
+					return check;
+				}
+			}
+			//if can't find a  unique name (this will never happen)
+			return baseName;
+		}
+
+		private static Field FindFieldWithFieldName(string name)
+		{
+			return WeSayWordsProject.Project.DefaultViewTemplate.Fields.Find(delegate(Field f)
+																				  {
+																					  return f.FieldName == name;
+																				  });
+		}
+
+		private void MakeFieldTheSelectedOne(Field f)
+		{
+			foreach (object o in _fieldsListBox.Items )
+			{
+				if (o == f)
+				{
+					_fieldsListBox.SelectedItem = o;
+					break;
+				}
+			}
+		}
+
+		private void OnDeleteField_Click(object sender, EventArgs e)
+		{
+			if (CurrentField ==null)
+				return;
+			if (!CurrentField.UserCanDeleteOrModify)
+				return;
+
+			WeSayWordsProject.Project.DefaultViewTemplate.Fields.Remove(CurrentField);
+			LoadInventory();
+		}
+
+		private void OnPropertyValueChanged(object s, PropertyValueChangedEventArgs e)
+		{
+			if (e.ChangedItem.Label == "DataTypeName")
+			{
+				//catch the case where the user is changing the type, but
+				//there is already existing data in the other type
+
+				bool found = false;
+				if (CurrentField.DataTypeName == Field.BuiltInDataType.MultiText.ToString())
+				{
+					//we can't go from a option or option collection to multitext, if there is already data
+					found =
+						WeSayWordsProject.Project.LiftHasMatchingElement("trait", "name", CurrentField.FieldName);
+				}
+				else if (CurrentField.DataTypeName == Field.BuiltInDataType.Option.ToString())
+				{
+					//we can't go from an option collection to to a simple option, if there is already data
+					if ((string)e.OldValue == Field.BuiltInDataType.OptionCollection.ToString())
+					{
+						found =
+							WeSayWordsProject.Project.LiftHasMatchingElement("trait", "name",
+																					 CurrentField.FieldName);
+					}
+					//we can't go from a multitext to to a simple option, if there is already data
+					found = found ||
+						WeSayWordsProject.Project.LiftHasMatchingElement("field", "tag", CurrentField.FieldName);
+				}
+				else if (CurrentField.DataTypeName == Field.BuiltInDataType.OptionCollection.ToString())
+				{
+					//we can't go from a multitext to to a option collection, if there is already data
+					found =
+						WeSayWordsProject.Project.LiftHasMatchingElement("field", "tag", CurrentField.FieldName);
+				}
+
+				if (found)
+				{
+					ErrorReporter.ReportNonFatalMessage(
+						"Sorry, WeSay cannot change the type of this field to '{0}', because there is existing data in the LIFT file of the old type, '{1}'",
+						CurrentField.DataTypeName, e.OldValue);
+					CurrentField.DataTypeName = (string)e.OldValue;
+				}
+			}
+
+			if (e.ChangedItem.Label == "FieldName")
+			{
+				if (CurrentField.FieldName == String.Empty)
+				{
+					e.ChangedItem.PropertyDescriptor.SetValue(_fieldPropertyGrid.SelectedObject, e.OldValue);
+					return;
+				}
+
+				List<Field> fields = WeSayWordsProject.Project.DefaultViewTemplate.Fields.FindAll(delegate(Field f)
+																					   {
+																						   return f.FieldName == CurrentField.FieldName;
+																					   });
+				if (fields.Count > 1)
+				{
+					Field f = fields[0];
+					if(f==CurrentField)
+					{
+						f = fields[1];
+					}
+					ErrorReporter.ReportNonFatalMessage(
+						"The field '{0}' with DisplayName '{1}' on class '{2}' is already using that name. Please choose another one.",
+						f.FieldName, f.DisplayName, f.ClassName);
+					CurrentField.FieldName = (string)e.OldValue;
+					return;
+				}
+
+				WeSayWordsProject.Project.MakeFieldNameChange(CurrentField, (string) e.OldValue);
+			}
+		}
+
+
+
 	}
+
 }

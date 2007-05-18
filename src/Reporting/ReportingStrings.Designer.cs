@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace SIL.Utils {
+namespace Reporting {
 	using System;
 
 
@@ -39,7 +39,7 @@ namespace SIL.Utils {
 		internal static global::System.Resources.ResourceManager ResourceManager {
 			get {
 				if (object.ReferenceEquals(resourceMan, null)) {
-					global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("SIL.Utils.ReportingStrings", typeof(ReportingStrings).Assembly);
+					global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Reporting.ReportingStrings", typeof(ReportingStrings).Assembly);
 					resourceMan = temp;
 				}
 				return resourceMan;

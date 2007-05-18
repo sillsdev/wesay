@@ -669,7 +669,7 @@ namespace WeSay.LexicalTools
 			if (_semanticDomainOptionsList == null)
 			{
 				_semanticDomainOptionsList =
-						WeSayWordsProject.Project.GetOptionsList(_semanticDomainField.OptionsListFile);
+						WeSayWordsProject.Project.GetOptionsList(_semanticDomainField);
 			}
 			_entries = RecordListManager.GetSortedList(new SemanticDomainSortHelper(RecordListManager.DataSource, _semanticDomainField.FieldName));
 

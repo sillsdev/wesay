@@ -154,7 +154,7 @@ namespace Reporting
 
 					if (showUI)
 					{
-						// bool fIsLethal = !(exception is SIL.Utils.ConfigurationException);
+						// bool fIsLethal = !(exception is Reporting.ConfigurationException);
 						//ErrorReporter.ReportException(exception, parent, fIsLethal);
 						ErrorReporter.ReportException(exception);
 						return false;
