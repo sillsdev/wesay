@@ -241,6 +241,8 @@ namespace WeSay.UI
 		{
 			WeSayTextBox box = new WeSayTextBox(writingSystem, Name);
 			box.ReadOnly = (_visibility == CommonEnumerations.VisibilitySetting.ReadOnly);
+			box.Multiline = true;
+			box.WordWrap = true;
 			//box.Enabled = !box.ReadOnly;
 
 

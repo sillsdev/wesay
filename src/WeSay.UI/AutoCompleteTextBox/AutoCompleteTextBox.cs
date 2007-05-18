@@ -29,7 +29,7 @@ namespace WeSay.UI
 		#region Members
 
 		private ListBox _list;
-		private Form _popup;
+		//private Form _popup;
 		private Control _popupParent;
 
 		#endregion
@@ -52,9 +52,9 @@ namespace WeSay.UI
 		}
 
 		private IEnumerable<string> items = new Collection<string>();
-	[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-	[Browsable(false)]
-	public IEnumerable<string> Items
+		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+		[Browsable(false)]
+		public IEnumerable<string> Items
 		{
 			get
 			{
@@ -71,9 +71,9 @@ namespace WeSay.UI
 		}
 
 		private AutoCompleteTriggerCollection triggers = new AutoCompleteTriggerCollection();
-	[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-	[Browsable(false)]
-	public AutoCompleteTriggerCollection Triggers
+		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+		[Browsable(false)]
+		public AutoCompleteTriggerCollection Triggers
 		{
 			get
 			{
@@ -92,19 +92,19 @@ namespace WeSay.UI
 		{
 			get
 			{
-				return this._popup.Width;
+				return this._list.Width;
 			}
 			set
 			{
 				if (value == -1)
 				{
 					_autoSizePopup = true;
-					this._popup.Width = Width;
+					this._list.Width = Width;
 				}
 				else
 				{
 					_autoSizePopup = false;
-					this._popup.Width = value;
+					this._list.Width = value;
 				}
 			}
 		}
@@ -177,8 +177,8 @@ namespace WeSay.UI
 		public delegate IEnumerable<string> ItemFilterDelegate(string text, IEnumerable<string> items);
 		private ItemFilterDelegate _itemFilterDelegate;
 
-	  [Browsable(false)]
-	[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+		[Browsable(false)]
+		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
 		public ItemFilterDelegate ItemFilterer
 		{
 			get
@@ -217,12 +217,12 @@ namespace WeSay.UI
 			_itemFilterDelegate = FilterList;
 
 			// Create the form that will hold the list
-			this._popup = new Form();
-			this._popup.StartPosition = FormStartPosition.Manual;
-			this._popup.ShowInTaskbar = false;
-			this._popup.FormBorderStyle = FormBorderStyle.None;
-			this._popup.TopMost = true;
-			this._popup.Deactivate += new EventHandler(Popup_Deactivate);
+			//this._popup = new Form();
+			//this._popup.StartPosition = FormStartPosition.Manual;
+			//this._popup.ShowInTaskbar = false;
+			//this._popup.FormBorderStyle = FormBorderStyle.None;
+			//this._popup.TopMost = true;
+			Leave += new EventHandler(Popup_Deactivate);
 
 			// Create the list box that will hold matching items
 			this._list = new ListBox();
@@ -230,13 +230,14 @@ namespace WeSay.UI
 			this._list.BorderStyle = BorderStyle.FixedSingle;
 			this._list.SelectedIndexChanged += new EventHandler(List_SelectedIndexChanged);
 			this._list.MouseClick += new MouseEventHandler(List_MouseClick);
-			this._list.DrawMode = DrawMode.OwnerDrawFixed;
-			this._list.DrawItem += new DrawItemEventHandler(List_DrawItem);
+			//this._list.DrawMode = DrawMode.OwnerDrawFixed;
+			//this._list.DrawItem += new DrawItemEventHandler(List_DrawItem);
 			this._list.ItemHeight = Height;
-			this._list.Dock = DockStyle.Fill;
+			//this._list.Dock = DockStyle.Fill;
+			this._list.Visible = false;
+			this._list.Sorted = false;
 
 			// Add the list box to the popup form
-			this._popup.Controls.Add(this._list);
 
 			// Add default triggers.
 			this.triggers.Add(new TextLengthTrigger(2));
@@ -253,9 +254,9 @@ namespace WeSay.UI
 			{
 				this._list.ItemHeight = Height;
 			}
-			if(_popup !=null && _autoSizePopup)
+			if(_list !=null && _autoSizePopup)
 			{
-				this._popup.Width = Width;
+				this._list.Width = Width;
 			}
 		}
 		protected override void OnParentChanged(EventArgs e)
@@ -343,29 +344,29 @@ namespace WeSay.UI
 			{
 				case Keys.Up:
 				{
-		  Mode = EntryMode.List;
+					Mode = EntryMode.List;
+					if (this._list.Visible == false)
+					{
+						ShowList();
+					}
 					if (this._list.SelectedIndex > 0)
 					{
 						this._list.SelectedIndex--;
 					}
-		  if (this._list.Visible == false)
-		  {
-			ShowList();
-		  }
-		  return true;
+					return true;
 				}
 				case Keys.Down:
 				{
-		  Mode = EntryMode.List;
+					Mode = EntryMode.List;
+					if (this._list.Visible == false)
+					{
+						ShowList();
+					}
 					if (this._list.SelectedIndex < this._list.Items.Count - 1)
 					{
 						this._list.SelectedIndex++;
 					}
-		  if (this._list.Visible == false)
-		  {
-			ShowList();
-		  }
-		  return true;
+					return true;
 				}
 				default:
 				{
@@ -402,7 +403,7 @@ namespace WeSay.UI
 		{
 			base.OnLostFocus (e);
 
-			if (!(Focused || this._popup.Focused || this._list.Focused))
+			if (!(Focused || this._list.Focused))
 			{
 				HideList();
 			}
@@ -415,7 +416,6 @@ namespace WeSay.UI
 				return;
 			}
 
-			Focus();
 			Text = this._list.SelectedItem.ToString();
 			if (Text.Length > 0)
 			{
@@ -436,17 +436,31 @@ namespace WeSay.UI
 		{
 			if (this._list.Visible == false)
 			{
-				this._list.SelectedIndex = -1;
+				//this._list.SelectedIndex = -1;
 				UpdateList();
-				Point p = PointToScreen(new Point(0,0));
+				Form form = FindForm();
+				Point parentPointOnScreen = Parent.PointToClient(form.Location);
+				Point formPointOnScreen = form.PointToClient(form.Location);
+				Point offset = new Point(formPointOnScreen.X - parentPointOnScreen.X,
+										 formPointOnScreen.Y - parentPointOnScreen.Y);
+				Point p = Location;
+				p.X += offset.X;
+				p.Y += offset.Y;
 				p.X += PopupOffset.X;
 				p.Y += Height + PopupOffset.Y;
-				this._popup.Location = p;
+				this._list.Location = p;
 				if (this._list.Items.Count > 0)
 				{
-					this._popup.Show();
-					//this.list.BringToFront();
-					Focus();
+					//this._popup.Show();
+					if (!form.Controls.Contains(this._list))
+					{
+						form.Controls.Add(this._list);
+					}
+
+					this._list.BringToFront();
+					this._list.Visible = true;
+					this._list.Location = p;
+					//Focus();
 				}
 			}
 			else
@@ -458,7 +472,7 @@ namespace WeSay.UI
 		protected virtual void HideList()
 		{
 			Mode = EntryMode.Text;
-			this._popup.Hide();
+			this._list.Visible = false;
 		}
 
 		protected virtual void UpdateList()
@@ -480,7 +494,7 @@ namespace WeSay.UI
 			//    Mode = oldMode;
 			//}
 
-			this._list.SelectedIndex = -1;
+			//this._list.SelectedIndex = -1;
 
 			if (this._list.Items.Count == 0)
 			{
@@ -494,22 +508,24 @@ namespace WeSay.UI
 
 				this._list.ItemHeight = Height;
 
-				this._popup.Height = (visItems * this._list.ItemHeight) + 2;
+				this._list.Height = (visItems * this._list.ItemHeight) + 2;
 				switch (BorderStyle)
 				{
 					case BorderStyle.FixedSingle:
 					{
-						this._popup.Height += 2;
+						this._list.Height += 2;
 						break;
 					}
 					case BorderStyle.Fixed3D:
 					{
-						this._popup.Height += 4;
+						this._list.Height += 4;
 						break;
 					}
 				}
 
-				this._popup.Width = PopupWidth;
+				this._list.Width = PopupWidth;
+				this._list.RightToLeft = RightToLeft;
+				this._list.Font = Font;
 
 				//if (this.list.Items.Count > 0 &&
 				//    this.list.SelectedIndex == -1)
@@ -566,37 +582,43 @@ namespace WeSay.UI
 			HideList();
 		}
 
-		private void List_DrawItem(object sender, DrawItemEventArgs e)
-		{
-			//Color bColor = e.BackColor;
-			if (e.State == DrawItemState.Selected)
-			{
-//                e.Graphics.FillRectangle(new SolidBrush(PopupSelectionBackColor), e.Bounds);
-				TextRenderer.DrawText(e.Graphics,
-									  this._list.Items[e.Index].ToString(),
-									  Font,
-									  e.Bounds,
-									  PopupSelectionForeColor,
-									  PopupSelectionBackColor,
-									  TextFormatFlags.Default | TextFormatFlags.TextBoxControl);
-			}
-			else
-			{
-				//e.DrawBackground();
-				TextRenderer.DrawText(e.Graphics,
-									  this._list.Items[e.Index].ToString(),
-									  Font,
-									  e.Bounds,
-									  ForeColor,
-									  BackColor,
-									  TextFormatFlags.Default | TextFormatFlags.TextBoxControl);
-//                e.Graphics.DrawString(this.list.Items[e.Index].ToString(), e.Font, new SolidBrush(e.ForeColor), e.Bounds, StringFormat.GenericDefault);
-			}
-		}
+//        private void List_DrawItem(object sender, DrawItemEventArgs e)
+//        {
+//            //Color bColor = e.BackColor;
+//            TextFormatFlags flags = TextFormatFlags.Default | TextFormatFlags.TextBoxControl;
+//            if (WritingSystem.RightToLeft)
+//            {
+//                flags |= TextFormatFlags.RightToLeft;
+//            }
+
+//            if (e.State == DrawItemState.Selected)
+//            {
+////                e.Graphics.FillRectangle(new SolidBrush(PopupSelectionBackColor), e.Bounds);
+//                TextRenderer.DrawText(e.Graphics,
+//                                      this._list.Items[e.Index].ToString(),
+//                                      Font,
+//                                      e.Bounds,
+//                                      PopupSelectionForeColor,
+//                                      PopupSelectionBackColor,
+//                                      flags);
+//            }
+//            else
+//            {
+//                //e.DrawBackground();
+//                TextRenderer.DrawText(e.Graphics,
+//                                      this._list.Items[e.Index].ToString(),
+//                                      Font,
+//                                      e.Bounds,
+//                                      ForeColor,
+//                                      BackColor,
+//                                      flags);
+////                e.Graphics.DrawString(this.list.Items[e.Index].ToString(), e.Font, new SolidBrush(e.ForeColor), e.Bounds, StringFormat.GenericDefault);
+//            }
+//        }
 
 		private void Popup_Deactivate(object sender, EventArgs e)
 		{
-			if (!(Focused || this._popup.Focused || this._list.Focused))
+			if (!(Focused || this._list.Focused))
 			{
 				HideList();
 			}

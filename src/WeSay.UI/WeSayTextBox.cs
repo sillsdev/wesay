@@ -2,7 +2,6 @@ using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Reflection;
-using System.Threading;
 using System.Windows.Forms;
 using WeSay.Language;
 
@@ -146,15 +145,23 @@ namespace WeSay.UI
 
 			using (Graphics g = CreateGraphics())
 			{
+				TextFormatFlags flags = TextFormatFlags.TextBoxControl |
+										TextFormatFlags.Default |
+										TextFormatFlags.NoClipping;
+				if (Multiline && WordWrap)
+				{
+					flags |= TextFormatFlags.WordBreak;
+				}
+				if(WritingSystem.RightToLeft)
+				{
+					flags |= TextFormatFlags.RightToLeft;
+				}
 				Size sz = TextRenderer.MeasureText(g,
 												   Text + "\n",
 												   // need extra new line to handle case where ends in new line (since last newline is ignored)
 									Font,
 									new Size(Width, int.MinValue),
-									TextFormatFlags.TextBoxControl |
-										TextFormatFlags.Default |
-										TextFormatFlags.NoClipping |
-										TextFormatFlags.WordBreak);
+									flags);
 
 				Height = Math.Max(MinimumSize.Height, sz.Height);
 			}
@@ -216,6 +223,7 @@ namespace WeSay.UI
 			get { return this._multiParagraph; }
 			set { this._multiParagraph = value; }
 		}
+
 		protected override void OnKeyPress(KeyPressEventArgs e)
 		{
 			if (!MultiParagraph && (e.KeyChar == '\r' || e.KeyChar == '\n')) // carriage return

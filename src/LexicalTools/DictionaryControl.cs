@@ -149,7 +149,6 @@ namespace WeSay.LexicalTools
 			this._findText.ItemFilterer = ApproximateMatcher.FindClosestAndNextClosestAndPrefixedForms;
 			this._findText.Items = (CachedSortedDb4oList<string, LexEntry>)this._records;
 			int originalHeight = this._findText.Height;
-			this._findText.Font = this._listWritingSystem.Font;
 			this._findText.WritingSystem = this._listWritingSystem;
 
 			this._findWritingSystemId.Text = this._listWritingSystem.Id;
@@ -163,13 +162,13 @@ namespace WeSay.LexicalTools
 												 this._recordsListBox.Location.Y + heightDifference);
 			this._recordsListBox.Height -= heightDifference;
 			this._btnFind.Height = this._findText.Height;
-			this._btnFind.Width = 20;
 			this._writingSystemChooser.Height = this._findText.Height;
 			this._btnFind.Image = Resources.Find.GetThumbnailImage(this._btnFind.Width - 2,
 																   this._btnFind.Width - 2,
 																   ReturnFalse, IntPtr.Zero);
 
 			this._btnFind.Left = this._writingSystemChooser.Left - this._btnFind.Width;
+			this._findText.Width = this._btnFind.Left - _findText.Left;
 			this._findText.PopupWidth = this._recordsListBox.Width;
 		}
 

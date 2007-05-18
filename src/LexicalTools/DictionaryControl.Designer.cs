@@ -80,10 +80,11 @@ namespace WeSay.LexicalTools
 			this._btnFind.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
 			this._btnFind.Location = new System.Drawing.Point(105, 3);
 			this._btnFind.Name = "_btnFind";
-			this._btnFind.Size = new System.Drawing.Size(11, 11);
+			this._btnFind.Size = new System.Drawing.Size(20, 20);
 			this._btnFind.TabIndex = 2;
 			this._btnFind.UseVisualStyleBackColor = false;
 			this._btnFind.Click += new System.EventHandler(this.OnFind_Click);
+
 			//
 			// _findText
 			//
@@ -93,8 +94,7 @@ namespace WeSay.LexicalTools
 			this._findText.BorderStyle = System.Windows.Forms.BorderStyle.None;
 			this._findText.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this._findText.Location = new System.Drawing.Point(24, 3);
-			this._findText.MinimumSize = new System.Drawing.Size(100, 24);
-			this._findText.Multiline = true;
+			this._findText.Multiline = false;
 			this._findText.MultiParagraph = false;
 			this._findText.Name = "_findText";
 			this._findText.PopupBorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
@@ -102,7 +102,7 @@ namespace WeSay.LexicalTools
 			this._findText.PopupSelectionBackColor = System.Drawing.SystemColors.Highlight;
 			this._findText.PopupSelectionForeColor = System.Drawing.SystemColors.HighlightText;
 			this._findText.PopupWidth = 118;
-			this._findText.Size = new System.Drawing.Size(100, 24);
+			this._findText.Size = new System.Drawing.Size(80, 24);
 			this._findText.TabIndex = 1;
 			this._findText.AutoCompleteChoiceSelected += new System.EventHandler(this._findText_AutoCompleteChoiceSelected);
 			//
