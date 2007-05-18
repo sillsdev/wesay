@@ -103,7 +103,17 @@ namespace WeSay.LexicalModel.Db4o_Specific
 			const int insertionCost = deletionCost; // should be symmetric
 			const int substitutionCost = 1;
 			const int transpositionCost = 1;
-			int lastColumnThatNeedsToBeEvaluated = 3;
+			if (maxEditDistance == int.MaxValue) // int.MaxValue has special meaning to us
+			{
+				--maxEditDistance;
+			}
+			int lastColumnThatNeedsToBeEvaluatedPrev = maxEditDistance;
+			int lastColumnThatNeedsToBeEvaluatedCurr = maxEditDistance;
+			int lastColumnThatNeedsToBeEvaluatedNext;
+
+			int firstColumnThatNeedsToBeEvaluatedPrev = 0;
+			int firstColumnThatNeedsToBeEvaluatedCurr = 0;
+			int firstColumnThatNeedsToBeEvaluatedNext;
 
 			// Validate parameters
 			if (list1 == null)
@@ -144,23 +154,17 @@ namespace WeSay.LexicalModel.Db4o_Specific
 			// so just O(min(x,y)) space.
 			int prevRow = 0, curRow = 1, nextRow = 2;
 			int[][] rows = new int[][] { new int[n2 + 1], new int[n2 + 1], new int[n2 + 1] };
-			int maxIndex = Math.Min(n2, lastColumnThatNeedsToBeEvaluated);
-			// Initialize the cur row.
-			for (int list2index = 0; list2index <= maxIndex; ++list2index)
-			{
-				rows[curRow][list2index] = list2index;
-				if (list2index <= maxEditDistance)
-				{
-					lastColumnThatNeedsToBeEvaluated = list2index;
-				}
-			}
+
 
 			// For each virtual row (since we only have physical storage for two)
-			for (int list1index = 1; list1index <= n1; ++list1index)
+			for (int list1index = 0; list1index <= n1; ++list1index)
 			{
-				// Fill in the values in the row
-				rows[nextRow][0] = list1index;
-				maxIndex = Math.Min(n2, lastColumnThatNeedsToBeEvaluated + 2);
+				for (int i = 0; i < n2+1; i++)
+				{
+					rows[nextRow][i] = EditDistanceLargerThanMax;
+				}
+
+				int maxIndex = Math.Min(lastColumnThatNeedsToBeEvaluatedCurr + 1, n2);
 				// if we are on the last row and we don't need to evaluate to the end of
 				// the column to determine if our edit distance is larger than the max
 				// then the edit distance is larger than the max
@@ -168,23 +172,51 @@ namespace WeSay.LexicalModel.Db4o_Specific
 				{
 					return EditDistanceLargerThanMax;
 				}
-				lastColumnThatNeedsToBeEvaluated = 0;
-				int minDistance = int.MaxValue;
-				for (int list2index = 1; list2index <= maxIndex; ++list2index)
-				{
-					int distance;
+				lastColumnThatNeedsToBeEvaluatedNext = int.MaxValue;
+				firstColumnThatNeedsToBeEvaluatedNext = lastColumnThatNeedsToBeEvaluatedCurr + 1;
 
-					if (list1[list1index - 1].Equals(list2[list2index - 1]))
+				int minDistance = int.MaxValue;
+
+				for (int list2index = firstColumnThatNeedsToBeEvaluatedCurr;
+					list2index <= maxIndex;
+					++list2index)
+				{
+					if (lastColumnThatNeedsToBeEvaluatedCurr == int.MaxValue)
 					{
-						distance = rows[curRow][list2index - 1]; //assumes equal cost is 0
+						break;
+					}
+
+					int distance = EditDistanceLargerThanMax;
+					if (list1index == 0 || list2index == 0)
+					{
+						distance = list1index*insertionCost + list2index*deletionCost;
 					}
 					else
 					{
-						int deletionDistance = rows[curRow][list2index] + deletionCost;
-						int insertionDistance = rows[nextRow][list2index - 1] + insertionCost;
-						int substitutionDistance = rows[curRow][list2index - 1] + substitutionCost;
 
-						distance = Math.Min(deletionDistance, Math.Min(insertionDistance, substitutionDistance));
+						// Delete Distance
+						if(list2index > firstColumnThatNeedsToBeEvaluatedCurr)
+						{
+							distance = rows[nextRow][list2index - 1] + deletionCost;
+						}
+
+						// Insert Distance
+						if(list2index <= lastColumnThatNeedsToBeEvaluatedPrev + 1)
+						{
+							distance = Math.Min(distance, rows[curRow][list2index] + insertionCost);
+						}
+
+						// Replace Distance
+						if(list2index > firstColumnThatNeedsToBeEvaluatedPrev)
+						{
+							int replaceDistance = rows[curRow][list2index - 1];
+
+							if (!list1[list1index - 1].Equals(list2[list2index - 1]))
+							{
+								replaceDistance += substitutionCost;
+							}
+							distance = Math.Min(distance, replaceDistance);
+						}
 
 						if (list1index > 1 && list2index > 1 &&
 							list1[list1index - 1].Equals(list2[list2index - 2]) &&
@@ -192,7 +224,9 @@ namespace WeSay.LexicalModel.Db4o_Specific
 						{
 							distance = Math.Min(distance, rows[prevRow][list2index - 2] + transpositionCost);
 						}
+
 					}
+
 					// only relevant if treatSuffixAsZeroDistance
 					if (treatSuffixAsZeroDistance && distance < minDistance)
 					{
@@ -201,7 +235,15 @@ namespace WeSay.LexicalModel.Db4o_Specific
 					rows[nextRow][list2index] = distance;
 					if (distance <= maxEditDistance)
 					{
-						lastColumnThatNeedsToBeEvaluated = list2index;
+						if(list2index < firstColumnThatNeedsToBeEvaluatedNext)
+						{
+							firstColumnThatNeedsToBeEvaluatedNext = list2index;
+						}
+						lastColumnThatNeedsToBeEvaluatedNext = list2index;
+					}
+					else if ((list1index == n1) && list2index > lastColumnThatNeedsToBeEvaluatedCurr)
+					{
+						break;
 					}
 				}
 
@@ -225,13 +267,19 @@ namespace WeSay.LexicalModel.Db4o_Specific
 						break;
 				}
 
-				if(lastColumnThatNeedsToBeEvaluated == 0)
-				{
-					return EditDistanceLargerThanMax;
-				}
+				lastColumnThatNeedsToBeEvaluatedPrev = lastColumnThatNeedsToBeEvaluatedCurr;
+				lastColumnThatNeedsToBeEvaluatedCurr = lastColumnThatNeedsToBeEvaluatedNext;
+
+				firstColumnThatNeedsToBeEvaluatedPrev = firstColumnThatNeedsToBeEvaluatedCurr;
+				firstColumnThatNeedsToBeEvaluatedCurr = firstColumnThatNeedsToBeEvaluatedNext;
 
 				if (treatSuffixAsZeroDistance && list1index == n1)
 				{
+					if (minDistance > maxEditDistance)
+					{
+						return EditDistanceLargerThanMax;
+					}
+
 					return minDistance;
 				}
 

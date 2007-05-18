@@ -527,6 +527,12 @@ namespace WeSay.LexicalTools.Tests
 			Assert.AreEqual(ApproximateMatcher.EditDistanceLargerThanMax, ApproximateMatcher.EditDistance("dist", "noise", 2, true));
 		}
 
+		[Test]
+		public void EditDistance_MajorDifference()
+		{
+			Assert.AreEqual(2, ApproximateMatcher.EditDistance("ab", "\"look busy do nothing\"", int.MaxValue, true));
+		}
+
 		/// <summary>
 		/// This test was created after we found that LexEntries did not
 		/// cascade on their delete and so lexical forms could be found even when
