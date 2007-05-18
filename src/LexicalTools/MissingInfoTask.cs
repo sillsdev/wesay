@@ -39,7 +39,7 @@ namespace WeSay.LexicalTools
 			WritingSystem listWritingSystem = BasilProject.Project.WritingSystems.UnknownVernacularWritingSystem;
 			// use the master view Template instead of the one for this task. (most likely the one for this
 			// task doesn't have the EntryLexicalForm field specified but the Master (Default) one will
-			Field field = WeSayWordsProject.Project.ViewTemplate.GetField(Field.FieldNames.EntryLexicalForm.ToString());
+			Field field = WeSayWordsProject.Project.DefaultViewTemplate.GetField(Field.FieldNames.EntryLexicalForm.ToString());
 			if (field != null)
 			{
 				if (field.WritingSystems.Count > 0)

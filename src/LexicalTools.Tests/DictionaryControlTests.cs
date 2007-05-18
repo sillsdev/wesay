@@ -108,7 +108,7 @@ namespace WeSay.LexicalTools.Tests
 
 			LexSense sense = (LexSense) entry.Senses.AddNew();
 			sense.Gloss[
-				WeSayWordsProject.Project.ViewTemplate.GetField("SenseGloss").WritingSystemIds[0]] =
+				WeSayWordsProject.Project.DefaultViewTemplate.GetField("SenseGloss").WritingSystemIds[0]] =
 				meaning;
 
 			if (includeExample)

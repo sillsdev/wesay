@@ -231,7 +231,7 @@ namespace WeSay.LexicalTools.Tests
 
 		private static string GetSomeValidWsIdForField(string fieldName)
 		{
-			return WeSayWordsProject.Project.ViewTemplate.GetField(fieldName).WritingSystemIds[0];
+			return WeSayWordsProject.Project.DefaultViewTemplate.GetField(fieldName).WritingSystemIds[0];
 		}
 
 		private static string GetLexicalForm(LexEntry entry)

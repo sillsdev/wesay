@@ -17,7 +17,8 @@ namespace WeSay.Project
 	{
 		//private string _lexiconDatabaseFileName = null;
 		private IList<ITask> _tasks;
-		private ViewTemplate _viewTemplate;
+		private ViewTemplate _defaultViewTemplate;
+		private IList<ViewTemplate> _viewTemplates;
 		private Dictionary<string, OptionsList> _optionLists;
 		private string _pathToLiftFile;
 		private string _cacheLocationOverride;
@@ -198,25 +199,46 @@ namespace WeSay.Project
 //
 //        }
 
-
-
-		private ViewTemplate GetViewTemplateFromProjectFiles()
+		private IList<ViewTemplate> InitializeViewTemplatesFromProjectFiles()
 		{
-			ViewTemplate template = new ViewTemplate();
-			try
+			if (_viewTemplates == null)
 			{
-				XmlDocument projectDoc = GetProjectDoc();
-				if (projectDoc != null)
+				List<ViewTemplate> viewTemplates = new List<ViewTemplate>();
+				ViewTemplate fullUpToDateTemplate = ViewTemplate.MakeMasterTemplate(WritingSystems);
+
+				try
 				{
-					XmlNode node = projectDoc.SelectSingleNode("tasks/components/viewTemplate");
-					template.LoadFromString(node.OuterXml);
+					XmlDocument projectDoc = GetProjectDoc();
+					if (projectDoc != null)
+					{
+						XmlNodeList nodes = projectDoc.SelectNodes("tasks/components/viewTemplate");
+						foreach (XmlNode node in nodes)
+						{
+							ViewTemplate template = new ViewTemplate();
+							template.LoadFromString(node.OuterXml);
+							ViewTemplate.SynchronizeInventories(fullUpToDateTemplate, template);
+							if (template.Id == "Default View Template")
+							{
+								_defaultViewTemplate = template;
+							}
+							viewTemplates.Add(template);
+						}
+					}
 				}
+				catch (Exception error)
+				{
+					MessageBox.Show(
+							"There may have been a problem reading the field template xml. A default template will be created." +
+							error.Message);
+				}
+				if(_defaultViewTemplate == null)
+				{
+					_defaultViewTemplate = fullUpToDateTemplate;
+				}
+				_viewTemplates = viewTemplates;
+
 			}
-			catch (Exception error)
-			{
-				MessageBox.Show("There may have been a problem reading the field template xml. A default template will be created." + error.Message);
-			}
-			return template;
+			return _viewTemplates;
 		}
 
 
@@ -266,7 +288,9 @@ namespace WeSay.Project
 		{
 			base.CreateEmptyProjectFiles(projectDirectoryPath);
 			Directory.CreateDirectory(PathToWeSaySpecificFilesDirectoryInProject);
-			_viewTemplate = ViewTemplate.MakeMasterTemplate(WritingSystems);
+			_defaultViewTemplate = ViewTemplate.MakeMasterTemplate(WritingSystems);
+			_viewTemplates = new List<ViewTemplate>();
+			_viewTemplates.Add(_defaultViewTemplate);
 		   // this._lexiconDatabaseFileName = this.Name+".words";
 
 
@@ -422,18 +446,27 @@ namespace WeSay.Project
 			}
 		}
 
-		public ViewTemplate ViewTemplate
+		public ViewTemplate DefaultViewTemplate
 		{
 			get
 			{
-				if(_viewTemplate==null)
+				if(_defaultViewTemplate==null)
 				{
-					ViewTemplate templateAsFoundInProjectFiles = GetViewTemplateFromProjectFiles();
-					ViewTemplate fullUpToDateTemplate = ViewTemplate.MakeMasterTemplate(WritingSystems);
-					ViewTemplate.SynchronizeInventories(fullUpToDateTemplate, templateAsFoundInProjectFiles);
-					_viewTemplate = fullUpToDateTemplate;
+					InitializeViewTemplatesFromProjectFiles();
 				}
-				return _viewTemplate;
+				return _defaultViewTemplate;
+			}
+		}
+
+		public IList<ViewTemplate> ViewTemplates
+		{
+			get
+			{
+				if (_viewTemplates == null)
+				{
+					InitializeViewTemplatesFromProjectFiles();
+				}
+				return _viewTemplates;
 			}
 		}
 
@@ -443,7 +476,7 @@ namespace WeSay.Project
 			{
 				List<string> names = new List<string>();
 
-				foreach (Field field in ViewTemplate.Fields)
+				foreach (Field field in DefaultViewTemplate.Fields)
 				{
 					if(field.DataTypeName=="Option")
 					{
@@ -460,7 +493,7 @@ namespace WeSay.Project
 			{
 				List<string> names = new List<string>();
 
-				foreach (Field field in ViewTemplate.Fields)
+				foreach (Field field in DefaultViewTemplate.Fields)
 				{
 					if (field.DataTypeName == "OptionCollection")
 					{
@@ -535,7 +568,7 @@ namespace WeSay.Project
 		public  Dictionary<string, string> GetFieldToOptionListNameDictionary()
 		{
 			Dictionary<string, string> fieldToOptionListName = new Dictionary<string, string>();
-			foreach (Field field in ViewTemplate.Fields)
+			foreach (Field field in DefaultViewTemplate.Fields)
 			{
 				if (field.OptionsListFile != null && field.OptionsListFile.Trim() != "")
 				{
@@ -556,7 +589,7 @@ namespace WeSay.Project
 
 			WritingSystems.IdOfWritingSystemChanged(ws, oldId);
 
-			foreach (Field field in ViewTemplate)
+			foreach (Field field in DefaultViewTemplate)
 			{
 				field.ChangeWritingSystemId(oldId, ws.Id);
 			}

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
@@ -15,20 +16,22 @@ namespace WeSay.Setup
 			InitializeComponent();
 		}
 
-		private void TaskList_Load(object sender, System.EventArgs e)
+		private void TaskList_Load(object sender, EventArgs e)
 		{
-			if (this.DesignMode)
+			if (DesignMode)
 				return;
 
 			LoadInventory();
 
-			BasilProject.Project.HackedEditorsSaveNow += new EventHandler(Project_HackedEditorsSaveNow);
+			WeSayWordsProject.Project.HackedEditorsSaveNow += new EventHandler(Project_HackedEditorsSaveNow);
 		}
 
 		void Project_HackedEditorsSaveNow(object sender, EventArgs e)
 		{
 			//nb do this before opening the writer, as that will empty our existing xml file
-			ViewTemplate vt = WeSayWordsProject.Project.ViewTemplate;
+			//ViewTemplate template = WeSayWordsProject.Project.DefaultViewTemplate;
+
+			IList<ViewTemplate> viewTemplates = WeSayWordsProject.Project.ViewTemplates;
 
 			XmlWriterSettings settings = new XmlWriterSettings();
 			settings.Indent = true;
@@ -38,7 +41,10 @@ namespace WeSay.Setup
 			writer.WriteStartElement("tasks");
 
 			writer.WriteStartElement("components");
-			vt.Write(writer);
+			foreach (ViewTemplate template in viewTemplates)
+			{
+				template.Write(writer);
+			}
 			writer.WriteEndElement();
 
 			foreach (TaskInfo t in _taskList.Items)
@@ -71,7 +77,6 @@ namespace WeSay.Setup
 				foreach (XmlNode node in inventoryDoc.SelectNodes("tasks/task"))
 				{
 					TaskInfo task = new TaskInfo(node);
-					XmlNode foundMatchingTask = null;
 					bool showCheckMark;
 
 					if (projectDoc == null)
@@ -81,6 +86,7 @@ namespace WeSay.Setup
 					}
 					else
 					{
+						XmlNode foundMatchingTask;
 						foundMatchingTask = projectDoc.SelectSingleNode("tasks/task[@id='" + task.Id + "']");
 						showCheckMark = !task.IsOptional || foundMatchingTask != null;
 					}
@@ -152,8 +158,8 @@ namespace WeSay.Setup
 		{
 			get
 			{
-				Debug.Assert(this.Node.Attributes["id"] != null,"Tasks must have ids.");
-				return GetOptionalAttributeString(this.Node, "id", "task");
+				Debug.Assert(Node.Attributes["id"] != null,"Tasks must have ids.");
+				return GetOptionalAttributeString(Node, "id", "task");
 			}
 		}
 
@@ -194,19 +200,19 @@ namespace WeSay.Setup
 
 		public override string ToString()
 		{
-				XmlNode label = this.Node.SelectSingleNode("label");
+				XmlNode label = Node.SelectSingleNode("label");
 				if (label != null)
 				{
 					return label.InnerText;
 				}
 				else
 				{
-					return GetOptionalAttributeString(this.Node, "id", "task");
+					return GetOptionalAttributeString(Node, "id", "task");
 				}
 
 		}
 
-		private string GetOptionalAttributeString(XmlNode xmlNode, string name, string defaultValue)
+		static private string GetOptionalAttributeString(XmlNode xmlNode, string name, string defaultValue)
 		{
 			XmlAttribute attr = xmlNode.Attributes[name];
 			if (attr == null)

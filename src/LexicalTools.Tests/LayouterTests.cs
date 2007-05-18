@@ -104,7 +104,7 @@ namespace WeSay.LexicalTools.Tests
 		private static void AddSense(LexEntry entry)
 		{
 			LexSense sense = (LexSense) entry.Senses.AddNew();
-			sense.Gloss[WeSayWordsProject.Project.ViewTemplate.GetField("SenseGloss").WritingSystemIds[0]] = "GlossInAnalysis";
+			sense.Gloss[WeSayWordsProject.Project.DefaultViewTemplate.GetField("SenseGloss").WritingSystemIds[0]] = "GlossInAnalysis";
 			AddExample(sense);
 			AddExample(sense);
 		}

@@ -54,7 +54,7 @@ namespace WeSay.Setup
 		{
 			_fieldsListBox.Items.Clear();
 
-			foreach (Field field in  WeSayWordsProject.Project.ViewTemplate)
+			foreach (Field field in  WeSayWordsProject.Project.DefaultViewTemplate)
 			{
 				this._fieldsListBox.Items.Add(field, field.Visibility == CommonEnumerations.VisibilitySetting.Visible);
 			}

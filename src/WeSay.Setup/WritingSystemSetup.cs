@@ -155,7 +155,7 @@ namespace WeSay.Setup
 
 		private void MakeWritingSystemIdChange(string oldId, string newId)
 		{
-			foreach (Field field in WeSayWordsProject.Project.ViewTemplate)
+			foreach (Field field in WeSayWordsProject.Project.DefaultViewTemplate)
 			{
 				field.ChangeWritingSystemId(oldId, newId);
 			}

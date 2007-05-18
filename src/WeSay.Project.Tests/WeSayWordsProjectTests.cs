@@ -1,9 +1,7 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
 using NUnit.Framework;
 using WeSay.Foundation;
-using WeSay.Foundation.Progress;
 using WeSay.Project;
 
 namespace WeSay.Project.Tests
@@ -92,10 +90,10 @@ namespace WeSay.Project.Tests
 
 
 
-		private static void MakeDummyWordsFile(string fileName, string weSayDir)
-		{
-			File.Create(Path.Combine(weSayDir, fileName)).Close();
-		}
+		//private static void MakeDummyWordsFile(string fileName, string weSayDir)
+		//{
+		//    File.Create(Path.Combine(weSayDir, fileName)).Close();
+		//}
 
 		private static string MakeDir(string existingParent, string newChild)
 		{

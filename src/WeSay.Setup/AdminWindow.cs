@@ -2,9 +2,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
-using MultithreadProgress;
-using WeSay.Data;
-using WeSay.Foundation;
+using Reporting;
 using WeSay.Foundation.Progress;
 using WeSay.Project;
 using WeSay.Setup.Properties;
@@ -17,15 +15,15 @@ namespace WeSay.Setup
 		private WelcomeControl _welcomePage;
 		private ProjectTabs _projectTabs;
 		private WeSayWordsProject _project;
-		ProgressDialogHandler _progressHandler;
+		private ProgressDialogHandler _progressHandler;
 		private ProgressDialogProgressState _progressState;
 		private string _progressLog;
 
- public AdminWindow(string[] args)
+		public AdminWindow(string[] args)
 		{
 			InitializeComponent();
 
-			this.Project = null;
+			Project = null;
 
 //            if (this.DesignMode)
 //                return;
@@ -35,11 +33,10 @@ namespace WeSay.Setup
 
 			if (args.Length > 0)
 			{
-				OpenProject(args[0].Trim(new char[] { '"' }));
+				OpenProject(args[0].Trim(new char[] {'"'}));
 			}
 
-
-			if (!this.DesignMode)
+			if (!DesignMode)
 			{
 				UpdateWindowCaption();
 			}
@@ -47,34 +44,34 @@ namespace WeSay.Setup
 
 		private WeSayWordsProject Project
 		{
-			get { return this._project; }
+			get { return _project; }
 			set
 			{
-				this._project = value;
+				_project = value;
 				UpdateEnabledStates();
 			}
 		}
 
 		// This delegate enables asynchronous calls for setting
 		// the properties from another thread.
-		delegate void UpdateStuffCallback();
+		private delegate void UpdateStuffCallback();
 
 		private void UpdateEnabledStates()
 		{
-			if (this.menuStrip1.InvokeRequired)
+			if (menuStrip1.InvokeRequired)
 			{
 				UpdateStuffCallback d = new UpdateStuffCallback(UpdateEnabledStates);
-				this.Invoke(d, new object[] {});
+				Invoke(d, new object[] {});
 			}
 			else
 			{
-				this.openProjectInWeSayToolStripMenuItem.Enabled = (_project != null) && (_progressHandler == null);
+				openProjectInWeSayToolStripMenuItem.Enabled = (_project != null) && (_progressHandler == null);
 			}
-
 		}
-		void OnChooseProject(object sender, EventArgs e)
+
+		private void OnChooseProject(object sender, EventArgs e)
 		{
-			string initialDirectory=null;
+			string initialDirectory = null;
 			if (!String.IsNullOrEmpty(Settings.Default.LastConfigFilePath))
 			{
 				try
@@ -84,7 +81,7 @@ namespace WeSay.Setup
 						initialDirectory = Path.GetDirectoryName(Settings.Default.LastConfigFilePath);
 					}
 				}
-				catch (Exception)
+				catch
 				{
 					//swallow
 				}
@@ -95,30 +92,32 @@ namespace WeSay.Setup
 				initialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 			}
 
-			System.Windows.Forms.OpenFileDialog dlg = new OpenFileDialog();
+			OpenFileDialog dlg = new OpenFileDialog();
 			dlg.Title = "Open WeSay Project...";
 			dlg.DefaultExt = ".WeSayConfig";
 			dlg.Filter = "WeSay Configuration File (*.WeSayConfig)|*.WeSayConfig";
 			dlg.Multiselect = false;
 			dlg.InitialDirectory = initialDirectory;
 			if (DialogResult.OK != dlg.ShowDialog(this))
+			{
 				return;
+			}
 
 			OnOpenProject(dlg.FileName, null);
 		}
 
-
-		void OnOpenProject(object sender, EventArgs e)
+		private void OnOpenProject(object sender, EventArgs e)
 		{
-			string configFilePath = (string)sender;
-			string first = System.IO.Directory.GetParent(configFilePath).FullName;
-			if (WeSayWordsProject.IsValidProjectDirectory(System.IO.Directory.GetParent(first).FullName))
+			string configFilePath = (string) sender;
+			string first = Directory.GetParent(configFilePath).FullName;
+			if (WeSayWordsProject.IsValidProjectDirectory(Directory.GetParent(first).FullName))
 			{
 				OpenProject(configFilePath);
 			}
 			else
 			{
-				Reporting.ErrorReporter.ReportNonFatalMessage("Sorry, that file does not appear to be located in a valid WeSay Project directory.");
+				ErrorReporter.ReportNonFatalMessage(
+						"Sorry, that file does not appear to be located in a valid WeSay Project directory.");
 			}
 			Settings.Default.LastConfigFilePath = Project.PathToConfigFile;
 		}
@@ -127,7 +126,9 @@ namespace WeSay.Setup
 		{
 			NewProject dlg = new NewProject();
 			if (DialogResult.OK != dlg.ShowDialog())
+			{
 				return;
+			}
 			CreateAndOpenProject(dlg.SelectedPath);
 		}
 
@@ -140,8 +141,8 @@ namespace WeSay.Setup
 			}
 
 			CreateNewProject(path);
-			OpenProject(path);
 			_project.Save();
+			OpenProject(path);
 		}
 
 		private void CreateNewProject(string path)
@@ -155,15 +156,15 @@ namespace WeSay.Setup
 			}
 			catch (Exception e)
 			{
-				Reporting.ErrorReporter.ReportNonFatalMessage("WeSay was not able to create a project there. \r\n" + e.Message);
+				ErrorReporter.ReportNonFatalMessage("WeSay was not able to create a project there. \r\n" + e.Message);
 				return;
 			}
 
-			if (this.Project != null)
+			if (Project != null)
 			{
-				this.Project.Dispose();
+				Project.Dispose();
 			}
-			this.Project = p;
+			Project = p;
 			SetupProjectControls();
 		}
 
@@ -180,14 +181,14 @@ namespace WeSay.Setup
 
 			try
 			{
-				this.Project = new WeSayWordsProject();
+				Project = new WeSayWordsProject();
 
 				//just open the accompanying lift file.
 				path = path.Replace(".WeSayConfig", ".lift");
 
 				if (path.Contains(".lift"))
 				{
-					this.Project.LoadFromLiftLexiconPath(path);
+					Project.LoadFromLiftLexiconPath(path);
 				}
 //                else if (path.Contains(".WeSayConfig"))
 //                {
@@ -195,31 +196,30 @@ namespace WeSay.Setup
 //                }
 				else if (Directory.Exists(path))
 				{
-					this.Project.LoadFromProjectDirectoryPath(path);
+					Project.LoadFromProjectDirectoryPath(path);
 				}
 				else
 				{
 					throw new ApplicationException(path + " is not named as a .lift file or .WeSayConfig file.");
 				}
-
 			}
 			catch (Exception e)
 			{
-				Reporting.ErrorReporter.ReportNonFatalMessage("WeSay was not able to open that project. \r\n" + e.Message);
+				ErrorReporter.ReportNonFatalMessage("WeSay was not able to open that project. \r\n" + e.Message);
 				return;
 			}
 
 			SetupProjectControls();
-			Settings.Default.LastConfigFilePath = this.Project.PathToConfigFile;
+			Settings.Default.LastConfigFilePath = Project.PathToConfigFile;
 		}
 
 		private void SetupProjectControls()
 		{
-		   // try
-		   // {
+			// try
+			// {
 			UpdateWindowCaption();
 			RemoveExistingControls();
-				InstallProjectsControls();
+			InstallProjectsControls();
 			//}
 //            catch (Exception e)
 //            {
@@ -229,47 +229,47 @@ namespace WeSay.Setup
 
 		private void UpdateWindowCaption()
 		{
-			string projectName="";
-			if (this.Project != null)
+			string projectName = "";
+			if (Project != null)
 			{
-				projectName = this.Project.Name;
+				projectName = Project.Name;
 			}
-			this.Text = projectName + " - WeSay Configuration Tool";
-			_versionToolStripMenuItem.Text = Reporting.ErrorReporter.UserFriendlyVersionString;
+			Text = projectName + " - WeSay Configuration Tool";
+			_versionToolStripMenuItem.Text = ErrorReporter.UserFriendlyVersionString;
 		}
-
 
 		private void InstallWelcomePage()
 		{
 			_welcomePage = new WelcomeControl();
-			this.Controls.Add(this._welcomePage);
-			this._welcomePage.BringToFront();
-			this._welcomePage.Dock = DockStyle.Fill;
-			this._welcomePage.NewProjectClicked += new EventHandler(OnCreateProject);
-			this._welcomePage.OpenPreviousProjectClicked  += new EventHandler(OnOpenProject);
-			this._welcomePage.ChooseProjectClicked   += new EventHandler(OnChooseProject);
+			Controls.Add(_welcomePage);
+			_welcomePage.BringToFront();
+			_welcomePage.Dock = DockStyle.Fill;
+			_welcomePage.NewProjectClicked += new EventHandler(OnCreateProject);
+			_welcomePage.OpenPreviousProjectClicked += new EventHandler(OnOpenProject);
+			_welcomePage.ChooseProjectClicked += new EventHandler(OnChooseProject);
 		}
+
 		private void InstallProjectsControls()
 		{
-			this._projectTabs = new ProjectTabs();
-			this.Controls.Add(this._projectTabs);
-			this._projectTabs.BringToFront();
-			this._projectTabs.Dock = DockStyle.Fill;
+			_projectTabs = new ProjectTabs();
+			Controls.Add(_projectTabs);
+			_projectTabs.BringToFront();
+			_projectTabs.Dock = DockStyle.Fill;
 		}
 
 		private void RemoveExistingControls()
 		{
-			if (this._welcomePage != null)
+			if (_welcomePage != null)
 			{
-				this.Controls.Remove(this._welcomePage);
-				this._welcomePage.Dispose();
-				this._welcomePage = null;
+				Controls.Remove(_welcomePage);
+				_welcomePage.Dispose();
+				_welcomePage = null;
 			}
-			if (this._projectTabs != null)
+			if (_projectTabs != null)
 			{
-				this.Controls.Remove(this._projectTabs);
-				this._projectTabs.Dispose();
-				this._projectTabs = null;
+				Controls.Remove(_projectTabs);
+				_projectTabs.Dispose();
+				_projectTabs = null;
 			}
 		}
 
@@ -295,16 +295,16 @@ namespace WeSay.Setup
 
 			try
 			{
-				if (this.Project != null)
+				if (Project != null)
 				{
-					this.Project.Save();
+					Project.Save();
 				}
 				Settings.Default.Save();
 			}
 			catch (Exception error)
 			{
 				//would make it impossible to quit. e.Cancel = true;
-				Reporting.ErrorReporter.ReportNonFatalMessage(error.Message);
+				ErrorReporter.ReportNonFatalMessage(error.Message);
 			}
 		}
 
@@ -313,15 +313,15 @@ namespace WeSay.Setup
 			new AboutBox().ShowDialog();
 		}
 
-
 		private void OnExportToLiftXmlToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			if (!File.Exists(_project.PathToDb4oLexicalModelDB))
 			{
-				Reporting.ErrorReporter.ReportNonFatalMessage(
-					string.Format(
-						"Sorry, {0} cannot find a file which is necessary to perform the export on this project ({1})",
-						Application.ProductName, _project.PathToDb4oLexicalModelDB));
+				ErrorReporter.ReportNonFatalMessage(
+						string.Format(
+								"Sorry, {0} cannot find a file which is necessary to perform the export on this project ({1})",
+								Application.ProductName,
+								_project.PathToDb4oLexicalModelDB));
 				return;
 			}
 
@@ -335,7 +335,8 @@ namespace WeSay.Setup
 //            }
 
 			SaveFileDialog saveDialog = new SaveFileDialog();
-			if (Settings.Default.LastLiftExportPath == String.Empty || !Directory.Exists(Settings.Default.LastLiftExportPath))
+			if (Settings.Default.LastLiftExportPath == String.Empty ||
+				!Directory.Exists(Settings.Default.LastLiftExportPath))
 			{
 				saveDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 			}
@@ -343,9 +344,9 @@ namespace WeSay.Setup
 			{
 				saveDialog.InitialDirectory = Settings.Default.LastLiftExportPath;
 			}
-			saveDialog.Title="Save LIFT file as";
+			saveDialog.Title = "Save LIFT file as";
 			saveDialog.Filter = "LIFT XML (*.xml)|*.xml";
-			saveDialog.FileName=_project.Name+".lift.xml";
+			saveDialog.FileName = _project.Name + ".lift.xml";
 			if (saveDialog.ShowDialog() != DialogResult.OK)
 			{
 				return;
@@ -355,30 +356,29 @@ namespace WeSay.Setup
 			RunCommand(new ExportLIFTCommand(saveDialog.FileName, _project.PathToDb4oLexicalModelDB));
 		}
 
-
 		private void RunCommand(BasicCommand command)
 		{
 			_progressLog = "";
 			_progressHandler = new ProgressDialogHandler(this, command);
 			_progressHandler.Finished += new EventHandler(OnProgressHandler_Finished);
-			_progressState = new WeSay.UI.ProgressDialogProgressState(_progressHandler);
+			_progressState = new ProgressDialogProgressState(_progressHandler);
 			_progressState.Log += new EventHandler<ProgressState.LogEvent>(OnProgressState_Log);
 			UpdateEnabledStates();
 			command.BeginInvoke(_progressState);
 		}
 
-		void OnProgressState_Log(object sender, ProgressState.LogEvent e)
+		private void OnProgressState_Log(object sender, ProgressState.LogEvent e)
 		{
 			_progressLog += e.message + "\r\n";
 		}
 
-		void OnProgressHandler_Finished(object sender, EventArgs e)
+		private void OnProgressHandler_Finished(object sender, EventArgs e)
 		{
 			_progressHandler = null;
 			UpdateEnabledStates();
 			if (_progressState.State == ProgressState.StateValue.StoppedWithError)
 			{
-				Reporting.ErrorReporter.ReportNonFatalMessage("WeSay ran into a problem.\r\n"+_progressLog);
+				ErrorReporter.ReportNonFatalMessage("WeSay ran into a problem.\r\n" + _progressLog);
 			}
 		}
 
@@ -418,19 +418,17 @@ namespace WeSay.Setup
 
 		private void OnOpenThisProjectInWeSay(object sender, EventArgs e)
 		{
-			this._project.Save();//want the client to see the latest
+			_project.Save(); //want the client to see the latest
 			string dir = Directory.GetParent(Application.ExecutablePath).FullName;
 			ProcessStartInfo startInfo =
-				new ProcessStartInfo(Path.Combine(dir, "WeSay.App.exe"),
-														string.Format("\"{0}\"", _project.PathToLiftFile));
+					new ProcessStartInfo(Path.Combine(dir, "WeSay.App.exe"),
+										 string.Format("\"{0}\"", _project.PathToLiftFile));
 			Process.Start(startInfo);
 		}
 
-
-
-		void OnExit_Click(object sender, System.EventArgs e)
+		private void OnExit_Click(object sender, EventArgs e)
 		{
-			this.Close();
+			Close();
 		}
 	}
 }
