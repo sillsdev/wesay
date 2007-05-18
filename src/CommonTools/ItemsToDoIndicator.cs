@@ -1,27 +1,31 @@
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.ComponentModel.Design;
 using System.Drawing;
-using System.Data;
-using System.Text;
 using System.Windows.Forms;
 
-namespace WindowsControlLibrary1
+namespace WeSay.CommonTools
 {
 	public partial class ItemsToDoIndicator : UserControl
 	{
+
 		private int _count=327;
 		private int _referenceCount = 1000;
 
 		private string _status;
+		private static int _largestExpectedNumber=0;
 
 		public ItemsToDoIndicator()
 		{
 			InitializeComponent();
 		}
 
-
+		/// <summary>
+		/// if we're showing a stack of these, it's nice if they are all the same width
+		/// </summary>
+		/// <param name="largestExpectedNumber"></param>
+		static public void MakeAllInstancesSameWidth(int largestExpectedNumber)
+		{
+			_largestExpectedNumber = largestExpectedNumber;
+		}
 
 		public int Count
 		{
@@ -65,30 +69,49 @@ namespace WindowsControlLibrary1
 			}
 		}
 
-		protected override void  OnPaint(PaintEventArgs e)
+		protected override void OnPaint(PaintEventArgs e)
 		{
 			if (_referenceCount < 0)
 			{
 				return; // a count is not relevant for this item, at least at this time
 			}
 
-		   const int paperWidth = 15;
-		   int paperDistanceFromLeftEdge = 4;
-		   SizeF countSize = e.Graphics.MeasureString(_count.ToString(), this.Font);
-		   this.Width = (int) (countSize.Width + paperDistanceFromLeftEdge + paperWidth + 10);
+			const int paperWidth = 15;
+			int paperDistanceFromLeftEdge = 4;
 
-		   Rectangle r = new Rectangle(this.ClientRectangle.Left, ClientRectangle.Top, ClientRectangle.Width, ClientRectangle.Height);
-		   Point topleft = new Point(r.Left, r.Top+3);
-		   Point bottomLeft = new Point(r.Left, r.Bottom-1);
-		   Point bottomRight = new Point(r.Right-2, r.Bottom-1);
-		   Point topRight = new Point(r.Right-2, r.Top+3);
+			//we will draw the tray big enough for the task with the most items, so all trays are the same size
+			int referenceNumberForWidth = _largestExpectedNumber > 0 ? _largestExpectedNumber : _count;
+
+			float globalCountWidth = e.Graphics.MeasureString(referenceNumberForWidth.ToString(), this.Font).Width;
+			float countWidth = e.Graphics.MeasureString(_count.ToString(), this.Font).Width;
+			this.Width = (int)(globalCountWidth + paperDistanceFromLeftEdge + paperWidth + 10);
+
+			DrawIntrayBounds(e, ClientRectangle);
+			DrawPaperStack(e, paperDistanceFromLeftEdge, paperWidth, ClientRectangle);
+
+			//center our count
+			float centeringNudge = (globalCountWidth - countWidth)/2;
+			e.Graphics.DrawString(_count.ToString(), this.Font, Brushes.Black,
+								  ClientRectangle.Left + paperDistanceFromLeftEdge + paperWidth + 3 + centeringNudge,
+								  ClientRectangle.Top + 3);
+		}
+
+		private static void DrawIntrayBounds(PaintEventArgs e, Rectangle r)
+		{
+			Point topleft = new Point(r.Left, r.Top+3);
+			Point bottomLeft = new Point(r.Left, r.Bottom-1);
+			Point bottomRight = new Point(r.Right-2, r.Bottom-1);
+			Point topRight = new Point(r.Right-2, r.Top+3);
 
 			Pen boxPen = Pens.Gray;
 			e.Graphics.DrawLine(boxPen, topleft, bottomLeft);
-		   e.Graphics.DrawLine(boxPen, bottomLeft, bottomRight);
-		   e.Graphics.DrawLine(boxPen, bottomRight, topRight);
+			e.Graphics.DrawLine(boxPen, bottomLeft, bottomRight);
+			e.Graphics.DrawLine(boxPen, bottomRight, topRight);
+		}
 
-		   int distanceBetweenPapers = 4   ;
+		private void DrawPaperStack(PaintEventArgs e, int paperDistanceFromLeftEdge, int paperWidth, Rectangle r)
+		{
+			int distanceBetweenPapers = 4   ;
 			int maximumNumberOfPapers = 5;
 			int numberOfPieces = 0;
 			if (_count > 0 && _referenceCount > 0)
@@ -97,15 +120,10 @@ namespace WindowsControlLibrary1
 				numberOfPieces = Math.Max(1, numberOfPieces);//at least one if there count is > 0
 			}
 			for (int i = 0; i < numberOfPieces; i++)
-		   {
-			   DrawOnePieceOfPaper(paperDistanceFromLeftEdge, e, paperWidth, r.Bottom - (5+(distanceBetweenPapers*i)));
-		   }
-
-		   e.Graphics.DrawString(_count.ToString(), this.Font, Brushes.Black, r.Left + paperDistanceFromLeftEdge + paperWidth + 3,
-								 r.Top + 3);
-//            e.Graphics.FillRectangle(Brushes.Cyan, Bounds);
-//             e.Graphics.FillRectangle(Brushes.Yellow , e.ClipRectangle);
-	   }
+			{
+				DrawOnePieceOfPaper(paperDistanceFromLeftEdge, e, paperWidth, r.Bottom - (5+(distanceBetweenPapers*i)));
+			}
+		}
 
 		private void DrawOnePieceOfPaper(int distanceFromLeftEdge, PaintEventArgs e, int paperWidth, int y)
 		{

@@ -57,41 +57,52 @@ namespace WeSay.LexicalTools
 		private void InitializeComponent()
 		{
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MissingInfoControl));
-			this._recordsListBox = new WeSayListBox();
-			this._completedRecordsListBox = new WeSayListBox();
-			this._completedRecordsLabel = new System.Windows.Forms.Label();
+			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+			this._congratulationsControl = new WeSay.LexicalTools.CongratulationsControl();
 			this._entryViewControl = new WeSay.LexicalTools.EntryViewControl();
+			this._recordsListBox = new WeSay.UI.WeSayListBox();
+			this._completedRecordsListBox = new WeSay.UI.WeSayListBox();
+			this._completedRecordsLabel = new System.Windows.Forms.Label();
 			this._btnPreviousWord = new WeSay.UI.Buttons.PreviousButton();
 			this._btnNextWord = new WeSay.UI.Buttons.NextButton();
 			this.labelNextHotKey = new System.Windows.Forms.Label();
-			this._congratulationsControl = new WeSay.LexicalTools.CongratulationsControl();
+			this.label1 = new System.Windows.Forms.Label();
+			this.splitContainer1.Panel1.SuspendLayout();
+			this.splitContainer1.Panel2.SuspendLayout();
+			this.splitContainer1.SuspendLayout();
 			this.SuspendLayout();
 			//
-			// _recordsListBox
+			// splitContainer1
 			//
-			this._recordsListBox.Location = new System.Drawing.Point(4, 5);
-			this._recordsListBox.MinimumSize = new System.Drawing.Size(0, 50);
-			this._recordsListBox.Name = "_recordsListBox";
-			this._recordsListBox.Size = new System.Drawing.Size(116, 170);
-			this._recordsListBox.TabIndex = 1;
+			this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.splitContainer1.Location = new System.Drawing.Point(0, 0);
+			this.splitContainer1.Name = "splitContainer1";
 			//
-			// _completedRecordsListBox
+			// splitContainer1.Panel1
 			//
-			this._completedRecordsListBox.Location = new System.Drawing.Point(4, 220);
-			this._completedRecordsListBox.MinimumSize = new System.Drawing.Size(0, 50);
-			this._completedRecordsListBox.Name = "_completedRecordsListBox";
-			this._completedRecordsListBox.Size = new System.Drawing.Size(116, 170);
-			this._completedRecordsListBox.TabIndex = 2;
+			this.splitContainer1.Panel1.Controls.Add(this.label1);
+			this.splitContainer1.Panel1.Controls.Add(this._completedRecordsLabel);
+			this.splitContainer1.Panel1.Controls.Add(this._completedRecordsListBox);
+			this.splitContainer1.Panel1.Controls.Add(this._recordsListBox);
 			//
-			// _completedRecordsLabel
+			// splitContainer1.Panel2
 			//
-			this._completedRecordsLabel.AutoSize = true;
-			this._completedRecordsLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this._completedRecordsLabel.Location = new System.Drawing.Point(4, 200);
-			this._completedRecordsLabel.Name = "_completedRecordsLabel";
-			this._completedRecordsLabel.Size = new System.Drawing.Size(70, 15);
-			this._completedRecordsLabel.TabIndex = 3;
-			this._completedRecordsLabel.Text = "Completed:";
+			this.splitContainer1.Panel2.Controls.Add(this._btnNextWord);
+			this.splitContainer1.Panel2.Controls.Add(this.labelNextHotKey);
+			this.splitContainer1.Panel2.Controls.Add(this._btnPreviousWord);
+			this.splitContainer1.Panel2.Controls.Add(this._entryViewControl);
+			this.splitContainer1.Panel2.Controls.Add(this._congratulationsControl);
+			this.splitContainer1.Size = new System.Drawing.Size(641, 407);
+			this.splitContainer1.SplitterDistance = 153;
+			this.splitContainer1.TabIndex = 9;
+			//
+			// _congratulationsControl
+			//
+			this._congratulationsControl.Dock = System.Windows.Forms.DockStyle.Fill;
+			this._congratulationsControl.Location = new System.Drawing.Point(0, 0);
+			this._congratulationsControl.Name = "_congratulationsControl";
+			this._congratulationsControl.Size = new System.Drawing.Size(484, 407);
+			this._congratulationsControl.TabIndex = 9;
 			//
 			// _entryViewControl
 			//
@@ -101,28 +112,64 @@ namespace WeSay.LexicalTools
 			this._entryViewControl.AutoScroll = true;
 			this._entryViewControl.BackColor = System.Drawing.SystemColors.ActiveCaption;
 			this._entryViewControl.DataSource = null;
-			this._entryViewControl.Location = new System.Drawing.Point(126, 5);
+			this._entryViewControl.Location = new System.Drawing.Point(-1, 3);
 			this._entryViewControl.Name = "_entryViewControl";
-			this._entryViewControl.Size = new System.Drawing.Size(367, 334);
-			this._entryViewControl.TabIndex = 0;
+			this._entryViewControl.Size = new System.Drawing.Size(482, 345);
+			this._entryViewControl.TabIndex = 10;
+			//
+			// _recordsListBox
+			//
+			this._recordsListBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+						| System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
+			this._recordsListBox.Location = new System.Drawing.Point(0, 21);
+			this._recordsListBox.MinimumSize = new System.Drawing.Size(4, 50);
+			this._recordsListBox.Name = "_recordsListBox";
+			this._recordsListBox.Size = new System.Drawing.Size(150, 173);
+			this._recordsListBox.TabIndex = 2;
+			//
+			// _completedRecordsListBox
+			//
+			this._completedRecordsListBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
+			this._completedRecordsListBox.Location = new System.Drawing.Point(0, 255);
+			this._completedRecordsListBox.MinimumSize = new System.Drawing.Size(4, 50);
+			this._completedRecordsListBox.Name = "_completedRecordsListBox";
+			this._completedRecordsListBox.Size = new System.Drawing.Size(150, 147);
+			this._completedRecordsListBox.TabIndex = 3;
+			//
+			// _completedRecordsLabel
+			//
+			this._completedRecordsLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this._completedRecordsLabel.AutoSize = true;
+			this._completedRecordsLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this._completedRecordsLabel.Location = new System.Drawing.Point(3, 229);
+			this._completedRecordsLabel.Name = "_completedRecordsLabel";
+			this._completedRecordsLabel.Size = new System.Drawing.Size(70, 15);
+			this._completedRecordsLabel.TabIndex = 4;
+			this._completedRecordsLabel.Text = "Completed:";
 			//
 			// _btnPreviousWord
 			//
 			this._btnPreviousWord.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this._btnPreviousWord.Location = new System.Drawing.Point(303, 354);
+			this._btnPreviousWord.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+			this._btnPreviousWord.Image = ((System.Drawing.Image)(resources.GetObject("_btnPreviousWord.Image")));
+			this._btnPreviousWord.Location = new System.Drawing.Point(289, 364);
 			this._btnPreviousWord.Name = "_btnPreviousWord";
 			this._btnPreviousWord.Size = new System.Drawing.Size(30, 30);
-			this._btnPreviousWord.TabIndex = 4;
+			this._btnPreviousWord.TabIndex = 11;
 			this._btnPreviousWord.TabStop = false;
 			this._btnPreviousWord.Click += new System.EventHandler(this.OnBtnPreviousWordClick);
 			//
 			// _btnNextWord
 			//
 			this._btnNextWord.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this._btnNextWord.Location = new System.Drawing.Point(336, 344);
+			this._btnNextWord.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+			this._btnNextWord.Image = ((System.Drawing.Image)(resources.GetObject("_btnNextWord.Image")));
+			this._btnNextWord.Location = new System.Drawing.Point(325, 354);
 			this._btnNextWord.Name = "_btnNextWord";
 			this._btnNextWord.Size = new System.Drawing.Size(50, 50);
-			this._btnNextWord.TabIndex = 5;
+			this._btnNextWord.TabIndex = 12;
 			this._btnNextWord.TabStop = false;
 			this._btnNextWord.Click += new System.EventHandler(this.OnBtnNextWordClick);
 			//
@@ -132,50 +179,50 @@ namespace WeSay.LexicalTools
 			this.labelNextHotKey.AutoSize = true;
 			this.labelNextHotKey.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.labelNextHotKey.ForeColor = System.Drawing.Color.DarkGray;
-			this.labelNextHotKey.Location = new System.Drawing.Point(387, 363);
+			this.labelNextHotKey.Location = new System.Drawing.Point(379, 371);
 			this.labelNextHotKey.Name = "labelNextHotKey";
 			this.labelNextHotKey.Size = new System.Drawing.Size(102, 15);
-			this.labelNextHotKey.TabIndex = 6;
+			this.labelNextHotKey.TabIndex = 13;
 			this.labelNextHotKey.Text = "(Page Down Key)";
 			//
-			// _congratulationsControl
+			// label1
 			//
-			this._congratulationsControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-						| System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
-			this._congratulationsControl.Location = new System.Drawing.Point(126, 9);
-			this._congratulationsControl.Name = "_congratulationsControl";
-			this._congratulationsControl.Size = new System.Drawing.Size(367, 370);
-			this._congratulationsControl.TabIndex = 8;
+			this.label1.AutoSize = true;
+			this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label1.Location = new System.Drawing.Point(3, 3);
+			this.label1.Name = "label1";
+			this.label1.Size = new System.Drawing.Size(43, 15);
+			this.label1.TabIndex = 4;
+			this.label1.Text = "To Do:";
 			//
 			// MissingInfoControl
 			//
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.Controls.Add(this._recordsListBox);
-			this.Controls.Add(this._completedRecordsListBox);
-			this.Controls.Add(this._entryViewControl);
-			this.Controls.Add(this._completedRecordsLabel);
-			this.Controls.Add(this._btnPreviousWord);
-			this.Controls.Add(this._btnNextWord);
-			this.Controls.Add(this.labelNextHotKey);
-			this.Controls.Add(this._congratulationsControl);
+			this.Controls.Add(this.splitContainer1);
 			this.Name = "MissingInfoControl";
-			this.Size = new System.Drawing.Size(493, 395);
+			this.Size = new System.Drawing.Size(641, 407);
+			this.splitContainer1.Panel1.ResumeLayout(false);
+			this.splitContainer1.Panel1.PerformLayout();
+			this.splitContainer1.Panel2.ResumeLayout(false);
+			this.splitContainer1.Panel2.PerformLayout();
+			this.splitContainer1.ResumeLayout(false);
 			this.ResumeLayout(false);
-			this.PerformLayout();
 
 		}
 
 		#endregion
-		private EntryViewControl _entryViewControl;
+
+		private SplitContainer splitContainer1;
 		private WeSayListBox _recordsListBox;
-		private WeSayListBox _completedRecordsListBox;
-		private Label _completedRecordsLabel;
-		private NextButton _btnNextWord;
-		private PreviousButton _btnPreviousWord;
-		private Label labelNextHotKey;
+		private EntryViewControl _entryViewControl;
 		private CongratulationsControl _congratulationsControl;
+		private Label label1;
+		private Label _completedRecordsLabel;
+		private WeSayListBox _completedRecordsListBox;
+		private NextButton _btnNextWord;
+		private Label labelNextHotKey;
+		private PreviousButton _btnPreviousWord;
 
 	}
 }

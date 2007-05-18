@@ -33,7 +33,7 @@ namespace WeSay.CommonTools
 		{
 			this._btnName = new System.Windows.Forms.Button();
 			this._textShortDescription = new System.Windows.Forms.TextBox();
-			this._intray = new WindowsControlLibrary1.ItemsToDoIndicator();
+			this._intray = new ItemsToDoIndicator();
 			this.SuspendLayout();
 			//
 			// _btnName
@@ -44,7 +44,7 @@ namespace WeSay.CommonTools
 			this._btnName.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this._btnName.Location = new System.Drawing.Point(79, 9);
 			this._btnName.Name = "_btnName";
-			this._btnName.Size = new System.Drawing.Size(1421, 33);
+			this._btnName.Size = new System.Drawing.Size(356, 33);
 			this._btnName.TabIndex = 1;
 			this._btnName.Text = "Gather from Foo words";
 			this._btnName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -60,7 +60,7 @@ namespace WeSay.CommonTools
 			this._textShortDescription.Location = new System.Drawing.Point(79, 48);
 			this._textShortDescription.Multiline = true;
 			this._textShortDescription.Name = "_textShortDescription";
-			this._textShortDescription.Size = new System.Drawing.Size(1421, 32);
+			this._textShortDescription.Size = new System.Drawing.Size(356, 32);
 			this._textShortDescription.TabIndex = 2;
 			this._textShortDescription.TabStop = false;
 			this._textShortDescription.Text = "See words in Foo, write the same words in Boo";
@@ -85,7 +85,7 @@ namespace WeSay.CommonTools
 			this.Controls.Add(this._textShortDescription);
 			this.Controls.Add(this._btnName);
 			this.Name = "TaskIndicator";
-			this.Size = new System.Drawing.Size(1503, 83);
+			this.Size = new System.Drawing.Size(438, 83);
 			this.BackColorChanged += new System.EventHandler(this.TaskIndicator_BackColorChanged);
 			this.ResumeLayout(false);
 			this.PerformLayout();
@@ -96,6 +96,6 @@ namespace WeSay.CommonTools
 
 		private System.Windows.Forms.Button _btnName;
 		private System.Windows.Forms.TextBox _textShortDescription;
-		private WindowsControlLibrary1.ItemsToDoIndicator _intray;
+		private ItemsToDoIndicator _intray;
 	}
 }

@@ -1,4 +1,4 @@
-namespace WindowsControlLibrary1
+namespace WeSay.CommonTools
 {
 	partial class ItemsToDoIndicator
 	{
