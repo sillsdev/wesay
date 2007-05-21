@@ -15,6 +15,25 @@ namespace WeSay.Setup
 //            if (DesignMode)
 //                WeSayWordsProject.InitializeForTests();
 			InitializeComponent();
+			this.Resize += new EventHandler(ProjectTabs_Resize);
+		}
+
+		void ProjectTabs_Resize(object sender, EventArgs e)
+		{
+			TryToFixScaling(_writingSystemSetupControl);
+			TryToFixScaling(fieldsControl1);
+			TryToFixScaling(_taskListControl);
+			TryToFixScaling(_optionListPage);
+			TryToFixScaling(_actionsPage);
+		}
+
+		//seems to help with some, not with others
+		private void TryToFixScaling(Control c)
+		{
+			//this is part of dealing with .net not adjusting stuff well for different dpis
+			c.Dock = DockStyle.None;
+			c.Size = this.Size;
+		   // c.BackColor = System.Drawing.Color.Crimson;
 		}
 	}
 }

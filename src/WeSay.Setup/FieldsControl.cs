@@ -17,6 +17,7 @@ namespace WeSay.Setup
 			//don't want grey
 			_descriptionBox.BackColor = SystemColors.Window;
 			_descriptionBox.ForeColor = SystemColors.WindowText;
+			this.Resize +=new EventHandler(FieldsControl_Resize);
 			RefreshMoveButtons();
 		}
 
@@ -358,6 +359,14 @@ namespace WeSay.Setup
 
 				WeSayWordsProject.Project.MakeFieldNameChange(CurrentField, (string) e.OldValue);
 			}
+		}
+
+		private void FieldsControl_Resize(object sender, EventArgs e)
+		{
+			//this is part of dealing with .net not adjusting stuff well for different dpis
+			splitContainer1.Dock = DockStyle.None;
+			splitContainer1.Width = this.Width - 20;
+
 		}
 
 

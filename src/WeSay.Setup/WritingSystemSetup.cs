@@ -12,6 +12,14 @@ namespace WeSay.Setup
 		public WritingSystemSetup()
 		{
 			InitializeComponent();
+			Resize += new EventHandler(WritingSystemSetup_Resize);
+		}
+
+		void WritingSystemSetup_Resize(object sender, EventArgs e)
+		{
+			//this is part of dealing with .net not adjusting stuff well for different dpis
+			splitContainer1.Dock = DockStyle.None;
+			splitContainer1.Width = this.Width - 25;
 		}
 
 		public void WritingSystemSetup_Load(object sender, EventArgs e)

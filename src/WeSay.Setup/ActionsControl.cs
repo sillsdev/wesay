@@ -19,6 +19,16 @@ namespace WeSay.Setup
 		public ActionsControl()
 		{
 			InitializeComponent();
+			this.Resize += new EventHandler(ActionsControl_Resize);
+		}
+
+		void ActionsControl_Resize(object sender, EventArgs e)
+		{
+			//this is part of dealing with .net not adjusting stuff well for different dpis
+
+			this._addinsList.Width = this.Width - 20;
+			this._addinsList.Height = (this.Height - _addinsList.Top) - 40;
+			this.label1.Top = this.Bottom - (10+label1.Height);
 		}
 
 		private void OnVisibleChanged(object sender, EventArgs e)

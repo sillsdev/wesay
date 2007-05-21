@@ -14,6 +14,14 @@ namespace WeSay.Setup
 		public TaskListControl()
 		{
 			InitializeComponent();
+			splitContainer1.Resize += new EventHandler(splitContainer1_Resize);
+		}
+
+		void splitContainer1_Resize(object sender, EventArgs e)
+		{
+			//this is part of dealing with .net not adjusting stuff well for different dpis
+			splitContainer1.Dock = DockStyle.None;
+			splitContainer1.Width = this.Width - 25;
 		}
 
 		private void TaskList_Load(object sender, EventArgs e)
