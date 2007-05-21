@@ -145,9 +145,9 @@
 						 Compile;
 						 Test;
 						 CreateSample;
-						 VerifySample;
 						 Package;
-						 Upload"/>
+						 Upload;
+						 VerifySample"/>
 	<Message Text="Build Complete"/>
   </Target>
 

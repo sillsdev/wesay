@@ -143,33 +143,6 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 		  <Component Id="Db4objects.Db4o.Tools.dll" Guid="{43EEAD0E-79B9-4E40-9FE0-BDEE34173B92}">
 			<File Id="Db4objects.Db4o.Tools.dll" Name="Db4objects.Db4o.Tools.dll" KeyPath="yes" Source="..\..\output\release\Db4objects.Db4o.Tools.dll" />
 		  </Component>
-		  <Component Id="DevAge.Core.dll" Guid="{E1DF2139-71A1-4D2A-897C-48C98479E2EA}">
-			<File Id="DevAge.Core.dll" Name="DevAge.Core.dll" KeyPath="yes" Source="..\..\output\release\DevAge.Core.dll" />
-		  </Component>
-		  <!--
-		  <Component Id="DevAge.Core.pdb" Guid="{5C06D692-6A1C-4ABE-80F4-A3FEA71B3565}">
-			<File Id="DevAge.Core.pdb" Name="DevAge.Core.pdb" KeyPath="yes" Source="..\..\output\release\DevAge.Core.pdb" />
-		  </Component>
-		  -->
-		  <Component Id="DevAge.Drawing.dll" Guid="{594FE7E6-FAD3-485B-AACD-8D592C44308C}">
-			<File Id="DevAge.Drawing.dll" Name="DevAge.Drawing.dll" KeyPath="yes" Source="..\..\output\release\DevAge.Drawing.dll" />
-		  </Component>
-		  <Component Id="DevAge.SourceGrid3.dll" Guid="{7BD35851-4F16-4D82-A374-18FDF6D50B44}">
-			<File Id="DevAge.SourceGrid3.dll" Name="DevAge.SourceGrid3.dll" KeyPath="yes" Source="..\..\output\release\DevAge.SourceGrid3.dll" />
-		  </Component>
-		  <!--
-		  <Component Id="DevAge.SourceGrid3.pdb" Guid="{913F7110-0788-44DD-BDE0-7FC57DEA6385}">
-			<File Id="DevAge.SourceGrid3.pdb" Name="DevAge.SourceGrid3.pdb" KeyPath="yes" Source="..\..\output\release\DevAge.SourceGrid3.pdb" />
-		  </Component>
-		  -->
-		  <Component Id="DevAge.Windows.Forms.dll" Guid="{F8CBCDA7-0C25-4A85-96D7-4FBC2D86356D}">
-			<File Id="DevAge.Windows.Forms.dll" Name="DevAge.Windows.Forms.dll" KeyPath="yes" Source="..\..\output\release\DevAge.Windows.Forms.dll" />
-		  </Component>
-		  <!--
-		  <Component Id="DevAge.Windows.Forms.pdb" Guid="{BBB76710-4DC1-4C15-91A8-7B6C25F6C5F3}">
-			<File Id="DevAge.Windows.Forms.pdb" Name="DevAge.Windows.Forms.pdb" KeyPath="yes" Source="..\..\output\release\DevAge.Windows.Forms.pdb" />
-		  </Component>
-		  -->
 
 
 		  <Component Id="ICSharpCode.SharpZipLib.dll" Guid="{6254D0F2-A7AF-411C-801E-30EBB1E6D9D7}">
@@ -205,12 +178,6 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 		  </Component>
 		  <Component Id="mono.relaxng.dll" Guid="{68959BF8-AC50-47FD-8B06-718B3E7FC6B6}">
 			<File Id="mono.relaxng.dll" Name="mono.relaxng.dll" KeyPath="yes" Source="..\..\output\release\mono.relaxng.dll" />
-		  </Component>
-		  <Component Id="ListBox.dll" Guid="{E145E8AD-F60E-49A0-8B5D-A513BBDBAF99}">
-			<File Id="ListBox.dll" Name="ListBox.dll" KeyPath="yes" Source="..\..\output\release\ListBox.dll" />
-		  </Component>
-		  <Component Id="ListBox.pdb" Guid="{FB40B28A-27FE-4DC9-9CE3-5A4F7B4512A4}">
-			<File Id="ListBox.pdb" Name="ListBox.pdb" KeyPath="yes" Source="..\..\output\release\ListBox.pdb" />
 		  </Component>
 		  <Component Id="NetReflector.dll" Guid="{AE9F3A6E-390F-46B3-AFCB-CE8A2E8EC769}">
 			<File Id="NetReflector.dll" Name="NetReflector.dll" KeyPath="yes" Source="..\..\output\release\NetReflector.dll" />
@@ -314,13 +281,7 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 	  <ComponentRef Id="CommonTools.pdb" />
 	  <ComponentRef Id="Db4objects.Db4o.dll" />
 	  <ComponentRef Id="Db4objects.Db4o.Tools.dll" />
-	  <ComponentRef Id="DevAge.Core.dll" />
-<!--      <ComponentRef Id="DevAge.Core.pdb" />-->
-	  <ComponentRef Id="DevAge.Drawing.dll" />
-	  <ComponentRef Id="DevAge.SourceGrid3.dll" />
-	  <!--<ComponentRef Id="DevAge.SourceGrid3.pdb" />-->
-	  <ComponentRef Id="DevAge.Windows.Forms.dll" />
-	  <!--<ComponentRef Id="DevAge.Windows.Forms.pdb" />-->
+
 	  <ComponentRef Id="ICSharpCode.SharpZipLib.dll" />
 	  <ComponentRef Id="KeymanLink.dll" />
 	  <!--<ComponentRef Id="KeymanLink.pdb" />-->
@@ -332,8 +293,6 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 	  <ComponentRef Id="LiftIO.dll" />
 	  <ComponentRef Id="mono.relaxng.dll" />
 	  <!--<ComponentRef Id="LiftIO.pdb" />-->
-	  <ComponentRef Id="ListBox.dll" />
-	  <ComponentRef Id="ListBox.pdb" />
 	  <ComponentRef Id="NetReflector.dll" />
 	  <!--<ComponentRef Id="NetReflector.pdb" />-->
 	  <ComponentRef Id="PicoContainer.dll" />
