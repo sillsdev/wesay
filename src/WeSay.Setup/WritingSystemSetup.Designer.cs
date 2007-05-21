@@ -67,7 +67,7 @@ namespace WeSay.Setup
 			this._btnAddWritingSystem,
 			this._btnRemove});
 			this.toolStrip1.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
-			this.toolStrip1.Location = new System.Drawing.Point(3, 205);
+			this.toolStrip1.Location = new System.Drawing.Point(3, 218);
 			this.toolStrip1.Name = "toolStrip1";
 			this.toolStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
 			this.toolStrip1.Size = new System.Drawing.Size(117, 25);
@@ -88,7 +88,7 @@ namespace WeSay.Setup
 			this._btnRemove.Image = ((System.Drawing.Image)(resources.GetObject("_btnRemove.Image")));
 			this._btnRemove.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this._btnRemove.Name = "_btnRemove";
-			this._btnRemove.Size = new System.Drawing.Size(66, 22);
+			this._btnRemove.Size = new System.Drawing.Size(66, 20);
 			this._btnRemove.Text = "Remove";
 			this._btnRemove.Click += new System.EventHandler(this._btnRemove_Click);
 			//
@@ -108,8 +108,8 @@ namespace WeSay.Setup
 			// splitContainer1.Panel2
 			//
 			this.splitContainer1.Panel2.Controls.Add(this._tabControl);
-			this.splitContainer1.Size = new System.Drawing.Size(616, 234);
-			this.splitContainer1.SplitterDistance = 128;
+			this.splitContainer1.Size = new System.Drawing.Size(613, 247);
+			this.splitContainer1.SplitterDistance = 173;
 			this.splitContainer1.TabIndex = 0;
 			//
 			// _wsListBox
@@ -120,7 +120,7 @@ namespace WeSay.Setup
 			this._wsListBox.FormattingEnabled = true;
 			this._wsListBox.Location = new System.Drawing.Point(0, 0);
 			this._wsListBox.Name = "_wsListBox";
-			this._wsListBox.Size = new System.Drawing.Size(128, 199);
+			this._wsListBox.Size = new System.Drawing.Size(172, 173);
 			this._wsListBox.TabIndex = 0;
 			this._wsListBox.SelectedIndexChanged += new System.EventHandler(this._wsListBox_SelectedIndexChanged);
 			//
@@ -133,7 +133,7 @@ namespace WeSay.Setup
 			this._tabControl.Location = new System.Drawing.Point(0, 0);
 			this._tabControl.Name = "_tabControl";
 			this._tabControl.SelectedIndex = 0;
-			this._tabControl.Size = new System.Drawing.Size(484, 234);
+			this._tabControl.Size = new System.Drawing.Size(436, 247);
 			this._tabControl.TabIndex = 0;
 			//
 			// _basicPage
@@ -141,7 +141,7 @@ namespace WeSay.Setup
 			this._basicPage.Controls.Add(this._basicControl);
 			this._basicPage.Location = new System.Drawing.Point(4, 22);
 			this._basicPage.Name = "_basicPage";
-			this._basicPage.Size = new System.Drawing.Size(476, 208);
+			this._basicPage.Size = new System.Drawing.Size(428, 221);
 			this._basicPage.TabIndex = 2;
 			this._basicPage.Text = "Basic";
 			this._basicPage.UseVisualStyleBackColor = true;
@@ -150,8 +150,9 @@ namespace WeSay.Setup
 			//
 			this._basicControl.Dock = System.Windows.Forms.DockStyle.Fill;
 			this._basicControl.Location = new System.Drawing.Point(0, 0);
+			this._basicControl.Margin = new System.Windows.Forms.Padding(4);
 			this._basicControl.Name = "_basicControl";
-			this._basicControl.Size = new System.Drawing.Size(476, 208);
+			this._basicControl.Size = new System.Drawing.Size(428, 221);
 			this._basicControl.TabIndex = 0;
 			this._basicControl.WritingSystemCollection = null;
 			this._basicControl.WritingSystemIdChanged += new System.EventHandler(this._basicControl_DisplayPropertiesChanged);
@@ -162,7 +163,7 @@ namespace WeSay.Setup
 			this._fontsPage.Location = new System.Drawing.Point(4, 22);
 			this._fontsPage.Name = "_fontsPage";
 			this._fontsPage.Padding = new System.Windows.Forms.Padding(3);
-			this._fontsPage.Size = new System.Drawing.Size(476, 208);
+			this._fontsPage.Size = new System.Drawing.Size(447, 184);
 			this._fontsPage.TabIndex = 0;
 			this._fontsPage.Text = "Font";
 			this._fontsPage.UseVisualStyleBackColor = true;
@@ -171,8 +172,9 @@ namespace WeSay.Setup
 			//
 			this._fontControl.Dock = System.Windows.Forms.DockStyle.Fill;
 			this._fontControl.Location = new System.Drawing.Point(3, 3);
+			this._fontControl.Margin = new System.Windows.Forms.Padding(4);
 			this._fontControl.Name = "_fontControl";
-			this._fontControl.Size = new System.Drawing.Size(470, 202);
+			this._fontControl.Size = new System.Drawing.Size(441, 178);
 			this._fontControl.TabIndex = 0;
 			//
 			// _sortingPage
@@ -182,7 +184,7 @@ namespace WeSay.Setup
 			this._sortingPage.Location = new System.Drawing.Point(4, 22);
 			this._sortingPage.Name = "_sortingPage";
 			this._sortingPage.Padding = new System.Windows.Forms.Padding(3);
-			this._sortingPage.Size = new System.Drawing.Size(401, 208);
+			this._sortingPage.Size = new System.Drawing.Size(447, 184);
 			this._sortingPage.TabIndex = 1;
 			this._sortingPage.Text = "Sorting";
 			this._sortingPage.UseVisualStyleBackColor = true;
@@ -191,8 +193,8 @@ namespace WeSay.Setup
 			//
 			this.label2.AutoSize = true;
 			this.label2.BackColor = System.Drawing.Color.Transparent;
-			this.label2.Location = new System.Drawing.Point(55, 27);
-			this.label2.MaximumSize = new System.Drawing.Size(250, 0);
+			this.label2.Location = new System.Drawing.Point(38, 15);
+			this.label2.MaximumSize = new System.Drawing.Size(266, 0);
 			this.label2.Name = "label2";
 			this.label2.Size = new System.Drawing.Size(250, 52);
 			this.label2.TabIndex = 11;
@@ -203,11 +205,10 @@ namespace WeSay.Setup
 			//
 			// pictureBox2
 			//
-			this.pictureBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.pictureBox2.Image = global::WeSay.Setup.Properties.Resources.construction;
-			this.pictureBox2.Location = new System.Drawing.Point(17, 27);
+			this.pictureBox2.Location = new System.Drawing.Point(6, 15);
 			this.pictureBox2.Name = "pictureBox2";
-			this.pictureBox2.Size = new System.Drawing.Size(23, 21);
+			this.pictureBox2.Size = new System.Drawing.Size(25, 21);
 			this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
 			this.pictureBox2.TabIndex = 8;
 			this.pictureBox2.TabStop = false;
@@ -219,11 +220,11 @@ namespace WeSay.Setup
 			this.textBox1.BackColor = System.Drawing.SystemColors.Window;
 			this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
 			this.textBox1.ForeColor = System.Drawing.Color.Gray;
-			this.textBox1.Location = new System.Drawing.Point(38, 265);
+			this.textBox1.Location = new System.Drawing.Point(32, 278);
 			this.textBox1.Multiline = true;
 			this.textBox1.Name = "textBox1";
 			this.textBox1.ReadOnly = true;
-			this.textBox1.Size = new System.Drawing.Size(479, 51);
+			this.textBox1.Size = new System.Drawing.Size(569, 41);
 			this.textBox1.TabIndex = 7;
 			this.textBox1.Text = "Eventually, you\'ll have more control over writing systems.  You\'ll be able to spe" +
 				"cify the abbreviation used for display, separately from the code, which will be " +
@@ -233,23 +234,24 @@ namespace WeSay.Setup
 			//
 			this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.pictureBox1.Image = global::WeSay.Setup.Properties.Resources.construction;
-			this.pictureBox1.Location = new System.Drawing.Point(7, 265);
+			this.pictureBox1.Location = new System.Drawing.Point(-2, 278);
 			this.pictureBox1.Name = "pictureBox1";
-			this.pictureBox1.Size = new System.Drawing.Size(25, 24);
+			this.pictureBox1.Size = new System.Drawing.Size(26, 24);
 			this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
 			this.pictureBox1.TabIndex = 6;
 			this.pictureBox1.TabStop = false;
 			//
 			// WritingSystemSetup
 			//
-			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+			this.AutoSize = true;
 			this.BackColor = System.Drawing.SystemColors.ControlLightLight;
 			this.Controls.Add(this.textBox1);
 			this.Controls.Add(this.pictureBox1);
 			this.Controls.Add(this.splitContainer1);
 			this.Name = "WritingSystemSetup";
-			this.Size = new System.Drawing.Size(616, 305);
+			this.Size = new System.Drawing.Size(627, 306);
 			this.Load += new System.EventHandler(this.WritingSystemSetup_Load);
 			this.toolStrip1.ResumeLayout(false);
 			this.toolStrip1.PerformLayout();

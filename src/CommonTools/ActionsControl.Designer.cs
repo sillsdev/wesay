@@ -1,5 +1,6 @@
 using System;
 using WeSay.AddinLib;
+using ControlListBox=WeSay.UI.ControlListBox;
 
 namespace WeSay.CommonTools
 {
@@ -32,7 +33,7 @@ namespace WeSay.CommonTools
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this._addinsList = new WindowsApplication2.ControlListBox();
+			this._addinsList = new ControlListBox();
 			this.SuspendLayout();
 			//
 			// _addinsList
@@ -61,7 +62,7 @@ namespace WeSay.CommonTools
 
 		#endregion
 
-		private WindowsApplication2.ControlListBox _addinsList;
+		private ControlListBox _addinsList;
 
 
 	}

@@ -226,18 +226,19 @@ namespace WeSay.Language
 			 public override System.ComponentModel.TypeConverter.StandardValuesCollection
 				   GetStandardValues(ITypeDescriptorContext context)
 			{
-				KeymanLink.KeymanLink _keymanLink = new KeymanLink.KeymanLink();
-				if (!_keymanLink.Initialize(false))
-				{
-					_keymanLink = null;
-				}
-
 				List<String> keyboards = new List<string>();
 				keyboards.Add(String.Empty); // for 'default'
-				foreach (KeymanLink.KeymanLink.KeymanKeyboard keyboard in _keymanLink.Keyboards)
+
+
+				KeymanLink.KeymanLink keymanLink = new KeymanLink.KeymanLink();
+				if (keymanLink.Initialize(false))
 				{
-					keyboards.Add(keyboard.KbdName);
+					foreach (KeymanLink.KeymanLink.KeymanKeyboard keyboard in keymanLink.Keyboards)
+					{
+						keyboards.Add(keyboard.KbdName);
+					}
 				}
+
 
 				foreach (InputLanguage lang in InputLanguage.InstalledInputLanguages )
 				{

@@ -77,12 +77,12 @@ namespace WeSay.Setup
 						| System.Windows.Forms.AnchorStyles.Left)
 						| System.Windows.Forms.AnchorStyles.Right)));
 			this._sampleTextBox.BackColor = System.Drawing.Color.White;
-			this._sampleTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+			this._sampleTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 			this._sampleTextBox.Location = new System.Drawing.Point(13, 75);
 			this._sampleTextBox.Multiline = true;
 			this._sampleTextBox.MultiParagraph = false;
 			this._sampleTextBox.Name = "_sampleTextBox";
-			this._sampleTextBox.Size = new System.Drawing.Size(238, 13);
+			this._sampleTextBox.Size = new System.Drawing.Size(238, 20);
 			this._sampleTextBox.TabIndex = 6;
 			//
 			// FontControl

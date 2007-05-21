@@ -31,27 +31,29 @@ namespace WeSay.Setup
 			this._writingSystemProperties = new System.Windows.Forms.PropertyGrid();
 			this.SuspendLayout();
 			//
-			// _fontProperties
+			// _writingSystemProperties
 			//
 			this._writingSystemProperties.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
 						| System.Windows.Forms.AnchorStyles.Left)
 						| System.Windows.Forms.AnchorStyles.Right)));
 			this._writingSystemProperties.HelpVisible = false;
-			this._writingSystemProperties.Location = new System.Drawing.Point(3, 3);
+			this._writingSystemProperties.Location = new System.Drawing.Point(4, 4);
+			this._writingSystemProperties.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
 			this._writingSystemProperties.Name = "_writingSystemProperties";
 			this._writingSystemProperties.PropertySort = System.Windows.Forms.PropertySort.NoSort;
-			this._writingSystemProperties.Size = new System.Drawing.Size(130, 144);
+			this._writingSystemProperties.Size = new System.Drawing.Size(273, 177);
 			this._writingSystemProperties.TabIndex = 2;
 			this._writingSystemProperties.ToolbarVisible = false;
 			this._writingSystemProperties.PropertyValueChanged += new System.Windows.Forms.PropertyValueChangedEventHandler(this.OnPropertyValueChanged);
 			//
 			// WritingSystemBasic
 			//
-			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.Controls.Add(this._writingSystemProperties);
+			this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
 			this.Name = "WritingSystemBasic";
-			this.Size = new System.Drawing.Size(211, 150);
+			this.Size = new System.Drawing.Size(281, 185);
 			this.ResumeLayout(false);
 
 		}

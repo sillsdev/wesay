@@ -35,19 +35,19 @@ namespace WeSay.Setup
 			this.fieldsControl1 = new WeSay.Setup.FieldsControl();
 			this._writingSystemPage = new System.Windows.Forms.TabPage();
 			this._writingSystemSetupControl = new WeSay.Setup.WritingSystemSetup();
+			this._optionListPage = new System.Windows.Forms.TabPage();
+			this.optionListControl1 = new WeSay.Setup.OptionListControl();
 			this._otherPage = new System.Windows.Forms.TabPage();
 			this.otherControl1 = new WeSay.Setup.OtherControl();
 			this._actionsPage = new System.Windows.Forms.TabPage();
 			this.actionsControl1 = new WeSay.Setup.ActionsControl();
-			this._optionListPage = new System.Windows.Forms.TabPage();
-			this.optionListControl1 = new WeSay.Setup.OptionListControl();
 			this._projectTabControl.SuspendLayout();
 			this._tasksPage.SuspendLayout();
 			this._fieldsPage.SuspendLayout();
 			this._writingSystemPage.SuspendLayout();
+			this._optionListPage.SuspendLayout();
 			this._otherPage.SuspendLayout();
 			this._actionsPage.SuspendLayout();
-			this._optionListPage.SuspendLayout();
 			this.SuspendLayout();
 			//
 			// _projectTabControl
@@ -62,7 +62,7 @@ namespace WeSay.Setup
 			this._projectTabControl.Location = new System.Drawing.Point(0, 0);
 			this._projectTabControl.Name = "_projectTabControl";
 			this._projectTabControl.SelectedIndex = 0;
-			this._projectTabControl.Size = new System.Drawing.Size(712, 447);
+			this._projectTabControl.Size = new System.Drawing.Size(571, 287);
 			this._projectTabControl.TabIndex = 2;
 			//
 			// _tasksPage
@@ -71,7 +71,7 @@ namespace WeSay.Setup
 			this._tasksPage.Location = new System.Drawing.Point(4, 22);
 			this._tasksPage.Name = "_tasksPage";
 			this._tasksPage.Padding = new System.Windows.Forms.Padding(3);
-			this._tasksPage.Size = new System.Drawing.Size(704, 421);
+			this._tasksPage.Size = new System.Drawing.Size(539, 306);
 			this._tasksPage.TabIndex = 0;
 			this._tasksPage.Text = "Tasks";
 			this._tasksPage.UseVisualStyleBackColor = true;
@@ -82,8 +82,9 @@ namespace WeSay.Setup
 			this._taskListControl.CausesValidation = false;
 			this._taskListControl.Dock = System.Windows.Forms.DockStyle.Fill;
 			this._taskListControl.Location = new System.Drawing.Point(3, 3);
+			this._taskListControl.Margin = new System.Windows.Forms.Padding(4);
 			this._taskListControl.Name = "_taskListControl";
-			this._taskListControl.Size = new System.Drawing.Size(698, 415);
+			this._taskListControl.Size = new System.Drawing.Size(533, 300);
 			this._taskListControl.TabIndex = 0;
 			//
 			// _fieldsPage
@@ -91,7 +92,7 @@ namespace WeSay.Setup
 			this._fieldsPage.Controls.Add(this.fieldsControl1);
 			this._fieldsPage.Location = new System.Drawing.Point(4, 22);
 			this._fieldsPage.Name = "_fieldsPage";
-			this._fieldsPage.Size = new System.Drawing.Size(704, 421);
+			this._fieldsPage.Size = new System.Drawing.Size(563, 261);
 			this._fieldsPage.TabIndex = 4;
 			this._fieldsPage.Text = "Fields";
 			this._fieldsPage.UseVisualStyleBackColor = true;
@@ -101,9 +102,10 @@ namespace WeSay.Setup
 			this.fieldsControl1.BackColor = System.Drawing.SystemColors.ControlLightLight;
 			this.fieldsControl1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.fieldsControl1.Location = new System.Drawing.Point(0, 0);
+			this.fieldsControl1.Margin = new System.Windows.Forms.Padding(4);
 			this.fieldsControl1.Name = "fieldsControl1";
-			this.fieldsControl1.Padding = new System.Windows.Forms.Padding(7);
-			this.fieldsControl1.Size = new System.Drawing.Size(704, 421);
+			this.fieldsControl1.Padding = new System.Windows.Forms.Padding(7, 7, 7, 7);
+			this.fieldsControl1.Size = new System.Drawing.Size(563, 261);
 			this.fieldsControl1.TabIndex = 0;
 			//
 			// _writingSystemPage
@@ -112,56 +114,21 @@ namespace WeSay.Setup
 			this._writingSystemPage.Location = new System.Drawing.Point(4, 22);
 			this._writingSystemPage.Name = "_writingSystemPage";
 			this._writingSystemPage.Padding = new System.Windows.Forms.Padding(3);
-			this._writingSystemPage.Size = new System.Drawing.Size(704, 421);
+			this._writingSystemPage.Size = new System.Drawing.Size(563, 261);
 			this._writingSystemPage.TabIndex = 1;
 			this._writingSystemPage.Text = "Writing Systems";
 			this._writingSystemPage.UseVisualStyleBackColor = true;
 			//
 			// _writingSystemSetupControl
 			//
+			this._writingSystemSetupControl.AutoSize = true;
 			this._writingSystemSetupControl.BackColor = System.Drawing.SystemColors.ControlLightLight;
 			this._writingSystemSetupControl.Dock = System.Windows.Forms.DockStyle.Fill;
 			this._writingSystemSetupControl.Location = new System.Drawing.Point(3, 3);
+			this._writingSystemSetupControl.Margin = new System.Windows.Forms.Padding(4);
 			this._writingSystemSetupControl.Name = "_writingSystemSetupControl";
-			this._writingSystemSetupControl.Size = new System.Drawing.Size(698, 415);
+			this._writingSystemSetupControl.Size = new System.Drawing.Size(557, 255);
 			this._writingSystemSetupControl.TabIndex = 0;
-			//
-			// _otherPage
-			//
-			this._otherPage.Controls.Add(this.otherControl1);
-			this._otherPage.Location = new System.Drawing.Point(4, 22);
-			this._otherPage.Name = "_otherPage";
-			this._otherPage.Size = new System.Drawing.Size(704, 421);
-			this._otherPage.TabIndex = 3;
-			this._otherPage.Text = "Other Settings";
-			this._otherPage.UseVisualStyleBackColor = true;
-			//
-			// otherControl1
-			//
-			this.otherControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.otherControl1.Location = new System.Drawing.Point(0, 0);
-			this.otherControl1.Name = "otherControl1";
-			this.otherControl1.Size = new System.Drawing.Size(704, 421);
-			this.otherControl1.TabIndex = 0;
-			//
-			// _actionsPage
-			//
-			this._actionsPage.Controls.Add(this.actionsControl1);
-			this._actionsPage.Location = new System.Drawing.Point(4, 22);
-			this._actionsPage.Name = "_actionsPage";
-			this._actionsPage.Size = new System.Drawing.Size(704, 421);
-			this._actionsPage.TabIndex = 2;
-			this._actionsPage.Text = "Actions";
-			this._actionsPage.UseVisualStyleBackColor = true;
-			//
-			// actionsControl1
-			//
-			this.actionsControl1.BackColor = System.Drawing.SystemColors.Window;
-			this.actionsControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.actionsControl1.Location = new System.Drawing.Point(0, 0);
-			this.actionsControl1.Name = "actionsControl1";
-			this.actionsControl1.Size = new System.Drawing.Size(704, 421);
-			this.actionsControl1.TabIndex = 0;
 			//
 			// _optionListPage
 			//
@@ -169,7 +136,7 @@ namespace WeSay.Setup
 			this._optionListPage.Location = new System.Drawing.Point(4, 22);
 			this._optionListPage.Name = "_optionListPage";
 			this._optionListPage.Padding = new System.Windows.Forms.Padding(3);
-			this._optionListPage.Size = new System.Drawing.Size(704, 421);
+			this._optionListPage.Size = new System.Drawing.Size(563, 261);
 			this._optionListPage.TabIndex = 5;
 			this._optionListPage.Text = "Option Lists";
 			this._optionListPage.UseVisualStyleBackColor = true;
@@ -179,9 +146,49 @@ namespace WeSay.Setup
 			this.optionListControl1.BackColor = System.Drawing.SystemColors.ControlLightLight;
 			this.optionListControl1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.optionListControl1.Location = new System.Drawing.Point(3, 3);
+			this.optionListControl1.Margin = new System.Windows.Forms.Padding(4);
 			this.optionListControl1.Name = "optionListControl1";
-			this.optionListControl1.Size = new System.Drawing.Size(698, 415);
+			this.optionListControl1.Size = new System.Drawing.Size(557, 255);
 			this.optionListControl1.TabIndex = 0;
+			//
+			// _otherPage
+			//
+			this._otherPage.Controls.Add(this.otherControl1);
+			this._otherPage.Location = new System.Drawing.Point(4, 22);
+			this._otherPage.Name = "_otherPage";
+			this._otherPage.Size = new System.Drawing.Size(539, 306);
+			this._otherPage.TabIndex = 3;
+			this._otherPage.Text = "Other Settings";
+			this._otherPage.UseVisualStyleBackColor = true;
+			//
+			// otherControl1
+			//
+			this.otherControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.otherControl1.Location = new System.Drawing.Point(0, 0);
+			this.otherControl1.Margin = new System.Windows.Forms.Padding(4);
+			this.otherControl1.Name = "otherControl1";
+			this.otherControl1.Size = new System.Drawing.Size(539, 306);
+			this.otherControl1.TabIndex = 0;
+			//
+			// _actionsPage
+			//
+			this._actionsPage.Controls.Add(this.actionsControl1);
+			this._actionsPage.Location = new System.Drawing.Point(4, 22);
+			this._actionsPage.Name = "_actionsPage";
+			this._actionsPage.Size = new System.Drawing.Size(563, 261);
+			this._actionsPage.TabIndex = 2;
+			this._actionsPage.Text = "Actions";
+			this._actionsPage.UseVisualStyleBackColor = true;
+			//
+			// actionsControl1
+			//
+			this.actionsControl1.BackColor = System.Drawing.SystemColors.Window;
+			this.actionsControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.actionsControl1.Location = new System.Drawing.Point(0, 0);
+			this.actionsControl1.Margin = new System.Windows.Forms.Padding(4);
+			this.actionsControl1.Name = "actionsControl1";
+			this.actionsControl1.Size = new System.Drawing.Size(563, 261);
+			this.actionsControl1.TabIndex = 0;
 			//
 			// ProjectTabs
 			//
@@ -189,14 +196,15 @@ namespace WeSay.Setup
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.Controls.Add(this._projectTabControl);
 			this.Name = "ProjectTabs";
-			this.Size = new System.Drawing.Size(712, 447);
+			this.Size = new System.Drawing.Size(571, 287);
 			this._projectTabControl.ResumeLayout(false);
 			this._tasksPage.ResumeLayout(false);
 			this._fieldsPage.ResumeLayout(false);
 			this._writingSystemPage.ResumeLayout(false);
+			this._writingSystemPage.PerformLayout();
+			this._optionListPage.ResumeLayout(false);
 			this._otherPage.ResumeLayout(false);
 			this._actionsPage.ResumeLayout(false);
-			this._optionListPage.ResumeLayout(false);
 			this.ResumeLayout(false);
 
 		}

@@ -86,12 +86,16 @@ namespace WeSay.Setup
 				{
 					_fieldsListBox.SelectedItem = _fieldsListBox.Items[0];
 				}
-				return (Field)_fieldsListBox.SelectedItem;
+				return _fieldsListBox.SelectedItem as Field;
 			}
 		}
 
 		private void OnSelectedFieldChanged(object sender, EventArgs e)
 		{
+			if (CurrentField == null)
+			{
+				return;
+			}
 			_btnDeleteField.Enabled = CurrentField.UserCanDeleteOrModify;
 			_descriptionBox.Text = CurrentField.Description;
 			LoadWritingSystemBox();
@@ -103,6 +107,10 @@ namespace WeSay.Setup
 
 		private void LoadWritingSystemBox()
 		{
+			if (CurrentField == null)
+			{
+				return;
+			}
 			_writingSystemListBox.Items.Clear();
 			foreach (WritingSystem ws in CurrentField.WritingSystems)
 			{

@@ -35,10 +35,14 @@ namespace WeSay.Setup
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
 			this._fieldsListBox = new System.Windows.Forms.CheckedListBox();
 			this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+			this._btnAddField = new System.Windows.Forms.ToolStripButton();
+			this._btnDeleteField = new System.Windows.Forms.ToolStripButton();
 			this.fieldSettingsTabControl = new System.Windows.Forms.TabControl();
 			this.tabPage1 = new System.Windows.Forms.TabPage();
 			this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
+			this.btnMoveDown = new System.Windows.Forms.Button();
+			this.btnMoveUp = new System.Windows.Forms.Button();
 			this._writingSystemListBox = new System.Windows.Forms.CheckedListBox();
 			this.groupBox2 = new System.Windows.Forms.GroupBox();
 			this._descriptionBox = new System.Windows.Forms.Label();
@@ -46,10 +50,6 @@ namespace WeSay.Setup
 			this._fieldPropertyGrid = new System.Windows.Forms.PropertyGrid();
 			this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
 			this.label1 = new System.Windows.Forms.Label();
-			this._btnAddField = new System.Windows.Forms.ToolStripButton();
-			this._btnDeleteField = new System.Windows.Forms.ToolStripButton();
-			this.btnMoveDown = new System.Windows.Forms.Button();
-			this.btnMoveUp = new System.Windows.Forms.Button();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
 			this.splitContainer1.SuspendLayout();
@@ -67,6 +67,8 @@ namespace WeSay.Setup
 			this.splitContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
 						| System.Windows.Forms.AnchorStyles.Left)
 						| System.Windows.Forms.AnchorStyles.Right)));
+			this.splitContainer1.BackColor = System.Drawing.SystemColors.ControlLightLight;
+			this.splitContainer1.ForeColor = System.Drawing.Color.Maroon;
 			this.splitContainer1.Location = new System.Drawing.Point(10, 23);
 			this.splitContainer1.Name = "splitContainer1";
 			//
@@ -78,8 +80,8 @@ namespace WeSay.Setup
 			// splitContainer1.Panel2
 			//
 			this.splitContainer1.Panel2.Controls.Add(this.fieldSettingsTabControl);
-			this.splitContainer1.Size = new System.Drawing.Size(590, 402);
-			this.splitContainer1.SplitterDistance = 222;
+			this.splitContainer1.Size = new System.Drawing.Size(578, 404);
+			this.splitContainer1.SplitterDistance = 217;
 			this.splitContainer1.TabIndex = 0;
 			//
 			// _fieldsListBox
@@ -98,7 +100,7 @@ namespace WeSay.Setup
 			"Grammatical Category"});
 			this._fieldsListBox.Location = new System.Drawing.Point(1, 0);
 			this._fieldsListBox.Name = "_fieldsListBox";
-			this._fieldsListBox.Size = new System.Drawing.Size(219, 364);
+			this._fieldsListBox.Size = new System.Drawing.Size(215, 349);
 			this._fieldsListBox.TabIndex = 1;
 			this._fieldsListBox.SelectedIndexChanged += new System.EventHandler(this.OnSelectedFieldChanged);
 			//
@@ -112,137 +114,13 @@ namespace WeSay.Setup
 			this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
 			this._btnAddField,
 			this._btnDeleteField});
-			this.toolStrip1.Location = new System.Drawing.Point(3, 370);
+			this.toolStrip1.Location = new System.Drawing.Point(3, 372);
 			this.toolStrip1.MinimumSize = new System.Drawing.Size(200, 0);
 			this.toolStrip1.Name = "toolStrip1";
 			this.toolStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
 			this.toolStrip1.Size = new System.Drawing.Size(200, 25);
 			this.toolStrip1.TabIndex = 17;
 			this.toolStrip1.Text = "toolStrip1";
-			//
-			// fieldSettingsTabControl
-			//
-			this.fieldSettingsTabControl.Controls.Add(this.tabPage1);
-			this.fieldSettingsTabControl.Controls.Add(this.tabPage2);
-			this.fieldSettingsTabControl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.fieldSettingsTabControl.Location = new System.Drawing.Point(0, 0);
-			this.fieldSettingsTabControl.Name = "fieldSettingsTabControl";
-			this.fieldSettingsTabControl.SelectedIndex = 0;
-			this.fieldSettingsTabControl.Size = new System.Drawing.Size(364, 402);
-			this.fieldSettingsTabControl.TabIndex = 1;
-			//
-			// tabPage1
-			//
-			this.tabPage1.Controls.Add(this.tableLayoutPanel1);
-			this.tabPage1.Location = new System.Drawing.Point(4, 22);
-			this.tabPage1.Name = "tabPage1";
-			this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-			this.tabPage1.Size = new System.Drawing.Size(356, 376);
-			this.tabPage1.TabIndex = 0;
-			this.tabPage1.Text = "Usage";
-			this.tabPage1.UseVisualStyleBackColor = true;
-			//
-			// tableLayoutPanel1
-			//
-			this.tableLayoutPanel1.ColumnCount = 1;
-			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-			this.tableLayoutPanel1.Controls.Add(this.groupBox1, 0, 1);
-			this.tableLayoutPanel1.Controls.Add(this.groupBox2, 0, 0);
-			this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.tableLayoutPanel1.Location = new System.Drawing.Point(3, 3);
-			this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-			this.tableLayoutPanel1.RowCount = 2;
-			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-			this.tableLayoutPanel1.Size = new System.Drawing.Size(350, 370);
-			this.tableLayoutPanel1.TabIndex = 1;
-			//
-			// groupBox1
-			//
-			this.groupBox1.Controls.Add(this.btnMoveDown);
-			this.groupBox1.Controls.Add(this.btnMoveUp);
-			this.groupBox1.Controls.Add(this._writingSystemListBox);
-			this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.groupBox1.Location = new System.Drawing.Point(3, 188);
-			this.groupBox1.Name = "groupBox1";
-			this.groupBox1.Padding = new System.Windows.Forms.Padding(7);
-			this.groupBox1.Size = new System.Drawing.Size(344, 179);
-			this.groupBox1.TabIndex = 0;
-			this.groupBox1.TabStop = false;
-			this.groupBox1.Text = "Show these Writing Systems in this field";
-			//
-			// _writingSystemListBox
-			//
-			this._writingSystemListBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-						| System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
-			this._writingSystemListBox.FormattingEnabled = true;
-			this._writingSystemListBox.Items.AddRange(new object[] {
-			"Foo(IPA)",
-			"Foo(Thai)",
-			"Thai",
-			"English"});
-			this._writingSystemListBox.Location = new System.Drawing.Point(31, 20);
-			this._writingSystemListBox.Name = "_writingSystemListBox";
-			this._writingSystemListBox.Size = new System.Drawing.Size(306, 139);
-			this._writingSystemListBox.TabIndex = 0;
-			this._writingSystemListBox.SelectedIndexChanged += new System.EventHandler(this._writingSystemListBox_SelectedIndexChanged);
-			this._writingSystemListBox.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this._writingSystemListBox_ItemCheck);
-			//
-			// groupBox2
-			//
-			this.groupBox2.Controls.Add(this._descriptionBox);
-			this.groupBox2.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.groupBox2.Location = new System.Drawing.Point(3, 3);
-			this.groupBox2.Name = "groupBox2";
-			this.groupBox2.Size = new System.Drawing.Size(344, 179);
-			this.groupBox2.TabIndex = 1;
-			this.groupBox2.TabStop = false;
-			this.groupBox2.Text = "About This Field";
-			this.groupBox2.SizeChanged += new System.EventHandler(this.groupBox2_SizeChanged);
-			//
-			// _descriptionBox
-			//
-			this._descriptionBox.AutoSize = true;
-			this._descriptionBox.Location = new System.Drawing.Point(15, 27);
-			this._descriptionBox.MaximumSize = new System.Drawing.Size(300, 0);
-			this._descriptionBox.Name = "_descriptionBox";
-			this._descriptionBox.Size = new System.Drawing.Size(294, 52);
-			this._descriptionBox.TabIndex = 0;
-			this._descriptionBox.Text = resources.GetString("_descriptionBox.Text");
-			//
-			// tabPage2
-			//
-			this.tabPage2.Controls.Add(this._fieldPropertyGrid);
-			this.tabPage2.Location = new System.Drawing.Point(4, 22);
-			this.tabPage2.Name = "tabPage2";
-			this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-			this.tabPage2.Size = new System.Drawing.Size(356, 376);
-			this.tabPage2.TabIndex = 1;
-			this.tabPage2.Text = "Properties";
-			this.tabPage2.UseVisualStyleBackColor = true;
-			//
-			// _fieldPropertyGrid
-			//
-			this._fieldPropertyGrid.Dock = System.Windows.Forms.DockStyle.Fill;
-			this._fieldPropertyGrid.LineColor = System.Drawing.SystemColors.Control;
-			this._fieldPropertyGrid.Location = new System.Drawing.Point(3, 3);
-			this._fieldPropertyGrid.Name = "_fieldPropertyGrid";
-			this._fieldPropertyGrid.PropertySort = System.Windows.Forms.PropertySort.Alphabetical;
-			this._fieldPropertyGrid.SelectedObject = this.btnMoveDown;
-			this._fieldPropertyGrid.Size = new System.Drawing.Size(350, 370);
-			this._fieldPropertyGrid.TabIndex = 0;
-			this._fieldPropertyGrid.ToolbarVisible = false;
-			this._fieldPropertyGrid.PropertyValueChanged += new System.Windows.Forms.PropertyValueChangedEventHandler(this.OnPropertyValueChanged);
-			//
-			// label1
-			//
-			this.label1.AutoSize = true;
-			this.label1.Location = new System.Drawing.Point(10, 3);
-			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(224, 13);
-			this.label1.TabIndex = 18;
-			this.label1.Text = "Check each field you want WeSay to display. ";
 			//
 			// _btnAddField
 			//
@@ -261,6 +139,59 @@ namespace WeSay.Setup
 			this._btnDeleteField.Size = new System.Drawing.Size(83, 22);
 			this._btnDeleteField.Text = "Delete Field";
 			this._btnDeleteField.Click += new System.EventHandler(this.OnDeleteField_Click);
+			//
+			// fieldSettingsTabControl
+			//
+			this.fieldSettingsTabControl.Controls.Add(this.tabPage1);
+			this.fieldSettingsTabControl.Controls.Add(this.tabPage2);
+			this.fieldSettingsTabControl.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.fieldSettingsTabControl.Location = new System.Drawing.Point(0, 0);
+			this.fieldSettingsTabControl.Name = "fieldSettingsTabControl";
+			this.fieldSettingsTabControl.SelectedIndex = 0;
+			this.fieldSettingsTabControl.Size = new System.Drawing.Size(357, 404);
+			this.fieldSettingsTabControl.TabIndex = 1;
+			//
+			// tabPage1
+			//
+			this.tabPage1.Controls.Add(this.tableLayoutPanel1);
+			this.tabPage1.Location = new System.Drawing.Point(4, 22);
+			this.tabPage1.Name = "tabPage1";
+			this.tabPage1.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+			this.tabPage1.Size = new System.Drawing.Size(349, 378);
+			this.tabPage1.TabIndex = 0;
+			this.tabPage1.Text = "Usage";
+			this.tabPage1.UseVisualStyleBackColor = true;
+			//
+			// tableLayoutPanel1
+			//
+			this.tableLayoutPanel1.ColumnCount = 1;
+			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+			this.tableLayoutPanel1.Controls.Add(this.groupBox1, 0, 1);
+			this.tableLayoutPanel1.Controls.Add(this.groupBox2, 0, 0);
+			this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.tableLayoutPanel1.Location = new System.Drawing.Point(3, 3);
+			this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+			this.tableLayoutPanel1.RowCount = 2;
+			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+			this.tableLayoutPanel1.Size = new System.Drawing.Size(343, 372);
+			this.tableLayoutPanel1.TabIndex = 1;
+			//
+			// groupBox1
+			//
+			this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+						| System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
+			this.groupBox1.Controls.Add(this.btnMoveDown);
+			this.groupBox1.Controls.Add(this.btnMoveUp);
+			this.groupBox1.Controls.Add(this._writingSystemListBox);
+			this.groupBox1.Location = new System.Drawing.Point(3, 189);
+			this.groupBox1.Name = "groupBox1";
+			this.groupBox1.Padding = new System.Windows.Forms.Padding(7, 7, 7, 7);
+			this.groupBox1.Size = new System.Drawing.Size(337, 180);
+			this.groupBox1.TabIndex = 0;
+			this.groupBox1.TabStop = false;
+			this.groupBox1.Text = "Show these Writing Systems in this field";
 			//
 			// btnMoveDown
 			//
@@ -290,6 +221,81 @@ namespace WeSay.Setup
 			this.btnMoveUp.UseVisualStyleBackColor = true;
 			this.btnMoveUp.Click += new System.EventHandler(this.OnBtnMoveUpClick);
 			//
+			// _writingSystemListBox
+			//
+			this._writingSystemListBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+						| System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
+			this._writingSystemListBox.FormattingEnabled = true;
+			this._writingSystemListBox.Items.AddRange(new object[] {
+			"Foo(IPA)",
+			"Foo(Thai)",
+			"Thai",
+			"English"});
+			this._writingSystemListBox.Location = new System.Drawing.Point(31, 20);
+			this._writingSystemListBox.Name = "_writingSystemListBox";
+			this._writingSystemListBox.Size = new System.Drawing.Size(299, 124);
+			this._writingSystemListBox.TabIndex = 0;
+			this._writingSystemListBox.SelectedIndexChanged += new System.EventHandler(this._writingSystemListBox_SelectedIndexChanged);
+			this._writingSystemListBox.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this._writingSystemListBox_ItemCheck);
+			//
+			// groupBox2
+			//
+			this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+						| System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
+			this.groupBox2.Controls.Add(this._descriptionBox);
+			this.groupBox2.Location = new System.Drawing.Point(3, 3);
+			this.groupBox2.Name = "groupBox2";
+			this.groupBox2.Size = new System.Drawing.Size(337, 180);
+			this.groupBox2.TabIndex = 1;
+			this.groupBox2.TabStop = false;
+			this.groupBox2.Text = "About This Field";
+			this.groupBox2.SizeChanged += new System.EventHandler(this.groupBox2_SizeChanged);
+			//
+			// _descriptionBox
+			//
+			this._descriptionBox.AutoSize = true;
+			this._descriptionBox.Location = new System.Drawing.Point(15, 27);
+			this._descriptionBox.MaximumSize = new System.Drawing.Size(300, 0);
+			this._descriptionBox.Name = "_descriptionBox";
+			this._descriptionBox.Size = new System.Drawing.Size(294, 52);
+			this._descriptionBox.TabIndex = 0;
+			this._descriptionBox.Text = resources.GetString("_descriptionBox.Text");
+			//
+			// tabPage2
+			//
+			this.tabPage2.Controls.Add(this._fieldPropertyGrid);
+			this.tabPage2.Location = new System.Drawing.Point(4, 22);
+			this.tabPage2.Name = "tabPage2";
+			this.tabPage2.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+			this.tabPage2.Size = new System.Drawing.Size(360, 376);
+			this.tabPage2.TabIndex = 1;
+			this.tabPage2.Text = "Properties";
+			this.tabPage2.UseVisualStyleBackColor = true;
+			//
+			// _fieldPropertyGrid
+			//
+			this._fieldPropertyGrid.Dock = System.Windows.Forms.DockStyle.Fill;
+			this._fieldPropertyGrid.LineColor = System.Drawing.SystemColors.Control;
+			this._fieldPropertyGrid.Location = new System.Drawing.Point(3, 3);
+			this._fieldPropertyGrid.Name = "_fieldPropertyGrid";
+			this._fieldPropertyGrid.PropertySort = System.Windows.Forms.PropertySort.Alphabetical;
+			this._fieldPropertyGrid.SelectedObject = this.btnMoveDown;
+			this._fieldPropertyGrid.Size = new System.Drawing.Size(354, 370);
+			this._fieldPropertyGrid.TabIndex = 0;
+			this._fieldPropertyGrid.ToolbarVisible = false;
+			this._fieldPropertyGrid.PropertyValueChanged += new System.Windows.Forms.PropertyValueChangedEventHandler(this.OnPropertyValueChanged);
+			//
+			// label1
+			//
+			this.label1.AutoSize = true;
+			this.label1.Location = new System.Drawing.Point(10, 3);
+			this.label1.Name = "label1";
+			this.label1.Size = new System.Drawing.Size(224, 13);
+			this.label1.TabIndex = 18;
+			this.label1.Text = "Check each field you want WeSay to display. ";
+			//
 			// FieldsControl
 			//
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -298,8 +304,8 @@ namespace WeSay.Setup
 			this.Controls.Add(this.label1);
 			this.Controls.Add(this.splitContainer1);
 			this.Name = "FieldsControl";
-			this.Padding = new System.Windows.Forms.Padding(7);
-			this.Size = new System.Drawing.Size(604, 425);
+			this.Padding = new System.Windows.Forms.Padding(7, 7, 7, 7);
+			this.Size = new System.Drawing.Size(586, 427);
 			this.Load += new System.EventHandler(this.FieldsControl_Load);
 			this.splitContainer1.Panel1.ResumeLayout(false);
 			this.splitContainer1.Panel1.PerformLayout();

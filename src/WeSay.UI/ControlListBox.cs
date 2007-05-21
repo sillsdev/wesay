@@ -6,7 +6,7 @@ using System.Data;
 using System.Text;
 using System.Windows.Forms;
 
-namespace WindowsApplication2
+namespace WeSay.UI
 {
 	public partial class ControlListBox : UserControl
 	{
@@ -70,7 +70,7 @@ namespace WindowsApplication2
 				h += style.Height;
 			}
 			_table.Height = (int)h;
-		 }
+		}
 
 		private void _table_Resize(object sender, EventArgs e)
 		{
