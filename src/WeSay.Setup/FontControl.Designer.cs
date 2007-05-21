@@ -47,13 +47,13 @@ namespace WeSay.Setup
 			this._fontInfoDisplay.Location = new System.Drawing.Point(13, 16);
 			this._fontInfoDisplay.Name = "_fontInfoDisplay";
 			this._fontInfoDisplay.ReadOnly = true;
-			this._fontInfoDisplay.Size = new System.Drawing.Size(205, 20);
+			this._fontInfoDisplay.Size = new System.Drawing.Size(209, 20);
 			this._fontInfoDisplay.TabIndex = 2;
 			//
 			// button1
 			//
 			this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.button1.Location = new System.Drawing.Point(224, 16);
+			this.button1.Location = new System.Drawing.Point(228, 16);
 			this.button1.Name = "button1";
 			this.button1.Size = new System.Drawing.Size(27, 23);
 			this.button1.TabIndex = 3;
@@ -82,7 +82,7 @@ namespace WeSay.Setup
 			this._sampleTextBox.Multiline = true;
 			this._sampleTextBox.MultiParagraph = false;
 			this._sampleTextBox.Name = "_sampleTextBox";
-			this._sampleTextBox.Size = new System.Drawing.Size(238, 20);
+			this._sampleTextBox.Size = new System.Drawing.Size(242, 20);
 			this._sampleTextBox.TabIndex = 6;
 			//
 			// FontControl
@@ -94,7 +94,7 @@ namespace WeSay.Setup
 			this.Controls.Add(this.button1);
 			this.Controls.Add(this._fontInfoDisplay);
 			this.Name = "FontControl";
-			this.Size = new System.Drawing.Size(254, 150);
+			this.Size = new System.Drawing.Size(258, 150);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 

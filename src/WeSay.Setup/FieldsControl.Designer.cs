@@ -100,7 +100,7 @@ namespace WeSay.Setup
 			"Grammatical Category"});
 			this._fieldsListBox.Location = new System.Drawing.Point(1, 0);
 			this._fieldsListBox.Name = "_fieldsListBox";
-			this._fieldsListBox.Size = new System.Drawing.Size(215, 349);
+			this._fieldsListBox.Size = new System.Drawing.Size(215, 364);
 			this._fieldsListBox.TabIndex = 1;
 			this._fieldsListBox.SelectedIndexChanged += new System.EventHandler(this.OnSelectedFieldChanged);
 			//
@@ -156,7 +156,7 @@ namespace WeSay.Setup
 			this.tabPage1.Controls.Add(this.tableLayoutPanel1);
 			this.tabPage1.Location = new System.Drawing.Point(4, 22);
 			this.tabPage1.Name = "tabPage1";
-			this.tabPage1.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+			this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
 			this.tabPage1.Size = new System.Drawing.Size(349, 378);
 			this.tabPage1.TabIndex = 0;
 			this.tabPage1.Text = "Usage";
@@ -187,7 +187,7 @@ namespace WeSay.Setup
 			this.groupBox1.Controls.Add(this._writingSystemListBox);
 			this.groupBox1.Location = new System.Drawing.Point(3, 189);
 			this.groupBox1.Name = "groupBox1";
-			this.groupBox1.Padding = new System.Windows.Forms.Padding(7, 7, 7, 7);
+			this.groupBox1.Padding = new System.Windows.Forms.Padding(7);
 			this.groupBox1.Size = new System.Drawing.Size(337, 180);
 			this.groupBox1.TabIndex = 0;
 			this.groupBox1.TabStop = false;
@@ -234,7 +234,7 @@ namespace WeSay.Setup
 			"English"});
 			this._writingSystemListBox.Location = new System.Drawing.Point(31, 20);
 			this._writingSystemListBox.Name = "_writingSystemListBox";
-			this._writingSystemListBox.Size = new System.Drawing.Size(299, 124);
+			this._writingSystemListBox.Size = new System.Drawing.Size(299, 154);
 			this._writingSystemListBox.TabIndex = 0;
 			this._writingSystemListBox.SelectedIndexChanged += new System.EventHandler(this._writingSystemListBox_SelectedIndexChanged);
 			this._writingSystemListBox.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this._writingSystemListBox_ItemCheck);
@@ -268,8 +268,8 @@ namespace WeSay.Setup
 			this.tabPage2.Controls.Add(this._fieldPropertyGrid);
 			this.tabPage2.Location = new System.Drawing.Point(4, 22);
 			this.tabPage2.Name = "tabPage2";
-			this.tabPage2.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
-			this.tabPage2.Size = new System.Drawing.Size(360, 376);
+			this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+			this.tabPage2.Size = new System.Drawing.Size(349, 378);
 			this.tabPage2.TabIndex = 1;
 			this.tabPage2.Text = "Properties";
 			this.tabPage2.UseVisualStyleBackColor = true;
@@ -282,7 +282,7 @@ namespace WeSay.Setup
 			this._fieldPropertyGrid.Name = "_fieldPropertyGrid";
 			this._fieldPropertyGrid.PropertySort = System.Windows.Forms.PropertySort.Alphabetical;
 			this._fieldPropertyGrid.SelectedObject = this.btnMoveDown;
-			this._fieldPropertyGrid.Size = new System.Drawing.Size(354, 370);
+			this._fieldPropertyGrid.Size = new System.Drawing.Size(343, 372);
 			this._fieldPropertyGrid.TabIndex = 0;
 			this._fieldPropertyGrid.ToolbarVisible = false;
 			this._fieldPropertyGrid.PropertyValueChanged += new System.Windows.Forms.PropertyValueChangedEventHandler(this.OnPropertyValueChanged);
@@ -304,7 +304,7 @@ namespace WeSay.Setup
 			this.Controls.Add(this.label1);
 			this.Controls.Add(this.splitContainer1);
 			this.Name = "FieldsControl";
-			this.Padding = new System.Windows.Forms.Padding(7, 7, 7, 7);
+			this.Padding = new System.Windows.Forms.Padding(7);
 			this.Size = new System.Drawing.Size(586, 427);
 			this.Load += new System.EventHandler(this.FieldsControl_Load);
 			this.splitContainer1.Panel1.ResumeLayout(false);

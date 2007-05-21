@@ -32,7 +32,7 @@ namespace WeSay.Setup
 		{
 			//this is part of dealing with .net not adjusting stuff well for different dpis
 			c.Dock = DockStyle.None;
-			c.Size = this.Size;
+			c.Size = new Size(this.Width, this.Height-25);
 		   // c.BackColor = System.Drawing.Color.Crimson;
 		}
 	}
