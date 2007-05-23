@@ -362,14 +362,8 @@ namespace WeSay.LexicalTools
 			}
 			_recordListBoxActive = true; // allow onRecordSelectionChanged
 			_records.RemoveAt(CurrentIndex);
+			OnRecordSelectionChanged(this, null);
 			_recordListBoxActive = false;
-
-			//hack until we can get selection change events sorted out in BindingGridList
-			//_recordListBoxActive = true;
-			//OnRecordSelectionChanged(this, null);
-			//_recordListBoxActive = false;
-			//_recordsListBox.Refresh();
-
 
 			if (CurrentRecord == null)
 			{

@@ -172,7 +172,7 @@ namespace WeSay.LexicalTools.Tests
 		}
 
 		[Test]
-		public void ClickingDeleteWordDereasesRecordsByOne()
+		public void ClickingDeleteWordDecreasesRecordsByOne()
 		{
 			int before = _records.Count;
 			ClickDeleteWord();
@@ -185,6 +185,14 @@ namespace WeSay.LexicalTools.Tests
 			ClickDeleteWord();
 			TextBoxTester t = new TextBoxTester(GetLexicalFormControlName());
 			Assert.IsTrue(t.Properties.Focused);
+		}
+
+		[Test]
+		public void ClickingDeleteWordRefreshesDetailView()
+		{
+			ClickDeleteWord();
+			TextBoxTester t = new TextBoxTester(GetLexicalFormControlName());
+			Assert.AreEqual(t.Text, LexemeFormOfSelectedEntry);
 		}
 
 
