@@ -94,11 +94,18 @@ namespace WeSay.LexicalTools
 
 		private void RefreshCurrentWords() {
 			this._listViewWords.Items.Clear();
-
+			string longestWord = string.Empty;
 			foreach (string word in this._presentationModel.CurrentWords)
 			{
+				if(longestWord.Length < word.Length)
+				{
+					longestWord = word;
+				}
 				this._listViewWords.Items.Add(word);
 			}
+
+			Size bounds = TextRenderer.MeasureText(longestWord, this._listViewWords.Font);
+			this._listViewWords.ColumnWidth = bounds.Width +10;
 		}
 
 		private void _btnNext_Click(object sender, EventArgs e)
