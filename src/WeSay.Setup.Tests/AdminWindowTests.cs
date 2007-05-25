@@ -19,6 +19,7 @@ namespace WeSay.Admin.Tests
 
 		public override void Setup()
 		{
+			Reporting.ErrorReporter.OkToInteractWithUser = false;
 			base.Setup();
 			_window = new AdminWindow(new string[] { });
 			_window.Show();
@@ -83,6 +84,12 @@ namespace WeSay.Admin.Tests
 //            writer.Close();
 			  File.Copy(Path.Combine(WeSayWordsProject.Project.ApplicationTestDirectory, "pretend.WeSayConfig"), WeSayWordsProject.Project.PathToConfigFile, true);
 			WalkTopLevelTabs();
+		}
+
+		[Test, ExpectedException(typeof(Reporting.ErrorReporter.NonFatalMessageSentToUserException))]
+		public void TryingToOpenNonExistantProjectDoesntCrash()
+		{
+			_window.OnOpenProject(@"C:\notreallythere.WeSayConfig", null);
 		}
 
 		[Test]

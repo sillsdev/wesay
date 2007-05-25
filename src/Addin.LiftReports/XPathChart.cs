@@ -71,9 +71,11 @@ namespace Addin.LiftReports
 					ReverseBarOrder();
 					this.DrawToBitmap(bm, new Rectangle(0, 0, this.Width, this.Height));
 					this._graph.Bars.Clear();
-					string path = Path.GetTempFileName();
-					bm.Save(path);
-					return path;
+					string path =Path.Combine(Path.GetTempPath(), Path.GetRandomFileName() + ".png");
+					//System.Drawing.Imaging.
+					//System.Drawing.Bitmap b= new png
+					bm.Save(path, System.Drawing.Imaging.ImageFormat.Png);
+					return "file://"+path;
 				}
 			}
 		}

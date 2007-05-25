@@ -15,7 +15,6 @@ namespace WeSay.Project
 {
 	public class WeSayWordsProject : BasilProject
 	{
-		//private string _lexiconDatabaseFileName = null;
 		private IList<ITask> _tasks;
 		private ViewTemplate _defaultViewTemplate;
 		private IList<ViewTemplate> _viewTemplates;
@@ -24,6 +23,8 @@ namespace WeSay.Project
 		private string _cacheLocationOverride;
 		private FileStream _liftFileStreamForLocking;
 		private LiftUpdateService _liftUpdateService;
+		private Dictionary<Guid, string> _addinSettings =new Dictionary<Guid,string>();
+		public event EventHandler HackedEditorsSaveNow;
 
 		public WeSayWordsProject()
 		{
@@ -161,7 +162,6 @@ namespace WeSay.Project
 				  return false;
 				}
 
-
 				//walk up from file to /wesay to /<project>
 				_projectDirectoryPath = Directory.GetParent(Directory.GetParent(liftPath).FullName).FullName;
 
@@ -169,14 +169,7 @@ namespace WeSay.Project
 				{
 					this._projectDirectoryPath = ProjectDirectoryPath;
 
-					/*if (GetCacheIsOutOfDate(liftPath))
-					{
-						throw new ApplicationException(
-							"Possible programming error. The cache should be up-to-date before calling this method.");
-					}
-					*/
-					base.LoadFromProjectDirectoryPath(
-						ProjectDirectoryPath);
+					LoadFromProjectDirectoryPath(ProjectDirectoryPath);
 					return true;
 				}
 				else
@@ -191,6 +184,12 @@ namespace WeSay.Project
 				ErrorReporter.ReportNonFatalMessage(e.Message);
 				return false;
 			}
+		}
+
+		public override void LoadFromProjectDirectoryPath(string projectDirectoryPath)
+		{
+			base.LoadFromProjectDirectoryPath(projectDirectoryPath);
+			InitializeViewTemplatesFromProjectFiles();
 		}
 
 //        public void LoadFromConfigFilePath(string path)
@@ -208,7 +207,7 @@ namespace WeSay.Project
 
 				try
 				{
-					XmlDocument projectDoc = GetProjectDoc();
+					XmlDocument projectDoc = GetConfigurationDoc();
 					if (projectDoc != null)
 					{
 						XmlNodeList nodes = projectDoc.SelectNodes("tasks/components/viewTemplate");
@@ -227,8 +226,8 @@ namespace WeSay.Project
 				}
 				catch (Exception error)
 				{
-					MessageBox.Show(
-							"There may have been a problem reading the field template xml. A default template will be created." +
+					Reporting.ErrorReporter.ReportNonFatalMessage(
+							"There may have been a problem reading the view template xml of the configuration file. A default template will be created." +
 							error.Message);
 				}
 				if(_defaultViewTemplate == null)
@@ -242,7 +241,7 @@ namespace WeSay.Project
 		}
 
 
-		private XmlDocument GetProjectDoc()
+		private XmlDocument GetConfigurationDoc()
 		{
 			XmlDocument projectDoc = null;
 			if (File.Exists(PathToConfigFile))
@@ -286,8 +285,9 @@ namespace WeSay.Project
 
 		public override void CreateEmptyProjectFiles(string projectDirectoryPath)
 		{
-			base.CreateEmptyProjectFiles(projectDirectoryPath);
+			this._projectDirectoryPath = projectDirectoryPath;
 			Directory.CreateDirectory(PathToWeSaySpecificFilesDirectoryInProject);
+			base.CreateEmptyProjectFiles(projectDirectoryPath);
 			_defaultViewTemplate = ViewTemplate.MakeMasterTemplate(WritingSystems);
 			_viewTemplates = new List<ViewTemplate>();
 			_viewTemplates.Add(_defaultViewTemplate);
@@ -437,6 +437,39 @@ namespace WeSay.Project
 
 
 
+		/// <summary>
+		/// Find the file, starting with the project dirs and moving to the app dirs.
+		/// This allows a user to override an installed file by making thier own.
+		/// </summary>
+		/// <returns></returns>
+		public string LocateFile(string fileName)
+		{
+			string path = Path.Combine(PathToWeSaySpecificFilesDirectoryInProject, fileName);
+			if (File.Exists(path))
+			{
+				return path;
+			}
+
+			path = Path.Combine(ProjectCommonDirectory, fileName);
+			if (File.Exists(path))
+			{
+				return path;
+			}
+
+			path = Path.Combine(ApplicationCommonDirectory, fileName);
+			if (File.Exists(path))
+			{
+				return path;
+			}
+
+			path = Path.Combine(BasilProject.DirectoryOfExecutingAssembly, fileName);
+			if (File.Exists(path))
+			{
+				return path;
+			}
+
+			return null;
+		}
 
 		public string PathToWeSaySpecificFilesDirectoryInProject
 		{
@@ -525,7 +558,88 @@ namespace WeSay.Project
 			}
 		}
 
+		public override void Save()
+		{
 
+			base.Save();
+
+			XmlWriterSettings settings = new XmlWriterSettings();
+			settings.Indent = true;
+
+			XmlWriter writer = XmlWriter.Create(WeSayWordsProject.Project.PathToConfigFile, settings);
+			writer.WriteStartDocument();
+			writer.WriteStartElement("tasks");
+
+			if (HackedEditorsSaveNow != null)
+			{
+				HackedEditorsSaveNow.Invoke(writer, null);
+			}
+
+			SaveAddinSettings(writer);
+
+			writer.WriteEndDocument();
+			writer.Close();
+		}
+
+
+		public string GetSettingsXmlForAddin(Guid id)
+		{
+			if (_addinSettings.Count == 0)
+			{
+				LoadSettingsForAddins();
+			}
+			string settings;
+			_addinSettings.TryGetValue(id, out settings);
+			return settings;
+		}
+
+		public void SetSettingsForAddin(Guid id, string settingsXml)
+		{
+			if (_addinSettings.ContainsKey(id))
+			{
+				_addinSettings.Remove(id);
+			}
+			_addinSettings.Add(id, settingsXml);
+		}
+
+		private void LoadSettingsForAddins()
+		{
+			try
+			{
+				_addinSettings.Clear();
+				XmlDocument configDoc = GetConfigurationDoc();
+				if (configDoc != null)
+				{
+					XmlNodeList nodes = configDoc.SelectNodes("tasks/addins/addin");
+					foreach (XmlNode node in nodes)
+					{
+						string  sid= XmlUtils.GetManditoryAttributeValue(node,"id");
+						Guid id = new Guid(sid);
+						string contents = node.InnerXml;
+						_addinSettings.Add(id, contents);
+					}
+				}
+			}
+			catch (Exception error)
+			{
+				Reporting.ErrorReporter.ReportNonFatalMessage(
+					"There was a problem reading the addins-settings xml. {0}",error.Message);
+			}
+		}
+
+		private void SaveAddinSettings(XmlWriter writer)
+		{
+			writer.WriteStartElement("addins");
+
+			foreach (KeyValuePair<Guid, string> pair in _addinSettings)
+			{
+				writer.WriteStartElement("addin");
+				writer.WriteAttributeString("id", pair.Key.ToString());
+				writer.WriteRaw(pair.Value);
+				writer.WriteEndElement();
+			}
+			writer.WriteEndElement();
+		}
 		public OptionsList GetOptionsList(Field field)
 		{
 			if (String.IsNullOrEmpty(field.OptionsListFile))
@@ -682,7 +796,6 @@ namespace WeSay.Project
 		public static string[] GetFilesBelongingToProject(string pathToProjectRoot)
 		{
 			List<String> files = new List<string>();
-			string wesay = Path.Combine(pathToProjectRoot, "wesay");
 			string[] allFiles =Directory.GetFiles(pathToProjectRoot, "*", SearchOption.AllDirectories);
 			string[] antipatterns = {"Cache", "cache", ".bak", ".old"};
 

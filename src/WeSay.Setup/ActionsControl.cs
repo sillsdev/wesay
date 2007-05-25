@@ -75,7 +75,7 @@ namespace WeSay.Setup
 
 		private void AddAddin(IWeSayAddin addin)
 		{
-			ActionItemControl control = new ActionItemControl(addin);
+			ActionItemControl control = new ActionItemControl(addin, true);
 			_addinsList.AddControlToBottom(control);
 			control.Launch += new EventHandler(OnLaunchAction);
 		}
@@ -90,8 +90,14 @@ namespace WeSay.Setup
 										 project.PathToLiftFile,
 										 WeSayWordsProject.GetFilesBelongingToProject(project.ProjectDirectoryPath));
 
-
-			addin.Launch(this.ParentForm, projectInfo);
+			try
+			{
+				addin.Launch(this.ParentForm, projectInfo);
+			}
+			catch (Exception error)
+			{
+				Reporting.ErrorReporter.ReportNonFatalMessage(error.Message);
+			}
 		}
 
 		void AddinManager_ExtensionChanged(object sender, ExtensionEventArgs args)

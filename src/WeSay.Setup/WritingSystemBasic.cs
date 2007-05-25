@@ -68,7 +68,7 @@ namespace WeSay.Setup
 
 			if (_writingSystemCollection.ContainsKey(id))
 			{
-				MessageBox.Show("Sorry, there is already a Writing System with that ID.");
+				Reporting.ErrorReporter.ReportNonFatalMessage("Sorry, there is already a Writing System with that ID.");
 				_writingSystem.Id = e.OldValue.ToString();
 			}
 			else

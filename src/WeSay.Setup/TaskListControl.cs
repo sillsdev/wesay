@@ -34,20 +34,11 @@ namespace WeSay.Setup
 			WeSayWordsProject.Project.HackedEditorsSaveNow += new EventHandler(Project_HackedEditorsSaveNow);
 		}
 
-		void Project_HackedEditorsSaveNow(object sender, EventArgs e)
+		void Project_HackedEditorsSaveNow(object owriter, EventArgs e)
 		{
-			//nb do this before opening the writer, as that will empty our existing xml file
-			//ViewTemplate template = WeSayWordsProject.Project.DefaultViewTemplate;
+			XmlWriter writer = (XmlWriter)owriter;
 
 			IList<ViewTemplate> viewTemplates = WeSayWordsProject.Project.ViewTemplates;
-
-			XmlWriterSettings settings = new XmlWriterSettings();
-			settings.Indent = true;
-
-			XmlWriter writer = XmlWriter.Create(WeSayWordsProject.Project.PathToConfigFile, settings);
-			writer.WriteStartDocument();
-			writer.WriteStartElement("tasks");
-
 			writer.WriteStartElement("components");
 			foreach (ViewTemplate template in viewTemplates)
 			{
@@ -63,9 +54,6 @@ namespace WeSay.Setup
 //                    writer.WriteRaw(t.Node.OuterXml);
 				}
 			}
-			writer.WriteEndElement();
-			writer.WriteEndDocument();
-			writer.Close();
 		}
 
 		private void LoadInventory()

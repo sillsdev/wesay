@@ -47,6 +47,34 @@ namespace Addin.Backup
 			}
 		}
 
+		#region IWeSayAddin Members
+
+		public object SettingsToPersist
+		{
+			get
+			{
+				return null;
+			}
+			set
+			{
+
+			}
+		}
+
+		public Guid ID
+		{
+			get
+			{
+				throw new NotImplementedException();
+			}
+			set
+			{
+				throw new NotImplementedException();
+			}
+		}
+
+		#endregion
+
 //        public WeSayWordsProject Project
 //        {
 //            set

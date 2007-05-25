@@ -1,3 +1,4 @@
+using System;
 using System.Drawing;
 using System.Windows.Forms;
 using Addin.LiftReports.Properties;
@@ -9,7 +10,9 @@ namespace Addin.LiftReports
 	[Extension]
 	public class ReportMaker : IWeSayAddin
 	{
-		 public Image ButtonImage
+		private Guid _id;
+
+		public Image ButtonImage
 		{
 			get
 			{
@@ -40,6 +43,34 @@ namespace Addin.LiftReports
 				return "Shows some information about the lexicon.";
 			}
 		}
+
+		#region IWeSayAddin Members
+
+		public object SettingsToPersist
+		{
+			get
+			{
+				return null;
+			}
+			set
+			{
+
+			}
+		}
+
+		public Guid ID
+		{
+			get
+			{
+				return _id;
+			}
+			set
+			{
+				_id = value;
+			}
+		}
+
+		#endregion
 
 /*        public void Launch(string pathToTopLevelDirectory, string pathToLIFT)
 		{

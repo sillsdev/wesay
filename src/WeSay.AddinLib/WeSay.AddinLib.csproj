@@ -46,6 +46,12 @@
 	<Compile Include="ActionItemControl.designer.cs">
 	  <DependentUpon>ActionItemControl.cs</DependentUpon>
 	</Compile>
+	<Compile Include="ActionSetupDialog.cs">
+	  <SubType>Form</SubType>
+	</Compile>
+	<Compile Include="ActionSetupDialog.Designer.cs">
+	  <DependentUpon>ActionSetupDialog.cs</DependentUpon>
+	</Compile>
 	<Compile Include="ComingSomedayAddin.cs" />
 	<Compile Include="IWeSayAddin.cs" />
 	<Compile Include="ProjectInfo.cs" />
@@ -61,6 +67,10 @@
 	  <DependentUpon>ActionItemControl.cs</DependentUpon>
 	  <SubType>Designer</SubType>
 	</EmbeddedResource>
+	<EmbeddedResource Include="ActionSetupDialog.resx">
+	  <SubType>Designer</SubType>
+	  <DependentUpon>ActionSetupDialog.cs</DependentUpon>
+	</EmbeddedResource>
 	<EmbeddedResource Include="Properties\Resources.resx">
 	  <SubType>Designer</SubType>
 	  <Generator>ResXFileCodeGenerator</Generator>
@@ -71,6 +81,10 @@
 	<None Include="Resources\construction.png" />
   </ItemGroup>
   <ItemGroup>
+	<ProjectReference Include="..\Reporting\Reporting.csproj">
+	  <Project>{9CCBECEC-513C-4DA4-A4CE-F5361B633760}</Project>
+	  <Name>Reporting</Name>
+	</ProjectReference>
 	<ProjectReference Include="..\WeSay.Project\WeSay.Project.csproj">
 	  <Project>{5CFD0BB3-5B2A-4911-B220-9C2286151BF0}</Project>
 	  <Name>WeSay.Project</Name>

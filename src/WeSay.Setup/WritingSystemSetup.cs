@@ -111,7 +111,7 @@ namespace WeSay.Setup
 			}
 			if (w == null)
 			{
-				MessageBox.Show("Could not produce a unique ID.");
+				Reporting.ErrorReporter.ReportNonFatalMessage("Could not produce a unique ID.");
 			}
 			else
 			{

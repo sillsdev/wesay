@@ -31,6 +31,7 @@ namespace WeSay.AddinLib
 			this._description = new System.Windows.Forms.TextBox();
 			this._launchButton = new System.Windows.Forms.Button();
 			this._actionName = new System.Windows.Forms.Label();
+			this._setupButton = new System.Windows.Forms.LinkLabel();
 			this.SuspendLayout();
 			//
 			// _description
@@ -68,11 +69,24 @@ namespace WeSay.AddinLib
 			this._actionName.TabIndex = 3;
 			this._actionName.Text = "Action Name";
 			//
+			// _setupButton
+			//
+			this._setupButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this._setupButton.AutoSize = true;
+			this._setupButton.Location = new System.Drawing.Point(360, 9);
+			this._setupButton.Name = "_setupButton";
+			this._setupButton.Size = new System.Drawing.Size(42, 13);
+			this._setupButton.TabIndex = 4;
+			this._setupButton.TabStop = true;
+			this._setupButton.Text = "setup...";
+			this._setupButton.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.OnSetupClicked);
+			//
 			// ActionItemControl
 			//
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.SystemColors.Window;
+			this.Controls.Add(this._setupButton);
 			this.Controls.Add(this._actionName);
 			this.Controls.Add(this._launchButton);
 			this.Controls.Add(this._description);
@@ -88,5 +102,6 @@ namespace WeSay.AddinLib
 		private System.Windows.Forms.TextBox _description;
 		private System.Windows.Forms.Button _launchButton;
 		private System.Windows.Forms.Label _actionName;
+		private System.Windows.Forms.LinkLabel _setupButton;
 	}
 }

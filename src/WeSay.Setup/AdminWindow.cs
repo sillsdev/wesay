@@ -106,9 +106,15 @@ namespace WeSay.Setup
 			OnOpenProject(dlg.FileName, null);
 		}
 
-		private void OnOpenProject(object sender, EventArgs e)
+		public void OnOpenProject(object sender, EventArgs e)
 		{
 			string configFilePath = (string) sender;
+			if (!File.Exists(configFilePath))
+			{
+				Reporting.ErrorReporter.ReportNonFatalMessage(
+					"WeSay could not find the file at {0} anymore.  Maybe it was moved or renamed?", configFilePath);
+				return;
+			}
 			string first = Directory.GetParent(configFilePath).FullName;
 			if (WeSayWordsProject.IsValidProjectDirectory(Directory.GetParent(first).FullName))
 			{
@@ -215,16 +221,9 @@ namespace WeSay.Setup
 
 		private void SetupProjectControls()
 		{
-			// try
-			// {
 			UpdateWindowCaption();
 			RemoveExistingControls();
 			InstallProjectsControls();
-			//}
-//            catch (Exception e)
-//            {
-//                MessageBox.Show("WeSay was not able to display that project. \r\n"+e.Message);
-//            }
 		}
 
 		private void UpdateWindowCaption()

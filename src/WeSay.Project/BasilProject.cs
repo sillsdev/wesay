@@ -25,7 +25,6 @@ namespace WeSay.Project
 		protected  string _projectDirectoryPath = string.Empty;
 		private string _stringCatalogSelector = string.Empty;
 
-		public event EventHandler HackedEditorsSaveNow;
 
 		public static BasilProject Project
 		{
@@ -84,7 +83,7 @@ namespace WeSay.Project
 		public virtual void CreateEmptyProjectFiles(string projectDirectoryPath)
 		{
 			this._projectDirectoryPath = projectDirectoryPath;
-			Directory.CreateDirectory(CommonDirectory);
+			Directory.CreateDirectory(ProjectCommonDirectory);
 			InitStringCatalog();
 			InitWritingSystems();
 			Save();
@@ -93,10 +92,6 @@ namespace WeSay.Project
 		public virtual void Save()
 		{
 		   Save(_projectDirectoryPath);
-		   if (HackedEditorsSaveNow != null)
-		   {
-			   HackedEditorsSaveNow.Invoke(this, null);
-		   }
 		}
 
 	   public virtual void Save(string projectDirectoryPath)
@@ -145,7 +140,7 @@ namespace WeSay.Project
 		{
 			get
 			{
-				return GetPathToWritingSystemPrefs(CommonDirectory);
+				return GetPathToWritingSystemPrefs(ProjectCommonDirectory);
 			}
 		}
 
@@ -180,11 +175,12 @@ namespace WeSay.Project
 		}
 
 
+
 		public string PathToStringCatalogInProjectDir
 		{
 			get
 			{
-				return Path.Combine(CommonDirectory, _stringCatalogSelector+".po");
+				return Path.Combine(ProjectCommonDirectory, _stringCatalogSelector+".po");
 			}
 		}
 		public string ApplicationCommonDirectory
@@ -207,22 +203,8 @@ namespace WeSay.Project
 		{
 			string path;
 
-			bool unitTesting = Assembly.GetEntryAssembly() == null;
-			if (unitTesting)
-			{
-				//string s = Assembly.GetExecutingAssembly().CodeBase;
-				//s = Path.GetDirectoryName(s);
-				path = new Uri(Assembly.GetExecutingAssembly().CodeBase).AbsolutePath;
-				path = Uri.UnescapeDataString(path);
-				//path = s;
-			}
-			else
-			{
-				path = Assembly.GetExecutingAssembly().Location;
-			}
+			path = DirectoryOfExecutingAssembly;
 
-			//go up to dir containing the executable
-			path = Directory.GetParent(path).FullName;
 			if (path.ToLower().IndexOf("output") > -1)
 			{
 				//go up to output
@@ -233,7 +215,26 @@ namespace WeSay.Project
 			return path;
 		}
 
-		private string CommonDirectory
+		public static string DirectoryOfExecutingAssembly
+		{
+			get
+			{
+				string path;
+				bool unitTesting = Assembly.GetEntryAssembly() == null;
+				if (unitTesting)
+				{
+					path = new Uri(Assembly.GetExecutingAssembly().CodeBase).AbsolutePath;
+					path = Uri.UnescapeDataString(path);
+				}
+				else
+				{
+					path = Assembly.GetExecutingAssembly().Location;
+				}
+				return Directory.GetParent(path).FullName;
+			}
+		}
+
+		protected string ProjectCommonDirectory
 		{
 			get
 			{

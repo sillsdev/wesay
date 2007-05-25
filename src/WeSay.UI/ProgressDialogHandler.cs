@@ -162,7 +162,7 @@ namespace WeSay.UI
 
 		private void FinishWithUnspecifiedError()
 		{
-			MessageBox.Show("An error occurred while processing your request.");
+			Reporting.ErrorReporter.ReportNonFatalMessage("An error occurred while processing your request.");
 			Finish();
 		}
 
