@@ -5,8 +5,8 @@ namespace WeSay.Data
 {
 	public class Db4oRecordList<T> : AbstractRecordList<T> where T : class, new()
 	{
-
-		private static int defaultWriteCacheSize = 1; // 0 means never commit until database closes, 1 means commit after each write
+  //committing is handled by Db4oRecordListManager when told to.
+		private static int defaultWriteCacheSize = 0; // 0 means never commit until database closes, 1 means commit after each write
 
 		private void Initialize(Db4oDataSource dataSource, Predicate<T> filter, Comparison<T> sort, SodaQueryProvider sodaQuery)
 		{
