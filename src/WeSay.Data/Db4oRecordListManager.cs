@@ -172,6 +172,7 @@ namespace WeSay.Data
 					SerializeRecordIds();
 				}
 				_masterRecordList.ListChanged += new ListChangedEventHandler(OnMasterRecordListListChanged);
+				_masterRecordList.ContentOfItemInListChanged += new ListChangedEventHandler(OnMasterRecordListContentOfItemInListChanged);
 				_masterRecordList.DeletingRecord += new EventHandler<RecordListEventArgs<T>>(OnMasterRecordListDeletingRecord);
 			}
 
@@ -211,17 +212,21 @@ namespace WeSay.Data
 				}
 			}
 
-			protected override void OnItemChanged(int newIndex)
+
+			protected override void OnItemContentChanged(int newIndex)
 			{
-				base.OnItemChanged(newIndex);
+				base.OnItemContentChanged(newIndex);
 				TriggerChangeInMaster(newIndex);
 			}
 
 			private void TriggerChangeInMaster(int newIndex) {
-				T item = this[newIndex];
-				//trigger change in master (it may not be active in master and we need it to perculate to all filtered ones
-				int i = this._masterRecordList.IndexOf(item);
-				this._masterRecordList[i] = item;
+				if (!_isSourceMasterRecord)
+				{
+					T item = this[newIndex];
+					//trigger change in master (it may not be active in master and we need it to perculate to all filtered ones
+					int i = this._masterRecordList.IndexOf(item);
+					this._masterRecordList[i] = item;
+				}
 			}
 
 			void SerializeRecordIds()
@@ -308,6 +313,14 @@ namespace WeSay.Data
 			{
 				_isSourceMasterRecord = true;
 				HandleItemDeletedFromMaster(e.Item);
+				_isSourceMasterRecord = false;
+			}
+
+			void OnMasterRecordListContentOfItemInListChanged(object sender, ListChangedEventArgs e)
+			{
+				IRecordList<T> masterRecordList = (IRecordList<T>)sender;
+				_isSourceMasterRecord = true;
+				HandleItemChangedInMaster(masterRecordList[e.NewIndex]);
 				_isSourceMasterRecord = false;
 			}
 

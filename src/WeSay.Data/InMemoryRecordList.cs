@@ -144,7 +144,7 @@ namespace WeSay.Data
 
 		private void Item_PropertyChanged(object sender, PropertyChangedEventArgs e)
 		{
-			OnItemChanged(Records.IndexOf((T)sender));
+			OnItemContentChanged(Records.IndexOf((T)sender));
 		}
 
 		protected override void Dispose(bool disposing)

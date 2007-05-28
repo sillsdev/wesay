@@ -37,6 +37,8 @@ namespace WeSay.Data
 	{
 		event EventHandler<RecordListEventArgs<T>> AddingRecord;
 		event EventHandler<RecordListEventArgs<T>> DeletingRecord;
+		event ListChangedEventHandler ContentOfItemInListChanged;
+
 
 		/// <summary>
 		/// Indicates that changes that have been made should be persisted if possible

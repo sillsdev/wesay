@@ -243,6 +243,7 @@ namespace WeSay.Data
 			OnListChanged(new ListChangedEventArgs(ListChangedType.ItemAdded, newIndex));
 		}
 
+
 		protected virtual void OnItemChanged(int newIndex)
 		{
 			OnListChanged(new ListChangedEventArgs(ListChangedType.ItemChanged, newIndex));
@@ -263,7 +264,17 @@ namespace WeSay.Data
 			ListChanged(this, e);
 		}
 
+
 		public event ListChangedEventHandler ListChanged = delegate
+		{
+		};
+
+		protected virtual void OnItemContentChanged(int index)
+		{
+			ContentOfItemInListChanged(this, new ListChangedEventArgs(ListChangedType.ItemChanged, index));
+		}
+
+		public event ListChangedEventHandler ContentOfItemInListChanged = delegate
 		{
 		};
 

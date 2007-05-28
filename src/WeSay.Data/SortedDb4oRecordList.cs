@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 
@@ -102,6 +103,7 @@ namespace WeSay.Data
 
 			_masterRecordList.ListChanged += new ListChangedEventHandler(OnMasterRecordListListChanged);
 			_masterRecordList.DeletingRecord += new EventHandler<RecordListEventArgs<T>>(OnMasterRecordListDeletingRecord);
+			_masterRecordList.ContentOfItemInListChanged += new ListChangedEventHandler(OnMasterRecordListContentChanged);
 		}
 
 		private string CacheFilePath
@@ -189,6 +191,13 @@ namespace WeSay.Data
 			return _masterRecordList.GetDatabaseLastModified();
 		}
 
+		void OnMasterRecordListContentChanged(object sender, ListChangedEventArgs e)
+		{
+			IRecordList<T> masterRecordList = (IRecordList<T>)sender;
+			Update(masterRecordList[e.NewIndex]);
+		}
+
+
 		void OnMasterRecordListDeletingRecord(object sender, RecordListEventArgs<T> e)
 		{
 			Remove(e.Item);
@@ -203,7 +212,7 @@ namespace WeSay.Data
 					Add(masterRecordList[e.NewIndex]);
 					break;
 				case ListChangedType.ItemChanged:
-					Update(masterRecordList[e.NewIndex]);
+					//Update(masterRecordList[e.NewIndex]);
 					break;
 				case ListChangedType.ItemDeleted:
 					break;
@@ -258,18 +267,31 @@ namespace WeSay.Data
 			foreach (K key in _sortHelper.GetKeys(item))
 			{
 				int index = AddKeyId(key, itemId);
+				//if this got inserted before our other indexes, we need to bump their values up
+				for (int i = 0; i < indexesOfAddedItems.Count; i++)
+				{
+					if (indexesOfAddedItems[i] >= index)
+					{
+						indexesOfAddedItems[i]++;
+					}
+				}
+				indexesOfAddedItems.Add(index);
+			}
+
+			for (int i = indexesOfAddedItems.Count - 1; i >= 0; i--)
+			{
+				int index = indexesOfAddedItems[i];
 				if (indexesOfDeletedItems.Contains(index))
 				{
-					indexesOfDeletedItems.Remove(index);
 					OnItemChanged(index);
-				}
-				else
-				{
-					indexesOfAddedItems.Add(index);
+					indexesOfDeletedItems.Remove(index);
+					indexesOfAddedItems.RemoveAt(i);
 				}
 			}
 
 			int itemsMoved = Math.Min(indexesOfAddedItems.Count, indexesOfDeletedItems.Count);
+
+			indexesOfAddedItems.Sort();
 
 			for (int i = 0; i < itemsMoved; i++)
 			{
@@ -278,10 +300,12 @@ namespace WeSay.Data
 				indexesOfAddedItems.RemoveAt(0);
 				indexesOfDeletedItems.RemoveAt(0);
 			}
+
 			foreach (int index in indexesOfAddedItems)
 			{
 				OnItemAdded(index);
 			}
+
 			foreach (int index in indexesOfDeletedItems)
 			{
 				OnItemDeleted(index);
@@ -462,6 +486,7 @@ namespace WeSay.Data
 
 		protected virtual void OnItemAdded(int newIndex)
 		{
+			Debug.Assert(this[newIndex] != null);
 			OnListChanged(new ListChangedEventArgs(ListChangedType.ItemAdded, newIndex));
 		}
 		protected virtual void OnItemMoved(int newIndex, int oldIndex)

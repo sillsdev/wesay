@@ -32,8 +32,17 @@ namespace WeSay.Data
 			  _masterRecordList = sourceRecords;
 			  _masterRecordList.ListChanged += new ListChangedEventHandler(OnMasterRecordListListChanged);
 			  _masterRecordList.DeletingRecord += new EventHandler<RecordListEventArgs<T>>(OnMasterRecordListDeletingRecord);
+			  _masterRecordList.ContentOfItemInListChanged += new ListChangedEventHandler(OnMasterRecordListContentOfItemInListChanged);
 			  IsRelevant = filter;
 			  ApplyFilter(filter);
+			}
+
+			void OnMasterRecordListContentOfItemInListChanged(object sender, ListChangedEventArgs e)
+			{
+				IRecordList<T> masterRecordList = (IRecordList<T>)sender;
+				_isSourceMasterRecord = true;
+				HandleItemChangedInMaster(masterRecordList[e.NewIndex]);
+				_isSourceMasterRecord = false;
 			}
 
 			void OnMasterRecordListDeletingRecord(object sender, RecordListEventArgs<T> e)

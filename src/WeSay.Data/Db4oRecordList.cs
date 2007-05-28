@@ -108,10 +108,10 @@ namespace WeSay.Data
 
 		void OnRecordStoring(object sender, Db4oListEventArgs<T> e)
 		{
-			int index = Records.IndexOf(e.Item);
-			if (index != -1)
+			int index = IndexOf(e.Item);
+			if (index != -1) // if it is -1 then this record will be added
 			{
-				OnItemChanged(index);
+				OnItemContentChanged(index);
 			}
 		}
 
