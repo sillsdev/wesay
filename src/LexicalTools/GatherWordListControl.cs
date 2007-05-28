@@ -25,6 +25,11 @@ namespace WeSay.LexicalTools
 
 			InitializeComponent();
 			InitializeDisplaySettings();
+			if (Environment.OSVersion.Platform != PlatformID.Unix)
+			{
+				SetAutoSizeToGrowAndShrink();
+			}
+
 			_listViewOfWordsMatchingCurrentItem.Items.Clear();
 
 			Field lexicalFormField = viewTemplate.GetField(Field.FieldNames.EntryLexicalForm.ToString());
@@ -177,5 +182,11 @@ namespace WeSay.LexicalTools
 			_listViewOfWordsMatchingCurrentItem.BackColor = BackColor;
 			_boxForeignWord.BackColor = BackColor;
 		}
+
+		private void SetAutoSizeToGrowAndShrink()
+		{
+			this._vernacularBox.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+		}
+
 	}
 }

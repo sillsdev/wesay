@@ -25,6 +25,11 @@ namespace WeSay.LexicalTools
 		{
 			_presentationModel = presentationModel;
 			InitializeComponent();
+			if (Environment.OSVersion.Platform != PlatformID.Unix)
+			{
+				SetAutoSizeToGrowAndShrink();
+			}
+
 			InitializeAnimator();
 
 			InitializeDisplaySettings();
@@ -301,6 +306,11 @@ namespace WeSay.LexicalTools
 		{
 			_presentationModel.CurrentDomainIndex = _domainName.SelectedIndex;
 			RefreshCurrentDomainAndQuestion();
+		}
+
+		private void SetAutoSizeToGrowAndShrink()
+		{
+			this._vernacularBox.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
 		}
 
 	}

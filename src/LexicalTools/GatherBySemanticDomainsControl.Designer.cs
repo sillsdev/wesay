@@ -1,3 +1,4 @@
+using System;
 using WeSay.UI;
 using WeSay.UI.Buttons;
 
@@ -186,7 +187,7 @@ namespace WeSay.LexicalTools
 			this._vernacularBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
 						| System.Windows.Forms.AnchorStyles.Right)));
 			this._vernacularBox.AutoSize = true;
-			this._vernacularBox.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+
 			this._vernacularBox.BackColor = System.Drawing.Color.White;
 			this._vernacularBox.ColumnCount = 3;
 			this._vernacularBox.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
@@ -257,7 +258,6 @@ namespace WeSay.LexicalTools
 			this.PerformLayout();
 
 		}
-
 
 
 		#endregion

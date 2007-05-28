@@ -1,3 +1,4 @@
+using System;
 using WeSay.Foundation;
 
 namespace WeSay.UI
@@ -38,12 +39,13 @@ namespace WeSay.UI
 			this.BackColor = System.Drawing.Color.White;
 			this.Name = "MultiTextControl";
 			this.AutoSize = true;
-			this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+
 			this.Height = 1;
 			this.Width = 1;
 			this.ResumeLayout(false);
 
 		}
+
 
 		#endregion
 

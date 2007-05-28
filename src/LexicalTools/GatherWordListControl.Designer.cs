@@ -1,3 +1,4 @@
+using System;
 using WeSay.UI;
 using WeSay.UI.Buttons;
 
@@ -169,7 +170,6 @@ namespace WeSay.LexicalTools
 			// _vernacularBox
 			//
 			this._vernacularBox.AutoSize = true;
-			this._vernacularBox.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
 			this._vernacularBox.BackColor = System.Drawing.Color.White;
 			this._vernacularBox.ColumnCount = 3;
 			this._vernacularBox.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());

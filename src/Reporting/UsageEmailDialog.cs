@@ -32,7 +32,7 @@ namespace Reporting
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-
+			this.richTextBox2.Text = "May we ask you a favor? We would like to send a tiny e-mail back to the software developers telling us of your progress.\nYou will be able to view the e-mail before it goes out. You do not need to be connected to the Internet right now...the e-mail will just open and you can save it in your outbox.";
 			//
 			// TODO: Add any constructor code after InitializeComponent call
 			//
@@ -123,9 +123,11 @@ namespace Reporting
 			// tabControl1
 			//
 			this.tabControl1.Controls.Add(this.tabPage1);
-			resources.ApplyResources(this.tabControl1, "tabControl1");
+			this.tabControl1.Location = new System.Drawing.Point(9, 10);
 			this.tabControl1.Name = "tabControl1";
 			this.tabControl1.SelectedIndex = 0;
+			this.tabControl1.Size = new System.Drawing.Size(590, 240);
+			this.tabControl1.TabIndex = 0;
 			//
 			// tabPage1
 			//
@@ -133,46 +135,65 @@ namespace Reporting
 			this.tabPage1.Controls.Add(this.m_topLineText);
 			this.tabPage1.Controls.Add(this.pictureBox1);
 			this.tabPage1.Controls.Add(this.richTextBox2);
-			resources.ApplyResources(this.tabPage1, "tabPage1");
+			this.tabPage1.Location = new System.Drawing.Point(4, 22);
 			this.tabPage1.Name = "tabPage1";
+			this.tabPage1.Size = new System.Drawing.Size(582, 214);
+			this.tabPage1.TabIndex = 0;
+			this.tabPage1.Text = "Report";
 			//
 			// m_topLineText
 			//
 			this.m_topLineText.BorderStyle = System.Windows.Forms.BorderStyle.None;
-			resources.ApplyResources(this.m_topLineText, "m_topLineText");
+			this.m_topLineText.Location = new System.Drawing.Point(218, 29);
 			this.m_topLineText.Name = "m_topLineText";
-			this.m_topLineText.TextChanged += new System.EventHandler(this.richTextBox1_TextChanged);
+			this.m_topLineText.Size = new System.Drawing.Size(339, 31);
+			this.m_topLineText.TabIndex = 1;
+			this.m_topLineText.Text = "Thank you for checking out this preview version of WeSay.";
 			//
 			// pictureBox1
 			//
-			resources.ApplyResources(this.pictureBox1, "pictureBox1");
+			this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
+			this.pictureBox1.Location = new System.Drawing.Point(18, 38);
 			this.pictureBox1.Name = "pictureBox1";
+			this.pictureBox1.Size = new System.Drawing.Size(165, 71);
+			this.pictureBox1.TabIndex = 2;
 			this.pictureBox1.TabStop = false;
 			//
 			// richTextBox2
 			//
 			this.richTextBox2.BorderStyle = System.Windows.Forms.BorderStyle.None;
-			resources.ApplyResources(this.richTextBox2, "richTextBox2");
+			this.richTextBox2.Location = new System.Drawing.Point(218, 74);
 			this.richTextBox2.Name = "richTextBox2";
+			this.richTextBox2.Size = new System.Drawing.Size(339, 147);
+			this.richTextBox2.TabIndex = 1;
+			this.richTextBox2.Text = "May we ask you a favor? We would like to send a tiny e-mail back to the software developers telling us of your progress.\nYou will be able to view the e-mail before it goes out. You do not need to be connected to the Internet right now...the e-mail will just open and you can save it in your outbox.";
+
 			//
 			// btnSend
 			//
-			resources.ApplyResources(this.btnSend, "btnSend");
+			this.btnSend.Location = new System.Drawing.Point(464, 263);
 			this.btnSend.Name = "btnSend";
+			this.btnSend.Size = new System.Drawing.Size(133, 23);
+			this.btnSend.TabIndex = 1;
+			this.btnSend.Text = "Create Email Message";
 			this.btnSend.Click += new System.EventHandler(this.btnSend_Click);
 			//
 			// btnNope
 			//
-			resources.ApplyResources(this.btnNope, "btnNope");
+			this.btnNope.Location = new System.Drawing.Point(14, 271);
 			this.btnNope.Name = "btnNope";
+			this.btnNope.Size = new System.Drawing.Size(278, 23);
+			this.btnNope.TabIndex = 2;
 			this.btnNope.TabStop = true;
+			this.btnNope.Text = "I\'m unable to send this information.";
 			this.btnNope.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.btnNope_LinkClicked);
 			//
 			// UsageEmailDialog
 			//
 			this.AcceptButton = this.btnSend;
-			resources.ApplyResources(this, "$this");
+			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
 			this.CancelButton = this.btnNope;
+			this.ClientSize = new System.Drawing.Size(618, 301);
 			this.ControlBox = false;
 			this.Controls.Add(this.btnNope);
 			this.Controls.Add(this.btnSend);
@@ -180,6 +201,7 @@ namespace Reporting
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
 			this.MinimizeBox = false;
 			this.Name = "UsageEmailDialog";
+			this.Text = "Field Usage Report System";
 			this.tabControl1.ResumeLayout(false);
 			this.tabPage1.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
@@ -188,30 +210,26 @@ namespace Reporting
 		}
 		#endregion
 
-		private void richTextBox1_TextChanged(object sender, EventArgs e)
-		{
-		}
-
 		private void btnSend_Click(object sender, EventArgs e)
 		{
 			try
 			{
 
-				this.EmailMessage.Send();
+				EmailMessage.Send();
 			}
-			catch(Exception)
+			catch
 			{
 				//swallow it
 			}
-			this.DialogResult = DialogResult.OK;
-			this.Close();
+			DialogResult = DialogResult.OK;
+			Close();
 		}
 
 
 		private void btnNope_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
 		{
-			this.DialogResult = DialogResult.No;
-			this.Close();
+			DialogResult = DialogResult.No;
+			Close();
 		}
 
 

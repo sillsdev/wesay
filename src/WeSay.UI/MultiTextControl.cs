@@ -49,7 +49,18 @@ namespace WeSay.UI
 			}
 			ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));//text
 			ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));//annotation widget
+
+			if (Environment.OSVersion.Platform != PlatformID.Unix)
+			{
+				SetAutoSizeToGrowAndShrink();
+			}
+
 			ResumeLayout(false);
+		}
+
+		private void SetAutoSizeToGrowAndShrink()
+		{
+			this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
 		}
 
 

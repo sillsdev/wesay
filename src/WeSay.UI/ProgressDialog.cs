@@ -1,11 +1,10 @@
 //originally from Matthew Adams
 
 using System;
-using System.Drawing;
-using System.Collections;
 using System.ComponentModel;
+using System.Drawing;
+using System.Globalization;
 using System.Windows.Forms;
-using WeSay;
 using WeSay.Foundation.Progress;
 
 namespace WeSay.UI
@@ -13,19 +12,19 @@ namespace WeSay.UI
 	/// <summary>
 	/// Provides a progress dialog similar to the one shown by Windows
 	/// </summary>
-	public class ProgressDialog : System.Windows.Forms.Form
+	public class ProgressDialog : Form
 	{
-		private System.Windows.Forms.Label _statusLabel;
-		private System.Windows.Forms.ProgressBar _progressBar;
-		private System.Windows.Forms.Label _progressLabel;
-		private System.Windows.Forms.Button _cancelButton;
-		private System.Windows.Forms.Timer _showWindowIfTakingLongTimeTimer;
+		private Label _statusLabel;
+		private ProgressBar _progressBar;
+		private Label _progressLabel;
+		private Button _cancelButton;
+		private Timer _showWindowIfTakingLongTimeTimer;
 		private bool _showOnce;
-		private System.Windows.Forms.Timer _progressTimer;
+		private Timer _progressTimer;
 		private bool _isClosing;
 		private Label _overviewLabel;
 		private DateTime _startTime = DateTime.Now;
-		private System.ComponentModel.IContainer components;
+		private IContainer components;
 		private BackgroundWorker _backgroundWorker;
 		private ProgressState _lastHeardFromProgressState;
 
@@ -38,9 +37,9 @@ namespace WeSay.UI
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-			_statusLabel.BackColor = System.Drawing.SystemColors.Control;
-			_progressLabel.BackColor = System.Drawing.SystemColors.Control;
-			_overviewLabel.BackColor = System.Drawing.SystemColors.Control;
+			_statusLabel.BackColor = SystemColors.Control;
+			_progressLabel.BackColor = SystemColors.Control;
+			_overviewLabel.BackColor = SystemColors.Control;
 
 		}
 
@@ -102,6 +101,14 @@ namespace WeSay.UI
 			set
 			{
 				_progressBar.Minimum = value;
+				if (Environment.OSVersion.Platform == PlatformID.Unix)
+				{
+					// hack to get around Mono Bug 81704
+					if (_progressBar.Maximum == value)
+					{
+						_progressBar.Maximum = value + 1;
+					}
+				}
 			}
 		}
 
@@ -117,6 +124,14 @@ namespace WeSay.UI
 			set
 			{
 				_progressBar.Maximum = value;
+				if (Environment.OSVersion.Platform == PlatformID.Unix)
+				{
+					// hack to get around Mono Bug 81704
+					if (_progressBar.Minimum == value)
+					{
+						_progressBar.Maximum = value + 1;
+					}
+				}
 			}
 		}
 
@@ -181,7 +196,7 @@ namespace WeSay.UI
 
 			if(e.Cancelled )
 			{
-				this.DialogResult = DialogResult.Cancel;
+				DialogResult = DialogResult.Cancel;
 			}
 			//NB: I don't know how to actually let the BW know there was an error
 			//else if (e.Error != null ||
@@ -190,11 +205,11 @@ namespace WeSay.UI
 			{
 			   //this dialog really can't know whether this was an unexpected exception or not
 				//so don't do this:  Reporting.ErrorReporter.ReportException(ProgressStateResult.ExceptionThatWasEncountered, this, false);
-				this.DialogResult = DialogResult.Abort;//not really matching semantics
+				DialogResult = DialogResult.Abort;//not really matching semantics
 			}
 			else
 			{
-				this.DialogResult = DialogResult.OK;
+				DialogResult = DialogResult.OK;
 			}
 			_isClosing = true;
 			Close();
@@ -325,26 +340,38 @@ namespace WeSay.UI
 			// _statusLabel
 			//
 			this._statusLabel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-			resources.ApplyResources(this._statusLabel, "_statusLabel");
+			this._statusLabel.Location = new System.Drawing.Point(9, 52);
 			this._statusLabel.Name = "_statusLabel";
+			this._statusLabel.Size = new System.Drawing.Size(279, 18);
+			this._statusLabel.TabIndex = 12;
 			//
 			// _progressBar
 			//
-			resources.ApplyResources(this._progressBar, "_progressBar");
+			this._progressBar.Location = new System.Drawing.Point(9, 75);
 			this._progressBar.Name = "_progressBar";
+			this._progressBar.Size = new System.Drawing.Size(279, 18);
+			this._progressBar.TabIndex = 11;
+			this._progressBar.Value = 1;
+			this._progressBar.Maximum = 100;
+			this._progressBar.Minimum = 0;
 			//
 			// _cancelButton
 			//
 			this._cancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-			resources.ApplyResources(this._cancelButton, "_cancelButton");
+			this._cancelButton.Location = new System.Drawing.Point(234, 99);
 			this._cancelButton.Name = "_cancelButton";
+			this._cancelButton.Size = new System.Drawing.Size(54, 22);
+			this._cancelButton.TabIndex = 10;
+			this._cancelButton.Text = "&Cancel";
 			this._cancelButton.Click += new System.EventHandler(this.OnCancelButton_Click);
 			//
 			// _progressLabel
 			//
 			this._progressLabel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-			resources.ApplyResources(this._progressLabel, "_progressLabel");
+			this._progressLabel.Location = new System.Drawing.Point(9, 99);
 			this._progressLabel.Name = "_progressLabel";
+			this._progressLabel.Size = new System.Drawing.Size(210, 18);
+			this._progressLabel.TabIndex = 9;
 			//
 			// _showWindowIfTakingLongTimeTimer
 			//
@@ -360,12 +387,15 @@ namespace WeSay.UI
 			// _overviewLabel
 			//
 			this._overviewLabel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
-			resources.ApplyResources(this._overviewLabel, "_overviewLabel");
+			this._overviewLabel.Location = new System.Drawing.Point(9, 7);
 			this._overviewLabel.Name = "_overviewLabel";
+			this._overviewLabel.Size = new System.Drawing.Size(280, 37);
+			this._overviewLabel.TabIndex = 8;
 			//
 			// ProgressDialog
 			//
-			resources.ApplyResources(this, "$this");
+			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
+			this.ClientSize = new System.Drawing.Size(298, 130);
 			this.ControlBox = false;
 			this.Controls.Add(this._overviewLabel);
 			this.Controls.Add(this._progressLabel);
@@ -373,10 +403,12 @@ namespace WeSay.UI
 			this.Controls.Add(this._progressBar);
 			this.Controls.Add(this._statusLabel);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
 			this.Name = "ProgressDialog";
 			this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
+			this.Text = "WeSay";
 			this.Shown += new System.EventHandler(this.OnShow);
 			this.ResumeLayout(false);
 
@@ -384,14 +416,14 @@ namespace WeSay.UI
 		#endregion
 
 
-		private void OnTakingLongTimeTimerClick(object sender, System.EventArgs e)
+		private void OnTakingLongTimeTimerClick(object sender, EventArgs e)
 		{
 			// Show the window now the timer has elapsed, and stop the timer
 			_showWindowIfTakingLongTimeTimer.Stop();
-			this.Show();
+			Show();
 		}
 
-		private void OnCancelButton_Click(object sender, System.EventArgs e)
+		private void OnCancelButton_Click(object sender, EventArgs e)
 		{
 			// Prevent further cancellation
 			_cancelButton.Enabled = false;
@@ -405,7 +437,7 @@ namespace WeSay.UI
 			}
 		}
 
-		private void progressTimer_Tick(object sender, System.EventArgs e)
+		private void progressTimer_Tick(object sender, EventArgs e)
 		{
 			int range = _progressBar.Maximum - _progressBar.Minimum;
 			if( range <= 0 )
@@ -417,7 +449,7 @@ namespace WeSay.UI
 				return;
 			}
 			TimeSpan elapsed = DateTime.Now - _startTime;
-			double estimatedSeconds = (elapsed.TotalSeconds * (double) range) / (double)_progressBar.Value;
+			double estimatedSeconds = (elapsed.TotalSeconds * range) / _progressBar.Value;
 			TimeSpan estimatedToGo = new TimeSpan(0,0,0,(int)(estimatedSeconds - elapsed.TotalSeconds),0);
 //			_progressLabel.Text = String.Format(
 //				System.Globalization.CultureInfo.CurrentUICulture,
@@ -425,7 +457,7 @@ namespace WeSay.UI
 //				GetStringFor(elapsed),
 //				GetStringFor(estimatedToGo) );
 			_progressLabel.Text = String.Format(
-				System.Globalization.CultureInfo.CurrentUICulture,
+				CultureInfo.CurrentUICulture,
 				"{0}",
 				//GetStringFor(elapsed),
 				GetStringFor(estimatedToGo));
@@ -435,43 +467,37 @@ namespace WeSay.UI
 		{
 			if( span.TotalDays > 1 )
 			{
-				return string.Format(System.Globalization.CultureInfo.CurrentUICulture, "{0} day {1} hour", span.Days, span.Hours);
+				return string.Format(CultureInfo.CurrentUICulture, "{0} day {1} hour", span.Days, span.Hours);
 			}
 			else if( span.TotalHours > 1 )
 			{
-				return string.Format(System.Globalization.CultureInfo.CurrentUICulture, "{0} hour {1} min", span.Hours, span.Minutes);
+				return string.Format(CultureInfo.CurrentUICulture, "{0} hour {1} minutes", span.Hours, span.Minutes);
 			}
 			else if( span.TotalMinutes > 1 )
 			{
-				return string.Format(System.Globalization.CultureInfo.CurrentUICulture, "{0} min {1}s", span.Minutes, span.Seconds);
+				return string.Format(CultureInfo.CurrentUICulture, "{0} minutes {1} seconds", span.Minutes, span.Seconds);
 			}
-			return string.Format( System.Globalization.CultureInfo.CurrentUICulture, "{0}s", span.Seconds );
-		}
-
-		private static string GetResourceString( string name )
-		{
-			System.Resources.ResourceManager resourceManager = new System.Resources.ResourceManager( "MultiThreadProgress.Strings", typeof( ProgressDialog ).Assembly );
-			return resourceManager.GetString( name, System.Globalization.CultureInfo.CurrentUICulture );
+			return string.Format( CultureInfo.CurrentUICulture, "{0} seconds", span.Seconds );
 		}
 
 		public void OnNumberOfStepsCompletedChanged(object sender, EventArgs e)
 		{
-			this.Progress = ((ProgressState) sender).NumberOfStepsCompleted;
+			Progress = ((ProgressState) sender).NumberOfStepsCompleted;
 			//in case there is no event pump showing us (mono-threaded)
 			progressTimer_Tick(this, null);
-			this.Refresh();
+			Refresh();
 		}
 
 		public void OnTotalNumberOfStepsChanged(object sender, EventArgs e)
 		{
-			this.ProgressRangeMaximum = ((ProgressState)sender).TotalNumberOfSteps;
-			this.Refresh();
+			ProgressRangeMaximum = ((ProgressState)sender).TotalNumberOfSteps;
+			Refresh();
 		}
 
 		public void OnStatusLabelChanged(object sender, EventArgs e)
 		{
-			this.StatusText = ((ProgressState)sender).StatusLabel;
-			this.Refresh();
+			StatusText = ((ProgressState)sender).StatusLabel;
+			Refresh();
 		}
 
 		private void OnShow(object sender, EventArgs e)
@@ -485,7 +511,7 @@ namespace WeSay.UI
 				ProgressRangeMaximum = 100;
 
 				//if the actual task can't take cancelling, the caller of this should set CanCancel to false;
-				_backgroundWorker.WorkerSupportsCancellation = this.CanCancel;
+				_backgroundWorker.WorkerSupportsCancellation = CanCancel;
 
 				_backgroundWorker.ProgressChanged += new ProgressChangedEventHandler(OnBackgroundWorker_ProgressChanged);
 				_backgroundWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(OnBackgroundWorker_RunWorkerCompleted);
