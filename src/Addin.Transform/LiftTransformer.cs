@@ -10,6 +10,8 @@ namespace Addin.Transform
 {
 	public abstract class LiftTransformer : IWeSayAddin
 	{
+		protected bool _launchAfterTransform=true;
+		private string _pathToOutput;
 		public abstract Image ButtonImage { get;}
 
 
@@ -47,12 +49,29 @@ namespace Addin.Transform
 			}
 		}
 
+		//for unit tests
+		public string PathToOutput
+		{
+			get
+			{
+				return _pathToOutput;
+			}
+		}
+
+		//for unit tests
+		public bool LaunchAfterTransform
+		{
+			set
+			{
+				_launchAfterTransform = value;
+			}
+		}
 
 
 		public abstract void Launch(Form parentForm, ProjectInfo projectInfo);
 
 
-		protected static string TransformLift(ProjectInfo projectInfo, string xsltName, string outputFileSuffix)
+		protected string TransformLift(ProjectInfo projectInfo, string xsltName, string outputFileSuffix)
 		{
 			XslCompiledTransform transform = new XslCompiledTransform();
 
@@ -72,9 +91,9 @@ namespace Addin.Transform
 				xsltReader.Close();
 			}
 
-			string output = Path.Combine(projectInfo.PathToTopLevelDirectory, projectInfo.Name+outputFileSuffix);
-			transform.Transform(projectInfo.PathToLIFT, output);
-			return output;
+			_pathToOutput = Path.Combine(projectInfo.PathToTopLevelDirectory, projectInfo.Name + outputFileSuffix);
+			transform.Transform(projectInfo.PathToLIFT, _pathToOutput);
+			return _pathToOutput;
 		}
 	}
 }

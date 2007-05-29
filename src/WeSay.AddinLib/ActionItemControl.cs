@@ -73,7 +73,7 @@ namespace WeSay.AddinLib
 			{
 				_setupButton.Visible = inAdminMode &&
 					_addin is IWeSayAddinHasSettings &&
-					((IWeSayAddinHasSettings)_addin).SettingsToPersist !=null;
+					((IWeSayAddinHasSettings)_addin).Settings !=null;
 			}
 
 		}
@@ -105,7 +105,7 @@ namespace WeSay.AddinLib
 				return;
 			}
 			IWeSayAddinHasSettings addin = (IWeSayAddinHasSettings)_addin;
-			object existingSettings = addin.SettingsToPersist;
+			object existingSettings = addin.Settings;
 			if (existingSettings == null)
 			{
 				return;  // this class doesn't do settings
@@ -118,7 +118,7 @@ namespace WeSay.AddinLib
 				XmlSerializer x = new XmlSerializer(existingSettings.GetType());
 				using(StringReader r = new StringReader(settings))
 				{
-					addin.SettingsToPersist = x.Deserialize(r);
+					addin.Settings = x.Deserialize(r);
 				}
 			}
 		}
@@ -134,7 +134,7 @@ namespace WeSay.AddinLib
 					return;
 				}
 
-				object settings = addin.SettingsToPersist;
+				object settings = addin.Settings;
 				if (settings == null)
 				{
 					return;

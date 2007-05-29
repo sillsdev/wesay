@@ -45,7 +45,7 @@ namespace WeSay.AddinLib
 	{
 		bool DoShowSettingsDialog(Form parentForm);
 
-		object SettingsToPersist
+		object Settings
 		{
 			get;
 			set;

@@ -261,6 +261,15 @@ namespace WeSay.Project
 			}
 		}
 
+		public  ProjectInfo GetProjectInfoForAddin()
+		{
+			return new ProjectInfo(Name,
+								   ProjectDirectoryPath,
+								   PathToLiftFile,
+								   WeSayWordsProject.GetFilesBelongingToProject(ProjectDirectoryPath),
+								   WeSay.AddinLib.AddinSet.Singleton.LocateFile);
+		}
+
 		private XmlDocument GetConfigurationDoc()
 		{
 			XmlDocument projectDoc = null;

@@ -10,9 +10,9 @@ namespace Addin.Transform
 {
 	public partial class SFMChangesDialog : Form
 	{
-		private Transform.SfmTransformer.SfmTransformSettings _settings;
+		private SfmTransformSettings _settings;
 
-		public SFMChangesDialog(SfmTransformer.SfmTransformSettings settings)
+		public SFMChangesDialog(SfmTransformSettings settings)
 		{
 			_settings = settings;
 			InitializeComponent();
