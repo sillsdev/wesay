@@ -8,9 +8,13 @@ namespace WeSay.AddinLib
 		private string _name;
 		private string[] _filesBelongingToProject;
 
-		public ProjectInfo(string name, string pathToTopLevelDirectory, string pathToLIFT, string[] filesBelongingToProject)
+
+		private FileLocater _locateFile;
+
+		public ProjectInfo(string name, string pathToTopLevelDirectory, string pathToLIFT, string[] filesBelongingToProject, FileLocater locateFile)
 		{
 			_pathToTopLevelDirectory = pathToTopLevelDirectory;
+			_locateFile = locateFile;
 			_filesBelongingToProject = filesBelongingToProject;
 			_name = name;
 			_pathToLIFT = pathToLIFT;
@@ -22,7 +26,7 @@ namespace WeSay.AddinLib
 		/// </summary>
 		public string LocateFile(string fileName)
 		{
-			return Project.WeSayWordsProject.Project.LocateFile(fileName);
+			return _locateFile(fileName);
 		}
 
 		public string PathToLIFT

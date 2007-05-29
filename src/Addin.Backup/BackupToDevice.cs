@@ -1,11 +1,8 @@
 using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 using Mono.Addins;
 using WeSay.AddinLib;
-using WeSay.Project;
 
 namespace Addin.Backup
 {
@@ -13,7 +10,8 @@ namespace Addin.Backup
 	[Extension]
 	public class BackupToDevice : IWeSayAddin//, IWeSayProjectAwareAddin
 	{
-		private WeSayWordsProject _project=null;
+
+		#region IWeSayAddin Members
 
 		public Image ButtonImage
 		{
@@ -24,6 +22,14 @@ namespace Addin.Backup
 		}
 
 		public bool Available
+		{
+			get
+			{
+				return true;
+			}
+		}
+
+		public bool DefaultVisibleInWeSay
 		{
 			get
 			{
@@ -47,46 +53,26 @@ namespace Addin.Backup
 			}
 		}
 
-		#region IWeSayAddin Members
 
-		public object SettingsToPersist
+
+		public string ID
 		{
 			get
 			{
-				return null;
-			}
-			set
-			{
-
-			}
-		}
-
-		public Guid ID
-		{
-			get
-			{
-				throw new NotImplementedException();
+				return "ManualBackupToDevice";
 			}
 			set
 			{
 				throw new NotImplementedException();
 			}
 		}
-
-		#endregion
-
-//        public WeSayWordsProject Project
-//        {
-//            set
-//            {
-//                _project = value;
-//            }
-//        }
 
 		public void Launch(Form parentForm, ProjectInfo projectInfo)
 		{
 			BackupDialog d = new BackupDialog(projectInfo);
 			d.ShowDialog(parentForm);
 		}
+		#endregion
+
 	}
 }

@@ -36,8 +36,7 @@ namespace WeSay.Admin.Tests
 			}
 			finally
 			{
-
-				Directory.Delete(path,true);
+				WeSay.Foundation.Tests.TestUtilities.DeleteFolderThatMayBeInUse(path);
 			}
 		}
 

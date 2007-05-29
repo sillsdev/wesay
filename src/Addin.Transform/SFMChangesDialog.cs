@@ -8,11 +8,11 @@ using System.Windows.Forms;
 
 namespace Addin.Transform
 {
-	public partial class SettingsDialog : Form
+	public partial class SFMChangesDialog : Form
 	{
-		private Transform.TransformLift.TransformSettings _settings;
+		private Transform.SfmTransformer.SfmTransformSettings _settings;
 
-		public SettingsDialog(TransformLift.TransformSettings settings)
+		public SFMChangesDialog(SfmTransformer.SfmTransformSettings settings)
 		{
 			_settings = settings;
 			InitializeComponent();

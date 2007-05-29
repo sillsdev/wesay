@@ -11,7 +11,7 @@ namespace WeSay.AddinLib
 	{
 		private string _name;
 		private string _shortDescription;
-		private Guid _id;
+		private readonly Image _buttonImage=null;
 
 		public ComingSomedayAddin(string name, string shortDescription)
 		{
@@ -19,11 +19,18 @@ namespace WeSay.AddinLib
 			_shortDescription = shortDescription;
 		}
 
+		public ComingSomedayAddin(string name, string shortDescription, Image buttonImage)
+		{
+			_name = name;
+			_shortDescription = shortDescription;
+			_buttonImage = buttonImage;
+		}
+
 		public Image ButtonImage
 		{
 			get
 			{
-				return null;
+				return _buttonImage;
 			}
 		}
 
@@ -31,9 +38,21 @@ namespace WeSay.AddinLib
 		{
 			get
 			{
+				return true;
+			}
+		}
+
+		#region IWeSayAddin Members
+
+		public bool DefaultVisibleInWeSay
+		{
+			get
+			{
 				return false;
 			}
 		}
+
+		#endregion
 
 		public string Name
 		{
@@ -47,7 +66,7 @@ namespace WeSay.AddinLib
 		{
 			get
 			{
-				return "Coming Someday: "+_shortDescription;
+				return /*"Coming Someday: "+*/_shortDescription;
 			}
 		}
 
@@ -65,15 +84,15 @@ namespace WeSay.AddinLib
 			}
 		}
 
-		public Guid ID
+		public string ID
 		{
 			get
 			{
-				return _id;
+				return _name;
 			}
 			set
 			{
-				_id = value;
+				throw new NotImplementedException();
 			}
 		}
 

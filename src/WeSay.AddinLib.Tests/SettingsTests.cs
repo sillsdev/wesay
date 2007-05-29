@@ -23,24 +23,24 @@ namespace WeSay.AddinLib.Tests
 
 		}
 
-		[Test]
-		public void Test()
-		{
-				Addin.Transform.TransformLift t = new Addin.Transform.TransformLift();
-			object settings = t.SettingsToPersist;
-			XmlSerializer x = new XmlSerializer( settings.GetType());
-			using(XmlWriter w = XmlWriter.Create("test.txt"))
-			{
-				x.Serialize(w, settings);
-			}
-
-			using (XmlReader r = XmlReader.Create("test.txt"))
-			{
-				Addin.Transform.TransformLift t2 = new Addin.Transform.TransformLift();
-				t2.SettingsToPersist = x.Deserialize(r);
-
-			}
-		}
+//        [Test]
+//        public void Test()
+//        {
+//                Addin.Transform.LiftTransformer t = new Addin.Transform.LiftTransformer();
+//            object settings = t.SettingsToPersist;
+//            XmlSerializer x = new XmlSerializer( settings.GetType());
+//            using(XmlWriter w = XmlWriter.Create("test.txt"))
+//            {
+//                x.Serialize(w, settings);
+//            }
+//
+//            using (XmlReader r = XmlReader.Create("test.txt"))
+//            {
+//                Addin.Transform.LiftTransformer t2 = new Addin.Transform.LiftTransformer();
+//                t2.SettingsToPersist = x.Deserialize(r);
+//
+//            }
+//        }
 
 	}
 

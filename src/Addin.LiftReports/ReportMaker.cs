@@ -20,6 +20,14 @@ namespace Addin.LiftReports
 			}
 		}
 
+		public bool DefaultVisibleInWeSay
+		{
+			get
+			{
+				return true;
+			}
+		}
+
 		public bool Available
 		{
 			get
@@ -58,15 +66,11 @@ namespace Addin.LiftReports
 			}
 		}
 
-		public Guid ID
+		public string ID
 		{
 			get
 			{
-				return _id;
-			}
-			set
-			{
-				_id = value;
+				return "ReportMaker";
 			}
 		}
 

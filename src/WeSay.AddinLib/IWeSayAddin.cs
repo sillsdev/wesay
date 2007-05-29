@@ -11,12 +11,17 @@ namespace WeSay.AddinLib
 //        bool EditSettings();
 //    }
 
+	public delegate string FileLocater(string fileName);
+
 	[TypeExtensionPoint]
 	public interface IWeSayAddin
 	{
+
 		Image ButtonImage { get;}
 
 		bool Available { get;}
+
+		bool DefaultVisibleInWeSay { get; }
 
 		string Name
 		{
@@ -24,6 +29,11 @@ namespace WeSay.AddinLib
 		}
 
 		string ShortDescription
+		{
+			get;
+		}
+
+		String ID
 		{
 			get;
 		}
@@ -41,11 +51,6 @@ namespace WeSay.AddinLib
 			set;
 		}
 
-		Guid ID
-		{
-			get;
-			set;
-		}
 	}
 
 //    public interface IWeSayProjectAwareAddin

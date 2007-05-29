@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Xml;
 using Reporting;
+using WeSay.AddinLib;
 using WeSay.Foundation;
 using WeSay.Language;
 using WeSay.LexicalModel;
@@ -23,11 +24,12 @@ namespace WeSay.Project
 		private string _cacheLocationOverride;
 		private FileStream _liftFileStreamForLocking;
 		private LiftUpdateService _liftUpdateService;
-		private Dictionary<Guid, string> _addinSettings =new Dictionary<Guid,string>();
 		public event EventHandler HackedEditorsSaveNow;
+		private WeSay.AddinLib.AddinSet _addins;
 
 		public WeSayWordsProject()
 		{
+			_addins = AddinSet.Create(GetAddinNodes,LocateFile);
 			_optionLists = new Dictionary<string, OptionsList>();
 		}
 
@@ -240,6 +242,24 @@ namespace WeSay.Project
 			return _viewTemplates;
 		}
 
+		public XmlNodeList GetAddinNodes()
+		{
+			try
+			{
+				XmlDocument configDoc = GetConfigurationDoc();
+				if (configDoc != null)
+				{
+					return configDoc.SelectNodes("tasks/addins/addin");
+				}
+				return null;
+			}
+			catch (Exception error)
+			{
+				Reporting.ErrorReporter.ReportNonFatalMessage(
+					"There was a problem reading the addins-settings xml. {0}", error.Message);
+				return null;
+			}
+		}
 
 		private XmlDocument GetConfigurationDoc()
 		{
@@ -558,8 +578,17 @@ namespace WeSay.Project
 			}
 		}
 
+		public AddinSet Addins
+		{
+			get
+			{
+				return _addins;
+			}
+		}
+
 		public override void Save()
 		{
+			_addins.InitializeIfNeeded(); // must be done before locking file for writing
 
 			base.Save();
 
@@ -575,71 +604,12 @@ namespace WeSay.Project
 				HackedEditorsSaveNow.Invoke(writer, null);
 			}
 
-			SaveAddinSettings(writer);
+			_addins.Save(writer);
 
 			writer.WriteEndDocument();
 			writer.Close();
 		}
 
-
-		public string GetSettingsXmlForAddin(Guid id)
-		{
-			if (_addinSettings.Count == 0)
-			{
-				LoadSettingsForAddins();
-			}
-			string settings;
-			_addinSettings.TryGetValue(id, out settings);
-			return settings;
-		}
-
-		public void SetSettingsForAddin(Guid id, string settingsXml)
-		{
-			if (_addinSettings.ContainsKey(id))
-			{
-				_addinSettings.Remove(id);
-			}
-			_addinSettings.Add(id, settingsXml);
-		}
-
-		private void LoadSettingsForAddins()
-		{
-			try
-			{
-				_addinSettings.Clear();
-				XmlDocument configDoc = GetConfigurationDoc();
-				if (configDoc != null)
-				{
-					XmlNodeList nodes = configDoc.SelectNodes("tasks/addins/addin");
-					foreach (XmlNode node in nodes)
-					{
-						string  sid= XmlUtils.GetManditoryAttributeValue(node,"id");
-						Guid id = new Guid(sid);
-						string contents = node.InnerXml;
-						_addinSettings.Add(id, contents);
-					}
-				}
-			}
-			catch (Exception error)
-			{
-				Reporting.ErrorReporter.ReportNonFatalMessage(
-					"There was a problem reading the addins-settings xml. {0}",error.Message);
-			}
-		}
-
-		private void SaveAddinSettings(XmlWriter writer)
-		{
-			writer.WriteStartElement("addins");
-
-			foreach (KeyValuePair<Guid, string> pair in _addinSettings)
-			{
-				writer.WriteStartElement("addin");
-				writer.WriteAttributeString("id", pair.Key.ToString());
-				writer.WriteRaw(pair.Value);
-				writer.WriteEndElement();
-			}
-			writer.WriteEndElement();
-		}
 		public OptionsList GetOptionsList(Field field)
 		{
 			if (String.IsNullOrEmpty(field.OptionsListFile))

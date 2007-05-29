@@ -59,5 +59,19 @@ namespace WeSay.CommonTools.Properties {
 				resourceCulture = value;
 			}
 		}
+
+		internal static System.Drawing.Bitmap emailAction {
+			get {
+				object obj = ResourceManager.GetObject("emailAction", resourceCulture);
+				return ((System.Drawing.Bitmap)(obj));
+			}
+		}
+
+		internal static System.Drawing.Bitmap printAction {
+			get {
+				object obj = ResourceManager.GetObject("printAction", resourceCulture);
+				return ((System.Drawing.Bitmap)(obj));
+			}
+		}
 	}
 }

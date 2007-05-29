@@ -76,19 +76,23 @@ namespace WeSay.Setup
 		private void AddAddin(IWeSayAddin addin)
 		{
 			ActionItemControl control = new ActionItemControl(addin, true);
+			control.DoShowInWeSay = AddinSet.Singleton.DoShowInWeSay(addin.ID);
 			_addinsList.AddControlToBottom(control);
 			control.Launch += new EventHandler(OnLaunchAction);
 		}
 
 		void OnLaunchAction(object sender, EventArgs e)
 		{
+
 			IWeSayAddin addin = sender as IWeSayAddin;
 
 			WeSayWordsProject project = Project.WeSayWordsProject.Project;
+			string[] filesBelongingToProject = WeSayWordsProject.GetFilesBelongingToProject(project.ProjectDirectoryPath);
 			ProjectInfo projectInfo = new ProjectInfo(project.Name,
 										 project.ProjectDirectoryPath,
 										 project.PathToLiftFile,
-										 WeSayWordsProject.GetFilesBelongingToProject(project.ProjectDirectoryPath));
+										 filesBelongingToProject,
+										 WeSay.AddinLib.AddinSet.Singleton.LocateFile);
 
 			try
 			{
@@ -120,46 +124,5 @@ namespace WeSay.Setup
 			Reporting.Logger.WriteEvent("Addin loaded: {0}", args.AddinId);
 		}
 
-//        protected IWeSayAddin CurrentAddin
-//        {
-//            get
-//            {
-//                if (_listView.SelectedItems != null && _listView.SelectedItems.Count == 1)
-//                {
-//                    IWeSayAddin addin= _listView.SelectedItems[0].Tag as IWeSayAddin;
-//                    if (addin.Available)
-//                        return addin;
-//                    else return null;
-//                }
-//                return null;
-//            }
-//        }
-//
-//
-//        private void OnLaunch(object sender, EventArgs e)
-//        {
-//            if (CurrentAddin == null)
-//                return;
-//
-//            try
-//            {
-//                CurrentAddin.Launch(Project.WeSayWordsProject.Project.ProjectDirectoryPath,
-//                                    Project.WeSayWordsProject.Project.PathToLiftFile);
-//            }
-//            catch(Exception err)
-//            {
-//                Reporting.ErrorReporter.ReportNonFatalMessage(err.Message);
-//            }
-//        }
-//
-//        private void OnListView_SelectedIndexChanged(object sender, EventArgs e)
-//        {
-//            UpdateStatesOfThings();
-//        }
-//
-//        private void UpdateStatesOfThings()
-//        {
-//          //  _launchButton.Enabled = (CurrentAddin != null);
-//        }
 	}
 }

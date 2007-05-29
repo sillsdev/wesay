@@ -15,21 +15,44 @@ namespace WeSay.AddinLib
 	public partial class ActionItemControl : UserControl//, IControlForListBox
 	{
 		private IWeSayAddin _addin;
+		private bool _inAdminMode;
+	   // private bool _showInWeSay;
 		public event EventHandler Launch;
 
-		public ActionItemControl(bool inAdminMode)
+//        public ActionItemControl(bool inAdminMode)
+//        {
+//            _inAdminMode = inAdminMode;
+//            InitializeComponent();
+//            UpdateVisualThings();
+//            _toggleShowInWeSay.Visible = inAdminMode;
+//            _setupButton.Visible = inAdminMode;
+//        }
+
+		public bool DoShowInWeSay
 		{
-			InitializeComponent();
-			_setupButton.Visible = inAdminMode;
+			get
+			{
+				return AddinSet.Singleton.DoShowInWeSay(_addin.ID);
+			}
+			set
+			{
+				AddinSet.Singleton.SetDoShowInWeSay(_addin.ID,value);
+			}
 		}
 
 		private static bool ReturnFalse()
 		{
 			return false;
 		}
-		public ActionItemControl(IWeSayAddin addin, bool inAdminMode) : this(inAdminMode)
+		public ActionItemControl(IWeSayAddin addin, bool inAdminMode)
 		{
 			_addin = addin;
+			_inAdminMode = inAdminMode;
+			InitializeComponent();
+			UpdateVisualThings();
+			_toggleShowInWeSay.Visible = inAdminMode;
+			_setupButton.Visible = inAdminMode;
+
 			_actionName.Text = addin.Name;
 			_description.Text = addin.ShortDescription;
 			if (addin.ButtonImage != null)
@@ -89,7 +112,7 @@ namespace WeSay.AddinLib
 			}
 
 			//this is not necessarily the right place for this deserialization to be happening
-			string settings = Project.WeSayWordsProject.Project.GetSettingsXmlForAddin(addin.ID);
+			string settings = AddinSet.Singleton.GetSettingsXmlForAddin(_addin.ID);
 			if (!String.IsNullOrEmpty(settings))
 			{
 				XmlSerializer x = new XmlSerializer(existingSettings.GetType());
@@ -130,7 +153,7 @@ namespace WeSay.AddinLib
 					}
 					string settingsXml = builder.ToString();
 					stringWriter.Close();
-					Project.WeSayWordsProject.Project.SetSettingsForAddin(addin.ID, settingsXml);
+					AddinSet.Singleton.SetSettingsForAddin(((IWeSayAddin)addin).ID, settingsXml);
 				}
 			}
 			catch (Exception error)
@@ -138,6 +161,30 @@ namespace WeSay.AddinLib
 				Reporting.ErrorReporter.ReportNonFatalMessage("Sorry, WeSay had a problem storing those settings. {0}",
 															  error.Message);
 			}
+
+		}
+		private void UpdateVisualThings()
+		{
+			if (_inAdminMode && !DoShowInWeSay)
+			{
+				_toggleShowInWeSay.Text = "Not In WeSay";
+				_toolTip.SetToolTip(_toggleShowInWeSay, "Click to make this action in available within WeSay.");
+//                e.Graphics.DrawLine(Pens.Red, new Point(0,0), new Point(_toggleShowInWeSay.Width,_toggleShowInWeSay.Height));
+//                e.Graphics.DrawLine(Pens.Red, new Point(0, _toggleShowInWeSay.Height), new Point(_toggleShowInWeSay.Width, 0));
+			}
+			else
+			{
+				_toggleShowInWeSay.Text = "Visible In WeSay";
+				_toolTip.SetToolTip(_toggleShowInWeSay, "Click to make this action in unavailable within WeSay.");
+			}
+		}
+
+
+		private void _toggleShowInWeSay_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+		{
+			DoShowInWeSay = !DoShowInWeSay;
+			UpdateVisualThings();
+			//_toggleShowInWeSay.Invalidate();
 
 		}
 

@@ -66,5 +66,12 @@ namespace WeSay.AddinLib.Properties {
 				return ((System.Drawing.Bitmap)(obj));
 			}
 		}
+
+		internal static System.Drawing.Bitmap ShowInWeSay {
+			get {
+				object obj = ResourceManager.GetObject("ShowInWeSay", resourceCulture);
+				return ((System.Drawing.Bitmap)(obj));
+			}
+		}
 	}
 }

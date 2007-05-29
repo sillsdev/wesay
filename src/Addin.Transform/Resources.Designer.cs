@@ -60,9 +60,16 @@ namespace Addin.Transform {
 			}
 		}
 
-		internal static System.Drawing.Bitmap buttonImage {
+		internal static System.Drawing.Bitmap printButtonImage {
 			get {
-				object obj = ResourceManager.GetObject("buttonImage", resourceCulture);
+				object obj = ResourceManager.GetObject("printButtonImage", resourceCulture);
+				return ((System.Drawing.Bitmap)(obj));
+			}
+		}
+
+		internal static System.Drawing.Bitmap SfmTransformerButtonImage {
+			get {
+				object obj = ResourceManager.GetObject("SfmTransformerButtonImage", resourceCulture);
 				return ((System.Drawing.Bitmap)(obj));
 			}
 		}

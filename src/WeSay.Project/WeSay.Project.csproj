@@ -73,6 +73,10 @@
 	  <Project>{9CCBECEC-513C-4DA4-A4CE-F5361B633760}</Project>
 	  <Name>Reporting</Name>
 	</ProjectReference>
+	<ProjectReference Include="..\WeSay.AddinLib\WeSay.AddinLib.csproj">
+	  <Project>{E651E83C-94DD-4D6D-ABA2-C9FDA34FBA55}</Project>
+	  <Name>WeSay.AddinLib</Name>
+	</ProjectReference>
 	<ProjectReference Include="..\WeSay.Data\WeSay.Data.csproj">
 	  <Project>{600D0FD4-D189-41A0-9BC5-FC79AD2CF1CD}</Project>
 	  <Name>WeSay.Data</Name>
