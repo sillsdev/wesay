@@ -12,8 +12,8 @@
 		<Component Id="SemanticDomains.xml" Guid="{0D314BE5-ABB3-4AB9-A698-F94FFA8B250C}">
 		  <File Id="SemanticDomains.xml" Name="SemanticDomains.xml" KeyPath="yes" Source="..\..\common\SemanticDomains.xml" />
 		</Component>
-		<Component Id="taskInventory.xml" Guid="{4D0210A0-095D-48DE-9367-4074A97864A4}">
-		  <File Id="taskInventory.xml" Name="taskInventory.xml" KeyPath="yes" Source="..\..\common\taskInventory.xml" />
+		<Component Id="default.WeSayConfig" Guid="{4D0210A0-095D-48DE-9399-4074A97864A4}">
+		  <File Id="default.WeSayConfig" Name="default.WeSayConfig" KeyPath="yes" Source="..\..\common\default.WeSayConfig" />
 		</Component>
 		<Component Id="CommonWritingSystemPrefs.xml" Guid="{2D64A565-57BC-4D0C-BAAF-13AB5A686E9B}">
 		  <File Id="CommonwritingSystemPrefs.xml" Name="writingSystemPrefs.xml" KeyPath="yes" Source="..\..\common\writingSystemPrefs.xml" />
@@ -36,7 +36,7 @@
 	  <ComponentRef Id="PartsOfSpeech.xml" />
 	  <ComponentRef Id="sampleWordList.txt" />
 	  <ComponentRef Id="SemanticDomains.xml" />
-	  <ComponentRef Id="taskInventory.xml" />
+	  <ComponentRef Id="default.WeSayConfig" />
 	  <ComponentRef Id="CommonWritingSystemPrefs.xml" />
 	</FeatureRef>
 
