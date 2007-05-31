@@ -60,9 +60,16 @@ namespace Addin.Backup {
 			}
 		}
 
-		internal static System.Drawing.Bitmap buttonImage {
+		internal static System.Drawing.Bitmap backupToDeviceImage {
 			get {
-				object obj = ResourceManager.GetObject("buttonImage", resourceCulture);
+				object obj = ResourceManager.GetObject("backupToDeviceImage", resourceCulture);
+				return ((System.Drawing.Bitmap)(obj));
+			}
+		}
+
+		internal static System.Drawing.Bitmap emailProjectImage {
+			get {
+				object obj = ResourceManager.GetObject("emailProjectImage", resourceCulture);
 				return ((System.Drawing.Bitmap)(obj));
 			}
 		}

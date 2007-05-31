@@ -62,7 +62,10 @@ namespace WeSay.UI
 			{
 				System.Diagnostics.Process.GetCurrentProcess().Kill();
 			}
-
+			if (e.KeyCode == Keys.Pause && (e.Alt))
+			{
+				throw new ApplicationException("User-invoked test crash.");
+			}
 		}
 
 

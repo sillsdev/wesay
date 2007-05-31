@@ -17,7 +17,7 @@ namespace Addin.Backup
 		{
 			get
 			{
-				return Resources.buttonImage;
+				return Resources.backupToDeviceImage;
 			}
 		}
 

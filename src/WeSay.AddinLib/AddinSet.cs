@@ -102,6 +102,7 @@ namespace WeSay.AddinLib
 			{
 				foreach (XPathNavigator node in nodes)
 				{
+
 					string sid = XmlUtils.GetManditoryAttributeValue(node, "id");
 					// Guid id = new Guid(sid);
 					SetDoShowInWeSay(sid, XmlUtils.GetBooleanAttributeValue(node, "showInWeSay"));

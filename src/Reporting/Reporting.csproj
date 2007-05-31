@@ -92,6 +92,7 @@
 	<Reference Include="System.Drawing">
 	  <Name>System.Drawing</Name>
 	</Reference>
+	<Reference Include="System.Web" />
 	<Reference Include="System.Windows.Forms">
 	  <Name>System.Windows.Forms</Name>
 	</Reference>
@@ -100,8 +101,13 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
+	<None Include="app.config" />
 	<None Include="AssemblyInfo.cs">
 	  <SubType>Code</SubType>
+	</None>
+	<None Include="ReportingSetting.settings">
+	  <Generator>SettingsSingleFileGenerator</Generator>
+	  <LastGenOutput>ReportingSetting.Designer.cs</LastGenOutput>
 	</None>
 	<Compile Include="ConfigurationException.cs" />
 	<Compile Include="EmailMessage.cs" />
@@ -119,11 +125,24 @@
 	<Compile Include="Logger.cs">
 	  <SubType>Code</SubType>
 	</Compile>
+	<Compile Include="Reporter.cs" />
+	<Compile Include="ReportingSetting.Designer.cs">
+	  <AutoGen>True</AutoGen>
+	  <DesignTimeSharedInput>True</DesignTimeSharedInput>
+	  <DependentUpon>ReportingSetting.settings</DependentUpon>
+	</Compile>
 	<Compile Include="ReportingStrings.Designer.cs">
 	  <AutoGen>True</AutoGen>
 	  <DesignTime>True</DesignTime>
 	  <DependentUpon>ReportingStrings.resx</DependentUpon>
 	</Compile>
+	<Compile Include="RequestUserIdentifier.cs">
+	  <SubType>Form</SubType>
+	</Compile>
+	<Compile Include="RequestUserIdentifier.Designer.cs">
+	  <DependentUpon>RequestUserIdentifier.cs</DependentUpon>
+	</Compile>
+	<Compile Include="SendFileTo.cs" />
 	<Compile Include="UsageEmailDialog.cs">
 	  <SubType>Form</SubType>
 	</Compile>
@@ -135,6 +154,10 @@
 	  <SubType>Designer</SubType>
 	  <Generator>ResXFileCodeGenerator</Generator>
 	  <LastGenOutput>ReportingStrings.Designer.cs</LastGenOutput>
+	</EmbeddedResource>
+	<EmbeddedResource Include="RequestUserIdentifier.resx">
+	  <SubType>Designer</SubType>
+	  <DependentUpon>RequestUserIdentifier.cs</DependentUpon>
 	</EmbeddedResource>
 	<EmbeddedResource Include="UsageEmailDialog.resx">
 	  <DependentUpon>UsageEmailDialog.cs</DependentUpon>

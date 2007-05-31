@@ -49,12 +49,9 @@ namespace WeSay.AddinLib
 			_addin = addin;
 			_inAdminMode = inAdminMode;
 			InitializeComponent();
-			UpdateVisualThings();
 			_toggleShowInWeSay.Visible = inAdminMode;
 			_setupButton.Visible = inAdminMode;
 
-			_actionName.Text = addin.Name;
-			_description.Text = addin.ShortDescription;
 			if (addin.ButtonImage != null)
 			{
 				//review: will these be disposed when the button is disposed?
@@ -62,21 +59,21 @@ namespace WeSay.AddinLib
 					addin.ButtonImage.GetThumbnailImage(_launchButton.Width-10, _launchButton.Height-10, ReturnFalse,
 														IntPtr.Zero);
 			}
-			if (!addin.Available)
-			{
-				_setupButton.Visible = false;
-				_actionName.ForeColor = System.Drawing.Color.Gray;
-				_description.ForeColor = System.Drawing.Color.Gray;
-				_launchButton.Enabled = false;
-			}
-			else
-			{
-				_setupButton.Visible = inAdminMode &&
-					_addin is IWeSayAddinHasSettings &&
-					((IWeSayAddinHasSettings)_addin).Settings !=null;
-			}
+			LoadSettings();
+
+			 UpdateVisualThings();
+
+			//nb: we do want to show the setup, even if the addin says unavailable.
+			//Maybe that's *why it's unavailable*.. it may need to be set up first.
+
+			_setupButton.Visible = inAdminMode &&
+				_addin is IWeSayAddinHasSettings &&
+				((IWeSayAddinHasSettings)_addin).Settings !=null;
+
 
 		}
+
+
 
 		public void Draw(Graphics graphics, Rectangle bounds)
 		{
@@ -93,7 +90,6 @@ namespace WeSay.AddinLib
 		{
 			if (Launch != null)
 			{
-				LoadSettings();
 				Launch.Invoke(_addin,null);
 			}
 		}
@@ -162,9 +158,14 @@ namespace WeSay.AddinLib
 															  error.Message);
 			}
 
+			UpdateVisualThings();
 		}
 		private void UpdateVisualThings()
 		{
+			UpdateEnabledStates();
+			_actionName.Text = _addin.Name;
+			_description.Text = _addin.ShortDescription;
+
 			if (_inAdminMode && !DoShowInWeSay)
 			{
 				_toggleShowInWeSay.Text = "Not In WeSay";
@@ -179,6 +180,21 @@ namespace WeSay.AddinLib
 			}
 		}
 
+		private void UpdateEnabledStates()
+		{
+			if (!_addin.Available)
+			{
+				_actionName.ForeColor = System.Drawing.Color.Gray;
+				_description.ForeColor = System.Drawing.Color.Gray;
+				_launchButton.Enabled = false;
+			}
+			else
+			{
+				_actionName.ForeColor = System.Drawing.SystemColors.WindowText;
+				_description.ForeColor = System.Drawing.SystemColors.WindowText;
+				_launchButton.Enabled = true;
+			}
+		}
 
 		private void _toggleShowInWeSay_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
 		{

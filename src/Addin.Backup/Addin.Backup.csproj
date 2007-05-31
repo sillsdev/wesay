@@ -53,6 +53,13 @@
 	  <DesignTime>True</DesignTime>
 	  <DependentUpon>Resources.resx</DependentUpon>
 	</Compile>
+	<Compile Include="SendProjectEmail.cs" />
+	<Compile Include="SendProjectEmailSettingsDialog.cs">
+	  <SubType>Form</SubType>
+	</Compile>
+	<Compile Include="SendProjectEmailSettingsDialog.Designer.cs">
+	  <DependentUpon>SendProjectEmailSettingsDialog.cs</DependentUpon>
+	</Compile>
   </ItemGroup>
   <ItemGroup>
 	<ProjectReference Include="..\Reporting\Reporting.csproj">
@@ -82,9 +89,16 @@
 	  <Generator>ResXFileCodeGenerator</Generator>
 	  <LastGenOutput>Resources.Designer.cs</LastGenOutput>
 	</EmbeddedResource>
+	<EmbeddedResource Include="SendProjectEmailSettingsDialog.resx">
+	  <SubType>Designer</SubType>
+	  <DependentUpon>SendProjectEmailSettingsDialog.cs</DependentUpon>
+	</EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
 	<None Include="buttonImage.png" />
+  </ItemGroup>
+  <ItemGroup>
+	<None Include="Resources\emailAction.png" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

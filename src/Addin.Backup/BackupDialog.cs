@@ -24,7 +24,7 @@ namespace Addin.Backup
 			//_project = _project ;
 			InitializeComponent();
 			_topLabel.Text = "Looking for USB Keys...";
-			pictureBox1.Image = Resources.buttonImage;
+			pictureBox1.Image = Resources.backupToDeviceImage;
 		}
 
 

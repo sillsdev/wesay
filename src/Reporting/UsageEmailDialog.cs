@@ -26,7 +26,7 @@ namespace Reporting
 		/// </summary>
 		private Container components = null;
 
-		private UsageEmailDialog()
+		internal UsageEmailDialog()
 		{
 			//
 			// Required for Windows Form Designer support
@@ -233,138 +233,6 @@ namespace Reporting
 		}
 
 
-		/// <summary>
-		/// call this each time the application is launched if you have launch count-based reporting
-		/// </summary>
-		public static void IncrementLaunchCount()
-		{
-			int launchCount = 1 + int.Parse(RegistryAccess.GetStringRegistryValue("launches","0"));
-			RegistryAccess.SetStringRegistryValue("launches",launchCount.ToString());
-		}
-
-		/// <summary>
-		/// used for testing purposes
-		/// </summary>
-		public static void ClearLaunchCount()
-		{
-			RegistryAccess.SetStringRegistryValue("launches","0");
-		}
-
-
-		/// <summary>
-		/// if you call this every time the application starts, it will send reports on those intervals
-		/// (e.g. {1, 10}) that are listed in the intervals parameter.  It will get version number and name out of the application.
-		/// </summary>
-		public static void DoTrivialUsageReport(string emailAddress, string topMessage, int[] intervals)
-		{
-			int launchCount = int.Parse(RegistryAccess.GetStringRegistryValue("launches","0"));
-
-			foreach(int launch in intervals)
-			{
-				if (launch == launchCount)
-				{
-					SendReport(emailAddress, launchCount, topMessage);
-					break;
-				}
-			}
-		}
-
-		private static void SendReport(string emailAddress, int launchCount, string topMessage)
-		{
-			// Set the Application label to the name of the app
-			Assembly assembly = Assembly.GetEntryAssembly();
-			string version = Application.ProductVersion;
-			if (assembly != null)
-			{
-				object[] attributes = assembly.GetCustomAttributes(typeof(AssemblyFileVersionAttribute), false);
-				version = (attributes != null && attributes.Length > 0) ?
-						  ((AssemblyFileVersionAttribute)attributes[0]).Version : Application.ProductVersion;
-			}
-
-			using (UsageEmailDialog d = new UsageEmailDialog())
-			{
-				d.TopLineText = topMessage;
-				d.EmailMessage.Address = emailAddress;
-				d.EmailMessage.Subject = string.Format("{0} {1} Report {2} Launches", Application.ProductName, version, launchCount);
-				d.EmailMessage.Body = string.Format("app={0} version={1} launches={2}", Application.ProductName, version, launchCount);
-				d.ShowDialog();
-			}
-		}
-
-		/// <summary>
-		/// A class for managing registry access.
-		/// </summary>
-		public class RegistryAccess
-		{
-			private const string SOFTWARE_KEY = "Software";
-//			private static string s_company;
-//			private static string s_application;
-//
-//			static Application App
-//			{
-//				set
-//				{
-//					s_company = Application.CompanyName;
-//
-//				}
-//			}
-			// Method for retrieving a Registry Value.
-			static public string GetStringRegistryValue(string key, string defaultValue)
-			{
-				RegistryKey rkCompany;
-				RegistryKey rkApplication;
-				//RegistryKey rkFieldWorks;
-
-				// The generic Company Name is SIL International, but in the registry we want this to use
-				// SIL. If we want to keep a generic approach, we probably need another member variable
-				// for ShortCompanyName, or something similar.
-				rkCompany = Registry.CurrentUser.OpenSubKey(SOFTWARE_KEY, false).OpenSubKey(Application.CompanyName, false);
-				//rkCompany = Registry.CurrentUser.OpenSubKey(SOFTWARE_KEY, false).OpenSubKey("SIL", false);
-				if( rkCompany != null )
-				{
-//					rkFieldWorks = rkCompany.OpenSubKey("FieldWorks", false);
-//					if( rkFieldWorks != null)
-//					{
-//						rkApplication = rkFieldWorks.OpenSubKey( Application.ProductName, false);
-						rkApplication = rkCompany.OpenSubKey( Application.ProductName, false);
-						if( rkApplication != null )
-						{
-							foreach(string sKey in rkApplication.GetValueNames())
-							{
-								if( sKey == key )
-								{
-									return (string)rkApplication.GetValue(sKey);
-								}
-							}
-//						}
-					}
-				}
-				return defaultValue;
-			}
-
-			// Method for storing a Registry Value.
-			static public void SetStringRegistryValue(string key, string stringValue)
-			{
-				RegistryKey rkSoftware;
-				RegistryKey rkCompany;
-				RegistryKey rkApplication;
-
-				rkSoftware = Registry.CurrentUser.OpenSubKey(SOFTWARE_KEY, true);
-				// The generic Company Name is SIL International, but in the registry we want this to use
-				// SIL. If we want to keep a generic approach, we probably need another member variable
-				// for ShortCompanyName, or something similar.
-				rkCompany = rkSoftware.CreateSubKey(Application.CompanyName);
-				//rkCompany = rkSoftware.CreateSubKey("SIL");
-				if( rkCompany != null )
-				{
-						rkApplication = rkCompany.CreateSubKey(Application.ProductName);
-						if( rkApplication != null )
-						{
-							rkApplication.SetValue(key, stringValue);
-						}
-				}
-			}
-		}
 
 
 

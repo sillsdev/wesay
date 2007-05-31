@@ -202,7 +202,7 @@ namespace WeSay.Foundation
 		{
 			if (node != null && node.HasAttributes)
 			{
-				string s = node.GetAttribute(attrName,null);
+				string s = node.GetAttribute(attrName, string.Empty);
 				if (!string.IsNullOrEmpty(s))
 					return s;
 			}

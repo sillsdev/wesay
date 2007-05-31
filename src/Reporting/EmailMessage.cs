@@ -10,6 +10,7 @@ namespace Reporting
 		private string _body= "";
 		protected string _address = "";
 		protected string _subject = "";
+	  //  private string _attachmentPath;
 
 		public void Send()
 		{
@@ -64,5 +65,12 @@ namespace Reporting
 			}
 		}
 
+//        public string AttachmentPath
+//        {
+//            set
+//            {
+//                _attachmentPath = value;
+//            }
+//        }
 	}
 }

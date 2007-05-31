@@ -29,8 +29,8 @@ namespace WeSay.Setup
 				Properties.Settings.Default.NeedUpgrade = false;
 			}
 
-			Reporting.UsageEmailDialog.IncrementLaunchCount();
-			Reporting.UsageEmailDialog.DoTrivialUsageReport("usage@wesay.org", "Thank you for helping us test WeSay!", new int[] { 1, 5, 20, 40, 60, 80, 100 });
+			Reporting.Reporter.RecordLaunch();
+			Reporting.Reporter.DoTrivialUsageReport("usage@wesay.org", "Thank you for helping us test WeSay!", new int[] { 1, 5, 20, 40, 60, 80, 100 });
 
 			Application.Run(new AdminWindow(args));
 

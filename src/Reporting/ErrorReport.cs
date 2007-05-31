@@ -23,9 +23,7 @@ namespace Reporting
 		#region Member variables
 		private Label label2;
 		private Label label3;
-		private Label label1;
 		private TextBox m_details;
-		private RadioButton radSelf;
 		private TextBox m_notification;
 		private TextBox m_reproduce;
 		private Label labelAttemptToContinue;
@@ -43,7 +41,6 @@ namespace Reporting
 
 		protected static bool s_isOkToInteractWithUser = true;
 		private Button btnClose;
-		private RadioButton radEmail;
 		private static bool s_fIgnoreReport = false;
 		#endregion
 
@@ -117,14 +114,11 @@ namespace Reporting
 		/// </summary>
 		private void InitializeComponent()
 		{
-			System.Resources.ResourceManager resources = new System.Resources.ResourceManager(typeof(ErrorReporter));
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ErrorReporter));
 			this.label2 = new System.Windows.Forms.Label();
 			this.m_reproduce = new System.Windows.Forms.TextBox();
 			this.label3 = new System.Windows.Forms.Label();
-			this.radEmail = new System.Windows.Forms.RadioButton();
 			this.m_details = new System.Windows.Forms.TextBox();
-			this.label1 = new System.Windows.Forms.Label();
-			this.radSelf = new System.Windows.Forms.RadioButton();
 			this.btnClose = new System.Windows.Forms.Button();
 			this.m_notification = new System.Windows.Forms.TextBox();
 			this.labelAttemptToContinue = new System.Windows.Forms.Label();
@@ -132,266 +126,56 @@ namespace Reporting
 			//
 			// label2
 			//
-			this.label2.AccessibleDescription = resources.GetString("label2.AccessibleDescription");
-			this.label2.AccessibleName = resources.GetString("label2.AccessibleName");
-			this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("label2.Anchor")));
-			this.label2.AutoSize = ((bool)(resources.GetObject("label2.AutoSize")));
-			this.label2.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("label2.Dock")));
-			this.label2.Enabled = ((bool)(resources.GetObject("label2.Enabled")));
-			this.label2.Font = ((System.Drawing.Font)(resources.GetObject("label2.Font")));
-			this.label2.Image = ((System.Drawing.Image)(resources.GetObject("label2.Image")));
-			this.label2.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label2.ImageAlign")));
-			this.label2.ImageIndex = ((int)(resources.GetObject("label2.ImageIndex")));
-			this.label2.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("label2.ImeMode")));
-			this.label2.Location = ((System.Drawing.Point)(resources.GetObject("label2.Location")));
+			resources.ApplyResources(this.label2, "label2");
 			this.label2.Name = "label2";
-			this.label2.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("label2.RightToLeft")));
-			this.label2.Size = ((System.Drawing.Size)(resources.GetObject("label2.Size")));
-			this.label2.TabIndex = ((int)(resources.GetObject("label2.TabIndex")));
-			this.label2.Text = resources.GetString("label2.Text");
-			this.label2.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label2.TextAlign")));
-			this.label2.Visible = ((bool)(resources.GetObject("label2.Visible")));
 			//
 			// m_reproduce
 			//
 			this.m_reproduce.AcceptsReturn = true;
 			this.m_reproduce.AcceptsTab = true;
-			this.m_reproduce.AccessibleDescription = resources.GetString("m_reproduce.AccessibleDescription");
-			this.m_reproduce.AccessibleName = resources.GetString("m_reproduce.AccessibleName");
-			this.m_reproduce.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("m_reproduce.Anchor")));
-			this.m_reproduce.AutoSize = ((bool)(resources.GetObject("m_reproduce.AutoSize")));
-			this.m_reproduce.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("m_reproduce.BackgroundImage")));
-			this.m_reproduce.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("m_reproduce.Dock")));
-			this.m_reproduce.Enabled = ((bool)(resources.GetObject("m_reproduce.Enabled")));
-			this.m_reproduce.Font = ((System.Drawing.Font)(resources.GetObject("m_reproduce.Font")));
-			this.m_reproduce.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("m_reproduce.ImeMode")));
-			this.m_reproduce.Location = ((System.Drawing.Point)(resources.GetObject("m_reproduce.Location")));
-			this.m_reproduce.MaxLength = ((int)(resources.GetObject("m_reproduce.MaxLength")));
-			this.m_reproduce.Multiline = ((bool)(resources.GetObject("m_reproduce.Multiline")));
+			resources.ApplyResources(this.m_reproduce, "m_reproduce");
 			this.m_reproduce.Name = "m_reproduce";
-			this.m_reproduce.PasswordChar = ((char)(resources.GetObject("m_reproduce.PasswordChar")));
-			this.m_reproduce.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("m_reproduce.RightToLeft")));
-			this.m_reproduce.ScrollBars = ((System.Windows.Forms.ScrollBars)(resources.GetObject("m_reproduce.ScrollBars")));
-			this.m_reproduce.Size = ((System.Drawing.Size)(resources.GetObject("m_reproduce.Size")));
-			this.m_reproduce.TabIndex = ((int)(resources.GetObject("m_reproduce.TabIndex")));
-			this.m_reproduce.Text = resources.GetString("m_reproduce.Text");
-			this.m_reproduce.TextAlign = ((System.Windows.Forms.HorizontalAlignment)(resources.GetObject("m_reproduce.TextAlign")));
-			this.m_reproduce.Visible = ((bool)(resources.GetObject("m_reproduce.Visible")));
-			this.m_reproduce.WordWrap = ((bool)(resources.GetObject("m_reproduce.WordWrap")));
 			//
 			// label3
 			//
-			this.label3.AccessibleDescription = resources.GetString("label3.AccessibleDescription");
-			this.label3.AccessibleName = resources.GetString("label3.AccessibleName");
-			this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("label3.Anchor")));
-			this.label3.AutoSize = ((bool)(resources.GetObject("label3.AutoSize")));
-			this.label3.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("label3.Dock")));
-			this.label3.Enabled = ((bool)(resources.GetObject("label3.Enabled")));
-			this.label3.Font = ((System.Drawing.Font)(resources.GetObject("label3.Font")));
-			this.label3.Image = ((System.Drawing.Image)(resources.GetObject("label3.Image")));
-			this.label3.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label3.ImageAlign")));
-			this.label3.ImageIndex = ((int)(resources.GetObject("label3.ImageIndex")));
-			this.label3.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("label3.ImeMode")));
-			this.label3.Location = ((System.Drawing.Point)(resources.GetObject("label3.Location")));
+			resources.ApplyResources(this.label3, "label3");
 			this.label3.Name = "label3";
-			this.label3.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("label3.RightToLeft")));
-			this.label3.Size = ((System.Drawing.Size)(resources.GetObject("label3.Size")));
-			this.label3.TabIndex = ((int)(resources.GetObject("label3.TabIndex")));
-			this.label3.Text = resources.GetString("label3.Text");
-			this.label3.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label3.TextAlign")));
-			this.label3.Visible = ((bool)(resources.GetObject("label3.Visible")));
-			//
-			// radEmail
-			//
-			this.radEmail.AccessibleDescription = resources.GetString("radEmail.AccessibleDescription");
-			this.radEmail.AccessibleName = resources.GetString("radEmail.AccessibleName");
-			this.radEmail.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("radEmail.Anchor")));
-			this.radEmail.Appearance = ((System.Windows.Forms.Appearance)(resources.GetObject("radEmail.Appearance")));
-			this.radEmail.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("radEmail.BackgroundImage")));
-			this.radEmail.CheckAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("radEmail.CheckAlign")));
-			this.radEmail.Checked = true;
-			this.radEmail.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("radEmail.Dock")));
-			this.radEmail.Enabled = ((bool)(resources.GetObject("radEmail.Enabled")));
-			this.radEmail.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("radEmail.FlatStyle")));
-			this.radEmail.Font = ((System.Drawing.Font)(resources.GetObject("radEmail.Font")));
-			this.radEmail.Image = ((System.Drawing.Image)(resources.GetObject("radEmail.Image")));
-			this.radEmail.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("radEmail.ImageAlign")));
-			this.radEmail.ImageIndex = ((int)(resources.GetObject("radEmail.ImageIndex")));
-			this.radEmail.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("radEmail.ImeMode")));
-			this.radEmail.Location = ((System.Drawing.Point)(resources.GetObject("radEmail.Location")));
-			this.radEmail.Name = "radEmail";
-			this.radEmail.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("radEmail.RightToLeft")));
-			this.radEmail.Size = ((System.Drawing.Size)(resources.GetObject("radEmail.Size")));
-			this.radEmail.TabIndex = ((int)(resources.GetObject("radEmail.TabIndex")));
-			this.radEmail.TabStop = true;
-			this.radEmail.Text = resources.GetString("radEmail.Text");
-			this.radEmail.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("radEmail.TextAlign")));
-			this.radEmail.Visible = ((bool)(resources.GetObject("radEmail.Visible")));
 			//
 			// m_details
 			//
-			this.m_details.AccessibleDescription = resources.GetString("m_details.AccessibleDescription");
-			this.m_details.AccessibleName = resources.GetString("m_details.AccessibleName");
-			this.m_details.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("m_details.Anchor")));
-			this.m_details.AutoSize = ((bool)(resources.GetObject("m_details.AutoSize")));
+			resources.ApplyResources(this.m_details, "m_details");
 			this.m_details.BackColor = System.Drawing.SystemColors.ControlLightLight;
-			this.m_details.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("m_details.BackgroundImage")));
-			this.m_details.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("m_details.Dock")));
-			this.m_details.Enabled = ((bool)(resources.GetObject("m_details.Enabled")));
-			this.m_details.Font = ((System.Drawing.Font)(resources.GetObject("m_details.Font")));
-			this.m_details.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("m_details.ImeMode")));
-			this.m_details.Location = ((System.Drawing.Point)(resources.GetObject("m_details.Location")));
-			this.m_details.MaxLength = ((int)(resources.GetObject("m_details.MaxLength")));
-			this.m_details.Multiline = ((bool)(resources.GetObject("m_details.Multiline")));
 			this.m_details.Name = "m_details";
-			this.m_details.PasswordChar = ((char)(resources.GetObject("m_details.PasswordChar")));
 			this.m_details.ReadOnly = true;
-			this.m_details.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("m_details.RightToLeft")));
-			this.m_details.ScrollBars = ((System.Windows.Forms.ScrollBars)(resources.GetObject("m_details.ScrollBars")));
-			this.m_details.Size = ((System.Drawing.Size)(resources.GetObject("m_details.Size")));
-			this.m_details.TabIndex = ((int)(resources.GetObject("m_details.TabIndex")));
-			this.m_details.Text = resources.GetString("m_details.Text");
-			this.m_details.TextAlign = ((System.Windows.Forms.HorizontalAlignment)(resources.GetObject("m_details.TextAlign")));
-			this.m_details.Visible = ((bool)(resources.GetObject("m_details.Visible")));
-			this.m_details.WordWrap = ((bool)(resources.GetObject("m_details.WordWrap")));
-			//
-			// label1
-			//
-			this.label1.AccessibleDescription = resources.GetString("label1.AccessibleDescription");
-			this.label1.AccessibleName = resources.GetString("label1.AccessibleName");
-			this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("label1.Anchor")));
-			this.label1.AutoSize = ((bool)(resources.GetObject("label1.AutoSize")));
-			this.label1.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("label1.Dock")));
-			this.label1.Enabled = ((bool)(resources.GetObject("label1.Enabled")));
-			this.label1.Font = ((System.Drawing.Font)(resources.GetObject("label1.Font")));
-			this.label1.Image = ((System.Drawing.Image)(resources.GetObject("label1.Image")));
-			this.label1.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label1.ImageAlign")));
-			this.label1.ImageIndex = ((int)(resources.GetObject("label1.ImageIndex")));
-			this.label1.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("label1.ImeMode")));
-			this.label1.Location = ((System.Drawing.Point)(resources.GetObject("label1.Location")));
-			this.label1.Name = "label1";
-			this.label1.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("label1.RightToLeft")));
-			this.label1.Size = ((System.Drawing.Size)(resources.GetObject("label1.Size")));
-			this.label1.TabIndex = ((int)(resources.GetObject("label1.TabIndex")));
-			this.label1.Text = resources.GetString("label1.Text");
-			this.label1.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label1.TextAlign")));
-			this.label1.Visible = ((bool)(resources.GetObject("label1.Visible")));
-			//
-			// radSelf
-			//
-			this.radSelf.AccessibleDescription = resources.GetString("radSelf.AccessibleDescription");
-			this.radSelf.AccessibleName = resources.GetString("radSelf.AccessibleName");
-			this.radSelf.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("radSelf.Anchor")));
-			this.radSelf.Appearance = ((System.Windows.Forms.Appearance)(resources.GetObject("radSelf.Appearance")));
-			this.radSelf.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("radSelf.BackgroundImage")));
-			this.radSelf.CheckAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("radSelf.CheckAlign")));
-			this.radSelf.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("radSelf.Dock")));
-			this.radSelf.Enabled = ((bool)(resources.GetObject("radSelf.Enabled")));
-			this.radSelf.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("radSelf.FlatStyle")));
-			this.radSelf.Font = ((System.Drawing.Font)(resources.GetObject("radSelf.Font")));
-			this.radSelf.Image = ((System.Drawing.Image)(resources.GetObject("radSelf.Image")));
-			this.radSelf.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("radSelf.ImageAlign")));
-			this.radSelf.ImageIndex = ((int)(resources.GetObject("radSelf.ImageIndex")));
-			this.radSelf.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("radSelf.ImeMode")));
-			this.radSelf.Location = ((System.Drawing.Point)(resources.GetObject("radSelf.Location")));
-			this.radSelf.Name = "radSelf";
-			this.radSelf.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("radSelf.RightToLeft")));
-			this.radSelf.Size = ((System.Drawing.Size)(resources.GetObject("radSelf.Size")));
-			this.radSelf.TabIndex = ((int)(resources.GetObject("radSelf.TabIndex")));
-			this.radSelf.Text = resources.GetString("radSelf.Text");
-			this.radSelf.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("radSelf.TextAlign")));
-			this.radSelf.Visible = ((bool)(resources.GetObject("radSelf.Visible")));
 			//
 			// btnClose
 			//
-			this.btnClose.AccessibleDescription = resources.GetString("btnClose.AccessibleDescription");
-			this.btnClose.AccessibleName = resources.GetString("btnClose.AccessibleName");
-			this.btnClose.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("btnClose.Anchor")));
-			this.btnClose.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnClose.BackgroundImage")));
+			resources.ApplyResources(this.btnClose, "btnClose");
 			this.btnClose.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-			this.btnClose.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("btnClose.Dock")));
-			this.btnClose.Enabled = ((bool)(resources.GetObject("btnClose.Enabled")));
-			this.btnClose.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("btnClose.FlatStyle")));
-			this.btnClose.Font = ((System.Drawing.Font)(resources.GetObject("btnClose.Font")));
-			this.btnClose.Image = ((System.Drawing.Image)(resources.GetObject("btnClose.Image")));
-			this.btnClose.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("btnClose.ImageAlign")));
-			this.btnClose.ImageIndex = ((int)(resources.GetObject("btnClose.ImageIndex")));
-			this.btnClose.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("btnClose.ImeMode")));
-			this.btnClose.Location = ((System.Drawing.Point)(resources.GetObject("btnClose.Location")));
 			this.btnClose.Name = "btnClose";
-			this.btnClose.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("btnClose.RightToLeft")));
-			this.btnClose.Size = ((System.Drawing.Size)(resources.GetObject("btnClose.Size")));
-			this.btnClose.TabIndex = ((int)(resources.GetObject("btnClose.TabIndex")));
-			this.btnClose.Text = resources.GetString("btnClose.Text");
-			this.btnClose.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("btnClose.TextAlign")));
-			this.btnClose.Visible = ((bool)(resources.GetObject("btnClose.Visible")));
 			this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
 			//
 			// m_notification
 			//
-			this.m_notification.AccessibleDescription = resources.GetString("m_notification.AccessibleDescription");
-			this.m_notification.AccessibleName = resources.GetString("m_notification.AccessibleName");
-			this.m_notification.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("m_notification.Anchor")));
-			this.m_notification.AutoSize = ((bool)(resources.GetObject("m_notification.AutoSize")));
-			this.m_notification.BackColor = System.Drawing.Color.FromArgb(((System.Byte)(192)), ((System.Byte)(255)), ((System.Byte)(192)));
-			this.m_notification.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("m_notification.BackgroundImage")));
+			resources.ApplyResources(this.m_notification, "m_notification");
+			this.m_notification.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
 			this.m_notification.BorderStyle = System.Windows.Forms.BorderStyle.None;
-			this.m_notification.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("m_notification.Dock")));
-			this.m_notification.Enabled = ((bool)(resources.GetObject("m_notification.Enabled")));
-			this.m_notification.Font = ((System.Drawing.Font)(resources.GetObject("m_notification.Font")));
 			this.m_notification.ForeColor = System.Drawing.Color.Black;
-			this.m_notification.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("m_notification.ImeMode")));
-			this.m_notification.Location = ((System.Drawing.Point)(resources.GetObject("m_notification.Location")));
-			this.m_notification.MaxLength = ((int)(resources.GetObject("m_notification.MaxLength")));
-			this.m_notification.Multiline = ((bool)(resources.GetObject("m_notification.Multiline")));
 			this.m_notification.Name = "m_notification";
-			this.m_notification.PasswordChar = ((char)(resources.GetObject("m_notification.PasswordChar")));
 			this.m_notification.ReadOnly = true;
-			this.m_notification.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("m_notification.RightToLeft")));
-			this.m_notification.ScrollBars = ((System.Windows.Forms.ScrollBars)(resources.GetObject("m_notification.ScrollBars")));
-			this.m_notification.Size = ((System.Drawing.Size)(resources.GetObject("m_notification.Size")));
-			this.m_notification.TabIndex = ((int)(resources.GetObject("m_notification.TabIndex")));
-			this.m_notification.Text = resources.GetString("m_notification.Text");
-			this.m_notification.TextAlign = ((System.Windows.Forms.HorizontalAlignment)(resources.GetObject("m_notification.TextAlign")));
-			this.m_notification.Visible = ((bool)(resources.GetObject("m_notification.Visible")));
-			this.m_notification.WordWrap = ((bool)(resources.GetObject("m_notification.WordWrap")));
 			//
 			// labelAttemptToContinue
 			//
-			this.labelAttemptToContinue.AccessibleDescription = resources.GetString("labelAttemptToContinue.AccessibleDescription");
-			this.labelAttemptToContinue.AccessibleName = resources.GetString("labelAttemptToContinue.AccessibleName");
-			this.labelAttemptToContinue.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("labelAttemptToContinue.Anchor")));
-			this.labelAttemptToContinue.AutoSize = ((bool)(resources.GetObject("labelAttemptToContinue.AutoSize")));
-			this.labelAttemptToContinue.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("labelAttemptToContinue.Dock")));
-			this.labelAttemptToContinue.Enabled = ((bool)(resources.GetObject("labelAttemptToContinue.Enabled")));
-			this.labelAttemptToContinue.Font = ((System.Drawing.Font)(resources.GetObject("labelAttemptToContinue.Font")));
+			resources.ApplyResources(this.labelAttemptToContinue, "labelAttemptToContinue");
 			this.labelAttemptToContinue.ForeColor = System.Drawing.Color.Firebrick;
-			this.labelAttemptToContinue.Image = ((System.Drawing.Image)(resources.GetObject("labelAttemptToContinue.Image")));
-			this.labelAttemptToContinue.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("labelAttemptToContinue.ImageAlign")));
-			this.labelAttemptToContinue.ImageIndex = ((int)(resources.GetObject("labelAttemptToContinue.ImageIndex")));
-			this.labelAttemptToContinue.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("labelAttemptToContinue.ImeMode")));
-			this.labelAttemptToContinue.Location = ((System.Drawing.Point)(resources.GetObject("labelAttemptToContinue.Location")));
 			this.labelAttemptToContinue.Name = "labelAttemptToContinue";
-			this.labelAttemptToContinue.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("labelAttemptToContinue.RightToLeft")));
-			this.labelAttemptToContinue.Size = ((System.Drawing.Size)(resources.GetObject("labelAttemptToContinue.Size")));
-			this.labelAttemptToContinue.TabIndex = ((int)(resources.GetObject("labelAttemptToContinue.TabIndex")));
-			this.labelAttemptToContinue.Text = resources.GetString("labelAttemptToContinue.Text");
-			this.labelAttemptToContinue.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("labelAttemptToContinue.TextAlign")));
-			this.labelAttemptToContinue.Visible = ((bool)(resources.GetObject("labelAttemptToContinue.Visible")));
 			//
 			// ErrorReporter
 			//
 			this.AcceptButton = this.btnClose;
-			this.AccessibleDescription = resources.GetString("$this.AccessibleDescription");
-			this.AccessibleName = resources.GetString("$this.AccessibleName");
-			this.AutoScaleBaseSize = ((System.Drawing.Size)(resources.GetObject("$this.AutoScaleBaseSize")));
-			this.AutoScroll = ((bool)(resources.GetObject("$this.AutoScroll")));
-			this.AutoScrollMargin = ((System.Drawing.Size)(resources.GetObject("$this.AutoScrollMargin")));
-			this.AutoScrollMinSize = ((System.Drawing.Size)(resources.GetObject("$this.AutoScrollMinSize")));
-			this.BackColor = System.Drawing.Color.FromArgb(((System.Byte)(192)), ((System.Byte)(255)), ((System.Byte)(192)));
-			this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
+			resources.ApplyResources(this, "$this");
+			this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
 			this.CancelButton = this.btnClose;
-			this.ClientSize = ((System.Drawing.Size)(resources.GetObject("$this.ClientSize")));
 			this.ControlBox = false;
 			this.Controls.Add(this.m_reproduce);
 			this.Controls.Add(this.m_notification);
@@ -399,25 +183,13 @@ namespace Reporting
 			this.Controls.Add(this.labelAttemptToContinue);
 			this.Controls.Add(this.label2);
 			this.Controls.Add(this.label3);
-			this.Controls.Add(this.label1);
-			this.Controls.Add(this.radEmail);
-			this.Controls.Add(this.radSelf);
 			this.Controls.Add(this.btnClose);
-			this.Enabled = ((bool)(resources.GetObject("$this.Enabled")));
-			this.Font = ((System.Drawing.Font)(resources.GetObject("$this.Font")));
-			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-			this.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("$this.ImeMode")));
 			this.KeyPreview = true;
-			this.Location = ((System.Drawing.Point)(resources.GetObject("$this.Location")));
 			this.MaximizeBox = false;
-			this.MaximumSize = ((System.Drawing.Size)(resources.GetObject("$this.MaximumSize")));
 			this.MinimizeBox = false;
-			this.MinimumSize = ((System.Drawing.Size)(resources.GetObject("$this.MinimumSize")));
 			this.Name = "ErrorReporter";
-			this.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("$this.RightToLeft")));
-			this.StartPosition = ((System.Windows.Forms.FormStartPosition)(resources.GetObject("$this.StartPosition")));
-			this.Text = resources.GetString("$this.Text");
 			this.ResumeLayout(false);
+			this.PerformLayout();
 
 		}
 		#endregion
@@ -565,19 +337,19 @@ namespace Reporting
 			InitializeComponent();
 
 			// These 2 lines can be deleted after the problems with mailto have been resolved.
-			this.radEmail.Enabled = false;
-			this.radSelf.Checked = true;
-
-			if(s_emailAddress == null)
-			{
-				this.radEmail.Enabled = false;
-				this.radSelf.Checked = true;
-			}
-			else
-			{
-				// Add the e-mail address to the dialog.
-				label1.Text += ": " + s_emailAddress;
-			}
+//			this.radEmail.Enabled = false;
+//			this.radSelf.Checked = true;
+//
+//			if(s_emailAddress == null)
+//			{
+//				this.radEmail.Enabled = false;
+//				this.radSelf.Checked = true;
+//			}
+//			else
+//			{
+//				// Add the e-mail address to the dialog.
+//				label1.Text += ": " + s_emailAddress;
+//			}
 
 			if(!m_isLethal)
 			{
@@ -619,7 +391,6 @@ namespace Reporting
 		/// <summary>
 		///
 		/// </summary>
-		/// <param name="error"></param>
 		/// <returns></returns>
 		/// ------------------------------------------------------------------------------------
 		protected string GetHiearchicalExceptionInfo(Exception error, ref Exception innerMostException)
@@ -706,33 +477,51 @@ namespace Reporting
 		/// ------------------------------------------------------------------------------------
 		private void btnClose_Click(object sender, EventArgs e)
 		{
+			if (ModifierKeys.Equals(Keys.Shift))
+			{
+				return;
+			}
 			GatherData();
 
-			if(radEmail.Checked)
-			{
-				try
-				{
-					// WARNING! This currently does not work. The main issue seems to be the length of the error report. mailto
-					// apparently has some limit on the length of the message, and we are exceeding that.
-					//make it safe, but does too much (like replacing spaces with +'s)
-					//string s = System.Web.HttpUtility.UrlPathEncode( m_details.Text);
+			Clipboard.SetDataObject(m_details.Text, true);
 
-					EmailMessage msg = new EmailMessage();
-					msg.Body = m_details.Text.Replace(Environment.NewLine, "%0A").Replace("\"", "%22").Replace("&", "%26");
-					msg.Address = s_emailAddress;
-					msg.Subject = s_emailSubject;
-					msg.Send();
+			try
+			{
+				Reporting.MAPI msg = new MAPI();
+				msg.AddRecipientTo(s_emailAddress);
+				if (msg.SendMailDirect(s_emailSubject, m_details.Text))
+				{
 					CloseUp();
 				}
-				catch(Exception)
-				{
-					//swallow it and go to the clipboard method
-				}
+			}
+			catch(Exception)
+			{
+				//swallow it and go to the mailto method
 			}
 
-			if(s_emailAddress != null)
+			try
 			{
-				m_details.Text =String.Format (ReportingStrings.ksPleaseEMailThisToUs,s_emailAddress, m_details.Text);
+				//EmailMessage msg = new EmailMessage();
+				// This currently does not work. The main issue seems to be the length of the error report. mailto
+				// apparently has some limit on the length of the message, and we are exceeding that.
+				//make it safe, but does too much (like replacing spaces with +'s)
+				//string s = System.Web.HttpUtility.UrlPathEncode( m_details.Text);
+				//msg.Body = m_details.Text.Replace(Environment.NewLine, "%0A").Replace("\"", "%22").Replace("&", "%26");
+				EmailMessage msg = new EmailMessage();
+				msg.Body = "<Please paste the details of the crash here>";
+				msg.Address = s_emailAddress;
+				msg.Subject = s_emailSubject;
+				msg.Send();
+				CloseUp();
+			}
+			catch (Exception)
+			{
+				//swallow it and go to the clipboard method
+			}
+
+			if (s_emailAddress != null)
+			{
+				m_details.Text = String.Format(ReportingStrings.ksPleaseEMailThisToUs, s_emailAddress, m_details.Text);
 			}
 			Clipboard.SetDataObject(m_details.Text, true);
 
@@ -748,6 +537,8 @@ namespace Reporting
 			}
 			Logger.WriteEvent("Exiting...");
 			Application.Exit();
+			//still didn't work? Sheesh.
+			System.Diagnostics.Process.GetCurrentProcess().Kill();
 		}
 
 		/// ------------------------------------------------------------------------------------
@@ -796,7 +587,7 @@ namespace Reporting
 			Assembly assembly = Assembly.GetEntryAssembly();
 			if (assembly != null)
 			{
-				string version = versionNumberString;
+				string version = VersionNumberString;
 
 				version += " (apparent build date: ";
 				try
@@ -817,7 +608,7 @@ namespace Reporting
 			return "unknown";
 		}
 
-		private static string versionNumberString
+		public static string VersionNumberString
 		{
 			get
 			{
@@ -845,7 +636,7 @@ namespace Reporting
 		{
 			get
 			{
-				string v = versionNumberString;
+				string v = VersionNumberString;
 				string build = v.Substring(v.LastIndexOf('.') + 1);
 				return "Version 1 Preview, build " + build;
 			}
