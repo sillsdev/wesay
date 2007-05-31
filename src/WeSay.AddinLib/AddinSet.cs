@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Xml;
+using System.Xml.XPath;
 using WeSay.Foundation;
 
 namespace WeSay.AddinLib
@@ -13,7 +14,7 @@ namespace WeSay.AddinLib
 		private Dictionary<string, string> _addinSettings = null;
 		private List<string> _addinsToShowInWeSay = new List<string>();
 
-		public delegate XmlNodeList AddinSettingsGetter();
+		public delegate XPathNodeIterator AddinSettingsGetter();
 
 		private AddinSettingsGetter _getSettingsNodesFromConfiguration;
 
@@ -96,10 +97,10 @@ namespace WeSay.AddinLib
 		private void Load()
 		{
 			_addinSettings = new Dictionary<string, string>();
-			XmlNodeList nodes = _getSettingsNodesFromConfiguration();
+			XPathNodeIterator nodes = _getSettingsNodesFromConfiguration();
 			if (nodes != null)
 			{
-				foreach (XmlNode node in nodes)
+				foreach (XPathNavigator node in nodes)
 				{
 					string sid = XmlUtils.GetManditoryAttributeValue(node, "id");
 					// Guid id = new Guid(sid);

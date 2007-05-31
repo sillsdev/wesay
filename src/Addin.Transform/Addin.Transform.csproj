@@ -78,12 +78,12 @@
 	<None Include="Resources\genericAction.png" />
   </ItemGroup>
   <ItemGroup>
-	<Content Include="lift2html.xsl">
+	<EmbeddedResource Include="lift2html.xsl">
 	  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	</Content>
-	<Content Include="lift2sfm.xsl">
+	</EmbeddedResource>
+	<EmbeddedResource Include="lift2sfm.xsl">
 	  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	</Content>
+	</EmbeddedResource>
 	<None Include="Resources\printAction.png" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

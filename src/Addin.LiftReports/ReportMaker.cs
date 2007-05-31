@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 using Addin.LiftReports.Properties;
@@ -10,21 +11,15 @@ namespace Addin.LiftReports
 	[Extension]
 	public class ReportMaker : IWeSayAddin
 	{
-		private Guid _id;
+		protected bool _launchAfterTransform = true;
+		private string _pathToOutput;
+
 
 		public Image ButtonImage
 		{
 			get
 			{
 				return Resources.image;
-			}
-		}
-
-		public bool DefaultVisibleInWeSay
-		{
-			get
-			{
-				return true;
 			}
 		}
 
@@ -52,6 +47,24 @@ namespace Addin.LiftReports
 			}
 		}
 
+		//for unit tests
+		public string PathToOutput
+		{
+			get
+			{
+				return _pathToOutput;
+			}
+		}
+
+		//for unit tests
+		public bool LaunchAfterTransform
+		{
+			set
+			{
+				_launchAfterTransform = value;
+			}
+		}
+
 		#region IWeSayAddin Members
 
 		public object SettingsToPersist
@@ -76,41 +89,15 @@ namespace Addin.LiftReports
 
 		#endregion
 
-/*        public void Launch(string pathToTopLevelDirectory, string pathToLIFT)
-		{
-			string path = Path.Combine(Path.GetTempPath(), "LexiconStats.htm");
-			using (StreamWriter stream = File.CreateText(path))
-			{
-				stream.Write("<html><body>");
-				stream.WriteLine("<p>{0}</p>", pathToTopLevelDirectory);
-				stream.WriteLine("<p>{0}</p>", pathToLIFT);
-				stream.Write("</body></html>");
-				stream.Close();
-			}
-			System.Diagnostics.Process.Start(path);
 
-		}
-*/
 		public void Launch(Form parentForm, ProjectInfo projectInfo)
 		{
-//            Form f = new Form();
-//            f.Size = new Size(400, 400);
-//            f.SuspendLayout();
-//            Panel panel = new Panel();
-//            panel.BackColor = Color.White;
-//            panel.Dock = DockStyle.Fill;
-//            f.Controls.Add(panel);
-//            Report r = new Report();
-//            r.PathToLift = pathToLIFT;
-//            r.Size = new Size(400, 1000);
-//            panel.Controls.Add(r) ;
-//            f.ResumeLayout();
-//            panel.VerticalScroll.Value = 0;
-//            panel.AutoScroll = true;
-//            f.ShowDialog();
-
 			HtmlReport r = new HtmlReport();
-			r.DisplayReport(projectInfo.PathToLIFT);
+			_pathToOutput = r.GenerateReport(projectInfo.PathToLIFT);
+			if (_launchAfterTransform)
+			{
+				Process.Start(_pathToOutput);
+			}
 		}
 	}
 }

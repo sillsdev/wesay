@@ -21,7 +21,6 @@ namespace WeSay.AddinLib
 
 		bool Available { get;}
 
-		bool DefaultVisibleInWeSay { get; }
 
 		string Name
 		{

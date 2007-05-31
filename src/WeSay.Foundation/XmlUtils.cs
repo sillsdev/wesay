@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Xml;
+using System.Xml.XPath;
 
 namespace WeSay.Foundation
 {
@@ -17,6 +18,17 @@ namespace WeSay.Foundation
 		/// <param name="attrName">The optional attribute to find.</param>
 		/// <returns></returns>
 		public static bool GetBooleanAttributeValue(XmlNode node, string attrName)
+		{
+			return GetBooleanAttributeValue(GetOptionalAttributeValue(node, attrName));
+		}
+
+		/// <summary>
+		/// Returns true if value of attrName is 'true' or 'yes' (case ignored)
+		/// </summary>
+		/// <param name="node">The XmlNode to look in.</param>
+		/// <param name="attrName">The optional attribute to find.</param>
+		/// <returns></returns>
+		public static bool GetBooleanAttributeValue(XPathNavigator node, string attrName)
 		{
 			return GetBooleanAttributeValue(GetOptionalAttributeValue(node, attrName));
 		}
@@ -158,6 +170,17 @@ namespace WeSay.Foundation
 		/// <param name="node">The XmlNode to look in.</param>
 		/// <param name="attrName">The attribute to find.</param>
 		/// <returns>The value of the attribute, or null, if not found.</returns>
+		public static string GetOptionalAttributeValue(XPathNavigator node, string attrName)
+		{
+			return GetOptionalAttributeValue(node, attrName, null);
+		}
+
+		/// <summary>
+		/// Get an optional attribute value from an XmlNode.
+		/// </summary>
+		/// <param name="node">The XmlNode to look in.</param>
+		/// <param name="attrName">The attribute to find.</param>
+		/// <returns>The value of the attribute, or null, if not found.</returns>
 		public static string GetOptionalAttributeValue(XmlNode node, string attrName, string defaultString)
 		{
 			if (node != null && node.Attributes != null)
@@ -169,6 +192,22 @@ namespace WeSay.Foundation
 			return defaultString;
 		}
 
+		/// <summary>
+		/// Get an optional attribute value from an XmlNode.
+		/// </summary>
+		/// <param name="node">The XmlNode to look in.</param>
+		/// <param name="attrName">The attribute to find.</param>
+		/// <returns>The value of the attribute, or null, if not found.</returns>
+		public static string GetOptionalAttributeValue(XPathNavigator  node, string attrName, string defaultString)
+		{
+			if (node != null && node.HasAttributes)
+			{
+				string s = node.GetAttribute(attrName,null);
+				if (!string.IsNullOrEmpty(s))
+					return s;
+			}
+			return defaultString;
+		}
 		/// <summary>
 		/// Return the node that has the desired 'name', either the input node or a decendent.
 		/// </summary>
@@ -211,7 +250,18 @@ namespace WeSay.Foundation
 			}
 			return retval;
 		}
-
+		public static string GetManditoryAttributeValue(XPathNavigator node, string attrName)
+		{
+			string retval = XmlUtils.GetOptionalAttributeValue(node, attrName, null);
+			if (retval == null)
+			{
+				throw new ApplicationException("The attribute'"
+					+ attrName
+					+ "' is mandatory, but was missing. "
+					+ node.OuterXml);
+			}
+			return retval;
+		}
 		/// <summary>
 		/// Append an attribute with the specified name and value to parent.
 		/// </summary>

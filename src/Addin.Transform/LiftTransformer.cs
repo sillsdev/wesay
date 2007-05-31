@@ -41,13 +41,7 @@ namespace Addin.Transform
 				return true;
 			}
 		}
-		public virtual bool DefaultVisibleInWeSay
-		{
-			get
-			{
-				return false;
-			}
-		}
+
 
 		//for unit tests
 		public string PathToOutput
@@ -73,27 +67,47 @@ namespace Addin.Transform
 
 		protected string TransformLift(ProjectInfo projectInfo, string xsltName, string outputFileSuffix)
 		{
-			XslCompiledTransform transform = new XslCompiledTransform();
-
-			string xslName = xsltName;
-			string xsltPath = projectInfo.LocateFile(xslName);
-			if (String.IsNullOrEmpty(xsltPath))
-			{
-				throw new ApplicationException("Could not find required file, " + xslName);
-			}
-
 			//all this just to allow a DTD statement in the source xslt
 			XmlReaderSettings readerSettings = new XmlReaderSettings();
 			readerSettings.ProhibitDtd = false;
-			using (FileStream xsltReader = File.OpenRead(xsltPath))
+			XslCompiledTransform transform = new XslCompiledTransform();
+
+			using(Stream stream = GetXsltStream(projectInfo, xsltName))
 			{
-				transform.Load(XmlReader.Create(xsltReader, readerSettings));
-				xsltReader.Close();
+				using(XmlReader xsltReader = XmlReader.Create(stream, readerSettings))
+				{
+					transform.Load(xsltReader);
+					xsltReader.Close();
+				}
+				stream.Close();
 			}
 
 			_pathToOutput = Path.Combine(projectInfo.PathToTopLevelDirectory, projectInfo.Name + outputFileSuffix);
+			if (File.Exists(_pathToOutput))
+			{
+				File.Delete(_pathToOutput);
+			}
 			transform.Transform(projectInfo.PathToLIFT, _pathToOutput);
+			transform.TemporaryFiles.Delete();
+
 			return _pathToOutput;
+		}
+
+		public static Stream GetXsltStream(ProjectInfo projectInfo, string xsltName)
+		{
+			//xslt can be in one of the project/wesay locations, (so user can override with their own copy)
+			//or just in a resource (helps with forgetting to put it in the installer)
+			string xsltPath = projectInfo.LocateFile(xsltName);
+			if (String.IsNullOrEmpty(xsltPath))
+			{
+				return Resources.ResourceManager.GetStream(xsltName);
+			}
+			return File.OpenRead(xsltPath);
+
+//            if (String.IsNullOrEmpty(xsltPath))
+//            {
+//                throw new ApplicationException("Could not find required file, " + xsltName);
+//            }
 		}
 	}
 }

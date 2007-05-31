@@ -29,14 +29,6 @@ namespace Addin.Backup
 			}
 		}
 
-		public bool DefaultVisibleInWeSay
-		{
-			get
-			{
-				return true;
-			}
-		}
-
 		public string Name
 		{
 			get

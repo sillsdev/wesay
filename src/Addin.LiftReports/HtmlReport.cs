@@ -19,7 +19,7 @@ namespace Addin.LiftReports
 
 		}
 
-		public void DisplayReport(string pathToLIFT)
+		public string GenerateReport(string pathToLIFT)
 		{
 			Velocity.Init();
 			NVelocity.VelocityContext context = new NVelocity.VelocityContext();
@@ -48,12 +48,13 @@ namespace Addin.LiftReports
 					Template template = Velocity.GetTemplate("tempReportTemplate.vm");
 					template.Merge(context, stream);
 				}
-				System.Diagnostics.Process.Start(path);
+				return path;
 			}
 			catch (System.Exception e)
 			{
 				Reporting.ErrorReporter.ReportNonFatalMessage("Problem creating report : " + e);
 			}
+			return null;
 		}
 	}
 

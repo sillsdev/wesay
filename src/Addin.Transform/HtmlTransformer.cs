@@ -39,8 +39,10 @@ namespace Addin.Transform
 		public override void Launch(Form parentForm, ProjectInfo projectInfo)
 		{
 			string output = TransformLift(projectInfo, "lift2html.xsl", ".htm");
-
-			Process.Start(output);
+			if (_launchAfterTransform)
+			{
+				Process.Start(output);
+			}
 		}
 	}
 }

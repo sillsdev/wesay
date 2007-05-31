@@ -53,7 +53,7 @@ namespace WeSay.App
 		{
 			_tasks = new List<ITask>();
 			XPathNavigator navigator = doc.CreateNavigator();
-			XPathNodeIterator taskList = navigator.SelectDescendants("task", string.Empty, false);
+			XPathNodeIterator taskList = navigator.Select("configuration/tasks/task");
 			foreach (XPathNavigator task in taskList)
 			{
 

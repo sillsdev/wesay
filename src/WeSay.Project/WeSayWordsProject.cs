@@ -3,9 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Reflection;
+using System.Resources;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Xml;
+using System.Xml.XPath;
+using System.Xml.Xsl;
 using Reporting;
 using WeSay.AddinLib;
 using WeSay.Foundation;
@@ -190,8 +194,54 @@ namespace WeSay.Project
 
 		public override void LoadFromProjectDirectoryPath(string projectDirectoryPath)
 		{
+			this._projectDirectoryPath = projectDirectoryPath;
+			XPathDocument configDoc = GetConfigurationDoc();
+			if (configDoc != null) // will be null if we're creating a new project
+			{
+				MigrateConfigurationXmlIfNeeded(configDoc, PathToConfigFile);
+			}
 			base.LoadFromProjectDirectoryPath(projectDirectoryPath);
 			InitializeViewTemplatesFromProjectFiles();
+		}
+
+		public static bool MigrateConfigurationXmlIfNeeded(XPathDocument configurationDoc, string targetPath)
+		{
+			Reporting.Logger.WriteEvent("Checking if migration of configuration is needed.");
+
+
+			if (configurationDoc.CreateNavigator().SelectSingleNode("configuration") == null)
+			{
+				Reporting.Logger.WriteEvent("Migrating Configuration File from version 0 to 1.");
+
+				//ResourceManager mgr = new System.Resources.ResourceManager(typeof(WeSay.Project.WeSayWordsProject));
+
+				using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(typeof(WeSayWordsProject),
+																		  "MigrateConfig0To1.xsl"))
+				{
+					XslCompiledTransform transform = new XslCompiledTransform();
+					using (XmlReader reader = XmlReader.Create(stream))
+					{
+						transform.Load(reader);
+						string tempPath = Path.GetTempFileName();
+						using (XmlWriter writer = XmlWriter.Create(tempPath))
+						{
+							transform.Transform(configurationDoc, writer);
+							transform.TemporaryFiles.Delete();
+							writer.Close();
+						}
+						string s = targetPath + ".tmp";
+						if (File.Exists(s))
+						{
+							File.Delete(s);
+						}
+						File.Move(targetPath, s);
+						File.Move(tempPath, targetPath);
+						File.Delete(s);
+						return true;
+					}
+				}
+			}
+			return false;
 		}
 
 //        public void LoadFromConfigFilePath(string path)
@@ -209,13 +259,14 @@ namespace WeSay.Project
 
 				try
 				{
-					XmlDocument projectDoc = GetConfigurationDoc();
+					XPathDocument projectDoc = GetConfigurationDoc();
 					if (projectDoc != null)
 					{
-						XmlNodeList nodes = projectDoc.SelectNodes("tasks/components/viewTemplate");
-						foreach (XmlNode node in nodes)
+						XPathNodeIterator nodes = projectDoc.CreateNavigator().Select("configuration/components/viewTemplate");
+						foreach (XPathNavigator node in nodes)
+						//while(nodes.MoveNext())
 						{
-							ViewTemplate template = new ViewTemplate();
+						   ViewTemplate template = new ViewTemplate();
 							template.LoadFromString(node.OuterXml);
 							ViewTemplate.SynchronizeInventories(fullUpToDateTemplate, template);
 							if (template.Id == "Default View Template")
@@ -242,14 +293,14 @@ namespace WeSay.Project
 			return _viewTemplates;
 		}
 
-		public XmlNodeList GetAddinNodes()
+		public XPathNodeIterator GetAddinNodes()
 		{
 			try
 			{
-				XmlDocument configDoc = GetConfigurationDoc();
+				XPathDocument configDoc = GetConfigurationDoc();
 				if (configDoc != null)
 				{
-					return configDoc.SelectNodes("tasks/addins/addin");
+					return configDoc.CreateNavigator().Select("configuration/addins/addin");
 				}
 				return null;
 			}
@@ -270,15 +321,15 @@ namespace WeSay.Project
 								   WeSay.AddinLib.AddinSet.Singleton.LocateFile);
 		}
 
-		private XmlDocument GetConfigurationDoc()
+		private XPathDocument GetConfigurationDoc()
 		{
-			XmlDocument projectDoc = null;
+			XPathDocument projectDoc = null;
 			if (File.Exists(PathToConfigFile))
 			{
 				try
 				{
-					projectDoc = new XmlDocument();
-					projectDoc.Load(Project.PathToConfigFile);
+					projectDoc = new XPathDocument(PathToConfigFile);
+					//projectDoc.Load(Project.PathToConfigFile);
 				}
 				catch (Exception e)
 				{
@@ -606,7 +657,8 @@ namespace WeSay.Project
 
 			XmlWriter writer = XmlWriter.Create(WeSayWordsProject.Project.PathToConfigFile, settings);
 			writer.WriteStartDocument();
-			writer.WriteStartElement("tasks");
+			writer.WriteStartElement("configuration");
+			writer.WriteAttributeString("version", "1");
 
 			if (HackedEditorsSaveNow != null)
 			{

@@ -46,6 +46,7 @@ namespace WeSay.Setup
 			}
 			writer.WriteEndElement();
 
+			writer.WriteStartElement("tasks");
 			foreach (TaskInfo t in _taskList.Items)
 			{
 				if (_taskList.GetItemChecked(_taskList.Items.IndexOf(t)))
@@ -54,6 +55,7 @@ namespace WeSay.Setup
 //                    writer.WriteRaw(t.Node.OuterXml);
 				}
 			}
+			writer.WriteEndElement();
 		}
 
 		private void LoadInventory()
@@ -61,16 +63,16 @@ namespace WeSay.Setup
 			try
 			{
 				XmlDocument inventoryDoc = new XmlDocument();
-				inventoryDoc.Load(Path.Combine(BasilProject.Project.ApplicationCommonDirectory, "taskInventory.xml"));
+				inventoryDoc.Load(Path.Combine(BasilProject.Project.ApplicationCommonDirectory, "default.WeSayCOnfig"));
 				XmlDocument projectDoc = GetProjectDoc();
 
 				//if there are no tasks, might as well be no document, so clear it out
-				if(projectDoc != null && (null == projectDoc.SelectSingleNode("tasks/task")))
+				if (projectDoc != null && (null == projectDoc.SelectSingleNode("configuration/tasks/task")))
 				{
 					projectDoc = null;
 				}
 
-				foreach (XmlNode node in inventoryDoc.SelectNodes("tasks/task"))
+				foreach (XmlNode node in inventoryDoc.SelectNodes("configuration/tasks/task"))
 				{
 					TaskInfo task = new TaskInfo(node);
 					bool showCheckMark;
@@ -83,7 +85,7 @@ namespace WeSay.Setup
 					else
 					{
 						XmlNode foundMatchingTask;
-						foundMatchingTask = projectDoc.SelectSingleNode("tasks/task[@id='" + task.Id + "']");
+						foundMatchingTask = projectDoc.SelectSingleNode("configuration/tasks/task[@id='" + task.Id + "']");
 						showCheckMark = !task.IsOptional || foundMatchingTask != null;
 					}
 					this._taskList.Items.Add(task, showCheckMark);

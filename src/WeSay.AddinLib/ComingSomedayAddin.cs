@@ -38,21 +38,11 @@ namespace WeSay.AddinLib
 		{
 			get
 			{
-				return true;
-			}
-		}
-
-		#region IWeSayAddin Members
-
-		public bool DefaultVisibleInWeSay
-		{
-			get
-			{
 				return false;
 			}
 		}
 
-		#endregion
+
 
 		public string Name
 		{

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Windows.Forms;
+using System.Xml.XPath;
 using NUnit.Framework;
 using NUnit.Extensions.Forms;
 using WeSay.Project;
@@ -118,6 +119,17 @@ namespace WeSay.Admin.Tests
 			CreateProjectAndGoToTaskControl();
 			CheckedListBoxTester c = new CheckedListBoxTester("_taskList");
 			Assert.Greater(c.Properties.CheckedItems.Count, 0);
+		}
+
+		[Test]
+		public void NewProjectHasValidStructure()
+		{
+			_window.CreateAndOpenProject(_projectFolder);
+			string path = WeSay.Project.WeSayWordsProject.Project.PathToConfigFile;
+			XPathDocument doc = new XPathDocument(path);
+			Assert.IsNotNull(doc.CreateNavigator().SelectSingleNode("configuration[@version='1']"));
+			Assert.IsNotNull(doc.CreateNavigator().SelectSingleNode("configuration/tasks"));
+			Assert.IsNotNull(doc.CreateNavigator().SelectSingleNode("configuration/components"));
 		}
 
 		private void CreateProjectAndGoToTaskControl()

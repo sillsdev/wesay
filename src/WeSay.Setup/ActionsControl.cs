@@ -68,7 +68,6 @@ namespace WeSay.Setup
 			AddAddin(new ComingSomedayAddin("Export To OpenOffice", ""));
 			AddAddin(new ComingSomedayAddin("Export To Word", ""));
 			AddAddin(new ComingSomedayAddin("Export To Lexique Pro", ""));
-			AddAddin(new ComingSomedayAddin("Export as MDF", "Create a toolbox-compatible dictionary file."));
 			AddAddin(
 				new ComingSomedayAddin("Send project to developers", "Sends your project to WeSay for help/debugging."));
 		}

@@ -48,6 +48,21 @@ namespace Addin.Transform.Tests
 			LaunchWithConversionString("");
 		}
 
+		[Test, ExpectedException(typeof(UnauthorizedAccessException))]
+		public void ThrowsMeaningfulExceptionIfOutputFileIsLocked()
+		{
+			try
+			{
+				LaunchWithConversionString("g_en ge");
+				File.SetAttributes(_addin.PathToOutput, FileAttributes.ReadOnly);
+				LaunchWithConversionString("g_en ge");
+			}
+			finally
+			{
+				File.SetAttributes(_addin.PathToOutput, default(FileAttributes));
+			}
+		}
+
 		[Test]
 		public void ConvertsGlossMarker()
 		{
@@ -72,6 +87,13 @@ namespace Addin.Transform.Tests
 		public void LaunchWithRecursiveConversionPiece()
 		{
 			LaunchWithConversionString("g_en g_en");
+		}
+		[Test]
+		public void CanGetXsltFromResource()
+		{
+			Stream stream = LiftTransformer.GetXsltStream(WeSay.Project.WeSayWordsProject.Project.GetProjectInfoForAddin(),
+										  "lift2sfm.xsl");
+			Assert.IsNotNull(stream);
 		}
 
 		private string LaunchWithConversionString(string conversions)
