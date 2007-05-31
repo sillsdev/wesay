@@ -330,7 +330,7 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 	  <ComponentRef Id="PartsOfSpeech.xml" />
 	  <ComponentRef Id="sampleWordList.txt" />
 	  <ComponentRef Id="SemanticDomains.xml" />
-	  <ComponentRef Id="taskInventory.xml" />
+	  <ComponentRef Id="default.WeSayConfig" />
 	  <ComponentRef Id="CommonWritingSystemPrefs.xml" />
 	  <ComponentRef Id="Ddp4.xml"/>
 	  <ComponentRef Id="Ddp4Questions_en.xml"/>
