@@ -50,7 +50,7 @@ namespace Reporting
 			this.label1.Location = new System.Drawing.Point(23, 117);
 			this.label1.MaximumSize = new System.Drawing.Size(230, 0);
 			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(230, 156);
+			this.label1.Size = new System.Drawing.Size(225, 143);
 			this.label1.TabIndex = 1;
 			this.label1.Text = resources.GetString("label1.Text");
 			//

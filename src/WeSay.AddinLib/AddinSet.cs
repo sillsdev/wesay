@@ -89,18 +89,17 @@ namespace WeSay.AddinLib
 		{
 			if (_addinSettings == null)
 			{
-				Load();
+				Load(_getSettingsNodesFromConfiguration());
 			}
 		}
 
 
-		private void Load()
+		public void Load(XPathNodeIterator addinNodes)
 		{
 			_addinSettings = new Dictionary<string, string>();
-			XPathNodeIterator nodes = _getSettingsNodesFromConfiguration();
-			if (nodes != null)
+			if (addinNodes != null)
 			{
-				foreach (XPathNavigator node in nodes)
+				foreach (XPathNavigator node in addinNodes)
 				{
 
 					string sid = XmlUtils.GetManditoryAttributeValue(node, "id");

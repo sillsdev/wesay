@@ -19,6 +19,7 @@ namespace WeSay.Language
 		private string _id;
 		private string _keyboardName;
 		private bool _rightToLeft = false;
+		private string _abbreviation;
 
 //        public WritingSystem(string filePath)
 //        {
@@ -69,13 +70,23 @@ namespace WeSay.Language
 			}
 		}
 
-	   // [ReflectorProperty("Abbreviation", Required = true)]
+	   [ReflectorProperty("Abbreviation", Required = false)]
 		public string Abbreviation
 		{
-			get { return _id; }
+			get
+			{
+				if (string.IsNullOrEmpty(_abbreviation))
+				{
+					return _id;
+				}
+				else
+				{
+					return _abbreviation;
+				}
+			}
 			set
 			{
-				_id = value;
+				_abbreviation = value;
 			}
 		}
 

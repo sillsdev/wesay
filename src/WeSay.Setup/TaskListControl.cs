@@ -58,12 +58,13 @@ namespace WeSay.Setup
 			writer.WriteEndElement();
 		}
 
+
 		private void LoadInventory()
 		{
 			try
 			{
-				XmlDocument inventoryDoc = new XmlDocument();
-				inventoryDoc.Load(Path.Combine(BasilProject.Project.ApplicationCommonDirectory, "default.WeSayCOnfig"));
+				XmlDocument defaultConfigDoc = new XmlDocument();
+				defaultConfigDoc.Load(WeSayWordsProject.Project.PathToDefaultConfig);
 				XmlDocument projectDoc = GetProjectDoc();
 
 				//if there are no tasks, might as well be no document, so clear it out
@@ -72,7 +73,7 @@ namespace WeSay.Setup
 					projectDoc = null;
 				}
 
-				foreach (XmlNode node in inventoryDoc.SelectNodes("configuration/tasks/task"))
+				foreach (XmlNode node in defaultConfigDoc.SelectNodes("configuration/tasks/task"))
 				{
 					TaskInfo task = new TaskInfo(node);
 					bool showCheckMark;

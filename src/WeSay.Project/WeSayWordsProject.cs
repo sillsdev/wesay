@@ -295,9 +295,13 @@ namespace WeSay.Project
 
 		public XPathNodeIterator GetAddinNodes()
 		{
+			return GetAddinNodes(GetConfigurationDoc());
+		}
+
+		private XPathNodeIterator GetAddinNodes(XPathDocument configDoc)
+		{
 			try
 			{
-				XPathDocument configDoc = GetConfigurationDoc();
 				if (configDoc != null)
 				{
 					return configDoc.CreateNavigator().Select("configuration/addins/addin");
@@ -363,16 +367,29 @@ namespace WeSay.Project
 			return true;
 		}
 
+
+		public string PathToDefaultConfig
+		{
+			get
+			{
+				return Path.Combine(BasilProject.Project.ApplicationCommonDirectory, "default.WeSayCOnfig");
+			}
+		}
+
 		public override void CreateEmptyProjectFiles(string projectDirectoryPath)
 		{
+			//enhance: some of this would be a lot cleaner if we just copied the silly
+			//  default.WeSayConfig over and used that.
+
 			this._projectDirectoryPath = projectDirectoryPath;
 			Directory.CreateDirectory(PathToWeSaySpecificFilesDirectoryInProject);
 			base.CreateEmptyProjectFiles(projectDirectoryPath);
 			_defaultViewTemplate = ViewTemplate.MakeMasterTemplate(WritingSystems);
 			_viewTemplates = new List<ViewTemplate>();
 			_viewTemplates.Add(_defaultViewTemplate);
-		   // this._lexiconDatabaseFileName = this.Name+".words";
 
+			XPathDocument doc = new XPathDocument(PathToDefaultConfig);
+			_addins.Load(GetAddinNodes(doc));
 
 			if (!File.Exists(PathToLiftFile))
 			{
