@@ -3,15 +3,16 @@
   <AnalysisWritingSystemDefaultId>en</AnalysisWritingSystemDefaultId>
   <members>
 	<WritingSystem>
-	  <FontName>Doulos SIL</FontName>
+	  <FontName>Arial</FontName>
 	  <FontSize>12</FontSize>
 	  <Id>v</Id>
 	</WritingSystem>
 	<WritingSystem>
-	  <FontName>Doulos SIL</FontName>
+	  <FontName>Arial</FontName>
 	  <FontSize>12</FontSize>
 	  <Id>en</Id>
+	  <Abbreviation>eng</Abbreviation>
 	</WritingSystem>
   </members>
-  <VernacularWritingSystemDefaultId>en</VernacularWritingSystemDefaultId>
+  <VernacularWritingSystemDefaultId>v</VernacularWritingSystemDefaultId>
 </WritingSystemCollection>
