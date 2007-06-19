@@ -91,7 +91,13 @@ namespace Addin.Transform.Tests
 		[Test]
 		public void CanGetXsltFromResource()
 		{
-			Stream stream = LiftTransformer.GetXsltStream(WeSay.Project.WeSayWordsProject.Project.GetProjectInfoForAddin(),
+			ProjectInfo info = WeSay.Project.WeSayWordsProject.Project.GetProjectInfoForAddin();
+			string path = info.LocateFile("lift2sfm.xsl");
+			if (!string.IsNullOrEmpty(path))
+			{
+				File.Delete(path);
+			}
+			Stream stream = LiftTransformer.GetXsltStream(info,
 										  "lift2sfm.xsl");
 			Assert.IsNotNull(stream);
 		}

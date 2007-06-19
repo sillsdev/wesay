@@ -1,6 +1,8 @@
 using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Reflection;
 using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Xsl;
@@ -100,7 +102,7 @@ namespace Addin.Transform
 			string xsltPath = projectInfo.LocateFile(xsltName);
 			if (String.IsNullOrEmpty(xsltPath))
 			{
-				return Resources.ResourceManager.GetStream(xsltName);
+				return Assembly.GetExecutingAssembly().GetManifestResourceStream("Addin.Transform." + xsltName);
 			}
 			return File.OpenRead(xsltPath);
 

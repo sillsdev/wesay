@@ -21,10 +21,20 @@ namespace Addin.LiftReports.Tests
 		[TearDown]
 		public void TearDown()
 		{
-			if (File.Exists(_addin.PathToOutput))
+			try
 			{
-				File.Delete(_addin.PathToOutput);
+				if (File.Exists(_addin.PathToOutput))
+				{
+					File.Delete(_addin.PathToOutput);
+				}
 			}
+			catch(Exception)
+			{
+			}
+		}
+		[Test]
+		public void AlwaysHappy()
+		{
 		}
 
 		[Test, Ignore("Unexplicably fails in nvelocity, sometimes")]

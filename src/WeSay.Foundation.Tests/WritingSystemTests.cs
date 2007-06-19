@@ -13,7 +13,6 @@ namespace WeSay.Language.Tests
 	[TestFixture]
 	public class WritingSystemTests
 	{
-
 		private string _path;
 		private WritingSystemCollection _collection;
 
@@ -75,7 +74,6 @@ namespace WeSay.Language.Tests
 			Assert.AreEqual("PretendAnalysis", ws.Id);
 			Assert.AreEqual("Wingdings", ws.Font.Name);
 			Assert.AreEqual(10, ws.Font.Size);
-
 		}
 
 

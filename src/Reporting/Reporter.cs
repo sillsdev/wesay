@@ -164,7 +164,7 @@ namespace Reporting
 				string result = HttpPost("http://www.wesay.org/usage/post.php", parameters);
 				return result == "OK";
 			}
-			catch(Exception err)
+			catch(Exception)
 			{
 				Reporting.Logger.WriteMinorEvent("Http Report Failed");
 				return false;
