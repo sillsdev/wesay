@@ -61,7 +61,8 @@ namespace MakeMasterPOFile {
 		}
 
 		/// <summary>
-		///   Looks up a localized string similar to
+		///   Looks up a localized string similar to msgid &quot;&quot;
+		///msgstr &quot;&quot;
 		///&quot;Project-Id-Version: WeSay\n&quot;
 		///&quot;POT-Creation-Date: \n&quot;
 		///&quot;PO-Revision-Date: 2006-09-06 17:01+0700\n&quot;
@@ -70,7 +71,7 @@ namespace MakeMasterPOFile {
 		///&quot;MIME-Version: 1.0\n&quot;
 		///&quot;Content-Type: text/plain; charset=utf-8\n&quot;
 		///&quot;Content-Transfer-Encoding: 8bit\n&quot;
-		///&quot;X-Poedit-Language: Portuguese\n&quot;
+		///&quot;X-Poedit-Language: English\n&quot;
 		///&quot;X-Poedit-Basepath: c:\\wesay\\src\n&quot;.
 		/// </summary>
 		internal static string header {

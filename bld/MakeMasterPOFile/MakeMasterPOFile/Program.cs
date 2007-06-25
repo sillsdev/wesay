@@ -8,6 +8,7 @@ using System.Text.RegularExpressions;
 
 namespace MakeMasterPOFile
 {
+	//merge with something like: "msmerge -U br.po WeSay.pot"
 	class Program
 	{
 		static Dictionary<string, List<string>> _entries = new Dictionary<string, List<string>>();
@@ -29,9 +30,12 @@ namespace MakeMasterPOFile
 		{
 			foreach (string d in Directory.GetDirectories(rootDirectory))
 			{
-				foreach (string file in Directory.GetFiles(d,"*.cs"))
+				foreach (string filePath in Directory.GetFiles(d,"*.cs"))
 				{
-					ProcessFile(file);
+					if(!Path.GetFileName(filePath).ToLower().Contains("test"))
+					{
+						ProcessFile(filePath);
+					}
 				}
 				ProcessDirectory(d);
 			}
