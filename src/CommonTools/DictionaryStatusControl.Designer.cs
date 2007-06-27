@@ -28,7 +28,7 @@ namespace WeSay.CommonTools
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this._dictionarySizeLabel = new System.Windows.Forms.Label();
+			this._dictionarySizeLabel = new WeSay.UI.LocalizableLabel();
 			this.SuspendLayout();
 			//
 			// _dictionarySizeLabel
@@ -57,6 +57,6 @@ namespace WeSay.CommonTools
 
 		#endregion
 
-		private System.Windows.Forms.Label _dictionarySizeLabel;
+		private WeSay.UI.LocalizableLabel _dictionarySizeLabel;
 	}
 }

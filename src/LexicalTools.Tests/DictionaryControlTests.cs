@@ -548,7 +548,7 @@ namespace WeSay.LexicalTools.Tests
 			TypeInMeaning(string.Empty);
 			Thread.Sleep(1000);
 			Application.DoEvents();
-			Assert.IsTrue(GetEditControl("Meaning").Name.Contains("ghost"), "Only ghost should remain");
+			Assert.IsTrue(GetEditControl("~Meaning").Name.Contains("ghost"), "Only ghost should remain");
 		}
 
 		[Test]  //regression test
@@ -579,7 +579,7 @@ namespace WeSay.LexicalTools.Tests
 			Assert.AreEqual("Secondary", LexemeFormOfSelectedEntry);
 			Assert.AreEqual(1, GetCurrentEntry().Senses.Count, "this test assumes an entry with 1 sense");
 			Assert.AreEqual(0, ((LexSense)(GetCurrentEntry().Senses[0])).ExampleSentences.Count, "this test assumes a sense w/ no example");
-			MultiTextControl editControl = GetEditControl("Meaning");
+			MultiTextControl editControl = GetEditControl("~Meaning");
 			editControl.TextBoxes[0].Focus();
 		}
 
@@ -594,8 +594,8 @@ namespace WeSay.LexicalTools.Tests
 			DetailList detailList = GetDetailList();
 			int initialCount = detailList.Count;
 
-			MultiTextControl editControl = GetEditControl("Meaning");
-			Assert.IsTrue(GetEditControl("Meaning").Name.Contains("ghost"));
+			MultiTextControl editControl = GetEditControl("~Meaning");
+			Assert.IsTrue(GetEditControl("~Meaning").Name.Contains("ghost"));
 			 editControl.TextBoxes[0].Focus();
 			 TextBoxTester t = new TextBoxTester(editControl.TextBoxes[0].Name);
 		  //didn''t work  t.FireEvent("KeyPress", new KeyPressEventArgs('a'));
@@ -612,7 +612,7 @@ namespace WeSay.LexicalTools.Tests
 
 			//now do another one
 			initialCount = detailList.Count;
-			MultiTextControl editControl2 = (MultiTextControl) GetEditControl("Meaning",true);
+			MultiTextControl editControl2 = (MultiTextControl) GetEditControl("~Meaning",true);
 			Assert.IsTrue(editControl2.Name.Contains("ghost"));
 			editControl2.TextBoxes[0].Focus();
 			Application.DoEvents();

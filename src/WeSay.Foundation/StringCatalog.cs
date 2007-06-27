@@ -1,3 +1,5 @@
+using System;
+using System.Drawing;
 using System.IO;
 
 namespace WeSay.Language
@@ -19,6 +21,11 @@ namespace WeSay.Language
 //
 		public static string Get(string id)
 		{
+			return Get(id, String.Empty);
+		}
+
+		public static string Get(string id, string translationNotes)
+		{
 			if (_singleton == null)//todo: this should not be needed
 				return id;
 			return _singleton[id];
@@ -26,6 +33,7 @@ namespace WeSay.Language
 
 		private System.Collections.Specialized.StringDictionary _catalog;
 		private static StringCatalog _singleton;
+		private static Font _font;
 
 		/// <summary>
 		/// Construct with no actual string file
@@ -33,13 +41,14 @@ namespace WeSay.Language
 		public StringCatalog()
 		{
 			Init();
+			SetupUIFont();
 		}
 
 		public StringCatalog(string pathToPoFile)
 		{
 			Init();
 
-			TextReader reader =  (TextReader)File.OpenText(pathToPoFile);
+			TextReader reader = (TextReader) File.OpenText(pathToPoFile);
 			try
 			{
 				string id = null;
@@ -67,8 +76,46 @@ namespace WeSay.Language
 			{
 				reader.Close();
 			}
+			SetupUIFont();
 
 		}
+
+		/// <summary>
+		/// the ui font can be customized by providing 'translations' indicating font name and size
+		/// </summary>
+		private void SetupUIFont()
+		{
+			LabelFont = new Font("Comic Sans MS", 9);
+			// _font = new Font(FontFamily.GenericMonospace, 12);
+
+			string fontFamily = Get("_fontFamily");
+			string fontSize = Get("_fontSize");
+			if (fontFamily != "_fontFamily")
+			{
+				int sz = 9;
+				if (fontSize != "_fontSize")
+				{
+					try
+					{
+						sz = Int32.Parse(fontSize);
+					}
+					catch (Exception)
+					{
+						Reporting.ErrorReporter.ReportNonFatalMessage("The localization initialization could not understand the font size '{0}', which should be an integer number", fontSize);
+					}
+				}
+				try
+				{
+					LabelFont = new Font(fontFamily, sz);
+				}
+				catch (Exception)
+				{
+					Reporting.ErrorReporter.ReportNonFatalMessage("The localization initialization  could not create a font '{0}' of size '{1}'",
+																  fontFamily, sz);
+			   }
+			}
+		}
+
 
 		private void Init()
 		{
@@ -92,6 +139,18 @@ namespace WeSay.Language
 					return id;
 				else
 					return s;
+			}
+		}
+
+		public static Font LabelFont
+		{
+			get
+			{
+				return _font;
+			}
+			set
+			{
+				_font = value;
 			}
 		}
 	}

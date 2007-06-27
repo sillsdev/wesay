@@ -76,7 +76,7 @@ namespace WeSay.LexicalTools
 		{
 			get
 			{
-				return String.Format(StringCatalog.Get("See all {0} {1} words."), DataSource.Count, BasilProject.Project.Name);
+				return String.Format(StringCatalog.Get("~See all {0} {1} words.", "The description of the 'Dictionary' task.  In place of the {0} will be the number of words in the dictionary.  In place of the {1} will be the name of the project."), DataSource.Count, BasilProject.Project.Name);
 			}
 		}
 

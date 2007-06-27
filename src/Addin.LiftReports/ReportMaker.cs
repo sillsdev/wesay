@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using Addin.LiftReports.Properties;
 using Mono.Addins;
 using WeSay.AddinLib;
+using WeSay.Language;
 
 namespace Addin.LiftReports
 {
@@ -35,7 +36,7 @@ namespace Addin.LiftReports
 		{
 			get
 			{
-				return "View Report";
+				return StringCatalog.Get("~View Report");
 			}
 		}
 
@@ -43,7 +44,7 @@ namespace Addin.LiftReports
 		{
 			get
 			{
-				return "Shows some information about the lexicon.";
+				return StringCatalog.Get("~Shows some information about the lexicon.");
 			}
 		}
 

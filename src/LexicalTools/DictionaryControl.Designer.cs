@@ -45,8 +45,8 @@ namespace WeSay.LexicalTools
 			this._btnFind = new System.Windows.Forms.Button();
 			this._findText = new WeSay.UI.WeSayAutoCompleteTextBox();
 			this._writingSystemChooser = new System.Windows.Forms.Button();
-			this._findWritingSystemId = new System.Windows.Forms.Label();
-			this._recordsListBox = new WeSayListBox();
+			this._findWritingSystemId = new WeSay.UI.LocalizableLabel();
+			this._recordsListBox = new WeSay.UI.WeSayListBox();
 			this.panelTools = new System.Windows.Forms.Panel();
 			this._btnDeleteWord = new System.Windows.Forms.Button();
 			this._btnNewWord = new System.Windows.Forms.Button();
@@ -84,7 +84,6 @@ namespace WeSay.LexicalTools
 			this._btnFind.TabIndex = 2;
 			this._btnFind.UseVisualStyleBackColor = false;
 			this._btnFind.Click += new System.EventHandler(this.OnFind_Click);
-
 			//
 			// _findText
 			//
@@ -94,7 +93,6 @@ namespace WeSay.LexicalTools
 			this._findText.BorderStyle = System.Windows.Forms.BorderStyle.None;
 			this._findText.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this._findText.Location = new System.Drawing.Point(24, 3);
-			this._findText.Multiline = false;
 			this._findText.MultiParagraph = false;
 			this._findText.Name = "_findText";
 			this._findText.PopupBorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
@@ -102,7 +100,7 @@ namespace WeSay.LexicalTools
 			this._findText.PopupSelectionBackColor = System.Drawing.SystemColors.Highlight;
 			this._findText.PopupSelectionForeColor = System.Drawing.SystemColors.HighlightText;
 			this._findText.PopupWidth = 118;
-			this._findText.Size = new System.Drawing.Size(80, 24);
+			this._findText.Size = new System.Drawing.Size(80, 19);
 			this._findText.TabIndex = 1;
 			this._findText.AutoCompleteChoiceSelected += new System.EventHandler(this._findText_AutoCompleteChoiceSelected);
 			//

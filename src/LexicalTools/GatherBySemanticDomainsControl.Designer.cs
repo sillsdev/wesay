@@ -36,14 +36,14 @@ namespace WeSay.LexicalTools
 			System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("stuff");
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GatherBySemanticDomainsControl));
 			this._domainName = new System.Windows.Forms.ComboBox();
-			this.label3 = new System.Windows.Forms.Label();
+			this.label3 = new WeSay.UI.LocalizableLabel();
 			this._listViewWords = new WeSayListBox();
-			this.label5 = new System.Windows.Forms.Label();
-			this.label4 = new System.Windows.Forms.Label();
-			this._instructionLabel = new System.Windows.Forms.Label();
-			this._question = new System.Windows.Forms.Label();
-			this._description = new System.Windows.Forms.Label();
-			this._animatedText = new System.Windows.Forms.Label();
+			this.label5 = new WeSay.UI.LocalizableLabel();
+			this.label4 = new WeSay.UI.LocalizableLabel();
+			this._instructionLabel = new WeSay.UI.LocalizableLabel();
+			this._question = new WeSay.UI.LocalizableLabel();
+			this._description = new WeSay.UI.LocalizableLabel();
+			this._animatedText = new WeSay.UI.LocalizableLabel();
 			this._questionIndicator = new WeSay.UI.CirclesProgressIndicator();
 			this._vernacularBox = new WeSay.UI.MultiTextControl();
 			this._btnPrevious = new WeSay.UI.Buttons.PreviousButton();
@@ -77,7 +77,7 @@ namespace WeSay.LexicalTools
 			this.label3.Name = "label3";
 			this.label3.Size = new System.Drawing.Size(37, 13);
 			this.label3.TabIndex = 19;
-			this.label3.Text = "Word";
+			this.label3.Text = "~Word";
 			//
 			// _listViewWords
 			//
@@ -108,7 +108,7 @@ namespace WeSay.LexicalTools
 			this.label5.Name = "label5";
 			this.label5.Size = new System.Drawing.Size(102, 15);
 			this.label5.TabIndex = 16;
-			this.label5.Text = "(Page Down Key)";
+			this.label5.Text = "~(Page Down Key)";
 			//
 			// label4
 			//
@@ -120,7 +120,7 @@ namespace WeSay.LexicalTools
 			this.label4.Name = "label4";
 			this.label4.Size = new System.Drawing.Size(67, 15);
 			this.label4.TabIndex = 14;
-			this.label4.Text = "(Enter Key)";
+			this.label4.Text = "~(Enter Key)";
 			//
 			// _instructionLabel
 			//
@@ -131,7 +131,7 @@ namespace WeSay.LexicalTools
 			this._instructionLabel.Name = "_instructionLabel";
 			this._instructionLabel.Size = new System.Drawing.Size(399, 20);
 			this._instructionLabel.TabIndex = 15;
-			this._instructionLabel.Text = "Try thinking of words you use to talk about these things.";
+			this._instructionLabel.Text = "~Try thinking of words you use to talk about these things.";
 			//
 			// _question
 			//
@@ -265,17 +265,17 @@ namespace WeSay.LexicalTools
 
 		private WeSay.UI.MultiTextControl _vernacularBox;
 		private System.Windows.Forms.ComboBox _domainName;
-		private System.Windows.Forms.Label label3;
+		private WeSay.UI.LocalizableLabel label3;
 		private WeSayListBox _listViewWords;
-		private System.Windows.Forms.Label label5;
-		private System.Windows.Forms.Label label4;
-	  private System.Windows.Forms.Label _instructionLabel;
+		private WeSay.UI.LocalizableLabel label5;
+		private WeSay.UI.LocalizableLabel label4;
+	  private WeSay.UI.LocalizableLabel _instructionLabel;
 		private PreviousButton _btnPrevious;
 		private NextButton _btnNext;
 		private AddButton _btnAddWord;
-		private System.Windows.Forms.Label _question;
-		private System.Windows.Forms.Label _description;
+		private WeSay.UI.LocalizableLabel _question;
+		private WeSay.UI.LocalizableLabel _description;
 		private WeSay.UI.CirclesProgressIndicator _questionIndicator;
-	  private System.Windows.Forms.Label _animatedText;
+	  private WeSay.UI.LocalizableLabel _animatedText;
 	}
 }

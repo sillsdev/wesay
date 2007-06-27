@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using Mono.Addins;
 using WeSay.AddinLib;
+using WeSay.Language;
 
 namespace Addin.Backup
 {
@@ -33,7 +34,7 @@ namespace Addin.Backup
 		{
 			get
 			{
-				return "Backup To Device";
+				return StringCatalog.Get("~Backup To Device","Label for usb backup action");
 			}
 		}
 
@@ -41,7 +42,7 @@ namespace Addin.Backup
 		{
 			get
 			{
-				return "Saves a backup on an external device, like a USB key.";
+				return StringCatalog.Get("~Saves a backup on an external device, like a USB key.","description of usb backup action");
 			}
 		}
 

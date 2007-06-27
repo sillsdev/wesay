@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using Mono.Addins;
 using WeSay.AddinLib;
+using WeSay.Language;
 
 namespace Addin.Transform
 {
@@ -14,7 +15,7 @@ namespace Addin.Transform
 		{
 			get
 			{
-				return "Html Exporter";
+				return StringCatalog.Get("~Html Exporter");
 			}
 		}
 
@@ -22,7 +23,7 @@ namespace Addin.Transform
 		{
 			get
 			{
-				return "Creates an Html version of the dictionary ready for printing.";
+				return StringCatalog.Get("~Creates an Html version of the dictionary ready for printing.");
 			}
 		}
 

@@ -45,7 +45,8 @@ namespace MakeMasterPOFile
 		{
 			string contents = File.ReadAllText(filePath);
 			System.Text.RegularExpressions.Regex pattern =
-				new System.Text.RegularExpressions.Regex("StringCatalog.Get\\(\"(.*)\"\\)", System.Text.RegularExpressions.RegexOptions.Compiled);
+//                new System.Text.RegularExpressions.Regex("StringCatalog.Get\\(\"(.*)\"\\)", System.Text.RegularExpressions.RegexOptions.Compiled);
+				new System.Text.RegularExpressions.Regex("\"~(.*)\"", System.Text.RegularExpressions.RegexOptions.Compiled);
 
 			foreach (System.Text.RegularExpressions.Match  match in pattern.Matches(contents))
 			{

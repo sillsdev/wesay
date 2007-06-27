@@ -24,6 +24,7 @@ namespace WeSay.LexicalTools
 		public MissingInfoControl(IRecordList<LexEntry> records, ViewTemplate viewTemplate, Predicate<LexEntry> isNotComplete)
 		{
 			InitializeComponent();
+
 			if (DesignMode)
 			{
 				return;
@@ -159,7 +160,7 @@ namespace WeSay.LexicalTools
 			else
 			{
 				CurrentRecord = null;
-				_congratulationsControl.Show(StringCatalog.Get("Congratulations. You have completed this task."));
+				_congratulationsControl.Show(StringCatalog.Get("~Congratulations. You have completed this task."));
 			}
 		}
 
@@ -196,7 +197,7 @@ namespace WeSay.LexicalTools
 			if (this._records.Count == 0)
 			{
 				CurrentRecord = null;
-				_congratulationsControl.Show(StringCatalog.Get("There is no work left to be done on this task."));
+				_congratulationsControl.Show(StringCatalog.Get("~There is no work left to be done on this task."));
 			}
 			else
 			{

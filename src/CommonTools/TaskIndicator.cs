@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
+using WeSay.Language;
 using WeSay.Project;
 
 namespace WeSay.CommonTools
@@ -39,8 +40,10 @@ namespace WeSay.CommonTools
 			{
 				WriteCacheFile(cacheFilePath, cachePath);
 			}
-			this._btnName.Text = task.Label;
-			this._textShortDescription.Text = task.Description;
+			_btnName.Font = StringCatalog.LabelFont;
+			this._btnName.Text = task.Label;//these have already gone through the StringCatalog
+			this._textShortDescription.Text = task.Description;//these have already gone through the StringCatalog
+			_textShortDescription.Font = StringCatalog.LabelFont;
 		}
 
 		private void WriteCacheFile(string cacheFilePath, string cachePath) {

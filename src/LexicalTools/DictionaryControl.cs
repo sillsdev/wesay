@@ -78,6 +78,10 @@ namespace WeSay.LexicalTools
 
 			InitializeDisplaySettings();
 			InitializeComponent();
+
+			this._btnNewWord.Font = StringCatalog.LabelFont;
+			this._btnDeleteWord.Font = StringCatalog.LabelFont;
+
 			this._writingSystemChooser.Image = Resources.Expand.GetThumbnailImage(6, 6, ReturnFalse, IntPtr.Zero);
 			this._btnFind.Image = Resources.Find.GetThumbnailImage(18, 18, ReturnFalse, IntPtr.Zero);
 			this._btnDeleteWord.Image = Resources.DeleteWord.GetThumbnailImage(18, 18, ReturnFalse, IntPtr.Zero);

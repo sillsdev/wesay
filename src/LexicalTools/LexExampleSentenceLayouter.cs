@@ -27,7 +27,7 @@ namespace WeSay.LexicalTools
 			if (field != null && field.DoShow )
 			{
 				Control entry = MakeBoundControl(example.Sentence, field);
-				DetailList.AddWidgetRow(StringCatalog.Get("Example"), false, entry, insertAtRow+rowCount, false);
+				DetailList.AddWidgetRow(StringCatalog.Get("~Example", "This is the field containing an example sentence of a sense of a word."), false, entry, insertAtRow+rowCount, false);
 				++rowCount;
 			}
 
@@ -35,7 +35,7 @@ namespace WeSay.LexicalTools
 			if (field != null && field.DoShow)
 			{
 				 Control entry = MakeBoundControl(example.Translation, field);
-				DetailList.AddWidgetRow(StringCatalog.Get("Translation"), false, entry, insertAtRow+rowCount, false);
+				DetailList.AddWidgetRow(StringCatalog.Get("~Translation", "This is the field for putting in a translation of an example sentence."), false, entry, insertAtRow+rowCount, false);
 				++rowCount;
 			}
 

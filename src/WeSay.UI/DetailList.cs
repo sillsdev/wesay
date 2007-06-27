@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
+using WeSay.Language;
 
 namespace WeSay.UI
 {
@@ -143,7 +144,7 @@ namespace WeSay.UI
 			Label label = new Label();
 			if (isHeader)
 			{
-				label.Font = new Font(label.Font, FontStyle.Bold);
+				label.Font = new Font(StringCatalog.LabelFont /* label.Font*/, FontStyle.Bold);
 			}
 			label.Text = fieldLabel;
 			label.Size = new Size(75, 50);

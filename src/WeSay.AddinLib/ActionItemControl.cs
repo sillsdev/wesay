@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Serialization;
 using Mono.Addins;
+using WeSay.Language;
 
 namespace WeSay.AddinLib
 {
@@ -49,6 +50,9 @@ namespace WeSay.AddinLib
 			_addin = addin;
 			_inAdminMode = inAdminMode;
 			InitializeComponent();
+			_actionName.Font = StringCatalog.LabelFont;
+			_description.Font = StringCatalog.LabelFont;
+
 			_toggleShowInWeSay.Visible = inAdminMode;
 			_setupButton.Visible = inAdminMode;
 

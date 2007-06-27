@@ -62,11 +62,11 @@ namespace WeSay.LexicalTools
 			this._entryViewControl = new WeSay.LexicalTools.EntryViewControl();
 			this._recordsListBox = new WeSay.UI.WeSayListBox();
 			this._completedRecordsListBox = new WeSay.UI.WeSayListBox();
-			this._completedRecordsLabel = new System.Windows.Forms.Label();
+			this._completedRecordsLabel = new WeSay.UI.LocalizableLabel();
 			this._btnPreviousWord = new WeSay.UI.Buttons.PreviousButton();
 			this._btnNextWord = new WeSay.UI.Buttons.NextButton();
-			this.labelNextHotKey = new System.Windows.Forms.Label();
-			this.label1 = new System.Windows.Forms.Label();
+			this.labelNextHotKey = new WeSay.UI.LocalizableLabel();
+			this.label1 = new WeSay.UI.LocalizableLabel();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
 			this.splitContainer1.SuspendLayout();
@@ -183,7 +183,7 @@ namespace WeSay.LexicalTools
 			this.labelNextHotKey.Name = "labelNextHotKey";
 			this.labelNextHotKey.Size = new System.Drawing.Size(102, 15);
 			this.labelNextHotKey.TabIndex = 13;
-			this.labelNextHotKey.Text = "(Page Down Key)";
+			this.labelNextHotKey.Text = "~(Page Down Key)";
 			//
 			// label1
 			//

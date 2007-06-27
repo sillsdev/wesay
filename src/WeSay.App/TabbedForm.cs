@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using WeSay.Language;
 using WeSay.Project;
 using System.Windows.Forms;
 
@@ -18,6 +19,7 @@ namespace WeSay.App
 			InitializeComponent();
 			this.tabControl1.TabPages.Clear();
 			this.tabControl1.SelectedIndexChanged += new EventHandler(tabControl1_SelectedIndexChanged);
+			this.tabControl1.Font = StringCatalog.LabelFont;
 		}
 
 		public void InitializeTasks(IList<ITask> taskList)

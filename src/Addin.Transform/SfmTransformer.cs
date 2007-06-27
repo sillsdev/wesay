@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Mono.Addins;
 using WeSay.AddinLib;
+using WeSay.Language;
 
 namespace Addin.Transform
 {
@@ -23,7 +24,7 @@ namespace Addin.Transform
 		{
 			get
 			{
-				return "SFM Exporter";
+				return StringCatalog.Get("~SFM Exporter");
 			}
 		}
 
@@ -31,7 +32,7 @@ namespace Addin.Transform
 		{
 			get
 			{
-				return "Saves the lexicon in a form of standard format.";
+				return StringCatalog.Get("~Saves the lexicon in a form of standard format.");
 			}
 		}
 

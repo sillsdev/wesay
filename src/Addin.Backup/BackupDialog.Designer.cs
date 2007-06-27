@@ -29,8 +29,8 @@ namespace Addin.Backup
 		private void InitializeComponent()
 		{
 			this.components = new System.ComponentModel.Container();
-			this._topLabel = new System.Windows.Forms.Label();
-			this._noteLabel = new System.Windows.Forms.Label();
+			this._topLabel = new WeSay.UI.LocalizableLabel();
+			this._noteLabel = new WeSay.UI.LocalizableLabel();
 			this._cancelButton = new System.Windows.Forms.Button();
 			this._checkForUsbKeyTimer = new System.Windows.Forms.Timer(this.components);
 			this.pictureBox1 = new System.Windows.Forms.PictureBox();
@@ -56,7 +56,6 @@ namespace Addin.Backup
 			this._noteLabel.TabIndex = 2;
 			this._noteLabel.Text = "Secondary status goes here";
 			this._noteLabel.Visible = false;
-			this._noteLabel.Click += new System.EventHandler(this._noteLabel_Click);
 			//
 			// _cancelButton
 			//
@@ -66,7 +65,7 @@ namespace Addin.Backup
 			this._cancelButton.Name = "_cancelButton";
 			this._cancelButton.Size = new System.Drawing.Size(75, 23);
 			this._cancelButton.TabIndex = 3;
-			this._cancelButton.Text = "&Cancel";
+			this._cancelButton.Text = "~&Cancel";
 			this._cancelButton.UseVisualStyleBackColor = true;
 			this._cancelButton.Click += new System.EventHandler(this._cancelButton_Click);
 			//
@@ -110,8 +109,8 @@ namespace Addin.Backup
 
 		#endregion
 
-		private System.Windows.Forms.Label _topLabel;
-		private System.Windows.Forms.Label _noteLabel;
+		private WeSay.UI.LocalizableLabel _topLabel;
+		private WeSay.UI.LocalizableLabel _noteLabel;
 		private System.Windows.Forms.Button _cancelButton;
 		private System.Windows.Forms.Timer _checkForUsbKeyTimer;
 		private System.Windows.Forms.PictureBox pictureBox1;

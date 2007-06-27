@@ -1,15 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Management;
-using System.Text;
 using System.Windows.Forms;
 using WeSay.AddinLib;
-using WeSay.Project;
+using WeSay.Language;
 
 namespace Addin.Backup
 {
@@ -20,11 +16,11 @@ namespace Addin.Backup
 		public BackupDialog(ProjectInfo projectInfo)
 		{
 			_projectInfo = projectInfo;
-		   // _pathToProjectDirectory = pathToProjectDirectory;
-			//_project = _project ;
 			InitializeComponent();
-			_topLabel.Text = "Looking for USB Keys...";
+			_topLabel.Text = "~Looking for USB Keys...";
 			pictureBox1.Image = Resources.backupToDeviceImage;
+			_cancelButton.Text = StringCatalog.Get(_cancelButton.Text);
+			_cancelButton.Font = StringCatalog.LabelFont;
 		}
 
 
@@ -32,21 +28,21 @@ namespace Addin.Backup
 		{
 			_checkForUsbKeyTimer.Enabled = false;
 			_noteLabel.Visible = false;
-			_topLabel.Text = "Backing Up...";
+			_topLabel.Text = "~Backing Up...";
 			this.Refresh();
 			try
 			{
 				string dest= Path.Combine(info.RootDirectory.FullName, _projectInfo.Name + "_wesay.zip");
 				WeSay.Foundation.BackupMaker.BackupToExternal(_projectInfo.PathToTopLevelDirectory, dest, _projectInfo.FilesBelongingToProject);
-				_topLabel.Text = "Backup Complete";
+				_topLabel.Text = "~Backup Complete";
 				_noteLabel.Visible = true;
-				_noteLabel.Text = String.Format("Files backed up to {0}", dest);
+				_noteLabel.Text = String.Format("~Files backed up to {0}", dest);
 			}
 			catch (Exception e)
 			{
 				Reporting.ErrorReporter.ReportNonFatalMessage("WeSay could to perform the backup.  Reason: {0}",
 															  e.Message);
-				 _topLabel.Text = "Files were not backed up.";
+				 _topLabel.Text = "~Files were not backed up.";
 				 _topLabel.ForeColor = Color.Red;
 		   }
 
@@ -122,14 +118,8 @@ namespace Addin.Backup
 			}
 			else
 			{
-				this._topLabel.Text = "Please insert the USB Key to backup to.";
+				this._topLabel.Text = "~Please insert the USB Key to backup to.";
 			}
 		}
-
-		private void _noteLabel_Click(object sender, EventArgs e)
-		{
-
-		}
-
 	}
 }

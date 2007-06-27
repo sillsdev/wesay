@@ -85,6 +85,12 @@
 	<Compile Include="ControlListBox.designer.cs">
 	  <DependentUpon>ControlListBox.cs</DependentUpon>
 	</Compile>
+	<Compile Include="LocalizableLabel.cs">
+	  <SubType>Component</SubType>
+	</Compile>
+	<Compile Include="LocalizableLabel.Designer.cs">
+	  <DependentUpon>LocalizableLabel.cs</DependentUpon>
+	</Compile>
 	<Compile Include="ProgressDialog.cs">
 	  <SubType>Form</SubType>
 	</Compile>
@@ -172,6 +178,10 @@
 	</EmbeddedResource>
 	<EmbeddedResource Include="ControlListBox.resx">
 	  <DependentUpon>ControlListBox.cs</DependentUpon>
+	  <SubType>Designer</SubType>
+	</EmbeddedResource>
+	<EmbeddedResource Include="LocalizableLabel.resx">
+	  <DependentUpon>LocalizableLabel.cs</DependentUpon>
 	  <SubType>Designer</SubType>
 	</EmbeddedResource>
 	<EmbeddedResource Include="ProgressDialog.resx">
