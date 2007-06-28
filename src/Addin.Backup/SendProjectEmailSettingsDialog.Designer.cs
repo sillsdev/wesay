@@ -31,8 +31,8 @@ namespace Addin.Backup
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SendProjectEmailSettingsDialog));
 			this._okButton = new System.Windows.Forms.Button();
 			this._cancelButton = new System.Windows.Forms.Button();
-			this.label1 = new WeSay.UI.LocalizableLabel();
-			this.label2 = new WeSay.UI.LocalizableLabel();
+			this.label1 = new System.Windows.Forms.Label();
+			this.label2 = new System.Windows.Forms.Label();
 			this._name = new System.Windows.Forms.TextBox();
 			this._email = new System.Windows.Forms.TextBox();
 			this.SuspendLayout();
@@ -119,8 +119,8 @@ namespace Addin.Backup
 
 		private System.Windows.Forms.Button _okButton;
 		private System.Windows.Forms.Button _cancelButton;
-		private WeSay.UI.LocalizableLabel label1;
-		private WeSay.UI.LocalizableLabel label2;
+		private System.Windows.Forms.Label label1;
+		private System.Windows.Forms.Label label2;
 		private System.Windows.Forms.TextBox _name;
 		private System.Windows.Forms.TextBox _email;
 	}

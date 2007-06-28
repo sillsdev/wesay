@@ -46,7 +46,7 @@ namespace WeSay.LexicalTools
 
 		public int AddGhost(System.ComponentModel.IBindingList list, int insertAtRow)
 		{
-			return MakeGhostWidget<LexExampleSentence>(list, insertAtRow, Field.FieldNames.ExampleSentence.ToString(), "Example", "Sentence", false);
+			return MakeGhostWidget<LexExampleSentence>(list, insertAtRow, Field.FieldNames.ExampleSentence.ToString(), "~Example", "Sentence", false);
 		}
 
 

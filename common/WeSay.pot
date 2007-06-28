@@ -11,149 +11,230 @@ msgstr ""
 "X-Poedit-Language: English\n"
 "X-Poedit-Basepath: c:\\wesay\\src\n"
 
-#: ..\src\Addin.Backup\BackupDialog.cs
-msgid "Looking for USB Keys..."
+
+#; ..\src\CommonTools\DashboardControl.cs
+#. The label for the 'dashboard'; the task which lets you see the status of other tasks and jump to them.
+msgid "Home"
 msgstr ""
 
-#: ..\src\Addin.Backup\BackupDialog.cs
-msgid "Backing Up..."
+
+msgid "This task is normally the first thing the user sees when WeSay comes up.  It gives the user some status of the project, and reminds him what he was working on. Finally, this tab will allow him to switch to a different work task, if you have enabled more than one."
 msgstr ""
 
-#: ..\src\Addin.Backup\BackupDialog.cs
-msgid "Backup Complete"
+
+msgid "Dictionary"
 msgstr ""
 
-#: ..\src\Addin.Backup\BackupDialog.cs
-msgid "Files backed up to {0}"
+
+msgid "This task allows advanced users to see and edit all enabled fields of all entries in the dictionary.  He can add, delete, and search for entries.  NOTE: while this task may be very enticing to those familiar with traditional programs, this is *not* intended to be a primary way of working with WeSay."
 msgstr ""
 
-#: ..\src\Addin.Backup\BackupDialog.cs
-msgid "Files were not backed up."
+
+msgid "Add Meanings"
 msgstr ""
 
-#: ..\src\Addin.Backup\BackupDialog.cs
-msgid "Please insert the USB Key to backup to."
+
+msgid "Add meanings to entries where they are missing."
 msgstr ""
 
-#: ..\src\Addin.Backup\BackupDialog.Designer.cs
-msgid "&Cancel"
+
+msgid "Add Examples"
 msgstr ""
 
-#: ..\src\Addin.Backup\BackupToDevice.cs
-msgid "Backup To Device","Label for usb backup action"
+
+msgid "Add example sentences to entries where they are missing."
 msgstr ""
 
-#: ..\src\Addin.Backup\BackupToDevice.cs
-msgid "Saves a backup on an external device, like a USB key.","description of usb backup action"
+
+msgid "Collect Word List"
 msgstr ""
 
-#: ..\src\Addin.Backup\SendProjectEmail.cs
-msgid "Email My Work to {0}"
+
+msgid "Collect new words by translating from words in another language."
 msgstr ""
 
-#: ..\src\Addin.Backup\SendProjectEmail.cs
-msgid "Send a zipped email containing all your WeSay work."
+
+msgid "Collect Words By Semantic Domain"
 msgstr ""
 
-#: ..\src\Addin.LiftReports\ReportMaker.cs
-msgid "View Report"
+
+msgid "Collect new words organized by semantic domains and questions about those domains."
 msgstr ""
 
-#: ..\src\Addin.LiftReports\ReportMaker.cs
-msgid "Shows some information about the lexicon."
-msgstr ""
 
-#: ..\src\Addin.Transform\HtmlTransformer.cs
-msgid "Html Exporter"
-msgstr ""
-
-#: ..\src\Addin.Transform\HtmlTransformer.cs
-msgid "Creates an Html version of the dictionary ready for printing."
-msgstr ""
-
-#: ..\src\Addin.Transform\SfmTransformer.cs
-msgid "SFM Exporter"
-msgstr ""
-
-#: ..\src\Addin.Transform\SfmTransformer.cs
-msgid "Saves the lexicon in a form of standard format."
-msgstr ""
-
-#: ..\src\CommonTools\ActionsControl.cs
+#; ..\src\CommonTools\ActionsControl.cs
 msgid "Actions"
 msgstr ""
 
-#: ..\src\CommonTools\ActionsControl.cs
-msgid "Backup, create a progress report, etc.", "The description of the Actions task."
+
+msgid "Perform actions on the project as a whole. For example backup, produce a report, print out a simple dictionary, etc."
 msgstr ""
 
-#: ..\src\CommonTools\DashboardControl.cs
+#; ..\src\Addin.Backup\BackupDialog.cs
+msgid "Looking for USB Keys..."
+msgstr ""
+
+#; ..\src\Addin.Backup\BackupDialog.cs
+msgid "Backing Up..."
+msgstr ""
+
+#; ..\src\Addin.Backup\BackupDialog.cs
+msgid "Backup Complete"
+msgstr ""
+
+#; ..\src\Addin.Backup\BackupDialog.cs
+msgid "Files backed up to {0}"
+msgstr ""
+
+#; ..\src\Addin.Backup\BackupDialog.cs
+msgid "Files were not backed up."
+msgstr ""
+
+#; ..\src\Addin.Backup\BackupDialog.cs
+msgid "Please insert the USB Key to backup to."
+msgstr ""
+
+#; ..\src\Addin.Backup\BackupDialog.Designer.cs
+msgid "&Cancel"
+msgstr ""
+
+#; ..\src\Addin.Backup\BackupToDevice.cs
+#. Label for usb backup action
+msgid "Backup To Device"
+msgstr ""
+
+#; ..\src\Addin.Backup\BackupToDevice.cs
+#. description of usb backup action
+msgid "Saves a backup on an external device, like a USB key."
+msgstr ""
+
+#; ..\src\Addin.Backup\SendProjectEmail.cs
+msgid "Email My Work to {0}"
+msgstr ""
+
+#; ..\src\Addin.Backup\SendProjectEmail.cs
+msgid "Send a zipped email containing all your WeSay work."
+msgstr ""
+
+#; ..\src\Addin.LiftReports\ReportMaker.cs
+msgid "View Report"
+msgstr ""
+
+#; ..\src\Addin.LiftReports\ReportMaker.cs
+msgid "Shows some information about the lexicon."
+msgstr ""
+
+#; ..\src\Addin.Transform\HtmlTransformer.cs
+msgid "Html Exporter"
+msgstr ""
+
+#; ..\src\Addin.Transform\HtmlTransformer.cs
+msgid "Creates an Html version of the dictionary ready for printing."
+msgstr ""
+
+#; ..\src\Addin.Transform\SfmTransformer.cs
+msgid "SFM Exporter"
+msgstr ""
+
+#; ..\src\Addin.Transform\SfmTransformer.cs
+msgid "Saves the lexicon in a form of standard format."
+msgstr ""
+
+#; ..\src\CommonTools\ActionsControl.cs
+#. The description of the Actions task.
+msgid "Backup, create a progress report, etc."
+msgstr ""
+
+#; ..\src\CommonTools\DashboardControl.cs
 msgid "Tasks"
 msgstr ""
 
-#: ..\src\CommonTools\DashboardControl.cs
-msgid "Home", "The label for the 'dashboard'; the task which lets you see the status of other tasks and jump to them."
-msgstr ""
-
-#: ..\src\CommonTools\DashboardControl.cs
+#; ..\src\CommonTools\DashboardControl.cs
 msgid "Switch tasks and see current status of tasks"
 msgstr ""
 
-#: ..\src\LexicalTools\DictionaryTask.cs
-msgid "See all {0} {1} words.", "The description of the 'Dictionary' task.  In place of the {0} will be the number of words in the dictionary.  In place of the {1} will be the name of the project."
+#; ..\src\CommonTools\DictionaryStatusControl.Designer.cs
+msgid "Your dictionary has {0} words"
 msgstr ""
 
-#: ..\src\LexicalTools\GatherBySemanticDomainsControl.Designer.cs
+#; ..\src\LexicalTools\DictionaryControl.Designer.cs
+msgid "&Delete This Word"
+msgstr ""
+
+#; ..\src\LexicalTools\DictionaryControl.Designer.cs
+msgid "&New Word"
+msgstr ""
+
+#; ..\src\LexicalTools\DictionaryTask.cs
+#. The description of the 'Dictionary' task.  In place of the {0} will be the number of words in the dictionary.  In place of the {1} will be the name of the project.
+msgid "See all {0} {1} words."
+msgstr ""
+
+#; ..\src\LexicalTools\GatherBySemanticDomainsControl.Designer.cs
 msgid "Word"
 msgstr ""
 
-#: ..\src\LexicalTools\GatherBySemanticDomainsControl.Designer.cs
-#: ..\src\LexicalTools\GatherWordListControl.Designer.cs
-#: ..\src\LexicalTools\MissingInfoControl.Designer.cs
+#; ..\src\LexicalTools\GatherBySemanticDomainsControl.Designer.cs
+#; ..\src\LexicalTools\GatherWordListControl.Designer.cs
+#; ..\src\LexicalTools\MissingInfoControl.Designer.cs
 msgid "(Page Down Key)"
 msgstr ""
 
-#: ..\src\LexicalTools\GatherBySemanticDomainsControl.Designer.cs
-#: ..\src\LexicalTools\GatherWordListControl.Designer.cs
+#; ..\src\LexicalTools\GatherBySemanticDomainsControl.Designer.cs
+#; ..\src\LexicalTools\GatherWordListControl.Designer.cs
 msgid "(Enter Key)"
 msgstr ""
 
-#: ..\src\LexicalTools\GatherBySemanticDomainsControl.Designer.cs
+#; ..\src\LexicalTools\GatherBySemanticDomainsControl.Designer.cs
 msgid "Try thinking of words you use to talk about these things."
 msgstr ""
 
-#: ..\src\LexicalTools\GatherWordListControl.Designer.cs
+#; ..\src\LexicalTools\GatherWordListControl.Designer.cs
 msgid "Try thinking of ways to say these words in your language."
 msgstr ""
 
-#: ..\src\LexicalTools\GatherWordListControl.Designer.cs
+#; ..\src\LexicalTools\GatherWordListControl.Designer.cs
 msgid "Word:"
 msgstr ""
 
-#: ..\src\LexicalTools\LexExampleSentenceLayouter.cs
-msgid "Example", "This is the field containing an example sentence of a sense of a word."
+#; ..\src\LexicalTools\LexExampleSentenceLayouter.cs
+#. This is the field containing an example sentence of a sense of a word.
+#; ..\src\LexicalTools\LexExampleSentenceLayouter.cs
+#. Sentence
+msgid "Example"
 msgstr ""
 
-#: ..\src\LexicalTools\LexExampleSentenceLayouter.cs
-msgid "Translation", "This is the field for putting in a translation of an example sentence."
+#; ..\src\LexicalTools\LexExampleSentenceLayouter.cs
+#. This is the field for putting in a translation of an example sentence.
+msgid "Translation"
 msgstr ""
 
-#: ..\src\LexicalTools\LexSenseLayouter.cs
+#; ..\src\LexicalTools\LexSenseLayouter.cs
+#; ..\src\LexicalTools\LexSenseLayouter.cs
+#. This label is shown once, but has two roles.  1) it labels contains the gloss, and 2) marks the beginning of the set of fields which make up a sense. So, in english, if we labelled this 'gloss', it would describe the field well but wouldn't label the section well."), "Gloss
 msgid "Meaning"
 msgstr ""
 
-#: ..\src\LexicalTools\LexSenseLayouter.cs
-msgid "Meaning", "This label is shown once, but has two roles.  1) it labels contains the gloss, and 2) marks the beginning of the set of fields which make up a sense. So, in english, if we labelled this 'gloss', it would describe the field well but wouldn't label the section well."), "Gloss"
-msgstr ""
-
-#: ..\src\LexicalTools\MissingInfoControl.cs
+#; ..\src\LexicalTools\MissingInfoControl.cs
 msgid "Congratulations. You have completed this task."
 msgstr ""
 
-#: ..\src\LexicalTools\MissingInfoControl.cs
+#; ..\src\LexicalTools\MissingInfoControl.cs
 msgid "There is no work left to be done on this task."
 msgstr ""
 
-#: ..\src\WeSay.UI\SingleOptionControl.cs
-msgid "unknown", "This is shown in a combo-box (list of options, like Part Of Speech) when no option has been chosen, or the user just doesn't know what to put in this field."
+#; ..\src\WeSay.Foundation\StringCatalog.cs
+#; ..\src\WeSay.Foundation\StringCatalog.cs
+#. Translate this to base font size to use, e.g. 9
+msgid "fontSize"
+msgstr ""
+
+#; ..\src\WeSay.Foundation\StringCatalog.cs
+#. Translate this to the name of the font to use, e.g. Arial
+msgid "fontFamily"
+msgstr ""
+
+#; ..\src\WeSay.UI\SingleOptionControl.cs
+#. This is shown in a combo-box (list of options, like Part Of Speech) when no option has been chosen, or the user just doesn't know what to put in this field.
+msgid "unknown"
 msgstr ""

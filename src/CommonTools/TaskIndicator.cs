@@ -40,7 +40,7 @@ namespace WeSay.CommonTools
 			{
 				WriteCacheFile(cacheFilePath, cachePath);
 			}
-			_btnName.Font = StringCatalog.LabelFont;
+			//_btnName.Font = StringCatalog.LabelFont;
 			this._btnName.Text = task.Label;//these have already gone through the StringCatalog
 			this._textShortDescription.Text = task.Description;//these have already gone through the StringCatalog
 			_textShortDescription.Font = StringCatalog.LabelFont;
@@ -109,6 +109,11 @@ namespace WeSay.CommonTools
 		private void OnBtnNameClick(object sender, EventArgs e)
 		{
 			selected(this, e);
+		}
+
+		private void _btnName_FontChanged(object sender, EventArgs e)
+		{
+
 		}
 
 	}

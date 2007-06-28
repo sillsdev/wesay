@@ -1,6 +1,6 @@
 namespace WeSay.UI
 {
-	partial class LocalizableLabel
+	partial class LocalizationHelper
 	{
 		/// <summary>
 		/// Required designer variable.
@@ -28,14 +28,7 @@ namespace WeSay.UI
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this.SuspendLayout();
-			//
-			// LocalizableLabel
-			//
-			this.FontChanged += new System.EventHandler(this.LocalizableLable_FontChanged);
-			this.TextChanged += new System.EventHandler(this.LocalizableLabel_TextChanged);
-			this.ResumeLayout(false);
-
+			components = new System.ComponentModel.Container();
 		}
 
 		#endregion

@@ -32,23 +32,26 @@ namespace WeSay.LexicalTools
 		/// </summary>
 		private void InitializeComponent()
 		{
+			this.components = new System.ComponentModel.Container();
 			System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("blah");
 			System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("stuff");
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GatherBySemanticDomainsControl));
 			this._domainName = new System.Windows.Forms.ComboBox();
-			this.label3 = new WeSay.UI.LocalizableLabel();
-			this._listViewWords = new WeSayListBox();
-			this.label5 = new WeSay.UI.LocalizableLabel();
-			this.label4 = new WeSay.UI.LocalizableLabel();
-			this._instructionLabel = new WeSay.UI.LocalizableLabel();
-			this._question = new WeSay.UI.LocalizableLabel();
-			this._description = new WeSay.UI.LocalizableLabel();
-			this._animatedText = new WeSay.UI.LocalizableLabel();
+			this.label3 = new System.Windows.Forms.Label();
+			this._listViewWords = new WeSay.UI.WeSayListBox();
+			this.label5 = new System.Windows.Forms.Label();
+			this.label4 = new System.Windows.Forms.Label();
+			this._instructionLabel = new System.Windows.Forms.Label();
+			this._question = new System.Windows.Forms.Label();
+			this._description = new System.Windows.Forms.Label();
+			this._animatedText = new System.Windows.Forms.Label();
 			this._questionIndicator = new WeSay.UI.CirclesProgressIndicator();
 			this._vernacularBox = new WeSay.UI.MultiTextControl();
 			this._btnPrevious = new WeSay.UI.Buttons.PreviousButton();
 			this._btnNext = new WeSay.UI.Buttons.NextButton();
 			this._btnAddWord = new WeSay.UI.Buttons.AddButton();
+			this.localizationHelper1 = new WeSay.UI.LocalizationHelper(this.components);
+			((System.ComponentModel.ISupportInitialize)(this.localizationHelper1)).BeginInit();
 			this.SuspendLayout();
 			//
 			// _domainName
@@ -75,7 +78,7 @@ namespace WeSay.LexicalTools
 			this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.label3.Location = new System.Drawing.Point(10, 355);
 			this.label3.Name = "label3";
-			this.label3.Size = new System.Drawing.Size(37, 13);
+			this.label3.Size = new System.Drawing.Size(45, 13);
 			this.label3.TabIndex = 19;
 			this.label3.Text = "~Word";
 			//
@@ -106,7 +109,7 @@ namespace WeSay.LexicalTools
 			this.label5.ForeColor = System.Drawing.Color.DarkGray;
 			this.label5.Location = new System.Drawing.Point(535, 54);
 			this.label5.Name = "label5";
-			this.label5.Size = new System.Drawing.Size(102, 15);
+			this.label5.Size = new System.Drawing.Size(109, 15);
 			this.label5.TabIndex = 16;
 			this.label5.Text = "~(Page Down Key)";
 			//
@@ -118,7 +121,7 @@ namespace WeSay.LexicalTools
 			this.label4.ForeColor = System.Drawing.Color.DarkGray;
 			this.label4.Location = new System.Drawing.Point(573, 352);
 			this.label4.Name = "label4";
-			this.label4.Size = new System.Drawing.Size(67, 15);
+			this.label4.Size = new System.Drawing.Size(74, 15);
 			this.label4.TabIndex = 14;
 			this.label4.Text = "~(Enter Key)";
 			//
@@ -129,7 +132,7 @@ namespace WeSay.LexicalTools
 			this._instructionLabel.ForeColor = System.Drawing.Color.DarkGray;
 			this._instructionLabel.Location = new System.Drawing.Point(11, 7);
 			this._instructionLabel.Name = "_instructionLabel";
-			this._instructionLabel.Size = new System.Drawing.Size(399, 20);
+			this._instructionLabel.Size = new System.Drawing.Size(408, 20);
 			this._instructionLabel.TabIndex = 15;
 			this._instructionLabel.Text = "~Try thinking of words you use to talk about these things.";
 			//
@@ -187,9 +190,12 @@ namespace WeSay.LexicalTools
 			this._vernacularBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
 						| System.Windows.Forms.AnchorStyles.Right)));
 			this._vernacularBox.AutoSize = true;
-
+			this._vernacularBox.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
 			this._vernacularBox.BackColor = System.Drawing.Color.White;
 			this._vernacularBox.ColumnCount = 3;
+			this._vernacularBox.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this._vernacularBox.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this._vernacularBox.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
 			this._vernacularBox.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
 			this._vernacularBox.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
 			this._vernacularBox.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
@@ -206,6 +212,8 @@ namespace WeSay.LexicalTools
 			// _btnPrevious
 			//
 			this._btnPrevious.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this._btnPrevious.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+			this._btnPrevious.Image = ((System.Drawing.Image)(resources.GetObject("_btnPrevious.Image")));
 			this._btnPrevious.Location = new System.Drawing.Point(453, 45);
 			this._btnPrevious.Name = "_btnPrevious";
 			this._btnPrevious.Size = new System.Drawing.Size(30, 30);
@@ -215,6 +223,8 @@ namespace WeSay.LexicalTools
 			// _btnNext
 			//
 			this._btnNext.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this._btnNext.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+			this._btnNext.Image = ((System.Drawing.Image)(resources.GetObject("_btnNext.Image")));
 			this._btnNext.Location = new System.Drawing.Point(485, 35);
 			this._btnNext.Name = "_btnNext";
 			this._btnNext.Size = new System.Drawing.Size(50, 50);
@@ -225,13 +235,19 @@ namespace WeSay.LexicalTools
 			//
 			this._btnAddWord.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this._btnAddWord.ArrowHeadHeight = 15;
+			this._btnAddWord.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
 			this._btnAddWord.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this._btnAddWord.Image = ((System.Drawing.Image)(resources.GetObject("_btnAddWord.Image")));
 			this._btnAddWord.Location = new System.Drawing.Point(496, 348);
 			this._btnAddWord.Name = "_btnAddWord";
 			this._btnAddWord.PointingDirection = WeSay.UI.Buttons.PointingDirection.Left;
 			this._btnAddWord.Size = new System.Drawing.Size(70, 27);
 			this._btnAddWord.TabIndex = 10;
 			this._btnAddWord.Click += new System.EventHandler(this._btnAddWord_Click);
+			//
+			// localizationHelper1
+			//
+			this.localizationHelper1.Parent = this;
 			//
 			// GatherBySemanticDomainsControl
 			//
@@ -254,6 +270,7 @@ namespace WeSay.LexicalTools
 			this.Name = "GatherBySemanticDomainsControl";
 			this.Size = new System.Drawing.Size(654, 386);
 			this.BackColorChanged += new System.EventHandler(this.GatherWordListControl_BackColorChanged);
+			((System.ComponentModel.ISupportInitialize)(this.localizationHelper1)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -265,17 +282,18 @@ namespace WeSay.LexicalTools
 
 		private WeSay.UI.MultiTextControl _vernacularBox;
 		private System.Windows.Forms.ComboBox _domainName;
-		private WeSay.UI.LocalizableLabel label3;
+		private System.Windows.Forms.Label label3;
 		private WeSayListBox _listViewWords;
-		private WeSay.UI.LocalizableLabel label5;
-		private WeSay.UI.LocalizableLabel label4;
-	  private WeSay.UI.LocalizableLabel _instructionLabel;
+		private System.Windows.Forms.Label label5;
+		private System.Windows.Forms.Label label4;
+	  private System.Windows.Forms.Label _instructionLabel;
 		private PreviousButton _btnPrevious;
 		private NextButton _btnNext;
 		private AddButton _btnAddWord;
-		private WeSay.UI.LocalizableLabel _question;
-		private WeSay.UI.LocalizableLabel _description;
+		private System.Windows.Forms.Label _question;
+		private System.Windows.Forms.Label _description;
 		private WeSay.UI.CirclesProgressIndicator _questionIndicator;
-	  private WeSay.UI.LocalizableLabel _animatedText;
+	  private System.Windows.Forms.Label _animatedText;
+		private LocalizationHelper localizationHelper1;
 	}
 }

@@ -28,7 +28,10 @@ namespace WeSay.CommonTools
 		/// </summary>
 		private void InitializeComponent()
 		{
+			this.components = new System.ComponentModel.Container();
 			this._title = new System.Windows.Forms.Label();
+			this.localizationHelper1 = new WeSay.UI.LocalizationHelper(this.components);
+			((System.ComponentModel.ISupportInitialize)(this.localizationHelper1)).BeginInit();
 			this.SuspendLayout();
 			//
 			// _title
@@ -41,6 +44,10 @@ namespace WeSay.CommonTools
 			this._title.TabIndex = 0;
 			this._title.Text = "label1";
 			//
+			// localizationHelper1
+			//
+			this.localizationHelper1.Parent = this;
+			//
 			// GroupHeader
 			//
 			this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
@@ -48,10 +55,11 @@ namespace WeSay.CommonTools
 			this.BackColor = System.Drawing.SystemColors.Window;
 			this.Controls.Add(this._title);
 			this.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+			this.Margin = new System.Windows.Forms.Padding(6);
 			this.Name = "GroupHeader";
 			this.Size = new System.Drawing.Size(396, 33);
 			this.Load += new System.EventHandler(this.GroupHeader_Load);
+			((System.ComponentModel.ISupportInitialize)(this.localizationHelper1)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -60,6 +68,7 @@ namespace WeSay.CommonTools
 		#endregion
 
 		private System.Windows.Forms.Label _title;
+		private WeSay.UI.LocalizationHelper localizationHelper1;
 
 	}
 }

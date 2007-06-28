@@ -31,9 +31,12 @@ namespace WeSay.CommonTools
 		/// </summary>
 		private void InitializeComponent()
 		{
+			this.components = new System.ComponentModel.Container();
 			this._btnName = new System.Windows.Forms.Button();
 			this._textShortDescription = new System.Windows.Forms.TextBox();
-			this._intray = new ItemsToDoIndicator();
+			this._intray = new WeSay.CommonTools.ItemsToDoIndicator();
+			this.localizationHelper1 = new WeSay.UI.LocalizationHelper(this.components);
+			((System.ComponentModel.ISupportInitialize)(this.localizationHelper1)).BeginInit();
 			this.SuspendLayout();
 			//
 			// _btnName
@@ -41,7 +44,7 @@ namespace WeSay.CommonTools
 			this._btnName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
 						| System.Windows.Forms.AnchorStyles.Right)));
 			this._btnName.BackColor = System.Drawing.Color.AliceBlue;
-			this._btnName.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this._btnName.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this._btnName.Location = new System.Drawing.Point(79, 9);
 			this._btnName.Name = "_btnName";
 			this._btnName.Size = new System.Drawing.Size(356, 33);
@@ -50,6 +53,7 @@ namespace WeSay.CommonTools
 			this._btnName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this._btnName.UseVisualStyleBackColor = false;
 			this._btnName.Click += new System.EventHandler(this.OnBtnNameClick);
+			this._btnName.FontChanged += new System.EventHandler(this._btnName_FontChanged);
 			//
 			// _textShortDescription
 			//
@@ -77,6 +81,10 @@ namespace WeSay.CommonTools
 			this._intray.Size = new System.Drawing.Size(57, 21);
 			this._intray.TabIndex = 3;
 			//
+			// localizationHelper1
+			//
+			this.localizationHelper1.Parent = this;
+			//
 			// TaskIndicator
 			//
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -87,6 +95,7 @@ namespace WeSay.CommonTools
 			this.Name = "TaskIndicator";
 			this.Size = new System.Drawing.Size(438, 83);
 			this.BackColorChanged += new System.EventHandler(this.TaskIndicator_BackColorChanged);
+			((System.ComponentModel.ISupportInitialize)(this.localizationHelper1)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -97,5 +106,6 @@ namespace WeSay.CommonTools
 		private System.Windows.Forms.Button _btnName;
 		private System.Windows.Forms.TextBox _textShortDescription;
 		private ItemsToDoIndicator _intray;
+		private WeSay.UI.LocalizationHelper localizationHelper1;
 	}
 }

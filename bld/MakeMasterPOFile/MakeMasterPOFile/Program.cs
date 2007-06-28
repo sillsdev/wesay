@@ -1,10 +1,7 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Text;
-using System.Text.RegularExpressions;
+using System.Xml;
 
 namespace MakeMasterPOFile
 {
@@ -12,12 +9,18 @@ namespace MakeMasterPOFile
 	class Program
 	{
 		static Dictionary<string, List<string>> _entries = new Dictionary<string, List<string>>();
+		private static bool _makeEnglishPo;
 
 
 		static void Main(string[] args)
 		{
 			string rootDirectory = args[0];
-			ProcessDirectory(rootDirectory);
+			if (args.Length > 1)
+			{
+				_makeEnglishPo = args[1] == "-en";
+			}
+			ProcessXmlFiles(rootDirectory);
+			ProcessSourceDirectory(Path.Combine(rootDirectory, "src"));
 
 			Console.WriteLine(Resource.header);
 			foreach (KeyValuePair<string, List<string>> pair in _entries)
@@ -26,48 +29,97 @@ namespace MakeMasterPOFile
 			}
 		}
 
-		private static void ProcessDirectory(string rootDirectory)
+		private static void ProcessXmlFiles(string rootDirectory)
 		{
-			foreach (string d in Directory.GetDirectories(rootDirectory))
+			string commonDir = Path.Combine(rootDirectory, "common");
+			foreach (string filePath in Directory.GetFiles(commonDir, "*.WeSayConfig"))
 			{
-				foreach (string filePath in Directory.GetFiles(d,"*.cs"))
-				{
-					if(!Path.GetFileName(filePath).ToLower().Contains("test"))
-					{
-						ProcessFile(filePath);
-					}
-				}
-				ProcessDirectory(d);
+				ProcessXmlFile(filePath);
 			}
 		}
 
-		private static void ProcessFile(string filePath)
+		private static void ProcessXmlFile(string filePath)
+		{
+			XmlDocument doc = new XmlDocument();
+			doc.Load(filePath);
+			foreach(XmlNode node in doc.SelectNodes("//label | //description"))
+			{
+				AddStringInstance(node.InnerText, String.Empty);
+			}
+		}
+
+		private static void AddStringInstance(string stringToTranslate, string commentsForTranslator)
+		{
+			if (!_entries.ContainsKey(stringToTranslate)) //first time we've encountered this string?
+			{
+				_entries.Add(stringToTranslate, new List<string>());
+			}
+			_entries[stringToTranslate].Add(commentsForTranslator);//add this reference
+		}
+
+		private static void ProcessSourceDirectory(string rootSourceDirectory)
+		{
+			foreach (string d in Directory.GetDirectories(rootSourceDirectory))
+			{
+				foreach (string filePath in Directory.GetFiles(d, "*.cs"))
+				{
+					if (!Path.GetFileName(filePath).ToLower().Contains("test"))
+					{
+						ProcessSrcFile(filePath);
+					}
+				}
+				ProcessSourceDirectory(d);
+			}
+		}
+
+		private static void ProcessSrcFile(string filePath)
 		{
 			string contents = File.ReadAllText(filePath);
 			System.Text.RegularExpressions.Regex pattern =
-//                new System.Text.RegularExpressions.Regex("StringCatalog.Get\\(\"(.*)\"\\)", System.Text.RegularExpressions.RegexOptions.Compiled);
-				new System.Text.RegularExpressions.Regex("\"~(.*)\"", System.Text.RegularExpressions.RegexOptions.Compiled);
+			new System.Text.RegularExpressions.Regex(@"""~([^""]*)""\s*(,\s*""(.*)"")?", System.Text.RegularExpressions.RegexOptions.Compiled);
 
-			foreach (System.Text.RegularExpressions.Match  match in pattern.Matches(contents))
+			foreach (System.Text.RegularExpressions.Match match in pattern.Matches(contents))
 			{
 				string str = match.Groups[1].Value;
-				if(!_entries.ContainsKey(str)) //first time we've encountered this string?
+				if (!_entries.ContainsKey(str)) //first time we've encountered this string?
 				{
 					_entries.Add(str, new List<string>());
 				}
-				_entries[str].Add(filePath);//add this reference
+				string comments = "#; "+filePath;
+				if (match.Groups.Count >= 3 && match.Groups[3].Length>0)
+				{
+					comments += System.Environment.NewLine + "#. " + match.Groups[3].Value;
+				}
+				_entries[str].Add(comments);//add this reference
 			}
 		}
 
-		private static void WriteEntry(string key, List<string> references)
+		private static void WriteEntry(string key, List<string> comments)
 		{
 			Console.WriteLine("");
-			foreach (string s in references)
+			foreach (string s in comments)
 			{
-				Console.WriteLine("#: " + s);
+				Console.WriteLine(s);
 			}
 			Console.WriteLine("msgid \"" + key + "\"");
-			Console.WriteLine("msgstr \"\"");
+			if (_makeEnglishPo)
+			{
+				string val = key;
+				if (key == "fontFamily")
+				{
+					val = "Arial";
+				}
+				if (key == "fontSize")
+				{
+					val = "9";
+				}
+				Console.WriteLine("msgstr \"{0}\"", val);
+			}
+			else
+			{
+				Console.WriteLine("msgstr \"\"");
+			}
 		}
+
 	}
 }

@@ -9,6 +9,7 @@ namespace WeSay.Project
 	public class BasilProject : IProject, IDisposable
 	{
 	  private static BasilProject _singleton;
+	  protected string _uiFontName;
 
 	  protected static BasilProject Singleton
 	  {
@@ -291,6 +292,10 @@ namespace WeSay.Project
 		{
 			try
 			{
+				if (_stringCatalogSelector == "test")
+				{
+					new StringCatalog("test", _uiFontName);
+				}
 				string p = LocateStringCatalog();
 				if (p == null)
 				{
@@ -298,7 +303,7 @@ namespace WeSay.Project
 				}
 				else
 				{
-					new StringCatalog(p);
+					new StringCatalog(p, _uiFontName);
 				}
 			}
 			catch(FileNotFoundException )

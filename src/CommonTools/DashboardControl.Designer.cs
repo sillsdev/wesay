@@ -31,7 +31,7 @@ namespace WeSay.CommonTools
 		private void InitializeComponent()
 		{
 			this._vbox = new WeSay.UI.VBox();
-			this._projectNameLabel = new WeSay.UI.LocalizableLabel();
+			this._projectNameLabel = new System.Windows.Forms.Label();
 			this.SuspendLayout();
 			//
 			// _vbox
@@ -75,7 +75,7 @@ namespace WeSay.CommonTools
 		#endregion
 
 		private WeSay.UI.VBox _vbox;
-		private WeSay.UI.LocalizableLabel _projectNameLabel;
+		private System.Windows.Forms.Label _projectNameLabel;
 
 	}
 }

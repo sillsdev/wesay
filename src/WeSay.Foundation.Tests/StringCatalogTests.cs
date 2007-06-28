@@ -29,21 +29,21 @@ namespace WeSay.Language.Tests
 		[Test]
 		public void NotTranslated()
 		{
-			StringCatalog catalog = new StringCatalog(_poFile);
+			StringCatalog catalog = new StringCatalog(_poFile,null);
 			Assert.AreEqual("justid", catalog["justid"]);
 		}
 
 		[Test]
 		public void NotListedAtAll()
 		{
-			StringCatalog catalog = new StringCatalog(_poFile);
+			StringCatalog catalog = new StringCatalog(_poFile,null);
 			Assert.AreEqual("notinthere", catalog["notinthere"]);
 		}
 
 		[Test]
 		public void Normal()
 		{
-			StringCatalog catalog = new StringCatalog(_poFile);
+			StringCatalog catalog = new StringCatalog(_poFile,null);
 			Assert.AreEqual("deng", catalog["red"]);
 		}
 	}

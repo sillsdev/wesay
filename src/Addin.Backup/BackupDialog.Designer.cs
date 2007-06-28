@@ -29,12 +29,14 @@ namespace Addin.Backup
 		private void InitializeComponent()
 		{
 			this.components = new System.ComponentModel.Container();
-			this._topLabel = new WeSay.UI.LocalizableLabel();
-			this._noteLabel = new WeSay.UI.LocalizableLabel();
+			this._topLabel = new System.Windows.Forms.Label();
+			this._noteLabel = new System.Windows.Forms.Label();
 			this._cancelButton = new System.Windows.Forms.Button();
 			this._checkForUsbKeyTimer = new System.Windows.Forms.Timer(this.components);
 			this.pictureBox1 = new System.Windows.Forms.PictureBox();
+			this.localizationHelper1 = new WeSay.UI.LocalizationHelper(this.components);
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.localizationHelper1)).BeginInit();
 			this.SuspendLayout();
 			//
 			// _topLabel
@@ -83,6 +85,10 @@ namespace Addin.Backup
 			this.pictureBox1.TabIndex = 4;
 			this.pictureBox1.TabStop = false;
 			//
+			// localizationHelper1
+			//
+			this.localizationHelper1.Parent = this;
+			//
 			// BackupDialog
 			//
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -102,6 +108,7 @@ namespace Addin.Backup
 			this.Text = "Backup To USB Key";
 			this.Load += new System.EventHandler(this.Dialog_Load);
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.localizationHelper1)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -109,10 +116,11 @@ namespace Addin.Backup
 
 		#endregion
 
-		private WeSay.UI.LocalizableLabel _topLabel;
-		private WeSay.UI.LocalizableLabel _noteLabel;
+		private System.Windows.Forms.Label _topLabel;
+		private System.Windows.Forms.Label _noteLabel;
 		private System.Windows.Forms.Button _cancelButton;
 		private System.Windows.Forms.Timer _checkForUsbKeyTimer;
 		private System.Windows.Forms.PictureBox pictureBox1;
+		private WeSay.UI.LocalizationHelper localizationHelper1;
 	}
 }

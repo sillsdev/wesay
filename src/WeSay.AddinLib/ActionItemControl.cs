@@ -50,8 +50,9 @@ namespace WeSay.AddinLib
 			_addin = addin;
 			_inAdminMode = inAdminMode;
 			InitializeComponent();
-			_actionName.Font = StringCatalog.LabelFont;
-			_description.Font = StringCatalog.LabelFont;
+			_actionName.Font = StringCatalog.ModifyFontForLocalization(_actionName.Font);
+			_description.Font = StringCatalog.ModifyFontForLocalization(_description.Font);
+
 
 			_toggleShowInWeSay.Visible = inAdminMode;
 			_setupButton.Visible = inAdminMode;

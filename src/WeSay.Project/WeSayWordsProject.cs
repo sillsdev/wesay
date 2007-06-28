@@ -196,8 +196,19 @@ namespace WeSay.Project
 		{
 			this._projectDirectoryPath = projectDirectoryPath;
 			XPathDocument configDoc = GetConfigurationDoc();
-			if (configDoc != null) // will be null if we're creating a new project
+			if(configDoc !=null)// will be null if we're creating a new project
 			{
+				XPathNavigator nav= configDoc.CreateNavigator().SelectSingleNode("//uiOptions");
+				if (nav != null)
+				{
+					string ui = nav.GetAttribute("uiLanguage", "");
+					if (!string.IsNullOrEmpty(ui))
+					{
+						StringCatalogSelector = ui;
+					}
+					_uiFontName = nav.GetAttribute("uiFont", "");
+
+				}
 				MigrateConfigurationXmlIfNeeded(configDoc, PathToConfigFile);
 			}
 			base.LoadFromProjectDirectoryPath(projectDirectoryPath);

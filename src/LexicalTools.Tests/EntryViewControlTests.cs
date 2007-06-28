@@ -95,7 +95,7 @@ namespace WeSay.LexicalTools.Tests
 			EntryViewControl entryViewControl = CreateFilteredForm(entry, Field.FieldNames.SenseGloss.ToString(), "LexSense", BasilProject.Project.WritingSystems.TestWritingSystemAnalId);
 			DetailList entryDetailControl = entryViewControl.ControlEntryDetail;
 			Label labelControl = entryDetailControl.GetLabelControlFromRow(0);
-			Assert.AreEqual("~Meaning", labelControl.Text);
+			Assert.AreEqual("Meaning", labelControl.Text);
 			MultiTextControl editControl = (MultiTextControl)entryDetailControl.GetEditControlFromRow(0);
 			editControl.TextBoxes[0].Text = "test";
 			Assert.IsTrue(editControl.TextBoxes[0].Text.Contains(GetGloss(entry)));
@@ -117,12 +117,12 @@ namespace WeSay.LexicalTools.Tests
 			LexEntry meaningOnly = CreateTestEntry("word", "meaning", "");
 			EntryViewControl entryViewControl = CreateForm(meaningOnly);
 			DetailList detailList = entryViewControl.ControlEntryDetail;
-			MultiTextControl editControl = GetEditControl(detailList, "~Meaning");
+			MultiTextControl editControl = GetEditControl(detailList, "Meaning");
 			editControl.TextBoxes[0].Text = "";
 			Thread.Sleep(1000);
 			Application.DoEvents();
 
-			Assert.IsTrue(GetEditControl(detailList, "~Meaning").Name.Contains("ghost"), "Only ghost should remain");
+			Assert.IsTrue(GetEditControl(detailList, "Meaning").Name.Contains("ghost"), "Only ghost should remain");
 		}
 
 		private static MultiTextControl GetEditControl(DetailList detailList, string labelText) {

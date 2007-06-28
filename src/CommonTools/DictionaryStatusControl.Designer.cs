@@ -28,7 +28,10 @@ namespace WeSay.CommonTools
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this._dictionarySizeLabel = new WeSay.UI.LocalizableLabel();
+			this.components = new System.ComponentModel.Container();
+			this._dictionarySizeLabel = new System.Windows.Forms.Label();
+			this.localizationHelper1 = new WeSay.UI.LocalizationHelper(this.components);
+			((System.ComponentModel.ISupportInitialize)(this.localizationHelper1)).BeginInit();
 			this.SuspendLayout();
 			//
 			// _dictionarySizeLabel
@@ -37,9 +40,13 @@ namespace WeSay.CommonTools
 			this._dictionarySizeLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this._dictionarySizeLabel.Location = new System.Drawing.Point(2, 0);
 			this._dictionarySizeLabel.Name = "_dictionarySizeLabel";
-			this._dictionarySizeLabel.Size = new System.Drawing.Size(253, 24);
+			this._dictionarySizeLabel.Size = new System.Drawing.Size(264, 24);
 			this._dictionarySizeLabel.TabIndex = 5;
-			this._dictionarySizeLabel.Text = "Your dictionary has {0} words";
+			this._dictionarySizeLabel.Text = "~Your dictionary has {0} words";
+			//
+			// localizationHelper1
+			//
+			this.localizationHelper1.Parent = this;
 			//
 			// DictionaryStatusControl
 			//
@@ -49,14 +56,15 @@ namespace WeSay.CommonTools
 			this.Controls.Add(this._dictionarySizeLabel);
 			this.Name = "DictionaryStatusControl";
 			this.Size = new System.Drawing.Size(538, 41);
+			((System.ComponentModel.ISupportInitialize)(this.localizationHelper1)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
-			this.TabStop = false;
 
 		}
 
 		#endregion
 
-		private WeSay.UI.LocalizableLabel _dictionarySizeLabel;
+		private System.Windows.Forms.Label _dictionarySizeLabel;
+		private WeSay.UI.LocalizationHelper localizationHelper1;
 	}
 }

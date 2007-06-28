@@ -31,8 +31,11 @@ namespace WeSay.CommonTools
 		/// </summary>
 		private void InitializeComponent()
 		{
+			this.components = new System.ComponentModel.Container();
 			this.label1 = new System.Windows.Forms.Label();
 			this._indicatorPanel = new System.Windows.Forms.Panel();
+			this.localizationHelper1 = new WeSay.UI.LocalizationHelper(this.components);
+			((System.ComponentModel.ISupportInitialize)(this.localizationHelper1)).BeginInit();
 			this.SuspendLayout();
 			//
 			// label1
@@ -44,19 +47,21 @@ namespace WeSay.CommonTools
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(136, 23);
 			this.label1.TabIndex = 0;
-			this.label1.Text = "Current task:";
+			this.label1.Text = "~Current task:";
 			//
 			// _indicatorPanel
 			//
 			this._indicatorPanel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
 						| System.Windows.Forms.AnchorStyles.Right)));
-
 			this._indicatorPanel.BackColor = System.Drawing.Color.Transparent;
 			this._indicatorPanel.Location = new System.Drawing.Point(70, 35);
 			this._indicatorPanel.Name = "_indicatorPanel";
 			this._indicatorPanel.Size = new System.Drawing.Size(485, 100);
 			this._indicatorPanel.TabIndex = 1;
-
+			//
+			// localizationHelper1
+			//
+			this.localizationHelper1.Parent = this;
 			//
 			// CurrentTaskIndicatorControl
 			//
@@ -71,13 +76,16 @@ namespace WeSay.CommonTools
 			Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
 
 //            this.SizeChanged += new System.EventHandler(this.CurrentTaskIndicatorControl_SizeChanged);
+			((System.ComponentModel.ISupportInitialize)(this.localizationHelper1)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
+
 		}
 
 		#endregion
 
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.Panel _indicatorPanel;
+		private WeSay.UI.LocalizationHelper localizationHelper1;
 	}
 }

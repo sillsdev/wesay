@@ -136,7 +136,7 @@ namespace WeSay.LexicalTools
 					new MultiTextControl(field.WritingSystems, new MultiText(), fieldName + "_ghost", false,
 										 BasilProject.Project.WritingSystems, field.Visibility);
 
-				Control refWidget = DetailList.AddWidgetRow(StringCatalog.Get(label), isHeading, m, insertAtRow + rowCount, true);
+				Control refWidget = DetailList.AddWidgetRow(label, isHeading, m, insertAtRow + rowCount, true);
 
 				foreach (WeSayTextBox box in m.TextBoxes)
 				{

@@ -41,11 +41,12 @@ namespace WeSay.LexicalTools
 		/// </summary>
 		private void InitializeComponent()
 		{
+			this.components = new System.ComponentModel.Container();
 			this.panelWordList = new System.Windows.Forms.Panel();
 			this._btnFind = new System.Windows.Forms.Button();
 			this._findText = new WeSay.UI.WeSayAutoCompleteTextBox();
 			this._writingSystemChooser = new System.Windows.Forms.Button();
-			this._findWritingSystemId = new WeSay.UI.LocalizableLabel();
+			this._findWritingSystemId = new System.Windows.Forms.Label();
 			this._recordsListBox = new WeSay.UI.WeSayListBox();
 			this.panelTools = new System.Windows.Forms.Panel();
 			this._btnDeleteWord = new System.Windows.Forms.Button();
@@ -53,9 +54,11 @@ namespace WeSay.LexicalTools
 			this.panelDetail = new System.Windows.Forms.Panel();
 			this._entryViewControl = new WeSay.LexicalTools.EntryViewControl();
 			this._splitter = new WeSay.UI.CollapsibleSplitter();
+			this.localizationHelper1 = new WeSay.UI.LocalizationHelper(this.components);
 			this.panelWordList.SuspendLayout();
 			this.panelTools.SuspendLayout();
 			this.panelDetail.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.localizationHelper1)).BeginInit();
 			this.SuspendLayout();
 			//
 			// panelWordList
@@ -93,6 +96,7 @@ namespace WeSay.LexicalTools
 			this._findText.BorderStyle = System.Windows.Forms.BorderStyle.None;
 			this._findText.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this._findText.Location = new System.Drawing.Point(24, 3);
+			this._findText.Multiline = true;
 			this._findText.MultiParagraph = false;
 			this._findText.Name = "_findText";
 			this._findText.PopupBorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
@@ -164,7 +168,7 @@ namespace WeSay.LexicalTools
 			this._btnDeleteWord.Name = "_btnDeleteWord";
 			this._btnDeleteWord.Size = new System.Drawing.Size(120, 24);
 			this._btnDeleteWord.TabIndex = 1;
-			this._btnDeleteWord.Text = "&Delete This Word";
+			this._btnDeleteWord.Text = "~&Delete This Word";
 			this._btnDeleteWord.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
 			this._btnDeleteWord.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
 			this._btnDeleteWord.Click += new System.EventHandler(this.OnDeleteWord_Click);
@@ -182,7 +186,7 @@ namespace WeSay.LexicalTools
 			this._btnNewWord.Name = "_btnNewWord";
 			this._btnNewWord.Size = new System.Drawing.Size(80, 24);
 			this._btnNewWord.TabIndex = 0;
-			this._btnNewWord.Text = "&New Word";
+			this._btnNewWord.Text = "~&New Word";
 			this._btnNewWord.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
 			this._btnNewWord.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
 			this._btnNewWord.Click += new System.EventHandler(this.OnNewWord_Click);
@@ -223,6 +227,10 @@ namespace WeSay.LexicalTools
 			this._splitter.TabIndex = 1;
 			this._splitter.TabStop = false;
 			//
+			// localizationHelper1
+			//
+			this.localizationHelper1.Parent = this;
+			//
 			// DictionaryControl
 			//
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -238,6 +246,7 @@ namespace WeSay.LexicalTools
 			this.panelTools.ResumeLayout(false);
 			this.panelTools.PerformLayout();
 			this.panelDetail.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.localizationHelper1)).EndInit();
 			this.ResumeLayout(false);
 
 		}
@@ -257,9 +266,10 @@ namespace WeSay.LexicalTools
 		private Button _btnNewWord;
 		private Button _btnFind;
 		private WeSayAutoCompleteTextBox _findText;
-		private Button  _writingSystemChooser;
-		private Label _findWritingSystemId;
+		private Button _writingSystemChooser;
 		private CollapsibleSplitter _splitter;
+		private Label _findWritingSystemId;
+		private LocalizationHelper localizationHelper1;
 
 	}
 }

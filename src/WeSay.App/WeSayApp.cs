@@ -61,7 +61,7 @@ namespace WeSay.App
 #endif
 
 			WeSayWordsProject project = new WeSayWordsProject();
-			project.StringCatalogSelector = cmdArgs.ui;
+			//project.StringCatalogSelector = cmdArgs.ui;
 
 			string path = cmdArgs.liftPath;
 			if (!TryToLoad(cmdArgs, path, project))
@@ -418,7 +418,7 @@ namespace WeSay.App
 		static void ShowCommandLineError(string e)
 		{
 			Parser p = new Parser(typeof(CommandLineArguments), new ReportError(ShowCommandLineError));
-			e = e.Replace("Duplicate 'wordsPath' argument", "Please enclose project path in quotes if it contains spaces.");
+			e = e.Replace("Duplicate 'liftPath' argument", "Please enclose project path in quotes if it contains spaces.");
 			e += "\r\n\r\n" + p.GetUsageString(200);
 			MessageBox.Show(e, "WeSay Command Line Problem");
 		}
