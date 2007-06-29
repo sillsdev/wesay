@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 
-namespace MakeMasterPOFile
+namespace PoMaker
 {
 	//merge with something like: "msmerge -U br.po WeSay.pot"
 	class Program
@@ -22,7 +22,10 @@ namespace MakeMasterPOFile
 			ProcessXmlFiles(rootDirectory);
 			ProcessSourceDirectory(Path.Combine(rootDirectory, "src"));
 
-			Console.WriteLine(Resource.header);
+			//"POT-Creation-Date: 2007-06-29T03:32:46+07:00\n"
+//"PO-Revision-Date: 2006-09-06 17:01+0700\n"
+
+			Console.WriteLine(Resource.header, DateTime.UtcNow.ToString("s"));
 			foreach (KeyValuePair<string, List<string>> pair in _entries)
 			{
 				WriteEntry(pair.Key, pair.Value);

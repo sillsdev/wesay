@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace MakeMasterPOFile {
+namespace PoMaker {
 	using System;
 
 
@@ -39,7 +39,7 @@ namespace MakeMasterPOFile {
 		internal static global::System.Resources.ResourceManager ResourceManager {
 			get {
 				if (object.ReferenceEquals(resourceMan, null)) {
-					global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("MakeMasterPOFile.Resource", typeof(Resource).Assembly);
+					global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("PoMaker.Resource", typeof(Resource).Assembly);
 					resourceMan = temp;
 				}
 				return resourceMan;
@@ -64,15 +64,14 @@ namespace MakeMasterPOFile {
 		///   Looks up a localized string similar to msgid &quot;&quot;
 		///msgstr &quot;&quot;
 		///&quot;Project-Id-Version: WeSay\n&quot;
-		///&quot;POT-Creation-Date: \n&quot;
+		///&quot;POT-Creation-Date: {0}\n&quot;
 		///&quot;PO-Revision-Date: 2006-09-06 17:01+0700\n&quot;
 		///&quot;Last-Translator: \n&quot;
 		///&quot;Language-Team: \n&quot;
 		///&quot;MIME-Version: 1.0\n&quot;
-		///&quot;Content-Type: text/plain; charset=utf-8\n&quot;
+		///&quot;Content-Type: text/plain; charset=UTF-8\n&quot;
 		///&quot;Content-Transfer-Encoding: 8bit\n&quot;
-		///&quot;X-Poedit-Language: English\n&quot;
-		///&quot;X-Poedit-Basepath: c:\\wesay\\src\n&quot;.
+		///.
 		/// </summary>
 		internal static string header {
 			get {

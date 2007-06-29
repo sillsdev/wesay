@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual Studio 2005
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MakeMasterPOFile", "MakeMasterPOFile\MakeMasterPOFile.csproj", "{B320FB34-24A8-4483-8768-807AD0956B98}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PoMaker", "MakeMasterPOFile\PoMaker.csproj", "{B320FB34-24A8-4483-8768-807AD0956B98}"
 	ProjectSection(WebsiteProperties) = preProject
 		Debug.AspNetCompiler.Debug = "True"
 		Release.AspNetCompiler.Debug = "False"

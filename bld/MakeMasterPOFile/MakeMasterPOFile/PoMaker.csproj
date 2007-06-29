@@ -7,8 +7,8 @@
 	<ProjectGuid>{B320FB34-24A8-4483-8768-807AD0956B98}</ProjectGuid>
 	<OutputType>Exe</OutputType>
 	<AppDesignerFolder>Properties</AppDesignerFolder>
-	<RootNamespace>MakeMasterPOFile</RootNamespace>
-	<AssemblyName>MakeMasterPOFile</AssemblyName>
+	<RootNamespace>PoMaker</RootNamespace>
+	<AssemblyName>PoMaker</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
 	<DebugSymbols>true</DebugSymbols>
