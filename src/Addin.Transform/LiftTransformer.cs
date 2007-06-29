@@ -74,11 +74,13 @@ namespace Addin.Transform
 			readerSettings.ProhibitDtd = false;
 			XslCompiledTransform transform = new XslCompiledTransform();
 
+
 			using(Stream stream = GetXsltStream(projectInfo, xsltName))
 			{
 				using(XmlReader xsltReader = XmlReader.Create(stream, readerSettings))
 				{
-					transform.Load(xsltReader);
+					XsltSettings settings = new XsltSettings(true, true);
+					transform.Load(xsltReader, settings, new XmlUrlResolver());
 					xsltReader.Close();
 				}
 				stream.Close();
@@ -89,6 +91,7 @@ namespace Addin.Transform
 			{
 				File.Delete(_pathToOutput);
 			}
+
 			transform.Transform(projectInfo.PathToLIFT, _pathToOutput);
 			transform.TemporaryFiles.Delete();
 

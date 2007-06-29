@@ -8,7 +8,7 @@ using WeSay.Language;
 
 namespace Addin.Transform
 {
-	[Extension]
+  //  [Extension]
 	public class HtmlTransformer : LiftTransformer
 	{
 		public override string Name

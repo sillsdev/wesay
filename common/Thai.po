@@ -1,8 +1,8 @@
-﻿msgid ""
+msgid ""
 msgstr ""
 "Project-Id-Version: WeSay\n"
 "POT-Creation-Date: 2007-06-29 3:36:09\n"
-"PO-Revision-Date: 2006-09-06 17:01+0700\n"
+"PO-Revision-Date: 2007-06-29 10:47+0700\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -12,57 +12,44 @@ msgstr ""
 #; ..\src\CommonTools\DashboardControl.cs
 #. The label for the 'dashboard'; the task which lets you see the status of other tasks and jump to them.
 msgid "Home"
-msgstr ""
-
+msgstr " บ้าน"
 
 msgid "This task is normally the first thing the user sees when WeSay comes up.  It gives the user some status of the project, and reminds him what he was working on. Finally, this tab will allow him to switch to a different work task, if you have enabled more than one."
 msgstr ""
 
-
 msgid "Dictionary"
 msgstr ""
-
 
 msgid "This task allows advanced users to see and edit all enabled fields of all entries in the dictionary.  He can add, delete, and search for entries.  NOTE: while this task may be very enticing to those familiar with traditional programs, this is *not* intended to be a primary way of working with WeSay."
 msgstr ""
 
-
 msgid "Add Meanings"
 msgstr ""
-
 
 msgid "Add meanings to entries where they are missing."
 msgstr ""
 
-
 msgid "Add Examples"
 msgstr ""
-
 
 msgid "Add example sentences to entries where they are missing."
 msgstr ""
 
-
 msgid "Collect Word List"
 msgstr ""
-
 
 msgid "Collect new words by translating from words in another language."
 msgstr ""
 
-
 msgid "Collect Words By Semantic Domain"
 msgstr ""
-
 
 msgid "Collect new words organized by semantic domains and questions about those domains."
 msgstr ""
 
-
 #; ..\src\CommonTools\ActionsControl.cs
 msgid "Actions"
 msgstr ""
-
 
 msgid "Perform actions on the project as a whole. For example backup, produce a report, print out a simple dictionary, etc."
 msgstr ""
@@ -199,8 +186,8 @@ msgid "Word:"
 msgstr ""
 
 #; ..\src\LexicalTools\LexExampleSentenceLayouter.cs
-#. This is the field containing an example sentence of a sense of a word.
 #; ..\src\LexicalTools\LexExampleSentenceLayouter.cs
+#. This is the field containing an example sentence of a sense of a word.
 #. Sentence
 msgid "Example"
 msgstr ""
