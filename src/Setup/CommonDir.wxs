@@ -3,6 +3,12 @@
 	<Fragment>
 	<DirectoryRef Id='ProgramDir'>
 	  <Directory Id="common" Name="common">
+
+		<Component Id="KJEnglish.po" Guid="{0EA30DD8-9395-41e3-B5FF-C2CC545729D3}">
+		  <File Id="KJEnglish.po" Name="KJEnglish.po" KeyPath="yes" Source="..\..\common\KJEnglish.po" />
+		</Component>
+
+
 		<Component Id="PartsOfSpeech.xml" Guid="{6B734BDE-1702-418D-93BC-40A7F310B14F}">
 		  <File Id="PartsOfSpeech.xml" Name="PartsOfSpeech.xml" KeyPath="yes" Source="..\..\common\PartsOfSpeech.xml" />
 		</Component>
