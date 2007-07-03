@@ -299,7 +299,7 @@ namespace WeSay.Project
 				string p = LocateStringCatalog();
 				if (p == null)
 				{
-					new StringCatalog();
+					new StringCatalog(_uiFontName);
 				}
 				else
 				{

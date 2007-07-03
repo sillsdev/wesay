@@ -46,9 +46,35 @@ namespace WeSay.Setup
 			XmlWriter writer = (XmlWriter) owriter;
 
 			writer.WriteStartElement("uiOptions");
-			writer.WriteAttributeString("uiLanguage", _languageCombo.SelectedItem.ToString());
-			writer.WriteAttributeString("uiFont", StringCatalog.LabelFont.Name);
+			if (!String.IsNullOrEmpty(UILanguage))
+			{
+				writer.WriteAttributeString("uiLanguage", UILanguage);
+			}
+			if (!String.IsNullOrEmpty(LabelName))
+			{
+				writer.WriteAttributeString("uiFont", LabelName);
+			}
 			writer.WriteEndElement();
+		}
+
+		private string UILanguage
+		{
+			get
+			{
+				if (_languageCombo.SelectedItem == null)
+				{
+					return String.Empty;
+				}
+				return _languageCombo.SelectedItem.ToString();
+			}
+		}
+
+		private string LabelName
+		{
+			get
+			{
+				return StringCatalog.LabelFont.Name;
+			}
 		}
 
 		private void OnChooseFont(object sender, EventArgs e)

@@ -14,12 +14,17 @@ namespace WeSay.Language
 		/// <summary>
 		/// Construct with no actual string file
 		/// </summary>
-		public StringCatalog()
+		public StringCatalog(): this(String.Empty)
+		{
+		}
+		/// <summary>
+		/// Construct with no actual string file
+		/// </summary>
+		public StringCatalog(string labelFontName)
 		{
 			Init();
-			SetupUIFont(string.Empty);
+			SetupUIFont(labelFontName);
 		}
-
 		public StringCatalog(string pathToPoFile, string labelFontName)
 		{
 			Init();
