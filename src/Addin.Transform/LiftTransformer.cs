@@ -66,8 +66,12 @@ namespace Addin.Transform
 
 		public abstract void Launch(Form parentForm, ProjectInfo projectInfo);
 
-
 		protected string TransformLift(ProjectInfo projectInfo, string xsltName, string outputFileSuffix)
+		{
+			return TransformLift(projectInfo, xsltName, outputFileSuffix, new XsltArgumentList());
+		}
+
+		protected string TransformLift(ProjectInfo projectInfo, string xsltName, string outputFileSuffix, XsltArgumentList arguments)
 		{
 			//all this just to allow a DTD statement in the source xslt
 			XmlReaderSettings readerSettings = new XmlReaderSettings();
@@ -92,7 +96,10 @@ namespace Addin.Transform
 				File.Delete(_pathToOutput);
 			}
 
-			transform.Transform(projectInfo.PathToLIFT, _pathToOutput);
+			using (Stream output = File.Create(_pathToOutput))
+			{
+				transform.Transform(projectInfo.PathToLIFT, arguments, output);
+			}
 			transform.TemporaryFiles.Delete();
 
 			return _pathToOutput;

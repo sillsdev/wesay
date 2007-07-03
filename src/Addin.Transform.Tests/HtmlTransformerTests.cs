@@ -28,7 +28,7 @@ namespace Addin.Transform.Tests
 			}
 		}
 
-		[Test, Ignore("current xslt breaks this")]
+		[Test]
 		public void LaunchWithDefaultSettings()
 		{
 			LaunchAddin();

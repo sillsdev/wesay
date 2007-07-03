@@ -2,13 +2,14 @@ using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
+using System.Xml.Xsl;
 using Mono.Addins;
 using WeSay.AddinLib;
 using WeSay.Language;
 
 namespace Addin.Transform
 {
-  //  [Extension]
+	[Extension]
 	public class HtmlTransformer : LiftTransformer
 	{
 		public override string Name
@@ -39,7 +40,17 @@ namespace Addin.Transform
 
 		public override void Launch(Form parentForm, ProjectInfo projectInfo)
 		{
-			string output = TransformLift(projectInfo, "lift2html.xsl", ".htm");
+			XsltArgumentList arguments = new XsltArgumentList();
+  //<xsl:param name="optionslist-writing-system" select="'en'"/>
+
+  //<xsl:param name="headword-writing-system" select="/lift/entry/lexical-unit/form/@lang"/>
+
+  //<xsl:param name="include-notes" select="false()"/>
+  //<xsl:param name="group-by-grammatical-info" select="true()"/>
+			arguments.AddParam("writing-system-info-file", string.Empty, projectInfo.LocateFile("writingSystemPrefs.xml"));
+			arguments.AddParam("grammatical-info-optionslist-file", string.Empty, projectInfo.LocateFile("PartsOfSpeech.xml"));
+
+			string output = TransformLift(projectInfo, "lift2html.xsl", ".htm",arguments);
 			if (_launchAfterTransform)
 			{
 				Process.Start(output);
