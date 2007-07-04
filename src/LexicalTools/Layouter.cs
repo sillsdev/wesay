@@ -33,8 +33,6 @@ namespace WeSay.LexicalTools
 		/// See WS-23 for more info.
 		private MultiTextControl _previouslyGhostedControlToReuse=null;
 
-		static private int _widthForWritingSystemLabels=-1;
-
 		protected DetailList DetailList
 	  {
 		get

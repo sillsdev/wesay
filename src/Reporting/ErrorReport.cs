@@ -608,27 +608,32 @@ namespace Reporting
 			return "unknown";
 		}
 
-		public static string VersionNumberString
+		private static object GetAssemblyAttribute(Type attributeType)
 		{
-			get
-			{
 				Assembly assembly = Assembly.GetEntryAssembly();
 				if (assembly != null)
 				{
 					object[] attributes =
-						assembly.GetCustomAttributes(typeof (AssemblyFileVersionAttribute), false);
-					string version;
+						assembly.GetCustomAttributes(attributeType, false);
+					object attr;
 					if (attributes != null && attributes.Length > 0)
 					{
-						version = ((AssemblyFileVersionAttribute) attributes[0]).Version;
+						return attributes[0];
 					}
-					else
-					{
-						version = Application.ProductVersion;
-					}
-					return version;
 				}
-				return "unknown";
+				return null;
+		}
+
+		public static string VersionNumberString
+		{
+			get
+			{
+				object attr = GetAssemblyAttribute(typeof (AssemblyFileVersionAttribute));
+				if (attr != null)
+				{
+					return ((AssemblyFileVersionAttribute) attr).Version;
+				}
+				return Application.ProductVersion;
 			}
 		}
 
@@ -638,7 +643,15 @@ namespace Reporting
 			{
 				string v = VersionNumberString;
 				string build = v.Substring(v.LastIndexOf('.') + 1);
-				return "Version 1 Preview, build " + build;
+				string label="";
+				object attr = GetAssemblyAttribute(typeof(AssemblyProductAttribute));
+				if (attr != null)
+				{
+					label = ((AssemblyProductAttribute)attr).Product+", ";
+				}
+
+				//return "Version 1 Preview, build " + build;
+				return label+"build " + build;
 			}
 		}
 
