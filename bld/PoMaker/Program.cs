@@ -45,7 +45,7 @@ namespace PoMaker
 		{
 			XmlDocument doc = new XmlDocument();
 			doc.Load(filePath);
-			foreach(XmlNode node in doc.SelectNodes("//label | //description"))
+			foreach (XmlNode node in doc.SelectNodes("//label | //description[not(@UseInConstructor='false')]"))
 			{
 				AddStringInstance(node.InnerText, String.Empty);
 			}
