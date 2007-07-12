@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Xml;
+using Db4objects.Db4o;
 using LiftIO;
+using Reporting;
 using WeSay.App;
 using WeSay.Data;
 using WeSay.Foundation;
 using WeSay.Foundation.Progress;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Db4o_Specific;
-using WeSay.Project;
 
 namespace WeSay.Project
 {
@@ -23,11 +24,10 @@ namespace WeSay.Project
 		/// </summary>
 		public const string kCacheIsFreshIndicator = "AssumeCacheIsFresh";
 
-
 		public static void RemoveAssumeCacheIsFreshIndicator()
 		{
 			string s = Path.Combine(WeSayWordsProject.Project.PathToCache, kCacheIsFreshIndicator);
-			if(File.Exists(s))
+			if (File.Exists(s))
 			{
 				File.Delete(s);
 			}
@@ -55,7 +55,7 @@ namespace WeSay.Project
 			string pathToCacheDirectory = project.PathToCache;
 			string db4oPath = project.PathToDb4oLexicalModelDB;
 			if (!Directory.Exists(pathToCacheDirectory) ||
-				   (!File.Exists(db4oPath)))
+				(!File.Exists(db4oPath)))
 			{
 				return true;
 			}
@@ -77,12 +77,13 @@ namespace WeSay.Project
 			return File.Exists(Path.Combine(pathToCacheDirectory, kCacheIsFreshIndicator));
 		}
 
-		class SyncPoint
+		private class SyncPoint
 		{
 			public DateTime when;
 		}
 
-		public static void UpdateSyncPointInCache(Db4objects.Db4o.IObjectContainer db, DateTime when)
+		[CLSCompliant(false)]
+		public static void UpdateSyncPointInCache(IObjectContainer db, DateTime when)
 		{
 			SyncPoint point;
 			IList<SyncPoint> result = db.Query<SyncPoint>();
@@ -104,7 +105,7 @@ namespace WeSay.Project
 			db.Commit();
 		}
 
-		public static bool  GetSyncPointInCacheMatches(Db4oDataSource dataSource, DateTime when)
+		public static bool GetSyncPointInCacheMatches(Db4oDataSource dataSource, DateTime when)
 		{
 //            SyncPoint point;
 			IList<SyncPoint> result = dataSource.Data.Query<SyncPoint>();
@@ -132,16 +133,15 @@ namespace WeSay.Project
 	public class CacheBuilder
 	{
 		private string _sourceLIFTPath;
-		protected ProgressState _progress;
-		private Db4oRecordList<LexEntry> _prewiredEntries=null;
+		private ProgressState _progress;
+		private Db4oRecordList<LexEntry> _prewiredEntries = null;
 		private BackgroundWorker _backgroundWorker;
 
 		public CacheBuilder(string sourceLIFTPath)
 		{
-		   // _destinationDatabasePath = destinationDatabasePath;
+			// _destinationDatabasePath = destinationDatabasePath;
 			_sourceLIFTPath = sourceLIFTPath;
 		}
-
 
 		/// <summary>
 		/// Used when staring this from a "System.ComponentModel.BackgroundWorker"
@@ -169,27 +169,17 @@ namespace WeSay.Project
 		/// </summary>
 		public Db4oRecordList<LexEntry> EntriesAlreadyWiredUp
 		{
-			set
-			{
-				_prewiredEntries = value;
-			}
+			set { _prewiredEntries = value; }
 		}
 
 		public string SourceLIFTPath
 		{
-			get
-			{
-				return _sourceLIFTPath;
-			}
-			set
-			{
-				_sourceLIFTPath = value;
-			}
+			get { return _sourceLIFTPath; }
+			set { _sourceLIFTPath = value; }
 		}
 
 		public Db4oRecordList<LexEntry> GetEntries(Db4oDataSource ds)
 		{
-
 			if (_prewiredEntries == null)
 			{
 				return new Db4oRecordList<LexEntry>(ds);
@@ -200,7 +190,7 @@ namespace WeSay.Project
 
 		public void DoWork(ProgressState progress)
 		{
-			Reporting.Logger.WriteEvent("Building Caches");
+			Logger.WriteEvent("Building Caches");
 			_progress = progress;
 			_progress.State = ProgressState.StateValue.Busy;
 			_progress.StatusLabel = "Validating...";
@@ -209,14 +199,16 @@ namespace WeSay.Project
 			{
 				progress.StatusLabel = "Problem with file format...";
 				_progress.State = ProgressState.StateValue.StoppedWithError;
-				_progress.WriteToLog(string.Format("There is a problem with the format of {0}. {1}", _sourceLIFTPath, errors));
-				Reporting.Logger.WriteEvent("LIFT failed to validate.");
+				_progress.WriteToLog(
+						string.Format("There is a problem with the format of {0}. {1}", _sourceLIFTPath, errors));
+				Logger.WriteEvent("LIFT failed to validate.");
 				return;
 			}
 			try
 			{
 				progress.StatusLabel = "Building Caches...";
-				string tempCacheDirectory = Directory.CreateDirectory(Path.Combine(Path.GetTempPath(), Path.GetRandomFileName())).FullName;
+				string tempCacheDirectory =
+						Directory.CreateDirectory(Path.Combine(Path.GetTempPath(), Path.GetRandomFileName())).FullName;
 				WeSayWordsProject.Project.CacheLocationOverride = tempCacheDirectory;
 
 				//same name, but in a temp directory
@@ -224,9 +216,9 @@ namespace WeSay.Project
 				string tempDb4oFilePath = Path.Combine(tempCacheDirectory, db4oFileName);
 
 				using (IRecordListManager recordListManager =
-					new Db4oRecordListManager(new WeSayWordsDb4oModelConfiguration(), tempDb4oFilePath))
+						new Db4oRecordListManager(new WeSayWordsDb4oModelConfiguration(), tempDb4oFilePath))
 				{
-					Db4oDataSource ds = ((Db4oRecordListManager)recordListManager).DataSource;
+					Db4oDataSource ds = ((Db4oRecordListManager) recordListManager).DataSource;
 					Db4oLexModelHelper.Initialize(ds.Data);
 					//  Db4oRecordListManager ds = recordListManager as Db4oRecordListManager;
 
@@ -234,7 +226,7 @@ namespace WeSay.Project
 					//                    using (FileStream config = new FileStream(project.PathToProjectTaskInventory, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete))
 					SetupTasksToBuildCaches(recordListManager);
 
-					EntriesAlreadyWiredUp = (Db4oRecordList<LexEntry>)recordListManager.GetListOfType<LexEntry>();
+					EntriesAlreadyWiredUp = (Db4oRecordList<LexEntry>) recordListManager.GetListOfType<LexEntry>();
 
 					if (Db4oLexModelHelper.Singleton == null)
 					{
@@ -245,18 +237,18 @@ namespace WeSay.Project
 					doc.Load(_sourceLIFTPath);
 
 					DoParsing(doc, ds);
-					if (_backgroundWorker!=null && _backgroundWorker.CancellationPending)
+					if (_backgroundWorker != null && _backgroundWorker.CancellationPending)
 					{
 						return;
 					}
 				}
-				 WeSayWordsProject.Project.CacheLocationOverride = null;
+				WeSayWordsProject.Project.CacheLocationOverride = null;
 				ClearTheIncrementalBackupDirectory();
 
 				//if we got this far without an error, move it
 				//string backupPath = _destinationDatabasePath + ".bak";
 				//not needed File.Delete(backupPath);
-			   string cacheFolderName = WeSayWordsProject.Project.PathToCache;// _destinationDatabasePath + " Cache";
+				string cacheFolderName = WeSayWordsProject.Project.PathToCache; // _destinationDatabasePath + " Cache";
 				if (Directory.Exists(cacheFolderName))
 				{
 					Directory.Delete(cacheFolderName, true);
@@ -269,7 +261,7 @@ namespace WeSay.Project
 				{
 					CacheManager.UpdateSyncPointInCache(ds.Data, File.GetLastWriteTimeUtc(_sourceLIFTPath));
 					File.WriteAllText(
-						Path.Combine(Project.WeSayWordsProject.Project.PathToCache, CacheManager.kCacheIsFreshIndicator), "");
+							Path.Combine(WeSayWordsProject.Project.PathToCache, CacheManager.kCacheIsFreshIndicator), "");
 				}
 
 				_progress.State = ProgressState.StateValue.Finished;
@@ -288,7 +280,7 @@ namespace WeSay.Project
 			{
 				WeSayWordsProject.Project.CacheLocationOverride = null;
 			}
-			Reporting.Logger.WriteEvent("Done Building Caches");
+			Logger.WriteEvent("Done Building Caches");
 		}
 
 		private void DoParsing(XmlDocument doc, Db4oDataSource ds)
@@ -305,7 +297,7 @@ namespace WeSay.Project
 						//_importer.ExpectedOptionTraits.Add(name);
 					}
 					foreach (
-						string name in WeSayWordsProject.Project.OptionCollectionFieldNames)
+							string name in WeSayWordsProject.Project.OptionCollectionFieldNames)
 					{
 						merger.ExpectedOptionCollectionTraits.Add(name);
 					}
@@ -324,7 +316,7 @@ namespace WeSay.Project
 			}
 		}
 
-		static private void UpdateDashboardStats()
+		private static void UpdateDashboardStats()
 		{
 			foreach (ITask task in WeSayWordsProject.Project.Tasks)
 			{
@@ -340,13 +332,16 @@ namespace WeSay.Project
 			recordListManager.DelayWritingCachesUntilDispose = true;
 			ConfigFileTaskBuilder taskBuilder;
 			using (
-				FileStream configFile =
-					new FileStream(WeSayWordsProject.Project.PathToConfigFile,
-								   FileMode.Open, FileAccess.Read,
-								   FileShare.ReadWrite))
+					FileStream configFile =
+							new FileStream(WeSayWordsProject.Project.PathToConfigFile,
+										   FileMode.Open,
+										   FileAccess.Read,
+										   FileShare.ReadWrite))
 			{
-				taskBuilder = new ConfigFileTaskBuilder(configFile, WeSayWordsProject.Project,
-														new EmptyCurrentWorkTask(), recordListManager);
+				taskBuilder = new ConfigFileTaskBuilder(configFile,
+														WeSayWordsProject.Project,
+														new EmptyCurrentWorkTask(),
+														recordListManager);
 			}
 
 			WeSayWordsProject.Project.Tasks = taskBuilder.Tasks;
@@ -362,34 +357,36 @@ namespace WeSay.Project
 		private void RunParser(XmlDocument doc, LiftMerger merger)
 		{
 			LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence> parser =
-				new LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence>(merger);
+					new LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence>(merger);
 
 			parser.SetTotalNumberSteps +=
-				new EventHandler
-					<LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence>.StepsArgs>(
-					parser_SetTotalNumberSteps);
+					new EventHandler
+							<LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence>.StepsArgs>(
+							parser_SetTotalNumberSteps);
 			parser.SetStepsCompleted +=
-				new EventHandler
-					<
-						LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence>.
-							ProgressEventArgs>(
-					parser_SetStepsCompleted);
+					new EventHandler
+							<
+									LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence>.
+											ProgressEventArgs>(
+							parser_SetStepsCompleted);
 
 			parser.ParsingWarning +=
-				new EventHandler
-					<LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence>.ErrorArgs>(
-					parser_ParsingWarning);
+					new EventHandler
+							<LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence>.ErrorArgs>(
+							parser_ParsingWarning);
 			parser.ReadFile(doc);
 		}
 
-		void parser_ParsingWarning(object sender, LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence>.ErrorArgs e)
+		private void parser_ParsingWarning(object sender,
+										   LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence>.ErrorArgs
+												   e)
 		{
 			_progress.WriteToLog(e.Exception.Message);
 		}
 
-
-
-		void parser_SetStepsCompleted(object sender, LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence>.ProgressEventArgs e)
+		private void parser_SetStepsCompleted(object sender,
+											  LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence>.
+													  ProgressEventArgs e)
 		{
 			_progress.NumberOfStepsCompleted = e.Progress;
 			if (_backgroundWorker != null)
@@ -398,12 +395,15 @@ namespace WeSay.Project
 			}
 		}
 
-		void parser_SetTotalNumberSteps(object sender, LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence>.StepsArgs e)
+		private void parser_SetTotalNumberSteps(object sender,
+												LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence>.
+														StepsArgs e)
 		{
-			_progress.TotalNumberOfSteps =e.Steps;
+			_progress.TotalNumberOfSteps = e.Steps;
 		}
 
 		/*public for unit-tests */
+
 		public static void ClearTheIncrementalBackupDirectory()
 		{
 			if (!Directory.Exists(WeSayWordsProject.Project.PathToLiftBackupDir))
@@ -426,20 +426,19 @@ namespace WeSay.Project
 			}
 		}
 
-
 		/// <summary>
 		/// Recursive procedure to copy folder to another volume
 		/// cleaned up from http://www.codeproject.com/cs/files/CopyFiles.asp
 		/// </summary>
 		private static void SafeMoveDirectory(string sourceDir,
-				string destinationDir)
+											  string destinationDir)
 		{
 			DirectoryInfo sourceDirInfo = new DirectoryInfo(sourceDir);
 			FileInfo[] files = sourceDirInfo.GetFiles();
 			Directory.CreateDirectory(destinationDir);
 			foreach (FileInfo file in files)
 			{
-				file.CopyTo(Path.Combine(destinationDir,file.Name));
+				file.CopyTo(Path.Combine(destinationDir, file.Name));
 				file.Delete();
 			}
 			// Recursive copy children dirs
@@ -451,5 +450,4 @@ namespace WeSay.Project
 			sourceDirInfo.Delete();
 		}
 	}
-
 }

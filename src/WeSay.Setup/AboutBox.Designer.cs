@@ -68,7 +68,6 @@ namespace WeSay.Setup
 			// logoPictureBox
 			//
 			this.logoPictureBox.Image = global::WeSay.Setup.Properties.Resources.WeSaySetupImage;
-			this.logoPictureBox.ImageLocation = "";
 			this.logoPictureBox.Location = new System.Drawing.Point(3, 3);
 			this.logoPictureBox.Name = "logoPictureBox";
 			this.tableLayoutPanel.SetRowSpan(this.logoPictureBox, 6);

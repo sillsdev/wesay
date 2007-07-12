@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics;
 using System.Text;
 
 namespace WeSay.Foundation.Progress
@@ -12,19 +11,19 @@ namespace WeSay.Foundation.Progress
 		private int _totalNumberOfSteps;
 		private int _numberOfStepsCompleted;
 		private string _statusLabel;
-		private StateValue _state= StateValue.NotStarted;
+		private StateValue _state = StateValue.NotStarted;
 		private StringBuilder _logBuilder;
 
-		protected  bool _doCancel = false;
+		private bool _doCancel = false;
 
 		public event EventHandler StatusLabelChanged;
 		public event EventHandler TotalNumberOfStepsChanged;
 		public event EventHandler NumberOfStepsCompletedChanged;
 
 		public event EventHandler StateChanged;
-		public event System.EventHandler<LogEvent> Log;
+		public event EventHandler<LogEvent> Log;
 
-		public class LogEvent : System.EventArgs
+		public class LogEvent : EventArgs
 		{
 			public string message;
 
@@ -36,13 +35,11 @@ namespace WeSay.Foundation.Progress
 
 		public enum StateValue
 		{
-			NotStarted=0,
+			NotStarted = 0,
 			Busy,
 			Finished,
 			StoppedWithError
 		} ;
-
-
 
 		public ProgressState()
 		{
@@ -50,10 +47,9 @@ namespace WeSay.Foundation.Progress
 			_logBuilder = new StringBuilder();
 		}
 
-
 		public void WriteToLog(string message)
 		{
-			if (this.Log != null)
+			if (Log != null)
 			{
 				Log.Invoke(this, new LogEvent(message));
 			}
@@ -65,14 +61,11 @@ namespace WeSay.Foundation.Progress
 		/// </summary>
 		public virtual int NumberOfStepsCompleted
 		{
-			get
-			{
-				return _numberOfStepsCompleted;
-			}
+			get { return _numberOfStepsCompleted; }
 			set
 			{
 				_numberOfStepsCompleted = value;
-				if (this.NumberOfStepsCompletedChanged != null)
+				if (NumberOfStepsCompletedChanged != null)
 				{
 					NumberOfStepsCompletedChanged(this, null);
 				}
@@ -84,10 +77,7 @@ namespace WeSay.Foundation.Progress
 		/// </summary>
 		public virtual string StatusLabel
 		{
-			get
-			{
-				return _statusLabel;
-			}
+			get { return _statusLabel; }
 
 			set
 			{
@@ -101,10 +91,7 @@ namespace WeSay.Foundation.Progress
 
 		public virtual int TotalNumberOfSteps
 		{
-			get
-			{
-				return _totalNumberOfSteps;
-			}
+			get { return _totalNumberOfSteps; }
 			set
 			{
 				_totalNumberOfSteps = value;
@@ -128,18 +115,12 @@ namespace WeSay.Foundation.Progress
 
 		public virtual bool Cancel
 		{
-			get
-			{
-				return _doCancel;
-			}
-			set
-			{
-				_doCancel = value;
-			}
+			get { return _doCancel; }
+			set { _doCancel = value; }
 		}
 
-
 		#region IDisposable & Co. implementation
+
 		//Courtesy  of Randy Regnier
 
 		/// <summary>
@@ -148,7 +129,6 @@ namespace WeSay.Foundation.Progress
 		private bool _isDisposed = false;
 
 		private Exception _encounteredException;
-
 
 		/// <summary>
 		/// See if the object has been disposed.
@@ -160,14 +140,11 @@ namespace WeSay.Foundation.Progress
 
 		public virtual StateValue State
 		{
-			get
-			{
-				return _state;
-			}
+			get { return _state; }
 			set
 			{
 				_state = value;
-				if(StateChanged!=null)
+				if (StateChanged != null)
 				{
 					StateChanged(this, null);
 				}
@@ -176,22 +153,13 @@ namespace WeSay.Foundation.Progress
 
 		public Exception ExceptionThatWasEncountered
 		{
-			get
-			{
-				return _encounteredException;
-			}
-			set
-			{
-				_encounteredException = value;
-			}
+			get { return _encounteredException; }
+			set { _encounteredException = value; }
 		}
 
 		public string LogString
 		{
-			get
-			{
-				return _logBuilder.ToString();
-			}
+			get { return _logBuilder.ToString(); }
 		}
 
 		/// <summary>
@@ -248,7 +216,9 @@ namespace WeSay.Foundation.Progress
 			//Debug.WriteLineIf(!disposing, "****************** " + GetType().Name + " 'disposing' is false. ******************");
 			// Must not be run more than once.
 			if (_isDisposed)
+			{
 				return;
+			}
 
 			_statusLabel = null;
 
@@ -256,8 +226,5 @@ namespace WeSay.Foundation.Progress
 		}
 
 		#endregion IDisposable & Co. implementation
-
-
 	}
-
 }

@@ -28,13 +28,13 @@ namespace WeSay.LexicalTools
 			try
 			{
 				base.Activate();
-				_dictionaryControl = new DictionaryControl((Db4oRecordListManager)RecordListManager, ViewTemplate);
+				_dictionaryControl = new DictionaryControl(RecordListManager, ViewTemplate);
 				_dictionaryControl.SelectedIndexChanged += new EventHandler(OnRecordSelectionChanged);
 			}
-			catch (Reporting.ConfigurationException e)
+			catch (Reporting.ConfigurationException)
 			{
-				_isActive = false;
-				throw e;
+				IsActive = false;
+				throw;
 			}
 		}
 

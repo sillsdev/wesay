@@ -81,7 +81,7 @@ namespace WeSay.LexicalTools.Tests
 
 			this._tabControl.Dock = DockStyle.Fill;
 			this._tabControl.TabPages.Add(this._detailTaskPage);
-			this._tabControl.TabPages.Add("Dummy");
+			this._tabControl.TabPages.Add(new TabPage("Dummy"));
 			this._window = new Form();
 			this._window.Controls.Add(this._tabControl);
 			_window.Width = 500;
@@ -556,7 +556,8 @@ namespace WeSay.LexicalTools.Tests
 		{
 			RemovingSenseTestCore();
 			TextBoxTester tb = new TextBoxTester(GetMeaningControlName());
-			tb.Properties.Paste(" ");
+			Clipboard.SetText(" ");
+			tb.Properties.Paste();
 		}
 
 		[Test]  //regression test
@@ -564,7 +565,8 @@ namespace WeSay.LexicalTools.Tests
 		{
 			RemovingSenseTestCore();
 			TextBoxTester tb = new TextBoxTester(GetMeaningControlName());
-			tb.Properties.Paste("samo");
+			Clipboard.SetText("samo");
+			tb.Properties.Paste();
 			TextBoxTester tb2 = new TextBoxTester(GetMeaningControlName());
 			Assert.AreEqual("samo", tb2.Properties.Text);
 		}

@@ -78,6 +78,8 @@ namespace WeSay.LexicalTools
 
 			InitializeDisplaySettings();
 			InitializeComponent();
+			InitializeMonoWorkarounds();
+
 
 			this._btnNewWord.Font = StringCatalog.LabelFont;
 			this._btnDeleteWord.Font = StringCatalog.LabelFont;
@@ -96,6 +98,20 @@ namespace WeSay.LexicalTools
 			_recordsListBox.Enter += new EventHandler(_recordsListBox_Enter);
 			_recordsListBox.Leave += new EventHandler(_recordsListBox_Leave);
 			_btnDeleteWord.Enabled = (CurrentRecord != null);
+		}
+
+	   private void InitializeMonoWorkarounds() { // Mono bug 82081
+#if !MONO
+			if (Type.GetType("Mono.Runtime") != null)
+#endif
+		   {
+			   // this is not allowed in .Net but it is in Mono and is the only way to get
+			   // it to work (setting width to 0 doesn't)
+			   this._btnFind.FlatAppearance.BorderColor = System.Drawing.Color.Transparent;
+			   this._writingSystemChooser.FlatAppearance.BorderColor = System.Drawing.Color.Transparent;
+			   this._btnDeleteWord.FlatAppearance.BorderColor = System.Drawing.Color.Transparent;
+			   this._btnNewWord.FlatAppearance.BorderColor = System.Drawing.Color.Transparent;
+		   }
 		}
 
 		private void InitializeDisplaySettings() {
@@ -193,7 +209,7 @@ namespace WeSay.LexicalTools
 			{
 			  menuItem.Checked = (this._listWritingSystem == menuItem.Tag);
 			}
-			this._cmWritingSystems.Show(_writingSystemChooser, new Point(0,_writingSystemChooser.Height), LeftRightAlignment.Right);
+			this._cmWritingSystems.Show(_writingSystemChooser, new Point(_writingSystemChooser.Width,_writingSystemChooser.Height));
 		}
 
 		void OnFindWritingSystemId_MouseClick(object sender, MouseEventArgs e)
@@ -217,9 +233,18 @@ namespace WeSay.LexicalTools
 			   e.KeyData == Keys.Enter)
 			{
 				e.Handled = true;
-				e.SuppressKeyPress = true; // otherwise it beeps!
+				if (Type.GetType("Mono.Runtime") == null) // Work around not yet implemented in Mono
+				{
+					SetSuppressKeyPressTrue(e);
+				}
 				Find(this._findText.Text);
 			}
+		}
+
+		private static void SetSuppressKeyPressTrue(KeyEventArgs e) {
+#if !MONO
+			e.SuppressKeyPress = true; // otherwise it beeps!
+#endif
 		}
 
 		void _findText_AutoCompleteChoiceSelected(object sender, EventArgs e)

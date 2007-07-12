@@ -10,7 +10,6 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
 
-
 namespace Reporting
 {
 	/// ----------------------------------------------------------------------------------------
@@ -21,14 +20,15 @@ namespace Reporting
 	public class ErrorReporter : Form, IDisposable
 	{
 		#region Member variables
+
 		private Label label2;
 		private Label label3;
 		private TextBox m_details;
 		private TextBox m_notification;
 		private TextBox m_reproduce;
 		private Label labelAttemptToContinue;
-		protected static string s_emailAddress= null;
-		protected static string s_emailSubject= "Automated Error Report";
+		protected static string s_emailAddress = null;
+		protected static string s_emailSubject = "Automated Error Report";
 
 		private bool m_isLethal;
 
@@ -37,11 +37,12 @@ namespace Reporting
 		/// For example, xWorks would could the name of the database in here.
 		/// </summary>
 		protected static StringDictionary s_properties =
-			new StringDictionary();
+				new StringDictionary();
 
 		protected static bool s_isOkToInteractWithUser = true;
 		private Button btnClose;
 		private static bool s_fIgnoreReport = false;
+
 		#endregion
 
 		/// ------------------------------------------------------------------------------------
@@ -64,7 +65,9 @@ namespace Reporting
 		public void CheckDisposed()
 		{
 			if (IsDisposed)
+			{
 				throw new ObjectDisposedException(String.Format("'{0}' in use after being disposed.", GetType().Name));
+			}
 		}
 
 		/// <summary>
@@ -93,7 +96,9 @@ namespace Reporting
 			//Debug.WriteLineIf(!disposing, "****************** " + GetType().Name + " 'disposing' is false. ******************");
 			// Must not be run more than once.
 			if (IsDisposed)
+			{
 				return;
+			}
 
 			if (disposing)
 			{
@@ -108,13 +113,15 @@ namespace Reporting
 		#endregion IDisposable override
 
 		#region Windows Form Designer generated code
+
 		/// <summary>
 		/// Required method for Designer support - do not modify
 		/// the contents of this method with the code editor.
 		/// </summary>
 		private void InitializeComponent()
 		{
-			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ErrorReporter));
+			System.ComponentModel.ComponentResourceManager resources =
+					new System.ComponentModel.ComponentResourceManager(typeof (ErrorReporter));
 			this.label2 = new System.Windows.Forms.Label();
 			this.m_reproduce = new System.Windows.Forms.TextBox();
 			this.label3 = new System.Windows.Forms.Label();
@@ -158,7 +165,10 @@ namespace Reporting
 			// m_notification
 			//
 			resources.ApplyResources(this.m_notification, "m_notification");
-			this.m_notification.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+			this.m_notification.BackColor =
+					System.Drawing.Color.FromArgb(((int) (((byte) (192)))),
+												  ((int) (((byte) (255)))),
+												  ((int) (((byte) (192)))));
 			this.m_notification.BorderStyle = System.Windows.Forms.BorderStyle.None;
 			this.m_notification.ForeColor = System.Drawing.Color.Black;
 			this.m_notification.Name = "m_notification";
@@ -174,7 +184,10 @@ namespace Reporting
 			//
 			this.AcceptButton = this.btnClose;
 			resources.ApplyResources(this, "$this");
-			this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+			this.BackColor =
+					System.Drawing.Color.FromArgb(((int) (((byte) (192)))),
+												  ((int) (((byte) (255)))),
+												  ((int) (((byte) (192)))));
 			this.CancelButton = this.btnClose;
 			this.ControlBox = false;
 			this.Controls.Add(this.m_reproduce);
@@ -190,11 +203,12 @@ namespace Reporting
 			this.Name = "ErrorReporter";
 			this.ResumeLayout(false);
 			this.PerformLayout();
-
 		}
+
 		#endregion
 
 		#region Static methods
+
 		/// ------------------------------------------------------------------------------------
 		/// <summary>
 		/// show a dialog or output to the error log, as appropriate.
@@ -205,6 +219,7 @@ namespace Reporting
 		{
 			ReportException(error, null);
 		}
+
 		/// <summary>
 		///
 		/// </summary>
@@ -215,7 +230,6 @@ namespace Reporting
 			ReportException(error, null, true);
 		}
 
-
 		/// ------------------------------------------------------------------------------------
 		/// <summary>
 		/// show a dialog or output to the error log, as appropriate.
@@ -224,11 +238,14 @@ namespace Reporting
 		/// <param name="parent">the parent form that this error belongs to (i.e. the form
 		/// show modally on)</param>
 		/// ------------------------------------------------------------------------------------
+		/// <param name="isLethal"></param>
 		public static void ReportException(Exception error, Form parent, bool isLethal)
 		{
 			// ignore message if we are showing from a previous error
 			if (s_fIgnoreReport)
+			{
 				return;
+			}
 
 //			// If the error has a message and a help link, then show that error
 //			if (error.HelpLink != null && error.HelpLink != string.Empty && error.HelpLink.IndexOf("::/") > 0 &&
@@ -260,9 +277,11 @@ namespace Reporting
 				e.HandleError(error, parent);
 			}
 		}
+
 		#endregion
 
 		#region Properties
+
 		/// ------------------------------------------------------------------------------------
 		/// <summary>
 		///make this false during automated testing
@@ -270,8 +289,8 @@ namespace Reporting
 		/// ------------------------------------------------------------------------------------
 		public static bool OkToInteractWithUser
 		{
-			set {s_isOkToInteractWithUser = value;}
-			get {return s_isOkToInteractWithUser;}
+			set { s_isOkToInteractWithUser = value; }
+			get { return s_isOkToInteractWithUser; }
 		}
 
 		/// <summary>
@@ -279,23 +298,23 @@ namespace Reporting
 		/// </summary>
 		public static string EmailAddress
 		{
-			set {s_emailAddress = value;}
-			get {return s_emailAddress;}
+			set { s_emailAddress = value; }
+			get { return s_emailAddress; }
 		}
+
 		/// <summary>
 		/// set this property if you want something other than the default e-mail subject
 		/// </summary>
 		public static string EmailSubject
 		{
-			set {s_emailSubject = value;}
-			get {return s_emailSubject;}
+			set { s_emailSubject = value; }
+			get { return s_emailSubject; }
 		}
-
-
 
 		#endregion
 
 		#region Methods
+
 		/// ------------------------------------------------------------------------------------
 		/// <summary>
 		///
@@ -316,7 +335,9 @@ namespace Reporting
 			//avoid an error if the user changes the value of something,
 			//which happens in FieldWorks, for example, when you change the language project.
 			if (s_properties.ContainsKey(label))
+			{
 				s_properties.Remove(label);
+			}
 
 			s_properties.Add(label, contents);
 		}
@@ -351,11 +372,11 @@ namespace Reporting
 //				label1.Text += ": " + s_emailAddress;
 //			}
 
-			if(!m_isLethal)
+			if (!m_isLethal)
 			{
 				btnClose.Text = ReportingStrings.ks_Ok;
-				this.BackColor =  Color.FromArgb(255, 255, 192);//yellow
-				m_notification.BackColor = this.BackColor;
+				BackColor = Color.FromArgb(255, 255, 192); //yellow
+				m_notification.BackColor = BackColor;
 			}
 
 			Exception innerMostException = null;
@@ -363,18 +384,24 @@ namespace Reporting
 
 			//if the exception had inner exceptions, show the inner-most exception first, since that is usually the one
 			//we want the developer to read.
-			if(innerMostException != null)
+			if (innerMostException != null)
+			{
 				m_details.Text = "Inner most exception:\r\n" + GetExceptionText(innerMostException) +
-					"\r\n\r\nFull, hierarchical exception contents:\r\n" + m_details.Text;
+								 "\r\n\r\nFull, hierarchical exception contents:\r\n" + m_details.Text;
+			}
 
 			m_details.Text += "\r\nError Reporting Properties:\r\n";
-			foreach(string label in s_properties.Keys )
+			foreach (string label in s_properties.Keys)
+			{
 				m_details.Text += label + ": " + s_properties[label] + "\r\n";
+			}
 
 			m_details.Text += Logger.LogText;
 			Debug.WriteLine(m_details.Text);
 			if (innerMostException != null)
+			{
 				error = innerMostException;
+			}
 			Logger.WriteEvent("Got exception " + error.GetType().Name);
 
 			if (s_isOkToInteractWithUser)
@@ -383,8 +410,10 @@ namespace Reporting
 				ShowDialog(owner);
 				s_fIgnoreReport = false;
 			}
-			else	//the test environment already prohibits dialogs but will save the contents of assertions in some log.
+			else //the test environment already prohibits dialogs but will save the contents of assertions in some log.
+			{
 				Debug.Fail(m_details.Text);
+			}
 		}
 
 		/// ------------------------------------------------------------------------------------
@@ -397,7 +426,7 @@ namespace Reporting
 		{
 			string x = GetExceptionText(error);
 
-			if (error.InnerException!= null)
+			if (error.InnerException != null)
 			{
 				innerMostException = error.InnerException;
 
@@ -414,7 +443,7 @@ namespace Reporting
 		/// <param name="error"></param>
 		/// <returns></returns>
 		/// ------------------------------------------------------------------------------------
-		private string GetExceptionText(Exception error)
+		static private string GetExceptionText(Exception error)
 		{
 			StringBuilder txt = new StringBuilder();
 
@@ -426,48 +455,42 @@ namespace Reporting
 				if (error is COMException)
 				{
 					txt.Append("\r\nCOM message: ");
-					txt.Append(new Win32Exception(((COMException)error).ErrorCode).Message);
+					txt.Append(new Win32Exception(((COMException) error).ErrorCode).Message);
 				}
 			}
-			catch
-			{
-			}
+			catch {}
 
 			try
 			{
 				txt.Append("\r\nSource: ");
 				txt.Append(error.Source);
 			}
-			catch
-			{
-			}
+			catch {}
 
 			try
 			{
-				if(error.TargetSite != null)
+				if (error.TargetSite != null)
 				{
 					txt.Append("\r\nAssembly: ");
 					txt.Append(error.TargetSite.DeclaringType.Assembly.FullName);
 				}
 			}
-			catch
-			{
-			}
+			catch {}
 
 			try
 			{
 				txt.Append("\r\nStack: ");
 				txt.Append(error.StackTrace);
 			}
-			catch
-			{
-			}
+			catch {}
 			txt.Append("\r\n");
 			return txt.ToString();
 		}
+
 		#endregion
 
 		#region Event Handlers
+
 		/// ------------------------------------------------------------------------------------
 		/// <summary>
 		///
@@ -487,14 +510,14 @@ namespace Reporting
 
 			try
 			{
-				Reporting.MAPI msg = new MAPI();
+				MAPI msg = new MAPI();
 				msg.AddRecipientTo(s_emailAddress);
 				if (msg.SendMailDirect(s_emailSubject, m_details.Text))
 				{
 					CloseUp();
 				}
 			}
-			catch(Exception)
+			catch (Exception)
 			{
 				//swallow it and go to the mailto method
 			}
@@ -528,9 +551,9 @@ namespace Reporting
 			CloseUp();
 		}
 
-		private  void CloseUp()
+		private void CloseUp()
 		{
-			if(!m_isLethal || ModifierKeys.Equals(Keys.Shift))
+			if (!m_isLethal || ModifierKeys.Equals(Keys.Shift))
 			{
 				Logger.WriteEvent("Continuing...");
 				return;
@@ -538,7 +561,7 @@ namespace Reporting
 			Logger.WriteEvent("Exiting...");
 			Application.Exit();
 			//still didn't work? Sheesh.
-			System.Diagnostics.Process.GetCurrentProcess().Kill();
+			Process.GetCurrentProcess().Kill();
 		}
 
 		/// ------------------------------------------------------------------------------------
@@ -550,7 +573,9 @@ namespace Reporting
 		protected override void OnKeyDown(KeyEventArgs e)
 		{
 			if (e.KeyCode == Keys.ShiftKey && Visible)
+			{
 				labelAttemptToContinue.Visible = true;
+			}
 			base.OnKeyDown(e);
 		}
 
@@ -563,9 +588,12 @@ namespace Reporting
 		protected override void OnKeyUp(KeyEventArgs e)
 		{
 			if (e.KeyCode == Keys.ShiftKey && Visible)
+			{
 				labelAttemptToContinue.Visible = false;
+			}
 			base.OnKeyUp(e);
 		}
+
 		#endregion
 
 		public static void AddStandardProperties()
@@ -593,7 +621,7 @@ namespace Reporting
 				try
 				{
 					string path = assembly.CodeBase.Replace(@"file:///", "");
-					version +=  File.GetLastWriteTimeUtc(path).Date.ToShortDateString() +")";
+					version += File.GetLastWriteTimeUtc(path).Date.ToShortDateString() + ")";
 				}
 				catch
 				{
@@ -610,18 +638,17 @@ namespace Reporting
 
 		private static object GetAssemblyAttribute(Type attributeType)
 		{
-				Assembly assembly = Assembly.GetEntryAssembly();
-				if (assembly != null)
-				{
-					object[] attributes =
+			Assembly assembly = Assembly.GetEntryAssembly();
+			if (assembly != null)
+			{
+				object[] attributes =
 						assembly.GetCustomAttributes(attributeType, false);
-					object attr;
-					if (attributes != null && attributes.Length > 0)
-					{
-						return attributes[0];
-					}
+				if (attributes != null && attributes.Length > 0)
+				{
+					return attributes[0];
 				}
-				return null;
+			}
+			return null;
 		}
 
 		public static string VersionNumberString
@@ -643,15 +670,15 @@ namespace Reporting
 			{
 				string v = VersionNumberString;
 				string build = v.Substring(v.LastIndexOf('.') + 1);
-				string label="";
-				object attr = GetAssemblyAttribute(typeof(AssemblyProductAttribute));
+				string label = "";
+				object attr = GetAssemblyAttribute(typeof (AssemblyProductAttribute));
 				if (attr != null)
 				{
-					label = ((AssemblyProductAttribute)attr).Product+", ";
+					label = ((AssemblyProductAttribute) attr).Product + ", ";
 				}
 
 				//return "Version 1 Preview, build " + build;
-				return label+"build " + build;
+				return label + "build " + build;
 			}
 		}
 
@@ -660,24 +687,24 @@ namespace Reporting
 		/// </summary>
 		public static void ReportNonFatalMessage(string message, params object[] args)
 		{
-			if (Reporting.ErrorReporter.OkToInteractWithUser)
+			if (OkToInteractWithUser)
 			{
 				MessageBox.Show(
-					String.Format(message,args),
-					 Application.ProductName+" Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+						String.Format(message, args),
+						Application.ProductName + " Error",
+						MessageBoxButtons.OK,
+						MessageBoxIcon.Exclamation);
 			}
 			else
 			{
-				throw new NonFatalMessageSentToUserException(String.Format(message,args));
+				throw new NonFatalMessageSentToUserException(String.Format(message, args));
 			}
 		}
 
 		//for tests to catch
 		public class NonFatalMessageSentToUserException : ApplicationException
 		{
-			public NonFatalMessageSentToUserException(string message) :base(message)
-			{
-			}
+			public NonFatalMessageSentToUserException(string message) : base(message) {}
 		}
 	}
 }

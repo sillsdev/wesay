@@ -50,7 +50,7 @@ namespace WeSay.UI
 			ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));//text
 			ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));//annotation widget
 
-			if (Environment.OSVersion.Platform != PlatformID.Unix)
+			if (Type.GetType("Mono.Runtime") == null) // Work around not yet implemented in Mono
 			{
 				SetAutoSizeToGrowAndShrink();
 			}
@@ -60,7 +60,9 @@ namespace WeSay.UI
 
 		private void SetAutoSizeToGrowAndShrink()
 		{
+#if !MONO
 			this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+#endif
 		}
 
 
@@ -124,6 +126,11 @@ namespace WeSay.UI
 
 			if (Controls.Count > 0)
 			{
+				foreach (WeSayTextBox box in _textBoxes)
+				{
+					box.SizeChanged -=  box_SizeChanged;
+				}
+				_textBoxes.Clear();
 				Controls.Clear();
 				RowCount = 0;
 				RowStyles.Clear();
@@ -258,6 +265,7 @@ namespace WeSay.UI
 
 
 			_textBoxes.Add(box);
+			box.SizeChanged += new EventHandler(box_SizeChanged);
 			box.Name = Name.Replace("-mtc","") + "_" + writingSystem.Id; //for automated tests to find this particular guy
 			box.Text = multiText[writingSystem.Id];
 
@@ -266,6 +274,24 @@ namespace WeSay.UI
 			box.KeyDown += new KeyEventHandler(OnKeyDownInSomeBox);
 
 			return box;
+		}
+
+		void box_SizeChanged(object sender, EventArgs e)
+		{
+#if !MONO
+			if (Type.GetType("Mono.Runtime") != null) // Work around because Row.AutoSize not yet implemented in Mono
+#endif
+			{
+				int height = 0;
+				foreach (WeSayTextBox box in _textBoxes)
+				{
+					height += Math.Max(28/*size of annotation widget*/, box.Height + box.Margin.Top + box.Margin.Bottom);
+				}
+				if (height != Height)
+				{
+					Height = height;
+				}
+			}
 		}
 
 

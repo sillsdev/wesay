@@ -2,30 +2,25 @@ using System;
 using System.IO;
 using System.Reflection;
 using System.Xml;
+using Reporting;
 using WeSay.Language;
 
 namespace WeSay.Project
 {
 	public class BasilProject : IProject, IDisposable
 	{
-	  private static BasilProject _singleton;
-	  protected string _uiFontName;
+		private static BasilProject _singleton;
+		private string _uiFontName;
 
-	  protected static BasilProject Singleton
-	  {
-		get
+		protected static BasilProject Singleton
 		{
-		  return BasilProject._singleton;
+			get { return _singleton; }
+			set { _singleton = value; }
 		}
-		set
-		{
-		  BasilProject._singleton = value;
-		}
-	  }
+
 		private WritingSystemCollection _writingSystems;
-		protected  string _projectDirectoryPath = string.Empty;
+		private string _projectDirectoryPath = string.Empty;
 		private string _stringCatalogSelector = string.Empty;
-
 
 		public static BasilProject Project
 		{
@@ -33,7 +28,8 @@ namespace WeSay.Project
 			{
 				if (_singleton == null)
 				{
-				  throw new InvalidOperationException("BasilProject Not initialized. For tests, call BasilProject.InitializeForTests().");
+					throw new InvalidOperationException(
+							"BasilProject Not initialized. For tests, call BasilProject.InitializeForTests().");
 				}
 				return _singleton;
 			}
@@ -49,15 +45,12 @@ namespace WeSay.Project
 
 		public static bool IsInitialized
 		{
-			get
-			{
-				return _singleton != null;
-			}
+			get { return _singleton != null; }
 		}
 
 		public BasilProject()
 		{
-			Project =this;
+			Project = this;
 			_writingSystems = new WritingSystemCollection();
 		}
 
@@ -73,7 +66,7 @@ namespace WeSay.Project
 		/// <param name="dontInitialize"></param>
 		public virtual void LoadFromProjectDirectoryPath(string projectDirectoryPath, bool dontInitialize)
 		{
-			this._projectDirectoryPath = projectDirectoryPath;
+			_projectDirectoryPath = projectDirectoryPath;
 			if (!dontInitialize)
 			{
 				InitStringCatalog();
@@ -83,7 +76,7 @@ namespace WeSay.Project
 
 		public virtual void CreateEmptyProjectFiles(string projectDirectoryPath)
 		{
-			this._projectDirectoryPath = projectDirectoryPath;
+			_projectDirectoryPath = projectDirectoryPath;
 			Directory.CreateDirectory(ProjectCommonDirectory);
 			InitStringCatalog();
 			InitWritingSystems();
@@ -92,15 +85,16 @@ namespace WeSay.Project
 
 		public virtual void Save()
 		{
-		   Save(_projectDirectoryPath);
+			Save(_projectDirectoryPath);
 		}
 
-	   public virtual void Save(string projectDirectoryPath)
+		public virtual void Save(string projectDirectoryPath)
 		{
 			XmlWriter writer = XmlWriter.Create(PathToWritingSystemPrefs);
 			_writingSystems.Write(writer);
 			writer.Close();
 		}
+
 		/// <summary>
 		/// Many tests throughout the system will not care at all about project related things,
 		/// but they will break if there is no project initialized, since many things
@@ -110,7 +104,7 @@ namespace WeSay.Project
 		/// </summary>
 		public static void InitializeForTests()
 		{
-			Reporting.ErrorReporter.OkToInteractWithUser = false;
+			ErrorReporter.OkToInteractWithUser = false;
 			BasilProject project = new BasilProject();
 			project.LoadFromProjectDirectoryPath(GetPretendProjectDirectory());
 			project.StringCatalogSelector = "en";
@@ -118,31 +112,23 @@ namespace WeSay.Project
 
 		public static string GetPretendProjectDirectory()
 		{
-			return Path.Combine(GetTopAppDirectory(), Path.Combine("SampleProjects","PRETEND"));
+			return Path.Combine(GetTopAppDirectory(), Path.Combine("SampleProjects", "PRETEND"));
 		}
 
 		public WritingSystemCollection WritingSystems
 		{
-			get
-			{
-				return _writingSystems;
-			}
+			get { return _writingSystems; }
 		}
 
 		public string ProjectDirectoryPath
 		{
-			get
-			{
-				return _projectDirectoryPath;
-			}
+			get { return _projectDirectoryPath; }
+			protected set { _projectDirectoryPath = value; }
 		}
 
 		public string PathToWritingSystemPrefs
 		{
-			get
-			{
-				return GetPathToWritingSystemPrefs(ProjectCommonDirectory);
-			}
+			get { return GetPathToWritingSystemPrefs(ProjectCommonDirectory); }
 		}
 
 //        public string PathToOptionsLists
@@ -172,32 +158,25 @@ namespace WeSay.Project
 				return path;
 			}
 
-			else return null;
+			else
+			{
+				return null;
+			}
 		}
-
-
 
 		public string PathToStringCatalogInProjectDir
 		{
-			get
-			{
-				return Path.Combine(ProjectCommonDirectory, _stringCatalogSelector+".po");
-			}
+			get { return Path.Combine(ProjectCommonDirectory, _stringCatalogSelector + ".po"); }
 		}
+
 		public string ApplicationCommonDirectory
 		{
-			get
-			{
-				return Path.Combine(GetTopAppDirectory(), "common");
-			}
+			get { return Path.Combine(GetTopAppDirectory(), "common"); }
 		}
 
 		public string ApplicationTestDirectory
 		{
-			get
-			{
-				return Path.Combine(GetTopAppDirectory(), "test");
-			}
+			get { return Path.Combine(GetTopAppDirectory(), "test"); }
 		}
 
 		protected static string GetTopAppDirectory()
@@ -237,10 +216,7 @@ namespace WeSay.Project
 
 		protected string ProjectCommonDirectory
 		{
-			get
-			{
-				return Path.Combine(_projectDirectoryPath, "common");
-			}
+			get { return Path.Combine(_projectDirectoryPath, "common"); }
 		}
 
 		public string Name
@@ -248,10 +224,9 @@ namespace WeSay.Project
 			get
 			{
 				//we don't really want to give this directory out... this is just for a test
-				return Path.GetFileName(this._projectDirectoryPath);
+				return Path.GetFileName(_projectDirectoryPath);
 			}
 		}
-
 
 		public virtual void Dispose()
 		{
@@ -261,14 +236,15 @@ namespace WeSay.Project
 			}
 		}
 
-		 private void InitWritingSystems()
+		private void InitWritingSystems()
 		{
 			if (File.Exists(PathToWritingSystemPrefs))
 			{
 				_writingSystems.Load(PathToWritingSystemPrefs);
 			}
 			else
-			{   //load defaults
+			{
+				//load defaults
 				_writingSystems.Load(GetPathToWritingSystemPrefs(ApplicationCommonDirectory));
 			}
 		}
@@ -287,6 +263,11 @@ namespace WeSay.Project
 			set { _stringCatalogSelector = value; }
 		}
 
+		protected string UiFontName
+		{
+			get { return _uiFontName; }
+			set { _uiFontName = value; }
+		}
 
 		private void InitStringCatalog()
 		{
@@ -294,25 +275,23 @@ namespace WeSay.Project
 			{
 				if (_stringCatalogSelector == "test")
 				{
-					new StringCatalog("test", _uiFontName);
+					new StringCatalog("test", UiFontName);
 				}
 				string p = LocateStringCatalog();
 				if (p == null)
 				{
-					new StringCatalog(_uiFontName);
+					new StringCatalog(UiFontName);
 				}
 				else
 				{
-					new StringCatalog(p, _uiFontName);
+					new StringCatalog(p, UiFontName);
 				}
 			}
-			catch(FileNotFoundException )
+			catch (FileNotFoundException)
 			{
 				//todo:when we add logging, this would be a good place to log a problem
 				new StringCatalog();
 			}
 		}
-
-
 	}
 }

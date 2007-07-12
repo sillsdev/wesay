@@ -101,14 +101,6 @@ namespace WeSay.UI
 			set
 			{
 				_progressBar.Minimum = value;
-				if (Environment.OSVersion.Platform == PlatformID.Unix)
-				{
-					// hack to get around Mono Bug 81704
-					if (_progressBar.Maximum == value)
-					{
-						_progressBar.Maximum = value + 1;
-					}
-				}
 			}
 		}
 
@@ -124,14 +116,6 @@ namespace WeSay.UI
 			set
 			{
 				_progressBar.Maximum = value;
-				if (Environment.OSVersion.Platform == PlatformID.Unix)
-				{
-					// hack to get around Mono Bug 81704
-					if (_progressBar.Minimum == value)
-					{
-						_progressBar.Maximum = value + 1;
-					}
-				}
 			}
 		}
 

@@ -55,7 +55,7 @@ namespace WeSay.CommonTools
 				}
 				using (StreamWriter sw = File.CreateText(cacheFilePath))
 				{
-					sw.Write(_intray.Count.ToString() +", "+_intray.ReferenceCount.ToString());
+					sw.Write(_intray.Count +", "+_intray.ReferenceCount);
 				}
 			}
 			catch
@@ -65,18 +65,18 @@ namespace WeSay.CommonTools
 		}
 		private  void ReadCountFromCacheFile(string cacheFilePath)
 		{
-			string s = string.Empty;
 			try
 			{
 				if (File.Exists(cacheFilePath))
 				{
 					using (StreamReader sr = new StreamReader(cacheFilePath))
 					{
+						string s;
 						s = sr.ReadToEnd();
 						string[] values = s.Split(',');
 						if (values.Length > 1) //old style didn't have reference
 						{
-							int r=0;
+							int r;
 							bool gotIt = int.TryParse(values[1], out r);
 							_intray.ReferenceCount = r;
 							Debug.Assert(gotIt);

@@ -4,9 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
-using System.Resources;
 using System.Text.RegularExpressions;
-using System.Windows.Forms;
 using System.Xml;
 using System.Xml.XPath;
 using System.Xml.Xsl;
@@ -29,7 +27,7 @@ namespace WeSay.Project
 		private FileStream _liftFileStreamForLocking;
 		private LiftUpdateService _liftUpdateService;
 		public event EventHandler HackedEditorsSaveNow;
-		private WeSay.AddinLib.AddinSet _addins;
+		private AddinSet _addins;
 
 		public WeSayWordsProject()
 		{
@@ -79,7 +77,7 @@ namespace WeSay.Project
 
 		public void SetupProjectDirForTests(string pathToLift)
 		{
-			_projectDirectoryPath = Directory.GetParent(pathToLift).Parent.FullName;
+			ProjectDirectoryPath = Directory.GetParent(pathToLift).Parent.FullName;
 			PathToLiftFile = pathToLift;
 //            if (!Directory.Exists(pathToLift))
 //            {
@@ -93,7 +91,7 @@ namespace WeSay.Project
 			File.Copy(Path.Combine(ApplicationTestDirectory, configName), Project.PathToConfigFile, true);
 
 			ErrorReporter.OkToInteractWithUser = false;
-			LoadFromProjectDirectoryPath(_projectDirectoryPath);
+			LoadFromProjectDirectoryPath(ProjectDirectoryPath);
 			StringCatalogSelector = "en";
 		}
 
@@ -169,11 +167,11 @@ namespace WeSay.Project
 				}
 
 				//walk up from file to /wesay to /<project>
-				_projectDirectoryPath = Directory.GetParent(Directory.GetParent(liftPath).FullName).FullName;
+				ProjectDirectoryPath = Directory.GetParent(Directory.GetParent(liftPath).FullName).FullName;
 
 				if (CheckLexiconIsInValidProjectDirectory(liftPath))
 				{
-					this._projectDirectoryPath = ProjectDirectoryPath;
+					ProjectDirectoryPath = ProjectDirectoryPath;
 
 					LoadFromProjectDirectoryPath(ProjectDirectoryPath);
 					return true;
@@ -181,7 +179,7 @@ namespace WeSay.Project
 				else
 				{
 					PathToLiftFile = null;
-					_projectDirectoryPath = null;
+					ProjectDirectoryPath = null;
 					return false;
 				}
 			}
@@ -194,7 +192,7 @@ namespace WeSay.Project
 
 		public override void LoadFromProjectDirectoryPath(string projectDirectoryPath)
 		{
-			this._projectDirectoryPath = projectDirectoryPath;
+			ProjectDirectoryPath = projectDirectoryPath;
 			XPathDocument configDoc = GetConfigurationDoc();
 			if(configDoc !=null)// will be null if we're creating a new project
 			{
@@ -206,7 +204,7 @@ namespace WeSay.Project
 					{
 						StringCatalogSelector = ui;
 					}
-					_uiFontName = nav.GetAttribute("uiFont", "");
+					UiFontName = nav.GetAttribute("uiFont", "");
 
 				}
 				MigrateConfigurationXmlIfNeeded(configDoc, PathToConfigFile);
@@ -217,12 +215,12 @@ namespace WeSay.Project
 
 		public static bool MigrateConfigurationXmlIfNeeded(XPathDocument configurationDoc, string targetPath)
 		{
-			Reporting.Logger.WriteEvent("Checking if migration of configuration is needed.");
+			Logger.WriteEvent("Checking if migration of configuration is needed.");
 
 
 			if (configurationDoc.CreateNavigator().SelectSingleNode("configuration") == null)
 			{
-				Reporting.Logger.WriteEvent("Migrating Configuration File from version 0 to 1.");
+				Logger.WriteEvent("Migrating Configuration File from version 0 to 1.");
 
 				//ResourceManager mgr = new System.Resources.ResourceManager(typeof(WeSay.Project.WeSayWordsProject));
 
@@ -290,7 +288,7 @@ namespace WeSay.Project
 				}
 				catch (Exception error)
 				{
-					Reporting.ErrorReporter.ReportNonFatalMessage(
+					ErrorReporter.ReportNonFatalMessage(
 							"There may have been a problem reading the view template xml of the configuration file. A default template will be created." +
 							error.Message);
 				}
@@ -309,7 +307,7 @@ namespace WeSay.Project
 			return GetAddinNodes(GetConfigurationDoc());
 		}
 
-		private XPathNodeIterator GetAddinNodes(XPathDocument configDoc)
+		static private XPathNodeIterator GetAddinNodes(XPathDocument configDoc)
 		{
 			try
 			{
@@ -321,7 +319,7 @@ namespace WeSay.Project
 			}
 			catch (Exception error)
 			{
-				Reporting.ErrorReporter.ReportNonFatalMessage(
+				ErrorReporter.ReportNonFatalMessage(
 					"There was a problem reading the addins-settings xml. {0}", error.Message);
 				return null;
 			}
@@ -332,8 +330,8 @@ namespace WeSay.Project
 			return new ProjectInfo(Name,
 								   ProjectDirectoryPath,
 								   PathToLiftFile,
-								   WeSayWordsProject.GetFilesBelongingToProject(ProjectDirectoryPath),
-								   WeSay.AddinLib.AddinSet.Singleton.LocateFile);
+								   GetFilesBelongingToProject(ProjectDirectoryPath),
+								   AddinSet.Singleton.LocateFile);
 		}
 
 		private XPathDocument GetConfigurationDoc()
@@ -392,7 +390,7 @@ namespace WeSay.Project
 			//enhance: some of this would be a lot cleaner if we just copied the silly
 			//  default.WeSayConfig over and used that.
 
-			this._projectDirectoryPath = projectDirectoryPath;
+			ProjectDirectoryPath = projectDirectoryPath;
 			Directory.CreateDirectory(PathToWeSaySpecificFilesDirectoryInProject);
 			base.CreateEmptyProjectFiles(projectDirectoryPath);
 			_defaultViewTemplate = ViewTemplate.MakeMasterTemplate(WritingSystems);
@@ -493,11 +491,11 @@ namespace WeSay.Project
 				_pathToLiftFile = value;
 				if (value == null)
 				{
-					_projectDirectoryPath = null;
+					ProjectDirectoryPath = null;
 				}
 				else
 				{
-					_projectDirectoryPath = Directory.GetParent(value).Parent.FullName;
+					ProjectDirectoryPath = Directory.GetParent(value).Parent.FullName;
 				}
 			}
 		}
@@ -570,7 +568,7 @@ namespace WeSay.Project
 				return path;
 			}
 
-			path = Path.Combine(BasilProject.DirectoryOfExecutingAssembly, fileName);
+			path = Path.Combine(DirectoryOfExecutingAssembly, fileName);
 			if (File.Exists(path))
 			{
 				return path;
@@ -683,7 +681,7 @@ namespace WeSay.Project
 			XmlWriterSettings settings = new XmlWriterSettings();
 			settings.Indent = true;
 
-			XmlWriter writer = XmlWriter.Create(WeSayWordsProject.Project.PathToConfigFile, settings);
+			XmlWriter writer = XmlWriter.Create(Project.PathToConfigFile, settings);
 			writer.WriteStartDocument();
 			writer.WriteStartElement("configuration");
 			writer.WriteAttributeString("version", "1");
@@ -703,7 +701,7 @@ namespace WeSay.Project
 		{
 			if (String.IsNullOrEmpty(field.OptionsListFile))
 			{
-				throw new Reporting.ConfigurationException("The administrator needs to declare an options list file for the field {0}. This can be done under the Fields tab of the WeSay Configuration Tool.", field.FieldName);
+				throw new ConfigurationException("The administrator needs to declare an options list file for the field {0}. This can be done under the Fields tab of the WeSay Configuration Tool.", field.FieldName);
 			}
 			OptionsList list;
 			if(_optionLists.TryGetValue(field.OptionsListFile, out list))
@@ -721,7 +719,7 @@ namespace WeSay.Project
 				string pathInProgramDir = Path.Combine(ApplicationCommonDirectory, field.OptionsListFile);
 				if (!File.Exists(pathInProgramDir))
 				{
-					throw new Reporting.ConfigurationException("Could not find the optionsList file {0}. Expected to find it at: {1} or {2}", field.OptionsListFile, pathInProject, pathInProgramDir);
+					throw new ConfigurationException("Could not find the optionsList file {0}. Expected to find it at: {1} or {2}", field.OptionsListFile, pathInProject, pathInProgramDir);
 				}
 				LoadOptionsList(pathInProgramDir);
 			}

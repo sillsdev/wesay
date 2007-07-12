@@ -268,7 +268,7 @@ namespace WeSay.LexicalModel
 
 		public new LexEntry Parent
 		{
-			get { return _parent as LexEntry; }
+			get { return base.Parent as LexEntry; }
 		}
 	}
 }

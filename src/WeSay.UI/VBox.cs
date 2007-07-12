@@ -101,7 +101,7 @@ namespace WeSay.UI
 		/// I want to hide this from clients who would try to touch my controls directly
 		/// </summary>
 		///doesn't work to hide       protected new ControlCollection Controls
-		public static new ControlCollection Controls
+		public static new Control.ControlCollection Controls
 		{
 			get
 			{

@@ -1,4 +1,5 @@
 using System;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace WeSay.CommonTools
@@ -58,6 +59,16 @@ namespace WeSay.CommonTools
 			this._indicatorPanel.Name = "_indicatorPanel";
 			this._indicatorPanel.Size = new System.Drawing.Size(485, 100);
 			this._indicatorPanel.TabIndex = 1;
+
+			this._s = new ShapeControl.ShapeControl();
+			this._s.TabStop = false;
+			this._s.Shape = ShapeControl.ShapeType.RoundedRectangle;
+			this._s.BorderStyle = System.Drawing.Drawing2D.DashStyle.Dot;
+			this._s.BorderWidth = 1;
+			this._s.BorderColor = System.Drawing.Color.Black;
+			this._s.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(242)))), ((int)(((byte)(253)))), ((int)(((byte)(219)))));
+			this._s.Dock = DockStyle.Fill;
+
 			//
 			// localizationHelper1
 			//
@@ -68,12 +79,13 @@ namespace WeSay.CommonTools
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.AutoSize = true;
-			this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(242)))), ((int)(((byte)(253)))), ((int)(((byte)(219)))));
+			this.BackColor = System.Drawing.Color.White;
 			this.Controls.Add(this._indicatorPanel);
 			this.Controls.Add(this.label1);
+			this.Controls.Add(_s);
 			this.Name = "CurrentTaskIndicatorControl";
 			this.Size = new System.Drawing.Size(563, 138);
-			Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
+//            Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
 
 //            this.SizeChanged += new System.EventHandler(this.CurrentTaskIndicatorControl_SizeChanged);
 			((System.ComponentModel.ISupportInitialize)(this.localizationHelper1)).EndInit();
@@ -87,5 +99,6 @@ namespace WeSay.CommonTools
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.Panel _indicatorPanel;
 		private WeSay.UI.LocalizationHelper localizationHelper1;
+		private ShapeControl.ShapeControl _s;
 	}
 }

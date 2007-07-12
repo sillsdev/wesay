@@ -25,7 +25,7 @@ namespace WeSay.LexicalTools
 
 			InitializeComponent();
 			InitializeDisplaySettings();
-			if (Environment.OSVersion.Platform != PlatformID.Unix)
+			if (Type.GetType("Mono.Runtime") == null) // Work around not yet implemented in Mono
 			{
 				SetAutoSizeToGrowAndShrink();
 			}
@@ -165,7 +165,7 @@ namespace WeSay.LexicalTools
 
 				default:
 					e.Handled = false;
-					if (Environment.OSVersion.Platform != PlatformID.Unix)
+					if (Type.GetType("Mono.Runtime") == null) // Work around not yet implemented in Mono
 					{
 						SetSuppressKeyPress(e, false);
 					}
@@ -174,7 +174,9 @@ namespace WeSay.LexicalTools
 		}
 		private static void SetSuppressKeyPress(KeyEventArgs e, bool suppress)
 		{
+#if !MONO
 			e.SuppressKeyPress = suppress;
+#endif
 		}
 
 		private void GatherWordListControl_BackColorChanged(object sender, EventArgs e)
@@ -185,7 +187,9 @@ namespace WeSay.LexicalTools
 
 		private void SetAutoSizeToGrowAndShrink()
 		{
+#if !MONO
 			this._vernacularBox.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+#endif
 		}
 
 	}

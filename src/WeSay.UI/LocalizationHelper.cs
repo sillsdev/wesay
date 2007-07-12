@@ -1,19 +1,14 @@
 using System;
 using System.ComponentModel;
-using System.Collections.Generic;
 using System.ComponentModel.Design;
-using System.Diagnostics;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 using WeSay.Language;
 
 namespace WeSay.UI
 {
-	[Designer(typeof(LocalizationHelperDesigner))]
+	[Designer(typeof (LocalizationHelperDesigner))]
 	[ToolboxItem(true)]
-	[ProvideProperty("ParentFo", typeof(Form))]
-
+	[ProvideProperty("ParentFo", typeof (Form))]
 	public partial class LocalizationHelper : Component, ISupportInitialize, IExtenderProvider
 	{
 		private bool _alreadyChanging;
@@ -36,43 +31,37 @@ namespace WeSay.UI
 
 		public Control Parent
 		{
-			get
-			{
-				return _parent;
-			}
-			set
-			{
-				_parent = value;
-			}
+			get { return _parent; }
+			set { _parent = value; }
 		}
 
-		void OnFontChanged(object sender, EventArgs e)
+		private void OnFontChanged(object sender, EventArgs e)
 		{
 			if (_alreadyChanging)
 			{
 				return;
 			}
-			Control control = sender as Control;
+			Control control = (Control) sender;
 			_alreadyChanging = true;
 			control.Font = StringCatalog.ModifyFontForLocalization(control.Font);
 			_alreadyChanging = false;
 		}
 
-		void OnTextChanged(object sender, EventArgs e)
+		private void OnTextChanged(object sender, EventArgs e)
 		{
 			if (_alreadyChanging)
 			{
 				return;
 			}
-			Control control = sender as Control;
+			Control control = (Control)sender;
 
-			if(control.Text.Contains("{0}"))
+			if (control.Text.Contains("{0}"))
 			{
-				return;//they're going to have to format it anyways, so we can't fix it automatically
+				return; //they're going to have to format it anyways, so we can't fix it automatically
 			}
 
 			_alreadyChanging = true;
-			if (!String.IsNullOrEmpty(control.Text))//don't try to translation, for example, buttons with no label
+			if (!String.IsNullOrEmpty(control.Text)) //don't try to translation, for example, buttons with no label
 			{
 				control.Text = StringCatalog.Get(control.Text);
 			}
@@ -85,9 +74,7 @@ namespace WeSay.UI
 		///Signals the object that initialization is starting.
 		///</summary>
 		///
-		public void BeginInit()
-		{
-		}
+		public void BeginInit() {}
 
 		///<summary>
 		///Signals the object that initialization is complete.
@@ -146,9 +133,11 @@ namespace WeSay.UI
 		///   Sets the Parent property to "this" -
 		///   the Form/UserControl where the component is being dropped.
 		///   </summary>
+		[Obsolete()]
 		public override void OnSetComponentDefaults()
 		{
-			LocalizationHelper rp = (LocalizationHelper)Component;
-			rp.Parent = (Control)Component.Site.Container.Components[0];
+			LocalizationHelper rp = (LocalizationHelper) Component;
+			rp.Parent = (Control) Component.Site.Container.Components[0];
 		}
-	}	}
+	}
+}

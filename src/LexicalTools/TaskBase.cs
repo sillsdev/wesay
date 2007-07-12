@@ -4,7 +4,6 @@ using WeSay.Data;
 using WeSay.Language;
 using WeSay.LexicalModel;
 using WeSay.Project;
-using WeSay.UI;
 
 namespace WeSay.LexicalTools
 {
@@ -37,13 +36,10 @@ namespace WeSay.LexicalTools
 
 		public virtual string Description
 		{
-			get
-			{
-				return StringCatalog.Get(_description);
-			}
+			get { return StringCatalog.Get(_description); }
 		}
 
-		protected  bool _isActive=false;
+		private bool _isActive = false;
 
 		public virtual void Activate()
 		{
@@ -51,7 +47,7 @@ namespace WeSay.LexicalTools
 			{
 				throw new InvalidOperationException("Activate should not be called when object is active.");
 			}
-			_isActive = true;
+			IsActive = true;
 		}
 
 		public virtual void Deactivate()
@@ -60,53 +56,33 @@ namespace WeSay.LexicalTools
 			{
 				throw new InvalidOperationException("Deactivate should only be called once after Activate.");
 			}
-			_isActive = false;
-		}
-
-		public bool IsActive
-		{
-			get { return this._isActive; }
+			IsActive = false;
 		}
 
 		public string Label
 		{
-			get
-			{
-				return StringCatalog.Get(_label);
-			}
+			get { return StringCatalog.Get(_label); }
 		}
 
 		/// <summary>
 		/// The control associated with this task
 		/// </summary>
 		/// <remarks>Non null only when task is activated</remarks>
-		public abstract Control Control
-		{
-			get;
-		}
+		public abstract Control Control { get; }
 
 		public bool IsPinned
 		{
-			get
-			{
-				return _isPinned;
-			}
+			get { return _isPinned; }
 		}
 
 		public virtual string Status
 		{
-			get
-			{
-				return string.Empty;
-			}
+			get { return string.Empty; }
 		}
 
 		public virtual string ExactStatus
 		{
-			get
-			{
-				return Status;
-			}
+			get { return Status; }
 		}
 
 		/// <summary>
@@ -123,7 +99,13 @@ namespace WeSay.LexicalTools
 
 		protected IRecordListManager RecordListManager
 		{
-			get { return this._recordListManager; }
+			get { return _recordListManager; }
+		}
+
+		public bool IsActive
+		{
+			get { return _isActive; }
+			protected set { _isActive = value; }
 		}
 	}
 }

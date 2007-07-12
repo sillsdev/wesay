@@ -114,7 +114,7 @@ namespace WeSay.LexicalModel
 
 		public new LexSense Parent
 		{
-			get { return _parent as LexSense; }
+			get { return base.Parent as LexSense; }
 		}
 	}
 }

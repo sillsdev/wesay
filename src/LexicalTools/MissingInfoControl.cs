@@ -77,7 +77,6 @@ namespace WeSay.LexicalTools
 			this._recordsListBox.Enter += new EventHandler(_recordsListBox_Enter);
 			this._recordsListBox.Leave += new EventHandler(_recordsListBox_Leave);
 			this._recordsListBox.WritingSystem = listWritingSystem;
-
 			this._completedRecordsListBox.DataSource = _completedRecords;
 			this._completedRecordsListBox.BorderStyle = BorderStyle.None;
 			this._completedRecordsListBox.SelectedIndexChanged += new EventHandler(OnCompletedRecordSelectionChanged);
@@ -201,7 +200,17 @@ namespace WeSay.LexicalTools
 			}
 			else
 			{
-				CurrentRecord = _records[RecordListCurrentIndex];
+				if (RecordListCurrentIndex == -1)
+				{
+					if (_recordsListBox.Items.Count > 0)
+					{
+						_recordsListBox.SelectedIndex = 0;
+					}
+				}
+				if (RecordListCurrentIndex != -1)
+				{
+					CurrentRecord = _records[RecordListCurrentIndex];
+				}
 				UpdatePreviousAndNextRecords();
 			}
 		}
@@ -368,7 +377,7 @@ namespace WeSay.LexicalTools
 
 				default:
 					e.Handled = false;
-					if (Environment.OSVersion.Platform != PlatformID.Unix)
+					if (Type.GetType("Mono.Runtime") == null) // Work around not yet implemented in Mono
 					{
 						SetSuppressKeyPress(e, false);
 					}
@@ -377,7 +386,9 @@ namespace WeSay.LexicalTools
 		}
 		private static void SetSuppressKeyPress(KeyEventArgs e, bool suppress)
 		{
+#if !MONO
 			e.SuppressKeyPress = suppress;
+#endif
 		}
 
 	}

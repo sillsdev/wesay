@@ -69,7 +69,11 @@ namespace Addin.LiftReports
 				using (Bitmap bm = new Bitmap(this.Width, this.Height, g))
 				{
 					ReverseBarOrder();
+#if MONO
+					g.CopyFromScreen(new Point(this.ClientRectangle.Left, this.ClientRectangle.Right), new Point(0,0), this.ClientSize);
+#else
 					this.DrawToBitmap(bm, new Rectangle(0, 0, this.Width, this.Height));
+#endif
 					this._graph.Bars.Clear();
 					string path =Path.Combine(Path.GetTempPath(), Path.GetRandomFileName() + ".png");
 					//System.Drawing.Imaging.

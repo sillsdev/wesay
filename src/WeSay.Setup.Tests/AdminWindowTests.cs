@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Threading;
 using System.Windows.Forms;
 using System.Xml.XPath;
 using NUnit.Framework;
@@ -153,7 +152,15 @@ namespace WeSay.Admin.Tests
 		{
 			TabControlTester t = new TabControlTester("_projectTabControl");
 
-			t.Properties.SelectedTab = t.Properties.TabPages[projectTabName];
+			foreach (TabPage page in t.Properties.TabPages)
+			{
+				if (page.Name == projectTabName)
+				{
+					t.Properties.SelectedTab = page;
+					break;
+				}
+			}
+//            t.Properties.SelectedTab = t.Properties.TabPages[projectTabName];
 
 			Assert.IsNotNull(t.Properties.SelectedTab, "Couldn't find "+projectTabName);
 		}
