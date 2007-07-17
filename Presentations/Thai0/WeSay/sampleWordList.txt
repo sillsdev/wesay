@@ -1,5 +1,0 @@
-﻿ant
-apple
-arch
-arm
-worm
