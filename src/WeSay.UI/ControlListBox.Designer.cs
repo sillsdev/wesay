@@ -44,7 +44,6 @@ namespace WeSay.UI
 			this._panel.Name = "_panel";
 			this._panel.Size = new System.Drawing.Size(547, 258);
 			this._panel.TabIndex = 1;
-			this._panel.Resize += new System.EventHandler(this._panel_Resize);
 			//
 			// _table
 			//
@@ -64,7 +63,6 @@ namespace WeSay.UI
 			this._table.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 257F));
 			this._table.Size = new System.Drawing.Size(545, 256);
 			this._table.TabIndex = 1;
-			this._table.Paint += new System.Windows.Forms.PaintEventHandler(this.tableLayoutPanel1_Paint);
 			//
 			// ControlListBox
 			//
@@ -74,7 +72,6 @@ namespace WeSay.UI
 			this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
 			this.Name = "ControlListBox";
 			this.Size = new System.Drawing.Size(547, 258);
-			this.Resize += new System.EventHandler(this.ControlListBox_Resize);
 			this._panel.ResumeLayout(false);
 			this.ResumeLayout(false);
 

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WeSay\n"
 "POT-Creation-Date: 2007-06-29 3:36:09\n"
-"PO-Revision-Date: 2007-06-29 10:47+0700\n"
+"PO-Revision-Date: 2007-07-13 15:46+0700\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -12,206 +12,200 @@ msgstr ""
 #; ..\src\CommonTools\DashboardControl.cs
 #. The label for the 'dashboard'; the task which lets you see the status of other tasks and jump to them.
 msgid "Home"
-msgstr " บ้าน"
-
-msgid "This task is normally the first thing the user sees when WeSay comes up.  It gives the user some status of the project, and reminds him what he was working on. Finally, this tab will allow him to switch to a different work task, if you have enabled more than one."
-msgstr ""
+msgstr "หน้าแรก"
 
 msgid "Dictionary"
-msgstr ""
-
-msgid "This task allows advanced users to see and edit all enabled fields of all entries in the dictionary.  He can add, delete, and search for entries.  NOTE: while this task may be very enticing to those familiar with traditional programs, this is *not* intended to be a primary way of working with WeSay."
-msgstr ""
+msgstr "พจนานุกรม"
 
 msgid "Add Meanings"
-msgstr ""
+msgstr "เพิ่มความหมาย"
 
 msgid "Add meanings to entries where they are missing."
-msgstr ""
+msgstr "เพิ่มความหมายข้อมูลที่ขาดหาย"
 
 msgid "Add Examples"
-msgstr ""
+msgstr "เพิ่มตัวอย่าง"
 
 msgid "Add example sentences to entries where they are missing."
-msgstr ""
+msgstr "เพิ่มประโยคตัวอย่างข้อมูลที่ขาดหาย"
 
 msgid "Collect Word List"
-msgstr ""
+msgstr "รวบรวมรายการกลุ่มคำ"
 
 msgid "Collect new words by translating from words in another language."
-msgstr ""
+msgstr "รวบรวมคำใหม่โดยแปลความหมายจากภาษาอื่น ๆ"
 
 msgid "Collect Words By Semantic Domain"
-msgstr ""
+msgstr "รวบรวมคำในขอบเขตความรู้เกี่ยวกับความหมาย"
 
 msgid "Collect new words organized by semantic domains and questions about those domains."
 msgstr ""
 
 #; ..\src\CommonTools\ActionsControl.cs
 msgid "Actions"
-msgstr ""
+msgstr "การกระทำ"
 
 msgid "Perform actions on the project as a whole. For example backup, produce a report, print out a simple dictionary, etc."
-msgstr ""
+msgstr "แสดงแผนงานการกระทำให้เห็นชัดเจน ตัวอย่าง ข้อมูลสนับสนุน การทำรายงาน การพิมพ์คำศัพท์ง่ายๆ  อื่นๆ"
 
 #; ..\src\Addin.Backup\BackupDialog.cs
 msgid "Looking for USB Keys..."
-msgstr ""
+msgstr "ค้นหาคำเฉลย  USB"
 
 #; ..\src\Addin.Backup\BackupDialog.cs
 msgid "Backing Up..."
-msgstr ""
+msgstr "ข้อมูลสำรอง"
 
 #; ..\src\Addin.Backup\BackupDialog.cs
 msgid "Backup Complete"
-msgstr ""
+msgstr "ข้อมูลสำรองที่สมบูรณ์"
 
 #; ..\src\Addin.Backup\BackupDialog.cs
 msgid "Files backed up to {0}"
-msgstr ""
+msgstr "แฟ้มข้อมูลสนับสนุน {0}"
 
 #; ..\src\Addin.Backup\BackupDialog.cs
 msgid "Files were not backed up."
-msgstr ""
+msgstr "แฟ้มข้อมูลยังไม่มีข้อมูลสนับสนุน"
 
 #; ..\src\Addin.Backup\BackupDialog.cs
 msgid "Please insert the USB Key to backup to."
-msgstr ""
+msgstr "โปรดบรรจุข้อมูล USB ในข้อมูลสำรอง"
 
 #; ..\src\Addin.Backup\BackupDialog.Designer.cs
 msgid "&Cancel"
-msgstr ""
+msgstr "ยกเลิก"
 
 #; ..\src\Addin.Backup\BackupToDevice.cs
 #. Label for usb backup action
 msgid "Backup To Device"
-msgstr ""
+msgstr "ข้อมูลสำรองอุปกรณ์ต่าง ๆ"
 
 #; ..\src\Addin.Backup\BackupToDevice.cs
 #. description of usb backup action
 msgid "Saves a backup on an external device, like a USB key."
-msgstr ""
+msgstr "เก็บรักษาหน่วยเก็บสำรองอุปกรณ์ภายนอกตัวเครื่อง เสมือนแป้น USB"
 
 #; ..\src\Addin.Backup\SendProjectEmail.cs
 msgid "Email My Work to {0}"
-msgstr ""
+msgstr "ส่งงานโดยจดหมายอีเลคทรอนิคถึง {0}"
 
 #; ..\src\Addin.Backup\SendProjectEmail.cs
 msgid "Send a zipped email containing all your WeSay work."
-msgstr ""
+msgstr "ส่งเลขประจำตัวจดหมายอีเลคทรอนิคที่บรรจุใน WeSay ของท่าน"
 
 #; ..\src\Addin.LiftReports\ReportMaker.cs
 msgid "View Report"
-msgstr ""
+msgstr "แสดงรายงาน"
 
 #; ..\src\Addin.LiftReports\ReportMaker.cs
 msgid "Shows some information about the lexicon."
-msgstr ""
+msgstr "แสดงบางข้อมูล Lexicon"
 
 #; ..\src\Addin.Transform\HtmlTransformer.cs
 msgid "Html Exporter"
-msgstr ""
+msgstr "การถ่ายทอดข้อมูลจากระบบ  Html ไปสู่ข้อมูลอีกระบบหนึ่ง"
 
 #; ..\src\Addin.Transform\HtmlTransformer.cs
 msgid "Creates an Html version of the dictionary ready for printing."
-msgstr ""
+msgstr "การสร้าง  คำศัพท์ รุ่น Html ที่พร้อมจะพิมพ์"
 
 #; ..\src\Addin.Transform\SfmTransformer.cs
 msgid "SFM Exporter"
-msgstr ""
+msgstr "การถ่ายทอดข้อมูลระบบ SFM ไปสู่อีกข้อมูลอีกระบบหนึ่ง"
 
 #; ..\src\Addin.Transform\SfmTransformer.cs
 msgid "Saves the lexicon in a form of standard format."
-msgstr ""
+msgstr "จัดระบบ  lexicon เป็นรุปแบบมาตรฐาน"
 
 #; ..\src\CommonTools\ActionsControl.cs
 #. The description of the Actions task.
 msgid "Backup, create a progress report, etc."
-msgstr ""
+msgstr "หน่วยเก็บสำรอง สร้างรายงานที่ก้าวหน้า"
 
 #; ..\src\CommonTools\CurrentTaskIndicatorControl.Designer.cs
 msgid "Current task:"
-msgstr ""
+msgstr "งานปัจุบัน"
 
 #; ..\src\CommonTools\DashboardControl.cs
 msgid "Tasks"
-msgstr ""
+msgstr "งาน"
 
 #; ..\src\CommonTools\DashboardControl.cs
 msgid "Switch tasks and see current status of tasks"
-msgstr ""
+msgstr "สลับงานและดูสถานะปัจจุบันของงาน"
 
 #; ..\src\CommonTools\DictionaryStatusControl.Designer.cs
 msgid "Your dictionary has {0} words"
-msgstr ""
+msgstr "พจนานุกรมของท่านมี {0} คำ"
 
 #; ..\src\LexicalTools\DictionaryControl.Designer.cs
 msgid "&Delete This Word"
-msgstr ""
+msgstr "ลบคำนี้"
 
 #; ..\src\LexicalTools\DictionaryControl.Designer.cs
 msgid "&New Word"
-msgstr ""
+msgstr "คำใหม่"
 
 #; ..\src\LexicalTools\DictionaryTask.cs
 #. The description of the 'Dictionary' task.  In place of the {0} will be the number of words in the dictionary.  In place of the {1} will be the name of the project.
 msgid "See all {0} {1} words."
-msgstr ""
+msgstr "ดูคำทั้งหมด {0}{1} "
 
 #; ..\src\LexicalTools\GatherBySemanticDomainsControl.Designer.cs
 msgid "Word"
-msgstr ""
+msgstr "คำ"
 
 #; ..\src\LexicalTools\GatherBySemanticDomainsControl.Designer.cs
 #; ..\src\LexicalTools\GatherWordListControl.Designer.cs
 #; ..\src\LexicalTools\MissingInfoControl.Designer.cs
 msgid "(Page Down Key)"
-msgstr ""
+msgstr "แป้นหน้าต่อไป"
 
 #; ..\src\LexicalTools\GatherBySemanticDomainsControl.Designer.cs
 #; ..\src\LexicalTools\GatherWordListControl.Designer.cs
 msgid "(Enter Key)"
-msgstr ""
+msgstr "แป้นใส่ข้อมูลในคอมพิวเตอร์"
 
 #; ..\src\LexicalTools\GatherBySemanticDomainsControl.Designer.cs
 msgid "Try thinking of words you use to talk about these things."
-msgstr ""
+msgstr "การทดสอบความคิดในคำที่พูดเกี่ยวกับสิ่งต่างๆ "
 
 #; ..\src\LexicalTools\GatherWordListControl.Designer.cs
 msgid "Try thinking of ways to say these words in your language."
-msgstr ""
+msgstr "ความพยายามคิดวิธีการในการพูดคำเหล่านี้เป็นภาษาของท่าน"
 
 #; ..\src\LexicalTools\GatherWordListControl.Designer.cs
 msgid "Word:"
-msgstr ""
+msgstr "คำ"
 
 #; ..\src\LexicalTools\LexExampleSentenceLayouter.cs
 #; ..\src\LexicalTools\LexExampleSentenceLayouter.cs
 #. This is the field containing an example sentence of a sense of a word.
 #. Sentence
 msgid "Example"
-msgstr ""
+msgstr "ตัวอย่าง"
 
 #; ..\src\LexicalTools\LexExampleSentenceLayouter.cs
 #. This is the field for putting in a translation of an example sentence.
 msgid "Translation"
-msgstr ""
+msgstr "คำแปล"
 
 #; ..\src\LexicalTools\LexSenseLayouter.cs
 #; ..\src\LexicalTools\LexSenseLayouter.cs
 #. This label is shown once, but has two roles.  1) it labels contains the gloss, and 2) marks the beginning of the set of fields which make up a sense. So, in english, if we labelled this 'gloss', it would describe the field well but wouldn't label the section well."), "Gloss
 msgid "Meaning"
-msgstr ""
+msgstr "ความหมาย"
 
 #; ..\src\LexicalTools\MissingInfoControl.cs
 msgid "Congratulations. You have completed this task."
-msgstr ""
+msgstr "ขอแสดงความยินดี คุณได้ทำงานสำเร็จ"
 
 #; ..\src\LexicalTools\MissingInfoControl.cs
 msgid "There is no work left to be done on this task."
-msgstr ""
+msgstr "ไม่มีงานเหลือที่จะทำในกลุ่มงาน"
 
 #; ..\src\WeSay.UI\SingleOptionControl.cs
 #. This is shown in a combo-box (list of options, like Part Of Speech) when no option has been chosen, or the user just doesn't know what to put in this field.
 msgid "unknown"
-msgstr ""
+msgstr "สิ่งที่ไม่รู้"

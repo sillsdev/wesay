@@ -1,9 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Text;
 using System.Windows.Forms;
 
 namespace WeSay.UI
@@ -72,24 +66,5 @@ namespace WeSay.UI
 			_table.Height = (int)h;
 		}
 
-		private void _table_Resize(object sender, EventArgs e)
-		{
-
-		}
-
-		private void _panel_Resize(object sender, EventArgs e)
-		{
-
-		}
-
-		private void ControlListBox_Resize(object sender, EventArgs e)
-		{
-
-		}
-
-		private void tableLayoutPanel1_Paint(object sender, PaintEventArgs e)
-		{
-
-		}
 	}
 }
