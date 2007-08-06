@@ -203,7 +203,7 @@ namespace WeSay.LexicalTools
 
 		void OnWritingSystemChooser_Click(object sender, EventArgs e)
 		{
-			Reporting.Logger.WriteMinorEvent("WritingSystemChooser_Click");
+			Palaso.Reporting.Logger.WriteMinorEvent("WritingSystemChooser_Click");
 
 			foreach (MenuItem menuItem in _cmWritingSystems.MenuItems)
 			{
@@ -214,7 +214,7 @@ namespace WeSay.LexicalTools
 
 		void OnFindWritingSystemId_MouseClick(object sender, MouseEventArgs e)
 		{
-			Reporting.Logger.WriteMinorEvent("FindWritingSystemId_MouseClick");
+			Palaso.Reporting.Logger.WriteMinorEvent("FindWritingSystemId_MouseClick");
 			_findText.Focus();
 		}
 
@@ -254,14 +254,14 @@ namespace WeSay.LexicalTools
 
 		void OnFind_Click(object sender, EventArgs e)
 		{
-			Reporting.Logger.WriteMinorEvent("FindButton_Click");
+			Palaso.Reporting.Logger.WriteMinorEvent("FindButton_Click");
 
 			Find(this._findText.Text);
 		}
 
 		private void Find(string text)
 		{
-			Reporting.Logger.WriteMinorEvent("Find");
+			Palaso.Reporting.Logger.WriteMinorEvent("Find");
 			int index = ((CachedSortedDb4oList<string, LexEntry>) _records).BinarySearch(text);
 			if (index < 0)
 			{
@@ -315,13 +315,13 @@ namespace WeSay.LexicalTools
 
 			if (CurrentRecord != null)
 			{
-				Reporting.Logger.WriteEvent("RecordSelectionChanged to " +
+				Palaso.Reporting.Logger.WriteEvent("RecordSelectionChanged to " +
 											CurrentRecord.LexicalForm.GetFirstAlternative());
 				Control_EntryDetailPanel.DataSource = CurrentRecord;
 			}
 			else
 			{
-				Reporting.Logger.WriteEvent("RecordSelectionChanged Skipping because record is null");
+				Palaso.Reporting.Logger.WriteEvent("RecordSelectionChanged Skipping because record is null");
 			}
 
 			SelectedIndexChanged.Invoke(this, null);
@@ -349,7 +349,7 @@ namespace WeSay.LexicalTools
 
 		private void OnNewWord_Click(object sender, EventArgs e)
 		{
-			Reporting.Logger.WriteEvent("NewWord_Click");
+			Palaso.Reporting.Logger.WriteEvent("NewWord_Click");
 
 			if (!this._btnNewWord.Focused)
 			{
@@ -376,7 +376,7 @@ namespace WeSay.LexicalTools
 
 		private void OnDeleteWord_Click(object sender, EventArgs e)
 		{
-			Reporting.Logger.WriteEvent("DeleteWord_Clicked");
+			Palaso.Reporting.Logger.WriteEvent("DeleteWord_Clicked");
 
 			Debug.Assert(CurrentIndex >= 0);
 			if(CurrentIndex == -1)

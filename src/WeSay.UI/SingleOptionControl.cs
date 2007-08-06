@@ -180,7 +180,7 @@ namespace WeSay.UI
 
 		void OnSelectedValueChanged(object sender, EventArgs e)
 		{
-			Reporting.Logger.WriteMinorEvent("SingleOptionControl_SelectionChanged ({0})", this._nameForLogging);
+			Palaso.Reporting.Logger.WriteMinorEvent("SingleOptionControl_SelectionChanged ({0})", this._nameForLogging);
 			SetStatusColor();
 			if (ValueChanged != null)
 			{

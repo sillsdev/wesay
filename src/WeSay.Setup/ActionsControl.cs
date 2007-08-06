@@ -99,28 +99,28 @@ namespace WeSay.Setup
 			}
 			catch (Exception error)
 			{
-				Reporting.ErrorReport.ReportNonFatalMessage(error.Message);
+				Palaso.Reporting.ErrorReport.ReportNonFatalMessage(error.Message);
 			}
 		}
 
 		void AddinManager_ExtensionChanged(object sender, ExtensionEventArgs args)
 		{
-			Reporting.Logger.WriteEvent("Addin 'extensionChanged': {0}",args.Path);
+			Palaso.Reporting.Logger.WriteEvent("Addin 'extensionChanged': {0}",args.Path);
 		}
 
 		void AddinManager_AddinUnloaded(object sender, AddinEventArgs args)
 		{
-			Reporting.Logger.WriteEvent("Addin unloaded: {0}",args.AddinId);
+			Palaso.Reporting.Logger.WriteEvent("Addin unloaded: {0}",args.AddinId);
 		}
 
 		void AddinManager_AddinLoadError(object sender, AddinErrorEventArgs args)
 		{
-			Reporting.Logger.WriteEvent("Addin load error: {0}", args.AddinId);
+			Palaso.Reporting.Logger.WriteEvent("Addin load error: {0}", args.AddinId);
 		}
 
 		void AddinManager_AddinLoaded(object sender, AddinEventArgs args)
 		{
-			Reporting.Logger.WriteEvent("Addin loaded: {0}", args.AddinId);
+			Palaso.Reporting.Logger.WriteEvent("Addin loaded: {0}", args.AddinId);
 		}
 
 	}

@@ -3,7 +3,7 @@ using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using Mono.Addins;
-using Reporting;
+using Palaso.Reporting;
 using WeSay.AddinLib;
 using WeSay.Foundation;
 using WeSay.Language;

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
-using Reporting;
+using Palaso.Reporting;
 
 
 namespace WeSay.Setup
@@ -21,7 +21,7 @@ namespace WeSay.Setup
 
 
 			SetupErrorHandling();
-			Reporting.Logger.Init();
+			Palaso.Reporting.Logger.Init();
 
 			//bring in settings from any previous version
 			if (Properties.Settings.Default.NeedUpgrade)
@@ -32,20 +32,20 @@ namespace WeSay.Setup
 
 			UsageReporter.AppNameToUseInDialogs = "WeSay";
 			UsageReporter.AppNameToUseInReporting = "WeSayConfig";
-			Reporting.UsageReporter.RecordLaunch();
-			Reporting.UsageReporter.DoTrivialUsageReport("usage@wesay.org", "Thank you for helping us test WeSay!", new int[] { 1, 5, 20, 40, 60, 80, 100 });
+			Palaso.Reporting.UsageReporter.RecordLaunch();
+			Palaso.Reporting.UsageReporter.DoTrivialUsageReport("usage@wesay.org", "Thank you for helping us test WeSay!", new int[] { 1, 5, 20, 40, 60, 80, 100 });
 
 			Application.Run(new AdminWindow(args));
 
-			Reporting.Logger.WriteEvent("App Exiting Normally.");
-			Reporting.Logger.ShutDown();
+			Palaso.Reporting.Logger.WriteEvent("App Exiting Normally.");
+			Palaso.Reporting.Logger.ShutDown();
 		}
 
 		private static void SetupErrorHandling()
 		{
-			 Reporting.ErrorReport.EmailAddress = "issues@wesay.org";
-			 Reporting.ErrorReport.AddStandardProperties();
-			 Reporting.ExceptionHandler.Init();
+			 Palaso.Reporting.ErrorReport.EmailAddress = "issues@wesay.org";
+			 Palaso.Reporting.ErrorReport.AddStandardProperties();
+			 Palaso.Reporting.ExceptionHandler.Init();
 		}
 	}
 }

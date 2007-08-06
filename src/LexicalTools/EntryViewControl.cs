@@ -82,13 +82,13 @@ namespace WeSay.LexicalTools
 			}
 			set
 			{
-				Reporting.Logger.WriteMinorEvent("In DataSource Set");
+				Palaso.Reporting.Logger.WriteMinorEvent("In DataSource Set");
 
 				if (_record != value)
 				{
 					if (_record != null)
 					{
-						Reporting.Logger.WriteMinorEvent("Datasource set calling _record.CleanUpAfterEditting()");
+						Palaso.Reporting.Logger.WriteMinorEvent("Datasource set calling _record.CleanUpAfterEditting()");
 
 						_record.CleanUpAfterEditting();
 						_record.PropertyChanged -= OnRecordPropertyChanged;
@@ -101,13 +101,13 @@ namespace WeSay.LexicalTools
 						_record.PropertyChanged += new PropertyChangedEventHandler(OnRecordPropertyChanged);
 						_record.EmptyObjectsRemoved +=new EventHandler(OnEmptyObjectsRemoved);
 					}
-					Reporting.Logger.WriteMinorEvent("Datasource set calling RefreshLexicalEntryPreview()");
+					Palaso.Reporting.Logger.WriteMinorEvent("Datasource set calling RefreshLexicalEntryPreview()");
 					RefreshLexicalEntryPreview();
-					Reporting.Logger.WriteMinorEvent("Datasource set calling RefreshEntryDetail()");
+					Palaso.Reporting.Logger.WriteMinorEvent("Datasource set calling RefreshEntryDetail()");
 					RefreshEntryDetail();
 				}
 
-				Reporting.Logger.WriteMinorEvent("Exit DataSource Set");
+				Palaso.Reporting.Logger.WriteMinorEvent("Exit DataSource Set");
 
 			}
 		}
@@ -124,17 +124,17 @@ namespace WeSay.LexicalTools
 					row = this._detailListControl.GetRow(focussedControl);
 				}
 			}
-			Reporting.Logger.WriteMinorEvent("OnEmptyObjectsRemoved: b4 RefreshEntryDetial");
+			Palaso.Reporting.Logger.WriteMinorEvent("OnEmptyObjectsRemoved: b4 RefreshEntryDetial");
 			RefreshEntryDetail();
-			Reporting.Logger.WriteMinorEvent("OnEmptyObjectsRemoved: b4  Application.DoEvents()");
+			Palaso.Reporting.Logger.WriteMinorEvent("OnEmptyObjectsRemoved: b4  Application.DoEvents()");
 			Application.DoEvents(); //TODO: We need to remove this.  It's a dangerous thing in a historically buggy spot
-			Reporting.Logger.WriteMinorEvent("OnEmptyObjectsRemoved: b4 MoveInsertionPoint");
+			Palaso.Reporting.Logger.WriteMinorEvent("OnEmptyObjectsRemoved: b4 MoveInsertionPoint");
 			if (row != null)
 			{
 				row = Math.Min((int)row, this._detailListControl.Count-1);
 				this._detailListControl.MoveInsertionPoint((int)row);
 			}
-			Reporting.Logger.WriteMinorEvent("OnEmptyObjectsRemoved end");
+			Palaso.Reporting.Logger.WriteMinorEvent("OnEmptyObjectsRemoved end");
 		}
 
 		private void OnRecordPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -169,7 +169,7 @@ namespace WeSay.LexicalTools
 
 		void OnCleanupTimer_Tick(object sender, EventArgs e)
 		{
-			Reporting.Logger.WriteMinorEvent("OnCleanupTimer_Tick");
+			Palaso.Reporting.Logger.WriteMinorEvent("OnCleanupTimer_Tick");
 			LexEntry entry = (LexEntry)_cleanupTimer.Tag;
 			_cleanupTimer.Stop();
 			entry.CleanUpEmptyObjects();

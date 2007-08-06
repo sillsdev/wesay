@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using System.Reflection;
 using System.Xml;
-using Reporting;
+using Palaso.Reporting;
 using WeSay.Language;
 
 namespace WeSay.Project

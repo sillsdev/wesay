@@ -5,7 +5,7 @@ using System.IO;
 using System.Xml;
 using Db4objects.Db4o;
 using LiftIO;
-using Reporting;
+using Palaso.Reporting;
 using WeSay.App;
 using WeSay.Data;
 using WeSay.Foundation;

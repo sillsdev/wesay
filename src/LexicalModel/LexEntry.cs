@@ -215,7 +215,7 @@ namespace WeSay.LexicalModel
 
 		public override void CleanUpEmptyObjects()
 		{
-			Reporting.Logger.WriteMinorEvent("LexEntry CleanUpEmptyObjects()");
+			Palaso.Reporting.Logger.WriteMinorEvent("LexEntry CleanUpEmptyObjects()");
 			base.CleanUpEmptyObjects();
 
 
@@ -235,7 +235,7 @@ namespace WeSay.LexicalModel
 			}
 			if(count != this._senses.Count)
 			{
-				Reporting.Logger.WriteMinorEvent("Empty sense removed");
+				Palaso.Reporting.Logger.WriteMinorEvent("Empty sense removed");
 				OnEmptyObjectsRemoved();
 			}
 		}

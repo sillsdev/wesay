@@ -5,7 +5,7 @@ using System.Windows.Forms;
 using System.Xml.XPath;
 using NUnit.Framework;
 using NUnit.Extensions.Forms;
-using Reporting;
+using Palaso.Reporting;
 using WeSay.Project;
 using WeSay.Setup;
 
@@ -20,7 +20,7 @@ namespace WeSay.Admin.Tests
 
 		public override void Setup()
 		{
-			Reporting.ErrorReport.OkToInteractWithUser = false;
+			Palaso.Reporting.ErrorReport.OkToInteractWithUser = false;
 			base.Setup();
 			_window = new AdminWindow(new string[] { });
 			_window.Show();

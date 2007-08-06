@@ -2,7 +2,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
-using Reporting;
+using Palaso.Reporting;
 using WeSay.Foundation.Progress;
 using WeSay.Project;
 using WeSay.Setup.Properties;
@@ -111,7 +111,7 @@ namespace WeSay.Setup
 			string configFilePath = (string) sender;
 			if (!File.Exists(configFilePath))
 			{
-				Reporting.ErrorReport.ReportNonFatalMessage(
+				Palaso.Reporting.ErrorReport.ReportNonFatalMessage(
 					"WeSay could not find the file at {0} anymore.  Maybe it was moved or renamed?", configFilePath);
 				return;
 			}

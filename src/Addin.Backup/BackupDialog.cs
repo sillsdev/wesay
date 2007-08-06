@@ -40,7 +40,7 @@ namespace Addin.Backup
 			}
 			catch (Exception e)
 			{
-				Reporting.ErrorReport.ReportNonFatalMessage("WeSay could to perform the backup.  Reason: {0}",
+				Palaso.Reporting.ErrorReport.ReportNonFatalMessage("WeSay could to perform the backup.  Reason: {0}",
 															  e.Message);
 				 _topLabel.Text = "~Files were not backed up.";
 				 _topLabel.ForeColor = Color.Red;

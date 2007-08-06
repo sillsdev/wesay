@@ -162,7 +162,7 @@ namespace WeSay.UI
 
 		private void FinishWithUnspecifiedError()
 		{
-			Reporting.ErrorReport.ReportNonFatalMessage("An error occurred while processing your request.");
+			Palaso.Reporting.ErrorReport.ReportNonFatalMessage("An error occurred while processing your request.");
 			Finish();
 		}
 

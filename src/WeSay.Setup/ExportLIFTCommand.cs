@@ -94,7 +94,7 @@ namespace WeSay
 		 {
 			 if (!File.Exists(_sourceWordsPath))
 			 {
-				 Reporting.ErrorReport.ReportNonFatalMessage(
+				 Palaso.Reporting.ErrorReport.ReportNonFatalMessage(
 					 string.Format(
 						 "Sorry, {0} cannot find a file which is necessary to perform the export on this project ({1})",
 						 Application.ProductName, _sourceWordsPath));

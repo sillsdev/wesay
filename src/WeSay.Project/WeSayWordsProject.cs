@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.XPath;
 using System.Xml.Xsl;
-using Reporting;
+using Palaso.Reporting;
 using WeSay.AddinLib;
 using WeSay.Foundation;
 using WeSay.Language;

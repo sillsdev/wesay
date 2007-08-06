@@ -4,7 +4,7 @@ using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 using CommandLine;
-using Reporting;
+using Palaso.Reporting;
 using WeSay.App;
 using WeSay.App.Properties;
 using WeSay.Data;

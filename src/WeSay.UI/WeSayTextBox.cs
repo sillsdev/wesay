@@ -73,7 +73,7 @@ namespace WeSay.UI
 		{
 			try
 			{
-				Reporting.Logger.WriteMinorEvent("Jumping to Toolbox");
+				Palaso.Reporting.Logger.WriteMinorEvent("Jumping to Toolbox");
 				Type toolboxJumperType = Type.GetTypeFromProgID("Toolbox.Jump");
 				if (toolboxJumperType != null)
 				{
@@ -87,7 +87,7 @@ namespace WeSay.UI
 			}
 			catch (Exception)
 			{
-				Reporting.ErrorReport.ReportNonFatalMessage("Could not get a connection to Toolbox.");
+				Palaso.Reporting.ErrorReport.ReportNonFatalMessage("Could not get a connection to Toolbox.");
 				throw;
 			}
 		}
@@ -99,7 +99,7 @@ namespace WeSay.UI
 				Focused/*try not to report when code is changing us*/)
 			{
 				_haveAlreadyLoggedTextChanged = true;
-				Reporting.Logger.WriteMinorEvent("First_TextChange (could be paste via mouse) {0}:{1}", _nameForLogging, _writingSystem.Id);
+				Palaso.Reporting.Logger.WriteMinorEvent("First_TextChange (could be paste via mouse) {0}:{1}", _nameForLogging, _writingSystem.Id);
 			}
 		}
 
@@ -109,18 +109,18 @@ namespace WeSay.UI
 			if (!_haveAlreadyLoggedTextChanged)
 			{
 				_haveAlreadyLoggedTextChanged = true;
-				Reporting.Logger.WriteMinorEvent("First_KeyPress {0}:{1}", _nameForLogging, _writingSystem.Id);
+				Palaso.Reporting.Logger.WriteMinorEvent("First_KeyPress {0}:{1}", _nameForLogging, _writingSystem.Id);
 			}
 		}
 
 		void OnLostFocus(object sender, EventArgs e)
 		{
-			Reporting.Logger.WriteMinorEvent("LostFocus {0}:{1}", _nameForLogging, _writingSystem.Id);
+			Palaso.Reporting.Logger.WriteMinorEvent("LostFocus {0}:{1}", _nameForLogging, _writingSystem.Id);
 		}
 
 		void OnGotFocus(object sender, EventArgs e)
 		{
-			Reporting.Logger.WriteMinorEvent("Focus {0}:{1}", _nameForLogging, _writingSystem.Id);
+			Palaso.Reporting.Logger.WriteMinorEvent("Focus {0}:{1}", _nameForLogging, _writingSystem.Id);
 			_haveAlreadyLoggedTextChanged = false;
 		}
 

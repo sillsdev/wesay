@@ -62,7 +62,7 @@ namespace WeSay.LexicalTools
 				pathToUse = pathInProgramDir;
 				if (!File.Exists(pathToUse))
 				{
-					Reporting.ErrorReport.ReportNonFatalMessage(
+					Palaso.Reporting.ErrorReport.ReportNonFatalMessage(
 						"WeSay could not find the wordlist.  It expected to find it either at {0} or {1}.", pathLocal,
 						pathInProgramDir);
 					return;
@@ -158,7 +158,7 @@ namespace WeSay.LexicalTools
 		{
 			if (!Project.WeSayWordsProject.Project.WritingSystems.ContainsKey(_writingSystemIdForGlossingLanguage))
 			{
-				Reporting.ErrorReport.ReportNonFatalMessage("The writing system of the words in the word list will be used to add glosses.  Therefore, it needs to be in the list of writing systems for this project.  Either change the writing system that this task uses for the word list (currently '{0}') or add a writing system with this id to the project.", _writingSystemIdForGlossingLanguage);
+				Palaso.Reporting.ErrorReport.ReportNonFatalMessage("The writing system of the words in the word list will be used to add glosses.  Therefore, it needs to be in the list of writing systems for this project.  Either change the writing system that this task uses for the word list (currently '{0}') or add a writing system with this id to the project.", _writingSystemIdForGlossingLanguage);
 			}
 
 			if (_words == null)

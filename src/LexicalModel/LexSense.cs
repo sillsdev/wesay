@@ -96,7 +96,7 @@ namespace WeSay.LexicalModel
 			}
 			if(count != this._exampleSentences.Count)
 			{
-				Reporting.Logger.WriteMinorEvent("Empty example removed");
+				Palaso.Reporting.Logger.WriteMinorEvent("Empty example removed");
 				OnEmptyObjectsRemoved();
 			}
 		}

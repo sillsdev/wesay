@@ -31,7 +31,7 @@ namespace WeSay.LexicalTools
 				_dictionaryControl = new DictionaryControl(RecordListManager, ViewTemplate);
 				_dictionaryControl.SelectedIndexChanged += new EventHandler(OnRecordSelectionChanged);
 			}
-			catch (Reporting.ConfigurationException)
+			catch (Palaso.Reporting.ConfigurationException)
 			{
 				IsActive = false;
 				throw;

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using NUnit.Framework;
-using Reporting;
+using Palaso.Reporting;
 using WeSay.Data;
 using WeSay.Language;
 using WeSay.LexicalModel;

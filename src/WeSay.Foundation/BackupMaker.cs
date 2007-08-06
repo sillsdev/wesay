@@ -20,7 +20,7 @@ namespace WeSay.Foundation
 			if (!Directory.Exists(Path.GetPathRoot(destinationZipPath)))
 				throw new ApplicationException("Directory of the destination doesn't exist.");
 
-			Reporting.Logger.WriteEvent("Start Backup to {0}", destinationZipPath);
+			Palaso.Reporting.Logger.WriteEvent("Start Backup to {0}", destinationZipPath);
 
 			//the tricky part here is to get all the paths to be relative, starting with the
 			//project root, rather than specifying them all the way up to the hard drive
@@ -37,7 +37,7 @@ namespace WeSay.Foundation
 			zipFile.CommitUpdate();
 			zipFile.Close();
 
-			Reporting.Logger.WriteEvent("Backup Done");
+			Palaso.Reporting.Logger.WriteEvent("Backup Done");
 		}
 	}
 }

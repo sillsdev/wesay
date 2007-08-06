@@ -33,6 +33,10 @@
 	  <ExecutableExtension>.exe</ExecutableExtension>
 	  <HintPath>..\..\lib\Mono.Addins.exe</HintPath>
 	</Reference>
+	<Reference Include="Palaso.Reporting, Version=1.0.2774.19364, Culture=neutral, processorArchitecture=MSIL">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\PalasoReporting.dll</HintPath>
+	</Reference>
 	<Reference Include="System" />
 	<Reference Include="System.Data" />
 	<Reference Include="System.Drawing" />
@@ -82,10 +86,6 @@
 	<None Include="Resources\construction.png" />
   </ItemGroup>
   <ItemGroup>
-	<ProjectReference Include="..\Reporting\Reporting.csproj">
-	  <Project>{9CCBECEC-513C-4DA4-A4CE-F5361B633760}</Project>
-	  <Name>Reporting</Name>
-	</ProjectReference>
 	<ProjectReference Include="..\WeSay.Foundation\WeSay.Foundation.csproj">
 	  <Project>{F12EB680-0990-4900-B77E-0FBF2E28A815}</Project>
 	  <Name>WeSay.Foundation</Name>

@@ -32,6 +32,10 @@
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\Mono.Addins.exe</HintPath>
 	</Reference>
+	<Reference Include="Palaso.Reporting, Version=1.0.2774.19364, Culture=neutral, processorArchitecture=MSIL">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\PalasoReporting.dll</HintPath>
+	</Reference>
 	<Reference Include="System" />
 	<Reference Include="System.Data" />
 	<Reference Include="System.Drawing" />
@@ -62,10 +66,6 @@
 	</Compile>
   </ItemGroup>
   <ItemGroup>
-	<ProjectReference Include="..\Reporting\Reporting.csproj">
-	  <Project>{9CCBECEC-513C-4DA4-A4CE-F5361B633760}</Project>
-	  <Name>Reporting</Name>
-	</ProjectReference>
 	<ProjectReference Include="..\WeSay.AddinLib\WeSay.AddinLib.csproj">
 	  <Project>{E651E83C-94DD-4D6D-ABA2-C9FDA34FBA55}</Project>
 	  <Name>WeSay.AddinLib</Name>

@@ -221,7 +221,7 @@ namespace WeSay.App
 
 		private void ActivateTask(TabPage page, ITask task)
 		{
-			Reporting.Logger.WriteEvent("Activating " + page.Text);//enhance: get in English always
+			Palaso.Reporting.Logger.WriteEvent("Activating " + page.Text);//enhance: get in English always
 			if (ActiveTask == task)
 			{
 				return;
@@ -230,10 +230,10 @@ namespace WeSay.App
 			{
 				task.Activate();
 			}
-			catch (Reporting.ConfigurationException e) //let others go through the normal bug reporting system
+			catch (Palaso.Reporting.ConfigurationException e) //let others go through the normal bug reporting system
 			{
-				Reporting.ErrorReport.ReportNonFatalMessage(e.Message);
-				Reporting.Logger.WriteEvent("Failed Activating");
+				Palaso.Reporting.ErrorReport.ReportNonFatalMessage(e.Message);
+				Palaso.Reporting.Logger.WriteEvent("Failed Activating");
 				return;
 			}
 
@@ -243,7 +243,7 @@ namespace WeSay.App
 			task.Control.Focus();
 			page.Cursor = Cursors.Default;
 			_activeTask = task;
-			Reporting.Logger.WriteEvent("Done Activating");
+			Palaso.Reporting.Logger.WriteEvent("Done Activating");
 		}
 
 //        private void RunCommand(BasicCommand command)

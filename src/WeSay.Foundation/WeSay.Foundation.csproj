@@ -40,6 +40,10 @@
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\NetReflector.dll</HintPath>
 	</Reference>
+	<Reference Include="Palaso.Reporting, Version=1.0.2774.19364, Culture=neutral, processorArchitecture=MSIL">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\PalasoReporting.dll</HintPath>
+	</Reference>
 	<Reference Include="System" />
 	<Reference Include="System.Data" />
 	<Reference Include="System.Drawing" />
@@ -78,10 +82,6 @@
 	<ProjectReference Include="..\PlatformSpecific\PlatformSpecific.csproj">
 	  <Project>{55E6BAB0-9B46-4C89-8773-4432417C1ADF}</Project>
 	  <Name>PlatformSpecific</Name>
-	</ProjectReference>
-	<ProjectReference Include="..\Reporting\Reporting.csproj">
-	  <Project>{9CCBECEC-513C-4DA4-A4CE-F5361B633760}</Project>
-	  <Name>Reporting</Name>
 	</ProjectReference>
   </ItemGroup>
   <ItemGroup>

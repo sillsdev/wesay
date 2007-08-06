@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 using NUnit.Framework;
-using Reporting;
+using Palaso.Reporting;
 using WeSay.Foundation;
 using WeSay.Project;
 
@@ -15,7 +15,7 @@ namespace WeSay.Project.Tests
 		[SetUp]
 		public void Setup()
 		{
-			Reporting.ErrorReport.OkToInteractWithUser = false;
+			Palaso.Reporting.ErrorReport.OkToInteractWithUser = false;
 			DirectoryInfo dirProject = Directory.CreateDirectory(Path.Combine(Path.GetTempPath(), Path.GetRandomFileName()));
 			this._projectDirectory = dirProject.FullName;
 		}

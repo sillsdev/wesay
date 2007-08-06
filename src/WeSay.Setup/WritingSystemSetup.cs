@@ -111,7 +111,7 @@ namespace WeSay.Setup
 			}
 			if (w == null)
 			{
-				Reporting.ErrorReport.ReportNonFatalMessage("Could not produce a unique ID.");
+				Palaso.Reporting.ErrorReport.ReportNonFatalMessage("Could not produce a unique ID.");
 			}
 			else
 			{

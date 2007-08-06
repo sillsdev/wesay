@@ -159,7 +159,7 @@ namespace WeSay.AddinLib
 			}
 			catch (Exception error)
 			{
-				Reporting.ErrorReport.ReportNonFatalMessage("Sorry, WeSay had a problem storing those settings. {0}",
+				Palaso.Reporting.ErrorReport.ReportNonFatalMessage("Sorry, WeSay had a problem storing those settings. {0}",
 															  error.Message);
 			}
 

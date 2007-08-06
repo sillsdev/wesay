@@ -204,7 +204,7 @@ namespace WeSay.UI
 			{
 				return;
 			}
-			Reporting.Logger.WriteMinorEvent("TimeForRealObject:"+_propertyName);
+			Palaso.Reporting.Logger.WriteMinorEvent("TimeForRealObject:"+_propertyName);
 
 			//don't let the code here trigger the ghost all over again
 			if (_inMidstOfTrigger)
@@ -215,12 +215,12 @@ namespace WeSay.UI
 
 			IBindingList list = _listTarget;
 			//in addition to adding a list item, this will fire events on the object that owns the list
-			Reporting.Logger.WriteMinorEvent("Before AddNew in TimeForRealObject");
+			Palaso.Reporting.Logger.WriteMinorEvent("Before AddNew in TimeForRealObject");
 
 //!!!! Anything can happen to our internal state after this point so don't rely on any objects sticking
 // around and not being null!
 			T newGuy = new T();
-			Reporting.Logger.WriteMinorEvent("After AddNew in TimeForRealObject");
+			Palaso.Reporting.Logger.WriteMinorEvent("After AddNew in TimeForRealObject");
 
 			//if (_textBoxTarget == null)
 			//{
