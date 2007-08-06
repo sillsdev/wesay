@@ -19,7 +19,7 @@
 using System;
 using System.Text;
 
-namespace Reporting
+namespace Palaso.Reporting
 {
 	/// <summary>
 	/// Helper class that makes it easier to get information out of nested exceptions to

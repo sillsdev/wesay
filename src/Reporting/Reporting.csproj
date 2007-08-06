@@ -111,9 +111,10 @@
 	</None>
 	<Compile Include="ConfigurationException.cs" />
 	<Compile Include="EmailMessage.cs" />
-	<Compile Include="ErrorReport.cs">
+	<Compile Include="ErrorNotificationDialog.cs">
 	  <SubType>Form</SubType>
 	</Compile>
+	<Compile Include="ErrorReport.cs" />
 	<Compile Include="ErrorReportTests.cs">
 	  <SubType>Code</SubType>
 	</Compile>
@@ -125,7 +126,7 @@
 	<Compile Include="Logger.cs">
 	  <SubType>Code</SubType>
 	</Compile>
-	<Compile Include="Reporter.cs" />
+	<Compile Include="UsageReporter.cs" />
 	<Compile Include="ReportingSetting.Designer.cs">
 	  <AutoGen>True</AutoGen>
 	  <DesignTimeSharedInput>True</DesignTimeSharedInput>
@@ -136,18 +137,18 @@
 	  <DesignTime>True</DesignTime>
 	  <DependentUpon>ReportingStrings.resx</DependentUpon>
 	</Compile>
-	<Compile Include="RequestUserIdentifier.cs">
+	<Compile Include="UserRegistrationDialog.cs">
 	  <SubType>Form</SubType>
 	</Compile>
-	<Compile Include="RequestUserIdentifier.Designer.cs">
-	  <DependentUpon>RequestUserIdentifier.cs</DependentUpon>
+	<Compile Include="UserRegistrationDialog.Designer.cs">
+	  <DependentUpon>UserRegistrationDialog.cs</DependentUpon>
 	</Compile>
-	<Compile Include="SendFileTo.cs" />
+	<Compile Include="MAPIHelper.cs" />
 	<Compile Include="UsageEmailDialog.cs">
 	  <SubType>Form</SubType>
 	</Compile>
-	<EmbeddedResource Include="ErrorReport.resx">
-	  <DependentUpon>ErrorReport.cs</DependentUpon>
+	<EmbeddedResource Include="ErrorNotificationDialog.resx">
+	  <DependentUpon>ErrorNotificationDialog.cs</DependentUpon>
 	  <SubType>Designer</SubType>
 	</EmbeddedResource>
 	<EmbeddedResource Include="ReportingStrings.resx">
@@ -155,9 +156,9 @@
 	  <Generator>ResXFileCodeGenerator</Generator>
 	  <LastGenOutput>ReportingStrings.Designer.cs</LastGenOutput>
 	</EmbeddedResource>
-	<EmbeddedResource Include="RequestUserIdentifier.resx">
+	<EmbeddedResource Include="UserRegistrationDialog.resx">
 	  <SubType>Designer</SubType>
-	  <DependentUpon>RequestUserIdentifier.cs</DependentUpon>
+	  <DependentUpon>UserRegistrationDialog.cs</DependentUpon>
 	</EmbeddedResource>
 	<EmbeddedResource Include="UsageEmailDialog.resx">
 	  <DependentUpon>UsageEmailDialog.cs</DependentUpon>

@@ -4,7 +4,7 @@ using System.Reflection;
 using System.Windows.Forms;
 using Microsoft.Win32;
 
-namespace Reporting
+namespace Palaso.Reporting
 {
 	/// <summary>
 	/// Summary description for UsageEmailDialog.
@@ -33,9 +33,8 @@ namespace Reporting
 			//
 			InitializeComponent();
 			this.richTextBox2.Text = "May we ask you a favor? We would like to send a tiny e-mail back to the software developers telling us of your progress.\nYou will be able to view the e-mail before it goes out. You do not need to be connected to the Internet right now...the e-mail will just open and you can save it in your outbox.";
-			//
-			// TODO: Add any constructor code after InitializeComponent call
-			//
+			this.m_topLineText.Text = string.Format(this.m_topLineText.Text, UsageReporter.AppNameToUseInDialogs);
+
 		}
 
 		/// <summary>
@@ -148,7 +147,7 @@ namespace Reporting
 			this.m_topLineText.Name = "m_topLineText";
 			this.m_topLineText.Size = new System.Drawing.Size(339, 31);
 			this.m_topLineText.TabIndex = 1;
-			this.m_topLineText.Text = "Thank you for checking out this preview version of WeSay.";
+			this.m_topLineText.Text = "Thank you for checking out this preview version of {0}.";
 			//
 			// pictureBox1
 			//

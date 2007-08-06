@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
 
-namespace Reporting
+namespace Palaso.Reporting
 {
 	public class ExceptionHandler
 	{
@@ -139,7 +139,7 @@ namespace Reporting
 					&& (uint)(((ExternalException)exception).ErrorCode) == 0x8007000E) // E_OUTOFMEMORY
 				{
 					if (showUI)
-						ErrorReporter.ReportException(exception);//, parent);
+						ErrorNotificationDialog.ReportException(exception);//, parent);
 					else
 					{
 						Trace.Fail("Out of memory");
@@ -156,7 +156,7 @@ namespace Reporting
 					{
 						// bool fIsLethal = !(exception is Reporting.ConfigurationException);
 						//ErrorReporter.ReportException(exception, parent, fIsLethal);
-						ErrorReporter.ReportException(exception);
+						ErrorNotificationDialog.ReportException(exception);
 						return false;
 					}
 					else

@@ -6,7 +6,7 @@ using System.IO;
 using System.Collections.Generic;
 using System.Windows.Forms;
 
-namespace Reporting
+namespace Palaso.Reporting
 {
 	public class MAPI
 	{

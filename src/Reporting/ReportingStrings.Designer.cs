@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Reporting {
+namespace Palaso.Reporting {
 	using System;
 
 

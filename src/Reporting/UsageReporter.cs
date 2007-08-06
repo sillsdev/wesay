@@ -1,18 +1,19 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Net;
 using System.Reflection;
 using System.Text;
 using System.Web;
 using System.Windows.Forms;
-using Microsoft.Win32;
 
-namespace Reporting
+namespace Palaso.Reporting
 {
-	public class Reporter
+	public class UsageReporter
 	{
-	   /// <summary>
+		private static string s_appNameToUseInDialogs;
+		private static string s_appNameToUseInReporting;
+
+		/// <summary>
 		/// call this each time the application is launched if you have launch count-based reporting
 		/// </summary>
 		public static void RecordLaunch()
@@ -37,23 +38,23 @@ namespace Reporting
 			//nb, this tries to share the id between applications that might want it,
 			//so the user doesn't have to be asked again.
 
-			string dir = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.LocalApplicationData), "WeSayCommon");
+			string dir = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.LocalApplicationData), "SIL");
 			Directory.CreateDirectory(dir);
 			string path = Path.Combine(dir, "UserIdentifier.txt");
 		   // ReportingSetting.Default.Identifier = "";
-			if (string.IsNullOrEmpty(ReportingSetting.Default.Identifier))
+			if (string.IsNullOrEmpty(ReportingSetting.Default.UserIdentifier))
 			{
 				if (File.Exists(path))
 				{
-					ReportingSetting.Default.Identifier = File.ReadAllText(path);
+					ReportingSetting.Default.UserIdentifier = File.ReadAllText(path);
 				}
 				else
 				{
-					RequestUserIdentifier dlg = new RequestUserIdentifier();
+					UserRegistrationDialog dlg = new UserRegistrationDialog();
 					dlg.ShowDialog();
-					ReportingSetting.Default.Identifier = dlg.EmailAddress;
+					ReportingSetting.Default.UserIdentifier = dlg.EmailAddress;
 					ReportingSetting.Default.Save();
-					File.WriteAllText(path, ReportingSetting.Default.Identifier);
+					File.WriteAllText(path, ReportingSetting.Default.UserIdentifier);
 				}
 			}
 
@@ -81,11 +82,44 @@ namespace Reporting
 		{
 			get
 			{
-				return ReportingSetting.Default.Identifier;
+				return ReportingSetting.Default.UserIdentifier;
 			}
 			set
 			{
-				ReportingSetting.Default.Identifier = value;
+				ReportingSetting.Default.UserIdentifier = value;
+			}
+		}
+
+		public static string AppNameToUseInDialogs
+		{
+			get
+			{
+				if (!String.IsNullOrEmpty(s_appNameToUseInReporting))
+				{
+				 return s_appNameToUseInDialogs;
+
+				}
+				return Application.ProductName;
+			}
+			set
+			{
+				s_appNameToUseInDialogs = value;
+			}
+		}
+
+		public static string AppNameToUseInReporting
+		{
+			get
+			{
+				if (!String.IsNullOrEmpty(s_appNameToUseInReporting))
+				{
+					 return s_appNameToUseInReporting;
+				}
+				return Application.ProductName;
+			}
+			set
+			{
+				s_appNameToUseInReporting = value;
 			}
 		}
 
@@ -141,10 +175,10 @@ namespace Reporting
 					d.TopLineText = topMessage;
 					d.EmailMessage.Address = emailAddress;
 					d.EmailMessage.Subject =
-						string.Format("{0} {1} Report {2} Launches", Application.ProductName, version,
+						string.Format("{0} {1} Report {2} Launches", UsageReporter.AppNameToUseInReporting, version,
 									  ReportingSetting.Default.Launches);
 					d.EmailMessage.Body =
-						string.Format("app={0} version={1} launches={2}", Application.ProductName, version,
+						string.Format("app={0} version={1} launches={2}", UsageReporter.AppNameToUseInReporting, version,
 									  ReportingSetting.Default.Launches);
 					d.ShowDialog();
 				}
@@ -157,8 +191,8 @@ namespace Reporting
 			try
 			{
 				Dictionary<string, string> parameters = new Dictionary<string, string>();
-				parameters.Add("app", "WeSay");
-				parameters.Add("version", ErrorReporter.VersionNumberString);
+				parameters.Add("app", UsageReporter.AppNameToUseInReporting);
+				parameters.Add("version", ErrorReport.VersionNumberString);
 				parameters.Add("launches", ReportingSetting.Default.Launches.ToString());
 
 				string result = HttpPost("http://www.wesay.org/usage/post.php", parameters);

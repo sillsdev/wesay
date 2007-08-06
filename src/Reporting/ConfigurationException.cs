@@ -1,7 +1,7 @@
 using System;
 
 
-namespace Reporting
+namespace Palaso.Reporting
 {
 	public class ConfigurationException:ApplicationException
 	{

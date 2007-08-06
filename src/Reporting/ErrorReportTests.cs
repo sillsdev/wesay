@@ -23,7 +23,7 @@ using System.Xml;
 // to be installed on the end user's machine.
 //using NUnit.Framework;
 
-namespace Reporting
+namespace Palaso.Reporting
 {
 	/// <summary>
 	/// Summary description for ErrorReportTests.
@@ -57,7 +57,7 @@ namespace Reporting
 //				[Test]
 				public void TestSend()
 				{
-					ErrorReporter.ReportException(new System.Exception("Testing"));
+					ErrorNotificationDialog.ReportException(new System.Exception("Testing"));
 				}
 	}
 

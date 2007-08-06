@@ -1,22 +1,19 @@
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 
-namespace Reporting
+namespace Palaso.Reporting
 {
-	public partial class RequestUserIdentifier : Form
+	public partial class UserRegistrationDialog : Form
 	{
-		public RequestUserIdentifier()
+		public UserRegistrationDialog()
 		{
 			InitializeComponent();
 			UpdateThings();
+			_noticeLabel.Text = string.Format(_noticeLabel.Text, UsageReporter.AppNameToUseInDialogs);
+			_welcomeLabel.Text = string.Format(_welcomeLabel.Text, UsageReporter.AppNameToUseInDialogs);
 		}
 
-		private void _okButton_Click(object sender, EventArgs e)
+		private void OnOkButton(object sender, EventArgs e)
 		{
 			DialogResult = DialogResult.OK;
 			this.Close();
@@ -40,9 +37,10 @@ namespace Reporting
 			_okButton.Enabled = _emailAddress.Text.Trim().Length > 4;
 		}
 
-		private void label2_Click(object sender, EventArgs e)
+		private void UserRegistrationDialog_Load(object sender, EventArgs e)
 		{
 
 		}
+
 	}
 }

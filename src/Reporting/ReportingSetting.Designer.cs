@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Reporting {
+namespace Palaso.Reporting {
 
 
 	[global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
@@ -38,12 +38,12 @@ namespace Reporting {
 		[global::System.Configuration.UserScopedSettingAttribute()]
 		[global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
 		[global::System.Configuration.DefaultSettingValueAttribute("")]
-		public string Identifier {
+		public string UserIdentifier {
 			get {
-				return ((string)(this["Identifier"]));
+				return ((string)(this["UserIdentifier"]));
 			}
 			set {
-				this["Identifier"] = value;
+				this["UserIdentifier"] = value;
 			}
 		}
 
