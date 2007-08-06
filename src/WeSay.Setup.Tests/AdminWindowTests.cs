@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using System.Xml.XPath;
 using NUnit.Framework;
 using NUnit.Extensions.Forms;
+using Reporting;
 using WeSay.Project;
 using WeSay.Setup;
 
@@ -19,7 +20,7 @@ namespace WeSay.Admin.Tests
 
 		public override void Setup()
 		{
-			Reporting.ErrorReporter.OkToInteractWithUser = false;
+			Reporting.ErrorReport.OkToInteractWithUser = false;
 			base.Setup();
 			_window = new AdminWindow(new string[] { });
 			_window.Show();
@@ -86,7 +87,7 @@ namespace WeSay.Admin.Tests
 			WalkTopLevelTabs();
 		}
 
-		[Test, ExpectedException(typeof(Reporting.ErrorReporter.NonFatalMessageSentToUserException))]
+		[Test, ExpectedException(typeof(ErrorReport.NonFatalMessageSentToUserException))]
 		public void TryingToOpenNonExistantProjectDoesntCrash()
 		{
 			_window.OnOpenProject(@"C:\notreallythere.WeSayConfig", null);

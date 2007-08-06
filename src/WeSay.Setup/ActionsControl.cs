@@ -99,7 +99,7 @@ namespace WeSay.Setup
 			}
 			catch (Exception error)
 			{
-				Reporting.ErrorReporter.ReportNonFatalMessage(error.Message);
+				Reporting.ErrorReport.ReportNonFatalMessage(error.Message);
 			}
 		}
 

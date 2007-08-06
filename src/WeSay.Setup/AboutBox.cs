@@ -48,7 +48,7 @@ namespace WeSay.Setup
 		{
 			get
 			{
-				return Reporting.ErrorReporter.UserFriendlyVersionString;
+				return Reporting.ErrorReport.UserFriendlyVersionString;
 				//return Assembly.GetExecutingAssembly().GetName().Version.ToString();
 			}
 		}

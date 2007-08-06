@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using NUnit.Framework;
+using Reporting;
 using WeSay.Data;
 using WeSay.Language;
 using WeSay.LexicalModel;
@@ -64,7 +65,7 @@ namespace WeSay.LexicalTools.Tests
 			Assert.IsNotNull(g);
 		}
 
-		[Test, ExpectedException(typeof(Reporting.ErrorReporter.NonFatalMessageSentToUserException))]
+		[Test, ExpectedException(typeof(ErrorReport.NonFatalMessageSentToUserException))]
 		public void MissingWordListFileGivesMessage()
 		{
 			GatherWordListTask g = new GatherWordListTask(_recordListManager,
@@ -76,7 +77,7 @@ namespace WeSay.LexicalTools.Tests
 			g.Activate();//should give a box to user, an exception in this text environment
 		}
 
-		[Test, ExpectedException(typeof(Reporting.ErrorReporter.NonFatalMessageSentToUserException))]
+		[Test, ExpectedException(typeof(ErrorReport.NonFatalMessageSentToUserException))]
 		public void WritingSystemNotInCurrentListGivesMessage()
 		{
 			GatherWordListTask g = new GatherWordListTask(_recordListManager,

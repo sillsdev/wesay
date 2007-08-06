@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
+using Reporting;
 
 
 namespace WeSay.Setup
@@ -29,8 +30,10 @@ namespace WeSay.Setup
 				Properties.Settings.Default.NeedUpgrade = false;
 			}
 
-			Reporting.Reporter.RecordLaunch();
-			Reporting.Reporter.DoTrivialUsageReport("usage@wesay.org", "Thank you for helping us test WeSay!", new int[] { 1, 5, 20, 40, 60, 80, 100 });
+			UsageReporter.AppNameToUseInDialogs = "WeSay";
+			UsageReporter.AppNameToUseInReporting = "WeSayConfig";
+			Reporting.UsageReporter.RecordLaunch();
+			Reporting.UsageReporter.DoTrivialUsageReport("usage@wesay.org", "Thank you for helping us test WeSay!", new int[] { 1, 5, 20, 40, 60, 80, 100 });
 
 			Application.Run(new AdminWindow(args));
 
@@ -40,8 +43,8 @@ namespace WeSay.Setup
 
 		private static void SetupErrorHandling()
 		{
-			 Reporting.ErrorReporter.EmailAddress = "issues@wesay.org";
-			 Reporting.ErrorReporter.AddStandardProperties();
+			 Reporting.ErrorReport.EmailAddress = "issues@wesay.org";
+			 Reporting.ErrorReport.AddStandardProperties();
 			 Reporting.ExceptionHandler.Init();
 		}
 	}

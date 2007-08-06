@@ -52,7 +52,7 @@ namespace Addin.LiftReports
 			}
 			catch (System.Exception e)
 			{
-				Reporting.ErrorReporter.ReportNonFatalMessage("Problem creating report : " + e);
+				Reporting.ErrorReport.ReportNonFatalMessage("Problem creating report : " + e);
 			}
 			return null;
 		}

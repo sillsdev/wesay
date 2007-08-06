@@ -40,7 +40,7 @@ namespace Addin.Backup
 			}
 			catch (Exception e)
 			{
-				Reporting.ErrorReporter.ReportNonFatalMessage("WeSay could to perform the backup.  Reason: {0}",
+				Reporting.ErrorReport.ReportNonFatalMessage("WeSay could to perform the backup.  Reason: {0}",
 															  e.Message);
 				 _topLabel.Text = "~Files were not backed up.";
 				 _topLabel.ForeColor = Color.Red;

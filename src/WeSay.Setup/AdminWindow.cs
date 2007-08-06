@@ -111,7 +111,7 @@ namespace WeSay.Setup
 			string configFilePath = (string) sender;
 			if (!File.Exists(configFilePath))
 			{
-				Reporting.ErrorReporter.ReportNonFatalMessage(
+				Reporting.ErrorReport.ReportNonFatalMessage(
 					"WeSay could not find the file at {0} anymore.  Maybe it was moved or renamed?", configFilePath);
 				return;
 			}
@@ -122,7 +122,7 @@ namespace WeSay.Setup
 			}
 			else
 			{
-				ErrorReporter.ReportNonFatalMessage(
+				ErrorReport.ReportNonFatalMessage(
 						"Sorry, that file does not appear to be located in a valid WeSay Project directory.");
 			}
 			Settings.Default.LastConfigFilePath = Project.PathToConfigFile;
@@ -162,7 +162,7 @@ namespace WeSay.Setup
 			}
 			catch (Exception e)
 			{
-				ErrorReporter.ReportNonFatalMessage("WeSay was not able to create a project there. \r\n" + e.Message);
+				ErrorReport.ReportNonFatalMessage("WeSay was not able to create a project there. \r\n" + e.Message);
 				return;
 			}
 
@@ -211,7 +211,7 @@ namespace WeSay.Setup
 			}
 			catch (Exception e)
 			{
-				ErrorReporter.ReportNonFatalMessage("WeSay was not able to open that project. \r\n" + e.Message);
+				ErrorReport.ReportNonFatalMessage("WeSay was not able to open that project. \r\n" + e.Message);
 				return;
 			}
 
@@ -234,7 +234,7 @@ namespace WeSay.Setup
 				projectName = Project.Name;
 			}
 			Text = projectName + " - WeSay Configuration Tool";
-			_versionToolStripMenuItem.Text = ErrorReporter.UserFriendlyVersionString;
+			_versionToolStripMenuItem.Text = ErrorReport.UserFriendlyVersionString;
 		}
 
 		private void InstallWelcomePage()
@@ -303,7 +303,7 @@ namespace WeSay.Setup
 			catch (Exception error)
 			{
 				//would make it impossible to quit. e.Cancel = true;
-				ErrorReporter.ReportNonFatalMessage(error.Message);
+				ErrorReport.ReportNonFatalMessage(error.Message);
 			}
 		}
 
@@ -316,7 +316,7 @@ namespace WeSay.Setup
 		{
 			if (!File.Exists(_project.PathToDb4oLexicalModelDB))
 			{
-				ErrorReporter.ReportNonFatalMessage(
+				ErrorReport.ReportNonFatalMessage(
 						string.Format(
 								"Sorry, {0} cannot find a file which is necessary to perform the export on this project ({1})",
 								Application.ProductName,
@@ -377,7 +377,7 @@ namespace WeSay.Setup
 			UpdateEnabledStates();
 			if (_progressState.State == ProgressState.StateValue.StoppedWithError)
 			{
-				ErrorReporter.ReportNonFatalMessage("WeSay ran into a problem.\r\n" + _progressLog);
+				ErrorReport.ReportNonFatalMessage("WeSay ran into a problem.\r\n" + _progressLog);
 			}
 		}
 

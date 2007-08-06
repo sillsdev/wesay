@@ -40,9 +40,10 @@ namespace WeSay.App
 			   Settings.Default.Upgrade();
 			   Settings.Default.NeedUpgrade = false;
 		   }
-
-			Reporter.RecordLaunch();
-			Reporter.DoTrivialUsageReport("usage@wesay.org", "(This will not be asked of users in the released version.)", new int[] { 1,5,20,40,60,80,100 });
+			UsageReporter.AppNameToUseInDialogs = "WeSay";
+			UsageReporter.AppNameToUseInReporting = "WeSayApp";
+			UsageReporter.RecordLaunch();
+			UsageReporter.DoTrivialUsageReport("usage@wesay.org", "(This will not be asked of users in the released version.)", new int[] { 1,5,20,40,60,80,100 });
 
 			CommandLineArguments cmdArgs = new CommandLineArguments();
 			if (!Parser.ParseArguments(args, cmdArgs, new ReportError(ShowCommandLineError)))
@@ -82,7 +83,7 @@ namespace WeSay.App
 				using (IRecordListManager recordListManager = MakeRecordListManager(project))
 				{
 					tabbedForm.Show(); // so the user sees that we did launch
-					tabbedForm.Text = "WeSay: " + project.Name + "        "  + ErrorReporter.UserFriendlyVersionString;
+					tabbedForm.Text = "WeSay: " + project.Name + "        "  + ErrorReport.UserFriendlyVersionString;
 					Application.DoEvents();
 
 					project.LiftUpdateService = SetupUpdateService(recordListManager);
@@ -111,7 +112,7 @@ namespace WeSay.App
 			}
 			catch (IOException e)
 			{
-				ErrorReporter.ReportNonFatalMessage(e.Message);
+				ErrorReport.ReportNonFatalMessage(e.Message);
 			}
 			finally
 			{
@@ -153,7 +154,7 @@ namespace WeSay.App
 			}
 			else
 			{
-			  ErrorReporter.ReportNonFatalMessage("WeSay was unable to figure out what lexicon to work on. Try opening the LIFT file by double clicking on it. If you don't have one yet, run the WeSay Configuration Tool to make a new WeSay proejct.");
+			  ErrorReport.ReportNonFatalMessage("WeSay was unable to figure out what lexicon to work on. Try opening the LIFT file by double clicking on it. If you don't have one yet, run the WeSay Configuration Tool to make a new WeSay proejct.");
 			  return false;
 			}
 		  }
@@ -219,11 +220,11 @@ namespace WeSay.App
 					{
 						if (dlg.ProgressStateResult.ExceptionThatWasEncountered !=null)
 						{
-							ErrorReporter.ReportException(dlg.ProgressStateResult.ExceptionThatWasEncountered, null, false);
+							ErrorNotificationDialog.ReportException(dlg.ProgressStateResult.ExceptionThatWasEncountered, null, false);
 						}
 						else if (dlg.ProgressStateResult.State == ProgressState.StateValue.StoppedWithError)
 						{
-							ErrorReporter.ReportNonFatalMessage("Could not build caches. " + dlg.ProgressStateResult.LogString, null, false);
+							ErrorReport.ReportNonFatalMessage("Could not build caches. " + dlg.ProgressStateResult.LogString, null, false);
 						}
 						return false;
 					}
@@ -244,7 +245,7 @@ namespace WeSay.App
 				dlg.ShowDialog();
 				if (dlg.ProgressStateResult.ExceptionThatWasEncountered != null)
 				{
-					ErrorReporter.ReportNonFatalMessage(
+					ErrorReport.ReportNonFatalMessage(
 						String.Format("WeSay encountered an error while preprocessing the file '{0}'.  Error was: {1}",
 						WeSayWordsProject.Project.PathToLiftFile,
 						dlg.ProgressStateResult.ExceptionThatWasEncountered.Message));
@@ -364,12 +365,12 @@ namespace WeSay.App
 
 		private static void SetupErrorHandling()
 		{
-			ErrorReporter.EmailAddress = "issues@wesay.org";
+			ErrorReport.EmailAddress = "issues@wesay.org";
 			if (BasilProject.IsInitialized)
 			{
-				ErrorReporter.AddProperty("ProjectPath", BasilProject.Project.ProjectDirectoryPath);
+				ErrorReport.AddProperty("ProjectPath", BasilProject.Project.ProjectDirectoryPath);
 			}
-			ErrorReporter.AddStandardProperties();
+			ErrorReport.AddStandardProperties();
 			ExceptionHandler.Init();
 		}
 

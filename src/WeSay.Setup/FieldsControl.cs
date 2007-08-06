@@ -324,7 +324,7 @@ namespace WeSay.Setup
 
 				if (found)
 				{
-					ErrorReporter.ReportNonFatalMessage(
+					ErrorReport.ReportNonFatalMessage(
 						"Sorry, WeSay cannot change the type of this field to '{0}', because there is existing data in the LIFT file of the old type, '{1}'",
 						CurrentField.DataTypeName, e.OldValue);
 					CurrentField.DataTypeName = (string)e.OldValue;
@@ -350,7 +350,7 @@ namespace WeSay.Setup
 					{
 						f = fields[1];
 					}
-					ErrorReporter.ReportNonFatalMessage(
+					ErrorReport.ReportNonFatalMessage(
 						"The field '{0}' with DisplayName '{1}' on class '{2}' is already using that name. Please choose another one.",
 						f.FieldName, f.DisplayName, f.ClassName);
 					CurrentField.FieldName = (string)e.OldValue;

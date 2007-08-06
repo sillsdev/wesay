@@ -17,7 +17,7 @@ namespace WeSay.Admin.Tests
 		[SetUp]
 		public void Setup()
 		{
-			Reporting.ErrorReporter.OkToInteractWithUser = false;
+			Reporting.ErrorReport.OkToInteractWithUser = false;
 			_window = new AdminWindow(new string[] { });
 			_window.Show();
 		 }

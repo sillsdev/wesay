@@ -84,7 +84,7 @@ namespace WeSay.Language
 				}
 				catch (Exception)
 				{
-					Reporting.ErrorReporter.ReportNonFatalMessage(
+					Reporting.ErrorReport.ReportNonFatalMessage(
 						"Could not find the requested UI font '{0}'.  Will use a generic font instead.",
 						labelFontName);
 				}

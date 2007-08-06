@@ -104,7 +104,7 @@ namespace WeSay.Project
 		/// </summary>
 		public static void InitializeForTests()
 		{
-			ErrorReporter.OkToInteractWithUser = false;
+			ErrorReport.OkToInteractWithUser = false;
 			BasilProject project = new BasilProject();
 			project.LoadFromProjectDirectoryPath(GetPretendProjectDirectory());
 			project.StringCatalogSelector = "en";

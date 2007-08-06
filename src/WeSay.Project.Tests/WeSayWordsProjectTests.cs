@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 using NUnit.Framework;
+using Reporting;
 using WeSay.Foundation;
 using WeSay.Project;
 
@@ -14,7 +15,7 @@ namespace WeSay.Project.Tests
 		[SetUp]
 		public void Setup()
 		{
-			Reporting.ErrorReporter.OkToInteractWithUser = false;
+			Reporting.ErrorReport.OkToInteractWithUser = false;
 			DirectoryInfo dirProject = Directory.CreateDirectory(Path.Combine(Path.GetTempPath(), Path.GetRandomFileName()));
 			this._projectDirectory = dirProject.FullName;
 		}
@@ -44,7 +45,7 @@ namespace WeSay.Project.Tests
 			}
 		}
 
-		[Test, ExpectedException(typeof(Reporting.ErrorReporter.NonFatalMessageSentToUserException))]
+		[Test, ExpectedException(typeof(ErrorReport.NonFatalMessageSentToUserException))]
 		public void WeSayDirNotInValidBasilDir()
 		{
 			string experimentDir = MakeDir(Path.GetTempPath(), Path.GetRandomFileName());

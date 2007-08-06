@@ -232,7 +232,7 @@ namespace WeSay.App
 			}
 			catch (Reporting.ConfigurationException e) //let others go through the normal bug reporting system
 			{
-				Reporting.ErrorReporter.ReportNonFatalMessage(e.Message);
+				Reporting.ErrorReport.ReportNonFatalMessage(e.Message);
 				Reporting.Logger.WriteEvent("Failed Activating");
 				return;
 			}

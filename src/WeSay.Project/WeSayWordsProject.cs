@@ -90,7 +90,7 @@ namespace WeSay.Project
 			string configName = Path.GetFileName(Project.PathToConfigFile);
 			File.Copy(Path.Combine(ApplicationTestDirectory, configName), Project.PathToConfigFile, true);
 
-			ErrorReporter.OkToInteractWithUser = false;
+			ErrorReport.OkToInteractWithUser = false;
 			LoadFromProjectDirectoryPath(ProjectDirectoryPath);
 			StringCatalogSelector = "en";
 		}
@@ -104,7 +104,7 @@ namespace WeSay.Project
 
 				if (!File.Exists(liftPath))
 				{
-				  ErrorReporter.ReportNonFatalMessage(
+				  ErrorReport.ReportNonFatalMessage(
 					  String.Format(
 						  "WeSay tried to find the lexicon at '{0}', but could not find it.\r\n\r\nTry opening the LIFT file by double clicking on it.",
 						  liftPath));
@@ -119,7 +119,7 @@ namespace WeSay.Project
 				}
 				catch (UnauthorizedAccessException)
 				{
-				  ErrorReporter.ReportNonFatalMessage(
+				  ErrorReport.ReportNonFatalMessage(
 					  String.Format(
 						  "WeSay was unable to open the file at '{0}' for writing, because the system won't allow it. Check that 'ReadOnly' is cleared, otherwise investigate your user permissions to write to this file.",
 								  liftPath));
@@ -127,7 +127,7 @@ namespace WeSay.Project
 				}
 				catch (IOException)
 				{
-				  ErrorReporter.ReportNonFatalMessage(
+				  ErrorReport.ReportNonFatalMessage(
 					  String.Format(
 						  "WeSay was unable to open the file at '{0}' for writing, probably because it is locked by some other process on your computer (maybe a recently crashed run of WeSay?). If you can't figure out what has it locked, restart your computer.",
 						  liftPath));
@@ -136,7 +136,7 @@ namespace WeSay.Project
 
 				if (!File.Exists(PathToConfigFile))
 				{
-				  ErrorReporter.ReportNonFatalMessage(
+				  ErrorReport.ReportNonFatalMessage(
 					  String.Format(
 						  "WeSay tried to find the WeSay configuration file at '{0}', but could not find it.\r\n\r\nTry using the configuration Tool to create one.",
 						  PathToConfigFile));
@@ -151,7 +151,7 @@ namespace WeSay.Project
 				}
 				catch (UnauthorizedAccessException)
 				{
-				  ErrorReporter.ReportNonFatalMessage(
+				  ErrorReport.ReportNonFatalMessage(
 					  String.Format(
 						  "WeSay was unable to open the file at '{0}' for reading, because the system won't allow it. Investigate your user permissions to write to this file.",
 								  PathToConfigFile));
@@ -159,7 +159,7 @@ namespace WeSay.Project
 				}
 				catch (IOException e)
 				{
-				  ErrorReporter.ReportNonFatalMessage(
+				  ErrorReport.ReportNonFatalMessage(
 					  String.Format(
 						  "WeSay was unable to open the file at '{0}' for reading. \n Further information: {1}",
 						  PathToConfigFile, e.Message));
@@ -185,7 +185,7 @@ namespace WeSay.Project
 			}
 			catch (Exception e)
 			{
-				ErrorReporter.ReportNonFatalMessage(e.Message);
+				ErrorReport.ReportNonFatalMessage(e.Message);
 				return false;
 			}
 		}
@@ -288,7 +288,7 @@ namespace WeSay.Project
 				}
 				catch (Exception error)
 				{
-					ErrorReporter.ReportNonFatalMessage(
+					ErrorReport.ReportNonFatalMessage(
 							"There may have been a problem reading the view template xml of the configuration file. A default template will be created." +
 							error.Message);
 				}
@@ -319,7 +319,7 @@ namespace WeSay.Project
 			}
 			catch (Exception error)
 			{
-				ErrorReporter.ReportNonFatalMessage(
+				ErrorReport.ReportNonFatalMessage(
 					"There was a problem reading the addins-settings xml. {0}", error.Message);
 				return null;
 			}
@@ -346,7 +346,7 @@ namespace WeSay.Project
 				}
 				catch (Exception e)
 				{
-					ErrorReporter.ReportNonFatalMessage("There was a problem reading the task xml. " + e.Message);
+					ErrorReport.ReportNonFatalMessage("There was a problem reading the task xml. " + e.Message);
 					projectDoc = null;
 				}
 			}
@@ -370,7 +370,7 @@ namespace WeSay.Project
 				(!IsValidProjectDirectory(projectRootDirectoryInfo.FullName)))
 			{
 				string message = "WeSay cannot open the lexicon, because it is not in a proper WeSay/Basil project structure.";
-				ErrorReporter.ReportNonFatalMessage(message);
+				ErrorReport.ReportNonFatalMessage(message);
 				return false;
 			}
 			return true;
