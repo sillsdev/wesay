@@ -18,6 +18,8 @@ namespace WeSay.UI
 		public WeSayTextBox()
 		{
 			InitializeComponent();
+			if(DesignMode)
+				return;
 			GotFocus += new EventHandler(OnGotFocus);
 			LostFocus += new EventHandler(OnLostFocus);
 			KeyPress += new KeyPressEventHandler(WeSayTextBox_KeyPress);
@@ -40,6 +42,7 @@ namespace WeSay.UI
 				_nameForLogging = "??";
 			}
 		}
+
 
 		void OnKeyDown(object sender, KeyEventArgs e)
 		{
@@ -126,6 +129,10 @@ namespace WeSay.UI
 
 		protected override void OnTextChanged(EventArgs e)
 		{
+			if (this.IsDisposed) // are we a zombie still getting events?
+			{
+				throw new ApplicationException();
+			}
 			base.OnTextChanged(e);
 			UpdateHeight();
 		}
@@ -138,6 +145,8 @@ namespace WeSay.UI
 
 		private void UpdateHeight()
 		{
+			if(DesignMode)
+				return;
 			SuspendLayout();
 			if (Text.Length == 0)
 			{
@@ -163,7 +172,7 @@ namespace WeSay.UI
 												   Text + "\n",
 												   // need extra new line to handle case where ends in new line (since last newline is ignored)
 									Font,
-									new Size(Width, int.MinValue),
+									new Size(Width, int.MaxValue), //new Size(Width, int.MinValue),
 									flags);
 
 				Height = Math.Max(MinimumSize.Height, sz.Height);
@@ -226,6 +235,8 @@ namespace WeSay.UI
 			get { return this._multiParagraph; }
 			set { this._multiParagraph = value; }
 		}
+
+
 
 		protected override void OnKeyPress(KeyPressEventArgs e)
 		{

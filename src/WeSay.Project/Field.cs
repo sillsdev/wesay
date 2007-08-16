@@ -19,7 +19,7 @@ namespace WeSay.Project
 		private string _description=string.Empty;
 		private string _className=string.Empty;
 		private string _dataTypeName;
-		public enum MultiplicityType { ZeroOr1 = 0 }
+		public enum MultiplicityType { ZeroOr1 = 0 , ZeroOrMore = 1}
 		private MultiplicityType _multiplicity = MultiplicityType.ZeroOr1;
 
 		public enum BuiltInDataType
@@ -175,7 +175,7 @@ namespace WeSay.Project
 		}
 
 		[TypeConverter(typeof(DataTypeClassConverter))]
-		[Description("The type of the field. E.g. multilingual text, option, option collection.")]
+		[Description("The type of the field. E.g. multilingual text, option, option collection, relation.")]
 		[ReflectorProperty("dataType", Required = true)]
 		public string DataTypeName
 		{
@@ -399,7 +399,7 @@ namespace WeSay.Project
 		{
 			get
 			{
-				return new string[] { "MultiText", "Option", "OptionCollection" };
+				return new string[] { "MultiText", "Option", "OptionCollection", "RelationToOneEntry" };
 			}
 		}
 	}

@@ -112,6 +112,17 @@ namespace WeSay.LexicalTools
 			}
 		}
 
+		/// <summary>
+		/// Use for establishing relations been this entry and the rest
+		/// </summary>
+		public IBindingList AllRecords
+		{
+			set
+			{
+				_allRecords = value;
+			}
+		}
+
 		private void OnEmptyObjectsRemoved(object sender, EventArgs e)
 		{
 			//find out where our current focus is and attempt to return to that place
@@ -191,7 +202,7 @@ namespace WeSay.LexicalTools
 			this._panelEntry.Controls.Add(_detailListControl);
 			if (this._record != null)
 			{
-				LexEntryLayouter layout = new LexEntryLayouter(this._detailListControl, ViewTemplate);
+				LexEntryLayouter layout = new LexEntryLayouter(this._detailListControl, ViewTemplate, _allRecords);
 				layout.AddWidgets(this._record);
 			}
 			this._detailListControl.ResumeLayout();
@@ -205,6 +216,7 @@ namespace WeSay.LexicalTools
 		}
 
 		private CurrentItemEventArgs _currentItemInFocus;
+		private IBindingList _allRecords;
 
 		private void LexPreviewWithEntryControl_BackColorChanged(object sender, EventArgs e)
 		{

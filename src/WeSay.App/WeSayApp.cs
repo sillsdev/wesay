@@ -398,6 +398,7 @@ namespace WeSay.App
 			{
 				recordListManager = new Db4oRecordListManager(new WeSayWordsDb4oModelConfiguration(), project.PathToDb4oLexicalModelDB);
 				Db4oLexModelHelper.Initialize(((Db4oRecordListManager)recordListManager).DataSource.Data);
+				Lexicon.Init(recordListManager as Db4oRecordListManager);
 			}
 			return recordListManager;
 		}

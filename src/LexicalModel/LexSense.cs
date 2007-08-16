@@ -17,6 +17,7 @@ namespace WeSay.LexicalModel
 			static public string PartOfSpeech = "POS";
 			static public string SemanticDomainsDdp4 = "SemanticDomainDdp4";
 			static public string Definition = "definition";
+			//static public string Relations = "relations";
 			static public bool Contains(string fieldName)
 			{
 				List<string> list = new List<string>(new string[] { PartOfSpeech, Definition, SemanticDomainsDdp4 });

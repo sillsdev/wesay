@@ -13,7 +13,7 @@ namespace WeSay.LexicalTools
 	public class LexExampleSentenceLayouter : Layouter
 	{
 		public LexExampleSentenceLayouter(DetailList  builder, ViewTemplate viewTemplate)
-			: base(builder, viewTemplate)
+			: base(builder, viewTemplate, null)
 		{
 		}
 

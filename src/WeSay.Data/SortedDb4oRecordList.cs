@@ -69,7 +69,7 @@ namespace WeSay.Data
 
 		List<KeyValuePair<K, long>> _keyIdMap;
 		List<KeyValuePair<K, long>> _idKeyMap;
-		Db4oRecordList<T> _masterRecordList;
+		private Db4oRecordList<T> _masterRecordList;
 		string _cachePath;
 		KeyValueComparer<K, long> _keyIdSorter;
 		KeyValueComparer<K, long> _idKeySorter;
@@ -91,7 +91,7 @@ namespace WeSay.Data
 			_cachePath = recordListManager.CachePath;
 			_keyIdSorter = new KeyValueComparer<K, long>(sortHelper.KeyComparer, Comparer<long>.Default, SortBy.KeyPrimaryValueSecondary);
 			_idKeySorter = new KeyValueComparer<K, long>(sortHelper.KeyComparer, Comparer<long>.Default, SortBy.KeySecondaryValuePrimary);
-			_masterRecordList = (Db4oRecordList<T>)recordListManager.GetListOfType<T>();
+			MasterRecordList = (Db4oRecordList<T>)recordListManager.GetListOfType<T>();
 
 			Deserialize();
 			if(_keyIdMap == null)
@@ -101,9 +101,9 @@ namespace WeSay.Data
 				Sort();
 			}
 
-			_masterRecordList.ListChanged += new ListChangedEventHandler(OnMasterRecordListListChanged);
-			_masterRecordList.DeletingRecord += new EventHandler<RecordListEventArgs<T>>(OnMasterRecordListDeletingRecord);
-			_masterRecordList.ContentOfItemInListChanged += new ListChangedEventHandler(OnMasterRecordListContentChanged);
+			MasterRecordList.ListChanged += new ListChangedEventHandler(OnMasterRecordListListChanged);
+			MasterRecordList.DeletingRecord += new EventHandler<RecordListEventArgs<T>>(OnMasterRecordListDeletingRecord);
+			MasterRecordList.ContentOfItemInListChanged += new ListChangedEventHandler(OnMasterRecordListContentChanged);
 		}
 
 		private string CacheFilePath
@@ -188,7 +188,7 @@ namespace WeSay.Data
 
 		private DateTime GetDatabaseLastModified()
 		{
-			return _masterRecordList.GetDatabaseLastModified();
+			return MasterRecordList.GetDatabaseLastModified();
 		}
 
 		void OnMasterRecordListContentChanged(object sender, ListChangedEventArgs e)
@@ -225,7 +225,7 @@ namespace WeSay.Data
 
 		private void Add(T item)
 		{
-			long itemId = this._masterRecordList.GetId(item);
+			long itemId = this.MasterRecordList.GetId(item);
 			foreach (K key in _sortHelper.GetKeys(item))
 			{
 				int index = AddKeyId(key, itemId);
@@ -259,7 +259,7 @@ namespace WeSay.Data
 
 		private void Update(T item)
 		{
-			long itemId = _masterRecordList.GetId(item);
+			long itemId = MasterRecordList.GetId(item);
 
 			List<int> indexesOfAddedItems = new List<int>();
 			List<int> indexesOfDeletedItems = RemoveId(itemId);
@@ -368,9 +368,9 @@ namespace WeSay.Data
 
 		private void Remove(T item)
 		{
-			if (_masterRecordList.Contains(item))
+			if (MasterRecordList.Contains(item))
 			{
-				long itemId = _masterRecordList.GetId(item);
+				long itemId = MasterRecordList.GetId(item);
 				foreach (int index in RemoveId(itemId))
 				{
 					OnItemDeleted(index);
@@ -381,7 +381,7 @@ namespace WeSay.Data
 		private void Sort()
 		{
 			// The reset event can be raised when items are cleared and also when sorting or filtering occurs
-			if (_masterRecordList.Count == 0)
+			if (MasterRecordList.Count == 0)
 			{
 				_keyIdMap.Clear();
 				_idKeyMap.Clear();
@@ -392,7 +392,7 @@ namespace WeSay.Data
 				_idKeyMap.Sort(_idKeySorter);
 			}
 			OnListReset();
-			if (!this._masterRecordList.DelayWritingCachesUntilDispose)
+			if (!this.MasterRecordList.DelayWritingCachesUntilDispose)
 			{
 				Serialize();
 			}
@@ -581,7 +581,7 @@ namespace WeSay.Data
 		public int Add(object value)
 		{
 			VerifyNotDisposed();
-			return ((IList)_masterRecordList).Add(value);
+			return ((IList)MasterRecordList).Add(value);
 		}
 
 		public void Clear()
@@ -605,7 +605,7 @@ namespace WeSay.Data
 				throw new ArgumentException("value must be of type T");
 			}
 
-			long itemId = this._masterRecordList.GetId((T)value);
+			long itemId = this.MasterRecordList.GetId((T)value);
 
 			int idKeyMapIndex;
 			int keyIdMapIndex;
@@ -650,13 +650,13 @@ namespace WeSay.Data
 		public void Remove(object value)
 		{
 			VerifyNotDisposed();
-			((IList)_masterRecordList).Remove(value);
+			((IList)MasterRecordList).Remove(value);
 		}
 
 		public void RemoveAt(int index)
 		{
 			VerifyNotDisposed();
-			((IList)_masterRecordList).Remove(GetValue(index));
+			((IList)MasterRecordList).Remove(GetValue(index));
 		}
 
 
@@ -699,7 +699,7 @@ namespace WeSay.Data
 		public T GetValue(int index)
 		{
 			VerifyNotDisposed();
-			return _masterRecordList[_masterRecordList.GetIndexFromId(_keyIdMap[index].Value)];
+			return MasterRecordList[MasterRecordList.GetIndexFromId(_keyIdMap[index].Value)];
 		}
 
 		public long GetId(int index)
@@ -742,6 +742,18 @@ namespace WeSay.Data
 			{
 				VerifyNotDisposed();
 				throw new NotSupportedException();
+			}
+		}
+
+		public Db4oRecordList<T> MasterRecordList
+		{
+			get
+			{
+				return _masterRecordList;
+			}
+			set
+			{
+				_masterRecordList = value;
 			}
 		}
 
@@ -900,10 +912,10 @@ namespace WeSay.Data
 				if (disposing)
 				{
 					// dispose-only, i.e. non-finalizable logic
-					if (_masterRecordList != null)
+					if (MasterRecordList != null)
 					{
-						_masterRecordList.ListChanged -= OnMasterRecordListListChanged;
-						_masterRecordList.DeletingRecord -= OnMasterRecordListDeletingRecord;
+						MasterRecordList.ListChanged -= OnMasterRecordListListChanged;
+						MasterRecordList.DeletingRecord -= OnMasterRecordListDeletingRecord;
 					}
 				   Serialize();
 				}

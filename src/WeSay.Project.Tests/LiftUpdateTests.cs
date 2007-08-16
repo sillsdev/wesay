@@ -87,7 +87,7 @@ namespace WeSay.Project.Tests
 		{
 			SetupDeletionSituation();
 			Assert.AreEqual(1,
-							GetLiftDoc().SelectNodes("//entry[@id='boo' and @dateDeleted]")
+							GetLiftDoc().SelectNodes("//entry[contains(@id,'boo_') and @dateDeleted]")
 								.Count);
 		}
 
@@ -116,8 +116,8 @@ namespace WeSay.Project.Tests
 			//now make an entry with the same id and add it
 			MakeEntry("boo");
 			_service.DoLiftUpdateNow(true);
-			Assert.AreEqual(0, GetLiftDoc().SelectNodes("//entry[@id='boo' and @dateDeleted]").Count);
-			Assert.AreEqual(1, GetLiftDoc().SelectNodes("//entry[@id='boo' and not(@dateDeleted)]").Count);
+			Assert.AreEqual(0, GetLiftDoc().SelectNodes("//entry[contains(@id,'boo_') and @dateDeleted]").Count);
+			Assert.AreEqual(1, GetLiftDoc().SelectNodes("//entry[contains(@id,'boo_') and not(@dateDeleted)]").Count);
 		}
 
 		private LexEntry MakeEntry(string id)

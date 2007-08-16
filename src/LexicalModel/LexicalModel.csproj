@@ -61,6 +61,7 @@
 	<Compile Include="LexEntry.cs" />
 	<Compile Include="LexExampleSentence.cs" />
 	<Compile Include="Lexicon.cs" />
+	<Compile Include="LexRelation.cs" />
 	<Compile Include="LexSense.cs" />
 	<Compile Include="LiftExporter.cs" />
 	<Compile Include="PretendRecordList.cs" />

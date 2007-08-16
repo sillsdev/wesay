@@ -6,16 +6,19 @@ using System.Drawing;
 using System.Data;
 using System.Text;
 using System.Windows.Forms;
+using WeSay.Foundation;
 
 namespace WeSay.UI
 {
-	public partial class AutoCompleteWithCreationBox : UserControl
+	public partial class AutoCompleteWithCreationBox<T> : UserControl, IBindableControl<T>
+		where T:class
 	{
 
 		public class CreateNewArgs : EventArgs
 		{
 			public string LabelOfNewItem;
 			private object _NewlyCreatedItem;
+			private bool _showRedSquiggle = false;
 
 			public CreateNewArgs(string labelOfNewItem)
 			{
@@ -43,13 +46,29 @@ namespace WeSay.UI
 		public AutoCompleteWithCreationBox()
 		{
 			InitializeComponent();
-			UpdateElementWidth();
-			_textBox.SelectedItemChanged += new EventHandler(_textBox_SelectedItemChanged);
+			_textBox.SelectedItemChanged += new EventHandler(OnSelectedItemChanged);
+			this.GotFocus += new EventHandler(OnFocusChanged);
+			_textBox.GotFocus += new EventHandler(OnFocusChanged);
+			this.LostFocus += new EventHandler(OnFocusChanged);
+			_textBox.LostFocus += new EventHandler(OnFocusChanged);
+			_addNewButton.LostFocus += new EventHandler(OnFocusChanged);
+			UpdateDisplay();
 		}
 
-		void _textBox_SelectedItemChanged(object sender, EventArgs e)
+
+		void OnFocusChanged(object sender, EventArgs e)
 		{
 			UpdateDisplay();
+			Invalidate();//to reshow any warning icons we don't show in a different focus situation
+		}
+
+		void OnSelectedItemChanged(object sender, EventArgs e)
+		{
+			UpdateDisplay();
+			if (ValueChanged != null)
+			{
+				ValueChanged.Invoke(this, null);
+			}
 		}
 
 		public WeSay.UI.WeSayAutoCompleteTextBox Box
@@ -59,11 +78,93 @@ namespace WeSay.UI
 				return this._textBox;
 			}
 		}
+		protected override void  OnPaint(PaintEventArgs e)
+		{
+			 base.OnPaint(e);
+			 if (!this.ContainsFocus &&  HasProblems)
+			 {
+				 int y = e.ClipRectangle.Top;
+				 e.Graphics.DrawString("!", new Font(FontFamily.GenericSansSerif, 14, FontStyle.Bold),
+					 Brushes.Red, e.ClipRectangle.Left + _textBox.Width + 10, y);
+			 }
+		}
+
+		private bool HasProblems
+		{
+			get
+			{
+				return Box.SelectedItem == null && !string.IsNullOrEmpty(Box.Text);
+			}
+		}
+
+
+//        /// <summary>
+//        /// Note: we don't actually have the ability to do squiggles yet (can't really override OnPaint),
+//        /// but this will do something
+//        /// </summary>
+//        public bool ShowRedSquiggle
+//        {
+//            get
+//            {
+//                return _showRedSquiggle;
+//            }
+//            set
+//            {
+//                _showRedSquiggle = value;
+//            }
+//        }
+
+		#region IBindableControl<T> Members
+
+		public event EventHandler ValueChanged;
+		public event EventHandler GoingAway;
+
+		 public T Value
+		{
+			get
+			{
+				return Box.SelectedItem as T;
+			}
+			set
+			{
+				Box.SelectedItem = value;
+			}
+		}
+
+		#endregion
 
 		void box_TextChanged(object sender, EventArgs e)
 		{
-			UpdateElementWidth();
+			UpdateDisplay();
 		}
+
+		protected override void OnHandleDestroyed(EventArgs e)
+		{
+			if (GoingAway != null)
+			{
+				GoingAway.Invoke(this, null);//shake any bindings to us loose
+			}
+			GoingAway = null;
+			base.OnHandleDestroyed(e);
+		}
+
+		/// <summary>
+		/// Clean up any resources being used.
+		/// </summary>
+		/// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+		protected override void Dispose(bool disposing)
+		{
+			if (GoingAway != null)
+			{
+				GoingAway.Invoke(this, null); //shake any bindings to us loose
+			}
+			if (disposing && (components != null))
+			{
+				components.Dispose();
+			}
+			base.Dispose(disposing);
+		}
+
 
 		private void UpdateElementWidth()
 		{
@@ -73,6 +174,8 @@ namespace WeSay.UI
 				_textBox.Width = _textBox.MinimumSize.Width;
 				return;
 			}
+
+			//NB:... doing CreateGraphics makes a bunch of events fire
 
 
 			using (Graphics g = _textBox.CreateGraphics())
@@ -102,7 +205,9 @@ namespace WeSay.UI
 
 		private void UpdateDisplay()
 		{
-			_addNewButton.Visible = (_textBox.SelectedItem == null);
+			_addNewButton.Visible = _textBox.SelectedItem == null
+				&& !string.IsNullOrEmpty(_textBox.Text)
+				&& this.ContainsFocus;
 			UpdateElementWidth();
 		}
 

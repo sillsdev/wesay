@@ -1,10 +1,15 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
+using WeSay.Data;
 using WeSay.Foundation;
 using WeSay.Language;
+using WeSay.LexicalModel;
+using WeSay.LexicalModel.Db4o_Specific;
 using WeSay.Project;
 using WeSay.UI;
 
@@ -22,7 +27,12 @@ namespace WeSay.LexicalTools
 		/// <summary>
 		/// The DetailList we are filling.
 		/// </summary>
-	  private DetailList _detailList;
+		protected DetailList _detailList;
+
+		/// <summary>
+		/// Use for establishing relations been this entry and the rest
+		/// </summary>
+		protected IBindingList _allRecords;
 
 		private readonly ViewTemplate _viewTemplate;
 
@@ -52,7 +62,7 @@ namespace WeSay.LexicalTools
 
 
 
-		protected Layouter(DetailList builder, ViewTemplate viewTemplate)
+		protected Layouter(DetailList builder, ViewTemplate viewTemplate, IBindingList allRecords)
 		{
 			if(builder == null)
 			{
@@ -64,6 +74,7 @@ namespace WeSay.LexicalTools
 			}
 			_detailList = builder;
 			_viewTemplate = viewTemplate;
+			_allRecords = allRecords;
 		}
 
 		/// <summary>
@@ -220,8 +231,17 @@ namespace WeSay.LexicalTools
 						box = MakeBoundControl(target.GetOrCreateProperty<MultiText>(customField.FieldName), customField);
 						break;
 					default:
-						throw new ApplicationException(
-							string.Format("WeSay doesn't understand how to a layout a {0}", customField.DataTypeName));
+						LexRelationType lexRelType = GetRelationType(customField.DataTypeName);
+						if (lexRelType !=null)
+						{
+							box = MakeRelationWidget(target, lexRelType, customField);
+						}
+						else
+						{
+							throw new ApplicationException(
+								string.Format("WeSay doesn't understand how to layout a {0}", customField.DataTypeName));
+						}
+						break;
 				}
 				DetailList.AddWidgetRow(StringCatalog.Get(customField.DisplayName), false, box, insertAtRow+rowCount, false);
 
@@ -229,6 +249,75 @@ namespace WeSay.LexicalTools
 			}
 			return rowCount;
 		}
+
+		private LexRelationType GetRelationType(string dataTypeName)
+		{
+			foreach (LexRelationType type in Project.WeSayWordsProject.Project.RelationTypes)
+			{
+				if(type.ID == dataTypeName)
+					return type;
+			}
+			return null;
+		}
+
+
+
+		/// <summary>
+		/// This is used to convert from the IEnuerable<string> that the cache give us
+		/// to the IEnumerable<object> that AutoComplete needs.
+		/// </summary>
+//        public class LexEntryEnumerableToObjectEnumerableWrapper : IEnumerable<object>
+//        {
+//            private readonly IEnumerable<LexEntry> _collection;
+//
+//            public LexEntryEnumerableToObjectEnumerableWrapper(IEnumerable<LexEntry> collection)
+//            {
+//                if (collection == null)
+//                {
+//                    throw new ArgumentNullException("collection");
+//                }
+//                _collection = collection;
+//            }
+//
+//            IEnumerator<object> IEnumerable<object>.GetEnumerator()
+//            {
+//                foreach (object s in _collection)
+//                {
+//                    yield return s;
+//                }
+//            }
+//
+//            public IEnumerator GetEnumerator()
+//            {
+//                return ((IEnumerable<object>)this).GetEnumerator();
+//            }
+//
+//        }
+
+		private Control MakeRelationWidget(WeSayDataObject target, LexRelationType type, Field field)
+		{
+			return RelationController.CreateWidget(target, type, field, _allRecords, _detailList.OnBinding_ChangeOfWhichItemIsInFocus);
+		}
+
+
+
+//        void OnSelectedItemChanged(object sender, EventArgs e)
+//        {
+//            WeSayAutoCompleteTextBox box = sender as WeSayAutoCompleteTextBox;
+//            LexRelation relation = (LexRelation)box.Tag;
+//            Palaso.Reporting.Logger.WriteMinorEvent("Changing value of LexRelation Control ({0})", relation.TypeId);
+//
+//            if (box.SelectedItem == null)
+//            {
+//                relation.TargetId = string.Empty;
+//            }
+//            else
+//            {
+//                relation.Target = box.SelectedItem;
+//            }
+//        }
+
+
 
 		protected Control MakeOptionWidget(WeSayDataObject target, Field field)
 		{

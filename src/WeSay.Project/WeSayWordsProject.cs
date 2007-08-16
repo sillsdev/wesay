@@ -28,6 +28,7 @@ namespace WeSay.Project
 		private LiftUpdateService _liftUpdateService;
 		public event EventHandler HackedEditorsSaveNow;
 		private AddinSet _addins;
+		private IList<LexRelationType> _relationTypes;
 
 		public WeSayWordsProject()
 		{
@@ -669,6 +670,19 @@ namespace WeSay.Project
 			get
 			{
 				return _addins;
+			}
+		}
+
+		public IList<LexRelationType> RelationTypes
+		{
+			get
+			{
+				if (_relationTypes == null)
+				{
+					_relationTypes = new List<LexRelationType>();
+					_relationTypes.Add(new LexRelationType("RelationToOneEntry", LexRelationType.Multiplicities.One, LexRelationType.TargetTypes.Entry));
+				}
+				return _relationTypes;
 			}
 		}
 

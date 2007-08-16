@@ -12,17 +12,19 @@ using WeSay.Language;
 namespace WeSay.UI
 {
 	public partial class ReferenceCollectionEditor<CONTAINER> : UserControl
-		where CONTAINER : IReferenceContainer
+		where CONTAINER :  class, IReferenceContainer
 	{
+
 		private IList<CONTAINER> _collection;
 		private IList<string> _writingSystemIds;
 		private WeSay.Foundation.IDisplayStringAdaptor _displayStringAdaptor;
 		private IEnumerable<object> _choices;
+		private WeSayAutoCompleteTextBox.FormToObectFinderDelegate _formToObectFinderDelegate;
 
 		public event EventHandler CollectionChanged;
 
 
-		public event EventHandler<AutoCompleteWithCreationBox.CreateNewArgs> CreateNewTargetItem;
+		public event EventHandler<AutoCompleteWithCreationBox<CONTAINER>.CreateNewArgs> CreateNewTargetItem;
 
 		public ReferenceCollectionEditor()
 		{
@@ -92,7 +94,19 @@ namespace WeSay.UI
 			}
 		}
 
-		private void LexRelationControl_Load(object sender, EventArgs e)
+		public WeSayAutoCompleteTextBox.FormToObectFinderDelegate FormToObectFinder
+		{
+			get
+			{
+				return _formToObectFinderDelegate;
+			}
+			set
+			{
+				_formToObectFinderDelegate = value;
+			}
+		}
+
+		private void OnLoad(object sender, EventArgs e)
 		{
 			if(DesignMode)
 				return;
@@ -101,7 +115,12 @@ namespace WeSay.UI
 			WritingSystem ws = new WeSay.Language.WritingSystem();
 			foreach (CONTAINER referenceContainer in _collection)
 			{
-				AutoCompleteWithCreationBox picker = new AutoCompleteWithCreationBox();
+				AutoCompleteWithCreationBox<CONTAINER> picker = new AutoCompleteWithCreationBox<CONTAINER>();
+				if(_formToObectFinderDelegate !=null)
+				{
+					picker.Box.FormToObectFinder = _formToObectFinderDelegate;
+				}
+
 				picker.Box.SelectedItemChanged += new EventHandler(OnSelectedItemChanged);
 
 				picker.Box.ItemDisplayStringAdaptor = _displayStringAdaptor;
@@ -114,12 +133,12 @@ namespace WeSay.UI
 				picker.Box.MinimumSize = new Size(20, 10);
 			   // box.BorderStyle = System.Windows.Forms.BorderStyle.None;
 				picker.Box.SelectedItem = referenceContainer.Target; //todo: change this
-				picker.CreateNewClicked +=new EventHandler<AutoCompleteWithCreationBox.CreateNewArgs>(picker_CreateNewClicked);
+				picker.CreateNewClicked += new EventHandler<AutoCompleteWithCreationBox<CONTAINER>.CreateNewArgs>(picker_CreateNewClicked);
 				_flowPanel.Controls.Add(picker);
 			}
 		}
 
-		void picker_CreateNewClicked(object sender, AutoCompleteWithCreationBox.CreateNewArgs e)
+		void picker_CreateNewClicked(object sender, AutoCompleteWithCreationBox<CONTAINER>.CreateNewArgs e)
 		{
 			if (this.CreateNewTargetItem!=null)
 			{
@@ -145,8 +164,6 @@ namespace WeSay.UI
 			}
 			else
 			{
-				//LexEntry entry = (LexEntry) box.SelectedItem;
-				//relation.TargetId = entry.Id;
 				relation.Target = box.SelectedItem;
 			}
 

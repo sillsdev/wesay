@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
@@ -144,6 +146,7 @@ namespace WeSay.LexicalTools
 			return false;
 		}
 
+
 		public void SetListWritingSystem(WritingSystem writingSystem) {
 			if(writingSystem == null)
 			{
@@ -162,12 +165,13 @@ namespace WeSay.LexicalTools
 
 			this._recordsListBox.DataSource = this._records;
 
-			Control_EntryDetailPanel.DataSource = CurrentRecord;
-
+			 Control_EntryDetailPanel.AllRecords = _records;
+		   Control_EntryDetailPanel.DataSource = CurrentRecord;
 			this._recordsListBox.WritingSystem = this._listWritingSystem;
 
 			this._findText.ItemFilterer = ApproximateMatcher.FindClosestAndNextClosestAndPrefixedForms;
-			this._findText.Items = (CachedSortedDb4oList<string, LexEntry>)this._records;
+//            this._findText.Items = (CachedSortedDb4oList<string, LexEntry>)this._records;
+			this._findText.Items = new WeSay.Foundation.StringToObjectEnumerableWrapper((CachedSortedDb4oList<string, LexEntry>)this._records);
 			int originalHeight = this._findText.Height;
 			this._findText.WritingSystem = this._listWritingSystem;
 

@@ -107,6 +107,35 @@ namespace WeSay.LexicalModel
 		{
 			base.SomethingWasModified(propertyModified);
 			ModificationTime = DateTime.UtcNow;
+			GetOrCreateId(false);
+		}
+
+		public string GetOrCreateId(bool doCreateEvenIfNoLexemeForm)
+		{
+			if (String.IsNullOrEmpty(_id))
+			{
+				//review: I think we could rapidly search the db for exact id matches,
+				//so we could come up with a smaller id... but this has the nice
+				//property of being somewhat readable and unique even across merges
+				if (!String.IsNullOrEmpty(this._lexicalForm.GetFirstAlternative()))
+				{
+					_id = this._lexicalForm.GetFirstAlternative().Trim().Normalize(NormalizationForm.FormD)+"_"+this.Guid;
+				}
+				else if (doCreateEvenIfNoLexemeForm)
+				{
+					_id = "Id'dPrematurely_"+this.Guid;
+				}
+			}
+
+			return _id;
+		}
+
+		/// <summary>
+		/// Something of a transitional hack... while we're introducing non-optional human readable ids
+		/// </summary>
+		public void EnsureHasId()
+		{
+			GetOrCreateId(true);
 		}
 
 		public MultiText LexicalForm
@@ -192,14 +221,15 @@ namespace WeSay.LexicalModel
 
 		/// <summary>
 		/// This use for keeping track of the item when importing an then exporting again,
-		/// like for merging. The user doesn't edit this, and if it is null that's fine,
-		/// the exporter will make up a reasonable one.
+		/// like for merging. Also used for relations (e.g. superentry). we purposefully
+		/// delay making one of these (if we aren't contructed with one) in order to give
+		/// time to get a LexemeForm to make the id more readable.
 		/// </summary>
 		public string Id
 		{
 			get
 			{
-				return _id;
+				return GetOrCreateId(false);
 			}
 		}
 
@@ -254,6 +284,19 @@ namespace WeSay.LexicalModel
 			return newSense;
 		}
 
+		public string GetToolTipText()
+		{
+			string s = "";
+			foreach (LexSense sense in Senses)
+			{
+				s += sense.Gloss.GetFirstAlternative() + ", ";
+			}
+			if (s == "")
+			{
+				return StringCatalog.Get("~No Senses");
+			}
+			return s.Substring(0, s.Length - 2);// chop off the trailing separator
+		}
 	}
 
 	/// <summary>

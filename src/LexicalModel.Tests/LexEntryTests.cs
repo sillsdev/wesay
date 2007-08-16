@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using NUnit.Framework;
 using WeSay.Language;
 
@@ -204,6 +205,7 @@ namespace WeSay.LexicalModel.Tests
 			LexSense sense = _entry.GetOrCreateSenseWithGloss(gloss);
 			Assert.AreSame(_sense, sense);
 		}
+
 
 	}
 }

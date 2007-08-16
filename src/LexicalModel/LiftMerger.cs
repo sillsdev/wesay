@@ -230,6 +230,7 @@ namespace WeSay.LexicalModel
 		{
 			if(String.IsNullOrEmpty(trait.Name))
 			{
+				//"log skipping..."
 				return;
 			}
 			if (ExpectedOptionTraits.Contains(trait.Name))
@@ -247,6 +248,19 @@ namespace WeSay.LexicalModel
 			//{
 			//    //"log skipping..."
 			//}
+		}
+
+		public void MergeInRelation(WeSayDataObject extensible, string relationFieldId, string targetId)
+		{
+			if (String.IsNullOrEmpty(relationFieldId))
+			{
+				return; //"log skipping..."
+			}
+
+			//the "field name" of a relation equals the name of the relation type
+			LexRelationCollection collection=  extensible.GetOrCreateProperty<LexRelationCollection>(relationFieldId);
+			LexRelation relation = new LexRelation(relationFieldId, targetId, extensible);
+			collection.Relations.Add(relation);
 		}
 
 		public IList<string> ExpectedOptionTraits

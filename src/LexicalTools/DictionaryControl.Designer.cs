@@ -42,6 +42,7 @@ namespace WeSay.LexicalTools
 		private void InitializeComponent()
 		{
 			this.components = new System.ComponentModel.Container();
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DictionaryControl));
 			this.panelWordList = new System.Windows.Forms.Panel();
 			this._btnFind = new System.Windows.Forms.Button();
 			this._findText = new WeSay.UI.WeSayAutoCompleteTextBox();
@@ -78,9 +79,9 @@ namespace WeSay.LexicalTools
 			//
 			this._btnFind.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this._btnFind.BackColor = this._findText.BackColor;
-			this._btnFind.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
 			this._btnFind.FlatAppearance.BorderSize = 0;
 			this._btnFind.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Orange;
+			this._btnFind.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
 			this._btnFind.Location = new System.Drawing.Point(105, 3);
 			this._btnFind.Name = "_btnFind";
 			this._btnFind.Size = new System.Drawing.Size(20, 20);
@@ -104,17 +105,19 @@ namespace WeSay.LexicalTools
 			this._findText.PopupSelectionBackColor = System.Drawing.SystemColors.Highlight;
 			this._findText.PopupSelectionForeColor = System.Drawing.SystemColors.HighlightText;
 			this._findText.PopupWidth = 118;
+			this._findText.SelectedItem = null;
 			this._findText.Size = new System.Drawing.Size(80, 19);
 			this._findText.TabIndex = 1;
+			this._findText.TooltipToDisplayStringAdaptor = null;
 			this._findText.AutoCompleteChoiceSelected += new System.EventHandler(this._findText_AutoCompleteChoiceSelected);
 			//
 			// _writingSystemChooser
 			//
 			this._writingSystemChooser.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this._writingSystemChooser.BackColor = this._findText.BackColor;
-			this._writingSystemChooser.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
 			this._writingSystemChooser.FlatAppearance.BorderSize = 0;
 			this._writingSystemChooser.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Orange;
+			this._writingSystemChooser.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
 			this._writingSystemChooser.Location = new System.Drawing.Point(124, 3);
 			this._writingSystemChooser.Name = "_writingSystemChooser";
 			this._writingSystemChooser.Size = new System.Drawing.Size(15, 19);
@@ -159,9 +162,9 @@ namespace WeSay.LexicalTools
 			//
 			this._btnDeleteWord.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this._btnDeleteWord.AutoSize = true;
-			this._btnDeleteWord.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
 			this._btnDeleteWord.FlatAppearance.BorderSize = 0;
 			this._btnDeleteWord.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Orange;
+			this._btnDeleteWord.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
 			this._btnDeleteWord.ImageAlign = System.Drawing.ContentAlignment.TopLeft;
 			this._btnDeleteWord.Location = new System.Drawing.Point(148, 2);
 			this._btnDeleteWord.Margin = new System.Windows.Forms.Padding(0);
@@ -177,9 +180,9 @@ namespace WeSay.LexicalTools
 			//
 			this._btnNewWord.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this._btnNewWord.AutoSize = true;
-			this._btnNewWord.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
 			this._btnNewWord.FlatAppearance.BorderSize = 0;
 			this._btnNewWord.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Orange;
+			this._btnNewWord.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
 			this._btnNewWord.ImageAlign = System.Drawing.ContentAlignment.TopLeft;
 			this._btnNewWord.Location = new System.Drawing.Point(0, 2);
 			this._btnNewWord.Margin = new System.Windows.Forms.Padding(0);

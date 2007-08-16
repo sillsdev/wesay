@@ -13,8 +13,9 @@ namespace WeSay.LexicalTools
 	/// </summary>
 	public class LexEntryLayouter : Layouter
 	{
-		public LexEntryLayouter(DetailList builder, ViewTemplate viewTemplate)
-			: base(builder, viewTemplate)
+
+		public LexEntryLayouter(DetailList builder, ViewTemplate viewTemplate, IBindingList allRecords)
+			: base(builder, viewTemplate, allRecords)
 		{
 		}
 
@@ -42,7 +43,7 @@ namespace WeSay.LexicalTools
 			}
 			rowCount += AddCustomFields(entry, insertAtRow+rowCount);
 
-			LexSenseLayouter layouter = new LexSenseLayouter(DetailList, ActiveViewTemplate);
+			LexSenseLayouter layouter = new LexSenseLayouter(DetailList, ActiveViewTemplate, _allRecords);
 			rowCount = AddChildrenWidgets(layouter, entry.Senses, insertAtRow, rowCount);
 			//add a ghost
 			rowCount += layouter.AddGhost(entry.Senses, true);

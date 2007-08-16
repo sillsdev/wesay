@@ -171,6 +171,18 @@ namespace WeSay.LexicalModel.Tests
 			Assert.AreEqual("dos", ex.Sentence["ws-two"]);
 		}
 
+
+		[Test]
+		public void SenseGetsRelation()
+		{
+			LexSense sense = new LexSense();
+			_merger.MergeInRelation(sense, "synonym", "foo");
+			LexRelationCollection synonyms= sense.GetProperty<LexRelationCollection>("synonym");
+			LexRelation relation = synonyms.Relations[0];
+			Assert.AreEqual("synonym", relation.FieldId);
+			Assert.AreEqual("foo", relation.TargetId);
+		}
+
 		[Test]
 		public void ExampleSourcePreserved()
 		{

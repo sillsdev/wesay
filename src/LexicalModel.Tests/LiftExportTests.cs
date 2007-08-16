@@ -518,6 +518,7 @@ namespace WeSay.LexicalTools.Tests
 		}
 
 
+	   /* this is not relevant, as we are currently using form_guid as the id
 		[Test]
 		public void DuplicateFormsGetHomographNumbers()
 		{
@@ -531,6 +532,7 @@ namespace WeSay.LexicalTools.Tests
 		  Assert.IsTrue(_stringBuilder.ToString().Contains("ocean_2"), "ocean_2 not contained in {0}", _stringBuilder.ToString());
 		  Assert.IsTrue(_stringBuilder.ToString().Contains("ocean_3"), "ocean_3 not contained in {0}", _stringBuilder.ToString());
 		}
+		*/
 
 		[Test]
 		public void GetHumanReadableId_EntryHasId_GivesId()
@@ -539,6 +541,7 @@ namespace WeSay.LexicalTools.Tests
 			Assert.AreEqual("my id", LiftExporter.GetHumanReadableId(entry, new Dictionary<string, int>()));
 		}
 
+	   /* this tests a particular implementation detail (idCounts), which isn't used anymore:
 		[Test]
 		public void GetHumanReadableId_EntryHasId_RegistersId()
 		{
@@ -547,8 +550,10 @@ namespace WeSay.LexicalTools.Tests
 			LiftExporter.GetHumanReadableId(entry, idCounts);
 			Assert.AreEqual(1, idCounts["my id"]);
 		}
+		*/
 
-		[Test]
+			  /* this is not relevant, as we are currently using form_guid as the id
+[Test]
 		public void GetHumanReadableId_EntryHasAlreadyUsedId_GivesIncrementedId()
 		{
 			LexEntry entry = new LexEntry("my id", Guid.NewGuid());
@@ -556,8 +561,9 @@ namespace WeSay.LexicalTools.Tests
 			LiftExporter.GetHumanReadableId(entry, idCounts);
 			Assert.AreEqual("my id_2", LiftExporter.GetHumanReadableId(entry, idCounts));
 		}
-
-		[Test]
+*/
+		/* this is not relevant, as we are currently using form_guid as the id
+	  [Test]
 		public void GetHumanReadableId_EntryHasAlreadyUsedId_IncrementsIdCount()
 		{
 			LexEntry entry = new LexEntry("my id", Guid.NewGuid());
@@ -566,15 +572,18 @@ namespace WeSay.LexicalTools.Tests
 			LiftExporter.GetHumanReadableId(entry, idCounts);
 			Assert.AreEqual(2, idCounts["my id"]);
 		}
+*/
 
-
-		[Test]
+		/* this is not relevant, as we are currently using form_guid as the id
+	  [Test]
 		public void GetHumanReadableId_EntryHasNoIdAndNoLexicalForms_GivesDefaultId()
 		{
 			LexEntry entry = new LexEntry();
 			Assert.AreEqual("NoForm", LiftExporter.GetHumanReadableId(entry, new Dictionary<string, int>()));
 		}
+		*/
 
+/*      this is not currently relevant, as we are now using form_guid as the id
 		[Test]
 		public void GetHumanReadableId_EntryHasNoIdAndNoLexicalFormsButAlreadyUsedId_GivesIncrementedDefaultId()
 		{
@@ -583,7 +592,9 @@ namespace WeSay.LexicalTools.Tests
 			LiftExporter.GetHumanReadableId(entry, idCounts);
 			Assert.AreEqual("NoForm_2", LiftExporter.GetHumanReadableId(entry, idCounts));
 		}
+*/
 
+		/*      this is not currently relevant, as we are now using form_guid as the id
 		[Test]
 		public void GetHumanReadableId_EntryHasNoId_GivesIdMadeFromFirstLexicalForm()
 		{
@@ -593,6 +604,9 @@ namespace WeSay.LexicalTools.Tests
 
 			Assert.AreEqual("grass", LiftExporter.GetHumanReadableId(entry, new Dictionary<string, int>()));
 		}
+		*/
+
+		/*/*      this is not currently relevant, as we are now using form_guid as the id
 
 		[Test]
 		public void GetHumanReadableId_EntryHasNoId_RegistersIdMadeFromFirstLexicalForm()
@@ -604,8 +618,9 @@ namespace WeSay.LexicalTools.Tests
 			LiftExporter.GetHumanReadableId(entry, idCounts);
 			Assert.AreEqual(1, idCounts["grass"]);
 		}
-
-		[Test]
+*/
+  /*      this is not currently relevant, as we are now using form_guid as the id
+	  [Test]
 		public void GetHumanReadableId_EntryHasNoIdAndIsSameAsAlreadyEncountered_GivesIncrementedId()
 		{
 			LexEntry entry = new LexEntry();
@@ -615,6 +630,8 @@ namespace WeSay.LexicalTools.Tests
 			LiftExporter.GetHumanReadableId(entry, idCounts);
 			Assert.AreEqual("grass_2", LiftExporter.GetHumanReadableId(entry, idCounts));
 		}
+*/
+		/*      this is not currently relevant, as we are now using form_guid as the id
 
 		[Test]
 		public void GetHumanReadableId_EntryHasNoIdAndIsSameAsAlreadyEncountered_IncrementsIdCount()
@@ -627,20 +644,21 @@ namespace WeSay.LexicalTools.Tests
 			LiftExporter.GetHumanReadableId(entry, idCounts);
 			Assert.AreEqual(2, idCounts["grass"]);
 		}
-
-		[Test]
+*/
+  /*      this is not currently relevant, as we are now using form_guid as the id
+	  [Test]
 		public void GetHumanReadableId_IdsDifferByWhiteSpaceTypeOnly_WhitespaceTreatedAsSpaces()
 		{
 			LexEntry entry = new LexEntry();
 			entry.LexicalForm["green"] = "string\t1\n2\r3 4";
 			Assert.AreEqual("string 1 2 3 4", LiftExporter.GetHumanReadableId(entry, new Dictionary<string, int>()));
 		}
-
+*/
 		[Test]
 		public void GetHumanReadableId_IdIsSpace_NoForm()
 		{
 			LexEntry entry = new LexEntry(" ",Guid.NewGuid());
-			Assert.AreEqual("NoForm", LiftExporter.GetHumanReadableId(entry, new Dictionary<string, int>()));
+			Assert.IsTrue(LiftExporter.GetHumanReadableId(entry, new Dictionary<string, int>()).StartsWith("Id'dPrematurely_"));
 		}
 
 		[Test]
@@ -648,7 +666,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			LexEntry entry = new LexEntry(" ", Guid.NewGuid());
 			entry.LexicalForm["green"] = "string";
-			Assert.AreEqual("string", LiftExporter.GetHumanReadableId(entry, new Dictionary<string, int>()));
+			Assert.IsTrue(LiftExporter.GetHumanReadableId(entry, new Dictionary<string, int>()).StartsWith("string"));
 		}
 
 		[Test]
@@ -934,6 +952,25 @@ namespace WeSay.LexicalTools.Tests
 		}
 
 
+		[Test]
+		public void SenseWithSynonymRelations()
+		{
+			LexSense sense = new LexSense();
+
+			LexRelationType synonymRelationType = new LexRelationType("synonym", LexRelationType.Multiplicities.Many, LexRelationType.TargetTypes.Sense);
+
+			LexRelationType antonymRelationType = new LexRelationType("antonym", LexRelationType.Multiplicities.Many, LexRelationType.TargetTypes.Sense);
+
+			LexRelationCollection relations = new LexRelationCollection();
+			sense.Properties.Add(new KeyValuePair<string, object>("relations", relations));
+
+			relations.Relations.Add(new LexRelation(synonymRelationType.ID, "one", sense));
+			relations.Relations.Add(new LexRelation(synonymRelationType.ID, "two", sense));
+			relations.Relations.Add(new LexRelation(antonymRelationType.ID, "bee", sense));
+
+			_exporter.Add(sense);
+			CheckAnswer("<sense><relation name=\"synonym\" ref=\"one\" /><relation name=\"synonym\" ref=\"two\" /><relation name=\"antonym\" ref=\"bee\" /></sense>");
+		}
 
 		private void CheckAnswer(string answer)
 		{

@@ -32,12 +32,11 @@ namespace RelationControlTestApp
 			this._referenceCollectionControl.Choices = null;
 			this._referenceCollectionControl.Location = _placeholder.Location;
 			this._referenceCollectionControl.Name = "_referenceCollectionControl";
-			this._referenceCollectionControl.Collection = null;
 			this._referenceCollectionControl.Size = _placeholder.Size;
 			this._referenceCollectionControl.TabIndex = 0;
 
 			_referenceCollectionControl.CreateNewTargetItem += new EventHandler<WeSay.UI.AutoCompleteWithCreationBox.CreateNewArgs>(OnCreateNewTargetItem);
-
+			_referenceCollectionControl.FormToObectFinder = FindObjectFromForm;
 			_referenceCollectionControl.Collection = new List<PretendReference>();
 			_referenceCollectionControl.DisplayStringAdaptor = new TestLabelAdaptor();
 			AddReference(AddTargetObject("IDone", "one"));
@@ -50,6 +49,19 @@ namespace RelationControlTestApp
 			_referenceCollectionControl.CollectionChanged += new EventHandler(lexRelationControl1_CollectionChanged);
 			LoadListViews();
 		}
+
+		public object FindObjectFromForm(string form)
+		{
+			foreach (PretendTarget item in _potentialTargets)
+			{
+				if (item._label == form)
+				{
+					return item;
+				}
+			}
+			return null;
+		}
+
 		private PretendTarget AddTargetObject(string id, string label)
 		{
 			//LexRelation one = new LexRelation("baseEntry", id);

@@ -32,7 +32,7 @@ namespace WeSay.UI
 		{
 			if (GoingAway != null)
 			{
-				GoingAway.Invoke(this, null);
+				GoingAway.Invoke(this, null);//shake any bindings to us loose
 			}
 			GoingAway = null;
 			base.OnHandleDestroyed(e);

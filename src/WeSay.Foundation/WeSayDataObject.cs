@@ -16,6 +16,16 @@ namespace WeSay.Foundation
 		}
 	}
 
+	public interface IReferenceContainer
+	{
+		object Target
+		{
+			get;
+			set;
+		}
+
+	}
+
 	public abstract class WeSayDataObject : INotifyPropertyChanged
 	{
 		public class WellKnownProperties
@@ -157,7 +167,12 @@ namespace WeSay.Foundation
 
 			for (int i = count - 1; i >= 0; i--)
 			{
-				if (IsPropertyEmpty(Properties[i].Value))
+				object property = Properties[i].Value;
+				if (property is IEmptinessCleanup)
+				{
+					((IEmptinessCleanup) property).RemoveEmptyStuff();
+				}
+				if (IsPropertyEmpty(property))
 				{
 					Properties.RemoveAt(i);
 				}
@@ -178,8 +193,13 @@ namespace WeSay.Foundation
 			{
 				return ((OptionRefCollection)property).IsEmpty;
 			}
-			Debug.Fail("Unknown property type");
-			return true;
+//  todo we can make an IAmEmpty later for this
+			else if (property is  IEmptinessCleanup)
+			{
+				return ((IEmptinessCleanup) property).IsEmpty;
+			}
+//            Debug.Fail("Unknown property type");
+			return false;//don't throw it away if you don't know what it is
 		}
 
 		public bool HasProperties
@@ -250,6 +270,16 @@ namespace WeSay.Foundation
 			}
 			return null;
 		}
+	}
+
+	public interface IEmptinessCleanup
+	{
+		bool IsEmpty
+		{
+			get;
+		}
+
+		void RemoveEmptyStuff();
 	}
 
 	/// <summary>

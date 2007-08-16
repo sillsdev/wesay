@@ -162,8 +162,8 @@ namespace WeSay.LexicalModel
 		/// <returns>A base id composed with its count</returns>
 		static public string GetHumanReadableId(LexEntry entry, Dictionary<string, int> idsAndCounts)
 		{
-			string id = entry.Id;
-			if (id == null || id.Length == 0)       // if the entry doesn't claim to have an id
+			string id = entry.GetOrCreateId(true);
+   /*         if (id == null || id.Length == 0)       // if the entry doesn't claim to have an id
 			{
 				id = entry.LexicalForm.GetFirstAlternative().Trim().Normalize(NormalizationForm.FormD); // use the first form as an id
 				if (id == "")
@@ -185,7 +185,7 @@ namespace WeSay.LexicalModel
 			{
 				idsAndCounts.Add(id, 1);
 			}
-
+			*/
 			return id;
 		}
 
@@ -276,9 +276,26 @@ namespace WeSay.LexicalModel
 					WriteOptionRefCollection(pair.Key, pair.Value as OptionRefCollection);
 					continue;
 				}
+				if (pair.Value is LexRelationCollection)
+				{
+					WriteRelationCollection(pair.Key, pair.Value as LexRelationCollection);
+					continue;
+				}
+
 				throw new ApplicationException(
 					string.Format("The LIFT exporter was surprised to find a property '{0}' of type: {1}", pair.Key,
 								  pair.Value.GetType()));
+			}
+		}
+
+		private void WriteRelationCollection(string key, LexRelationCollection collection)
+		{
+			foreach (LexRelation relation in collection.Relations)
+			{
+				_writer.WriteStartElement("relation");
+				_writer.WriteAttributeString("name", relation.FieldId);
+				_writer.WriteAttributeString("ref", relation.TargetId);
+				_writer.WriteEndElement();
 			}
 		}
 

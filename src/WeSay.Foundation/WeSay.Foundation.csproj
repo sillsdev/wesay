@@ -58,6 +58,7 @@
 	<Compile Include="CommonEnumerations.cs" />
 	<Compile Include="ConsoleProgressState.cs" />
 	<Compile Include="BackgroundWorkerState.cs" />
+	<Compile Include="IDisplayStringAdaptor.cs" />
 	<Compile Include="IBindableControl.cs" />
 	<Compile Include="ILongRunningJob.cs" />
 	<Compile Include="LameProgressDialog.cs">

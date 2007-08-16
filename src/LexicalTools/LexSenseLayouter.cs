@@ -13,8 +13,8 @@ namespace WeSay.LexicalTools
 	/// </summary>
 	public class LexSenseLayouter : Layouter
 	{
-		public LexSenseLayouter(DetailList builder, ViewTemplate viewTemplate)
-			: base(builder, viewTemplate)
+		public LexSenseLayouter(DetailList builder, ViewTemplate viewTemplate, IBindingList allRecords)
+			: base(builder, viewTemplate, allRecords)
 		{
 		}
 

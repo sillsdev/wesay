@@ -29,7 +29,7 @@ namespace WeSay.LexicalTools.Tests
 			AddEntry("distane");
 			AddEntry("destance");
 			AddEntry("distence");
-			IList closest = (IList) ApproximateMatcher.FindClosestForms("distance", _forms);
+			IList closest = (IList) ApproximateMatcher.FindClosestForms("distance", _forms, ApproximateMatcher.ToStringAdaptor);
 		   Assert.AreEqual(1, closest.Count);
 			Assert.Contains("distance", closest);
 		}

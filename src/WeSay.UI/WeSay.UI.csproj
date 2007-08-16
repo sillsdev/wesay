@@ -59,6 +59,12 @@
 	</Compile>
 	<Compile Include="AutoCompleteTextBox\AutoCompleteTrigger.cs" />
 	<Compile Include="AutoCompleteTextBox\AutoCompleteTriggerCollection.cs" />
+	<Compile Include="AutoCompleteTextBox\AutoCompleteWithCreationBox.cs">
+	  <SubType>UserControl</SubType>
+	</Compile>
+	<Compile Include="AutoCompleteTextBox\AutoCompleteWithCreationBox.Designer.cs">
+	  <DependentUpon>AutoCompleteWithCreationBox.cs</DependentUpon>
+	</Compile>
 	<Compile Include="AutoCompleteTextBox\ShortCutTrigger.cs" />
 	<Compile Include="AutoCompleteTextBox\TextLengthTrigger.cs" />
 	<Compile Include="AutoCompleteTextBox\TriggerState.cs" />
@@ -100,6 +106,12 @@
 	</Compile>
 	<Compile Include="ProgressDialogHandler.cs" />
 	<Compile Include="ProgressDialogProgressState.cs" />
+	<Compile Include="ReferenceCollectionEditor.cs">
+	  <SubType>UserControl</SubType>
+	</Compile>
+	<Compile Include="ReferenceCollectionEditor.Designer.cs">
+	  <DependentUpon>ReferenceCollectionEditor.cs</DependentUpon>
+	</Compile>
 	<Compile Include="VBox.cs">
 	  <SubType>Component</SubType>
 	</Compile>
@@ -176,12 +188,20 @@
 	  <DependentUpon>ArrowButton.cs</DependentUpon>
 	  <SubType>Designer</SubType>
 	</EmbeddedResource>
+	<EmbeddedResource Include="AutoCompleteTextBox\AutoCompleteWithCreationBox.resx">
+	  <DependentUpon>AutoCompleteWithCreationBox.cs</DependentUpon>
+	  <SubType>Designer</SubType>
+	</EmbeddedResource>
 	<EmbeddedResource Include="ControlListBox.resx">
 	  <DependentUpon>ControlListBox.cs</DependentUpon>
 	  <SubType>Designer</SubType>
 	</EmbeddedResource>
 	<EmbeddedResource Include="ProgressDialog.resx">
 	  <DependentUpon>ProgressDialog.cs</DependentUpon>
+	  <SubType>Designer</SubType>
+	</EmbeddedResource>
+	<EmbeddedResource Include="ReferenceCollectionEditor.resx">
+	  <DependentUpon>ReferenceCollectionEditor.cs</DependentUpon>
 	  <SubType>Designer</SubType>
 	</EmbeddedResource>
 	<EmbeddedResource Include="VBox.resx">

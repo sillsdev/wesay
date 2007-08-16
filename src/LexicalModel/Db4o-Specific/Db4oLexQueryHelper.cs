@@ -62,6 +62,24 @@ namespace WeSay.LexicalModel.Db4o_Specific
 			return (T)matches[0];
 		 }
 
+		public static LexEntry FindFirstEntryMatchingId(Db4oDataSource db, string id)
+		{
+			Db4objects.Db4o.Query.IQuery q = db.Data.Query();
+			q.Constrain(typeof(LexEntry));
+			q.Descend("_id").Constrain(id);
+			IObjectSet matches = q.Execute();
+			if (matches.Count == 0)
+			{
+				return null;
+			}
+			if (matches.Count > 1)//review: not sure if we should throw or not
+			{
+				throw new ApplicationException(String.Format("There were {0} objects found with the id {1}", matches.Count, id));
+			}
+			System.Diagnostics.Debug.Assert(matches[0].GetType() == typeof(LexEntry));
+			return (LexEntry)matches[0];
+		}
+
 		static private List<AncestorType> FindAncestorsOfLanguageForms<AncestorType, MultiTextType>(IObjectSet matches)
 			where AncestorType : class
 			where MultiTextType : MultiText

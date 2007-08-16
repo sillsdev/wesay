@@ -48,7 +48,7 @@ namespace WeSay.UI
 			this.Controls.Add(this._flowPanel);
 			this.Name = "LexRelationControl";
 			this.Size = new System.Drawing.Size(309, 66);
-			this.Load += new System.EventHandler(this.LexRelationControl_Load);
+			this.Load += new System.EventHandler(this.OnLoad);
 			this.ResumeLayout(false);
 
 		}

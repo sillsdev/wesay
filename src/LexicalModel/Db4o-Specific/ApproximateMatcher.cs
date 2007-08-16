@@ -1,44 +1,90 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
+using WeSay.Data;
+using WeSay.Foundation;
 
 namespace WeSay.LexicalModel.Db4o_Specific
 {
 	public class ApproximateMatcher
 	{
-		static public IList<string> FindClosestForms(string key, IEnumerable<string> forms)
+		private static IDisplayStringAdaptor s_ToStringAdaptor = new ToStringAutoCompleteAdaptor();
+
+		private class ToStringAutoCompleteAdaptor : IDisplayStringAdaptor
 		{
-			return FindClosestForms(key, false, false, forms);
+			public string GetDisplayLabel(object item)
+			{
+				return item.ToString();
+			}
 		}
 
-		static public IList<string> FindClosestAndPrefixedForms(string key, IEnumerable<string> forms)
+		public static IDisplayStringAdaptor ToStringAdaptor
 		{
-			return FindClosestForms(key, false, true, forms);
+			get
+			{
+				return s_ToStringAdaptor;
+			}
+			set
+			{
+				s_ToStringAdaptor = value;
+			}
 		}
 
-		static public IList<string> FindClosestAndNextClosestForms(string key, IEnumerable<string> forms)
+		static public IList<object> FindClosestForms(string key, IEnumerable items, IDisplayStringAdaptor adaptor)
 		{
-			return FindClosestForms(key, true, false, forms);
+		 //   StringToObjectEnumerableWrapper wrapper = new StringToObjectEnumerableWrapper(forms);
+			return FindClosestForms(key, false, false, items, adaptor);
 		}
 
-		static public IList<string> FindClosestAndNextClosestAndPrefixedForms(string key, IEnumerable<string> forms)
+		static public IList<object> FindClosestForms(string key, IEnumerable items)
 		{
-			return FindClosestForms(key, true, true, forms);
+			//StringToObjectEnumerableWrapper wrapper = new StringToObjectEnumerableWrapper(forms);
+			return FindClosestForms(key, false, false, items, ToStringAdaptor);
 		}
 
+		static public IList<object> FindClosestAndPrefixedForms(string key, IEnumerable<string> forms)
+		{
+			StringToObjectEnumerableWrapper wrapper = new StringToObjectEnumerableWrapper(forms);
+			return FindClosestForms(key, false, true, wrapper, ToStringAdaptor);
+		}
 
-		static private IList<string> FindClosestForms(string notNormalizedkey, bool includeNextClosest, bool includeApproximatePrefixedForms, IEnumerable<string> forms)
+		static public IList<object> FindClosestAndNextClosestForms(string key, IEnumerable<string> forms)
+		{
+			StringToObjectEnumerableWrapper wrapper = new StringToObjectEnumerableWrapper(forms);
+			return FindClosestForms(key, true, false, wrapper, ToStringAdaptor);
+		}
+
+		static public IList<object> FindClosestAndNextClosestAndPrefixedForms(string key, IEnumerable<string> forms)
+		{
+			StringToObjectEnumerableWrapper wrapper = new StringToObjectEnumerableWrapper(forms);
+			return FindClosestForms(key, true, true, wrapper, ToStringAdaptor);
+		}
+
+		static public IList<object> FindClosestAndNextClosestAndPrefixedForms(string key, IEnumerable items, IDisplayStringAdaptor adaptor)
+		{
+			return FindClosestForms(key, true, true, items, ToStringAdaptor);
+		}
+
+		static private IList<object> FindClosestForms(string notNormalizedkey, bool includeNextClosest, bool includeApproximatePrefixedForms, IEnumerable items, IDisplayStringAdaptor adaptor)
 		{
 			string key = notNormalizedkey.Normalize(NormalizationForm.FormD);
-			List<string> bestMatches = new List<string>();
-			List<string> secondBestMatches = new List<string>();
+			List<object> bestMatches = new List<object>();
+			List<object> secondBestMatches = new List<object>();
 
 			int bestEditDistance = int.MaxValue;
 			int secondBestEditDistance = int.MaxValue;
 
-			foreach (string originalForm in forms)
+			IEnumerable objects = items;
+			CachedSortedDb4oList<string, LexEntry> list = items as CachedSortedDb4oList<string, LexEntry>;
+			if (list != null)
 			{
+				objects = list.MasterRecordList;
+			}
+			foreach (object item in objects)
+			{
+				string originalForm = adaptor.GetDisplayLabel(item);
 				string form = originalForm.Normalize(NormalizationForm.FormD);
 				if (!string.IsNullOrEmpty(form))
 				{
@@ -65,11 +111,11 @@ namespace WeSay.LexicalModel.Db4o_Specific
 					}
 					if (editDistance == bestEditDistance)
 					{
-						bestMatches.Add(originalForm);
+						bestMatches.Add(item);
 					}
 					else if (includeNextClosest && editDistance == secondBestEditDistance)
 					{
-						secondBestMatches.Add(originalForm);
+						secondBestMatches.Add(item);
 					}
 					Debug.Assert(bestEditDistance != secondBestEditDistance);
 				}

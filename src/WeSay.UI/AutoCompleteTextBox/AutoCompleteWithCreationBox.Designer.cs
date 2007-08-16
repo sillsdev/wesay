@@ -1,24 +1,12 @@
 namespace WeSay.UI
 {
-	partial class AutoCompleteWithCreationBox
+	partial class AutoCompleteWithCreationBox<T>
 	{
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
 		private System.ComponentModel.IContainer components = null;
 
-		/// <summary>
-		/// Clean up any resources being used.
-		/// </summary>
-		/// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-		protected override void Dispose(bool disposing)
-		{
-			if (disposing && (components != null))
-			{
-				components.Dispose();
-			}
-			base.Dispose(disposing);
-		}
 
 		#region Component Designer generated code
 
@@ -36,7 +24,6 @@ namespace WeSay.UI
 			//
 			// _textBox
 			//
-			this._textBox.BackColor = System.Drawing.Color.LightGreen;
 			this._textBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
 			this._textBox.Location = new System.Drawing.Point(1, 1);
 			this._textBox.Multiline = true;

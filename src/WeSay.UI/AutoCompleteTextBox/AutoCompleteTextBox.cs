@@ -1,11 +1,14 @@
 // Derived from code by Peter Femiani available on CodeProject http://www.codeproject.com/csharp/AutoCompleteTextBox.asp
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
+using WeSay.Foundation;
+
 
 namespace WeSay.UI
 {
@@ -15,6 +18,10 @@ namespace WeSay.UI
 	[Serializable]
 	public class WeSayAutoCompleteTextBox : WeSayTextBox
 	{
+		public delegate object FormToObectFinderDelegate(string form);
+		private FormToObectFinderDelegate _formToObectFinderDelegate;
+
+		public event EventHandler SelectedItemChanged;
 
 		#region EntryMode
 
@@ -28,13 +35,29 @@ namespace WeSay.UI
 
 		#region Members
 
-		private ListBox _list;
+		private IDisplayStringAdaptor _labelToDisplayStringAdaptor= new ToStringAutoCompleteAdaptor();
+		private IDisplayStringAdaptor _tooltipToDisplayStringAdaptor = null;
+		private ListBox _listBox;
 		//private Form _popup;
 		private Control _popupParent;
 
 		#endregion
 
 		#region Properties
+
+		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+		[Browsable(false)]
+		public FormToObectFinderDelegate FormToObectFinder
+		{
+			get
+			{
+				return _formToObectFinderDelegate;
+			}
+			set
+			{
+				_formToObectFinderDelegate = value;
+			}
+		}
 
 		private EntryMode mode = EntryMode.Text;
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
@@ -51,18 +74,18 @@ namespace WeSay.UI
 			}
 		}
 
-		private IEnumerable<string> items = new Collection<string>();
+		private IEnumerable _items = new Collection<object>();
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
 		[Browsable(false)]
-		public IEnumerable<string> Items
+		public IEnumerable Items
 		{
 			get
 			{
-				return this.items;
+				return this._items;
 			}
 			set
 			{
-				this.items = value;
+				this._items = value;
 				if(Mode == EntryMode.List)
 				{
 					UpdateList();
@@ -92,19 +115,19 @@ namespace WeSay.UI
 		{
 			get
 			{
-				return this._list.Width;
+				return this._listBox.Width;
 			}
 			set
 			{
 				if (value == -1)
 				{
 					_autoSizePopup = true;
-					this._list.Width = Width;
+					this._listBox.Width = Width;
 				}
 				else
 				{
 					_autoSizePopup = false;
-					this._list.Width = value;
+					this._listBox.Width = value;
 				}
 			}
 		}
@@ -113,11 +136,11 @@ namespace WeSay.UI
 		{
 			get
 			{
-				return this._list.BorderStyle;
+				return this._listBox.BorderStyle;
 			}
 			set
 			{
-				this._list.BorderStyle = value;
+				this._listBox.BorderStyle = value;
 			}
 		}
 
@@ -174,8 +197,13 @@ namespace WeSay.UI
 			}
 		}
 
-		public delegate IEnumerable<string> ItemFilterDelegate(string text, IEnumerable<string> items);
+		//nb: if we used an interface (e.g. IFilter) rather than a delegate, then the adaptor part wouldn't have to be
+		// part of the interface, where it doesn't really fit. It would instead be added to the constructor of the filterer,
+		// if appropriate.
+		public delegate IEnumerable ItemFilterDelegate(string text, IEnumerable items, IDisplayStringAdaptor adaptor);
 		private ItemFilterDelegate _itemFilterDelegate;
+		private object _selectedItem;
+		private ToolTip _toolTip;
 
 		[Browsable(false)]
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
@@ -210,10 +238,83 @@ namespace WeSay.UI
 			}
 		}
 
+		[Browsable(false)]
+		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+		public IDisplayStringAdaptor ItemDisplayStringAdaptor
+		{
+			get
+			{
+				return _labelToDisplayStringAdaptor;
+			}
+			set
+			{
+				_labelToDisplayStringAdaptor = value;
+			}
+		}
+
+		public object SelectedItem
+		{
+			get
+			{
+				return _selectedItem;
+			}
+
+
+			set
+			{
+				if(_selectedItem == value)
+					return;
+
+				_selectedItem = value;
+				if (value != null)
+				{
+					 Text = _labelToDisplayStringAdaptor.GetDisplayLabel(value);
+			   }
+
+				if (SelectedItemChanged != null)
+				{
+					SelectedItemChanged.Invoke(this, null);
+				}
+				UpdateDisplay();
+			}
+		}
+
+		private void UpdateDisplay()
+		{
+//            if (_selectedItem == null && !string.IsNullOrEmpty(Text))
+//	        {
+//	            BackColor = Color.SeaShell;
+//	        }
+//	        else
+//	        {
+//	            BackColor = Color.White;
+//	        }
+//	        ForeColor = Color.Black;
+		}
+
+		/// <summary>
+		/// Set this in order to show tooltips for items
+		/// </summary>
+		public IDisplayStringAdaptor TooltipToDisplayStringAdaptor
+		{
+			get
+			{
+				return _tooltipToDisplayStringAdaptor;
+			}
+			set
+			{
+				_tooltipToDisplayStringAdaptor = value;
+			}
+		}
+
 		#endregion
 
 		public WeSayAutoCompleteTextBox()
 		{
+			if (DesignMode)
+				return;
+
+			_formToObectFinderDelegate = DefaultFormToObjectFinder;
 			_itemFilterDelegate = FilterList;
 
 			// Create the form that will hold the list
@@ -224,18 +325,22 @@ namespace WeSay.UI
 			//this._popup.TopMost = true;
 			Leave += new EventHandler(Popup_Deactivate);
 
+			_toolTip = new ToolTip();
+			this.MouseHover += new EventHandler(OnMouseHover);
+
 			// Create the list box that will hold matching items
-			this._list = new ListBox();
-			this._list.Cursor = Cursors.Hand;
-			this._list.BorderStyle = BorderStyle.FixedSingle;
-			this._list.SelectedIndexChanged += new EventHandler(List_SelectedIndexChanged);
-			this._list.MouseClick += new MouseEventHandler(List_MouseClick);
+			this._listBox = new ListBox();
+			this._listBox.Cursor = Cursors.Hand;
+			this._listBox.BorderStyle = BorderStyle.FixedSingle;
+			this._listBox.SelectedIndexChanged += new EventHandler(List_SelectedIndexChanged);
+			this._listBox.MouseClick += new MouseEventHandler(List_MouseClick);
+			_listBox.MouseMove += new MouseEventHandler(List_MouseMove);
 			//this._list.DrawMode = DrawMode.OwnerDrawFixed;
 			//this._list.DrawItem += new DrawItemEventHandler(List_DrawItem);
-			this._list.ItemHeight = Height;
+			this._listBox.ItemHeight = Height;
 			//this._list.Dock = DockStyle.Fill;
-			this._list.Visible = false;
-			this._list.Sorted = false;
+			this._listBox.Visible = false;
+			this._listBox.Sorted = false;
 
 			// Add the list box to the popup form
 
@@ -247,16 +352,45 @@ namespace WeSay.UI
 			this.triggers.Add(new ShortCutTrigger(Keys.Escape, TriggerState.HideAndConsume));
 		}
 
+		void OnMouseHover(object sender, EventArgs e)
+		{
+			if (_tooltipToDisplayStringAdaptor == null || SelectedItem == null)
+				return;
+
+			string tip = _tooltipToDisplayStringAdaptor.GetDisplayLabel(SelectedItem);
+			_toolTip.SetToolTip(this, tip);
+		}
+
+		private void List_MouseMove ( object sender, MouseEventArgs e )
+		{
+			if(_tooltipToDisplayStringAdaptor==null)
+				return;
+
+			string tip = "";
+
+			//Get the item
+			int nIdx = _listBox.IndexFromPoint(e.Location);
+			if ((nIdx >= 0) && (nIdx < _listBox.Items.Count))
+			{
+				ItemWrapper wrapper = (ItemWrapper)_listBox.Items[nIdx];
+				tip = _tooltipToDisplayStringAdaptor.GetDisplayLabel(wrapper.Item);
+			}
+
+			_toolTip.SetToolTip(_listBox, tip);
+		}
+
 		protected override void OnSizeChanged(EventArgs e)
 		{
 			base.OnSizeChanged(e);
-			if (_list != null)
+			if (_listBox != null)
 			{
-				this._list.ItemHeight = Height;
+				//NB: this height can be multiple lines, so we don't just want the Height
+				//this._listBox.ItemHeight = Height;
+				this._listBox.ItemHeight = Font.Height;
 			}
-			if(_list !=null && _autoSizePopup)
+			if(_listBox !=null && _autoSizePopup)
 			{
-				this._list.Width = Width;
+				this._listBox.Width = Width;
 			}
 		}
 		protected override void OnParentChanged(EventArgs e)
@@ -317,7 +451,7 @@ namespace WeSay.UI
 					} break;
 					case TriggerState.SelectAndConsume:
 					{
-						if (this._list.Visible)
+						if (this._listBox.Visible)
 						{
 							val = true;
 							SelectCurrentItemAndHideList();
@@ -325,7 +459,7 @@ namespace WeSay.UI
 					} break;
 					case TriggerState.Select:
 					{
-						if (this._list.Visible)
+						if (this._listBox.Visible)
 						{
 							SelectCurrentItemAndHideList();
 						}
@@ -345,26 +479,26 @@ namespace WeSay.UI
 				case Keys.Up:
 				{
 					Mode = EntryMode.List;
-					if (this._list.Visible == false)
+					if (this._listBox.Visible == false)
 					{
 						ShowList();
 					}
-					if (this._list.SelectedIndex > 0)
+					if (this._listBox.SelectedIndex > 0)
 					{
-						this._list.SelectedIndex--;
+						this._listBox.SelectedIndex--;
 					}
 					return true;
 				}
 				case Keys.Down:
 				{
 					Mode = EntryMode.List;
-					if (this._list.Visible == false)
+					if (this._listBox.Visible == false)
 					{
 						ShowList();
 					}
-					if (this._list.SelectedIndex < this._list.Items.Count - 1)
+					if (this._listBox.SelectedIndex < this._listBox.Items.Count - 1)
 					{
-						this._list.SelectedIndex++;
+						this._listBox.SelectedIndex++;
 					}
 					return true;
 				}
@@ -396,14 +530,35 @@ namespace WeSay.UI
 						UpdateList();
 					} break;
 				}
+
+				SelectedItem = _formToObectFinderDelegate(Text);
 			}
+			UpdateDisplay();
+		}
+
+
+
+		/// <summary>
+		/// can be replaced by something smarter, using the FormToObectFinderDelegate
+		/// </summary>
+		/// <param name="form"></param>
+		private object DefaultFormToObjectFinder(string form)
+		{
+			foreach (object item in _items)
+			{
+				if (_labelToDisplayStringAdaptor.GetDisplayLabel(item) == form)
+				{
+					return item;
+				}
+			}
+			return null;
 		}
 
 		protected override void OnLostFocus(EventArgs e)
 		{
 			base.OnLostFocus (e);
 
-			if (!(Focused || this._list.Focused))
+			if (!(Focused || this._listBox.Focused))
 			{
 				HideList();
 			}
@@ -411,12 +566,13 @@ namespace WeSay.UI
 
 		protected virtual void SelectCurrentItem()
 		{
-			if (this._list.SelectedIndex == -1)
+			if (this._listBox.SelectedIndex == -1)
 			{
 				return;
 			}
 
-			Text = this._list.SelectedItem.ToString();
+			Text = this._listBox.SelectedItem.ToString();
+			SelectedItem = ((ItemWrapper) _listBox.SelectedItem).Item;
 			if (Text.Length > 0)
 			{
 				SelectionStart = Text.Length;
@@ -425,7 +581,7 @@ namespace WeSay.UI
 
 		protected void SelectCurrentItemAndHideList()
 		{
-			if (this._list.SelectedIndex != -1)
+			if (this._listBox.SelectedIndex != -1)
 			{
 				SelectCurrentItem();
 			}
@@ -434,7 +590,7 @@ namespace WeSay.UI
 
 		protected virtual void ShowList()
 		{
-			if (this._list.Visible == false)
+			if (this._listBox.Visible == false)
 			{
 				//this._list.SelectedIndex = -1;
 				UpdateList();
@@ -448,18 +604,18 @@ namespace WeSay.UI
 				p.Y += offset.Y;
 				p.X += PopupOffset.X;
 				p.Y += Height + PopupOffset.Y;
-				this._list.Location = p;
-				if (this._list.Items.Count > 0)
+				this._listBox.Location = p;
+				if (this._listBox.Items.Count > 0)
 				{
 					//this._popup.Show();
-					if (!form.Controls.Contains(this._list))
+					if (!form.Controls.Contains(this._listBox))
 					{
-						form.Controls.Add(this._list);
+						form.Controls.Add(this._listBox);
 					}
 
-					this._list.BringToFront();
-					this._list.Visible = true;
-					this._list.Location = p;
+					this._listBox.BringToFront();
+					this._listBox.Visible = true;
+					this._listBox.Location = p;
 					//Focus();
 				}
 			}
@@ -472,17 +628,47 @@ namespace WeSay.UI
 		protected virtual void HideList()
 		{
 			Mode = EntryMode.Text;
-			this._list.Visible = false;
+			this._listBox.Visible = false;
+		}
+
+		class ItemWrapper
+		{
+			private object _item;
+			private string _label;
+
+			public ItemWrapper(object item, string label)
+			{
+				Item = item;
+				_label = label;
+			}
+
+			public object Item
+			{
+				get
+				{
+					return _item;
+				}
+				set
+				{
+					_item = value;
+				}
+			}
+
+			public override string ToString()
+			{
+				return _label;
+			}
 		}
 
 		protected virtual void UpdateList()
 		{
 			//object selectedItem = this.list.SelectedItem;
 
-			this._list.Items.Clear();
-			foreach (string item in ItemFilterer.Invoke(Text, Items))
+			this._listBox.Items.Clear();
+			foreach (object item in ItemFilterer.Invoke(Text, Items, ItemDisplayStringAdaptor))
 			{
-				this._list.Items.Add(item);
+				this._listBox.Items.Add(new ItemWrapper(item, ItemDisplayStringAdaptor.GetDisplayLabel(item)));
+				//                this._listBox.Items.Add(ItemDisplayStringAdaptor.GetDisplayLabel(item));
 			}
 
 			//if (selectedItem != null &&
@@ -496,36 +682,36 @@ namespace WeSay.UI
 
 			//this._list.SelectedIndex = -1;
 
-			if (this._list.Items.Count == 0)
+			if (this._listBox.Items.Count == 0)
 			{
 				HideList();
 			}
 			else
 			{
-				int visItems = this._list.Items.Count;
+				int visItems = this._listBox.Items.Count;
 				if (visItems > 8)
 					visItems = 8;
 
-				this._list.ItemHeight = Height;
+				this._listBox.ItemHeight = Height;
 
-				this._list.Height = (visItems * this._list.ItemHeight) + 2;
+				this._listBox.Height = (visItems * this._listBox.ItemHeight) + 2;
 				switch (BorderStyle)
 				{
 					case BorderStyle.FixedSingle:
 					{
-						this._list.Height += 2;
+						this._listBox.Height += 2;
 						break;
 					}
 					case BorderStyle.Fixed3D:
 					{
-						this._list.Height += 4;
+						this._listBox.Height += 4;
 						break;
 					}
 				}
 
-				this._list.Width = PopupWidth;
-				this._list.RightToLeft = RightToLeft;
-				this._list.Font = Font;
+				this._listBox.Width = PopupWidth;
+				this._listBox.RightToLeft = RightToLeft;
+				this._listBox.Font = Font;
 
 				//if (this.list.Items.Count > 0 &&
 				//    this.list.SelectedIndex == -1)
@@ -539,12 +725,14 @@ namespace WeSay.UI
 			}
 		}
 
-		private static IEnumerable<string> FilterList(string text, IEnumerable<string> items)
+		private IEnumerable FilterList(string text, IEnumerable items, IDisplayStringAdaptor adaptor)
 		{
-			ICollection<string> newList = new Collection<string>();
-			foreach (string item in items)
+			ICollection<object> newList = new Collection<object>();
+
+			foreach (object item in items)
 			{
-				if (item.ToLower().StartsWith(text.ToLower()))
+				string label = adaptor.GetDisplayLabel(item);
+				if (label.ToLower().StartsWith(text.ToLower()))
 				{
 					newList.Add(item);
 					break;
@@ -552,6 +740,8 @@ namespace WeSay.UI
 			}
 			return newList;
 		}
+
+
 
 		private void List_SelectedIndexChanged(object sender, EventArgs e)
 		{
@@ -569,11 +759,11 @@ namespace WeSay.UI
 
 		private void List_MouseClick(object sender, MouseEventArgs e)
 		{
-			for (int i=0; i<this._list.Items.Count; i++)
+			for (int i=0; i<this._listBox.Items.Count; i++)
 			{
-				if (this._list.GetItemRectangle(i).Contains(e.X, e.Y))
+				if (this._listBox.GetItemRectangle(i).Contains(e.X, e.Y))
 				{
-					this._list.SelectedIndex = i;
+					this._listBox.SelectedIndex = i;
 					SelectCurrentItemAndHideList();
 					AutoCompleteChoiceSelected.Invoke(this, new EventArgs());
 					return;
@@ -618,7 +808,7 @@ namespace WeSay.UI
 
 		private void Popup_Deactivate(object sender, EventArgs e)
 		{
-			if (!(Focused || this._list.Focused))
+			if (!(Focused || this._listBox.Focused))
 			{
 				HideList();
 			}

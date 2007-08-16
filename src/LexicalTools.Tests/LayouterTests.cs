@@ -25,7 +25,7 @@ namespace WeSay.LexicalTools.Tests
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void Create_NullBuilder_Throws()
 		{
-			new LexEntryLayouter(null, new ViewTemplate());
+			new LexEntryLayouter(null, new ViewTemplate(), null);
 
 		}
 
@@ -33,7 +33,7 @@ namespace WeSay.LexicalTools.Tests
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void Create_NullviewTemplate_Throws()
 		{
-			new LexEntryLayouter(new DetailList(), null);
+			new LexEntryLayouter(new DetailList(), null, null);
 		}
 
 		[Test]
@@ -67,7 +67,7 @@ namespace WeSay.LexicalTools.Tests
 			LexEntry entry = GetNewEntry();
 
 			DetailList dl = new DetailList();
-			LexEntryLayouter layout = new LexEntryLayouter(dl, new ViewTemplate());
+			LexEntryLayouter layout = new LexEntryLayouter(dl, new ViewTemplate(), null);
 			_rowCount = layout.AddWidgets(entry);
 			Assert.AreEqual(0, _rowCount);
 		}
@@ -96,7 +96,7 @@ namespace WeSay.LexicalTools.Tests
 			LexEntry entry = GetNewEntry();
 
 			DetailList dl = new DetailList();
-			LexEntryLayouter layout = new LexEntryLayouter(dl, viewTemplate);
+			LexEntryLayouter layout = new LexEntryLayouter(dl, viewTemplate, null);
 			_rowCount = layout.AddWidgets(entry);
 			return dl;
 		}

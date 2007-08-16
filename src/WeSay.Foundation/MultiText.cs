@@ -266,6 +266,17 @@ namespace WeSay.Language
 			return string.Empty;
 		}
 
+		public string GetBestAlternative(IEnumerable<string> orderedListOfWritingSystemIds)
+		{
+			foreach (string id in orderedListOfWritingSystemIds)
+			{
+			   LanguageForm alt = Find(id);
+				if (null != alt)
+					return alt.Form;
+			}
+			return string.Empty;
+		}
+
 		public bool Empty
 		{
 			get { return Count == 0; }
