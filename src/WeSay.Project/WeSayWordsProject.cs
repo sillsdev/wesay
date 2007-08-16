@@ -265,7 +265,7 @@ namespace WeSay.Project
 			if (_viewTemplates == null)
 			{
 				List<ViewTemplate> viewTemplates = new List<ViewTemplate>();
-				ViewTemplate fullUpToDateTemplate = ViewTemplate.MakeMasterTemplate(WritingSystems);
+				ViewTemplate factoryTemplate = ViewTemplate.MakeMasterTemplate(WritingSystems);
 
 				try
 				{
@@ -276,14 +276,14 @@ namespace WeSay.Project
 						foreach (XPathNavigator node in nodes)
 						//while(nodes.MoveNext())
 						{
-						   ViewTemplate template = new ViewTemplate();
-							template.LoadFromString(node.OuterXml);
-							ViewTemplate.SynchronizeInventories(fullUpToDateTemplate, template);
-							if (template.Id == "Default View Template")
+						   ViewTemplate userTemplate = new ViewTemplate();
+							userTemplate.LoadFromString(node.OuterXml);
+							ViewTemplate.UpdateUserViewTemplate(factoryTemplate, userTemplate);
+							if (userTemplate.Id == "Default View Template")
 							{
-								_defaultViewTemplate = template;
+								_defaultViewTemplate = userTemplate;
 							}
-							viewTemplates.Add(template);
+							viewTemplates.Add(userTemplate);
 						}
 					}
 				}
@@ -295,7 +295,7 @@ namespace WeSay.Project
 				}
 				if(_defaultViewTemplate == null)
 				{
-					_defaultViewTemplate = fullUpToDateTemplate;
+					_defaultViewTemplate = factoryTemplate;
 				}
 				_viewTemplates = viewTemplates;
 

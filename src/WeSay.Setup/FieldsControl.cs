@@ -131,7 +131,8 @@ namespace WeSay.Setup
 		}
 		private void LoadAboutFieldBox()
 		{
-			_descriptionBox.Text = String.Format("{0} ({1}).  {2}", CurrentField.DisplayName, CurrentField.FieldName, CurrentField.Description);
+			_descriptionBox.Text = CurrentField.Description;
+		//    _descriptionBox.Text = String.Format("{0} ({1}).  {2}", CurrentField.DisplayName, CurrentField.FieldName, CurrentField.Description);
 		}
 		private void _writingSystemListBox_ItemCheck(object sender, ItemCheckEventArgs e)
 		{

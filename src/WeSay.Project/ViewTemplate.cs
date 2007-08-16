@@ -122,18 +122,26 @@ namespace WeSay.Project
 		}
 
 		/// <summary>
-		/// used in the admin to make sure what we write out is based on the latest master inventory
+		/// Update the users' field inventory with new stuff.
 		/// </summary>
 		/// <remarks>
+		/// used in the admin to update the users template with new fields.
+		///
+		/// This was written before, and should not to be confused with,
+		///  MigrateConfigurationXmlIfNeeded(), which could
+		/// do most of this work. It's not obvious how that would get the guess
+		/// of which writing systems to assign in (but that's not a big deal).
+		///
 		/// The algorithm here is to fill the list with all of the fields from the master inventory.
 		/// If a field is also found in the users existing inventory, turn on the checkbox,
-		/// and set all of the writing systems to match what the user had before.
+		/// and change any settings (e.g. the writing systems) to match the users' inventory spec.
+		/// Then add any custom fields from the existing inventory.
 		/// </remarks>
-		/// <param name="masterTemplate"></param>
+		/// <param name="factoryTemplate"></param>
 		/// <param name="usersTemplate"></param>
-		public static void SynchronizeInventories(ViewTemplate masterTemplate, ViewTemplate usersTemplate)
+		public static void UpdateUserViewTemplate(ViewTemplate factoryTemplate, ViewTemplate usersTemplate)
 		{
-			if(masterTemplate == null)
+			if(factoryTemplate == null)
 			{
 				throw new ArgumentNullException();
 			}
@@ -141,23 +149,30 @@ namespace WeSay.Project
 			{
 				throw new ArgumentNullException();
 			}
-			foreach (Field masterField in masterTemplate)
+			foreach (Field masterField in factoryTemplate)
 			{
 				Field userField = usersTemplate.GetField(masterField.FieldName);
 				if (userField != null)
 				{
-					Field.ModifyMasterFromUser( masterField, userField);
+				 //why do that???   Field.ModifyMasterFromUser(masterField, userField);
+					//allow us to improve the descriptions
+					userField.Description = masterField.Description;
+				}
+				else
+				{
+					masterField.Visibility= CommonEnumerations.VisibilitySetting.Invisible;//let them turn it on if they want
+					usersTemplate.Fields.Add(masterField);
 				}
 			}
 			//add custom fields (or out of date fields <--todo!)
-			foreach (Field userField in usersTemplate)
-			{
-				Field masterField = masterTemplate.GetField(userField.FieldName);
-				if (masterField == null)
-				{
-					masterTemplate.Add(userField);
-				}
-			}
+//            foreach (Field userField in usersTemplate)
+//            {
+//                Field masterField = factoryTemplate.GetField(userField.FieldName);
+//                if (masterField == null)
+//                {
+//                    factoryTemplate.Add(userField);
+//                }
+//            }
 		}
 
 		public static ViewTemplate MakeMasterTemplate(WritingSystemCollection writingSystems)
@@ -172,11 +187,13 @@ namespace WeSay.Project
 
 			Field lexicalFormField = new Field(Field.FieldNames.EntryLexicalForm.ToString(), "LexEntry", defaultVernacularSet);
 			lexicalFormField.DisplayName = "Word";
+			lexicalFormField.Description = "The Lexeme Form of the entry.";
 			lexicalFormField.Visibility = CommonEnumerations.VisibilitySetting.Visible;
 			masterTemplate.Add(lexicalFormField);
 
 			Field glossField = new Field(Field.FieldNames.SenseGloss.ToString(), "LexSense", defaultAnalysisSet);
 			glossField.DisplayName = "Gloss";
+			glossField.Description = "Normally a single word. Shows up as the first field of the sense, across from the 'Meaning' label";
 			glossField.Visibility = CommonEnumerations.VisibilitySetting.Visible;
 			masterTemplate.Add(glossField);
 
@@ -193,7 +210,8 @@ namespace WeSay.Project
 			masterTemplate.Add(exampleField);
 
 			Field translationField = new Field(Field.FieldNames.ExampleTranslation.ToString(), "LexExampleSentence", defaultAnalysisSet);
-			translationField.DisplayName = "Translation";
+			translationField.DisplayName = "Example Translation";
+			translationField.Description = "The translation of the example sentence into another language.";
 			translationField.Visibility = CommonEnumerations.VisibilitySetting.Visible;
 			masterTemplate.Add(translationField);
 
@@ -203,6 +221,12 @@ namespace WeSay.Project
 			ddp4Field.DataTypeName = "OptionCollection";
 			ddp4Field.OptionsListFile = "Ddp4.xml";
 			masterTemplate.Add(ddp4Field);
+
+			Field superEntryField = new Field("BaseForm", "LexEntry", defaultVernacularSet);
+			superEntryField.DisplayName = "Base Form";
+			superEntryField.Description = "Provides a field for identifying the form from which an entry is derived.  You may use this in place of the MDF subentry.  In a future version WeSay may support directly listing derived forms from the base form.";
+			superEntryField.Visibility = CommonEnumerations.VisibilitySetting.Invisible;
+			masterTemplate.Add(superEntryField);
 
 			return masterTemplate;
 		}

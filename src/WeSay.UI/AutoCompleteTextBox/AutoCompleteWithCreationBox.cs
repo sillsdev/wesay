@@ -1,10 +1,6 @@
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
-using System.Data;
-using System.Text;
 using System.Windows.Forms;
 using WeSay.Foundation;
 
@@ -13,34 +9,6 @@ namespace WeSay.UI
 	public partial class AutoCompleteWithCreationBox<T> : UserControl, IBindableControl<T>
 		where T:class
 	{
-
-		public class CreateNewArgs : EventArgs
-		{
-			public string LabelOfNewItem;
-			private object _NewlyCreatedItem;
-			private bool _showRedSquiggle = false;
-
-			public CreateNewArgs(string labelOfNewItem)
-			{
-				LabelOfNewItem = labelOfNewItem;
-			}
-
-			/// <summary>
-			/// Receiver fills this in after creating something
-			/// </summary>
-			public object NewlyCreatedItem
-			{
-				get
-				{
-					return _NewlyCreatedItem;
-				}
-				set
-				{
-					_NewlyCreatedItem = value;
-				}
-			}
-		}
-
 		public event EventHandler<CreateNewArgs> CreateNewClicked;
 
 		public AutoCompleteWithCreationBox()
@@ -93,26 +61,13 @@ namespace WeSay.UI
 		{
 			get
 			{
+				//note, this combines two different problems:
+				//1) the user typed in a non-matching form and didn't hit the create button
+				//2) the relation exists, but the target cannot be found.
 				return Box.SelectedItem == null && !string.IsNullOrEmpty(Box.Text);
 			}
 		}
 
-
-//        /// <summary>
-//        /// Note: we don't actually have the ability to do squiggles yet (can't really override OnPaint),
-//        /// but this will do something
-//        /// </summary>
-//        public bool ShowRedSquiggle
-//        {
-//            get
-//            {
-//                return _showRedSquiggle;
-//            }
-//            set
-//            {
-//                _showRedSquiggle = value;
-//            }
-//        }
 
 		#region IBindableControl<T> Members
 
@@ -217,6 +172,37 @@ namespace WeSay.UI
 			CreateNewArgs creationArgs = new CreateNewArgs(_textBox.Text);
 			CreateNewClicked.Invoke(this, creationArgs);
 			_textBox.SelectedItem = creationArgs.NewlyCreatedItem;
+		}
+
+
+		/// <summary>
+		/// Use to make a new object from a simple form, and to notify the control of what
+		/// object was created.
+		/// </summary>
+		public class CreateNewArgs : EventArgs
+		{
+			public string LabelOfNewItem;
+			private object _newlyCreatedItem;
+
+			public CreateNewArgs(string labelOfNewItem)
+			{
+				LabelOfNewItem = labelOfNewItem;
+			}
+
+			/// <summary>
+			/// Receiver fills this in after creating something
+			/// </summary>
+			public object NewlyCreatedItem
+			{
+				get
+				{
+					return _newlyCreatedItem;
+				}
+				set
+				{
+					_newlyCreatedItem = value;
+				}
+			}
 		}
 	}
 }

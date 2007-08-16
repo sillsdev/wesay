@@ -96,21 +96,21 @@ namespace WeSay.Project.Tests
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void SynchronizeInventories_nullMasterTemplate_throws()
 		{
-			ViewTemplate.SynchronizeInventories(null, new ViewTemplate());
+			ViewTemplate.UpdateUserViewTemplate(null, new ViewTemplate());
 		}
 
 		[Test]
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void SynchronizeInventories_nullUserTemplate_throws()
 		{
-			ViewTemplate.SynchronizeInventories(new ViewTemplate(), null);
+			ViewTemplate.UpdateUserViewTemplate(new ViewTemplate(), null);
 		}
 
 		[Test]
 		public void SynchronizeInventories_empty_empty()
 		{
 			ViewTemplate v = new ViewTemplate();
-			ViewTemplate.SynchronizeInventories(v, new ViewTemplate());
+			ViewTemplate.UpdateUserViewTemplate(v, new ViewTemplate());
 			Assert.IsEmpty(v);
 		}
 
@@ -120,7 +120,7 @@ namespace WeSay.Project.Tests
 			ViewTemplate master = MakeMasterInventory();
 			int count = master.Count;
 			ViewTemplate empty = new ViewTemplate ();
-			ViewTemplate.SynchronizeInventories(master, empty);
+			ViewTemplate.UpdateUserViewTemplate(master, empty);
 
 			Assert.AreEqual(count, master.Count);
 		}
@@ -141,7 +141,7 @@ namespace WeSay.Project.Tests
 			int count = master.Count;
 			ViewTemplate simple = new ViewTemplate ();
 			simple.Add(new Field(Field.FieldNames.ExampleTranslation.ToString(), "LexExampleSentence", new String[] {"en"}));
-			ViewTemplate.SynchronizeInventories(master, simple);
+			ViewTemplate.UpdateUserViewTemplate(master, simple);
 
 			Assert.AreEqual(count, master.Count);
 			Assert.IsTrue(master.Contains(Field.FieldNames.ExampleTranslation.ToString()));
@@ -154,7 +154,7 @@ namespace WeSay.Project.Tests
 			int count = master.Count;
 			ViewTemplate simple = new ViewTemplate();
 			simple.Add(new Field("dummy", "LexEntry", new String[] { "en" }));
-			ViewTemplate.SynchronizeInventories(master, simple);
+			ViewTemplate.UpdateUserViewTemplate(master, simple);
 			Assert.IsTrue(master.Contains("dummy"));
 		}
 
