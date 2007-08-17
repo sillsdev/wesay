@@ -41,8 +41,14 @@
 		</xsl:apply-templates>
 	</xsl:template>
 
+  <xsl:template match="relation">
+	<xsl:text>&nl;\</xsl:text>
+	<xsl:value-of select="@name"/>
+	<xsl:text>   </xsl:text>
+	<xsl:value-of select="@ref"/>
+  </xsl:template>
 
-	<xsl:template match="trait">
+  <xsl:template match="trait">
 		<xsl:text>&nl;\</xsl:text><xsl:value-of select="@name"/>
 	  <xsl:text>   </xsl:text>
 		<xsl:value-of select="@value"/>

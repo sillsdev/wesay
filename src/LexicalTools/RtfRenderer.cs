@@ -160,7 +160,7 @@ namespace WeSay.LexicalTools
 				if (c > 128)
 				{
 				  outString.Append(@"\u");
-				  outString.Append(Convert.ToInt16(c).ToString());
+				  outString.Append(Convert.ToUInt16(c).ToString());
 				  outString.Append('?');
 				}
 				else
