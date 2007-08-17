@@ -152,10 +152,10 @@ namespace WeSay.Project.Tests
 		{
 			ViewTemplate master = MakeMasterInventory();
 			int count = master.Count;
-			ViewTemplate simple = new ViewTemplate();
-			simple.Add(new Field("dummy", "LexEntry", new String[] { "en" }));
-			ViewTemplate.UpdateUserViewTemplate(master, simple);
-			Assert.IsTrue(master.Contains("dummy"));
+			ViewTemplate usersTemplate = new ViewTemplate();
+			usersTemplate.Add(new Field("dummy", "LexEntry", new String[] { "en" }));
+			ViewTemplate.UpdateUserViewTemplate(master, usersTemplate);
+			Assert.IsTrue(usersTemplate.Contains("dummy"));
 		}
 
 	}
