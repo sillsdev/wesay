@@ -49,11 +49,8 @@ namespace WeSay.Setup
 			writer.WriteStartElement("tasks");
 			foreach (TaskInfo t in _taskList.Items)
 			{
-				if (_taskList.GetItemChecked(_taskList.Items.IndexOf(t)))
-				{
+					t.IsVisible = _taskList.GetItemChecked(_taskList.Items.IndexOf(t));
 					t.Node.WriteTo(writer);
-//                    writer.WriteRaw(t.Node.OuterXml);
-				}
 			}
 			writer.WriteEndElement();
 		}
@@ -63,34 +60,41 @@ namespace WeSay.Setup
 		{
 			try
 			{
-				XmlDocument defaultConfigDoc = new XmlDocument();
-				defaultConfigDoc.Load(WeSayWordsProject.Project.PathToDefaultConfig);
 				XmlDocument projectDoc = GetProjectDoc();
 
 				//if there are no tasks, might as well be no document, so clear it out
-				if (projectDoc != null && (null == projectDoc.SelectSingleNode("configuration/tasks/task")))
+//                if (projectDoc != null && (null == projectDoc.SelectSingleNode("configuration/tasks/task")))
+//                {
+//                    projectDoc = null;
+//                }
+
+				if (projectDoc == null)
 				{
-					projectDoc = null;
+					projectDoc.Load(WeSayWordsProject.Project.PathToDefaultConfig);
 				}
 
+				foreach (XmlNode node in projectDoc.SelectNodes("configuration/tasks/task"))
+				{
+					TaskInfo task = new TaskInfo(node);
+					bool showCheckMark = task.IsVisible || (!task.IsOptional);
+
+					this._taskList.Items.Add(task, showCheckMark);
+				}
+
+				//now go looking for newly introduced tasks in the default config that
+				//we can add to the list
+				XmlDocument defaultConfigDoc = new XmlDocument();
+				defaultConfigDoc.Load(WeSayWordsProject.Project.PathToDefaultConfig);
 				foreach (XmlNode node in defaultConfigDoc.SelectNodes("configuration/tasks/task"))
 				{
 					TaskInfo task = new TaskInfo(node);
-					bool showCheckMark;
-
-					if (projectDoc == null)
+					bool taskIsNotInProjectConfig = (null == projectDoc.SelectSingleNode("configuration/tasks/task[@id='" + task.Id + "']"));
+					if (taskIsNotInProjectConfig)
 					{
-						XmlAttribute isDefault = node.Attributes["default"];
-						showCheckMark = task.IsDefault;
+						this._taskList.Items.Add(task, false);
 					}
-					else
-					{
-						XmlNode foundMatchingTask;
-						foundMatchingTask = projectDoc.SelectSingleNode("configuration/tasks/task[@id='" + task.Id + "']");
-						showCheckMark = !task.IsOptional || foundMatchingTask != null;
-					}
-					this._taskList.Items.Add(task, showCheckMark);
 				}
+
 			}
 			catch (Exception error)
 			{
@@ -148,6 +152,7 @@ namespace WeSay.Setup
 	public class TaskInfo
 	{
 		private XmlNode _node;
+
 		public TaskInfo(XmlNode node)
 		{
 			_node  = node;
@@ -171,14 +176,14 @@ namespace WeSay.Setup
 		}
 
 
-		public bool IsDefault
-		{
-			get
-			{
-				bool b = GetOptionalAttributeString(_node, "default", "false") == "true";
-				return b || !IsOptional;
-			}
-		}
+//        public bool IsDefault
+//        {
+//            get
+//            {
+//                bool b = GetOptionalAttributeString(_node, "default", "false") == "true";
+//                return b || !IsOptional;
+//            }
+//        }
 
 		public bool IsOptional
 		{
@@ -195,6 +200,18 @@ namespace WeSay.Setup
 		public XmlNode Node
 		{
 			get { return this._node; }
+		}
+
+		public bool IsVisible
+		{
+			get
+			{
+				return GetOptionalAttributeString(_node, "visible", "true") == "true";
+			}
+			set
+			{
+				WeSay.Foundation.XmlUtils.AppendAttribute(_node, "visible", value ? "true" : "false");
+			}
 		}
 
 		public override string ToString()

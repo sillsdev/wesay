@@ -73,6 +73,15 @@ namespace WeSay.App
 				// E.g., the template says:     <id>Default View BLAH</id>
 				//  but the EntryDetailTask is lookinig for: <viewTemplate ref="Default View Template" />
 
+				string isVisible = task.GetAttribute("visible", string.Empty);//otherwise, it's an older config format, just show all tasks
+
+				if (!String.IsNullOrEmpty(isVisible))
+				{
+					if (isVisible == "false")
+					{
+						continue; // don't show it
+					}
+				}
 				ITask iTask;
 				string id = string.Empty;
 				try

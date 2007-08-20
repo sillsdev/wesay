@@ -260,7 +260,7 @@ namespace WeSay.Project
 //
 //        }
 
-		private IList<ViewTemplate> InitializeViewTemplatesFromProjectFiles()
+		private void InitializeViewTemplatesFromProjectFiles()
 		{
 			if (_viewTemplates == null)
 			{
@@ -274,7 +274,6 @@ namespace WeSay.Project
 					{
 						XPathNodeIterator nodes = projectDoc.CreateNavigator().Select("configuration/components/viewTemplate");
 						foreach (XPathNavigator node in nodes)
-						//while(nodes.MoveNext())
 						{
 						   ViewTemplate userTemplate = new ViewTemplate();
 							userTemplate.LoadFromString(node.OuterXml);
@@ -300,7 +299,6 @@ namespace WeSay.Project
 				_viewTemplates = viewTemplates;
 
 			}
-			return _viewTemplates;
 		}
 
 		public XPathNodeIterator GetAddinNodes()

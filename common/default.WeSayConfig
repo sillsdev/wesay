@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <configuration>
   <tasks>
-	<task id="Dashboard" class="WeSay.CommonTools.DashboardControl" assembly="CommonTools" default="true">
+	<task id="Dashboard" class="WeSay.CommonTools.DashboardControl" assembly="CommonTools" visible="true">
 	  <entries ref="All Entries" />
 	  <currentTaskProvider ref="Current Task Provider"/>
 	  <label UseInConstructor="false">Home</label>
@@ -9,14 +9,14 @@
 	  <optional  UseInConstructor="false">false</optional>
 	</task>
 
-	<task id="Dictionary" class="WeSay.LexicalTools.DictionaryTask" assembly="LexicalTools" default="true">
+	<task id="Dictionary" class="WeSay.LexicalTools.DictionaryTask" assembly="LexicalTools" visible="true">
 	  <entries ref="All Entries" />
 	  <viewTemplate ref="Default View Template"/>
 	  <label UseInConstructor="false">Dictionary</label>
 	  <description UseInConstructor="false">This task allows advanced users to see and edit all enabled fields of all entries in the dictionary.  He can add, delete, and search for entries.  NOTE: while this task may be very enticing to those familiar with traditional programs, this is *not* intended to be a primary way of working with WeSay.</description>
 	</task>
 
-	<task id="AddMeanings" class="WeSay.LexicalTools.MissingInfoTask" assembly="LexicalTools" default="false">
+	<task id="AddMeanings" class="WeSay.LexicalTools.MissingInfoTask" assembly="LexicalTools" visible="false">
 	  <entries ref="All Entries"/>
 	  <filter class="WeSay.LexicalTools.MissingItemFilter" assembly="LexicalTools">
 		<viewTemplate ref="Default View Template"/>
@@ -51,7 +51,7 @@
 	  <viewTemplate ref="Default View Template"/>
 	</task>
 
-	<task id="Gather Words By Domain" class="WeSay.LexicalTools.GatherBySemanticDomainTask" assembly="LexicalTools" default="true">
+	<task id="Gather Words By Domain" class="WeSay.LexicalTools.GatherBySemanticDomainTask" assembly="LexicalTools" visible="true">
 	  <entries ref="All Entries" />
 	  <label>Collect Words By Semantic Domain</label>
 	  <description>Collect new words organized by semantic domains and questions about those domains.</description>
@@ -60,7 +60,7 @@
 	  <semanticDomainFieldName>SemanticDomainDdp4</semanticDomainFieldName>
 	</task>
 
-	<task id="Actions" class="WeSay.CommonTools.ActionsControl" assembly="CommonTools" default="true">
+	<task id="Actions" class="WeSay.CommonTools.ActionsControl" assembly="CommonTools" visible="true">
 	  <label UseInConstructor="false">Actions</label>
 	  <description UseInConstructor="false">Perform actions on the project as a whole. For example backup, produce a report, print out a simple dictionary, etc.</description>
 	</task>
