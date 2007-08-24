@@ -146,7 +146,7 @@
 	  <description UseInConstructor="false">Perform actions on the project as a whole. For example backup, produce a report, print out a simple dictionary, etc.</description>
 	</task>
   </tasks>
-  <uiOptions uiLanguage="Chinese (simplified)" uiFont="SimSun" uiFontSize="12" />
+  <uiOptions uiFont="Microsoft Sans Serif" uiFontSize="8.25" />
   <addins>
 	<addin id="SFM Exporter" showInWeSay="True"><SfmTransformSettings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <SfmTagConversions>lx_bth lx

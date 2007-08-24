@@ -330,7 +330,6 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 	  <ComponentRef Id="Mono.Addins.exe"/>
 
 	  <ComponentRef Id="PalasoReporting.dll"/>
-	  <ComponentRef Id="PalasoReporting.pdb"/>
 
 	  <!-- i tried to FeatureRef these from their own files but it didn't work -->
 	  <ComponentRef Id="KJEnglish.po" />

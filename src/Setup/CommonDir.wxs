@@ -8,6 +8,17 @@
 		  <File Id="KJEnglish.po" Name="KJEnglish.po" KeyPath="yes" Source="..\..\common\KJEnglish.po" />
 		</Component>
 
+		<Component Id="Burmese.po" Guid="{0EA30DD8-9395-41e3-B5FF-C2CC54571111}">
+		  <File Id="Burmese.po" Name="Burmese.po" KeyPath="yes" Source="..\..\common\Burmese.po" />
+		</Component>
+
+		<Component Id="Thai.po" Guid="{0EA30DD8-9395-41e3-B5FF-C2CC54572222}">
+		  <File Id="Thai.po" Name="Thai.po" KeyPath="yes" Source="..\..\common\Thai.po" />
+		</Component>
+
+		<Component Id="canonizeLift.xsl" Guid="{0EA30DD8-9395-41e3-B5FF-C2CC54573333}">
+		  <File Id="canonizeLift.xsl" Name="canonizeLift.xsl" KeyPath="yes" Source="..\..\common\canonizeLift.xsl" />
+		</Component>
 
 		<Component Id="PartsOfSpeech.xml" Guid="{6B734BDE-1702-418D-93BC-40A7F310B14F}">
 		  <File Id="PartsOfSpeech.xml" Name="PartsOfSpeech.xml" KeyPath="yes" Source="..\..\common\PartsOfSpeech.xml" />
