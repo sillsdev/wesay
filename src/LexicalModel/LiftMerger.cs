@@ -305,6 +305,7 @@ namespace WeSay.LexicalModel
 
 		public void FinishEntry(LexEntry entry)
 		{
+			entry.GetOrCreateId(false);
 			if (!_entries.Contains(entry))
 			{
 				_entries.Add(entry);

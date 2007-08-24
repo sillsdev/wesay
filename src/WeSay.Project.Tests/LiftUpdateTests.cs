@@ -68,8 +68,8 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void WouldUpdateOnlyNewRecords()
 		{
-			_records.Add(new LexEntry());
-			_records.Add(new LexEntry());
+			_records.Add(MakeEntry());
+			_records.Add(MakeEntry());
 			_service.DoLiftUpdateNow(false);
 
 			_records.Add(new LexEntry());
@@ -80,6 +80,13 @@ namespace WeSay.Project.Tests
 			Assert.AreEqual(3, newGuys.Count);
 		}
 
+		private LexEntry MakeEntry()
+		{
+			LexEntry e= new LexEntry();
+		   // e.LexicalForm.SetAlternative("abc", id);
+			e.GetOrCreateId(true);
+			return e;
+		}
 
 
 		[Test]

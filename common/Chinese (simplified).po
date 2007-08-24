@@ -1,0 +1,224 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: 2007-08-22 16:33+0800\n"
+"Last-Translator: Greg Aumann <greg underscore aumann at sil dot org>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+# ; ..\src\CommonTools\DashboardControl.cs
+#. The label for the 'dashboard'; the task which lets you see the status of other tasks and jump to them.
+msgid "Home"
+msgstr "开始"
+
+msgid "This task is normally the first thing the user sees when WeSay comes up.  It gives the user some status of the project, and reminds him what he was working on. Finally, this tab will allow him to switch to a different work task, if you have enabled more than one."
+msgstr "用户看到WeSay打开时的第一个版面。它给用户一些信息，提醒用户已经做了什么。最后，这个制表位允许用户转到不同的任务，如果你需要实现更多的任务。"
+
+msgid "Dictionary"
+msgstr "词典"
+
+msgid "This task allows advanced users to see and edit all enabled fields of all entries in the dictionary.  He can add, delete, and search for entries.  NOTE: while this task may be very enticing to those familiar with traditional programs, this is *not* intended to be a primary way of working with WeSay."
+msgstr "这个任务让高级用户查看和编辑词典中所有的词条字段。他可以添加、删除、查找所有词条。注意：当熟悉传统软件的时候，这不是操作WeSay的首先方式。"
+
+msgid "Add Meanings"
+msgstr "增加意义"
+
+msgid "Add meanings to entries where they are missing."
+msgstr "为空词条添加意义"
+
+msgid "Add Examples"
+msgstr "增加例子"
+
+msgid "Add example sentences to entries where they are missing."
+msgstr "为空词条添加例句"
+
+msgid "Collect Word List"
+msgstr "收集词汇"
+
+msgid "Collect new words by translating from words in another language."
+msgstr "从另外一种语言的词汇收集新词。"
+
+msgid "Collect Words By Semantic Domain"
+msgstr "用语义分类收集词汇"
+
+msgid "Collect new words organized by semantic domains and questions about those domains."
+msgstr "从语义分类中的问题收集新词。"
+
+# ; ..\src\CommonTools\ActionsControl.cs
+msgid "Actions"
+msgstr "细节"
+
+msgid "Perform actions on the project as a whole. For example backup, produce a report, print out a simple dictionary, etc."
+msgstr "整个项目的细节。例如备份，建立报告，打印简单的词典等。"
+
+# ; ..\src\Addin.Backup\BackupDialog.cs
+msgid "Looking for USB Keys..."
+msgstr "找U盘..."
+
+# ; ..\src\Addin.Backup\BackupDialog.cs
+msgid "Backing Up..."
+msgstr "备份..."
+
+# ; ..\src\Addin.Backup\BackupDialog.cs
+msgid "Backup Complete"
+msgstr "备份完成..."
+
+# ; ..\src\Addin.Backup\BackupDialog.cs
+msgid "Files backed up to {0}"
+msgstr "文件备份到{0}"
+
+# ; ..\src\Addin.Backup\BackupDialog.cs
+msgid "Files were not backed up."
+msgstr "文件未备份。"
+
+# ; ..\src\Addin.Backup\BackupDialog.cs
+msgid "Please insert the USB Key to backup to."
+msgstr "插入U盘备份。"
+
+# ; ..\src\Addin.Backup\BackupDialog.Designer.cs
+msgid "&Cancel"
+msgstr "取消"
+
+# ; ..\src\Addin.Backup\BackupToDevice.cs
+#. Label for usb backup action
+msgid "Backup To Device"
+msgstr "备份到"
+
+# ; ..\src\Addin.Backup\BackupToDevice.cs
+#. description of usb backup action
+msgid "Saves a backup on an external device, like a USB key."
+msgstr "保存备份到外部的设备，例如U盘。"
+
+# ; ..\src\Addin.Backup\SendProjectEmail.cs
+msgid "Email My Work to {0}"
+msgstr "电子函件发至{0}"
+
+# ; ..\src\Addin.Backup\SendProjectEmail.cs
+msgid "Send a zipped email containing all your WeSay work."
+msgstr "发送压缩电子函件包括WeSay全部内容。"
+
+# ; ..\src\Addin.LiftReports\ReportMaker.cs
+msgid "View Report"
+msgstr "浏览报告"
+
+# ; ..\src\Addin.LiftReports\ReportMaker.cs
+msgid "Shows some information about the lexicon."
+msgstr "显示关于词汇的某些信息。"
+
+# ; ..\src\Addin.Transform\HtmlTransformer.cs
+msgid "Html Exporter"
+msgstr "导出Html格式文件"
+
+# ; ..\src\Addin.Transform\HtmlTransformer.cs
+msgid "Creates an Html version of the dictionary ready for printing."
+msgstr "建立现有词典的Html格式文件。"
+
+# ; ..\src\Addin.Transform\SfmTransformer.cs
+msgid "SFM Exporter"
+msgstr "导出标准格式文件"
+
+# ; ..\src\Addin.Transform\SfmTransformer.cs
+msgid "Saves the lexicon in a form of standard format."
+msgstr "保存词汇的标准格式文件。"
+
+# ; ..\src\CommonTools\ActionsControl.cs
+#. The description of the Actions task.
+msgid "Backup, create a progress report, etc."
+msgstr "备份，工作进展报告等。"
+
+# ; ..\src\CommonTools\DashboardControl.cs
+msgid "Tasks"
+msgstr "任务"
+
+# ; ..\src\CommonTools\DashboardControl.cs
+msgid "Switch tasks and see current status of tasks"
+msgstr "转换任务和查看当前任务情况。"
+
+# ; ..\src\CommonTools\DictionaryStatusControl.Designer.cs
+msgid "Your dictionary has {0} words"
+msgstr "你词典有{0}词条"
+
+# ; ..\src\LexicalTools\DictionaryControl.Designer.cs
+msgid "&Delete This Word"
+msgstr "删去此词"
+
+# ; ..\src\LexicalTools\DictionaryControl.Designer.cs
+msgid "&New Word"
+msgstr "添加词条"
+
+# ; ..\src\LexicalTools\DictionaryTask.cs
+#. The description of the 'Dictionary' task.  In place of the {0} will be the number of words in the dictionary.  In place of the {1} will be the name of the project.
+msgid "See all {0} {1} words."
+msgstr "看{1}全部词汇{0}"
+
+# ; ..\src\LexicalTools\GatherBySemanticDomainsControl.Designer.cs
+msgid "Word"
+msgstr "词条"
+
+# ; ..\src\LexicalTools\GatherBySemanticDomainsControl.Designer.cs
+# ; ..\src\LexicalTools\GatherWordListControl.Designer.cs
+# ; ..\src\LexicalTools\MissingInfoControl.Designer.cs
+msgid "(Page Down Key)"
+msgstr "（翻页）"
+
+# ; ..\src\LexicalTools\GatherBySemanticDomainsControl.Designer.cs
+# ; ..\src\LexicalTools\GatherWordListControl.Designer.cs
+msgid "(Enter Key)"
+msgstr "（回车键）"
+
+# ; ..\src\LexicalTools\GatherBySemanticDomainsControl.Designer.cs
+msgid "Try thinking of words you use to talk about these things."
+msgstr "试想你用来讨论关于这些东西的词。"
+
+# ; ..\src\LexicalTools\GatherWordListControl.Designer.cs
+msgid "Try thinking of ways to say these words in your language."
+msgstr "试想你的语言中用来讨论关于这些东西的词。"
+
+# ; ..\src\LexicalTools\GatherWordListControl.Designer.cs
+msgid "Word:"
+msgstr "词条："
+
+# ; ..\src\LexicalTools\LexExampleSentenceLayouter.cs
+# ; ..\src\LexicalTools\LexExampleSentenceLayouter.cs
+#. This is the field containing an example sentence of a sense of a word.
+#. Sentence
+msgid "Example"
+msgstr "例子"
+
+# ; ..\src\LexicalTools\LexExampleSentenceLayouter.cs
+#. This is the field for putting in a translation of an example sentence.
+msgid "Translation"
+msgstr "翻译"
+
+# ; ..\src\LexicalTools\LexSenseLayouter.cs
+# ; ..\src\LexicalTools\LexSenseLayouter.cs
+#. This label is shown once, but has two roles.  1) it labels contains the gloss, and 2) marks the beginning of the set of fields which make up a sense. So, in english, if we labelled this 'gloss', it would describe the field well but wouldn't label the section well."), "Gloss
+msgid "Meaning"
+msgstr "意义"
+
+# ; ..\src\LexicalTools\MissingInfoControl.cs
+msgid "Congratulations. You have completed this task."
+msgstr "祝贺你完成了任务。"
+
+# ; ..\src\LexicalTools\MissingInfoControl.cs
+msgid "There is no work left to be done on this task."
+msgstr "任务已经完成。"
+
+# ; ..\src\WeSay.Foundation\StringCatalog.cs
+# ; ..\src\WeSay.Foundation\StringCatalog.cs
+#. Translate this to base font size to use, e.g. 9
+msgid "fontSize"
+msgstr "12"
+
+# ; ..\src\WeSay.Foundation\StringCatalog.cs
+#. Translate this to the name of the font to use, e.g. Arial
+msgid "fontFamily"
+msgstr ""
+
+# ; ..\src\WeSay.UI\SingleOptionControl.cs
+#. This is shown in a combo-box (list of options, like Part Of Speech) when no option has been chosen, or the user just doesn't know what to put in this field.
+msgid "unknown"
+msgstr "未知"

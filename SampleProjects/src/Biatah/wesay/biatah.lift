@@ -2,30 +2,6 @@
 <lift
   version="0.10">
 	<entry
-	guid="7e6fef8f-4a15-45d5-bd72-ad99ea227b53">
-		<lexical-unit>
-			<form
-		lang="bth">
-				<text>ABC</text>
-			</form>
-		</lexical-unit>
-		<sense
-	  id="ABC">
-			<grammatical-info
-		value="noun" />
-			<gloss
-		lang="en">
-				<text>alphabet</text>
-			</gloss>
-			<note>
-				<form
-		  lang="en">
-					<text>This is deprecated of course</text>
-				</form>
-			</note>
-		</sense>
-	</entry>
-	<entry
 	guid="044b36c6-5172-4ea5-bda4-79030eef50da">
 		<lexical-unit>
 			<form
@@ -80,76 +56,30 @@
 		</sense>
 	</entry>
 	<entry
-	guid="cf7961ce-a113-4e49-93fc-34b7635a434e">
-		<lexical-unit>
-			<form
-		lang="bth">
-				<text>abéw</text>
-			</form>
-		</lexical-unit>
-		<pronunciation>
-			<form
-		lang="bth-fonipa">
-				<text>aˈbɛw</text>
-			</form>
-		</pronunciation>
-		<sense
-	  id="abéw">
-			<grammatical-info
-		value="noun" />
-			<gloss
-		lang="en">
-				<text>glimpse</text>
-			</gloss>
-			<note>
-				<form
-		  lang="en">
-					<text>something that passes by very fast so that you don't have time to distinguish</text>
-				</form>
-			</note>
-		</sense>
-		<sense
-	  id="abéw-dizzy">
-			<grammatical-info
-		value="noun" />
-			<gloss
-		lang="en">
-				<text>dizziness</text>
-			</gloss>
-		</sense>
-	</entry>
+	id="abéw_cf7961ce-a113-4e49-93fc-34b7635a434e"
+	dateCreated="2007-08-24T04:54:27Z"
+	dateModified="2007-08-24T04:58:01Z"
+	guid="cf7961ce-a113-4e49-93fc-34b7635a434e"><lexical-unit><form
+		lang="bth"><text>abéw</text></form></lexical-unit><sense><grammatical-info
+		value="noun" /><gloss
+		lang="en"><text>glimpse</text></gloss><note><form
+		  lang="en"><text>something that passes by very fast so that you don't have time to distinguish</text></form></note></sense><sense><grammatical-info
+		value="noun" /><gloss
+		lang="en"><text>dizziness</text></gloss></sense></entry>
 	<entry
-	guid="367c5778-b03b-4ef1-b941-45fd7dea7a00">
-		<lexical-unit>
-			<form
-		lang="bth">
-				<text>abéw-abéw</text>
-			</form>
-		</lexical-unit>
-		<pronunciation>
-			<form
-		lang="bth-fonipa">
-				<text>abɛ͡uʔabɛ͡u</text>
-			</form>
-		</pronunciation>
-		<sense
-	  id="abéw-abéw">
-			<grammatical-info
-		value="adjective" />
-			<gloss
-		lang="en">
-				<text>unsteady</text>
-			</gloss>
-			<relation
+	id="abéw-abéw_367c5778-b03b-4ef1-b941-45fd7dea7a00"
+	dateCreated="2007-08-24T04:54:27Z"
+	dateModified="2007-08-24T04:57:55Z"
+	guid="367c5778-b03b-4ef1-b941-45fd7dea7a00"><lexical-unit><form
+		lang="bth"><text>abéw-abéw</text></form></lexical-unit><relation
+	  name="BaseForm"
+	  ref="abéw_cf7961ce-a113-4e49-93fc-34b7635a434e" /><sense><grammatical-info
+		value="adjective" /><gloss
+		lang="en"><text>unsteady</text></gloss><relation
 		name="composition"
-		ref="abéw-dizzy"
-		order="1" />
-			<relation
+		ref="abéw-dizzy" /><relation
 		name="composition"
-		ref="abéw-dizzy"
-		order="2" />
-		</sense>
-	</entry>
+		ref="abéw-dizzy" /></sense></entry>
 	<entry
 	guid="6082481e-2ac2-4e2a-bf2b-ae750bc08507">
 		<lexical-unit>
@@ -402,37 +332,19 @@
 		</sense>
 	</entry>
 	<entry
-	guid="0a6cb1d0-e7d8-4067-a4e5-2966a2b93e10">
-		<lexical-unit>
-			<form
-		lang="bth">
-				<text>abŭt kupong</text>
-			</form>
-		</lexical-unit>
-		<pronunciation>
-			<form
-		lang="bth-fonipa">
-				<text>əbɨt kupoŋ</text>
-			</form>
-		</pronunciation>
-		<sense
-	  id="abŭt_kupong">
-			<grammatical-info
-		value="noun" />
-			<gloss
-		lang="en">
-				<text>belt</text>
-			</gloss>
-			<relation
+	id="abŭt kupong_0a6cb1d0-e7d8-4067-a4e5-2966a2b93e10"
+	dateCreated="2007-08-24T04:54:27Z"
+	dateModified="2007-08-24T04:57:13Z"
+	guid="0a6cb1d0-e7d8-4067-a4e5-2966a2b93e10"><lexical-unit><form
+		lang="bth"><text>abŭt kupong</text></form></lexical-unit><relation
+	  name="BaseForm"
+	  ref="abŭt_c1c58880-02ef-4fc2-a539-5caab3b6b87b" /><sense><grammatical-info
+		value="noun" /><gloss
+		lang="en"><text>belt</text></gloss><relation
 		name="composition"
-		ref="abŭt"
-		order="1" />
-			<relation
+		ref="abŭt" /><relation
 		name="composition"
-		ref="kupong"
-		order="2" />
-		</sense>
-	</entry>
+		ref="kupong" /></sense></entry>
 	<entry
 	guid="d1cacb72-d973-42cd-a538-eee109ce8ba7">
 		<lexical-unit>
@@ -599,31 +511,18 @@
 		</sense>
 	</entry>
 	<entry
-	guid="49daa629-e148-4e2b-b660-68a0ade08f32">
-		<lexical-unit>
-			<form
-		lang="bth">
-				<text>adŭd-adŭd</text>
-			</form>
-		</lexical-unit>
-		<sense
-	  id="adŭd-adŭd">
-			<grammatical-info
-		value="" />
-			<gloss
-		lang="en">
-				<text>heard but didn't do</text>
-			</gloss>
-			<relation
+	id="adŭd-adŭd_49daa629-e148-4e2b-b660-68a0ade08f32"
+	dateCreated="2007-08-24T04:54:27Z"
+	dateModified="2007-08-24T04:59:02Z"
+	guid="49daa629-e148-4e2b-b660-68a0ade08f32"><lexical-unit><form
+		lang="bth"><text>adŭd-adŭd</text></form></lexical-unit><relation
+	  name="BaseForm"
+	  ref="adŭd_d1c6c583-fde5-4ea3-87ef-ba46fca127af" /><sense><gloss
+		lang="en"><text>heard but didn't do</text></gloss><relation
 		name="composition"
-		ref="adŭd"
-		order="1" />
-			<relation
+		ref="adŭd" /><relation
 		name="composition"
-		ref="adŭd"
-		order="2" />
-		</sense>
-	</entry>
+		ref="adŭd" /></sense></entry>
 	<entry
 	guid="a9dc0444-1cee-4677-bd09-b11d68c5d61f">
 		<lexical-unit>
@@ -691,23 +590,15 @@
 		</sense>
 	</entry>
 	<entry
-	guid="2cdf6394-5191-42a9-a9db-a571cfb80447">
-		<lexical-unit>
-			<form
-		lang="bth">
-				<text>adu-adu</text>
-			</form>
-		</lexical-unit>
-		<sense
-	  id="aduu-aduu">
-			<grammatical-info
-		value="verb" />
-			<gloss
-		lang="en">
-				<text>continue</text>
-			</gloss>
-		</sense>
-	</entry>
+	id="adu-adu_2cdf6394-5191-42a9-a9db-a571cfb80447"
+	dateCreated="2007-08-24T04:54:27Z"
+	dateModified="2007-08-24T04:57:47Z"
+	guid="2cdf6394-5191-42a9-a9db-a571cfb80447"><lexical-unit><form
+		lang="bth"><text>adu-adu</text></form></lexical-unit><relation
+	  name="BaseForm"
+	  ref="adu_944e6568-720b-43e2-adfc-6936e8770e2e" /><sense><grammatical-info
+		value="verb" /><gloss
+		lang="en"><text>continue</text></gloss></sense></entry>
 	<entry
 	guid="198bc9b8-e547-456c-82ba-5dfddbb1fdf8">
 		<lexical-unit>
@@ -856,31 +747,19 @@
 		</sense>
 	</entry>
 	<entry
-	guid="c18476b1-35a4-4b57-8a71-e4c170aeebfd">
-		<lexical-unit>
-			<form
-		lang="bth">
-				<text>ajog-ajog</text>
-			</form>
-		</lexical-unit>
-		<sense
-	  id="ajog-ajog">
-			<grammatical-info
-		value="verb" />
-			<gloss
-		lang="en">
-				<text>keep on standing</text>
-			</gloss>
-			<relation
+	id="ajog-ajog_c18476b1-35a4-4b57-8a71-e4c170aeebfd"
+	dateCreated="2007-08-24T05:06:27Z"
+	dateModified="2007-08-24T05:13:01Z"
+	guid="c18476b1-35a4-4b57-8a71-e4c170aeebfd"><lexical-unit><form
+		lang="bth"><text>ajog-ajog</text></form></lexical-unit><relation
+	  name="BaseForm"
+	  ref="ajog_691b6518-cdcd-4a1b-bfc0-8be8f4731b90" /><sense><grammatical-info
+		value="verb" /><gloss
+		lang="en"><text>keep on standing</text></gloss><relation
 		name="composition"
-		ref="ajog-upright"
-		order="1" />
-			<relation
+		ref="ajog-upright" /><relation
 		name="composition"
-		ref="ajog-upright"
-		order="2" />
-		</sense>
-	</entry>
+		ref="ajog-upright" /></sense></entry>
 	<entry
 	guid="de0652e2-5ed3-4ce2-959e-2ca1c54c820a">
 		<lexical-unit>
@@ -46202,23 +46081,11 @@
 		</sense>
 	</entry>
 	<entry
-	guid="3c033433-87f4-45cc-ba2a-55c887c71f31">
-		<lexical-unit>
-			<form
-		lang="bth">
-				<text>pir</text>
-			</form>
-		</lexical-unit>
-		<sense
-	  id="pir">
-			<grammatical-info
-		value="" />
-			<gloss
-		lang="en">
-				<text />
-			</gloss>
-		</sense>
-	</entry>
+	id="pir_3c033433-87f4-45cc-ba2a-55c887c71f31"
+	dateCreated="2007-08-24T04:54:39Z"
+	dateModified="2007-08-24T05:01:08Z"
+	guid="3c033433-87f4-45cc-ba2a-55c887c71f31"><lexical-unit><form
+		lang="bth"><text>pir</text></form></lexical-unit></entry>
 	<entry
 	guid="78327d48-4035-42cf-a26c-05abb07c1bce">
 		<lexical-unit>
@@ -48501,23 +48368,11 @@
 		</sense>
 	</entry>
 	<entry
-	guid="0f32a756-1b02-4522-9faf-3a09626975a8">
-		<lexical-unit>
-			<form
-		lang="bth">
-				<text>r</text>
-			</form>
-		</lexical-unit>
-		<sense
-	  id="r">
-			<grammatical-info
-		value="" />
-			<gloss
-		lang="en">
-				<text />
-			</gloss>
-		</sense>
-	</entry>
+	id="r_0f32a756-1b02-4522-9faf-3a09626975a8"
+	dateCreated="2007-08-24T04:54:40Z"
+	dateModified="2007-08-24T05:01:10Z"
+	guid="0f32a756-1b02-4522-9faf-3a09626975a8"><lexical-unit><form
+		lang="bth"><text>r</text></form></lexical-unit></entry>
 	<entry
 	guid="95a96396-21a1-4f1a-a903-d7480f085d56">
 		<lexical-unit>

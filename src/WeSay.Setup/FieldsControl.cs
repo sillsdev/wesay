@@ -101,7 +101,10 @@ namespace WeSay.Setup
 			_descriptionBox.Text = CurrentField.Description;
 			LoadWritingSystemBox();
 			LoadAboutFieldBox();
+
+			//todo(WS-364): this is too blunt. They should be able to edit the display name
 			_fieldPropertyGrid.Enabled = CurrentField.UserCanDeleteOrModify;
+
 			_fieldPropertyGrid.SelectedObject = CurrentField;
 		}
 

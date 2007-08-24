@@ -120,10 +120,12 @@ namespace WeSay.LexicalModel
 				if (!String.IsNullOrEmpty(this._lexicalForm.GetFirstAlternative()))
 				{
 					_id = this._lexicalForm.GetFirstAlternative().Trim().Normalize(NormalizationForm.FormD)+"_"+this.Guid;
+					this.NotifyPropertyChanged("id");
 				}
 				else if (doCreateEvenIfNoLexemeForm)
 				{
 					_id = "Id'dPrematurely_"+this.Guid;
+					this.NotifyPropertyChanged("id");
 				}
 			}
 
