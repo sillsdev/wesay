@@ -2,7 +2,7 @@ using System;
 using System.ComponentModel;
 using System.ComponentModel.Design;
 using System.Windows.Forms;
-using WeSay.Language;
+using WeSay.Foundation;
 
 namespace WeSay.UI
 {
@@ -43,7 +43,10 @@ namespace WeSay.UI
 			}
 			Control control = (Control) sender;
 			_alreadyChanging = true;
-			control.Font = StringCatalog.ModifyFontForLocalization(control.Font);
+			if (!(control is WeSay.UI.Buttons.RegionButton))//making a big font on these things that don't have text was causing them to grow
+			{
+				control.Font = StringCatalog.ModifyFontForLocalization(control.Font);
+			}
 			_alreadyChanging = false;
 		}
 

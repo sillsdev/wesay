@@ -3,6 +3,7 @@ using System.IO;
 using System.Reflection;
 using System.Xml;
 using Palaso.Reporting;
+using WeSay.Foundation;
 using WeSay.Language;
 
 namespace WeSay.Project
@@ -21,6 +22,7 @@ namespace WeSay.Project
 		private WritingSystemCollection _writingSystems;
 		private string _projectDirectoryPath = string.Empty;
 		private string _stringCatalogSelector = string.Empty;
+		private float _uiFontSize;
 
 		public static BasilProject Project
 		{
@@ -268,23 +270,27 @@ namespace WeSay.Project
 			get { return _uiFontName; }
 			set { _uiFontName = value; }
 		}
-
+		protected float UiFontSizeInPoints
+		{
+			get { return _uiFontSize; }
+			set { _uiFontSize = value; }
+		}
 		private void InitStringCatalog()
 		{
 			try
 			{
 				if (_stringCatalogSelector == "test")
 				{
-					new StringCatalog("test", UiFontName);
+					new StringCatalog("test", UiFontName, UiFontSizeInPoints);
 				}
 				string p = LocateStringCatalog();
 				if (p == null)
 				{
-					new StringCatalog(UiFontName);
+					new StringCatalog(UiFontName, UiFontSizeInPoints);
 				}
 				else
 				{
-					new StringCatalog(p, UiFontName);
+					new StringCatalog(p, UiFontName, UiFontSizeInPoints);
 				}
 			}
 			catch (FileNotFoundException)

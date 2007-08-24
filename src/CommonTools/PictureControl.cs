@@ -2,7 +2,7 @@ using System;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
-using WeSay.Language;
+using WeSay.Foundation;
 using WeSay.Project;
 using WeSay.UI;
 

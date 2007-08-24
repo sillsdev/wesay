@@ -206,6 +206,14 @@ namespace WeSay.Project
 						StringCatalogSelector = ui;
 					}
 					UiFontName = nav.GetAttribute("uiFont", "");
+					string s = nav.GetAttribute("uiFontSize", string.Empty);
+					float f = 0;
+					float.TryParse(s, out f);
+					if(f==0)
+					{
+						f = 12;
+					}
+					UiFontSizeInPoints = f;
 
 				}
 				MigrateConfigurationXmlIfNeeded(configDoc, PathToConfigFile);
@@ -213,6 +221,8 @@ namespace WeSay.Project
 			base.LoadFromProjectDirectoryPath(projectDirectoryPath);
 			InitializeViewTemplatesFromProjectFiles();
 		}
+
+
 
 		public static bool MigrateConfigurationXmlIfNeeded(XPathDocument configurationDoc, string targetPath)
 		{

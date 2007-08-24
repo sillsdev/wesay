@@ -31,6 +31,8 @@ namespace WeSay.Setup
 			this.components = new System.ComponentModel.Container();
 			this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
 			this.groupBox2 = new System.Windows.Forms.GroupBox();
+			this.button2 = new System.Windows.Forms.Button();
+			this._fontInfoDisplay = new System.Windows.Forms.TextBox();
 			this.label4 = new System.Windows.Forms.Label();
 			this.label3 = new System.Windows.Forms.Label();
 			this._languageCombo = new System.Windows.Forms.ComboBox();
@@ -43,8 +45,6 @@ namespace WeSay.Setup
 			this.textBox1 = new System.Windows.Forms.TextBox();
 			this.label1 = new System.Windows.Forms.Label();
 			this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-			this.button2 = new System.Windows.Forms.Button();
-			this._fontInfoDisplay = new System.Windows.Forms.TextBox();
 			this.tableLayoutPanel1.SuspendLayout();
 			this.groupBox2.SuspendLayout();
 			this.groupBox1.SuspendLayout();
@@ -82,6 +82,29 @@ namespace WeSay.Setup
 			this.groupBox2.TabIndex = 1;
 			this.groupBox2.TabStop = false;
 			this.groupBox2.Text = "User Interface";
+			//
+			// button2
+			//
+			this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.button2.Location = new System.Drawing.Point(357, 67);
+			this.button2.Name = "button2";
+			this.button2.Size = new System.Drawing.Size(27, 23);
+			this.button2.TabIndex = 5;
+			this.button2.Text = "...";
+			this.button2.UseVisualStyleBackColor = true;
+			this.button2.Click += new System.EventHandler(this.OnChooseFont);
+			//
+			// _fontInfoDisplay
+			//
+			this._fontInfoDisplay.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
+			this._fontInfoDisplay.BackColor = System.Drawing.SystemColors.Window;
+			this._fontInfoDisplay.Location = new System.Drawing.Point(122, 69);
+			this._fontInfoDisplay.Name = "_fontInfoDisplay";
+			this._fontInfoDisplay.ReadOnly = true;
+			this._fontInfoDisplay.Size = new System.Drawing.Size(229, 20);
+			this._fontInfoDisplay.TabIndex = 4;
+			this._fontInfoDisplay.TextChanged += new System.EventHandler(this._fontInfoDisplay_TextChanged);
 			//
 			// label4
 			//
@@ -199,28 +222,6 @@ namespace WeSay.Setup
 			this.label1.Size = new System.Drawing.Size(108, 13);
 			this.label1.TabIndex = 0;
 			this.label1.Text = "Auto-backup location";
-			//
-			// button2
-			//
-			this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.button2.Location = new System.Drawing.Point(357, 67);
-			this.button2.Name = "button2";
-			this.button2.Size = new System.Drawing.Size(27, 23);
-			this.button2.TabIndex = 5;
-			this.button2.Text = "...";
-			this.button2.UseVisualStyleBackColor = true;
-			this.button2.Click += new System.EventHandler(this.OnChooseFont);
-			//
-			// _fontInfoDisplay
-			//
-			this._fontInfoDisplay.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
-			this._fontInfoDisplay.BackColor = System.Drawing.SystemColors.Window;
-			this._fontInfoDisplay.Location = new System.Drawing.Point(122, 69);
-			this._fontInfoDisplay.Name = "_fontInfoDisplay";
-			this._fontInfoDisplay.ReadOnly = true;
-			this._fontInfoDisplay.Size = new System.Drawing.Size(229, 20);
-			this._fontInfoDisplay.TabIndex = 4;
 			//
 			// OtherControl
 			//

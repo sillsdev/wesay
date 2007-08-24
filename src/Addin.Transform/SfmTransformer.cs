@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Mono.Addins;
 using WeSay.AddinLib;
-using WeSay.Language;
+using WeSay.Foundation;
 
 namespace Addin.Transform
 {

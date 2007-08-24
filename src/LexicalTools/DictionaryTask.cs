@@ -1,7 +1,7 @@
 using System;
 using System.Windows.Forms;
 using WeSay.Data;
-using WeSay.Language;
+using WeSay.Foundation;
 using WeSay.LexicalModel;
 using WeSay.Project;
 

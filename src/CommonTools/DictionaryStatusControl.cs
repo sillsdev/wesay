@@ -2,7 +2,7 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows.Forms;
-using WeSay.Language;
+using WeSay.Foundation;
 using WeSay.UI;
 
 namespace WeSay.CommonTools

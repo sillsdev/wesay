@@ -207,17 +207,6 @@ msgstr ""
 msgid "There is no work left to be done on this task."
 msgstr ""
 
-# ; ..\src\WeSay.Foundation\StringCatalog.cs
-# ; ..\src\WeSay.Foundation\StringCatalog.cs
-#. Translate this to base font size to use, e.g. 9
-msgid "fontSize"
-msgstr ""
-
-# ; ..\src\WeSay.Foundation\StringCatalog.cs
-#. Translate this to the name of the font to use, e.g. Arial
-msgid "fontFamily"
-msgstr ""
-
 # ; ..\src\WeSay.UI\SingleOptionControl.cs
 #. This is shown in a combo-box (list of options, like Part Of Speech) when no option has been chosen, or the user just doesn't know what to put in this field.
 msgid "unknown"

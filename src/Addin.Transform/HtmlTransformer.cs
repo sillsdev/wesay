@@ -5,7 +5,7 @@ using System.Windows.Forms;
 using System.Xml.Xsl;
 using Mono.Addins;
 using WeSay.AddinLib;
-using WeSay.Language;
+using WeSay.Foundation;
 
 namespace Addin.Transform
 {

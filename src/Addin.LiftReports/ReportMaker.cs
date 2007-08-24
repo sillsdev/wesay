@@ -5,7 +5,7 @@ using System.Windows.Forms;
 using Addin.LiftReports.Properties;
 using Mono.Addins;
 using WeSay.AddinLib;
-using WeSay.Language;
+using WeSay.Foundation;
 
 namespace Addin.LiftReports
 {

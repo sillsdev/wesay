@@ -42,7 +42,6 @@ namespace WeSay.LexicalTools
 		private void InitializeComponent()
 		{
 			this.components = new System.ComponentModel.Container();
-			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DictionaryControl));
 			this.panelWordList = new System.Windows.Forms.Panel();
 			this._btnFind = new System.Windows.Forms.Button();
 			this._findText = new WeSay.UI.WeSayAutoCompleteTextBox();
@@ -165,7 +164,7 @@ namespace WeSay.LexicalTools
 			this._btnDeleteWord.FlatAppearance.BorderSize = 0;
 			this._btnDeleteWord.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Orange;
 			this._btnDeleteWord.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-			this._btnDeleteWord.ImageAlign = System.Drawing.ContentAlignment.TopLeft;
+			this._btnDeleteWord.ImageAlign = System.Drawing.ContentAlignment.BottomLeft;
 			this._btnDeleteWord.Location = new System.Drawing.Point(148, 2);
 			this._btnDeleteWord.Margin = new System.Windows.Forms.Padding(0);
 			this._btnDeleteWord.Name = "_btnDeleteWord";
@@ -183,7 +182,7 @@ namespace WeSay.LexicalTools
 			this._btnNewWord.FlatAppearance.BorderSize = 0;
 			this._btnNewWord.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Orange;
 			this._btnNewWord.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-			this._btnNewWord.ImageAlign = System.Drawing.ContentAlignment.TopLeft;
+			this._btnNewWord.ImageAlign = System.Drawing.ContentAlignment.BottomLeft;
 			this._btnNewWord.Location = new System.Drawing.Point(0, 2);
 			this._btnNewWord.Margin = new System.Windows.Forms.Padding(0);
 			this._btnNewWord.Name = "_btnNewWord";

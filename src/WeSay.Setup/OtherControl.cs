@@ -7,7 +7,7 @@ using System.IO;
 using System.Text;
 using System.Windows.Forms;
 using System.Xml;
-using WeSay.Language;
+using WeSay.Foundation;
 using WeSay.Project;
 
 namespace WeSay.Setup
@@ -53,6 +53,7 @@ namespace WeSay.Setup
 			if (!String.IsNullOrEmpty(LabelName))
 			{
 				writer.WriteAttributeString("uiFont", LabelName);
+				writer.WriteAttributeString("uiFontSize", LabelSizeInPoints.ToString());
 			}
 			writer.WriteEndElement();
 		}
@@ -77,6 +78,14 @@ namespace WeSay.Setup
 			}
 		}
 
+		private float LabelSizeInPoints
+		{
+			get
+			{
+				return StringCatalog.LabelFont.SizeInPoints;
+			}
+		}
+
 		private void OnChooseFont(object sender, EventArgs e)
 		{
 			System.Windows.Forms.FontDialog dialog = new FontDialog();
@@ -84,9 +93,7 @@ namespace WeSay.Setup
 			dialog.ShowColor = false;
 			dialog.ShowEffects = false;
 
-			dialog.MaxSize = 12;//size is not relevant
-			dialog.MinSize = 12;
-			if (DialogResult.OK != dialog.ShowDialog())
+		   if (DialogResult.OK != dialog.ShowDialog())
 			{
 				return;
 			}
@@ -95,8 +102,12 @@ namespace WeSay.Setup
 		}
 		private void UpdateFontDisplay()
 		{
-			_fontInfoDisplay.Text = string.Format(StringCatalog.LabelFont.Name);
-			//this.Invalidate();
+			_fontInfoDisplay.Text = string.Format("{0}, {1} points",StringCatalog.LabelFont.Name, (int)StringCatalog.LabelFont.SizeInPoints);
+		}
+
+		private void _fontInfoDisplay_TextChanged(object sender, EventArgs e)
+		{
+
 		}
 
 	}

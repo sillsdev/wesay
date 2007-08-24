@@ -5,7 +5,7 @@ using System.IO;
 using System.Management;
 using System.Windows.Forms;
 using WeSay.AddinLib;
-using WeSay.Language;
+using WeSay.Foundation;
 
 namespace Addin.Backup
 {
@@ -20,7 +20,7 @@ namespace Addin.Backup
 			_topLabel.Text = "~Looking for USB Keys...";
 			pictureBox1.Image = Resources.backupToDeviceImage;
 			_cancelButton.Text = StringCatalog.Get(_cancelButton.Text);
-			_cancelButton.Font = StringCatalog.LabelFont;
+			_cancelButton.Font = StringCatalog.ModifyFontForLocalization(_cancelButton.Font);
 		}
 
 

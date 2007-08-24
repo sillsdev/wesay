@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.Windows.Forms;
+using WeSay.Foundation;
 using WeSay.Language;
 using WeSay.LexicalModel;
 using WeSay.Project;
@@ -25,6 +26,8 @@ namespace WeSay.LexicalTools
 		{
 			InitializeComponent();
 
+			_btnNextWord.ReallySetSize(50, 50);
+			_btnPreviousWord.ReallySetSize(30, 30);
 			if (DesignMode)
 			{
 				return;

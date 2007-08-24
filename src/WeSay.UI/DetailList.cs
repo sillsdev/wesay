@@ -2,7 +2,7 @@ using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
-using WeSay.Language;
+using WeSay.Foundation;
 
 namespace WeSay.UI
 {
@@ -145,7 +145,9 @@ namespace WeSay.UI
 			if (isHeader)
 			{
 				label.Font = new Font(StringCatalog.LabelFont /* label.Font*/, FontStyle.Bold);
+				label.Font = new Font(StringCatalog.LabelFont /* label.Font*/, FontStyle.Bold);
 			}
+			label.Font =StringCatalog.ModifyFontForLocalization(label.Font);
 			label.Text = fieldLabel;
 			label.Size = new Size(75, 50);
 			label.AutoSize = true;

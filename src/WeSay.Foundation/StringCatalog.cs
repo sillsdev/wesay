@@ -2,7 +2,7 @@ using System;
 using System.Drawing;
 using System.IO;
 
-namespace WeSay.Language
+namespace WeSay.Foundation
 {
 	public class StringCatalog
 	{
@@ -14,18 +14,18 @@ namespace WeSay.Language
 		/// <summary>
 		/// Construct with no actual string file
 		/// </summary>
-		public StringCatalog(): this(String.Empty)
+		public StringCatalog(): this(String.Empty, 9)
 		{
 		}
 		/// <summary>
 		/// Construct with no actual string file
 		/// </summary>
-		public StringCatalog(string labelFontName)
+		public StringCatalog(string labelFontName, float labelFontSizeInPoints)
 		{
 			Init();
-			SetupUIFont(labelFontName);
+			SetupUIFont(labelFontName, labelFontSizeInPoints );
 		}
-		public StringCatalog(string pathToPoFile, string labelFontName)
+		public StringCatalog(string pathToPoFile, string labelFontName, float labelFontSizeInPoints)
 		{
 			Init();
 			_inInternationalizationTestMode = pathToPoFile == "test";
@@ -61,13 +61,10 @@ namespace WeSay.Language
 				}
 			}
 
-			SetupUIFont(labelFontName);
+			SetupUIFont(labelFontName,  labelFontSizeInPoints);
 		}
 
-		/// <summary>
-		/// the ui font can be customized by providing 'translations' indicating font name and size
-		/// </summary>
-		private void SetupUIFont(string labelFontName)
+		private void SetupUIFont(string labelFontName, float labelFontSizeInPoints)
 		{
 			if (_inInternationalizationTestMode)
 			{
@@ -80,7 +77,7 @@ namespace WeSay.Language
 			{
 				try
 				{
-					LabelFont = new Font(labelFontName, (float) 8.25, FontStyle.Regular);
+					LabelFont = new Font(labelFontName, labelFontSizeInPoints, FontStyle.Regular);
 				}
 				catch (Exception)
 				{
@@ -160,7 +157,10 @@ namespace WeSay.Language
 		}
 		public static Font ModifyFontForLocalization(Font incoming)
 		{
-			return new Font(StringCatalog.LabelFont.Name, incoming.Size, incoming.Style);
+			float sBaseFontSizeInPoints = (float)8.25;
+			float points = incoming.SizeInPoints + (StringCatalog.LabelFont.SizeInPoints- sBaseFontSizeInPoints);
+			//float points = incoming.SizeInPoints * (StringCatalog.LabelFont.SizeInPoints / sBaseFontSizeInPoints);
+			return new Font(StringCatalog.LabelFont.Name, points, incoming.Style);
 
 		}
 	}

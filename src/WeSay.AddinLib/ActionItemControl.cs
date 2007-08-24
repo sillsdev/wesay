@@ -9,7 +9,7 @@ using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Serialization;
 using Mono.Addins;
-using WeSay.Language;
+using WeSay.Foundation;
 
 namespace WeSay.AddinLib
 {

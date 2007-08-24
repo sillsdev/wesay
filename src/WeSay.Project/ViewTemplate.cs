@@ -222,7 +222,8 @@ namespace WeSay.Project
 			ddp4Field.OptionsListFile = "Ddp4.xml";
 			masterTemplate.Add(ddp4Field);
 
-			Field superEntryField = new Field("BaseForm", "LexEntry", defaultVernacularSet);
+			Field superEntryField = new Field("BaseForm", "LexEntry", defaultVernacularSet,
+				Field.MultiplicityType.ZeroOr1, "RelationToOneEntry");
 			superEntryField.DisplayName = "Base Form";
 			superEntryField.Description = "Provides a field for identifying the form from which an entry is derived.  You may use this in place of the MDF subentry.  In a future version WeSay may support directly listing derived forms from the base form.";
 			superEntryField.Visibility = CommonEnumerations.VisibilitySetting.Invisible;

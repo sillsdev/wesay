@@ -1,6 +1,5 @@
 using System.Windows.Forms;
 using WeSay.Foundation;
-using WeSay.Language;
 using WeSay.LexicalModel;
 using WeSay.Project;
 using WeSay.UI;

@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
-using WeSay.Language;
+using WeSay.Foundation;
 using WeSay.Project;
 using System.Windows.Forms;
 
@@ -19,7 +20,7 @@ namespace WeSay.App
 			InitializeComponent();
 			this.tabControl1.TabPages.Clear();
 			this.tabControl1.SelectedIndexChanged += new EventHandler(tabControl1_SelectedIndexChanged);
-			this.tabControl1.Font = StringCatalog.LabelFont;
+			this.tabControl1.Font = StringCatalog.ModifyFontForLocalization(tabControl1.Font);
 		}
 
 		public void InitializeTasks(IList<ITask> taskList)
@@ -75,6 +76,13 @@ namespace WeSay.App
 			//t.Container = container;
 			TabPage page = new TabPage(t.Label);
 			page.Tag = t;
+
+			//this is trying to get around screwing up spacing when the ui font
+			//is a huge one
+			page.Font = new Font(FontFamily.GenericSansSerif,9);
+
+
+
 			this.tabControl1.TabPages.Add(page);
 		}
 

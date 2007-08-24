@@ -61,10 +61,22 @@ namespace ArrowButton
 			//
 			this.Name = "ArrowButton";
 			this.Size = new System.Drawing.Size(48, 48);
+			this.SizeChanged += new EventHandler(ArrowButton_SizeChanged);
+			this.FontChanged += new EventHandler(ArrowButton_FontChanged);
 			this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.ArrowButton_MouseUp);
 			this.MouseEnter += new System.EventHandler(this.ArrowButton_MouseEnter);
 			this.MouseLeave += new System.EventHandler(this.ArrowButton_MouseLeave);
 			this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.ArrowButton_MouseDown);
+
+		}
+
+		void ArrowButton_FontChanged(object sender, EventArgs e)
+		{
+
+		}
+
+		void ArrowButton_SizeChanged(object sender, EventArgs e)
+		{
 
 		}
 		#endregion
