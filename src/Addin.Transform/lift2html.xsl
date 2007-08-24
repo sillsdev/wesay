@@ -33,6 +33,8 @@ BOGURAEV and NEFF Lit Linguist Computing.1992; 7: 110-112
 
   <xsl:param name="writing-system-info-file" select="'../common/writingSystemPrefs.xml'"/>
   <xsl:param name="grammatical-info-optionslist-file"/>
+  <xsl:param name="relations-optionslist-file"/>
+  <!-- things like 'see' for cross-references and 'ant' for antonyms, 'syn' for synonyms, etc.-->
   <xsl:param name="optionslist-writing-system" select="'en'"/>
 
   <xsl:param name="headword-writing-system" select="/lift/entry/lexical-unit/form/@lang"/>
@@ -40,9 +42,11 @@ BOGURAEV and NEFF Lit Linguist Computing.1992; 7: 110-112
   <xsl:param name="include-notes" select="false()"/>
   <xsl:param name="group-by-grammatical-info" select="true()"/>
 
+  <xsl:variable name="entries-with-BaseForm-relation-rendered-as-subentries-of-base" select="true()"/>
   <xsl:template match="/">
 	<html>
 	  <head>
+		<link rel="stylesheet" href="user.css"/>
 		<style type="text/css">
 		  div.entry { /* this gives us outdented headwords */
 		  text-indent: -.5em; /* a slight outdent the width of a lower-case n */
@@ -115,6 +119,19 @@ BOGURAEV and NEFF Lit Linguist Computing.1992; 7: 110-112
 		  span.pronunciation{
 		  }
 
+		  span.subentry span.headword{
+			font-family:sans-serif; /*to do: select the sans-serif variety from writing system*/
+			font-weight:bold;
+			font-size:90%;
+
+		  }
+		  <!--
+		  span.subentry {
+			display: block;
+			margin-left: 1em;
+		  }
+		  -->
+
 		  <xsl:for-each select="document($writing-system-info-file)//WritingSystem">
 		  span.<xsl:value-of select="Id"/> {
 			font-family: "<xsl:value-of select="FontName"/>";
@@ -134,42 +151,85 @@ BOGURAEV and NEFF Lit Linguist Computing.1992; 7: 110-112
 	</html>
   </xsl:template>
 
-  <xsl:template match="entry">
-	<div class="entry">
-	  <!-- if there is a citation-form, use that as the headword; otherwise
+  <xsl:template name="output-headword">
+	<!-- if there is a citation-form, use that as the headword; otherwise
 		   use the lexical-unit.-->
-	  <xsl:choose>
-		<xsl:when test="citation-form">
-		  <xsl:apply-templates select="citation-form"/>
-		</xsl:when>
-		<xsl:otherwise>
-		  <xsl:apply-templates select="lexical-unit"/>
-		</xsl:otherwise>
-	  </xsl:choose>
-	  <xsl:text> </xsl:text>
-	  <xsl:apply-templates select="pronunciation"/>
-	  <xsl:apply-templates select="variant"/>
-	  <xsl:apply-templates select="trait"/>
-	  <xsl:apply-templates select="field"/>
-	  <xsl:apply-templates select="relation"/>
-	  <xsl:apply-templates select="note"/>
-	  <xsl:apply-templates select="annotation"/>
-	  <xsl:choose>
-		<xsl:when test="$group-by-grammatical-info">
-		  <xsl:apply-templates select="sense[not(grammatical-info)]"/>
-		  <xsl:for-each select="sense">
-			<xsl:if test="not(preceding-sibling::sense/grammatical-info/@value =
+	<xsl:choose>
+	  <xsl:when test="citation-form">
+		<xsl:apply-templates select="citation-form"/>
+	  </xsl:when>
+	  <xsl:otherwise>
+		<xsl:apply-templates select="lexical-unit"/>
+	  </xsl:otherwise>
+	</xsl:choose>
+	<xsl:text> </xsl:text>
+  </xsl:template>
+
+  <xsl:template name="output-entry">
+	<xsl:call-template name="output-headword"/>
+	<xsl:apply-templates select="pronunciation"/>
+	<xsl:apply-templates select="variant"/>
+	<xsl:apply-templates select="trait"/>
+	<xsl:apply-templates select="field"/>
+	<xsl:choose>
+	  <xsl:when test="$entries-with-BaseForm-relation-rendered-as-subentries-of-base">
+		<xsl:apply-templates select="relation[not(@name='BaseForm')]"/>
+	  </xsl:when>
+	  <xsl:otherwise>
+		<xsl:apply-templates select="relation"/>
+	  </xsl:otherwise>
+	</xsl:choose>
+	<xsl:apply-templates select="note"/>
+	<xsl:apply-templates select="annotation"/>
+	<xsl:choose>
+	  <xsl:when test="$group-by-grammatical-info">
+		<xsl:apply-templates select="sense[not(grammatical-info)]"/>
+		<xsl:for-each select="sense">
+		  <xsl:if test="not(preceding-sibling::sense/grammatical-info/@value =
 					  grammatical-info/@value)">
-			  <xsl:apply-templates select="grammatical-info"/>
-			  <xsl:apply-templates select="parent::*/sense[grammatical-info/@value =current()/grammatical-info/@value]"/>
-			</xsl:if>
-		  </xsl:for-each>
-		</xsl:when>
-		<xsl:otherwise>
-		  <xsl:apply-templates select="sense"/>
-		</xsl:otherwise>
-	  </xsl:choose>
-	</div>
+			<xsl:apply-templates select="grammatical-info"/>
+			<xsl:apply-templates select="parent::*/sense[grammatical-info/@value =current()/grammatical-info/@value]"/>
+		  </xsl:if>
+		</xsl:for-each>
+	  </xsl:when>
+	  <xsl:otherwise>
+		<xsl:apply-templates select="sense"/>
+	  </xsl:otherwise>
+	</xsl:choose>
+
+	<xsl:if test="$entries-with-BaseForm-relation-rendered-as-subentries-of-base">
+	  <xsl:apply-templates select="//entry[descendant::relation[@name='BaseForm']/@ref=current()/@id]" mode="subentry"/>
+	</xsl:if>
+  </xsl:template>
+
+  <xsl:template match="entry">
+	<xsl:choose>
+	  <xsl:when test="$entries-with-BaseForm-relation-rendered-as-subentries-of-base and
+		relation[@name='BaseForm']">
+		<div class="minorentry">
+		  <xsl:call-template name="output-headword"/>
+		  <span class="cross-reference">
+			<span class="{$optionslist-writing-system}">
+			  see <!-- TODO: localize from relations option list -->
+			</span>
+			<xsl:for-each select="//entry[@id=current()/descendant::relation[@name='BaseForm']/@ref]">
+			  <xsl:call-template name="output-headword"/>
+			</xsl:for-each>
+		  </span>
+		</div>
+	  </xsl:when>
+	  <xsl:otherwise>
+		<div class="entry">
+		  <xsl:call-template name="output-entry"/>
+		</div>
+	  </xsl:otherwise>
+	</xsl:choose>
+  </xsl:template>
+
+  <xsl:template match="entry" mode="subentry">
+	<span class="subentry">
+	  <xsl:call-template name="output-entry"/>
+	</span>
   </xsl:template>
 
   <!-- omit entries that have been deleted-->
