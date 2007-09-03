@@ -401,7 +401,12 @@ namespace WeSay.Project
 
 			ProjectDirectoryPath = projectDirectoryPath;
 			Directory.CreateDirectory(PathToWeSaySpecificFilesDirectoryInProject);
+
 			base.CreateEmptyProjectFiles(projectDirectoryPath);
+
+			//hack
+			File.Copy(PathToDefaultConfig, PathToConfigFile, true);
+
 			_defaultViewTemplate = ViewTemplate.MakeMasterTemplate(WritingSystems);
 			_viewTemplates = new List<ViewTemplate>();
 			_viewTemplates.Add(_defaultViewTemplate);

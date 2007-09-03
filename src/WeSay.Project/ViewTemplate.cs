@@ -188,13 +188,13 @@ namespace WeSay.Project
 			Field lexicalFormField = new Field(Field.FieldNames.EntryLexicalForm.ToString(), "LexEntry", defaultVernacularSet);
 			//this is here so the PoMaker scanner can pick up a comment about this label
 			StringCatalog.Get("~Word", "The label for the field showing the Lexeme Form of the entry.");
-			lexicalFormField.DisplayName = "~Word";
+			lexicalFormField.DisplayName = "Word";
 			lexicalFormField.Description = "The Lexeme Form of the entry.";
 			lexicalFormField.Visibility = CommonEnumerations.VisibilitySetting.Visible;
 			masterTemplate.Add(lexicalFormField);
 
 			Field glossField = new Field(Field.FieldNames.SenseGloss.ToString(), "LexSense", defaultAnalysisSet);
-			glossField.DisplayName = "~Gloss";
+			glossField.DisplayName = "Gloss";
 			glossField.Description = "Normally a single word. Shows up as the first field of the sense, across from the 'Meaning' label";
 			glossField.Visibility = CommonEnumerations.VisibilitySetting.Visible;
 			masterTemplate.Add(glossField);
@@ -202,14 +202,16 @@ namespace WeSay.Project
 			Field posField = new Field("POS", "LexSense", defaultAnalysisSet);
 			//this is here so the PoMaker scanner can pick up a comment about this label
 			StringCatalog.Get("~POS", "The label for the field showing Part Of Speech");
-			posField.DisplayName = "~POS";
+			posField.DisplayName = "POS";
 			posField.Description = "The grammatical category of the entry (Noun, Verb, etc.).";
 			posField.DataTypeName = "Option";
 			posField.OptionsListFile = "PartsOfSpeech.xml";
 			masterTemplate.Add(posField);
 
 			Field exampleField = new Field(Field.FieldNames.ExampleSentence.ToString(), "LexExampleSentence", defaultVernacularSet);
-			exampleField.DisplayName = "~Example Sentence";
+			//this is here so the PoMaker scanner can pick up a comment about this label
+			StringCatalog.Get("~Example Sentence", "The label for the field showing an example use of the word.");
+			exampleField.DisplayName = "Example Sentence";
 			exampleField.Visibility = CommonEnumerations.VisibilitySetting.Visible;
 			masterTemplate.Add(exampleField);
 
@@ -226,7 +228,7 @@ namespace WeSay.Project
 			//this is here so the PoMaker scanner can pick up a comment about this label
 			StringCatalog.Get("~Sem Dom", "The label for the field showing Semantic Domains");
 
-			ddp4Field.DisplayName = "~Sem Dom";
+			ddp4Field.DisplayName = "Sem Dom";
 			ddp4Field.Description = "The semantic domain using Ron Moe's Dictionary Development Process version 4.";
 			ddp4Field.DataTypeName = "OptionCollection";
 			ddp4Field.OptionsListFile = "Ddp4.xml";
@@ -236,7 +238,7 @@ namespace WeSay.Project
 				Field.MultiplicityType.ZeroOr1, "RelationToOneEntry");
 			//this is here so the PoMaker scanner can pick up a comment about this label
 			StringCatalog.Get("~Base Form", "The label for the field showing the entry which this entry is derived from, is a subentry of, etc.");
-			superEntryField.DisplayName = "~Base Form";
+			superEntryField.DisplayName = "Base Form";
 			superEntryField.Description = "Provides a field for identifying the form from which an entry is derived.  You may use this in place of the MDF subentry.  In a future version WeSay may support directly listing derived forms from the base form.";
 			superEntryField.Visibility = CommonEnumerations.VisibilitySetting.Invisible;
 			masterTemplate.Add(superEntryField);
