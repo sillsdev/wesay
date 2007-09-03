@@ -83,7 +83,7 @@ namespace WeSay.App
 				using (IRecordListManager recordListManager = MakeRecordListManager(project))
 				{
 					tabbedForm.Show(); // so the user sees that we did launch
-					tabbedForm.Text = "WeSay: " + project.Name + "        "  + ErrorReport.UserFriendlyVersionString;
+					tabbedForm.Text = StringCatalog.Get("~WeSay", "It's up to you whether to bother translating this or not.") + ": " + project.Name + "        "  + ErrorReport.UserFriendlyVersionString;
 					Application.DoEvents();
 
 					project.LiftUpdateService = SetupUpdateService(recordListManager);

@@ -131,7 +131,7 @@ namespace WeSay.LexicalTools
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(43, 15);
 			this.label1.TabIndex = 4;
-			this.label1.Text = "To Do:";
+			this.label1.Text = "~To Do:";
 			//
 			// _recordsListBox
 			//
@@ -154,7 +154,7 @@ namespace WeSay.LexicalTools
 			this._completedRecordsLabel.Name = "_completedRecordsLabel";
 			this._completedRecordsLabel.Size = new System.Drawing.Size(70, 15);
 			this._completedRecordsLabel.TabIndex = 4;
-			this._completedRecordsLabel.Text = "Completed:";
+			this._completedRecordsLabel.Text = "~Completed:";
 			//
 			// _completedRecordsListBox
 			//

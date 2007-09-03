@@ -214,7 +214,7 @@ namespace WeSay.App
 
 		private void ActivateAfterScreenDraw(TabPage page, ITask task)
 		{
-			page.Text += " Loading...";
+			page.Text += " " +StringCatalog.Get("~Loading...", "Appended to the name of a task, in its tab, while the user is waiting for the task to come up.");
 			Timer t = new Timer();
 			t.Tick+=new EventHandler(delegate
 									 {

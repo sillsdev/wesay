@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: WeSay\n"
-"POT-Creation-Date: 2007-08-24T07:29:23\n"
+"POT-Creation-Date: 2007-09-03T02:18:45\n"
 "PO-Revision-Date: 2006-09-06 17:01+0700\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -170,6 +170,9 @@ msgid "See all {0} {1} words."
 msgstr ""
 
 #; ..\src\LexicalTools\GatherBySemanticDomainsControl.Designer.cs
+#; ..\src\WeSay.Project\ViewTemplate.cs
+#. The label for the field showing the Lexeme Form of the entry.
+#; ..\src\WeSay.Project\ViewTemplate.cs
 msgid "Word"
 msgstr ""
 
@@ -199,7 +202,7 @@ msgstr ""
 #; ..\src\LexicalTools\LexExampleSentenceLayouter.cs
 #. This is the field containing an example sentence of a sense of a word.
 #; ..\src\LexicalTools\LexExampleSentenceLayouter.cs
-#. Sentence
+#. This is the field containing an example sentence of a sense of a word."), "Sentence
 msgid "Example"
 msgstr ""
 
@@ -220,6 +223,55 @@ msgstr ""
 
 #; ..\src\LexicalTools\MissingInfoControl.cs
 msgid "There is no work left to be done on this task."
+msgstr ""
+
+#; ..\src\LexicalTools\MissingInfoControl.Designer.cs
+msgid "To Do:"
+msgstr ""
+
+#; ..\src\LexicalTools\MissingInfoControl.Designer.cs
+msgid "Completed:"
+msgstr ""
+
+#; ..\src\WeSay.App\TabbedForm.cs
+#. Appended to the name of a task, in its tab, while the user is waiting for the task to come up.
+msgid "Loading..."
+msgstr ""
+
+#; ..\src\WeSay.App\WeSayApp.cs
+#. It's up to you whether to bother translating this or not.") + ": " + project.Name + "
+msgid "WeSay"
+msgstr ""
+
+#; ..\src\WeSay.Project\ViewTemplate.cs
+msgid "Gloss"
+msgstr ""
+
+#; ..\src\WeSay.Project\ViewTemplate.cs
+#. The label for the field showing Part Of Speech
+#; ..\src\WeSay.Project\ViewTemplate.cs
+msgid "POS"
+msgstr ""
+
+#; ..\src\WeSay.Project\ViewTemplate.cs
+msgid "Example Sentence"
+msgstr ""
+
+#; ..\src\WeSay.Project\ViewTemplate.cs
+#. The label for the field showing the example sentence translated into other languages.
+msgid "Example Translation"
+msgstr ""
+
+#; ..\src\WeSay.Project\ViewTemplate.cs
+#. The label for the field showing Semantic Domains
+#; ..\src\WeSay.Project\ViewTemplate.cs
+msgid "Sem Dom"
+msgstr ""
+
+#; ..\src\WeSay.Project\ViewTemplate.cs
+#. The label for the field showing the entry which this entry is derived from, is a subentry of, etc.
+#; ..\src\WeSay.Project\ViewTemplate.cs
+msgid "Base Form"
 msgstr ""
 
 #; ..\src\WeSay.UI\SingleOptionControl.cs

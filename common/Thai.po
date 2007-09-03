@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: WeSay\n"
-"POT-Creation-Date: 2007-06-29 3:36:09\n"
+"POT-Creation-Date: 2007-09-03T02:17:41\n"
 "PO-Revision-Date: 2007-07-13 15:46+0700\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -9,7 +9,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#; ..\src\CommonTools\DashboardControl.cs
+# ; ..\src\CommonTools\DashboardControl.cs
 #. The label for the 'dashboard'; the task which lets you see the status of other tasks and jump to them.
 msgid "Home"
 msgstr "หน้าแรก"
@@ -38,174 +38,243 @@ msgstr "รวบรวมคำใหม่โดยแปลความหม
 msgid "Collect Words By Semantic Domain"
 msgstr "รวบรวมคำในขอบเขตความรู้เกี่ยวกับความหมาย"
 
-msgid "Collect new words organized by semantic domains and questions about those domains."
+msgid ""
+"Collect new words organized by semantic domains and questions about those "
+"domains."
 msgstr ""
 
-#; ..\src\CommonTools\ActionsControl.cs
+# ; ..\src\CommonTools\ActionsControl.cs
 msgid "Actions"
 msgstr "การกระทำ"
 
-msgid "Perform actions on the project as a whole. For example backup, produce a report, print out a simple dictionary, etc."
-msgstr "แสดงแผนงานการกระทำให้เห็นชัดเจน ตัวอย่าง ข้อมูลสนับสนุน การทำรายงาน การพิมพ์คำศัพท์ง่ายๆ  อื่นๆ"
-
-#; ..\src\Addin.Backup\BackupDialog.cs
+# ; ..\src\Addin.Backup\BackupDialog.cs
 msgid "Looking for USB Keys..."
 msgstr "ค้นหาคำเฉลย  USB"
 
-#; ..\src\Addin.Backup\BackupDialog.cs
+# ; ..\src\Addin.Backup\BackupDialog.cs
 msgid "Backing Up..."
 msgstr "ข้อมูลสำรอง"
 
-#; ..\src\Addin.Backup\BackupDialog.cs
+# ; ..\src\Addin.Backup\BackupDialog.cs
 msgid "Backup Complete"
 msgstr "ข้อมูลสำรองที่สมบูรณ์"
 
-#; ..\src\Addin.Backup\BackupDialog.cs
+# ; ..\src\Addin.Backup\BackupDialog.cs
 msgid "Files backed up to {0}"
 msgstr "แฟ้มข้อมูลสนับสนุน {0}"
 
-#; ..\src\Addin.Backup\BackupDialog.cs
+# ; ..\src\Addin.Backup\BackupDialog.cs
 msgid "Files were not backed up."
 msgstr "แฟ้มข้อมูลยังไม่มีข้อมูลสนับสนุน"
 
-#; ..\src\Addin.Backup\BackupDialog.cs
+# ; ..\src\Addin.Backup\BackupDialog.cs
 msgid "Please insert the USB Key to backup to."
 msgstr "โปรดบรรจุข้อมูล USB ในข้อมูลสำรอง"
 
-#; ..\src\Addin.Backup\BackupDialog.Designer.cs
+# ; ..\src\Addin.Backup\BackupDialog.Designer.cs
 msgid "&Cancel"
 msgstr "ยกเลิก"
 
-#; ..\src\Addin.Backup\BackupToDevice.cs
+# ; ..\src\Addin.Backup\BackupToDevice.cs
 #. Label for usb backup action
 msgid "Backup To Device"
 msgstr "ข้อมูลสำรองอุปกรณ์ต่าง ๆ"
 
-#; ..\src\Addin.Backup\BackupToDevice.cs
+# ; ..\src\Addin.Backup\BackupToDevice.cs
 #. description of usb backup action
 msgid "Saves a backup on an external device, like a USB key."
 msgstr "เก็บรักษาหน่วยเก็บสำรองอุปกรณ์ภายนอกตัวเครื่อง เสมือนแป้น USB"
 
-#; ..\src\Addin.Backup\SendProjectEmail.cs
+# ; ..\src\Addin.Backup\SendProjectEmail.cs
 msgid "Email My Work to {0}"
 msgstr "ส่งงานโดยจดหมายอีเลคทรอนิคถึง {0}"
 
-#; ..\src\Addin.Backup\SendProjectEmail.cs
+# ; ..\src\Addin.Backup\SendProjectEmail.cs
 msgid "Send a zipped email containing all your WeSay work."
 msgstr "ส่งเลขประจำตัวจดหมายอีเลคทรอนิคที่บรรจุใน WeSay ของท่าน"
 
-#; ..\src\Addin.LiftReports\ReportMaker.cs
+# ; ..\src\Addin.LiftReports\ReportMaker.cs
 msgid "View Report"
 msgstr "แสดงรายงาน"
 
-#; ..\src\Addin.LiftReports\ReportMaker.cs
+# ; ..\src\Addin.LiftReports\ReportMaker.cs
 msgid "Shows some information about the lexicon."
 msgstr "แสดงบางข้อมูล Lexicon"
 
-#; ..\src\Addin.Transform\HtmlTransformer.cs
+# ; ..\src\Addin.Transform\HtmlTransformer.cs
 msgid "Html Exporter"
 msgstr "การถ่ายทอดข้อมูลจากระบบ  Html ไปสู่ข้อมูลอีกระบบหนึ่ง"
 
-#; ..\src\Addin.Transform\HtmlTransformer.cs
+# ; ..\src\Addin.Transform\HtmlTransformer.cs
 msgid "Creates an Html version of the dictionary ready for printing."
 msgstr "การสร้าง  คำศัพท์ รุ่น Html ที่พร้อมจะพิมพ์"
 
-#; ..\src\Addin.Transform\SfmTransformer.cs
+# ; ..\src\Addin.Transform\SfmTransformer.cs
 msgid "SFM Exporter"
 msgstr "การถ่ายทอดข้อมูลระบบ SFM ไปสู่อีกข้อมูลอีกระบบหนึ่ง"
 
-#; ..\src\Addin.Transform\SfmTransformer.cs
+# ; ..\src\Addin.Transform\SfmTransformer.cs
 msgid "Saves the lexicon in a form of standard format."
 msgstr "จัดระบบ  lexicon เป็นรุปแบบมาตรฐาน"
 
-#; ..\src\CommonTools\ActionsControl.cs
+# ; ..\src\CommonTools\ActionsControl.cs
 #. The description of the Actions task.
 msgid "Backup, create a progress report, etc."
 msgstr "หน่วยเก็บสำรอง สร้างรายงานที่ก้าวหน้า"
 
-#; ..\src\CommonTools\CurrentTaskIndicatorControl.Designer.cs
+# ; ..\src\CommonTools\CurrentTaskIndicatorControl.Designer.cs
 msgid "Current task:"
 msgstr "งานปัจุบัน"
 
-#; ..\src\CommonTools\DashboardControl.cs
+# ; ..\src\CommonTools\DashboardControl.cs
 msgid "Tasks"
 msgstr "งาน"
 
-#; ..\src\CommonTools\DashboardControl.cs
+# ; ..\src\CommonTools\DashboardControl.cs
 msgid "Switch tasks and see current status of tasks"
 msgstr "สลับงานและดูสถานะปัจจุบันของงาน"
 
-#; ..\src\CommonTools\DictionaryStatusControl.Designer.cs
+# ; ..\src\CommonTools\DictionaryStatusControl.Designer.cs
 msgid "Your dictionary has {0} words"
 msgstr "พจนานุกรมของท่านมี {0} คำ"
 
-#; ..\src\LexicalTools\DictionaryControl.Designer.cs
+# ; ..\src\Image Picker Test App\ImagePicker\ImageDisplayWidget.cs
+msgid "Cannot find {0}"
+msgstr ""
+
+# ; ..\src\LexicalModel\LexEntry.cs
+msgid "No Senses"
+msgstr ""
+
+# ; ..\src\LexicalTools\DictionaryControl.Designer.cs
 msgid "&Delete This Word"
 msgstr "ลบคำนี้"
 
-#; ..\src\LexicalTools\DictionaryControl.Designer.cs
+# ; ..\src\LexicalTools\DictionaryControl.Designer.cs
 msgid "&New Word"
 msgstr "คำใหม่"
 
-#; ..\src\LexicalTools\DictionaryTask.cs
+# ; ..\src\LexicalTools\DictionaryTask.cs
 #. The description of the 'Dictionary' task.  In place of the {0} will be the number of words in the dictionary.  In place of the {1} will be the name of the project.
 msgid "See all {0} {1} words."
 msgstr "ดูคำทั้งหมด {0}{1} "
 
-#; ..\src\LexicalTools\GatherBySemanticDomainsControl.Designer.cs
+# ; ..\src\LexicalTools\GatherBySemanticDomainsControl.Designer.cs
+#. The label for the field showing the Lexeme Form of the entry.
 msgid "Word"
 msgstr "คำ"
 
-#; ..\src\LexicalTools\GatherBySemanticDomainsControl.Designer.cs
-#; ..\src\LexicalTools\GatherWordListControl.Designer.cs
-#; ..\src\LexicalTools\MissingInfoControl.Designer.cs
+# ; ..\src\LexicalTools\GatherBySemanticDomainsControl.Designer.cs
+# ; ..\src\LexicalTools\GatherWordListControl.Designer.cs
+# ; ..\src\LexicalTools\MissingInfoControl.Designer.cs
 msgid "(Page Down Key)"
 msgstr "แป้นหน้าต่อไป"
 
-#; ..\src\LexicalTools\GatherBySemanticDomainsControl.Designer.cs
-#; ..\src\LexicalTools\GatherWordListControl.Designer.cs
+# ; ..\src\LexicalTools\GatherBySemanticDomainsControl.Designer.cs
+# ; ..\src\LexicalTools\GatherWordListControl.Designer.cs
 msgid "(Enter Key)"
 msgstr "แป้นใส่ข้อมูลในคอมพิวเตอร์"
 
-#; ..\src\LexicalTools\GatherBySemanticDomainsControl.Designer.cs
+# ; ..\src\LexicalTools\GatherBySemanticDomainsControl.Designer.cs
 msgid "Try thinking of words you use to talk about these things."
 msgstr "การทดสอบความคิดในคำที่พูดเกี่ยวกับสิ่งต่างๆ "
 
-#; ..\src\LexicalTools\GatherWordListControl.Designer.cs
+# ; ..\src\LexicalTools\GatherWordListControl.Designer.cs
 msgid "Try thinking of ways to say these words in your language."
 msgstr "ความพยายามคิดวิธีการในการพูดคำเหล่านี้เป็นภาษาของท่าน"
 
-#; ..\src\LexicalTools\GatherWordListControl.Designer.cs
+# ; ..\src\LexicalTools\GatherWordListControl.Designer.cs
 msgid "Word:"
 msgstr "คำ"
 
-#; ..\src\LexicalTools\LexExampleSentenceLayouter.cs
-#; ..\src\LexicalTools\LexExampleSentenceLayouter.cs
+# ; ..\src\LexicalTools\LexExampleSentenceLayouter.cs
+# ; ..\src\LexicalTools\LexExampleSentenceLayouter.cs
 #. This is the field containing an example sentence of a sense of a word.
-#. Sentence
+#. This is the field containing an example sentence of a sense of a word."), "Sentence
 msgid "Example"
 msgstr "ตัวอย่าง"
 
-#; ..\src\LexicalTools\LexExampleSentenceLayouter.cs
+# ; ..\src\LexicalTools\LexExampleSentenceLayouter.cs
 #. This is the field for putting in a translation of an example sentence.
 msgid "Translation"
 msgstr "คำแปล"
 
-#; ..\src\LexicalTools\LexSenseLayouter.cs
-#; ..\src\LexicalTools\LexSenseLayouter.cs
+# ; ..\src\LexicalTools\LexSenseLayouter.cs
+# ; ..\src\LexicalTools\LexSenseLayouter.cs
 #. This label is shown once, but has two roles.  1) it labels contains the gloss, and 2) marks the beginning of the set of fields which make up a sense. So, in english, if we labelled this 'gloss', it would describe the field well but wouldn't label the section well."), "Gloss
 msgid "Meaning"
 msgstr "ความหมาย"
 
-#; ..\src\LexicalTools\MissingInfoControl.cs
+# ; ..\src\LexicalTools\MissingInfoControl.cs
 msgid "Congratulations. You have completed this task."
 msgstr "ขอแสดงความยินดี คุณได้ทำงานสำเร็จ"
 
-#; ..\src\LexicalTools\MissingInfoControl.cs
+# ; ..\src\LexicalTools\MissingInfoControl.cs
 msgid "There is no work left to be done on this task."
 msgstr "ไม่มีงานเหลือที่จะทำในกลุ่มงาน"
 
-#; ..\src\WeSay.UI\SingleOptionControl.cs
+# ; ..\src\LexicalTools\MissingInfoControl.Designer.cs
+msgid "To Do:"
+msgstr ""
+
+# ; ..\src\Addin.Backup\BackupDialog.cs
+#, fuzzy
+msgid "Completed:"
+msgstr "ข้อมูลสำรองที่สมบูรณ์"
+
+# ; ..\src\Addin.Backup\BackupDialog.cs
+#. Appended to the name of a task, in its tab, while the user is waiting for the task to come up.
+#, fuzzy
+msgid "Loading..."
+msgstr "ข้อมูลสำรอง"
+
+# ; ..\src\WeSay.App\WeSayApp.cs
+#. It's up to you whether to bother translating this or not.") + ": " + project.Name + "
+msgid "WeSay"
+msgstr ""
+
+# ; ..\src\WeSay.Project\ViewTemplate.cs
+msgid "Gloss"
+msgstr ""
+
+# ; ..\src\WeSay.Project\ViewTemplate.cs
+# ; ..\src\WeSay.Project\ViewTemplate.cs
+#. The label for the field showing Part Of Speech
+msgid "POS"
+msgstr ""
+
+# ; ..\src\LexicalTools\LexExampleSentenceLayouter.cs
+# ; ..\src\LexicalTools\LexExampleSentenceLayouter.cs
+#, fuzzy
+msgid "Example Sentence"
+msgstr "ตัวอย่าง"
+
+# ; ..\src\LexicalTools\LexExampleSentenceLayouter.cs
+#. The label for the field showing the example sentence translated into other languages.
+#, fuzzy
+msgid "Example Translation"
+msgstr "คำแปล"
+
+# ; ..\src\WeSay.Project\ViewTemplate.cs
+# ; ..\src\WeSay.Project\ViewTemplate.cs
+#. The label for the field showing Semantic Domains
+msgid "Sem Dom"
+msgstr ""
+
+# ; ..\src\WeSay.Project\ViewTemplate.cs
+# ; ..\src\WeSay.Project\ViewTemplate.cs
+#. The label for the field showing the entry which this entry is derived from, is a subentry of, etc.
+msgid "Base Form"
+msgstr ""
+
+# ; ..\src\WeSay.UI\SingleOptionControl.cs
 #. This is shown in a combo-box (list of options, like Part Of Speech) when no option has been chosen, or the user just doesn't know what to put in this field.
 msgid "unknown"
 msgstr "สิ่งที่ไม่รู้"
+
+#~ msgid ""
+#~ "Perform actions on the project as a whole. For example backup, produce a "
+#~ "report, print out a simple dictionary, etc."
+#~ msgstr ""
+#~ "แสดงแผนงานการกระทำให้เห็นชัดเจน ตัวอย่าง ข้อมูลสนับสนุน การทำรายงาน "
+#~ "การพิมพ์คำศัพท์ง่ายๆ  อื่นๆ"
