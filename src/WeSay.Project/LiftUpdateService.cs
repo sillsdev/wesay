@@ -134,7 +134,10 @@ namespace WeSay.Project
 
 			if (mergeIntoSingleFileBeforeReturning)
 			{
-				ConsumePendingLiftUpdates();
+				if (!ConsumePendingLiftUpdates())
+				{
+					throw new ApplicationException("Could not finish updating LIFT dictionary file.");
+				}
 				CacheManager.UpdateSyncPointInCache(_datasource.Data,
 														File.GetLastWriteTimeUtc(
 															WeSayWordsProject.Project.PathToLiftFile));
@@ -149,7 +152,11 @@ namespace WeSay.Project
 
 		}
 
-		public static void ConsumePendingLiftUpdates()
+		/// <summary>
+		///
+		/// </summary>
+		/// <returns>false if it failed (and it would have already reported the error)</returns>
+		public static bool ConsumePendingLiftUpdates()
 		{
 			//merge the increment files
 
@@ -162,11 +169,22 @@ namespace WeSay.Project
 					WeSayWordsProject.Project.ReleaseLockOnLift();
 					merger.MergeUpdatesIntoFile(WeSayWordsProject.Project.PathToLiftFile);
 				}
+				catch (LiftIO.LiftFormatException error)
+				{
+					//well, it is fatal, but it's probably their bug, not ours
+					Palaso.Reporting.ErrorReport.ReportNonFatalMessage(error.Message);
+					return false;
+				}
+				catch (Exception e)
+				{
+					throw e; //it's probably our bug, so time to fail.
+				}
 				finally
 				{
 					WeSayWordsProject.Project.LockLift();
 				}
 			}
+		   return true;
 		}
 
 

@@ -1,14 +1,7 @@
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
-using System.Text;
-using System.Windows.Forms;
 using Addin.LiftReports.Properties;
-using Commons.Collections;
 using NVelocity;
 using NVelocity.App;
-using NVelocity.Runtime;
 
 namespace Addin.LiftReports
 {
@@ -21,8 +14,10 @@ namespace Addin.LiftReports
 
 		public string GenerateReport(string pathToLIFT)
 		{
+
 			Velocity.Init();
 			NVelocity.VelocityContext context = new NVelocity.VelocityContext();
+
 			context.Put("pathToLift", pathToLIFT);
 			XPathChart chart = new XPathChart();
 			context.Put("chart", chart);
@@ -44,9 +39,17 @@ namespace Addin.LiftReports
 				using (StreamWriter stream = File.CreateText(path))
 				{
 					/*I couldn't get nvelocity to read directly from the resource*/
-					File.WriteAllText("tempReportTemplate.vm", Resources.reportTemplate );
-					Template template = Velocity.GetTemplate("tempReportTemplate.vm");
+					string templatePath = Path.Combine(Path.GetTempPath(), "tempReportTemplate.vm");
+					File.WriteAllText(templatePath, Resources.reportTemplate);
+
+					//hack to get around weird Velocity problem; if I give it the
+					//full path into temp, it chokes saying it can't handle the path format
+					string oldCurrentDir = Directory.GetCurrentDirectory();
+					Directory.SetCurrentDirectory(Path.GetTempPath());
+					Template template = Velocity.GetTemplate(Path.GetFileName(templatePath));
+					Directory.SetCurrentDirectory(oldCurrentDir);
 					template.Merge(context, stream);
+					File.Delete(templatePath);
 				}
 				return path;
 			}

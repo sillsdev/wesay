@@ -70,6 +70,7 @@ namespace WeSay.Setup
 
 				if (projectDoc == null)
 				{
+					projectDoc = new XmlDocument();
 					projectDoc.Load(WeSayWordsProject.Project.PathToDefaultConfig);
 				}
 
@@ -98,7 +99,9 @@ namespace WeSay.Setup
 			}
 			catch (Exception error)
 			{
-				Palaso.Reporting.ErrorReport.ReportNonFatalMessage("There may have been a problem reading the master task inventory xml. " + error.Message);
+				throw new ApplicationException(
+					String.Format("There was a problem reading {0}.  The error was: {1}",
+								  WeSayWordsProject.Project.PathToDefaultConfig, error.Message));
 			}
 		}
 

@@ -172,7 +172,10 @@ namespace WeSay.App
 
 			//NB: it's very important that any updates are consumed before the cache is rebuilt.
 			//Otherwise, the cache and lift will fall out of sync.
-			LiftUpdateService.ConsumePendingLiftUpdates();
+			if (!LiftUpdateService.ConsumePendingLiftUpdates())
+			{
+				return false;
+			}
 
 			if (!BringCachesUpToDate(liftPath, project))
 			{

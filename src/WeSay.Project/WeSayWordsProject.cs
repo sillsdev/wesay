@@ -819,6 +819,32 @@ namespace WeSay.Project
 			}
 		}
 
+	   /// <summary>
+	   ///
+	   /// </summary>
+	   /// <param name="pathToLift"></param>
+	   /// <returns>true if it displayed an error message</returns>
+		static public bool CheckLiftAndReportErrors(string pathToLift)
+		{
+			try
+			{
+				string errors = LiftIO.Validator.GetAnyValidationErrors(WeSayWordsProject.Project.PathToLiftFile);
+			   if (!String.IsNullOrEmpty(errors))
+			   {
+				   Palaso.Reporting.ErrorReport.ReportNonFatalMessage(
+					   "The dictionary file at {0} does not conform to the LIFT format used by this version of WeSay.  The RNG validator said: {1}.",
+					   pathToLift, errors);
+				   return true;
+			   }
+			}
+			catch (Exception e)
+			{
+				Palaso.Reporting.ErrorNotificationDialog.ReportException(e);
+				return true;
+			}
+		   return false;
+		}
+
 		static private void GrepLift(string inputPath, string pattern, string replaceWith)
 		{
 			Regex regex = new Regex(pattern, RegexOptions.Compiled);
