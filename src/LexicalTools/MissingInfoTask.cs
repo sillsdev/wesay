@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 using System.Windows.Forms;
 using WeSay.Language;
 using WeSay.LexicalModel;
@@ -142,7 +143,9 @@ namespace WeSay.LexicalTools
 		public override void Activate()
 		{
 			base.Activate();
-			IRecordList<LexEntry> allRecords = RecordListManager.GetListOfTypeFilteredFurther(new AllItems<LexEntry>(), _sortHelper);
+			//IRecordList<LexEntry> allRecords = RecordListManager.GetListOfTypeFilteredFurther(new AllItems<LexEntry>(), _sortHelper);
+
+			IBindingList allRecords = ((Db4oRecordListManager)RecordListManager).GetSortedList(_sortHelper);
 
 			_missingInfoControl = new MissingInfoControl(DataSource, ViewTemplate, _filter.FilteringPredicate, allRecords);
 			_missingInfoControl.SelectedIndexChanged += new EventHandler(OnRecordSelectionChanged);

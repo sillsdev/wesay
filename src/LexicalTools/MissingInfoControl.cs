@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows.Forms;
 using WeSay.Foundation;
@@ -23,7 +24,7 @@ namespace WeSay.LexicalTools
 		private readonly Predicate<LexEntry> _isNotComplete;
 		public event EventHandler SelectedIndexChanged;
 
-		public MissingInfoControl(IRecordList<LexEntry> records, ViewTemplate viewTemplate, Predicate<LexEntry> isNotComplete, IRecordList<LexEntry> allRecords)
+		public MissingInfoControl(IRecordList<LexEntry> records, ViewTemplate viewTemplate, Predicate<LexEntry> isNotComplete, IBindingList allRecords)
 		{
 			InitializeComponent();
 
