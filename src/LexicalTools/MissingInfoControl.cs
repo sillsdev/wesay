@@ -23,7 +23,7 @@ namespace WeSay.LexicalTools
 		private readonly Predicate<LexEntry> _isNotComplete;
 		public event EventHandler SelectedIndexChanged;
 
-		public MissingInfoControl(IRecordList<LexEntry> records, ViewTemplate viewTemplate, Predicate<LexEntry> isNotComplete)
+		public MissingInfoControl(IRecordList<LexEntry> records, ViewTemplate viewTemplate, Predicate<LexEntry> isNotComplete, IRecordList<LexEntry> allRecords)
 		{
 			InitializeComponent();
 
@@ -46,6 +46,10 @@ namespace WeSay.LexicalTools
 			{
 				throw new ArgumentNullException("isNotComplete");
 			}
+			if (allRecords == null)
+			{
+				throw new ArgumentNullException("allRecords");
+			}
 
 			_records = records;
 			_completedRecords = new InMemoryBindingList<LexEntry>();
@@ -55,10 +59,7 @@ namespace WeSay.LexicalTools
 			_entryViewControl.KeyDown += new KeyEventHandler(OnKeyDown);
 			_entryViewControl.ViewTemplate = _viewTemplate;
 
-		   // IRecordList<LexEntry> master = ((WeSay.Data.Db4oRecordListManager.FilteredDb4oRecordList<string,WeSay.LexicalModel.LexEntry>) _records).MasterRecordList;
-
-			//Eric, can you plumb the needed data down to here?
-		   // _entryViewControl.AllRecords = ;//todo this needs to be give the sorted list for the typeahead control of a relation
+			_entryViewControl.AllRecords = allRecords;//todo this needs to be give the sorted list for the typeahead control of a relation
 
 			_recordsListBox.DataSource = _records;
 			_records.ListChanged += OnRecordsListChanged; // this needs to be after so it will get change event after the ListBox

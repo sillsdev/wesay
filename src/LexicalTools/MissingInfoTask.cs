@@ -140,7 +140,9 @@ namespace WeSay.LexicalTools
 		public override void Activate()
 		{
 			base.Activate();
-			_missingInfoControl = new MissingInfoControl(DataSource, ViewTemplate, _filter.FilteringPredicate);
+			IRecordList<LexEntry> allRecords = RecordListManager.GetListOfType<LexEntry>();
+
+			_missingInfoControl = new MissingInfoControl(DataSource, ViewTemplate, _filter.FilteringPredicate, allRecords);
 			_missingInfoControl.SelectedIndexChanged += new EventHandler(OnRecordSelectionChanged);
 		}
 

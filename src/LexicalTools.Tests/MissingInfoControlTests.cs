@@ -12,6 +12,7 @@ namespace WeSay.LexicalTools.Tests
 	{
 		InMemoryRecordListManager _recordListManager;
 		IRecordList<LexEntry> _missingTranslationRecordList;
+		private IRecordList<LexEntry> _allRecords;
 		ViewTemplate _viewTemplate;
 		private MissingTranslationFilter _missingTranslation;
 
@@ -63,6 +64,7 @@ namespace WeSay.LexicalTools.Tests
 			Db4oLexModelHelper.InitializeForNonDbTests();
 			WeSayWordsProject.InitializeForTests();
 			_recordListManager = new InMemoryRecordListManager();
+			_allRecords = _recordListManager.GetListOfType<LexEntry>();
 			this._missingTranslation = new MissingTranslationFilter();
 			LexEntrySortHelper lexEntrySortHelper = new LexEntrySortHelper("vernacular", true);
 			_recordListManager.Register(this._missingTranslation, lexEntrySortHelper);
@@ -71,6 +73,7 @@ namespace WeSay.LexicalTools.Tests
 			_missingTranslationRecordList.Add(CreateTestEntry("banana", "yellow food", "Monkeys like to eat bananas."));
 			_missingTranslationRecordList.Add(CreateTestEntry("car", "small motorized vehicle", "Watch out for cars when you cross the street."));
 			_missingTranslationRecordList.Add(CreateTestEntry("dog", "animal with four legs; man's best friend", "He walked his dog."));
+
 
 			string[] analysisWritingSystemIds = new string[] { "analysis" };
 			string[] vernacularWritingSystemIds = new string[] { "vernacular" };
@@ -110,7 +113,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void Create()
 		{
-			MissingInfoControl missingInfoControl = new MissingInfoControl(_missingTranslationRecordList, _viewTemplate, _missingTranslation.FilteringPredicate);
+			MissingInfoControl missingInfoControl = new MissingInfoControl(_missingTranslationRecordList, _viewTemplate, _missingTranslation.FilteringPredicate, _allRecords);
 			Assert.IsNotNull(missingInfoControl);
 		}
 
@@ -118,34 +121,41 @@ namespace WeSay.LexicalTools.Tests
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void Create_NullRecords_Throws()
 		{
-			new MissingInfoControl(null, _viewTemplate, _missingTranslation.FilteringPredicate);
+			new MissingInfoControl(null, _viewTemplate, _missingTranslation.FilteringPredicate, _allRecords);
 		}
 
 		[Test]
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void Create_NullviewTemplate_Throws()
 		{
-			new MissingInfoControl(_missingTranslationRecordList, null, _missingTranslation.FilteringPredicate);
+			new MissingInfoControl(_missingTranslationRecordList, null, _missingTranslation.FilteringPredicate, _allRecords);
 		}
 
 		[Test]
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void Create_NullFilter_Throws()
 		{
-			new MissingInfoControl(_missingTranslationRecordList, _viewTemplate, null);
+			new MissingInfoControl(_missingTranslationRecordList, _viewTemplate, null, _allRecords);
+		}
+
+		[Test]
+		[ExpectedException(typeof(ArgumentNullException))]
+		public void Create_NullAllRecords_Throws()
+		{
+			new MissingInfoControl(_missingTranslationRecordList, _viewTemplate, _missingTranslation.FilteringPredicate, null);
 		}
 
 		[Test]
 		public void CurrentRecord_InitializedToFirst()
 		{
-			MissingInfoControl missingInfoControl = new MissingInfoControl(_missingTranslationRecordList, _viewTemplate, _missingTranslation.FilteringPredicate);
+			MissingInfoControl missingInfoControl = new MissingInfoControl(_missingTranslationRecordList, _viewTemplate, _missingTranslation.FilteringPredicate, _allRecords);
 			Assert.AreEqual(_missingTranslationRecordList[0], missingInfoControl.CurrentRecord);
 		}
 
 		[Test]
 		public void SetCurrentRecordToPrevious_AtFirst_StaysAtFirst()
 		{
-			MissingInfoControl missingInfoControl = new MissingInfoControl(_missingTranslationRecordList, _viewTemplate, _missingTranslation.FilteringPredicate);
+			MissingInfoControl missingInfoControl = new MissingInfoControl(_missingTranslationRecordList, _viewTemplate, _missingTranslation.FilteringPredicate, _allRecords);
 			missingInfoControl.SetCurrentRecordToPrevious();
 			Assert.AreEqual(_missingTranslationRecordList[0], missingInfoControl.CurrentRecord);
 		}
@@ -153,7 +163,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void SetCurrentRecordToNextThenPrevious_SamePlace()
 		{
-			MissingInfoControl missingInfoControl = new MissingInfoControl(_missingTranslationRecordList, _viewTemplate, _missingTranslation.FilteringPredicate);
+			MissingInfoControl missingInfoControl = new MissingInfoControl(_missingTranslationRecordList, _viewTemplate, _missingTranslation.FilteringPredicate, _allRecords);
 			missingInfoControl.SetCurrentRecordToNext();
 			missingInfoControl.SetCurrentRecordToPrevious();
 			Assert.AreEqual(_missingTranslationRecordList[0], missingInfoControl.CurrentRecord);
@@ -162,7 +172,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void SetCurrentRecordToNext_AtLast_StaysAtLast()
 		{
-			MissingInfoControl missingInfoControl = new MissingInfoControl(_missingTranslationRecordList, _viewTemplate, _missingTranslation.FilteringPredicate);
+			MissingInfoControl missingInfoControl = new MissingInfoControl(_missingTranslationRecordList, _viewTemplate, _missingTranslation.FilteringPredicate, _allRecords);
 			int count = _missingTranslationRecordList.Count;
 			for (int i = 0; i <= count; i++)
 			{
@@ -174,7 +184,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void SetCurrentRecordToNext_GoesToNext()
 		{
-			MissingInfoControl missingInfoControl = new MissingInfoControl(_missingTranslationRecordList, _viewTemplate, _missingTranslation.FilteringPredicate);
+			MissingInfoControl missingInfoControl = new MissingInfoControl(_missingTranslationRecordList, _viewTemplate, _missingTranslation.FilteringPredicate, _allRecords);
 			missingInfoControl.SetCurrentRecordToNext();
 			Assert.AreEqual(_missingTranslationRecordList[1], missingInfoControl.CurrentRecord);
 		}
@@ -182,7 +192,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void SetCurrentRecordToPrevious_AfterChangedSoNoLongerMeetsFilter_StaysAtFirst()
 		{
-			MissingInfoControl missingInfoControl = new MissingInfoControl(_missingTranslationRecordList, _viewTemplate, _missingTranslation.FilteringPredicate);
+			MissingInfoControl missingInfoControl = new MissingInfoControl(_missingTranslationRecordList, _viewTemplate, _missingTranslation.FilteringPredicate, _allRecords);
 			AddTranslationToEntry(missingInfoControl.CurrentRecord,"a bogus translation of example");
 			missingInfoControl.SetCurrentRecordToPrevious();
 			Assert.AreEqual(_missingTranslationRecordList[0], missingInfoControl.CurrentRecord);
@@ -191,7 +201,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void SetCurrentRecordToPrevious_AfterChangedSoNoLongerMeetsFilter_GoesToEntryBeforeChangedOne()
 		{
-			MissingInfoControl missingInfoControl = new MissingInfoControl(_missingTranslationRecordList, _viewTemplate, _missingTranslation.FilteringPredicate);
+			MissingInfoControl missingInfoControl = new MissingInfoControl(_missingTranslationRecordList, _viewTemplate, _missingTranslation.FilteringPredicate, _allRecords);
 			missingInfoControl.SetCurrentRecordToNext();
 			missingInfoControl.SetCurrentRecordToNext();
 			AddTranslationToEntry(missingInfoControl.CurrentRecord, "a bogus translation of example");
@@ -202,7 +212,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void SetCurrentRecordToNextThenPrevious_AfterChangedSoNoLongerMeetsFilter_SamePlace()
 		{
-			MissingInfoControl missingInfoControl = new MissingInfoControl(_missingTranslationRecordList, _viewTemplate, _missingTranslation.FilteringPredicate);
+			MissingInfoControl missingInfoControl = new MissingInfoControl(_missingTranslationRecordList, _viewTemplate, _missingTranslation.FilteringPredicate, _allRecords);
 			missingInfoControl.SetCurrentRecordToNext();
 			AddTranslationToEntry(missingInfoControl.CurrentRecord, "a bogus translation of example");
 			missingInfoControl.SetCurrentRecordToPrevious();
@@ -212,7 +222,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void SetCurrentRecordToPrevious_AtLast_AfterChangedSoNoLongerMeetsFilter_StaysAtLast()
 		{
-			MissingInfoControl missingInfoControl = new MissingInfoControl(_missingTranslationRecordList, _viewTemplate, _missingTranslation.FilteringPredicate);
+			MissingInfoControl missingInfoControl = new MissingInfoControl(_missingTranslationRecordList, _viewTemplate, _missingTranslation.FilteringPredicate, _allRecords);
 			int count = _missingTranslationRecordList.Count;
 			for (int i = 0; i < count; i++)
 			{
@@ -226,7 +236,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void SetCurrentRecordToPrevious_AtSecondToLast_AfterChangedSoNoLongerMeetsFilter_GoesToEntryBeforeChangedOne()
 		{
-			MissingInfoControl missingInfoControl = new MissingInfoControl(_missingTranslationRecordList, _viewTemplate, _missingTranslation.FilteringPredicate);
+			MissingInfoControl missingInfoControl = new MissingInfoControl(_missingTranslationRecordList, _viewTemplate, _missingTranslation.FilteringPredicate, _allRecords);
 			int count = _missingTranslationRecordList.Count;
 			for (int i = 0; i < count-2; i++)
 			{
@@ -241,7 +251,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void SetCurrentRecordToNext_AtLast_AfterChangedSoNoLongerMeetsFilter_StaysAtLast()
 		{
-			MissingInfoControl missingInfoControl = new MissingInfoControl(_missingTranslationRecordList, _viewTemplate, _missingTranslation.FilteringPredicate);
+			MissingInfoControl missingInfoControl = new MissingInfoControl(_missingTranslationRecordList, _viewTemplate, _missingTranslation.FilteringPredicate, _allRecords);
 			int count = _missingTranslationRecordList.Count;
 			for (int i = 0; i < count; i++)
 			{
@@ -255,7 +265,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void SetCurrentRecordToNext_AfterChangedSoNoLongerMeetsFilter_GoesToNext()
 		{
-			MissingInfoControl missingInfoControl = new MissingInfoControl(_missingTranslationRecordList, _viewTemplate, _missingTranslation.FilteringPredicate);
+			MissingInfoControl missingInfoControl = new MissingInfoControl(_missingTranslationRecordList, _viewTemplate, _missingTranslation.FilteringPredicate, _allRecords);
 			missingInfoControl.SetCurrentRecordToNext();
 			AddTranslationToEntry(missingInfoControl.CurrentRecord, "a bogus translation of example");
 			missingInfoControl.SetCurrentRecordToNext();
