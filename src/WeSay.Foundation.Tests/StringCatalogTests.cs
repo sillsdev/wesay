@@ -60,10 +60,10 @@ namespace WeSay.Foundation.Tests
 		[Test]
 		public void FontsChanged()
 		{
-			StringCatalog catalog = new StringCatalog(_poFile, "Onyx", 30);
+			StringCatalog catalog = new StringCatalog(_poFile, "Arial", 30);
 			Font normal = new Font(System.Drawing.FontFamily.GenericSerif, 20);
 			Font localized = StringCatalog.ModifyFontForLocalization(normal);
-			Assert.AreEqual("Onyx", localized.FontFamily.Name);
+			Assert.AreEqual("Arial", localized.FontFamily.Name);
 		}
 	}
 }
