@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using NUnit.Framework;
 using WeSay.LexicalModel;
 using WeSay.LexicalTools;
@@ -9,6 +10,7 @@ namespace WeSay.LexicalTools.Tests
 	public class MissingExampleSentenceFilterTests
 	{
 		private MissingItemFilter _missingExampleSentenceFilter;
+		private string kNameOfSkipTrait = "intentionalMissing_LexExampleSentence";
 
 		[SetUp]
 	public void Setup()
@@ -42,6 +44,16 @@ namespace WeSay.LexicalTools.Tests
 			entry.Senses.AddNew();
 			Assert.AreEqual(true, this._missingExampleSentenceFilter.FilteringPredicate(entry));
 		}
+
+//        [Test]
+//        public void NoExamplesButHasSkipFlag()
+//        {
+//            LexEntry entry = new LexEntry();
+//            LexSense sense = (LexSense) entry.Senses.AddNew();
+//            sense.Properties.Add(new KeyValuePair<string, object>(kNameOfSkipTrait, true));
+//
+//            Assert.AreEqual(false, this._missingExampleSentenceFilter.FilteringPredicate(entry));
+//        }
 
 		[Test]
 		public void SenseExampleSentenceNoWritingSystems()

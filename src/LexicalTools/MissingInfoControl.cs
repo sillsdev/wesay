@@ -12,6 +12,7 @@ namespace WeSay.LexicalTools
 {
 	public partial class MissingInfoControl : UserControl
 	{
+		private readonly IRecordListManager _recordManager;
 		private IRecordList<LexEntry> _records;
 		private InMemoryBindingList<LexEntry> _completedRecords;
 		private LexEntry _currentRecord;
@@ -53,6 +54,11 @@ namespace WeSay.LexicalTools
 			InitializeDisplaySettings();
 			_entryViewControl.KeyDown += new KeyEventHandler(OnKeyDown);
 			_entryViewControl.ViewTemplate = _viewTemplate;
+
+		   // IRecordList<LexEntry> master = ((WeSay.Data.Db4oRecordListManager.FilteredDb4oRecordList<string,WeSay.LexicalModel.LexEntry>) _records).MasterRecordList;
+
+			//Eric, can you plumb the needed data down to here?
+		   // _entryViewControl.AllRecords = ;//todo this needs to be give the sorted list for the typeahead control of a relation
 
 			_recordsListBox.DataSource = _records;
 			_records.ListChanged += OnRecordsListChanged; // this needs to be after so it will get change event after the ListBox

@@ -138,12 +138,8 @@ namespace WeSay.LexicalModel
 				{
 					LexEntry entry = value as LexEntry;
 					Debug.Assert(entry != null);
-					entry.EnsureHasId();
-					if (entry.Id == null)
-					{
-						throw new ApplicationException("The target is lacking an id.");
-					}
-					_targetId = entry.Id;
+					_targetId = entry.GetOrCreateId(true);
+
 				}
 				NotifyPropertyChanged();
 			}
@@ -231,6 +227,7 @@ namespace WeSay.LexicalModel
 			{
 				_parent = value;
 			}
+			get { return _parent; }
 		}
 		#endregion
 

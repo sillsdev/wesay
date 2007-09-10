@@ -41,6 +41,17 @@
 	  <showfields>ExampleSentence</showfields>
 	  <readOnly>SenseGloss</readOnly>
 	</task>
+	<task id="AddBaseForms" class="WeSay.LexicalTools.MissingInfoTask" assembly="LexicalTools" visible="true">
+	  <entries ref="All Entries" />
+	  <filter class="WeSay.LexicalTools.MissingItemFilter" assembly="LexicalTools">
+		<viewTemplate ref="Default View Template" />
+		<field>BaseForm</field>
+	  </filter>
+	  <label>Add Base Forms</label>
+	  <description>Identify the "base form" word that this word is built from. In the printed dictionary, these can optionally be shown as subentries.</description>
+	  <viewTemplate ref="Default View Template" />
+	  <showfields>BaseForm</showfields>
+	</task>
 
 	<task id="Gather Words" class="WeSay.LexicalTools.GatherWordListTask" assembly="LexicalTools">
 	  <entries ref="All Entries" />

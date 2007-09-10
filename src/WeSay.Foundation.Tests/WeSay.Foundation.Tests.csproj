@@ -55,6 +55,7 @@
 	  <DependentUpon>TestResources.resx</DependentUpon>
 	</Compile>
 	<Compile Include="TestUtilities.cs" />
+	<Compile Include="WeSayDataObjectTests.cs" />
 	<Compile Include="WritingSystemTests.cs" />
 	<Compile Include="MultiTextTests.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />

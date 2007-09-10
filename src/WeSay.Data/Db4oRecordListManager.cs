@@ -105,10 +105,10 @@ namespace WeSay.Data
 			}
 		}
 
-		class FilteredDb4oRecordList<Key, T> : Db4oRecordList<T>, IBindingList where T : class, new()
+		public class FilteredDb4oRecordList<Key, T> : Db4oRecordList<T>, IBindingList where T : class, new()
 		{
 			private bool _isSorted;
-			IRecordList<T> _masterRecordList;
+			private IRecordList<T> _masterRecordList;
 			bool _isSourceMasterRecord;
 			IFilter<T> _isRelevantFilter;
 			string _cachePath;
@@ -140,7 +140,7 @@ namespace WeSay.Data
 					((Db4oList<T>)Records).ItemIds.Clear();
 				}
 
-				DelayWritingCachesUntilDispose = _masterRecordList.DelayWritingCachesUntilDispose;
+				DelayWritingCachesUntilDispose = MasterRecordList.DelayWritingCachesUntilDispose;
 
 				ApplyFilter(RelevancePredicate);
 				_isSorted = false;
@@ -171,9 +171,9 @@ namespace WeSay.Data
 				{
 					SerializeRecordIds();
 				}
-				_masterRecordList.ListChanged += new ListChangedEventHandler(OnMasterRecordListListChanged);
-				_masterRecordList.ContentOfItemInListChanged += new ListChangedEventHandler(OnMasterRecordListContentOfItemInListChanged);
-				_masterRecordList.DeletingRecord += new EventHandler<RecordListEventArgs<T>>(OnMasterRecordListDeletingRecord);
+				MasterRecordList.ListChanged += new ListChangedEventHandler(OnMasterRecordListListChanged);
+				MasterRecordList.ContentOfItemInListChanged += new ListChangedEventHandler(OnMasterRecordListContentOfItemInListChanged);
+				MasterRecordList.DeletingRecord += new EventHandler<RecordListEventArgs<T>>(OnMasterRecordListDeletingRecord);
 			}
 
 			// use the SortedList to determine the order of the filtered list items.
@@ -212,6 +212,11 @@ namespace WeSay.Data
 				}
 			}
 
+			public IRecordList<T> MasterRecordList
+			{
+				get { return _masterRecordList; }
+			}
+
 
 			protected override void OnItemContentChanged(int newIndex)
 			{
@@ -224,8 +229,8 @@ namespace WeSay.Data
 				{
 					T item = this[newIndex];
 					//trigger change in master (it may not be active in master and we need it to perculate to all filtered ones
-					int i = this._masterRecordList.IndexOf(item);
-					this._masterRecordList[i] = item;
+					int i = this.MasterRecordList.IndexOf(item);
+					this.MasterRecordList[i] = item;
 				}
 			}
 
@@ -358,9 +363,9 @@ namespace WeSay.Data
 					else
 					{
 						shouldAdd = false;
-						if (!_isSourceMasterRecord && _masterRecordList != null)
+						if (!_isSourceMasterRecord && MasterRecordList != null)
 						{
-							_masterRecordList.Add(item);
+							MasterRecordList.Add(item);
 						}
 					}
 
@@ -373,9 +378,9 @@ namespace WeSay.Data
 			}
 			protected override bool ShouldDeleteRecord(T item)
 			{
-				if (!_isSourceMasterRecord && _masterRecordList != null)
+				if (!_isSourceMasterRecord && MasterRecordList != null)
 				{
-					_masterRecordList.Remove(item);
+					MasterRecordList.Remove(item);
 				}
 				return base.ShouldDeleteRecord(item);
 			}
@@ -399,7 +404,7 @@ namespace WeSay.Data
 						Add(item);
 					}
 #if DEBUG
-					if (!_masterRecordList.DelayWritingCachesUntilDispose)
+					if (!MasterRecordList.DelayWritingCachesUntilDispose)
 					{
 						SerializeRecordIds();
 					}
@@ -411,7 +416,7 @@ namespace WeSay.Data
 					((Db4oList<T>)Records).Refresh(item);
 					OnItemDeleted(index);
 #if DEBUG
-					if (!_masterRecordList.DelayWritingCachesUntilDispose)
+					if (!MasterRecordList.DelayWritingCachesUntilDispose)
 					{
 						SerializeRecordIds();
 					}
@@ -432,7 +437,7 @@ namespace WeSay.Data
 
 //                    Remove(item);
 #if DEBUG
-					if (!_masterRecordList.DelayWritingCachesUntilDispose)
+					if (!MasterRecordList.DelayWritingCachesUntilDispose)
 					{
 						SerializeRecordIds();
 					}
@@ -447,7 +452,7 @@ namespace WeSay.Data
 				{
 					Clear();
 #if DEBUG
-					if (!_masterRecordList.DelayWritingCachesUntilDispose)
+					if (!MasterRecordList.DelayWritingCachesUntilDispose)
 					{
 						SerializeRecordIds();
 					}
@@ -460,9 +465,9 @@ namespace WeSay.Data
 				_isSorted = true; //allow me to get the record associated with newIndex
 								  //without triggering a sort and changing it from out
 								  //from under me
-				if (!_isSourceMasterRecord && _masterRecordList != null)
+				if (!_isSourceMasterRecord && MasterRecordList != null)
 				{
-					_masterRecordList.Add(this[newIndex]);
+					MasterRecordList.Add(this[newIndex]);
 				}
 				_isSorted = false; // may have lost sort order.
 				base.OnItemAdded(newIndex);
@@ -538,9 +543,9 @@ namespace WeSay.Data
 					if (disposing)
 					{
 						// dispose-only, i.e. non-finalizable logic
-						if (_masterRecordList != null)
+						if (MasterRecordList != null)
 						{
-							_masterRecordList.ListChanged -= OnMasterRecordListListChanged;
+							MasterRecordList.ListChanged -= OnMasterRecordListListChanged;
 							_masterRecordList = null;
 						}
 						if (!_isInitializingFromCache)

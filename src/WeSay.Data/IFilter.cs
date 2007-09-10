@@ -26,6 +26,9 @@ namespace WeSay.Data
 			return true;
 		}
 
+		/// <summary>
+		/// Filters are kept in a list; this is the string by which a filter is accessed.
+		/// </summary>
 		public string Key
 		{
 			get { return "AllItems"; }

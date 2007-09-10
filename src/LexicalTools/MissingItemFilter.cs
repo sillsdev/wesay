@@ -42,6 +42,9 @@ namespace WeSay.LexicalTools
 
 		#region IFilter<LexEntry> Members
 
+		/// <summary>
+		/// Filters are kept in a list; this is the string by which a filter is accessed.
+		/// </summary>
 		public string Key
 		{
 			get
@@ -62,20 +65,24 @@ namespace WeSay.LexicalTools
 		{
 			get
 			{
+
 				return IsMissingItem;
 			}
 		}
 
-		private bool IsMissingDataInWritingSystem(object field)
+		private bool IsMissingDataInWritingSystem(object content)
 		{
 			switch (_field.DataTypeName)
 			{
 				case "Option":
-					return ((OptionRef) field).IsEmpty;
+					return ((OptionRef) content).IsEmpty;
 				case "OptionCollection":
-					return ((OptionRefCollection)field).IsEmpty;
+					return ((OptionRefCollection)content).IsEmpty;
 				case "MultiText":
-					return IsMissingWritingSystem((MultiText)field);
+					return IsMissingWritingSystem((MultiText)content);
+				case "RelationToOneEntry":
+					LexRelationCollection collection = (LexRelationCollection)content;
+					return collection.IsEmpty && !IsIntentionallyMissing(collection.Parent, this._field.FieldName);
 				default:
 					Debug.Fail("unknown DataTypeName");
 					return false;
@@ -137,6 +144,11 @@ namespace WeSay.LexicalTools
 					break;
 			}
 			return false;
+		}
+
+		private bool IsIntentionallyMissing(WeSay.Foundation.WeSayDataObject parent, string fieldName)
+		{
+			return parent.GetHasFlag("intentionallyMissing_" + fieldName);
 		}
 
 		private bool IsMissingLexExampleSentenceField(LexExampleSentence example)
@@ -204,11 +216,12 @@ namespace WeSay.LexicalTools
 			return false;
 		}
 
-		private bool IsMissingCustomField(WeSayDataObject weSayData) {
+		private bool IsMissingCustomField(WeSayDataObject weSayData)
+		{
 			IParentable field = weSayData.GetProperty<IParentable>(this._field.FieldName);
 			if(field == null)
 			{
-				return true;
+				return !IsIntentionallyMissing( weSayData,_field.FieldName);
 			}
 			return IsMissingDataInWritingSystem(field);
 		}

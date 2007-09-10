@@ -132,14 +132,6 @@ namespace WeSay.LexicalModel
 			return _id;
 		}
 
-		/// <summary>
-		/// Something of a transitional hack... while we're introducing non-optional human readable ids
-		/// </summary>
-		public void EnsureHasId()
-		{
-			GetOrCreateId(true);
-		}
-
 		public MultiText LexicalForm
 		{
 			get

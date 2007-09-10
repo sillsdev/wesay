@@ -253,13 +253,11 @@ namespace WeSay.Foundation
 		/// Will return null if not found
 		/// </summary>
 		/// <typeparam name="TContents"></typeparam>
-		/// <returns></returns>
-		public TContents GetProperty<TContents>(string fieldName) where TContents : class, IParentable
+		/// <returns>null if not found</returns>
+		public TContents GetProperty<TContents>(string fieldName) where TContents : class//, IParentable
 		{
 			KeyValuePair<string, object> found = Properties.Find(delegate(KeyValuePair<string, object> p) { return p.Key == fieldName; });
 			if (found.Key == fieldName)
-			//if (Properties.Exists(delegate(KeyValuePair<string,object> p) { return p.Key == fieldName; }))
-			//.TryGetValue(fieldName, out val))
 			{
 				//temp hack until mt's use parents for notification
 				if (found.Value is MultiText)
@@ -269,6 +267,45 @@ namespace WeSay.Foundation
 				return found.Value as TContents;
 			}
 			return null;
+		}
+
+		public bool GetHasFlag(string propertyName)
+		{
+			string value =GetProperty<string>(propertyName);
+			if (value == null)
+				return false;
+			return value == "set";
+		}
+
+		/// <summary>
+		///
+		/// </summary>
+		///<remarks>Seting a flag is represented by creating a property and giving it a "set"
+		/// value, though that is not really meaningful (there are no other possible values).</remarks>
+		/// <param name="propertyName"></param>
+		public void SetFlag(string propertyName)
+		{
+			KeyValuePair<string, object> found = Properties.Find(delegate(KeyValuePair<string, object> p) { return p.Key == propertyName; });
+			if (found.Key == propertyName)
+			{
+				_properties.Remove(found);
+			}
+
+			Properties.Add(new KeyValuePair<string, object>(propertyName, "set"));
+		}
+
+		/// <summary>
+		///
+		/// </summary>
+		/// <remarks>Clearing a flag is represented by just removing the property, if it exists</remarks>
+		/// <param name="propertyName"></param>
+		public void ClearFlag(string propertyName)
+		{
+			KeyValuePair<string, object> found = Properties.Find(delegate(KeyValuePair<string, object> p) { return p.Key == propertyName; });
+			if (found.Key == propertyName)
+			{
+				_properties.Remove(found);
+			}
 		}
 	}
 
