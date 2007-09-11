@@ -15,8 +15,8 @@ namespace WeSay.LexicalTools
 {
 	public class SemanticDomainSortHelper : ISortHelper<string, LexEntry>
 	{
-		Db4oDataSource _db4oData;
-		string _semanticDomainFieldName;
+		private Db4oDataSource _db4oData;
+		private string _semanticDomainFieldName;
 
 		public SemanticDomainSortHelper(Db4oDataSource db4oData, string semanticDomainFieldName)
 		{
@@ -24,11 +24,11 @@ namespace WeSay.LexicalTools
 			{
 				throw new ArgumentNullException("db4oData");
 			}
-			if(semanticDomainFieldName == null)
+			if (semanticDomainFieldName == null)
 			{
 				throw new ArgumentNullException("semanticDomainFieldName");
 			}
-			if(semanticDomainFieldName == string.Empty)
+			if (semanticDomainFieldName == string.Empty)
 			{
 				throw new ArgumentOutOfRangeException("semanticDomainFieldName");
 			}
@@ -41,10 +41,7 @@ namespace WeSay.LexicalTools
 
 		public IComparer<string> KeyComparer
 		{
-			get
-			{
-				return StringComparer.InvariantCulture;
-			}
+			get { return StringComparer.InvariantCulture; }
 		}
 
 		public List<KeyValuePair<string, long>> GetKeyIdPairs()
@@ -59,11 +56,11 @@ namespace WeSay.LexicalTools
 			{
 				OptionRefCollection semanticDomains = sense.GetProperty<OptionRefCollection>(_semanticDomainFieldName);
 
-				if(semanticDomains != null)
+				if (semanticDomains != null)
 				{
 					foreach (string s in semanticDomains)
 					{
-						if(!keys.Contains(s))
+						if (!keys.Contains(s))
 						{
 							keys.Add(s);
 						}
@@ -75,10 +72,7 @@ namespace WeSay.LexicalTools
 
 		public string Name
 		{
-			get
-			{
-				return "LexEntry sorted by " + _semanticDomainFieldName;
-			}
+			get { return "LexEntry sorted by " + _semanticDomainFieldName; }
 		}
 
 		#endregion
@@ -87,7 +81,7 @@ namespace WeSay.LexicalTools
 	public class GatherBySemanticDomainTask : TaskBase
 	{
 		private readonly string _semanticDomainQuestionsFileName;
-		private GatherBySemanticDomainsControl  _gatherControl;
+		private GatherBySemanticDomainsControl _gatherControl;
 		private Dictionary<string, List<string>> _domainQuestions;
 		private List<string> _domainKeys;
 		private List<string> _domainNames;
@@ -99,8 +93,7 @@ namespace WeSay.LexicalTools
 		private Field _semanticDomainField;
 		private OptionsList _semanticDomainOptionsList;
 
-
-		int _currentDomainIndex;
+		private int _currentDomainIndex;
 		private int _currentQuestionIndex;
 
 		public GatherBySemanticDomainTask(IRecordListManager recordListManager,
@@ -109,9 +102,9 @@ namespace WeSay.LexicalTools
 										  string semanticDomainQuestionsFileName,
 										  ViewTemplate viewTemplate,
 										  string semanticDomainFieldName)
-			: base(label, description, false, recordListManager)
+				: base(label, description, false, recordListManager)
 		{
-			if(semanticDomainQuestionsFileName == null)
+			if (semanticDomainQuestionsFileName == null)
 			{
 				throw new ArgumentNullException("semanticDomainQuestionsFileName");
 			}
@@ -136,18 +129,26 @@ namespace WeSay.LexicalTools
 			_semanticDomainQuestionsFileName = semanticDomainQuestionsFileName;
 			if (!File.Exists(semanticDomainQuestionsFileName))
 			{
-				string pathInProject = Path.Combine(WeSayWordsProject.Project.PathToWeSaySpecificFilesDirectoryInProject, semanticDomainQuestionsFileName);
+				string pathInProject =
+						Path.Combine(WeSayWordsProject.Project.PathToWeSaySpecificFilesDirectoryInProject,
+									 semanticDomainQuestionsFileName);
 				if (File.Exists(pathInProject))
 				{
 					_semanticDomainQuestionsFileName = pathInProject;
 				}
 				else
 				{
-					string pathInProgramDir = Path.Combine(WeSayWordsProject.Project.ApplicationCommonDirectory, semanticDomainQuestionsFileName);
+					string pathInProgramDir =
+							Path.Combine(WeSayWordsProject.Project.ApplicationCommonDirectory,
+										 semanticDomainQuestionsFileName);
 					if (!File.Exists(pathInProgramDir))
 					{
 						throw new ApplicationException(
-							string.Format("Could not find the semanticDomainQuestions file {0}. Expected to find it at: {1} or {2}", semanticDomainQuestionsFileName, pathInProject, pathInProgramDir));
+								string.Format(
+										"Could not find the semanticDomainQuestions file {0}. Expected to find it at: {1} or {2}",
+										semanticDomainQuestionsFileName,
+										pathInProject,
+										pathInProgramDir));
 					}
 					_semanticDomainQuestionsFileName = pathInProgramDir;
 				}
@@ -158,11 +159,9 @@ namespace WeSay.LexicalTools
 
 		private new Db4oRecordListManager RecordListManager
 		{
-			get
-			{
-				return (Db4oRecordListManager)base.RecordListManager;
-			}
+			get { return (Db4oRecordListManager) base.RecordListManager; }
 		}
+
 		/// <summary>
 		/// The GatherWordListControl associated with this task
 		/// </summary>
@@ -171,7 +170,7 @@ namespace WeSay.LexicalTools
 		{
 			get
 			{
-				if(!IsActive)
+				if (!IsActive)
 				{
 					throw new InvalidOperationException("Task must be active to use this property");
 				}
@@ -181,22 +180,19 @@ namespace WeSay.LexicalTools
 
 		public List<string> DomainKeys
 		{
-			get { return this._domainKeys; }
+			get { return _domainKeys; }
 		}
 
 		public string CurrentDomainKey
 		{
-			get
-			{
-				return DomainKeys[CurrentDomainIndex];
-			}
+			get { return DomainKeys[CurrentDomainIndex]; }
 		}
 
 		public List<string> DomainNames
 		{
 			get
 			{
-				if(this._domainNames == null)
+				if (_domainNames == null)
 				{
 					PopulateDomainNames();
 				}
@@ -213,16 +209,13 @@ namespace WeSay.LexicalTools
 			}
 		}
 
-
 		public string CurrentDomainName
 		{
-			get
-			{
-				return GetOptionNameFromKey(CurrentDomainKey);
-			}
+			get { return GetOptionNameFromKey(CurrentDomainKey); }
 		}
 
-		private string GetOptionNameFromKey(string key) {
+		private string GetOptionNameFromKey(string key)
+		{
 			Option option = GetOptionFromKey(key);
 			if (option == null)
 			{
@@ -233,10 +226,7 @@ namespace WeSay.LexicalTools
 
 		private Option GetOptionFromKey(string key)
 		{
-			return this._semanticDomainOptionsList.Options.Find(delegate(Option o)
-																{
-																	return o.Key == key;
-																});
+			return _semanticDomainOptionsList.Options.Find(delegate(Option o) { return o.Key == key; });
 		}
 
 		public string CurrentDomainDescription
@@ -261,10 +251,10 @@ namespace WeSay.LexicalTools
 				{
 					throw new ArgumentOutOfRangeException();
 				}
-				if (value != this._currentDomainIndex)
+				if (value != _currentDomainIndex)
 				{
-					this._currentDomainIndex = value;
-					this._currentQuestionIndex = 0;
+					_currentDomainIndex = value;
+					_currentQuestionIndex = 0;
 					_words = null;
 				}
 			}
@@ -277,33 +267,30 @@ namespace WeSay.LexicalTools
 
 		public string CurrentQuestion
 		{
-			get
-			{
-				return Questions[CurrentQuestionIndex];
-			}
+			get { return Questions[CurrentQuestionIndex]; }
 		}
 
 		public int CurrentQuestionIndex
 		{
-			get { return this._currentQuestionIndex; }
+			get { return _currentQuestionIndex; }
 			set
 			{
 				if (value < 0 || value >= Questions.Count)
 				{
 					throw new ArgumentOutOfRangeException();
 				}
-				this._currentQuestionIndex = value;
+				_currentQuestionIndex = value;
 			}
 		}
 
 		public List<string> Questions
 		{
-			get { return this._domainQuestions[_domainKeys[_currentDomainIndex]]; }
+			get { return _domainQuestions[_domainKeys[_currentDomainIndex]]; }
 		}
 
 		public int WordsInDomain(int domainIndex)
 		{
-			if(domainIndex < 0 || domainIndex >= _domainKeys.Count)
+			if (domainIndex < 0 || domainIndex >= _domainKeys.Count)
 			{
 				throw new ArgumentOutOfRangeException();
 			}
@@ -315,8 +302,9 @@ namespace WeSay.LexicalTools
 
 		public List<string> CurrentWords
 		{
-			get {
-				if(this._words == null)
+			get
+			{
+				if (_words == null)
 				{
 					_words = new List<string>();
 
@@ -328,13 +316,14 @@ namespace WeSay.LexicalTools
 						_words.Add(_entries.GetValue(i).LexicalForm.GetBestAlternative(WordWritingSystemId, "*"));
 					}
 				}
-				return this._words;
-			 }
+				return _words;
+			}
 		}
 
 		public bool HasNextDomainQuestion
 		{
-			get {
+			get
+			{
 				if (_currentDomainIndex < DomainKeys.Count - 1)
 				{
 					return true; // has another domain
@@ -348,11 +337,12 @@ namespace WeSay.LexicalTools
 				return false;
 			}
 		}
+
 		public void GotoNextDomainQuestion()
 		{
-			if(_currentQuestionIndex == Questions.Count-1)
+			if (_currentQuestionIndex == Questions.Count - 1)
 			{
-				if(_currentDomainIndex < DomainKeys.Count-1)
+				if (_currentDomainIndex < DomainKeys.Count - 1)
 				{
 					_currentDomainIndex++;
 					_currentQuestionIndex = 0;
@@ -367,7 +357,8 @@ namespace WeSay.LexicalTools
 
 		public bool HasPreviousDomainQuestion
 		{
-			get {
+			get
+			{
 				if (_currentDomainIndex == 0 &&
 					_currentQuestionIndex == 0)
 				{
@@ -380,25 +371,22 @@ namespace WeSay.LexicalTools
 
 		public string WordWritingSystemId
 		{
-			get { return this._lexicalFormWritingSystem.Id; }
+			get { return _lexicalFormWritingSystem.Id; }
 		}
 
 		public WritingSystem WordWritingSystem
 		{
-			get { return this._lexicalFormWritingSystem; }
+			get { return _lexicalFormWritingSystem; }
 		}
 
 		public string SemanticDomainWritingSystemId
 		{
-			get { return this._semanticDomainWritingSystem.Id; }
+			get { return _semanticDomainWritingSystem.Id; }
 		}
 
 		public WritingSystem SemanticDomainWritingSystem
 		{
-			get
-			{
-				return this._semanticDomainWritingSystem;
-			}
+			get { return _semanticDomainWritingSystem; }
 		}
 
 		public void GotoPreviousDomainQuestion()
@@ -409,7 +397,7 @@ namespace WeSay.LexicalTools
 			}
 			else
 			{
-				if(_currentDomainIndex != 0)
+				if (_currentDomainIndex != 0)
 				{
 					_currentDomainIndex--;
 					_currentQuestionIndex = Questions.Count - 1;
@@ -427,7 +415,7 @@ namespace WeSay.LexicalTools
 			if (lexicalForm != string.Empty)
 			{
 				List<LexEntry> entries = GetEntriesHavingLexicalForm(lexicalForm);
-				if(entries.Count == 0)
+				if (entries.Count == 0)
 				{
 					LexEntry entry = new LexEntry();
 					entry.LexicalForm.SetAlternative(WordWritingSystemId, lexicalForm);
@@ -473,40 +461,39 @@ namespace WeSay.LexicalTools
 			RecordListManager.GoodTimeToCommit();
 		}
 
-
 		private bool EntryHasLexicalFormAndSemanticDomainAsOnlyContent(LexEntry entry)
 		{
-			if(entry.LexicalForm.Count > 1)
+			if (entry.LexicalForm.Count > 1)
 			{
 				return false;
 			}
 
-			if(entry.LexicalForm.Count == 1 &&
-			   !entry.LexicalForm.ContainsAlternative(WordWritingSystemId))
+			if (entry.LexicalForm.Count == 1 &&
+				!entry.LexicalForm.ContainsAlternative(WordWritingSystemId))
 			{
 				return false;
 			}
 
-			if(entry.HasProperties)
+			if (entry.HasProperties)
 			{
 				return false;
 			}
 
-			if(entry.Senses.Count > 1)
+			if (entry.Senses.Count > 1)
 			{
 				return false;
 			}
 
-			if(entry.Senses.Count == 1)
+			if (entry.Senses.Count == 1)
 			{
 				LexSense sense = (LexSense) entry.Senses[0];
 
-				if(sense.ExampleSentences.Count != 0)
+				if (sense.ExampleSentences.Count != 0)
 				{
 					return false;
 				}
 
-				if(!sense.Gloss.Empty)
+				if (!sense.Gloss.Empty)
 				{
 					return false;
 				}
@@ -516,9 +503,10 @@ namespace WeSay.LexicalTools
 					return false;
 				}
 
-				if(sense.Properties.Count == 1)
+				if (sense.Properties.Count == 1)
 				{
-					OptionRefCollection semanticDomains = sense.GetProperty<OptionRefCollection>(_semanticDomainField.FieldName);
+					OptionRefCollection semanticDomains =
+							sense.GetProperty<OptionRefCollection>(_semanticDomainField.FieldName);
 					if (semanticDomains == null)
 					{
 						return false;
@@ -529,7 +517,6 @@ namespace WeSay.LexicalTools
 			return true;
 		}
 
-
 		private void DisassociateCurrentSemanticDomainFromEntry(LexEntry entry)
 		{
 			// have to iterate through these in reverse order
@@ -537,7 +524,8 @@ namespace WeSay.LexicalTools
 			for (int i = entry.Senses.Count - 1; i >= 0; i--)
 			{
 				LexSense sense = (LexSense) entry.Senses[i];
-				OptionRefCollection semanticDomains = sense.GetProperty<OptionRefCollection>(_semanticDomainField.FieldName);
+				OptionRefCollection semanticDomains =
+						sense.GetProperty<OptionRefCollection>(_semanticDomainField.FieldName);
 				if (semanticDomains != null)
 				{
 					semanticDomains.Remove(CurrentDomainKey);
@@ -551,12 +539,12 @@ namespace WeSay.LexicalTools
 			List<LexEntry> result = new List<LexEntry>();
 			// search dictionary for entry with new lexical form
 			LexEntrySortHelper sortHelper = new LexEntrySortHelper(RecordListManager.DataSource,
-																   WordWritingSystemId,
+																   WordWritingSystem,
 																   true);
 			CachedSortedDb4oList<string, LexEntry> entriesByLexicalForm = RecordListManager.GetSortedList(sortHelper);
 			int index = entriesByLexicalForm.BinarySearch(lexicalForm);
 			while (index >= 0 && index < entriesByLexicalForm.Count &&
-				entriesByLexicalForm.GetKey(index) == lexicalForm)
+				   entriesByLexicalForm.GetKey(index) == lexicalForm)
 			{
 				result.Add(entriesByLexicalForm.GetValue(index));
 				++index;
@@ -567,25 +555,27 @@ namespace WeSay.LexicalTools
 		private void AddCurrentSemanticDomainToEntry(LexEntry entry)
 		{
 			LexSense sense = entry.GetOrCreateSenseWithGloss(new MultiText());
-			OptionRefCollection semanticDomains = sense.GetOrCreateProperty<OptionRefCollection>(_semanticDomainField.FieldName);
+			OptionRefCollection semanticDomains =
+					sense.GetOrCreateProperty<OptionRefCollection>(_semanticDomainField.FieldName);
 			if (!semanticDomains.Contains(CurrentDomainKey))
 			{
 				semanticDomains.Add(CurrentDomainKey);
 			}
 		}
 
-		private void GetWordsIndexes(int domainIndex, out int beginIndex, out int pastEndIndex) {
+		private void GetWordsIndexes(int domainIndex, out int beginIndex, out int pastEndIndex)
+		{
 			string domainKey = DomainKeys[domainIndex];
 
-			beginIndex = this._entries.BinarySearch(domainKey);
-			if(beginIndex < 0)
+			beginIndex = _entries.BinarySearch(domainKey);
+			if (beginIndex < 0)
 			{
 				pastEndIndex = beginIndex;
 				return;
 			}
 			pastEndIndex = beginIndex + 1;
-			while (pastEndIndex < this._entries.Count &&
-				   this._entries.GetKey(pastEndIndex) == domainKey)
+			while (pastEndIndex < _entries.Count &&
+				   _entries.GetKey(pastEndIndex) == domainKey)
 			{
 				++pastEndIndex;
 			}
@@ -621,16 +611,16 @@ namespace WeSay.LexicalTools
 					{
 						questions.Add(questionReader.ReadElementString("question"));
 					}
-					this._domainKeys.Add(domainKey);
-					if(questions.Count == 0)
+					_domainKeys.Add(domainKey);
+					if (questions.Count == 0)
 					{
 						questions.Add(string.Empty);
 					}
-					this._domainQuestions.Add(domainKey, questions);
+					_domainQuestions.Add(domainKey, questions);
 					reader.ReadToFollowing("semantic-domain");
 				}
 			}
-			catch(XmlException)
+			catch (XmlException)
 			{
 				// log this;
 			}
@@ -643,7 +633,6 @@ namespace WeSay.LexicalTools
 			}
 		}
 
-
 		public override void Activate()
 		{
 			base.Activate();
@@ -655,11 +644,11 @@ namespace WeSay.LexicalTools
 
 				// always have at least one domain and one question
 				// so default indexes of 0 are valid.
-				if(_domainKeys.Count == 0)
+				if (_domainKeys.Count == 0)
 				{
 					_domainKeys.Add(string.Empty);
 				}
-				if(_domainQuestions.Count == 0)
+				if (_domainQuestions.Count == 0)
 				{
 					List<string> emptyList = new List<string>();
 					emptyList.Add(string.Empty);
@@ -671,12 +660,13 @@ namespace WeSay.LexicalTools
 				_semanticDomainOptionsList =
 						WeSayWordsProject.Project.GetOptionsList(_semanticDomainField);
 			}
-			_entries = RecordListManager.GetSortedList(new SemanticDomainSortHelper(RecordListManager.DataSource, _semanticDomainField.FieldName));
+			_entries =
+					RecordListManager.GetSortedList(
+							new SemanticDomainSortHelper(RecordListManager.DataSource, _semanticDomainField.FieldName));
 
 			UpdateCurrentWords();
 			_gatherControl = new GatherBySemanticDomainsControl(this);
 		}
-
 
 		public override void Deactivate()
 		{
@@ -693,9 +683,7 @@ namespace WeSay.LexicalTools
 		/// </summary>
 		public override int ReferenceCount
 		{
-			get
-			{
-				return -1; //todo
+			get { return -1; //todo
 			}
 		}
 	}

@@ -8,6 +8,7 @@ using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.XPath;
 using System.Xml.Xsl;
+using LiftIO;
 using Palaso.Reporting;
 using WeSay.AddinLib;
 using WeSay.Foundation;
@@ -32,46 +33,40 @@ namespace WeSay.Project
 
 		public WeSayWordsProject()
 		{
-			_addins = AddinSet.Create(GetAddinNodes,LocateFile);
+			_addins = AddinSet.Create(GetAddinNodes, LocateFile);
 			_optionLists = new Dictionary<string, OptionsList>();
 		}
 
 		public IList<ITask> Tasks
 		{
-			get
-			{
-				return this._tasks;
-			}
-			set
-			{
-				this._tasks = value;
-			}
+			get { return _tasks; }
+			set { _tasks = value; }
 		}
 
-		public static new WeSayWordsProject Project
+		public new static WeSayWordsProject Project
 		{
 			get
 			{
 				if (Singleton == null)
 				{
-				  throw new InvalidOperationException("WeSayWordsProject Not initialized. For tests, call BasilProject.InitializeForTests().");
+					throw new InvalidOperationException(
+							"WeSayWordsProject Not initialized. For tests, call BasilProject.InitializeForTests().");
 				}
 				return (WeSayWordsProject) Singleton;
 			}
 		}
 
-
 		/// <summary>
 		/// See comment on BasilProject.InitializeForTests()
 		/// </summary>
-		public static new void InitializeForTests()
+		public new static void InitializeForTests()
 		{
 			WeSayWordsProject project = new WeSayWordsProject();
-			string s = Path.Combine(GetPretendProjectDirectory(),"wesay");
-			s = Path.Combine(s,"pretend.lift");
+			string s = Path.Combine(GetPretendProjectDirectory(), "wesay");
+			s = Path.Combine(s, "pretend.lift");
 
 			//jdh added, amidst some confusion about why it was suddenly needed, on april 17,2007
-			LiftIO.Utilities.CreateEmptyLiftFile(s, "InitializeForTests()", true);
+			Utilities.CreateEmptyLiftFile(s, "InitializeForTests()", true);
 
 			project.SetupProjectDirForTests(s);
 		}
@@ -96,7 +91,6 @@ namespace WeSay.Project
 			StringCatalogSelector = "en";
 		}
 
-
 		public bool LoadFromLiftLexiconPath(string liftPath)
 		{
 			try
@@ -105,66 +99,67 @@ namespace WeSay.Project
 
 				if (!File.Exists(liftPath))
 				{
-				  ErrorReport.ReportNonFatalMessage(
-					  String.Format(
-						  "WeSay tried to find the lexicon at '{0}', but could not find it.\r\n\r\nTry opening the LIFT file by double clicking on it.",
-						  liftPath));
-				  return false;
+					ErrorReport.ReportNonFatalMessage(
+							String.Format(
+									"WeSay tried to find the lexicon at '{0}', but could not find it.\r\n\r\nTry opening the LIFT file by double clicking on it.",
+									liftPath));
+					return false;
 				}
 				try
 				{
-				  using (FileStream fs = File.OpenWrite(liftPath))
-				  {
-					fs.Close();
-				  }
+					using (FileStream fs = File.OpenWrite(liftPath))
+					{
+						fs.Close();
+					}
 				}
 				catch (UnauthorizedAccessException)
 				{
-				  ErrorReport.ReportNonFatalMessage(
-					  String.Format(
-						  "WeSay was unable to open the file at '{0}' for writing, because the system won't allow it. Check that 'ReadOnly' is cleared, otherwise investigate your user permissions to write to this file.",
-								  liftPath));
-				  return false;
+					ErrorReport.ReportNonFatalMessage(
+							String.Format(
+									"WeSay was unable to open the file at '{0}' for writing, because the system won't allow it. Check that 'ReadOnly' is cleared, otherwise investigate your user permissions to write to this file.",
+									liftPath));
+					return false;
 				}
 				catch (IOException)
 				{
-				  ErrorReport.ReportNonFatalMessage(
-					  String.Format(
-						  "WeSay was unable to open the file at '{0}' for writing, probably because it is locked by some other process on your computer (maybe a recently crashed run of WeSay?). If you can't figure out what has it locked, restart your computer.",
-						  liftPath));
-				  return false;
+					ErrorReport.ReportNonFatalMessage(
+							String.Format(
+									"WeSay was unable to open the file at '{0}' for writing, probably because it is locked by some other process on your computer (maybe a recently crashed run of WeSay?). If you can't figure out what has it locked, restart your computer.",
+									liftPath));
+					return false;
 				}
 
 				if (!File.Exists(PathToConfigFile))
 				{
-				  ErrorReport.ReportNonFatalMessage(
-					  String.Format(
-						  "WeSay tried to find the WeSay configuration file at '{0}', but could not find it.\r\n\r\nTry using the configuration Tool to create one.",
-						  PathToConfigFile));
-				  return false;
+					ErrorReport.ReportNonFatalMessage(
+							String.Format(
+									"WeSay tried to find the WeSay configuration file at '{0}', but could not find it.\r\n\r\nTry using the configuration Tool to create one.",
+									PathToConfigFile));
+					return false;
 				}
 				try
 				{
-				  using (FileStream fs = File.OpenRead(PathToConfigFile))
-				  {
-					fs.Close();
-				  }
+					using (FileStream fs = File.OpenRead(PathToConfigFile))
+					{
+						fs.Close();
+					}
 				}
 				catch (UnauthorizedAccessException)
 				{
-				  ErrorReport.ReportNonFatalMessage(
-					  String.Format(
-						  "WeSay was unable to open the file at '{0}' for reading, because the system won't allow it. Investigate your user permissions to write to this file.",
-								  PathToConfigFile));
-				  return false;
+					ErrorReport.ReportNonFatalMessage(
+							String.Format(
+									"WeSay was unable to open the file at '{0}' for reading, because the system won't allow it. Investigate your user permissions to write to this file.",
+									PathToConfigFile));
+					return false;
 				}
 				catch (IOException e)
 				{
-				  ErrorReport.ReportNonFatalMessage(
-					  String.Format(
-						  "WeSay was unable to open the file at '{0}' for reading. \n Further information: {1}",
-						  PathToConfigFile, e.Message));
-				  return false;
+					ErrorReport.ReportNonFatalMessage(
+							String.Format(
+									"WeSay was unable to open the file at '{0}' for reading. \n Further information: {1}",
+									PathToConfigFile,
+									e.Message));
+					return false;
 				}
 
 				//walk up from file to /wesay to /<project>
@@ -195,9 +190,9 @@ namespace WeSay.Project
 		{
 			ProjectDirectoryPath = projectDirectoryPath;
 			XPathDocument configDoc = GetConfigurationDoc();
-			if(configDoc !=null)// will be null if we're creating a new project
+			if (configDoc != null) // will be null if we're creating a new project
 			{
-				XPathNavigator nav= configDoc.CreateNavigator().SelectSingleNode("//uiOptions");
+				XPathNavigator nav = configDoc.CreateNavigator().SelectSingleNode("//uiOptions");
 				if (nav != null)
 				{
 					string ui = nav.GetAttribute("uiLanguage", "");
@@ -207,14 +202,12 @@ namespace WeSay.Project
 					}
 					UiFontName = nav.GetAttribute("uiFont", "");
 					string s = nav.GetAttribute("uiFontSize", string.Empty);
-					float f = 0;
-					float.TryParse(s, out f);
-					if(f==0)
+					float f;
+					if(!float.TryParse(s, out f) || f==0)
 					{
 						f = 12;
 					}
 					UiFontSizeInPoints = f;
-
 				}
 				MigrateConfigurationXmlIfNeeded(configDoc, PathToConfigFile);
 			}
@@ -222,12 +215,9 @@ namespace WeSay.Project
 			InitializeViewTemplatesFromProjectFiles();
 		}
 
-
-
 		public static bool MigrateConfigurationXmlIfNeeded(XPathDocument configurationDoc, string targetPath)
 		{
 			Logger.WriteEvent("Checking if migration of configuration is needed.");
-
 
 			if (configurationDoc.CreateNavigator().SelectSingleNode("configuration") == null)
 			{
@@ -235,8 +225,10 @@ namespace WeSay.Project
 
 				//ResourceManager mgr = new System.Resources.ResourceManager(typeof(WeSay.Project.WeSayWordsProject));
 
-				using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(typeof(WeSayWordsProject),
-																		  "MigrateConfig0To1.xsl"))
+				using (
+						Stream stream =
+								Assembly.GetExecutingAssembly().GetManifestResourceStream(typeof (WeSayWordsProject),
+																						  "MigrateConfig0To1.xsl"))
 				{
 					XslCompiledTransform transform = new XslCompiledTransform();
 					using (XmlReader reader = XmlReader.Create(stream))
@@ -282,10 +274,11 @@ namespace WeSay.Project
 					XPathDocument projectDoc = GetConfigurationDoc();
 					if (projectDoc != null)
 					{
-						XPathNodeIterator nodes = projectDoc.CreateNavigator().Select("configuration/components/viewTemplate");
+						XPathNodeIterator nodes =
+								projectDoc.CreateNavigator().Select("configuration/components/viewTemplate");
 						foreach (XPathNavigator node in nodes)
 						{
-						   ViewTemplate userTemplate = new ViewTemplate();
+							ViewTemplate userTemplate = new ViewTemplate();
 							userTemplate.LoadFromString(node.OuterXml);
 							ViewTemplate.UpdateUserViewTemplate(factoryTemplate, userTemplate);
 							if (userTemplate.Id == "Default View Template")
@@ -302,12 +295,11 @@ namespace WeSay.Project
 							"There may have been a problem reading the view template xml of the configuration file. A default template will be created." +
 							error.Message);
 				}
-				if(_defaultViewTemplate == null)
+				if (_defaultViewTemplate == null)
 				{
 					_defaultViewTemplate = factoryTemplate;
 				}
 				_viewTemplates = viewTemplates;
-
 			}
 		}
 
@@ -316,7 +308,7 @@ namespace WeSay.Project
 			return GetAddinNodes(GetConfigurationDoc());
 		}
 
-		static private XPathNodeIterator GetAddinNodes(XPathDocument configDoc)
+		private static XPathNodeIterator GetAddinNodes(XPathDocument configDoc)
 		{
 			try
 			{
@@ -329,12 +321,12 @@ namespace WeSay.Project
 			catch (Exception error)
 			{
 				ErrorReport.ReportNonFatalMessage(
-					"There was a problem reading the addins-settings xml. {0}", error.Message);
+						"There was a problem reading the addins-settings xml. {0}", error.Message);
 				return null;
 			}
 		}
 
-		public  ProjectInfo GetProjectInfoForAddin()
+		public ProjectInfo GetProjectInfoForAddin()
 		{
 			return new ProjectInfo(Name,
 								   ProjectDirectoryPath,
@@ -362,8 +354,7 @@ namespace WeSay.Project
 			return projectDoc;
 		}
 
-
-		static private bool CheckLexiconIsInValidProjectDirectory(string liftPath)
+		private static bool CheckLexiconIsInValidProjectDirectory(string liftPath)
 		{
 			DirectoryInfo lexiconDirectoryInfo = Directory.GetParent(liftPath);
 			DirectoryInfo projectRootDirectoryInfo = lexiconDirectoryInfo.Parent;
@@ -378,20 +369,17 @@ namespace WeSay.Project
 				lexiconDirectoryName != "wesay" ||
 				(!IsValidProjectDirectory(projectRootDirectoryInfo.FullName)))
 			{
-				string message = "WeSay cannot open the lexicon, because it is not in a proper WeSay/Basil project structure.";
+				string message =
+						"WeSay cannot open the lexicon, because it is not in a proper WeSay/Basil project structure.";
 				ErrorReport.ReportNonFatalMessage(message);
 				return false;
 			}
 			return true;
 		}
 
-
 		public string PathToDefaultConfig
 		{
-			get
-			{
-				return Path.Combine(BasilProject.Project.ApplicationCommonDirectory, "default.WeSayCOnfig");
-			}
+			get { return Path.Combine(BasilProject.Project.ApplicationCommonDirectory, "default.WeSayCOnfig"); }
 		}
 
 		public override void CreateEmptyProjectFiles(string projectDirectoryPath)
@@ -416,18 +404,19 @@ namespace WeSay.Project
 
 			if (!File.Exists(PathToLiftFile))
 			{
-				LiftIO.Utilities.CreateEmptyLiftFile(PathToLiftFile, LiftExporter.ProducerString, false);
+				Utilities.CreateEmptyLiftFile(PathToLiftFile, LiftExporter.ProducerString, false);
 			}
-
 		}
 
 		public static bool IsValidProjectDirectory(string dir)
 		{
-			string[] requiredDirectories = new string[] { "common", "wesay" };
+			string[] requiredDirectories = new string[] {"common", "wesay"};
 			foreach (string s in requiredDirectories)
 			{
 				if (!Directory.Exists(Path.Combine(dir, s)))
+				{
 					return false;
+				}
 			}
 			return true;
 		}
@@ -446,10 +435,7 @@ namespace WeSay.Project
 		/// </summary>
 		public string PathToOldProjectTaskInventory
 		{
-			get
-			{
-				return Path.Combine(PathToWeSaySpecificFilesDirectoryInProject, "tasks.xml");
-			}
+			get { return Path.Combine(PathToWeSaySpecificFilesDirectoryInProject, "tasks.xml"); }
 		}
 
 		public override void Dispose()
@@ -476,16 +462,13 @@ namespace WeSay.Project
 
 		public bool LiftIsLocked
 		{
-			get
-			{
-				return _liftFileStreamForLocking != null;
-			}
+			get { return _liftFileStreamForLocking != null; }
 		}
 
 		public void LockLift()
 		{
 			Debug.Assert(_liftFileStreamForLocking == null);
-			 _liftFileStreamForLocking = File.OpenRead(PathToLiftFile);
+			_liftFileStreamForLocking = File.OpenRead(PathToLiftFile);
 		}
 
 		public string PathToLiftFile
@@ -495,7 +478,8 @@ namespace WeSay.Project
 				if (String.IsNullOrEmpty(_pathToLiftFile))
 				{
 					_pathToLiftFile =
-						Path.Combine(PathToWeSaySpecificFilesDirectoryInProject, Path.GetFileName(ProjectDirectoryPath ) + ".lift");
+							Path.Combine(PathToWeSaySpecificFilesDirectoryInProject,
+										 Path.GetFileName(ProjectDirectoryPath) + ".lift");
 				}
 				return _pathToLiftFile;
 			}
@@ -516,10 +500,7 @@ namespace WeSay.Project
 
 		public string PathToLiftBackupDir
 		{
-			get
-			{
-				return PathToLiftFile + " incremental xml backup";
-			}
+			get { return PathToLiftFile + " incremental xml backup"; }
 		}
 
 		public string PathToCache
@@ -528,11 +509,11 @@ namespace WeSay.Project
 			{
 				if (_cacheLocationOverride != null)
 				{
-				   return _cacheLocationOverride;
+					return _cacheLocationOverride;
 				}
 				else
 				{
-					 return GetPathToCacheFromPathToLift(PathToLiftFile);
+					return GetPathToCacheFromPathToLift(PathToLiftFile);
 				}
 			}
 		}
@@ -544,18 +525,15 @@ namespace WeSay.Project
 
 		public string PathToDb4oLexicalModelDB
 		{
-			get
-			{
-				return GetPathToDb4oLexicalModelDBFromPathToLift(PathToLiftFile);
-			}
+			get { return GetPathToDb4oLexicalModelDBFromPathToLift(PathToLiftFile); }
 		}
 
 		public string GetPathToDb4oLexicalModelDBFromPathToLift(string pathToLift)
 		{
-				return Path.Combine(GetPathToCacheFromPathToLift(pathToLift), Path.GetFileNameWithoutExtension(pathToLift) + ".words");
+			return
+					Path.Combine(GetPathToCacheFromPathToLift(pathToLift),
+								 Path.GetFileNameWithoutExtension(pathToLift) + ".words");
 		}
-
-
 
 		/// <summary>
 		/// Find the file, starting with the project dirs and moving to the app dirs.
@@ -593,17 +571,14 @@ namespace WeSay.Project
 
 		public string PathToWeSaySpecificFilesDirectoryInProject
 		{
-			get
-			{
-				return Path.Combine(ProjectDirectoryPath, "wesay");
-			}
+			get { return Path.Combine(ProjectDirectoryPath, "wesay"); }
 		}
 
 		public ViewTemplate DefaultViewTemplate
 		{
 			get
 			{
-				if(_defaultViewTemplate==null)
+				if (_defaultViewTemplate == null)
 				{
 					InitializeViewTemplatesFromProjectFiles();
 				}
@@ -631,7 +606,7 @@ namespace WeSay.Project
 
 				foreach (Field field in DefaultViewTemplate.Fields)
 				{
-					if(field.DataTypeName=="Option")
+					if (field.DataTypeName == "Option")
 					{
 						names.Add(field.FieldName);
 					}
@@ -660,30 +635,18 @@ namespace WeSay.Project
 		//used when building the cache, so we can build it in a temp directory
 		public string CacheLocationOverride
 		{
-			set
-			{
-				_cacheLocationOverride = value;
-			}
+			set { _cacheLocationOverride = value; }
 		}
 
 		public LiftUpdateService LiftUpdateService
 		{
-			get
-			{
-				return _liftUpdateService;
-			}
-			set
-			{
-				_liftUpdateService = value;
-			}
+			get { return _liftUpdateService; }
+			set { _liftUpdateService = value; }
 		}
 
 		public AddinSet Addins
 		{
-			get
-			{
-				return _addins;
-			}
+			get { return _addins; }
 		}
 
 		public IList<LexRelationType> RelationTypes
@@ -693,7 +656,10 @@ namespace WeSay.Project
 				if (_relationTypes == null)
 				{
 					_relationTypes = new List<LexRelationType>();
-					_relationTypes.Add(new LexRelationType("RelationToOneEntry", LexRelationType.Multiplicities.One, LexRelationType.TargetTypes.Entry));
+					_relationTypes.Add(
+							new LexRelationType("RelationToOneEntry",
+												LexRelationType.Multiplicities.One,
+												LexRelationType.TargetTypes.Entry));
 				}
 				return _relationTypes;
 			}
@@ -728,10 +694,12 @@ namespace WeSay.Project
 		{
 			if (String.IsNullOrEmpty(field.OptionsListFile))
 			{
-				throw new ConfigurationException("The administrator needs to declare an options list file for the field {0}. This can be done under the Fields tab of the WeSay Configuration Tool.", field.FieldName);
+				throw new ConfigurationException(
+						"The administrator needs to declare an options list file for the field {0}. This can be done under the Fields tab of the WeSay Configuration Tool.",
+						field.FieldName);
 			}
 			OptionsList list;
-			if(_optionLists.TryGetValue(field.OptionsListFile, out list))
+			if (_optionLists.TryGetValue(field.OptionsListFile, out list))
 			{
 				return list;
 			}
@@ -746,13 +714,17 @@ namespace WeSay.Project
 				string pathInProgramDir = Path.Combine(ApplicationCommonDirectory, field.OptionsListFile);
 				if (!File.Exists(pathInProgramDir))
 				{
-					throw new ConfigurationException("Could not find the optionsList file {0}. Expected to find it at: {1} or {2}", field.OptionsListFile, pathInProject, pathInProgramDir);
+					throw new ConfigurationException(
+							"Could not find the optionsList file {0}. Expected to find it at: {1} or {2}",
+							field.OptionsListFile,
+							pathInProject,
+							pathInProgramDir);
 				}
 				LoadOptionsList(pathInProgramDir);
 			}
 
 			return _optionLists[field.OptionsListFile];
-	   }
+		}
 
 		private void LoadOptionsList(string pathToOptionsList)
 		{
@@ -766,7 +738,7 @@ namespace WeSay.Project
 		/// Used with xml export, e.g. with LIFT to set the proper "range" for option fields
 		/// </summary>
 		/// <returns></returns>
-		public  Dictionary<string, string> GetFieldToOptionListNameDictionary()
+		public Dictionary<string, string> GetFieldToOptionListNameDictionary()
 		{
 			Dictionary<string, string> fieldToOptionListName = new Dictionary<string, string>();
 			foreach (Field field in DefaultViewTemplate.Fields)
@@ -779,7 +751,7 @@ namespace WeSay.Project
 			return fieldToOptionListName;
 		}
 
-		static private string GetListNameFromFileName(string file)
+		private static string GetListNameFromFileName(string file)
 		{
 			return file.Substring(0, file.IndexOf(".xml"));
 		}
@@ -788,19 +760,21 @@ namespace WeSay.Project
 		{
 			//NB: we're just using regex, here, not xpaths which in this case
 			//would be nice (e.g., "name" is a pretty generic thing to be changing)
-		   if (File.Exists(PathToLiftFile))
+			if (File.Exists(PathToLiftFile))
 			{
 				//traits
-			   if(field.DataTypeName == Field.BuiltInDataType.Option.ToString()
-				   || field.DataTypeName == Field.BuiltInDataType.OptionCollection.ToString())
-			   {
-				   GrepLift(PathToLiftFile, string.Format("name\\s*=\\s*[\"']{0}[\"']", oldName),
-							string.Format("name=\"{0}\"", field.FieldName));
-			   }
-			   else
+				if (field.DataTypeName == Field.BuiltInDataType.Option.ToString()
+					|| field.DataTypeName == Field.BuiltInDataType.OptionCollection.ToString())
+				{
+					GrepLift(PathToLiftFile,
+							 string.Format("name\\s*=\\s*[\"']{0}[\"']", oldName),
+							 string.Format("name=\"{0}\"", field.FieldName));
+				}
+				else
 				{
 					//<field>s
-					GrepLift(PathToLiftFile, string.Format("tag\\s*=\\s*[\"']{0}[\"']", oldName),
+					GrepLift(PathToLiftFile,
+							 string.Format("tag\\s*=\\s*[\"']{0}[\"']", oldName),
 							 string.Format("tag=\"{0}\"", field.FieldName));
 				}
 			}
@@ -820,37 +794,40 @@ namespace WeSay.Project
 			if (File.Exists(PathToLiftFile))
 			{
 				//todo: expand the regular expression here to account for all reasonable patterns
-				GrepLift(PathToLiftFile, string.Format("lang\\s*=\\s*[\"']{0}[\"']", oldId), string.Format("lang=\"{0}\"", ws.Id));
+				GrepLift(PathToLiftFile,
+						 string.Format("lang\\s*=\\s*[\"']{0}[\"']", oldId),
+						 string.Format("lang=\"{0}\"", ws.Id));
 			}
 		}
 
-	   /// <summary>
-	   ///
-	   /// </summary>
-	   /// <param name="pathToLift"></param>
-	   /// <returns>true if it displayed an error message</returns>
-		static public bool CheckLiftAndReportErrors(string pathToLift)
+		/// <summary>
+		///
+		/// </summary>
+		/// <param name="pathToLift"></param>
+		/// <returns>true if it displayed an error message</returns>
+		public static bool CheckLiftAndReportErrors(string pathToLift)
 		{
 			try
 			{
-				string errors = LiftIO.Validator.GetAnyValidationErrors(WeSayWordsProject.Project.PathToLiftFile);
-			   if (!String.IsNullOrEmpty(errors))
-			   {
-				   Palaso.Reporting.ErrorReport.ReportNonFatalMessage(
-					   "The dictionary file at {0} does not conform to the LIFT format used by this version of WeSay.  The RNG validator said: {1}.",
-					   pathToLift, errors);
-				   return true;
-			   }
+				string errors = Validator.GetAnyValidationErrors(Project.PathToLiftFile);
+				if (!String.IsNullOrEmpty(errors))
+				{
+					ErrorReport.ReportNonFatalMessage(
+							"The dictionary file at {0} does not conform to the LIFT format used by this version of WeSay.  The RNG validator said: {1}.",
+							pathToLift,
+							errors);
+					return true;
+				}
 			}
 			catch (Exception e)
 			{
-				Palaso.Reporting.ErrorNotificationDialog.ReportException(e);
+				ErrorNotificationDialog.ReportException(e);
 				return true;
 			}
-		   return false;
+			return false;
 		}
 
-		static private void GrepLift(string inputPath, string pattern, string replaceWith)
+		private static void GrepLift(string inputPath, string pattern, string replaceWith)
 		{
 			Regex regex = new Regex(pattern, RegexOptions.Compiled);
 			string tempPath = inputPath + ".tmp";
@@ -867,8 +844,8 @@ namespace WeSay.Project
 				}
 				reader.Close();
 			}
-		   string backupPath = GetUniqueFileName(inputPath);
-		   File.Replace(tempPath, inputPath, backupPath);
+			string backupPath = GetUniqueFileName(inputPath);
+			File.Replace(tempPath, inputPath, backupPath);
 		}
 
 		public bool LiftHasMatchingElement(string element, string attribute, string attributeValue)
@@ -897,7 +874,6 @@ namespace WeSay.Project
 			return path + "old" + i;
 		}
 
-
 		/// <summary>
 		/// Files to process when backing up or checking in
 		/// </summary>
@@ -906,12 +882,12 @@ namespace WeSay.Project
 		public static string[] GetFilesBelongingToProject(string pathToProjectRoot)
 		{
 			List<String> files = new List<string>();
-			string[] allFiles =Directory.GetFiles(pathToProjectRoot, "*", SearchOption.AllDirectories);
+			string[] allFiles = Directory.GetFiles(pathToProjectRoot, "*", SearchOption.AllDirectories);
 			string[] antipatterns = {"Cache", "cache", ".bak", ".old", ".liftold"};
 
 			foreach (string file in allFiles)
 			{
-			   if(!Matches(file, antipatterns))
+				if (!Matches(file, antipatterns))
 				{
 					files.Add(file);
 				}
@@ -924,7 +900,9 @@ namespace WeSay.Project
 			foreach (string s in antipatterns)
 			{
 				if (file.Contains(s))
+				{
 					return true;
+				}
 			}
 			return false;
 		}

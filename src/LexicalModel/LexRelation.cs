@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -8,8 +7,18 @@ namespace WeSay.LexicalModel
 {
 	public class LexRelationType
 	{
-		public enum Multiplicities { One, Many }
-		public enum TargetTypes{ Entry, Sense }
+		public enum Multiplicities
+		{
+			One,
+			Many
+		}
+
+		public enum TargetTypes
+		{
+			Entry,
+			Sense
+		}
+
 		private string _id;
 		private Multiplicities _multiplicity;
 		private TargetTypes _targetType;
@@ -23,27 +32,17 @@ namespace WeSay.LexicalModel
 
 		public string ID
 		{
-			get
-			{
-				return _id;
-			}
-
+			get { return _id; }
 		}
 
 		public Multiplicities Multiplicity
 		{
-			get
-			{
-				return _multiplicity;
-			}
+			get { return _multiplicity; }
 		}
 
 		public TargetTypes TargetType
 		{
-			get
-			{
-				return _targetType;
-			}
+			get { return _targetType; }
 		}
 	}
 
@@ -66,20 +65,13 @@ namespace WeSay.LexicalModel
 			_parent = parent;
 		}
 
-
 		/// <summary>
 		/// Set to string.emtpy to clear the relation
 		/// </summary>
 		public string TargetId
 		{
-			get
-			{
-				return _targetId;
-			}
-			set
-			{
-				_targetId = value;
-			}
+			get { return _targetId; }
+			set { _targetId = value; }
 		}
 
 //        public LexRelationType Type
@@ -98,22 +90,13 @@ namespace WeSay.LexicalModel
 
 		public WeSayDataObject Parent
 		{
-			set
-			{
-				_parent = value;
-			}
+			set { _parent = value; }
 		}
 
 		public string FieldId
 		{
-			get
-			{
-				return _fieldId;
-			}
-			set
-			{
-				_fieldId = value;
-			}
+			get { return _fieldId; }
+			set { _fieldId = value; }
 		}
 
 		#region IReferenceContainer Members
@@ -123,12 +106,14 @@ namespace WeSay.LexicalModel
 			get
 			{
 				return Lexicon.FindFirstLexEntryMatchingId(_targetId);
-			   // return Lexicon.TheLexicon.FindEntryFromId(_targetId);
+				// return Lexicon.TheLexicon.FindEntryFromId(_targetId);
 			}
 			set
 			{
-				if(value == Target)
+				if (value == Target)
+				{
 					return;
+				}
 
 				if (value == null)
 				{
@@ -139,7 +124,6 @@ namespace WeSay.LexicalModel
 					LexEntry entry = value as LexEntry;
 					Debug.Assert(entry != null);
 					_targetId = entry.GetOrCreateId(true);
-
 				}
 				NotifyPropertyChanged();
 			}
@@ -160,9 +144,10 @@ namespace WeSay.LexicalModel
 			//tell our parent, which then handles getting us saved eventually
 			if (_parent != null)
 			{
-				this._parent.NotifyPropertyChanged("relation");
+				_parent.NotifyPropertyChanged("relation");
 			}
 		}
+
 		#region IValueHolder<LexEntry> Members
 
 		/// <summary>
@@ -170,24 +155,15 @@ namespace WeSay.LexicalModel
 		/// </summary>
 		public LexEntry Value
 		{
-			get
-			{
-				return Target as LexEntry;
-			}
-			set
-			{
-				Target = value;
-			}
+			get { return Target as LexEntry; }
+			set { Target = value; }
 		}
 
 		#region IEmptinessStatus Members
 
 		public bool IsEmpty
 		{
-			get
-			{
-				return string.IsNullOrEmpty(_targetId);
-			}
+			get { return string.IsNullOrEmpty(_targetId); }
 		}
 
 		#region IEmptinessCleanup Members
@@ -209,7 +185,7 @@ namespace WeSay.LexicalModel
 		///Occurs when a property value changes.
 		///</summary>
 		///
-	   public event PropertyChangedEventHandler PropertyChanged;
+		public event PropertyChangedEventHandler PropertyChanged;
 
 		#endregion
 	}
@@ -223,24 +199,16 @@ namespace WeSay.LexicalModel
 
 		public WeSayDataObject Parent
 		{
-			set
-			{
-				_parent = value;
-			}
+			set { _parent = value; }
 			get { return _parent; }
 		}
+
 		#endregion
 
 		public List<LexRelation> Relations
 		{
-			get
-			{
-				return _relations;
-			}
-			set
-			{
-				_relations = value;
-			}
+			get { return _relations; }
+			set { _relations = value; }
 		}
 
 		#region IEmptinessStatus Members
@@ -251,8 +219,10 @@ namespace WeSay.LexicalModel
 			{
 				foreach (LexRelation relation in _relations)
 				{
-					if(!relation.IsEmpty )
+					if (!relation.IsEmpty)
+					{
 						return false;
+					}
 				}
 				return true;
 			}

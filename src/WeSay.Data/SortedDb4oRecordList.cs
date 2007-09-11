@@ -14,7 +14,6 @@ namespace WeSay.Data
 		KeySecondaryValuePrimary
 	}
 
-
 	public class KeyValueComparer<Key, Value> : IComparer<KeyValuePair<Key, Value>>
 	{
 		private IComparer<Key> _keySorter;
@@ -29,10 +28,7 @@ namespace WeSay.Data
 		}
 
 		public KeyValueComparer(IComparer<Key> keySorter, IComparer<Value> valueSorter)
-			: this(keySorter, valueSorter, SortBy.KeyPrimaryValueSecondary)
-		{
-
-		}
+				: this(keySorter, valueSorter, SortBy.KeyPrimaryValueSecondary) {}
 
 		#region IComparer<KeyValuePair<Key,Value>> Members
 
@@ -55,25 +51,23 @@ namespace WeSay.Data
 					result = _keySorter.Compare(x.Key, y.Key);
 				}
 				return result;
-
 			}
 		}
 
 		#endregion
-	};
+	} ;
 
-
-	public class CachedSortedDb4oList<K, T>: IBindingList, IEnumerable<K>, IDisposable where T : class, new()
+	public class CachedSortedDb4oList<K, T> : IBindingList, IEnumerable<K>, IDisposable where T : class, new()
 	{
 		public delegate K KeyProvider(T item);
 
-		List<KeyValuePair<K, long>> _keyIdMap;
-		List<KeyValuePair<K, long>> _idKeyMap;
+		private List<KeyValuePair<K, long>> _keyIdMap;
+		private List<KeyValuePair<K, long>> _idKeyMap;
 		private Db4oRecordList<T> _masterRecordList;
-		string _cachePath;
-		KeyValueComparer<K, long> _keyIdSorter;
-		KeyValueComparer<K, long> _idKeySorter;
-		ISortHelper<K, T> _sortHelper;
+		private string _cachePath;
+		private KeyValueComparer<K, long> _keyIdSorter;
+		private KeyValueComparer<K, long> _idKeySorter;
+		private ISortHelper<K, T> _sortHelper;
 
 		public CachedSortedDb4oList(Db4oRecordListManager recordListManager, ISortHelper<K, T> sortHelper)
 		{
@@ -89,12 +83,18 @@ namespace WeSay.Data
 			}
 			_sortHelper = sortHelper;
 			_cachePath = recordListManager.CachePath;
-			_keyIdSorter = new KeyValueComparer<K, long>(sortHelper.KeyComparer, Comparer<long>.Default, SortBy.KeyPrimaryValueSecondary);
-			_idKeySorter = new KeyValueComparer<K, long>(sortHelper.KeyComparer, Comparer<long>.Default, SortBy.KeySecondaryValuePrimary);
-			MasterRecordList = (Db4oRecordList<T>)recordListManager.GetListOfType<T>();
+			_keyIdSorter =
+					new KeyValueComparer<K, long>(sortHelper.KeyComparer,
+												  Comparer<long>.Default,
+												  SortBy.KeyPrimaryValueSecondary);
+			_idKeySorter =
+					new KeyValueComparer<K, long>(sortHelper.KeyComparer,
+												  Comparer<long>.Default,
+												  SortBy.KeySecondaryValuePrimary);
+			MasterRecordList = (Db4oRecordList<T>) recordListManager.GetListOfType<T>();
 
 			Deserialize();
-			if(_keyIdMap == null)
+			if (_keyIdMap == null)
 			{
 				_keyIdMap = _sortHelper.GetKeyIdPairs();
 				_idKeyMap = _sortHelper.GetKeyIdPairs();
@@ -102,16 +102,14 @@ namespace WeSay.Data
 			}
 
 			MasterRecordList.ListChanged += new ListChangedEventHandler(OnMasterRecordListListChanged);
-			MasterRecordList.DeletingRecord += new EventHandler<RecordListEventArgs<T>>(OnMasterRecordListDeletingRecord);
+			MasterRecordList.DeletingRecord +=
+					new EventHandler<RecordListEventArgs<T>>(OnMasterRecordListDeletingRecord);
 			MasterRecordList.ContentOfItemInListChanged += new ListChangedEventHandler(OnMasterRecordListContentChanged);
 		}
 
 		private string CacheFilePath
 		{
-			get
-			{
-				return Path.Combine(_cachePath, CacheHelper.EscapeFileNameString(_sortHelper.Name) + ".cache");
-			}
+			get { return Path.Combine(_cachePath, CacheHelper.EscapeFileNameString(_sortHelper.Name) + ".cache"); }
 		}
 
 		private void Serialize()
@@ -137,12 +135,11 @@ namespace WeSay.Data
 					}
 				}
 			}
-			catch
-			{
-			}
+			catch {}
 		}
 
-		private int GetSorterHashCode() {
+		private int GetSorterHashCode()
+		{
 			byte[] bytes = _keyIdSorter.GetType().GetMethod("Compare").GetMethodBody().GetILAsByteArray();
 			int hashCode = 0;
 			for (int i = 0; i < bytes.Length; i++)
@@ -164,20 +161,19 @@ namespace WeSay.Data
 					BinaryFormatter formatter = new BinaryFormatter();
 					try
 					{
-						DateTime databaseLastModified = (DateTime)formatter.Deserialize(fs);
+						DateTime databaseLastModified = (DateTime) formatter.Deserialize(fs);
 						if (databaseLastModified == GetDatabaseLastModified())
 						{
-							int filterHashCode = (int)formatter.Deserialize(fs);
+							int filterHashCode = (int) formatter.Deserialize(fs);
 							if (filterHashCode == GetSorterHashCode())
 							{
-								_keyIdMap = (List<KeyValuePair<K, long>>)formatter.Deserialize(fs);
+								_keyIdMap = (List<KeyValuePair<K, long>>) formatter.Deserialize(fs);
 								_idKeyMap = new List<KeyValuePair<K, long>>(_keyIdMap);
 								_idKeyMap.Sort(_idKeySorter);
-
 							}
 						}
 					}
-					catch{}
+					catch {}
 					finally
 					{
 						fs.Close();
@@ -191,21 +187,20 @@ namespace WeSay.Data
 			return MasterRecordList.GetDatabaseLastModified();
 		}
 
-		void OnMasterRecordListContentChanged(object sender, ListChangedEventArgs e)
+		private void OnMasterRecordListContentChanged(object sender, ListChangedEventArgs e)
 		{
-			IRecordList<T> masterRecordList = (IRecordList<T>)sender;
+			IRecordList<T> masterRecordList = (IRecordList<T>) sender;
 			Update(masterRecordList[e.NewIndex]);
 		}
 
-
-		void OnMasterRecordListDeletingRecord(object sender, RecordListEventArgs<T> e)
+		private void OnMasterRecordListDeletingRecord(object sender, RecordListEventArgs<T> e)
 		{
 			Remove(e.Item);
 		}
 
-		void OnMasterRecordListListChanged(object sender, ListChangedEventArgs e)
+		private void OnMasterRecordListListChanged(object sender, ListChangedEventArgs e)
 		{
-			IRecordList<T> masterRecordList = (IRecordList<T>)sender;
+			IRecordList<T> masterRecordList = (IRecordList<T>) sender;
 			switch (e.ListChangedType)
 			{
 				case ListChangedType.ItemAdded:
@@ -225,7 +220,7 @@ namespace WeSay.Data
 
 		private void Add(T item)
 		{
-			long itemId = this.MasterRecordList.GetId(item);
+			long itemId = MasterRecordList.GetId(item);
 			foreach (K key in _sortHelper.GetKeys(item))
 			{
 				int index = AddKeyId(key, itemId);
@@ -238,22 +233,21 @@ namespace WeSay.Data
 			int index;
 			KeyValuePair<K, long> keyIdPair = new KeyValuePair<K, long>(key, itemId);
 
-
 			// insert into id key map
-			int idKeyIndex = this._idKeyMap.BinarySearch(keyIdPair, this._idKeySorter);
+			int idKeyIndex = _idKeyMap.BinarySearch(keyIdPair, _idKeySorter);
 			if (idKeyIndex < 0) // not found, index is bitwise complement of the place to insert
 			{
 				idKeyIndex = ~idKeyIndex;
 			}
-			this._idKeyMap.Insert(idKeyIndex, keyIdPair);
+			_idKeyMap.Insert(idKeyIndex, keyIdPair);
 
 			// insert into key id map
-			index = this._keyIdMap.BinarySearch(keyIdPair, this._keyIdSorter);
+			index = _keyIdMap.BinarySearch(keyIdPair, _keyIdSorter);
 			if (index < 0) // not found, index is bitwise complement of the place to insert
 			{
 				index = ~index;
 			}
-			this._keyIdMap.Insert(index, keyIdPair);
+			_keyIdMap.Insert(index, keyIdPair);
 			return index;
 		}
 
@@ -312,7 +306,8 @@ namespace WeSay.Data
 			}
 		}
 
-		private List<int> RemoveId(long itemId) {
+		private List<int> RemoveId(long itemId)
+		{
 			List<int> indexesOfDeletedItems = new List<int>();
 
 			int idKeyMapIndex;
@@ -320,9 +315,9 @@ namespace WeSay.Data
 			{
 				int keyIdMapIndex;
 				GetKeyValueIndexes(itemId, out keyIdMapIndex, out idKeyMapIndex);
-				if (keyIdMapIndex >=0)
+				if (keyIdMapIndex >= 0)
 				{
-					this._idKeyMap.RemoveAt(idKeyMapIndex);
+					_idKeyMap.RemoveAt(idKeyMapIndex);
 					indexesOfDeletedItems.Add(keyIdMapIndex);
 				}
 			}
@@ -338,7 +333,8 @@ namespace WeSay.Data
 			return indexesOfDeletedItems;
 		}
 
-		private void GetKeyValueIndexes(long itemId, out int keyIdMapIndex, out int idKeyMapIndex) {
+		private void GetKeyValueIndexes(long itemId, out int keyIdMapIndex, out int idKeyMapIndex)
+		{
 			idKeyMapIndex = GetIdKeyMapIndex(itemId);
 
 			keyIdMapIndex = -1;
@@ -346,8 +342,8 @@ namespace WeSay.Data
 			// get the index of the keyIdPair from the keyIdMap
 			if (idKeyMapIndex >= 0)
 			{
-				KeyValuePair<K, long> keyIdPair = this._idKeyMap[idKeyMapIndex];
-				keyIdMapIndex = this._keyIdMap.IndexOf(keyIdPair);
+				KeyValuePair<K, long> keyIdPair = _idKeyMap[idKeyMapIndex];
+				keyIdMapIndex = _keyIdMap.IndexOf(keyIdPair);
 			}
 		}
 
@@ -355,10 +351,10 @@ namespace WeSay.Data
 		{
 			int idKeyMapIndex;
 			KeyValuePair<K, long> keyIdPair = new KeyValuePair<K, long>(default(K), itemId);
-			idKeyMapIndex = this._idKeyMap.BinarySearch(keyIdPair, this._idKeySorter);
-			if (idKeyMapIndex < 0 && ~idKeyMapIndex != this._idKeyMap.Count)
+			idKeyMapIndex = _idKeyMap.BinarySearch(keyIdPair, _idKeySorter);
+			if (idKeyMapIndex < 0 && ~idKeyMapIndex != _idKeyMap.Count)
 			{
-				if (this._idKeyMap[~idKeyMapIndex].Value == itemId)
+				if (_idKeyMap[~idKeyMapIndex].Value == itemId)
 				{
 					idKeyMapIndex = ~idKeyMapIndex;
 				}
@@ -392,7 +388,7 @@ namespace WeSay.Data
 				_idKeyMap.Sort(_idKeySorter);
 			}
 			OnListReset();
-			if (!this.MasterRecordList.DelayWritingCachesUntilDispose)
+			if (!MasterRecordList.DelayWritingCachesUntilDispose)
 			{
 				Serialize();
 			}
@@ -464,7 +460,7 @@ namespace WeSay.Data
 			KeyValuePair<K, long> keyIdPair = new KeyValuePair<K, long>(key, 0);
 
 			int index = _keyIdMap.BinarySearch(keyIdPair, _keyIdSorter);
-			if (index < 0 && ~index !=_keyIdMap.Count)
+			if (index < 0 && ~index != _keyIdMap.Count)
 			{
 				if (_sortHelper.KeyComparer.Compare(_keyIdMap[~index].Key, key) == 0)
 				{
@@ -489,10 +485,12 @@ namespace WeSay.Data
 			Debug.Assert(this[newIndex] != null);
 			OnListChanged(new ListChangedEventArgs(ListChangedType.ItemAdded, newIndex));
 		}
+
 		protected virtual void OnItemMoved(int newIndex, int oldIndex)
 		{
 			OnListChanged(new ListChangedEventArgs(ListChangedType.ItemMoved, newIndex, oldIndex));
 		}
+
 		protected virtual void OnItemChanged(int newIndex)
 		{
 			OnListChanged(new ListChangedEventArgs(ListChangedType.ItemChanged, newIndex));
@@ -513,9 +511,7 @@ namespace WeSay.Data
 			ListChanged(this, e);
 		}
 
-		public event ListChangedEventHandler ListChanged = delegate
-														   {
-														   };
+		public event ListChangedEventHandler ListChanged = delegate { };
 
 		public void RemoveIndex(PropertyDescriptor property)
 		{
@@ -581,7 +577,7 @@ namespace WeSay.Data
 		public int Add(object value)
 		{
 			VerifyNotDisposed();
-			return ((IList)MasterRecordList).Add(value);
+			return ((IList) MasterRecordList).Add(value);
 		}
 
 		public void Clear()
@@ -605,7 +601,7 @@ namespace WeSay.Data
 				throw new ArgumentException("value must be of type T");
 			}
 
-			long itemId = this.MasterRecordList.GetId((T)value);
+			long itemId = MasterRecordList.GetId((T) value);
 
 			int idKeyMapIndex;
 			int keyIdMapIndex;
@@ -650,15 +646,14 @@ namespace WeSay.Data
 		public void Remove(object value)
 		{
 			VerifyNotDisposed();
-			((IList)MasterRecordList).Remove(value);
+			((IList) MasterRecordList).Remove(value);
 		}
 
 		public void RemoveAt(int index)
 		{
 			VerifyNotDisposed();
-			((IList)MasterRecordList).Remove(GetValue(index));
+			((IList) MasterRecordList).Remove(GetValue(index));
 		}
-
 
 		// returns the key string. to get the value object use GetValue
 		// this is so bindinglistgrid will display the right thing.
@@ -747,14 +742,8 @@ namespace WeSay.Data
 
 		public Db4oRecordList<T> MasterRecordList
 		{
-			get
-			{
-				return _masterRecordList;
-			}
-			set
-			{
-				_masterRecordList = value;
-			}
+			get { return _masterRecordList; }
+			set { _masterRecordList = value; }
 		}
 
 		#endregion
@@ -765,9 +754,9 @@ namespace WeSay.Data
 
 		public struct Enumerator : IEnumerator<K>
 		{
-			CachedSortedDb4oList<K, T> _collection;
-			int _index;
-			bool _isDisposed;
+			private CachedSortedDb4oList<K, T> _collection;
+			private int _index;
+			private bool _isDisposed;
 
 			public Enumerator(CachedSortedDb4oList<K, T> collection)
 			{
@@ -868,13 +857,11 @@ namespace WeSay.Data
 			return new Enumerator(this);
 		}
 
-
 		IEnumerator IEnumerable.GetEnumerator()
 		{
 			VerifyNotDisposed();
 			return GetEnumerator();
 		}
-
 
 		IEnumerator<K> IEnumerable<K>.GetEnumerator()
 		{
@@ -885,12 +872,15 @@ namespace WeSay.Data
 				yield return _keyIdMap[i].Key;
 			}
 		}
+
 		#endregion
+
 		#region IDisposable Members
+
 #if DEBUG
 		~CachedSortedDb4oList()
 		{
-			if (!this._disposed)
+			if (!_disposed)
 			{
 				throw new ApplicationException("Disposed not explicitly called on CachedSortedDb4oList.");
 			}
@@ -907,7 +897,7 @@ namespace WeSay.Data
 
 		protected virtual void Dispose(bool disposing)
 		{
-			if (!this._disposed)
+			if (!_disposed)
 			{
 				if (disposing)
 				{
@@ -917,21 +907,22 @@ namespace WeSay.Data
 						MasterRecordList.ListChanged -= OnMasterRecordListListChanged;
 						MasterRecordList.DeletingRecord -= OnMasterRecordListDeletingRecord;
 					}
-				   Serialize();
+					Serialize();
 				}
 
 				// shared (dispose and finalizable) cleanup logic
-				this._disposed = true;
+				_disposed = true;
 			}
 		}
 
 		protected void VerifyNotDisposed()
 		{
-			if (this._disposed)
+			if (_disposed)
 			{
 				throw new ObjectDisposedException("CachedSortedDb4oList");
 			}
 		}
+
 		#endregion
 	}
 }

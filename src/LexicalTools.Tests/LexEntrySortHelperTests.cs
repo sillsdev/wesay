@@ -1,7 +1,9 @@
 using System;
+using System.Drawing;
 using System.IO;
 using NUnit.Framework;
 using WeSay.Data;
+using WeSay.Language;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Db4o_Specific;
 using WeSay.Project;
@@ -14,11 +16,13 @@ namespace WeSay.LexicalTools.Tests
 		ViewTemplate _viewTemplate;
 		string _filePath;
 		IRecordListManager _recordListManager;
+		private WritingSystem _writingSystem;
 
 		[SetUp]
 		public void Setup()
 		{
-			string[] vernacularWritingSystemIds = new string[] { "pretendVernacular" };
+			this._writingSystem = new WritingSystem("pretendVernacular", new Font(FontFamily.GenericSansSerif, 24));
+			string[] vernacularWritingSystemIds = new string[] { this._writingSystem.Id };
 
 			_viewTemplate = new ViewTemplate();
 			_viewTemplate.Add(new Field(Field.FieldNames.EntryLexicalForm.ToString(), "LexEntry", vernacularWritingSystemIds));
@@ -40,7 +44,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void Constuct()
 		{
-			LexEntrySortHelper h = new LexEntrySortHelper(((Db4oRecordListManager)_recordListManager).DataSource, "pretendVernacular", true);
+			LexEntrySortHelper h = new LexEntrySortHelper(((Db4oRecordListManager)_recordListManager).DataSource, _writingSystem, true);
 			Assert.IsNotNull(h);
 		}
 
@@ -48,7 +52,7 @@ namespace WeSay.LexicalTools.Tests
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void Construct_NullDataSource_Throws()
 		{
-			new LexEntrySortHelper(null, "pretendVernacular", true);
+			new LexEntrySortHelper(null, _writingSystem, true);
 		}
 
 		[Test]
@@ -61,7 +65,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void GetKeys_ForGloss_LexEntryHasNoSenses_NotEmpty()
 		{
-			LexEntrySortHelper h = new LexEntrySortHelper(((Db4oRecordListManager)_recordListManager).DataSource, "pretendAnalysis", false);
+			LexEntrySortHelper h = new LexEntrySortHelper(((Db4oRecordListManager)_recordListManager).DataSource, _writingSystem, false);
 			int count = 0;
 			foreach (string s in h.GetKeys(new LexEntry()))
 			{
@@ -74,10 +78,10 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void GetKeys_ForCompoundGlossExactWritingSystem_SeparateKeys()
 		{
-			LexEntrySortHelper h = new LexEntrySortHelper(((Db4oRecordListManager)_recordListManager).DataSource, "pretendAnalysis", false);
+			LexEntrySortHelper h = new LexEntrySortHelper(((Db4oRecordListManager)_recordListManager).DataSource, _writingSystem, false);
 			LexEntry e = new LexEntry();
 			LexSense s = (LexSense) e.Senses.AddNew();
-			s.Gloss.SetAlternative("pretendAnalysis", "gloss 1; gloss 2");
+			s.Gloss.SetAlternative(_writingSystem.Id, "gloss 1; gloss 2");
 			int count = 0;
 			foreach (string k in h.GetKeys(e))
 			{
@@ -98,7 +102,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void GetKeys_ForCompoundGlossFallBackWritingSystem_SeparateKeys()
 		{
-			LexEntrySortHelper h = new LexEntrySortHelper(((Db4oRecordListManager)_recordListManager).DataSource, "pretendAnalysis", false);
+			LexEntrySortHelper h = new LexEntrySortHelper(((Db4oRecordListManager)_recordListManager).DataSource, _writingSystem, false);
 			LexEntry e = new LexEntry();
 			LexSense s = (LexSense)e.Senses.AddNew();
 			s.Gloss.SetAlternative("analysis", "gloss 1; gloss 2");

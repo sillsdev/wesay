@@ -1,9 +1,10 @@
 using System;
 using System.ComponentModel;
 using System.Windows.Forms;
+using Palaso.Reporting;
+using WeSay.LexicalModel;
 using WeSay.Project;
 using WeSay.UI;
-using WeSay.LexicalModel;
 
 namespace WeSay.LexicalTools
 {
@@ -11,13 +12,14 @@ namespace WeSay.LexicalTools
 	{
 		private ViewTemplate _viewTemplate;
 		private LexEntry _record;
-		private System.Windows.Forms.Timer _cleanupTimer;
+		private Timer _cleanupTimer;
 
 		public EntryViewControl()
 		{
 			_viewTemplate = null;
 			InitializeComponent();
-			_detailListControl.ChangeOfWhichItemIsInFocus += new EventHandler<CurrentItemEventArgs>(OnChangeOfWhichItemIsInFocus);
+			_detailListControl.ChangeOfWhichItemIsInFocus +=
+					new EventHandler<CurrentItemEventArgs>(OnChangeOfWhichItemIsInFocus);
 			_detailListControl.KeyDown += new KeyEventHandler(_detailListControl_KeyDown);
 		}
 
@@ -30,18 +32,18 @@ namespace WeSay.LexicalTools
 			base.OnHandleDestroyed(e);
 		}
 
-	  void _detailListControl_KeyDown(object sender, KeyEventArgs e)
+		private void _detailListControl_KeyDown(object sender, KeyEventArgs e)
 		{
 			OnKeyDown(e);
 		}
 
 		[Browsable(false)]
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-		public ViewTemplate  ViewTemplate
+		public ViewTemplate ViewTemplate
 		{
 			get
 			{
-				if(_viewTemplate == null)
+				if (_viewTemplate == null)
 				{
 					throw new InvalidOperationException("ViewTemplate must be initialized");
 				}
@@ -60,35 +62,26 @@ namespace WeSay.LexicalTools
 
 		public RichTextBox ControlFormattedView
 		{
-			get
-			{
-				return _lexicalEntryPreview;
-			}
+			get { return _lexicalEntryPreview; }
 		}
 
 		public DetailList ControlEntryDetail
 		{
-			get
-			{
-				return _detailListControl;
-			}
+			get { return _detailListControl; }
 		}
 
 		public LexEntry DataSource
 		{
-			get
-			{
-				return _record;
-			}
+			get { return _record; }
 			set
 			{
-				Palaso.Reporting.Logger.WriteMinorEvent("In DataSource Set");
+				Logger.WriteMinorEvent("In DataSource Set");
 
 				if (_record != value)
 				{
 					if (_record != null)
 					{
-						Palaso.Reporting.Logger.WriteMinorEvent("Datasource set calling _record.CleanUpAfterEditting()");
+						Logger.WriteMinorEvent("Datasource set calling _record.CleanUpAfterEditting()");
 
 						_record.CleanUpAfterEditting();
 						_record.PropertyChanged -= OnRecordPropertyChanged;
@@ -99,16 +92,15 @@ namespace WeSay.LexicalTools
 					if (_record != null)
 					{
 						_record.PropertyChanged += new PropertyChangedEventHandler(OnRecordPropertyChanged);
-						_record.EmptyObjectsRemoved +=new EventHandler(OnEmptyObjectsRemoved);
+						_record.EmptyObjectsRemoved += new EventHandler(OnEmptyObjectsRemoved);
 					}
-					Palaso.Reporting.Logger.WriteMinorEvent("Datasource set calling RefreshLexicalEntryPreview()");
+					Logger.WriteMinorEvent("Datasource set calling RefreshLexicalEntryPreview()");
 					RefreshLexicalEntryPreview();
-					Palaso.Reporting.Logger.WriteMinorEvent("Datasource set calling RefreshEntryDetail()");
+					Logger.WriteMinorEvent("Datasource set calling RefreshEntryDetail()");
 					RefreshEntryDetail();
 				}
 
-				Palaso.Reporting.Logger.WriteMinorEvent("Exit DataSource Set");
-
+				Logger.WriteMinorEvent("Exit DataSource Set");
 			}
 		}
 
@@ -117,35 +109,32 @@ namespace WeSay.LexicalTools
 		/// </summary>
 		public IBindingList AllRecords
 		{
-			set
-			{
-				_allRecords = value;
-			}
+			set { _allRecords = value; }
 		}
 
 		private void OnEmptyObjectsRemoved(object sender, EventArgs e)
 		{
 			//find out where our current focus is and attempt to return to that place
 			int? row = null;
-			if (this._detailListControl.ContainsFocus)
+			if (_detailListControl.ContainsFocus)
 			{
-				Control focussedControl = this._detailListControl.FocussedImmediateChild;
+				Control focussedControl = _detailListControl.FocussedImmediateChild;
 				if (focussedControl != null)
 				{
-					row = this._detailListControl.GetRow(focussedControl);
+					row = _detailListControl.GetRow(focussedControl);
 				}
 			}
-			Palaso.Reporting.Logger.WriteMinorEvent("OnEmptyObjectsRemoved: b4 RefreshEntryDetial");
+			Logger.WriteMinorEvent("OnEmptyObjectsRemoved: b4 RefreshEntryDetial");
 			RefreshEntryDetail();
-			Palaso.Reporting.Logger.WriteMinorEvent("OnEmptyObjectsRemoved: b4  Application.DoEvents()");
+			Logger.WriteMinorEvent("OnEmptyObjectsRemoved: b4  Application.DoEvents()");
 			Application.DoEvents(); //TODO: We need to remove this.  It's a dangerous thing in a historically buggy spot
-			Palaso.Reporting.Logger.WriteMinorEvent("OnEmptyObjectsRemoved: b4 MoveInsertionPoint");
+			Logger.WriteMinorEvent("OnEmptyObjectsRemoved: b4 MoveInsertionPoint");
 			if (row != null)
 			{
-				row = Math.Min((int)row, this._detailListControl.Count-1);
-				this._detailListControl.MoveInsertionPoint((int)row);
+				row = Math.Min((int) row, _detailListControl.Count - 1);
+				_detailListControl.MoveInsertionPoint((int) row);
 			}
-			Palaso.Reporting.Logger.WriteMinorEvent("OnEmptyObjectsRemoved end");
+			Logger.WriteMinorEvent("OnEmptyObjectsRemoved end");
 		}
 
 		private void OnRecordPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -153,8 +142,8 @@ namespace WeSay.LexicalTools
 			LexEntry entry = (LexEntry) sender;
 			switch (e.PropertyName)
 			{
-				// these are changes to the list not a change that needs to clean up
-				// and can actually have very detrimental effect if we do.
+					// these are changes to the list not a change that needs to clean up
+					// and can actually have very detrimental effect if we do.
 				case "exampleSentences":
 				case "senses":
 					break;
@@ -169,8 +158,8 @@ namespace WeSay.LexicalTools
 					{
 						_cleanupTimer = new Timer();
 						_cleanupTimer.Tick += new EventHandler(OnCleanupTimer_Tick);
-					 _cleanupTimer.Interval = 500;
-					 }
+						_cleanupTimer.Interval = 500;
+					}
 					_cleanupTimer.Tag = entry;
 					_cleanupTimer.Start();
 					break;
@@ -178,10 +167,10 @@ namespace WeSay.LexicalTools
 			RefreshLexicalEntryPreview();
 		}
 
-		void OnCleanupTimer_Tick(object sender, EventArgs e)
+		private void OnCleanupTimer_Tick(object sender, EventArgs e)
 		{
-			Palaso.Reporting.Logger.WriteMinorEvent("OnCleanupTimer_Tick");
-			LexEntry entry = (LexEntry)_cleanupTimer.Tag;
+			Logger.WriteMinorEvent("OnCleanupTimer_Tick");
+			LexEntry entry = (LexEntry) _cleanupTimer.Tag;
 			_cleanupTimer.Stop();
 			entry.CleanUpEmptyObjects();
 		}
@@ -194,19 +183,19 @@ namespace WeSay.LexicalTools
 
 		private void RefreshEntryDetail()
 		{
-		  this._panelEntry.SuspendLayout();
-			this._detailListControl.SuspendLayout();
+			_panelEntry.SuspendLayout();
+			_detailListControl.SuspendLayout();
 
-			this._detailListControl.Clear();
-			this._detailListControl.VerticalScroll.Value = this._detailListControl.VerticalScroll.Minimum;
-			this._panelEntry.Controls.Add(_detailListControl);
-			if (this._record != null)
+			_detailListControl.Clear();
+			_detailListControl.VerticalScroll.Value = _detailListControl.VerticalScroll.Minimum;
+			_panelEntry.Controls.Add(_detailListControl);
+			if (_record != null)
 			{
-				LexEntryLayouter layout = new LexEntryLayouter(this._detailListControl, ViewTemplate, _allRecords);
-				layout.AddWidgets(this._record);
+				LexEntryLayouter layout = new LexEntryLayouter(_detailListControl, ViewTemplate, _allRecords);
+				layout.AddWidgets(_record);
 			}
-			this._detailListControl.ResumeLayout();
-		  this._panelEntry.ResumeLayout(true);
+			_detailListControl.ResumeLayout();
+			_panelEntry.ResumeLayout(true);
 		}
 
 		private void OnChangeOfWhichItemIsInFocus(object sender, CurrentItemEventArgs e)

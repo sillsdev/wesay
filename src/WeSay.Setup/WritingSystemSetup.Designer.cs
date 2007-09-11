@@ -40,8 +40,7 @@ namespace WeSay.Setup
 			this._fontsPage = new System.Windows.Forms.TabPage();
 			this._fontControl = new WeSay.Setup.FontControl();
 			this._sortingPage = new System.Windows.Forms.TabPage();
-			this.label2 = new System.Windows.Forms.Label();
-			this.pictureBox2 = new System.Windows.Forms.PictureBox();
+			this._sortControl = new WritingSystemSort();
 			this.textBox1 = new System.Windows.Forms.TextBox();
 			this.pictureBox1 = new System.Windows.Forms.PictureBox();
 			this.toolStrip1.SuspendLayout();
@@ -52,7 +51,6 @@ namespace WeSay.Setup
 			this._basicPage.SuspendLayout();
 			this._fontsPage.SuspendLayout();
 			this._sortingPage.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
 			this.SuspendLayout();
 			//
@@ -180,8 +178,7 @@ namespace WeSay.Setup
 			//
 			// _sortingPage
 			//
-			this._sortingPage.Controls.Add(this.label2);
-			this._sortingPage.Controls.Add(this.pictureBox2);
+			this._sortingPage.Controls.Add(this._sortControl);
 			this._sortingPage.Location = new System.Drawing.Point(4, 22);
 			this._sortingPage.Name = "_sortingPage";
 			this._sortingPage.Padding = new System.Windows.Forms.Padding(3);
@@ -190,29 +187,15 @@ namespace WeSay.Setup
 			this._sortingPage.Text = "Sorting";
 			this._sortingPage.UseVisualStyleBackColor = true;
 			//
-			// label2
+			// _sortControl
 			//
-			this.label2.AutoSize = true;
-			this.label2.BackColor = System.Drawing.Color.Transparent;
-			this.label2.Location = new System.Drawing.Point(38, 15);
-			this.label2.MaximumSize = new System.Drawing.Size(266, 0);
-			this.label2.Name = "label2";
-			this.label2.Size = new System.Drawing.Size(250, 52);
-			this.label2.TabIndex = 11;
-			this.label2.Text = "Here, you\'ll have control over sort order.  Currently, WeSay just uses unicode or" +
-				"der, unless the writing system id matches a locale that Windows supports. E.g. F" +
-				"R (French), ES (Spanish), TH (Thai)";
-			this.label2.Click += new System.EventHandler(this.label2_Click);
+			this._sortControl.Dock = System.Windows.Forms.DockStyle.Fill;
+			this._sortControl.Location = new System.Drawing.Point(0, 0);
+			this._sortControl.Margin = new System.Windows.Forms.Padding(4);
+			this._sortControl.Name = "_sortControl";
+			this._sortControl.Size = new System.Drawing.Size(429, 269);
+			this._sortControl.TabIndex = 0;
 			//
-			// pictureBox2
-			//
-			this.pictureBox2.Image = global::WeSay.Setup.Properties.Resources.construction;
-			this.pictureBox2.Location = new System.Drawing.Point(6, 15);
-			this.pictureBox2.Name = "pictureBox2";
-			this.pictureBox2.Size = new System.Drawing.Size(25, 21);
-			this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-			this.pictureBox2.TabIndex = 8;
-			this.pictureBox2.TabStop = false;
 			//
 			// textBox1
 			//
@@ -264,7 +247,6 @@ namespace WeSay.Setup
 			this._fontsPage.ResumeLayout(false);
 			this._sortingPage.ResumeLayout(false);
 			this._sortingPage.PerformLayout();
-			((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
@@ -284,10 +266,9 @@ namespace WeSay.Setup
 		private System.Windows.Forms.TabControl _tabControl;
 		private System.Windows.Forms.TabPage _basicPage;
 		private WritingSystemBasic _basicControl;
+		private WritingSystemSort _sortControl;
 		private System.Windows.Forms.TabPage _fontsPage;
 		private FontControl _fontControl;
 		private System.Windows.Forms.TabPage _sortingPage;
-		private System.Windows.Forms.PictureBox pictureBox2;
-		private System.Windows.Forms.Label label2;
 	}
 }

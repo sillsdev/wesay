@@ -112,7 +112,7 @@ namespace WeSay.LexicalTools.Tests
 		private static void AddExample(LexSense sense)
 		{
 			LexExampleSentence example = (LexExampleSentence) sense.ExampleSentences.AddNew();
-			example.Sentence[BasilProject.Project.WritingSystems.TestGetWritingSystemVern.Id] = "sentence";
+			example.Sentence[BasilProject.Project.WritingSystems.TestWritingSystemVernId] = "sentence";
 		}
 	}
 }

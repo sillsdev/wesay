@@ -1,15 +1,9 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
-using System.Drawing;
 using System.Windows.Forms;
-using WeSay.Data;
 using WeSay.Foundation;
 using WeSay.Language;
 using WeSay.LexicalModel;
-using WeSay.LexicalModel.Db4o_Specific;
 using WeSay.Project;
 using WeSay.UI;
 
@@ -41,34 +35,26 @@ namespace WeSay.LexicalTools
 		/// otherwise, the first character typed into a ghost text field is not considered by
 		/// Keyman, since switching focus to a new, "real" box clears Keymans history of your typing.
 		/// See WS-23 for more info.
-		private MultiTextControl _previouslyGhostedControlToReuse=null;
+		private MultiTextControl _previouslyGhostedControlToReuse = null;
 
 		protected DetailList DetailList
-	  {
-		get
 		{
-		  return _detailList;
+			get { return _detailList; }
+			set { _detailList = value; }
 		}
-		set
-		{
-		  _detailList = value;
-		}
-	  }
 
 		public ViewTemplate ActiveViewTemplate
 		{
-			get { return this._viewTemplate; }
+			get { return _viewTemplate; }
 		}
-
-
 
 		protected Layouter(DetailList builder, ViewTemplate viewTemplate, IBindingList allRecords)
 		{
-			if(builder == null)
+			if (builder == null)
 			{
 				throw new ArgumentNullException("builder");
 			}
-			if(viewTemplate == null)
+			if (viewTemplate == null)
 			{
 				throw new ArgumentNullException("viewTemplate");
 			}
@@ -80,23 +66,25 @@ namespace WeSay.LexicalTools
 		/// <summary>
 		/// actually add the widgets that are needed to the detailed list
 		/// </summary>
-		public  int AddWidgets(IBindingList list, int index)
+		public int AddWidgets(IBindingList list, int index)
 		{
 			return AddWidgets(list, index, -1);
 		}
+
 		internal abstract int AddWidgets(IBindingList list, int index, int row);
-
-
-
 
 		protected Control MakeBoundControl(MultiText multiTextToBindTo, Field field)
 		{
 			MultiTextControl m;
 			if (_previouslyGhostedControlToReuse == null)
 			{
-				m = new MultiTextControl(field.WritingSystems, multiTextToBindTo, field.FieldName,
-					field.Visibility != CommonEnumerations.VisibilitySetting.ReadOnly, //show annotation
-					BasilProject.Project.WritingSystems, field.Visibility);
+				m = new MultiTextControl(field.WritingSystems,
+										 multiTextToBindTo,
+										 field.FieldName,
+										 field.Visibility != CommonEnumerations.VisibilitySetting.ReadOnly,
+										 //show annotation
+										 BasilProject.Project.WritingSystems,
+										 field.Visibility);
 			}
 			else
 			{
@@ -113,10 +101,10 @@ namespace WeSay.LexicalTools
 			foreach (WeSayTextBox box in control.TextBoxes)
 			{
 				TextBinding binding = new TextBinding(multiTextToBindTo, box.WritingSystem.Id, box);
-				binding.ChangeOfWhichItemIsInFocus += new EventHandler<CurrentItemEventArgs>(_detailList.OnBinding_ChangeOfWhichItemIsInFocus);
+				binding.ChangeOfWhichItemIsInFocus +=
+						new EventHandler<CurrentItemEventArgs>(_detailList.OnBinding_ChangeOfWhichItemIsInFocus);
 			}
 		}
-
 
 //        protected Control MakeGhostEntry(IBindingList list, string ghostPropertyName, IList<String> writingSystemIds)
 //        {
@@ -135,15 +123,20 @@ namespace WeSay.LexicalTools
 //            return m;
 //        }
 
-		protected int MakeGhostWidget<T>(IBindingList list, int insertAtRow, string fieldName, string label, string propertyName, bool isHeading) where T:new()
+		protected int MakeGhostWidget<T>(IBindingList list, int insertAtRow, string fieldName, string label,
+										 string propertyName, bool isHeading) where T : new()
 		{
 			int rowCount = 0;
 			Field field = ActiveViewTemplate.GetField(fieldName);
 			if (field != null && field.Visibility == CommonEnumerations.VisibilitySetting.Visible)
 			{
 				MultiTextControl m =
-					new MultiTextControl(field.WritingSystems, new MultiText(), fieldName + "_ghost", false,
-										 BasilProject.Project.WritingSystems, field.Visibility);
+						new MultiTextControl(field.WritingSystems,
+											 new MultiText(),
+											 fieldName + "_ghost",
+											 false,
+											 BasilProject.Project.WritingSystems,
+											 field.Visibility);
 
 				Control refWidget = DetailList.AddWidgetRow(label, isHeading, m, insertAtRow + rowCount, true);
 
@@ -158,27 +151,31 @@ namespace WeSay.LexicalTools
 			{
 				return 0; //didn't add a row
 			}
-
 		}
 
-		protected GhostBinding<T> MakeGhostBinding<T>(IBindingList list, string ghostPropertyName, WritingSystem writingSystem,
-			WeSayTextBox entry) where T: new()
+		protected GhostBinding<T> MakeGhostBinding<T>(IBindingList list, string ghostPropertyName,
+													  WritingSystem writingSystem,
+													  WeSayTextBox entry) where T : new()
 		{
 			GhostBinding<T> binding = new GhostBinding<T>(list, ghostPropertyName, writingSystem, entry);
 			binding.LayoutNeededAfterMadeReal += new GhostBinding<T>.LayoutNeededHandler(OnGhostBindingLayoutNeeded<T>);
-			binding.CurrentItemChanged += new EventHandler<CurrentItemEventArgs>(_detailList.OnBinding_ChangeOfWhichItemIsInFocus);
+			binding.CurrentItemChanged +=
+					new EventHandler<CurrentItemEventArgs>(_detailList.OnBinding_ChangeOfWhichItemIsInFocus);
 			return binding;
 		}
 
-		protected virtual void OnGhostBindingLayoutNeeded<T>(GhostBinding<T> sender, IBindingList list, int index, MultiTextControl previouslyGhostedControlToReuse, bool doGoToNextField, EventArgs args) where T:new()
+		protected virtual void OnGhostBindingLayoutNeeded<T>(GhostBinding<T> sender, IBindingList list, int index,
+															 MultiTextControl previouslyGhostedControlToReuse,
+															 bool doGoToNextField, EventArgs args) where T : new()
 		{
 			_previouslyGhostedControlToReuse = previouslyGhostedControlToReuse;
 			AddWidgetsAfterGhostTrigger(list, index, sender.ReferenceControl, doGoToNextField);
 		}
 
-		protected void AddWidgetsAfterGhostTrigger(IBindingList list, int index, Control refControl, bool doGoToNextField)
+		protected void AddWidgetsAfterGhostTrigger(IBindingList list, int index, Control refControl,
+												   bool doGoToNextField)
 		{
-			int row    = _detailList.GetRow(refControl);
+			int row = _detailList.GetRow(refControl);
 			AddWidgets(list, index, row);
 			if (doGoToNextField)
 			{
@@ -190,21 +187,20 @@ namespace WeSay.LexicalTools
 			}
 		}
 
-		protected static int AddChildrenWidgets(Layouter layouter, IBindingList list, int insertAtRow , int rowCount)
+		protected static int AddChildrenWidgets(Layouter layouter, IBindingList list, int insertAtRow, int rowCount)
 		{
-
 			for (int i = 0; i < list.Count; i++)
 			{
-			  int r;
-			  if (insertAtRow < 0)
-			  {
-				r = insertAtRow;    // just stick at the end
-			  }
-			  else
-			  {
-				r = insertAtRow + rowCount;
-			  }
-			  rowCount += layouter.AddWidgets(list, i, r);
+				int r;
+				if (insertAtRow < 0)
+				{
+					r = insertAtRow; // just stick at the end
+				}
+				else
+				{
+					r = insertAtRow + rowCount;
+				}
+				rowCount += layouter.AddWidgets(list, i, r);
 			}
 			return rowCount;
 		}
@@ -214,7 +210,7 @@ namespace WeSay.LexicalTools
 			int rowCount = 0;
 			foreach (Field customField in ActiveViewTemplate.GetCustomFields(target.GetType().Name))
 			{
-				if (!customField.DoShow )
+				if (!customField.DoShow)
 				{
 					continue;
 				}
@@ -228,39 +224,46 @@ namespace WeSay.LexicalTools
 						box = MakeOptionCollectionWidget(target, customField);
 						break;
 					case "MultiText":
-						box = MakeBoundControl(target.GetOrCreateProperty<MultiText>(customField.FieldName), customField);
+						box =
+								MakeBoundControl(target.GetOrCreateProperty<MultiText>(customField.FieldName),
+												 customField);
 						break;
 					default:
 						LexRelationType lexRelType = GetRelationType(customField.DataTypeName);
-						if (lexRelType !=null)
+						if (lexRelType != null)
 						{
 							box = MakeRelationWidget(target, lexRelType, customField);
 						}
 						else
 						{
 							throw new ApplicationException(
-								string.Format("WeSay doesn't understand how to layout a {0}", customField.DataTypeName));
+									string.Format("WeSay doesn't understand how to layout a {0}",
+												  customField.DataTypeName));
 						}
 						break;
 				}
-				DetailList.AddWidgetRow(StringCatalog.Get(customField.DisplayName), false, box, insertAtRow+rowCount, false);
+				DetailList.AddWidgetRow(StringCatalog.Get(customField.DisplayName),
+										false,
+										box,
+										insertAtRow + rowCount,
+										false);
 
 				++rowCount;
 			}
 			return rowCount;
 		}
 
-		private LexRelationType GetRelationType(string dataTypeName)
+		static private LexRelationType GetRelationType(string dataTypeName)
 		{
-			foreach (LexRelationType type in Project.WeSayWordsProject.Project.RelationTypes)
+			foreach (LexRelationType type in WeSayWordsProject.Project.RelationTypes)
 			{
-				if(type.ID == dataTypeName)
+				if (type.ID == dataTypeName)
+				{
 					return type;
+				}
 			}
 			return null;
 		}
-
-
 
 		/// <summary>
 		/// This is used to convert from the IEnuerable<string> that the cache give us
@@ -293,13 +296,15 @@ namespace WeSay.LexicalTools
 //            }
 //
 //        }
-
 		private Control MakeRelationWidget(WeSayDataObject target, LexRelationType type, Field field)
 		{
-			return RelationController.CreateWidget(target, type, field, _allRecords, _detailList.OnBinding_ChangeOfWhichItemIsInFocus);
+			return
+					RelationController.CreateWidget(target,
+													type,
+													field,
+													_allRecords,
+													_detailList.OnBinding_ChangeOfWhichItemIsInFocus);
 		}
-
-
 
 //        void OnSelectedItemChanged(object sender, EventArgs e)
 //        {
@@ -317,26 +322,26 @@ namespace WeSay.LexicalTools
 //            }
 //        }
 
-
-
 		protected Control MakeOptionWidget(WeSayDataObject target, Field field)
 		{
 			OptionRef optionRefTarget = target.GetOrCreateProperty<OptionRef>(field.FieldName);
 
 			OptionsList list = WeSayWordsProject.Project.GetOptionsList(field);
-			SingleOptionControl control = new SingleOptionControl(optionRefTarget, list, field.WritingSystemIds[0], field.FieldName);
+			SingleOptionControl control =
+					new SingleOptionControl(optionRefTarget, list, field.WritingSystemIds[0], field.FieldName);
 			SimpleBinding<string> binding = new SimpleBinding<string>(optionRefTarget, control);
-			binding.CurrentItemChanged += new EventHandler<CurrentItemEventArgs>(_detailList.OnBinding_ChangeOfWhichItemIsInFocus);
+			binding.CurrentItemChanged +=
+					new EventHandler<CurrentItemEventArgs>(_detailList.OnBinding_ChangeOfWhichItemIsInFocus);
 			return control;
 		}
 
-		static private Control MakeOptionCollectionWidget(WeSayDataObject target, Field field)
+		private static Control MakeOptionCollectionWidget(WeSayDataObject target, Field field)
 		{
 			OptionsList list = WeSayWordsProject.Project.GetOptionsList(field);
 			OptionRefCollection optionRefTarget = target.GetOrCreateProperty<OptionRefCollection>(field.FieldName);
-			OptionCollectionControl control = new OptionCollectionControl(optionRefTarget, list, field.WritingSystemIds[0]);
+			OptionCollectionControl control =
+					new OptionCollectionControl(optionRefTarget, list, field.WritingSystemIds[0]);
 			return control;
 		}
 	}
-
 }

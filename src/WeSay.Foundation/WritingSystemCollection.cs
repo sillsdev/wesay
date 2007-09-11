@@ -171,36 +171,6 @@ namespace WeSay.Language
 			}
 		}
 
-		public WritingSystem TestGetWritingSystemAnal
-		{
-			get
-			{
-				WritingSystem ws;
-				if (TryGetValue(TestWritingSystemAnalId, out ws))
-				{
-					return ws;
-				}
-//                foreach (WritingSystem value in this.Values )
-//                {
-//                    return value;
-//                }
-				return null;
-			}
-		}
-
-		public WritingSystem TestGetWritingSystemVern
-		{
-			get
-			{
-				WritingSystem ws;
-				if (TryGetValue(TestWritingSystemVernId, out ws))
-				{
-					return ws;
-				}
-				return null;
-			}
-		}
-
 		/// <summary>
 		/// For serialization only
 		/// </summary>

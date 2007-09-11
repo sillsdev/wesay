@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Xml;
 using Exortech.NetReflector;
 using WeSay.Foundation;
@@ -10,12 +11,7 @@ namespace WeSay.Project
 	[ReflectorType("viewTemplate")]
 	public class ViewTemplate : List<Field>
 	{
-		private string _id="Default View Template";
-
-		public ViewTemplate()
-		{
-
-		}
+		private string _id = "Default View Template";
 
 		/// <summary>
 		/// For serialization only
@@ -23,10 +19,7 @@ namespace WeSay.Project
 		[ReflectorCollection("fields", Required = true)]
 		public List<Field> Fields
 		{
-			get
-			{
-				return this;
-			}
+			get { return this; }
 			set
 			{
 				Clear();
@@ -57,14 +50,14 @@ namespace WeSay.Project
 		///The field with the given field name.
 		///</returns>
 		///
-		///<param name="index">The field name of the field to get.</param>
+		///<param name="fieldName">The field name of the field to get.</param>
 		///<exception cref="T:System.ArgumentOutOfRangeException">index is not a valid index in the <see cref="T:System.Collections.Generic.IList`1"></see>.</exception>
 		public Field this[string fieldName]
 		{
 			get
 			{
 				Field field;
-				if(!TryGetField(fieldName, out field))
+				if (!TryGetField(fieldName, out field))
 				{
 					throw new ArgumentOutOfRangeException();
 				}
@@ -74,15 +67,12 @@ namespace WeSay.Project
 
 		public bool TryGetField(string fieldName, out Field field)
 		{
-			if(fieldName == null)
+			if (fieldName == null)
 			{
 				throw new ArgumentNullException();
 			}
 			field = Find(
-						   delegate(Field f)
-						   {
-							   return f.FieldName == fieldName;
-						   });
+					delegate(Field f) { return f.FieldName == fieldName; });
 
 			if (field == default(Field))
 			{
@@ -93,9 +83,12 @@ namespace WeSay.Project
 
 		public Field GetField(string fieldName)
 		{
-			Field field = null;
-			TryGetField(fieldName, out field);
-			return field;
+			Field field;
+			if (TryGetField(fieldName, out field))
+			{
+				return field;
+			}
+			return null;
 		}
 
 		public List<Field> GetCustomFields(string className)
@@ -141,11 +134,11 @@ namespace WeSay.Project
 		/// <param name="usersTemplate"></param>
 		public static void UpdateUserViewTemplate(ViewTemplate factoryTemplate, ViewTemplate usersTemplate)
 		{
-			if(factoryTemplate == null)
+			if (factoryTemplate == null)
 			{
 				throw new ArgumentNullException();
 			}
-			if(usersTemplate == null)
+			if (usersTemplate == null)
 			{
 				throw new ArgumentNullException();
 			}
@@ -154,13 +147,14 @@ namespace WeSay.Project
 				Field userField = usersTemplate.GetField(masterField.FieldName);
 				if (userField != null)
 				{
-				 //why do that???   Field.ModifyMasterFromUser(masterField, userField);
+					//why do that???   Field.ModifyMasterFromUser(masterField, userField);
 					//allow us to improve the descriptions
 					userField.Description = masterField.Description;
 				}
 				else
 				{
-					masterField.Visibility= CommonEnumerations.VisibilitySetting.Invisible;//let them turn it on if they want
+					masterField.Visibility = CommonEnumerations.VisibilitySetting.Invisible;
+							//let them turn it on if they want
 					usersTemplate.Fields.Add(masterField);
 				}
 			}
@@ -185,7 +179,8 @@ namespace WeSay.Project
 
 			ViewTemplate masterTemplate = new ViewTemplate();
 
-			Field lexicalFormField = new Field(Field.FieldNames.EntryLexicalForm.ToString(), "LexEntry", defaultVernacularSet);
+			Field lexicalFormField =
+					new Field(Field.FieldNames.EntryLexicalForm.ToString(), "LexEntry", defaultVernacularSet);
 			//this is here so the PoMaker scanner can pick up a comment about this label
 			StringCatalog.Get("~Word", "The label for the field showing the Lexeme Form of the entry.");
 			lexicalFormField.DisplayName = "Word";
@@ -195,7 +190,8 @@ namespace WeSay.Project
 
 			Field glossField = new Field(Field.FieldNames.SenseGloss.ToString(), "LexSense", defaultAnalysisSet);
 			glossField.DisplayName = "Gloss";
-			glossField.Description = "Normally a single word. Shows up as the first field of the sense, across from the 'Meaning' label";
+			glossField.Description =
+					"Normally a single word. Shows up as the first field of the sense, across from the 'Meaning' label";
 			glossField.Visibility = CommonEnumerations.VisibilitySetting.Visible;
 			masterTemplate.Add(glossField);
 
@@ -208,16 +204,19 @@ namespace WeSay.Project
 			posField.OptionsListFile = "PartsOfSpeech.xml";
 			masterTemplate.Add(posField);
 
-			Field exampleField = new Field(Field.FieldNames.ExampleSentence.ToString(), "LexExampleSentence", defaultVernacularSet);
+			Field exampleField =
+					new Field(Field.FieldNames.ExampleSentence.ToString(), "LexExampleSentence", defaultVernacularSet);
 			//this is here so the PoMaker scanner can pick up a comment about this label
 			StringCatalog.Get("~Example Sentence", "The label for the field showing an example use of the word.");
 			exampleField.DisplayName = "Example Sentence";
 			exampleField.Visibility = CommonEnumerations.VisibilitySetting.Visible;
 			masterTemplate.Add(exampleField);
 
-			Field translationField = new Field(Field.FieldNames.ExampleTranslation.ToString(), "LexExampleSentence", defaultAnalysisSet);
+			Field translationField =
+					new Field(Field.FieldNames.ExampleTranslation.ToString(), "LexExampleSentence", defaultAnalysisSet);
 			//this is here so the PoMaker scanner can pick up a comment about this label
-			StringCatalog.Get("~Example Translation", "The label for the field showing the example sentence translated into other languages.");
+			StringCatalog.Get("~Example Translation",
+							  "The label for the field showing the example sentence translated into other languages.");
 			translationField.DisplayName = "Example Translation";
 			translationField.Description = "The translation of the example sentence into another language.";
 			translationField.Visibility = CommonEnumerations.VisibilitySetting.Visible;
@@ -234,12 +233,17 @@ namespace WeSay.Project
 			ddp4Field.OptionsListFile = "Ddp4.xml";
 			masterTemplate.Add(ddp4Field);
 
-			Field superEntryField = new Field("BaseForm", "LexEntry", defaultVernacularSet,
-				Field.MultiplicityType.ZeroOr1, "RelationToOneEntry");
+			Field superEntryField = new Field("BaseForm",
+											  "LexEntry",
+											  defaultVernacularSet,
+											  Field.MultiplicityType.ZeroOr1,
+											  "RelationToOneEntry");
 			//this is here so the PoMaker scanner can pick up a comment about this label
-			StringCatalog.Get("~Base Form", "The label for the field showing the entry which this entry is derived from, is a subentry of, etc.");
+			StringCatalog.Get("~Base Form",
+							  "The label for the field showing the entry which this entry is derived from, is a subentry of, etc.");
 			superEntryField.DisplayName = "Base Form";
-			superEntryField.Description = "Provides a field for identifying the form from which an entry is derived.  You may use this in place of the MDF subentry.  In a future version WeSay may support directly listing derived forms from the base form.";
+			superEntryField.Description =
+					"Provides a field for identifying the form from which an entry is derived.  You may use this in place of the MDF subentry.  In a future version WeSay may support directly listing derived forms from the base form.";
 			superEntryField.Visibility = CommonEnumerations.VisibilitySetting.Invisible;
 			masterTemplate.Add(superEntryField);
 
@@ -265,7 +269,7 @@ namespace WeSay.Project
 		public void LoadFromString(string xml)
 		{
 			NetReflectorReader r = new NetReflectorReader(MakeTypeTable());
-			XmlReader reader = XmlReader.Create(new System.IO.StringReader(xml));
+			XmlReader reader = XmlReader.Create(new StringReader(xml));
 			try
 			{
 				r.Read(reader, this);
@@ -282,19 +286,18 @@ namespace WeSay.Project
 		/// <param name="writer"></param>
 		public void Write(XmlWriter writer)
 		{
-			 NetReflector.Write(writer, this);
+			NetReflector.Write(writer, this);
 		}
 
-		private NetReflectorTypeTable MakeTypeTable()
+		static private NetReflectorTypeTable MakeTypeTable()
 		{
 			NetReflectorTypeTable t = new NetReflectorTypeTable();
-			t.Add(typeof(ViewTemplate ));
-			t.Add(typeof(Field));
-		 //   t.Add(typeof(Field.WritingSystemId));
+			t.Add(typeof (ViewTemplate));
+			t.Add(typeof (Field));
+			//   t.Add(typeof(Field.WritingSystemId));
 			return t;
 		}
 
 		#endregion
-	 }
-
+	}
 }

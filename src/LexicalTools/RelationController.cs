@@ -2,11 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 using WeSay.Data;
 using WeSay.Foundation;
-using WeSay.Language;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Db4o_Specific;
 using WeSay.Project;
@@ -20,19 +18,19 @@ namespace WeSay.LexicalTools
 		private readonly LexRelationType _relationType;
 		private readonly Field _field;
 		private readonly IBindingList _allRecords;
-		private readonly EventHandler<CurrentItemEventArgs>  _focusDelegate;
+		private readonly EventHandler<CurrentItemEventArgs> _focusDelegate;
 		private Control _control;
 		private SimpleBinding<LexEntry> _binding;
 
 		public static Control CreateWidget(WeSayDataObject target, LexRelationType relationType, Field field,
-			IBindingList allRecords, EventHandler<CurrentItemEventArgs>  focus)
+										   IBindingList allRecords, EventHandler<CurrentItemEventArgs> focus)
 		{
-			RelationController controller = new RelationController(target, relationType, field, allRecords,focus);
+			RelationController controller = new RelationController(target, relationType, field, allRecords, focus);
 			return controller.Control;
 		}
 
 		private RelationController(WeSayDataObject target, LexRelationType relationType, Field field,
-			IBindingList allRecords, EventHandler<CurrentItemEventArgs>  focus)
+								   IBindingList allRecords, EventHandler<CurrentItemEventArgs> focus)
 		{
 			_target = target;
 			_relationType = relationType;
@@ -52,10 +50,7 @@ namespace WeSay.LexicalTools
 
 		public Control Control
 		{
-			get
-			{
-				return _control;
-			}
+			get { return _control; }
 		}
 
 		private void MakeControl()
@@ -64,7 +59,7 @@ namespace WeSay.LexicalTools
 			// this will get a collection if we already have some for this field, or else
 			// it will make one. If unused, it will be cleaned up at the right time by the WeSayDataObject parent.
 			LexRelationCollection targetRelationCollection =
-				_target.GetOrCreateProperty<LexRelationCollection>(_field.FieldName);
+					_target.GetOrCreateProperty<LexRelationCollection>(_field.FieldName);
 
 			switch (_relationType.Multiplicity)
 			{
@@ -85,7 +80,7 @@ namespace WeSay.LexicalTools
 					AutoCompleteWithCreationBox<LexEntry> picker = new AutoCompleteWithCreationBox<LexEntry>();
 					picker.Box.ItemDisplayStringAdaptor = new WeSayDataObjectLabelAdaptor(_field.WritingSystemIds);
 					picker.Box.TooltipToDisplayStringAdaptor =
-						new WeSayDataObjectToolTipProvider(_field.WritingSystemIds);
+							new WeSayDataObjectToolTipProvider(_field.WritingSystemIds);
 					picker.Box.FormToObectFinder = FindLexEntryFromForm;
 					picker.Box.ItemFilterer = ApproximateMatcher.FindClosestAndNextClosestAndPrefixedForms;
 					picker.Box.PopupWidth = 100;
@@ -109,33 +104,35 @@ namespace WeSay.LexicalTools
 					if (picker.Box.SelectedItem == null && !string.IsNullOrEmpty(relation.TargetId))
 					{
 						picker.Box.Text = relation.TargetId;
-					   // picker.Box.ShowRedSquiggle = true;
+						// picker.Box.ShowRedSquiggle = true;
 					}
 
 					_binding = new SimpleBinding<LexEntry>(relation, picker);
 					//for underlinging the relation in the preview pane
-					_binding.CurrentItemChanged += _focusDelegate;// _detailList.OnBinding_ChangeOfWhichItemIsInFocus;
+					_binding.CurrentItemChanged += _focusDelegate; // _detailList.OnBinding_ChangeOfWhichItemIsInFocus;
 
-					picker.CreateNewClicked +=OnCreateNewEntry;
-					_control= picker;
+					picker.CreateNewClicked += OnCreateNewEntry;
+					_control = picker;
 					break;
 				case LexRelationType.Multiplicities.Many:
-					_control=
-						new ReferenceCollectionEditor<LexRelation>(targetRelationCollection.Relations,
-																   _field.WritingSystemIds);
+					_control =
+							new ReferenceCollectionEditor<LexRelation>(targetRelationCollection.Relations,
+																	   _field.WritingSystemIds);
 					break;
 				default:
 					break;
 			}
 		}
+
 		public void AddChangeBinding(EventHandler<CurrentItemEventArgs> handler)
 		{
 			_binding.CurrentItemChanged += handler;
 		}
 
-		private class WeSayDataObjectLabelAdaptor : WeSay.Foundation.IDisplayStringAdaptor
+		private class WeSayDataObjectLabelAdaptor : IDisplayStringAdaptor
 		{
-			private IList<string> _writingSystemIds;//review: should this really be an ordered collection of preferred choices?
+			private IList<string> _writingSystemIds;
+								  //review: should this really be an ordered collection of preferred choices?
 
 			public WeSayDataObjectLabelAdaptor(IList<string> writingSystemIds)
 			{
@@ -145,19 +142,22 @@ namespace WeSay.LexicalTools
 			public string GetDisplayLabel(object item)
 			{
 				if (item is LexEntry)
-					return ((LexEntry)item).LexicalForm.GetBestAlternative(_writingSystemIds);
+				{
+					return ((LexEntry) item).LexicalForm.GetBestAlternative(_writingSystemIds);
+				}
 				if (item is LexSense)
 				{
-					LexSense sense = (LexSense)item;
+					LexSense sense = (LexSense) item;
 					return GetDisplayLabel(sense.Parent) + "." + sense.Gloss.GetBestAlternative(_writingSystemIds);
 				}
 				return "Program error";
 			}
 		}
 
-		private class WeSayDataObjectToolTipProvider : WeSay.Foundation.IDisplayStringAdaptor
+		private class WeSayDataObjectToolTipProvider : IDisplayStringAdaptor
 		{
-			private IList<string> _writingSystemIds;//review: should this really be an ordered collection of preferred choices?
+			private IList<string> _writingSystemIds;
+								  //review: should this really be an ordered collection of preferred choices?
 
 			public WeSayDataObjectToolTipProvider(IList<string> writingSystemIds)
 			{
@@ -167,10 +167,12 @@ namespace WeSay.LexicalTools
 			public string GetDisplayLabel(object item)
 			{
 				if (item is LexEntry)
-					return ((LexEntry)item).GetToolTipText();
+				{
+					return ((LexEntry) item).GetToolTipText();
+				}
 				if (item is LexSense)
 				{
-					LexSense sense = (LexSense)item;
+					LexSense sense = (LexSense) item;
 					return "What to show for senses?";
 				}
 				return "Program error";
@@ -179,14 +181,13 @@ namespace WeSay.LexicalTools
 
 		private object FindLexEntryFromForm(string form)
 		{
-			int index = ((CachedSortedDb4oList<string, LexEntry>)_allRecords).BinarySearch(form);
+			int index = ((CachedSortedDb4oList<string, LexEntry>) _allRecords).BinarySearch(form);
 
 			if (index >= 0)
 			{
-				return ((CachedSortedDb4oList<string, LexEntry>)_allRecords).GetValue(index);
+				return ((CachedSortedDb4oList<string, LexEntry>) _allRecords).GetValue(index);
 			}
 			return null;
 		}
-
 	}
 }

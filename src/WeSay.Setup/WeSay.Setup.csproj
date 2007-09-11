@@ -172,6 +172,10 @@
 	  <SubType>Designer</SubType>
 	  <DependentUpon>WritingSystemSetup.cs</DependentUpon>
 	</EmbeddedResource>
+	<EmbeddedResource Include="WritingSystemSort.resx">
+	  <SubType>Designer</SubType>
+	  <DependentUpon>WritingSystemSort.cs</DependentUpon>
+	</EmbeddedResource>
 	<Compile Include="Properties\Resources.Designer.cs">
 	  <AutoGen>True</AutoGen>
 	  <DependentUpon>Resources.resx</DependentUpon>
@@ -210,6 +214,12 @@
 	</Compile>
 	<Compile Include="WritingSystemSetup.Designer.cs">
 	  <DependentUpon>WritingSystemSetup.cs</DependentUpon>
+	</Compile>
+	<Compile Include="WritingSystemSort.cs">
+	  <SubType>UserControl</SubType>
+	</Compile>
+	<Compile Include="WritingSystemSort.Designer.cs">
+	  <DependentUpon>WritingSystemSort.cs</DependentUpon>
 	</Compile>
   </ItemGroup>
   <ItemGroup>
@@ -266,6 +276,9 @@
   </ItemGroup>
   <ItemGroup>
 	<None Include="Resources\genericLittleNewButton.png" />
+  </ItemGroup>
+  <ItemGroup>
+	<Folder Include="Properties\DataSources\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

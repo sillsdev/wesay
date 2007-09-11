@@ -57,12 +57,12 @@ namespace WeSay.LexicalTools
 			{
 				_sortHelper =
 						new LexEntrySortHelper(((Db4oRecordListManager)recordListManager).DataSource,
-											   listWritingSystem.Id,
+											   listWritingSystem,
 											   true);
 			}
 			else
 			{
-				_sortHelper = new LexEntrySortHelper(listWritingSystem.Id, true);
+				_sortHelper = new LexEntrySortHelper(listWritingSystem, true);
 			}
 
 			recordListManager.Register(filter, _sortHelper);

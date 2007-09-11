@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Xml;
 using Exortech.NetReflector;
 using Exortech.NetReflector.Util;
@@ -15,19 +16,27 @@ namespace WeSay.Project
 	{
 		private string _fieldName;
 		private List<string> _writingSystemIds;
-		private string _displayName=string.Empty;
-		private string _description=string.Empty;
-		private string _className=string.Empty;
+		private string _displayName = string.Empty;
+		private string _description = string.Empty;
+		private string _className = string.Empty;
 		private string _dataTypeName;
-		public enum MultiplicityType { ZeroOr1 = 0 , ZeroOrMore = 1}
+
+		public enum MultiplicityType
+		{
+			ZeroOr1 = 0,
+			ZeroOrMore = 1
+		}
+
 		private MultiplicityType _multiplicity = MultiplicityType.ZeroOr1;
 
 		public enum BuiltInDataType
 		{
-			MultiText, Option, OptionCollection
+			MultiText,
+			Option,
+			OptionCollection
 		}
 
-		private CommonEnumerations.VisibilitySetting _visibility=CommonEnumerations.VisibilitySetting.Visible ;
+		private CommonEnumerations.VisibilitySetting _visibility = CommonEnumerations.VisibilitySetting.Visible;
 		private string _optionsListFile;
 
 		/// <summary>
@@ -35,20 +44,24 @@ namespace WeSay.Project
 		/// To allow extensions later, we aren't using these as a closed list of possible
 		/// values.
 		/// </summary>
-		public enum FieldNames {EntryLexicalForm, SenseGloss, ExampleSentence, ExampleTranslation};
+		public enum FieldNames
+		{
+			EntryLexicalForm,
+			SenseGloss,
+			ExampleSentence,
+			ExampleTranslation
+		} ;
 
 		public Field()
 		{
 			Initialize("unknown", "MultiText", MultiplicityType.ZeroOr1, new List<string>());
 		}
 
-
 		public Field(string fieldName, string className, IEnumerable<string> writingSystemIds)
-			:this(fieldName, className, writingSystemIds,MultiplicityType.ZeroOr1,"MultiText")
-		{
-		}
+				: this(fieldName, className, writingSystemIds, MultiplicityType.ZeroOr1, "MultiText") {}
 
-		public Field(string fieldName, string className, IEnumerable<string> writingSystemIds, MultiplicityType multiplicity, string dataTypeName)
+		public Field(string fieldName, string className, IEnumerable<string> writingSystemIds,
+					 MultiplicityType multiplicity, string dataTypeName)
 		{
 			if (writingSystemIds == null)
 			{
@@ -56,7 +69,6 @@ namespace WeSay.Project
 			}
 			ClassName = className;
 			Initialize(fieldName, dataTypeName, multiplicity, writingSystemIds);
-
 		}
 
 		public Field(Field field)
@@ -68,25 +80,25 @@ namespace WeSay.Project
 			{
 				WritingSystemIds.Add(id);
 			}
-			Description =  field.Description;
+			Description = field.Description;
 			DisplayName = field.DisplayName;
-			Multiplicity= field.Multiplicity;
-			Visibility =  field.Visibility;
+			Multiplicity = field.Multiplicity;
+			Visibility = field.Visibility;
 			DataTypeName = field.DataTypeName;
 			OptionsListFile = field.OptionsListFile;
 		}
 
-
-		private void Initialize(string fieldName, string dataTypeName, MultiplicityType multiplicity, IEnumerable<string> writingSystemIds)
+		private void Initialize(string fieldName, string dataTypeName, MultiplicityType multiplicity,
+								IEnumerable<string> writingSystemIds)
 		{
 			FieldName = fieldName;
 			WritingSystemIds = new List<string>(writingSystemIds);
-			this._multiplicity = multiplicity;
+			_multiplicity = multiplicity;
 			DataTypeName = dataTypeName;
 		}
 
-
-		[Description("The name of the field, as it will appear in the LIFT file. This is not visible to the WeSay user.")]
+		[Description("The name of the field, as it will appear in the LIFT file. This is not visible to the WeSay user."
+				)]
 		[ReflectorCollection("fieldName", Required = true)]
 		public string FieldName
 		{
@@ -104,32 +116,33 @@ namespace WeSay.Project
 				{
 					throw new ArgumentNullException("FieldName");
 				}
-				_fieldName = value.Replace(" ","").Trim();//helpful when exposed to UI for user editting
+				_fieldName = value.Replace(" ", "").Trim(); //helpful when exposed to UI for user editting
 			}
 		}
+
 		[Description("The label of the field as it will be displayed to the user.")]
 		[ReflectorCollection("displayName", Required=false)]
 		public string DisplayName
 		{
 			get
 			{
-				if(_displayName=="")
+				if (_displayName == "")
 				{
-					return "*"+FieldName;
+					return "*" + FieldName;
 				}
 				return _displayName;
 			}
 			set { _displayName = value; }
 		}
 
-		[TypeConverter(typeof(ParentClassConverter))]
+		[TypeConverter(typeof (ParentClassConverter))]
 		[Description("The parent of this field. E.g. Entry, Sense, Example.")]
 		[ReflectorCollection("className", Required = true)]
 		public string ClassName
 		{
 			get
 			{
-				if(_className.Length == 0)
+				if (_className.Length == 0)
 				{
 					throw new InvalidOperationException("className has not been initialized correctly");
 				}
@@ -137,7 +150,7 @@ namespace WeSay.Project
 			}
 			set
 			{
-				switch(value)
+				switch (value)
 				{
 					case null:
 						throw new ArgumentNullException();
@@ -147,8 +160,8 @@ namespace WeSay.Project
 						_className = value;
 						break;
 					default:
-						throw new ArgumentOutOfRangeException("className must be LexEntry or LexSense or LexExampleSentence");
-
+						throw new ArgumentOutOfRangeException(
+								"className must be LexEntry or LexSense or LexExampleSentence");
 				}
 			}
 		}
@@ -158,23 +171,31 @@ namespace WeSay.Project
 		{
 			get
 			{
-				if(IsBuiltInViaCode)
+				if (IsBuiltInViaCode)
+				{
 					return false;
+				}
 
-				if (LexEntry.WellKnownProperties.Contains(this.FieldName))
+				if (LexEntry.WellKnownProperties.Contains(FieldName))
+				{
 					return false;
+				}
 
-				if (LexSense.WellKnownProperties.Contains(this.FieldName))
+				if (LexSense.WellKnownProperties.Contains(FieldName))
+				{
 					return false;
+				}
 
-				if (LexExampleSentence.WellKnownProperties.Contains(this.FieldName))
+				if (LexExampleSentence.WellKnownProperties.Contains(FieldName))
+				{
 					return false;
+				}
 
 				return true;
 			}
 		}
 
-		[TypeConverter(typeof(DataTypeClassConverter))]
+		[TypeConverter(typeof (DataTypeClassConverter))]
 		[Description("The type of the field. E.g. multilingual text, option, option collection, relation.")]
 		[ReflectorProperty("dataType", Required = true)]
 		public string DataTypeName
@@ -183,7 +204,8 @@ namespace WeSay.Project
 			set { _dataTypeName = value; }
 		}
 
-		[Description("For options and option collections, the name of the xml file containing the valid set of options.")]
+		[Description("For options and option collections, the name of the xml file containing the valid set of options."
+				)]
 		[ReflectorProperty("optionsListFile", Required = false)]
 		public string OptionsListFile
 		{
@@ -220,20 +242,16 @@ namespace WeSay.Project
 			}
 		}
 
-
 		public override string ToString()
 		{
 			return DisplayName;
 		}
 
 		[Browsable(false)]
-		[ReflectorProperty("writingSystems", typeof(WsIdCollectionSerializerFactory))]
+		[ReflectorProperty("writingSystems", typeof (WsIdCollectionSerializerFactory))]
 		public IList<string> WritingSystemIds
 		{
-			get
-			{
-				return _writingSystemIds;
-			}
+			get { return _writingSystemIds; }
 			set
 			{
 				int i = 0;
@@ -243,13 +261,12 @@ namespace WeSay.Project
 					if (s == null)
 					{
 						throw new ArgumentNullException("writingSystem",
-														"Writing System argument" + i.ToString() + "is null");
+														"Writing System argument" + i + "is null");
 					}
 				}
 				_writingSystemIds = new List<string>(value);
 			}
 		}
-
 
 		[Browsable(false)]
 		public string Description
@@ -269,11 +286,12 @@ namespace WeSay.Project
 		public void ChangeWritingSystemId(string oldId, string newId)
 		{
 			int i = _writingSystemIds.FindIndex(delegate(string id) { return id == oldId; });
-			if(i>-1)
+			if (i > -1)
 			{
 				_writingSystemIds[i] = newId;
 			}
 		}
+
 		[Browsable(false)]
 		public IList<WritingSystem> WritingSystems
 		{
@@ -296,27 +314,21 @@ namespace WeSay.Project
 			set { _multiplicity = value; }
 		}
 
-
-
 		[Browsable(false)]
 		public bool DoShow
 		{
 			get
 			{
 				return _visibility == CommonEnumerations.VisibilitySetting.Visible ||
-					_visibility == CommonEnumerations.VisibilitySetting.ReadOnly;
+					   _visibility == CommonEnumerations.VisibilitySetting.ReadOnly;
 			}
 		}
-
 
 		[Browsable(false)]
 		public bool HasWritingSystem(string writingSystemId)
 		{
 			return _writingSystemIds.Exists(
-										delegate(string s)
-										{
-											return s == writingSystemId;
-										});
+					delegate(string s) { return s == writingSystemId; });
 		}
 
 		public static void ModifyMasterFromUser(Field master, Field user)
@@ -341,6 +353,7 @@ namespace WeSay.Project
 //        }
 
 		#region persistence
+
 		internal class WsIdCollectionSerializerFactory : ISerialiserFactory
 		{
 			public IXmlMemberSerialiser Create(ReflectorMember member, ReflectorPropertyAttribute attribute)
@@ -352,13 +365,12 @@ namespace WeSay.Project
 		internal class WsIdCollectionSerializer : XmlMemberSerialiser
 		{
 			public WsIdCollectionSerializer(ReflectorMember member, ReflectorPropertyAttribute attribute)
-				: base(member, attribute)
-			{ }
+					: base(member, attribute) {}
 
 			public override void Write(XmlWriter writer, object target)
 			{
 				writer.WriteStartElement("writingSystems");
-				foreach (string s in ((Field)target)._writingSystemIds)
+				foreach (string s in ((Field) target)._writingSystemIds)
 				{
 					writer.WriteElementString("id", s);
 				}
@@ -367,8 +379,8 @@ namespace WeSay.Project
 
 			public override object Read(XmlNode node, NetReflectorTypeTable table)
 			{
-				System.Diagnostics.Debug.Assert(node.Name == "writingSystems");
-				System.Diagnostics.Debug.Assert(node != null);
+				Debug.Assert(node.Name == "writingSystems");
+				Debug.Assert(node != null);
 				List<string> l = new List<string>();
 				foreach (XmlNode n in node.SelectNodes("id"))
 				{
@@ -379,37 +391,28 @@ namespace WeSay.Project
 		}
 
 		#endregion
-
 	}
 
-	class ParentClassConverter : WeSayStringConverter
+	internal class ParentClassConverter : WeSayStringConverter
 	{
 		public override string[] ValidStrings
 		{
-			get
-			{
-				return new string[] { "LexEntry", "LexSense", "LexExampleSentence" };
-			}
+			get { return new string[] {"LexEntry", "LexSense", "LexExampleSentence"}; }
 		}
 	}
 
-	class DataTypeClassConverter : WeSayStringConverter
+	internal class DataTypeClassConverter : WeSayStringConverter
 	{
 		public override string[] ValidStrings
 		{
-			get
-			{
-				return new string[] { "MultiText", "Option", "OptionCollection", "RelationToOneEntry" };
-			}
+			get { return new string[] {"MultiText", "Option", "OptionCollection", "RelationToOneEntry"}; }
 		}
 	}
 
-	abstract class WeSayStringConverter : StringConverter
+	internal abstract class WeSayStringConverter : StringConverter
 	{
-		abstract public string[] ValidStrings
-		{
-			get;
-		}
+		public abstract string[] ValidStrings { get; }
+
 		public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
 		{
 			//true means show a combobox
@@ -457,10 +460,9 @@ namespace WeSay.Project
 			return true;
 		}
 
-		public override System.ComponentModel.TypeConverter.StandardValuesCollection
-			  GetStandardValues(ITypeDescriptorContext context)
+		public override StandardValuesCollection
+				GetStandardValues(ITypeDescriptorContext context)
 		{
-
 			return new StandardValuesCollection(ValidStrings);
 		}
 	}

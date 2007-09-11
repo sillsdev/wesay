@@ -1,7 +1,6 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Threading;
+using ICSharpCode.SharpZipLib.Zip;
 using NUnit.Framework;
 using WeSay.Project;
 
@@ -20,10 +19,9 @@ namespace WeSay.Foundation.Tests
 		{
 			WeSayWordsProject.InitializeForTests();
 			_destinationZip = Path.Combine(Path.GetTempPath(), Path.GetTempFileName() + ".zip");
-			_sourceProjectPath = Project.WeSayWordsProject.GetPretendProjectDirectory();
+			_sourceProjectPath = WeSayWordsProject.GetPretendProjectDirectory();
 			_backupMaker = new BackupMaker();
-			_filesToBackup = WeSay.Project.WeSayWordsProject.GetFilesBelongingToProject(_sourceProjectPath);
-
+			_filesToBackup = WeSayWordsProject.GetFilesBelongingToProject(_sourceProjectPath);
 		}
 
 		[TearDown]
@@ -35,22 +33,25 @@ namespace WeSay.Foundation.Tests
 			}
 		}
 
-		[Test, ExpectedException(typeof(ApplicationException))]
+		[Test]
+		[ExpectedException(typeof (ApplicationException))]
 		public void ThrowIfCannotCreateDestination()
 		{
-			BackupMaker.BackupToExternal(Project.WeSayWordsProject.GetPretendProjectDirectory(), "Q:\\" + Path.GetRandomFileName(), _filesToBackup);
+			BackupMaker.BackupToExternal(WeSayWordsProject.GetPretendProjectDirectory(),
+										 "Q:\\" + Path.GetRandomFileName(),
+										 _filesToBackup);
 		}
 
-		[Test, ExpectedException(typeof(ApplicationException))]
+		[Test]
+		[ExpectedException(typeof (ApplicationException))]
 		public void ThrowIfSourceDoesntExist()
 		{
-			BackupMaker.BackupToExternal(Path.GetRandomFileName(), _destinationZip,_filesToBackup);
+			BackupMaker.BackupToExternal(Path.GetRandomFileName(), _destinationZip, _filesToBackup);
 		}
 
-		[Test, Ignore("Not implemented yet")]
-		public void WhatIfNotEnoughRoom()
-		{
-		}
+		[Test]
+		[Ignore("Not implemented yet")]
+		public void WhatIfNotEnoughRoom() {}
 
 		[Test]
 		public void OverwritesExistingZip()
@@ -70,10 +71,10 @@ namespace WeSay.Foundation.Tests
 
 		private void AssertDoesNotContainFile(string partialPath)
 		{
-			ICSharpCode.SharpZipLib.Zip.ZipFile f = null;
+			ZipFile f = null;
 			try
 			{
-				f = new ICSharpCode.SharpZipLib.Zip.ZipFile(_destinationZip);
+				f = new ZipFile(_destinationZip);
 				Assert.AreEqual(-1, f.FindEntry(GetZipFileInternalPath(partialPath), true));
 			}
 			finally
@@ -90,12 +91,12 @@ namespace WeSay.Foundation.Tests
 		/// </summary>
 		private static string GetZipFileInternalPath(string partialPath)
 		{
-			return partialPath.Substring(3).Replace("\\","/");
+			return partialPath.Substring(3).Replace("\\", "/");
 		}
 
 		private string MakeDummyExistingZip()
 		{
-			ICSharpCode.SharpZipLib.Zip.ZipFile z = ICSharpCode.SharpZipLib.Zip.ZipFile.Create(_destinationZip);
+			ZipFile z = ZipFile.Create(_destinationZip);
 			z.BeginUpdate();
 			string tempFile = Path.GetTempFileName();
 			z.Add(tempFile);
@@ -112,20 +113,19 @@ namespace WeSay.Foundation.Tests
 			AssertHasReasonableContents();
 		}
 
-
 		[Test]
 		public void OkIfNoFilesChosen()
 		{
-			BackupMaker.BackupToExternal(_sourceProjectPath, _destinationZip, new string[] { });
+			BackupMaker.BackupToExternal(_sourceProjectPath, _destinationZip, new string[] {});
 		}
 
 		private void AssertHasReasonableContents()
 		{
 			Assert.IsTrue(File.Exists(_destinationZip));
-			ICSharpCode.SharpZipLib.Zip.ZipFile f=null;
+			ZipFile f = null;
 			try
 			{
-				f= new ICSharpCode.SharpZipLib.Zip.ZipFile(_destinationZip);
+				f = new ZipFile(_destinationZip);
 				Assert.AreNotEqual(-1, f.FindEntry("pretend/wesay/pretend.lift", true));
 			}
 			finally
@@ -137,5 +137,4 @@ namespace WeSay.Foundation.Tests
 			}
 		}
 	}
-
 }

@@ -1,6 +1,8 @@
 using System;
+using System.Drawing;
 using NUnit.Framework;
 using WeSay.Data;
+using WeSay.Language;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Db4o_Specific;
 using WeSay.Project;
@@ -15,6 +17,7 @@ namespace WeSay.LexicalTools.Tests
 		private IRecordList<LexEntry> _allRecords;
 		ViewTemplate _viewTemplate;
 		private MissingTranslationFilter _missingTranslation;
+		private WritingSystem _writingSystem;
 
 		public class MissingTranslationFilter:IFilter<LexEntry>
 		{
@@ -66,7 +69,10 @@ namespace WeSay.LexicalTools.Tests
 			_recordListManager = new InMemoryRecordListManager();
 			_allRecords = _recordListManager.GetListOfType<LexEntry>();
 			this._missingTranslation = new MissingTranslationFilter();
-			LexEntrySortHelper lexEntrySortHelper = new LexEntrySortHelper("vernacular", true);
+
+			_writingSystem = new WritingSystem("pretendVernacular", new Font(FontFamily.GenericSansSerif, 24));
+
+			LexEntrySortHelper lexEntrySortHelper = new LexEntrySortHelper(_writingSystem, true);
 			_recordListManager.Register(this._missingTranslation, lexEntrySortHelper);
 			_missingTranslationRecordList = _recordListManager.GetListOfTypeFilteredFurther(this._missingTranslation, lexEntrySortHelper);
 			_missingTranslationRecordList.Add(CreateTestEntry("apple", "red thing", "An apple a day keeps the doctor away."));
@@ -76,7 +82,7 @@ namespace WeSay.LexicalTools.Tests
 
 
 			string[] analysisWritingSystemIds = new string[] { "analysis" };
-			string[] vernacularWritingSystemIds = new string[] { "vernacular" };
+			string[] vernacularWritingSystemIds = new string[] { _writingSystem.Id };
 			this._viewTemplate = new ViewTemplate();
 			this._viewTemplate.Add(new Field(Field.FieldNames.EntryLexicalForm.ToString(), "LexEntry",vernacularWritingSystemIds));
 			this._viewTemplate.Add(new Field(Field.FieldNames.SenseGloss.ToString(), "LexSense",analysisWritingSystemIds));
@@ -85,14 +91,14 @@ namespace WeSay.LexicalTools.Tests
 
 		}
 
-		private static LexEntry CreateTestEntry(string lexicalForm, string gloss, string exampleSentence)
+		private LexEntry CreateTestEntry(string lexicalForm, string gloss, string exampleSentence)
 		{
 			LexEntry entry = new LexEntry();
-			entry.LexicalForm["vernacular"] = lexicalForm;
+			entry.LexicalForm[_writingSystem.Id] = lexicalForm;
 			LexSense sense = (LexSense)entry.Senses.AddNew();
 			sense.Gloss["analysis"] = gloss;
 			LexExampleSentence example = (LexExampleSentence)sense.ExampleSentences.AddNew();
-			example.Sentence["vernacular"] = exampleSentence;
+			example.Sentence[_writingSystem.Id] = exampleSentence;
 			return entry;
 		}
 

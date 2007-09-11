@@ -1,7 +1,7 @@
 using System;
-using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
+using Palaso.Reporting;
 using WeSay.Language;
 using WeSay.Project;
 
@@ -15,17 +15,19 @@ namespace WeSay.Setup
 			Resize += new EventHandler(WritingSystemSetup_Resize);
 		}
 
-		void WritingSystemSetup_Resize(object sender, EventArgs e)
+		private void WritingSystemSetup_Resize(object sender, EventArgs e)
 		{
 			//this is part of dealing with .net not adjusting stuff well for different dpis
 			splitContainer1.Dock = DockStyle.None;
-			splitContainer1.Width = this.Width - 25;
+			splitContainer1.Width = Width - 25;
 		}
 
 		public void WritingSystemSetup_Load(object sender, EventArgs e)
 		{
 			if (DesignMode)
+			{
 				return;
+			}
 
 			LoadWritingSystemListBox();
 			//for checking that ids are unique
@@ -35,14 +37,14 @@ namespace WeSay.Setup
 		private void LoadWritingSystemListBox()
 		{
 			_wsListBox.Items.Clear();
-			foreach(WeSay.Language.WritingSystem w in BasilProject.Project.WritingSystems.Values)
+			foreach (WritingSystem w in BasilProject.Project.WritingSystems.Values)
 			{
-				this._wsListBox.Items.Add(new WsDisplayProxy(w, BasilProject.Project.WritingSystems));
+				_wsListBox.Items.Add(new WsDisplayProxy(w, BasilProject.Project.WritingSystems));
 			}
 			_wsListBox.Sorted = true;
-			if (this._wsListBox.Items.Count > 0)
+			if (_wsListBox.Items.Count > 0)
 			{
-				this._wsListBox.SelectedIndex = 0;
+				_wsListBox.SelectedIndex = 0;
 			}
 		}
 
@@ -51,13 +53,12 @@ namespace WeSay.Setup
 			UpdateSelection();
 		}
 
-
 		/// <summary>
 		/// nb: seperate from the event handler because the handler isn't called if the last item is deleted
 		/// </summary>
 		private void UpdateSelection()
 		{
-			this._tabControl.Visible = SelectedWritingSystem != null;
+			_tabControl.Visible = SelectedWritingSystem != null;
 			if (SelectedWritingSystem == null)
 			{
 				Refresh();
@@ -68,6 +69,7 @@ namespace WeSay.Setup
 //                (SelectedWritingSystem != BasilProject.Project.WritingSystems.AnalysisWritingSystemDefault)
 //              && (SelectedWritingSystem != BasilProject.Project.WritingSystems.VernacularWritingSystemDefault);
 			_basicControl.WritingSystem = SelectedWritingSystem;
+			_sortControl.WritingSystem = SelectedWritingSystem;
 			_fontControl.WritingSystem = SelectedWritingSystem;
 		}
 
@@ -89,7 +91,8 @@ namespace WeSay.Setup
 
 		private void _btnRemove_Click(object sender, EventArgs e)
 		{
-			if(SelectedWritingSystem!=null && BasilProject.Project.WritingSystems.ContainsKey(SelectedWritingSystem.Id))
+			if (SelectedWritingSystem != null &&
+				BasilProject.Project.WritingSystems.ContainsKey(SelectedWritingSystem.Id))
 			{
 				BasilProject.Project.WritingSystems.Remove(SelectedWritingSystem.Id);
 				LoadWritingSystemListBox();
@@ -99,24 +102,24 @@ namespace WeSay.Setup
 
 		private void _btnAddWritingSystem_Click(object sender, EventArgs e)
 		{
-			WritingSystem w =null;
-			string[] keys = { "xx", "x1", "x2", "x3" };
+			WritingSystem w = null;
+			string[] keys = {"xx", "x1", "x2", "x3"};
 			foreach (string s in keys)
 			{
 				if (!BasilProject.Project.WritingSystems.ContainsKey(s))
 				{
-					w= new WritingSystem(s, new Font("Doulos SIL", 12));
+					w = new WritingSystem(s, new Font("Doulos SIL", 12));
 					break;
 				}
 			}
 			if (w == null)
 			{
-				Palaso.Reporting.ErrorReport.ReportNonFatalMessage("Could not produce a unique ID.");
+				ErrorReport.ReportNonFatalMessage("Could not produce a unique ID.");
 			}
 			else
 			{
-				BasilProject.Project.WritingSystems.Add(w.Id,w);
-				this._wsListBox.Items.Add(new WsDisplayProxy(w, BasilProject.Project.WritingSystems));
+				BasilProject.Project.WritingSystems.Add(w.Id, w);
+				_wsListBox.Items.Add(new WsDisplayProxy(w, BasilProject.Project.WritingSystems));
 				_wsListBox.SelectedItem = w;
 			}
 		}
@@ -130,7 +133,7 @@ namespace WeSay.Setup
 		{
 			WritingSystem ws = sender as WritingSystem;
 			PropertyValueChangedEventArgs args = e as PropertyValueChangedEventArgs;
-			if (args!=null && args.ChangedItem.PropertyDescriptor.Name == "Id")
+			if (args != null && args.ChangedItem.PropertyDescriptor.Name == "Id")
 			{
 				string oldId = args.OldValue.ToString();
 				WeSayWordsProject.Project.MakeWritingSystemIdChange(ws, oldId);
@@ -141,7 +144,7 @@ namespace WeSay.Setup
 
 			//_wsListBox.Refresh(); didn't work
 			//this.Refresh();   didn't work
-			for (int i = 0; i < _wsListBox.Items.Count;i++ )
+			for (int i = 0; i < _wsListBox.Items.Count; i++)
 			{
 				_wsListBox.Items[i] = _wsListBox.Items[i];
 			}
@@ -151,7 +154,7 @@ namespace WeSay.Setup
 				LoadWritingSystemListBox();
 				foreach (WsDisplayProxy o in _wsListBox.Items)
 				{
-					if(o.WritingSystem == ws)
+					if (o.WritingSystem == ws)
 					{
 						_wsListBox.SelectedItem = o;
 						break;
@@ -160,23 +163,13 @@ namespace WeSay.Setup
 			}
 		}
 
-
-		private void MakeWritingSystemIdChange(string oldId, string newId)
-		{
-			foreach (Field field in WeSayWordsProject.Project.DefaultViewTemplate)
-			{
-				field.ChangeWritingSystemId(oldId, newId);
-			}
-		}
-
-		private void label2_Click(object sender, EventArgs e)
-		{
-
-		}
-
-		private void textBox2_TextChanged(object sender, EventArgs e)
-		{
-					}
+		//private void MakeWritingSystemIdChange(string oldId, string newId)
+		//{
+		//    foreach (Field field in WeSayWordsProject.Project.DefaultViewTemplate)
+		//    {
+		//        field.ChangeWritingSystemId(oldId, newId);
+		//    }
+		//}
 	}
 
 	/// <summary>
@@ -232,13 +225,13 @@ namespace WeSay.Setup
 
 		public WritingSystem WritingSystem
 		{
-			get { return this._writingSystem; }
-			set { this._writingSystem = value; }
+			get { return _writingSystem; }
+			set { _writingSystem = value; }
 		}
 
 		public override string ToString()
 		{
-			string s = this._writingSystem.ToString();
+			string s = _writingSystem.ToString();
 //            if (IsVernacularDefault )
 //            {
 //                s += " (V)";
@@ -248,7 +241,9 @@ namespace WeSay.Setup
 //                s += " (A)";
 //            }
 			if (s == WritingSystem.IdForUnknownVernacular)
+			{
 				s += "<-- Consider Changing This";
+			}
 			return s;
 		}
 	}
