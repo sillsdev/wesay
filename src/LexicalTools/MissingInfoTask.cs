@@ -143,9 +143,16 @@ namespace WeSay.LexicalTools
 		public override void Activate()
 		{
 			base.Activate();
-			//IRecordList<LexEntry> allRecords = RecordListManager.GetListOfTypeFilteredFurther(new AllItems<LexEntry>(), _sortHelper);
+			IBindingList allRecords;
+			if (RecordListManager is Db4oRecordListManager)
+			{
+				allRecords = ((Db4oRecordListManager) RecordListManager).GetSortedList(_sortHelper);
+			}
+			else
+			{
+				allRecords = RecordListManager.GetListOfTypeFilteredFurther(new AllItems<LexEntry>(), _sortHelper);
+			}
 
-			IBindingList allRecords = ((Db4oRecordListManager)RecordListManager).GetSortedList(_sortHelper);
 
 			_missingInfoControl = new MissingInfoControl(DataSource, ViewTemplate, _filter.FilteringPredicate, allRecords);
 			_missingInfoControl.SelectedIndexChanged += new EventHandler(OnRecordSelectionChanged);
