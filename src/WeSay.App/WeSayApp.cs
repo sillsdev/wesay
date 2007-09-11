@@ -42,8 +42,8 @@ namespace WeSay.App
 		   }
 			UsageReporter.AppNameToUseInDialogs = "WeSay";
 			UsageReporter.AppNameToUseInReporting = "WeSayApp";
-			UsageReporter.RecordLaunch();
-			UsageReporter.DoTrivialUsageReport("usage@wesay.org", "(This will not be asked of users in the released version.)", new int[] { 1,5,20,40,60,80,100 });
+//            UsageReporter.RecordLaunch();
+//            UsageReporter.DoTrivialUsageReport("usage@wesay.org", "(This will not be asked of users in the released version.)", new int[] { 1,5,20,40,60,80,100 });
 
 			CommandLineArguments cmdArgs = new CommandLineArguments();
 			if (!Parser.ParseArguments(args, cmdArgs, new ReportError(ShowCommandLineError)))

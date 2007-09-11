@@ -13,7 +13,6 @@ namespace WeSay.LexicalTools
 {
 	public partial class MissingInfoControl : UserControl
 	{
-		private readonly IRecordListManager _recordManager;
 		private IRecordList<LexEntry> _records;
 		private InMemoryBindingList<LexEntry> _completedRecords;
 		private LexEntry _currentRecord;
@@ -60,28 +59,12 @@ namespace WeSay.LexicalTools
 			_entryViewControl.KeyDown += new KeyEventHandler(OnKeyDown);
 			_entryViewControl.ViewTemplate = _viewTemplate;
 
-			_entryViewControl.AllRecords = allRecords;//todo this needs to be give the sorted list for the typeahead control of a relation
+			_entryViewControl.AllRecords = allRecords;
 
 			_recordsListBox.DataSource = _records;
 			_records.ListChanged += OnRecordsListChanged; // this needs to be after so it will get change event after the ListBox
 
-			WritingSystem listWritingSystem = BasilProject.Project.WritingSystems.UnknownVernacularWritingSystem;
-
-			// use the master view Template instead of the one for this task. (most likely the one for this
-			// task doesn't have the EntryLexicalForm field specified but the Master (Default) one will
-			Field field = WeSayWordsProject.Project.DefaultViewTemplate.GetField(Field.FieldNames.EntryLexicalForm.ToString());
-
-			if (field != null)
-			{
-				if (field.WritingSystems.Count > 0)
-				{
-					listWritingSystem = field.WritingSystems[0];
-				}
-				else
-				{
-					MessageBox.Show(String.Format("There are no writing systems enabled for the Field '{0}'", field.FieldName), "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);//review
-				}
-			}
+			WritingSystem listWritingSystem = GetListWritingSystem();
 
 			this._recordsListBox.BorderStyle = BorderStyle.None;
 			this._recordsListBox.SelectedIndexChanged += new EventHandler(OnRecordSelectionChanged);
@@ -99,6 +82,28 @@ namespace WeSay.LexicalTools
 			this._btnNextWord.BringToFront();
 			this._btnPreviousWord.BringToFront();
 			SetCurrentRecordFromRecordList();
+		}
+
+		private WritingSystem GetListWritingSystem()
+		{
+			WritingSystem listWritingSystem = BasilProject.Project.WritingSystems.UnknownVernacularWritingSystem;
+
+			// use the master view Template instead of the one for this task. (most likely the one for this
+			// task doesn't have the EntryLexicalForm field specified but the Master (Default) one will
+			Field field = WeSayWordsProject.Project.DefaultViewTemplate.GetField(Field.FieldNames.EntryLexicalForm.ToString());
+
+			if (field != null)
+			{
+				if (field.WritingSystems.Count > 0)
+				{
+					listWritingSystem = field.WritingSystems[0];
+				}
+				else
+				{
+					MessageBox.Show(String.Format("There are no writing systems enabled for the Field '{0}'", field.FieldName), "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);//review
+				}
+			}
+			return listWritingSystem;
 		}
 
 		private bool _recordsListBoxActive;
@@ -124,7 +129,8 @@ namespace WeSay.LexicalTools
 			_completedRecordsListBoxActive = true;
 		}
 
-		private void InitializeDisplaySettings() {
+		private void InitializeDisplaySettings()
+		{
 			BackColor = DisplaySettings.Default.BackgroundColor;
 			_entryViewControl.BackColor = DisplaySettings.Default.BackgroundColor;//we like it to stand out at design time, but not runtime
 		}

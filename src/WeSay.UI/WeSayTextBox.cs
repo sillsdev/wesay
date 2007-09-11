@@ -69,6 +69,10 @@ namespace WeSay.UI
 			{
 				throw new ApplicationException("User-invoked test crash.");
 			}
+			if(e.KeyCode == Keys.PageDown)
+			{
+				e.Handled = false;
+			}
 		}
 
 
