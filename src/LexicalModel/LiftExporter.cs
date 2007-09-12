@@ -281,10 +281,26 @@ namespace WeSay.LexicalModel
 					WriteRelationCollection(pair.Key, pair.Value as LexRelationCollection);
 					continue;
 				}
+				if (pair.Value is FlagState)
+				{
+					WriteFlagState(pair.Key, pair.Value as FlagState);
+					continue;
+				}
 
 				throw new ApplicationException(
 					string.Format("The LIFT exporter was surprised to find a property '{0}' of type: {1}", pair.Key,
 								  pair.Value.GetType()));
+			}
+		}
+
+		private void WriteFlagState(string key, FlagState state)
+		{
+			if (state.Value) //skip it if it's not set
+			{
+				_writer.WriteStartElement("trait");
+				_writer.WriteAttributeString("name", key);
+				_writer.WriteAttributeString("value", "set");//this attr required by lift schema, though we don't use it
+				_writer.WriteEndElement();
 			}
 		}
 

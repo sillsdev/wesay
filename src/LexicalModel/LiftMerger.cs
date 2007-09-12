@@ -238,7 +238,11 @@ namespace WeSay.LexicalModel
 				OptionRef o = extensible.GetOrCreateProperty<OptionRef>(trait.Name);
 				o.Value = trait.Value;
 			}
-			// if it is unknown assume it is a collection.
+			else if(trait.Name.StartsWith("flag_"))
+			{
+				extensible.SetFlag(trait.Name);
+			}
+				// if it is unknown assume it is a collection.
 			else //if (ExpectedOptionCollectionTraits.Contains(trait.Name))
 			{
 				OptionRefCollection c = extensible.GetOrCreateProperty<OptionRefCollection>(trait.Name);

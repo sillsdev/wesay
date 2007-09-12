@@ -18,7 +18,7 @@ namespace WeSay.LexicalTools
 
 
 		public MissingInfoTask(IRecordListManager recordListManager,
-					IFilter<LexEntry> filter,
+			IFilter<LexEntry> filter,
 					string label,
 					string description,
 					ViewTemplate viewTemplate)
@@ -80,7 +80,7 @@ namespace WeSay.LexicalTools
 		/// <param name="viewTemplate">The base viewTemplate</param>
 		/// <param name="fieldsToShow">The fields to show from the base Field Inventory</param>
 		public MissingInfoTask(IRecordListManager recordListManager,
-							IFilter<LexEntry> filter,
+							IFilter<LexEntry>  filter,
 							string label,
 							string description,
 							ViewTemplate viewTemplate,
@@ -91,11 +91,24 @@ namespace WeSay.LexicalTools
 			{
 				throw new ArgumentNullException("fieldsToShow");
 			}
-			_viewTemplate = FilterviewTemplate(viewTemplate, fieldsToShow);
+			_viewTemplate = CreateViewTemplateFromListOfFields(viewTemplate, fieldsToShow);
+
+			//hack until we overhaul how Tasks are setup:
+			if (filter is MissingItemFilter && fieldsToShow.Contains("BaseForm"))
+			{
+				MissingItemFilter f = filter as MissingItemFilter;
+				Field flagField = new Field();
+				flagField.DisplayName = "~This word has no Base Form";
+				flagField.DataTypeName = "Flag";
+				flagField.ClassName = "LexEntry";
+				flagField.FieldName = "flag_skip_" + ((MissingItemFilter) filter).FieldName;
+
+				_viewTemplate.Add(flagField);
+			}
 		}
 
 		public MissingInfoTask(IRecordListManager recordListManager,
-					IFilter<LexEntry> filter,
+			IFilter<LexEntry>  filter,
 					string label,
 					string description,
 					ViewTemplate viewTemplate,
@@ -103,12 +116,17 @@ namespace WeSay.LexicalTools
 					string fieldsToShowReadOnly)
 			: this(recordListManager, filter, label, description, viewTemplate, fieldsToShowEditable+" "+fieldsToShowReadOnly)
 		{
+			MarkReadOnlyFIelds(fieldsToShowReadOnly);
+		}
+
+		private void MarkReadOnlyFIelds(string fieldsToShowReadOnly)
+		{
 			string[] readOnlyFields = SplitUpFieldNames(fieldsToShowReadOnly);
 
 			for (int i = 0; i < _viewTemplate.Count; i++)
 			{
 				Field field = _viewTemplate[i];
-			   foreach (string s in readOnlyFields)
+				foreach (string s in readOnlyFields)
 				{
 					if(s==field.FieldName)
 					{
@@ -121,7 +139,7 @@ namespace WeSay.LexicalTools
 			}
 		}
 
-		static private ViewTemplate FilterviewTemplate(ViewTemplate baseViewTemplate, string fieldsToShow)
+		static private ViewTemplate CreateViewTemplateFromListOfFields(ViewTemplate baseViewTemplate, string fieldsToShow)
 		{
 			string[] fields = SplitUpFieldNames(fieldsToShow);
 			ViewTemplate viewTemplate = new ViewTemplate();

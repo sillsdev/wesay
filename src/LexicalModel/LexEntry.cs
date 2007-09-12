@@ -107,7 +107,8 @@ namespace WeSay.LexicalModel
 		{
 			base.SomethingWasModified(propertyModified);
 			ModificationTime = DateTime.UtcNow;
-			GetOrCreateId(false);
+			//too soon to make id: this method is called after first keystroke
+			//  GetOrCreateId(false);
 		}
 
 		public string GetOrCreateId(bool doCreateEvenIfNoLexemeForm)

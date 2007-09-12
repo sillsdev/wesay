@@ -563,10 +563,16 @@ namespace WeSay.LexicalModel.Tests
 			Assert.AreEqual(1, e.Properties.Count);
 			Assert.AreEqual("flub", e.Properties[0].Key);
 			MultiText mt = e.GetProperty<MultiText>("flub");
-			Assert.AreEqual("dub", mt["z"]);
+			Assert.AreEqual("dub", mt["z" ]);
 		}
 
-
+		[Test]
+		public void EntryGetsFlag()
+		{
+			LexEntry e = MakeSimpleEntry();
+			_merger.MergeInTrait(e, new Trait("flag_skip_BaseForm", null) );
+			Assert.IsTrue(e.GetHasFlag("flag_skip_BaseForm"));
+		}
 	}
 
 }

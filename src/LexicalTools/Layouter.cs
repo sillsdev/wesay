@@ -217,6 +217,9 @@ namespace WeSay.LexicalTools
 				Control box;
 				switch (customField.DataTypeName)
 				{
+					case "Flag":
+						box = MakeCheckBoxWidget(target, customField);
+						break;
 					case "Option":
 						box = MakeOptionWidget(target, customField);
 						break;
@@ -242,7 +245,16 @@ namespace WeSay.LexicalTools
 						}
 						break;
 				}
-				DetailList.AddWidgetRow(StringCatalog.Get(customField.DisplayName),
+
+				string label = StringCatalog.Get(customField.DisplayName);
+
+				//for checkboxes, the label is part of the control
+				if (customField.DataTypeName == "Flag")
+				{
+					label = string.Empty;
+				}
+
+				DetailList.AddWidgetRow(StringCatalog.Get(label),
 										false,
 										box,
 										insertAtRow + rowCount,
@@ -335,12 +347,23 @@ namespace WeSay.LexicalTools
 			return control;
 		}
 
+
 		private static Control MakeOptionCollectionWidget(WeSayDataObject target, Field field)
 		{
 			OptionsList list = WeSayWordsProject.Project.GetOptionsList(field);
 			OptionRefCollection optionRefTarget = target.GetOrCreateProperty<OptionRefCollection>(field.FieldName);
 			OptionCollectionControl control =
 					new OptionCollectionControl(optionRefTarget, list, field.WritingSystemIds[0]);
+			return control;
+		}
+
+		protected Control MakeCheckBoxWidget(WeSayDataObject target, Field field)
+		{
+			FlagState boxState = target.GetOrCreateProperty<FlagState>(field.FieldName);
+
+			CheckBoxControl control = new CheckBoxControl(boxState.Value, field.DisplayName, field.FieldName);
+			SimpleBinding<bool> binding = new SimpleBinding<bool>(boxState, control);
+			binding.CurrentItemChanged += new EventHandler<CurrentItemEventArgs>(_detailList.OnBinding_ChangeOfWhichItemIsInFocus);
 			return control;
 		}
 	}

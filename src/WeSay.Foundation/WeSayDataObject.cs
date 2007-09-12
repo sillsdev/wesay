@@ -271,10 +271,10 @@ namespace WeSay.Foundation
 
 		public bool GetHasFlag(string propertyName)
 		{
-			string value =GetProperty<string>(propertyName);
-			if (value == null)
+			FlagState flag = GetProperty<FlagState>(propertyName);
+			if (flag == null)
 				return false;
-			return value == "set";
+			return flag.Value;
 		}
 
 		/// <summary>
@@ -285,13 +285,15 @@ namespace WeSay.Foundation
 		/// <param name="propertyName"></param>
 		public void SetFlag(string propertyName)
 		{
-			KeyValuePair<string, object> found = Properties.Find(delegate(KeyValuePair<string, object> p) { return p.Key == propertyName; });
-			if (found.Key == propertyName)
-			{
-				_properties.Remove(found);
-			}
-
-			Properties.Add(new KeyValuePair<string, object>(propertyName, "set"));
+			FlagState f = GetOrCreateProperty<FlagState>(propertyName);
+			f.Value = true;
+//            KeyValuePair<FlagState, object> found = Properties.Find(delegate(KeyValuePair<FlagState, object> p) { return p.Key == propertyName; });
+//            if (found.Key == propertyName)
+//            {
+//                _properties.Remove(found);
+//            }
+//
+//            Properties.Add(new KeyValuePair<string, object>(propertyName, "set"));
 		}
 
 		/// <summary>

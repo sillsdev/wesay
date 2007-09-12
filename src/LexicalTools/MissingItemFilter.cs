@@ -11,7 +11,7 @@ namespace WeSay.LexicalTools
 {
 	public class MissingItemFilter : IFilter<LexEntry>
 	{
-		Field _field;
+		private Field _field;
 
 		public MissingItemFilter(Field field)
 		{
@@ -70,6 +70,11 @@ namespace WeSay.LexicalTools
 			}
 		}
 
+		public string FieldName
+		{
+			get { return _field.FieldName; }
+		}
+
 		private bool IsMissingDataInWritingSystem(object content)
 		{
 			switch (_field.DataTypeName)
@@ -82,7 +87,7 @@ namespace WeSay.LexicalTools
 					return IsMissingWritingSystem((MultiText)content);
 				case "RelationToOneEntry":
 					LexRelationCollection collection = (LexRelationCollection)content;
-					return collection.IsEmpty && !IsIntentionallyMissing(collection.Parent, this._field.FieldName);
+					return collection.IsEmpty && !IsSkipped(collection.Parent, this._field.FieldName);
 				default:
 					Debug.Fail("unknown DataTypeName");
 					return false;
@@ -146,9 +151,9 @@ namespace WeSay.LexicalTools
 			return false;
 		}
 
-		private bool IsIntentionallyMissing(WeSay.Foundation.WeSayDataObject parent, string fieldName)
+		private bool IsSkipped(WeSay.Foundation.WeSayDataObject parent, string fieldName)
 		{
-			return parent.GetHasFlag("intentionallyMissing_" + fieldName);
+			return parent.GetHasFlag("flag_skip_" + fieldName);
 		}
 
 		private bool IsMissingLexExampleSentenceField(LexExampleSentence example)
@@ -221,7 +226,7 @@ namespace WeSay.LexicalTools
 			IParentable field = weSayData.GetProperty<IParentable>(this._field.FieldName);
 			if(field == null)
 			{
-				return !IsIntentionallyMissing( weSayData,_field.FieldName);
+				return !IsSkipped( weSayData,_field.FieldName);
 			}
 			return IsMissingDataInWritingSystem(field);
 		}

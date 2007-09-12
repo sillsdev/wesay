@@ -977,5 +977,27 @@ namespace WeSay.LexicalTools.Tests
 			_exporter.End();
 			Assert.AreEqual(answer, _stringBuilder.ToString());
 		}
+
+
+		[Test]
+		public void FlagOnEntry_OutputAsTrait()
+		{
+			LexEntry entry = new LexEntry();
+			entry.SetFlag("ATestFlag");
+			_exporter.Add(entry);
+			_exporter.End();
+			AssertXPathNotNull("entry/trait[@name='ATestFlag' and @value]");
+		}
+
+		[Test]
+		public void FlagCleared_NoOutput()
+		{
+			LexEntry entry = new LexEntry();
+			entry.SetFlag("ATestFlag");
+			entry.ClearFlag("ATestFlag");
+			_exporter.Add(entry);
+			_exporter.End();
+			AssertXPathNotNull("entry[not(trait)]");
+		}
 	}
 }
