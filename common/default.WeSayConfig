@@ -41,7 +41,7 @@
 	  <showfields>ExampleSentence</showfields>
 	  <readOnly>SenseGloss</readOnly>
 	</task>
-	<task id="AddBaseForms" class="WeSay.LexicalTools.MissingInfoTask" assembly="LexicalTools" visible="true">
+	<task id="AddBaseForms" class="WeSay.LexicalTools.MissingInfoTask" assembly="LexicalTools" visible="false">
 	  <entries ref="All Entries" />
 	  <filter class="WeSay.LexicalTools.MissingItemFilter" assembly="LexicalTools">
 		<viewTemplate ref="Default View Template" />

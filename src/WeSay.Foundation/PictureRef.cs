@@ -2,28 +2,20 @@ using System.ComponentModel;
 
 namespace WeSay.Foundation
 {
-	/// <summary>
-	/// Holds a boolean value for, for example, a checkbox
-	/// </summary>
-	public class FlagState : IParentable, IValueHolder<bool>
+	public class PictureRef  : IParentable, IValueHolder<string>
 	{
+		private string _fileName;
+
 		/// <summary>
 		/// This "backreference" is used to notify the parent of changes.
 		/// IParentable gives access to this during explicit construction.
 		/// </summary>
 		private WeSayDataObject _parent;
 
-		private bool _isChecked;
-
 		/// <summary>
 		/// For INotifyPropertyChanged
 		/// </summary>
 		public event PropertyChangedEventHandler PropertyChanged;
-
-
-		public FlagState()//WeSay.Foundation.WeSayDataObject parent)
-		{
-		}
 
 		#region IParentable Members
 
@@ -42,32 +34,28 @@ namespace WeSay.Foundation
 			//tell any data binding
 			if (PropertyChanged != null)
 			{
-				PropertyChanged(this, new PropertyChangedEventArgs("checkBox")); //todo
+				PropertyChanged(this, new PropertyChangedEventArgs("picture"));
 			}
 
 			//tell our parent
 
 			if (_parent != null)
 			{
-				this._parent.NotifyPropertyChanged("checkBox");
+				this._parent.NotifyPropertyChanged("picture");
 			}
 		}
 
-		public bool Value
+		public string Value
 		{
 			get
 			{
-				return this._isChecked;
+				return this._fileName;
 			}
 			set
 			{
-				this._isChecked = value;
-				// this.Guid = value.Guid;
+				this._fileName = value;
 				NotifyPropertyChanged();
 			}
 		}
-
-
-
 	}
 }

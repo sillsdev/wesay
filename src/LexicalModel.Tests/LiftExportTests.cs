@@ -999,5 +999,17 @@ namespace WeSay.LexicalTools.Tests
 			_exporter.End();
 			AssertXPathNotNull("entry[not(trait)]");
 		}
+
+
+		[Test]
+		public void Picture_OutputAsPictureURLRef()
+		{
+			LexSense sense = new LexSense();
+			PictureRef p = sense.GetOrCreateProperty<PictureRef>("Picture");
+			p.Value = "bird.jpg";
+			_exporter.Add(sense);
+			_exporter.End();
+			CheckAnswer("<sense><picture href=\"bird.jpg\" /></sense>");
+		}
 	}
 }

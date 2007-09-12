@@ -212,24 +212,6 @@ namespace WeSay.LexicalModel
 		{
 			OptionRef pos = sense.GetProperty<OptionRef>(LexSense.WellKnownProperties.PartOfSpeech);
 
-			//For Dennis
- /*               OptionRef oldpos = sense.GetProperty<OptionRef>("PartOfSpeech");
-				if (oldpos != null)
-				{
-					//move it
-					sense.Properties.Remove(
-						new KeyValuePair<string, object>("PartOfSpeech", oldpos));
-
-					OptionRef existingPos = sense.GetProperty<OptionRef>(LexSense.WellKnownProperties.PartOfSpeech);
-					if (existingPos == null)
-					{
-						sense.Properties.Add(
-							new KeyValuePair<string, object>(LexSense.WellKnownProperties.PartOfSpeech, oldpos));
-						pos = oldpos;
-					}
-				}
-*/
-
 			if (pos != null && pos.Value.Length > 0)
 			{
 				_writer.WriteStartElement("grammatical-info");
@@ -286,10 +268,25 @@ namespace WeSay.LexicalModel
 					WriteFlagState(pair.Key, pair.Value as FlagState);
 					continue;
 				}
-
+				if (pair.Value is PictureRef)
+				{
+					WriteURLRef("picture", (pair.Value as PictureRef).Value );
+					continue;
+				}
 				throw new ApplicationException(
 					string.Format("The LIFT exporter was surprised to find a property '{0}' of type: {1}", pair.Key,
 								  pair.Value.GetType()));
+			}
+		}
+
+		private void WriteURLRef(string key, string href)
+		{
+			if (!string.IsNullOrEmpty(href))
+			{
+				_writer.WriteStartElement(key);
+				_writer.WriteAttributeString("href", href);
+				//todo: somehow captions go here, but I'm not clear how they should be wrapped
+				_writer.WriteEndElement();
 			}
 		}
 

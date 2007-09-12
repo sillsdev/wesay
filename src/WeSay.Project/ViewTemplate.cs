@@ -188,12 +188,32 @@ namespace WeSay.Project
 			lexicalFormField.Visibility = CommonEnumerations.VisibilitySetting.Visible;
 			masterTemplate.Add(lexicalFormField);
 
+/* does this make sense in WeSay?   */
+//            Field citationFormField = new Field("CitationForm", "LexEntry", defaultVernacularSet);
+//            StringCatalog.Get("~CitationForm", "The label for the field holding the citation form.");
+//            citationFormField.DisplayName = "Citation Form";
+//            citationFormField.Description = "The form that is to be printed in the dictionary";
+//            citationFormField.Visibility = CommonEnumerations.VisibilitySetting.Invisible;
+//            masterTemplate.Add(citationFormField);
+
+
+
 			Field glossField = new Field(Field.FieldNames.SenseGloss.ToString(), "LexSense", defaultAnalysisSet);
 			glossField.DisplayName = "Gloss";
 			glossField.Description =
 					"Normally a single word. Shows up as the first field of the sense, across from the 'Meaning' label";
 			glossField.Visibility = CommonEnumerations.VisibilitySetting.Visible;
 			masterTemplate.Add(glossField);
+
+			Field definitionField = new Field("Definition", "LexSense", defaultAnalysisSet);
+			//this is here so the PoMaker scanner can pick up a comment about this label
+			StringCatalog.Get("~Definition", "The label for the field showing the definition of the word.");
+			definitionField.DisplayName = "Definition";
+			definitionField.Description =
+					"The definition of this sense of the word, in one or more languages.";
+			definitionField.Visibility = CommonEnumerations.VisibilitySetting.Invisible;
+			masterTemplate.Add(definitionField);
+
 
 			Field posField = new Field("POS", "LexSense", defaultAnalysisSet);
 			//this is here so the PoMaker scanner can pick up a comment about this label
@@ -203,6 +223,14 @@ namespace WeSay.Project
 			posField.DataTypeName = "Option";
 			posField.OptionsListFile = "PartsOfSpeech.xml";
 			masterTemplate.Add(posField);
+
+//            Field pictureField = new Field("Picture", "LexSense", defaultAnalysisSet);
+//            //this is here so the PoMaker scanner can pick up a comment about this label
+//            StringCatalog.Get("~Picture", "The label for the field showing a picture.");
+//            pictureField.DisplayName = "Picture";
+//            pictureField.Description = "An image corresponding to the sense.";
+//            pictureField.DataTypeName = "Picture";
+//            masterTemplate.Add(pictureField);
 
 			Field exampleField =
 					new Field(Field.FieldNames.ExampleSentence.ToString(), "LexExampleSentence", defaultVernacularSet);
