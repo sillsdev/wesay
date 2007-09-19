@@ -96,7 +96,7 @@ namespace WeSay.Foundation
 
 		public LanguageForm Find(string writingSystemId)
 		{
-			foreach (LanguageForm f in _forms)
+			foreach (LanguageForm f in Forms)
 			{
 				if (f.WritingSystemId == writingSystemId)
 				{
@@ -262,7 +262,7 @@ namespace WeSay.Foundation
 
 		public int Count
 		{
-			get { return _forms.Length; }
+			get { return Forms.Length; }
 		}
 
 		/// <summary>
@@ -282,21 +282,19 @@ namespace WeSay.Foundation
 
 		public LanguageForm[] Forms
 		{
-			get { return _forms; }
+			get
+			{
+				Debug.Assert(_forms != null, "Forms was null. Is this an old cache?");
+				if (_forms == null)
+				{
+					_forms = new LanguageForm[0];
+				}
+				return _forms;
+			}
 			set { _forms = value; }
 		}
 
-		/// <summary>
-		/// Until we learn how to better control deserialization, this fixes any problems we've identified.
-		/// It must be called by anybody doing deserialization
-		/// </summary>
-		public void FinishDeserialization()
-		{
-			if (_forms == null)
-			{
-				_forms = new LanguageForm[0];
-			}
-		}
+
 
 		/// <summary>
 		/// We have this pesky "backreference" solely to enable fast
@@ -361,29 +359,29 @@ namespace WeSay.Foundation
 
 		private void RemoveLanguageForm(LanguageForm languageForm)
 		{
-			Debug.Assert(_forms.Length > 0);
-			LanguageForm[] forms = new LanguageForm[_forms.Length - 1];
+			Debug.Assert(Forms.Length > 0);
+			LanguageForm[] forms = new LanguageForm[Forms.Length - 1];
 			for (int i = 0, j = 0; i < forms.Length; i++,j++)
 			{
-				if (_forms[j] == languageForm)
+				if (Forms[j] == languageForm)
 				{
 					j++;
 				}
-				forms[i] = _forms[j];
+				forms[i] = Forms[j];
 			}
 			_forms = forms;
 		}
 
 		private void AddLanguageForm(LanguageForm languageForm)
 		{
-			LanguageForm[] forms = new LanguageForm[_forms.Length + 1];
-			for (int i = 0; i < _forms.Length; i++)
+			LanguageForm[] forms = new LanguageForm[Forms.Length + 1];
+			for (int i = 0; i < Forms.Length; i++)
 			{
-				forms[i] = _forms[i];
+				forms[i] = Forms[i];
 			}
 
 			//actually copy the contents, as we must now be the parent
-			forms[_forms.Length] = new LanguageForm(languageForm.WritingSystemId, languageForm.Form, this);
+			forms[Forms.Length] = new LanguageForm(languageForm.WritingSystemId, languageForm.Form, this);
 			_forms = forms;
 		}
 
@@ -404,7 +402,7 @@ namespace WeSay.Foundation
 
 		public IEnumerator GetEnumerator()
 		{
-			return _forms.GetEnumerator();
+			return Forms.GetEnumerator();
 		}
 
 		#endregion
@@ -484,7 +482,7 @@ namespace WeSay.Foundation
 
 		public bool ContainsEqualForm(LanguageForm other)
 		{
-			foreach (LanguageForm form in _forms)
+			foreach (LanguageForm form in Forms)
 			{
 				if (other.Equals(form))
 				{

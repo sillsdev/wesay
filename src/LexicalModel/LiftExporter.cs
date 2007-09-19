@@ -270,7 +270,8 @@ namespace WeSay.LexicalModel
 				}
 				if (pair.Value is PictureRef)
 				{
-					WriteURLRef("picture", (pair.Value as PictureRef).Value );
+					PictureRef pictureRef = pair.Value as PictureRef;
+					WriteURLRef("picture", pictureRef.Value, pictureRef.Caption );
 					continue;
 				}
 				throw new ApplicationException(
@@ -279,13 +280,13 @@ namespace WeSay.LexicalModel
 			}
 		}
 
-		private void WriteURLRef(string key, string href)
+		private void WriteURLRef(string key, string href, MultiText caption)
 		{
 			if (!string.IsNullOrEmpty(href))
 			{
 				_writer.WriteStartElement(key);
 				_writer.WriteAttributeString("href", href);
-				//todo: somehow captions go here, but I'm not clear how they should be wrapped
+				WriteMultiWithWrapperIfNonEmpty("label", caption);
 				_writer.WriteEndElement();
 			}
 		}

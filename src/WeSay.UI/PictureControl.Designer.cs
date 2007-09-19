@@ -49,7 +49,7 @@ namespace WeSay.UI
 			// _chooseImageLink
 			//
 			this._chooseImageLink.AutoSize = true;
-			this._chooseImageLink.Location = new System.Drawing.Point(166, 0);
+			this._chooseImageLink.Location = new System.Drawing.Point(83, 0);
 			this._chooseImageLink.Name = "_chooseImageLink";
 			this._chooseImageLink.Size = new System.Drawing.Size(84, 13);
 			this._chooseImageLink.TabIndex = 1;
@@ -72,7 +72,7 @@ namespace WeSay.UI
 			// _removeImageLink
 			//
 			this._removeImageLink.AutoSize = true;
-			this._removeImageLink.Location = new System.Drawing.Point(176, 0);
+			this._removeImageLink.Location = new System.Drawing.Point(114, 0);
 			this._removeImageLink.Name = "_removeImageLink";
 			this._removeImageLink.Size = new System.Drawing.Size(88, 13);
 			this._removeImageLink.TabIndex = 1;
@@ -82,7 +82,7 @@ namespace WeSay.UI
 			this._removeImageLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this._removeImageLink_LinkClicked);
 			this._removeImageLink.MouseEnter += new System.EventHandler(this._removeImageLink_MouseEnter);
 			//
-			// ImageDisplayWidget
+			// PictureControl
 			//
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -90,8 +90,8 @@ namespace WeSay.UI
 			this.Controls.Add(this._removeImageLink);
 			this.Controls.Add(this._chooseImageLink);
 			this.Controls.Add(this._pictureBox);
-			this.Name = "ImageDisplayWidget";
-			this.Size = new System.Drawing.Size(292, 94);
+			this.Name = "PictureControl";
+			this.Size = new System.Drawing.Size(241, 94);
 			this.Load += new System.EventHandler(this.ImageDisplayWidget_Load);
 			this.MouseLeave += new System.EventHandler(this.ImageDisplayWidget_MouseLeave);
 			this.MouseHover += new System.EventHandler(this.ImageDisplayWidget_MouseHover);

@@ -154,6 +154,18 @@ namespace WeSay.LexicalModel
 			AddOrAppendMultiTextProperty(sense, contents, LexSense.WellKnownProperties.Definition);
 		}
 
+		public void MergeInPicture(LexSense sense, string href, LiftMultiText caption)
+		{
+			//nb 1:  we're limiting ourselves to one picture per sense, here:
+			//nb 2: the name and case must match the fieldName
+			PictureRef pict = sense.GetOrCreateProperty<PictureRef>("Picture");
+			pict.Value = href;
+			if (caption != null)
+			{
+				pict.Caption = MultiText.Create(caption);
+			}
+		}
+
 		/// <summary>
 		/// Handle LIFT's "note" entity
 		/// </summary>

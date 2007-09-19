@@ -572,6 +572,34 @@ namespace WeSay.LexicalModel.Tests
 			_merger.MergeInTrait(e, new Trait("flag_skip_BaseForm", null) );
 			Assert.IsTrue(e.GetHasFlag("flag_skip_BaseForm"));
 		}
+
+
+		[Test]
+		public void SenseGetsPictureNoCaption()
+		{
+			Extensible extensibleInfo = new Extensible();
+			LexEntry e = MakeSimpleEntry();
+			LexSense s = _merger.GetOrMakeSense(e, extensibleInfo);
+
+			_merger.MergeInPicture(s, "testPicture.png", null);
+			PictureRef pict = s.GetProperty<PictureRef>("Picture");
+			Assert.AreEqual("testPicture.png", pict.Value);
+			Assert.IsNull(pict.Caption);
+		}
+		[Test]
+		public void SenseGetsPictureWithCaption()
+		{
+			Extensible extensibleInfo = new Extensible();
+			LexEntry e = MakeSimpleEntry();
+			LexSense s = _merger.GetOrMakeSense(e, extensibleInfo);
+
+			LiftMultiText caption = new LiftMultiText();
+			caption["aa"] = "acaption";
+			_merger.MergeInPicture(s, "testPicture.png", caption);
+			PictureRef pict = s.GetProperty<PictureRef>("Picture");
+			Assert.AreEqual("testPicture.png", pict.Value);
+			Assert.AreEqual("acaption", pict.Caption["aa"]);
+		}
 	}
 
 }

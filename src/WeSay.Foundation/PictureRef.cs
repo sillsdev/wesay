@@ -5,6 +5,7 @@ namespace WeSay.Foundation
 	public class PictureRef  : IParentable, IValueHolder<string>
 	{
 		private string _fileName;
+		private MultiText _caption;
 
 		/// <summary>
 		/// This "backreference" is used to notify the parent of changes.
@@ -55,6 +56,18 @@ namespace WeSay.Foundation
 			{
 				this._fileName = value;
 				NotifyPropertyChanged();
+			}
+		}
+
+		public MultiText Caption
+		{
+			get
+			{
+				return _caption;
+			}
+			set
+			{
+				_caption = value;
 			}
 		}
 	}

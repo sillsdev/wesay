@@ -1010,5 +1010,19 @@ namespace WeSay.LexicalTools.Tests
 			_exporter.End();
 			CheckAnswer("<sense><picture href=\"bird.jpg\" /></sense>");
 		}
+
+		[Test]
+		public void Picture_OutputAsPictureWithCaption()
+		{
+			LexSense sense = new LexSense();
+			PictureRef p = sense.GetOrCreateProperty<PictureRef>("Picture");
+			p.Value = "bird.jpg";
+			p.Caption = new MultiText();
+			p.Caption["aa"] = "aCaption";
+			_exporter.Add(sense);
+			_exporter.End();
+			CheckAnswer("<sense><picture href=\"bird.jpg\"><label><form lang=\"aa\"><text>aCaption</text></form></label></picture></sense>");
+		}
+
 	}
 }

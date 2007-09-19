@@ -161,7 +161,10 @@ namespace WeSay.UI
 				{
 					string old = this.GetPathToImage();
 					_fileName = "Unused_" + _fileName;
-					File.Move(old, GetPathToImage());
+					if(!File.Exists(GetPathToImage()))
+					{
+						File.Move(old, GetPathToImage());
+					}
 				}
 			}
 			catch(Exception error)
