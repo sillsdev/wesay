@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://web.resource.org/cc/"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="744.09448819"
+   height="1052.3622047"
+   id="svg2379"
+   sodipodi:version="0.32"
+   inkscape:version="0.45.1"
+   sodipodi:docbase="C:\WeSay\artwork"
+   sodipodi:docname="OptionListEditting.svg"
+   inkscape:output_extension="org.inkscape.output.svg.inkscape">
+  <defs
+	 id="defs2381">
+	<linearGradient
+	   id="linearGradient12512">
+	  <stop
+		 id="stop12513"
+		 offset="0.0000000"
+		 style="stop-color:#ffffff;stop-opacity:1.0000000;" />
+	  <stop
+		 id="stop12517"
+		 offset="0.50000000"
+		 style="stop-color:#fff520;stop-opacity:0.89108908;" />
+	  <stop
+		 id="stop12514"
+		 offset="1.0000000"
+		 style="stop-color:#fff300;stop-opacity:0.0000000;" />
+	</linearGradient>
+	<radialGradient
+	   inkscape:collect="always"
+	   xlink:href="#linearGradient12512"
+	   id="radialGradient5435"
+	   gradientUnits="userSpaceOnUse"
+	   cx="55.000000"
+	   cy="125.00000"
+	   fx="55.000000"
+	   fy="125.00000"
+	   r="14.375000" />
+	<radialGradient
+	   inkscape:collect="always"
+	   xlink:href="#linearGradient12512"
+	   id="radialGradient2689"
+	   gradientUnits="userSpaceOnUse"
+	   cx="55.000000"
+	   cy="125.00000"
+	   fx="55.000000"
+	   fy="125.00000"
+	   r="14.375000" />
+  </defs>
+  <sodipodi:namedview
+	 id="base"
+	 pagecolor="#ffffff"
+	 bordercolor="#666666"
+	 borderopacity="1.0"
+	 gridtolerance="10000"
+	 guidetolerance="10"
+	 objecttolerance="10"
+	 inkscape:pageopacity="0.0"
+	 inkscape:pageshadow="2"
+	 inkscape:zoom="5.6"
+	 inkscape:cx="279.37463"
+	 inkscape:cy="626.31272"
+	 inkscape:document-units="px"
+	 inkscape:current-layer="layer1"
+	 inkscape:window-width="744"
+	 inkscape:window-height="573"
+	 inkscape:window-x="1645"
+	 inkscape:window-y="-13" />
+  <metadata
+	 id="metadata2384">
+	<rdf:RDF>
+	  <cc:Work
+		 rdf:about="">
+		<dc:format>image/svg+xml</dc:format>
+		<dc:type
+		   rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+	  </cc:Work>
+	</rdf:RDF>
+  </metadata>
+  <g
+	 inkscape:label="Layer 1"
+	 inkscape:groupmode="layer"
+	 id="layer1">
+	<path
+	   sodipodi:type="arc"
+	   style="opacity:1;fill:#ddff55;fill-opacity:1;stroke:#2b0000;stroke-width:0.496;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+	   id="path2665"
+	   sodipodi:cx="140"
+	   sodipodi:cy="385.21933"
+	   sodipodi:rx="11.428572"
+	   sodipodi:ry="11.428572"
+	   d="M 151.42857 385.21933 A 11.428572 11.428572 0 1 1  128.57143,385.21933 A 11.428572 11.428572 0 1 1  151.42857 385.21933 z"
+	   transform="translate(49.642857,41.428566)"
+	   inkscape:export-filename="C:\WeSay\artwork\deleteOptionListItem2.png"
+	   inkscape:export-xdpi="46.897156"
+	   inkscape:export-ydpi="46.897156" />
+	<g
+	   id="g2671"
+	   transform="matrix(2.0910292,0,0,2.0514351,-376.85078,-476.45184)"
+	   inkscape:export-filename="C:\WeSay\artwork\deleteOptionListItem2.png"
+	   inkscape:export-xdpi="46.897156"
+	   inkscape:export-ydpi="46.897156">
+	  <path
+		 inkscape:export-ydpi="90"
+		 inkscape:export-xdpi="90"
+		 inkscape:export-filename="c:\PalasoLib\WritingSystemSetup\artwork\delete.png"
+		 style="fill:#a02c2c;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+		 d="M 265.58538,445.45494 L 266.87474,448.04925 C 268.68577,444.98306 274.17361,438.57046 278.94053,435.6458 C 279.10778,435.54319 277.99046,434.9197 277.72792,435.05702 C 271.69302,438.21355 269.57501,440.15335 265.58538,445.45494 z "
+		 id="path2878"
+		 sodipodi:nodetypes="ccssc" />
+	  <path
+		 inkscape:export-ydpi="90"
+		 inkscape:export-xdpi="90"
+		 inkscape:export-filename="c:\PalasoLib\WritingSystemSetup\artwork\delete.png"
+		 style="fill:#a02c2c;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+		 d="M 263.89964,434.82872 L 266.17388,433.10369 C 268.67812,435.29986 274.06084,440.99474 277.70723,447.07463 C 277.69758,447.09203 276.37637,447.17078 276.35897,447.15298 C 272.30109,442.34151 268.89426,438.27248 263.89964,434.82872 z "
+		 id="path2669"
+		 sodipodi:nodetypes="ccccc" />
+	</g>
+	<path
+	   transform="translate(-6.7857144,43.571423)"
+	   d="M 151.42857 385.21933 A 11.428572 11.428572 0 1 1  128.57143,385.21933 A 11.428572 11.428572 0 1 1  151.42857 385.21933 z"
+	   sodipodi:ry="11.428572"
+	   sodipodi:rx="11.428572"
+	   sodipodi:cy="385.21933"
+	   sodipodi:cx="140"
+	   id="path2675"
+	   style="opacity:1;fill:#ddff55;fill-opacity:1;stroke:#2b0000;stroke-width:1.296;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+	   sodipodi:type="arc"
+	   inkscape:export-filename="C:\WeSay\artwork\NewOptionListItem.png"
+	   inkscape:export-xdpi="46.897156"
+	   inkscape:export-ydpi="46.897156" />
+	<g
+	   id="layer4"
+	   inkscape:label="new"
+	   style="display:inline"
+	   transform="translate(102.90268,408.60236)"
+	   inkscape:export-filename="C:\WeSay\artwork\NewOptionListItem.png"
+	   inkscape:export-xdpi="46.897156"
+	   inkscape:export-ydpi="46.897156">
+	  <path
+		 sodipodi:type="arc"
+		 style="color:#000000;fill:url(#radialGradient5435);fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1.25000024;stroke-linecap:butt;stroke-linejoin:round;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:block"
+		 id="path12511"
+		 sodipodi:cx="55"
+		 sodipodi:cy="125"
+		 sodipodi:rx="14.375"
+		 sodipodi:ry="14.375"
+		 d="M 69.375 125 A 14.375 14.375 0 1 1  40.625,125 A 14.375 14.375 0 1 1  69.375 125 z"
+		 transform="matrix(0.783292,0,0,0.783292,-6.340883,-86.65168)"
+		 inkscape:export-filename="/home/jimmac/ximian_art/icons/nautilus/suse93/stock_new-16.png"
+		 inkscape:export-xdpi="33.852203"
+		 inkscape:export-ydpi="33.852203" />
+	</g>
+	<rect
+	   style="opacity:1;fill:#d5f6ff;fill-opacity:1;stroke:#2b0000;stroke-width:0.564583;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+	   id="rect2677"
+	   width="34.302845"
+	   height="25.731415"
+	   x="237.13429"
+	   y="424.13934"
+	   rx="0.48492208"
+	   ry="0.52614826"
+	   inkscape:export-filename="C:\WeSay\artwork\NewOptionsList.png"
+	   inkscape:export-xdpi="46.897156"
+	   inkscape:export-ydpi="46.897156" />
+	<path
+	   transform="matrix(0.2922832,0,0,0.2922832,202.97643,317.97385)"
+	   d="M 151.42857 385.21933 A 11.428572 11.428572 0 1 1  128.57143,385.21933 A 11.428572 11.428572 0 1 1  151.42857 385.21933 z"
+	   sodipodi:ry="11.428572"
+	   sodipodi:rx="11.428572"
+	   sodipodi:cy="385.21933"
+	   sodipodi:cx="140"
+	   id="path2679"
+	   style="opacity:1;fill:#ff8080;fill-opacity:1;stroke:#2b0000;stroke-width:0.78730279;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+	   sodipodi:type="arc"
+	   inkscape:export-filename="C:\WeSay\artwork\NewOptionsList.png"
+	   inkscape:export-xdpi="46.897156"
+	   inkscape:export-ydpi="46.897156" />
+	<g
+	   id="g2685"
+	   inkscape:label="new"
+	   style="display:inline"
+	   transform="matrix(1.285465,0,0,1.2061692,216.70037,413.42379)"
+	   inkscape:export-filename="C:\WeSay\artwork\NewOptionsList.png"
+	   inkscape:export-xdpi="46.897156"
+	   inkscape:export-ydpi="46.897156">
+	  <path
+		 sodipodi:type="arc"
+		 style="color:#000000;fill:url(#radialGradient2689);fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1.25000024;stroke-linecap:butt;stroke-linejoin:round;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:block"
+		 id="path2687"
+		 sodipodi:cx="55"
+		 sodipodi:cy="125"
+		 sodipodi:rx="14.375"
+		 sodipodi:ry="14.375"
+		 d="M 69.375 125 A 14.375 14.375 0 1 1  40.625,125 A 14.375 14.375 0 1 1  69.375 125 z"
+		 transform="matrix(0.783292,0,0,0.783292,-6.340883,-86.65168)"
+		 inkscape:export-filename="/home/jimmac/ximian_art/icons/nautilus/suse93/stock_new-16.png"
+		 inkscape:export-xdpi="33.852203"
+		 inkscape:export-ydpi="33.852203" />
+	</g>
+	<path
+	   inkscape:export-ydpi="46.897156"
+	   inkscape:export-xdpi="46.897156"
+	   inkscape:export-filename="C:\WeSay\artwork\NewOptionsList.png"
+	   sodipodi:type="arc"
+	   style="opacity:1;fill:#ff8080;fill-opacity:1;stroke:#2b0000;stroke-width:0.78730279;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+	   id="path4898"
+	   sodipodi:cx="140"
+	   sodipodi:cy="385.21933"
+	   sodipodi:rx="11.428572"
+	   sodipodi:ry="11.428572"
+	   d="M 151.42857 385.21933 A 11.428572 11.428572 0 1 1  128.57143,385.21933 A 11.428572 11.428572 0 1 1  151.42857 385.21933 z"
+	   transform="matrix(0.3028723,0,0,0.3083966,201.36769,322.84893)" />
+	<g
+	   id="g2705"
+	   transform="matrix(0.8022769,5.5396783e-3,-0.6812588,0.7318528,347.21509,182.35577)"
+	   style="fill:#ff9955"
+	   inkscape:export-filename="C:\WeSay\artwork\openOptionsList.png"
+	   inkscape:export-xdpi="25.83"
+	   inkscape:export-ydpi="25.83">
+	  <rect
+		 ry="0.52614826"
+		 rx="0.48492208"
+		 y="421.00931"
+		 x="307.33511"
+		 height="25.731415"
+		 width="34.302845"
+		 id="rect2691"
+		 style="opacity:1;fill:#ff9955;fill-opacity:1;stroke:#2b0000;stroke-width:1.3317517;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+		 inkscape:export-filename="C:\WeSay\artwork\openOptionsList.png"
+		 inkscape:export-xdpi="25.83"
+		 inkscape:export-ydpi="25.83" />
+	</g>
+	<path
+	   style="opacity:1;fill:#d5f6ff;fill-opacity:1;stroke:#2b0000;stroke-width:0.877;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+	   d="M 293.44038,404.54556 C 293.22074,404.54556 293.3157,404.78582 293.3157,405.07791 L 293.44197,428.83818 C 293.44197,429.13027 293.63111,429.37053 293.85075,429.37053 L 321.0858,429.37053 C 321.30543,429.37053 321.49457,429.13027 321.49458,428.83818 L 321.49458,407.85712 L 302.28186,407.85712 C 302.06195,407.85713 301.89863,407.67079 301.89863,407.41871 L 301.74079,404.51399 L 293.44038,404.54556 z "
+	   id="rect6852"
+	   sodipodi:nodetypes="ccccccccccc"
+	   inkscape:export-filename="C:\WeSay\artwork\OpenOptionsList2.png"
+	   inkscape:export-xdpi="46.897156"
+	   inkscape:export-ydpi="46.897156" />
+	<rect
+	   inkscape:export-ydpi="46.897156"
+	   inkscape:export-xdpi="46.897156"
+	   inkscape:export-filename="C:\WeSay\artwork\OpenOptionsList2.png"
+	   ry="0.40651664"
+	   rx="0.39145941"
+	   y="416.99548"
+	   x="374.16812"
+	   height="19.880802"
+	   width="27.691401"
+	   id="rect6854"
+	   style="opacity:1;fill:#d5f6ff;fill-opacity:1;stroke:#2b0000;stroke-width:0.88460356;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+	   transform="matrix(1,0,-0.1842306,0.982883,0,0)" />
+	<path
+	   inkscape:export-ydpi="46.897156"
+	   inkscape:export-xdpi="46.897156"
+	   inkscape:export-filename="C:\WeSay\artwork\NewOptionsList.png"
+	   sodipodi:type="arc"
+	   style="opacity:1;fill:#ff8080;fill-opacity:1;stroke:#2b0000;stroke-width:0.78730279;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+	   id="path6838"
+	   sodipodi:cx="140"
+	   sodipodi:cy="385.21933"
+	   sodipodi:rx="11.428572"
+	   sodipodi:ry="11.428572"
+	   d="M 151.42857 385.21933 A 11.428572 11.428572 0 1 1  128.57143,385.21933 A 11.428572 11.428572 0 1 1  151.42857 385.21933 z"
+	   transform="matrix(0.3937494,0,0,0.3937494,356.6608,330.23587)" />
+	<path
+	   style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.60000002;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+	   d="M 374.48353,366.04195 C 377.06702,365.95028 377.08334,365.89688 379.02577,366.48745 C 381.87189,367.35278 381.93365,370.58522 381.93365,370.58522 L 378.31457,369.89747 L 382.33544,370.80843 L 383.14404,367.79585"
+	   id="path6859"
+	   sodipodi:nodetypes="cscccc" />
+  </g>
+</svg>

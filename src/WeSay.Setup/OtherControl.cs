@@ -24,7 +24,7 @@ namespace WeSay.Setup
 			LoadPoFilesIntoCombo(Project.WeSayWordsProject.Project.PathToWeSaySpecificFilesDirectoryInProject);
 			LoadPoFilesIntoCombo(Project.WeSayWordsProject.Project.ApplicationCommonDirectory);
 
-			WeSayWordsProject.Project.HackedEditorsSaveNow += Project_HackedEditorsSaveNow;
+			WeSayWordsProject.Project.EditorsSaveNow += Project_HackedEditorsSaveNow;
 			UpdateFontDisplay();
 	   }
 

@@ -31,7 +31,7 @@ namespace WeSay.Setup
 
 			LoadInventory();
 
-			WeSayWordsProject.Project.HackedEditorsSaveNow += new EventHandler(Project_HackedEditorsSaveNow);
+			WeSayWordsProject.Project.EditorsSaveNow += new EventHandler(Project_HackedEditorsSaveNow);
 		}
 
 		void Project_HackedEditorsSaveNow(object owriter, EventArgs e)

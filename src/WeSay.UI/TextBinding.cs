@@ -1,6 +1,6 @@
 using System;
 using System.ComponentModel;
-using WeSay.Language;
+using WeSay.Foundation;
 
 namespace WeSay.UI
 {

@@ -1,5 +1,6 @@
 using System.Drawing;
 using NUnit.Framework;
+using WeSay.Foundation;
 using WeSay.Language;
 using WeSay.Project;
 

@@ -1,4 +1,5 @@
 using WeSay.Data;
+using WeSay.Foundation;
 using WeSay.Language;
 
 namespace WeSay.LexicalModel.Db4o_Specific

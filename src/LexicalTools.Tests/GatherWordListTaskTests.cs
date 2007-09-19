@@ -5,6 +5,7 @@ using System.IO;
 using NUnit.Framework;
 using Palaso.Reporting;
 using WeSay.Data;
+using WeSay.Foundation;
 using WeSay.Language;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Db4o_Specific;

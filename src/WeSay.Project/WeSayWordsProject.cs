@@ -27,7 +27,7 @@ namespace WeSay.Project
 		private string _cacheLocationOverride;
 		private FileStream _liftFileStreamForLocking;
 		private LiftUpdateService _liftUpdateService;
-		public event EventHandler HackedEditorsSaveNow;
+		public event EventHandler EditorsSaveNow;
 		private AddinSet _addins;
 		private IList<LexRelationType> _relationTypes;
 
@@ -518,6 +518,15 @@ namespace WeSay.Project
 			}
 		}
 
+		public string PathToPictures
+		{
+			get
+			{
+				return Path.Combine(PathToWeSaySpecificFilesDirectoryInProject,
+									"pictures");
+			}
+		}
+
 		private static string GetPathToCacheFromPathToLift(string pathToLift)
 		{
 			return Path.Combine(Path.GetDirectoryName(pathToLift), "Cache");
@@ -665,6 +674,8 @@ namespace WeSay.Project
 			}
 		}
 
+
+
 		public override void Save()
 		{
 			_addins.InitializeIfNeeded(); // must be done before locking file for writing
@@ -679,9 +690,9 @@ namespace WeSay.Project
 			writer.WriteStartElement("configuration");
 			writer.WriteAttributeString("version", "1");
 
-			if (HackedEditorsSaveNow != null)
+			if (EditorsSaveNow != null)
 			{
-				HackedEditorsSaveNow.Invoke(writer, null);
+				EditorsSaveNow.Invoke(writer, null);
 			}
 
 			_addins.Save(writer);
@@ -729,8 +740,7 @@ namespace WeSay.Project
 		private void LoadOptionsList(string pathToOptionsList)
 		{
 			string name = Path.GetFileName(pathToOptionsList);
-			OptionsList list = new OptionsList();
-			list.LoadFromFile(pathToOptionsList);
+			OptionsList list = OptionsList.LoadFromFile(pathToOptionsList);
 			_optionLists.Add(name, list);
 		}
 

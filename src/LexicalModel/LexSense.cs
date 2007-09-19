@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using WeSay.Data;
 using WeSay.Foundation;
-using WeSay.Language;
 
 namespace WeSay.LexicalModel
 {

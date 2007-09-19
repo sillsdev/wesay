@@ -1,7 +1,7 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
-using WeSay.Language;
+using WeSay.Foundation;
 using WeSay.UI.Properties;
 
 namespace WeSay.UI

@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using WeSay.Foundation;
-using WeSay.Language;
 
 namespace WeSay.LexicalModel
 {

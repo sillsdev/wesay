@@ -58,7 +58,7 @@ namespace WeSay.Project.Tests
 			{
 				BasilProject.Project.Dispose();
 			}
-			Directory.Delete(_projectDirectory, true);
+			WeSay.Foundation.Tests.TestUtilities.DeleteFolderThatMayBeInUse(_projectDirectory);
 		}
 
 //  not relevant anymore

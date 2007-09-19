@@ -4,44 +4,22 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Xml;
+using System.Xml.Schema;
 using System.Xml.Serialization;
 using Exortech.NetReflector;
 using Exortech.NetReflector.Util;
 using WeSay.Foundation;
+using WeSay.Language;
 
-namespace WeSay.Language
+namespace WeSay.Foundation
 {
-	/*
-	 * Important: This class purposly hides the implementation of MultiText as a collection of LanguageForms.
-	 *
-	 * Thus it
-	 * 1) only refers to "alternatives" in public methods and
-	 * 2) has some otherwise ugly methods for getting at the innards (e.g. annotations) of them.
-	 */
-
-	/* ----------- ABOUT SUBCLASSES OF MULTITEXT ------------
-	* Subclasses of MultiText are used in many (most? all?)
-	* fields in WeSay exist to in order to make a
-	* signature for fields that we want to search on quickly.
-	* This is in influenced by the version of db4o we are using (5.5)
-	* as our persistence mechanism, which cannot do fast queries
-	* which span collections.
-	* For example, consider the following class definition.
-	* If we want to load all lexeme-forms into a
-	* datastructure for as-you-type approximate matching, we
-	* can just pull up all objects of this type from the database.
-		public class LexicalFormMultiText : MultiText
-		{
-		}
-	*/
-
 	/// <summary>
 	/// MultiText holds an array of LanguageForms, indexed by writing system ID.
 	/// </summary>
 	//NO: we haven't been able to do a reasonalbly compact xml representation except with custom deserializer
 	//[ReflectorType("multiText")]
 	[XmlInclude(typeof (LanguageForm))]
-	public class MultiText : IParentable, INotifyPropertyChanged // IEquatable<MultiText>//, IEnumerable
+	public class MultiText : IParentable, INotifyPropertyChanged, System.Xml.Serialization.IXmlSerializable
 	{
 		/// <summary>
 		/// We have this pesky "backreference" solely to enable fast
@@ -270,7 +248,7 @@ namespace WeSay.Language
 		{
 			foreach (string id in orderedListOfWritingSystemIds)
 			{
-			   LanguageForm alt = Find(id);
+				LanguageForm alt = Find(id);
 				if (null != alt)
 					return alt.Form;
 			}
@@ -301,10 +279,23 @@ namespace WeSay.Language
 		/// just for deserialization
 		/// </summary>
 		[XmlElement(typeof (LanguageForm), ElementName="form")]
+
 		public LanguageForm[] Forms
 		{
 			get { return _forms; }
 			set { _forms = value; }
+		}
+
+		/// <summary>
+		/// Until we learn how to better control deserialization, this fixes any problems we've identified.
+		/// It must be called by anybody doing deserialization
+		/// </summary>
+		public void FinishDeserialization()
+		{
+			if (_forms == null)
+			{
+				_forms = new LanguageForm[0];
+			}
 		}
 
 		/// <summary>
@@ -502,9 +493,58 @@ namespace WeSay.Language
 			}
 			return false;
 		}
-	}
 
-	#region NetReflector
+
+		///<summary>
+		/// required by IXmlSerializable
+		///</summary>
+		public XmlSchema GetSchema()
+		{
+			return null;
+		}
+
+		///<summary>
+		/// required by IXmlSerializable.
+		/// This is wierd and sad, but this is tuned to the format we want in OptionLists.
+		///</summary>
+		public void ReadXml(XmlReader reader)
+		{
+			//enhance: this is a maximally inefficient way to read it, but ok if we're just using it for option lists
+			XmlDocument d = new XmlDocument();
+			d.LoadXml(reader.ReadOuterXml());
+			foreach (XmlNode form in d.SelectNodes("*/form"))
+			{
+				string s = form.InnerText.Trim().Replace('\n', ' ').Replace("  ", " ");
+				if(form.Attributes.GetNamedItem("ws")!=null) //old style, but out there
+				{
+					this.SetAlternative(form.Attributes["ws"].Value, s);
+				}
+				else
+				{
+					this.SetAlternative(form.Attributes["lang"].Value, s);
+				}
+			}
+//reader.ReadEndElement();
+		}
+
+		///<summary>
+		/// required by IXmlSerializable.
+		/// This is wierd and sad, but this is tuned to the format we want in OptionLists.
+		///</summary>
+	   public void WriteXml(XmlWriter writer)
+		{
+			foreach (LanguageForm form in Forms)
+			{
+				writer.WriteStartElement("form");
+				writer.WriteAttributeString("lang", form.WritingSystemId);
+				//notice, no <text> wrapper
+				writer.WriteString(form.Form);
+				writer.WriteEndElement();
+			}
+		}
+
+
+	}
 
 	public class MultiTextSerializorFactory : ISerialiserFactory
 	{
@@ -517,7 +557,7 @@ namespace WeSay.Language
 	internal class MultiTextSerialiser : XmlMemberSerialiser
 	{
 		public MultiTextSerialiser(ReflectorMember member, ReflectorPropertyAttribute attribute)
-				: base(member, attribute) {}
+			: base(member, attribute) {}
 
 		public override object Read(XmlNode node, NetReflectorTypeTable table)
 		{
@@ -532,6 +572,4 @@ namespace WeSay.Language
 			return text;
 		}
 	}
-
-	#endregion
 }

@@ -217,6 +217,9 @@ namespace WeSay.LexicalTools
 				Control box;
 				switch (customField.DataTypeName)
 				{
+					case "Picture":
+						box = MakePictureWidget(target, customField);
+						break;
 					case "Flag":
 						box = MakeCheckBoxWidget(target, customField);
 						break;
@@ -264,6 +267,8 @@ namespace WeSay.LexicalTools
 			}
 			return rowCount;
 		}
+
+
 
 		static private LexRelationType GetRelationType(string dataTypeName)
 		{
@@ -363,6 +368,20 @@ namespace WeSay.LexicalTools
 
 			CheckBoxControl control = new CheckBoxControl(boxState.Value, field.DisplayName, field.FieldName);
 			SimpleBinding<bool> binding = new SimpleBinding<bool>(boxState, control);
+			binding.CurrentItemChanged += new EventHandler<CurrentItemEventArgs>(_detailList.OnBinding_ChangeOfWhichItemIsInFocus);
+			return control;
+		}
+
+		private Control MakePictureWidget(WeSayDataObject target, Field field)
+		{
+			PictureRef pictureRef = target.GetOrCreateProperty<PictureRef>(field.FieldName);
+
+			PictureControl control = new PictureControl(field.FieldName, Project.WeSayWordsProject.Project.PathToPictures);
+			if (!String.IsNullOrEmpty(pictureRef.Value))
+			{
+				control.Value = pictureRef.Value;
+			}
+			SimpleBinding<string> binding = new SimpleBinding<string>(pictureRef, control);
 			binding.CurrentItemChanged += new EventHandler<CurrentItemEventArgs>(_detailList.OnBinding_ChangeOfWhichItemIsInFocus);
 			return control;
 		}

@@ -224,13 +224,14 @@ namespace WeSay.Project
 			posField.OptionsListFile = "PartsOfSpeech.xml";
 			masterTemplate.Add(posField);
 
-//            Field pictureField = new Field("Picture", "LexSense", defaultAnalysisSet);
-//            //this is here so the PoMaker scanner can pick up a comment about this label
-//            StringCatalog.Get("~Picture", "The label for the field showing a picture.");
-//            pictureField.DisplayName = "Picture";
-//            pictureField.Description = "An image corresponding to the sense.";
-//            pictureField.DataTypeName = "Picture";
-//            masterTemplate.Add(pictureField);
+			Field pictureField = new Field("Picture", "LexSense", defaultAnalysisSet);
+			//this is here so the PoMaker scanner can pick up a comment about this label
+			StringCatalog.Get("~Picture", "The label for the field showing a picture.");
+			pictureField.DisplayName = "Picture";
+			pictureField.Description = "An image corresponding to the sense.";
+			pictureField.DataTypeName = "Picture";
+			pictureField.Visibility = CommonEnumerations.VisibilitySetting.Invisible;
+			masterTemplate.Add(pictureField);
 
 			Field exampleField =
 					new Field(Field.FieldNames.ExampleSentence.ToString(), "LexExampleSentence", defaultVernacularSet);

@@ -4,7 +4,6 @@ using System.ComponentModel;
 using System.Text;
 using WeSay.Data;
 using WeSay.Foundation;
-using WeSay.Language;
 using WeSay.LexicalModel.Db4o_Specific;
 
 namespace WeSay.LexicalModel
