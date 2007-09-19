@@ -701,7 +701,7 @@ namespace WeSay.Project
 			writer.Close();
 		}
 
-		public OptionsList GetOptionsList(Field field)
+		public OptionsList GetOptionsList(Field field, bool createIfFileMissing)
 		{
 			if (String.IsNullOrEmpty(field.OptionsListFile))
 			{
@@ -725,11 +725,20 @@ namespace WeSay.Project
 				string pathInProgramDir = Path.Combine(ApplicationCommonDirectory, field.OptionsListFile);
 				if (!File.Exists(pathInProgramDir))
 				{
-					throw new ConfigurationException(
+					if (createIfFileMissing)
+					{
+						list = new OptionsList();
+						_optionLists.Add(Path.GetFileName(pathInProject), list);
+						return list;
+					}
+					else
+					{
+						throw new ConfigurationException(
 							"Could not find the optionsList file {0}. Expected to find it at: {1} or {2}",
 							field.OptionsListFile,
 							pathInProject,
 							pathInProgramDir);
+					}
 				}
 				LoadOptionsList(pathInProgramDir);
 			}
@@ -763,7 +772,7 @@ namespace WeSay.Project
 
 		private static string GetListNameFromFileName(string file)
 		{
-			return file.Substring(0, file.IndexOf(".xml"));
+			return Path.GetFileNameWithoutExtension(file);//file.Substring(0, file.IndexOf(".xml"));
 		}
 
 		public void MakeFieldNameChange(Field field, string oldName)

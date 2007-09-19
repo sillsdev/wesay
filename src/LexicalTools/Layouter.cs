@@ -343,7 +343,7 @@ namespace WeSay.LexicalTools
 		{
 			OptionRef optionRefTarget = target.GetOrCreateProperty<OptionRef>(field.FieldName);
 
-			OptionsList list = WeSayWordsProject.Project.GetOptionsList(field);
+			OptionsList list = WeSayWordsProject.Project.GetOptionsList(field, false);
 			SingleOptionControl control =
 					new SingleOptionControl(optionRefTarget, list, field.WritingSystemIds[0], field.FieldName);
 			SimpleBinding<string> binding = new SimpleBinding<string>(optionRefTarget, control);
@@ -355,7 +355,7 @@ namespace WeSay.LexicalTools
 
 		private static Control MakeOptionCollectionWidget(WeSayDataObject target, Field field)
 		{
-			OptionsList list = WeSayWordsProject.Project.GetOptionsList(field);
+			OptionsList list = WeSayWordsProject.Project.GetOptionsList(field, false);
 			OptionRefCollection optionRefTarget = target.GetOrCreateProperty<OptionRefCollection>(field.FieldName);
 			OptionCollectionControl control =
 					new OptionCollectionControl(optionRefTarget, list, field.WritingSystemIds[0]);

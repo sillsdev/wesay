@@ -61,7 +61,7 @@ namespace WeSay.Project.Tests
 			WeSayWordsProject p = CreateAndLoad(false);
 			Field f = new Field();
 			f.OptionsListFile = "PartsOfSpeech.xml";
-			OptionsList list = p.GetOptionsList(f);
+			OptionsList list = p.GetOptionsList(f, false);
 			Assert.IsTrue(list.Options.Count>2);
 		}
 
@@ -71,7 +71,7 @@ namespace WeSay.Project.Tests
 			WeSayWordsProject p = CreateAndLoad(false);
 			Field f = new Field();
 			f.OptionsListFile = "PartsOfSpeech.xml";
-			OptionsList list = p.GetOptionsList(f);
+			OptionsList list = p.GetOptionsList(f, false);
 			Dictionary<string, string> dict = p.GetFieldToOptionListNameDictionary();
 			Assert.AreEqual("PartsOfSpeech", dict[LexicalModel.LexSense.WellKnownProperties.PartOfSpeech]);
 		}

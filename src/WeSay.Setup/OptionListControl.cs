@@ -57,6 +57,8 @@ namespace WeSay.Setup
 		{
 			if (this.Visible && _listBox.Items.Count > 0)
 			{
+				LoadFieldChooser();
+
 				//things, like active fields, may have been changed in a different tab
 
 				if (_listBox.SelectedItem != null)
@@ -72,22 +74,42 @@ namespace WeSay.Setup
 			}
 		}
 
+		private void LoadFieldChooser()
+		{
+			_fieldChooser.DropDownItems.Clear();
+			foreach (Field field in WeSayWordsProject.Project.DefaultViewTemplate)
+			{
+				if (field.DataTypeName == Field.BuiltInDataType.Option.ToString()
+					|| field.DataTypeName == Field.BuiltInDataType.OptionCollection.ToString())
+				{
+					ToolStripItem item =_fieldChooser.DropDownItems.Add(field.FieldName, null);
+					item.Tag = field;
+				}
+			}
+		}
+
 
 		private void OnLoad(object sender, EventArgs e)
 		{
-		   _currentField = GetFirstFieldWithOptionsList();
-			if(null == _currentField)
+		   Field field = GetPOSOrFieldWithOptionsList();
+		   if (null == field)
+			{
+				_listDescriptionLabel.Text = "This project does not have any fields which use option lists.";
+				splitContainer1.Visible = false;
+				UpdateDisplay();
 				return;
 
-		   _currentList =  WeSay.Project.WeSayWordsProject.Project.GetOptionsList(_currentField);
-			_listDescriptionLabel.Text = String.Format(StringCatalog.Get("~This is the contents of the {0} options list, used in the {1} field."), _currentField.OptionsListFile, _currentField.FieldName);
-
-			LoadList();
+			}
+			LoadList(field);
 		}
 
-		private void LoadList()
+		private void LoadList( Field field)
 		{
 			SaveCurrentList();
+			_currentField = field;
+			_currentList = WeSay.Project.WeSayWordsProject.Project.GetOptionsList(_currentField, true);
+
+			_listDescriptionLabel.Text = String.Format(StringCatalog.Get("~This is the contents of the {0} options list, used in the {1} field."), field.OptionsListFile, field.FieldName);
 			_listBox.Items.Clear();
 			_currentListWasModified = false;
 			foreach (Option option in _currentList.Options)
@@ -114,8 +136,16 @@ namespace WeSay.Setup
 			}
 		}
 
-		private Field GetFirstFieldWithOptionsList()
+		private Field GetPOSOrFieldWithOptionsList()
 		{
+			foreach (Field field in WeSayWordsProject.Project.DefaultViewTemplate)
+			{
+				if (field.FieldName == "POS")
+				{
+					return field;
+				}
+			}
+
 			foreach (Field field in WeSayWordsProject.Project.DefaultViewTemplate)
 			{
 				if (!String.IsNullOrEmpty(field.OptionsListFile))
@@ -143,6 +173,7 @@ namespace WeSay.Setup
 								 CommonEnumerations.VisibilitySetting.Visible);
 				m.SizeChanged += new EventHandler(OnNameControlSizeChanged);
 				m.Bounds = _nameMultiTextControl.Bounds;
+				m.Top = _nameLabel.Top;
 				m.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 
 				_nameMultiTextControl = m;
@@ -235,14 +266,21 @@ namespace WeSay.Setup
 		{
 			_btnDelete.Enabled = _listBox.SelectedItem != null;
 			_keyText.Enabled = _newlyCreatedOptions.Contains(_currentOption);
+			_keyText.BackColor = System.Drawing.SystemColors.Window;
 			_nameMultiTextControl.Visible = _listBox.SelectedItem != null;
 			_keyText.Visible = _nameMultiTextControl.Visible;
-
+			_btnAdd.Enabled =  (null != _currentField) ;
 		}
 
 		private void OnKeyTextChanged(object sender, EventArgs e)
 		{
 			UserModifiedList();
+		}
+
+		private void _fieldChooser_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
+		{
+			Field f = e.ClickedItem.Tag as Field;
+			LoadList(f);
 		}
 
 	}

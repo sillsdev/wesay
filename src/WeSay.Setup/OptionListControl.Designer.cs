@@ -34,16 +34,14 @@ namespace WeSay.Setup
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
 			this._listBox = new System.Windows.Forms.ListBox();
 			this._keyText = new System.Windows.Forms.TextBox();
-			this.label3 = new System.Windows.Forms.Label();
+			this._nameLabel = new System.Windows.Forms.Label();
 			this._keyLabel = new System.Windows.Forms.Label();
 			this._nameMultiTextControl = new WeSay.UI.MultiTextControl();
 			this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
 			this.toolStrip1 = new System.Windows.Forms.ToolStrip();
 			this._btnAdd = new System.Windows.Forms.ToolStripButton();
 			this._btnDelete = new System.Windows.Forms.ToolStripButton();
-			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-			this._btnEditList = new System.Windows.Forms.ToolStripButton();
-			this._btnNewList = new System.Windows.Forms.ToolStripButton();
+			this._fieldChooser = new System.Windows.Forms.ToolStripDropDownButton();
 			this.panel1.SuspendLayout();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
@@ -81,7 +79,7 @@ namespace WeSay.Setup
 			// splitContainer1.Panel2
 			//
 			this.splitContainer1.Panel2.Controls.Add(this._keyText);
-			this.splitContainer1.Panel2.Controls.Add(this.label3);
+			this.splitContainer1.Panel2.Controls.Add(this._nameLabel);
 			this.splitContainer1.Panel2.Controls.Add(this._keyLabel);
 			this.splitContainer1.Panel2.Controls.Add(this._nameMultiTextControl);
 			this.splitContainer1.Size = new System.Drawing.Size(392, 172);
@@ -94,9 +92,9 @@ namespace WeSay.Setup
 						| System.Windows.Forms.AnchorStyles.Left)
 						| System.Windows.Forms.AnchorStyles.Right)));
 			this._listBox.FormattingEnabled = true;
-			this._listBox.Location = new System.Drawing.Point(1, 26);
+			this._listBox.Location = new System.Drawing.Point(1, 8);
 			this._listBox.Name = "_listBox";
-			this._listBox.Size = new System.Drawing.Size(127, 147);
+			this._listBox.Size = new System.Drawing.Size(127, 134);
 			this._listBox.TabIndex = 0;
 			this._listBox.SelectedIndexChanged += new System.EventHandler(this.OnSelectedIndexChanged);
 			//
@@ -111,14 +109,14 @@ namespace WeSay.Setup
 					"t is the key that would need to communicate what value the field is set to.");
 			this._keyText.TextChanged += new System.EventHandler(this.OnKeyTextChanged);
 			//
-			// label3
+			// _nameLabel
 			//
-			this.label3.AutoSize = true;
-			this.label3.Location = new System.Drawing.Point(2, 31);
-			this.label3.Name = "label3";
-			this.label3.Size = new System.Drawing.Size(33, 13);
-			this.label3.TabIndex = 1;
-			this.label3.Text = "Label";
+			this._nameLabel.AutoSize = true;
+			this._nameLabel.Location = new System.Drawing.Point(2, 11);
+			this._nameLabel.Name = "_nameLabel";
+			this._nameLabel.Size = new System.Drawing.Size(35, 13);
+			this._nameLabel.TabIndex = 1;
+			this._nameLabel.Text = "Name";
 			//
 			// _keyLabel
 			//
@@ -135,6 +133,12 @@ namespace WeSay.Setup
 			this._nameMultiTextControl.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
 			this._nameMultiTextControl.BackColor = System.Drawing.Color.Red;
 			this._nameMultiTextControl.ColumnCount = 2;
+			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
 			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
 			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
 			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
@@ -186,9 +190,7 @@ namespace WeSay.Setup
 			this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
 			this._btnAdd,
 			this._btnDelete,
-			this.toolStripSeparator1,
-			this._btnEditList,
-			this._btnNewList});
+			this._fieldChooser});
 			this.toolStrip1.Location = new System.Drawing.Point(0, 212);
 			this.toolStrip1.MinimumSize = new System.Drawing.Size(200, 0);
 			this.toolStrip1.Name = "toolStrip1";
@@ -215,31 +217,14 @@ namespace WeSay.Setup
 			this._btnDelete.Text = "Delete Item";
 			this._btnDelete.Click += new System.EventHandler(this._btnDelete_Click);
 			//
-			// toolStripSeparator1
+			// _fieldChooser
 			//
-			this.toolStripSeparator1.Name = "toolStripSeparator1";
-			this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
-			//
-			// _btnEditList
-			//
-			this._btnEditList.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-			this._btnEditList.Enabled = false;
-			this._btnEditList.Image = global::WeSay.Setup.Properties.Resources.openOptionsList;
-			this._btnEditList.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this._btnEditList.Name = "_btnEditList";
-			this._btnEditList.Size = new System.Drawing.Size(114, 22);
-			this._btnEditList.Text = "Edit another list...";
-			this._btnEditList.Click += new System.EventHandler(this._btnEditList_Click);
-			//
-			// _btnNewList
-			//
-			this._btnNewList.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-			this._btnNewList.Enabled = false;
-			this._btnNewList.Image = global::WeSay.Setup.Properties.Resources.NewOptionsList;
-			this._btnNewList.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this._btnNewList.Name = "_btnNewList";
-			this._btnNewList.Size = new System.Drawing.Size(120, 22);
-			this._btnNewList.Text = "Create a new list...";
+			this._fieldChooser.Image = global::WeSay.Setup.Properties.Resources.openOptionsList;
+			this._fieldChooser.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this._fieldChooser.Name = "_fieldChooser";
+			this._fieldChooser.Size = new System.Drawing.Size(169, 22);
+			this._fieldChooser.Text = "Edit options of another field";
+			this._fieldChooser.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this._fieldChooser_DropDownItemClicked);
 			//
 			// OptionListControl
 			//
@@ -275,13 +260,11 @@ namespace WeSay.Setup
 		private System.Windows.Forms.TextBox _keyText;
 		private System.Windows.Forms.Label _keyLabel;
 		private System.Windows.Forms.ToolTip toolTip1;
-		private System.Windows.Forms.Label label3;
+		private System.Windows.Forms.Label _nameLabel;
 		private System.Windows.Forms.ToolStrip toolStrip1;
 		private System.Windows.Forms.ToolStripButton _btnAdd;
 		private System.Windows.Forms.ToolStripButton _btnDelete;
-		private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-		private System.Windows.Forms.ToolStripButton _btnEditList;
-		private System.Windows.Forms.ToolStripButton _btnNewList;
+		private System.Windows.Forms.ToolStripDropDownButton _fieldChooser;
 
 	}
 }
