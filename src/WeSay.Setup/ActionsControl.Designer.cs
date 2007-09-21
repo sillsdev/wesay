@@ -46,21 +46,20 @@ namespace WeSay.Setup
 			// label2
 			//
 			this.label2.AutoSize = true;
-			this.label2.Location = new System.Drawing.Point(7, 12);
-			this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label2.Location = new System.Drawing.Point(4, 10);
 			this.label2.Name = "label2";
-			this.label2.Size = new System.Drawing.Size(264, 17);
+			this.label2.Size = new System.Drawing.Size(467, 15);
 			this.label2.TabIndex = 16;
-			this.label2.Text = "The following action addins are installed:";
+			this.label2.Text = "Choose which actions to make available in WeSay, and customize them.";
 			//
 			// label1
 			//
 			this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.label1.AutoSize = true;
-			this.label1.Location = new System.Drawing.Point(7, 281);
-			this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.label1.Location = new System.Drawing.Point(4, 241);
 			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(429, 17);
+			this.label1.Size = new System.Drawing.Size(322, 13);
 			this.label1.TabIndex = 16;
 			this.label1.Text = "If you are or know a programmer, you can create your own actions.";
 			//
@@ -70,24 +69,23 @@ namespace WeSay.Setup
 						| System.Windows.Forms.AnchorStyles.Left)
 						| System.Windows.Forms.AnchorStyles.Right)));
 			this._addinsList.AutoScroll = true;
-			this._addinsList.Location = new System.Drawing.Point(11, 46);
-			this._addinsList.Margin = new System.Windows.Forms.Padding(5);
+			this._addinsList.Location = new System.Drawing.Point(5, 37);
+			this._addinsList.Margin = new System.Windows.Forms.Padding(4);
 			this._addinsList.Name = "_addinsList";
-			this._addinsList.Size = new System.Drawing.Size(744, 218);
+			this._addinsList.Size = new System.Drawing.Size(574, 190);
 			this._addinsList.TabIndex = 19;
 			//
 			// ActionsControl
 			//
-			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.SystemColors.Window;
 			this.Controls.Add(this._addinsList);
 			this.Controls.Add(this.label1);
 			this.Controls.Add(this.label2);
-			this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
 			this.Name = "ActionsControl";
-			this.Size = new System.Drawing.Size(777, 325);
-			this.VisibleChanged += new System.EventHandler(this.OnVisibleChanged);
+			this.Size = new System.Drawing.Size(583, 264);
+			this.Load += new System.EventHandler(this.ActionsControl_Load);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 

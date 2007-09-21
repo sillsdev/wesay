@@ -12,9 +12,9 @@ using WeSay.Project;
 
 namespace WeSay.Setup
 {
-	public partial class OtherControl : UserControl
+	public partial class InterfaceLanguageControl : ConfigurationControlBase
 	{
-		public OtherControl()
+		public InterfaceLanguageControl():base("settings for the user interface")
 		{
 			InitializeComponent();
 		}

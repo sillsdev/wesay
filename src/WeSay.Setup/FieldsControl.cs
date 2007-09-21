@@ -9,9 +9,10 @@ using WeSay.Project;
 
 namespace WeSay.Setup
 {
-	public partial class FieldsControl : UserControl
+	public partial class FieldsControl : ConfigurationControlBase
 	{
 		public FieldsControl()
+			: base("set up the fields for the dictionary")
 		{
 			InitializeComponent();
 			//don't want grey
@@ -20,6 +21,8 @@ namespace WeSay.Setup
 			this.Resize +=new EventHandler(FieldsControl_Resize);
 			RefreshMoveButtons();
 		}
+
+
 
 		private void RefreshMoveButtons() {
 			this.btnMoveUp.Enabled = this._writingSystemListBox.SelectedIndex > 0;

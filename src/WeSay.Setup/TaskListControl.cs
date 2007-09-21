@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using System.Xml;
@@ -8,20 +9,28 @@ using WeSay.Project;
 
 namespace WeSay.Setup
 {
-	public partial class TaskListControl : UserControl
+	public partial class TaskListControl : ConfigurationControlBase
 	{
 
-		public TaskListControl()
+		public TaskListControl() :base ( "set up tasks for the user")
 		{
 			InitializeComponent();
 			splitContainer1.Resize += new EventHandler(splitContainer1_Resize);
+
 		}
 
 		void splitContainer1_Resize(object sender, EventArgs e)
 		{
-			//this is part of dealing with .net not adjusting stuff well for different dpis
-			splitContainer1.Dock = DockStyle.None;
-			splitContainer1.Width = this.Width - 25;
+			try
+			{
+				//this is part of dealing with .net not adjusting stuff well for different dpis
+				splitContainer1.Dock = DockStyle.None;
+				splitContainer1.Width = this.Width - 25;
+			}
+			catch (Exception)
+			{
+				//swallow
+			}
 		}
 
 		private void TaskList_Load(object sender, EventArgs e)
@@ -73,7 +82,7 @@ namespace WeSay.Setup
 					projectDoc = new XmlDocument();
 					projectDoc.Load(WeSayWordsProject.Project.PathToDefaultConfig);
 				}
-
+				_taskList.Items.Clear();
 				foreach (XmlNode node in projectDoc.SelectNodes("configuration/tasks/task"))
 				{
 					TaskInfo task = new TaskInfo(node);
@@ -147,6 +156,11 @@ namespace WeSay.Setup
 		}
 
 		private void textBox1_TextChanged(object sender, EventArgs e)
+		{
+
+		}
+
+		private void _description_TextChanged(object sender, EventArgs e)
 		{
 
 		}

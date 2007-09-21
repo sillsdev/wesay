@@ -7,9 +7,9 @@ using WeSay.Project;
 
 namespace WeSay.Setup
 {
-	public partial class WritingSystemSetup : UserControl
+	public partial class WritingSystemSetup : ConfigurationControlBase
 	{
-		public WritingSystemSetup()
+		public WritingSystemSetup():base("set up fonts, keyboards, and sorting")
 		{
 			InitializeComponent();
 			Resize += new EventHandler(WritingSystemSetup_Resize);

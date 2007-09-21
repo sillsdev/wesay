@@ -60,6 +60,69 @@ namespace WeSay.Setup.Properties {
 			}
 		}
 
+		internal static System.Drawing.Bitmap about {
+			get {
+				object obj = ResourceManager.GetObject("about", resourceCulture);
+				return ((System.Drawing.Bitmap)(obj));
+			}
+		}
+
+		internal static System.Drawing.Bitmap buttonImage {
+			get {
+				object obj = ResourceManager.GetObject("buttonImage", resourceCulture);
+				return ((System.Drawing.Bitmap)(obj));
+			}
+		}
+
+		internal static System.Drawing.Bitmap ConfigActions {
+			get {
+				object obj = ResourceManager.GetObject("ConfigActions", resourceCulture);
+				return ((System.Drawing.Bitmap)(obj));
+			}
+		}
+
+		internal static System.Drawing.Bitmap ConfigBackup {
+			get {
+				object obj = ResourceManager.GetObject("ConfigBackup", resourceCulture);
+				return ((System.Drawing.Bitmap)(obj));
+			}
+		}
+
+		internal static System.Drawing.Bitmap ConfigFields {
+			get {
+				object obj = ResourceManager.GetObject("ConfigFields", resourceCulture);
+				return ((System.Drawing.Bitmap)(obj));
+			}
+		}
+
+		internal static System.Drawing.Bitmap ConfigInterfaceLanguage {
+			get {
+				object obj = ResourceManager.GetObject("ConfigInterfaceLanguage", resourceCulture);
+				return ((System.Drawing.Bitmap)(obj));
+			}
+		}
+
+		internal static System.Drawing.Bitmap ConfigOptionLists {
+			get {
+				object obj = ResourceManager.GetObject("ConfigOptionLists", resourceCulture);
+				return ((System.Drawing.Bitmap)(obj));
+			}
+		}
+
+		internal static System.Drawing.Bitmap ConfigTasks {
+			get {
+				object obj = ResourceManager.GetObject("ConfigTasks", resourceCulture);
+				return ((System.Drawing.Bitmap)(obj));
+			}
+		}
+
+		internal static System.Drawing.Bitmap ConfigWritingSystems {
+			get {
+				object obj = ResourceManager.GetObject("ConfigWritingSystems", resourceCulture);
+				return ((System.Drawing.Bitmap)(obj));
+			}
+		}
+
 		internal static System.Drawing.Bitmap construction {
 			get {
 				object obj = ResourceManager.GetObject("construction", resourceCulture);
@@ -70,6 +133,13 @@ namespace WeSay.Setup.Properties {
 		internal static System.Drawing.Bitmap deleteOptionListItem {
 			get {
 				object obj = ResourceManager.GetObject("deleteOptionListItem", resourceCulture);
+				return ((System.Drawing.Bitmap)(obj));
+			}
+		}
+
+		internal static System.Drawing.Bitmap genericAction {
+			get {
+				object obj = ResourceManager.GetObject("genericAction", resourceCulture);
 				return ((System.Drawing.Bitmap)(obj));
 			}
 		}
@@ -102,9 +172,23 @@ namespace WeSay.Setup.Properties {
 			}
 		}
 
+		internal static System.Drawing.Bitmap NewProject {
+			get {
+				object obj = ResourceManager.GetObject("NewProject", resourceCulture);
+				return ((System.Drawing.Bitmap)(obj));
+			}
+		}
+
 		internal static System.Drawing.Bitmap openOptionsList {
 			get {
 				object obj = ResourceManager.GetObject("openOptionsList", resourceCulture);
+				return ((System.Drawing.Bitmap)(obj));
+			}
+		}
+
+		internal static System.Drawing.Bitmap openProject {
+			get {
+				object obj = ResourceManager.GetObject("openProject", resourceCulture);
 				return ((System.Drawing.Bitmap)(obj));
 			}
 		}

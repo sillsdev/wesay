@@ -136,7 +136,8 @@ namespace WeSay.Admin.Tests
 		{
 			_window.CreateAndOpenProject(_projectFolder);
 
-			GotoProjectTab("_tasksPage");
+			ClickToolStripButton("_tasksButton");
+//            GotoProjectTab("_tasksPage");
 		}
 
 		[Test]
@@ -144,39 +145,48 @@ namespace WeSay.Admin.Tests
 		{
 			_window.CreateAndOpenProject(_projectFolder);
 
-			GotoProjectTab("_writingSystemPage");
+			ClickToolStripButton("_writingSystemButton");
+			//GotoProjectTab("_writingSystemPage");
 			ListBoxTester c = new ListBoxTester("_wsListBox");
 			Assert.AreEqual(2, c.Properties.Items.Count);
 		}
 
-		private static void GotoProjectTab(string projectTabName)
-		{
-			TabControlTester t = new TabControlTester("_projectTabControl");
+//        private static void GotoProjectTab(string projectTabName)
+//        {
+//            TabControlTester t = new TabControlTester("_projectTabControl");
+//
+//            foreach (TabPage page in t.Properties.TabPages)
+//            {
+//                if (page.Name == projectTabName)
+//                {
+//                    t.Properties.SelectedTab = page;
+//                    break;
+//                }
+//            }
+////            t.Properties.SelectedTab = t.Properties.TabPages[projectTabName];
+//
+//            Assert.IsNotNull(t.Properties.SelectedTab, "Couldn't find "+projectTabName);
+//        }
 
-			foreach (TabPage page in t.Properties.TabPages)
-			{
-				if (page.Name == projectTabName)
-				{
-					t.Properties.SelectedTab = page;
-					break;
-				}
-			}
-//            t.Properties.SelectedTab = t.Properties.TabPages[projectTabName];
-
-			Assert.IsNotNull(t.Properties.SelectedTab, "Couldn't find "+projectTabName);
-		}
-
-		static private void WalkTopLevelTabs()
+		private void WalkTopLevelTabs()
 		{
 //            for(int i = 0; i<10000;i++)
 //            {
 //                Application.DoEvents();
 //            }
-			TabControlTester t = new TabControlTester("_projectTabControl");
-			foreach(TabPage p in t.Properties.TabPages)
+			NUnit.Extensions.Forms.ControlFinder f = new ControlFinder("_areasToolStrip");
+			ToolStrip toolstrip = (ToolStrip)f.Find();
+			foreach (ToolStripButton button in toolstrip.Items)
 			{
-				t.Properties.SelectedTab = p;
+				string name = button.Name;
+				ClickToolStripButton(name);
 			}
+		}
+
+		private void ClickToolStripButton(string name)
+		{
+			NUnit.Extensions.Forms.ToolStripButtonTester tester = new ToolStripButtonTester(name);
+			tester.Click();
 		}
 
 		[Test]

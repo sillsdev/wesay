@@ -13,7 +13,7 @@ namespace WeSay.Setup
 	public partial class AdminWindow : Form
 	{
 		private WelcomeControl _welcomePage;
-		private ProjectTabs _projectTabs;
+		private SettingsControl _projectSettingsControl;
 		private WeSayWordsProject _project;
 		private ProgressDialogHandler _progressHandler;
 		private ProgressDialogProgressState _progressState;
@@ -58,7 +58,7 @@ namespace WeSay.Setup
 
 		private void UpdateEnabledStates()
 		{
-			if (menuStrip1.InvokeRequired)
+			if (this.toolStrip2.InvokeRequired)
 			{
 				UpdateStuffCallback d = new UpdateStuffCallback(UpdateEnabledStates);
 				Invoke(d, new object[] {});
@@ -250,10 +250,10 @@ namespace WeSay.Setup
 
 		private void InstallProjectsControls()
 		{
-			_projectTabs = new ProjectTabs();
-			Controls.Add(_projectTabs);
-			_projectTabs.BringToFront();
-			_projectTabs.Dock = DockStyle.Fill;
+			_projectSettingsControl = new SettingsControl();
+			Controls.Add(_projectSettingsControl);
+			_projectSettingsControl.BringToFront();
+			_projectSettingsControl.Dock = DockStyle.Fill;
 		}
 
 		private void RemoveExistingControls()
@@ -264,19 +264,19 @@ namespace WeSay.Setup
 				_welcomePage.Dispose();
 				_welcomePage = null;
 			}
-			if (_projectTabs != null)
+			if (_projectSettingsControl != null)
 			{
-				Controls.Remove(_projectTabs);
-				_projectTabs.Dispose();
-				_projectTabs = null;
+				Controls.Remove(_projectSettingsControl);
+				_projectSettingsControl.Dispose();
+				_projectSettingsControl = null;
 			}
 		}
 
 		private void AdminWindow_FormClosed(object sender, FormClosedEventArgs e)
 		{
-			if (_projectTabs != null)
+			if (_projectSettingsControl != null)
 			{
-				_projectTabs.Dispose();
+				_projectSettingsControl.Dispose();
 			}
 		}
 

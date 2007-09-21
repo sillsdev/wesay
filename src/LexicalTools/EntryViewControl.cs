@@ -183,19 +183,27 @@ namespace WeSay.LexicalTools
 
 		private void RefreshEntryDetail()
 		{
-			_panelEntry.SuspendLayout();
-			_detailListControl.SuspendLayout();
-
-			_detailListControl.Clear();
-			_detailListControl.VerticalScroll.Value = _detailListControl.VerticalScroll.Minimum;
-			_panelEntry.Controls.Add(_detailListControl);
-			if (_record != null)
+			try
 			{
-				LexEntryLayouter layout = new LexEntryLayouter(_detailListControl, ViewTemplate, _allRecords);
-				layout.AddWidgets(_record);
+				_panelEntry.SuspendLayout();
+
+				_detailListControl.SuspendLayout();
+
+				_detailListControl.Clear();
+				_detailListControl.VerticalScroll.Value = _detailListControl.VerticalScroll.Minimum;
+				_panelEntry.Controls.Add(_detailListControl);
+				if (_record != null)
+				{
+					LexEntryLayouter layout = new LexEntryLayouter(_detailListControl, ViewTemplate, _allRecords);
+					layout.AddWidgets(_record);
+				}
+				_detailListControl.ResumeLayout();
+				_panelEntry.ResumeLayout(true);
 			}
-			_detailListControl.ResumeLayout();
-			_panelEntry.ResumeLayout(true);
+			catch (ConfigurationException e)
+			{
+				Palaso.Reporting.ErrorReport.ReportNonFatalMessage(e.Message);
+			}
 		}
 
 		private void OnChangeOfWhichItemIsInFocus(object sender, CurrentItemEventArgs e)

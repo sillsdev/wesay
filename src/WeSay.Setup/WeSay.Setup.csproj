@@ -76,6 +76,15 @@
 	<Compile Include="AdminWindow.Designer.cs">
 	  <DependentUpon>AdminWindow.cs</DependentUpon>
 	</Compile>
+	<Compile Include="ConfigurationControlBase.cs">
+	  <SubType>UserControl</SubType>
+	</Compile>
+	<Compile Include="BackupPlanControl.cs">
+	  <SubType>UserControl</SubType>
+	</Compile>
+	<Compile Include="BackupPlanControl.Designer.cs">
+	  <DependentUpon>BackupPlanControl.cs</DependentUpon>
+	</Compile>
 	<Compile Include="ExportLIFTCommand.cs" />
 	<Compile Include="FieldsControl.cs">
 	  <SubType>UserControl</SubType>
@@ -101,11 +110,11 @@
 	<Compile Include="OptionListControl.Designer.cs">
 	  <DependentUpon>OptionListControl.cs</DependentUpon>
 	</Compile>
-	<Compile Include="OtherControl.cs">
+	<Compile Include="InterfaceLanguageControl.cs">
 	  <SubType>UserControl</SubType>
 	</Compile>
-	<Compile Include="OtherControl.Designer.cs">
-	  <DependentUpon>OtherControl.cs</DependentUpon>
+	<Compile Include="InterfaceLanguageControl.Designer.cs">
+	  <DependentUpon>InterfaceLanguageControl.cs</DependentUpon>
 	</Compile>
 	<Compile Include="Program.cs" />
 	<Compile Include="ProjectTabs.cs">
@@ -127,6 +136,10 @@
 	  <SubType>Designer</SubType>
 	  <DependentUpon>AdminWindow.cs</DependentUpon>
 	</EmbeddedResource>
+	<EmbeddedResource Include="BackupPlanControl.resx">
+	  <DependentUpon>BackupPlanControl.cs</DependentUpon>
+	  <SubType>Designer</SubType>
+	</EmbeddedResource>
 	<EmbeddedResource Include="FieldsControl.resx">
 	  <SubType>Designer</SubType>
 	  <DependentUpon>FieldsControl.cs</DependentUpon>
@@ -143,9 +156,9 @@
 	  <SubType>Designer</SubType>
 	  <DependentUpon>OptionListControl.cs</DependentUpon>
 	</EmbeddedResource>
-	<EmbeddedResource Include="OtherControl.resx">
+	<EmbeddedResource Include="InterfaceLanguageControl.resx">
 	  <SubType>Designer</SubType>
-	  <DependentUpon>OtherControl.cs</DependentUpon>
+	  <DependentUpon>InterfaceLanguageControl.cs</DependentUpon>
 	</EmbeddedResource>
 	<EmbeddedResource Include="ProjectTabs.resx">
 	  <SubType>Designer</SubType>
@@ -163,6 +176,10 @@
 	<EmbeddedResource Include="WelcomeControl.resx">
 	  <SubType>Designer</SubType>
 	  <DependentUpon>WelcomeControl.cs</DependentUpon>
+	</EmbeddedResource>
+	<EmbeddedResource Include="SettingsControl.resx">
+	  <SubType>Designer</SubType>
+	  <DependentUpon>SettingsControl.cs</DependentUpon>
 	</EmbeddedResource>
 	<EmbeddedResource Include="WritingSystemBasic.resx">
 	  <DependentUpon>WritingSystemBasic.cs</DependentUpon>
@@ -202,6 +219,12 @@
 	</Compile>
 	<Compile Include="WelcomeControl.Designer.cs">
 	  <DependentUpon>WelcomeControl.cs</DependentUpon>
+	</Compile>
+	<Compile Include="SettingsControl.cs">
+	  <SubType>UserControl</SubType>
+	</Compile>
+	<Compile Include="SettingsControl.Designer.cs">
+	  <DependentUpon>SettingsControl.cs</DependentUpon>
 	</Compile>
 	<Compile Include="WritingSystemBasic.cs">
 	  <SubType>UserControl</SubType>
@@ -288,6 +311,42 @@
   </ItemGroup>
   <ItemGroup>
 	<None Include="Resources\OpenOptionsList.png" />
+  </ItemGroup>
+  <ItemGroup>
+	<None Include="Resources\ConfigTasks.png" />
+  </ItemGroup>
+  <ItemGroup>
+	<None Include="Resources\ConfigWritingSystems.png" />
+  </ItemGroup>
+  <ItemGroup>
+	<None Include="Resources\buttonImage.png" />
+  </ItemGroup>
+  <ItemGroup>
+	<None Include="Resources\ConfigBackup.png" />
+  </ItemGroup>
+  <ItemGroup>
+	<None Include="Resources\genericAction.png" />
+  </ItemGroup>
+  <ItemGroup>
+	<None Include="Resources\ConfigFields.png" />
+  </ItemGroup>
+  <ItemGroup>
+	<None Include="Resources\ConfigInterfaceLanguage.png" />
+  </ItemGroup>
+  <ItemGroup>
+	<None Include="Resources\ConfigActions.png" />
+  </ItemGroup>
+  <ItemGroup>
+	<None Include="Resources\about.png" />
+  </ItemGroup>
+  <ItemGroup>
+	<None Include="Resources\openProject.png" />
+  </ItemGroup>
+  <ItemGroup>
+	<None Include="Resources\NewProject.png" />
+  </ItemGroup>
+  <ItemGroup>
+	<None Include="Resources\ConfigOptionLists.png" />
   </ItemGroup>
   <ItemGroup>
 	<Folder Include="Properties\DataSources\" />

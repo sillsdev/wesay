@@ -12,11 +12,11 @@ using WeSay.Project;
 
 namespace WeSay.Setup
 {
-	public partial class ActionsControl : UserControl
+	public partial class ActionsControl : ConfigurationControlBase
 	{
 		private bool _loaded=false;
 
-		public ActionsControl()
+		public ActionsControl():base("setup and use plug-in actions")
 		{
 			InitializeComponent();
 			this.Resize += new EventHandler(ActionsControl_Resize);
@@ -31,18 +31,18 @@ namespace WeSay.Setup
 			this.label1.Top = this.Bottom - (10+label1.Height);
 		}
 
-		private void OnVisibleChanged(object sender, EventArgs e)
-		{
-			if (Visible)
-			{
-				if (!_loaded)
-				{
-					LoadAddins();
-					_loaded = true;
-				}
-			   // UpdateStatesOfThings();
-			}
-		}
+//        private void OnVisibleChanged(object sender, EventArgs e)
+//        {
+//            if (Visible)
+//            {
+//                if (!_loaded)
+//                {
+//                    LoadAddins();
+//                    _loaded = true;
+//                }
+//               // UpdateStatesOfThings();
+//            }
+//        }
 
 		private void LoadAddins()
 		{
@@ -121,6 +121,12 @@ namespace WeSay.Setup
 		void AddinManager_AddinLoaded(object sender, AddinEventArgs args)
 		{
 			Palaso.Reporting.Logger.WriteEvent("Addin loaded: {0}", args.AddinId);
+		}
+
+		private void ActionsControl_Load(object sender, EventArgs e)
+		{
+			LoadAddins();
+			_loaded = true;
 		}
 
 	}

@@ -121,11 +121,29 @@
   <data name="WeSaySetupApplicationIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
 	<value>..\..\..\artwork\WeSay.Setup.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="ConfigActions" type="System.Resources.ResXFileRef, System.Windows.Forms">
+	<value>..\Resources\ConfigActions.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="openOptionsList" type="System.Resources.ResXFileRef, System.Windows.Forms">
 	<value>..\Resources\openOptionsList.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="about" type="System.Resources.ResXFileRef, System.Windows.Forms">
+	<value>..\Resources\about.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="NewProject" type="System.Resources.ResXFileRef, System.Windows.Forms">
+	<value>..\Resources\NewProject.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ConfigTasks" type="System.Resources.ResXFileRef, System.Windows.Forms">
+	<value>..\Resources\ConfigTasks.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="WeSayMenuSized" type="System.Resources.ResXFileRef, System.Windows.Forms">
 	<value>..\Resources\WeSayMenuSized.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ConfigFields" type="System.Resources.ResXFileRef, System.Windows.Forms">
+	<value>..\Resources\ConfigFields.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="openProject" type="System.Resources.ResXFileRef, System.Windows.Forms">
+	<value>..\Resources\openProject.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="NewOptionsList" type="System.Resources.ResXFileRef, System.Windows.Forms">
 	<value>..\Resources\NewOptionsList.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -136,6 +154,9 @@
   <data name="construction" type="System.Resources.ResXFileRef, System.Windows.Forms">
 	<value>..\Resources\construction.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="genericAction" type="System.Resources.ResXFileRef, System.Windows.Forms">
+	<value>..\Resources\genericAction.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="WeSayImage" type="System.Resources.ResXFileRef, System.Windows.Forms">
 	<value>..\..\..\artwork\WeSay.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -145,22 +166,34 @@
   <data name="WeSayConfigMenuSized" type="System.Resources.ResXFileRef, System.Windows.Forms">
 	<value>..\Resources\WeSayConfigMenuSized.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="genericLittleNewButton" type="System.Resources.ResXFileRef, System.Windows.Forms">
-	<value>..\Resources\genericLittleNewButton.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="GenericLittleDeletionButton" type="System.Resources.ResXFileRef, System.Windows.Forms">
 	<value>..\Resources\GenericLittleDeletionButton.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="WeSaySetupImage" type="System.Resources.ResXFileRef, System.Windows.Forms">
 	<value>..\..\..\artwork\WeSay.Setup.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-
+  <data name="genericLittleNewButton" type="System.Resources.ResXFileRef, System.Windows.Forms">
+	<value>..\Resources\genericLittleNewButton.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="deleteOptionListItem" type="System.Resources.ResXFileRef, System.Windows.Forms">
 	<value>..\Resources\deleteOptionListItem.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-
-   <data name="NewOptionListItem" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="ConfigBackup" type="System.Resources.ResXFileRef, System.Windows.Forms">
+	<value>..\Resources\ConfigBackup.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="buttonImage" type="System.Resources.ResXFileRef, System.Windows.Forms">
+	<value>..\Resources\buttonImage.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ConfigInterfaceLanguage" type="System.Resources.ResXFileRef, System.Windows.Forms">
+	<value>..\Resources\ConfigInterfaceLanguage.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ConfigWritingSystems" type="System.Resources.ResXFileRef, System.Windows.Forms">
+	<value>..\Resources\ConfigWritingSystems.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="NewOptionListItem" type="System.Resources.ResXFileRef, System.Windows.Forms">
 	<value>..\Resources\NewOptionListItem.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-
+  <data name="ConfigOptionLists" type="System.Resources.ResXFileRef, System.Windows.Forms">
+	<value>..\Resources\ConfigOptionLists.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>

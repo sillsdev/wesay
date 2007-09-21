@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Windows.Forms;
+using Palaso.Reporting;
 using WeSay.Foundation;
 using WeSay.Project;
 using WeSay.UI;
 
 namespace WeSay.Setup
 {
-	public partial class OptionListControl : UserControl
+	public partial class OptionListControl : ConfigurationControlBase
 	{
 		private OptionsList _currentList;
 		private Option _currentOption;
@@ -17,7 +18,7 @@ namespace WeSay.Setup
 		private List<Option> _newlyCreatedOptions = new List<Option>();
 		private bool _currentListWasModified;
 
-		public OptionListControl()
+		public OptionListControl():base("set up choices for option fields")
 		{
 			InitializeComponent();
 			this.VisibleChanged += new EventHandler(OptionListControl_VisibleChanged);
@@ -76,14 +77,13 @@ namespace WeSay.Setup
 
 		private void LoadFieldChooser()
 		{
-			_fieldChooser.DropDownItems.Clear();
+			_fieldChooser.Items.Clear();
 			foreach (Field field in WeSayWordsProject.Project.DefaultViewTemplate)
 			{
 				if (field.DataTypeName == Field.BuiltInDataType.Option.ToString()
 					|| field.DataTypeName == Field.BuiltInDataType.OptionCollection.ToString())
 				{
-					ToolStripItem item =_fieldChooser.DropDownItems.Add(field.FieldName, null);
-					item.Tag = field;
+					_fieldChooser.Items.Add(field);
 				}
 			}
 		}
@@ -94,33 +94,44 @@ namespace WeSay.Setup
 		   Field field = GetPOSOrFieldWithOptionsList();
 		   if (null == field)
 			{
-				_listDescriptionLabel.Text = "This project does not have any fields which use option lists.";
+			   // _listDescriptionLabel.Text = "This project does not have any fields which use option lists.";
 				splitContainer1.Visible = false;
 				UpdateDisplay();
 				return;
 
 			}
 			LoadList(field);
+			LoadFieldChooser();
 		}
 
 		private void LoadList( Field field)
 		{
-			SaveCurrentList();
-			_currentField = field;
-			_currentList = WeSay.Project.WeSayWordsProject.Project.GetOptionsList(_currentField, true);
+			try
+			{
+				SaveCurrentList();
+				_currentField = field;
+				_currentList = WeSay.Project.WeSayWordsProject.Project.GetOptionsList(_currentField, true);
 
-			_listDescriptionLabel.Text = String.Format(StringCatalog.Get("~This is the contents of the {0} options list, used in the {1} field."), field.OptionsListFile, field.FieldName);
-			_listBox.Items.Clear();
-			_currentListWasModified = false;
-			foreach (Option option in _currentList.Options)
-			{
-				_listBox.Items.Add(option.GetDisplayProxy(PreferredWritingSystem));
+//                _listDescriptionLabel.Text =
+//                    String.Format(
+//                        StringCatalog.Get("~These are {0} options list"),
+//                        field.OptionsListFile, field.FieldName);
+				_listBox.Items.Clear();
+				_currentListWasModified = false;
+				foreach (Option option in _currentList.Options)
+				{
+					_listBox.Items.Add(option.GetDisplayProxy(PreferredWritingSystem));
+				}
+				if (_listBox.Items.Count > 0)
+				{
+					_listBox.SelectedIndex = 0;
+				}
+				UpdateDisplay();
 			}
-			if (_listBox.Items.Count > 0)
+			catch (ConfigurationException e)
 			{
-				_listBox.SelectedIndex = 0;
+				Palaso.Reporting.ErrorReport.ReportNonFatalMessage(e.Message);
 			}
-			UpdateDisplay();
 		}
 
 		private string PreferredWritingSystem
@@ -277,10 +288,13 @@ namespace WeSay.Setup
 			UserModifiedList();
 		}
 
-		private void _fieldChooser_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
+		private void OnFieldChooser_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			Field f = e.ClickedItem.Tag as Field;
-			LoadList(f);
+			if (_fieldChooser.SelectedItem != null)
+			{
+				Field f = _fieldChooser.SelectedItem as Field;
+				LoadList(f);
+			}
 		}
 
 	}

@@ -38,7 +38,7 @@ namespace WeSay.Setup
 			this._optionListPage = new System.Windows.Forms.TabPage();
 			this.optionListControl1 = new WeSay.Setup.OptionListControl();
 			this._otherPage = new System.Windows.Forms.TabPage();
-			this.otherControl1 = new WeSay.Setup.OtherControl();
+			this.otherControl1 = new WeSay.Setup.InterfaceLanguageControl();
 			this._actionsPage = new System.Windows.Forms.TabPage();
 			this.actionsControl1 = new WeSay.Setup.ActionsControl();
 			this._projectTabControl.SuspendLayout();
@@ -219,7 +219,7 @@ namespace WeSay.Setup
 		private System.Windows.Forms.TabPage _writingSystemPage;
 		private WritingSystemSetup _writingSystemSetupControl;
 		private System.Windows.Forms.TabPage _otherPage;
-		private OtherControl otherControl1;
+		private InterfaceLanguageControl otherControl1;
 		private System.Windows.Forms.TabPage _actionsPage;
 		private ActionsControl actionsControl1;
 		private System.Windows.Forms.TabPage _optionListPage;
