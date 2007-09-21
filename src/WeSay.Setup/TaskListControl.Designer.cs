@@ -67,7 +67,7 @@ namespace WeSay.Setup
 						| System.Windows.Forms.AnchorStyles.Left)
 						| System.Windows.Forms.AnchorStyles.Right)));
 			this._taskList.FormattingEnabled = true;
-			this._taskList.Location = new System.Drawing.Point(0, -3);
+			this._taskList.Location = new System.Drawing.Point(0, 3);
 			this._taskList.Name = "_taskList";
 			this._taskList.Size = new System.Drawing.Size(158, 259);
 			this._taskList.TabIndex = 0;

@@ -22,7 +22,7 @@ namespace WeSay.Setup
 		{
 			Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right | AnchorStyles.Bottom;
 			BorderStyle = System.Windows.Forms.BorderStyle.None;
-			Padding = new Padding(15);
+		   // Padding = new Padding(15);
 		}
 
 		public string Header
@@ -36,7 +36,7 @@ namespace WeSay.Setup
 		protected override void OnPaint(PaintEventArgs e)
 		{
 			base.OnPaint(e);
-			ControlPaint.DrawBorder(e.Graphics, this.ClientRectangle, Color.LightGray, ButtonBorderStyle.Solid);
+  //          ControlPaint.DrawBorder(e.Graphics, this.ClientRectangle, Color.LightGray, ButtonBorderStyle.Solid);
 		}
 
 	}

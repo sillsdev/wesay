@@ -39,7 +39,10 @@ namespace WeSay.Setup
 				return;
 
 			LoadInventory();
-
+			if (_taskList.Items.Count > 0)
+			{
+				_taskList.SelectedIndex = 0;
+			}
 			WeSayWordsProject.Project.EditorsSaveNow += new EventHandler(Project_HackedEditorsSaveNow);
 		}
 

@@ -234,7 +234,7 @@ namespace WeSay.Setup
 				projectName = Project.Name;
 			}
 			Text = projectName + " - WeSay Configuration Tool";
-			_versionToolStripMenuItem.Text = ErrorReport.UserFriendlyVersionString;
+			_versionToolStripLabel.Text = ErrorReport.UserFriendlyVersionString;
 		}
 
 		private void InstallWelcomePage()
@@ -429,5 +429,7 @@ namespace WeSay.Setup
 		{
 			Close();
 		}
+
+
 	}
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Xml;
 using NUnit.Framework;
@@ -25,6 +26,8 @@ namespace WeSay.Project.Tests
 		[SetUp]
 		public void Setup()
 		{
+			BasilProject.Project = null;
+
 			WeSayWordsProject.InitializeForTests();
 			_dbFile = Path.GetTempFileName();
 			_dataSource = new Db4oDataSource(_dbFile);
@@ -93,9 +96,13 @@ namespace WeSay.Project.Tests
 		public void DeletionIsRecorded()
 		{
 			SetupDeletionSituation();
-			Assert.AreEqual(1,
-							GetLiftDoc().SelectNodes("//entry[contains(@id,'boo_') and @dateDeleted]")
-								.Count);
+			int count = GetLiftDoc().SelectNodes("//entry[contains(@id,'boo_') and @dateDeleted]")
+				.Count;
+			if (count != 1)
+			{
+				Debug.WriteLine(GetLiftDoc().OuterXml);
+			}
+			Assert.AreEqual(1,count);
 		}
 
 		private void SetupDeletionSituation()
@@ -103,15 +110,17 @@ namespace WeSay.Project.Tests
 			LiftIO.Utilities.CreateEmptyLiftFile(WeSayWordsProject.Project.PathToLiftFile, "test", true);
 			_records.Add(new LexEntry());
 			LexEntry entryToDelete = MakeEntry("boo");
+			entryToDelete.GetOrCreateId(true);
 			_records.Add(new LexEntry());
 
-			_service.DoLiftUpdateNow(false);
+			WeSayWordsProject.Project.LockLift();//the next call will expect this to be locked
+
+			_service.DoLiftUpdateNow(true);
 
 			//now delete it
 			_records.Remove(entryToDelete);
 			//this deletion event comes from a higher-level class we aren't using, so we raise it ourselves here:
 			_service.OnDataDeleted(this, new DeletedItemEventArgs(entryToDelete));
-			WeSayWordsProject.Project.LockLift();//the next call will expect this to be locked
 			_service.DoLiftUpdateNow(true);
 		}
 

@@ -53,11 +53,10 @@ namespace WeSay.Setup
 			this.label2.Location = new System.Drawing.Point(37, 12);
 			this.label2.MaximumSize = new System.Drawing.Size(350, 0);
 			this.label2.Name = "label2";
-			this.label2.Size = new System.Drawing.Size(344, 48);
+			this.label2.Size = new System.Drawing.Size(321, 64);
 			this.label2.TabIndex = 15;
-			this.label2.Text = "This will be the path to a usb key or sd card that you want WeSay to automaticall" +
-				"y backup to.  In the meantime, use the \"Backup\" Action to backup to a USB flash " +
-				"drive.";
+			this.label2.Text = "Eventually we expect to have integrated, automatic backup.\r\nIn the meantime, what" +
+				" we have is \"one-click backup\", using the \"Backup To Device\" Action.";
 			//
 			// BackupPlanControl
 			//

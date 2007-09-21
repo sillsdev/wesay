@@ -19,6 +19,15 @@ namespace WeSay.Setup
 			SetStyle(ControlStyles.ResizeRedraw,true);//makes OnPaint work
 		}
 
+		/*something left over from this class's predaccesor, which may be useful*/
+		//seems to help with some, not with others
+		private void TryToFixScaling(Control c)
+		{
+			//this is part of dealing with .net not adjusting stuff well for different dpis
+			c.Dock = DockStyle.None;
+			c.Size = new Size(this.Width, this.Height - 25);
+			// c.BackColor = System.Drawing.Color.Crimson;
+		}
 
 		private void OnAreaButton_Click(object sender, EventArgs e)
 		{
@@ -36,21 +45,19 @@ namespace WeSay.Setup
 
 		   if (currentItem != null)
 			{
-				this.Controls.Remove((Control) (currentItem.Tag));
+				this._areaPanel.Controls.Remove((Control) (currentItem.Tag));
 			}
 			ConfigurationControlBase c = button.Tag as ConfigurationControlBase;
 			if (c != null)
 			{
-				this.Controls.Add(c);
-				c.Left = _areaHeader.Left-12;//this indents the header text to match the first label in the control
-				c.Top = _areaHeader.Bottom + 4  ;
-				c.Height = _areasToolStrip.Bottom - (c.Top+15);
-				c.Width = _areaHeader.Width+13;
+				this._areaPanel.Controls.Add(c);
+				c.Location = new Point(10, _areaHeader.Height +20);
+				c.Width = _areaPanel.Width - 20;
+				c.Height = _areaPanel.Height - (15+c.Top);
 				c.SetOtherStuff();
 
 				_areaHeader.Text = "";
 				this._areaHeader.Font = new System.Drawing.Font("Tahoma", 11F, System.Drawing.FontStyle.Bold);
-				//this._areaHeader.SelectionFont = new System.Drawing.Font("Tahoma", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(177)));
 				_areaHeader.AppendText(button.Text+": ");
 				 this._areaHeader.SelectionFont = new System.Drawing.Font("Tahoma", 11F, System.Drawing.FontStyle.Regular);
 				_areaHeader.AppendText(c.Header);
@@ -69,18 +76,21 @@ namespace WeSay.Setup
 					currentItem = item;
 				}
 			}
-			ConfigurationControlBase c = currentItem.Tag as ConfigurationControlBase;
 
-			Rectangle r = new Rectangle(c.Left, _areaHeader.Top - 12, c.Width-1, 12+c.Top - _areaHeader.Top);
-//           ControlPaint.DrawBorder(e.Graphics, r, Color.Red,
-//                                        System.Windows.Forms.ButtonBorderStyle.Solid);
-			e.Graphics.FillRectangle(SystemBrushes.Window, r);
-			e.Graphics.DrawRectangle(Pens.LightGray, r);
+			Rectangle r = new Rectangle(_areaPanel.Left - 1, _areaPanel.Top-1 , 2 + _areaPanel.Width, 2+ _areaPanel.Height);
+
+			ControlPaint.DrawBorder(e.Graphics, r, Color.LightGray, ButtonBorderStyle.Solid);
 		}
 
 		private void OnLoad(object sender, EventArgs e)
 		{
 			OnAreaButton_Click(_tasksButton, null);
+		}
+
+		private void _areaPanel_Paint(object sender, PaintEventArgs e)
+		{
+			int y = 3 + _areaHeader.Height;
+			e.Graphics.DrawLine(Pens.LightGray, 0, y, _areaPanel.Width, y);
 		}
 	}
 }

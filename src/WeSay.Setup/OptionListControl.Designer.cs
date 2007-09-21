@@ -66,7 +66,7 @@ namespace WeSay.Setup
 			this.splitContainer1.Panel2.Controls.Add(this._keyLabel);
 			this.splitContainer1.Panel2.Controls.Add(this._nameMultiTextControl);
 			this.splitContainer1.Size = new System.Drawing.Size(392, 182);
-			this.splitContainer1.SplitterDistance = 184;
+			this.splitContainer1.SplitterDistance = 101;
 			this.splitContainer1.TabIndex = 1;
 			//
 			// _listBox
@@ -77,7 +77,7 @@ namespace WeSay.Setup
 			this._listBox.FormattingEnabled = true;
 			this._listBox.Location = new System.Drawing.Point(1, 8);
 			this._listBox.Name = "_listBox";
-			this._listBox.Size = new System.Drawing.Size(179, 134);
+			this._listBox.Size = new System.Drawing.Size(96, 173);
 			this._listBox.TabIndex = 0;
 			this._listBox.SelectedIndexChanged += new System.EventHandler(this.OnSelectedIndexChanged);
 			//
@@ -116,6 +116,24 @@ namespace WeSay.Setup
 			this._nameMultiTextControl.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
 			this._nameMultiTextControl.BackColor = System.Drawing.Color.Red;
 			this._nameMultiTextControl.ColumnCount = 2;
+			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
 			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
 			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
 			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
@@ -210,21 +228,23 @@ namespace WeSay.Setup
 			//
 			// _fieldChooser
 			//
+			this._fieldChooser.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this._fieldChooser.FormattingEnabled = true;
-			this._fieldChooser.Location = new System.Drawing.Point(53, 1);
+			this._fieldChooser.Location = new System.Drawing.Point(53, 2);
 			this._fieldChooser.Name = "_fieldChooser";
 			this._fieldChooser.Size = new System.Drawing.Size(121, 21);
-			this._fieldChooser.TabIndex = 23;
+			this._fieldChooser.Sorted = true;
+			this._fieldChooser.TabIndex = 27;
 			this._fieldChooser.SelectedIndexChanged += new System.EventHandler(this.OnFieldChooser_SelectedIndexChanged);
 			//
 			// label1
 			//
 			this.label1.AutoSize = true;
 			this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label1.Location = new System.Drawing.Point(3, 0);
+			this.label1.Location = new System.Drawing.Point(3, 3);
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(43, 15);
-			this.label1.TabIndex = 22;
+			this.label1.TabIndex = 26;
 			this.label1.Text = "Field:";
 			//
 			// OptionListControl

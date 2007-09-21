@@ -28,7 +28,6 @@ namespace WeSay.Setup
 
 			this._addinsList.Width = this.Width - 20;
 			this._addinsList.Height = (this.Height - _addinsList.Top) - 40;
-			this.label1.Top = this.Bottom - (10+label1.Height);
 		}
 
 //        private void OnVisibleChanged(object sender, EventArgs e)

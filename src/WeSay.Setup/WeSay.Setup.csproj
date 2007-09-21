@@ -117,12 +117,6 @@
 	  <DependentUpon>InterfaceLanguageControl.cs</DependentUpon>
 	</Compile>
 	<Compile Include="Program.cs" />
-	<Compile Include="ProjectTabs.cs">
-	  <SubType>UserControl</SubType>
-	</Compile>
-	<Compile Include="ProjectTabs.Designer.cs">
-	  <DependentUpon>ProjectTabs.cs</DependentUpon>
-	</Compile>
 	<Compile Include="Properties\AssemblyInfo.cs" />
 	<EmbeddedResource Include="AboutBox.resx">
 	  <SubType>Designer</SubType>
@@ -159,10 +153,6 @@
 	<EmbeddedResource Include="InterfaceLanguageControl.resx">
 	  <SubType>Designer</SubType>
 	  <DependentUpon>InterfaceLanguageControl.cs</DependentUpon>
-	</EmbeddedResource>
-	<EmbeddedResource Include="ProjectTabs.resx">
-	  <SubType>Designer</SubType>
-	  <DependentUpon>ProjectTabs.cs</DependentUpon>
 	</EmbeddedResource>
 	<EmbeddedResource Include="Properties\Resources.resx">
 	  <Generator>ResXFileCodeGenerator</Generator>

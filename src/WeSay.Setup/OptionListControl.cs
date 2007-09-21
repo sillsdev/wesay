@@ -69,7 +69,6 @@ namespace WeSay.Setup
 						_listBox.SelectedIndex = _listBox.Items.Count-1;
 					}
 				}
-				_listBox.SelectedIndex = 0;
 				AdjustLocations();
 
 			}
@@ -86,6 +85,10 @@ namespace WeSay.Setup
 					_fieldChooser.Items.Add(field);
 				}
 			}
+			if (_currentField != null)
+			{
+				_fieldChooser.SelectedItem = _currentField;
+			}
 		}
 
 
@@ -100,8 +103,8 @@ namespace WeSay.Setup
 				return;
 
 			}
-			LoadList(field);
 			LoadFieldChooser();
+			LoadList(field);
 		}
 
 		private void LoadList( Field field)
@@ -112,10 +115,6 @@ namespace WeSay.Setup
 				_currentField = field;
 				_currentList = WeSay.Project.WeSayWordsProject.Project.GetOptionsList(_currentField, true);
 
-//                _listDescriptionLabel.Text =
-//                    String.Format(
-//                        StringCatalog.Get("~These are {0} options list"),
-//                        field.OptionsListFile, field.FieldName);
 				_listBox.Items.Clear();
 				_currentListWasModified = false;
 				foreach (Option option in _currentList.Options)
@@ -126,7 +125,8 @@ namespace WeSay.Setup
 				{
 					_listBox.SelectedIndex = 0;
 				}
-				UpdateDisplay();
+				_fieldChooser.SelectedItem =field;
+			   UpdateDisplay();
 			}
 			catch (ConfigurationException e)
 			{
@@ -268,10 +268,6 @@ namespace WeSay.Setup
 			_currentListWasModified = true;
 		}
 
-		private void _btnEditList_Click(object sender, EventArgs e)
-		{
-
-		}
 
 		private void UpdateDisplay()
 		{

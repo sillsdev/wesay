@@ -370,10 +370,16 @@ namespace WeSay.Setup
 
 		private void FieldsControl_Resize(object sender, EventArgs e)
 		{
-			//this is part of dealing with .net not adjusting stuff well for different dpis
-			splitContainer1.Dock = DockStyle.None;
-			splitContainer1.Width = this.Width - 20;
-
+			try//I've seen this crash when window is really small
+			{
+				//this is part of dealing with .net not adjusting stuff well for different dpis
+				splitContainer1.Dock = DockStyle.None;
+				splitContainer1.Width = this.Width - 20;
+			}
+			catch (Exception)
+			{
+				//swallow
+			}
 		}
 
 

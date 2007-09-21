@@ -28,8 +28,10 @@ namespace WeSay.Setup
 			this._backupButton = new System.Windows.Forms.ToolStripButton();
 			this._optionsListButton = new System.Windows.Forms.ToolStripButton();
 			this.panel1 = new System.Windows.Forms.Panel();
+			this._areaPanel = new System.Windows.Forms.Panel();
 			this._areaHeader = new System.Windows.Forms.RichTextBox();
 			this._areasToolStrip.SuspendLayout();
+			this._areaPanel.SuspendLayout();
 			this.SuspendLayout();
 			//
 			// _areasToolStrip
@@ -165,6 +167,19 @@ namespace WeSay.Setup
 			this.panel1.Size = new System.Drawing.Size(610, 20);
 			this.panel1.TabIndex = 2;
 			//
+			// _areaPanel
+			//
+			this._areaPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+						| System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
+			this._areaPanel.BackColor = System.Drawing.SystemColors.Window;
+			this._areaPanel.Controls.Add(this._areaHeader);
+			this._areaPanel.Location = new System.Drawing.Point(198, 26);
+			this._areaPanel.Name = "_areaPanel";
+			this._areaPanel.Size = new System.Drawing.Size(399, 328);
+			this._areaPanel.TabIndex = 5;
+			this._areaPanel.Paint += new System.Windows.Forms.PaintEventHandler(this._areaPanel_Paint);
+			//
 			// _areaHeader
 			//
 			this._areaHeader.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
@@ -173,14 +188,14 @@ namespace WeSay.Setup
 			this._areaHeader.BorderStyle = System.Windows.Forms.BorderStyle.None;
 			this._areaHeader.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(177)));
 			this._areaHeader.ForeColor = System.Drawing.Color.DimGray;
-			this._areaHeader.Location = new System.Drawing.Point(198, 32);
+			this._areaHeader.Location = new System.Drawing.Point(14, 3);
 			this._areaHeader.Margin = new System.Windows.Forms.Padding(20, 3, 3, 3);
 			this._areaHeader.Multiline = false;
 			this._areaHeader.Name = "_areaHeader";
 			this._areaHeader.ReadOnly = true;
 			this._areaHeader.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
-			this._areaHeader.Size = new System.Drawing.Size(399, 28);
-			this._areaHeader.TabIndex = 4;
+			this._areaHeader.Size = new System.Drawing.Size(385, 25);
+			this._areaHeader.TabIndex = 5;
 			this._areaHeader.TabStop = false;
 			this._areaHeader.Text = "Header";
 			this._areaHeader.WordWrap = false;
@@ -188,7 +203,7 @@ namespace WeSay.Setup
 			// SettingsControl
 			//
 			this.BackColor = System.Drawing.SystemColors.ControlLight;
-			this.Controls.Add(this._areaHeader);
+			this.Controls.Add(this._areaPanel);
 			this.Controls.Add(this._areasToolStrip);
 			this.Controls.Add(this.panel1);
 			this.Name = "SettingsControl";
@@ -196,6 +211,7 @@ namespace WeSay.Setup
 			this.Load += new System.EventHandler(this.OnLoad);
 			this._areasToolStrip.ResumeLayout(false);
 			this._areasToolStrip.PerformLayout();
+			this._areaPanel.ResumeLayout(false);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -211,7 +227,8 @@ namespace WeSay.Setup
 		private System.Windows.Forms.Panel panel1;
 		private System.Windows.Forms.ToolStripButton _backupButton;
 		private System.Windows.Forms.ToolStripButton _writingSystemButton;
-		private RichTextBox _areaHeader;
 		private ToolStripButton _optionsListButton;
+		private Panel _areaPanel;
+		private RichTextBox _areaHeader;
 	}
 }

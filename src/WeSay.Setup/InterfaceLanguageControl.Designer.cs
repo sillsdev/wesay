@@ -30,16 +30,24 @@ namespace WeSay.Setup
 		{
 			this.components = new System.ComponentModel.Container();
 			this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+			this._languageCombo = new System.Windows.Forms.ComboBox();
 			this.button2 = new System.Windows.Forms.Button();
 			this._fontInfoDisplay = new System.Windows.Forms.TextBox();
 			this.label4 = new System.Windows.Forms.Label();
 			this.label3 = new System.Windows.Forms.Label();
-			this._languageCombo = new System.Windows.Forms.ComboBox();
 			this.SuspendLayout();
+			//
+			// _languageCombo
+			//
+			this._languageCombo.FormattingEnabled = true;
+			this._languageCombo.Location = new System.Drawing.Point(119, 3);
+			this._languageCombo.Name = "_languageCombo";
+			this._languageCombo.Size = new System.Drawing.Size(229, 21);
+			this._languageCombo.TabIndex = 6;
+			this.toolTip1.SetToolTip(this._languageCombo, "The language (e.g., national language) to use for labels, buttons, etc.");
 			//
 			// button2
 			//
-			this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.button2.Location = new System.Drawing.Point(354, 37);
 			this.button2.Name = "button2";
 			this.button2.Size = new System.Drawing.Size(27, 23);
@@ -73,15 +81,6 @@ namespace WeSay.Setup
 			this.label3.Size = new System.Drawing.Size(100, 13);
 			this.label3.TabIndex = 7;
 			this.label3.Text = "Interface Language";
-			//
-			// _languageCombo
-			//
-			this._languageCombo.FormattingEnabled = true;
-			this._languageCombo.Location = new System.Drawing.Point(119, 3);
-			this._languageCombo.Name = "_languageCombo";
-			this._languageCombo.Size = new System.Drawing.Size(229, 21);
-			this._languageCombo.TabIndex = 6;
-			this.toolTip1.SetToolTip(this._languageCombo, "The language (e.g., national language) to use for labels, buttons, etc.");
 			//
 			// InterfaceLanguageControl
 			//

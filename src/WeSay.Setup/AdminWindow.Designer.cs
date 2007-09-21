@@ -44,7 +44,7 @@ namespace WeSay.Setup
 			this.toolStripButton9 = new System.Windows.Forms.ToolStripButton();
 			this.toolStripButton10 = new System.Windows.Forms.ToolStripButton();
 			this.openProjectInWeSayToolStripMenuItem = new System.Windows.Forms.ToolStripButton();
-			this._versionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this._versionToolStripLabel = new System.Windows.Forms.ToolStripLabel();
 			this.toolStrip2.SuspendLayout();
 			this.SuspendLayout();
 			//
@@ -109,7 +109,7 @@ namespace WeSay.Setup
 			this.toolStripButton9,
 			this.toolStripButton10,
 			this.openProjectInWeSayToolStripMenuItem,
-			this._versionToolStripMenuItem});
+			this._versionToolStripLabel});
 			this.toolStrip2.Location = new System.Drawing.Point(0, 0);
 			this.toolStrip2.Name = "toolStrip2";
 			this.toolStrip2.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
@@ -162,16 +162,15 @@ namespace WeSay.Setup
 			this.openProjectInWeSayToolStripMenuItem.Size = new System.Drawing.Size(101, 22);
 			this.openProjectInWeSayToolStripMenuItem.Text = "Open in WeSay";
 			this.openProjectInWeSayToolStripMenuItem.ToolTipText = "Open this in WeSay";
-			this.openProjectInWeSayToolStripMenuItem.Click += new System.EventHandler(this.OnOpenProject);
+			this.openProjectInWeSayToolStripMenuItem.Click += new System.EventHandler(this.OnOpenThisProjectInWeSay);
 			//
-			// _versionToolStripMenuItem
+			// _versionToolStripLabel
 			//
-			this._versionToolStripMenuItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-			this._versionToolStripMenuItem.Enabled = false;
-			this._versionToolStripMenuItem.Name = "_versionToolStripMenuItem";
-			this._versionToolStripMenuItem.Overflow = System.Windows.Forms.ToolStripItemOverflow.AsNeeded;
-			this._versionToolStripMenuItem.Size = new System.Drawing.Size(54, 25);
-			this._versionToolStripMenuItem.Text = "Version";
+			this._versionToolStripLabel.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+			this._versionToolStripLabel.ForeColor = System.Drawing.SystemColors.ControlDark;
+			this._versionToolStripLabel.Name = "_versionToolStripLabel";
+			this._versionToolStripLabel.Size = new System.Drawing.Size(42, 22);
+			this._versionToolStripLabel.Text = "version";
 			//
 			// AdminWindow
 			//
@@ -208,6 +207,6 @@ namespace WeSay.Setup
 		private System.Windows.Forms.ToolStripButton toolStripButton9;
 		private System.Windows.Forms.ToolStripButton toolStripButton10;
 		private System.Windows.Forms.ToolStripButton openProjectInWeSayToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem _versionToolStripMenuItem;
+		private System.Windows.Forms.ToolStripLabel _versionToolStripLabel;
 	}
 }

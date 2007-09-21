@@ -84,8 +84,8 @@ namespace WeSay.Setup
 			this._btnRemove.Image = ((System.Drawing.Image)(resources.GetObject("_btnRemove.Image")));
 			this._btnRemove.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this._btnRemove.Name = "_btnRemove";
-			this._btnRemove.Size = new System.Drawing.Size(66, 22);
-			this._btnRemove.Text = "Remove";
+			this._btnRemove.Size = new System.Drawing.Size(58, 22);
+			this._btnRemove.Text = "Delete";
 			this._btnRemove.Click += new System.EventHandler(this._btnRemove_Click);
 			//
 			// splitContainer1
@@ -159,7 +159,7 @@ namespace WeSay.Setup
 			this._fontsPage.Location = new System.Drawing.Point(4, 22);
 			this._fontsPage.Name = "_fontsPage";
 			this._fontsPage.Padding = new System.Windows.Forms.Padding(3);
-			this._fontsPage.Size = new System.Drawing.Size(541, 376);
+			this._fontsPage.Size = new System.Drawing.Size(541, 403);
 			this._fontsPage.TabIndex = 0;
 			this._fontsPage.Text = "Font";
 			this._fontsPage.UseVisualStyleBackColor = true;
@@ -170,7 +170,7 @@ namespace WeSay.Setup
 			this._fontControl.Location = new System.Drawing.Point(3, 3);
 			this._fontControl.Margin = new System.Windows.Forms.Padding(4);
 			this._fontControl.Name = "_fontControl";
-			this._fontControl.Size = new System.Drawing.Size(535, 370);
+			this._fontControl.Size = new System.Drawing.Size(535, 397);
 			this._fontControl.TabIndex = 0;
 			//
 			// _sortingPage
@@ -179,7 +179,7 @@ namespace WeSay.Setup
 			this._sortingPage.Location = new System.Drawing.Point(4, 22);
 			this._sortingPage.Name = "_sortingPage";
 			this._sortingPage.Padding = new System.Windows.Forms.Padding(3);
-			this._sortingPage.Size = new System.Drawing.Size(541, 376);
+			this._sortingPage.Size = new System.Drawing.Size(541, 403);
 			this._sortingPage.TabIndex = 1;
 			this._sortingPage.Text = "Sorting";
 			this._sortingPage.UseVisualStyleBackColor = true;
@@ -190,7 +190,7 @@ namespace WeSay.Setup
 			this._sortControl.Location = new System.Drawing.Point(3, 3);
 			this._sortControl.Margin = new System.Windows.Forms.Padding(4);
 			this._sortControl.Name = "_sortControl";
-			this._sortControl.Size = new System.Drawing.Size(535, 370);
+			this._sortControl.Size = new System.Drawing.Size(535, 397);
 			this._sortControl.TabIndex = 0;
 			//
 			// WritingSystemSetup

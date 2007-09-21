@@ -34,7 +34,7 @@ namespace Addin.Backup
 		{
 			get
 			{
-				return StringCatalog.Get("~Backup To Device","Label for usb backup action");
+				return StringCatalog.Get("~Backup To Device","Label for usb flash-drive backup action");
 			}
 		}
 
