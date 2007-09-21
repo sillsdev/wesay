@@ -186,7 +186,7 @@ namespace WeSay.Language.Tests
 		public void SortUsing_customWithNoRules_sortsLikeInvariant()
 		{
 			WritingSystem writingSystem = new WritingSystem("one", new Font(FontFamily.GenericSansSerif, 11));
-			writingSystem.SortUsing = WritingSystem.SortUsingCustomSortRules;
+			writingSystem.SortUsing = CustomSortRulesType.CustomSimple.ToString();
 			// hard to test because half of the system locales use the invariant table: http://blogs.msdn.com/michkap/archive/2004/12/29/344136.aspx
 		}
 
@@ -225,7 +225,7 @@ namespace WeSay.Language.Tests
 		public void CustomSortRules_SortUsingCustomSortRules_Set()
 		{
 			WritingSystem writingSystem = new WritingSystem("one", new Font(FontFamily.GenericSansSerif, 11));
-			writingSystem.SortUsing = WritingSystem.SortUsingCustomSortRules;
+			writingSystem.SortUsing = CustomSortRulesType.CustomICU.ToString();
 
 			string rules = "&n < ng <<< Ng <<< NG";
 			writingSystem.CustomSortRules = rules;
@@ -236,7 +236,7 @@ namespace WeSay.Language.Tests
 		public void CustomSortRules_SerializeAndDeserialize()
 		{
 			WritingSystem ws = new WritingSystem("one", new Font("Arial", 99));
-			ws.SortUsing = WritingSystem.SortUsingCustomSortRules;
+			ws.SortUsing = CustomSortRulesType.CustomICU.ToString();
 
 			string rules = "&n < ng <<< Ng <<< NG";
 			ws.CustomSortRules = rules;
@@ -258,10 +258,10 @@ namespace WeSay.Language.Tests
 			t.Add(typeof (WritingSystem));
 			NetReflectorReader r = new NetReflectorReader(t);
 			WritingSystem ws = (WritingSystem)
-							   r.Read("<WritingSystem><CustomSortRules>test</CustomSortRules><SortUsing>custom</SortUsing><FontName>Tahoma</FontName><FontSize>99</FontSize><Id>one</Id></WritingSystem>");
+							   r.Read("<WritingSystem><CustomSortRules>test</CustomSortRules><SortUsing>CustomSimple</SortUsing><FontName>Tahoma</FontName><FontSize>99</FontSize><Id>one</Id></WritingSystem>");
 			Assert.IsNotNull(ws);
 			Assert.AreEqual("test", ws.CustomSortRules);
-			Assert.AreEqual(WritingSystem.SortUsingCustomSortRules, ws.SortUsing);
+			Assert.AreEqual(CustomSortRulesType.CustomSimple.ToString(), ws.SortUsing);
 		}
 
 		[Test]
@@ -271,10 +271,10 @@ namespace WeSay.Language.Tests
 			t.Add(typeof (WritingSystem));
 			NetReflectorReader r = new NetReflectorReader(t);
 			WritingSystem ws = (WritingSystem)
-							   r.Read("<WritingSystem><SortUsing>custom</SortUsing><CustomSortRules>test</CustomSortRules><FontName>Tahoma</FontName><FontSize>99</FontSize><Id>one</Id></WritingSystem>");
+							   r.Read("<WritingSystem><SortUsing>CustomSimple</SortUsing><CustomSortRules>test</CustomSortRules><FontName>Tahoma</FontName><FontSize>99</FontSize><Id>one</Id></WritingSystem>");
 			Assert.IsNotNull(ws);
 			Assert.AreEqual("test", ws.CustomSortRules);
-			Assert.AreEqual(WritingSystem.SortUsingCustomSortRules, ws.SortUsing);
+			Assert.AreEqual(CustomSortRulesType.CustomSimple.ToString(), ws.SortUsing);
 		}
 
 		[Test]

@@ -1,14 +1,32 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.Windows.Forms;
 using System.Xml;
 using Exortech.NetReflector;
+using Palaso.WritingSystems.Collation;
+using Spart;
 
 namespace WeSay.Language
 {
+	public enum CustomSortRulesType
+	{
+		/// <summary>
+		/// Custom Simple (Shoebox/Toolbox) style rules
+		/// </summary>
+		[Description("Custom Simple (Shoebox style) rules")]
+		CustomSimple,
+		/// <summary>
+		/// Custom ICU rules
+		/// </summary>
+		[Description("Custom ICU rules")]
+		CustomICU
+	}
+
+
 	[ReflectorType("WritingSystem")]
 	public class WritingSystem : IComparer<string>
 	{
@@ -119,7 +137,7 @@ namespace WeSay.Language
 		}
 
 		/// <summary>
-		/// A system id for sorting or SortUsingCustom
+		/// A system id for sorting or a CustomSortRulesType as a string
 		/// </summary>
 		[Browsable(false)]
 		[ReflectorProperty("SortUsing", Required = false)]
@@ -138,7 +156,7 @@ namespace WeSay.Language
 				if (_sortUsing != value)
 				{
 					_sortUsing = value;
-					if (value != SortUsingCustomSortRules)
+					if (!UsesCustomSortRules)
 					{
 						_customSortRules = null;
 					}
@@ -147,10 +165,20 @@ namespace WeSay.Language
 			}
 		}
 
-		public const string SortUsingCustomSortRules = "custom";
+		public bool UsesCustomSortRules
+		{
+		   get
+		   {
+			   if (SortUsing == null)
+			   {
+				   return false;
+			   }
+			   return Enum.IsDefined(typeof(CustomSortRulesType), SortUsing);
+		   }
+		}
 
 		/// <summary>
-		/// returns null if SortUsing != SortUsingCustom can only be set if SortUsing == SortUsingCustom
+		/// returns null if UsesCustomSortRules is false
 		/// </summary>
 		[Browsable(false)]
 		[ReflectorProperty("CustomSortRules", Required = false)]
@@ -158,21 +186,23 @@ namespace WeSay.Language
 		{
 			get
 			{
-				if (SortUsing != SortUsingCustomSortRules)
+				if (!UsesCustomSortRules)
 				{
 					_customSortRules=null;
+					return null;
 				}
-				return _customSortRules;
+				return _customSortRules ?? string.Empty;
 			}
 			set
 			{
+				// should only be set if UsesCustomSortRules == true but can't because of NetReflector
 				if (_customSortRules != value)
 				{
 					_customSortRules = value;
 					InitializeSorting();
 				}
 				// cannot do the following due to NetReflector wanting to set to null!
-				// throw new InvalidOperationException("CustomSortRules can only be set when the SortUsing property equals SortUsingCustom");
+				// throw new InvalidOperationException("CustomSortRules can only be set when UsesCustomSortRules is true");
 			}
 		}
 
@@ -201,25 +231,71 @@ namespace WeSay.Language
 
 		private void InitializeSorting()
 		{
-			string sortUsing = SortUsing;
-			if (sortUsing == "custom")
+			if (UsesCustomSortRules)
 			{
 				InitializeSortingFromCustomRules(CustomSortRules);
 			}
 			else
 			{
-				InitializeSortingFromWritingSystemId(sortUsing);
+				InitializeSortingFromWritingSystemId(SortUsing);
 			}
 		}
 
+		// This should always succeed. We try to use the rule collator associated
+		// with the custom sort rules type, if that still doesn't work then we
+		// fall back to using the system sort from the id or the invariant sort
 		private void InitializeSortingFromCustomRules(string rules)
 		{
-			// not really implemented yet
-			// eventually we will try to parse rules as shoebox sort
-			//  if that doesn't work then we will try to parse them as ICU
-			//  if that doesn't work then we will use our id and fallback to invariantCulture
+			ICollator collator=null;
+			try
+			{
+				if (SortUsing == CustomSortRulesType.CustomSimple.ToString())
+				{
+					try
+					{
+						collator = new SimpleRulesCollator(rules);
+					}
+					catch (ParserErrorException e)
+					{
+						Palaso.Reporting.Logger.WriteMinorEvent(e.Message);
+						Palaso.Reporting.Logger.WriteMinorEvent(
+								"Failed to parse simple sort rules, falling back to system sorting");
+					}
+				}
 
-			InitializeSortingFromWritingSystemId(Id);
+				else if (SortUsing == CustomSortRulesType.CustomICU.ToString())
+				{
+					try
+					{
+						collator = new IcuRulesCollator(rules);
+					}
+					catch (ApplicationException e)
+					{
+						Palaso.Reporting.Logger.WriteMinorEvent(e.Message);
+						Palaso.Reporting.Logger.WriteMinorEvent(
+								"Failed to parse ICU sort rules, falling back to system sorting");
+					}
+				}
+				else
+				{
+					Debug.Fail("unknown CustomSortRulesType");
+				}
+			}
+			catch (DllNotFoundException e)
+			{
+				Palaso.Reporting.Logger.WriteMinorEvent(e.Message);
+				Palaso.Reporting.Logger.WriteMinorEvent("Falling back to system sorting");
+			}
+
+			if (collator == null)
+			{
+				InitializeSortingFromWritingSystemId(Id);
+			}
+			else
+			{
+				_sortComparer = collator.Compare;
+				_sortKeyGenerator = collator.GetSortKey;
+			}
 		}
 
 		private static CultureInfo GetCultureInfoFromWritingSystemId(string sortUsing)
