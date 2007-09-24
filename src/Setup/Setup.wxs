@@ -273,13 +273,13 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 			<File Id="Icu.Net.dll" Name="icu.net.dll" KeyPath="yes" Source="..\..\output\release\icu.net.dll" />
 		  </Component>
 
-		  <Component Id="IcuData.dll" Guid="{7EEB48AE-7494-4408-924F-24BCA99A6E22}">
+		  <Component Id="IcuData.dll" Guid="{39EFEA93-2A23-42d0-A3EE-CD080A9F8C54}">
 			<File Id="IcuData.dll" Name="icudt38.dll" KeyPath="yes" Source="..\..\output\release\icudt38.dll" />
 		  </Component>
-		  <Component Id="IcuI18n.dll" Guid="{7EEB48AE-7494-4408-924F-24BCA99A6E22}">
+		  <Component Id="IcuI18n.dll" Guid="{E47B3633-2C93-4bdc-AB68-4851EC13878F}">
 			<File Id="IcuI18n.dll" Name="icuin38.dll" KeyPath="yes" Source="..\..\output\release\icuin38.dll" />
 		  </Component>
-		  <Component Id="IcuCommon.dll" Guid="{7EEB48AE-7494-4408-924F-24BCA99A6E22}">
+		  <Component Id="IcuCommon.dll" Guid="{15D5ACDF-802A-40b1-83C3-681F12B02D89}">
 			<File Id="IcuCommon.dll" Name="icuuc38.dll" KeyPath="yes" Source="..\..\output\release\icuuc38.dll" />
 		  </Component>
 
