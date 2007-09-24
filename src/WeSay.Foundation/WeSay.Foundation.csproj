@@ -105,4 +105,7 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <PropertyGroup>
+	<PreBuildEvent>copy $(SolutionDir)..\lib\icu*.dll $(OutDir)</PreBuildEvent>
+  </PropertyGroup>
 </Project>
