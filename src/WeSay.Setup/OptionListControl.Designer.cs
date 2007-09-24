@@ -173,6 +173,9 @@ namespace WeSay.Setup
 			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
 			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
 			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
 			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
 			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
 			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
@@ -228,8 +231,6 @@ namespace WeSay.Setup
 			//
 			// _fieldChooser
 			//
-			this._fieldChooser.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this._fieldChooser.FormattingEnabled = true;
 			this._fieldChooser.Location = new System.Drawing.Point(53, 2);
 			this._fieldChooser.Name = "_fieldChooser";
 			this._fieldChooser.Size = new System.Drawing.Size(121, 21);

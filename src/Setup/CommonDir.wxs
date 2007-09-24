@@ -4,10 +4,6 @@
 	<DirectoryRef Id='ProgramDir'>
 	  <Directory Id="common" Name="common">
 
-		<Component Id="KJEnglish.po" Guid="{0EA30DD8-9395-41e3-B5FF-C2CC545729D3}">
-		  <File Id="KJEnglish.po" Name="KJEnglish.po" KeyPath="yes" Source="..\..\common\KJEnglish.po" />
-		</Component>
-
 		<Component Id="Burmese.po" Guid="{0EA30DD8-9395-41e3-B5FF-C2CC54571111}">
 		  <File Id="Burmese.po" Name="Burmese.po" KeyPath="yes" Source="..\..\common\Burmese.po" />
 		</Component>
@@ -16,6 +12,13 @@
 		  <File Id="Thai.po" Name="Thai.po" KeyPath="yes" Source="..\..\common\Thai.po" />
 		</Component>
 
+		<Component Id="French.po" Guid="{0EA30DD8-9395-41e3-B5FF-C2CC54573333}">
+		  <File Id="French.po" Name="French.po" KeyPath="yes" Source="..\..\common\French.po" />
+		</Component>
+
+		<Component Id="Chinese (simplified).po" Guid="{0EA30DD8-9395-41e3-B5FF-C2CC54574444}">
+		  <File Id="Chinese (simplified).po" Name="Chinese (simplified).po" KeyPath="yes" Source="..\..\common\Chinese (simplified).po" />
+		</Component>
 
 
 		<Component Id="PartsOfSpeech.xml" Guid="{6B734BDE-1702-418D-93BC-40A7F310B14F}">

@@ -3,24 +3,45 @@
 # This file is distributed under the same license as the wesay package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2007.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: wesay\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2007-08-31T07:16:26\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"POT-Creation-Date: 2007-08-31 07:16+0000\n"
+"PO-Revision-Date: 2007-09-07 10:19+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Simplified Chinese <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Rosetta-Export-Date: 2007-09-03 07:08:23+0000\n"
+"X-Launchpad-Export-Date: 2007-09-21 09:48+0000\n"
+"X-Generator: Launchpad (build Unknown)\n"
+
+# ; ..\src\Addin.Backup\BackupDialog.cs
+#, fuzzy
+#~ msgid "Completed:"
+#~ msgstr "备份完成..."
+
+# ; ..\src\Addin.Backup\BackupDialog.cs
+#, fuzzy
+#~ msgid "Loading..."
+#~ msgstr "备份..."
+
+# ; ..\src\LexicalTools\LexExampleSentenceLayouter.cs
+# ; ..\src\LexicalTools\LexExampleSentenceLayouter.cs
+#, fuzzy
+#~ msgid "Example Sentence"
+#~ msgstr "例子"
+
+# ; ..\src\LexicalTools\LexExampleSentenceLayouter.cs
+#, fuzzy
+#~ msgid "Example Translation"
+#~ msgstr "翻译"
 
 # ; ..\src\CommonTools\DashboardControl.cs
 #. The label for the 'dashboard'; the task which lets you see the status of other tasks and jump to them.
 msgid "Home"
-msgstr "开始"
+msgstr "首项"
 
 msgid "Dictionary"
 msgstr "词典"
@@ -132,7 +153,7 @@ msgstr "备份，工作进展报告等。"
 
 # ; ..\src\CommonTools\CurrentTaskIndicatorControl.Designer.cs
 msgid "Current task:"
-msgstr ""
+msgstr "当前任务："
 
 # ; ..\src\CommonTools\DashboardControl.cs
 msgid "Tasks"
@@ -148,11 +169,11 @@ msgstr "你词典有{0}词条"
 
 # ; ..\src\Image Picker Test App\ImagePicker\ImageDisplayWidget.cs
 msgid "Cannot find {0}"
-msgstr ""
+msgstr "找不到{0}"
 
 # ; ..\src\LexicalModel\LexEntry.cs
 msgid "No Senses"
-msgstr ""
+msgstr "没有意义"
 
 # ; ..\src\LexicalTools\DictionaryControl.Designer.cs
 msgid "&Delete This Word"
@@ -168,7 +189,6 @@ msgid "See all {0} {1} words."
 msgstr "看{1}全部词汇{0}"
 
 # ; ..\src\LexicalTools\GatherBySemanticDomainsControl.Designer.cs
-#. The label for the field showing the Lexeme Form of the entry.
 msgid "Word"
 msgstr "词条"
 
@@ -198,7 +218,7 @@ msgstr "词条："
 # ; ..\src\LexicalTools\LexExampleSentenceLayouter.cs
 # ; ..\src\LexicalTools\LexExampleSentenceLayouter.cs
 #. This is the field containing an example sentence of a sense of a word.
-#. This is the field containing an example sentence of a sense of a word."), "Sentence
+#. Sentence
 msgid "Example"
 msgstr "例子"
 
@@ -221,56 +241,13 @@ msgstr "祝贺你完成了任务。"
 msgid "There is no work left to be done on this task."
 msgstr "任务已经完成。"
 
-# ; ..\src\LexicalTools\MissingInfoControl.Designer.cs
-msgid "To Do:"
-msgstr ""
-
-# ; ..\src\Addin.Backup\BackupDialog.cs
-#, fuzzy
-msgid "Completed:"
-msgstr "备份完成..."
-
-# ; ..\src\Addin.Backup\BackupDialog.cs
-#. Appended to the name of a task, in its tab, while the user is waiting for the task to come up.
-#, fuzzy
-msgid "Loading..."
-msgstr "备份..."
-
-# ; ..\src\WeSay.App\WeSayApp.cs
-#. It's up to you whether to bother translating this or not.") + ": " + project.Name + "
-msgid "WeSay"
-msgstr ""
-
 # ; ..\src\WeSay.Project\ViewTemplate.cs
-msgid "Gloss"
-msgstr ""
-
-# ; ..\src\WeSay.Project\ViewTemplate.cs
-#. The label for the field showing Part Of Speech
 msgid "POS"
-msgstr ""
-
-# ; ..\src\LexicalTools\LexExampleSentenceLayouter.cs
-# ; ..\src\LexicalTools\LexExampleSentenceLayouter.cs
-#, fuzzy
-msgid "Example Sentence"
-msgstr "例子"
-
-# ; ..\src\LexicalTools\LexExampleSentenceLayouter.cs
-#. The label for the field showing the example sentence translated into other languages.
-#, fuzzy
-msgid "Example Translation"
-msgstr "翻译"
+msgstr "词性"
 
 # ; ..\src\WeSay.Project\ViewTemplate.cs
-#. The label for the field showing Semantic Domains
 msgid "Sem Dom"
-msgstr ""
-
-# ; ..\src\WeSay.Project\ViewTemplate.cs
-#. The label for the field showing the entry which this entry is derived from, is a subentry of, etc.
-msgid "Base Form"
-msgstr ""
+msgstr "语义分类"
 
 # ; ..\src\WeSay.UI\SingleOptionControl.cs
 #. This is shown in a combo-box (list of options, like Part Of Speech) when no option has been chosen, or the user just doesn't know what to put in this field.

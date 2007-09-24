@@ -1,0 +1,190 @@
+# French translation for wesay
+# Copyright (c) 2007 Rosetta Contributors and Canonical Ltd 2007
+# This file is distributed under the same license as the wesay package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2007.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: wesay\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2007-08-31 07:16+0000\n"
+"PO-Revision-Date: 2007-09-04 17:27+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: French <fr@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2007-09-21 09:48+0000\n"
+"X-Generator: Launchpad (build Unknown)\n"
+
+#. The label for the 'dashboard'; the task which lets you see the status of other tasks and jump to them.
+msgid "Home"
+msgstr "Point de depart"
+
+msgid "Dictionary"
+msgstr "Dictionnaire"
+
+msgid "Add Meanings"
+msgstr "Ajouter Sens"
+
+msgid "Add meanings to entries where they are missing."
+msgstr "Ajouter des sens pour les entrées qui en manquent"
+
+msgid "Add Examples"
+msgstr "Ajouter exemples"
+
+msgid "Add example sentences to entries where they are missing."
+msgstr "Ajouter des phrases exemplaires pour les entrées qui en manquent"
+
+msgid "Collect Word List"
+msgstr "Receuillir une liste des mots"
+
+msgid "Collect new words by translating from words in another language."
+msgstr ""
+"Recuillir des nouveaux mots en traduisant des mots d'une autre langue."
+
+msgid "Collect Words By Semantic Domain"
+msgstr "Recuillir des mots par domaine sémantique"
+
+msgid ""
+"Collect new words organized by semantic domains and questions about those "
+"domains."
+msgstr ""
+"Recuillir des nouveaux mots selon les domaines sémantiques et par des "
+"questions au sujet de ces domaines"
+
+msgid "Actions"
+msgstr "Actions"
+
+msgid "Looking for USB Keys..."
+msgstr "Detectant des clefs USB..."
+
+msgid "Backing Up..."
+msgstr "En train de Sauvegarder..."
+
+msgid "Backup Complete"
+msgstr "Fin de la sauvegarde"
+
+msgid "Files backed up to {0}"
+msgstr "Fichiers sauvegardées vers {0}"
+
+msgid "Files were not backed up."
+msgstr "Les fichiers n'ont pas été sauvegardés."
+
+msgid "Please insert the USB Key to backup to."
+msgstr "Veuillez insérer la clé USB pour la sauvegarde."
+
+msgid "&Cancel"
+msgstr "&Annuler"
+
+#. Label for usb backup action
+msgid "Backup To Device"
+msgstr "Sauvegarde au dispositif"
+
+#. description of usb backup action
+msgid "Saves a backup on an external device, like a USB key."
+msgstr "Sauvegarde vers un périphérique externe, comme une clé USB"
+
+msgid "Email My Work to {0}"
+msgstr "Envoyer mon travail à {0}"
+
+msgid "Send a zipped email containing all your WeSay work."
+msgstr "Envoyer un email zippé contenant tout votre travail en WeSay."
+
+msgid "View Report"
+msgstr "View Report"
+
+msgid "Shows some information about the lexicon."
+msgstr "Affiche quelques informations sur le lexique"
+
+msgid "Html Exporter"
+msgstr "Exporter en HTML"
+
+msgid "Creates an Html version of the dictionary ready for printing."
+msgstr ""
+"Créer une version du dictionnaire en HTML qui est prêt pour l'impression."
+
+msgid "SFM Exporter"
+msgstr "Exporter en SFM"
+
+msgid "Saves the lexicon in a form of standard format."
+msgstr "Sauvegarde le lexique sous une forme de format standard."
+
+#. The description of the Actions task.
+msgid "Backup, create a progress report, etc."
+msgstr "Sauvegarder, créer un rapport d'avancement, etc."
+
+msgid "Current task:"
+msgstr "Tâche actuelle:"
+
+msgid "Tasks"
+msgstr "Tâches"
+
+msgid "Switch tasks and see current status of tasks"
+msgstr "Changer de tâche et voir l'état actuel des tâches"
+
+msgid "Your dictionary has {0} words"
+msgstr "Votre dictionnaire a {0} mots"
+
+msgid "Cannot find {0}"
+msgstr "Ne peut pas trouver {0}"
+
+msgid "No Senses"
+msgstr "Pas de sens"
+
+msgid "&Delete This Word"
+msgstr "&Supprimer ce mot"
+
+msgid "&New Word"
+msgstr "&Nouveau mot"
+
+#. The description of the 'Dictionary' task.  In place of the {0} will be the number of words in the dictionary.  In place of the {1} will be the name of the project.
+msgid "See all {0} {1} words."
+msgstr "Afficher les {0} mots de {1}."
+
+msgid "Word"
+msgstr "Mot"
+
+msgid "(Page Down Key)"
+msgstr "(Touche page suivante)"
+
+msgid "(Enter Key)"
+msgstr "(Touche Entrée)"
+
+msgid "Try thinking of words you use to talk about these things."
+msgstr "Penser aux mots que vous utilisez pour parler de ces choses."
+
+msgid "Try thinking of ways to say these words in your language."
+msgstr "Penser aux moyennes de dire ces mots en votre langage"
+
+msgid "Word:"
+msgstr "Mot:"
+
+#. This is the field containing an example sentence of a sense of a word.
+#. Sentence
+msgid "Example"
+msgstr "Exemple"
+
+#. This is the field for putting in a translation of an example sentence.
+msgid "Translation"
+msgstr "Traduction"
+
+#. This label is shown once, but has two roles.  1) it labels contains the gloss, and 2) marks the beginning of the set of fields which make up a sense. So, in english, if we labelled this 'gloss', it would describe the field well but wouldn't label the section well."), "Gloss
+msgid "Meaning"
+msgstr "Signification"
+
+msgid "Congratulations. You have completed this task."
+msgstr "Félicitations. Vous avez terminé cette tâche."
+
+msgid "There is no work left to be done on this task."
+msgstr "Il n'y reste aucun travail pour cette tâche."
+
+msgid "POS"
+msgstr "Partie grammaticale"
+
+msgid "Sem Dom"
+msgstr "Domaine"
+
+#. This is shown in a combo-box (list of options, like Part Of Speech) when no option has been chosen, or the user just doesn't know what to put in this field.
+msgid "unknown"
+msgstr "inconnu(e)"
