@@ -16,8 +16,8 @@
 		  <File Id="French.po" Name="French.po" KeyPath="yes" Source="..\..\common\French.po" />
 		</Component>
 
-		<Component Id="Chinese (simplified).po" Guid="{0EA30DD8-9395-41e3-B5FF-C2CC54574444}">
-		  <File Id="Chinese (simplified).po" Name="Chinese (simplified).po" KeyPath="yes" Source="..\..\common\Chinese (simplified).po" />
+		<Component Id="Chinese_simplified.po" Guid="{0EA30DD8-9395-41e3-B5FF-C2CC54574444}">
+		  <File Id="Chinese_simplified.po" Name="Chinese (simplified).po" KeyPath="yes" Source="..\..\common\Chinese (simplified).po" />
 		</Component>
 
 

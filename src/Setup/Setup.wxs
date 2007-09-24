@@ -355,7 +355,7 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 	  <ComponentRef Id="Burmese.po" />
 	  <ComponentRef Id="Thai.po" />
 	  <ComponentRef Id="French.po" />
-	  <ComponentRef Id="Chinese (simplified).po" />
+	  <ComponentRef Id="Chinese_simplified.po" />
 
 	  <ComponentRef Id="PartsOfSpeech.xml" />
 	  <ComponentRef Id="sampleWordList.txt" />
