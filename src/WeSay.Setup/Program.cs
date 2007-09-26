@@ -26,7 +26,7 @@ namespace WeSay.Setup
 				Settings.Default.NeedUpgrade = false;
 			}
 
-			UsageReporter.AppNameToUseInDialogs = "WeSay";
+			UsageReporter.AppNameToUseInDialogs = "WeSay Configuration Tool";
 			UsageReporter.AppNameToUseInReporting = "WeSayConfig";
 			UsageReporter.RecordLaunch();
 			UsageReporter.DoTrivialUsageReport("usage@wesay.org",
