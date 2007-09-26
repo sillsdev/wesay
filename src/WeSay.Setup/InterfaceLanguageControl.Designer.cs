@@ -29,12 +29,13 @@ namespace WeSay.Setup
 		private void InitializeComponent()
 		{
 			this.components = new System.ComponentModel.Container();
+			System.Windows.Forms.Button _chooseFontButton;
 			this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
 			this._languageCombo = new System.Windows.Forms.ComboBox();
-			this.button2 = new System.Windows.Forms.Button();
 			this._fontInfoDisplay = new System.Windows.Forms.TextBox();
 			this.label4 = new System.Windows.Forms.Label();
 			this.label3 = new System.Windows.Forms.Label();
+			_chooseFontButton = new System.Windows.Forms.Button();
 			this.SuspendLayout();
 			//
 			// _languageCombo
@@ -43,17 +44,18 @@ namespace WeSay.Setup
 			this._languageCombo.Location = new System.Drawing.Point(119, 3);
 			this._languageCombo.Name = "_languageCombo";
 			this._languageCombo.Size = new System.Drawing.Size(229, 21);
-			this._languageCombo.TabIndex = 6;
+			this._languageCombo.TabIndex = 0;
 			this.toolTip1.SetToolTip(this._languageCombo, "The language (e.g., national language) to use for labels, buttons, etc.");
 			//
-			// button2
+			// _chooseFontButton
 			//
-			this.button2.Location = new System.Drawing.Point(354, 37);
-			this.button2.Name = "button2";
-			this.button2.Size = new System.Drawing.Size(27, 23);
-			this.button2.TabIndex = 10;
-			this.button2.Text = "...";
-			this.button2.UseVisualStyleBackColor = true;
+			_chooseFontButton.Location = new System.Drawing.Point(354, 37);
+			_chooseFontButton.Name = "_chooseFontButton";
+			_chooseFontButton.Size = new System.Drawing.Size(27, 23);
+			_chooseFontButton.TabIndex = 2;
+			_chooseFontButton.Text = "...";
+			_chooseFontButton.UseVisualStyleBackColor = true;
+			_chooseFontButton.Click += new System.EventHandler(this.OnChooseFont);
 			//
 			// _fontInfoDisplay
 			//
@@ -62,7 +64,7 @@ namespace WeSay.Setup
 			this._fontInfoDisplay.Name = "_fontInfoDisplay";
 			this._fontInfoDisplay.ReadOnly = true;
 			this._fontInfoDisplay.Size = new System.Drawing.Size(229, 20);
-			this._fontInfoDisplay.TabIndex = 9;
+			this._fontInfoDisplay.TabIndex = 1;
 			//
 			// label4
 			//
@@ -87,7 +89,7 @@ namespace WeSay.Setup
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.SystemColors.Window;
-			this.Controls.Add(this.button2);
+			this.Controls.Add(_chooseFontButton);
 			this.Controls.Add(this._fontInfoDisplay);
 			this.Controls.Add(this.label4);
 			this.Controls.Add(this.label3);
@@ -103,7 +105,6 @@ namespace WeSay.Setup
 		#endregion
 
 		private System.Windows.Forms.ToolTip toolTip1;
-		private System.Windows.Forms.Button button2;
 		private System.Windows.Forms.TextBox _fontInfoDisplay;
 		private System.Windows.Forms.Label label4;
 		private System.Windows.Forms.Label label3;

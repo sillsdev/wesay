@@ -25,6 +25,7 @@ namespace WeSay.LexicalTools
 		{
 			_presentationModel = presentationModel;
 			InitializeComponent();
+
 			if (Environment.OSVersion.Platform != PlatformID.Unix)
 			{
 				SetAutoSizeToGrowAndShrink();

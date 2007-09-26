@@ -19,9 +19,13 @@ namespace WeSay.UI.Buttons
 
 		void RoundButton_SizeChanged(object sender, System.EventArgs e)
 		{
-			this.Size = _keepThisSize;
-
+			if(!this.DesignMode)
+			{
+				this.Size = _keepThisSize;
+			}
 		}
+
+
 
 		/// <summary>
 		/// Use this to actually change the size. Had to disable normal resizing

@@ -12,14 +12,15 @@ namespace WeSay.LexicalTools
 
 		public void Show(string message)
 		{
-			_statusMessage.Text = message;
+			_messageText.Text = message;
 			this.BringToFront();
 			this.Visible = true;
 		}
 
-//        public void Hide()
-//        {
-//            this.Visible = false;
-//        }
+		private void CongratulationsControl_BackColorChanged(object sender, System.EventArgs e)
+		{
+			_messageText.BackColor = this.BackColor;
+		}
+
 	}
 }

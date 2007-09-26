@@ -214,6 +214,14 @@ namespace WeSay.Project
 			definitionField.Visibility = CommonEnumerations.VisibilitySetting.Invisible;
 			masterTemplate.Add(definitionField);
 
+			Field entryNoteField = new Field("Note", "LexEntry", defaultAnalysisSet);
+			//this is here so the PoMaker scanner can pick up a comment about this label
+			StringCatalog.Get("~Note", "The label for the field showing a note.");
+			entryNoteField.DisplayName = "Note";
+			entryNoteField.Description = "A note on the entry.";
+			entryNoteField.Visibility = CommonEnumerations.VisibilitySetting.Invisible;
+			masterTemplate.Add(entryNoteField);
+
 
 			Field posField = new Field("POS", "LexSense", defaultAnalysisSet);
 			//this is here so the PoMaker scanner can pick up a comment about this label

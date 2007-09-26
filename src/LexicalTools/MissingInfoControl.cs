@@ -29,7 +29,7 @@ namespace WeSay.LexicalTools
 			InitializeComponent();
 
 			_btnNextWord.ReallySetSize(50, 50);
-			_btnPreviousWord.ReallySetSize(30, 30);
+		   // _btnPreviousWord.ReallySetSize(30, 30);
 			if (DesignMode)
 			{
 				return;
