@@ -283,6 +283,11 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 			<File Id="IcuCommon.dll" Name="icuuc38.dll" KeyPath="yes" Source="..\..\output\release\icuuc38.dll" />
 		  </Component>
 
+		  <Component Id="Keyman7Interop.dll" Guid="{4F786363-00D6-41ec-9464-9168B2EF3499}">
+			<File Id="Keyman7Interop.dll" Name="Keyman7Interop.dll" KeyPath="yes" Source="..\..\output\release\Keyman7Interop.dll" />
+		  </Component>
+
+
 		</Directory>
 	  </Directory>
 	</Directory>
@@ -349,6 +354,7 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 	  <ComponentRef Id="IcuData.dll"/>
 	  <ComponentRef Id="IcuI18n.dll"/>
 	  <ComponentRef Id="IcuCommon.dll"/>
+	  <ComponentRef Id="Keyman7Interop.dll"/>
 
 
 	  <!-- i tried to FeatureRef these from their own files but it didn't work -->

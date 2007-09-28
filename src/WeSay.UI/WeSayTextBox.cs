@@ -30,9 +30,20 @@ namespace WeSay.UI
 		  //  Debug.Assert(DesignMode);
 			if (Environment.OSVersion.Platform != PlatformID.Unix)
 			{
-				_keymanLink = new KeymanLink.KeymanLink();
-				if (!_keymanLink.Initialize(false))
+				try
 				{
+					_keymanLink = new KeymanLink.KeymanLink();
+					if (!_keymanLink.Initialize(false))
+					{
+						_keymanLink = null;
+					}
+				}
+				catch(Exception )
+				{
+					//swallow.  we have a report from Mike that indicates the above will
+					//crash in some situation (vista + keyman 7?)... better to just not
+					// provide direct keyman access in that situation
+
 					_keymanLink = null;
 				}
 			}

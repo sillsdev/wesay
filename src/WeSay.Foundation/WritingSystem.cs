@@ -7,6 +7,7 @@ using System.Globalization;
 using System.Windows.Forms;
 using System.Xml;
 using Exortech.NetReflector;
+using kmcomapi;
 using Palaso.WritingSystems.Collation;
 using Spart;
 
@@ -461,12 +462,11 @@ namespace WeSay.Language
 				List<String> keyboards = new List<string>();
 				keyboards.Add(String.Empty); // for 'default'
 
-				KeymanLink.KeymanLink keymanLink = new KeymanLink.KeymanLink();
-				if (keymanLink.Initialize(false))
+				if (Environment.OSVersion.Platform != PlatformID.Unix)
 				{
-					foreach (KeymanLink.KeymanLink.KeymanKeyboard keyboard in keymanLink.Keyboards)
+					if (!GetKeyboardsFromKeyman7(keyboards))
 					{
-						keyboards.Add(keyboard.KbdName);
+						GetKeyboardsFromKeyman6(keyboards);
 					}
 				}
 
@@ -475,6 +475,45 @@ namespace WeSay.Language
 					keyboards.Add(lang.LayoutName);
 				}
 				return new StandardValuesCollection(keyboards);
+			}
+
+			private static void GetKeyboardsFromKeyman6(List<string> keyboards)
+			{
+				try
+				{
+					KeymanLink.KeymanLink keymanLink = new KeymanLink.KeymanLink();
+					if (keymanLink.Initialize(false))
+					{
+						foreach (KeymanLink.KeymanLink.KeymanKeyboard keyboard in keymanLink.Keyboards)
+						{
+							keyboards.Add(keyboard.KbdName);
+						}
+					}
+				}
+				catch (Exception err)
+				{
+					Palaso.Reporting.ErrorReport.ReportNonFatalMessage(
+						"WeSay ran into an error when looking for Keyman and asking it for a list of keyboards.  You can still use Keyman by assigning a Windows System Keyboard to the Keyman keyboard. \r\n{0}",
+						err.Message);
+				}
+			}
+
+			private static bool GetKeyboardsFromKeyman7(List<string> keyboards)
+			{
+				try
+				{
+					kmcomapi.TavultesoftKeymanClass keyman = new TavultesoftKeymanClass();
+
+						foreach (kmcomapi.IKeymanKeyboard keyboard in keyman.Keyboards)
+						{
+							keyboards.Add(keyboard.KeyboardName);
+						}
+				}
+				catch (Exception )
+				{
+					return false;
+				}
+				return true;
 			}
 		}
 	}
