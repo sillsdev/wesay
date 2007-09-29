@@ -45,6 +45,8 @@ namespace WeSay.Setup
 
 		private void LoadAddins()
 		{
+			List<string> alreadyFound = new List<string>();
+
 			_addinsList.Clear();
 			if(!AddinManager.IsInitialized)
 			{
@@ -62,7 +64,13 @@ namespace WeSay.Setup
 
 			foreach (IWeSayAddin addin in AddinManager.GetExtensionObjects(typeof(IWeSayAddin)))
 			{
-				AddAddin(addin);
+				//this alreadyFound business is a hack to prevent duplication in some
+				// situation I haven't tracked down yet.
+				if (!alreadyFound.Contains(addin.ID))
+				{
+					alreadyFound.Add(addin.ID);
+					AddAddin(addin);
+				}
 			}
 			AddAddin(new ComingSomedayAddin("Export To OpenOffice", ""));
 			AddAddin(new ComingSomedayAddin("Export To Word", ""));

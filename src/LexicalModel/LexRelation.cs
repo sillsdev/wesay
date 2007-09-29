@@ -161,9 +161,13 @@ namespace WeSay.LexicalModel
 
 		#region IEmptinessStatus Members
 
-		public bool IsEmpty
+		public bool ShouldCountAsNonEmptyForPurposesOfDeletion
 		{
-			get { return string.IsNullOrEmpty(_targetId); }
+			get
+			{
+				return false;
+				//return string.IsNullOrEmpty(_targetId);
+			}
 		}
 
 		#region IEmptinessCleanup Members
@@ -211,7 +215,8 @@ namespace WeSay.LexicalModel
 			set { _relations = value; }
 		}
 
-		#region IEmptinessStatus Members
+
+
 
 		public bool IsEmpty
 		{
@@ -219,7 +224,7 @@ namespace WeSay.LexicalModel
 			{
 				foreach (LexRelation relation in _relations)
 				{
-					if (!relation.IsEmpty)
+					if (!relation.ShouldCountAsNonEmptyForPurposesOfDeletion)
 					{
 						return false;
 					}
@@ -230,13 +235,20 @@ namespace WeSay.LexicalModel
 
 		#region IEmptinessCleanup Members
 
+			   public bool ShouldCountAsNonEmptyForPurposesOfDeletion
+		{
+			get
+			{
+				return false;//don't hold up deleting just because of these
+			}
+		}
 		public void RemoveEmptyStuff()
 		{
 			//we do this in two passes because you can't remove items from a collection you are iterating over
 			List<LexRelation> condemed = new List<LexRelation>();
 			foreach (LexRelation relation in _relations)
 			{
-				if (relation.IsEmpty)
+				if (relation.ShouldCountAsNonEmptyForPurposesOfDeletion)
 				{
 					condemed.Add(relation);
 				}
@@ -250,6 +262,5 @@ namespace WeSay.LexicalModel
 
 		#endregion
 
-		#endregion
 	}
 }

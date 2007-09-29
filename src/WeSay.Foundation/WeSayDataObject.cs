@@ -192,12 +192,32 @@ namespace WeSay.Foundation
 			{
 				return ((OptionRefCollection)property).IsEmpty;
 			}
-//  todo we can make an IAmEmpty later for this
 			else if (property is  IEmptinessCleanup)
 			{
-				return ((IEmptinessCleanup) property).IsEmpty;
+				return ((IEmptinessCleanup) property).ShouldCountAsNonEmptyForPurposesOfDeletion;
 			}
 //            Debug.Fail("Unknown property type");
+			return false;//don't throw it away if you don't know what it is
+		}
+
+		static private bool IsPropertyEmptyForPurposesOfDeletion(object property)
+		{
+			if (property is MultiText)
+			{
+				return IsPropertyEmpty(property);
+			}
+			else if (property is OptionRef)
+			{
+				return true;
+			}
+			else if (property is OptionRefCollection)
+			{
+				return true;
+			}
+			else if (property is IEmptinessCleanup)
+			{
+				return IsPropertyEmpty(property);
+			}
 			return false;//don't throw it away if you don't know what it is
 		}
 
@@ -215,7 +235,20 @@ namespace WeSay.Foundation
 				return false;
 			}
 		}
-
+		public bool HasPropertiesForPurposesOfDeletion
+		{
+			get
+			{
+				foreach (KeyValuePair<string, object> pair in _properties)
+				{
+					if (!IsPropertyEmptyForPurposesOfDeletion(pair.Value))
+					{
+						return true;
+					}
+				}
+				return false;
+			}
+		}
 		public void NotifyPropertyChanged(string propertyName)
 		{
 			PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
@@ -312,7 +345,7 @@ namespace WeSay.Foundation
 
 	public interface IEmptinessCleanup
 	{
-		bool IsEmpty
+		bool ShouldCountAsNonEmptyForPurposesOfDeletion
 		{
 			get;
 		}

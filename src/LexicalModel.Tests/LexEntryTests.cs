@@ -164,6 +164,20 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
+		public void SenseWithOnlyPOS_ReadyForDeletion()
+		{
+			Assert.IsFalse(this._sense.IsEmptyForPurposesOfDeletion);
+			ClearSenseGloss();
+			ClearSenseExample();
+			ClearSenseCustom();
+			Assert.IsTrue(this._sense.IsEmpty);
+			OptionRef pos = _sense.GetOrCreateProperty<OptionRef>(LexSense.WellKnownProperties.PartOfSpeech);
+			pos.Value = "noun";
+			Assert.IsFalse(this._sense.IsEmpty);
+			Assert.IsTrue(this._sense.IsEmptyForPurposesOfDeletion);
+		}
+
+		[Test]
 		public void EmptySensesRemoved()
 		{
 			ClearSenseGloss();

@@ -252,7 +252,7 @@ namespace WeSay.LexicalModel
 			int count = this._senses.Count;
 			for (int i = count - 1; i >= 0; i--)
 			{
-				if (this._senses[i].IsEmpty)
+				if (this._senses[i].IsEmptyForPurposesOfDeletion)
 				{
 				   this._senses.RemoveAt(i);
 				}

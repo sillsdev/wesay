@@ -66,6 +66,15 @@ namespace WeSay.LexicalModel
 			}
 		}
 
+		public bool IsEmptyForPurposesOfDeletion
+		{
+			get {
+				return Gloss.Empty &&
+					   ExampleSentences.Count == 0 &&
+					   !HasPropertiesForPurposesOfDeletion;
+			}
+		}
+
 		public override void CleanUpAfterEditting()
 		{
 			base.CleanUpAfterEditting();
