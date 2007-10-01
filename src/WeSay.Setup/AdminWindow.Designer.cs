@@ -96,7 +96,7 @@ namespace WeSay.Setup
 			// aboutToolStripMenuItem
 			//
 			this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-			this.aboutToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.aboutToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
 			this.aboutToolStripMenuItem.Text = "&About WeSay...";
 			this.aboutToolStripMenuItem.Click += new System.EventHandler(this.OnAboutToolStripMenuItem_Click);
 			//
@@ -159,7 +159,7 @@ namespace WeSay.Setup
 			this.openProjectInWeSayToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.openProjectInWeSayToolStripMenuItem.Name = "openProjectInWeSayToolStripMenuItem";
 			this.openProjectInWeSayToolStripMenuItem.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
-			this.openProjectInWeSayToolStripMenuItem.Size = new System.Drawing.Size(101, 22);
+			this.openProjectInWeSayToolStripMenuItem.Size = new System.Drawing.Size(102, 22);
 			this.openProjectInWeSayToolStripMenuItem.Text = "Open in WeSay";
 			this.openProjectInWeSayToolStripMenuItem.ToolTipText = "Open this in WeSay";
 			this.openProjectInWeSayToolStripMenuItem.Click += new System.EventHandler(this.OnOpenThisProjectInWeSay);
@@ -169,7 +169,7 @@ namespace WeSay.Setup
 			this._versionToolStripLabel.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
 			this._versionToolStripLabel.ForeColor = System.Drawing.SystemColors.ControlDark;
 			this._versionToolStripLabel.Name = "_versionToolStripLabel";
-			this._versionToolStripLabel.Size = new System.Drawing.Size(42, 22);
+			this._versionToolStripLabel.Size = new System.Drawing.Size(41, 22);
 			this._versionToolStripLabel.Text = "version";
 			//
 			// AdminWindow
@@ -177,7 +177,7 @@ namespace WeSay.Setup
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.SystemColors.ControlLightLight;
-			this.ClientSize = new System.Drawing.Size(781, 381);
+			this.ClientSize = new System.Drawing.Size(781, 522);
 			this.Controls.Add(this.toolStrip2);
 			this.Icon = global::WeSay.Setup.Properties.Resources.WeSaySetupApplicationIcon;
 			this.Name = "AdminWindow";

@@ -11,6 +11,7 @@ namespace WeSay.Setup
 {
 	public partial class FieldsControl : ConfigurationControlBase
 	{
+
 		public FieldsControl()
 			: base("set up the fields for the dictionary")
 		{
@@ -19,15 +20,10 @@ namespace WeSay.Setup
 			_descriptionBox.BackColor = SystemColors.Window;
 			_descriptionBox.ForeColor = SystemColors.WindowText;
 			this.Resize +=new EventHandler(FieldsControl_Resize);
-			RefreshMoveButtons();
 		}
 
 
 
-		private void RefreshMoveButtons() {
-			this.btnMoveUp.Enabled = this._writingSystemListBox.SelectedIndex > 0;
-			this.btnMoveDown.Enabled = this._writingSystemListBox.SelectedIndex < this._writingSystemListBox.Items.Count - 2;
-		}
 
 		private void FieldsControl_Load(object sender, EventArgs e)
 		{
@@ -37,15 +33,9 @@ namespace WeSay.Setup
 			LoadInventory();
 			//nb: may important to do this after loading the inventory
 			this._fieldsListBox.ItemCheck += new ItemCheckEventHandler(this.OnFieldsListBox_ItemCheck);
+
 		}
-		protected override void OnVisibleChanged(EventArgs e)
-		{
-			if (Visible)
-			{
-				LoadWritingSystemBox(); // refresh these since they might have changed on another tab
-			}
-			base.OnVisibleChanged(e);
-		}
+
 
 		/// <summary>
 		/// Construct the list of fields to show.
@@ -76,9 +66,16 @@ namespace WeSay.Setup
 			{
 				((Field)_fieldsListBox.SelectedItem).Visibility = CommonEnumerations.VisibilitySetting.Visible;
 			}
-			else
+			else if (e.NewValue== CheckState.Unchecked)
 			{
-				CurrentField.Visibility = CommonEnumerations.VisibilitySetting.Invisible;
+				if(CurrentField.CanOmitFromMainViewTemplate)
+				{
+					CurrentField.Visibility = CommonEnumerations.VisibilitySetting.Invisible;
+				}
+				else
+				{
+					e.NewValue = CheckState.Checked; //revert
+				}
 			}
 		}
 
@@ -102,152 +99,41 @@ namespace WeSay.Setup
 			}
 			_btnDeleteField.Enabled = CurrentField.UserCanDeleteOrModify;
 			_descriptionBox.Text = CurrentField.Description;
-			LoadWritingSystemBox();
+
 			LoadAboutFieldBox();
 
 			//todo(WS-364): this is too blunt. They should be able to edit the display name
-			_fieldPropertyGrid.Enabled = CurrentField.UserCanDeleteOrModify;
+		//    _fieldPropertyGrid.Enabled = CurrentField.UserCanDeleteOrModify;
 
-			_fieldPropertyGrid.SelectedObject = CurrentField;
+		//    _fieldPropertyGrid.SelectedObject = CurrentField;
+			_fieldSetupControl.CurrentField = CurrentField;
 		}
 
 
-		private void LoadWritingSystemBox()
-		{
-			if (CurrentField == null)
-			{
-				return;
-			}
-			_writingSystemListBox.Items.Clear();
-			foreach (WritingSystem ws in CurrentField.WritingSystems)
-			{
-				int i = _writingSystemListBox.Items.Add(ws);
-				_writingSystemListBox.SetItemChecked(i, true);
 
-			}
-			foreach (WritingSystem ws in BasilProject.Project.WritingSystems.Values)
-			{
-				if(!CurrentField.WritingSystemIds.Contains(ws.Id))
-				{
-					int i= _writingSystemListBox.Items.Add(ws);
-					_writingSystemListBox.SetItemChecked(i, false);
-				}
-			}
-
-		}
 		private void LoadAboutFieldBox()
 		{
 			_descriptionBox.Text = CurrentField.Description;
 		//    _descriptionBox.Text = String.Format("{0} ({1}).  {2}", CurrentField.DisplayName, CurrentField.FieldName, CurrentField.Description);
 		}
-		private void _writingSystemListBox_ItemCheck(object sender, ItemCheckEventArgs e)
-		{
-			//happens when we are setting initial checkbox states from code
-			if (_writingSystemListBox.SelectedItem == null)
-				return;
-
-			if (e.NewValue == CheckState.Checked)
-			{
-				SaveWritingSystemIdsForField(e.Index);
-				//CurrentField.WritingSystemIds.Add(CurrentWritingSystemId);
-			}
-			else
-			{
-				CurrentField.WritingSystemIds.Remove(CurrentWritingSystemId);
-			}
-		}
-
-		private void SaveWritingSystemIdsForField()
-		{
-			SaveWritingSystemIdsForField(-1);
-		}
 
 
-		private void SaveWritingSystemIdsForField(int aboutToBeCheckedItemIndex) {
-			CurrentField.WritingSystemIds.Clear();
-			for (int i = 0; i < this._writingSystemListBox.Items.Count; i++)
-			{
-				if(this._writingSystemListBox.GetItemChecked(i) ||
-						i == aboutToBeCheckedItemIndex)
-				{
-					WritingSystem ws = (WritingSystem) this._writingSystemListBox.Items[i];
-					CurrentField.WritingSystemIds.Add(ws.Id);
-				}
-			}
-		}
+//        private void groupBox2_SizeChanged(object sender, EventArgs e)
+//        {
+//            _descriptionBox.MaximumSize  = new Size(groupBox1.Width - 30,groupBox1.Height -30);
+//        }
 
-		private string CurrentWritingSystemId
-		{
-			get
-			{
-				return _writingSystemListBox.SelectedItem.ToString();
-			}
-		}
-
-		void _writingSystemListBox_SelectedIndexChanged(object sender, EventArgs e)
-		{
-			RefreshMoveButtons();
-		}
-
-		void OnBtnMoveUpClick(object sender, EventArgs e)
-		{
-			object item = _writingSystemListBox.SelectedItem;
-			int index = _writingSystemListBox.SelectedIndex;
-			if (item == null || index < 1)
-			{
-				return;
-			}
-			// remove and put back
-			bool isChecked = _writingSystemListBox.GetItemChecked(index);
-			_writingSystemListBox.Items.RemoveAt(index);
-			--index;
-			_writingSystemListBox.Items.Insert(index, item);
-			_writingSystemListBox.SetItemChecked(index, isChecked);
-			_writingSystemListBox.SelectedIndex = index;
-			if (isChecked)
-			{
-				SaveWritingSystemIdsForField();
-			}
-			RefreshMoveButtons();
-		}
-
-		void OnBtnMoveDownClick(object sender, EventArgs e)
-		{
-			object item = _writingSystemListBox.SelectedItem;
-			int index = _writingSystemListBox.SelectedIndex;
-			if (item == null || index > _writingSystemListBox.Items.Count - 2)
-			{
-				return;
-			}
-			// remove and put back
-			bool isChecked = _writingSystemListBox.GetItemChecked(index);
-			_writingSystemListBox.Items.RemoveAt(index);
-			++index;
-			_writingSystemListBox.Items.Insert(index, item);
-			_writingSystemListBox.SetItemChecked(index, isChecked);
-			_writingSystemListBox.SelectedIndex = index;
-			if (isChecked)
-			{
-				SaveWritingSystemIdsForField();
-			}
-			RefreshMoveButtons();
-		}
-
-		private void groupBox2_SizeChanged(object sender, EventArgs e)
-		{
-			_descriptionBox.MaximumSize  = new Size(groupBox1.Width - 30,groupBox1.Height -30);
-		}
-
-		private void _btnAddField_Click(object sender, EventArgs e)
+		private void OnAddField_Click(object sender, EventArgs e)
 		{
 			Field f = new Field(MakeUniqueFieldName(), "LexEntry", WeSayWordsProject.Project.WritingSystems.Keys);
 			WeSayWordsProject.Project.DefaultViewTemplate.Fields.Add(f);
 			LoadInventory();
+			_tabControl.SelectedTab = _setupTab;
 			MakeFieldTheSelectedOne(f);
 		}
 		private string MakeUniqueFieldName()
 		{
-			string baseName = "newField";
+			string baseName = Field.NewFieldNamePrefix;
 			for (int count = 0; count<1000 ; count++)
 			{
 				string check = baseName;
@@ -291,8 +177,13 @@ namespace WeSay.Setup
 			if (!CurrentField.UserCanDeleteOrModify)
 				return;
 
+			int index = _fieldsListBox.SelectedIndex;
 			WeSayWordsProject.Project.DefaultViewTemplate.Fields.Remove(CurrentField);
 			LoadInventory();
+			if(_fieldsListBox.Items.Count>0)
+			{
+				_fieldsListBox.SelectedIndex = index -1;//select the item before the deleted one
+			}
 		}
 
 		private void OnPropertyValueChanged(object s, PropertyValueChangedEventArgs e)
@@ -342,7 +233,7 @@ namespace WeSay.Setup
 			{
 				if (CurrentField.FieldName == String.Empty)
 				{
-					e.ChangedItem.PropertyDescriptor.SetValue(_fieldPropertyGrid.SelectedObject, e.OldValue);
+   //                 e.ChangedItem.PropertyDescriptor.SetValue(_fieldPropertyGrid.SelectedObject, e.OldValue);
 					return;
 				}
 

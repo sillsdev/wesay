@@ -96,6 +96,12 @@
 	<Compile Include="FieldsControl.Designer.cs">
 	  <DependentUpon>FieldsControl.cs</DependentUpon>
 	</Compile>
+	<Compile Include="FieldDetailControl.cs">
+	  <SubType>UserControl</SubType>
+	</Compile>
+	<Compile Include="FieldDetailControl.Designer.cs">
+	  <DependentUpon>FieldDetailControl.cs</DependentUpon>
+	</Compile>
 	<Compile Include="FontControl.cs">
 	  <SubType>UserControl</SubType>
 	</Compile>
@@ -142,6 +148,10 @@
 	  <SubType>Designer</SubType>
 	  <DependentUpon>FieldsControl.cs</DependentUpon>
 	</EmbeddedResource>
+	<EmbeddedResource Include="FieldDetailControl.resx">
+	  <SubType>Designer</SubType>
+	  <DependentUpon>FieldDetailControl.cs</DependentUpon>
+	</EmbeddedResource>
 	<EmbeddedResource Include="FontControl.resx">
 	  <DependentUpon>FontControl.cs</DependentUpon>
 	  <SubType>Designer</SubType>
@@ -178,6 +188,10 @@
 	<EmbeddedResource Include="WritingSystemBasic.resx">
 	  <DependentUpon>WritingSystemBasic.cs</DependentUpon>
 	  <SubType>Designer</SubType>
+	</EmbeddedResource>
+	<EmbeddedResource Include="WritingSystemForFieldControl.resx">
+	  <SubType>Designer</SubType>
+	  <DependentUpon>WritingSystemForFieldControl.cs</DependentUpon>
 	</EmbeddedResource>
 	<EmbeddedResource Include="WritingSystemSetup.resx">
 	  <SubType>Designer</SubType>
@@ -225,6 +239,12 @@
 	</Compile>
 	<Compile Include="WritingSystemBasic.designer.cs">
 	  <DependentUpon>WritingSystemBasic.cs</DependentUpon>
+	</Compile>
+	<Compile Include="WritingSystemForFieldControl.cs">
+	  <SubType>UserControl</SubType>
+	</Compile>
+	<Compile Include="WritingSystemForFieldControl.Designer.cs">
+	  <DependentUpon>WritingSystemForFieldControl.cs</DependentUpon>
 	</Compile>
 	<Compile Include="WritingSystemSetup.cs">
 	  <SubType>UserControl</SubType>

@@ -33,7 +33,9 @@ namespace WeSay.Project
 		{
 			MultiText,
 			Option,
-			OptionCollection
+			OptionCollection,
+			Picture,
+			RelationToOneEntry
 		}
 
 		private CommonEnumerations.VisibilitySetting _visibility = CommonEnumerations.VisibilitySetting.Visible;
@@ -181,7 +183,7 @@ namespace WeSay.Project
 					return false;
 				}
 
-				if (LexSense.WellKnownProperties.Contains(FieldName))
+				if (LexSense.WellKnownProperties.ContainsAnyCaseVersionOf(FieldName))
 				{
 					return false;
 				}
@@ -292,6 +294,25 @@ namespace WeSay.Project
 			}
 		}
 
+		/// <summary>
+		/// built-in fields have properties which aren't user editable
+		/// </summary>
+//        [Browsable(false)]
+//        public bool CanOnlyEditDisplayName
+//        {
+//            get { return IsBuiltInViaCode; }
+//        }
+
+		[Browsable(false)]
+		public bool ShowOptionListStuff
+		{
+			get
+			{
+				return DataTypeName == Field.BuiltInDataType.Option.ToString()
+					   || DataTypeName == Field.BuiltInDataType.OptionCollection.ToString();
+			}
+		}
+
 		[Browsable(false)]
 		public IList<WritingSystem> WritingSystems
 		{
@@ -321,6 +342,20 @@ namespace WeSay.Project
 			{
 				return _visibility == CommonEnumerations.VisibilitySetting.Visible ||
 					   _visibility == CommonEnumerations.VisibilitySetting.ReadOnly;
+			}
+		}
+
+		public static string NewFieldNamePrefix
+		{
+			get { return "newField"; }
+		}
+
+		public bool CanOmitFromMainViewTemplate
+		{
+			get
+			{
+				return !(_fieldName == FieldNames.EntryLexicalForm.ToString() ||
+					   _fieldName == FieldNames.SenseGloss.ToString());
 			}
 		}
 

@@ -665,6 +665,12 @@ namespace WeSay.UI
 			//object selectedItem = this.list.SelectedItem;
 
 			this._listBox.Items.Clear();
+
+			//hatton experimental:
+			if (string.IsNullOrEmpty(Text))
+				return;
+			//end hatton experimental
+
 			foreach (object item in ItemFilterer.Invoke(Text, Items, ItemDisplayStringAdaptor))
 			{
 				this._listBox.Items.Add(new ItemWrapper(item, ItemDisplayStringAdaptor.GetDisplayLabel(item)));
