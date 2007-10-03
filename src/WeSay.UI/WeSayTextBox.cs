@@ -3,7 +3,6 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Reflection;
 using System.Windows.Forms;
-using kmcomapi;
 using WeSay.Language;
 
 namespace WeSay.UI
@@ -11,52 +10,26 @@ namespace WeSay.UI
 	public partial class WeSayTextBox : TextBox
 	{
 		private WritingSystem _writingSystem;
-		private KeymanLink.KeymanLink _keyman6;
-		private  kmcomapi.TavultesoftKeymanClass _keyman7;
 
 		private bool _multiParagraph;
-		private string _nameForLogging;
+		private readonly string _nameForLogging;
 		private bool _haveAlreadyLoggedTextChanged = false;
+		private readonly Keyman _keyman;
 
 		public WeSayTextBox()
 		{
 			InitializeComponent();
 			if(DesignMode)
 				return;
-			GotFocus += new EventHandler(OnGotFocus);
-			LostFocus += new EventHandler(OnLostFocus);
-			KeyPress += new KeyPressEventHandler(WeSayTextBox_KeyPress);
-			TextChanged += new EventHandler(WeSayTextBox_TextChanged);
+			GotFocus += OnGotFocus;
+			LostFocus += OnLostFocus;
+			KeyPress += WeSayTextBox_KeyPress;
+			TextChanged += WeSayTextBox_TextChanged;
 
-			KeyDown += new KeyEventHandler(OnKeyDown);
+			KeyDown += OnKeyDown;
 
 		  //  Debug.Assert(DesignMode);
-			if (Environment.OSVersion.Platform != PlatformID.Unix)
-			{
-				try
-				{
-				  _keyman7 = new TavultesoftKeymanClass();
-				}
-				catch(Exception )
-				{
-					_keyman7 = null;
-				}
-				try
-				{
-					_keyman6 = new KeymanLink.KeymanLink();
-					if (!_keyman6.Initialize(false))
-					{
-						_keyman6 = null;
-					}
-				}
-				catch(Exception )
-				{
-					//swallow.  we have a report from Mike that indicates the above will
-					//crash in some situation (vista + keyman 6.2?)... better to just not
-					// provide direct keyman access in that situation
-					_keyman6 = null;
-				}
-			}
+			_keyman = new Keyman();
 
 			if (_nameForLogging == null)
 			{
@@ -154,9 +127,9 @@ namespace WeSay.UI
 
 		protected override void OnTextChanged(EventArgs e)
 		{
-			if (this.IsDisposed) // are we a zombie still getting events?
+			if (IsDisposed) // are we a zombie still getting events?
 			{
-				throw new ApplicationException();
+				throw new ObjectDisposedException(GetType().ToString());
 			}
 			base.OnTextChanged(e);
 			UpdateHeight();
@@ -349,28 +322,7 @@ namespace WeSay.UI
 				//set the windows back to default so it doesn't interfere
 				//nice idea but is unneeded... perhaps keyman is calling this too
 				//InputLanguage.CurrentInputLanguage = InputLanguage.DefaultInputLanguage;
-				if(!string.IsNullOrEmpty(_writingSystem.KeyboardName))
-				{
-					try
-					{
-						if (_keyman7 != null)
-						{
-							int index= _keyman7.Keyboards.IndexOf(_writingSystem.KeyboardName);
-							if(index >=0)
-							{
-								_keyman7.Control.ActiveKeyboard = _keyman7.Keyboards[index];
-							}
-						}
-						else if (_keyman6 != null)
-							{
-								_keyman6.SelectKeymanKeyboard(_writingSystem.KeyboardName, true);
-							}
-					}
-					catch (Exception err)
-					{
-						Palaso.Reporting.ErrorReport.ReportNonFatalMessage("Keyman switching problem: " + err.Message);
-					}
-				}
+				_keyman.UseKeyboard(_writingSystem.KeyboardName);
 			}
 		}
 
@@ -406,13 +358,9 @@ namespace WeSay.UI
 			{
 				InputLanguage.CurrentInputLanguage = InputLanguage.DefaultInputLanguage;
 			}
-			else if (this._keyman7 != null)
+			else
 			{
-				_keyman7.Control.ActiveKeyboard = null;
-			}
-			else if (this._keyman6 != null)
-			{
-				this._keyman6.SelectKeymanKeyboard(null, false);
+				_keyman.ClearKeyboard();
 			}
 		}
 

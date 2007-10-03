@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using NUnit.Framework;
 using WeSay.LexicalModel.Db4o_Specific;
 
-namespace WeSay.LexicalTools.Tests
+namespace WeSay.LexicalModel.Tests
 {
 	[TestFixture]
 	public class ApproximateMatcherTests
@@ -29,7 +29,7 @@ namespace WeSay.LexicalTools.Tests
 			AddEntry("distane");
 			AddEntry("destance");
 			AddEntry("distence");
-			IList closest = (IList) ApproximateMatcher.FindClosestForms("distance", _forms, ApproximateMatcher.ToStringAdaptor);
+			IList closest = (IList) ApproximateMatcher.FindClosestForms(_forms, "distance");
 		   Assert.AreEqual(1, closest.Count);
 			Assert.Contains("distance", closest);
 		}
@@ -42,7 +42,7 @@ namespace WeSay.LexicalTools.Tests
 			AddEntry("distane");
 			AddEntry("destance");
 			AddEntry("distence");
-			IList closest = (IList) ApproximateMatcher.FindClosestAndPrefixedForms("dist", _forms);
+			IList closest = (IList) ApproximateMatcher.FindClosestForms(_forms, "dist", ApproximateMatcherOptions.IncludePrefixedForms);
 			Assert.AreEqual(4, closest.Count);
 			Assert.Contains("distance", closest);
 			Assert.Contains("distances", closest);
@@ -58,7 +58,7 @@ namespace WeSay.LexicalTools.Tests
 			AddEntry("godo"); //1
 			AddEntry("good"); //0
 			AddEntry("good-bye"); //0
-			IList closest = (IList)ApproximateMatcher.FindClosestAndNextClosestAndPrefixedForms("good", _forms);
+			IList closest = (IList)ApproximateMatcher.FindClosestForms(_forms, "good", ApproximateMatcherOptions.IncludePrefixedAndNextClosestForms);
 			Assert.AreEqual(4, closest.Count);
 			Assert.Contains("goad", closest);
 			Assert.Contains("godo", closest);
@@ -79,7 +79,7 @@ namespace WeSay.LexicalTools.Tests
 			AddEntry("dest"); //1
 			AddEntry("dits"); //1
 			AddEntry("noise"); //3
-			IList closest = (IList)ApproximateMatcher.FindClosestAndNextClosestAndPrefixedForms("dist", _forms);
+			IList closest = (IList)ApproximateMatcher.FindClosestForms(_forms, "dist", ApproximateMatcherOptions.IncludePrefixedAndNextClosestForms );
 			Assert.AreEqual(3, closest.Count);
 			Assert.Contains("past", closest);
 			Assert.Contains("dest", closest);
@@ -115,7 +115,7 @@ namespace WeSay.LexicalTools.Tests
 			AddEntry("1235467980");
 
 
-			IList closest = (IList)ApproximateMatcher.FindClosestForms("1234567890", _forms);
+			IList closest = (IList)ApproximateMatcher.FindClosestForms(_forms,"1234567890");
 			Assert.AreEqual(12, closest.Count);
 			Assert.Contains("a1234567890", closest);
 			Assert.Contains("1a234567890", closest);
@@ -161,7 +161,7 @@ namespace WeSay.LexicalTools.Tests
 			AddEntry("1235467980");
 
 
-			IList closest = (IList) ApproximateMatcher.FindClosestAndNextClosestForms("1234567890", _forms);
+			IList closest = (IList) ApproximateMatcher.FindClosestForms(_forms, "1234567890", ApproximateMatcherOptions.IncludeNextClosestForms);
 			Assert.AreEqual(13, closest.Count);
 			Assert.Contains("1234567890", closest);
 			Assert.Contains("a1234567890", closest);
@@ -186,7 +186,7 @@ namespace WeSay.LexicalTools.Tests
 
 			AddEntry("aaa1234567890a"); // noise
 
-			IList closest = (IList) ApproximateMatcher.FindClosestAndNextClosestForms("1234567890", _forms);
+			IList closest = (IList) ApproximateMatcher.FindClosestForms(_forms, "1234567890", ApproximateMatcherOptions.IncludeNextClosestForms);
 			Assert.AreEqual(2, closest.Count);
 			Assert.Contains("a1234567890", closest);
 			Assert.Contains("aaa1234567890", closest);

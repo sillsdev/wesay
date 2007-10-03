@@ -5,7 +5,7 @@ using System.Collections;
 using System.Windows.Forms;
 using System.ComponentModel.Design;
 
-namespace WeSay.UI
+namespace WeSay.UI.AutoCompleteTextBox
 {
 	/// <summary>
 	/// Summary description for AutoCompleteTriggerCollection.
@@ -40,23 +40,23 @@ namespace WeSay.UI
 		{
 			get
 			{
-				return this.InnerList[index] as AutoCompleteTrigger;
+				return InnerList[index] as AutoCompleteTrigger;
 			}
 		}
 
 		public void Add(AutoCompleteTrigger item)
 		{
-			this.InnerList.Add(item);
+			InnerList.Add(item);
 		}
 
 		public void Remove(AutoCompleteTrigger item)
 		{
-			this.InnerList.Remove(item);
+			InnerList.Remove(item);
 		}
 
 		public virtual TriggerState OnTextChanged(string text)
 		{
-			foreach (AutoCompleteTrigger trigger in this.InnerList)
+			foreach (AutoCompleteTrigger trigger in InnerList)
 			{
 				TriggerState state = trigger.OnTextChanged(text);
 				if (state != TriggerState.None)
@@ -69,7 +69,7 @@ namespace WeSay.UI
 
 		public virtual TriggerState OnCommandKey(Keys keyData)
 		{
-			foreach (AutoCompleteTrigger trigger in this.InnerList)
+			foreach (AutoCompleteTrigger trigger in InnerList)
 			{
 				TriggerState state = trigger.OnCommandKey(keyData);
 				if (state != TriggerState.None)

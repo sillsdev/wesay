@@ -9,8 +9,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using WeSay.Foundation;
 
-
-namespace WeSay.UI
+namespace WeSay.UI.AutoCompleteTextBox
 {
 	/// <summary>
 	/// Summary description for AutoCompleteTextBox.

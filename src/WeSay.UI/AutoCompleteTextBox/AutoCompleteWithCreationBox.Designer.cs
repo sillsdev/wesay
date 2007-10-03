@@ -1,6 +1,6 @@
-namespace WeSay.UI
+namespace WeSay.UI.AutoCompleteTextBox
 {
-	partial class AutoCompleteWithCreationBox<T>
+	partial class AutoCompleteWithCreationBox<KV, ValueT>
 	{
 		/// <summary>
 		/// Required designer variable.
@@ -17,7 +17,7 @@ namespace WeSay.UI
 		private void InitializeComponent()
 		{
 			this.components = new System.ComponentModel.Container();
-			this._textBox = new WeSay.UI.WeSayAutoCompleteTextBox();
+			this._textBox = new WeSay.UI.AutoCompleteTextBox.WeSayAutoCompleteTextBox();
 			this._addNewButton = new System.Windows.Forms.Button();
 			this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
 			this.SuspendLayout();
@@ -34,7 +34,6 @@ namespace WeSay.UI
 			this._textBox.PopupSelectionBackColor = System.Drawing.SystemColors.Highlight;
 			this._textBox.PopupSelectionForeColor = System.Drawing.SystemColors.HighlightText;
 			this._textBox.PopupWidth = 110;
-			this._textBox.SelectedItem = null;
 			this._textBox.Size = new System.Drawing.Size(110, 20);
 			this._textBox.TabIndex = 0;
 			this._textBox.TooltipToDisplayStringAdaptor = null;
@@ -66,7 +65,7 @@ namespace WeSay.UI
 
 		#endregion
 
-		private WeSay.UI.WeSayAutoCompleteTextBox _textBox;
+		private WeSayAutoCompleteTextBox _textBox;
 		private System.Windows.Forms.Button _addNewButton;
 		private System.Windows.Forms.ToolTip toolTip1;
 	}

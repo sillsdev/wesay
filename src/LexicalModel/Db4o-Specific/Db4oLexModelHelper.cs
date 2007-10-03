@@ -3,21 +3,76 @@ using System.Collections.Generic;
 using Db4objects.Db4o;
 using Db4objects.Db4o.Events;
 using WeSay.Foundation;
+using Debug=System.Diagnostics.Debug;
 
 namespace WeSay.LexicalModel.Db4o_Specific
 {
 	/// <summary>
 	/// All db4o-specific code for WeSayDataObjects is isolated here
 	/// </summary>
-	public class Db4oLexModelHelper :IDisposable
+	public class Db4oLexModelHelper: IDisposable
 	{
-		static private Db4oLexModelHelper _singleton = null;
-		internal IObjectContainer _container;
+		private static Db4oLexModelHelper _singleton = null;
 
 		/// <summary>
 		/// for tests
 		/// </summary>
-		private int _activationCount=0;
+		private int _activationCount = 0;
+
+		internal IObjectContainer _container;
+		private List<Type> _doNotActivateTypes;
+
+		private Db4oLexModelHelper(IObjectContainer container)
+		{
+			_container = container;
+			if (container == null)
+			{
+				return; //for non-db tests
+			}
+			_doNotActivateTypes = new List<Type>();
+
+			IEventRegistry r =
+					EventRegistryFactory.ForObjectContainer(container);
+			r.Activated += OnActivated;
+			r.Activating += OnActivating;
+		}
+
+		/// <summary>
+		/// how many times a WeSayDataObject has been activated
+		/// </summary>
+		public int ActivationCount
+		{
+			get { return _activationCount; }
+		}
+
+		public static Db4oLexModelHelper Singleton
+		{
+			get { return _singleton; }
+		}
+
+		public List<Type> DoNotActivateTypes
+		{
+			get { return _doNotActivateTypes; }
+			set { _doNotActivateTypes = value; }
+		}
+
+		#region IDisposable Members
+
+		public void Dispose()
+		{
+			if (_container == null)
+			{
+				return;
+			}
+
+			IEventRegistry r =
+					EventRegistryFactory.ForObjectContainer(_container);
+			r.Activated -= OnActivated;
+			_container = null;
+			_singleton = null;
+		}
+
+		#endregion
 
 		/// <summary>
 		/// used by test setups to avoid hiding bugs that would be found if we didn't have to initialize in
@@ -26,14 +81,14 @@ namespace WeSay.LexicalModel.Db4o_Specific
 		/// <param name="container"></param>
 		public static void Deinitialize(IObjectContainer container)
 		{
-			System.Diagnostics.Debug.Assert(_singleton._container == container);
+			Debug.Assert(_singleton._container == container);
 			_singleton = null;
 		}
 
 		[CLSCompliant(false)]
 		public static void Initialize(IObjectContainer container)
 		{
-			System.Diagnostics.Debug.Assert(container != null);
+			Debug.Assert(container != null);
 			if (_singleton != null && container == _singleton._container)
 			{
 				return;
@@ -57,42 +112,7 @@ namespace WeSay.LexicalModel.Db4o_Specific
 			_singleton = new Db4oLexModelHelper(null);
 		}
 
-		/// <summary>
-		/// how many times a WeSayDataObject has been activated
-		/// </summary>
-		public int ActivationCount
-		{
-			get { return _activationCount; }
-		}
-
-		public static Db4oLexModelHelper Singleton
-		{
-			get { return _singleton; }
-		}
-
-		private List<Type> _doNotActivateTypes;
-
-		public List<Type> DoNotActivateTypes
-		{
-			get { return this._doNotActivateTypes; }
-			set { this._doNotActivateTypes = value; }
-		}
-
-		private Db4oLexModelHelper(IObjectContainer container)
-		{
-			_container = container;
-			if (container == null)
-			{
-				return; //for non-db tests
-			}
-			_doNotActivateTypes = new List<Type>();
-
-			IEventRegistry r = EventRegistryFactory.ForObjectContainer(container);
-			r.Activated += new ObjectEventHandler(OnActivated);
-			r.Activating += new CancellableObjectEventHandler(OnActivating);
-		}
-
-		void OnActivating(object sender, CancellableObjectEventArgs args)
+		private void OnActivating(object sender, CancellableObjectEventArgs args)
 		{
 			if (_doNotActivateTypes.Contains(sender.GetType()))
 			{
@@ -100,25 +120,13 @@ namespace WeSay.LexicalModel.Db4o_Specific
 			}
 		}
 
-		public void Dispose()
-		{
-			if (_container == null)
-			{
-				return;
-			}
-
-			IEventRegistry r = EventRegistryFactory.ForObjectContainer(_container);
-			r.Activated -= new ObjectEventHandler(OnActivated);
-			_container = null;
-			_singleton = null;
-		}
-
-
-		void OnActivated(object sender, ObjectEventArgs args)
+		private void OnActivated(object sender, ObjectEventArgs args)
 		{
 			WeSayDataObject o = args.Object as WeSayDataObject;
 			if (o == null)
+			{
 				return;
+			}
 
 			//activate all the children
 			_container.Activate(o, int.MaxValue);

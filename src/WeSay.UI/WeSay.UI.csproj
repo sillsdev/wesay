@@ -105,6 +105,8 @@
 	<Compile Include="ControlListBox.designer.cs">
 	  <DependentUpon>ControlListBox.cs</DependentUpon>
 	</Compile>
+	<Compile Include="Keyman.cs" />
+	<Compile Include="Keyman7.cs" />
 	<Compile Include="PictureControl.cs">
 	  <SubType>UserControl</SubType>
 	</Compile>

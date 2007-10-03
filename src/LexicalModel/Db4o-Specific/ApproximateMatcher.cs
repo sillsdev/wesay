@@ -3,96 +3,112 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
-using WeSay.Data;
-using WeSay.Foundation;
 
 namespace WeSay.LexicalModel.Db4o_Specific
 {
+	[Flags]
+	public enum ApproximateMatcherOptions
+	{
+		/// <summary>
+		/// Find closest forms only
+		/// </summary>
+		None = 0,
+		IncludePrefixedForms = 1,
+		IncludeNextClosestForms = 2,
+		IncludePrefixedAndNextClosestForms =
+				IncludePrefixedForms | IncludeNextClosestForms
+	}
+
 	public class ApproximateMatcher
 	{
-		private static IDisplayStringAdaptor s_ToStringAdaptor = new ToStringAutoCompleteAdaptor();
+		#region Delegates
 
-		private class ToStringAutoCompleteAdaptor : IDisplayStringAdaptor
+		public delegate string GetStringDelegate<T>(T t);
+
+		#endregion
+
+		public const int EditDistanceLargerThanMax = int.MaxValue;
+
+		private static string Self(string s)
 		{
-			public string GetDisplayLabel(object item)
-			{
-				return item.ToString();
-			}
+			return s;
 		}
 
-		public static IDisplayStringAdaptor ToStringAdaptor
+		public static IList<string> FindClosestForms(IEnumerable forms,
+													 string notNormalizedKey)
 		{
-			get
-			{
-				return s_ToStringAdaptor;
-			}
-			set
-			{
-				s_ToStringAdaptor = value;
-			}
+			return
+					FindClosestForms(forms,
+									 notNormalizedKey,
+									 ApproximateMatcherOptions.None);
 		}
 
-		static public IList<object> FindClosestForms(string key, IEnumerable items, IDisplayStringAdaptor adaptor)
+		public static IList<T> FindClosestForms<T>(IEnumerable items,
+												   GetStringDelegate<T>
+														   stringExtractor,
+												   string notNormalizedKey)
 		{
-		 //   StringToObjectEnumerableWrapper wrapper = new StringToObjectEnumerableWrapper(forms);
-			return FindClosestForms(key, false, false, items, adaptor);
+			return
+					FindClosestForms(items,
+										stringExtractor,
+										notNormalizedKey,
+										ApproximateMatcherOptions.None);
 		}
 
-		static public IList<object> FindClosestForms(string key, IEnumerable items)
+		public static IList<string> FindClosestForms(IEnumerable forms,
+													 string notNormalizedKey,
+													 ApproximateMatcherOptions
+															 options)
 		{
-			//StringToObjectEnumerableWrapper wrapper = new StringToObjectEnumerableWrapper(forms);
-			return FindClosestForms(key, false, false, items, ToStringAdaptor);
+			return
+					FindClosestForms<string>(forms,
+											 Self,
+											 notNormalizedKey,
+											 options);
 		}
 
-		static public IList<object> FindClosestAndPrefixedForms(string key, IEnumerable<string> forms)
+		// would like to have IEnumerable<T> but IBindingList isn't strong typed
+		public static IList<T> FindClosestForms<T>(IEnumerable items,
+												   GetStringDelegate<T>
+														   stringExtractor,
+												   string notNormalizedKey,
+												   ApproximateMatcherOptions
+														   options)
 		{
-			StringToObjectEnumerableWrapper wrapper = new StringToObjectEnumerableWrapper(forms);
-			return FindClosestForms(key, false, true, wrapper, ToStringAdaptor);
-		}
+			string key = notNormalizedKey.Normalize(NormalizationForm.FormD);
+			bool includeNextClosest = (options &
+									   ApproximateMatcherOptions.
+											   IncludeNextClosestForms) ==
+									  ApproximateMatcherOptions.
+											  IncludeNextClosestForms;
+			bool includeApproximatePrefixedForms = (options &
+													ApproximateMatcherOptions.
+															IncludePrefixedForms) ==
+												   ApproximateMatcherOptions.
+														   IncludePrefixedForms;
 
-		static public IList<object> FindClosestAndNextClosestForms(string key, IEnumerable<string> forms)
-		{
-			StringToObjectEnumerableWrapper wrapper = new StringToObjectEnumerableWrapper(forms);
-			return FindClosestForms(key, true, false, wrapper, ToStringAdaptor);
-		}
-
-		static public IList<object> FindClosestAndNextClosestAndPrefixedForms(string key, IEnumerable<string> forms)
-		{
-			StringToObjectEnumerableWrapper wrapper = new StringToObjectEnumerableWrapper(forms);
-			return FindClosestForms(key, true, true, wrapper, ToStringAdaptor);
-		}
-
-		static public IList<object> FindClosestAndNextClosestAndPrefixedForms(string key, IEnumerable items, IDisplayStringAdaptor adaptor)
-		{
-			return FindClosestForms(key, true, true, items, ToStringAdaptor);
-		}
-
-		static private IList<object> FindClosestForms(string notNormalizedkey, bool includeNextClosest, bool includeApproximatePrefixedForms, IEnumerable items, IDisplayStringAdaptor adaptor)
-		{
-			string key = notNormalizedkey.Normalize(NormalizationForm.FormD);
-			List<object> bestMatches = new List<object>();
-			List<object> secondBestMatches = new List<object>();
+			List<T> bestMatches = new List<T>();
+			List<T> secondBestMatches = new List<T>();
 
 			int bestEditDistance = int.MaxValue;
 			int secondBestEditDistance = int.MaxValue;
 
-			IEnumerable objects = items;
-			CachedSortedDb4oList<string, LexEntry> list = items as CachedSortedDb4oList<string, LexEntry>;
-			if (list != null)
+			foreach (T item in items)
 			{
-				objects = list.MasterRecordList;
-			}
-			foreach (object item in objects)
-			{
-				string originalForm = adaptor.GetDisplayLabel(item);
+				string originalForm = stringExtractor(item);
 				string form = originalForm.Normalize(NormalizationForm.FormD);
 				if (!string.IsNullOrEmpty(form))
 				{
 					int editDistance;
-					editDistance = EditDistance(key, form, secondBestEditDistance, includeApproximatePrefixedForms);
+					editDistance =
+							EditDistance(key,
+										 form,
+										 secondBestEditDistance,
+										 includeApproximatePrefixedForms);
 					if (editDistance < bestEditDistance)
 					{
-						if (includeNextClosest && bestEditDistance != int.MaxValue)
+						if (includeNextClosest &&
+							bestEditDistance != int.MaxValue)
 						{
 							// best becomes second best
 							secondBestMatches.Clear();
@@ -113,7 +129,8 @@ namespace WeSay.LexicalModel.Db4o_Specific
 					{
 						bestMatches.Add(item);
 					}
-					else if (includeNextClosest && editDistance == secondBestEditDistance)
+					else if (includeNextClosest &&
+							 editDistance == secondBestEditDistance)
 					{
 						secondBestMatches.Add(item);
 					}
@@ -127,10 +144,6 @@ namespace WeSay.LexicalModel.Db4o_Specific
 			return bestMatches;
 		}
 
-
-		public const int EditDistanceLargerThanMax = int.MaxValue;
-
-
 		// The Damerau-Levenshtein distance is equal to the minimal number of insertions, deletions, substitutions and transpositions needed to transform one string into anothe
 		// http://en.wikipedia.org/wiki/Damerau-Levenshtein_distance
 		// This algorithm is O(|x||y|) time and O(min(|x|,|y|)) space in worst and average case
@@ -143,13 +156,17 @@ namespace WeSay.LexicalModel.Db4o_Specific
 		// Ukkonen's cut-off heuristic is faster than the original Sellers 1980
 
 		// returns int.MaxValue if distance is greater than cutoff.
-		public static int EditDistance(string list1, string list2, int maxEditDistance, bool treatSuffixAsZeroDistance)
+		public static int EditDistance(string list1,
+									   string list2,
+									   int maxEditDistance,
+									   bool treatSuffixAsZeroDistance)
 		{
 			const int deletionCost = 1;
 			const int insertionCost = deletionCost; // should be symmetric
 			const int substitutionCost = 1;
 			const int transpositionCost = 1;
-			if (maxEditDistance == int.MaxValue) // int.MaxValue has special meaning to us
+			if (maxEditDistance == int.MaxValue)
+					// int.MaxValue has special meaning to us
 			{
 				--maxEditDistance;
 			}
@@ -163,11 +180,16 @@ namespace WeSay.LexicalModel.Db4o_Specific
 
 			// Validate parameters
 			if (list1 == null)
-				throw new ArgumentNullException("x");
+			{
+				throw new ArgumentNullException("list1");
+			}
 			if (list2 == null)
-				throw new ArgumentNullException("y");
+			{
+				throw new ArgumentNullException("list2");
+			}
 
-			if (!treatSuffixAsZeroDistance) // this is not a reflexive operation so swap isn't allowed
+			if (!treatSuffixAsZeroDistance)
+					// this is not a reflexive operation so swap isn't allowed
 			{
 				// list2 is the one that we are actually using storage space for so we want it to be the smaller of the two
 				if (list1.Length < list2.Length)
@@ -192,40 +214,44 @@ namespace WeSay.LexicalModel.Db4o_Specific
 				{
 					return 0;
 				}
-				return n1*deletionCost;
+				return n1 * deletionCost;
 			}
 
 			// Rather than maintain an entire matrix (which would require O(x*y) space),
 			// just store the previous row, current row, and next row, each of which has a length min(x,y)+1,
 			// so just O(min(x,y)) space.
 			int prevRow = 0, curRow = 1, nextRow = 2;
-			int[][] rows = new int[][] { new int[n2 + 1], new int[n2 + 1], new int[n2 + 1] };
-
+			int[][] rows =
+					new int[][]
+							{new int[n2 + 1], new int[n2 + 1], new int[n2 + 1]};
 
 			// For each virtual row (since we only have physical storage for two)
-			for (int list1index = 0; list1index <= n1; ++list1index)
+			for (int list1index = 0;list1index <= n1;++list1index)
 			{
-				for (int i = 0; i < n2+1; i++)
+				for (int i = 0;i < n2 + 1;i++)
 				{
 					rows[nextRow][i] = EditDistanceLargerThanMax;
 				}
 
-				int maxIndex = Math.Min(lastColumnThatNeedsToBeEvaluatedCurr + 1, n2);
+				int maxIndex =
+						Math.Min(lastColumnThatNeedsToBeEvaluatedCurr + 1, n2);
 				// if we are on the last row and we don't need to evaluate to the end of
 				// the column to determine if our edit distance is larger than the max
 				// then the edit distance is larger than the max
-				if (!treatSuffixAsZeroDistance && list1index == n1 && maxIndex < n2)
+				if (!treatSuffixAsZeroDistance && list1index == n1 &&
+					maxIndex < n2)
 				{
 					return EditDistanceLargerThanMax;
 				}
 				lastColumnThatNeedsToBeEvaluatedNext = int.MaxValue;
-				firstColumnThatNeedsToBeEvaluatedNext = lastColumnThatNeedsToBeEvaluatedCurr + 1;
+				firstColumnThatNeedsToBeEvaluatedNext =
+						lastColumnThatNeedsToBeEvaluatedCurr + 1;
 
 				int minDistance = int.MaxValue;
 
 				for (int list2index = firstColumnThatNeedsToBeEvaluatedCurr;
-					list2index <= maxIndex;
-					++list2index)
+					 list2index <= maxIndex;
+					 ++list2index)
 				{
 					if (lastColumnThatNeedsToBeEvaluatedCurr == int.MaxValue)
 					{
@@ -235,29 +261,36 @@ namespace WeSay.LexicalModel.Db4o_Specific
 					int distance = EditDistanceLargerThanMax;
 					if (list1index == 0 || list2index == 0)
 					{
-						distance = list1index*insertionCost + list2index*deletionCost;
+						distance = list1index * insertionCost +
+								   list2index * deletionCost;
 					}
 					else
 					{
-
 						// Delete Distance
-						if(list2index > firstColumnThatNeedsToBeEvaluatedCurr)
+						if (list2index > firstColumnThatNeedsToBeEvaluatedCurr)
 						{
-							distance = rows[nextRow][list2index - 1] + deletionCost;
+							distance = rows[nextRow][list2index - 1] +
+									   deletionCost;
 						}
 
 						// Insert Distance
-						if(list2index <= lastColumnThatNeedsToBeEvaluatedPrev + 1)
+						if (list2index <=
+							lastColumnThatNeedsToBeEvaluatedPrev + 1)
 						{
-							distance = Math.Min(distance, rows[curRow][list2index] + insertionCost);
+							distance =
+									Math.Min(distance,
+											 rows[curRow][list2index] +
+											 insertionCost);
 						}
 
 						// Replace Distance
-						if(list2index > firstColumnThatNeedsToBeEvaluatedPrev)
+						if (list2index > firstColumnThatNeedsToBeEvaluatedPrev)
 						{
 							int replaceDistance = rows[curRow][list2index - 1];
 
-							if (!list1[list1index - 1].Equals(list2[list2index - 1]))
+							if (
+									!list1[list1index - 1].Equals(
+											 list2[list2index - 1]))
 							{
 								replaceDistance += substitutionCost;
 							}
@@ -268,9 +301,11 @@ namespace WeSay.LexicalModel.Db4o_Specific
 							list1[list1index - 1].Equals(list2[list2index - 2]) &&
 							list1[list1index - 2].Equals(list2[list2index - 1]))
 						{
-							distance = Math.Min(distance, rows[prevRow][list2index - 2] + transpositionCost);
+							distance =
+									Math.Min(distance,
+											 rows[prevRow][list2index - 2] +
+											 transpositionCost);
 						}
-
 					}
 
 					// only relevant if treatSuffixAsZeroDistance
@@ -281,13 +316,14 @@ namespace WeSay.LexicalModel.Db4o_Specific
 					rows[nextRow][list2index] = distance;
 					if (distance <= maxEditDistance)
 					{
-						if(list2index < firstColumnThatNeedsToBeEvaluatedNext)
+						if (list2index < firstColumnThatNeedsToBeEvaluatedNext)
 						{
 							firstColumnThatNeedsToBeEvaluatedNext = list2index;
 						}
 						lastColumnThatNeedsToBeEvaluatedNext = list2index;
 					}
-					else if ((list1index == n1) && list2index > lastColumnThatNeedsToBeEvaluatedCurr)
+					else if ((list1index == n1) &&
+							 list2index > lastColumnThatNeedsToBeEvaluatedCurr)
 					{
 						break;
 					}
@@ -313,11 +349,15 @@ namespace WeSay.LexicalModel.Db4o_Specific
 						break;
 				}
 
-				lastColumnThatNeedsToBeEvaluatedPrev = lastColumnThatNeedsToBeEvaluatedCurr;
-				lastColumnThatNeedsToBeEvaluatedCurr = lastColumnThatNeedsToBeEvaluatedNext;
+				lastColumnThatNeedsToBeEvaluatedPrev =
+						lastColumnThatNeedsToBeEvaluatedCurr;
+				lastColumnThatNeedsToBeEvaluatedCurr =
+						lastColumnThatNeedsToBeEvaluatedNext;
 
-				firstColumnThatNeedsToBeEvaluatedPrev = firstColumnThatNeedsToBeEvaluatedCurr;
-				firstColumnThatNeedsToBeEvaluatedCurr = firstColumnThatNeedsToBeEvaluatedNext;
+				firstColumnThatNeedsToBeEvaluatedPrev =
+						firstColumnThatNeedsToBeEvaluatedCurr;
+				firstColumnThatNeedsToBeEvaluatedCurr =
+						firstColumnThatNeedsToBeEvaluatedNext;
 
 				if (treatSuffixAsZeroDistance && list1index == n1)
 				{
@@ -328,13 +368,12 @@ namespace WeSay.LexicalModel.Db4o_Specific
 
 					return minDistance;
 				}
-
 			}
 
 			// Return the computed edit distance
 			int editDistance = rows[curRow][n2];
 
-			if(editDistance > maxEditDistance)
+			if (editDistance > maxEditDistance)
 			{
 				return EditDistanceLargerThanMax;
 			}

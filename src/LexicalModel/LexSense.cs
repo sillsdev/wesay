@@ -7,8 +7,8 @@ namespace WeSay.LexicalModel
 {
 	public sealed class LexSense : WeSayDataObject
 	{
-		private SenseGlossMultiText _gloss;
-		private InMemoryBindingList<LexExampleSentence> _exampleSentences;
+		private readonly SenseGlossMultiText _gloss;
+		private readonly InMemoryBindingList<LexExampleSentence> _exampleSentences;
 
 		new public class WellKnownProperties : WeSayDataObject.WellKnownProperties
 		{

@@ -477,7 +477,7 @@ namespace WeSay.Language
 				return new StandardValuesCollection(keyboards);
 			}
 
-			private static void GetKeyboardsFromKeyman6(List<string> keyboards)
+			private static void GetKeyboardsFromKeyman6(ICollection<string> keyboards)
 			{
 				try
 				{
@@ -498,13 +498,13 @@ namespace WeSay.Language
 				}
 			}
 
-			private static bool GetKeyboardsFromKeyman7(List<string> keyboards)
+			private static bool GetKeyboardsFromKeyman7(ICollection<string> keyboards)
 			{
 				try
 				{
-					kmcomapi.TavultesoftKeymanClass keyman = new TavultesoftKeymanClass();
+					TavultesoftKeymanClass keyman = new TavultesoftKeymanClass();
 
-						foreach (kmcomapi.IKeymanKeyboard keyboard in keyman.Keyboards)
+						foreach (IKeymanKeyboard keyboard in keyman.Keyboards)
 						{
 							keyboards.Add(keyboard.KeyboardName);
 						}

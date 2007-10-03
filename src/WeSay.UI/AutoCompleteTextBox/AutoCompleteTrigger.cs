@@ -3,7 +3,7 @@
 using System;
 using System.Windows.Forms;
 
-namespace WeSay.UI
+namespace WeSay.UI.AutoCompleteTextBox
 {
 	/// <summary>
 	/// Summary description for AutoCompleteTrigger.

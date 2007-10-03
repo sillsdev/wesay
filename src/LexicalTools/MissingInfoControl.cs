@@ -24,7 +24,7 @@ namespace WeSay.LexicalTools
 		public event EventHandler SelectedIndexChanged;
 
 		public MissingInfoControl(IRecordList<LexEntry> records, ViewTemplate viewTemplate,
-								  Predicate<LexEntry> isNotComplete, IBindingList allRecords)
+								  Predicate<LexEntry> isNotComplete, IRecordListManager recordListManager)
 		{
 			InitializeComponent();
 
@@ -47,9 +47,9 @@ namespace WeSay.LexicalTools
 			{
 				throw new ArgumentNullException("isNotComplete");
 			}
-			if (allRecords == null)
+			if (recordListManager == null)
 			{
-				throw new ArgumentNullException("allRecords");
+				throw new ArgumentNullException("recordListManager");
 			}
 
 			_records = records;
@@ -60,7 +60,7 @@ namespace WeSay.LexicalTools
 			_entryViewControl.KeyDown += new KeyEventHandler(OnKeyDown);
 			_entryViewControl.ViewTemplate = _viewTemplate;
 
-			_entryViewControl.AllRecords = allRecords;
+			_entryViewControl.RecordListManager = recordListManager;
 
 			_recordsListBox.DataSource = _records;
 			_records.ListChanged += OnRecordsListChanged;

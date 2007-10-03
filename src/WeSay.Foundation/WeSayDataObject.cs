@@ -3,50 +3,30 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
-using WeSay.Foundation;
 
 namespace WeSay.Foundation
 {
 	public interface IParentable
 	{
-		WeSayDataObject Parent
-		{
-			set;
-		}
+		WeSayDataObject Parent { set; }
 	}
 
 	public interface IReferenceContainer
 	{
-		object Target
-		{
-			get;
-			set;
-		}
-
+		object Target { get; set; }
 	}
 
-	public abstract class WeSayDataObject : INotifyPropertyChanged
+	public abstract class WeSayDataObject: INotifyPropertyChanged
 	{
-		public class WellKnownProperties
-		{
-			static public string Note = "note";
-		} ;
-
-		/// <summary>
-		/// For INotifyPropertyChanged
-		/// </summary>
-		public event PropertyChangedEventHandler PropertyChanged = delegate{};
-		public event EventHandler EmptyObjectsRemoved = delegate{};
-
-		// abandoned due to db4o difficulties
-		//          private  Dictionary<string,object>  _properties;
-
-		private List<KeyValuePair<string, object>> _properties;
+		[NonSerialized]
+		private ArrayList _listEventHelpers;
 
 		/// <summary>
 		/// see comment on _parent field of MultiText for an explanation of this field
 		/// </summary>
 		private WeSayDataObject _parent;
+
+		private List<KeyValuePair<string, object>> _properties;
 
 		protected WeSayDataObject(WeSayDataObject parent)
 		{
@@ -54,27 +34,7 @@ namespace WeSay.Foundation
 			_parent = parent;
 		}
 
-		[NonSerialized]
-		private ArrayList _listEventHelpers;
-//
-//        [CLSCompliant(false)]
-//        public void objectOnActivate(Db4objects.Db4o.IObjectContainer container)
-//        {
-//            container.Activate(this, int.MaxValue);
-//            EmptyObjectsRemoved = delegate{};
-//            WireUpEvents();
-//        }
-
-		/// <summary>
-		/// Do the non-db40-specific parts of becoming activated
-		/// </summary>
-		public void FinishActivation()
-		{
-			EmptyObjectsRemoved = delegate{};
-			WireUpEvents();
-		}
-
-		public abstract bool IsEmpty{get;}
+		public abstract bool IsEmpty { get; }
 
 		/// <summary>
 		/// see comment on _parent field of MultiText for an explanation of this field
@@ -87,11 +47,12 @@ namespace WeSay.Foundation
 				Debug.Assert(value != null);
 				_parent = value;
 			}
-	   }
+		}
 
 		public List<KeyValuePair<string, object>> Properties
 		{
-			get {
+			get
+			{
 				if (_properties == null)
 				{
 					_properties = new List<KeyValuePair<string, object>>();
@@ -102,6 +63,56 @@ namespace WeSay.Foundation
 			}
 		}
 
+		public bool HasProperties
+		{
+			get
+			{
+				foreach (KeyValuePair<string, object> pair in _properties)
+				{
+					if (!IsPropertyEmpty(pair.Value))
+					{
+						return true;
+					}
+				}
+				return false;
+			}
+		}
+
+		public bool HasPropertiesForPurposesOfDeletion
+		{
+			get
+			{
+				foreach (KeyValuePair<string, object> pair in _properties)
+				{
+					if (!IsPropertyEmptyForPurposesOfDeletion(pair.Value))
+					{
+						return true;
+					}
+				}
+				return false;
+			}
+		}
+
+		#region INotifyPropertyChanged Members
+
+		/// <summary>
+		/// For INotifyPropertyChanged
+		/// </summary>
+		public event PropertyChangedEventHandler PropertyChanged = delegate { };
+
+		#endregion
+
+		public event EventHandler EmptyObjectsRemoved = delegate { };
+
+		/// <summary>
+		/// Do the non-db40-specific parts of becoming activated
+		/// </summary>
+		public void FinishActivation()
+		{
+			EmptyObjectsRemoved = delegate { };
+			WireUpEvents();
+		}
+
 		protected void WireUpList(IBindingList list, string listName)
 		{
 			_listEventHelpers.Add(new ListEventHelper(this, list, listName));
@@ -110,16 +121,17 @@ namespace WeSay.Foundation
 		protected virtual void WireUpEvents()
 		{
 			_listEventHelpers = new ArrayList();
-			PropertyChanged += new PropertyChangedEventHandler(OnPropertyChanged);
+			PropertyChanged += OnPropertyChanged;
 		}
 
-		void OnEmptyObjectsRemoved(object sender, EventArgs e)
+		private void OnEmptyObjectsRemoved(object sender, EventArgs e)
 		{
 			// perculate up
 			EmptyObjectsRemoved(sender, e);
 		}
 
-		protected void OnEmptyObjectsRemoved() {
+		protected void OnEmptyObjectsRemoved()
+		{
 			EmptyObjectsRemoved(this, new EventArgs());
 		}
 
@@ -130,10 +142,10 @@ namespace WeSay.Foundation
 
 		public void WireUpChild(INotifyPropertyChanged child)
 		{
-			child.PropertyChanged += new PropertyChangedEventHandler(OnChildObjectPropertyChanged);
+			child.PropertyChanged += OnChildObjectPropertyChanged;
 			if (child is WeSayDataObject)
 			{
-			   ((WeSayDataObject)child).EmptyObjectsRemoved += new EventHandler(OnEmptyObjectsRemoved);
+				((WeSayDataObject) child).EmptyObjectsRemoved += OnEmptyObjectsRemoved;
 			}
 		}
 
@@ -144,7 +156,7 @@ namespace WeSay.Foundation
 		/// <remarks>The only side effect of this should be to update the dateModified fields</remarks>
 		public virtual void SomethingWasModified(string propertyModified)
 		{
-		   //NO: can't do this until really putting the record to bed;
+			//NO: can't do this until really putting the record to bed;
 			//only the display code knows when to do that.      RemoveEmptyProperties();
 		}
 
@@ -164,7 +176,7 @@ namespace WeSay.Foundation
 			// remove any custom fields that are empty
 			int count = Properties.Count;
 
-			for (int i = count - 1; i >= 0; i--)
+			for (int i = count - 1;i >= 0;i--)
 			{
 				object property = Properties[i].Value;
 				if (property is IEmptinessCleanup)
@@ -178,7 +190,7 @@ namespace WeSay.Foundation
 			}
 		}
 
-		static private bool IsPropertyEmpty(object property)
+		private static bool IsPropertyEmpty(object property)
 		{
 			if (property is MultiText)
 			{
@@ -186,21 +198,23 @@ namespace WeSay.Foundation
 			}
 			else if (property is OptionRef)
 			{
-				return ((OptionRef)property).IsEmpty;
+				return ((OptionRef) property).IsEmpty;
 			}
 			else if (property is OptionRefCollection)
 			{
-				return ((OptionRefCollection)property).IsEmpty;
+				return ((OptionRefCollection) property).IsEmpty;
 			}
-			else if (property is  IEmptinessCleanup)
+			else if (property is IEmptinessCleanup)
 			{
-				return ((IEmptinessCleanup) property).ShouldCountAsNonEmptyForPurposesOfDeletion;
+				return
+						((IEmptinessCleanup) property).
+								ShouldCountAsNonEmptyForPurposesOfDeletion;
 			}
-//            Debug.Fail("Unknown property type");
-			return false;//don't throw it away if you don't know what it is
+			//            Debug.Fail("Unknown property type");
+			return false; //don't throw it away if you don't know what it is
 		}
 
-		static private bool IsPropertyEmptyForPurposesOfDeletion(object property)
+		private static bool IsPropertyEmptyForPurposesOfDeletion(object property)
 		{
 			if (property is MultiText)
 			{
@@ -218,48 +232,23 @@ namespace WeSay.Foundation
 			{
 				return IsPropertyEmpty(property);
 			}
-			return false;//don't throw it away if you don't know what it is
+			return false; //don't throw it away if you don't know what it is
 		}
 
-		public bool HasProperties
-		{
-			get
-			{
-				foreach (KeyValuePair<string, object> pair in _properties)
-				{
-					if(!IsPropertyEmpty(pair.Value))
-					{
-						return true;
-					}
-				}
-				return false;
-			}
-		}
-		public bool HasPropertiesForPurposesOfDeletion
-		{
-			get
-			{
-				foreach (KeyValuePair<string, object> pair in _properties)
-				{
-					if (!IsPropertyEmptyForPurposesOfDeletion(pair.Value))
-					{
-						return true;
-					}
-				}
-				return false;
-			}
-		}
 		public void NotifyPropertyChanged(string propertyName)
 		{
 			PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 		}
 
-		protected virtual void OnChildObjectPropertyChanged(object sender, PropertyChangedEventArgs e)
+		protected virtual void OnChildObjectPropertyChanged(object sender,
+															PropertyChangedEventArgs
+																	e)
 		{
 			NotifyPropertyChanged(e.PropertyName);
 		}
 
-		public TContents GetOrCreateProperty<TContents>(string fieldName) where TContents : class, IParentable, new()
+		public TContents GetOrCreateProperty<TContents>(string fieldName)
+				where TContents : class, IParentable, new()
 		{
 			TContents value = GetProperty<TContents>(fieldName);
 			if (value != null)
@@ -286,15 +275,18 @@ namespace WeSay.Foundation
 		/// </summary>
 		/// <typeparam name="TContents"></typeparam>
 		/// <returns>null if not found</returns>
-		public TContents GetProperty<TContents>(string fieldName) where TContents : class//, IParentable
+		public TContents GetProperty<TContents>(string fieldName)
+				where TContents : class //, IParentable
 		{
-			KeyValuePair<string, object> found = Properties.Find(delegate(KeyValuePair<string, object> p) { return p.Key == fieldName; });
+			KeyValuePair<string, object> found =
+					Properties.Find(
+							delegate(KeyValuePair<string, object> p) { return p.Key == fieldName; });
 			if (found.Key == fieldName)
 			{
 				//temp hack until mt's use parents for notification
 				if (found.Value is MultiText)
 				{
-					WireUpChild((INotifyPropertyChanged)found.Value);
+					WireUpChild((INotifyPropertyChanged) found.Value);
 				}
 				return found.Value as TContents;
 			}
@@ -305,7 +297,9 @@ namespace WeSay.Foundation
 		{
 			FlagState flag = GetProperty<FlagState>(propertyName);
 			if (flag == null)
+			{
 				return false;
+			}
 			return flag.Value;
 		}
 
@@ -319,13 +313,13 @@ namespace WeSay.Foundation
 		{
 			FlagState f = GetOrCreateProperty<FlagState>(propertyName);
 			f.Value = true;
-//            KeyValuePair<FlagState, object> found = Properties.Find(delegate(KeyValuePair<FlagState, object> p) { return p.Key == propertyName; });
-//            if (found.Key == propertyName)
-//            {
-//                _properties.Remove(found);
-//            }
-//
-//            Properties.Add(new KeyValuePair<string, object>(propertyName, "set"));
+			//            KeyValuePair<FlagState, object> found = Properties.Find(delegate(KeyValuePair<FlagState, object> p) { return p.Key == propertyName; });
+			//            if (found.Key == propertyName)
+			//            {
+			//                _properties.Remove(found);
+			//            }
+			//
+			//            Properties.Add(new KeyValuePair<string, object>(propertyName, "set"));
 		}
 
 		/// <summary>
@@ -335,20 +329,28 @@ namespace WeSay.Foundation
 		/// <param name="propertyName"></param>
 		public void ClearFlag(string propertyName)
 		{
-			KeyValuePair<string, object> found = Properties.Find(delegate(KeyValuePair<string, object> p) { return p.Key == propertyName; });
+			KeyValuePair<string, object> found =
+					Properties.Find(
+							delegate(KeyValuePair<string, object> p) { return p.Key == propertyName; });
 			if (found.Key == propertyName)
 			{
 				_properties.Remove(found);
 			}
 		}
+
+		#region Nested type: WellKnownProperties
+
+		public class WellKnownProperties
+		{
+			public static string Note = "note";
+		} ;
+
+		#endregion
 	}
 
 	public interface IEmptinessCleanup
 	{
-		bool ShouldCountAsNonEmptyForPurposesOfDeletion
-		{
-			get;
-		}
+		bool ShouldCountAsNonEmptyForPurposesOfDeletion { get; }
 
 		void RemoveEmptyStuff();
 	}
@@ -361,34 +363,36 @@ namespace WeSay.Foundation
 	/// </summary>
 	public class ListEventHelper
 	{
-		private WeSayDataObject _listOwner;
-		private string _listName;
+		private readonly string _listName;
+		private readonly WeSayDataObject _listOwner;
 
-		public ListEventHelper(WeSayDataObject listOwner, IBindingList list, string listName)
+		public ListEventHelper(WeSayDataObject listOwner,
+							   IBindingList list,
+							   string listName)
 		{
 			_listOwner = listOwner;
 			_listName = listName;
-			list.ListChanged += new ListChangedEventHandler(OnListChanged);
+			list.ListChanged += OnListChanged;
 			foreach (INotifyPropertyChanged x in list)
 			{
 				_listOwner.WireUpChild(x);
 			}
 		}
 
-		void OnListChanged(object sender, ListChangedEventArgs e)
+		private void OnListChanged(object sender, ListChangedEventArgs e)
 		{
 			if (e.ListChangedType == ListChangedType.ItemAdded)
 			{
 				IBindingList list = (IBindingList) sender;
-				INotifyPropertyChanged newGuy = (INotifyPropertyChanged)list[e.NewIndex];
+				INotifyPropertyChanged newGuy =
+						(INotifyPropertyChanged) list[e.NewIndex];
 				_listOwner.WireUpChild(newGuy);
 				if (newGuy is WeSayDataObject)
 				{
-					((WeSayDataObject) newGuy).Parent =  this._listOwner;
+					((WeSayDataObject) newGuy).Parent = _listOwner;
 				}
 			}
 			_listOwner.NotifyPropertyChanged(_listName);
 		}
-
 	}
 }

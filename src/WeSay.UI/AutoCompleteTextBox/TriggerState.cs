@@ -2,13 +2,13 @@
 
 using System;
 
-namespace WeSay.UI
+namespace WeSay.UI.AutoCompleteTextBox
 {
 	/// <summary>
 	/// Summary description for TriggerState.
 	/// </summary>
 	[Serializable]
-	public enum TriggerState : int
+	public enum TriggerState
 	{
 		None = 0,
 		Show = 1,

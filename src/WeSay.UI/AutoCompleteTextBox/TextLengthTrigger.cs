@@ -2,7 +2,7 @@
 
 using System;
 
-namespace WeSay.UI
+namespace WeSay.UI.AutoCompleteTextBox
 {
 	/// <summary>
 	/// Summary description for TextLengthTrigger.
@@ -34,9 +34,9 @@ namespace WeSay.UI
 
 		public override TriggerState OnTextChanged(string text)
 		{
-			if (text.Length >= this.TextLength)
+			if (text.Length >= TextLength)
 				return TriggerState.Show;
-			else if (text.Length < this.TextLength)
+			else if (text.Length < TextLength)
 				return TriggerState.Hide;
 
 			return TriggerState.None;

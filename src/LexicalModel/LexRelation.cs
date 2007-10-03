@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using WeSay.Foundation;
 
 namespace WeSay.LexicalModel
@@ -19,9 +18,9 @@ namespace WeSay.LexicalModel
 			Sense
 		}
 
-		private string _id;
-		private Multiplicities _multiplicity;
-		private TargetTypes _targetType;
+		private readonly string _id;
+		private readonly Multiplicities _multiplicity;
+		private readonly TargetTypes _targetType;
 
 		public LexRelationType(string id, Multiplicities multiplicity, TargetTypes targetType)
 		{
@@ -121,8 +120,7 @@ namespace WeSay.LexicalModel
 				}
 				else
 				{
-					LexEntry entry = value as LexEntry;
-					Debug.Assert(entry != null);
+					LexEntry entry = (LexEntry)value;
 					_targetId = entry.GetOrCreateId(true);
 				}
 				NotifyPropertyChanged();
@@ -155,7 +153,7 @@ namespace WeSay.LexicalModel
 		/// </summary>
 		public LexEntry Value
 		{
-			get { return Target as LexEntry; }
+			get{return (LexEntry)Target;}
 			set { Target = value; }
 		}
 

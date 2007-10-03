@@ -6,8 +6,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using WeSay.Foundation;
 using WeSay.Language;
-
-
+using WeSay.UI.AutoCompleteTextBox;
 
 namespace WeSay.UI
 {
@@ -24,7 +23,7 @@ namespace WeSay.UI
 		public event EventHandler CollectionChanged;
 
 
-		public event EventHandler<AutoCompleteWithCreationBox<CONTAINER>.CreateNewArgs> CreateNewTargetItem;
+		public event EventHandler<CreateNewArgs> CreateNewTargetItem;
 
 		public ReferenceCollectionEditor()
 		{
@@ -115,7 +114,7 @@ namespace WeSay.UI
 			WritingSystem ws = new WeSay.Language.WritingSystem();
 			foreach (CONTAINER referenceContainer in _collection)
 			{
-				AutoCompleteWithCreationBox<CONTAINER> picker = new AutoCompleteWithCreationBox<CONTAINER>();
+				AutoCompleteWithCreationBox<CONTAINER,CONTAINER> picker = new AutoCompleteWithCreationBox<CONTAINER,CONTAINER>();
 				if(_formToObectFinderDelegate !=null)
 				{
 					picker.Box.FormToObectFinder = _formToObectFinderDelegate;
@@ -133,12 +132,12 @@ namespace WeSay.UI
 				picker.Box.MinimumSize = new Size(20, 10);
 			   // box.BorderStyle = System.Windows.Forms.BorderStyle.None;
 				picker.Box.SelectedItem = referenceContainer.Target; //todo: change this
-				picker.CreateNewClicked += new EventHandler<AutoCompleteWithCreationBox<CONTAINER>.CreateNewArgs>(picker_CreateNewClicked);
+				picker.CreateNewClicked += new EventHandler<CreateNewArgs>(picker_CreateNewClicked);
 				_flowPanel.Controls.Add(picker);
 			}
 		}
 
-		void picker_CreateNewClicked(object sender, AutoCompleteWithCreationBox<CONTAINER>.CreateNewArgs e)
+		void picker_CreateNewClicked(object sender, CreateNewArgs e)
 		{
 			if (this.CreateNewTargetItem!=null)
 			{

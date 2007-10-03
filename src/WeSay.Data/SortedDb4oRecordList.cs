@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
@@ -16,9 +17,9 @@ namespace WeSay.Data
 
 	public class KeyValueComparer<Key, Value> : IComparer<KeyValuePair<Key, Value>>
 	{
-		private IComparer<Key> _keySorter;
-		private IComparer<Value> _valueSorter;
-		private SortBy _sortBy;
+		private readonly IComparer<Key> _keySorter;
+		private readonly IComparer<Value> _valueSorter;
+		private readonly SortBy _sortBy;
 
 		public KeyValueComparer(IComparer<Key> keySorter, IComparer<Value> valueSorter, SortBy sortBy)
 		{
@@ -64,10 +65,10 @@ namespace WeSay.Data
 		private List<KeyValuePair<K, long>> _keyIdMap;
 		private List<KeyValuePair<K, long>> _idKeyMap;
 		private Db4oRecordList<T> _masterRecordList;
-		private string _cachePath;
-		private KeyValueComparer<K, long> _keyIdSorter;
-		private KeyValueComparer<K, long> _idKeySorter;
-		private ISortHelper<K, T> _sortHelper;
+		private readonly string _cachePath;
+		private readonly KeyValueComparer<K, long> _keyIdSorter;
+		private readonly KeyValueComparer<K, long> _idKeySorter;
+		private readonly ISortHelper<K, T> _sortHelper;
 
 		public CachedSortedDb4oList(Db4oRecordListManager recordListManager, ISortHelper<K, T> sortHelper)
 		{
@@ -101,10 +102,9 @@ namespace WeSay.Data
 				Sort();
 			}
 
-			MasterRecordList.ListChanged += new ListChangedEventHandler(OnMasterRecordListListChanged);
-			MasterRecordList.DeletingRecord +=
-					new EventHandler<RecordListEventArgs<T>>(OnMasterRecordListDeletingRecord);
-			MasterRecordList.ContentOfItemInListChanged += new ListChangedEventHandler(OnMasterRecordListContentChanged);
+			MasterRecordList.ListChanged += OnMasterRecordListListChanged;
+			MasterRecordList.DeletingRecord += OnMasterRecordListDeletingRecord;
+			MasterRecordList.ContentOfItemInListChanged += OnMasterRecordListContentChanged;
 		}
 
 		private string CacheFilePath
@@ -167,7 +167,7 @@ namespace WeSay.Data
 							int filterHashCode = (int) formatter.Deserialize(fs);
 							if (filterHashCode == GetSorterHashCode())
 							{
-								_keyIdMap = (List<KeyValuePair<K, long>>) formatter.Deserialize(fs);
+								_keyIdMap = (List<KeyValuePair<K, long>>)formatter.Deserialize(fs);
 								_idKeyMap = new List<KeyValuePair<K, long>>(_keyIdMap);
 								_idKeyMap.Sort(_idKeySorter);
 							}
@@ -460,9 +460,9 @@ namespace WeSay.Data
 			KeyValuePair<K, long> keyIdPair = new KeyValuePair<K, long>(key, 0);
 
 			int index = _keyIdMap.BinarySearch(keyIdPair, _keyIdSorter);
-			if (index < 0 && ~index != _keyIdMap.Count)
+			if (index < 0 && ~index != this._keyIdMap.Count)
 			{
-				if (_sortHelper.KeyComparer.Compare(_keyIdMap[~index].Key, key) == 0)
+				if (_sortHelper.KeyComparer.Compare(this._keyIdMap[~index].Key, key) == 0)
 				{
 					index = ~index;
 				}
@@ -612,7 +612,7 @@ namespace WeSay.Data
 		public IList<long> GetIds()
 		{
 			List<long> result = new List<long>();
-			foreach (KeyValuePair<K, long> pair in _keyIdMap)
+			foreach (KeyValuePair<K, long> pair in this._keyIdMap)
 			{
 				result.Add(pair.Value);
 			}
@@ -696,11 +696,17 @@ namespace WeSay.Data
 			VerifyNotDisposed();
 			return MasterRecordList[MasterRecordList.GetIndexFromId(_keyIdMap[index].Value)];
 		}
+		public T GetValueFromId(long id)
+		{
+			VerifyNotDisposed();
+			return MasterRecordList[MasterRecordList.GetIndexFromId(id)];
+		}
+
 
 		public long GetId(int index)
 		{
 			VerifyNotDisposed();
-			return _keyIdMap[index].Value;
+			return this._keyIdMap[index].Value;
 		}
 
 		#endregion
@@ -718,7 +724,7 @@ namespace WeSay.Data
 			get
 			{
 				VerifyNotDisposed();
-				return _keyIdMap.Count;
+				return this._keyIdMap.Count;
 			}
 		}
 
@@ -744,6 +750,11 @@ namespace WeSay.Data
 		{
 			get { return _masterRecordList; }
 			set { _masterRecordList = value; }
+		}
+
+		public ReadOnlyCollection<KeyValuePair<K, long>> KeyIdMap
+		{
+			get { return this._keyIdMap.AsReadOnly(); }
 		}
 
 		#endregion
@@ -813,6 +824,7 @@ namespace WeSay.Data
 			void IDisposable.Dispose()
 			{
 				_collection = null;
+				_isDisposed = true;
 			}
 
 			#endregion
@@ -866,10 +878,10 @@ namespace WeSay.Data
 		IEnumerator<K> IEnumerable<K>.GetEnumerator()
 		{
 			VerifyNotDisposed();
-			int count = _keyIdMap.Count;
+			int count = this._keyIdMap.Count;
 			for (int i = 0; i < count; i++)
 			{
-				yield return _keyIdMap[i].Key;
+				yield return this._keyIdMap[i].Key;
 			}
 		}
 

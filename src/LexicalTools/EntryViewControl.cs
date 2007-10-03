@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel;
 using System.Windows.Forms;
 using Palaso.Reporting;
+using WeSay.Data;
 using WeSay.LexicalModel;
 using WeSay.Project;
 using WeSay.UI;
@@ -107,9 +108,9 @@ namespace WeSay.LexicalTools
 		/// <summary>
 		/// Use for establishing relations been this entry and the rest
 		/// </summary>
-		public IBindingList AllRecords
+		public IRecordListManager RecordListManager
 		{
-			set { _allRecords = value; }
+			set { _recordListManager = value; }
 		}
 
 		private void OnEmptyObjectsRemoved(object sender, EventArgs e)
@@ -194,7 +195,7 @@ namespace WeSay.LexicalTools
 				_panelEntry.Controls.Add(_detailListControl);
 				if (_record != null)
 				{
-					LexEntryLayouter layout = new LexEntryLayouter(_detailListControl, ViewTemplate, _allRecords);
+					LexEntryLayouter layout = new LexEntryLayouter(_detailListControl, ViewTemplate, _recordListManager);
 					layout.AddWidgets(_record);
 				}
 				_detailListControl.ResumeLayout();
@@ -213,7 +214,7 @@ namespace WeSay.LexicalTools
 		}
 
 		private CurrentItemEventArgs _currentItemInFocus;
-		private IBindingList _allRecords;
+		private IRecordListManager _recordListManager;
 
 		private void LexPreviewWithEntryControl_BackColorChanged(object sender, EventArgs e)
 		{

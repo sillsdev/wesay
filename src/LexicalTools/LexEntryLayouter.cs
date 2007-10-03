@@ -1,4 +1,5 @@
 using System.Windows.Forms;
+using WeSay.Data;
 using WeSay.Foundation;
 using WeSay.LexicalModel;
 using WeSay.Project;
@@ -13,8 +14,8 @@ namespace WeSay.LexicalTools
 	public class LexEntryLayouter : Layouter
 	{
 
-		public LexEntryLayouter(DetailList builder, ViewTemplate viewTemplate, IBindingList allRecords)
-			: base(builder, viewTemplate, allRecords)
+		public LexEntryLayouter(DetailList builder, ViewTemplate viewTemplate, IRecordListManager recordListManager)
+			: base(builder, viewTemplate, recordListManager)
 		{
 		}
 
@@ -42,7 +43,7 @@ namespace WeSay.LexicalTools
 			}
 			rowCount += AddCustomFields(entry, insertAtRow+rowCount);
 
-			LexSenseLayouter layouter = new LexSenseLayouter(DetailList, ActiveViewTemplate, _allRecords);
+			LexSenseLayouter layouter = new LexSenseLayouter(DetailList, ActiveViewTemplate, RecordListManager);
 			rowCount = AddChildrenWidgets(layouter, entry.Senses, insertAtRow, rowCount);
 			//add a ghost
 			rowCount += layouter.AddGhost(entry.Senses, true);

@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Forms;
+using WeSay.Data;
 using WeSay.Foundation;
 using WeSay.Language;
 using WeSay.LexicalModel;
@@ -21,12 +23,12 @@ namespace WeSay.LexicalTools
 		/// <summary>
 		/// The DetailList we are filling.
 		/// </summary>
-		protected DetailList _detailList;
+		private DetailList _detailList;
 
 		/// <summary>
 		/// Use for establishing relations been this entry and the rest
 		/// </summary>
-		protected IBindingList _allRecords;
+		private readonly IRecordListManager _recordListManager;
 
 		private readonly ViewTemplate _viewTemplate;
 
@@ -48,7 +50,15 @@ namespace WeSay.LexicalTools
 			get { return _viewTemplate; }
 		}
 
-		protected Layouter(DetailList builder, ViewTemplate viewTemplate, IBindingList allRecords)
+		/// <summary>
+		/// Use for establishing relations been this entry and the rest
+		/// </summary>
+		protected IRecordListManager RecordListManager
+		{
+			get { return this._recordListManager; }
+		}
+
+		protected Layouter(DetailList builder, ViewTemplate viewTemplate, IRecordListManager recordListManager)
 		{
 			if (builder == null)
 			{
@@ -60,7 +70,7 @@ namespace WeSay.LexicalTools
 			}
 			_detailList = builder;
 			_viewTemplate = viewTemplate;
-			_allRecords = allRecords;
+			_recordListManager = recordListManager;
 		}
 
 		/// <summary>
@@ -101,8 +111,7 @@ namespace WeSay.LexicalTools
 			foreach (WeSayTextBox box in control.TextBoxes)
 			{
 				TextBinding binding = new TextBinding(multiTextToBindTo, box.WritingSystem.Id, box);
-				binding.ChangeOfWhichItemIsInFocus +=
-						new EventHandler<CurrentItemEventArgs>(_detailList.OnBinding_ChangeOfWhichItemIsInFocus);
+				binding.ChangeOfWhichItemIsInFocus += this._detailList.OnBinding_ChangeOfWhichItemIsInFocus;
 			}
 		}
 
@@ -158,9 +167,8 @@ namespace WeSay.LexicalTools
 													  WeSayTextBox entry) where T : new()
 		{
 			GhostBinding<T> binding = new GhostBinding<T>(list, ghostPropertyName, writingSystem, entry);
-			binding.LayoutNeededAfterMadeReal += new GhostBinding<T>.LayoutNeededHandler(OnGhostBindingLayoutNeeded<T>);
-			binding.CurrentItemChanged +=
-					new EventHandler<CurrentItemEventArgs>(_detailList.OnBinding_ChangeOfWhichItemIsInFocus);
+			binding.LayoutNeededAfterMadeReal += OnGhostBindingLayoutNeeded;
+			binding.CurrentItemChanged += this._detailList.OnBinding_ChangeOfWhichItemIsInFocus;
 			return binding;
 		}
 
@@ -319,7 +327,7 @@ namespace WeSay.LexicalTools
 					RelationController.CreateWidget(target,
 													type,
 													field,
-													_allRecords,
+													_recordListManager,
 													_detailList.OnBinding_ChangeOfWhichItemIsInFocus);
 		}
 
@@ -347,8 +355,7 @@ namespace WeSay.LexicalTools
 			SingleOptionControl control =
 					new SingleOptionControl(optionRefTarget, list, field.WritingSystemIds[0], field.FieldName);
 			SimpleBinding<string> binding = new SimpleBinding<string>(optionRefTarget, control);
-			binding.CurrentItemChanged +=
-					new EventHandler<CurrentItemEventArgs>(_detailList.OnBinding_ChangeOfWhichItemIsInFocus);
+			binding.CurrentItemChanged +=this._detailList.OnBinding_ChangeOfWhichItemIsInFocus;
 			return control;
 		}
 
@@ -368,7 +375,7 @@ namespace WeSay.LexicalTools
 
 			CheckBoxControl control = new CheckBoxControl(boxState.Value, field.DisplayName, field.FieldName);
 			SimpleBinding<bool> binding = new SimpleBinding<bool>(boxState, control);
-			binding.CurrentItemChanged += new EventHandler<CurrentItemEventArgs>(_detailList.OnBinding_ChangeOfWhichItemIsInFocus);
+			binding.CurrentItemChanged += this._detailList.OnBinding_ChangeOfWhichItemIsInFocus;
 			return control;
 		}
 
@@ -376,13 +383,13 @@ namespace WeSay.LexicalTools
 		{
 			PictureRef pictureRef = target.GetOrCreateProperty<PictureRef>(field.FieldName);
 
-			PictureControl control = new PictureControl(field.FieldName, Project.WeSayWordsProject.Project.PathToPictures);
+			PictureControl control = new PictureControl(field.FieldName, WeSayWordsProject.Project.PathToPictures);
 			if (!String.IsNullOrEmpty(pictureRef.Value))
 			{
 				control.Value = pictureRef.Value;
 			}
 			SimpleBinding<string> binding = new SimpleBinding<string>(pictureRef, control);
-			binding.CurrentItemChanged += new EventHandler<CurrentItemEventArgs>(_detailList.OnBinding_ChangeOfWhichItemIsInFocus);
+			binding.CurrentItemChanged += this._detailList.OnBinding_ChangeOfWhichItemIsInFocus;
 			return control;
 		}
 	}

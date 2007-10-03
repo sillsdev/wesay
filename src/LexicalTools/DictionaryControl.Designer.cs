@@ -1,5 +1,6 @@
 using System.Windows.Forms;
 using WeSay.UI;
+using WeSay.UI.AutoCompleteTextBox;
 
 namespace WeSay.LexicalTools
 {
@@ -44,7 +45,7 @@ namespace WeSay.LexicalTools
 			this.components = new System.ComponentModel.Container();
 			this.panelWordList = new System.Windows.Forms.Panel();
 			this._btnFind = new System.Windows.Forms.Button();
-			this._findText = new WeSay.UI.WeSayAutoCompleteTextBox();
+			this._findText = new WeSay.UI.AutoCompleteTextBox.WeSayAutoCompleteTextBox();
 			this._writingSystemChooser = new System.Windows.Forms.Button();
 			this._findWritingSystemId = new System.Windows.Forms.Label();
 			this._recordsListBox = new WeSay.UI.WeSayListBox();
@@ -104,7 +105,6 @@ namespace WeSay.LexicalTools
 			this._findText.PopupSelectionBackColor = System.Drawing.SystemColors.Highlight;
 			this._findText.PopupSelectionForeColor = System.Drawing.SystemColors.HighlightText;
 			this._findText.PopupWidth = 118;
-			this._findText.SelectedItem = null;
 			this._findText.Size = new System.Drawing.Size(80, 19);
 			this._findText.TabIndex = 1;
 			this._findText.TooltipToDisplayStringAdaptor = null;

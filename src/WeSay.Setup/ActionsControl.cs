@@ -1,54 +1,48 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.IO;
-using System.Text;
 using System.Windows.Forms;
 using Mono.Addins;
+using Palaso.Reporting;
 using WeSay.AddinLib;
 using WeSay.Project;
 
 namespace WeSay.Setup
 {
-	public partial class ActionsControl : ConfigurationControlBase
+	public partial class ActionsControl: ConfigurationControlBase
 	{
-		private bool _loaded=false;
-
-		public ActionsControl():base("setup and use plug-in actions")
+		public ActionsControl(): base("setup and use plug-in actions")
 		{
 			InitializeComponent();
-			this.Resize += new EventHandler(ActionsControl_Resize);
+			Resize += ActionsControl_Resize;
 		}
 
-		void ActionsControl_Resize(object sender, EventArgs e)
+		private void ActionsControl_Resize(object sender, EventArgs e)
 		{
 			//this is part of dealing with .net not adjusting stuff well for different dpis
 
-			this._addinsList.Width = this.Width - 20;
-			this._addinsList.Height = (this.Height - _addinsList.Top) - 40;
+			_addinsList.Width = Width - 20;
+			_addinsList.Height = (Height - _addinsList.Top) - 40;
 		}
 
-//        private void OnVisibleChanged(object sender, EventArgs e)
-//        {
-//            if (Visible)
-//            {
-//                if (!_loaded)
-//                {
-//                    LoadAddins();
-//                    _loaded = true;
-//                }
-//               // UpdateStatesOfThings();
-//            }
-//        }
+		//        private void OnVisibleChanged(object sender, EventArgs e)
+		//        {
+		//            if (Visible)
+		//            {
+		//                if (!_loaded)
+		//                {
+		//                    LoadAddins();
+		//                    _loaded = true;
+		//                }
+		//               // UpdateStatesOfThings();
+		//            }
+		//        }
 
 		private void LoadAddins()
 		{
 			List<string> alreadyFound = new List<string>();
 
 			_addinsList.Clear();
-			if(!AddinManager.IsInitialized)
+			if (!AddinManager.IsInitialized)
 			{
 				AddinManager.Initialize(Application.UserAppDataPath);
 				AddinManager.Registry.Rebuild(null);
@@ -56,13 +50,16 @@ namespace WeSay.Setup
 				AddinManager.Initialize(Application.UserAppDataPath);
 				//these (at least AddinLoaded) does get called after initialize, when you
 				//do a search for objects (e.g. GetExtensionObjects())
-				AddinManager.AddinLoaded += new AddinEventHandler(AddinManager_AddinLoaded);
-				AddinManager.AddinLoadError += new AddinErrorEventHandler(AddinManager_AddinLoadError);
-				AddinManager.AddinUnloaded += new AddinEventHandler(AddinManager_AddinUnloaded);
-				AddinManager.ExtensionChanged += new ExtensionEventHandler(AddinManager_ExtensionChanged);
+				AddinManager.AddinLoaded +=AddinManager_AddinLoaded;
+				AddinManager.AddinLoadError +=AddinManager_AddinLoadError;
+				AddinManager.AddinUnloaded +=AddinManager_AddinUnloaded;
+				AddinManager.ExtensionChanged +=AddinManager_ExtensionChanged;
 			}
 
-			foreach (IWeSayAddin addin in AddinManager.GetExtensionObjects(typeof(IWeSayAddin)))
+			foreach (
+					IWeSayAddin addin in
+							AddinManager.GetExtensionObjects(
+									typeof (IWeSayAddin)))
 			{
 				//this alreadyFound business is a hack to prevent duplication in some
 				// situation I haven't tracked down yet.
@@ -76,7 +73,8 @@ namespace WeSay.Setup
 			AddAddin(new ComingSomedayAddin("Export To Word", ""));
 			AddAddin(new ComingSomedayAddin("Export To Lexique Pro", ""));
 			AddAddin(
-				new ComingSomedayAddin("Send project to developers", "Sends your project to WeSay for help/debugging."));
+					new ComingSomedayAddin("Send project to developers",
+										   "Sends your project to WeSay for help/debugging."));
 		}
 
 		private void AddAddin(IWeSayAddin addin)
@@ -84,57 +82,61 @@ namespace WeSay.Setup
 			ActionItemControl control = new ActionItemControl(addin, true);
 			control.DoShowInWeSay = AddinSet.Singleton.DoShowInWeSay(addin.ID);
 			_addinsList.AddControlToBottom(control);
-			control.Launch += new EventHandler(OnLaunchAction);
+			control.Launch += OnLaunchAction;
 		}
 
-		void OnLaunchAction(object sender, EventArgs e)
+		private void OnLaunchAction(object sender, EventArgs e)
 		{
+			IWeSayAddin addin = (IWeSayAddin)sender;
 
-			IWeSayAddin addin = sender as IWeSayAddin;
-
-			WeSayWordsProject project = Project.WeSayWordsProject.Project;
-			string[] filesBelongingToProject = WeSayWordsProject.GetFilesBelongingToProject(project.ProjectDirectoryPath);
+			WeSayWordsProject project = WeSayWordsProject.Project;
+			string[] filesBelongingToProject =
+					WeSayWordsProject.GetFilesBelongingToProject(
+							project.ProjectDirectoryPath);
 			ProjectInfo projectInfo = new ProjectInfo(project.Name,
-										 project.ProjectDirectoryPath,
-										 project.PathToLiftFile,
-										 filesBelongingToProject,
-										 WeSay.AddinLib.AddinSet.Singleton.LocateFile);
+													  project.
+															  ProjectDirectoryPath,
+													  project.PathToLiftFile,
+													  filesBelongingToProject,
+													  AddinSet.Singleton.
+															  LocateFile);
 
 			try
 			{
-				addin.Launch(this.ParentForm, projectInfo);
+				addin.Launch(ParentForm, projectInfo);
 			}
 			catch (Exception error)
 			{
-				Palaso.Reporting.ErrorReport.ReportNonFatalMessage(error.Message);
+				ErrorReport.ReportNonFatalMessage(error.Message);
 			}
 		}
 
-		void AddinManager_ExtensionChanged(object sender, ExtensionEventArgs args)
+		private static void AddinManager_ExtensionChanged(object sender,
+												   ExtensionEventArgs args)
 		{
-			Palaso.Reporting.Logger.WriteEvent("Addin 'extensionChanged': {0}",args.Path);
+			Logger.WriteEvent("Addin 'extensionChanged': {0}", args.Path);
 		}
 
-		void AddinManager_AddinUnloaded(object sender, AddinEventArgs args)
+		private static void AddinManager_AddinUnloaded(object sender,
+												AddinEventArgs args)
 		{
-			Palaso.Reporting.Logger.WriteEvent("Addin unloaded: {0}",args.AddinId);
+			Logger.WriteEvent("Addin unloaded: {0}", args.AddinId);
 		}
 
-		void AddinManager_AddinLoadError(object sender, AddinErrorEventArgs args)
+		private static void AddinManager_AddinLoadError(object sender,
+												 AddinErrorEventArgs args)
 		{
-			Palaso.Reporting.Logger.WriteEvent("Addin load error: {0}", args.AddinId);
+			Logger.WriteEvent("Addin load error: {0}", args.AddinId);
 		}
 
-		void AddinManager_AddinLoaded(object sender, AddinEventArgs args)
+		private static void AddinManager_AddinLoaded(object sender, AddinEventArgs args)
 		{
-			Palaso.Reporting.Logger.WriteEvent("Addin loaded: {0}", args.AddinId);
+			Logger.WriteEvent("Addin loaded: {0}", args.AddinId);
 		}
 
 		private void ActionsControl_Load(object sender, EventArgs e)
 		{
 			LoadAddins();
-			_loaded = true;
 		}
-
 	}
 }

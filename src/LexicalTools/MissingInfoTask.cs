@@ -172,7 +172,7 @@ namespace WeSay.LexicalTools
 			}
 
 
-			_missingInfoControl = new MissingInfoControl(DataSource, ViewTemplate, _filter.FilteringPredicate, allRecords);
+			_missingInfoControl = new MissingInfoControl(DataSource, ViewTemplate, _filter.FilteringPredicate, RecordListManager);
 			_missingInfoControl.SelectedIndexChanged += new EventHandler(OnRecordSelectionChanged);
 		}
 

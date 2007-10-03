@@ -1,4 +1,5 @@
 using System.Windows.Forms;
+using WeSay.Data;
 using WeSay.Foundation;
 using WeSay.LexicalModel;
 using WeSay.Project;
@@ -12,8 +13,8 @@ namespace WeSay.LexicalTools
 	/// </summary>
 	public class LexSenseLayouter : Layouter
 	{
-		public LexSenseLayouter(DetailList builder, ViewTemplate viewTemplate, IBindingList allRecords)
-			: base(builder, viewTemplate, allRecords)
+		public LexSenseLayouter(DetailList builder, ViewTemplate viewTemplate, IRecordListManager recordListManager)
+			: base(builder, viewTemplate, recordListManager)
 		{
 		}
 

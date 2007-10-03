@@ -3,7 +3,7 @@
 using System;
 using System.Windows.Forms;
 
-namespace WeSay.UI
+namespace WeSay.UI.AutoCompleteTextBox
 {
 	/// <summary>
 	/// Summary description for TextLengthTrigger.
@@ -49,8 +49,8 @@ namespace WeSay.UI
 
 		public override TriggerState OnCommandKey(Keys keyData)
 		{
-			if (keyData == this.ShortCut)
-				return this.ResultState;
+			if (keyData == ShortCut)
+				return ResultState;
 
 			return TriggerState.None;
 		}

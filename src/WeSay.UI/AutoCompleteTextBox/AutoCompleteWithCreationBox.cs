@@ -4,25 +4,41 @@ using System.Drawing;
 using System.Windows.Forms;
 using WeSay.Foundation;
 
-namespace WeSay.UI
+namespace WeSay.UI.AutoCompleteTextBox
 {
-	public partial class AutoCompleteWithCreationBox<T> : UserControl, IBindableControl<T>
-		where T:class
+	public partial class AutoCompleteWithCreationBox<KV, ValueT> : UserControl, IBindableControl<ValueT>
 	{
 		public event EventHandler<CreateNewArgs> CreateNewClicked;
 
+		public delegate ValueT GetValueFromKeyValueDelegate(KV t);
+		public delegate KV GetKeyValueFromValueDelegate(ValueT t);
+
+		private GetValueFromKeyValueDelegate _getValueFromKeyValueDelegate;
+		private GetKeyValueFromValueDelegate _getKeyValueFromValueDelegate;
 		public AutoCompleteWithCreationBox()
 		{
 			InitializeComponent();
-			_textBox.SelectedItemChanged += new EventHandler(OnSelectedItemChanged);
-			this.GotFocus += new EventHandler(OnFocusChanged);
-			_textBox.GotFocus += new EventHandler(OnFocusChanged);
-			this.LostFocus += new EventHandler(OnFocusChanged);
-			_textBox.LostFocus += new EventHandler(OnFocusChanged);
-			_addNewButton.LostFocus += new EventHandler(OnFocusChanged);
+			_textBox.SelectedItemChanged += OnSelectedItemChanged;
+			GotFocus += OnFocusChanged;
+			_textBox.GotFocus += OnFocusChanged;
+			LostFocus += OnFocusChanged;
+			_textBox.LostFocus += OnFocusChanged;
+			_addNewButton.LostFocus += OnFocusChanged;
 			UpdateDisplay();
+			GetValueFromKeyValue = CastKeyValueToValue;
+			GetKeyValueFromValue = CastValueToKeyValue;
+
 		}
 
+		private static KV CastValueToKeyValue(ValueT v)
+		{
+			return (KV) ((object)v);
+		}
+
+		private static ValueT CastKeyValueToValue(KV t)
+		{
+			return (ValueT)((object)t);
+		}
 
 		void OnFocusChanged(object sender, EventArgs e)
 		{
@@ -39,7 +55,7 @@ namespace WeSay.UI
 			}
 		}
 
-		public WeSay.UI.WeSayAutoCompleteTextBox Box
+		public WeSayAutoCompleteTextBox Box
 		{
 			get
 			{
@@ -49,7 +65,7 @@ namespace WeSay.UI
 		protected override void  OnPaint(PaintEventArgs e)
 		{
 			 base.OnPaint(e);
-			 if (!this.ContainsFocus &&  HasProblems)
+			 if (!ContainsFocus &&  HasProblems)
 			 {
 				 int y = e.ClipRectangle.Top;
 				 e.Graphics.DrawString("!", new Font(FontFamily.GenericSansSerif, 14, FontStyle.Bold),
@@ -74,15 +90,39 @@ namespace WeSay.UI
 		public event EventHandler ValueChanged;
 		public event EventHandler GoingAway;
 
-		 public T Value
+		 public ValueT Value
 		{
 			get
 			{
-				return Box.SelectedItem as T;
+				return GetValueFromKeyValue.Invoke((KV)Box.SelectedItem);
 			}
 			set
 			{
-				Box.SelectedItem = value;
+				Box.SelectedItem = GetKeyValueFromValue.Invoke(value);
+			}
+		}
+
+		public GetValueFromKeyValueDelegate GetValueFromKeyValue
+		{
+			get
+			{
+				return this._getValueFromKeyValueDelegate;
+			}
+			set
+			{
+				this._getValueFromKeyValueDelegate = value;
+			}
+		}
+
+		public GetKeyValueFromValueDelegate GetKeyValueFromValue
+		{
+			get
+			{
+				return this._getKeyValueFromValueDelegate;
+			}
+			set
+			{
+				this._getKeyValueFromValueDelegate = value;
 			}
 		}
 
@@ -148,11 +188,11 @@ namespace WeSay.UI
 			}
 			if(_addNewButton.Visible)
 			{
-				this.Width = _textBox.Width + _addNewButton.Width;
+				Width = _textBox.Width + _addNewButton.Width;
 			}
 			else
 			{
-				this.Width = _textBox.Width;
+				Width = _textBox.Width;
 			}
 			_addNewButton.Left = _textBox.Width;
 			ResumeLayout(false);
@@ -162,7 +202,7 @@ namespace WeSay.UI
 		{
 			_addNewButton.Visible = _textBox.SelectedItem == null
 				&& !string.IsNullOrEmpty(_textBox.Text)
-				&& this.ContainsFocus;
+				&& ContainsFocus;
 			UpdateElementWidth();
 		}
 
@@ -175,34 +215,35 @@ namespace WeSay.UI
 		}
 
 
-		/// <summary>
-		/// Use to make a new object from a simple form, and to notify the control of what
-		/// object was created.
-		/// </summary>
-		public class CreateNewArgs : EventArgs
-		{
-			public string LabelOfNewItem;
-			private object _newlyCreatedItem;
+	  }
+	  /// <summary>
+	  /// Use to make a new object from a simple form, and to notify the control of what
+	  /// object was created.
+	  /// </summary>
+	  public class CreateNewArgs : EventArgs
+	  {
+		  public string LabelOfNewItem;
+		  private object _newlyCreatedItem;
 
-			public CreateNewArgs(string labelOfNewItem)
-			{
-				LabelOfNewItem = labelOfNewItem;
-			}
+		  public CreateNewArgs(string labelOfNewItem)
+		  {
+			  LabelOfNewItem = labelOfNewItem;
+		  }
 
-			/// <summary>
-			/// Receiver fills this in after creating something
-			/// </summary>
-			public object NewlyCreatedItem
-			{
-				get
-				{
-					return _newlyCreatedItem;
-				}
-				set
-				{
-					_newlyCreatedItem = value;
-				}
-			}
-		}
-	}
+		  /// <summary>
+		  /// Receiver fills this in after creating something
+		  /// </summary>
+		  public object NewlyCreatedItem
+		  {
+			  get
+			  {
+				  return _newlyCreatedItem;
+			  }
+			  set
+			  {
+				  _newlyCreatedItem = value;
+			  }
+		  }
+	  }
+
 }
