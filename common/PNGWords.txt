@@ -1,0 +1,912 @@
+I/me
+you (singular)
+he, she, it/him, her
+we (inclusive dual)
+we (exclusive dual)
+you (dual)
+they (dual)
+we (inclusive plural)
+we (exclusive plural)
+you (plural)
+they (plural)
+I (controlling, ergative)
+you (controlling, ergative)
+he (controlling, ergative)
+I (myself, emphatic)
+you (yourself, emphatic)
+he (himself, emphatic)
+I (alone)
+you (alone)
+he, she (alone)
+my
+your
+his, her, its
+mine
+his, hers, its
+to/for me
+to/for you
+to/for him, her, it
+this, near speaker
+that, near addressee
+that, distal (away from SAP)
+this, proximal, focus
+that, medial, focus
+that, distal, focus
+thus, like this
+thus, like that
+here
+there, near addressee
+there
+it is here!
+it is there!, all right
+it is there!
+Eureka, it's here! (after searching)
+Eureka, it's there! (after searching)
+to/for this one
+to/for that one; therefore
+to/for that
+someone
+something
+something, focus
+who (agent)
+who/whom
+with whom
+who (comment in topic-comment clause)
+whose
+for whom?
+what
+what (plural)
+what (ergative) with what
+what, focus
+of what
+what (comment in topic-comment clause)
+why
+for what reason
+where
+toward where
+where
+which
+when
+how many
+how
+what kind of
+and (addition)
+and, and but
+and (dual accompaniment)
+and (plural accompaniment)
+or
+if/when
+but
+so: seeing, seeing that
+therefore: saying that
+speaking on account of that, therefore
+on account of that, therefore
+on account of that, therefore
+on account of that, therefore
+verb + on account of that
+because: the meaning of that (is)
+because: the reason for that (is)
+because: the purpose for that (is)
+because: the main point of that (is)
+because
+of POSSESSIVE   (*K)
+perhaps POSSIBILITY MARKER
+with PLURAL COMITATIVE (*K)
+to,  for,  in order to (Korafe = -dae)
+with DUAL COMITATIVE   (Korafe = -ghae)
+like COMPARATIVE, (on medial verbs: REPETITIVE)  (*K)
+toward DIRECTIONAL LOCATIVE (Mado)
+toward DIRECTIONAL LOCATIVE (Tapota)(*K)
+perhaps POSSIBILITY MARKER  (more common than tano)
+ERGATIVE (except for personal pronouns), INSTRUMENTAL  (Korafe = -i, -imi)
+if, when (OCCASIONAL) TOPIC MARKER  (Is this a separate word or joined?)  *K
+ERGATIVE (marker on personal nouns and pronouns)
+FOCUS
+is, be COPULA, TRUTH VALUE UNKNOWN FOR CLAUSE IT TERMINATES
+is, be COPULA, TRUTH VALUE ASSERTED FOR CLAUSE IT TERMINATES  (Korafe = -ri)
+from SOURCE (Korafe = ghedo)
+is, be COPULA, TRUTH VALUE ESTABLISHED FOR UNDERLYING  ASSERTION
+ANTICIPATORY MARKER, FRUSTRATIVE MARKER  (Korafe y-ta is a FRUSTRATIVE MARKER only.)
+perhaps POSSIBILITY MARKER (*K)
+at, in, to LOCATIVE/DIRECTIONAL LOCATIVE  \e va réta  \f from  (Korafe = da)
+(who) is? COPULA USED TO QUESTION `WHO' in place of -ro (for Mado and Bareji)
+ouch!
+oh, man, what pain!
+oh, wow, am I in agony!
+Have we got trouble on our hands!
+Oh dread, look what's happened!
+Horror of horrors! This is awful!
+Goodness gracious! (jokingly said)
+Good gracious! All that pompous talk!
+thank you! (expression of pleasure)
+I really feel for you!  (expression of extreme sadness)
+beaut!, neat!
+And what's that for a show! (mocking)
+Maski! Forget it!
+Kick the bucket!
+Despair!
+Tough luck, you got what you deserve!
+You got what you deserve!
+That's too bad!
+Shame on you!
+Wow! (expression of wonderment)
+grandfather, ancestor,
+namesake
+girl, daughter
+old man
+firstborn
+children
+man, husband
+person, people
+woman, wife
+old woman
+young man
+enemy
+baby
+friend, mate, boy's male friend
+(the )next-born
+lastborn
+boy , son
+victim,  "our meat"
+friend, girl's female friend
+mother
+parents
+grandmother
+woman's mother-in-law
+grandparents
+sisters, female relatives
+father-in-law (used only by males)
+father
+brother-in-law: sister's husband
+older sister's husband
+younger sister's husband
+husband's older brother
+sister-in-law:
+husband's older brother's wife
+man, husband
+great grandfather
+great grandson
+woman, wife
+great grandmother
+great grand-daughter
+(older) sister (to brothers)
+sisters and brothers
+(younger )brother or sister
+(yonger )brother
+(younger )sister
+mother-in-law (used only by males)
+(your) uncle
+grandchild
+younger siblings
+(older )brother (male)
+(older) sibling (female)
+brothers (male referential term)
+wife of older brother
+sister-in-law:
+younger brother's wife
+wife's younger sister
+brother-in-law:
+husband's younger brother
+sister-in-law:
+husband's younger brother's wife
+brother-in-law
+(wife's younger sister's husband)
+great grandfather
+great grandson
+daughter-in-law
+co-wife or husband's brother's wife
+sister-in-law
+woman's brother's wife,
+husband's sister
+brother-in-law
+woman's husband's sister's husband
+boy, son
+children
+son-in-law
+brother-in-law
+sister's husband,
+wife's brother
+brother-in-law
+sister's husband,
+wife's brother
+(your )mother
+(your )father
+(his, her, their )mother
+(his, her, their) father
+(cross-)cousin
+(younger) sibling
+younger sister
+female's younger brother
+(female's) brother
+co-parents-in-law
+aunt: father's sister,
+mother's brother's wife
+grandmother-in-law
+friend, female's girlfriend
+wife (of man's brother)
+(wife's older) sister
+(wife's older sister's husband)
+uncle: mother's brother,
+father's sister's husband
+great grandmother
+great grandddaughter
+skin, bark (of tree)
+cough
+tongue
+buttocks
+mouth
+lips
+forehead
+pouch (of mother wallaby)
+sore
+ear
+belly
+tooth
+eyebrow
+cheek
+eye
+eyelashes
+eyelid
+face
+dizziness, vertigo
+leg
+breast
+footprint
+wing
+hair
+urine
+womb, uterus
+back
+middle finger
+claw, nail: fingernail or toenail
+arm, hand
+ribs
+side (of body)
+excrement
+head
+smart, nimble-minded
+stupid, dull-witted
+tear(s
+sweat, perspiration
+hepatitis
+baldhead
+tusk (of pig)
+sickness
+navel
+knee
+neck, tune
+pain
+worry
+nose
+mucus
+breastbone
+centre of emotions, heart
+tail
+chin, jawbone
+shadow
+feather
+hand, fingers
+bone
+body
+pain, fever
+blood
+nape (of the neck)
+liver
+heart
+heartburn
+elbow
+shoulder
+ (large) flying fox
+(small) flying fox
+dog
+(large male) wallaby
+pig
+cassowary
+(marsupial?) mouse
+rat
+bandicoot
+wallaby
+dove
+bird of paradise
+scorpion
+spider
+hornbill
+horsefly, deerfly
+owl
+(carpenter) bee
+mosquito
+fly
+(white) duck
+(green) parrot
+(red) parrot
+(large) millipede
+sandflies
+chicken
+(red) ant
+butterfly, moth
+Willy Wagtail
+gnats, small mosquitoes, fruitflies
+bird
+(black) ant(s)
+lice
+(white) cockatoo
+cockroach
+grasshopper
+humming bird
+firefly
+centipede
+(crown, Victoria) pigeon
+(black) duck
+fish  (generic term)
+(small) fish
+shark
+(red) snapper
+crocodile
+earthworm
+frog
+Taipan, Papuan Black Snake
+bark
+long-needled evergreen
+knot (in tree)
+kwila
+(generic term for )root
+leaf
+palm tree
+mango tree
+palm branch
+black palm tree
+tree (generic term)
+stick
+betelnut
+sawdust, excrement
+Casuarina evergreen tree
+sap
+flower
+coconut
+husk of coconut/peel of banana
+young, growing coconut
+seed, seedling
+ (kunai or elephant) grass
+strawflowers
+(Papuan) tobacco
+(generic term for )vine, rope
+bamboo
+pitpit, year
+aibica
+egg (chicken)
+sago
+(generic term for) banana
+flesh, meat
+taro
+grease
+rice
+lime
+sweet potato
+yam
+watermelon
+food
+meat
+broth
+mumu, earth oven pit-roasted meal
+(generic term for) sugarcane
+rain
+large drops of rain
+spitting rain, sprinkling drops
+darkness
+lightning
+swamp
+daylight
+fork (in a tree,  in a road, etc.)
+star(s)
+path, way
+salt water
+earth, ground, land
+cave
+stone, rock
+edge of reef, drop off to deep water
+valley
+cloud, mist
+current (of river)
+thunder
+sun
+mountain
+sand
+moon, month
+dew
+bush
+mud
+light, brilliance, glory
+sky, heaven(s)
+shade (of tree)
+Pleiades constellation of stars
+water, river
+wind
+boundary
+door
+garden
+mat (for sitting)
+mat or place (for sleeping)
+paddle
+shelter, temporary dwelling
+(bush) torch
+fence (for garden)
+rubbish
+(sitting) platform, porch
+verandah of house
+table, platform for crockery and pot storage
+smoke
+fire
+charcoal
+ashes
+platform built in tree for defense and protection
+tree house
+house
+enclosure (like a sheepfold or pigpen)
+wall (of a house)
+nest (for bird, spider, insects)
+village
+lantern, lamp (English loan)
+steps, ladder, bridge
+(garden) border
+end of story
+(established) place
+ (traditional) axe
+book(s)
+bow
+net for trapping pigs or fish
+government
+spear
+club
+cords, vine rope for binding
+pencil
+hunting trip
+lime spatula
+cup
+pannikin
+(bark) string (for making string bags)
+stringbag
+lime gourd
+fork
+(bark) dustpan
+(inner bark skin) rubbish container
+(fibre) broom
+(process of )sweeping and gathering rubbish
+(pandanus) mat
+(wooden) pillow
+knife
+salt
+(process of )pruning (sugar cane)
+plate
+container
+(traditional) clay pot
+cooking using a pot
+spoon
+skewer, (traditional) fork
+lid, cover (of pot)
+(wooden serving) dish
+plug
+(gardening) knife
+broom
+(vegetable) scraper, peeler
+stern
+prow
+thwart pins
+pegs made of black palm for the canoe
+gunwales
+(canoe) platform
+outrigger canoe
+dugout canoe without outrigger
+outrigger poles
+outrigger
+cushion (for outrigger)
+paddle
+raft
+tatoo, facial tatoo
+shoes
+clothing
+wrap-around skirt
+nose ornament
+earring
+bracelet
+loincloth
+angel(s)
+dream
+vision
+spirit
+bush masalai
+Holy Spirit
+poison
+sorcery
+medicine
+ (traditional, wooden) flute
+beat, rhythm  (drum gives to music)
+castanets, clackers
+(kundu) drum
+rattle (of some type with seeds)
+guitar
+story, tradition
+legend
+song
+dance
+talk:quit talking
+request
+prayer
+news, reputation
+rumbling noise
+sound
+language
+grammar
+talk, speech
+laughter, laugh
+middle (as in middle of the night)
+mouth (of the river)
+(the) rest, remainder
+sheath
+daylight, sun(light)
+Saturday
+Sunday
+afternoon
+year
+nothing, none
+occurrence in time, times
+thing
+length
+dawn
+month
+moon
+hole
+opportunity, pig run
+deed(s), activities
+evil (deeds)
+kindly people
+attitudes
+width
+speed
+strength, power, (natural) ability
+reputation, news
+mistake, problem, trouble, worry
+perception
+thought processes, thoughts, reasoning
+capability, equality
+lifestyle
+life
+respect
+grace
+ignorance
+odor
+truth
+reality
+real part, flesh  (of tree)
+shame, shyness
+pain
+play
+love
+name
+question
+joy, delight, happiness
+preparations
+sin, wickedness, sinful state
+help, salvation
+beginning, commencement
+want, wish
+fear
+round
+oval
+dull, blunt
+true, real
+full
+empty/none left/none
+none
+hard/difficult
+light/easy
+heavy
+red
+white
+black, blue, purple
+yellow, orange
+green
+brown
+all
+together
+only one, unique, one and the same
+plenty, many
+plenty, many, multitudinous
+some
+the rest
+one (number)
+two (number)
+three (number)
+five(number,)
+ten (number)
+straight (not crooked)
+correct, right
+wrong
+smooth-speaking
+dirty
+equal/able/sufficient
+egual/equivalent
+barren
+bad, evil
+very bad
+bigheaded, arrogant, mischievous
+good/handsome/pretty/clean/correct
+handsome
+pretty
+tiny, teeny-weeny
+small
+short
+tall (generic)
+tall (vertical length)
+long (horizontal length)
+big, large/great, important
+immense, enormous, full-sized
+different
+cold
+hot
+bitter (hurtful ???)
+sweet
+greasy, fatty
+hungry
+gluttonous
+holy, respected, taboo
+like, similar, likely to
+ripe
+overripe
+dry
+wet, watery
+wet, watery, rotten
+soft, mushy  (refers only to food)
+soft (general usage)
+shallow
+deep
+wide
+new
+old
+far
+deft, adept, quick moving
+also
+again
+(do) slowly, deliberately, carefully
+slowly
+gently, respectfully
+quickly
+a little bit
+not
+only
+above
+(on) top of
+beside, next to
+outside (of objects, buildings, etc.)
+between
+inside
+underneath
+near
+across, over on the other side
+upward, higher up on the mountain
+after
+toward the point, toward the sea
+down lower
+first/at the beginning, initially
+afterwards, after
+already, a long time ago
+forever
+all the time
+all day long
+each day
+each and every day
+day
+week
+last week
+Sabbath
+SDA Sunday/Anglican Saturday
+month
+year
+last year
+time, turn
+mornings, in the morning
+midday, at noon
+afternoon
+evening
+nights, at night
+today
+right now (just happened)
+right now (about to happen)
+yesterday
+tomorrow
+two days ago
+three days ago
+two days from now
+three days from now
+dawn
+do
+stay
+go
+come
+speak, say
+eat
+approach, arrive/go out
+hear
+hit
+see
+open
+sit
+die
+dress, put on (clothes)
+recover, come alive
+fall
+swim
+run
+cook
+think
+write, sew, weave
+bathe, wash one's self
+lash (tie poles to canoe)
+give
+prop against (transitive)
+lean against (intransitive)
+scoop up, dip up (water)
+discover, find
+undress, take off (clothes)
+unloose, free from bonds, come unfastened or untied
+blow (flute, up a fire)
+pour out
+pour into, fill
+descend (fall, intransitive)
+cut
+cut off
+trim
+leave, desist, abandon
+cover over/press down
+shroud
+wrap around
+dawn
+grind, crush, crumble
+detach itself, come unfastened
+spear, shoot, stir
+turn around halfway, turn back
+hold
+empathize
+dance
+card/separate strings for making a bilum
+twist strands into a string bag rope
+despair
+duck under
+carry (on shoulder),
+bear child in childbirth
+break (transitive)
+break (intransitive)
+cut down, chop
+kneel
+roast
+accompany
+heal, carry out shaman practices
+show, teach, mark a sign
+lie down, prostrate
+burn (transitive)
+wash (clothes, things)
+mash food with a small paddle
+close
+throw away
+welcome, heartily greet
+nurture, care for
+grow
+carve, strip bark off, scrape coconut out
+get stuck onto
+split
+stand
+circle around
+lick (with tongue)
+cry
+dry
+help. save
+grab/catch
+get out of the way, get clear
+pull
+chew
+bend down
+slip under/off
+dive/submerge
+harvest betelnut
+part open lips
+become dusk
+bind
+enter
+cross over
+lift up skirt
+search, part through
+dodge
+chase away
+burrow
+scratch out
+
+work
+stink
+hide
+practice
+do thoroughly, do well
+decorate
+be consumed, used up, finished
+end, become use up
+duck under
+lay down a mat for sitting or sleeping, make up a bed
+not know
+be able
+begin
+pray
+play
+marry
+flash (lightning)
+rock (gentle, soothe) a baby
+blink
+twinkle
+be surprised
+scratch, itch
+prepare
+stand up and stretch (after bending for long hours)
+feel with, empathize
+be different, differ
+(rain) sprinkle
+to become dark
+do garden work
+dry
+turn halfway around and turn back
+turn around a full turn
+twist, turn, spin
+spin around and around
+ask, pray
+want
+detest, dislike
+hate, strongly dislike
+shelter
+wait
+be gracious, generous; give freely
+tie shut, tie down securely
+hunt (overnight trip)
+hunt (daytime excursion)
+knock
+spoil, rot
+cover
+move
+fear
+(fire) rumble, rage, roar
+be desecrated, defiled, defile
+spit
+be busy
+praise
+love
+move, act slowly
+be greedy
+steal
+leave (something)
+jump
+sweep
+bump
+be hot, be painful
+heat up fire to fierce intensity
+open and shut fingers on hand, clench and release hand
+fan, chase insects away by waving hand
+lift off a hook
+cry
+strip off bark
+chop
+perceive, understand
+to repeatedly say
+peel
+cry
+make noises, sounds
+call out, yell
+talk about
+laugh
+shout
+blow out mucus from nose
+try
+work sorcery, poison
+stop crying
+discuss, ask, question
+touch
+experience
+dawn
+be sick
+it is soaring
+it is flapping
+it is flying
