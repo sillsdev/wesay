@@ -1,5 +1,6 @@
 using System.Threading;
 using NUnit.Framework;
+using WeSay.Foundation;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Db4o_Specific;
 using WeSay.Project;
@@ -60,6 +61,18 @@ namespace WeSay.LexicalTools.Tests
 		   TestEntryShows(apple);
 		   TestEntryShows(banana);
 		}
+
+		[Test]
+		public void FormattedView_ShowsPartOfSpeech()
+		{
+			LexSense sense = (LexSense) apple.Senses[0];
+			OptionRef o;
+			o = sense.GetOrCreateProperty<OptionRef>("POS");
+			o.Value = "noun";//nb: this is the key, which for noun happens to be the English display name tested for below
+			EntryViewControl entryViewControl = CreateForm(apple);
+			Assert.IsTrue(entryViewControl.ControlFormattedView.Text.Contains("noun"));
+			 Assert.IsFalse(entryViewControl.ControlFormattedView.Text.Contains("nombre"));
+	   }
 
 		private void TestEntryShows(LexEntry entry)
 		{

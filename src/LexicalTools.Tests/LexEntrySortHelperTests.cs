@@ -69,7 +69,7 @@ namespace WeSay.LexicalTools.Tests
 			int count = 0;
 			foreach (string s in h.GetKeys(new LexEntry()))
 			{
-				Assert.AreEqual("*", s);
+				Assert.AreEqual("*No Gloss", s);
 				count++;
 			}
 			Assert.AreEqual(1, count);

@@ -11,11 +11,16 @@ namespace WeSay.LexicalTools
 	{
 		private DictionaryControl _dictionaryControl;
 		private readonly ViewTemplate _viewTemplate;
+		private static readonly string kTaskLabel = "Dictionary Browse && Edit";
 
 		public DictionaryTask(IRecordListManager recordListManager,
 							ViewTemplate viewTemplate)
-			: base("Dictionary", string.Empty, true, recordListManager)
+			: base(kTaskLabel, string.Empty, true, recordListManager)
 		{
+#if JustForCodeScanner
+			StringCatalog.Get(kTaskLabel,
+							  "The label for the task that lets you see all entries, search for entries, and edit various fields.  We don't like the English name very much, so feel free to call this something very different in the language your are translating to.");
+#endif
 			if (viewTemplate == null)
 			{
 				throw new ArgumentNullException("viewTemplate");

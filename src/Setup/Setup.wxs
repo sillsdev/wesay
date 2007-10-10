@@ -365,6 +365,7 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 
 	  <ComponentRef Id="PartsOfSpeech.xml" />
 	  <ComponentRef Id="sampleWordList.txt" />
+	  <ComponentRef Id="DuerksenWords.txt" />
 	  <ComponentRef Id="SemanticDomains.xml" />
 	  <ComponentRef Id="default.WeSayConfig" />
 	  <ComponentRef Id="CommonWritingSystemPrefs.xml" />

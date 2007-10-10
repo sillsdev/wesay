@@ -75,7 +75,7 @@ namespace WeSay.Setup
 			this._btnAddWritingSystem.Image = ((System.Drawing.Image)(resources.GetObject("_btnAddWritingSystem.Image")));
 			this._btnAddWritingSystem.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this._btnAddWritingSystem.Name = "_btnAddWritingSystem";
-			this._btnAddWritingSystem.Size = new System.Drawing.Size(48, 22);
+			this._btnAddWritingSystem.Size = new System.Drawing.Size(49, 22);
 			this._btnAddWritingSystem.Text = "New";
 			this._btnAddWritingSystem.Click += new System.EventHandler(this._btnAddWritingSystem_Click);
 			//
@@ -114,10 +114,10 @@ namespace WeSay.Setup
 						| System.Windows.Forms.AnchorStyles.Left)
 						| System.Windows.Forms.AnchorStyles.Right)));
 			this._wsListBox.FormattingEnabled = true;
-			this._wsListBox.Location = new System.Drawing.Point(0, 0);
+			this._wsListBox.Location = new System.Drawing.Point(2, 11);
 			this._wsListBox.Name = "_wsListBox";
-			this._wsListBox.Size = new System.Drawing.Size(214, 394);
-			this._wsListBox.TabIndex = 0;
+			this._wsListBox.Size = new System.Drawing.Size(210, 394);
+			this._wsListBox.TabIndex = 2;
 			this._wsListBox.SelectedIndexChanged += new System.EventHandler(this._wsListBox_SelectedIndexChanged);
 			//
 			// _tabControl
@@ -220,7 +220,6 @@ namespace WeSay.Setup
 		#endregion
 
 		private System.Windows.Forms.SplitContainer splitContainer1;
-		private System.Windows.Forms.ListBox _wsListBox;
 		private System.Windows.Forms.ToolStrip toolStrip1;
 		private System.Windows.Forms.ToolStripButton _btnAddWritingSystem;
 		private System.Windows.Forms.ToolStripButton _btnRemove;
@@ -231,5 +230,6 @@ namespace WeSay.Setup
 		private System.Windows.Forms.TabPage _fontsPage;
 		private FontControl _fontControl;
 		private System.Windows.Forms.TabPage _sortingPage;
+		private System.Windows.Forms.ListBox _wsListBox;
 	}
 }

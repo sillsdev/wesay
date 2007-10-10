@@ -244,15 +244,34 @@ namespace WeSay.Foundation
 			return string.Empty;
 		}
 
-		public string GetBestAlternative(IEnumerable<string> orderedListOfWritingSystemIds)
+		public string GetBestAlternativeString(IEnumerable<string> orderedListOfWritingSystemIds)
+		{
+			LanguageForm form = GetBestAlternative(orderedListOfWritingSystemIds);
+			if (form == null)
+				return string.Empty;
+			return form.Form;
+		}
+
+		/// <summary>
+		/// Try to get an alternative according to the ws's given(e.g. the enabled writing systems for a field)
+		/// </summary>
+		/// <param name="orderedListOfWritingSystemIds"></param>
+		/// <returns>May return null!</returns>
+		public LanguageForm GetBestAlternative(IEnumerable<string> orderedListOfWritingSystemIds)
 		{
 			foreach (string id in orderedListOfWritingSystemIds)
 			{
 				LanguageForm alt = Find(id);
 				if (null != alt)
-					return alt.Form;
+					return alt;
 			}
-			return string.Empty;
+
+//            //just send back an empty
+//            foreach (string id in orderedListOfWritingSystemIds)
+//            {
+//                return new LanguageForm(id, string.Empty );
+//            }
+			return null;
 		}
 
 		public bool Empty

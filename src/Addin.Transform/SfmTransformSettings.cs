@@ -13,7 +13,7 @@ namespace Addin.Transform
 
 		public SfmTransformSettings()
 		{
-			SfmTagConversions = "g_en ge";
+			SfmTagConversions = "lx_v lx\r\ng_en ge\r\nx_v xv\r\nx_en xe";
 		}
 
 		[Browsable(true)]

@@ -226,7 +226,7 @@ namespace WeSay.Project
 			Field posField = new Field("POS", "LexSense", defaultAnalysisSet);
 			//this is here so the PoMaker scanner can pick up a comment about this label
 			StringCatalog.Get("~POS", "The label for the field showing Part Of Speech");
-			posField.DisplayName = "POS";
+			posField.DisplayName = "PartOfSpeech";
 			posField.Description = "The grammatical category of the entry (Noun, Verb, etc.).";
 			posField.DataTypeName = "Option";
 			posField.OptionsListFile = "PartsOfSpeech.xml";
@@ -256,7 +256,7 @@ namespace WeSay.Project
 							  "The label for the field showing the example sentence translated into other languages.");
 			translationField.DisplayName = "Example Translation";
 			translationField.Description = "The translation of the example sentence into another language.";
-			translationField.Visibility = CommonEnumerations.VisibilitySetting.Visible;
+			translationField.Visibility = CommonEnumerations.VisibilitySetting.Invisible;
 			masterTemplate.Add(translationField);
 
 			Field ddp4Field = new Field("SemanticDomainDdp4", "LexSense", defaultAnalysisSet);

@@ -116,6 +116,11 @@ namespace WeSay.LexicalTools
 
 		private void _btnNext_Click(object sender, EventArgs e)
 		{
+			//add in any existing word before going on
+			if (!string.IsNullOrEmpty(WordToAdd))
+			{
+				_btnAddWord_Click(this, null);
+			}
 			_presentationModel.GotoNextDomainQuestion();
 			RefreshCurrentDomainAndQuestion();
 		}
@@ -225,14 +230,12 @@ namespace WeSay.LexicalTools
 
 	  private void _btnAddWord_Click(object sender, EventArgs e)
 	  {
+		  string word = WordToAdd;
+		  if (String.IsNullOrEmpty(word))
+		  {
+			  return;
+		  }
 
-		string word = this._vernacularBox.TextBoxes[0].Text.Trim();
-		if (String.IsNullOrEmpty(word))
-		{
-			return;
-		}
-
-		_presentationModel.AddWord(word);
 		_vernacularBox.ClearAllText();
 		RefreshCurrentWords();
 
@@ -251,7 +254,16 @@ namespace WeSay.LexicalTools
 		_addingWordAnimation = true;
 		this._animator.Start();
 	  }
-	  void _animator_Finished(object sender, EventArgs e)
+
+		private string WordToAdd
+		{
+			get
+			{
+			   return this._vernacularBox.TextBoxes[0].Text.Trim();
+			}
+		}
+
+		void _animator_Finished(object sender, EventArgs e)
 	  {
 		_animatedText.Visible = false;
 		_animator.Reset();
@@ -301,8 +313,18 @@ namespace WeSay.LexicalTools
 			{
 				return string.Empty;
 			}
-			return "(" + this._presentationModel.WordsInDomain(index) + ") " +
-				this._presentationModel.DomainNames[index];
+
+			int count = this._presentationModel.WordsInDomain(index);
+			string s;
+			if(count > 0)
+			{
+				s = "(" + count + ") ";
+			}
+			else
+			{
+				s = "    ";
+			}
+			return s+this._presentationModel.DomainNames[index];
 		}
 
 		void _domainName_SelectedIndexChanged(object sender, EventArgs e)

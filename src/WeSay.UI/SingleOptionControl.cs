@@ -141,7 +141,7 @@ namespace WeSay.UI
 			ResumeLayout(false);
 		}
 
-		private void SetupComboControl(int initialPanelWidth, OptionRef optionRef)
+		private void SetupComboControl(int initialPanelWidth, OptionRef selectedOptionRef)
 		{
 			if (!_list.Options.Exists(delegate(Option o) {return (o.Key == string.Empty);}))
 			{
@@ -165,7 +165,7 @@ namespace WeSay.UI
 
 
 
-			Value = optionRef.Value;
+			Value = selectedOptionRef.Value;
 
 			_control.SelectedValueChanged += new EventHandler(OnSelectedValueChanged);
 //            _control.Validating += new System.ComponentModel.CancelEventHandler(_control_Validating);

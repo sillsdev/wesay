@@ -23,7 +23,7 @@ namespace WeSay.LexicalTools
 			rtf.Append(MakeFontTable());
 
 			rtf.Append(@"\b ");
-			rtf.Append(RenderField(entry.LexicalForm, currentItem));
+			rtf.Append(RenderField(entry.LexicalForm, currentItem, 2, null));
 			rtf.Append(@"\b0");
 
 			int senseNumber = 1;
@@ -34,13 +34,37 @@ namespace WeSay.LexicalTools
 				{
 					rtf.Append(senseNumber.ToString());
 				}
-				rtf.Append(@" \i ");
+
+				OptionRef posRef = sense.GetProperty<OptionRef>(LexSense.WellKnownProperties.PartOfSpeech.ToString());
+				if (posRef != null)
+				{
+					OptionsList list =
+						WeSayWordsProject.Project.GetOptionsList(LexSense.WellKnownProperties.PartOfSpeech);
+					if (list != null)
+					{
+						Option posOption = list.GetOptionFromKey(posRef.Value);
+
+						if (posOption != null)
+						{
+							Field posField = WeSayWordsProject.Project.GetFieldFromDefaultViewTemplate(
+								LexSense.WellKnownProperties.PartOfSpeech);
+							if (posField != null)
+							{
+								rtf.Append(@" \i ");
+								rtf.Append(RenderField(posOption.Name, currentItem, 0, posField));
+								rtf.Append(@"\i0 ");
+							}
+						}
+					}
+				}
 				rtf.Append(RenderField(sense.Gloss, currentItem));
-				rtf.Append(@"\i0 ");
+//                rtf.Append(@"\i0 ");
 
 				foreach (LexExampleSentence exampleSentence in sense.ExampleSentences)
 				{
+					rtf.Append(@" \i ");
 					rtf.Append(RenderField(exampleSentence.Sentence, currentItem));
+					rtf.Append(@"\i0 ");
 					rtf.Append(RenderField(exampleSentence.Translation, currentItem));
 				}
 
@@ -83,33 +107,54 @@ namespace WeSay.LexicalTools
 
 		private static string RenderField(MultiText text, CurrentItemEventArgs currentItem)
 		{
-			StringBuilder rtf = new StringBuilder();
+			return RenderField(text, currentItem, 0, null);
+		}
+
+		private static string RenderField(MultiText text, CurrentItemEventArgs currentItem, int sizeBoost, Field field)
+		{
+			StringBuilder rtfBuilder = new StringBuilder();
 			if (text != null)
 			{
 				if (text.Count == 0 && currentItem != null && text == currentItem.DataTarget)
 				{
-					rtf.Append(RenderBlankPosition());
+					rtfBuilder.Append(RenderBlankPosition());
 				}
 
-				foreach (LanguageForm l in text)
+				if (field == null)// show them all
 				{
-					if (IsCurrentField(text, l, currentItem))
+					foreach (LanguageForm l in text)
 					{
-						rtf.Append(@"\ul");
+						RenderForm(text, currentItem, rtfBuilder, l, sizeBoost);
 					}
-					rtf.Append(SwitchToWritingSystem(l.WritingSystemId));
-					rtf.Append(l.Form);// + " ");
-					if (IsCurrentField(text, l, currentItem))
+				}
+				else //todo: show all those turned on for the field?
+				{
+					LanguageForm form = text.GetBestAlternative(field.WritingSystemIds);
+					if (form != null)
 					{
-					  //rtf.Append(" ");
-						//rtf.Append(Convert.ToChar(160));
-						rtf.Append(@"\ulnone ");
-					  //rtf.Append(Convert.ToChar(160));
-				  }
-				  rtf.Append(" ");
+						RenderForm(text, currentItem, rtfBuilder, form, sizeBoost);
+					}
 				}
 			}
-			return rtf.ToString();
+			return rtfBuilder.ToString();
+		}
+
+		private static void RenderForm(MultiText text, CurrentItemEventArgs currentItem, StringBuilder rtfBuilder, LanguageForm form, int sizeBoost)
+		{
+			if (IsCurrentField(text, form, currentItem))
+			{
+				rtfBuilder.Append(@"\ul");
+			}
+			rtfBuilder.Append(SwitchToWritingSystem(form.WritingSystemId, sizeBoost));
+			rtfBuilder.Append(form.Form);// + " ");
+			if (IsCurrentField(text, form, currentItem))
+			{
+				//rtfBuilder.Append(" ");
+				//rtfBuilder.Append(Convert.ToChar(160));
+				rtfBuilder.Append(@"\ulnone ");
+				//rtfBuilder.Append(Convert.ToChar(160));
+			}
+			rtfBuilder.Append(" ");
 		}
 
 		private static string RenderGhostedField(string property, CurrentItemEventArgs currentItem, Nullable<int> number)
@@ -132,7 +177,9 @@ namespace WeSay.LexicalTools
 			return @" \ul        " + Convert.ToChar(160) + @"\ulnone  ";
 		}
 
-		private static string SwitchToWritingSystem(string writingSystemId)
+
+
+		private static string SwitchToWritingSystem(string writingSystemId, int sizeBoost)
 		{
 			WritingSystem writingSystem;
 			if (!BasilProject.Project.WritingSystems.TryGetValue(writingSystemId, out writingSystem))
@@ -140,7 +187,7 @@ namespace WeSay.LexicalTools
 				return "";//that ws isn't actually part of our configuration, so can't get a special font for it
 			}
 			string rtf = @"\f" + GetFontNumber(writingSystem);
-			rtf += @"\fs" + writingSystem.Font.SizeInPoints * 2 + " ";
+			rtf += @"\fs" + (sizeBoost+ writingSystem.Font.SizeInPoints) * 2 + " ";
 			return rtf;
 		}
 

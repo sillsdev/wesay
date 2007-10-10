@@ -106,6 +106,11 @@ namespace WeSay.Setup
 			set
 			{
 				_writingSystem = value;
+				if(_writingSystem!=null)
+				{
+					textBoxSortTest.Font = _writingSystem.Font;
+					textBoxCustomRules.Font = _writingSystem.Font;
+				}
 				Refresh();
 			}
 		}

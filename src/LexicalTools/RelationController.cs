@@ -268,7 +268,7 @@ namespace WeSay.LexicalTools
 				if (item is LexEntry)
 				{
 					return
-							((LexEntry) item).LexicalForm.GetBestAlternative(
+							((LexEntry) item).LexicalForm.GetBestAlternativeString(
 									_writingSystemIds);
 				}
 				if (item is LexSense)
@@ -276,7 +276,7 @@ namespace WeSay.LexicalTools
 					LexSense sense = (LexSense) item;
 					return
 							GetDisplayLabel(sense.Parent) + "." +
-							sense.Gloss.GetBestAlternative(_writingSystemIds);
+							sense.Gloss.GetBestAlternativeString(_writingSystemIds);
 				}
 				return "Program error";
 			}
@@ -341,8 +341,9 @@ namespace WeSay.LexicalTools
 			{
 				KeyValuePair<string, long> kv = (KeyValuePair<string,long>)item;
 				return kv.Key;
-				LexEntry entry = this._cachedSortedDb4oList.GetValueFromId(kv.Value);
-				return entry.LexicalForm.GetBestAlternative(_writingSystemIds);
+// Review: Eric had these two lines in, but they won't be run...
+//                LexEntry entry = this._cachedSortedDb4oList.GetValueFromId(kv.Value);
+//                return entry.LexicalForm.GetBestAlternativeString(_writingSystemIds);
 			}
 
 			#endregion

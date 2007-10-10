@@ -2,7 +2,7 @@ using System.ComponentModel;
 
 namespace WeSay.Foundation
 {
-	public class PictureRef  : IParentable, IValueHolder<string>
+	public class PictureRef : IParentable, IValueHolder<string>, IEmptinessCleanup
 	{
 		private string _fileName;
 		private MultiText _caption;
@@ -70,5 +70,18 @@ namespace WeSay.Foundation
 				_caption = value;
 			}
 		}
+
+		#region IEmptinessCleanup Members
+
+		public bool ShouldCountAsNonEmptyForPurposesOfDeletion
+		{
+			get { return true; }
+		}
+
+		public void RemoveEmptyStuff()
+		{
+		}
+
+		#endregion
 	}
 }

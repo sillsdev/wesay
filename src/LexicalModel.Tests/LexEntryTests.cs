@@ -177,6 +177,20 @@ namespace WeSay.LexicalModel.Tests
 			Assert.IsTrue(this._sense.IsEmptyForPurposesOfDeletion);
 		}
 
+ //Not fixed yet       [Test]
+		public void SenseWithAPicture_ReadyForDeletion()
+		{
+			Assert.IsFalse(this._sense.IsEmptyForPurposesOfDeletion);
+			ClearSenseGloss();
+			ClearSenseExample();
+			ClearSenseCustom();
+			Assert.IsTrue(this._sense.IsEmpty);
+			PictureRef pict = _sense.GetOrCreateProperty<PictureRef>(LexSense.WellKnownProperties.Picture);
+			pict.Value = "dummy.png";
+			Assert.IsFalse(this._sense.IsEmpty);
+			Assert.IsTrue(this._sense.IsEmptyForPurposesOfDeletion);
+		}
+
 		[Test]
 		public void EmptySensesRemoved()
 		{

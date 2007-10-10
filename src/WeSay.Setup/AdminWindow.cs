@@ -125,7 +125,10 @@ namespace WeSay.Setup
 				ErrorReport.ReportNonFatalMessage(
 						"Sorry, that file does not appear to be located in a valid WeSay Project directory.");
 			}
-			Settings.Default.LastConfigFilePath = Project.PathToConfigFile;
+			if (Project != null)
+			{
+				Settings.Default.LastConfigFilePath = Project.PathToConfigFile;
+			}
 		}
 
 		private void OnCreateProject(object sender, EventArgs e)
@@ -194,7 +197,11 @@ namespace WeSay.Setup
 
 				if (path.Contains(".lift"))
 				{
-					Project.LoadFromLiftLexiconPath(path);
+					if(!Project.LoadFromLiftLexiconPath(path))
+					{
+						Project = null;
+						return;
+					}
 				}
 //                else if (path.Contains(".WeSayConfig"))
 //                {

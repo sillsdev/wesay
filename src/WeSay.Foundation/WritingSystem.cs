@@ -464,7 +464,7 @@ namespace WeSay.Language
 
 				if (Environment.OSVersion.Platform != PlatformID.Unix)
 				{
-					if (!GetKeyboardsFromKeyman7(keyboards))
+					//if (!GetKeyboardsFromKeyman7(keyboards))
 					{
 						GetKeyboardsFromKeyman6(keyboards);
 					}

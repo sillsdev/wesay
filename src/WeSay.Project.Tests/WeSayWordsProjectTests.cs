@@ -119,5 +119,16 @@ namespace WeSay.Project.Tests
 				Directory.Delete(experimentDir, true);
 			}
 		}
+
+		[Test]
+		public void GetOptionsListFromFieldName()
+		{
+			WeSayWordsProject p = new WeSayWordsProject();
+
+			OptionsList list = p.GetOptionsList("POS");
+			Assert.IsNotNull(list);
+			Assert.IsNotNull(list.Options);
+			Assert.Greater(list.Options.Count, 2);
+		}
 	}
 }

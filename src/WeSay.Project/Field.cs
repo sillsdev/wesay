@@ -270,6 +270,7 @@ namespace WeSay.Project
 			}
 		}
 
+
 		[Browsable(false)]
 		public string Description
 		{

@@ -45,7 +45,9 @@
 	<xsl:text>&nl;\</xsl:text>
 	<xsl:value-of select="@name"/>
 	<xsl:text>   </xsl:text>
-	<xsl:value-of select="@ref"/>
+	<xsl:for-each select="//entry[@id=current()/@ref]/lexical-unit">
+	  <xsl:apply-templates mode="raw"/>
+	</xsl:for-each>
   </xsl:template>
 
   <xsl:template match="trait">
@@ -54,7 +56,15 @@
 		<xsl:value-of select="@value"/>
 	</xsl:template>
 
-	 <xsl:template match="sense">
+  <xsl:template match="trait[@name='SemanticDomainDdp4']">
+		<xsl:text>&nl;\sd</xsl:text>
+	  <xsl:text>   </xsl:text>
+		<xsl:value-of select="@value"/>
+	</xsl:template>
+
+  <xsl:template match="trait[starts-with(@name, 'flag_')]"><!-- don't output these--></xsl:template>
+
+  <xsl:template match="sense">
 		 <xsl:text>&nl;\ps </xsl:text><xsl:value-of select="grammatical-info/@value"/>
 		<xsl:apply-templates select="gloss">
 			<xsl:sort select="@lang"/>
@@ -102,6 +112,11 @@
 
 		  <xsl:text>&nl;\</xsl:text><xsl:value-of select="$prefix"/><xsl:text>_</xsl:text>
 		<xsl:value-of select="@lang"/><xsl:text>   </xsl:text>
+		<xsl:apply-templates select="text" />
+	  </xsl:template>
+
+	   <xsl:template match="form" mode="raw">
+
 		<xsl:apply-templates select="text" />
 	  </xsl:template>
 

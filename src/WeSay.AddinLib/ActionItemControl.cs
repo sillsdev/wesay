@@ -181,6 +181,8 @@ namespace WeSay.AddinLib
 				_actionName.ForeColor = Color.Gray;
 				_description.ForeColor = Color.Gray;
 				_launchButton.Enabled = false;
+				_setupButton.Visible = false;
+				_toggleShowInWeSay.Visible = false;
 			}
 			else
 			{

@@ -701,6 +701,28 @@ namespace WeSay.Project
 			writer.Close();
 		}
 
+		public Field GetFieldFromDefaultViewTemplate(string fieldName)
+		{
+			foreach (Field field in DefaultViewTemplate.Fields)
+			{
+				if (field.FieldName  == fieldName)
+				{
+					return field;
+				}
+			}
+			return null;
+		}
+
+		public OptionsList GetOptionsList(string fieldName)
+		{
+			Field field = GetFieldFromDefaultViewTemplate(fieldName);
+			if(field==null)
+			{
+				return null;
+			}
+			return GetOptionsList(field, false);
+		}
+
 		public OptionsList GetOptionsList(Field field, bool createIfFileMissing)
 		{
 			if (String.IsNullOrEmpty(field.OptionsListFile))
