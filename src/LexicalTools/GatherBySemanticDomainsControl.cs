@@ -235,7 +235,7 @@ namespace WeSay.LexicalTools
 		  {
 			  return;
 		  }
-
+		  _presentationModel.AddWord(word);
 		_vernacularBox.ClearAllText();
 		RefreshCurrentWords();
 

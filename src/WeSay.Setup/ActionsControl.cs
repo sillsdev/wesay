@@ -69,11 +69,11 @@ namespace WeSay.Setup
 					AddAddin(addin);
 				}
 			}
-			AddAddin(new ComingSomedayAddin("Export To OpenOffice", ""));
-			AddAddin(new ComingSomedayAddin("Export To Lexique Pro", ""));
-			AddAddin(
-					new ComingSomedayAddin("Send project to developers",
-										   "Sends your project to WeSay for help/debugging."));
+//            AddAddin(new ComingSomedayAddin("Export To OpenOffice", ""));
+//            AddAddin(new ComingSomedayAddin("Export To Lexique Pro", ""));
+//            AddAddin(
+//                    new ComingSomedayAddin("Send project to developers",
+//                                           "Sends your project to WeSay for help/debugging."));
 		}
 
 		private void AddAddin(IWeSayAddin addin)
