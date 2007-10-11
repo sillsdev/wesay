@@ -41,7 +41,7 @@ namespace WeSay.LexicalTools
 				_domainName.Items.Add(domainName);
 			}
 			RefreshCurrentDomainAndQuestion();
-			bool showDescription = false;
+			bool showDescription = true;
 			if (!showDescription)
 			{
 				_listViewWords.Anchor |= AnchorStyles.Top;

@@ -130,15 +130,16 @@ namespace WeSay.LexicalTools
 				picker.GetKeyValueFromValue = GetKeyIdPairFromLexEntry;
 				picker.GetValueFromKeyValue = GetLexEntryFromKeyIdPair;
 
-				picker.Box.Items = this._keyIdMap;
-				picker.Box.SelectedItem = relation.Target;
-
 				picker.Box.ItemDisplayStringAdaptor =
 						new PairStringLexEntryIdLabelAdaptor(this._field.WritingSystemIds, pairStringLexEntryIdList);
 				picker.Box.TooltipToDisplayStringAdaptor =
-						new PairStringLexEntryIdToolTipProvider( pairStringLexEntryIdList);
+						new PairStringLexEntryIdToolTipProvider(pairStringLexEntryIdList);
 				picker.Box.FormToObectFinder = FindStringLexEntryFromForm;
 				picker.Box.ItemFilterer = FindClosestAndNextClosestAndPrefixedPairStringLexEntryForms;
+
+				picker.Box.Items = this._keyIdMap;
+				picker.Box.SelectedItem = GetKeyIdPairFromLexEntry((LexEntry)relation.Target);
+
 				picker.CreateNewClicked += OnCreateNewEntry;
 				this._control = picker;
 			}
@@ -165,6 +166,10 @@ namespace WeSay.LexicalTools
 		}
 
 		private object GetKeyIdPairFromLexEntry(LexEntry e) {
+			if (e == null)
+			{
+				return null;
+			}
 			int i = this._pairStringLexEntryIdList.IndexOf(e);
 			if(i<0)
 			{
