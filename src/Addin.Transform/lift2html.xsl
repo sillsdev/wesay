@@ -43,10 +43,13 @@ BOGURAEV and NEFF Lit Linguist Computing.1992; 7: 110-112
   <xsl:param name="group-by-grammatical-info" select="true()"/>
 
   <xsl:variable name="entries-with-BaseForm-relation-rendered-as-subentries-of-base" select="true()"/>
+  <xsl:variable name="output-intented-for-winword" select="false()"/>
   <xsl:template match="/">
 	<html>
 	  <head>
-		<link rel="stylesheet" href="user.css"/>
+		<xsl:if test="not($output-intented-for-winword)">
+		  <link rel="stylesheet" href="user.css"/>
+		</xsl:if>
 		<style type="text/css">
 		  div.entry { /* this gives us outdented headwords */
 		  text-indent: -.5em; /* a slight outdent the width of a lower-case n */

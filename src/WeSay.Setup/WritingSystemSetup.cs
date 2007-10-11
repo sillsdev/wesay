@@ -22,6 +22,7 @@ namespace WeSay.Setup
 			splitContainer1.Width = Width - 25;
 		}
 
+
 		public void WritingSystemSetup_Load(object sender, EventArgs e)
 		{
 			if (DesignMode)

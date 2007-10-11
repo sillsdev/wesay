@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Reflection;
 using System.Windows.Forms;
@@ -173,12 +174,6 @@ namespace WeSay.UI
 			if(DesignMode)
 				return;
 			SuspendLayout();
-			if (Text.Length == 0)
-			{
-				Height = PreferredHeight;
-				return;
-			}
-
 
 			using (Graphics g = CreateGraphics())
 			{
@@ -189,7 +184,7 @@ namespace WeSay.UI
 				{
 					flags |= TextFormatFlags.WordBreak;
 				}
-				if(WritingSystem.RightToLeft)
+				if (_writingSystem != null && WritingSystem.RightToLeft)
 				{
 					flags |= TextFormatFlags.RightToLeft;
 				}

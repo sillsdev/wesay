@@ -40,21 +40,27 @@ namespace Addin.Transform
 
 		public override void Launch(Form parentForm, ProjectInfo projectInfo)
 		{
-			XsltArgumentList arguments = new XsltArgumentList();
-  //<xsl:param name="optionslist-writing-system" select="'en'"/>
-
-  //<xsl:param name="headword-writing-system" select="/lift/entry/lexical-unit/form/@lang"/>
-
-  //<xsl:param name="include-notes" select="false()"/>
-  //<xsl:param name="group-by-grammatical-info" select="true()"/>
-			arguments.AddParam("writing-system-info-file", string.Empty, projectInfo.LocateFile("writingSystemPrefs.xml"));
-			arguments.AddParam("grammatical-info-optionslist-file", string.Empty, projectInfo.LocateFile("PartsOfSpeech.xml"));
-
-			string output = TransformLift(projectInfo, "lift2html.xsl", ".htm",arguments);
+			string output = CreateFileToOpen(projectInfo, false);
 			if (_launchAfterTransform)
 			{
 				Process.Start(output);
 			}
+		}
+
+		protected string CreateFileToOpen(ProjectInfo projectInfo, bool intendedForWinWord)
+		{
+			XsltArgumentList arguments = new XsltArgumentList();
+			//<xsl:param name="optionslist-writing-system" select="'en'"/>
+
+			//<xsl:param name="headword-writing-system" select="/lift/entry/lexical-unit/form/@lang"/>
+
+			//<xsl:param name="include-notes" select="false()"/>
+			//<xsl:param name="group-by-grammatical-info" select="true()"/>
+			arguments.AddParam("writing-system-info-file", string.Empty, projectInfo.LocateFile("writingSystemPrefs.xml"));
+			arguments.AddParam("grammatical-info-optionslist-file", string.Empty, projectInfo.LocateFile("PartsOfSpeech.xml"));
+			arguments.AddParam("output-intented-for-winword", string.Empty, intendedForWinWord.ToString()+"()");
+
+			return TransformLift(projectInfo, "lift2html.xsl", ".htm",arguments);
 		}
 	}
 }

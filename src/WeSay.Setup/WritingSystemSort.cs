@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using Palaso.WritingSystems.Collation;
 using Spart;
 using WeSay.Language;
+using WeSay.Project;
 
 namespace WeSay.Setup
 {
@@ -63,6 +64,14 @@ namespace WeSay.Setup
 
 			validBackgroundColor = textBoxCustomRules.BackColor;
 			invalidBackgroundColor = Color.Tomato;
+
+			WeSayWordsProject.Project.EditorsSaveNow += OnEditorSaveNow;
+
+		}
+
+		private void OnEditorSaveNow(object sender, EventArgs e)
+		{
+			this.Validate(); // this will make it save
 		}
 
 		void textBoxCustomRules_Validating(object sender, CancelEventArgs cancelEventArgs)

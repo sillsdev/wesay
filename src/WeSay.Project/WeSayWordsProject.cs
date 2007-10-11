@@ -680,7 +680,6 @@ namespace WeSay.Project
 		{
 			_addins.InitializeIfNeeded(); // must be done before locking file for writing
 
-			base.Save();
 
 			XmlWriterSettings settings = new XmlWriterSettings();
 			settings.Indent = true;
@@ -699,6 +698,8 @@ namespace WeSay.Project
 
 			writer.WriteEndDocument();
 			writer.Close();
+
+			base.Save(); // nb: this saves the writing system stuff, so if it is called before EditorsSaveNow, we won't get the latest stuff from editors working on them.
 		}
 
 		public Field GetFieldFromDefaultViewTemplate(string fieldName)
