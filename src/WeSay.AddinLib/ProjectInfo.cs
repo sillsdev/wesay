@@ -1,3 +1,7 @@
+using System.Collections;
+using System.Collections.Generic;
+using WeSay.Language;
+
 namespace WeSay.AddinLib
 {
 	public class ProjectInfo
@@ -10,11 +14,13 @@ namespace WeSay.AddinLib
 
 
 		private FileLocater _locateFile;
+		private readonly WritingSystemCollection _writingSystems;
 
-		public ProjectInfo(string name, string pathToTopLevelDirectory, string pathToLIFT, string[] filesBelongingToProject, FileLocater locateFile)
+		public ProjectInfo(string name, string pathToTopLevelDirectory, string pathToLIFT, string[] filesBelongingToProject, FileLocater locateFile, WritingSystemCollection writingSystems)
 		{
 			_pathToTopLevelDirectory = pathToTopLevelDirectory;
 			_locateFile = locateFile;
+			_writingSystems = writingSystems;
 			_filesBelongingToProject = filesBelongingToProject;
 			_name = name;
 			_pathToLIFT = pathToLIFT;
@@ -59,6 +65,14 @@ namespace WeSay.AddinLib
 			get
 			{
 				return _filesBelongingToProject;
+			}
+		}
+
+		public WritingSystemCollection WritingSystems
+		{
+			get
+			{
+				return _writingSystems;
 			}
 		}
 	}

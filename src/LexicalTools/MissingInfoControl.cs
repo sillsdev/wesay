@@ -27,6 +27,7 @@ namespace WeSay.LexicalTools
 								  Predicate<LexEntry> isNotComplete, IRecordListManager recordListManager)
 		{
 			InitializeComponent();
+			this.PreviewKeyDown += new PreviewKeyDownEventHandler(OnPreviewKeyDown);
 
 			_btnNextWord.ReallySetSize(50, 50);
 		   // _btnPreviousWord.ReallySetSize(30, 30);
@@ -84,6 +85,39 @@ namespace WeSay.LexicalTools
 			_btnNextWord.BringToFront();
 			_btnPreviousWord.BringToFront();
 			SetCurrentRecordFromRecordList();
+		}
+
+		protected override bool ProcessDialogKey(Keys keyData)
+		{
+			if (keyData == Keys.Enter || keyData == Keys.PageDown)
+			{
+				SetCurrentRecordToNext();
+				return true;
+			}
+			if (keyData == Keys.PageUp)
+			{
+				this.SetCurrentRecordToPrevious();
+				return true;
+			}
+			return base.ProcessDialogKey(keyData);
+		}
+		/// <summary>
+		/// needed because the pos combo box blocks our access to enter, PageDown, etc.
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		void OnPreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+		{
+			if (e.KeyCode == Keys.Enter || e. KeyCode == Keys.PageDown)
+			{
+				e.IsInputKey = false;
+				SetCurrentRecordToNext();
+			}
+			if (e.KeyCode == Keys.PageUp)
+			{
+				e.IsInputKey = false;
+				this.SetCurrentRecordToPrevious();
+			}
 		}
 
 		private WritingSystem GetListWritingSystem()
@@ -389,6 +423,7 @@ namespace WeSay.LexicalTools
 				case Keys.PageUp:
 					SetCurrentRecordToPrevious();
 					break;
+				case Keys.Enter:
 				case Keys.PageDown:
 					SetCurrentRecordToNext();
 					break;

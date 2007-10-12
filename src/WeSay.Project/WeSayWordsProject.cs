@@ -332,7 +332,8 @@ namespace WeSay.Project
 								   ProjectDirectoryPath,
 								   PathToLiftFile,
 								   GetFilesBelongingToProject(ProjectDirectoryPath),
-								   AddinSet.Singleton.LocateFile);
+								   AddinSet.Singleton.LocateFile,
+								   WritingSystems);
 		}
 
 		private XPathDocument GetConfigurationDoc()

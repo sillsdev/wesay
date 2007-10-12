@@ -69,6 +69,13 @@ namespace WeSay.LexicalTools
 			newGuy.LexicalForm.SetAlternative(_field.WritingSystemIds[0],
 											  e.LabelOfNewItem);
 			e.NewlyCreatedItem = newGuy;
+
+			//hack: if something is a baseform itself, it isn't likely to have its own baseform
+			//This satisfies Rene's request of WS-419
+			if (_field.FieldName == "BaseForm")
+			{
+				newGuy.SetFlag("flag_skip_BaseForm");
+			}
 		}
 
 		private void MakeControl()

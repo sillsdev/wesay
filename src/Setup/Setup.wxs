@@ -242,10 +242,11 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 		  <Component Id="Addin.Backup.dll" Guid="{8597A830-9A97-4A74-A25F-3FEDF7901122}">
 			<File Id="Addin.Backup.dll" Name="Addin.Backup.dll" KeyPath="yes" Source="..\..\output\release\Addin.Backup.dll" />
 		  </Component>
-
+<!--
 		  <Component Id="Addin.LiftReports.dll" Guid="{8597A830-9A97-4A74-A25F-3FEDF7901111}">
 			<File Id="Addin.LiftReports.dll" Name="Addin.LiftReports.dll" KeyPath="yes" Source="..\..\output\release\Addin.LiftReports.dll" />
 		  </Component>
+		  -->
 		  <!-- this is a LiftReports requirement -->
 		  <Component Id="NVelocity.dll" Guid="{6254D0F2-A7AF-411C-801E-30EBB1E6D444}">
 			<File Id="NVelocity.dll" Name="NVelocity.dll" KeyPath="yes" Source="..\..\output\release\NVelocity.dll" />
@@ -340,7 +341,7 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 	  <ComponentRef Id="WeSay.UI.pdb" />
 
 	  <ComponentRef Id="Addin.Backup.dll"/>
-	  <ComponentRef Id="Addin.LiftReports.dll"/>
+<!--      <ComponentRef Id="Addin.LiftReports.dll"/> -->
 	  <ComponentRef Id="Addin.Transform.dll"/>
 	  <ComponentRef Id="NVelocity.dll"/>
 	  <ComponentRef Id="log4net.dll"/>
@@ -366,6 +367,7 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 	  <ComponentRef Id="PartsOfSpeech.xml" />
 	  <ComponentRef Id="sampleWordList.txt" />
 	  <ComponentRef Id="DuerksenWords.txt" />
+	  <ComponentRef Id="PNGWords.txt" />
 	  <ComponentRef Id="SemanticDomains.xml" />
 	  <ComponentRef Id="default.WeSayConfig" />
 	  <ComponentRef Id="CommonWritingSystemPrefs.xml" />

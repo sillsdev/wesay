@@ -28,7 +28,13 @@ namespace WeSay.LexicalTools
 			if (field != null && field.DoShow )
 			{
 				Control glossControl = MakeBoundControl(sense.Gloss, field);
-				Control glossRowControl = DetailList.AddWidgetRow(StringCatalog.Get("~Meaning"), true, glossControl, insertAtRow, false);
+				string label = StringCatalog.Get("~Meaning");
+				LexEntry entry = sense.Parent as LexEntry;
+				if (entry != null)// && entry.Senses.Count > 1)
+				{
+					label += " "+(entry.Senses.IndexOf(sense)+1);
+				}
+				Control glossRowControl = DetailList.AddWidgetRow(label, true, glossControl, insertAtRow, false);
 				++rowCount;
 				insertAtRow = DetailList.GetRow(glossRowControl);
 			}
@@ -66,7 +72,12 @@ namespace WeSay.LexicalTools
 //            return rowCount;
 
 			int insertAtRow = -1;
-			return MakeGhostWidget<LexSense>(list, insertAtRow, Field.FieldNames.SenseGloss.ToString(), StringCatalog.Get("~Meaning", "This label is shown once, but has two roles.  1) it labels contains the gloss, and 2) marks the beginning of the set of fields which make up a sense. So, in english, if we labelled this 'gloss', it would describe the field well but wouldn't label the section well."), "Gloss", isHeading);
+			string label = StringCatalog.Get("~Meaning", "This label is shown once, but has two roles.  1) it labels contains the gloss, and 2) marks the beginning of the set of fields which make up a sense. So, in english, if we labelled this 'gloss', it would describe the field well but wouldn't label the section well.");
+			if(list.Count > 0)
+			{
+				label += " "+(list.Count + 1);
+			}
+			return MakeGhostWidget<LexSense>(list, insertAtRow, Field.FieldNames.SenseGloss.ToString(), label, "Gloss", isHeading);
 
 		}
 

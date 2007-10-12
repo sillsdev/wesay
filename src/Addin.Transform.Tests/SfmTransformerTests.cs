@@ -72,6 +72,22 @@ namespace Addin.Transform.Tests
 		}
 
 		[Test]
+		public void SemDomConvertedTo_sd()
+		{
+			string result = LaunchWithConversionString("");
+			Assert.IsTrue(result.Contains("\\sd"));
+		}
+
+		[Test]
+		public void EmptyBaseFormNotOutput()
+		{
+			string result = LaunchWithConversionString("");
+			Assert.IsTrue(result.Contains("\\base"));
+			//should only have one, since the input has one empty, one non-empty
+			Assert.IsTrue(result.LastIndexOf("\\base") == result.IndexOf("\\base"));
+		}
+
+		[Test]
 		public void LaunchWithEmptyMissingConversionPiece()
 		{
 			LaunchWithConversionString("g_en");
@@ -113,7 +129,18 @@ namespace Addin.Transform.Tests
 		private string LaunchAddin()
 		{
 			string contents = @"<?xml version='1.0' encoding='utf-8'?>
-<lift  version='0.10'><entry id='one'><sense><gloss lang='en'><text>hello</text></gloss></sense></entry><entry id='two'/></lift>";
+			<lift  version='0.10'>
+				<entry id='one'>
+					<relation name='BaseForm' ref=''/>
+					<relation name='BaseForm' ref='two'/>
+				   <sense>
+						<gloss lang='en'><text>hello</text></gloss>
+						<trait name='SemanticDomainDdp4' value='1.1' />
+					 </sense>
+				</entry>
+				<entry id='two'>
+				</entry>
+			</lift>";
 			if (WeSay.Project.WeSayWordsProject.Project.LiftIsLocked)
 			{
 				WeSay.Project.WeSayWordsProject.Project.ReleaseLockOnLift();

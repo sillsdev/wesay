@@ -77,7 +77,7 @@ namespace Addin.Backup
 
 		#region IWeSayAddinHasSettings Members
 
-		public bool DoShowSettingsDialog(Form parentForm)
+		public bool DoShowSettingsDialog(Form parentForm, ProjectInfo projectInfo)
 		{
 			SendProjectEmailSettingsDialog dlg = new SendProjectEmailSettingsDialog(_settings);
 			return dlg.ShowDialog(parentForm) == DialogResult.OK;

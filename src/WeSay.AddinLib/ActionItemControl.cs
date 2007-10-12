@@ -14,6 +14,7 @@ namespace WeSay.AddinLib
 	{
 		private IWeSayAddin _addin;
 		private bool _inAdminMode;
+		private readonly ProjectInfo _projectInfo;
 		// private bool _showInWeSay;
 		public event EventHandler Launch;
 
@@ -37,10 +38,11 @@ namespace WeSay.AddinLib
 			return false;
 		}
 
-		public ActionItemControl(IWeSayAddin addin, bool inAdminMode)
+		public ActionItemControl(IWeSayAddin addin, bool inAdminMode, ProjectInfo projectInfo)
 		{
 			_addin = addin;
 			_inAdminMode = inAdminMode;
+			_projectInfo = projectInfo;
 			InitializeComponent();
 			_actionName.Font = StringCatalog.ModifyFontForLocalization(_actionName.Font);
 			_description.Font = StringCatalog.ModifyFontForLocalization(_description.Font);
@@ -118,7 +120,7 @@ namespace WeSay.AddinLib
 			{
 				LoadSettings();
 				IWeSayAddinHasSettings addin = (IWeSayAddinHasSettings) _addin;
-				if (!addin.DoShowSettingsDialog(ParentForm))
+				if (!addin.DoShowSettingsDialog(ParentForm, _projectInfo))
 				{
 					return;
 				}

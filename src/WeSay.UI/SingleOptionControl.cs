@@ -56,7 +56,12 @@ namespace WeSay.UI
 				//review
 				if (_control.SelectedItem != null)
 				{
-					return ((Option.OptionDisplayProxy)_control.SelectedItem).Key;
+					string key = ((Option.OptionDisplayProxy)_control.SelectedItem).Key;
+// todo: something like this                   if (String.IsNullOrEmpty(key))
+//                    {
+//                        return null;// make "unknown" option be the same as if not set (at least as far as we can do that from here)
+//                    }
+					return key;
 				}
 				else
 				{

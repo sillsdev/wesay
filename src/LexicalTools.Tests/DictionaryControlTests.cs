@@ -581,7 +581,7 @@ namespace WeSay.LexicalTools.Tests
 			Assert.AreEqual("Secondary", LexemeFormOfSelectedEntry);
 			Assert.AreEqual(1, GetCurrentEntry().Senses.Count, "this test assumes an entry with 1 sense");
 			Assert.AreEqual(0, ((LexSense)(GetCurrentEntry().Senses[0])).ExampleSentences.Count, "this test assumes a sense w/ no example");
-			MultiTextControl editControl = GetEditControl("Meaning");
+			MultiTextControl editControl = GetEditControl("Meaning 1");
 			editControl.TextBoxes[0].Focus();
 		}
 

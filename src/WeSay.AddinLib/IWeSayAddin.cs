@@ -42,7 +42,7 @@ namespace WeSay.AddinLib
 
 	public interface IWeSayAddinHasSettings
 	{
-		bool DoShowSettingsDialog(Form parentForm);
+		bool DoShowSettingsDialog(Form parentForm, ProjectInfo projectInfo);
 
 		object Settings
 		{

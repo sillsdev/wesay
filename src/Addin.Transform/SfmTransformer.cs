@@ -58,7 +58,7 @@ namespace Addin.Transform
 						string line = reader.ReadLine();
 						foreach (SfmTransformSettings.ChangePair pair in pairs)
 						{
-							if (Regex.IsMatch(line, pair.from))
+							if (Regex.IsMatch(line, @"\\" + pair.from))
 							{
 								line = Regex.Replace(line, pair.from, pair.to);
 								break; //only supporting one match per line
@@ -88,9 +88,9 @@ namespace Addin.Transform
 
 		#region IWeSayAddinHasSettings Members
 
-		public bool DoShowSettingsDialog(Form parentForm)
+		public bool DoShowSettingsDialog(Form parentForm, ProjectInfo projectInfo)
 		{
-			SFMChangesDialog dlg = new SFMChangesDialog(_settings);
+			SFMChangesDialog dlg = new SFMChangesDialog(_settings, projectInfo);
 			return dlg.ShowDialog(parentForm) == DialogResult.OK;
 		}
 

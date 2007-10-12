@@ -155,7 +155,7 @@ namespace WeSay.LexicalTools
 
 		private static string[] SplitUpFieldNames(string fieldsToShow)
 		{
-			return fieldsToShow.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+			return fieldsToShow.Split(new char[] { ' ', ',' }, StringSplitOptions.RemoveEmptyEntries);
 		}
 
 		public override void Activate()

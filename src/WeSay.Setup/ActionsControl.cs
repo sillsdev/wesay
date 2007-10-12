@@ -78,7 +78,8 @@ namespace WeSay.Setup
 
 		private void AddAddin(IWeSayAddin addin)
 		{
-			ActionItemControl control = new ActionItemControl(addin, true);
+			ActionItemControl control =
+				new ActionItemControl(addin, true, WeSayWordsProject.Project.GetProjectInfoForAddin());// GetProjectInfo());
 			control.DoShowInWeSay = AddinSet.Singleton.DoShowInWeSay(addin.ID);
 			_addinsList.AddControlToBottom(control);
 			control.Launch += OnLaunchAction;
@@ -88,27 +89,29 @@ namespace WeSay.Setup
 		{
 			IWeSayAddin addin = (IWeSayAddin)sender;
 
-			WeSayWordsProject project = WeSayWordsProject.Project;
-			string[] filesBelongingToProject =
-					WeSayWordsProject.GetFilesBelongingToProject(
-							project.ProjectDirectoryPath);
-			ProjectInfo projectInfo = new ProjectInfo(project.Name,
-													  project.
-															  ProjectDirectoryPath,
-													  project.PathToLiftFile,
-													  filesBelongingToProject,
-													  AddinSet.Singleton.
-															  LocateFile);
-
 			try
 			{
-				addin.Launch(ParentForm, projectInfo);
+				addin.Launch(ParentForm, WeSayWordsProject.Project.GetProjectInfoForAddin());
 			}
 			catch (Exception error)
 			{
 				ErrorReport.ReportNonFatalMessage(error.Message);
 			}
 		}
+
+//        public static ProjectInfo GetProjectInfo()
+//        {
+//            WeSayWordsProject project = WeSayWordsProject.Project;
+//            string[] filesBelongingToProject =
+//                WeSayWordsProject.GetFilesBelongingToProject(
+//                    project.ProjectDirectoryPath);
+//            return new ProjectInfo(project.Name,
+//                                   project.
+//                                       ProjectDirectoryPath,
+//                                   project.PathToLiftFile,
+//                                   filesBelongingToProject,
+//                                   AddinSet.Singleton.LocateFile);
+//        }
 
 		private static void AddinManager_ExtensionChanged(object sender,
 												   ExtensionEventArgs args)

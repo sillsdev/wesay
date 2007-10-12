@@ -30,6 +30,9 @@
 		<Component Id="DuerksenWords.txt" Guid="{51F4A62A-A216-43bf-820B-3683F64FBA19}">
 		  <File Id="DuerksenWords.txt" Name="DuerksenWords.txt" KeyPath="yes" Source="..\..\common\DuerksenWords.txt" />
 		</Component>
+		<Component Id="PNGWords.txt" Guid="{EADBA21D-B3ED-4626-A363-301EA5D6A390}">
+		  <File Id="PNGWords.txt" Name="PNGWords.txt" KeyPath="yes" Source="..\..\common\PNGWords.txt" />
+		</Component>
 		<Component Id="SemanticDomains.xml" Guid="{0D314BE5-ABB3-4AB9-A698-F94FFA8B250C}">
 		  <File Id="SemanticDomains.xml" Name="SemanticDomains.xml" KeyPath="yes" Source="..\..\common\SemanticDomains.xml" />
 		</Component>

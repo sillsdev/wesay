@@ -26,6 +26,18 @@
 	  <showfields>SenseGloss</showfields>
 	  <readOnly>SemanticDomainDdp4</readOnly>
 	</task>
+	<task id="AddPartOfSpeech" class="WeSay.LexicalTools.MissingInfoTask" assembly="LexicalTools" visible="false">
+	  <entries ref="All Entries" />
+	  <filter class="WeSay.LexicalTools.MissingItemFilter" assembly="LexicalTools">
+		<viewTemplate ref="Default View Template" />
+		<field>POS</field>
+	  </filter>
+	  <label>Add Parts of Speech</label>
+	  <description>Add a Part Of Speech to senses where they are missing.</description>
+	  <viewTemplate ref="Default View Template" />
+	  <showfields>POS</showfields>
+	  <readOnly>SenseGloss, ExampleSentence</readOnly>
+	</task>
 	<task id="AddExamples" class="WeSay.LexicalTools.MissingInfoTask" assembly="LexicalTools" visible="false">
 	  <entries ref="All Entries" />
 	  <filter class="WeSay.LexicalTools.MissingItemFilter" assembly="LexicalTools">
@@ -50,11 +62,19 @@
 	  <showfields>BaseForm</showfields>
 	</task>
 
-	<task id="Gather Words" class="WeSay.LexicalTools.GatherWordListTask" assembly="LexicalTools" visible="false">
+	<task id="Gather Words (D)" class="WeSay.LexicalTools.GatherWordListTask" assembly="LexicalTools" visible="false">
 	  <entries ref="All Entries" />
 	  <label>Collect Word List (D)</label>
 	  <description>Collect new words by translating from words in another language. This is a list of 1700 words from John Duerksen.</description>
 	  <wordListFileName>DuerksenWords.txt</wordListFileName>
+	  <wordListWritingSystemId>en</wordListWritingSystemId>
+	  <viewTemplate ref="Default View Template" />
+	</task>
+	<task id="Gather Words (PNG)" class="WeSay.LexicalTools.GatherWordListTask" assembly="LexicalTools" visible="false">
+	  <entries ref="All Entries" />
+	  <label>Collect Word List (PNG)</label>
+	  <description>Collect new words by translating from words in another language. This is a list of around 900 words and phrases from PNG.</description>
+	  <wordListFileName>PNGWords.txt</wordListFileName>
 	  <wordListWritingSystemId>en</wordListWritingSystemId>
 	  <viewTemplate ref="Default View Template" />
 	</task>
