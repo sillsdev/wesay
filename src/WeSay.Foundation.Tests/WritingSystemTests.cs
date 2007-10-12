@@ -302,5 +302,100 @@ namespace WeSay.Language.Tests
 			Assert.IsNull(ws.CustomSortRules);
 			Assert.AreEqual("one", ws.SortUsing);
 		}
+
+		[Test]
+		public void GetHashCode_SameIdDefaultsDifferentFont_Same()
+		{
+			Font font1 = new Font("Arial", 12);
+			WritingSystem writingSystem1 = new WritingSystem("ws", font1);
+			Font font2 = new Font("Arial", 22);
+			WritingSystem writingSystem2 = new WritingSystem("ws", font2);
+
+			Assert.AreEqual(writingSystem1.GetHashCode(), writingSystem2.GetHashCode());
+		}
+
+
+		[Test]
+		public void GetHashCode_SameIdSortUsingNoCustomRules_Same()
+		{
+			Font font1 = new Font("Arial", 12);
+			WritingSystem writingSystem1 = new WritingSystem("ws", font1);
+			writingSystem1.SortUsing = "th";
+			Font font2 = new Font("Arial", 22);
+			WritingSystem writingSystem2 = new WritingSystem("ws", font2);
+			writingSystem2.SortUsing = "th";
+
+			Assert.AreEqual(writingSystem1.GetHashCode(), writingSystem2.GetHashCode());
+
+		}
+
+		[Test]
+		public void GetHashCode_SameIdSortUsingCustomRules_Same()
+		{
+			Font font1 = new Font("Arial", 12);
+			WritingSystem writingSystem1 = new WritingSystem("ws", font1);
+			writingSystem1.SortUsing = CustomSortRulesType.CustomSimple.ToString();
+			writingSystem1.CustomSortRules = "A";
+
+			Font font2 = new Font("Arial", 22);
+			WritingSystem writingSystem2 = new WritingSystem("ws", font2);
+			writingSystem2.SortUsing = CustomSortRulesType.CustomSimple.ToString();
+			writingSystem2.CustomSortRules = "A";
+
+			Assert.AreEqual(writingSystem1.GetHashCode(), writingSystem2.GetHashCode());
+		}
+
+		[Test]
+		public void GetHashCode_DifferentId_Different()
+		{
+			Font font1 = new Font("Arial", 12);
+			WritingSystem writingSystem1 = new WritingSystem("ws", font1);
+			WritingSystem writingSystem2 = new WritingSystem("sw", font1);
+
+			Assert.AreNotEqual(writingSystem1.GetHashCode(), writingSystem2.GetHashCode());
+		}
+
+		[Test]
+		public void GetHashCode_DifferentSortUsing_Different()
+		{
+			Font font1 = new Font("Arial", 12);
+			WritingSystem writingSystem1 = new WritingSystem("ws", font1);
+			writingSystem1.SortUsing = "th";
+			WritingSystem writingSystem2 = new WritingSystem("ws", font1);
+			writingSystem2.SortUsing = "th-TH";
+
+			Assert.AreNotEqual(writingSystem1.GetHashCode(), writingSystem2.GetHashCode());
+		}
+
+		[Test]
+		public void GetHashCode_DifferentCustomSortRuleTypes_Different()
+		{
+			Font font1 = new Font("Arial", 12);
+			WritingSystem writingSystem1 = new WritingSystem("ws", font1);
+			writingSystem1.SortUsing = CustomSortRulesType.CustomSimple.ToString();
+			writingSystem1.CustomSortRules = "A";
+
+			WritingSystem writingSystem2 = new WritingSystem("ws", font1);
+			writingSystem2.SortUsing = CustomSortRulesType.CustomICU.ToString();
+			writingSystem2.CustomSortRules = "A";
+
+			Assert.AreNotEqual(writingSystem1.GetHashCode(), writingSystem2.GetHashCode());
+		}
+
+		[Test]
+		public void GetHashCode_DifferentCustomSortRules_Different()
+		{
+			Font font1 = new Font("Arial", 12);
+			WritingSystem writingSystem1 = new WritingSystem("ws", font1);
+			writingSystem1.SortUsing = CustomSortRulesType.CustomSimple.ToString();
+			writingSystem1.CustomSortRules = "A";
+
+			WritingSystem writingSystem2 = new WritingSystem("ws", font1);
+			writingSystem2.SortUsing = CustomSortRulesType.CustomSimple.ToString();
+			writingSystem2.CustomSortRules = "A a";
+
+			Assert.AreNotEqual(writingSystem1.GetHashCode(), writingSystem2.GetHashCode());
+		}
+
 	}
 }

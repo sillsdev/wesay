@@ -140,14 +140,7 @@ namespace WeSay.Data
 
 		private int GetSorterHashCode()
 		{
-			byte[] bytes = _keyIdSorter.GetType().GetMethod("Compare").GetMethodBody().GetILAsByteArray();
-			int hashCode = 0;
-			for (int i = 0; i < bytes.Length; i++)
-			{
-				byte b = bytes[i];
-				hashCode ^= b;
-			}
-			return hashCode;
+			return _sortHelper.GetHashCode();
 		}
 
 		private void Deserialize()

@@ -75,6 +75,10 @@ namespace WeSay.LexicalTools
 			get { return "LexEntry sorted by " + _semanticDomainFieldName; }
 		}
 
+		public override int GetHashCode()
+		{
+			return _semanticDomainFieldName.GetHashCode();
+		}
 		#endregion
 	}
 

@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using System.Xml;
 using Exortech.NetReflector;
 using kmcomapi;
+using Palaso.Reporting;
 using Palaso.WritingSystems.Collation;
 using Spart;
 
@@ -27,29 +28,30 @@ namespace WeSay.Language
 		CustomICU
 	}
 
-
 	[ReflectorType("WritingSystem")]
-	public class WritingSystem : IComparer<string>
+	public class WritingSystem: IComparer<string>
 	{
-		public static string IdForUnknownVernacular = "v";
 		public static string IdForUnknownAnalysis = "en";
+		public static string IdForUnknownVernacular = "v";
+		private string _abbreviation;
+		private string _customSortRules;
 
 		private Font _font;
 		private string _id;
 		private string _keyboardName;
 		private bool _rightToLeft = false;
-		private string _abbreviation;
+		private SortComparer _sortComparer;
+		private SortKeyGenerator _sortKeyGenerator;
 		private string _sortUsing;
-		private string _customSortRules;
 
-//        public WritingSystem(string filePath)
-//        {
-//            _fontPrefsDoc = new XmlDocument();
-//            _fontPrefsDoc.Load(filePath);
-//            XmlNode node = _fontPrefsDoc.SelectSingleNode("writingSystemPrefs");
-//            _id = node.Attributes["id"].Value;
-//        }
-		public WritingSystem(XmlNode node) : this()
+		//        public WritingSystem(string filePath)
+		//        {
+		//            _fontPrefsDoc = new XmlDocument();
+		//            _fontPrefsDoc.Load(filePath);
+		//            XmlNode node = _fontPrefsDoc.SelectSingleNode("writingSystemPrefs");
+		//            _id = node.Attributes["id"].Value;
+		//        }
+		public WritingSystem(XmlNode node): this()
 		{
 			_id = node.Attributes["id"].Value;
 			XmlNode fontNode = node.SelectSingleNode("font");
@@ -70,15 +72,10 @@ namespace WeSay.Language
 		/// <summary>
 		/// default for testing only
 		/// </summary>
-		public WritingSystem(string id, Font font) : this()
+		public WritingSystem(string id, Font font): this()
 		{
 			_id = id;
 			_font = font;
-		}
-
-		public override string ToString()
-		{
-			return Id;
 		}
 
 		[ReflectorProperty("Id", Required = true)]
@@ -112,16 +109,16 @@ namespace WeSay.Language
 			set { _rightToLeft = value; }
 		}
 
-//        //we'll be getting rid of this property
-//        [Browsable(true), System.ComponentModel.DisplayName("Vernacular")]
-//        public string VernacularDefault
-//        {
-//            get { return _id; }
-//            set
-//            {
-//                _id = value;
-//            }
-//        }
+		//        //we'll be getting rid of this property
+		//        [Browsable(true), System.ComponentModel.DisplayName("Vernacular")]
+		//        public string VernacularDefault
+		//        {
+		//            get { return _id; }
+		//            set
+		//            {
+		//                _id = value;
+		//            }
+		//        }
 
 		[Browsable(false)]
 		public Font Font
@@ -168,14 +165,14 @@ namespace WeSay.Language
 
 		public bool UsesCustomSortRules
 		{
-		   get
-		   {
-			   if (SortUsing == null)
-			   {
-				   return false;
-			   }
-			   return Enum.IsDefined(typeof(CustomSortRulesType), SortUsing);
-		   }
+			get
+			{
+				if (SortUsing == null)
+				{
+					return false;
+				}
+				return Enum.IsDefined(typeof (CustomSortRulesType), SortUsing);
+			}
 		}
 
 		/// <summary>
@@ -189,7 +186,7 @@ namespace WeSay.Language
 			{
 				if (!UsesCustomSortRules)
 				{
-					_customSortRules=null;
+					_customSortRules = null;
 					return null;
 				}
 				return _customSortRules ?? string.Empty;
@@ -205,160 +202,6 @@ namespace WeSay.Language
 				// cannot do the following due to NetReflector wanting to set to null!
 				// throw new InvalidOperationException("CustomSortRules can only be set when UsesCustomSortRules is true");
 			}
-		}
-
-		private void InitializeSortingFromWritingSystemId(string id)
-		{
-			CultureInfo cultureInfo = null;
-			if (!String.IsNullOrEmpty(id))
-			{
-				cultureInfo = GetCultureInfoFromWritingSystemId(id);
-			}
-			if (cultureInfo == null)
-			{
-				cultureInfo = CultureInfo.InvariantCulture;
-			}
-
-			_sortComparer = cultureInfo.CompareInfo.Compare;
-			_sortKeyGenerator = cultureInfo.CompareInfo.GetSortKey;
-		}
-
-		private delegate SortKey SortKeyGenerator(string s);
-
-		private delegate int SortComparer(string s1, string s2);
-
-		private SortComparer _sortComparer;
-		private SortKeyGenerator _sortKeyGenerator;
-
-		private void InitializeSorting()
-		{
-			if (UsesCustomSortRules)
-			{
-				InitializeSortingFromCustomRules(CustomSortRules);
-			}
-			else
-			{
-				InitializeSortingFromWritingSystemId(SortUsing);
-			}
-		}
-
-		// This should always succeed. We try to use the rule collator associated
-		// with the custom sort rules type, if that still doesn't work then we
-		// fall back to using the system sort from the id or the invariant sort
-		private void InitializeSortingFromCustomRules(string rules)
-		{
-			ICollator collator=null;
-			try
-			{
-				if (SortUsing == CustomSortRulesType.CustomSimple.ToString())
-				{
-					try
-					{
-						collator = new SimpleRulesCollator(rules);
-					}
-					catch (ParserErrorException e)
-					{
-						Palaso.Reporting.Logger.WriteMinorEvent(e.Message);
-						Palaso.Reporting.Logger.WriteMinorEvent(
-								"Failed to parse simple sort rules, falling back to system sorting");
-					}
-				}
-
-				else if (SortUsing == CustomSortRulesType.CustomICU.ToString())
-				{
-					try
-					{
-						collator = new IcuRulesCollator(rules);
-					}
-					catch (ApplicationException e)
-					{
-						Palaso.Reporting.Logger.WriteMinorEvent(e.Message);
-						Palaso.Reporting.Logger.WriteMinorEvent(
-								"Failed to parse ICU sort rules, falling back to system sorting");
-					}
-				}
-				else
-				{
-					Debug.Fail("unknown CustomSortRulesType");
-				}
-			}
-			catch (DllNotFoundException e)
-			{
-				Palaso.Reporting.Logger.WriteMinorEvent(e.Message);
-				Palaso.Reporting.Logger.WriteMinorEvent("Falling back to system sorting");
-			}
-
-			if (collator == null)
-			{
-				InitializeSortingFromWritingSystemId(Id);
-			}
-			else
-			{
-				_sortComparer = collator.Compare;
-				_sortKeyGenerator = collator.GetSortKey;
-			}
-		}
-
-		private static CultureInfo GetCultureInfoFromWritingSystemId(string sortUsing)
-		{
-			CultureInfo ci = null;
-			try
-			{
-				ci = CultureInfo.GetCultureInfo(sortUsing);
-			}
-			catch (ArgumentException e)
-			{
-				if (e is ArgumentNullException ||
-					e is ArgumentOutOfRangeException)
-				{
-					throw;
-				}
-				if (Environment.OSVersion.Platform != PlatformID.Unix)
-				{
-					ci = TryGetCultureInfoByIetfLanguageTag(sortUsing); // not supported by mono yet
-				}
-			}
-			return ci;
-		}
-
-		private static CultureInfo TryGetCultureInfoByIetfLanguageTag(string ietfLanguageTag)
-		{
-			CultureInfo ci = null;
-			try
-			{
-				ci = CultureInfo.GetCultureInfoByIetfLanguageTag(ietfLanguageTag);
-			}
-			catch (ArgumentException ex)
-			{
-				if (ex is ArgumentNullException ||
-					ex is ArgumentOutOfRangeException)
-				{
-					throw;
-				}
-			}
-			return ci;
-		}
-
-		public SortKey GetSortKey(string source)
-		{
-			return _sortKeyGenerator(source);
-		}
-
-		///<summary>
-		///Compares two strings and returns a value indicating whether one is less than, equal to, or greater than the other.
-		///</summary>
-		///
-		///<returns>
-		/// Less than zero when x is less than y.
-		/// Zero when x equals y.
-		/// Greater than zero when x is greater than y.
-		///</returns>
-		///
-		///<param name="y">The second object to compare.</param>
-		///<param name="x">The first object to compare.</param>
-		public int Compare(string x, string y)
-		{
-			return _sortComparer(x, y);
 		}
 
 		[TypeConverter(typeof (KeyboardListHelper))]
@@ -406,7 +249,183 @@ namespace WeSay.Language
 			set { _font = new Font(FontName, value); }
 		}
 
-		public class KeyboardListHelper : StringConverter
+		#region IComparer<string> Members
+
+		///<summary>
+		///Compares two strings and returns a value indicating whether one is less than, equal to, or greater than the other.
+		///</summary>
+		///
+		///<returns>
+		/// Less than zero when x is less than y.
+		/// Zero when x equals y.
+		/// Greater than zero when x is greater than y.
+		///</returns>
+		///
+		///<param name="y">The second object to compare.</param>
+		///<param name="x">The first object to compare.</param>
+		public int Compare(string x, string y)
+		{
+			return _sortComparer(x, y);
+		}
+
+		#endregion
+
+		public override string ToString()
+		{
+			return Id;
+		}
+
+		private void InitializeSortingFromWritingSystemId(string id)
+		{
+			CultureInfo cultureInfo = null;
+			if (!String.IsNullOrEmpty(id))
+			{
+				cultureInfo = GetCultureInfoFromWritingSystemId(id);
+			}
+			if (cultureInfo == null)
+			{
+				cultureInfo = CultureInfo.InvariantCulture;
+			}
+
+			_sortComparer = cultureInfo.CompareInfo.Compare;
+			_sortKeyGenerator = cultureInfo.CompareInfo.GetSortKey;
+		}
+
+		private void InitializeSorting()
+		{
+			if (UsesCustomSortRules)
+			{
+				InitializeSortingFromCustomRules(CustomSortRules);
+			}
+			else
+			{
+				InitializeSortingFromWritingSystemId(SortUsing);
+			}
+		}
+
+		// This should always succeed. We try to use the rule collator associated
+		// with the custom sort rules type, if that still doesn't work then we
+		// fall back to using the system sort from the id or the invariant sort
+		private void InitializeSortingFromCustomRules(string rules)
+		{
+			ICollator collator = null;
+			try
+			{
+				if (SortUsing == CustomSortRulesType.CustomSimple.ToString())
+				{
+					try
+					{
+						collator = new SimpleRulesCollator(rules);
+					}
+					catch (ParserErrorException e)
+					{
+						Logger.WriteMinorEvent(e.Message);
+						Logger.WriteMinorEvent(
+								"Failed to parse simple sort rules, falling back to system sorting");
+					}
+				}
+
+				else if (SortUsing == CustomSortRulesType.CustomICU.ToString())
+				{
+					try
+					{
+						collator = new IcuRulesCollator(rules);
+					}
+					catch (ApplicationException e)
+					{
+						Logger.WriteMinorEvent(e.Message);
+						Logger.WriteMinorEvent(
+								"Failed to parse ICU sort rules, falling back to system sorting");
+					}
+				}
+				else
+				{
+					Debug.Fail("unknown CustomSortRulesType");
+				}
+			}
+			catch (DllNotFoundException e)
+			{
+				Logger.WriteMinorEvent(e.Message);
+				Logger.WriteMinorEvent("Falling back to system sorting");
+			}
+
+			if (collator == null)
+			{
+				InitializeSortingFromWritingSystemId(Id);
+			}
+			else
+			{
+				_sortComparer = collator.Compare;
+				_sortKeyGenerator = collator.GetSortKey;
+			}
+		}
+
+		private static CultureInfo GetCultureInfoFromWritingSystemId(string sortUsing)
+		{
+			CultureInfo ci = null;
+			try
+			{
+				ci = CultureInfo.GetCultureInfo(sortUsing);
+			}
+			catch (ArgumentException e)
+			{
+				if (e is ArgumentNullException || e is ArgumentOutOfRangeException)
+				{
+					throw;
+				}
+				if (Environment.OSVersion.Platform != PlatformID.Unix)
+				{
+					ci = TryGetCultureInfoByIetfLanguageTag(sortUsing); // not supported by mono yet
+				}
+			}
+			return ci;
+		}
+
+		private static CultureInfo TryGetCultureInfoByIetfLanguageTag(string ietfLanguageTag)
+		{
+			CultureInfo ci = null;
+			try
+			{
+				ci = CultureInfo.GetCultureInfoByIetfLanguageTag(ietfLanguageTag);
+			}
+			catch (ArgumentException ex)
+			{
+				if (ex is ArgumentNullException || ex is ArgumentOutOfRangeException)
+				{
+					throw;
+				}
+			}
+			return ci;
+		}
+
+		public SortKey GetSortKey(string source)
+		{
+			return _sortKeyGenerator(source);
+		}
+
+		// Same if behavior is same (not appearance)
+		public override int GetHashCode()
+		{
+			int hashCode = HashCombine(Id.GetHashCode(), SortUsing.GetHashCode());
+			if (UsesCustomSortRules)
+			{
+				hashCode = HashCombine(hashCode, CustomSortRules.GetHashCode());
+			}
+			return hashCode;
+		}
+
+		static int HashCombine(int seed, int hash)
+		{
+			// following line lifted from boost/functional/hash.hpp which is
+			//  Copyright Daniel James 2005-2007.
+			//  Use, modification, and distribution are subject to the Boost Software License, Version 1.0.
+			//  see license at http://www.boost.org/LICENSE_1_0.txt
+			return (int)(seed ^ (hash + 0x9e3779b9 + (seed << 6) + (seed >> 2)));
+		}
+
+		#region Nested type: KeyboardListHelper
+
+		public class KeyboardListHelper: StringConverter
 		{
 			public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
 			{
@@ -414,7 +433,9 @@ namespace WeSay.Language
 				return true;
 			}
 
-			public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value,
+			public override object ConvertTo(ITypeDescriptorContext context,
+											 CultureInfo culture,
+											 object value,
 											 Type destinationType)
 			{
 				if ((String) value == String.Empty)
@@ -427,7 +448,9 @@ namespace WeSay.Language
 				}
 			}
 
-			public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
+			public override object ConvertFrom(ITypeDescriptorContext context,
+											   CultureInfo culture,
+											   object value)
 			{
 				if ((String) value == "default")
 				{
@@ -456,8 +479,8 @@ namespace WeSay.Language
 				return true;
 			}
 
-			public override StandardValuesCollection
-					GetStandardValues(ITypeDescriptorContext context)
+			public override StandardValuesCollection GetStandardValues(
+					ITypeDescriptorContext context)
 			{
 				List<String> keyboards = new List<string>();
 				keyboards.Add(String.Empty); // for 'default'
@@ -484,7 +507,9 @@ namespace WeSay.Language
 					KeymanLink.KeymanLink keymanLink = new KeymanLink.KeymanLink();
 					if (keymanLink.Initialize(false))
 					{
-						foreach (KeymanLink.KeymanLink.KeymanKeyboard keyboard in keymanLink.Keyboards)
+						foreach (
+								KeymanLink.KeymanLink.KeymanKeyboard keyboard in
+										keymanLink.Keyboards)
 						{
 							keyboards.Add(keyboard.KbdName);
 						}
@@ -492,9 +517,9 @@ namespace WeSay.Language
 				}
 				catch (Exception err)
 				{
-					Palaso.Reporting.ErrorReport.ReportNonFatalMessage(
-						"WeSay ran into an error when looking for Keyman and asking it for a list of keyboards.  You can still use Keyman by assigning a Windows System Keyboard to the Keyman keyboard. \r\n{0}",
-						err.Message);
+					ErrorReport.ReportNonFatalMessage(
+							"WeSay ran into an error when looking for Keyman and asking it for a list of keyboards.  You can still use Keyman by assigning a Windows System Keyboard to the Keyman keyboard. \r\n{0}",
+							err.Message);
 				}
 			}
 
@@ -504,17 +529,31 @@ namespace WeSay.Language
 				{
 					TavultesoftKeymanClass keyman = new TavultesoftKeymanClass();
 
-						foreach (IKeymanKeyboard keyboard in keyman.Keyboards)
-						{
-							keyboards.Add(keyboard.KeyboardName);
-						}
+					foreach (IKeymanKeyboard keyboard in keyman.Keyboards)
+					{
+						keyboards.Add(keyboard.KeyboardName);
+					}
 				}
-				catch (Exception )
+				catch (Exception)
 				{
 					return false;
 				}
 				return true;
 			}
 		}
+
+		#endregion
+
+		#region Nested type: SortComparer
+
+		private delegate int SortComparer(string s1, string s2);
+
+		#endregion
+
+		#region Nested type: SortKeyGenerator
+
+		private delegate SortKey SortKeyGenerator(string s);
+
+		#endregion
 	}
 }

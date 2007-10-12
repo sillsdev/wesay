@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Globalization;
+using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
 using Palaso.WritingSystems.Collation;
 using Spart;
+using WeSay.Data;
 using WeSay.Language;
 using WeSay.Project;
 
@@ -99,12 +101,38 @@ namespace WeSay.Setup
 		private void textBoxCustomRules_Validated(object sender, EventArgs e)
 		{
 			_writingSystem.CustomSortRules = textBoxCustomRules.Text.Replace(Environment.NewLine, "\n");
+
+			InvalidateCache();
+		}
+
+		private static void InvalidateCache() {
+			DateTime liftLastWriteTimeUtc = File.GetLastWriteTimeUtc(WeSayWordsProject.Project.PathToLiftFile);
+			if (File.Exists(WeSayWordsProject.Project.PathToDb4oLexicalModelDB))
+			{
+				try // don't crash if we can't update
+				{
+					using (
+							Db4oDataSource ds =
+									new Db4oDataSource(
+											WeSayWordsProject.Project.PathToDb4oLexicalModelDB))
+					{
+						//this should be different now so the cache should be updated
+						//but it shouldn't be off by enough to make it so we lose
+						//records if a crash occured and updates hadn't been written
+						//out yet and so are still pending in the db.
+						CacheManager.UpdateSyncPointInCache(ds.Data,
+															liftLastWriteTimeUtc.AddMilliseconds(10));
+					}
+				}
+				catch {}
+			}
 		}
 
 		private void comboBoxCultures_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			_writingSystem.SortUsing = (string) comboBoxCultures.SelectedValue;
 			UpdateCustomRules();
+			InvalidateCache();
 		}
 
 		[Browsable(false)]
