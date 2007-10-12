@@ -103,7 +103,6 @@
   </ItemGroup>
   <ItemGroup>
 	<Content Include="Resources\viewTemplate.xml" />
-	<None Include="ClassDiagram1.cd" />
 	<None Include="Resources\poStrings.txt" />
   </ItemGroup>
   <ItemGroup>

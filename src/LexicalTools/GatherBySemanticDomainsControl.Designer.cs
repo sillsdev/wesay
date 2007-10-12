@@ -95,7 +95,7 @@ namespace WeSay.LexicalTools
 			this._listViewWords.Location = new System.Drawing.Point(15, 233);
 			this._listViewWords.MultiColumn = true;
 			this._listViewWords.Name = "_listViewWords";
-			this._listViewWords.Size = new System.Drawing.Size(622, 104);
+			this._listViewWords.Size = new System.Drawing.Size(622, 65);
 			this._listViewWords.Sorted = true;
 			this._listViewWords.TabIndex = 17;
 			this._listViewWords.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this._listViewWords_KeyPress);
@@ -145,7 +145,7 @@ namespace WeSay.LexicalTools
 			this._question.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this._question.Location = new System.Drawing.Point(15, 189);
 			this._question.Name = "_question";
-			this._question.Size = new System.Drawing.Size(622, 39);
+			this._question.Size = new System.Drawing.Size(622, 78);
 			this._question.TabIndex = 23;
 			//
 			// _description

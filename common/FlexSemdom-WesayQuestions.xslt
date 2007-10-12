@@ -2,6 +2,7 @@
 <xsl:transform xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
 
   <xsl:param name="lang" select="'en'"/>
+  <xsl:param name="warning" select="'Do not just translate these words; instead think of words in your own language.'"/>
 
   <xsl:output method="xml" indent="yes" encoding="utf-8"/>
 
@@ -28,6 +29,10 @@
 	  <xsl:value-of select="normalize-space(Question67/AUni[@ws=$lang])"/>
 	</xsl:variable>
 
+	<xsl:variable name="answer">
+	  <xsl:value-of select="normalize-space(ExampleWords67/AUni[@ws=$lang])"/>
+	</xsl:variable>
+
 	<xsl:variable name="questionWithoutNumber">
 	  <xsl:choose>
 		<xsl:when test="starts-with($question, '(')">
@@ -42,6 +47,12 @@
 	<xsl:if test="$question != ''">
 	  <question>
 		<xsl:value-of select="$questionWithoutNumber"/>
+		<xsl:if test="$answer != ''">
+		  <xsl:text> (</xsl:text>
+		  <xsl:value-of select="$answer"/>
+		  <xsl:text>)&#13;</xsl:text>
+		  <xsl:value-of select="$warning"/>
+		</xsl:if>
 	  </question>
 	</xsl:if>
   </xsl:template>
