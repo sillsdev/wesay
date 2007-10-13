@@ -102,12 +102,6 @@ namespace WeSay.Language
 			set { _abbreviation = value; }
 		}
 
-		[ReflectorProperty("RightToLeft", Required = false)]
-		public bool RightToLeft
-		{
-			get { return _rightToLeft; }
-			set { _rightToLeft = value; }
-		}
 
 		//        //we'll be getting rid of this property
 		//        [Browsable(true), System.ComponentModel.DisplayName("Vernacular")]
@@ -163,6 +157,7 @@ namespace WeSay.Language
 			}
 		}
 
+		[Browsable(false)]
 		public bool UsesCustomSortRules
 		{
 			get
@@ -247,6 +242,13 @@ namespace WeSay.Language
 				}
 			}
 			set { _font = new Font(FontName, value); }
+		}
+
+		[ReflectorProperty("RightToLeft", Required = false)]
+		public bool RightToLeft
+		{
+			get { return _rightToLeft; }
+			set { _rightToLeft = value; }
 		}
 
 		#region IComparer<string> Members

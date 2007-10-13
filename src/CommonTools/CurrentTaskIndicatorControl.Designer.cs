@@ -36,6 +36,7 @@ namespace WeSay.CommonTools
 			this.label1 = new System.Windows.Forms.Label();
 			this._indicatorPanel = new System.Windows.Forms.Panel();
 			this.localizationHelper1 = new WeSay.UI.LocalizationHelper(this.components);
+			this._shapeControl = new ShapeControl.ShapeControl();
 			((System.ComponentModel.ISupportInitialize)(this.localizationHelper1)).BeginInit();
 			this.SuspendLayout();
 			//
@@ -46,7 +47,7 @@ namespace WeSay.CommonTools
 			this.label1.Font = new System.Drawing.Font("Verdana", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.label1.Location = new System.Drawing.Point(12, 9);
 			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(136, 23);
+			this.label1.Size = new System.Drawing.Size(152, 23);
 			this.label1.TabIndex = 0;
 			this.label1.Text = "~Current task:";
 			//
@@ -57,22 +58,33 @@ namespace WeSay.CommonTools
 			this._indicatorPanel.BackColor = System.Drawing.Color.Transparent;
 			this._indicatorPanel.Location = new System.Drawing.Point(70, 35);
 			this._indicatorPanel.Name = "_indicatorPanel";
-			this._indicatorPanel.Size = new System.Drawing.Size(485, 100);
+			this._indicatorPanel.Size = new System.Drawing.Size(482, 80);
 			this._indicatorPanel.TabIndex = 1;
-
-			this._s = new ShapeControl.ShapeControl();
-			this._s.TabStop = false;
-			this._s.Shape = ShapeControl.ShapeType.RoundedRectangle;
-			this._s.BorderStyle = System.Drawing.Drawing2D.DashStyle.Dot;
-			this._s.BorderWidth = 1;
-			this._s.BorderColor = System.Drawing.Color.Black;
-			this._s.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(242)))), ((int)(((byte)(253)))), ((int)(((byte)(219)))));
-			this._s.Dock = DockStyle.Fill;
-
+			this._indicatorPanel.Click += new System.EventHandler(this._indicatorPanel_Click);
+			this._indicatorPanel.Resize += new System.EventHandler(this._indicatorPanel_Resize);
 			//
 			// localizationHelper1
 			//
 			this.localizationHelper1.Parent = this;
+			//
+			// _shapeControl
+			//
+			this._shapeControl.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(242)))), ((int)(((byte)(253)))), ((int)(((byte)(219)))));
+			this._shapeControl.BorderColor = System.Drawing.Color.Black;
+			this._shapeControl.BorderStyle = System.Drawing.Drawing2D.DashStyle.Dot;
+			this._shapeControl.BorderWidth = 1;
+			this._shapeControl.CenterColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(255)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+			this._shapeControl.Dock = System.Windows.Forms.DockStyle.Fill;
+			this._shapeControl.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold);
+			this._shapeControl.Location = new System.Drawing.Point(0, 0);
+			this._shapeControl.Name = "_shapeControl";
+			this._shapeControl.Shape = ShapeControl.ShapeType.RoundedRectangle;
+			this._shapeControl.Size = new System.Drawing.Size(563, 138);
+			this._shapeControl.SurroundColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(0)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+			this._shapeControl.TabIndex = 2;
+			this._shapeControl.TabStop = false;
+			this._shapeControl.UseGradient = false;
+			this._shapeControl.Resize += new System.EventHandler(this._shapeControl_Resize);
 			//
 			// CurrentTaskIndicatorControl
 			//
@@ -82,12 +94,10 @@ namespace WeSay.CommonTools
 			this.BackColor = System.Drawing.Color.White;
 			this.Controls.Add(this._indicatorPanel);
 			this.Controls.Add(this.label1);
-			this.Controls.Add(_s);
+			this.Controls.Add(this._shapeControl);
 			this.Name = "CurrentTaskIndicatorControl";
 			this.Size = new System.Drawing.Size(563, 138);
-//            Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
-
-//            this.SizeChanged += new System.EventHandler(this.CurrentTaskIndicatorControl_SizeChanged);
+			this.Resize += new System.EventHandler(this.CurrentTaskIndicatorControl_Resize);
 			((System.ComponentModel.ISupportInitialize)(this.localizationHelper1)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
@@ -99,6 +109,6 @@ namespace WeSay.CommonTools
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.Panel _indicatorPanel;
 		private WeSay.UI.LocalizationHelper localizationHelper1;
-		private ShapeControl.ShapeControl _s;
+		private ShapeControl.ShapeControl _shapeControl;
 	}
 }

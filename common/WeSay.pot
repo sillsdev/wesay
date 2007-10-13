@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: WeSay\n"
-"POT-Creation-Date: 2007-09-03T02:18:45\n"
+"POT-Creation-Date: 2007-10-13T09:18:53\n"
 "PO-Revision-Date: 2006-09-06 17:01+0700\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -17,7 +17,7 @@ msgid "Home"
 msgstr ""
 
 
-msgid "Dictionary"
+msgid "Dictionary Browse & Edit"
 msgstr ""
 
 
@@ -29,6 +29,14 @@ msgid "Add meanings to entries where they are missing."
 msgstr ""
 
 
+msgid "Add Parts of Speech"
+msgstr ""
+
+
+msgid "Add a Part Of Speech to senses where they are missing."
+msgstr ""
+
+
 msgid "Add Examples"
 msgstr ""
 
@@ -37,11 +45,27 @@ msgid "Add example sentences to entries where they are missing."
 msgstr ""
 
 
-msgid "Collect Word List"
+msgid "Add Base Forms"
 msgstr ""
 
 
-msgid "Collect new words by translating from words in another language."
+msgid "Identify the "base form" word that this word is built from. In the printed dictionary, these can optionally be shown as subentries."
+msgstr ""
+
+
+msgid "Collect Word List (D)"
+msgstr ""
+
+
+msgid "Collect new words by translating from words in another language. This is a list of 1700 words from John Duerksen."
+msgstr ""
+
+
+msgid "Collect Word List (PNG)"
+msgstr ""
+
+
+msgid "Collect new words by translating from words in another language. This is a list of around 900 words and phrases from PNG."
 msgstr ""
 
 
@@ -86,7 +110,7 @@ msgid "&Cancel"
 msgstr ""
 
 #; ..\src\Addin.Backup\BackupToDevice.cs
-#. Label for usb backup action
+#. Label for usb flash-drive backup action
 msgid "Backup To Device"
 msgstr ""
 
@@ -111,6 +135,14 @@ msgstr ""
 msgid "Shows some information about the lexicon."
 msgstr ""
 
+#; ..\src\Addin.Transform\HtmlInWord.cs
+msgid "Export to Word"
+msgstr ""
+
+#; ..\src\Addin.Transform\HtmlInWord.cs
+msgid "Creates a very basic dictionary publication in Microsoft Word."
+msgstr ""
+
 #; ..\src\Addin.Transform\HtmlTransformer.cs
 msgid "Html Exporter"
 msgstr ""
@@ -129,7 +161,7 @@ msgstr ""
 
 #; ..\src\CommonTools\ActionsControl.cs
 #. The description of the Actions task.
-msgid "Backup, create a progress report, etc."
+msgid "Backup, print, etc."
 msgstr ""
 
 #; ..\src\CommonTools\CurrentTaskIndicatorControl.Designer.cs
@@ -149,6 +181,7 @@ msgid "Your dictionary has {0} words"
 msgstr ""
 
 #; ..\src\Image Picker Test App\ImagePicker\ImageDisplayWidget.cs
+#; ..\src\WeSay.UI\PictureControl.cs
 msgid "Cannot find {0}"
 msgstr ""
 
@@ -172,7 +205,6 @@ msgstr ""
 #; ..\src\LexicalTools\GatherBySemanticDomainsControl.Designer.cs
 #; ..\src\WeSay.Project\ViewTemplate.cs
 #. The label for the field showing the Lexeme Form of the entry.
-#; ..\src\WeSay.Project\ViewTemplate.cs
 msgid "Word"
 msgstr ""
 
@@ -199,6 +231,11 @@ msgstr ""
 msgid "Word:"
 msgstr ""
 
+#; ..\src\LexicalTools\LexEntrySortHelper.cs
+#. This is what shows if the user is listing words by the glossing language, but the word doesn't have a gloss.
+msgid "No Gloss"
+msgstr ""
+
 #; ..\src\LexicalTools\LexExampleSentenceLayouter.cs
 #. This is the field containing an example sentence of a sense of a word.
 #; ..\src\LexicalTools\LexExampleSentenceLayouter.cs
@@ -213,7 +250,7 @@ msgstr ""
 
 #; ..\src\LexicalTools\LexSenseLayouter.cs
 #; ..\src\LexicalTools\LexSenseLayouter.cs
-#. This label is shown once, but has two roles.  1) it labels contains the gloss, and 2) marks the beginning of the set of fields which make up a sense. So, in english, if we labelled this 'gloss', it would describe the field well but wouldn't label the section well."), "Gloss
+#. This label is shown once, but has two roles.  1) it labels contains the gloss, and 2) marks the beginning of the set of fields which make up a sense. So, in english, if we labelled this 'gloss', it would describe the field well but wouldn't label the section well.
 msgid "Meaning"
 msgstr ""
 
@@ -233,6 +270,10 @@ msgstr ""
 msgid "Completed:"
 msgstr ""
 
+#; ..\src\LexicalTools\MissingInfoTask.cs
+msgid "This word has no Base Form"
+msgstr ""
+
 #; ..\src\WeSay.App\TabbedForm.cs
 #. Appended to the name of a task, in its tab, while the user is waiting for the task to come up.
 msgid "Loading..."
@@ -244,16 +285,32 @@ msgid "WeSay"
 msgstr ""
 
 #; ..\src\WeSay.Project\ViewTemplate.cs
-msgid "Gloss"
+#. The label for the field holding the citation form.
+msgid "CitationForm"
+msgstr ""
+
+#; ..\src\WeSay.Project\ViewTemplate.cs
+#. The label for the field showing the definition of the word.
+msgid "Definition"
+msgstr ""
+
+#; ..\src\WeSay.Project\ViewTemplate.cs
+#. The label for the field showing a note.
+msgid "Note"
 msgstr ""
 
 #; ..\src\WeSay.Project\ViewTemplate.cs
 #. The label for the field showing Part Of Speech
-#; ..\src\WeSay.Project\ViewTemplate.cs
 msgid "POS"
 msgstr ""
 
 #; ..\src\WeSay.Project\ViewTemplate.cs
+#. The label for the field showing a picture.
+msgid "Picture"
+msgstr ""
+
+#; ..\src\WeSay.Project\ViewTemplate.cs
+#. The label for the field showing an example use of the word.
 msgid "Example Sentence"
 msgstr ""
 
@@ -264,13 +321,11 @@ msgstr ""
 
 #; ..\src\WeSay.Project\ViewTemplate.cs
 #. The label for the field showing Semantic Domains
-#; ..\src\WeSay.Project\ViewTemplate.cs
 msgid "Sem Dom"
 msgstr ""
 
 #; ..\src\WeSay.Project\ViewTemplate.cs
 #. The label for the field showing the entry which this entry is derived from, is a subentry of, etc.
-#; ..\src\WeSay.Project\ViewTemplate.cs
 msgid "Base Form"
 msgstr ""
 

@@ -25,9 +25,10 @@ namespace WeSay.LexicalTools
 			Field field = ActiveViewTemplate.GetField(Field.FieldNames.ExampleSentence.ToString());
 			if (field != null && field.DoShow )
 			{
-				Control entry = MakeBoundControl(example.Sentence, field);
-				DetailList.AddWidgetRow(StringCatalog.Get("~Example", "This is the field containing an example sentence of a sense of a word."), false, entry, insertAtRow+rowCount, false);
+				Control control = MakeBoundControl(example.Sentence, field);
+				DetailList.AddWidgetRow(StringCatalog.Get("~Example", "This is the field containing an example sentence of a sense of a word."), false, control, insertAtRow, false);
 				++rowCount;
+				insertAtRow = DetailList.GetRow(control);
 			}
 
 			field = ActiveViewTemplate.GetField(Field.FieldNames.ExampleTranslation.ToString());
@@ -39,7 +40,7 @@ namespace WeSay.LexicalTools
 			}
 
 			rowCount += AddCustomFields(example, insertAtRow + rowCount);
-			DetailList.ResumeLayout(false);
+			DetailList.ResumeLayout(true);
 			return rowCount;
 		}
 

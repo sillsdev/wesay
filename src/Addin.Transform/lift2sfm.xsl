@@ -46,7 +46,7 @@
 	  <xsl:text>&nl;\</xsl:text>
 	  <xsl:value-of select="@name"/>
 	  <xsl:text>   </xsl:text>
-	  <xsl:for-each select="//entry[@id=current()/@ref]/lexical-unit">
+	  <xsl:for-each select="//entry[@id=current()/@ref]/lexical-unit"><!-- todo: what if the ref is not found?-->
 		<xsl:apply-templates mode="raw"/>
 	  </xsl:for-each>
 	</xsl:if>
@@ -65,12 +65,13 @@
 	</xsl:template>
 -->
 
-  <xsl:template match="trait[starts-with(@name, 'flag_')]"><!-- don't output these--></xsl:template>
 
 
 
   <xsl:template match="sense">
-		 <xsl:text>&nl;\ps </xsl:text><xsl:value-of select="grammatical-info/@value"/>
+	<xsl:if test="grammatical-info/@value">
+		  <xsl:text>&nl;\ps </xsl:text><xsl:value-of select="grammatical-info/@value"/>
+	</xsl:if>
 		<xsl:apply-templates select="gloss">
 			<xsl:sort select="@lang"/>
 		</xsl:apply-templates>
@@ -78,6 +79,7 @@
 		 <xsl:apply-templates select="field"/>
 		 <xsl:apply-templates select="example"/>
 		 <xsl:apply-templates select="note"/>
+		 <xsl:apply-templates select="picture"/>
 	 </xsl:template>
 
 <xsl:template match="example">
@@ -106,6 +108,9 @@
 		</xsl:apply-templates>
 	 </xsl:template>
 
+  <xsl:template match="picture">
+	<xsl:text>&nl;\pc WeSay/pictures/</xsl:text><xsl:value-of select="@href"/>
+  </xsl:template>
 
 	<xsl:template match="gloss">
 		<xsl:choose>
@@ -133,5 +138,18 @@
 	<xsl:template match="text">
 		<xsl:value-of select="normalize-space()"/>
 	</xsl:template>
+
+  <!-- omit empty traits -->
+  <xsl:template match="trait[not(@value)]"/>
+
+  <!-- omit empty traits -->
+  <xsl:template match="trait[@value = '']"/>
+
+  <xsl:template match="trait[starts-with(@name, 'flag_')]">
+	<!-- don't output these-->
+  </xsl:template>
+
+  <!-- omit entries that have been deleted-->
+  <xsl:template match="entry[@dateDeleted]"/>
 
 </xsl:stylesheet>

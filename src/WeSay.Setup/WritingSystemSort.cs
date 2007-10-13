@@ -163,8 +163,45 @@ namespace WeSay.Setup
 		{
 			if (_writingSystem.UsesCustomSortRules)
 			{
+				if (_writingSystem.SortUsing == CustomSortRulesType.CustomSimple.ToString()  &&
+					textBoxCustomRules.Text.Trim() == string.Empty)
+				{
+					textBoxCustomRules.Text =
+						@"A a
+B b
+C c
+D d
+E e
+F f
+G g
+H h
+I i
+J j
+K k
+L l
+M m
+N n
+O o
+P p
+Q q
+R r
+S s
+T t
+U u
+V v
+W w
+X x
+Y y
+Z z";
+					textBoxCustomRules.Text = textBoxCustomRules.Text.Replace("\r\n", Environment.NewLine);
+					textBoxCustomRules.Text = textBoxCustomRules.Text.Replace("\n", Environment.NewLine);
+				}
+				else
+				{
+					textBoxCustomRules.Text = _writingSystem.CustomSortRules.Replace("\n", Environment.NewLine);
+				}
+
 				textBoxCustomRules.Visible = true;
-				textBoxCustomRules.Text = _writingSystem.CustomSortRules.Replace("\n", Environment.NewLine);
 				ValidateCustomRules();
 			}
 			else
@@ -220,6 +257,11 @@ namespace WeSay.Setup
 				s += s1 + Environment.NewLine;
 			}
 			this.textBoxSortTest.Text = s.Trim();
+		}
+
+		private void WritingSystemSort_Load(object sender, EventArgs e)
+		{
+			Refresh();
 		}
 	}
 }

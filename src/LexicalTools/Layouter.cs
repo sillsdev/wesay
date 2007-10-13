@@ -265,12 +265,13 @@ namespace WeSay.LexicalTools
 					label = string.Empty;
 				}
 
-				DetailList.AddWidgetRow(StringCatalog.Get(label),
+				Control c =DetailList.AddWidgetRow(StringCatalog.Get(label),
 										false,
 										box,
-										insertAtRow + rowCount,
+										insertAtRow,
 										false);
 
+			   insertAtRow = DetailList.GetRow(c);
 				++rowCount;
 			}
 			return rowCount;

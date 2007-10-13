@@ -94,8 +94,8 @@ namespace WeSay.LexicalTools
 								UnknownVernacularWritingSystem;
 			}
 
-			InitializeDisplaySettings();
 			InitializeComponent();
+			InitializeDisplaySettings();
 			InitializeMonoWorkarounds();
 
 			//this._btnNewWord.Font = StringCatalog.ModifyFontForLocalization(_btnNewWord.Font);
@@ -180,6 +180,8 @@ namespace WeSay.LexicalTools
 		private void InitializeDisplaySettings()
 		{
 			BackColor = DisplaySettings.Default.BackgroundColor;
+			this._findWritingSystemId.ForeColor = DisplaySettings.Default.WritingSystemLabelColor;
+
 		}
 
 		private void RegisterWritingSystemAndField(Field field,

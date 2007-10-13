@@ -42,7 +42,9 @@
 			<File Id="AddExamples.cache" Name="Add Examples.cache" KeyPath="yes" Source="..\..\sampleprojects\biatah\wesay\Cache\Add Examples.cache" />
 			<File Id="AssumeCacheIsFresh" Name="AssumeCacheIsFresh" Source="..\..\sampleprojects\biatah\wesay\Cache\AssumeCacheIsFresh" />
 			<File Id="AddMeanings.cache" Name="Add Meanings.cache" Source="..\..\sampleprojects\biatah\wesay\Cache\Add Meanings.cache" />
-			<File Id="Dictionary.cache" Name="Dictionary.cache"  Source="..\..\sampleprojects\biatah\wesay\Cache\Dictionary.cache" />
+	 <!-- this isn't shown in the dashboard now, so it isn't created.
+			And if it was, it would have a new name
+			<File Id="Dictionary.cache" Name="Dictionary.cache"  Source="..\..\sampleprojects\biatah\wesay\Cache\Dictionary.cache" /> -->
 			<File Id="LexEntrysortedbybth.cache" Name="LexEntry sorted by bth.cache"  Source="..\..\sampleprojects\biatah\wesay\Cache\LexEntry sorted by bth.cache" />
 			<File Id="LexEntrysortedbybthqipa.cache" Name="LexEntry sorted by bth-fonipa.cache"  Source="..\..\sampleprojects\biatah\wesay\Cache\LexEntry sorted by bth-fonipa.cache" />
 			<File Id="LexEntrysortedbyen.cache" Name="LexEntry sorted by en.cache"  Source="..\..\sampleprojects\biatah\wesay\Cache\LexEntry sorted by en.cache" />

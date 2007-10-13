@@ -232,7 +232,7 @@ namespace WeSay.UI
 		{
 			Label label = new Label();
 			label.Text = box.WritingSystem.Abbreviation;
-			label.ForeColor = Color.LightGray;
+			label.ForeColor = DisplaySettings.Default.WritingSystemLabelColor;
 			label.Anchor = AnchorStyles.Left | AnchorStyles.Top;
 			label.Font = _writingSystemLabelFont;
 

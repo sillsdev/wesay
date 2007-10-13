@@ -23,45 +23,14 @@ namespace Addin.Transform
 			//the xml serialization process seems to convert the \r\n we need (on windows) to \n
 			_pairsText.Text = settings.SfmTagConversions.Replace("\n", System.Environment.NewLine);
 
-			if (String.IsNullOrEmpty(settings.VernacularLanguageWritingSystemId))
-			{
-				if (projectInfo.WritingSystems.ContainsKey("v"))
-				{
-					settings.NationalLanguageWritingSystemId = "v";
-				}
-				else //guess
-				{
-					foreach (string id in projectInfo.WritingSystems.Keys)
-					{
-						if (!"en fr chn th tpi".Contains(id))
-						{
-							settings.VernacularLanguageWritingSystemId = id;
-							break;
-						}
-					}
-				}
-			}
-
-			if (String.IsNullOrEmpty(settings.NationalLanguageWritingSystemId))
-			{
-				if (projectInfo.WritingSystems.ContainsKey("tpi")) //melanesian pidgin
-				{
-					settings.NationalLanguageWritingSystemId = "tpi";
-				}
-				if (projectInfo.WritingSystems.ContainsKey("th")) //thai
-				{
-					settings.NationalLanguageWritingSystemId = "th";
-				}
-				if (projectInfo.WritingSystems.ContainsKey("fr")) //french
-				{
-					settings.NationalLanguageWritingSystemId = "fr";
-				}
-			}
+			_settings.FillEmptySettingsWithGuesses(projectInfo);
 			FillLanguageCombos(_vernacularLanguage, settings.VernacularLanguageWritingSystemId);
 			FillLanguageCombos(_englishLanguage, settings.EnglishLanguageWritingSystemId);
 			FillLanguageCombos(_nationalLanguage, settings.NationalLanguageWritingSystemId);
 			FillLanguageCombos(_regionalLanguage, settings.RegionalLanguageWritingSystemId);
 		}
+
+
 
 		private void FillLanguageCombos(ComboBox languageCombo, string currentWSId)
 		{

@@ -83,6 +83,7 @@ namespace WeSay.Setup
 			this.textBoxSortTest.Name = "textBoxSortTest";
 			this.textBoxSortTest.Size = new System.Drawing.Size(100, 182);
 			this.textBoxSortTest.TabIndex = 3;
+			this.textBoxSortTest.Text = "pear\r\napple\r\norange\r\nmango\r\n";
 			//
 			// buttonSortTest
 			//
@@ -91,7 +92,7 @@ namespace WeSay.Setup
 			this.buttonSortTest.Name = "buttonSortTest";
 			this.buttonSortTest.Size = new System.Drawing.Size(100, 23);
 			this.buttonSortTest.TabIndex = 4;
-			this.buttonSortTest.Text = "Sort the following:";
+			this.buttonSortTest.Text = "Test Sort";
 			this.buttonSortTest.UseVisualStyleBackColor = true;
 			this.buttonSortTest.Click += new System.EventHandler(this.buttonSortTest_Click);
 			//
@@ -113,6 +114,7 @@ namespace WeSay.Setup
 			this.Controls.Add(this.textBoxCustomRules);
 			this.Name = "WritingSystemSort";
 			this.Size = new System.Drawing.Size(434, 218);
+			this.Load += new System.EventHandler(this.WritingSystemSort_Load);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 

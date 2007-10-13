@@ -6,7 +6,7 @@ using WeSay.Foundation;
 
 namespace WeSay.UI.AutoCompleteTextBox
 {
-	public partial class AutoCompleteWithCreationBox<KV, ValueT> : UserControl, IBindableControl<ValueT>
+	public partial class AutoCompleteWithCreationBox<KV, ValueT> : UserControl, IBindableControl<ValueT> where ValueT : class
 	{
 		public event EventHandler<CreateNewArgs> CreateNewClicked;
 
@@ -18,6 +18,10 @@ namespace WeSay.UI.AutoCompleteTextBox
 		public AutoCompleteWithCreationBox()
 		{
 			InitializeComponent();
+
+
+
+
 			_textBox.SelectedItemChanged += OnSelectedItemChanged;
 			GotFocus += OnFocusChanged;
 			_textBox.GotFocus += OnFocusChanged;
@@ -94,7 +98,10 @@ namespace WeSay.UI.AutoCompleteTextBox
 		{
 			get
 			{
-				return GetValueFromKeyValue.Invoke((KV)Box.SelectedItem);
+				if(Box.SelectedItem ==null)
+					return null;
+				else
+					return GetValueFromKeyValue.Invoke((KV)Box.SelectedItem);
 			}
 			set
 			{
@@ -200,9 +207,13 @@ namespace WeSay.UI.AutoCompleteTextBox
 
 		private void UpdateDisplay()
 		{
+#if WS468Fixed
 			_addNewButton.Visible = _textBox.SelectedItem == null
 				&& !string.IsNullOrEmpty(_textBox.Text)
 				&& ContainsFocus;
+#else
+			_addNewButton.Visible = false;
+#endif
 			UpdateElementWidth();
 		}
 

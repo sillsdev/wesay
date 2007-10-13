@@ -29,8 +29,7 @@ namespace WeSay.CommonTools
 			string cachePath = WeSayWordsProject.Project.PathToCache;
 
 
-			//TODO: this leads to a failure when the label isn't a valid path (like when it says "failed to load: blahblah"
-			string cacheFilePath = Path.Combine(cachePath, task.Label + ".cache");
+			string cacheFilePath = Path.Combine(cachePath, MakeSafeName(task.Label + ".cache"));
 
 			if (task.Status == "-")
 			{
@@ -44,6 +43,15 @@ namespace WeSay.CommonTools
 			this._btnName.Text = task.Label;//these have already gone through the StringCatalog
 			this._textShortDescription.Text = task.Description;//these have already gone through the StringCatalog
 			_textShortDescription.Font = StringCatalog.ModifyFontForLocalization(_textShortDescription.Font);
+		}
+
+		private string MakeSafeName(string fileName)
+		{
+			foreach (char invalChar in Path.GetInvalidFileNameChars())
+			{
+				fileName = fileName.Replace(invalChar.ToString(), "");
+			}
+			return fileName;
 		}
 
 		private void WriteCacheFile(string cacheFilePath, string cachePath) {
@@ -114,6 +122,11 @@ namespace WeSay.CommonTools
 		private void _btnName_FontChanged(object sender, EventArgs e)
 		{
 
+		}
+
+		private void TaskIndicator_Resize(object sender, EventArgs e)
+		{
+			//int w = this.Width;
 		}
 
 	}

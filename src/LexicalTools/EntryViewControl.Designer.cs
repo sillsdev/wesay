@@ -49,7 +49,7 @@ namespace WeSay.LexicalTools
 			//
 			// _lexicalEntryPreview
 			//
-			this._lexicalEntryPreview.BackColor = System.Drawing.SystemColors.Control;
+			this._lexicalEntryPreview.BackColor = System.Drawing.Color.LightSeaGreen;
 			this._lexicalEntryPreview.BorderStyle = System.Windows.Forms.BorderStyle.None;
 			this._lexicalEntryPreview.Dock = System.Windows.Forms.DockStyle.Top;
 			this._lexicalEntryPreview.Location = new System.Drawing.Point(0, 0);
@@ -76,9 +76,11 @@ namespace WeSay.LexicalTools
 			this._detailListControl.ColumnCount = 2;
 			this._detailListControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
 			this._detailListControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this._detailListControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this._detailListControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
 			this._detailListControl.Dock = System.Windows.Forms.DockStyle.Fill;
 			this._detailListControl.Location = new System.Drawing.Point(0, 0);
-			this._detailListControl.Margin = new System.Windows.Forms.Padding(0, 0, 0, 0);
+			this._detailListControl.Margin = new System.Windows.Forms.Padding(0);
 			this._detailListControl.Name = "_detailListControl";
 			this._detailListControl.Padding = new System.Windows.Forms.Padding(20, 0, 20, 0);
 			this._detailListControl.Size = new System.Drawing.Size(474, 277);

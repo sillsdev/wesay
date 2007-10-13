@@ -61,6 +61,8 @@ namespace WeSay.App
 			Application.Init();
 #endif
 
+			DisplaySettings.Default.SkinName = Settings.Default.SkinName;
+
 			WeSayWordsProject project = new WeSayWordsProject();
 			//project.StringCatalogSelector = cmdArgs.ui;
 
@@ -108,6 +110,8 @@ namespace WeSay.App
 					project.LiftUpdateService.DoLiftUpdateNow(true);
 			  //      BackupMaker.BackupToExternal(_filesToBackup,project.ProjectDirectoryPath, "h:\\" + project.Name + ".zip");
 				}
+
+				Settings.Default.SkinName =DisplaySettings.Default.SkinName;
 				Logger.WriteEvent("App Exiting Normally.");
 			}
 			catch (IOException e)

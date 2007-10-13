@@ -34,8 +34,8 @@ namespace WeSay.CommonTools
 			this.components = new System.ComponentModel.Container();
 			this._btnName = new System.Windows.Forms.Button();
 			this._textShortDescription = new System.Windows.Forms.TextBox();
-			this._intray = new WeSay.CommonTools.ItemsToDoIndicator();
 			this.localizationHelper1 = new WeSay.UI.LocalizationHelper(this.components);
+			this._intray = new WeSay.CommonTools.ItemsToDoIndicator();
 			((System.ComponentModel.ISupportInitialize)(this.localizationHelper1)).BeginInit();
 			this.SuspendLayout();
 			//
@@ -47,7 +47,7 @@ namespace WeSay.CommonTools
 			this._btnName.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this._btnName.Location = new System.Drawing.Point(79, 9);
 			this._btnName.Name = "_btnName";
-			this._btnName.Size = new System.Drawing.Size(156, 33);
+			this._btnName.Size = new System.Drawing.Size(225, 33);
 			this._btnName.TabIndex = 1;
 			this._btnName.Text = "Gather from Foo words";
 			this._btnName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -64,10 +64,14 @@ namespace WeSay.CommonTools
 			this._textShortDescription.Location = new System.Drawing.Point(79, 48);
 			this._textShortDescription.Multiline = true;
 			this._textShortDescription.Name = "_textShortDescription";
-			this._textShortDescription.Size = new System.Drawing.Size(156, 32);
+			this._textShortDescription.Size = new System.Drawing.Size(222, 32);
 			this._textShortDescription.TabIndex = 2;
 			this._textShortDescription.TabStop = false;
 			this._textShortDescription.Text = "See words in Foo, write the same words in Boo";
+			//
+			// localizationHelper1
+			//
+			this.localizationHelper1.Parent = this;
 			//
 			// _intray
 			//
@@ -81,10 +85,6 @@ namespace WeSay.CommonTools
 			this._intray.Size = new System.Drawing.Size(57, 21);
 			this._intray.TabIndex = 3;
 			//
-			// localizationHelper1
-			//
-			this.localizationHelper1.Parent = this;
-			//
 			// TaskIndicator
 			//
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -93,7 +93,8 @@ namespace WeSay.CommonTools
 			this.Controls.Add(this._textShortDescription);
 			this.Controls.Add(this._btnName);
 			this.Name = "TaskIndicator";
-			this.Size = new System.Drawing.Size(238, 83);
+			this.Size = new System.Drawing.Size(304, 83);
+			this.Resize += new System.EventHandler(this.TaskIndicator_Resize);
 			this.BackColorChanged += new System.EventHandler(this.TaskIndicator_BackColorChanged);
 			((System.ComponentModel.ISupportInitialize)(this.localizationHelper1)).EndInit();
 			this.ResumeLayout(false);

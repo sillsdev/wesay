@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel;
 using System.Windows.Forms;
+using WeSay.Foundation;
 using WeSay.Language;
 using WeSay.LexicalModel;
 using WeSay.Data;
@@ -98,7 +99,7 @@ namespace WeSay.LexicalTools
 			{
 				MissingItemFilter f = filter as MissingItemFilter;
 				Field flagField = new Field();
-				flagField.DisplayName = "~This word has no Base Form";
+				flagField.DisplayName = StringCatalog.Get("~This word has no Base Form", "The user will click this to say that this word has no baseform.  E.g. Kindess has Kind as a baseform, but Kind has no other word as a baseform.");
 				flagField.DataTypeName = "Flag";
 				flagField.ClassName = "LexEntry";
 				flagField.FieldName = "flag_skip_" + ((MissingItemFilter) filter).FieldName;

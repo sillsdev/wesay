@@ -58,10 +58,10 @@ namespace Addin.Transform
 						string line = reader.ReadLine();
 						foreach (SfmTransformSettings.ChangePair pair in pairs)
 						{
-							if (Regex.IsMatch(line, @"\\" + pair.from))
+							if (Regex.IsMatch(line, pair.from))
 							{
 								line = Regex.Replace(line, pair.from, pair.to);
-								break; //only supporting one match per line
+								//break; //only supporting one match per line
 							}
 						}
 						writer.WriteLine(line);
@@ -77,6 +77,8 @@ namespace Addin.Transform
 
 		public override void Launch(Form parentForm, ProjectInfo projectInfo)
 		{
+			_settings.FillEmptySettingsWithGuesses(projectInfo);
+
 			string output = TransformLift(projectInfo, "lift2sfm.xsl", "-sfm.txt");
 			GrepFile(output);
 
