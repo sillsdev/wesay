@@ -94,6 +94,18 @@ namespace WeSay.UI.AutoCompleteTextBox
 		public event EventHandler ValueChanged;
 		public event EventHandler GoingAway;
 
+		public override string Text
+		{
+			get
+			{
+				return Box.Text;
+			}
+			set
+			{
+				Box.Text = value;
+			}
+		}
+
 		 public ValueT Value
 		{
 			get
@@ -207,22 +219,21 @@ namespace WeSay.UI.AutoCompleteTextBox
 
 		private void UpdateDisplay()
 		{
-#if WS468Fixed
 			_addNewButton.Visible = _textBox.SelectedItem == null
 				&& !string.IsNullOrEmpty(_textBox.Text)
 				&& ContainsFocus;
-#else
-			_addNewButton.Visible = false;
-#endif
 			UpdateElementWidth();
 		}
-
-		private void OnAddNewButton_Click(object sender, EventArgs e)
+		public void CreateNewObjectFromText()
 		{
 			Debug.Assert(CreateNewClicked != null, "Doesn't make sense to use this class without CreateNewClicked handler.");
 			CreateNewArgs creationArgs = new CreateNewArgs(_textBox.Text);
 			CreateNewClicked.Invoke(this, creationArgs);
 			_textBox.SelectedItem = creationArgs.NewlyCreatedItem;
+		}
+		private void OnAddNewButton_Click(object sender, EventArgs e)
+		{
+			CreateNewObjectFromText();
 		}
 
 

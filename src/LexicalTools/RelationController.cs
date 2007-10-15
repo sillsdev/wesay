@@ -20,19 +20,19 @@ namespace WeSay.LexicalTools
 		private readonly Field _field;
 		private readonly EventHandler<CurrentItemEventArgs> _focusDelegate;
 		private readonly LexRelationType _relationType;
-		private readonly WeSayDataObject _target;
+		private readonly WeSayDataObject _relationParent;
 		private SimpleBinding<LexEntry> _binding;
 		private Control _control;
 		private CachedSortedDb4oList<string, LexEntry> _pairStringLexEntryIdList;
 		private ReadOnlyCollection<KeyValuePair<string, long>> _keyIdMap;
 
-		private RelationController(WeSayDataObject target,
+		private RelationController(WeSayDataObject relationParent,
 								   LexRelationType relationType,
 								   Field field,
 								   IRecordListManager recordListManager,
 								   EventHandler<CurrentItemEventArgs> focus)
 		{
-			_target = target;
+			this._relationParent = relationParent;
 			_relationType = relationType;
 			_field = field;
 			_recordListManager = recordListManager;
@@ -46,7 +46,7 @@ namespace WeSay.LexicalTools
 			get { return _control; }
 		}
 
-		public static Control CreateWidget(WeSayDataObject target,
+		public static Control CreateWidget(WeSayDataObject relationParent,
 										   LexRelationType relationType,
 										   Field field,
 										   IRecordListManager recordListManager,
@@ -54,7 +54,7 @@ namespace WeSay.LexicalTools
 												   focus)
 		{
 			RelationController controller =
-					new RelationController(target,
+					new RelationController(relationParent,
 										   relationType,
 										   field,
 										   recordListManager,
@@ -62,20 +62,32 @@ namespace WeSay.LexicalTools
 			return controller.Control;
 		}
 
-		private void OnCreateNewEntry(object sender,
+		private void OnCreateNewLexEntry(object sender,
 											  CreateNewArgs e)
 		{
-			LexEntry newGuy = Lexicon.AddNewEntry();
-			newGuy.LexicalForm.SetAlternative(_field.WritingSystemIds[0],
-											  e.LabelOfNewItem);
+			LexEntry newGuy = CreateNewLexEntry(e);
 			e.NewlyCreatedItem = newGuy;
 
+		}
+
+		private void OnCreateNewPairStringLexEntryId(object sender,
+									  CreateNewArgs e)
+		{
+			LexEntry newGuy = CreateNewLexEntry(e);
+			e.NewlyCreatedItem = GetKeyIdPairFromLexEntry(newGuy);
+		}
+
+		private LexEntry CreateNewLexEntry(CreateNewArgs e) {
+			LexEntry newGuy = Lexicon.AddNewEntry();
+			newGuy.LexicalForm.SetAlternative(this._field.WritingSystemIds[0],
+											  e.LabelOfNewItem);
 			//hack: if something is a baseform itself, it isn't likely to have its own baseform
 			//This satisfies Rene's request of WS-419
-			if (_field.FieldName == "BaseForm")
+			if (this._field.FieldName == "BaseForm")
 			{
 				newGuy.SetFlag("flag_skip_BaseForm");
 			}
+			return newGuy;
 		}
 
 		private void MakeControl()
@@ -84,7 +96,7 @@ namespace WeSay.LexicalTools
 			// this will get a collection if we already have some for this field, or else
 			// it will make one. If unused, it will be cleaned up at the right time by the WeSayDataObject parent.
 			LexRelationCollection targetRelationCollection =
-					_target.GetOrCreateProperty<LexRelationCollection>(
+					this._relationParent.GetOrCreateProperty<LexRelationCollection>(
 							_field.FieldName);
 
 			switch (_relationType.Multiplicity)
@@ -94,7 +106,7 @@ namespace WeSay.LexicalTools
 					if (targetRelationCollection.Relations.Count > 0)
 					{
 						relation = targetRelationCollection.Relations[0];
-						relation.Parent = _target;
+						relation.Parent = this._relationParent;
 					}
 					else
 					{
@@ -102,7 +114,7 @@ namespace WeSay.LexicalTools
 						relation =
 								new LexRelation(_field.FieldName,
 												string.Empty,
-												_target);
+												this._relationParent);
 						targetRelationCollection.Relations.Add(relation);
 					}
 
@@ -137,17 +149,16 @@ namespace WeSay.LexicalTools
 				picker.GetKeyValueFromValue = GetKeyIdPairFromLexEntry;
 				picker.GetValueFromKeyValue = GetLexEntryFromKeyIdPair;
 
-				picker.Box.ItemDisplayStringAdaptor =
-						new PairStringLexEntryIdLabelAdaptor(this._field.WritingSystemIds, pairStringLexEntryIdList);
+				picker.Box.ItemDisplayStringAdaptor = new PairStringLexEntryIdLabelAdaptor();
 				picker.Box.TooltipToDisplayStringAdaptor =
 						new PairStringLexEntryIdToolTipProvider(pairStringLexEntryIdList);
-				picker.Box.FormToObectFinder = FindStringLexEntryFromForm;
+				picker.Box.FormToObectFinder = FindPairStringLexEntryIdFromForm;
 				picker.Box.ItemFilterer = FindClosestAndNextClosestAndPrefixedPairStringLexEntryForms;
 
 				picker.Box.Items = this._keyIdMap;
 				picker.Box.SelectedItem = GetKeyIdPairFromLexEntry((LexEntry)relation.Target);
 
-				picker.CreateNewClicked += OnCreateNewEntry;
+				picker.CreateNewClicked += OnCreateNewPairStringLexEntryId;
 				this._control = picker;
 			}
 			else
@@ -163,7 +174,7 @@ namespace WeSay.LexicalTools
 				picker.Box.TooltipToDisplayStringAdaptor =
 						new WeSayDataObjectToolTipProvider(this._field.WritingSystemIds);
 				picker.Box.ItemFilterer = FindClosestAndNextClosestAndPrefixedLexEntryForms;
-				picker.CreateNewClicked += OnCreateNewEntry;
+				picker.CreateNewClicked += OnCreateNewLexEntry;
 				this._control = picker;
 			}
 		}
@@ -219,8 +230,6 @@ namespace WeSay.LexicalTools
 			_binding = new SimpleBinding<LexEntry>(relation, picker);
 			//for underlinging the relation in the preview pane
 			_binding.CurrentItemChanged += _focusDelegate;
-			// _detailList.OnBinding_ChangeOfWhichItemIsInFocus;
-
 
 			return picker;
 		}
@@ -249,7 +258,7 @@ namespace WeSay.LexicalTools
 			_binding.CurrentItemChanged += handler;
 		}
 
-		private object FindStringLexEntryFromForm(string form)
+		private object FindPairStringLexEntryIdFromForm(string form)
 		{
 			int index = _pairStringLexEntryIdList.
 							BinarySearch(form);
@@ -335,27 +344,12 @@ namespace WeSay.LexicalTools
 
 		private class PairStringLexEntryIdLabelAdaptor : IDisplayStringAdaptor
 		{
-			private readonly IList<string> _writingSystemIds;
-			//review: should this really be an ordered collection of preferred choices?
-
-			private readonly CachedSortedDb4oList<string, LexEntry> _cachedSortedDb4oList;
-
-			public PairStringLexEntryIdLabelAdaptor(IList<string> writingSystemIds,
-			   CachedSortedDb4oList<string, LexEntry> cachedSortedDb4oList)
-			{
-				_writingSystemIds = writingSystemIds;
-				_cachedSortedDb4oList = cachedSortedDb4oList;
-			}
-
 			#region IDisplayStringAdaptor Members
 
 			public string GetDisplayLabel(object item)
 			{
 				KeyValuePair<string, long> kv = (KeyValuePair<string,long>)item;
 				return kv.Key;
-// Review: Eric had these two lines in, but they won't be run...
-//                LexEntry entry = this._cachedSortedDb4oList.GetValueFromId(kv.Value);
-//                return entry.LexicalForm.GetBestAlternativeString(_writingSystemIds);
 			}
 
 			#endregion

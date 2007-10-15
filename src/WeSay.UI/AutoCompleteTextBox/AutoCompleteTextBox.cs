@@ -529,9 +529,9 @@ namespace WeSay.UI.AutoCompleteTextBox
 						UpdateList();
 					} break;
 				}
-
-				SelectedItem = _formToObectFinderDelegate(Text);
 			}
+
+			SelectedItem = _formToObectFinderDelegate(Text);
 			UpdateDisplay();
 		}
 

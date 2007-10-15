@@ -52,6 +52,7 @@
   </ItemGroup>
   <ItemGroup>
 	<Compile Include="GatherBySemanticDomainTaskTests.cs" />
+	<Compile Include="HelperForTestsRequiringDb4o.cs" />
 	<Compile Include="MissingEntryRelationFieldFilterTests.cs" />
 	<Compile Include="MissingLexicalFormFilterTests.cs" />
 	<Compile Include="MissingExampleTranslationFilterTests.cs" />
@@ -65,6 +66,7 @@
 	<Compile Include="LexFieldTaskTests.cs" />
 	<Compile Include="MissingExampleSentenceFilterTests.cs" />
 	<Compile Include="MissingGlossFilterTests.cs" />
+	<Compile Include="RelationControllerTests.cs" />
 	<Compile Include="TaskBaseTests.cs" />
 	<Compile Include="EntryViewControlTests.cs" />
 	<Compile Include="LayouterTests.cs" />
