@@ -1,12 +1,16 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
 using System.Xml;
+using System.Xml.XPath;
 using System.Xml.Xsl;
+using Palaso.WritingSystems.Collation;
 using WeSay.AddinLib;
+using WeSay.Language;
 
 namespace Addin.Transform
 {
@@ -98,7 +102,27 @@ namespace Addin.Transform
 
 			using (Stream output = File.Create(_pathToOutput))
 			{
-				transform.Transform(projectInfo.PathToLIFT, arguments, output);
+				XmlDocument document = new XmlDocument();
+				document.PreserveWhitespace = true;
+				document.Load(projectInfo.PathToLIFT);
+				XPathNavigator navigator = document.CreateNavigator();
+
+				XPathNavigator headwordWritingSystemAttribute = navigator.SelectSingleNode("//lexical-unit/form/@lang");
+				string headwordWritingSystem = headwordWritingSystemAttribute.Value;
+				WritingSystem ws;
+				if(projectInfo.WritingSystems.TryGetValue(headwordWritingSystem, out ws))
+				{
+					string xpathSortKeySource = string.Format("//lexical-unit/form[@lang='{0}']",
+															  headwordWritingSystem);
+					AddSortKeysToXml.AddSortKeys(navigator,
+												 xpathSortKeySource,
+												 ws.GetSortKey,
+												 "ancestor::entry",
+												 "sort-key");
+
+				}
+				XPathNavigator check = navigator.SelectSingleNode("//entry");
+				transform.Transform(document, arguments, output);
 			}
 			transform.TemporaryFiles.Delete();
 

@@ -146,7 +146,7 @@ BOGURAEV and NEFF Lit Linguist Computing.1992; 7: 110-112
 	  </head>
 	  <body>
 		<xsl:apply-templates select="//entry">
-		  <xsl:sort select="sort-key"/>
+		  <xsl:sort select="@sort-key"/>
 		  <!-- Entries should be ordered by their order attribute if they have one otherwise, they should be kept in document order -->
 		  <xsl:sort select="@order"/>
 		</xsl:apply-templates>
