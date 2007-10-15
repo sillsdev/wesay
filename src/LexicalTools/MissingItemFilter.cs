@@ -81,12 +81,27 @@ namespace WeSay.LexicalTools
 				case "Option":
 					return ((OptionRef) content).IsEmpty;
 				case "OptionCollection":
-					return ((OptionRefCollection)content).IsEmpty;
+					return ((OptionRefCollection) content).IsEmpty;
 				case "MultiText":
-					return IsMissingWritingSystem((MultiText)content);
+					return IsMissingWritingSystem((MultiText) content);
 				case "RelationToOneEntry":
-					LexRelationCollection collection = (LexRelationCollection)content;
-					return collection.IsEmpty && !IsSkipped(collection.Parent, this._field.FieldName);
+					LexRelationCollection collection = (LexRelationCollection) content;
+					if (IsSkipped(collection.Parent, this._field.FieldName))
+					{
+						return false;
+					}
+					else
+					{
+						foreach (LexRelation r in collection.Relations)
+						{
+							if(r.Target !=null)
+							{
+								return false; // has one non-empty relation
+							}
+						}
+						return true; //collection is empty or all its members don't really have targets
+					}
+					break;
 				default:
 					Debug.Fail("unknown DataTypeName");
 					return false;
