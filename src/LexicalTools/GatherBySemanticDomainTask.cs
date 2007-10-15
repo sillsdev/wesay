@@ -15,8 +15,8 @@ namespace WeSay.LexicalTools
 {
 	public class SemanticDomainSortHelper : ISortHelper<string, LexEntry>
 	{
-		private Db4oDataSource _db4oData;
-		private string _semanticDomainFieldName;
+		private readonly Db4oDataSource _db4oData;
+		private readonly string _semanticDomainFieldName;
 
 		public SemanticDomainSortHelper(Db4oDataSource db4oData, string semanticDomainFieldName)
 		{
@@ -92,9 +92,9 @@ namespace WeSay.LexicalTools
 		private List<string> _words;
 		private CachedSortedDb4oList<string, LexEntry> _entries;
 
-		private WritingSystem _lexicalFormWritingSystem;
+		private readonly WritingSystem _lexicalFormWritingSystem;
 		private WritingSystem _semanticDomainWritingSystem;
-		private Field _semanticDomainField;
+		private readonly Field _semanticDomainField;
 		private OptionsList _semanticDomainOptionsList;
 
 		private int _currentDomainIndex;
@@ -669,6 +669,7 @@ namespace WeSay.LexicalTools
 							new SemanticDomainSortHelper(RecordListManager.DataSource, _semanticDomainField.FieldName));
 
 			UpdateCurrentWords();
+			GotoLastDomainWithAnswers();
 			_gatherControl = new GatherBySemanticDomainsControl(this);
 		}
 
@@ -689,6 +690,28 @@ namespace WeSay.LexicalTools
 		{
 			get { return -1; //todo
 			}
+		}
+
+		public void GotoLastDomainWithAnswers()
+		{
+			if(!IsActive)
+			{
+				throw new InvalidOperationException("task must be activated first");
+			}
+			for (int i = 0; i < DomainKeys.Count; i++)
+			{
+				CurrentDomainIndex = i;
+				int beginIndex;
+				int pastEndIndex;
+				GetWordsIndexes(CurrentDomainIndex, out beginIndex, out pastEndIndex);
+				if(pastEndIndex == beginIndex)
+				{
+					CurrentDomainIndex = (i==0)?i:i - 1;
+					return;
+				}
+			}
+			// there were no empty domains. Stay at the last domain (as a side effect of having positioned
+			// ourself in the above loop
 		}
 	}
 }

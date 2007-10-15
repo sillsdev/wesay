@@ -92,7 +92,7 @@ namespace WeSay.LexicalTools
 			this._listViewWords.Items.AddRange(new object[] {
 			listViewItem1,
 			listViewItem2});
-			this._listViewWords.Location = new System.Drawing.Point(15, 233);
+			this._listViewWords.Location = new System.Drawing.Point(15, 273);
 			this._listViewWords.MultiColumn = true;
 			this._listViewWords.Name = "_listViewWords";
 			this._listViewWords.Size = new System.Drawing.Size(622, 65);

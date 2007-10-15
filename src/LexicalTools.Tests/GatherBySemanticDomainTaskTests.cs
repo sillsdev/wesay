@@ -627,6 +627,43 @@ namespace WeSay.LexicalTools.Tests
 
 
 		#region Navigation
+		#region GotoLastDomainWithAnswers
+		[Test]
+		public void GotoLastDomainWithAnswers_NoDomainsHaveAnswers_GoesToFirstDomain()
+		{
+			Task.GotoLastDomainWithAnswers();
+			Assert.AreEqual(0, Task.CurrentQuestionIndex);
+			Assert.AreEqual(0, Task.CurrentDomainIndex);
+		}
+
+		[Test]
+		public void GotoLastDomainWithAnswers_GoesToDomainBeforeFirstDomainWithNoAnswers()
+		{
+			Task.CurrentDomainIndex = 0;
+			Task.AddWord("first");
+			Task.CurrentDomainIndex = 1;
+			Task.AddWord("second");
+			Task.CurrentDomainIndex = 3;
+			Task.AddWord("fourth");
+			Task.GotoLastDomainWithAnswers();
+			Assert.AreEqual(0, Task.CurrentQuestionIndex);
+			Assert.AreEqual(1, Task.CurrentDomainIndex);
+		}
+
+		[Test]
+		public void GotoLastDomainWithAnswers_AllDomainsHaveAnswers()
+		{
+			for (int i = 0; i < Task.DomainKeys.Count; i++)
+			{
+				Task.CurrentDomainIndex = i;
+				Task.AddWord(i.ToString());
+			}
+			Task.GotoLastDomainWithAnswers();
+			Assert.AreEqual(0, Task.CurrentQuestionIndex);
+			Assert.AreEqual(Task.DomainKeys.Count - 1, Task.CurrentDomainIndex);
+		}
+
+		#endregion
 		#region GotoNextDomainQuestion
 		[Test]
 		public void GotoNextDomainQuestion_HasNextQuestion_GoesToNextQuestion()
