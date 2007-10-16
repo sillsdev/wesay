@@ -108,10 +108,12 @@ namespace Addin.Transform
 				XPathNavigator navigator = document.CreateNavigator();
 
 				XPathNavigator headwordWritingSystemAttribute = navigator.SelectSingleNode("//lexical-unit/form/@lang");
-				string headwordWritingSystem = headwordWritingSystemAttribute.Value;
-				WritingSystem ws;
-				if(projectInfo.WritingSystems.TryGetValue(headwordWritingSystem, out ws))
+				if (headwordWritingSystemAttribute != null)
 				{
+				  string headwordWritingSystem = headwordWritingSystemAttribute.Value;
+				  WritingSystem ws;
+				  if (projectInfo.WritingSystems.TryGetValue(headwordWritingSystem, out ws))
+				  {
 					string xpathSortKeySource = string.Format("//lexical-unit/form[@lang='{0}']",
 															  headwordWritingSystem);
 					AddSortKeysToXml.AddSortKeys(navigator,
@@ -120,8 +122,8 @@ namespace Addin.Transform
 												 "ancestor::entry",
 												 "sort-key");
 
+				  }
 				}
-				XPathNavigator check = navigator.SelectSingleNode("//entry");
 				transform.Transform(document, arguments, output);
 			}
 			transform.TemporaryFiles.Delete();
