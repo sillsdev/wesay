@@ -127,7 +127,7 @@ namespace WeSay.LexicalTools
 				_lexicalFormWritingSystem = lexicalFormField.WritingSystems[0];
 			}
 
-			_currentDomainIndex = 0;
+			_currentDomainIndex = -1;
 			_currentQuestionIndex = 0;
 			_words = null;
 			_semanticDomainQuestionsFileName = semanticDomainQuestionsFileName;
@@ -174,28 +174,36 @@ namespace WeSay.LexicalTools
 		{
 			get
 			{
-				if (!IsActive)
-				{
-					throw new InvalidOperationException("Task must be active to use this property");
-				}
+				VerifyTaskActivated();
 				return _gatherControl;
 			}
 		}
 
 		public List<string> DomainKeys
 		{
-			get { return _domainKeys; }
+
+			get
+			{
+				VerifyTaskActivated();
+				return _domainKeys;
+			}
 		}
 
 		public string CurrentDomainKey
 		{
-			get { return DomainKeys[CurrentDomainIndex]; }
+			get
+			{
+				VerifyTaskActivated();
+				return DomainKeys[CurrentDomainIndex];
+			}
 		}
 
 		public List<string> DomainNames
 		{
 			get
 			{
+				VerifyTaskActivated();
+
 				if (_domainNames == null)
 				{
 					PopulateDomainNames();
@@ -215,7 +223,11 @@ namespace WeSay.LexicalTools
 
 		public string CurrentDomainName
 		{
-			get { return GetOptionNameFromKey(CurrentDomainKey); }
+			get
+			{
+				VerifyTaskActivated();
+				return GetOptionNameFromKey(CurrentDomainKey);
+			}
 		}
 
 		private string GetOptionNameFromKey(string key)
@@ -237,6 +249,8 @@ namespace WeSay.LexicalTools
 		{
 			get
 			{
+				VerifyTaskActivated();
+
 				Option option = GetOptionFromKey(CurrentDomainKey);
 				if (option == null)
 				{
@@ -248,9 +262,14 @@ namespace WeSay.LexicalTools
 
 		public int CurrentDomainIndex
 		{
-			get { return _currentDomainIndex; }
+			get
+			{
+				VerifyTaskActivated();
+				return _currentDomainIndex;
+			}
 			set
 			{
+				VerifyTaskActivated();
 				if (value < 0 || value >= DomainKeys.Count)
 				{
 					throw new ArgumentOutOfRangeException();
@@ -271,14 +290,23 @@ namespace WeSay.LexicalTools
 
 		public string CurrentQuestion
 		{
-			get { return Questions[CurrentQuestionIndex]; }
+			get
+			{
+				VerifyTaskActivated();
+				return Questions[CurrentQuestionIndex];
+			}
 		}
 
 		public int CurrentQuestionIndex
 		{
-			get { return _currentQuestionIndex; }
+			get
+			{
+				VerifyTaskActivated();
+				return _currentQuestionIndex;
+			}
 			set
 			{
+				VerifyTaskActivated();
 				if (value < 0 || value >= Questions.Count)
 				{
 					throw new ArgumentOutOfRangeException();
@@ -289,11 +317,17 @@ namespace WeSay.LexicalTools
 
 		public List<string> Questions
 		{
-			get { return _domainQuestions[_domainKeys[_currentDomainIndex]]; }
+			get
+			{
+				VerifyTaskActivated();
+				return _domainQuestions[_domainKeys[_currentDomainIndex]];
+			}
 		}
 
 		public int WordsInDomain(int domainIndex)
 		{
+			VerifyTaskActivated();
+
 			if (domainIndex < 0 || domainIndex >= _domainKeys.Count)
 			{
 				throw new ArgumentOutOfRangeException();
@@ -308,6 +342,8 @@ namespace WeSay.LexicalTools
 		{
 			get
 			{
+				VerifyTaskActivated();
+
 				if (_words == null)
 				{
 					_words = new List<string>();
@@ -328,6 +364,8 @@ namespace WeSay.LexicalTools
 		{
 			get
 			{
+				VerifyTaskActivated();
+
 				if (_currentDomainIndex < DomainKeys.Count - 1)
 				{
 					return true; // has another domain
@@ -344,6 +382,8 @@ namespace WeSay.LexicalTools
 
 		public void GotoNextDomainQuestion()
 		{
+			VerifyTaskActivated();
+
 			if (_currentQuestionIndex == Questions.Count - 1)
 			{
 				if (_currentDomainIndex < DomainKeys.Count - 1)
@@ -363,6 +403,8 @@ namespace WeSay.LexicalTools
 		{
 			get
 			{
+				VerifyTaskActivated();
+
 				if (_currentDomainIndex == 0 &&
 					_currentQuestionIndex == 0)
 				{
@@ -375,26 +417,44 @@ namespace WeSay.LexicalTools
 
 		public string WordWritingSystemId
 		{
-			get { return _lexicalFormWritingSystem.Id; }
+			get
+			{
+				VerifyTaskActivated();
+				return _lexicalFormWritingSystem.Id;
+			}
 		}
 
 		public WritingSystem WordWritingSystem
 		{
-			get { return _lexicalFormWritingSystem; }
+			get
+			{
+				VerifyTaskActivated();
+				return _lexicalFormWritingSystem;
+			}
 		}
 
 		public string SemanticDomainWritingSystemId
 		{
-			get { return _semanticDomainWritingSystem.Id; }
+			get
+			{
+				VerifyTaskActivated();
+				return _semanticDomainWritingSystem.Id;
+			}
 		}
 
 		public WritingSystem SemanticDomainWritingSystem
 		{
-			get { return _semanticDomainWritingSystem; }
+			get
+			{
+				VerifyTaskActivated();
+				return _semanticDomainWritingSystem;
+			}
 		}
 
 		public void GotoPreviousDomainQuestion()
 		{
+			VerifyTaskActivated();
+
 			if (_currentQuestionIndex != 0)
 			{
 				_currentQuestionIndex--;
@@ -412,6 +472,8 @@ namespace WeSay.LexicalTools
 
 		public void AddWord(string lexicalForm)
 		{
+			VerifyTaskActivated();
+
 			if (lexicalForm == null)
 			{
 				throw new ArgumentNullException();
@@ -441,6 +503,8 @@ namespace WeSay.LexicalTools
 
 		public void RemoveWord(string lexicalForm)
 		{
+			VerifyTaskActivated();
+
 			if (lexicalForm == null)
 			{
 				throw new ArgumentNullException();
@@ -669,7 +733,10 @@ namespace WeSay.LexicalTools
 							new SemanticDomainSortHelper(RecordListManager.DataSource, _semanticDomainField.FieldName));
 
 			UpdateCurrentWords();
-			GotoLastDomainWithAnswers();
+			if (CurrentDomainIndex == -1)
+			{
+				GotoLastDomainWithAnswers();
+			}
 			_gatherControl = new GatherBySemanticDomainsControl(this);
 		}
 
@@ -694,10 +761,7 @@ namespace WeSay.LexicalTools
 
 		public void GotoLastDomainWithAnswers()
 		{
-			if(!IsActive)
-			{
-				throw new InvalidOperationException("task must be activated first");
-			}
+			VerifyTaskActivated();
 			for (int i = 0; i < DomainKeys.Count; i++)
 			{
 				CurrentDomainIndex = i;
@@ -713,5 +777,6 @@ namespace WeSay.LexicalTools
 			// there were no empty domains. Stay at the last domain (as a side effect of having positioned
 			// ourself in the above loop
 		}
+
 	}
 }

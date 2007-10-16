@@ -59,6 +59,14 @@ namespace WeSay.LexicalTools
 			IsActive = false;
 		}
 
+		protected void VerifyTaskActivated()
+		{
+			if (!IsActive)
+			{
+				throw new InvalidOperationException("Task must be activated first");
+			}
+		}
+
 		public string Label
 		{
 			get { return StringCatalog.Get(_label); }
