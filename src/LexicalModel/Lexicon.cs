@@ -1,3 +1,4 @@
+using System;
 using WeSay.Data;
 
 namespace WeSay.LexicalModel
@@ -11,6 +12,7 @@ namespace WeSay.LexicalModel
 		{
 			get
 			{
+				VerifyInitialized();
 				return _recordListManager.GetListOfType<LexEntry>();
 			}
 		}
@@ -22,12 +24,23 @@ namespace WeSay.LexicalModel
 
 		public static LexEntry FindFirstLexEntryMatchingId(string id)
 		{
+			VerifyInitialized();
 			return WeSay.LexicalModel.Db4o_Specific.Db4oLexQueryHelper.FindFirstEntryMatchingId(_recordListManager.DataSource, id);
 		}
 
 		public static LexEntry AddNewEntry()
 		{
-			return  (LexEntry)_recordListManager.GetListOfType<LexEntry>().AddNew();
+			VerifyInitialized();
+			return (LexEntry)_recordListManager.GetListOfType<LexEntry>().AddNew();
 		}
+
+		private static void VerifyInitialized()
+		{
+			if (_recordListManager == null)
+			{
+				throw new InvalidOperationException("Must Call Init before calling this method");
+			}
+		}
+
 	}
 }

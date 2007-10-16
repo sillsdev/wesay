@@ -60,7 +60,7 @@ namespace WeSay.LexicalModel
 		public LexRelation(string fieldId, string targetId, WeSayDataObject parent)
 		{
 			_fieldId = fieldId;
-			_targetId = targetId;
+			_targetId = targetId??string.Empty;
 			_parent = parent;
 		}
 
@@ -70,7 +70,7 @@ namespace WeSay.LexicalModel
 		public string TargetId
 		{
 			get { return _targetId; }
-			set { _targetId = value; }
+			set { _targetId = value??string.Empty; }
 		}
 
 //        public LexRelationType Type

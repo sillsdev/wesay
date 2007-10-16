@@ -220,6 +220,8 @@ namespace WeSay.Project
 				{
 					Db4oDataSource ds = ((Db4oRecordListManager) recordListManager).DataSource;
 					Db4oLexModelHelper.Initialize(ds.Data);
+					Lexicon.Init((Db4oRecordListManager)recordListManager);
+
 					//  Db4oRecordListManager ds = recordListManager as Db4oRecordListManager;
 
 					//MONO bug as of 1.1.18 cannot bitwise or FileShare on FileStream constructor
@@ -231,6 +233,7 @@ namespace WeSay.Project
 					if (Db4oLexModelHelper.Singleton == null)
 					{
 						Db4oLexModelHelper.Initialize(ds.Data);
+						Lexicon.Init((Db4oRecordListManager)recordListManager);
 					}
 
 					XmlDocument doc = new XmlDocument();
