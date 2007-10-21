@@ -23,7 +23,7 @@ namespace WeSay.LexicalTools
 			LexExampleSentence example = (LexExampleSentence)list[index];
 
 			Field field = ActiveViewTemplate.GetField(Field.FieldNames.ExampleSentence.ToString());
-			if (field != null && field.DoShow )
+			if (field != null && field.GetDoShow(example.Sentence, this.ShowNormallyHiddenFields))
 			{
 				Control control = MakeBoundControl(example.Sentence, field);
 				DetailList.AddWidgetRow(StringCatalog.Get("~Example", "This is the field containing an example sentence of a sense of a word."), false, control, insertAtRow, false);
@@ -32,7 +32,7 @@ namespace WeSay.LexicalTools
 			}
 
 			field = ActiveViewTemplate.GetField(Field.FieldNames.ExampleTranslation.ToString());
-			if (field != null && field.DoShow)
+			if (field != null && field.GetDoShow(example.Translation, this.ShowNormallyHiddenFields))
 			{
 				 Control entry = MakeBoundControl(example.Translation, field);
 				DetailList.AddWidgetRow(StringCatalog.Get("~Translation", "This is the field for putting in a translation of an example sentence."), false, entry, insertAtRow+rowCount, false);

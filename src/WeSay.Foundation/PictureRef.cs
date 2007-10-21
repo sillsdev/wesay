@@ -2,7 +2,7 @@ using System.ComponentModel;
 
 namespace WeSay.Foundation
 {
-	public class PictureRef : IParentable, IValueHolder<string>, IEmptinessCleanup
+	public class PictureRef : IParentable, IValueHolder<string>, IReportEmptiness
 	{
 		private string _fileName;
 		private MultiText _caption;
@@ -71,11 +71,21 @@ namespace WeSay.Foundation
 			}
 		}
 
-		#region IEmptinessCleanup Members
+		#region IReportEmptiness Members
 
-		public bool ShouldCountAsNonEmptyForPurposesOfDeletion
+		public bool ShouldHoldUpDeletionOfParentObject
 		{
-			get { return true; }
+			get { return false; }
+		}
+
+		public bool ShouldCountAsFilledForPurposesOfConditionalDisplay
+		{
+			get { return !string.IsNullOrEmpty(_fileName); }
+		}
+
+		public bool ShouldBeRemovedFromParentDueToEmptiness
+		{
+			get { return string.IsNullOrEmpty(_fileName); }
 		}
 
 		public void RemoveEmptyStuff()

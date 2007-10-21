@@ -466,5 +466,10 @@ namespace WeSay.LexicalTools
 
 			_entryViewControl.Focus();
 		}
+
+		private void OnShowAllFields_Click(object sender, EventArgs e)
+		{
+			_entryViewControl.ShowNormallyHiddenFieldsTemporarily();
+		}
 	}
 }

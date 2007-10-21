@@ -45,7 +45,7 @@ namespace WeSay.LexicalModel
 		}
 	}
 
-	public class LexRelation : IParentable, IReferenceContainer, IValueHolder<LexEntry>, IEmptinessCleanup
+	public class LexRelation : IParentable, IReferenceContainer, IValueHolder<LexEntry>, IReportEmptiness
 	{
 		//private LexRelationType _type;
 		private string _fieldId;
@@ -157,29 +157,37 @@ namespace WeSay.LexicalModel
 			set { Target = value; }
 		}
 
-		#region IEmptinessStatus Members
+		#endregion
 
-		public bool ShouldCountAsNonEmptyForPurposesOfDeletion
+		#region IReportEmptiness Members
+	   public bool ShouldHoldUpDeletionOfParentObject
 		{
 			get
 			{
 				return false;
-				//return string.IsNullOrEmpty(_targetId);
 			}
 		}
 
-		#region IEmptinessCleanup Members
 
 		public void RemoveEmptyStuff()
 		{
 			//nothing to do...
 		}
 
-		#endregion
+		public bool ShouldCountAsFilledForPurposesOfConditionalDisplay
+		{
+			get { return !string.IsNullOrEmpty(TargetId); }
+		}
+
+		public bool ShouldBeRemovedFromParentDueToEmptiness
+		{
+			get {  return string.IsNullOrEmpty(TargetId);}
+		}
 
 		#endregion
 
-		#endregion
+
+
 
 		#region INotifyPropertyChanged Members
 
@@ -192,7 +200,7 @@ namespace WeSay.LexicalModel
 		#endregion
 	}
 
-	public class LexRelationCollection : IParentable, IEmptinessCleanup
+	public class LexRelationCollection : IParentable, IReportEmptiness
 	{
 		private WeSayDataObject _parent;
 		private List<LexRelation> _relations = new List<LexRelation>();
@@ -215,14 +223,55 @@ namespace WeSay.LexicalModel
 
 
 
+//
+//        public bool IsEmpty
+//        {
+//            get
+//            {
+//                foreach (LexRelation relation in _relations)
+//                {
+//                    if (!relation.ShouldCountAsFilledForPurposesOfConditionalDisplay)
+//                    {
+//                        return false;
+//                    }
+//                }
+//                return true;
+//            }
+//        }
 
-		public bool IsEmpty
+		#region IReportEmptiness Members
+
+			   public bool ShouldHoldUpDeletionOfParentObject
+		{
+			get
+			{
+				return false;//don't hold up deleting just because of these
+			}
+		}
+
+		public bool ShouldCountAsFilledForPurposesOfConditionalDisplay
 		{
 			get
 			{
 				foreach (LexRelation relation in _relations)
 				{
-					if (!relation.ShouldCountAsNonEmptyForPurposesOfDeletion)
+					if (relation.ShouldCountAsFilledForPurposesOfConditionalDisplay)
+					{
+						return true;
+					}
+				}
+				return false;
+			}
+		}
+
+		public bool ShouldBeRemovedFromParentDueToEmptiness
+		{
+			get
+			{
+				//if we can find one child that thinks he is non-empty, then we too should stick around
+				foreach (LexRelation relation in _relations)
+				{
+					if (!relation.ShouldBeRemovedFromParentDueToEmptiness)
 					{
 						return false;
 					}
@@ -231,22 +280,13 @@ namespace WeSay.LexicalModel
 			}
 		}
 
-		#region IEmptinessCleanup Members
-
-			   public bool ShouldCountAsNonEmptyForPurposesOfDeletion
-		{
-			get
-			{
-				return false;//don't hold up deleting just because of these
-			}
-		}
 		public void RemoveEmptyStuff()
 		{
 			//we do this in two passes because you can't remove items from a collection you are iterating over
 			List<LexRelation> condemed = new List<LexRelation>();
 			foreach (LexRelation relation in _relations)
 			{
-				if (relation.ShouldCountAsNonEmptyForPurposesOfDeletion)
+				if (relation.ShouldBeRemovedFromParentDueToEmptiness)
 				{
 					condemed.Add(relation);
 				}

@@ -101,7 +101,6 @@ namespace WeSay.LexicalTools
 						}
 						return true; //collection is empty or all its members don't really have targets
 					}
-					break;
 				default:
 					Debug.Fail("unknown DataTypeName");
 					return false;

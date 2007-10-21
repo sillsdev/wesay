@@ -5,7 +5,7 @@ namespace WeSay.Foundation
 	/// <summary>
 	/// Holds a boolean value for, for example, a checkbox
 	/// </summary>
-	public class FlagState : IParentable, IValueHolder<bool>
+	public class FlagState : IParentable, IValueHolder<bool>, IReportEmptiness
 	{
 		/// <summary>
 		/// This "backreference" is used to notify the parent of changes.
@@ -67,7 +67,27 @@ namespace WeSay.Foundation
 			}
 		}
 
+		#region IReportEmptiness Members
 
+		public bool ShouldHoldUpDeletionOfParentObject
+		{
+			get { return false; }
+		}
 
+		public bool ShouldCountAsFilledForPurposesOfConditionalDisplay
+		{
+			get { return _isChecked; } //review: is that right? or always true?
+		}
+
+		public bool ShouldBeRemovedFromParentDueToEmptiness
+		{
+			get { return !_isChecked; }
+		}
+
+		public void RemoveEmptyStuff()
+		{
+		}
+
+		#endregion
 	}
 }

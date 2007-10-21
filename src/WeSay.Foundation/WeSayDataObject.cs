@@ -179,9 +179,9 @@ namespace WeSay.Foundation
 			for (int i = count - 1;i >= 0;i--)
 			{
 				object property = Properties[i].Value;
-				if (property is IEmptinessCleanup)
+				if (property is IReportEmptiness)
 				{
-					((IEmptinessCleanup) property).RemoveEmptyStuff();
+					((IReportEmptiness) property).RemoveEmptyStuff();
 				}
 				if (IsPropertyEmpty(property))
 				{
@@ -204,11 +204,11 @@ namespace WeSay.Foundation
 			{
 				return ((OptionRefCollection) property).IsEmpty;
 			}
-			else if (property is IEmptinessCleanup)
+			else if (property is IReportEmptiness)
 			{
 				return
-						((IEmptinessCleanup) property).
-								ShouldCountAsNonEmptyForPurposesOfDeletion;
+						((IReportEmptiness) property).
+								ShouldBeRemovedFromParentDueToEmptiness;
 			}
 			//            Debug.Fail("Unknown property type");
 			return false; //don't throw it away if you don't know what it is
@@ -228,7 +228,7 @@ namespace WeSay.Foundation
 			{
 				return true;
 			}
-			else if (property is IEmptinessCleanup)
+			else if (property is IReportEmptiness)
 			{
 				return IsPropertyEmpty(property);
 			}
@@ -346,11 +346,16 @@ namespace WeSay.Foundation
 		} ;
 
 		#endregion
+
+
 	}
 
-	public interface IEmptinessCleanup
+	public interface IReportEmptiness
 	{
-		bool ShouldCountAsNonEmptyForPurposesOfDeletion { get; }
+		bool ShouldHoldUpDeletionOfParentObject { get; }
+		bool ShouldCountAsFilledForPurposesOfConditionalDisplay { get; }
+
+		bool ShouldBeRemovedFromParentDueToEmptiness { get; }
 
 		void RemoveEmptyStuff();
 	}

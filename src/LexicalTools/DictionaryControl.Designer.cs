@@ -56,6 +56,7 @@ namespace WeSay.LexicalTools
 			this._entryViewControl = new WeSay.LexicalTools.EntryViewControl();
 			this._splitter = new WeSay.UI.CollapsibleSplitter();
 			this.localizationHelper1 = new WeSay.UI.LocalizationHelper(this.components);
+			this._showAllFields = new System.Windows.Forms.Button();
 			this.panelWordList.SuspendLayout();
 			this.panelTools.SuspendLayout();
 			this.panelDetail.SuspendLayout();
@@ -105,6 +106,7 @@ namespace WeSay.LexicalTools
 			this._findText.PopupSelectionBackColor = System.Drawing.SystemColors.Highlight;
 			this._findText.PopupSelectionForeColor = System.Drawing.SystemColors.HighlightText;
 			this._findText.PopupWidth = 118;
+			this._findText.SelectedItem = null;
 			this._findText.Size = new System.Drawing.Size(80, 19);
 			this._findText.TabIndex = 1;
 			this._findText.TooltipToDisplayStringAdaptor = null;
@@ -149,6 +151,7 @@ namespace WeSay.LexicalTools
 			//
 			// panelTools
 			//
+			this.panelTools.Controls.Add(this._showAllFields);
 			this.panelTools.Controls.Add(this._btnDeleteWord);
 			this.panelTools.Controls.Add(this._btnNewWord);
 			this.panelTools.Dock = System.Windows.Forms.DockStyle.Bottom;
@@ -168,7 +171,7 @@ namespace WeSay.LexicalTools
 			this._btnDeleteWord.Location = new System.Drawing.Point(148, 2);
 			this._btnDeleteWord.Margin = new System.Windows.Forms.Padding(0);
 			this._btnDeleteWord.Name = "_btnDeleteWord";
-			this._btnDeleteWord.Size = new System.Drawing.Size(120, 24);
+			this._btnDeleteWord.Size = new System.Drawing.Size(138, 24);
 			this._btnDeleteWord.TabIndex = 1;
 			this._btnDeleteWord.Text = "~&Delete This Word";
 			this._btnDeleteWord.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
@@ -186,7 +189,7 @@ namespace WeSay.LexicalTools
 			this._btnNewWord.Location = new System.Drawing.Point(0, 2);
 			this._btnNewWord.Margin = new System.Windows.Forms.Padding(0);
 			this._btnNewWord.Name = "_btnNewWord";
-			this._btnNewWord.Size = new System.Drawing.Size(90, 24);
+			this._btnNewWord.Size = new System.Drawing.Size(125, 24);
 			this._btnNewWord.TabIndex = 0;
 			this._btnNewWord.Text = "~&New Word";
 			this._btnNewWord.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
@@ -233,6 +236,24 @@ namespace WeSay.LexicalTools
 			//
 			this.localizationHelper1.Parent = this;
 			//
+			// _showAllFields
+			//
+			this._showAllFields.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this._showAllFields.AutoSize = true;
+			this._showAllFields.FlatAppearance.BorderSize = 0;
+			this._showAllFields.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Orange;
+			this._showAllFields.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+			this._showAllFields.ImageAlign = System.Drawing.ContentAlignment.BottomLeft;
+			this._showAllFields.Location = new System.Drawing.Point(363, 2);
+			this._showAllFields.Margin = new System.Windows.Forms.Padding(0);
+			this._showAllFields.Name = "_showAllFields";
+			this._showAllFields.Size = new System.Drawing.Size(120, 24);
+			this._showAllFields.TabIndex = 2;
+			this._showAllFields.Text = "~&Show All Fields";
+			this._showAllFields.TextAlign = System.Drawing.ContentAlignment.BottomRight;
+			this._showAllFields.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+			this._showAllFields.Click += new System.EventHandler(this.OnShowAllFields_Click);
+			//
 			// DictionaryControl
 			//
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -272,6 +293,7 @@ namespace WeSay.LexicalTools
 		private CollapsibleSplitter _splitter;
 		private Label _findWritingSystemId;
 		private LocalizationHelper localizationHelper1;
+		private Button _showAllFields;
 
 	}
 }

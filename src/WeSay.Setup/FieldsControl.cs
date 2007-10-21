@@ -46,7 +46,7 @@ namespace WeSay.Setup
 
 			foreach (Field field in  WeSayWordsProject.Project.DefaultViewTemplate)
 			{
-				this._fieldsListBox.Items.Add(field, field.Visibility == CommonEnumerations.VisibilitySetting.Visible);
+				this._fieldsListBox.Items.Add(field, field.Enabled);
 			}
 
 			if (_fieldsListBox.Items.Count > 0)
@@ -64,13 +64,13 @@ namespace WeSay.Setup
 			}
 			if (e.NewValue== CheckState.Checked)
 			{
-				((Field)_fieldsListBox.SelectedItem).Visibility = CommonEnumerations.VisibilitySetting.Visible;
+				((Field) _fieldsListBox.SelectedItem).Enabled = true;
 			}
 			else if (e.NewValue== CheckState.Unchecked)
 			{
 				if(CurrentField.CanOmitFromMainViewTemplate)
 				{
-					CurrentField.Visibility = CommonEnumerations.VisibilitySetting.Invisible;
+					CurrentField.Enabled = false;
 				}
 				else
 				{

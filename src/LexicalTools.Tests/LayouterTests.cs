@@ -2,6 +2,7 @@
 using System;
 using System.Windows.Forms;
 using NUnit.Framework;
+using WeSay.Foundation;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Db4o_Specific;
 using WeSay.Project;
@@ -39,14 +40,21 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void RightNumberOfRows()
 		{
-			MakeDetailList();
-			Assert.AreEqual(14, _rowCount);
+			MakeDetailList(false);
+			Assert.AreEqual(12, _rowCount);
+		}
+
+		[Test]
+		public void RightNumberOfRowsWithShowAll()
+		{
+			MakeDetailList(true);
+			Assert.AreEqual(16, _rowCount);//12 + 2 *(1 ghost example + 1 rare multitext)
 		}
 
 		[Test]
 		public void RowsInRightPlace()
 		{
-			DetailList dl = MakeDetailList();
+			DetailList dl = MakeDetailList(false);
 
 			Label l = dl.GetLabelControlFromRow(0);
 			Assert.AreEqual("Word", l.Text);
@@ -55,7 +63,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void WordShownInVernacular()
 		{
-			DetailList dl = MakeDetailList();
+			DetailList dl = MakeDetailList(false);
 
 			MultiTextControl box = (MultiTextControl)dl.GetEditControlFromRow(0);
 			Assert.AreEqual("WordInVernacular", box.TextBoxes[0].Text);
@@ -81,7 +89,7 @@ namespace WeSay.LexicalTools.Tests
 			return entry;
 		}
 
-		private DetailList MakeDetailList()
+		private DetailList MakeDetailList(bool showNormallyHiddenFields)
 		{
 			string[] analysisWritingSystemIds = new string[] { BasilProject.Project.WritingSystems.TestWritingSystemAnalId };
 			string[] vernacularWritingSystemIds = new string[] { BasilProject.Project.WritingSystems.TestWritingSystemVernId };
@@ -93,10 +101,18 @@ namespace WeSay.LexicalTools.Tests
 			viewTemplate.Add(new Field(Field.FieldNames.ExampleSentence.ToString(), "LexExampleSentence", vernacularWritingSystemIds));
 			viewTemplate.Add(new Field(Field.FieldNames.ExampleTranslation.ToString(), "LexExampleSentence", analysisWritingSystemIds));
 
+			Field rare = new Field("rare", "LexSense", analysisWritingSystemIds);
+			rare.Visibility = CommonEnumerations.VisibilitySetting.NormallyHidden;
+			viewTemplate.Add(rare);
+
+			//TODO need tests for other data types when made optional
+			//TODO need tests for showing non-empty optional tests in non-show-all mode
+
 			LexEntry entry = GetNewEntry();
 
 			DetailList dl = new DetailList();
 			LexEntryLayouter layout = new LexEntryLayouter(dl, viewTemplate, null);
+			layout.ShowNormallyHiddenFields = showNormallyHiddenFields;
 			_rowCount = layout.AddWidgets(entry);
 			return dl;
 		}

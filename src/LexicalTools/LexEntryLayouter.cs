@@ -34,7 +34,7 @@ namespace WeSay.LexicalTools
 			DetailList.SuspendLayout();
 			int rowCount = 0;
 			Field field = ActiveViewTemplate.GetField(Field.FieldNames.EntryLexicalForm.ToString());
-			if (field != null && field.DoShow )
+			if (field != null && field.GetDoShow(entry.LexicalForm, this.ShowNormallyHiddenFields))
 			{
 				Control formControl = MakeBoundControl(entry.LexicalForm, field);
 				DetailList.AddWidgetRow(StringCatalog.Get(field.DisplayName), true, formControl, insertAtRow, false);
@@ -44,6 +44,7 @@ namespace WeSay.LexicalTools
 			rowCount += AddCustomFields(entry, insertAtRow+rowCount);
 
 			LexSenseLayouter layouter = new LexSenseLayouter(DetailList, ActiveViewTemplate, RecordListManager);
+			layouter.ShowNormallyHiddenFields = ShowNormallyHiddenFields;
 			rowCount = AddChildrenWidgets(layouter, entry.Senses, insertAtRow, rowCount);
 			//add a ghost
 			rowCount += layouter.AddGhost(entry.Senses, true);

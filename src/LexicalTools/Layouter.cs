@@ -39,6 +39,8 @@ namespace WeSay.LexicalTools
 		/// See WS-23 for more info.
 		private MultiTextControl _previouslyGhostedControlToReuse = null;
 
+		private bool _showNormallyHiddenFields = false;
+
 		protected DetailList DetailList
 		{
 			get { return _detailList; }
@@ -56,6 +58,12 @@ namespace WeSay.LexicalTools
 		protected IRecordListManager RecordListManager
 		{
 			get { return this._recordListManager; }
+		}
+
+		public bool ShowNormallyHiddenFields
+		{
+			get { return _showNormallyHiddenFields; }
+			set { _showNormallyHiddenFields = value; }
 		}
 
 		protected Layouter(DetailList builder, ViewTemplate viewTemplate, IRecordListManager recordListManager)
@@ -137,7 +145,7 @@ namespace WeSay.LexicalTools
 		{
 			int rowCount = 0;
 			Field field = ActiveViewTemplate.GetField(fieldName);
-			if (field != null && field.Visibility == CommonEnumerations.VisibilitySetting.Visible)
+			if (field != null && field.Enabled && field.Visibility == CommonEnumerations.VisibilitySetting.Visible)
 			{
 				MultiTextControl m =
 						new MultiTextControl(field.WritingSystems,
@@ -218,7 +226,8 @@ namespace WeSay.LexicalTools
 			int rowCount = 0;
 			foreach (Field customField in ActiveViewTemplate.GetCustomFields(target.GetType().Name))
 			{
-				if (!customField.DoShow)
+				IReportEmptiness data= target.GetProperty<IReportEmptiness>(customField.FieldName);
+				if (!customField.GetDoShow(data, this.ShowNormallyHiddenFields))
 				{
 					continue;
 				}

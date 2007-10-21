@@ -113,6 +113,13 @@ namespace WeSay.LexicalTools
 			set { _recordListManager = value; }
 		}
 
+		public void ShowNormallyHiddenFieldsTemporarily()
+		{
+			_showNormallyHiddenFields = true;
+			RefreshEntryDetail();
+			_showNormallyHiddenFields = false;
+		}
+
 		private void OnEmptyObjectsRemoved(object sender, EventArgs e)
 		{
 			//find out where our current focus is and attempt to return to that place
@@ -196,6 +203,7 @@ namespace WeSay.LexicalTools
 				if (_record != null)
 				{
 					LexEntryLayouter layout = new LexEntryLayouter(_detailListControl, ViewTemplate, _recordListManager);
+					layout.ShowNormallyHiddenFields = _showNormallyHiddenFields;
 					layout.AddWidgets(_record);
 				}
 				_detailListControl.ResumeLayout();
@@ -215,6 +223,7 @@ namespace WeSay.LexicalTools
 
 		private CurrentItemEventArgs _currentItemInFocus;
 		private IRecordListManager _recordListManager;
+		private bool _showNormallyHiddenFields=false;
 
 		private void LexPreviewWithEntryControl_BackColorChanged(object sender, EventArgs e)
 		{

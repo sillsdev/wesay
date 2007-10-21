@@ -111,7 +111,7 @@ namespace WeSay.Project
 			{
 				return false;
 			}
-			return field.Visibility == CommonEnumerations.VisibilitySetting.Visible;
+			return field.Enabled; // field.Visibility == CommonEnumerations.VisibilitySetting.Visible;
 		}
 
 		/// <summary>
@@ -153,7 +153,8 @@ namespace WeSay.Project
 				}
 				else
 				{
-					masterField.Visibility = CommonEnumerations.VisibilitySetting.Invisible;
+					masterField.Enabled = false;
+					//masterField.Visibility = CommonEnumerations.VisibilitySetting.Invisible;
 							//let them turn it on if they want
 					usersTemplate.Fields.Add(masterField);
 				}
@@ -185,16 +186,17 @@ namespace WeSay.Project
 			StringCatalog.Get("~Word", "The label for the field showing the Lexeme Form of the entry.");
 			lexicalFormField.DisplayName = "Word";
 			lexicalFormField.Description = "The Lexeme Form of the entry.";
+			lexicalFormField.Enabled = true;
 			lexicalFormField.Visibility = CommonEnumerations.VisibilitySetting.Visible;
 			masterTemplate.Add(lexicalFormField);
 
-/* does this make sense in WeSay?   */
-//            Field citationFormField = new Field("CitationForm", "LexEntry", defaultVernacularSet);
-//            StringCatalog.Get("~CitationForm", "The label for the field holding the citation form.");
-//            citationFormField.DisplayName = "Citation Form";
-//            citationFormField.Description = "The form that is to be printed in the dictionary";
-//            citationFormField.Visibility = CommonEnumerations.VisibilitySetting.Invisible;
-//            masterTemplate.Add(citationFormField);
+			Field citationFormField = new Field("CitationForm", "LexEntry", defaultVernacularSet);
+			StringCatalog.Get("~CitationForm", "The label for the field holding the citation form.");
+			citationFormField.DisplayName = "Citation Form";
+			citationFormField.Description = "The form that is to be printed in the dictionary";
+			citationFormField.Visibility = CommonEnumerations.VisibilitySetting.NormallyHidden;
+			citationFormField.Enabled = false;
+			masterTemplate.Add(citationFormField);
 
 
 
@@ -203,6 +205,7 @@ namespace WeSay.Project
 			glossField.Description =
 					"Normally a single word. Shows up as the first field of the sense, across from the 'Meaning' label";
 			glossField.Visibility = CommonEnumerations.VisibilitySetting.Visible;
+			glossField.Enabled = true;
 			masterTemplate.Add(glossField);
 
 			Field definitionField = new Field("Definition", "LexSense", defaultAnalysisSet);
@@ -211,7 +214,8 @@ namespace WeSay.Project
 			definitionField.DisplayName = "Definition";
 			definitionField.Description =
 					"The definition of this sense of the word, in one or more languages.";
-			definitionField.Visibility = CommonEnumerations.VisibilitySetting.Invisible;
+			definitionField.Visibility = CommonEnumerations.VisibilitySetting.Visible;
+			definitionField.Enabled = false;
 			masterTemplate.Add(definitionField);
 
 			Field entryNoteField = new Field("Note", "LexEntry", defaultAnalysisSet);
@@ -219,7 +223,8 @@ namespace WeSay.Project
 			StringCatalog.Get("~Note", "The label for the field showing a note.");
 			entryNoteField.DisplayName = "Note";
 			entryNoteField.Description = "A note on the entry.";
-			entryNoteField.Visibility = CommonEnumerations.VisibilitySetting.Invisible;
+			entryNoteField.Visibility = CommonEnumerations.VisibilitySetting.NormallyHidden;
+			entryNoteField.Enabled = false;
 			masterTemplate.Add(entryNoteField);
 
 
@@ -230,6 +235,7 @@ namespace WeSay.Project
 			posField.Description = "The grammatical category of the entry (Noun, Verb, etc.).";
 			posField.DataTypeName = "Option";
 			posField.OptionsListFile = "PartsOfSpeech.xml";
+			posField.Enabled = true;
 			masterTemplate.Add(posField);
 
 			Field pictureField = new Field("Picture", "LexSense", defaultAnalysisSet);
@@ -238,7 +244,8 @@ namespace WeSay.Project
 			pictureField.DisplayName = "Picture";
 			pictureField.Description = "An image corresponding to the sense.";
 			pictureField.DataTypeName = "Picture";
-			pictureField.Visibility = CommonEnumerations.VisibilitySetting.Invisible;
+			pictureField.Visibility = CommonEnumerations.VisibilitySetting.NormallyHidden;
+			pictureField.Enabled = true;
 			masterTemplate.Add(pictureField);
 
 			Field exampleField =
@@ -247,6 +254,7 @@ namespace WeSay.Project
 			StringCatalog.Get("~Example Sentence", "The label for the field showing an example use of the word.");
 			exampleField.DisplayName = "Example Sentence";
 			exampleField.Visibility = CommonEnumerations.VisibilitySetting.Visible;
+			exampleField.Enabled = true;
 			masterTemplate.Add(exampleField);
 
 			Field translationField =
@@ -256,7 +264,8 @@ namespace WeSay.Project
 							  "The label for the field showing the example sentence translated into other languages.");
 			translationField.DisplayName = "Example Translation";
 			translationField.Description = "The translation of the example sentence into another language.";
-			translationField.Visibility = CommonEnumerations.VisibilitySetting.Invisible;
+			translationField.Visibility = CommonEnumerations.VisibilitySetting.Visible;
+			translationField.Enabled = false;
 			masterTemplate.Add(translationField);
 
 			Field ddp4Field = new Field("SemanticDomainDdp4", "LexSense", defaultAnalysisSet);
@@ -268,9 +277,11 @@ namespace WeSay.Project
 			ddp4Field.Description = "The semantic domain using Ron Moe's Dictionary Development Process version 4.";
 			ddp4Field.DataTypeName = "OptionCollection";
 			ddp4Field.OptionsListFile = "Ddp4.xml";
+			ddp4Field.Enabled = true;
+			ddp4Field.Visibility = CommonEnumerations.VisibilitySetting.NormallyHidden;
 			masterTemplate.Add(ddp4Field);
 
-			Field superEntryField = new Field("BaseForm",
+			Field baseFormField = new Field("BaseForm",
 											  "LexEntry",
 											  defaultVernacularSet,
 											  Field.MultiplicityType.ZeroOr1,
@@ -278,11 +289,12 @@ namespace WeSay.Project
 			//this is here so the PoMaker scanner can pick up a comment about this label
 			StringCatalog.Get("~Base Form",
 							  "The label for the field showing the entry which this entry is derived from, is a subentry of, etc.");
-			superEntryField.DisplayName = "Base Form";
-			superEntryField.Description =
+			baseFormField.DisplayName = "Base Form";
+			baseFormField.Description =
 					"Provides a field for identifying the form from which an entry is derived.  You may use this in place of the MDF subentry.  In a future version WeSay may support directly listing derived forms from the base form.";
-			superEntryField.Visibility = CommonEnumerations.VisibilitySetting.Invisible;
-			masterTemplate.Add(superEntryField);
+			baseFormField.Visibility = CommonEnumerations.VisibilitySetting.NormallyHidden;
+			baseFormField.Enabled = false;
+			masterTemplate.Add(baseFormField);
 
 			return masterTemplate;
 		}

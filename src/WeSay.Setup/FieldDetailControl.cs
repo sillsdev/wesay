@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Windows.Forms;
 using Palaso.Reporting;
+using WeSay.Foundation;
 using WeSay.Project;
 
 namespace WeSay.Setup
@@ -20,7 +21,8 @@ namespace WeSay.Setup
 			this.toolTip1.SetToolTip(this._optionsFileName,  toolTip1.GetToolTip(_optionListFileLabel));
 			this.toolTip1.SetToolTip(this._dataTypeCombo,  toolTip1.GetToolTip(_displayLabel));
 			this.toolTip1.SetToolTip(this._classNameCombo, toolTip1.GetToolTip(_classLabel));
-		}
+			 this.toolTip1.SetToolTip(this._normallyHidden, toolTip1.GetToolTip(_normallyHiddenLabel));
+	   }
 
 		public Field CurrentField
 		{
@@ -32,6 +34,8 @@ namespace WeSay.Setup
 				_displayName.Text = _field.DisplayName;
 				_optionsFileName.Text = _field.OptionsListFile;
 				_description.Text = _field.Description;
+
+				_normallyHidden.Checked = _field.Visibility == CommonEnumerations.VisibilitySetting.NormallyHidden;
 
 				FillClassNameCombo();
 				FillDataTypeCombo();
@@ -151,6 +155,20 @@ namespace WeSay.Setup
 			_field.Description = _description.Text.Trim();
 
 		}
+
+
+		private void _normallyHidden_CheckedChanged(object sender, EventArgs e)
+		{
+			if(_normallyHidden.Checked)
+			{
+				_field.Visibility = CommonEnumerations.VisibilitySetting.NormallyHidden;
+			}
+			else
+			{
+				_field.Visibility = CommonEnumerations.VisibilitySetting.Visible;
+			}
+		}
+
 		private void _optionsFileName_TextChanged(object sender, EventArgs e)
 		{
 			string s = _optionsFileName.Text.Trim();
@@ -170,6 +188,8 @@ namespace WeSay.Setup
 			_optionsFileName.Text = s;
 			_field.OptionsListFile = _optionsFileName.Text;
 		}
+
+
 
 		private string GetDefaultOptionsListFileName()
 		{
@@ -258,6 +278,7 @@ namespace WeSay.Setup
 			}
 			return !conflictFound;
 		}
+
 
 
 	}

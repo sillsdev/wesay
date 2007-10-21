@@ -21,6 +21,8 @@ namespace WeSay.Project
 		private string _className = string.Empty;
 		private string _dataTypeName;
 
+		private bool _enabledNotSet = true;
+
 		public enum MultiplicityType
 		{
 			ZeroOr1 = 0,
@@ -40,6 +42,7 @@ namespace WeSay.Project
 
 		private CommonEnumerations.VisibilitySetting _visibility = CommonEnumerations.VisibilitySetting.Visible;
 		private string _optionsListFile;
+		private bool _enabled;
 
 		/// <summary>
 		/// These are just for getting the strings right, using ToString(). In order
@@ -70,6 +73,7 @@ namespace WeSay.Project
 				throw new ArgumentNullException();
 			}
 			ClassName = className;
+			Enabled = true; //without this lots of tests would need updating
 			Initialize(fieldName, dataTypeName, multiplicity, writingSystemIds);
 		}
 
@@ -88,6 +92,7 @@ namespace WeSay.Project
 			Visibility = field.Visibility;
 			DataTypeName = field.DataTypeName;
 			OptionsListFile = field.OptionsListFile;
+			Enabled = field.Enabled;
 		}
 
 		private void Initialize(string fieldName, string dataTypeName, MultiplicityType multiplicity,
@@ -283,7 +288,36 @@ namespace WeSay.Project
 		public CommonEnumerations.VisibilitySetting Visibility
 		{
 			get { return _visibility; }
-			set { _visibility = value; }
+			set
+			{
+				_visibility = value;
+
+				//for backward compatibility:
+				//we now use Enabled=false rather than Invisible
+				if(_visibility == CommonEnumerations.VisibilitySetting.Invisible)
+				{
+					_visibility = CommonEnumerations.VisibilitySetting.Visible;
+					Enabled = false;
+				}
+			}
+		}
+
+		[ReflectorProperty("enabled", Required = false)]
+		public bool Enabled
+		{
+			get
+			{
+				if(_enabledNotSet) //for backwards compatibility, before we added Enabled
+				{
+					Enabled = Visibility == CommonEnumerations.VisibilitySetting.Visible;
+				}
+				return _enabled;
+			}
+			set
+			{
+				_enabled = value;
+				_enabledNotSet = false;
+			}
 		}
 
 		public void ChangeWritingSystemId(string oldId, string newId)
@@ -336,14 +370,14 @@ namespace WeSay.Project
 			set { _multiplicity = value; }
 		}
 
-		[Browsable(false)]
-		public bool DoShow
+		public bool GetDoShow(IReportEmptiness data, bool showNormallyHiddenFields)
 		{
-			get
-			{
-				return _visibility == CommonEnumerations.VisibilitySetting.Visible ||
-					   _visibility == CommonEnumerations.VisibilitySetting.ReadOnly;
-			}
+			return _enabled &&
+				(
+					(showNormallyHiddenFields || (data!=null && data.ShouldCountAsFilledForPurposesOfConditionalDisplay)) ||
+
+				   (_visibility == CommonEnumerations.VisibilitySetting.Visible ||
+					_visibility == CommonEnumerations.VisibilitySetting.ReadOnly));
 		}
 
 		public static string NewFieldNamePrefix

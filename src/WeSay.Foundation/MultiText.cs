@@ -19,7 +19,7 @@ namespace WeSay.Foundation
 	//NO: we haven't been able to do a reasonalbly compact xml representation except with custom deserializer
 	//[ReflectorType("multiText")]
 	[XmlInclude(typeof (LanguageForm))]
-	public class MultiText : IParentable, INotifyPropertyChanged, System.Xml.Serialization.IXmlSerializable
+	public class MultiText : IParentable, IReportEmptiness, INotifyPropertyChanged, System.Xml.Serialization.IXmlSerializable
 	{
 		/// <summary>
 		/// We have this pesky "backreference" solely to enable fast
@@ -560,7 +560,40 @@ namespace WeSay.Foundation
 			}
 		}
 
+		#region IReportEmptiness Members
 
+		public bool ShouldHoldUpDeletionOfParentObject
+		{
+			get { return Empty; }
+		}
+
+		public bool ShouldCountAsFilledForPurposesOfConditionalDisplay
+		{
+			get { return !Empty; }
+		}
+
+		public bool ShouldBeRemovedFromParentDueToEmptiness
+		{
+			get { return Empty; }
+		}
+
+		public void RemoveEmptyStuff()
+		{
+			List<LanguageForm> condemened = new List<LanguageForm>();
+			foreach (LanguageForm f in _forms)
+			{
+				if (string.IsNullOrEmpty(f.Form))
+				{
+					condemened.Add(f);
+				}
+			}
+			foreach (LanguageForm f in condemened)
+			{
+				this.RemoveLanguageForm(f);
+			}
+		}
+
+		#endregion
 	}
 
 	public class MultiTextSerializorFactory : ISerialiserFactory
