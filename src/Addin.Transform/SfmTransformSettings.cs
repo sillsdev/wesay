@@ -107,6 +107,7 @@ namespace Addin.Transform
 				if (!String.IsNullOrEmpty(_vernacularLanguageWritingSystemId))
 				{
 					pairs.Add(new ChangePair( "lx_" + _vernacularLanguageWritingSystemId, "lx"));
+					pairs.Add(new ChangePair( "lc_" + _vernacularLanguageWritingSystemId, "lc"));
 					pairs.Add(new ChangePair( "x_" + _vernacularLanguageWritingSystemId,   "xv"));
 					pairs.Add(new ChangePair( "d_" + _vernacularLanguageWritingSystemId,   "dv"));
 				}

@@ -101,8 +101,49 @@
 		</xsl:apply-templates>
 	</xsl:template>
 
+  <xsl:template match="field[@tag='CitationForm']">
+	<xsl:apply-templates select="form">
+	  <xsl:with-param name="prefix">lc</xsl:with-param>
+	</xsl:apply-templates>
+  </xsl:template>
 
-	<xsl:template match="translation">
+  <xsl:template match="field[@tag='LiteralMeaning']">
+	<!--review: notice we drop the language identifier completely -->
+	<xsl:text>&nl;\lt </xsl:text>
+  </xsl:template>
+
+  <!-- Wesay frowns on encouraging people to do homograph numbers, so it's not a build-in field.  As a concession,
+  we detect that someone has added it as a custom field if they've named it anything reasonable-->
+  <xsl:template match="field[contains(@tag,'omograph')] | field[contains(@tag,'omonym')]  | field[@tag='hm']">
+	<!--notice we drop the language identifier completely -->
+	<xsl:text>&nl;\hm </xsl:text><xsl:value-of select="form/text"/>
+  </xsl:template>
+
+  <!-- Wesay doesn't expect its users to doing etymology, so it's not a build-in field.  As a concession,
+  we try to detect it and export it correctly -->
+  <xsl:template match="field[@tag='Etymology'] |field[@tag='et']">
+	<!--notice we drop the language identifier completely -->
+	<xsl:text>&nl;\et </xsl:text>
+	<xsl:value-of select="form/text"/>
+  </xsl:template>
+
+  <!-- Wesay doesn't expect its users to doing etymology, so it's not a build-in field.  As a concession,
+  we try to detect it and export it correctly -->
+  <xsl:template match="field[contains(@tag,'orrowed')] |field[@tag='bw']">
+	<!--review: notice we drop the language identifier completely -->
+	<xsl:text>&nl;\bw </xsl:text>
+	<xsl:value-of select="form/text"/>
+  </xsl:template>
+
+  <!-- Wesay doesn't expect its users to doing encyclopedic info, so it's not a build-in field.  As a concession,
+  we try to detect it and export it correctly -->
+  <xsl:template match="field[@tag='EncyclopedicInformation'] |field[@tag='ee']">
+	<!--review: notice we drop the language identifier completely -->
+	<xsl:text>&nl;\ee </xsl:text>
+	<xsl:value-of select="form/text"/>
+  </xsl:template>
+
+  <xsl:template match="translation">
 		<xsl:apply-templates select="form">
 			<xsl:with-param name="prefix">x</xsl:with-param>
 		</xsl:apply-templates>

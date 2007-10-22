@@ -218,6 +218,16 @@ namespace WeSay.Project
 			definitionField.Enabled = false;
 			masterTemplate.Add(definitionField);
 
+			Field literalMeaningField = new Field("LiteralMeaning", "LexSense", defaultAnalysisSet);
+			//this is here so the PoMaker scanner can pick up a comment about this label
+			StringCatalog.Get("~Literal Meaning", "The label for the field showing the literal meaning of idiom or proverb.");
+			literalMeaningField.DisplayName = "Lit Meaning";
+			literalMeaningField.Description =
+					"Literal meaning of an idiom.";
+			literalMeaningField.Visibility = CommonEnumerations.VisibilitySetting.NormallyHidden;
+			literalMeaningField.Enabled = false;
+			masterTemplate.Add(literalMeaningField);
+
 			Field entryNoteField = new Field("Note", "LexEntry", defaultAnalysisSet);
 			//this is here so the PoMaker scanner can pick up a comment about this label
 			StringCatalog.Get("~Note", "The label for the field showing a note.");

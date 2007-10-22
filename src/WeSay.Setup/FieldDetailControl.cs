@@ -148,8 +148,11 @@ namespace WeSay.Setup
 
 		private void _fieldName_TextChanged(object sender, EventArgs e)
 		{
+			string oldValue = _field.FieldName;
 			_field.FieldName = _fieldName.Text.Trim();
+			WeSayWordsProject.Project.MakeFieldNameChange(_field, oldValue);
 		}
+
 		private void _description_TextChanged(object sender, EventArgs e)
 		{
 			_field.Description = _description.Text.Trim();

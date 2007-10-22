@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using System.Windows.Forms;
 using System.Xml;
 using System.Xml.XPath;
 using System.Xml.Xsl;
@@ -124,7 +125,7 @@ namespace WeSay.Project
 				{
 					ErrorReport.ReportNonFatalMessage(
 							String.Format(
-									"WeSay was unable to open the file at '{0}' for writing, probably because it is locked by some other process on your computer (maybe a recently crashed run of WeSay?). If you can't figure out what has it locked, restart your computer.",
+									"WeSay was unable to open the file at '{0}' for writing, probably because it is locked by some other process on your computer. Maybe you need to quit WeSay? If you can't figure out what has it locked, restart your computer.",
 									liftPath));
 					return false;
 				}
@@ -875,6 +876,8 @@ namespace WeSay.Project
 			Regex regex = new Regex(pattern, RegexOptions.Compiled);
 			string tempPath = inputPath + ".tmp";
 
+
+
 			using (StreamReader reader = File.OpenText(inputPath))
 			{
 				using (StreamWriter writer = new StreamWriter(tempPath))
@@ -888,7 +891,27 @@ namespace WeSay.Project
 				reader.Close();
 			}
 			string backupPath = GetUniqueFileName(inputPath);
-			File.Replace(tempPath, inputPath, backupPath);
+
+			ReplaceFileWithUserInteractionIfNeeded(tempPath, inputPath, backupPath);
+		}
+
+		private static void ReplaceFileWithUserInteractionIfNeeded(string tempPath, string inputPath, string backupPath)
+		{
+			bool succeeded = false;
+			do
+			{
+				try
+				{
+					File.Replace(tempPath, inputPath, backupPath);
+					succeeded = true;
+				}
+
+				catch (IOException e)
+				{
+					//nb: we don't want to provide an option to cancel.  Better to crash than cancel.
+					Palaso.Reporting.ErrorReport.ReportNonFatalMessage(Application.ProductName+" was unable to get at the dictionary file to update it.  Please ensure that WeSay isn't running with it open, then click the 'OK' button below. If you cannot figure out what program has the LIFT file open, the best choice is to kill WeSay Configuration Tool using the Task Manager (ctrl+alt+del), so that the configuration does not fall out of sync with the LIFT file.");
+				}
+			} while (!succeeded);
 		}
 
 		public bool LiftHasMatchingElement(string element, string attribute, string attributeValue)
