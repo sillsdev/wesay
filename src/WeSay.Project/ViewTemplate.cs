@@ -5,6 +5,7 @@ using System.Xml;
 using Exortech.NetReflector;
 using WeSay.Foundation;
 using WeSay.Language;
+using WeSay.LexicalModel;
 
 namespace WeSay.Project
 {
@@ -208,7 +209,7 @@ namespace WeSay.Project
 			glossField.Enabled = true;
 			masterTemplate.Add(glossField);
 
-			Field definitionField = new Field("Definition", "LexSense", defaultAnalysisSet);
+			Field definitionField = new Field(LexSense.WellKnownProperties.Definition, "LexSense", defaultAnalysisSet);
 			//this is here so the PoMaker scanner can pick up a comment about this label
 			StringCatalog.Get("~Definition", "The label for the field showing the definition of the word.");
 			definitionField.DisplayName = "Definition";

@@ -124,6 +124,10 @@ namespace WeSay.Project
 					throw new ArgumentNullException("FieldName");
 				}
 				_fieldName = value.Replace(" ", "").Trim(); //helpful when exposed to UI for user editting
+				if(_fieldName == "Definition") //versions prior to oct-23-2007 had the case wrong
+				{
+					_fieldName = "definition";
+				}
 			}
 		}
 

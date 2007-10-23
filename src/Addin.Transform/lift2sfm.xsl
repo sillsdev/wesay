@@ -76,11 +76,19 @@
 			<xsl:sort select="@lang"/>
 		</xsl:apply-templates>
 		 <xsl:apply-templates select="trait"/>
-		 <xsl:apply-templates select="field"/>
+		 <xsl:apply-templates select="definition"/>
 		 <xsl:apply-templates select="example"/>
+		 <xsl:apply-templates select="field"/>
 		 <xsl:apply-templates select="note"/>
 		 <xsl:apply-templates select="picture"/>
 	 </xsl:template>
+
+  <xsl:template match="definition">
+	<xsl:apply-templates select="form">
+	  <xsl:with-param name="prefix">d</xsl:with-param>
+	</xsl:apply-templates>
+	<xsl:apply-templates select="translation"/>
+  </xsl:template>
 
 <xsl:template match="example">
 	<xsl:apply-templates select="form">
@@ -90,6 +98,8 @@
 </xsl:template>
 
   <xsl:template match="field[@tag='Definition']">
+	<!-- this is here as a result of a screwup where definition was treated as property, rather than a proper
+	part of lift... projects created after oct 23 2007 won't need this-->
 	<xsl:apply-templates select="form">
 	  <xsl:with-param name="prefix">d</xsl:with-param>
 	</xsl:apply-templates>
@@ -119,6 +129,7 @@
 	<xsl:text>&nl;\hm </xsl:text><xsl:value-of select="form/text"/>
   </xsl:template>
 
+  <!-- TODO: LIFT has a proper place for etymology, this won't address this. -->
   <!-- Wesay doesn't expect its users to doing etymology, so it's not a build-in field.  As a concession,
   we try to detect it and export it correctly -->
   <xsl:template match="field[@tag='Etymology'] |field[@tag='et']">
