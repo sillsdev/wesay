@@ -91,7 +91,5 @@
   </Target>
   -->
   <PropertyGroup>
-	<PreBuildEvent>if exist $(SolutionDir)..\lib\lift\liftdotnet\output\debug\*.dll copy $(SolutionDir)..\lib\lift\liftdotnet\output\debug\*.dll $(SolutionDir)..\lib
-if exist $(SolutionDir)..\lib\lift\liftdotnet\output\debug\*.pdb copy $(SolutionDir)..\lib\lift\liftdotnet\output\debug\*.pdb $(TargetDir)..\lib</PreBuildEvent>
   </PropertyGroup>
 </Project>
