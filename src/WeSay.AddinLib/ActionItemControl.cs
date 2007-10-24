@@ -85,6 +85,7 @@ namespace WeSay.AddinLib
 		{
 			if (Launch != null)
 			{
+				Cursor = Cursors.WaitCursor;
 				Launch.Invoke(_addin, null);
 			}
 		}

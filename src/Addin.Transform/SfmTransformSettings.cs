@@ -90,7 +90,7 @@ namespace Addin.Transform
 			public ChangePair( string sfrom, string sto)
 			{
 				from = @"(\W)*" + sfrom+ @"(\W)";
-				to = "$1" + sto +   "$2"; //put the spaces back in
+				to = "$1" + sto +   " "; //put the spaces back in
 
 			}
 		}

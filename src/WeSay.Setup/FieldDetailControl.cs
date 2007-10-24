@@ -150,7 +150,10 @@ namespace WeSay.Setup
 		{
 			string oldValue = _field.FieldName;
 			_field.FieldName = _fieldName.Text.Trim();
-			WeSayWordsProject.Project.MakeFieldNameChange(_field, oldValue);
+			if (_field.FieldName != oldValue)
+			{
+				WeSayWordsProject.Project.MakeFieldNameChange(_field, oldValue);
+			}
 		}
 
 		private void _description_TextChanged(object sender, EventArgs e)

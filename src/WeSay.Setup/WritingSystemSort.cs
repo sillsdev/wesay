@@ -130,9 +130,14 @@ namespace WeSay.Setup
 
 		private void comboBoxCultures_SelectedIndexChanged(object sender, EventArgs e)
 		{
+			string oldValue =_writingSystem.SortUsing;
 			_writingSystem.SortUsing = (string) comboBoxCultures.SelectedValue;
 			UpdateCustomRules();
-			InvalidateCache();
+
+			if (oldValue != _writingSystem.SortUsing)
+			{
+				InvalidateCache();
+			}
 		}
 
 		[Browsable(false)]

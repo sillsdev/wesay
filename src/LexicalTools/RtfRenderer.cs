@@ -32,7 +32,7 @@ namespace WeSay.LexicalTools
 				//rtf.Append(SwitchToWritingSystem(BasilProject.Project.WritingSystems.AnalysisWritingSystemDefault.Id));
 				if (entry.Senses.Count > 1 || (currentItem != null && currentItem.PropertyName == "Gloss"))
 				{
-					rtf.Append(senseNumber.ToString());
+					rtf.Append(" " + senseNumber.ToString());
 				}
 
 				OptionRef posRef = sense.GetProperty<OptionRef>(LexSense.WellKnownProperties.PartOfSpeech.ToString());
@@ -57,7 +57,7 @@ namespace WeSay.LexicalTools
 						}
 					}
 				}
-				rtf.Append(RenderField(sense.Gloss, currentItem));
+				rtf.Append(" " + RenderField(sense.Gloss, currentItem));
 //                rtf.Append(@"\i0 ");
 
 				foreach (LexExampleSentence exampleSentence in sense.ExampleSentences)

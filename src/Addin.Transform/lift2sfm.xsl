@@ -18,8 +18,15 @@
 	</xsl:template>
 
 	<xsl:template  match="entry">
-
-		<xsl:apply-templates />
+		<xsl:apply-templates select="lexical-unit"/>
+		<xsl:apply-templates select="pronunciation"/>
+		<xsl:apply-templates select="variant"/>
+	  <xsl:apply-templates select="relation"/>
+	  <xsl:apply-templates select="trait"/>
+		<xsl:apply-templates select="field"/>
+		<xsl:apply-templates select="note"/>
+		<xsl:apply-templates select="annotation"/>
+		<xsl:apply-templates select="sense"/>
 		<xsl:if test="@dateModified">
 			<xsl:text>&nl;\dt </xsl:text><xsl:value-of select="substring(@dateModified, 1, 10)"/>
 		</xsl:if>
@@ -65,20 +72,23 @@
 	</xsl:template>
 -->
 
-
+  <xsl:template match="trait[starts-with(@name, 'flag_')]"><!-- don't output these--></xsl:template>
 
 
   <xsl:template match="sense">
-	<xsl:if test="grammatical-info/@value">
-		  <xsl:text>&nl;\ps </xsl:text><xsl:value-of select="grammatical-info/@value"/>
-	</xsl:if>
+		  <xsl:if test="(count(parent::*/sense) > 1)">&nl;\sn <xsl:number level="multiple" from="entry" format="1.1.1"/>
+		  </xsl:if>
+		<xsl:if test="grammatical-info/@value">
+			 <xsl:text>&nl;\ps </xsl:text><xsl:value-of select="grammatical-info/@value"/>
+		</xsl:if>
 		<xsl:apply-templates select="gloss">
 			<xsl:sort select="@lang"/>
 		</xsl:apply-templates>
 		 <xsl:apply-templates select="trait"/>
 		 <xsl:apply-templates select="definition"/>
 		 <xsl:apply-templates select="example"/>
-		 <xsl:apply-templates select="field"/>
+		<xsl:apply-templates select="relation"/>
+		<xsl:apply-templates select="field"/>
 		 <xsl:apply-templates select="note"/>
 		 <xsl:apply-templates select="picture"/>
 	 </xsl:template>
@@ -96,6 +106,12 @@
 	</xsl:apply-templates>
 	<xsl:apply-templates select="translation"/>
 </xsl:template>
+
+	<xsl:template match="translation">
+		<xsl:apply-templates select="form">
+			<xsl:with-param name="prefix">x</xsl:with-param>
+		</xsl:apply-templates>
+	 </xsl:template>
 
   <xsl:template match="field[@tag='Definition']">
 	<!-- this is here as a result of a screwup where definition was treated as property, rather than a proper
@@ -119,7 +135,7 @@
 
   <xsl:template match="field[@tag='LiteralMeaning']">
 	<!--review: notice we drop the language identifier completely -->
-	<xsl:text>&nl;\lt </xsl:text>
+	  <xsl:text>&nl;\lt </xsl:text><xsl:value-of select="form/text"/>
   </xsl:template>
 
   <!-- Wesay frowns on encouraging people to do homograph numbers, so it's not a build-in field.  As a concession,
@@ -169,16 +185,15 @@
 			<xsl:when test="not(preceding-sibling::gloss[@lang=current()/@lang])"><!-- are we the first gloss with this lang -->
 				<xsl:text>&#13;\g_</xsl:text><xsl:value-of select="@lang"/><xsl:text> </xsl:text>
 			</xsl:when>
-			<xsl:otherwise>; </xsl:otherwise>
+			<xsl:otherwise> ; </xsl:otherwise><!-- the preceding space was requested by Rene -->
 		</xsl:choose>
 		<xsl:apply-templates select="text"/>
 	</xsl:template>
 
 	  <xsl:template match="form">
 		  <xsl:param name="prefix"/>
-
 		  <xsl:text>&nl;\</xsl:text><xsl:value-of select="$prefix"/><xsl:text>_</xsl:text>
-		<xsl:value-of select="@lang"/><xsl:text>   </xsl:text>
+		<xsl:value-of select="@lang"/><xsl:text> </xsl:text>
 		<xsl:apply-templates select="text" />
 	  </xsl:template>
 
