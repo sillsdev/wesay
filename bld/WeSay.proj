@@ -93,7 +93,7 @@
 	</CreateItem>
 
 	<!-- open using wesay -->
-	<Exec Command="$(BaseDirectory)\output\Release\WeSay.App.exe %(WeSayFiles.FullPath)"
+	<Exec Command='"$(BaseDirectory)\output\Release\WeSay.App.exe" "%(WeSayFiles.FullPath)"'
 		  WorkingDirectory="$(BaseDirectory)\output\Release"/>
   </Target>
 
