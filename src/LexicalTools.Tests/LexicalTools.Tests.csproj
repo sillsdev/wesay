@@ -61,7 +61,6 @@
 	<Compile Include="DictionaryControlTests.cs" />
 	<Compile Include="DictionaryTaskTests.cs" />
 	<Compile Include="GatherWordListTaskTests.cs" />
-	<Compile Include="LexEntrySortHelperTests.cs" />
 	<Compile Include="MissingInfoControlTests.cs" />
 	<Compile Include="LexFieldTaskTests.cs" />
 	<Compile Include="MissingExampleSentenceFilterTests.cs" />

@@ -19,14 +19,14 @@ namespace WeSay.LexicalModel.Db4o_Specific
 		{
 			if (recordManager is Db4oRecordListManager)
 			{
-				return FindObjectsFromLanguageForm<AncestorType, MultiTextType> (((Db4oRecordListManager)recordManager).DataSource, match);
+				return FindObjectsFromLanguageForm<AncestorType, MultiTextType>(((Db4oRecordListManager)recordManager).DataSource, match);
 			}
 			else
 			{
-//                foreach (MultiTextType m in recordManager.GetListOfType<MultiTextType>() )
-//                {
-//
-//                }
+				//                foreach (MultiTextType m in recordManager.GetListOfType<MultiTextType>() )
+				//                {
+				//
+				//                }
 				throw new NotImplementedException("this search is not available for non-db4o sources");
 			}
 		}
@@ -60,7 +60,7 @@ namespace WeSay.LexicalModel.Db4o_Specific
 			}
 			System.Diagnostics.Debug.Assert(matches[0].GetType() == typeof(T));
 			return (T)matches[0];
-		 }
+		}
 
 		public static LexEntry FindFirstEntryMatchingId(Db4oDataSource db, string id)
 		{
@@ -103,6 +103,9 @@ namespace WeSay.LexicalModel.Db4o_Specific
 			return list;
 		}
 
+		/// <summary>
+		/// Try to add the sense to a matching entry. If none found, make a new entry with the sense
+		/// </summary>
 		static public void AddSenseToLexicon(IRecordListManager recordManager, MultiText lexemeForm, LexSense sense)
 		{
 			//review: the desired semantics of this find are unclear, if we have more than one ws
@@ -116,8 +119,34 @@ namespace WeSay.LexicalModel.Db4o_Specific
 			}
 			else
 			{
-				entriesWithSameForm[0].Senses.Add(sense);
+				LexEntry entry = GetConnectedEntry(recordManager, entriesWithSameForm[0]);
+				foreach (LexSense s in entry.Senses)
+				{
+					if (sense.Gloss.Forms.Length > 0)
+					{
+						LanguageForm glossWeAreAdding = sense.Gloss.Forms[0];
+						string glossInThisWritingSystem = s.Gloss.GetExactAlternative(glossWeAreAdding.WritingSystemId);
+						if (glossInThisWritingSystem == glossWeAreAdding.Form)
+						{
+							return; //don't add it again
+						}
+					}
+				}
+				entry.Senses.Add(sense);
+
 			}
+		}
+
+		/// <summary>
+		/// This is REALLY important to understand.  If you get an existing guy by querying db4o
+		/// directly, then make a change, that change WILL NOT be visible elsewhere in the program
+		/// and WILL NOT be saved!
+		/// </summary>
+		private static LexEntry GetConnectedEntry(IRecordListManager recordManager, LexEntry entryFromRawQuery)
+		{
+			IRecordList<LexEntry> list = recordManager.GetListOfType<LexEntry>();
+			int index = list.GetIndexFromId(((Db4oRecordListManager)recordManager).DataSource.Data.Ext().GetID(entryFromRawQuery));
+			return list[index];
 		}
 
 		static public bool HasMatchingLexemeForm(LanguageForm form)

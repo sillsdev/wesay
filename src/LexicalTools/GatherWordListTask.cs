@@ -84,7 +84,7 @@ namespace WeSay.LexicalTools
 				} while (true);
 			}
 
-			NavigateFirst();
+			NavigateFirstToShow();
 		}
 
 
@@ -218,10 +218,15 @@ namespace WeSay.LexicalTools
 			}
 		}
 
-		public void NavigateFirst()
+		public void NavigateFirstToShow()
 		{
 			_currentWordIndex = -1;
 			NavigateNext();
+		}
+
+		public void NavigateAbsoluteFirst()
+		{
+			CurrentWordIndex = 0;
 		}
 
 		public IList<LexEntry> GetMatchingRecords(MultiText gloss)
@@ -238,6 +243,48 @@ namespace WeSay.LexicalTools
 			{
 				return -1; //todo
 			}
+		}
+
+		/// <summary>
+		/// Removes the sense (if otherwise empty) and deletes the entry if it has no reason left to live
+		/// </summary>
+		public void TryToRemoveAssociationWithListWordFromEntry(LexEntry entry)
+		{
+
+			// have to iterate through these in reverse order
+			// since they might get modified
+			for (int i = entry.Senses.Count - 1; i >= 0; i--)
+			{
+				LexSense sense = (LexSense)entry.Senses[i];
+				if(sense.Gloss !=null)
+				{
+					if(sense.Gloss.ContainsAlternative(_writingSystemIdForGlossingLanguage))
+					{
+						if (sense.Gloss[_writingSystemIdForGlossingLanguage] == CurrentListWord)
+						{
+							sense.Gloss.SetAlternative(_writingSystemIdForGlossingLanguage, null);
+							sense.Gloss.RemoveEmptyStuff();
+						}
+						if(!sense.IsEmptyForPurposesOfDeletion)
+						{
+							//it had other stuff in it, so repent!
+							sense.Gloss.SetAlternative(_writingSystemIdForGlossingLanguage, CurrentListWord);
+						}
+					}
+				}
+			}
+			entry.CleanUpAfterEditting();
+			if (entry.IsEmptyExceptForLexemeFormForPurposesOfDeletion)
+			{
+				Lexicon.RemoveEntry(entry);
+			}
+		}
+
+
+
+		private string CurrentListWord
+		{
+			get { return _words[_currentWordIndex]; }
 		}
 	}
 }

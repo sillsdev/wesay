@@ -8,7 +8,7 @@ using WeSay.LexicalModel;
 using WeSay.LexicalModel.Db4o_Specific;
 using WeSay.Project;
 
-namespace WeSay.LexicalTools.Tests
+namespace WeSay.LexicalModel.Tests
 {
 	[TestFixture]
 	public class LexEntrySortHelperTests

@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using WeSay.Data;
+using WeSay.Language;
 
 namespace WeSay.LexicalModel
 {
@@ -8,7 +10,7 @@ namespace WeSay.LexicalModel
 	{
 		 private static Db4oRecordListManager _recordListManager;
 
-		public IRecordList<LexEntry> Entries
+		public static IRecordList<LexEntry> Entries
 		{
 			get
 			{
@@ -22,6 +24,24 @@ namespace WeSay.LexicalModel
 			_recordListManager = recordListManager;
 		}
 
+		public static List<LexEntry> GetEntriesHavingLexicalForm(string lexicalForm,  WritingSystem writingSystem)
+		{
+			VerifyInitialized();
+			List<LexEntry> result = new List<LexEntry>();
+			// search dictionary for entry with new lexical form
+			LexEntrySortHelper sortHelper = new LexEntrySortHelper(_recordListManager.DataSource,
+																   writingSystem,
+																   true);
+			CachedSortedDb4oList<string, LexEntry> entriesByLexicalForm = _recordListManager.GetSortedList(sortHelper);
+			int index = entriesByLexicalForm.BinarySearch(lexicalForm);
+			while (index >= 0 && index < entriesByLexicalForm.Count &&
+				   entriesByLexicalForm.GetKey(index) == lexicalForm)
+			{
+				result.Add(entriesByLexicalForm.GetValue(index));
+				++index;
+			}
+			return result;
+		}
 		public static LexEntry FindFirstLexEntryMatchingId(string id)
 		{
 			VerifyInitialized();
@@ -31,8 +51,10 @@ namespace WeSay.LexicalModel
 		public static LexEntry AddNewEntry()
 		{
 			VerifyInitialized();
-			return (LexEntry)_recordListManager.GetListOfType<LexEntry>().AddNew();
+			return (LexEntry)Entries.AddNew();
 		}
+
+
 
 		private static void VerifyInitialized()
 		{
@@ -42,5 +64,10 @@ namespace WeSay.LexicalModel
 			}
 		}
 
+		public static void RemoveEntry(LexEntry entry)
+		{
+			VerifyInitialized();
+			Entries.Remove(entry);
+		}
 	}
 }

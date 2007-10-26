@@ -480,7 +480,7 @@ namespace WeSay.LexicalTools
 			}
 			if (lexicalForm != string.Empty)
 			{
-				List<LexEntry> entries = GetEntriesHavingLexicalForm(lexicalForm);
+				List<LexEntry> entries = Lexicon.GetEntriesHavingLexicalForm(lexicalForm, WordWritingSystem);
 				if (entries.Count == 0)
 				{
 					LexEntry entry = new LexEntry();
@@ -511,7 +511,7 @@ namespace WeSay.LexicalTools
 			}
 			if (lexicalForm != string.Empty)
 			{
-				List<LexEntry> entries = GetEntriesHavingLexicalForm(lexicalForm);
+				List<LexEntry> entries = Lexicon.GetEntriesHavingLexicalForm(lexicalForm, WordWritingSystem);
 				foreach (LexEntry entry in entries)
 				{
 					if (EntryHasLexicalFormAndSemanticDomainAsOnlyContent(entry))
@@ -602,23 +602,7 @@ namespace WeSay.LexicalTools
 			entry.CleanUpAfterEditting();
 		}
 
-		private List<LexEntry> GetEntriesHavingLexicalForm(string lexicalForm)
-		{
-			List<LexEntry> result = new List<LexEntry>();
-			// search dictionary for entry with new lexical form
-			LexEntrySortHelper sortHelper = new LexEntrySortHelper(RecordListManager.DataSource,
-																   WordWritingSystem,
-																   true);
-			CachedSortedDb4oList<string, LexEntry> entriesByLexicalForm = RecordListManager.GetSortedList(sortHelper);
-			int index = entriesByLexicalForm.BinarySearch(lexicalForm);
-			while (index >= 0 && index < entriesByLexicalForm.Count &&
-				   entriesByLexicalForm.GetKey(index) == lexicalForm)
-			{
-				result.Add(entriesByLexicalForm.GetValue(index));
-				++index;
-			}
-			return result;
-		}
+
 
 		private void AddCurrentSemanticDomainToEntry(LexEntry entry)
 		{

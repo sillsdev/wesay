@@ -85,7 +85,7 @@
   </Target>
 
 
-  <Target Name="VerifySample">
+  <Target Name="LauchWeSayWithSample"> <!-- formerly VerifySample -->
 	<CreateItem Include="$(BaseDirectory)\SampleProjects\**\*.lift"
 				Exclude="$(BaseDirectory)\SampleProjects\src\**\*.*;
 				$(BaseDirectory)\SampleProjects\PRETEND\**\*.*">
@@ -146,8 +146,7 @@
 						 Test;
 						 CreateSample;
 						 Package;
-						 Upload;
-						 VerifySample"/>
+						 Upload"/>
 	<Message Text="Build Complete"/>
   </Target>
 

@@ -55,6 +55,7 @@
 	<Compile Include="Binding.cs" />
 	<Compile Include="Db4o-Specific\Db4oLexQueryHelperTests.cs" />
 	<Compile Include="ApproximateMatcherTests.cs" />
+	<Compile Include="LexEntrySortHelperTests.cs" />
 	<Compile Include="LexEntryTests.cs" />
 	<Compile Include="LexRelationTests.cs" />
 	<Compile Include="LiftExportTests.cs" />

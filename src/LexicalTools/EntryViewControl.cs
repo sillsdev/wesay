@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Windows.Forms;
 using Palaso.Reporting;
 using WeSay.Data;
@@ -140,6 +141,8 @@ namespace WeSay.LexicalTools
 			if (row != null)
 			{
 				row = Math.Min((int) row, _detailListControl.Count - 1);
+				Debug.Assert(row > -1, "You've reproduced bug ws-511!"); // bug WS-511, which we haven't yet been able to reproduce
+				row = Math.Max((int) row, 0); //would get around bug WS-511
 				_detailListControl.MoveInsertionPoint((int) row);
 			}
 			Logger.WriteMinorEvent("OnEmptyObjectsRemoved end");

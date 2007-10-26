@@ -73,13 +73,15 @@ namespace WeSay.LexicalTools
 			listViewItem1,
 			listViewItem2});
 			this._listViewOfWordsMatchingCurrentItem.Location = new System.Drawing.Point(11, 169);
+			this._listViewOfWordsMatchingCurrentItem.MinimumSize = new System.Drawing.Size(315, 84);
 			this._listViewOfWordsMatchingCurrentItem.MultiSelect = false;
 			this._listViewOfWordsMatchingCurrentItem.Name = "_listViewOfWordsMatchingCurrentItem";
-			this._listViewOfWordsMatchingCurrentItem.Size = new System.Drawing.Size(315, 97);
+			this._listViewOfWordsMatchingCurrentItem.Size = new System.Drawing.Size(315, 126);
 			this._listViewOfWordsMatchingCurrentItem.TabIndex = 4;
 			this._listViewOfWordsMatchingCurrentItem.TabStop = false;
 			this._listViewOfWordsMatchingCurrentItem.UseCompatibleStateImageBehavior = false;
 			this._listViewOfWordsMatchingCurrentItem.View = System.Windows.Forms.View.List;
+			this._listViewOfWordsMatchingCurrentItem.Click += new System.EventHandler(this._listViewOfWordsMatchingCurrentItem_Click);
 			//
 			// label3
 			//
@@ -148,6 +150,12 @@ namespace WeSay.LexicalTools
 			this._vernacularBox.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
 			this._vernacularBox.BackColor = System.Drawing.Color.White;
 			this._vernacularBox.ColumnCount = 3;
+			this._vernacularBox.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this._vernacularBox.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this._vernacularBox.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this._vernacularBox.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this._vernacularBox.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this._vernacularBox.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
 			this._vernacularBox.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
 			this._vernacularBox.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
 			this._vernacularBox.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());

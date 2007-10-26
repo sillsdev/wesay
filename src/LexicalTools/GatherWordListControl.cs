@@ -63,12 +63,12 @@ namespace WeSay.LexicalTools
 
 		void _vernacularBox_TextChanged(object sender, EventArgs e)
 		{
-			UpdateStuff();
+			UpdateEnabledStates();
 		}
 
 		private void GatherWordListControl_Load(object sender, EventArgs e)
 		{
-			_task.NavigateFirst();
+			_task.NavigateFirstToShow();
 		}
 
 		private void UpdateStuff()
@@ -80,7 +80,6 @@ namespace WeSay.LexicalTools
 			if (_task.IsTaskComplete)
 			{
 				_congratulationsControl.Show("Congratulations. You have completed this task.");
-				_btnAddWord.Enabled = false;
 			}
 			else
 			{
@@ -88,12 +87,17 @@ namespace WeSay.LexicalTools
 				Debug.Assert(_vernacularBox.TextBoxes.Count == 1, "other code here (for now), assumes exactly one ws/text box");
 				_boxForeignWord.Text = _task.CurrentWord;
 				PopulateWordsMatchingCurrentItem();
-				_btnAddWord.Enabled = _vernacularBox.TextBoxes[0].Text.Trim() != "";
 			}
-			_btnNextWord.Enabled = _task.CanNavigateNext;
-			_btnPreviousWord.Enabled = _task.CanNavigatePrevious;
+			UpdateEnabledStates();
 
 	   }
+
+		private void UpdateEnabledStates()
+		{
+			_btnAddWord.Enabled = !_task.IsTaskComplete && _vernacularBox.TextBoxes[0].Text.Trim() != "";
+			_btnNextWord.Enabled = _task.CanNavigateNext;
+			_btnPreviousWord.Enabled = _task.CanNavigatePrevious;
+		}
 
 		/// <summary>
 		/// We want to show all words in the lexicon which match the current
@@ -105,7 +109,10 @@ namespace WeSay.LexicalTools
 
 			foreach (LexEntry entry in _task.GetMatchingRecords(_task.CurrentWordAsMultiText))
 			{
-				_listViewOfWordsMatchingCurrentItem.Items.Add(entry.LexicalForm.GetFirstAlternative());
+				string alternative = entry.LexicalForm.GetFirstAlternative();
+				ListViewItem item = new ListViewItem(alternative);
+				item.Tag = entry;
+				_listViewOfWordsMatchingCurrentItem.Items.Add(item);
 			}
 		}
 
@@ -116,6 +123,7 @@ namespace WeSay.LexicalTools
 		}
 		private void _btnPreviousWord_Click(object sender, EventArgs e)
 		{
+			AddCurrentWord();//don't throw away what they were typing
 			_task.NavigatePrevious();
 		}
 
@@ -190,6 +198,43 @@ namespace WeSay.LexicalTools
 #if !MONO
 			this._vernacularBox.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
 #endif
+		}
+
+		private void _listViewOfWordsMatchingCurrentItem_Click(object sender, EventArgs e)
+		{
+			if (_listViewOfWordsMatchingCurrentItem.SelectedItems.Count > 0)
+			{
+
+				string word = _listViewOfWordsMatchingCurrentItem.SelectedItems[0].Text;
+				LexEntry entry = _listViewOfWordsMatchingCurrentItem.SelectedItems[0].Tag as LexEntry;
+				Debug.Assert(entry!=null);
+				if(entry==null)
+				{
+					return;
+				}
+
+								 // NB: don't do this before storing what they clicked on.
+			   AddCurrentWord();//don't throw away what they were typing
+
+				_task.TryToRemoveAssociationWithListWordFromEntry(entry);
+
+//                this.destination = this._vernacularBox.Location;
+//                this.destination.X += this._vernacularBox.TextBoxes[0].Location.X;
+//                this.destination.Y += this._vernacularBox.TextBoxes[0].Location.Y;
+//                this.start = this._listViewOfWordsMatchingCurrentItem.GetItemRectangle(_listViewOfWordsMatchingCurrentItem.SelectedIndex).Location;
+//                this.start.X += this._listViewOfWordsMatchingCurrentItem.Location.X;
+//                this.start.Y += this._listViewOfWordsMatchingCurrentItem.Location.Y;
+//
+//                _animatedText.Text = (string)this._listViewWords.SelectedItem;
+//                _animatedText.Location = start;
+//                _animatedText.Visible = true;
+//
+				 UpdateStuff();
+				 _vernacularBox.TextBoxes[0].Text = word;
+
+//                _addingWordAnimation = false;
+//                this._animator.Start();
+			}
 		}
 
 	}

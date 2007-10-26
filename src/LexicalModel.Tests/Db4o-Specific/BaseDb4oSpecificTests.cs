@@ -26,14 +26,15 @@ namespace WeSay.LexicalModel.Tests
 			{
 				this._entriesList.Dispose();
 			}
-			if (_dataSource != null)
-			{
-				this._dataSource.Dispose();
-			}
 			if (_recordListManager != null)
 			{
 				_recordListManager.Dispose();
 			}
+			if (_dataSource != null)
+			{
+				this._dataSource.Dispose();
+			}
+
 			if (_filePath != "")
 			{
 				File.Delete(_filePath);
@@ -52,6 +53,7 @@ namespace WeSay.LexicalModel.Tests
 
 			   _dataSource = _recordListManager.DataSource;
 			Db4oLexModelHelper.Initialize(_dataSource.Data);
+			Lexicon.Init(_recordListManager);
 
 			_entriesList = new Db4oRecordList<LexEntry>(_dataSource);
 			if (_entriesList.Count > 0)

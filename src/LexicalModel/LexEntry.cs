@@ -132,6 +132,11 @@ namespace WeSay.LexicalModel
 			return _id;
 		}
 
+		/// <summary>
+		///
+		/// </summary>
+		/// <remarks>The signature here is MultiText rather than LexicalFormMultiText because we want
+		/// to hide this (hopefully temporary) performance implementation detail. </remarks>
 		public MultiText LexicalForm
 		{
 			get
@@ -290,6 +295,23 @@ namespace WeSay.LexicalModel
 				return StringCatalog.Get("~No Senses");
 			}
 			return s.Substring(0, s.Length - 2);// chop off the trailing separator
+		}
+
+
+		public bool IsEmptyExceptForLexemeFormForPurposesOfDeletion
+		{
+			get
+			{
+				foreach (LexSense sense in _senses)
+				{
+					if(!sense.IsEmptyForPurposesOfDeletion )
+						return false;
+				}
+				if (HasPropertiesForPurposesOfDeletion)
+					return false;
+
+				return true;
+			}
 		}
 	}
 

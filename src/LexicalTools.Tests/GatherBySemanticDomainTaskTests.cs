@@ -33,7 +33,7 @@ namespace WeSay.LexicalTools.Tests
 
 			this._recordListManager = new Db4oRecordListManager(new WeSayWordsDb4oModelConfiguration(), _dbFilePath);// InMemoryRecordListManager();
 			Db4oLexModelHelper.Initialize(_recordListManager.DataSource.Data);
-
+			Lexicon.Init(_recordListManager);
 			Field semanticDomainField = new Field("SemanticDomain", "LexSense", new string[] { "en" });
 			semanticDomainField.OptionsListFile = "Ddp4.xml";
 			semanticDomainField.DataTypeName = "OptionRefCollection";

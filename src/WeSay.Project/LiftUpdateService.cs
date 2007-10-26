@@ -93,7 +93,7 @@ namespace WeSay.Project
 
 		public void DoLiftUpdateNow(bool mergeIntoSingleFileBeforeReturning)
 		{
-			Logger.WriteEvent("Incremental Update Start");
+		   // Logger.WriteEvent("Incremental Update Start");
 
 			if (Updating != null)
 			{
@@ -143,7 +143,7 @@ namespace WeSay.Project
 															WeSayWordsProject.Project.PathToLiftFile));
 			}
 
-			Logger.WriteEvent("Incremental Update Done");
+			//Logger.WriteEvent("Incremental Update Done");
 
 			//the granularity of the file access time stamp is too blunt, so we
 			//avoid missing changes with this hack, for now (have *not* tested how small it could be)
