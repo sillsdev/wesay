@@ -226,66 +226,82 @@ namespace WeSay.LexicalTools
 			int rowCount = 0;
 			foreach (Field customField in ActiveViewTemplate.GetCustomFields(target.GetType().Name))
 			{
-				IReportEmptiness data= target.GetProperty<IReportEmptiness>(customField.FieldName);
-				if (!customField.GetDoShow(data, this.ShowNormallyHiddenFields))
+				rowCount = AddOneCustomField(target, customField, insertAtRow, rowCount);
+			}
+
+
+			//grab any basetype class (to just one level). E.g., 'Note'
+			foreach (Field customField in ActiveViewTemplate.GetCustomFields(target.GetType().BaseType.Name))
+			{
+				if (target.GetType() == typeof(LexExampleSentence) && customField.FieldName==WeSayDataObject.WellKnownProperties.Note)
 				{
-					continue;
+					continue; //note actually isn't allowed at the moment
 				}
-				Control box;
-				switch (customField.DataTypeName)
-				{
-					case "Picture":
-						box = MakePictureWidget(target, customField);
-						break;
-					case "Flag":
-						box = MakeCheckBoxWidget(target, customField);
-						break;
-					case "Option":
-						box = MakeOptionWidget(target, customField);
-						break;
-					case "OptionCollection":
-						box = MakeOptionCollectionWidget(target, customField);
-						break;
-					case "MultiText":
-						box =
-								MakeBoundControl(target.GetOrCreateProperty<MultiText>(customField.FieldName),
-												 customField);
-						break;
-					default:
-						LexRelationType lexRelType = GetRelationType(customField.DataTypeName);
-						if (lexRelType != null)
-						{
-							box = MakeRelationWidget(target, lexRelType, customField);
-						}
-						else
-						{
-							throw new ApplicationException(
-									string.Format("WeSay doesn't understand how to layout a {0}",
-												  customField.DataTypeName));
-						}
-						break;
-				}
-
-				string label = StringCatalog.Get(customField.DisplayName);
-
-				//for checkboxes, the label is part of the control
-				if (customField.DataTypeName == "Flag")
-				{
-					label = string.Empty;
-				}
-
-				Control c =DetailList.AddWidgetRow(StringCatalog.Get(label),
-										false,
-										box,
-										insertAtRow,
-										false);
-
-			   insertAtRow = DetailList.GetRow(c);
-				++rowCount;
+				rowCount = AddOneCustomField(target, customField, insertAtRow, rowCount);
 			}
 			return rowCount;
 		}
 
+		private int AddOneCustomField(WeSayDataObject target, Field customField, int insertAtRow, int rowCount)
+		{
+			IReportEmptiness data= target.GetProperty<IReportEmptiness>(customField.FieldName);
+			if (!customField.GetDoShow(data, this.ShowNormallyHiddenFields))
+			{
+				return rowCount;
+			}
+			Control box;
+			switch (customField.DataTypeName)
+			{
+				case "Picture":
+					box = MakePictureWidget(target, customField);
+					break;
+				case "Flag":
+					box = MakeCheckBoxWidget(target, customField);
+					break;
+				case "Option":
+					box = MakeOptionWidget(target, customField);
+					break;
+				case "OptionCollection":
+					box = MakeOptionCollectionWidget(target, customField);
+					break;
+				case "MultiText":
+					box =
+						MakeBoundControl(target.GetOrCreateProperty<MultiText>(customField.FieldName),
+										 customField);
+					break;
+				default:
+					LexRelationType lexRelType = GetRelationType(customField.DataTypeName);
+					if (lexRelType != null)
+					{
+						box = MakeRelationWidget(target, lexRelType, customField);
+					}
+					else
+					{
+						throw new ApplicationException(
+							string.Format("WeSay doesn't understand how to layout a {0}",
+										  customField.DataTypeName));
+					}
+					break;
+			}
+
+			string label = StringCatalog.Get(customField.DisplayName);
+
+			//for checkboxes, the label is part of the control
+			if (customField.DataTypeName == "Flag")
+			{
+				label = string.Empty;
+			}
+
+			Control c =DetailList.AddWidgetRow(StringCatalog.Get(label),
+											   false,
+											   box,
+											   insertAtRow,
+											   false);
+
+			insertAtRow = DetailList.GetRow(c);
+			++rowCount;
+			return rowCount;
+		}
 
 
 		static private LexRelationType GetRelationType(string dataTypeName)

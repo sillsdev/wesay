@@ -3,9 +3,37 @@
 <!ENTITY nl "
 ">
 ]>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"
+  xmlns:msxsl="urn:schemas-microsoft-com:xslt">
   <xsl:output method="text" omit-xml-declaration="yes"/>
-   <xsl:template match="*"/>
+
+
+  <xsl:param name="headword-writing-system" select="/lift/entry/lexical-unit/form/@lang"/>
+
+
+
+
+   <xsl:template match="/">
+<!--     <xsl:apply-templates select="//entry">
+	   <xsl:sort select="@sort-key"/>
+
+		Entries should be ordered by their order attribute if they have one otherwise, they should be kept in document order
+	   <xsl:sort select="@order" />
+	 </xsl:apply-templates>-->
+
+	 <xsl:variable name="sorted-entries">
+	   <xsl:for-each select="//entry">
+		 <xsl:sort select="@sort-key"/>
+
+		 <!-- Entries should be ordered by their order attribute if they have one otherwise, they should be kept in document order -->
+		 <xsl:sort select="@order" />
+		 <xsl:copy-of select="." />
+	   </xsl:for-each>
+	 </xsl:variable>
+
+	 <xsl:apply-templates select="msxsl:node-set($sorted-entries)/entry" />
+
+   </xsl:template>
 
    <xsl:template match="text()">
 	   <xsl:if test="not(normalize-space() = '')">
@@ -13,9 +41,7 @@
 	   </xsl:if>
    </xsl:template>
 
-	<xsl:template match="/">
-		<xsl:apply-templates select="//entry"/>
-	</xsl:template>
+
 
 	<xsl:template  match="entry">
 		<xsl:apply-templates select="lexical-unit"/>
@@ -30,15 +56,87 @@
 		<xsl:if test="@dateModified">
 			<xsl:text>&nl;\dt </xsl:text><xsl:value-of select="substring(@dateModified, 1, 10)"/>
 		</xsl:if>
-		<xsl:text>&nl;</xsl:text>
-	</xsl:template>
+	  <xsl:text>&nl;</xsl:text>
+	 </xsl:template>
 
 	<xsl:template match="lexical-unit">
 		<xsl:apply-templates>
 			<xsl:with-param name="prefix">lx</xsl:with-param>
 		</xsl:apply-templates>
+
+
+	  <!-- if there is an entry with the same headword, provide a homograph
+		number -->
+	  <xsl:variable name="homograph-number">
+		<xsl:call-template name="get-homograph-number">
+		  <xsl:with-param name="current-entry" select="parent::entry"/>
+		</xsl:call-template>
+	  </xsl:variable>
+	  <xsl:if test="$homograph-number != ''">&nl;\hm <xsl:value-of select="$homograph-number"/>
+	  </xsl:if>
 	</xsl:template>
 
+  <xsl:template name="get-homograph-number">
+	<xsl:param name="current-entry"/>
+
+	<xsl:if test="$current-entry">
+	  <xsl:variable name="headword">
+		<xsl:call-template name="get-headword">
+		  <xsl:with-param name="current-entry" select="$current-entry"/>
+		</xsl:call-template>
+	  </xsl:variable>
+
+	  <xsl:variable name="previous-headword">
+		<xsl:call-template name="get-headword">
+		  <xsl:with-param name="current-entry" select="$current-entry/preceding-sibling::entry[1]"/>
+		</xsl:call-template>
+	  </xsl:variable>
+
+	  <xsl:variable name="next-headword">
+		<xsl:call-template name="get-headword">
+		  <xsl:with-param name="current-entry" select="$current-entry/following-sibling::entry[1]"/>
+		</xsl:call-template>
+	  </xsl:variable>
+
+	   <xsl:if test="$previous-headword = $headword or
+		$next-headword = $headword">
+		<xsl:variable name="prior-homograph-number">
+		  <xsl:choose>
+			<xsl:when test="$current-entry/preceding-sibling::entry">
+			  <xsl:choose>
+				<xsl:when test="$previous-headword = $headword">
+				<xsl:call-template name="get-homograph-number">
+				<xsl:with-param name="current-entry" select="$current-entry/preceding-sibling::entry[1]"/>
+				</xsl:call-template>
+				</xsl:when>
+				<xsl:otherwise>0</xsl:otherwise>
+			  </xsl:choose>
+			</xsl:when>
+			<xsl:otherwise>0</xsl:otherwise>
+		  </xsl:choose>
+		</xsl:variable>
+		<xsl:value-of select="$prior-homograph-number + 1"/>
+	  </xsl:if>
+	  <xsl:message>current=<xsl:value-of select="$headword"/> prev=<xsl:value-of select="$previous-headword"/></xsl:message>
+   </xsl:if>
+   </xsl:template>
+
+  <xsl:template name="get-headword">
+	<xsl:param name="current-entry"/>
+
+	<xsl:if test="$current-entry">
+	  <!-- if there is a citation-form, use that as the headword; otherwise
+		use the lexical-unit.-->
+	  <xsl:choose>
+		<xsl:when test="$current-entry/citation-form[form[@lang=$headword-writing-system]]">
+		  <xsl:value-of select="normalize-space($current-entry/citation-form/form[@lang=$headword-writing-system]/text)"/>
+		</xsl:when>
+		<xsl:otherwise>
+		  <xsl:value-of select="normalize-space($current-entry/lexical-unit/form[@lang=$headword-writing-system]/text)"/>
+		</xsl:otherwise>
+	  </xsl:choose>
+	</xsl:if>
+  </xsl:template>
 
 	  <xsl:template match="field">
 		<xsl:apply-templates select="form">
@@ -86,11 +184,11 @@
 		</xsl:apply-templates>
 		 <xsl:apply-templates select="trait"/>
 		 <xsl:apply-templates select="definition"/>
+		<xsl:apply-templates select="note"/>
 		 <xsl:apply-templates select="example"/>
 		<xsl:apply-templates select="relation"/>
 		<xsl:apply-templates select="field"/>
-		 <xsl:apply-templates select="note"/>
-		 <xsl:apply-templates select="picture"/>
+		  <xsl:apply-templates select="picture"/>
 	 </xsl:template>
 
   <xsl:template match="definition">
@@ -100,11 +198,21 @@
 	<xsl:apply-templates select="translation"/>
   </xsl:template>
 
+  <xsl:template match="note">
+	<!-- notice we drop the language identifier completely -->
+	<xsl:text>&nl;\nt </xsl:text>
+	<xsl:value-of select="form/text"/>
+  </xsl:template>
+
 <xsl:template match="example">
 	<xsl:apply-templates select="form">
 		<xsl:with-param name="prefix">x</xsl:with-param>
 	</xsl:apply-templates>
 	<xsl:apply-templates select="translation"/>
+  <xsl:apply-templates select="trait"/>
+  <xsl:apply-templates select="field"/>
+  <!-- no, not allowed by lift <xsl:apply-templates select="note"/> -->
+  <xsl:apply-templates select="annotation"/>
 </xsl:template>
 
 	<xsl:template match="translation">
@@ -140,11 +248,11 @@
 
   <!-- Wesay frowns on encouraging people to do homograph numbers, so it's not a build-in field.  As a concession,
   we detect that someone has added it as a custom field if they've named it anything reasonable-->
-  <xsl:template match="field[contains(@tag,'omograph')] | field[contains(@tag,'omonym')]  | field[@tag='hm']">
-	<!--notice we drop the language identifier completely -->
+ <!-- <xsl:template match="field[contains(@tag,'omograph')] | field[contains(@tag,'omonym')]  | field[@tag='hm']">
+	notice we drop the language identifier completely
 	<xsl:text>&nl;\hm </xsl:text><xsl:value-of select="form/text"/>
   </xsl:template>
-
+-->
   <!-- TODO: LIFT has a proper place for etymology, this won't address this. -->
   <!-- Wesay doesn't expect its users to doing etymology, so it's not a build-in field.  As a concession,
   we try to detect it and export it correctly -->

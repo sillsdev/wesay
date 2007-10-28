@@ -20,6 +20,8 @@ namespace WeSay.Project
 		private string _description = string.Empty;
 		private string _className = string.Empty;
 		private string _dataTypeName;
+		private bool _enabled;
+		private string _configurationName;
 
 		private bool _enabledNotSet = true;
 
@@ -42,7 +44,6 @@ namespace WeSay.Project
 
 		private CommonEnumerations.VisibilitySetting _visibility = CommonEnumerations.VisibilitySetting.Visible;
 		private string _optionsListFile;
-		private bool _enabled;
 
 		/// <summary>
 		/// These are just for getting the strings right, using ToString(). In order
@@ -131,13 +132,19 @@ namespace WeSay.Project
 			}
 		}
 
+
+		public string Key
+		{
+			get { return _className + "." + _fieldName; }
+		}
+
 		[Description("The label of the field as it will be displayed to the user.")]
 		[ReflectorCollection("displayName", Required=false)]
 		public string DisplayName
 		{
 			get
 			{
-				if (_displayName == "")
+				if (String.IsNullOrEmpty(_displayName))
 				{
 					return "*" + FieldName;
 				}
@@ -145,6 +152,34 @@ namespace WeSay.Project
 			}
 			set { _displayName = value; }
 		}
+
+//        /// <summary>
+//        /// this is needed for fields like sense note vs entry not, where in the app, they should have the same label
+//        /// </summary>
+//        [Description("The label of the field as it will be displayed in the config tool.")]
+//        [ReflectorCollection("configurationName", Required = false)]
+//        public string ConfigurationName
+//        {
+//            get
+//            {
+//                if (String.IsNullOrEmpty(_configurationName))
+//                {
+//                    return DisplayName;
+//                }
+//                return _configurationName;
+//            }
+//            set
+//            {
+//                if(value == DisplayName)//don't make a distinction unless you need to
+//                {
+//                    _configurationName = String.Empty;
+//                }
+//                else
+//                {
+//                    _configurationName = value;
+//                }
+//            }
+//        }
 
 		[TypeConverter(typeof (ParentClassConverter))]
 		[Description("The parent of this field. E.g. Entry, Sense, Example.")]
@@ -165,6 +200,7 @@ namespace WeSay.Project
 				{
 					case null:
 						throw new ArgumentNullException();
+					case "WeSayDataObject":
 					case "LexEntry":
 					case "LexSense":
 					case "LexExampleSentence":
@@ -172,7 +208,7 @@ namespace WeSay.Project
 						break;
 					default:
 						throw new ArgumentOutOfRangeException(
-								"className must be LexEntry or LexSense or LexExampleSentence");
+								"className must be WeSayDataObject, LexEntry, LexSense, or LexExampleSentence");
 				}
 			}
 		}
@@ -183,6 +219,11 @@ namespace WeSay.Project
 			get
 			{
 				if (IsBuiltInViaCode)
+				{
+					return false;
+				}
+
+				if (WeSayDataObject.WellKnownProperties.Contains(FieldName))
 				{
 					return false;
 				}

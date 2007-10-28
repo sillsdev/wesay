@@ -230,6 +230,14 @@ namespace WeSay.LexicalModel
 		{
 			MultiText t = MultiText.Create(contents);
 			extensible.Properties.Add(new KeyValuePair<string, object>(tagAttribute, t));
+
+			/* good idea, but it doesn't work.  It doesn't cause an update to the lift xml
+			 * if(extensible.GetType() == typeof(LexSense) && tagAttribute=="note")
+			{
+				//goose it into wanting to write this back out, in the corrected form (<note> instead of <field>)
+				extensible.SomethingWasModified("note");
+			}
+			*/
 		}
 
 		/// <summary>

@@ -145,7 +145,7 @@ BOGURAEV and NEFF Lit Linguist Computing.1992; 7: 110-112
 		</style>
 	  </head>
 	  <body>
-		<xsl:apply-templates select="//entry">
+		<xsl:apply-templates select="//entry"> <!-- REVIEW: JH has some reason to believe that preceding-sybling used in homograph calc won't use this order -->
 		  <xsl:sort select="@sort-key"/>
 		  <!-- Entries should be ordered by their order attribute if they have one otherwise, they should be kept in document order -->
 		  <xsl:sort select="@order"/>
@@ -261,7 +261,7 @@ BOGURAEV and NEFF Lit Linguist Computing.1992; 7: 110-112
 	  </xsl:variable>
 
 	  <xsl:if test="$previous-headword = $headword or
-					$next-headword = $headword">
+		$next-headword = $headword">  <!-- REVIEW: JH has some reason to believe this will cause the B's to have 3 and 4, rather than 1 and 2, given A A B B -->
 		<xsl:variable name="prior-homograph-number">
 		  <xsl:choose>
 			<xsl:when test="$current-entry/preceding-sibling::entry">

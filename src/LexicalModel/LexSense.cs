@@ -17,7 +17,6 @@ namespace WeSay.LexicalModel
 			static public string SemanticDomainsDdp4 = "SemanticDomainDdp4";
 			static public string Definition = "definition";//the lower case here is defined by LIFT standard
 			static public string Picture = "Picture";
-			static public string Note = "note";//the lower case here is defined by LIFT standard
 			static public string BaseForm = "BaseForm";
 			//static public string Relations = "relations";
 			static public bool ContainsAnyCaseVersionOf(string fieldName)

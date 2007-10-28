@@ -186,6 +186,7 @@ namespace WeSay.Foundation
 				if (IsPropertyEmpty(property))
 				{
 					Properties.RemoveAt(i);
+					NotifyPropertyChanged("some property");
 				}
 			}
 		}
@@ -343,6 +344,11 @@ namespace WeSay.Foundation
 		public class WellKnownProperties
 		{
 			public static string Note = "note";
+			static public bool Contains(string fieldName)
+			{
+				List<string> list = new List<string>(new string[] { Note });
+				return list.Contains(fieldName);
+			}
 		} ;
 
 		#endregion

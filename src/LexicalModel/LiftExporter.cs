@@ -212,7 +212,7 @@ namespace WeSay.LexicalModel
 		{
 			OptionRef pos = sense.GetProperty<OptionRef>(LexSense.WellKnownProperties.PartOfSpeech);
 
-			if (pos != null && pos.Value.Length > 0)
+			if (pos != null && !pos.IsEmpty)
 			{
 				_writer.WriteStartElement("grammatical-info");
 				_writer.WriteAttributeString("value", pos.Value);

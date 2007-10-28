@@ -82,6 +82,7 @@ namespace WeSay.Project
 			return true;
 		}
 
+		//todo: either switch to using the key (class.name) or ?
 		public Field GetField(string fieldName)
 		{
 			Field field;
@@ -229,17 +230,37 @@ namespace WeSay.Project
 			literalMeaningField.Enabled = false;
 			masterTemplate.Add(literalMeaningField);
 
-			Field entryNoteField = new Field("Note", "LexEntry", defaultAnalysisSet);
+			Field noteField = new Field(WeSayDataObject.WellKnownProperties.Note, "WeSayDataObject", defaultAnalysisSet);
 			//this is here so the PoMaker scanner can pick up a comment about this label
 			StringCatalog.Get("~Note", "The label for the field showing a note.");
-			entryNoteField.DisplayName = "Note";
-			entryNoteField.Description = "A note on the entry.";
-			entryNoteField.Visibility = CommonEnumerations.VisibilitySetting.NormallyHidden;
-			entryNoteField.Enabled = false;
-			masterTemplate.Add(entryNoteField);
+			noteField.DisplayName = "Note";
+		   // noteField.ConfigurationName = "Note";
+			noteField.Description = "A note.";
+			noteField.Visibility = CommonEnumerations.VisibilitySetting.NormallyHidden;
+			noteField.Enabled = true;
+			masterTemplate.Add(noteField);
+
+//            Field entryNoteField = new Field(LexEntry.WellKnownProperties.Note, "LexEntry", defaultAnalysisSet);
+//            //this is here so the PoMaker scanner can pick up a comment about this label
+//            StringCatalog.Get("~Note", "The label for the field showing a note.");
+//            entryNoteField.DisplayName = "Note";
+//            entryNoteField.ConfigurationName = "Note on Entry";
+//            entryNoteField.Description = "A note on the entry.";
+//            entryNoteField.Visibility = CommonEnumerations.VisibilitySetting.NormallyHidden;
+//            entryNoteField.Enabled = false;
+//            masterTemplate.Add(entryNoteField);
+
+//            Field senseNoteField = new Field(LexSense.WellKnownProperties.Note, "LexSense", defaultAnalysisSet);
+//            //this is here so the PoMaker scanner can pick up a comment about this label
+//            senseNoteField.DisplayName = "Note";
+//            senseNoteField.ConfigurationName = "Note on Sense";
+//            senseNoteField.Description = "A note on the sense.";
+//            senseNoteField.Visibility = CommonEnumerations.VisibilitySetting.NormallyHidden;
+//            senseNoteField.Enabled = false;
+//            masterTemplate.Add(senseNoteField);
 
 
-			Field posField = new Field("POS", "LexSense", defaultAnalysisSet);
+			Field posField = new Field(LexSense.WellKnownProperties.PartOfSpeech, "LexSense", defaultAnalysisSet);
 			//this is here so the PoMaker scanner can pick up a comment about this label
 			StringCatalog.Get("~POS", "The label for the field showing Part Of Speech");
 			posField.DisplayName = "PartOfSpeech";
