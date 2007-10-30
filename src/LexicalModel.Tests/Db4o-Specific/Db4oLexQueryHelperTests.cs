@@ -21,7 +21,7 @@ namespace WeSay.LexicalModel.Tests
 			CycleDatabase();
 			//don't want to find this one
 			_dataSource.Data.Set(new LanguageForm("en", "findme", new MultiText()));
-			List<LexEntry> list = Db4oLexQueryHelper.FindObjectsFromLanguageForm<LexEntry, LexicalFormMultiText>(_dataSource, "findme");
+			List<LexEntry> list = Db4oLexQueryHelper.FindDisconnectedObjectsFromLanguageForm<LexEntry, LexicalFormMultiText>(_dataSource, "findme");
 			Assert.AreEqual(1, list.Count);
 		}
 
@@ -72,7 +72,7 @@ namespace WeSay.LexicalModel.Tests
 			//don't want to find this one
 			_dataSource.Data.Set(new LanguageForm("en", gloss, new MultiText()));
 
-			List<LexEntry> list = Db4oLexQueryHelper.FindObjectsFromLanguageForm<LexEntry, SenseGlossMultiText>(_dataSource, gloss);
+			List<LexEntry> list = Db4oLexQueryHelper.FindDisconnectedObjectsFromLanguageForm<LexEntry, SenseGlossMultiText>(_dataSource, gloss);
 			Assert.AreEqual(1, list.Count);
 		}
 

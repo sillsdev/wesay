@@ -44,7 +44,6 @@ namespace WeSay.LexicalTools
 			this._instructionLabel = new System.Windows.Forms.Label();
 			this._question = new System.Windows.Forms.Label();
 			this._description = new System.Windows.Forms.Label();
-			this._animatedText = new System.Windows.Forms.Label();
 			this._questionIndicator = new WeSay.UI.CirclesProgressIndicator();
 			this._vernacularBox = new WeSay.UI.MultiTextControl();
 			this._btnPrevious = new WeSay.UI.Buttons.PreviousButton();
@@ -160,17 +159,7 @@ namespace WeSay.LexicalTools
 			this._description.Name = "_description";
 			this._description.Size = new System.Drawing.Size(622, 90);
 			this._description.TabIndex = 24;
-			//
-			// _animatedText
-			//
-			this._animatedText.AutoSize = true;
-			this._animatedText.BackColor = System.Drawing.Color.White;
-			this._animatedText.Location = new System.Drawing.Point(0, 0);
-			this._animatedText.Name = "_animatedText";
-			this._animatedText.Size = new System.Drawing.Size(0, 13);
-			this._animatedText.TabIndex = 0;
-			this._animatedText.Visible = false;
-			//
+			 //
 			// _questionIndicator
 			//
 			this._questionIndicator.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
@@ -265,7 +254,6 @@ namespace WeSay.LexicalTools
 			//
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.Controls.Add(this._animatedText);
 			this.Controls.Add(this._questionIndicator);
 			this.Controls.Add(this._description);
 			this.Controls.Add(this._question);
@@ -305,7 +293,6 @@ namespace WeSay.LexicalTools
 		private System.Windows.Forms.Label _question;
 		private System.Windows.Forms.Label _description;
 		private WeSay.UI.CirclesProgressIndicator _questionIndicator;
-	  private System.Windows.Forms.Label _animatedText;
 		private LocalizationHelper localizationHelper1;
 	}
 }

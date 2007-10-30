@@ -62,7 +62,7 @@
 	<Compile Include="DictionaryTaskTests.cs" />
 	<Compile Include="GatherWordListTaskTests.cs" />
 	<Compile Include="MissingInfoControlTests.cs" />
-	<Compile Include="LexFieldTaskTests.cs" />
+	<Compile Include="MissingInfoTaskTests.cs" />
 	<Compile Include="MissingExampleSentenceFilterTests.cs" />
 	<Compile Include="MissingGlossFilterTests.cs" />
 	<Compile Include="RelationControllerTests.cs" />

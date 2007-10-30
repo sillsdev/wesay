@@ -12,27 +12,48 @@ namespace WeSay.LexicalModel.Db4o_Specific
 
 		//TODO: this is not ws savvy yet
 
-		[CLSCompliant(false)]
-		static public List<AncestorType> FindObjectsFromLanguageForm<AncestorType, MultiTextType>(IRecordListManager recordManager, string match)
-			where AncestorType : class
+//        [CLSCompliant(false)]
+//        static public List<AncestorType> FindObjectsFromLanguageForm<AncestorType, MultiTextType>(IRecordListManager recordManager, string match)
+//            where AncestorType : class
+//            where MultiTextType : MultiText
+//        {
+//            if (recordManager is Db4oRecordListManager)
+//            {
+//                return FindObjectsFromLanguageForm<AncestorType, MultiTextType>(recordManager, match);
+//            }
+//            else
+//            {
+//                //                foreach (MultiTextType m in recordManager.GetListOfType<MultiTextType>() )
+//                //                {
+//                //
+//                //                }
+//                throw new NotImplementedException("this search is not available for non-db4o sources");
+//            }
+//        }
+
+		public static List<AncestorType> FindObjectsFromLanguageForm<AncestorType, MultiTextType>(IRecordListManager recordManager, string match)
+			where AncestorType : class, new()
 			where MultiTextType : MultiText
 		{
-			if (recordManager is Db4oRecordListManager)
+			Db4oDataSource db = ((Db4oRecordListManager)recordManager).DataSource;
+
+			List<AncestorType> disconnectedGuys = FindDisconnectedObjectsFromLanguageForm<AncestorType, MultiTextType>(db, match);
+
+			//ok, so those objects are going to be the same .net objects that our recordmanager handles.
+			//So now we look up each on in the record manager and grab the equivalent there.
+			// This is REALLY important to understand.  If you get an existing guy by querying db4o
+			// directly, then make a change, that change WILL NOT be visible elsewhere in the program
+			// and WILL NOT be saved. Repent!
+			List<AncestorType> connectedGuys = new List<AncestorType>();
+			foreach (AncestorType guy in disconnectedGuys)
 			{
-				return FindObjectsFromLanguageForm<AncestorType, MultiTextType>(((Db4oRecordListManager)recordManager).DataSource, match);
+				connectedGuys.Add( GetManagedObjectFromRawDb4oObject<AncestorType>(recordManager, guy));
 			}
-			else
-			{
-				//                foreach (MultiTextType m in recordManager.GetListOfType<MultiTextType>() )
-				//                {
-				//
-				//                }
-				throw new NotImplementedException("this search is not available for non-db4o sources");
-			}
+			return connectedGuys;
 		}
 
-		public static List<AncestorType> FindObjectsFromLanguageForm<AncestorType, MultiTextType>(Db4oDataSource db, string match)
-			where AncestorType : class
+		internal static List<AncestorType> FindDisconnectedObjectsFromLanguageForm<AncestorType, MultiTextType>(Db4oDataSource db, string match)
+			where AncestorType : class, new()
 			where MultiTextType : MultiText
 		{
 			Db4objects.Db4o.Query.IQuery q = db.Data.Query();
@@ -119,7 +140,8 @@ namespace WeSay.LexicalModel.Db4o_Specific
 			}
 			else
 			{
-				LexEntry entry = GetConnectedEntry(recordManager, entriesWithSameForm[0]);
+				LexEntry entry = entriesWithSameForm[0];// GetConnectedEntry(recordManager, entriesWithSameForm[0]);
+
 				foreach (LexSense s in entry.Senses)
 				{
 					if (sense.Gloss.Forms.Length > 0)
@@ -144,8 +166,15 @@ namespace WeSay.LexicalModel.Db4o_Specific
 		/// </summary>
 		private static LexEntry GetConnectedEntry(IRecordListManager recordManager, LexEntry entryFromRawQuery)
 		{
-			IRecordList<LexEntry> list = recordManager.GetListOfType<LexEntry>();
-			int index = list.GetIndexFromId(((Db4oRecordListManager)recordManager).DataSource.Data.Ext().GetID(entryFromRawQuery));
+//            IRecordList<LexEntry> list = recordManager.GetListOfType<LexEntry>();
+//            int index = list.GetIndexFromId(((Db4oRecordListManager)recordManager).DataSource.Data.Ext().GetID(entryFromRawQuery));
+//            return list[index];
+			return GetManagedObjectFromRawDb4oObject<LexEntry>(recordManager, entryFromRawQuery);
+		}
+		private static T GetManagedObjectFromRawDb4oObject<T>(IRecordListManager recordManager, T objectFromRawDb4oQuery) where T : class, new()
+		{
+			IRecordList<T> list = recordManager.GetListOfType<T>();
+			int index = list.GetIndexFromId(((Db4oRecordListManager)recordManager).DataSource.Data.Ext().GetID(objectFromRawDb4oQuery));
 			return list[index];
 		}
 

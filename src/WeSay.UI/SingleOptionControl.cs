@@ -46,6 +46,8 @@ namespace WeSay.UI
 		   //doesn't allow old, non-valid values to be shown (can't set the text):  ComboBoxStyle.DropDownList;
 			_control.AutoCompleteMode = AutoCompleteMode.Append;
 			_control.AutoCompleteSource = AutoCompleteSource.ListItems;
+			_control.Sorted = false;
+			_control.MaxDropDownItems = 100;
 			BuildBoxes(optionRef);
 		}
 
@@ -157,7 +159,7 @@ namespace WeSay.UI
 						new Option.OptionDisplayProxy(unspecifiedOption,
 													  _idOfPreferredWritingSystem));
 			}
-
+			_list.Options.Sort(CompareItems);
 			foreach (Option o in _list.Options)
 			{
 			   /* this won't work.  It doesn't give us a way to select which ws to display, as it will always
@@ -175,6 +177,22 @@ namespace WeSay.UI
 			_control.SelectedValueChanged += new EventHandler(OnSelectedValueChanged);
 //            _control.Validating += new System.ComponentModel.CancelEventHandler(_control_Validating);
 	   }
+
+		private  int CompareItems(Option a, Option b)
+		{
+			if(string.IsNullOrEmpty(a.Key )) //get the "unknown" at the top
+			{
+				return 1;
+			}
+			else if(string.IsNullOrEmpty(b.Key ))
+			{
+				return -1;
+			}
+			string x = a.Name.GetBestAlternative(_idOfPreferredWritingSystem);
+			string y = b.Name.GetBestAlternative(_idOfPreferredWritingSystem);
+
+			return String.Compare(x, y);
+		}
 
 		//void _control_Validating(object sender, System.ComponentModel.CancelEventArgs e)
 		//{

@@ -11,7 +11,7 @@ using WeSay.Project;
 
 namespace WeSay.LexicalTools
 {
-	public class GatherWordListTask : TaskBase
+	public class GatherWordListTask : WordGatheringTaskBase
 	{
 		private readonly string _wordListFileName;
 		private GatherWordListControl _gatherControl;
@@ -19,10 +19,7 @@ namespace WeSay.LexicalTools
 		private int _currentWordIndex = 0;
 		private ViewTemplate _viewTemplate;
 		private string _writingSystemIdForGlossingLanguage;
-		/// <summary>
-		/// Fires when the user navigates to a new word from the wordlist
-		/// </summary>
-		public event EventHandler UpdateSourceWord;
+	   // private bool _suspendNotificationOfNavigation=false;
 
 
 		public GatherWordListTask(IRecordListManager recordListManager,
@@ -31,7 +28,7 @@ namespace WeSay.LexicalTools
 								  string wordListFileName,
 								  string writingSystemIdForGlossingLanguage,
 								  ViewTemplate viewTemplate)
-			: base(label, description, false, recordListManager)
+			: base(label, description, false, recordListManager, viewTemplate)
 		{
 			if (wordListFileName == null)
 			{
@@ -39,7 +36,7 @@ namespace WeSay.LexicalTools
 			}
 			if (writingSystemIdForGlossingLanguage == null)
 			{
-				throw new ArgumentNullException("wordListWritingSystemId");
+				throw new ArgumentNullException("writingSystemIdForGlossingLanguage");
 			}
 			if (viewTemplate == null)
 			{
@@ -147,16 +144,16 @@ namespace WeSay.LexicalTools
 
 				//nb: (CurrentWordIndex == _words.Count) is used to mark the "all done" state:
 
-				if (this.UpdateSourceWord != null)
-				{
-					UpdateSourceWord.Invoke(this, null);
-				}
+//                if (!_suspendNotificationOfNavigation && UpdateSourceWord != null)
+//                {
+//                    UpdateSourceWord.Invoke(this, null);
+//                }
 			}
 		}
 
 		public override void Activate()
 		{
-			if (!Project.WeSayWordsProject.Project.WritingSystems.ContainsKey(_writingSystemIdForGlossingLanguage))
+			if (!WeSayWordsProject.Project.WritingSystems.ContainsKey(_writingSystemIdForGlossingLanguage))
 			{
 				Palaso.Reporting.ErrorReport.ReportNonFatalMessage("The writing system of the words in the word list will be used to add glosses.  Therefore, it needs to be in the list of writing systems for this project.  Either change the writing system that this task uses for the word list (currently '{0}') or add a writing system with this id to the project.", _writingSystemIdForGlossingLanguage);
 			}
@@ -211,11 +208,18 @@ namespace WeSay.LexicalTools
 
 		public void NavigateNext()
 		{
+		   // _suspendNotificationOfNavigation = true;
+
 			CurrentWordIndex++;
 			while (CanNavigateNext && GetMatchingRecords(CurrentWordAsMultiText).Count > 0)
 			{
 				++CurrentWordIndex;
 			}
+		  //  _suspendNotificationOfNavigation = false;
+//            if (UpdateSourceWord != null)
+//            {
+//                UpdateSourceWord.Invoke(this, null);
+//            }
 		}
 
 		public void NavigateFirstToShow()
@@ -231,7 +235,7 @@ namespace WeSay.LexicalTools
 
 		public IList<LexEntry> GetMatchingRecords(MultiText gloss)
 		{
-			return Db4oLexQueryHelper.FindObjectsFromLanguageForm<LexEntry, SenseGlossMultiText>(this.RecordListManager, gloss.GetFirstAlternative());
+			return Db4oLexQueryHelper.FindObjectsFromLanguageForm<LexEntry, SenseGlossMultiText>(RecordListManager, gloss.GetFirstAlternative());
 		}
 
 		/// <summary>
@@ -264,11 +268,11 @@ namespace WeSay.LexicalTools
 						{
 							sense.Gloss.SetAlternative(_writingSystemIdForGlossingLanguage, null);
 							sense.Gloss.RemoveEmptyStuff();
-						}
-						if(!sense.IsEmptyForPurposesOfDeletion)
-						{
-							//it had other stuff in it, so repent!
-							sense.Gloss.SetAlternative(_writingSystemIdForGlossingLanguage, CurrentListWord);
+							if (!sense.IsEmptyForPurposesOfDeletion)
+							{
+								//removing the gloss didn't make it empty. So repent of removing the gloss.
+								sense.Gloss.SetAlternative(_writingSystemIdForGlossingLanguage, CurrentListWord);
+							}
 						}
 					}
 				}
@@ -286,5 +290,7 @@ namespace WeSay.LexicalTools
 		{
 			get { return _words[_currentWordIndex]; }
 		}
+
+
 	}
 }

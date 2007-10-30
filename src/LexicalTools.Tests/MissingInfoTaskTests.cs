@@ -8,7 +8,7 @@ using NUnit.Framework;
 namespace WeSay.LexicalTools.Tests
 {
 	[TestFixture]
-	public class LexFieldTaskTests : TaskBaseTests
+	public class MissingInfoTaskTests : TaskBaseTests
 	{
 
 		IRecordListManager _recordListManager;
@@ -209,6 +209,21 @@ namespace WeSay.LexicalTools.Tests
 			MissingInfoTask task = new MissingInfoTask(_recordListManager, _filter, _label, _description, viewTemplate, "Dummy");
 			Assert.AreEqual(true, task.ViewTemplate.Contains("Dummy"));
 			Assert.AreEqual(false, task.ViewTemplate.Contains("PrefixDummy"));
+		}
+
+
+		[Test] //Greg's WS-375
+		public void FieldsToShow_RequiredFields_ShownEvenIfDisabledInDefaultTemplate()
+		{
+			ViewTemplate viewTemplate = new ViewTemplate();
+			string[] writingSystemIds = new string[] { "en" };
+			Field field = new Field("Dummy", "LexSense", writingSystemIds);
+			field.Enabled = false;
+			viewTemplate.Add(field);
+			viewTemplate.Add(new Field("PrefixDummy", "LexSense", writingSystemIds));
+
+			MissingInfoTask task = new MissingInfoTask(_recordListManager, _filter, _label, _description, viewTemplate, "PrefixDummy Dummy");
+			Assert.AreEqual(true, task.ViewTemplate.Contains("Dummy"));
 		}
 
 	}

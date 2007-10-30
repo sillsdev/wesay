@@ -227,7 +227,7 @@ namespace WeSay.Foundation
 			}
 			else if (property is OptionRefCollection)
 			{
-				return true;
+				return ((OptionRefCollection) property).ShouldHoldUpDeletionOfParentObject;
 			}
 			else if (property is IReportEmptiness)
 			{

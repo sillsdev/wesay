@@ -82,7 +82,7 @@ namespace WeSay.LexicalTools
 		#endregion
 	}
 
-	public class GatherBySemanticDomainTask : TaskBase
+	public class GatherBySemanticDomainTask : WordGatheringTaskBase
 	{
 		private readonly string _semanticDomainQuestionsFileName;
 		private GatherBySemanticDomainsControl _gatherControl;
@@ -92,7 +92,6 @@ namespace WeSay.LexicalTools
 		private List<string> _words;
 		private CachedSortedDb4oList<string, LexEntry> _entries;
 
-		private readonly WritingSystem _lexicalFormWritingSystem;
 		private WritingSystem _semanticDomainWritingSystem;
 		private readonly Field _semanticDomainField;
 		private OptionsList _semanticDomainOptionsList;
@@ -106,7 +105,7 @@ namespace WeSay.LexicalTools
 										  string semanticDomainQuestionsFileName,
 										  ViewTemplate viewTemplate,
 										  string semanticDomainFieldName)
-				: base(label, description, false, recordListManager)
+				: base(label, description, false, recordListManager, viewTemplate)
 		{
 			if (semanticDomainQuestionsFileName == null)
 			{
@@ -115,16 +114,6 @@ namespace WeSay.LexicalTools
 			if (viewTemplate == null)
 			{
 				throw new ArgumentNullException("viewTemplate");
-			}
-
-			Field lexicalFormField = viewTemplate.GetField(Field.FieldNames.EntryLexicalForm.ToString());
-			if (lexicalFormField == null || lexicalFormField.WritingSystems.Count < 1)
-			{
-				_lexicalFormWritingSystem = BasilProject.Project.WritingSystems.UnknownVernacularWritingSystem;
-			}
-			else
-			{
-				_lexicalFormWritingSystem = lexicalFormField.WritingSystems[0];
 			}
 
 			_currentDomainIndex = -1;
@@ -415,23 +404,6 @@ namespace WeSay.LexicalTools
 			}
 		}
 
-		public string WordWritingSystemId
-		{
-			get
-			{
-				VerifyTaskActivated();
-				return _lexicalFormWritingSystem.Id;
-			}
-		}
-
-		public WritingSystem WordWritingSystem
-		{
-			get
-			{
-				VerifyTaskActivated();
-				return _lexicalFormWritingSystem;
-			}
-		}
 
 		public string SemanticDomainWritingSystemId
 		{
@@ -501,7 +473,7 @@ namespace WeSay.LexicalTools
 			RecordListManager.GoodTimeToCommit();
 		}
 
-		public void RemoveWord(string lexicalForm)
+		public void DetachFromMatchingEntries(string lexicalForm)
 		{
 			VerifyTaskActivated();
 
@@ -511,16 +483,15 @@ namespace WeSay.LexicalTools
 			}
 			if (lexicalForm != string.Empty)
 			{
-				List<LexEntry> entries = Lexicon.GetEntriesHavingLexicalForm(lexicalForm, WordWritingSystem);
-				foreach (LexEntry entry in entries)
+				// this task was coded to have a list of word-forms, not actual entries.
+				//so we have to go searching for possible matches at this point.
+				List<LexEntry> matchingEntries = Lexicon.GetEntriesHavingLexicalForm(lexicalForm, WordWritingSystem);
+				foreach (LexEntry entry in matchingEntries)
 				{
-					if (EntryHasLexicalFormAndSemanticDomainAsOnlyContent(entry))
+					DisassociateCurrentSemanticDomainFromEntry(entry); // might remove senses
+					if(entry.IsEmptyExceptForLexemeFormForPurposesOfDeletion)
 					{
-						_entries.Remove(entry);
-					}
-					else
-					{
-						DisassociateCurrentSemanticDomainFromEntry(entry);
+						_entries.Remove(entry); // if there are no senses left, get rid of it
 					}
 				}
 			}
@@ -556,17 +527,7 @@ namespace WeSay.LexicalTools
 			{
 				LexSense sense = (LexSense) entry.Senses[0];
 
-				if (sense.ExampleSentences.Count != 0)
-				{
-					return false;
-				}
-
-				if (!sense.Gloss.Empty)
-				{
-					return false;
-				}
-
-				if (sense.Properties.Count > 1)
+				if (!sense.IsEmptyForPurposesOfDeletion)
 				{
 					return false;
 				}

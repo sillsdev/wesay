@@ -37,7 +37,7 @@ namespace WeSay.LexicalTools
 			System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("blah");
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GatherWordListControl));
 			this._instructionLabel = new System.Windows.Forms.Label();
-			this._listViewOfWordsMatchingCurrentItem = new System.Windows.Forms.ListView();
+			this._listViewOfWordsMatchingCurrentItem = new WeSayListBox();
 			this.label3 = new System.Windows.Forms.Label();
 			this._boxForeignWord = new System.Windows.Forms.TextBox();
 			this.panel1 = new System.Windows.Forms.Panel();
@@ -69,19 +69,18 @@ namespace WeSay.LexicalTools
 						| System.Windows.Forms.AnchorStyles.Left)
 						| System.Windows.Forms.AnchorStyles.Right)));
 			this._listViewOfWordsMatchingCurrentItem.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this._listViewOfWordsMatchingCurrentItem.ItemHeight = 20;
 			this._listViewOfWordsMatchingCurrentItem.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
 			listViewItem1,
 			listViewItem2});
 			this._listViewOfWordsMatchingCurrentItem.Location = new System.Drawing.Point(11, 169);
 			this._listViewOfWordsMatchingCurrentItem.MinimumSize = new System.Drawing.Size(315, 84);
-			this._listViewOfWordsMatchingCurrentItem.MultiSelect = false;
+			this._listViewOfWordsMatchingCurrentItem.MultiColumn = true;
 			this._listViewOfWordsMatchingCurrentItem.Name = "_listViewOfWordsMatchingCurrentItem";
 			this._listViewOfWordsMatchingCurrentItem.Size = new System.Drawing.Size(315, 126);
 			this._listViewOfWordsMatchingCurrentItem.TabIndex = 4;
 			this._listViewOfWordsMatchingCurrentItem.TabStop = false;
-			this._listViewOfWordsMatchingCurrentItem.UseCompatibleStateImageBehavior = false;
-			this._listViewOfWordsMatchingCurrentItem.View = System.Windows.Forms.View.List;
-			this._listViewOfWordsMatchingCurrentItem.Click += new System.EventHandler(this._listViewOfWordsMatchingCurrentItem_Click);
+			this._listViewOfWordsMatchingCurrentItem.Click += new System.EventHandler(this.OnListViewOfWordsMatchingCurrentItem_Click);
 			//
 			// label3
 			//
@@ -252,7 +251,7 @@ namespace WeSay.LexicalTools
 		private NextButton _btnNextWord;
 		private PreviousButton _btnPreviousWord;
 	  private System.Windows.Forms.Label _instructionLabel;
-		private System.Windows.Forms.ListView _listViewOfWordsMatchingCurrentItem;
+		private WeSayListBox _listViewOfWordsMatchingCurrentItem;
 		private System.Windows.Forms.Label label3;
 		private System.Windows.Forms.TextBox _boxForeignWord;
 		private System.Windows.Forms.Panel panel1;

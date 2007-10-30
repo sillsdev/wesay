@@ -35,4 +35,5 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyFileVersion("1.0.0.0")]
 
 [assembly: System.CLSCompliant(true)]
+[assembly: InternalsVisibleTo("LexicalModel.Tests")]
 [assembly: System.Security.Permissions.SecurityPermission(System.Security.Permissions.SecurityAction.RequestMinimum, Execution = true)]

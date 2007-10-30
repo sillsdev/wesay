@@ -229,6 +229,11 @@ namespace WeSay.LexicalTools.Tests
 			word[VernWs.Id] = "uno";
 			Task.WordCollected(word);
 			Assert.AreEqual(1, _recordListManager.GetListOfType<LexEntry>().Count);
+
+		   //this is an attempt to get a failure that I was able to get at one time in the
+			//app itself, but which I haven't got to fail under tests.  I believe I've
+			//fixed the bug, but alas this never really demonstrated it.
+			Assert.AreEqual(1, Task.GetMatchingRecords(Task.CurrentWordAsMultiText).Count);
 		}
 
 		[Test]

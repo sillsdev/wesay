@@ -2,6 +2,7 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 using WeSay.Language;
+using WeSay.UI;
 using WeSay.UI.Animation;
 
 namespace WeSay.LexicalTools
@@ -9,7 +10,8 @@ namespace WeSay.LexicalTools
 	public partial class GatherBySemanticDomainsControl : UserControl
 	{
 		private GatherBySemanticDomainTask _presentationModel;
-		private Animator _animator;
+		private bool _animationIsMovingFromList;
+		private MovingLabel _movingLabel;
 
 
 		public GatherBySemanticDomainsControl()
@@ -30,8 +32,6 @@ namespace WeSay.LexicalTools
 			{
 				SetAutoSizeToGrowAndShrink();
 			}
-
-			InitializeAnimator();
 
 			InitializeDisplaySettings();
 			RefreshCurrentWords();
@@ -62,22 +62,15 @@ namespace WeSay.LexicalTools
 			}
 			_vernacularBox.WritingSystemsForThisField = new WritingSystem[] {_presentationModel.WordWritingSystem};
 		  _listViewWords.WritingSystem = _presentationModel.WordWritingSystem;
-		  _animatedText.Font = _presentationModel.WordWritingSystem.Font;
+		//  _listViewWords.ItemHeight = (int)Math.Ceiling(_presentationModel.WordWritingSystem.Font.GetHeight());
+
+	  //    _animatedText.Font = _presentationModel.WordWritingSystem.Font;
+
+		  _movingLabel = new MovingLabel(this, _vernacularBox.TextBoxes[0].Font);// _listViewOfWordsMatchingCurrentItem.Font);
+		  _movingLabel.Finished += new EventHandler(_animator_Finished);
+
 		}
 
-		private void InitializeAnimator()
-		{
-			this._animator = new Animator();
-			CubicBezierCurve c = new CubicBezierCurve(new PointF(0, 0),
-													  new PointF(0.5f, 0f), new PointF(.5f, 1f), new PointF(1, 1));
-			this._animator.PointFromDistanceFunction = c.GetPointOnCurve;
-
-			this._animator.Duration = 750;
-			this._animator.FrameRate = 30;
-			this._animator.SpeedFunction = Animator.SpeedFunctions.SinSpeed;
-			this._animator.Animate += new Animator.AnimateEventDelegate(_animator_Animate);
-			this._animator.Finished += new EventHandler(_animator_Finished);
-		}
 
 		private void InitializeDisplaySettings() {
 			BackColor = WeSay.UI.DisplaySettings.Default.BackgroundColor;
@@ -199,34 +192,28 @@ namespace WeSay.LexicalTools
 			if(_listViewWords.SelectedItem != null)
 			{
 				string word = (string) _listViewWords.SelectedItem;
-				_presentationModel.RemoveWord(word);
+						// NB: don't do this before storing what they clicked on.
 
-				this.destination = this._vernacularBox.Location;
-				this.destination.X += this._vernacularBox.TextBoxes[0].Location.X;
-				this.destination.Y += this._vernacularBox.TextBoxes[0].Location.Y;
-				this.start = this._listViewWords.GetItemRectangle(_listViewWords.SelectedIndex).Location;
-				this.start.X += this._listViewWords.Location.X;
-				this.start.Y += this._listViewWords.Location.Y;
+				string wordCurrentlyInTheEditBox = WordToAdd;
+				if (!String.IsNullOrEmpty(wordCurrentlyInTheEditBox))
+				{
+					_presentationModel.AddWord(wordCurrentlyInTheEditBox);//don't throw away what they were typing
+				}
 
-				_animatedText.Text = (string) this._listViewWords.SelectedItem;
-				_animatedText.Location = start;
-				_animatedText.Visible = true;
+				_presentationModel.DetachFromMatchingEntries(word);
+
+				Point destination = this._vernacularBox.Location;
+				destination.Offset(this._vernacularBox.TextBoxes[0].Location);
+				Point start = this._listViewWords.GetItemRectangle(_listViewWords.SelectedIndex).Location;
+				start.Offset(this._listViewWords.Location);
 
 				RefreshCurrentWords();
-			  _addingWordAnimation = false;
-				this._animator.Start();
+				_animationIsMovingFromList = false;
+
+				_movingLabel.Go(word, start,destination);
 			}
 		}
 
-		private Point destination;
-		private Point start;
-	  private bool _addingWordAnimation;
-
-	  void _animator_Animate(object sender, Animator.AnimatorEventArgs e)
-	  {
-		this._animatedText.Location = new Point(Animator.GetValue(e.Point.X, start.X, destination.X),
-												Animator.GetValue(e.Point.Y, start.Y, destination.Y));
-	  }
 
 	  private void _btnAddWord_Click(object sender, EventArgs e)
 	  {
@@ -237,22 +224,21 @@ namespace WeSay.LexicalTools
 		  }
 		  _presentationModel.AddWord(word);
 		_vernacularBox.ClearAllText();
+
+		  _listViewWords.ItemToNotDrawYet = word;
 		RefreshCurrentWords();
 
 		int index = _listViewWords.FindStringExact(word);
-		this.destination = this._listViewWords.GetItemRectangle(index).Location;
-		this.destination.X += this._listViewWords.Location.X;
-		this.destination.Y += this._listViewWords.Location.Y;
-		this.start = this._vernacularBox.Location;
-		this.start.X += this._vernacularBox.TextBoxes[0].Location.X;
-		this.start.Y += this._vernacularBox.TextBoxes[0].Location.Y;
 
-		this._animatedText.Text = word;
-		_animatedText.Font = this._vernacularBox.TextBoxes[0].Font;
-		_animatedText.Location = start;
-		_animatedText.Visible = true;
-		_addingWordAnimation = true;
-		this._animator.Start();
+		Point start = this._vernacularBox.Location;
+		start.Offset(this._vernacularBox.TextBoxes[0].Location);
+		Point destination = this._listViewWords.GetItemRectangle(index).Location;
+		destination.Offset(this._listViewWords.Location);
+
+		this._movingLabel.Text = word;
+		_animationIsMovingFromList = true;
+
+		_movingLabel.Go(word,start,destination);
 	  }
 
 		private string WordToAdd
@@ -264,14 +250,14 @@ namespace WeSay.LexicalTools
 		}
 
 		void _animator_Finished(object sender, EventArgs e)
-	  {
-		_animatedText.Visible = false;
-		_animator.Reset();
-		if (!_addingWordAnimation)
 		{
-		  _vernacularBox.TextBoxes[0].Text = _animatedText.Text;
+			if (!_animationIsMovingFromList)
+			{
+				_vernacularBox.TextBoxes[0].Text = _movingLabel.Text;
+			}
+
+			_listViewWords.ItemToNotDrawYet = null;
 		}
-	  }
 
 
 		void _domainName_DrawItem(object sender, DrawItemEventArgs e)

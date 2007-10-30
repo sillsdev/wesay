@@ -148,7 +148,16 @@ namespace WeSay.LexicalTools
 			{
 				if(Array.IndexOf(fields, field.FieldName) >= 0)
 				{
-					viewTemplate.Add(field);
+					if (field.Enabled == false)//make sure specified fields are shown (greg's ws-356)
+					{
+						Field enabledField = new Field(field);
+						enabledField.Enabled = true;
+						viewTemplate.Add(enabledField);
+					}
+					else
+					{
+						viewTemplate.Add(field);
+					}
 				}
 			}
 			return viewTemplate;
@@ -233,7 +242,10 @@ namespace WeSay.LexicalTools
 
 		public ViewTemplate ViewTemplate
 		{
-			get { return this._viewTemplate; }
+			get
+			{
+				return _viewTemplate;
+			}
 		}
 	}
 }

@@ -107,6 +107,9 @@
 	</Compile>
 	<Compile Include="Keyman.cs" />
 	<Compile Include="Keyman7.cs" />
+	<Compile Include="MovingLabel.cs">
+	  <SubType>Component</SubType>
+	</Compile>
 	<Compile Include="PictureControl.cs">
 	  <SubType>UserControl</SubType>
 	</Compile>

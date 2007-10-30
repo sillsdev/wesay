@@ -95,6 +95,7 @@
 	<Compile Include="RelationController.cs" />
 	<Compile Include="RtfRenderer.cs" />
 	<Compile Include="TaskBase.cs" />
+	<Compile Include="WordGatheringTaskBase.cs" />
   </ItemGroup>
   <ItemGroup>
 	<ProjectReference Include="..\LexicalModel\LexicalModel.csproj">

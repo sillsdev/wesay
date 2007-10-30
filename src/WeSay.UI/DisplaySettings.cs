@@ -84,7 +84,7 @@ namespace WeSay.UI
 			{
 				BackgroundColor = Color.FromArgb(235, 255, 215);
 				CurrentIndicatorColor = Color.FromArgb(((int)(((byte)(242)))), ((int)(((byte)(253)))), ((int)(((byte)(219)))));
-				_wsLabelColor = Color.LightGray;
+				_wsLabelColor = Color.Gray;
 
 			}
 		}

@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel;
+using System.Drawing;
 using System.Windows.Forms;
 using WeSay.Language;
 
@@ -8,10 +9,41 @@ namespace WeSay.UI
 	public partial class WeSayListBox : ListBox
 	{
 		private WritingSystem _writingSystem;
+		private object _itemToNotDrawYet=null;
 
 		public WeSayListBox()
 		{
 			InitializeComponent();
+			// Set the DrawMode property to draw fixed sized items.
+			this.DrawMode = DrawMode.OwnerDrawFixed;
+
+			this.DrawItem += new DrawItemEventHandler(WeSayListBox_DrawItem);
+		}
+
+		void WeSayListBox_DrawItem(object sender, DrawItemEventArgs e)
+		{
+		   //surprisingly, this *is* called with bogus values, by the system
+			if(e.Index <0 || e.Index >= this.Items.Count)
+				return;
+
+			if (Items[e.Index] == _itemToNotDrawYet)
+			{
+				return;
+			}
+			// Draw the background of the ListBox control for each item.
+		   e.DrawBackground();
+		   // Define the default color of the brush as black.
+		   Brush myBrush = Brushes.Black;
+
+			// Draw the current item text based on the current Font and the custom brush settings.
+		   e.Graphics.DrawString(this.Items[e.Index].ToString(), e.Font, myBrush,e.Bounds,StringFormat.GenericDefault);
+		   // If the ListBox has focus, draw a focus rectangle around the selected item.
+		   e.DrawFocusRectangle();
+		}
+
+		protected override void OnPaint(PaintEventArgs e)
+		{
+		//    base.OnPaint(e);
 		}
 
 		[Browsable(false)]
@@ -34,6 +66,7 @@ namespace WeSay.UI
 				}
 				_writingSystem = value;
 				Font = value.Font;
+				ItemHeight = (int)(Math.Ceiling(value.Font.GetHeight()));
 				if (value.RightToLeft)
 				{
 					RightToLeft = RightToLeft.Yes;
@@ -45,5 +78,11 @@ namespace WeSay.UI
 			}
 		}
 
+		//used when animating additions to the list
+		public object ItemToNotDrawYet
+		{
+			get { return _itemToNotDrawYet; }
+			set { _itemToNotDrawYet = value; }
+		}
 	}
 }

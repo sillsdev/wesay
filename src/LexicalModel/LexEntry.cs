@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
+using Db4objects.Db4o;
 using WeSay.Data;
 using WeSay.Foundation;
 using WeSay.LexicalModel.Db4o_Specific;
@@ -298,10 +299,18 @@ namespace WeSay.LexicalModel
 		}
 
 
+		/// <summary>
+		/// checks if it looks like the user has added info. this is used when changing spelling
+		/// in a word-gathering task
+		/// </summary>
 		public bool IsEmptyExceptForLexemeFormForPurposesOfDeletion
 		{
 			get
 			{
+				if(LexicalForm.Count > 1)
+				{
+					return false;
+				}
 				foreach (LexSense sense in _senses)
 				{
 					if(!sense.IsEmptyForPurposesOfDeletion )

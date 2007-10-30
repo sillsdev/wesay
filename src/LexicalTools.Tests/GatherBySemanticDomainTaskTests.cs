@@ -423,7 +423,7 @@ namespace WeSay.LexicalTools.Tests
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void RemoveWord_null_Throws()
 		{
-			Task.RemoveWord(null);
+			Task.DetachFromMatchingEntries(null);
 		}
 
 		[Test]
@@ -438,7 +438,7 @@ namespace WeSay.LexicalTools.Tests
 			int originalCount = recordList.Count;
 
 			Task.CurrentDomainIndex = 0;
-			Task.RemoveWord("peixe");
+			Task.DetachFromMatchingEntries("peixe");
 
 			Assert.AreEqual(originalCount - 1, recordList.Count);
 		}
@@ -451,7 +451,7 @@ namespace WeSay.LexicalTools.Tests
 			AddEntryToRecordList(recordList, "raposa", "fox");
 			AddEntryToRecordList(recordList, "cachorro", "dog");
 
-			Task.RemoveWord("raposa");
+			Task.DetachFromMatchingEntries("raposa");
 			Assert.IsFalse(Task.CurrentWords.Contains("raposa"));
 			Assert.AreEqual(3, recordList.Count);
 		}
@@ -465,7 +465,7 @@ namespace WeSay.LexicalTools.Tests
 			AddSenseToEntry(e, "special");
 			AddEntryToRecordList(recordList, "cachorro", "dog");
 
-			Task.RemoveWord("raposa");
+			Task.DetachFromMatchingEntries("raposa");
 			Assert.IsFalse(Task.CurrentWords.Contains("raposa"));
 			Assert.AreEqual(2, Task.CurrentWords.Count);
 		}
@@ -484,7 +484,7 @@ namespace WeSay.LexicalTools.Tests
 			int originalCount = recordList.Count;
 
 			Task.CurrentDomainIndex = 0;
-			Task.RemoveWord("peixe");
+			Task.DetachFromMatchingEntries("peixe");
 
 			Assert.AreEqual(originalCount, recordList.Count);
 		}
@@ -503,7 +503,7 @@ namespace WeSay.LexicalTools.Tests
 			int originalCount = recordList.Count;
 
 			Task.CurrentDomainIndex = 0;
-			Task.RemoveWord("peixe");
+			Task.DetachFromMatchingEntries("peixe");
 
 			Assert.AreEqual(originalCount, recordList.Count);
 			Assert.AreEqual(1, e.Senses.Count);
@@ -522,7 +522,7 @@ namespace WeSay.LexicalTools.Tests
 			int originalCount = recordList.Count;
 
 			Task.CurrentDomainIndex = 0;
-			Task.RemoveWord("peixe");
+			Task.DetachFromMatchingEntries("peixe");
 
 			Assert.AreEqual(originalCount, recordList.Count);
 		}
@@ -533,8 +533,8 @@ namespace WeSay.LexicalTools.Tests
 			IRecordList<LexEntry> recordList = _recordListManager.GetListOfType<LexEntry>();
 			LexEntry e = (LexEntry)recordList.AddNew();
 			e.LexicalForm.SetAlternative("br", "peixe");
-			OptionRef optionRef = e.GetOrCreateProperty<OptionRef>("custom");
-			optionRef.Value = "hello";
+			MultiText mt = e.GetOrCreateProperty<MultiText>("custom");
+			mt["en"] = "hello";
 
 			LexSense s = (LexSense)e.Senses.AddNew();
 			OptionRefCollection o = s.GetOrCreateProperty<OptionRefCollection>("SemanticDomain");
@@ -542,7 +542,7 @@ namespace WeSay.LexicalTools.Tests
 			int originalCount = recordList.Count;
 
 			Task.CurrentDomainIndex = 0;
-			Task.RemoveWord("peixe");
+			Task.DetachFromMatchingEntries("peixe");
 
 			Assert.AreEqual(originalCount, recordList.Count);
 		}
@@ -557,13 +557,13 @@ namespace WeSay.LexicalTools.Tests
 			OptionRefCollection o = s.GetOrCreateProperty<OptionRefCollection>("SemanticDomain");
 			o.Add(Task.DomainKeys[0]);
 
-			OptionRef optionRef = s.GetOrCreateProperty<OptionRef>("custom");
-			optionRef.Value = "hello";
+			MultiText mt = e.GetOrCreateProperty<MultiText>("custom");
+			mt["en"] = "hello";
 
 			int originalCount = recordList.Count;
 
 			Task.CurrentDomainIndex = 0;
-			Task.RemoveWord("peixe");
+			Task.DetachFromMatchingEntries("peixe");
 
 			Assert.AreEqual(originalCount, recordList.Count);
 		}
@@ -575,13 +575,13 @@ namespace WeSay.LexicalTools.Tests
 			LexEntry e = (LexEntry)recordList.AddNew();
 			e.LexicalForm.SetAlternative("br", "peixe");
 			LexSense s = (LexSense)e.Senses.AddNew();
-			OptionRef optionRef = s.GetOrCreateProperty<OptionRef>("custom");
-			optionRef.Value = "hello";
+			MultiText mt = e.GetOrCreateProperty<MultiText>("custom");
+			mt["en"] = "hello";
 
 			int originalCount = recordList.Count;
 
 			Task.CurrentDomainIndex = 0;
-			Task.RemoveWord("peixe");
+			Task.DetachFromMatchingEntries("peixe");
 
 			Assert.AreEqual(originalCount, recordList.Count);
 		}
@@ -603,7 +603,7 @@ namespace WeSay.LexicalTools.Tests
 			int originalCount = recordList.Count;
 
 			Task.CurrentDomainIndex = 0;
-			Task.RemoveWord("peixe");
+			Task.DetachFromMatchingEntries("peixe");
 
 			Assert.AreEqual(originalCount, recordList.Count);
 		}
@@ -620,7 +620,7 @@ namespace WeSay.LexicalTools.Tests
 			int originalCount = recordList.Count;
 
 			Task.CurrentDomainIndex = 0;
-			Task.RemoveWord("peshi");
+			Task.DetachFromMatchingEntries("peshi");
 
 			Assert.AreEqual(originalCount, recordList.Count);
 		}

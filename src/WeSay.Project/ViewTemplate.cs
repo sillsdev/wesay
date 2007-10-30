@@ -149,27 +149,36 @@ namespace WeSay.Project
 				Field userField = usersTemplate.GetField(masterField.FieldName);
 				if (userField != null)
 				{
-					//why do that???   Field.ModifyMasterFromUser(masterField, userField);
-					//allow us to improve the descriptions
+					 //allow us to improve the descriptions
 					userField.Description = masterField.Description;
 				}
 				else
 				{
-					masterField.Enabled = false;
-					//masterField.Visibility = CommonEnumerations.VisibilitySetting.Invisible;
-							//let them turn it on if they want
+					masterField.Enabled = false; //let them turn it on if they want
 					usersTemplate.Fields.Add(masterField);
 				}
 			}
-			//add custom fields (or out of date fields <--todo!)
-//            foreach (Field userField in usersTemplate)
-//            {
-//                Field masterField = factoryTemplate.GetField(userField.FieldName);
-//                if (masterField == null)
-//                {
-//                    factoryTemplate.Add(userField);
-//                }
-//            }
+
+			//pre-nov2007 (png alpha release) projects had Note.
+			//then, when we fixed it to "note", they had two note fields!
+			//this is to clean up the mess.
+			RemoveByFieldName(usersTemplate, "Note");
+		}
+
+		private static void RemoveByFieldName(ViewTemplate usersTemplate, string fielName)
+		{
+			List<Field> condemned = new List<Field>();
+			foreach (Field field in usersTemplate)
+			{
+				if (field.FieldName == fielName) //keep the case!
+				{
+					condemned.Add(field);
+				}
+			}
+			foreach (Field field in condemned)
+			{
+				usersTemplate.Remove(field);
+			}
 		}
 
 		public static ViewTemplate MakeMasterTemplate(WritingSystemCollection writingSystems)

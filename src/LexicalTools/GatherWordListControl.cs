@@ -1,15 +1,23 @@
 using System;
 using System.Diagnostics;
+using System.Drawing;
 using System.Windows.Forms;
+using WeSay.Foundation;
 using WeSay.Language;
 using WeSay.LexicalModel;
 using WeSay.Project;
+using WeSay.UI;
+
 
 namespace WeSay.LexicalTools
 {
 	public partial class GatherWordListControl : UserControl
 	{
 		private readonly GatherWordListTask _task;
+
+		//private System.Windows.Forms.Label _animatedText= new Label();
+		private bool _animationIsMovingFromList;
+		private MovingLabel _movingLabel;
 
 		public GatherWordListControl()
 		{
@@ -21,7 +29,6 @@ namespace WeSay.LexicalTools
 									 ViewTemplate viewTemplate)
 		{
 			_task = task;
-			_task.UpdateSourceWord += new EventHandler(OnUpdateSourceWord);
 
 			InitializeComponent();
 			InitializeDisplaySettings();
@@ -41,11 +48,17 @@ namespace WeSay.LexicalTools
 			{
 				_vernacularBox.WritingSystemsForThisField = new WritingSystem[] { lexicalFormField.WritingSystems[0] };
 			}
-//            _vernacularBox.BackColor = System.Drawing.Color.Red;
 			_vernacularBox.TextChanged += new EventHandler(_vernacularBox_TextChanged);
 			_vernacularBox.KeyDown += new KeyEventHandler(_boxVernacularWord_KeyDown);
 			_vernacularBox.MinimumSize = this._boxForeignWord.Size;
+
+			_listViewOfWordsMatchingCurrentItem.WritingSystem = _task.WordWritingSystem;
+		  //  _listViewOfWordsMatchingCurrentItem.ItemHeight = (int)Math.Ceiling(_task.WordWritingSystem.Font.GetHeight());
+
 			UpdateStuff();
+
+			_movingLabel = new MovingLabel(this, _vernacularBox.TextBoxes[0].Font);// _listViewOfWordsMatchingCurrentItem.Font);
+			_movingLabel.Finished += new EventHandler(OnAnimator_Finished);
 		}
 
 		private void InitializeDisplaySettings()
@@ -54,7 +67,17 @@ namespace WeSay.LexicalTools
 		}
 
 
-		void OnUpdateSourceWord(object sender, EventArgs e)
+		private void OnAnimator_Finished(object sender, EventArgs e)
+		{
+			if (_animationIsMovingFromList)
+			{
+				_vernacularBox.TextBoxes[0].Text = _movingLabel.Text;
+			}
+			_vernacularBox.TextBoxes[0].Focus();
+			_vernacularBox.TextBoxes[0].SelectionStart = 1000; //go to end
+		}
+
+		void UpdateSourceWord()
 		{
 			UpdateStuff();
 			_vernacularBox.ClearAllText();
@@ -69,6 +92,7 @@ namespace WeSay.LexicalTools
 		private void GatherWordListControl_Load(object sender, EventArgs e)
 		{
 			_task.NavigateFirstToShow();
+			UpdateSourceWord();
 		}
 
 		private void UpdateStuff()
@@ -105,26 +129,42 @@ namespace WeSay.LexicalTools
 		/// </summary>
 		private void PopulateWordsMatchingCurrentItem()
 		{
+			TraceAbdomen();
 			_listViewOfWordsMatchingCurrentItem.Items.Clear();
 
 			foreach (LexEntry entry in _task.GetMatchingRecords(_task.CurrentWordAsMultiText))
 			{
-				string alternative = entry.LexicalForm.GetFirstAlternative();
-				ListViewItem item = new ListViewItem(alternative);
-				item.Tag = entry;
-				_listViewOfWordsMatchingCurrentItem.Items.Add(item);
+				//string alternative = entry.LexicalForm.GetFirstAlternative();
+			   // ListViewItem item = new ListViewItem(alternative);
+				//item.Tag = entry;
+				_listViewOfWordsMatchingCurrentItem.Items.Add(new EntryDisplayProxy(entry, _task.WordWritingSystem.Id));
 			}
+		}
+
+		private void TraceAbdomen()
+		{
+			MultiText m = new MultiText();
+			m.SetAlternative(_task.WordWritingSystem.Id, "abdomen");
+
+
+			foreach (LexEntry entry in _task.GetMatchingRecords(m))
+			{
+				Debug.WriteLine(entry.LexicalForm.GetFirstAlternative());
+			}
+			Debug.WriteLine("");
 		}
 
 		private void _btnNextWord_Click(object sender, EventArgs e)
 		{
 			AddCurrentWord();//don't throw away what they were typing
 			_task.NavigateNext();
+			UpdateSourceWord();
 		}
 		private void _btnPreviousWord_Click(object sender, EventArgs e)
 		{
 			AddCurrentWord();//don't throw away what they were typing
 			_task.NavigatePrevious();
+			UpdateSourceWord();
 		}
 
 
@@ -147,6 +187,8 @@ namespace WeSay.LexicalTools
 			//_listViewOfWordsMatchingCurrentItem.Items.Add(s);
 			_vernacularBox.TextBoxes[0].Text = "";
 			UpdateStuff();
+			_vernacularBox.TextBoxes[0].Focus();
+
 		}
 
 		private void _boxVernacularWord_KeyDown(object sender, KeyEventArgs e)
@@ -200,40 +242,39 @@ namespace WeSay.LexicalTools
 #endif
 		}
 
-		private void _listViewOfWordsMatchingCurrentItem_Click(object sender, EventArgs e)
+		private void OnListViewOfWordsMatchingCurrentItem_Click(object sender, EventArgs e)
 		{
 			if (_listViewOfWordsMatchingCurrentItem.SelectedItems.Count > 0)
 			{
-
-				string word = _listViewOfWordsMatchingCurrentItem.SelectedItems[0].Text;
-				LexEntry entry = _listViewOfWordsMatchingCurrentItem.SelectedItems[0].Tag as LexEntry;
+				int selectedListIndex = _listViewOfWordsMatchingCurrentItem.SelectedIndices[0];
+				string word = _listViewOfWordsMatchingCurrentItem.SelectedItem.ToString();
+				LexEntry entry = ((EntryDisplayProxy)_listViewOfWordsMatchingCurrentItem.SelectedItem).Entry;
 				Debug.Assert(entry!=null);
+#pragma warning disable ConditionIsAlwaysTrueOrFalse
 				if(entry==null)
+#pragma warning restore ConditionIsAlwaysTrueOrFalse
 				{
 					return;
 				}
+				Point start = _listViewOfWordsMatchingCurrentItem.GetItemRectangle(selectedListIndex).Location;
+				start.Offset(_listViewOfWordsMatchingCurrentItem.Location);
+				Point destination = _vernacularBox.Location;
+				destination.Offset(_vernacularBox.TextBoxes[0].Location);
 
 								 // NB: don't do this before storing what they clicked on.
 			   AddCurrentWord();//don't throw away what they were typing
 
 				_task.TryToRemoveAssociationWithListWordFromEntry(entry);
 
-//                this.destination = this._vernacularBox.Location;
-//                this.destination.X += this._vernacularBox.TextBoxes[0].Location.X;
-//                this.destination.Y += this._vernacularBox.TextBoxes[0].Location.Y;
-//                this.start = this._listViewOfWordsMatchingCurrentItem.GetItemRectangle(_listViewOfWordsMatchingCurrentItem.SelectedIndex).Location;
-//                this.start.X += this._listViewOfWordsMatchingCurrentItem.Location.X;
-//                this.start.Y += this._listViewOfWordsMatchingCurrentItem.Location.Y;
-//
-//                _animatedText.Text = (string)this._listViewWords.SelectedItem;
-//                _animatedText.Location = start;
-//                _animatedText.Visible = true;
-//
-				 UpdateStuff();
-				 _vernacularBox.TextBoxes[0].Text = word;
+			   // _movingLabel.Go(word,_listViewOfWordsMatchingCurrentItem.GetItemRect(selectedListIndex).Location, _vernacularBox.Location)
 
-//                _addingWordAnimation = false;
-//                this._animator.Start();
+				 UpdateStuff();
+				// _vernacularBox.TextBoxes[0].Text = word;
+
+				_animationIsMovingFromList = true;
+				_movingLabel.Go(word,
+								start,
+								destination);
 			}
 		}
 
