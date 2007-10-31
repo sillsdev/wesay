@@ -158,6 +158,15 @@ namespace WeSay.Project.Tests
 			Assert.IsTrue(usersTemplate.Contains("dummy"));
 		}
 
+		[Test]
+		public void ChangeWritingSystemId()
+		{
+			ViewTemplate viewTemplate = PopulateViewTemplate();
+			viewTemplate.Fields[0].WritingSystemIds.Contains("en");
+			viewTemplate.ChangeWritingSystemId("en", "x");
+			Assert.IsFalse(viewTemplate.Fields[0].WritingSystemIds.Contains("en"));
+			Assert.IsTrue(viewTemplate.Fields[0].WritingSystemIds.Contains("x"));
+		}
 	}
 
 }

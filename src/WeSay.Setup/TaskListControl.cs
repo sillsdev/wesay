@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Xml;
 using WeSay.Project;
@@ -67,23 +68,35 @@ namespace WeSay.Setup
 			writer.WriteEndElement();
 		}
 
+		void OnProject_WritingSystemChanged(object sender, WeSayWordsProject.StringPair pair)
+		{
+			Regex regex = new Regex( string.Format("wordListWritingSystemId>\\s*{0}\\s*<", pair.from), RegexOptions.Compiled);
+			if (_taskList != null)
+			{
+				foreach (TaskInfo t in _taskList.Items)
+				{
+					//this is a sad hack. It must have this detailed knowledge of what should be changed.
+					//When task xml is overhauled, we should use well-known attributes like "ws"
+					//so this can be done generically.
+					//Or better, if we have access to the task object itself, they could implement an
+					//IChangeWritingSystems interface.
+					t.Node.InnerXml =
+						regex.Replace(t.Node.InnerXml, string.Format("wordListWritingSystemId>{0}<", pair.to));
+				}
+			}
+		}
 
 		private void LoadInventory()
 		{
 			try
 			{
 				XmlDocument projectDoc = GetProjectDoc();
+//                projectDoc = new XmlDocument();
+//                projectDoc.Load(WeSayWordsProject.Project.PathToConfigFile);
 
-				//if there are no tasks, might as well be no document, so clear it out
-//                if (projectDoc != null && (null == projectDoc.SelectSingleNode("configuration/tasks/task")))
-//                {
-//                    projectDoc = null;
-//                }
-
-				if (projectDoc == null)
+				if(projectDoc ==null)
 				{
-					projectDoc = new XmlDocument();
-					projectDoc.Load(WeSayWordsProject.Project.PathToDefaultConfig);
+					Application.Exit();
 				}
 				_taskList.Items.Clear();
 				foreach (XmlNode node in projectDoc.SelectNodes("configuration/tasks/task"))
@@ -107,7 +120,7 @@ namespace WeSay.Setup
 						this._taskList.Items.Add(task, false);
 					}
 				}
-
+				WeSayWordsProject.Project.WritingSystemChanged += new EventHandler<WeSayWordsProject.StringPair>(OnProject_WritingSystemChanged);
 			}
 			catch (Exception error)
 			{
@@ -116,6 +129,7 @@ namespace WeSay.Setup
 								  WeSayWordsProject.Project.PathToDefaultConfig, error.Message));
 			}
 		}
+
 
 		private static XmlDocument GetProjectDoc()
 		{

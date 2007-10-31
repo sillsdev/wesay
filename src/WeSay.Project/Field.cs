@@ -506,6 +506,7 @@ namespace WeSay.Project
 		}
 
 		#endregion
+
 	}
 
 	internal class ParentClassConverter : WeSayStringConverter

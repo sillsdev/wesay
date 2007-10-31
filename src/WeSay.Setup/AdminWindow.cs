@@ -259,8 +259,9 @@ namespace WeSay.Setup
 		{
 			_projectSettingsControl = new SettingsControl();
 			Controls.Add(_projectSettingsControl);
-			_projectSettingsControl.BringToFront();
 			_projectSettingsControl.Dock = DockStyle.Fill;
+			_projectSettingsControl.BringToFront();
+			_projectSettingsControl.Focus();
 		}
 
 		private void RemoveExistingControls()

@@ -28,9 +28,18 @@ namespace WeSay.Project
 		private string _cacheLocationOverride;
 		private FileStream _liftFileStreamForLocking;
 		private LiftUpdateService _liftUpdateService;
-		public event EventHandler EditorsSaveNow;
+
 		private AddinSet _addins;
 		private IList<LexRelationType> _relationTypes;
+
+		public event EventHandler EditorsSaveNow;
+
+		public class StringPair :EventArgs {
+			public string from;
+			public string to;
+		}
+		public event EventHandler<StringPair> WritingSystemChanged;
+
 
 		public WeSayWordsProject()
 		{
@@ -829,11 +838,7 @@ namespace WeSay.Project
 			//Todo: WS-227 Before changing a ws id in a lift file, ensure that it isn't already in use
 
 			WritingSystems.IdOfWritingSystemChanged(ws, oldId);
-
-			foreach (Field field in DefaultViewTemplate)
-			{
-				field.ChangeWritingSystemId(oldId, ws.Id);
-			}
+			DefaultViewTemplate.ChangeWritingSystemId(oldId, ws.Id);
 
 			if (File.Exists(PathToLiftFile))
 			{
@@ -842,6 +847,23 @@ namespace WeSay.Project
 						 string.Format("lang\\s*=\\s*[\"']{0}[\"']", oldId),
 						 string.Format("lang=\"{0}\"", ws.Id));
 			}
+
+			if(WritingSystemChanged!=null)
+			{
+				StringPair p = new StringPair();
+				p.from = oldId;
+				p.to = ws.Id;
+				WritingSystemChanged.Invoke(this, p);
+			}
+
+			//this worked but it just gets overwritten when Setup closes
+			/*if (File.Exists(PathToConfigFile))
+			{
+				GrepLift(PathToConfigFile,
+						 string.Format("wordListWritingSystemId>\\s*{0}\\s*<", oldId),
+						 string.Format("wordListWritingSystemId>{0}<", ws.Id));
+			}
+			*/
 		}
 
 		/// <summary>
