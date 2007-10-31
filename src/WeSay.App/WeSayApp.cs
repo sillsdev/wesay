@@ -225,9 +225,18 @@ namespace WeSay.App
 					dlg.ShowDialog();
 					if (dlg.DialogResult != DialogResult.OK)
 					{
-						if (dlg.ProgressStateResult.ExceptionThatWasEncountered !=null)
+						Exception err = dlg.ProgressStateResult.ExceptionThatWasEncountered;
+						if (err !=null)
 						{
-							ErrorNotificationDialog.ReportException(dlg.ProgressStateResult.ExceptionThatWasEncountered, null, false);
+							if (err is LiftIO.LiftFormatException)
+							{
+								Palaso.Reporting.ErrorReport.ReportNonFatalMessage(
+									"WeSay had problems with the content of the dictionary file.\r\n\r\n" + err.Message);
+							}
+							else
+							{
+								ErrorNotificationDialog.ReportException(err, null, false);
+							}
 						}
 						else if (dlg.ProgressStateResult.State == ProgressState.StateValue.StoppedWithError)
 						{

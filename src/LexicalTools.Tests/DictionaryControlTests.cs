@@ -49,9 +49,15 @@ namespace WeSay.LexicalTools.Tests
 			string[] vernacularWritingSystemIds = new string[] { this._vernacularWsId };
 			ViewTemplate viewTemplate = new ViewTemplate();
 			viewTemplate.Add(new Field(Field.FieldNames.EntryLexicalForm.ToString(), "LexEntry",vernacularWritingSystemIds));
-			viewTemplate.Add(new Field("EntryNote", "LexEntry", new string[]{"en"}, Field.MultiplicityType.ZeroOr1, "MultiText" ));
-			viewTemplate.Add(new Field(Field.FieldNames.SenseGloss.ToString(), "LexSense",analysisWritingSystemIds));
-			viewTemplate.Add(new Field("SenseNote", "LexSense", new string[]{"en"}, Field.MultiplicityType.ZeroOr1, "MultiText" ));
+			viewTemplate.Add(new Field("MyEntryCustom", "LexEntry", new string[]{"en"}, Field.MultiplicityType.ZeroOr1, "MultiText" ));
+
+			Field shy1 = new Field("MyShyEntryCustom", "LexEntry", new string[] { "en" }, Field.MultiplicityType.ZeroOr1, "MultiText");
+			shy1.Visibility = WeSay.Foundation.CommonEnumerations.VisibilitySetting.NormallyHidden;
+			shy1.DisplayName = "MyShyEntryCustom";
+			viewTemplate.Add(shy1);
+
+			viewTemplate.Add(new Field(Field.FieldNames.SenseGloss.ToString(), "LexSense", analysisWritingSystemIds));
+			viewTemplate.Add(new Field("MySenseCustom", "LexSense", new string[]{"en"}, Field.MultiplicityType.ZeroOr1, "MultiText" ));
 			viewTemplate.Add(new Field(Field.FieldNames.ExampleSentence.ToString(), "LexExampleSentence",vernacularWritingSystemIds));
 			viewTemplate.Add(new Field(Field.FieldNames.ExampleTranslation.ToString(), "LexExampleSentence",analysisWritingSystemIds));
 
@@ -304,7 +310,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void CustomTextFieldPreservedNoOtherEditing()
 		{
-			CustomTextFieldPreservedCore("*EntryNote");
+			CustomTextFieldPreservedCore("*MyEntryCustom");
 		}
 
 		[Test]
@@ -313,7 +319,7 @@ namespace WeSay.LexicalTools.Tests
 			TextBoxTester t = new TextBoxTester(GetLexicalFormControlName());
 			t.Enter("test");
 
-			CustomTextFieldPreservedCore("*EntryNote");
+			CustomTextFieldPreservedCore("*MyEntryCustom");
 		}
 
 		private void CustomTextFieldPreservedCore(string fieldLabel)
@@ -624,6 +630,68 @@ namespace WeSay.LexicalTools.Tests
 			lxt.Properties.Focus();
 			Application.DoEvents();
 			Assert.IsTrue(detailList.Count > initialCount);
+		}
+
+		[Test]
+		public void ClickingShowAllOnce_ShowsCustomShyGuyOnEntry()
+		{
+			ClickAddWord();
+			Assert.IsNull(GetEditControl("MyShyEntryCustom"));
+			ButtonTester btn = new ButtonTester("_showAllFieldsToggleButton");
+			btn.Click();
+			Assert.IsNotNull(GetEditControl("MyShyEntryCustom"));
+		}
+
+		[Test]
+		public void ClickingShowAllTwice_HidesCustomShyGuy()
+		{
+			ClickAddWord();
+			Assert.IsNull(GetEditControl("MyShyEntryCustom"));
+			ButtonTester btn = new ButtonTester("_showAllFieldsToggleButton");
+			btn.Click();
+			Assert.IsNotNull(GetEditControl("MyShyEntryCustom"));
+			btn.Click();
+			Assert.IsNull(GetEditControl("MyShyEntryCustom"));
+		}
+
+		[Test]
+		public void AddingNewWord_HidesCustomShyGuy()
+		{
+			ClickAddWord();
+			Assert.IsNull(GetEditControl("MyShyEntryCustom"));
+			ButtonTester btn = new ButtonTester("_showAllFieldsToggleButton");
+			Assert.IsTrue(btn.Text.Contains("Show"));
+			btn.Click();
+			Assert.IsTrue(btn.Text.Contains("Hide"));
+			Assert.IsNotNull(GetEditControl("MyShyEntryCustom"));
+			ClickAddWord();
+			Assert.IsNull(GetEditControl("MyShyEntryCustom"));
+			Assert.IsTrue(btn.Text.Contains("Show"));
+		}
+
+		[Test]
+		public void AddingNewWord_ClearsShowHiddenState()
+		{
+			ClickAddWord();
+			ButtonTester btn = new ButtonTester("_showAllFieldsToggleButton");
+			Assert.IsTrue(btn.Text.Contains("Show"));
+			btn.Click();
+			Assert.IsTrue(btn.Text.Contains("Hide"));
+			ClickAddWord();
+			Assert.IsTrue(btn.Text.Contains("Show"));
+		}
+		[Test]
+		public void DeletingWord_ClearsShowHiddenState()
+		{
+			ClickAddWord();
+			ClickAddWord();
+			ButtonTester btn = new ButtonTester("_showAllFieldsToggleButton");
+			Assert.IsTrue(btn.Text.Contains("Show"));
+			btn.Click();
+			Assert.IsTrue(btn.Text.Contains("Hide"));
+			ButtonTester delbtn = new ButtonTester("_btnDeleteWord");
+			delbtn.Click();
+			Assert.IsTrue(btn.Text.Contains("Show"));
 		}
 
 		private DetailList GetDetailList()

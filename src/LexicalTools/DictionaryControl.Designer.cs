@@ -56,7 +56,7 @@ namespace WeSay.LexicalTools
 			this._entryViewControl = new WeSay.LexicalTools.EntryViewControl();
 			this._splitter = new WeSay.UI.CollapsibleSplitter();
 			this.localizationHelper1 = new WeSay.UI.LocalizationHelper(this.components);
-			this._showAllFields = new System.Windows.Forms.Button();
+			this._showAllFieldsToggleButton = new System.Windows.Forms.Button();
 			this.panelWordList.SuspendLayout();
 			this.panelTools.SuspendLayout();
 			this.panelDetail.SuspendLayout();
@@ -151,7 +151,7 @@ namespace WeSay.LexicalTools
 			//
 			// panelTools
 			//
-			this.panelTools.Controls.Add(this._showAllFields);
+			this.panelTools.Controls.Add(this._showAllFieldsToggleButton);
 			this.panelTools.Controls.Add(this._btnDeleteWord);
 			this.panelTools.Controls.Add(this._btnNewWord);
 			this.panelTools.Dock = System.Windows.Forms.DockStyle.Bottom;
@@ -236,23 +236,23 @@ namespace WeSay.LexicalTools
 			//
 			this.localizationHelper1.Parent = this;
 			//
-			// _showAllFields
+			// _showAllFieldsToggleButton
 			//
-			this._showAllFields.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this._showAllFields.AutoSize = true;
-			this._showAllFields.FlatAppearance.BorderSize = 0;
-			this._showAllFields.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Orange;
-			this._showAllFields.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-			this._showAllFields.ImageAlign = System.Drawing.ContentAlignment.BottomLeft;
-			this._showAllFields.Location = new System.Drawing.Point(363, 2);
-			this._showAllFields.Margin = new System.Windows.Forms.Padding(0);
-			this._showAllFields.Name = "_showAllFields";
-			this._showAllFields.Size = new System.Drawing.Size(120, 24);
-			this._showAllFields.TabIndex = 2;
-			this._showAllFields.Text = "~&Show All Fields";
-			this._showAllFields.TextAlign = System.Drawing.ContentAlignment.BottomRight;
-			this._showAllFields.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-			this._showAllFields.Click += new System.EventHandler(this.OnShowAllFields_Click);
+			this._showAllFieldsToggleButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this._showAllFieldsToggleButton.AutoSize = true;
+			this._showAllFieldsToggleButton.FlatAppearance.BorderSize = 0;
+			this._showAllFieldsToggleButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Orange;
+			this._showAllFieldsToggleButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+			this._showAllFieldsToggleButton.ImageAlign = System.Drawing.ContentAlignment.BottomLeft;
+			this._showAllFieldsToggleButton.Location = new System.Drawing.Point(363, 2);
+			this._showAllFieldsToggleButton.Margin = new System.Windows.Forms.Padding(0);
+			this._showAllFieldsToggleButton.Name = "_showAllFieldsToggleButton";
+			this._showAllFieldsToggleButton.Size = new System.Drawing.Size(120, 24);
+			this._showAllFieldsToggleButton.TabIndex = 2;
+			this._showAllFieldsToggleButton.Text = "~&Show All Fields";
+			this._showAllFieldsToggleButton.TextAlign = System.Drawing.ContentAlignment.BottomRight;
+			this._showAllFieldsToggleButton.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+			this._showAllFieldsToggleButton.Click += new System.EventHandler(this.OnShowAllFields_Click);
 			//
 			// DictionaryControl
 			//
@@ -293,7 +293,7 @@ namespace WeSay.LexicalTools
 		private CollapsibleSplitter _splitter;
 		private Label _findWritingSystemId;
 		private LocalizationHelper localizationHelper1;
-		private Button _showAllFields;
+		private Button _showAllFieldsToggleButton;
 
 	}
 }

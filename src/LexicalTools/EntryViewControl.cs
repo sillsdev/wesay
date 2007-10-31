@@ -78,6 +78,7 @@ namespace WeSay.LexicalTools
 			set
 			{
 				Logger.WriteMinorEvent("In DataSource Set");
+				_showNormallyHiddenFields = false;
 
 				if (_record != value)
 				{
@@ -99,6 +100,7 @@ namespace WeSay.LexicalTools
 					Logger.WriteMinorEvent("Datasource set calling RefreshLexicalEntryPreview()");
 					RefreshLexicalEntryPreview();
 					Logger.WriteMinorEvent("Datasource set calling RefreshEntryDetail()");
+					ShowNormallyHiddenFields = false;
 					RefreshEntryDetail();
 				}
 
@@ -114,11 +116,19 @@ namespace WeSay.LexicalTools
 			set { _recordListManager = value; }
 		}
 
-		public void ShowNormallyHiddenFieldsTemporarily()
+		public bool ShowNormallyHiddenFields
 		{
-			_showNormallyHiddenFields = true;
-			RefreshEntryDetail();
-			_showNormallyHiddenFields = false;
+			get { return _showNormallyHiddenFields; }
+			set
+			{
+				_showNormallyHiddenFields = value;
+				RefreshEntryDetail();
+			}
+		}
+
+		public void ToggleShowNormallyHiddenFields()
+		{
+			ShowNormallyHiddenFields = !ShowNormallyHiddenFields;
 		}
 
 		private void OnEmptyObjectsRemoved(object sender, EventArgs e)
@@ -206,7 +216,7 @@ namespace WeSay.LexicalTools
 				if (_record != null)
 				{
 					LexEntryLayouter layout = new LexEntryLayouter(_detailListControl, ViewTemplate, _recordListManager);
-					layout.ShowNormallyHiddenFields = _showNormallyHiddenFields;
+					layout.ShowNormallyHiddenFields = ShowNormallyHiddenFields;
 					layout.AddWidgets(_record);
 				}
 				_detailListControl.ResumeLayout();

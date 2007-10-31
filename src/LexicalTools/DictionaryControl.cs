@@ -131,7 +131,7 @@ namespace WeSay.LexicalTools
 			_recordsListBox.SelectedIndexChanged +=OnRecordSelectionChanged;
 			_recordsListBox.Enter += _recordsListBox_Enter;
 			_recordsListBox.Leave += _recordsListBox_Leave;
-			_btnDeleteWord.Enabled = (CurrentRecord != null);
+			UpdateDisplay();
 		}
 
 		public EntryViewControl Control_EntryDetailPanel
@@ -383,7 +383,6 @@ namespace WeSay.LexicalTools
 				//we were getting 3 calls to this for each click on a new word
 				return;
 			}
-			_btnDeleteWord.Enabled = (CurrentRecord != null);
 			if (!_recordListBoxActive)
 			{
 				// When we change the content of the displayed string,
@@ -410,6 +409,7 @@ namespace WeSay.LexicalTools
 			}
 
 			SelectedIndexChanged.Invoke(this, null);
+			UpdateDisplay();
 		}
 
 		private void OnNewWord_Click(object sender, EventArgs e)
@@ -435,7 +435,7 @@ namespace WeSay.LexicalTools
 				OnRecordSelectionChanged(this, null);
 			}
 			_recordListBoxActive = false;
-
+			UpdateDisplay();
 			_entryViewControl.Focus();
 		}
 
@@ -463,13 +463,27 @@ namespace WeSay.LexicalTools
 			{
 				Control_EntryDetailPanel.DataSource = CurrentRecord;
 			}
-
+			UpdateDisplay();
 			_entryViewControl.Focus();
 		}
 
 		private void OnShowAllFields_Click(object sender, EventArgs e)
 		{
-			_entryViewControl.ShowNormallyHiddenFieldsTemporarily();
+			_entryViewControl.ToggleShowNormallyHiddenFields();
+			UpdateDisplay();
+		}
+
+		private void UpdateDisplay()
+		{
+			_btnDeleteWord.Enabled = (CurrentRecord != null);
+			if (_entryViewControl.ShowNormallyHiddenFields)
+			{
+				_showAllFieldsToggleButton.Text = StringCatalog.Get("~Hide Uncommon Fields");
+			}
+			else
+			{
+				_showAllFieldsToggleButton.Text = StringCatalog.Get("~Show Uncommon Fields");
+			}
 		}
 	}
 }

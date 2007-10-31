@@ -111,17 +111,22 @@ namespace WeSay.UI
 					File.Copy(dialog.FileName, GetPathToImage());
 					UpdateDisplay();
 
-					Palaso.Reporting.Logger.WriteMinorEvent("Picture Control Changed ({0})", this._nameForLogging);
-					if (ValueChanged != null)
-					{
-						ValueChanged.Invoke(this, null);
-					}
+					NotifyChanged();
 				}
 			}
 			catch (Exception error)
 			{
 				Palaso.Reporting.ErrorReport.ReportNonFatalMessage("Something went wrong getting the picture. " +
 																   error.Message);
+			}
+		}
+
+		private void NotifyChanged()
+		{
+			Palaso.Reporting.Logger.WriteMinorEvent("Picture Control Changed ({0})", this._nameForLogging);
+			if (ValueChanged != null)
+			{
+				ValueChanged.Invoke(this, null);
 			}
 		}
 
@@ -173,7 +178,7 @@ namespace WeSay.UI
 			}
 
 			_fileName = string.Empty;
-
+			NotifyChanged();
 			UpdateDisplay();
 		}
 

@@ -236,10 +236,8 @@ namespace WeSay.Project
 						Lexicon.Init((Db4oRecordListManager)recordListManager);
 					}
 
-					XmlDocument doc = new XmlDocument();
-					doc.Load(_sourceLIFTPath);
 
-					DoParsing(doc, ds);
+					DoParsing(ds);
 					if (_backgroundWorker != null && _backgroundWorker.CancellationPending)
 					{
 						return;
@@ -286,7 +284,7 @@ namespace WeSay.Project
 			Logger.WriteEvent("Done Building Caches");
 		}
 
-		private void DoParsing(XmlDocument doc, Db4oDataSource ds)
+		private void DoParsing(Db4oDataSource ds)
 		{
 			Db4oRecordList<LexEntry> entriesList = GetEntries(ds);
 			try
@@ -299,17 +297,17 @@ namespace WeSay.Project
 						merger.ExpectedOptionTraits.Add(name);
 						//_importer.ExpectedOptionTraits.Add(name);
 					}
-					foreach (
-							string name in WeSayWordsProject.Project.OptionCollectionFieldNames)
+					foreach (string name in WeSayWordsProject.Project.OptionCollectionFieldNames)
 					{
 						merger.ExpectedOptionCollectionTraits.Add(name);
 					}
 
-					RunParser(doc, merger);
+					RunParser(merger);
 				}
 
 				UpdateDashboardStats();
 			}
+
 			finally
 			{
 				if (entriesList != _prewiredEntries) //did we create it?
@@ -357,27 +355,42 @@ namespace WeSay.Project
 			}
 		}
 
-		private void RunParser(XmlDocument doc, LiftMerger merger)
+		private void RunParser( LiftMerger merger)
 		{
 			LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence> parser =
-					new LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence>(merger);
+				new LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence>(merger);
 
 			parser.SetTotalNumberSteps +=
-					new EventHandler
-							<LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence>.StepsArgs>(
-							parser_SetTotalNumberSteps);
+				new EventHandler
+					<LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence>.StepsArgs>(
+					parser_SetTotalNumberSteps);
 			parser.SetStepsCompleted +=
-					new EventHandler
-							<
-									LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence>.
-											ProgressEventArgs>(
-							parser_SetStepsCompleted);
+				new EventHandler
+					<
+						LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence>.
+							ProgressEventArgs>(
+					parser_SetStepsCompleted);
 
 			parser.ParsingWarning +=
-					new EventHandler
-							<LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence>.ErrorArgs>(
-							parser_ParsingWarning);
-			parser.ReadFile(doc);
+				new EventHandler
+					<LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence>.ErrorArgs>(
+					parser_ParsingWarning);
+
+			try
+			{
+				XmlDocument doc = new XmlDocument();
+				doc.Load(_sourceLIFTPath);
+				parser.ReadFile(doc);
+			}
+			catch(Exception error)
+			{
+				//our parser failed.  Hopefully, because of bad lift. Validate it now  to
+				//see if that's the problem.
+				LiftIO.Validator.CheckLiftWithPossibleThrow(_sourceLIFTPath);
+
+				//if it got past that, ok, send along the error the parser encountered.
+				throw error;
+			}
 		}
 
 		private void parser_ParsingWarning(object sender,

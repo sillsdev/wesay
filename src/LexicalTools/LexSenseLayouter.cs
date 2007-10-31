@@ -1,4 +1,5 @@
 using System.Windows.Forms;
+using Palaso.Reporting;
 using WeSay.Data;
 using WeSay.Foundation;
 using WeSay.LexicalModel;
@@ -21,37 +22,45 @@ namespace WeSay.LexicalTools
 
 		internal override int AddWidgets(IBindingList list, int index, int insertAtRow)
 		{
-			DetailList.SuspendLayout();
 			int rowCount = 0;
-			LexSense sense = (LexSense) list[index];
-			Field field = ActiveViewTemplate.GetField(Field.FieldNames.SenseGloss.ToString());
-			if (field != null && field.GetDoShow(sense.Gloss, this.ShowNormallyHiddenFields))
+			DetailList.SuspendLayout();
+			try
 			{
-				Control glossControl = MakeBoundControl(sense.Gloss, field);
-				string label = StringCatalog.Get("~Meaning");
-				LexEntry entry = sense.Parent as LexEntry;
-				if (entry != null) // && entry.Senses.Count > 1)
+
+				LexSense sense = (LexSense) list[index];
+				Field field = ActiveViewTemplate.GetField(Field.FieldNames.SenseGloss.ToString());
+				if (field != null && field.GetDoShow(sense.Gloss, this.ShowNormallyHiddenFields))
 				{
-					label += " " + (entry.Senses.IndexOf(sense) + 1);
+					Control glossControl = MakeBoundControl(sense.Gloss, field);
+					string label = StringCatalog.Get("~Meaning");
+					LexEntry entry = sense.Parent as LexEntry;
+					if (entry != null) // && entry.Senses.Count > 1)
+					{
+						label += " " + (entry.Senses.IndexOf(sense) + 1);
+					}
+					Control glossRowControl = DetailList.AddWidgetRow(label, true, glossControl, insertAtRow, false);
+					++rowCount;
+					insertAtRow = DetailList.GetRow(glossRowControl);
 				}
-				Control glossRowControl = DetailList.AddWidgetRow(label, true, glossControl, insertAtRow, false);
-				++rowCount;
-				insertAtRow = DetailList.GetRow(glossRowControl);
+
+				rowCount += AddCustomFields(sense, insertAtRow + rowCount);
+
+				LexExampleSentenceLayouter exampleLayouter =
+					new LexExampleSentenceLayouter(DetailList, ActiveViewTemplate);
+				exampleLayouter.ShowNormallyHiddenFields = ShowNormallyHiddenFields;
+
+				rowCount = AddChildrenWidgets(exampleLayouter, sense.ExampleSentences, insertAtRow, rowCount);
+
+				//add a ghost for another example if we don't have one or we're in the "show all" mode
+				if (ShowNormallyHiddenFields || sense.ExampleSentences.Count == 0)
+				{
+					rowCount += exampleLayouter.AddGhost(sense.ExampleSentences, insertAtRow + rowCount);
+				}
 			}
-
-			rowCount += AddCustomFields(sense, insertAtRow + rowCount);
-
-			LexExampleSentenceLayouter exampleLayouter = new LexExampleSentenceLayouter(DetailList, ActiveViewTemplate);
-			exampleLayouter.ShowNormallyHiddenFields = ShowNormallyHiddenFields;
-
-			rowCount = AddChildrenWidgets(exampleLayouter, sense.ExampleSentences, insertAtRow, rowCount);
-
-			//add a ghost for another example if we don't have one or we're in the "show all" mode
-			if (ShowNormallyHiddenFields ||  sense.ExampleSentences.Count == 0)
+			catch (ConfigurationException e)
 			{
-				rowCount += exampleLayouter.AddGhost(sense.ExampleSentences, insertAtRow + rowCount);
+				Palaso.Reporting.ErrorReport.ReportNonFatalMessage(e.Message);
 			}
-
 			DetailList.ResumeLayout(true);
 			return rowCount;
 		}
