@@ -7,8 +7,10 @@
 		  <className>LexEntry</className>
 		  <dataType>MultiText</dataType>
 		  <displayName>Word</displayName>
+		  <enabled>True</enabled>
 		  <fieldName>EntryLexicalForm</fieldName>
 		  <multiplicity>ZeroOr1</multiplicity>
+		  <optionsListFile></optionsListFile>
 		  <visibility>Visible</visibility>
 		  <writingSystems>
 			<id>bth</id>
@@ -19,6 +21,7 @@
 		  <className>LexSense</className>
 		  <dataType>MultiText</dataType>
 		  <displayName>Gloss</displayName>
+		  <enabled>True</enabled>
 		  <fieldName>SenseGloss</fieldName>
 		  <multiplicity>ZeroOr1</multiplicity>
 		  <visibility>Visible</visibility>
@@ -30,6 +33,7 @@
 		  <className>LexSense</className>
 		  <dataType>Option</dataType>
 		  <displayName>POS</displayName>
+		  <enabled>True</enabled>
 		  <fieldName>POS</fieldName>
 		  <multiplicity>ZeroOr1</multiplicity>
 		  <optionsListFile>PartsOfSpeech.xml</optionsListFile>
@@ -42,8 +46,10 @@
 		  <className>LexExampleSentence</className>
 		  <dataType>MultiText</dataType>
 		  <displayName>Example Sentence</displayName>
+		  <enabled>True</enabled>
 		  <fieldName>ExampleSentence</fieldName>
 		  <multiplicity>ZeroOr1</multiplicity>
+		  <optionsListFile></optionsListFile>
 		  <visibility>Visible</visibility>
 		  <writingSystems>
 			<id>bth</id>
@@ -53,6 +59,7 @@
 		  <className>LexExampleSentence</className>
 		  <dataType>MultiText</dataType>
 		  <displayName>Translation</displayName>
+		  <enabled>True</enabled>
 		  <fieldName>ExampleTranslation</fieldName>
 		  <multiplicity>ZeroOr1</multiplicity>
 		  <visibility>Visible</visibility>
@@ -64,10 +71,11 @@
 		  <className>LexSense</className>
 		  <dataType>OptionCollection</dataType>
 		  <displayName>Sem Dom</displayName>
+		  <enabled>True</enabled>
 		  <fieldName>SemanticDomainDdp4</fieldName>
 		  <multiplicity>ZeroOr1</multiplicity>
 		  <optionsListFile>Ddp4.xml</optionsListFile>
-		  <visibility>Visible</visibility>
+		  <visibility>NormallyHidden</visibility>
 		  <writingSystems>
 			<id>en</id>
 		  </writingSystems>
@@ -76,11 +84,73 @@
 		  <className>LexEntry</className>
 		  <dataType>RelationToOneEntry</dataType>
 		  <displayName>Base Form</displayName>
+		  <enabled>True</enabled>
 		  <fieldName>BaseForm</fieldName>
+		  <multiplicity>ZeroOr1</multiplicity>
+		  <optionsListFile></optionsListFile>
+		  <visibility>NormallyHidden</visibility>
+		  <writingSystems>
+			<id>bth</id>
+		  </writingSystems>
+		</field>
+		<field>
+		  <className>LexEntry</className>
+		  <dataType>MultiText</dataType>
+		  <displayName>Citation Form</displayName>
+		  <enabled>True</enabled>
+		  <fieldName>CitationForm</fieldName>
+		  <multiplicity>ZeroOr1</multiplicity>
+		  <visibility>NormallyHidden</visibility>
+		  <writingSystems>
+			<id>v</id>
+		  </writingSystems>
+		</field>
+		<field>
+		  <className>LexSense</className>
+		  <dataType>MultiText</dataType>
+		  <displayName>Definition</displayName>
+		  <enabled>False</enabled>
+		  <fieldName>definition</fieldName>
 		  <multiplicity>ZeroOr1</multiplicity>
 		  <visibility>Visible</visibility>
 		  <writingSystems>
-			<id>bth</id>
+			<id>en</id>
+		  </writingSystems>
+		</field>
+		<field>
+		  <className>LexSense</className>
+		  <dataType>MultiText</dataType>
+		  <displayName>Lit Meaning</displayName>
+		  <enabled>False</enabled>
+		  <fieldName>LiteralMeaning</fieldName>
+		  <multiplicity>ZeroOr1</multiplicity>
+		  <visibility>NormallyHidden</visibility>
+		  <writingSystems>
+			<id>en</id>
+		  </writingSystems>
+		</field>
+		<field>
+		  <className>WeSayDataObject</className>
+		  <dataType>MultiText</dataType>
+		  <displayName>Note</displayName>
+		  <enabled>True</enabled>
+		  <fieldName>note</fieldName>
+		  <multiplicity>ZeroOr1</multiplicity>
+		  <visibility>NormallyHidden</visibility>
+		  <writingSystems>
+			<id>en</id>
+		  </writingSystems>
+		</field>
+		<field>
+		  <className>LexSense</className>
+		  <dataType>Picture</dataType>
+		  <displayName>Picture</displayName>
+		  <enabled>True</enabled>
+		  <fieldName>Picture</fieldName>
+		  <multiplicity>ZeroOr1</multiplicity>
+		  <visibility>NormallyHidden</visibility>
+		  <writingSystems>
+			<id>en</id>
 		  </writingSystems>
 		</field>
 	  </fields>
@@ -144,6 +214,45 @@
 	<task id="Actions" class="WeSay.CommonTools.ActionsControl" assembly="CommonTools" default="true" visible="true">
 	  <label UseInConstructor="false">Actions</label>
 	  <description UseInConstructor="false">Perform actions on the project as a whole. For example backup, produce a report, print out a simple dictionary, etc.</description>
+	</task>
+	<task id="AddPartOfSpeech" class="WeSay.LexicalTools.MissingInfoTask" assembly="LexicalTools" visible="false">
+	  <entries ref="All Entries" />
+	  <filter class="WeSay.LexicalTools.MissingItemFilter" assembly="LexicalTools">
+		<viewTemplate ref="Default View Template" />
+		<field>POS</field>
+	  </filter>
+	  <label>Add Parts of Speech</label>
+	  <description>Add a Part Of Speech to senses where they are missing.</description>
+	  <viewTemplate ref="Default View Template" />
+	  <showfields>POS</showfields>
+	  <readOnly>SenseGloss, ExampleSentence</readOnly>
+	</task>
+	<task id="AddBaseForms" class="WeSay.LexicalTools.MissingInfoTask" assembly="LexicalTools" visible="false">
+	  <entries ref="All Entries" />
+	  <filter class="WeSay.LexicalTools.MissingItemFilter" assembly="LexicalTools">
+		<viewTemplate ref="Default View Template" />
+		<field>BaseForm</field>
+	  </filter>
+	  <label>Add Base Forms</label>
+	  <description>Identify the "base form" word that this word is built from. In the printed dictionary, these can optionally be shown as subentries.</description>
+	  <viewTemplate ref="Default View Template" />
+	  <showfields>BaseForm</showfields>
+	</task>
+	<task id="Gather Words (D)" class="WeSay.LexicalTools.GatherWordListTask" assembly="LexicalTools" visible="true">
+	  <entries ref="All Entries" />
+	  <label>Collect Word List (D)</label>
+	  <description>Collect new words by translating from words in another language. This is a list of 1700 words from John Duerksen.</description>
+	  <wordListFileName>DuerksenWords.txt</wordListFileName>
+	  <wordListWritingSystemId>en</wordListWritingSystemId>
+	  <viewTemplate ref="Default View Template" />
+	</task>
+	<task id="Gather Words (PNG)" class="WeSay.LexicalTools.GatherWordListTask" assembly="LexicalTools" visible="false">
+	  <entries ref="All Entries" />
+	  <label>Collect Word List (PNG)</label>
+	  <description>Collect new words by translating from words in another language. This is a list of around 900 words and phrases from PNG.</description>
+	  <wordListFileName>PNGWords.txt</wordListFileName>
+	  <wordListWritingSystemId>en</wordListWritingSystemId>
+	  <viewTemplate ref="Default View Template" />
 	</task>
   </tasks>
   <uiOptions uiFont="Microsoft Sans Serif" uiFontSize="8.25" />
