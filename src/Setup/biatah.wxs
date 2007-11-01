@@ -26,6 +26,7 @@
 
 	  </Component>
 
+
 	  <Directory Id="BiatahCommon" Name="common">
 		<Component Id="biatahWritingSystemPrefs" Guid="{DFC212BA-EBF6-41BD-A015-94BF95D3B27A}">
 		  <File Id="writingSystemPrefs.xml" Name="writingSystemPrefs.xml" KeyPath="yes" Source="..\..\sampleprojects\biatah\common\writingSystemPrefs.xml" />
@@ -51,6 +52,11 @@
 			<File Id="LexEntrysortedbySemanticDomainDdp4.cache" Name="LexEntry sorted by SemanticDomainDdp4.cache" Source="..\..\sampleprojects\biatah\wesay\Cache\LexEntry sorted by SemanticDomainDdp4.cache" />
 			<File Id="WeSay.LexicalTools.MissingExampleSentenceFilterbth.cache" Name="WeSay.LexicalTools.MissingExampleSentenceFilterbth.cache" Source="..\..\sampleprojects\biatah\wesay\Cache\Missing ExampleSentence [bth] Filter.cache" />
 			<File Id="WeSay.LexicalTools.MissingGlossFilteren.cache" Name="WeSay.LexicalTools.MissingGlossFilteren.cache" Source="..\..\sampleprojects\biatah\wesay\Cache\Missing SenseGloss [en] Filter.cache" />
+		  </Component>
+		</Directory>
+		<Directory Id="biatahPictures" Name="pictures">
+		  <Component Id="waterBasket" Guid="{FFC212BA-EBF6-41BD-A015-94BF95D3B2AA}">
+			<File Id="waterBasket1.png" Name="waterBasket1.png" KeyPath="yes" Source="..\..\sampleprojects\biatah\wesay\pictures\waterBasket1.png" />
 		  </Component>
 		</Directory>
 	  </Directory>
