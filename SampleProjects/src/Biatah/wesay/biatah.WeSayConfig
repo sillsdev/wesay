@@ -255,7 +255,6 @@
 	  <viewTemplate ref="Default View Template" />
 	</task>
   </tasks>
-  <uiOptions uiFont="Microsoft Sans Serif" uiFontSize="8.25" />
   <addins>
 	<addin id="SFM Exporter" showInWeSay="True"><SfmTransformSettings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <SfmTagConversions>lx_bth lx
