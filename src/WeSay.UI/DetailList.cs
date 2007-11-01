@@ -197,32 +197,41 @@ namespace WeSay.UI
 
 		public void MoveInsertionPoint(int row)
 		{
-			if(0 > row || row >= RowCount)
+			try
 			{
-				throw new ArgumentOutOfRangeException("row", row, "row must be between 0 and Count-1 inclusive");
-			}
-//            Panel p = (Panel)ActualControls[RowToControlIndex(row)];
-//            Control c = GetEditControlFromReferenceControl(p);
-			Control c = GetControlFromPosition(1, row);
+				if (0 > row || row >= RowCount)
+				{
+					throw new ArgumentOutOfRangeException("row", row, "row must be between 0 and Count-1 inclusive");
+				}
+				//            Panel p = (Panel)ActualControls[RowToControlIndex(row)];
+				//            Control c = GetEditControlFromReferenceControl(p);
+				Control c = GetControlFromPosition(1, row);
 
-			WeSayTextBox tb;
+				WeSayTextBox tb;
 
-			if (c is MultiTextControl)
-			{
-				MultiTextControl multText = (MultiTextControl)c;
-				tb = multText.TextBoxes[0];
-				tb.Focus();
-				tb.Select(1000, 0);//go to end
+				if (c is MultiTextControl)
+				{
+					MultiTextControl multText = (MultiTextControl) c;
+					tb = multText.TextBoxes[0];
+					tb.Focus();
+					tb.Select(1000, 0); //go to end
+				}
+				else if (c is WeSayTextBox)
+				{
+					tb = (WeSayTextBox) c;
+					tb.Focus();
+					tb.Select(1000, 0); //go to end
+				}
+				else
+				{
+					c.Focus();
+				}
 			}
-			else if (c is WeSayTextBox)
+			catch(Exception error)
 			{
-				tb = (WeSayTextBox)c;
-				tb.Focus();
-				tb.Select(1000, 0);//go to end
-			}
-			else
-			{
-				c.Focus();
+#if DEBUG // not worth crashing over
+				throw error;
+#endif
 			}
 		}
 

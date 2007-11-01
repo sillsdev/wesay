@@ -52,7 +52,9 @@ namespace WeSay.LexicalTools
 				rowCount = AddChildrenWidgets(exampleLayouter, sense.ExampleSentences, insertAtRow, rowCount);
 
 				//add a ghost for another example if we don't have one or we're in the "show all" mode
-				if (ShowNormallyHiddenFields || sense.ExampleSentences.Count == 0)
+			   //removed because of its effect on the Add Examples task, where
+				//we'd like to be able to add more than one
+				//if (ShowNormallyHiddenFields || sense.ExampleSentences.Count == 0)
 				{
 					rowCount += exampleLayouter.AddGhost(sense.ExampleSentences, insertAtRow + rowCount);
 				}

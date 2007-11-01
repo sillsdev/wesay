@@ -41,7 +41,7 @@ namespace WeSay.LexicalTools.Tests
 		public void RightNumberOfRows()
 		{
 			MakeDetailList(false);
-			Assert.AreEqual(12, _rowCount);
+			Assert.AreEqual(14, _rowCount);
 		}
 
 		[Test]

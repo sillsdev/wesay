@@ -43,7 +43,7 @@ namespace Addin.Backup
 			//
 			this._topLabel.AutoSize = true;
 			this._topLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this._topLabel.Location = new System.Drawing.Point(178, 12);
+			this._topLabel.Location = new System.Drawing.Point(145, 12);
 			this._topLabel.Name = "_topLabel";
 			this._topLabel.Size = new System.Drawing.Size(144, 20);
 			this._topLabel.TabIndex = 1;
@@ -52,7 +52,7 @@ namespace Addin.Backup
 			// _noteLabel
 			//
 			this._noteLabel.AutoSize = true;
-			this._noteLabel.Location = new System.Drawing.Point(179, 51);
+			this._noteLabel.Location = new System.Drawing.Point(146, 51);
 			this._noteLabel.Name = "_noteLabel";
 			this._noteLabel.Size = new System.Drawing.Size(139, 13);
 			this._noteLabel.TabIndex = 2;
@@ -105,7 +105,7 @@ namespace Addin.Backup
 			this.ShowIcon = false;
 			this.ShowInTaskbar = false;
 			this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
-			this.Text = "Backup To USB Key";
+			this.Text = "Backup To USB Flash Drive";
 			this.Load += new System.EventHandler(this.Dialog_Load);
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.localizationHelper1)).EndInit();

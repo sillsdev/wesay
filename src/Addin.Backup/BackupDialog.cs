@@ -57,7 +57,6 @@ namespace Addin.Backup
 		public List<DriveInfo> GetLogicalUsbDisks()
 		{
 			List<DriveInfo> driveInfos=new List<DriveInfo>();
-
 			using (ManagementObjectSearcher driveSearcher = new ManagementObjectSearcher(
 					"SELECT Caption, DeviceID FROM Win32_DiskDrive WHERE InterfaceType='USB'"))
 					{
@@ -111,14 +110,23 @@ namespace Addin.Backup
 
 		private void LookForTargetVolume()
 		{
-			List<DriveInfo> list = GetLogicalUsbDisks();
-			if (list.Count > 0)
+			try
 			{
-				DoBackup(list[0]);
+				List<DriveInfo> list = GetLogicalUsbDisks();
+				if (list.Count > 0)
+				{
+					DoBackup(list[0]);
+				}
+				else
+				{
+					this._topLabel.Text = "~Please insert the USB Key to backup to.";
+				}
 			}
-			else
+			catch(Exception error)
 			{
-				this._topLabel.Text = "~Please insert the USB Key to backup to.";
+				_checkForUsbKeyTimer.Enabled = false;
+				Palaso.Reporting.ErrorNotificationDialog.ReportException(error,this,false);
+				this._topLabel.Text = "Unable to look for the device due to an error.";
 			}
 		}
 	}
