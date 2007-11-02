@@ -54,8 +54,8 @@
 			<File Id="WeSay.LexicalTools.MissingGlossFilteren.cache" Name="WeSay.LexicalTools.MissingGlossFilteren.cache" Source="..\..\sampleprojects\biatah\wesay\Cache\Missing SenseGloss [en] Filter.cache" />
 		  </Component>
 		</Directory>
-		<Directory Id="biatahPictures" Name="pictures">
-		  <Component Id="waterBasket" Guid="{FFC212BA-EBF6-41BD-A015-94BF95D3B2AA}">
+		<Directory Id="biatahPicturesDir" Name="pictures">
+		  <Component Id="biatahPictures" Guid="{FFC212BA-EBF6-41BD-A015-94BF95D3B2AA}">
 			<File Id="waterBasket1.png" Name="waterBasket1.png" KeyPath="yes" Source="..\..\sampleprojects\biatah\wesay\pictures\waterBasket1.png" />
 		  </Component>
 		</Directory>
