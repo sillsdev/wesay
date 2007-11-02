@@ -79,7 +79,7 @@ namespace WeSay.Project
 		public virtual void CreateEmptyProjectFiles(string projectDirectoryPath)
 		{
 			_projectDirectoryPath = projectDirectoryPath;
-			Directory.CreateDirectory(ProjectCommonDirectory);
+		  //  Directory.CreateDirectory(ProjectCommonDirectory);
 			InitStringCatalog();
 			InitWritingSystems();
 			Save();
@@ -130,7 +130,7 @@ namespace WeSay.Project
 
 		public string PathToWritingSystemPrefs
 		{
-			get { return GetPathToWritingSystemPrefs(ProjectCommonDirectory); }
+			get { return GetPathToWritingSystemPrefs(PathToDirectoryContaingWritingSystemFilesInProject/*ProjectCommonDirectory*/); }
 		}
 
 //        public string PathToOptionsLists
@@ -144,6 +144,12 @@ namespace WeSay.Project
 		private static string GetPathToWritingSystemPrefs(string parentDir)
 		{
 			return Path.Combine(parentDir, "writingSystemPrefs.xml");
+		}
+
+
+		public string PathToDirectoryContaingWritingSystemFilesInProject
+		{
+			get { return ProjectDirectoryPath; }
 		}
 
 		public string LocateStringCatalog()
@@ -168,7 +174,7 @@ namespace WeSay.Project
 
 		public string PathToStringCatalogInProjectDir
 		{
-			get { return Path.Combine(ProjectCommonDirectory, _stringCatalogSelector + ".po"); }
+			get { return Path.Combine(ProjectDirectoryPath/*ProjectCommonDirectory*/, _stringCatalogSelector + ".po"); }
 		}
 
 		public string ApplicationCommonDirectory
@@ -216,7 +222,7 @@ namespace WeSay.Project
 			}
 		}
 
-		protected string ProjectCommonDirectory
+		protected string OldProjectCommonDirectory
 		{
 			get { return Path.Combine(_projectDirectoryPath, "common"); }
 		}

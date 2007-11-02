@@ -380,9 +380,8 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 	  <!-- i tried to FeatureRef these from their own files but it didn't work -->
 
 	  <ComponentRef Id ="biatahShortcuts"/>
-	  <ComponentRef Id ="biatahWritingSystemPrefs"/>
-	  <ComponentRef Id ="biatahWesayDir"/>
-	  <ComponentRef Id ="biatahWordsCache"/>
+	  <ComponentRef Id ="biatahMain"/>
+	  <ComponentRef Id ="biatahCache"/>
 	  <ComponentRef Id ="biatahPictures"/>
 
 	</Feature>

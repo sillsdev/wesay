@@ -94,6 +94,13 @@ namespace WeSay.Project.Tests
 		}
 
 
+//        [Test]
+//        public void LoadFromOldStructure(bool doMakeFileMatchingProjectName)
+//        {
+//            string experimentDir = MakeDir(Path.GetTempPath(), Path.GetRandomFileName());
+//            string projectDir = MakeDir(experimentDir, "TestProj");
+//        }
+
 
 		//private static void MakeDummyWordsFile(string fileName, string weSayDir)
 		//{
@@ -112,6 +119,8 @@ namespace WeSay.Project.Tests
 			try
 			{
 				WeSayWordsProject p = new WeSayWordsProject();
+				lexiconPath = p.UpdateFileStructure(lexiconPath);
+
 				return p.LoadFromLiftLexiconPath(lexiconPath);
 			}
 			finally

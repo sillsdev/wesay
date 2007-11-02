@@ -148,11 +148,11 @@ namespace WeSay.Project.Tests
 
 				   } while(Directory.Exists(directory));
 
-				   string target = Path.Combine(directory, "WeSay\\pretend.lift");
+				   string target = Path.Combine(directory, "pretend.lift");
 				   Directory.CreateDirectory(directory);
 				   try
 				   {
-					   Directory.CreateDirectory(Path.Combine(directory, "WeSay"));
+					   //Directory.CreateDirectory(Path.Combine(directory, "WeSay"));
 					   WeSayWordsProject.Project.SetupProjectDirForTests(target);
 					   Assert.AreEqual(directory, WeSayWordsProject.Project.ProjectDirectoryPath);
 					   SimpleGoodLiftCore(true);

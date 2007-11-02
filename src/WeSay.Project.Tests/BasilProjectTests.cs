@@ -28,7 +28,8 @@ namespace WeSay.Project.Tests
 
 		private string GetCommonDirectory()
 		{
-			return Path.Combine(_projectDirectory, "common");
+			return _projectDirectory;
+			//return Path.Combine(_projectDirectory, "common");
 		}
 
 		private void WriteSampleStringCatalogFile()

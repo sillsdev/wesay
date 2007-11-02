@@ -163,6 +163,8 @@ namespace WeSay.App
 			}
 		  }
 
+		  liftPath = project.UpdateFileStructure(liftPath);
+
 		  if (project.LoadFromLiftLexiconPath(liftPath))
 		  {
 			Settings.Default.PreviousLiftPath = liftPath;

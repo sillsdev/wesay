@@ -197,7 +197,8 @@ namespace WeSay.Setup
 
 				if (path.Contains(".lift"))
 				{
-					if(!Project.LoadFromLiftLexiconPath(path))
+					path = Project.UpdateFileStructure(path);
+					if (!Project.LoadFromLiftLexiconPath(path))
 					{
 						Project = null;
 						return;

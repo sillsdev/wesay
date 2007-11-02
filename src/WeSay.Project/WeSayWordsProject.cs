@@ -172,8 +172,8 @@ namespace WeSay.Project
 					return false;
 				}
 
-				//walk up from file to /wesay to /<project>
-				ProjectDirectoryPath = Directory.GetParent(Directory.GetParent(liftPath).FullName).FullName;
+				//ProjectDirectoryPath = Directory.GetParent(Directory.GetParent(liftPath).FullName).FullName;
+				ProjectDirectoryPath = Directory.GetParent(liftPath).FullName;
 
 				if (CheckLexiconIsInValidProjectDirectory(liftPath))
 				{
@@ -196,9 +196,33 @@ namespace WeSay.Project
 			}
 		}
 
+		public string UpdateFileStructure(string liftPath)
+		{
+			string projectDir;
+			if (HasOldStructure(liftPath, out projectDir))
+			{
+				MoveFilesFromOldDirLayout(projectDir);
+				liftPath = Path.Combine(projectDir, Path.GetFileName(liftPath));
+			}
+			return liftPath;
+		}
+
+		private static bool HasOldStructure(string liftPath, out string projectDirectory)
+		{
+			Debug.Assert(File.Exists(liftPath));
+			projectDirectory = Directory.GetParent(Directory.GetParent(liftPath).FullName).FullName;
+			string commonDir = Path.Combine(projectDirectory, "common");
+			string dirHoldingLift = Path.GetFileName(Path.GetDirectoryName(liftPath));
+			return dirHoldingLift == "wesay" && Directory.Exists(commonDir);
+		}
+
 		public override void LoadFromProjectDirectoryPath(string projectDirectoryPath)
 		{
 			ProjectDirectoryPath = projectDirectoryPath;
+
+			//may have already been done, but maybe not
+			MoveFilesFromOldDirLayout(projectDirectoryPath);
+
 			XPathDocument configDoc = GetConfigurationDoc();
 			if (configDoc != null) // will be null if we're creating a new project
 			{
@@ -224,6 +248,95 @@ namespace WeSay.Project
 			base.LoadFromProjectDirectoryPath(projectDirectoryPath);
 			InitializeViewTemplatesFromProjectFiles();
 		}
+
+		private void MoveFilesFromOldDirLayout(string projectDir)
+		{
+			MoveWeSayContentsToProjectDir(projectDir, "common");
+			MoveWeSayContentsToProjectDir(projectDir, "wesay");
+			MoveExportAndLexiqueProFilesToNewDirStructure(projectDir);
+		}
+
+
+
+		private static void MoveWeSayContentsToProjectDir(string projectDir, string subDirName)
+		{
+			try
+			{
+				string sourceDir = Path.Combine(projectDir, subDirName);
+				string targetDir = projectDir;
+				if (Directory.Exists(sourceDir))
+				{
+					MoveSubDirectory(projectDir, sourceDir, "pictures");
+					MoveSubDirectory(projectDir, sourceDir, "cache");
+
+					foreach (string source in Directory.GetFiles(sourceDir))
+					{
+						if (source.Contains("liftold") || source.Contains("lift.bak"))
+						{
+							File.Delete(source);
+						}
+						else
+						{
+							string target = Path.Combine(targetDir, Path.GetFileName(source));
+							if (File.Exists(target))
+							{
+								File.Delete(target);
+							}
+							File.Move(source, target);
+						}
+					}
+					try
+					{
+						Directory.Delete(sourceDir);
+					}
+					catch(Exception err)
+					{
+						//no big deal if other files prevent deleting it
+					}
+				}
+			}
+			catch(Exception err)
+			{
+				ApplicationException e = new ApplicationException("Error while trying to migrate to new file structure. ", err);
+				Palaso.Reporting.ErrorNotificationDialog.ReportException(e);
+			}
+		}
+
+		private static void MoveSubDirectory(string targetParentDir, string subDirName, string directoryToMoveName)
+		{
+			string moveDir = Path.Combine(subDirName, directoryToMoveName);
+			if (Directory.Exists(moveDir))
+			{
+				string dest = Path.Combine(targetParentDir, directoryToMoveName);
+				Directory.Move(moveDir, dest);
+			}
+		}
+
+		private static void MoveExportAndLexiqueProFilesToNewDirStructure(string projectDir)
+		{
+			try
+			{
+				string presumedExportName = Path.GetFileName(projectDir);
+				string targetDir = Path.Combine(projectDir, "export");
+				Directory.CreateDirectory(targetDir);
+				foreach (string source in Directory.GetFiles(projectDir, presumedExportName + "-sfm*.*"))
+				{
+					string target = Path.Combine(targetDir, Path.GetFileName(source));
+					if (File.Exists(target))
+					{
+						File.Delete(target);
+					}
+					File.Move(source, target);
+				}
+			}
+			catch (Exception err)
+			{
+				ApplicationException e = new ApplicationException("Error while trying to move export files to new structure. ", err);
+				Palaso.Reporting.ErrorNotificationDialog.ReportException(e);
+			}
+		}
+
+
 
 		public static bool MigrateConfigurationXmlIfNeeded(XPathDocument configurationDoc, string targetPath)
 		{
@@ -341,6 +454,7 @@ namespace WeSay.Project
 			return new ProjectInfo(Name,
 								   ProjectDirectoryPath,
 								   PathToLiftFile,
+								   PathToExportDirectory,
 								   GetFilesBelongingToProject(ProjectDirectoryPath),
 								   AddinSet.Singleton.LocateFile,
 								   WritingSystems);
@@ -368,7 +482,7 @@ namespace WeSay.Project
 		private static bool CheckLexiconIsInValidProjectDirectory(string liftPath)
 		{
 			DirectoryInfo lexiconDirectoryInfo = Directory.GetParent(liftPath);
-			DirectoryInfo projectRootDirectoryInfo = lexiconDirectoryInfo.Parent;
+			DirectoryInfo projectRootDirectoryInfo = lexiconDirectoryInfo;
 			string lexiconDirectoryName = lexiconDirectoryInfo.Name;
 			if (Environment.OSVersion.Platform != PlatformID.Unix)
 			{
@@ -377,7 +491,7 @@ namespace WeSay.Project
 			}
 
 			if (projectRootDirectoryInfo == null ||
-				lexiconDirectoryName != "wesay" ||
+			  //  lexiconDirectoryName != "wesay" ||
 				(!IsValidProjectDirectory(projectRootDirectoryInfo.FullName)))
 			{
 				string message =
@@ -421,7 +535,7 @@ namespace WeSay.Project
 
 		public static bool IsValidProjectDirectory(string dir)
 		{
-			string[] requiredDirectories = new string[] {"common", "wesay"};
+			string[] requiredDirectories = new string[] {};
 			foreach (string s in requiredDirectories)
 			{
 				if (!Directory.Exists(Path.Combine(dir, s)))
@@ -447,6 +561,11 @@ namespace WeSay.Project
 		public string PathToOldProjectTaskInventory
 		{
 			get { return Path.Combine(PathToWeSaySpecificFilesDirectoryInProject, "tasks.xml"); }
+		}
+
+		private string PathToExportDirectory
+		{
+			get { return Path.Combine(ProjectDirectoryPath, "export"); }
 		}
 
 		public override void Dispose()
@@ -504,7 +623,7 @@ namespace WeSay.Project
 				}
 				else
 				{
-					ProjectDirectoryPath = Directory.GetParent(value).Parent.FullName;
+					ProjectDirectoryPath = Path.GetDirectoryName(value);// Directory.GetParent(value).Parent.FullName;
 				}
 			}
 		}
@@ -568,11 +687,11 @@ namespace WeSay.Project
 				return path;
 			}
 
-			path = Path.Combine(ProjectCommonDirectory, fileName);
-			if (File.Exists(path))
-			{
-				return path;
-			}
+//            path = Path.Combine(ProjectCommonDirectory, fileName);
+//            if (File.Exists(path))
+//            {
+//                return path;
+//            }
 
 			path = Path.Combine(ApplicationCommonDirectory, fileName);
 			if (File.Exists(path))
@@ -591,8 +710,14 @@ namespace WeSay.Project
 
 		public string PathToWeSaySpecificFilesDirectoryInProject
 		{
+			get { return ProjectDirectoryPath; }
+		}
+
+		public string PathOldToWeSaySpecificFilesDirectoryInProject
+		{
 			get { return Path.Combine(ProjectDirectoryPath, "wesay"); }
 		}
+
 
 		public ViewTemplate DefaultViewTemplate
 		{
@@ -912,7 +1037,8 @@ namespace WeSay.Project
 				}
 				reader.Close();
 			}
-			string backupPath = GetUniqueFileName(inputPath);
+			//string backupPath = GetUniqueFileName(inputPath);
+			string backupPath = inputPath + ".bak";
 
 			ReplaceFileWithUserInteractionIfNeeded(tempPath, inputPath, backupPath);
 		}
