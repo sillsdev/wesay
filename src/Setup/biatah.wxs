@@ -18,7 +18,7 @@
 	  </Component>
 
 		<Component Id="biatahMain" Guid="{5008C03F-7946-4147-96B1-442AD4999FA9}">
-		  <File Id="writingSystemPrefs.xml" Name="writingSystemPrefs.xml" KeyPath="yes" Source="..\..\sampleprojects\biatah\writingSystemPrefs.xml" />
+		  <File Id="writingSystemPrefs.xml" Name="writingSystemPrefs.xml" Source="..\..\sampleprojects\biatah\writingSystemPrefs.xml" />
 		  <File Id="biatah.lift" Name="biatah.lift" KeyPath="yes" Source="..\..\sampleprojects\biatah\biatah.lift" />
 		  <File Id="biatah.WeSayConfig" Name="biatah.WeSayConfig"  Source="..\..\sampleprojects\biatah\biatah.WeSayConfig" />
 		</Component>
