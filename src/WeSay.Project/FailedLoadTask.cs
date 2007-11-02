@@ -39,6 +39,11 @@ namespace WeSay.Project
 			get { return String.Format("Error: {0}", _description); }
 		}
 
+		public bool WantsToPreCache
+		{
+			get { return false; }
+		}
+
 		public Control Control
 		{
 			get {

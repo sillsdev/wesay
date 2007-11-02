@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<lift
+	version="0.10"
+	producer="test"><entry
+		id="boo_a4ce3d82-c3f2-46df-b5f3-7328b9d067c2"
+		dateCreated="2007-11-02T06:22:06Z"
+		dateModified="2007-11-02T06:22:06Z"
+		guid="a4ce3d82-c3f2-46df-b5f3-7328b9d067c2"><lexical-unit><form
+				lang="zzz"><text>boo</text></form></lexical-unit></entry><entry
+		id="Id'dPrematurely_24b02c1e-2622-46ed-8c6d-f02a43f8dc06"
+		dateCreated="2007-11-02T06:22:06Z"
+		dateModified="2007-11-02T06:22:06Z"
+		guid="24b02c1e-2622-46ed-8c6d-f02a43f8dc06" /></lift>

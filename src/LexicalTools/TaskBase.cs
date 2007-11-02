@@ -50,6 +50,12 @@ namespace WeSay.LexicalTools
 			IsActive = true;
 		}
 
+
+		public bool WantsToPreCache
+		{
+			get { return true; }
+		}
+
 		public virtual void Deactivate()
 		{
 			if (!IsActive)

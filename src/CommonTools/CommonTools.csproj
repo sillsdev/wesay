@@ -80,12 +80,6 @@
 	<Compile Include="ItemsToDoIndicator.designer.cs">
 	  <DependentUpon>ItemsToDoIndicator.cs</DependentUpon>
 	</Compile>
-	<Compile Include="PictureControl.cs">
-	  <SubType>UserControl</SubType>
-	</Compile>
-	<Compile Include="PictureControl.Designer.cs">
-	  <DependentUpon>PictureControl.cs</DependentUpon>
-	</Compile>
 	<Compile Include="Properties\AssemblyInfo.cs" />
 	<Compile Include="Properties\Resources.Designer.cs">
 	  <AutoGen>True</AutoGen>

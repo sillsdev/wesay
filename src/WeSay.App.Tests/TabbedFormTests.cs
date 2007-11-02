@@ -83,6 +83,10 @@ namespace WeSay.App.Tests
 				return Status;
 			}
 		}
+		public bool WantsToPreCache
+		{
+			get { return true; }
+		}
 
 	}
 
