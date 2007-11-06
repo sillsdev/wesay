@@ -169,6 +169,7 @@ BOGURAEV and NEFF Lit Linguist Computing.1992; 7: 110-112
   </xsl:template>
 
   <xsl:template name="output-entry">
+	<xsl:message/> <!-- for progress dialog-->
 	<xsl:call-template name="output-headword"/>
 	<xsl:apply-templates select="pronunciation"/>
 	<xsl:apply-templates select="variant"/>

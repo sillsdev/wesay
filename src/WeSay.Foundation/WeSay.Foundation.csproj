@@ -60,16 +60,11 @@
   </ItemGroup>
   <ItemGroup>
 	<Compile Include="Annotation.cs" />
-	<Compile Include="AsyncCommand.cs" />
 	<Compile Include="BackupMaker.cs" />
-	<Compile Include="BasicCommand.cs" />
 	<Compile Include="CommonEnumerations.cs" />
-	<Compile Include="ConsoleProgressState.cs" />
-	<Compile Include="BackgroundWorkerState.cs" />
 	<Compile Include="FlagState.cs" />
 	<Compile Include="IDisplayStringAdaptor.cs" />
 	<Compile Include="IBindableControl.cs" />
-	<Compile Include="ILongRunningJob.cs" />
 	<Compile Include="LameProgressDialog.cs">
 	  <SubType>Form</SubType>
 	</Compile>
@@ -78,10 +73,8 @@
 	</Compile>
 	<Compile Include="LanguageForm.cs" />
 	<Compile Include="MultiText.cs" />
-	<Compile Include="NullProgressState.cs" />
 	<Compile Include="OptionsList.cs" />
 	<Compile Include="PictureRef.cs" />
-	<Compile Include="ProgressState.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />
 	<Compile Include="StringCatalog.cs" />
 	<Compile Include="WeSayDataObject.cs" />

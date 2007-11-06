@@ -39,6 +39,10 @@ namespace Addin.Transform
 		public override void Launch(Form parentForm, ProjectInfo projectInfo)
 		{
 			string output = CreateFileToOpen(projectInfo, true);
+			if(string.IsNullOrEmpty(output))
+			{
+				return; // get this when the user cancels
+			}
 			if (_launchAfterTransform)
 			{
 				try

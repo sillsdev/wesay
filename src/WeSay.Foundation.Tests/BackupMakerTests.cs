@@ -126,7 +126,7 @@ namespace WeSay.Foundation.Tests
 			try
 			{
 				f = new ZipFile(_destinationZip);
-				Assert.AreNotEqual(-1, f.FindEntry("pretend/wesay/pretend.lift", true));
+				Assert.AreNotEqual(-1, f.FindEntry("pretend/pretend.lift", true));
 			}
 			finally
 			{

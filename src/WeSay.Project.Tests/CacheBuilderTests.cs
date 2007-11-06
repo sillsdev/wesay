@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using Db4objects.Db4o;
 using NUnit.Framework;
-using WeSay.Foundation;
-using WeSay.Foundation.Progress;
+using Palaso.Progress;
 using WeSay.LexicalModel;
 using WeSay.Project;
 

@@ -4,12 +4,13 @@ using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 using CommandLine;
+using Palaso.Progress;
 using Palaso.Reporting;
+using Palaso.UI.WindowsForms.Progress;
 using WeSay.App;
 using WeSay.App.Properties;
 using WeSay.Data;
 using WeSay.Foundation;
-using WeSay.Foundation.Progress;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Db4o_Specific;
 using WeSay.LexicalModel.Tests;
@@ -252,7 +253,7 @@ namespace WeSay.App
 			}
 
 		private static bool PreprocessLift()
-			{
+		{
 			using (ProgressDialog dlg = new ProgressDialog())
 			{
 				dlg.Overview = "Please wait while WeSay preprocesses your LIFT file.";

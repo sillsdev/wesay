@@ -5,11 +5,11 @@ using System.IO;
 using System.Xml;
 using Db4objects.Db4o;
 using LiftIO;
+using Palaso.Progress;
 using Palaso.Reporting;
 using WeSay.App;
 using WeSay.Data;
 using WeSay.Foundation;
-using WeSay.Foundation.Progress;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Db4o_Specific;
 

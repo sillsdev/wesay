@@ -49,7 +49,7 @@ namespace WeSay.Project.Tests
 		public void WeSayDirNotInValidBasilDir()
 		{
 			string experimentDir = MakeDir(Path.GetTempPath(), Path.GetRandomFileName());
-			string weSayDir = MakeDir(experimentDir, "WeSay");
+			string weSayDir = experimentDir; // MakeDir(experimentDir, "WeSay");
 			string wordsPath = Path.Combine(weSayDir, "AAA.words");
 			File.Create(wordsPath).Close();
 			TryLoading(wordsPath, experimentDir);
@@ -81,7 +81,7 @@ namespace WeSay.Project.Tests
 		{
 			string experimentDir = MakeDir(Path.GetTempPath(), Path.GetRandomFileName());
 			string projectDir = MakeDir(experimentDir, "TestProj");
-			string weSayDir = MakeDir(projectDir, "WeSay");
+		   // string weSayDir = MakeDir(projectDir, "WeSay");
 //            MakeDummyWordsFile("AAA.words", weSayDir);
 //            if (doMakeFileMatchingProjectName)
 //            {

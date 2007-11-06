@@ -28,8 +28,8 @@ namespace WeSay.Data.Tests
 		[Ignore("Run this explicity to setup the sample data. It should not be required for any tests.")]
 		public void MakeThai5000SampleFromLift()
 		{
-			string sourcePath = CombinePathParts(new string[] { "..", "..", "SampleProjects", "Thai", "WeSay", "thai5000.lift.xml"});
-			string destPath = CombinePathParts(new string[] { "..", "..", "SampleProjects", "Thai", "WeSay", "thai5000.words"});
+			string sourcePath = CombinePathParts(new string[] { "..", "..", "SampleProjects", "Thai",  "thai5000.lift.xml"});
+			string destPath = CombinePathParts(new string[] { "..", "..", "SampleProjects", "Thai",  "thai5000.words"});
 
 			if (File.Exists(destPath))
 			{

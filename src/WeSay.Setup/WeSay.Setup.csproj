@@ -58,6 +58,10 @@
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\PalasoReporting.dll</HintPath>
 	</Reference>
+	<Reference Include="PalasoUIWindowsForms, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\PalasoUIWindowsForms.dll</HintPath>
+	</Reference>
 	<Reference Include="System" />
 	<Reference Include="System.Data" />
 	<Reference Include="System.Deployment" />

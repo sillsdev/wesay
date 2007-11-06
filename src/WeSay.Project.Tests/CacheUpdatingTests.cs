@@ -22,7 +22,7 @@ namespace WeSay.Project.Tests
 		{
 			_experimentDir = MakeDir(Path.GetTempPath(), Path.GetRandomFileName());
 			_projectDir = MakeDir(_experimentDir, "TestProj");
-			 _weSayDir = MakeDir(_projectDir, "WeSay");
+			_weSayDir = _projectDir;// MakeDir(_projectDir, "WeSay");
 			_liftPath = Path.Combine(_weSayDir, "test.lift");
 			MakeEmptyFile(_liftPath);
 			_project = new WeSayWordsProject();

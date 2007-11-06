@@ -2,8 +2,7 @@ using System;
 using System.ComponentModel;
 using System.IO;
 using System.Threading;
-using WeSay.Foundation;
-using WeSay.Foundation.Progress;
+using Palaso.Progress;
 using WeSay.Project;
 
 namespace WeSay.SampleDataProcessor
