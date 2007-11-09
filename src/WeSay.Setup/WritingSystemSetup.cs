@@ -120,8 +120,9 @@ namespace WeSay.Setup
 			else
 			{
 				BasilProject.Project.WritingSystems.Add(w.Id, w);
-				_wsListBox.Items.Add(new WsDisplayProxy(w, BasilProject.Project.WritingSystems));
-				_wsListBox.SelectedItem = w;
+				WsDisplayProxy item = new WsDisplayProxy(w, BasilProject.Project.WritingSystems);
+				_wsListBox.Items.Add(item);
+				_wsListBox.SelectedItem = item;
 			}
 		}
 

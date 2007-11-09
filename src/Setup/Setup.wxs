@@ -3,18 +3,20 @@
 <!-- will be used later on in this file.                                                                 -->
 <?define Property_ProductVersion = "0.0.3" ?>
 <?define Property_ProductCode = "*" ?> <!--- REVIEW. Should that be a guid? -->
-<?define Property_UpgradeCode = "F9219A2A-1C98-4da8-A100-51989F618054" ?>
+<?define Property_UpgradeCode = "{6B6778A7-D3AD-4de8-BE95-C8956665B85A}" ?>
 
 
 	<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
 
 		<Product Id="$(var.Property_ProductCode)" Name="WeSay" Language="1033"
 				   Version="$(var.Property_ProductVersion)" Manufacturer="SIL"
-				   UpgradeCode="$(var.Property_UpgradeCode">
+				   UpgradeCode="$(var.Property_UpgradeCode)">
 
-		 <Upgrade Id ="$(var.Property_UpgradeCode" >
-		  <UpgradeVersion Minimum ="$(var.ProductVersion)" OnlyDetect ="yes" Property ="NEWVERSIONDETECTED" />
-		  <UpgradeVersion Minimum ="0.0.0" IncludeMinimum ="yes" Maximum ="$(var.ProductVersion)" IncludeMaximum ="no" Property ="OLDERVERSIONBEINGUPGRADED" />
+		  <Package  Compressed="yes" InstallerVersion="200" />
+
+		  <Upgrade Id ="$(var.Property_UpgradeCode)" >
+		  <UpgradeVersion Minimum ="$(var.Property_ProductVersion)" OnlyDetect ="yes" Property ="NEWVERSIONDETECTED" />
+		  <UpgradeVersion Minimum ="0.0.0" IncludeMinimum ="yes" Maximum ="$(var.Property_ProductVersion)" IncludeMaximum ="no" Property ="OLDERVERSIONBEINGUPGRADED" />
 		  </Upgrade >
 
 
