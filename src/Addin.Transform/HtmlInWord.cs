@@ -32,7 +32,7 @@ namespace Addin.Transform
 		{
 			get
 			{
-				return Resources.printButtonImage;
+				return Resources.wordExport;
 			}
 		}
 

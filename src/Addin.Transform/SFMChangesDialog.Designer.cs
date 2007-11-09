@@ -103,6 +103,7 @@ namespace Addin.Transform
 			this.textBox1.Size = new System.Drawing.Size(130, 219);
 			this.textBox1.TabIndex = 4;
 			this.textBox1.Text = resources.GetString("textBox1.Text");
+			this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
 			//
 			// label2
 			//
@@ -213,6 +214,7 @@ namespace Addin.Transform
 			this.Name = "SFMChangesDialog";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "Setup Standard Format Export...";
+			this.Load += new System.EventHandler(this.SFMChangesDialog_Load);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 

@@ -129,6 +129,10 @@ namespace WeSay.Project
 				{
 					_fieldName = "definition";
 				}
+				if (_fieldName == "CitationForm") //versions prior to nov-8-2007 had the name wrong
+				{
+					_fieldName = "citation";
+				}
 			}
 		}
 

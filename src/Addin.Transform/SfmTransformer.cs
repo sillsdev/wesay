@@ -27,7 +27,7 @@ namespace Addin.Transform
 		{
 			get
 			{
-				return StringCatalog.Get("~SFM Exporter");
+				return StringCatalog.Get("~Export To SFM");
 			}
 		}
 
@@ -55,7 +55,9 @@ namespace Addin.Transform
 			ProgressState progressState = (ProgressState)args.Argument;
 			TransformWorkerArguments workerArguments = (TransformWorkerArguments)(progressState.Arguments);
 
-			progressState.StatusLabel = "Grepping...";
+			progressState.StatusLabel = "Converting to MDF...";
+			progressState.NumberOfStepsCompleted++;
+			//System.Threading.Thread.Sleep(100);//don't event see that message otherwise
 			GrepFile(workerArguments.outputFilePath, args);
 		}
 		private static void GrepFile(string inputPath, DoWorkEventArgs args)
@@ -66,7 +68,6 @@ namespace Addin.Transform
 
 			string tempPath = inputPath + ".tmp";
 			IEnumerable<SfmTransformSettings.ChangePair> pairs = sfmSettings.ChangePairs;
-
 			using (StreamReader reader = File.OpenText(inputPath))
 			{
 				using (StreamWriter writer = new StreamWriter(tempPath))
@@ -74,22 +75,18 @@ namespace Addin.Transform
 					while (!reader.EndOfStream)
 					{
 						string line = reader.ReadLine();
-						if(line.StartsWith("\\lx"))
+					   // if(line.StartsWith("\\lx"))
 						{
 							if(progressState.Cancel)
 							{
 								return;
 							}
-							progressState.NumberOfStepsCompleted++;
-
+								//we don't have a way of knowing      progressState.NumberOfStepsCompleted = ;
 						}
 						foreach (SfmTransformSettings.ChangePair pair in pairs)
 						{
-							if (Regex.IsMatch(line, pair.from))
-							{
-								line = Regex.Replace(line, pair.from, pair.to);
-								//break; //only supporting one match per line
-							}
+							//this is super slow
+							line = pair.regex.Replace(line, pair.to);
 						}
 						writer.WriteLine(line);
 					}
@@ -98,14 +95,19 @@ namespace Addin.Transform
 				reader.Close();
 			}
 
+			//System.Threading.Thread.Sleep(500);//don't event see that message otherwise
+			progressState.StatusLabel = "Cleaning up...";
+			progressState.NumberOfStepsCompleted++;
 			File.Delete(inputPath);
 			File.Move(tempPath, inputPath);//, backupPath);
+			progressState.NumberOfStepsCompleted = progressState.TotalNumberOfSteps;
+			System.Threading.Thread.Sleep(500);//don't event see that message otherwise
 		}
 
 		public override void Launch(Form parentForm, ProjectInfo projectInfo)
 		{
 			_settings.FillEmptySettingsWithGuesses(projectInfo);
-			SetupPostTransformMethod(OnDoGrepWork, _settings, 1);
+			SetupPostTransformMethod(OnDoGrepWork, _settings, 10/*has some cushion*/);
 			string output = TransformLift(projectInfo, "lift2sfm.xsl", "-sfm.txt");
 			if (string.IsNullOrEmpty(output))
 			{

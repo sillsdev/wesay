@@ -118,15 +118,14 @@
 	<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="textBox1.Text" xml:space="preserve">
-	<value>Put each "from-to" pair on its own line, with a space in between the "from" and "to" parts.
+	<value>Put each from/to "regular expression" pair on its own line.
 
-Example:
+Examples:
+\\myCustom \mc
+trunk boot
+\[Vi\] vi
 
-lx_bth lx
-g_en ge
-g_chn gn
-
-Note, these are actually regular expressions, so characters like \ would have to be properly escaped.</value>
+Note, in the "from" part, characters like \, [, and ] need a '\' in the front if you want them to be taken literally.</value>
   </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">

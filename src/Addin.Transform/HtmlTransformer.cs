@@ -16,7 +16,7 @@ namespace Addin.Transform
 		{
 			get
 			{
-				return StringCatalog.Get("~Html Exporter");
+				return StringCatalog.Get("~Export to HTML");
 			}
 		}
 
@@ -24,7 +24,7 @@ namespace Addin.Transform
 		{
 			get
 			{
-				return StringCatalog.Get("~Creates an Html version of the dictionary ready for printing.");
+				return StringCatalog.Get("~Creates a simple Html version of the dictionary, ready for printing.");
 			}
 		}
 

@@ -86,9 +86,9 @@ namespace WeSay.LexicalTools
 					{
 						Logger.WriteMinorEvent("Datasource set calling _record.CleanUpAfterEditting()");
 
-						_record.CleanUpAfterEditting();
 						_record.PropertyChanged -= OnRecordPropertyChanged;
 						_record.EmptyObjectsRemoved -= OnEmptyObjectsRemoved;
+						_record.CleanUpAfterEditting();
 					}
 					_record = value;
 					_currentItemInFocus = null;

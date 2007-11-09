@@ -201,7 +201,7 @@ namespace WeSay.Project
 			lexicalFormField.Visibility = CommonEnumerations.VisibilitySetting.Visible;
 			masterTemplate.Add(lexicalFormField);
 
-			Field citationFormField = new Field("CitationForm", "LexEntry", defaultVernacularSet);
+			Field citationFormField = new Field(LexEntry.WellKnownProperties.Citation, "LexEntry", defaultVernacularSet);
 			StringCatalog.Get("~CitationForm", "The label for the field holding the citation form.");
 			citationFormField.DisplayName = "Citation Form";
 			citationFormField.Description = "The form that is to be printed in the dictionary";

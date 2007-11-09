@@ -70,5 +70,15 @@ namespace Addin.Transform
 		{
 
 		}
+
+		private void textBox1_TextChanged(object sender, EventArgs e)
+		{
+
+		}
+
+		private void SFMChangesDialog_Load(object sender, EventArgs e)
+		{
+
+		}
 	}
 }

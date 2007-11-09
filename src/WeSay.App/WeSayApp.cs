@@ -155,14 +155,17 @@ namespace WeSay.App
 		  {
 			if (!String.IsNullOrEmpty(Settings.Default.PreviousLiftPath))
 			{
-			  liftPath = Settings.Default.PreviousLiftPath;
-			}
-			else
-			{
-			  ErrorReport.ReportNonFatalMessage("WeSay was unable to figure out what lexicon to work on. Try opening the LIFT file by double clicking on it. If you don't have one yet, run the WeSay Configuration Tool to make a new WeSay proejct.");
-			  return false;
+				if (File.Exists(Settings.Default.PreviousLiftPath))
+				{
+					liftPath = Settings.Default.PreviousLiftPath;
+				}
 			}
 		  }
+		  if(liftPath == null)
+			{
+			  ErrorReport.ReportNonFatalMessage("WeSay was unable to figure out what lexicon to work on. Try opening the LIFT file by double clicking on it. If you don't have one yet, run the WeSay Configuration Tool to make a new WeSay project.");
+			  return false;
+			}
 
 		  liftPath = project.UpdateFileStructure(liftPath);
 

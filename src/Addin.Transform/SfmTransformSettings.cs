@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
+using System.Text.RegularExpressions;
 using System.Xml.Serialization;
 using WeSay.AddinLib;
 using WeSay.Language;
@@ -81,17 +82,45 @@ namespace Addin.Transform
 
 		public class ChangePair
 		{
-			public string from;
+			private string _from;
 			public string to;
+			public Regex regex;
 
-			public ChangePair( )
+/*            public ChangePair( string sfrom, string sto)
 			{
+//                _from = @"(\W)*" + sfrom+ @"(\W)";
+ //                to = "$1" + sto + " "; //put the spaces back in
+			   _from = @"\\" + sfrom + @"\s+";
+				to =  @"\\" + sto + " "; //put the spaces back in
+				regex = new Regex(_from, RegexOptions.Compiled);
 			}
-			public ChangePair( string sfrom, string sto)
-			{
-				from = @"(\W)*" + sfrom+ @"(\W)";
-				to = "$1" + sto +   " "; //put the spaces back in
+ * */
 
+			private ChangePair( string sfrom, string sto)
+			{
+				_from = sfrom;
+				to = sto;
+
+				//can throw exception
+				regex = new Regex(_from, RegexOptions.Compiled);
+			}
+
+			static public ChangePair CreateFullMarkerReplacement(string fromMarkerNoSlash, string toMarkerNoSlash)
+			{
+				string from = @"\\" + fromMarkerNoSlash + @"\s+";
+				string to = @"\" + toMarkerNoSlash + " ";
+				ChangePair p = new ChangePair(from, to);
+				return p;
+			}
+
+			/// <summary>
+			///
+			/// </summary>
+			/// <exception cref="ArgumentException">if the regex doesn't parse</exception>
+			public static ChangePair CreateReplacementFromTweak(string from, string to)
+			{
+				ChangePair p = new ChangePair(from, to);
+				return p;
 			}
 		}
 
@@ -101,38 +130,38 @@ namespace Addin.Transform
 			get
 			{
 				List<ChangePair> pairs = new List<ChangePair>();
-				pairs.Add(new ChangePair( "BaseForm", "base"));
-				pairs.Add(new ChangePair( "SemanticDomainDdp4", "sd"));
+				pairs.Add(ChangePair.CreateFullMarkerReplacement( "BaseForm", "base"));
+				pairs.Add(ChangePair.CreateFullMarkerReplacement( "SemanticDomainDdp4", "sd"));
 
 				if (!String.IsNullOrEmpty(_vernacularLanguageWritingSystemId))
 				{
-					pairs.Add(new ChangePair( "lx_" + _vernacularLanguageWritingSystemId, "lx"));
-					pairs.Add(new ChangePair( "lc_" + _vernacularLanguageWritingSystemId, "lc"));
-					pairs.Add(new ChangePair( "x_" + _vernacularLanguageWritingSystemId,   "xv"));
-					pairs.Add(new ChangePair( "d_" + _vernacularLanguageWritingSystemId,   "dv"));
+					pairs.Add(ChangePair.CreateFullMarkerReplacement("lx_" + _vernacularLanguageWritingSystemId, "lx"));
+					pairs.Add(ChangePair.CreateFullMarkerReplacement( "lc_" + _vernacularLanguageWritingSystemId, "lc"));
+					pairs.Add(ChangePair.CreateFullMarkerReplacement( "x_" + _vernacularLanguageWritingSystemId,   "xv"));
+					pairs.Add(ChangePair.CreateFullMarkerReplacement( "d_" + _vernacularLanguageWritingSystemId,   "dv"));
 				}
 
 				if (!String.IsNullOrEmpty(_englishLanguageWritingSystemId))
 				{
-					pairs.Add(new ChangePair("g_" + _englishLanguageWritingSystemId, "ge"));
-					pairs.Add(new ChangePair( "d_" + _englishLanguageWritingSystemId, "de"));
-					pairs.Add(new ChangePair( "x_" + _englishLanguageWritingSystemId, "xe"));
-					pairs.Add(new ChangePair( "nt_" + _englishLanguageWritingSystemId, "nt"));
+					pairs.Add(ChangePair.CreateFullMarkerReplacement("g_" + _englishLanguageWritingSystemId, "ge"));
+					pairs.Add(ChangePair.CreateFullMarkerReplacement( "d_" + _englishLanguageWritingSystemId, "de"));
+					pairs.Add(ChangePair.CreateFullMarkerReplacement( "x_" + _englishLanguageWritingSystemId, "xe"));
+					pairs.Add(ChangePair.CreateFullMarkerReplacement( "nt_" + _englishLanguageWritingSystemId, "nt"));
 				}
 
 				if (!String.IsNullOrEmpty(_nationalLanguageWritingSystemId))
 				{
-					pairs.Add(new ChangePair( "g_" + _nationalLanguageWritingSystemId, "gn"));
-					pairs.Add(new ChangePair( "d_" + _nationalLanguageWritingSystemId, "dn"));
-					pairs.Add(new ChangePair( "x_" + _nationalLanguageWritingSystemId, "xn"));
-					pairs.Add(new ChangePair( "nt_" + _nationalLanguageWritingSystemId, "ntn"));
+					pairs.Add(ChangePair.CreateFullMarkerReplacement( "g_" + _nationalLanguageWritingSystemId, "gn"));
+					pairs.Add(ChangePair.CreateFullMarkerReplacement( "d_" + _nationalLanguageWritingSystemId, "dn"));
+					pairs.Add(ChangePair.CreateFullMarkerReplacement( "x_" + _nationalLanguageWritingSystemId, "xn"));
+					pairs.Add(ChangePair.CreateFullMarkerReplacement( "nt_" + _nationalLanguageWritingSystemId, "ntn"));
 				}
 
 				if (!String.IsNullOrEmpty(_regionalLanguageWritingSystemId))
 				{
-					pairs.Add(new ChangePair( "g_" + _regionalLanguageWritingSystemId, "gr"));
-					pairs.Add(new ChangePair( "d_" + _regionalLanguageWritingSystemId, "dr"));
-					pairs.Add(new ChangePair( "x_" + _regionalLanguageWritingSystemId, "xr"));
+					pairs.Add(ChangePair.CreateFullMarkerReplacement( "g_" + _regionalLanguageWritingSystemId, "gr"));
+					pairs.Add(ChangePair.CreateFullMarkerReplacement( "d_" + _regionalLanguageWritingSystemId, "dr"));
+					pairs.Add(ChangePair.CreateFullMarkerReplacement( "x_" + _regionalLanguageWritingSystemId, "xr"));
 				}
 
 				if (_sfmTagConversions == null)
@@ -153,10 +182,18 @@ namespace Addin.Transform
 							}
 							else
 							{
-								ChangePair p = new ChangePair(  );
-								p.from = @"(\W)*" + parts[0] + @"(\W)"; //only match if bounded by white space
-								p.to = "$1" + parts[1] + "$2"; // put the spaces back in
-								pairs.Add(p);
+//                                string from=@"(\W)*" + parts[0] + @"(\W)"; //only match if bounded by white space
+//                                string to = "$1" + parts[1] + "$2";
+								try
+								{
+									ChangePair p = ChangePair.CreateReplacementFromTweak(parts[0], parts[1]);
+
+									pairs.Add(p);
+								}
+								catch(ArgumentException err)
+								{
+									Palaso.Reporting.ErrorReport.ReportNonFatalMessage("Sorry, there is a problem in one of the tweaks for SFM export.  They must each be valid 'regular expressions'.  The error was: {0}", err.Message);
+								}
 							}
 						}
 						else

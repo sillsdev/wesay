@@ -23,7 +23,7 @@ namespace Addin.Transform
 		public delegate void FileManipulationMethod(object sender, DoWorkEventArgs e);
 		private  FileManipulationMethod _postTransformMethod;
 		private object _postTransformArgument;
-		private int _postTransformWorkProgressStepsPerEntry;
+		private int _postTransformWorkSteps;
 
 		public abstract Image ButtonImage { get;}
 
@@ -93,7 +93,7 @@ namespace Addin.Transform
 
 		protected string TransformLift(ProjectInfo projectInfo, string xsltName, string outputFileSuffix, XsltArgumentList arguments)
 		{
-			_pathToOutput = Path.Combine(projectInfo.PathToTopLevelDirectory, projectInfo.Name + outputFileSuffix);
+			_pathToOutput = Path.Combine(projectInfo.PathToExportDirectory, projectInfo.Name + outputFileSuffix);
 			if (File.Exists(_pathToOutput))
 			{
 				File.Delete(_pathToOutput);
@@ -102,7 +102,7 @@ namespace Addin.Transform
 			TransformWorkerArguments targs = new TransformWorkerArguments();
 			targs.postTransformMethod = _postTransformMethod;
 			targs.postTransformArgument = _postTransformArgument;
-			targs.progressStepsPerEntry = _postTransformWorkProgressStepsPerEntry;
+			targs.postTransformSteps = _postTransformWorkSteps;
 			targs.outputFilePath = _pathToOutput;
 			using (targs.outputStream = File.Create(_pathToOutput))
 			{
@@ -139,14 +139,14 @@ namespace Addin.Transform
 				dlg.BackgroundWorker = worker;
 				dlg.CanCancel = true;
 				//dlg.CancelRequested += new EventHandler(OnCancelRequested);
-				dlg.InitialProgressState.Arguments = arguments;
+				dlg.ProgressState.Arguments = arguments;
 				dlg.ShowDialog();
 				if (dlg.ProgressStateResult!=null && dlg.ProgressStateResult.ExceptionThatWasEncountered != null)
 				{
 					Palaso.Reporting.ErrorNotificationDialog.ReportException(dlg.ProgressStateResult.ExceptionThatWasEncountered,null,false);
 					return false;
 				}
-				return !dlg.InitialProgressState.Cancel;
+				return !dlg.ProgressState.Cancel;
 			}
 			return false;
 		}
@@ -171,7 +171,7 @@ namespace Addin.Transform
 			public FileManipulationMethod postTransformMethod;
 			public string outputFilePath;
 			public object postTransformArgument;
-			public int progressStepsPerEntry;
+			public int postTransformSteps;
 		}
 
 		/// <summary>
@@ -205,13 +205,15 @@ namespace Addin.Transform
 
 				progressState.StatusLabel = "Exporting...";
 				int entriesCount = workerArguments.inputDocument.SelectNodes("//entry").Count;
-				progressState.TotalNumberOfSteps = entriesCount + (int)((entriesCount * workerArguments.progressStepsPerEntry));
+				progressState.TotalNumberOfSteps = entriesCount + workerArguments.postTransformSteps;
 				_staticProgressStateForWorker = progressState;
 				workerArguments.xsltArguments.XsltMessageEncountered += new XsltMessageEncounteredEventHandler(OnXsltMessageEncountered);
 				transform.Transform(workerArguments.inputDocument, workerArguments.xsltArguments,
 									workerArguments.outputStream);
 
 				workerArguments.outputStream.Close();//let the next guy get at the file
+				System.Diagnostics.Debug.Assert(progressState.NumberOfStepsCompleted <= entriesCount, "Should use up more than we reserved for ourselves");
+				progressState.NumberOfStepsCompleted = entriesCount;
 				if(workerArguments.postTransformMethod != null)
 				{
 					workerArguments.postTransformMethod.Invoke(sender, args);
@@ -298,11 +300,11 @@ namespace Addin.Transform
 
 		}
 
-		protected void SetupPostTransformMethod(FileManipulationMethod work, object arguments, int progressStepsPerEntry)
+		protected void SetupPostTransformMethod(FileManipulationMethod work, object arguments, int howManySteps)
 		{
 			_postTransformMethod = work;
 			_postTransformArgument = arguments;
-			_postTransformWorkProgressStepsPerEntry = progressStepsPerEntry;
+			_postTransformWorkSteps = howManySteps;
 		}
 	}
 }

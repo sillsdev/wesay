@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text.RegularExpressions;
 using NUnit.Framework;
+using Palaso.Reporting;
 using WeSay.AddinLib;
 
 namespace Addin.Transform.Tests
@@ -66,7 +68,7 @@ namespace Addin.Transform.Tests
 		[Test]
 		public void ConvertsGlossMarker()
 		{
-			string result = LaunchWithConversionString("g_en ge");
+			string result = LaunchWithConversionString("");
 			Assert.IsTrue(result.Contains("\\ge"));
 			Assert.IsFalse(result.Contains("g_en"));
 		}
@@ -100,9 +102,20 @@ namespace Addin.Transform.Tests
 		}
 
 		[Test]
+		public void BogusExpressionDoesntCrash()
+		{
+			Palaso.Reporting.ErrorReport.JustRecordNonFatalMessagesForTesting = true;
+			Assert.IsNull(ErrorReport.PreviousNonFatalMessage);
+			LaunchWithConversionString("{foo "  //missing "to"
+				+System.Environment.NewLine+"{foo $3" //bogus group refference
+				+System.Environment.NewLine+"[ foo"); // this is the one that is failing
+			Assert.IsNotNull(ErrorReport.PreviousNonFatalMessage);
+		}
+
+		[Test]
 		public void LaunchWithRecursiveConversionPiece()
 		{
-			LaunchWithConversionString("g_en g_en");
+			LaunchWithConversionString("hello hellothere");
 		}
 		[Test]
 		public void CanGetXsltFromResource()

@@ -45,7 +45,8 @@
 
 	<xsl:template  match="entry">
 		<xsl:apply-templates select="lexical-unit"/>
-		<xsl:apply-templates select="pronunciation"/>
+	  <xsl:apply-templates select="citation"/>
+	  <xsl:apply-templates select="pronunciation"/>
 		<xsl:apply-templates select="variant"/>
 	  <xsl:apply-templates select="relation"/>
 	  <xsl:apply-templates select="trait"/>
@@ -204,6 +205,12 @@
 	<xsl:value-of select="form/text"/>
   </xsl:template>
 
+  <xsl:template match="citation">
+	<!-- notice we drop the language identifier completely -->
+	<xsl:text>&nl;\lc </xsl:text>
+	<xsl:value-of select="form/text"/>
+  </xsl:template>
+
 <xsl:template match="example">
 	<xsl:apply-templates select="form">
 		<xsl:with-param name="prefix">x</xsl:with-param>
@@ -235,11 +242,7 @@
 		</xsl:apply-templates>
 	</xsl:template>
 
-  <xsl:template match="field[@tag='CitationForm']">
-	<xsl:apply-templates select="form">
-	  <xsl:with-param name="prefix">lc</xsl:with-param>
-	</xsl:apply-templates>
-  </xsl:template>
+
 
   <xsl:template match="field[@tag='LiteralMeaning']">
 	<!--review: notice we drop the language identifier completely -->
@@ -285,7 +288,7 @@
 	 </xsl:template>
 
   <xsl:template match="picture">
-	<xsl:text>&nl;\pc WeSay/pictures/</xsl:text><xsl:value-of select="@href"/>
+	<xsl:text>&nl;\pc ../pictures/</xsl:text><xsl:value-of select="@href"/>
   </xsl:template>
 
 	<xsl:template match="gloss">
