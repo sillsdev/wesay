@@ -6,10 +6,6 @@
 <?define Property_UpgradeCode = "F9219A2A-1C98-4da8-A100-51989F618054" ?>
 
 
-	   <InstallExecuteSequence >
-		<RemoveExistingProducts After ="InstallInitialize" />
-	   </InstallExecuteSequence>
-
 	<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
 
 		<Product Id="$(var.Property_ProductCode)" Name="WeSay" Language="1033"
