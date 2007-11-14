@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
@@ -12,58 +11,19 @@ using WeSay.UI.AutoCompleteTextBox;
 namespace WeSay.UI
 {
 	public partial class ReferenceCollectionEditor<KV, ValueT, KEY_CONTAINER> : UserControl
-		where ValueT :  class /*, IReferenceContainer,*/ /*IValueHolder<KV>*/
+		where ValueT :  class
 		where KEY_CONTAINER : IValueHolder<ValueT>, IReferenceContainer
-	  //  where CHOICE : IChoice
 	{
-
 		private IBindingList _chosenItems;
 		private IEnumerable<KV> _sourceChoices;
 		private IList<WritingSystem> _writingSystems;
+		private IChoiceSystemAdaptor<KV,ValueT,KEY_CONTAINER> _choiceSystemAdaptor;
 
 		//-------------------------------------------------
 		#region Delegates and Events
-		public event EventHandler CollectionChanged;
-		private WeSay.Foundation.IDisplayStringAdaptor _displayStringAdaptor;
 		private WeSayAutoCompleteTextBox.FormToObectFinderDelegate _formToObectFinderDelegate;
 
-		private IDisplayStringAdaptor _toolTipAdaptor;
-		AutoCompleteWithCreationBox<KV, ValueT>.GetValueFromKeyValueDelegate _getValueFromKeyValueDelegate;
-		private AutoCompleteWithCreationBox<KV, ValueT>.GetKeyValueFromValueDelegate _getKeyValueFromValueDelegate;
-
-		public delegate KV GetKeyValueFromKey_ContainerDelegate(KEY_CONTAINER kc);
-		private GetKeyValueFromKey_ContainerDelegate _getKeyValueFromKey_Container;
-
-		public delegate void UpdateKeyContainerFromKeyValueDelegate(KV kv, KEY_CONTAINER kc);
-
-		private UpdateKeyContainerFromKeyValueDelegate _updateKeyContainerFromKeyValue;
 		#endregion
-		//-------------------------------------------------
-
-		public AutoCompleteWithCreationBox<KV, ValueT>.GetValueFromKeyValueDelegate GetValueFromKeyValue
-		{
-			get
-			{
-				return this._getValueFromKeyValueDelegate;
-			}
-			set
-			{
-				this._getValueFromKeyValueDelegate = value;
-			}
-		}
-
-
-		public AutoCompleteWithCreationBox<KV, ValueT>.GetKeyValueFromValueDelegate GetKeyValueFromValue
-		{
-			get
-			{
-				return this._getKeyValueFromValueDelegate;
-			}
-			set
-			{
-				this._getKeyValueFromValueDelegate = value;
-			}
-		}
 
 
 		public event EventHandler<CreateNewArgs> CreateNewTargetItem;
@@ -73,90 +33,40 @@ namespace WeSay.UI
 			InitializeComponent();
 		 }
 
-		public ReferenceCollectionEditor(IBindingList collection, IList<WritingSystem> writingSystems)//, IEnumerable<IChoice> choices)
-		{
-			InitializeComponent();
-			_chosenItems = collection;
-			_writingSystems = writingSystems;
-			if (_writingSystems == null)
-				throw new ArgumentException("writingSystems");
-		   // _sourceChoices = choices;
-		}
-
-
-		public IBindingList CollectionBeingEdited
-		{
-			get
-			{
-				return _chosenItems;
-			}
-			set
-			{
-				_chosenItems = value;
-			}
-		}
-
-		[Browsable(false)]
-		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-		public WeSay.Foundation.IDisplayStringAdaptor ItemDisplayStringAdaptor
-		{
-			get
-			{
-				return _displayStringAdaptor;
-			}
-			set
-			{
-				_displayStringAdaptor = value;
-			}
-		}
-
-
 		/// <summary>
-		/// The set of objects that the user can choose from. The AutoCompleteAdaptor is used
-		/// to convert these into display strings.
+		/// ctor
 		/// </summary>
-		public IEnumerable<KV> SourceChoices
+		/// <param name="chosenItems">The set of chosen items we are displaying/editting</param>
+		 /// <param name="sourceChoices"> The set of objects that the user can choose from. The AutoCompleteAdaptor is used
+		 /// to convert these into display strings.</param>
+		/// <param name="writingSystems">a list of writing systems ordered by preference</param>
+		/// <param name="adaptor">does all the conversion between keys, wrappers, actual objects, etc.</param>
+		public ReferenceCollectionEditor(IBindingList chosenItems,
+			IEnumerable<KV> sourceChoices,
+			IList<WritingSystem> writingSystems,
+			IChoiceSystemAdaptor<KV,ValueT,KEY_CONTAINER> adaptor)
 		{
-			get
-			{
-				return _sourceChoices;
-			}
-			set
-			{
-				_sourceChoices = value;
-			}
-		}
+			if (chosenItems == null)
+				throw new ArgumentException("chosenItems");
+			if (adaptor == null)
+				throw new ArgumentException("adaptor");
+			if (writingSystems == null)
+				throw new ArgumentException("writingSystems");
+			if (sourceChoices == null)
+				throw new ArgumentException("sourceChoices");
+			InitializeComponent();
+			_chosenItems = chosenItems;
+			_sourceChoices = sourceChoices;
+			_writingSystems = writingSystems;
+			_choiceSystemAdaptor = adaptor;
+	   }
 
-		public WeSayAutoCompleteTextBox.FormToObectFinderDelegate FormToObectFinder
-		{
-			get
-			{
-				return _formToObectFinderDelegate;
-			}
-			set
-			{
-				_formToObectFinderDelegate = value;
-			}
-		}
-
-		public GetKeyValueFromKey_ContainerDelegate GetKeyValueFromKey_Container
-		{
-			get { return _getKeyValueFromKey_Container; }
-			set { _getKeyValueFromKey_Container = value; }
-		}
-
-		public UpdateKeyContainerFromKeyValueDelegate UpdateKeyContainerFromKeyValue
-		{
-			get { return _updateKeyContainerFromKeyValue; }
-			set { _updateKeyContainerFromKeyValue = value; }
-		}
 
 		private void OnLoad(object sender, EventArgs e)
 		{
 			if(DesignMode)
 				return;
 			_flowPanel.Controls.Clear();
-		  //  IDisplayStringAdaptor toolTipAdaptor = new LexemeInfoProvider();
 			foreach (KEY_CONTAINER item in _chosenItems)
 			{
 				AutoCompleteWithCreationBox<KV, ValueT> picker = MakePicker();
@@ -164,7 +74,7 @@ namespace WeSay.UI
 				picker.Box.Tag =item;
 			   // box.BorderStyle = System.Windows.Forms.BorderStyle.None;
 
-				picker.Box.SelectedItem = GetKeyValueFromKey_Container(item);
+				picker.Box.SelectedItem = _choiceSystemAdaptor.GetKeyValueFromKey_Container(item);
 
 				if(picker.Box.SelectedItem ==null)//couldn't find a match for the key
 				{
@@ -204,7 +114,7 @@ namespace WeSay.UI
 			{
 				picker.ValueChanged -= emptyPicker_ValueChanged;
 				KEY_CONTAINER newGuy = (KEY_CONTAINER) _chosenItems.AddNew();
-				UpdateKeyContainerFromKeyValue(kv, newGuy);
+				_choiceSystemAdaptor.UpdateKeyContainerFromKeyValue(kv, newGuy);
 				picker.ValueChanged += picker_ValueChanged;
 				AddEmptyPicker();
 			}
@@ -215,28 +125,28 @@ namespace WeSay.UI
 			AutoCompleteWithCreationBox<KV, ValueT> picker = new AutoCompleteWithCreationBox<KV, ValueT>();
 			if(_formToObectFinderDelegate !=null)
 			{
-				picker.Box.FormToObectFinder = _formToObectFinderDelegate;
+				picker.Box.FormToObectFinder = _choiceSystemAdaptor.GetValueFromForm;
 			}
 
-			picker.GetKeyValueFromValue = _getKeyValueFromValueDelegate;
-		   picker.GetValueFromKeyValue = _getValueFromKeyValueDelegate;
-			picker.Box.ItemDisplayStringAdaptor = _displayStringAdaptor;
+			picker.GetKeyValueFromValue = _choiceSystemAdaptor.GetKeyValueFromValue;
+			picker.GetValueFromKeyValue = _choiceSystemAdaptor.GetValueFromKeyValue;// _getValueFromKeyValueDelegate;
+			picker.Box.ItemDisplayStringAdaptor = _choiceSystemAdaptor;
 
 			//picker.Box.SelectedItemChanged += new EventHandler(OnSelectedItemChanged);
 
-			if(_displayStringAdaptor != null)
+			if(_choiceSystemAdaptor != null)
 			{
-				picker.Box.ItemDisplayStringAdaptor = _displayStringAdaptor;
+				picker.Box.ItemDisplayStringAdaptor = _choiceSystemAdaptor;
 			}
-			picker.Box.TooltipToDisplayStringAdaptor = _toolTipAdaptor;
+			picker.Box.TooltipToDisplayStringAdaptor = _choiceSystemAdaptor.ToolTipAdaptor;
 			picker.Box.PopupWidth = 100;
 			picker.Box.Mode = WeSayAutoCompleteTextBox.EntryMode.List;
-			picker.Box.Items = SourceChoices;
+			picker.Box.Items = _sourceChoices;
 			picker.Box.WritingSystem = _writingSystems[0];
 			picker.Box.MinimumSize = new Size(20, 10);
 			if (CreateNewTargetItem != null)
 			{
-				picker.CreateNewClicked += new EventHandler<CreateNewArgs>(OnCreateNewClicked);
+				picker.CreateNewClicked += OnCreateNewClicked;
 			}
 			return picker;
 		}
@@ -256,31 +166,6 @@ namespace WeSay.UI
 				return "pretend: "+item.ToString();
 			}
 		}
-
-//        void OnSelectedItemChanged(object sender, EventArgs e)
-//        {
-//            WeSayAutoCompleteTextBox box = sender as WeSayAutoCompleteTextBox;
-//            ValueT referer = box.Tag as ValueT;
-//            if(referer==null)
-//            {
-//                return;//referer = box.Tag = this. //TODO need a delegate to add chosen item
-//            }
-//            if (box.SelectedItem == null)
-//            {
-//
-//            }
-//            else
-//            {
-//                referer.Target = box.SelectedItem;
-//            }
-//
-//
-//            if (CollectionChanged != null)
-//            {
-//                CollectionChanged.Invoke(this, null);
-//            }
-//        }
-
 
 	}
 

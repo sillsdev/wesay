@@ -34,20 +34,16 @@ namespace WeSay.UI.Tests
 
 			_chosenItems = new OptionRefCollection(this);
 
-			List<WritingSystem> lw = new List<WritingSystem>();
-			lw.Add(_ws);
-			_control = new ReferenceCollectionEditor<Option, string, OptionRef>(_chosenItems.Members, lw);
+			List<WritingSystem> writingSystems = new List<WritingSystem>();
+			writingSystems.Add(_ws);
+
+			_control = new ReferenceCollectionEditor<Option, string, OptionRef>(
+				_chosenItems.Members,
+				_sourceChoices.Options,
+				writingSystems,
+				new OptionDisplayAdaptor(_sourceChoices, _ws.Id));
 
 			_control.Name = "refcontrol";
-			_control.SourceChoices = _sourceChoices.Options;
-			_control.CollectionBeingEdited = _chosenItems.Members;
-
-			OptionDisplayAdaptor adaptor = new OptionDisplayAdaptor(_sourceChoices,_ws.Id);
-			_control.ItemDisplayStringAdaptor = adaptor;
-			_control.GetKeyValueFromValue = adaptor.GetOptionFromKey;
-			_control.GetValueFromKeyValue = adaptor.GetKeyFromOption;
-			_control.GetKeyValueFromKey_Container = adaptor.GetOptionFromOptionRef;
-			_control.UpdateKeyContainerFromKeyValue = adaptor.UpdateKeyContainerFromKeyValue;
 
 		}
 

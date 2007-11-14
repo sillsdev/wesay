@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 using NUnit.Framework;
@@ -8,7 +7,7 @@ using WeSay.Foundation;
 using WeSay.Language;
 using WeSay.UI;
 using WeSay.UI.AutoCompleteTextBox;
-using NUnit.Extensions.Forms;
+
 
 namespace WeSay.UI.Tests
 {
@@ -20,15 +19,14 @@ namespace WeSay.UI.Tests
 		private OptionsList _sourceChoices;
 		private List<string> _choiceKeys;
 		private Control _somethingElseToFocusOn;
-		private bool _createNewClickedFired;
-		private bool _valueChangedFired;
+//        private bool _createNewClickedFired;
+//        private bool _valueChangedFired;
 
 		/// <summary>
 		/// Key concept: this is the data (as would be in the database) that we are editing
 		/// </summary>
 		private OptionRef _dataBeingEditted;
 		private WritingSystem _ws;
-		private SimpleBinding<string> _bindingBetweenDataAndWidget;
 		private OptionDisplayAdaptor _displayAdaptor;
 
 
@@ -36,8 +34,8 @@ namespace WeSay.UI.Tests
 		public void Setup()
 		{
 			_ws = new WritingSystem("xx", new Font("Arial", 12));
-			_createNewClickedFired=false;
-			_valueChangedFired = false;
+//            _createNewClickedFired=false;
+//            _valueChangedFired = false;
 			_sourceChoices = new OptionsList();
 			_choiceKeys = new List<string>();
 			AddSourceChoice("one", "1");
@@ -62,12 +60,12 @@ namespace WeSay.UI.Tests
 
 		void _control_CreateNewClicked(object sender, CreateNewArgs e)
 		{
-			_createNewClickedFired=true;
+			//_createNewClickedFired=true;
 		}
 
 		void _control_ValueChanged(object sender, EventArgs e)
 		{
-			_valueChangedFired = true;
+		   // _valueChangedFired = true;
 		}
 
 
@@ -188,7 +186,8 @@ namespace WeSay.UI.Tests
 				{
 				 _control.Box.Text = _dataBeingEditted.Key;//will show with red background
 				}
-				_bindingBetweenDataAndWidget = new SimpleBinding<string>(_dataBeingEditted, _control);
+				//just creating it is enough; the events bindings it creates keeps it alive
+				SimpleBinding<string> dummy = new SimpleBinding<string>(_dataBeingEditted, _control);
 				_window = new Form();
 				_somethingElseToFocusOn = new Button();
 				_window.Controls.Add(_somethingElseToFocusOn);
