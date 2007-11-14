@@ -308,18 +308,18 @@ namespace WeSay.LexicalModel
 			{
 				_writer.WriteStartElement("relation");
 				_writer.WriteAttributeString("name", relation.FieldId);
-				_writer.WriteAttributeString("ref", relation.TargetId);
+				_writer.WriteAttributeString("ref", relation.Key);
 				_writer.WriteEndElement();
 			}
 		}
 
-		private void WriteOptionRefCollection(string key, OptionRefCollection collection)
+		private void WriteOptionRefCollection(string traitName, OptionRefCollection collection)
 		{
-			foreach (string value in collection)
+			foreach (string key in collection.Keys)
 			{
 				_writer.WriteStartElement("trait");
-				_writer.WriteAttributeString("name", key);
-				_writer.WriteAttributeString("value", value);
+				_writer.WriteAttributeString("name", traitName);
+				_writer.WriteAttributeString("value", key);//yes, the 'value' here is an option key
 			   // WriteRangeName(key);
 				_writer.WriteEndElement();
 			}

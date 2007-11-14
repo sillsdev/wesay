@@ -67,7 +67,7 @@ namespace WeSay.LexicalModel
 		/// <summary>
 		/// Set to string.emtpy to clear the relation
 		/// </summary>
-		public string TargetId
+		public string Key
 		{
 			get { return _targetId; }
 			set { _targetId = value??string.Empty; }
@@ -176,12 +176,12 @@ namespace WeSay.LexicalModel
 
 		public bool ShouldCountAsFilledForPurposesOfConditionalDisplay
 		{
-			get { return !string.IsNullOrEmpty(TargetId); }
+			get { return !string.IsNullOrEmpty(Key); }
 		}
 
 		public bool ShouldBeRemovedFromParentDueToEmptiness
 		{
-			get {  return string.IsNullOrEmpty(TargetId);}
+			get {  return string.IsNullOrEmpty(Key);}
 		}
 
 		#endregion

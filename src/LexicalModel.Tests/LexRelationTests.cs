@@ -41,7 +41,7 @@ namespace WeSay.LexicalModel.Tests
 
 			LexRelation relation = new LexRelation(synonymRelationType.ID, null, sense);
 			Assert.AreEqual(null, relation.Target);
-			Assert.AreEqual(string.Empty, relation.TargetId);
+			Assert.AreEqual(string.Empty, relation.Key);
 		}
 
 		[Test]
@@ -51,9 +51,9 @@ namespace WeSay.LexicalModel.Tests
 			LexRelationType synonymRelationType = new LexRelationType("synonym", LexRelationType.Multiplicities.Many, LexRelationType.TargetTypes.Sense);
 
 			LexRelation relation = new LexRelation(synonymRelationType.ID, "something", sense);
-			relation.TargetId = null;
+			relation.Key = null;
 			Assert.AreEqual(null, relation.Target);
-			Assert.AreEqual(string.Empty, relation.TargetId);
+			Assert.AreEqual(string.Empty, relation.Key);
 		}
 
 	}

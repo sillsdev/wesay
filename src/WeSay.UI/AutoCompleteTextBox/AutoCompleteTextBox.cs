@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 using WeSay.Foundation;
@@ -21,7 +22,7 @@ namespace WeSay.UI.AutoCompleteTextBox
 		private FormToObectFinderDelegate _formToObectFinderDelegate;
 
 		public event EventHandler SelectedItemChanged;
-
+		private bool _inMidstOfSettingSelectedItem = false;
 		#region EntryMode
 
 		public enum EntryMode
@@ -261,20 +262,35 @@ namespace WeSay.UI.AutoCompleteTextBox
 
 			set
 			{
+				if(_inMidstOfSettingSelectedItem)
+					return;
+
+
 				if(_selectedItem == value)
 					return;
+				_inMidstOfSettingSelectedItem = true;
 
 				_selectedItem = value;
 				if (value != null)
 				{
-					 Text = _labelToDisplayStringAdaptor.GetDisplayLabel(value);
-			   }
+					if (_labelToDisplayStringAdaptor != null)
+					{
+						Text = _labelToDisplayStringAdaptor.GetDisplayLabel(value);
+					}
+					else
+					{
+						Text = value.ToString();
+					}
+				}
 
 				if (SelectedItemChanged != null)
 				{
 					SelectedItemChanged.Invoke(this, null);
 				}
 				UpdateDisplay();
+
+				//Debug.WriteLine("AutomCOmplete Set selectedItem(" + value + ") now " + _selectedItem);
+				_inMidstOfSettingSelectedItem = false;
 			}
 		}
 
@@ -517,21 +533,26 @@ namespace WeSay.UI.AutoCompleteTextBox
 				switch (Triggers.OnTextChanged(Text))
 				{
 					case TriggerState.Show:
-					{
-						ShowList();
-					} break;
+						{
+							ShowList();
+						}
+						break;
 					case TriggerState.Hide:
-					{
-						HideList();
-					} break;
+						{
+							HideList();
+						}
+						break;
 					default:
-					{
-						UpdateList();
-					} break;
+						{
+							UpdateList();
+						}
+						break;
 				}
+
 			}
 
 			SelectedItem = _formToObectFinderDelegate(Text);
+
 			UpdateDisplay();
 		}
 
@@ -552,6 +573,8 @@ namespace WeSay.UI.AutoCompleteTextBox
 			}
 			return null;
 		}
+
+
 
 		protected override void OnLostFocus(EventArgs e)
 		{

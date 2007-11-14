@@ -179,7 +179,7 @@ namespace WeSay.LexicalModel.Tests
 			LexRelationCollection synonyms= sense.GetProperty<LexRelationCollection>("synonym");
 			LexRelation relation = synonyms.Relations[0];
 			Assert.AreEqual("synonym", relation.FieldId);
-			Assert.AreEqual("foo", relation.TargetId);
+			Assert.AreEqual("foo", relation.Key);
 		}
 
 		[Test]

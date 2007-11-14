@@ -365,7 +365,7 @@ namespace WeSay.LexicalTools
 //
 //            if (box.SelectedItem == null)
 //            {
-//                relation.TargetId = string.Empty;
+//                relation.Key = string.Empty;
 //            }
 //            else
 //            {
@@ -388,10 +388,11 @@ namespace WeSay.LexicalTools
 
 		private static Control MakeOptionCollectionWidget(WeSayDataObject target, Field field)
 		{
-			OptionsList list = WeSayWordsProject.Project.GetOptionsList(field, false);
-			OptionRefCollection optionRefTarget = target.GetOrCreateProperty<OptionRefCollection>(field.FieldName);
+			OptionsList availableOptions = WeSayWordsProject.Project.GetOptionsList(field, false);
+			OptionRefCollection refsOfChoices = target.GetOrCreateProperty<OptionRefCollection>(field.FieldName);
 			OptionCollectionControl control =
-					new OptionCollectionControl(optionRefTarget, list, field.WritingSystemIds[0]);
+				   new OptionCollectionControl(refsOfChoices, availableOptions, field.WritingSystemIds[0]);
+  //          ReferenceCollectionEditor<OptionRef> control
 			return control;
 		}
 

@@ -58,7 +58,7 @@ namespace WeSay.LexicalTools
 
 				if (semanticDomains != null)
 				{
-					foreach (string s in semanticDomains)
+					foreach (string s in semanticDomains.Keys)
 					{
 						if (!keys.Contains(s))
 						{

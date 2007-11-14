@@ -27,7 +27,7 @@ namespace WeSay.UI.AutoCompleteTextBox
 			_textBox.GotFocus += OnFocusChanged;
 			LostFocus += OnFocusChanged;
 			_textBox.LostFocus += OnFocusChanged;
-			_addNewButton.LostFocus += OnFocusChanged;
+			AddNewButton.LostFocus += OnFocusChanged;
 			UpdateDisplay();
 			GetValueFromKeyValue = CastKeyValueToValue;
 			GetKeyValueFromValue = CastValueToKeyValue;
@@ -37,6 +37,10 @@ namespace WeSay.UI.AutoCompleteTextBox
 		private static KV CastValueToKeyValue(ValueT v)
 		{
 			return (KV) ((object)v);
+		}
+		internal Button AddNewButton
+		{
+			get { return _addNewButton; }
 		}
 
 		private static ValueT CastKeyValueToValue(KV t)
@@ -77,7 +81,8 @@ namespace WeSay.UI.AutoCompleteTextBox
 			 }
 		}
 
-		private bool HasProblems
+
+		internal bool HasProblems
 		{
 			get
 			{
@@ -113,7 +118,9 @@ namespace WeSay.UI.AutoCompleteTextBox
 				if(Box.SelectedItem ==null)
 					return null;
 				else
-					return GetValueFromKeyValue.Invoke((KV)Box.SelectedItem);
+				{
+						return GetValueFromKeyValue.Invoke((KV)Box.SelectedItem);
+				}
 			}
 			set
 			{
@@ -205,28 +212,29 @@ namespace WeSay.UI.AutoCompleteTextBox
 
 				_textBox.Width = Math.Max(_textBox.MinimumSize.Width, sz.Width);
 			}
-			if(_addNewButton.Visible)
+			if(AddNewButton.Visible)
 			{
-				Width = _textBox.Width + _addNewButton.Width;
+				Width = _textBox.Width + AddNewButton.Width;
 			}
 			else
 			{
 				Width = _textBox.Width;
 			}
-			_addNewButton.Left = _textBox.Width;
+			AddNewButton.Left = _textBox.Width;
 			ResumeLayout(false);
 		}
 
 		private void UpdateDisplay()
 		{
-			_addNewButton.Visible = _textBox.SelectedItem == null
+			AddNewButton.Visible = CreateNewClicked !=null
+				&& _textBox.SelectedItem == null
 				&& !string.IsNullOrEmpty(_textBox.Text)
 				&& ContainsFocus;
 			UpdateElementWidth();
 		}
 		public void CreateNewObjectFromText()
 		{
-			Debug.Assert(CreateNewClicked != null, "Doesn't make sense to use this class without CreateNewClicked handler.");
+			Debug.Assert(CreateNewClicked != null, "This shouldn't be called if CreateNewClicked handler is missing.");
 			CreateNewArgs creationArgs = new CreateNewArgs(_textBox.Text);
 			CreateNewClicked.Invoke(this, creationArgs);
 			_textBox.SelectedItem = creationArgs.NewlyCreatedItem;

@@ -34,6 +34,10 @@
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\nunit.framework.dll</HintPath>
 	</Reference>
+	<Reference Include="NUnitForms, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\NUnitForms.dll</HintPath>
+	</Reference>
 	<Reference Include="System" />
 	<Reference Include="System.Data" />
 	<Reference Include="System.Drawing" />
@@ -41,10 +45,13 @@
 	<Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+	<Compile Include="AutoCompleteWithCreationBoxTests.cs" />
 	<Compile Include="BindingTests.cs" />
 	<Compile Include="DetailListTests.cs" />
 	<Compile Include="GhostBindingTests.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />
+	<Compile Include="ReferenceCollectionEditorTests.cs">
+	</Compile>
 	<Compile Include="TestResources.Designer.cs">
 	  <AutoGen>True</AutoGen>
 	  <DesignTime>True</DesignTime>

@@ -45,4 +45,17 @@ namespace WeSay.Foundation
 		}
 
 	}
+
+
+	public interface IChoice
+	{
+		string Label
+		{
+			get;
+		}
+		string Key
+		{
+			get;
+		}
+	}
 }

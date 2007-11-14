@@ -11,12 +11,18 @@ namespace WeSay.Foundation
 		WeSayDataObject Parent { set; }
 	}
 
+	public interface IReceivePropertyChangeNotifications
+	{
+		void NotifyPropertyChanged(string property);
+	}
+
 	public interface IReferenceContainer
 	{
 		object Target { get; set; }
+		string Key { get; set; }
 	}
 
-	public abstract class WeSayDataObject: INotifyPropertyChanged
+	public abstract class WeSayDataObject : INotifyPropertyChanged, IReceivePropertyChangeNotifications
 	{
 		[NonSerialized]
 		private ArrayList _listEventHelpers;

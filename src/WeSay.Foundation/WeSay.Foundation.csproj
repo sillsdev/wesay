@@ -32,6 +32,10 @@
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\ICSharpCode.SharpZipLib.dll</HintPath>
 	</Reference>
+	<Reference Include="icu.net, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\icu.net.dll</HintPath>
+	</Reference>
 	<Reference Include="Keyman7Interop, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\Keyman7Interop.dll</HintPath>
@@ -104,6 +108,20 @@
 	  <Isolated>False</Isolated>
 	</COMReference>
   </ItemGroup>
+  <ItemGroup>
+	<Content Include="..\..\lib\icudt38.dll">
+	  <Link>icudt38.dll</Link>
+	  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	</Content>
+	<Content Include="..\..\lib\icuin38.dll">
+	  <Link>icuin38.dll</Link>
+	  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	</Content>
+	<Content Include="..\..\lib\icuuc38.dll">
+	  <Link>icuuc38.dll</Link>
+	  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	</Content>
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
 	   Other similar extension points exist, see Microsoft.Common.targets.
@@ -113,6 +131,7 @@
   </Target>
   -->
   <PropertyGroup>
-	<PreBuildEvent>copy "$(SolutionDir)..\lib\icu*.dll" "$(OutDir)"</PreBuildEvent>
+	<PreBuildEvent>
+	</PreBuildEvent>
   </PropertyGroup>
 </Project>

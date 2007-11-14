@@ -1,6 +1,6 @@
 namespace WeSay.UI
 {
-	partial class ReferenceCollectionEditor<CONTAINER>
+	partial class ReferenceCollectionEditor<KV, ValueT, KEY_CONTAINER>
 	{
 		/// <summary>
 		/// Required designer variable.

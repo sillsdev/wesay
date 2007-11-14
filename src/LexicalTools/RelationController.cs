@@ -121,11 +121,11 @@ namespace WeSay.LexicalTools
 					InitializeRelationControl(relation);
 
 					break;
-				case LexRelationType.Multiplicities.Many:
-					_control = new ReferenceCollectionEditor<LexRelation>
-									(targetRelationCollection.Relations,
-									 _field.WritingSystemIds);
-					break;
+//                case LexRelationType.Multiplicities.Many:
+//                    _control = new ReferenceCollectionEditor<LexRelation>
+//                                    (targetRelationCollection.Relations,
+//                                     _field.WritingSystemIds);
+//                    break;
 				default:
 					break;
 			}
@@ -221,9 +221,9 @@ namespace WeSay.LexicalTools
 			//review:
 			picker.Box.MinimumSize = new Size(40, 10);
 			if (picker.Box.SelectedItem == null &&
-				!string.IsNullOrEmpty(relation.TargetId))
+				!string.IsNullOrEmpty(relation.Key))
 			{
-				picker.Box.Text = relation.TargetId;
+				picker.Box.Text = relation.Key;
 				// picker.Box.ShowRedSquiggle = true;
 			}
 

@@ -1,3 +1,5 @@
+using System.Windows.Forms;
+
 namespace WeSay.UI.AutoCompleteTextBox
 {
 	partial class AutoCompleteWithCreationBox<KV, ValueT>
@@ -41,8 +43,8 @@ namespace WeSay.UI.AutoCompleteTextBox
 			//
 			// _addNewButton
 			//
-			this._addNewButton.Anchor = System.Windows.Forms.AnchorStyles.Right;
-			this._addNewButton.Location = new System.Drawing.Point(110, -1);
+			this.AddNewButton.Anchor = System.Windows.Forms.AnchorStyles.Right;
+			this.AddNewButton.Location = new System.Drawing.Point(110, -1);
 			this._addNewButton.Name = "_addNewButton";
 			this._addNewButton.Size = new System.Drawing.Size(37, 23);
 			this._addNewButton.TabIndex = 1;

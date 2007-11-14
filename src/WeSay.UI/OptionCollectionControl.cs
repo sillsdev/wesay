@@ -29,20 +29,13 @@ namespace WeSay.UI
 		{
 			StringBuilder builder = new StringBuilder();
 
-			foreach (string key in _optionRefCollection)
+			foreach (string key in _optionRefCollection.Keys)
 			{
 				builder.AppendFormat("{0} | ", key);
 			}
 			_textBox.Text = builder.ToString();
 		}
 
-		private void button1_Click(object sender, System.EventArgs e)
-		{
-
-			_optionRefCollection.Add(_list.Options[0].Key);
-			LoadDisplay();
-			this.Refresh();
-		}
 
 		private void OptionCollectionControl_BackColorChanged(object sender, System.EventArgs e)
 		{

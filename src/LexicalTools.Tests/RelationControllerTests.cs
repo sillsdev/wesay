@@ -142,7 +142,7 @@ namespace WeSay.LexicalTools.Tests
 								});
 			c.Text = string.Empty;
 
-			Assert.AreEqual(string.Empty, relation.TargetId);
+			Assert.AreEqual(string.Empty, relation.Key);
 		}
 
 		[Test]
@@ -159,7 +159,7 @@ namespace WeSay.LexicalTools.Tests
 								});
 			c.Text = "NonExistantId";
 
-			Assert.AreEqual(string.Empty, relation.TargetId);
+			Assert.AreEqual(string.Empty, relation.Key);
 		}
 
 		[Test]
@@ -176,7 +176,7 @@ namespace WeSay.LexicalTools.Tests
 								});
 			c.Text = _target.LexicalForm["vernacular"];
 
-			Assert.AreEqual(_target.Id, relation.TargetId);
+			Assert.AreEqual(_target.Id, relation.Key);
 		}
 
 		[Test]
@@ -196,7 +196,7 @@ namespace WeSay.LexicalTools.Tests
 			AutoCompleteWithCreationBox<object, LexEntry> picker = (AutoCompleteWithCreationBox<object, LexEntry>) c;
 			picker.CreateNewObjectFromText();
 
-			LexEntry newEntry = Lexicon.FindFirstLexEntryMatchingId(relation.TargetId);
+			LexEntry newEntry = Lexicon.FindFirstLexEntryMatchingId(relation.Key);
 			Assert.IsNotNull(newEntry);
 			Assert.AreEqual("new", newEntry.LexicalForm["vernacular"]);
 		}
