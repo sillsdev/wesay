@@ -1,4 +1,5 @@
 using System;
+using System.CodeDom.Compiler;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -360,7 +361,11 @@ namespace WeSay.Project
 						using (XmlWriter writer = XmlWriter.Create(tempPath))
 						{
 							transform.Transform(configurationDoc, writer);
-							transform.TemporaryFiles.Delete();
+							TempFileCollection tempfiles = transform.TemporaryFiles;
+							if (tempfiles != null)  // tempfiles will be null when debugging is not enabled
+							{
+								tempfiles.Delete();
+							}
 							writer.Close();
 						}
 						string s = targetPath + ".tmp";

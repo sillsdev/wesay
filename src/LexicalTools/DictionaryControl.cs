@@ -96,7 +96,6 @@ namespace WeSay.LexicalTools
 
 			InitializeComponent();
 			InitializeDisplaySettings();
-			InitializeMonoWorkarounds();
 
 			//this._btnNewWord.Font = StringCatalog.ModifyFontForLocalization(_btnNewWord.Font);
 			//this._btnDeleteWord.Font = StringCatalog.ModifyFontForLocalization(_btnDeleteWord.Font);
@@ -159,23 +158,6 @@ namespace WeSay.LexicalTools
 		}
 
 		public event EventHandler SelectedIndexChanged = delegate { };
-
-		private void InitializeMonoWorkarounds()
-		{
-			// Mono bug 82081
-#if !MONO
-			if (Type.GetType("Mono.Runtime") != null)
-#endif
-			{
-				// this is not allowed in .Net but it is in Mono and is the only way to get
-				// it to work (setting width to 0 doesn't)
-				_btnFind.FlatAppearance.BorderColor = Color.Transparent;
-				_writingSystemChooser.FlatAppearance.BorderColor =
-						Color.Transparent;
-				_btnDeleteWord.FlatAppearance.BorderColor = Color.Transparent;
-				_btnNewWord.FlatAppearance.BorderColor = Color.Transparent;
-			}
-		}
 
 		private void InitializeDisplaySettings()
 		{

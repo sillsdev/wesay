@@ -1,4 +1,5 @@
 using System;
+using System.CodeDom.Compiler;
 using System.ComponentModel;
 using System.Drawing;
 using System.IO;
@@ -239,7 +240,11 @@ namespace Addin.Transform
 				if (transform != null)
 				{
 					progressState.StatusLabel = "Cleaning up...";
-					transform.TemporaryFiles.Delete();
+					TempFileCollection tempfiles = transform.TemporaryFiles;
+					if (tempfiles != null)  // tempfiles will be null when debugging is not enabled
+					{
+						tempfiles.Delete();
+					}
 				}
 			}
 		}
