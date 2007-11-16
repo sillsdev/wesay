@@ -149,9 +149,8 @@ namespace WeSay.LexicalTools
 				picker.GetKeyValueFromValue = GetKeyIdPairFromLexEntry;
 				picker.GetValueFromKeyValue = GetLexEntryFromKeyIdPair;
 
-				picker.Box.ItemDisplayStringAdaptor = new PairStringLexEntryIdLabelAdaptor();
-				picker.Box.TooltipToDisplayStringAdaptor =
-						new PairStringLexEntryIdToolTipProvider(pairStringLexEntryIdList);
+				picker.Box.ItemDisplayStringAdaptor =
+						new PairStringLexEntryIdDisplayProvider(pairStringLexEntryIdList);
 				picker.Box.FormToObectFinder = FindPairStringLexEntryIdFromForm;
 				picker.Box.ItemFilterer = FindClosestAndNextClosestAndPrefixedPairStringLexEntryForms;
 
@@ -171,8 +170,6 @@ namespace WeSay.LexicalTools
 
 				picker.Box.ItemDisplayStringAdaptor =
 						new WeSayDataObjectLabelAdaptor(this._field.WritingSystemIds);
-				picker.Box.TooltipToDisplayStringAdaptor =
-						new WeSayDataObjectToolTipProvider(this._field.WritingSystemIds);
 				picker.Box.ItemFilterer = FindClosestAndNextClosestAndPrefixedLexEntryForms;
 				picker.CreateNewClicked += OnCreateNewLexEntry;
 				this._control = picker;
@@ -302,26 +299,8 @@ namespace WeSay.LexicalTools
 				return "Program error";
 			}
 
-			#endregion
-		}
 
-		#endregion
-
-		#region Nested type: WeSayDataObjectToolTipProvider
-
-		private class WeSayDataObjectToolTipProvider: IDisplayStringAdaptor
-		{
-			private IList<string> _writingSystemIds;
-			//review: should this really be an ordered collection of preferred choices?
-
-			public WeSayDataObjectToolTipProvider(IList<string> writingSystemIds)
-			{
-				_writingSystemIds = writingSystemIds;
-			}
-
-			#region IDisplayStringAdaptor Members
-
-			public string GetDisplayLabel(object item)
+			public string GetToolTip(object item)
 			{
 				if (item is LexEntry)
 				{
@@ -340,44 +319,52 @@ namespace WeSay.LexicalTools
 
 		#endregion
 
-		#region Nested type: WeSayDataObjectLabelAdaptor
 
-		private class PairStringLexEntryIdLabelAdaptor : IDisplayStringAdaptor
-		{
-			#region IDisplayStringAdaptor Members
 
-			public string GetDisplayLabel(object item)
-			{
-				KeyValuePair<string, long> kv = (KeyValuePair<string,long>)item;
-				return kv.Key;
-			}
 
-			#endregion
-		}
-
-		#endregion
+//        #region Nested type: WeSayDataObjectLabelAdaptor
+//
+//        private class PairStringLexEntryIdLabelAdaptor : IDisplayStringAdaptor
+//        {
+//            #region IDisplayStringAdaptor Members
+//
+//            public string GetDisplayLabel(object item)
+//            {
+//                KeyValuePair<string, long> kv = (KeyValuePair<string,long>)item;
+//                return kv.Key;
+//            }
+//
+//            #endregion
+//        }
+//
+//        #endregion
 
 		#region Nested type: WeSayDataObjectToolTipProvider
 
-		private class PairStringLexEntryIdToolTipProvider : IDisplayStringAdaptor
+		private class PairStringLexEntryIdDisplayProvider : IDisplayStringAdaptor
 		{
 			private readonly CachedSortedDb4oList<string, LexEntry> _cachedSortedDb4oList;
 
-			public PairStringLexEntryIdToolTipProvider(CachedSortedDb4oList<string, LexEntry> cachedSortedDb4oList)
+			public PairStringLexEntryIdDisplayProvider(CachedSortedDb4oList<string, LexEntry> cachedSortedDb4oList)
 			{
 				_cachedSortedDb4oList = cachedSortedDb4oList;
 			}
 
-			#region IDisplayStringAdaptor Members
 
 			public string GetDisplayLabel(object item)
+			{
+				KeyValuePair<string, long> kv = (KeyValuePair<string, long>)item;
+				return kv.Key;
+			}
+
+			public string GetToolTip(object item)
 			{
 				KeyValuePair<string, long> kv = (KeyValuePair<string, long>)item;
 				LexEntry entry = this._cachedSortedDb4oList.GetValueFromId(kv.Value);
 				return entry.GetToolTipText();
 			}
 
-			#endregion
+
 		}
 
 		#endregion

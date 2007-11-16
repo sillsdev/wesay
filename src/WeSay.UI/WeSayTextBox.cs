@@ -239,6 +239,10 @@ namespace WeSay.UI
 				}
 				_writingSystem = value;
 				Font = value.Font;
+
+	 //hack for testing
+			 //   this.Height = (int) Math.Ceiling( Font.GetHeight());
+
 				if (value.RightToLeft)
 				{
 					RightToLeft = RightToLeft.Yes;

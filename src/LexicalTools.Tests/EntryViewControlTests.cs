@@ -1,6 +1,6 @@
 using System.Threading;
 using NUnit.Framework;
-using WeSay.Foundation;
+using WeSay.Foundation.Options;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Db4o_Specific;
 using WeSay.Project;

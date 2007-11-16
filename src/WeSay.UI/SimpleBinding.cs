@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using WeSay.Foundation;
 
 namespace WeSay.UI
@@ -43,7 +44,16 @@ namespace WeSay.UI
 
 		void OnWidgetValueChanged(object sender, EventArgs e)
 		{
-			SetDataTargetValue(_widget.Value);
+#if DEBUG
+			if (_widget == null)
+			{
+				throw new Exception("SimpleBinding called after tearing down (apparently). Did editting the widget make something delete it?  Then perhaps SimpleBinding got the valueCHanged event afterwards... to late!");
+			}
+#endif
+			if(_widget!=null) //would not be worth crashing over in release build
+			{
+				SetDataTargetValue(_widget.Value);
+			}
 		}
 
 		/// <summary>

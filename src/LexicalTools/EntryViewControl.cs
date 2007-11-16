@@ -122,13 +122,14 @@ namespace WeSay.LexicalTools
 			set
 			{
 				_showNormallyHiddenFields = value;
-				RefreshEntryDetail();
+				//no... this will lead to extra refreshing. RefreshEntryDetail();
 			}
 		}
 
 		public void ToggleShowNormallyHiddenFields()
 		{
 			ShowNormallyHiddenFields = !ShowNormallyHiddenFields;
+			RefreshEntryDetail();
 		}
 
 		private void OnEmptyObjectsRemoved(object sender, EventArgs e)
@@ -220,7 +221,7 @@ namespace WeSay.LexicalTools
 					layout.AddWidgets(_record);
 				}
 				_detailListControl.ResumeLayout();
-				_panelEntry.ResumeLayout(true);
+				_panelEntry.ResumeLayout(false);//review
 			}
 			catch (ConfigurationException e)
 			{

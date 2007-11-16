@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.IO;
 using NUnit.Framework;
 using Palaso.Reporting;
-using WeSay.Foundation;
+using WeSay.Foundation.Options;
 using WeSay.Project;
 
 namespace WeSay.Project.Tests

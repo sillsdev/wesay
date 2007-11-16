@@ -35,8 +35,7 @@ namespace WeSay.UI.AutoCompleteTextBox
 
 		#region Members
 
-		private IDisplayStringAdaptor _labelToDisplayStringAdaptor= new ToStringAutoCompleteAdaptor();
-		private IDisplayStringAdaptor _tooltipToDisplayStringAdaptor = null;
+		private IDisplayStringAdaptor _itemDisplayAdaptor= new ToStringAutoCompleteAdaptor();
 		private ListBox _listBox;
 		//private Form _popup;
 		private Control _popupParent;
@@ -204,6 +203,7 @@ namespace WeSay.UI.AutoCompleteTextBox
 		private ItemFilterDelegate _itemFilterDelegate;
 		private object _selectedItem;
 		private ToolTip _toolTip;
+		private object _previousToolTipTarget=null;
 
 		[Browsable(false)]
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
@@ -244,11 +244,11 @@ namespace WeSay.UI.AutoCompleteTextBox
 		{
 			get
 			{
-				return _labelToDisplayStringAdaptor;
+				return _itemDisplayAdaptor;
 			}
 			set
 			{
-				_labelToDisplayStringAdaptor = value;
+				_itemDisplayAdaptor = value;
 			}
 		}
 
@@ -273,9 +273,12 @@ namespace WeSay.UI.AutoCompleteTextBox
 				_selectedItem = value;
 				if (value != null)
 				{
-					if (_labelToDisplayStringAdaptor != null)
+					if (_itemDisplayAdaptor != null)
 					{
-						Text = _labelToDisplayStringAdaptor.GetDisplayLabel(value);
+						Text = _itemDisplayAdaptor.GetDisplayLabel(value);
+						//keep cursor form jumping to start when user typed in
+						//a matched value that varied by case
+						SelectionStart = Text.Length;
 					}
 					else
 					{
@@ -307,19 +310,24 @@ namespace WeSay.UI.AutoCompleteTextBox
 //	        ForeColor = Color.Black;
 		}
 
-		/// <summary>
-		/// Set this in order to show tooltips for items
-		/// </summary>
-		public IDisplayStringAdaptor TooltipToDisplayStringAdaptor
+//	    /// <summary>
+//        /// Set this in order to show tooltips for items
+//        /// </summary>
+//	    public IDisplayStringAdaptor TooltipToDisplayStringAdaptor
+//	    {
+//	        get
+//	        {
+//	            return _tooltipToDisplayStringAdaptor;
+//	        }
+//	        set
+//	        {
+//	            _tooltipToDisplayStringAdaptor = value;
+//	        }
+//	    }
+
+		internal ListBox FilteredChoicesListBox
 		{
-			get
-			{
-				return _tooltipToDisplayStringAdaptor;
-			}
-			set
-			{
-				_tooltipToDisplayStringAdaptor = value;
-			}
+			get { return _listBox; }
 		}
 
 		#endregion
@@ -369,16 +377,16 @@ namespace WeSay.UI.AutoCompleteTextBox
 
 		void OnMouseHover(object sender, EventArgs e)
 		{
-			if (_tooltipToDisplayStringAdaptor == null || SelectedItem == null)
+			if (_itemDisplayAdaptor == null || SelectedItem == null)
 				return;
 
-			string tip = _tooltipToDisplayStringAdaptor.GetDisplayLabel(SelectedItem);
+			string tip = _itemDisplayAdaptor.GetToolTip(SelectedItem);
 			_toolTip.SetToolTip(this, tip);
 		}
 
 		private void List_MouseMove ( object sender, MouseEventArgs e )
 		{
-			if(_tooltipToDisplayStringAdaptor==null)
+			if (_itemDisplayAdaptor == null)
 				return;
 
 			string tip = "";
@@ -388,10 +396,17 @@ namespace WeSay.UI.AutoCompleteTextBox
 			if ((nIdx >= 0) && (nIdx < _listBox.Items.Count))
 			{
 				ItemWrapper wrapper = (ItemWrapper)_listBox.Items[nIdx];
-				tip = _tooltipToDisplayStringAdaptor.GetDisplayLabel(wrapper.Item);
+				if(wrapper.Item == _previousToolTipTarget)//prevent flicker and unnecessary work
+				{
+					return;
+				}
+				_previousToolTipTarget = wrapper.Item;
+				tip = _itemDisplayAdaptor.GetToolTip(wrapper.Item);
 			}
-
-			_toolTip.SetToolTip(_listBox, tip);
+//            if (_toolTip.GetToolTip(_listBox) != tip)
+//            {
+				_toolTip.SetToolTip(_listBox, tip);
+//            }
 		}
 
 		protected override void OnSizeChanged(EventArgs e)
@@ -566,7 +581,7 @@ namespace WeSay.UI.AutoCompleteTextBox
 		{
 			foreach (object item in _items)
 			{
-				if (_labelToDisplayStringAdaptor.GetDisplayLabel(item) == form)
+				if (_itemDisplayAdaptor.GetDisplayLabel(item) == form)
 				{
 					return item;
 				}

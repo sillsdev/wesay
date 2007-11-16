@@ -109,7 +109,6 @@ namespace WeSay.LexicalTools
 			this._findText.SelectedItem = null;
 			this._findText.Size = new System.Drawing.Size(80, 19);
 			this._findText.TabIndex = 1;
-			this._findText.TooltipToDisplayStringAdaptor = null;
 			this._findText.AutoCompleteChoiceSelected += new System.EventHandler(this._findText_AutoCompleteChoiceSelected);
 			//
 			// _writingSystemChooser

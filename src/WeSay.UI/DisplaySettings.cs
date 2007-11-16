@@ -77,16 +77,18 @@ namespace WeSay.UI
 			if (_skinName == "projector")
 			{
 				BackgroundColor = System.Drawing.Color.LightGreen;
-				CurrentIndicatorColor = BackgroundColor;
 				_wsLabelColor = Color.Blue;
 			}
 			else
 			{
-				BackgroundColor = Color.FromArgb(235, 255, 215);
-				CurrentIndicatorColor = Color.FromArgb(((int)(((byte)(242)))), ((int)(((byte)(253)))), ((int)(((byte)(219)))));
+//original                BackgroundColor = Color.FromArgb(235, 255, 215);
+				BackgroundColor = Color.FromArgb(203, 255, 185);
+
+			   // CurrentIndicatorColor = Color.FromArgb(((int)(((byte)(242)))), ((int)(((byte)(253)))), ((int)(((byte)(219)))));
 				_wsLabelColor = Color.Gray;
 
 			}
+			 CurrentIndicatorColor = BackgroundColor;
 		}
 	}
 }

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using WeSay.Foundation;
+using WeSay.Foundation.Options;
 using WeSay.LexicalModel;
 using WeSay.Project;
 using WeSay.Data;

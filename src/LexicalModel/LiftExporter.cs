@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Text;
 using System.Xml;
 using WeSay.Foundation;
+using WeSay.Foundation.Options;
 using WeSay.Language;
 
 namespace WeSay.LexicalModel

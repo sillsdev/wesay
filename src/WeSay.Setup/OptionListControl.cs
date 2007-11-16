@@ -5,6 +5,7 @@ using System.IO;
 using System.Windows.Forms;
 using Palaso.Reporting;
 using WeSay.Foundation;
+using WeSay.Foundation.Options;
 using WeSay.Project;
 using WeSay.UI;
 

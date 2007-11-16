@@ -7,6 +7,7 @@ namespace WeSay.Foundation
 	public interface IDisplayStringAdaptor
 	{
 		string GetDisplayLabel(object item);
+		string GetToolTip(object item);
 	}
 
 	public class ToStringAutoCompleteAdaptor : IDisplayStringAdaptor
@@ -15,6 +16,10 @@ namespace WeSay.Foundation
 		public string GetDisplayLabel(object item)
 		{
 			return item.ToString();
+		}
+		public string GetToolTip(object item)
+		{
+			return "";
 		}
 	}
 
@@ -31,7 +36,13 @@ namespace WeSay.Foundation
 
 		KV GetKeyValueFromKey_Container(KEY_CONTAINER kc);
 		KV GetKeyValueFromValue(ValueT t);
-		ValueT GetValueFromForm(string form);
+
+		KV GetValueFromForm(string form);
+
+		object GetValueFromFormNonGeneric(string form);
+
+		IEnumerable GetItemsToOffer(string text, IEnumerable items, IDisplayStringAdaptor adaptor);
+
 	}
 
 

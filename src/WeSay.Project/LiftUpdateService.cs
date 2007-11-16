@@ -169,15 +169,18 @@ namespace WeSay.Project
 					WeSayWordsProject.Project.ReleaseLockOnLift();
 					merger.MergeUpdatesIntoFile(WeSayWordsProject.Project.PathToLiftFile);
 				}
-				catch (LiftIO.LiftFormatException error)
+				catch (LiftIO.BadUpdateFileException error)
 				{
-					//well, it is fatal, but it's probably their bug, not ours
-					Palaso.Reporting.ErrorReport.ReportNonFatalMessage(error.Message);
-					return false;
+						Palaso.Reporting.ErrorReport.ReportNonFatalMessage(
+							"WeSay was unable to save some work you did in the previous session.  The next screen will allow you to send a report of this to the developers.");
+						Palaso.Reporting.ErrorNotificationDialog.ReportException(error,null,false);
+						File.Move(error.PathToNewFile, error.PathToNewFile + ".bad");
+					return true;
 				}
 				catch (Exception e)
 				{
-					throw e; //it's probably our bug, so time to fail.
+					Palaso.Reporting.ErrorReport.ReportNonFatalMessage(e.Message);
+					return false;
 				}
 				finally
 				{

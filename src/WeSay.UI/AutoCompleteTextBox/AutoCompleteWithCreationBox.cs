@@ -19,7 +19,8 @@ namespace WeSay.UI.AutoCompleteTextBox
 		{
 			InitializeComponent();
 
-
+			if(DesignMode)
+				return;
 
 
 			_textBox.SelectedItemChanged += OnSelectedItemChanged;
@@ -32,6 +33,12 @@ namespace WeSay.UI.AutoCompleteTextBox
 			GetValueFromKeyValue = CastKeyValueToValue;
 			GetKeyValueFromValue = CastValueToKeyValue;
 
+			_textBox.SizeChanged += new EventHandler(_textBox_SizeChanged);
+		}
+
+		void _textBox_SizeChanged(object sender, EventArgs e)
+		{
+			Height = _textBox.Height;
 		}
 
 		private static KV CastValueToKeyValue(ValueT v)
@@ -72,7 +79,7 @@ namespace WeSay.UI.AutoCompleteTextBox
 		}
 		protected override void  OnPaint(PaintEventArgs e)
 		{
-			 base.OnPaint(e);
+			base.OnPaint(e);
 			 if (!ContainsFocus &&  HasProblems)
 			 {
 				 int y = e.ClipRectangle.Top;
@@ -231,6 +238,25 @@ namespace WeSay.UI.AutoCompleteTextBox
 				&& !string.IsNullOrEmpty(_textBox.Text)
 				&& ContainsFocus;
 			UpdateElementWidth();
+
+		 //   if (ContainsFocus)
+			{
+				if (Box.SelectedItem != null)
+				{
+					this.Box.ForeColor = Color.Black;
+				}
+				else
+				{
+					this.Box.ForeColor = Color.DarkBlue;
+				}
+			}
+			//this behavior may have to become a parameter
+			if (!ContainsFocus && HasProblems)
+			{
+				this.Box.BackColor = Color.Red;
+			}
+			else
+				this.Box.BackColor = SystemColors.Window;
 		}
 		public void CreateNewObjectFromText()
 		{

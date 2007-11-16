@@ -30,26 +30,32 @@ namespace WeSay.UI
 		{
 			this._flowPanel = new System.Windows.Forms.FlowLayoutPanel();
 			this.SuspendLayout();
+			_flowPanel.SuspendLayout();
 			//
 			// _flowPanel
 			//
-			this._flowPanel.BackColor = System.Drawing.Color.White;
+			this._flowPanel.AutoSize = true;
+			this._flowPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			this._flowPanel.BackColor = System.Drawing.Color.Gainsboro;
 			this._flowPanel.Dock = System.Windows.Forms.DockStyle.Fill;
 			this._flowPanel.Location = new System.Drawing.Point(0, 0);
 			this._flowPanel.Name = "_flowPanel";
-			this._flowPanel.Size = new System.Drawing.Size(309, 66);
+			this._flowPanel.Size = new System.Drawing.Size(309, 37);
 			this._flowPanel.TabIndex = 0;
 			//
-			// LexRelationControl
+			// ReferenceCollectionEditor
 			//
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.Color.NavajoWhite;
 			this.Controls.Add(this._flowPanel);
-			this.Name = "LexRelationControl";
-			this.Size = new System.Drawing.Size(309, 66);
+			this.Name = "ReferenceCollectionEditor";
+			this.Size = new System.Drawing.Size(309, 37);
 			this.Load += new System.EventHandler(this.OnLoad);
+
+			this._flowPanel.ResumeLayout(false);
 			this.ResumeLayout(false);
+		   // this.PerformLayout();
 
 		}
 

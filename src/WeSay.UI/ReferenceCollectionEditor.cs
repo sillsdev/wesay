@@ -18,12 +18,11 @@ namespace WeSay.UI
 		private IEnumerable<KV> _sourceChoices;
 		private IList<WritingSystem> _writingSystems;
 		private IChoiceSystemAdaptor<KV,ValueT,KEY_CONTAINER> _choiceSystemAdaptor;
+		private IReportEmptiness _alternateEmptinessHelper;
 
-		//-------------------------------------------------
-		#region Delegates and Events
-		private WeSayAutoCompleteTextBox.FormToObectFinderDelegate _formToObectFinderDelegate;
-
-		#endregion
+		 private int _popupWidth=-1;
+		private bool _ignoreListChanged = false;
+		private bool _alreadyInUpdateSize=false;
 
 
 		public event EventHandler<CreateNewArgs> CreateNewTargetItem;
@@ -55,17 +54,97 @@ namespace WeSay.UI
 			if (sourceChoices == null)
 				throw new ArgumentException("sourceChoices");
 			InitializeComponent();
+
 			_chosenItems = chosenItems;
 			_sourceChoices = sourceChoices;
 			_writingSystems = writingSystems;
 			_choiceSystemAdaptor = adaptor;
-	   }
+			chosenItems.ListChanged += new ListChangedEventHandler(chosenItems_ListChanged);
+
+			this.SizeChanged += new EventHandler(ReferenceCollectionEditor_SizeChanged);
+			_flowPanel.Dock = DockStyle.None;//we want it to grow
+			_flowPanel.ControlAdded += new ControlEventHandler(OnSizeRelatedEvent);
+			_flowPanel.ControlRemoved += new ControlEventHandler(OnSizeRelatedEvent);
+			_flowPanel.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+			_flowPanel.AutoSize = true;
+			_flowPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			this.AutoSize = false;
+
+			UpdateSize();
+		}
+
+		void ReferenceCollectionEditor_SizeChanged(object sender, EventArgs e)
+		{
+			//we determine the width, the flow determines the height
+			_flowPanel.MaximumSize= new Size(this.Width, 500);
+			_flowPanel.Width = this.Width-1;
+			UpdateSize();
+		}
+
+		void OnSizeRelatedEvent(object sender, ControlEventArgs e)
+		{
+			UpdateSize();
+		}
+
+		private void UpdateSize()
+		{
+			if(_alreadyInUpdateSize)
+				return;
+			_alreadyInUpdateSize = true;
+			int min =0;//review
+			Height = Math.Max(min,_flowPanel.Height);
+			_alreadyInUpdateSize = false;
+		}
+
+		void chosenItems_ListChanged(object sender, ListChangedEventArgs e)
+		{
+			if (!_ignoreListChanged && !ContainsFocus)
+			{
+				OnLoad(this, null);
+			}
+		}
+
+
+		public int PopupWidth
+		{
+			get { return _popupWidth; }
+			set { _popupWidth = value; }
+		}
+
+		void OnChildLostFocus(object sender, EventArgs e)
+		{
+			if(!ContainsFocus)//doing cleanup while the user is in the area will lead to much grief
+			{
+				IReportEmptiness x = _alternateEmptinessHelper;
+				if(x==null)
+				{
+					x = _chosenItems as IReportEmptiness;
+				}
+				if (x != null)
+				{
+					x.RemoveEmptyStuff();
+				}
+			}
+		}
+		public IReportEmptiness AlternateEmptinessHelper
+		{
+			get { return _alternateEmptinessHelper; }
+			set { _alternateEmptinessHelper = value; }
+		}
 
 
 		private void OnLoad(object sender, EventArgs e)
 		{
-			if(DesignMode)
+			if (DesignMode)
 				return;
+			SuspendLayout();
+			if (Parent != null)
+			{
+				BackColor = Parent.BackColor;
+
+				_flowPanel.BackColor = BackColor;
+			}
+
 			_flowPanel.Controls.Clear();
 			foreach (KEY_CONTAINER item in _chosenItems)
 			{
@@ -80,23 +159,32 @@ namespace WeSay.UI
 				{
 					picker.Box.Text = item.Key; // the box will recognize the problem and display a red background
 				}
+
+				//the binding itself doesn't need to be "owned" by us... it controls its own lifetime
 				SimpleBinding<ValueT> binding = new SimpleBinding<ValueT>(item, picker);
 
 				_flowPanel.Controls.Add(picker);
+
+				//review
+				picker.Parent = _flowPanel;
 			}
 			//add a blank to type in
 			AddEmptyPicker();
+			ResumeLayout(false);
 		}
 
 		void picker_ValueChanged(object sender, EventArgs e)
 		{
 			AutoCompleteWithCreationBox<KV, ValueT> picker = (AutoCompleteWithCreationBox<KV, ValueT>) sender;
-			if(picker.Box.SelectedItem == null && string.IsNullOrEmpty(picker.Box.Text))
-			{
-				 KEY_CONTAINER container = (KEY_CONTAINER) picker.Box.Tag;
-				_chosenItems.Remove(container);
-				_flowPanel.Controls.Remove(picker);
-			}
+
+			//this is dangerous; a user trying to replace whats there will loose the box they were working in
+//            if(picker.Box.SelectedItem == null && string.IsNullOrEmpty(picker.Box.Text))
+//            {
+//                 KEY_CONTAINER container = (KEY_CONTAINER) picker.Box.Tag;
+//                _chosenItems.Remove(container);
+//                _flowPanel.Controls.Remove(picker);
+//                picker.Dispose();
+//            }
 		}
 
 		private void AddEmptyPicker()
@@ -104,6 +192,9 @@ namespace WeSay.UI
 			AutoCompleteWithCreationBox<KV, ValueT> emptyPicker = MakePicker();
 			emptyPicker.ValueChanged += new EventHandler(emptyPicker_ValueChanged);
 			_flowPanel.Controls.Add(emptyPicker);
+
+			//review
+			emptyPicker.Parent = _flowPanel;
 		}
 
 		void emptyPicker_ValueChanged(object sender, EventArgs e)
@@ -113,9 +204,15 @@ namespace WeSay.UI
 			if (kv != null)
 			{
 				picker.ValueChanged -= emptyPicker_ValueChanged;
+				_ignoreListChanged = true;
 				KEY_CONTAINER newGuy = (KEY_CONTAINER) _chosenItems.AddNew();
 				_choiceSystemAdaptor.UpdateKeyContainerFromKeyValue(kv, newGuy);
+				_ignoreListChanged = false;
 				picker.ValueChanged += picker_ValueChanged;
+
+				//the binding itself doesn't need to be "owned" by us... it controls its own lifetime
+				SimpleBinding<ValueT> binding = new SimpleBinding<ValueT>(newGuy, picker);
+
 				AddEmptyPicker();
 			}
 		}
@@ -123,10 +220,7 @@ namespace WeSay.UI
 		private AutoCompleteWithCreationBox<KV, ValueT> MakePicker()
 		{
 			AutoCompleteWithCreationBox<KV, ValueT> picker = new AutoCompleteWithCreationBox<KV, ValueT>();
-			if(_formToObectFinderDelegate !=null)
-			{
-				picker.Box.FormToObectFinder = _choiceSystemAdaptor.GetValueFromForm;
-			}
+			picker.Box.FormToObectFinder = _choiceSystemAdaptor.GetValueFromFormNonGeneric;
 
 			picker.GetKeyValueFromValue = _choiceSystemAdaptor.GetKeyValueFromValue;
 			picker.GetValueFromKeyValue = _choiceSystemAdaptor.GetValueFromKeyValue;// _getValueFromKeyValueDelegate;
@@ -138,12 +232,17 @@ namespace WeSay.UI
 			{
 				picker.Box.ItemDisplayStringAdaptor = _choiceSystemAdaptor;
 			}
-			picker.Box.TooltipToDisplayStringAdaptor = _choiceSystemAdaptor.ToolTipAdaptor;
+			//picker.Box.TooltipToDisplayStringAdaptor = _choiceSystemAdaptor.ToolTipAdaptor;
 			picker.Box.PopupWidth = 100;
 			picker.Box.Mode = WeSayAutoCompleteTextBox.EntryMode.List;
 			picker.Box.Items = _sourceChoices;
 			picker.Box.WritingSystem = _writingSystems[0];
 			picker.Box.MinimumSize = new Size(20, 10);
+			picker.Box.ItemFilterer = _choiceSystemAdaptor.GetItemsToOffer;
+			picker.Box.PopupWidth = _popupWidth;
+
+			picker.Box.LostFocus   += new EventHandler(OnChildLostFocus);
+
 			if (CreateNewTargetItem != null)
 			{
 				picker.CreateNewClicked += OnCreateNewClicked;
@@ -165,6 +264,15 @@ namespace WeSay.UI
 			{
 				return "pretend: "+item.ToString();
 			}
+
+			#region IDisplayStringAdaptor Members
+
+			public string GetToolTip(object item)
+			{
+				return "";
+			}
+
+			#endregion
 		}
 
 	}

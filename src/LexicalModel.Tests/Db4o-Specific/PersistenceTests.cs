@@ -1,6 +1,7 @@
 using NUnit.Framework;
 using WeSay.Data;
 using WeSay.Foundation;
+using WeSay.Foundation.Options;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Db4o_Specific;
 

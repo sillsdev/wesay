@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using LiftIO;
 using WeSay.Data;
 using WeSay.Foundation;
+using WeSay.Foundation.Options;
 
 namespace WeSay.LexicalModel
 {

@@ -1,6 +1,6 @@
 using System.Text;
 using System.Windows.Forms;
-using WeSay.Foundation;
+using WeSay.Foundation.Options;
 
 namespace WeSay.UI
 {

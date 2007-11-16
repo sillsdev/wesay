@@ -4,10 +4,10 @@ using System.Drawing;
 using System.Windows.Forms;
 using NUnit.Framework;
 using WeSay.Foundation;
+using WeSay.Foundation.Options;
 using WeSay.Language;
 using WeSay.UI;
 using WeSay.UI.AutoCompleteTextBox;
-using NUnit.Extensions.Forms;
 
 namespace WeSay.UI.Tests
 {
@@ -16,7 +16,6 @@ namespace WeSay.UI.Tests
 	{
 		private WritingSystem _ws = new WritingSystem("test", new Font("Arial", 30));
 		private ReferenceCollectionEditor<Option, string, OptionRef> _control;
-		private Control _focussedControl;
 		private Form _window;
 		private OptionsList _sourceChoices;
 		private OptionRefCollection _chosenItems;
@@ -31,6 +30,8 @@ namespace WeSay.UI.Tests
 			AddSourceChoice( "one", "1");
 			AddSourceChoice( "two", "2");
 			AddSourceChoice( "three", "3");
+			AddSourceChoice("four", "4");
+			AddSourceChoice("five", "5");
 
 			_chosenItems = new OptionRefCollection(this);
 
@@ -44,6 +45,7 @@ namespace WeSay.UI.Tests
 				new OptionDisplayAdaptor(_sourceChoices, _ws.Id));
 
 			_control.Name = "refcontrol";
+			_control.AlternateEmptinessHelper = _chosenItems;
 
 		}
 
@@ -168,38 +170,86 @@ namespace WeSay.UI.Tests
 			_chosenItems.Add("3");
 			ActuallyShowOnScreen();
 			Assert.AreEqual(4, Boxes.Count);
-			GetTextBox(1).Text = "";
+			SimulateTypingOver(1,"");
 			_somethingElseToFocusOn.Focus();
+			Assert.AreEqual(2, _chosenItems.Count);
 			Assert.AreEqual(3, Boxes.Count);
 		}
-
 		[Test]
-		public void RemoveLastItem()
+		public void RemoveOnlyItem()
 		{
 			_chosenItems.Add("3");
 			ActuallyShowOnScreen();
 			Assert.AreEqual(2, Boxes.Count);
 			Assert.AreEqual(1, _chosenItems.Count);
-			GetTextBox(0).Text = "";
+			SimulateTypingOver(0, "");
 			_somethingElseToFocusOn.Focus();
 			Assert.AreEqual(1, Boxes.Count);
 			Assert.AreEqual(0, _chosenItems.Count);
 		}
+		[Test]
+		public void RemoveLastItem()
+		{
+			_chosenItems.Add("1");
+			_chosenItems.Add("2");
+			_chosenItems.Add("3");
+			ActuallyShowOnScreen();
+			Assert.AreEqual(4, Boxes.Count);
+			Assert.AreEqual(3, _chosenItems.Count);
+			SimulateTypingOver(2,"");
+			_somethingElseToFocusOn.Focus();
+			 Assert.AreEqual(2, _chosenItems.Count);
+		   Assert.AreEqual(3, Boxes.Count);
+		}
+
+		private void SimulateTypingOver(int boxNumber, string s)
+		{
+			WeSayAutoCompleteTextBox box = Boxes[boxNumber].Box;
+			box.Focus();
+			box.SelectionStart = 0;
+			box.SelectionLength = box.TextLength;
+			box.Paste(s);
+		}
 
 		[Test]
-		public void RemoveLastItemThenAdd()
+		public void TypingOverItemDoesNotRemoveItsBox()
 		{
-			RemoveLastItem();
-			AddItem();
+			_chosenItems.Add("1");
+			_chosenItems.Add("2");
+			_chosenItems.Add("3");
+			ActuallyShowOnScreen();
+			Assert.AreEqual(4, Boxes.Count);
+			SimulateTypingOver(1, "hello");
+			 Boxes[1].Box.Paste("hello");
+			Assert.AreEqual(4, Boxes.Count);
+		}
+
+
+
+		[Test]
+		public void RemoveOnlyItemThenAdd()
+		{
+			RemoveOnlyItem();
+			Assert.AreEqual(1, Boxes.Count);
+		   Assert.AreEqual("", GetTextBox(0).Text);
+			GetTextBox(0).Text = "two";
+			_somethingElseToFocusOn.Focus();
+			Assert.AreEqual(1, _chosenItems.Count);
+			Assert.AreEqual("2", _chosenItems.KeyAtIndex(0));
+			Assert.AreEqual(2, Boxes.Count);
 		}
 
 		[Test]
 		public void AddThenRemove()
 		{
 			AddItem();
+			Assert.AreEqual("two", GetTextBox(0).Text);
 			Assert.AreEqual(2, Boxes.Count);
+			GetTextBox(0).Focus();
 			GetTextBox(0).Text = "";
 			_somethingElseToFocusOn.Focus();
+			Assert.AreEqual("", GetTextBox(0).Text);
+			Assert.AreEqual(0, _chosenItems.Count);
 			Assert.AreEqual(1, Boxes.Count);
 		}
 
@@ -214,6 +264,41 @@ namespace WeSay.UI.Tests
 			Assert.AreEqual(1, _chosenItems.Count);
 			Assert.AreEqual("2", _chosenItems.KeyAtIndex(0));
 			Assert.AreEqual(2, Boxes.Count);
+		}
+
+		[Test] //during development the cursor would jump to the beginning, iff case was changed
+		public void TypingAMatchLeavesCursorInSamePlace()
+		{
+			 ActuallyShowOnScreen();
+			SimulateTypingOver(0, "two");
+			Assert.AreEqual(3, Boxes[0].Box.SelectionStart);
+			SimulateTypingOver(0, "Three");
+			Assert.AreEqual(5, Boxes[0].Box.SelectionStart);
+		}
+
+		[Test]
+		public void HeightIncreasesAsItemsAdded()
+		{
+			_control.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+			_control.Dock = DockStyle.None;
+			_control.AutoSize = false;
+
+			_control.Width = 100;
+			_control.Height = 30;
+			ActuallyShowOnScreen();
+			Application.DoEvents();
+			int initialHeight = _control.Height;
+			_chosenItems.Add("1");
+			Application.DoEvents();
+			_chosenItems.Add("2");
+			Application.DoEvents();
+			_chosenItems.Add("3");
+			Application.DoEvents();
+			_chosenItems.Add("4");
+			Application.DoEvents();
+			_chosenItems.Add("5");
+			Application.DoEvents();
+			Assert.Greater(_control.Height, initialHeight);
 		}
 
 
@@ -231,10 +316,11 @@ namespace WeSay.UI.Tests
 			if (_window == null)
 			{
 				_window = new Form();
+				_window.Size  = new Size(100, 300);
 				_somethingElseToFocusOn = new Button();
 				_window.Controls.Add(_somethingElseToFocusOn);
 
-				_control.Dock = DockStyle.Fill;
+			  //  _control.Dock = DockStyle.Fill;
 				_window.Controls.Add(_control);
 
 				_window.Show();

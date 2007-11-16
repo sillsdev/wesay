@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using NUnit.Framework;
 using WeSay.Foundation;
+using WeSay.Foundation.Options;
 using WeSay.Language;
 using WeSay.UI;
 using WeSay.UI.AutoCompleteTextBox;
@@ -33,21 +34,22 @@ namespace WeSay.UI.Tests
 		[SetUp]
 		public void Setup()
 		{
-			_ws = new WritingSystem("xx", new Font("Arial", 12));
+			_ws = new WritingSystem("xx", new Font("Arial", (float)55.9));
 //            _createNewClickedFired=false;
 //            _valueChangedFired = false;
 			_sourceChoices = new OptionsList();
 			_choiceKeys = new List<string>();
-			AddSourceChoice("one", "1");
-			AddSourceChoice("two", "2");
-			AddSourceChoice("three", "3");
+			AddSourceChoice("one", "1","Notice, this is not the number two.");//nb: key 'two' in there
+			AddSourceChoice("two", "2", "A description of two which includes the word duo.");
+			AddSourceChoice("three", "3", "A description of this which includes the word trio and is not two.");
 
+			_displayAdaptor = new OptionDisplayAdaptor(_sourceChoices,_ws.Id);
 			_control = new AutoCompleteWithCreationBox<Option,string>();
 			_control.Name = "autobox";
 			_control.Box.Items = _sourceChoices.Options;
+			_control.Box.ItemFilterer = _displayAdaptor.GetItemsToOffer;
 
 		   //leave for individual tests _control.CreateNewClicked += new EventHandler<CreateNewArgs>(_control_CreateNewClicked);
-			_displayAdaptor = new OptionDisplayAdaptor(_sourceChoices,_ws.Id);
 			_control.Box.ItemDisplayStringAdaptor = _displayAdaptor;
 			_control.Box.WritingSystem = _ws;
 			_control.GetKeyValueFromValue = _displayAdaptor.GetOptionFromKey;
@@ -67,6 +69,7 @@ namespace WeSay.UI.Tests
 		{
 		   // _valueChangedFired = true;
 		}
+
 
 
 		[TearDown]
@@ -136,6 +139,58 @@ namespace WeSay.UI.Tests
 		}
 
 		[Test]
+		public void DropdownMatchesStartOfName()
+		{
+			SetKeyAndShow(String.Empty);
+			Assert.AreEqual("", _control.Box.Text);
+			_control.Box.Focus();
+			SetBoxText("thr");
+			Assert.AreEqual(1, _control.Box.FilteredChoicesListBox.Items.Count);
+			Assert.AreEqual("three", _control.Box.FilteredChoicesListBox.Items[0].ToString());
+			SetBoxText("twxxx");
+			Assert.AreEqual(0, _control.Box.FilteredChoicesListBox.Items.Count);
+		 }
+
+		[Test]
+		public void DropDownMatchesDescription()
+		{
+			SetKeyAndShow(String.Empty);
+			Assert.AreEqual(0, _control.Box.FilteredChoicesListBox.Items.Count);
+			SetBoxText("duo");
+			Assert.AreEqual(1, _control.Box.FilteredChoicesListBox.Items.Count);
+			Assert.AreEqual("two", _control.Box.FilteredChoicesListBox.Items[0].ToString());
+		   SetBoxText("includes");
+			Assert.AreEqual(2, _control.Box.FilteredChoicesListBox.Items.Count);
+		}
+
+		[Test]
+		public void DropDownOrdersExactPrefixFirst()
+		{
+			SetKeyAndShow(String.Empty);
+			SetBoxText("tw");
+			//the item 'one' has the word 'two' in the description
+			Assert.AreEqual("two", _control.Box.FilteredChoicesListBox.Items[0].ToString());
+		 }
+
+		[Test]
+		public void DropDownDoesntRepeatItems()
+		{
+			SetKeyAndShow(String.Empty);
+			SetBoxText("two");//everything has the word 'two' and the item 'two' also has a matching name
+			//the item 'one' has the word 'two' in the description
+			Assert.AreEqual(_sourceChoices.Options.Count, _control.Box.FilteredChoicesListBox.Items.Count);
+		}
+
+		private void SetBoxText(string text)
+		{
+			//it seems that just setting text doesn't trigger drop down;
+			//just pasting only appends
+			_control.Box.SelectionStart = 0;
+			_control.Box.SelectionLength = 1000;
+			_control.Box.Paste(text);
+		}
+
+		[Test]
 		public void ClearItem()
 		{
 			SetKeyAndShow("3");
@@ -157,13 +212,23 @@ namespace WeSay.UI.Tests
 
 
 
+		[Test]
+		public void SensitiveToFontSize()
+		{
+			SetKeyAndShow("3");
+			//the +3 fudge here is because the actual height of the
+			//inner text box is something less than the Font's GetHeight
+			Assert.Greater(_control.Height +3, _ws.Font.GetHeight());
+		}
 
 		//------------------------------------------------------------
-		private void AddSourceChoice(string label, string key)
+		private void AddSourceChoice(string label, string key, string description)
 		{
 			MultiText name = new MultiText();
 			name[_ws.Id] = label;
-			_sourceChoices.Options.Add(new Option(key, name));
+			Option item = new Option(key, name);
+			item.Description.SetAlternative(_ws.Id, description);
+			_sourceChoices.Options.Add(item);
 			_choiceKeys.Add(key);
 		}
 

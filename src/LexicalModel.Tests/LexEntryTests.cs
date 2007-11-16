@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using NUnit.Framework;
 using WeSay.Foundation;
+using WeSay.Foundation.Options;
 
 namespace WeSay.LexicalModel.Tests
 {

@@ -13,7 +13,7 @@ using System.Xml.Xsl;
 using LiftIO;
 using Palaso.Reporting;
 using WeSay.AddinLib;
-using WeSay.Foundation;
+using WeSay.Foundation.Options;
 using WeSay.Language;
 using WeSay.LexicalModel;
 

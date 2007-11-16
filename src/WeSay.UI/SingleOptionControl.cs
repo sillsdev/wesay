@@ -2,6 +2,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using WeSay.Foundation;
 using System;
+using WeSay.Foundation.Options;
 
 namespace WeSay.UI
 {

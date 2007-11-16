@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Windows.Forms;
 using WeSay.Data;
 using WeSay.Foundation;
+using WeSay.Foundation.Options;
 using WeSay.Language;
 using WeSay.LexicalModel;
 using WeSay.Project;
@@ -390,9 +391,17 @@ namespace WeSay.LexicalTools
 		{
 			OptionsList availableOptions = WeSayWordsProject.Project.GetOptionsList(field, false);
 			OptionRefCollection refsOfChoices = target.GetOrCreateProperty<OptionRefCollection>(field.FieldName);
-			OptionCollectionControl control =
-				   new OptionCollectionControl(refsOfChoices, availableOptions, field.WritingSystemIds[0]);
-  //          ReferenceCollectionEditor<OptionRef> control
+//            OptionCollectionControl control =
+//                   new OptionCollectionControl(refsOfChoices, availableOptions, field.WritingSystemIds[0]);
+
+
+			ReferenceCollectionEditor<Option, string, OptionRef> control = new ReferenceCollectionEditor<Option, string, OptionRef>(
+				refsOfChoices.Members,
+				availableOptions.Options,
+				field.WritingSystems,
+				new OptionDisplayAdaptor(availableOptions, field.WritingSystemIds[0]));
+			control.PopupWidth = 200;
+			control.AlternateEmptinessHelper = refsOfChoices;
 			return control;
 		}
 
