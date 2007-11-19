@@ -8,6 +8,7 @@ namespace WeSay.Foundation
 	{
 		string GetDisplayLabel(object item);
 		string GetToolTip(object item);
+		string GetToolTipTitle(object item);
 	}
 
 	public class ToStringAutoCompleteAdaptor : IDisplayStringAdaptor
@@ -21,6 +22,13 @@ namespace WeSay.Foundation
 		{
 			return "";
 		}
+
+
+		public string GetToolTipTitle(object item)
+		{
+			return "";
+		}
+
 	}
 
 

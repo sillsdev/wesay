@@ -272,6 +272,11 @@ namespace WeSay.UI
 				return "";
 			}
 
+			public string GetToolTipTitle(object item)
+			{
+				return "";
+			}
+
 			#endregion
 		}
 

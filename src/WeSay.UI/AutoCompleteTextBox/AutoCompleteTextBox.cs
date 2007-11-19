@@ -382,6 +382,7 @@ namespace WeSay.UI.AutoCompleteTextBox
 
 			string tip = _itemDisplayAdaptor.GetToolTip(SelectedItem);
 			_toolTip.SetToolTip(this, tip);
+			_toolTip.ToolTipTitle =_itemDisplayAdaptor.GetToolTipTitle(SelectedItem);;
 		}
 
 		private void List_MouseMove ( object sender, MouseEventArgs e )
@@ -390,6 +391,7 @@ namespace WeSay.UI.AutoCompleteTextBox
 				return;
 
 			string tip = "";
+			string tipTitle = "";
 
 			//Get the item
 			int nIdx = _listBox.IndexFromPoint(e.Location);
@@ -402,11 +404,10 @@ namespace WeSay.UI.AutoCompleteTextBox
 				}
 				_previousToolTipTarget = wrapper.Item;
 				tip = _itemDisplayAdaptor.GetToolTip(wrapper.Item);
+				tipTitle = _itemDisplayAdaptor.GetToolTipTitle(wrapper.Item);
 			}
-//            if (_toolTip.GetToolTip(_listBox) != tip)
-//            {
-				_toolTip.SetToolTip(_listBox, tip);
-//            }
+			_toolTip.SetToolTip(_listBox, tip);
+			_toolTip.ToolTipTitle = tipTitle;
 		}
 
 		protected override void OnSizeChanged(EventArgs e)

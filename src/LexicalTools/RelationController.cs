@@ -314,6 +314,11 @@ namespace WeSay.LexicalTools
 				return "Program error";
 			}
 
+			public string GetToolTipTitle(object item)
+			{
+				return "";
+			}
+
 			#endregion
 		}
 
@@ -364,7 +369,14 @@ namespace WeSay.LexicalTools
 				return entry.GetToolTipText();
 			}
 
+			#region IDisplayStringAdaptor Members
 
+			public string GetToolTipTitle(object item)
+			{
+				return "";
+			}
+
+			#endregion
 		}
 
 		#endregion

@@ -40,6 +40,12 @@ namespace WeSay.Foundation.Options
 			return option.Description.GetBestAlternative(_preferredWritingSystemId);
 		}
 
+		public string GetToolTipTitle(object item)
+		{
+			Option option = item as Option;
+			return option.Abbreviation.GetBestAlternative(_preferredWritingSystemId);
+		}
+
 		#endregion
 
 		//other delegates
