@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: WeSay\n"
-"POT-Creation-Date: 2007-10-13T09:18:53\n"
+"POT-Creation-Date: 2007-11-23T02:23:03\n"
 "PO-Revision-Date: 2006-09-06 17:01+0700\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -49,7 +49,7 @@ msgid "Add Base Forms"
 msgstr ""
 
 
-msgid "Identify the "base form" word that this word is built from. In the printed dictionary, these can optionally be shown as subentries."
+msgid "Identify the \"base form\" word that this word is built from. In the printed dictionary, these can optionally be shown as subentries."
 msgstr ""
 
 
@@ -144,15 +144,15 @@ msgid "Creates a very basic dictionary publication in Microsoft Word."
 msgstr ""
 
 #; ..\src\Addin.Transform\HtmlTransformer.cs
-msgid "Html Exporter"
+msgid "Export to HTML"
 msgstr ""
 
 #; ..\src\Addin.Transform\HtmlTransformer.cs
-msgid "Creates an Html version of the dictionary ready for printing."
+msgid "Creates a simple Html version of the dictionary, ready for printing."
 msgstr ""
 
 #; ..\src\Addin.Transform\SfmTransformer.cs
-msgid "SFM Exporter"
+msgid "Export To SFM"
 msgstr ""
 
 #; ..\src\Addin.Transform\SfmTransformer.cs
@@ -189,12 +189,29 @@ msgstr ""
 msgid "No Senses"
 msgstr ""
 
+#; ..\src\LexicalModel\LexEntrySortHelper.cs
+#. This is what shows if the user is listing words by the glossing language, but the word doesn't have a gloss.
+msgid "No Gloss"
+msgstr ""
+
+#; ..\src\LexicalTools\DictionaryControl.cs
+msgid "Hide Uncommon Fields"
+msgstr ""
+
+#; ..\src\LexicalTools\DictionaryControl.cs
+msgid "Show Uncommon Fields"
+msgstr ""
+
 #; ..\src\LexicalTools\DictionaryControl.Designer.cs
 msgid "&Delete This Word"
 msgstr ""
 
 #; ..\src\LexicalTools\DictionaryControl.Designer.cs
 msgid "&New Word"
+msgstr ""
+
+#; ..\src\LexicalTools\DictionaryControl.Designer.cs
+msgid "&Show All Fields"
 msgstr ""
 
 #; ..\src\LexicalTools\DictionaryTask.cs
@@ -229,11 +246,6 @@ msgstr ""
 
 #; ..\src\LexicalTools\GatherWordListControl.Designer.cs
 msgid "Word:"
-msgstr ""
-
-#; ..\src\LexicalTools\LexEntrySortHelper.cs
-#. This is what shows if the user is listing words by the glossing language, but the word doesn't have a gloss.
-msgid "No Gloss"
 msgstr ""
 
 #; ..\src\LexicalTools\LexExampleSentenceLayouter.cs
@@ -271,6 +283,7 @@ msgid "Completed:"
 msgstr ""
 
 #; ..\src\LexicalTools\MissingInfoTask.cs
+#. The user will click this to say that this word has no baseform.  E.g. Kindess has Kind as a baseform, but Kind has no other word as a baseform.
 msgid "This word has no Base Form"
 msgstr ""
 
@@ -294,6 +307,13 @@ msgstr ""
 msgid "Definition"
 msgstr ""
 
+#; ..\src\WeSay.Project\ViewTemplate.cs
+#. The label for the field showing the literal meaning of idiom or proverb.
+msgid "Literal Meaning"
+msgstr ""
+
+#; ..\src\WeSay.Project\ViewTemplate.cs
+#. The label for the field showing a note.
 #; ..\src\WeSay.Project\ViewTemplate.cs
 #. The label for the field showing a note.
 msgid "Note"
