@@ -1,355 +1,325 @@
+# French translation for wesay
+# Copyright (c) 2007 Rosetta Contributors and Canonical Ltd 2007
+# This file is distributed under the same license as the wesay package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2007.
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: WeSay\n"
+"Project-Id-Version: wesay\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2007-11-23T05:56:27\n"
-"PO-Revision-Date: 2006-09-06 17:01+0700\n"
-"Last-Translator: \n"
-"Language-Team: \n"
+"PO-Revision-Date: 2007-09-04 17:27+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2007-11-23 03:16+0000\n"
+"X-Generator: Launchpad (build Unknown)\n"
 
-
-
-#; ..\src\CommonTools\DashboardControl.cs
 #. The label for the 'dashboard'; the task which lets you see the status of other tasks and jump to them.
 msgid "Home"
-msgstr ""
-
+msgstr "Point de depart"
 
 msgid "Dictionary Browse & Edit"
 msgstr ""
 
-
 msgid "Add Meanings"
-msgstr ""
-
+msgstr "Ajouter Sens"
 
 msgid "Add meanings to entries where they are missing."
-msgstr ""
-
+msgstr "Ajouter des sens pour les entrées qui en manquent"
 
 msgid "Add Parts of Speech"
 msgstr ""
 
-
+#, fuzzy
 msgid "Add a Part Of Speech to senses where they are missing."
-msgstr ""
-
+msgstr "Ajouter des phrases exemplaires pour les entrées qui en manquent"
 
 msgid "Add Examples"
-msgstr ""
+msgstr "Ajouter exemples"
 
-
+#, fuzzy
 msgid "Add example sentences to entries where they are missing."
-msgstr ""
-
+msgstr "Ajouter des phrases exemplaires pour les entrées qui en manquent"
 
 msgid "Add Base Forms"
 msgstr ""
 
-
-msgid "Identify the \"base form\" word that this word is built from. In the printed dictionary, these can optionally be shown as subentries."
+msgid ""
+"Identify the \"base form\" word that this word is built from. In the printed "
+"dictionary, these can optionally be shown as subentries."
 msgstr ""
 
-
+#, fuzzy
 msgid "Collect Word List (D)"
-msgstr ""
+msgstr "Receuillir une liste des mots"
 
+#, fuzzy
+msgid ""
+"Collect new words by translating from words in another language. This is a "
+"list of 1700 words from John Duerksen."
+msgstr "Recuillir des nouveaux mots en traduisant des mots d'une autre langue."
 
-msgid "Collect new words by translating from words in another language. This is a list of 1700 words from John Duerksen."
-msgstr ""
-
-
+#, fuzzy
 msgid "Collect Word List (PNG)"
-msgstr ""
+msgstr "Receuillir une liste des mots"
 
-
-msgid "Collect new words by translating from words in another language. This is a list of around 900 words and phrases from PNG."
-msgstr ""
-
+#, fuzzy
+msgid ""
+"Collect new words by translating from words in another language. This is a "
+"list of around 900 words and phrases from PNG."
+msgstr "Recuillir des nouveaux mots en traduisant des mots d'une autre langue."
 
 msgid "Collect Words By Semantic Domain"
+msgstr "Recuillir des mots par domaine sémantique"
+
+msgid ""
+"Collect new words organized by semantic domains and questions about those "
+"domains."
 msgstr ""
+"Recuillir des nouveaux mots selon les domaines sémantiques et par des "
+"questions au sujet de ces domaines"
 
-
-msgid "Collect new words organized by semantic domains and questions about those domains."
-msgstr ""
-
-
-#; ..\src\CommonTools\ActionsControl.cs
 msgid "Actions"
-msgstr ""
+msgstr "Actions"
 
-#; ..\src\Addin.Backup\BackupDialog.cs
 msgid "Looking for USB Keys..."
-msgstr ""
+msgstr "Detectant des clefs USB..."
 
-#; ..\src\Addin.Backup\BackupDialog.cs
 msgid "Backing Up..."
-msgstr ""
+msgstr "En train de Sauvegarder..."
 
-#; ..\src\Addin.Backup\BackupDialog.cs
 msgid "Backup Complete"
-msgstr ""
+msgstr "Fin de la sauvegarde"
 
-#; ..\src\Addin.Backup\BackupDialog.cs
 msgid "Files backed up to {0}"
-msgstr ""
+msgstr "Fichiers sauvegardées vers {0}"
 
-#; ..\src\Addin.Backup\BackupDialog.cs
 msgid "Files were not backed up."
-msgstr ""
+msgstr "Les fichiers n'ont pas été sauvegardés."
 
-#; ..\src\Addin.Backup\BackupDialog.cs
 msgid "Please insert the USB Key to backup to."
-msgstr ""
+msgstr "Veuillez insérer la clé USB pour la sauvegarde."
 
-#; ..\src\Addin.Backup\BackupDialog.Designer.cs
 msgid "&Cancel"
-msgstr ""
+msgstr "&Annuler"
 
-#; ..\src\Addin.Backup\BackupToDevice.cs
 #. Label for usb flash-drive backup action
 msgid "Backup To Device"
-msgstr ""
+msgstr "Sauvegarde au dispositif"
 
-#; ..\src\Addin.Backup\BackupToDevice.cs
 #. description of usb backup action
 msgid "Saves a backup on an external device, like a USB key."
-msgstr ""
+msgstr "Sauvegarde vers un périphérique externe, comme une clé USB"
 
-#; ..\src\Addin.Backup\SendProjectEmail.cs
 msgid "Email My Work to {0}"
-msgstr ""
+msgstr "Envoyer mon travail à {0}"
 
-#; ..\src\Addin.Backup\SendProjectEmail.cs
 msgid "Send a zipped email containing all your WeSay work."
-msgstr ""
+msgstr "Envoyer un email zippé contenant tout votre travail en WeSay."
 
-#; ..\src\Addin.LiftReports\ReportMaker.cs
 msgid "View Report"
-msgstr ""
+msgstr "View Report"
 
-#; ..\src\Addin.LiftReports\ReportMaker.cs
 msgid "Shows some information about the lexicon."
-msgstr ""
+msgstr "Affiche quelques informations sur le lexique"
 
-#; ..\src\Addin.Transform\HtmlInWord.cs
+# ; ..\src\Addin.Transform\HtmlInWord.cs
 msgid "Export to Word"
 msgstr ""
 
-#; ..\src\Addin.Transform\HtmlInWord.cs
+# ; ..\src\Addin.Transform\HtmlInWord.cs
 msgid "Creates a very basic dictionary publication in Microsoft Word."
 msgstr ""
 
-#; ..\src\Addin.Transform\HtmlTransformer.cs
+# ; ..\src\Addin.Transform\HtmlTransformer.cs
 msgid "Export to HTML"
 msgstr ""
 
-#; ..\src\Addin.Transform\HtmlTransformer.cs
+#, fuzzy
 msgid "Creates a simple Html version of the dictionary, ready for printing."
 msgstr ""
+"Créer une version du dictionnaire en HTML qui est prêt pour l'impression."
 
-#; ..\src\Addin.Transform\SfmTransformer.cs
+# ; ..\src\Addin.Transform\SfmTransformer.cs
 msgid "Export To SFM"
 msgstr ""
 
-#; ..\src\Addin.Transform\SfmTransformer.cs
 msgid "Saves the lexicon in a form of standard format."
-msgstr ""
+msgstr "Sauvegarde le lexique sous une forme de format standard."
 
-#; ..\src\CommonTools\ActionsControl.cs
+# ; ..\src\CommonTools\ActionsControl.cs
 #. The description of the Actions task.
 msgid "Backup, print, etc."
 msgstr ""
 
-#; ..\src\CommonTools\CurrentTaskIndicatorControl.Designer.cs
 msgid "Current task:"
-msgstr ""
+msgstr "Tâche actuelle:"
 
-#; ..\src\CommonTools\DashboardControl.cs
 msgid "Tasks"
-msgstr ""
+msgstr "Tâches"
 
-#; ..\src\CommonTools\DashboardControl.cs
 msgid "Switch tasks and see current status of tasks"
-msgstr ""
+msgstr "Changer de tâche et voir l'état actuel des tâches"
 
-#; ..\src\CommonTools\DictionaryStatusControl.Designer.cs
 msgid "Your dictionary has {0} words"
-msgstr ""
+msgstr "Votre dictionnaire a {0} mots"
 
-#; ..\src\Image Picker Test App\ImagePicker\ImageDisplayWidget.cs
-#; ..\src\WeSay.UI\PictureControl.cs
 msgid "Cannot find {0}"
-msgstr ""
+msgstr "Ne peut pas trouver {0}"
 
-#; ..\src\LexicalModel\LexEntry.cs
 msgid "No Senses"
-msgstr ""
+msgstr "Pas de sens"
 
-#; ..\src\LexicalModel\LexEntrySortHelper.cs
+# ; ..\src\LexicalModel\LexEntrySortHelper.cs
 #. This is what shows if the user is listing words by the glossing language, but the word doesn't have a gloss.
 msgid "No Gloss"
 msgstr ""
 
-#; ..\src\LexicalTools\DictionaryControl.cs
+# ; ..\src\LexicalTools\DictionaryControl.cs
 msgid "Hide Uncommon Fields"
 msgstr ""
 
-#; ..\src\LexicalTools\DictionaryControl.cs
+# ; ..\src\LexicalTools\DictionaryControl.cs
 msgid "Show Uncommon Fields"
 msgstr ""
 
-#; ..\src\LexicalTools\DictionaryControl.Designer.cs
 msgid "&Delete This Word"
-msgstr ""
+msgstr "&Supprimer ce mot"
 
-#; ..\src\LexicalTools\DictionaryControl.Designer.cs
 msgid "&New Word"
-msgstr ""
+msgstr "&Nouveau mot"
 
-#; ..\src\LexicalTools\DictionaryControl.Designer.cs
+# ; ..\src\LexicalTools\DictionaryControl.Designer.cs
 msgid "&Show All Fields"
 msgstr ""
 
-#; ..\src\LexicalTools\DictionaryTask.cs
 #. The description of the 'Dictionary' task.  In place of the {0} will be the number of words in the dictionary.  In place of the {1} will be the name of the project.
 msgid "See all {0} {1} words."
-msgstr ""
+msgstr "Afficher les {0} mots de {1}."
 
-#; ..\src\LexicalTools\GatherBySemanticDomainsControl.Designer.cs
-#; ..\src\WeSay.Project\ViewTemplate.cs
 #. The label for the field showing the Lexeme Form of the entry.
 msgid "Word"
-msgstr ""
+msgstr "Mot"
 
-#; ..\src\LexicalTools\GatherBySemanticDomainsControl.Designer.cs
-#; ..\src\LexicalTools\GatherWordListControl.Designer.cs
-#; ..\src\LexicalTools\MissingInfoControl.Designer.cs
 msgid "(Page Down Key)"
-msgstr ""
+msgstr "(Touche page suivante)"
 
-#; ..\src\LexicalTools\GatherBySemanticDomainsControl.Designer.cs
-#; ..\src\LexicalTools\GatherWordListControl.Designer.cs
 msgid "(Enter Key)"
-msgstr ""
+msgstr "(Touche Entrée)"
 
-#; ..\src\LexicalTools\GatherBySemanticDomainsControl.Designer.cs
 msgid "Try thinking of words you use to talk about these things."
-msgstr ""
+msgstr "Penser aux mots que vous utilisez pour parler de ces choses."
 
-#; ..\src\LexicalTools\GatherWordListControl.Designer.cs
 msgid "Try thinking of ways to say these words in your language."
-msgstr ""
+msgstr "Penser aux moyennes de dire ces mots en votre langage"
 
-#; ..\src\LexicalTools\GatherWordListControl.Designer.cs
 msgid "Word:"
-msgstr ""
+msgstr "Mot:"
 
-#; ..\src\LexicalTools\LexExampleSentenceLayouter.cs
 #. This is the field containing an example sentence of a sense of a word.
-#; ..\src\LexicalTools\LexExampleSentenceLayouter.cs
 #. This is the field containing an example sentence of a sense of a word."), "Sentence
 msgid "Example"
-msgstr ""
+msgstr "Exemple"
 
-#; ..\src\LexicalTools\LexExampleSentenceLayouter.cs
 #. This is the field for putting in a translation of an example sentence.
 msgid "Translation"
-msgstr ""
+msgstr "Traduction"
 
-#; ..\src\LexicalTools\LexSenseLayouter.cs
-#; ..\src\LexicalTools\LexSenseLayouter.cs
 #. This label is shown once, but has two roles.  1) it labels contains the gloss, and 2) marks the beginning of the set of fields which make up a sense. So, in english, if we labelled this 'gloss', it would describe the field well but wouldn't label the section well.
 msgid "Meaning"
-msgstr ""
+msgstr "Signification"
 
-#; ..\src\LexicalTools\MissingInfoControl.cs
 msgid "Congratulations. You have completed this task."
-msgstr ""
+msgstr "Félicitations. Vous avez terminé cette tâche."
 
-#; ..\src\LexicalTools\MissingInfoControl.cs
 msgid "There is no work left to be done on this task."
-msgstr ""
+msgstr "Il n'y reste aucun travail pour cette tâche."
 
-#; ..\src\LexicalTools\MissingInfoControl.Designer.cs
+# ; ..\src\LexicalTools\MissingInfoControl.Designer.cs
 msgid "To Do:"
 msgstr ""
 
-#; ..\src\LexicalTools\MissingInfoControl.Designer.cs
+#, fuzzy
 msgid "Completed:"
-msgstr ""
+msgstr "Fin de la sauvegarde"
 
-#; ..\src\LexicalTools\MissingInfoTask.cs
+# ; ..\src\LexicalTools\MissingInfoTask.cs
 #. The user will click this to say that this word has no baseform.  E.g. Kindess has Kind as a baseform, but Kind has no other word as a baseform.
 msgid "This word has no Base Form"
 msgstr ""
 
-#; ..\src\WeSay.App\TabbedForm.cs
 #. Appended to the name of a task, in its tab, while the user is waiting for the task to come up.
+#, fuzzy
 msgid "Loading..."
-msgstr ""
+msgstr "En train de Sauvegarder..."
 
-#; ..\src\WeSay.App\WeSayApp.cs
+# ; ..\src\WeSay.App\WeSayApp.cs
 #. It's up to you whether to bother translating this or not.") + ": " + project.Name + "
 msgid "WeSay"
 msgstr ""
 
-#; ..\src\WeSay.Project\ViewTemplate.cs
+# ; ..\src\WeSay.Project\ViewTemplate.cs
 #. The label for the field holding the citation form.
 msgid "CitationForm"
 msgstr ""
 
-#; ..\src\WeSay.Project\ViewTemplate.cs
 #. The label for the field showing the definition of the word.
+#, fuzzy
 msgid "Definition"
-msgstr ""
+msgstr "Dictionnaire"
 
-#; ..\src\WeSay.Project\ViewTemplate.cs
 #. The label for the field showing the literal meaning of idiom or proverb.
+#, fuzzy
 msgid "Literal Meaning"
-msgstr ""
+msgstr "Signification"
 
-#; ..\src\WeSay.Project\ViewTemplate.cs
+# ; ..\src\WeSay.Project\ViewTemplate.cs
+# ; ..\src\WeSay.Project\ViewTemplate.cs
 #. The label for the field showing a note.
-#; ..\src\WeSay.Project\ViewTemplate.cs
 #. The label for the field showing a note.
 msgid "Note"
 msgstr ""
 
-#; ..\src\WeSay.Project\ViewTemplate.cs
 #. The label for the field showing Part Of Speech
 msgid "POS"
-msgstr ""
+msgstr "Partie grammaticale"
 
-#; ..\src\WeSay.Project\ViewTemplate.cs
+# ; ..\src\WeSay.Project\ViewTemplate.cs
 #. The label for the field showing a picture.
 msgid "Picture"
 msgstr ""
 
-#; ..\src\WeSay.Project\ViewTemplate.cs
 #. The label for the field showing an example use of the word.
+#, fuzzy
 msgid "Example Sentence"
-msgstr ""
+msgstr "Exemple"
 
-#; ..\src\WeSay.Project\ViewTemplate.cs
 #. The label for the field showing the example sentence translated into other languages.
+#, fuzzy
 msgid "Example Translation"
-msgstr ""
+msgstr "Traduction"
 
-#; ..\src\WeSay.Project\ViewTemplate.cs
 #. The label for the field showing Semantic Domains
 msgid "Sem Dom"
-msgstr ""
+msgstr "Domaine"
 
-#; ..\src\WeSay.Project\ViewTemplate.cs
+# ; ..\src\WeSay.Project\ViewTemplate.cs
 #. The label for the field showing the entry which this entry is derived from, is a subentry of, etc.
 msgid "Base Form"
 msgstr ""
 
-#; ..\src\WeSay.UI\SingleOptionControl.cs
 #. This is shown in a combo-box (list of options, like Part Of Speech) when no option has been chosen, or the user just doesn't know what to put in this field.
 msgid "unknown"
-msgstr ""
+msgstr "inconnu(e)"
+
+#~ msgid "Html Exporter"
+#~ msgstr "Exporter en HTML"
+
+#~ msgid "SFM Exporter"
+#~ msgstr "Exporter en SFM"
+
+#~ msgid "Backup, create a progress report, etc."
+#~ msgstr "Sauvegarder, créer un rapport d'avancement, etc."

@@ -30,7 +30,7 @@ namespace WeSay.Setup
 			UsageReporter.AppNameToUseInReporting = "WeSayConfig";
 			UsageReporter.RecordLaunch();
 			UsageReporter.DoTrivialUsageReport("usage@wesay.org",
-											   "Thank you for helping us test WeSay!",
+											   "Thank you for letting us know you are using WeSay.",
 											   new int[] {1, 5, 20, 40, 60, 80, 100});
 
 			Application.Run(new AdminWindow(args));

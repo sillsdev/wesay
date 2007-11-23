@@ -65,12 +65,12 @@ namespace WeSay.Setup
 			this.tableLayoutPanel1.Controls.Add(this._classNameCombo, 1, 2);
 			this.tableLayoutPanel1.Controls.Add(this._dataTypeCombo, 1, 3);
 			this.tableLayoutPanel1.Controls.Add(this._optionsFileName, 1, 4);
-			this.tableLayoutPanel1.Controls.Add(this._descriptionLabel, 0, 5);
 			this.tableLayoutPanel1.Controls.Add(this.label6, 0, 6);
-			this.tableLayoutPanel1.Controls.Add(this._description, 1, 5);
 			this.tableLayoutPanel1.Controls.Add(this._writingSystemsControl, 1, 6);
-			this.tableLayoutPanel1.Controls.Add(this._normallyHiddenLabel, 0, 7);
-			this.tableLayoutPanel1.Controls.Add(this._normallyHidden, 1, 7);
+			this.tableLayoutPanel1.Controls.Add(this._normallyHidden, 1, 5);
+			this.tableLayoutPanel1.Controls.Add(this._description, 1, 7);
+			this.tableLayoutPanel1.Controls.Add(this._descriptionLabel, 0, 7);
+			this.tableLayoutPanel1.Controls.Add(this._normallyHiddenLabel, 0, 5);
 			this.tableLayoutPanel1.Location = new System.Drawing.Point(3, 17);
 			this.tableLayoutPanel1.Name = "tableLayoutPanel1";
 			this.tableLayoutPanel1.RowCount = 8;
@@ -79,9 +79,9 @@ namespace WeSay.Setup
 			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 31F));
 			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
 			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 32F));
+			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 29F));
 			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 106F));
-			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 110F));
-			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 24F));
+			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 105F));
 			this.tableLayoutPanel1.Size = new System.Drawing.Size(300, 387);
 			this.tableLayoutPanel1.TabIndex = 0;
 			//
@@ -200,7 +200,7 @@ namespace WeSay.Setup
 			//
 			this._descriptionLabel.AutoSize = true;
 			this._descriptionLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this._descriptionLabel.Location = new System.Drawing.Point(3, 147);
+			this._descriptionLabel.Location = new System.Drawing.Point(3, 282);
 			this._descriptionLabel.Name = "_descriptionLabel";
 			this._descriptionLabel.Size = new System.Drawing.Size(76, 16);
 			this._descriptionLabel.TabIndex = 9;
@@ -211,7 +211,7 @@ namespace WeSay.Setup
 			//
 			this.label6.AutoSize = true;
 			this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label6.Location = new System.Drawing.Point(3, 253);
+			this.label6.Location = new System.Drawing.Point(3, 176);
 			this.label6.Name = "label6";
 			this.label6.Size = new System.Drawing.Size(104, 16);
 			this.label6.TabIndex = 10;
@@ -223,10 +223,10 @@ namespace WeSay.Setup
 			this._description.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
 						| System.Windows.Forms.AnchorStyles.Right)));
 			this._description.Enabled = false;
-			this._description.Location = new System.Drawing.Point(119, 150);
+			this._description.Location = new System.Drawing.Point(119, 285);
 			this._description.Multiline = true;
 			this._description.Name = "_description";
-			this._description.Size = new System.Drawing.Size(178, 100);
+			this._description.Size = new System.Drawing.Size(178, 99);
 			this._description.TabIndex = 5;
 			this._description.TextChanged += new System.EventHandler(this._description_TextChanged);
 			//
@@ -234,16 +234,16 @@ namespace WeSay.Setup
 			//
 			this._writingSystemsControl.CurrentField = null;
 			this._writingSystemsControl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this._writingSystemsControl.Location = new System.Drawing.Point(119, 256);
+			this._writingSystemsControl.Location = new System.Drawing.Point(119, 179);
 			this._writingSystemsControl.Name = "_writingSystemsControl";
-			this._writingSystemsControl.Size = new System.Drawing.Size(178, 104);
+			this._writingSystemsControl.Size = new System.Drawing.Size(178, 100);
 			this._writingSystemsControl.TabIndex = 6;
 			//
 			// _normallyHiddenLabel
 			//
 			this._normallyHiddenLabel.AutoSize = true;
 			this._normallyHiddenLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this._normallyHiddenLabel.Location = new System.Drawing.Point(3, 363);
+			this._normallyHiddenLabel.Location = new System.Drawing.Point(3, 147);
 			this._normallyHiddenLabel.Name = "_normallyHiddenLabel";
 			this._normallyHiddenLabel.Size = new System.Drawing.Size(57, 16);
 			this._normallyHiddenLabel.TabIndex = 10;
@@ -253,7 +253,7 @@ namespace WeSay.Setup
 			// _normallyHidden
 			//
 			this._normallyHidden.AutoSize = true;
-			this._normallyHidden.Location = new System.Drawing.Point(119, 366);
+			this._normallyHidden.Location = new System.Drawing.Point(119, 150);
 			this._normallyHidden.Name = "_normallyHidden";
 			this._normallyHidden.Size = new System.Drawing.Size(140, 17);
 			this._normallyHidden.TabIndex = 7;

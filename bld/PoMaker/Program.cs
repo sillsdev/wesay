@@ -104,6 +104,7 @@ namespace PoMaker
 			{
 				Console.WriteLine(s);
 			}
+			key = key.Replace("\"", "\\\"");
 			Console.WriteLine("msgid \"" + key + "\"");
 			if (_makeEnglishPo)
 			{

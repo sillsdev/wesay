@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Data;
 using System.IO;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Xml;
 using WeSay.Foundation;
@@ -32,12 +33,40 @@ namespace WeSay.Setup
 		{
 			foreach (string file in Directory.GetFiles(directory,"*.po"))
 			{
-				string selector = Path.GetFileNameWithoutExtension(file);
+				PoProxy selector = new PoProxy(file);
 				_languageCombo.Items.Add(selector);
-				if(Project.WeSayWordsProject.Project.StringCatalogSelector == selector)
+				if(Project.WeSayWordsProject.Project.StringCatalogSelector == selector.fileNameWithoutExtension)
 				{
 					_languageCombo.SelectedItem = selector;
 				}
+			}
+		}
+
+		private class PoProxy
+		{
+			public PoProxy(string path)
+			{
+				fileNameWithoutExtension = Path.GetFileNameWithoutExtension(path);
+				_languageName = fileNameWithoutExtension;
+				try
+				{
+					string contents = File.ReadAllText(path);
+					Match m = Regex.Match(contents, @"# (.*) translation");
+					if (m.Success)
+					{
+						_languageName = m.Groups[1].Value.Trim();
+					}
+				}
+				catch(Exception error) //couldn't extract a better name
+				{
+				}
+			}
+
+			public string fileNameWithoutExtension;
+			private string _languageName;
+			public override string ToString()
+			{
+				return _languageName;
 			}
 		}
 
@@ -66,7 +95,7 @@ namespace WeSay.Setup
 				{
 					return String.Empty;
 				}
-				return _languageCombo.SelectedItem.ToString();
+				return ((PoProxy) _languageCombo.SelectedItem).fileNameWithoutExtension;
 			}
 		}
 

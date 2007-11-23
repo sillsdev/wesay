@@ -28,12 +28,13 @@
  <entry
 		id="abit_ID0EHE"
 		dateCreated="2007-11-01T09:47:31Z"
-		dateModified="2007-11-01T10:04:27Z"
+		dateModified="2007-11-19T08:14:31Z"
 		guid="6082481e-2ac2-4e2a-bf2b-ae750bc08507"><lexical-unit><form
 				lang="bth"><text>abit</text></form><form
-				lang="bth-fonipa"><text>ab'it</text></form></lexical-unit><sense><grammatical-info
-				value="noun" /><gloss
-				lang="en"><text>water carrying basket</text></gloss><picture
+				lang="bth-fonipa"><text>ab'it</text></form></lexical-unit><sense><gloss
+				lang="en"><text>water carrying basket</text><trait
+					name="flag"
+					value="1" /></gloss><picture
 				href="waterBasket1.png" /></sense></entry>
  <entry
 		id="abo-abo_ID0ENG"
