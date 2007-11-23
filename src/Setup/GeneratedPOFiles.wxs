@@ -2,53 +2,41 @@
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
 	<Fragment>
 		<DirectoryRef Id="common">
-			<Component Id="wesay_da.po" Guid="9B3BF3DF-A0B9-4738-8E10-006FDCA00B19">
-				<File Id="wesay_da.po" Name="wesay-da.po" KeyPath="yes" Source="C:\WeSay\common\fromLaunchpad\wesay-da.po" />
-			</Component>
-			<Component Id="wesay_fr.po" Guid="AACB8535-5AC8-45DF-9896-33608D75ABE9">
-				<File Id="wesay_fr.po" Name="wesay-fr.po" Source="C:\WeSay\common\fromLaunchpad\wesay-fr.po" />
+			   <Component Id="wesay_fr.po" Guid="AACB8535-5AC8-45DF-9896-33608D75ABE9">
+				<File Id="wesay_fr.po" Name="wesay-fr.po" Source="C:\WeSay\common\wesay-fr.po" />
 			</Component>
 			<Component Id="wesay_he.po" Guid="ECBBD680-C29E-4C73-80E1-68DFADCDFBD7">
-				<File Id="wesay_he.po" Name="wesay-he.po" Source="C:\WeSay\common\fromLaunchpad\wesay-he.po" />
+				<File Id="wesay_he.po" Name="wesay-he.po" Source="C:\WeSay\common\wesay-he.po" />
 			</Component>
 			<Component Id="wesay_is.po" Guid="A06A7E86-7B7E-40F5-AD4C-BBF207BA7569">
-				<File Id="wesay_is.po" Name="wesay-is.po" Source="C:\WeSay\common\fromLaunchpad\wesay-is.po" />
+				<File Id="wesay_is.po" Name="wesay-is.po" Source="C:\WeSay\common\wesay-is.po" />
 			</Component>
 			<Component Id="wesay_my.po" Guid="9054BCFC-165C-4128-8C08-1E52E0932803">
-				<File Id="wesay_my.po" Name="wesay-my.po" Source="C:\WeSay\common\fromLaunchpad\wesay-my.po" />
+				<File Id="wesay_my.po" Name="wesay-my.po" Source="C:\WeSay\common\wesay-my.po" />
 			</Component>
-			<Component Id="wesay_nl.po" Guid="0EC73C26-84EE-47C1-A2EF-FAE7D5899977">
-				<File Id="wesay_nl.po" Name="wesay-nl.po" Source="C:\WeSay\common\fromLaunchpad\wesay-nl.po" />
+			 <Component Id="wesay_pl.po" Guid="E43E08D1-C7B7-4FEB-8330-D4E6583C62E5">
+				<File Id="wesay_pl.po" Name="wesay-pl.po" Source="C:\WeSay\common\wesay-pl.po" />
 			</Component>
-			<Component Id="wesay_pl.po" Guid="E43E08D1-C7B7-4FEB-8330-D4E6583C62E5">
-				<File Id="wesay_pl.po" Name="wesay-pl.po" Source="C:\WeSay\common\fromLaunchpad\wesay-pl.po" />
-			</Component>
-			<Component Id="wesay_pt.po" Guid="5219DFB3-61CC-495F-898D-B85AE25BEAE7">
-				<File Id="wesay_pt.po" Name="wesay-pt.po" Source="C:\WeSay\common\fromLaunchpad\wesay-pt.po" />
-			</Component>
-			<Component Id="wesay_ru.po" Guid="80C9838E-47FD-4E9E-B038-165D9272905A">
-				<File Id="wesay_ru.po" Name="wesay-ru.po" Source="C:\WeSay\common\fromLaunchpad\wesay-ru.po" />
+			  <Component Id="wesay_ru.po" Guid="80C9838E-47FD-4E9E-B038-165D9272905A">
+				<File Id="wesay_ru.po" Name="wesay-ru.po" Source="C:\WeSay\common\wesay-ru.po" />
 			</Component>
 			<Component Id="wesay_th.po" Guid="E8BC519C-19FE-48A5-AE09-ABF62E87E735">
-				<File Id="wesay_th.po" Name="wesay-th.po" Source="C:\WeSay\common\fromLaunchpad\wesay-th.po" />
+				<File Id="wesay_th.po" Name="wesay-th.po" Source="C:\WeSay\common\wesay-th.po" />
 			</Component>
 			<Component Id="wesay_zh_CN.po" Guid="DBC6CB04-E450-4071-B940-0AF3DA78DA4C">
-				<File Id="wesay_zh_CN.po" Name="wesay-zh_CN.po" Source="C:\WeSay\common\fromLaunchpad\wesay-zh_CN.po" />
+				<File Id="wesay_zh_CN.po" Name="wesay-zh_CN.po" Source="C:\WeSay\common\wesay-zh_CN.po" />
 			</Component>
 			<Component Id="wesay.pot" Guid="159F2D56-478F-4EDA-B790-B2E5292B8E6C">
-				<File Id="wesay.pot" Name="wesay.pot" Source="C:\WeSay\common\fromLaunchpad\wesay.pot" />
+				<File Id="wesay.pot" Name="wesay.pot" Source="C:\WeSay\common\wesay.pot" />
 			</Component>
 		</DirectoryRef>
 		<ComponentGroup Id="PoFiles">
-			<ComponentRef Id="wesay_da.po" />
-			<ComponentRef Id="wesay_fr.po" />
+			 <ComponentRef Id="wesay_fr.po" />
 			<ComponentRef Id="wesay_he.po" />
 			<ComponentRef Id="wesay_is.po" />
 			<ComponentRef Id="wesay_my.po" />
-			<ComponentRef Id="wesay_nl.po" />
 			<ComponentRef Id="wesay_pl.po" />
-			<ComponentRef Id="wesay_pt.po" />
-			<ComponentRef Id="wesay_ru.po" />
+			 <ComponentRef Id="wesay_ru.po" />
 			<ComponentRef Id="wesay_th.po" />
 			<ComponentRef Id="wesay_zh_CN.po" />
 			<ComponentRef Id="wesay.pot" />
