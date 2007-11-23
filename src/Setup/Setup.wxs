@@ -369,12 +369,6 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 			  <ComponentRef Id="Keyman7Interop.dll"/>
 
 
-			  <!-- i tried to FeatureRef these from their own files but it didn't work -->
-			  <ComponentRef Id="Burmese.po" />
-			  <ComponentRef Id="Thai.po" />
-			  <ComponentRef Id="French.po" />
-			  <ComponentRef Id="Chinese_simplified.po" />
-
 			  <ComponentRef Id="PartsOfSpeech.xml" />
 			  <ComponentRef Id="sampleWordList.txt" />
 			  <ComponentRef Id="DuerksenWords.txt" />
@@ -394,7 +388,7 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 			  <ComponentRef Id ="biatahMain"/>
 			  <ComponentRef Id ="biatahCache"/>
 			  <ComponentRef Id ="biatahPictures"/>
-
+			  <ComponentGroupRef Id ="PoFiles"/>
 			</Feature>
 			<Media Id="1" Cabinet="product.cab" EmbedCab="yes" />
 			<Icon Id="WeSay.App.exe" SourceFile ="..\..\output\release\WeSay.App.exe" />
