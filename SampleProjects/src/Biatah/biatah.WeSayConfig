@@ -195,14 +195,7 @@
 	  <showfields>ExampleSentence</showfields>
 	  <readOnly>SenseGloss</readOnly>
 	</task>
-	<task id="Gather Words" class="WeSay.LexicalTools.GatherWordListTask" assembly="LexicalTools" visible="true">
-	  <entries ref="All Entries" />
-	  <label>Collect Word List</label>
-	  <description>Collect new words by translating from words in another language.</description>
-	  <wordListFileName>sampleWordList.txt</wordListFileName>
-	  <wordListWritingSystemId>en</wordListWritingSystemId>
-	  <viewTemplate ref="Default View Template" />
-	</task>
+
 	<task id="Gather Words By Domain" class="WeSay.LexicalTools.GatherBySemanticDomainTask" assembly="LexicalTools" default="true" visible="true">
 	  <entries ref="All Entries" />
 	  <label>Collect Words By Semantic Domain</label>
