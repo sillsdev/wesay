@@ -263,6 +263,16 @@ namespace WeSay.Project
 			try
 			{
 				string sourceDir = Path.Combine(projectDir, subDirName);
+				//overcome a problem someone might have, where the installer places the new sample files
+				//right in there alongside the old.
+				if(projectDir.Contains("biatah"))
+				{
+					if (Directory.Exists(sourceDir))
+					{
+						Directory.Delete(sourceDir, true);
+						return;
+					}
+				}
 				string targetDir = projectDir;
 				if (Directory.Exists(sourceDir))
 				{

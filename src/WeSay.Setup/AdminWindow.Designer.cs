@@ -96,7 +96,7 @@ namespace WeSay.Setup
 			// aboutToolStripMenuItem
 			//
 			this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-			this.aboutToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
+			this.aboutToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
 			this.aboutToolStripMenuItem.Text = "&About WeSay...";
 			this.aboutToolStripMenuItem.Click += new System.EventHandler(this.OnAboutToolStripMenuItem_Click);
 			//
@@ -155,11 +155,12 @@ namespace WeSay.Setup
 			// openProjectInWeSayToolStripMenuItem
 			//
 			this.openProjectInWeSayToolStripMenuItem.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+			this.openProjectInWeSayToolStripMenuItem.ForeColor = System.Drawing.SystemColors.ActiveCaption;
 			this.openProjectInWeSayToolStripMenuItem.Image = global::WeSay.Setup.Properties.Resources.WeSayMenuSized;
 			this.openProjectInWeSayToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.openProjectInWeSayToolStripMenuItem.Name = "openProjectInWeSayToolStripMenuItem";
 			this.openProjectInWeSayToolStripMenuItem.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
-			this.openProjectInWeSayToolStripMenuItem.Size = new System.Drawing.Size(102, 22);
+			this.openProjectInWeSayToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
 			this.openProjectInWeSayToolStripMenuItem.Text = "Open in WeSay";
 			this.openProjectInWeSayToolStripMenuItem.ToolTipText = "Open this in WeSay";
 			this.openProjectInWeSayToolStripMenuItem.Click += new System.EventHandler(this.OnOpenThisProjectInWeSay);
@@ -169,7 +170,7 @@ namespace WeSay.Setup
 			this._versionToolStripLabel.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
 			this._versionToolStripLabel.ForeColor = System.Drawing.SystemColors.ControlDark;
 			this._versionToolStripLabel.Name = "_versionToolStripLabel";
-			this._versionToolStripLabel.Size = new System.Drawing.Size(41, 22);
+			this._versionToolStripLabel.Size = new System.Drawing.Size(45, 22);
 			this._versionToolStripLabel.Text = "version";
 			//
 			// AdminWindow
