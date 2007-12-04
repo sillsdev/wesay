@@ -66,7 +66,7 @@ namespace WeSay.Language.Tests
 			_collection.Load(_path);
 			WritingSystem ws = _collection["PretendAnalysis"];
 			Assert.AreEqual("PretendAnalysis", ws.Id);
-			Assert.AreEqual("Wingdings", ws.Font.Name);
+			Assert.AreEqual("Courier New", ws.Font.Name);
 			Assert.AreEqual(10, ws.Font.Size);
 		}
 

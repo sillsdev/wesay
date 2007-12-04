@@ -116,12 +116,14 @@ namespace WeSay.LexicalTools
 			}
 			_presentationModel.GotoNextDomainQuestion();
 			RefreshCurrentDomainAndQuestion();
+			_vernacularBox.FocusOnFirstWsAlternative();
 		}
 
 		private void _btnPrevious_Click(object sender, EventArgs e)
 		{
 			_presentationModel.GotoPreviousDomainQuestion();
 			RefreshCurrentDomainAndQuestion();
+			_vernacularBox.FocusOnFirstWsAlternative();
 		}
 
 		private void _boxVernacularWord_KeyDown(object sender, KeyEventArgs e)
@@ -212,6 +214,8 @@ namespace WeSay.LexicalTools
 
 				_movingLabel.Go(word, start,destination);
 			}
+			_vernacularBox.FocusOnFirstWsAlternative();
+
 		}
 
 
@@ -220,6 +224,7 @@ namespace WeSay.LexicalTools
 		  string word = WordToAdd;
 		  if (String.IsNullOrEmpty(word))
 		  {
+			_vernacularBox.FocusOnFirstWsAlternative();
 			  return;
 		  }
 		  _presentationModel.AddWord(word);
@@ -239,6 +244,8 @@ namespace WeSay.LexicalTools
 		_animationIsMovingFromList = true;
 
 		_movingLabel.Go(word,start,destination);
+		_vernacularBox.FocusOnFirstWsAlternative();
+
 	  }
 
 		private string WordToAdd
@@ -317,6 +324,8 @@ namespace WeSay.LexicalTools
 		{
 			_presentationModel.CurrentDomainIndex = _domainName.SelectedIndex;
 			RefreshCurrentDomainAndQuestion();
+			_vernacularBox.FocusOnFirstWsAlternative();
+
 		}
 
 		private void SetAutoSizeToGrowAndShrink()

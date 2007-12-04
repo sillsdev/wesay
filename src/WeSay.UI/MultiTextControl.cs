@@ -65,6 +65,13 @@ namespace WeSay.UI
 #endif
 		}
 
+		public void FocusOnFirstWsAlternative()
+		{
+			if (TextBoxes.Count > 0)
+			{
+				this.TextBoxes[0].Focus();
+			}
+		}
 
 		///<remarks>This can't be done during construction... we have to wait until
 		///we actually have a parent to do this.</remarks>
@@ -199,6 +206,8 @@ namespace WeSay.UI
 				tb.Select(1000, 0);//go to end}
 			}
 		}
+
+
 
 		/// <summary>
 		/// We want all the texts to line up, so we have to take into account the maximum

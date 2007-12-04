@@ -156,8 +156,19 @@ namespace WeSay.LexicalTools
 					}
 					else
 					{
-						viewTemplate.Add(field);
+						if (field.Visibility != CommonEnumerations.VisibilitySetting.Visible)//make sure specified fields are visible (not in 'rare mode)
+						{
+							Field visibleField = new Field(field);
+							visibleField.Visibility = CommonEnumerations.VisibilitySetting.Visible;
+							viewTemplate.Add(visibleField);
+						}
+						else
+						{
+							viewTemplate.Add(field);
+						}
 					}
+
+
 				}
 			}
 			return viewTemplate;

@@ -44,7 +44,7 @@ namespace WeSay.UI.Tests
 			AddSourceChoice("three", "3", "A description of this which includes the word trio and is not two.");
 
 			_displayAdaptor = new OptionDisplayAdaptor(_sourceChoices,_ws.Id);
-			_control = new AutoCompleteWithCreationBox<Option,string>();
+			_control = new AutoCompleteWithCreationBox<Option,string>(CommonEnumerations.VisibilitySetting.Visible);
 			_control.Name = "autobox";
 			_control.Box.Items = _sourceChoices.Options;
 			_control.Box.ItemFilterer = _displayAdaptor.GetItemsToOffer;

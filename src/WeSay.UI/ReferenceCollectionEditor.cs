@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 using WeSay.Foundation;
+using WeSay.Foundation.Options;
 using WeSay.Language;
 using WeSay.UI.AutoCompleteTextBox;
 
@@ -17,6 +18,7 @@ namespace WeSay.UI
 		private IBindingList _chosenItems;
 		private IEnumerable<KV> _sourceChoices;
 		private IList<WritingSystem> _writingSystems;
+		private readonly CommonEnumerations.VisibilitySetting _visibility;
 		private IChoiceSystemAdaptor<KV,ValueT,KEY_CONTAINER> _choiceSystemAdaptor;
 		private IReportEmptiness _alternateEmptinessHelper;
 
@@ -39,10 +41,12 @@ namespace WeSay.UI
 		 /// <param name="sourceChoices"> The set of objects that the user can choose from. The AutoCompleteAdaptor is used
 		 /// to convert these into display strings.</param>
 		/// <param name="writingSystems">a list of writing systems ordered by preference</param>
+		/// <param name="visibility"></param>
 		/// <param name="adaptor">does all the conversion between keys, wrappers, actual objects, etc.</param>
 		public ReferenceCollectionEditor(IBindingList chosenItems,
 			IEnumerable<KV> sourceChoices,
 			IList<WritingSystem> writingSystems,
+			CommonEnumerations.VisibilitySetting visibility,
 			IChoiceSystemAdaptor<KV,ValueT,KEY_CONTAINER> adaptor)
 		{
 			if (chosenItems == null)
@@ -58,6 +62,7 @@ namespace WeSay.UI
 			_chosenItems = chosenItems;
 			_sourceChoices = sourceChoices;
 			_writingSystems = writingSystems;
+			_visibility = visibility;
 			_choiceSystemAdaptor = adaptor;
 			chosenItems.ListChanged += new ListChangedEventHandler(chosenItems_ListChanged);
 
@@ -72,6 +77,7 @@ namespace WeSay.UI
 
 			UpdateSize();
 		}
+
 
 		void ReferenceCollectionEditor_SizeChanged(object sender, EventArgs e)
 		{
@@ -219,7 +225,7 @@ namespace WeSay.UI
 
 		private AutoCompleteWithCreationBox<KV, ValueT> MakePicker()
 		{
-			AutoCompleteWithCreationBox<KV, ValueT> picker = new AutoCompleteWithCreationBox<KV, ValueT>();
+			AutoCompleteWithCreationBox<KV, ValueT> picker = new AutoCompleteWithCreationBox<KV, ValueT>(_visibility);
 			picker.Box.FormToObectFinder = _choiceSystemAdaptor.GetValueFromFormNonGeneric;
 
 			picker.GetKeyValueFromValue = _choiceSystemAdaptor.GetKeyValueFromValue;

@@ -13,6 +13,7 @@ using System.Xml.Xsl;
 using LiftIO;
 using Palaso.Reporting;
 using WeSay.AddinLib;
+using WeSay.Data;
 using WeSay.Foundation.Options;
 using WeSay.Language;
 using WeSay.LexicalModel;
@@ -99,6 +100,51 @@ namespace WeSay.Project
 			ErrorReport.OkToInteractWithUser = false;
 			LoadFromProjectDirectoryPath(ProjectDirectoryPath);
 			StringCatalogSelector = "en";
+		}
+
+		/// <summary>
+		/// configuration tools should call this when they modify something (e.g. writing systems) that
+		/// calls for rebuilding the caches.
+		/// </summary>
+		public void InvalidateCacheSilently()
+		{
+			DateTime liftLastWriteTimeUtc = File.GetLastWriteTimeUtc(WeSayWordsProject.Project.PathToLiftFile);
+			if (File.Exists(WeSayWordsProject.Project.PathToDb4oLexicalModelDB))
+			{
+				try // don't crash if we can't update
+				{
+					using (
+							Db4oDataSource ds =
+									new Db4oDataSource(
+											WeSayWordsProject.Project.PathToDb4oLexicalModelDB))
+					{
+						//this should be different now so the cache should be updated
+						//but it shouldn't be off by enough to make it so we lose
+						//records if a crash occured and updates hadn't been written
+						//out yet and so are still pending in the db.
+						CacheManager.UpdateSyncPointInCache(ds.Data,
+															liftLastWriteTimeUtc.AddMilliseconds(10));
+					}
+				}
+				catch { }
+			}
+		}
+		/// <summary>
+		/// exception handlers should call this when the database or other caches seem broken or out of sync
+		/// </summary>
+		/// <param name="error"></param>
+		public void HandleProbableCacheProblem(Exception error)
+		{
+#if DEBUG
+			Palaso.Reporting.ErrorReport.ReportNonFatalMessage(
+				"WeSay had a problem. You should quit now and let WeSay try to fix the problem when you run it again.\r\n\r\nIn the release build, the cache would now be invalidated and the user would not see the following crash dialog.");
+			throw error;
+#else
+			InvalidateCacheSilently();
+			//todo: make a way to pass on this error to us
+			Palaso.Reporting.ErrorReport.ReportNonFatalMessage(
+				"WeSay had a problem. You should quit now and let WeSay try to fix the problem when you run it again.");
+#endif
 		}
 
 		public bool LoadFromLiftLexiconPath(string liftPath)

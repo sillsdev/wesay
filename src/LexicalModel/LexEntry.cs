@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Text;
-using Db4objects.Db4o;
 using WeSay.Data;
 using WeSay.Foundation;
 using WeSay.LexicalModel.Db4o_Specific;
@@ -29,6 +29,7 @@ namespace WeSay.LexicalModel
 		private InMemoryBindingList<LexSense> _senses;
 		private DateTime _creationTime;
 		private DateTime _modificationTime;
+		private bool _isBeingDeleted;
 
 		new public class WellKnownProperties : WeSayDataObject.WellKnownProperties
 		{
@@ -235,6 +236,7 @@ namespace WeSay.LexicalModel
 
 		public override void CleanUpAfterEditting()
 		{
+			Debug.Assert(!IsBeingDeleted);
 			base.CleanUpAfterEditting();
 			foreach (LexSense sense in _senses)
 			{
@@ -245,6 +247,7 @@ namespace WeSay.LexicalModel
 
 		public override void CleanUpEmptyObjects()
 		{
+			Debug.Assert(!IsBeingDeleted);
 			Palaso.Reporting.Logger.WriteMinorEvent("LexEntry CleanUpEmptyObjects()");
 			base.CleanUpEmptyObjects();
 
@@ -321,6 +324,16 @@ namespace WeSay.LexicalModel
 
 				return true;
 			}
+		}
+
+		/// <summary>
+		/// this is used to prevent things like cleanup of an object that is being deleted, which
+		/// can lead to update notifications that get the dispossed entry back in the db, or in some cache
+		/// </summary>
+		public bool IsBeingDeleted
+		{
+			get { return _isBeingDeleted; }
+			set { _isBeingDeleted = value; }
 		}
 	}
 

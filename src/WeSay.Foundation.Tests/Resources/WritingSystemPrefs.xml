@@ -2,12 +2,12 @@
 <WritingSystemCollection>
   <members>
 	<WritingSystem>
-	  <FontName>WingDings</FontName>
+	  <FontName>Courier New</FontName>
 	  <FontSize>10</FontSize>
 	  <Id>PretendAnalysis</Id>
 	</WritingSystem>
 	<WritingSystem>
-	  <FontName>WingDings</FontName>
+	  <FontName>Courier New</FontName>
 	  <FontSize>20</FontSize>
 	  <Id>PretendVernacular</Id>
 	</WritingSystem>

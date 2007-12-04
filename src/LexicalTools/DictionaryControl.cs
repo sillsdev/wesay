@@ -146,9 +146,18 @@ namespace WeSay.LexicalTools
 				{
 					return null;
 				}
-				return
-						((CachedSortedDb4oList<string, LexEntry>) _records).
-								GetValue(CurrentIndex);
+				try
+				{
+					LexEntry record = ((CachedSortedDb4oList<string, LexEntry>)_records).
+						GetValue(CurrentIndex);
+
+					return record;
+				}
+				catch (Exception e)
+				{
+					WeSay.Project.WeSayWordsProject.Project.HandleProbableCacheProblem(e);
+					return null;
+				}
 			}
 		}
 
@@ -437,6 +446,7 @@ namespace WeSay.LexicalTools
 				_btnDeleteWord.Focus();
 			}
 			_recordListBoxActive = true; // allow onRecordSelectionChanged
+		   CurrentRecord.IsBeingDeleted = true;
 			_records.RemoveAt(CurrentIndex);
 			OnRecordSelectionChanged(this, null);
 			_recordListBoxActive = false;

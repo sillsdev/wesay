@@ -8,6 +8,7 @@ namespace WeSay.UI.AutoCompleteTextBox
 {
 	public partial class AutoCompleteWithCreationBox<KV, ValueT> : UserControl, IBindableControl<ValueT> where ValueT : class
 	{
+		private readonly CommonEnumerations.VisibilitySetting _visibility;
 		public event EventHandler<CreateNewArgs> CreateNewClicked;
 
 		public delegate ValueT GetValueFromKeyValueDelegate(KV t);
@@ -15,13 +16,19 @@ namespace WeSay.UI.AutoCompleteTextBox
 
 		private GetValueFromKeyValueDelegate _getValueFromKeyValueDelegate;
 		private GetKeyValueFromValueDelegate _getKeyValueFromValueDelegate;
-		public AutoCompleteWithCreationBox()
+		public AutoCompleteWithCreationBox(CommonEnumerations.VisibilitySetting visibility)
 		{
+			_visibility = visibility;
 			InitializeComponent();
 
 			if(DesignMode)
 				return;
 
+			//todo: what other cases make sense
+			if (visibility == CommonEnumerations.VisibilitySetting.ReadOnly)
+			{
+				_textBox.ReadOnly = true;
+			}
 
 			_textBox.SelectedItemChanged += OnSelectedItemChanged;
 			GotFocus += OnFocusChanged;
@@ -35,6 +42,8 @@ namespace WeSay.UI.AutoCompleteTextBox
 
 			_textBox.SizeChanged += new EventHandler(_textBox_SizeChanged);
 		}
+
+
 
 		void _textBox_SizeChanged(object sender, EventArgs e)
 		{

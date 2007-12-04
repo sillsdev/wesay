@@ -105,27 +105,9 @@ namespace WeSay.Setup
 			InvalidateCache();
 		}
 
-		private static void InvalidateCache() {
-			DateTime liftLastWriteTimeUtc = File.GetLastWriteTimeUtc(WeSayWordsProject.Project.PathToLiftFile);
-			if (File.Exists(WeSayWordsProject.Project.PathToDb4oLexicalModelDB))
-			{
-				try // don't crash if we can't update
-				{
-					using (
-							Db4oDataSource ds =
-									new Db4oDataSource(
-											WeSayWordsProject.Project.PathToDb4oLexicalModelDB))
-					{
-						//this should be different now so the cache should be updated
-						//but it shouldn't be off by enough to make it so we lose
-						//records if a crash occured and updates hadn't been written
-						//out yet and so are still pending in the db.
-						CacheManager.UpdateSyncPointInCache(ds.Data,
-															liftLastWriteTimeUtc.AddMilliseconds(10));
-					}
-				}
-				catch {}
-			}
+		private static void InvalidateCache()
+		{
+			WeSayWordsProject.Project.InvalidateCacheSilently();
 		}
 
 		private void comboBoxCultures_SelectedIndexChanged(object sender, EventArgs e)

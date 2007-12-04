@@ -192,8 +192,9 @@ namespace WeSay.Foundation
 				}
 				if (IsPropertyEmpty(property))
 				{
+					Palaso.Reporting.Logger.WriteMinorEvent("Removing {0} due to emptiness.", property.ToString());
 					Properties.RemoveAt(i);
-					NotifyPropertyChanged("some property");
+					NotifyPropertyChanged(property.ToString());
 				}
 			}
 		}

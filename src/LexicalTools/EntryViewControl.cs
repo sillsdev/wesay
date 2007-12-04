@@ -82,10 +82,9 @@ namespace WeSay.LexicalTools
 
 				if (_record != value)
 				{
-					if (_record != null)
+					if (_record != null && !_record.IsBeingDeleted)
 					{
-						Logger.WriteMinorEvent("Datasource set calling _record.CleanUpAfterEditting()");
-
+						Logger.WriteMinorEvent("Datasource set. Calling _record.CleanUpAfterEditting()");
 						_record.PropertyChanged -= OnRecordPropertyChanged;
 						_record.EmptyObjectsRemoved -= OnEmptyObjectsRemoved;
 						_record.CleanUpAfterEditting();

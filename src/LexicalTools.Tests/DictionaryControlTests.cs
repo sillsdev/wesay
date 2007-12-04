@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Windows.Forms;
@@ -183,6 +184,58 @@ namespace WeSay.LexicalTools.Tests
 			int before = _records.Count;
 			ClickDeleteWord();
 			Assert.AreEqual(before - 1, _records.Count);
+		}
+
+		/// <summary>
+		/// regression test for WS-536, WS-545
+		/// </summary>
+		[Test]
+		public void DeleteWordWhenEvenHasCleanup_Regression()
+		{
+			ClickAddWord();
+			int before = _records.Count;
+
+			EntryViewControl parentControl = ((DictionaryControl)_task.Control).Control_EntryDetailPanel;
+			LexEntry entry = parentControl.DataSource;
+			const string form = "xx";
+			entry.LexicalForm.SetAlternative(_vernacularWsId, form);
+			GoToLexicalEntryUseFind("Initial"); //go away
+			GoToLexicalEntryUseFind(form);//come back
+
+			KeyValuePair<string, object>  item2 = new KeyValuePair<string, object>("test", new LexRelation("b","bbb", entry));
+			entry.Properties.Add(item2);
+
+			GetEditControl("*EntryLexicalForm").FocusOnFirstWsAlternative();
+			ClickDeleteWord();
+			Assert.AreEqual(before - 1, _records.Count);
+		   // GoToLexicalEntryUseFind(form); should fail to find it
+
+			AssertExistenceOfEntryInList(form, false);
+		}
+
+		private void GoToLexicalEntryUseFind(string lexemeForm)
+		{
+			TextBoxTester t = new TextBoxTester("_findText");
+			t.Enter(lexemeForm);
+			t.FireEvent("KeyDown", new KeyEventArgs(Keys.Enter));
+			ListBoxTester l = new ListBoxTester("_recordsListBox");
+
+			Assert.AreEqual(lexemeForm, l.Properties.SelectedItem);
+		}
+
+		private void AssertExistenceOfEntryInList(string form, bool shouldExist)
+		{
+			ListBoxTester l = new ListBoxTester("_recordsListBox");
+			bool found = false;
+			foreach (object o in l.Properties.Items)
+			{
+				if (o.ToString() == form)
+				{
+					found = true;
+					break;
+				}
+			}
+			Assert.AreEqual(shouldExist, found);
 		}
 
 		[Test]

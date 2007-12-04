@@ -42,6 +42,7 @@ namespace WeSay.UI.Tests
 				_chosenItems.Members,
 				_sourceChoices.Options,
 				writingSystems,
+				CommonEnumerations.VisibilitySetting.Visible,
 				new OptionDisplayAdaptor(_sourceChoices, _ws.Id));
 
 			_control.Name = "refcontrol";
