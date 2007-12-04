@@ -175,7 +175,10 @@ namespace WeSay.UI
 				picker.Parent = _flowPanel;
 			}
 			//add a blank to type in
-			AddEmptyPicker();
+			if(_visibility != CommonEnumerations.VisibilitySetting.ReadOnly)
+			{
+				AddEmptyPicker();
+			}
 			ResumeLayout(false);
 		}
 

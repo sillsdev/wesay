@@ -28,6 +28,7 @@ namespace WeSay.UI.AutoCompleteTextBox
 			if (visibility == CommonEnumerations.VisibilitySetting.ReadOnly)
 			{
 				_textBox.ReadOnly = true;
+				_textBox.Enabled = false;
 			}
 
 			_textBox.SelectedItemChanged += OnSelectedItemChanged;
