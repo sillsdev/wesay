@@ -103,7 +103,7 @@ namespace WeSay.LexicalTools
 				flagField.DataTypeName = "Flag";
 				flagField.ClassName = "LexEntry";
 				flagField.FieldName = "flag_skip_" + ((MissingItemFilter) filter).FieldName;
-
+				flagField.Enabled = true;
 				_viewTemplate.Add(flagField);
 			}
 		}
