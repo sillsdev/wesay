@@ -150,6 +150,11 @@ namespace WeSay.Setup
 		{
 			string oldValue = _field.FieldName;
 			_field.FieldName = _fieldName.Text.Trim();
+			if (string.IsNullOrEmpty(_field.FieldName))
+			{
+				_field.FieldName = oldValue;
+				return;
+			}
 			if (_field.FieldName != oldValue)
 			{
 				WeSayWordsProject.Project.MakeFieldNameChange(_field, oldValue);

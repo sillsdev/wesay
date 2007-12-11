@@ -122,8 +122,17 @@ namespace WeSay.Setup
 			dialog.ShowColor = false;
 			dialog.ShowEffects = false;
 
-		   if (DialogResult.OK != dialog.ShowDialog())
+			try//strange, but twice we've found situations where ShowDialog crashes on windows
 			{
+				if (DialogResult.OK != dialog.ShowDialog())
+				{
+					return;
+				}
+			}
+			catch (Exception err)
+			{
+				Palaso.Reporting.ErrorReport.ReportNonFatalMessage(
+					"There was some problem with choosing that font.  If you just installed it, you might try restarting the program or even your computer.");
 				return;
 			}
 			StringCatalog.LabelFont = dialog.Font;

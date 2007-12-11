@@ -661,6 +661,14 @@ namespace WeSay.Project
 			_liftFileStreamForLocking = File.OpenRead(PathToLiftFile);
 		}
 
+		public override string Name
+		{
+			get
+			{
+				return Path.GetFileNameWithoutExtension(PathToLiftFile);
+			}
+		}
+
 		public string PathToLiftFile
 		{
 			get
@@ -996,6 +1004,11 @@ namespace WeSay.Project
 
 		public void MakeFieldNameChange(Field field, string oldName)
 		{
+			Debug.Assert(!String.IsNullOrEmpty(oldName));
+			if (string.IsNullOrEmpty(oldName))
+			{
+				return;
+			}
 			//NB: we're just using regex, here, not xpaths which in this case
 			//would be nice (e.g., "name" is a pretty generic thing to be changing)
 			if (File.Exists(PathToLiftFile))

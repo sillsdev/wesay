@@ -227,12 +227,11 @@ namespace WeSay.Project
 			get { return Path.Combine(_projectDirectoryPath, "common"); }
 		}
 
-		public string Name
+		public virtual string Name
 		{
 			get
 			{
-				//we don't really want to give this directory out... this is just for a test
-				return Path.GetFileName(_projectDirectoryPath);
+				return "Need to override";
 			}
 		}
 

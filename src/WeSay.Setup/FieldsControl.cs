@@ -186,7 +186,7 @@ namespace WeSay.Setup
 			}
 		}
 
-		private void OnPropertyValueChanged(object s, PropertyValueChangedEventArgs e)
+	   /* private void OnPropertyValueChanged(object s, PropertyValueChangedEventArgs e)
 		{
 			if (e.ChangedItem.Label == "DataTypeName")
 			{
@@ -257,7 +257,7 @@ namespace WeSay.Setup
 
 				WeSayWordsProject.Project.MakeFieldNameChange(CurrentField, (string) e.OldValue);
 			}
-		}
+		}*/
 
 		private void FieldsControl_Resize(object sender, EventArgs e)
 		{
