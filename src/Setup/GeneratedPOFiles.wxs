@@ -3,31 +3,31 @@
 	<Fragment>
 		<DirectoryRef Id="common">
 			   <Component Id="wesay_fr.po" Guid="AACB8535-5AC8-45DF-9896-33608D75ABE9">
-				<File Id="wesay_fr.po" Name="wesay-fr.po" Source="C:\WeSay\common\wesay-fr.po" />
+				<File Id="wesay_fr.po" Name="wesay-fr.po" Source="..\..\common\wesay-fr.po" />
 			</Component>
 			<Component Id="wesay_he.po" Guid="ECBBD680-C29E-4C73-80E1-68DFADCDFBD7">
-				<File Id="wesay_he.po" Name="wesay-he.po" Source="C:\WeSay\common\wesay-he.po" />
+				<File Id="wesay_he.po" Name="wesay-he.po" Source="..\..\common\wesay-he.po" />
 			</Component>
 			<Component Id="wesay_is.po" Guid="A06A7E86-7B7E-40F5-AD4C-BBF207BA7569">
-				<File Id="wesay_is.po" Name="wesay-is.po" Source="C:\WeSay\common\wesay-is.po" />
+				<File Id="wesay_is.po" Name="wesay-is.po" Source="..\..\common\wesay-is.po" />
 			</Component>
 			<Component Id="wesay_my.po" Guid="9054BCFC-165C-4128-8C08-1E52E0932803">
-				<File Id="wesay_my.po" Name="wesay-my.po" Source="C:\WeSay\common\wesay-my.po" />
+				<File Id="wesay_my.po" Name="wesay-my.po" Source="..\..\common\wesay-my.po" />
 			</Component>
 			 <Component Id="wesay_pl.po" Guid="E43E08D1-C7B7-4FEB-8330-D4E6583C62E5">
-				<File Id="wesay_pl.po" Name="wesay-pl.po" Source="C:\WeSay\common\wesay-pl.po" />
+				<File Id="wesay_pl.po" Name="wesay-pl.po" Source="..\..\common\wesay-pl.po" />
 			</Component>
 			  <Component Id="wesay_ru.po" Guid="80C9838E-47FD-4E9E-B038-165D9272905A">
-				<File Id="wesay_ru.po" Name="wesay-ru.po" Source="C:\WeSay\common\wesay-ru.po" />
+				<File Id="wesay_ru.po" Name="wesay-ru.po" Source="..\..\common\wesay-ru.po" />
 			</Component>
 			<Component Id="wesay_th.po" Guid="E8BC519C-19FE-48A5-AE09-ABF62E87E735">
-				<File Id="wesay_th.po" Name="wesay-th.po" Source="C:\WeSay\common\wesay-th.po" />
+				<File Id="wesay_th.po" Name="wesay-th.po" Source="..\..\common\wesay-th.po" />
 			</Component>
 			<Component Id="wesay_zh_CN.po" Guid="DBC6CB04-E450-4071-B940-0AF3DA78DA4C">
-				<File Id="wesay_zh_CN.po" Name="wesay-zh_CN.po" Source="C:\WeSay\common\wesay-zh_CN.po" />
+				<File Id="wesay_zh_CN.po" Name="wesay-zh_CN.po" Source="..\..\common\wesay-zh_CN.po" />
 			</Component>
 			<Component Id="wesay.pot" Guid="159F2D56-478F-4EDA-B790-B2E5292B8E6C">
-				<File Id="wesay.pot" Name="wesay.pot" Source="C:\WeSay\common\wesay.pot" />
+				<File Id="wesay.pot" Name="wesay.pot" Source="..\..\common\wesay.pot" />
 			</Component>
 		</DirectoryRef>
 		<ComponentGroup Id="PoFiles">
