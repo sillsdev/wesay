@@ -23,8 +23,8 @@ namespace WeSay.LexicalModel
 		public LexExampleSentence(WeSayDataObject parent)
 			: base(parent)
 		{
-			_sentence = new MultiText();
-			_translation = new MultiText();
+			_sentence = new MultiText(this);
+			_translation = new MultiText(this);
 
 			WireUpEvents();
 		}

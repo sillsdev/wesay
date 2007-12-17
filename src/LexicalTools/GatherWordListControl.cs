@@ -128,9 +128,7 @@ namespace WeSay.LexicalTools
 		/// gloss.
 		/// </summary>
 		private void PopulateWordsMatchingCurrentItem()
-		{
-			TraceAbdomen();
-			_listViewOfWordsMatchingCurrentItem.Items.Clear();
+		{            _listViewOfWordsMatchingCurrentItem.Items.Clear();
 
 			foreach (LexEntry entry in _task.GetMatchingRecords(_task.CurrentWordAsMultiText))
 			{
@@ -139,19 +137,6 @@ namespace WeSay.LexicalTools
 				//item.Tag = entry;
 				_listViewOfWordsMatchingCurrentItem.Items.Add(new EntryDisplayProxy(entry, _task.WordWritingSystem.Id));
 			}
-		}
-
-		private void TraceAbdomen()
-		{
-			MultiText m = new MultiText();
-			m.SetAlternative(_task.WordWritingSystem.Id, "abdomen");
-
-
-			foreach (LexEntry entry in _task.GetMatchingRecords(m))
-			{
-				Debug.WriteLine(entry.LexicalForm.GetFirstAlternative());
-			}
-			Debug.WriteLine("");
 		}
 
 		private void _btnNextWord_Click(object sender, EventArgs e)

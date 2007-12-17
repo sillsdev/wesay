@@ -67,6 +67,7 @@
 	<Compile Include="BackupMaker.cs" />
 	<Compile Include="CommonEnumerations.cs" />
 	<Compile Include="FlagState.cs" />
+	<Compile Include="IAnnotatable.cs" />
 	<Compile Include="IDisplayStringAdaptor.cs" />
 	<Compile Include="IBindableControl.cs" />
 	<Compile Include="LameProgressDialog.cs">
@@ -75,8 +76,13 @@
 	<Compile Include="LameProgressDialog.Designer.cs">
 	  <DependentUpon>LameProgressDialog.cs</DependentUpon>
 	</Compile>
-	<Compile Include="LanguageForm.cs" />
+	<Compile Include="LanguageForm.cs">
+	  <SubType>Code</SubType>
+	</Compile>
 	<Compile Include="MultiText.cs" />
+	<Compile Include="MultiTextBase.cs">
+	  <SubType>Code</SubType>
+	</Compile>
 	<Compile Include="Options\Option.cs" />
 	<Compile Include="Options\OptionDisplayAdaptor.cs" />
 	<Compile Include="Options\OptionRef.cs" />

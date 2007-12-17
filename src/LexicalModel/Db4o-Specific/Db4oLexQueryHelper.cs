@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using Db4objects.Db4o;
+using Palaso.Text;
 using WeSay.Data;
 using WeSay.Foundation;
-using WeSay.Language;
 
 namespace WeSay.LexicalModel.Db4o_Specific
 {

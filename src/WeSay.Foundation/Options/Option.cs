@@ -62,8 +62,8 @@ namespace WeSay.Foundation.Options
 			}
 		}
 
-		[ReflectorProperty("name", typeof (MultiTextSerializorFactory),
-			Required = true)]
+//        [ReflectorProperty("name", typeof (MultiTextSerializorFactory),
+//            Required = true)]
 		[XmlElement("name")]
 		public MultiText Name
 		{
@@ -71,8 +71,8 @@ namespace WeSay.Foundation.Options
 			set { _name = value; }
 		}
 
-		[ReflectorProperty("abbreviation", typeof (MultiTextSerializorFactory),
-			Required = false)]
+//        [ReflectorProperty("abbreviation", typeof (MultiTextSerializorFactory),
+//            Required = false)]
 		[XmlElement("abbreviation")]
 		public MultiText Abbreviation
 		{
@@ -86,9 +86,9 @@ namespace WeSay.Foundation.Options
 			}
 			set { _abbreviation = value; }
 		}
-
-		[ReflectorProperty("description", typeof (MultiTextSerializorFactory),
-			Required = false)]
+//
+//        [ReflectorProperty("description", typeof (MultiTextSerializorFactory),
+//            Required = false)]
 		[XmlElement("description")]
 		public MultiText Description
 		{

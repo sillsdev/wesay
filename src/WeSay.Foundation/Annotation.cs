@@ -1,9 +1,9 @@
 using System.Xml.Serialization;
+using WeSay.Foundation;
 
-namespace WeSay.Foundation
+namespace Palaso.Annotations
 {
-
-	public class Annotatable
+	public class Annotatable : IAnnotatable
 	{
 		private Annotation _annotation;
 

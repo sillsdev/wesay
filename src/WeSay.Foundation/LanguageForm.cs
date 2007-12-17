@@ -1,14 +1,14 @@
 using System;
 using System.Xml.Serialization;
-using Exortech.NetReflector;
-using WeSay.Foundation;
+//using Exortech.NetReflector;
+using Palaso.Annotations;
 
-namespace WeSay.Language
+namespace Palaso.Text
 {
 	/// <summary>
 	/// A LanguageForm is a unicode string plus the id of its writing system
 	/// </summary>
-	[ReflectorType("alt")]
+   // [ReflectorType("alt")]
 	public class LanguageForm : Annotatable
 	{
 		private string _writingSystemId;
@@ -18,7 +18,7 @@ namespace WeSay.Language
 		/// See the comment on MultiText._parent for information on
 		/// this field.
 		/// </summary>
-		private MultiText _parent;
+		private MultiTextBase _parent;
 
 		/// <summary>
 		/// for netreflector
@@ -27,7 +27,7 @@ namespace WeSay.Language
 		{
 		}
 
-		public LanguageForm(string writingSystemId, string form, MultiText parent)
+		public LanguageForm(string writingSystemId, string form, MultiTextBase parent)
 		{
 			if (parent == null)
 			{
@@ -39,7 +39,7 @@ namespace WeSay.Language
 		}
 
 
-		[ReflectorProperty("ws", Required = true)]
+		//[ReflectorProperty("ws", Required = true)]
 		[XmlAttribute("ws")]
 		public string WritingSystemId
 		{
@@ -52,7 +52,7 @@ namespace WeSay.Language
 			}
 		}
 
-		[ReflectorProperty("form", Required = true)]
+		//[ReflectorProperty("form", Required = true)]
 		[XmlText]
 		public string Form
 		{
@@ -65,7 +65,7 @@ namespace WeSay.Language
 		/// this field.
 		/// </summary>
 		[XmlIgnore]
-		public MultiText Parent
+		public MultiTextBase Parent
 		{
 			get { return _parent; }
 		}

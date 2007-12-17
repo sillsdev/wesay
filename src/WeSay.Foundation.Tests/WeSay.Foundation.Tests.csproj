@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
 	<Compile Include="BackupMakerTests.cs" />
+	<Compile Include="MultiTextBase.Tests.cs" />
 	<Compile Include="OptionList.Tests.cs" />
 	<Compile Include="StringCatalogTests.cs" />
 	<Compile Include="TestResources.Designer.cs">

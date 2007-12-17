@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 using System.Xml;
+using Palaso.Text;
 using WeSay.Foundation;
 using WeSay.Foundation.Options;
-using WeSay.Language;
 
 namespace WeSay.LexicalModel
 {
@@ -426,7 +426,7 @@ namespace WeSay.LexicalModel
 			}
 		}
 
-		private void WriteFlags(Annotatable thing)
+		private void WriteFlags(IAnnotatable thing)
 		{
 			if (thing.IsStarred )
 			{
