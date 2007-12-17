@@ -35,15 +35,6 @@ namespace WeSay.Foundation
 
 		}
 
-		public bool GetAnnotationOfAlternativeIsStarred(string id)
-		{
-			LanguageForm alt = Find(id);
-			if (alt == null)
-			{
-				return false;
-			}
-			return alt.IsStarred;
-		}
 
 
 		/// <summary>

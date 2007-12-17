@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 using System.Xml;
+using Palaso.Annotations;
 using Palaso.Text;
 using WeSay.Foundation;
 using WeSay.Foundation.Options;
