@@ -1,11 +1,14 @@
 using System;
 using System.ComponentModel;
 using System.IO;
+using System.ServiceModel;
 using System.Threading;
 using System.Windows.Forms;
 using CommandLine;
+using Palaso.DictionaryService.Client;
 using Palaso.Progress;
 using Palaso.Reporting;
+using Palaso.Services;
 using Palaso.UI.WindowsForms.Progress;
 using WeSay.App;
 using WeSay.App.Properties;
@@ -19,21 +22,31 @@ using WeSay.UI;
 
 namespace WeSay.App
 {
-	class WeSayApp
+	public class WeSayApp
 	{
-		private static Mutex _oneInstancePerProjectMutex;
+		//private static Mutex _oneInstancePerProjectMutex;
+		private  WeSayWordsProject _project;
+		private  ServiceHost _dictionaryHost;
+		private  DictionaryServiceProvider _dictionary;
+		private  IRecordListManager _recordListManager ;
+		private CommandLineArguments _commandLineArguments = new CommandLineArguments();
+		private bool _inServerMode=true;
 
 		[STAThread]
 		static void Main(string[] args)
 		{
+			WeSayApp app = new WeSayApp(args);
+			app.Run();
+		}
+		public WeSayApp(string[] args)
+		{
 			Application.EnableVisualStyles();
+			//leave this at the top:
 			Application.SetCompatibleTextRenderingDefault(false);
-
-			//problems with user.config: http://blogs.msdn.com/rprabhu/articles/433979.aspx
-
-			OsCheck();
+		   OsCheck();
 			Logger.Init();
-		   SetupErrorHandling();
+			SetupErrorHandling();
+			 //problems with user.config: http://blogs.msdn.com/rprabhu/articles/433979.aspx
 
 		   //bring in settings from any previous version
 		   if (Settings.Default.NeedUpgrade)
@@ -43,63 +56,105 @@ namespace WeSay.App
 		   }
 			UsageReporter.AppNameToUseInDialogs = "WeSay";
 			UsageReporter.AppNameToUseInReporting = "WeSayApp";
-		  //  UsageReporter.RecordLaunch();
-		//    UsageReporter.DoTrivialUsageReport("usage@wesay.org", "(This will not be asked of users in the released version.)", new int[] { 1,5,20,40,60,80,100 });
 
-			CommandLineArguments cmdArgs = new CommandLineArguments();
-			if (!Parser.ParseArguments(args, cmdArgs, new ReportError(ShowCommandLineError)))
+			if (!Parser.ParseArguments(args, _commandLineArguments, new ReportError(ShowCommandLineError)))
 			{
-				return;
+				Application.Exit();
 			}
+		}
+		public bool ServerModeStartRequested
+		{
+			get { return _commandLineArguments.startInServerMode; }
+		}
 
-			if (!GrabTokenForThisProject(cmdArgs))
+		public void Run()
+		{
+			ServiceAppSingletonHelper serviceAppSingletonHelper = ServiceAppSingletonHelper.CreateServiceAppSingletonHelperIfNeeded("WeSay", _commandLineArguments.startInServerMode);
+			if (serviceAppSingletonHelper == null)
 			{
-				return;
+				return; // there's already an instance of this app running
 			}
-#if GTK
-			GLib.Thread.Init();
-			Gdk.Threads.Init();
-			Application.Init();
-#endif
 
 			DisplaySettings.Default.SkinName = Settings.Default.SkinName;
 
-			WeSayWordsProject project = new WeSayWordsProject();
-			//project.StringCatalogSelector = cmdArgs.ui;
+			_project = new WeSayWordsProject();
 
-			string path = cmdArgs.liftPath;
-			if (!TryToLoad(cmdArgs, path, project))
+			if (!TryToLoad(_commandLineArguments.liftPath, _project))
 			{
 				return;
 			}
+			using (_recordListManager= MakeRecordListManager(_project))
+			{
+				using (_dictionary = new DictionaryServiceProvider(this,_project))
+				{
+					StartDictionaryServices();
+					_dictionary.LastClientDeregistered += serviceAppSingletonHelper.OnExitIfInServerMode;
+					serviceAppSingletonHelper.HandleRequestsUntilExitOrUIStart(RunUserInterface);
+					_dictionary.LastClientDeregistered -= serviceAppSingletonHelper.OnExitIfInServerMode;
+				}
+			}
+
+			Logger.ShutDown();
+			Settings.Default.Save();
+		}
+
+		private void StartDictionaryServices()
+		{
+			Palaso.Reporting.Logger.WriteMinorEvent("Staring Dictionary Services at {0}", DictionaryServiceAddress);
+
+			 _dictionaryHost = new ServiceHost(_dictionary, new Uri[] { new Uri(DictionaryServiceAddress), });
+
+			_dictionaryHost.AddServiceEndpoint(typeof(IDictionaryService), new NetNamedPipeBinding(),
+												 DictionaryServiceAddress);
+			_dictionaryHost.Open();
 
 
+		}
+
+		private string DictionaryServiceAddress
+		{
+			get
+			{
+				return "net.pipe://localhost/DictionaryServices/" + Uri.EscapeDataString(_project.PathToLiftFile);
+			}
+		}
+
+		public bool IsInServerMode
+		{
+			get { return _inServerMode; }
+		}
+
+		private void RunUserInterface()
+		{
 #if GTK
 			Gdk.Threads.Enter();
 #endif
-			ITaskBuilder builder = null;
-			try
-			{
-				TabbedForm tabbedForm = new TabbedForm();
-
-
-				using (IRecordListManager recordListManager = MakeRecordListManager(project))
+				ITaskBuilder builder = null;
+				try
 				{
+					TabbedForm tabbedForm = new TabbedForm();
+
+
 					tabbedForm.Show(); // so the user sees that we did launch
-					tabbedForm.Text = StringCatalog.Get("~WeSay", "It's up to you whether to bother translating this or not.") + ": " + project.Name + "        "  + ErrorReport.UserFriendlyVersionString;
+					tabbedForm.Text =
+						StringCatalog.Get("~WeSay", "It's up to you whether to bother translating this or not.") + ": " +
+						_project.Name + "        " + ErrorReport.UserFriendlyVersionString;
 					Application.DoEvents();
 
-					project.LiftUpdateService = SetupUpdateService(recordListManager);
-					project.LiftUpdateService.DoLiftUpdateNow(true);
+					_project.LiftUpdateService = SetupUpdateService(_recordListManager);
+					_project.LiftUpdateService.DoLiftUpdateNow(true);
 
 					//MONO bug as of 1.1.18 cannot bitwise or FileShare on FileStream constructor
-					//                    using (FileStream config = new FileStream(project.PathToProjectTaskInventory, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete))
-					using (FileStream configFile = new FileStream(project.PathToConfigFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+					//                    using (FileStream config = new FileStream(_project.PathTo_projectTaskInventory, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete))
+					using (
+						FileStream configFile =
+							new FileStream(_project.PathToConfigFile, FileMode.Open, FileAccess.Read,
+										   FileShare.ReadWrite))
 					{
-						builder = new ConfigFileTaskBuilder(configFile, project,
-							tabbedForm as ICurrentWorkTask, recordListManager);
+						builder = new ConfigFileTaskBuilder(configFile, _project,
+															tabbedForm as ICurrentWorkTask, _recordListManager);
 					}
-					project.Tasks = builder.Tasks;
+					_project.Tasks = builder.Tasks;
 					Application.DoEvents();
 
 					tabbedForm.ContinueLaunchingAfterInitialDisplay();
@@ -108,38 +163,35 @@ namespace WeSay.App
 					Application.Run(tabbedForm);
 
 					//do a last backup before exiting
-					project.LiftUpdateService.DoLiftUpdateNow(true);
-			  //      BackupMaker.BackupToExternal(_filesToBackup,project.ProjectDirectoryPath, "h:\\" + project.Name + ".zip");
+					_project.LiftUpdateService.DoLiftUpdateNow(true);
+					//      BackupMaker.BackupToExternal(_filesToBackup,_project.ProjectDirectoryPath, "h:\\" + project.Name + ".zip");
+
+
+					Settings.Default.SkinName = DisplaySettings.Default.SkinName;
+					Logger.WriteEvent("App Exiting Normally.");
 				}
-
-				Settings.Default.SkinName =DisplaySettings.Default.SkinName;
-				Logger.WriteEvent("App Exiting Normally.");
-			}
-			catch (IOException e)
-			{
-				ErrorReport.ReportNonFatalMessage(e.Message);
-			}
-			finally
-			{
-
+				catch (IOException e)
+				{
+					ErrorReport.ReportNonFatalMessage(e.Message);
+				}
+				finally
+				{
 #if GTK
 				Gdk.Threads.Leave();
 #endif
-				//TODO(JH): having a builder than needs to be kept around so it can be disposed of is all wrong.
-				//either I want to change it to something like TaskList rather than ITaskBuilder, or
-				//it needs to create some disposable object other than a IList<>.
-				//The reason we need to be able to dispose of it is because we need some way to
-				//dispose of things that it might create, such as a data source.
-				if (builder is IDisposable)
-					((IDisposable)builder).Dispose();
-			}
+					//TODO(JH): having a builder than needs to be kept around so it can be disposed of is all wrong.
+					//either I want to change it to something like TaskList rather than ITaskBuilder, or
+					//it needs to create some disposable object other than a IList<>.
+					//The reason we need to be able to dispose of it is because we need some way to
+					//dispose of things that it might create, such as a data source.
+					if (builder is IDisposable)
+						((IDisposable) builder).Dispose();
+				}
 
-			Logger.ShutDown();
-			Settings.Default.Save();
-			ReleaseMutexForThisProject();
+			_inServerMode = false;
 		}
 
-		private static LiftUpdateService SetupUpdateService(IRecordListManager recordListManager)
+		private LiftUpdateService SetupUpdateService(IRecordListManager recordListManager)
 		{
 			LiftUpdateService liftUpdateService;
 			Db4oRecordListManager ds = (Db4oRecordListManager)    recordListManager;
@@ -149,7 +201,7 @@ namespace WeSay.App
 			return liftUpdateService;
 		}
 
-		private static bool TryToLoad(CommandLineArguments cmdArgs, string liftPath, WeSayWordsProject project)
+		private bool TryToLoad(string liftPath, WeSayWordsProject project)
 		{
 		  if (liftPath == null)
 		  {
@@ -205,7 +257,7 @@ namespace WeSay.App
 		  return true;
 		}
 
-		private static bool BringCachesUpToDate(string liftPath, WeSayWordsProject project)
+		private bool BringCachesUpToDate(string liftPath, WeSayWordsProject project)
 		{
 			project.PathToLiftFile = liftPath;
 			CacheBuilder builder = CacheManager.GetCacheBuilderIfNeeded(project);
@@ -255,7 +307,7 @@ namespace WeSay.App
 			return true;
 			}
 
-		private static bool PreprocessLift()
+		private bool PreprocessLift()
 		{
 			using (ProgressDialog dlg = new ProgressDialog())
 			{
@@ -276,7 +328,7 @@ namespace WeSay.App
 			}
 		}
 
-		static void OnDoPreprocessLiftWork(object sender, DoWorkEventArgs e)
+		void OnDoPreprocessLiftWork(object sender, DoWorkEventArgs e)
 		{
 			BackgroundWorkerState state = (BackgroundWorkerState) e.Argument;
 			state.StatusLabel = "Preprocessing...";
@@ -300,7 +352,7 @@ namespace WeSay.App
 		}
 
 
-		private static void MoveTempOverRealAndBackup(string existingPath, string newFilePath)
+		private void MoveTempOverRealAndBackup(string existingPath, string newFilePath)
 		{
 			string backupName = existingPath + ".old";
 
@@ -331,7 +383,7 @@ namespace WeSay.App
 		}
 
 
-		private static void OsCheck()
+		private void OsCheck()
 		{
 #if DEBUG
 			if (Environment.OSVersion.Platform == PlatformID.Unix)
@@ -345,47 +397,47 @@ namespace WeSay.App
 #endif
 		}
 
-		private static void ReleaseMutexForThisProject()
-		{
-			if (_oneInstancePerProjectMutex != null)
-			{
-				_oneInstancePerProjectMutex.ReleaseMutex();
-			}
-		}
+//        private static void ReleaseMutexForThisProject()
+//        {
+//            if (_oneInstancePerProjectMutex != null)
+//            {
+//                _oneInstancePerProjectMutex.ReleaseMutex();
+//            }
+//        }
 
-		private static bool GrabTokenForThisProject(CommandLineArguments cmdArgs)
-		{
-			string mutexId = cmdArgs.liftPath;
-			if (mutexId != null)
-			{
-				 bool mutexCreated;
-				mutexId = mutexId.Replace(Path.DirectorySeparatorChar, '-');
-				mutexId = mutexId.Replace(Path.VolumeSeparatorChar, '-');
-				_oneInstancePerProjectMutex = new Mutex(true, mutexId, out mutexCreated);
-				if (!mutexCreated) // can I acquire?
-				{
-					//    Process[] processes = Process.GetProcessesByName("WeSay.App");
-					//    foreach (Process process in processes)
-					//    {
+//        private static bool GrabTokenForThisProject(CommandLineArguments cmdArgs)
+//        {
+//            string mutexId = cmdArgs.liftPath;
+//            if (mutexId != null)
+//            {
+//                 bool mutexCreated;
+//                mutexId = mutexId.Replace(Path.DirectorySeparatorChar, '-');
+//                mutexId = mutexId.Replace(Path.VolumeSeparatorChar, '-');
+//                _oneInstancePerProjectMutex = new Mutex(true, mutexId, out mutexCreated);
+//                if (!mutexCreated) // can I acquire?
+//                {
+//                    //    Process[] processes = Process.GetProcessesByName("WeSay.App");
+//                    //    foreach (Process process in processes)
+//                    //    {
+//
+//                    //        // we should make window title include the database name.
+//                    //        if(process.MainWindowTitle == "WeSay: " + project.Name)
+//                    //        {
+//                    //            process.WaitForInputIdle(4000); // wait four seconds at most
+//                    //            //process.MainWindowHandle;
+//                    //            break;
+//                    //        }
+//                    //    }
+//
+//                    MessageBox.Show("WeSay is already open with " + cmdArgs.liftPath + ".");
+//                    return false;
+//                }
+//             }
+//             return true;
+//        }
 
-					//        // we should make window title include the database name.
-					//        if(process.MainWindowTitle == "WeSay: " + project.Name)
-					//        {
-					//            process.WaitForInputIdle(4000); // wait four seconds at most
-					//            //process.MainWindowHandle;
-					//            break;
-					//        }
-					//    }
 
-					MessageBox.Show("WeSay is already open with " + cmdArgs.liftPath + ".");
-					return false;
-				}
-			 }
-			 return true;
-		}
-
-
-		private static void SetupErrorHandling()
+		private void SetupErrorHandling()
 		{
 			ErrorReport.EmailAddress = "issues@wesay.org";
 			if (BasilProject.IsInitialized)
@@ -402,7 +454,7 @@ namespace WeSay.App
 		//}
 
 
-		private static IRecordListManager MakeRecordListManager(WeSayWordsProject project)
+		private IRecordListManager MakeRecordListManager(WeSayWordsProject project)
 		{
 			IRecordListManager recordListManager;
 
@@ -437,9 +489,16 @@ namespace WeSay.App
 				LongName = "ui",
 				ShortName = "")]
 			public string ui = null;
+
+			[Argument(ArgumentTypes.AtMostOnce,
+			HelpText = "Start without a user interface (will have no effect if WeSay is already running with a UI.",
+			LongName = "server",
+				DefaultValue=false,
+			ShortName = "")]
+			public bool startInServerMode = false;
 		}
 
-		static void ShowCommandLineError(string e)
+		void ShowCommandLineError(string e)
 		{
 			Parser p = new Parser(typeof(CommandLineArguments), new ReportError(ShowCommandLineError));
 			e = e.Replace("Duplicate 'liftPath' argument", "Please enclose project path in quotes if it contains spaces.");

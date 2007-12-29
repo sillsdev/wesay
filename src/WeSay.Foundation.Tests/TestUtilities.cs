@@ -8,6 +8,10 @@ namespace WeSay.Foundation.Tests
 {
 	public class TestUtilities
 	{
+		/// <summary>
+		/// todo: this might be more effective if spawned off to its own thread
+		/// </summary>
+		/// <param name="folder"></param>
 		public static void DeleteFolderThatMayBeInUse(string folder)
 		{
 			if (Directory.Exists(folder))

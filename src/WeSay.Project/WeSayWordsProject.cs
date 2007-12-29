@@ -74,12 +74,15 @@ namespace WeSay.Project
 		public new static void InitializeForTests()
 		{
 			WeSayWordsProject project = new WeSayWordsProject();
-			string s = Path.Combine(GetPretendProjectDirectory(), "pretend.lift");
 
 			//jdh added, amidst some confusion about why it was suddenly needed, on april 17,2007
-			Utilities.CreateEmptyLiftFile(s, "InitializeForTests()", true);
+			Utilities.CreateEmptyLiftFile(PathToPretendLiftFile, "InitializeForTests()", true);
 
-			project.SetupProjectDirForTests(s);
+			project.SetupProjectDirForTests(PathToPretendLiftFile);
+		}
+		public static string PathToPretendLiftFile
+		{
+			get { return Path.Combine(GetPretendProjectDirectory(), "pretend.lift"); }
 		}
 
 		public void SetupProjectDirForTests(string pathToLift)
