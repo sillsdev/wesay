@@ -30,41 +30,10 @@ namespace WeSay.App.Tests
 
 			//overwrite the blank lift file
 			string liftContents = string.Format("<?xml version='1.0' encoding='utf-8'?><lift version='{0}'>{1}</lift>", LiftIO.Validator.LiftVersion, xmlOfEntries);
-			File.WriteAllText(PathLiftFile, liftContents);
-//            string configContents = string.Format("<?xml version='1.0' encoding='utf-8'?>");
-//            File.WriteAllText(PathToConfigFile, configContents);
-//            string writingSystemContents = string.Format(@"<?xml version='1.0' encoding='utf-8'?>
-//                <WritingSystemCollection><members>
-//                    <WritingSystem>
-//                        <Abbreviation>en</Abbreviation>
-//                        <FontName>Courier New</FontName>
-//                        <FontSize>10</FontSize>
-//                        <Id>en</Id>
-//                        <RightToLeft>False</RightToLeft>
-//                        <SortUsing>en</SortUsing>
-//                    </WritingSystem>
-//                    <WritingSystem><Abbreviation>v</Abbreviation>
-//                        <FontName>Courier New</FontName>
-//                        <FontSize>20</FontSize>
-//                        <Id>v</Id>
-//                        <RightToLeft>False</RightToLeft>
-//                        <SortUsing>v</SortUsing>
-//                    </WritingSystem>
-//                </members></WritingSystemCollection>");
-//            File.WriteAllText(PathToWritingSystems, writingSystemContents);
+			File.WriteAllText(PathToLiftFile, liftContents);
 		}
 
-		private string PathToWritingSystems
-		{
-			get { return Path.Combine(_experimentDir, "writingSystems.xml"); }
-		}
-
-		private string PathToConfigFile
-		{
-			get { return Path.Combine(_experimentDir, "test.WeSayConfig"); }
-		}
-
-		public string PathLiftFile
+		public string PathToLiftFile
 		{
 			get { return Path.Combine(_experimentDir, "test.lift"); }
 		}

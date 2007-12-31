@@ -32,6 +32,14 @@ namespace WeSay.App
 		private CommandLineArguments _commandLineArguments = new CommandLineArguments();
 		private bool _inServerMode=true;
 
+
+		/// <summary>
+		/// for now, this support jumping.  Later, we'll make it a stack and support fwd/backward
+		/// </summary>
+		private string _currentUrl;
+
+		private ServiceAppSingletonHelper _serviceAppSingletonHelper;
+
 		[STAThread]
 		static void Main(string[] args)
 		{
@@ -69,8 +77,8 @@ namespace WeSay.App
 
 		public void Run()
 		{
-			ServiceAppSingletonHelper serviceAppSingletonHelper = ServiceAppSingletonHelper.CreateServiceAppSingletonHelperIfNeeded("WeSay", _commandLineArguments.startInServerMode);
-			if (serviceAppSingletonHelper == null)
+			_serviceAppSingletonHelper = ServiceAppSingletonHelper.CreateServiceAppSingletonHelperIfNeeded("WeSay", _commandLineArguments.startInServerMode);
+			if (_serviceAppSingletonHelper == null)
 			{
 				return; // there's already an instance of this app running
 			}
@@ -88,9 +96,10 @@ namespace WeSay.App
 				using (_dictionary = new DictionaryServiceProvider(this,_project))
 				{
 					StartDictionaryServices();
-					_dictionary.LastClientDeregistered += serviceAppSingletonHelper.OnExitIfInServerMode;
-					serviceAppSingletonHelper.HandleRequestsUntilExitOrUIStart(RunUserInterface);
-					_dictionary.LastClientDeregistered -= serviceAppSingletonHelper.OnExitIfInServerMode;
+					_dictionary.LastClientDeregistered += _serviceAppSingletonHelper.OnExitIfInServerMode;
+					_serviceAppSingletonHelper.HandleRequestsUntilExitOrUIStart(RunUserInterface);
+
+					_dictionary.LastClientDeregistered -= _serviceAppSingletonHelper.OnExitIfInServerMode;
 				}
 			}
 
@@ -124,8 +133,24 @@ namespace WeSay.App
 			get { return _inServerMode; }
 		}
 
+		public string CurrentUrl
+		{
+			get { return _currentUrl; }
+			private set { _currentUrl = value; }
+		}
+
+		public void GoToUrl(string url)
+		{
+			if (IsInServerMode)
+			{
+				_inServerMode = false;
+				_serviceAppSingletonHelper.EnsureUIRunningAndInFront();
+			}
+		}
+
 		private void RunUserInterface()
 		{
+			_inServerMode = false;
 #if GTK
 			Gdk.Threads.Enter();
 #endif
@@ -187,8 +212,6 @@ namespace WeSay.App
 					if (builder is IDisposable)
 						((IDisposable) builder).Dispose();
 				}
-
-			_inServerMode = false;
 		}
 
 		private LiftUpdateService SetupUpdateService(IRecordListManager recordListManager)

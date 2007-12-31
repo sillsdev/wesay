@@ -94,8 +94,26 @@ namespace WeSay.App
 
 		public void JumpToEntry(string entryId)
 		{
-
+			ShowUIWithUrl(entryId);
 		}
+
+		public string GetCurrentUrl()
+		{
+			return null;
+			//return _app.CurrentUrl;
+		}
+
+		//todo remove
+		public void GoToCurrentUrl(string url)
+		{
+			throw new NotImplementedException();
+		}
+
+		public void ShowUIWithUrl(string url)
+		{
+			_app.GoToUrl(url);
+		}
+
 
 		public bool IsInServerMode()
 		{

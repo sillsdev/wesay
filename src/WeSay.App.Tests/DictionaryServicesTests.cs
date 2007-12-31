@@ -10,6 +10,7 @@ using Palaso.DictionaryService.Client;
 using SampleDictionaryServicesApplication;
 using WeSay.Language;
 using WeSay.Project;
+using Timer=System.Timers.Timer;
 
 namespace WeSay.App.Tests
 {
@@ -45,16 +46,16 @@ namespace WeSay.App.Tests
 				Process p = LaunchDictionaryServiceApp(kStartInServerMode, projectInfo);
 				int firstClientId = Process.GetCurrentProcess().Id;
 
-				IDictionaryService dictionaryService = GetDictionaryService(projectInfo.PathLiftFile, firstClientId);
+				IDictionaryService dictionaryService = GetDictionaryService(projectInfo.PathToLiftFile, firstClientId);
 				int secondClientId = firstClientId + 1;//bad thing to do in a non-test setting
-				IDictionaryService dictionaryService2 = GetDictionaryService(projectInfo.PathLiftFile, secondClientId);
-				AssertServerIsRunning(projectInfo.PathLiftFile);
+				IDictionaryService dictionaryService2 = GetDictionaryService(projectInfo.PathToLiftFile, secondClientId);
+				AssertServerIsRunning(projectInfo.PathToLiftFile);
 				dictionaryService.DeregisterClient(firstClientId);
-				AssertServerIsRunning(projectInfo.PathLiftFile);
+				AssertServerIsRunning(projectInfo.PathToLiftFile);
 
 				//now close the last client
 				dictionaryService2.DeregisterClient(secondClientId);
-				AssertServiceIsClosed(projectInfo.PathLiftFile);
+				AssertServiceIsClosed(projectInfo.PathToLiftFile);
 			}
 		}
 		private void AssertServerIsRunning(string liftPath)
@@ -152,41 +153,92 @@ namespace WeSay.App.Tests
 		}
 
 		[Test]
-		public void JumpToEntryMakesAppLeaveServerMode()
+		public void JumpToEntryMakesAppSwitchToUIMode()
 		{
-			string entriesXml = @"
-						<entry id='foo1'>
-								<lexical-unit><form lang='v'><text>foo</text></form></lexical-unit>
-							  <sense>
-								<gloss lang='en'>
-									<text>gloss for foo</text>
-								</gloss>
-							 </sense>
-						</entry>";
+			string entriesXml = @"<entry id='foo1'/>";
 			RunTest(kStartInServerMode, entriesXml, delegate(IDictionaryService dictionaryService)
 										   {
-											   Assert.IsFalse(dictionaryService.IsInServerMode());
+											   Assert.IsTrue(dictionaryService.IsInServerMode());
 											   dictionaryService.JumpToEntry("foo1");
 
-											   Assert.IsTrue(dictionaryService.IsInServerMode());
+											   Assert.IsFalse(dictionaryService.IsInServerMode());
 										   });
 		}
+
+		[Test]
+		public void JumpToEntryMakesDictionaryTaskShowEnty()
+		{
+			string entriesXml = @"<entry id='foo1'/><entry id='foo2'/><entry id='foo3'/>";
+			RunTest(kStartInServerMode, entriesXml, delegate(IDictionaryService dictionaryService)
+										   {
+											   Assert.IsTrue(dictionaryService.IsInServerMode());
+											   dictionaryService.JumpToEntry("foo2");
+											  Assert.AreEqual("foo2", dictionaryService.GetCurrentUrl());
+										   });
+		}
+
+//        [Test]
+//        public void JumpToEntryMakesDictionaryTaskShowEnty()
+//        {
+//            using(TestProjectDirectory projectInfo = new TestProjectDirectory("<entry id='foo1'/>"))
+//            {
+//                WeSayApp app = new WeSayApp(new string[]{'"'+projectInfo.PathToLiftFile +'"'});
+//                DelayedActionOnAnotherThread action = new DelayedActionOnAnotherThread(projectInfo.PathToLiftFile);
+//                app.Run();
+//                Assert.AreEqual("foo1", app.CurrentUrl);
+//            }
+//        }
+
+//        class DelayedActionOnAnotherThread
+//        {
+//            private readonly string _pathToLift;
+//
+//            public DelayedActionOnAnotherThread(string pathToLift)
+//            {
+//                _pathToLift = pathToLift;
+//                System.Timers.Timer timer = new Timer(1000);
+//                timer.Elapsed += new System.Timers.ElapsedEventHandler(OnTimer_Elapsed);
+//            }
+//
+//            void OnDoIt(object sender, System.Timers.ElapsedEventArgs e)
+//            {
+//
+//                IDictionaryService dictionaryService = GetDictionaryService(_pathToLift, Process.GetCurrentProcess().Id);
+//                dictionaryService.JumpToEntry("foo1");
+//
+//            }
+//        }
 
 		private void RunTest(bool startInServerMode, string entriesXml, ServiceTestingMethod serviceTestingMethod)
 		{
 			using (TestProjectDirectory projectInfo = new TestProjectDirectory(entriesXml))
 			{
 				Process p = LaunchDictionaryServiceApp(startInServerMode, projectInfo);
-				IDictionaryService dictionaryService = GetDictionaryService(projectInfo.PathLiftFile, Process.GetCurrentProcess().Id);
+				IDictionaryService dictionaryService = GetDictionaryService(projectInfo.PathToLiftFile, Process.GetCurrentProcess().Id);
 				Assert.IsNotNull(dictionaryService);
-				serviceTestingMethod(dictionaryService);
-				if (startInServerMode)
+				try
 				{
-					dictionaryService.DeregisterClient(Process.GetCurrentProcess().Id);
+					serviceTestingMethod(dictionaryService);
 				}
-				else
+				finally
 				{
-					p.CloseMainWindow();
+					Thread.Sleep(100);
+					if(dictionaryService.IsInServerMode())
+					{
+						dictionaryService.DeregisterClient(Process.GetCurrentProcess().Id);
+					}
+					else
+					{
+						if (p.HasExited)
+						{
+
+							//may hit this case if we make a test run multiple copies of wesay... not sure
+						}
+						else
+						{
+							p.CloseMainWindow();
+						}
+					}
 				}
 			}
 
@@ -197,7 +249,7 @@ namespace WeSay.App.Tests
 		{
 
 			// System.Diagnostics.Process.Start("SampleDictionaryServicesApplication.exe", "-server");
-			string arguments = '"' + projectInfo.PathLiftFile + '"';
+			string arguments = '"' + projectInfo.PathToLiftFile + '"';
 			if(launchInServerMode)
 			{
 				arguments += " -server";
@@ -211,7 +263,7 @@ namespace WeSay.App.Tests
 			return p;
 		}
 
-		private IDictionaryService GetDictionaryService(string liftPath, int clientIdForRegistering)
+		private static IDictionaryService GetDictionaryService(string liftPath, int clientIdForRegistering)
 		{
 			IDictionaryService dictionaryService=null;
 			for (int i = 0; i < 10; i++)
@@ -229,7 +281,7 @@ namespace WeSay.App.Tests
 			return dictionaryService;
 		}
 
-		private string GetServiceAddress(string liftPath)
+		private static string GetServiceAddress(string liftPath)
 		{
 			return "net.pipe://localhost/DictionaryServices/"
 				   + Uri.EscapeDataString(liftPath);
