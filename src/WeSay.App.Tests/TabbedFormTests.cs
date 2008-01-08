@@ -14,6 +14,7 @@ namespace WeSay.App.Tests
 		private Control _control;
 
 		private bool _isActive;
+		public string _urlThatItWasToldToGoTo;
 
 		public MockTask(string label, string description, bool isPinned)
 		{
@@ -45,6 +46,15 @@ namespace WeSay.App.Tests
 		{
 			_isActive = false;
 		}
+
+		#region ITask Members
+
+		public void GoToUrl(string url)
+		{
+			_urlThatItWasToldToGoTo = url;
+		}
+
+		#endregion
 
 		public string Label
 		{
@@ -125,6 +135,7 @@ namespace WeSay.App.Tests
 		{
 			_project.Dispose();
 		}
+
 
 		[Test]
 		[ExpectedException(typeof(ArgumentNullException))]

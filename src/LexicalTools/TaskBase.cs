@@ -65,6 +65,15 @@ namespace WeSay.LexicalTools
 			IsActive = false;
 		}
 
+		#region ITask Members
+
+		public virtual void GoToUrl(string url)
+		{
+			throw new NotImplementedException();
+		}
+
+		#endregion
+
 		protected void VerifyTaskActivated()
 		{
 			if (!IsActive)

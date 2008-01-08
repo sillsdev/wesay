@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using System;
+using System.Windows.Forms;
 
 namespace WeSay.Project
 {
@@ -7,6 +8,7 @@ namespace WeSay.Project
 
 		void Activate();
 		void Deactivate();
+		void GoToUrl(string url);
 		bool IsActive { get; }
 		string Label { get; }
 		string Description { get; }
@@ -42,5 +44,13 @@ namespace WeSay.Project
 	public interface IFinishCacheSetup
 	{
 		void FinishCacheSetup();
+	}
+
+	public class NavigationException : Exception
+	{
+		public NavigationException(string message):base(message)
+		{
+
+		}
 	}
 }

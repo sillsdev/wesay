@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.ServiceModel;
 using System.Threading;
@@ -30,15 +31,12 @@ namespace WeSay.App
 		private  DictionaryServiceProvider _dictionary;
 		private  IRecordListManager _recordListManager ;
 		private CommandLineArguments _commandLineArguments = new CommandLineArguments();
-		private bool _inServerMode=true;
 
 
-		/// <summary>
-		/// for now, this support jumping.  Later, we'll make it a stack and support fwd/backward
-		/// </summary>
-		private string _currentUrl;
+
 
 		private ServiceAppSingletonHelper _serviceAppSingletonHelper;
+		private TabbedForm _tabbedForm;
 
 		[STAThread]
 		static void Main(string[] args)
@@ -97,7 +95,8 @@ namespace WeSay.App
 				{
 					StartDictionaryServices();
 					_dictionary.LastClientDeregistered += _serviceAppSingletonHelper.OnExitIfInServerMode;
-					_serviceAppSingletonHelper.HandleRequestsUntilExitOrUIStart(RunUserInterface);
+
+					_serviceAppSingletonHelper.HandleEventsUntilExit(RunUserInterface);
 
 					_dictionary.LastClientDeregistered -= _serviceAppSingletonHelper.OnExitIfInServerMode;
 				}
@@ -109,7 +108,7 @@ namespace WeSay.App
 
 		private void StartDictionaryServices()
 		{
-			Palaso.Reporting.Logger.WriteMinorEvent("Staring Dictionary Services at {0}", DictionaryServiceAddress);
+			Palaso.Reporting.Logger.WriteMinorEvent("Starting Dictionary Services at {0}", DictionaryServiceAddress);
 
 			 _dictionaryHost = new ServiceHost(_dictionary, new Uri[] { new Uri(DictionaryServiceAddress), });
 
@@ -130,88 +129,94 @@ namespace WeSay.App
 
 		public bool IsInServerMode
 		{
-			get { return _inServerMode; }
+			get { return _serviceAppSingletonHelper.CurrentState  ==  ServiceAppSingletonHelper.State.ServerMode; }
 		}
 
 		public string CurrentUrl
 		{
-			get { return _currentUrl; }
-			private set { _currentUrl = value; }
+			get
+			{
+				if (_tabbedForm != null)
+				{
+					return _tabbedForm.CurrentUrl;
+				}
+				Debug.Fail("hmmm");
+				return string.Empty;
+			}
 		}
 
 		public void GoToUrl(string url)
 		{
-			if (IsInServerMode)
+			_serviceAppSingletonHelper.EnsureUIRunningAndInFront();
+
+			//if it didn't timeout
+			if(_serviceAppSingletonHelper.CurrentState == ServiceAppSingletonHelper.State.UiMode)
 			{
-				_inServerMode = false;
-				_serviceAppSingletonHelper.EnsureUIRunningAndInFront();
+				Debug.Assert(_tabbedForm != null, "tabbed form should have been started.");
+				_tabbedForm.GoToUrl(url);
 			}
 		}
 
 		private void RunUserInterface()
 		{
-			_inServerMode = false;
-#if GTK
-			Gdk.Threads.Enter();
-#endif
-				ITaskBuilder builder = null;
-				try
+			ITaskBuilder builder = null;
+			try
+			{
+				_tabbedForm = new TabbedForm();
+				_tabbedForm.Show(); // so the user sees that we did launch
+				_tabbedForm.Text =
+					StringCatalog.Get("~WeSay", "It's up to you whether to bother translating this or not.") + ": " +
+					_project.Name + "        " + ErrorReport.UserFriendlyVersionString;
+				Application.DoEvents();
+
+				_project.LiftUpdateService = SetupUpdateService(_recordListManager);
+				_project.LiftUpdateService.DoLiftUpdateNow(true);
+
+				//MONO bug as of 1.1.18 cannot bitwise or FileShare on FileStream constructor
+				//                    using (FileStream config = new FileStream(_project.PathTo_projectTaskInventory, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete))
+				using (
+					FileStream configFile =
+						new FileStream(_project.PathToConfigFile, FileMode.Open, FileAccess.Read,
+									   FileShare.ReadWrite))
 				{
-					TabbedForm tabbedForm = new TabbedForm();
-
-
-					tabbedForm.Show(); // so the user sees that we did launch
-					tabbedForm.Text =
-						StringCatalog.Get("~WeSay", "It's up to you whether to bother translating this or not.") + ": " +
-						_project.Name + "        " + ErrorReport.UserFriendlyVersionString;
-					Application.DoEvents();
-
-					_project.LiftUpdateService = SetupUpdateService(_recordListManager);
-					_project.LiftUpdateService.DoLiftUpdateNow(true);
-
-					//MONO bug as of 1.1.18 cannot bitwise or FileShare on FileStream constructor
-					//                    using (FileStream config = new FileStream(_project.PathTo_projectTaskInventory, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete))
-					using (
-						FileStream configFile =
-							new FileStream(_project.PathToConfigFile, FileMode.Open, FileAccess.Read,
-										   FileShare.ReadWrite))
-					{
-						builder = new ConfigFileTaskBuilder(configFile, _project,
-															tabbedForm as ICurrentWorkTask, _recordListManager);
-					}
-					_project.Tasks = builder.Tasks;
-					Application.DoEvents();
-
-					tabbedForm.ContinueLaunchingAfterInitialDisplay();
-
-					//run the ui
-					Application.Run(tabbedForm);
-
-					//do a last backup before exiting
-					_project.LiftUpdateService.DoLiftUpdateNow(true);
-					//      BackupMaker.BackupToExternal(_filesToBackup,_project.ProjectDirectoryPath, "h:\\" + project.Name + ".zip");
-
-
-					Settings.Default.SkinName = DisplaySettings.Default.SkinName;
-					Logger.WriteEvent("App Exiting Normally.");
+					builder = new ConfigFileTaskBuilder(configFile, _project,
+														_tabbedForm as ICurrentWorkTask, _recordListManager);
 				}
-				catch (IOException e)
-				{
-					ErrorReport.ReportNonFatalMessage(e.Message);
-				}
-				finally
-				{
-#if GTK
-				Gdk.Threads.Leave();
-#endif
-					//TODO(JH): having a builder than needs to be kept around so it can be disposed of is all wrong.
-					//either I want to change it to something like TaskList rather than ITaskBuilder, or
-					//it needs to create some disposable object other than a IList<>.
-					//The reason we need to be able to dispose of it is because we need some way to
-					//dispose of things that it might create, such as a data source.
-					if (builder is IDisposable)
-						((IDisposable) builder).Dispose();
-				}
+				_project.Tasks = builder.Tasks;
+				Application.DoEvents();
+				_tabbedForm.IntializationComplete += new EventHandler(OnTabbedForm_IntializationComplete);
+				_tabbedForm.ContinueLaunchingAfterInitialDisplay();
+
+				//run the ui
+				Application.Run(_tabbedForm);
+
+				//do a last backup before exiting
+				_project.LiftUpdateService.DoLiftUpdateNow(true);
+				//      BackupMaker.BackupToExternal(_filesToBackup,_project.ProjectDirectoryPath, "h:\\" + project.Name + ".zip");
+
+
+				Settings.Default.SkinName = DisplaySettings.Default.SkinName;
+				Logger.WriteEvent("App Exiting Normally.");
+			}
+			catch (IOException e)
+			{
+				ErrorReport.ReportNonFatalMessage(e.Message);
+			}
+			finally
+			{
+				//TODO(JH): having a builder than needs to be kept around so it can be disposed of is all wrong.
+				//either I want to change it to something like TaskList rather than ITaskBuilder, or
+				//it needs to create some disposable object other than a IList<>.
+				//The reason we need to be able to dispose of it is because we need some way to
+				//dispose of things that it might create, such as a data source.
+				if (builder is IDisposable)
+					((IDisposable) builder).Dispose();
+			}
+		}
+
+		void OnTabbedForm_IntializationComplete(object sender, EventArgs e)
+		{
+			_serviceAppSingletonHelper.UiReadyForEvents();
 		}
 
 		private LiftUpdateService SetupUpdateService(IRecordListManager recordListManager)

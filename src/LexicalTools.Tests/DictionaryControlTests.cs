@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
@@ -40,6 +41,7 @@ namespace WeSay.LexicalTools.Tests
 			this._filePath = Path.GetTempFileName();
 			this._recordListManager = new Db4oRecordListManager(new WeSayWordsDb4oModelConfiguration(), _filePath);
 			Db4oLexModelHelper.Initialize(((Db4oRecordListManager)_recordListManager).DataSource.Data);
+			Lexicon.Init((Db4oRecordListManager)_recordListManager);
 
 			this._records = this._recordListManager.GetListOfType<LexEntry>();
 			AddEntry("Initial", "meaning", true);
@@ -108,7 +110,7 @@ namespace WeSay.LexicalTools.Tests
 			}
 		}
 
-		private void AddEntry(string lexemeForm, string meaning, bool includeExample)
+		private LexEntry AddEntry(string lexemeForm, string meaning, bool includeExample)
 		{
 			LexEntry entry = new LexEntry();
 			entry.LexicalForm.SetAlternative(this._vernacularWsId, lexemeForm);
@@ -124,6 +126,7 @@ namespace WeSay.LexicalTools.Tests
 				ex.Sentence.SetAlternative("x", "hello");
 			}
 			this._records.Add(entry);
+			return entry;
 		}
 
 		public override void TearDown()
@@ -746,6 +749,36 @@ namespace WeSay.LexicalTools.Tests
 			delbtn.Click();
 			Assert.IsTrue(btn.Text.Contains("Show"));
 		}
+
+		[Test]
+		public void GotoEntry_EntryInList_GoesToIt()
+		{
+			DictionaryControl control = (DictionaryControl) _task.Control;
+			string idOfInitial = control.CurrentRecord.Id;
+			GoToLexicalEntryUseFind("Secondary"); //go away from that one
+			control.GoToEntry(idOfInitial);
+			Assert.AreEqual(idOfInitial,control.CurrentRecord.Id);
+		}
+
+
+		[Test, ExpectedException(typeof(NavigationException))]
+		public void GotoEntry_EntryNotInList_Throws()
+		{
+			DictionaryControl control = (DictionaryControl)_task.Control;
+			control.GoToEntry("bogus");
+		}
+//
+//        [Test]
+//        public void GotoEntry_LackingFormInCurrentListWritingSystem()
+//        {
+//            LexEntry e = AddEntry("", "findme!", false);
+//            e.LexicalForm.
+//            DictionaryControl control = (DictionaryControl)_task.Control;
+//            string idOfInitial = control.CurrentRecord.Id;
+//            GoToLexicalEntryUseFind("Secondary"); //go away from that one
+//            control.GoToEntry(idOfInitial);
+//            Assert.AreEqual(idOfInitial, control.CurrentRecord.Id);
+//        }
 
 		private DetailList GetDetailList()
 		{

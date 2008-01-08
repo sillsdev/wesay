@@ -24,6 +24,7 @@ namespace WeSay.LexicalTools
 		private readonly ContextMenu _cmWritingSystems;
 		private WritingSystem _listWritingSystem;
 		private bool _recordListBoxActive;
+		private bool _programmaticallyGoingToNewEntry;
 		private readonly Db4oRecordListManager _recordManager;
 		private IBindingList _records;
 
@@ -131,6 +132,8 @@ namespace WeSay.LexicalTools
 			_recordsListBox.Enter += _recordsListBox_Enter;
 			_recordsListBox.Leave += _recordsListBox_Leave;
 			UpdateDisplay();
+
+			_programmaticallyGoingToNewEntry = false;
 		}
 
 		public EntryViewControl Control_EntryDetailPanel
@@ -311,7 +314,7 @@ namespace WeSay.LexicalTools
 				{
 					SetSuppressKeyPressTrue(e);
 				}
-				Find(_findText.Text);
+				FindInList(_findText.Text);
 			}
 		}
 
@@ -325,19 +328,37 @@ namespace WeSay.LexicalTools
 		private void _findText_AutoCompleteChoiceSelected(object sender,
 														  EventArgs e)
 		{
-			Find(_findText.Text);
+			FindInList(_findText.Text);
 		}
 
 		private void OnFind_Click(object sender, EventArgs e)
 		{
 			Logger.WriteMinorEvent("FindButton_Click");
 
-			Find(_findText.Text);
+			FindInList(_findText.Text);
 		}
 
-		private void Find(string text)
+		public void GoToEntry(string entryId)
 		{
-			Logger.WriteMinorEvent("Find");
+			LexEntry entry = Lexicon.FindFirstLexEntryMatchingId(entryId);
+			if (entry == null)
+			{
+				throw new NavigationException("Could not find the entry with id " + entryId);
+			}
+		   int index =_records.IndexOf(entry);
+			if(index <0)
+			{
+				throw new NavigationException("The requested entry was found in the database, but the ui could not display it.");
+			}
+
+			_programmaticallyGoingToNewEntry = true;
+			_recordsListBox.SelectedIndex = index;
+			_programmaticallyGoingToNewEntry = false;
+		}
+
+		private bool FindInList(string text)
+		{
+			Logger.WriteMinorEvent("FindInList");
 			int index =
 					((CachedSortedDb4oList<string, LexEntry>) _records).
 							BinarySearch(text);
@@ -354,6 +375,11 @@ namespace WeSay.LexicalTools
 				_recordListBoxActive = true; // allow onRecordSelectionChanged
 				_recordsListBox.SelectedIndex = index;
 				_recordListBoxActive = false;
+				return true;
+			}
+			else
+			{
+				return false;
 			}
 		}
 
@@ -374,7 +400,7 @@ namespace WeSay.LexicalTools
 				//we were getting 3 calls to this for each click on a new word
 				return;
 			}
-			if (!_recordListBoxActive)
+			if (!_recordListBoxActive && !_programmaticallyGoingToNewEntry)
 			{
 				// When we change the content of the displayed string,
 				// Windows.Forms.ListBox removes the item (and sends

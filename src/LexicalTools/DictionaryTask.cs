@@ -57,6 +57,16 @@ namespace WeSay.LexicalTools
 			RecordListManager.GoodTimeToCommit();
 		}
 
+		public override void GoToUrl(string url)
+		{
+			_dictionaryControl.GoToEntry(GetEntryFromUrl(url));
+		}
+
+		private string GetEntryFromUrl(string url)
+		{
+			return url;
+		}
+
 		/// <summary>
 		/// The entry detail control associated with this task
 		/// </summary>

@@ -1,16 +1,9 @@
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
-using System.ServiceModel;
-using System.Text;
 using System.Threading;
 using NUnit.Framework;
 using Palaso.DictionaryService.Client;
 using SampleDictionaryServicesApplication;
-using WeSay.Language;
-using WeSay.Project;
-using Timer=System.Timers.Timer;
 
 namespace WeSay.App.Tests
 {
@@ -29,6 +22,25 @@ namespace WeSay.App.Tests
 		public void Setup()
 		{
 
+		}
+
+		[TearDown]
+		public void TearDown()
+		{
+			for (int i = 0; i < 20; i++)
+			{
+				Process[] p = Process.GetProcessesByName("WeSay.App");
+				if(p.Length == 0)
+					break;
+				Thread.Sleep(100);
+			}
+			Process[] doomed = Process.GetProcessesByName("WeSay.App");
+			foreach (Process process in doomed)
+			{
+				Debug.WriteLine("Gave up waiting, killing wesay...");
+				process.Kill();
+			}
+			Assert.AreEqual(0, doomed.Length,"Teardown shouldn't have to kill any WeSay instances.");
 		}
 
 		[Test]
@@ -110,6 +122,7 @@ namespace WeSay.App.Tests
 						</entry>";
 			RunTest(kStartInServerMode, entriesXml, delegate(IDictionaryService dictionaryService)
 										   {
+											  Assert.IsTrue(dictionaryService.IsInServerMode());
 											   string[] entryIds = dictionaryService.GetIdsOfMatchingEntries("v", "foo", FindMethods.Exact);
 											   Assert.AreEqual(2, entryIds.Length);
 										   });
@@ -124,13 +137,14 @@ namespace WeSay.App.Tests
 						</entry>";
 			RunTest(kStartInServerMode, entriesXml, delegate(IDictionaryService dictionaryService)
 										   {
+											   Assert.IsTrue(dictionaryService.IsInServerMode());
 											   string[] entryIds = dictionaryService.GetIdsOfMatchingEntries("v", "blahblah", FindMethods.Exact);
 											   Assert.AreEqual(0, entryIds.Length);
 
 										   });
 		}
 		/// <summary>
-		/// details of the html belong in a different test
+		/// this doesn't look at the details of the html; that job belongs in a different test
 		/// </summary>
 		[Test]
 		public void GivesHtml()
@@ -153,6 +167,83 @@ namespace WeSay.App.Tests
 		}
 
 		[Test]
+		public void CreateNewEntryWithUnknownWritingSystemReturnsNull()
+		{
+			RunTest(kStartInServerMode, string.Empty, delegate(IDictionaryService dictionaryService)
+										   {
+											   string id = dictionaryService.AddEntry("bogus", "voom", null, null, null, null);
+											   Assert.IsNull(id);
+										   });
+		}
+
+		[Test]
+		public void CreateNewEntryWithEmptyLexemeFormReturnsNull()
+		{
+			RunTest(kStartInServerMode, string.Empty, delegate(IDictionaryService dictionaryService)
+										   {
+											   string id = dictionaryService.AddEntry("v", "", null, null, null, null);
+											   Assert.IsNull(id);
+										   });
+		}
+
+		[Test]
+		public void CreateNewEntryWithOnlyLexemeFormDoesCreateIt()
+		{
+			string entriesXml = @"<entry id='foo1'/>";
+			RunTest(kStartInServerMode, entriesXml, delegate(IDictionaryService dictionaryService)
+										   {
+											   string id = dictionaryService.AddEntry("v","voom", null, null, null, null);
+											   Assert.IsNotNull(id);
+											   string[] ids = dictionaryService.GetIdsOfMatchingEntries("v", "voom", FindMethods.Exact);
+											   Assert.AreEqual(id, ids[0]);
+										   });
+		}
+
+		[Test]
+		public void CreateNewEntryInUIMode()
+		{
+			string entriesXml = @"<entry id='foo1'/>";
+			RunTest(kStartInUIMode, entriesXml, delegate(IDictionaryService dictionaryService)
+										   {
+											   string id = dictionaryService.AddEntry("v", "voom", "en", "def of voom", "v", "vlah voom!");
+											   Assert.IsNotNull(id);
+											   string[] ids = dictionaryService.GetIdsOfMatchingEntries("v", "voom", FindMethods.Exact);
+											   Assert.AreEqual(id, ids[0]);
+										   });
+		}
+
+		[Test]
+		public void CreateNewEntryWithAllFieldsDoesCreateIt()
+		{
+			string entriesXml = @"<entry id='foo1'/>";
+			RunTest(kStartInServerMode, entriesXml, delegate(IDictionaryService dictionaryService)
+										   {
+											   string id = dictionaryService.AddEntry("v", "voom", "en", "def of voom", "v", "vlah voom!");
+											   Assert.IsNotNull(id);
+											   string[] ids = dictionaryService.GetIdsOfMatchingEntries("v", "voom", FindMethods.Exact);
+											   Assert.AreEqual(id, ids[0]);
+											   string html = dictionaryService.GetHmtlForEntry(id);
+											   Assert.IsTrue(html.Contains("vlah voom!"));
+											   Assert.IsTrue(html.Contains("def of voom"));
+										   });
+		}
+
+		[Test]
+		public void CreateNewEntryWithExampleButNoDef()
+		{
+			string entriesXml = @"<entry id='foo1'/>";
+			RunTest(kStartInServerMode, entriesXml, delegate(IDictionaryService dictionaryService)
+										   {
+											   string id = dictionaryService.AddEntry("v", "voom", null, null, "v", "vlah voom!");
+											   Assert.IsNotNull(id);
+											   string[] ids = dictionaryService.GetIdsOfMatchingEntries("v", "voom", FindMethods.Exact);
+											   Assert.AreEqual(id, ids[0]);
+											   string html = dictionaryService.GetHmtlForEntry(id);
+											   Assert.IsTrue(html.Contains("vlah voom!"));
+										   });
+		}
+
+		[Test]
 		public void JumpToEntryMakesAppSwitchToUIMode()
 		{
 			string entriesXml = @"<entry id='foo1'/>";
@@ -168,12 +259,16 @@ namespace WeSay.App.Tests
 		[Test]
 		public void JumpToEntryMakesDictionaryTaskShowEnty()
 		{
-			string entriesXml = @"<entry id='foo1'/><entry id='foo2'/><entry id='foo3'/>";
+			string entriesXml = @"<entry id='foo1'><lexical-unit><form lang='v'><text>fooOne</text></form></lexical-unit></entry>
+								<entry id='foo2'><lexical-unit><form lang='v'><text>fooTwo</text></form></lexical-unit></entry>
+								<entry id='foo3'><lexical-unit><form lang='v'><text>fooThree</text></form></lexical-unit></entry>";
 			RunTest(kStartInServerMode, entriesXml, delegate(IDictionaryService dictionaryService)
 										   {
 											   Assert.IsTrue(dictionaryService.IsInServerMode());
 											   dictionaryService.JumpToEntry("foo2");
 											  Assert.AreEqual("foo2", dictionaryService.GetCurrentUrl());
+											   dictionaryService.JumpToEntry("foo3");
+											  Assert.AreEqual("foo3", dictionaryService.GetCurrentUrl());
 										   });
 		}
 
@@ -231,7 +326,6 @@ namespace WeSay.App.Tests
 					{
 						if (p.HasExited)
 						{
-
 							//may hit this case if we make a test run multiple copies of wesay... not sure
 						}
 						else
@@ -256,10 +350,14 @@ namespace WeSay.App.Tests
 			}
 			System.Diagnostics.ProcessStartInfo psi = new ProcessStartInfo(@"wesay.app.exe",arguments);
 			Process p = System.Diagnostics.Process.Start(psi);
-			if (launchInServerMode)
+
+			//this only works because we only launch it once... wouldn't be adequate logic if we
+			//might just be joining an existing process
+			if (!launchInServerMode)
 			{
-				p.WaitForInputIdle(25000);
+				Assert.IsTrue(p.WaitForInputIdle(25000),"Gave up waiting for the UI to come up.");
 			}
+
 			return p;
 		}
 

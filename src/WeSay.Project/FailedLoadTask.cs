@@ -24,6 +24,15 @@ namespace WeSay.Project
 		{
 		}
 
+		#region ITask Members
+
+		public void GoToUrl(string url)
+		{
+			throw new NotImplementedException();
+		}
+
+		#endregion
+
 		public bool IsActive
 		{
 			get { return false; }

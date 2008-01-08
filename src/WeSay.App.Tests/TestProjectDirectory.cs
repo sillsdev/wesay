@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Xml;
 using NUnit.Framework;
 using WeSay.Foundation.Tests;
 using WeSay.Project;
@@ -16,6 +17,7 @@ namespace WeSay.App.Tests
 		private bool _disposed = false;
 		private readonly string _experimentDir;
 		private string _projectName = "test";
+		private string _pathToTasksBase;
 
 		public TestProjectDirectory(string xmlOfEntries)
 		{
@@ -24,13 +26,38 @@ namespace WeSay.App.Tests
 			{
 				p.PathToLiftFile = Path.Combine(_experimentDir, _projectName + ".lift");
 				p.CreateEmptyProjectFiles(_experimentDir);
-				p.Save();
 				Assert.IsTrue(File.Exists(p.PathToConfigFile));
+				_pathToTasksBase = Path.Combine(p.ProjectDirectoryPath, "temptasks.xml");
+				File.Copy(p.PathToConfigFile, _pathToTasksBase);
+				p.EditorsSaveNow += new EventHandler(p_EditorsSaveNow);
+				p.Save();
 			}
 
 			//overwrite the blank lift file
 			string liftContents = string.Format("<?xml version='1.0' encoding='utf-8'?><lift version='{0}'>{1}</lift>", LiftIO.Validator.LiftVersion, xmlOfEntries);
 			File.WriteAllText(PathToLiftFile, liftContents);
+		}
+
+		void p_EditorsSaveNow(object sender, EventArgs e)
+		{
+			//ok, the hard part is that now we have a config with tasks, but no view template.
+			System.Xml.XmlDocument doc = new XmlDocument();
+			doc.Load(_pathToTasksBase);
+			XmlWriter writer = sender as XmlWriter;
+			IList<ViewTemplate> viewTemplates = WeSayWordsProject.Project.ViewTemplates;
+			writer.WriteStartElement("components");
+			foreach (ViewTemplate template in viewTemplates)
+			{
+				template.Write(writer);
+			}
+			writer.WriteEndElement();
+
+			writer.WriteStartElement("tasks");
+			foreach (XmlNode taskNode in doc.SelectNodes("//task"))
+			{
+				taskNode.WriteTo(writer);
+			}
+			writer.WriteEndElement();
 		}
 
 		public string PathToLiftFile

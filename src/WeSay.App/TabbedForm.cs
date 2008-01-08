@@ -13,6 +13,7 @@ namespace WeSay.App
 	{
 		private ITask _activeTask;
 		private TabPage _currentWorkTab;
+		private string _currentUrl;
 //        private ProgressDialogHandler _progressHandler;
 
 		public TabbedForm()
@@ -86,6 +87,35 @@ namespace WeSay.App
 			this.tabControl1.TabPages.Add(page);
 		}
 
+		private delegate void TakesStringArg(string arg);
+		public void GoToUrl(string url)
+		{
+			if (InvokeRequired)
+			{
+				Invoke(new TakesStringArg(GoToUrl), url);
+				return;
+			}
+			//todo: find the task in the url, pick the right task,
+			//handle the case where we don't have that task, etc.
+
+
+			foreach (TabPage page in this.tabControl1.TabPages)
+			{
+				//todo: temporary hack
+				if (((ITask)page.Tag).Label.Contains("Dictionary"))
+				{
+					//this approach is for user clicking, chokes without an event loop: ActiveTask = (ITask) page.Tag;
+					this.tabControl1.SelectedTab = page;
+					ActivateTab(page, false);
+					ActiveTask.GoToUrl(url);
+					CurrentUrl = url;
+					return;
+				}
+			}
+			Palaso.Reporting.ErrorReport.ReportNonFatalMessage("Sorry, that URL requires a task which is not currently enabled for this user. ({0})",url);
+			throw new NavigationException("Couldn't locate ");
+		}
+
 		public ITask ActiveTask
 		{
 			get
@@ -124,7 +154,7 @@ namespace WeSay.App
 					}
 					else
 					{
-						ActivateTab(tabPageToActivate);
+						ActivateTab(tabPageToActivate,true);
 					}
 				}
 
@@ -179,14 +209,20 @@ namespace WeSay.App
 			}
 		}
 
+		public string CurrentUrl
+		{
+			get { return _currentUrl; }
+			set { _currentUrl = value; }
+		}
+
 		void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			TabPage page = ((TabControl)sender).SelectedTab;
-			ActivateTab(page);
+			ActivateTab(page, true);
 		}
 
 
-		private void ActivateTab(TabPage page)
+		private void ActivateTab(TabPage page, bool okTouseTimer)
 		{
 			ITask task = (ITask)page.Tag;
 			if (ActiveTask == task)
@@ -201,7 +237,7 @@ namespace WeSay.App
 			{
 				page.Cursor = Cursors.WaitCursor;
 				page.Controls.Clear();
-				if (Visible)
+				if (Visible && okTouseTimer)
 				{
 					ActivateAfterScreenDraw(page, task);
 				}
@@ -283,6 +319,7 @@ namespace WeSay.App
 //            this.tabControl1.SelectedTab.Cursor = Cursors.Default;
 //        }
 
+		public event System.EventHandler  IntializationComplete;
 
 		public void ContinueLaunchingAfterInitialDisplay()
 		{
@@ -291,6 +328,10 @@ namespace WeSay.App
 									   {
 										   t.Stop();
 										   InitializeTasks(WeSayWordsProject.Project.Tasks);
+										   if (IntializationComplete != null)
+										   {
+											   IntializationComplete.Invoke(this, null);
+										   }
 										   t.Dispose();
 									   });
 			t.Interval = 1;

@@ -887,7 +887,6 @@ namespace WeSay.Project
 		{
 			_addins.InitializeIfNeeded(); // must be done before locking file for writing
 
-
 			XmlWriterSettings settings = new XmlWriterSettings();
 			settings.Indent = true;
 
