@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using NUnit.Framework;
 using WeSay.Project;
+using WeSay.Project.Tests;
 
 namespace WeSay.App.Tests
 {
@@ -12,7 +13,7 @@ namespace WeSay.App.Tests
 		private TabbedForm _tabbedForm;
 		private WeSayWordsProject _project;
 		private MockTask _dictionaryTask;
-		private TestProjectDirectory _projectDirectory;
+		private ProjectDirectorySetupForTesting _projectDirectory;
 		private MockTask _dashboardTask;
 		private bool _didRaiseInitializedEvent;
 
@@ -23,7 +24,7 @@ namespace WeSay.App.Tests
 				@"<entry id='foo1'><lexical-unit><form lang='v'><text>fooOne</text></form></lexical-unit></entry>
 								<entry id='foo2'><lexical-unit><form lang='v'><text>fooTwo</text></form></lexical-unit></entry>
 								<entry id='foo3'><lexical-unit><form lang='v'><text>fooThree</text></form></lexical-unit></entry>";
-			_projectDirectory = new TestProjectDirectory(entriesXml);
+			_projectDirectory = new ProjectDirectorySetupForTesting(entriesXml);
 
 			_project = new WeSayWordsProject();
 			_project.LoadFromLiftLexiconPath(_projectDirectory.PathToLiftFile);

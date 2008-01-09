@@ -7,7 +7,6 @@ using System.Windows.Forms;
 using WeSay.Data;
 using WeSay.Foundation;
 using WeSay.LexicalModel;
-using WeSay.LexicalModel.Db4o_Specific;
 using WeSay.Project;
 using WeSay.UI;
 using WeSay.UI.AutoCompleteTextBox;
@@ -136,6 +135,9 @@ namespace WeSay.LexicalTools
 					this._recordListManager as Db4oRecordListManager;
 			if (recordListManager != null)
 			{
+				//TODO: refactor this (sortHelper, pairStringLexEntryIdList, _keyIdMap, GetKeyIdPairFromLexEntry)
+				//      to use ApproximateFinder. Eventually refactor the automcompletetextbox to just take one
+
 				LexEntrySortHelper sortHelper =
 						new LexEntrySortHelper(
 								recordListManager.DataSource,
@@ -160,7 +162,7 @@ namespace WeSay.LexicalTools
 				picker.CreateNewClicked += OnCreateNewPairStringLexEntryId;
 				this._control = picker;
 			}
-			else
+			else //is not a Db4oRecordListManager
 			{
 				AutoCompleteWithCreationBox<LexEntry, LexEntry> picker = CreatePicker<LexEntry>(relation);
 				picker.GetKeyValueFromValue = Identity;
@@ -267,62 +269,6 @@ namespace WeSay.LexicalTools
 			return null;
 		}
 
-		#region Nested type: WeSayDataObjectLabelAdaptor
-
-		private class WeSayDataObjectLabelAdaptor: IDisplayStringAdaptor
-		{
-			private readonly IList<string> _writingSystemIds;
-			//review: should this really be an ordered collection of preferred choices?
-
-			public WeSayDataObjectLabelAdaptor(IList<string> writingSystemIds)
-			{
-				_writingSystemIds = writingSystemIds;
-			}
-
-			#region IDisplayStringAdaptor Members
-
-			public string GetDisplayLabel(object item)
-			{
-				if (item is LexEntry)
-				{
-					return
-							((LexEntry) item).LexicalForm.GetBestAlternativeString(
-									_writingSystemIds);
-				}
-				if (item is LexSense)
-				{
-					LexSense sense = (LexSense) item;
-					return
-							GetDisplayLabel(sense.Parent) + "." +
-							sense.Gloss.GetBestAlternativeString(_writingSystemIds);
-				}
-				return "Program error";
-			}
-
-
-			public string GetToolTip(object item)
-			{
-				if (item is LexEntry)
-				{
-					return ((LexEntry) item).GetToolTipText();
-				}
-				if (item is LexSense)
-				{
-					LexSense sense = (LexSense) item;
-					return "What to show for senses?";
-				}
-				return "Program error";
-			}
-
-			public string GetToolTipTitle(object item)
-			{
-				return "";
-			}
-
-			#endregion
-		}
-
-		#endregion
 
 
 
@@ -343,43 +289,5 @@ namespace WeSay.LexicalTools
 //        }
 //
 //        #endregion
-
-		#region Nested type: WeSayDataObjectToolTipProvider
-
-		private class PairStringLexEntryIdDisplayProvider : IDisplayStringAdaptor
-		{
-			private readonly CachedSortedDb4oList<string, LexEntry> _cachedSortedDb4oList;
-
-			public PairStringLexEntryIdDisplayProvider(CachedSortedDb4oList<string, LexEntry> cachedSortedDb4oList)
-			{
-				_cachedSortedDb4oList = cachedSortedDb4oList;
-			}
-
-
-			public string GetDisplayLabel(object item)
-			{
-				KeyValuePair<string, long> kv = (KeyValuePair<string, long>)item;
-				return kv.Key;
-			}
-
-			public string GetToolTip(object item)
-			{
-				KeyValuePair<string, long> kv = (KeyValuePair<string, long>)item;
-				LexEntry entry = this._cachedSortedDb4oList.GetValueFromId(kv.Value);
-				return entry.GetToolTipText();
-			}
-
-			#region IDisplayStringAdaptor Members
-
-			public string GetToolTipTitle(object item)
-			{
-				return "";
-			}
-
-			#endregion
-		}
-
-		#endregion
-
 	}
 }

@@ -66,16 +66,20 @@
 	<Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-	<Compile Include="DictionaryServicesTests.cs" />
+	<Compile Include="DictionaryServices_CrossApplicationTests.cs" />
+	<Compile Include="DictionaryServices_SameTheadTests.cs" />
 	<Compile Include="FullUIAppTests.cs" />
 	<Compile Include="TabbedFormNavigationTests.cs" />
 	<Compile Include="TabbedFormTests.cs" />
 	<Compile Include="MakeTestFiles.cs" />
 	<Compile Include="TaskBuilderTests.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />
-	<Compile Include="TestProjectDirectory.cs" />
   </ItemGroup>
   <ItemGroup>
+	<ProjectReference Include="..\LexicalModel.Tests\LexicalModel.Tests.csproj">
+	  <Project>{123D695C-0D5D-46E5-893F-39EC4E0B01B8}</Project>
+	  <Name>LexicalModel.Tests</Name>
+	</ProjectReference>
 	<ProjectReference Include="..\LexicalModel\LexicalModel.csproj">
 	  <Project>{5F61C809-B6C0-4567-9603-B2198E1AD038}</Project>
 	  <Name>LexicalModel</Name>
@@ -99,6 +103,10 @@
 	<ProjectReference Include="..\WeSay.Foundation\WeSay.Foundation.csproj">
 	  <Project>{F12EB680-0990-4900-B77E-0FBF2E28A815}</Project>
 	  <Name>WeSay.Foundation</Name>
+	</ProjectReference>
+	<ProjectReference Include="..\WeSay.Project.Tests\WeSay.Project.Tests.csproj">
+	  <Project>{F644C902-A952-4797-9E2D-19D6051DD032}</Project>
+	  <Name>WeSay.Project.Tests</Name>
 	</ProjectReference>
 	<ProjectReference Include="..\WeSay.Project\WeSay.Project.csproj">
 	  <Project>{5CFD0BB3-5B2A-4911-B220-9C2286151BF0}</Project>

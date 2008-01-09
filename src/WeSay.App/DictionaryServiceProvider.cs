@@ -18,6 +18,7 @@ namespace WeSay.App
 		private readonly WeSayWordsProject _project;
 		List<int> _registeredClientProcessIds;
 		private WeSayApp _app;
+		private int _maxNumberOfEntriesToReturn = 20;
 		public event EventHandler LastClientDeregistered;
 
 		public DictionaryServiceProvider(WeSayApp app, WeSayWordsProject project)
@@ -30,34 +31,59 @@ namespace WeSay.App
 		#region IDictionaryService Members
 
 
-		public string[] GetIdsOfMatchingEntries(string writingSystemId, string form, FindMethods method)
+		public void GetMatchingEntries(string writingSystemId, string form, FindMethods method, out string[] ids,
+									   out string[] forms)
 		{
+			   //in case something goes wrong
+				ids = new string[] {};
+				forms = new string[] {};
 			try
 			{
+
 				Palaso.Reporting.Logger.WriteMinorEvent("GetIdsOfMatchingEntries({0},{1},{2})", writingSystemId, form,
 														method.ToString());
 				if (!_project.WritingSystems.ContainsKey(writingSystemId))
 				{
-					return new string[0];
+					return;
 				}
 				WritingSystem ws = _project.WritingSystems[writingSystemId];
-				List<LexEntry> matches = Lexicon.GetEntriesHavingLexicalForm(form, ws);
-				string[] ids = new string[matches.Count];
+
+				IList<LexEntry> matches;
+				switch (method)
+				{
+					case FindMethods.Exact:
+						matches = Lexicon.GetEntriesHavingLexicalForm(form, ws);
+						break;
+
+					default:
+					case FindMethods.DefaultApproximate:
+						matches = Lexicon.GetEntriesWithSimilarLexicalForms(form, ws,
+																			ApproximateMatcherOptions.
+																				IncludePrefixedAndNextClosestForms,
+																				_maxNumberOfEntriesToReturn);
+						break;
+				}
+				ids = new string[matches.Count];
+				forms = new string[matches.Count];
 				int i = 0;
 				foreach (LexEntry entry in matches)
 				{
+					if(i == _maxNumberOfEntriesToReturn)
+					{
+						break;
+					}
+					forms[i] = entry.LexicalForm.GetBestAlternative(writingSystemId);
 					ids[i] = entry.Id;
 					i++;
 				}
-				return ids;
 			}
 			catch (Exception e)
 			{
 				Palaso.Reporting.Logger.WriteEvent("Error from dictionary services, RegisterClient: " + e.Message);
 				Debug.Fail(e.Message);
 			}
-			return new string[0];
 		}
+
 
 		public string GetHmtlForEntry(string entryId)
 		{
@@ -232,6 +258,30 @@ namespace WeSay.App
 		public bool IsInServerMode()
 		{
 			return _app.IsInServerMode;
+		}
+
+		public string[] GetFormsFromIds(string writingSytemId, string[] ids)
+		{
+			if (string.IsNullOrEmpty(writingSytemId))
+			{
+				return null;
+			}
+			List<string> forms = new List<string>(ids.Length);
+			foreach (string id in ids)
+			{
+				LexEntry entry = Lexicon.FindFirstLexEntryMatchingId(id);
+				if (entry == null)
+				{
+					forms.Add(string.Empty);
+				}
+				else
+				{
+					//nb: we want to add this, even it is empty
+					forms.Add(entry.LexicalForm.GetExactAlternative(writingSytemId));
+				}
+			}
+			Debug.Assert(forms.Count == ids.Length, "These must be the same, as the receiver expects them to be aligned.");
+			return forms.ToArray();
 		}
 
 		#endregion

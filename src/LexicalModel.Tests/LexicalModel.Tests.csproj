@@ -58,9 +58,10 @@
 	<Compile Include="Db4o-Specific\BaseDb4oSpecificTests.cs" />
 	<Compile Include="Binding.cs" />
 	<Compile Include="Db4o-Specific\Db4oLexQueryHelperTests.cs" />
-	<Compile Include="ApproximateMatcherTests.cs" />
+	<Compile Include="Db4o-Specific\Db4oProjectSetupForTesting.cs" />
 	<Compile Include="LexEntrySortHelperTests.cs" />
 	<Compile Include="LexEntryTests.cs" />
+	<Compile Include="LexiconTests.cs" />
 	<Compile Include="LexRelationTests.cs" />
 	<Compile Include="LiftExportTests.cs" />
 	<Compile Include="EventsAndDates.cs" />
@@ -84,6 +85,10 @@
 	<ProjectReference Include="..\WeSay.Foundation\WeSay.Foundation.csproj">
 	  <Project>{F12EB680-0990-4900-B77E-0FBF2E28A815}</Project>
 	  <Name>WeSay.Foundation</Name>
+	</ProjectReference>
+	<ProjectReference Include="..\WeSay.Project.Tests\WeSay.Project.Tests.csproj">
+	  <Project>{F644C902-A952-4797-9E2D-19D6051DD032}</Project>
+	  <Name>WeSay.Project.Tests</Name>
 	</ProjectReference>
 	<ProjectReference Include="..\WeSay.Project\WeSay.Project.csproj">
 	  <Project>{5CFD0BB3-5B2A-4911-B220-9C2286151BF0}</Project>

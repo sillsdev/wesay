@@ -1,9 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework;
-using WeSay.LexicalModel.Db4o_Specific;
 
-namespace WeSay.LexicalModel.Tests
+namespace WeSay.Foundation.Tests
 {
 	[TestFixture]
 	public class ApproximateMatcherTests
@@ -30,7 +29,7 @@ namespace WeSay.LexicalModel.Tests
 			AddEntry("destance");
 			AddEntry("distence");
 			IList closest = (IList) ApproximateMatcher.FindClosestForms(_forms, "distance");
-		   Assert.AreEqual(1, closest.Count);
+			Assert.AreEqual(1, closest.Count);
 			Assert.Contains("distance", closest);
 		}
 

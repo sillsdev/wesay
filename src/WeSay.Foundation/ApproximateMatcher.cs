@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 
-namespace WeSay.LexicalModel.Db4o_Specific
+namespace WeSay.Foundation
 {
 	[Flags]
 	public enum ApproximateMatcherOptions
@@ -16,7 +16,7 @@ namespace WeSay.LexicalModel.Db4o_Specific
 		IncludePrefixedForms = 1,
 		IncludeNextClosestForms = 2,
 		IncludePrefixedAndNextClosestForms =
-				IncludePrefixedForms | IncludeNextClosestForms
+			IncludePrefixedForms | IncludeNextClosestForms
 	}
 
 	public class ApproximateMatcher
@@ -35,57 +35,57 @@ namespace WeSay.LexicalModel.Db4o_Specific
 		}
 
 		public static IList<string> FindClosestForms(IEnumerable forms,
-													 string notNormalizedKey)
+													 string notNormalizedFormToMatch)
 		{
 			return
-					FindClosestForms(forms,
-									 notNormalizedKey,
-									 ApproximateMatcherOptions.None);
+				FindClosestForms(forms,
+								 notNormalizedFormToMatch,
+								 ApproximateMatcherOptions.None);
 		}
 
-		public static IList<T> FindClosestForms<T>(IEnumerable items,
+		public static IList<T> FindClosestForms<T>(IEnumerable itemsToSearch,
 												   GetStringDelegate<T>
-														   stringExtractor,
-												   string notNormalizedKey)
+													   itemFormExtractor,
+												   string notNormalizedFormToMatch)
 		{
 			return
-					FindClosestForms(items,
-										stringExtractor,
-										notNormalizedKey,
-										ApproximateMatcherOptions.None);
+				FindClosestForms(itemsToSearch,
+								 itemFormExtractor,
+								 notNormalizedFormToMatch,
+								 ApproximateMatcherOptions.None);
 		}
 
 		public static IList<string> FindClosestForms(IEnumerable forms,
-													 string notNormalizedKey,
+													 string notNormalizedFormToMatch,
 													 ApproximateMatcherOptions
-															 options)
+														 options)
 		{
 			return
-					FindClosestForms<string>(forms,
-											 Self,
-											 notNormalizedKey,
-											 options);
+				FindClosestForms<string>(forms,
+										 Self,
+										 notNormalizedFormToMatch,
+										 options);
 		}
 
 		// would like to have IEnumerable<T> but IBindingList isn't strong typed
-		public static IList<T> FindClosestForms<T>(IEnumerable items,
+		public static IList<T> FindClosestForms<T>(IEnumerable itemsToSearch,
 												   GetStringDelegate<T>
-														   stringExtractor,
-												   string notNormalizedKey,
+													   itemFormExtractor,
+												   string notNormalizedFormToMatch,
 												   ApproximateMatcherOptions
-														   options)
+													   options)
 		{
-			string key = notNormalizedKey.Normalize(NormalizationForm.FormD);
+			string formToMatch = notNormalizedFormToMatch.Normalize(NormalizationForm.FormD);
 			bool includeNextClosest = (options &
 									   ApproximateMatcherOptions.
-											   IncludeNextClosestForms) ==
+										   IncludeNextClosestForms) ==
 									  ApproximateMatcherOptions.
-											  IncludeNextClosestForms;
+										  IncludeNextClosestForms;
 			bool includeApproximatePrefixedForms = (options &
 													ApproximateMatcherOptions.
-															IncludePrefixedForms) ==
+														IncludePrefixedForms) ==
 												   ApproximateMatcherOptions.
-														   IncludePrefixedForms;
+													   IncludePrefixedForms;
 
 			List<T> bestMatches = new List<T>();
 			List<T> secondBestMatches = new List<T>();
@@ -93,18 +93,18 @@ namespace WeSay.LexicalModel.Db4o_Specific
 			int bestEditDistance = int.MaxValue;
 			int secondBestEditDistance = int.MaxValue;
 
-			foreach (T item in items)
+			foreach (T item in itemsToSearch)
 			{
-				string originalForm = stringExtractor(item);
+				string originalForm = itemFormExtractor(item);
 				string form = originalForm.Normalize(NormalizationForm.FormD);
 				if (!string.IsNullOrEmpty(form))
 				{
 					int editDistance;
 					editDistance =
-							EditDistance(key,
-										 form,
-										 secondBestEditDistance,
-										 includeApproximatePrefixedForms);
+						EditDistance(formToMatch,
+									 form,
+									 secondBestEditDistance,
+									 includeApproximatePrefixedForms);
 					if (editDistance < bestEditDistance)
 					{
 						if (includeNextClosest &&
@@ -166,7 +166,7 @@ namespace WeSay.LexicalModel.Db4o_Specific
 			const int substitutionCost = 1;
 			const int transpositionCost = 1;
 			if (maxEditDistance == int.MaxValue)
-					// int.MaxValue has special meaning to us
+				// int.MaxValue has special meaning to us
 			{
 				--maxEditDistance;
 			}
@@ -189,7 +189,7 @@ namespace WeSay.LexicalModel.Db4o_Specific
 			}
 
 			if (!treatSuffixAsZeroDistance)
-					// this is not a reflexive operation so swap isn't allowed
+				// this is not a reflexive operation so swap isn't allowed
 			{
 				// list2 is the one that we are actually using storage space for so we want it to be the smaller of the two
 				if (list1.Length < list2.Length)
@@ -222,8 +222,8 @@ namespace WeSay.LexicalModel.Db4o_Specific
 			// so just O(min(x,y)) space.
 			int prevRow = 0, curRow = 1, nextRow = 2;
 			int[][] rows =
-					new int[][]
-							{new int[n2 + 1], new int[n2 + 1], new int[n2 + 1]};
+				new int[][]
+					{new int[n2 + 1], new int[n2 + 1], new int[n2 + 1]};
 
 			// For each virtual row (since we only have physical storage for two)
 			for (int list1index = 0;list1index <= n1;++list1index)
@@ -234,7 +234,7 @@ namespace WeSay.LexicalModel.Db4o_Specific
 				}
 
 				int maxIndex =
-						Math.Min(lastColumnThatNeedsToBeEvaluatedCurr + 1, n2);
+					Math.Min(lastColumnThatNeedsToBeEvaluatedCurr + 1, n2);
 				// if we are on the last row and we don't need to evaluate to the end of
 				// the column to determine if our edit distance is larger than the max
 				// then the edit distance is larger than the max
@@ -245,7 +245,7 @@ namespace WeSay.LexicalModel.Db4o_Specific
 				}
 				lastColumnThatNeedsToBeEvaluatedNext = int.MaxValue;
 				firstColumnThatNeedsToBeEvaluatedNext =
-						lastColumnThatNeedsToBeEvaluatedCurr + 1;
+					lastColumnThatNeedsToBeEvaluatedCurr + 1;
 
 				int minDistance = int.MaxValue;
 
@@ -278,9 +278,9 @@ namespace WeSay.LexicalModel.Db4o_Specific
 							lastColumnThatNeedsToBeEvaluatedPrev + 1)
 						{
 							distance =
-									Math.Min(distance,
-											 rows[curRow][list2index] +
-											 insertionCost);
+								Math.Min(distance,
+										 rows[curRow][list2index] +
+										 insertionCost);
 						}
 
 						// Replace Distance
@@ -289,8 +289,8 @@ namespace WeSay.LexicalModel.Db4o_Specific
 							int replaceDistance = rows[curRow][list2index - 1];
 
 							if (
-									!list1[list1index - 1].Equals(
-											 list2[list2index - 1]))
+								!list1[list1index - 1].Equals(
+									 list2[list2index - 1]))
 							{
 								replaceDistance += substitutionCost;
 							}
@@ -302,9 +302,9 @@ namespace WeSay.LexicalModel.Db4o_Specific
 							list1[list1index - 2].Equals(list2[list2index - 1]))
 						{
 							distance =
-									Math.Min(distance,
-											 rows[prevRow][list2index - 2] +
-											 transpositionCost);
+								Math.Min(distance,
+										 rows[prevRow][list2index - 2] +
+										 transpositionCost);
 						}
 					}
 
@@ -350,14 +350,14 @@ namespace WeSay.LexicalModel.Db4o_Specific
 				}
 
 				lastColumnThatNeedsToBeEvaluatedPrev =
-						lastColumnThatNeedsToBeEvaluatedCurr;
+					lastColumnThatNeedsToBeEvaluatedCurr;
 				lastColumnThatNeedsToBeEvaluatedCurr =
-						lastColumnThatNeedsToBeEvaluatedNext;
+					lastColumnThatNeedsToBeEvaluatedNext;
 
 				firstColumnThatNeedsToBeEvaluatedPrev =
-						firstColumnThatNeedsToBeEvaluatedCurr;
+					firstColumnThatNeedsToBeEvaluatedCurr;
 				firstColumnThatNeedsToBeEvaluatedCurr =
-						firstColumnThatNeedsToBeEvaluatedNext;
+					firstColumnThatNeedsToBeEvaluatedNext;
 
 				if (treatSuffixAsZeroDistance && list1index == n1)
 				{

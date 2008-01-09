@@ -1,7 +1,11 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using WeSay.Data;
+using WeSay.Foundation;
 using WeSay.Language;
+using WeSay.LexicalModel.Db4o_Specific;
 
 namespace WeSay.LexicalModel
 {
@@ -22,6 +26,13 @@ namespace WeSay.LexicalModel
 		static public void Init(Db4oRecordListManager recordListManager)
 		{
 			_recordListManager = recordListManager;
+		}
+
+
+		public static IList<LexEntry> GetEntriesWithSimilarLexicalForms(string wordForm, WritingSystem writingSystem, ApproximateMatcherOptions matcherOptions, int maxEntriesToGet)
+		{
+			ApproximateFinder findList = new ApproximateFinder(_recordListManager, writingSystem);
+			return findList.FindEntries(wordForm, matcherOptions, maxEntriesToGet);
 		}
 
 		public static List<LexEntry> GetEntriesHavingLexicalForm(string lexicalForm,  WritingSystem writingSystem)

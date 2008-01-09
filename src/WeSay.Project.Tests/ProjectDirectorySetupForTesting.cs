@@ -7,19 +7,21 @@ using NUnit.Framework;
 using WeSay.Foundation.Tests;
 using WeSay.Project;
 
-namespace WeSay.App.Tests
+namespace WeSay.Project.Tests
 {
 	/// <summary>
 	/// Creates a valid WeSay project directory in temp dir, and removes it when disposed.
+	///
+	/// Also see: Db4oProjectSetupForTesting, which encapsulates this
 	/// </summary>
-	public class TestProjectDirectory : IDisposable
+	public class ProjectDirectorySetupForTesting : IDisposable
 	{
 		private bool _disposed = false;
 		private readonly string _experimentDir;
 		private string _projectName = "test";
 		private string _pathToTasksBase;
 
-		public TestProjectDirectory(string xmlOfEntries)
+		public ProjectDirectorySetupForTesting(string xmlOfEntries)
 		{
 			_experimentDir = MakeDir(Path.GetTempPath(), Path.GetRandomFileName());
 			using (WeSayWordsProject p = new WeSayWordsProject())
@@ -73,7 +75,7 @@ namespace WeSay.App.Tests
 		#region IDisposable Members
 
 
-		~TestProjectDirectory()
+		~ProjectDirectorySetupForTesting()
 		{
 			if (!this._disposed)
 			{

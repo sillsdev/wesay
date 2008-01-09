@@ -63,6 +63,7 @@
 	<Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+	<Compile Include="ApproximateMatcher.cs" />
 	<Compile Include="BackupMaker.cs" />
 	<Compile Include="CommonEnumerations.cs" />
 	<Compile Include="FlagState.cs" />

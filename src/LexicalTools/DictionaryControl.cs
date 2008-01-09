@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
@@ -10,11 +9,9 @@ using WeSay.Data;
 using WeSay.Foundation;
 using WeSay.Language;
 using WeSay.LexicalModel;
-using WeSay.LexicalModel.Db4o_Specific;
 using WeSay.LexicalTools.Properties;
 using WeSay.Project;
 using WeSay.UI;
-using WeSay.UI.AutoCompleteTextBox;
 
 namespace WeSay.LexicalTools
 {
@@ -238,8 +235,9 @@ namespace WeSay.LexicalTools
 
 			_findText.ItemFilterer = FindClosestAndNextClosestAndPrefixedForms;
 			_findText.Items = _records;
-			int originalHeight = _findText.Height;
 			_findText.WritingSystem = _listWritingSystem;
+
+			int originalHeight = _findText.Height;
 
 			_findWritingSystemId.Text = _listWritingSystem.Id;
 			int width = _findWritingSystemId.Width;
