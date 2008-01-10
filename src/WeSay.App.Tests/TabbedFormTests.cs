@@ -93,11 +93,15 @@ namespace WeSay.App.Tests
 				return Status;
 			}
 		}
-		public bool WantsToPreCache
+		public bool MustBeActivatedDuringPreCache
 		{
 			get { return true; }
 		}
 
+		public virtual void RegisterWithCache(ViewTemplate viewTemplate)
+		{
+
+		}
 	}
 
 	[TestFixture]

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
@@ -15,9 +16,11 @@ using WeSay.App;
 using WeSay.App.Properties;
 using WeSay.Data;
 using WeSay.Foundation;
+using WeSay.Language;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Db4o_Specific;
 using WeSay.LexicalModel.Tests;
+using WeSay.LexicalTools;
 using WeSay.Project;
 using WeSay.UI;
 
@@ -108,6 +111,9 @@ namespace WeSay.App
 
 		private void StartDictionaryServices()
 		{
+			//Problem: if there is already a cache miss, this will be slow, and somebody will time out
+			StartCacheWatchingStuff();
+
 			Palaso.Reporting.Logger.WriteMinorEvent("Starting Dictionary Services at {0}", DictionaryServiceAddress);
 
 			 _dictionaryHost = new ServiceHost(_dictionary, new Uri[] { new Uri(DictionaryServiceAddress), });
@@ -130,6 +136,37 @@ namespace WeSay.App
 		public bool IsInServerMode
 		{
 			get { return _serviceAppSingletonHelper.CurrentState  ==  ServiceAppSingletonHelper.State.ServerMode; }
+		}
+
+
+		/// <summary>
+		/// Without this, if we add entries with no UI up, there is not dictionary task up, and the cache
+		/// ignores new entries being added (and someday other stuff). Then when we do eventually pull
+		/// the ui up, they'll get a painful cache rebuild.
+		/// </summary>
+		private void StartCacheWatchingStuff()
+		{
+			DictionaryTask dictionaryTask = new DictionaryTask(_recordListManager, _project.DefaultViewTemplate);
+			dictionaryTask.RegisterWithCache(_project.DefaultViewTemplate);
+
+//            Db4oRecordListManager manager = _recordListManager as Db4oRecordListManager;
+//            if (manager == null)
+//            {
+//                return;//if this is an in-memory test, don't sweat this optimization stuff
+//            }
+//
+//            foreach (KeyValuePair<string, WritingSystem> pair in _project.WritingSystems)
+//            {
+//                bool writingSystemUsedByLexicalForm =
+//                    _project.DefaultViewTemplate.IsWritingSystemUsedInField(pair.Value,
+//                                                                            Field.FieldNames.EntryLexicalForm.ToString());
+//
+//                LexEntrySortHelper sortHelper = new LexEntrySortHelper(manager.DataSource,
+//                                                                       pair.Value, writingSystemUsedByLexicalForm);
+//
+//                //this actuall installs the list so the cache watches it
+//                manager.GetSortedList(sortHelper);
+//            }
 		}
 
 		public string CurrentUrl

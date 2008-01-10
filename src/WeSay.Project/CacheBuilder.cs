@@ -350,7 +350,7 @@ namespace WeSay.Project
 			//give the tasks a chance to register with the recordlistmanager
 			foreach (ITask task in taskBuilder.Tasks)
 			{
-				if (task.WantsToPreCache)
+				if (task.MustBeActivatedDuringPreCache)
 				{
 					task.Activate();
 					task.Deactivate();

@@ -80,5 +80,21 @@ namespace WeSay.LexicalModel
 			VerifyInitialized();
 			Entries.Remove(entry);
 		}
+
+
+
+
+		public static void RegisterFieldWithCache(IList<WritingSystem> writingSystems, bool areLexicalFormWs)
+		{
+				foreach (WritingSystem writingSystem in writingSystems)
+				{
+					LexEntrySortHelper sortHelper =
+							new LexEntrySortHelper(_recordListManager.DataSource,
+												   writingSystem,
+												   areLexicalFormWs);
+					_recordListManager.GetSortedList(sortHelper);
+				}
+		}
+
 	}
 }

@@ -44,59 +44,12 @@ namespace WeSay.LexicalTools
 			}
 			_viewTemplate = viewTemplate;
 			_recordManager = (Db4oRecordListManager) recordManager;
-
-			WritingSystem listWritingSystem = null;
 			_cmWritingSystems = new ContextMenu();
 
-			Field field =
-					viewTemplate.GetField(
-							Field.FieldNames.EntryLexicalForm.ToString());
-			if (field != null)
-			{
-				if (field.WritingSystems.Count > 0)
-				{
-					listWritingSystem = field.WritingSystems[0];
-					foreach (WritingSystem writingSystem in field.WritingSystems
-							)
-					{
-						RegisterWritingSystemAndField(field, writingSystem);
-					}
-				}
-				else
-				{
-					MessageBox.Show(
-							String.Format(
-									"There are no writing systems enabled for the Field '{0}'",
-									field.FieldName),
-							"Error",
-							MessageBoxButtons.OK,
-							MessageBoxIcon.Exclamation); //review
-				}
-			}
-			Field glossfield =
-					viewTemplate.GetField(Field.FieldNames.SenseGloss.ToString());
-			if (glossfield != null)
-			{
-				foreach (
-						WritingSystem writingSystem in glossfield.WritingSystems
-						)
-				{
-					RegisterWritingSystemAndField(glossfield, writingSystem);
-				}
-			}
-
-			if (listWritingSystem == null)
-			{
-				listWritingSystem =
-						BasilProject.Project.WritingSystems.
-								UnknownVernacularWritingSystem;
-			}
+			SetupPickerControlWritingSystems();
 
 			InitializeComponent();
 			InitializeDisplaySettings();
-
-			//this._btnNewWord.Font = StringCatalog.ModifyFontForLocalization(_btnNewWord.Font);
-			//this._btnDeleteWord.Font = StringCatalog.ModifyFontForLocalization(_btnDeleteWord.Font);
 
 			_writingSystemChooser.Image =
 					Resources.Expand.GetThumbnailImage(6,
@@ -122,7 +75,7 @@ namespace WeSay.LexicalTools
 			Control_EntryDetailPanel.ViewTemplate = _viewTemplate;
 			Control_EntryDetailPanel.RecordListManager = this._recordManager;
 
-			SetListWritingSystem(listWritingSystem);
+			SetListWritingSystem(_viewTemplate.GetDefaultWritingSystemForField(Field.FieldNames.EntryLexicalForm.ToString()));
 
 			_findText.KeyDown += _findText_KeyDown;
 			_recordsListBox.SelectedIndexChanged +=OnRecordSelectionChanged;
@@ -132,6 +85,8 @@ namespace WeSay.LexicalTools
 
 			_programmaticallyGoingToNewEntry = false;
 		}
+
+
 
 		public EntryViewControl Control_EntryDetailPanel
 		{
@@ -175,37 +130,50 @@ namespace WeSay.LexicalTools
 
 		}
 
-		private void RegisterWritingSystemAndField(Field field,
-												   WritingSystem writingSystem)
+
+
+		private void SetupPickerControlWritingSystems()
+		{
+			RegisterFieldWithPicker(Field.FieldNames.EntryLexicalForm.ToString());
+			RegisterFieldWithPicker(Field.FieldNames.SenseGloss.ToString());
+		}
+
+
+		private void RegisterFieldWithPicker(string fieldName)
+		{
+			Field field = _viewTemplate.GetField(fieldName);
+			if (field != null)
+			{
+				if (field.WritingSystems.Count > 0)
+				{
+					foreach (WritingSystem writingSystem in field.WritingSystems)
+					{
+						AddWritingSystemToPicker(writingSystem, field);
+					}
+				}
+				else
+				{
+					Palaso.Reporting.ErrorReport.ReportNonFatalMessage(
+							"There are no writing systems enabled for the Field '{0}'",
+							field.FieldName);
+				}
+			}
+		}
+		private void AddWritingSystemToPicker(WritingSystem writingSystem, Field field)
 		{
 			MenuItem item =
-					new MenuItem(
-							writingSystem.Id + "\t" +
-							StringCatalog.Get(field.DisplayName),
-							OnCmWritingSystemClicked);
+				new MenuItem(
+					writingSystem.Id + "\t" +
+					StringCatalog.Get(field.DisplayName),
+					OnCmWritingSystemClicked);
 			item.RadioCheck = true;
 			item.Tag = writingSystem;
 			_cmWritingSystems.MenuItems.Add(item);
-
-			LexEntrySortHelper sortHelper =
-					new LexEntrySortHelper(_recordManager.DataSource,
-										   writingSystem,
-										   IsWritingSystemUsedInLexicalForm(
-												   writingSystem));
-			_recordManager.GetSortedList(sortHelper);
 		}
 
-		private bool IsWritingSystemUsedInLexicalForm(
-				WritingSystem writingSystem)
+		private bool IsWritingSystemUsedInLexicalForm(WritingSystem writingSystem)
 		{
-			Field field =
-					_viewTemplate.GetField(
-							Field.FieldNames.EntryLexicalForm.ToString());
-			if (field != null)
-			{
-				return field.WritingSystems.Contains(writingSystem);
-			}
-			return false;
+			return _viewTemplate.IsWritingSystemUsedInField(writingSystem, Field.FieldNames.EntryLexicalForm.ToString());
 		}
 
 		public void SetListWritingSystem(WritingSystem writingSystem)

@@ -4,6 +4,7 @@ using System.IO;
 using System.Windows.Forms;
 using NUnit.Framework;
 using WeSay.Data;
+using WeSay.LexicalModel;
 using WeSay.LexicalModel.Db4o_Specific;
 using WeSay.Project;
 using WeSay.UI;
@@ -34,7 +35,7 @@ namespace WeSay.LexicalTools.Tests
 //
 			_recordListManager = new Db4oRecordListManager(new WeSayWordsDb4oModelConfiguration(), _filePath);
 			Db4oLexModelHelper.Initialize(((Db4oRecordListManager)_recordListManager).DataSource.Data);
-
+		  Lexicon.Init((Db4oRecordListManager)_recordListManager);
 			_task = new DictionaryTask(_recordListManager, this._viewTemplate);
 		}
 

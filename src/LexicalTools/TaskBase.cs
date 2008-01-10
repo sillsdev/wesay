@@ -51,10 +51,18 @@ namespace WeSay.LexicalTools
 		}
 
 
-		public bool WantsToPreCache
+		public bool MustBeActivatedDuringPreCache
 		{
 			get { return true; }
 		}
+
+
+		public virtual void RegisterWithCache(ViewTemplate viewTemplate)
+		{
+
+		}
+
+
 
 		public virtual void Deactivate()
 		{

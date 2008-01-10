@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Xml;
 using Exortech.NetReflector;
@@ -396,6 +397,38 @@ namespace WeSay.Project
 			{
 				field.ChangeWritingSystemId(from, to);
 			}
+		}
+
+		public bool IsWritingSystemUsedInField(WritingSystem writingSystem, string fieldName)
+		{
+			Field field =GetField(fieldName);
+			if (field != null)
+			{
+				return field.WritingSystems.Contains(writingSystem);
+			}
+			return false;
+		}
+
+		public WritingSystem GetDefaultWritingSystemForField(string fieldName)
+		{
+			WritingSystem listWritingSystem = null;
+			Field field = GetField(fieldName);
+			//Debug.Assert(field != null, fieldName + "not found.");
+			if (field != null)
+			{
+				if (field.WritingSystems.Count > 0)
+				{
+					listWritingSystem = field.WritingSystems[0];
+				}
+
+			}
+			if (listWritingSystem == null)
+			{
+				listWritingSystem =
+					BasilProject.Project.WritingSystems.
+						UnknownVernacularWritingSystem;
+			}
+			return listWritingSystem;
 		}
 	}
 }

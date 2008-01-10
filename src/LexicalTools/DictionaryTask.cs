@@ -32,6 +32,7 @@ namespace WeSay.LexicalTools
 		{
 			try
 			{
+				RegisterWithCache(_viewTemplate);
 				base.Activate();
 				_dictionaryControl = new DictionaryControl(RecordListManager, ViewTemplate);
 				_dictionaryControl.SelectedIndexChanged += new EventHandler(OnRecordSelectionChanged);
@@ -42,6 +43,26 @@ namespace WeSay.LexicalTools
 				throw;
 			}
 		}
+
+		/// <summary>
+		/// This is static and public so we can keep the cache current with what this needs
+		/// even if we are running in ServerMode
+		/// </summary>
+		/// <param name="viewTemplate"></param>
+		public override void RegisterWithCache(ViewTemplate viewTemplate)
+		{
+			Field field = viewTemplate.GetField(Field.FieldNames.EntryLexicalForm.ToString());
+			if (field != null)
+			{
+				Lexicon.RegisterFieldWithCache(field.WritingSystems, true);
+			}
+			field = viewTemplate.GetField(Field.FieldNames.SenseGloss.ToString());
+			if (field != null)
+			{
+				Lexicon.RegisterFieldWithCache(field.WritingSystems, false);
+			}
+		}
+
 
 		void OnRecordSelectionChanged(object sender, EventArgs e)
 		{

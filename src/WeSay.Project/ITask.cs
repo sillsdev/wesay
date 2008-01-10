@@ -18,7 +18,9 @@ namespace WeSay.Project
 		/// a chance to be activated while the import (cache building) happens, which is a lot
 		/// more efficient than waiting for the user to click on them.
 		/// </summary>
-		bool WantsToPreCache { get;}
+		bool MustBeActivatedDuringPreCache { get;}
+
+		void RegisterWithCache(ViewTemplate viewTemplate);
 
 		//Gtk.VBox Container { get;set; }
 		Control Control { get;}

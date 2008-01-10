@@ -48,9 +48,14 @@ namespace WeSay.Project
 			get { return String.Format("Error: {0}", _description); }
 		}
 
-		public bool WantsToPreCache
+		public bool MustBeActivatedDuringPreCache
 		{
 			get { return false; }
+		}
+
+		public void RegisterWithCache(ViewTemplate viewTemplate)
+		{
+
 		}
 
 		public Control Control
