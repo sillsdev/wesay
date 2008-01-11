@@ -1,9 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Threading;
 using NUnit.Framework;
-using Palaso.DictionaryService.Client;
+using Palaso.Services.Dictionary;
 using WeSay.Data;
 using WeSay.LexicalModel;
 using WeSay.Project.Tests;
@@ -64,7 +60,9 @@ namespace WeSay.App.Tests
 			Assert.AreEqual(0, ids.Length);
 		}
 
-		[Test]
+	  /* These were good tests, but the method under test has been removed froom the service
+	   * until we see if it is actually  needed.
+	   [Test]
 		public void GetFormsFromIdsWhenEachIsOk()
 		{
 			string a = MakeTestLexEntry(_entries, "v", "foo1").Id;
@@ -86,6 +84,7 @@ namespace WeSay.App.Tests
 			Assert.AreEqual(string.Empty, forms[1]);
 			Assert.AreEqual("foo2", forms[2]);
 		}
+	   * */
 
 		[Test]
 		public void ShouldFindApproximates()

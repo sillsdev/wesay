@@ -2,7 +2,7 @@ using System;
 using System.Diagnostics;
 using System.Threading;
 using NUnit.Framework;
-using Palaso.DictionaryService.Client;
+using Palaso.Services.Dictionary;
 using SampleDictionaryServicesApplication;
 using WeSay.Project.Tests;
 

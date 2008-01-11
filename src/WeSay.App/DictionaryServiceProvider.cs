@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.ServiceModel;
 using System.Text;
-using Palaso.DictionaryService.Client;
+using Palaso.Services.Dictionary;
 using Palaso.Text;
 using WeSay.Foundation;
 using WeSay.Language;
@@ -13,7 +13,7 @@ using WeSay.Project;
 namespace WeSay.App
 {
 	[ServiceBehavior(InstanceContextMode = InstanceContextMode.Single)]
-	public class DictionaryServiceProvider:Palaso.DictionaryService.Client.IDictionaryService, IDisposable
+	public class DictionaryServiceProvider : Palaso.Services.Dictionary.IDictionaryService, IDisposable
 	{
 		private readonly WeSayWordsProject _project;
 		List<int> _registeredClientProcessIds;
@@ -260,7 +260,8 @@ namespace WeSay.App
 			return _app.IsInServerMode;
 		}
 
-		public string[] GetFormsFromIds(string writingSytemId, string[] ids)
+	   /*worked fine, but trimmed from the service until need is demonstrated
+		* public string[] GetFormsFromIds(string writingSytemId, string[] ids)
 		{
 			if (string.IsNullOrEmpty(writingSytemId))
 			{
@@ -282,7 +283,7 @@ namespace WeSay.App
 			}
 			Debug.Assert(forms.Count == ids.Length, "These must be the same, as the receiver expects them to be aligned.");
 			return forms.ToArray();
-		}
+		}*/
 
 
 		#endregion
