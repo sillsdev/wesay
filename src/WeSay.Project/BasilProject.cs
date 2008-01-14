@@ -177,7 +177,7 @@ namespace WeSay.Project
 			get { return Path.Combine(ProjectDirectoryPath/*ProjectCommonDirectory*/, _stringCatalogSelector + ".po"); }
 		}
 
-		public string ApplicationCommonDirectory
+		public static string ApplicationCommonDirectory
 		{
 			get { return Path.Combine(GetTopAppDirectory(), "common"); }
 		}

@@ -66,6 +66,29 @@ namespace WeSay.Project.Tests
 		{
 			get { return Path.Combine(_experimentDir, "test.lift"); }
 		}
+		public string PathToWritingSystemFile
+		{
+			get { return Path.Combine(_experimentDir, "writingSystemPrefs.xml"); }
+		}
+		public string PathToFactoryDefaultsPartsOfSpeech
+		{
+			get
+			{
+				string fileName="writingSystemPrefs.xml";
+				string path = Path.Combine(BasilProject.ApplicationCommonDirectory, fileName);
+				if (File.Exists(path))
+				{
+					return path;
+				}
+
+				path = Path.Combine(BasilProject.DirectoryOfExecutingAssembly, fileName);
+				if (File.Exists(path))
+				{
+					return path;
+				}
+				return path;
+			}
+		}
 		private static string MakeDir(string existingParent, string newChild)
 		{
 			string dir = Path.Combine(existingParent, newChild);

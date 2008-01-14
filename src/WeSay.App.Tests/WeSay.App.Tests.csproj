@@ -66,9 +66,10 @@
 	<Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-	<Compile Include="DictionaryServices_CrossApplicationTests.cs" />
-	<Compile Include="DictionaryServices_SameTheadTests.cs" />
+	<Compile Include="Services\DictionaryServices_CrossApplicationTests.cs" />
+	<Compile Include="Services\DictionaryServices_SameTheadTests.cs" />
 	<Compile Include="FullUIAppTests.cs" />
+	<Compile Include="Services\HtmlArticleMakerTests.cs" />
 	<Compile Include="TabbedFormNavigationTests.cs" />
 	<Compile Include="TabbedFormTests.cs" />
 	<Compile Include="MakeTestFiles.cs" />

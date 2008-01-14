@@ -9,7 +9,7 @@ using System.Windows.Forms;
 using CommandLine;
 using Palaso.Progress;
 using Palaso.Reporting;
-using Palaso.Services;
+using Palaso.Services.ForServers;
 using Palaso.Services.Dictionary;
 using Palaso.UI.WindowsForms.Progress;
 using WeSay.App;
@@ -51,8 +51,16 @@ namespace WeSay.App
 		{
 			Application.EnableVisualStyles();
 			//leave this at the top:
-			Application.SetCompatibleTextRenderingDefault(false);
-		   OsCheck();
+			try
+			{
+				Application.SetCompatibleTextRenderingDefault(false);
+			}
+			catch (Exception swallow)
+			{
+				//this fails in some test scenarios; perhaps the unit testing framework is leaving us in
+				//the same appdomain, and that remembers that we called this once before?
+			}
+			OsCheck();
 			Logger.Init();
 			SetupErrorHandling();
 			 //problems with user.config: http://blogs.msdn.com/rprabhu/articles/433979.aspx
@@ -98,8 +106,8 @@ namespace WeSay.App
 				{
 					StartDictionaryServices();
 					_dictionary.LastClientDeregistered += _serviceAppSingletonHelper.OnExitIfInServerMode;
-
-					_serviceAppSingletonHelper.HandleEventsUntilExit(RunUserInterface);
+					_serviceAppSingletonHelper.BringToFrontRequest += new EventHandler(OnBringToFrontRequest);
+					_serviceAppSingletonHelper.HandleEventsUntilExit(StartUserInterface);
 
 					_dictionary.LastClientDeregistered -= _serviceAppSingletonHelper.OnExitIfInServerMode;
 				}
@@ -107,6 +115,16 @@ namespace WeSay.App
 
 			Logger.ShutDown();
 			Settings.Default.Save();
+		}
+
+		void OnBringToFrontRequest(object sender, EventArgs e)
+		{
+			Debug.Assert(_tabbedForm != null);
+			if (_tabbedForm != null)
+			{
+				_tabbedForm.Activate();
+				_tabbedForm.BringToFront();
+			}
 		}
 
 		private void StartDictionaryServices()
@@ -184,6 +202,7 @@ namespace WeSay.App
 
 		public void GoToUrl(string url)
 		{
+
 			_serviceAppSingletonHelper.EnsureUIRunningAndInFront();
 
 			//if it didn't timeout
@@ -194,7 +213,7 @@ namespace WeSay.App
 			}
 		}
 
-		private void RunUserInterface()
+		private void StartUserInterface()
 		{
 			ITaskBuilder builder = null;
 			try
@@ -223,6 +242,7 @@ namespace WeSay.App
 				Application.DoEvents();
 				_tabbedForm.IntializationComplete += new EventHandler(OnTabbedForm_IntializationComplete);
 				_tabbedForm.ContinueLaunchingAfterInitialDisplay();
+				_tabbedForm.BringToFront();//needed if we were previously in server mode
 
 				//run the ui
 				Application.Run(_tabbedForm);
@@ -254,6 +274,7 @@ namespace WeSay.App
 		void OnTabbedForm_IntializationComplete(object sender, EventArgs e)
 		{
 			_serviceAppSingletonHelper.UiReadyForEvents();
+
 		}
 
 		private LiftUpdateService SetupUpdateService(IRecordListManager recordListManager)

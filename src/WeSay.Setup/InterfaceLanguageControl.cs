@@ -23,7 +23,7 @@ namespace WeSay.Setup
 		private void OnLoad(object sender, EventArgs e)
 		{
 			LoadPoFilesIntoCombo(Project.WeSayWordsProject.Project.PathToWeSaySpecificFilesDirectoryInProject);
-			LoadPoFilesIntoCombo(Project.WeSayWordsProject.Project.ApplicationCommonDirectory);
+			LoadPoFilesIntoCombo(Project.WeSayWordsProject.ApplicationCommonDirectory);
 
 			WeSayWordsProject.Project.EditorsSaveNow += Project_HackedEditorsSaveNow;
 			UpdateFontDisplay();

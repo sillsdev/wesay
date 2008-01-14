@@ -29,7 +29,7 @@ namespace WeSay
 			 WeSay.LexicalModel.LiftExporter exporter = null;
 			 try
 			 {
-				 exporter = new LiftExporter(WeSayWordsProject.Project.GetFieldToOptionListNameDictionary(), _destinationLIFTPath);
+				 exporter = new LiftExporter(/*WeSayWordsProject.Project.GetFieldToOptionListNameDictionary(),*/ _destinationLIFTPath);
 
 				 if(!VerifyWeCanOpenTheFile())
 				 {

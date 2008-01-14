@@ -5,6 +5,7 @@ using System.ServiceModel;
 using System.Text;
 using Palaso.Services.Dictionary;
 using Palaso.Text;
+using WeSay.App.Services;
 using WeSay.Foundation;
 using WeSay.Language;
 using WeSay.LexicalModel;
@@ -20,12 +21,16 @@ namespace WeSay.App
 		private WeSayApp _app;
 		private int _maxNumberOfEntriesToReturn = 20;
 		public event EventHandler LastClientDeregistered;
+		private WeSay.App.Services.HtmlArticleMaker _articleMaker;
 
 		public DictionaryServiceProvider(WeSayApp app, WeSayWordsProject project)
 		{
 			_app = app;
 			_project = project;
 			_registeredClientProcessIds = new List<int>();
+
+			_articleMaker = new HtmlArticleMaker(_project.LocateFile("writingSystemPrefs.xml"),
+										_project.LocateFile("PartsOfSpeech.xml"));
 		}
 
 		#region IDictionaryService Members
@@ -85,46 +90,31 @@ namespace WeSay.App
 		}
 
 
-		public string GetHmtlForEntry(string entryId)
+		public string GetHtmlForEntries(string[] entryIds)
 		{
-			/**************
-			 *
-			 *
-			 * todo: this is just a proof of concept
-			 *
-			 *
-			 *****************/
 			try
 			{
-				Palaso.Reporting.Logger.WriteMinorEvent("GetHmtlForEntry{0}", entryId);
-				LexEntry e = Lexicon.FindFirstLexEntryMatchingId(entryId);
-				if (e == null)
+				Palaso.Reporting.Logger.WriteMinorEvent("GetHtmlForEntries()");
+				StringBuilder builder = new StringBuilder();
+				LiftExporter exporter = new LiftExporter(builder, true);
+				foreach (string entryId in entryIds)
 				{
-					return "Not Found";
-				}
-				StringBuilder b = new StringBuilder();
-				b.AppendFormat("{0}: ", e.LexicalForm.GetFirstAlternative());
-				foreach (LexSense sense in e.Senses)
-				{
-					foreach (LanguageForm form in sense.Gloss)
+					LexEntry entry = Lexicon.FindFirstLexEntryMatchingId(entryId);
+					if (entry == null)
 					{
-						b.AppendFormat("{0} ", form.Form);
+						builder.AppendFormat("Error: entry '{0}' not found.", entryId);
 					}
-
-					foreach (LexExampleSentence o in sense.ExampleSentences)
+					else
 					{
-						foreach (LanguageForm form in o.Sentence.Forms)
-						{
-							b.AppendFormat("{0} ", form.Form);
-						}
+						exporter.Add(entry);
 					}
 				}
-				b.Append(" (WeSay)");
-				return b.ToString();
+				exporter.End();
+				return _articleMaker.GetHtmlFragment(builder.ToString());
 			}
 			catch (Exception e)
 			{
-				Palaso.Reporting.Logger.WriteEvent("Error from dictionary services, RegisterClient: " + e.Message);
+				Palaso.Reporting.Logger.WriteEvent("Error from dictionary services, GetHtmlForEntries: " + e.Message);
 				Debug.Fail(e.Message);
 			}
 			return StringCatalog.Get("~Program Error", "This is what we call it when something goes wrong but it's the computer's fault, not the user's.");

@@ -133,7 +133,7 @@ namespace WeSay.LexicalTools
 				else
 				{
 					string pathInProgramDir =
-							Path.Combine(WeSayWordsProject.Project.ApplicationCommonDirectory,
+							Path.Combine(WeSayWordsProject.ApplicationCommonDirectory,
 										 semanticDomainQuestionsFileName);
 					if (!File.Exists(pathInProgramDir))
 					{

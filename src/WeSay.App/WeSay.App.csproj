@@ -70,13 +70,14 @@
   </ItemGroup>
   <ItemGroup>
 	<Compile Include="CommandLineParser.cs" />
-	<Compile Include="DictionaryServiceProvider.cs" />
+	<Compile Include="Services\DictionaryServiceProvider.cs" />
 	<Compile Include="Properties\Resources.Designer.cs">
 	  <AutoGen>True</AutoGen>
 	  <DesignTime>True</DesignTime>
 	  <DependentUpon>Resources.resx</DependentUpon>
 	</Compile>
 	<Compile Include="registrySettingsProvider.cs" />
+	<Compile Include="Services\HtmlArticleMaker.cs" />
 	<Compile Include="Settings.cs" />
 	<Compile Include="TabbedForm.cs">
 	  <SubType>Form</SubType>
@@ -133,6 +134,11 @@
 	<EmbeddedResource Include="TabbedForm.resx">
 	  <SubType>Designer</SubType>
 	  <DependentUpon>TabbedForm.cs</DependentUpon>
+	</EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+	<EmbeddedResource Include="..\Addin.Transform\lift2html.xsl">
+	  <Link>Services\lift2html.xsl</Link>
 	</EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

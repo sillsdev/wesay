@@ -110,7 +110,7 @@ namespace WeSay.Project.Tests
 				BasilProject project = new BasilProject();
 				project.CreateEmptyProjectFiles(path);
 				Assert.IsTrue(Directory.Exists(path));
-				Assert.IsTrue(Directory.Exists(project.ApplicationCommonDirectory));
+				Assert.IsTrue(Directory.Exists(BasilProject.ApplicationCommonDirectory));
 				Assert.IsTrue(File.Exists(project.PathToWritingSystemPrefs));
 			}
 			finally

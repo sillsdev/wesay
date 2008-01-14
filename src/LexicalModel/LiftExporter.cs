@@ -16,11 +16,11 @@ namespace WeSay.LexicalModel
 		public const string LiftDateTimeFormat = "yyyy-MM-ddThh:mm:ssZ";
 		private XmlWriter _writer;
 		private Dictionary<string, int> _allIdsExportedSoFar;
-		private Dictionary<string, string> _fieldToRangeSetPairs;
+	 //   private Dictionary<string, string> _fieldToRangeSetPairs;
 
-		public LiftExporter(Dictionary<string, string> fieldToOptionListName, string path)
+		public LiftExporter(/*Dictionary<string, string> fieldToOptionListName, */string path)
 		{
-			_fieldToRangeSetPairs = fieldToOptionListName;
+		 //   _fieldToRangeSetPairs = fieldToOptionListName;
 			_allIdsExportedSoFar = new Dictionary<string, int>();
 		   _writer = XmlWriter.Create(path, PrepareSettings(false));
 		   Start();
@@ -28,10 +28,10 @@ namespace WeSay.LexicalModel
 
 		/// <summary>
 		/// for automated testing
-		/// </summary>
-		public LiftExporter(Dictionary<string, string> fieldToOptionListName, StringBuilder builder, bool produceFragmentOnly)
+		/// </summary>`
+		public LiftExporter(/*Dictionary<string, string> fieldToOptionListName,*/ StringBuilder builder, bool produceFragmentOnly)
 		{
-			_fieldToRangeSetPairs = fieldToOptionListName;
+		   // _fieldToRangeSetPairs = fieldToOptionListName;
 
 			_allIdsExportedSoFar = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
 			_writer = XmlWriter.Create(builder, PrepareSettings(produceFragmentOnly));

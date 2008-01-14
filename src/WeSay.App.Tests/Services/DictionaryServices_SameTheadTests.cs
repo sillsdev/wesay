@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using Palaso.Services.Dictionary;
+using WeSay.App.Services;
 using WeSay.Data;
 using WeSay.LexicalModel;
 using WeSay.Project.Tests;
@@ -38,7 +39,7 @@ namespace WeSay.App.Tests
 		}
 
 		[TestFixtureTearDown]
-		public void TearDown()
+		public void FixtureTearDown()
 		{
 			_projectSetupSharedByAllTests.Dispose();
 		}
@@ -114,7 +115,7 @@ namespace WeSay.App.Tests
 		   string[] forms;
 		   _dictionaryServiceProvider.GetMatchingEntries("v", "voom", FindMethods.Exact, out ids, out forms);
 		   Assert.AreEqual(id, ids[0]);
-		   string html = _dictionaryServiceProvider.GetHmtlForEntry(id);
+		   string html = _dictionaryServiceProvider.GetHtmlForEntries(new string[] { id });
 		   Assert.IsTrue(html.Contains("vlah voom!"));
 		}
 
@@ -128,10 +129,12 @@ namespace WeSay.App.Tests
 		   string[] forms;
 		   _dictionaryServiceProvider.GetMatchingEntries("v", "voom", FindMethods.Exact, out ids, out forms);
 		   Assert.AreEqual(id, ids[0]);
-		   string html = _dictionaryServiceProvider.GetHmtlForEntry(id);
+		   string html = _dictionaryServiceProvider.GetHtmlForEntries(new string[] { id });
 		   Assert.IsTrue(html.Contains("vlah voom!"));
 		   Assert.IsTrue(html.Contains("def of voom"));
 		}
+
+
 
 
 		[Test]
@@ -159,6 +162,7 @@ namespace WeSay.App.Tests
 		   _dictionaryServiceProvider.GetMatchingEntries("v", "voom", FindMethods.Exact, out ids, out forms);
 		   Assert.AreEqual(id, ids[0]);
 		}
+
 
 	}
 }

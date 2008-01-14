@@ -37,7 +37,7 @@ BOGURAEV and NEFF Lit Linguist Computing.1992; 7: 110-112
   <!-- things like 'see' for cross-references and 'ant' for antonyms, 'syn' for synonyms, etc.-->
   <xsl:param name="optionslist-writing-system" select="'en'"/>
 
-  <xsl:param name="headword-writing-system" select="/lift/entry/lexical-unit/form/@lang"/>
+  <xsl:param name="headword-writing-system" select="//entry/lexical-unit/form/@lang"/>
 
   <xsl:param name="include-notes" select="false()"/>
   <xsl:param name="group-by-grammatical-info" select="true()"/>
@@ -261,8 +261,10 @@ BOGURAEV and NEFF Lit Linguist Computing.1992; 7: 110-112
 		</xsl:call-template>
 	  </xsl:variable>
 
-	  <xsl:if test="$previous-headword = $headword or
-		$next-headword = $headword">  <!-- REVIEW: JH has some reason to believe this will cause the B's to have 3 and 4, rather than 1 and 2, given A A B B -->
+	  <xsl:if test="$previous-headword = $headword">
+		<!--or
+		$next-headword = $headword"-->
+		<!-- REVIEW: JH has some reason to believe this will cause the B's to have 3 and 4, rather than 1 and 2, given A A B B -->
 		<xsl:variable name="prior-homograph-number">
 		  <xsl:choose>
 			<xsl:when test="$current-entry/preceding-sibling::entry">

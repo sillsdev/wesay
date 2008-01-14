@@ -55,7 +55,7 @@ namespace WeSay.LexicalTools
 			if (!File.Exists(pathLocal))
 			{
 				string pathInProgramDir =
-					Path.Combine(WeSayWordsProject.Project.ApplicationCommonDirectory, _wordListFileName);
+					Path.Combine(WeSayWordsProject.ApplicationCommonDirectory, _wordListFileName);
 				pathToUse = pathInProgramDir;
 				if (!File.Exists(pathToUse))
 				{

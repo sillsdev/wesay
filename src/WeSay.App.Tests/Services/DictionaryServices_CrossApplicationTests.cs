@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Threading;
 using NUnit.Framework;
 using Palaso.Services.Dictionary;
-using SampleDictionaryServicesApplication;
+using Palaso.Services.ForClients;
 using WeSay.Project.Tests;
 
 namespace WeSay.App.Tests
@@ -28,6 +28,11 @@ namespace WeSay.App.Tests
 		[TearDown]
 		public void TearDown()
 		{
+			EnsureNoWeSaysRunning();
+		}
+
+		private void EnsureNoWeSaysRunning()
+		{
 			for (int i = 0; i < 20; i++)
 			{
 				Process[] p = Process.GetProcessesByName("WeSay.App");
@@ -41,12 +46,15 @@ namespace WeSay.App.Tests
 				Debug.WriteLine("Gave up waiting, killing wesay...");
 				process.Kill();
 			}
-			Assert.AreEqual(0, doomed.Length,"Teardown shouldn't have to kill any WeSay instances.");
+			{
+				Assert.AreEqual(0, doomed.Length, "Teardown shouldn't have to kill any WeSay instances.");
+			}
 		}
 
 		[Test]
 		public void CommandLineArgRequestsServerMode()
 		{
+
 			WeSayApp app = new WeSayApp(new string[] { "-server" });
 			Assert.IsTrue(app.ServerModeStartRequested);
 		}
@@ -152,8 +160,9 @@ namespace WeSay.App.Tests
 						</entry>";
 			RunTest(kStartInServerMode, entriesXml, delegate(IDictionaryService dictionaryService)
 										   {
-											   string html = dictionaryService.GetHmtlForEntry("foo1");
+											   string html = dictionaryService.GetHtmlForEntries(new string[] { "foo1" });
 
+											   Assert.IsTrue(html.Contains("<html>"));
 											   Assert.IsTrue(html.Contains("gloss for foo"));
 										   });
 		}
@@ -184,6 +193,17 @@ namespace WeSay.App.Tests
 										  });
 		}
 
+//        [Test]
+//        public void JumpToEntryInServerModeMakesAppComeToFrontOfZOrder()
+//        {
+//            string entriesXml = @"<entry id='foo1'/>";
+//            RunTest(kStartInServerMode, entriesXml, delegate(IDictionaryService dictionaryService)
+//                                           {
+//                                               dictionaryService.JumpToEntry("foo1");
+//
+// DONT KNOW HOW TO TEST THE ZORDER                                              Assert.IsFalse(dictionaryService.IsInServerMode());
+//                                           });
+//        }
 
 		[Test]
 		public void JumpToEntryMakesAppSwitchToUIMode()

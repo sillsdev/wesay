@@ -83,7 +83,7 @@ namespace WeSay.Project
 				return;
 			}
 
-			LiftExporter exporter = new LiftExporter(WeSayWordsProject.Project.GetFieldToOptionListNameDictionary(),
+			LiftExporter exporter = new LiftExporter(/*WeSayWordsProject.Project.GetFieldToOptionListNameDictionary(), */
 				MakeIncrementFileName(DateTime.UtcNow));
 			exporter.AddDeletedEntry(entry);
 			exporter.End();
@@ -115,7 +115,7 @@ namespace WeSay.Project
 				try
 				{
 					LiftExporter exporter =
-						new LiftExporter(WeSayWordsProject.Project.GetFieldToOptionListNameDictionary(),
+						new LiftExporter(/*WeSayWordsProject.Project.GetFieldToOptionListNameDictionary(),*/
 										 MakeIncrementFileName(_timeOfLastQueryForNewRecords));
 					exporter.AddNoGeneric(records);
 					exporter.End();

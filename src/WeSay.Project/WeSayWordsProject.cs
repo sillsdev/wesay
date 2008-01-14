@@ -567,7 +567,7 @@ namespace WeSay.Project
 
 		public string PathToDefaultConfig
 		{
-			get { return Path.Combine(BasilProject.Project.ApplicationCommonDirectory, "default.WeSayCOnfig"); }
+			get { return Path.Combine(BasilProject.ApplicationCommonDirectory, "default.WeSayCOnfig"); }
 		}
 
 		public override void CreateEmptyProjectFiles(string projectDirectoryPath)

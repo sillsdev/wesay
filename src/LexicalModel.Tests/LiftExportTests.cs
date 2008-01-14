@@ -31,12 +31,12 @@ namespace WeSay.LexicalTools.Tests
 
 		private void PrepWriterForFragment()
 		{
-			_exporter = new LiftExporter(_fieldToOptionListName, _stringBuilder, true);
+			_exporter = new LiftExporter(/*_fieldToOptionListName,*/ _stringBuilder, true);
 		}
 
 		private void PrepWriterForFullDocument()
 		{
-			_exporter = new LiftExporter(_fieldToOptionListName, _stringBuilder, false);
+			_exporter = new LiftExporter(/*_fieldToOptionListName,*/ _stringBuilder, false);
 		}
 
 
@@ -150,7 +150,7 @@ namespace WeSay.LexicalTools.Tests
 			string filePath = Path.GetTempFileName();
 			try
 			{
-				_exporter = new LiftExporter(_fieldToOptionListName, filePath);
+				_exporter = new LiftExporter(/*_fieldToOptionListName,*/ filePath);
 				WriteTwoEntries();
 				XmlDocument doc = new XmlDocument();
 				doc.Load(filePath);
