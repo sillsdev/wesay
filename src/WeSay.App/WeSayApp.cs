@@ -94,9 +94,17 @@ namespace WeSay.App
 
 			DisplaySettings.Default.SkinName = Settings.Default.SkinName;
 
-			_project = new WeSayWordsProject();
+			_project = InitializeProject(_commandLineArguments.liftPath);
+			if (_project == null)
+			{
+				return;
+			}
 
-			if (!TryToLoad(_commandLineArguments.liftPath, _project))
+			if (_project.PathToWeSaySpecificFilesDirectoryInProject.IndexOf("PRETEND") <0)
+			{
+				RecoverUnsavedDataIfNeeded();
+			}
+			if (!MakeCacheAndLiftReady(_project.PathToLiftFile, _project))
 			{
 				return;
 			}
@@ -104,6 +112,10 @@ namespace WeSay.App
 			{
 				using (_dictionary = new DictionaryServiceProvider(this,_project))
 				{
+
+					_project.LiftUpdateService = SetupUpdateService(_recordListManager);
+					_project.LiftUpdateService.DoLiftUpdateNow(true);
+
 					StartDictionaryServices();
 					_dictionary.LastClientDeregistered += _serviceAppSingletonHelper.OnExitIfInServerMode;
 					_serviceAppSingletonHelper.BringToFrontRequest += new EventHandler(OnBringToFrontRequest);
@@ -115,6 +127,23 @@ namespace WeSay.App
 
 			Logger.ShutDown();
 			Settings.Default.Save();
+		}
+
+		private void RecoverUnsavedDataIfNeeded()
+		{
+			if (!File.Exists(_project.PathToDb4oLexicalModelDB))
+			{
+				return;
+			}
+			WeSayWordsDb4oModelConfiguration config = new WeSayWordsDb4oModelConfiguration();
+			config.Configure();
+			using (Db4oDataSource ds = new Db4oDataSource(_project.PathToDb4oLexicalModelDB))
+			{
+				Db4oLexModelHelper.Initialize(ds.Data);
+				LiftUpdateService updateServiceForCrashRecovery = new LiftUpdateService(ds);
+				updateServiceForCrashRecovery.RecoverUnsavedChangesOutOfCacheIfNeeded();
+				Db4oLexModelHelper.Deinitialize(ds.Data);
+			}
 		}
 
 		void OnBringToFrontRequest(object sender, EventArgs e)
@@ -166,25 +195,6 @@ namespace WeSay.App
 		{
 			DictionaryTask dictionaryTask = new DictionaryTask(_recordListManager, _project.DefaultViewTemplate);
 			dictionaryTask.RegisterWithCache(_project.DefaultViewTemplate);
-
-//            Db4oRecordListManager manager = _recordListManager as Db4oRecordListManager;
-//            if (manager == null)
-//            {
-//                return;//if this is an in-memory test, don't sweat this optimization stuff
-//            }
-//
-//            foreach (KeyValuePair<string, WritingSystem> pair in _project.WritingSystems)
-//            {
-//                bool writingSystemUsedByLexicalForm =
-//                    _project.DefaultViewTemplate.IsWritingSystemUsedInField(pair.Value,
-//                                                                            Field.FieldNames.EntryLexicalForm.ToString());
-//
-//                LexEntrySortHelper sortHelper = new LexEntrySortHelper(manager.DataSource,
-//                                                                       pair.Value, writingSystemUsedByLexicalForm);
-//
-//                //this actuall installs the list so the cache watches it
-//                manager.GetSortedList(sortHelper);
-//            }
 		}
 
 		public string CurrentUrl
@@ -225,8 +235,6 @@ namespace WeSay.App
 					_project.Name + "        " + ErrorReport.UserFriendlyVersionString;
 				Application.DoEvents();
 
-				_project.LiftUpdateService = SetupUpdateService(_recordListManager);
-				_project.LiftUpdateService.DoLiftUpdateNow(true);
 
 				//MONO bug as of 1.1.18 cannot bitwise or FileShare on FileStream constructor
 				//                    using (FileStream config = new FileStream(_project.PathTo_projectTaskInventory, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete))
@@ -242,6 +250,7 @@ namespace WeSay.App
 				Application.DoEvents();
 				_tabbedForm.IntializationComplete += new EventHandler(OnTabbedForm_IntializationComplete);
 				_tabbedForm.ContinueLaunchingAfterInitialDisplay();
+				_tabbedForm.Activate();
 				_tabbedForm.BringToFront();//needed if we were previously in server mode
 
 				//run the ui
@@ -287,36 +296,46 @@ namespace WeSay.App
 			return liftUpdateService;
 		}
 
-		private bool TryToLoad(string liftPath, WeSayWordsProject project)
+		private WeSayWordsProject InitializeProject(string liftPath)
 		{
-		  if (liftPath == null)
-		  {
-			if (!String.IsNullOrEmpty(Settings.Default.PreviousLiftPath))
+			WeSayWordsProject project = new WeSayWordsProject();
+			if (liftPath == null)
 			{
-				if (File.Exists(Settings.Default.PreviousLiftPath))
+				if (!String.IsNullOrEmpty(Settings.Default.PreviousLiftPath))
 				{
-					liftPath = Settings.Default.PreviousLiftPath;
+					if (File.Exists(Settings.Default.PreviousLiftPath))
+					{
+						liftPath = Settings.Default.PreviousLiftPath;
+					}
 				}
 			}
-		  }
-		  if(liftPath == null)
+			if (liftPath == null)
 			{
-			  ErrorReport.ReportNonFatalMessage("WeSay was unable to figure out what lexicon to work on. Try opening the LIFT file by double clicking on it. If you don't have one yet, run the WeSay Configuration Tool to make a new WeSay project.");
-			  return false;
+				ErrorReport.ReportNonFatalMessage("WeSay was unable to figure out what lexicon to work on. Try opening the LIFT file by double clicking on it. If you don't have one yet, run the WeSay Configuration Tool to make a new WeSay project.");
+				return null;
 			}
 
-		  liftPath = project.UpdateFileStructure(liftPath);
+			liftPath = project.UpdateFileStructure(liftPath);
 
-		  if (project.LoadFromLiftLexiconPath(liftPath))
-		  {
-			Settings.Default.PreviousLiftPath = liftPath;
-		  }
-		  else
-		  {
-			return false;
-		  }
+			if (project.LoadFromLiftLexiconPath(liftPath))
+			{
+				Settings.Default.PreviousLiftPath = liftPath;
+			}
+			else
+			{
+				return null;
+			}
 
 			WeSayWordsProject.Project.LockLift(); // Consume will expect it to be locked already
+
+			return project;
+		}
+
+
+		private bool MakeCacheAndLiftReady(string liftPath, WeSayWordsProject project)
+		{
+
+
 
 			//NB: it's very important that any updates are consumed before the cache is rebuilt.
 			//Otherwise, the cache and lift will fall out of sync.

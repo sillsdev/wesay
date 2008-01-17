@@ -74,12 +74,12 @@ namespace WeSay.UI
 //              -1 + panelSize.Height - _flagButton.Height);
 
 			_flagButton.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-			_flagButton.CheckedChanged += new EventHandler(OnFlagButtonCheckedChanged);
 			_flagButton.TabStop = false;
 			_flagButton.Checked = FlagIsOn;
 			_flagButton.Name = _nameForTesting;
 			_flagButton.MouseEnter += new EventHandler(_flagButton_MouseEnter);
 			_flagButton.MouseLeave += new EventHandler(_flagButton_MouseLeave);
+			_flagButton.CheckedChanged += new EventHandler(OnFlagButtonCheckedChanged);
 
 			if (Type.GetType("Mono.Runtime") == null) // Work around because Mono draws a border around image even though it shouldn't
 			{

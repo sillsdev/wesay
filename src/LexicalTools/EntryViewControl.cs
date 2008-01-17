@@ -15,6 +15,7 @@ namespace WeSay.LexicalTools
 		private ViewTemplate _viewTemplate;
 		private LexEntry _record;
 		private Timer _cleanupTimer;
+		private bool _isDisposed = false;
 
 		public EntryViewControl()
 		{
@@ -133,6 +134,7 @@ namespace WeSay.LexicalTools
 
 		private void OnEmptyObjectsRemoved(object sender, EventArgs e)
 		{
+			VerifyNotDisposed();
 			//find out where our current focus is and attempt to return to that place
 			int? row = null;
 			if (_detailListControl.ContainsFocus)
@@ -160,6 +162,7 @@ namespace WeSay.LexicalTools
 
 		private void OnRecordPropertyChanged(object sender, PropertyChangedEventArgs e)
 		{
+			VerifyNotDisposed();
 			LexEntry entry = (LexEntry) sender;
 			switch (e.PropertyName)
 			{
@@ -190,16 +193,39 @@ namespace WeSay.LexicalTools
 
 		private void OnCleanupTimer_Tick(object sender, EventArgs e)
 		{
+			VerifyNotDisposed();
 			Logger.WriteMinorEvent("OnCleanupTimer_Tick");
 			LexEntry entry = (LexEntry) _cleanupTimer.Tag;
 			_cleanupTimer.Stop();
 			entry.CleanUpEmptyObjects();
 		}
 
+		protected void VerifyNotDisposed()
+		{
+			if (this._isDisposed)
+			{
+#if DEBUG
+				throw new ObjectDisposedException(GetType().FullName);
+#endif
+				Palaso.Reporting.ErrorReport.ReportNonFatalMessage("WeSay ran into a problem in the EntryViewControl (it was called after it was disposed.) If you can make this happen again, please contact the developers.");
+			}
+		}
+
 		private void RefreshLexicalEntryPreview()
 		{
-			_lexicalEntryPreview.Rtf = RtfRenderer.ToRtf(_record, _currentItemInFocus);
-			_lexicalEntryPreview.Refresh();
+			VerifyNotDisposed();
+			try
+			{
+				_lexicalEntryPreview.Rtf = RtfRenderer.ToRtf(_record, _currentItemInFocus);
+				_lexicalEntryPreview.Refresh();
+			}
+			catch (Exception error)
+			{
+#if DEBUG
+				throw error;
+#endif
+				Palaso.Reporting.ErrorReport.ReportNonFatalMessage("There was an error refreshing the entry preview. If you were quiting the program, this is a know issue (WS-554) that we are trying to track down.  If you can make this happen again, please contact the developers.");
+			}
 		}
 
 		private void RefreshEntryDetail()
@@ -230,6 +256,7 @@ namespace WeSay.LexicalTools
 
 		private void OnChangeOfWhichItemIsInFocus(object sender, CurrentItemEventArgs e)
 		{
+			VerifyNotDisposed();
 			_currentItemInFocus = e;
 			RefreshLexicalEntryPreview();
 		}
@@ -242,6 +269,15 @@ namespace WeSay.LexicalTools
 		{
 			_detailListControl.BackColor = BackColor;
 			_lexicalEntryPreview.BackColor = BackColor;
+		}
+
+		~EntryViewControl()
+		{
+			if (!this._isDisposed)
+			{
+				throw new InvalidOperationException("Disposed not explicitly called on " + GetType().FullName + ".");
+			}
+
 		}
 	}
 }

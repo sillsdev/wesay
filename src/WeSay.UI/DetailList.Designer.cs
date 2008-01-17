@@ -20,6 +20,7 @@ namespace WeSay.UI
 				components.Dispose();
 			}
 			base.Dispose(disposing);
+			this._disposed = true;
 		}
 
 		#region Component Designer generated code

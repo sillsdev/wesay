@@ -194,7 +194,7 @@ namespace WeSay.Foundation
 				{
 					Palaso.Reporting.Logger.WriteMinorEvent("Removing {0} due to emptiness.", property.ToString());
 					Properties.RemoveAt(i);
-					NotifyPropertyChanged(property.ToString());
+				   // don't: this just makes for false modified events: NotifyPropertyChanged(property.ToString());
 				}
 			}
 		}
@@ -246,7 +246,10 @@ namespace WeSay.Foundation
 
 		public void NotifyPropertyChanged(string propertyName)
 		{
-			PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			if (PropertyChanged != null)
+			{
+				PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
 		}
 
 		protected virtual void OnChildObjectPropertyChanged(object sender,

@@ -82,6 +82,7 @@ namespace WeSay.LexicalModel.Db4o_Specific
 		public static void Deinitialize(IObjectContainer container)
 		{
 			Debug.Assert(_singleton._container == container);
+			_singleton.Dispose();
 			_singleton = null;
 		}
 

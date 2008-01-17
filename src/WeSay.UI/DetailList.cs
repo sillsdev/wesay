@@ -49,6 +49,7 @@ namespace WeSay.UI
 
 		protected override void OnPaddingChanged(EventArgs e)
 		{
+			VerifyNotDisposed();
 			base.OnPaddingChanged(e);
 			Padding = new Padding(Math.Max(Padding.Left, 20), Padding.Top, Padding.Right, Padding.Bottom);
 		}
@@ -178,6 +179,7 @@ namespace WeSay.UI
 
 		void OnEditWidget_KeyDown(object sender, KeyEventArgs e)
 		{
+			VerifyNotDisposed();
 			OnKeyDown(e);
 		}
 
@@ -237,6 +239,7 @@ namespace WeSay.UI
 
 		public void OnBinding_ChangeOfWhichItemIsInFocus(object sender, CurrentItemEventArgs e)
 		{
+			VerifyNotDisposed();
 			ChangeOfWhichItemIsInFocus(sender, e);
 		}
 
@@ -256,5 +259,26 @@ namespace WeSay.UI
 		{
 			return (Label) GetControlFromPosition(0, row);
 		}
+
+		~DetailList()
+		{
+			if (!this._disposed)
+			{
+				throw new InvalidOperationException("Disposed not explicitly called on " + GetType().FullName + ".");
+			}
+		}
+
+
+		private bool _disposed = false;
+
+
+		protected void VerifyNotDisposed()
+		{
+			if (this._disposed)
+			{
+				throw new ObjectDisposedException(GetType().FullName);
+			}
+		}
+
 	}
 }

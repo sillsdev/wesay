@@ -20,12 +20,14 @@ using WeSay.Project;
  *
  * DB Committed?    Lift Update File Written?   Update File Consumed yet?   Result
  * -------------    -------------------------   -------------------------   ------
- * N                N                           N                           No data to loose.
+ * N                N                           N                           No data to lose.
  * N                Y                           N                           On restart, we must consume update file first, then rebuild cache (see ws-281)
  * N                Y                           Y                           Cache will rebuild with correct data on restart
- * Y                N                           N                           On restart, find newer changes than LIFT has, create update and consume it
+ * Y                N                           N                           On restart, RecoverUnsavedChangesOutOfCacheIfNeeded() finds newer changes than LIFT has, create update and consume it
  * Y                Y                           N                           On restart, will consume update file.
- * Y                Y                           Y                           No data to loose.
+ * Y                Y                           Y                           No data to lose.
+ * Y                corrupt, but exporter threw exception                   ? probably retain data lift.update.bad file may also contain info, if the exporter actually wrote out a half-finished update file
+ * Y                corrupt, but exporter ended normally                    WOULD LOOSE DATA
  *
  */
 namespace WeSay.Project
@@ -37,6 +39,7 @@ namespace WeSay.Project
 		private int _commitCount;
 		private Db4oDataSource _datasource;
 		private DateTime _timeOfLastQueryForNewRecords;
+		private bool _didFindDataInCacheNeedingRecovery = false;
 
 		event EventHandler Updating;
 
@@ -134,13 +137,12 @@ namespace WeSay.Project
 
 			if (mergeIntoSingleFileBeforeReturning)
 			{
-				if (!ConsumePendingLiftUpdates())
+				if (ConsumePendingLiftUpdates())
 				{
-					throw new ApplicationException("Could not finish updating LIFT dictionary file.");
+					CacheManager.UpdateSyncPointInCache(_datasource.Data,
+															File.GetLastWriteTimeUtc(
+																WeSayWordsProject.Project.PathToLiftFile));
 				}
-				CacheManager.UpdateSyncPointInCache(_datasource.Data,
-														File.GetLastWriteTimeUtc(
-															WeSayWordsProject.Project.PathToLiftFile));
 			}
 
 			//Logger.WriteEvent("Incremental Update Done");
@@ -171,15 +173,25 @@ namespace WeSay.Project
 				}
 				catch (LiftIO.BadUpdateFileException error)
 				{
-						Palaso.Reporting.ErrorReport.ReportNonFatalMessage(
-							"WeSay was unable to save some work you did in the previous session.  The next screen will allow you to send a report of this to the developers.");
-						Palaso.Reporting.ErrorNotificationDialog.ReportException(error,null,false);
+					string contents = File.ReadAllText(error.PathToNewFile);
+					if (contents.Trim().Length == 0)
+					{
+					   Palaso.Reporting.ErrorReport.ReportNonFatalMessage(
+							"It looks as though WeSay recently crashed while attempting to save.  It will try again to preserve your work, but you will want to check to make sure nothing was lost.");
+						File.Delete(error.PathToNewFile);
+					}
+					else
+					{
 						File.Move(error.PathToNewFile, error.PathToNewFile + ".bad");
-					return true;
+						Palaso.Reporting.ErrorReport.ReportNonFatalMessage(
+							"WeSay was unable to save some work you did in the previous session.  The work might be recoverable from the file {0}. The next screen will allow you to send a report of this to the developers.", error.PathToNewFile + ".bad");
+						Palaso.Reporting.ErrorNotificationDialog.ReportException(error, null, false);
+					}
+					return false;
 				}
 				catch (Exception e)
 				{
-					Palaso.Reporting.ErrorReport.ReportNonFatalMessage(e.Message);
+					throw new ApplicationException("Could not finish updating LIFT dictionary file.", e);
 					return false;
 				}
 				finally
@@ -270,6 +282,33 @@ namespace WeSay.Project
 			q.Descend("_modificationTime").Constrain(last).Greater();
 			_timeOfLastQueryForNewRecords = DateTime.UtcNow;
 			return q.Execute();
+		}
+
+		/// <summary>
+		/// Used to try again to get data out of the cache in case it crashed last time
+		/// We can be successful at saving on startup if the crash was somehow related to the UI (as in WS-554)
+		/// </summary>
+		public void RecoverUnsavedChangesOutOfCacheIfNeeded()
+		{
+
+			IList records = GetRecordsNeedingUpdateInLift();
+			if (records.Count == 0)
+			{
+				return;
+			}
+
+			try
+			{
+				Palaso.Reporting.ErrorReport.ReportNonFatalMessage("It appears that WeSay did not exit normally last time.  WeSay will now attempt to recover the {0} records which were not saved.", records.Count);
+				DoLiftUpdateNow(false);
+				_didFindDataInCacheNeedingRecovery = true;
+				Palaso.Reporting.ErrorReport.ReportNonFatalMessage("Your work was successfully recovered.");
+			}
+			catch (Exception e)
+			{
+				Palaso.Reporting.ErrorReport.ReportNonFatalMessage("Sorry, WeSay was unable to recover some of your work.");
+				Project.WeSayWordsProject.Project.InvalidateCacheSilently();
+			}
 		}
 	}
 }

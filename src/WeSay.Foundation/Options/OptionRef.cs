@@ -19,6 +19,8 @@ namespace WeSay.Foundation.Options
 		/// </summary>
 		private IReceivePropertyChangeNotifications _parent;
 
+		private bool _suspendNotification=false;
+
 		public OptionRef() : this(string.Empty)
 		{
 
@@ -112,6 +114,10 @@ namespace WeSay.Foundation.Options
 
 		private void NotifyPropertyChanged()
 		{
+			if(_suspendNotification)
+			{
+				return;
+			}
 			//tell any data binding
 			if (PropertyChanged != null)
 			{
@@ -149,7 +155,9 @@ namespace WeSay.Foundation.Options
 		{
 			if(Value == string.Empty)
 			{
+				_suspendNotification = true;
 				Value = null; // better for matching 'missing' for purposes of missing info task
+				_suspendNotification = false;
 			}
 
 		}

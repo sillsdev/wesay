@@ -1,3 +1,4 @@
+using System;
 using System.Windows.Forms;
 using WeSay.UI;
 
@@ -9,6 +10,7 @@ namespace WeSay.LexicalTools
 		/// Required designer variable.
 		/// </summary>
 		private System.ComponentModel.IContainer components = null;
+
 
 		/// <summary>
 		/// Clean up any resources being used.
@@ -30,7 +32,10 @@ namespace WeSay.LexicalTools
 				components.Dispose();
 			}
 			base.Dispose(disposing);
+			_isDisposed = true;
 		}
+
+
 
 		#region Component Designer generated code
 

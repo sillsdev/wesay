@@ -161,7 +161,7 @@ namespace WeSay.LexicalModel
 		{
 			get
 			{
-				return _creationTime;
+				return GetSafeDateTime(_creationTime);
 			}
 			set
 			{
@@ -170,11 +170,21 @@ namespace WeSay.LexicalModel
 			}
 		}
 
+		private DateTime GetSafeDateTime(DateTime dt)
+		{
+			//workaround db4o 6 bug
+			if (dt.Kind != DateTimeKind.Utc)
+			{
+				return new DateTime(dt.Ticks, DateTimeKind.Utc);
+			}
+			return dt;
+		}
+
 		public DateTime ModificationTime
 		{
 			get
 			{
-				return _modificationTime;
+				return GetSafeDateTime(_modificationTime);
 			}
 			set
 			{
