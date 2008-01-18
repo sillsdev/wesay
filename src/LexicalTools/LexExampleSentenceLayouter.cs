@@ -57,7 +57,7 @@ namespace WeSay.LexicalTools
 				Palaso.Reporting.ErrorReport.ReportNonFatalMessage(e.Message);
 			}
 
-			DetailList.ResumeLayout(true);
+			DetailList.ResumeLayout();
 			return rowCount;
 		}
 

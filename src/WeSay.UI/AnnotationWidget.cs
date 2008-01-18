@@ -81,7 +81,7 @@ namespace WeSay.UI
 			_flagButton.MouseLeave += new EventHandler(_flagButton_MouseLeave);
 			_flagButton.CheckedChanged += new EventHandler(OnFlagButtonCheckedChanged);
 
-			if (Type.GetType("Mono.Runtime") == null) // Work around because Mono draws a border around image even though it shouldn't
+			if (Type.GetType("Mono.Runtime") != null) // Work around because Mono draws a border around image even though it shouldn't
 			{
 				_flagButton.Paint += new PaintEventHandler(_flagButton_Paint);
 			}
@@ -90,11 +90,11 @@ namespace WeSay.UI
 			return _flagButton;
 		}
 
-	  void _flagButton_Paint(object sender, PaintEventArgs e)
-	  {
-		  // undo the border that Mono just drew around this image Mono bug 82081
-		  e.Graphics.DrawRectangle(new Pen(_flagButton.BackColor, 1), _flagButton.ClientRectangle.X, _flagButton.ClientRectangle.Y, _flagButton.ClientRectangle.Width - 1, _flagButton.ClientRectangle.Height-1);
-	  }
+		void _flagButton_Paint(object sender, PaintEventArgs e)
+		{
+			// undo the border that Mono just drew around this image Mono bug 82081
+			e.Graphics.DrawRectangle(new Pen(_flagButton.BackColor, 1), _flagButton.ClientRectangle.X, _flagButton.ClientRectangle.Y, _flagButton.ClientRectangle.Width - 1, _flagButton.ClientRectangle.Height - 1);
+		}
 
 	  void _flagButton_MouseLeave(object sender, EventArgs e)
 	  {

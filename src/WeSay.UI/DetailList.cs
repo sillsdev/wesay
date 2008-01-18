@@ -19,8 +19,8 @@ namespace WeSay.UI
 		/// </summary>
 		public event EventHandler<CurrentItemEventArgs> ChangeOfWhichItemIsInFocus = delegate{};
 
-		private int _indexOfLabel = 0;
-		private int _indexOfWidget = 1;
+		private readonly int _indexOfLabel = 0;
+		private readonly int _indexOfWidget = 1;
 
 		private bool _disposed = false;
 		private StackTrace _stackAtConstruction;
@@ -37,9 +37,6 @@ namespace WeSay.UI
 					 true);
 
 			Name = "DetailList";//for  debugging
-			_fadeInTimer.Enabled = false;
-			_fadeInTimer.Interval = 500;
-
 
 		   if (_indexOfLabel == 0)
 		   {
@@ -59,7 +56,11 @@ namespace WeSay.UI
 		{
 			VerifyNotDisposed();
 			base.OnPaddingChanged(e);
-			Padding = new Padding(Math.Max(Padding.Left, 20), Padding.Top, Padding.Right, Padding.Bottom);
+			Padding =
+					new Padding(Math.Max(Padding.Left, 20),
+								Padding.Top,
+								Padding.Right,
+								Padding.Bottom);
 		}
 
 		public Control AddWidgetRow(string label, bool isHeader, Control control)
@@ -143,25 +144,19 @@ namespace WeSay.UI
 				RowCount++;
 			}
 
-
-			int top = 0;// AddHorizontalRule(panel, isHeader, _rowCount == 0);
-			if (isHeader)
-			{
-				int beforeHeadingPadding = 8;
-				top = beforeHeadingPadding;
-			}
 			Label label = new Label();
 			if (isHeader)
 			{
-				label.Font = new Font(StringCatalog.LabelFont /* label.Font*/, FontStyle.Bold);
 				label.Font = new Font(StringCatalog.LabelFont /* label.Font*/, FontStyle.Bold);
 			}
 			label.Font =StringCatalog.ModifyFontForLocalization(label.Font);
 			label.Text = fieldLabel;
 			label.Size = new Size(75, 50);
 			label.AutoSize = true;
-			int verticalPadding = 0;
-			label.Top = verticalPadding+3+top;
+
+			int beforeHeadingPadding = isHeader ? 8 : 0;
+			label.Top = 3 + beforeHeadingPadding;
+
 			if (isGhostField)
 			{
 				label.ForeColor = System.Drawing.Color.Gray;
@@ -185,24 +180,10 @@ namespace WeSay.UI
 		   return editWidget;
 		}
 
-		void OnEditWidget_KeyDown(object sender, KeyEventArgs e)
+		private void OnEditWidget_KeyDown(object sender, KeyEventArgs e)
 		{
 			VerifyNotDisposed();
 			OnKeyDown(e);
-		}
-
-		private void _fadeInTimer_Tick(object sender, EventArgs e)
-		{
-			foreach (Control c in Controls)
-			{
-				if (c.Controls.Count < 2)
-					continue;
-//                WeSayTextBox tb = c.Controls[_indexOfTextBox] as WeSayTextBox;
-//                if (tb == null)
-//                    continue;
-//
-//                tb.FadeInSomeMore((Label) c.Controls[_indexOfLabel]);
-			}
 		}
 
 		public void MoveInsertionPoint(int row)
@@ -211,7 +192,9 @@ namespace WeSay.UI
 			{
 				if (0 > row || row >= RowCount)
 				{
-					throw new ArgumentOutOfRangeException("row", row, "row must be between 0 and Count-1 inclusive");
+					throw new ArgumentOutOfRangeException("row",
+														  row,
+														  "row must be between 0 and Count-1 inclusive");
 				}
 				//            Panel p = (Panel)ActualControls[RowToControlIndex(row)];
 				//            Control c = GetEditControlFromReferenceControl(p);
@@ -240,7 +223,7 @@ namespace WeSay.UI
 			catch(Exception error)
 			{
 #if DEBUG // not worth crashing over
-				throw error;
+				throw;
 #endif
 			}
 		}
@@ -256,16 +239,15 @@ namespace WeSay.UI
 		/// </summary>
 		public Control GetEditControlFromRow(int row)
 		{
-			return GetControlFromPosition(1, row);
+			return GetControlFromPosition(_indexOfWidget, row);
 		}
-
 
 		/// <summary>
 		/// for tests
 		/// </summary>
 		public Label GetLabelControlFromRow(int row)
 		{
-			return (Label) GetControlFromPosition(0, row);
+			return (Label)GetControlFromPosition(_indexOfLabel, row);
 		}
 
 		~DetailList()
@@ -276,9 +258,9 @@ namespace WeSay.UI
 				if (_stackAtConstruction != null)
 				{
 					trace = _stackAtConstruction.ToString();
-				}
-				throw new InvalidOperationException("Disposed not explicitly called on " + GetType().FullName + ".  Stack at creation was "+trace);
 			}
+				throw new InvalidOperationException("Disposed not explicitly called on " + GetType().FullName + ".  Stack at creation was "+trace);
+		}
 		}
 
 

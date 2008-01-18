@@ -29,7 +29,7 @@ namespace WeSay.UI
 			this.components = new Container();
 			InitializeComponent();
 			_textBoxes = new List<WeSayTextBox>();
-//            this.BackColor = System.Drawing.Color.Crimson;
+		   //this.BackColor = System.Drawing.Color.Crimson;
 			SuspendLayout();
 
 			this.ParentChanged += new EventHandler(OnParentChanged);
@@ -50,19 +50,9 @@ namespace WeSay.UI
 			ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));//text
 			ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));//annotation widget
 
-			if (Type.GetType("Mono.Runtime") == null) // Work around not yet implemented in Mono
-			{
-				SetAutoSizeToGrowAndShrink();
-			}
+			this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
 
 			ResumeLayout(false);
-		}
-
-		private void SetAutoSizeToGrowAndShrink()
-		{
-#if !MONO
-			this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-#endif
 		}
 
 		public void FocusOnFirstWsAlternative()
@@ -133,10 +123,6 @@ namespace WeSay.UI
 
 			if (Controls.Count > 0)
 			{
-				foreach (WeSayTextBox box in _textBoxes)
-				{
-					box.SizeChanged -=  box_SizeChanged;
-				}
 				_textBoxes.Clear();
 				Controls.Clear();
 				RowCount = 0;
@@ -145,7 +131,6 @@ namespace WeSay.UI
 
 			foreach (WritingSystem writingSystem in WritingSystemsForThisField)
 			{
-				RowCount++;
 				RowStyles.Add(new RowStyle(SizeType.AutoSize));
 
 				WeSayTextBox box = AddTextBox(writingSystem, multiText);
@@ -166,13 +151,12 @@ namespace WeSay.UI
 					annotationControl.Click += new EventHandler(subControl_Click);
 					annotationControl.Anchor = AnchorStyles.Right | AnchorStyles.Top;
 					Controls.Add(annotationControl, 2, RowCount);
-
-					this.components.Add(annotationControl); //so it will get disposed of when we are
 				}
 				//else
 				//{
 				//    SetColumnSpan(box, 2);
 				//}
+				RowCount++;
 			}
 
 			ResumeLayout(false);
@@ -272,9 +256,7 @@ namespace WeSay.UI
 			box.WordWrap = true;
 			//box.Enabled = !box.ReadOnly;
 
-
 			_textBoxes.Add(box);
-			box.SizeChanged += new EventHandler(box_SizeChanged);
 			box.Name = Name.Replace("-mtc","") + "_" + writingSystem.Id; //for automated tests to find this particular guy
 			box.Text = multiText[writingSystem.Id];
 
@@ -285,60 +267,14 @@ namespace WeSay.UI
 			return box;
 		}
 
-		void box_SizeChanged(object sender, EventArgs e)
-		{
-#if !MONO
-			if (Type.GetType("Mono.Runtime") != null) // Work around because Row.AutoSize not yet implemented in Mono
-#endif
-			{
-				int height = 0;
-				foreach (WeSayTextBox box in _textBoxes)
-				{
-					height += Math.Max(28/*size of annotation widget*/, box.Height + box.Margin.Top + box.Margin.Bottom);
-				}
-				if (height != Height)
-				{
-					Height = height;
-				}
-			}
-		}
-
-
 		void OnKeyDownInSomeBox(object sender, KeyEventArgs e)
 		{
 		  OnKeyDown(e);
-//
-////            if (Environment.OSVersion.Platform != PlatformID.Unix)
-////            {
-////                SetSuppressKeyPress(e, true);
-////            }
-//            switch (e.KeyCode)
-//            {
-//                case Keys.Return:
-//                    e.Handled = true;
-//                    if (SpecialKeyPress != null)
-//                    {
-//                        SpecialKeyPress.Invoke(this, e.KeyCode);
-//                    }
-//                    break;
-//
-//                default:
-//                    e.Handled = false;
-////                    if (Environment.OSVersion.Platform != PlatformID.Unix)
-////                    {
-////                        SetSuppressKeyPress(e, false);
-////                    }
-//                    break;
-//            }
 		}
 
 		void OnTextOfSomeBoxChanged(object sender, EventArgs e)
 		{
 			OnTextChanged(e);
-			//if (this.TextChanged != null)
-			//{
-			//    TextChanged.Invoke(sender, e);
-			//}
 		}
 
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]

@@ -19,10 +19,10 @@ namespace WeSay.UI
 			//Debug.WriteLine("Disposing " + Name + "   Disposing=" + disposing);
 			if (disposing && (components != null))
 			{
-				foreach (WeSayTextBox box in _textBoxes)
-				{
-					box.SizeChanged -= box_SizeChanged;
-				}
+				//foreach (WeSayTextBox box in _textBoxes)
+				//{
+				//    box.SizeChanged -= box_SizeChanged;
+				//}
 
 				components.Dispose();
 			}
@@ -45,8 +45,8 @@ namespace WeSay.UI
 			this.Name = "MultiTextControl";
 			this.AutoSize = true;
 
-			this.Height = 1;
-			this.Width = 1;
+			//this.Height = 1;
+			//this.Width = 1;
 			this.ResumeLayout(false);
 
 		}

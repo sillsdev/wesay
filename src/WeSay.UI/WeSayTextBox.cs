@@ -85,7 +85,7 @@ namespace WeSay.UI
 
 			if (e.KeyCode == Keys.Pause && e.Modifiers == Keys.Shift)
 			{
-				System.Diagnostics.Process.GetCurrentProcess().Kill();
+				Process.GetCurrentProcess().Kill();
 			}
 			if (e.KeyCode == Keys.Pause && (e.Alt))
 			{
@@ -159,22 +159,25 @@ namespace WeSay.UI
 			{
 				throw new ObjectDisposedException(GetType().ToString());
 			}
+			Height = GetPreferredHeight();
 			base.OnTextChanged(e);
-			UpdateHeight();
 		}
 
 		protected override void OnResize(EventArgs e)
 		{
+			Height = GetPreferredHeight();
 			base.OnResize(e);
-			UpdateHeight();
 		}
 
-		private void UpdateHeight()
+		public override Size GetPreferredSize(Size proposedSize)
 		{
-			if(DesignMode)
-				return;
-			SuspendLayout();
+			Size size = base.GetPreferredSize(proposedSize);
+			size.Height = GetPreferredHeight();
+			return size;
+		}
 
+		private int GetPreferredHeight()
+		{
 			using (Graphics g = CreateGraphics())
 			{
 				TextFormatFlags flags = TextFormatFlags.TextBoxControl |
@@ -194,10 +197,8 @@ namespace WeSay.UI
 									Font,
 									new Size(Width, int.MaxValue), //new Size(Width, int.MinValue),
 									flags);
-
-				Height = Math.Max(MinimumSize.Height, sz.Height);
+				return Math.Max(MinimumSize.Height, sz.Height);
 			}
-			ResumeLayout(false);
 		}
 
 		public WeSayTextBox(WritingSystem ws, string nameForLogging):this()

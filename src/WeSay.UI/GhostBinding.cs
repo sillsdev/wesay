@@ -60,10 +60,7 @@ namespace WeSay.UI
 			if (e.KeyCode == Keys.Return)
 			{
 				e.Handled = true;
-				if (Type.GetType("Mono.Runtime") == null) // Work around not yet implemented in Mono
-				{
-					SetSuppressKeyPressTrue(e);
-				}
+				e.SuppressKeyPress = true; //none of this
 				TimeForRealObject(false);
 			}
 			else
@@ -72,11 +69,6 @@ namespace WeSay.UI
 			}
 		}
 
-		private static void SetSuppressKeyPressTrue(KeyEventArgs e) {
-#if !MONO
-			e.SuppressKeyPress = true; //none of this
-#endif
-		}
 
 		/// <summary>
 		/// this only gets called when the control is actually, like, maybe finalized

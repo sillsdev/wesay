@@ -129,10 +129,7 @@ namespace WeSay.LexicalTools
 		private void _boxVernacularWord_KeyDown(object sender, KeyEventArgs e)
 		{
 			e.Handled = true;
-			if (Environment.OSVersion.Platform != PlatformID.Unix)
-			{
-				SetSuppressKeyPress(e, true);
-			}
+			e.SuppressKeyPress = true;
 			switch (e.KeyCode)
 			{
 				case Keys.Return:
@@ -150,19 +147,9 @@ namespace WeSay.LexicalTools
 
 				default:
 					e.Handled = false;
-					if (Type.GetType("Mono.Runtime") == null) // Work around not yet implemented in Mono
-					{
-						SetSuppressKeyPress(e, false);
-					}
+					e.SuppressKeyPress = false;
 					break;
 			}
-		}
-
-		private static void SetSuppressKeyPress(KeyEventArgs e, bool suppress)
-		{
-#if !MONO
-			e.SuppressKeyPress = suppress;
-#endif
 		}
 
 		private void GatherWordListControl_BackColorChanged(object sender, EventArgs e)

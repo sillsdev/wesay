@@ -60,8 +60,6 @@ namespace WeSay.CommonTools
 			this._indicatorPanel.Name = "_indicatorPanel";
 			this._indicatorPanel.Size = new System.Drawing.Size(482, 80);
 			this._indicatorPanel.TabIndex = 1;
-			this._indicatorPanel.Click += new System.EventHandler(this._indicatorPanel_Click);
-			this._indicatorPanel.Resize += new System.EventHandler(this._indicatorPanel_Resize);
 			//
 			// localizationHelper1
 			//
@@ -97,7 +95,6 @@ namespace WeSay.CommonTools
 			this.Controls.Add(this._shapeControl);
 			this.Name = "CurrentTaskIndicatorControl";
 			this.Size = new System.Drawing.Size(563, 138);
-			this.Resize += new System.EventHandler(this.CurrentTaskIndicatorControl_Resize);
 			((System.ComponentModel.ISupportInitialize)(this.localizationHelper1)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();

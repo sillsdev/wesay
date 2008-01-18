@@ -32,10 +32,7 @@ namespace WeSay.LexicalTools
 
 			InitializeComponent();
 			InitializeDisplaySettings();
-			if (Type.GetType("Mono.Runtime") == null) // Work around not yet implemented in Mono
-			{
-				SetAutoSizeToGrowAndShrink();
-			}
+			this._vernacularBox.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
 
 			_listViewOfWordsMatchingCurrentItem.Items.Clear();
 
@@ -179,10 +176,7 @@ namespace WeSay.LexicalTools
 		private void _boxVernacularWord_KeyDown(object sender, KeyEventArgs e)
 		{
 			e.Handled = true;
-			if (Environment.OSVersion.Platform != PlatformID.Unix)
-			{
-				SetSuppressKeyPress(e, true);
-			}
+			e.SuppressKeyPress = true;
 			switch (e.KeyCode)
 			{
 				case Keys.Return:
@@ -200,31 +194,15 @@ namespace WeSay.LexicalTools
 
 				default:
 					e.Handled = false;
-					if (Type.GetType("Mono.Runtime") == null) // Work around not yet implemented in Mono
-					{
-						SetSuppressKeyPress(e, false);
-					}
+					e.SuppressKeyPress = false;
 					break;
 			}
-		}
-		private static void SetSuppressKeyPress(KeyEventArgs e, bool suppress)
-		{
-#if !MONO
-			e.SuppressKeyPress = suppress;
-#endif
 		}
 
 		private void GatherWordListControl_BackColorChanged(object sender, EventArgs e)
 		{
 			_listViewOfWordsMatchingCurrentItem.BackColor = BackColor;
 			_boxForeignWord.BackColor = BackColor;
-		}
-
-		private void SetAutoSizeToGrowAndShrink()
-		{
-#if !MONO
-			this._vernacularBox.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-#endif
 		}
 
 		private void OnListViewOfWordsMatchingCurrentItem_Click(object sender, EventArgs e)
@@ -235,9 +213,7 @@ namespace WeSay.LexicalTools
 				string word = _listViewOfWordsMatchingCurrentItem.SelectedItem.ToString();
 				LexEntry entry = ((EntryDisplayProxy)_listViewOfWordsMatchingCurrentItem.SelectedItem).Entry;
 				Debug.Assert(entry!=null);
-#pragma warning disable ConditionIsAlwaysTrueOrFalse
 				if(entry==null)
-#pragma warning restore ConditionIsAlwaysTrueOrFalse
 				{
 					return;
 				}

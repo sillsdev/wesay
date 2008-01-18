@@ -84,11 +84,6 @@ namespace WeSay.LexicalTools
 			//
 			this._detailListControl.AutoScroll = true;
 			this._detailListControl.BackColor = System.Drawing.SystemColors.Control;
-			this._detailListControl.ColumnCount = 2;
-			this._detailListControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this._detailListControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this._detailListControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this._detailListControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
 			this._detailListControl.Dock = System.Windows.Forms.DockStyle.Fill;
 			this._detailListControl.Location = new System.Drawing.Point(0, 0);
 			this._detailListControl.Margin = new System.Windows.Forms.Padding(0);

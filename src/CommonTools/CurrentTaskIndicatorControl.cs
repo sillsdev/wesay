@@ -15,21 +15,12 @@ namespace WeSay.CommonTools
 
 			content.BackColor = BackColor;// System.Drawing.Color.Transparent; // set here to avoid assertion
 			content.Dock = DockStyle.Fill;
-  //          _indicatorPanel.DockPadding.Right = 10;
+//          _indicatorPanel.DockPadding.Right = 10;
 
 			UpdateColors();
 			this._indicatorPanel.Controls.Add(content);
 
-			if (Type.GetType("Mono.Runtime") == null) // Work around not yet implemented in Mono
-			{
-				SetAutoSizeToGrowAndShrink();
-			}
-		}
-		private void SetAutoSizeToGrowAndShrink()
-		{
-#if !MONO
 			this._indicatorPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-#endif
 		}
 
 		public void UpdateColors()
@@ -45,19 +36,5 @@ namespace WeSay.CommonTools
 			_indicatorPanel.Width = this.Width - (_indicatorPanel.Left  +10/*HACK*/);
 		}
 
-		private void _indicatorPanel_Resize(object sender, EventArgs e)
-		{
-
-		}
-
-		private void CurrentTaskIndicatorControl_Resize(object sender, EventArgs e)
-		{
-
-		}
-
-		private void _indicatorPanel_Click(object sender, EventArgs e)
-		{
-
-		}
 	}
 }

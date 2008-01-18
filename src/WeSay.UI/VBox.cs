@@ -4,32 +4,6 @@ using System.Windows.Forms;
 
 namespace WeSay.UI
 {
-//    public class FlexibleHeightPanel : Panel
-//    {
-//        private int _heightDifferenceFromControllingChild;
-
-//        public FlexibleHeightPanel(int initialWidth, int heightDifferenceFromControllingChild, Control controllingChild)
-//        {
-//            Size = new Size(initialWidth, controllingChild.Height + _heightDifferenceFromControllingChild);
-//            Anchor = AnchorStyles.Left | AnchorStyles.Right;
-
-//            Controls.Add(controllingChild);
-////            this.BackColor = Color.Wheat;
-//            controllingChild.Resize += new EventHandler(OnChildResize);
-//            _heightDifferenceFromControllingChild = heightDifferenceFromControllingChild;
-//        }
-
-//        void OnChildResize(object sender, EventArgs e)
-//        {
-//            Control c = (Control)sender;
-//            Debug.Assert(Controls.Contains(c));
-//            //if(c.Height > this.Height)
-//            {
-//                Height = c.Height + _heightDifferenceFromControllingChild;
-//                Invalidate();
-//            }
-//        }
-//    }
 
 	public partial class VBox : TableLayoutPanel//, IContainerControl
 	{
@@ -38,8 +12,6 @@ namespace WeSay.UI
 		/// </summary>
 		private int _rowCount = 0;
 
-//        private Control _focussedImmediateChild;
-
 		public VBox()
 		{
 
@@ -47,47 +19,6 @@ namespace WeSay.UI
 			ColumnCount = 1;// = FlowDirection.TopDown;
 		//    this.CellBorderStyle = TableLayoutPanelCellBorderStyle.OutsetPartial;
 		}
-
-//        //from http://yortondotnet.blogspot.com/2007/01/when-activecontrol-is-not-active.html
-//        public bool ActivateControl(Control active)
-//        {
-//            //If we know the active control, then focus it, otherwise focus the first child control.
-//            bool retVal = false;
-//            if (_activeControl != null)
-//            {
-//                _activeControl.Focus();
-//                retVal = true;
-//            }
-//            else
-//            {
-//                if (this.ActualControls.Count > 0)
-//                {
-//                    this.ActualControls[0].Focus();
-//                    retVal = true;
-//                }
-//            }
-//            return retVal;
-//        }
-
-
-//        public Control ActiveControl
-//        {
-//            get     //TODO: the following was just a try that didn't work
-//            {
-//                foreach (Control child in ActualControls)
-//                {
-//                    if(child.Focused)
-//                    {
-//                        IContainerControl c = child as IContainerControl;
-//                        if (c != null)
-//                        {
-//                            return c.ActiveControl;
-//                        }
-//                    }
-//                }
-//                throw new ApplicationException("Could not find the ActiveControl of the VBox");
-//            }
-//        }
 
 		public int Count
 		{
@@ -166,90 +97,5 @@ namespace WeSay.UI
 
 			ResumeLayout();
 		}
-
-		//void OnChildControlResized(object sender, EventArgs e)
-		//{
-		//    //an outermost control (eg the stack of form fields)
-		//    //can have a height fixed to its container, not its contents
-		//    if ((Anchor & AnchorStyles.Bottom) == AnchorStyles.Bottom )
-		//    {
-		//        return;
-		//    }
-
-		//    int h = 0;
-		//    foreach (Control child in ActualControls)
-		//    {
-		//        h += child.Height ;
-		//    }
-		//    Height = h + Margin.Top + Margin.Bottom+ (5 * (ActualControls.Count - 1));
-		//}
-
-		//public int GetRowOfControl(Control control)
-		//{
-		//    return GetRow(control);
-
-		//    int index = base.Controls.GetChildIndex(control,false);
-		//    if(index == -1)
-		//    {
-		//        index = 0;
-		//        foreach (Control childControl in base.Controls)
-		//        {
-		//            if(HasDescendentControl(childControl, control))
-		//            {
-		//                break;
-		//            }
-		//            ++index;
-		//        }
-		//        if(index == base.Controls.Count)
-		//        {
-		//            throw new ArgumentException("Control is not an owned descendant.");
-		//        }
-		//    }
-		//    Debug.Assert(index < _rowCount);
-		//    return index; // (_rowCount - index) - 1;
-		//}
-
-		//private static bool HasDescendentControl(Control current, Control control)
-		//{
-		//    if (current == control)
-		//        return true;
-		//    foreach (Control child in current.Controls)
-		//    {
-		//        if (child == control || HasDescendentControl(child, control))
-		//        {
-		//            return true;
-		//        }
-		//    }
-		//    return false;
-		//}
-
-		///// <summary>
-		///// for unit testing
-		///// </summary>
-		///// <param name="row"></param>
-		///// <returns></returns>
-		//public Control GetControlOfRow(int row)
-		//{
-		//    if(0 > row || row >= _rowCount)
-		//    {
-		//        throw new ArgumentOutOfRangeException("row", row, "row must be between 0 and Count-1 inclusive");
-		//    }
-		//    return (base.Controls[RowToControlIndex(row)]);
-		//}
-
-		//private int RowToControlInsertionIndex(int row)
-		//{
-		//    //reverse order
-		//   // return ((_rowCount) - row);
-		//    return row;
-		//}
-
-		//protected int RowToControlIndex(int row)
-		//{
-		//    Debug.Assert(row < _rowCount); // if we assert here, we are probably missing an opportunity to throw an ArgumentOutOfrange exception in a public method
-		//    //reverse order (that's how docking works)
-		//    return row;// RowToControlInsertionIndex(row) - 1;
-		//}
-
 	}
 }

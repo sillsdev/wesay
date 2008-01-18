@@ -275,20 +275,9 @@ namespace WeSay.LexicalTools
 				e.KeyData == Keys.Enter)
 			{
 				e.Handled = true;
-				if (Type.GetType("Mono.Runtime") == null)
-						// Work around not yet implemented in Mono
-				{
-					SetSuppressKeyPressTrue(e);
-				}
+				e.SuppressKeyPress = true; // otherwise it beeps!
 				FindInList(_findText.Text);
 			}
-		}
-
-		private static void SetSuppressKeyPressTrue(KeyEventArgs e)
-		{
-#if !MONO
-			e.SuppressKeyPress = true; // otherwise it beeps!
-#endif
 		}
 
 		private void _findText_AutoCompleteChoiceSelected(object sender,

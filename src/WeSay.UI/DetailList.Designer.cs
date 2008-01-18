@@ -32,13 +32,7 @@ namespace WeSay.UI
 		private void InitializeComponent()
 		{
 			this.components = new System.ComponentModel.Container();
-			this._fadeInTimer = new System.Windows.Forms.Timer(this.components);
 			this.SuspendLayout();
-			//
-			// _fadeInTimer
-			//
-			this._fadeInTimer.Enabled = true;
-			this._fadeInTimer.Tick += new System.EventHandler(this._fadeInTimer_Tick);
 			//
 			// DetailList
 			//
@@ -48,7 +42,6 @@ namespace WeSay.UI
 			//AutoSizeMode = AutoSizeMode.GrowAndShrink;
 			Padding = new Padding(20, 0, 0, 0);
 			HScroll = false;
-			//VerticalScroll.Enabled = true;
 			//VerticalScroll.Visible = true;
 			ColumnCount = 2;
 
@@ -57,7 +50,5 @@ namespace WeSay.UI
 		}
 
 		#endregion
-
-		private System.Windows.Forms.Timer _fadeInTimer;
 	}
 }
