@@ -17,7 +17,7 @@ namespace WeSay.Admin.Tests
 		[SetUp]
 		public void Setup()
 		{
-			Palaso.Reporting.ErrorReport.OkToInteractWithUser = false;
+			Palaso.Reporting.ErrorReport.IsOkToInteractWithUser = false;
 			_window = new AdminWindow(new string[] { });
 			_window.Show();
 		 }

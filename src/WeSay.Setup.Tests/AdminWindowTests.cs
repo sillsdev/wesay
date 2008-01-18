@@ -20,7 +20,7 @@ namespace WeSay.Admin.Tests
 
 		public override void Setup()
 		{
-			Palaso.Reporting.ErrorReport.OkToInteractWithUser = false;
+			Palaso.Reporting.ErrorReport.IsOkToInteractWithUser = false;
 			base.Setup();
 			_window = new AdminWindow(new string[] { });
 			_window.Show();

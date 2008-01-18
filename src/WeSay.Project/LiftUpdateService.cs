@@ -290,23 +290,34 @@ namespace WeSay.Project
 		/// </summary>
 		public void RecoverUnsavedChangesOutOfCacheIfNeeded()
 		{
-
-			IList records = GetRecordsNeedingUpdateInLift();
-			if (records.Count == 0)
-			{
-				return;
-			}
-
 			try
 			{
-				Palaso.Reporting.ErrorReport.ReportNonFatalMessage("It appears that WeSay did not exit normally last time.  WeSay will now attempt to recover the {0} records which were not saved.", records.Count);
-				DoLiftUpdateNow(false);
-				_didFindDataInCacheNeedingRecovery = true;
-				Palaso.Reporting.ErrorReport.ReportNonFatalMessage("Your work was successfully recovered.");
+				IList records = GetRecordsNeedingUpdateInLift();
+				if (records.Count == 0)
+				{
+					return;
+				}
+
+				try
+				{
+					Palaso.Reporting.ErrorReport.ReportNonFatalMessage(
+						"It appears that WeSay did not exit normally last time.  WeSay will now attempt to recover the {0} records which were not saved.",
+						records.Count);
+					DoLiftUpdateNow(false);
+					_didFindDataInCacheNeedingRecovery = true;
+					Palaso.Reporting.ErrorReport.ReportNonFatalMessage("Your work was successfully recovered.");
+				}
+				catch (Exception e)
+				{
+					Palaso.Reporting.ErrorReport.ReportNonFatalMessage(
+						"Sorry, WeSay was unable to recover some of your work.");
+					Project.WeSayWordsProject.Project.InvalidateCacheSilently();
+				}
 			}
 			catch (Exception e)
 			{
-				Palaso.Reporting.ErrorReport.ReportNonFatalMessage("Sorry, WeSay was unable to recover some of your work.");
+				Palaso.Reporting.ErrorReport.ReportNonFatalMessage(
+					"WeSay had a problem reading the cache.  It will now be rebuilt");
 				Project.WeSayWordsProject.Project.InvalidateCacheSilently();
 			}
 		}

@@ -12,9 +12,7 @@ namespace WeSay.Project.Tests
 	[TestFixture]
 	public class CacheBuilderTests
 	{
-//        private ProgressDialogHandler _progressHandler;
 		private CacheBuilder _cacheBuilder;
-		//private bool _finished;
 		private ProgressState _progress;
 		private string _simpleGoodLiftContents = string.Format("<?xml version='1.0' encoding='utf-8'?><lift version='{0}'><entry id='one'><sense><gloss lang='en'><text>hello</text></gloss></sense></entry><entry id='two'/></lift>", LiftIO.Validator.LiftVersion);
 		private string _log;
@@ -24,7 +22,6 @@ namespace WeSay.Project.Tests
 			get
 			{
 				return WeSayWordsProject.Project.PathToLiftBackupDir;
-				//return _cacheBuilder.DestinationDatabasePath + ".bak";
 			}
 		}
 
@@ -32,16 +29,11 @@ namespace WeSay.Project.Tests
 		public void Setup()
 		{
 			WeSayWordsProject.InitializeForTests();
-			_cacheBuilder = new CacheBuilder(WeSayWordsProject.Project.PathToLiftFile);//Path.GetTempFileName());
-			_progress = new ConsoleProgress();// ProgressState(_progressHandler);
+			_cacheBuilder = new CacheBuilder(WeSayWordsProject.Project.PathToLiftFile);
+			_progress = new ConsoleProgress();
 			_progress.Log += new EventHandler<ProgressState.LogEvent>(OnLog);
-//            _finished = false;
 		}
 
-//        private void _progressHandler_Finished(object sender, EventArgs e)
-//        {
-//            _finished = true;
-//        }
 
 		[TearDown]
 		public void TearDown()
@@ -91,11 +83,9 @@ namespace WeSay.Project.Tests
 		{
 			if (doMakeExistingFilesThatNeedToBeReplaced)
 			{
-//                string dir = Path.GetDirectoryName(_cacheBuilder.DestinationDatabasePath);
 				string dir = WeSayWordsProject.Project.PathToCache;
 				Directory.CreateDirectory(dir);
 				string oldCache = WeSayWordsProject.Project.PathToCache;
-				// _cacheBuilder.DestinationDatabasePath + " Cache";
 				Directory.CreateDirectory(oldCache);
 
 				File.WriteAllText(Path.Combine(oldCache, "foo"), "hello");
@@ -104,8 +94,6 @@ namespace WeSay.Project.Tests
 			File.WriteAllText(_cacheBuilder.SourceLIFTPath, _simpleGoodLiftContents);
 			Assert.AreEqual(ProgressState.StateValue.NotStarted, _progress.State);
 			_cacheBuilder.DoWork(_progress);
-			//WaitForFinish();
-			//  Console.WriteLine(_log);
 			Assert.AreEqual(ProgressState.StateValue.Finished, _progress.State, _log);
 		}
 

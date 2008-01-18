@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
+using System.Reflection;
+using System.Windows.Forms;
 using System.Xml;
 using Db4objects.Db4o;
 using LiftIO;
@@ -68,7 +70,8 @@ namespace WeSay.Project
 
 			using (Db4oDataSource ds = new Db4oDataSource(project.PathToDb4oLexicalModelDB))
 			{
-				return !GetSyncPointInCacheMatches(ds, File.GetLastWriteTimeUtc(project.PathToLiftFile));
+				return (!GetSyncPointInCacheMatches(ds, File.GetLastWriteTimeUtc(project.PathToLiftFile)))
+					|| (!GetModelVersionInCacheMatches(ds));
 			}
 		}
 
@@ -80,6 +83,26 @@ namespace WeSay.Project
 		private class SyncPoint
 		{
 			public DateTime when;
+			private string _modelVersion;
+
+			public string GetCurrentModelVersion()
+			{
+				Assembly assembly = Assembly.GetEntryAssembly();
+				System.Diagnostics.Debug.Assert(assembly != null);
+				object[] attributes = assembly.GetCustomAttributes(typeof (AssemblyFileVersionAttribute), false);
+				System.Diagnostics.Debug.Assert(attributes.Length > 0);
+				return ((AssemblyFileVersionAttribute) attributes[0]).Version;
+			}
+
+			public void SetModelVersion()
+			{
+				_modelVersion = GetCurrentModelVersion();
+			}
+
+			public bool ModelMatchesCurrentVersion()
+			{
+				return _modelVersion == GetCurrentModelVersion();
+			}
 		}
 
 		[CLSCompliant(false)]
@@ -101,13 +124,13 @@ namespace WeSay.Project
 			}
 
 			point.when = when;
+			point.SetModelVersion();
 			db.Set(point);
 			db.Commit();
 		}
 
 		public static bool GetSyncPointInCacheMatches(Db4oDataSource dataSource, DateTime when)
 		{
-//            SyncPoint point;
 			IList<SyncPoint> result = dataSource.Data.Query<SyncPoint>();
 			if (result.Count > 1)
 			{
@@ -119,13 +142,31 @@ namespace WeSay.Project
 			}
 			else
 			{
+				SyncPoint syncPoint = result[0];
 				//workaround db4o 6 bug that loses the utc bit
-				if (result[0].when.Kind != DateTimeKind.Utc)
+				if (syncPoint.when.Kind != DateTimeKind.Utc)
 				{
 					result[0].when = new DateTime(result[0].when.Ticks, DateTimeKind.Utc);
 				}
 
 				return result[0].when == when;
+			}
+		}
+
+		public static bool GetModelVersionInCacheMatches(Db4oDataSource dataSource)
+		{
+			IList<SyncPoint> result = dataSource.Data.Query<SyncPoint>();
+			if (result.Count > 1)
+			{
+				throw new ApplicationException("The cache should not have more than 1 syncpoint.");
+			}
+			if (result.Count == 0)
+			{
+				return false;
+			}
+			else
+			{
+				return result[0].ModelMatchesCurrentVersion();
 			}
 		}
 	}

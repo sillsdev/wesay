@@ -100,7 +100,7 @@ namespace WeSay.Project
 			string configName = Path.GetFileName(Project.PathToConfigFile);
 			File.Copy(Path.Combine(ApplicationTestDirectory, configName), Project.PathToConfigFile, true);
 
-			ErrorReport.OkToInteractWithUser = false;
+			ErrorReport.IsOkToInteractWithUser = false;
 			LoadFromProjectDirectoryPath(ProjectDirectoryPath);
 			StringCatalogSelector = "en";
 		}
@@ -129,7 +129,20 @@ namespace WeSay.Project
 															liftLastWriteTimeUtc.AddMilliseconds(10));
 					}
 				}
-				catch { }
+				catch
+				{
+					try
+					{
+						File.Delete(WeSayWordsProject.Project.PathToDb4oLexicalModelDB);
+					}
+					catch(Exception )
+					{
+						Palaso.Reporting.ErrorReport.ReportNonFatalMessage(
+							"Please exit WeSay and manually delete this cache file: {0}.",
+							WeSayWordsProject.Project.PathToDb4oLexicalModelDB);
+					}
+				}
+
 			}
 		}
 		/// <summary>

@@ -15,7 +15,7 @@ namespace WeSay.Project.Tests
 		[SetUp]
 		public void Setup()
 		{
-			Palaso.Reporting.ErrorReport.OkToInteractWithUser = false;
+			Palaso.Reporting.ErrorReport.IsOkToInteractWithUser = false;
 			DirectoryInfo dirProject = Directory.CreateDirectory(Path.Combine(Path.GetTempPath(), Path.GetRandomFileName()));
 			this._projectDirectory = dirProject.FullName;
 		}
