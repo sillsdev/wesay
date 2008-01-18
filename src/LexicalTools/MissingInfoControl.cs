@@ -26,6 +26,26 @@ namespace WeSay.LexicalTools
 		public MissingInfoControl(IRecordList<LexEntry> records, ViewTemplate viewTemplate,
 								  Predicate<LexEntry> isNotComplete, IRecordListManager recordListManager)
 		{
+			if (!DesignMode)
+			{
+				if (records == null)
+				{
+					throw new ArgumentNullException("records");
+				}
+				if (viewTemplate == null)
+				{
+					throw new ArgumentNullException("viewTemplate");
+				}
+				if (isNotComplete == null)
+				{
+					throw new ArgumentNullException("isNotComplete");
+				}
+				if (recordListManager == null)
+				{
+					throw new ArgumentNullException("recordListManager");
+				}
+			}
+
 			InitializeComponent();
 			this.PreviewKeyDown += new PreviewKeyDownEventHandler(OnPreviewKeyDown);
 
@@ -36,22 +56,6 @@ namespace WeSay.LexicalTools
 				return;
 			}
 
-			if (records == null)
-			{
-				throw new ArgumentNullException("records");
-			}
-			if (viewTemplate == null)
-			{
-				throw new ArgumentNullException("viewTemplate");
-			}
-			if (isNotComplete == null)
-			{
-				throw new ArgumentNullException("isNotComplete");
-			}
-			if (recordListManager == null)
-			{
-				throw new ArgumentNullException("recordListManager");
-			}
 
 			_records = records;
 			_completedRecords = new InMemoryBindingList<LexEntry>();

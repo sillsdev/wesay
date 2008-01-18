@@ -34,50 +34,61 @@ namespace WeSay.LexicalTools.Tests
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void Create_NullviewTemplate_Throws()
 		{
-			new LexEntryLayouter(new DetailList(), null, null);
+			using (DetailList detailList = new DetailList())
+			{
+				new LexEntryLayouter(detailList, null, null);
+			}
 		}
 
 		[Test]
 		public void RightNumberOfRows()
 		{
-			MakeDetailList(false);
-			Assert.AreEqual(14, _rowCount);
+			using (DetailList dl = MakeDetailList(false))
+			{
+				Assert.AreEqual(14, _rowCount);
+			}
 		}
 
 		[Test]
 		public void RightNumberOfRowsWithShowAll()
 		{
-			MakeDetailList(true);
-			Assert.AreEqual(16, _rowCount);//12 + 2 *(1 ghost example + 1 rare multitext)
+			using (DetailList dl = MakeDetailList(true))
+			{
+				Assert.AreEqual(16, _rowCount); //12 + 2 *(1 ghost example + 1 rare multitext)
+			}
 		}
 
 		[Test]
 		public void RowsInRightPlace()
 		{
-			DetailList dl = MakeDetailList(false);
-
-			Label l = dl.GetLabelControlFromRow(0);
-			Assert.AreEqual("Word", l.Text);
+			using (DetailList dl = MakeDetailList(false))
+			{
+				Label l = dl.GetLabelControlFromRow(0);
+				Assert.AreEqual("Word", l.Text);
+			}
 		}
 
 		[Test]
 		public void WordShownInVernacular()
 		{
-			DetailList dl = MakeDetailList(false);
-
-			MultiTextControl box = (MultiTextControl)dl.GetEditControlFromRow(0);
-			Assert.AreEqual("WordInVernacular", box.TextBoxes[0].Text);
-	  }
+			using (DetailList dl = MakeDetailList(false))
+			{
+				MultiTextControl box = (MultiTextControl) dl.GetEditControlFromRow(0);
+				Assert.AreEqual("WordInVernacular", box.TextBoxes[0].Text);
+			}
+		}
 
 		[Test]
 		public void EmptyViewTemplate()
 		{
 			LexEntry entry = GetNewEntry();
 
-			DetailList dl = new DetailList();
-			LexEntryLayouter layout = new LexEntryLayouter(dl, new ViewTemplate(), null);
-			_rowCount = layout.AddWidgets(entry);
-			Assert.AreEqual(0, _rowCount);
+			using (DetailList dl = new DetailList())
+			{
+				LexEntryLayouter layout = new LexEntryLayouter(dl, new ViewTemplate(), null);
+				_rowCount = layout.AddWidgets(entry);
+				Assert.AreEqual(0, _rowCount);
+			}
 		}
 
 		private static LexEntry GetNewEntry() {

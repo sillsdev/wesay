@@ -20,6 +20,12 @@ namespace WeSay.LexicalTools
 		{
 			if (disposing && !IsDisposed)
 			{
+				if (_cleanupTimer != null)
+				{
+					_cleanupTimer.Stop();
+					_cleanupTimer.Dispose();
+					_cleanupTimer = null;
+				}
 				if (_record != null)
 				{
 					_record.PropertyChanged -= OnRecordPropertyChanged;

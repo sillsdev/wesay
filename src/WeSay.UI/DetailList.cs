@@ -22,8 +22,14 @@ namespace WeSay.UI
 		private int _indexOfLabel = 0;
 		private int _indexOfWidget = 1;
 
+		private bool _disposed = false;
+		private StackTrace _stackAtConstruction;
+
 		public DetailList()
 		{
+#if DEBUG
+			_stackAtConstruction = new StackTrace();
+#endif
 			InitializeComponent();
 			SetStyle(ControlStyles.OptimizedDoubleBuffer |
 					 ControlStyles.AllPaintingInWmPaint |
@@ -46,6 +52,8 @@ namespace WeSay.UI
 			 ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
 		   }
 		}
+
+
 
 		protected override void OnPaddingChanged(EventArgs e)
 		{
@@ -264,12 +272,16 @@ namespace WeSay.UI
 		{
 			if (!this._disposed)
 			{
-				throw new InvalidOperationException("Disposed not explicitly called on " + GetType().FullName + ".");
+				string trace = "Was not recorded.";
+				if (_stackAtConstruction != null)
+				{
+					trace = _stackAtConstruction.ToString();
+				}
+				throw new InvalidOperationException("Disposed not explicitly called on " + GetType().FullName + ".  Stack at creation was "+trace);
 			}
 		}
 
 
-		private bool _disposed = false;
 
 
 		protected void VerifyNotDisposed()

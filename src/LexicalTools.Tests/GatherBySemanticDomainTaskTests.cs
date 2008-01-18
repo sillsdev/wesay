@@ -58,6 +58,10 @@ namespace WeSay.LexicalTools.Tests
 		[TearDown]
 		public void TearDown()
 		{
+			if (_task.IsActive)
+			{
+				_task.Deactivate();//needed for disposal of controls
+			}
 			_recordListManager.Dispose();
 			File.Delete(_dbFilePath);
 			File.Delete(_semanticDomainFilePath);

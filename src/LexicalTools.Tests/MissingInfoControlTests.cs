@@ -132,14 +132,18 @@ namespace WeSay.LexicalTools.Tests
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void Create_NullviewTemplate_Throws()
 		{
-			new MissingInfoControl(_missingTranslationRecordList, null, _missingTranslation.FilteringPredicate, _recordListManager);
+			using (new MissingInfoControl(_missingTranslationRecordList, null, _missingTranslation.FilteringPredicate, _recordListManager))
+			{
+			}
 		}
 
 		[Test]
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void Create_NullFilter_Throws()
 		{
-			new MissingInfoControl(_missingTranslationRecordList, _viewTemplate, null, _recordListManager);
+			using (new MissingInfoControl(_missingTranslationRecordList, _viewTemplate, null, _recordListManager))
+			{
+			}
 		}
 
 		[Test]

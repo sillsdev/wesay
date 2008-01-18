@@ -44,15 +44,19 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void CreateWithInventory()
 		{
-			EntryViewControl entryViewControl = new EntryViewControl();
-			Assert.IsNotNull(entryViewControl);
+			using (EntryViewControl entryViewControl = new EntryViewControl())
+			{
+				Assert.IsNotNull(entryViewControl);
+			}
 		}
 
 		[Test]
 		public void NullDataSource_ShowsEmpty()
 		{
-			EntryViewControl entryViewControl = CreateForm(null);
-			Assert.AreEqual(string.Empty, entryViewControl.ControlFormattedView.Text);
+			using (EntryViewControl entryViewControl = CreateForm(null))
+			{
+				Assert.AreEqual(string.Empty, entryViewControl.ControlFormattedView.Text);
+			}
 		}
 
 		[Test]
@@ -69,31 +73,39 @@ namespace WeSay.LexicalTools.Tests
 			OptionRef o;
 			o = sense.GetOrCreateProperty<OptionRef>("POS");
 			o.Value = "noun";//nb: this is the key, which for noun happens to be the English display name tested for below
-			EntryViewControl entryViewControl = CreateForm(apple);
-			Assert.IsTrue(entryViewControl.ControlFormattedView.Text.Contains("noun"));
-			 Assert.IsFalse(entryViewControl.ControlFormattedView.Text.Contains("nombre"));
-	   }
+			using (EntryViewControl entryViewControl = CreateForm(apple))
+			{
+				Assert.IsTrue(entryViewControl.ControlFormattedView.Text.Contains("noun"));
+				Assert.IsFalse(entryViewControl.ControlFormattedView.Text.Contains("nombre"));
+			}
+		}
 
 		private void TestEntryShows(LexEntry entry)
 		{
-			EntryViewControl entryViewControl = CreateForm(entry);
-			Assert.IsTrue(entryViewControl.ControlFormattedView.Text.Contains(GetLexicalForm(entry)));
-			Assert.IsTrue(entryViewControl.ControlFormattedView.Text.Contains(GetGloss(entry)));
-			Assert.IsTrue(entryViewControl.ControlFormattedView.Text.Contains(GetExampleSentence(entry)));
+			using (EntryViewControl entryViewControl = CreateForm(entry))
+			{
+				Assert.IsTrue(entryViewControl.ControlFormattedView.Text.Contains(GetLexicalForm(entry)));
+				Assert.IsTrue(entryViewControl.ControlFormattedView.Text.Contains(GetGloss(entry)));
+				Assert.IsTrue(entryViewControl.ControlFormattedView.Text.Contains(GetExampleSentence(entry)));
+			}
 		}
 
 		[Test, Ignore("For now, we also show the ghost field in this situation.")]
 		public void EditField_SingleControl()
 		{
-			EntryViewControl entryViewControl = CreateFilteredForm(apple, Field.FieldNames.SenseGloss.ToString(), "LexSense", BasilProject.Project.WritingSystems.TestWritingSystemAnalId);
-			Assert.AreEqual(1, entryViewControl.ControlEntryDetail.Count);
+			using (EntryViewControl entryViewControl = CreateFilteredForm(apple, Field.FieldNames.SenseGloss.ToString(), "LexSense", BasilProject.Project.WritingSystems.TestWritingSystemAnalId))
+			{
+				Assert.AreEqual(1, entryViewControl.ControlEntryDetail.Count);
+			}
 		}
 
 		[Test]
 		public void EditField_SingleControlWithGhost()
 		{
-			EntryViewControl entryViewControl = CreateFilteredForm(apple, Field.FieldNames.SenseGloss.ToString(), "LexSense", BasilProject.Project.WritingSystems.TestWritingSystemAnalId);
-			Assert.AreEqual(2, entryViewControl.ControlEntryDetail.Count);
+			using (EntryViewControl entryViewControl = CreateFilteredForm(apple, Field.FieldNames.SenseGloss.ToString(), "LexSense", BasilProject.Project.WritingSystems.TestWritingSystemAnalId))
+			{
+				Assert.AreEqual(2, entryViewControl.ControlEntryDetail.Count);
+			}
 		}
 
 		[Test]
@@ -105,37 +117,43 @@ namespace WeSay.LexicalTools.Tests
 
 		private static void TestEditFieldMapsToLexicalForm(LexEntry entry)
 		{
-			EntryViewControl entryViewControl = CreateFilteredForm(entry, Field.FieldNames.SenseGloss.ToString(), "LexSense", BasilProject.Project.WritingSystems.TestWritingSystemAnalId);
-			DetailList entryDetailControl = entryViewControl.ControlEntryDetail;
-			Label labelControl = entryDetailControl.GetLabelControlFromRow(0);
-			Assert.AreEqual("Meaning 1", labelControl.Text);
-			MultiTextControl editControl = (MultiTextControl)entryDetailControl.GetEditControlFromRow(0);
-			editControl.TextBoxes[0].Text = "test";
-			Assert.IsTrue(editControl.TextBoxes[0].Text.Contains(GetGloss(entry)));
+			using (EntryViewControl entryViewControl = CreateFilteredForm(entry, Field.FieldNames.SenseGloss.ToString(), "LexSense", BasilProject.Project.WritingSystems.TestWritingSystemAnalId))
+			{
+				DetailList entryDetailControl = entryViewControl.ControlEntryDetail;
+				Label labelControl = entryDetailControl.GetLabelControlFromRow(0);
+				Assert.AreEqual("Meaning 1", labelControl.Text);
+				MultiTextControl editControl = (MultiTextControl) entryDetailControl.GetEditControlFromRow(0);
+				editControl.TextBoxes[0].Text = "test";
+				Assert.IsTrue(editControl.TextBoxes[0].Text.Contains(GetGloss(entry)));
+			}
 		}
 
 		[Test]
 		public void EditField_Change_DisplayedInFormattedView()
 		{
-			EntryViewControl entryViewControl = CreateFilteredForm(apple, Field.FieldNames.EntryLexicalForm .ToString(), "LexEntry", BasilProject.Project.WritingSystems.TestWritingSystemVernId);
-			DetailList entryDetailControl = entryViewControl.ControlEntryDetail;
-			MultiTextControl editControl = (MultiTextControl)entryDetailControl.GetEditControlFromRow(0);
-			editControl.TextBoxes[0].Text = "test";
-			Assert.IsTrue(entryViewControl.ControlFormattedView.Text.Contains("test"));
-	   }
+			using (EntryViewControl entryViewControl = CreateFilteredForm(apple, Field.FieldNames.EntryLexicalForm.ToString(), "LexEntry", BasilProject.Project.WritingSystems.TestWritingSystemVernId))
+			{
+				DetailList entryDetailControl = entryViewControl.ControlEntryDetail;
+				MultiTextControl editControl = (MultiTextControl) entryDetailControl.GetEditControlFromRow(0);
+				editControl.TextBoxes[0].Text = "test";
+				Assert.IsTrue(entryViewControl.ControlFormattedView.Text.Contains("test"));
+			}
+		}
 
 		[Test]
 		public void EditField_RemoveContents_RemovesSense()
 		{
 			LexEntry meaningOnly = CreateTestEntry("word", "meaning", "");
-			EntryViewControl entryViewControl = CreateForm(meaningOnly);
-			DetailList detailList = entryViewControl.ControlEntryDetail;
-			MultiTextControl editControl = GetEditControl(detailList, "Meaning 1");
-			editControl.TextBoxes[0].Text = "";
-			Thread.Sleep(1000);
-			Application.DoEvents();
+			using (EntryViewControl entryViewControl = CreateForm(meaningOnly))
+			{
+				DetailList detailList = entryViewControl.ControlEntryDetail;
+				MultiTextControl editControl = GetEditControl(detailList, "Meaning 1");
+				editControl.TextBoxes[0].Text = "";
+				Thread.Sleep(1000);
+				Application.DoEvents();
 
-			Assert.IsTrue(GetEditControl(detailList, "Meaning").Name.Contains("ghost"), "Only ghost should remain");
+				Assert.IsTrue(GetEditControl(detailList, "Meaning").Name.Contains("ghost"), "Only ghost should remain");
+			}
 		}
 
 		private static MultiTextControl GetEditControl(DetailList detailList, string labelText) {
@@ -155,17 +173,22 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void FormattedView_FocusInControl_Displayed()
 		{
-			EntryViewControl entryViewControl = CreateFilteredForm(apple, Field.FieldNames.EntryLexicalForm.ToString(), "LexEntry", BasilProject.Project.WritingSystems.TestWritingSystemVernId);
-			entryViewControl.ControlFormattedView.Select();
-			string rtfOriginal = entryViewControl.ControlFormattedView.Rtf;
+			using (
+				EntryViewControl entryViewControl =
+					CreateFilteredForm(apple, Field.FieldNames.EntryLexicalForm.ToString(), "LexEntry",
+									   BasilProject.Project.WritingSystems.TestWritingSystemVernId))
+			{
+				entryViewControl.ControlFormattedView.Select();
+				string rtfOriginal = entryViewControl.ControlFormattedView.Rtf;
 
-			DetailList entryDetailControl = entryViewControl.ControlEntryDetail;
-			Control editControl = entryDetailControl.GetEditControlFromRow(0);
+				DetailList entryDetailControl = entryViewControl.ControlEntryDetail;
+				Control editControl = entryDetailControl.GetEditControlFromRow(0);
 
-			//JDH added after we added multiple ws's per field. Was: editControl.Select();
-			((MultiTextControl)editControl).TextBoxes[0].Select();
+				//JDH added after we added multiple ws's per field. Was: editControl.Select();
+				((MultiTextControl) editControl).TextBoxes[0].Select();
 
-			Assert.AreNotEqual(rtfOriginal, entryViewControl.ControlFormattedView.Rtf);
+				Assert.AreNotEqual(rtfOriginal, entryViewControl.ControlFormattedView.Rtf);
+			}
 		}
 
 		[Test, Ignore("Not implemented yet.")]
@@ -176,39 +199,43 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void FormattedView_ChangeRecordThenBack_NothingHighlighted()
 		{
-			EntryViewControl entryViewControl = CreateFilteredForm(apple, Field.FieldNames.EntryLexicalForm.ToString(), "LexEntry", BasilProject.Project.WritingSystems.TestWritingSystemVernId);
-			entryViewControl.ControlFormattedView.Select();
-			string rtfAppleNothingHighlighted = entryViewControl.ControlFormattedView.Rtf;
+			using (EntryViewControl entryViewControl = CreateFilteredForm(apple, Field.FieldNames.EntryLexicalForm.ToString(), "LexEntry", BasilProject.Project.WritingSystems.TestWritingSystemVernId))
+			{
+				entryViewControl.ControlFormattedView.Select();
+				string rtfAppleNothingHighlighted = entryViewControl.ControlFormattedView.Rtf;
 
-			DetailList entryDetailControl = entryViewControl.ControlEntryDetail;
-			Control editControl = entryDetailControl.GetEditControlFromRow(0);
+				DetailList entryDetailControl = entryViewControl.ControlEntryDetail;
+				Control editControl = entryDetailControl.GetEditControlFromRow(0);
 
-			//JDH added after we added multiple ws's per field. Was: editControl.Select();
-			((MultiTextControl)editControl).TextBoxes[0].Select();
+				//JDH added after we added multiple ws's per field. Was: editControl.Select();
+				((MultiTextControl) editControl).TextBoxes[0].Select();
 
-			Assert.AreNotEqual(rtfAppleNothingHighlighted, entryViewControl.ControlFormattedView.Rtf);
+				Assert.AreNotEqual(rtfAppleNothingHighlighted, entryViewControl.ControlFormattedView.Rtf);
 
-			entryViewControl.DataSource = banana;
-			entryViewControl.DataSource = apple;
-//            Debug.WriteLine("Expected: "+rtfAppleNothingHighlighted);
-//            Debug.WriteLine("Actual:" + lexFieldControl.ControlFormattedView.Rtf);
-			Assert.AreEqual(rtfAppleNothingHighlighted, entryViewControl.ControlFormattedView.Rtf);
+				entryViewControl.DataSource = banana;
+				entryViewControl.DataSource = apple;
+				//            Debug.WriteLine("Expected: "+rtfAppleNothingHighlighted);
+				//            Debug.WriteLine("Actual:" + lexFieldControl.ControlFormattedView.Rtf);
+				Assert.AreEqual(rtfAppleNothingHighlighted, entryViewControl.ControlFormattedView.Rtf);
+			}
 		}
 
 		[Test]
 		public void FormattedView_EmptyField_StillHighlighted()
 		{
-			EntryViewControl entryViewControl = CreateFilteredForm(empty, Field.FieldNames.EntryLexicalForm.ToString(), "LexEntry", BasilProject.Project.WritingSystems.TestWritingSystemVernId);
-			entryViewControl.ControlFormattedView.Select();
-			string rtfEmptyNothingHighlighted = entryViewControl.ControlFormattedView.Rtf;
+			using (EntryViewControl entryViewControl = CreateFilteredForm(empty, Field.FieldNames.EntryLexicalForm.ToString(), "LexEntry", BasilProject.Project.WritingSystems.TestWritingSystemVernId))
+			{
+				entryViewControl.ControlFormattedView.Select();
+				string rtfEmptyNothingHighlighted = entryViewControl.ControlFormattedView.Rtf;
 
-			DetailList entryDetailControl = entryViewControl.ControlEntryDetail;
-			Control editControl = entryDetailControl.GetEditControlFromRow(0);
+				DetailList entryDetailControl = entryViewControl.ControlEntryDetail;
+				Control editControl = entryDetailControl.GetEditControlFromRow(0);
 
-			//JDH added after we added multiple ws's per field. Was: editControl.Select();
-			((MultiTextControl)editControl).TextBoxes[0].Select();
+				//JDH added after we added multiple ws's per field. Was: editControl.Select();
+				((MultiTextControl) editControl).TextBoxes[0].Select();
 
-			Assert.AreNotEqual(rtfEmptyNothingHighlighted, entryViewControl.ControlFormattedView.Rtf);
+				Assert.AreNotEqual(rtfEmptyNothingHighlighted, entryViewControl.ControlFormattedView.Rtf);
+			}
 		}
 
 		private EntryViewControl CreateForm(LexEntry entry)

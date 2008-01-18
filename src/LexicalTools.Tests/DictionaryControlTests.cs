@@ -134,6 +134,7 @@ namespace WeSay.LexicalTools.Tests
 			_window.Close();
 			_window.Dispose();
 			_window = null;
+			_task.Deactivate();
 			this._recordListManager.Dispose();
 			_recordListManager = null;
 			_records.Dispose();
@@ -145,8 +146,10 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void Construct_EmptyViewTemplate_NoCrash()
 		{
-			DictionaryControl e = new DictionaryControl(_recordListManager, new ViewTemplate());
-			Assert.IsNotNull(e);
+			using (DictionaryControl e = new DictionaryControl(_recordListManager, new ViewTemplate()))
+			{
+				Assert.IsNotNull(e);
+			}
 		}
 
 		[Test]

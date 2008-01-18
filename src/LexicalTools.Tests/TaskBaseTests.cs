@@ -19,17 +19,19 @@ namespace WeSay.LexicalTools.Tests
 		[ExpectedException(typeof(InvalidOperationException))]
 		public void Deactivate_CalledTwice_Throws()
 		{
-			_task.Activate();
-			_task.Deactivate();
-			_task.Deactivate();
-		}
+			try
+			{
+				_task.Activate();
+				_task.Deactivate();
 
-		[Test]
-		[ExpectedException(typeof(InvalidOperationException))]
-		public void Activate_CalledTwice_Throws()
-		{
-			_task.Activate();
-			_task.Activate();
+			}
+			finally
+			{
+				_task.Deactivate();
+			}
+			//    _task = null;
+//            GC.Collect();
+//            GC.WaitForPendingFinalizers();
 		}
 
 		[Test]
@@ -37,7 +39,26 @@ namespace WeSay.LexicalTools.Tests
 		{
 			_task.Activate();
 			Assert.IsTrue(_task.IsActive);
+			_task.Deactivate();
 		}
+
+		[Test]
+		[ExpectedException(typeof(InvalidOperationException))]
+		public void Activate_CalledTwice_Throws()
+		{
+
+			_task.Activate();
+			try
+			{
+				_task.Activate();
+			}
+			finally
+			{
+				_task.Deactivate();
+			}
+		}
+
+
 
 		[Test]
 		public void IsActive_BeforeActivate_False()
