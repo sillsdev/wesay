@@ -87,7 +87,7 @@ namespace WeSay.Project
 
 			public string GetCurrentModelVersion()
 			{
-				Assembly assembly = Assembly.GetEntryAssembly();
+				Assembly assembly = Assembly.GetExecutingAssembly();
 				System.Diagnostics.Debug.Assert(assembly != null);
 				object[] attributes = assembly.GetCustomAttributes(typeof (AssemblyFileVersionAttribute), false);
 				System.Diagnostics.Debug.Assert(attributes.Length > 0);
