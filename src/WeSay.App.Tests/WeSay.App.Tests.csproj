@@ -36,10 +36,6 @@
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\LiftIO.dll</HintPath>
 	</Reference>
-	<Reference Include="Mono.ServiceModel, Version=3.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\..\PalasoLib\lib\Mono.ServiceModel.dll</HintPath>
-	</Reference>
 	<Reference Include="nunit.framework, Version=2.2.8.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\nunit.framework.dll</HintPath>
@@ -62,6 +58,11 @@
 	</Reference>
 	<Reference Include="System" />
 	<Reference Include="System.Data" />
+	<Reference Include="System.ServiceModel, Version=3.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\System.ServiceModel.dll</HintPath>
+	  <Private>True</Private>
+	</Reference>
 	<Reference Include="System.Windows.Forms" />
 	<Reference Include="System.Xml" />
   </ItemGroup>
