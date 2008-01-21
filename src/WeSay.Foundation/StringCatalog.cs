@@ -148,6 +148,10 @@ namespace WeSay.Foundation
 		{
 			get
 			{
+				if (_font == null)
+				{
+					_font = new Font("Comic Sans MS", 9);
+				}
 				return _font;
 			}
 			set

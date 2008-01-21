@@ -21,6 +21,11 @@ namespace WeSay.UI.Tests
 			_control = new DetailList();
 			//Application.Init();
 		}
+		[TearDown]
+		public void TearDown()
+		{
+			_control.Dispose();
+		}
 
 		/// <summary>
 		/// Needed for focus-related tests

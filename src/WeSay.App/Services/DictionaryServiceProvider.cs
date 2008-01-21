@@ -13,7 +13,7 @@ using WeSay.Project;
 
 namespace WeSay.App
 {
-	[ServiceBehavior(InstanceContextMode = InstanceContextMode.Single)]
+	[ServiceBehavior(InstanceContextMode = InstanceContextMode.Single, IncludeExceptionDetailInFaults =true)]
 	public class DictionaryServiceProvider : Palaso.Services.Dictionary.IDictionaryService, IDisposable
 	{
 		private readonly WeSayWordsProject _project;

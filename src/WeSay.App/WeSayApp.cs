@@ -160,7 +160,11 @@ namespace WeSay.App
 			Debug.Assert(_tabbedForm != null);
 			if (_tabbedForm != null)
 			{
-				_tabbedForm.MakeFrontMostWindow();
+				_tabbedForm.synchronizationContext.Send(
+					   delegate
+						   {
+							   _tabbedForm.MakeFrontMostWindow();
+						   }, null);
 			}
 		}
 

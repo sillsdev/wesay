@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Threading;
 using WeSay.Foundation;
 using WeSay.Project;
 using System.Windows.Forms;
+using Timer=System.Windows.Forms.Timer;
 
 namespace WeSay.App
 {
@@ -14,6 +16,7 @@ namespace WeSay.App
 		private ITask _activeTask;
 		private TabPage _currentWorkTab;
 		private string _currentUrl;
+		public SynchronizationContext synchronizationContext;
 //        private ProgressDialogHandler _progressHandler;
 
 		public TabbedForm()
@@ -22,6 +25,9 @@ namespace WeSay.App
 			this.tabControl1.TabPages.Clear();
 			this.tabControl1.SelectedIndexChanged += new EventHandler(tabControl1_SelectedIndexChanged);
 			this.tabControl1.Font = StringCatalog.ModifyFontForLocalization(tabControl1.Font);
+
+			synchronizationContext =  WindowsFormsSynchronizationContext.Current;
+			Debug.Assert(synchronizationContext != null);
 		}
 
 		public void InitializeTasks(IList<ITask> taskList)
@@ -118,14 +124,8 @@ namespace WeSay.App
 			throw new NavigationException("Couldn't locate ");
 		}
 
-		private delegate void TakesNoArg();
 		public void MakeFrontMostWindow()
 		{
-			if (InvokeRequired)
-			{
-				Invoke(new TakesNoArg(MakeFrontMostWindow));
-				return;
-			}
 			if(this.WindowState == FormWindowState.Minimized)
 			{
 				this.WindowState = FormWindowState.Normal;
