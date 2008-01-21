@@ -33,7 +33,7 @@ namespace WeSay.App.Tests
 
 		private void EnsureNoWeSaysRunning()
 		{
-			for (int i = 0; i < 20; i++)
+			for (int i = 0; i < 50; i++)
 			{
 				Process[] p = Process.GetProcessesByName("WeSay.App");
 				if(p.Length == 0)

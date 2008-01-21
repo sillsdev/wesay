@@ -246,7 +246,10 @@ namespace WeSay.LexicalModel
 
 		public override void CleanUpAfterEditting()
 		{
-			Debug.Assert(!IsBeingDeleted);
+			if (IsBeingDeleted)
+			{
+				return;
+			}
 			base.CleanUpAfterEditting();
 			foreach (LexSense sense in _senses)
 			{
@@ -257,7 +260,10 @@ namespace WeSay.LexicalModel
 
 		public override void CleanUpEmptyObjects()
 		{
-			Debug.Assert(!IsBeingDeleted);
+			if (IsBeingDeleted)
+			{
+				return;
+			}
 			Palaso.Reporting.Logger.WriteMinorEvent("LexEntry CleanUpEmptyObjects()");
 			base.CleanUpEmptyObjects();
 
