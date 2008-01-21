@@ -50,6 +50,12 @@ namespace WeSay.App.Tests
 			_tabbedForm.IntializationComplete += new EventHandler(OnTabbedForm_IntializationComplete);
 			_tabbedForm.ContinueLaunchingAfterInitialDisplay();
 			Application.DoEvents();
+			for (int i = 0; i < 1000; i++)
+			{
+				if (_didRaiseInitializedEvent)
+					break;
+				Application.DoEvents();
+			}
 			Assert.IsTrue(_didRaiseInitializedEvent);
 		}
 
