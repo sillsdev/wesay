@@ -213,9 +213,7 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 				  <Component Id="Palaso.Services.dll" Guid="{B8D67640-A995-42ec-B13C-0B1EECC65659}">
 					<File Id="Palaso.Services.dll" Name="Palaso.Services.dll" KeyPath="yes" Source="..\..\output\release\Palaso.Services.dll" />
 				  </Component>
-				 <Component Id="System.ServiceModel.dll" Guid="{D4C6A347-4959-44a7-A52E-506FD3BF1947}">
-					<File Id="System.ServiceModel.dll" Name="System.ServiceModel.dll" KeyPath="yes" Source="..\..\output\release\System.ServiceModel.dll" />
-				  </Component>
+
 
 				  <Component Id="PalasoReporting.dll" Guid="{63142923-BAE1-4884-957C-11F6F2A3E800}">
 					<File Id="PalasoReporting.dll" Name="PalasoReporting.dll" KeyPath="yes" Source="..\..\output\release\PalasoReporting.dll" />
@@ -347,7 +345,6 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 			  <ComponentRef Id="Palaso.dll"/>
 			  <ComponentRef Id="PalasoReporting.dll" />
 			  <ComponentRef Id="Palaso.Services.dll" />
-			  <ComponentRef Id="System.ServiceModel.dll" />
 			  <ComponentRef Id="PalasoUIWindowsForms.dll" />
 			  <ComponentRef Id="WeSay.App.exe" />
 			  <ComponentRef Id="WeSay.App.exe.config" />

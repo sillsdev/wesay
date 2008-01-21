@@ -87,6 +87,8 @@ namespace WeSay.App
 			this.tabControl1.TabPages.Add(page);
 		}
 
+
+
 		private delegate void TakesStringArg(string arg);
 		public void GoToUrl(string url)
 		{
@@ -116,6 +118,22 @@ namespace WeSay.App
 			throw new NavigationException("Couldn't locate ");
 		}
 
+		private delegate void TakesNoArg();
+		public void MakeFrontMostWindow()
+		{
+			if (InvokeRequired)
+			{
+				Invoke(new TakesNoArg(MakeFrontMostWindow));
+				return;
+			}
+			if(this.WindowState == FormWindowState.Minimized)
+			{
+				this.WindowState = FormWindowState.Normal;
+			}
+
+			BringToFront();
+			Activate(); // may only flash the icon on the taskbar
+		}
 		public ITask ActiveTask
 		{
 			get

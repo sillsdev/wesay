@@ -86,10 +86,19 @@ namespace WeSay.App
 
 		public void Run()
 		{
-			_serviceAppSingletonHelper = ServiceAppSingletonHelper.CreateServiceAppSingletonHelperIfNeeded("WeSay", _commandLineArguments.startInServerMode);
-			if (_serviceAppSingletonHelper == null)
+			string path = DetermineActualLiftPath(_commandLineArguments.liftPath);
+			if (!String.IsNullOrEmpty(path))
 			{
-				return; // there's already an instance of this app running
+				path = path.Replace(Path.DirectorySeparatorChar, '-');
+				path = path.Replace(Path.VolumeSeparatorChar, '-');
+
+				_serviceAppSingletonHelper =
+					ServiceAppSingletonHelper.CreateServiceAppSingletonHelperIfNeeded("WeSay-" + path,
+									  _commandLineArguments.startInServerMode);
+				if (_serviceAppSingletonHelper == null)
+				{
+					return; // there's already an instance of this app running
+				}
 			}
 
 			DisplaySettings.Default.SkinName = Settings.Default.SkinName;
@@ -151,8 +160,7 @@ namespace WeSay.App
 			Debug.Assert(_tabbedForm != null);
 			if (_tabbedForm != null)
 			{
-				_tabbedForm.Activate();
-				_tabbedForm.BringToFront();
+				_tabbedForm.MakeFrontMostWindow();
 			}
 		}
 
@@ -299,16 +307,7 @@ namespace WeSay.App
 		private WeSayWordsProject InitializeProject(string liftPath)
 		{
 			WeSayWordsProject project = new WeSayWordsProject();
-			if (liftPath == null)
-			{
-				if (!String.IsNullOrEmpty(Settings.Default.PreviousLiftPath))
-				{
-					if (File.Exists(Settings.Default.PreviousLiftPath))
-					{
-						liftPath = Settings.Default.PreviousLiftPath;
-					}
-				}
-			}
+			liftPath = DetermineActualLiftPath(liftPath);
 			if (liftPath == null)
 			{
 				ErrorReport.ReportNonFatalMessage("WeSay was unable to figure out what lexicon to work on. Try opening the LIFT file by double clicking on it. If you don't have one yet, run the WeSay Configuration Tool to make a new WeSay project.");
@@ -329,6 +328,21 @@ namespace WeSay.App
 			WeSayWordsProject.Project.LockLift(); // Consume will expect it to be locked already
 
 			return project;
+		}
+
+		private string DetermineActualLiftPath(string liftPath)
+		{
+			if (liftPath == null)
+			{
+				if (!String.IsNullOrEmpty(Settings.Default.PreviousLiftPath))
+				{
+					if (File.Exists(Settings.Default.PreviousLiftPath))
+					{
+						liftPath = Settings.Default.PreviousLiftPath;
+					}
+				}
+			}
+			return liftPath;
 		}
 
 
