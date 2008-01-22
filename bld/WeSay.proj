@@ -117,7 +117,7 @@
 	<Move SourceFiles="$(BaseDirectory)\output\installer\SetupWeSay.msi"
 		  DestinationFiles="$(BaseDirectory)\output\installer\SetupWeSay.$(Version).msi"/>
 
-	<Exec Command='pscp.exe -pw $(password) "$(BaseDirectory)\output\installer\SetupWeSay.$(Version).msi" $(user)@wesay.org:/var/www/downloads'
+	<Exec Command='pscp.exe -batch -pw $(password) "$(BaseDirectory)\output\installer\SetupWeSay.$(Version).msi" $(user)@wesay.org:/var/www/downloads'
 		   WorkingDirectory="c:\program files\PuTTY\" />
   </Target>
 
