@@ -238,7 +238,7 @@ namespace WeSay.App.Tests
 			{
 				Process p = LaunchDictionaryServiceApp(startInServerMode, projectDirectorySetup);
 				IDictionaryService dictionaryService = GetDictionaryService(projectDirectorySetup.PathToLiftFile, Process.GetCurrentProcess().Id);
-				Assert.IsNotNull(dictionaryService);
+				Assert.IsNotNull(dictionaryService, "Could not get ahold of a dictionary service from a launch of WeSay.  This can fail as a result of a timeout, if wesay was just too slow coming up.");
 				try
 				{
 					serviceTestingMethod(dictionaryService);
@@ -292,7 +292,7 @@ namespace WeSay.App.Tests
 		private static IDictionaryService GetDictionaryService(string liftPath, int clientIdForRegistering)
 		{
 			IDictionaryService dictionaryService=null;
-			for (int i = 0; i < 10; i++)
+			for (int i = 0; i < 40; i++)
 			{
 				Thread.Sleep(500);
 				string serviceAddress = GetServiceAddress(liftPath);

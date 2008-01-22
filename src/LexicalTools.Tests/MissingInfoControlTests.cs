@@ -117,15 +117,19 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void Create()
 		{
-			MissingInfoControl missingInfoControl = new MissingInfoControl(_missingTranslationRecordList, _viewTemplate, _missingTranslation.FilteringPredicate, _recordListManager);
-			Assert.IsNotNull(missingInfoControl);
+			using (MissingInfoControl missingInfoControl = new MissingInfoControl(_missingTranslationRecordList, _viewTemplate, _missingTranslation.FilteringPredicate, _recordListManager))
+			{
+				Assert.IsNotNull(missingInfoControl);
+			}
 		}
 
 		[Test]
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void Create_NullRecords_Throws()
 		{
-			new MissingInfoControl(null, _viewTemplate, _missingTranslation.FilteringPredicate, _recordListManager);
+			using (new MissingInfoControl(null, _viewTemplate, _missingTranslation.FilteringPredicate, _recordListManager))
+			{
+			}
 		}
 
 		[Test]
@@ -150,136 +154,178 @@ namespace WeSay.LexicalTools.Tests
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void Create_NullAllRecords_Throws()
 		{
-			new MissingInfoControl(_missingTranslationRecordList, _viewTemplate, _missingTranslation.FilteringPredicate, null);
+			using (new MissingInfoControl(_missingTranslationRecordList, _viewTemplate, _missingTranslation.FilteringPredicate, null))
+			{
+			}
 		}
 
 		[Test]
 		public void CurrentRecord_InitializedToFirst()
 		{
-			MissingInfoControl missingInfoControl = new MissingInfoControl(_missingTranslationRecordList, _viewTemplate, _missingTranslation.FilteringPredicate, _recordListManager);
-			Assert.AreEqual(_missingTranslationRecordList[0], missingInfoControl.CurrentRecord);
+			using (
+				MissingInfoControl missingInfoControl =
+					new MissingInfoControl(_missingTranslationRecordList, _viewTemplate,
+										   _missingTranslation.FilteringPredicate, _recordListManager))
+			{
+				Assert.AreEqual(_missingTranslationRecordList[0], missingInfoControl.CurrentRecord);
+			}
 		}
 
 		[Test]
 		public void SetCurrentRecordToPrevious_AtFirst_StaysAtFirst()
 		{
-			MissingInfoControl missingInfoControl = new MissingInfoControl(_missingTranslationRecordList, _viewTemplate, _missingTranslation.FilteringPredicate, _recordListManager);
-			missingInfoControl.SetCurrentRecordToPrevious();
-			Assert.AreEqual(_missingTranslationRecordList[0], missingInfoControl.CurrentRecord);
+			using (MissingInfoControl missingInfoControl = new MissingInfoControl(_missingTranslationRecordList, _viewTemplate, _missingTranslation.FilteringPredicate, _recordListManager))
+			{
+				missingInfoControl.SetCurrentRecordToPrevious();
+				Assert.AreEqual(_missingTranslationRecordList[0], missingInfoControl.CurrentRecord);
+			}
 		}
 
 		[Test]
 		public void SetCurrentRecordToNextThenPrevious_SamePlace()
 		{
-			MissingInfoControl missingInfoControl = new MissingInfoControl(_missingTranslationRecordList, _viewTemplate, _missingTranslation.FilteringPredicate, _recordListManager);
-			missingInfoControl.SetCurrentRecordToNext();
-			missingInfoControl.SetCurrentRecordToPrevious();
-			Assert.AreEqual(_missingTranslationRecordList[0], missingInfoControl.CurrentRecord);
+			using (MissingInfoControl missingInfoControl = new MissingInfoControl(_missingTranslationRecordList, _viewTemplate, _missingTranslation.FilteringPredicate, _recordListManager))
+			{
+				missingInfoControl.SetCurrentRecordToNext();
+				missingInfoControl.SetCurrentRecordToPrevious();
+				Assert.AreEqual(_missingTranslationRecordList[0], missingInfoControl.CurrentRecord);
+			}
 		}
 
 		[Test]
 		public void SetCurrentRecordToNext_AtLast_StaysAtLast()
 		{
-			MissingInfoControl missingInfoControl = new MissingInfoControl(_missingTranslationRecordList, _viewTemplate, _missingTranslation.FilteringPredicate, _recordListManager);
-			int count = _missingTranslationRecordList.Count;
-			for (int i = 0; i <= count; i++)
+			using (MissingInfoControl missingInfoControl = new MissingInfoControl(_missingTranslationRecordList, _viewTemplate, _missingTranslation.FilteringPredicate, _recordListManager))
 			{
-				missingInfoControl.SetCurrentRecordToNext();
+				int count = _missingTranslationRecordList.Count;
+				for (int i = 0; i <= count; i++)
+				{
+					missingInfoControl.SetCurrentRecordToNext();
+				}
+				Assert.AreEqual(_missingTranslationRecordList[count - 1], missingInfoControl.CurrentRecord);
 			}
-			Assert.AreEqual(_missingTranslationRecordList[count - 1], missingInfoControl.CurrentRecord);
 		}
 
 		[Test]
 		public void SetCurrentRecordToNext_GoesToNext()
 		{
-			MissingInfoControl missingInfoControl = new MissingInfoControl(_missingTranslationRecordList, _viewTemplate, _missingTranslation.FilteringPredicate, _recordListManager);
-			missingInfoControl.SetCurrentRecordToNext();
-			Assert.AreEqual(_missingTranslationRecordList[1], missingInfoControl.CurrentRecord);
+			using (MissingInfoControl missingInfoControl = new MissingInfoControl(_missingTranslationRecordList, _viewTemplate, _missingTranslation.FilteringPredicate, _recordListManager))
+			{
+				missingInfoControl.SetCurrentRecordToNext();
+				Assert.AreEqual(_missingTranslationRecordList[1], missingInfoControl.CurrentRecord);
+			}
 		}
 
 		[Test]
 		public void SetCurrentRecordToPrevious_AfterChangedSoNoLongerMeetsFilter_StaysAtFirst()
 		{
-			MissingInfoControl missingInfoControl = new MissingInfoControl(_missingTranslationRecordList, _viewTemplate, _missingTranslation.FilteringPredicate, _recordListManager);
-			AddTranslationToEntry(missingInfoControl.CurrentRecord,"a bogus translation of example");
-			missingInfoControl.SetCurrentRecordToPrevious();
-			Assert.AreEqual(_missingTranslationRecordList[0], missingInfoControl.CurrentRecord);
+			using (MissingInfoControl missingInfoControl = new MissingInfoControl(_missingTranslationRecordList, _viewTemplate, _missingTranslation.FilteringPredicate, _recordListManager))
+			{
+				AddTranslationToEntry(missingInfoControl.CurrentRecord, "a bogus translation of example");
+				missingInfoControl.SetCurrentRecordToPrevious();
+				Assert.AreEqual(_missingTranslationRecordList[0], missingInfoControl.CurrentRecord);
+			}
 		}
 
 		[Test]
 		public void SetCurrentRecordToPrevious_AfterChangedSoNoLongerMeetsFilter_GoesToEntryBeforeChangedOne()
 		{
-			MissingInfoControl missingInfoControl = new MissingInfoControl(_missingTranslationRecordList, _viewTemplate, _missingTranslation.FilteringPredicate, _recordListManager);
-			missingInfoControl.SetCurrentRecordToNext();
-			missingInfoControl.SetCurrentRecordToNext();
-			AddTranslationToEntry(missingInfoControl.CurrentRecord, "a bogus translation of example");
-			missingInfoControl.SetCurrentRecordToPrevious();
-			Assert.AreEqual(_missingTranslationRecordList[1], missingInfoControl.CurrentRecord);
+			using (MissingInfoControl missingInfoControl = new MissingInfoControl(_missingTranslationRecordList, _viewTemplate, _missingTranslation.FilteringPredicate, _recordListManager))
+			{
+				missingInfoControl.SetCurrentRecordToNext();
+				missingInfoControl.SetCurrentRecordToNext();
+				AddTranslationToEntry(missingInfoControl.CurrentRecord, "a bogus translation of example");
+				missingInfoControl.SetCurrentRecordToPrevious();
+				Assert.AreEqual(_missingTranslationRecordList[1], missingInfoControl.CurrentRecord);
+			}
 		}
 
 		[Test]
 		public void SetCurrentRecordToNextThenPrevious_AfterChangedSoNoLongerMeetsFilter_SamePlace()
 		{
-			MissingInfoControl missingInfoControl = new MissingInfoControl(_missingTranslationRecordList, _viewTemplate, _missingTranslation.FilteringPredicate, _recordListManager);
-			missingInfoControl.SetCurrentRecordToNext();
-			AddTranslationToEntry(missingInfoControl.CurrentRecord, "a bogus translation of example");
-			missingInfoControl.SetCurrentRecordToPrevious();
-			Assert.AreEqual(_missingTranslationRecordList[0], missingInfoControl.CurrentRecord);
+			using (
+				MissingInfoControl missingInfoControl =
+					new MissingInfoControl(_missingTranslationRecordList, _viewTemplate,
+										   _missingTranslation.FilteringPredicate, _recordListManager))
+			{
+				missingInfoControl.SetCurrentRecordToNext();
+				AddTranslationToEntry(missingInfoControl.CurrentRecord, "a bogus translation of example");
+				missingInfoControl.SetCurrentRecordToPrevious();
+				Assert.AreEqual(_missingTranslationRecordList[0], missingInfoControl.CurrentRecord);
+			}
 		}
 
 		[Test]
 		public void SetCurrentRecordToPrevious_AtLast_AfterChangedSoNoLongerMeetsFilter_StaysAtLast()
 		{
-			MissingInfoControl missingInfoControl = new MissingInfoControl(_missingTranslationRecordList, _viewTemplate, _missingTranslation.FilteringPredicate, _recordListManager);
-			int count = _missingTranslationRecordList.Count;
-			for (int i = 0; i < count; i++)
+			using (
+				MissingInfoControl missingInfoControl =
+					new MissingInfoControl(_missingTranslationRecordList, _viewTemplate,
+										   _missingTranslation.FilteringPredicate, _recordListManager))
 			{
-				missingInfoControl.SetCurrentRecordToNext();
+				int count = _missingTranslationRecordList.Count;
+				for (int i = 0; i < count; i++)
+				{
+					missingInfoControl.SetCurrentRecordToNext();
+				}
+				AddTranslationToEntry(missingInfoControl.CurrentRecord, "a bogus translation of example");
+				missingInfoControl.SetCurrentRecordToPrevious();
+				Assert.AreEqual(_missingTranslationRecordList[count - 2], missingInfoControl.CurrentRecord);
 			}
-			AddTranslationToEntry(missingInfoControl.CurrentRecord, "a bogus translation of example");
-			missingInfoControl.SetCurrentRecordToPrevious();
-			Assert.AreEqual(_missingTranslationRecordList[count - 2], missingInfoControl.CurrentRecord);
 		}
 
 		[Test]
 		public void SetCurrentRecordToPrevious_AtSecondToLast_AfterChangedSoNoLongerMeetsFilter_GoesToEntryBeforeChangedOne()
 		{
-			MissingInfoControl missingInfoControl = new MissingInfoControl(_missingTranslationRecordList, _viewTemplate, _missingTranslation.FilteringPredicate, _recordListManager);
-			int count = _missingTranslationRecordList.Count;
-			for (int i = 0; i < count-2; i++)
+			using (
+				MissingInfoControl missingInfoControl =
+					new MissingInfoControl(_missingTranslationRecordList, _viewTemplate,
+										   _missingTranslation.FilteringPredicate, _recordListManager))
 			{
-				missingInfoControl.SetCurrentRecordToNext();
+				int count = _missingTranslationRecordList.Count;
+				for (int i = 0; i < count - 2; i++)
+				{
+					missingInfoControl.SetCurrentRecordToNext();
+				}
+				AddTranslationToEntry(missingInfoControl.CurrentRecord, "a bogus translation of example");
+				missingInfoControl.SetCurrentRecordToPrevious();
+				Assert.AreEqual(_missingTranslationRecordList[count - 3], missingInfoControl.CurrentRecord);
 			}
-			AddTranslationToEntry(missingInfoControl.CurrentRecord, "a bogus translation of example");
-			missingInfoControl.SetCurrentRecordToPrevious();
-			Assert.AreEqual(_missingTranslationRecordList[count - 3], missingInfoControl.CurrentRecord);
 		}
 
 
 		[Test]
 		public void SetCurrentRecordToNext_AtLast_AfterChangedSoNoLongerMeetsFilter_StaysAtLast()
 		{
-			MissingInfoControl missingInfoControl = new MissingInfoControl(_missingTranslationRecordList, _viewTemplate, _missingTranslation.FilteringPredicate, _recordListManager);
-			int count = _missingTranslationRecordList.Count;
-			for (int i = 0; i < count; i++)
+			using (
+				MissingInfoControl missingInfoControl =
+					new MissingInfoControl(_missingTranslationRecordList, _viewTemplate,
+										   _missingTranslation.FilteringPredicate, _recordListManager))
 			{
+				int count = _missingTranslationRecordList.Count;
+				for (int i = 0; i < count; i++)
+				{
+					missingInfoControl.SetCurrentRecordToNext();
+				}
+				AddTranslationToEntry(missingInfoControl.CurrentRecord, "a bogus translation of example");
 				missingInfoControl.SetCurrentRecordToNext();
+				Assert.AreEqual(_missingTranslationRecordList[count - 2], missingInfoControl.CurrentRecord);
 			}
-			AddTranslationToEntry(missingInfoControl.CurrentRecord, "a bogus translation of example");
-			missingInfoControl.SetCurrentRecordToNext();
-			Assert.AreEqual(_missingTranslationRecordList[count - 2], missingInfoControl.CurrentRecord);
 		}
 
 		[Test]
 		public void SetCurrentRecordToNext_AfterChangedSoNoLongerMeetsFilter_GoesToNext()
 		{
-			MissingInfoControl missingInfoControl = new MissingInfoControl(_missingTranslationRecordList, _viewTemplate, _missingTranslation.FilteringPredicate, _recordListManager);
-			missingInfoControl.SetCurrentRecordToNext();
-			AddTranslationToEntry(missingInfoControl.CurrentRecord, "a bogus translation of example");
-			missingInfoControl.SetCurrentRecordToNext();
-			Assert.AreEqual(_missingTranslationRecordList[1], missingInfoControl.CurrentRecord);
+			using (
+				MissingInfoControl missingInfoControl =
+					new MissingInfoControl(_missingTranslationRecordList, _viewTemplate,
+										   _missingTranslation.FilteringPredicate, _recordListManager))
+			{
+				missingInfoControl.SetCurrentRecordToNext();
+				AddTranslationToEntry(missingInfoControl.CurrentRecord, "a bogus translation of example");
+				missingInfoControl.SetCurrentRecordToNext();
+				Assert.AreEqual(_missingTranslationRecordList[1], missingInfoControl.CurrentRecord);
+			}
 		}
-
-
 	}
 }

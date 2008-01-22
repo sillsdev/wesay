@@ -15,7 +15,7 @@ namespace WeSay.App.Tests
 	/// Tests here are easier to debug, because we can step into the execution.
 	/// </summary>
 	[TestFixture]
-	public class _dictionaryServiceProviders_SameTheadTests
+	public class DictionaryService_SameTheadTests
 	{
 		private Db4oProjectSetupForTesting _projectSetupSharedByAllTests;
 		private IRecordList<LexEntry> _entries;

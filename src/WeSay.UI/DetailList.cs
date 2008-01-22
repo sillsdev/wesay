@@ -30,8 +30,11 @@ namespace WeSay.UI
 		{
 			++_instanceCountForDebugging;
 			if(_instanceCountForDebugging >1)
-			{//not necessarily
+			{//not necessarily bad, just did this while looking into ws-554
 				Palaso.Reporting.Logger.WriteEvent("Detail List Count ={0}", _instanceCountForDebugging);
+#if DEBUG
+				Debug.Assert(_instanceCountForDebugging < 3,"ws-554 reproduction?");
+#endif
 			}
 
 #if DEBUG
