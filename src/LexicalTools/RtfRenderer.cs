@@ -21,7 +21,7 @@ namespace WeSay.LexicalTools
 			}
 
 			StringBuilder rtf = new StringBuilder();
-			rtf.Append(@"{\rtf1\ansi\fs28 ");
+			rtf.Append(@"{\rtf1\ansi\uc0\fs28 ");
 			rtf.Append(MakeFontTable());
 
 			rtf.Append(@"\b ");
@@ -211,7 +211,6 @@ namespace WeSay.LexicalTools
 				{
 				  outString.Append(@"\u");
 				  outString.Append(Convert.ToUInt16(c).ToString());
-				  outString.Append('?');
 				}
 				else
 				{
