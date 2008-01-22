@@ -126,11 +126,11 @@
 	<xsl:param name="current-entry"/>
 
 	<xsl:if test="$current-entry">
-	  <!-- if there is a citation-form, use that as the headword; otherwise
+	  <!-- if there is a citation, use that as the headword; otherwise
 		use the lexical-unit.-->
 	  <xsl:choose>
-		<xsl:when test="$current-entry/citation-form[form[@lang=$headword-writing-system]]">
-		  <xsl:value-of select="normalize-space($current-entry/citation-form/form[@lang=$headword-writing-system]/text)"/>
+		<xsl:when test="$current-entry/citation[form[@lang=$headword-writing-system]]">
+		  <xsl:value-of select="normalize-space($current-entry/citation/form[@lang=$headword-writing-system]/text)"/>
 		</xsl:when>
 		<xsl:otherwise>
 		  <xsl:value-of select="normalize-space($current-entry/lexical-unit/form[@lang=$headword-writing-system]/text)"/>

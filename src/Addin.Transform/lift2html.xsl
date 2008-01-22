@@ -155,11 +155,11 @@ BOGURAEV and NEFF Lit Linguist Computing.1992; 7: 110-112
   </xsl:template>
 
   <xsl:template name="output-headword">
-	<!-- if there is a citation-form, use that as the headword; otherwise
+	<!-- if there is a citation, use that as the headword; otherwise
 		   use the lexical-unit.-->
 	<xsl:choose>
-	  <xsl:when test="citation-form">
-		<xsl:apply-templates select="citation-form"/>
+	  <xsl:when test="citation">
+		<xsl:apply-templates select="citation"/>
 	  </xsl:when>
 	  <xsl:otherwise>
 		<xsl:apply-templates select="lexical-unit"/>
@@ -284,11 +284,11 @@ BOGURAEV and NEFF Lit Linguist Computing.1992; 7: 110-112
 	<xsl:param name="current-entry"/>
 
 	<xsl:if test="$current-entry">
-	  <!-- if there is a citation-form, use that as the headword; otherwise
+	  <!-- if there is a citation, use that as the headword; otherwise
 			 use the lexical-unit.-->
 	  <xsl:choose>
-		<xsl:when test="$current-entry/citation-form[form[@lang=$headword-writing-system]]">
-		  <xsl:value-of select="normalize-space($current-entry/citation-form/form[@lang=$headword-writing-system]/text)"/>
+		<xsl:when test="$current-entry/citation[form[@lang=$headword-writing-system]]">
+		  <xsl:value-of select="normalize-space($current-entry/citation/form[@lang=$headword-writing-system]/text)"/>
 		</xsl:when>
 		<xsl:otherwise>
 		  <xsl:value-of select="normalize-space($current-entry/lexical-unit/form[@lang=$headword-writing-system]/text)"/>
@@ -297,7 +297,7 @@ BOGURAEV and NEFF Lit Linguist Computing.1992; 7: 110-112
 	</xsl:if>
   </xsl:template>
 
-  <xsl:template match="lexical-unit|citation-form">
+  <xsl:template match="lexical-unit|citation">
 	<span class="headword">
 	  <xsl:apply-templates select="form[@lang=$headword-writing-system]"/>
 

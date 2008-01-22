@@ -24,10 +24,18 @@ namespace WeSay.UI
 
 		private bool _disposed = false;
 		private StackTrace _stackAtConstruction;
+		private static int _instanceCountForDebugging=0;
 
 		public DetailList()
 		{
+			++_instanceCountForDebugging;
+			if(_instanceCountForDebugging >1)
+			{//not necessarily
+				Palaso.Reporting.Logger.WriteEvent("Detail List Count ={0}", _instanceCountForDebugging);
+			}
+
 #if DEBUG
+
 			_stackAtConstruction = new StackTrace();
 #endif
 			InitializeComponent();
@@ -37,6 +45,7 @@ namespace WeSay.UI
 					 true);
 
 			Name = "DetailList";//for  debugging
+
 
 		   if (_indexOfLabel == 0)
 		   {
