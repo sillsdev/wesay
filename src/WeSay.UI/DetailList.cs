@@ -42,11 +42,6 @@ namespace WeSay.UI
 			_stackAtConstruction = new StackTrace();
 #endif
 			InitializeComponent();
-			SetStyle(ControlStyles.OptimizedDoubleBuffer |
-					 ControlStyles.AllPaintingInWmPaint |
-					 ControlStyles.UserPaint,
-					 true);
-
 			Name = "DetailList";//for  debugging
 
 
@@ -63,15 +58,19 @@ namespace WeSay.UI
 		}
 
 
-
+		/// <summary>
+		/// Forces scroll bar to only have vertical scroll bar and not horizontal scroll bar by
+		/// allowing enough space for the scroll bar to be added in (even though it then
+		/// </summary>
+		/// <param name="e"></param>
 		protected override void OnPaddingChanged(EventArgs e)
 		{
 			VerifyNotDisposed();
 			base.OnPaddingChanged(e);
 			Padding =
-					new Padding(Math.Max(Padding.Left, 20),
+					new Padding(Padding.Left,
 								Padding.Top,
-								Padding.Right,
+								Math.Max(Padding.Right,20),
 								Padding.Bottom);
 		}
 
@@ -163,7 +162,6 @@ namespace WeSay.UI
 			}
 			label.Font =StringCatalog.ModifyFontForLocalization(label.Font);
 			label.Text = fieldLabel;
-			label.Size = new Size(75, 50);
 			label.AutoSize = true;
 
 			int beforeHeadingPadding = isHeader ? 8 : 0;
@@ -186,7 +184,16 @@ namespace WeSay.UI
 
 			// At this point, multitext controls were being displayed on the screen.
 			// We weren't able to get around this by simply using SuspendLayout and ResumeLayout
-			// But finally made MultiText default to have a size of 1,1.
+			//
+			// http://msdn.microsoft.com/msdnmag/issues/06/03/WindowsFormsPerformance/
+			// tells why:
+			// "If the handles are created you will notice the difference, even if you use
+			// SuspendLayout and ResumeLayout calls. SuspendLayout only prevents Windows
+			// Forms OnLayout from being called. It will not prevent messages about size
+			// changes from being sent and processed."
+			//
+			// we eventually get around this by making control invisible while it laysout
+			// and then making it visible again. (See EntryViewControl.cs:RefreshEntryDetail)
 			Controls.Add(editWidget, _indexOfWidget, insertAtRow);
 
 		   return editWidget;

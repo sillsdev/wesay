@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 using WeSay.Foundation;
@@ -25,19 +26,15 @@ namespace WeSay.UI
 
 		public MultiTextControl(WritingSystemCollection allWritingSystems)
 		{
+			SuspendLayout();
 			_allWritingSystems = allWritingSystems;
 			this.components = new Container();
 			InitializeComponent();
 			_textBoxes = new List<WeSayTextBox>();
 		   //this.BackColor = System.Drawing.Color.Crimson;
-			SuspendLayout();
-
-			this.ParentChanged += new EventHandler(OnParentChanged);
-
 			_writingSystemLabelFont = new Font(FontFamily.GenericSansSerif, 9);
-			ColumnCount = 3;
 
-			if (-1 == MultiTextControl.WidthForWritingSystemLabels)
+			if (-1 == WidthForWritingSystemLabels)
 			{
 				//happens when this is from a hand-placed designer piece,
 				//in which case we don't really care about aligning anyhow
@@ -45,12 +42,10 @@ namespace WeSay.UI
 			}
 			else
 			{
-				ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, MultiTextControl.WidthForWritingSystemLabels));
+				ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, WidthForWritingSystemLabels));
 			}
 			ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));//text
 			ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));//annotation widget
-
-			this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
 
 			ResumeLayout(false);
 		}
@@ -90,7 +85,23 @@ namespace WeSay.UI
 			 BuildBoxes(multiTextToCopyFormsFrom);
 		}
 
+		protected override void OnResize(EventArgs eventargs)
+		{
+			base.OnResize(eventargs);
+			SizeBoxes();
+		}
 
+		private void SizeBoxes()
+		{
+			int[] widths = GetColumnWidths();
+			if (widths == null || widths.Length < 2)
+				return;
+			int width = widths[1];
+			foreach (WeSayTextBox box in this._textBoxes)
+			{
+				box.Width = width;
+			}
+		}
 
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
 		public List<WeSayTextBox> TextBoxes
@@ -128,7 +139,7 @@ namespace WeSay.UI
 				RowCount = 0;
 				RowStyles.Clear();
 			}
-
+			Debug.Assert(RowCount == 0);
 			foreach (WritingSystem writingSystem in WritingSystemsForThisField)
 			{
 				RowStyles.Add(new RowStyle(SizeType.AutoSize));
@@ -140,7 +151,6 @@ namespace WeSay.UI
 
 				Controls.Add(label, 0, RowCount);
 				Controls.Add(box, 1, RowCount);
-				this.components.Add(box);//so it will get disposed of when we are
 
 				if (_showAnnotationWidget) //false for ghosts
 				{
@@ -260,7 +270,6 @@ namespace WeSay.UI
 			box.Name = Name.Replace("-mtc","") + "_" + writingSystem.Id; //for automated tests to find this particular guy
 			box.Text = multiText[writingSystem.Id];
 
-			box.Dock = DockStyle.Fill;
 			box.TextChanged += new EventHandler(OnTextOfSomeBoxChanged);
 			box.KeyDown += new KeyEventHandler(OnKeyDownInSomeBox);
 

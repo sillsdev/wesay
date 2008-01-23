@@ -53,7 +53,6 @@ namespace WeSay.LexicalTools
 		{
 			this._lexicalEntryPreview = new System.Windows.Forms.RichTextBox();
 			this._panelEntry = new System.Windows.Forms.Panel();
-			this._detailListControl = new WeSay.UI.DetailList();
 			this._splitter = new WeSay.UI.CollapsibleSplitter();
 			this._panelEntry.SuspendLayout();
 			this.SuspendLayout();
@@ -73,24 +72,11 @@ namespace WeSay.LexicalTools
 			//
 			// _panelEntry
 			//
-			this._panelEntry.Controls.Add(this._detailListControl);
 			this._panelEntry.Dock = System.Windows.Forms.DockStyle.Fill;
 			this._panelEntry.Location = new System.Drawing.Point(0, 93);
 			this._panelEntry.Name = "_panelEntry";
 			this._panelEntry.Size = new System.Drawing.Size(474, 277);
 			this._panelEntry.TabIndex = 1;
-			//
-			// _detailListControl
-			//
-			this._detailListControl.AutoScroll = true;
-			this._detailListControl.BackColor = System.Drawing.SystemColors.Control;
-			this._detailListControl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this._detailListControl.Location = new System.Drawing.Point(0, 0);
-			this._detailListControl.Margin = new System.Windows.Forms.Padding(0);
-			this._detailListControl.Name = "_detailListControl";
-			this._detailListControl.Padding = new System.Windows.Forms.Padding(20, 0, 20, 0);
-			this._detailListControl.Size = new System.Drawing.Size(474, 277);
-			this._detailListControl.TabIndex = 1;
 			//
 			// _splitter
 			//
@@ -125,7 +111,6 @@ namespace WeSay.LexicalTools
 		#endregion
 
 		private System.Windows.Forms.RichTextBox _lexicalEntryPreview;
-		private WeSay.UI.DetailList _detailListControl;
 		private CollapsibleSplitter _splitter;
 		private System.Windows.Forms.Panel _panelEntry;
 

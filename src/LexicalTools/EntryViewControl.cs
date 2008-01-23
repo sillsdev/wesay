@@ -16,14 +16,13 @@ namespace WeSay.LexicalTools
 		private LexEntry _record;
 		private Timer _cleanupTimer;
 		private bool _isDisposed = false;
+		private DetailList _detailListControl;
 
 		public EntryViewControl()
 		{
 			_viewTemplate = null;
 			InitializeComponent();
-			_detailListControl.ChangeOfWhichItemIsInFocus +=
-					new EventHandler<CurrentItemEventArgs>(OnChangeOfWhichItemIsInFocus);
-			_detailListControl.KeyDown += new KeyEventHandler(_detailListControl_KeyDown);
+			RefreshEntryDetail();
 		}
 
 		protected override void OnHandleDestroyed(EventArgs e)
@@ -233,26 +232,57 @@ namespace WeSay.LexicalTools
 			try
 			{
 				_panelEntry.SuspendLayout();
+				DetailList oldDetailList = _detailListControl;
+				if (oldDetailList != null)
+				{
+					oldDetailList.ChangeOfWhichItemIsInFocus -= OnChangeOfWhichItemIsInFocus;
+					oldDetailList.KeyDown -= _detailListControl_KeyDown;
+				}
 
-				_detailListControl.SuspendLayout();
+				DetailList detailList = new DetailList();
+				_detailListControl = detailList;
 
-				_detailListControl.Clear();
-				_detailListControl.VerticalScroll.Value = _detailListControl.VerticalScroll.Minimum;
-				_panelEntry.Controls.Add(_detailListControl);
+				detailList.SuspendLayout();
+				//
+				// _detailListControl
+				//
+				detailList.BackColor = BackColor;
+				detailList.Dock = DockStyle.Fill;
+				detailList.Name = "_detailListControl";
+				detailList.Size = _panelEntry.Size;
+				detailList.TabIndex = 1;
+				detailList.ChangeOfWhichItemIsInFocus += OnChangeOfWhichItemIsInFocus;
+				detailList.KeyDown += _detailListControl_KeyDown;
+
 				if (_record != null)
 				{
-					LexEntryLayouter layout = new LexEntryLayouter(_detailListControl, ViewTemplate, _recordListManager);
+					LexEntryLayouter layout = new LexEntryLayouter(detailList, ViewTemplate, _recordListManager);
 					layout.ShowNormallyHiddenFields = ShowNormallyHiddenFields;
 					layout.AddWidgets(_record);
 				}
-				_detailListControl.ResumeLayout();
-				_panelEntry.ResumeLayout(false);//review
+				detailList.Visible = false;
+				_panelEntry.Controls.Add(detailList);
+				detailList.ResumeLayout(true);
+				detailList.Visible = true;
+				_panelEntry.Controls.SetChildIndex(detailList,0);
+				_panelEntry.Controls.Remove(oldDetailList);
+
+
+				_panelEntry.ResumeLayout(false);
+
+				if (oldDetailList != null)
+				{
+					oldDetailList.Dispose();
+				}
 			}
 			catch (ConfigurationException e)
 			{
 				Palaso.Reporting.ErrorReport.ReportNonFatalMessage(e.Message);
 			}
 		}
+
+
+
 
 		private void OnChangeOfWhichItemIsInFocus(object sender, CurrentItemEventArgs e)
 		{

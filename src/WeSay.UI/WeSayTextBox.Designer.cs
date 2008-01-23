@@ -38,7 +38,7 @@ namespace WeSay.UI
 			Multiline = true;
 			WordWrap = true;
 			BorderStyle = System.Windows.Forms.BorderStyle.None;
-
+			DoubleBuffered = true;
 
 			this.ResumeLayout(false);
 

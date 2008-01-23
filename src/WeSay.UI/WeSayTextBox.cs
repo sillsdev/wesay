@@ -163,10 +163,13 @@ namespace WeSay.UI
 			base.OnTextChanged(e);
 		}
 
-		protected override void OnResize(EventArgs e)
+		// we do this in OnLayout instead of OnResize see
+		// "Setting the Size/Location of child controls in the Resize event
+		// http://blogs.msdn.com/jfoscoding/archive/2005/03/04/385625.aspx
+		protected override void OnLayout(LayoutEventArgs levent)
 		{
 			Height = GetPreferredHeight();
-			base.OnResize(e);
+			base.OnLayout(levent);
 		}
 
 		public override Size GetPreferredSize(Size proposedSize)
@@ -297,28 +300,28 @@ namespace WeSay.UI
 		//    }
 		//}
 
-		public void FadeInSomeMore(Label label)
-		{
-			int interval = 2;
-			if (BackColor.R < SystemColors.Window.R)
-			{
-				interval = Math.Min(interval, 255 - BackColor.R);
+		//public void FadeInSomeMore(Label label)
+		//{
+		//    int interval = 2;
+		//    if (BackColor.R < SystemColors.Window.R)
+		//    {
+		//        interval = Math.Min(interval, 255 - BackColor.R);
 
-				BackColor = Color.FromArgb(BackColor.R + interval,
-															 BackColor.G + interval,
-															 BackColor.B + interval);
-			}
-			else if( BackColor != SystemColors.Window)
-			{
-				BackColor = SystemColors.Window;
-			}
-		}
+		//        BackColor = Color.FromArgb(BackColor.R + interval,
+		//                                                     BackColor.G + interval,
+		//                                                     BackColor.B + interval);
+		//    }
+		//    else if( BackColor != SystemColors.Window)
+		//    {
+		//        BackColor = SystemColors.Window;
+		//    }
+		//}
 
-		public void PrepareForFadeIn()
-		{
-				Text = ""; //ready for the next one
-				BackColor = SystemColors.Control;
-		}
+		//public void PrepareForFadeIn()
+		//{
+		//        Text = ""; //ready for the next one
+		//        BackColor = SystemColors.Control;
+		//}
 
 		protected override void OnEnter(EventArgs e)
 		{

@@ -44,6 +44,10 @@ namespace WeSay.UI
 			this.BackColor = System.Drawing.Color.White;
 			this.Name = "MultiTextControl";
 			this.AutoSize = true;
+			this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			this.DoubleBuffered = true;
+			this.ColumnCount = 3;
+			this.ParentChanged += new EventHandler(OnParentChanged);
 
 			//this.Height = 1;
 			//this.Width = 1;

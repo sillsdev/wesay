@@ -41,10 +41,11 @@ namespace WeSay.UI
 			this.Name = "DetailList";
 			//AutoSize = true;
 			//AutoSizeMode = AutoSizeMode.GrowAndShrink;
-			Padding = new Padding(20, 0, 0, 0);
 			HScroll = false;
 			//VerticalScroll.Visible = true;
 			ColumnCount = 2;
+			DoubleBuffered = true;
+			Padding = new Padding(0,0,20,0);
 
 			this.ResumeLayout(false);
 
