@@ -81,8 +81,20 @@ namespace WeSay.Setup
 			ValidateCustomRules();
 		}
 
-		private void ValidateCustomRules() {
-			CustomSortRulesType customSortRulesType = (CustomSortRulesType)Enum.Parse(typeof(CustomSortRulesType), this._writingSystem.SortUsing);
+		private void ValidateCustomRules()
+		{
+			CustomSortRulesType customSortRulesType;
+			try
+			{
+				customSortRulesType =
+					(CustomSortRulesType) Enum.Parse(typeof (CustomSortRulesType), this._writingSystem.SortUsing);
+			}
+			catch(ArgumentException ) //handle ws-541 where somehow Kim got an 'x1' in there
+			{
+				Palaso.Reporting.ErrorReport.ReportNonFatalMessage("WeSay could not understand this type of sorting ('{0}'). It will be reset.", this._writingSystem.SortUsing );
+				customSortRulesType = default(CustomSortRulesType);
+			}
+
 			string errorMessage;
 			if(AreCustomRulesValid(this.textBoxCustomRules.Text, customSortRulesType, out errorMessage))
 			{
