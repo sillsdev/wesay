@@ -181,15 +181,26 @@ namespace WeSay.Foundation
 		public void RemoveEmptyProperties()
 		{
 			// remove any custom fields that are empty
-			int count = Properties.Count;
+			int originalCount = Properties.Count;
 
-			for (int i = count - 1;i >= 0;i--)
+			for (int i = originalCount - 1;i >= 0;i--)// NB: counting backwards
 			{
+				//trying to reproduce ws-564
+				Debug.Assert(Properties.Count > i, "Likely hit the ws-564 bug.");
+
+				if (Properties.Count <= i)
+				{
+					Palaso.Reporting.ErrorNotificationDialog.ReportException(new Exception(string.Format("Error (not shown to user): Number of properties was orginally {0}, is now {1}, but the index is {2}. PLEASE help us reproduce this bug.", originalCount,
+													   Properties.Count, i)), null, false);
+					break; // things are screwy, give up before someone gets hurt.
+				}
+
 				object property = Properties[i].Value;
 				if (property is IReportEmptiness)
 				{
 					((IReportEmptiness) property).RemoveEmptyStuff();
 				}
+
 				if (IsPropertyEmpty(property))
 				{
 					Palaso.Reporting.Logger.WriteMinorEvent("Removing {0} due to emptiness.", property.ToString());
