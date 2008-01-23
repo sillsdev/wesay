@@ -33,7 +33,7 @@ namespace WeSay.UI
 			{//not necessarily bad, just did this while looking into ws-554
 				Palaso.Reporting.Logger.WriteEvent("Detail List Count ={0}", _instanceCountForDebugging);
 #if DEBUG
-				Debug.Assert(_instanceCountForDebugging < 3,"ws-554 reproduction?");
+				Debug.Assert(_instanceCountForDebugging < 5,"ws-554 reproduction?");
 #endif
 			}
 
@@ -277,9 +277,9 @@ namespace WeSay.UI
 				if (_stackAtConstruction != null)
 				{
 					trace = _stackAtConstruction.ToString();
-			}
+				}
 				throw new InvalidOperationException("Disposed not explicitly called on " + GetType().FullName + ".  Stack at creation was "+trace);
-		}
+			}
 		}
 
 

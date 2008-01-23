@@ -251,8 +251,6 @@ namespace WeSay.LexicalTools
 				detailList.Name = "_detailListControl";
 				detailList.Size = _panelEntry.Size;
 				detailList.TabIndex = 1;
-				detailList.ChangeOfWhichItemIsInFocus += OnChangeOfWhichItemIsInFocus;
-				detailList.KeyDown += _detailListControl_KeyDown;
 
 				if (_record != null)
 				{
@@ -265,15 +263,17 @@ namespace WeSay.LexicalTools
 				detailList.ResumeLayout(true);
 				detailList.Visible = true;
 				_panelEntry.Controls.SetChildIndex(detailList,0);
-				_panelEntry.Controls.Remove(oldDetailList);
-
-
-				_panelEntry.ResumeLayout(false);
 
 				if (oldDetailList != null)
 				{
+					_panelEntry.Controls.Remove(oldDetailList);
 					oldDetailList.Dispose();
 				}
+
+				detailList.ChangeOfWhichItemIsInFocus += OnChangeOfWhichItemIsInFocus;
+				detailList.KeyDown += _detailListControl_KeyDown;
+				_panelEntry.ResumeLayout(false);
+
 			}
 			catch (ConfigurationException e)
 			{

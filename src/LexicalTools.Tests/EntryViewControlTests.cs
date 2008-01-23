@@ -146,13 +146,12 @@ namespace WeSay.LexicalTools.Tests
 			LexEntry meaningOnly = CreateTestEntry("word", "meaning", "");
 			using (EntryViewControl entryViewControl = CreateForm(meaningOnly))
 			{
-				DetailList detailList = entryViewControl.ControlEntryDetail;
-				MultiTextControl editControl = GetEditControl(detailList, "Meaning 1");
+				MultiTextControl editControl = GetEditControl(entryViewControl.ControlEntryDetail, "Meaning 1");
 				editControl.TextBoxes[0].Text = "";
 				Thread.Sleep(1000);
 				Application.DoEvents();
 
-				Assert.IsTrue(GetEditControl(detailList, "Meaning").Name.Contains("ghost"), "Only ghost should remain");
+				Assert.IsTrue(GetEditControl(entryViewControl.ControlEntryDetail, "Meaning").Name.Contains("ghost"), "Only ghost should remain");
 			}
 		}
 
