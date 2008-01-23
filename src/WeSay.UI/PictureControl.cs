@@ -67,11 +67,8 @@ namespace WeSay.UI
 				_problemLabel.Visible = false;
 				try
 				{
-					_pictureBox.ImageLocation = GetPathToImage();
-					_pictureBox.Invalidate();
-					_pictureBox.Show();
+					_pictureBox.Load(GetPathToImage());
 					Height = _pictureBox.Bottom + 5;
-
 				}
 				catch (Exception error)
 				{
