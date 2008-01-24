@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: wesay\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2007-11-23T05:56:27\n"
+"POT-Creation-Date: 2007-11-23 05:56+0000\n"
 "PO-Revision-Date: 2007-09-07 10:19+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Simplified Chinese <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2007-11-23 03:16+0000\n"
+"X-Launchpad-Export-Date: 2008-01-24 06:16+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 # ; ..\src\CommonTools\DashboardControl.cs
@@ -34,9 +34,8 @@ msgstr "为空词条添加意义"
 msgid "Add Parts of Speech"
 msgstr ""
 
-#, fuzzy
 msgid "Add a Part Of Speech to senses where they are missing."
-msgstr "为空词条添加例句"
+msgstr ""
 
 msgid "Add Examples"
 msgstr "增加例子"
@@ -52,25 +51,21 @@ msgid ""
 "dictionary, these can optionally be shown as subentries."
 msgstr ""
 
-#, fuzzy
 msgid "Collect Word List (D)"
-msgstr "收集词汇"
+msgstr ""
 
-#, fuzzy
 msgid ""
 "Collect new words by translating from words in another language. This is a "
 "list of 1700 words from John Duerksen."
-msgstr "从另外一种语言的词汇收集新词。"
+msgstr ""
 
-#, fuzzy
 msgid "Collect Word List (PNG)"
-msgstr "收集词汇"
+msgstr ""
 
-#, fuzzy
 msgid ""
 "Collect new words by translating from words in another language. This is a "
 "list of around 900 words and phrases from PNG."
-msgstr "从另外一种语言的词汇收集新词。"
+msgstr ""
 
 msgid "Collect Words By Semantic Domain"
 msgstr "用语义分类收集词汇"
@@ -138,24 +133,18 @@ msgstr "浏览报告"
 msgid "Shows some information about the lexicon."
 msgstr "显示关于词汇的某些信息。"
 
-# ; ..\src\Addin.Transform\HtmlInWord.cs
 msgid "Export to Word"
 msgstr ""
 
-# ; ..\src\Addin.Transform\HtmlInWord.cs
 msgid "Creates a very basic dictionary publication in Microsoft Word."
 msgstr ""
 
-# ; ..\src\Addin.Transform\HtmlTransformer.cs
 msgid "Export to HTML"
 msgstr ""
 
-# ; ..\src\Addin.Transform\HtmlTransformer.cs
-#, fuzzy
 msgid "Creates a simple Html version of the dictionary, ready for printing."
-msgstr "建立现有词典的Html格式文件。"
+msgstr ""
 
-# ; ..\src\Addin.Transform\SfmTransformer.cs
 msgid "Export To SFM"
 msgstr ""
 
@@ -163,7 +152,6 @@ msgstr ""
 msgid "Saves the lexicon in a form of standard format."
 msgstr "保存词汇的标准格式文件。"
 
-# ; ..\src\CommonTools\ActionsControl.cs
 #. The description of the Actions task.
 msgid "Backup, print, etc."
 msgstr ""
@@ -192,16 +180,13 @@ msgstr "找不到{0}"
 msgid "No Senses"
 msgstr "没有意义"
 
-# ; ..\src\LexicalModel\LexEntrySortHelper.cs
 #. This is what shows if the user is listing words by the glossing language, but the word doesn't have a gloss.
 msgid "No Gloss"
 msgstr ""
 
-# ; ..\src\LexicalTools\DictionaryControl.cs
 msgid "Hide Uncommon Fields"
 msgstr ""
 
-# ; ..\src\LexicalTools\DictionaryControl.cs
 msgid "Show Uncommon Fields"
 msgstr ""
 
@@ -213,7 +198,6 @@ msgstr "删去此词"
 msgid "&New Word"
 msgstr "添加词条"
 
-# ; ..\src\LexicalTools\DictionaryControl.Designer.cs
 msgid "&Show All Fields"
 msgstr ""
 
@@ -276,7 +260,6 @@ msgstr "祝贺你完成了任务。"
 msgid "There is no work left to be done on this task."
 msgstr "任务已经完成。"
 
-# ; ..\src\LexicalTools\MissingInfoControl.Designer.cs
 msgid "To Do:"
 msgstr ""
 
@@ -285,7 +268,6 @@ msgstr ""
 msgid "Completed:"
 msgstr "备份完成..."
 
-# ; ..\src\LexicalTools\MissingInfoTask.cs
 #. The user will click this to say that this word has no baseform.  E.g. Kindess has Kind as a baseform, but Kind has no other word as a baseform.
 msgid "This word has no Base Form"
 msgstr ""
@@ -296,30 +278,22 @@ msgstr ""
 msgid "Loading..."
 msgstr "备份..."
 
-# ; ..\src\WeSay.App\WeSayApp.cs
 #. It's up to you whether to bother translating this or not.") + ": " + project.Name + "
 msgid "WeSay"
 msgstr ""
 
-# ; ..\src\WeSay.Project\ViewTemplate.cs
 #. The label for the field holding the citation form.
 msgid "CitationForm"
 msgstr ""
 
 #. The label for the field showing the definition of the word.
-#, fuzzy
 msgid "Definition"
-msgstr "词典"
+msgstr ""
 
-# ; ..\src\LexicalTools\LexSenseLayouter.cs
-# ; ..\src\LexicalTools\LexSenseLayouter.cs
 #. The label for the field showing the literal meaning of idiom or proverb.
-#, fuzzy
 msgid "Literal Meaning"
-msgstr "意义"
+msgstr ""
 
-# ; ..\src\WeSay.Project\ViewTemplate.cs
-# ; ..\src\WeSay.Project\ViewTemplate.cs
 #. The label for the field showing a note.
 #. The label for the field showing a note.
 msgid "Note"
@@ -330,7 +304,6 @@ msgstr ""
 msgid "POS"
 msgstr "词性"
 
-# ; ..\src\WeSay.Project\ViewTemplate.cs
 #. The label for the field showing a picture.
 msgid "Picture"
 msgstr ""
@@ -353,7 +326,6 @@ msgstr "翻译"
 msgid "Sem Dom"
 msgstr "语义分类"
 
-# ; ..\src\WeSay.Project\ViewTemplate.cs
 #. The label for the field showing the entry which this entry is derived from, is a subentry of, etc.
 msgid "Base Form"
 msgstr ""
@@ -362,15 +334,3 @@ msgstr ""
 #. This is shown in a combo-box (list of options, like Part Of Speech) when no option has been chosen, or the user just doesn't know what to put in this field.
 msgid "unknown"
 msgstr "未知"
-
-# ; ..\src\Addin.Transform\HtmlTransformer.cs
-#~ msgid "Html Exporter"
-#~ msgstr "导出Html格式文件"
-
-# ; ..\src\Addin.Transform\SfmTransformer.cs
-#~ msgid "SFM Exporter"
-#~ msgstr "导出标准格式文件"
-
-# ; ..\src\CommonTools\ActionsControl.cs
-#~ msgid "Backup, create a progress report, etc."
-#~ msgstr "备份，工作进展报告等。"

@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: wesay\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2007-11-23T05:56:27\n"
+"POT-Creation-Date: 2007-11-23 05:56+0000\n"
 "PO-Revision-Date: 2007-10-15 09:23+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Thai <th@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2007-11-23 03:16+0000\n"
+"X-Launchpad-Export-Date: 2008-01-24 06:16+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 # ; ..\src\CommonTools\DashboardControl.cs
@@ -36,9 +36,8 @@ msgstr "ป้อนความหมายของคำที่ยังไ
 msgid "Add Parts of Speech"
 msgstr ""
 
-#, fuzzy
 msgid "Add a Part Of Speech to senses where they are missing."
-msgstr "ป้อนประโยคตัวอย่างของคำที่ยังไม่ได้รับการป้อน"
+msgstr ""
 
 #, fuzzy
 msgid "Add Examples"
@@ -56,25 +55,21 @@ msgid ""
 "dictionary, these can optionally be shown as subentries."
 msgstr ""
 
-#, fuzzy
 msgid "Collect Word List (D)"
-msgstr "รวบรวมรายการคำ"
+msgstr ""
 
-#, fuzzy
 msgid ""
 "Collect new words by translating from words in another language. This is a "
 "list of 1700 words from John Duerksen."
-msgstr "รวบรวมคำใหม่โดยการแปลความหมายในภาษาอื่น"
+msgstr ""
 
-#, fuzzy
 msgid "Collect Word List (PNG)"
-msgstr "รวบรวมรายการคำ"
+msgstr ""
 
-#, fuzzy
 msgid ""
 "Collect new words by translating from words in another language. This is a "
 "list of around 900 words and phrases from PNG."
-msgstr "รวบรวมคำใหม่โดยการแปลความหมายในภาษาอื่น"
+msgstr ""
 
 msgid "Collect Words By Semantic Domain"
 msgstr "รวบรวมคำตามหมวดความหมาย"
@@ -156,24 +151,18 @@ msgstr "ดูการแสดงผล"
 msgid "Shows some information about the lexicon."
 msgstr "แสดงข้อมูลเกี่ยวกับรายการคำ"
 
-# ; ..\src\Addin.Transform\HtmlInWord.cs
 msgid "Export to Word"
 msgstr ""
 
-# ; ..\src\Addin.Transform\HtmlInWord.cs
 msgid "Creates a very basic dictionary publication in Microsoft Word."
 msgstr ""
 
-# ; ..\src\Addin.Transform\HtmlTransformer.cs
 msgid "Export to HTML"
 msgstr ""
 
-# ; ..\src\Addin.Transform\HtmlTransformer.cs
-#, fuzzy
 msgid "Creates a simple Html version of the dictionary, ready for printing."
-msgstr "สร้างพจนานุกรมรูปแบบ Html สำหรับการพิมพ์"
+msgstr ""
 
-# ; ..\src\Addin.Transform\SfmTransformer.cs
 msgid "Export To SFM"
 msgstr ""
 
@@ -182,7 +171,6 @@ msgstr ""
 msgid "Saves the lexicon in a form of standard format."
 msgstr "จัดเก็บรายการคำในรูปแบบ SFM"
 
-# ; ..\src\CommonTools\ActionsControl.cs
 #. The description of the Actions task.
 msgid "Backup, print, etc."
 msgstr ""
@@ -213,16 +201,13 @@ msgstr "ไม่พบ {0}"
 msgid "No Senses"
 msgstr "ไม่มีความหมาย"
 
-# ; ..\src\LexicalModel\LexEntrySortHelper.cs
 #. This is what shows if the user is listing words by the glossing language, but the word doesn't have a gloss.
 msgid "No Gloss"
 msgstr ""
 
-# ; ..\src\LexicalTools\DictionaryControl.cs
 msgid "Hide Uncommon Fields"
 msgstr ""
 
-# ; ..\src\LexicalTools\DictionaryControl.cs
 msgid "Show Uncommon Fields"
 msgstr ""
 
@@ -234,7 +219,6 @@ msgstr "ลบคำนี้"
 msgid "&New Word"
 msgstr "คำใหม่"
 
-# ; ..\src\LexicalTools\DictionaryControl.Designer.cs
 msgid "&Show All Fields"
 msgstr ""
 
@@ -304,7 +288,6 @@ msgstr "ขอแสดงความยินดี ท่านทำงา�
 msgid "There is no work left to be done on this task."
 msgstr "ไม่มีสิ่งที่ต้องทำในงานชิ้นนี้แล้ว"
 
-# ; ..\src\LexicalTools\MissingInfoControl.Designer.cs
 msgid "To Do:"
 msgstr ""
 
@@ -313,7 +296,6 @@ msgstr ""
 msgid "Completed:"
 msgstr "ข้อมูลสำรองที่สมบูรณ์"
 
-# ; ..\src\LexicalTools\MissingInfoTask.cs
 #. The user will click this to say that this word has no baseform.  E.g. Kindess has Kind as a baseform, but Kind has no other word as a baseform.
 msgid "This word has no Base Form"
 msgstr ""
@@ -324,30 +306,22 @@ msgstr ""
 msgid "Loading..."
 msgstr "ข้อมูลสำรอง"
 
-# ; ..\src\WeSay.App\WeSayApp.cs
 #. It's up to you whether to bother translating this or not.") + ": " + project.Name + "
 msgid "WeSay"
 msgstr ""
 
-# ; ..\src\WeSay.Project\ViewTemplate.cs
 #. The label for the field holding the citation form.
 msgid "CitationForm"
 msgstr ""
 
 #. The label for the field showing the definition of the word.
-#, fuzzy
 msgid "Definition"
-msgstr "พจนานุกรม"
+msgstr ""
 
-# ; ..\src\LexicalTools\LexSenseLayouter.cs
-# ; ..\src\LexicalTools\LexSenseLayouter.cs
 #. The label for the field showing the literal meaning of idiom or proverb.
-#, fuzzy
 msgid "Literal Meaning"
-msgstr "ความหมาย"
+msgstr ""
 
-# ; ..\src\WeSay.Project\ViewTemplate.cs
-# ; ..\src\WeSay.Project\ViewTemplate.cs
 #. The label for the field showing a note.
 #. The label for the field showing a note.
 msgid "Note"
@@ -360,7 +334,6 @@ msgstr ""
 msgid "POS"
 msgstr "หน้าที่ของคำ"
 
-# ; ..\src\WeSay.Project\ViewTemplate.cs
 #. The label for the field showing a picture.
 msgid "Picture"
 msgstr ""
@@ -385,7 +358,6 @@ msgstr "คำแปล"
 msgid "Sem Dom"
 msgstr "หมวดความหมาย"
 
-# ; ..\src\WeSay.Project\ViewTemplate.cs
 #. The label for the field showing the entry which this entry is derived from, is a subentry of, etc.
 msgid "Base Form"
 msgstr ""
@@ -394,25 +366,3 @@ msgstr ""
 #. This is shown in a combo-box (list of options, like Part Of Speech) when no option has been chosen, or the user just doesn't know what to put in this field.
 msgid "unknown"
 msgstr "ไม่ทราบ"
-
-#~ msgid ""
-#~ "Perform actions on the project as a whole. For example backup, produce a "
-#~ "report, print out a simple dictionary, etc."
-#~ msgstr ""
-#~ "แสดงแผนงานการกระทำให้เห็นชัดเจน ตัวอย่าง ข้อมูลสนับสนุน การทำรายงาน "
-#~ "การพิมพ์คำศัพท์ง่ายๆ  อื่นๆ"
-
-# ; ..\src\Addin.Transform\HtmlTransformer.cs
-#, fuzzy
-#~ msgid "Html Exporter"
-#~ msgstr "เก็บข้อมูลในรูปแบบ Html"
-
-# ; ..\src\Addin.Transform\SfmTransformer.cs
-#, fuzzy
-#~ msgid "SFM Exporter"
-#~ msgstr "เก็บข้อมูลในรูปแบบ SFM"
-
-# ; ..\src\CommonTools\ActionsControl.cs
-#, fuzzy
-#~ msgid "Backup, create a progress report, etc."
-#~ msgstr "สำรองข้อมูล สร้างรายงานการทำงาน ฯลฯ"

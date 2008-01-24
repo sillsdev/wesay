@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: wesay\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2007-11-23T05:56:27\n"
+"POT-Creation-Date: 2007-11-23 05:56+0000\n"
 "PO-Revision-Date: 2007-09-03 11:37+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Burmese <my@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2007-11-23 03:16+0000\n"
+"X-Launchpad-Export-Date: 2008-01-24 06:16+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 # ; ..\src\CommonTools\DashboardControl.cs
@@ -34,9 +34,8 @@ msgstr "အဓိပ္ပာယ္‌မ္ယားကုိ လုိအပ�
 msgid "Add Parts of Speech"
 msgstr ""
 
-#, fuzzy
 msgid "Add a Part Of Speech to senses where they are missing."
-msgstr "ဉပမာဝာက္ယမ္ယားကုိ လုိအပ္‌ေသာေနရာတ္ဝင္‌ ဖ္ရည္‌့ပာ။"
+msgstr ""
 
 msgid "Add Examples"
 msgstr "ဉပမာမ္ယားထပ္‌ထည္‌့ပာ။"
@@ -52,25 +51,21 @@ msgid ""
 "dictionary, these can optionally be shown as subentries."
 msgstr ""
 
-#, fuzzy
 msgid "Collect Word List (D)"
-msgstr "စကားလုံးစုကုိ စုေဆာင္‌းပာ။"
+msgstr ""
 
-#, fuzzy
 msgid ""
 "Collect new words by translating from words in another language. This is a "
 "list of 1700 words from John Duerksen."
-msgstr "စကားလုံးအသစ္‌မ္ယားကုိ အခ္ရားဘာသာစကားမ္ဟ ဘာသာပ္ရန္‌ခ္ရင္‌းအားဖ္ရင္‌့ စုေဆာင္‌းပာ။"
+msgstr ""
 
-#, fuzzy
 msgid "Collect Word List (PNG)"
-msgstr "စကားလုံးစုကုိ စုေဆာင္‌းပာ။"
+msgstr ""
 
-#, fuzzy
 msgid ""
 "Collect new words by translating from words in another language. This is a "
 "list of around 900 words and phrases from PNG."
-msgstr "စကားလုံးအသစ္‌မ္ယားကုိ အခ္ရားဘာသာစကားမ္ဟ ဘာသာပ္ရန္‌ခ္ရင္‌းအားဖ္ရင္‌့ စုေဆာင္‌းပာ။"
+msgstr ""
 
 msgid "Collect Words By Semantic Domain"
 msgstr "သက္‌ဆုိင္‌ေသာ စကားလုံး‌စုထဲမ္ဟ စကားလုံးမ္ယားကုိ ရေ္ဝးခ္ယယ္‌ပာ။"
@@ -79,7 +74,8 @@ msgid ""
 "Collect new words organized by semantic domains and questions about those "
 "domains."
 msgstr ""
-"သက္‌ဆုိင္‌ေသာ စကားလုံး‌စုကုိသုံး၍ စကားလုံးအသစ္‌စုဆောင္‌းရန္‌န္ဟင္‌့ ဤစကားလုံး‌စုန္ဟင္‌့ပတ္‌သက္‌ေသာ ေမးခ္ဝန္‌းမ္ယား။"
+"သက္‌ဆုိင္‌ေသာ စကားလုံး‌စုကုိသုံး၍ စကားလုံးအသစ္‌စုဆောင္‌းရန္‌န္ဟင္‌့ "
+"ဤစကားလုံး‌စုန္ဟင္‌့ပတ္‌သက္‌ေသာ ေမးခ္ဝန္‌းမ္ယား။"
 
 # ; ..\src\CommonTools\ActionsControl.cs
 msgid "Actions"
@@ -122,7 +118,8 @@ msgstr "သုိေလ္ဟာင္‌ပာ။"
 #. description of usb backup action
 msgid "Saves a backup on an external device, like a USB key."
 msgstr ""
-"သုိေလ္ဟာင္‌ပ္ရီးေသာ စာရ္ဝက္‌စာတမ္‌းမ္ယားကုိ USB Keys ကဲ့သုိ့ေသာ external device တ္ဝင္‌ သိမ္‌းဆည္‌းပာ။"
+"သုိေလ္ဟာင္‌ပ္ရီးေသာ စာရ္ဝက္‌စာတမ္‌းမ္ယားကုိ USB Keys ကဲ့သုိ့ေသာ external "
+"device တ္ဝင္‌ သိမ္‌းဆည္‌းပာ။"
 
 # ; ..\src\Addin.Backup\SendProjectEmail.cs
 msgid "Email My Work to {0}"
@@ -130,7 +127,8 @@ msgstr "အလုပ္‌တာ၀န္‌ကုိ {၀} သုိ့ပု�
 
 # ; ..\src\Addin.Backup\SendProjectEmail.cs
 msgid "Send a zipped email containing all your WeSay work."
-msgstr "သင္‌၏လုပ္‌ငန္‌းေဆာင္‌တာမ္ယားကုိ ေပာင္‌းခ္ယုပ္‌၍ email ဖ္ရင္‌့ ပုိ့ပာ။"
+msgstr ""
+"သင္‌၏လုပ္‌ငန္‌းေဆာင္‌တာမ္ယားကုိ ေပာင္‌းခ္ယုပ္‌၍ email ဖ္ရင္‌့ ပုိ့ပာ။"
 
 # ; ..\src\Addin.LiftReports\ReportMaker.cs
 msgid "View Report"
@@ -140,24 +138,18 @@ msgstr "အစီရင္‌ခံစာကုိ က္ရည္‌့ရ္�
 msgid "Shows some information about the lexicon."
 msgstr "စကားလုံးန္ဟင္‌့သက္‌ဆုိင္‌ေသာ အကေ္ရာင္‌းအရာအခ္ယို့ကုိ ေဖာ္‌‌ပ္ရပာ"
 
-# ; ..\src\Addin.Transform\HtmlInWord.cs
 msgid "Export to Word"
 msgstr ""
 
-# ; ..\src\Addin.Transform\HtmlInWord.cs
 msgid "Creates a very basic dictionary publication in Microsoft Word."
 msgstr ""
 
-# ; ..\src\Addin.Transform\HtmlTransformer.cs
 msgid "Export to HTML"
 msgstr ""
 
-# ; ..\src\Addin.Transform\HtmlTransformer.cs
-#, fuzzy
 msgid "Creates a simple Html version of the dictionary, ready for printing."
-msgstr "အဘိဓာန္‌ကုိ ပုံန္ဟိပ္‌ရန္‌အတ္ဝက္‌ HTML ပုံစံသုိ့ ေပ္ရာင္‌းပာ။"
+msgstr ""
 
-# ; ..\src\Addin.Transform\SfmTransformer.cs
 msgid "Export To SFM"
 msgstr ""
 
@@ -165,7 +157,6 @@ msgstr ""
 msgid "Saves the lexicon in a form of standard format."
 msgstr "စာလုံးကုိ Standard Format ပုံစံအဖ္ရစ္‌သိမ္‌းဆည္‌းပာ။"
 
-# ; ..\src\CommonTools\ActionsControl.cs
 #. The description of the Actions task.
 msgid "Backup, print, etc."
 msgstr ""
@@ -180,30 +171,27 @@ msgstr "အလုပ္‌တာ၀န္‌မ္ယား"
 
 # ; ..\src\CommonTools\DashboardControl.cs
 msgid "Switch tasks and see current status of tasks"
-msgstr "အလုပ္‌တာ၀န္‌မ္ယားကုိ ဖလ္ဟယ္‌၍ အလုပ္‌တာ၀န္‌မ္ယား၏ လက္‌ရ္ဟိအခေ္ရအနေကုိ က္ရည္‌့ရ္ဟု့ပာ။"
+msgstr ""
+"အလုပ္‌တာ၀န္‌မ္ယားကုိ ဖလ္ဟယ္‌၍ အလုပ္‌တာ၀န္‌မ္ယား၏ လက္‌ရ္ဟိအခေ္ရအနေကုိ "
+"က္ရည္‌့ရ္ဟု့ပာ။"
 
 # ; ..\src\CommonTools\DictionaryStatusControl.Designer.cs
 msgid "Your dictionary has {0} words"
 msgstr "သင္‌၏အဘိဓာန္‌တ္ဝင္‌ စကားလုံးမရ္ဟိပာ။"
 
-# ; ..\src\Image Picker Test App\ImagePicker\ImageDisplayWidget.cs
 msgid "Cannot find {0}"
 msgstr ""
 
-# ; ..\src\LexicalModel\LexEntry.cs
 msgid "No Senses"
 msgstr ""
 
-# ; ..\src\LexicalModel\LexEntrySortHelper.cs
 #. This is what shows if the user is listing words by the glossing language, but the word doesn't have a gloss.
 msgid "No Gloss"
 msgstr ""
 
-# ; ..\src\LexicalTools\DictionaryControl.cs
 msgid "Hide Uncommon Fields"
 msgstr ""
 
-# ; ..\src\LexicalTools\DictionaryControl.cs
 msgid "Show Uncommon Fields"
 msgstr ""
 
@@ -215,7 +203,6 @@ msgstr "ဤစကားလုံးကုိဖ္ယက္‌ပာ။"
 msgid "&New Word"
 msgstr "စကားလုံးအသစ္‌"
 
-# ; ..\src\LexicalTools\DictionaryControl.Designer.cs
 msgid "&Show All Fields"
 msgstr ""
 
@@ -242,11 +229,15 @@ msgstr "[ေရ္ဝးခ္ယယ္‌ရန္‌ ခလုပ္‌]"
 
 # ; ..\src\LexicalTools\GatherBySemanticDomainsControl.Designer.cs
 msgid "Try thinking of words you use to talk about these things."
-msgstr "ေအာက္‌ပာအကေ္ရာင္‌းမ္ယားေပ္ရာရာတ္ဝင္‌ အသုံးပ္ရုေသာ စကားလုံးမ္ယားကုိ စဉ္‌းစားပာ။"
+msgstr ""
+"ေအာက္‌ပာအကေ္ရာင္‌းမ္ယားေပ္ရာရာတ္ဝင္‌ အသုံးပ္ရုေသာ စကားလုံးမ္ယားကုိ "
+"စဉ္‌းစားပာ။"
 
 # ; ..\src\LexicalTools\GatherWordListControl.Designer.cs
 msgid "Try thinking of ways to say these words in your language."
-msgstr "ဤစကားလုံးမ္ယားကုိ သင္‌၏ဘာသာစကားတ္ဝင္‌ မည္‌ကဲ့သုိ့ေသာနည္‌းမ္ယားဖ္ရင္‌့ ေပ္ရာနုိင္‌သည္‌ကုိ စဉ္‌းစားပာ။"
+msgstr ""
+"ဤစကားလုံးမ္ယားကုိ သင္‌၏ဘာသာစကားတ္ဝင္‌ မည္‌ကဲ့သုိ့ေသာနည္‌းမ္ယားဖ္ရင္‌့ "
+"ေပ္ရာနုိင္‌သည္‌ကုိ စဉ္‌းစားပာ။"
 
 # ; ..\src\LexicalTools\GatherWordListControl.Designer.cs
 msgid "Word:"
@@ -278,7 +269,6 @@ msgstr "အလုပ္‌တာ၀န္‌ ပ္ရီးဆုံးပာ�
 msgid "There is no work left to be done on this task."
 msgstr "လုပ္‌စရာမရ္ဟိေတာ့ပာ။"
 
-# ; ..\src\LexicalTools\MissingInfoControl.Designer.cs
 msgid "To Do:"
 msgstr ""
 
@@ -287,7 +277,6 @@ msgstr ""
 msgid "Completed:"
 msgstr "သုိေလ္ဟာင္‌ခ္ရင္‌း ပ္ရီးပာပ္ရီ။"
 
-# ; ..\src\LexicalTools\MissingInfoTask.cs
 #. The user will click this to say that this word has no baseform.  E.g. Kindess has Kind as a baseform, but Kind has no other word as a baseform.
 msgid "This word has no Base Form"
 msgstr ""
@@ -298,30 +287,22 @@ msgstr ""
 msgid "Loading..."
 msgstr "သုိေလ္ဟာင္‌ေနပာသည္‌။"
 
-# ; ..\src\WeSay.App\WeSayApp.cs
 #. It's up to you whether to bother translating this or not.") + ": " + project.Name + "
 msgid "WeSay"
 msgstr ""
 
-# ; ..\src\WeSay.Project\ViewTemplate.cs
 #. The label for the field holding the citation form.
 msgid "CitationForm"
 msgstr ""
 
 #. The label for the field showing the definition of the word.
-#, fuzzy
 msgid "Definition"
-msgstr "အဘိဓာန္‌"
+msgstr ""
 
-# ; ..\src\LexicalTools\LexSenseLayouter.cs
-# ; ..\src\LexicalTools\LexSenseLayouter.cs
 #. The label for the field showing the literal meaning of idiom or proverb.
-#, fuzzy
 msgid "Literal Meaning"
-msgstr "အဓိပ္ပာယ္‌"
+msgstr ""
 
-# ; ..\src\WeSay.Project\ViewTemplate.cs
-# ; ..\src\WeSay.Project\ViewTemplate.cs
 #. The label for the field showing a note.
 #. The label for the field showing a note.
 msgid "Note"
@@ -331,7 +312,6 @@ msgstr ""
 msgid "POS"
 msgstr "ဝာစင္ဂ"
 
-# ; ..\src\WeSay.Project\ViewTemplate.cs
 #. The label for the field showing a picture.
 msgid "Picture"
 msgstr ""
@@ -349,13 +329,10 @@ msgstr "ဥပမာ"
 msgid "Example Translation"
 msgstr "ဘာသာပ္ရန္‌"
 
-# ; ..\src\WeSay.Project\ViewTemplate.cs
-# ; ..\src\WeSay.Project\ViewTemplate.cs
 #. The label for the field showing Semantic Domains
 msgid "Sem Dom"
 msgstr ""
 
-# ; ..\src\WeSay.Project\ViewTemplate.cs
 #. The label for the field showing the entry which this entry is derived from, is a subentry of, etc.
 msgid "Base Form"
 msgstr ""
@@ -364,51 +341,3 @@ msgstr ""
 #. This is shown in a combo-box (list of options, like Part Of Speech) when no option has been chosen, or the user just doesn't know what to put in this field.
 msgid "unknown"
 msgstr "မသိပာ။"
-
-#~ msgid ""
-#~ "This task is normally the first thing the user sees when WeSay comes up.  "
-#~ "It gives the user some status of the project, and reminds him what he was "
-#~ "working on. Finally, this tab will allow him to switch to a different "
-#~ "work task, if you have enabled more than one."
-#~ msgstr "ဤအလုပ္‌သည္‌ WeSay ဖ္ဝင္‌့ေသာအခာ ပထမဆုံးမ္ရင္‌ေတ္ဝ့ရသော အလုပ္‌ဖ္ရစ္‌သည္‌။ ဘာသာဆက္‌ပ္ရန္‌စရာမလုိပာ။"
-
-#~ msgid ""
-#~ "This task allows advanced users to see and edit all enabled fields of all "
-#~ "entries in the dictionary.  He can add, delete, and search for entries.  "
-#~ "NOTE: while this task may be very enticing to those familiar with "
-#~ "traditional programs, this is *not* intended to be a primary way of "
-#~ "working with WeSay."
-#~ msgstr "ဘာသာပ္ရန္‌စရာ မလုိပာ။"
-
-#~ msgid ""
-#~ "Perform actions on the project as a whole. For example backup, produce a "
-#~ "report, print out a simple dictionary, etc."
-#~ msgstr ""
-#~ "အားလုံးကုိ တပ္ရိုင္‌တည္‌းလုပ္‌ပာ။ ဉပမာ၊ သုိေလ္ဟာင္‌ခ္ရင္‌း၊ အစီရင္‌ခံစာပ္ရုလုပ္‌ခ္ရင္‌း၊ အဘိဓာန္‌ေရးထုတ္‌ခ္ရင္‌း။"
-
-#~ msgid "Noun"
-#~ msgstr "နာမ္‌"
-
-#~ msgid "Verb"
-#~ msgstr "က္ရိယာ"
-
-#~ msgid "Pronoun"
-#~ msgstr "နာမ္‌စား"
-
-#~ msgid "Adjective"
-#~ msgstr "နာမဝိေသသန"
-
-#~ msgid "Adverb"
-#~ msgstr "က္ရိယာ၀ိေသသန"
-
-# ; ..\src\Addin.Transform\HtmlTransformer.cs
-#~ msgid "Html Exporter"
-#~ msgstr "HTML ပုံစံသုိ့ေပ္ရာင္‌းပာ။"
-
-# ; ..\src\Addin.Transform\SfmTransformer.cs
-#~ msgid "SFM Exporter"
-#~ msgstr "SFM ပုံစံသုိ့ေပ္ရာင္‌းပာ။"
-
-# ; ..\src\CommonTools\ActionsControl.cs
-#~ msgid "Backup, create a progress report, etc."
-#~ msgstr "သုိေလ္ဟာင္‌ပာ၊ တုိးတက္‌မ္ဟုအစီရင္‌ခံစာကုိ စတင္‌ပာ၊  စသည္‌ဖ္ရင္‌့........"

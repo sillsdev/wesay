@@ -1,4 +1,4 @@
-# Russian translation for wesay
+# Indonesian translation for wesay
 # Copyright (c) 2007 Rosetta Contributors and Canonical Ltd 2007
 # This file is distributed under the same license as the wesay package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2007.
@@ -8,9 +8,9 @@ msgstr ""
 "Project-Id-Version: wesay\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2007-11-23 05:56+0000\n"
-"PO-Revision-Date: 2007-12-03 08:01+0000\n"
+"PO-Revision-Date: 2007-12-20 09:26+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Russian <ru@li.org>\n"
+"Language-Team: Indonesian <id@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -19,276 +19,286 @@ msgstr ""
 
 #. The label for the 'dashboard'; the task which lets you see the status of other tasks and jump to them.
 msgid "Home"
-msgstr "В начало"
+msgstr "Awal"
 
 msgid "Dictionary Browse & Edit"
-msgstr "Просмотр и правка словаря"
+msgstr "Melihati dan Meredaksikan Kamus"
 
+#, fuzzy
 msgid "Add Meanings"
-msgstr "Добавить значения"
+msgstr "Menabahkan Arti-arti."
 
 msgid "Add meanings to entries where they are missing."
-msgstr "Добавить значения к элементам у которых они отсутствуют."
+msgstr "Menambahkan arti-arti pada kata-kata utama."
 
 msgid "Add Parts of Speech"
-msgstr "Добавить части речи"
+msgstr "Menambahkan istilah-istilah tata bahasa."
 
 msgid "Add a Part Of Speech to senses where they are missing."
-msgstr "Добавить к значениям пропущенные части речи"
+msgstr "Menambahkan istilah tata bahasa pada arti-arti."
 
 msgid "Add Examples"
-msgstr "Добавить примеры употребления"
+msgstr "Menambahkan contoh-contoh."
 
 msgid "Add example sentences to entries where they are missing."
-msgstr "Добавить примеры к элементам у которых они отсутствуют."
+msgstr "Menambahkan kalimat-kalimat contoh pada kata-kata utama."
 
 msgid "Add Base Forms"
-msgstr "Добавить основные формы"
+msgstr "Menambahkan kata-kata dasar."
 
 msgid ""
 "Identify the \"base form\" word that this word is built from. In the printed "
 "dictionary, these can optionally be shown as subentries."
 msgstr ""
-"Определить \"основую форму\", от которой образовано слово. В словаре для "
-"печати, это можно произвольно показать как дополнительные значения."
+"Namakanlah \"kata dasar\" buat kata ini.  Sebaliknya, dalam kamus yang akan "
+"dicetak, kata-kata dasar ini juga bisa dimasukkan sebagai kata utama."
 
 msgid "Collect Word List (D)"
-msgstr "Собрать список слов (D)"
+msgstr "Mengumpulkan daftar kata. (D)"
 
 msgid ""
 "Collect new words by translating from words in another language. This is a "
 "list of 1700 words from John Duerksen."
 msgstr ""
-"Собрать новые слова путем перевода со слов на другом языке. Это список из "
-"1700 слов от Джона Дерксена (John Duerksen)."
+"Mengumpulkan kata-kata baru dengan menerjemahkan dari kata-kata dalam bahasa "
+"lain. Daftar kata yang berikutnya (berjumlah 1700 buah kata) dari John "
+"Duerksen."
 
 msgid "Collect Word List (PNG)"
-msgstr "Собрать список слов (PNG)"
+msgstr "Mengumpulkan daftar kata (Papua Niugini)"
 
 msgid ""
 "Collect new words by translating from words in another language. This is a "
 "list of around 900 words and phrases from PNG."
 msgstr ""
-"Собрать новые слова путем перевода со слов на другом языке. Это список из "
-"примерно 900 слов и выражений из PNG."
+"Mengumpulkan kata-kata baru dengan menerjemahkan dari kata-kata dalam bahasa "
+"lain. Daftar kata dan frase yang berikutnya (berjumlah 900 buah) dari Papua "
+"Niugini."
 
 msgid "Collect Words By Semantic Domain"
-msgstr "Собрать список слов по области семантики"
+msgstr "Mengumpulkan kata-kata sesuai dengan lingkungan arti."
 
 msgid ""
 "Collect new words organized by semantic domains and questions about those "
 "domains."
 msgstr ""
-"Собрать новые слова, упорядочивая их по области семантики и вопросам об этих "
-"областях."
+"Mengumpulkan kata-kata baru yang diatur sesuai dengan lingkungan arti dan "
+"sesuai dengan pertanyaan-pertanyaan tentang lingkungan-lingkungan itu."
 
 msgid "Actions"
-msgstr "Действия"
+msgstr "Perbuatan-perbuatan."
 
 msgid "Looking for USB Keys..."
-msgstr "Поиск USB дисков..."
+msgstr "Flashdrive sedang dicari ..."
 
 msgid "Backing Up..."
-msgstr "Резервное копирование..."
+msgstr "Cadangan sedang dibuat ..."
 
 msgid "Backup Complete"
-msgstr "Резервное копирование выполнено"
+msgstr "Proses biking cadangan sudah selesai."
 
 msgid "Files backed up to {0}"
-msgstr "Файлы скопированы н {0}"
+msgstr "Cadangan map-map sudah ada pada {0}"
 
 msgid "Files were not backed up."
-msgstr "Файлы не были скопированы."
+msgstr "Cadangan map-map belum dibuat."
 
 msgid "Please insert the USB Key to backup to."
-msgstr "Пожалуйста, подключите USB диск для копирования."
+msgstr "Sebelum cadangan bisa dibuat, flashdrive harus dipasangkan."
 
 msgid "&Cancel"
-msgstr "&Отменить"
+msgstr "&Batal"
 
 #. Label for usb flash-drive backup action
 msgid "Backup To Device"
-msgstr "Резервное копирование на устройство"
+msgstr "Membuat cadangan di flashdrive."
 
 #. description of usb backup action
 msgid "Saves a backup on an external device, like a USB key."
 msgstr ""
-"Сохраняет резервные копии на внешнее устройство, например, на USB диск."
+"Perbuatan ini akan menyimpan cadangan pada alat eksternal seperti flashdrive."
 
 msgid "Email My Work to {0}"
-msgstr "Отправить мою работу по email {0}"
+msgstr "Meneruskan karya Anda lewat email kepada {0}."
 
 msgid "Send a zipped email containing all your WeSay work."
-msgstr "Отправить, предварительно сжав, всю вашу WeSay работу."
+msgstr ""
+"Mengirim semua karya WeSay Anda  sebagai email yang ditekankan (zipped)."
 
 msgid "View Report"
-msgstr "Посмотреть отчёт"
+msgstr "Melihat laporan."
 
 msgid "Shows some information about the lexicon."
-msgstr "Показывает информацию о словаре."
+msgstr "Melihat informasi tentang kamus."
 
 msgid "Export to Word"
-msgstr "Экспорт в MS Word"
+msgstr "Mengirim ke program Word."
 
 msgid "Creates a very basic dictionary publication in Microsoft Word."
-msgstr "Создает простой словарь в формате Microsoft Word"
+msgstr "Menciptakan kamus sederhana dengan Word."
 
 msgid "Export to HTML"
-msgstr "Экспорт в HTML"
+msgstr "Membuatkan kopi dengan menerjemahkan ke dalam bahasa komputer HTML."
 
 msgid "Creates a simple Html version of the dictionary, ready for printing."
-msgstr "Создает простую HTML-версию словаря, готово для печати."
+msgstr ""
+"Menciptakan kamus yang sederhana siap dicetak. Akan diterjemahkan ke dalam "
+"bahasa komputer HTML."
 
 msgid "Export To SFM"
-msgstr "Экспорт в SFM"
+msgstr ""
+"Mebuatkan kopi dengan menerjemahkan ke dalam bahasa komputer SFM (Standard "
+"Format Markers-Tanda-tanda Format Norma)."
 
 msgid "Saves the lexicon in a form of standard format."
-msgstr "Сохраняет словарь в стандартном формате."
+msgstr "Menyimpan kamusnya dengan pakai format norma yang tertentu."
 
 #. The description of the Actions task.
 msgid "Backup, print, etc."
-msgstr "Резервное копирование, печать и др."
+msgstr "Membuat cadangan, memprint, dll."
 
 msgid "Current task:"
-msgstr "Текущая задача:"
+msgstr "Tugas aktuil:"
 
 msgid "Tasks"
-msgstr "Задачи"
+msgstr "Tugas-tugas"
 
 msgid "Switch tasks and see current status of tasks"
-msgstr "Переключение заданий и их текущее состояние"
+msgstr "Ganti tugas dan lihat status semua tugas aktuil."
 
 msgid "Your dictionary has {0} words"
-msgstr "В вашем словаре {0} слов"
+msgstr "Kamus Anda punya {0} kata."
 
 msgid "Cannot find {0}"
-msgstr "Не найдено {0}"
+msgstr "{0} tidak bisa ditemukan."
 
 msgid "No Senses"
-msgstr "Нет значений"
+msgstr "Arti-arti belum ada."
 
 #. This is what shows if the user is listing words by the glossing language, but the word doesn't have a gloss.
 msgid "No Gloss"
-msgstr "Нет толкования"
+msgstr "Terjemahan kata belum ada."
 
 msgid "Hide Uncommon Fields"
-msgstr "Спрятать редко встречающиеся поля"
+msgstr "Menyembunyikan kategori-kategori yang tidak biasa."
 
 msgid "Show Uncommon Fields"
-msgstr "Показать редко встречающиеся поля"
+msgstr "Lihatkan kategori yang tidak biasa."
 
 msgid "&Delete This Word"
-msgstr "Удалить это слово"
+msgstr "&Hapuskan Kata Ini."
 
 msgid "&New Word"
-msgstr "Новое слово"
+msgstr "&Kata Baru."
 
 msgid "&Show All Fields"
-msgstr "Показать все поля"
+msgstr "&Lihatkan Semua Kategori."
 
 #. The description of the 'Dictionary' task.  In place of the {0} will be the number of words in the dictionary.  In place of the {1} will be the name of the project.
 msgid "See all {0} {1} words."
-msgstr "Посмотреть все {0} {1} слов(а)."
+msgstr "Melihat semua {0} {1} kata-kata."
 
 #. The label for the field showing the Lexeme Form of the entry.
 msgid "Word"
-msgstr "Слово"
+msgstr "Kata"
 
 msgid "(Page Down Key)"
-msgstr "(Клавиша Page Down)"
+msgstr "(Tuts Lihat Yang Berikutnya)"
 
 msgid "(Enter Key)"
-msgstr "(Клавиша Enter)"
+msgstr "(Tuts Masukkan)"
 
 msgid "Try thinking of words you use to talk about these things."
 msgstr ""
-"Попробуйте придумать слова которые вы используете говоря об этих вещах."
+"Cobalah meningat/membayangkan kata-kata yang biasanya dipakai Anda untuk "
+"membicarakan hal-hal ini dan ketiklahnya."
 
 msgid "Try thinking of ways to say these words in your language."
 msgstr ""
-"Попробуйте придумать способы, которыми вы говорите эти слова в вашем языке."
+"Cobalah membayangkan cara-cara mengucapkan kata-kata ini dalam bahasa Anda "
+"dan ketiklahnya."
 
 msgid "Word:"
-msgstr "Слово:"
+msgstr "Kata:"
 
 #. This is the field containing an example sentence of a sense of a word.
 #. This is the field containing an example sentence of a sense of a word."), "Sentence
 msgid "Example"
-msgstr "Пример"
+msgstr "Kalimat contoh:"
 
 #. This is the field for putting in a translation of an example sentence.
 msgid "Translation"
-msgstr "Перевод"
+msgstr "Terjemahan kalimatnya:"
 
 #. This label is shown once, but has two roles.  1) it labels contains the gloss, and 2) marks the beginning of the set of fields which make up a sense. So, in english, if we labelled this 'gloss', it would describe the field well but wouldn't label the section well.
 msgid "Meaning"
-msgstr "Значение"
+msgstr "Terjemahan kata dan artinya:"
 
 msgid "Congratulations. You have completed this task."
-msgstr "Поздравления. Вы выполнили это задание."
+msgstr "Selamat berbahagia! Anda baru sudah selesai tugas ini."
 
 msgid "There is no work left to be done on this task."
-msgstr "Вся работа в этом задании выполнена."
+msgstr "Semua pekerjaan yang terkait dengan tugas ini sudah selesai."
 
 msgid "To Do:"
-msgstr "Выполнить:"
+msgstr "Kata-kata yang belum diproses."
 
 msgid "Completed:"
-msgstr "Выполнено:"
+msgstr "Kata-kata yang sudah diproses."
 
 #. The user will click this to say that this word has no baseform.  E.g. Kindess has Kind as a baseform, but Kind has no other word as a baseform.
 msgid "This word has no Base Form"
-msgstr "У этого слова нет основной формы"
+msgstr "Kata dasar buat kata ini tidak ada."
 
 #. Appended to the name of a task, in its tab, while the user is waiting for the task to come up.
 msgid "Loading..."
-msgstr "Загрузка..."
+msgstr "Sabar dulu- sedang dibuka..."
 
 #. It's up to you whether to bother translating this or not.") + ": " + project.Name + "
 msgid "WeSay"
-msgstr "WeSay"
+msgstr "KamiKata"
 
 #. The label for the field holding the citation form.
 msgid "CitationForm"
-msgstr "Цитата"
+msgstr "Bentuk kutipan (kata utama) buat kata Ini."
 
 #. The label for the field showing the definition of the word.
 msgid "Definition"
-msgstr "Определение"
+msgstr "Definisi buat kata ini."
 
 #. The label for the field showing the literal meaning of idiom or proverb.
 msgid "Literal Meaning"
-msgstr "Буквальное значение"
+msgstr "Artinya yang kharfiah buat kata ini."
 
 #. The label for the field showing a note.
 #. The label for the field showing a note.
 msgid "Note"
-msgstr "Примечание"
+msgstr "Catatan"
 
 #. The label for the field showing Part Of Speech
 msgid "POS"
-msgstr "Часть речи"
+msgstr "Istilah Tata Bahasa"
 
 #. The label for the field showing a picture.
 msgid "Picture"
-msgstr "Изображение"
+msgstr "Gambar/Foto"
 
 #. The label for the field showing an example use of the word.
 msgid "Example Sentence"
-msgstr "Пример употребления"
+msgstr "Kalimat Contoh"
 
 #. The label for the field showing the example sentence translated into other languages.
 msgid "Example Translation"
-msgstr "Перевод примера употребления"
+msgstr "Terjemahan Contoh"
 
 #. The label for the field showing Semantic Domains
 msgid "Sem Dom"
-msgstr "Sem Dom"
+msgstr "Lingkungan Arti"
 
 #. The label for the field showing the entry which this entry is derived from, is a subentry of, etc.
 msgid "Base Form"
-msgstr "Основная форма"
+msgstr "Kata Dasar"
 
 #. This is shown in a combo-box (list of options, like Part Of Speech) when no option has been chosen, or the user just doesn't know what to put in this field.
 msgid "unknown"
-msgstr "неизвестно"
+msgstr "Belum Terentu"

@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: wesay\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2007-11-23T05:56:27\n"
+"POT-Creation-Date: 2007-11-23 05:56+0000\n"
 "PO-Revision-Date: 2007-10-11 16:03+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Polish <pl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2007-11-23 03:16+0000\n"
+"X-Launchpad-Export-Date: 2008-01-24 06:16+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. The label for the 'dashboard'; the task which lets you see the status of other tasks and jump to them.
@@ -118,30 +118,24 @@ msgstr "Pokarz raport"
 msgid "Shows some information about the lexicon."
 msgstr ""
 
-# ; ..\src\Addin.Transform\HtmlInWord.cs
 msgid "Export to Word"
 msgstr ""
 
-# ; ..\src\Addin.Transform\HtmlInWord.cs
 msgid "Creates a very basic dictionary publication in Microsoft Word."
 msgstr ""
 
-# ; ..\src\Addin.Transform\HtmlTransformer.cs
 msgid "Export to HTML"
 msgstr ""
 
-#, fuzzy
 msgid "Creates a simple Html version of the dictionary, ready for printing."
-msgstr "Tworzy gotową do wydruku wersję HTML słownika"
+msgstr ""
 
-# ; ..\src\Addin.Transform\SfmTransformer.cs
 msgid "Export To SFM"
 msgstr ""
 
 msgid "Saves the lexicon in a form of standard format."
 msgstr ""
 
-# ; ..\src\CommonTools\ActionsControl.cs
 #. The description of the Actions task.
 msgid "Backup, print, etc."
 msgstr ""
@@ -164,16 +158,13 @@ msgstr "Nie można odnaleźć {0}"
 msgid "No Senses"
 msgstr ""
 
-# ; ..\src\LexicalModel\LexEntrySortHelper.cs
 #. This is what shows if the user is listing words by the glossing language, but the word doesn't have a gloss.
 msgid "No Gloss"
 msgstr ""
 
-# ; ..\src\LexicalTools\DictionaryControl.cs
 msgid "Hide Uncommon Fields"
 msgstr ""
 
-# ; ..\src\LexicalTools\DictionaryControl.cs
 msgid "Show Uncommon Fields"
 msgstr ""
 
@@ -183,7 +174,6 @@ msgstr "&Usuń to słowo"
 msgid "&New Word"
 msgstr "&Nowe słowo"
 
-# ; ..\src\LexicalTools\DictionaryControl.Designer.cs
 msgid "&Show All Fields"
 msgstr ""
 
@@ -202,10 +192,12 @@ msgid "(Enter Key)"
 msgstr ""
 
 msgid "Try thinking of words you use to talk about these things."
-msgstr "Spróbuj pomysleć o słowach, których używasz, by mówić o tych rzeczach."
+msgstr ""
+"Spróbuj pomysleć o słowach, których używasz, by mówić o tych rzeczach."
 
 msgid "Try thinking of ways to say these words in your language."
-msgstr "Spróbuj pomyśleć o sposobach, by wypowiedzieć te słowa w twoim języku."
+msgstr ""
+"Spróbuj pomyśleć o sposobach, by wypowiedzieć te słowa w twoim języku."
 
 msgid "Word:"
 msgstr "Słowo:"
@@ -229,46 +221,36 @@ msgstr "Gratulacje. Ukończyłeś to zadanie."
 msgid "There is no work left to be done on this task."
 msgstr "Nie ma już żadnych słów w tym zadaniu."
 
-# ; ..\src\LexicalTools\MissingInfoControl.Designer.cs
 msgid "To Do:"
 msgstr ""
 
-#, fuzzy
 msgid "Completed:"
-msgstr "Kopa zapasowa wykonana"
+msgstr ""
 
-# ; ..\src\LexicalTools\MissingInfoTask.cs
 #. The user will click this to say that this word has no baseform.  E.g. Kindess has Kind as a baseform, but Kind has no other word as a baseform.
 msgid "This word has no Base Form"
 msgstr ""
 
-# ; ..\src\WeSay.App\TabbedForm.cs
 #. Appended to the name of a task, in its tab, while the user is waiting for the task to come up.
 msgid "Loading..."
 msgstr ""
 
-# ; ..\src\WeSay.App\WeSayApp.cs
 #. It's up to you whether to bother translating this or not.") + ": " + project.Name + "
 msgid "WeSay"
 msgstr ""
 
-# ; ..\src\WeSay.Project\ViewTemplate.cs
 #. The label for the field holding the citation form.
 msgid "CitationForm"
 msgstr ""
 
-# ; ..\src\WeSay.Project\ViewTemplate.cs
 #. The label for the field showing the definition of the word.
 msgid "Definition"
 msgstr ""
 
 #. The label for the field showing the literal meaning of idiom or proverb.
-#, fuzzy
 msgid "Literal Meaning"
-msgstr "Znaczenie"
+msgstr ""
 
-# ; ..\src\WeSay.Project\ViewTemplate.cs
-# ; ..\src\WeSay.Project\ViewTemplate.cs
 #. The label for the field showing a note.
 #. The label for the field showing a note.
 msgid "Note"
@@ -278,26 +260,22 @@ msgstr ""
 msgid "POS"
 msgstr ""
 
-# ; ..\src\WeSay.Project\ViewTemplate.cs
 #. The label for the field showing a picture.
 msgid "Picture"
 msgstr ""
 
 #. The label for the field showing an example use of the word.
-#, fuzzy
 msgid "Example Sentence"
-msgstr "Przykład"
+msgstr ""
 
 #. The label for the field showing the example sentence translated into other languages.
-#, fuzzy
 msgid "Example Translation"
-msgstr "Tłumaczenie"
+msgstr ""
 
 #. The label for the field showing Semantic Domains
 msgid "Sem Dom"
 msgstr ""
 
-# ; ..\src\WeSay.Project\ViewTemplate.cs
 #. The label for the field showing the entry which this entry is derived from, is a subentry of, etc.
 msgid "Base Form"
 msgstr ""
@@ -305,6 +283,3 @@ msgstr ""
 #. This is shown in a combo-box (list of options, like Part Of Speech) when no option has been chosen, or the user just doesn't know what to put in this field.
 msgid "unknown"
 msgstr "nieznany"
-
-#~ msgid "Html Exporter"
-#~ msgstr "Eksport do HTML"
