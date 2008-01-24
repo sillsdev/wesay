@@ -6,7 +6,18 @@
 	<BaseDirectory>$(MSBuildProjectDirectory)\..</BaseDirectory>
   </PropertyGroup>
 
+  <PropertyGroup>
+	<SourceFolder>$(BaseDirectory)\src</SourceFolder>
+	<CSharpFiles>$(BaseDirectory)\src</CSharpFiles>
+  </PropertyGroup>
+
+  <ItemGroup>
+	<CSharpFiles Include="$(BaseDirectory)\**\*.cs"/>
+	<XmlFiles Include="$(BaseDirectory)\common\**\*.WeSayConfig"/>
+  </ItemGroup>
+
   <Import Project="$(BaseDirectory)\bld\UpdateCsProjs.Targets"/>
+
 
   <Target Name="Compile">
 	<MSBuild Projects="$(BaseDirectory)\src\WeSay.sln"
@@ -97,7 +108,32 @@
 		  WorkingDirectory="$(BaseDirectory)\output\Release"/>
   </Target>
 
+
+  <UsingTask AssemblyFile="$(BaseDirectory)\bld\Palaso.BuildTasks.dll" TaskName="MakePot" />
+  <Target Name="MakePotFile">
+	<MakePot ProjectId="WeSay"
+			 OutputFile="$(BaseDirectory)\common\WeSay.pot"
+			 MsdIdBugsTo="hattonjohn@gmail.com"
+			 XmlFiles="@(XmlFiles)"
+			 XPathToStrings="//label | //description[not(@UseInConstructor='false')]"
+			 CSharpFiles="@(CSharpFiles)">
+	</MakePot>
+  </Target>
+
+	<UsingTask AssemblyFile="$(BaseDirectory)\bld\Palaso.BuildTasks.dll" TaskName="MakeWixForDirTree" />
+  <Target Name="MakeWixForPoFiles">
+	<MakeWixForDirTree
+				DirectoryReferenceId="common"
+				ComponentGroupId="PoFiles"
+				RootDirectory="$(BaseDirectory)\common"
+				OutputFileName="$(BaseDirectory)\src\Setup\GeneratedPOFiles.wxs"
+				MatchRegExPattern="\.po$">
+	  <Output TaskParameter="OutputFileName" ItemName="Compile" />
+	</MakeWixForDirTree>
+  </Target>
+
   <Target Name="Package">
+	<CallTarget targets="MakePotFile; MakeWixForPoFiles"/>
 	<MSBuild Projects="$(BaseDirectory)\src\Setup\Setup.wixproj"/>
   </Target>
 
