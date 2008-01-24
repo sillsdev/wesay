@@ -159,8 +159,8 @@ namespace WeSay.UI
 			{
 				throw new ObjectDisposedException(GetType().ToString());
 			}
-			Height = GetPreferredHeight();
 			base.OnTextChanged(e);
+			Height = GetPreferredHeight(Width);
 		}
 
 		// we do this in OnLayout instead of OnResize see
@@ -168,18 +168,31 @@ namespace WeSay.UI
 		// http://blogs.msdn.com/jfoscoding/archive/2005/03/04/385625.aspx
 		protected override void OnLayout(LayoutEventArgs levent)
 		{
-			Height = GetPreferredHeight();
+			Height = GetPreferredHeight(Width);
 			base.OnLayout(levent);
+		}
+
+		// we still need the resize sometimes or ghost fields disappear
+		protected override void OnSizeChanged(EventArgs e)
+		{
+			Height = GetPreferredHeight(Width);
+			base.OnSizeChanged(e);
+		}
+
+		protected override void OnResize(EventArgs e)
+		{
+			Height = GetPreferredHeight(Width);
+			base.OnResize(e);
 		}
 
 		public override Size GetPreferredSize(Size proposedSize)
 		{
 			Size size = base.GetPreferredSize(proposedSize);
-			size.Height = GetPreferredHeight();
+			size.Height = GetPreferredHeight(size.Width);
 			return size;
 		}
 
-		private int GetPreferredHeight()
+		private int GetPreferredHeight(int width)
 		{
 			using (Graphics g = CreateGraphics())
 			{
@@ -198,9 +211,9 @@ namespace WeSay.UI
 												   Text + "\n",
 												   // need extra new line to handle case where ends in new line (since last newline is ignored)
 									Font,
-									new Size(Width, int.MaxValue), //new Size(Width, int.MinValue),
+									new Size(width, int.MaxValue),
 									flags);
-				return Math.Max(MinimumSize.Height, sz.Height);
+				return sz.Height;
 			}
 		}
 

@@ -28,11 +28,6 @@ namespace WeSay.LexicalTools
 			_presentationModel = presentationModel;
 			InitializeComponent();
 
-			if (Environment.OSVersion.Platform != PlatformID.Unix)
-			{
-				SetAutoSizeToGrowAndShrink();
-			}
-
 			InitializeDisplaySettings();
 			RefreshCurrentWords();
 			_domainName.Items.Clear();
@@ -314,13 +309,5 @@ namespace WeSay.LexicalTools
 			_vernacularBox.FocusOnFirstWsAlternative();
 
 		}
-
-		private void SetAutoSizeToGrowAndShrink()
-		{
-#if !MONO
-			this._vernacularBox.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-#endif
-		}
-
 	}
 }

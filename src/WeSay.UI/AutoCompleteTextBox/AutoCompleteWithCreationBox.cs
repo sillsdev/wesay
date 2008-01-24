@@ -41,9 +41,15 @@ namespace WeSay.UI.AutoCompleteTextBox
 			GetValueFromKeyValue = CastKeyValueToValue;
 			GetKeyValueFromValue = CastValueToKeyValue;
 
-			_textBox.SizeChanged += new EventHandler(_textBox_SizeChanged);
+			_textBox.SizeChanged += _textBox_SizeChanged;
 		}
 
+		public override Size GetPreferredSize(Size proposedSize)
+		{
+			Size size = base.GetPreferredSize(proposedSize);
+			size.Height = _textBox.Height;
+			return size;
+		}
 
 
 		void _textBox_SizeChanged(object sender, EventArgs e)
@@ -224,7 +230,7 @@ namespace WeSay.UI.AutoCompleteTextBox
 
 				Size sz = TextRenderer.MeasureText(g, _textBox.Text,
 												   _textBox.Font,
-												   new Size(int.MinValue, _textBox.Height),
+												   new Size(int.MaxValue, _textBox.Height),
 												   flags);
 
 				_textBox.Width = Math.Max(_textBox.MinimumSize.Width, sz.Width);

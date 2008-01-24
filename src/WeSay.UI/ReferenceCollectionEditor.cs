@@ -66,29 +66,40 @@ namespace WeSay.UI
 			_choiceSystemAdaptor = adaptor;
 			chosenItems.ListChanged += new ListChangedEventHandler(chosenItems_ListChanged);
 
-			this.SizeChanged += new EventHandler(ReferenceCollectionEditor_SizeChanged);
-			_flowPanel.Dock = DockStyle.None;//we want it to grow
-			_flowPanel.ControlAdded += new ControlEventHandler(OnSizeRelatedEvent);
-			_flowPanel.ControlRemoved += new ControlEventHandler(OnSizeRelatedEvent);
-			_flowPanel.Anchor = AnchorStyles.Top | AnchorStyles.Left;
-			_flowPanel.AutoSize = true;
-			_flowPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-			this.AutoSize = false;
-
 			UpdateSize();
 		}
 
-
-		void ReferenceCollectionEditor_SizeChanged(object sender, EventArgs e)
+		public override Size GetPreferredSize(Size proposedSize)
 		{
+			return _flowPanel.GetPreferredSize(proposedSize);
+		}
+
+		public override Size MinimumSize
+		{
+			get
+			{
+				return new Size(_flowPanel.MinimumSize.Width, _flowPanel.Height);
+			}
+		}
+
+		protected override void OnResize(EventArgs e)
+		{
+			base.OnResize(e);
 			//we determine the width, the flow determines the height
-			_flowPanel.MaximumSize= new Size(this.Width, 500);
-			_flowPanel.Width = this.Width-1;
+			_flowPanel.MaximumSize = new Size(this.Width, 500);
+			_flowPanel.Width = Width;
 			UpdateSize();
 		}
 
-		void OnSizeRelatedEvent(object sender, ControlEventArgs e)
+		protected override void OnControlAdded(ControlEventArgs e)
 		{
+			base.OnControlAdded(e);
+			UpdateSize();
+		}
+
+		protected override void OnControlRemoved(ControlEventArgs e)
+		{
+			base.OnControlRemoved(e);
 			UpdateSize();
 		}
 
@@ -97,8 +108,7 @@ namespace WeSay.UI
 			if(_alreadyInUpdateSize)
 				return;
 			_alreadyInUpdateSize = true;
-			int min =0;//review
-			Height = Math.Max(min,_flowPanel.Height);
+			Height = _flowPanel.Height;
 			_alreadyInUpdateSize = false;
 		}
 

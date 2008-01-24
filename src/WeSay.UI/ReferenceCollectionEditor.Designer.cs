@@ -35,13 +35,13 @@ namespace WeSay.UI
 			// _flowPanel
 			//
 			this._flowPanel.AutoSize = true;
-			this._flowPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
 			this._flowPanel.BackColor = System.Drawing.Color.Gainsboro;
-			this._flowPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+			this._flowPanel.Dock = System.Windows.Forms.DockStyle.None;
 			this._flowPanel.Location = new System.Drawing.Point(0, 0);
 			this._flowPanel.Name = "_flowPanel";
 			this._flowPanel.Size = new System.Drawing.Size(309, 37);
 			this._flowPanel.TabIndex = 0;
+			this._flowPanel.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left;
 			//
 			// ReferenceCollectionEditor
 			//
@@ -52,6 +52,7 @@ namespace WeSay.UI
 			this.Name = "ReferenceCollectionEditor";
 			this.Size = new System.Drawing.Size(309, 37);
 			this.Load += new System.EventHandler(this.OnLoad);
+			this.AutoSize = false;
 
 			this._flowPanel.ResumeLayout(false);
 			this.ResumeLayout(false);
