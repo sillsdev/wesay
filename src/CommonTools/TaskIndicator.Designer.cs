@@ -53,7 +53,6 @@ namespace WeSay.CommonTools
 			this._btnName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this._btnName.UseVisualStyleBackColor = false;
 			this._btnName.Click += new System.EventHandler(this.OnBtnNameClick);
-			this._btnName.FontChanged += new System.EventHandler(this._btnName_FontChanged);
 			//
 			// _textShortDescription
 			//
@@ -94,7 +93,6 @@ namespace WeSay.CommonTools
 			this.Controls.Add(this._btnName);
 			this.Name = "TaskIndicator";
 			this.Size = new System.Drawing.Size(304, 83);
-			this.Resize += new System.EventHandler(this.TaskIndicator_Resize);
 			this.BackColorChanged += new System.EventHandler(this.TaskIndicator_BackColorChanged);
 			((System.ComponentModel.ISupportInitialize)(this.localizationHelper1)).EndInit();
 			this.ResumeLayout(false);

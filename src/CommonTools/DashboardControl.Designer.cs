@@ -31,7 +31,7 @@ namespace WeSay.CommonTools
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this._vbox = new WeSay.UI.VBox();
+			this._vbox = new System.Windows.Forms.TableLayoutPanel();
 			this.SuspendLayout();
 			//
 			// _vbox
@@ -68,7 +68,7 @@ namespace WeSay.CommonTools
 
 		#endregion
 
-		private WeSay.UI.VBox _vbox;
+		private System.Windows.Forms.TableLayoutPanel _vbox;
 		private System.Windows.Forms.Label _projectNameLabel;
 
 	}

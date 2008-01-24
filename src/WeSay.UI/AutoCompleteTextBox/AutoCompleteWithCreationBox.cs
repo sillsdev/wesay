@@ -47,14 +47,18 @@ namespace WeSay.UI.AutoCompleteTextBox
 		public override Size GetPreferredSize(Size proposedSize)
 		{
 			Size size = base.GetPreferredSize(proposedSize);
-			size.Height = _textBox.Height;
+			size.Height = GetPreferredHeight();
 			return size;
 		}
 
 
 		void _textBox_SizeChanged(object sender, EventArgs e)
 		{
-			Height = _textBox.Height;
+			Height = GetPreferredHeight();
+		}
+
+		private int GetPreferredHeight() {
+			return Math.Max(this._addNewButton.Height, this._textBox.Height);
 		}
 
 		private static KV CastValueToKeyValue(ValueT v)

@@ -228,7 +228,6 @@ namespace WeSay.LexicalTools
 
 			_btnFind.Left = _writingSystemChooser.Left - _btnFind.Width;
 			_findText.Width = _btnFind.Left - _findText.Left;
-			_findText.PopupWidth = _recordsListBox.Width;
 		}
 
 		private static IEnumerable FindClosestAndNextClosestAndPrefixedForms(string text, IEnumerable items, IDisplayStringAdaptor adaptor)

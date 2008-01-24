@@ -36,7 +36,6 @@ namespace WeSay.UI.AutoCompleteTextBox
 			this._textBox.PopupOffset = new System.Drawing.Point(0, 0);
 			this._textBox.PopupSelectionBackColor = System.Drawing.SystemColors.Highlight;
 			this._textBox.PopupSelectionForeColor = System.Drawing.SystemColors.HighlightText;
-			this._textBox.PopupWidth = 110;
 			this._textBox.SelectedItem = null;
 			this._textBox.Size = new System.Drawing.Size(110, 20);
 			this._textBox.TabIndex = 0;
@@ -47,11 +46,13 @@ namespace WeSay.UI.AutoCompleteTextBox
 			this._addNewButton.Anchor = System.Windows.Forms.AnchorStyles.Right;
 			this._addNewButton.Location = new System.Drawing.Point(110, -1);
 			this._addNewButton.Name = "_addNewButton";
-			this._addNewButton.Size = new System.Drawing.Size(37, 23);
+			this._addNewButton.Size = new System.Drawing.Size(30, 18);
 			this._addNewButton.TabIndex = 1;
 			this._addNewButton.Text = "+";
 			this._addNewButton.UseVisualStyleBackColor = true;
 			this._addNewButton.Click += new System.EventHandler(this.OnAddNewButton_Click);
+			this._addNewButton.AutoSize = true;
+			this._addNewButton.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
 			//
 			// AutoCompleteWithCreationBox
 			//

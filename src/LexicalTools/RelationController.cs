@@ -203,7 +203,6 @@ namespace WeSay.LexicalTools
 		private AutoCompleteWithCreationBox<T, LexEntry> CreatePicker<T>(LexRelation relation) where T:class
 		{
 			AutoCompleteWithCreationBox<T, LexEntry> picker = new AutoCompleteWithCreationBox<T, LexEntry>(CommonEnumerations.VisibilitySetting.Visible);
-			picker.Box.PopupWidth = 100;
 			picker.Box.Tag = relation;
 			//                    switch (type.TargetType)
 			//                    {

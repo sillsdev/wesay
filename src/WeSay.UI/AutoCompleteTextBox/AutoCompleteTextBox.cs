@@ -109,7 +109,7 @@ namespace WeSay.UI.AutoCompleteTextBox
 
 		private bool _autoSizePopup = true;
 		[Browsable(true)]
-		[Description("The width of the popup (-1 will auto-size the popup to the width of the textbox).")]
+		[Description("The width of the popup (-1 will auto-size the popup to the larger of the width of the textbox or the content of the list).")]
 		public int PopupWidth
 		{
 			get
@@ -353,6 +353,7 @@ namespace WeSay.UI.AutoCompleteTextBox
 
 			// Create the list box that will hold matching items
 			this._listBox = new ListBox();
+			this._listBox.MaximumSize = new Size(400,100);
 			this._listBox.Cursor = Cursors.Hand;
 			this._listBox.BorderStyle = BorderStyle.FixedSingle;
 			this._listBox.SelectedIndexChanged += new EventHandler(List_SelectedIndexChanged);
@@ -360,7 +361,7 @@ namespace WeSay.UI.AutoCompleteTextBox
 			_listBox.MouseMove += new MouseEventHandler(List_MouseMove);
 			//this._list.DrawMode = DrawMode.OwnerDrawFixed;
 			//this._list.DrawItem += new DrawItemEventHandler(List_DrawItem);
-			this._listBox.ItemHeight = Height;
+			this._listBox.ItemHeight = _listBox.Font.Height;
 			//this._list.Dock = DockStyle.Fill;
 			this._listBox.Visible = false;
 			this._listBox.Sorted = false;
@@ -417,11 +418,14 @@ namespace WeSay.UI.AutoCompleteTextBox
 			{
 				//NB: this height can be multiple lines, so we don't just want the Height
 				//this._listBox.ItemHeight = Height;
-				this._listBox.ItemHeight = Font.Height;
+				this._listBox.ItemHeight = _listBox.Font.Height;
 			}
 			if(_listBox !=null && _autoSizePopup)
 			{
-				this._listBox.Width = Width;
+				if (this._listBox.Width < Width)
+				{
+					this._listBox.Width = Width;
+				}
 			}
 		}
 		protected override void OnParentChanged(EventArgs e)
@@ -709,22 +713,19 @@ namespace WeSay.UI.AutoCompleteTextBox
 				return;
 			//end hatton experimental
 
-			foreach (object item in ItemFilterer.Invoke(Text, Items, ItemDisplayStringAdaptor))
+			int maxWidth = Width;
+			using (Graphics g = (_autoSizePopup)?CreateGraphics():null)
 			{
-				this._listBox.Items.Add(new ItemWrapper(item, ItemDisplayStringAdaptor.GetDisplayLabel(item)));
-				//                this._listBox.Items.Add(ItemDisplayStringAdaptor.GetDisplayLabel(item));
+				foreach (object item in ItemFilterer.Invoke(Text, Items, ItemDisplayStringAdaptor))
+				{
+					string label = ItemDisplayStringAdaptor.GetDisplayLabel(item);
+					this._listBox.Items.Add(new ItemWrapper(item, label));
+					if (_autoSizePopup)
+					{
+					  maxWidth = Math.Max(maxWidth, MeasureItem(g, label).Width);
+					}
+				}
 			}
-
-			//if (selectedItem != null &&
-			//    this.list.Items.Contains(selectedItem))
-			//{
-			//    EntryMode oldMode = Mode;
-			//    Mode = EntryMode.List;
-			//    this.list.SelectedItem = selectedItem;
-			//    Mode = oldMode;
-			//}
-
-			//this._list.SelectedIndex = -1;
 
 			if (this._listBox.Items.Count == 0)
 			{
@@ -736,9 +737,10 @@ namespace WeSay.UI.AutoCompleteTextBox
 				if (visItems > 8)
 					visItems = 8;
 
-				this._listBox.ItemHeight = Height;
+				this._listBox.ItemHeight = _listBox.Font.Height;
 
 				this._listBox.Height = (visItems * this._listBox.ItemHeight) + 2;
+
 				switch (BorderStyle)
 				{
 					case BorderStyle.FixedSingle:
@@ -753,20 +755,26 @@ namespace WeSay.UI.AutoCompleteTextBox
 					}
 				}
 
-				this._listBox.Width = PopupWidth;
+				if (_autoSizePopup)
+				{
+					_listBox.Width = maxWidth;
+				}
 				this._listBox.RightToLeft = RightToLeft;
 				this._listBox.Font = Font;
-
-				//if (this.list.Items.Count > 0 &&
-				//    this.list.SelectedIndex == -1)
-				//{
-				//    EntryMode oldMode = Mode;
-				//    Mode = EntryMode.List;
-				//    this.list.SelectedIndex = 0;
-				//    Mode = oldMode;
-				//}
-
 			}
+		}
+
+		private Size MeasureItem(Graphics g, string s) {
+				TextFormatFlags flags = TextFormatFlags.LeftAndRightPadding |
+										TextFormatFlags.Default |
+										TextFormatFlags.NoClipping;
+				if (WritingSystem != null && WritingSystem.RightToLeft)
+				{
+					flags |= TextFormatFlags.RightToLeft;
+				}
+				return TextRenderer.MeasureText(g, s, _listBox.Font,
+											   new Size(int.MaxValue, _listBox.Font.Height+2),
+											   flags);
 		}
 
 		private IEnumerable FilterList(string text, IEnumerable items, IDisplayStringAdaptor adaptor)

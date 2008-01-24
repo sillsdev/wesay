@@ -4,28 +4,25 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 using WeSay.Foundation;
-using WeSay.Foundation.Options;
 using WeSay.Language;
 using WeSay.UI.AutoCompleteTextBox;
 
 
 namespace WeSay.UI
 {
-	public partial class ReferenceCollectionEditor<KV, ValueT, KEY_CONTAINER> : UserControl
+	public partial class ReferenceCollectionEditor<KV, ValueT, KEY_CONTAINER> : FlowLayoutPanel
 		where ValueT :  class
 		where KEY_CONTAINER : IValueHolder<ValueT>, IReferenceContainer
 	{
-		private IBindingList _chosenItems;
-		private IEnumerable<KV> _sourceChoices;
-		private IList<WritingSystem> _writingSystems;
+		private readonly IBindingList _chosenItems;
+		private readonly IEnumerable<KV> _sourceChoices;
+		private readonly IList<WritingSystem> _writingSystems;
 		private readonly CommonEnumerations.VisibilitySetting _visibility;
-		private IChoiceSystemAdaptor<KV,ValueT,KEY_CONTAINER> _choiceSystemAdaptor;
+		private readonly IChoiceSystemAdaptor<KV,ValueT,KEY_CONTAINER> _choiceSystemAdaptor;
 		private IReportEmptiness _alternateEmptinessHelper;
 
-		 private int _popupWidth=-1;
+		private int _popupWidth=-1;
 		private bool _ignoreListChanged = false;
-		private bool _alreadyInUpdateSize=false;
-
 
 		public event EventHandler<CreateNewArgs> CreateNewTargetItem;
 
@@ -64,62 +61,28 @@ namespace WeSay.UI
 			_writingSystems = writingSystems;
 			_visibility = visibility;
 			_choiceSystemAdaptor = adaptor;
-			chosenItems.ListChanged += new ListChangedEventHandler(chosenItems_ListChanged);
-
-			UpdateSize();
+			chosenItems.ListChanged += chosenItems_ListChanged;
 		}
 
-		public override Size GetPreferredSize(Size proposedSize)
+		// esa: I don't like this. We are relying on the CreateNewTargetItem
+		// event to be wired up before we AddControls since this passes that
+		// wiring on. If we just do AddControls in the constructor where
+		// it otherwise would be natural, adding a delegate to CreateNewTargetItem
+		// has no effect.
+		// This waits until the Control has become "real" presumably actually shown
+		protected override void  OnHandleCreated(EventArgs e)
 		{
-			return _flowPanel.GetPreferredSize(proposedSize);
-		}
-
-		public override Size MinimumSize
-		{
-			get
-			{
-				return new Size(_flowPanel.MinimumSize.Width, _flowPanel.Height);
-			}
-		}
-
-		protected override void OnResize(EventArgs e)
-		{
-			base.OnResize(e);
-			//we determine the width, the flow determines the height
-			_flowPanel.MaximumSize = new Size(this.Width, 500);
-			_flowPanel.Width = Width;
-			UpdateSize();
-		}
-
-		protected override void OnControlAdded(ControlEventArgs e)
-		{
-			base.OnControlAdded(e);
-			UpdateSize();
-		}
-
-		protected override void OnControlRemoved(ControlEventArgs e)
-		{
-			base.OnControlRemoved(e);
-			UpdateSize();
-		}
-
-		private void UpdateSize()
-		{
-			if(_alreadyInUpdateSize)
-				return;
-			_alreadyInUpdateSize = true;
-			Height = _flowPanel.Height;
-			_alreadyInUpdateSize = false;
+			AddControls();
+			 base.OnHandleCreated(e);
 		}
 
 		void chosenItems_ListChanged(object sender, ListChangedEventArgs e)
 		{
 			if (!_ignoreListChanged && !ContainsFocus)
 			{
-				OnLoad(this, null);
+				AddControls();
 			}
 		}
-
 
 		public int PopupWidth
 		{
@@ -148,8 +111,7 @@ namespace WeSay.UI
 			set { _alternateEmptinessHelper = value; }
 		}
 
-
-		private void OnLoad(object sender, EventArgs e)
+		private void AddControls()
 		{
 			if (DesignMode)
 				return;
@@ -157,20 +119,14 @@ namespace WeSay.UI
 			if (Parent != null)
 			{
 				BackColor = Parent.BackColor;
-
-				_flowPanel.BackColor = BackColor;
 			}
 
-			_flowPanel.Controls.Clear();
+			Controls.Clear();
 			foreach (KEY_CONTAINER item in _chosenItems)
 			{
 				AutoCompleteWithCreationBox<KV, ValueT> picker = MakePicker();
-				picker.ValueChanged += new EventHandler(picker_ValueChanged);
 				picker.Box.Tag =item;
-			   // box.BorderStyle = System.Windows.Forms.BorderStyle.None;
-
 				picker.Box.SelectedItem = _choiceSystemAdaptor.GetKeyValueFromKey_Container(item);
-
 				if(picker.Box.SelectedItem ==null)//couldn't find a match for the key
 				{
 					picker.Box.Text = item.Key; // the box will recognize the problem and display a red background
@@ -179,10 +135,7 @@ namespace WeSay.UI
 				//the binding itself doesn't need to be "owned" by us... it controls its own lifetime
 				SimpleBinding<ValueT> binding = new SimpleBinding<ValueT>(item, picker);
 
-				_flowPanel.Controls.Add(picker);
-
-				//review
-				picker.Parent = _flowPanel;
+				Controls.Add(picker);
 			}
 			//add a blank to type in
 			if(_visibility != CommonEnumerations.VisibilitySetting.ReadOnly)
@@ -190,30 +143,14 @@ namespace WeSay.UI
 				AddEmptyPicker();
 			}
 			ResumeLayout(false);
-		}
-
-		void picker_ValueChanged(object sender, EventArgs e)
-		{
-			AutoCompleteWithCreationBox<KV, ValueT> picker = (AutoCompleteWithCreationBox<KV, ValueT>) sender;
-
-			//this is dangerous; a user trying to replace whats there will loose the box they were working in
-//            if(picker.Box.SelectedItem == null && string.IsNullOrEmpty(picker.Box.Text))
-//            {
-//                 KEY_CONTAINER container = (KEY_CONTAINER) picker.Box.Tag;
-//                _chosenItems.Remove(container);
-//                _flowPanel.Controls.Remove(picker);
-//                picker.Dispose();
-//            }
+			PerformLayout();
 		}
 
 		private void AddEmptyPicker()
 		{
 			AutoCompleteWithCreationBox<KV, ValueT> emptyPicker = MakePicker();
-			emptyPicker.ValueChanged += new EventHandler(emptyPicker_ValueChanged);
-			_flowPanel.Controls.Add(emptyPicker);
-
-			//review
-			emptyPicker.Parent = _flowPanel;
+			emptyPicker.ValueChanged += emptyPicker_ValueChanged;
+			Controls.Add(emptyPicker);
 		}
 
 		void emptyPicker_ValueChanged(object sender, EventArgs e)
@@ -227,7 +164,6 @@ namespace WeSay.UI
 				KEY_CONTAINER newGuy = (KEY_CONTAINER) _chosenItems.AddNew();
 				_choiceSystemAdaptor.UpdateKeyContainerFromKeyValue(kv, newGuy);
 				_ignoreListChanged = false;
-				picker.ValueChanged += picker_ValueChanged;
 
 				//the binding itself doesn't need to be "owned" by us... it controls its own lifetime
 				SimpleBinding<ValueT> binding = new SimpleBinding<ValueT>(newGuy, picker);
@@ -242,17 +178,8 @@ namespace WeSay.UI
 			picker.Box.FormToObectFinder = _choiceSystemAdaptor.GetValueFromFormNonGeneric;
 
 			picker.GetKeyValueFromValue = _choiceSystemAdaptor.GetKeyValueFromValue;
-			picker.GetValueFromKeyValue = _choiceSystemAdaptor.GetValueFromKeyValue;// _getValueFromKeyValueDelegate;
+			picker.GetValueFromKeyValue = _choiceSystemAdaptor.GetValueFromKeyValue;
 			picker.Box.ItemDisplayStringAdaptor = _choiceSystemAdaptor;
-
-			//picker.Box.SelectedItemChanged += new EventHandler(OnSelectedItemChanged);
-
-			if(_choiceSystemAdaptor != null)
-			{
-				picker.Box.ItemDisplayStringAdaptor = _choiceSystemAdaptor;
-			}
-			//picker.Box.TooltipToDisplayStringAdaptor = _choiceSystemAdaptor.ToolTipAdaptor;
-			picker.Box.PopupWidth = 100;
 			picker.Box.Mode = WeSayAutoCompleteTextBox.EntryMode.List;
 			picker.Box.Items = _sourceChoices;
 			picker.Box.WritingSystem = _writingSystems[0];
@@ -260,7 +187,7 @@ namespace WeSay.UI
 			picker.Box.ItemFilterer = _choiceSystemAdaptor.GetItemsToOffer;
 			picker.Box.PopupWidth = _popupWidth;
 
-			picker.Box.LostFocus   += new EventHandler(OnChildLostFocus);
+			picker.Box.LostFocus += OnChildLostFocus;
 
 			if (CreateNewTargetItem != null)
 			{
@@ -271,35 +198,10 @@ namespace WeSay.UI
 
 		internal void OnCreateNewClicked(object sender, CreateNewArgs e)
 		{
-			if (this.CreateNewTargetItem!=null)
+			if (CreateNewTargetItem!=null)
 			{
 				CreateNewTargetItem.Invoke(this, e);
 			}
 		}
-
-		private class LexemeInfoProvider : IDisplayStringAdaptor
-		{
-			public string GetDisplayLabel(object item)
-			{
-				return "pretend: "+item.ToString();
-			}
-
-			#region IDisplayStringAdaptor Members
-
-			public string GetToolTip(object item)
-			{
-				return "";
-			}
-
-			public string GetToolTipTitle(object item)
-			{
-				return "";
-			}
-
-			#endregion
-		}
-
 	}
-
-
 }

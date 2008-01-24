@@ -118,16 +118,5 @@ namespace WeSay.CommonTools
 		{
 			selected(this, e);
 		}
-
-		private void _btnName_FontChanged(object sender, EventArgs e)
-		{
-
-		}
-
-		private void TaskIndicator_Resize(object sender, EventArgs e)
-		{
-			//int w = this.Width;
-		}
-
 	}
 }

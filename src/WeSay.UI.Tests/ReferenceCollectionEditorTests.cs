@@ -101,8 +101,7 @@ namespace WeSay.UI.Tests
 			get
 			{
 				IList<AutoCompleteWithCreationBox<Option, string>> boxes = new List<AutoCompleteWithCreationBox<Option, string>>();
-				Control panel = _control.Controls[0];
-				foreach (Control child in panel.Controls)
+				foreach (Control child in _control.Controls)
 				{
 					AutoCompleteWithCreationBox<Option, string> b = child as AutoCompleteWithCreationBox<Option, string>;
 					if(b!=null)
@@ -281,11 +280,9 @@ namespace WeSay.UI.Tests
 		public void HeightIncreasesAsItemsAdded()
 		{
 			_control.Anchor = AnchorStyles.Left | AnchorStyles.Right;
-			_control.Dock = DockStyle.None;
-			_control.AutoSize = false;
-
-			_control.Width = 100;
-			_control.Height = 30;
+			_control.FlowDirection = FlowDirection.TopDown;
+			//_control.Width = 100;
+			//_control.Height = 30;
 			ActuallyShowOnScreen();
 			Application.DoEvents();
 			int initialHeight = _control.Height;

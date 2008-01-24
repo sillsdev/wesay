@@ -105,7 +105,6 @@ namespace WeSay.LexicalTools
 			this._findText.PopupOffset = new System.Drawing.Point(0, 0);
 			this._findText.PopupSelectionBackColor = System.Drawing.SystemColors.Highlight;
 			this._findText.PopupSelectionForeColor = System.Drawing.SystemColors.HighlightText;
-			this._findText.PopupWidth = 118;
 			this._findText.SelectedItem = null;
 			this._findText.Size = new System.Drawing.Size(80, 19);
 			this._findText.TabIndex = 1;
