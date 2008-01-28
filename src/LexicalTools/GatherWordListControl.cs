@@ -122,10 +122,11 @@ namespace WeSay.LexicalTools
 
 		/// <summary>
 		/// We want to show all words in the lexicon which match the current
-		/// gloss.
+		/// wordlist item.
 		/// </summary>
 		private void PopulateWordsMatchingCurrentItem()
-		{            _listViewOfWordsMatchingCurrentItem.Items.Clear();
+		{
+			_listViewOfWordsMatchingCurrentItem.Items.Clear();
 
 			foreach (LexEntry entry in _task.GetMatchingRecords(_task.CurrentWordAsMultiText))
 			{

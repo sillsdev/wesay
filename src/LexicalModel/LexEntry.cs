@@ -289,7 +289,7 @@ namespace WeSay.LexicalModel
 			}
 		}
 
-		public LexSense GetOrCreateSenseWithGloss(MultiText gloss)
+		public LexSense GetOrCreateSenseWithGloss(MultiText gloss)//Switch to definition
 		{
 			foreach (LexSense sense in Senses)
 			{
@@ -308,7 +308,7 @@ namespace WeSay.LexicalModel
 			string s = "";
 			foreach (LexSense sense in Senses)
 			{
-				s += sense.Gloss.GetFirstAlternative() + ", ";
+				s += sense.Gloss.GetFirstAlternative() + ", ";  //TODO switch to definition
 			}
 			if (s == "")
 			{

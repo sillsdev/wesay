@@ -439,7 +439,7 @@ namespace WeSay.Project
 			get
 			{
 				return !(_fieldName == FieldNames.EntryLexicalForm.ToString() ||
-					   _fieldName == FieldNames.SenseGloss.ToString());
+					   _fieldName == FieldNames.SenseGloss.ToString());// TODEF
 			}
 		}
 

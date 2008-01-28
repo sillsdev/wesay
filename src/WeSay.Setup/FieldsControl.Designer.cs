@@ -83,7 +83,7 @@ namespace WeSay.Setup
 			this._fieldsListBox.FormattingEnabled = true;
 			this._fieldsListBox.Items.AddRange(new object[] {
 			"Word",
-			"Meaning (Gloss)",
+			"Meaning",
 			"Definition",
 			"Example Sentence",
 			"Translation of Example Sentence",

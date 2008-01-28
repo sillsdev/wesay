@@ -18,7 +18,7 @@ namespace WeSay.LexicalTools
 		private List<string> _words;
 		private int _currentWordIndex = 0;
 		private ViewTemplate _viewTemplate;
-		private string _writingSystemIdForGlossingLanguage;
+		private string _writingSystemIdForWordListWords;
 	   // private bool _suspendNotificationOfNavigation=false;
 
 
@@ -26,7 +26,7 @@ namespace WeSay.LexicalTools
 								  string label,
 								  string description,
 								  string wordListFileName,
-								  string writingSystemIdForGlossingLanguage,
+								  string writingSystemIdForWordListLanguage,
 								  ViewTemplate viewTemplate)
 			: base(label, description, false, recordListManager, viewTemplate)
 		{
@@ -34,9 +34,9 @@ namespace WeSay.LexicalTools
 			{
 				throw new ArgumentNullException("wordListFileName");
 			}
-			if (writingSystemIdForGlossingLanguage == null)
+			if (writingSystemIdForWordListLanguage == null)
 			{
-				throw new ArgumentNullException("writingSystemIdForGlossingLanguage");
+				throw new ArgumentNullException("writingSystemIdForWordListLanguage");
 			}
 			if (viewTemplate == null)
 			{
@@ -44,7 +44,7 @@ namespace WeSay.LexicalTools
 			}
 			_wordListFileName = wordListFileName;
 			_words = null;
-			_writingSystemIdForGlossingLanguage = writingSystemIdForGlossingLanguage;
+			_writingSystemIdForWordListWords = writingSystemIdForWordListLanguage;
 			_viewTemplate = viewTemplate;
 		}
 
@@ -153,9 +153,9 @@ namespace WeSay.LexicalTools
 
 		public override void Activate()
 		{
-			if (!WeSayWordsProject.Project.WritingSystems.ContainsKey(_writingSystemIdForGlossingLanguage))
+			if (!WeSayWordsProject.Project.WritingSystems.ContainsKey(_writingSystemIdForWordListWords))
 			{
-				Palaso.Reporting.ErrorReport.ReportNonFatalMessage("The writing system of the words in the word list will be used to add glosses.  Therefore, it needs to be in the list of writing systems for this project.  Either change the writing system that this task uses for the word list (currently '{0}') or add a writing system with this id to the project.", _writingSystemIdForGlossingLanguage);
+				Palaso.Reporting.ErrorReport.ReportNonFatalMessage("The writing system of the words in the word list will be used to add reversals and definitions.  Therefore, it needs to be in the list of writing systems for this project.  Either change the writing system that this task uses for the word list (currently '{0}') or add a writing system with this id to the project.", _writingSystemIdForWordListWords);
 			}
 
 			if (_words == null)
@@ -176,7 +176,7 @@ namespace WeSay.LexicalTools
 			get
 			{
 				MultiText m = new MultiText();
-				m.SetAlternative(_writingSystemIdForGlossingLanguage, CurrentWord);
+				m.SetAlternative(_writingSystemIdForWordListWords, CurrentWord);
 				return m;
 			}
 		}
@@ -260,16 +260,16 @@ namespace WeSay.LexicalTools
 				LexSense sense = (LexSense)entry.Senses[i];
 				if(sense.Gloss !=null)
 				{
-					if(sense.Gloss.ContainsAlternative(_writingSystemIdForGlossingLanguage))
+					if(sense.Gloss.ContainsAlternative(_writingSystemIdForWordListWords))
 					{
-						if (sense.Gloss[_writingSystemIdForGlossingLanguage] == CurrentListWord)
+						if (sense.Gloss[_writingSystemIdForWordListWords] == CurrentListWord)
 						{
-							sense.Gloss.SetAlternative(_writingSystemIdForGlossingLanguage, null);
+							sense.Gloss.SetAlternative(_writingSystemIdForWordListWords, null);
 							sense.Gloss.RemoveEmptyStuff();
 							if (!sense.IsEmptyForPurposesOfDeletion)
 							{
 								//removing the gloss didn't make it empty. So repent of removing the gloss.
-								sense.Gloss.SetAlternative(_writingSystemIdForGlossingLanguage, CurrentListWord);
+								sense.Gloss.SetAlternative(_writingSystemIdForWordListWords, CurrentListWord);
 							}
 						}
 					}

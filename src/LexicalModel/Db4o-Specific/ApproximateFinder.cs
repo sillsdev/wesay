@@ -58,7 +58,7 @@ namespace WeSay.LexicalModel.Db4o_Specific
 				{
 					break;
 				}
-				if (!pair.Key.EndsWith("*"))//be strict about entries added because of other writing-systems/glosses
+				if (!pair.Key.EndsWith("*"))//be strict about entries added because of other writing-systems(e.g. reversals)
 				{
 					LexEntry entry = _pairStringLexEntryIdList.GetValueFromId(pair.Value);
 					matches.Add(entry);

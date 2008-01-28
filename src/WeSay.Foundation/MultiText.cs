@@ -45,7 +45,7 @@ namespace WeSay.Foundation
 		/// each string in WeSay is part of a collection of writing
 		/// system alternatives, that means we can't quickly get
 		/// an answer, for example, to the question Get all
-		/// the Entries that contain a senes which matches the gloss "cat".
+		/// the Entries that contain a senses which have the reversal "cat".
 		///
 		/// Using this field, we can do a query asking for all
 		/// the LanguageForms matching "cat".

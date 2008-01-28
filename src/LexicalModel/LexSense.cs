@@ -59,6 +59,11 @@ namespace WeSay.LexicalModel
 			get { return _gloss; }
 		}
 
+		public MultiText Definition
+		{
+			get { return this.GetOrCreateProperty<MultiText>(LexSense.WellKnownProperties.Definition); }
+		}
+
 		public IBindingList ExampleSentences
 		{
 			get { return _exampleSentences; }

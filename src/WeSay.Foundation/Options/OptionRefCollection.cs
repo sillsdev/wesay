@@ -211,7 +211,7 @@ namespace WeSay.Foundation.Options
 			{
 				//this one is a conundrum.  Semantic domain gathering involves making senses
 				//and adding to their semantic domain collection, without (necessarily) adding
-				//a gloss.  We don't want this info lost just because some eager-beaver decides
+				//a definition.  We don't want this info lost just because some eager-beaver decides
 				//to clean up.
 				// OTOH, we would like to have this *not* prevent deletion, if it looks like
 				//the user is trying to delete the sense.
