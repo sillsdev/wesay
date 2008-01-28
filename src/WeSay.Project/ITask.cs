@@ -5,7 +5,6 @@ namespace WeSay.Project
 {
 	public interface ITask
 	{
-
 		void Activate();
 		void Deactivate();
 		void GoToUrl(string url);
@@ -22,11 +21,10 @@ namespace WeSay.Project
 
 		void RegisterWithCache(ViewTemplate viewTemplate);
 
-		//Gtk.VBox Container { get;set; }
 		Control Control { get;}
 		bool IsPinned { get; }
-		string Status { get; }
-		string ExactStatus // this may take awhile to get but will be correct (State may give you nothing if it takes awhile to get)
+		int Count { get; }
+		int ExactCount // this may take awhile to get but will be correct (State may give you nothing if it takes awhile to get)
 		{
 			get;
 		}

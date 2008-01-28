@@ -696,13 +696,13 @@ namespace WeSay.LexicalTools
 			RecordListManager.GoodTimeToCommit();
 		}
 
-		/// <summary>
-		/// Gives a sense of the overall size of the task versus what's left to do
-		/// </summary>
-		public override int ReferenceCount
+		protected override int ComputeCount(bool returnResultEvenIfExpensive)
 		{
-			get { return -1; //todo
-			}
+			return CountNotRelevant; //todo
+		}
+		protected override int ComputeReferenceCount()
+		{
+			return CountNotRelevant; //todo
 		}
 
 		public void GotoLastDomainWithAnswers()

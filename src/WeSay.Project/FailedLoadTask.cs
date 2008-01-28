@@ -77,14 +77,22 @@ namespace WeSay.Project
 			get { return false; }
 		}
 
-		public string Status
+		const int CountNotApplicable = -1;
+
+		public int Count
 		{
-			get { return ""; }
+			get
+			{
+				return CountNotApplicable;
+			}
 		}
 
-		public string ExactStatus
+		public int ExactCount
 		{
-			get { return Status; }
+			get
+			{
+				return CountNotApplicable;
+			}
 		}
 
 		/// <summary>

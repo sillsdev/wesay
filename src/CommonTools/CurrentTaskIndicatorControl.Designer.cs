@@ -34,7 +34,6 @@ namespace WeSay.CommonTools
 		{
 			this.components = new System.ComponentModel.Container();
 			this.label1 = new System.Windows.Forms.Label();
-			this._indicatorPanel = new System.Windows.Forms.Panel();
 			this.localizationHelper1 = new WeSay.UI.LocalizationHelper(this.components);
 			this._shapeControl = new ShapeControl.ShapeControl();
 			((System.ComponentModel.ISupportInitialize)(this.localizationHelper1)).BeginInit();
@@ -50,16 +49,6 @@ namespace WeSay.CommonTools
 			this.label1.Size = new System.Drawing.Size(152, 23);
 			this.label1.TabIndex = 0;
 			this.label1.Text = "~Current task:";
-			//
-			// _indicatorPanel
-			//
-			this._indicatorPanel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
-			this._indicatorPanel.BackColor = System.Drawing.Color.Transparent;
-			this._indicatorPanel.Location = new System.Drawing.Point(70, 35);
-			this._indicatorPanel.Name = "_indicatorPanel";
-			this._indicatorPanel.Size = new System.Drawing.Size(482, 80);
-			this._indicatorPanel.TabIndex = 1;
 			//
 			// localizationHelper1
 			//
@@ -86,11 +75,10 @@ namespace WeSay.CommonTools
 			//
 			// CurrentTaskIndicatorControl
 			//
-			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
 			this.AutoSize = true;
 			this.BackColor = System.Drawing.Color.White;
-			this.Controls.Add(this._indicatorPanel);
 			this.Controls.Add(this.label1);
 			this.Controls.Add(this._shapeControl);
 			this.Name = "CurrentTaskIndicatorControl";
@@ -104,7 +92,6 @@ namespace WeSay.CommonTools
 		#endregion
 
 		private System.Windows.Forms.Label label1;
-		private System.Windows.Forms.Panel _indicatorPanel;
 		private WeSay.UI.LocalizationHelper localizationHelper1;
 		private ShapeControl.ShapeControl _shapeControl;
 	}

@@ -80,8 +80,8 @@ namespace WeSay.Setup
 			//
 			// WritingSystemForFieldControl
 			//
-			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
 			this.Controls.Add(this.btnMoveDown);
 			this.Controls.Add(this.btnMoveUp);
 			this.Controls.Add(this._writingSystemListBox);

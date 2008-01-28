@@ -23,7 +23,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			_filePath = Path.GetTempFileName();
 
-			BasilProject.InitializeForTests();
+			WeSayWordsProject.InitializeForTests();
 			string[] analysisWritingSystemIds = new string[] { BasilProject.Project.WritingSystems.TestWritingSystemAnalId };
 			string[] vernacularWritingSystemIds = new string[] { BasilProject.Project.WritingSystems.TestWritingSystemVernId };
 			_viewTemplate = new ViewTemplate();

@@ -10,7 +10,6 @@ namespace WeSay.CommonTools
 		private int _count=327;
 		private int _referenceCount = 1000;
 
-		private string _status;
 		private static int _largestExpectedNumber=0;
 
 		public ItemsToDoIndicator()
@@ -54,21 +53,6 @@ namespace WeSay.CommonTools
 		}
 
 
-		/// <summary>
-		/// this exists because some tasks give a string under some conditions, rather than a number.
-		/// </summary>
-		public string Status
-		{
-			set
-			{
-				//store it only if it is not a number
-				if(!Int32.TryParse(value, out _count))
-				{
-					_status = value;
-				}
-			}
-		}
-
 		protected override void OnPaint(PaintEventArgs e)
 		{
 			if (_referenceCount < 0)
@@ -82,16 +66,16 @@ namespace WeSay.CommonTools
 			//we will draw the tray big enough for the task with the most items, so all trays are the same size
 			int referenceNumberForWidth = _largestExpectedNumber > 0 ? _largestExpectedNumber : _count;
 
-			float globalCountWidth = e.Graphics.MeasureString(referenceNumberForWidth.ToString(), this.Font).Width;
-			float countWidth = e.Graphics.MeasureString(_count.ToString(), this.Font).Width;
-			this.Width = (int)(globalCountWidth + paperDistanceFromLeftEdge + paperWidth + 10);
+			float globalCountWidth = e.Graphics.MeasureString(referenceNumberForWidth.ToString(), Font).Width;
+			float countWidth = e.Graphics.MeasureString(_count.ToString(), Font).Width;
+			Width = (int)(globalCountWidth + paperDistanceFromLeftEdge + paperWidth + 10);
 
 			DrawIntrayBounds(e, ClientRectangle);
 			DrawPaperStack(e, paperDistanceFromLeftEdge, paperWidth, ClientRectangle);
 
 			//center our count
 			float centeringNudge = (globalCountWidth - countWidth)/2;
-			e.Graphics.DrawString(_count.ToString(), this.Font, Brushes.Black,
+			e.Graphics.DrawString(_count.ToString(), Font, Brushes.Black,
 								  ClientRectangle.Left + paperDistanceFromLeftEdge + paperWidth + 3 + centeringNudge,
 								  ClientRectangle.Top + 3);
 		}
@@ -129,8 +113,8 @@ namespace WeSay.CommonTools
 		{
 			using (Pen paperPen = new Pen(Brushes.Black, 2))
 			{
-				e.Graphics.DrawLine(paperPen, this.ClientRectangle.Left + distanceFromLeftEdge, y,
-									this.ClientRectangle.Left + distanceFromLeftEdge + paperWidth, y);
+				e.Graphics.DrawLine(paperPen, ClientRectangle.Left + distanceFromLeftEdge, y,
+									ClientRectangle.Left + distanceFromLeftEdge + paperWidth, y);
 			}
 		}
 	}

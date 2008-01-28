@@ -223,24 +223,20 @@ namespace WeSay.LexicalTools
 			}
 		}
 
-		public override string Status
+		protected override int ComputeCount(bool returnResultEvenIfExpensive)
 		{
-			get
+			if (_dataHasBeenRetrieved || returnResultEvenIfExpensive)
 			{
-				if (_dataHasBeenRetrieved)
-				{
-					return DataSource.Count.ToString();
-				}
-				return "-";// String.Empty;
+				return DataSource.Count;
 			}
+			return CountNotComputed;
 		}
-		public override string ExactStatus
+
+		protected override int ComputeReferenceCount()
 		{
-			get
-			{
-				return DataSource.Count.ToString();
-			}
+			return RecordListManager.GetListOfType<LexEntry>().Count;
 		}
+
 		public IRecordList<LexEntry> DataSource
 		{
 			get

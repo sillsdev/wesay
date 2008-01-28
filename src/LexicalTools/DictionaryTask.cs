@@ -100,31 +100,11 @@ namespace WeSay.LexicalTools
 			}
 		}
 
-		public override string Status
-		{
-			get
-			{
-				return DataSource.Count.ToString();
-			}
-		}
-
 		public override string Description
 		{
 			get
 			{
 				return String.Format(StringCatalog.Get("~See all {0} {1} words.", "The description of the 'Dictionary' task.  In place of the {0} will be the number of words in the dictionary.  In place of the {1} will be the name of the project."), DataSource.Count, BasilProject.Project.Name);
-			}
-		}
-
-
-		/// <summary>
-		/// Gives a sense of the overall size of the task versus what's left to do
-		/// </summary>
-		public override int ReferenceCount
-		{
-			get
-			{
-				return -1; //not relevant
 			}
 		}
 
@@ -140,6 +120,16 @@ namespace WeSay.LexicalTools
 		public ViewTemplate ViewTemplate
 		{
 			get { return this._viewTemplate; }
+		}
+
+		protected override int ComputeCount(bool returnResultEvenIfExpensive)
+		{
+			return DataSource.Count;
+		}
+
+		protected override int ComputeReferenceCount()
+		{
+			return CountNotRelevant;
 		}
 	}
 }

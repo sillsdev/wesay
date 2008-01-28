@@ -43,8 +43,8 @@ namespace WeSay.UI
 			//
 			// CheckBoxControl
 			//
-			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
 			this.Controls.Add(this.checkBox1);
 			this.Name = "CheckBoxControl";
 			this.Size = new System.Drawing.Size(150, 26);

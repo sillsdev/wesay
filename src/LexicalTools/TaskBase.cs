@@ -1,18 +1,26 @@
 using System;
+using System.Diagnostics;
+using System.IO;
 using System.Windows.Forms;
 using WeSay.Data;
 using WeSay.Foundation;
-using WeSay.LexicalModel;
 using WeSay.Project;
 
 namespace WeSay.LexicalTools
 {
 	public abstract class TaskBase : ITask
 	{
-		private IRecordListManager _recordListManager;
-		private string _label;
-		private string _description;
+		public const int CountNotRelevant = -1;
+		public const int CountNotComputed = -2;
+
+		private readonly IRecordListManager _recordListManager;
+		private readonly string _label;
+		private readonly string _description;
 		private readonly bool _isPinned;
+		private readonly string _cachePath;
+		private readonly string _cacheFilePath;
+		private int _count;
+		private int _referenceCount;
 
 		public TaskBase(string label, string description, bool isPinned, IRecordListManager recordListManager)
 		{
@@ -32,6 +40,11 @@ namespace WeSay.LexicalTools
 			_label = label;
 			_description = description;
 			_isPinned = isPinned;
+
+			_cachePath = WeSayWordsProject.Project.PathToCache;
+			_cacheFilePath = Path.Combine(_cachePath, MakeSafeName(Label + ".cache"));
+
+			ReadCacheFile();
 		}
 
 		public virtual string Description
@@ -56,13 +69,70 @@ namespace WeSay.LexicalTools
 			get { return true; }
 		}
 
+		private static string MakeSafeName(string fileName)
+		{
+			foreach (char invalChar in Path.GetInvalidFileNameChars())
+			{
+				fileName = fileName.Replace(invalChar.ToString(), "");
+			}
+			return fileName;
+		}
+
+		private void WriteCacheFile()
+		{
+			try
+			{
+				if (!Directory.Exists(_cachePath))
+				{
+					Directory.CreateDirectory(_cachePath);
+				}
+				using (StreamWriter sw = File.CreateText(_cacheFilePath))
+				{
+					sw.Write(_count + ", " + _referenceCount);
+				}
+			}
+			catch
+			{
+				Console.WriteLine("Could not write cache file: " + _cacheFilePath);
+			}
+		}
+
+		private void ReadCacheFile()
+		{
+			_count = CountNotRelevant;
+			_referenceCount = CountNotRelevant;
+			try
+			{
+				if (File.Exists(_cacheFilePath))
+				{
+					using (StreamReader sr = new StreamReader(_cacheFilePath))
+					{
+						string s;
+						s = sr.ReadToEnd();
+						string[] values = s.Split(',');
+						if (values.Length > 1) //old style didn't have reference
+						{
+							bool gotIt = int.TryParse(values[1], out _referenceCount);
+							Debug.Assert(gotIt);
+						}
+						if (values.Length > 0) //old style didn't have reference
+						{
+							bool gotIt = int.TryParse(values[0], out _count);
+							Debug.Assert(gotIt);
+						}
+					}
+				}
+			}
+			catch
+			{
+				// Console.WriteLine("Could not read cache file: " + cacheFilePath);
+			}
+		}
 
 		public virtual void RegisterWithCache(ViewTemplate viewTemplate)
 		{
 
 		}
-
-
 
 		public virtual void Deactivate()
 		{
@@ -105,28 +175,65 @@ namespace WeSay.LexicalTools
 		{
 			get { return _isPinned; }
 		}
-
-		public virtual string Status
-		{
-			get { return string.Empty; }
-		}
-
-		public virtual string ExactStatus
-		{
-			get { return Status; }
-		}
-
 		/// <summary>
-		/// Gives a sense of the overall size of the task versus what's left to do
+		/// Gives a sense of how much work is left to be done
 		/// </summary>
-		public virtual int ReferenceCount
+		public int Count
 		{
 			get
 			{
-				//this is obviously flawed ;-)
-				return _recordListManager.GetListOfType<LexEntry>().Count;
+				int count = ComputeCount(false);
+				if(count != CountNotComputed)
+				{
+					_count = count;
+					WriteCacheFile();
+				}
+				return _count;
 			}
 		}
+
+		/// <summary>
+		/// Should Return CountNotComputed if expensive to figure out
+		/// and force==false
+		/// </summary>
+		/// <returns>An integer indicating how much work is left to do</returns>
+		protected abstract int ComputeCount(bool returnResultEvenIfExpensive);
+
+		public int ExactCount
+		{
+			get
+			{
+				_count = ComputeCount(true);
+				WriteCacheFile();
+				return _count;
+			}
+		}
+
+		/// <summary>
+		/// Gives a sense of the overall size of the task
+		/// </summary>
+		public int ReferenceCount
+		{
+			get
+			{
+				int count = ComputeReferenceCount();
+				if (count != CountNotComputed)
+				{
+					_referenceCount = count;
+					WriteCacheFile();
+				}
+
+				return _referenceCount;
+			}
+		}
+
+		/// <summary>
+		/// Should Return CountNotComputed if expensive to figure out
+		/// </summary>
+		/// <returns>
+		/// An integer indicating how much work there is total
+		/// </returns>
+		protected abstract int ComputeReferenceCount();
 
 		protected IRecordListManager RecordListManager
 		{

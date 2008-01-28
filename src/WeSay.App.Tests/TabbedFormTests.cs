@@ -79,18 +79,18 @@ namespace WeSay.App.Tests
 			get { return this._isPinned; }
 		}
 
-		public string Status
+		public int Count
 		{
 			get
 			{
-				return "12";
+				return 12;
 			}
 		}
-		public string ExactStatus
+		public int ExactCount
 		{
 			get
 			{
-				return Status;
+				return Count;
 			}
 		}
 		public bool MustBeActivatedDuringPreCache
