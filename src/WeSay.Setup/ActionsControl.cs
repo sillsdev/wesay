@@ -27,6 +27,7 @@ namespace WeSay.Setup
 		{
 			List<string> alreadyFound = new List<string>();
 
+			_addinsList.SuspendLayout();
 			_addinsList.Controls.Clear();
 			_addinsList.RowStyles.Clear();
 			if (!AddinManager.IsInitialized)
@@ -61,6 +62,7 @@ namespace WeSay.Setup
 //            AddAddin(
 //                    new ComingSomedayAddin("Send project to developers",
 //                                           "Sends your project to WeSay for help/debugging."));
+			_addinsList.ResumeLayout();
 		}
 
 		private void AddAddin(IWeSayAddin addin)
@@ -71,10 +73,8 @@ namespace WeSay.Setup
 			control.TabIndex = _addinsList.RowCount;
 			control.Launch += OnLaunchAction;
 
-			_addinsList.SuspendLayout();
 			_addinsList.RowStyles.Add(new RowStyle(SizeType.AutoSize));
 			_addinsList.Controls.Add(control);
-			_addinsList.ResumeLayout();
 		}
 
 		private void OnLaunchAction(object sender, EventArgs e)

@@ -64,8 +64,7 @@ namespace WeSay.Setup
 			this._addinsList.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 			this._addinsList.ColumnCount = 1;
 			this._addinsList.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this._addinsList.RowCount = 1;
-			this._addinsList.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.AutoSize));
+			this._addinsList.RowCount = 0;
 			//
 			// ActionsControl
 			//
