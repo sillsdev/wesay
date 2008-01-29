@@ -1,6 +1,5 @@
 using System;
 using WeSay.AddinLib;
-using ControlListBox=WeSay.UI.ControlListBox;
 
 namespace WeSay.CommonTools
 {
@@ -33,7 +32,7 @@ namespace WeSay.CommonTools
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this._addinsList = new ControlListBox();
+			this._addinsList = new System.Windows.Forms.TableLayoutPanel();
 			this.SuspendLayout();
 			//
 			// _addinsList
@@ -46,6 +45,14 @@ namespace WeSay.CommonTools
 			this._addinsList.Name = "_addinsList";
 			this._addinsList.Size = new System.Drawing.Size(485, 308);
 			this._addinsList.TabIndex = 0;
+
+			this._addinsList.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			this._addinsList.ColumnCount = 1;
+			this._addinsList.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this._addinsList.Margin = new System.Windows.Forms.Padding(4);
+			this._addinsList.RowCount = 1;
+			this._addinsList.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.AutoSize));
+
 			//
 			// ActionsControl
 			//
@@ -57,12 +64,11 @@ namespace WeSay.CommonTools
 			this.Name = "ActionsControl";
 			this.Size = new System.Drawing.Size(499, 342);
 			this.ResumeLayout(false);
-
 		}
 
 		#endregion
 
-		private ControlListBox _addinsList;
+		private System.Windows.Forms.TableLayoutPanel _addinsList;
 
 
 	}

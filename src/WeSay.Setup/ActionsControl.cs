@@ -13,35 +13,22 @@ namespace WeSay.Setup
 		public ActionsControl(): base("setup and use plug-in actions")
 		{
 			InitializeComponent();
-			Resize += ActionsControl_Resize;
 		}
 
-		private void ActionsControl_Resize(object sender, EventArgs e)
-		{
-			//this is part of dealing with .net not adjusting stuff well for different dpis
+		//private void ActionsControl_Resize(object sender, EventArgs e)
+		//{
+		//    //this is part of dealing with .net not adjusting stuff well for different dpis
 
-			_addinsList.Width = Width - 20;
-			_addinsList.Height = (Height - _addinsList.Top) - 40;
-		}
+		//    _addinsList.Width = Width - 20;
+		//    _addinsList.Height = (Height - _addinsList.Top) - 40;
+		//}
 
-		//        private void OnVisibleChanged(object sender, EventArgs e)
-		//        {
-		//            if (Visible)
-		//            {
-		//                if (!_loaded)
-		//                {
-		//                    LoadAddins();
-		//                    _loaded = true;
-		//                }
-		//               // UpdateStatesOfThings();
-		//            }
-		//        }
-
-		private void LoadAddins()
+		 private void LoadAddins()
 		{
 			List<string> alreadyFound = new List<string>();
 
-			_addinsList.Clear();
+			_addinsList.Controls.Clear();
+			_addinsList.RowStyles.Clear();
 			if (!AddinManager.IsInitialized)
 			{
 				AddinManager.Initialize(Application.UserAppDataPath);
@@ -81,8 +68,13 @@ namespace WeSay.Setup
 			ActionItemControl control =
 				new ActionItemControl(addin, true, WeSayWordsProject.Project.GetProjectInfoForAddin());// GetProjectInfo());
 			control.DoShowInWeSay = AddinSet.Singleton.DoShowInWeSay(addin.ID);
-			_addinsList.AddControlToBottom(control);
+			control.TabIndex = _addinsList.RowCount;
 			control.Launch += OnLaunchAction;
+
+			_addinsList.SuspendLayout();
+			_addinsList.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+			_addinsList.Controls.Add(control);
+			_addinsList.ResumeLayout();
 		}
 
 		private void OnLaunchAction(object sender, EventArgs e)
@@ -98,20 +90,6 @@ namespace WeSay.Setup
 				ErrorReport.ReportNonFatalMessage(error.Message);
 			}
 		}
-
-//        public static ProjectInfo GetProjectInfo()
-//        {
-//            WeSayWordsProject project = WeSayWordsProject.Project;
-//            string[] filesBelongingToProject =
-//                WeSayWordsProject.GetFilesBelongingToProject(
-//                    project.ProjectDirectoryPath);
-//            return new ProjectInfo(project.Name,
-//                                   project.
-//                                       ProjectDirectoryPath,
-//                                   project.PathToLiftFile,
-//                                   filesBelongingToProject,
-//                                   AddinSet.Singleton.LocateFile);
-//        }
 
 		private static void AddinManager_ExtensionChanged(object sender,
 												   ExtensionEventArgs args)

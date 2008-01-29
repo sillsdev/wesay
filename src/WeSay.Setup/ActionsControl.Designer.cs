@@ -1,5 +1,3 @@
-using ControlListBox=WeSay.UI.ControlListBox;
-
 namespace WeSay.Setup
 {
 	partial class ActionsControl
@@ -33,7 +31,7 @@ namespace WeSay.Setup
 			this.components = new System.ComponentModel.Container();
 			this._imageList = new System.Windows.Forms.ImageList(this.components);
 			this.label2 = new System.Windows.Forms.Label();
-			this._addinsList = new WeSay.UI.ControlListBox();
+			this._addinsList = new System.Windows.Forms.TableLayoutPanel();
 			this.SuspendLayout();
 			//
 			// _imageList
@@ -63,6 +61,11 @@ namespace WeSay.Setup
 			this._addinsList.Name = "_addinsList";
 			this._addinsList.Size = new System.Drawing.Size(574, 223);
 			this._addinsList.TabIndex = 19;
+			this._addinsList.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			this._addinsList.ColumnCount = 1;
+			this._addinsList.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this._addinsList.RowCount = 1;
+			this._addinsList.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.AutoSize));
 			//
 			// ActionsControl
 			//
@@ -83,6 +86,6 @@ namespace WeSay.Setup
 
 		private System.Windows.Forms.ImageList _imageList;
 		private System.Windows.Forms.Label label2;
-		private ControlListBox _addinsList;
+		private System.Windows.Forms.TableLayoutPanel _addinsList;
 	}
 }
