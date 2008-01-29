@@ -23,7 +23,7 @@ namespace WeSay.App
 		{
 			InitializeComponent();
 			this.tabControl1.TabPages.Clear();
-			this.tabControl1.SelectedIndexChanged += new EventHandler(tabControl1_SelectedIndexChanged);
+			this.tabControl1.Selected += OnTabSelected;
 			this.tabControl1.Font = StringCatalog.ModifyFontForLocalization(tabControl1.Font);
 
 			synchronizationContext =  WindowsFormsSynchronizationContext.Current;
@@ -233,12 +233,13 @@ namespace WeSay.App
 			set { _currentUrl = value; }
 		}
 
-		void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
+		private void OnTabSelected(object sender, TabControlEventArgs e)
 		{
-			TabPage page = ((TabControl)sender).SelectedTab;
-			ActivateTab(page, true);
+			if(e.Action == TabControlAction.Selected)
+			{
+				ActivateTab(e.TabPage, true);
+			}
 		}
-
 
 		private void ActivateTab(TabPage page, bool okTouseTimer)
 		{
@@ -308,35 +309,6 @@ namespace WeSay.App
 			Palaso.Reporting.Logger.WriteEvent("Done Activating");
 		}
 
-//        private void RunCommand(BasicCommand command)
-//        {
-//            _progressHandler = new ProgressDialogHandler(this, command);
-//            _progressHandler.Finished += new EventHandler(_progressHandler_Finished);
-//            ProgressState progress = new ProgressState(_progressHandler);
-//            // UpdateEnabledStates();
-//            command.BeginInvoke(progress);
-//        }
-//
-//        void _progressHandler_Finished(object sender, EventArgs e)
-//        {
-//            if (InvokeRequired)
-//            {
-//                BeginInvoke(new MethodInvoker(FinishButOnCorrectThread));
-//            }
-//            else
-//            {
-//                FinishButOnCorrectThread();
-//            }
-//        }
-//
-//        private void FinishButOnCorrectThread()
-//        {
-//            _progressHandler = null;
-//            _activeTask.Control.Dock = DockStyle.Fill;
-//            this.tabControl1.SelectedTab.Controls.Add(_activeTask.Control);
-//            this.tabControl1.SelectedTab.Cursor = Cursors.Default;
-//        }
-
 		public event System.EventHandler  IntializationComplete;
 
 		public void ContinueLaunchingAfterInitialDisplay()
@@ -355,37 +327,5 @@ namespace WeSay.App
 			t.Interval = 1;
 			t.Start();
 		}
-
-		private void TabbedForm_Load(object sender, EventArgs e)
-		{
-
-		}
 	}
-
-//    public class ActivateTaskCommand : BasicCommand
-//    {
-//        private readonly TabPage _page;
-//        private readonly ITask _task;
-//        protected WeSay.Foundation.Progress.ProgressState _progress;
-//
-//        public ActivateTaskCommand(TabPage page, ITask task)
-//        {
-//            _page = page;
-//            _task = task;
-//        }
-//
-//        protected override void DoWork2(ProgressState progress)
-//        {
-//            _progress = progress;
-//            _task.Activate();
-//
-//        }
-//
-//        protected override void DoWork(InitializeProgressCallback initializeCallback, ProgressCallback progressCallback,
-//                                       StatusCallback primaryStatusTextCallback,
-//                                       StatusCallback secondaryStatusTextCallback)
-//        {
-//            throw new NotImplementedException();
-//        }
-//    }
 }

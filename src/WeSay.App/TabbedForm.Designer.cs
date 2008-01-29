@@ -62,10 +62,8 @@ namespace WeSay.App
 			this.Icon = global::WeSay.App.Properties.Resources.ApplicationIcon;
 			this.Name = "TabbedForm";
 			this.Text = "WeSay";
-			this.Load += new System.EventHandler(this.TabbedForm_Load);
 			this.tabControl1.ResumeLayout(false);
 			this.ResumeLayout(false);
-
 		}
 
 		#endregion
