@@ -41,6 +41,7 @@ namespace WeSay.LexicalTools
 			this._listViewWords = new WeSay.UI.WeSayListBox();
 			this.label5 = new System.Windows.Forms.Label();
 			this.label4 = new System.Windows.Forms.Label();
+			this._movingLabel = new WeSay.UI.MovingLabel();
 			this._instructionLabel = new System.Windows.Forms.Label();
 			this._question = new System.Windows.Forms.Label();
 			this._description = new System.Windows.Forms.Label();
@@ -245,6 +246,7 @@ namespace WeSay.LexicalTools
 			this.Controls.Add(this._btnPrevious);
 			this.Controls.Add(this._btnNext);
 			this.Controls.Add(this._btnAddWord);
+			this.Controls.Add(this._movingLabel);
 			this.Name = "GatherBySemanticDomainsControl";
 			this.Size = new System.Drawing.Size(654, 386);
 			this.BackColorChanged += new System.EventHandler(this.GatherWordListControl_BackColorChanged);
@@ -272,5 +274,7 @@ namespace WeSay.LexicalTools
 		private System.Windows.Forms.Label _description;
 		private WeSay.UI.CirclesProgressIndicator _questionIndicator;
 		private LocalizationHelper localizationHelper1;
+		private MovingLabel _movingLabel;
+
 	}
 }

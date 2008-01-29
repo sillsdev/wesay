@@ -43,6 +43,7 @@ namespace WeSay.LexicalTools
 			this.panel1 = new System.Windows.Forms.Panel();
 			this.label4 = new System.Windows.Forms.Label();
 			this.label5 = new System.Windows.Forms.Label();
+			this._movingLabel = new WeSay.UI.MovingLabel();
 			this._vernacularBox = new WeSay.UI.MultiTextControl();
 			this._btnPreviousWord = new WeSay.UI.Buttons.PreviousButton();
 			this._btnNextWord = new WeSay.UI.Buttons.NextButton();
@@ -235,6 +236,7 @@ namespace WeSay.LexicalTools
 			this.Controls.Add(this._btnNextWord);
 			this.Controls.Add(this._btnAddWord);
 			this.Controls.Add(this._congratulationsControl);
+			this.Controls.Add(this._movingLabel);
 			this.Name = "GatherWordListControl";
 			this.Size = new System.Drawing.Size(511, 429);
 			this.Load += new System.EventHandler(this.GatherWordListControl_Load);
@@ -260,6 +262,8 @@ namespace WeSay.LexicalTools
 		private MultiTextControl _vernacularBox;
 		private CongratulationsControl _congratulationsControl;
 		private LocalizationHelper localizationHelper1;
+		private WeSay.UI.MovingLabel _movingLabel;
+
 
 	 }
 }

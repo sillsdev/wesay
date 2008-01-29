@@ -17,8 +17,6 @@ namespace WeSay.LexicalTools
 
 		//private System.Windows.Forms.Label _animatedText= new Label();
 		private bool _animationIsMovingFromList;
-		private MovingLabel _movingLabel;
-
 		public GatherWordListControl()
 		{
 			Debug.Assert(DesignMode);
@@ -54,7 +52,7 @@ namespace WeSay.LexicalTools
 
 			UpdateStuff();
 
-			_movingLabel = new MovingLabel(this, _vernacularBox.TextBoxes[0].Font);// _listViewOfWordsMatchingCurrentItem.Font);
+			_movingLabel.Font = _vernacularBox.TextBoxes[0].Font;
 			_movingLabel.Finished += new EventHandler(OnAnimator_Finished);
 		}
 

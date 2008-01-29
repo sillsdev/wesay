@@ -7,30 +7,16 @@ namespace WeSay.UI
 {
 	public class MovingLabel : Label
 	{
-		private readonly UserControl _parent;
 		private Point _to;
 		private Point _from;
 		private Animator _animator;
 		public event EventHandler Finished;
 
-		public MovingLabel(UserControl parent, Font labelFont)
+		public MovingLabel()
 		{
-			_parent = parent;
 			Visible = false;
-			parent.Controls.Add(this);
-			this.BringToFront();
-			this.Font = labelFont;
 			this.BackColor = Color.Transparent;//didn't work
 			InitializeAnimator();
-		}
-
-		protected override void Dispose(bool disposing)
-		{
-			if (disposing)
-			{
-				_parent.Controls.Remove(this);
-			}
-			base.Dispose(disposing);
 		}
 
 		private void InitializeAnimator()
@@ -73,6 +59,7 @@ namespace WeSay.UI
 			Text = word;
 			Location = from;
 			Visible = true;
+			BringToFront();
 			_animator.Start();
 		}
 	}

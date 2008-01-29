@@ -11,8 +11,6 @@ namespace WeSay.LexicalTools
 	{
 		private GatherBySemanticDomainTask _presentationModel;
 		private bool _animationIsMovingFromList;
-		private MovingLabel _movingLabel;
-
 
 		public GatherBySemanticDomainsControl()
 		{
@@ -61,7 +59,7 @@ namespace WeSay.LexicalTools
 
 	  //    _animatedText.Font = _presentationModel.WordWritingSystem.Font;
 
-		  _movingLabel = new MovingLabel(this, _vernacularBox.TextBoxes[0].Font);// _listViewOfWordsMatchingCurrentItem.Font);
+		  _movingLabel.Font = _vernacularBox.TextBoxes[0].Font;
 		  _movingLabel.Finished += new EventHandler(_animator_Finished);
 
 		}
