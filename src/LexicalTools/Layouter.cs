@@ -401,7 +401,6 @@ namespace WeSay.LexicalTools
 				field.WritingSystems,
 				field.Visibility,
 				new OptionDisplayAdaptor(availableOptions, field.WritingSystemIds[0]));
-			control.PopupWidth = 200;
 			control.AlternateEmptinessHelper = refsOfChoices;
 			return control;
 		}

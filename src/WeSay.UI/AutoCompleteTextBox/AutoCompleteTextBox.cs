@@ -5,7 +5,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 using WeSay.Foundation;
@@ -36,8 +35,7 @@ namespace WeSay.UI.AutoCompleteTextBox
 		#region Members
 
 		private IDisplayStringAdaptor _itemDisplayAdaptor= new ToStringAutoCompleteAdaptor();
-		private ListBox _listBox;
-		//private Form _popup;
+		private readonly ListBox _listBox;
 		private Control _popupParent;
 
 		#endregion
@@ -202,7 +200,7 @@ namespace WeSay.UI.AutoCompleteTextBox
 		public delegate IEnumerable ItemFilterDelegate(string text, IEnumerable items, IDisplayStringAdaptor adaptor);
 		private ItemFilterDelegate _itemFilterDelegate;
 		private object _selectedItem;
-		private ToolTip _toolTip;
+		private readonly ToolTip _toolTip;
 		private object _previousToolTipTarget=null;
 
 		[Browsable(false)]
@@ -290,40 +288,10 @@ namespace WeSay.UI.AutoCompleteTextBox
 				{
 					SelectedItemChanged.Invoke(this, null);
 				}
-				UpdateDisplay();
-
 				//Debug.WriteLine("AutomCOmplete Set selectedItem(" + value + ") now " + _selectedItem);
 				_inMidstOfSettingSelectedItem = false;
 			}
 		}
-
-		private void UpdateDisplay()
-		{
-//            if (_selectedItem == null && !string.IsNullOrEmpty(Text))
-//	        {
-//	            BackColor = Color.SeaShell;
-//	        }
-//	        else
-//	        {
-//	            BackColor = Color.White;
-//	        }
-//	        ForeColor = Color.Black;
-		}
-
-//	    /// <summary>
-//        /// Set this in order to show tooltips for items
-//        /// </summary>
-//	    public IDisplayStringAdaptor TooltipToDisplayStringAdaptor
-//	    {
-//	        get
-//	        {
-//	            return _tooltipToDisplayStringAdaptor;
-//	        }
-//	        set
-//	        {
-//	            _tooltipToDisplayStringAdaptor = value;
-//	        }
-//	    }
 
 		internal ListBox FilteredChoicesListBox
 		{
@@ -340,33 +308,22 @@ namespace WeSay.UI.AutoCompleteTextBox
 			_formToObectFinderDelegate = DefaultFormToObjectFinder;
 			_itemFilterDelegate = FilterList;
 
-			// Create the form that will hold the list
-			//this._popup = new Form();
-			//this._popup.StartPosition = FormStartPosition.Manual;
-			//this._popup.ShowInTaskbar = false;
-			//this._popup.FormBorderStyle = FormBorderStyle.None;
-			//this._popup.TopMost = true;
-			Leave += new EventHandler(Popup_Deactivate);
+			Leave += Popup_Deactivate;
 
 			_toolTip = new ToolTip();
-			this.MouseHover += new EventHandler(OnMouseHover);
+			MouseHover += OnMouseHover;
 
 			// Create the list box that will hold matching items
 			this._listBox = new ListBox();
 			this._listBox.MaximumSize = new Size(400,100);
 			this._listBox.Cursor = Cursors.Hand;
 			this._listBox.BorderStyle = BorderStyle.FixedSingle;
-			this._listBox.SelectedIndexChanged += new EventHandler(List_SelectedIndexChanged);
-			this._listBox.MouseClick += new MouseEventHandler(List_MouseClick);
-			_listBox.MouseMove += new MouseEventHandler(List_MouseMove);
-			//this._list.DrawMode = DrawMode.OwnerDrawFixed;
-			//this._list.DrawItem += new DrawItemEventHandler(List_DrawItem);
+			this._listBox.SelectedIndexChanged += List_SelectedIndexChanged;
+			this._listBox.Click += List_Click;
+			this._listBox.MouseMove += List_MouseMove;
 			this._listBox.ItemHeight = _listBox.Font.Height;
-			//this._list.Dock = DockStyle.Fill;
 			this._listBox.Visible = false;
 			this._listBox.Sorted = false;
-
-			// Add the list box to the popup form
 
 			// Add default triggers.
 			this.triggers.Add(new TextLengthTrigger(2));
@@ -428,6 +385,7 @@ namespace WeSay.UI.AutoCompleteTextBox
 				}
 			}
 		}
+
 		protected override void OnParentChanged(EventArgs e)
 		{
 			base.OnParentChanged(e);
@@ -444,7 +402,7 @@ namespace WeSay.UI.AutoCompleteTextBox
 					this._popupParent = this._popupParent.Parent;
 				}
 				this._popupParent.Move += Parent_Move;
-				this._popupParent.ParentChanged += new EventHandler(popupParent_ParentChanged);
+				this._popupParent.ParentChanged += popupParent_ParentChanged;
 			}
 		}
 
@@ -568,15 +526,10 @@ namespace WeSay.UI.AutoCompleteTextBox
 						}
 						break;
 				}
-
 			}
 
 			SelectedItem = _formToObectFinderDelegate(Text);
-
-			UpdateDisplay();
 		}
-
-
 
 		/// <summary>
 		/// can be replaced by something smarter, using the FormToObectFinderDelegate
@@ -593,8 +546,6 @@ namespace WeSay.UI.AutoCompleteTextBox
 			}
 			return null;
 		}
-
-
 
 		protected override void OnLostFocus(EventArgs e)
 		{
@@ -634,7 +585,6 @@ namespace WeSay.UI.AutoCompleteTextBox
 		{
 			if (this._listBox.Visible == false)
 			{
-				//this._list.SelectedIndex = -1;
 				UpdateList();
 				Form form = FindForm();
 				Point parentPointOnScreen = Parent.PointToClient(form.Location);
@@ -649,7 +599,6 @@ namespace WeSay.UI.AutoCompleteTextBox
 				this._listBox.Location = p;
 				if (this._listBox.Items.Count > 0)
 				{
-					//this._popup.Show();
 					if (!form.Controls.Contains(this._listBox))
 					{
 						form.Controls.Add(this._listBox);
@@ -658,7 +607,6 @@ namespace WeSay.UI.AutoCompleteTextBox
 					this._listBox.BringToFront();
 					this._listBox.Visible = true;
 					this._listBox.Location = p;
-					//Focus();
 				}
 			}
 			else
@@ -676,7 +624,7 @@ namespace WeSay.UI.AutoCompleteTextBox
 		class ItemWrapper
 		{
 			private object _item;
-			private string _label;
+			private readonly string _label;
 
 			public ItemWrapper(object item, string label)
 			{
@@ -704,14 +652,15 @@ namespace WeSay.UI.AutoCompleteTextBox
 
 		protected virtual void UpdateList()
 		{
-			//object selectedItem = this.list.SelectedItem;
-
 			this._listBox.Items.Clear();
 
 			//hatton experimental:
 			if (string.IsNullOrEmpty(Text))
 				return;
 			//end hatton experimental
+
+			this._listBox.Font = Font;
+			this._listBox.ItemHeight = _listBox.Font.Height;
 
 			int maxWidth = Width;
 			using (Graphics g = (_autoSizePopup)?CreateGraphics():null)
@@ -737,9 +686,7 @@ namespace WeSay.UI.AutoCompleteTextBox
 				if (visItems > 8)
 					visItems = 8;
 
-				this._listBox.ItemHeight = _listBox.Font.Height;
-
-				this._listBox.Height = (visItems * this._listBox.ItemHeight) + 2;
+				this._listBox.Height = (visItems * this._listBox.ItemHeight) + 4;
 
 				switch (BorderStyle)
 				{
@@ -757,27 +704,26 @@ namespace WeSay.UI.AutoCompleteTextBox
 
 				if (_autoSizePopup)
 				{
-					_listBox.Width = maxWidth;
+					bool hasScrollBar = visItems < this._listBox.Items.Count;
+					_listBox.Width = maxWidth + (hasScrollBar?10:0); // in theory this shouldn't be needed
 				}
 				this._listBox.RightToLeft = RightToLeft;
-				this._listBox.Font = Font;
 			}
 		}
 
-		private Size MeasureItem(Graphics g, string s) {
-				TextFormatFlags flags = TextFormatFlags.LeftAndRightPadding |
-										TextFormatFlags.Default |
+		private Size MeasureItem(IDeviceContext dc, string s) {
+				TextFormatFlags flags = TextFormatFlags.Default |
 										TextFormatFlags.NoClipping;
 				if (WritingSystem != null && WritingSystem.RightToLeft)
 				{
 					flags |= TextFormatFlags.RightToLeft;
 				}
-				return TextRenderer.MeasureText(g, s, _listBox.Font,
-											   new Size(int.MaxValue, _listBox.Font.Height+2),
+				return TextRenderer.MeasureText(dc, s, _listBox.Font,
+											   new Size(int.MaxValue, _listBox.ItemHeight),
 											   flags);
 		}
 
-		private IEnumerable FilterList(string text, IEnumerable items, IDisplayStringAdaptor adaptor)
+		private static IEnumerable FilterList(string text, IEnumerable items, IDisplayStringAdaptor adaptor)
 		{
 			ICollection<object> newList = new Collection<object>();
 
@@ -793,8 +739,6 @@ namespace WeSay.UI.AutoCompleteTextBox
 			return newList;
 		}
 
-
-
 		private void List_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			if (Mode != EntryMode.List)
@@ -809,54 +753,11 @@ namespace WeSay.UI.AutoCompleteTextBox
 
 		public event EventHandler AutoCompleteChoiceSelected = delegate {};
 
-		private void List_MouseClick(object sender, MouseEventArgs e)
+		private void List_Click(object sender, EventArgs e)
 		{
-			for (int i=0; i<this._listBox.Items.Count; i++)
-			{
-				if (this._listBox.GetItemRectangle(i).Contains(e.X, e.Y))
-				{
-					this._listBox.SelectedIndex = i;
-					SelectCurrentItemAndHideList();
-					AutoCompleteChoiceSelected.Invoke(this, new EventArgs());
-					return;
-				}
-			}
-			HideList();
+			SelectCurrentItemAndHideList();
+			AutoCompleteChoiceSelected.Invoke(this, new EventArgs());
 		}
-
-//        private void List_DrawItem(object sender, DrawItemEventArgs e)
-//        {
-//            //Color bColor = e.BackColor;
-//            TextFormatFlags flags = TextFormatFlags.Default | TextFormatFlags.TextBoxControl;
-//            if (WritingSystem.RightToLeft)
-//            {
-//                flags |= TextFormatFlags.RightToLeft;
-//            }
-
-//            if (e.State == DrawItemState.Selected)
-//            {
-////                e.Graphics.FillRectangle(new SolidBrush(PopupSelectionBackColor), e.Bounds);
-//                TextRenderer.DrawText(e.Graphics,
-//                                      this._list.Items[e.Index].ToString(),
-//                                      Font,
-//                                      e.Bounds,
-//                                      PopupSelectionForeColor,
-//                                      PopupSelectionBackColor,
-//                                      flags);
-//            }
-//            else
-//            {
-//                //e.DrawBackground();
-//                TextRenderer.DrawText(e.Graphics,
-//                                      this._list.Items[e.Index].ToString(),
-//                                      Font,
-//                                      e.Bounds,
-//                                      ForeColor,
-//                                      BackColor,
-//                                      flags);
-////                e.Graphics.DrawString(this.list.Items[e.Index].ToString(), e.Font, new SolidBrush(e.ForeColor), e.Bounds, StringFormat.GenericDefault);
-//            }
-//        }
 
 		private void Popup_Deactivate(object sender, EventArgs e)
 		{
@@ -865,6 +766,5 @@ namespace WeSay.UI.AutoCompleteTextBox
 				HideList();
 			}
 		}
-
 	}
 }
