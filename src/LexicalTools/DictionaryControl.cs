@@ -202,24 +202,23 @@ namespace WeSay.LexicalTools
 			Control_EntryDetailPanel.DataSource = CurrentRecord;
 			_recordsListBox.WritingSystem = _listWritingSystem;
 
+			int originalHeight = _findText.Height;
 			_findText.ItemFilterer = FindClosestAndNextClosestAndPrefixedForms;
 			_findText.Items = _records;
 			_findText.WritingSystem = _listWritingSystem;
 
-			int originalHeight = _findText.Height;
-
 			_findWritingSystemId.Text = _listWritingSystem.Id;
 			int width = _findWritingSystemId.Width;
 			_findWritingSystemId.AutoSize = false;
-			_findWritingSystemId.Height = _findText.Height;
-			_findWritingSystemId.Width = Math.Min(width, 25);
-
+			_findWritingSystemId.Size = new Size(Math.Min(width, 25), _findText.Height);
 			int heightDifference = _findText.Height - originalHeight;
-			_recordsListBox.Location = new Point(_recordsListBox.Location.X,
-												 _recordsListBox.Location.Y +
-												 heightDifference);
-			_recordsListBox.Height -= heightDifference;
-			_btnFind.Height = _findText.Bounds.Height; // should just be Height work around for Mono Bug 357152
+
+			_recordsListBox.SetBounds(_recordsListBox.Bounds.X,
+									  _recordsListBox.Bounds.Y + heightDifference,
+									  _recordsListBox.Bounds.Width,
+									  _recordsListBox.Bounds.Height - heightDifference);
+
+			_btnFind.Height = _findText.Height;
 			_writingSystemChooser.Height = _findText.Height;
 			_btnFind.Image =
 					Resources.Find.GetThumbnailImage(_btnFind.Width - 2,
