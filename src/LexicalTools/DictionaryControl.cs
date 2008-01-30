@@ -195,8 +195,9 @@ namespace WeSay.LexicalTools
 												   _listWritingSystem));
 			CachedSortedDb4oList<string, LexEntry> cachedSortedDb4oList = this._recordManager.GetSortedList(sortHelper);
 			_records = cachedSortedDb4oList;
-
+			_recordsListBox.BeginUpdate();
 			_recordsListBox.DataSource = _records;
+			_recordsListBox.EndUpdate();
 
 			Control_EntryDetailPanel.DataSource = CurrentRecord;
 			_recordsListBox.WritingSystem = _listWritingSystem;
@@ -218,7 +219,7 @@ namespace WeSay.LexicalTools
 												 _recordsListBox.Location.Y +
 												 heightDifference);
 			_recordsListBox.Height -= heightDifference;
-			_btnFind.Height = _findText.Height;
+			_btnFind.Height = _findText.Bounds.Height; // should just be Height work around for Mono Bug 357152
 			_writingSystemChooser.Height = _findText.Height;
 			_btnFind.Image =
 					Resources.Find.GetThumbnailImage(_btnFind.Width - 2,
