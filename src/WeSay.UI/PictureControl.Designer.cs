@@ -39,7 +39,7 @@ namespace WeSay.UI
 			//
 			// _pictureBox
 			//
-			this._pictureBox.Location = new System.Drawing.Point(6, 3);
+			this._pictureBox.Location = new System.Drawing.Point(0, 0);
 			this._pictureBox.Name = "_pictureBox";
 			this._pictureBox.Size = new System.Drawing.Size(97, 82);
 			this._pictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;

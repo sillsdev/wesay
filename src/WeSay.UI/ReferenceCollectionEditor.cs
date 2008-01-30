@@ -31,6 +31,13 @@ namespace WeSay.UI
 			InitializeComponent();
 		 }
 
+		public override Size GetPreferredSize(Size proposedSize)
+		{
+			Size size = base.GetPreferredSize(proposedSize);
+			size.Height = Math.Max(20, size.Height); // get around Mono problem of collapsing
+			return size;
+		}
+
 		/// <summary>
 		/// ctor
 		/// </summary>
@@ -183,7 +190,7 @@ namespace WeSay.UI
 			picker.Box.Mode = WeSayAutoCompleteTextBox.EntryMode.List;
 			picker.Box.Items = _sourceChoices;
 			picker.Box.WritingSystem = _writingSystems[0];
-			picker.Box.MinimumSize = new Size(20, 10);
+			picker.Box.MinimumSize = new Size(30, 10);
 			picker.Box.ItemFilterer = _choiceSystemAdaptor.GetItemsToOffer;
 			picker.Box.PopupWidth = _popupWidth;
 

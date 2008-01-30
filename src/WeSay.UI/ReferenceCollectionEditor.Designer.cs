@@ -1,3 +1,5 @@
+using System.Windows.Forms;
+
 namespace WeSay.UI
 {
 	partial class ReferenceCollectionEditor<KV, ValueT, KEY_CONTAINER>
@@ -37,6 +39,7 @@ namespace WeSay.UI
 			this.Size = new System.Drawing.Size(30, 37);
 			this.AutoSize = true;
 			this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			this.Margin = new Padding(0);
 			this.ResumeLayout(false);
 		   // this.PerformLayout();
 
