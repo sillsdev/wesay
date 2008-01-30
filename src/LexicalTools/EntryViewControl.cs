@@ -23,7 +23,15 @@ namespace WeSay.LexicalTools
 			_viewTemplate = null;
 			InitializeComponent();
 			RefreshEntryDetail();
+			_lexicalEntryPreview.HandleCreated += OnLexicalEntryPreviewHandleCreated;
 		}
+
+#region Work around for Mono Bug 357155
+		private void OnLexicalEntryPreviewHandleCreated(object sender, EventArgs e)
+		{
+			RefreshLexicalEntryPreview();
+		}
+#endregion
 
 		protected override void OnHandleDestroyed(EventArgs e)
 		{
