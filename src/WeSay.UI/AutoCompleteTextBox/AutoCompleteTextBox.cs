@@ -652,6 +652,7 @@ namespace WeSay.UI.AutoCompleteTextBox
 
 		protected virtual void UpdateList()
 		{
+			this._listBox.BeginUpdate();
 			this._listBox.Items.Clear();
 
 			//hatton experimental:
@@ -675,6 +676,7 @@ namespace WeSay.UI.AutoCompleteTextBox
 					}
 				}
 			}
+			this._listBox.EndUpdate();
 
 			if (this._listBox.Items.Count == 0)
 			{
