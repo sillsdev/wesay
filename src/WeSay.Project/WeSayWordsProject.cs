@@ -1024,6 +1024,8 @@ namespace WeSay.Project
 			{
 				return;
 			}
+			oldName = Regex.Escape(oldName);
+
 			//NB: we're just using regex, here, not xpaths which in this case
 			//would be nice (e.g., "name" is a pretty generic thing to be changing)
 			if (File.Exists(PathToLiftFile))
@@ -1053,11 +1055,12 @@ namespace WeSay.Project
 			WritingSystems.IdOfWritingSystemChanged(ws, oldId);
 			DefaultViewTemplate.ChangeWritingSystemId(oldId, ws.Id);
 
+
 			if (File.Exists(PathToLiftFile))
 			{
 				//todo: expand the regular expression here to account for all reasonable patterns
 				GrepLift(PathToLiftFile,
-						 string.Format("lang\\s*=\\s*[\"']{0}[\"']", oldId),
+						 string.Format("lang\\s*=\\s*[\"']{0}[\"']", Regex.Escape(oldId)),
 						 string.Format("lang=\"{0}\"", ws.Id));
 			}
 
@@ -1105,6 +1108,7 @@ namespace WeSay.Project
 			}
 			return false;
 		}
+
 
 		private static void GrepLift(string inputPath, string pattern, string replaceWith)
 		{
@@ -1208,6 +1212,7 @@ namespace WeSay.Project
 			}
 			return false;
 		}
+
 
 
 	}

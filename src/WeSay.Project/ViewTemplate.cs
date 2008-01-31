@@ -164,6 +164,39 @@ namespace WeSay.Project
 			//then, when we fixed it to "note", they had two note fields!
 			//this is to clean up the mess.
 			RemoveByFieldName(usersTemplate, "Note");
+
+			if (factoryTemplate.GetField(LexSense.WellKnownProperties.Definition)==null)
+			{
+				return; // this some  test situation with a abnormal factory template
+			}
+
+			//In Jan 2008 (still in version 1 Preview 3, just a hand-full of users)
+			//we switch from "meaning" being the gloss, to the definition, making Defintion
+			//a non-optional field, and gloss a normally hidden field
+
+			Field def = usersTemplate.GetField(LexSense.WellKnownProperties.Definition);
+			Field gloss = usersTemplate.GetField(Field.FieldNames.SenseGloss.ToString());
+
+
+			//this is an upgrade situation
+			if (!def.Enabled || def.Visibility!=CommonEnumerations.VisibilitySetting.Visible)
+			{
+				//copy writing systems from glosses
+				foreach (string writingSystemId in gloss.WritingSystemIds)
+				{
+					if (!def.WritingSystemIds.Contains(writingSystemId))
+					{
+						def.WritingSystemIds.Add(writingSystemId);
+					}
+				}
+			}
+
+			def.Enabled = true;
+			def.Visibility = CommonEnumerations.VisibilitySetting.Visible;
+
+			gloss.Visibility = CommonEnumerations.VisibilitySetting.NormallyHidden;
+
+
 		}
 
 		private static void RemoveByFieldName(ViewTemplate usersTemplate, string fielName)
@@ -203,32 +236,33 @@ namespace WeSay.Project
 			masterTemplate.Add(lexicalFormField);
 
 			Field citationFormField = new Field(LexEntry.WellKnownProperties.Citation, "LexEntry", defaultVernacularSet);
-			StringCatalog.Get("~CitationForm", "The label for the field holding the citation form.");
+			StringCatalog.Get("~Citation Form", "The label for the field holding the citation form, which is how the word will be displayed in the dictionary.  This is used in languages where the lexeme form may be different from what the Headword should be.");
 			citationFormField.DisplayName = "Citation Form";
-			citationFormField.Description = "The form that is to be printed in the dictionary";
+			citationFormField.Description = "A form which overrides the Lexeme Form to be the Headword in the printed dictionary";
 			citationFormField.Visibility = CommonEnumerations.VisibilitySetting.NormallyHidden;
 			citationFormField.Enabled = false;
 			masterTemplate.Add(citationFormField);
 
 
-
-			Field glossField = new Field(Field.FieldNames.SenseGloss.ToString(), "LexSense", defaultAnalysisSet);
-			glossField.DisplayName = "Gloss";
-			glossField.Description =
-					"Normally a single word. Shows up as the first field of the sense, across from the 'Meaning' label";
-			glossField.Visibility = CommonEnumerations.VisibilitySetting.Visible;
-			glossField.Enabled = true;
-			masterTemplate.Add(glossField);
-
 			Field definitionField = new Field(LexSense.WellKnownProperties.Definition, "LexSense", defaultAnalysisSet);
 			//this is here so the PoMaker scanner can pick up a comment about this label
 			StringCatalog.Get("~Definition", "The label for the field showing the definition of the word.");
-			definitionField.DisplayName = "Definition";
+			definitionField.DisplayName = "Definition (Meaning)";
 			definitionField.Description =
-					"The definition of this sense of the word, in one or more languages.";
+					"The definition of this sense of the word, in one or more languages. Shows up next to the Meaning label.";
 			definitionField.Visibility = CommonEnumerations.VisibilitySetting.Visible;
-			definitionField.Enabled = false;
+			definitionField.Enabled = true;
 			masterTemplate.Add(definitionField);
+
+			//this is here so the PoMaker scanner can pick up a comment about this label
+			StringCatalog.Get("~Gloss", "The label for the field showing a single word translation, as used in interlinear text glossing.");
+			Field glossField = new Field(Field.FieldNames.SenseGloss.ToString(), "LexSense", defaultAnalysisSet);
+			glossField.DisplayName = "Gloss";
+			glossField.Description =
+					"Normally a single word, used when interlinearizing texts.";
+			glossField.Visibility = CommonEnumerations.VisibilitySetting.NormallyHidden;
+			glossField.Enabled = true;
+			masterTemplate.Add(glossField);
 
 			Field literalMeaningField = new Field("LiteralMeaning", "LexSense", defaultAnalysisSet);
 			//this is here so the PoMaker scanner can pick up a comment about this label
@@ -269,6 +303,15 @@ namespace WeSay.Project
 //            senseNoteField.Enabled = false;
 //            masterTemplate.Add(senseNoteField);
 
+			Field pictureField = new Field("Picture", "LexSense", defaultAnalysisSet);
+			//this is here so the PoMaker scanner can pick up a comment about this label
+			StringCatalog.Get("~Picture", "The label for the field showing a picture.");
+			pictureField.DisplayName = "Picture";
+			pictureField.Description = "An image corresponding to the sense.";
+			pictureField.DataTypeName = "Picture";
+			pictureField.Visibility = CommonEnumerations.VisibilitySetting.NormallyHidden;
+			pictureField.Enabled = true;
+			masterTemplate.Add(pictureField);
 
 			Field posField = new Field(LexSense.WellKnownProperties.PartOfSpeech, "LexSense", defaultAnalysisSet);
 			//this is here so the PoMaker scanner can pick up a comment about this label
@@ -280,15 +323,6 @@ namespace WeSay.Project
 			posField.Enabled = true;
 			masterTemplate.Add(posField);
 
-			Field pictureField = new Field("Picture", "LexSense", defaultAnalysisSet);
-			//this is here so the PoMaker scanner can pick up a comment about this label
-			StringCatalog.Get("~Picture", "The label for the field showing a picture.");
-			pictureField.DisplayName = "Picture";
-			pictureField.Description = "An image corresponding to the sense.";
-			pictureField.DataTypeName = "Picture";
-			pictureField.Visibility = CommonEnumerations.VisibilitySetting.NormallyHidden;
-			pictureField.Enabled = true;
-			masterTemplate.Add(pictureField);
 
 			Field exampleField =
 					new Field(Field.FieldNames.ExampleSentence.ToString(), "LexExampleSentence", defaultVernacularSet);

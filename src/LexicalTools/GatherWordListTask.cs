@@ -184,7 +184,8 @@ namespace WeSay.LexicalTools
 		public void WordCollected(MultiText newVernacularWord)
 		{
 			LexSense sense = new LexSense();
-			sense.Gloss.MergeIn(CurrentWordAsMultiText);
+			sense.Definition.MergeIn(CurrentWordAsMultiText);
+			sense.Gloss.MergeIn(CurrentWordAsMultiText);//we use this for matching up, and well, it probably is a good gloss
 
 			Db4oLexQueryHelper.AddSenseToLexicon(RecordListManager, newVernacularWord, sense);
 			RecordListManager.GoodTimeToCommit();
@@ -264,6 +265,14 @@ namespace WeSay.LexicalTools
 					{
 						if (sense.Gloss[_writingSystemIdForWordListWords] == CurrentListWord)
 						{
+							//since we copy the gloss into the defniition, too, if that hasn't been
+							//modified, then we don't want to let it being non-empty keep us from
+							//removing the sense. We're trying to enable typo correcting.
+							if (sense.Definition[_writingSystemIdForWordListWords] == CurrentListWord)
+							{
+								sense.Definition.SetAlternative(_writingSystemIdForWordListWords, null);
+								sense.Definition.RemoveEmptyStuff();
+							}
 							sense.Gloss.SetAlternative(_writingSystemIdForWordListWords, null);
 							sense.Gloss.RemoveEmptyStuff();
 							if (!sense.IsEmptyForPurposesOfDeletion)

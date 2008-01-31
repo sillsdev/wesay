@@ -130,11 +130,21 @@ namespace WeSay.UI.Tests
 		[Test]
 		public void SetPreviouslyEmptyItem()
 		{
+
 			SetKeyAndShow(String.Empty);
+	Application.DoEvents();
 			Assert.AreEqual("", _control.Box.Text);
+			_control.Show();
+			Application.DoEvents();
 			_control.Box.Focus();
+			Application.DoEvents();
 			_control.Box.Paste("two");
+//            while (true)
+//            {
+//                Application.DoEvents();
+//            }
 			_somethingElseToFocusOn.Focus();
+	Application.DoEvents();
 			Assert.AreEqual("2", _dataBeingEditted.Key);
 		}
 

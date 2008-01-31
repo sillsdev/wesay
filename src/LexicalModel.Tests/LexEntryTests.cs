@@ -18,7 +18,11 @@ namespace WeSay.LexicalModel.Tests
 		{
 			this._entry = new LexEntry();
 			this._sense = (LexSense) this._entry.Senses.AddNew();
+#if GlossMeaning
 			this._sense.Gloss["th"] = "sense";
+#else
+			this._sense.Definition["th"] = "sense";
+#endif
 			MultiText customFieldInSense = this._sense.GetOrCreateProperty<MultiText>("customFieldInSense");
 			customFieldInSense["th"] = "custom";
 			this._examples = (LexExampleSentence)this._sense.ExampleSentences.AddNew();
@@ -55,9 +59,13 @@ namespace WeSay.LexicalModel.Tests
 			customFieldInExample["th"] = string.Empty;
 			_entry.CleanUpAfterEditting();
 		}
-		private void ClearSenseGloss()
+		private void ClearSenseMeaning()
 		{
+#if GlossMeaning
 			this._sense.Gloss["th"] = string.Empty;
+#else
+			this._sense.Definition["th"] = string.Empty;
+#endif
 		}
 		private void ClearSenseExample()
 		{
@@ -128,7 +136,7 @@ namespace WeSay.LexicalModel.Tests
 
 
 		[Test]
-		public void SenseWithOnlyGloss_Empty_False()
+		public void SenseWithOnlyMeaning_Empty_False()
 		{
 			ClearSenseExample();
 			ClearSenseCustom();
@@ -139,7 +147,7 @@ namespace WeSay.LexicalModel.Tests
 		[Test]
 		public void SenseWithOnlyExample_Empty_False()
 		{
-			ClearSenseGloss();
+			ClearSenseMeaning();
 			ClearSenseCustom();
 			Assert.IsFalse(this._removed);
 			Assert.IsFalse(this._sense.IsEmpty);
@@ -148,7 +156,7 @@ namespace WeSay.LexicalModel.Tests
 		[Test]
 		public void SenseWithOnlyCustom_Empty_False()
 		{
-			ClearSenseGloss();
+			ClearSenseMeaning();
 			ClearSenseExample();
 			Assert.IsFalse(this._removed);
 			Assert.IsFalse(this._sense.IsEmpty);
@@ -157,7 +165,7 @@ namespace WeSay.LexicalModel.Tests
 		[Test]
 		public void SenseWithNoExampleOrField_Empty_True()
 		{
-			ClearSenseGloss();
+			ClearSenseMeaning();
 			ClearSenseExample();
 			ClearSenseCustom();
 			Assert.IsTrue(this._removed);
@@ -168,7 +176,7 @@ namespace WeSay.LexicalModel.Tests
 		public void SenseWithOnlyPOS_ReadyForDeletion()
 		{
 			Assert.IsFalse(this._sense.IsEmptyForPurposesOfDeletion);
-			ClearSenseGloss();
+			ClearSenseMeaning();
 			ClearSenseExample();
 			ClearSenseCustom();
 			Assert.IsTrue(this._sense.IsEmpty);
@@ -182,7 +190,7 @@ namespace WeSay.LexicalModel.Tests
 		public void SenseWithAPicture_ReadyForDeletion()
 		{
 			Assert.IsFalse(this._sense.IsEmptyForPurposesOfDeletion);
-			ClearSenseGloss();
+			ClearSenseMeaning();
 			ClearSenseExample();
 			ClearSenseCustom();
 			Assert.IsTrue(this._sense.IsEmpty);
@@ -195,7 +203,7 @@ namespace WeSay.LexicalModel.Tests
 		[Test]
 		public void EmptySensesRemoved()
 		{
-			ClearSenseGloss();
+			ClearSenseMeaning();
 			ClearSenseExample();
 			ClearSenseCustom();
 			Assert.IsTrue(this._removed);
@@ -203,35 +211,39 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
-		public void GetOrCreateSenseWithGloss_SenseDoesNotExist_NewSenseWithGloss()
+		public void GetOrCreateSenseWithMeaning_SenseDoesNotExist_NewSenseWithMeaning()
 		{
-			MultiText gloss = new MultiText();
-			gloss.SetAlternative("th", "new");
+			MultiText meaning = new MultiText();
+			meaning.SetAlternative("th", "new");
 
-			LexSense sense = _entry.GetOrCreateSenseWithGloss(gloss);
+			LexSense sense = _entry.GetOrCreateSenseWithMeaning(meaning);
 			Assert.AreNotSame(_sense, sense);
+#if GlossMeaning
 			Assert.AreEqual("new", sense.Gloss.GetExactAlternative("th"));
+#else
+			Assert.AreEqual("new", sense.Definition.GetExactAlternative("th"));
+#endif
 		}
 
 		[Test]
-		public void GetOrCreateSenseWithGloss_SenseWithEmptyStringExists_ExistingSense()
+		public void GetOrCreateSenseWithMeaning_SenseWithEmptyStringExists_ExistingSense()
 		{
-			ClearSenseGloss();
+			ClearSenseMeaning();
 
-			MultiText gloss = new MultiText();
-			gloss.SetAlternative("th", string.Empty);
+			MultiText meaning = new MultiText();
+			meaning.SetAlternative("th", string.Empty);
 
-			LexSense sense = _entry.GetOrCreateSenseWithGloss(gloss);
+			LexSense sense = _entry.GetOrCreateSenseWithMeaning(meaning);
 			Assert.AreSame(_sense, sense);
 		}
 
 		[Test]
-		public void GetOrCreateSenseWithGloss_SenseDoesExists_ExistingSense()
+		public void GetOrCreateSenseWithMeaning_SenseDoesExists_ExistingSense()
 		{
-			MultiText gloss = new MultiText();
-			gloss.SetAlternative("th", "sense");
+			MultiText meaning = new MultiText();
+			meaning.SetAlternative("th", "sense");
 
-			LexSense sense = _entry.GetOrCreateSenseWithGloss(gloss);
+			LexSense sense = _entry.GetOrCreateSenseWithMeaning(meaning);
 			Assert.AreSame(_sense, sense);
 		}
 

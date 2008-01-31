@@ -28,20 +28,43 @@ namespace WeSay.LexicalTools
 			{
 
 				LexSense sense = (LexSense) list[index];
+#if GlossMeaning
 				Field field = ActiveViewTemplate.GetField(Field.FieldNames.SenseGloss.ToString());
 				if (field != null && field.GetDoShow(sense.Gloss, this.ShowNormallyHiddenFields))
 				{
-					Control glossControl = MakeBoundControl(sense.Gloss, field);
+					Control meaningControl = MakeBoundControl(sense.Gloss, field);
+#else
+					Field field = ActiveViewTemplate.GetField(LexSense.WellKnownProperties.Definition);
+					if (field != null && field.GetDoShow(sense.Definition, this.ShowNormallyHiddenFields))
+					{
+					Control meaningControl = MakeBoundControl(sense.Definition, field);
+#endif
 					string label = StringCatalog.Get("~Meaning");
 					LexEntry entry = sense.Parent as LexEntry;
 					if (entry != null) // && entry.Senses.Count > 1)
 					{
 						label += " " + (entry.Senses.IndexOf(sense) + 1);
 					}
-					Control glossRowControl = DetailList.AddWidgetRow(label, true, glossControl, insertAtRow, false);
+					Control meaningRowControl = DetailList.AddWidgetRow(label, true, meaningControl, insertAtRow, false);
 					++rowCount;
-					insertAtRow = DetailList.GetRow(glossRowControl);
+					insertAtRow = DetailList.GetRow(meaningRowControl);
 				}
+
+#if GlossMeaning
+#else
+				Field glossfield = ActiveViewTemplate.GetField(Field.FieldNames.SenseGloss.ToString());
+				if (glossfield != null && glossfield.GetDoShow(sense.Gloss, this.ShowNormallyHiddenFields))
+				{
+					Control control = MakeBoundControl(sense.Gloss, glossfield);
+					DetailList.AddWidgetRow(
+						StringCatalog.Get("~Gloss",
+										  "This is the field that normally has just a single word translation, not a full definition. Mostly used with interlinear text displays."),
+						false,
+						control, insertAtRow + rowCount, false);
+					++rowCount;
+					insertAtRow = DetailList.GetRow(control);
+				}
+#endif
 
 				rowCount += AddCustomFields(sense, insertAtRow + rowCount);
 
@@ -69,45 +92,17 @@ namespace WeSay.LexicalTools
 
 		public int AddGhost(IBindingList list, bool isHeading)
 		{
-//            int rowCount = 0;
-//           Field field;
-//           //TODO: only add this if there is no empty gloss in an existing sense (we
-//           //run into this with the MissingInfoTask, where we don't want to see two empty gloss boxes (one a ghost)
-//           if (viewTemplate.TryGetField(Field.FieldNames.SenseGloss.ToString(), out field))
-//           {
-//               foreach (string writingSystemId in field.WritingSystemIds)
-//               {
-//                   WritingSystem writingSystem = BasilProject.Project.WritingSystems[writingSystemId];
-//
-//                   WeSayTextBox entry = new WeSayTextBox(writingSystem);
-//                   GhostBinding g = MakeGhostBinding(list, "Gloss", writingSystem, entry);
-//                   g.ReferenceControl = DetailList.AddWidgetRow(StringCatalog.GetListOfType("New Meaning"), true, entry);
-//                   ++rowCount;
-//               }
-//           }
-//            return rowCount;
-
 			int insertAtRow = -1;
-			string label = StringCatalog.Get("~Meaning", "This label is shown once, but has two roles.  1) it labels contains the gloss, and 2) marks the beginning of the set of fields which make up a sense. So, in english, if we labelled this 'gloss', it would describe the field well but wouldn't label the section well.");
+			string label = StringCatalog.Get("~Meaning", "This label is shown once, but has two roles.  1) it labels the defintion field, and 2) marks the beginning of the set of fields which make up a sense. So, in english, if we labelled this 'definition', it would describe the field well but wouldn't label the section well.");
 			if(list.Count > 0)
 			{
 				label += " "+(list.Count + 1);
 			}
+#if GlossMeaning
 			return MakeGhostWidget<LexSense>(list, insertAtRow, Field.FieldNames.SenseGloss.ToString(), label, "Gloss", isHeading);
-
+#else
+			return MakeGhostWidget<LexSense>(list, insertAtRow, LexSense.WellKnownProperties.Definition, label, "Definition", isHeading);
+#endif
 		}
-
-		public static bool HasSenseWithEmptyGloss(IBindingList list)
-		{
-			foreach (LexSense sense in list)
-			{
-				if (sense.Gloss.Count == 0)
-				{
-					return true;
-				}
-			}
-			return false;
-		}
-
 	}
 }

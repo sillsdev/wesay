@@ -227,6 +227,13 @@ namespace WeSay.LexicalTools
 			int rowCount = 0;
 			foreach (Field customField in ActiveViewTemplate.GetCustomFields(target.GetType().Name))
 			{
+#if GlossMeaning
+#else
+				if (customField.FieldName == LexSense.WellKnownProperties.Definition)
+				{
+					continue; //already put this in next to "Meaning"
+				}
+#endif
 				rowCount = AddOneCustomField(target, customField, insertAtRow, rowCount);
 			}
 
@@ -234,7 +241,7 @@ namespace WeSay.LexicalTools
 			//grab any basetype class (to just one level). E.g., 'Note'
 			foreach (Field customField in ActiveViewTemplate.GetCustomFields(target.GetType().BaseType.Name))
 			{
-				if (target.GetType() == typeof(LexExampleSentence) && customField.FieldName==WeSayDataObject.WellKnownProperties.Note)
+				if (target.GetType() == typeof(LexExampleSentence) && customField.FieldName == WeSayDataObject.WellKnownProperties.Note)
 				{
 					continue; //note actually isn't allowed at the moment
 				}

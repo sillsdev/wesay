@@ -130,6 +130,9 @@ namespace WeSay.Setup
 			_classNameCombo.Enabled = _field.UserCanDeleteOrModify;
 			_dataTypeCombo.Enabled = _field.UserCanDeleteOrModify;
 			_description.Enabled = _field.UserCanDeleteOrModify;
+
+			_normallyHidden.Enabled = _field.CanOmitFromMainViewTemplate;
+
 		}
 
 		private void OnLeaveDisplayName(object sender, EventArgs e)
@@ -148,8 +151,10 @@ namespace WeSay.Setup
 
 		private void _fieldName_TextChanged(object sender, EventArgs e)
 		{
+
 			string oldValue = _field.FieldName;
-			_field.FieldName = _fieldName.Text.Trim();
+			_fieldName.Text = Field.MakeFieldNameSafe(_fieldName.Text);
+			_field.FieldName = _fieldName.Text;
 			if (string.IsNullOrEmpty(_field.FieldName))
 			{
 				_field.FieldName = oldValue;

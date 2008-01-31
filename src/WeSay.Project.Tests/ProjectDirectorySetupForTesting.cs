@@ -62,6 +62,11 @@ namespace WeSay.Project.Tests
 			writer.WriteEndElement();
 		}
 
+		public string PathToDirectory
+		{
+			get { return _experimentDir; }
+		}
+
 		public string PathToLiftFile
 		{
 			get { return Path.Combine(_experimentDir, "test.lift"); }
@@ -145,5 +150,12 @@ namespace WeSay.Project.Tests
 		}
 
 		#endregion
+
+		public WeSayWordsProject CreateLoadedProject()
+		{
+			WeSayWordsProject p = new WeSayWordsProject();
+			p.LoadFromLiftLexiconPath(PathToLiftFile);
+			return p;
+		}
 	}
 }

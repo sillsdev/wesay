@@ -568,7 +568,7 @@ namespace WeSay.LexicalTools
 
 		private void AddCurrentSemanticDomainToEntry(LexEntry entry)
 		{
-			LexSense sense = entry.GetOrCreateSenseWithGloss(new MultiText());
+			LexSense sense = entry.GetOrCreateSenseWithMeaning(new MultiText());
 			OptionRefCollection semanticDomains =
 					sense.GetOrCreateProperty<OptionRefCollection>(_semanticDomainField.FieldName);
 			if (!semanticDomains.Contains(CurrentDomainKey))

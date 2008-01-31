@@ -108,7 +108,12 @@ namespace WeSay.LexicalTools.Tests
 			Field field = new Field(Field.FieldNames.EntryLexicalForm.ToString(), "LexEntry", vernacularWritingSystemIds);
 			field.DisplayName = "Word";
 			viewTemplate.Add(field);
-			viewTemplate.Add(new Field(Field.FieldNames.SenseGloss.ToString(), "LexSense", analysisWritingSystemIds));
+#if GlossMeaning
+			string meaningFieldName = Field.FieldNames.SenseGloss.ToString();
+#else
+			string meaningFieldName = LexSense.WellKnownProperties.Definition;
+#endif
+			viewTemplate.Add(new Field(meaningFieldName, "LexSense", analysisWritingSystemIds));
 			viewTemplate.Add(new Field(Field.FieldNames.ExampleSentence.ToString(), "LexExampleSentence", vernacularWritingSystemIds));
 			viewTemplate.Add(new Field(Field.FieldNames.ExampleTranslation.ToString(), "LexExampleSentence", analysisWritingSystemIds));
 
@@ -131,7 +136,11 @@ namespace WeSay.LexicalTools.Tests
 		private static void AddSense(LexEntry entry)
 		{
 			LexSense sense = (LexSense) entry.Senses.AddNew();
+#if GlossMeaning
 			sense.Gloss[WeSayWordsProject.Project.DefaultViewTemplate.GetField("SenseGloss").WritingSystemIds[0]] = "GlossInAnalysis";
+#else
+			sense.Definition[WeSayWordsProject.Project.DefaultViewTemplate.GetField(LexSense.WellKnownProperties.Definition).WritingSystemIds[0]] = "MeaningInAnalysis";
+#endif
 			AddExample(sense);
 			AddExample(sense);
 		}

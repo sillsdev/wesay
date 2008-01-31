@@ -1,10 +1,7 @@
 using System;
-using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Drawing;
 using System.Windows.Forms;
-using Palaso.Reporting;
-using WeSay.Foundation;
-using WeSay.Language;
 using WeSay.Project;
 
 namespace WeSay.Setup
@@ -46,7 +43,18 @@ namespace WeSay.Setup
 
 			foreach (Field field in  WeSayWordsProject.Project.DefaultViewTemplate)
 			{
-				this._fieldsListBox.Items.Add(field, field.Enabled);
+				if(field.ClassName == "LexEntry")
+					this._fieldsListBox.Items.Add(new FieldListBoxWrapper(field), field.Enabled);
+			}
+			foreach (Field field in WeSayWordsProject.Project.DefaultViewTemplate)
+			{
+				if(field.ClassName == "LexSense")
+					this._fieldsListBox.Items.Add(new FieldListBoxWrapper(field), field.Enabled);
+			}
+			foreach (Field field in WeSayWordsProject.Project.DefaultViewTemplate)
+			{
+				if(field.ClassName == "LexExampleSentence")
+					this._fieldsListBox.Items.Add(new FieldListBoxWrapper(field), field.Enabled);
 			}
 
 			if (_fieldsListBox.Items.Count > 0)
@@ -64,7 +72,8 @@ namespace WeSay.Setup
 			}
 			if (e.NewValue== CheckState.Checked)
 			{
-				((Field) _fieldsListBox.SelectedItem).Enabled = true;
+				CurrentField.Enabled = true;
+				//((Field) _fieldsListBox.SelectedItem).Enabled = true;
 			}
 			else if (e.NewValue== CheckState.Unchecked)
 			{
@@ -79,6 +88,34 @@ namespace WeSay.Setup
 			}
 		}
 
+		class FieldListBoxWrapper
+		{
+			public Field _field;
+			private static StringDictionary _labels;
+
+			public FieldListBoxWrapper(Field f)
+			{
+				_field = f;
+				if (_labels == null)
+				{
+					_labels = new StringDictionary();
+					PopulateLabelDictionary();
+				}
+			}
+
+			private static void PopulateLabelDictionary()
+			{
+				_labels.Add("LexEntry", "Entry");
+				_labels.Add("LexSense", "Sense");
+				_labels.Add("LexExampleSentence", "Ex");
+			}
+
+			public override string ToString()
+			{
+				return _labels[_field.ClassName]+":" + _field.DisplayName;
+			}
+		}
+
 		private Field CurrentField
 		{
 			get
@@ -87,7 +124,7 @@ namespace WeSay.Setup
 				{
 					_fieldsListBox.SelectedItem = _fieldsListBox.Items[0];
 				}
-				return _fieldsListBox.SelectedItem as Field;
+				return (_fieldsListBox.SelectedItem as FieldListBoxWrapper)._field;
 			}
 		}
 
@@ -102,7 +139,7 @@ namespace WeSay.Setup
 
 			LoadAboutFieldBox();
 
-			//todo(WS-364): this is too blunt. They should be able to edit the display name
+			//(WS-364): this is too blunt. They should be able to edit the display name
 		//    _fieldPropertyGrid.Enabled = CurrentField.UserCanDeleteOrModify;
 
 		//    _fieldPropertyGrid.SelectedObject = CurrentField;
@@ -160,9 +197,9 @@ namespace WeSay.Setup
 
 		private void MakeFieldTheSelectedOne(Field f)
 		{
-			foreach (object o in _fieldsListBox.Items )
+			foreach (FieldListBoxWrapper o in _fieldsListBox.Items )
 			{
-				if (o == f)
+				if (o._field == f)
 				{
 					_fieldsListBox.SelectedItem = o;
 					break;

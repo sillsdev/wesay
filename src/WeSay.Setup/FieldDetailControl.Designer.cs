@@ -40,12 +40,12 @@ namespace WeSay.Setup
 			this._classNameCombo = new System.Windows.Forms.ComboBox();
 			this._dataTypeCombo = new System.Windows.Forms.ComboBox();
 			this._optionsFileName = new System.Windows.Forms.TextBox();
-			this._descriptionLabel = new System.Windows.Forms.Label();
 			this.label6 = new System.Windows.Forms.Label();
-			this._description = new System.Windows.Forms.TextBox();
 			this._writingSystemsControl = new WeSay.Setup.WritingSystemForFieldControl();
-			this._normallyHiddenLabel = new System.Windows.Forms.Label();
 			this._normallyHidden = new System.Windows.Forms.CheckBox();
+			this._description = new System.Windows.Forms.TextBox();
+			this._descriptionLabel = new System.Windows.Forms.Label();
+			this._normallyHiddenLabel = new System.Windows.Forms.Label();
 			this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
 			this.tableLayoutPanel1.SuspendLayout();
 			this.SuspendLayout();
@@ -104,6 +104,8 @@ namespace WeSay.Setup
 			this._fieldName.Name = "_fieldName";
 			this._fieldName.Size = new System.Drawing.Size(178, 20);
 			this._fieldName.TabIndex = 1;
+			this.toolTip1.SetToolTip(this._fieldName, "The name that will be used in the LIFT xml file. Only a small set of punctuation " +
+					"characters are allowed.");
 			this._fieldName.TextChanged += new System.EventHandler(this._fieldName_TextChanged);
 			//
 			// _displayLabel
@@ -136,6 +138,7 @@ namespace WeSay.Setup
 			this._displayName.Name = "_displayName";
 			this._displayName.Size = new System.Drawing.Size(178, 20);
 			this._displayName.TabIndex = 0;
+			this.toolTip1.SetToolTip(this._displayName, "The name the user will see.");
 			this._displayName.Leave += new System.EventHandler(this.OnLeaveDisplayName);
 			this._displayName.TextChanged += new System.EventHandler(this._displayName_TextChanged);
 			//
@@ -196,17 +199,6 @@ namespace WeSay.Setup
 			this._optionsFileName.TabIndex = 4;
 			this._optionsFileName.TextChanged += new System.EventHandler(this._optionsFileName_TextChanged);
 			//
-			// _descriptionLabel
-			//
-			this._descriptionLabel.AutoSize = true;
-			this._descriptionLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this._descriptionLabel.Location = new System.Drawing.Point(3, 282);
-			this._descriptionLabel.Name = "_descriptionLabel";
-			this._descriptionLabel.Size = new System.Drawing.Size(76, 16);
-			this._descriptionLabel.TabIndex = 9;
-			this._descriptionLabel.Text = "Description";
-			this.toolTip1.SetToolTip(this._descriptionLabel, "Information about the use of this field.");
-			//
 			// label6
 			//
 			this.label6.AutoSize = true;
@@ -217,6 +209,27 @@ namespace WeSay.Setup
 			this.label6.TabIndex = 10;
 			this.label6.Text = "Writing Systems";
 			this.toolTip1.SetToolTip(this.label6, "Mark which writing systems to show for this field.");
+			//
+			// _writingSystemsControl
+			//
+			this._writingSystemsControl.CurrentField = null;
+			this._writingSystemsControl.Dock = System.Windows.Forms.DockStyle.Fill;
+			this._writingSystemsControl.Location = new System.Drawing.Point(119, 179);
+			this._writingSystemsControl.Name = "_writingSystemsControl";
+			this._writingSystemsControl.Size = new System.Drawing.Size(178, 100);
+			this._writingSystemsControl.TabIndex = 6;
+			//
+			// _normallyHidden
+			//
+			this._normallyHidden.AutoSize = true;
+			this._normallyHidden.Location = new System.Drawing.Point(119, 150);
+			this._normallyHidden.Name = "_normallyHidden";
+			this._normallyHidden.Size = new System.Drawing.Size(140, 17);
+			this._normallyHidden.TabIndex = 7;
+			this._normallyHidden.Text = "Normally hidden if empty";
+			this.toolTip1.SetToolTip(this._normallyHidden, ".");
+			this._normallyHidden.UseVisualStyleBackColor = true;
+			this._normallyHidden.CheckedChanged += new System.EventHandler(this._normallyHidden_CheckedChanged);
 			//
 			// _description
 			//
@@ -230,14 +243,16 @@ namespace WeSay.Setup
 			this._description.TabIndex = 5;
 			this._description.TextChanged += new System.EventHandler(this._description_TextChanged);
 			//
-			// _writingSystemsControl
+			// _descriptionLabel
 			//
-			this._writingSystemsControl.CurrentField = null;
-			this._writingSystemsControl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this._writingSystemsControl.Location = new System.Drawing.Point(119, 179);
-			this._writingSystemsControl.Name = "_writingSystemsControl";
-			this._writingSystemsControl.Size = new System.Drawing.Size(178, 100);
-			this._writingSystemsControl.TabIndex = 6;
+			this._descriptionLabel.AutoSize = true;
+			this._descriptionLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this._descriptionLabel.Location = new System.Drawing.Point(3, 282);
+			this._descriptionLabel.Name = "_descriptionLabel";
+			this._descriptionLabel.Size = new System.Drawing.Size(76, 16);
+			this._descriptionLabel.TabIndex = 9;
+			this._descriptionLabel.Text = "Description";
+			this.toolTip1.SetToolTip(this._descriptionLabel, "Information about the use of this field.");
 			//
 			// _normallyHiddenLabel
 			//
@@ -249,18 +264,6 @@ namespace WeSay.Setup
 			this._normallyHiddenLabel.TabIndex = 10;
 			this._normallyHiddenLabel.Text = "Visibility";
 			this.toolTip1.SetToolTip(this._normallyHiddenLabel, "Tick this box for fields which are  not used in most records");
-			//
-			// _normallyHidden
-			//
-			this._normallyHidden.AutoSize = true;
-			this._normallyHidden.Location = new System.Drawing.Point(119, 150);
-			this._normallyHidden.Name = "_normallyHidden";
-			this._normallyHidden.Size = new System.Drawing.Size(140, 17);
-			this._normallyHidden.TabIndex = 7;
-			this._normallyHidden.Text = "Normally hidden if empty";
-			this.toolTip1.SetToolTip(this._normallyHidden, ".");
-			this._normallyHidden.UseVisualStyleBackColor = true;
-			this._normallyHidden.CheckedChanged += new System.EventHandler(this._normallyHidden_CheckedChanged);
 			//
 			// FieldDetailControl
 			//

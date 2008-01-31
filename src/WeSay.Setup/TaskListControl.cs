@@ -70,7 +70,7 @@ namespace WeSay.Setup
 
 		void OnProject_WritingSystemChanged(object sender, WeSayWordsProject.StringPair pair)
 		{
-			Regex regex = new Regex( string.Format("wordListWritingSystemId>\\s*{0}\\s*<", pair.from), RegexOptions.Compiled);
+			Regex regex = new Regex( string.Format("wordListWritingSystemId>\\s*{0}\\s*<", Regex.Escape(pair.from)), RegexOptions.Compiled);
 			if (_taskList != null)
 			{
 				foreach (TaskInfo t in _taskList.Items)

@@ -289,17 +289,25 @@ namespace WeSay.LexicalModel
 			}
 		}
 
-		public LexSense GetOrCreateSenseWithGloss(MultiText gloss)//Switch to definition
+		public LexSense GetOrCreateSenseWithMeaning(MultiText meaning)//Switch to meaning
 		{
 			foreach (LexSense sense in Senses)
 			{
-				if (gloss.HasFormWithSameContent(sense.Gloss))
+#if GlossMeaning
+				if (meaning.HasFormWithSameContent(sense.Gloss))
+#else
+				if (meaning.HasFormWithSameContent(sense.Definition))
+#endif
 				{
 					return sense;
 				}
 			}
 			LexSense newSense = (LexSense)Senses.AddNew();
-			newSense.Gloss.MergeIn(gloss);
+#if GlossMeaning
+			newSense.Gloss.MergeIn(meaning);
+#else
+			newSense.Definition.MergeIn(meaning);
+#endif
 			return newSense;
 		}
 
@@ -308,7 +316,12 @@ namespace WeSay.LexicalModel
 			string s = "";
 			foreach (LexSense sense in Senses)
 			{
-				s += sense.Gloss.GetFirstAlternative() + ", ";  //TODO switch to definition
+				string x = sense.Definition.GetFirstAlternative();
+				if(string.IsNullOrEmpty(x))
+				{
+					x = sense.Gloss.GetFirstAlternative();
+				}
+				s += x + ", ";
 			}
 			if (s == "")
 			{

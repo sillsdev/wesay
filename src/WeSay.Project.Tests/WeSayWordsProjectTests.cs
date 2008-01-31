@@ -81,13 +81,6 @@ namespace WeSay.Project.Tests
 		{
 			string experimentDir = MakeDir(Path.GetTempPath(), Path.GetRandomFileName());
 			string projectDir = MakeDir(experimentDir, "TestProj");
-		   // string weSayDir = MakeDir(projectDir, "WeSay");
-//            MakeDummyWordsFile("AAA.words", weSayDir);
-//            if (doMakeFileMatchingProjectName)
-//            {
-//                MakeDummyWordsFile("TestProj.words", weSayDir);
-//            }
-//            MakeDummyWordsFile("ZZZ.words", weSayDir);
 			WeSayWordsProject p = new WeSayWordsProject();
 			p.LoadFromProjectDirectoryPath(projectDir);
 			return p;
@@ -138,6 +131,53 @@ namespace WeSay.Project.Tests
 			Assert.IsNotNull(list);
 			Assert.IsNotNull(list.Options);
 			Assert.Greater(list.Options.Count, 2);
+		}
+
+		[Test]
+		public void MakeFieldNameChange_CannotBeBrokenWithWeirdNames_IfSafe()
+		{
+			TryFieldNameChangeAfterMakingSafe("color)", "color(");
+			TryFieldNameChangeAfterMakingSafe("(color", ")color");
+			TryFieldNameChangeAfterMakingSafe("*color", "color*");
+			TryFieldNameChangeAfterMakingSafe("[color", "]color");
+			TryFieldNameChangeAfterMakingSafe("color[", "color]");
+			TryFieldNameChangeAfterMakingSafe("{color", "}color");
+			TryFieldNameChangeAfterMakingSafe("color{", "color}");
+			TryFieldNameChangeAfterMakingSafe("?color{", "color");
+		}
+
+//        [Test]
+//        public void MakeFieldNameChange_FromNameWithParens_MakesChange()
+//        {
+//            TryFieldNameChangeAfterMakingSafe("color(", "color");
+//        }
+//
+//        [Test]
+//        public void MakeFieldNameChange_FromNameWithSlash_MakesChange()
+//        {
+//            TryFieldNameChangeAfterMakingSafe("color\\", "color");
+//        }
+//
+//        [Test]
+//        public void MakeFieldNameChange_ToNameWithSlash_MakesChange()
+//        {
+//            TryFieldNameChangeAfterMakingSafe("color", "color\\");
+//        }
+
+		private void TryFieldNameChangeAfterMakingSafe(string oldName, string newName)
+		{
+			using (ProjectDirectorySetupForTesting dir = new ProjectDirectorySetupForTesting(string.Empty))
+			{
+				WeSayWordsProject p = dir.CreateLoadedProject();
+				p.ViewTemplates.Add(new ViewTemplate());
+				oldName = Field.MakeFieldNameSafe(oldName);
+				newName = Field.MakeFieldNameSafe(newName);
+				Field f = new Field(oldName, "LexEntry", new string[] {"en"});
+				p.ViewTemplates[0].Add(f);
+				p.Save();
+				f.FieldName = newName;
+				p.MakeFieldNameChange(f, oldName);
+			}
 		}
 	}
 }

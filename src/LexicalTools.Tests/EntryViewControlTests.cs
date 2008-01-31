@@ -18,6 +18,7 @@ namespace WeSay.LexicalTools.Tests
 		LexEntry car;
 		LexEntry bike;
 		private ViewTemplate _viewTemplate;
+		private string _primaryMeaningFieldName;
 
 		[SetUp]
 		public void SetUp()
@@ -25,19 +26,26 @@ namespace WeSay.LexicalTools.Tests
 			Db4oLexModelHelper.InitializeForNonDbTests();
 			WeSayWordsProject.InitializeForTests();
 
-			empty = CreateTestEntry("", "", "");
-			apple = CreateTestEntry("apple", "red thing", "An apple a day keeps the doctor away.");
-			banana = CreateTestEntry("banana", "yellow food", "Monkeys like to eat bananas.");
-			car = CreateTestEntry("car", "small motorized vehicle", "Watch out for cars when you cross the street.");
-			bike = CreateTestEntry("bike", "vehicle with two wheels", "He rides his bike to school.");
+
+#if GlossMeaning
+		   _primaryMeaningFieldName = Field.FieldNames.SenseGloss.ToString();
+#else
+			_primaryMeaningFieldName = LexSense.WellKnownProperties.Definition;
+#endif
 
 			string[] analysisWritingSystemIds = new string[] { BasilProject.Project.WritingSystems.TestWritingSystemAnalId };
 			string[] vernacularWritingSystemIds = new string[] { BasilProject.Project.WritingSystems.TestWritingSystemVernId };
 			this._viewTemplate = new ViewTemplate();
 			this._viewTemplate.Add(new Field(Field.FieldNames.EntryLexicalForm.ToString(), "LexEntry", vernacularWritingSystemIds));
-			this._viewTemplate.Add(new Field(Field.FieldNames.SenseGloss.ToString(), "LexSense", analysisWritingSystemIds));
+			 this._viewTemplate.Add(new Field(_primaryMeaningFieldName, "LexSense", analysisWritingSystemIds));
 			this._viewTemplate.Add(new Field(Field.FieldNames.ExampleSentence.ToString(), "LexExampleSentence", vernacularWritingSystemIds));
 			this._viewTemplate.Add(new Field(Field.FieldNames.ExampleTranslation.ToString(), "LexExampleSentence", analysisWritingSystemIds));
+
+			empty = CreateTestEntry("", "", "");
+			apple = CreateTestEntry("apple", "red thing", "An apple a day keeps the doctor away.");
+			banana = CreateTestEntry("banana", "yellow food", "Monkeys like to eat bananas.");
+			car = CreateTestEntry("car", "small motorized vehicle", "Watch out for cars when you cross the street.");
+			bike = CreateTestEntry("bike", "vehicle with two wheels", "He rides his bike to school.");
 
 		}
 
@@ -85,7 +93,7 @@ namespace WeSay.LexicalTools.Tests
 			using (EntryViewControl entryViewControl = CreateForm(entry))
 			{
 				Assert.IsTrue(entryViewControl.ControlFormattedView.Text.Contains(GetLexicalForm(entry)));
-				Assert.IsTrue(entryViewControl.ControlFormattedView.Text.Contains(GetGloss(entry)));
+				Assert.IsTrue(entryViewControl.ControlFormattedView.Text.Contains(GetMeaning(entry)));
 				Assert.IsTrue(entryViewControl.ControlFormattedView.Text.Contains(GetExampleSentence(entry)));
 			}
 		}
@@ -93,7 +101,9 @@ namespace WeSay.LexicalTools.Tests
 		[Test, Ignore("For now, we also show the ghost field in this situation.")]
 		public void EditField_SingleControl()
 		{
-			using (EntryViewControl entryViewControl = CreateFilteredForm(apple, Field.FieldNames.SenseGloss.ToString(), "LexSense", BasilProject.Project.WritingSystems.TestWritingSystemAnalId))
+
+
+			using (EntryViewControl entryViewControl = CreateFilteredForm(apple, _primaryMeaningFieldName, "LexSense", BasilProject.Project.WritingSystems.TestWritingSystemAnalId))
 			{
 				Assert.AreEqual(1, entryViewControl.ControlEntryDetail.Count);
 			}
@@ -102,29 +112,29 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void EditField_SingleControlWithGhost()
 		{
-			using (EntryViewControl entryViewControl = CreateFilteredForm(apple, Field.FieldNames.SenseGloss.ToString(), "LexSense", BasilProject.Project.WritingSystems.TestWritingSystemAnalId))
+			using (EntryViewControl entryViewControl = CreateFilteredForm(apple, _primaryMeaningFieldName, "LexSense", BasilProject.Project.WritingSystems.TestWritingSystemAnalId))
 			{
 				Assert.AreEqual(2, entryViewControl.ControlEntryDetail.Count);
 			}
 		}
 
 		[Test]
-		public void EditField_MapsToLexicalForm()
+		public void EditField_Change_UpdatesSenseMeaning()
 		{
-			TestEditFieldMapsToLexicalForm(car);
-			TestEditFieldMapsToLexicalForm(bike);
+			EnsureField_Change_UpdatesSenseMeaning(car);
+			EnsureField_Change_UpdatesSenseMeaning(bike);
 		}
 
-		private static void TestEditFieldMapsToLexicalForm(LexEntry entry)
+		private  void EnsureField_Change_UpdatesSenseMeaning(LexEntry entry)
 		{
-			using (EntryViewControl entryViewControl = CreateFilteredForm(entry, Field.FieldNames.SenseGloss.ToString(), "LexSense", BasilProject.Project.WritingSystems.TestWritingSystemAnalId))
+			using (EntryViewControl entryViewControl = CreateFilteredForm(entry, _primaryMeaningFieldName, "LexSense", BasilProject.Project.WritingSystems.TestWritingSystemAnalId))
 			{
 				DetailList entryDetailControl = entryViewControl.ControlEntryDetail;
 				Label labelControl = entryDetailControl.GetLabelControlFromRow(0);
 				Assert.AreEqual("Meaning 1", labelControl.Text);
 				MultiTextControl editControl = (MultiTextControl) entryDetailControl.GetEditControlFromRow(0);
 				editControl.TextBoxes[0].Text = "test";
-				Assert.IsTrue(editControl.TextBoxes[0].Text.Contains(GetGloss(entry)));
+				Assert.IsTrue(editControl.TextBoxes[0].Text.Contains(GetMeaning(entry)));
 			}
 		}
 
@@ -257,12 +267,16 @@ namespace WeSay.LexicalTools.Tests
 			return entryViewControl;
 		}
 
-		private static LexEntry CreateTestEntry(string lexicalForm, string gloss, string exampleSentence)
+		private static LexEntry CreateTestEntry(string lexicalForm, string meaning, string exampleSentence)
 		{
 			LexEntry entry = new LexEntry();
 			entry.LexicalForm[GetSomeValidWsIdForField("EntryLexicalForm")] = lexicalForm;
 			LexSense sense = (LexSense)entry.Senses.AddNew();
-			sense.Gloss[GetSomeValidWsIdForField("SenseGloss")] = gloss;
+#if GlossMeaning
+			sense.Gloss[GetSomeValidWsIdForField("SenseGloss")] = meaning;
+#else
+			sense.Definition[WeSayWordsProject.Project.WritingSystems.TestWritingSystemAnalId] = meaning;
+#endif
 			LexExampleSentence example = (LexExampleSentence)sense.ExampleSentences.AddNew();
 			example.Sentence[GetSomeValidWsIdForField("ExampleSentence")] = exampleSentence;
 			return entry;
@@ -278,9 +292,13 @@ namespace WeSay.LexicalTools.Tests
 			return entry.LexicalForm.GetFirstAlternative();
 		}
 
-		private static string GetGloss(LexEntry entry)
+		private static string GetMeaning(LexEntry entry)
 		{
+ #if GlossMeaning
 			return ((LexSense)entry.Senses[0]).Gloss.GetFirstAlternative();
+#else
+			return ((LexSense)entry.Senses[0]).Definition.GetFirstAlternative();
+#endif
 		}
 
 		private static string GetExampleSentence(LexEntry entry)

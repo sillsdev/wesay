@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.ServiceModel;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
 using CommandLine;
@@ -458,9 +459,10 @@ namespace WeSay.App
 			try
 			{
 				WeSayWordsProject.Project.ReleaseLockOnLift();
-				string lift = WeSayWordsProject.Project.PathToLiftFile;
-				string output = LiftIO.Utilities.ProcessLiftForLaterMerging(lift);
-				MoveTempOverRealAndBackup(lift, output);
+				string pathToLift = WeSayWordsProject.Project.PathToLiftFile;
+				string output = LiftIO.Utilities.ProcessLiftForLaterMerging(pathToLift);
+			//    int liftProducerVersion = GetLiftProducerVersion(pathToLift);
+				MoveTempOverRealAndBackup(pathToLift, output);
 			}
 			catch (Exception error)
 			{
@@ -472,6 +474,29 @@ namespace WeSay.App
 			{
 				WeSayWordsProject.Project.LockLift();
 			}
+		}
+
+//        private int GetLiftProducerVersion(string pathToLift)
+//        {
+//            string s = FindFirstInstanceOfPatternInFile(pathToLift, "producer=\"()\"");
+//        }
+
+		private static string FindFirstInstanceOfPatternInFile(string inputPath, string pattern)
+		{
+			Regex regex = new Regex(pattern);
+			using (StreamReader reader = File.OpenText(inputPath))
+			{
+				while (!reader.EndOfStream)
+				{
+					Match m = regex.Match(reader.ReadLine());
+					if (m != null)
+					{
+						return m.Value;
+					}
+				}
+				reader.Close();
+			}
+			return string.Empty;
 		}
 
 

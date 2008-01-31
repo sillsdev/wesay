@@ -24,6 +24,8 @@ namespace WeSay.LexicalTools.Tests
 		private TabControl _tabControl;
 		private Form _window;
 		private TabPage _detailTaskPage;
+		private LexEntry _secondEntry;
+		private Field _defintionField;
 
 		[TestFixtureSetUp]
 		public void SetupFixture()
@@ -33,9 +35,7 @@ namespace WeSay.LexicalTools.Tests
 
 		public override void Setup()
 		{
-			WeSayWordsProject.InitializeForTests();
 			base.Setup();
-			WeSayWordsProject.InitializeForTests();
 			this._vernacularWsId = BasilProject.Project.WritingSystems.TestWritingSystemVernId;
 
 			this._filePath = Path.GetTempFileName();
@@ -44,9 +44,6 @@ namespace WeSay.LexicalTools.Tests
 			Lexicon.Init((Db4oRecordListManager)_recordListManager);
 
 			this._records = this._recordListManager.GetListOfType<LexEntry>();
-			AddEntry("Initial", "meaning", true);
-			AddEntry("Secondary", "meaning", false);
-			AddEntry("Tertiary", "meaning", true);
 
 			string[] analysisWritingSystemIds = new string[] { BasilProject.Project.WritingSystems.TestWritingSystemAnalId };
 			string[] vernacularWritingSystemIds = new string[] { this._vernacularWsId };
@@ -59,10 +56,20 @@ namespace WeSay.LexicalTools.Tests
 			shy1.DisplayName = "MyShyEntryCustom";
 			viewTemplate.Add(shy1);
 
+#if GlossMeaning
 			viewTemplate.Add(new Field(Field.FieldNames.SenseGloss.ToString(), "LexSense", analysisWritingSystemIds));
-			viewTemplate.Add(new Field("MySenseCustom", "LexSense", new string[]{"en"}, Field.MultiplicityType.ZeroOr1, "MultiText" ));
+#else
+			_defintionField = new Field(LexSense.WellKnownProperties.Definition, "LexSense", analysisWritingSystemIds);
+			viewTemplate.Add(_defintionField);
+#endif
+			viewTemplate.Add(new Field("MySenseCustom", "LexSense", new string[] { "en" }, Field.MultiplicityType.ZeroOr1, "MultiText"));
 			viewTemplate.Add(new Field(Field.FieldNames.ExampleSentence.ToString(), "LexExampleSentence",vernacularWritingSystemIds));
 			viewTemplate.Add(new Field(Field.FieldNames.ExampleTranslation.ToString(), "LexExampleSentence",analysisWritingSystemIds));
+
+			AddEntry("Initial", analysisWritingSystemIds[0], "meaning", true);
+			_secondEntry = AddEntry("Secondary", analysisWritingSystemIds[0], "meaning", false);
+			AddEntry("Tertiary", analysisWritingSystemIds[0], "meaning", true);
+
 
 			Field customField = new Field("SemanticDomains", "LexSense", analysisWritingSystemIds, Field.MultiplicityType.ZeroOr1, "OptionCollection");
 			customField.DisplayName = "Sem Dom";
@@ -110,16 +117,19 @@ namespace WeSay.LexicalTools.Tests
 			}
 		}
 
-		private LexEntry AddEntry(string lexemeForm, string meaning, bool includeExample)
+		private LexEntry AddEntry(string lexemeForm, string meaningWritingSystemId, string meaning, bool includeExample)
 		{
 			LexEntry entry = new LexEntry();
 			entry.LexicalForm.SetAlternative(this._vernacularWsId, lexemeForm);
 
 			LexSense sense = (LexSense) entry.Senses.AddNew();
+#if GlossMeaning
 			sense.Gloss[
 				WeSayWordsProject.Project.DefaultViewTemplate.GetField("SenseGloss").WritingSystemIds[0]] =
 				meaning;
-
+#else
+			sense.Definition.SetAlternative(meaningWritingSystemId,meaning);
+#endif
 			if (includeExample)
 			{
 				LexExampleSentence ex = (LexExampleSentence) sense.ExampleSentences.AddNew();
@@ -453,9 +463,12 @@ namespace WeSay.LexicalTools.Tests
 			parentControl.DataSource = new LexEntry();
 
 			Assert.AreEqual(0, entry.Properties.Count);
+#if GlossMeaning
 			Assert.AreEqual(0, ((LexSense)entry.Senses[0]).Properties.Count);
-			Assert.AreEqual(0, ((LexSense)entry.Senses[0]).Properties.Count);
-
+#else
+			Assert.AreEqual(1, ((LexSense)entry.Senses[0]).Properties.Count);
+			Assert.AreEqual(LexSense.WellKnownProperties.Definition.ToString(), ((LexSense)entry.Senses[0]).Properties[0].Key);
+#endif
 		}
 
 
@@ -543,7 +556,11 @@ namespace WeSay.LexicalTools.Tests
 
 		private static string GetMeaningControlName()
 		{
+#if GlossMeaning
 			return Field.FieldNames.SenseGloss + "_" + BasilProject.Project.WritingSystems.TestWritingSystemAnalId;
+#else
+			return LexSense.WellKnownProperties.Definition + "_" + BasilProject.Project.WritingSystems.TestWritingSystemAnalId;
+#endif
 		}
 
 		private static void TypeInMeaning(string value)
@@ -600,8 +617,10 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void BaselineForRemovingSenseTests()
 		{
-			RemovingSenseTestCore();
+			PutCursorInMeaningFieldOfSecondEntry();
+
 			TypeInMeaning("samo");
+
 			TextBoxTester tb2 = new TextBoxTester(GetMeaningControlName());
 			Assert.AreEqual("samo", tb2.Properties.Text);
 		}
@@ -609,17 +628,25 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void EditField_RemoveSenseContents_RemovesSense()
 		{
-			RemovingSenseTestCore();
+			PutCursorInMeaningFieldOfSecondEntry();
 			TypeInMeaning(string.Empty);
 			Thread.Sleep(1000);
 			Application.DoEvents();
 			Assert.IsTrue(GetEditControl("Meaning").Name.Contains("ghost"), "Only ghost should remain");
 		}
 
+		private void DoUi()
+		{
+			while (true)
+
+				Application.DoEvents();
+		}
+
+
 		[Test]  //regression test
 		public void PastingBlankOverAMeaningOfEmptySenseDoesntCrash()
 		{
-			RemovingSenseTestCore();
+			PutCursorInMeaningFieldOfSecondEntry();
 			TextBoxTester tb = new TextBoxTester(GetMeaningControlName());
 			Clipboard.SetText(" ");
 			tb.Properties.Paste();
@@ -628,7 +655,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]  //regression test
 		public void PastingTextOverAMeaningOfEmptySenseDoesntJustChangesMeaning()
 		{
-			RemovingSenseTestCore();
+			PutCursorInMeaningFieldOfSecondEntry();
 			TextBoxTester tb = new TextBoxTester(GetMeaningControlName());
 			Clipboard.SetText("samo");
 			tb.Properties.Paste();
@@ -637,7 +664,7 @@ namespace WeSay.LexicalTools.Tests
 		}
 
 
-		private void RemovingSenseTestCore()
+		private void PutCursorInMeaningFieldOfSecondEntry()
 		{
 //skip to second word (first has extra stuff in the sense)
 			ListBoxTester t = new ListBoxTester("_recordsListBox");

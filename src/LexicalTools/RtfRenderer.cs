@@ -32,7 +32,11 @@ namespace WeSay.LexicalTools
 			foreach (LexSense sense in entry.Senses)
 			{
 				//rtf.Append(SwitchToWritingSystem(BasilProject.Project.WritingSystems.AnalysisWritingSystemDefault.Id));
+#if GlossMeaning
 				if (entry.Senses.Count > 1 || (currentItem != null && currentItem.PropertyName == "Gloss"))
+#else
+				if (entry.Senses.Count > 1 || (currentItem != null && currentItem.PropertyName == LexSense.WellKnownProperties.Definition))
+#endif
 				{
 					rtf.Append(" " + senseNumber.ToString());
 				}
@@ -59,7 +63,11 @@ namespace WeSay.LexicalTools
 						}
 					}
 				}
+#if GlossMeaning
 				rtf.Append(" " + RenderField(sense.Gloss, currentItem));
+#else
+				rtf.Append(" " + RenderField(sense.Definition, currentItem));
+#endif
 //                rtf.Append(@"\i0 ");
 
 				foreach (LexExampleSentence exampleSentence in sense.ExampleSentences)
@@ -75,7 +83,11 @@ namespace WeSay.LexicalTools
 
 				++senseNumber;
 			}
+#if GlossMeaning
 			rtf.Append(RenderGhostedField("Gloss", currentItem, entry.Senses.Count + 1));
+#else
+			rtf.Append(RenderGhostedField(LexSense.WellKnownProperties.Definition, currentItem, entry.Senses.Count + 1));
+#endif
 
 			rtf.Append(@"\par}");
 			return Utf16ToRtfAnsi(rtf.ToString());

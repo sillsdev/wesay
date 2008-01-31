@@ -96,6 +96,22 @@ namespace WeSay.Project
 			Enabled = field.Enabled;
 		}
 
+		/// <summary>
+		/// clean up after exposing field name to UI for user editting
+		/// </summary>
+		/// <param name="text"></param>
+		/// <returns></returns>
+		public static string MakeFieldNameSafe(string text)
+		{
+			//parentheses mess up our greps, don't really belong in xml names
+			char[] charsToRemove = new char[] {' ','(',')', '*', ']', '[', '?', '{','}','\\','<', '>','+', '&'};
+			foreach (char c in charsToRemove)
+			{
+				text = text.Replace(c.ToString(), "");
+			}
+			return text.Trim();
+		}
+
 		private void Initialize(string fieldName, string dataTypeName, MultiplicityType multiplicity,
 								IEnumerable<string> writingSystemIds)
 		{
@@ -124,8 +140,8 @@ namespace WeSay.Project
 				{
 					throw new ArgumentNullException("FieldName");
 				}
-				_fieldName = value.Replace(" ", "").Trim(); //helpful when exposed to UI for user editting
-				if(_fieldName == "Definition") //versions prior to oct-23-2007 had the case wrong
+				_fieldName = MakeFieldNameSafe(value);
+				if (_fieldName == "Definition") //versions prior to oct-23-2007 had the case wrong
 				{
 					_fieldName = "definition";
 				}
@@ -133,6 +149,7 @@ namespace WeSay.Project
 				{
 					_fieldName = "citation";
 				}
+
 			}
 		}
 
@@ -438,8 +455,18 @@ namespace WeSay.Project
 		{
 			get
 			{
-				return !(_fieldName == FieldNames.EntryLexicalForm.ToString() ||
-					   _fieldName == FieldNames.SenseGloss.ToString());// TODEF
+				if(_fieldName == FieldNames.EntryLexicalForm.ToString())
+					return false;
+
+#if GlossMeaning
+				if(_fieldName == FieldNames.SenseGloss.ToString())
+					return false;
+#else
+				if (_fieldName == LexSense.WellKnownProperties.Definition)
+					return false;
+#endif
+
+				return true;
 			}
 		}
 
