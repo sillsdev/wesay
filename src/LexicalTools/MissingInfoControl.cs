@@ -11,10 +11,10 @@ using WeSay.UI;
 
 namespace WeSay.LexicalTools
 {
-	public partial class MissingInfoControl : UserControl
+	public partial class MissingInfoControl: UserControl
 	{
-		private IRecordList<LexEntry> _records;
-		private InMemoryBindingList<LexEntry> _completedRecords;
+		private readonly IRecordList<LexEntry> _records;
+		private readonly InMemoryBindingList<LexEntry> _completedRecords;
 		private LexEntry _currentRecord;
 		private LexEntry _previousRecord;
 		private LexEntry _nextRecord;
@@ -23,8 +23,10 @@ namespace WeSay.LexicalTools
 		private readonly Predicate<LexEntry> _isNotComplete;
 		public event EventHandler SelectedIndexChanged;
 
-		public MissingInfoControl(IRecordList<LexEntry> records, ViewTemplate viewTemplate,
-								  Predicate<LexEntry> isNotComplete, IRecordListManager recordListManager)
+		public MissingInfoControl(IRecordList<LexEntry> records,
+								  ViewTemplate viewTemplate,
+								  Predicate<LexEntry> isNotComplete,
+								  IRecordListManager recordListManager)
 		{
 			if (!DesignMode)
 			{
@@ -47,42 +49,41 @@ namespace WeSay.LexicalTools
 			}
 
 			InitializeComponent();
-			this.PreviewKeyDown += new PreviewKeyDownEventHandler(OnPreviewKeyDown);
+			PreviewKeyDown += OnPreviewKeyDown;
 
 			_btnNextWord.ReallySetSize(50, 50);
-		   // _btnPreviousWord.ReallySetSize(30, 30);
+			// _btnPreviousWord.ReallySetSize(30, 30);
 			if (DesignMode)
 			{
 				return;
 			}
-
 
 			_records = records;
 			_completedRecords = new InMemoryBindingList<LexEntry>();
 			_viewTemplate = viewTemplate;
 			_isNotComplete = isNotComplete;
 			InitializeDisplaySettings();
-			_entryViewControl.KeyDown += new KeyEventHandler(OnKeyDown);
+			_entryViewControl.KeyDown += OnKeyDown;
 			_entryViewControl.ViewTemplate = _viewTemplate;
 
 			_entryViewControl.RecordListManager = recordListManager;
 
 			_recordsListBox.DataSource = _records;
 			_records.ListChanged += OnRecordsListChanged;
-					// this needs to be after so it will get change event after the ListBox
+			// this needs to be after so it will get change event after the ListBox
 
 			WritingSystem listWritingSystem = GetListWritingSystem();
 
 			_recordsListBox.BorderStyle = BorderStyle.None;
-			_recordsListBox.SelectedIndexChanged += new EventHandler(OnRecordSelectionChanged);
-			_recordsListBox.Enter += new EventHandler(_recordsListBox_Enter);
-			_recordsListBox.Leave += new EventHandler(_recordsListBox_Leave);
+			_recordsListBox.SelectedIndexChanged += OnRecordSelectionChanged;
+			_recordsListBox.Enter += _recordsListBox_Enter;
+			_recordsListBox.Leave += _recordsListBox_Leave;
 			_recordsListBox.WritingSystem = listWritingSystem;
 			_completedRecordsListBox.DataSource = _completedRecords;
 			_completedRecordsListBox.BorderStyle = BorderStyle.None;
-			_completedRecordsListBox.SelectedIndexChanged += new EventHandler(OnCompletedRecordSelectionChanged);
-			_completedRecordsListBox.Enter += new EventHandler(_completedRecordsListBox_Enter);
-			_completedRecordsListBox.Leave += new EventHandler(_completedRecordsListBox_Leave);
+			_completedRecordsListBox.SelectedIndexChanged += OnCompletedRecordSelectionChanged;
+			_completedRecordsListBox.Enter += _completedRecordsListBox_Enter;
+			_completedRecordsListBox.Leave += _completedRecordsListBox_Leave;
 			_completedRecordsListBox.WritingSystem = listWritingSystem;
 
 			labelNextHotKey.BringToFront();
@@ -100,19 +101,20 @@ namespace WeSay.LexicalTools
 			}
 			if (keyData == Keys.PageUp)
 			{
-				this.SetCurrentRecordToPrevious();
+				SetCurrentRecordToPrevious();
 				return true;
 			}
 			return base.ProcessDialogKey(keyData);
 		}
+
 		/// <summary>
 		/// needed because the pos combo box blocks our access to enter, PageDown, etc.
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		void OnPreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+		private void OnPreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
 		{
-			if (e.KeyCode == Keys.Enter || e. KeyCode == Keys.PageDown)
+			if (e.KeyCode == Keys.Enter || e.KeyCode == Keys.PageDown)
 			{
 				e.IsInputKey = false;
 				SetCurrentRecordToNext();
@@ -120,17 +122,20 @@ namespace WeSay.LexicalTools
 			if (e.KeyCode == Keys.PageUp)
 			{
 				e.IsInputKey = false;
-				this.SetCurrentRecordToPrevious();
+				SetCurrentRecordToPrevious();
 			}
 		}
 
-		private WritingSystem GetListWritingSystem()
+		private static WritingSystem GetListWritingSystem()
 		{
-			WritingSystem listWritingSystem = BasilProject.Project.WritingSystems.UnknownVernacularWritingSystem;
+			WritingSystem listWritingSystem =
+					BasilProject.Project.WritingSystems.UnknownVernacularWritingSystem;
 
 			// use the master view Template instead of the one for this task. (most likely the one for this
 			// task doesn't have the EntryLexicalForm field specified but the Master (Default) one will
-			Field field = WeSayWordsProject.Project.DefaultViewTemplate.GetField(Field.FieldNames.EntryLexicalForm.ToString());
+			Field field =
+					WeSayWordsProject.Project.DefaultViewTemplate.GetField(
+							Field.FieldNames.EntryLexicalForm.ToString());
 
 			if (field != null)
 			{
@@ -140,7 +145,13 @@ namespace WeSay.LexicalTools
 				}
 				else
 				{
-					MessageBox.Show(String.Format("There are no writing systems enabled for the Field '{0}'", field.FieldName), "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);//review
+					MessageBox.Show(
+							String.Format(
+									"There are no writing systems enabled for the Field '{0}'",
+									field.FieldName),
+							"Error",
+							MessageBoxButtons.OK,
+							MessageBoxIcon.Exclamation); //review
 				}
 			}
 			return listWritingSystem;
@@ -173,7 +184,7 @@ namespace WeSay.LexicalTools
 		{
 			BackColor = DisplaySettings.Default.BackgroundColor;
 			_entryViewControl.BackColor = DisplaySettings.Default.BackgroundColor;
-					//we like it to stand out at design time, but not runtime
+			//we like it to stand out at design time, but not runtime
 		}
 
 		private void OnRecordSelectionChanged(object sender, EventArgs e)
@@ -210,14 +221,16 @@ namespace WeSay.LexicalTools
 			{
 				CurrentRecord = _nextRecord ?? _records[_records.Count - 1];
 				SelectCurrentRecordInRecordList();
-				_recordsListBox.Focus(); // change the focus so that the next focus event will for sure work
+				_recordsListBox.Focus();
+						// change the focus so that the next focus event will for sure work
 				_entryViewControl.Focus();
 				UpdatePreviousAndNextRecords();
 			}
 			else
 			{
 				CurrentRecord = null;
-				_congratulationsControl.Show(StringCatalog.Get("~Congratulations. You have completed this task."));
+				_congratulationsControl.Show(
+						StringCatalog.Get("~Congratulations. You have completed this task."));
 			}
 		}
 
@@ -234,7 +247,8 @@ namespace WeSay.LexicalTools
 
 				CurrentRecord = _previousRecord ?? _records[0];
 				SelectCurrentRecordInRecordList();
-				_recordsListBox.Focus(); // change the focus so that the next focus event will for sure work
+				_recordsListBox.Focus();
+						// change the focus so that the next focus event will for sure work
 				_entryViewControl.Focus();
 				UpdatePreviousAndNextRecords();
 			}
@@ -254,7 +268,8 @@ namespace WeSay.LexicalTools
 			if (_records.Count == 0)
 			{
 				CurrentRecord = null;
-				_congratulationsControl.Show(StringCatalog.Get("~There is no work left to be done on this task."));
+				_congratulationsControl.Show(
+						StringCatalog.Get("~There is no work left to be done on this task."));
 			}
 			else
 			{
@@ -347,13 +362,17 @@ namespace WeSay.LexicalTools
 
 		private void OnRecordsListChanged(object sender, ListChangedEventArgs e)
 		{
-			if (e.ListChangedType == ListChangedType.ItemAdded)
+			switch(e.ListChangedType)
 			{
-				SelectCurrentRecordInRecordList();
-			}
-			else if (e.ListChangedType == ListChangedType.ItemDeleted)
-			{
-				ClearSelectionForRecordsListBox();
+				case ListChangedType.ItemAdded:
+					SelectCurrentRecordInRecordList();
+					break;
+				case ListChangedType.ItemDeleted:
+					ClearSelectionForRecordsListBox();
+					break;
+				case ListChangedType.Reset:
+					SelectCurrentRecordInRecordList();
+					break;
 			}
 		}
 

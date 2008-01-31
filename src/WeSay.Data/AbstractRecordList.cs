@@ -396,7 +396,7 @@ namespace WeSay.Data
 		#endregion
 		#region IList<T> Members
 
-		public int IndexOf(T item)
+		public virtual int IndexOf(T item)
 		{
 			VerifyNotDisposed();
 			return _records.IndexOf(item);

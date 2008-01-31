@@ -1305,6 +1305,11 @@ namespace WeSay.Data
 					StoreItem(value, string.Empty);
 				}
 				long newId = GetItemId(value);
+				if (oldId != newId)
+				{
+					DeleteItem(oldId, true);
+					ItemIds[index] = newId;
+				}
 				if (isStored)
 				{
 					bool storeAgain = Equaler == null;
@@ -1317,11 +1322,6 @@ namespace WeSay.Data
 					{
 						StoreItem(value, string.Empty);
 					}
-				}
-				if (oldId != newId)
-				{
-					DeleteItem(oldId, true);
-					ItemIds[index] = newId;
 				}
 				if (StoreItemOnPropertyChanged)
 				{

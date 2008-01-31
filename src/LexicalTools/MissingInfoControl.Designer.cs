@@ -265,12 +265,12 @@ namespace WeSay.LexicalTools
 		private SplitContainer splitContainer1;
 		private SplitContainer splitContainer2;
 
-		private WeSayListBox _recordsListBox;
+		internal WeSayListBox _recordsListBox;
 		private EntryViewControl _entryViewControl;
 		private CongratulationsControl _congratulationsControl;
 		private Label label1;
 		private Label _completedRecordsLabel;
-		private WeSayListBox _completedRecordsListBox;
+		internal WeSayListBox _completedRecordsListBox;
 		private NextButton _btnNextWord;
 		private Label labelNextHotKey;
 		private PreviousButton _btnPreviousWord;

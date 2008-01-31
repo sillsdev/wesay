@@ -492,6 +492,13 @@ namespace WeSay.Data
 				}
 			}
 
+			public override int IndexOf(T item)
+			{
+				VerifyNotDisposed();
+				VerifySorted();
+				return base.IndexOf(item);
+			}
+
 			int IList.IndexOf(object value)
 			{
 				VerifyNotDisposed();
