@@ -79,8 +79,9 @@ namespace WeSay.LexicalTools
 
 			_findText.KeyDown += _findText_KeyDown;
 			_recordsListBox.SelectedIndexChanged +=OnRecordSelectionChanged;
-			_recordsListBox.Enter += _recordsListBox_Enter;
-			_recordsListBox.Leave += _recordsListBox_Leave;
+
+			_recordsListBox.GotFocus += _recordsListBox_Enter;
+			_recordsListBox.LostFocus += _recordsListBox_Leave;
 			UpdateDisplay();
 
 			_programmaticallyGoingToNewEntry = false;
