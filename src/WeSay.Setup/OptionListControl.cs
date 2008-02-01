@@ -187,6 +187,7 @@ namespace WeSay.Setup
 				m.Bounds = _nameMultiTextControl.Bounds;
 				m.Top = _nameLabel.Top;
 				m.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+				m.Anchor = _nameMultiTextControl.Anchor;
 
 				_nameMultiTextControl = m;
 				this.splitContainer1.Panel2.Controls.Add(m);

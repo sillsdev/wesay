@@ -114,7 +114,8 @@ namespace WeSay.App
 			{
 				RecoverUnsavedDataIfNeeded();
 			}
-			if (!MakeCacheAndLiftReady(_project.PathToLiftFile, _project))
+			LiftPreparer preparer = new LiftPreparer(_project);
+			if (!preparer.MakeCacheAndLiftReady())
 			{
 				return;
 			}
@@ -351,185 +352,6 @@ namespace WeSay.App
 		}
 
 
-		private bool MakeCacheAndLiftReady(string liftPath, WeSayWordsProject project)
-		{
-
-
-
-			//NB: it's very important that any updates are consumed before the cache is rebuilt.
-			//Otherwise, the cache and lift will fall out of sync.
-			if (!LiftUpdateService.ConsumePendingLiftUpdates())
-			{
-				return false;
-			}
-
-			if (!BringCachesUpToDate(liftPath, project))
-			{
-				return false;
-			}
-			if (CacheManager.AssumeCacheIsFresh(WeSayWordsProject.Project.PathToCache))
-			{
-				//prevent the update service from thinking the LIFT file is really old
-				//compared to the cache, due to the installer messing with the dates.
-				LiftUpdateService.LiftIsFreshNow();
-			}
-			//whether or not we're out of date, remove this indicator file, which is only to get
-			//fresh-from-install launchign without an installer-induced
-			//false dirty cache signal
-			CacheManager.RemoveAssumeCacheIsFreshIndicator();
-
-		  return true;
-		}
-
-		private bool BringCachesUpToDate(string liftPath, WeSayWordsProject project)
-		{
-			project.PathToLiftFile = liftPath;
-			CacheBuilder builder = CacheManager.GetCacheBuilderIfNeeded(project);
-
-			if (builder == null)
-			{
-				return true;
-			}
-
-				//ProgressState progressState = new WeSay.Foundation.ConsoleProgress();//new ProgressState(progressDialogHandler);
-				using (ProgressDialog dlg = new ProgressDialog())
-				{
-					if (!PreprocessLift())
-					{
-						return false;
-					}
-
-					dlg.Overview = "Please wait while WeSay updates its caches to match the new or modified LIFT file.";
-					BackgroundWorker cacheBuildingWork = new BackgroundWorker();
-					cacheBuildingWork.DoWork += new DoWorkEventHandler(builder.OnDoWork);
-					dlg.BackgroundWorker = cacheBuildingWork;
-					dlg.CanCancel = true;
-					dlg.ShowDialog();
-					if (dlg.DialogResult != DialogResult.OK)
-					{
-						Exception err = dlg.ProgressStateResult.ExceptionThatWasEncountered;
-						if (err !=null)
-						{
-							if (err is LiftIO.LiftFormatException)
-							{
-								Palaso.Reporting.ErrorReport.ReportNonFatalMessage(
-									"WeSay had problems with the content of the dictionary file.\r\n\r\n" + err.Message);
-							}
-							else
-							{
-								ErrorNotificationDialog.ReportException(err, null, false);
-							}
-						}
-						else if (dlg.ProgressStateResult.State == ProgressState.StateValue.StoppedWithError)
-						{
-							ErrorReport.ReportNonFatalMessage("Could not build caches. " + dlg.ProgressStateResult.LogString, null, false);
-						}
-						return false;
-					}
-					LiftUpdateService.LiftIsFreshNow();
-				}
-			return true;
-			}
-
-		private bool PreprocessLift()
-		{
-			using (ProgressDialog dlg = new ProgressDialog())
-			{
-				dlg.Overview = "Please wait while WeSay preprocesses your LIFT file.";
-				BackgroundWorker preprocessWorker = new BackgroundWorker();
-				preprocessWorker.DoWork += new DoWorkEventHandler(OnDoPreprocessLiftWork);
-				dlg.BackgroundWorker = preprocessWorker;
-				dlg.CanCancel = true;
-				dlg.ShowDialog();
-				if (dlg.ProgressStateResult.ExceptionThatWasEncountered != null)
-				{
-					ErrorReport.ReportNonFatalMessage(
-						String.Format("WeSay encountered an error while preprocessing the file '{0}'.  Error was: {1}",
-						WeSayWordsProject.Project.PathToLiftFile,
-						dlg.ProgressStateResult.ExceptionThatWasEncountered.Message));
-				}
-				return (dlg.DialogResult == DialogResult.OK);
-			}
-		}
-
-		void OnDoPreprocessLiftWork(object sender, DoWorkEventArgs e)
-		{
-			BackgroundWorkerState state = (BackgroundWorkerState) e.Argument;
-			state.StatusLabel = "Preprocessing...";
-			try
-			{
-				WeSayWordsProject.Project.ReleaseLockOnLift();
-				string pathToLift = WeSayWordsProject.Project.PathToLiftFile;
-				string output = LiftIO.Utilities.ProcessLiftForLaterMerging(pathToLift);
-			//    int liftProducerVersion = GetLiftProducerVersion(pathToLift);
-				MoveTempOverRealAndBackup(pathToLift, output);
-			}
-			catch (Exception error)
-			{
-				state.ExceptionThatWasEncountered = error;
-				state.State = ProgressState.StateValue.StoppedWithError;
-				throw; // this will put the exception in the e.Error arg of the RunWorkerCompletedEventArgs
-			}
-			finally
-			{
-				WeSayWordsProject.Project.LockLift();
-			}
-		}
-
-//        private int GetLiftProducerVersion(string pathToLift)
-//        {
-//            string s = FindFirstInstanceOfPatternInFile(pathToLift, "producer=\"()\"");
-//        }
-
-		private static string FindFirstInstanceOfPatternInFile(string inputPath, string pattern)
-		{
-			Regex regex = new Regex(pattern);
-			using (StreamReader reader = File.OpenText(inputPath))
-			{
-				while (!reader.EndOfStream)
-				{
-					Match m = regex.Match(reader.ReadLine());
-					if (m != null)
-					{
-						return m.Value;
-					}
-				}
-				reader.Close();
-			}
-			return string.Empty;
-		}
-
-
-		private void MoveTempOverRealAndBackup(string existingPath, string newFilePath)
-		{
-			string backupName = existingPath + ".old";
-
-			//this was just making a mess
-//            int i = 0;
-//            while (File.Exists(backupName + i))
-//            {
-//                i++;
-//            }
-//            backupName += i;
-
-			try
-			{
-				if (File.Exists(backupName))
-				{
-					File.Delete(backupName);
-				}
-
-				File.Move(existingPath, backupName);
-			}
-			catch
-			{
-				Logger.WriteEvent(String.Format("Couldn't write out to {0} ", backupName));
-			}
-
-			File.Copy(newFilePath, existingPath);
-			File.Delete(newFilePath);
-		}
-
 
 		private void OsCheck()
 		{
@@ -545,45 +367,6 @@ namespace WeSay.App
 #endif
 		}
 
-//        private static void ReleaseMutexForThisProject()
-//        {
-//            if (_oneInstancePerProjectMutex != null)
-//            {
-//                _oneInstancePerProjectMutex.ReleaseMutex();
-//            }
-//        }
-
-//        private static bool GrabTokenForThisProject(CommandLineArguments cmdArgs)
-//        {
-//            string mutexId = cmdArgs.liftPath;
-//            if (mutexId != null)
-//            {
-//                 bool mutexCreated;
-//                mutexId = mutexId.Replace(Path.DirectorySeparatorChar, '-');
-//                mutexId = mutexId.Replace(Path.VolumeSeparatorChar, '-');
-//                _oneInstancePerProjectMutex = new Mutex(true, mutexId, out mutexCreated);
-//                if (!mutexCreated) // can I acquire?
-//                {
-//                    //    Process[] processes = Process.GetProcessesByName("WeSay.App");
-//                    //    foreach (Process process in processes)
-//                    //    {
-//
-//                    //        // we should make window title include the database name.
-//                    //        if(process.MainWindowTitle == "WeSay: " + project.Name)
-//                    //        {
-//                    //            process.WaitForInputIdle(4000); // wait four seconds at most
-//                    //            //process.MainWindowHandle;
-//                    //            break;
-//                    //        }
-//                    //    }
-//
-//                    MessageBox.Show("WeSay is already open with " + cmdArgs.liftPath + ".");
-//                    return false;
-//                }
-//             }
-//             return true;
-//        }
-
 
 		private void SetupErrorHandling()
 		{
@@ -595,12 +378,6 @@ namespace WeSay.App
 			ErrorReport.AddStandardProperties();
 			ExceptionHandler.Init();
 		}
-
-		//private static void HandleTopLevelError(object sender, ThreadExceptionEventArgs e)
-		//{
-		//    throw new NotImplementedException();
-		//}
-
 
 		private IRecordListManager MakeRecordListManager(WeSayWordsProject project)
 		{

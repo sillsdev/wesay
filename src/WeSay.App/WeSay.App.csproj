@@ -70,6 +70,8 @@
   </ItemGroup>
   <ItemGroup>
 	<Compile Include="CommandLineParser.cs" />
+	<Compile Include="Migration\LiftPreparer.cs" />
+	<Compile Include="Migration\TransformWithProgressDialog.cs" />
 	<Compile Include="Services\DictionaryServiceProvider.cs" />
 	<Compile Include="Properties\Resources.Designer.cs">
 	  <AutoGen>True</AutoGen>
@@ -140,6 +142,9 @@
 	<EmbeddedResource Include="..\Addin.Transform\lift2html.xsl">
 	  <Link>Services\lift2html.xsl</Link>
 	</EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+	<EmbeddedResource Include="Migration\populateDefinitionFromGloss.xslt" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

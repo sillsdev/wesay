@@ -22,6 +22,10 @@ namespace WeSay.UI
 
 		public MultiTextControl() :this(null)
 		{
+			//design mode only
+			InitializeComponent();
+			AutoSize = false;
+			Size = new Size(100,20);
 		}
 
 		public MultiTextControl(WritingSystemCollection allWritingSystems)
@@ -46,6 +50,7 @@ namespace WeSay.UI
 			}
 			ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));//text
 			ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));//annotation widget
+
 
 			ResumeLayout(false);
 		}

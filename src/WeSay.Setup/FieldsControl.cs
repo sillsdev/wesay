@@ -107,12 +107,12 @@ namespace WeSay.Setup
 			{
 				_labels.Add("LexEntry", "Entry");
 				_labels.Add("LexSense", "Sense");
-				_labels.Add("LexExampleSentence", "Ex");
+				_labels.Add("LexExampleSentence", "Example");
 			}
 
 			public override string ToString()
 			{
-				return _labels[_field.ClassName]+":" + _field.DisplayName;
+				return string.Format("{0} ({1})", _field.DisplayName, _labels[_field.ClassName]);
 			}
 		}
 

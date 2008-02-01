@@ -112,10 +112,12 @@ namespace WeSay.Setup
 			//
 			// _nameMultiTextControl
 			//
+			this._nameMultiTextControl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
 			this._nameMultiTextControl.AutoSize = true;
 			this._nameMultiTextControl.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
 			this._nameMultiTextControl.BackColor = System.Drawing.Color.Red;
-			this._nameMultiTextControl.ColumnCount = 2;
+			this._nameMultiTextControl.ColumnCount = 3;
 			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
 			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
 			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
@@ -125,67 +127,10 @@ namespace WeSay.Setup
 			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
 			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
 			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-			this._nameMultiTextControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this._nameMultiTextControl.Location = new System.Drawing.Point(39, 31);
+			this._nameMultiTextControl.Location = new System.Drawing.Point(56, 11);
 			this._nameMultiTextControl.Name = "_nameMultiTextControl";
-			this._nameMultiTextControl.RowCount = 2;
-			this._nameMultiTextControl.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-			this._nameMultiTextControl.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
 			this._nameMultiTextControl.ShowAnnotationWidget = false;
-			this._nameMultiTextControl.Size = new System.Drawing.Size(0, 0);
+			this._nameMultiTextControl.Size = new System.Drawing.Size(212, 0);
 			this._nameMultiTextControl.TabIndex = 0;
 			//
 			// toolTip1
@@ -216,7 +161,7 @@ namespace WeSay.Setup
 			this._btnAdd.Image = global::WeSay.Setup.Properties.Resources.NewOptionListItem;
 			this._btnAdd.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this._btnAdd.Name = "_btnAdd";
-			this._btnAdd.Size = new System.Drawing.Size(83, 22);
+			this._btnAdd.Size = new System.Drawing.Size(91, 22);
 			this._btnAdd.Text = "New Option";
 			this._btnAdd.Click += new System.EventHandler(this._btnAdd_Click);
 			//
@@ -225,7 +170,7 @@ namespace WeSay.Setup
 			this._btnDelete.Image = global::WeSay.Setup.Properties.Resources.deleteOptionListItem;
 			this._btnDelete.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this._btnDelete.Name = "_btnDelete";
-			this._btnDelete.Size = new System.Drawing.Size(93, 22);
+			this._btnDelete.Size = new System.Drawing.Size(100, 22);
 			this._btnDelete.Text = "Delete Option";
 			this._btnDelete.Click += new System.EventHandler(this._btnDelete_Click);
 			//
