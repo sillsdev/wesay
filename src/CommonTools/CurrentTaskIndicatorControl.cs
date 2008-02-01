@@ -25,15 +25,19 @@ namespace WeSay.CommonTools
 
 			UpdateColors();
 			content.Location = new System.Drawing.Point(70, 35);
+			content.AutoSize = false;
+			content.Width = Width - 80;
+			content.Height = 100;
+			content.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
 			Controls.Add(content);
 			Controls.SetChildIndex(content, 0);
 		}
 
 		public void UpdateColors()
 		{
-			this._shapeControl.BackColor = DisplaySettings.Default.CurrentIndicatorColor;
-			label1.BackColor = _shapeControl.BackColor;
-			_content.BackColor = _shapeControl.BackColor;
+			this._shapeControl.CenterColor = DisplaySettings.Default.CurrentIndicatorColor;
+			label1.BackColor = _shapeControl.CenterColor;
+			_content.BackColor = _shapeControl.CenterColor;
 		}
 
 		private void _shapeControl_Resize(object sender, EventArgs e)

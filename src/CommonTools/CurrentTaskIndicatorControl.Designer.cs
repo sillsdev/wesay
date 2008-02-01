@@ -35,7 +35,7 @@ namespace WeSay.CommonTools
 			this.components = new System.ComponentModel.Container();
 			this.label1 = new System.Windows.Forms.Label();
 			this.localizationHelper1 = new WeSay.UI.LocalizationHelper(this.components);
-			this._shapeControl = new ShapeControl.ShapeControl();
+			this._shapeControl = new ShapeControl();
 			((System.ComponentModel.ISupportInitialize)(this.localizationHelper1)).BeginInit();
 			this.SuspendLayout();
 			//
@@ -56,18 +56,16 @@ namespace WeSay.CommonTools
 			//
 			// _shapeControl
 			//
-			this._shapeControl.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(242)))), ((int)(((byte)(253)))), ((int)(((byte)(219)))));
+			this._shapeControl.CenterColor = System.Drawing.Color.FromArgb(((int)(((byte)(242)))), ((int)(((byte)(253)))), ((int)(((byte)(219)))));
 			this._shapeControl.BorderColor = System.Drawing.Color.Black;
 			this._shapeControl.BorderStyle = System.Drawing.Drawing2D.DashStyle.Dot;
 			this._shapeControl.BorderWidth = 1;
-			this._shapeControl.CenterColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(255)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
 			this._shapeControl.Dock = System.Windows.Forms.DockStyle.Fill;
 			this._shapeControl.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold);
 			this._shapeControl.Location = new System.Drawing.Point(0, 0);
 			this._shapeControl.Name = "_shapeControl";
-			this._shapeControl.Shape = ShapeControl.ShapeType.RoundedRectangle;
+			this._shapeControl.Shape = ShapeType.RoundedRectangle;
 			this._shapeControl.Size = new System.Drawing.Size(563, 138);
-			this._shapeControl.SurroundColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(0)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
 			this._shapeControl.TabIndex = 2;
 			this._shapeControl.TabStop = false;
 			this._shapeControl.UseGradient = false;
@@ -93,6 +91,6 @@ namespace WeSay.CommonTools
 
 		private System.Windows.Forms.Label label1;
 		private WeSay.UI.LocalizationHelper localizationHelper1;
-		private ShapeControl.ShapeControl _shapeControl;
+		private ShapeControl _shapeControl;
 	}
 }
