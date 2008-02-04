@@ -23,15 +23,7 @@ namespace WeSay.LexicalTools
 			_viewTemplate = null;
 			InitializeComponent();
 			RefreshEntryDetail();
-			_lexicalEntryPreview.HandleCreated += OnLexicalEntryPreviewHandleCreated;
 		}
-
-#region Work around for Mono Bug 357155
-		private void OnLexicalEntryPreviewHandleCreated(object sender, EventArgs e)
-		{
-			RefreshLexicalEntryPreview();
-		}
-#endregion
 
 		protected override void OnHandleDestroyed(EventArgs e)
 		{
@@ -224,7 +216,6 @@ namespace WeSay.LexicalTools
 			try
 			{
 				_lexicalEntryPreview.Rtf = RtfRenderer.ToRtf(_record, _currentItemInFocus);
-				_lexicalEntryPreview.Refresh();
 			}
 			catch (Exception error)
 			{
@@ -289,9 +280,6 @@ namespace WeSay.LexicalTools
 			}
 		}
 
-
-
-
 		private void OnChangeOfWhichItemIsInFocus(object sender, CurrentItemEventArgs e)
 		{
 			VerifyNotDisposed();
@@ -316,6 +304,17 @@ namespace WeSay.LexicalTools
 				throw new InvalidOperationException("Disposed not explicitly called on " + GetType().FullName + ".");
 			}
 
+		}
+
+		// hack to get around the fact that SplitContainer takes over the
+		// tab order and doesn't allow you to specify that the controls in the
+		// right pane should get the highest tab order.
+		// this means the RTF view looks bad. Still haven't figured out how to make
+		// cursor go to right position.
+		protected override void OnEnter(EventArgs e)
+		{
+			base.OnEnter(e);
+			RefreshLexicalEntryPreview();
 		}
 	}
 }

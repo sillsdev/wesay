@@ -54,7 +54,6 @@ namespace WeSay.LexicalTools
 			this._lexicalEntryPreview = new System.Windows.Forms.RichTextBox();
 			this._panelEntry = new System.Windows.Forms.Panel();
 			this._splitter = new WeSay.UI.CollapsibleSplitter();
-			this._panelEntry.SuspendLayout();
 			this.SuspendLayout();
 			//
 			// _lexicalEntryPreview
@@ -103,7 +102,6 @@ namespace WeSay.LexicalTools
 			this.Name = "EntryViewControl";
 			this.Size = new System.Drawing.Size(474, 370);
 			this.BackColorChanged += new System.EventHandler(this.LexPreviewWithEntryControl_BackColorChanged);
-			this._panelEntry.ResumeLayout(false);
 			this.ResumeLayout(false);
 
 		}

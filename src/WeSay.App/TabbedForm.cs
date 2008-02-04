@@ -303,7 +303,7 @@ namespace WeSay.App
 			// RunCommand(new ActivateTaskCommand(page, task));
 			task.Control.Dock = DockStyle.Fill;
 			page.Controls.Add(task.Control);
-			task.Control.Focus();
+			task.Control.SelectNextControl(task.Control, true, true, true, true);
 			page.Cursor = Cursors.Default;
 			_activeTask = task;
 			Palaso.Reporting.Logger.WriteEvent("Done Activating");

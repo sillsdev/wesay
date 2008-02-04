@@ -454,5 +454,17 @@ namespace WeSay.LexicalTools
 					break;
 			}
 		}
+
+		// hack to get around the fact that SplitContainer takes over the
+		// tab order and doesn't allow you to specify that the controls in the
+		// right pane should get the highest tab order.
+		// this means the RTF view looks bad. Still haven't figured out how to make
+		// cursor go to right position.
+		protected override void OnEnter(EventArgs e)
+		{
+			base.OnEnter(e);
+			_entryViewControl.Select();
+		}
 	}
+
 }
