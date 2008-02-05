@@ -179,7 +179,7 @@ namespace WeSay.App
 
 			 _dictionaryHost = new ServiceHost(_dictionary, new Uri[] { new Uri(DictionaryServiceAddress), });
 
-			_dictionaryHost.AddServiceEndpoint(typeof(IDictionaryService), new NetNamedPipeBinding(),
+			_dictionaryHost.AddServiceEndpoint(typeof(IDictionaryService), new NetTcpBinding(),
 												 DictionaryServiceAddress);
 			_dictionaryHost.Open();
 
@@ -190,7 +190,7 @@ namespace WeSay.App
 		{
 			get
 			{
-				return "net.pipe://localhost/DictionaryServices/" + Uri.EscapeDataString(_project.PathToLiftFile);
+				return "net.tcp://localhost/DictionaryServices/" + Uri.EscapeDataString(_project.PathToLiftFile);
 			}
 		}
 
