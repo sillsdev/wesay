@@ -4,11 +4,10 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
-using System.Windows.Forms;
 using System.Xml;
 using Exortech.NetReflector;
-using kmcomapi;
 using Palaso.Reporting;
+using Palaso.UI.WindowsForms.Keyboarding;
 using Palaso.WritingSystems.Collation;
 using Spart;
 
@@ -487,61 +486,15 @@ namespace WeSay.Language
 				List<String> keyboards = new List<string>();
 				keyboards.Add(String.Empty); // for 'default'
 
-				if (Environment.OSVersion.Platform != PlatformID.Unix)
+				foreach (KeyboardController.KeyboardDescriptor keyboard in KeyboardController.GetAvailableKeyboards(KeyboardController.Engines.All))
 				{
-					//if (!GetKeyboardsFromKeyman7(keyboards))
-					{
-						GetKeyboardsFromKeyman6(keyboards);
-					}
-				}
-
-				foreach (InputLanguage lang in InputLanguage.InstalledInputLanguages)
-				{
-					keyboards.Add(lang.LayoutName);
+					keyboards.Add(keyboard.Name);
 				}
 				return new StandardValuesCollection(keyboards);
 			}
 
-			private static void GetKeyboardsFromKeyman6(ICollection<string> keyboards)
-			{
-				try
-				{
-					KeymanLink.KeymanLink keymanLink = new KeymanLink.KeymanLink();
-					if (keymanLink.Initialize(false))
-					{
-						foreach (
-								KeymanLink.KeymanLink.KeymanKeyboard keyboard in
-										keymanLink.Keyboards)
-						{
-							keyboards.Add(keyboard.KbdName);
-						}
-					}
-				}
-				catch (Exception err)
-				{
-					ErrorReport.ReportNonFatalMessage(
-							"WeSay ran into an error when looking for Keyman and asking it for a list of keyboards.  You can still use Keyman by assigning a Windows System Keyboard to the Keyman keyboard. \r\n{0}",
-							err.Message);
-				}
-			}
 
-			private static bool GetKeyboardsFromKeyman7(ICollection<string> keyboards)
-			{
-				try
-				{
-					TavultesoftKeymanClass keyman = new TavultesoftKeymanClass();
 
-					foreach (IKeymanKeyboard keyboard in keyman.Keyboards)
-					{
-						keyboards.Add(keyboard.KeyboardName);
-					}
-				}
-				catch (Exception)
-				{
-					return false;
-				}
-				return true;
-			}
 		}
 
 		#endregion

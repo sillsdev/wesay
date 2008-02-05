@@ -71,7 +71,6 @@
   <ItemGroup>
 	<Compile Include="CommandLineParser.cs" />
 	<Compile Include="Migration\LiftPreparer.cs" />
-	<Compile Include="Migration\TransformWithProgressDialog.cs" />
 	<Compile Include="Services\DictionaryServiceProvider.cs" />
 	<Compile Include="Properties\Resources.Designer.cs">
 	  <AutoGen>True</AutoGen>

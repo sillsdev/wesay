@@ -194,7 +194,7 @@ namespace WeSay.Project
 			def.Enabled = true;
 			def.Visibility = CommonEnumerations.VisibilitySetting.Visible;
 
-			gloss.Visibility = CommonEnumerations.VisibilitySetting.NormallyHidden;
+			gloss.Visibility = CommonEnumerations.VisibilitySetting.Invisible;
 
 
 		}

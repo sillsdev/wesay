@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Reflection;
 using System.Windows.Forms;
+using Palaso.UI.WindowsForms.Keyboarding;
 using WeSay.Language;
 
 namespace WeSay.UI
@@ -11,13 +12,10 @@ namespace WeSay.UI
 	public partial class WeSayTextBox : TextBox
 	{
 		private WritingSystem _writingSystem;
-		private KeymanLink.KeymanLink _keyman6;
-	   // private  kmcomapi.TavultesoftKeymanClass _keyman7;
 
 		private bool _multiParagraph;
 		private readonly string _nameForLogging;
 		private bool _haveAlreadyLoggedTextChanged = false;
-		private readonly Keyman _keyman;
 
 		public WeSayTextBox()
 		{
@@ -30,34 +28,6 @@ namespace WeSay.UI
 			TextChanged += WeSayTextBox_TextChanged;
 
 			KeyDown += OnKeyDown;
-
-		  //  Debug.Assert(DesignMode);
-			if (Environment.OSVersion.Platform != PlatformID.Unix)
-			{
-//                try
-//                {
-//                  _keyman7 = new TavultesoftKeymanClass();
-//                }
-//                catch(Exception )
-//                {
-//                    _keyman7 = null;
-//                }
-				try
-				{
-					_keyman6 = new KeymanLink.KeymanLink();
-					if (!_keyman6.Initialize(false))
-					{
-						_keyman6 = null;
-					}
-				}
-				catch(Exception )
-				{
-					//swallow.  we have a report from Mike that indicates the above will
-					//crash in some situation (vista + keyman 6.2?)... better to just not
-					// provide direct keyman access in that situation
-					_keyman6 = null;
-				}
-			}
 
 			if (_nameForLogging == null)
 			{
@@ -348,63 +318,17 @@ namespace WeSay.UI
 			{
 				throw new InvalidOperationException("WritingSystem must be initialized prior to use.");
 			}
-//
-//            if (_writingSystem.KeyboardName == null || _writingSystem.KeyboardName == string.Empty)
-//            {
-//                InputLanguage.CurrentInputLanguage = InputLanguage.DefaultInputLanguage;
-//                return;
-//            }
 
-			InputLanguage inputLanguage = FindInputLanguage(this._writingSystem.KeyboardName);
-			if (inputLanguage != null)
+			if (_writingSystem.KeyboardName == null || _writingSystem.KeyboardName == string.Empty)
 			{
-				InputLanguage.CurrentInputLanguage = inputLanguage;
+				KeyboardController.DeactivateKeyboard();
+				return;
 			}
-			else
-			{
-				//set the windows back to default so it doesn't interfere
-				//nice idea but is unneeded... perhaps keyman is calling this too
-				//InputLanguage.CurrentInputLanguage = InputLanguage.DefaultInputLanguage;
-				if(!string.IsNullOrEmpty(_writingSystem.KeyboardName))
-				{
-					try
-					{
-//                        if (_keyman7 != null)
-//                        {
-//                            int index= _keyman7.Keyboards.IndexOf(_writingSystem.KeyboardName);
-//                            if(index >=0)
-//                            {
-//                                _keyman7.Control.ActiveKeyboard = _keyman7.Keyboards[index];
-//                            }
-//                        }
-					   // else
-						if (_keyman6 != null)
-							{
-								_keyman6.SelectKeymanKeyboard(_writingSystem.KeyboardName, true);
-							}
-					}
-					catch (Exception err)
-					{
-						Palaso.Reporting.ErrorReport.ReportNonFatalMessage("Keyman switching problem: " + err.Message);
-					}
-				}
-			}
+			KeyboardController.ActivateKeyboard(this._writingSystem.KeyboardName);
+
 		}
 
-		static private InputLanguage FindInputLanguage(string name)
-		{
-			if(InputLanguage.InstalledInputLanguages != null) // as is the case on Linux
-			{
-				foreach (InputLanguage  l in InputLanguage.InstalledInputLanguages )
-				{
-					if (l.LayoutName == name)
-					{
-						return l;
-					}
-				}
-			}
-			return null;
-		}
+
 
 		protected override void OnLeave(EventArgs e)
 		{
@@ -414,24 +338,14 @@ namespace WeSay.UI
 			ClearKeyboard();
 		}
 
-		public void ClearKeyboard() {
+		public void ClearKeyboard()
+		{
 			if (_writingSystem == null)
 			{
 				throw new InvalidOperationException("WritingSystem must be initialized prior to use.");
 			}
-			if (FindInputLanguage(this._writingSystem.KeyboardName) != null)//just a weird way to know if we changed the keyboard when we came in
-			{
-				InputLanguage.CurrentInputLanguage = InputLanguage.DefaultInputLanguage;
-			}
-//            else if (this._keyman7 != null)
-//            {
-//                _keyman7.Control.ActiveKeyboard = null;
-//            }
-			//else
-				if (this._keyman6 != null)
-			{
-				this._keyman6.SelectKeymanKeyboard(null, false);
-			}
+
+			KeyboardController.DeactivateKeyboard();
 		}
 
 		/// <summary>
