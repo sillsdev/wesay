@@ -309,7 +309,7 @@ namespace WeSay.App.Tests
 
 		private static string GetServiceAddress(string liftPath)
 		{
-			return "net.tcp://localhost/DictionaryServices/"
+			return IPCUtils.URLPrefix + "DictionaryServices/"
 				   + Uri.EscapeDataString(liftPath);
 		}
 	}

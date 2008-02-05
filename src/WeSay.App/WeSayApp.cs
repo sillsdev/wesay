@@ -1,23 +1,18 @@
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.ServiceModel;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
 using CommandLine;
-using Palaso.Progress;
 using Palaso.Reporting;
-using Palaso.Services.ForServers;
 using Palaso.Services.Dictionary;
-using Palaso.UI.WindowsForms.Progress;
-using WeSay.App;
+using Palaso.Services.ForClients;
+using Palaso.Services.ForServers;
 using WeSay.App.Properties;
 using WeSay.Data;
 using WeSay.Foundation;
-using WeSay.Language;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Db4o_Specific;
 using WeSay.LexicalModel.Tests;
@@ -175,22 +170,24 @@ namespace WeSay.App
 			//Problem: if there is already a cache miss, this will be slow, and somebody will time out
 			StartCacheWatchingStuff();
 
-			Palaso.Reporting.Logger.WriteMinorEvent("Starting Dictionary Services at {0}", DictionaryServiceAddress);
 
-			 _dictionaryHost = new ServiceHost(_dictionary, new Uri[] { new Uri(DictionaryServiceAddress), });
+			if (Environment.OSVersion.Platform != PlatformID.Unix)
+			{
+				Palaso.Reporting.Logger.WriteMinorEvent("Starting Dictionary Services at {0}", DictionaryServiceAddress);
 
-			_dictionaryHost.AddServiceEndpoint(typeof(IDictionaryService), new NetTcpBinding(),
-												 DictionaryServiceAddress);
-			_dictionaryHost.Open();
+				_dictionaryHost = new ServiceHost(_dictionary, new Uri[] {new Uri(DictionaryServiceAddress),});
 
-
+				_dictionaryHost.AddServiceEndpoint(typeof (IDictionaryService), IPCUtils.CreateBinding(),
+												   DictionaryServiceAddress);
+				_dictionaryHost.Open();
+			}
 		}
 
 		private string DictionaryServiceAddress
 		{
 			get
 			{
-				return "net.tcp://localhost/DictionaryServices/" + Uri.EscapeDataString(_project.PathToLiftFile);
+				return IPCUtils.URLPrefix + "DictionaryServices/" + Uri.EscapeDataString(_project.PathToLiftFile);
 			}
 		}
 
