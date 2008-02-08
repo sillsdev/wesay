@@ -426,7 +426,7 @@ namespace WeSay.LexicalTools.Tests
 				AddTranslationToEntry(currentRecord, "a bogus translation of example");
 				Assert.AreEqual(missingInfoControl._completedRecordsListBox.SelectedItem,
 								currentRecord);
-				Assert.IsFalse(missingInfoControl._recordsListBox.Items.Contains(currentRecord));
+				Assert.IsFalse(missingInfoControl._recordsListBox.DataSource.Contains(currentRecord));
 #if Visual
 				DebugShowState(missingInfoControl, currentRecord);
 #endif
@@ -449,7 +449,7 @@ namespace WeSay.LexicalTools.Tests
 				AddTranslationToEntry(currentRecord, string.Empty);
 				Assert.AreEqual(missingInfoControl._recordsListBox.SelectedItem, currentRecord);
 				Assert.IsFalse(
-						missingInfoControl._completedRecordsListBox.Items.Contains(currentRecord));
+						missingInfoControl._completedRecordsListBox.DataSource.Contains(currentRecord));
 #if Visual
 				DebugShowState(missingInfoControl, currentRecord);
 #endif

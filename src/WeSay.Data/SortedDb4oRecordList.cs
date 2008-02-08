@@ -588,7 +588,10 @@ namespace WeSay.Data
 		public int IndexOf(object value)
 		{
 			VerifyNotDisposed();
-
+			if (value == null)
+			{
+				return -1;
+			}
 			if (!(value is T))
 			{
 				throw new ArgumentException("value must be of type T");
@@ -648,14 +651,13 @@ namespace WeSay.Data
 			((IList) MasterRecordList).Remove(GetValue(index));
 		}
 
-		// returns the key string. to get the value object use GetValue
-		// this is so bindinglistgrid will display the right thing.
+		// returns the value object. use GetKey to return the Key
 		public object this[int index]
 		{
 			get
 			{
 				VerifyNotDisposed();
-				return GetKey(index);
+				return GetValue(index);
 			}
 			set
 			{

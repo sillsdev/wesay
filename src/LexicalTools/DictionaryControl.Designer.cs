@@ -20,9 +20,9 @@ namespace WeSay.LexicalTools
 			if (disposing && !IsDisposed)
 			{
 				_recordsListBox.SelectedIndexChanged -= OnRecordSelectionChanged;
-				_recordsListBox.Enter -= _recordsListBox_Enter;
-				_recordsListBox.Leave -= _recordsListBox_Leave;
-				_recordsListBox.DataSource = null; // without this, the currency manager keeps trying to work
+				//_recordsListBox.Enter -= _recordsListBox_Enter;
+				//_recordsListBox.Leave -= _recordsListBox_Leave;
+				//_recordsListBox.DataSource = null; // without this, the currency manager keeps trying to work
 
 
 				_findText.KeyDown -= _findText_KeyDown;
@@ -141,7 +141,6 @@ namespace WeSay.LexicalTools
 			this._recordsListBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
 						| System.Windows.Forms.AnchorStyles.Left)
 						| System.Windows.Forms.AnchorStyles.Right)));
-			this._recordsListBox.IntegralHeight = false;
 			this._recordsListBox.Location = new System.Drawing.Point(3, 28);
 			this._recordsListBox.Name = "_recordsListBox";
 			this._recordsListBox.Size = new System.Drawing.Size(136, 236);

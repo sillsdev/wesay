@@ -232,7 +232,12 @@ namespace WeSay.Data
 
 		public long GetId(T item)
 		{
-			return ((Db4oList<T>)Records).ItemIds[IndexOf(item)];
+			int index = IndexOf(item);
+			if(index == -1)
+			{
+				return -1;
+			}
+			return ((Db4oList<T>)Records).ItemIds[index];
 		}
 
 		public DateTime GetDatabaseLastModified()

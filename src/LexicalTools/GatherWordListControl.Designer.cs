@@ -70,18 +70,16 @@ namespace WeSay.LexicalTools
 						| System.Windows.Forms.AnchorStyles.Left)
 						| System.Windows.Forms.AnchorStyles.Right)));
 			this._listViewOfWordsMatchingCurrentItem.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this._listViewOfWordsMatchingCurrentItem.ItemHeight = 20;
-			this._listViewOfWordsMatchingCurrentItem.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-			listViewItem1,
-			listViewItem2});
+			this._listViewOfWordsMatchingCurrentItem.HideSelection = true;
 			this._listViewOfWordsMatchingCurrentItem.Location = new System.Drawing.Point(11, 169);
 			this._listViewOfWordsMatchingCurrentItem.MinimumSize = new System.Drawing.Size(315, 84);
-			this._listViewOfWordsMatchingCurrentItem.MultiColumn = true;
 			this._listViewOfWordsMatchingCurrentItem.Name = "_listViewOfWordsMatchingCurrentItem";
 			this._listViewOfWordsMatchingCurrentItem.Size = new System.Drawing.Size(315, 126);
 			this._listViewOfWordsMatchingCurrentItem.TabIndex = 4;
 			this._listViewOfWordsMatchingCurrentItem.TabStop = false;
 			this._listViewOfWordsMatchingCurrentItem.Click += new System.EventHandler(this.OnListViewOfWordsMatchingCurrentItem_Click);
+			this._listViewOfWordsMatchingCurrentItem.Columns.Clear();
+			this._listViewOfWordsMatchingCurrentItem.View = System.Windows.Forms.View.List;
 			//
 			// label3
 			//

@@ -191,16 +191,22 @@ namespace WeSay.LexicalTools
 		{
 			if (!_recordsListBoxActive)
 			{
-				// When we change the content of the displayed string,
-				// Windows.Forms.ListBox removes the item (and sends
-				// the new selection event) then adds it in to the right
-				// place (and sends the new selection event again)
-				// We don't want to know about this case
+				// We don't care about the case where a record moves from the
+				// record list box to the completed records list box automatically
+				// (although the selection will change)
+				//
 				// We only want to know about the case where the user
 				// has selected a record in the list box itself (so has to enter
 				// the list box first)
 				return;
 			}
+
+			// only do something if an item is being selected (not deselected)
+			if (_recordsListBox.SelectedIndex == -1)
+			{
+				return;
+			}
+
 			SetCurrentRecordFromRecordList();
 			if (SelectedIndexChanged != null)
 			{
@@ -292,14 +298,19 @@ namespace WeSay.LexicalTools
 		{
 			if (!_completedRecordsListBoxActive)
 			{
-				// When we change the content of the displayed string,
-				// Windows.Forms.ListBox removes the item (and sends
-				// the new selection event) then adds it in to the right
-				// place (and sends the new selection event again)
-				// We don't want to know about this case
+				// We don't care about the case where a record moves from the
+				// record list box to the completed records list box automatically
+				// (although the selection will change)
+				//
 				// We only want to know about the case where the user
 				// has selected a record in the list box itself (so has to enter
 				// the list box first)
+				return;
+			}
+
+			// only do something if an item is being selected (not deselected)
+			if(_completedRecordsListBox.SelectedIndex == -1)
+			{
 				return;
 			}
 
@@ -400,8 +411,7 @@ namespace WeSay.LexicalTools
 				if (!_completedRecords.Contains(entry))
 				{
 					_completedRecords.Add(entry);
-					int index = _completedRecords.IndexOf(CurrentRecord);
-					Debug.Assert(index != -1);
+					int index = _completedRecords.IndexOf(entry);
 					_completedRecordsListBox.SelectedIndex = index;
 					ClearSelectionForRecordsListBox();
 				}
@@ -410,18 +420,14 @@ namespace WeSay.LexicalTools
 
 		private void ClearSelectionForCompletedRecordsListBox()
 		{
-			int topIndex = _completedRecordsListBox.TopIndex;
-			_completedRecordsListBox.ClearSelected();
-			_completedRecordsListBox.ClearSelected();
-			_completedRecordsListBox.TopIndex = topIndex;
+			_completedRecordsListBox.HideSelection = true;
+			_recordsListBox.HideSelection = false;
 		}
 
 		private void ClearSelectionForRecordsListBox()
 		{
-			int topIndex = _recordsListBox.TopIndex;
-			_recordsListBox.ClearSelected();
-			_recordsListBox.ClearSelected();
-			_recordsListBox.TopIndex = topIndex;
+			_recordsListBox.HideSelection = true;
+			_completedRecordsListBox.HideSelection = false;
 		}
 
 		private void OnBtnPreviousWordClick(object sender, EventArgs e)

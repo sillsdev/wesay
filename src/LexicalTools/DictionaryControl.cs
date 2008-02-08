@@ -20,8 +20,8 @@ namespace WeSay.LexicalTools
 		private readonly ViewTemplate _viewTemplate;
 		private readonly ContextMenu _cmWritingSystems;
 		private WritingSystem _listWritingSystem;
-		private bool _recordListBoxActive;
-		private bool _programmaticallyGoingToNewEntry;
+		//private bool _recordListBoxActive;
+		//private bool _programmaticallyGoingToNewEntry;
 		private readonly Db4oRecordListManager _recordManager;
 		private IBindingList _records;
 
@@ -80,11 +80,11 @@ namespace WeSay.LexicalTools
 			_findText.KeyDown += _findText_KeyDown;
 			_recordsListBox.SelectedIndexChanged +=OnRecordSelectionChanged;
 
-			_recordsListBox.GotFocus += _recordsListBox_Enter;
-			_recordsListBox.LostFocus += _recordsListBox_Leave;
+			//_recordsListBox.GotFocus += _recordsListBox_Enter;
+			//_recordsListBox.LostFocus += _recordsListBox_Leave;
 			UpdateDisplay();
 
-			_programmaticallyGoingToNewEntry = false;
+			//_programmaticallyGoingToNewEntry = false;
 		}
 
 
@@ -198,7 +198,9 @@ namespace WeSay.LexicalTools
 			_records = cachedSortedDb4oList;
 			_recordsListBox.BeginUpdate();
 			_recordsListBox.DataSource = _records;
+			_recordsListBox.RetrieveVirtualItem += OnRetrieveVirtualItemEvent;
 			_recordsListBox.EndUpdate();
+			_recordsListBox.ShowItemToolTips = true;
 
 			Control_EntryDetailPanel.DataSource = CurrentRecord;
 			_recordsListBox.WritingSystem = _listWritingSystem;
@@ -229,6 +231,13 @@ namespace WeSay.LexicalTools
 
 			_btnFind.Left = _writingSystemChooser.Left - _btnFind.Width;
 			_findText.Width = _btnFind.Left - _findText.Left;
+		}
+
+		private void OnRetrieveVirtualItemEvent(object sender, RetrieveVirtualItemEventArgs e)
+		{
+			string displayString = ((CachedSortedDb4oList<string, LexEntry>)this._records).GetKey(e.ItemIndex);
+			e.Item = new ListViewItem(displayString);
+			e.Item.ToolTipText = displayString;
 		}
 
 		private static IEnumerable FindClosestAndNextClosestAndPrefixedForms(string text, IEnumerable items, IDisplayStringAdaptor adaptor)
@@ -306,9 +315,9 @@ namespace WeSay.LexicalTools
 				throw new NavigationException("The requested entry was found in the database, but the ui could not display it.");
 			}
 
-			_programmaticallyGoingToNewEntry = true;
+			//_programmaticallyGoingToNewEntry = true;
 			_recordsListBox.SelectedIndex = index;
-			_programmaticallyGoingToNewEntry = false;
+			//_programmaticallyGoingToNewEntry = false;
 		}
 
 		private bool FindInList(string text)
@@ -327,9 +336,9 @@ namespace WeSay.LexicalTools
 			}
 			if (0 <= index && index < _recordsListBox.Items.Count)
 			{
-				_recordListBoxActive = true; // allow onRecordSelectionChanged
+				//_recordListBoxActive = true; // allow onRecordSelectionChanged
 				_recordsListBox.SelectedIndex = index;
-				_recordListBoxActive = false;
+				//_recordListBoxActive = false;
 				return true;
 			}
 			else
@@ -338,15 +347,15 @@ namespace WeSay.LexicalTools
 			}
 		}
 
-		private void _recordsListBox_Enter(object sender, EventArgs e)
-		{
-			_recordListBoxActive = true;
-		}
+		//private void _recordsListBox_Enter(object sender, EventArgs e)
+		//{
+		//    //_recordListBoxActive = true;
+		//}
 
-		private void _recordsListBox_Leave(object sender, EventArgs e)
-		{
-			_recordListBoxActive = false;
-		}
+		//private void _recordsListBox_Leave(object sender, EventArgs e)
+		//{
+		//    //_recordListBoxActive = false;
+		//}
 
 		private void OnRecordSelectionChanged(object sender, EventArgs e)
 		{
@@ -355,18 +364,18 @@ namespace WeSay.LexicalTools
 				//we were getting 3 calls to this for each click on a new word
 				return;
 			}
-			if (!_recordListBoxActive && !_programmaticallyGoingToNewEntry)
-			{
-				// When we change the content of the displayed string,
-				// Windows.Forms.ListBox removes the item (and sends
-				// the new selection event) then adds it in to the right
-				// place (and sends the new selection event again)
-				// We don't want to know about this case
-				// We only want to know about the case where the user
-				// has selected a record in the list box itself (so has to enter
-				// the list box first)
-				return;
-			}
+			//if (!_recordListBoxActive && !_programmaticallyGoingToNewEntry)
+			//{
+			//    // When we change the content of the displayed string,
+			//    // Windows.Forms.ListBox removes the item (and sends
+			//    // the new selection event) then adds it in to the right
+			//    // place (and sends the new selection event again)
+			//    // We don't want to know about this case
+			//    // We only want to know about the case where the user
+			//    // has selected a record in the list box itself (so has to enter
+			//    // the list box first)
+			//    return;
+			//}
 
 			if (CurrentRecord != null)
 			{
@@ -395,18 +404,18 @@ namespace WeSay.LexicalTools
 				_btnNewWord.Focus();
 			}
 			LexEntry entry = new LexEntry();
-			bool NoPriorSelection = _recordsListBox.SelectedIndex == -1;
-			_recordListBoxActive = true; // allow onRecordSelectionChanged
+			//bool NoPriorSelection = _recordsListBox.SelectedIndex == -1;
+			//_recordListBoxActive = true; // allow onRecordSelectionChanged
 			_records.Add(entry);
 			_recordsListBox.SelectedIndex = _records.IndexOf(entry);
-			if (NoPriorSelection)
-			{
-				// Windows.Forms.Listbox does not consider it a change of Selection
-				// index if the index was -1 and a record is added.
-				// (No event is sent so we must do it ourselves)
-				OnRecordSelectionChanged(this, null);
-			}
-			_recordListBoxActive = false;
+			//if (NoPriorSelection)
+			//{
+			//    // Windows.Forms.Listbox does not consider it a change of Selection
+			//    // index if the index was -1 and a record is added.
+			//    // (No event is sent so we must do it ourselves)
+			//    OnRecordSelectionChanged(this, null);
+			//}
+			//_recordListBoxActive = false;
 			UpdateDisplay();
 			_entryViewControl.Focus();
 		}
@@ -426,11 +435,11 @@ namespace WeSay.LexicalTools
 				// but we assume it has the focus when we do our selection change event
 				_btnDeleteWord.Focus();
 			}
-			_recordListBoxActive = true; // allow onRecordSelectionChanged
+			//_recordListBoxActive = true; // allow onRecordSelectionChanged
 		   CurrentRecord.IsBeingDeleted = true;
 			_records.RemoveAt(CurrentIndex);
 			OnRecordSelectionChanged(this, null);
-			_recordListBoxActive = false;
+			//_recordListBoxActive = false;
 
 			if (CurrentRecord == null)
 			{

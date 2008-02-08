@@ -229,23 +229,29 @@ namespace WeSay.LexicalTools.Tests
 			AssertExistenceOfEntryInList(form, false);
 		}
 
-		private void GoToLexicalEntryUseFind(string lexemeForm)
+		private static void GoToLexicalEntryUseFind(string lexemeForm)
 		{
 			TextBoxTester t = new TextBoxTester("_findText");
 			t.Enter(lexemeForm);
 			t.FireEvent("KeyDown", new KeyEventArgs(Keys.Enter));
-			ListBoxTester l = new ListBoxTester("_recordsListBox");
-
-			Assert.AreEqual(lexemeForm, l.Properties.SelectedItem);
+			ListViewTester l = new ListViewTester("_recordsListBox");
+			string label = GetSelectedLabel((WeSayListBox)l.Properties);
+			Assert.AreEqual(lexemeForm, label);
 		}
 
-		private void AssertExistenceOfEntryInList(string form, bool shouldExist)
+		private static string GetSelectedLabel(WeSayListBox box)
 		{
-			ListBoxTester l = new ListBoxTester("_recordsListBox");
+			return box.Items[box.SelectedIndex].Text;
+		}
+
+		private static void AssertExistenceOfEntryInList(string form, bool shouldExist)
+		{
+			ListViewTester l = new ListViewTester("_recordsListBox");
 			bool found = false;
-			foreach (object o in l.Properties.Items)
+
+			for (int i=0; i < l.Properties.Items.Count; ++i)
 			{
-				if (o.ToString() == form)
+				if (l.Properties.Items[i].ToString() == form)
 				{
 					found = true;
 					break;
@@ -282,8 +288,8 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void DeletingLastWordSelectsPreviousWordInList()
 		{
-			ListBoxTester t = new ListBoxTester("_recordsListBox");
-			t.Properties.SelectedIndex = 2;
+			ListViewTester t = new ListViewTester("_recordsListBox");
+			((WeSayListBox)t.Properties).SelectedIndex = 2;
 			Assert.AreEqual("Tertiary", LexemeFormOfSelectedEntry);
 			ClickDeleteWord();
 			Assert.AreEqual("Secondary", LexemeFormOfSelectedEntry);
@@ -321,9 +327,10 @@ namespace WeSay.LexicalTools.Tests
 		{
 			DeleteAllEntries();
 			ClickAddWord();
-			ListBoxTester t = new ListBoxTester("_recordsListBox");
-			Assert.AreEqual(0, t.Properties.SelectedIndex);
-			Assert.AreEqual("*", t.Properties.SelectedItem);
+			ListViewTester t = new ListViewTester("_recordsListBox");
+			Assert.AreEqual(0, ((WeSayListBox)t.Properties).SelectedIndex);
+			string label = GetSelectedLabel((WeSayListBox)t.Properties);
+			Assert.AreEqual("*", label);
 		}
 
 		[Test]
@@ -361,9 +368,9 @@ namespace WeSay.LexicalTools.Tests
 			t.Enter("blah");
 			ButtonTester b = new ButtonTester("_btnFind");
 			b.Click();
-			ListBoxTester l = new ListBoxTester("_recordsListBox");
+			ListViewTester l = new ListViewTester("_recordsListBox");
 
-			Assert.AreEqual(-1,l.Properties.SelectedIndex);
+			Assert.AreEqual(-1,((WeSayListBox)l.Properties).SelectedIndex);
 		}
 
 
@@ -455,7 +462,7 @@ namespace WeSay.LexicalTools.Tests
 			EntryViewControl parentControl = ((DictionaryControl)_task.Control).Control_EntryDetailPanel;
 			LexEntry entry = parentControl.DataSource;
 			Assert.Less(0, entry.Properties.Count, "the setup of this test should have some custom properties");
-		   TextBoxTester t = new TextBoxTester(GetLexicalFormControlName());
+			TextBoxTester t = new TextBoxTester(GetLexicalFormControlName());
 			t.Enter("test");
 			Assert.Less(0, entry.Properties.Count, "the setup of this test should have some custom properties");
 
@@ -467,7 +474,7 @@ namespace WeSay.LexicalTools.Tests
 			Assert.AreEqual(0, ((LexSense)entry.Senses[0]).Properties.Count);
 #else
 			Assert.AreEqual(1, ((LexSense)entry.Senses[0]).Properties.Count);
-			Assert.AreEqual(LexSense.WellKnownProperties.Definition.ToString(), ((LexSense)entry.Senses[0]).Properties[0].Key);
+			Assert.AreEqual(LexSense.WellKnownProperties.Definition, ((LexSense)entry.Senses[0]).Properties[0].Key);
 #endif
 		}
 
@@ -596,9 +603,10 @@ namespace WeSay.LexicalTools.Tests
 			t.Enter("Secondary");
 			ButtonTester b = new ButtonTester("_btnFind");
 			b.Click();
-			ListBoxTester l = new ListBoxTester("_recordsListBox");
+			ListViewTester l = new ListViewTester("_recordsListBox");
 
-			Assert.AreEqual("Secondary", l.Properties.SelectedItem);
+			string label = GetSelectedLabel((WeSayListBox)l.Properties);
+			Assert.AreEqual("Secondary", label);
 			RichTextBoxTester r = new RichTextBoxTester("_lexicalEntryPreview");
 			Assert.IsTrue(r.Text.Contains("Secondary"));
 		}
@@ -609,9 +617,10 @@ namespace WeSay.LexicalTools.Tests
 			TextBoxTester t = new TextBoxTester("_findText");
 			t.Enter("Secondary");
 			t.FireEvent("KeyDown", new KeyEventArgs(Keys.Enter));
-			ListBoxTester l = new ListBoxTester("_recordsListBox");
+			ListViewTester l = new ListViewTester("_recordsListBox");
 
-			Assert.AreEqual("Secondary", l.Properties.SelectedItem);
+			string label = GetSelectedLabel((WeSayListBox)l.Properties);
+			Assert.AreEqual("Secondary", label);
 		}
 
 		[Test]
@@ -667,9 +676,9 @@ namespace WeSay.LexicalTools.Tests
 		private void PutCursorInMeaningFieldOfSecondEntry()
 		{
 //skip to second word (first has extra stuff in the sense)
-			ListBoxTester t = new ListBoxTester("_recordsListBox");
+			ListViewTester t = new ListViewTester("_recordsListBox");
 			t.Properties.Focus();
-			t.Properties.SelectedIndex = 1;
+			((WeSayListBox)t.Properties).SelectedIndex = 1;
 			Assert.AreEqual("Secondary", LexemeFormOfSelectedEntry);
 			Assert.AreEqual(1, GetCurrentEntry().Senses.Count, "this test assumes an entry with 1 sense");
 			Assert.AreEqual(0, ((LexSense)(GetCurrentEntry().Senses[0])).ExampleSentences.Count, "this test assumes a sense w/ no example");

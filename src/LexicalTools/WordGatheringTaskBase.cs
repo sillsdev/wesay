@@ -46,25 +46,4 @@ namespace WeSay.LexicalTools
 			}
 		}
 	}
-
-	public class EntryDisplayProxy
-	{
-		private readonly string _writingSystemId;
-		private LexEntry _entry;
-		public EntryDisplayProxy(LexEntry entry, string writingSystemId)
-		{
-			_writingSystemId = writingSystemId;
-			_entry = entry;
-		}
-
-		public LexEntry Entry
-		{
-			get { return _entry; }
-		}
-
-		public override string ToString()
-		{
-			return _entry.LexicalForm.GetBestAlternative(_writingSystemId, "*");
-		}
-	}
 }

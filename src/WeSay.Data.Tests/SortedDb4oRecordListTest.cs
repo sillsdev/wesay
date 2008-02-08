@@ -187,8 +187,8 @@ namespace WeSay.Data.Tests
 		{
 			SimpleIntTestClass item = new SimpleIntTestClass(2);
 			_sortedList.Add(item);
-			Assert.AreEqual(2, _sortedList[2]);
-			Assert.AreEqual(2, _sortedList[3]);
+			Assert.AreEqual(2, _sortedList.GetKey(2));
+			Assert.AreEqual(2, _sortedList.GetKey(3));
 		}
 
 		[Test]
@@ -339,7 +339,7 @@ namespace WeSay.Data.Tests
 		public void Get_Indexer()
 		{
 			object o = _sortedList[12];
-			Assert.AreEqual(12, o);
+			Assert.AreEqual(12, ((SimpleIntTestClass)o).I);
 		}
 
 		[Test]

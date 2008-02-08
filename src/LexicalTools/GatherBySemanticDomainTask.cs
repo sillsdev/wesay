@@ -346,6 +346,7 @@ namespace WeSay.LexicalTools
 						_words.Add(_entries.GetValue(i).LexicalForm.GetBestAlternative(WordWritingSystemId, "*"));
 					}
 				}
+				_words.Sort(WordWritingSystem);
 				return _words;
 			}
 		}

@@ -1,3 +1,5 @@
+using System.Windows.Forms;
+
 namespace WeSay.UI
 {
 	partial class WeSayListBox
@@ -17,6 +19,7 @@ namespace WeSay.UI
 			{
 				components.Dispose();
 			}
+			RemoveBindingListNotifiers();
 			base.Dispose(disposing);
 		}
 
@@ -28,9 +31,22 @@ namespace WeSay.UI
 		/// </summary>
 		private void InitializeComponent()
 		{
+			header = new ColumnHeader();
 			components = new System.ComponentModel.Container();
+			this.DoubleBuffered = true;
+			this.VirtualMode = true;
+			this.MultiSelect = false;
+			this.HideSelection = false;
+
+			// Set the DrawMode property to draw fixed sized items.
+			this.OwnerDraw = true;
+
+			this.View = System.Windows.Forms.View.SmallIcon;
+
+			this.Columns.Add(header);
 		}
 
 		#endregion
+		ColumnHeader header;
 	}
 }

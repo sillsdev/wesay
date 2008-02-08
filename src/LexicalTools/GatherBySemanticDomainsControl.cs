@@ -64,7 +64,6 @@ namespace WeSay.LexicalTools
 
 		}
 
-
 		private void InitializeDisplaySettings() {
 			BackColor = WeSay.UI.DisplaySettings.Default.BackgroundColor;
 		}
@@ -85,19 +84,18 @@ namespace WeSay.LexicalTools
 		}
 
 		private void RefreshCurrentWords() {
-			this._listViewWords.Items.Clear();
-			string longestWord = string.Empty;
-			foreach (string word in this._presentationModel.CurrentWords)
-			{
-				if(longestWord.Length < word.Length)
-				{
-					longestWord = word;
-				}
-				this._listViewWords.Items.Add(word);
-			}
+			this._listViewWords.DataSource = this._presentationModel.CurrentWords;
+			//string longestWord = string.Empty;
+			//foreach (string word in this._presentationModel.CurrentWords)
+			//{
+			//    if(longestWord.Length < word.Length)
+			//    {
+			//        longestWord = word;
+			//    }
+			//}
 
-			Size bounds = TextRenderer.MeasureText(longestWord, this._listViewWords.Font);
-			this._listViewWords.ColumnWidth = bounds.Width +10;
+			//Size bounds = TextRenderer.MeasureText(longestWord, this._listViewWords.Font);
+			//this._listViewWords.ColumnWidth = bounds.Width +10;
 		}
 
 		private void _btnNext_Click(object sender, EventArgs e)
@@ -169,11 +167,13 @@ namespace WeSay.LexicalTools
 			}
 		}
 
+
 		void _listViewWords_Click(object sender, EventArgs e)
 		{
-			if(_listViewWords.SelectedItem != null)
+			if(_listViewWords.SelectedIndices.Count != 0)
 			{
-				string word = (string) _listViewWords.SelectedItem;
+				ListViewItem selectedItem = this._listViewWords.Items[_listViewWords.SelectedIndex];
+				string word = selectedItem.Text;
 						// NB: don't do this before storing what they clicked on.
 
 				string wordCurrentlyInTheEditBox = WordToAdd;
@@ -186,7 +186,7 @@ namespace WeSay.LexicalTools
 
 				Point destination = this._vernacularBox.Location;
 				destination.Offset(this._vernacularBox.TextBoxes[0].Location);
-				Point start = this._listViewWords.GetItemRectangle(_listViewWords.SelectedIndex).Location;
+				Point start = selectedItem.Position;
 				start.Offset(this._listViewWords.Location);
 
 				RefreshCurrentWords();
@@ -210,14 +210,14 @@ namespace WeSay.LexicalTools
 		  _presentationModel.AddWord(word);
 		_vernacularBox.ClearAllText();
 
-		  _listViewWords.ItemToNotDrawYet = word;
 		RefreshCurrentWords();
 
-		int index = _listViewWords.FindStringExact(word);
+		int index = _presentationModel.CurrentWords.IndexOf(word);
+		_listViewWords.ItemToNotDrawYet = index;
 
 		Point start = this._vernacularBox.Location;
 		start.Offset(this._vernacularBox.TextBoxes[0].Location);
-		Point destination = this._listViewWords.GetItemRectangle(index).Location;
+		Point destination = _listViewWords.Items[index].Position;
 		destination.Offset(this._listViewWords.Location);
 
 		this._movingLabel.Text = word;
@@ -232,6 +232,10 @@ namespace WeSay.LexicalTools
 		{
 			get
 			{
+				if (_movingLabel.Visible)
+				{
+					return _movingLabel.Text;
+				}
 			   return this._vernacularBox.TextBoxes[0].Text.Trim();
 			}
 		}
@@ -243,7 +247,7 @@ namespace WeSay.LexicalTools
 				_vernacularBox.TextBoxes[0].Text = _movingLabel.Text;
 			}
 
-			_listViewWords.ItemToNotDrawYet = null;
+			_listViewWords.ItemToNotDrawYet = -1;
 		}
 
 

@@ -176,6 +176,7 @@ namespace WeSay.Data
 			}
 
 			// use the SortedList to determine the order of the filtered list items.
+			//
 			private void Sort()
 			{
 				int oldCount = Count;
@@ -187,18 +188,22 @@ namespace WeSay.Data
 
 			private class IdListComparer : IComparer<long>
 			{
-				private IList<long> _baseList;
+				private Dictionary<long, int> _mapIdToIndex;
 
 				public IdListComparer(IList<long> baseList)
 				{
-					_baseList = baseList;
+					_mapIdToIndex = new Dictionary<long, int>(baseList.Count);
+					for(int i = 0; i < baseList.Count;++i)
+					{
+						_mapIdToIndex[baseList[i]] = i;
+					}
 				}
 
 				#region IComparer<long> Members
 
 				public int Compare(long x, long y)
 				{
-					return Comparer<long>.Default.Compare(_baseList.IndexOf(x), _baseList.IndexOf(y));
+					return Comparer<long>.Default.Compare(_mapIdToIndex[x], _mapIdToIndex[y]);
 				}
 
 				#endregion
@@ -475,15 +480,19 @@ namespace WeSay.Data
 				return _sortedList.GetKeyFromId(id);
 			}
 
-			// returns the key string. to get the value object use GetValue
-			// this is so bindinglistgrid will display the right thing.
+			public T GetValue(int index)
+			{
+				return this[index];
+			}
+
+			// returns the value object. use GetKey to return the Key
 			object IList.this[int index]
 			{
 				get
 				{
 					VerifyNotDisposed();
 					VerifySorted();
-					return GetKey(index);
+					return GetValue(index);
 				}
 				set
 				{
@@ -495,7 +504,7 @@ namespace WeSay.Data
 			public override int IndexOf(T item)
 			{
 				VerifyNotDisposed();
-				VerifySorted();
+//                VerifySorted();
 				return base.IndexOf(item);
 			}
 

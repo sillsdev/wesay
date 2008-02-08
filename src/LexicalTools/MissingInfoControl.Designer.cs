@@ -23,20 +23,20 @@ namespace WeSay.LexicalTools
 				_records.ListChanged -= OnRecordsListChanged;
 
 				_recordsListBox.SelectedIndexChanged -= OnRecordSelectionChanged;
-				_recordsListBox.Enter += _recordsListBox_Enter;
-				_recordsListBox.Leave += _recordsListBox_Leave;
-				_recordsListBox.DataSource = null; // without this, the currency manager keeps trying to work
+				//_recordsListBox.Enter += _recordsListBox_Enter;
+				//_recordsListBox.Leave += _recordsListBox_Leave;
+				//_recordsListBox.DataSource = null; // without this, the currency manager keeps trying to work
 
 				_completedRecordsListBox.SelectedIndexChanged -= OnCompletedRecordSelectionChanged;
-				_completedRecordsListBox.Enter += _completedRecordsListBox_Enter;
-				_completedRecordsListBox.Leave += _completedRecordsListBox_Leave;
+				//_completedRecordsListBox.Enter += _completedRecordsListBox_Enter;
+				//_completedRecordsListBox.Leave += _completedRecordsListBox_Leave;
 
 			   // Debug.Assert(_recordsListBox.BindingContext.Contains(_records) == false);
-				if (_recordsListBox.BindingContext != null)
-				{
-					((CurrencyManager) _recordsListBox.BindingContext[_records]).SuspendBinding();
-					_recordsListBox.BindingContext = new BindingContext();
-				}
+				//if (_recordsListBox.BindingContext != null)
+				//{
+				//    ((CurrencyManager) _recordsListBox.BindingContext[_records]).SuspendBinding();
+				//    _recordsListBox.BindingContext = new BindingContext();
+				//}
 
 
 				if (_currentRecord != null)
@@ -140,8 +140,7 @@ namespace WeSay.LexicalTools
 			this._recordsListBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
 						| System.Windows.Forms.AnchorStyles.Left)
 						| System.Windows.Forms.AnchorStyles.Right)));
-			this._recordsListBox.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-			this._recordsListBox.ItemToNotDrawYet = null;
+			this._recordsListBox.ItemToNotDrawYet = -1;
 			this._recordsListBox.Location = new System.Drawing.Point(0, 21);
 			this._recordsListBox.MinimumSize = new System.Drawing.Size(4, 50);
 			this._recordsListBox.Name = "_recordsListBox";
@@ -165,8 +164,7 @@ namespace WeSay.LexicalTools
 			this._completedRecordsListBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
 						| System.Windows.Forms.AnchorStyles.Left)
 						| System.Windows.Forms.AnchorStyles.Right)));
-			this._completedRecordsListBox.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-			this._completedRecordsListBox.ItemToNotDrawYet = null;
+			this._completedRecordsListBox.ItemToNotDrawYet = -1;
 			this._completedRecordsListBox.Location = new System.Drawing.Point(0, 21);
 			this._completedRecordsListBox.MinimumSize = new System.Drawing.Size(4, 50);
 			this._completedRecordsListBox.Name = "_completedRecordsListBox";
