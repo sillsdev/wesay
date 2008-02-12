@@ -136,7 +136,7 @@ namespace WeSay.LexicalTools
 		private void SetupPickerControlWritingSystems()
 		{
 			RegisterFieldWithPicker(Field.FieldNames.EntryLexicalForm.ToString());
-			RegisterFieldWithPicker(Field.FieldNames.SenseGloss.ToString()); //Reversal
+			RegisterFieldWithPicker(LexSense.WellKnownProperties.Gloss); //Reversal
 		}
 
 

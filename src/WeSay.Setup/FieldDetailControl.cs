@@ -12,6 +12,8 @@ namespace WeSay.Setup
 		private Field _field;
 		private bool _loading;
 
+		public event EventHandler ClassOfFieldChanged;
+
 		public FieldDetailControl()
 		{
 			InitializeComponent();
@@ -28,6 +30,9 @@ namespace WeSay.Setup
 		{
 			set
 			{
+				if(value == _field )
+					return;
+
 				_loading = true;
 			   _field = value;
 				_fieldName.Text = _field.FieldName;
@@ -214,11 +219,18 @@ namespace WeSay.Setup
 
 		private void _classNameCombo_SelectedIndexChanged(object sender, EventArgs e)
 		{
+			if (_loading)
+				return;
+
 			ComboItemProxy proxy = _classNameCombo.SelectedItem as ComboItemProxy;
 			if (proxy == null)
 				return;
 			_field.ClassName = proxy.UnderlyingValue.ToString();
 			UpdateDisplay();
+			if (ClassOfFieldChanged != null)
+			{
+				ClassOfFieldChanged.Invoke(this, null);
+			}
 		}
 
 		private void OnDataTypeCombo_SelectedIndexChanged(object sender, EventArgs e)

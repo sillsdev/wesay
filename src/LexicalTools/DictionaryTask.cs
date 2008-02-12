@@ -56,7 +56,7 @@ namespace WeSay.LexicalTools
 			{
 				Lexicon.RegisterFieldWithCache(field.WritingSystems, true);
 			}
-			field = viewTemplate.GetField(Field.FieldNames.SenseGloss.ToString());
+			field = viewTemplate.GetField(LexSense.WellKnownProperties.Gloss);
 			if (field != null)
 			{
 				Lexicon.RegisterFieldWithCache(field.WritingSystems, false);

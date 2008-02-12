@@ -200,6 +200,8 @@ namespace WeSay.LexicalModel
 			propertiesAlreadyOutput.Add(LexSense.WellKnownProperties.PartOfSpeech);
 
 			WriteOneElementPerFormIfNonEmpty("gloss", sense.Gloss, ';');
+			propertiesAlreadyOutput.Add(LexSense.WellKnownProperties.Gloss);
+
 			foreach (LexExampleSentence example in sense.ExampleSentences)
 			{
 				Add(example);

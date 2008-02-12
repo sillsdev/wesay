@@ -50,21 +50,21 @@ namespace WeSay.LexicalTools
 					insertAtRow = DetailList.GetRow(meaningRowControl);
 				}
 
-#if GlossMeaning
-#else
-				Field glossfield = ActiveViewTemplate.GetField(Field.FieldNames.SenseGloss.ToString());
-				if (glossfield != null && glossfield.GetDoShow(sense.Gloss, this.ShowNormallyHiddenFields))
-				{
-					Control control = MakeBoundControl(sense.Gloss, glossfield);
-					DetailList.AddWidgetRow(
-						StringCatalog.Get("~Gloss",
-										  "This is the field that normally has just a single word translation, not a full definition. Mostly used with interlinear text displays."),
-						false,
-						control, insertAtRow + rowCount, false);
-					++rowCount;
-					insertAtRow = DetailList.GetRow(control);
-				}
-#endif
+//#if GlossMeaning
+//#else
+//                Field glossfield = ActiveViewTemplate.GetField(Field.FieldNames.SenseGloss.ToString());
+//                if (glossfield != null && glossfield.GetDoShow(sense.Gloss, this.ShowNormallyHiddenFields))
+//                {
+//                    Control control = MakeBoundControl(sense.Gloss, glossfield);
+//                    DetailList.AddWidgetRow(
+//                        StringCatalog.Get("~Gloss",
+//                                          "This is the field that normally has just a single word translation, not a full definition. Mostly used with interlinear text displays."),
+//                        false,
+//                        control, insertAtRow + rowCount, false);
+//                    ++rowCount;
+//                    insertAtRow = DetailList.GetRow(control);
+//                }
+//#endif
 
 				rowCount += AddCustomFields(sense, insertAtRow + rowCount);
 

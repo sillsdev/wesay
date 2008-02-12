@@ -11,23 +11,21 @@ namespace WeSay.AddinLib
 		private string _pathToLIFT;
 		private string _pathToExportDirectory;
 		private string _name;
+		private readonly string _pathToApplicationRootDirectory;
 		private string[] _filesBelongingToProject;
 
 
 		private FileLocater _locateFile;
 		private readonly WritingSystemCollection _writingSystems;
 
-		public ProjectInfo(string name, string pathToTopLevelDirectory,
-			string pathToLIFT,
-			string pathToExportDirectory,
-			string[] filesBelongingToProject,
-			FileLocater locateFile, WritingSystemCollection writingSystems)
+		public ProjectInfo(string name, string pathToApplicationRootDirectory, string pathToTopLevelDirectory, string pathToLIFT, string pathToExportDirectory, string[] filesBelongingToProject, FileLocater locateFile, WritingSystemCollection writingSystems)
 		{
 			_pathToTopLevelDirectory = pathToTopLevelDirectory;
 			_locateFile = locateFile;
 			_writingSystems = writingSystems;
 			_filesBelongingToProject = filesBelongingToProject;
 			_name = name;
+			_pathToApplicationRootDirectory = pathToApplicationRootDirectory;
 			_pathToLIFT = pathToLIFT;
 			_pathToExportDirectory = pathToExportDirectory;
 		}
@@ -88,6 +86,11 @@ namespace WeSay.AddinLib
 			{
 				return _writingSystems;
 			}
+		}
+
+		public string PathToApplicationRootDirectory
+		{
+			get { return _pathToApplicationRootDirectory; }
 		}
 	}
 }

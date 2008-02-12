@@ -7,7 +7,7 @@ namespace WeSay.LexicalModel
 {
 	public sealed class LexSense : WeSayDataObject
 	{
-		private readonly SenseGlossMultiText _gloss;
+		//private readonly SenseGlossMultiText _gloss;
 		private readonly InMemoryBindingList<LexExampleSentence> _exampleSentences;
 
 		new public class WellKnownProperties : WeSayDataObject.WellKnownProperties
@@ -18,6 +18,7 @@ namespace WeSay.LexicalModel
 			static public string Definition = "definition";//the lower case here is defined by LIFT standard
 			static public string Picture = "Picture";
 			static public string BaseForm = "BaseForm";
+			static public string Gloss = "gloss";
 			//static public string Relations = "relations";
 			static public bool ContainsAnyCaseVersionOf(string fieldName)
 			{
@@ -29,7 +30,7 @@ namespace WeSay.LexicalModel
 		public LexSense(WeSayDataObject parent)
 			: base(parent)
 		{
-			_gloss = new SenseGlossMultiText(this);
+		 //   _gloss = new SenseGlossMultiText(this);
 			_exampleSentences = new InMemoryBindingList<LexExampleSentence>();
 			WireUpEvents();
 		}
@@ -45,7 +46,7 @@ namespace WeSay.LexicalModel
 		protected override void WireUpEvents()
 		{
 			base.WireUpEvents();
-			WireUpChild(_gloss);
+			//WireUpChild(_gloss);
 			WireUpList(_exampleSentences, "exampleSentences");
 		}
 
@@ -56,7 +57,10 @@ namespace WeSay.LexicalModel
 		/// to hide this (hopefully temporary) performance implementation detail. </remarks>
 		public MultiText Gloss
 		{
-			get { return _gloss; }
+			get
+			{
+				return GetOrCreateProperty<SenseGlossMultiText>(LexSense.WellKnownProperties.Gloss);
+			}
 		}
 
 		public MultiText Definition
@@ -81,7 +85,9 @@ namespace WeSay.LexicalModel
 		public bool IsEmptyForPurposesOfDeletion
 		{
 			get {
-				return Gloss.Empty &&
+				SenseGlossMultiText gloss = GetProperty<SenseGlossMultiText>(LexSense.WellKnownProperties.Gloss);
+				bool noGloss = (gloss == null) || gloss.Empty; // careful, just asking the later will actually create a gloss
+				return noGloss &&
 					   ExampleSentences.Count == 0 &&
 					   !HasPropertiesForPurposesOfDeletion;
 			}
@@ -130,6 +136,10 @@ namespace WeSay.LexicalModel
 	{
 		public SenseGlossMultiText(LexSense parent)
 			: base(parent)
+		{
+		}
+
+		public SenseGlossMultiText()
 		{
 		}
 

@@ -182,6 +182,11 @@ namespace WeSay.Project
 			get { return Path.Combine(GetTopAppDirectory(), "common"); }
 		}
 
+		public static string ApplicationRootDirectory
+		{
+			get { return DirectoryOfExecutingAssembly; }
+		}
+
 		public string ApplicationTestDirectory
 		{
 			get { return Path.Combine(GetTopAppDirectory(), "test"); }

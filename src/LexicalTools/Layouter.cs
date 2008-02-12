@@ -234,7 +234,7 @@ namespace WeSay.LexicalTools
 					continue; //already put this in next to "Meaning"
 				}
 #endif
-				rowCount = AddOneCustomField(target, customField, insertAtRow, rowCount);
+				rowCount = AddOneCustomField(target, customField, insertAtRow + rowCount/*changed feb 2008*/, rowCount);
 			}
 
 
@@ -245,7 +245,7 @@ namespace WeSay.LexicalTools
 				{
 					continue; //note actually isn't allowed at the moment
 				}
-				rowCount = AddOneCustomField(target, customField, insertAtRow, rowCount);
+				rowCount = AddOneCustomField(target, customField, insertAtRow + rowCount/*changed feb 2008*/, rowCount);
 			}
 			return rowCount;
 		}

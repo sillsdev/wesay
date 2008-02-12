@@ -528,6 +528,7 @@ namespace WeSay.Project
 		public ProjectInfo GetProjectInfoForAddin()
 		{
 			return new ProjectInfo(Name,
+								   BasilProject.ApplicationRootDirectory,
 								   ProjectDirectoryPath,
 								   PathToLiftFile,
 								   PathToExportDirectory,
@@ -535,6 +536,8 @@ namespace WeSay.Project
 								   AddinSet.Singleton.LocateFile,
 								   WritingSystems);
 		}
+
+
 
 		private XPathDocument GetConfigurationDoc()
 		{

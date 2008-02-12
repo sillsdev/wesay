@@ -3,6 +3,7 @@ using System.Xml;
 using Exortech.NetReflector;
 using NUnit.Framework;
 using WeSay.Foundation;
+using WeSay.LexicalModel;
 using WeSay.Project;
 using WeSay.Project.Tests;
 
@@ -102,7 +103,7 @@ namespace WeSay.Project.Tests
 		{
 			ViewTemplate f = new ViewTemplate();
 			f.Add(new Field(Field.FieldNames.EntryLexicalForm.ToString(), "LexEntry", new string[] { "xx", "yy" }));
-			Field field = new Field(Field.FieldNames.SenseGloss.ToString(), "LexSense", new string[] { "zz" });
+			Field field = new Field(LexSense.WellKnownProperties.Gloss, "LexSense", new string[] { "zz" });
 			field.Enabled = false; //field.Visibility = CommonEnumerations.VisibilitySetting.Invisible;
 			f.Add(field);
 			return f;
@@ -131,7 +132,7 @@ namespace WeSay.Project.Tests
 			Assert.AreEqual(2, f[0].WritingSystemIds.Count);
 			Assert.AreEqual("xx", f[0].WritingSystemIds[0]);
 			Assert.AreEqual("yy", f[0].WritingSystemIds[1]);
-			Assert.AreEqual(Field.FieldNames.SenseGloss.ToString(), f[1].FieldName);
+			Assert.AreEqual(LexSense.WellKnownProperties.Gloss, f[1].FieldName);
 			Assert.AreEqual(1, f[1].WritingSystemIds.Count);
 			Assert.AreEqual(false, f[1].Enabled);
 			Assert.AreEqual("zz", f[1].WritingSystemIds[0]);

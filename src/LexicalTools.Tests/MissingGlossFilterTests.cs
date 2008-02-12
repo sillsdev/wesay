@@ -13,7 +13,7 @@ namespace WeSay.LexicalTools.Tests
 		[SetUp]
 		public void Setup()
 		{
-			Field field = new Field(Field.FieldNames.SenseGloss.ToString(), "LexSense", new string[] { "analysis" });
+			Field field = new Field(LexSense.WellKnownProperties.Gloss, "LexSense", new string[] { "analysis" });
 			this._missingGlossFilter = new MissingItemFilter(field);
 		}
 

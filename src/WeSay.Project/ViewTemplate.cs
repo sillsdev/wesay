@@ -160,23 +160,29 @@ namespace WeSay.Project
 				}
 			}
 
-			//pre-nov2007 (png alpha release) projects had Note.
-			//then, when we fixed it to "note", they had two note fields!
-			//this is to clean up the mess.
-			RemoveByFieldName(usersTemplate, "Note");
 
 			if (factoryTemplate.GetField(LexSense.WellKnownProperties.Definition)==null)
 			{
-				return; // this some  test situation with a abnormal factory template
+				return; // this is some  test situation with a abnormal factory template
 			}
+
+			usersTemplate.MoreMigrations();
+		}
+
+		internal void MoreMigrations()
+		{
+		  //pre-nov2007 (png alpha release) projects had Note.
+			//then, when we fixed it to "note", they had two note fields!
+			//this is to clean up the mess.
+			RemoveByFieldName(this, "Note");
 
 			//In Jan 2008 (still in version 1 Preview 3, just a hand-full of users)
 			//we switch from "meaning" being the gloss, to the definition, making Defintion
 			//a non-optional field, and gloss a normally hidden field
 
-			Field def = usersTemplate.GetField(LexSense.WellKnownProperties.Definition);
-			Field gloss = usersTemplate.GetField(Field.FieldNames.SenseGloss.ToString());
-
+			Field def = GetField(LexSense.WellKnownProperties.Definition);
+			Field gloss = GetField(LexSense.WellKnownProperties.Gloss);
+			gloss.FieldName = LexSense.WellKnownProperties.Gloss; // switch from "SenseGloss" to just "gloss"
 
 			//this is an upgrade situation
 			if (!def.Enabled || def.Visibility!=CommonEnumerations.VisibilitySetting.Visible)
@@ -196,7 +202,26 @@ namespace WeSay.Project
 
 			gloss.Visibility = CommonEnumerations.VisibilitySetting.Invisible;
 
+			// In Feb 2008 we started giving user control over field order, but
+			// certain key fields must be first.
+			MoveToFirstInClass(def);
+			MoveToFirstInClass(GetField(Field.FieldNames.EntryLexicalForm.ToString()));
+			MoveToFirstInClass(GetField(Field.FieldNames.ExampleSentence.ToString()));
+		}
 
+		private void MoveToFirstInClass(Field field)
+		{
+			while (!IsFieldFirstInClass(field))
+			{
+				MoveUpInClass(field);
+			}
+		}
+		public void MoveToLastInClass(Field field)
+		{
+			while (!IsFieldLastInClass(field))
+			{
+				MoveDownInClass(field);
+			}
 		}
 
 		private static void RemoveByFieldName(ViewTemplate usersTemplate, string fielName)
@@ -256,12 +281,12 @@ namespace WeSay.Project
 
 			//this is here so the PoMaker scanner can pick up a comment about this label
 			StringCatalog.Get("~Gloss", "The label for the field showing a single word translation, as used in interlinear text glossing.");
-			Field glossField = new Field(Field.FieldNames.SenseGloss.ToString(), "LexSense", defaultAnalysisSet);
+			Field glossField = new Field(LexSense.WellKnownProperties.Gloss, "LexSense", defaultAnalysisSet);
 			glossField.DisplayName = "Gloss";
 			glossField.Description =
 					"Normally a single word, used when interlinearizing texts.";
 			glossField.Visibility = CommonEnumerations.VisibilitySetting.NormallyHidden;
-			glossField.Enabled = true;
+			glossField.Enabled = false;
 			masterTemplate.Add(glossField);
 
 			Field literalMeaningField = new Field("LiteralMeaning", "LexSense", defaultAnalysisSet);
@@ -463,6 +488,62 @@ namespace WeSay.Project
 						UnknownVernacularWritingSystem;
 			}
 			return listWritingSystem;
+		}
+
+		public bool IsFieldFirstInClass(Field field)
+		{
+			return GetFieldsOfClass(field.ClassName).IndexOf(field) == 0;
+		}
+
+		public bool IsFieldLastInClass(Field field)
+		{
+			List<Field> fields = GetFieldsOfClass(field.ClassName);
+			return fields.IndexOf(field) == fields.Count -1;
+		}
+
+		public void MoveUpInClass(Field field)
+		{
+			if (!IsFieldFirstInClass(field))
+			{
+				List<Field> classMates = GetFieldsOfClass(field.ClassName);
+				int indexAmongClassmates = classMates.IndexOf(field);
+
+				Field previousClassmate = classMates[indexAmongClassmates - 1];
+				if (!previousClassmate.UserCanRelocate)
+				{
+					return;
+				}
+				int newIndexAmongAllFields = Fields.IndexOf(previousClassmate);
+
+				Fields.Remove(field);
+				Fields.Insert(newIndexAmongAllFields, field);
+			}
+		}
+
+		private List<Field> GetFieldsOfClass(string className)
+		{
+			List<Field> fields = new List<Field>();
+			foreach (Field field in Fields)
+			{
+				if (field.ClassName == className)
+					fields.Add(field);
+			}
+			return fields;
+		}
+
+		public void MoveDownInClass(Field field)
+		{
+			if (!IsFieldLastInClass(field))
+			{
+				List<Field> classMates = GetFieldsOfClass(field.ClassName);
+				int indexAmongClassmates = classMates.IndexOf(field);
+
+				Field nextClassmate = classMates[indexAmongClassmates + 1];
+				int newIndexAmongAllFields = Fields.IndexOf(nextClassmate);
+
+				Fields.Remove(field);
+				Fields.Insert(newIndexAmongAllFields, field);
+			}
 		}
 	}
 }

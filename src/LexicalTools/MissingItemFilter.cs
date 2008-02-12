@@ -151,7 +151,7 @@ namespace WeSay.LexicalTools
 						}
 					}
 					if(entry.Senses.Count == 0 &&
-					  (this._field.FieldName == Field.FieldNames.SenseGloss.ToString()))
+					  (this._field.FieldName == LexSense.WellKnownProperties.Gloss))
 					{
 						//ghost field
 						return true;
@@ -194,18 +194,19 @@ namespace WeSay.LexicalTools
 			}
 		}
 
-		private bool IsMissingLexSenseField(LexSense sense) {
+		private bool IsMissingLexSenseField(LexSense sense)
+		{
 			if (!this._field.IsBuiltInViaCode)
 			{
 				return IsMissingCustomField(sense);
 			}
 			else
 			{
-				if(this._field.FieldName == Field.FieldNames.SenseGloss.ToString())
-				{
-					return IsMissingWritingSystem(sense.Gloss);
-				}
-				else
+//                if(this._field.FieldName == LexSense.WellKnownProperties.Gloss)
+//                {
+//                    return IsMissingWritingSystem(sense.Gloss);
+//                }
+//                else
 				{
 					Debug.Fail("unknown FieldName");
 					return false;

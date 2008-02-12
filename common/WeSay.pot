@@ -1,81 +1,75 @@
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: WeSay\n"
-"POT-Creation-Date: 2007-11-23T05:56:27\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2007-11-23 05:56+0000\n"
 "PO-Revision-Date: 2006-09-06 17:01+0700\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-
-
+"X-Launchpad-Export-Date: 2008-02-05 09:12+0000\n"
+"X-Generator: Launchpad (build Unknown)\n"
 
 #; ..\src\CommonTools\DashboardControl.cs
 #. The label for the 'dashboard'; the task which lets you see the status of other tasks and jump to them.
 msgid "Home"
 msgstr ""
 
-
 msgid "Dictionary Browse & Edit"
 msgstr ""
-
 
 msgid "Add Meanings"
 msgstr ""
 
-
 msgid "Add meanings to entries where they are missing."
 msgstr ""
-
 
 msgid "Add Parts of Speech"
 msgstr ""
 
-
 msgid "Add a Part Of Speech to senses where they are missing."
 msgstr ""
-
 
 msgid "Add Examples"
 msgstr ""
 
-
 msgid "Add example sentences to entries where they are missing."
 msgstr ""
-
 
 msgid "Add Base Forms"
 msgstr ""
 
-
-msgid "Identify the \"base form\" word that this word is built from. In the printed dictionary, these can optionally be shown as subentries."
+msgid ""
+"Identify the \"base form\" word that this word is built from. In the printed "
+"dictionary, these can optionally be shown as subentries."
 msgstr ""
-
 
 msgid "Collect Word List (D)"
 msgstr ""
 
-
-msgid "Collect new words by translating from words in another language. This is a list of 1700 words from John Duerksen."
+msgid ""
+"Collect new words by translating from words in another language. This is a "
+"list of 1700 words from John Duerksen."
 msgstr ""
-
 
 msgid "Collect Word List (PNG)"
 msgstr ""
 
-
-msgid "Collect new words by translating from words in another language. This is a list of around 900 words and phrases from PNG."
+msgid ""
+"Collect new words by translating from words in another language. This is a "
+"list of around 900 words and phrases from PNG."
 msgstr ""
-
 
 msgid "Collect Words By Semantic Domain"
 msgstr ""
 
-
-msgid "Collect new words organized by semantic domains and questions about those domains."
+msgid ""
+"Collect new words organized by semantic domains and questions about those "
+"domains."
 msgstr ""
-
 
 #; ..\src\CommonTools\ActionsControl.cs
 msgid "Actions"
@@ -249,8 +243,8 @@ msgid "Word:"
 msgstr ""
 
 #; ..\src\LexicalTools\LexExampleSentenceLayouter.cs
-#. This is the field containing an example sentence of a sense of a word.
 #; ..\src\LexicalTools\LexExampleSentenceLayouter.cs
+#. This is the field containing an example sentence of a sense of a word.
 #. This is the field containing an example sentence of a sense of a word."), "Sentence
 msgid "Example"
 msgstr ""
@@ -313,8 +307,8 @@ msgid "Literal Meaning"
 msgstr ""
 
 #; ..\src\WeSay.Project\ViewTemplate.cs
-#. The label for the field showing a note.
 #; ..\src\WeSay.Project\ViewTemplate.cs
+#. The label for the field showing a note.
 #. The label for the field showing a note.
 msgid "Note"
 msgstr ""

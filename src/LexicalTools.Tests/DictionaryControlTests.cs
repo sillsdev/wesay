@@ -25,7 +25,7 @@ namespace WeSay.LexicalTools.Tests
 		private Form _window;
 		private TabPage _detailTaskPage;
 		private LexEntry _secondEntry;
-		private Field _defintionField;
+		private Field _definitionField;
 
 		[TestFixtureSetUp]
 		public void SetupFixture()
@@ -59,8 +59,8 @@ namespace WeSay.LexicalTools.Tests
 #if GlossMeaning
 			viewTemplate.Add(new Field(Field.FieldNames.SenseGloss.ToString(), "LexSense", analysisWritingSystemIds));
 #else
-			_defintionField = new Field(LexSense.WellKnownProperties.Definition, "LexSense", analysisWritingSystemIds);
-			viewTemplate.Add(_defintionField);
+			_definitionField = new Field(LexSense.WellKnownProperties.Definition, "LexSense", analysisWritingSystemIds);
+			viewTemplate.Add(_definitionField);
 #endif
 			viewTemplate.Add(new Field("MySenseCustom", "LexSense", new string[] { "en" }, Field.MultiplicityType.ZeroOr1, "MultiText"));
 			viewTemplate.Add(new Field(Field.FieldNames.ExampleSentence.ToString(), "LexExampleSentence",vernacularWritingSystemIds));

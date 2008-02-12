@@ -14,7 +14,7 @@
 	</field>
 	<field class="WeSay.LexicalModel.Field" assembly="WeSay.LexicalModel">
 	  <className>LexSense</className>
-	  <fieldName>SenseGloss</fieldName>
+	  <fieldName>gloss</fieldName>
 	  <visibility>Invisible</visibility>
 	  <dataType>MultiText</dataType>
 	  <writingSystems>

@@ -28,7 +28,7 @@ namespace WeSay.LexicalTools.Tests
 			WeSayWordsProject.InitializeForTests();
 
 			this._recordListManager = new InMemoryRecordListManager();
-			Field field = new Field(Field.FieldNames.SenseGloss.ToString(),"LexSense" , new string[]{"analysis"});
+			Field field = new Field(LexSense.WellKnownProperties.Gloss,"LexSense" , new string[]{"analysis"});
 			this._filter = new MissingItemFilter(field);
 
 			LexEntry entry = new LexEntry();
@@ -42,7 +42,7 @@ namespace WeSay.LexicalTools.Tests
 			this._description = "My description";
 
 			this._viewTemplate = new ViewTemplate();
-			this._viewTemplate.Add(new Field(Field.FieldNames.SenseGloss.ToString(), "LexSense",new string[] { "en" }));
+			this._viewTemplate.Add(new Field(LexSense.WellKnownProperties.Gloss, "LexSense",new string[] { "en" }));
 			this._viewTemplate.Add(new Field(Field.FieldNames.ExampleSentence.ToString(), "LexExampleSentence",new string[] { "th" }));
 
 			this._task = new MissingInfoTask(_recordListManager, _filter, _label, _description, _viewTemplate, _fieldsToShow);

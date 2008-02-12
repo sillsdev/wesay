@@ -91,7 +91,7 @@ namespace WeSay.LexicalTools.Tests
 							  "LexEntry",
 							  vernacularWritingSystemIds));
 			_viewTemplate.Add(
-					new Field(Field.FieldNames.SenseGloss.ToString(),
+					new Field(LexSense.WellKnownProperties.Gloss,
 							  "LexSense",
 							  analysisWritingSystemIds));
 			_viewTemplate.Add(

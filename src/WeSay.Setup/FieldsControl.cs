@@ -30,7 +30,15 @@ namespace WeSay.Setup
 			LoadInventory();
 			//nb: may important to do this after loading the inventory
 			this._fieldsListBox.ItemCheck += new ItemCheckEventHandler(this.OnFieldsListBox_ItemCheck);
+			_fieldSetupControl.ClassOfFieldChanged += new EventHandler(OnClassOfFieldChanged);
+		}
 
+		void OnClassOfFieldChanged(object sender, EventArgs e)
+		{
+			Field f = CurrentField;
+			ViewTemplate.MoveToLastInClass(f);
+			LoadInventory();    // show it in its new location
+			MakeFieldTheSelectedOne(f);
 		}
 
 
@@ -41,32 +49,35 @@ namespace WeSay.Setup
 		{
 			_fieldsListBox.Items.Clear();
 
-			foreach (Field field in  WeSayWordsProject.Project.DefaultViewTemplate)
+			foreach (Field field in  ViewTemplate)
 			{
-				if(field.ClassName == "LexEntry")
-					this._fieldsListBox.Items.Add(new FieldListBoxWrapper(field), field.Enabled);
-			}
-			foreach (Field field in WeSayWordsProject.Project.DefaultViewTemplate)
-			{
-				if(field.ClassName == "LexSense")
-					this._fieldsListBox.Items.Add(new FieldListBoxWrapper(field), field.Enabled);
-			}
-			foreach (Field field in WeSayWordsProject.Project.DefaultViewTemplate)
-			{
-				if(field.ClassName == "LexExampleSentence")
-					this._fieldsListBox.Items.Add(new FieldListBoxWrapper(field), field.Enabled);
-			}
-
-			if (_fieldsListBox.Items.Count > 0)
-			{
-				_fieldsListBox.SelectedIndex = 0;
+				ListViewItem item = new ListViewItem(field.DisplayName);
+				item.Tag = field;
+				item.Text = field.DisplayName;
+				item.Checked = field.Enabled;
+				foreach (ListViewGroup group in _fieldsListBox.Groups)
+				{
+					if (field.ClassName == group.Name)
+					{
+						item.Group = group;
+					}
+				}
+				_fieldsListBox.Items.Add(item);
 			}
 		}
 
+		private ViewTemplate ViewTemplate
+		{
+			get
+			{
+
+				return WeSayWordsProject.Project.DefaultViewTemplate;
+			}
+		}
 
 		private void OnFieldsListBox_ItemCheck(object sender, ItemCheckEventArgs e)
 		{
-			if (_fieldsListBox.SelectedItem == null)//this gets called during population of the list,too
+			if (CurrentField == null)//this gets called during population of the list,too
 			{
 				return;
 			}
@@ -88,65 +99,47 @@ namespace WeSay.Setup
 			}
 		}
 
-		class FieldListBoxWrapper
-		{
-			public Field _field;
-			private static StringDictionary _labels;
-
-			public FieldListBoxWrapper(Field f)
-			{
-				_field = f;
-				if (_labels == null)
-				{
-					_labels = new StringDictionary();
-					PopulateLabelDictionary();
-				}
-			}
-
-			private static void PopulateLabelDictionary()
-			{
-				_labels.Add("LexEntry", "Entry");
-				_labels.Add("LexSense", "Sense");
-				_labels.Add("LexExampleSentence", "Example");
-			}
-
-			public override string ToString()
-			{
-				return string.Format("{0} ({1})", _field.DisplayName, _labels[_field.ClassName]);
-			}
-		}
+//        class FieldListBoxWrapper
+//        {
+//            public Field _field;
+//            private static StringDictionary _labels;
+//
+//            public FieldListBoxWrapper(Field f)
+//            {
+//                _field = f;
+//                if (_labels == null)
+//                {
+//                    _labels = new StringDictionary();
+//                    PopulateLabelDictionary();
+//                }
+//            }
+//
+//            private static void PopulateLabelDictionary()
+//            {
+//                _labels.Add("LexEntry", "Entry");
+//                _labels.Add("LexSense", "Sense");
+//                _labels.Add("LexExampleSentence", "Example");
+//            }
+//
+//            public override string ToString()
+//            {
+//                return string.Format("{0} ({1})", _field.DisplayName, _labels[_field.ClassName]);
+//            }
+//        }
 
 		private Field CurrentField
 		{
 			get
 			{
-				if (_fieldsListBox.SelectedItem == null && _fieldsListBox.Items.Count>0)
+				if (_fieldsListBox.SelectedItems.Count == 0 && _fieldsListBox.Items.Count>0)
 				{
-					_fieldsListBox.SelectedItem = _fieldsListBox.Items[0];
+					_fieldsListBox.Items[0].Selected = true; //did not select in time for the return statement
+					return _fieldsListBox.Items[0].Tag as Field;
+					//_fieldsListBox.SelectedIndices.Add(0);
 				}
-				return (_fieldsListBox.SelectedItem as FieldListBoxWrapper)._field;
+				return (_fieldsListBox.SelectedItems[0].Tag) as Field;
 			}
 		}
-
-		private void OnSelectedFieldChanged(object sender, EventArgs e)
-		{
-			if (CurrentField == null)
-			{
-				return;
-			}
-			_btnDeleteField.Enabled = CurrentField.UserCanDeleteOrModify;
-			_descriptionBox.Text = CurrentField.Description;
-
-			LoadAboutFieldBox();
-
-			//(WS-364): this is too blunt. They should be able to edit the display name
-		//    _fieldPropertyGrid.Enabled = CurrentField.UserCanDeleteOrModify;
-
-		//    _fieldPropertyGrid.SelectedObject = CurrentField;
-			_fieldSetupControl.CurrentField = CurrentField;
-		}
-
-
 
 		private void LoadAboutFieldBox()
 		{
@@ -163,7 +156,7 @@ namespace WeSay.Setup
 		private void OnAddField_Click(object sender, EventArgs e)
 		{
 			Field f = new Field(MakeUniqueFieldName(), "LexEntry", WeSayWordsProject.Project.WritingSystems.Keys);
-			WeSayWordsProject.Project.DefaultViewTemplate.Fields.Add(f);
+			ViewTemplate.Fields.Add(f);
 			LoadInventory();
 			_tabControl.SelectedTab = _setupTab;
 			MakeFieldTheSelectedOne(f);
@@ -187,24 +180,31 @@ namespace WeSay.Setup
 			return baseName;
 		}
 
-		private static Field FindFieldWithFieldName(string name)
+		private Field FindFieldWithFieldName(string name)
 		{
-			return WeSayWordsProject.Project.DefaultViewTemplate.Fields.Find(delegate(Field f)
-																				  {
-																					  return f.FieldName == name;
-																				  });
+			return ViewTemplate.Fields.Find(delegate(Field f)
+												{
+													return f.FieldName == name;
+												});
 		}
 
 		private void MakeFieldTheSelectedOne(Field f)
 		{
-			foreach (FieldListBoxWrapper o in _fieldsListBox.Items )
+//            _fieldsListBox.SelectedIndices.Clear();
+//            _fieldsListBox.SelectedIndices.Add(GetItemOfField(f).Index);
+		 GetItemOfField(f).Selected = true;
+		}
+
+		private ListViewItem GetItemOfField(Field f)
+		{
+			foreach (ListViewItem item in _fieldsListBox.Items)
 			{
-				if (o._field == f)
+				if (item.Tag == f)
 				{
-					_fieldsListBox.SelectedItem = o;
-					break;
+					return item;
 				}
 			}
+			throw new ApplicationException(string.Format("Could not find the field {0} in th list view", f.DisplayName));
 		}
 
 		private void OnDeleteField_Click(object sender, EventArgs e)
@@ -214,12 +214,16 @@ namespace WeSay.Setup
 			if (!CurrentField.UserCanDeleteOrModify)
 				return;
 
-			int index = _fieldsListBox.SelectedIndex;
-			WeSayWordsProject.Project.DefaultViewTemplate.Fields.Remove(CurrentField);
+			int index = _fieldsListBox.SelectedIndices[0];
+			ViewTemplate.Fields.Remove(CurrentField);
 			LoadInventory();
 			if(_fieldsListBox.Items.Count>0)
 			{
-				_fieldsListBox.SelectedIndex = index -1;//select the item before the deleted one
+				_fieldsListBox.SelectedIndices.Clear();
+				int indexToSelect = index == 0 ? 0 : index - 1;
+
+				_fieldsListBox.Items[indexToSelect].Selected = true;
+				//_fieldsListBox.SelectedIndices.Add(index - 1);//select the item before the deleted one
 			}
 		}
 
@@ -274,7 +278,7 @@ namespace WeSay.Setup
 					return;
 				}
 
-				List<Field> fields = WeSayWordsProject.Project.DefaultViewTemplate.Fields.FindAll(delegate(Field f)
+				List<Field> fields = ViewTemplate.Fields.FindAll(delegate(Field f)
 																					   {
 																						   return f.FieldName == CurrentField.FieldName;
 																					   });
@@ -308,6 +312,48 @@ namespace WeSay.Setup
 			{
 				//swallow
 			}
+		}
+
+		private void OnSelectedFieldChanged(object sender, ListViewItemSelectionChangedEventArgs e)
+		{
+			btnMoveUp.Enabled = false;
+			btnMoveDown.Enabled = false;
+
+		   if(!e.IsSelected )
+				return;
+			if (CurrentField == null)
+			{
+				return;
+			}
+			_btnDeleteField.Enabled = CurrentField.UserCanDeleteOrModify;
+			_descriptionBox.Text = CurrentField.Description;
+
+			LoadAboutFieldBox();
+
+			//(WS-364): this is too blunt. They should be able to edit the display name
+			//    _fieldPropertyGrid.Enabled = CurrentField.UserCanDeleteOrModify;
+
+			//    _fieldPropertyGrid.SelectedObject = CurrentField;
+			_fieldSetupControl.CurrentField = CurrentField;
+
+			btnMoveUp.Enabled = CurrentField.UserCanRelocate &&  !ViewTemplate.IsFieldFirstInClass(CurrentField);
+			btnMoveDown.Enabled = CurrentField.UserCanRelocate && !ViewTemplate.IsFieldLastInClass(CurrentField);
+		}
+
+		private void btnMoveUp_Click(object sender, EventArgs e)
+		{
+			Field f = CurrentField;
+			ViewTemplate.MoveUpInClass(CurrentField);
+			this.LoadInventory();
+			MakeFieldTheSelectedOne(f);
+		}
+
+		private void btnMoveDown_Click(object sender, EventArgs e)
+		{
+			Field f = CurrentField;
+			ViewTemplate.MoveDownInClass(CurrentField);
+			this.LoadInventory();
+			MakeFieldTheSelectedOne(f);
 		}
 
 

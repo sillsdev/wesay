@@ -19,6 +19,7 @@ namespace WeSay.LexicalModel.Tests
 	   [TestFixtureSetUp]
 		public void SetupFixture()
 		{
+			Palaso.Reporting.ErrorReport.IsOkToInteractWithUser = false;
 			_projectSetupSharedByAllTests = new Db4oProjectSetupForTesting(string.Empty);
 			_entries = _projectSetupSharedByAllTests._recordListManager.GetListOfType<LexEntry>();
 		}

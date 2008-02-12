@@ -1,6 +1,7 @@
 using System;
 using NUnit.Framework;
 using WeSay.Language;
+using WeSay.LexicalModel;
 using WeSay.Project;
 
 namespace WeSay.Project.Tests
@@ -166,6 +167,35 @@ namespace WeSay.Project.Tests
 			viewTemplate.ChangeWritingSystemId("en", "x");
 			Assert.IsFalse(viewTemplate.Fields[0].WritingSystemIds.Contains("en"));
 			Assert.IsTrue(viewTemplate.Fields[0].WritingSystemIds.Contains("x"));
+		}
+
+		[Test]
+		public void UpdateUserViewTemplate_Jan2008Upgrade_DefinitionIsEnabled()
+		{
+			ViewTemplate master = MakeMasterInventory();
+			ViewTemplate simple = new ViewTemplate();
+			Field definitionField = new Field(LexSense.WellKnownProperties.Definition, "LexSense", new String[] { "en" });
+			definitionField.Enabled = false;
+			simple.Add(definitionField);
+			ViewTemplate.UpdateUserViewTemplate(master, simple);
+			Assert.IsTrue(definitionField.Enabled);
+		}
+		[Test]
+		public void UpdateUserViewTemplate_Jan2008Upgrade_DefinitionGetsGlossWritingSystemsAdded()
+		{
+			ViewTemplate master = MakeMasterInventory();
+			ViewTemplate simple = new ViewTemplate();
+			Field definitionField = new Field(LexSense.WellKnownProperties.Definition, "LexSense", new String[] { "en", "a", "b" });
+			definitionField.Enabled = false;
+			simple.Add(definitionField);
+			Field glossField = new Field(LexSense.WellKnownProperties.Gloss, "LexSense", new String[] { "b", "c" });
+			simple.Add(glossField);
+			ViewTemplate.UpdateUserViewTemplate(master, simple);
+			Assert.AreEqual(4,definitionField.WritingSystemIds.Count);
+			Assert.IsTrue(definitionField.WritingSystemIds.Contains("en"));
+			Assert.IsTrue(definitionField.WritingSystemIds.Contains("a"));
+			Assert.IsTrue(definitionField.WritingSystemIds.Contains("b"));
+			Assert.IsTrue(definitionField.WritingSystemIds.Contains("c"));
 		}
 	}
 

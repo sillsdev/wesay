@@ -53,7 +53,6 @@ namespace WeSay.Project
 		public enum FieldNames
 		{
 			EntryLexicalForm,
-			SenseGloss,
 			ExampleSentence,
 			ExampleTranslation
 		} ;
@@ -268,6 +267,23 @@ namespace WeSay.Project
 			}
 		}
 
+		[Browsable(false)]
+		public bool UserCanRelocate
+		{
+			get
+			{
+				if (_fieldName==FieldNames.EntryLexicalForm.ToString()
+					|| _fieldName == LexSense.WellKnownProperties.Definition
+					|| _fieldName == FieldNames.ExampleSentence.ToString())
+				{
+					return false;
+				}
+
+
+				return true;
+			}
+		}
+
 		[TypeConverter(typeof (DataTypeClassConverter))]
 		[Description("The type of the field. E.g. multilingual text, option, option collection, relation.")]
 		[ReflectorProperty("dataType", Required = true)]
@@ -306,11 +322,12 @@ namespace WeSay.Project
 					return true;
 				}
 
+ #if GlossMeaning
 				if (FieldName == FieldNames.SenseGloss.ToString())
 				{
 					return true;
 				}
-
+#endif
 				return false;
 			}
 		}
@@ -469,6 +486,8 @@ namespace WeSay.Project
 				return true;
 			}
 		}
+
+
 
 		[Browsable(false)]
 		public bool HasWritingSystem(string writingSystemId)
