@@ -149,6 +149,7 @@ namespace WeSay.Foundation
 
 		public void WireUpChild(INotifyPropertyChanged child)
 		{
+			child.PropertyChanged -= OnChildObjectPropertyChanged;//prevent the bug where we were acquiring these with each GetProperty<> call
 			child.PropertyChanged += OnChildObjectPropertyChanged;
 			if (child is WeSayDataObject)
 			{

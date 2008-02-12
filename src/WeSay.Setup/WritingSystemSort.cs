@@ -23,6 +23,11 @@ namespace WeSay.Setup
 		public WritingSystemSort()
 		{
 			InitializeComponent();
+			if (DesignMode)
+			{
+				return;
+			}
+
 			List<CultureInfo> result = new List<CultureInfo>(CultureInfo.GetCultures(CultureTypes.AllCultures));
 
 			result.Sort(

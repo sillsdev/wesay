@@ -49,6 +49,7 @@ namespace WeSay.Setup
 			_fontInfoDisplay.Text =
 				string.Format("{0}, {1}", this.WritingSystem.Font.Name, Math.Round(this.WritingSystem.Font.Size));
 			_sampleTextBox.WritingSystem =WritingSystem;
+			_sampleTextBox.Text = string.Empty;
 			this.Invalidate();
 		}
 	}
