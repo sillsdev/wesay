@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Xml;
 using Exortech.NetReflector;
+using Palaso.UI.WindowsForms.i8n;
 using WeSay.Foundation;
 using WeSay.Language;
 using WeSay.LexicalModel;

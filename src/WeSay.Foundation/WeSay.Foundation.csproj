@@ -79,7 +79,6 @@
 	<Compile Include="Options\OptionsList.cs" />
 	<Compile Include="PictureRef.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />
-	<Compile Include="StringCatalog.cs" />
 	<Compile Include="WeSayDataObject.cs" />
 	<Compile Include="WritingSystem.cs" />
 	<Compile Include="WritingSystemCollection.cs" />

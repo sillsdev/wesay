@@ -10,6 +10,7 @@ using Palaso.Reporting;
 using Palaso.Services.Dictionary;
 using Palaso.Services.ForClients;
 using Palaso.Services.ForServers;
+using Palaso.UI.WindowsForms.i8n;
 using WeSay.App.Properties;
 using WeSay.Data;
 using WeSay.Foundation;

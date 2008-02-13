@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Threading;
+using Palaso.UI.WindowsForms.i8n;
 using WeSay.Foundation;
 using WeSay.Project;
 using System.Windows.Forms;

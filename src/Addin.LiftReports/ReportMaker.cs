@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using Addin.LiftReports.Properties;
 using Mono.Addins;
+using Palaso.UI.WindowsForms.i8n;
 using WeSay.AddinLib;
 using WeSay.Foundation;
 

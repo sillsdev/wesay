@@ -5,6 +5,7 @@ using System.ServiceModel;
 using System.Text;
 using Palaso.Services.Dictionary;
 using Palaso.Text;
+using Palaso.UI.WindowsForms.i8n;
 using WeSay.App.Services;
 using WeSay.Foundation;
 using WeSay.Language;

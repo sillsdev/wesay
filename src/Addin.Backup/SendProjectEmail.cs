@@ -4,6 +4,7 @@ using System.IO;
 using System.Windows.Forms;
 using Mono.Addins;
 using Palaso.Reporting;
+using Palaso.UI.WindowsForms.i8n;
 using WeSay.AddinLib;
 using WeSay.Foundation;
 
@@ -23,7 +24,7 @@ namespace Addin.Backup
 		{
 			get
 			{
-				return string.Format(WeSay.Foundation.StringCatalog.Get("~Email My Work to {0}"), _settings.RecipientName);
+				return string.Format(StringCatalog.Get("~Email My Work to {0}"), _settings.RecipientName);
 			}
 		}
 
@@ -31,7 +32,7 @@ namespace Addin.Backup
 		{
 			get
 			{
-				return string.Format(WeSay.Foundation.StringCatalog.Get("~Send a zipped email containing all your WeSay work."));
+				return string.Format(StringCatalog.Get("~Send a zipped email containing all your WeSay work."));
 			}
 		}
 

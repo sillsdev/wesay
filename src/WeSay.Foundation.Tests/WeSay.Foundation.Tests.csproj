@@ -57,7 +57,6 @@
 	<Compile Include="ApproximateMatcherTests.cs" />
 	<Compile Include="BackupMakerTests.cs" />
 	<Compile Include="OptionList.Tests.cs" />
-	<Compile Include="StringCatalogTests.cs" />
 	<Compile Include="TestResources.Designer.cs">
 	  <AutoGen>True</AutoGen>
 	  <DesignTime>True</DesignTime>
@@ -92,9 +91,6 @@
   </ItemGroup>
   <ItemGroup>
 	<None Include="Resources\WritingSystemPrefs.xml" />
-  </ItemGroup>
-  <ItemGroup>
-	<None Include="Resources\poStrings.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

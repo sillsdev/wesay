@@ -1,5 +1,6 @@
 using System.IO;
 using NUnit.Framework;
+using Palaso.UI.WindowsForms.i8n;
 using WeSay.Foundation;
 using WeSay.Language.Tests;
 using WeSay.Project;
