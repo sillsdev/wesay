@@ -1,5 +1,6 @@
 using System.Drawing;
 using System.Windows.Forms;
+using Palaso.UI.WindowsForms.i8n;
 using WeSay.Foundation;
 using System;
 using WeSay.Foundation.Options;

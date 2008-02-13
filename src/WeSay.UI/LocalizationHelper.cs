@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel;
 using System.ComponentModel.Design;
 using System.Windows.Forms;
+using Palaso.UI.WindowsForms.i8n;
 using WeSay.Foundation;
 
 namespace WeSay.UI
