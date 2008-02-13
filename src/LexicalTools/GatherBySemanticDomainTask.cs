@@ -99,6 +99,7 @@ namespace WeSay.LexicalTools
 
 		private int _currentDomainIndex;
 		private int _currentQuestionIndex;
+		private bool _alreadyReportedWSLookupFailure= false;
 
 		public GatherBySemanticDomainTask(IRecordListManager recordListManager,
 										  string label,
@@ -120,12 +121,12 @@ namespace WeSay.LexicalTools
 			_currentDomainIndex = -1;
 			_currentQuestionIndex = 0;
 			_words = null;
-			_semanticDomainQuestionsFileName = semanticDomainQuestionsFileName;
-			if (!File.Exists(semanticDomainQuestionsFileName))
+			_semanticDomainQuestionsFileName = DetermineActualQuestionsFileName(semanticDomainQuestionsFileName);
+			if (!File.Exists(_semanticDomainQuestionsFileName))
 			{
 				string pathInProject =
 						Path.Combine(WeSayWordsProject.Project.PathToWeSaySpecificFilesDirectoryInProject,
-									 semanticDomainQuestionsFileName);
+									 _semanticDomainQuestionsFileName);
 				if (File.Exists(pathInProject))
 				{
 					_semanticDomainQuestionsFileName = pathInProject;
@@ -134,13 +135,13 @@ namespace WeSay.LexicalTools
 				{
 					string pathInProgramDir =
 							Path.Combine(WeSayWordsProject.ApplicationCommonDirectory,
-										 semanticDomainQuestionsFileName);
+										 _semanticDomainQuestionsFileName);
 					if (!File.Exists(pathInProgramDir))
 					{
 						throw new ApplicationException(
 								string.Format(
-										"Could not find the semanticDomainQuestions file {0}. Expected to find it at: {1} or {2}",
-										semanticDomainQuestionsFileName,
+										"Could not find the semanticDomainQuestions file {0}. Expected to find it at: {1} or {2}. The name of the file is influenced by the first enabled writing system for the Semantic Domain Field.",
+										_semanticDomainQuestionsFileName,
 										pathInProject,
 										pathInProgramDir));
 					}
@@ -150,6 +151,22 @@ namespace WeSay.LexicalTools
 
 			_semanticDomainField = viewTemplate.GetField(semanticDomainFieldName);
 		}
+
+		private string DetermineActualQuestionsFileName(string nameFromTaskConfiguration)
+		{
+			int extension = nameFromTaskConfiguration.LastIndexOf('-');
+			if(extension == -1)
+			{
+				return nameFromTaskConfiguration;
+			}
+
+			string name = nameFromTaskConfiguration.Substring(0, extension + 1)
+				+ WritingSystemIdForNamesAndQuestions
+				+ Path.GetExtension(nameFromTaskConfiguration);
+			return name;
+		}
+
+
 
 		private new Db4oRecordListManager RecordListManager
 		{
@@ -608,9 +625,10 @@ namespace WeSay.LexicalTools
 					//what are we going to do when the file is bad?
 					Debug.Fail("Bad file format, expected semantic-domain-questions element");
 				}
-				string ws = reader.GetAttribute("lang");
+				//string ws = reader.GetAttribute("lang"); got it from the configuration file
+
 				// should verify that this writing system is in optionslist
-				_semanticDomainWritingSystem = BasilProject.Project.WritingSystems[ws];
+				_semanticDomainWritingSystem = BasilProject.Project.WritingSystems[WritingSystemIdForNamesAndQuestions];
 				string semanticDomainType = reader.GetAttribute("semantic-domain-type");
 				// should verify that domain type matches type of optionList in semantic domain field
 
@@ -645,6 +663,30 @@ namespace WeSay.LexicalTools
 				{
 					reader.Close();
 				}
+			}
+		}
+
+		private string WritingSystemIdForNamesAndQuestions
+		{
+			get
+			{
+				string ws = "en";
+				try
+				{
+					ws =
+						_viewTemplate.GetField(
+							LexSense.WellKnownProperties.SemanticDomainsDdp4).WritingSystemIds[0];
+				}
+				catch (Exception e)
+				{
+					if (!_alreadyReportedWSLookupFailure)
+					{
+						_alreadyReportedWSLookupFailure = true;
+						Palaso.Reporting.ErrorReport.ReportNonFatalMessage(
+							"WeSay was unable to get a writing system to use from the configuration Semantic Domain Field. English will be used.");
+					}
+				}
+				return ws;
 			}
 		}
 

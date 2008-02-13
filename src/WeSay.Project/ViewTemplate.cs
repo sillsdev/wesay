@@ -375,7 +375,7 @@ namespace WeSay.Project
 			StringCatalog.Get("~Sem Dom", "The label for the field showing Semantic Domains");
 
 			ddp4Field.DisplayName = "Sem Dom";
-			ddp4Field.Description = "The semantic domain using Ron Moe's Dictionary Development Process version 4.";
+			ddp4Field.Description = "The semantic domains of the sense, using Ron Moe's Dictionary Development Process version 4.\r\n. You can enter these directly by typing the number of the domain, its name, or a word used in the description. You can also use the Gather By Semantic Domains Task, which will try to use the writing system chosen by this field.";
 			ddp4Field.DataTypeName = "OptionCollection";
 			ddp4Field.OptionsListFile = "Ddp4.xml";
 			ddp4Field.Enabled = true;

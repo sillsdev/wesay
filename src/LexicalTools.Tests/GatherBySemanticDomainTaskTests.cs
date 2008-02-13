@@ -35,23 +35,28 @@ namespace WeSay.LexicalTools.Tests
 			this._recordListManager = new Db4oRecordListManager(new WeSayWordsDb4oModelConfiguration(), _dbFilePath);// InMemoryRecordListManager();
 			Db4oLexModelHelper.Initialize(_recordListManager.DataSource.Data);
 			Lexicon.Init(_recordListManager);
-			Field semanticDomainField = new Field("SemanticDomain", "LexSense", new string[] { "en" });
-			semanticDomainField.OptionsListFile = "Ddp4.xml";
-			semanticDomainField.DataTypeName = "OptionRefCollection";
-
-			this._viewTemplate = new ViewTemplate();
-			Field lexicalFormField = new Field(Field.FieldNames.EntryLexicalForm.ToString(), "LexEntry", new string[] { "br" });
-			lexicalFormField.DataTypeName = "MultiText";
-
-			_viewTemplate.Add(lexicalFormField);
-			_viewTemplate.Add(semanticDomainField);
-
+			this._viewTemplate =MakeViewTemplate("en");
 			this._task = new GatherBySemanticDomainTask(_recordListManager,
 												"label",
 												"description",
 												_semanticDomainFilePath,
 												this._viewTemplate,
-												"SemanticDomain");
+												LexSense.WellKnownProperties.SemanticDomainsDdp4);
+		}
+
+		private ViewTemplate MakeViewTemplate(string nameAndQuestionWritingSystem)
+		{
+			Field semanticDomainField = new Field(LexSense.WellKnownProperties.SemanticDomainsDdp4, "LexSense", new string[] { nameAndQuestionWritingSystem });
+			semanticDomainField.OptionsListFile = "Ddp4.xml";
+			semanticDomainField.DataTypeName = "OptionRefCollection";
+
+			ViewTemplate v = new ViewTemplate();
+			Field lexicalFormField = new Field(Field.FieldNames.EntryLexicalForm.ToString(), "LexEntry", new string[] { "br" });
+			lexicalFormField.DataTypeName = "MultiText";
+
+			v.Add(lexicalFormField);
+			v.Add(semanticDomainField);
+			return v;
 		}
 
 
@@ -91,7 +96,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			LexSense s = (LexSense)e.Senses.AddNew();
 			s.Gloss.SetAlternative("en", gloss);
-			OptionRefCollection o = s.GetOrCreateProperty<OptionRefCollection>("SemanticDomain");
+			OptionRefCollection o = s.GetOrCreateProperty<OptionRefCollection>(LexSense.WellKnownProperties.SemanticDomainsDdp4);
 			o.Add(Task.DomainKeys[0]);
 			return s;
 		}
@@ -103,7 +108,7 @@ namespace WeSay.LexicalTools.Tests
 												"description",
 												_semanticDomainFilePath,
 												this._viewTemplate,
-												"SemanticDomain"));
+												LexSense.WellKnownProperties.SemanticDomainsDdp4));
 		}
 
 		[Test]
@@ -115,7 +120,7 @@ namespace WeSay.LexicalTools.Tests
 												"description",
 												_semanticDomainFilePath,
 												this._viewTemplate,
-												"SemanticDomain");
+												LexSense.WellKnownProperties.SemanticDomainsDdp4);
 		}
 		[Test]
 		[ExpectedException(typeof(ArgumentNullException))]
@@ -126,7 +131,7 @@ namespace WeSay.LexicalTools.Tests
 												"description",
 												_semanticDomainFilePath,
 												this._viewTemplate,
-												"SemanticDomain");
+												LexSense.WellKnownProperties.SemanticDomainsDdp4);
 		}
 		[Test]
 		[ExpectedException(typeof(ArgumentNullException))]
@@ -137,7 +142,7 @@ namespace WeSay.LexicalTools.Tests
 												null,
 												_semanticDomainFilePath,
 												this._viewTemplate,
-												"SemanticDomain");
+												LexSense.WellKnownProperties.SemanticDomainsDdp4);
 		}
 		[Test]
 		[ExpectedException(typeof(ArgumentNullException))]
@@ -148,7 +153,7 @@ namespace WeSay.LexicalTools.Tests
 												"description",
 												null,
 												this._viewTemplate,
-												"SemanticDomain");
+												LexSense.WellKnownProperties.SemanticDomainsDdp4);
 		}
 		[Test]
 		[ExpectedException(typeof(ApplicationException))]
@@ -159,7 +164,7 @@ namespace WeSay.LexicalTools.Tests
 												"description",
 												Path.GetRandomFileName(),
 												this._viewTemplate,
-												"SemanticDomain");
+												LexSense.WellKnownProperties.SemanticDomainsDdp4);
 		}
 
 		[Test]
@@ -171,7 +176,7 @@ namespace WeSay.LexicalTools.Tests
 												"description",
 												_semanticDomainFilePath,
 												null,
-												"SemanticDomain");
+												LexSense.WellKnownProperties.SemanticDomainsDdp4);
 		}
 		[Test]
 		[ExpectedException(typeof(ArgumentNullException))]
@@ -330,7 +335,7 @@ namespace WeSay.LexicalTools.Tests
 			e.LexicalForm.SetAlternative("br", "peixe");
 			LexSense s = (LexSense)e.Senses.AddNew();
 			s.Gloss.SetAlternative("en", "fish");
-			OptionRefCollection o = s.GetOrCreateProperty<OptionRefCollection>("SemanticDomain");
+			OptionRefCollection o = s.GetOrCreateProperty<OptionRefCollection>(LexSense.WellKnownProperties.SemanticDomainsDdp4);
 			o.Add(Task.DomainKeys[0]);
 
 			Task.CurrentDomainIndex = 0;
@@ -438,7 +443,7 @@ namespace WeSay.LexicalTools.Tests
 			LexEntry e = (LexEntry)recordList.AddNew();
 			e.LexicalForm.SetAlternative("br", "peixe");
 			LexSense s = (LexSense)e.Senses.AddNew();
-			OptionRefCollection o = s.GetOrCreateProperty<OptionRefCollection>("SemanticDomain");
+			OptionRefCollection o = s.GetOrCreateProperty<OptionRefCollection>(LexSense.WellKnownProperties.SemanticDomainsDdp4);
 			o.Add(Task.DomainKeys[0]);
 			int originalCount = recordList.Count;
 
@@ -484,7 +489,7 @@ namespace WeSay.LexicalTools.Tests
 			LexSense s = (LexSense)e.Senses.AddNew();
 			s.Gloss.SetAlternative("en", "fish");
 			s = (LexSense)e.Senses.AddNew();
-			OptionRefCollection o = s.GetOrCreateProperty<OptionRefCollection>("SemanticDomain");
+			OptionRefCollection o = s.GetOrCreateProperty<OptionRefCollection>(LexSense.WellKnownProperties.SemanticDomainsDdp4);
 			o.Add(Task.DomainKeys[0]);
 			int originalCount = recordList.Count;
 
@@ -503,7 +508,7 @@ namespace WeSay.LexicalTools.Tests
 			LexSense s = (LexSense)e.Senses.AddNew();
 			s.Gloss.SetAlternative("en", "fish");
 			s = (LexSense)e.Senses.AddNew();
-			OptionRefCollection o = s.GetOrCreateProperty<OptionRefCollection>("SemanticDomain");
+			OptionRefCollection o = s.GetOrCreateProperty<OptionRefCollection>(LexSense.WellKnownProperties.SemanticDomainsDdp4);
 			o.Add(Task.DomainKeys[0]);
 			int originalCount = recordList.Count;
 
@@ -522,7 +527,7 @@ namespace WeSay.LexicalTools.Tests
 			e.LexicalForm.SetAlternative("br", "peixe");
 			e.LexicalForm.SetAlternative("v", "peshi");
 			LexSense s = (LexSense)e.Senses.AddNew();
-			OptionRefCollection o = s.GetOrCreateProperty<OptionRefCollection>("SemanticDomain");
+			OptionRefCollection o = s.GetOrCreateProperty<OptionRefCollection>(LexSense.WellKnownProperties.SemanticDomainsDdp4);
 			o.Add(Task.DomainKeys[0]);
 			int originalCount = recordList.Count;
 
@@ -542,7 +547,7 @@ namespace WeSay.LexicalTools.Tests
 			mt["en"] = "hello";
 
 			LexSense s = (LexSense)e.Senses.AddNew();
-			OptionRefCollection o = s.GetOrCreateProperty<OptionRefCollection>("SemanticDomain");
+			OptionRefCollection o = s.GetOrCreateProperty<OptionRefCollection>(LexSense.WellKnownProperties.SemanticDomainsDdp4);
 			o.Add(Task.DomainKeys[0]);
 			int originalCount = recordList.Count;
 
@@ -559,7 +564,7 @@ namespace WeSay.LexicalTools.Tests
 			LexEntry e = (LexEntry)recordList.AddNew();
 			e.LexicalForm.SetAlternative("br", "peixe");
 			LexSense s = (LexSense)e.Senses.AddNew();
-			OptionRefCollection o = s.GetOrCreateProperty<OptionRefCollection>("SemanticDomain");
+			OptionRefCollection o = s.GetOrCreateProperty<OptionRefCollection>(LexSense.WellKnownProperties.SemanticDomainsDdp4);
 			o.Add(Task.DomainKeys[0]);
 
 			MultiText mt = e.GetOrCreateProperty<MultiText>("custom");
@@ -598,7 +603,7 @@ namespace WeSay.LexicalTools.Tests
 			LexEntry e = (LexEntry)recordList.AddNew();
 			e.LexicalForm.SetAlternative("br", "peixe");
 			LexSense s = (LexSense)e.Senses.AddNew();
-			OptionRefCollection o = s.GetOrCreateProperty<OptionRefCollection>("SemanticDomain");
+			OptionRefCollection o = s.GetOrCreateProperty<OptionRefCollection>(LexSense.WellKnownProperties.SemanticDomainsDdp4);
 			o.Add(Task.DomainKeys[0]);
 
 			LexExampleSentence example = (LexExampleSentence) s.ExampleSentences.AddNew();
@@ -620,7 +625,7 @@ namespace WeSay.LexicalTools.Tests
 			LexEntry e = (LexEntry)recordList.AddNew();
 			e.LexicalForm.SetAlternative("v", "peshi");
 			LexSense s = (LexSense)e.Senses.AddNew();
-			OptionRefCollection o = s.GetOrCreateProperty<OptionRefCollection>("SemanticDomain");
+			OptionRefCollection o = s.GetOrCreateProperty<OptionRefCollection>(LexSense.WellKnownProperties.SemanticDomainsDdp4);
 			o.Add(Task.DomainKeys[0]);
 			int originalCount = recordList.Count;
 
@@ -864,7 +869,7 @@ namespace WeSay.LexicalTools.Tests
 										"description",
 										emptySemanticDomainFilePath,
 										this._viewTemplate,
-										"SemanticDomain");
+										LexSense.WellKnownProperties.SemanticDomainsDdp4);
 			task.Activate();
 			Assert.AreEqual(1, task.DomainKeys.Count);
 			Assert.AreEqual(string.Empty, task.CurrentDomainKey);
@@ -894,12 +899,13 @@ namespace WeSay.LexicalTools.Tests
 </semantic-domain></semantic-domain-type>");
 			}
 
+			ViewTemplate template = MakeViewTemplate("fr");
 			GatherBySemanticDomainTask task = new GatherBySemanticDomainTask(_recordListManager,
 										"label",
 										"description",
 										frenchSemanticDomainFilePath,
-										this._viewTemplate,
-										"SemanticDomain");
+										template,
+										LexSense.WellKnownProperties.SemanticDomainsDdp4);
 			task.Activate();
 			Assert.AreEqual("L'univers physique", task.DomainNames[0]);
 			Assert.AreEqual("Ciel", task.DomainNames[1]);

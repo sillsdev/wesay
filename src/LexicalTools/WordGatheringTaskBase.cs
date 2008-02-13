@@ -9,11 +9,14 @@ namespace WeSay.LexicalTools
 	public abstract class WordGatheringTaskBase : TaskBase
 	{
 		private readonly WritingSystem _lexicalFormWritingSystem;
+		protected ViewTemplate _viewTemplate;
+
 		protected WordGatheringTaskBase(string label, string description, bool isPinned,
 										IRecordListManager recordListManager, ViewTemplate viewTemplate)
 			: base(label, description, isPinned, recordListManager)
 		{
-			if (viewTemplate == null)
+			_viewTemplate = viewTemplate;
+			if (_viewTemplate == null)
 			{
 				throw new ArgumentNullException("viewTemplate");
 			}
