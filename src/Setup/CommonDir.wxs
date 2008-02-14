@@ -43,5 +43,23 @@
 	  </Directory>
 	</DirectoryRef>
 
+
+	<ComponentGroup Id="defaultFiles">
+	  <ComponentRef Id="PartsOfSpeech.xml" />
+	  <ComponentRef Id="sampleWordList.txt" />
+	  <ComponentRef Id="DuerksenWords.txt" />
+	  <ComponentRef Id="PNGWords.txt" />
+	  <ComponentRef Id="SemanticDomains.xml" />
+	  <ComponentRef Id="default.WeSayConfig" />
+	  <ComponentRef Id="CommonWritingSystemPrefs.xml" />
+	</ComponentGroup>
+
+	<ComponentGroup Id="ddpStuff">
+	  <ComponentRef Id="Ddp4.xml"/>
+	  <ComponentRef Id="Ddp4Questions_en.xml"/>
+	  <ComponentRef Id="Ddp4Questions_fr.xml"/>
+	  <ComponentRef Id="Ddp4Questions_id.xml"/>
+	</ComponentGroup>
+
   </Fragment>
 </Wix>

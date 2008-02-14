@@ -45,5 +45,15 @@
 		  </Component>
 		</Directory>
 	</DirectoryRef>
+
+
+	<ComponentGroup Id="biatahSample">
+
+	  <ComponentRef Id ="biatahShortcuts"/>
+	  <ComponentRef Id ="biatahMain"/>
+	  <ComponentRef Id ="biatahCache"/>
+	  <ComponentRef Id ="biatahPictures"/>
+	</ComponentGroup>
+
   </Fragment>
 </Wix>
