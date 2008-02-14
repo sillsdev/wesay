@@ -36,6 +36,9 @@
 		<Component Id="Ddp4Questions_fr.xml" Guid="{48879B52-29CB-4197-B238-5276AFB8CB4B}">
 		  <File Id="Ddp4Questions_fr.xml" Name="Ddp4Questions-fr.xml" KeyPath="yes" Source="..\..\common\Ddp4Questions-fr.xml" />
 		</Component>
+		<Component Id="Ddp4Questions_id.xml" Guid="{242A15FA-A451-43e5-B91B-B7977BADA5EE}">
+		  <File Id="Ddp4Questions_id.xml" Name="Ddp4Questions-fr.xml" KeyPath="yes" Source="..\..\common\Ddp4Questions-id.xml" />
+		</Component>
 
 	  </Directory>
 	</DirectoryRef>

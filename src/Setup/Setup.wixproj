@@ -66,6 +66,7 @@
   </ItemGroup>
   <ItemGroup>
 	<WixExtension Include="C:\Program Files\Windows Installer XML v3\bin\WixUtilExtension.dll" />
+	<WixExtension Include="C:\Program Files\Windows Installer XML v3\bin\WixNetFxExtension.dll" />
   </ItemGroup>
   <ItemGroup>
 	<Content Include="Welcome.htm" />
