@@ -33,7 +33,7 @@
 			<File Id="Dictionary.cache" Name="Dictionary.cache"  Source="..\..\sampleprojects\biatah\Cache\Dictionary.cache" /> -->
 			<File Id="LexEntrysortedbybth.cache" Name="LexEntry sorted by bth.cache"  Source="..\..\sampleprojects\biatah\Cache\LexEntry sorted by bth.cache" />
 			<File Id="LexEntrysortedbybthqipa.cache" Name="LexEntry sorted by bth-fonipa.cache"  Source="..\..\sampleprojects\biatah\Cache\LexEntry sorted by bth-fonipa.cache" />
-			<File Id="LexEntrysortedbyen.cache" Name="LexEntry sorted by en.cache"  Source="..\..\sampleprojects\biatah\Cache\LexEntry sorted by en.cache" />
+   <!--         <File Id="LexEntrysortedbyen.cache" Name="LexEntry sorted by en.cache"  Source="..\..\sampleprojects\biatah\Cache\LexEntry sorted by en.cache" /> -->
 			<File Id="LexEntrysortedbySemanticDomainDdp4.cache" Name="LexEntry sorted by SemanticDomainDdp4.cache" Source="..\..\sampleprojects\biatah\Cache\LexEntry sorted by SemanticDomainDdp4.cache" />
 			<File Id="WeSay.LexicalTools.MissingExampleSentenceFilterbth.cache" Name="WeSay.LexicalTools.MissingExampleSentenceFilterbth.cache" Source="..\..\sampleprojects\biatah\Cache\Missing ExampleSentence [bth] Filter.cache" />
 			<File Id="WeSay.LexicalTools.MissingGlossFilteren.cache" Name="WeSay.LexicalTools.MissingGlossFilteren.cache" Source="..\..\sampleprojects\biatah\Cache\Missing SenseGloss [en] Filter.cache" />
