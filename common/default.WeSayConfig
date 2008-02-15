@@ -18,12 +18,12 @@
 	  <entries ref="All Entries" />
 	  <filter class="WeSay.LexicalTools.MissingItemFilter" assembly="LexicalTools">
 		<viewTemplate ref="Default View Template" />
-		<field>SenseGloss</field>
+		<field>gloss</field>
 	  </filter>
 	  <label>Add Meanings</label>
 	  <description>Add meanings to entries where they are missing.</description>
 	  <viewTemplate ref="Default View Template" />
-	  <showfields>SenseGloss</showfields>
+	  <showfields>gloss</showfields>
 	  <readOnly>SemanticDomainDdp4</readOnly>
 	</task>
 	<task id="AddPartOfSpeech" class="WeSay.LexicalTools.MissingInfoTask" assembly="LexicalTools" visible="false">
@@ -36,7 +36,7 @@
 	  <description>Add a Part Of Speech to senses where they are missing.</description>
 	  <viewTemplate ref="Default View Template" />
 	  <showfields>POS</showfields>
-	  <readOnly>SenseGloss, ExampleSentence</readOnly>
+	  <readOnly>gloss, ExampleSentence</readOnly>
 	</task>
 	<task id="AddExamples" class="WeSay.LexicalTools.MissingInfoTask" assembly="LexicalTools" visible="false">
 	  <entries ref="All Entries" />
@@ -48,7 +48,7 @@
 	  <description>Add example sentences to entries where they are missing.</description>
 	  <viewTemplate ref="Default View Template" />
 	  <showfields>ExampleSentence</showfields>
-	  <readOnly>SenseGloss</readOnly>
+	  <readOnly>gloss</readOnly>
 	</task>
 	<task id="AddBaseForms" class="WeSay.LexicalTools.MissingInfoTask" assembly="LexicalTools" visible="false">
 	  <entries ref="All Entries" />
