@@ -64,6 +64,9 @@ namespace WeSay.Setup
 				}
 				_fieldsListBox.Items.Add(item);
 			}
+
+		   if(_fieldsListBox.Items.Count>0)
+			   _fieldsListBox.Items[0].Selected = true;
 		}
 
 		private ViewTemplate ViewTemplate
