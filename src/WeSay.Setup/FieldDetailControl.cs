@@ -13,6 +13,7 @@ namespace WeSay.Setup
 		private bool _loading;
 
 		public event EventHandler ClassOfFieldChanged;
+		public event EventHandler DisplayNameOfFieldChanged;
 
 		public FieldDetailControl()
 		{
@@ -149,9 +150,14 @@ namespace WeSay.Setup
 			UpdateDisplay();
 		}
 
-		private void _displayName_TextChanged(object sender, EventArgs e)
+		private void OnDisplayName_TextChanged(object sender, EventArgs e)
 		{
 			_field.DisplayName = _displayName.Text.Trim();
+
+			if(this.DisplayNameOfFieldChanged !=null)
+			{
+				DisplayNameOfFieldChanged.Invoke(this, null);
+			}
 		}
 
 		private void _fieldName_TextChanged(object sender, EventArgs e)

@@ -31,6 +31,16 @@ namespace WeSay.Setup
 			//nb: may important to do this after loading the inventory
 			this._fieldsListBox.ItemCheck += new ItemCheckEventHandler(this.OnFieldsListBox_ItemCheck);
 			_fieldSetupControl.ClassOfFieldChanged += new EventHandler(OnClassOfFieldChanged);
+			_fieldSetupControl.DisplayNameOfFieldChanged += new EventHandler(OnNameOfFieldChanged);
+		}
+
+		private void OnNameOfFieldChanged(object sender, EventArgs e)
+		{
+			if(_fieldsListBox.SelectedItems.Count == 0)
+				return;
+
+			Field f = (Field) _fieldsListBox.SelectedItems[0].Tag;
+			_fieldsListBox.SelectedItems[0].Text=f.DisplayName;
 		}
 
 		void OnClassOfFieldChanged(object sender, EventArgs e)

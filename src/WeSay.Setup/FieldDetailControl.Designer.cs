@@ -140,7 +140,7 @@ namespace WeSay.Setup
 			this._displayName.TabIndex = 0;
 			this.toolTip1.SetToolTip(this._displayName, "The name the user will see.");
 			this._displayName.Leave += new System.EventHandler(this.OnLeaveDisplayName);
-			this._displayName.TextChanged += new System.EventHandler(this._displayName_TextChanged);
+			this._displayName.TextChanged += new System.EventHandler(this.OnDisplayName_TextChanged);
 			//
 			// _classLabel
 			//

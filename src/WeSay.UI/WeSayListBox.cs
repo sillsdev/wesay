@@ -176,6 +176,7 @@ namespace WeSay.UI
 		protected override void OnItemSelectionChanged(ListViewItemSelectionChangedEventArgs e)
 		{
 			base.OnItemSelectionChanged(e);
+			_selectedItem = SelectedItem;
 			OnSelectedIndexChanged(new EventArgs());
 		}
 
