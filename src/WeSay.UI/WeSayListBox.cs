@@ -345,18 +345,10 @@ namespace WeSay.UI
 					}
 
 					_selectedItem = SelectedItem;
+					EnsureVisible(value);
 				}
 			}
 		}
-
-		//protected override void OnHandleCreated(EventArgs e)
-		//{
-		//    base.OnHandleCreated(e);
-		//    if (VirtualListSize > 0)
-		//    {
-		//        SelectedIndex = 0;
-		//    }
-		//}
 
 		public object SelectedItem
 		{
