@@ -32,6 +32,8 @@ namespace WeSay.LexicalModel
 		private DateTime _modificationTime;
 		private bool _isBeingDeleted;
 
+		//!!What!! Is this done this way so that we don't end up storing
+		//  the data in the object database?
 		new public class WellKnownProperties : WeSayDataObject.WellKnownProperties
 		{
 			static public string Citation = "citation";

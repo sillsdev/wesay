@@ -205,25 +205,27 @@ namespace WeSay.LexicalTools
 			{
 #if DEBUG
 				throw new ObjectDisposedException(GetType().FullName);
-#endif
+#else
 				Palaso.Reporting.ErrorReport.ReportNonFatalMessage("WeSay ran into a problem in the EntryViewControl (it was called after it was disposed.) If you can make this happen again, please contact the developers.");
+#endif
 			}
 		}
 
 		private void RefreshLexicalEntryPreview()
 		{
 			VerifyNotDisposed();
+#if !DEBUG
 			try
 			{
-				_lexicalEntryPreview.Rtf = RtfRenderer.ToRtf(_record, _currentItemInFocus);
-			}
-			catch (Exception error)
-			{
-#if DEBUG
-				throw error;
 #endif
+				_lexicalEntryPreview.Rtf = RtfRenderer.ToRtf(_record, _currentItemInFocus);
+#if !DEBUG
+			}
+			catch (Exception)
+			{
 				Palaso.Reporting.ErrorReport.ReportNonFatalMessage("There was an error refreshing the entry preview. If you were quiting the program, this is a know issue (WS-554) that we are trying to track down.  If you can make this happen again, please contact the developers.");
 			}
+#endif
 		}
 
 		private void RefreshEntryDetail()

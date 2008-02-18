@@ -10,7 +10,7 @@ namespace WeSay.LexicalTools.Tests
 	public class MissingExampleSentenceFilterTests
 	{
 		private MissingItemFilter _missingExampleSentenceFilter;
-		private string kNameOfSkipTrait = "flag_skip_LexExampleSentence";
+		//private string kNameOfSkipTrait = "flag_skip_LexExampleSentence";
 
 		[SetUp]
 	public void Setup()

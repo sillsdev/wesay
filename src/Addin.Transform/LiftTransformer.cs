@@ -149,7 +149,6 @@ namespace Addin.Transform
 				}
 				return !dlg.ProgressState.Cancel;
 			}
-			return false;
 		}
 
 		/// <summary>
@@ -221,7 +220,7 @@ namespace Addin.Transform
 				}
 				progressState.State = ProgressState.StateValue.Finished;
 			}
-			catch(CancelingException notAnErr)
+			catch(CancelingException) // not an error
 			{
 				progressState.State = ProgressState.StateValue.Finished;
 			}

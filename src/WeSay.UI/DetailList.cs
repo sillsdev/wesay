@@ -208,9 +208,11 @@ namespace WeSay.UI
 
 		public void MoveInsertionPoint(int row)
 		{
+#if (!DEBUG) // not worth crashing over
 			try
 			{
-				if (0 > row || row >= RowCount)
+#endif
+			if (0 > row || row >= RowCount)
 				{
 					throw new ArgumentOutOfRangeException("row",
 														  row,
@@ -239,13 +241,12 @@ namespace WeSay.UI
 				{
 					c.Focus();
 				}
+#if (!DEBUG) // not worth crashing over
 			}
-			catch(Exception error)
+			catch (Exception)
 			{
-#if DEBUG // not worth crashing over
-				throw;
-#endif
 			}
+#endif
 		}
 
 		public void OnBinding_ChangeOfWhichItemIsInFocus(object sender, CurrentItemEventArgs e)

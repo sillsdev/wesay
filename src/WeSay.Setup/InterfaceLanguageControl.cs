@@ -58,7 +58,7 @@ namespace WeSay.Setup
 						_languageName = m.Groups[1].Value.Trim();
 					}
 				}
-				catch(Exception error) //couldn't extract a better name
+				catch(Exception) //couldn't extract a better name
 				{
 				}
 			}
@@ -130,7 +130,7 @@ namespace WeSay.Setup
 					return;
 				}
 			}
-			catch (Exception err)
+			catch (Exception)
 			{
 				Palaso.Reporting.ErrorReport.ReportNonFatalMessage(
 					"There was some problem with choosing that font.  If you just installed it, you might try restarting the program or even your computer.");

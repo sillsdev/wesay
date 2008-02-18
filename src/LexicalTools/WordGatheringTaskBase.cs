@@ -9,17 +9,18 @@ namespace WeSay.LexicalTools
 	public abstract class WordGatheringTaskBase : TaskBase
 	{
 		private readonly WritingSystem _lexicalFormWritingSystem;
-		protected ViewTemplate _viewTemplate;
+		private readonly ViewTemplate _viewTemplate;
 
 		protected WordGatheringTaskBase(string label, string description, bool isPinned,
 										IRecordListManager recordListManager, ViewTemplate viewTemplate)
 			: base(label, description, isPinned, recordListManager)
 		{
-			_viewTemplate = viewTemplate;
-			if (_viewTemplate == null)
+			if (viewTemplate == null)
 			{
 				throw new ArgumentNullException("viewTemplate");
 			}
+
+			_viewTemplate = viewTemplate;
 			Field lexicalFormField = viewTemplate.GetField(Field.FieldNames.EntryLexicalForm.ToString());
 			if (lexicalFormField == null || lexicalFormField.WritingSystems.Count < 1)
 			{
@@ -47,6 +48,11 @@ namespace WeSay.LexicalTools
 				VerifyTaskActivated();
 				return _lexicalFormWritingSystem;
 			}
+		}
+
+		protected ViewTemplate ViewTemplate
+		{
+			get { return this._viewTemplate; }
 		}
 	}
 }

@@ -39,7 +39,7 @@ namespace WeSay.Project
 		private int _commitCount;
 		private Db4oDataSource _datasource;
 		private DateTime _timeOfLastQueryForNewRecords;
-		private bool _didFindDataInCacheNeedingRecovery = false;
+		//private bool _didFindDataInCacheNeedingRecovery = false;
 
 		event EventHandler Updating;
 
@@ -192,7 +192,6 @@ namespace WeSay.Project
 				catch (Exception e)
 				{
 					throw new ApplicationException("Could not finish updating LIFT dictionary file.", e);
-					return false;
 				}
 				finally
 				{
@@ -304,17 +303,17 @@ namespace WeSay.Project
 						"It appears that WeSay did not exit normally last time.  WeSay will now attempt to recover the {0} records which were not saved.",
 						records.Count);
 					DoLiftUpdateNow(false);
-					_didFindDataInCacheNeedingRecovery = true;
+//                    _didFindDataInCacheNeedingRecovery = true;
 					Palaso.Reporting.ErrorReport.ReportNonFatalMessage("Your work was successfully recovered.");
 				}
-				catch (Exception e)
+				catch (Exception)
 				{
 					Palaso.Reporting.ErrorReport.ReportNonFatalMessage(
 						"Sorry, WeSay was unable to recover some of your work.");
 					Project.WeSayWordsProject.Project.InvalidateCacheSilently();
 				}
 			}
-			catch (Exception e)
+			catch (Exception)
 			{
 				Palaso.Reporting.ErrorReport.ReportNonFatalMessage(
 					"WeSay had a problem reading the cache.  It will now be rebuilt");

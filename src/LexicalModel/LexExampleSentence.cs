@@ -8,7 +8,8 @@ namespace WeSay.LexicalModel
 		private MultiText _sentence;
 		private MultiText _translation;
 
-
+		//!!What!! Is this done this way so that we don't end up storing
+		//  the data in the object database?
 		new public class WellKnownProperties : WeSayDataObject.WellKnownProperties
 		{
 			static public string Source = "source";

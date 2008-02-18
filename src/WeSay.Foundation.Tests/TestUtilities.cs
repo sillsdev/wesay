@@ -20,7 +20,7 @@ namespace WeSay.Foundation.Tests
 						Directory.Delete(folder, true);
 						return;
 					}
-					catch (Exception e)
+					catch (Exception)
 					{
 					}
 					Thread.Sleep(100);
@@ -39,7 +39,7 @@ namespace WeSay.Foundation.Tests
 					Thread.Sleep(1000);
 					Directory.Delete(folder, true);
 				}
-				catch (Exception e2)
+				catch (Exception)
 				{
 				}
 

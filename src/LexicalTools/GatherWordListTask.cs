@@ -17,7 +17,6 @@ namespace WeSay.LexicalTools
 		private GatherWordListControl _gatherControl;
 		private List<string> _words;
 		private int _currentWordIndex = 0;
-		private ViewTemplate _viewTemplate;
 		private string _writingSystemIdForWordListWords;
 	   // private bool _suspendNotificationOfNavigation=false;
 
@@ -45,7 +44,6 @@ namespace WeSay.LexicalTools
 			_wordListFileName = wordListFileName;
 			_words = null;
 			_writingSystemIdForWordListWords = writingSystemIdForWordListLanguage;
-			_viewTemplate = viewTemplate;
 		}
 
 		private void LoadWordList()
@@ -107,7 +105,7 @@ namespace WeSay.LexicalTools
 			{
 				if (_gatherControl==null)
 			   {
-				   _gatherControl = new GatherWordListControl(this, _viewTemplate);
+				   _gatherControl = new GatherWordListControl(this, ViewTemplate);
 			   }
 			   return _gatherControl;
 			}

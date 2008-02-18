@@ -79,6 +79,7 @@ namespace WeSay.LexicalModel.Db4o_Specific
 		/// order to create the test database.
 		/// </summary>
 		/// <param name="container"></param>
+		[CLSCompliant(false)]
 		public static void Deinitialize(IObjectContainer container)
 		{
 			Debug.Assert(_singleton._container == container);

@@ -21,7 +21,7 @@ namespace WeSay.Project
 		private string _className = string.Empty;
 		private string _dataTypeName;
 		private bool _enabled;
-		private string _configurationName;
+		//private string _configurationName;
 
 		private bool _enabledNotSet = true;
 

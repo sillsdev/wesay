@@ -361,7 +361,7 @@ namespace WeSay.Project
 					{
 						Directory.Delete(sourceDir);
 					}
-					catch(Exception err)
+					catch(Exception)
 					{
 						//no big deal if other files prevent deleting it
 					}
@@ -1149,7 +1149,7 @@ namespace WeSay.Project
 					succeeded = true;
 				}
 
-				catch (IOException e)
+				catch (IOException)
 				{
 					//nb: we don't want to provide an option to cancel.  Better to crash than cancel.
 					Palaso.Reporting.ErrorReport.ReportNonFatalMessage(Application.ProductName+" was unable to get at the dictionary file to update it.  Please ensure that WeSay isn't running with it open, then click the 'OK' button below. If you cannot figure out what program has the LIFT file open, the best choice is to kill WeSay Configuration Tool using the Task Manager (ctrl+alt+del), so that the configuration does not fall out of sync with the LIFT file.");

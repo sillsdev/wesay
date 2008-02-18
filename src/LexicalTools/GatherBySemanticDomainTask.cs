@@ -674,10 +674,10 @@ namespace WeSay.LexicalTools
 				try
 				{
 					ws =
-						_viewTemplate.GetField(
+						ViewTemplate.GetField(
 							LexSense.WellKnownProperties.SemanticDomainsDdp4).WritingSystemIds[0];
 				}
-				catch (Exception e)
+				catch (Exception)
 				{
 					if (!_alreadyReportedWSLookupFailure)
 					{

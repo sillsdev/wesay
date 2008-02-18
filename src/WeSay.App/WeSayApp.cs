@@ -52,7 +52,7 @@ namespace WeSay.App
 			{
 				Application.SetCompatibleTextRenderingDefault(false);
 			}
-			catch (Exception swallow)
+			catch (Exception) //swallow
 			{
 				//this fails in some test scenarios; perhaps the unit testing framework is leaving us in
 				//the same appdomain, and that remembers that we called this once before?

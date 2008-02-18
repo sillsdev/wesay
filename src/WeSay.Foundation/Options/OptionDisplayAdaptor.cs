@@ -15,6 +15,7 @@ namespace WeSay.Foundation.Options
 		{
 			this._allOptions = allOptions;
 			this._preferredWritingSystemId = preferredWritingSystemId;
+			this._toolTipAdaptor = null;
 		}
 
 		#region IDisplayStringAdaptor Members
