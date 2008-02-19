@@ -201,7 +201,6 @@ namespace WeSay.LexicalTools
 			_recordsListBox.DataSource = _records;
 			_recordsListBox.RetrieveVirtualItem += OnRetrieveVirtualItemEvent;
 			_recordsListBox.EndUpdate();
-			_recordsListBox.ShowItemToolTips = true;
 
 			Control_EntryDetailPanel.DataSource = CurrentRecord;
 			_recordsListBox.WritingSystem = _listWritingSystem;

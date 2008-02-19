@@ -182,22 +182,43 @@ namespace WeSay.UI
 
 		#region extend hot click area to simulate list box behavior
 		// see comment on OnMouseUp
-		private MouseEventArgs _clickSelecting;
+		private bool _clickSelecting;
+		private Point _currentMouseLocation;
+
 		protected override void OnClick(EventArgs e)
 		{
-			_clickSelecting = null;
+			_clickSelecting = false;
 			base.OnClick(e);
 		}
 
 		protected override void OnMouseDown(MouseEventArgs e)
 		{
-			_clickSelecting = e;
+			_clickSelecting = true;
+			_currentMouseLocation = e.Location;
 			base.OnMouseDown(e);
 		}
 		protected override void OnMouseMove(MouseEventArgs e)
 		{
-			_clickSelecting = null;
+			_clickSelecting = false;
+			_currentMouseLocation = e.Location;
 			base.OnMouseMove(e);
+		}
+
+		// we set the tool tip explicitly due to a bug with
+		// MS implementation of ListView when Virtual
+		// and ShowItemTooltips
+		protected override void OnMouseHover(EventArgs e)
+		{
+			ListViewItem item = GetItemAt(0, _currentMouseLocation.Y);
+			if(item != null)
+			{
+				tooltip.Show(item.ToolTipText, this, item.Position, int.MaxValue);
+			}
+			else
+			{
+				tooltip.SetToolTip(this, string.Empty);
+			}
+			base.OnMouseHover(e);
 		}
 
 		// By default this control will turn off the selection when
@@ -208,16 +229,17 @@ namespace WeSay.UI
 		// the coordinates returned now don't reflect the user's intentions
 		protected override void OnMouseUp(MouseEventArgs e)
 		{
-			base.OnMouseUp(e);
-			if (SimulateListBox && _clickSelecting!= null)
+			if (SimulateListBox && _clickSelecting)
 			{
-				ListViewItem item = GetItemAt(0, _clickSelecting.Y);
+				ListViewItem item = GetItemAt(0, _currentMouseLocation.Y);
 				if (item != null)
 				{
 					SelectedIndex = item.Index;
 				}
 			}
-			_clickSelecting = null;
+			_clickSelecting = false;
+			_currentMouseLocation = e.Location;
+			base.OnMouseUp(e);
 		}
 		#endregion
 
@@ -237,8 +259,9 @@ namespace WeSay.UI
 						new Rectangle(e.Bounds.X, e.Bounds.Y, header.Width, e.Bounds.Height);
 
 				Brush backgroundBrush;
+				bool backgroundBrushNeedsDisposal = false;
 				Color textColor;
-				if (e.ItemIndex == SelectedIndex && (!this.HideSelection || this.Focused))
+				if (SelectedIndices.Contains(e.ItemIndex) && (!HideSelection || Focused))
 				{
 					backgroundBrush = SystemBrushes.Highlight;
 					textColor = SystemColors.HighlightText;
@@ -246,6 +269,7 @@ namespace WeSay.UI
 				else
 				{
 					backgroundBrush = new SolidBrush(e.Item.BackColor);
+					backgroundBrushNeedsDisposal = true;
 					textColor = e.Item.ForeColor;
 				}
 
@@ -258,8 +282,7 @@ namespace WeSay.UI
 				}
 				TextRenderer.DrawText(e.Graphics, e.Item.Text, e.Item.Font, bounds, textColor, flags);
 
-				if (e.ItemIndex == SelectedIndex) {}
-				else
+				if (backgroundBrushNeedsDisposal)
 				{
 					backgroundBrush.Dispose();
 				}
@@ -360,6 +383,39 @@ namespace WeSay.UI
 					return null;
 				}
 				return _dataSource[SelectedIndex];
+			}
+		}
+
+		private void DrawToolTip(object sender, DrawToolTipEventArgs e)
+		{
+			e.DrawBackground();
+			e.DrawBorder();
+			TextFormatFlags flags = TextFormatFlags.Default | TextFormatFlags.Left | TextFormatFlags.VerticalCenter;
+			if (_writingSystem != null && WritingSystem.RightToLeft)
+			{
+				flags |= TextFormatFlags.RightToLeft;
+			}
+			TextRenderer.DrawText(e.Graphics, e.ToolTipText, _writingSystem.Font, e.Bounds, tooltip.ForeColor, flags);
+		}
+
+		private void ToolTipPopup(object sender, PopupEventArgs e)
+		{
+			TextFormatFlags flags = TextFormatFlags.Default | TextFormatFlags.Left
+				;
+			if (_writingSystem != null && WritingSystem.RightToLeft)
+			{
+				flags |= TextFormatFlags.RightToLeft;
+			}
+			int maxWidth = Screen.GetWorkingArea(this).Width;
+			using (Graphics g = Graphics.FromHwnd(Handle))
+			{
+				e.ToolTipSize =
+					   Size.Add(TextRenderer.MeasureText(g,
+												 tooltip.GetToolTip(this),
+												 _writingSystem.Font,
+												 new Size(maxWidth, int.MaxValue),
+												 flags),
+												 new Size(0,5));
 			}
 		}
 	}

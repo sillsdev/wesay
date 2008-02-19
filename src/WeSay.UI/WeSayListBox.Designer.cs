@@ -33,10 +33,19 @@ namespace WeSay.UI
 		{
 			header = new ColumnHeader();
 			components = new System.ComponentModel.Container();
+			tooltip = new ToolTip(components);
+
+			tooltip.SetToolTip(this, string.Empty);
+			tooltip.OwnerDraw = true;
+			tooltip.Draw += DrawToolTip;
+			tooltip.Popup += ToolTipPopup;
 			this.DoubleBuffered = true;
 			this.VirtualMode = true;
 			this.MultiSelect = false;
 			this.HideSelection = false;
+			this.AutoArrange = false;
+			this.LabelWrap = false;
+			this.UseCompatibleStateImageBehavior = false;
 
 			// Set the DrawMode property to draw fixed sized items.
 			this.OwnerDraw = true;
@@ -48,5 +57,7 @@ namespace WeSay.UI
 
 		#endregion
 		ColumnHeader header;
+		ToolTip tooltip;
+
 	}
 }
