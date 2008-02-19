@@ -46,6 +46,7 @@ namespace WeSay.App
 		}
 		public WeSayApp(string[] args)
 		{
+		   // Palaso.Services.ForClients.IPCUtils.IsWcfAvailable = false;
 			Application.EnableVisualStyles();
 			//leave this at the top:
 			try
@@ -172,7 +173,7 @@ namespace WeSay.App
 			StartCacheWatchingStuff();
 
 
-			if (Environment.OSVersion.Platform != PlatformID.Unix)
+			if (IPCUtils.IsWcfAvailable)
 			{
 				Palaso.Reporting.Logger.WriteMinorEvent("Starting Dictionary Services at {0}", DictionaryServiceAddress);
 

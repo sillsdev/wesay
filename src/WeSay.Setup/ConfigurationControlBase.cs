@@ -12,6 +12,11 @@ namespace WeSay.Setup
 			SetStyle(ControlStyles.ResizeRedraw, true);
 		}
 
+		public virtual void PreLoad()
+		{
+		}
+
+
 		//design-time
 		public ConfigurationControlBase()
 		{

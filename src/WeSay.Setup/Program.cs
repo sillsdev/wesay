@@ -35,8 +35,19 @@ namespace WeSay.Setup
 
 			Application.Run(new AdminWindow(args));
 
-			Logger.WriteEvent("App Exiting Normally.");
-			Logger.ShutDown();
+			try // we don't know what caused ws-596, but it isn't worth crashing over
+			{
+				Logger.WriteEvent("App Exiting Normally.");
+				Logger.ShutDown();
+			}
+#pragma warning disable EmptyGeneralCatchClause
+			catch (Exception err)
+#pragma warning restore EmptyGeneralCatchClause
+			{
+#if DEBUG
+				throw err;
+#endif
+			}
 		}
 
 		private static void SetupErrorHandling()

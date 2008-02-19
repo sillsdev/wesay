@@ -38,15 +38,6 @@ namespace WeSay.Setup
 			_chooseFontButton = new System.Windows.Forms.Button();
 			this.SuspendLayout();
 			//
-			// _languageCombo
-			//
-			this._languageCombo.FormattingEnabled = true;
-			this._languageCombo.Location = new System.Drawing.Point(119, 3);
-			this._languageCombo.Name = "_languageCombo";
-			this._languageCombo.Size = new System.Drawing.Size(229, 21);
-			this._languageCombo.TabIndex = 0;
-			this.toolTip1.SetToolTip(this._languageCombo, "The language (e.g., national language) to use for labels, buttons, etc.");
-			//
 			// _chooseFontButton
 			//
 			_chooseFontButton.Location = new System.Drawing.Point(354, 37);
@@ -56,6 +47,16 @@ namespace WeSay.Setup
 			_chooseFontButton.Text = "...";
 			_chooseFontButton.UseVisualStyleBackColor = true;
 			_chooseFontButton.Click += new System.EventHandler(this.OnChooseFont);
+			//
+			// _languageCombo
+			//
+			this._languageCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this._languageCombo.FormattingEnabled = true;
+			this._languageCombo.Location = new System.Drawing.Point(119, 3);
+			this._languageCombo.Name = "_languageCombo";
+			this._languageCombo.Size = new System.Drawing.Size(229, 21);
+			this._languageCombo.TabIndex = 0;
+			this.toolTip1.SetToolTip(this._languageCombo, "The language (e.g., national language) to use for labels, buttons, etc.");
 			//
 			// _fontInfoDisplay
 			//

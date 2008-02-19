@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -6,17 +7,34 @@ namespace WeSay.Setup
 {
 	public partial class SettingsControl : UserControl
 	{
+		private List<ConfigurationControlBase> _areaControls;
 		public SettingsControl()
 		{
+			_areaControls = new List<ConfigurationControlBase>();
+
 			InitializeComponent();
 			_tasksButton.Tag = new TaskListControl();
+			_areaControls.Add((ConfigurationControlBase) _tasksButton.Tag);
+
 			_writingSystemButton.Tag = new WritingSystemSetup();
+			_areaControls.Add((ConfigurationControlBase)_writingSystemButton.Tag);
+
 			_fieldsButton.Tag = new FieldsControl();
+			_areaControls.Add((ConfigurationControlBase)_fieldsButton.Tag);
+
 			_interfaceLanguageButton.Tag = new InterfaceLanguageControl();
+			_areaControls.Add((ConfigurationControlBase)_interfaceLanguageButton.Tag);
+
 			_actionsButton.Tag = new ActionsControl();
+			_areaControls.Add((ConfigurationControlBase)_actionsButton.Tag);
+
 			_backupButton.Tag = new BackupPlanControl();
+			_areaControls.Add((ConfigurationControlBase)_backupButton.Tag);
+
 			_optionsListButton.Tag = new OptionListControl();
-			SetStyle(ControlStyles.ResizeRedraw,true);//makes OnPaint work
+			_areaControls.Add((ConfigurationControlBase)_optionsListButton.Tag);
+
+			SetStyle(ControlStyles.ResizeRedraw, true);//makes OnPaint work
 		}
 
 		/*something left over from this class's predaccesor, which may be useful*/
@@ -84,6 +102,10 @@ namespace WeSay.Setup
 
 		private void OnLoad(object sender, EventArgs e)
 		{
+			foreach (ConfigurationControlBase control in _areaControls)
+			{
+				control.PreLoad();
+			}
 			OnAreaButton_Click(_tasksButton, null);
 		}
 

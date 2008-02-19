@@ -26,12 +26,31 @@ namespace WeSay.Setup
 			LoadPoFilesIntoCombo(Project.WeSayWordsProject.Project.PathToWeSaySpecificFilesDirectoryInProject);
 			LoadPoFilesIntoCombo(Project.WeSayWordsProject.ApplicationCommonDirectory);
 
-			WeSayWordsProject.Project.EditorsSaveNow += Project_HackedEditorsSaveNow;
 			UpdateFontDisplay();
+			_languageCombo.SelectedIndexChanged += new EventHandler(_languageCombo_SelectedIndexChanged);
 	   }
+
+		void _languageCombo_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			if (_languageCombo.SelectedItem != null)
+			{
+				UILanguage = ((PoProxy) _languageCombo.SelectedItem).fileNameWithoutExtension;
+			}
+		}
+
+		public override void PreLoad()
+		{
+			base.PreLoad();
+			WeSayWordsProject.Project.EditorsSaveNow += Project_HackedEditorsSaveNow;
+
+		}
 
 		private void LoadPoFilesIntoCombo(string directory)
 		{
+			_languageCombo.Items.Clear();
+			EnglishPoProxy englishPoProxy = new EnglishPoProxy();
+			_languageCombo.Items.Add(englishPoProxy);
+			_languageCombo.SelectedItem = englishPoProxy;
 			foreach (string file in Directory.GetFiles(directory,"*.po"))
 			{
 				PoProxy selector = new PoProxy(file);
@@ -45,6 +64,10 @@ namespace WeSay.Setup
 
 		private class PoProxy
 		{
+			public PoProxy()
+			{
+			}
+
 			public PoProxy(string path)
 			{
 				fileNameWithoutExtension = Path.GetFileNameWithoutExtension(path);
@@ -64,10 +87,18 @@ namespace WeSay.Setup
 			}
 
 			public string fileNameWithoutExtension;
-			private string _languageName;
+			protected string _languageName;
 			public override string ToString()
 			{
 				return _languageName;
+			}
+		}
+		private class EnglishPoProxy : PoProxy
+		{
+			public EnglishPoProxy()
+			{
+				_languageName = "English (Default)";
+				fileNameWithoutExtension = string.Empty;
 			}
 		}
 
@@ -92,11 +123,19 @@ namespace WeSay.Setup
 		{
 			get
 			{
-				if (_languageCombo.SelectedItem == null)
+				return Project.WeSayWordsProject.Project.StringCatalogSelector;
+//                if (_languageCombo.SelectedItem == null)
+//                {
+//                    return String.Empty;
+//                }
+//                return ((PoProxy) _languageCombo.SelectedItem).fileNameWithoutExtension;
+			}
+			set
+			{
+				if(_languageCombo.SelectedItem !=null)
 				{
-					return String.Empty;
+					Project.WeSayWordsProject.Project.StringCatalogSelector = value;
 				}
-				return ((PoProxy) _languageCombo.SelectedItem).fileNameWithoutExtension;
 			}
 		}
 
@@ -150,4 +189,6 @@ namespace WeSay.Setup
 		}
 
 	}
+
+
 }
