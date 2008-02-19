@@ -26,7 +26,7 @@ namespace WeSay.LexicalTools
 
 			rtf.Append(@"\b ");
 			rtf.Append(RenderField(entry.LexicalForm, currentItem, 2, null));
-			rtf.Append(@"\b0");
+			rtf.Append(@"\b0  ");
 
 			int senseNumber = 1;
 			foreach (LexSense sense in entry.Senses)
