@@ -379,7 +379,7 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 
 			  <ComponentGroupRef Id ="defaultFiles"/>
 			  <ComponentGroupRef Id ="ddpStuff"/>
-		  <!--    <ComponentGroupRef Id ="biatahSample"/>-->
+			  <ComponentGroupRef Id ="biatahSample"/>
 			  <ComponentGroupRef Id ="PoFiles"/>
 			</Feature>
 			<Media Id="1" Cabinet="product.cab" EmbedCab="yes" />
