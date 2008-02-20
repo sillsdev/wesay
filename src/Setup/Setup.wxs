@@ -2,8 +2,8 @@
 <!-- These variables define the Windows Installer product version, product code and upgrade code. They   -->
 <!-- will be used later on in this file.                                                                 -->
 <?define Property_ProductVersion = "0.0.3" ?>
-<?define Property_ProductCode = "*" ?> <!--- REVIEW. Should that be a guid? -->
-<?define Property_UpgradeCode = "{6B6778A7-D3AD-4de8-BE95-C8956665B85A}" ?>
+<?define Property_ProductCode = "FEE455D7-E216-4C49-B82B-919D753F3A98" ?> <!--- REVIEW. Should that be a guid? Yes, it should! -->
+<?define Property_UpgradeCode = "6B6778A7-D3AD-4de8-BE95-C8956665B85A" ?>
 
 
 	<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
@@ -12,11 +12,13 @@
 				   Version="$(var.Property_ProductVersion)" Manufacturer="SIL"
 				   UpgradeCode="$(var.Property_UpgradeCode)">
 
-		  <Package  Compressed="yes" InstallerVersion="200" />
+		  <Package Id="????????-????-????-????-????????????" Compressed="yes" InstallerVersion="200" />
 
 		  <Upgrade Id ="$(var.Property_UpgradeCode)" >
-		  <UpgradeVersion Minimum ="$(var.Property_ProductVersion)" OnlyDetect ="yes" Property ="NEWVERSIONDETECTED" />
-		  <UpgradeVersion Minimum ="0.0.0" IncludeMinimum ="yes" Maximum ="$(var.Property_ProductVersion)" IncludeMaximum ="no" Property ="OLDERVERSIONBEINGUPGRADED" />
+		  <UpgradeVersion Minimum ="$(var.Property_ProductVersion)" IncludeMinimum="no" OnlyDetect ="yes" Property ="NEWVERSIONDETECTED" />
+		  <Property Id="NEWVERSIONDETECTED" Secure="yes" />
+		  <UpgradeVersion Minimum ="0.0.0" IncludeMinimum ="yes" Maximum ="$(var.Property_ProductVersion)" IncludeMaximum ="no" Property ="OLDERVERSIONBEINGUPGRADED" MigrateFeatures="yes" />
+		  <Property Id="OLDERVERSIONBEINGUPGRADED" Secure="yes" />
 		  </Upgrade >
 
 
@@ -377,7 +379,7 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 
 			  <ComponentGroupRef Id ="defaultFiles"/>
 			  <ComponentGroupRef Id ="ddpStuff"/>
-			  <ComponentGroupRef Id ="biatahSample"/>
+		  <!--    <ComponentGroupRef Id ="biatahSample"/>-->
 			  <ComponentGroupRef Id ="PoFiles"/>
 			</Feature>
 			<Media Id="1" Cabinet="product.cab" EmbedCab="yes" />

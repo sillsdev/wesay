@@ -75,7 +75,10 @@ namespace WeSay.CommonTools
 
 			//center our count
 			float centeringNudge = (globalCountWidth - countWidth)/2;
-			e.Graphics.DrawString(_count.ToString(), Font, Brushes.Black,
+			string countString = _count.ToString();
+			if (_count < 0)
+				countString = "?";
+			e.Graphics.DrawString(countString, Font, Brushes.Black,
 								  ClientRectangle.Left + paperDistanceFromLeftEdge + paperWidth + 3 + centeringNudge,
 								  ClientRectangle.Top + 3);
 		}
