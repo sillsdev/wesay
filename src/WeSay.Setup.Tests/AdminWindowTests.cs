@@ -127,7 +127,7 @@ namespace WeSay.Admin.Tests
 			_window.CreateAndOpenProject(_projectFolder);
 			string path = WeSay.Project.WeSayWordsProject.Project.PathToConfigFile;
 			XPathDocument doc = new XPathDocument(path);
-			Assert.IsNotNull(doc.CreateNavigator().SelectSingleNode("configuration[@version='1']"));
+			Assert.IsNotNull(doc.CreateNavigator().SelectSingleNode("configuration[@version='2']"));
 			Assert.IsNotNull(doc.CreateNavigator().SelectSingleNode("configuration/tasks"));
 			Assert.IsNotNull(doc.CreateNavigator().SelectSingleNode("configuration/components"));
 		}
@@ -141,14 +141,14 @@ namespace WeSay.Admin.Tests
 		}
 
 		[Test]
-		public void NewProjectShowsTwoWritingSystems()
+		public void NewProjectShowsMultipleWritingSystems()
 		{
 			_window.CreateAndOpenProject(_projectFolder);
 
 			ClickToolStripButton("_writingSystemButton");
 			//GotoProjectTab("_writingSystemPage");
 			ListBoxTester c = new ListBoxTester("_wsListBox");
-			Assert.AreEqual(2, c.Properties.Items.Count);
+			Assert.Greater(c.Properties.Items.Count, 2);
 		}
 
 //        private static void GotoProjectTab(string projectTabName)

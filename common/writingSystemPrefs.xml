@@ -13,6 +13,42 @@
 	  <Id>en</Id>
 	  <Abbreviation>eng</Abbreviation>
 	</WritingSystem>
+
+  <WritingSystem>
+	<FontName>Arial</FontName>
+	<FontSize>12</FontSize>
+	<Id>fr</Id>
+	<Abbreviation>fr</Abbreviation>
+  </WritingSystem>
+
+	<WritingSystem>
+	  <FontName>Arial</FontName>
+	  <FontSize>12</FontSize>
+	  <Id>tpi</Id>
+	  <Abbreviation>tp</Abbreviation>
+	</WritingSystem>
+
+  <WritingSystem>
+	<FontName>Arial</FontName>
+	<FontSize>12</FontSize>
+	<Id>id</Id>
+	<Abbreviation>ind</Abbreviation>
+  </WritingSystem>
+
+
+  <WritingSystem>
+	<FontName>Arial</FontName>
+	<FontSize>12</FontSize>
+	<Id>th</Id>
+	<Abbreviation>th</Abbreviation>
+  </WritingSystem>
+  <WritingSystem>
+	<FontName>Arial</FontName>
+	<FontSize>12</FontSize>
+	<Id>es</Id>
+	<Abbreviation>span</Abbreviation>
+  </WritingSystem>
   </members>
+
   <VernacularWritingSystemDefaultId>v</VernacularWritingSystemDefaultId>
 </WritingSystemCollection>

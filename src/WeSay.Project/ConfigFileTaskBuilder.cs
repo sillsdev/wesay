@@ -99,6 +99,11 @@ namespace WeSay.App
 					else
 					{
 						message = e.Message;
+						while(e.InnerException!=null) //the user will see this, so lets dive down to the actual cause
+						{
+							e = e.InnerException;
+							message = e.Message;
+						}
 					}
 					iTask = new FailedLoadTask(id, message);
 				}

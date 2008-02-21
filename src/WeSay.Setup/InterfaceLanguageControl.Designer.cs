@@ -55,6 +55,7 @@ namespace WeSay.Setup
 			this._languageCombo.Location = new System.Drawing.Point(119, 3);
 			this._languageCombo.Name = "_languageCombo";
 			this._languageCombo.Size = new System.Drawing.Size(229, 21);
+			this._languageCombo.Sorted = true;
 			this._languageCombo.TabIndex = 0;
 			this.toolTip1.SetToolTip(this._languageCombo, "The language (e.g., national language) to use for labels, buttons, etc.");
 			//

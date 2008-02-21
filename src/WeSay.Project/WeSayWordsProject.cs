@@ -414,45 +414,56 @@ namespace WeSay.Project
 		{
 			Logger.WriteEvent("Checking if migration of configuration is needed.");
 
+			bool didMigrate = false;
+
 			if (configurationDoc.CreateNavigator().SelectSingleNode("configuration") == null)
 			{
-				Logger.WriteEvent("Migrating Configuration File from version 0 to 1.");
+				MigrateUsingXSLT(configurationDoc, "MigrateConfig0To1.xsl", targetPath);
+				configurationDoc = new XPathDocument(targetPath);
+				didMigrate = true;
+			}
+			if (configurationDoc.CreateNavigator().SelectSingleNode("configuration[@version='1']") != null)
+			{
+				MigrateUsingXSLT(configurationDoc, "MigrateConfig1To2.xsl", targetPath) ;
+				configurationDoc = new XPathDocument(targetPath);
+				didMigrate = true;
+			}
+			return didMigrate;
+		}
 
-				//ResourceManager mgr = new System.Resources.ResourceManager(typeof(WeSay.Project.WeSayWordsProject));
-
-				using (
-						Stream stream =
-								Assembly.GetExecutingAssembly().GetManifestResourceStream(typeof (WeSayWordsProject),
-																						  "MigrateConfig0To1.xsl"))
+		private static void MigrateUsingXSLT(XPathDocument configurationDoc, string xsltName, string targetPath)
+		{
+			Logger.WriteEvent("Migrating Configuration File {0}", xsltName);
+			using (
+				Stream stream =
+					Assembly.GetExecutingAssembly().GetManifestResourceStream(typeof (WeSayWordsProject),
+																			  xsltName))
+			{
+				XslCompiledTransform transform = new XslCompiledTransform();
+				using (XmlReader reader = XmlReader.Create(stream))
 				{
-					XslCompiledTransform transform = new XslCompiledTransform();
-					using (XmlReader reader = XmlReader.Create(stream))
+					transform.Load(reader);
+					string tempPath = Path.GetTempFileName();
+					using (XmlWriter writer = XmlWriter.Create(tempPath))
 					{
-						transform.Load(reader);
-						string tempPath = Path.GetTempFileName();
-						using (XmlWriter writer = XmlWriter.Create(tempPath))
+						transform.Transform(configurationDoc, writer);
+						TempFileCollection tempfiles = transform.TemporaryFiles;
+						if (tempfiles != null)  // tempfiles will be null when debugging is not enabled
 						{
-							transform.Transform(configurationDoc, writer);
-							TempFileCollection tempfiles = transform.TemporaryFiles;
-							if (tempfiles != null)  // tempfiles will be null when debugging is not enabled
-							{
-								tempfiles.Delete();
-							}
-							writer.Close();
+							tempfiles.Delete();
 						}
-						string s = targetPath + ".tmp";
-						if (File.Exists(s))
-						{
-							File.Delete(s);
-						}
-						File.Move(targetPath, s);
-						File.Move(tempPath, targetPath);
-						File.Delete(s);
-						return true;
+						writer.Close();
 					}
+					string s = targetPath + ".tmp";
+					if (File.Exists(s))
+					{
+						File.Delete(s);
+					}
+					File.Move(targetPath, s);
+					File.Move(tempPath, targetPath);
+					File.Delete(s);
 				}
 			}
-			return false;
 		}
 
 //        public void LoadFromConfigFilePath(string path)
@@ -1037,14 +1048,14 @@ namespace WeSay.Project
 				if (field.DataTypeName == Field.BuiltInDataType.Option.ToString()
 					|| field.DataTypeName == Field.BuiltInDataType.OptionCollection.ToString())
 				{
-					GrepLift(PathToLiftFile,
+					GrepFile(PathToLiftFile,
 							 string.Format("name\\s*=\\s*[\"']{0}[\"']", oldName),
 							 string.Format("name=\"{0}\"", field.FieldName));
 				}
 				else
 				{
 					//<field>s
-					GrepLift(PathToLiftFile,
+					GrepFile(PathToLiftFile,
 							 string.Format("tag\\s*=\\s*[\"']{0}[\"']", oldName),
 							 string.Format("tag=\"{0}\"", field.FieldName));
 				}
@@ -1062,7 +1073,7 @@ namespace WeSay.Project
 			if (File.Exists(PathToLiftFile))
 			{
 				//todo: expand the regular expression here to account for all reasonable patterns
-				GrepLift(PathToLiftFile,
+				GrepFile(PathToLiftFile,
 						 string.Format("lang\\s*=\\s*[\"']{0}[\"']", Regex.Escape(oldId)),
 						 string.Format("lang=\"{0}\"", ws.Id));
 			}
@@ -1078,7 +1089,7 @@ namespace WeSay.Project
 			//this worked but it just gets overwritten when Setup closes
 			/*if (File.Exists(PathToConfigFile))
 			{
-				GrepLift(PathToConfigFile,
+				GrepFile(PathToConfigFile,
 						 string.Format("wordListWritingSystemId>\\s*{0}\\s*<", oldId),
 						 string.Format("wordListWritingSystemId>{0}<", ws.Id));
 			}
@@ -1113,7 +1124,7 @@ namespace WeSay.Project
 		}
 
 
-		private static void GrepLift(string inputPath, string pattern, string replaceWith)
+		private static void GrepFile(string inputPath, string pattern, string replaceWith)
 		{
 			Regex regex = new Regex(pattern, RegexOptions.Compiled);
 			string tempPath = inputPath + ".tmp";

@@ -45,6 +45,8 @@ namespace WeSay.Project
 			set { _id = value; }
 		}
 
+
+
 		///<summary>
 		///Gets the field with the specified name.
 		///</summary>
@@ -146,6 +148,16 @@ namespace WeSay.Project
 			{
 				throw new ArgumentNullException();
 			}
+
+// handled by xslt           //in jan 2008 we changed this field name, moving it in line with the lift spec
+//            const string oldGlossFieldName = "SenseGloss";
+//            Field userGlossField = usersTemplate.GetField(oldGlossFieldName);
+//            if (userGlossField != null)
+//            {
+//                userGlossField.FieldName = LexSense.WellKnownProperties.Gloss;
+//            }
+
+
 			foreach (Field masterField in factoryTemplate)
 			{
 				Field userField = usersTemplate.GetField(masterField.FieldName);
@@ -176,6 +188,7 @@ namespace WeSay.Project
 			//then, when we fixed it to "note", they had two note fields!
 			//this is to clean up the mess.
 			RemoveByFieldName(this, "Note");
+			RemoveDuplicateGloss();
 
 			//In Jan 2008 (still in version 1 Preview 3, just a hand-full of users)
 			//we switch from "meaning" being the gloss, to the definition, making Defintion
@@ -183,7 +196,6 @@ namespace WeSay.Project
 
 			Field def = GetField(LexSense.WellKnownProperties.Definition);
 			Field gloss = GetField(LexSense.WellKnownProperties.Gloss);
-			gloss.FieldName = LexSense.WellKnownProperties.Gloss; // switch from "SenseGloss" to just "gloss"
 
 			//this is an upgrade situation
 			if (!def.Enabled || def.Visibility!=CommonEnumerations.VisibilitySetting.Visible)
@@ -210,6 +222,31 @@ namespace WeSay.Project
 			MoveToFirstInClass(GetField(Field.FieldNames.ExampleSentence.ToString()));
 		}
 
+		/// <summary>
+		/// there was a migration bug in Jan 2008 that gave Kim Blewett an extra gloss. Others may get that too, and the
+		/// ui won't let them delete this well-known field
+		/// </summary>
+		public void RemoveDuplicateGloss()
+		{
+			bool foundAlready = false;
+			Field doomed = null;
+			foreach (Field field in Fields)
+			{
+				if (field.FieldName == LexSense.WellKnownProperties.Gloss)
+				{
+					if (foundAlready)
+					{
+						doomed = field;
+					}
+
+					foundAlready = true;
+				}
+			}
+			if (doomed != null)
+			{
+				Fields.Remove(doomed);
+			}
+		}
 		private void MoveToFirstInClass(Field field)
 		{
 			while (!IsFieldFirstInClass(field))

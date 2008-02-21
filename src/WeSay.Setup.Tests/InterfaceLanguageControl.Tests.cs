@@ -126,7 +126,7 @@ namespace WeSay.Setup.Tests
 				//now reopen, close before going to ui language tab
 				OpenExisting(path);
 				t = GoToTabAndGetLanguageCombo();
-			   t.Properties.SelectedItem = t.Properties.Items[0];
+				t.Properties.SelectedItem = FindDefaultEnglishItem(t.Properties);
 				CloseApp();
 
 				//now reopen, this time go to uilanguage
@@ -139,6 +139,18 @@ namespace WeSay.Setup.Tests
 				CloseApp();
 				WeSay.Foundation.Tests.TestUtilities.DeleteFolderThatMayBeInUse(path);
 			}
+		}
+
+		private object FindDefaultEnglishItem(ComboBox combo)
+		{
+			foreach (object o in combo.Items)
+			{
+				if(o.ToString() == "English (Default)")
+				{
+					return o;
+				}
+			}
+				return null;
 		}
 
 		private void CloseApp()

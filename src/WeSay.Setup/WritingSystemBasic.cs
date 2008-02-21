@@ -55,6 +55,16 @@ namespace WeSay.Setup
 			set { _writingSystemCollection = value; }
 		}
 
+		private bool TriedToChangeKnownLanguageId(string oldId, string officialId, string language)
+		{
+			if (oldId == officialId)
+			{
+				ErrorReport.ReportNonFatalMessage("Sorry, it's important to keep to international standard code for {0}, which is '{1}'.", language, officialId);
+				return true;
+			}
+			return false;
+		}
+
 		private void OnPropertyValueChanged(object s, PropertyValueChangedEventArgs e)
 		{
 			if (e.ChangedItem.PropertyDescriptor.Name != "Id")
@@ -63,8 +73,26 @@ namespace WeSay.Setup
 			}
 
 			string id = e.ChangedItem.Value as string;
-
-			if (_writingSystemCollection.ContainsKey(id))
+			if(TriedToChangeKnownLanguageId(e.OldValue.ToString(), "en", "English")
+				|| TriedToChangeKnownLanguageId(e.OldValue.ToString(), "fr", "French")
+				|| TriedToChangeKnownLanguageId(e.OldValue.ToString(), "id", "Indonesian")
+				|| TriedToChangeKnownLanguageId(e.OldValue.ToString(), "es", "Spanish")
+				|| TriedToChangeKnownLanguageId(e.OldValue.ToString(), "tpi", "Tok Pisin")
+				|| TriedToChangeKnownLanguageId(e.OldValue.ToString(), "th", "Thai"))
+			{
+				_writingSystem.Id = e.OldValue.ToString();
+			}
+			else if (e.OldValue.ToString() == "fr")
+			{
+				ErrorReport.ReportNonFatalMessage("Sorry, it's important to keep to international standard code for French, which is 'fr'.");
+				_writingSystem.Id = e.OldValue.ToString();
+			}
+			else if (e.OldValue.ToString() == "id")
+			{
+				ErrorReport.ReportNonFatalMessage("Sorry, it's important to keep to international standard code for Indonesian, which is 'id'.");
+				_writingSystem.Id = e.OldValue.ToString();
+			}
+			else if (_writingSystemCollection.ContainsKey(id))
 			{
 				ErrorReport.ReportNonFatalMessage("Sorry, there is already a Writing System with that ID.");
 				_writingSystem.Id = e.OldValue.ToString();

@@ -22,7 +22,7 @@ namespace WeSay.LexicalModel
 			//static public string Relations = "relations";
 			static public bool ContainsAnyCaseVersionOf(string fieldName)
 			{
-				List<string> list = new List<string>(new string[] { PartOfSpeech, Definition, SemanticDomainsDdp4, Picture, Note, BaseForm });
+				List<string> list = new List<string>(new string[] { PartOfSpeech, Definition, SemanticDomainsDdp4, Picture, Note, BaseForm, Gloss });
 				return list.Contains(fieldName) || list.Contains(fieldName.ToLower()) || list.Contains(fieldName.ToUpper());
 			}
 		} ;
