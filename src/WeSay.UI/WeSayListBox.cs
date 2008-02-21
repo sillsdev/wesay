@@ -176,9 +176,9 @@ namespace WeSay.UI
 		protected override void OnItemSelectionChanged(ListViewItemSelectionChangedEventArgs e)
 		{
 			base.OnItemSelectionChanged(e);
-			_selectedItem = SelectedItem;
-			OnSelectedIndexChanged(new EventArgs());
-		}
+				_selectedItem = SelectedItem;
+				OnSelectedIndexChanged(new EventArgs());
+			}
 
 		#region extend hot click area to simulate list box behavior
 		// see comment on OnMouseUp
@@ -201,24 +201,20 @@ namespace WeSay.UI
 		{
 			_clickSelecting = false;
 			_currentMouseLocation = e.Location;
+			if (GetItemAt(e.X, e.Y) == null)
+			{
+				tooltip.Hide(this);
+			}
 			base.OnMouseMove(e);
 		}
 
 		// we set the tool tip explicitly due to a bug with
 		// MS implementation of ListView when Virtual
 		// and ShowItemTooltips
-		protected override void OnMouseHover(EventArgs e)
+		protected override void OnItemMouseHover(ListViewItemMouseHoverEventArgs e)
 		{
-			ListViewItem item = GetItemAt(0, _currentMouseLocation.Y);
-			if(item != null)
-			{
-				tooltip.Show(item.ToolTipText, this, item.Position, int.MaxValue);
-			}
-			else
-			{
-				tooltip.SetToolTip(this, string.Empty);
-			}
-			base.OnMouseHover(e);
+			tooltip.Show(e.Item.ToolTipText, this, e.Item.Position, int.MaxValue);
+			base.OnItemMouseHover(e);
 		}
 
 		// By default this control will turn off the selection when
@@ -235,6 +231,15 @@ namespace WeSay.UI
 				if (item != null)
 				{
 					SelectedIndex = item.Index;
+				}
+				else
+				{
+					// restore the selection
+					int index = _dataSource.IndexOf(_selectedItem);
+					if (index != -1)
+					{
+						SelectedIndex = index;
+					}
 				}
 			}
 			_clickSelecting = false;
@@ -261,7 +266,7 @@ namespace WeSay.UI
 				Brush backgroundBrush;
 				bool backgroundBrushNeedsDisposal = false;
 				Color textColor;
-				if (SelectedIndices.Contains(e.ItemIndex) && (!HideSelection || Focused))
+				if (SelectedIndex == e.ItemIndex && (!HideSelection || Focused))
 				{
 					backgroundBrush = SystemBrushes.Highlight;
 					textColor = SystemColors.HighlightText;
@@ -353,7 +358,10 @@ namespace WeSay.UI
 				}
 				else
 				{
-					SelectedIndices.Add(value);
+					if (!SelectedIndices.Contains(value))
+					{
+						SelectedIndices.Add(value);
+					}
 
 					// We can't get a selection to stay until the real handle is created
 					// this gets around that
