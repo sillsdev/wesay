@@ -73,6 +73,20 @@ namespace WeSay.LexicalModel.Tests
 
 
 		[Test]
+		public void NewEntryGetsDates()
+		{
+			Extensible extensibleInfo = new Extensible();
+			extensibleInfo.CreationTime = DateTime.Parse("2/2/1969  12:15:12").ToUniversalTime();
+			extensibleInfo.ModificationTime = DateTime.Parse("10/11/1968  12:15:12").ToUniversalTime();
+			LexEntry e = _merger.GetOrMakeEntry(extensibleInfo);
+			Assert.AreEqual(extensibleInfo.CreationTime, e.CreationTime);
+			Assert.AreEqual(extensibleInfo.ModificationTime, e.ModificationTime);
+			_merger.FinishEntry(e);
+			RefreshEntriesList();
+			Assert.AreEqual(1, _entries.Count);
+		}
+
+		[Test]
 		public  void NewEntryWithTextIdIgnoresIt()
 		{
 			Extensible extensibleInfo = new Extensible();

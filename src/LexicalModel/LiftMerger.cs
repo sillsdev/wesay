@@ -51,18 +51,21 @@ namespace WeSay.LexicalModel
 #endif
 			if (entry == null)
 			{
-				entry = new LexEntry(eInfo.Id, eInfo.Guid);
+				if (eInfo.CreationTime == default(DateTime))
+				{
+					eInfo.CreationTime = DateTime.UtcNow;
+				}
+
+				if (eInfo.ModificationTime == default(DateTime))
+				{
+					eInfo.ModificationTime = DateTime.UtcNow;
+				}
+
+
+				entry = new LexEntry(eInfo);
 			}
 
-			if (eInfo.CreationTime != default(DateTime))
-			{
-				entry.CreationTime = eInfo.CreationTime;
-			}
 
-			if (eInfo.ModificationTime != default(DateTime))
-			{
-				entry.ModificationTime = eInfo.ModificationTime;
-			}
 			return entry;
 		}
 

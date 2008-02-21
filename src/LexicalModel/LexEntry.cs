@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Text;
+using LiftIO;
 using Palaso.UI.WindowsForms.i8n;
 using WeSay.Data;
 using WeSay.Foundation;
@@ -46,15 +47,20 @@ namespace WeSay.LexicalModel
 
 		public LexEntry(): base(null)
 		{
-			Init(null, Guid.NewGuid());
+			Init(null, Guid.NewGuid(), DateTime.UtcNow, DateTime.UtcNow);
 		}
 
 		public LexEntry(string id, Guid guid): base(null)
 		{
-			Init(id, guid);
+			Init(id, guid, DateTime.UtcNow, DateTime.UtcNow);
 		}
 
-		private void Init(string id,Guid guid)
+		public LexEntry(Extensible info) : base(null)
+		{
+			Init(info.Id, info.Guid, info.CreationTime, info.ModificationTime);
+		}
+
+		private void Init(string id,Guid guid, DateTime creationTime, DateTime modifiedTime)
 		{
 			_id = id;
 			if (_id != null)
@@ -71,8 +77,8 @@ namespace WeSay.LexicalModel
 			}
 			this._lexicalForm = new LexicalFormMultiText(this);
 			this._senses = new InMemoryBindingList<LexSense>();
-			CreationTime = DateTime.UtcNow;
-			ModificationTime = CreationTime;
+			CreationTime = creationTime;
+			ModificationTime = modifiedTime;
 
 			WireUpEvents();
 		}

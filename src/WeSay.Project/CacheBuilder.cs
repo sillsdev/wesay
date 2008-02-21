@@ -424,7 +424,7 @@ namespace WeSay.Project
 			{
 				XmlDocument doc = new XmlDocument();
 				doc.Load(_sourceLIFTPath);
-				parser.ReadFile(doc);
+				parser.ReadFile(doc, File.GetLastWriteTimeUtc(_sourceLIFTPath));
 			}
 			catch(Exception error)
 			{
