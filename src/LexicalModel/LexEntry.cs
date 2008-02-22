@@ -33,7 +33,7 @@ namespace WeSay.LexicalModel
 		private DateTime _modificationTime;
 		private bool _isBeingDeleted;
 
-	   //TODO: no reason to save this in db4o, but I don't know how to make it not
+		[NonSerialized]
 		private bool _modifiedTimeIsLocked= false;
 
 		//!!What!! Is this done this way so that we don't end up storing
