@@ -65,7 +65,7 @@ namespace WeSay.LexicalModel
 				entry = new LexEntry(eInfo);
 			}
 
-
+			entry.ModifiedTimeIsLocked = true; //while we build it up
 			return entry;
 		}
 
@@ -333,6 +333,7 @@ namespace WeSay.LexicalModel
 		public void FinishEntry(LexEntry entry)
 		{
 			entry.GetOrCreateId(false);
+			entry.ModifiedTimeIsLocked = false;
 			if (!_entries.Contains(entry))
 			{
 				_entries.Add(entry);

@@ -33,6 +33,9 @@ namespace WeSay.LexicalModel
 		private DateTime _modificationTime;
 		private bool _isBeingDeleted;
 
+	   //TODO: no reason to save this in db4o, but I don't know how to make it not
+		private bool _modifiedTimeIsLocked= false;
+
 		//!!What!! Is this done this way so that we don't end up storing
 		//  the data in the object database?
 		new public class WellKnownProperties : WeSayDataObject.WellKnownProperties
@@ -62,6 +65,9 @@ namespace WeSay.LexicalModel
 
 		private void Init(string id,Guid guid, DateTime creationTime, DateTime modifiedTime)
 		{
+			ModificationTime = modifiedTime;
+			ModifiedTimeIsLocked = true;
+
 			_id = id;
 			if (_id != null)
 			{
@@ -78,9 +84,11 @@ namespace WeSay.LexicalModel
 			this._lexicalForm = new LexicalFormMultiText(this);
 			this._senses = new InMemoryBindingList<LexSense>();
 			CreationTime = creationTime;
-			ModificationTime = modifiedTime;
 
 			WireUpEvents();
+
+			ModifiedTimeIsLocked = false;
+
 		}
 
 
@@ -197,8 +205,11 @@ namespace WeSay.LexicalModel
 			}
 			set
 			{
-				System.Diagnostics.Debug.Assert(value.Kind == DateTimeKind.Utc);
-				_modificationTime = value;
+				if (!ModifiedTimeIsLocked)
+				{
+					System.Diagnostics.Debug.Assert(value.Kind == DateTimeKind.Utc);
+					_modificationTime = value;
+				}
 			}
 		}
 
@@ -372,6 +383,15 @@ namespace WeSay.LexicalModel
 		{
 			get { return _isBeingDeleted; }
 			set { _isBeingDeleted = value; }
+		}
+
+		/// <summary>
+		/// used during import so we don't accidentally change the modified time while building up the entry
+		/// </summary>
+		public bool ModifiedTimeIsLocked
+		{
+			get { return _modifiedTimeIsLocked; }
+			set { _modifiedTimeIsLocked = value; }
 		}
 	}
 
