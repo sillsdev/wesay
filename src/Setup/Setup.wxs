@@ -2,7 +2,7 @@
 <!-- These variables define the Windows Installer product version, product code and upgrade code. They   -->
 <!-- will be used later on in this file.                                                                 -->
 <?define Property_ProductVersion = "0.0.3" ?>
-<?define Property_ProductCode = "FEE455D7-E216-4C49-B82B-919D753F3A98" ?> <!--- REVIEW. Should that be a guid? Yes, it should! -->
+<?define Property_ProductCode = "FEE455D7-E216-4C49-B82B-919D753F3A98" ?>
 <?define Property_UpgradeCode = "6B6778A7-D3AD-4de8-BE95-C8956665B85A" ?>
 
 
