@@ -23,23 +23,22 @@
 		  <File Id="biatah.WeSayConfig" Name="biatah.WeSayConfig"  Source="..\..\sampleprojects\biatah\biatah.WeSayConfig" />
 		</Component>
 		<Directory Id="biatahCacheDir" Name="Cache">
-		  <Component Id="biatahCache" Guid="{EF2EBD26-0A05-4DC1-8B74-C4EFDA1547F6}">
-			<File Id="biatah.words" Name="biatah.words" Source="..\..\sampleprojects\biatah\cache\biatah.words" />
+	<!--  <Component Id="biatahCache" Guid="{EF2EBD26-0A05-4DC1-8B74-C4EFDA1547F6}">
+			<File Id="biatah.words" Name="biatah.words"  KeyPath="yes" Source="..\..\sampleprojects\biatah\cache\biatah.words" />
 			<File Id="AddMeanings.cache" Name="Add Meanings.cache" Source="..\..\sampleprojects\biatah\Cache\Add Meanings.cache" />
-			<File Id="AddExamples.cache" Name="Add Examples.cache" KeyPath="yes" Source="..\..\sampleprojects\biatah\Cache\Add Examples.cache" />
+			<File Id="AddExamples.cache" Name="Add Examples.cache"  Source="..\..\sampleprojects\biatah\Cache\Add Examples.cache" />
 			<File Id="AssumeCacheIsFresh" Name="AssumeCacheIsFresh" Source="..\..\sampleprojects\biatah\Cache\AssumeCacheIsFresh" />
-	 <!-- this isn't shown in the dashboard now, so it isn't created.
-			And if it was, it would have a new name
-			<File Id="Dictionary.cache" Name="Dictionary.cache"  Source="..\..\sampleprojects\biatah\Cache\Dictionary.cache" /> -->
-			<File Id="Collect Word List (D).cache" Name="Collect Word List (D).cache" KeyPath="yes" Source="..\..\sampleprojects\biatah\Cache\Collect Word List (D).cache" />
-			<File Id="Collect Words By Semantic Domain.cache" Name="Collect Words By Semantic Domain.cache" KeyPath="yes" Source="..\..\sampleprojects\biatah\Cache\Collect Words By Semantic Domain.cache" />
-			<File Id="LexEntry sorted by bth.cache" Name="LexEntry sorted by bth.cache"  Source="..\..\sampleprojects\biatah\Cache\LexEntry sorted by bth.cache" />
-			<File Id="LexEntry sorted by bth-fonipa.cache" Name="LexEntry sorted by bth-fonipa.cache"  Source="..\..\sampleprojects\biatah\Cache\LexEntry sorted by bth-fonipa.cache" />
-			<File Id="LexEntry sorted by en.cache" Name="LexEntry sorted by en.cache" KeyPath="yes" Source="..\..\sampleprojects\biatah\Cache\LexEntry sorted by en.cache" />
+			<File Id="CollectWordListD.cache" Name="Collect Word List (D).cache" Source="..\..\sampleprojects\biatah\Cache\Collect Word List (D).cache" />
+			<File Id="CollectWordsBySemanticDomain.cache" Name="Collect Words By Semantic Domain.cache" Source="..\..\sampleprojects\biatah\Cache\Collect Words By Semantic Domain.cache" />
+			<File Id="LexEntrysortedbybth.cache" Name="LexEntry sorted by bth.cache"  Source="..\..\sampleprojects\biatah\Cache\LexEntry sorted by bth.cache" />
+			<File Id="LexEntrysortedbybthfonipa.cache" Name="LexEntry sorted by bth-fonipa.cache"  Source="..\..\sampleprojects\biatah\Cache\LexEntry sorted by bth-fonipa.cache" />
+			<File Id="LexEntrysortedbyen.cache" Name="LexEntry sorted by en.cache" Source="..\..\sampleprojects\biatah\Cache\LexEntry sorted by en.cache" />
 			<File Id="LexEntrysortedbySemanticDomainDdp4.cache" Name="LexEntry sorted by SemanticDomainDdp4.cache" Source="..\..\sampleprojects\biatah\Cache\LexEntry sorted by SemanticDomainDdp4.cache" />
-			<File Id="Missing definition [en] Filter" Name="Missing definition [en] Filter" Source="..\..\sampleprojects\biatah\Cache\Missing definition [en] Filter" />
-			<File Id="Missing ExampleSentence [bth] Filter" Name="Missing ExampleSentence [bth] Filter" Source="..\..\sampleprojects\biatah\Cache\Missing ExampleSentence [bth] Filter" />
+			<File Id="MissingdefinitionenFilter.cache" Name="Missing definition [en] Filter.cache" Source="..\..\sampleprojects\biatah\Cache\Missing definition [en] Filter.cache" />
+			<File Id="MissingExampleSentencebthFilter.cache" Name="Missing ExampleSentence [bth] Filter.cache" Source="..\..\sampleprojects\biatah\Cache\Missing ExampleSentence [bth] Filter.cache" />
 		  </Component>
+		-->
+
 		</Directory>
 		<Directory Id="biatahPicturesDir" Name="pictures">
 		  <Component Id="biatahPictures" Guid="{FFC212BA-EBF6-41BD-A015-94BF95D3B2AA}">
@@ -53,9 +52,11 @@
 
 	  <ComponentRef Id ="biatahShortcuts"/>
 	  <ComponentRef Id ="biatahMain"/>
-	  <ComponentRef Id ="biatahCache"/>
+	 <!-- <ComponentRef Id ="biatahCache"/> -->
 	  <ComponentRef Id ="biatahPictures"/>
+	  <ComponentGroupRef Id ="biatahCache"/>
 	</ComponentGroup>
+
 
   </Fragment>
 </Wix>

@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+	<Fragment>
+		<DirectoryRef Id="common">
+			<Component Id="Add_Examples.cache" Guid="308219AA-11DA-4FC9-BCBB-170F7F1DF7F9">
+				<File Id="Add_Examples.cache" Name="Add Examples.cache" KeyPath="yes" Source="C:\WeSayBuild\SampleProjects\Biatah\Cache\Add Examples.cache" />
+			</Component>
+			<Component Id="Add_Meanings.cache" Guid="2E12FE38-7349-42EA-BDBF-C28040A177A6">
+				<File Id="Add_Meanings.cache" Name="Add Meanings.cache" Source="C:\WeSayBuild\SampleProjects\Biatah\Cache\Add Meanings.cache" />
+			</Component>
+			<Component Id="AssumeCacheIsFresh" Guid="A6186B5A-5EEB-4710-B32D-7CCB4C7A87C6">
+				<File Id="AssumeCacheIsFresh" Name="AssumeCacheIsFresh" Source="C:\WeSayBuild\SampleProjects\Biatah\Cache\AssumeCacheIsFresh" />
+			</Component>
+			<Component Id="biatah.words" Guid="36DAC181-D94F-4423-9DA3-7449CA54C7A2">
+				<File Id="biatah.words" Name="biatah.words" Source="C:\WeSayBuild\SampleProjects\Biatah\Cache\biatah.words" />
+			</Component>
+			<Component Id="Collect_Word_List__D_.cache" Guid="319C44A3-98CB-4BEB-9052-3597462F0120">
+				<File Id="Collect_Word_List__D_.cache" Name="Collect Word List (D).cache" Source="C:\WeSayBuild\SampleProjects\Biatah\Cache\Collect Word List (D).cache" />
+			</Component>
+			<Component Id="Collect_Words_By_Semantic_Domain.cache" Guid="A082EEFA-E808-4552-A817-4AE3C17D483C">
+				<File Id="Collect_Words_By_Semantic_Domain.cache" Name="Collect Words By Semantic Domain.cache" Source="C:\WeSayBuild\SampleProjects\Biatah\Cache\Collect Words By Semantic Domain.cache" />
+			</Component>
+			<Component Id="LexEntry_sorted_by_bth_fonipa.cache" Guid="FDC13B84-B7D9-4251-AC69-343322A5D7ED">
+				<File Id="LexEntry_sorted_by_bth_fonipa.cache" Name="LexEntry sorted by bth-fonipa.cache" Source="C:\WeSayBuild\SampleProjects\Biatah\Cache\LexEntry sorted by bth-fonipa.cache" />
+			</Component>
+			<Component Id="LexEntry_sorted_by_bth.cache" Guid="A6E5BDC8-2565-47C7-B539-EEA4EA742E8A">
+				<File Id="LexEntry_sorted_by_bth.cache" Name="LexEntry sorted by bth.cache" Source="C:\WeSayBuild\SampleProjects\Biatah\Cache\LexEntry sorted by bth.cache" />
+			</Component>
+			<Component Id="LexEntry_sorted_by_en.cache" Guid="35D13EA2-DBC4-4EDE-A150-43E1F48D8D18">
+				<File Id="LexEntry_sorted_by_en.cache" Name="LexEntry sorted by en.cache" Source="C:\WeSayBuild\SampleProjects\Biatah\Cache\LexEntry sorted by en.cache" />
+			</Component>
+			<Component Id="LexEntry_sorted_by_SemanticDomainDdp4.cache" Guid="8DE88BBF-EC32-4367-BDFF-DA60E7CA71D9">
+				<File Id="LexEntry_sorted_by_SemanticDomainDdp4.cache" Name="LexEntry sorted by SemanticDomainDdp4.cache" Source="C:\WeSayBuild\SampleProjects\Biatah\Cache\LexEntry sorted by SemanticDomainDdp4.cache" />
+			</Component>
+			<Component Id="Missing_definition__en__Filter.cache" Guid="A3661676-7B4E-426D-B9A4-141DD4B4AD2A">
+				<File Id="Missing_definition__en__Filter.cache" Name="Missing definition [en] Filter.cache" Source="C:\WeSayBuild\SampleProjects\Biatah\Cache\Missing definition [en] Filter.cache" />
+			</Component>
+			<Component Id="Missing_ExampleSentence__bth__Filter.cache" Guid="AD854A7E-60A7-4629-A891-912FBC0A70FA">
+				<File Id="Missing_ExampleSentence__bth__Filter.cache" Name="Missing ExampleSentence [bth] Filter.cache" Source="C:\WeSayBuild\SampleProjects\Biatah\Cache\Missing ExampleSentence [bth] Filter.cache" />
+			</Component>
+		</DirectoryRef>
+		<ComponentGroup Id="biatahCache">
+			<ComponentRef Id="Add_Examples.cache" />
+			<ComponentRef Id="Add_Meanings.cache" />
+			<ComponentRef Id="AssumeCacheIsFresh" />
+			<ComponentRef Id="biatah.words" />
+			<ComponentRef Id="Collect_Word_List__D_.cache" />
+			<ComponentRef Id="Collect_Words_By_Semantic_Domain.cache" />
+			<ComponentRef Id="LexEntry_sorted_by_bth_fonipa.cache" />
+			<ComponentRef Id="LexEntry_sorted_by_bth.cache" />
+			<ComponentRef Id="LexEntry_sorted_by_en.cache" />
+			<ComponentRef Id="LexEntry_sorted_by_SemanticDomainDdp4.cache" />
+			<ComponentRef Id="Missing_definition__en__Filter.cache" />
+			<ComponentRef Id="Missing_ExampleSentence__bth__Filter.cache" />
+		</ComponentGroup>
+	</Fragment>
+</Wix>
