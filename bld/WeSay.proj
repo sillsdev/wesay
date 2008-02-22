@@ -96,7 +96,8 @@
   </Target>
 
 
-  <Target Name="LauchWeSayWithSample"> <!-- formerly VerifySample -->
+  <Target Name="LauchWeSayWithSample">
+	<!-- formerly VerifySample -->
 	<CreateItem Include="$(BaseDirectory)\SampleProjects\**\*.lift"
 				Exclude="$(BaseDirectory)\SampleProjects\src\**\*.*;
 				$(BaseDirectory)\SampleProjects\PRETEND\**\*.*">
@@ -120,20 +121,34 @@
 	</MakePot>
   </Target>
 
-	<UsingTask AssemblyFile="$(BaseDirectory)\bld\Palaso.BuildTasks.dll" TaskName="MakeWixForDirTree" />
+  <UsingTask AssemblyFile="$(BaseDirectory)\bld\Palaso.BuildTasks.dll" TaskName="MakeWixForDirTree" />
+
   <Target Name="MakeWixForPoFiles">
 	<MakeWixForDirTree
 				DirectoryReferenceId="common"
 				ComponentGroupId="PoFiles"
 				RootDirectory="$(BaseDirectory)\common"
-				OutputFileName="$(BaseDirectory)\src\Setup\GeneratedPOFiles.wxs"
+				OutputFilePath="$(BaseDirectory)\src\Setup\GeneratedPOFiles.wxs"
 				MatchRegExPattern="\.po$">
-	  <Output TaskParameter="OutputFileName" ItemName="Compile" />
+	  <Output TaskParameter="OutputFilePath" ItemName="Compile" />
+	</MakeWixForDirTree>
+  </Target>
+
+
+  <Target Name="MakeWixForBiatah">
+	<MakeWixForDirTree
+				DirectoryReferenceId="biatahCacheDir"
+				ComponentGroupId="biatahCache"
+				RootDirectory="$(BaseDirectory)\SampleProjects\Biatah\Cache"
+				OutputFilePath="$(BaseDirectory)\src\Setup\GeneratedBiatahCache.wxs"
+				MatchRegExPattern=".*">
+	  <Output TaskParameter="OutputFilePath" ItemName="Compile" />
 	</MakeWixForDirTree>
   </Target>
 
   <Target Name="Package">
 	<CallTarget targets="MakePotFile; MakeWixForPoFiles"/>
+	<CallTarget targets="MakeWixForBiatah"/>
 	<MSBuild Projects="$(BaseDirectory)\src\Setup\Setup.wixproj"/>
   </Target>
 
