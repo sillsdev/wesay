@@ -68,7 +68,7 @@
 	<Compile Include="MissingInfoControlTests.cs" />
 	<Compile Include="MissingInfoTaskTests.cs" />
 	<Compile Include="MissingExampleSentenceFilterTests.cs" />
-	<Compile Include="MissingGlossFilterTests.cs" />
+	<Compile Include="MissingMeaningFilterTests.cs" />
 	<Compile Include="RelationControllerTests.cs" />
 	<Compile Include="TaskBaseTests.cs" />
 	<Compile Include="EntryViewControlTests.cs" />

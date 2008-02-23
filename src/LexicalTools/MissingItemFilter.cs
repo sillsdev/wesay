@@ -151,7 +151,7 @@ namespace WeSay.LexicalTools
 						}
 					}
 					if(entry.Senses.Count == 0 &&
-					  (this._field.FieldName == LexSense.WellKnownProperties.Gloss))
+					  (this._field.FieldName == LexSense.WellKnownProperties.Definition))
 					{
 						//ghost field
 						return true;
