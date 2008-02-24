@@ -73,7 +73,8 @@ namespace Addin.Backup
 			MAPI msg = new MAPI();
 			msg.AddAttachment(dest);
 			msg.AddRecipientTo(_settings.Email);
-			msg.SendMailPopup("WeSay Project Data","The latest WeSay project data is attached.");
+			msg.SendMailPopup(String.Format(StringCatalog.Get("{0} WeSay Project Data", "The subject line of the email send by the 'Send Email' Action. The {0} will be replaced by the name of the project, as in 'Greek WeSay Project Data'"), projectInfo.Name),
+				StringCatalog.Get("The latest WeSay project data is attached."));
 		}
 
 		#region IWeSayAddinHasSettings Members
