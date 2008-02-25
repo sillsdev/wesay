@@ -29,6 +29,8 @@ namespace WeSay.UI.AutoCompleteTextBox
 			{
 				_textBox.ReadOnly = true;
 				_textBox.Enabled = false;
+				_textBox.TabStop = false;
+				this.TabStop = false;
 			}
 
 			_textBox.SelectedItemChanged += OnSelectedItemChanged;

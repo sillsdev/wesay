@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using NUnit.Framework;
 using NUnit.Extensions.Forms;
 using WeSay.Data;
+using WeSay.Foundation;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Db4o_Specific;
 using WeSay.Project;
@@ -50,6 +51,12 @@ namespace WeSay.LexicalTools.Tests
 			ViewTemplate viewTemplate = new ViewTemplate();
 			viewTemplate.Add(new Field(Field.FieldNames.EntryLexicalForm.ToString(), "LexEntry",vernacularWritingSystemIds));
 			viewTemplate.Add(new Field("MyEntryCustom", "LexEntry", new string[]{"en"}, Field.MultiplicityType.ZeroOr1, "MultiText" ));
+
+			Field readOnlySemanticDomain = new Field(LexSense.WellKnownProperties.SemanticDomainsDdp4,
+					 "LexSense",
+					 analysisWritingSystemIds);
+			readOnlySemanticDomain.Visibility = CommonEnumerations.VisibilitySetting.ReadOnly;
+			viewTemplate.Add(readOnlySemanticDomain);
 
 			Field shy1 = new Field("MyShyEntryCustom", "LexEntry", new string[] { "en" }, Field.MultiplicityType.ZeroOr1, "MultiText");
 			shy1.Visibility = WeSay.Foundation.CommonEnumerations.VisibilitySetting.NormallyHidden;
@@ -138,6 +145,15 @@ namespace WeSay.LexicalTools.Tests
 			this._records.Add(entry);
 			return entry;
 		}
+
+//        [Test]
+//        public void TabKeySkipsReadOnlyField()
+//        {
+//            while (true)
+//            {
+//                Application.DoEvents();
+//            }
+//        }
 
 		public override void TearDown()
 		{

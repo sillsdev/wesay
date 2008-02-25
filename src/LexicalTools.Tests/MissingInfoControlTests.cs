@@ -2,6 +2,7 @@ using System;
 using System.Drawing;
 using NUnit.Framework;
 using WeSay.Data;
+using WeSay.Foundation;
 using WeSay.Language;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Db4o_Specific;
@@ -91,9 +92,12 @@ namespace WeSay.LexicalTools.Tests
 							  "LexEntry",
 							  vernacularWritingSystemIds));
 			_viewTemplate.Add(
-					new Field(LexSense.WellKnownProperties.Gloss,
+					new Field(LexSense.WellKnownProperties.Definition,
 							  "LexSense",
 							  analysisWritingSystemIds));
+
+
+
 			_viewTemplate.Add(
 					new Field(Field.FieldNames.ExampleSentence.ToString(),
 							  "LexExampleSentence",
@@ -104,12 +108,12 @@ namespace WeSay.LexicalTools.Tests
 							  analysisWritingSystemIds));
 		}
 
-		private LexEntry CreateTestEntry(string lexicalForm, string gloss, string exampleSentence)
+		private LexEntry CreateTestEntry(string lexicalForm, string Definition, string exampleSentence)
 		{
 			LexEntry entry = new LexEntry();
 			entry.LexicalForm[_writingSystem.Id] = lexicalForm;
 			LexSense sense = (LexSense) entry.Senses.AddNew();
-			sense.Gloss["analysis"] = gloss;
+			sense.Definition["analysis"] = Definition;
 			LexExampleSentence example = (LexExampleSentence) sense.ExampleSentences.AddNew();
 			example.Sentence[_writingSystem.Id] = exampleSentence;
 			return entry;
