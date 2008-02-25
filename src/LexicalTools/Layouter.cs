@@ -190,19 +190,25 @@ namespace WeSay.LexicalTools
 			AddWidgetsAfterGhostTrigger(list, index, sender.ReferenceControl, doGoToNextField);
 		}
 
-		protected void AddWidgetsAfterGhostTrigger(IBindingList list, int index, Control refControl,
+		protected void AddWidgetsAfterGhostTrigger(IBindingList list, int indexOfNewGuyInList, Control refControl,
 												   bool doGoToNextField)
 		{
-			int row = _detailList.GetRow(refControl);
-			AddWidgets(list, index, row);
+			int ghostRow = _detailList.GetRow(refControl);
+			this.UpdateGhostLabel(list, ghostRow);
+			AddWidgets(list, indexOfNewGuyInList, ghostRow);
+		   Application.DoEvents();
 			if (doGoToNextField)
 			{
-				_detailList.MoveInsertionPoint(row + 1);
+				_detailList.MoveInsertionPoint(ghostRow + 1);
 			}
 			else
 			{
-				_detailList.MoveInsertionPoint(row);
+				_detailList.MoveInsertionPoint(ghostRow);
 			}
+		}
+
+		protected virtual void UpdateGhostLabel(IBindingList list, int index)
+		{
 		}
 
 		protected static int AddChildrenWidgets(Layouter layouter, IBindingList list, int insertAtRow, int rowCount)

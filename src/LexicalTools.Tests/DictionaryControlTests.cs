@@ -697,34 +697,65 @@ namespace WeSay.LexicalTools.Tests
 			DetailList detailList = GetDetailList();
 			int initialCount = detailList.Count;
 
-			MultiTextControl editControl = GetEditControl("Meaning");
-			Assert.IsTrue(GetEditControl("Meaning").Name.Contains("ghost"));
-			 editControl.TextBoxes[0].Focus();
-			 TextBoxTester t = new TextBoxTester(editControl.TextBoxes[0].Name);
-		  //didn''t work  t.FireEvent("KeyPress", new KeyPressEventArgs('a'));
-		   t.Properties.Text = "foo";
-//            Application.DoEvents();
-//            t.FireEvent("KeyDown", new KeyEventArgs(Keys.Tab));
-//            Application.DoEvents();
-//            t.FireEvent("KeyUp", new KeyEventArgs(Keys.Tab));
-//            Application.DoEvents();
-			TextBoxTester lxt = new TextBoxTester(GetLexicalFormControlName());
-			lxt.Properties.Focus();
+			FillInTheGhostMeaning();
+
 			//ghost really did fire
 			Assert.IsTrue(detailList.Count > initialCount);
 
 			//now do another one
 			initialCount = detailList.Count;
-			MultiTextControl editControl2 = (MultiTextControl) GetEditControl("Meaning",true);
+			MultiTextControl editControl2 = (MultiTextControl) GetEditControl("Meaning 2",true);
 			Assert.IsTrue(editControl2.Name.Contains("ghost"));
 			editControl2.TextBoxes[0].Focus();
 			Application.DoEvents();
 			TextBoxTester t2 = new TextBoxTester(editControl2.TextBoxes[0].Name);
 			t2.Properties.Text = "bar";
 			Application.DoEvents();
+			TextBoxTester lxt = new TextBoxTester(GetLexicalFormControlName());
 			lxt.Properties.Focus();
 			Application.DoEvents();
 			Assert.IsTrue(detailList.Count > initialCount);
+		}
+
+		private void FillInTheGhostMeaning()
+		{
+			MultiTextControl editControl = (MultiTextControl)GetEditControl("Meaning", true);
+			Assert.IsTrue(GetEditControl("Meaning").Name.Contains("ghost"));
+			editControl.TextBoxes[0].Focus();
+			TextBoxTester t = new TextBoxTester(editControl.TextBoxes[0].Name);
+			//didn''t work  t.FireEvent("KeyPress", new KeyPressEventArgs('a'));
+			t.Properties.Text = "foo";
+			//move focus away
+			Application.DoEvents();
+			TextBoxTester lxt = new TextBoxTester(GetLexicalFormControlName());
+			lxt.Properties.Focus();
+			Application.DoEvents();
+		}
+
+		[Test]
+		public void NewWord_GhostMeaningLabelWithNoNumber()
+		{
+			ClickAddWord();
+			Assert.AreEqual("Meaning", GetLabelOfMeaningRow(0));
+		}
+
+		[Test]
+		public void AfterAddingMeaning_RealMeaningLabelHasNumber()
+		{
+			ClickAddWord();
+			FillInTheGhostMeaning();
+			Assert.AreEqual("Meaning 1", GetLabelOfMeaningRow(0));
+		}
+
+		/// <summary>
+		/// Regression for WS-620
+		/// </summary>
+		[Test]
+		public void AfterAddingMeaning_GhostMeaningLabelHasNumber()
+		{
+			ClickAddWord();
+			FillInTheGhostMeaning();
+			Assert.AreEqual("Meaning 2", GetLabelOfMeaningRow(1));
 		}
 
 		[Test]
@@ -857,6 +888,24 @@ namespace WeSay.LexicalTools.Tests
 			return foundControl;
 		}
 
+		private string GetLabelOfMeaningRow(int whichMeaningZeroBased)
+		{
+			DetailList detailList = ((DictionaryControl)_task.Control).Control_EntryDetailPanel.ControlEntryDetail;
+			int foundSoFar = -1;
+			for (int i = 0; i < detailList.Count; i++)
+			{
+				Label label = detailList.GetLabelControlFromRow(i);
+				if (label.Text.Contains("Meaning"))
+				{
+					++foundSoFar;
+					if (foundSoFar == whichMeaningZeroBased)
+					{
+						return label.Text;
+					}
+				}
+			}
+			return "Not Found";
+		}
 	}
 
 }

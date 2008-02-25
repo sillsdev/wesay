@@ -94,16 +94,27 @@ namespace WeSay.LexicalTools
 		public int AddGhost(IBindingList list, bool isHeading)
 		{
 			int insertAtRow = -1;
-			string label = StringCatalog.Get("~Meaning", "This label is shown once, but has two roles.  1) it labels the defintion field, and 2) marks the beginning of the set of fields which make up a sense. So, in english, if we labelled this 'definition', it would describe the field well but wouldn't label the section well.");
-			if(list.Count > 0)
-			{
-				label += " "+(list.Count + 1);
-			}
+			string label = GetLabelForMeaning(list);
 #if GlossMeaning
 			return MakeGhostWidget<LexSense>(list, insertAtRow, Field.FieldNames.SenseGloss.ToString(), label, "Gloss", isHeading);
 #else
 			return MakeGhostWidget<LexSense>(list, insertAtRow, LexSense.WellKnownProperties.Definition, label, "Definition", isHeading);
 #endif
+		}
+
+		private string GetLabelForMeaning(IBindingList list)
+		{
+			string label = StringCatalog.Get("~Meaning", "This label is shown once, but has two roles.  1) it labels the defintion field, and 2) marks the beginning of the set of fields which make up a sense. So, in english, if we labelled this 'definition', it would describe the field well but wouldn't label the section well.");
+			if(list.Count > 0)
+			{
+				label += " "+(list.Count + 1);
+			}
+			return label;
+		}
+
+		protected override void UpdateGhostLabel(IBindingList list, int rowOfGhost)
+		{
+			DetailList.GetLabelControlFromRow(rowOfGhost).Text = GetLabelForMeaning(list);
 		}
 	}
 }
