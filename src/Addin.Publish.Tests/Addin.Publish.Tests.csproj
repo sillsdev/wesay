@@ -1,0 +1,79 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+	<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+	<ProductVersion>8.0.50727</ProductVersion>
+	<SchemaVersion>2.0</SchemaVersion>
+	<ProjectGuid>{9A48A903-06DB-4D8E-8034-C77D5316101B}</ProjectGuid>
+	<OutputType>Library</OutputType>
+	<AppDesignerFolder>Properties</AppDesignerFolder>
+	<RootNamespace>Addin.Publish.Tests</RootNamespace>
+	<AssemblyName>Addin.Publish.Tests</AssemblyName>
+	<StartupObject>
+	</StartupObject>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+	<DebugSymbols>true</DebugSymbols>
+	<DebugType>full</DebugType>
+	<Optimize>false</Optimize>
+	<OutputPath>..\..\output\Debug\</OutputPath>
+	<DefineConstants>DEBUG;TRACE</DefineConstants>
+	<ErrorReport>prompt</ErrorReport>
+	<WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+	<DebugType>pdbonly</DebugType>
+	<Optimize>true</Optimize>
+	<OutputPath>bin\Release\</OutputPath>
+	<DefineConstants>TRACE</DefineConstants>
+	<ErrorReport>prompt</ErrorReport>
+	<WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+	   Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <ItemGroup>
+	<ProjectReference Include="..\Addin.Publish\Addin.Publish.csproj">
+	  <Project>{7AE29850-AD39-460C-965C-A8BF1B0569BE}</Project>
+	  <Name>Addin.Publish</Name>
+	</ProjectReference>
+	<ProjectReference Include="..\LexicalModel\LexicalModel.csproj">
+	  <Project>{5F61C809-B6C0-4567-9603-B2198E1AD038}</Project>
+	  <Name>LexicalModel</Name>
+	</ProjectReference>
+	<ProjectReference Include="..\WeSay.Data\WeSay.Data.csproj">
+	  <Project>{600D0FD4-D189-41A0-9BC5-FC79AD2CF1CD}</Project>
+	  <Name>WeSay.Data</Name>
+	</ProjectReference>
+	<ProjectReference Include="..\WeSay.Foundation\WeSay.Foundation.csproj">
+	  <Project>{F12EB680-0990-4900-B77E-0FBF2E28A815}</Project>
+	  <Name>WeSay.Foundation</Name>
+	</ProjectReference>
+	<ProjectReference Include="..\WeSay.Project\WeSay.Project.csproj">
+	  <Project>{5CFD0BB3-5B2A-4911-B220-9C2286151BF0}</Project>
+	  <Name>WeSay.Project</Name>
+	</ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+	<Reference Include="nunit.framework, Version=2.2.8.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\LIFT\LIFTDotNet\lib\nunit.framework.dll</HintPath>
+	</Reference>
+	<Reference Include="Palaso, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\Palaso.dll</HintPath>
+	</Reference>
+	<Reference Include="System" />
+	<Reference Include="System.Data" />
+	<Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+	<Compile Include="PLiftMakerTests.cs" />
+  </ItemGroup>
+</Project>
