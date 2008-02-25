@@ -237,7 +237,6 @@ namespace WeSay.LexicalTools
 		{
 			string displayString = ((CachedSortedDb4oList<string, LexEntry>)this._records).GetKey(e.ItemIndex);
 			e.Item = new ListViewItem(displayString);
-			e.Item.ToolTipText = displayString;
 		}
 
 		private static IEnumerable FindClosestAndNextClosestAndPrefixedForms(string text, IEnumerable items, IDisplayStringAdaptor adaptor)

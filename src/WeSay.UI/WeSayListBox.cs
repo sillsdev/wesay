@@ -211,9 +211,25 @@ namespace WeSay.UI
 		// we set the tool tip explicitly due to a bug with
 		// MS implementation of ListView when Virtual
 		// and ShowItemTooltips
+
+		// show the tooltip if there is one
+		// otherwise see if the text has been truncated
+		// and if it has show the text as a tooltip
 		protected override void OnItemMouseHover(ListViewItemMouseHoverEventArgs e)
 		{
-			tooltip.Show(e.Item.ToolTipText, this, e.Item.Position, int.MaxValue);
+			if (string.IsNullOrEmpty(e.Item.ToolTipText))
+			{
+				if (MeasureItemText(e.Item.Text).Width > Width)
+				{
+					tooltip.Show(e.Item.Text, this, e.Item.Position, int.MaxValue);
+				}
+			}
+			else
+			{
+				tooltip.Show(e.Item.ToolTipText, this, _currentMouseLocation, int.MaxValue);
+			}
+
+
 			base.OnItemMouseHover(e);
 		}
 
@@ -408,8 +424,14 @@ namespace WeSay.UI
 
 		private void ToolTipPopup(object sender, PopupEventArgs e)
 		{
-			TextFormatFlags flags = TextFormatFlags.Default | TextFormatFlags.Left
-				;
+				e.ToolTipSize =
+					   Size.Add(MeasureItemText(this.tooltip.GetToolTip(this)),
+												 new Size(0,5));
+		}
+
+		private Size MeasureItemText(string text)
+		{
+			TextFormatFlags flags = TextFormatFlags.Default | TextFormatFlags.Left;
 			if (_writingSystem != null && WritingSystem.RightToLeft)
 			{
 				flags |= TextFormatFlags.RightToLeft;
@@ -417,13 +439,11 @@ namespace WeSay.UI
 			int maxWidth = Screen.GetWorkingArea(this).Width;
 			using (Graphics g = Graphics.FromHwnd(Handle))
 			{
-				e.ToolTipSize =
-					   Size.Add(TextRenderer.MeasureText(g,
-												 tooltip.GetToolTip(this),
-												 _writingSystem.Font,
-												 new Size(maxWidth, int.MaxValue),
-												 flags),
-												 new Size(0,5));
+				return TextRenderer.MeasureText(g,
+												text,
+												this._writingSystem.Font,
+												new Size(maxWidth, int.MaxValue),
+												flags);
 			}
 		}
 	}
