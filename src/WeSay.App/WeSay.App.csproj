@@ -138,9 +138,7 @@
 	</EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-	<EmbeddedResource Include="..\Addin.Transform\lift2html.xsl">
-	  <Link>Services\lift2html.xsl</Link>
-	</EmbeddedResource>
+	<EmbeddedResource Include="..\Addin.Transform\lift2html.xsl" />
   </ItemGroup>
   <ItemGroup>
 	<EmbeddedResource Include="Migration\populateDefinitionFromGloss.xslt" />
