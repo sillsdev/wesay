@@ -30,7 +30,7 @@ namespace WeSay.LexicalModel.Tests
 			_calculator = new HomographCalculator(_recordListManager, WeSayWordsProject.Project.WritingSystems.UnknownAnalysisWritingSystem);
 		}
 
-		[Test]
+		[Test, Ignore("not yet")]
 		public void GetHomographNumber_NoHomograph_Returns0()
 		{
 			LexEntry entry = new LexEntry();
@@ -46,6 +46,11 @@ namespace WeSay.LexicalModel.Tests
 			Assert.AreEqual(1, _calculator.GetHomographNumber(entry1));
 			Assert.AreEqual(3, _calculator.GetHomographNumber(entry3));
 			Assert.AreEqual(2, _calculator.GetHomographNumber(entry2));
+		}
+
+		[Test, Ignore("not implemented")]
+		public void GetHomographNumber_HonorsOrderAttribute()
+		{
 		}
 
 		private FluentEntry MakeEntry()
