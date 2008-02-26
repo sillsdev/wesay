@@ -73,6 +73,7 @@
 	<Compile Include="LiftExportTests.cs" />
 	<Compile Include="LiftUpdateTests.cs" />
 	<Compile Include="MigrationTests.cs" />
+	<Compile Include="LiftExporterPLiftTests.cs" />
 	<Compile Include="ProjectDirectorySetupForTesting.cs" />
 	<Compile Include="TestResources.Designer.cs">
 	  <AutoGen>True</AutoGen>

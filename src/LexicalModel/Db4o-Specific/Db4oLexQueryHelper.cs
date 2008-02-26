@@ -178,9 +178,6 @@ namespace WeSay.LexicalModel.Db4o_Specific
 			return list[index];
 		}
 
-		static public bool HasMatchingLexemeForm(LanguageForm form)
-		{
-			return form.Form == "findme" && form.Parent.GetType() == typeof(LexicalFormMultiText);
-		}
+
 	}
 }

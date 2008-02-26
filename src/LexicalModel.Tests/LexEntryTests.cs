@@ -33,6 +33,8 @@ namespace WeSay.LexicalModel.Tests
 			this._entry.EmptyObjectsRemoved += new System.EventHandler(_entry_EmptyObjectsRemoved);
 			this._entry.PropertyChanged += new System.ComponentModel.PropertyChangedEventHandler(_entry_PropertyChanged);
 			this._removed = false;
+
+			Db4o_Specific.Db4oLexModelHelper.InitializeForNonDbTests();
 		}
 
 		void _entry_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -247,6 +249,45 @@ namespace WeSay.LexicalModel.Tests
 			Assert.AreSame(_sense, sense);
 		}
 
+		[Test]
+		public void GetHeadword_EmptyEverything_ReturnsEmptyString()
+		{
+			LexEntry entry = new LexEntry();
+			Assert.AreEqual(string.Empty, entry.GetHeadWord("a"));
+		}
 
+		[Test]
+		public void GetHeadword_LexemeForm_ReturnsCorrectAlternative()
+		{
+			LexEntry entry = new LexEntry();
+			entry.LexicalForm.SetAlternative("c", "can");
+			entry.LexicalForm.SetAlternative("a", "apple");
+			entry.LexicalForm.SetAlternative("b", "bart");
+			Assert.AreEqual("apple", entry.GetHeadWord("a"));
+			Assert.AreEqual("bart", entry.GetHeadWord("b"));
+			Assert.AreEqual(string.Empty, entry.GetHeadWord("donthave"));
+		}
+
+		[Test]
+		public void GetHeadword_CitationFormHasAlternative_CorrectForm()
+		{
+			LexEntry entry = new LexEntry();
+			entry.LexicalForm.SetAlternative("a", "apple");
+			MultiText citation = entry.GetOrCreateProperty<MultiText>(LexEntry.WellKnownProperties.Citation);
+			citation.SetAlternative("b", "barter");
+			citation.SetAlternative("a", "applishus");
+			Assert.AreEqual("applishus", entry.GetHeadWord("a"));
+			Assert.AreEqual("barter", entry.GetHeadWord("b"));
+			Assert.AreEqual(string.Empty, entry.GetHeadWord("donthave"));
+		}
+		[Test]
+		public void GetHeadword_CitationFormLacksAlternative_GetsFormFromLexemeForm()
+		{
+			LexEntry entry = new LexEntry();
+			entry.LexicalForm.SetAlternative("a", "apple");
+			MultiText citation = entry.GetOrCreateProperty<MultiText>(LexEntry.WellKnownProperties.Citation);
+			citation.SetAlternative("b", "bater");
+			Assert.AreEqual("apple", entry.GetHeadWord("a"));
+		}
 	}
 }

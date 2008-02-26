@@ -61,11 +61,13 @@
 	<Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+	<Compile Include="HeadwordSortedListHelper.cs" />
 	<Compile Include="Db4o-Specific\ApproximateFinder.cs" />
 	<Compile Include="Db4o-Specific\Db4oLexModelHelper.cs" />
 	<Compile Include="Db4o-Specific\Db4oLexQueryHelper.cs" />
 	<Compile Include="Db4o-Specific\WeSayWordsDb4oModelConfiguration.cs" />
 	<Compile Include="Db4o-Specific\KeyToEntryIdInitializer.cs" />
+	<Compile Include="HomographCalculator.cs" />
 	<Compile Include="LexEntry.cs" />
 	<Compile Include="LexEntrySortHelper.cs" />
 	<Compile Include="LexExampleSentence.cs" />

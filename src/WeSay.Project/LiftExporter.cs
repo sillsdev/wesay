@@ -19,6 +19,7 @@ namespace WeSay.Project
 		private XmlWriter _writer;
 		private Dictionary<string, int> _allIdsExportedSoFar;
 		private ViewTemplate _viewTemplate;
+		private IHomographCalculator _homographCalculator;
 
 		//   private Dictionary<string, string> _fieldToRangeSetPairs;
 		protected LiftExporter()
@@ -104,6 +105,12 @@ namespace WeSay.Project
 			set { _viewTemplate = value; }
 		}
 
+		public IHomographCalculator HomographCalculator
+		{
+			get { return _homographCalculator; }
+			set { _homographCalculator = value; }
+		}
+
 		public void End()
 		{
 			if (_writer.Settings.ConformanceLevel != ConformanceLevel.Fragment)
@@ -146,6 +153,16 @@ namespace WeSay.Project
 
 			_writer.WriteStartElement("entry");
 			_writer.WriteAttributeString("id", GetHumanReadableId(entry, _allIdsExportedSoFar));
+
+			if (_homographCalculator != null)
+			{
+				int h = _homographCalculator.GetHomographNumber(entry);
+				if (h > 0)
+				{
+					  _writer.WriteAttributeString("order", h.ToString());
+				}
+			}
+
 			System.Diagnostics.Debug.Assert(entry.CreationTime.Kind == DateTimeKind.Utc);
 			_writer.WriteAttributeString("dateCreated", entry.CreationTime.ToString(LiftDateTimeFormat));
 			System.Diagnostics.Debug.Assert(entry.ModificationTime.Kind == DateTimeKind.Utc);
@@ -553,4 +570,5 @@ namespace WeSay.Project
 			_writer.WriteEndElement();
 		}
 	}
+
 }

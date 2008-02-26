@@ -59,10 +59,12 @@
 	<Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+	<Compile Include="HeadwordSortedListHelperTests.cs" />
 	<Compile Include="Db4o-Specific\BaseDb4oSpecificTests.cs" />
 	<Compile Include="Binding.cs" />
 	<Compile Include="Db4o-Specific\Db4oLexQueryHelperTests.cs" />
 	<Compile Include="Db4o-Specific\Db4oProjectSetupForTesting.cs" />
+	<Compile Include="HomographCalculatorTests.cs" />
 	<Compile Include="LexEntrySortHelperTests.cs" />
 	<Compile Include="LexEntryTests.cs" />
 	<Compile Include="LexiconTests.cs" />

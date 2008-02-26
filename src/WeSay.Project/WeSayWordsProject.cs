@@ -908,6 +908,18 @@ namespace WeSay.Project
 			}
 		}
 
+		public WritingSystem HeadWordWritingSystem
+		{
+			get
+			{
+				Field f = DefaultViewTemplate.GetField(LexEntry.WellKnownProperties.LexicalUnit);
+				if(f.WritingSystemIds.Count == 0)
+				{
+					return this.WritingSystems.UnknownVernacularWritingSystem;
+				}
+				return WritingSystems[f.WritingSystemIds[0]];
+			}
+		}
 
 
 		public override void Save()
