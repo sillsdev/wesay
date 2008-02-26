@@ -8,32 +8,37 @@ using Palaso.Annotations;
 using Palaso.Text;
 using WeSay.Foundation;
 using WeSay.Foundation.Options;
+using WeSay.LexicalModel;
+using WeSay.Project;
 
-namespace WeSay.LexicalModel
+namespace WeSay.Project
 {
 	public class LiftExporter
 	{
 		public const string LiftDateTimeFormat = "yyyy-MM-ddThh:mm:ssZ";
 		private XmlWriter _writer;
 		private Dictionary<string, int> _allIdsExportedSoFar;
-	 //   private Dictionary<string, string> _fieldToRangeSetPairs;
+		private ViewTemplate _viewTemplate;
 
-		public LiftExporter(/*Dictionary<string, string> fieldToOptionListName, */string path)
+		//   private Dictionary<string, string> _fieldToRangeSetPairs;
+		protected LiftExporter()
 		{
-		 //   _fieldToRangeSetPairs = fieldToOptionListName;
 			_allIdsExportedSoFar = new Dictionary<string, int>();
-		   _writer = XmlWriter.Create(path, PrepareSettings(false));
-		   Start();
+		}
+
+		public LiftExporter(/*Dictionary<string, string> fieldToOptionListName, */string path): this()
+		{
+			//   _fieldToRangeSetPairs = fieldToOptionListName;
+			_writer = XmlWriter.Create(path, PrepareSettings(false));
+			Start();
 		}
 
 		/// <summary>
 		/// for automated testing
 		/// </summary>`
 		public LiftExporter(/*Dictionary<string, string> fieldToOptionListName,*/ StringBuilder builder, bool produceFragmentOnly)
+			:this()
 		{
-		   // _fieldToRangeSetPairs = fieldToOptionListName;
-
-			_allIdsExportedSoFar = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
 			_writer = XmlWriter.Create(builder, PrepareSettings(produceFragmentOnly));
 			if (!produceFragmentOnly)
 			{
@@ -78,7 +83,7 @@ namespace WeSay.LexicalModel
 			_writer.WriteAttributeString("version", LiftIO.Validator.LiftVersion);
 			_writer.WriteAttributeString("producer",
 										 ProducerString);
-		   // _writer.WriteAttributeString("xmlns", "flex", null, "http://fieldworks.sil.org");
+			// _writer.WriteAttributeString("xmlns", "flex", null, "http://fieldworks.sil.org");
 		}
 
 		public static string ProducerString
@@ -88,6 +93,15 @@ namespace WeSay.LexicalModel
 				return "WeSay " +
 					   Assembly.GetExecutingAssembly().GetName().Version;
 			}
+		}
+
+		/// <summary>
+		/// Set this if you want the output filtered to the visible fields and the writing system orders respected
+		/// </summary>
+		public ViewTemplate Template
+		{
+			get { return _viewTemplate; }
+			set { _viewTemplate = value; }
 		}
 
 		public void End()
@@ -108,7 +122,7 @@ namespace WeSay.LexicalModel
 			{
 				Add(entries[i]);
 			}
-		 }
+		}
 
 		public void Add(IEnumerable<LexEntry> entries)
 		{
@@ -137,12 +151,12 @@ namespace WeSay.LexicalModel
 			System.Diagnostics.Debug.Assert(entry.ModificationTime.Kind == DateTimeKind.Utc);
 			_writer.WriteAttributeString("dateModified", entry.ModificationTime.ToString(LiftDateTimeFormat));
 			_writer.WriteAttributeString("guid", entry.Guid.ToString());
-		   // _writer.WriteAttributeString("flex", "id", "http://fieldworks.sil.org", entry.Guid.ToString());
-			WriteMultiWithWrapperIfNonEmpty( "lexical-unit",entry.LexicalForm);
+			// _writer.WriteAttributeString("flex", "id", "http://fieldworks.sil.org", entry.Guid.ToString());
+			WriteMultiWithWrapperIfNonEmpty(LexEntry.WellKnownProperties.LexicalUnit, "lexical-unit",entry.LexicalForm);
 
-			WriteWellKnownCustomMultiText(entry, LexEntry.WellKnownProperties.Citation, propertiesAlreadyOutput);
-			WriteWellKnownCustomMultiText(entry, LexEntry.WellKnownProperties.Note, propertiesAlreadyOutput);
-			WriteCustomProperties(entry, propertiesAlreadyOutput);
+			WriteWellKnownCustomMultiTextIfVisible(entry, LexEntry.WellKnownProperties.Citation, propertiesAlreadyOutput);
+			WriteWellKnownCustomMultiTextIfVisible(entry, LexEntry.WellKnownProperties.Note, propertiesAlreadyOutput);
+			WriteCustomPropertiesIfVisible(entry, propertiesAlreadyOutput);
 			foreach (LexSense sense in entry.Senses)
 			{
 				Add(sense);
@@ -165,7 +179,7 @@ namespace WeSay.LexicalModel
 		static public string GetHumanReadableId(LexEntry entry, Dictionary<string, int> idsAndCounts)
 		{
 			string id = entry.GetOrCreateId(true);
-   /*         if (id == null || id.Length == 0)       // if the entry doesn't claim to have an id
+			/*         if (id == null || id.Length == 0)       // if the entry doesn't claim to have an id
 			{
 				id = entry.LexicalForm.GetFirstAlternative().Trim().Normalize(NormalizationForm.FormD); // use the first form as an id
 				if (id == "")
@@ -196,24 +210,33 @@ namespace WeSay.LexicalModel
 			List<string> propertiesAlreadyOutput = new List<string>();
 
 			_writer.WriteStartElement("sense");
-			WriteGrammi(sense);
-			propertiesAlreadyOutput.Add(LexSense.WellKnownProperties.PartOfSpeech);
+			if (ShouldOutputProperty(LexSense.WellKnownProperties.PartOfSpeech))
+			{
+				WriteGrammi(sense);
+				propertiesAlreadyOutput.Add(LexSense.WellKnownProperties.PartOfSpeech);
+			}
+			if (ShouldOutputProperty(LexSense.WellKnownProperties.Gloss))
+			{
+				WriteOneElementPerFormIfNonEmpty(LexSense.WellKnownProperties.Gloss, "gloss", sense.Gloss, ';');
+				propertiesAlreadyOutput.Add(LexSense.WellKnownProperties.Gloss);
+			}
 
-			WriteOneElementPerFormIfNonEmpty("gloss", sense.Gloss, ';');
-			propertiesAlreadyOutput.Add(LexSense.WellKnownProperties.Gloss);
 
 			foreach (LexExampleSentence example in sense.ExampleSentences)
 			{
 				Add(example);
 			}
-			WriteWellKnownCustomMultiText(sense, LexSense.WellKnownProperties.Definition, propertiesAlreadyOutput);
-			WriteWellKnownCustomMultiText(sense, LexSense.WellKnownProperties.Note, propertiesAlreadyOutput);
-			WriteCustomProperties(sense, propertiesAlreadyOutput);
+			WriteWellKnownCustomMultiTextIfVisible(sense, LexSense.WellKnownProperties.Definition, propertiesAlreadyOutput);
+			WriteWellKnownCustomMultiTextIfVisible(sense, LexSense.WellKnownProperties.Note, propertiesAlreadyOutput);
+			WriteCustomPropertiesIfVisible(sense, propertiesAlreadyOutput);
 			_writer.WriteEndElement();
 		}
 
 		private void WriteGrammi(LexSense sense)
 		{
+			if (!ShouldOutputProperty(LexSense.WellKnownProperties.PartOfSpeech))
+				return;
+
 			OptionRef pos = sense.GetProperty<OptionRef>(LexSense.WellKnownProperties.PartOfSpeech);
 
 			if (pos != null && !pos.IsEmpty)
@@ -230,20 +253,58 @@ namespace WeSay.LexicalModel
 			}
 		}
 
-		private void WriteWellKnownCustomMultiText(WeSayDataObject item, string property, List<string> propertiesAlreadyOutput)
+		private void WriteWellKnownCustomMultiTextIfVisible(WeSayDataObject item, string property, List<string> propertiesAlreadyOutput)
 		{
-			MultiText m = item.GetProperty<MultiText>(property);
-			if (WriteMultiWithWrapperIfNonEmpty(property, m))
+			if (ShouldOutputProperty(property))
 			{
-				propertiesAlreadyOutput.Add(property);
+				MultiText m = item.GetProperty<MultiText>(property);
+				if (WriteMultiWithWrapperIfNonEmpty(property, property, m))
+				{
+					propertiesAlreadyOutput.Add(property);
+				}
 			}
 		}
 
-		private void WriteCustomProperties(WeSayDataObject item, List<string> propertiesAlreadyOutput)
+		private bool ShouldOutputProperty(string property)
+		{
+			if(Template == null)
+				return true;
+			Field f = Template.GetField(property);
+			if(f==null)
+				return false;
+			return (f.Enabled);
+		}
+
+		/// <summary>
+		/// this is used both when we're just exporting to lift, and dont' want to filter or order, and
+		/// when we are writing presentation-ready lift, when we do want to filter and order
+		/// </summary>
+		/// <param name="text"></param>
+		/// <param name="propertyName"></param>
+		/// <returns></returns>
+		private LanguageForm[] GetOrderedAndFilteredForms(MultiText text, string propertyName)
+		{
+			if (Template == null)
+			{
+				return text.Forms;
+			}
+			Field f = Template.GetField(propertyName);
+			if (f == null)
+			{
+				return text.Forms;
+			}
+			return text.GetOrderedAndFilteredForms(f.WritingSystemIds);
+		}
+
+		private void WriteCustomPropertiesIfVisible(WeSayDataObject item, List<string> propertiesAlreadyOutput)
 		{
 			foreach (KeyValuePair<string, object> pair in item.Properties)
 			{
 				if (propertiesAlreadyOutput.Contains(pair.Key))
+				{
+					continue;
+				}
+				if(!ShouldOutputProperty(pair.Key))
 				{
 					continue;
 				}
@@ -290,7 +351,7 @@ namespace WeSay.LexicalModel
 			{
 				_writer.WriteStartElement(key);
 				_writer.WriteAttributeString("href", href);
-				WriteMultiWithWrapperIfNonEmpty("label", caption);
+				WriteMultiWithWrapperIfNonEmpty(key, "label", caption);
 				_writer.WriteEndElement();
 			}
 		}
@@ -308,6 +369,9 @@ namespace WeSay.LexicalModel
 
 		private void WriteRelationCollection(string key, LexRelationCollection collection)
 		{
+			if (!ShouldOutputProperty(key))
+				return;
+
 			foreach (LexRelation relation in collection.Relations)
 			{
 				_writer.WriteStartElement("relation");
@@ -319,12 +383,14 @@ namespace WeSay.LexicalModel
 
 		private void WriteOptionRefCollection(string traitName, OptionRefCollection collection)
 		{
+			if (!ShouldOutputProperty(traitName))
+				return;
 			foreach (string key in collection.Keys)
 			{
 				_writer.WriteStartElement("trait");
 				_writer.WriteAttributeString("name", traitName);
 				_writer.WriteAttributeString("value", key);//yes, the 'value' here is an option key
-			   // WriteRangeName(key);
+				// WriteRangeName(key);
 				_writer.WriteEndElement();
 			}
 		}
@@ -336,7 +402,7 @@ namespace WeSay.LexicalModel
 				_writer.WriteStartElement("field");
 
 				_writer.WriteAttributeString("tag", key);
-				WriteMultiTextNoWrapper(text);
+				WriteMultiTextNoWrapper(key, text);
 				_writer.WriteEndElement();
 			}
 		}
@@ -364,68 +430,54 @@ namespace WeSay.LexicalModel
 
 		public void Add(LexExampleSentence example)
 		{
+			if (!ShouldOutputProperty(LexExampleSentence.WellKnownProperties.ExampleSentence))
+				return;
+
 			List<string> propertiesAlreadyOutput = new List<string>();
 			_writer.WriteStartElement("example");
 
 			OptionRef source;
-			//convert for dennis
-/*            MultiText sourceAsMt = example.GetProperty<MultiText>(LexExampleSentence.WellKnownProperties.Source);
-			if (!MultiText.IsEmpty(sourceAsMt))
-			{
-				example.Properties.Remove(new KeyValuePair<string, object>("source", sourceAsMt));
 
-//                source = new OptionRef();
-//
-//               //take the old one out
-//
-//                example.Properties.Remove(new KeyValuePair<string, object>("source", sourceAsMt));
-//
-//                //put this one in
-//                example.Properties.Add(
-//                        new KeyValuePair<string, object>(LexExampleSentence.WellKnownProperties.Source, source));
-//
-//                source.Parent = example;
-//                source.Value = sourceAsMt.GetFirstAlternative();
-			}
- //           else
-*/            {
-				source = example.GetProperty<OptionRef>(LexExampleSentence.WellKnownProperties.Source);
-			}
+			source = example.GetProperty<OptionRef>(LexExampleSentence.WellKnownProperties.Source);
+
 			if (source != null && source.Value.Length > 0)
 			{
-				_writer.WriteAttributeString("source", source.Value);
-				propertiesAlreadyOutput.Add("source");
+				if (ShouldOutputProperty(LexExampleSentence.WellKnownProperties.Source))
+				{
+					_writer.WriteAttributeString("source", source.Value);
+					propertiesAlreadyOutput.Add("source");
+				}
 			}
 
-			WriteMultiTextNoWrapper(example.Sentence);
-			WriteMultiWithWrapperIfNonEmpty("translation", example.Translation);
-			WriteWellKnownCustomMultiText(example, LexExampleSentence.WellKnownProperties.Note, propertiesAlreadyOutput);
+			WriteMultiTextNoWrapper(LexExampleSentence.WellKnownProperties.ExampleSentence, example.Sentence);
+			WriteMultiWithWrapperIfNonEmpty(LexExampleSentence.WellKnownProperties.Translation, "translation", example.Translation);
 
-			//for Dennis
-			/*MultiText t = example.GetProperty<MultiText>("trans");
-			if(t!=null)
+			if (ShouldOutputProperty(LexExampleSentence.WellKnownProperties.ExampleSentence))
 			{
-				Debug.Assert(!MultiText.IsEmpty( example.Translation));
-				example.Properties.Remove(new KeyValuePair<string, object>("trans", t));
+				WriteWellKnownCustomMultiTextIfVisible(example, LexExampleSentence.WellKnownProperties.Note,
+											  propertiesAlreadyOutput);
 			}
-			*/
-			WriteCustomProperties(example, propertiesAlreadyOutput);
+
+
+			WriteCustomPropertiesIfVisible(example, propertiesAlreadyOutput);
 			_writer.WriteEndElement();
 		}
 
-		public void Add(MultiText text)
+
+
+		public void Add(string propertyName, MultiText text)
 		{
-			foreach (LanguageForm form in text)
+			foreach (LanguageForm form in GetOrderedAndFilteredForms(text, propertyName))
 			{
-				_writer.WriteStartElement("form");
-				_writer.WriteAttributeString("lang", form.WritingSystemId);
+					_writer.WriteStartElement("form");
+					_writer.WriteAttributeString("lang", form.WritingSystemId);
 
-				_writer.WriteStartElement("text");
-				_writer.WriteString(form.Form);
-				_writer.WriteEndElement();
+					_writer.WriteStartElement("text");
+					_writer.WriteString(form.Form);
+					_writer.WriteEndElement();
 
-				WriteFlags(form);
-				_writer.WriteEndElement();
+					WriteFlags(form);
+					_writer.WriteEndElement();
 			}
 		}
 
@@ -441,46 +493,48 @@ namespace WeSay.LexicalModel
 		}
 
 
-		private void WriteMultiTextNoWrapper(MultiText text)
+		private void WriteMultiTextNoWrapper(string propertyName, MultiText text)
 		{
+
 			if (!MultiText.IsEmpty(text))
 			{
-				Add(text);
+				Add(propertyName, text);
 			}
 		}
 
-		private void WriteOneElementPerFormIfNonEmpty(string wrapperName, MultiText text, char delimeter)
+		private void WriteOneElementPerFormIfNonEmpty(string propertyName, string wrapperName, MultiText text, char delimeter)
 		{
 			if (!MultiText.IsEmpty(text))
 			{
-				foreach (LanguageForm form in text)
+				foreach (LanguageForm alternative in GetOrderedAndFilteredForms(text, propertyName))
 				{
-					foreach (string part in form.Form.Split(new char[]{delimeter}))
-					{
-						string trimmed = part.Trim();
-						if (part != string.Empty)
+						foreach (string part in alternative.Form.Split(new char[] { delimeter }))
 						{
-							_writer.WriteStartElement(wrapperName);
-							_writer.WriteAttributeString("lang", form.WritingSystemId);
-							_writer.WriteStartElement("text");
-							_writer.WriteString(trimmed);
-							_writer.WriteEndElement();
-							WriteFlags(form);
-							_writer.WriteEndElement();
-
+							string trimmed = part.Trim();
+							if (part != string.Empty)
+							{
+								_writer.WriteStartElement(wrapperName);
+								_writer.WriteAttributeString("lang", alternative.WritingSystemId);
+								_writer.WriteStartElement("text");
+								_writer.WriteString(trimmed);
+								_writer.WriteEndElement();
+								WriteFlags(alternative);
+								_writer.WriteEndElement();
+							}
 						}
-					}
 				}
 			}
 		}
 
 
-		private bool WriteMultiWithWrapperIfNonEmpty(string wrapperName, MultiText text)
+
+
+		private bool WriteMultiWithWrapperIfNonEmpty(string propertyName, string wrapperName, MultiText text)
 		{
 			if (!MultiText.IsEmpty(text))
 			{
 				_writer.WriteStartElement(wrapperName);
-				Add(text);
+				Add(propertyName, text);
 				_writer.WriteEndElement();
 				return true;
 			}
@@ -494,7 +548,7 @@ namespace WeSay.LexicalModel
 			_writer.WriteAttributeString("dateCreated", entry.CreationTime.ToString(LiftDateTimeFormat));
 			_writer.WriteAttributeString("dateModified", entry.ModificationTime.ToString(LiftDateTimeFormat));
 			_writer.WriteAttributeString("guid", entry.Guid.ToString());
-			 _writer.WriteAttributeString("dateDeleted", DateTime.UtcNow.ToString(LiftDateTimeFormat));
+			_writer.WriteAttributeString("dateDeleted", DateTime.UtcNow.ToString(LiftDateTimeFormat));
 
 			_writer.WriteEndElement();
 		}

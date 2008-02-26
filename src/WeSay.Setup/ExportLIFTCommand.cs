@@ -26,7 +26,7 @@ namespace WeSay
 			 _progress = progress;
 			 _progress.StatusLabel="Exporting...";
 			 _progress.State = ProgressState.StateValue.Busy;
-			 WeSay.LexicalModel.LiftExporter exporter = null;
+			 LiftExporter exporter = null;
 			 try
 			 {
 				 exporter = new LiftExporter(/*WeSayWordsProject.Project.GetFieldToOptionListNameDictionary(),*/ _destinationLIFTPath);

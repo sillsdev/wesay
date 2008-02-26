@@ -79,7 +79,7 @@ namespace Addin.Publish.Tests
 			}
 		}
 
-		[Test, Ignore("Not Implemented")]
+		[Test]
 		public void HiddenFields_AreNotOutput()
 		{
 			using (InMemoryRecordList<LexEntry> entries = new InMemoryRecordList<LexEntry>())
@@ -95,27 +95,28 @@ namespace Addin.Publish.Tests
 				AssertXPathNotNull("lift/entry[@id='" + e1.Id + "']/field[@tag='"+"color"+"']", _outputPath);
 
 				//now make it invisible and it should disappear
-				color.Visibility = WeSay.Foundation.CommonEnumerations.VisibilitySetting.Invisible;
+				_viewTemplate.GetField("color").Enabled = false;
+
 				_maker.Make(entries, _viewTemplate, _outputPath);
-				AssertXPathNotNull("lift/entry[@id='" + e1.Id + "' and not(field)]", _outputPath);
+				AssertXPathIsNull("lift/entry[@id='" + e1.Id + "']/field", _outputPath);
 
 			}
 		}
 
-		[Test, Ignore("Not Implemented")]
-		public void DisabledWritingSystems_AreNotOutput()
+		[Test]
+		public void LexemeForm_DisabledWritingSystems_AreNotOutput()
 		{
 			using (InMemoryRecordList<LexEntry> entries = new InMemoryRecordList<LexEntry>())
 			{
-				LexEntry e1 = MakeTestLexEntry(entries, "sunset");
-				e1.LexicalForm.SetAlternative("anUnlistedWritingSystemId", "red");
+				LexEntry entry = entries.AddNew();
+				entry.LexicalForm.SetAlternative(_writingSystemIds[1], "one");
 				_maker.Make(entries, _viewTemplate, _outputPath);
-				AssertXPathNotNull("lift/entry/lexical-unit/form[text='sunset']", _outputPath);
+				AssertXPathNotNull("lift/entry/lexical-unit/form[text='one']", _outputPath);
 				AssertXPathIsNull("lift/entry/lexical-unit/form[text='red']", _outputPath);
 			}
 		}
 
-		[Test, Ignore("Not Implemented")]
+		[Test]
 		public void WritingSystems_AreOutputInPrescribedOrder()
 		{
 			using (InMemoryRecordList<LexEntry> entries = new InMemoryRecordList<LexEntry>())

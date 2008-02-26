@@ -17,7 +17,8 @@ namespace Addin.Publish
 
 		public void Make(InMemoryRecordList<LexEntry> entries, ViewTemplate template, string path)
 		{
-			WeSay.LexicalModel.LiftExporter exporter = new LiftExporter(path);
+			LiftExporter exporter = new LiftExporter(path);
+			exporter.Template = template;
 			foreach (LexEntry entry in entries)
 			{
 				exporter.Add(entry); // .Add(entries, i, howManyAtATime);

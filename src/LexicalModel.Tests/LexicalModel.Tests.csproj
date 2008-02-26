@@ -67,7 +67,6 @@
 	<Compile Include="LexEntryTests.cs" />
 	<Compile Include="LexiconTests.cs" />
 	<Compile Include="LexRelationTests.cs" />
-	<Compile Include="LiftExportTests.cs" />
 	<Compile Include="EventsAndDates.cs" />
 	<Compile Include="Db4o-Specific\PersistenceTests.cs" />
 	<Compile Include="LiftMergerTests.cs" />

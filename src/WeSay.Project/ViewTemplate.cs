@@ -388,7 +388,7 @@ namespace WeSay.Project
 
 
 			Field exampleField =
-					new Field(Field.FieldNames.ExampleSentence.ToString(), "LexExampleSentence", defaultVernacularSet);
+					new Field(LexExampleSentence.WellKnownProperties.ExampleSentence, "LexExampleSentence", defaultVernacularSet);
 			//this is here so the PoMaker scanner can pick up a comment about this label
 			StringCatalog.Get("~Example Sentence", "The label for the field showing an example use of the word.");
 			exampleField.DisplayName = "Example Sentence";
@@ -397,7 +397,7 @@ namespace WeSay.Project
 			masterTemplate.Add(exampleField);
 
 			Field translationField =
-					new Field(Field.FieldNames.ExampleTranslation.ToString(), "LexExampleSentence", defaultAnalysisSet);
+					new Field(LexExampleSentence.WellKnownProperties.Translation, "LexExampleSentence", defaultAnalysisSet);
 			//this is here so the PoMaker scanner can pick up a comment about this label
 			StringCatalog.Get("~Example Translation",
 							  "The label for the field showing the example sentence translated into other languages.");

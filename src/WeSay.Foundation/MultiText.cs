@@ -174,31 +174,5 @@ namespace WeSay.Foundation
 			return m;
 		}
 	}
-	/*
-	public class MultiTextSerializorFactory : ISerialiserFactory
-	{
-		public IXmlMemberSerialiser Create(ReflectorMember member, ReflectorPropertyAttribute attribute)
-		{
-			return new MultiTextSerialiser(member, attribute);
-		}
-	}
 
-	internal class MultiTextSerialiser : XmlMemberSerialiser
-	{
-		public MultiTextSerialiser(ReflectorMember member, ReflectorPropertyAttribute attribute)
-			: base(member, attribute) {}
-
-		public override object Read(XmlNode node, NetReflectorTypeTable table)
-		{
-			MultiText text = new MultiText();
-			if (node != null)
-			{
-				foreach (XmlNode form in node.SelectNodes("form"))
-				{
-					text[form.Attributes["ws"].Value] = form.InnerText.Trim().Replace('\n', ' ').Replace("  ", " ");
-				}
-			}
-			return text;
-		}
-	}*/
 }

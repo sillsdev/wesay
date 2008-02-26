@@ -9,8 +9,9 @@ using WeSay.Foundation;
 using WeSay.Foundation.Options;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Db4o_Specific;
+using WeSay.Project;
 
-namespace WeSay.LexicalTools.Tests
+namespace WeSay.Project.Tests
 {
 	[TestFixture]
 	public class LiftExportTests
@@ -155,7 +156,7 @@ namespace WeSay.LexicalTools.Tests
 				XmlDocument doc = new XmlDocument();
 				doc.Load(filePath);
 				Assert.AreEqual(2, doc.SelectNodes("lift/entry").Count);
-				}
+			}
 			finally
 			{
 				File.Delete(filePath);
@@ -181,7 +182,7 @@ namespace WeSay.LexicalTools.Tests
 			MultiText text = new MultiText();
 			text["blue"] = "ocean";
 			text ["red"] = "sunset";
-			_exporter.Add(text);
+			_exporter.Add(null, text);
 			CheckAnswer("<form lang=\"blue\"><text>ocean</text></form><form lang=\"red\"><text>sunset</text></form>");
 		}
 
@@ -210,7 +211,7 @@ namespace WeSay.LexicalTools.Tests
 				XmlWriter writer = XmlTextWriter.Create(Console.Out, settings);
 				doc.WriteContentTo(writer);
 				writer.Flush();
-		   }
+			}
 			Assert.IsNotNull(node);
 		}
 
@@ -368,7 +369,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void BlankMultiText()
 		{
-			_exporter.Add(new MultiText());
+			_exporter.Add(null, new MultiText());
 			CheckAnswer("");
 		}
 
@@ -475,7 +476,7 @@ namespace WeSay.LexicalTools.Tests
 			_exporter.Add(entry);
 			_exporter.End();
 			ShouldContain(string.Format("dateCreated=\"{0}\"", entry.CreationTime.ToString("yyyy-MM-ddThh:mm:ssZ")));
-	   }
+		}
 
 		[Test]
 		public void EntryHasDateModified()
@@ -518,7 +519,7 @@ namespace WeSay.LexicalTools.Tests
 		}
 
 
-	   /* this is not relevant, as we are currently using form_guid as the id
+		/* this is not relevant, as we are currently using form_guid as the id
 		[Test]
 		public void DuplicateFormsGetHomographNumbers()
 		{
@@ -541,7 +542,7 @@ namespace WeSay.LexicalTools.Tests
 			Assert.AreEqual("my id", LiftExporter.GetHumanReadableId(entry, new Dictionary<string, int>()));
 		}
 
-	   /* this tests a particular implementation detail (idCounts), which isn't used anymore:
+		/* this tests a particular implementation detail (idCounts), which isn't used anymore:
 		[Test]
 		public void GetHumanReadableId_EntryHasId_RegistersId()
 		{
@@ -552,7 +553,7 @@ namespace WeSay.LexicalTools.Tests
 		}
 		*/
 
-			  /* this is not relevant, as we are currently using form_guid as the id
+		/* this is not relevant, as we are currently using form_guid as the id
 [Test]
 		public void GetHumanReadableId_EntryHasAlreadyUsedId_GivesIncrementedId()
 		{
@@ -619,7 +620,7 @@ namespace WeSay.LexicalTools.Tests
 			Assert.AreEqual(1, idCounts["grass"]);
 		}
 */
-  /*      this is not currently relevant, as we are now using form_guid as the id
+		/*      this is not currently relevant, as we are now using form_guid as the id
 	  [Test]
 		public void GetHumanReadableId_EntryHasNoIdAndIsSameAsAlreadyEncountered_GivesIncrementedId()
 		{
@@ -645,7 +646,7 @@ namespace WeSay.LexicalTools.Tests
 			Assert.AreEqual(2, idCounts["grass"]);
 		}
 */
-  /*      this is not currently relevant, as we are now using form_guid as the id
+		/*      this is not currently relevant, as we are now using form_guid as the id
 	  [Test]
 		public void GetHumanReadableId_IdsDifferByWhiteSpaceTypeOnly_WhitespaceTreatedAsSpaces()
 		{
@@ -806,7 +807,7 @@ namespace WeSay.LexicalTools.Tests
 			_exporter.Add(sense);
 			_exporter.End();
 			AssertXPathNotNull("sense/field[@tag='flubadub']/form[@lang='zz' and text='orange']");
-		 }
+		}
 
 		[Test]
 		public void CustomMultiTextOnEntry()

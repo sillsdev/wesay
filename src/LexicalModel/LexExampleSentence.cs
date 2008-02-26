@@ -12,10 +12,14 @@ namespace WeSay.LexicalModel
 		//  the data in the object database?
 		new public class WellKnownProperties : WeSayDataObject.WellKnownProperties
 		{
+			static public string ExampleSentence = "ExampleSentence";
+			static public string Translation = "ExampleTranslation";
 			static public string Source = "source";
+
+
 			static public bool Contains(string fieldName)
 			{
-				List<string> list = new List<string>(new string[] { Source });
+				List<string> list = new List<string>(new string[] {ExampleSentence, Source, Translation });
 				return list.Contains(fieldName);
 			}
 

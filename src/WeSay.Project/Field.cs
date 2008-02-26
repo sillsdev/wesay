@@ -49,6 +49,9 @@ namespace WeSay.Project
 		/// These are just for getting the strings right, using ToString(). In order
 		/// To allow extensions later, we aren't using these as a closed list of possible
 		/// values.
+		///
+		///
+		/// NB: use of these is deprecated.  Better to use the WellKnownProperties of the class
 		/// </summary>
 		public enum FieldNames
 		{
@@ -118,6 +121,11 @@ namespace WeSay.Project
 			WritingSystemIds = new List<string>(writingSystemIds);
 			_multiplicity = multiplicity;
 			DataTypeName = dataTypeName;
+
+			Debug.Assert(FieldNames.EntryLexicalForm.ToString() == LexEntry.WellKnownProperties.LexicalUnit);
+			Debug.Assert(FieldNames.ExampleSentence.ToString() == LexExampleSentence.WellKnownProperties.ExampleSentence);
+			Debug.Assert(FieldNames.ExampleTranslation.ToString() == LexExampleSentence.WellKnownProperties.Translation);
+
 		}
 
 		[Description("The name of the field, as it will appear in the LIFT file. This is not visible to the WeSay user."

@@ -41,9 +41,13 @@ namespace WeSay.LexicalModel
 		new public class WellKnownProperties : WeSayDataObject.WellKnownProperties
 		{
 			static public string Citation = "citation";
+
+			static public string LexicalUnit = "EntryLexicalForm";
+
+
 			static public bool Contains(string fieldName)
 			{
-				List<string> list = new List<string>(new string[] { Citation });
+				List<string> list = new List<string>(new string[] {LexicalUnit, Citation });
 				return list.Contains(fieldName);
 			}
 		} ;

@@ -72,7 +72,6 @@
 	<Compile Include="Lexicon.cs" />
 	<Compile Include="LexRelation.cs" />
 	<Compile Include="LexSense.cs" />
-	<Compile Include="LiftExporter.cs" />
 	<Compile Include="PairStringLexEntryIdDisplayProvider.cs" />
 	<Compile Include="PretendRecordList.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />
