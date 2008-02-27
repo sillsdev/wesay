@@ -212,7 +212,7 @@ namespace WeSay.App
 			Db4oRecordListManager manager = _recordListManager as Db4oRecordListManager;
 			if (manager != null)
 			{
-				HeadwordSortedListHelper helper = new HeadwordSortedListHelper(manager.DataSource,
+				HeadwordSortedListHelper helper = new HeadwordSortedListHelper(manager,
 																	 this._project.HeadWordWritingSystem);
 				manager.GetSortedList(helper);//installs it
 			}

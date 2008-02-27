@@ -28,7 +28,7 @@ namespace WeSay.LexicalModel
 		{
 			_headwordWritingSystem = headwordWritingSystem;
 
-			HeadwordSortedListHelper helper = new HeadwordSortedListHelper(recordListManager.DataSource,
+			HeadwordSortedListHelper helper = new HeadwordSortedListHelper(recordListManager,
 										  headwordWritingSystem);
 			_entryIdsSortedByHeadword = recordListManager.GetSortedList(helper);
 
@@ -48,6 +48,9 @@ namespace WeSay.LexicalModel
 				LexEntry neighbor = _entryIdsSortedByHeadword.GetValue(searchIndex);
 				string theirHeadword = neighbor.GetHeadWord(_headwordWritingSystem.Id);
 			}
+
+
+			//todo: look at @order and the planned-for order-in-lift field on LexEntry
 
 			return 0;
 		}
