@@ -209,13 +209,13 @@ namespace WeSay.App
 			DictionaryTask dictionaryTask = new DictionaryTask(_recordListManager, _project.DefaultViewTemplate);
 			dictionaryTask.RegisterWithCache(_project.DefaultViewTemplate);
 
-			Db4oRecordListManager manager = _recordListManager as Db4oRecordListManager;
-			if (manager != null)
-			{
-				HeadwordSortedListHelper helper = new HeadwordSortedListHelper(manager,
-																	 this._project.HeadWordWritingSystem);
-				manager.GetSortedList(helper);//installs it
-			}
+//            Db4oRecordListManager manager = _recordListManager as Db4oRecordListManager;
+//            if (manager != null)
+//            {
+//                HeadwordSortedListHelper helper = new HeadwordSortedListHelper(manager,
+//                                                                     this._project.HeadWordWritingSystem);
+//                manager.GetSortedList(helper);//installs it
+//            }
 		}
 
 		public string CurrentUrl
