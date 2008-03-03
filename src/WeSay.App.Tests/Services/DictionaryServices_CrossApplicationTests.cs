@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.IO;
 using System.Threading;
 using NUnit.Framework;
 using Palaso.Services.Dictionary;
@@ -22,7 +23,7 @@ namespace WeSay.App.Tests
 		[SetUp]
 		public void Setup()
 		{
-
+			Palaso.Reporting.ErrorReport.IsOkToInteractWithUser = false;
 		}
 
 		[TearDown]
@@ -43,8 +44,16 @@ namespace WeSay.App.Tests
 			Process[] doomed = Process.GetProcessesByName("WeSay.App");
 			foreach (Process process in doomed)
 			{
-				Debug.WriteLine("Gave up waiting, killing wesay...");
-				process.Kill();
+				if (process.MainWindowTitle.Contains("Whoops"))
+				{
+					process.Kill();
+					Assert.Fail("Client WeSay was showing a failure dialog");
+				}
+				else
+				{
+					Debug.WriteLine("Gave up waiting, killing wesay...");
+					process.Kill();
+				}
 			}
 //failing on the build server                Assert.AreEqual(0, doomed.Length, "Teardown shouldn't have to kill any WeSay instances.");
 		}
@@ -55,6 +64,28 @@ namespace WeSay.App.Tests
 
 			WeSayApp app = new WeSayApp(new string[] { "-server" });
 			Assert.IsTrue(app.ServerModeStartRequested);
+		}
+
+
+
+		/// <summary>
+		/// WS-632 regression
+		/// </summary>
+		[Test]
+		public void LiftFileIsUpdatedWhenServiceQuits()
+		{
+			using (ProjectDirectorySetupForTesting projectDirectorySetup = new ProjectDirectorySetupForTesting(string.Empty))
+			{
+				Process p = LaunchDictionaryServiceApp(kStartInServerMode, projectDirectorySetup);
+
+				IDictionaryService dictionaryService = GetDictionaryService(projectDirectorySetup.PathToLiftFile, Process.GetCurrentProcess().Id);
+				dictionaryService.AddEntry("v", "dontLooseThisWord", null, null, null, null);
+				dictionaryService.DeregisterClient(Process.GetCurrentProcess().Id);
+				Thread.Sleep(1000);
+				AssertServiceIsClosed(projectDirectorySetup.PathToLiftFile);
+
+				Assert.IsTrue(File.ReadAllText(projectDirectorySetup.PathToLiftFile).Contains("dontLooseThisWord"));
+			}
 		}
 
 		[Test]

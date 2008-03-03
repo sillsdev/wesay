@@ -126,10 +126,13 @@ namespace WeSay.App
 
 					StartDictionaryServices();
 					_dictionary.LastClientDeregistered += _serviceAppSingletonHelper.OnExitIfInServerMode;
-					_serviceAppSingletonHelper.BringToFrontRequest += new EventHandler(OnBringToFrontRequest);
 					_serviceAppSingletonHelper.HandleEventsUntilExit(StartUserInterface);
 
 					_dictionary.LastClientDeregistered -= _serviceAppSingletonHelper.OnExitIfInServerMode;
+
+					//do a last backup before exiting
+					_project.LiftUpdateService.DoLiftUpdateNow(true);
+					Logger.WriteEvent("App Exiting Normally.");
 				}
 			}
 
@@ -156,8 +159,11 @@ namespace WeSay.App
 
 		void OnBringToFrontRequest(object sender, EventArgs e)
 		{
-			Debug.Assert(_tabbedForm != null);
-			if (_tabbedForm != null)
+			if (_tabbedForm == null)
+			{
+				_serviceAppSingletonHelper.EnsureUIRunningAndInFront();
+			}
+			else
 			{
 				_tabbedForm.synchronizationContext.Send(
 					   delegate
@@ -280,13 +286,8 @@ namespace WeSay.App
 				//run the ui
 				Application.Run(_tabbedForm);
 
-				//do a last backup before exiting
-				_project.LiftUpdateService.DoLiftUpdateNow(true);
-				//      BackupMaker.BackupToExternal(_filesToBackup,_project.ProjectDirectoryPath, "h:\\" + project.Name + ".zip");
-
-
 				Settings.Default.SkinName = DisplaySettings.Default.SkinName;
-				Logger.WriteEvent("App Exiting Normally.");
+
 			}
 			catch (IOException e)
 			{
@@ -306,6 +307,7 @@ namespace WeSay.App
 
 		void OnTabbedForm_IntializationComplete(object sender, EventArgs e)
 		{
+			_serviceAppSingletonHelper.BringToFrontRequest += new EventHandler(OnBringToFrontRequest);
 			_serviceAppSingletonHelper.UiReadyForEvents();
 
 		}

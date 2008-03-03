@@ -163,6 +163,5 @@ namespace WeSay.App.Tests
 		   Assert.AreEqual(id, ids[0]);
 		}
 
-
 	}
 }

@@ -20,6 +20,7 @@ namespace WeSay.App
 		public ConfigFileTaskBuilder(Stream config, WeSayWordsProject project, ICurrentWorkTask currentWorkTask, IRecordListManager recordListManager)
 		{
 			_picoContext = new DefaultPicoContainer();
+
 			_picoContext.RegisterComponentInstance("Project", project);
 			_picoContext.RegisterComponentInstance("Current Task Provider", currentWorkTask);
 
@@ -213,6 +214,11 @@ namespace WeSay.App
 			{
 				if (disposing)
 				{
+					//without this, pico disposes of the project, which we don't really own
+					_picoContext.UnregisterComponent("Project");
+					//without this, pico disposes of the db, which we don't really own
+					_picoContext.UnregisterComponent("All Entries");
+
 					_picoContext.Dispose();
 					_picoContext = null;
 					GC.SuppressFinalize(this);

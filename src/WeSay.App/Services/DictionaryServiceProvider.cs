@@ -199,7 +199,7 @@ namespace WeSay.App
 			if (!string.IsNullOrEmpty(definition))
 			{
 				sense = (LexSense) e.Senses.AddNew();
-				sense.Gloss.SetAlternative(definitionWritingSystemId, definition);
+				sense.Definition.SetAlternative(definitionWritingSystemId, definition);
 			}
 			if (!string.IsNullOrEmpty(example))
 			{
