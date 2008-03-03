@@ -86,6 +86,8 @@ namespace WeSay.LexicalTools.Tests
 
 			string[] analysisWritingSystemIds = new string[] {"analysis"};
 			string[] vernacularWritingSystemIds = new string[] {_writingSystem.Id};
+			RtfRenderer.HeadWordWritingSystemId = vernacularWritingSystemIds[0];
+
 			_viewTemplate = new ViewTemplate();
 			_viewTemplate.Add(
 					new Field(Field.FieldNames.EntryLexicalForm.ToString(),

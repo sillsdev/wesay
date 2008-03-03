@@ -35,6 +35,8 @@ namespace WeSay.LexicalTools.Tests
 
 			string[] analysisWritingSystemIds = new string[] { BasilProject.Project.WritingSystems.TestWritingSystemAnalId };
 			string[] vernacularWritingSystemIds = new string[] { BasilProject.Project.WritingSystems.TestWritingSystemVernId };
+			RtfRenderer.HeadWordWritingSystemId = vernacularWritingSystemIds[0];
+
 			this._viewTemplate = new ViewTemplate();
 			this._viewTemplate.Add(new Field(Field.FieldNames.EntryLexicalForm.ToString(), "LexEntry", vernacularWritingSystemIds));
 			 this._viewTemplate.Add(new Field(_primaryMeaningFieldName, "LexSense", analysisWritingSystemIds));

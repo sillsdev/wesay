@@ -38,6 +38,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			base.Setup();
 			this._vernacularWsId = BasilProject.Project.WritingSystems.TestWritingSystemVernId;
+			RtfRenderer.HeadWordWritingSystemId = _vernacularWsId;
 
 			this._filePath = Path.GetTempFileName();
 			this._recordListManager = new Db4oRecordListManager(new WeSayWordsDb4oModelConfiguration(), _filePath);
@@ -99,6 +100,7 @@ namespace WeSay.LexicalTools.Tests
 			this._task = new DictionaryTask(_recordListManager, viewTemplate);
 			this._detailTaskPage = new TabPage();
 			ActivateTask();
+
 
 			this._tabControl = new TabControl();
 
