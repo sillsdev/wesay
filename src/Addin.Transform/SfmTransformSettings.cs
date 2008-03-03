@@ -131,7 +131,9 @@ namespace Addin.Transform
 			{
 				List<ChangePair> pairs = new List<ChangePair>();
 				pairs.Add(ChangePair.CreateFullMarkerReplacement( "BaseForm", "base"));
-				pairs.Add(ChangePair.CreateFullMarkerReplacement( "SemanticDomainDdp4", "sd"));
+				pairs.Add(ChangePair.CreateFullMarkerReplacement("SemanticDomainDdp4", "sd"));
+				pairs.Add(ChangePair.CreateFullMarkerReplacement("citation", "lc"));
+				pairs.Add(ChangePair.CreateFullMarkerReplacement("definition", "d"));
 
 				if (!String.IsNullOrEmpty(_vernacularLanguageWritingSystemId))
 				{

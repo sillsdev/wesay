@@ -191,7 +191,7 @@ namespace WeSay.Project
 
 		internal void MoreMigrations()
 		{
-		  //pre-nov2007 (png alpha release) projects had Note.
+			//pre-nov2007 (png alpha release) projects had Note.
 			//then, when we fixed it to "note", they had two note fields!
 			//this is to clean up the mess.
 			RemoveByFieldName(this, "Note");
@@ -205,7 +205,7 @@ namespace WeSay.Project
 			Field gloss = GetField(LexSense.WellKnownProperties.Gloss);
 
 			//this is an upgrade situation
-			if (!def.Enabled || def.Visibility!=CommonEnumerations.VisibilitySetting.Visible)
+			if (!def.Enabled || def.Visibility != CommonEnumerations.VisibilitySetting.Visible)
 			{
 				//copy writing systems from glosses
 				foreach (string writingSystemId in gloss.WritingSystemIds)
@@ -217,10 +217,16 @@ namespace WeSay.Project
 				}
 			}
 
+			//detect pre-gloss-to-definition switch
+			if(!def.Enabled || def.Visibility != CommonEnumerations.VisibilitySetting.Visible)
+			{
+				gloss.Visibility = CommonEnumerations.VisibilitySetting.Invisible;
+			}
+
 			def.Enabled = true;
 			def.Visibility = CommonEnumerations.VisibilitySetting.Visible;
 
-			gloss.Visibility = CommonEnumerations.VisibilitySetting.Invisible;
+
 
 			// In Feb 2008 we started giving user control over field order, but
 			// certain key fields must be first.

@@ -70,6 +70,10 @@
 	<Compile Include="SfmTransformSettings.cs" />
   </ItemGroup>
   <ItemGroup>
+	<ProjectReference Include="..\LexicalModel\LexicalModel.csproj">
+	  <Project>{5F61C809-B6C0-4567-9603-B2198E1AD038}</Project>
+	  <Name>LexicalModel</Name>
+	</ProjectReference>
 	<ProjectReference Include="..\WeSay.AddinLib\WeSay.AddinLib.csproj">
 	  <Project>{E651E83C-94DD-4D6D-ABA2-C9FDA34FBA55}</Project>
 	  <Name>WeSay.AddinLib</Name>
@@ -77,6 +81,10 @@
 	<ProjectReference Include="..\WeSay.Foundation\WeSay.Foundation.csproj">
 	  <Project>{F12EB680-0990-4900-B77E-0FBF2E28A815}</Project>
 	  <Name>WeSay.Foundation</Name>
+	</ProjectReference>
+	<ProjectReference Include="..\WeSay.Project\WeSay.Project.csproj">
+	  <Project>{5CFD0BB3-5B2A-4911-B220-9C2286151BF0}</Project>
+	  <Name>WeSay.Project</Name>
 	</ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -108,6 +116,11 @@
   </ItemGroup>
   <ItemGroup>
 	<None Include="Resources\wordExport.png" />
+  </ItemGroup>
+  <ItemGroup>
+	<EmbeddedResource Include="plift2html.xsl">
+	  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	</EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
