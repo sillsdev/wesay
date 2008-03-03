@@ -253,7 +253,7 @@ namespace WeSay.LexicalModel.Tests
 		public void GetHeadword_EmptyEverything_ReturnsEmptyString()
 		{
 			LexEntry entry = new LexEntry();
-			Assert.AreEqual(string.Empty, entry.GetHeadWord("a"));
+			Assert.AreEqual(string.Empty, entry.GetHeadWordForm("a"));
 		}
 
 		[Test]
@@ -263,9 +263,9 @@ namespace WeSay.LexicalModel.Tests
 			entry.LexicalForm.SetAlternative("c", "can");
 			entry.LexicalForm.SetAlternative("a", "apple");
 			entry.LexicalForm.SetAlternative("b", "bart");
-			Assert.AreEqual("apple", entry.GetHeadWord("a"));
-			Assert.AreEqual("bart", entry.GetHeadWord("b"));
-			Assert.AreEqual(string.Empty, entry.GetHeadWord("donthave"));
+			Assert.AreEqual("apple", entry.GetHeadWordForm("a"));
+			Assert.AreEqual("bart", entry.GetHeadWordForm("b"));
+			Assert.AreEqual(string.Empty, entry.GetHeadWordForm("donthave"));
 		}
 
 		[Test]
@@ -276,9 +276,9 @@ namespace WeSay.LexicalModel.Tests
 			MultiText citation = entry.GetOrCreateProperty<MultiText>(LexEntry.WellKnownProperties.Citation);
 			citation.SetAlternative("b", "barter");
 			citation.SetAlternative("a", "applishus");
-			Assert.AreEqual("applishus", entry.GetHeadWord("a"));
-			Assert.AreEqual("barter", entry.GetHeadWord("b"));
-			Assert.AreEqual(string.Empty, entry.GetHeadWord("donthave"));
+			Assert.AreEqual("applishus", entry.GetHeadWordForm("a"));
+			Assert.AreEqual("barter", entry.GetHeadWordForm("b"));
+			Assert.AreEqual(string.Empty, entry.GetHeadWordForm("donthave"));
 		}
 		[Test]
 		public void GetHeadword_CitationFormLacksAlternative_GetsFormFromLexemeForm()
@@ -287,7 +287,7 @@ namespace WeSay.LexicalModel.Tests
 			entry.LexicalForm.SetAlternative("a", "apple");
 			MultiText citation = entry.GetOrCreateProperty<MultiText>(LexEntry.WellKnownProperties.Citation);
 			citation.SetAlternative("b", "bater");
-			Assert.AreEqual("apple", entry.GetHeadWord("a"));
+			Assert.AreEqual("apple", entry.GetHeadWordForm("a"));
 		}
 	}
 }

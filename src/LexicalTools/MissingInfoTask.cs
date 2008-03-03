@@ -96,7 +96,7 @@ namespace WeSay.LexicalTools
 			_viewTemplate = CreateViewTemplateFromListOfFields(viewTemplate, fieldsToShow);
 
 			//hack until we overhaul how Tasks are setup:
-			if (filter is MissingItemFilter && fieldsToShow.Contains("BaseForm"))
+			if (filter is MissingItemFilter && fieldsToShow.Contains(LexEntry.WellKnownProperties.BaseForm))
 			{
 				MissingItemFilter f = filter as MissingItemFilter;
 				Field flagField = new Field();
@@ -206,8 +206,11 @@ namespace WeSay.LexicalTools
 		public override void Deactivate()
 		{
 			base.Deactivate();
-		   _missingInfoControl.SelectedIndexChanged -= new EventHandler(OnRecordSelectionChanged);
-			_missingInfoControl.Dispose();
+		   if (_missingInfoControl != null)
+		   {
+			   _missingInfoControl.SelectedIndexChanged -= new EventHandler(OnRecordSelectionChanged);
+			   _missingInfoControl.Dispose();
+		   }
 			_missingInfoControl = null;
 			RecordListManager.GoodTimeToCommit();
 		}

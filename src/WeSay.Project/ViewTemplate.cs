@@ -45,7 +45,13 @@ namespace WeSay.Project
 			set { _id = value; }
 		}
 
-
+		public WritingSystem HeadwordWritingSytem
+		{
+			get
+			{
+				return GetDefaultWritingSystemForField(LexEntry.WellKnownProperties.LexicalUnit);
+			}
+		}
 
 
 		///<summary>
@@ -421,7 +427,7 @@ namespace WeSay.Project
 			ddp4Field.Visibility = CommonEnumerations.VisibilitySetting.NormallyHidden;
 			masterTemplate.Add(ddp4Field);
 
-			Field baseFormField = new Field("BaseForm",
+			Field baseFormField = new Field(LexEntry.WellKnownProperties.BaseForm,
 											  "LexEntry",
 											  defaultVernacularSet,
 											  Field.MultiplicityType.ZeroOr1,

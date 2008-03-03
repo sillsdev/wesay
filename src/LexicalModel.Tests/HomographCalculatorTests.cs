@@ -5,11 +5,17 @@ using System.Text;
 
 using NUnit.Framework;
 using WeSay.Data;
+using WeSay.Foundation;
+using WeSay.Language;
 using WeSay.LexicalModel.Db4o_Specific;
 using WeSay.Project;
 
 namespace WeSay.LexicalModel.Tests
 {
+	/// <summary>
+	/// NB: we don't test the citationform-lexemeform interactions here, as that is the job of
+	/// the GetHeadword method of LexemeForm, which is tested elsewhere.
+	/// </summary>
 	[TestFixture]
 	public class HomographCalculatorTests
 	{
@@ -27,22 +33,62 @@ namespace WeSay.LexicalModel.Tests
 			_recordListManager = new Db4oRecordListManager(new WeSayWordsDb4oModelConfiguration(), _dbFile);
 			Db4oLexModelHelper.Initialize(_recordListManager.DataSource.Data);
 			_records = (Db4oRecordList<LexEntry>) _recordListManager.GetListOfType<LexEntry>();
-			_calculator = new HomographCalculator(_recordListManager, WeSayWordsProject.Project.WritingSystems.UnknownAnalysisWritingSystem);
+			WritingSystem primary = new WritingSystem();
+			primary.Id = "primary";
+			WeSay.Project.WeSayWordsProject.Project.WritingSystems.Add("primary", primary);
+			_calculator = new HomographCalculator(_recordListManager, primary);
 		}
-
-		[Test, Ignore("not yet")]
-		public void GetHomographNumber_NoHomograph_Returns0()
+		[TearDown]
+		public void TearDown()
 		{
-			LexEntry entry = new LexEntry();
-			Assert.AreEqual(0, _calculator.GetHomographNumber(entry));
+			_recordListManager.Dispose();
 		}
 
-		[Test,Ignore("not implemented")]
+		[Test]
+		public void GetHomographNumber_OnlyOneEntry_Returns0()
+		{
+			FluentEntry entry1 = MakeEntry().WithLexemeForm("primary", "blue");
+			Assert.AreEqual(0, _calculator.GetHomographNumber(entry1));
+		}
+
+
+
+		[Test]
+		public void GetHomographNumber_FirstEntryWithFollowingHomograph_Returns1()
+		{
+			FluentEntry entry1 = MakeEntry().WithLexemeForm("primary", "blue");
+			FluentEntry entry2 = MakeEntry().WithLexemeForm("primary", "blue");
+			Assert.AreEqual(1, _calculator.GetHomographNumber(entry1));
+		}
+
+
+
+		[Test]
+		public void GetHomographNumber_SecondEntry_Returns2()
+		{
+			FluentEntry entry1 = MakeEntry().WithLexemeForm("primary", "blue");
+			FluentEntry entry2 = MakeEntry().WithLexemeForm("primary", "blue");
+			Assert.AreEqual(2, _calculator.GetHomographNumber(entry2));
+		}
+
+
+
+		[Test]
+		public void GetHomographNumber_ThirdEntry_Returns3()
+		{
+			FluentEntry entry0 = MakeEntry().WithLexemeForm("en", "blue");
+			FluentEntry entry1 = MakeEntry().WithLexemeForm("primary", "blue");
+		   FluentEntry entry2 = MakeEntry().WithLexemeForm("primary", "blue");
+			FluentEntry entry3 = MakeEntry().WithLexemeForm("primary", "blue");
+			Assert.AreEqual(3, _calculator.GetHomographNumber(entry3));
+		}
+
+		[Test]
 		public void GetHomographNumber_3SameLexicalForms_Returns123()
 		{
-			FluentEntry entry1 = MakeEntry().WithLexemeForm("one", "blue");
-			FluentEntry entry2 = MakeEntry().WithLexemeForm("one", "blue");
-			FluentEntry entry3 = MakeEntry().WithLexemeForm("one", "blue");
+			FluentEntry entry1 = MakeEntry().WithLexemeForm("primary", "blue");
+			FluentEntry entry2 = MakeEntry().WithLexemeForm("primary", "blue");
+			FluentEntry entry3 = MakeEntry().WithLexemeForm("primary", "blue");
 			Assert.AreEqual(1, _calculator.GetHomographNumber(entry1));
 			Assert.AreEqual(3, _calculator.GetHomographNumber(entry3));
 			Assert.AreEqual(2, _calculator.GetHomographNumber(entry2));
@@ -65,6 +111,11 @@ namespace WeSay.LexicalModel.Tests
 			public FluentEntry WithLexemeForm(string writingSystemId, string lexicalunit)
 			{
 				this.LexicalForm.SetAlternative(writingSystemId, lexicalunit);
+				return this;
+			}
+			public FluentEntry WithCitationForm(string writingSystemId, string lexicalunit)
+			{
+				this.GetOrCreateProperty<MultiText>(LexEntry.WellKnownProperties.Citation).SetAlternative(writingSystemId, lexicalunit);
 				return this;
 			}
 		}

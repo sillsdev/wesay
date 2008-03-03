@@ -260,15 +260,15 @@ namespace WeSay.CommonTools
 					break;
 
 				case ShapeType.RoundedRectangle:
-					int a = 20;
-					outline.AddArc(0, 0, a, a, 180, 90);
-					outline.AddLine(a / 2, 0, width - a / 2, 0);
-					outline.AddArc(width - a, 0, a, a, 270, 90);
-					outline.AddLine(width, a / 2, width, height - width / 8);
-					outline.AddArc(width - a, height - a, a, a, 0, 90);
-					outline.AddLine(width - a / 2, height, a / 2, height);
-					outline.AddArc(0, height - a, a, a, 90, 90);
-					outline.AddLine(0, height - a / 2, 0, a / 2);
+					int radius = 20;
+					outline.AddArc(0, 0, radius, radius, 180, 90);
+					outline.AddLine(radius / 2, 0, width - radius / 2, 0);
+					outline.AddArc(width - radius, 0, radius, radius, 270, 90);
+					outline.AddLine(width, radius / 2, width, height - radius / 8);
+					outline.AddArc(width - radius, height - radius, radius, radius, 0, 90);
+					outline.AddLine(width - radius / 2, height, radius / 2, height);
+					outline.AddArc(0, height - radius, radius, radius, 90, 90);
+					outline.AddLine(0, height - radius / 2, 0, radius / 2);
 					break;
 
 					//                case ShapeType.RoundedRectangle:

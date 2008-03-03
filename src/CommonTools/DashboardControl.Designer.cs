@@ -29,7 +29,6 @@ namespace WeSay.CommonTools
 		private void InitializeComponent()
 		{
 			this._panel = new System.Windows.Forms.TableLayoutPanel();
-			this._panel.SuspendLayout();
 			this.SuspendLayout();
 			//
 			// _panel
@@ -45,7 +44,7 @@ namespace WeSay.CommonTools
 			this._panel.Padding = new System.Windows.Forms.Padding(10);
 			this._panel.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this._panel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this._panel.Size = new System.Drawing.Size(420, 282);
+			this._panel.Size = new System.Drawing.Size(420, 20);
 			this._panel.TabIndex = 0;
 			//
 			// DashboardControl
@@ -55,8 +54,6 @@ namespace WeSay.CommonTools
 			this.Controls.Add(this._panel);
 			this.Name = "DashboardControl";
 			this.Size = new System.Drawing.Size(421, 342);
-			this._panel.ResumeLayout(false);
-			this._panel.PerformLayout();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 

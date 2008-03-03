@@ -4,6 +4,10 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 
+
+//!!!!!!!!!!!!!! see http://www.codeproject.com/KB/GDI-plus/colormatrix.aspx  for a way
+// to automatically re-color the icons. THe key search terms are "Color Matrix" and "Sepia"
+
 namespace WeSay.CommonTools
 {
 	public class DashboardButtonWithIcon : DashboardButton

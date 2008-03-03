@@ -53,6 +53,21 @@ namespace WeSay.LexicalModel
 			}
 			return result;
 		}
+
+		public static IEnumerable<LexEntry> GetAllEntriesSortedByHeadword(WritingSystem headwordWritingSystem)
+		{
+			VerifyInitialized();
+			HeadwordSortedListHelper sortHelper = new HeadwordSortedListHelper(_recordListManager,
+																			   headwordWritingSystem);
+			CachedSortedDb4oList<string, LexEntry> entryPairs = _recordListManager.GetSortedList(sortHelper);
+			List<LexEntry> result = new List<LexEntry>();
+			for (int index = 0; index < entryPairs.Count; index++)
+			{
+				result.Add(entryPairs.GetValue(index));
+			}
+			return result;
+		}
+
 		public static LexEntry FindFirstLexEntryMatchingId(string id)
 		{
 			VerifyInitialized();

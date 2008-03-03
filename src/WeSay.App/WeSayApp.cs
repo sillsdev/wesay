@@ -209,13 +209,13 @@ namespace WeSay.App
 			DictionaryTask dictionaryTask = new DictionaryTask(_recordListManager, _project.DefaultViewTemplate);
 			dictionaryTask.RegisterWithCache(_project.DefaultViewTemplate);
 
-//            Db4oRecordListManager manager = _recordListManager as Db4oRecordListManager;
-//            if (manager != null)
-//            {
-//                HeadwordSortedListHelper helper = new HeadwordSortedListHelper(manager,
-//                                                                     this._project.HeadWordWritingSystem);
-//                manager.GetSortedList(helper);//installs it
-//            }
+			Db4oRecordListManager manager = _recordListManager as Db4oRecordListManager;
+			if (manager != null)
+			{
+				HeadwordSortedListHelper helper = new HeadwordSortedListHelper(manager,
+																	 this._project.HeadWordWritingSystem);
+			  manager.GetSortedList(helper);//installs it
+			}
 		}
 
 		public string CurrentUrl
@@ -273,6 +273,9 @@ namespace WeSay.App
 				_tabbedForm.ContinueLaunchingAfterInitialDisplay();
 				_tabbedForm.Activate();
 				_tabbedForm.BringToFront();//needed if we were previously in server mode
+
+				RtfRenderer.HomographCalculator = new HomographCalculator((Db4oRecordListManager) _recordListManager, _project.DefaultViewTemplate.HeadwordWritingSytem);
+				RtfRenderer.HeadWordWritingSystemId = _project.DefaultViewTemplate.HeadwordWritingSytem.Id;
 
 				//run the ui
 				Application.Run(_tabbedForm);

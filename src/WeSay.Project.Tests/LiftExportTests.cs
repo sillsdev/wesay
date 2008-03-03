@@ -188,7 +188,7 @@ namespace WeSay.Project.Tests
 
 
 		[Test]
-		public void LexemeForm()
+		public void LexemeForm_SingleWritingSystem()
 		{
 			LexEntry e = new LexEntry();
 			e.LexicalForm["xx"] = "foo";

@@ -1,10 +1,12 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Reflection;
 using System.Text;
 using System.Xml;
 using Palaso.Annotations;
+using Palaso.Reporting;
 using Palaso.Text;
 using WeSay.Foundation;
 using WeSay.Foundation.Options;
@@ -20,6 +22,19 @@ namespace WeSay.Project
 		private Dictionary<string, int> _allIdsExportedSoFar;
 		private ViewTemplate _viewTemplate;
 		private IHomographCalculator _homographCalculator;
+		private IFindEntries _entryFinder;
+
+		[Flags]
+		public enum Options
+		{
+			NormalLift = 0,
+			DereferenceRelations = 1,
+			DetermineHeadword = 1
+		} ;
+
+		private Options _options= Options.NormalLift;
+		private string _headWordWritingSystemId;
+
 
 		//   private Dictionary<string, string> _fieldToRangeSetPairs;
 		protected LiftExporter()
@@ -45,6 +60,14 @@ namespace WeSay.Project
 			{
 				Start();
 			}
+		}
+
+		public void SetUpForPresentationLiftExport(ViewTemplate template, IHomographCalculator homographCalculator, IFindEntries entryFinder)
+		{
+			_homographCalculator = homographCalculator;
+			ExportOptions = LiftExporter.Options.DereferenceRelations | Options.DetermineHeadword;
+			_entryFinder = entryFinder;
+			Template = template;
 		}
 
 //        public Dictionary<string, string> FieldToRangeSetPairs
@@ -111,6 +134,18 @@ namespace WeSay.Project
 			set { _homographCalculator = value; }
 		}
 
+		public IFindEntries EntryFinder
+		{
+			get { return _entryFinder; }
+			set { _entryFinder = value; }
+		}
+
+		public Options ExportOptions
+		{
+			get { return _options; }
+			set { _options = value; }
+		}
+
 		public void End()
 		{
 			if (_writer.Settings.ConformanceLevel != ConformanceLevel.Fragment)
@@ -171,6 +206,10 @@ namespace WeSay.Project
 			// _writer.WriteAttributeString("flex", "id", "http://fieldworks.sil.org", entry.Guid.ToString());
 			WriteMultiWithWrapperIfNonEmpty(LexEntry.WellKnownProperties.LexicalUnit, "lexical-unit",entry.LexicalForm);
 
+			if (0 != (_options & Options.DetermineHeadword))
+			{
+				WriteHeadWordField(entry,"headword");
+			}
 			WriteWellKnownCustomMultiTextIfVisible(entry, LexEntry.WellKnownProperties.Citation, propertiesAlreadyOutput);
 			WriteWellKnownCustomMultiTextIfVisible(entry, LexEntry.WellKnownProperties.Note, propertiesAlreadyOutput);
 			WriteCustomPropertiesIfVisible(entry, propertiesAlreadyOutput);
@@ -179,6 +218,18 @@ namespace WeSay.Project
 				Add(sense);
 			}
 			_writer.WriteEndElement();
+		}
+
+		private void WriteHeadWordField(LexEntry entry, string fieldName)
+		{
+			MultiText headword = new MultiText();
+
+			//review: here I (jh) make a whole multitext out of the form, so I don't need
+			// to add specialized exporters for a non-multitext.  But anyhow,
+			//I'm wondering if we won't really need to have a multi-ws headword anyhow
+			headword.SetAlternative(HeadWordWritingSystemId, entry.GetHeadWordForm(HeadWordWritingSystemId));
+			WriteCustomMultiTextField(fieldName, headword);
+
 		}
 
 		/// <summary>
@@ -395,6 +446,34 @@ namespace WeSay.Project
 				_writer.WriteAttributeString("name", relation.FieldId);
 				_writer.WriteAttributeString("ref", relation.Key);
 				_writer.WriteEndElement();
+
+				if (0 !=(ExportOptions & Options.DereferenceRelations))
+				{
+					Debug.Assert(_entryFinder != null, "An IEntryFinder must be provide if DereferenceRelations is on.");
+					LexEntry target = _entryFinder.FindFirstEntryMatchingId(relation.Key);
+					if (target != null)
+					{
+						WriteHeadWordField(target, relation.FieldId + "-relation-headword");
+					}
+				}
+			}
+		}
+
+		private string HeadWordWritingSystemId
+		{
+			get
+			{
+				if (_headWordWritingSystemId == null)
+				{
+					Debug.Assert(_viewTemplate != null,"Should not be in here if not template was specified.");
+					if (_viewTemplate.HeadwordWritingSytem == null)
+						throw new ConfigurationException("Could not get a HeadwordWritingSytem from the ViewTemplate.");
+					if (string.IsNullOrEmpty(_viewTemplate.HeadwordWritingSytem.Id))
+						throw new ConfigurationException("HeadwordWritingSytem had an empty id.");
+					//cache this
+					_headWordWritingSystemId = _viewTemplate.HeadwordWritingSytem.Id;
+				}
+				return _headWordWritingSystemId;
 			}
 		}
 
@@ -412,14 +491,14 @@ namespace WeSay.Project
 			}
 		}
 
-		private void WriteCustomMultiTextField(string key, MultiText text)
+		private void WriteCustomMultiTextField(string tag, MultiText text)
 		{
 			if (!MultiText.IsEmpty(text))
 			{
 				_writer.WriteStartElement("field");
 
-				_writer.WriteAttributeString("tag", key);
-				WriteMultiTextNoWrapper(key, text);
+				_writer.WriteAttributeString("tag", tag);
+				WriteMultiTextNoWrapper(tag, text);
 				_writer.WriteEndElement();
 			}
 		}
@@ -570,5 +649,6 @@ namespace WeSay.Project
 			_writer.WriteEndElement();
 		}
 	}
+
 
 }

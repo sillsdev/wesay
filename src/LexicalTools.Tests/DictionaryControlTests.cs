@@ -74,7 +74,7 @@ namespace WeSay.LexicalTools.Tests
 			viewTemplate.Add(new Field(Field.FieldNames.ExampleTranslation.ToString(), "LexExampleSentence",analysisWritingSystemIds));
 
 			AddEntry("Initial", analysisWritingSystemIds[0], "meaning", true);
-			_secondEntry = AddEntry("Secondary", analysisWritingSystemIds[0], "meaning", false);
+			_secondEntry = AddEntry("Secondary", analysisWritingSystemIds[0], "secondarymeaning", false);
 			AddEntry("Tertiary", analysisWritingSystemIds[0], "meaning", true);
 
 
@@ -624,7 +624,7 @@ namespace WeSay.LexicalTools.Tests
 			string label = GetSelectedLabel((WeSayListBox)l.Properties);
 			Assert.AreEqual("Secondary", label);
 			RichTextBoxTester r = new RichTextBoxTester("_lexicalEntryPreview");
-			Assert.IsTrue(r.Text.Contains("Secondary"));
+			Assert.IsTrue(r.Text.Contains("secondarymeaning"));
 		}
 
 		[Test]

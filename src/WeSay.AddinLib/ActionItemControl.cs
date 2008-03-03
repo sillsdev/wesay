@@ -159,7 +159,7 @@ namespace WeSay.AddinLib
 			UpdateVisualThings();
 		}
 
-		private void UpdateVisualThings()
+		protected void UpdateVisualThings()
 		{
 			UpdateEnabledStates();
 			_actionName.Text = _addin.Name;
@@ -181,13 +181,13 @@ namespace WeSay.AddinLib
 
 		private void UpdateEnabledStates()
 		{
+			_toggleShowInWeSay.Visible = _addin.Available;
 			if (!_addin.Available)
 			{
 				_actionName.ForeColor = Color.Gray;
 				_description.ForeColor = Color.Gray;
 				_launchButton.Enabled = false;
-				_setupButton.Visible = false;
-				_toggleShowInWeSay.Visible = false;
+			  //  _setupButton.Visible = false;
 			}
 			else
 			{

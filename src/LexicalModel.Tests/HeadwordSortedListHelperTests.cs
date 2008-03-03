@@ -47,7 +47,6 @@ namespace WeSay.LexicalModel.Tests
 		[Test, Ignore("not yet")]
 		public void GetKeys_3EntriesWithLexemeForms_PairsAreSorted()
 		{
-			HeadwordSortedListHelper h = new HeadwordSortedListHelper(_recordListManager, _headwordWritingSystem);
 			LexEntry e1 = (LexEntry) _entries.AddNew();
 			e1.LexicalForm.SetAlternative(_headwordWritingSystem.Id, "bank");
 			long bankId = _recordListManager.DataSource.Data.Ext().GetID(e1);

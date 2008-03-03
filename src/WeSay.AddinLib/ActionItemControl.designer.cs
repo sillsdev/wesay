@@ -35,6 +35,8 @@ namespace WeSay.AddinLib
 			this._launchButton = new System.Windows.Forms.Button();
 			this._toolTip = new System.Windows.Forms.ToolTip(this.components);
 			this._toggleShowInWeSay = new System.Windows.Forms.LinkLabel();
+			this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+			this.flowLayoutPanel1.SuspendLayout();
 			this.SuspendLayout();
 			//
 			// _description
@@ -43,7 +45,7 @@ namespace WeSay.AddinLib
 			this._description.BorderStyle = System.Windows.Forms.BorderStyle.None;
 			this._description.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this._description.ForeColor = System.Drawing.SystemColors.WindowText;
-			this._description.Location = new System.Drawing.Point(84, 27);
+			this._description.Location = new System.Drawing.Point(3, 23);
 			this._description.Multiline = true;
 			this._description.Name = "_description";
 			this._description.ReadOnly = true;
@@ -56,7 +58,7 @@ namespace WeSay.AddinLib
 			//
 			this._actionName.AutoSize = true;
 			this._actionName.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this._actionName.Location = new System.Drawing.Point(80, 4);
+			this._actionName.Location = new System.Drawing.Point(3, 0);
 			this._actionName.MaximumSize = new System.Drawing.Size(247, 0);
 			this._actionName.Name = "_actionName";
 			this._actionName.Size = new System.Drawing.Size(111, 20);
@@ -68,7 +70,7 @@ namespace WeSay.AddinLib
 			this._setupButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this._setupButton.AutoSize = true;
 			this._setupButton.LinkColor = System.Drawing.Color.Navy;
-			this._setupButton.Location = new System.Drawing.Point(340, 4);
+			this._setupButton.Location = new System.Drawing.Point(393, 4);
 			this._setupButton.Name = "_setupButton";
 			this._setupButton.Size = new System.Drawing.Size(47, 13);
 			this._setupButton.TabIndex = 4;
@@ -91,7 +93,7 @@ namespace WeSay.AddinLib
 			this._toggleShowInWeSay.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this._toggleShowInWeSay.AutoSize = true;
 			this._toggleShowInWeSay.LinkColor = System.Drawing.Color.Navy;
-			this._toggleShowInWeSay.Location = new System.Drawing.Point(393, 4);
+			this._toggleShowInWeSay.Location = new System.Drawing.Point(393, 27);
 			this._toggleShowInWeSay.Name = "_toggleShowInWeSay";
 			this._toggleShowInWeSay.Size = new System.Drawing.Size(87, 13);
 			this._toggleShowInWeSay.TabIndex = 4;
@@ -99,18 +101,30 @@ namespace WeSay.AddinLib
 			this._toggleShowInWeSay.Text = "Visible In WeSay";
 			this._toggleShowInWeSay.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this._toggleShowInWeSay_LinkClicked);
 			//
+			// flowLayoutPanel1
+			//
+			this.flowLayoutPanel1.Controls.Add(this._actionName);
+			this.flowLayoutPanel1.Controls.Add(this._description);
+			this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+			this.flowLayoutPanel1.Location = new System.Drawing.Point(84, 4);
+			this.flowLayoutPanel1.Name = "flowLayoutPanel1";
+			this.flowLayoutPanel1.Size = new System.Drawing.Size(303, 65);
+			this.flowLayoutPanel1.TabIndex = 5;
+			this.flowLayoutPanel1.WrapContents = false;
+			//
 			// ActionItemControl
 			//
 			this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
 			this.BackColor = System.Drawing.SystemColors.Window;
+			this.Controls.Add(this.flowLayoutPanel1);
 			this.Controls.Add(this._toggleShowInWeSay);
 			this.Controls.Add(this._setupButton);
-			this.Controls.Add(this._actionName);
 			this.Controls.Add(this._launchButton);
-			this.Controls.Add(this._description);
 			this.Name = "ActionItemControl";
 			this.Size = new System.Drawing.Size(480, 77);
+			this.flowLayoutPanel1.ResumeLayout(false);
+			this.flowLayoutPanel1.PerformLayout();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -124,5 +138,6 @@ namespace WeSay.AddinLib
 		private System.Windows.Forms.LinkLabel _setupButton;
 		private System.Windows.Forms.ToolTip _toolTip;
 		private System.Windows.Forms.LinkLabel _toggleShowInWeSay;
+		private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
 	}
 }

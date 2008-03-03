@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Palaso.Text;
 using WeSay.Data;
 using WeSay.Language;
 
@@ -16,7 +17,6 @@ namespace WeSay.LexicalModel
 		/// <returns></returns>
 		int GetHomographNumber(LexEntry entry);
 	}
-
 
 	public class HomographCalculator : IHomographCalculator
 	{
@@ -37,25 +37,53 @@ namespace WeSay.LexicalModel
 
 		#region IHomographCalculator Members
 
+
+
 		public int GetHomographNumber(LexEntry entry)
 		{
 			long databaseIdOfEntry = _records.GetId(entry);
-			int index = _entryIdsSortedByHeadword.GetIds().IndexOf(databaseIdOfEntry);
-			int searchIndex = index - 1;
-			string headword = entry.GetHeadWord(_headwordWritingSystem.Id);
+			int ourIndex = _entryIdsSortedByHeadword.GetIds().IndexOf(databaseIdOfEntry);
+			string headword = entry.GetHeadWordForm(_headwordWritingSystem.Id);
+
+			//what number are we?
+			int found = 0;
+			int searchIndex = ourIndex - 1;
 			while (searchIndex > -1)
 			{
-				LexEntry neighbor = _entryIdsSortedByHeadword.GetValue(searchIndex);
-				string theirHeadword = neighbor.GetHeadWord(_headwordWritingSystem.Id);
+				LexEntry previousGuy = _entryIdsSortedByHeadword.GetValue(searchIndex);
+				if (headword != previousGuy.GetHeadWordForm(_headwordWritingSystem.Id))
+				{
+					break;
+				}
+				++found;
+				--searchIndex;
 			}
 
+			// if we're the first with this headword
+			if (found == 0)
+			{
+				//and we're the last entry
+				if (ourIndex + 1 >= _entryIdsSortedByHeadword.Count)
+				{
+					return 0; //no homograph number
+				}
+
+				LexEntry nextGuy = _entryIdsSortedByHeadword.GetValue(ourIndex +1);
+				// the next guy doesn't match
+				if (headword != nextGuy.GetHeadWordForm(_headwordWritingSystem.Id))
+				{
+					return 0; //no homograph number
+				}
+				else
+				{
+					return 1;
+				}
+			}
+			//there were preceding homographs
+			return 1+found;
 
 			//todo: look at @order and the planned-for order-in-lift field on LexEntry
-
-			return 0;
 		}
-
-
 
 		#endregion
 	}

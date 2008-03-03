@@ -15,6 +15,12 @@ namespace WeSay.CommonTools
 			InitializeComponent();
 		}
 
+		public GroupHeader(string name)
+		{
+
+			InitializeComponent();
+			Name = name;
+		}
 
 		protected override void OnPaint(PaintEventArgs e)
 		{

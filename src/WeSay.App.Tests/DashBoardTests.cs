@@ -28,7 +28,7 @@ namespace WeSay.App.Tests
 			window.Controls.Add(dash);
 			Application.Run(window);
 		}
-		[Test]
+		[Test, Ignore("not really a test")]
 		public void Run()
 		{
 		}

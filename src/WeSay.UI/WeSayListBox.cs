@@ -175,6 +175,11 @@ namespace WeSay.UI
 
 		protected override void OnItemSelectionChanged(ListViewItemSelectionChangedEventArgs e)
 		{
+			if (System.Environment.OSVersion.Version.Major >= 6)
+			{
+				this.Invalidate();//needed to prevent artifacts of previous selections hanging around
+			}
+
 			base.OnItemSelectionChanged(e);
 				_selectedItem = SelectedItem;
 				OnSelectedIndexChanged(new EventArgs());

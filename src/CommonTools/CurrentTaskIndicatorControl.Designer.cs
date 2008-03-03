@@ -39,7 +39,7 @@ namespace WeSay.CommonTools
 			((System.ComponentModel.ISupportInitialize)(this.localizationHelper1)).BeginInit();
 			this.SuspendLayout();
 			//
-			// label1
+			// _label
 			//
 			this.label1.AutoSize = true;
 			this.label1.BackColor = System.Drawing.Color.Transparent;

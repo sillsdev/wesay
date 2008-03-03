@@ -20,12 +20,14 @@ namespace WeSay.LexicalTools.Tests
 
 		private string _lexicalForm;
 		private ViewTemplate _viewTemplate;
+		private string _vernacularWritingSystemId = "PretendVernacular";
 
 		[SetUp]
 		public void Setup()
 		{
 			Db4oLexModelHelper.InitializeForNonDbTests();
 			WeSayWordsProject.InitializeForTests();
+			RtfRenderer.HeadWordWritingSystemId = _vernacularWritingSystemId;
 
 			this._recordListManager = new InMemoryRecordListManager();
 			Field field = new Field(LexSense.WellKnownProperties.Definition,"LexSense" , new string[]{"analysis"});
@@ -33,7 +35,7 @@ namespace WeSay.LexicalTools.Tests
 
 			LexEntry entry = new LexEntry();
 			this._lexicalForm = "vernacular";
-			entry.LexicalForm.SetAlternative("PretendVernacular", _lexicalForm);
+			entry.LexicalForm.SetAlternative(_vernacularWritingSystemId, _lexicalForm);
 			IRecordList<LexEntry> masterRecordList = this._recordListManager.GetListOfType<LexEntry>();
 			masterRecordList.Add(entry);
 
@@ -42,6 +44,7 @@ namespace WeSay.LexicalTools.Tests
 			this._description = "My description";
 
 			this._viewTemplate = new ViewTemplate();
+			this._viewTemplate.Add(new Field(LexEntry.WellKnownProperties.LexicalUnit, "LexEntry", new string[] { _vernacularWritingSystemId }));
 			this._viewTemplate.Add(new Field(LexSense.WellKnownProperties.Definition, "LexSense",new string[] { "en" }));
 			this._viewTemplate.Add(new Field(Field.FieldNames.ExampleSentence.ToString(), "LexExampleSentence",new string[] { "th" }));
 
@@ -125,14 +128,29 @@ namespace WeSay.LexicalTools.Tests
 		{
 			MissingInfoTask task = (MissingInfoTask)_task;
 			task.Activate();
-			Assert.IsTrue(((MissingInfoControl)task.Control).EntryViewControl.ControlFormattedView.Text.Contains(_lexicalForm));
-			Assert.AreEqual(1, task.DataSource.Count);
-			task.Deactivate();
+			try
+			{
+
+				Assert.IsTrue(
+					((MissingInfoControl)task.Control).EntryViewControl.ControlFormattedView.Text.Contains(_lexicalForm));
+
+				Assert.AreEqual(1, task.DataSource.Count);
+			}
+			finally
+			{
+				task.Deactivate();
+			}
 			ClearMasterRecordList();
 			task.Activate();
-			Assert.AreEqual(string.Empty, ((MissingInfoControl)task.Control).EntryViewControl.ControlFormattedView.Text);
-			Assert.AreEqual(0, task.DataSource.Count);
-			task.Deactivate();
+			try
+			{
+				Assert.AreEqual(string.Empty, ((MissingInfoControl)task.Control).EntryViewControl.ControlFormattedView.Text);
+				Assert.AreEqual(0, task.DataSource.Count);
+			}
+			finally
+			{
+				task.Deactivate();
+			}
 		}
 
 		[Test]

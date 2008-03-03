@@ -25,5 +25,20 @@ namespace WeSay.CommonTools
 			InitializeComponent();
 			this._dictionarySizeLabel.Text = String.Format(StringCatalog.Get(this._dictionarySizeLabel.Text), records.Count);
 		}
+
+		private void _dictionarySizeLabel_Click(object sender, EventArgs e)
+		{
+
+		}
+
+		private void DictionaryStatusControl_FontChanged(object sender, EventArgs e)
+		{
+			this._dictionarySizeLabel.Font = this.Font;
+		}
+
+		private void _dictionarySizeLabel_FontChanged(object sender, EventArgs e)
+		{
+
+		}
 	}
 }

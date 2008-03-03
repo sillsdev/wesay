@@ -13,6 +13,9 @@ namespace WeSay.LexicalTools
 {
 	public static class RtfRenderer
 	{
+		static public IHomographCalculator HomographCalculator;
+		public static string HeadWordWritingSystemId;
+
 		public static string ToRtf(LexEntry entry, CurrentItemEventArgs currentItem)
 		{
 			if(entry == null)
@@ -24,9 +27,7 @@ namespace WeSay.LexicalTools
 			rtf.Append(@"{\rtf1\ansi\uc0\fs28 ");
 			rtf.Append(MakeFontTable());
 
-			rtf.Append(@"\b ");
-			rtf.Append(RenderField(entry.LexicalForm, currentItem, 2, null));
-			rtf.Append(@"\b0  ");
+			RenderHeadword(entry, rtf);
 
 			int senseNumber = 1;
 			foreach (LexSense sense in entry.Senses)
@@ -91,6 +92,34 @@ namespace WeSay.LexicalTools
 
 			rtf.Append(@"\par}");
 			return Utf16ToRtfAnsi(rtf.ToString());
+		}
+
+		private static void RenderHeadword(LexEntry entry, StringBuilder rtf)
+		{
+			rtf.Append(@"{\b ");
+			LanguageForm  headword = entry.GetHeadWord(HeadWordWritingSystemId);
+			if (null != headword)
+			{
+				// rtf.Append(RenderField(headword, currentItem, 2, null));
+
+				rtf.Append(SwitchToWritingSystem(headword.WritingSystemId, 2));
+				rtf.Append(headword.Form);
+			 //   rtf.Append(" ");
+
+				if (HomographCalculator != null)
+				{
+					int homographNumber = HomographCalculator.GetHomographNumber(entry);
+					if (homographNumber > 0)
+					{
+						rtf.Append(@"{\super " + homographNumber.ToString() + "}");
+					}
+				}
+			}
+			else
+			{
+				rtf.Append("??? ");
+			}
+			rtf.Append("}");
 		}
 
 		private static string MakeFontTable()

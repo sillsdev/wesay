@@ -19,7 +19,11 @@ namespace WeSay.LexicalModel
 		private IRecordList<LexEntry> _entries;
 		private IList<String> _expectedOptionTraits;
 		private IList<string> _expectedOptionCollectionTraits;
-//        private ProgressState _progressState = new NullProgressState();
+
+		/// <summary>
+		/// related to homograph number calculation
+		/// </summary>
+		private IHistoricalEntryCountProvider _historicalEntryCountProvider;
 
 		public LiftMerger(Db4oDataSource dataSource,  IRecordList<LexEntry> entries)
 		{
@@ -27,6 +31,7 @@ namespace WeSay.LexicalModel
 			_entries = entries;
 			_expectedOptionTraits = new List<string>();
 			_expectedOptionCollectionTraits = new List<string>();
+			_historicalEntryCountProvider = HistoricalEntryCountProviderForDb4o.GetOrMakeFromDatabase(dataSource);
 		}
 
 		public LexEntry GetOrMakeEntry(Extensible eInfo)
@@ -66,6 +71,7 @@ namespace WeSay.LexicalModel
 			}
 
 			entry.ModifiedTimeIsLocked = true; //while we build it up
+			entry.DetermineBirthOrder(_historicalEntryCountProvider);
 			return entry;
 		}
 

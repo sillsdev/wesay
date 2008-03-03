@@ -42,7 +42,7 @@ namespace WeSay.CommonTools
 			this._title.Name = "_title";
 			this._title.Size = new System.Drawing.Size(60, 24);
 			this._title.TabIndex = 0;
-			this._title.Text = "label1";
+			this._title.Text = "_label";
 			//
 			// localizationHelper1
 			//

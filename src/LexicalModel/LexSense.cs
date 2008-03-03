@@ -17,12 +17,11 @@ namespace WeSay.LexicalModel
 			static public string SemanticDomainsDdp4 = "SemanticDomainDdp4";
 			static public string Definition = "definition";//the lower case here is defined by LIFT standard
 			static public string Picture = "Picture";
-			static public string BaseForm = "BaseForm";
 			static public string Gloss = "gloss";
 			//static public string Relations = "relations";
 			static public bool ContainsAnyCaseVersionOf(string fieldName)
 			{
-				List<string> list = new List<string>(new string[] { PartOfSpeech, Definition, SemanticDomainsDdp4, Picture, Note, BaseForm, Gloss });
+				List<string> list = new List<string>(new string[] { PartOfSpeech, Definition, SemanticDomainsDdp4, Picture, Note, Gloss });
 				return list.Contains(fieldName) || list.Contains(fieldName.ToLower()) || list.Contains(fieldName.ToUpper());
 			}
 		} ;

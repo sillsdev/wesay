@@ -61,6 +61,7 @@
 	<Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+	<Compile Include="HistoricalEntryCountProvider.cs" />
 	<Compile Include="HeadwordSortedListHelper.cs" />
 	<Compile Include="Db4o-Specific\ApproximateFinder.cs" />
 	<Compile Include="Db4o-Specific\Db4oLexModelHelper.cs" />

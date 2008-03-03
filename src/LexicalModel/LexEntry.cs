@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Text;
 using LiftIO;
+using Palaso.Text;
 using Palaso.UI.WindowsForms.i8n;
 using WeSay.Data;
 using WeSay.Foundation;
@@ -36,18 +37,25 @@ namespace WeSay.LexicalModel
 		[NonSerialized]
 		private bool _modifiedTimeIsLocked= false;
 
+		 /// <summary>
+		 /// This is used in homograph calculation.  When reading in from lift,
+		 /// each entry should get this set in order, thus preserving the (un-desirable, in my (jh's) opinion)
+		 /// the LIFT spec's assertion that the relative order of entries is significant.
+		 /// </summary>
+		private int _birthOrder=-1;
+
 		//!!What!! Is this done this way so that we don't end up storing
 		//  the data in the object database?
 		new public class WellKnownProperties : WeSayDataObject.WellKnownProperties
 		{
 			static public string Citation = "citation";
-
 			static public string LexicalUnit = "EntryLexicalForm";
+			static public string BaseForm = "BaseForm";
 
 
 			static public bool Contains(string fieldName)
 			{
-				List<string> list = new List<string>(new string[] {LexicalUnit, Citation });
+				List<string> list = new List<string>(new string[] { LexicalUnit, Citation, BaseForm });
 				return list.Contains(fieldName);
 			}
 		} ;
@@ -398,16 +406,60 @@ namespace WeSay.LexicalModel
 			set { _modifiedTimeIsLocked = value; }
 		}
 
-		public string GetHeadWord(string writingSystemId)
+		public MultiText CitationForm
 		{
-
-			MultiText citationMT = GetProperty<MultiText>(LexEntry.WellKnownProperties.Citation);
-			string headWord;
-			if (citationMT == null || string.IsNullOrEmpty(headWord = citationMT.GetExactAlternative(writingSystemId)))
+			get
 			{
-				headWord = LexicalForm.GetExactAlternative(writingSystemId);
+				return GetOrCreateProperty<MultiText>(WellKnownProperties.Citation);
+			}
+		}
+
+		/// <summary>
+		/// The "birth order" of this entry, relative to all other entries
+		/// that have ever been in this version of the cache.
+		/// This is used in homograph number calculation
+		/// </summary>
+		public int DetermineBirthOrder(IHistoricalEntryCountProvider historicalCountProvider)
+		{
+			if (_birthOrder < 0)
+			{
+				_birthOrder = historicalCountProvider.GetNextNumber();
+				NotifyPropertyChanged("birthOrder");
+			}
+			return _birthOrder;
+		}
+
+		public LanguageForm GetHeadWord(string writingSystemId)
+		{
+			if (string.IsNullOrEmpty(writingSystemId))
+			{
+				throw new ArgumentException("writingSystemId");
+			}
+			MultiText citationMT = GetProperty<MultiText>(LexEntry.WellKnownProperties.Citation);
+			LanguageForm headWord;
+			if (citationMT == null || (headWord = citationMT.Find(writingSystemId)) ==null)
+			{
+				headWord = LexicalForm.Find(writingSystemId);
 			}
 			return headWord;
+		}
+		 /// <summary>
+		 /// this is safer
+		 /// </summary>
+		 /// <param name="writingSystemId"></param>
+		 /// <returns>string.emtpy if no headword</returns>
+		public string GetHeadWordForm(string writingSystemId)
+		{
+			LanguageForm form = GetHeadWord(writingSystemId);
+			if (form == null)
+				return string.Empty;
+			return form.Form;
+		}
+
+		public void AddRelationTarget(string relationName, string targetId)
+		{
+			LexRelationCollection relations = GetOrCreateProperty<LexRelationCollection>(LexEntry.WellKnownProperties.BaseForm);
+			relations.Relations.Add(new LexRelation(relationName, targetId, this));
 		}
 	}
 
@@ -425,5 +477,10 @@ namespace WeSay.LexicalModel
 		{
 			get { return base.Parent as LexEntry; }
 		}
+	}
+
+	public interface IFindEntries
+	{
+		LexEntry FindFirstEntryMatchingId(string id);
 	}
 }

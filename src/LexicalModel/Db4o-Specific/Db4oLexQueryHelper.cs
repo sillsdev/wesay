@@ -180,4 +180,39 @@ namespace WeSay.LexicalModel.Db4o_Specific
 
 
 	}
+
+	public class Db4oLexEntryFinder: IFindEntries
+	{
+		private Db4oDataSource _dataSource;
+
+		public Db4oLexEntryFinder(Db4oDataSource dataSource)
+		{
+			_dataSource = dataSource;
+		}
+
+		public LexEntry FindFirstEntryMatchingId(string id)
+		{
+			return Db4oLexQueryHelper.FindFirstEntryMatchingId(_dataSource, id);
+		}
+	}
+
+	public class InMemoryLexEntryFinder : IFindEntries
+	{
+		private readonly InMemoryRecordList<LexEntry> _recordList;
+
+		public InMemoryLexEntryFinder(InMemoryRecordList<LexEntry> recordList)
+		{
+			_recordList = recordList;
+		}
+
+		public LexEntry FindFirstEntryMatchingId(string id)
+		{
+			foreach (LexEntry entry in _recordList)
+			{
+				if(entry.Id == id)
+					return entry;
+			}
+			return null;
+		}
+	}
 }
