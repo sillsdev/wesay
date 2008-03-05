@@ -22,10 +22,26 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
 	<DebugType>pdbonly</DebugType>
 	<Optimize>true</Optimize>
-	<OutputPath>bin\Release\</OutputPath>
+	<OutputPath>..\..\output\Release\</OutputPath>
 	<DefineConstants>TRACE</DefineConstants>
 	<ErrorReport>prompt</ErrorReport>
 	<WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Mono Debug|AnyCPU' ">
+	<DebugSymbols>true</DebugSymbols>
+	<OutputPath>..\..\output\Mono Debug\</OutputPath>
+	<DefineConstants>TRACE;DEBUG;MONO</DefineConstants>
+	<DebugType>full</DebugType>
+	<PlatformTarget>AnyCPU</PlatformTarget>
+	<ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Mono Release|AnyCPU' ">
+	<OutputPath>..\..\output\Mono Release\</OutputPath>
+	<DefineConstants>TRACE;MONO</DefineConstants>
+	<Optimize>true</Optimize>
+	<DebugType>pdbonly</DebugType>
+	<PlatformTarget>AnyCPU</PlatformTarget>
+	<ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
 	<Reference Include="Db4objects.Db4o, Version=6.0.2.0, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL">

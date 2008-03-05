@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+#if !MONO
 using System.ServiceModel;
+#endif
 using System.Text;
 using Palaso.Services.Dictionary;
 using Palaso.Text;
@@ -14,7 +16,9 @@ using WeSay.Project;
 
 namespace WeSay.App
 {
+#if !MONO
 	[ServiceBehavior(InstanceContextMode = InstanceContextMode.Single, IncludeExceptionDetailInFaults =true)]
+#endif
 	public class DictionaryServiceProvider : Palaso.Services.Dictionary.IDictionaryService, IDisposable
 	{
 		private readonly WeSayWordsProject _project;

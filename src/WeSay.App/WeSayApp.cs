@@ -2,7 +2,9 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+#if !MONO
 using System.ServiceModel;
+#endif
 using System.Threading;
 using System.Windows.Forms;
 using CommandLine;
@@ -27,7 +29,9 @@ namespace WeSay.App
 	{
 		//private static Mutex _oneInstancePerProjectMutex;
 		private  WeSayWordsProject _project;
+#if !MONO
 		private  ServiceHost _dictionaryHost;
+#endif
 		private  DictionaryServiceProvider _dictionary;
 		private  IRecordListManager _recordListManager ;
 		private CommandLineArguments _commandLineArguments = new CommandLineArguments();
@@ -181,6 +185,7 @@ namespace WeSay.App
 
 			if (IPCUtils.IsWcfAvailable)
 			{
+#if !MONO
 				Palaso.Reporting.Logger.WriteMinorEvent("Starting Dictionary Services at {0}", DictionaryServiceAddress);
 
 				_dictionaryHost = new ServiceHost(_dictionary, new Uri[] {new Uri(DictionaryServiceAddress),});
@@ -188,6 +193,7 @@ namespace WeSay.App
 				_dictionaryHost.AddServiceEndpoint(typeof (IDictionaryService), IPCUtils.CreateBinding(),
 												   DictionaryServiceAddress);
 				_dictionaryHost.Open();
+#endif
 			}
 		}
 
