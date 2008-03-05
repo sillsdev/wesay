@@ -231,16 +231,16 @@ namespace WeSay.Data
 			if (idKeyIndex < 0) // not found, index is bitwise complement of the place to insert
 			{
 				idKeyIndex = ~idKeyIndex;
+				_idKeyMap.Insert(idKeyIndex, keyIdPair);
 			}
-			_idKeyMap.Insert(idKeyIndex, keyIdPair);
 
 			// insert into key id map
 			index = _keyIdMap.BinarySearch(keyIdPair, _keyIdSorter);
 			if (index < 0) // not found, index is bitwise complement of the place to insert
 			{
 				index = ~index;
+				_keyIdMap.Insert(index, keyIdPair);
 			}
-			_keyIdMap.Insert(index, keyIdPair);
 			return index;
 		}
 
