@@ -181,7 +181,7 @@ namespace WeSay.AddinLib
 
 		private void UpdateEnabledStates()
 		{
-			_toggleShowInWeSay.Visible = _addin.Available;
+			_toggleShowInWeSay.Visible = _addin.Available && _inAdminMode;
 			if (!_addin.Available)
 			{
 				_actionName.ForeColor = Color.Gray;
