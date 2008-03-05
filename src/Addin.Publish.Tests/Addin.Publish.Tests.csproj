@@ -55,9 +55,9 @@
   </Target>
   -->
   <ItemGroup>
-	<ProjectReference Include="..\Addin.Publish\Addin.Publish.csproj">
-	  <Project>{7AE29850-AD39-460C-965C-A8BF1B0569BE}</Project>
-	  <Name>Addin.Publish</Name>
+	<ProjectReference Include="..\LexicalModel.Tests\LexicalModel.Tests.csproj">
+	  <Project>{123D695C-0D5D-46E5-893F-39EC4E0B01B8}</Project>
+	  <Name>LexicalModel.Tests</Name>
 	</ProjectReference>
 	<ProjectReference Include="..\LexicalModel\LexicalModel.csproj">
 	  <Project>{5F61C809-B6C0-4567-9603-B2198E1AD038}</Project>
@@ -70,6 +70,10 @@
 	<ProjectReference Include="..\WeSay.Foundation\WeSay.Foundation.csproj">
 	  <Project>{F12EB680-0990-4900-B77E-0FBF2E28A815}</Project>
 	  <Name>WeSay.Foundation</Name>
+	</ProjectReference>
+	<ProjectReference Include="..\WeSay.Project.Tests\WeSay.Project.Tests.csproj">
+	  <Project>{F644C902-A952-4797-9E2D-19D6051DD032}</Project>
+	  <Name>WeSay.Project.Tests</Name>
 	</ProjectReference>
 	<ProjectReference Include="..\WeSay.Project\WeSay.Project.csproj">
 	  <Project>{5CFD0BB3-5B2A-4911-B220-9C2286151BF0}</Project>
@@ -85,11 +89,12 @@
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\Palaso.dll</HintPath>
 	</Reference>
+	<Reference Include="PalasoReporting, Version=1.0.2973.24988, Culture=neutral, processorArchitecture=MSIL">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\PalasoReporting.dll</HintPath>
+	</Reference>
 	<Reference Include="System" />
 	<Reference Include="System.Data" />
 	<Reference Include="System.Xml" />
-  </ItemGroup>
-  <ItemGroup>
-	<Compile Include="PLiftMakerTests.cs" />
   </ItemGroup>
 </Project>

@@ -63,6 +63,7 @@
   </ItemGroup>
   <ItemGroup>
 	<Compile Include="HtmlTransformerTests.cs" />
+	<Compile Include="PLiftMakerTests.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />
 	<Compile Include="SfmTransformerTests.cs" />
   </ItemGroup>
@@ -71,9 +72,29 @@
 	  <Project>{9D196637-2D50-4604-A310-378083CEA809}</Project>
 	  <Name>Addin.Transform</Name>
 	</ProjectReference>
+	<ProjectReference Include="..\LexicalModel.Tests\LexicalModel.Tests.csproj">
+	  <Project>{123D695C-0D5D-46E5-893F-39EC4E0B01B8}</Project>
+	  <Name>LexicalModel.Tests</Name>
+	</ProjectReference>
+	<ProjectReference Include="..\LexicalModel\LexicalModel.csproj">
+	  <Project>{5F61C809-B6C0-4567-9603-B2198E1AD038}</Project>
+	  <Name>LexicalModel</Name>
+	</ProjectReference>
 	<ProjectReference Include="..\WeSay.AddinLib\WeSay.AddinLib.csproj">
 	  <Project>{E651E83C-94DD-4D6D-ABA2-C9FDA34FBA55}</Project>
 	  <Name>WeSay.AddinLib</Name>
+	</ProjectReference>
+	<ProjectReference Include="..\WeSay.Data\WeSay.Data.csproj">
+	  <Project>{600D0FD4-D189-41A0-9BC5-FC79AD2CF1CD}</Project>
+	  <Name>WeSay.Data</Name>
+	</ProjectReference>
+	<ProjectReference Include="..\WeSay.Foundation\WeSay.Foundation.csproj">
+	  <Project>{F12EB680-0990-4900-B77E-0FBF2E28A815}</Project>
+	  <Name>WeSay.Foundation</Name>
+	</ProjectReference>
+	<ProjectReference Include="..\WeSay.Project.Tests\WeSay.Project.Tests.csproj">
+	  <Project>{F644C902-A952-4797-9E2D-19D6051DD032}</Project>
+	  <Name>WeSay.Project.Tests</Name>
 	</ProjectReference>
 	<ProjectReference Include="..\WeSay.Project\WeSay.Project.csproj">
 	  <Project>{5CFD0BB3-5B2A-4911-B220-9C2286151BF0}</Project>

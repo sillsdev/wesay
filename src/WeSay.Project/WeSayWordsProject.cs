@@ -545,7 +545,9 @@ namespace WeSay.Project
 								   PathToExportDirectory,
 								   GetFilesBelongingToProject(ProjectDirectoryPath),
 								   AddinSet.Singleton.LocateFile,
-								   WritingSystems);
+								   WritingSystems,
+								   this,
+								   Lexicon.RecordListManager);
 		}
 
 
@@ -653,7 +655,7 @@ namespace WeSay.Project
 			get { return Path.Combine(PathToWeSaySpecificFilesDirectoryInProject, "tasks.xml"); }
 		}
 
-		private string PathToExportDirectory
+		public string PathToExportDirectory
 		{
 			get { return Path.Combine(ProjectDirectoryPath, "export"); }
 		}
@@ -919,6 +921,11 @@ namespace WeSay.Project
 				}
 				return WritingSystems[f.WritingSystemIds[0]];
 			}
+		}
+
+		public ViewTemplate DefaultPrintingTemplate
+		{
+			get { return DefaultViewTemplate; }
 		}
 
 

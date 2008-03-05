@@ -61,7 +61,8 @@
 	 </xsl:template>
 
 	<xsl:template match="lexical-unit">
-		<xsl:apply-templates>
+	  <xsl:message/>
+	  <xsl:apply-templates>
 			<xsl:with-param name="prefix">lx</xsl:with-param>
 		</xsl:apply-templates>
 
@@ -118,7 +119,6 @@
 		</xsl:variable>
 		<xsl:value-of select="$prior-homograph-number + 1"/>
 	  </xsl:if>
-	  <xsl:message>current=<xsl:value-of select="$headword"/> prev=<xsl:value-of select="$previous-headword"/></xsl:message>
    </xsl:if>
    </xsl:template>
 

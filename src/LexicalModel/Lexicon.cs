@@ -19,19 +19,25 @@ namespace WeSay.LexicalModel
 			get
 			{
 				VerifyInitialized();
-				return _recordListManager.GetListOfType<LexEntry>();
+				return RecordListManager.GetListOfType<LexEntry>();
 			}
+		}
+
+		public static Db4oRecordListManager RecordListManager
+		{
+			get { return _recordListManager; }
+			set { _recordListManager = value; }
 		}
 
 		static public void Init(Db4oRecordListManager recordListManager)
 		{
-			_recordListManager = recordListManager;
+			RecordListManager = recordListManager;
 		}
 
 
 		public static IList<LexEntry> GetEntriesWithSimilarLexicalForms(string wordForm, WritingSystem writingSystem, ApproximateMatcherOptions matcherOptions, int maxEntriesToGet)
 		{
-			ApproximateFinder findList = new ApproximateFinder(_recordListManager, writingSystem);
+			ApproximateFinder findList = new ApproximateFinder(RecordListManager, writingSystem);
 			return findList.FindEntries(wordForm, matcherOptions, maxEntriesToGet);
 		}
 
@@ -40,10 +46,10 @@ namespace WeSay.LexicalModel
 			VerifyInitialized();
 			List<LexEntry> result = new List<LexEntry>();
 			// search dictionary for entry with new lexical form
-			LexEntrySortHelper sortHelper = new LexEntrySortHelper(_recordListManager.DataSource,
+			LexEntrySortHelper sortHelper = new LexEntrySortHelper(RecordListManager.DataSource,
 																   writingSystem,
 																   true);
-			CachedSortedDb4oList<string, LexEntry> entriesByLexicalForm = _recordListManager.GetSortedList(sortHelper);
+			CachedSortedDb4oList<string, LexEntry> entriesByLexicalForm = RecordListManager.GetSortedList(sortHelper);
 			int index = entriesByLexicalForm.BinarySearch(lexicalForm);
 			while (index >= 0 && index < entriesByLexicalForm.Count &&
 				   entriesByLexicalForm.GetKey(index) == lexicalForm)
@@ -57,9 +63,9 @@ namespace WeSay.LexicalModel
 		public static IEnumerable<LexEntry> GetAllEntriesSortedByHeadword(WritingSystem headwordWritingSystem)
 		{
 			VerifyInitialized();
-			HeadwordSortedListHelper sortHelper = new HeadwordSortedListHelper(_recordListManager,
+			HeadwordSortedListHelper sortHelper = new HeadwordSortedListHelper(RecordListManager,
 																			   headwordWritingSystem);
-			CachedSortedDb4oList<string, LexEntry> entryPairs = _recordListManager.GetSortedList(sortHelper);
+			CachedSortedDb4oList<string, LexEntry> entryPairs = RecordListManager.GetSortedList(sortHelper);
 			List<LexEntry> result = new List<LexEntry>();
 			for (int index = 0; index < entryPairs.Count; index++)
 			{
@@ -71,7 +77,7 @@ namespace WeSay.LexicalModel
 		public static LexEntry FindFirstLexEntryMatchingId(string id)
 		{
 			VerifyInitialized();
-			return WeSay.LexicalModel.Db4o_Specific.Db4oLexQueryHelper.FindFirstEntryMatchingId(_recordListManager.DataSource, id);
+			return WeSay.LexicalModel.Db4o_Specific.Db4oLexQueryHelper.FindFirstEntryMatchingId(RecordListManager.DataSource, id);
 		}
 
 		public static LexEntry AddNewEntry()
@@ -84,7 +90,7 @@ namespace WeSay.LexicalModel
 
 		private static void VerifyInitialized()
 		{
-			if (_recordListManager == null)
+			if (RecordListManager == null)
 			{
 				throw new InvalidOperationException("Must Call Init before calling this method");
 			}
@@ -104,10 +110,10 @@ namespace WeSay.LexicalModel
 				foreach (WritingSystem writingSystem in writingSystems)
 				{
 					LexEntrySortHelper sortHelper =
-							new LexEntrySortHelper(_recordListManager.DataSource,
+							new LexEntrySortHelper(RecordListManager.DataSource,
 												   writingSystem,
 												   areLexicalFormWs);
-					_recordListManager.GetSortedList(sortHelper);
+					RecordListManager.GetSortedList(sortHelper);
 				}
 		}
 

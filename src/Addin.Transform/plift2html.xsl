@@ -29,7 +29,7 @@ following format: <a pie: on foot> or more generally, use a colon between forms.
   Text Representation, Dictionary Structure, and Lexical knowledge
 BOGURAEV and NEFF Lit Linguist Computing.1992; 7: 110-112
   -->
-  <xsl:output method="html" indent="yes" encoding="utf-8"/>
+  <xsl:output method="xml" indent="yes" encoding="utf-8"/>
 
   <xsl:param name="writing-system-info-file" select="'writingSystemPrefs.xml'"/>
   <xsl:param name="grammatical-info-optionslist-file"/>
@@ -48,7 +48,8 @@ BOGURAEV and NEFF Lit Linguist Computing.1992; 7: 110-112
 	<html>
 	  <head>
 		<xsl:if test="not($output-intented-for-winword)">
-		  <link rel="stylesheet" href="user.css"/>
+		  <link rel="stylesheet" href="user.css">
+		  </link>
 		</xsl:if>
 		<style type="text/css">
 		  div.entry { /* this gives us outdented headwords */
