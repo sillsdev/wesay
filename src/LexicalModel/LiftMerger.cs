@@ -67,11 +67,10 @@ namespace WeSay.LexicalModel
 				}
 
 
-				entry = new LexEntry(eInfo);
+				entry = new LexEntry(eInfo, _historicalEntryCountProvider);
 			}
 
 			entry.ModifiedTimeIsLocked = true; //while we build it up
-			entry.DetermineBirthOrder(_historicalEntryCountProvider);
 			return entry;
 		}
 

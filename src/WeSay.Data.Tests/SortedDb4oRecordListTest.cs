@@ -481,8 +481,8 @@ namespace WeSay.Data.Tests
 			System.IO.File.Delete(_FilePath);
 		}
 
-		[Test, Ignore("fixing")]
-		public void Update_DoesNotAddKeyValuePairThatAlreadyExists()
+		[Test] //see issue ws-647 for some relevant history
+		public void Update_AddsKeyValuePairThatAlreadyExists()
 		{
 			TestItem item = _sortedList.GetValue(1);
 			int items = _sortedList.Count;
@@ -490,7 +490,7 @@ namespace WeSay.Data.Tests
 			list.Add("one");
 			list.Add("one");
 			item.StoredList = list;
-			Assert.AreEqual(items , _sortedList.Count);
+			Assert.AreEqual(items + 1, _sortedList.Count);
 
 		}
 	}

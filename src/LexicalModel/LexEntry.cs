@@ -70,9 +70,11 @@ namespace WeSay.LexicalModel
 			Init(id, guid, DateTime.UtcNow, DateTime.UtcNow);
 		}
 
-		public LexEntry(Extensible info) : base(null)
+		 public LexEntry(Extensible info, IHistoricalEntryCountProvider historicalCountProvider)
+			 : base(null)
 		{
 			Init(info.Id, info.Guid, info.CreationTime, info.ModificationTime);
+			 DetermineBirthOrder(historicalCountProvider);
 		}
 
 		private void Init(string id,Guid guid, DateTime creationTime, DateTime modifiedTime)
@@ -424,7 +426,11 @@ namespace WeSay.LexicalModel
 			if (_birthOrder < 0)
 			{
 				_birthOrder = historicalCountProvider.GetNextNumber();
-				NotifyPropertyChanged("birthOrder");
+			  //this lead to a bug that got expensive to fix,ws-647
+				//NotifyPropertyChanged("birthOrder");
+				//we can get away with not notifying by
+				//1) doing this determination during creation while cache building
+				//2) with a new entry, it is going to get called before the store happens
 			}
 			return _birthOrder;
 		}
