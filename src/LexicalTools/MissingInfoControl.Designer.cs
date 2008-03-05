@@ -64,9 +64,9 @@ namespace WeSay.LexicalTools
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
 			this.splitContainer2 = new System.Windows.Forms.SplitContainer();
 			this.label1 = new System.Windows.Forms.Label();
-			this._recordsListBox = new WeSay.UI.WeSayListBox();
+			this._recordsListBox = new WeSay.UI.WeSayListView();
 			this._completedRecordsLabel = new System.Windows.Forms.Label();
-			this._completedRecordsListBox = new WeSay.UI.WeSayListBox();
+			this._completedRecordsListBox = new WeSay.UI.WeSayListView();
 			this._buttonPanel = new System.Windows.Forms.Panel();
 			this.labelNextHotKey = new System.Windows.Forms.Label();
 			this._btnNextWord = new WeSay.UI.Buttons.NextButton();
@@ -269,12 +269,12 @@ namespace WeSay.LexicalTools
 		private SplitContainer splitContainer1;
 		private SplitContainer splitContainer2;
 
-		internal WeSayListBox _recordsListBox;
+		internal WeSayListView _recordsListBox;
 		private EntryViewControl _entryViewControl;
 		private CongratulationsControl _congratulationsControl;
 		private Label label1;
 		private Label _completedRecordsLabel;
-		internal WeSayListBox _completedRecordsListBox;
+		internal WeSayListView _completedRecordsListBox;
 		private NextButton _btnNextWord;
 		private Label labelNextHotKey;
 		private PreviousButton _btnPreviousWord;

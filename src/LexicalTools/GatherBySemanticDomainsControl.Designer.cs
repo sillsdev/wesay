@@ -86,16 +86,20 @@ namespace WeSay.LexicalTools
 			//
 			this._listViewWords.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
 						| System.Windows.Forms.AnchorStyles.Right)));
+			this._listViewWords.ColumnWidth = 100;
 			this._listViewWords.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this._listViewWords.HideSelection = true;
+			this._listViewWords.ItemHeight = 20;
+			this._listViewWords.Items.AddRange(new object[] {
+			listViewItem1,
+			listViewItem2});
 			this._listViewWords.Location = new System.Drawing.Point(15, 273);
+			this._listViewWords.MultiColumn = true;
 			this._listViewWords.Name = "_listViewWords";
 			this._listViewWords.Size = new System.Drawing.Size(622, 65);
+			this._listViewWords.Sorted = true;
 			this._listViewWords.TabIndex = 17;
 			this._listViewWords.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this._listViewWords_KeyPress);
 			this._listViewWords.Click += new System.EventHandler(this._listViewWords_Click);
-			this._listViewWords.Columns.Clear();
-			this._listViewWords.View = System.Windows.Forms.View.List;
 			//
 			// label5
 			//
@@ -156,7 +160,7 @@ namespace WeSay.LexicalTools
 			this._description.Name = "_description";
 			this._description.Size = new System.Drawing.Size(622, 90);
 			this._description.TabIndex = 24;
-			 //
+			//
 			// _questionIndicator
 			//
 			this._questionIndicator.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
@@ -262,7 +266,7 @@ namespace WeSay.LexicalTools
 		private WeSayListBox _listViewWords;
 		private System.Windows.Forms.Label label5;
 		private System.Windows.Forms.Label label4;
-	  private System.Windows.Forms.Label _instructionLabel;
+		private System.Windows.Forms.Label _instructionLabel;
 		private PreviousButton _btnPrevious;
 		private NextButton _btnNext;
 		private AddButton _btnAddWord;

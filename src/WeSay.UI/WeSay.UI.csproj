@@ -99,6 +99,12 @@
 	<Compile Include="CollapsibleSplitter.cs">
 	  <SubType>Component</SubType>
 	</Compile>
+	<Compile Include="WeSayListView.cs">
+	  <SubType>Component</SubType>
+	</Compile>
+	<Compile Include="WeSayListView.Designer.cs">
+	  <DependentUpon>WeSayListView.cs</DependentUpon>
+	</Compile>
 	<Compile Include="MovingLabel.cs">
 	  <SubType>Component</SubType>
 	</Compile>

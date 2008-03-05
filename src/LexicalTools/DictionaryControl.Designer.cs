@@ -48,7 +48,7 @@ namespace WeSay.LexicalTools
 			this._findText = new WeSay.UI.AutoCompleteTextBox.WeSayAutoCompleteTextBox();
 			this._writingSystemChooser = new System.Windows.Forms.Button();
 			this._findWritingSystemId = new System.Windows.Forms.Label();
-			this._recordsListBox = new WeSay.UI.WeSayListBox();
+			this._recordsListBox = new WeSay.UI.WeSayListView();
 			this.panelTools = new System.Windows.Forms.Panel();
 			this._btnDeleteWord = new System.Windows.Forms.Button();
 			this._btnNewWord = new System.Windows.Forms.Button();
@@ -282,7 +282,7 @@ namespace WeSay.LexicalTools
 		private Panel panelWordList;
 		private Panel panelDetail;
 		private Panel panelTools;
-		private WeSayListBox _recordsListBox;
+		private WeSayListView _recordsListBox;
 		private Button _btnDeleteWord;
 		private Button _btnNewWord;
 		private Button _btnFind;

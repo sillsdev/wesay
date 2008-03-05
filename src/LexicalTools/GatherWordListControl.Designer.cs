@@ -70,16 +70,18 @@ namespace WeSay.LexicalTools
 						| System.Windows.Forms.AnchorStyles.Left)
 						| System.Windows.Forms.AnchorStyles.Right)));
 			this._listViewOfWordsMatchingCurrentItem.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this._listViewOfWordsMatchingCurrentItem.HideSelection = true;
+			this._listViewOfWordsMatchingCurrentItem.ItemHeight = 20;
+			this._listViewOfWordsMatchingCurrentItem.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
+			listViewItem1,
+			listViewItem2});
 			this._listViewOfWordsMatchingCurrentItem.Location = new System.Drawing.Point(11, 169);
 			this._listViewOfWordsMatchingCurrentItem.MinimumSize = new System.Drawing.Size(315, 84);
+			this._listViewOfWordsMatchingCurrentItem.MultiColumn = true;
 			this._listViewOfWordsMatchingCurrentItem.Name = "_listViewOfWordsMatchingCurrentItem";
 			this._listViewOfWordsMatchingCurrentItem.Size = new System.Drawing.Size(315, 126);
 			this._listViewOfWordsMatchingCurrentItem.TabIndex = 4;
 			this._listViewOfWordsMatchingCurrentItem.TabStop = false;
 			this._listViewOfWordsMatchingCurrentItem.Click += new System.EventHandler(this.OnListViewOfWordsMatchingCurrentItem_Click);
-			this._listViewOfWordsMatchingCurrentItem.Columns.Clear();
-			this._listViewOfWordsMatchingCurrentItem.View = System.Windows.Forms.View.List;
 			//
 			// label3
 			//
@@ -147,6 +149,19 @@ namespace WeSay.LexicalTools
 			this._vernacularBox.AutoSize = true;
 			this._vernacularBox.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
 			this._vernacularBox.BackColor = System.Drawing.Color.White;
+			this._vernacularBox.ColumnCount = 3;
+			this._vernacularBox.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this._vernacularBox.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this._vernacularBox.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this._vernacularBox.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this._vernacularBox.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this._vernacularBox.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this._vernacularBox.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this._vernacularBox.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this._vernacularBox.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this._vernacularBox.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this._vernacularBox.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this._vernacularBox.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
 			this._vernacularBox.Location = new System.Drawing.Point(78, 120);
 			this._vernacularBox.MinimumSize = new System.Drawing.Size(50, 20);
 			this._vernacularBox.Name = "_vernacularBox";
@@ -237,7 +252,7 @@ namespace WeSay.LexicalTools
 		private AddButton _btnAddWord;
 		private NextButton _btnNextWord;
 		private PreviousButton _btnPreviousWord;
-	  private System.Windows.Forms.Label _instructionLabel;
+		private System.Windows.Forms.Label _instructionLabel;
 		private WeSayListBox _listViewOfWordsMatchingCurrentItem;
 		private System.Windows.Forms.Label label3;
 		private System.Windows.Forms.TextBox _boxForeignWord;
@@ -250,5 +265,5 @@ namespace WeSay.LexicalTools
 		private WeSay.UI.MovingLabel _movingLabel;
 
 
-	 }
+	}
 }

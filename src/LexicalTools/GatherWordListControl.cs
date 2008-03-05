@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
@@ -33,8 +32,8 @@ namespace WeSay.LexicalTools
 			InitializeDisplaySettings();
 			this._vernacularBox.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
 
-			_listViewOfWordsMatchingCurrentItem.DataSource = null;
-			_listViewOfWordsMatchingCurrentItem.RetrieveVirtualItem += GetBestLexicalForm;
+			_listViewOfWordsMatchingCurrentItem.Items.Clear();
+
 			Field lexicalFormField = viewTemplate.GetField(Field.FieldNames.EntryLexicalForm.ToString());
 			if (lexicalFormField == null || lexicalFormField.WritingSystems.Count < 1)
 			{
@@ -57,14 +56,6 @@ namespace WeSay.LexicalTools
 			_movingLabel.Finished += new EventHandler(OnAnimator_Finished);
 		}
 
-		private void GetBestLexicalForm(object sender, RetrieveVirtualItemEventArgs e)
-		{
-			LexEntry entry = (LexEntry)((WeSayListBox)sender).DataSource[e.ItemIndex];
-			string displayString =
-					entry.LexicalForm.GetBestAlternative(_task.WordWritingSystemId, "*");
-			e.Item = new ListViewItem(displayString);
-		}
-
 		private void InitializeDisplaySettings()
 		{
 			BackColor = WeSay.UI.DisplaySettings.Default.BackgroundColor;
@@ -78,7 +69,7 @@ namespace WeSay.LexicalTools
 				_vernacularBox.TextBoxes[0].Text = _movingLabel.Text;
 			}
 			_vernacularBox.TextBoxes[0].Focus();
-			_vernacularBox.TextBoxes[0].SelectionStart = int.MaxValue; //go to end
+			_vernacularBox.TextBoxes[0].SelectionStart = 1000; //go to end
 		}
 
 		void UpdateSourceWord()
@@ -133,7 +124,15 @@ namespace WeSay.LexicalTools
 		/// </summary>
 		private void PopulateWordsMatchingCurrentItem()
 		{
-			_listViewOfWordsMatchingCurrentItem.DataSource = (IList)_task.GetMatchingRecords(_task.CurrentWordAsMultiText);
+			_listViewOfWordsMatchingCurrentItem.Items.Clear();
+
+			foreach (LexEntry entry in _task.GetMatchingRecords(_task.CurrentWordAsMultiText))
+			{
+				//string alternative = entry.LexicalForm.GetFirstAlternative();
+			   // ListViewItem item = new ListViewItem(alternative);
+				//item.Tag = entry;
+				_listViewOfWordsMatchingCurrentItem.Items.Add(new EntryDisplayProxy(entry, _task.WordWritingSystem.Id));
+			}
 		}
 
 		private void _btnNextWord_Click(object sender, EventArgs e)
@@ -207,18 +206,17 @@ namespace WeSay.LexicalTools
 
 		private void OnListViewOfWordsMatchingCurrentItem_Click(object sender, EventArgs e)
 		{
-			if (_listViewOfWordsMatchingCurrentItem.SelectedIndices.Count > 0)
+			if (_listViewOfWordsMatchingCurrentItem.SelectedItems.Count > 0)
 			{
-				int selectedListIndex = _listViewOfWordsMatchingCurrentItem.SelectedIndex;
-				ListViewItem selectedItem = _listViewOfWordsMatchingCurrentItem.Items[selectedListIndex];
-				LexEntry entry = (LexEntry) _listViewOfWordsMatchingCurrentItem.DataSource[selectedListIndex];
-				Debug.Assert(entry != null);
-				if (entry == null)
+				int selectedListIndex = _listViewOfWordsMatchingCurrentItem.SelectedIndices[0];
+				string word = _listViewOfWordsMatchingCurrentItem.SelectedItem.ToString();
+				LexEntry entry = ((EntryDisplayProxy)_listViewOfWordsMatchingCurrentItem.SelectedItem).Entry;
+				Debug.Assert(entry!=null);
+				if(entry==null)
 				{
 					return;
 				}
-				string word = selectedItem.Text;
-				Point start = selectedItem.Position;
+				Point start = _listViewOfWordsMatchingCurrentItem.GetItemRectangle(selectedListIndex).Location;
 				start.Offset(_listViewOfWordsMatchingCurrentItem.Location);
 				Point destination = _vernacularBox.Location;
 				destination.Offset(_vernacularBox.TextBoxes[0].Location);
@@ -237,6 +235,28 @@ namespace WeSay.LexicalTools
 				_movingLabel.Go(word,
 								start,
 								destination);
+			}
+		}
+
+
+		public class EntryDisplayProxy
+		{
+			private readonly string _writingSystemId;
+			private LexEntry _entry;
+			public EntryDisplayProxy(LexEntry entry, string writingSystemId)
+			{
+				_writingSystemId = writingSystemId;
+				_entry = entry;
+			}
+
+			public LexEntry Entry
+			{
+				get { return _entry; }
+			}
+
+			public override string ToString()
+			{
+				return _entry.LexicalForm.GetBestAlternative(_writingSystemId, "*");
 			}
 		}
 	}
