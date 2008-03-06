@@ -96,7 +96,7 @@ namespace WeSay.LexicalTools
 			this._listViewWords.MultiColumn = true;
 			this._listViewWords.Name = "_listViewWords";
 			this._listViewWords.Size = new System.Drawing.Size(622, 65);
-			this._listViewWords.Sorted = true;
+			this._listViewWords.Sorted = false;
 			this._listViewWords.TabIndex = 17;
 			this._listViewWords.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this._listViewWords_KeyPress);
 			this._listViewWords.Click += new System.EventHandler(this._listViewWords_Click);

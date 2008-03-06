@@ -12,8 +12,6 @@ using WeSay.LexicalModel.Db4o_Specific;
 
 namespace WeSay.LexicalModel
 {
-
-
 	/// <summary>
 	/// A Lexical Entry is what makes up our lexicon/dictionary.  In
 	/// some languages/dictionaries, these will be indistinguishable from "words".

@@ -1,10 +1,12 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 using WeSay.Data;
 using WeSay.Foundation;
+using WeSay.Language;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Db4o_Specific;
 using WeSay.Project;
@@ -232,7 +234,7 @@ namespace WeSay.LexicalTools
 			CurrentWordIndex = 0;
 		}
 
-		public IList<LexEntry> GetMatchingRecords(MultiText gloss)
+		public List<LexEntry> GetMatchingRecords(MultiText gloss)
 		{
 			return Db4oLexQueryHelper.FindObjectsFromLanguageForm<LexEntry, SenseGlossMultiText>(RecordListManager, gloss.GetFirstAlternative());
 		}
@@ -295,6 +297,17 @@ namespace WeSay.LexicalTools
 		{
 			get { return _words[_currentWordIndex]; }
 		}
+
+		public IEnumerable<LexEntry> CurrentEntriesSorted
+		{
+			get
+			{
+				List<LexEntry> entries = GetMatchingRecords(CurrentWordAsMultiText);
+				entries.Sort(new EntryByBestLexemeFormAlternativeComparer(_viewTemplate.GetField(LexEntry.WellKnownProperties.LexicalUnit).WritingSystems[0]));
+				return entries;
+			}
+		}
+
 
 
 	}

@@ -125,12 +125,8 @@ namespace WeSay.LexicalTools
 		private void PopulateWordsMatchingCurrentItem()
 		{
 			_listViewOfWordsMatchingCurrentItem.Items.Clear();
-
-			foreach (LexEntry entry in _task.GetMatchingRecords(_task.CurrentWordAsMultiText))
+			foreach (LexEntry entry in this._task.CurrentEntriesSorted)
 			{
-				//string alternative = entry.LexicalForm.GetFirstAlternative();
-			   // ListViewItem item = new ListViewItem(alternative);
-				//item.Tag = entry;
 				_listViewOfWordsMatchingCurrentItem.Items.Add(new EntryDisplayProxy(entry, _task.WordWritingSystem.Id));
 			}
 		}
