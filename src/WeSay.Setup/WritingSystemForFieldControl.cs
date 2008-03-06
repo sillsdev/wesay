@@ -131,7 +131,7 @@ namespace WeSay.Setup
 		private void RefreshMoveButtons()
 		{
 			this.btnMoveUp.Enabled = this._writingSystemListBox.SelectedIndex > 0;
-			this.btnMoveDown.Enabled = this._writingSystemListBox.SelectedIndex < this._writingSystemListBox.Items.Count - 2;
+			this.btnMoveDown.Enabled = this._writingSystemListBox.SelectedIndex < this._writingSystemListBox.Items.Count - 1;
 		}
 
 		private void WritingSystemForFieldControl_Load(object sender, EventArgs e)
