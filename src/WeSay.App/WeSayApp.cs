@@ -120,7 +120,7 @@ namespace WeSay.App
 			{
 				return;
 			}
-			using (_recordListManager= MakeRecordListManager(_project))
+			using (_recordListManager= _project.MakeRecordListManager())
 			{
 				using (_dictionary = new DictionaryServiceProvider(this,_project))
 				{
@@ -150,14 +150,24 @@ namespace WeSay.App
 			{
 				return;
 			}
+
+
 			WeSayWordsDb4oModelConfiguration config = new WeSayWordsDb4oModelConfiguration();
 			config.Configure();
-			using (Db4oDataSource ds = new Db4oDataSource(_project.PathToDb4oLexicalModelDB))
+			try
 			{
-				Db4oLexModelHelper.Initialize(ds.Data);
-				LiftUpdateService updateServiceForCrashRecovery = new LiftUpdateService(ds);
-				updateServiceForCrashRecovery.RecoverUnsavedChangesOutOfCacheIfNeeded();
-				Db4oLexModelHelper.Deinitialize(ds.Data);
+				using (Db4oDataSource ds = new Db4oDataSource(_project.PathToDb4oLexicalModelDB))
+				{
+					Db4oLexModelHelper.Initialize(ds.Data);
+					LiftUpdateService updateServiceForCrashRecovery = new LiftUpdateService(ds);
+					updateServiceForCrashRecovery.RecoverUnsavedChangesOutOfCacheIfNeeded();
+					Db4oLexModelHelper.Deinitialize(ds.Data);
+				}
+			}
+			catch (System.IO.IOException e)
+			{
+				Palaso.Reporting.ErrorNotificationDialog.ReportException(e, null, false);
+				Thread.CurrentThread.Abort();
 			}
 		}
 
@@ -397,28 +407,7 @@ namespace WeSay.App
 			ExceptionHandler.Init();
 		}
 
-		private IRecordListManager MakeRecordListManager(WeSayWordsProject project)
-		{
-			IRecordListManager recordListManager;
 
-			if (project.PathToWeSaySpecificFilesDirectoryInProject.IndexOf("PRETEND") > -1)
-			{
-				IBindingList entries = new PretendRecordList();
-				recordListManager = new InMemoryRecordListManager();
-				IRecordList<LexEntry> masterRecordList = recordListManager.GetListOfType<LexEntry>();
-				foreach (LexEntry entry in entries)
-				{
-					masterRecordList.Add(entry);
-				}
-			}
-			else
-			{
-				recordListManager = new Db4oRecordListManager(new WeSayWordsDb4oModelConfiguration(), project.PathToDb4oLexicalModelDB);
-				Db4oLexModelHelper.Initialize(((Db4oRecordListManager)recordListManager).DataSource.Data);
-				Lexicon.Init(recordListManager as Db4oRecordListManager);
-			}
-			return recordListManager;
-		}
 
 		class CommandLineArguments
 		{

@@ -117,5 +117,22 @@ namespace WeSay.LexicalModel
 				}
 		}
 
+		public static void DeInitialize(bool doDisposeLikeYouOwnEverything)
+		{
+			if (doDisposeLikeYouOwnEverything)
+			{
+				Db4oDataSource db = _recordListManager.DataSource;
+				if(!_recordListManager.IsDisposed)
+				{
+					_recordListManager.Dispose();
+				}
+				if (db != null)
+				{
+					db.Dispose();
+				}
+
+			}
+			_recordListManager = null;
+		}
 	}
 }

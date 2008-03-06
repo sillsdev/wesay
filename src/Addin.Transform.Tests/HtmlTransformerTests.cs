@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using NUnit.Framework;
 using WeSay.AddinLib;
+using WeSay.Data;
+using WeSay.LexicalModel;
+using WeSay.LexicalModel.Db4o_Specific;
+using WeSay.Project;
 
 namespace Addin.Transform.Tests
 {
@@ -10,11 +14,19 @@ namespace Addin.Transform.Tests
 	public class HtmlTransformerTests
 	{
 		public Transform.HtmlTransformer _addin;
+		private Db4oRecordListManager _recordListManager;
+		private string _dbFile;
 
 		[SetUp]
 		public void Setup()
 		{
-			WeSay.Project.WeSayWordsProject.InitializeForTests();
+			WeSayWordsProject.InitializeForTests();
+			_dbFile = Path.GetTempFileName();
+			_recordListManager = new Db4oRecordListManager(new WeSayWordsDb4oModelConfiguration(), _dbFile);
+			Db4oLexModelHelper.Initialize(_recordListManager.DataSource.Data);
+
+			Lexicon.Init(_recordListManager);
+
 			_addin = new Transform.HtmlTransformer();
 			_addin.LaunchAfterTransform = false;
 		}
@@ -26,9 +38,11 @@ namespace Addin.Transform.Tests
 			{
 				File.Delete(_addin.PathToOutput);
 			}
+			_recordListManager.Dispose();
+			File.Delete(_dbFile);
 		}
 
-		[Test, Ignore("broken")]
+		[Test]
 		public void LaunchWithDefaultSettings()
 		{
 			LaunchAddin();

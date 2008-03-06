@@ -58,19 +58,43 @@ namespace Addin.Transform
 
 		protected string CreateFileToOpen(ProjectInfo projectInfo, bool intendedForWinWord)
 		{
-			Lexicon.Init((Db4oRecordListManager) projectInfo.RecordListManager);
-			PLiftMaker maker = new PLiftMaker();
-			string pliftPath = Path.Combine(projectInfo.PathToExportDirectory, projectInfo.Name+ ".html");
-			maker.MakeXHtmlFile(pliftPath, (Db4oRecordListManager) projectInfo.RecordListManager, (WeSayWordsProject) projectInfo.Project);
+			//the problem we're addressing here is that when this is launched from the wesay configuration
+			//that won't (and doesn't want to) have locked up the db4o db by making a record list manager,
+			//which it normally has no need for.
+			//So if we're in that situation, we temporarily try to make one and then release it,
+			//so it isn't locked when the user says "open wesay"
 
-			projectInfo.PathToLIFT = pliftPath;
+			Db4oRecordListManager manager = null;
+			if (Lexicon.RecordListManager == null)
+			{
+				manager = (Db4oRecordListManager) ((WeSayWordsProject) projectInfo.Project).MakeRecordListManager();
+			}
+		   try
+		   {
 
-			XsltArgumentList arguments = new XsltArgumentList();
-			 arguments.AddParam("writing-system-info-file", string.Empty, projectInfo.LocateFile("writingSystemPrefs.xml"));
-			arguments.AddParam("grammatical-info-optionslist-file", string.Empty, projectInfo.LocateFile("PartsOfSpeech.xml"));
-			arguments.AddParam("output-intented-for-winword", string.Empty, intendedForWinWord.ToString()+"()");
+			   PLiftMaker maker = new PLiftMaker();
+			   string pliftPath =
+				   maker.MakePLiftTempFile(Lexicon.RecordListManager,
+										   (WeSayWordsProject) projectInfo.Project);
 
-			return TransformLift(projectInfo, "lift2html.xsl", ".htm",arguments);
+			   projectInfo.PathToLIFT = pliftPath;
+
+			   XsltArgumentList arguments = new XsltArgumentList();
+			   arguments.AddParam("writing-system-info-file", string.Empty,
+								  projectInfo.LocateFile("writingSystemPrefs.xml"));
+			   arguments.AddParam("grammatical-info-optionslist-file", string.Empty,
+								  projectInfo.LocateFile("PartsOfSpeech.xml"));
+			   arguments.AddParam("output-intented-for-winword", string.Empty, intendedForWinWord.ToString() + "()");
+
+			   return TransformLift(projectInfo, "plift2html.xsl", ".htm", arguments);
+		   }
+			finally
+		   {
+			   if (manager != null)
+			   {
+				   Lexicon.DeInitialize(true);
+			   }
+		   }
 		}
 	}
 }

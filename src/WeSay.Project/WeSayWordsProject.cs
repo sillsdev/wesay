@@ -2,6 +2,7 @@ using System;
 using System.CodeDom.Compiler;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
@@ -17,6 +18,8 @@ using WeSay.Data;
 using WeSay.Foundation.Options;
 using WeSay.Language;
 using WeSay.LexicalModel;
+using WeSay.LexicalModel.Db4o_Specific;
+using WeSay.LexicalModel.Tests;
 
 namespace WeSay.Project
 {
@@ -546,8 +549,7 @@ namespace WeSay.Project
 								   GetFilesBelongingToProject(ProjectDirectoryPath),
 								   AddinSet.Singleton.LocateFile,
 								   WritingSystems,
-								   this,
-								   Lexicon.RecordListManager);
+								   this);
 		}
 
 
@@ -1247,6 +1249,27 @@ namespace WeSay.Project
 		}
 
 
+		public IRecordListManager MakeRecordListManager()
+		{
+			IRecordListManager recordListManager;
 
+			if (PathToWeSaySpecificFilesDirectoryInProject.IndexOf("PRETEND") > -1)
+			{
+				IBindingList entries = new PretendRecordList();
+				recordListManager = new InMemoryRecordListManager();
+				IRecordList<LexEntry> masterRecordList = recordListManager.GetListOfType<LexEntry>();
+				foreach (LexEntry entry in entries)
+				{
+					masterRecordList.Add(entry);
+				}
+			}
+			else
+			{
+				recordListManager = new Db4oRecordListManager(new WeSayWordsDb4oModelConfiguration(), PathToDb4oLexicalModelDB);
+				Db4oLexModelHelper.Initialize(((Db4oRecordListManager)recordListManager).DataSource.Data);
+				Lexicon.Init(recordListManager as Db4oRecordListManager);
+			}
+			return recordListManager;
+		}
 	}
 }

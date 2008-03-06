@@ -28,14 +28,14 @@ namespace WeSay.AddinLib
 			string[] filesBelongingToProject,
 			FileLocater locateFile,
 			WritingSystemCollection writingSystems,
-			object project,             // these signatures were to reduce the dependencies on addins that didn't need this stuff
-			object recordListManager) // these signatures were to reduce the dependencies on addins that didn't need this stuff
+			object project)             // these signatures were to reduce the dependencies on addins that didn't need this stuff
+//            object recordListManager) // these signatures were to reduce the dependencies on addins that didn't need this stuff
 		{
 			_pathToTopLevelDirectory = pathToTopLevelDirectory;
 			_locateFile = locateFile;
 			_writingSystems = writingSystems;
 			_project = project;
-			_recordListManager = recordListManager;
+		 //   _recordListManager = recordListManager;
 			_filesBelongingToProject = filesBelongingToProject;
 			_name = name;
 			_pathToApplicationRootDirectory = pathToApplicationRootDirectory;
@@ -107,10 +107,10 @@ namespace WeSay.AddinLib
 			get { return _pathToApplicationRootDirectory; }
 		}
 
-		public object RecordListManager
-		{
-			get { return _recordListManager; }
-		}
+//        public object RecordListManager
+//        {
+//            get { return _recordListManager; }
+//        }
 
 		public object Project
 		{

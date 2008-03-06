@@ -242,10 +242,37 @@ namespace WeSay.Setup
 //            {
 //                s += " (A)";
 //            }
-			if (s == WritingSystem.IdForUnknownVernacular)
+
+
+			switch (s)
 			{
-				s += "<-- Consider Changing This";
+				default:
+					if (s == WritingSystem.IdForUnknownVernacular)
+						s += " (Change to your Vernacular)";
+					break;
+				case "fr":
+					s += " (French)";
+					break;
+				case "id":
+					s += " (Indonesian)";
+					break;
+				case "tpi":
+					s += " (Tok Pisin)";
+					break;
+				case "th":
+					s += " (Thai)";
+					break;
+				case "es":
+					s += " (Spanish)";
+					break;
+				case "en":
+					s += " (English)";
+					break;
+				case "my":
+					s += " (Burmese)";
+					break;
 			}
+
 			return s;
 		}
 	}

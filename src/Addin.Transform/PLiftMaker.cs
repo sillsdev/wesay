@@ -29,37 +29,47 @@ namespace Addin.Transform
 			return path;
 		}
 
-		public void MakeXHtmlFile(string outputPath, Db4oRecordListManager recordListManager, WeSayWordsProject project)
+		public string MakePLiftTempFile( Db4oRecordListManager recordListManager, WeSayWordsProject project)
 		{
 			IHomographCalculator homographCalculator = new HomographCalculator(recordListManager, project.DefaultPrintingTemplate.HeadwordWritingSytem);
 
 			IEnumerable<LexEntry> entries = Lexicon.GetAllEntriesSortedByHeadword(project.DefaultPrintingTemplate.HeadwordWritingSytem);
 			Db4oLexEntryFinder finder = new Db4oLexEntryFinder(recordListManager.DataSource);
 
-			string pliftPath = MakePLiftTempFile(entries, project.DefaultPrintingTemplate, homographCalculator, finder);
-			try
-			{
-				using (Stream xsltStream = GetXsltStream("plift2html.xsl"))
-				{
-					TransformWithProgressDialog dlg = new TransformWithProgressDialog(pliftPath,
-																					  outputPath,
-																					  xsltStream,
-																					  "lift/entry");
-					dlg.TaskMessage =
-						StringCatalog.Get("Preparing dictionary for printing...",
-										  "This is shown when WeSay is creating the pdf document for printing.");
-					dlg.AddArgument("writing-system-info-file", project.PathToWritingSystemPrefs);
-					dlg.Transform();
-				}
-			}
-			finally
-			{
-				if(File.Exists(pliftPath))
-				{
-					File.Delete(pliftPath);
-				}
-			}
+			return MakePLiftTempFile(entries, project.DefaultPrintingTemplate, homographCalculator, finder);
 		}
+//
+//        public void MakeXHtmlFile(string outputPath, Db4oRecordListManager recordListManager, WeSayWordsProject project)
+//        {
+//            IHomographCalculator homographCalculator = new HomographCalculator(recordListManager, project.DefaultPrintingTemplate.HeadwordWritingSytem);
+//
+//            IEnumerable<LexEntry> entries = Lexicon.GetAllEntriesSortedByHeadword(project.DefaultPrintingTemplate.HeadwordWritingSytem);
+//            Db4oLexEntryFinder finder = new Db4oLexEntryFinder(recordListManager.DataSource);
+//
+//            string pliftPath = MakePLiftTempFile(entries, project.DefaultPrintingTemplate, homographCalculator, finder);
+//            try
+//            {
+//                using (Stream xsltStream = GetXsltStream("plift2html.xsl"))
+//                {
+//                    TransformWithProgressDialog dlg = new TransformWithProgressDialog(pliftPath,
+//                                                                                      outputPath,
+//                                                                                      xsltStream,
+//                                                                                      "lift/entry");
+//                    dlg.TaskMessage =
+//                        StringCatalog.Get("Preparing dictionary for printing...",
+//                                          "This is shown when WeSay is creating the pdf document for printing.");
+//                    dlg.AddArgument("writing-system-info-file", project.PathToWritingSystemPrefs);
+//                    dlg.Transform();
+//                }
+//            }
+//            finally
+//            {
+//                if(File.Exists(pliftPath))
+//                {
+//                    File.Delete(pliftPath);
+//                }
+//            }
+//        }
 
 		public static Stream GetXsltStream(string xsltName)
 		{

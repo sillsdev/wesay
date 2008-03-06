@@ -31,20 +31,20 @@ namespace Addin.Transform.Tests
 			Palaso.Reporting.ErrorReport.IsOkToInteractWithUser = false;
 		}
 
-		[Test, Ignore("broken")]
-		public void EntryMakeItToXHtml()
-		{
-			string xmlForEntries = @"<entry id='foo1'><lexical-unit><form lang='v'><text>fooOne</text></form></lexical-unit></entry>";
-
-			using (Db4oProjectSetupForTesting projectSetup = new Db4oProjectSetupForTesting(xmlForEntries))
-			{
-				Lexicon.Init(projectSetup._recordListManager);
-				PLiftMaker maker = new PLiftMaker();
-				string outputPath = Path.Combine(projectSetup._project.PathToExportDirectory, projectSetup._project.Name + ".xhtml");
-				maker.MakeXHtmlFile(outputPath, projectSetup._recordListManager, projectSetup._project);
-				Assert.IsTrue(File.ReadAllText(outputPath).Contains("<span class=\"v\">fooOne"));
-			}
-		}
+//        [Test]
+//        public void EntryMakeItToXHtml()
+//        {
+//            string xmlForEntries = @"<entry id='foo1'><lexical-unit><form lang='v'><text>fooOne</text></form></lexical-unit></entry>";
+//
+//            using (Db4oProjectSetupForTesting projectSetup = new Db4oProjectSetupForTesting(xmlForEntries))
+//            {
+//                Lexicon.Init(projectSetup._recordListManager);
+//                PLiftMaker maker = new PLiftMaker();
+//                string outputPath = Path.Combine(projectSetup._project.PathToExportDirectory, projectSetup._project.Name + ".xhtml");
+//                maker.MakeXHtmlFile(outputPath, projectSetup._recordListManager, projectSetup._project);
+//                Assert.IsTrue(File.ReadAllText(outputPath).Contains("<span class=\"v\">fooOne"));
+//            }
+//        }
 
 		[Test, Ignore("not a real test")]
 		public void MakePLiftForBiatah2()
