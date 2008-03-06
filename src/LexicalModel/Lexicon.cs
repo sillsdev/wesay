@@ -117,6 +117,15 @@ namespace WeSay.LexicalModel
 				}
 		}
 
+		public static void RegisterHeadwordListWithCache(IList<WritingSystem> headwordWritingSystems)
+		{
+			foreach (WritingSystem writingSystem in headwordWritingSystems)
+			{
+				HeadwordSortedListHelper helper = new HeadwordSortedListHelper(RecordListManager,writingSystem);
+				RecordListManager.GetSortedList(helper);//installs it
+			}
+		}
+
 		public static void DeInitialize(bool doDisposeLikeYouOwnEverything)
 		{
 			if (doDisposeLikeYouOwnEverything)

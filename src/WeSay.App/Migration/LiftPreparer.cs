@@ -109,7 +109,7 @@ namespace WeSay.App
 				TransformWithProgressDialog transformer =
 					new TransformWithProgressDialog(pathToLift, outputPath, xsltStream, "//sense");
 				transformer.TaskMessage = "Populating Definitions from Glosses";
-				transformer.Transform();
+				transformer.Transform(true);
 				return outputPath;
 			}
 		}

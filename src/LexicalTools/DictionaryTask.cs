@@ -62,6 +62,9 @@ namespace WeSay.LexicalTools
 			{
 				Lexicon.RegisterFieldWithCache(field.WritingSystems, false);
 			}
+
+			Lexicon.RegisterHeadwordListWithCache(viewTemplate.HeadwordWritingSystems);
+
 		}
 
 

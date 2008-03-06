@@ -45,6 +45,7 @@ namespace WeSay.Project
 			set { _id = value; }
 		}
 
+		//todo: this is simplistic. Switch to the plural form
 		public WritingSystem HeadwordWritingSytem
 		{
 			get
@@ -52,7 +53,13 @@ namespace WeSay.Project
 				return GetDefaultWritingSystemForField(LexEntry.WellKnownProperties.LexicalUnit);
 			}
 		}
-
+		public IList<WritingSystem> HeadwordWritingSystems
+		{
+			get
+			{
+				return GetField(LexEntry.WellKnownProperties.LexicalUnit).WritingSystems;
+			}
+		}
 
 		///<summary>
 		///Gets the field with the specified name.
