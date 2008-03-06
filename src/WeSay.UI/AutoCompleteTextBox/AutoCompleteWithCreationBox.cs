@@ -30,6 +30,7 @@ namespace WeSay.UI.AutoCompleteTextBox
 				_textBox.ReadOnly = true;
 				_textBox.Enabled = false;
 				_textBox.TabStop = false;
+
 				this.TabStop = false;
 			}
 
@@ -39,11 +40,25 @@ namespace WeSay.UI.AutoCompleteTextBox
 			LostFocus += OnFocusChanged;
 			_textBox.LostFocus += OnFocusChanged;
 			AddNewButton.LostFocus += OnFocusChanged;
+			BackColorChanged += new EventHandler(OnBackColorChanged);
 			UpdateDisplay();
 			GetValueFromKeyValue = CastKeyValueToValue;
 			GetKeyValueFromValue = CastValueToKeyValue;
 
 			_textBox.SizeChanged += _textBox_SizeChanged;
+		}
+
+		/// <summary>
+		/// used when showing read only
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		void OnBackColorChanged(object sender, EventArgs e)
+		{
+			if (_textBox != null)
+			{
+				_textBox.BackColor = this.BackColor;
+			}
 		}
 
 		public override Size GetPreferredSize(Size proposedSize)

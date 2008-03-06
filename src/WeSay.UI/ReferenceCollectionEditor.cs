@@ -69,6 +69,18 @@ namespace WeSay.UI
 			_visibility = visibility;
 			_choiceSystemAdaptor = adaptor;
 			chosenItems.ListChanged += chosenItems_ListChanged;
+			BackColorChanged += new EventHandler(OnBackColorChanged);
+		}
+
+		void OnBackColorChanged(object sender, EventArgs e)
+		{
+			if (_visibility == CommonEnumerations.VisibilitySetting.ReadOnly)
+			{
+				foreach (Control control in Controls)
+				{
+					control.BackColor = this.BackColor;
+				}
+			}
 		}
 
 		// esa: I don't like this. We are relying on the CreateNewTargetItem
@@ -144,6 +156,8 @@ namespace WeSay.UI
 
 				Controls.Add(picker);
 			}
+			this.OnBackColorChanged(this, null);//set the appropriate background for the pickers if we're readonly
+
 			//add a blank to type in
 			if(_visibility != CommonEnumerations.VisibilitySetting.ReadOnly)
 			{

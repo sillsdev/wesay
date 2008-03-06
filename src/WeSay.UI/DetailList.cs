@@ -165,8 +165,9 @@ namespace WeSay.UI
 			label.Text = fieldLabel;
 			label.AutoSize = true;
 
-			int beforeHeadingPadding = isHeader ? 8 : 0;
-			label.Top = 3 + beforeHeadingPadding;
+			int beforeHeadingPadding = (isHeader && insertAtRow!=0) ? 18 : 0;
+	//        label.Top = 3 + beforeHeadingPadding;
+			label.Margin = new Padding(label.Margin.Left, beforeHeadingPadding, label.Margin.Right, label.Margin.Bottom);
 
 			if (isGhostField)
 			{
@@ -174,6 +175,7 @@ namespace WeSay.UI
 			}
 
 			Controls.Add(label, _indexOfLabel, insertAtRow);
+
 			editWidget.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
 
 			editWidget.KeyDown += new KeyEventHandler(OnEditWidget_KeyDown);
@@ -182,6 +184,8 @@ namespace WeSay.UI
 
 			//test
 			editWidget.TabIndex = insertAtRow;
+
+			editWidget.Margin = new Padding(editWidget.Margin.Left, beforeHeadingPadding, editWidget.Margin.Right, editWidget.Margin.Bottom);
 
 			// At this point, multitext controls were being displayed on the screen.
 			// We weren't able to get around this by simply using SuspendLayout and ResumeLayout
