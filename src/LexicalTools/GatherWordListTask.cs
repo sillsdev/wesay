@@ -303,7 +303,7 @@ namespace WeSay.LexicalTools
 			get
 			{
 				List<LexEntry> entries = GetMatchingRecords(CurrentWordAsMultiText);
-				entries.Sort(new EntryByBestLexemeFormAlternativeComparer(_viewTemplate.GetField(LexEntry.WellKnownProperties.LexicalUnit).WritingSystems[0]));
+				entries.Sort(new EntryByBestLexemeFormAlternativeComparer(ViewTemplate.GetField(LexEntry.WellKnownProperties.LexicalUnit).WritingSystems[0]));
 				return entries;
 			}
 		}
