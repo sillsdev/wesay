@@ -47,7 +47,18 @@ namespace WeSay.LexicalModel.Db4o_Specific
 			List<AncestorType> connectedGuys = new List<AncestorType>();
 			foreach (AncestorType guy in disconnectedGuys)
 			{
-				connectedGuys.Add( GetManagedObjectFromRawDb4oObject<AncestorType>(recordManager, guy));
+				//try-catch is temporary fix for ws-655
+				try
+				{
+					connectedGuys.Add(GetManagedObjectFromRawDb4oObject<AncestorType>(recordManager, guy));
+				}
+				catch(Exception err)
+				{
+#if DEBUG
+					throw err;
+#endif
+					Palaso.Reporting.Logger.WriteEvent("ERROR (not shown to user) at FindObjectsFromLanguageForm (see ws-655):" + err.Message);
+				}
 			}
 			return connectedGuys;
 		}
