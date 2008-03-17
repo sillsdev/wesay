@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Windows.Forms;
 using NUnit.Framework;
 using WeSay.Project;
@@ -97,6 +98,30 @@ namespace WeSay.App.Tests
 		{
 			get { return true; }
 		}
+
+		#region IThingOnDashboard Members
+
+		public string GroupName
+		{
+			get { throw new NotImplementedException(); }
+		}
+
+		public string LocalizedLabel
+		{
+			get { throw new NotImplementedException(); }
+		}
+
+		public ButtonStyle Style
+		{
+			get { throw new NotImplementedException(); }
+		}
+
+		public Image Image
+		{
+			get { throw new NotImplementedException(); }
+		}
+
+		#endregion
 
 		public virtual void RegisterWithCache(ViewTemplate viewTemplate)
 		{

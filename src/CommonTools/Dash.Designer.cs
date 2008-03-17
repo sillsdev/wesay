@@ -36,11 +36,11 @@ namespace WeSay.CommonTools
 			this._flow.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
 						| System.Windows.Forms.AnchorStyles.Left)
 						| System.Windows.Forms.AnchorStyles.Right)));
-			this._flow.BackColor = System.Drawing.SystemColors.Window;
+			this._flow.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(230)))), ((int)(((byte)(242)))));
 			this._flow.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-			this._flow.Location = new System.Drawing.Point(20, 20);
+			this._flow.Location = new System.Drawing.Point(20, 11);
 			this._flow.Name = "_flow";
-			this._flow.Size = new System.Drawing.Size(534, 493);
+			this._flow.Size = new System.Drawing.Size(534, 507);
 			this._flow.TabIndex = 0;
 			this._flow.WrapContents = false;
 			//
@@ -51,7 +51,6 @@ namespace WeSay.CommonTools
 			this.Controls.Add(this._flow);
 			this.Name = "Dash";
 			this.Size = new System.Drawing.Size(581, 534);
-			this.Load += new System.EventHandler(this.Dash_Load);
 			this.ResumeLayout(false);
 
 		}

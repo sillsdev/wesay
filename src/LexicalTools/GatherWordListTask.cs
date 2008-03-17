@@ -48,6 +48,7 @@ namespace WeSay.LexicalTools
 			_writingSystemIdForWordListWords = writingSystemIdForWordListLanguage;
 		}
 
+
 		private void LoadWordList()
 		{
 			string pathLocal = Path.Combine(WeSayWordsProject.Project.PathToWeSaySpecificFilesDirectoryInProject, _wordListFileName);

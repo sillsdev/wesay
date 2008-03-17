@@ -1,8 +1,7 @@
 using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
+using WeSay.Project;
 
 
 //!!!!!!!!!!!!!! see http://www.codeproject.com/KB/GDI-plus/colormatrix.aspx  for a way
@@ -13,27 +12,22 @@ namespace WeSay.CommonTools
 	public class DashboardButtonWithIcon : DashboardButton
 	{
 		private Image _image;
-		private readonly bool _isVariableWidth;
 		private int _imageWidth = 30;
 		private int _spaceBetweenImageAndLabel=10;
 
-		public DashboardButtonWithIcon(Image image, bool isVariableWidth)
+		public DashboardButtonWithIcon(IThingOnDashboard thingToShowOnDashboard)
+			:base(thingToShowOnDashboard)
 		 {
-			_image = image;
-			_isVariableWidth = isVariableWidth;
-			_label.Left = ClientRectangle.Left + _imageWidth + _spaceBetweenImageAndLabel;
-			_label.Width = ClientRectangle.Width - (_label.Left + 10);
-			_label.Height = ClientRectangle.Height - 20;
-
+			_image = thingToShowOnDashboard.Image;
 			this.Load += new EventHandler(DashboardButtonWithIcon_Load);
 		}
 
 		void DashboardButtonWithIcon_Load(object sender, EventArgs e)
 		{
-			if (_isVariableWidth)
+			if (_thingToShowOnDashboard.Style == ButtonStyle.IconVariableWidth)
 			{
 				int labelWidth =
-					TextRenderer.MeasureText(_label.Text, _label.Font, new Size(int.MaxValue, int.MaxValue),
+					TextRenderer.MeasureText(Text, Font, new Size(int.MaxValue, int.MaxValue),
 											 TextFormatFlags.LeftAndRightPadding).Width;
 
 				this.Width = _imageWidth + _spaceBetweenImageAndLabel + labelWidth + 10;
@@ -44,9 +38,23 @@ namespace WeSay.CommonTools
 		{
 			if (_image != null)
 			{
-				e.Graphics.DrawImage(_image, this.ClientRectangle.Left + 5, this.ClientRectangle.Top + 5, _imageWidth, _imageWidth);
+				e.Graphics.DrawImage(_image,
+					this.ClientRectangle.Left + _leftMarginWidth + CurrentMouseButtonNudge,
+					this.ClientRectangle.Top + CurrentMouseButtonNudge + 10,
+					_imageWidth, _imageWidth);
 			}
 
+			int left = ClientRectangle.Left + _imageWidth + _spaceBetweenImageAndLabel;
+			e.Graphics.DrawString(this.Text, this.Font, Brushes.Black, left + CurrentMouseButtonNudge, 16 + CurrentMouseButtonNudge);
 		}
+
+		public override int GetRequiredWidth()
+		{
+			int textWidth = TextRenderer.MeasureText(Text, this.Font, new Size(int.MaxValue, int.MaxValue), TextFormatFlags.LeftAndRightPadding).Width + _buttonDownHorizontalNudge;
+			int unknownHack = 20;
+			return textWidth + _buttonDownHorizontalNudge + _imageWidth +
+				_spaceBetweenImageAndLabel + _leftMarginWidth + unknownHack;
+		}
+
 	}
 }

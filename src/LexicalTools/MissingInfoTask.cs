@@ -17,6 +17,7 @@ namespace WeSay.LexicalTools
 		private readonly ViewTemplate _viewTemplate;
 		private bool _dataHasBeenRetrieved;
 		private LexEntrySortHelper _sortHelper;
+		private bool _isBaseFormFillingTask;
 
 
 		public MissingInfoTask(IRecordListManager recordListManager,
@@ -96,7 +97,8 @@ namespace WeSay.LexicalTools
 			_viewTemplate = CreateViewTemplateFromListOfFields(viewTemplate, fieldsToShow);
 
 			//hack until we overhaul how Tasks are setup:
-			if (filter is MissingItemFilter && fieldsToShow.Contains(LexEntry.WellKnownProperties.BaseForm))
+			_isBaseFormFillingTask = filter is MissingItemFilter && fieldsToShow.Contains(LexEntry.WellKnownProperties.BaseForm);
+			if (_isBaseFormFillingTask)
 			{
 				MissingItemFilter f = filter as MissingItemFilter;
 				Field flagField = new Field();
@@ -109,6 +111,17 @@ namespace WeSay.LexicalTools
 			}
 		}
 
+		public override string GroupName
+		{
+			get
+			{
+				if (_isBaseFormFillingTask)
+				{
+					return "Refine";
+				}
+				return base.GroupName;
+			}
+		}
 		public MissingInfoTask(IRecordListManager recordListManager,
 			IFilter<LexEntry>  filter,
 					string label,

@@ -88,6 +88,12 @@
   </ItemGroup>
   <ItemGroup>
 	<Compile Include="CommandLineParser.cs" />
+	<Compile Include="LongStartupNotification.cs">
+	  <SubType>Form</SubType>
+	</Compile>
+	<Compile Include="LongStartupNotification.Designer.cs">
+	  <DependentUpon>LongStartupNotification.cs</DependentUpon>
+	</Compile>
 	<Compile Include="Migration\LiftPreparer.cs" />
 	<Compile Include="Services\DictionaryServiceProvider.cs" />
 	<Compile Include="Properties\Resources.Designer.cs">
@@ -159,6 +165,10 @@
 	<EmbeddedResource Include="..\Addin.Transform\lift2html.xsl" />
   </ItemGroup>
   <ItemGroup>
+	<EmbeddedResource Include="LongStartupNotification.resx">
+	  <SubType>Designer</SubType>
+	  <DependentUpon>LongStartupNotification.cs</DependentUpon>
+	</EmbeddedResource>
 	<EmbeddedResource Include="Migration\populateDefinitionFromGloss.xslt" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

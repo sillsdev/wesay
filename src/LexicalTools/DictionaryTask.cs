@@ -1,9 +1,11 @@
 using System;
+using System.Drawing;
 using System.Windows.Forms;
 using Palaso.UI.WindowsForms.i8n;
 using WeSay.Data;
 using WeSay.Foundation;
 using WeSay.LexicalModel;
+using WeSay.LexicalTools.Properties;
 using WeSay.Project;
 
 namespace WeSay.LexicalTools
@@ -134,6 +136,16 @@ namespace WeSay.LexicalTools
 		protected override int ComputeReferenceCount()
 		{
 			return CountNotRelevant;
+		}
+
+		public override ButtonStyle Style
+		{
+			get { return ButtonStyle.IconFixedWidth; }
+		}
+
+		public override Image Image
+		{
+			get { return Resources.blueDictionary; }
 		}
 	}
 }

@@ -3,7 +3,7 @@ using System.Windows.Forms;
 
 namespace WeSay.Project
 {
-	public interface ITask
+	public interface ITask : IThingOnDashboard
 	{
 		void Activate();
 		void Deactivate();

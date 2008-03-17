@@ -16,6 +16,7 @@ namespace WeSay.CommonTools
 		{
 			Debug.Assert(this.DesignMode);
 			InitializeComponent();
+			ShowLogo = false;
 		}
 
 
@@ -26,6 +27,13 @@ namespace WeSay.CommonTools
 			this._dictionarySizeLabel.Text = String.Format(StringCatalog.Get(this._dictionarySizeLabel.Text), records.Count);
 		}
 
+		public bool ShowLogo
+		{
+			set
+			{
+				_logoImage.Visible = value;
+			}
+		}
 		private void _dictionarySizeLabel_Click(object sender, EventArgs e)
 		{
 

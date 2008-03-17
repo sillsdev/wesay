@@ -32,6 +32,17 @@ namespace WeSay.LexicalTools
 			}
 		}
 
+		public override string GroupName
+		{
+			get { return "Gather"; }
+		}
+
+		public override ButtonStyle Style
+		{
+			get { return ButtonStyle.FixedAmount; }
+		}
+
+
 		public string WordWritingSystemId
 		{
 			get

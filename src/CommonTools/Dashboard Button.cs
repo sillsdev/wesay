@@ -1,10 +1,7 @@
 using System;
-using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
-using Palaso.UI.WindowsForms.i8n;
-using WeSay.Foundation;
 using WeSay.Project;
 
 namespace WeSay.CommonTools
@@ -14,13 +11,37 @@ namespace WeSay.CommonTools
 		private Color _borderColor=Color.Blue;
 		private Color _doneColor = Color.Blue;
 		private Color _todoColor = Color.LightBlue;
+		protected bool _mouseIsDown;
+		protected static int _buttonDownHorizontalNudge = 2;
+		protected    int _leftMarginWidth= 5;
+		protected IThingOnDashboard _thingToShowOnDashboard;
 
 		public event EventHandler Selected = delegate { };
 
-		public DashboardButton()
+		public DashboardButton(IThingOnDashboard thingToShowOnDashboard)
 		{
+			_thingToShowOnDashboard = thingToShowOnDashboard;
 			InitializeComponent();
+
 		}
+
+		public override string Text
+		{
+			get
+			{
+				return base.Text;
+			}
+			set
+			{
+				base.Text = value;
+				int requiredWidth = GetRequiredWidth();
+				if (requiredWidth > Width)
+				{
+					Width = requiredWidth;
+				}
+			}
+		}
+
 
 		public Color BorderColor
 		{
@@ -45,6 +66,7 @@ namespace WeSay.CommonTools
 		{
 			Selected(this, e);
 		}
+
 
 		/// <summary>
 		/// From a comment in http://www.codeproject.com/KB/GDI-plus/ExtendedGraphics.aspx
@@ -77,7 +99,6 @@ namespace WeSay.CommonTools
 
 		protected override void OnPaint(PaintEventArgs e)
 		{
-			this._label.Text = this.Text;
 
 			int borderWidth = 1;
 			int radius = 8;
@@ -92,11 +113,23 @@ namespace WeSay.CommonTools
 			e.Graphics.FillPath(Brushes.LightGray, path);
 
 			//draw the fron part
-			rectangle = new Rectangle(this.ClientRectangle.Left,
-														this.ClientRectangle.Top,
-														this.ClientRectangle.Width - shadowWidth,
-														this.ClientRectangle.Height - shadowWidth);
+
+			if(!_mouseIsDown)
+			{
+				rectangle = new Rectangle(this.ClientRectangle.Left,
+										  this.ClientRectangle.Top,
+										  this.ClientRectangle.Width - shadowWidth,
+										  this.ClientRectangle.Height - shadowWidth);
+			}
+			else
+			{
+				rectangle = new Rectangle(this.ClientRectangle.Left+2,
+										  this.ClientRectangle.Top+2,
+										  this.ClientRectangle.Width - shadowWidth,
+										  this.ClientRectangle.Height - shadowWidth);
+			}
 			path = GetButtonShapePath(rectangle, radius, borderWidth);
+
 			e.Graphics.FillPath(Brushes.White, path);
 			e.Graphics.DrawPath(new Pen(_borderColor, borderWidth), path);
 
@@ -106,27 +139,47 @@ namespace WeSay.CommonTools
 
 		}
 
+		protected int CurrentMouseButtonNudge
+		{
+			get { return _mouseIsDown ? _buttonDownHorizontalNudge : 0; }
+		}
+
+		public IThingOnDashboard ThingToShowOnDashboard
+		{
+			get { return _thingToShowOnDashboard; }
+		}
+
 		protected virtual void PaintContents(PaintEventArgs e)
 		{
-//Color doneColor =Contrast(ForeColor, (float)1.2);
+			int nudge = CurrentMouseButtonNudge;
 			Pen pen = new Pen(_doneColor, 5);
 
 			int y = ClientRectangle.Bottom - 16;
-			int left = this._label.Left;
+			int left = ClientRectangle.Left + _leftMarginWidth;
 			int rightEdge = ClientRectangle.Right - 15;
 			float percentDone = 30;
 			float rightEdgeOfDonePart =(float) (percentDone/100.0)*(rightEdge-left) + left;
-			e.Graphics.DrawLine(pen, left,
-								y,
-								rightEdgeOfDonePart,
-								y);
+			e.Graphics.DrawLine(pen, left+nudge,
+								y + nudge,
+								rightEdgeOfDonePart + nudge,
+								y + nudge);
 
 			// Color todoColor = Contrast(ForeColor, (float)1.9);
 			pen = new Pen(_todoColor, 5);
-			e.Graphics.DrawLine(pen, rightEdgeOfDonePart,
-								y,
-								rightEdge,
-								y);
+			e.Graphics.DrawLine(pen, rightEdgeOfDonePart + nudge,
+								y + nudge,
+								rightEdge + nudge,
+								y + nudge);
+
+			e.Graphics.DrawString(this.Text, this.Font, Brushes.Black, left+nudge, 10+nudge);
+		}
+
+
+		public virtual int GetRequiredWidth()
+		{
+			int textWidth= TextRenderer.MeasureText(Text, this.Font, new Size(int.MaxValue, int.MaxValue), TextFormatFlags.LeftAndRightPadding).Width + _buttonDownHorizontalNudge;
+			int unknownHack = 20;
+			return textWidth + _buttonDownHorizontalNudge + _leftMarginWidth + unknownHack;
 		}
 
 		private GraphicsPath GetButtonShapePath(Rectangle rectangle, int radius, int borderWidth)
@@ -139,33 +192,24 @@ namespace WeSay.CommonTools
 							 borderWidth);
 		}
 
-		/*
-		 *
-		 * Didn't reall do what we wanted
 
-		private Color Contrast(Color color, float howMuch)
+
+		protected void DashboardButton_MouseDown(object sender, MouseEventArgs e)
 		{
-			return Color.FromArgb(ContrastComponent(color.R, howMuch),
-								  ContrastComponent(color.G,howMuch), ContrastComponent(color.B,howMuch));
+			_mouseIsDown = true;
+			Invalidate();
 		}
 
-		private byte ContrastComponent(byte g, float howMuch)
+		protected void DashboardButton_MouseUp(object sender, MouseEventArgs e)
 		{
-			double v;
-			v = g / 255.0;
-			v -= 0.5;
-			v *= howMuch;
-			v += 0.5;
-			v *= 255;
-			if (v < 0) v = 0;
-			if (v > 255) v = 255;
-			return (byte)v;
-
+			_mouseIsDown = false;
+			Invalidate();
 		}
-*/
-		private void DashboardButton_FontChanged(object sender, EventArgs e)
+
+		protected void DashboardButton_MouseLeave(object sender, EventArgs e)
 		{
-			this._label.Font = this.Font;
+			_mouseIsDown = false;
+			Invalidate();
 		}
 	}
 }

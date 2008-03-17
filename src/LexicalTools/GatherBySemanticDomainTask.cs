@@ -14,74 +14,6 @@ using WeSay.Project;
 
 namespace WeSay.LexicalTools
 {
-	public class SemanticDomainSortHelper : ISortHelper<string, LexEntry>
-	{
-		private readonly Db4oDataSource _db4oData;
-		private readonly string _semanticDomainFieldName;
-
-		public SemanticDomainSortHelper(Db4oDataSource db4oData, string semanticDomainFieldName)
-		{
-			if (db4oData == null)
-			{
-				throw new ArgumentNullException("db4oData");
-			}
-			if (semanticDomainFieldName == null)
-			{
-				throw new ArgumentNullException("semanticDomainFieldName");
-			}
-			if (semanticDomainFieldName == string.Empty)
-			{
-				throw new ArgumentOutOfRangeException("semanticDomainFieldName");
-			}
-
-			_db4oData = db4oData;
-			_semanticDomainFieldName = semanticDomainFieldName;
-		}
-
-		#region IDb4oSortHelper<string,LexEntry> Members
-
-		public IComparer<string> KeyComparer
-		{
-			get { return StringComparer.InvariantCulture; }
-		}
-
-		public List<KeyValuePair<string, long>> GetKeyIdPairs()
-		{
-			return KeyToEntryIdInitializer.GetKeyToEntryIdPairs(_db4oData, GetKeys);
-		}
-
-		public IEnumerable<string> GetKeys(LexEntry item)
-		{
-			List<string> keys = new List<string>();
-			foreach (LexSense sense in item.Senses)
-			{
-				OptionRefCollection semanticDomains = sense.GetProperty<OptionRefCollection>(_semanticDomainFieldName);
-
-				if (semanticDomains != null)
-				{
-					foreach (string s in semanticDomains.Keys)
-					{
-						if (!keys.Contains(s))
-						{
-							keys.Add(s);
-						}
-					}
-				}
-			}
-			return keys;
-		}
-
-		public string Name
-		{
-			get { return "LexEntry sorted by " + _semanticDomainFieldName; }
-		}
-
-		public override int GetHashCode()
-		{
-			return _semanticDomainFieldName.GetHashCode();
-		}
-		#endregion
-	}
 
 	public class GatherBySemanticDomainTask : WordGatheringTaskBase
 	{
@@ -768,4 +700,74 @@ namespace WeSay.LexicalTools
 		}
 
 	}
+
+	public class SemanticDomainSortHelper : ISortHelper<string, LexEntry>
+	{
+		private readonly Db4oDataSource _db4oData;
+		private readonly string _semanticDomainFieldName;
+
+		public SemanticDomainSortHelper(Db4oDataSource db4oData, string semanticDomainFieldName)
+		{
+			if (db4oData == null)
+			{
+				throw new ArgumentNullException("db4oData");
+			}
+			if (semanticDomainFieldName == null)
+			{
+				throw new ArgumentNullException("semanticDomainFieldName");
+			}
+			if (semanticDomainFieldName == string.Empty)
+			{
+				throw new ArgumentOutOfRangeException("semanticDomainFieldName");
+			}
+
+			_db4oData = db4oData;
+			_semanticDomainFieldName = semanticDomainFieldName;
+		}
+
+		#region IDb4oSortHelper<string,LexEntry> Members
+
+		public IComparer<string> KeyComparer
+		{
+			get { return StringComparer.InvariantCulture; }
+		}
+
+		public List<KeyValuePair<string, long>> GetKeyIdPairs()
+		{
+			return KeyToEntryIdInitializer.GetKeyToEntryIdPairs(_db4oData, GetKeys);
+		}
+
+		public IEnumerable<string> GetKeys(LexEntry item)
+		{
+			List<string> keys = new List<string>();
+			foreach (LexSense sense in item.Senses)
+			{
+				OptionRefCollection semanticDomains = sense.GetProperty<OptionRefCollection>(_semanticDomainFieldName);
+
+				if (semanticDomains != null)
+				{
+					foreach (string s in semanticDomains.Keys)
+					{
+						if (!keys.Contains(s))
+						{
+							keys.Add(s);
+						}
+					}
+				}
+			}
+			return keys;
+		}
+
+		public string Name
+		{
+			get { return "LexEntry sorted by " + _semanticDomainFieldName; }
+		}
+
+		public override int GetHashCode()
+		{
+			return _semanticDomainFieldName.GetHashCode();
+		}
+		#endregion
+	}
+
 }

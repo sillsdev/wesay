@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using Palaso.UI.WindowsForms.i8n;
@@ -246,5 +247,29 @@ namespace WeSay.LexicalTools
 			get { return _isActive; }
 			protected set { _isActive = value; }
 		}
+
+		#region IThingOnDashboard Members
+
+		public virtual string GroupName
+		{
+			get { return "Describe"; }
+		}
+
+		public string LocalizedLabel
+		{
+			get { return StringCatalog.Get(_label); }
+		}
+
+		public virtual ButtonStyle Style
+		{
+			get { return ButtonStyle.VariableAmount; }
+		}
+
+		public virtual Image Image
+		{
+			get { return null;}
+		}
+
+		#endregion
 	}
 }

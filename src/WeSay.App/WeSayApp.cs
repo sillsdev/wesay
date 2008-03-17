@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 #if !MONO
+using System.Reflection;
 using System.ServiceModel;
 #endif
 using System.Threading;
@@ -220,6 +221,38 @@ namespace WeSay.App
 			get { return _serviceAppSingletonHelper.CurrentState  ==  ServiceAppSingletonHelper.State.ServerMode; }
 		}
 
+		/// <summary>
+		/// Only show a dialog if the operation takes more than two seconds
+		/// </summary>
+		/// <param name="message"></param>
+		public  void NotifyOfLongStartupThread(object message)
+		{
+			try
+			{
+				Thread.Sleep(2000);
+
+				LongStartupNotification dlg = new LongStartupNotification();
+				dlg.Message = (string)message;
+				dlg.Show();
+				Application.DoEvents();
+				try
+				{
+					while (true)
+					{
+						Thread.Sleep(100);
+						Application.DoEvents();//otherwise we get (Not Responding)
+					}
+				}
+				catch (ThreadInterruptedException e)
+				{
+					dlg.Close();
+					dlg.Dispose();
+				}
+			}
+			catch (ThreadInterruptedException e)
+			{
+			}
+		}
 
 		/// <summary>
 		/// Without this, if we add entries with no UI up, there is not dictionary task up, and the cache
@@ -228,8 +261,21 @@ namespace WeSay.App
 		/// </summary>
 		private void StartCacheWatchingStuff()
 		{
-			DictionaryTask dictionaryTask = new DictionaryTask(_recordListManager, _project.DefaultViewTemplate);
-			dictionaryTask.RegisterWithCache(_project.DefaultViewTemplate);
+			Thread notify = new Thread(NotifyOfLongStartupThread);
+
+			notify.Start(
+				StringCatalog.Get("~Please wait while WeSay prepares your data",
+								  "This is shown in rare circumstances where WeSay finds it needs to prepare some indices so it can run faster.  The main point to get across is that the user should settle in for a long wait, not think something is broken or try to run WeSay again."));
+
+			try
+			{
+				DictionaryTask dictionaryTask = new DictionaryTask(_recordListManager, _project.DefaultViewTemplate);
+				dictionaryTask.RegisterWithCache(_project.DefaultViewTemplate);
+			}
+			finally
+			{
+				notify.Interrupt();
+			}
 
 //            Db4oRecordListManager manager = _recordListManager as Db4oRecordListManager;
 //            if (manager != null)
