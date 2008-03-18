@@ -8,12 +8,12 @@
   <PropertyGroup>
 	<ApplicationName>WeSay</ApplicationName>
 	<Company>WeSay</Company>
-	<Copyright>Copyright © WeSay 2006-2007</Copyright>
+	<Copyright>Copyright © WeSay 2006-2008</Copyright>
 
 	<Major>0</Major>
-	<Minor>1</Minor>
+	<Minor>3</Minor>
+	<Revision></Revision><!-- filled in by subversion version number below-->
 	<Bug>0</Bug>
-	<Revision></Revision>
   </PropertyGroup>
 
 
@@ -36,7 +36,7 @@
 	  <Output TaskParameter="Revision" PropertyName="AssemblyFileRevision"/>
 	</SvnVersion>
 
-	<Message Text="Version: $(Major).$(Minor).$(Bug).$(Revision)"/>
+	<Message Text="Version: $(Major).$(Minor).$(Revision).$(Bug)"/>
   </Target>
 
   <!-- From http://www.gotdotnet.com/codegallery/codegallery.aspx?id=93d23e13-c653-4815-9e79-16107919f93e -->
@@ -53,10 +53,10 @@
   <PropertyGroup>
 	<AssemblyMajorVersion>$(Major)</AssemblyMajorVersion>
 	<AssemblyMinorVersion>$(Minor)</AssemblyMinorVersion>
-	<AssemblyBuildNumber>$(Bug)</AssemblyBuildNumber>
+	<AssemblyBuildNumber>$(Revision)</AssemblyBuildNumber>
 	<AssemblyBuildNumberType>NoIncrement</AssemblyBuildNumberType>
 	<AssemblyBuildNumberFormat>0</AssemblyBuildNumberFormat>
-	<AssemblyRevision>$(Revision)</AssemblyRevision>
+	<AssemblyRevision>$(Bug)</AssemblyRevision>
 	<AssemblyRevisionType>NoIncrement</AssemblyRevisionType>
 	<AssemblyRevisionFormat>0</AssemblyRevisionFormat>
   </PropertyGroup>
@@ -65,10 +65,10 @@
   <PropertyGroup>
 	<AssemblyFileMajorVersion>$(Major)</AssemblyFileMajorVersion>
 	<AssemblyFileMinorVersion>$(Minor)</AssemblyFileMinorVersion>
-	<AssemblyFileBuildNumber>$(Bug)</AssemblyFileBuildNumber>
+	<AssemblyFileBuildNumber>$(Revision)</AssemblyFileBuildNumber>
 	<AssemblyFileBuildNumberType>NoIncrement</AssemblyFileBuildNumberType>
 	<AssemblyFileBuildNumberFormat>0</AssemblyFileBuildNumberFormat>
-	<AssemblyFileRevision>$(Revision)</AssemblyFileRevision>
+	<AssemblyFileRevision>$(Bug)</AssemblyFileRevision>
 	<AssemblyFileRevisionType>NoIncrement</AssemblyFileRevisionType>
 	<AssemblyFileRevisionFormat>0</AssemblyFileRevisionFormat>
   </PropertyGroup>
