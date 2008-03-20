@@ -165,10 +165,7 @@
 
 	<Message Text="Version: $(Version)"/>
 
-	<Move SourceFiles="$(BaseDirectory)\output\installer\SetupWeSay.msi"
-		  DestinationFiles="$(BaseDirectory)\output\installer\SetupWeSay.$(Version).msi"/>
-
-	<Exec Command='rsync.exe -avz -e "ssh -l $(user)" "output\installer\SetupWeSay.$(Version).msi" $(user)@wesay.org:/var/www/downloads'
+	<Exec Command='rsync.exe -vz -e "ssh -l $(user)" "output/installer/SetupWeSay.msi" $(user)@wesay.org:/var/www/downloads/SetupWeSay.$(Version).msi'
 		   WorkingDirectory="$(BaseDirectory)" />
   </Target>
 
