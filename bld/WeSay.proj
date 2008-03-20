@@ -149,6 +149,18 @@
   <Target Name="Package">
 	<CallTarget targets="MakePotFile; MakeWixForPoFiles"/>
 	<CallTarget targets="MakeWixForBiatah"/>
+
+
+	<CreateProperty Value="$(Major).$(Minor).0$(Revision)"><!--the preceding zero here is so we get a valid version even when just running this target in isolation, when Revision is empty -->
+	  <Output PropertyName="Version" TaskParameter="Value"/>
+	</CreateProperty>
+
+	<!-- set the version number in the installer configuration program.  I'm sure there's a way to just send in the variables rather than this brute-force
+		changing of the script, but I haven't figured that out. -->
+	<FileUpdate Files="$(BaseDirectory)\src\Setup\Setup.wxs" Regex="Property_ProductVersion = \&quot;.*\&quot;"
+			  ReplacementText ="Property_ProductVersion = &quot;$(Version)&quot;" />
+
+
 	<MSBuild Projects="$(BaseDirectory)\src\Setup\Setup.wixproj"/>
   </Target>
 
