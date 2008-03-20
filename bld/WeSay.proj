@@ -177,8 +177,11 @@
 
 	<Message Text="Version: $(Version)"/>
 
-	<Exec Command='rsync.exe -vz -e "ssh -l $(user)" "output/installer/SetupWeSay.msi" $(user)@wesay.org:/var/www/downloads/SetupWeSay.$(Version).msi'
-		   WorkingDirectory="$(BaseDirectory)" />
+	<Move SourceFiles="$(BaseDirectory)\output\installer\SetupWeSay.msi"
+		  DestinationFiles="$(BaseDirectory)\output\installer\SetupWeSay.$(Version).msi"/>
+
+	<Exec Command='pscp.exe -batch -pw $(password) "$(BaseDirectory)\output\installer\SetupWeSay.$(Version).msi" $(user)@wesay.org:/var/www/downloads'
+		   WorkingDirectory="c:\program files\PuTTY\" />
   </Target>
 
   <Target Name="Mail">
