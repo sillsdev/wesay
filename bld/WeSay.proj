@@ -168,8 +168,8 @@
 	<Move SourceFiles="$(BaseDirectory)\output\installer\SetupWeSay.msi"
 		  DestinationFiles="$(BaseDirectory)\output\installer\SetupWeSay.$(Version).msi"/>
 
-	<Exec Command='rsync.exe -avz -e "ssh -l $(user)" "$(BaseDirectory)\output\installer\SetupWeSay.$(Version).msi" $(user)@wesay.org:/var/www/downloads'
-		   WorkingDirectory="c:\program files\rsync\" />
+	<Exec Command='rsync.exe -avz -e "ssh -l $(user)" "output\installer\SetupWeSay.$(Version).msi" $(user)@wesay.org:/var/www/downloads'
+		   WorkingDirectory="$(BaseDirectory)" />
   </Target>
 
   <Target Name="Mail">
