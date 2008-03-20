@@ -17,7 +17,7 @@ namespace Addin.Transform
 	[Extension]
 	public class HtmlTransformer : LiftTransformer
 	{
-		public override string Name
+		public override string LocalizedName
 		{
 			get
 			{
@@ -40,6 +40,11 @@ namespace Addin.Transform
 			{
 				return Resources.printButtonImage;
 			}
+		}
+
+		public override string ID
+		{
+			get { return "ExportToHtml"; }
 		}
 
 

@@ -20,7 +20,7 @@ namespace Addin.Backup
 			_settings = new SendProjectEmailSettings();
 		}
 
-		public string Name
+		public string LocalizedName
 		{
 			get
 			{

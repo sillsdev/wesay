@@ -44,7 +44,7 @@ namespace WeSay.AddinLib
 
 
 
-		public string Name
+		public string LocalizedName
 		{
 			get
 			{

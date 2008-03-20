@@ -24,7 +24,7 @@ namespace Addin.Transform
 			_settings = new SfmTransformSettings();
 		}
 
-		public override string Name
+		public override string LocalizedName
 		{
 			get
 			{
@@ -142,6 +142,11 @@ namespace Addin.Transform
 			{
 				_settings = (SfmTransformSettings)value;
 			}
+		}
+
+		public override string ID
+		{
+			get { return "Export To SFM"; } //CAN'T CHANGE THIS WITHOUT PROVIDING A MIGRATION FOR FOLKS!
 		}
 
 		#endregion

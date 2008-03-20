@@ -462,11 +462,11 @@ namespace WeSay.App
 				HelpText = "Path to the Lift Xml file (e.g. on windows, \"c:\\thai\\wesay\\thai.lift\").")]
 			public string liftPath = null;
 
-			[Argument(ArgumentTypes.AtMostOnce,
-				HelpText = "Language to show the user interface in.",
-				LongName = "ui",
-				ShortName = "")]
-			public string ui = null;
+//            [Argument(ArgumentTypes.AtMostOnce,
+//                HelpText = "Language to show the user interface in.",
+//                LongName = "ui",
+//                ShortName = "")]
+//            public string ui = null;
 
 			[Argument(ArgumentTypes.AtMostOnce,
 			HelpText = "Start without a user interface (will have no effect if WeSay is already running with a UI.",

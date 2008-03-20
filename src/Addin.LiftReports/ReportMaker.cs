@@ -33,7 +33,7 @@ namespace Addin.LiftReports
 			}
 		}
 
-		public string Name
+		public string LocalizedName
 		{
 			get
 			{

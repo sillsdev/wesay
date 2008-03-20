@@ -12,12 +12,17 @@ namespace Addin.Transform
 	[Extension]
 	public class HtmlInWord : HtmlTransformer
 	{
-		public override string Name
+		public override string LocalizedName
 		{
 			get
 			{
 				return StringCatalog.Get("~Export to Word");
 			}
+		}
+
+		public override string ID
+		{
+			get { return "ExportToWord"; }
 		}
 
 		public override string ShortDescription

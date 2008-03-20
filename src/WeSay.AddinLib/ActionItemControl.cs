@@ -162,7 +162,7 @@ namespace WeSay.AddinLib
 		protected void UpdateVisualThings()
 		{
 			UpdateEnabledStates();
-			_actionName.Text = _addin.Name;
+			_actionName.Text = _addin.LocalizedName;
 			_description.Text = _addin.ShortDescription;
 
 			if (_inAdminMode && !DoShowInWeSay)

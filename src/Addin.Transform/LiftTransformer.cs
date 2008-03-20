@@ -29,7 +29,7 @@ namespace Addin.Transform
 		public abstract Image ButtonImage { get;}
 
 
-		public abstract string Name
+		public abstract string LocalizedName
 		{
 			get;
 		}
@@ -39,14 +39,14 @@ namespace Addin.Transform
 			get;
 		}
 
-		public virtual string ID
+		#region IWeSayAddin Members
+
+		public abstract string ID
 		{
-			get
-			{
-				return Name;
-			}
+			get;
 		}
 
+		#endregion
 
 		public virtual bool Available
 		{

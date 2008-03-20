@@ -31,7 +31,7 @@ namespace Addin.Backup
 			}
 		}
 
-		public string Name
+		public string LocalizedName
 		{
 			get
 			{

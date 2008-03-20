@@ -1,6 +1,5 @@
 using System;
 using System.Drawing;
-using System.Runtime.Serialization;
 using System.Windows.Forms;
 using Mono.Addins;
 
@@ -22,7 +21,7 @@ namespace WeSay.AddinLib
 		bool Available { get;}
 
 
-		string Name
+		string LocalizedName
 		{
 			get;
 		}
