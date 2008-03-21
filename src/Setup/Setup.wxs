@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <!-- These variables define the Windows Installer product version, product code and upgrade code. They   -->
 <!-- will be used later on in this file.                                                                 -->
-<?define Property_ProductVersion = "0.0.0" ?> <!--this is replaced at build time by the msbuild 'package' target -->
-<?define Property_ProductCode = "FEE455D7-E216-4C49-B82B-919D753F3A98" ?>
-<?define Property_UpgradeCode = "6B6778A7-D3AD-4de8-BE95-C8956665B85A" ?> <!--Don't even think of EVER changing this -->
+<?define Property_ProductVersion = "0.3.0" ?> <!--this is replaced at build time by the msbuild 'package' target -->
+<?define Property_ProductCode = "*" ?> <!-- auto-generate a new guid each time -->
+<?define Property_UpgradeCode = "{6B6778A7-D3AD-4de8-BE95-C8956665B85A}" ?> <!--Don't even think of EVER changing this -->
 
 
 	<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
@@ -12,25 +12,13 @@
 				   Version="$(var.Property_ProductVersion)" Manufacturer="SIL"
 				   UpgradeCode="$(var.Property_UpgradeCode)">
 
-		  <Package Id="????????-????-????-????-????????????" Compressed="yes" InstallerVersion="200" />
+		  <Package  Compressed="yes" InstallerVersion="200" />
 
 		  <Upgrade Id ="$(var.Property_UpgradeCode)" >
-		  <UpgradeVersion Minimum ="$(var.Property_ProductVersion)" IncludeMinimum="no" OnlyDetect ="yes" Property ="NEWVERSIONDETECTED" />
-		  <Property Id="NEWVERSIONDETECTED" Secure="yes" />
-		  <UpgradeVersion Minimum ="0.0.0" IncludeMinimum ="yes" Maximum ="$(var.Property_ProductVersion)" IncludeMaximum ="no" Property ="OLDERVERSIONBEINGUPGRADED" MigrateFeatures="yes" />
-		  <Property Id="OLDERVERSIONBEINGUPGRADED" Secure="yes" />
+		  <UpgradeVersion Minimum ="$(var.Property_ProductVersion)" OnlyDetect ="yes" Property ="NEWVERSIONDETECTED" />
+		  <UpgradeVersion Minimum ="0.0.0" IncludeMinimum ="yes" Maximum ="$(var.Property_ProductVersion)" IncludeMaximum ="no" Property ="OLDERVERSIONBEINGUPGRADED" />
 		  </Upgrade >
 
-
-			<!-- This information enables Windows Installer major upgrade functionality so users can seamlessly  -->
-			<!-- install a new version of the product and have the old version automatically uninstall behind    -->
-			<!-- the scenes. See the following topic in the MSDN Library for additional information:             -->
-			<!-- http://msdn.microsoft.com/library/default.asp?url=/library/en-us/msi/setup/major_upgrades.asp   -->
-	   <!--        <Upgrade Id="$(var.Property_UpgradeCode)">
-			  <UpgradeVersion Minimum="$(var.Property_ProductVersion)" OnlyDetect="yes" Property="NEWERVERSIONDETECTED" />
-			  <UpgradeVersion Minimum="0.0.0" IncludeMinimum="yes" Maximum="$(var.Property_ProductVersion)" IncludeMaximum="no" Property="OLDERVERSIONBEINGUPGRADED" />
-			</Upgrade>
--->
 			<!--
 	"from the list: Don't use Advertise="yes" Advertised shortcuts are designed to allow
 users to install just the shortcut for your app, then demand-install the
@@ -54,12 +42,7 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 					  <RegistryValue Type ="string" Value =""  Action ="write" KeyPath ="yes"/>
 					</RegistryKey>
 				  </Component>
-				  <!--         <Component Id="Test" Guid ="{9483C884-78CF-4b1c-8886-6BE42E73DA65}">
-			<Shortcut Id="SetupThaiShortcut1"  Directory="WeSayShortcutDir" Name="Thai Sample Setup1"
-			 Arguments="[thai5000.words]"  Target="[!WeSay.App.exe]" Icon ="SampleSetupIcon" />
-			<Registry Root="HKCU" Key="SOFTWARE\WeSay\Components\Test" KeyPath="yes" />
 
-		  </Component>    -->
 				</Directory>
 			  </Directory>
 			  <Directory Id="ProgramFilesFolder" Name="PFiles">
