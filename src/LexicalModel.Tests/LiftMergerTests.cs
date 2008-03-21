@@ -234,7 +234,7 @@ namespace WeSay.LexicalModel.Tests
 
 			MultiText mt = sense.GetProperty<MultiText>(LexSense.WellKnownProperties.Note);
 			Assert.AreEqual(3, mt.Forms.Length);
-			Assert.AreEqual("uno; UNO", mt["ws-one"]);
+			Assert.AreEqual("uno || UNO", mt["ws-one"]);
 		}
 
 //        [Test]

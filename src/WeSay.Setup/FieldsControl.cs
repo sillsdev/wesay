@@ -94,16 +94,19 @@ namespace WeSay.Setup
 			{
 				return;
 			}
+
+			//nb: this is not necessarily the Current Field!  you can click check boxes without selecting a different item
+			Field touchedField = _fieldsListBox.Items[e.Index].Tag as Field;
 			if (e.NewValue== CheckState.Checked)
 			{
-				CurrentField.Enabled = true;
+				touchedField.Enabled = true;
 				//((Field) _fieldsListBox.SelectedItem).Enabled = true;
 			}
 			else if (e.NewValue== CheckState.Unchecked)
 			{
-				if(CurrentField.CanOmitFromMainViewTemplate)
+				if (touchedField.CanOmitFromMainViewTemplate)
 				{
-					CurrentField.Enabled = false;
+					touchedField.Enabled = false;
 				}
 				else
 				{

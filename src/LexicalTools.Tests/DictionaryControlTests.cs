@@ -348,7 +348,7 @@ namespace WeSay.LexicalTools.Tests
 			ListViewTester t = new ListViewTester("_recordsListBox");
 			Assert.AreEqual(0, ((WeSayListView)t.Properties).SelectedIndex);
 			string label = GetSelectedLabel((WeSayListView)t.Properties);
-			Assert.AreEqual("*", label);
+			Assert.AreEqual("(Empty)", label);
 		}
 
 		[Test]

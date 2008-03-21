@@ -133,40 +133,52 @@ namespace WeSay.Foundation.Options
 
 		public IEnumerable GetItemsToOffer(string text, IEnumerable items, IDisplayStringAdaptor adaptor)
 		{
-			string pattern = @"(^|[^\w])("+ text +@")[^\w]";
-			System.Text.RegularExpressions.Regex MatchWholeWordNoCase =
-				new Regex(pattern, RegexOptions.IgnoreCase | RegexOptions.Compiled);
-
 			List<Option> show = new List<Option>();
-			foreach (Option option in _allOptions.Options)
+			try
 			{
-				//todo: make this prefferd script(s) savvy
-				if(option.Name.GetFirstAlternative().StartsWith(text, StringComparison.CurrentCultureIgnoreCase))
-				{
-					show.Add(option);
-				}
-			}
-			foreach (Option option in _allOptions.Options)
-			{
-				//todo: make this prefferd script(s) savvy
-				if (option.Abbreviation.GetFirstAlternative().StartsWith(text, StringComparison.CurrentCultureIgnoreCase))
-				{
-					if(!show.Contains(option))
-						show.Add(option);
-				}
-			}
-			//  if(show.Count == 0)
-			{
+				//enhance: make that text safe for regex. for now, we just swallow the exception
+				string pattern = @"(^|[^\w])("+ text +@")[^\w]";
+				System.Text.RegularExpressions.Regex MatchWholeWordNoCase =
+					new Regex(pattern, RegexOptions.IgnoreCase | RegexOptions.Compiled);
+
 				foreach (Option option in _allOptions.Options)
 				{
 					//todo: make this prefferd script(s) savvy
-					if(MatchWholeWordNoCase.IsMatch(option.Description.GetFirstAlternative()))
+					if (option.Name.GetFirstAlternative().StartsWith(text, StringComparison.CurrentCultureIgnoreCase))
 					{
-						if(!show.Contains(option))
+						show.Add(option);
+					}
+				}
+				foreach (Option option in _allOptions.Options)
+				{
+					//todo: make this prefferd script(s) savvy
+					if (
+						option.Abbreviation.GetFirstAlternative().StartsWith(text,
+																			 StringComparison.CurrentCultureIgnoreCase))
+					{
+						if (!show.Contains(option))
 							show.Add(option);
 					}
 				}
-
+				//  if(show.Count == 0)
+				{
+					foreach (Option option in _allOptions.Options)
+					{
+						//todo: make this prefferd script(s) savvy
+						if (MatchWholeWordNoCase.IsMatch(option.Description.GetFirstAlternative()))
+						{
+							if (!show.Contains(option))
+								show.Add(option);
+						}
+					}
+				}
+			}
+			catch (Exception e)
+			{
+#if DEBUG
+				throw e;
+#endif
+				//not worth crashing over some regex problem
 			}
 			return show;
 		}

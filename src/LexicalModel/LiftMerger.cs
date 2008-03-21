@@ -118,7 +118,7 @@ namespace WeSay.LexicalModel
 
 		public void MergeInCitationForm(LexEntry entry, LiftMultiText contents)
 		{
-			AddOrAppendMultiTextProperty(entry, contents, LexEntry.WellKnownProperties.Citation);
+			AddOrAppendMultiTextProperty(entry, contents, LexEntry.WellKnownProperties.Citation, null);
 		}
 
 		public void MergeInGloss(LexSense sense, LiftMultiText forms)
@@ -160,7 +160,7 @@ namespace WeSay.LexicalModel
 
 		public void MergeInDefinition(LexSense sense, LiftMultiText contents)
 		{
-			AddOrAppendMultiTextProperty(sense, contents, LexSense.WellKnownProperties.Definition);
+			AddOrAppendMultiTextProperty(sense, contents, LexSense.WellKnownProperties.Definition,null);
 		}
 
 		public void MergeInPicture(LexSense sense, string href, LiftMultiText caption)
@@ -180,7 +180,13 @@ namespace WeSay.LexicalModel
 		/// </summary>
 		public void MergeInNote(WeSayDataObject extensible, string type, LiftMultiText contents)
 		{
-			if (type != null && type != string.Empty)
+			List<String> writingSystemAlternatives = new List<string>(contents.Count);
+			foreach (KeyValuePair<string, string> pair in contents)
+			{
+				writingSystemAlternatives.Add(pair.Key);
+			}
+
+			if (!string.IsNullOrEmpty(type))
 			{
 				List<String> keys = new List<string>(contents.Count);
 				foreach (KeyValuePair<string, string> pair in contents)
@@ -192,7 +198,8 @@ namespace WeSay.LexicalModel
 					contents.Prepend(s, "(" + type + ") ");
 				}
 			}
-			AddOrAppendMultiTextProperty(extensible, contents, WeSayDataObject.WellKnownProperties.Note);
+
+			AddOrAppendMultiTextProperty(extensible, contents, WeSayDataObject.WellKnownProperties.Note, " || ");
 		}
 
 		public void MergeInGrammaticalInfo(LexSense sense, string val, List<Trait> traits)
@@ -215,10 +222,10 @@ namespace WeSay.LexicalModel
 			}
 		}
 
-		private static void AddOrAppendMultiTextProperty(WeSayDataObject dataObject, LiftMultiText contents, string propertyName)
+		private static void AddOrAppendMultiTextProperty(WeSayDataObject dataObject, LiftMultiText contents, string propertyName, string noticeToPrependIfNotEmpty)
 		{
 			MultiText mt = dataObject.GetOrCreateProperty<MultiText>(propertyName);
-			mt.MergeInWithAppend(MultiText.Create(contents), "; ");
+			mt.MergeInWithAppend(MultiText.Create(contents), string.IsNullOrEmpty(noticeToPrependIfNotEmpty) ? "; " : noticeToPrependIfNotEmpty);
 			//dataObject.GetOrCreateProperty<string>(propertyName) mt));
 		}
 
