@@ -129,6 +129,14 @@ BOGURAEV and NEFF Lit Linguist Computing.1992; 7: 110-112
 			font-size:90%;
 
 		  }
+
+
+		  span.relation-target{
+			font-family:sans-serif; /*to do: select the sans-serif variety from writing system*/
+			font-weight:bold;
+			font-size:90%;
+
+		  }
 		  <!--
 		  span.subentry {
 			display: block;
@@ -161,16 +169,8 @@ BOGURAEV and NEFF Lit Linguist Computing.1992; 7: 110-112
 	<xsl:call-template name="output-headword"/>
 	<xsl:apply-templates select="pronunciation"/>
 	<xsl:apply-templates select="variant"/>
-	<xsl:apply-templates select="trait"/>
-	<xsl:apply-templates select="field[not(@tag='headword')]"/>
-	<xsl:choose>
-	  <xsl:when test="$entries-with-BaseForm-relation-rendered-as-subentries-of-base">
-		<xsl:apply-templates select="relation[not(@name='BaseForm')]"/>
-	  </xsl:when>
-	  <xsl:otherwise>
-		<xsl:apply-templates select="relation"/>
-	  </xsl:otherwise>
-	</xsl:choose>
+
+
 	<xsl:apply-templates select="note"/>
 	<xsl:apply-templates select="annotation"/>
 	<xsl:choose>
@@ -189,10 +189,24 @@ BOGURAEV and NEFF Lit Linguist Computing.1992; 7: 110-112
 	  </xsl:otherwise>
 	</xsl:choose>
 
+	<xsl:choose>
+	  <xsl:when test="$entries-with-BaseForm-relation-rendered-as-subentries-of-base">
+		<xsl:apply-templates select="relation[not(@name='BaseForm')]"/>
+	  </xsl:when>
+	  <xsl:otherwise>
+		<xsl:apply-templates select="relation"/>
+	  </xsl:otherwise>
+	</xsl:choose>
+
+	<xsl:apply-templates select="trait"/>
+	<xsl:apply-templates select="field[not(@tag='headword')]"/>
+
 	<xsl:if test="$entries-with-BaseForm-relation-rendered-as-subentries-of-base">
 	  <xsl:apply-templates select="//entry[descendant::relation[@name='BaseForm']/@ref=current()/@id]" mode="subentry"/>
 	</xsl:if>
   </xsl:template>
+
+
 
   <xsl:template match="entry">
 	<xsl:choose>
@@ -401,6 +415,21 @@ BOGURAEV and NEFF Lit Linguist Computing.1992; 7: 110-112
 
   <xsl:template match="text()">
 	<xsl:value-of select="normalize-space()"/>
+  </xsl:template>
+
+	<!--
+	  <field tag="confer-relation-headword">
+		<form lang="v">
+		  <text>aneCitation</text>
+		</form>
+	  </field> -->
+	<xsl:template match="field[@tag='confer-relation-headword']">
+	  <xsl:text>see </xsl:text>
+	  <span class="relation-target">
+		<xsl:apply-templates/>
+	  </span>
+	<xsl:text> </xsl:text>
+
   </xsl:template>
 
   <xsl:template match="grammatical-info">

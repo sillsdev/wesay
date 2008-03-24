@@ -12,6 +12,7 @@ using WeSay.App.Services;
 using WeSay.Foundation;
 using WeSay.Language;
 using WeSay.LexicalModel;
+using WeSay.LexicalModel.Db4o_Specific;
 using WeSay.Project;
 
 namespace WeSay.App
@@ -102,6 +103,10 @@ namespace WeSay.App
 				Palaso.Reporting.Logger.WriteMinorEvent("GetHtmlForEntries()");
 				StringBuilder builder = new StringBuilder();
 				LiftExporter exporter = new LiftExporter(builder, true);
+				IHomographCalculator homographCalculator = new HomographCalculator(Lexicon.RecordListManager, _project.DefaultPrintingTemplate.HeadwordWritingSytem);
+				Db4oLexEntryFinder finder = new Db4oLexEntryFinder(Lexicon.RecordListManager.DataSource);
+				exporter.SetUpForPresentationLiftExport(_project.DefaultPrintingTemplate, homographCalculator, finder);
+
 				foreach (string entryId in entryIds)
 				{
 					LexEntry entry = Lexicon.FindFirstLexEntryMatchingId(entryId);
