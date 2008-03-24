@@ -15,7 +15,7 @@
 	<Revision></Revision><!-- filled in by subversion version number below-->
 	<Bug>0</Bug>
 
-	<Version></Version><!-- filled in by DetermineVersion version number below-->
+	<Version>0</Version><!-- changed by DetermineVersion version number below-->
   </PropertyGroup>
 
 

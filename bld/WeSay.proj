@@ -149,15 +149,27 @@
   </Target>
 
 
+  <Target Name="MakeWixForTemplates">
+	<MakeWixForDirTree
+				DirectoryReferenceId="templatesDir"
+				ComponentGroupId="templates"
+				RootDirectory="$(BaseDirectory)\templates"
+				OutputFilePath="$(BaseDirectory)\src\Setup\GeneratedTemplates.wxs"
+				MatchRegExPattern=".*">
+	  <Output TaskParameter="OutputFilePath" ItemName="Compile" />
+	</MakeWixForDirTree>
+  </Target>
+
   <Target Name="Package">
 
 	<CallTarget targets="MakePotFile; MakeWixForPoFiles"/>
 	<CallTarget targets="MakeWixForBiatah"/>
+	<CallTarget targets="MakeWixForTemplates"/>
 
 	<SvnVersion LocalPath="$(BaseDirectory)">
 	  <Output TaskParameter="Revision" PropertyName="Revision" />
 	</SvnVersion>
-	<CreateProperty Value="$(Major).$(Minor).0$(Revision)"><!--the preceding zero here is so we get a valid version even when just running this target in isolation, when Revision is empty -->
+	<CreateProperty Value="$(Major).$(Minor).$(Revision)"><!--the preceding zero here is so we get a valid version even when just running this target in isolation, when Revision is empty -->
 	  <Output PropertyName="Version" TaskParameter="Value"/>
 	</CreateProperty>
 
