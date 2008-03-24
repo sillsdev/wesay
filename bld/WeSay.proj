@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <Import Project="$(BaseDirectory)\bld\UpdateCsProjs.Targets"/>
+  <Import Project="$(BaseDirectory)\bld\Version.Targets"/>
 
 
   <Target Name="Compile">
@@ -146,6 +147,8 @@
 	</MakeWixForDirTree>
   </Target>
 
+
+
   <Target Name="Package">
 	<CallTarget targets="MakePotFile; MakeWixForPoFiles"/>
 	<CallTarget targets="MakeWixForBiatah"/>
@@ -164,7 +167,6 @@
 	<MSBuild Projects="$(BaseDirectory)\src\Setup\Setup.wixproj"/>
   </Target>
 
-  <Import Project="$(BaseDirectory)\bld\Version.Targets"/>
 
   <Target Name="Upload">
 	<SvnVersion LocalPath="$(BaseDirectory)">
