@@ -14,6 +14,8 @@
 	<Minor>3</Minor>
 	<Revision></Revision><!-- filled in by subversion version number below-->
 	<Bug>0</Bug>
+
+	<Version></Version><!-- filled in by DetermineVersion version number below-->
   </PropertyGroup>
 
 
@@ -22,21 +24,26 @@
 
 
 
-
-
-
-  <Target Name="Version">
+  <Target Name="DetermineVersion">
 	<!--
 	  You must install the subversion package (not tortoise or another fancy gui version)
 	  http://subversion.tigris.org/project_packages.html
 	-->
-	<SvnVersion LocalPath="$(MSBuildProjectDirectory)">
+   <Message Text="b4 DetermineVersion: $(Version)"/>
+
+   <SvnVersion LocalPath="$(MSBuildProjectDirectory)">
 	  <Output TaskParameter="Revision" PropertyName="Revision" />
 	  <Output TaskParameter="Revision" PropertyName="AssemblyRevision"/>
 	  <Output TaskParameter="Revision" PropertyName="AssemblyFileRevision"/>
 	</SvnVersion>
 
-	<Message Text="Version: $(Major).$(Minor).$(Revision).$(Bug)"/>
+	<!-- todo: I wanted to now set the Version property, but it seems imposible to affect the property in the outer scope.  There is a bug report here:  http://connect.microsoft.com/VisualStudio/feedback/ViewFeedback.aspx?FeedbackID=110713 -->
+  </Target>
+
+
+
+  <Target Name="Version">
+	<CallTarget targets="DetermineVersion"/>
   </Target>
 
   <!-- From http://www.gotdotnet.com/codegallery/codegallery.aspx?id=93d23e13-c653-4815-9e79-16107919f93e -->

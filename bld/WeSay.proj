@@ -11,6 +11,7 @@
 	<CSharpFiles>$(BaseDirectory)\src</CSharpFiles>
   </PropertyGroup>
 
+
   <ItemGroup>
 	<CSharpFiles Include="$(BaseDirectory)\**\*.cs"/>
 	<XmlFiles Include="$(BaseDirectory)\common\**\*.WeSayConfig"/>
@@ -148,8 +149,8 @@
   </Target>
 
 
-
   <Target Name="Package">
+
 	<CallTarget targets="MakePotFile; MakeWixForPoFiles"/>
 	<CallTarget targets="MakeWixForBiatah"/>
 
@@ -166,11 +167,15 @@
 			  ReplacementText ="Property_ProductVersion = &quot;$(Version)&quot;" />
 
 
-	<Message Text="Version: $(Version)"/>
+	<Message Text="Making Installer Version: $(Version)"/>
+
+	<MSBuild Projects="$(BaseDirectory)\src\Setup\Setup.wixproj"/>
+
+	<!-- remove an existing one with the same name, if necessary -->
+	<Delete Files="$(BaseDirectory)\output\installer\SetupWeSay.$(Version).msi" TreatErrorsAsWarnings="false" />
 
 	<Move SourceFiles="$(BaseDirectory)\output\installer\SetupWeSay.msi"
 		  DestinationFiles="$(BaseDirectory)\output\installer\SetupWeSay.$(Version).msi"/>
-		  <MSBuild Projects="$(BaseDirectory)\src\Setup\Setup.wixproj"/>
   </Target>
 
 
