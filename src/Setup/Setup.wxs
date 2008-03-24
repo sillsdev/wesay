@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <!-- These variables define the Windows Installer product version, product code and upgrade code. They   -->
 <!-- will be used later on in this file.                                                                 -->
-<?define Property_ProductVersion = "0.3.01247" ?> <!--this is replaced at build time by the msbuild 'package' target -->
+<?define Property_ProductVersion = "0.3.01250" ?> <!--this is replaced at build time by the msbuild 'package' target -->
 <?define Property_ProductCode = "*" ?> <!-- auto-generate a new guid each time -->
 <?define Property_UpgradeCode = "{6B6778A7-D3AD-4de8-BE95-C8956665B85A}" ?> <!--Don't even think of EVER changing this -->
 
@@ -30,8 +30,8 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 			  Installed OR NETFRAMEWORK30
 			</Condition>
 
-			<!--review: ALLUSERS is not well researched -->
-			<Property Id ="ALLUSERS">2</Property>
+			<!--because of bug, this needs to be 1 -->
+			<Property Id ="ALLUSERS">1</Property>
 
 			<Directory Id="TARGETDIR" Name="SourceDir">
 			  <Directory Id='ProgramMenuFolder' Name='Programs'>
@@ -46,12 +46,12 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 				</Directory>
 			  </Directory>
 			  <Directory Id="ProgramFilesFolder" Name="PFiles">
-				<Directory Id="templatesDir" Name="Templates">
-					<!-- a generated fragment from GeneratedTemplates.wxs will fill this in -->
-				</Directory>
 
 				<Directory Id="ProgramDir" Name="WeSay">
 
+				<Directory Id="templatesDir" Name="Templates">
+					<!-- a generated fragment from GeneratedTemplates.wxs will fill this in -->
+				</Directory>
 
 				  <Component Id="DocFiles" Guid="{F533B47C-A6F4-4284-A257-59C3C9B54526}">
 					<File Id="Welcome.htm" Name="Welcome.htm" KeyPath="yes" Source="..\..\doc\Welcome.htm" />
@@ -374,6 +374,7 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 			</Feature>
 			<Media Id="1" Cabinet="product.cab" EmbedCab="yes" />
 			<Icon Id="WeSay.App.exe" SourceFile ="..\..\output\release\WeSay.App.exe" />
+			<Property Id="ARPPRODUCTICON" Value="WeSay.App.exe" /><!-- what you see in add/remove programs control panel -->
 			<Icon Id="IconSetup.exe" SourceFile ="..\..\output\release\WeSay Configuration Tool.exe" />
 			<Icon Id="SampleSetupIcon" SourceFile ="..\..\artwork\WeSay.Config.File.ico" />
 			<Icon Id="SampleRunIcon" SourceFile ="..\..\artwork\WeSay.File.ico" />
