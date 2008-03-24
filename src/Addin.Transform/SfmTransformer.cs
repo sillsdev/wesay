@@ -76,14 +76,15 @@ namespace Addin.Transform
 					while (!reader.EndOfStream)
 					{
 						string line = reader.ReadLine();
-					   // if(line.StartsWith("\\lx"))
+						if(progressState.Cancel)
 						{
-							if(progressState.Cancel)
-							{
-								return;
-							}
-								//we don't have a way of knowing      progressState.NumberOfStepsCompleted = ;
+							return;
 						}
+						if (line.StartsWith("\\dt "))
+						{
+							line= ConvertDateLineToToolboxFormat(line);
+						}
+						//we don't have a way of knowing      progressState.NumberOfStepsCompleted = ;
 						foreach (SfmTransformSettings.ChangePair pair in pairs)
 						{
 							//this is super slow
@@ -103,6 +104,17 @@ namespace Addin.Transform
 			File.Move(tempPath, inputPath);//, backupPath);
 			progressState.NumberOfStepsCompleted = progressState.TotalNumberOfSteps;
 			System.Threading.Thread.Sleep(500);//don't event see that message otherwise
+		}
+
+		private static string ConvertDateLineToToolboxFormat(string line)
+		{
+			string[] parts = line.Split(' ');
+			if (parts.Length > 1)
+			{
+				DateTime dt = DateTime.Parse(parts[1]);
+				line = parts[0] + " " + dt.ToString(@"d\/MMM\/yyyy");
+			}
+			return line;
 		}
 
 		public override void Launch(Form parentForm, ProjectInfo projectInfo)

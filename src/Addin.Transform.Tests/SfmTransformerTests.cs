@@ -74,6 +74,13 @@ namespace Addin.Transform.Tests
 		}
 
 		[Test]
+		public void ConvertsDatesToToolboxFormat()
+		{
+			string result = LaunchWithConversionString("");
+			Assert.IsTrue(result.Contains("\\dt 11/Feb/2008"));
+		}
+
+		[Test]
 		public void SemDomConvertedTo_sd()
 		{
 			string result = LaunchWithConversionString("");
@@ -143,13 +150,16 @@ namespace Addin.Transform.Tests
 		{
 			string contents = @"<?xml version='1.0' encoding='utf-8'?>
 			<lift  version='0.10'>
-				<entry id='one'>
+				<entry id='one'
+					dateCreated='2008-02-06T09:46:31Z'
+					dateModified='2008-02-11T04:13:06Z'>
 					<relation name='BaseForm' ref=''/>
 					<relation name='BaseForm' ref='two'/>
 				   <sense>
 						<gloss lang='en'><text>hello</text></gloss>
 						<trait name='SemanticDomainDdp4' value='1.1' />
 					 </sense>
+
 				</entry>
 				<entry id='two'>
 				</entry>
