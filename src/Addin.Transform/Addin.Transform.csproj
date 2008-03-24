@@ -124,9 +124,6 @@
 	<None Include="Resources\genericAction.png" />
   </ItemGroup>
   <ItemGroup>
-	<EmbeddedResource Include="lift2html.xsl">
-	  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	</EmbeddedResource>
 	<EmbeddedResource Include="lift2sfm.xsl">
 	  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	</EmbeddedResource>
