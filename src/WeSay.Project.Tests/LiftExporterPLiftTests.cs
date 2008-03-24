@@ -221,7 +221,7 @@ namespace WeSay.Project.Tests
 		private void CheckRelationOutput(LexEntry targetEntry, string relationName)
 		{
 			AssertXPathNotNullWithArgs(_outputPath,
-									   "lift/entry/field[@tag='{0}-relation-headword']/form[@lang='{1}']/text[text() = '{2}']",
+									   "lift/entry/relation/field[@tag='headword-of-target']/form[@lang='{1}']/text[text() = '{2}']",
 									   relationName, _headwordWritingSystemId, targetEntry.GetHeadWordForm(_headwordWritingSystemId));
 		}
 		private void CheckRelationNotOutput(string relationName)
