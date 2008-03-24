@@ -38,7 +38,7 @@ namespace WeSay.App.Services
 
 		private static Stream GetXsltStream()
 		{
-			return Assembly.GetExecutingAssembly().GetManifestResourceStream("WeSay.App.lift2html.xsl");
+			return Assembly.GetExecutingAssembly().GetManifestResourceStream("WeSay.App.plift2html.xsl");
 		}
 
 		public string GetHtmlFragment(string entryXml)

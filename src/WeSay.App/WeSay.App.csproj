@@ -162,14 +162,17 @@
 	</EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-	<EmbeddedResource Include="..\Addin.Transform\lift2html.xsl" />
-  </ItemGroup>
-  <ItemGroup>
 	<EmbeddedResource Include="LongStartupNotification.resx">
 	  <SubType>Designer</SubType>
 	  <DependentUpon>LongStartupNotification.cs</DependentUpon>
 	</EmbeddedResource>
 	<EmbeddedResource Include="Migration\populateDefinitionFromGloss.xslt" />
+  </ItemGroup>
+  <ItemGroup>
+	<EmbeddedResource Include="..\Addin.Transform\plift2html.xsl">
+	  <Link>plift2html.xsl</Link>
+	  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	</EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
