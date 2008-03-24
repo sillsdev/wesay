@@ -196,7 +196,7 @@
 	  <Output TaskParameter="Revision" PropertyName="Revision" />
 	</SvnVersion>
 
-	<CreateProperty Value="$(Major).$(Minor).$(Revision).$(Bug)">
+	<CreateProperty Value="$(Major).$(Minor).$(Revision)">
 	  <Output PropertyName="Version" TaskParameter="Value"/>
 	</CreateProperty>
 
@@ -211,7 +211,7 @@
 	  <Output TaskParameter="Revision" PropertyName="Revision" />
 	</SvnVersion>
 
-	<CreateProperty Value="$(Major).$(Minor).$(Revision).$(Bug)">
+	<CreateProperty Value="$(Major).$(Minor).$(Revision)">
 	  <Output PropertyName="Version" TaskParameter="Value"/>
 	</CreateProperty>
 
