@@ -139,7 +139,7 @@ BOGURAEV and NEFF Lit Linguist Computing.1992; 7: 110-112
 		  <xsl:for-each select="document($writing-system-info-file)//WritingSystem">
 		  span.<xsl:value-of select="Id"/> {
 			font-family: "<xsl:value-of select="FontName"/>";
-			font-size: <xsl:value-of select="FontSize"/>;
+			font-size: <xsl:value-of select="FontSize"/>pt;
 		  }
 		  </xsl:for-each>
 
