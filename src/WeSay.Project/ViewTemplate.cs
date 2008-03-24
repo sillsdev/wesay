@@ -456,14 +456,19 @@ namespace WeSay.Project
 			masterTemplate.Add(baseFormField);
 
 
+			Field crossRefField = new Field(LexEntry.WellKnownProperties.CrossReference,
+											  "LexEntry",
+											  defaultVernacularSet,
+											  Field.MultiplicityType.ZeroOrMore,
+											  "RelationToOneEntry");
 			StringCatalog.Get("~Cross Reference",
 				   @"The label for the field showing a 'confer' relation (\cf in MDF).");
-			baseFormField.DisplayName = "Cross Reference";
-			baseFormField.Description =
+			crossRefField.DisplayName = "Cross Reference";
+			crossRefField.Description =
 					"Provides a field for identifying the form from which an entry is derived.  You may use this in place of the MDF subentry.  In a future version WeSay may support directly listing derived forms from the base form.";
-			baseFormField.Visibility = CommonEnumerations.VisibilitySetting.NormallyHidden;
-			baseFormField.Enabled = false;
-			masterTemplate.Add(baseFormField);
+			crossRefField.Visibility = CommonEnumerations.VisibilitySetting.NormallyHidden;
+			crossRefField.Enabled = false;
+			masterTemplate.Add(crossRefField);
 
 
 			return masterTemplate;

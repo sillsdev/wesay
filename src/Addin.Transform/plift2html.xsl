@@ -5,7 +5,7 @@
   Should sense numbers be restarted after the part of speech?
   should they be considered homographs?-->
 
-<!-- one way to handle example sentences and their translations is to use the
+  <!-- one way to handle example sentences and their translations is to use the
 following format: <a pie: on foot> or more generally, use a colon between forms.
 -->
 
@@ -48,124 +48,57 @@ BOGURAEV and NEFF Lit Linguist Computing.1992; 7: 110-112
 	<html>
 	  <head>
 		<xsl:if test="not($output-intented-for-winword)">
-		  <link rel="stylesheet" href="user.css">
-		  </link>
+		  <link rel="stylesheet" href="user.css"> </link>
 		</xsl:if>
-		<style type="text/css">
-		  div.entry { /* this gives us outdented headwords */
-		  text-indent: -.5em; /* a slight outdent the width of a lower-case n */
-		  margin-left: .5em;
-		  line-height: 120%;
-		  }
-
-		  /* use sans serif for related words */
-
-		  span.headword {
-		  /* Contemporary dictionaries generally tend to use
-		  lower- or upper and lower-case forms for headwords,
-		  in a bolder and often sans serif type, at a
-		  slightly larger size than the entries. */
-
+		<style type="text/css"> div.entry { /* this gives us outdented headwords */ text-indent:
+		  -.5em; /* a slight outdent the width of a lower-case n */ margin-left: .5em; line-height:
+		  120%; } /* use sans serif for related words */ span.headword { /* Contemporary
+		  dictionaries generally tend to use lower- or upper and lower-case forms for headwords, in
+		  a bolder and often sans serif type, at a slightly larger size than the entries. */
 		  font-family:sans-serif; /*to do: select the sans-serif variety from writing system*/
-		  font-weight:bold;
-		  font-size:108%;
-		  }
-
-		  span.homograph-number {
-		  font-family:sans-serif;
-		  font-weight:bold;
-		  font-size:50%;
-		  vertical-align: sub;
-		  }
-
-		  div.note {
-		  padding-right: 1em;
-		  padding-left: 1em;
-		  background-color: #eeeeee; /*light-gray*/
-		  }
-
-		  span.sense-number{
-		  /*If a headword has multiple meanings or senses, the sense numbers
-		  appear in the bold weight of the entry type, both accented and
-		  neutralized by extra white space around them. */
-		  padding-right: .25em;
-		  font-weight:bold;
-		  /*            font-size: 70%;*/ /*this should be the x height of the surrounding type*/
-		  }
-
-		  /*The parts of speech are abbreviated and expressed in italic type.*/
-		  span.grammatical-info{
-		  font-style: italic;
-		  }
-
-		  /*Plurals or related words appear in the medium weight of the sans serif
-		  headword type; etymologies in combinations of small and regular capitals,
-		  italic and roman. Simple icons indicate new parts of speech or sense,
-		  and related words.*/
-
-
-		  /*So quotations and samples from everyday speech are expressed in italic,
-		  as is structural emphasis (parts of speech; subject areas; translations or
-		  source words in another language); small capitals are used only to
-		  indicate the century of a word’s origin, and related words.*/
-		  span.example {
-		  font-style:italic;
-		  }
-
-		  span.trait {
-		  font-variant: small-caps;
-		  }
-
-		  span.translation {
-
-		  }
-
-		  span.pronunciation{
-		  }
-
-		  span.subentry span.headword{
-			font-family:sans-serif; /*to do: select the sans-serif variety from writing system*/
-			font-weight:bold;
-			font-size:90%;
-
-		  }
-
-
-		  span.relation-target{
-			font-family:sans-serif; /*to do: select the sans-serif variety from writing system*/
-			font-weight:bold;
-			font-size:90%;
-
-		  }
-		  <!--
+		  font-weight:bold; font-size:108%; } span.homograph-number { font-family:sans-serif;
+		  font-weight:bold; font-size:50%; vertical-align: sub; } div.note { padding-right: 1em;
+		  padding-left: 1em; background-color: #eeeeee; /*light-gray*/ } span.sense-number{ /*If a
+		  headword has multiple meanings or senses, the sense numbers appear in the bold weight of
+		  the entry type, both accented and neutralized by extra white space around them. */
+		  padding-right: .25em; font-weight:bold; /* font-size: 70%;*/ /*this should be the x height
+		  of the surrounding type*/ } /*The parts of speech are abbreviated and expressed in italic
+		  type.*/ span.grammatical-info{ font-style: italic; } /*Plurals or related words appear in
+		  the medium weight of the sans serif headword type; etymologies in combinations of small
+		  and regular capitals, italic and roman. Simple icons indicate new parts of speech or
+		  sense, and related words.*/ /*So quotations and samples from everyday speech are expressed
+		  in italic, as is structural emphasis (parts of speech; subject areas; translations or
+		  source words in another language); small capitals are used only to indicate the century of
+		  a word’s origin, and related words.*/ span.example { font-style:italic; } span.trait {
+		  font-variant: small-caps; } span.translation { } span.pronunciation{ } span.subentry
+		  span.headword{ font-family:sans-serif; /*to do: select the sans-serif variety from writing
+		  system*/ font-weight:bold; font-size:90%; } span.relation-target{ font-family:sans-serif;
+		  /*to do: select the sans-serif variety from writing system*/ font-weight:bold;
+		  font-size:90%; } <!--
 		  span.subentry {
 			display: block;
 			margin-left: 1em;
 		  }
 		  -->
-
 		  <xsl:for-each select="document($writing-system-info-file)//WritingSystem">
-		  span.<xsl:value-of select="Id"/> {
-			font-family: "<xsl:value-of select="FontName"/>";
-			font-size: <xsl:value-of select="FontSize"/>pt;
-		  }
-		  </xsl:for-each>
-
+			  span.<xsl:value-of select="Id"/> { font-family: "<xsl:value-of select="FontName"/>";
+			font-size: <xsl:value-of select="FontSize"/>pt; } </xsl:for-each>
 		</style>
 	  </head>
 	  <body>
 		<xsl:apply-templates select="//entry"/>
-	   </body>
+	  </body>
 	</html>
   </xsl:template>
 
   <xsl:template name="output-headword">
-		<xsl:apply-templates select="field[@tag='headword']"/>
+	<xsl:apply-templates select="field[@tag='headword']"/>
 	<xsl:text> </xsl:text>
   </xsl:template>
 
   <xsl:template name="output-entry">
-	<xsl:message/> <!-- for progress dialog-->
+	<xsl:message/>
+	<!-- for progress dialog-->
 	<xsl:call-template name="output-headword"/>
 	<xsl:apply-templates select="pronunciation"/>
 	<xsl:apply-templates select="variant"/>
@@ -177,10 +110,12 @@ BOGURAEV and NEFF Lit Linguist Computing.1992; 7: 110-112
 	  <xsl:when test="$group-by-grammatical-info">
 		<xsl:apply-templates select="sense[not(grammatical-info)]"/>
 		<xsl:for-each select="sense">
-		  <xsl:if test="not(preceding-sibling::sense/grammatical-info/@value =
+		  <xsl:if
+			test="not(preceding-sibling::sense/grammatical-info/@value =
 					  grammatical-info/@value)">
 			<xsl:apply-templates select="grammatical-info"/>
-			<xsl:apply-templates select="parent::*/sense[grammatical-info/@value =current()/grammatical-info/@value]"/>
+			<xsl:apply-templates
+			  select="parent::*/sense[grammatical-info/@value =current()/grammatical-info/@value]"/>
 		  </xsl:if>
 		</xsl:for-each>
 	  </xsl:when>
@@ -202,7 +137,9 @@ BOGURAEV and NEFF Lit Linguist Computing.1992; 7: 110-112
 	<xsl:apply-templates select="field[not(@tag='headword')]"/>
 
 	<xsl:if test="$entries-with-BaseForm-relation-rendered-as-subentries-of-base">
-	  <xsl:apply-templates select="//entry[descendant::relation[@name='BaseForm']/@ref=current()/@id]" mode="subentry"/>
+	  <xsl:apply-templates
+		select="//entry[descendant::relation[@name='BaseForm']/@ref=current()/@id]" mode="subentry"
+	  />
 	</xsl:if>
   </xsl:template>
 
@@ -210,15 +147,17 @@ BOGURAEV and NEFF Lit Linguist Computing.1992; 7: 110-112
 
   <xsl:template match="entry">
 	<xsl:choose>
-	  <xsl:when test="$entries-with-BaseForm-relation-rendered-as-subentries-of-base and
+	  <xsl:when
+		test="$entries-with-BaseForm-relation-rendered-as-subentries-of-base and
 		relation[@name='BaseForm']">
 		<div class="minorentry">
 		  <xsl:call-template name="output-headword"/>
 		  <span class="cross-reference">
-			<span class="{$optionslist-writing-system}">
-			  see <!-- TODO: localize from relations option list -->
+			<span class="{$optionslist-writing-system}"> see
+			  <!-- TODO: localize from relations option list -->
 			</span>
-			<xsl:for-each select="//entry[@id=current()/descendant::relation[@name='BaseForm']/@ref]">
+			<xsl:for-each
+			  select="//entry[@id=current()/descendant::relation[@name='BaseForm']/@ref]">
 			  <xsl:call-template name="output-headword"/>
 			</xsl:for-each>
 		  </span>
@@ -266,7 +205,8 @@ BOGURAEV and NEFF Lit Linguist Computing.1992; 7: 110-112
 		  <xsl:if test="not(grammatical-info) and count(parent::*/sense[not(grammatical-info)]) > 1">
 			<xsl:value-of select="'yes'"/>
 		  </xsl:if>
-		  <xsl:if test="(count(parent::*/sense[grammatical-info/@value = current()/grammatical-info/@value]) > 1 or count(parent::*/subsense) > 1)">
+		  <xsl:if
+			test="(count(parent::*/sense[grammatical-info/@value = current()/grammatical-info/@value]) > 1 or count(parent::*/subsense) > 1)">
 			<xsl:value-of select="'yes'"/>
 		  </xsl:if>
 		</xsl:when>
@@ -417,19 +357,29 @@ BOGURAEV and NEFF Lit Linguist Computing.1992; 7: 110-112
 	<xsl:value-of select="normalize-space()"/>
   </xsl:template>
 
-	<!--
-	  <field tag="confer-relation-headword">
+  <!--
+	Handle this:
+	<relation name="confer" ref="ane_ID0EIJAG">
+	  <field tag="headword-of-target">
 		<form lang="v">
 		  <text>aneCitation</text>
 		</form>
-	  </field> -->
-	<xsl:template match="field[@tag='confer-relation-headword']">
-	  <xsl:text>see </xsl:text>
-	  <span class="relation-target">
-		<xsl:apply-templates/>
-	  </span>
+	  </field>
+	  </relation>-->
+  <xsl:template match="relation[field/@tag='headword-of-target']"> <!-- where plift generator found the target for us -->
+	<xsl:choose>
+	  <xsl:when test="@name = 'confer'">
+		<xsl:text>see</xsl:text>
+	  </xsl:when>
+	  <xsl:otherwise>
+		<xsl:value-of select="@name"/>
+	  </xsl:otherwise>
+	</xsl:choose>
 	<xsl:text> </xsl:text>
-
+	<span class="relation-target">
+	  <xsl:apply-templates select="field[@tag='headword-of-target']"/>
+	</span>
+	<xsl:text> </xsl:text>
   </xsl:template>
 
   <xsl:template match="grammatical-info">

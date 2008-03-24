@@ -445,17 +445,18 @@ namespace WeSay.Project
 				_writer.WriteStartElement("relation");
 				_writer.WriteAttributeString("name", relation.FieldId);
 				_writer.WriteAttributeString("ref", relation.Key);
-				_writer.WriteEndElement();
-
-				if (0 !=(ExportOptions & Options.DereferenceRelations))
+				if (0 != (ExportOptions & Options.DereferenceRelations))
 				{
 					Debug.Assert(_entryFinder != null, "An IEntryFinder must be provide if DereferenceRelations is on.");
 					LexEntry target = _entryFinder.FindFirstEntryMatchingId(relation.Key);
 					if (target != null)
 					{
-						WriteHeadWordField(target, relation.FieldId + "-relation-headword");
+						WriteHeadWordField(target, "headword-of-target");
 					}
 				}
+				_writer.WriteEndElement();
+
+
 			}
 		}
 
