@@ -61,6 +61,7 @@
 	<Compile Include="biatah.wxs" />
 	<Compile Include="GeneratedBiatahCache.wxs" />
 	<Compile Include="GeneratedPOFiles.wxs" />
+	<Compile Include="GeneratedTemplates.wxs" />
 	<Compile Include="SampleData.wxs" />
 	<Compile Include="Setup.wxs" />
 	<Compile Include="CommonDir.wxs" />

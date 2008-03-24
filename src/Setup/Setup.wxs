@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <!-- These variables define the Windows Installer product version, product code and upgrade code. They   -->
 <!-- will be used later on in this file.                                                                 -->
-<?define Property_ProductVersion = "0.3.0" ?> <!--this is replaced at build time by the msbuild 'package' target -->
+<?define Property_ProductVersion = "0.3.01247" ?> <!--this is replaced at build time by the msbuild 'package' target -->
 <?define Property_ProductCode = "*" ?> <!-- auto-generate a new guid each time -->
 <?define Property_UpgradeCode = "{6B6778A7-D3AD-4de8-BE95-C8956665B85A}" ?> <!--Don't even think of EVER changing this -->
 
@@ -46,6 +46,10 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 				</Directory>
 			  </Directory>
 			  <Directory Id="ProgramFilesFolder" Name="PFiles">
+				<Directory Id="templatesDir" Name="Templates">
+					<!-- a generated fragment from GeneratedTemplates.wxs will fill this in -->
+				</Directory>
+
 				<Directory Id="ProgramDir" Name="WeSay">
 
 
@@ -53,9 +57,6 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 					<File Id="Welcome.htm" Name="Welcome.htm" KeyPath="yes" Source="..\..\doc\Welcome.htm" />
 				  </Component>
 
-				<Component Id="Templates" Guid="{EE33B47C-A6F4-4284-A257-59C3C9B545EE}">
-					<File Id="test1.txt" Name="test1.txt" KeyPath="yes" Source="..\..\templates\test1.txt" />
-				  </Component>
 
 
 				  <Component Id="WeSay.App.exe" Guid="{406B533F-C5D5-49AD-9DC9-12375B80949F}">
@@ -304,7 +305,6 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 			  <ComponentRef Id ="removeShortcutDir"/>
 
 			  <ComponentRef Id="DocFiles"/>
-			 <ComponentRef Id="Templates"/>
 
 			  <!-- assemblies -->
 			  <ComponentRef Id="WeSayConfigurationTool" />
@@ -369,6 +369,7 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 			  <ComponentGroupRef Id ="defaultFiles"/>
 			  <ComponentGroupRef Id ="ddpStuff"/>
 			  <ComponentGroupRef Id ="biatahSample"/>
+			 <ComponentGroupRef Id ="templates"/>
 			  <ComponentGroupRef Id ="PoFiles"/>
 			</Feature>
 			<Media Id="1" Cabinet="product.cab" EmbedCab="yes" />
