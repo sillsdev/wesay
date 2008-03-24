@@ -153,7 +153,9 @@
 	<CallTarget targets="MakePotFile; MakeWixForPoFiles"/>
 	<CallTarget targets="MakeWixForBiatah"/>
 
-
+	<SvnVersion LocalPath="$(BaseDirectory)">
+	  <Output TaskParameter="Revision" PropertyName="Revision" />
+	</SvnVersion>
 	<CreateProperty Value="$(Major).$(Minor).0$(Revision)"><!--the preceding zero here is so we get a valid version even when just running this target in isolation, when Revision is empty -->
 	  <Output PropertyName="Version" TaskParameter="Value"/>
 	</CreateProperty>
@@ -164,7 +166,11 @@
 			  ReplacementText ="Property_ProductVersion = &quot;$(Version)&quot;" />
 
 
-	<MSBuild Projects="$(BaseDirectory)\src\Setup\Setup.wixproj"/>
+	<Message Text="Version: $(Version)"/>
+
+	<Move SourceFiles="$(BaseDirectory)\output\installer\SetupWeSay.msi"
+		  DestinationFiles="$(BaseDirectory)\output\installer\SetupWeSay.$(Version).msi"/>
+		  <MSBuild Projects="$(BaseDirectory)\src\Setup\Setup.wixproj"/>
   </Target>
 
 
@@ -177,10 +183,7 @@
 	  <Output PropertyName="Version" TaskParameter="Value"/>
 	</CreateProperty>
 
-	<Message Text="Version: $(Version)"/>
-
-	<Move SourceFiles="$(BaseDirectory)\output\installer\SetupWeSay.msi"
-		  DestinationFiles="$(BaseDirectory)\output\installer\SetupWeSay.$(Version).msi"/>
+	<Message Text="Uploading Version: $(Version)"/>
 
 	<Exec Command='pscp.exe -batch -pw $(password) "$(BaseDirectory)\output\installer\SetupWeSay.$(Version).msi" $(user)@wesay.org:/var/www/downloads'
 		   WorkingDirectory="c:\program files\PuTTY\" />
