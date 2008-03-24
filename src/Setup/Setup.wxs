@@ -53,6 +53,11 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 					<File Id="Welcome.htm" Name="Welcome.htm" KeyPath="yes" Source="..\..\doc\Welcome.htm" />
 				  </Component>
 
+				<Component Id="Templates" Guid="{EE33B47C-A6F4-4284-A257-59C3C9B545EE}">
+					<File Id="test1.txt" Name="test1.txt" KeyPath="yes" Source="..\..\templates\test1.txt" />
+				  </Component>
+
+
 				  <Component Id="WeSay.App.exe" Guid="{406B533F-C5D5-49AD-9DC9-12375B80949F}">
 					<Registry Root="HKCU" Key="SOFTWARE\WeSay\Components\WeSay.App.exe" KeyPath="yes" />
 
