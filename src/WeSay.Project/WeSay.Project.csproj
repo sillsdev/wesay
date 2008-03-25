@@ -52,6 +52,11 @@
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\LiftIO.dll</HintPath>
 	</Reference>
+	<Reference Include="Mono.Addins, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+	  <SpecificVersion>False</SpecificVersion>
+	  <ExecutableExtension>.exe</ExecutableExtension>
+	  <HintPath>..\..\lib\Mono.Addins.exe</HintPath>
+	</Reference>
 	<Reference Include="NetReflector, Version=1.0.0.0, Culture=neutral">
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\NetReflector.dll</HintPath>
@@ -84,7 +89,6 @@
 	<Compile Include="ConfigFileTaskBuilder.cs" />
 	<Compile Include="FailedLoadTask.cs" />
 	<Compile Include="Field.cs" />
-	<Compile Include="IThingOnDashboard.cs" />
 	<Compile Include="LiftExporter.cs" />
 	<Compile Include="LiftUpdateService.cs" />
 	<Compile Include="ViewTemplate.cs" />

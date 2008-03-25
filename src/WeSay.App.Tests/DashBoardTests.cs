@@ -7,8 +7,9 @@ using NUnit.Framework;
 using WeSay.App.Properties;
 using WeSay.CommonTools;
 using WeSay.Data;
+using WeSay.Foundation;
+using WeSay.Foundation.Dashboard;
 using WeSay.LexicalModel;
-using WeSay.Project;
 
 namespace WeSay.App.Tests
 {
@@ -40,19 +41,19 @@ namespace WeSay.App.Tests
 		private List<IThingOnDashboard> GetButtonItems()
 		{
 			List<IThingOnDashboard> buttonItems = new List<IThingOnDashboard>();
-			buttonItems.Add(new ThingThatGetsAButton("Gather", "Semantic Domains"));
-			buttonItems.Add(new ThingThatGetsAButton("Gather", "PNG Word List"));
-			buttonItems.Add(new ThingThatGetsAButton("Describe", "Nuhu Sapoo Definitions"));
-			buttonItems.Add(new ThingThatGetsAButton("Describe", "Example Sentences"));
-			buttonItems.Add(new ThingThatGetsAButton("Describe", "English Definitions"));
-			buttonItems.Add(new ThingThatGetsAButton("Describe", "Translate Examples To English"));
-			buttonItems.Add(new ThingThatGetsAButton("Describe", "Dictionary Browse && Edit", ButtonStyle.IconFixedWidth, CommonTools.Properties.Resources.blueDictionary));
-			buttonItems.Add(new ThingThatGetsAButton("Refine", "Identify Base Forms"));
-			buttonItems.Add(new ThingThatGetsAButton("Refine", "Review"));
+			buttonItems.Add(new ThingThatGetsAButton(DashboardGroup.Gather, "Semantic Domains"));
+			buttonItems.Add(new ThingThatGetsAButton(DashboardGroup.Gather, "PNG Word List"));
+			buttonItems.Add(new ThingThatGetsAButton(DashboardGroup.Describe, "Nuhu Sapoo Definitions"));
+			buttonItems.Add(new ThingThatGetsAButton(DashboardGroup.Describe, "Example Sentences"));
+			buttonItems.Add(new ThingThatGetsAButton(DashboardGroup.Describe, "English Definitions"));
+			buttonItems.Add(new ThingThatGetsAButton(DashboardGroup.Describe, "Translate Examples To English"));
+			buttonItems.Add(new ThingThatGetsAButton(DashboardGroup.Describe, "Dictionary Browse && Edit", ButtonStyle.IconFixedWidth, null/*CommonTools.Properties.Resources.blueDictionary*/));
+			buttonItems.Add(new ThingThatGetsAButton(DashboardGroup.Refine, "Identify Base Forms"));
+			buttonItems.Add(new ThingThatGetsAButton(DashboardGroup.Refine, "Review"));
 
-			buttonItems.Add(new ThingThatGetsAButton("Share", "Print", ButtonStyle.IconVariableWidth, CommonTools.Properties.Resources.greenPrinter));
-			buttonItems.Add(new ThingThatGetsAButton("Share", "Email", ButtonStyle.IconVariableWidth, CommonTools.Properties.Resources.greenEmail));
-			buttonItems.Add(new ThingThatGetsAButton("Share", "Synchronize", ButtonStyle.IconVariableWidth, CommonTools.Properties.Resources.greenSynchronize));
+//            buttonItems.Add(new ThingThatGetsAButton(DashboardGroup.Share, "Print", ButtonStyle.IconVariableWidth, Addin..Properties.Resources.greenPrinter));
+//            buttonItems.Add(new ThingThatGetsAButton(DashboardGroup.Share, "Email", ButtonStyle.IconVariableWidth, CommonTools.Properties.Resources.greenEmail));
+//            buttonItems.Add(new ThingThatGetsAButton(DashboardGroup.Share, "Synchronize", ButtonStyle.IconVariableWidth, CommonTools.Properties.Resources.greenSynchronize));
 
 			return buttonItems;
 		}
@@ -60,7 +61,7 @@ namespace WeSay.App.Tests
 
 	class ThingThatGetsAButton : IThingOnDashboard
 	{
-		private readonly string _groupName;
+		private readonly DashboardGroup _group;
 		private readonly string _localizedLabel;
 		private Font _font;
 		private ButtonStyle _style;
@@ -68,17 +69,17 @@ namespace WeSay.App.Tests
 
 
 
-		public ThingThatGetsAButton(string groupName, string localizedLabel, ButtonStyle style, Image image)
+		public ThingThatGetsAButton(DashboardGroup group, string localizedLabel, ButtonStyle style, Image image)
 		{
 			_image = image;
-			Style = style;
-			_groupName = groupName;
+			DashboardButtonStyle = style;
+			_group = group;
 			_localizedLabel = localizedLabel;
 			Font = new Font("Arial", 10);
 		}
 
-		public ThingThatGetsAButton(string groupName, string localizedLabel)
-			: this(groupName, localizedLabel, ButtonStyle.VariableAmount, null)
+		public ThingThatGetsAButton(DashboardGroup group, string localizedLabel)
+			: this(group, localizedLabel, ButtonStyle.VariableAmount, null)
 		{
 		}
 
@@ -91,10 +92,15 @@ namespace WeSay.App.Tests
 			}
 		}
 
-		public string GroupName
+
+		#region IThingOnDashboard Members
+
+		public DashboardGroup Group
 		{
-			get { return _groupName; }
+			get { return DashboardGroup.Describe; }
 		}
+
+		#endregion
 
 		public string LocalizedLabel
 		{
@@ -107,7 +113,7 @@ namespace WeSay.App.Tests
 			set { _font = value; }
 		}
 
-		public ButtonStyle Style
+		public ButtonStyle DashboardButtonStyle
 		{
 			get { return _style; }
 			set { _style = value; }
@@ -115,7 +121,7 @@ namespace WeSay.App.Tests
 
 		#region IThingOnDashboard Members
 
-		public Image Image
+		public Image DashboardButtonImage
 		{
 			get { return _image;  }
 		}

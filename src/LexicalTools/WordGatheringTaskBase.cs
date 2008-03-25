@@ -1,5 +1,7 @@
 using System;
 using WeSay.Data;
+using WeSay.Foundation;
+using WeSay.Foundation.Dashboard;
 using WeSay.Language;
 using WeSay.LexicalModel;
 using WeSay.Project;
@@ -32,12 +34,13 @@ namespace WeSay.LexicalTools
 			}
 		}
 
-		public override string GroupName
+		public  override WeSay.Foundation.Dashboard.DashboardGroup Group
 		{
-			get { return "Gather"; }
+			get { return WeSay.Foundation.Dashboard.DashboardGroup.Gather; }
 		}
 
-		public override ButtonStyle Style
+
+		public override ButtonStyle DashboardButtonStyle
 		{
 			get { return ButtonStyle.FixedAmount; }
 		}

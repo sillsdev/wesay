@@ -67,6 +67,13 @@ namespace Addin.Transform {
 			}
 		}
 
+		internal static System.Drawing.Bitmap greenPrinter {
+			get {
+				object obj = ResourceManager.GetObject("greenPrinter", resourceCulture);
+				return ((System.Drawing.Bitmap)(obj));
+			}
+		}
+
 		internal static System.Drawing.Bitmap printButtonImage {
 			get {
 				object obj = ResourceManager.GetObject("printButtonImage", resourceCulture);

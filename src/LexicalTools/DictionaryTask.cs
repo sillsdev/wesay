@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using Palaso.UI.WindowsForms.i8n;
 using WeSay.Data;
 using WeSay.Foundation;
+using WeSay.Foundation.Dashboard;
 using WeSay.LexicalModel;
 using WeSay.LexicalTools.Properties;
 using WeSay.Project;
@@ -138,12 +139,12 @@ namespace WeSay.LexicalTools
 			return CountNotRelevant;
 		}
 
-		public override ButtonStyle Style
+		public override ButtonStyle DashboardButtonStyle
 		{
 			get { return ButtonStyle.IconFixedWidth; }
 		}
 
-		public override Image Image
+		public override Image DashboardButtonImage
 		{
 			get { return Resources.blueDictionary; }
 		}

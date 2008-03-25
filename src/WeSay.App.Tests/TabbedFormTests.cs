@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using NUnit.Framework;
+using WeSay.Foundation;
+using WeSay.Foundation.Dashboard;
 using WeSay.Project;
 
 namespace WeSay.App.Tests
@@ -106,17 +108,22 @@ namespace WeSay.App.Tests
 			get { throw new NotImplementedException(); }
 		}
 
+		public DashboardGroup Group
+		{
+			get { throw new NotImplementedException(); }
+		}
+
 		public string LocalizedLabel
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public ButtonStyle Style
+		public ButtonStyle DashboardButtonStyle
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Image Image
+		public Image DashboardButtonImage
 		{
 			get { throw new NotImplementedException(); }
 		}

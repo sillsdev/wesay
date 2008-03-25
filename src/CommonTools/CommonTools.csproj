@@ -201,31 +201,10 @@
 	</EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-	<None Include="Resources\emailAction.png" />
-  </ItemGroup>
-  <ItemGroup>
-	<None Include="Resources\printAction.png" />
-  </ItemGroup>
-  <ItemGroup>
 	<None Include="Resources\WeSay64x64.png" />
   </ItemGroup>
   <ItemGroup>
 	<None Include="Resources\blueWeSay.png" />
-  </ItemGroup>
-  <ItemGroup>
-	<None Include="Resources\blueDictionary.png" />
-  </ItemGroup>
-  <ItemGroup>
-	<None Include="Resources\greenUsbKey.png" />
-  </ItemGroup>
-  <ItemGroup>
-	<None Include="Resources\greenEmail.png" />
-  </ItemGroup>
-  <ItemGroup>
-	<None Include="Resources\greenPrinter.png" />
-  </ItemGroup>
-  <ItemGroup>
-	<None Include="Resources\greenSynchronize.png" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

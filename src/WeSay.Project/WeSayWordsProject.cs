@@ -12,6 +12,7 @@ using System.Xml;
 using System.Xml.XPath;
 using System.Xml.Xsl;
 using LiftIO;
+using Mono.Addins;
 using Palaso.Reporting;
 using WeSay.AddinLib;
 using WeSay.Data;
@@ -1214,6 +1215,8 @@ namespace WeSay.Project
 			}
 			return path + "old" + i;
 		}
+
+
 
 		/// <summary>
 		/// Files to process when backing up or checking in

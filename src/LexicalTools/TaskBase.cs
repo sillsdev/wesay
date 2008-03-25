@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using Palaso.UI.WindowsForms.i8n;
 using WeSay.Data;
 using WeSay.Foundation;
+using WeSay.Foundation.Dashboard;
 using WeSay.Project;
 
 namespace WeSay.LexicalTools
@@ -250,22 +251,23 @@ namespace WeSay.LexicalTools
 
 		#region IThingOnDashboard Members
 
-		public virtual string GroupName
+		public virtual WeSay.Foundation.Dashboard.DashboardGroup Group
 		{
-			get { return "Describe"; }
+			get { return WeSay.Foundation.Dashboard.DashboardGroup.Describe; }
 		}
+
 
 		public string LocalizedLabel
 		{
 			get { return StringCatalog.Get(_label); }
 		}
 
-		public virtual ButtonStyle Style
+		public virtual ButtonStyle DashboardButtonStyle
 		{
 			get { return ButtonStyle.VariableAmount; }
 		}
 
-		public virtual Image Image
+		public virtual Image DashboardButtonImage
 		{
 			get { return null;}
 		}

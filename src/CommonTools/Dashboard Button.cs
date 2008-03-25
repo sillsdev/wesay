@@ -2,7 +2,8 @@ using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
-using WeSay.Project;
+using WeSay.Foundation;
+using WeSay.Foundation.Dashboard;
 
 namespace WeSay.CommonTools
 {
@@ -21,6 +22,12 @@ namespace WeSay.CommonTools
 		public DashboardButton(IThingOnDashboard thingToShowOnDashboard)
 		{
 			_thingToShowOnDashboard = thingToShowOnDashboard;
+			InitializeComponent();
+
+		}
+
+		public DashboardButton()
+		{
 			InitializeComponent();
 
 		}

@@ -22,7 +22,7 @@ namespace WeSay.CommonTools.Properties {
 	[global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "2.0.0.0")]
 	[global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
 	[global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-	public class Resources {
+	internal class Resources {
 
 		private static global::System.Resources.ResourceManager resourceMan;
 
@@ -60,63 +60,14 @@ namespace WeSay.CommonTools.Properties {
 			}
 		}
 
-		public static System.Drawing.Bitmap blueDictionary {
-			get {
-				object obj = ResourceManager.GetObject("blueDictionary", resourceCulture);
-				return ((System.Drawing.Bitmap)(obj));
-			}
-		}
-
-		public static System.Drawing.Bitmap blueWeSay {
+		internal static System.Drawing.Bitmap blueWeSay {
 			get {
 				object obj = ResourceManager.GetObject("blueWeSay", resourceCulture);
 				return ((System.Drawing.Bitmap)(obj));
 			}
 		}
 
-		public static System.Drawing.Bitmap emailAction {
-			get {
-				object obj = ResourceManager.GetObject("emailAction", resourceCulture);
-				return ((System.Drawing.Bitmap)(obj));
-			}
-		}
-
-		public static System.Drawing.Bitmap greenEmail {
-			get {
-				object obj = ResourceManager.GetObject("greenEmail", resourceCulture);
-				return ((System.Drawing.Bitmap)(obj));
-			}
-		}
-
-		public static System.Drawing.Bitmap greenPrinter {
-			get {
-				object obj = ResourceManager.GetObject("greenPrinter", resourceCulture);
-				return ((System.Drawing.Bitmap)(obj));
-			}
-		}
-
-		public static System.Drawing.Bitmap greenSynchronize {
-			get {
-				object obj = ResourceManager.GetObject("greenSynchronize", resourceCulture);
-				return ((System.Drawing.Bitmap)(obj));
-			}
-		}
-
-		public static System.Drawing.Bitmap greenUsbKey {
-			get {
-				object obj = ResourceManager.GetObject("greenUsbKey", resourceCulture);
-				return ((System.Drawing.Bitmap)(obj));
-			}
-		}
-
-		public static System.Drawing.Bitmap printAction {
-			get {
-				object obj = ResourceManager.GetObject("printAction", resourceCulture);
-				return ((System.Drawing.Bitmap)(obj));
-			}
-		}
-
-		public static System.Drawing.Bitmap WeSay64x64 {
+		internal static System.Drawing.Bitmap WeSay64x64 {
 			get {
 				object obj = ResourceManager.GetObject("WeSay64x64", resourceCulture);
 				return ((System.Drawing.Bitmap)(obj));

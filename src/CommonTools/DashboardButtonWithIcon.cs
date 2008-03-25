@@ -1,7 +1,8 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
-using WeSay.Project;
+using WeSay.Foundation;
+using WeSay.Foundation.Dashboard;
 
 
 //!!!!!!!!!!!!!! see http://www.codeproject.com/KB/GDI-plus/colormatrix.aspx  for a way
@@ -18,13 +19,18 @@ namespace WeSay.CommonTools
 		public DashboardButtonWithIcon(IThingOnDashboard thingToShowOnDashboard)
 			:base(thingToShowOnDashboard)
 		 {
-			_image = thingToShowOnDashboard.Image;
+			_image = thingToShowOnDashboard.DashboardButtonImage;
 			this.Load += new EventHandler(DashboardButtonWithIcon_Load);
+		}
+
+		public DashboardButtonWithIcon():base()
+		 {
+
 		}
 
 		void DashboardButtonWithIcon_Load(object sender, EventArgs e)
 		{
-			if (_thingToShowOnDashboard.Style == ButtonStyle.IconVariableWidth)
+			if (_thingToShowOnDashboard.DashboardButtonStyle == ButtonStyle.IconVariableWidth)
 			{
 				int labelWidth =
 					TextRenderer.MeasureText(Text, Font, new Size(int.MaxValue, int.MaxValue),

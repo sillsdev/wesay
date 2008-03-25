@@ -88,6 +88,30 @@ namespace WeSay.AddinLib
 
 		#endregion
 
+		#region IThingOnDashboard Members
+
+		public WeSay.Foundation.Dashboard.DashboardGroup Group
+		{
+			get { return WeSay.Foundation.Dashboard.DashboardGroup.Share; }
+		}
+
+		public string LocalizedLabel
+		{
+			get { return this.LocalizedName; }
+		}
+
+		public WeSay.Foundation.Dashboard.ButtonStyle DashboardButtonStyle
+		{
+			get { return WeSay.Foundation.Dashboard.ButtonStyle.IconVariableWidth; }
+		}
+
+		public Image DashboardButtonImage
+		{
+			get { return null; }
+		}
+
+		#endregion
+
 		public void Launch(Form parentForm, ProjectInfo projectInfo)
 		{
 		}

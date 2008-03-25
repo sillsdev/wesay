@@ -73,5 +73,26 @@ namespace Addin.Backup {
 				return ((System.Drawing.Bitmap)(obj));
 			}
 		}
+
+		internal static System.Drawing.Bitmap greenEmail {
+			get {
+				object obj = ResourceManager.GetObject("greenEmail", resourceCulture);
+				return ((System.Drawing.Bitmap)(obj));
+			}
+		}
+
+		internal static System.Drawing.Bitmap greenSynchronize {
+			get {
+				object obj = ResourceManager.GetObject("greenSynchronize", resourceCulture);
+				return ((System.Drawing.Bitmap)(obj));
+			}
+		}
+
+		internal static System.Drawing.Bitmap greenUsbKey {
+			get {
+				object obj = ResourceManager.GetObject("greenUsbKey", resourceCulture);
+				return ((System.Drawing.Bitmap)(obj));
+			}
+		}
 	}
 }

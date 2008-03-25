@@ -4,6 +4,8 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using Palaso.UI.WindowsForms.i8n;
+using WeSay.Foundation;
+using WeSay.Foundation.Dashboard;
 
 namespace WeSay.Project
 {
@@ -110,10 +112,10 @@ namespace WeSay.Project
 
 		#region IThingOnDashboard Members
 
-		public string GroupName
+
+		public WeSay.Foundation.Dashboard.DashboardGroup Group
 		{
-			get { return "Describe"; }
-			//review
+			get { return WeSay.Foundation.Dashboard.DashboardGroup.Describe; }
 		}
 
 		public string LocalizedLabel
@@ -121,12 +123,12 @@ namespace WeSay.Project
 			get { return StringCatalog.Get(_label); }
 		}
 
-		public ButtonStyle Style
+		public ButtonStyle DashboardButtonStyle
 		{
 			get { return ButtonStyle.FixedAmount; }
 		}
 
-		public Image Image
+		public Image DashboardButtonImage
 		{
 			get { return null; }
 		}

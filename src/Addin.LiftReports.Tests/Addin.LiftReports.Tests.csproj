@@ -66,6 +66,10 @@
 	  <Project>{E651E83C-94DD-4D6D-ABA2-C9FDA34FBA55}</Project>
 	  <Name>WeSay.AddinLib</Name>
 	</ProjectReference>
+	<ProjectReference Include="..\WeSay.Foundation\WeSay.Foundation.csproj">
+	  <Project>{F12EB680-0990-4900-B77E-0FBF2E28A815}</Project>
+	  <Name>WeSay.Foundation</Name>
+	</ProjectReference>
 	<ProjectReference Include="..\WeSay.Project\WeSay.Project.csproj">
 	  <Project>{5CFD0BB3-5B2A-4911-B220-9C2286151BF0}</Project>
 	  <Name>WeSay.Project</Name>

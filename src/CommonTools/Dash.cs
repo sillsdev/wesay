@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using Palaso.UI.WindowsForms.i8n;
+using WeSay.AddinLib;
 using WeSay.Data;
+using WeSay.Foundation;
+using WeSay.Foundation.Dashboard;
 using WeSay.LexicalModel;
 using WeSay.Project;
 using WeSay.UI;
@@ -75,7 +78,7 @@ namespace WeSay.CommonTools
 //            }
 //        }
 
-		private void AddButtonGroup(ButtonGroup group, int buttonWidth)
+		private void AddButtonGroup(ButtonGroup buttonGroup, int buttonWidth)
 		{
 			FlowLayoutPanel buttonFlow = new FlowLayoutPanel();
 			buttonFlow.AutoSize = true;
@@ -87,17 +90,17 @@ namespace WeSay.CommonTools
 			{
 				if (item == this)
 					continue;
-				if (item.GroupName == group.Name)
+				if (item.Group == buttonGroup.Group)
 				{
-					buttonFlow.Controls.Add(MakeButton(item, buttonWidth, group));
+					buttonFlow.Controls.Add(MakeButton(item, buttonWidth, buttonGroup));
 					foundAtLeastOne = true;
 				}
 			}
 			if (foundAtLeastOne)
 			{
 				Label header = new Label();
-				header.Text = StringCatalog.Get(group.Name);
-				header.Font = new Font("Arial", 13);
+				header.Text = StringCatalog.Get(buttonGroup.Group.ToString());
+				header.Font = new Font("Arial", 12);
 				_flow.Controls.Add(header);
 				_flow.Controls.Add(buttonFlow);
 			}
@@ -115,7 +118,7 @@ namespace WeSay.CommonTools
 //            if (buttonWidth == 0)
 //                buttonWidth = item.WidthToDisplayFullSizeLabel;
 
-			button.Size = new Size(buttonWidth, 50);
+			button.Size = new Size(buttonWidth, 40);
 			button.Text = item.LocalizedLabel;
 			button.Click += new EventHandler(OnButtonClick);
 			return button;
@@ -129,12 +132,33 @@ namespace WeSay.CommonTools
 			{
 				_currentWorkTaskProvider.ActiveTask = task;
 			}
+			else
+			{
+				IWeSayAddin addin = b.ThingToShowOnDashboard as IWeSayAddin;
+				if (addin != null)
+				{
+					Cursor.Current = Cursors.WaitCursor;
+
+					try
+					{
+						ProjectInfo projectInfo = WeSay.Project.WeSayWordsProject.Project.GetProjectInfoForAddin();
+						addin.Launch(this.ParentForm, projectInfo);
+					}
+					catch (Exception error)
+					{
+						Palaso.Reporting.ErrorReport.ReportNonFatalMessage(error.Message);
+					}
+
+					Cursor.Current = Cursors.Default;
+
+				}
+			}
 		}
 
 
 		public DashboardButton MakeButton(IThingOnDashboard item)
 		{
-			switch (item.Style)
+			switch (item.DashboardButtonStyle)
 			{
 				case ButtonStyle.FixedAmount:
 					return new DashboardButton(item);
@@ -181,7 +205,9 @@ namespace WeSay.CommonTools
 			}
 
 			Initialize();
-
+			SuspendLayout();
+			this.Dock = DockStyle.Fill;
+			this.AutoScroll = true;
 			if (ThingsToMakeButtonsFor == null)
 			{
 				ThingsToMakeButtonsFor = new List<IThingOnDashboard>();
@@ -189,11 +215,15 @@ namespace WeSay.CommonTools
 				{
 					ThingsToMakeButtonsFor.Add(task);
 				}
+				foreach (IThingOnDashboard action in AddinSet.GetAddinsForUser())
+				{
+					ThingsToMakeButtonsFor.Add(action);
+				}
 			}
 
 
 			Fill();
-
+			ResumeLayout(true);
 			_isActive = true;
 		}
 
@@ -205,17 +235,17 @@ namespace WeSay.CommonTools
 			//_flow.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 
 			_buttonGroups = new List<ButtonGroup>();
-			_buttonGroups.Add(new ButtonGroup("Gather", true,
+			_buttonGroups.Add(new ButtonGroup(DashboardGroup.Gather, true,
 											  Color.FromArgb(155, 187, 89),
 											  Color.FromArgb(195, 214, 155),
 											  Color.FromArgb(235, 241, 222)));
-			_buttonGroups.Add(new ButtonGroup("Describe", true, Color.FromArgb(85, 142, 213),
+			_buttonGroups.Add(new ButtonGroup(DashboardGroup.Describe, true, Color.FromArgb(85, 142, 213),
 											  Color.FromArgb(185, 205, 229),
 											  Color.White));
-			_buttonGroups.Add(new ButtonGroup("Refine", true, Color.FromArgb(250, 192, 144),
+			_buttonGroups.Add(new ButtonGroup(DashboardGroup.Refine, true, Color.FromArgb(250, 192, 144),
 											  Color.FromArgb(252, 213, 181),
 											  Color.White));
-			_buttonGroups.Add(new ButtonGroup("Share", true, Color.FromArgb(119, 147, 60),
+			_buttonGroups.Add(new ButtonGroup(DashboardGroup.Share, true, Color.FromArgb(119, 147, 60),
 											  Color.White,
 											  Color.White));
 
@@ -275,9 +305,9 @@ namespace WeSay.CommonTools
 
 		#region IThingOnDashboard Members
 
-		public string GroupName
+		public DashboardGroup Group
 		{
-			get { throw new NotImplementedException(); }
+			get { return DashboardGroup.DontShow; }
 		}
 
 		public string LocalizedLabel
@@ -285,12 +315,12 @@ namespace WeSay.CommonTools
 			get { throw new NotImplementedException(); }
 		}
 
-		public ButtonStyle Style
+		public ButtonStyle DashboardButtonStyle
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public Image Image
+		public Image DashboardButtonImage
 		{
 			get { throw new NotImplementedException(); }
 		}
@@ -322,30 +352,26 @@ namespace WeSay.CommonTools
 
 	internal class ButtonGroup
 	{
-		private readonly string _name;
+		private readonly DashboardGroup _group;
 		private readonly bool _makeButtonsSameSize;
 		private Color _doneColor;
 		private Color _borderColor;
 		private Color _todoColor;
 
-		public ButtonGroup(string name, bool makeButtonsSameSize, Color borderColor, Color doneColor, Color todoColor)
+		public ButtonGroup(DashboardGroup group, bool makeButtonsSameSize, Color borderColor, Color doneColor, Color todoColor)
 		{
-			_name = name;
+			_group = group;
 			_makeButtonsSameSize = makeButtonsSameSize;
 			_borderColor = borderColor;
 			_doneColor = doneColor;
 			_todoColor = todoColor;
 		}
 
-		public string Name
-		{
-			get { return _name; }
-		}
-
 		public bool MakeButtonsSameSize
 		{
 			get { return _makeButtonsSameSize; }
 		}
+
 
 
 		public Color DoneColor
@@ -361,6 +387,11 @@ namespace WeSay.CommonTools
 		public Color TodoColor
 		{
 			get { return _todoColor; }
+		}
+
+		public DashboardGroup Group
+		{
+			get { return _group; }
 		}
 	}
 }

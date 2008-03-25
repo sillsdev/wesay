@@ -81,6 +81,7 @@
 	<Compile Include="FlagState.cs" />
 	<Compile Include="IDisplayStringAdaptor.cs" />
 	<Compile Include="IBindableControl.cs" />
+	<Compile Include="IThingOnDashboard.cs" />
 	<Compile Include="LameProgressDialog.cs">
 	  <SubType>Form</SubType>
 	</Compile>

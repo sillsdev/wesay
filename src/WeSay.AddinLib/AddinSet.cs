@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Windows.Forms;
 using System.Xml;
 using System.Xml.XPath;
+using Mono.Addins;
 using WeSay.Foundation;
 
 namespace WeSay.AddinLib
@@ -148,6 +150,52 @@ namespace WeSay.AddinLib
 				writer.WriteRaw(settingsXml);
 			}
 			writer.WriteEndElement();
+		}
+
+		static public List<IWeSayAddin> GetAddinsForUser()
+		{
+			List<IWeSayAddin> addins = new List<IWeSayAddin>();
+			try
+			{
+				List<string> alreadyFound = new List<string>();
+				Palaso.Reporting.Logger.WriteMinorEvent("Loading Addins");
+				if (!AddinManager.IsInitialized)
+				{
+					//                AddinManager.Initialize(Application.UserAppDataPath);
+					//                AddinManager.Registry.Rebuild(null);
+					//                AddinManager.Shutdown();
+					AddinManager.Initialize(Application.UserAppDataPath);
+					AddinManager.Registry.Update(null);
+					//these (at least AddinLoaded) does get called after initialize, when you
+					//do a search for objects (e.g. GetExtensionObjects())
+
+					//TODO: I added these back on 13 oct because I was seeing no addins!
+					AddinManager.Registry.Rebuild(null);
+					AddinManager.Shutdown();
+					AddinManager.Initialize(Application.UserAppDataPath);
+				}
+
+				foreach (IWeSayAddin addin in AddinManager.GetExtensionObjects(typeof(IWeSayAddin)))
+				{
+					if (AddinSet.Singleton.DoShowInWeSay(addin.ID))
+					{
+						//this alreadyFound business is a hack to prevent duplication in some
+						// situation I haven't tracked down yet.
+						if (!alreadyFound.Contains(addin.ID))
+						{
+							alreadyFound.Add(addin.ID);
+							addins.Add(addin);
+						}
+					}
+				}
+			}
+			catch (Exception error)
+			{
+				Palaso.Reporting.ErrorReport.ReportNonFatalMessage(
+					"WeSay encountered an error while looking for Addins (e.g., Actions).  The error was: {0}",
+					error.Message);
+			}
+			return addins;
 		}
 	}
 }

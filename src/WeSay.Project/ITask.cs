@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
+using WeSay.Foundation;
+using WeSay.Foundation.Dashboard;
 
 namespace WeSay.Project
 {

@@ -111,15 +111,15 @@ namespace WeSay.LexicalTools
 			}
 		}
 
-		public override string GroupName
+		public override WeSay.Foundation.Dashboard.DashboardGroup Group
 		{
 			get
 			{
 				if (_isBaseFormFillingTask)
 				{
-					return "Refine";
+					return WeSay.Foundation.Dashboard.DashboardGroup.Refine;
 				}
-				return base.GroupName;
+				return base.Group;
 			}
 		}
 		public MissingInfoTask(IRecordListManager recordListManager,

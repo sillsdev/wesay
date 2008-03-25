@@ -2,6 +2,8 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 using Mono.Addins;
+using WeSay.Foundation;
+using WeSay.Foundation.Dashboard;
 
 namespace WeSay.AddinLib
 {
@@ -13,7 +15,7 @@ namespace WeSay.AddinLib
 	public delegate string FileLocater(string fileName);
 
 	[TypeExtensionPoint]
-	public interface IWeSayAddin
+	public interface IWeSayAddin : IThingOnDashboard
 	{
 
 		Image ButtonImage { get;}

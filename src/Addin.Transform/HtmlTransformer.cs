@@ -42,6 +42,11 @@ namespace Addin.Transform
 			}
 		}
 
+		public override Image DashboardButtonImage
+		{
+			get { return Resources.greenPrinter; }
+		}
+
 		public override string ID
 		{
 			get { return "ExportToHtml"; }

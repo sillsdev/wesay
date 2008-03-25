@@ -137,6 +137,9 @@
 	<Content Include="mercurial.bat">
 	  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	</Content>
+	<None Include="Resources\greenSynchronize.png" />
+	<None Include="Resources\greenEmail.png" />
+	<None Include="Resources\greenUsbKey.png" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
