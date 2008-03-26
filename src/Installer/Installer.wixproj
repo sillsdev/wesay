@@ -4,7 +4,7 @@
 	<ProductVersion>3.0</ProductVersion>
 	<ProjectGuid>{be2c52bc-6b66-4f8b-8b50-2cba58a8027d}</ProjectGuid>
 	<SchemaVersion>2.0</SchemaVersion>
-	<OutputName>SetupWeSay</OutputName>
+	<OutputName>WeSayInstaller</OutputName>
 	<OutputType>Package</OutputType>
 	<WixToolPath>C:\Program Files\Windows Installer XML v3\bin\</WixToolPath>
   </PropertyGroup>
@@ -61,9 +61,8 @@
 	<Compile Include="biatah.wxs" />
 	<Compile Include="GeneratedBiatahCache.wxs" />
 	<Compile Include="GeneratedPOFiles.wxs" />
-	<Compile Include="GeneratedTemplates.wxs" />
 	<Compile Include="SampleData.wxs" />
-	<Compile Include="Setup.wxs" />
+	<Compile Include="Installer.wxs" />
 	<Compile Include="CommonDir.wxs" />
   </ItemGroup>
   <ItemGroup>
