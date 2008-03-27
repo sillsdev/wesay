@@ -78,7 +78,13 @@ namespace WeSay.Setup
 
 		private void OnEditorSaveNow(object sender, EventArgs e)
 		{
-			this.Validate(); // this will make it save
+			// has never been initialized
+			if(_writingSystem == null)
+			{
+				return;
+			}
+
+			this.ValidateChildren(); // this will make it save
 		}
 
 		void textBoxCustomRules_Validating(object sender, CancelEventArgs cancelEventArgs)
