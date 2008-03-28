@@ -94,7 +94,9 @@ namespace WeSay.Project
 			{
 				settings.Indent = true;
 			}
-			settings.Encoding = Encoding.UTF8;
+			// this will give you a bom, which messes up princexml :settings.Encoding = Encoding.UTF8;
+			Encoding utf8NoBom = new UTF8Encoding(false);
+			settings.Encoding = utf8NoBom;
 			settings.CloseOutput = true;
 			return settings;
 		}

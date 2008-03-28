@@ -808,6 +808,12 @@ namespace WeSay.Project
 				return path;
 			}
 
+			path = Path.Combine(GetTopAppDirectory(), fileName);
+			if (File.Exists(path))
+			{
+				return path;
+			}
+
 			return null;
 		}
 

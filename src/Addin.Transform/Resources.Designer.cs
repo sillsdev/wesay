@@ -74,6 +74,13 @@ namespace Addin.Transform {
 			}
 		}
 
+		internal static System.Drawing.Bitmap pdfDictionary {
+			get {
+				object obj = ResourceManager.GetObject("pdfDictionary", resourceCulture);
+				return ((System.Drawing.Bitmap)(obj));
+			}
+		}
+
 		internal static System.Drawing.Bitmap printButtonImage {
 			get {
 				object obj = ResourceManager.GetObject("printButtonImage", resourceCulture);

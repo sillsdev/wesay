@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Reflection;
+using System.Text;
 using System.Windows.Forms;
 using System.Xml;
 using System.Xml.XPath;
@@ -233,9 +234,18 @@ namespace Addin.Transform
 				progressState.TotalNumberOfSteps = entriesCount + workerArguments.postTransformSteps;
 				_staticProgressStateForWorker = progressState;
 				workerArguments.xsltArguments.XsltMessageEncountered += new XsltMessageEncounteredEventHandler(OnXsltMessageEncountered);
-				transform.Transform(workerArguments.inputDocument, workerArguments.xsltArguments,
-									workerArguments.outputStream);
+//                transform.Transform(workerArguments.inputDocument, workerArguments.xsltArguments,
+//                                    workerArguments.outputStream);
 
+				//all this is to stop sticking on the BOM, which trips up princeXML
+				XmlWriterSettings writerSettings= new XmlWriterSettings();
+				writerSettings.Encoding  = new UTF8Encoding(false);
+
+				using (XmlWriter writer = XmlWriter.Create(workerArguments.outputStream, writerSettings))
+				{
+					transform.Transform(workerArguments.inputDocument, workerArguments.xsltArguments,
+									   writer);
+				}
 				workerArguments.outputStream.Close();//let the next guy get at the file
 				System.Diagnostics.Debug.Assert(progressState.NumberOfStepsCompleted <= entriesCount, "Should use up more than we reserved for ourselves");
 				progressState.NumberOfStepsCompleted = entriesCount;

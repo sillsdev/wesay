@@ -60,6 +60,10 @@
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\PalasoUIWindowsForms.dll</HintPath>
 	</Reference>
+	<Reference Include="Prince, Version=1.0.2830.36745, Culture=neutral">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\Prince.dll</HintPath>
+	</Reference>
 	<Reference Include="System" />
 	<Reference Include="System.Data" />
 	<Reference Include="System.Drawing" />
@@ -67,9 +71,11 @@
 	<Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+	<Compile Include="PdfMaker.cs" />
 	<Compile Include="HtmlInWord.cs" />
 	<Compile Include="HtmlTransformer.cs" />
 	<Compile Include="PLiftMaker.cs" />
+	<Compile Include="PrinceXmlWrapper.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />
 	<Compile Include="Resources.Designer.cs">
 	  <AutoGen>True</AutoGen>
@@ -142,6 +148,9 @@
   </ItemGroup>
   <ItemGroup>
 	<None Include="Resources\greenPrinter.png" />
+  </ItemGroup>
+  <ItemGroup>
+	<None Include="Resources\kpdf.png" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
