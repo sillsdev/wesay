@@ -2,6 +2,11 @@
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
 	<Fragment>
 		<DirectoryRef Id="biatahCacheDir">
+			<Component Id="biatahCacheDir" Guid="87AB5706-3691-4721-BA1C-D9D84CB68B37">
+				<CreateFolder Directory="biatahCacheDir">
+					<Permission GenericAll="yes" User="Everyone" />
+				</CreateFolder>
+			</Component>
 			<Component Id="Add_Examples.cache" Guid="492F2725-9DF9-46B1-9ACE-E84E70AFEE25">
 				<File Id="Add_Examples.cache" Name="Add Examples.cache" KeyPath="yes" Source="..\..\SampleProjects\Biatah\Cache\Add Examples.cache">
 					<Permission GenericAll="yes" User="Everyone" />
@@ -74,6 +79,7 @@
 			</Component>
 		</DirectoryRef>
 		<ComponentGroup Id="biatahCache">
+			<ComponentRef Id="biatahCacheDir" />
 			<ComponentRef Id="Add_Examples.cache" />
 			<ComponentRef Id="Add_Meanings.cache" />
 			<ComponentRef Id="AssumeCacheIsFresh" />
