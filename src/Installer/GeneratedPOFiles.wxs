@@ -3,49 +3,49 @@
 	<Fragment>
 		<DirectoryRef Id="common">
 			<Component Id="wesay_da.po" Guid="6F118941-7B1E-4C47-8ADA-01D8AAFD82CE">
-				<File Id="wesay_da.po" Name="wesay-da.po" KeyPath="yes" Source="c:\wesaybuild\common\wesay-da.po" />
+				<File Id="wesay_da.po" Name="wesay-da.po" KeyPath="yes" Source="..\..\common\wesay-da.po" />
 			</Component>
 			<Component Id="wesay_es.po" Guid="A81EC96F-5F0B-4495-9D76-90DF742EB77C">
-				<File Id="wesay_es.po" Name="wesay-es.po" Source="c:\wesaybuild\common\wesay-es.po" />
+				<File Id="wesay_es.po" Name="wesay-es.po" Source="..\..\common\wesay-es.po" />
 			</Component>
 			<Component Id="wesay_fr.po" Guid="3167C09C-3FA7-4B25-951E-134F5B5C0C25">
-				<File Id="wesay_fr.po" Name="wesay-fr.po" Source="c:\wesaybuild\common\wesay-fr.po" />
+				<File Id="wesay_fr.po" Name="wesay-fr.po" Source="..\..\common\wesay-fr.po" />
 			</Component>
 			<Component Id="wesay_he.po" Guid="65C03CD6-2B76-4AFC-BD8E-15F2BCE4B653">
-				<File Id="wesay_he.po" Name="wesay-he.po" Source="c:\wesaybuild\common\wesay-he.po" />
+				<File Id="wesay_he.po" Name="wesay-he.po" Source="..\..\common\wesay-he.po" />
 			</Component>
 			<Component Id="wesay_id.po" Guid="134F2C22-319F-474A-8DAD-059207130B6B">
-				<File Id="wesay_id.po" Name="wesay-id.po" Source="c:\wesaybuild\common\wesay-id.po" />
+				<File Id="wesay_id.po" Name="wesay-id.po" Source="..\..\common\wesay-id.po" />
 			</Component>
 			<Component Id="wesay_is.po" Guid="A99C79FE-F574-4EDA-827D-4332587CFBE0">
-				<File Id="wesay_is.po" Name="wesay-is.po" Source="c:\wesaybuild\common\wesay-is.po" />
+				<File Id="wesay_is.po" Name="wesay-is.po" Source="..\..\common\wesay-is.po" />
 			</Component>
 			<Component Id="wesay_my.po" Guid="EB58521A-363D-41F0-942C-AF30E4A18C3F">
-				<File Id="wesay_my.po" Name="wesay-my.po" Source="c:\wesaybuild\common\wesay-my.po" />
+				<File Id="wesay_my.po" Name="wesay-my.po" Source="..\..\common\wesay-my.po" />
 			</Component>
 			<Component Id="wesay_nl.po" Guid="A3F179D9-978F-4902-9E5B-C9AA4DE3E026">
-				<File Id="wesay_nl.po" Name="wesay-nl.po" Source="c:\wesaybuild\common\wesay-nl.po" />
+				<File Id="wesay_nl.po" Name="wesay-nl.po" Source="..\..\common\wesay-nl.po" />
 			</Component>
 			<Component Id="wesay_oc.po" Guid="1A4A8EBD-1EFE-4100-B1D6-6B8A683ACE0A">
-				<File Id="wesay_oc.po" Name="wesay-oc.po" Source="c:\wesaybuild\common\wesay-oc.po" />
+				<File Id="wesay_oc.po" Name="wesay-oc.po" Source="..\..\common\wesay-oc.po" />
 			</Component>
 			<Component Id="wesay_pl.po" Guid="BE4021AD-A658-4E8D-8DE8-0D7D2872002C">
-				<File Id="wesay_pl.po" Name="wesay-pl.po" Source="c:\wesaybuild\common\wesay-pl.po" />
+				<File Id="wesay_pl.po" Name="wesay-pl.po" Source="..\..\common\wesay-pl.po" />
 			</Component>
 			<Component Id="wesay_pt.po" Guid="469D47E5-6BB7-472B-857F-F266CA140D19">
-				<File Id="wesay_pt.po" Name="wesay-pt.po" Source="c:\wesaybuild\common\wesay-pt.po" />
+				<File Id="wesay_pt.po" Name="wesay-pt.po" Source="..\..\common\wesay-pt.po" />
 			</Component>
 			<Component Id="wesay_ru.po" Guid="3D6650A6-0367-4914-9114-9E1F68F7774D">
-				<File Id="wesay_ru.po" Name="wesay-ru.po" Source="c:\wesaybuild\common\wesay-ru.po" />
+				<File Id="wesay_ru.po" Name="wesay-ru.po" Source="..\..\common\wesay-ru.po" />
 			</Component>
 			<Component Id="wesay_th.po" Guid="B713C0CB-9448-4E3D-A89B-C2E9F36B1187">
-				<File Id="wesay_th.po" Name="wesay-th.po" Source="c:\wesaybuild\common\wesay-th.po" />
+				<File Id="wesay_th.po" Name="wesay-th.po" Source="..\..\common\wesay-th.po" />
 			</Component>
 			<Component Id="wesay_tpi.po" Guid="8E283EEE-0ABC-4374-A115-1182F97E12C6">
-				<File Id="wesay_tpi.po" Name="wesay-tpi.po" Source="c:\wesaybuild\common\wesay-tpi.po" />
+				<File Id="wesay_tpi.po" Name="wesay-tpi.po" Source="..\..\common\wesay-tpi.po" />
 			</Component>
 			<Component Id="wesay_zh_CN.po" Guid="4CBB84A2-ECE1-4705-8915-FF0BF29CAEB2">
-				<File Id="wesay_zh_CN.po" Name="wesay-zh_CN.po" Source="c:\wesaybuild\common\wesay-zh_CN.po" />
+				<File Id="wesay_zh_CN.po" Name="wesay-zh_CN.po" Source="..\..\common\wesay-zh_CN.po" />
 			</Component>
 		</DirectoryRef>
 		<ComponentGroup Id="PoFiles">

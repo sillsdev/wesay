@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+	<Fragment>
+		<DirectoryRef Id="TemplatesDir">
+			<Component Id="basicDictionary.css" Guid="33409C8F-7834-456E-84C8-35084439A0E3">
+				<File Id="basicDictionary.css" Name="basicDictionary.css" KeyPath="yes" Source="..\..\templates\basicDictionary.css" />
+			</Component>
+		</DirectoryRef>
+		<ComponentGroup Id="templates">
+			<ComponentRef Id="basicDictionary.css" />
+		</ComponentGroup>
+	</Fragment>
+</Wix>

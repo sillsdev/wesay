@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <!-- These variables define the Windows Installer product version, product code and upgrade code. They   -->
 <!-- will be used later on in this file.                                                                 -->
-<?define Property_ProductVersion = "0.3.01250" ?> <!--this is replaced at build time by the msbuild 'package' target -->
+<?define Property_ProductVersion = "0.3.1266" ?> <!--this is replaced at build time by the msbuild 'package' target -->
 <?define Property_ProductCode = "*" ?> <!-- auto-generate a new guid each time -->
 <?define Property_UpgradeCode = "{6B6778A7-D3AD-4de8-BE95-C8956665B85A}" ?> <!--Don't even think of EVER changing this -->
 
@@ -49,7 +49,7 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 
 				<Directory Id="ProgramDir" Name="WeSay">
 
-				<Directory Id="templatesDir" Name="Templates">
+				<Directory Id="TemplatesDir" Name="Templates">
 					<!-- a generated fragment from GeneratedTemplates.wxs will fill this in -->
 				</Directory>
 

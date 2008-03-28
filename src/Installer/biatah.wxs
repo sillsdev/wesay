@@ -18,31 +18,24 @@
 	  </Component>
 
 		<Component Id="biatahMain" Guid="{5008C03F-7946-4147-96B1-442AD4999FA9}">
-		  <File Id="writingSystemPrefs.xml" Name="writingSystemPrefs.xml" Source="..\..\sampleprojects\biatah\writingSystemPrefs.xml" />
-		  <File Id="biatah.lift" Name="biatah.lift" KeyPath="yes" Source="..\..\sampleprojects\biatah\biatah.lift" />
-		  <File Id="biatah.WeSayConfig" Name="biatah.WeSayConfig"  Source="..\..\sampleprojects\biatah\biatah.WeSayConfig" />
+		  <File Id="writingSystemPrefs.xml" Name="writingSystemPrefs.xml" Source="..\..\sampleprojects\biatah\writingSystemPrefs.xml" >
+			 <Permission GenericAll="yes" User="Everyone" />
+		  </File>
+		  <File Id="biatah.lift" Name="biatah.lift" KeyPath="yes" Source="..\..\sampleprojects\biatah\biatah.lift" >
+			 <Permission GenericAll="yes" User="Everyone" />
+		  </File>
+		  <File Id="biatah.WeSayConfig" Name="biatah.WeSayConfig"  Source="..\..\sampleprojects\biatah\biatah.WeSayConfig" >
+			 <Permission GenericAll="yes" User="Everyone" />
+		  </File>
 		</Component>
 		<Directory Id="biatahCacheDir" Name="Cache">
-	<!--  <Component Id="biatahCache" Guid="{EF2EBD26-0A05-4DC1-8B74-C4EFDA1547F6}">
-			<File Id="biatah.words" Name="biatah.words"  KeyPath="yes" Source="..\..\sampleprojects\biatah\cache\biatah.words" />
-			<File Id="AddMeanings.cache" Name="Add Meanings.cache" Source="..\..\sampleprojects\biatah\Cache\Add Meanings.cache" />
-			<File Id="AddExamples.cache" Name="Add Examples.cache"  Source="..\..\sampleprojects\biatah\Cache\Add Examples.cache" />
-			<File Id="AssumeCacheIsFresh" Name="AssumeCacheIsFresh" Source="..\..\sampleprojects\biatah\Cache\AssumeCacheIsFresh" />
-			<File Id="CollectWordListD.cache" Name="Collect Word List (D).cache" Source="..\..\sampleprojects\biatah\Cache\Collect Word List (D).cache" />
-			<File Id="CollectWordsBySemanticDomain.cache" Name="Collect Words By Semantic Domain.cache" Source="..\..\sampleprojects\biatah\Cache\Collect Words By Semantic Domain.cache" />
-			<File Id="LexEntrysortedbybth.cache" Name="LexEntry sorted by bth.cache"  Source="..\..\sampleprojects\biatah\Cache\LexEntry sorted by bth.cache" />
-			<File Id="LexEntrysortedbybthfonipa.cache" Name="LexEntry sorted by bth-fonipa.cache"  Source="..\..\sampleprojects\biatah\Cache\LexEntry sorted by bth-fonipa.cache" />
-			<File Id="LexEntrysortedbyen.cache" Name="LexEntry sorted by en.cache" Source="..\..\sampleprojects\biatah\Cache\LexEntry sorted by en.cache" />
-			<File Id="LexEntrysortedbySemanticDomainDdp4.cache" Name="LexEntry sorted by SemanticDomainDdp4.cache" Source="..\..\sampleprojects\biatah\Cache\LexEntry sorted by SemanticDomainDdp4.cache" />
-			<File Id="MissingdefinitionenFilter.cache" Name="Missing definition [en] Filter.cache" Source="..\..\sampleprojects\biatah\Cache\Missing definition [en] Filter.cache" />
-			<File Id="MissingExampleSentencebthFilter.cache" Name="Missing ExampleSentence [bth] Filter.cache" Source="..\..\sampleprojects\biatah\Cache\Missing ExampleSentence [bth] Filter.cache" />
-		  </Component>
-		-->
-
+		  <!--  directory will be filled in by auto generated wxs file, which will reference this -->
 		</Directory>
 		<Directory Id="biatahPicturesDir" Name="pictures">
 		  <Component Id="biatahPictures" Guid="{FFC212BA-EBF6-41BD-A015-94BF95D3B2AA}">
-			<File Id="waterBasket1.png" Name="waterBasket1.png" KeyPath="yes" Source="..\..\sampleprojects\biatah\pictures\waterBasket1.png" />
+			<File Id="waterBasket1.png" Name="waterBasket1.png" KeyPath="yes" Source="..\..\sampleprojects\biatah\pictures\waterBasket1.png">
+			   <Permission GenericAll="yes" User="Everyone" />
+			</File>
 		  </Component>
 		</Directory>
 	</DirectoryRef>

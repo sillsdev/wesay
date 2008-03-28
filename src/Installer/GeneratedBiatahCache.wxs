@@ -1,42 +1,76 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
 	<Fragment>
-		<DirectoryRef Id="common">
-			<Component Id="Add_Examples.cache" Guid="308219AA-11DA-4FC9-BCBB-170F7F1DF7F9">
-				<File Id="Add_Examples.cache" Name="Add Examples.cache" KeyPath="yes" Source="C:\WeSayBuild\SampleProjects\Biatah\Cache\Add Examples.cache" />
+		<DirectoryRef Id="biatahCacheDir">
+			<Component Id="Add_Examples.cache" Guid="492F2725-9DF9-46B1-9ACE-E84E70AFEE25">
+				<File Id="Add_Examples.cache" Name="Add Examples.cache" KeyPath="yes" Source="..\..\SampleProjects\Biatah\Cache\Add Examples.cache">
+					<Permission GenericAll="yes" User="Everyone" />
+				</File>
 			</Component>
-			<Component Id="Add_Meanings.cache" Guid="2E12FE38-7349-42EA-BDBF-C28040A177A6">
-				<File Id="Add_Meanings.cache" Name="Add Meanings.cache" Source="C:\WeSayBuild\SampleProjects\Biatah\Cache\Add Meanings.cache" />
+			<Component Id="Add_Meanings.cache" Guid="7E823CD2-3B19-45E7-9F09-3CF4508C4163">
+				<File Id="Add_Meanings.cache" Name="Add Meanings.cache" Source="..\..\SampleProjects\Biatah\Cache\Add Meanings.cache">
+					<Permission GenericAll="yes" User="Everyone" />
+				</File>
 			</Component>
-			<Component Id="AssumeCacheIsFresh" Guid="A6186B5A-5EEB-4710-B32D-7CCB4C7A87C6">
-				<File Id="AssumeCacheIsFresh" Name="AssumeCacheIsFresh" Source="C:\WeSayBuild\SampleProjects\Biatah\Cache\AssumeCacheIsFresh" />
+			<Component Id="AssumeCacheIsFresh" Guid="AFDDAA89-458F-488A-99E8-CA31C588724A">
+				<File Id="AssumeCacheIsFresh" Name="AssumeCacheIsFresh" Source="..\..\SampleProjects\Biatah\Cache\AssumeCacheIsFresh">
+					<Permission GenericAll="yes" User="Everyone" />
+				</File>
 			</Component>
-			<Component Id="biatah.words" Guid="36DAC181-D94F-4423-9DA3-7449CA54C7A2">
-				<File Id="biatah.words" Name="biatah.words" Source="C:\WeSayBuild\SampleProjects\Biatah\Cache\biatah.words" />
+			<Component Id="biatah.words" Guid="B05F38C8-C51B-4A45-8960-727EACC10C2C">
+				<File Id="biatah.words" Name="biatah.words" Source="..\..\SampleProjects\Biatah\Cache\biatah.words">
+					<Permission GenericAll="yes" User="Everyone" />
+				</File>
 			</Component>
-			<Component Id="Collect_Word_List__D_.cache" Guid="319C44A3-98CB-4BEB-9052-3597462F0120">
-				<File Id="Collect_Word_List__D_.cache" Name="Collect Word List (D).cache" Source="C:\WeSayBuild\SampleProjects\Biatah\Cache\Collect Word List (D).cache" />
+			<Component Id="Collect_Word_List__D_.cache" Guid="E3821D36-E8A2-4CD2-BBE5-40CB216805F5">
+				<File Id="Collect_Word_List__D_.cache" Name="Collect Word List (D).cache" Source="..\..\SampleProjects\Biatah\Cache\Collect Word List (D).cache">
+					<Permission GenericAll="yes" User="Everyone" />
+				</File>
 			</Component>
-			<Component Id="Collect_Words_By_Semantic_Domain.cache" Guid="A082EEFA-E808-4552-A817-4AE3C17D483C">
-				<File Id="Collect_Words_By_Semantic_Domain.cache" Name="Collect Words By Semantic Domain.cache" Source="C:\WeSayBuild\SampleProjects\Biatah\Cache\Collect Words By Semantic Domain.cache" />
+			<Component Id="Collect_Words_By_Semantic_Domain.cache" Guid="D025EF42-484D-42DF-AF05-5FD61D5468F9">
+				<File Id="Collect_Words_By_Semantic_Domain.cache" Name="Collect Words By Semantic Domain.cache" Source="..\..\SampleProjects\Biatah\Cache\Collect Words By Semantic Domain.cache">
+					<Permission GenericAll="yes" User="Everyone" />
+				</File>
 			</Component>
-			<Component Id="LexEntry_sorted_by_bth_fonipa.cache" Guid="FDC13B84-B7D9-4251-AC69-343322A5D7ED">
-				<File Id="LexEntry_sorted_by_bth_fonipa.cache" Name="LexEntry sorted by bth-fonipa.cache" Source="C:\WeSayBuild\SampleProjects\Biatah\Cache\LexEntry sorted by bth-fonipa.cache" />
+			<Component Id="Headwords_sorted_by_bth_fonipa.cache" Guid="CA07664A-CF7B-447D-9FA7-ECA8C8979FCF">
+				<File Id="Headwords_sorted_by_bth_fonipa.cache" Name="Headwords sorted by bth-fonipa.cache" Source="..\..\SampleProjects\Biatah\Cache\Headwords sorted by bth-fonipa.cache">
+					<Permission GenericAll="yes" User="Everyone" />
+				</File>
 			</Component>
-			<Component Id="LexEntry_sorted_by_bth.cache" Guid="A6E5BDC8-2565-47C7-B539-EEA4EA742E8A">
-				<File Id="LexEntry_sorted_by_bth.cache" Name="LexEntry sorted by bth.cache" Source="C:\WeSayBuild\SampleProjects\Biatah\Cache\LexEntry sorted by bth.cache" />
+			<Component Id="Headwords_sorted_by_bth.cache" Guid="D6B78478-4664-44DA-B505-181F58C59518">
+				<File Id="Headwords_sorted_by_bth.cache" Name="Headwords sorted by bth.cache" Source="..\..\SampleProjects\Biatah\Cache\Headwords sorted by bth.cache">
+					<Permission GenericAll="yes" User="Everyone" />
+				</File>
 			</Component>
-			<Component Id="LexEntry_sorted_by_en.cache" Guid="35D13EA2-DBC4-4EDE-A150-43E1F48D8D18">
-				<File Id="LexEntry_sorted_by_en.cache" Name="LexEntry sorted by en.cache" Source="C:\WeSayBuild\SampleProjects\Biatah\Cache\LexEntry sorted by en.cache" />
+			<Component Id="LexEntry_sorted_by_bth_of_LexemeForm.cache" Guid="C7099B4F-2425-4EC8-903C-15FB9A5C881F">
+				<File Id="LexEntry_sorted_by_bth_of_LexemeForm.cache" Name="LexEntry sorted by bth of LexemeForm.cache" Source="..\..\SampleProjects\Biatah\Cache\LexEntry sorted by bth of LexemeForm.cache">
+					<Permission GenericAll="yes" User="Everyone" />
+				</File>
 			</Component>
-			<Component Id="LexEntry_sorted_by_SemanticDomainDdp4.cache" Guid="8DE88BBF-EC32-4367-BDFF-DA60E7CA71D9">
-				<File Id="LexEntry_sorted_by_SemanticDomainDdp4.cache" Name="LexEntry sorted by SemanticDomainDdp4.cache" Source="C:\WeSayBuild\SampleProjects\Biatah\Cache\LexEntry sorted by SemanticDomainDdp4.cache" />
+			<Component Id="LexEntry_sorted_by_bth_fonipa_of_LexemeForm.cache" Guid="5AC9160F-EC13-4964-A910-49F15191F0DE">
+				<File Id="LexEntry_sorted_by_bth_fonipa_of_LexemeForm.cache" Name="LexEntry sorted by bth-fonipa of LexemeForm.cache" Source="..\..\SampleProjects\Biatah\Cache\LexEntry sorted by bth-fonipa of LexemeForm.cache">
+					<Permission GenericAll="yes" User="Everyone" />
+				</File>
 			</Component>
-			<Component Id="Missing_definition__en__Filter.cache" Guid="A3661676-7B4E-426D-B9A4-141DD4B4AD2A">
-				<File Id="Missing_definition__en__Filter.cache" Name="Missing definition [en] Filter.cache" Source="C:\WeSayBuild\SampleProjects\Biatah\Cache\Missing definition [en] Filter.cache" />
+			<Component Id="LexEntry_sorted_by_en_of_Gloss.cache" Guid="2F7BE99F-1F80-42BC-B48A-D58537431C38">
+				<File Id="LexEntry_sorted_by_en_of_Gloss.cache" Name="LexEntry sorted by en of Gloss.cache" Source="..\..\SampleProjects\Biatah\Cache\LexEntry sorted by en of Gloss.cache">
+					<Permission GenericAll="yes" User="Everyone" />
+				</File>
 			</Component>
-			<Component Id="Missing_ExampleSentence__bth__Filter.cache" Guid="AD854A7E-60A7-4629-A891-912FBC0A70FA">
-				<File Id="Missing_ExampleSentence__bth__Filter.cache" Name="Missing ExampleSentence [bth] Filter.cache" Source="C:\WeSayBuild\SampleProjects\Biatah\Cache\Missing ExampleSentence [bth] Filter.cache" />
+			<Component Id="LexEntry_sorted_by_SemanticDomainDdp4.cache" Guid="09B0C04B-E862-4DF7-AA4D-5ADF88453288">
+				<File Id="LexEntry_sorted_by_SemanticDomainDdp4.cache" Name="LexEntry sorted by SemanticDomainDdp4.cache" Source="..\..\SampleProjects\Biatah\Cache\LexEntry sorted by SemanticDomainDdp4.cache">
+					<Permission GenericAll="yes" User="Everyone" />
+				</File>
+			</Component>
+			<Component Id="Missing_definition__en__Filter.cache" Guid="5C2CC801-61FD-4053-8590-153FA704989C">
+				<File Id="Missing_definition__en__Filter.cache" Name="Missing definition [en] Filter.cache" Source="..\..\SampleProjects\Biatah\Cache\Missing definition [en] Filter.cache">
+					<Permission GenericAll="yes" User="Everyone" />
+				</File>
+			</Component>
+			<Component Id="Missing_ExampleSentence__bth__Filter.cache" Guid="04D804BE-8977-44D6-AC46-9FA2104CA81A">
+				<File Id="Missing_ExampleSentence__bth__Filter.cache" Name="Missing ExampleSentence [bth] Filter.cache" Source="..\..\SampleProjects\Biatah\Cache\Missing ExampleSentence [bth] Filter.cache">
+					<Permission GenericAll="yes" User="Everyone" />
+				</File>
 			</Component>
 		</DirectoryRef>
 		<ComponentGroup Id="biatahCache">
@@ -46,9 +80,11 @@
 			<ComponentRef Id="biatah.words" />
 			<ComponentRef Id="Collect_Word_List__D_.cache" />
 			<ComponentRef Id="Collect_Words_By_Semantic_Domain.cache" />
-			<ComponentRef Id="LexEntry_sorted_by_bth_fonipa.cache" />
-			<ComponentRef Id="LexEntry_sorted_by_bth.cache" />
-			<ComponentRef Id="LexEntry_sorted_by_en.cache" />
+			<ComponentRef Id="Headwords_sorted_by_bth_fonipa.cache" />
+			<ComponentRef Id="Headwords_sorted_by_bth.cache" />
+			<ComponentRef Id="LexEntry_sorted_by_bth_of_LexemeForm.cache" />
+			<ComponentRef Id="LexEntry_sorted_by_bth_fonipa_of_LexemeForm.cache" />
+			<ComponentRef Id="LexEntry_sorted_by_en_of_Gloss.cache" />
 			<ComponentRef Id="LexEntry_sorted_by_SemanticDomainDdp4.cache" />
 			<ComponentRef Id="Missing_definition__en__Filter.cache" />
 			<ComponentRef Id="Missing_ExampleSentence__bth__Filter.cache" />
