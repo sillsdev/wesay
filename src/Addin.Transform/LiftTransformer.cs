@@ -113,12 +113,12 @@ namespace Addin.Transform
 
 		public abstract void Launch(Form parentForm, ProjectInfo projectInfo);
 
-		protected string TransformLift(ProjectInfo projectInfo, string xsltName, string outputFileSuffix)
+		protected string TransformLiftToText(ProjectInfo projectInfo, string xsltName, string outputFileSuffix)
 		{
-			return TransformLift(projectInfo, xsltName, outputFileSuffix, new XsltArgumentList());
+			return TransformLift(projectInfo, xsltName, outputFileSuffix, new XsltArgumentList(), false);
 		}
 
-		protected string TransformLift(ProjectInfo projectInfo, string xsltName, string outputFileSuffix, XsltArgumentList arguments)
+		protected string TransformLift(ProjectInfo projectInfo, string xsltName, string outputFileSuffix, XsltArgumentList arguments, bool OutputToXml)
 		{
 			_pathToOutput = Path.Combine(projectInfo.PathToExportDirectory, projectInfo.Name + outputFileSuffix);
 			if (File.Exists(_pathToOutput))
@@ -198,6 +198,7 @@ namespace Addin.Transform
 			public string outputFilePath;
 			public object postTransformArgument;
 			public int postTransformSteps;
+			public bool isXml=true;
 		}
 
 		/// <summary>
@@ -234,18 +235,25 @@ namespace Addin.Transform
 				progressState.TotalNumberOfSteps = entriesCount + workerArguments.postTransformSteps;
 				_staticProgressStateForWorker = progressState;
 				workerArguments.xsltArguments.XsltMessageEncountered += new XsltMessageEncounteredEventHandler(OnXsltMessageEncountered);
-//                transform.Transform(workerArguments.inputDocument, workerArguments.xsltArguments,
-//                                    workerArguments.outputStream);
 
-				//all this is to stop sticking on the BOM, which trips up princeXML
-				XmlWriterSettings writerSettings= new XmlWriterSettings();
-				writerSettings.Encoding  = new UTF8Encoding(false);
-
-				using (XmlWriter writer = XmlWriter.Create(workerArguments.outputStream, writerSettings))
+				if (true)
 				{
 					transform.Transform(workerArguments.inputDocument, workerArguments.xsltArguments,
-									   writer);
+										workerArguments.outputStream);
 				}
+				else
+				{
+					//all this is to stop sticking on the BOM, which trips up princeXML
+					XmlWriterSettings writerSettings = new XmlWriterSettings();
+					writerSettings.Encoding = new UTF8Encoding(false);
+
+					using (XmlWriter writer = XmlWriter.Create(workerArguments.outputStream, writerSettings))
+					{
+						transform.Transform(workerArguments.inputDocument, workerArguments.xsltArguments,
+											writer);
+					}
+				}
+
 				workerArguments.outputStream.Close();//let the next guy get at the file
 				System.Diagnostics.Debug.Assert(progressState.NumberOfStepsCompleted <= entriesCount, "Should use up more than we reserved for ourselves");
 				progressState.NumberOfStepsCompleted = entriesCount;

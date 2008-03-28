@@ -96,7 +96,7 @@ namespace Addin.Transform
 								  projectInfo.LocateFile("PartsOfSpeech.xml"));
 			   arguments.AddParam("output-intented-for-winword", string.Empty, intendedForWinWord.ToString() + "()");
 
-			   return TransformLift(projectInfo, "plift2html.xsl", ".htm", arguments);
+			   return TransformLift(projectInfo, "plift2html.xsl", ".htm", arguments, true);
 		   }
 			finally
 		   {
