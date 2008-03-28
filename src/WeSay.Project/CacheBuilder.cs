@@ -62,7 +62,7 @@ namespace WeSay.Project
 				return true;
 			}
 
-			if (AssumeCacheIsFresh(pathToCacheDirectory))
+			if (GetAssumeCacheIsFresh(pathToCacheDirectory))
 			{
 				return false;
 			}
@@ -75,7 +75,7 @@ namespace WeSay.Project
 			}
 		}
 
-		public static bool AssumeCacheIsFresh(string pathToCacheDirectory)
+		public static bool GetAssumeCacheIsFresh(string pathToCacheDirectory)
 		{
 			return File.Exists(Path.Combine(pathToCacheDirectory, kCacheIsFreshIndicator));
 		}

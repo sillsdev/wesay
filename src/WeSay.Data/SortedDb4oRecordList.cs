@@ -154,8 +154,8 @@ namespace WeSay.Data
 					BinaryFormatter formatter = new BinaryFormatter();
 					try
 					{
-						DateTime databaseLastModified = (DateTime) formatter.Deserialize(fs);
-						if (databaseLastModified == GetDatabaseLastModified())
+						DateTime expectedModifiedDateOfDatabase = (DateTime) formatter.Deserialize(fs);
+						if (expectedModifiedDateOfDatabase == GetDatabaseLastModified())
 						{
 							int filterHashCode = (int) formatter.Deserialize(fs);
 							if (filterHashCode == GetSorterHashCode())

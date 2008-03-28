@@ -291,6 +291,11 @@ namespace WeSay.Project
 		{
 			try
 			{
+				if (CacheManager.GetAssumeCacheIsFresh(Project.WeSayWordsProject.Project.PathToCache))
+				{
+					return;// setting permissions in the installer apparently was enough to mess this next line up on the sample data
+				}
+
 				IList records = GetRecordsNeedingUpdateInLift();
 				if (records.Count == 0)
 				{

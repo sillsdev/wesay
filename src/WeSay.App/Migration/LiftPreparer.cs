@@ -35,7 +35,7 @@ namespace WeSay.App
 			{
 				return false;
 			}
-			if (CacheManager.AssumeCacheIsFresh(_project.PathToCache))
+			if (CacheManager.GetAssumeCacheIsFresh(_project.PathToCache))
 			{
 				//prevent the update service from thinking the LIFT file is really old
 				//compared to the cache, due to the installer messing with the dates.
