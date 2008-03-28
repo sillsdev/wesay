@@ -143,7 +143,8 @@
 				ComponentGroupId="biatahCache"
 				RootDirectory="$(BaseDirectory)\SampleProjects\Biatah\Cache"
 				OutputFilePath="$(BaseDirectory)\src\Installer\GeneratedBiatahCache.wxs"
-				MatchRegExPattern=".*">
+				MatchRegExPattern=".*"
+				GiveAllPermissions="true">
 	  <Output TaskParameter="OutputFilePath" ItemName="Compile" />
 	</MakeWixForDirTree>
   </Target>
@@ -151,13 +152,42 @@
 
   <Target Name="MakeWixForTemplates">
 	<MakeWixForDirTree
-				DirectoryReferenceId="templatesDir"
+				DirectoryReferenceId="TemplatesDir"
 				ComponentGroupId="templates"
 				RootDirectory="$(BaseDirectory)\templates"
-				OutputFilePath="$(BaseDirectory)\src\Installer\GeneratedTemplates.wxs"
-				MatchRegExPattern=".*">
+				OutputFilePath="$(BaseDirectory)\src\Installer\GeneratedTemplateFiles.wxs"
+				MatchRegExPattern=".*"
+				>
 	  <Output TaskParameter="OutputFilePath" ItemName="Compile" />
 	</MakeWixForDirTree>
+  </Target>
+
+  <Target Name="InstallerNoGenerationTest">
+
+		<CallTarget targets="MakeWixForTemplates"/>
+
+	<SvnVersion LocalPath="$(BaseDirectory)">
+	  <Output TaskParameter="Revision" PropertyName="Revision" />
+	</SvnVersion>
+	<CreateProperty Value="$(Major).$(Minor).$(Revision)"><!--the preceding zero here is so we get a valid version even when just running this target in isolation, when Revision is empty -->
+	  <Output PropertyName="Version" TaskParameter="Value"/>
+	</CreateProperty>
+
+	<!-- set the version number in the installer configuration program.  I'm sure there's a way to just send in the variables rather than this brute-force
+		changing of the script, but I haven't figured that out. -->
+	<FileUpdate Files="$(BaseDirectory)\src\Installer\Installer.wxs" Regex="Property_ProductVersion = \&quot;.*\&quot;"
+			  ReplacementText ="Property_ProductVersion = &quot;$(Version)&quot;" />
+
+
+	<Message Text="Making Installer Version: $(Version)"/>
+
+	<MSBuild Projects="$(BaseDirectory)\src\Installer\Installer.wixproj"/>
+
+	<!-- remove an existing one with the same name, if necessary -->
+	<Delete Files="$(BaseDirectory)\output\installer\WeSayInstaller.$(Version).msi" TreatErrorsAsWarnings="false" />
+
+	<Move SourceFiles="$(BaseDirectory)\output\installer\WeSayInstaller.msi"
+		  DestinationFiles="$(BaseDirectory)\output\installer\WeSayInstaller.$(Version).msi"/>
   </Target>
 
   <Target Name="Installer">
