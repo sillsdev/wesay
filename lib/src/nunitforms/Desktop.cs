@@ -136,13 +136,16 @@ namespace NUnit.Extensions.Forms
 		{
 			this.display = display;
 
-			realDesktop = CurrentHandle();
+			if (Environment.OSVersion.Platform != PlatformID.Unix)
+			{
+				realDesktop = CurrentHandle();
 
 			handle = Win32.CreateDesktop(name, IntPtr.Zero, IntPtr.Zero, 0, Win32.GENERIC_ALL, IntPtr.Zero);
 
-			Win32.SetThreadDesktop(handle);
+				Win32.SetThreadDesktop(handle);
 
-			Switch(display);
+				Switch(display);
+			}
 		}
 
 		~Desktop()
@@ -152,7 +155,10 @@ namespace NUnit.Extensions.Forms
 
 		public void Dispose()
 		{
-			Destroy();
+			if (Environment.OSVersion.Platform != PlatformID.Unix)
+			{
+				Destroy();
+			}
 			GC.SuppressFinalize(this);
 		}
 
