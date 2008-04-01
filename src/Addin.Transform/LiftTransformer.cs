@@ -118,7 +118,8 @@ namespace Addin.Transform
 			return TransformLift(projectInfo, xsltName, outputFileSuffix, new XsltArgumentList(), false);
 		}
 
-		protected string TransformLift(ProjectInfo projectInfo, string xsltName, string outputFileSuffix, XsltArgumentList arguments, bool OutputToXml)
+		protected string TransformLift(ProjectInfo projectInfo, string xsltName, string outputFileSuffix,
+			XsltArgumentList arguments, bool outputToXml)
 		{
 			_pathToOutput = Path.Combine(projectInfo.PathToExportDirectory, projectInfo.Name + outputFileSuffix);
 			if (File.Exists(_pathToOutput))
@@ -131,6 +132,7 @@ namespace Addin.Transform
 			targs.postTransformArgument = _postTransformArgument;
 			targs.postTransformSteps = _postTransformWorkSteps;
 			targs.outputFilePath = _pathToOutput;
+			targs.outputToXml = outputToXml;
 			using (targs.outputStream = File.Create(_pathToOutput))
 			{
 				targs.inputDocument = new XmlDocument();
@@ -198,7 +200,7 @@ namespace Addin.Transform
 			public string outputFilePath;
 			public object postTransformArgument;
 			public int postTransformSteps;
-			public bool isXml=true;
+			public bool outputToXml=true;
 		}
 
 		/// <summary>
@@ -236,7 +238,7 @@ namespace Addin.Transform
 				_staticProgressStateForWorker = progressState;
 				workerArguments.xsltArguments.XsltMessageEncountered += new XsltMessageEncounteredEventHandler(OnXsltMessageEncountered);
 
-				if (true)
+				if (!workerArguments.outputToXml)
 				{
 					transform.Transform(workerArguments.inputDocument, workerArguments.xsltArguments,
 										workerArguments.outputStream);

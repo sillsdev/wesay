@@ -28,7 +28,7 @@ namespace Addin.Transform
 		{
 			get
 			{
-				return "EXPERIMENTAL: " + StringCatalog.Get("~Creates a nice dictionary publication and opens it in a PDF reader, if one is installed (e.g. Adobe Acrobat).");
+				return "EXPERIMENTAL: " + "Create a publication and open it in a PDF reader.";
 			}
 		}
 
