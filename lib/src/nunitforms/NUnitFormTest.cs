@@ -184,7 +184,10 @@ namespace NUnit.Extensions.Forms
 	  verified = false;
 	  if (!SystemInformation.UserInteractive)
 	  {
-		isUserInteractive.SetValue(null, true);
+		  if (isUserInteractive != null) // is named something else on Mono
+		  {
+			  isUserInteractive.SetValue(null, true);
+		  }
 	  }
 
 	  if (UseHidden)

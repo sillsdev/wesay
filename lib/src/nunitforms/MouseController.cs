@@ -94,7 +94,7 @@ namespace NUnit.Extensions.Forms
 
 		private MouseControl mouseControl = null;
 
-		private Win32.Point originalPosition;
+		private Point originalPosition;
 
 		private bool restoreUserInput = false;
 
@@ -106,8 +106,9 @@ namespace NUnit.Extensions.Forms
 
 		static MouseController()
 		{
-			Win32.SystemParametersInfo(Win32.SPI_GETMOUSEHOVERTIME, 0, out hoverTime, 0);
-			hoverTime += hoverTime/2;
+			hoverTime = SystemInformation.MouseHoverTime * 3/2;
+			//Win32.SystemParametersInfo(Win32.SPI_GETMOUSEHOVERTIME, 0, out hoverTime, 0);
+			//hoverTime += hoverTime/2;
 		}
 
 		/// <summary>
@@ -155,7 +156,9 @@ namespace NUnit.Extensions.Forms
 		{
 			if(mouseControl == null)
 			{
-				Win32.GetCursorPos(out originalPosition);
+				Win32.Point position;
+				Win32.GetCursorPos(out position);
+				originalPosition = new Point(position.x, position.y);
 			}
 
 			if(control == null)
@@ -250,7 +253,7 @@ namespace NUnit.Extensions.Forms
 				finally
 				{
 					// Restore the mouse position
-					Win32.SetCursorPos(originalPosition.x, originalPosition.y);
+					Win32.SetCursorPos(originalPosition.X, originalPosition.Y);
 
 					// Enable user input.
 					if(restoreUserInput)
