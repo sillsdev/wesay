@@ -18,7 +18,6 @@ namespace WeSay.AddinLib
 		private FileLocater _locateFile;
 		private readonly WritingSystemCollection _writingSystems;
 		private readonly object _project;
-		private readonly object _recordListManager;
 
 		public ProjectInfo(string name,
 			string pathToApplicationRootDirectory,

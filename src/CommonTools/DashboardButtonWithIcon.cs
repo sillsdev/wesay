@@ -1,7 +1,6 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
-using WeSay.Foundation;
 using WeSay.Foundation.Dashboard;
 
 
@@ -12,54 +11,53 @@ namespace WeSay.CommonTools
 {
 	public class DashboardButtonWithIcon : DashboardButton
 	{
-		private Image _image;
-		private int _imageWidth = 30;
-		private int _spaceBetweenImageAndLabel=10;
+		private readonly Image _image;
+		private const int _imageWidth = 30;
+		private const int _spaceBetweenImageAndLabel=10;
 
 		public DashboardButtonWithIcon(IThingOnDashboard thingToShowOnDashboard)
 			:base(thingToShowOnDashboard)
 		 {
 			_image = thingToShowOnDashboard.DashboardButtonImage;
-			this.Load += new EventHandler(DashboardButtonWithIcon_Load);
 		}
 
-		public DashboardButtonWithIcon():base()
-		 {
-
-		}
-
-		void DashboardButtonWithIcon_Load(object sender, EventArgs e)
+		public DashboardButtonWithIcon()
 		{
-			if (_thingToShowOnDashboard.DashboardButtonStyle == ButtonStyle.IconVariableWidth)
+
+		}
+		protected override void OnLoad(EventArgs e)
+		{
+			base.OnLoad(e);
+			if (ThingToShowOnDashboard.DashboardButtonStyle == ButtonStyle.IconVariableWidth)
 			{
 				int labelWidth =
 					TextRenderer.MeasureText(Text, Font, new Size(int.MaxValue, int.MaxValue),
 											 TextFormatFlags.LeftAndRightPadding).Width;
 
-				this.Width = _imageWidth + _spaceBetweenImageAndLabel + labelWidth + 10;
+				Width = _imageWidth + _spaceBetweenImageAndLabel + labelWidth + 10;
 			}
 		}
 
-		protected override void PaintContents(System.Windows.Forms.PaintEventArgs e)
+		protected override void PaintContents(PaintEventArgs e)
 		{
 			if (_image != null)
 			{
 				e.Graphics.DrawImage(_image,
-					this.ClientRectangle.Left + _leftMarginWidth + CurrentMouseButtonNudge,
-					this.ClientRectangle.Top + CurrentMouseButtonNudge + 10,
+					ClientRectangle.Left + LeftMarginWidth + CurrentMouseButtonNudge,
+					ClientRectangle.Top + CurrentMouseButtonNudge + 10,
 					_imageWidth, _imageWidth);
 			}
 
 			int left = ClientRectangle.Left + _imageWidth + _spaceBetweenImageAndLabel;
-			e.Graphics.DrawString(this.Text, this.Font, Brushes.Black, left + CurrentMouseButtonNudge, 16 + CurrentMouseButtonNudge);
+			e.Graphics.DrawString(Text, Font, Brushes.Black, left + CurrentMouseButtonNudge, 16 + CurrentMouseButtonNudge);
 		}
 
 		public override int GetRequiredWidth()
 		{
-			int textWidth = TextRenderer.MeasureText(Text, this.Font, new Size(int.MaxValue, int.MaxValue), TextFormatFlags.LeftAndRightPadding).Width + _buttonDownHorizontalNudge;
+			int textWidth = TextRenderer.MeasureText(Text, Font, new Size(int.MaxValue, int.MaxValue), TextFormatFlags.LeftAndRightPadding).Width + ButtonDownHorizontalNudge;
 			int unknownHack = 20;
-			return textWidth + _buttonDownHorizontalNudge + _imageWidth +
-				_spaceBetweenImageAndLabel + _leftMarginWidth + unknownHack;
+			return textWidth + ButtonDownHorizontalNudge + _imageWidth +
+				_spaceBetweenImageAndLabel + LeftMarginWidth + unknownHack;
 		}
 
 	}

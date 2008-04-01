@@ -243,13 +243,13 @@ namespace WeSay.App
 						Application.DoEvents();//otherwise we get (Not Responding)
 					}
 				}
-				catch (ThreadInterruptedException e)
+				catch (ThreadInterruptedException)
 				{
 					dlg.Close();
 					dlg.Dispose();
 				}
 			}
-			catch (ThreadInterruptedException e)
+			catch (ThreadInterruptedException)
 			{
 			}
 		}

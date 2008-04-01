@@ -17,7 +17,6 @@ namespace WeSay.Project.Tests
 	[TestFixture]
 	public class LiftExporterPLiftTests
 	{
-		private LiftExporter _exporter;
 		private string _outputPath;
 		private ViewTemplate _viewTemplate;
 		private List<string> _writingSystemIds;

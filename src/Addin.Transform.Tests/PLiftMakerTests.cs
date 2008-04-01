@@ -19,8 +19,6 @@ namespace Addin.Transform.Tests
 	{
 		private PLiftMaker _maker;
 		private string _outputPath;
-		private ViewTemplate _viewTemplate;
-		private List<string> _writingSystemIds;
 
 		[SetUp]
 		public void Setup()

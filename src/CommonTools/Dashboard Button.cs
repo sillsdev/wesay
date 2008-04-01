@@ -12,10 +12,10 @@ namespace WeSay.CommonTools
 		private Color _borderColor=Color.Blue;
 		private Color _doneColor = Color.Blue;
 		private Color _todoColor = Color.LightBlue;
-		protected bool _mouseIsDown;
-		protected static int _buttonDownHorizontalNudge = 2;
-		protected    int _leftMarginWidth= 5;
-		protected IThingOnDashboard _thingToShowOnDashboard;
+		private bool _mouseIsDown;
+		protected const int ButtonDownHorizontalNudge = 2;
+		protected const int LeftMarginWidth= 5;
+		private readonly IThingOnDashboard _thingToShowOnDashboard;
 
 		public event EventHandler Selected = delegate { };
 
@@ -148,12 +148,12 @@ namespace WeSay.CommonTools
 
 		protected int CurrentMouseButtonNudge
 		{
-			get { return _mouseIsDown ? _buttonDownHorizontalNudge : 0; }
+			get { return _mouseIsDown ? ButtonDownHorizontalNudge : 0; }
 		}
 
 		public IThingOnDashboard ThingToShowOnDashboard
 		{
-			get { return _thingToShowOnDashboard; }
+			get { return this._thingToShowOnDashboard; }
 		}
 
 		protected virtual void PaintContents(PaintEventArgs e)
@@ -162,7 +162,7 @@ namespace WeSay.CommonTools
 			Pen pen = new Pen(_doneColor, 5);
 
 			int y = ClientRectangle.Bottom - 16;
-			int left = ClientRectangle.Left + _leftMarginWidth;
+			int left = ClientRectangle.Left + LeftMarginWidth;
 			int rightEdge = ClientRectangle.Right - 15;
 			float percentDone = 30;
 			float rightEdgeOfDonePart =(float) (percentDone/100.0)*(rightEdge-left) + left;
@@ -184,9 +184,9 @@ namespace WeSay.CommonTools
 
 		public virtual int GetRequiredWidth()
 		{
-			int textWidth= TextRenderer.MeasureText(Text, this.Font, new Size(int.MaxValue, int.MaxValue), TextFormatFlags.LeftAndRightPadding).Width + _buttonDownHorizontalNudge;
+			int textWidth= TextRenderer.MeasureText(Text, this.Font, new Size(int.MaxValue, int.MaxValue), TextFormatFlags.LeftAndRightPadding).Width + ButtonDownHorizontalNudge;
 			int unknownHack = 20;
-			return textWidth + _buttonDownHorizontalNudge + _leftMarginWidth + unknownHack;
+			return textWidth + ButtonDownHorizontalNudge + LeftMarginWidth + unknownHack;
 		}
 
 		private GraphicsPath GetButtonShapePath(Rectangle rectangle, int radius, int borderWidth)

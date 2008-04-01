@@ -8,7 +8,7 @@
 	<OutputType>Library</OutputType>
 	<AppDesignerFolder>Properties</AppDesignerFolder>
 	<RootNamespace>WeSay.Foundation.Tests</RootNamespace>
-	<AssemblyName>Language.Tests</AssemblyName>
+	<AssemblyName>WeSay.Foundation.Tests</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
 	<DebugSymbols>true</DebugSymbols>
