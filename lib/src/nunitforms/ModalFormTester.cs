@@ -96,9 +96,12 @@ namespace NUnit.Extensions.Forms
 
 		public ModalFormTester()
 		{
-			Add(ANY,
-				(ModalFormActivatedHwnd)
-				Delegate.CreateDelegate(typeof(ModalFormActivatedHwnd), this, "UnexpectedModal"), false);
+			if (Environment.OSVersion.Platform != PlatformID.Unix)
+			{
+				Add(ANY,
+					(ModalFormActivatedHwnd)
+					Delegate.CreateDelegate(typeof(ModalFormActivatedHwnd), this, "UnexpectedModal"), false);
+			}
 		}
 
 		public void UnexpectedModal(IntPtr hWnd)

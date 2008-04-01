@@ -45,6 +45,13 @@ namespace NUnit.Extensions.Forms
 	/// sense in this context.</remarks>
 	public class FormTester : ControlTester, IDisposable
 	{
+		private Form form;
+		public FormTester(string name, Form form)
+			: base(name, form)
+		{
+			this.form = form;
+		}
+
 		public FormTester(string name) : base(name)
 		{
 		}
@@ -59,6 +66,10 @@ namespace NUnit.Extensions.Forms
 		{
 			get
 			{
+				if(form != null)
+				{
+					return form;
+				}
 				return new FormFinder().Find(name);
 			}
 		}

@@ -75,8 +75,11 @@ namespace NUnit.Extensions.Forms
 			{
 				forms = new FormCollection();
 				this.name = name;
-				IntPtr desktop = Win32.GetDesktopWindow();
-				Win32.EnumChildWindows(desktop, new Win32.WindowEnumProc(OnEnumWindow), IntPtr.Zero);
+				if (Environment.OSVersion.Platform != PlatformID.Unix)
+				{
+					IntPtr desktop = Win32.GetDesktopWindow();
+					Win32.EnumChildWindows(desktop, new Win32.WindowEnumProc(OnEnumWindow), IntPtr.Zero);
+				}
 				return forms;
 			}
 		}

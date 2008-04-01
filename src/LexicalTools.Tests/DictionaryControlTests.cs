@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
@@ -60,7 +59,7 @@ namespace WeSay.LexicalTools.Tests
 			viewTemplate.Add(readOnlySemanticDomain);
 
 			Field shy1 = new Field("MyShyEntryCustom", "LexEntry", new string[] { "en" }, Field.MultiplicityType.ZeroOr1, "MultiText");
-			shy1.Visibility = WeSay.Foundation.CommonEnumerations.VisibilitySetting.NormallyHidden;
+			shy1.Visibility = CommonEnumerations.VisibilitySetting.NormallyHidden;
 			shy1.DisplayName = "MyShyEntryCustom";
 			viewTemplate.Add(shy1);
 
@@ -184,7 +183,7 @@ namespace WeSay.LexicalTools.Tests
 		public void ClickingAddWordFocusesFirstField()
 		{
 			ClickAddWord();
-			TextBoxTester t = new TextBoxTester(GetLexicalFormControlName());
+			TextBoxTester t = new TextBoxTester(GetLexicalFormControlName(), _window);
 			Assert.IsTrue(t.Properties.Focused);
 		}
 
@@ -247,12 +246,12 @@ namespace WeSay.LexicalTools.Tests
 			AssertExistenceOfEntryInList(form, false);
 		}
 
-		private static void GoToLexicalEntryUseFind(string lexemeForm)
+		private void GoToLexicalEntryUseFind(string lexemeForm)
 		{
-			TextBoxTester t = new TextBoxTester("_findText");
+			TextBoxTester t = new TextBoxTester("_findText", _window);
 			t.Enter(lexemeForm);
 			t.FireEvent("KeyDown", new KeyEventArgs(Keys.Enter));
-			ListViewTester l = new ListViewTester("_recordsListBox");
+			ListViewTester l = new ListViewTester("_recordsListBox", _window);
 			string label = GetSelectedLabel((WeSayListView)l.Properties);
 			Assert.AreEqual(lexemeForm, label);
 		}
@@ -262,9 +261,9 @@ namespace WeSay.LexicalTools.Tests
 			return box.Items[box.SelectedIndex].Text;
 		}
 
-		private static void AssertExistenceOfEntryInList(string form, bool shouldExist)
+		private void AssertExistenceOfEntryInList(string form, bool shouldExist)
 		{
-			ListViewTester l = new ListViewTester("_recordsListBox");
+			ListViewTester l = new ListViewTester("_recordsListBox", _window);
 			bool found = false;
 
 			for (int i=0; i < l.Properties.Items.Count; ++i)
@@ -282,7 +281,7 @@ namespace WeSay.LexicalTools.Tests
 		public void ClickingDeleteWordFocusesFirstField()
 		{
 			ClickDeleteWord();
-			TextBoxTester t = new TextBoxTester(GetLexicalFormControlName());
+			TextBoxTester t = new TextBoxTester(GetLexicalFormControlName(), _window);
 			Assert.IsTrue(t.Properties.Focused);
 		}
 
@@ -290,7 +289,7 @@ namespace WeSay.LexicalTools.Tests
 		public void ClickingDeleteWordRefreshesDetailView()
 		{
 			ClickDeleteWord();
-			TextBoxTester t = new TextBoxTester(GetLexicalFormControlName());
+			TextBoxTester t = new TextBoxTester(GetLexicalFormControlName(), _window);
 			Assert.AreEqual(t.Text, LexemeFormOfSelectedEntry);
 		}
 
@@ -306,7 +305,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void DeletingLastWordSelectsPreviousWordInList()
 		{
-			ListViewTester t = new ListViewTester("_recordsListBox");
+			ListViewTester t = new ListViewTester("_recordsListBox", _window);
 			((WeSayListView)t.Properties).SelectedIndex = 2;
 			Assert.AreEqual("Tertiary", LexemeFormOfSelectedEntry);
 			ClickDeleteWord();
@@ -327,7 +326,7 @@ namespace WeSay.LexicalTools.Tests
 			ClickAddWord();
 		}
 
-		static private void DeleteAllEntries()
+		private void DeleteAllEntries()
 		{
 			ClickDeleteWord();
 			ClickDeleteWord();
@@ -345,7 +344,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			DeleteAllEntries();
 			ClickAddWord();
-			ListViewTester t = new ListViewTester("_recordsListBox");
+			ListViewTester t = new ListViewTester("_recordsListBox", _window);
 			Assert.AreEqual(0, ((WeSayListView)t.Properties).SelectedIndex);
 			string label = GetSelectedLabel((WeSayListView)t.Properties);
 			Assert.AreEqual("(Empty)", label);
@@ -356,7 +355,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			DeleteAllEntries();
 			ClickAddWord();
-			TextBoxTester t = new TextBoxTester(GetLexicalFormControlName());
+			TextBoxTester t = new TextBoxTester(GetLexicalFormControlName(), _window);
 			Assert.IsTrue(t.Properties.Visible);
 		}
 
@@ -365,7 +364,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			DeleteAllEntries();
 			ClickAddWord();
-			TextBoxTester t = new TextBoxTester(GetLexicalFormControlName());
+			TextBoxTester t = new TextBoxTester(GetLexicalFormControlName(), _window);
 			t.Enter("test");
 			Assert.AreEqual("test", t.Text);
 		}
@@ -374,7 +373,7 @@ namespace WeSay.LexicalTools.Tests
 		public void EmptyDictionary_DeleteButtonDisabled()
 		{
 			StartWithEmpty();
-			ButtonTester l = new ButtonTester("_btnDeleteWord");
+			ButtonTester l = new ButtonTester("_btnDeleteWord", _window);
 			Assert.IsFalse(l.Properties.Enabled);
 		}
 
@@ -382,11 +381,11 @@ namespace WeSay.LexicalTools.Tests
 		public void EmptyDictionary_EnterText_PressFindButton_NoCrash()
 		{
 			StartWithEmpty();
-			TextBoxTester t = new TextBoxTester("_findText");
+			TextBoxTester t = new TextBoxTester("_findText", _window);
 			t.Enter("blah");
-			ButtonTester b = new ButtonTester("_btnFind");
+			ButtonTester b = new ButtonTester("_btnFind", _window);
 			b.Click();
-			ListViewTester l = new ListViewTester("_recordsListBox");
+			ListViewTester l = new ListViewTester("_recordsListBox", _window);
 
 			Assert.AreEqual(-1,((WeSayListView)l.Properties).SelectedIndex);
 		}
@@ -395,7 +394,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void IfNoWordsDeleteButtonDisabled()
 		{
-			ButtonTester l = new ButtonTester("_btnDeleteWord");
+			ButtonTester l = new ButtonTester("_btnDeleteWord", _window);
 			Assert.IsTrue(l.Properties.Enabled);
 			DeleteAllEntries();
 			Assert.IsFalse(l.Properties.Enabled);
@@ -410,7 +409,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void CustomTextFieldPreserved()
 		{
-			TextBoxTester t = new TextBoxTester(GetLexicalFormControlName());
+			TextBoxTester t = new TextBoxTester(GetLexicalFormControlName(), _window);
 			t.Enter("test");
 
 			CustomTextFieldPreservedCore("*MyEntryCustom");
@@ -480,7 +479,7 @@ namespace WeSay.LexicalTools.Tests
 			EntryViewControl parentControl = ((DictionaryControl)_task.Control).Control_EntryDetailPanel;
 			LexEntry entry = parentControl.DataSource;
 			Assert.Less(0, entry.Properties.Count, "the setup of this test should have some custom properties");
-			TextBoxTester t = new TextBoxTester(GetLexicalFormControlName());
+			TextBoxTester t = new TextBoxTester(GetLexicalFormControlName(), _window);
 			t.Enter("test");
 			Assert.Less(0, entry.Properties.Count, "the setup of this test should have some custom properties");
 
@@ -518,7 +517,7 @@ namespace WeSay.LexicalTools.Tests
 
 		private void ClickStarOfLexemeForm()
 		{
-			ControlTester t = new ControlTester(GetNameOfLexicalFormAnnotationControl());
+			ControlTester t = new ControlTester(GetNameOfLexicalFormAnnotationControl(), _window);
 			t.Click();
 			GetEditControl(Field.FieldNames.EntryLexicalForm.ToString());
 		}
@@ -539,7 +538,7 @@ namespace WeSay.LexicalTools.Tests
 			_tabControl.SelectedIndex = 0;
 			ActivateTask();
 
-			TextBoxTester t = new TextBoxTester(GetLexicalFormControlName());
+			TextBoxTester t = new TextBoxTester(GetLexicalFormControlName(), _window);
 			t.Properties.Visible = true;
 
 			LexicalFormMustMatch("one");
@@ -549,7 +548,7 @@ namespace WeSay.LexicalTools.Tests
 			_tabControl.SelectedIndex = 1;
 			_tabControl.SelectedIndex = 0;
 			ActivateTask();
-			t = new TextBoxTester(GetLexicalFormControlName());
+			t = new TextBoxTester(GetLexicalFormControlName(), _window);
 			t.Properties.Visible = true;
 			LexicalFormMustMatch("plus");
 		}
@@ -562,9 +561,9 @@ namespace WeSay.LexicalTools.Tests
 			this._detailTaskPage.Controls.Add(this._task.Control);
 		}
 
-		private static void LexicalFormMustMatch(string value)
+		private void LexicalFormMustMatch(string value)
 		{
-			TextBoxTester t = new TextBoxTester(GetLexicalFormControlName());
+			TextBoxTester t = new TextBoxTester(GetLexicalFormControlName(), _window);
 			Assert.AreEqual(value, t.Properties.Text);
 		}
 
@@ -573,9 +572,9 @@ namespace WeSay.LexicalTools.Tests
 			return Field.FieldNames.EntryLexicalForm + "_" + BasilProject.Project.WritingSystems.TestWritingSystemVernId;
 		}
 
-		private static void TypeInLexicalForm(string value)
+		private void TypeInLexicalForm(string value)
 		{
-			TextBoxTester t = new TextBoxTester(GetLexicalFormControlName());
+			TextBoxTester t = new TextBoxTester(GetLexicalFormControlName(), _window);
 			t.Properties.Text = value;
 		}
 
@@ -588,9 +587,9 @@ namespace WeSay.LexicalTools.Tests
 #endif
 		}
 
-		private static void TypeInMeaning(string value)
+		private void TypeInMeaning(string value)
 		{
-			TextBoxTester t = new TextBoxTester(GetMeaningControlName());
+			TextBoxTester t = new TextBoxTester(GetMeaningControlName(), _window);
 			t.Properties.Text = value;
 		}
 
@@ -602,40 +601,40 @@ namespace WeSay.LexicalTools.Tests
 			}
 		}
 
-		private static void ClickAddWord()
+		private void ClickAddWord()
 		{
-			ButtonTester l = new ButtonTester("_btnNewWord");
+			ButtonTester l = new ButtonTester("_btnNewWord", _window);
 			l.Click();
 		}
 
-		static private void ClickDeleteWord()
+		private void ClickDeleteWord()
 		{
-			ButtonTester l = new ButtonTester("_btnDeleteWord");
+			ButtonTester l = new ButtonTester("_btnDeleteWord", _window);
 			l.Click();
 		}
 
 		[Test]
 		public void EnterText_PressFindButton_Finds()
 		{
-			TextBoxTester t = new TextBoxTester("_findText");
+			TextBoxTester t = new TextBoxTester("_findText", _window);
 			t.Enter("Secondary");
-			ButtonTester b = new ButtonTester("_btnFind");
+			ButtonTester b = new ButtonTester("_btnFind", _window);
 			b.Click();
-			ListViewTester l = new ListViewTester("_recordsListBox");
+			ListViewTester l = new ListViewTester("_recordsListBox", _window);
 
 			string label = GetSelectedLabel((WeSayListView)l.Properties);
 			Assert.AreEqual("Secondary", label);
-			RichTextBoxTester r = new RichTextBoxTester("_lexicalEntryPreview");
+			RichTextBoxTester r = new RichTextBoxTester("_lexicalEntryPreview", _window);
 			Assert.IsTrue(r.Text.Contains("secondarymeaning"));
 		}
 
 		[Test]
 		public void FindText_Enter_Finds()
 		{
-			TextBoxTester t = new TextBoxTester("_findText");
+			TextBoxTester t = new TextBoxTester("_findText", _window);
 			t.Enter("Secondary");
 			t.FireEvent("KeyDown", new KeyEventArgs(Keys.Enter));
-			ListViewTester l = new ListViewTester("_recordsListBox");
+			ListViewTester l = new ListViewTester("_recordsListBox", _window);
 
 			string label = GetSelectedLabel((WeSayListView)l.Properties);
 			Assert.AreEqual("Secondary", label);
@@ -648,7 +647,7 @@ namespace WeSay.LexicalTools.Tests
 
 			TypeInMeaning("samo");
 
-			TextBoxTester tb2 = new TextBoxTester(GetMeaningControlName());
+			TextBoxTester tb2 = new TextBoxTester(GetMeaningControlName(), _window);
 			Assert.AreEqual("samo", tb2.Properties.Text);
 		}
 
@@ -674,7 +673,7 @@ namespace WeSay.LexicalTools.Tests
 		public void PastingBlankOverAMeaningOfEmptySenseDoesntCrash()
 		{
 			PutCursorInMeaningFieldOfSecondEntry();
-			TextBoxTester tb = new TextBoxTester(GetMeaningControlName());
+			TextBoxTester tb = new TextBoxTester(GetMeaningControlName(), _window);
 			Clipboard.SetText(" ");
 			tb.Properties.Paste();
 		}
@@ -683,10 +682,10 @@ namespace WeSay.LexicalTools.Tests
 		public void PastingTextOverAMeaningOfEmptySenseDoesntJustChangesMeaning()
 		{
 			PutCursorInMeaningFieldOfSecondEntry();
-			TextBoxTester tb = new TextBoxTester(GetMeaningControlName());
+			TextBoxTester tb = new TextBoxTester(GetMeaningControlName(), _window);
 			Clipboard.SetText("samo");
 			tb.Properties.Paste();
-			TextBoxTester tb2 = new TextBoxTester(GetMeaningControlName());
+			TextBoxTester tb2 = new TextBoxTester(GetMeaningControlName(), _window);
 			Assert.AreEqual("samo", tb2.Properties.Text);
 		}
 
@@ -694,7 +693,7 @@ namespace WeSay.LexicalTools.Tests
 		private void PutCursorInMeaningFieldOfSecondEntry()
 		{
 //skip to second word (first has extra stuff in the sense)
-			ListViewTester t = new ListViewTester("_recordsListBox");
+			ListViewTester t = new ListViewTester("_recordsListBox", _window);
 			t.Properties.Focus();
 			((WeSayListView)t.Properties).SelectedIndex = 1;
 			Assert.AreEqual("Secondary", LexemeFormOfSelectedEntry);
@@ -726,10 +725,10 @@ namespace WeSay.LexicalTools.Tests
 			Assert.IsTrue(editControl2.Name.Contains("ghost"));
 			editControl2.TextBoxes[0].Focus();
 			Application.DoEvents();
-			TextBoxTester t2 = new TextBoxTester(editControl2.TextBoxes[0].Name);
+			TextBoxTester t2 = new TextBoxTester(editControl2.TextBoxes[0].Name, _window);
 			t2.Properties.Text = "bar";
 			Application.DoEvents();
-			TextBoxTester lxt = new TextBoxTester(GetLexicalFormControlName());
+			TextBoxTester lxt = new TextBoxTester(GetLexicalFormControlName(), _window);
 			lxt.Properties.Focus();
 			Application.DoEvents();
 			Assert.IsTrue(detailList.Count > initialCount);
@@ -740,12 +739,12 @@ namespace WeSay.LexicalTools.Tests
 			MultiTextControl editControl = (MultiTextControl)GetEditControl("Meaning", true);
 			Assert.IsTrue(GetEditControl("Meaning").Name.Contains("ghost"));
 			editControl.TextBoxes[0].Focus();
-			TextBoxTester t = new TextBoxTester(editControl.TextBoxes[0].Name);
+			TextBoxTester t = new TextBoxTester(editControl.TextBoxes[0].Name, _window);
 			//didn''t work  t.FireEvent("KeyPress", new KeyPressEventArgs('a'));
 			t.Properties.Text = "foo";
 			//move focus away
 			Application.DoEvents();
-			TextBoxTester lxt = new TextBoxTester(GetLexicalFormControlName());
+			TextBoxTester lxt = new TextBoxTester(GetLexicalFormControlName(), _window);
 			lxt.Properties.Focus();
 			Application.DoEvents();
 		}
@@ -781,7 +780,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			ClickAddWord();
 			Assert.IsNull(GetEditControl("MyShyEntryCustom"));
-			ButtonTester btn = new ButtonTester("_showAllFieldsToggleButton");
+			ButtonTester btn = new ButtonTester("_showAllFieldsToggleButton", _window);
 			btn.Click();
 			Assert.IsNotNull(GetEditControl("MyShyEntryCustom"));
 		}
@@ -791,7 +790,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			ClickAddWord();
 			Assert.IsNull(GetEditControl("MyShyEntryCustom"));
-			ButtonTester btn = new ButtonTester("_showAllFieldsToggleButton");
+			ButtonTester btn = new ButtonTester("_showAllFieldsToggleButton", _window);
 			btn.Click();
 			Assert.IsNotNull(GetEditControl("MyShyEntryCustom"));
 			btn.Click();
@@ -803,7 +802,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			ClickAddWord();
 			Assert.IsNull(GetEditControl("MyShyEntryCustom"));
-			ButtonTester btn = new ButtonTester("_showAllFieldsToggleButton");
+			ButtonTester btn = new ButtonTester("_showAllFieldsToggleButton", _window);
 			Assert.IsTrue(btn.Text.Contains("Show"));
 			btn.Click();
 			Assert.IsTrue(btn.Text.Contains("Hide"));
@@ -817,7 +816,7 @@ namespace WeSay.LexicalTools.Tests
 		public void AddingNewWord_ClearsShowHiddenState()
 		{
 			ClickAddWord();
-			ButtonTester btn = new ButtonTester("_showAllFieldsToggleButton");
+			ButtonTester btn = new ButtonTester("_showAllFieldsToggleButton", _window);
 			Assert.IsTrue(btn.Text.Contains("Show"));
 			btn.Click();
 			Assert.IsTrue(btn.Text.Contains("Hide"));
@@ -829,11 +828,11 @@ namespace WeSay.LexicalTools.Tests
 		{
 			ClickAddWord();
 			ClickAddWord();
-			ButtonTester btn = new ButtonTester("_showAllFieldsToggleButton");
+			ButtonTester btn = new ButtonTester("_showAllFieldsToggleButton", _window);
 			Assert.IsTrue(btn.Text.Contains("Show"));
 			btn.Click();
 			Assert.IsTrue(btn.Text.Contains("Hide"));
-			ButtonTester delbtn = new ButtonTester("_btnDeleteWord");
+			ButtonTester delbtn = new ButtonTester("_btnDeleteWord", _window);
 			delbtn.Click();
 			Assert.IsTrue(btn.Text.Contains("Show"));
 		}

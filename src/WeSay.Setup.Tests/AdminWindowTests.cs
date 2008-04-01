@@ -24,8 +24,7 @@ namespace WeSay.Admin.Tests
 			base.Setup();
 			_window = new AdminWindow(new string[] { });
 			_window.Show();
-			string name = new Finder().Name(_window);
-			_mainWindowTester = new FormTester(name);
+			_mainWindowTester = new FormTester(_window.Name, _window);
 
 			this._projectFolder = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
 
@@ -109,7 +108,7 @@ namespace WeSay.Admin.Tests
 		public void NewProjectShowsTasks()
 		{
 			CreateProjectAndGoToTaskControl();
-			CheckedListBoxTester c = new CheckedListBoxTester("_taskList");
+			CheckedListBoxTester c = new CheckedListBoxTester("_taskList", _window);
 			Assert.Greater(c.Properties.Items.Count, 0);
 		}
 
@@ -117,7 +116,7 @@ namespace WeSay.Admin.Tests
 		public void NewProjectShowSomeDefaultTasks()
 		{
 			CreateProjectAndGoToTaskControl();
-			CheckedListBoxTester c = new CheckedListBoxTester("_taskList");
+			CheckedListBoxTester c = new CheckedListBoxTester("_taskList", _window);
 			Assert.Greater(c.Properties.CheckedItems.Count, 0);
 		}
 
@@ -147,7 +146,7 @@ namespace WeSay.Admin.Tests
 
 			ClickToolStripButton("_writingSystemButton");
 			//GotoProjectTab("_writingSystemPage");
-			ListBoxTester c = new ListBoxTester("_wsListBox");
+			ListBoxTester c = new ListBoxTester("_wsListBox",_window);
 			Assert.Greater(c.Properties.Items.Count, 2);
 		}
 
@@ -185,7 +184,7 @@ namespace WeSay.Admin.Tests
 
 		private void ClickToolStripButton(string name)
 		{
-			NUnit.Extensions.Forms.ToolStripButtonTester tester = new ToolStripButtonTester(name);
+			NUnit.Extensions.Forms.ToolStripButtonTester tester = new ToolStripButtonTester(name, _window);
 			tester.Click();
 		}
 

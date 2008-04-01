@@ -170,13 +170,13 @@ namespace WeSay.Setup.Tests
 			_window.Show();
 			_window.CreateAndOpenProject(path);
 			GoToUILanguageTab();
-			return new ComboBoxTester("_languageCombo");
+			return new ComboBoxTester("_languageCombo", _window);
 		}
 
 		private ComboBoxTester GoToTabAndGetLanguageCombo()
 		{
 			GoToUILanguageTab();
-			ComboBoxTester t = new ComboBoxTester("_languageCombo");
+			ComboBoxTester t = new ComboBoxTester("_languageCombo", _window);
 			return t;
 		}
 
