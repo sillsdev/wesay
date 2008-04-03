@@ -1,11 +1,6 @@
 using System;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
-#if !MONO
-using System.Reflection;
-using System.ServiceModel;
-#endif
 using System.Threading;
 using System.Windows.Forms;
 using CommandLine;
@@ -16,10 +11,8 @@ using Palaso.Services.ForServers;
 using Palaso.UI.WindowsForms.i8n;
 using WeSay.App.Properties;
 using WeSay.Data;
-using WeSay.Foundation;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Db4o_Specific;
-using WeSay.LexicalModel.Tests;
 using WeSay.LexicalTools;
 using WeSay.Project;
 using WeSay.UI;
@@ -31,15 +24,11 @@ namespace WeSay.App
 		//private static Mutex _oneInstancePerProjectMutex;
 		private  WeSayWordsProject _project;
 #if !MONO
-		private  ServiceHost _dictionaryHost;
+		//private  ServiceHost _dictionaryHost;
 #endif
 		private  DictionaryServiceProvider _dictionary;
 		private  IRecordListManager _recordListManager ;
 		private CommandLineArguments _commandLineArguments = new CommandLineArguments();
-
-
-
-
 		private ServiceAppSingletonHelper _serviceAppSingletonHelper;
 		private TabbedForm _tabbedForm;
 
@@ -51,7 +40,7 @@ namespace WeSay.App
 		}
 		public WeSayApp(string[] args)
 		{
-		   // Palaso.Services.ForClients.IPCUtils.IsWcfAvailable = false;
+		   // Palaso.Services.ForClients.IpcSystem.IsWcfAvailable = false;
 			Application.EnableVisualStyles();
 			//leave this at the top:
 			try
@@ -193,26 +182,16 @@ namespace WeSay.App
 			//Problem: if there is already a cache miss, this will be slow, and somebody will time out
 			StartCacheWatchingStuff();
 
+			Palaso.Reporting.Logger.WriteMinorEvent("Starting Dictionary Services at {0}", DictionaryServiceAddress);
+			IpcSystem.StartServingObject(DictionaryAccessor.GetServiceName(_project.PathToLiftFile), _dictionary);
 
-			if (IPCUtils.IsWcfAvailable)
-			{
-#if !MONO
-				Palaso.Reporting.Logger.WriteMinorEvent("Starting Dictionary Services at {0}", DictionaryServiceAddress);
-
-				_dictionaryHost = new ServiceHost(_dictionary, new Uri[] {new Uri(DictionaryServiceAddress),});
-
-				_dictionaryHost.AddServiceEndpoint(typeof (IDictionaryService), IPCUtils.CreateBinding(),
-												   DictionaryServiceAddress);
-				_dictionaryHost.Open();
-#endif
-			}
 		}
 
 		private string DictionaryServiceAddress
 		{
 			get
 			{
-				return IPCUtils.URLPrefix + "DictionaryServices/" + Uri.EscapeDataString(_project.PathToLiftFile);
+				return IpcSystem.GetUrlForService(DictionaryAccessor.GetServiceName(_project.PathToLiftFile), IpcSystem._defaultPort);
 			}
 		}
 
@@ -294,7 +273,6 @@ namespace WeSay.App
 				{
 					return _tabbedForm.CurrentUrl;
 				}
-				Debug.Fail("hmmm");
 				return string.Empty;
 			}
 		}
@@ -371,6 +349,7 @@ namespace WeSay.App
 		{
 			_serviceAppSingletonHelper.BringToFrontRequest += new EventHandler(OnBringToFrontRequest);
 			_serviceAppSingletonHelper.UiReadyForEvents();
+			_dictionary.UiSynchronizationContext = _tabbedForm.synchronizationContext;
 
 		}
 

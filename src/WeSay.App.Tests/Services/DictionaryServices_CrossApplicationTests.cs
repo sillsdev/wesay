@@ -79,7 +79,7 @@ namespace WeSay.App.Tests
 				Process p = LaunchDictionaryServiceApp(kStartInServerMode, projectDirectorySetup);
 
 				IDictionaryService dictionaryService = GetDictionaryService(projectDirectorySetup.PathToLiftFile, Process.GetCurrentProcess().Id);
-				dictionaryService.AddEntry("v", "dontLooseThisWord", null, null, null, null);
+				dictionaryService.AddEntry("v", "dontLooseThisWord", string.Empty, string.Empty, string.Empty, string.Empty);
 				dictionaryService.DeregisterClient(Process.GetCurrentProcess().Id);
 				Thread.Sleep(1000);
 				AssertServiceIsClosed(projectDirectorySetup.PathToLiftFile);
@@ -112,7 +112,7 @@ namespace WeSay.App.Tests
 		{
 		   //didn't work Assert.AreEqual(System.ServiceModel.CommunicationState.Opened, ((System.ServiceModel.Channels.IChannel)service).State);
 
-			Assert.IsNotNull(IPCUtils.GetExistingService<IDictionaryService>(GetServiceAddress(liftPath)));
+			Assert.IsNotNull(IpcSystem.GetExistingService<IDictionaryService>(DictionaryAccessor.GetServiceName(liftPath)));
 		}
 		private void AssertServiceIsClosed(string liftPath)
 		{
@@ -121,7 +121,7 @@ namespace WeSay.App.Tests
 			{
 				Thread.Sleep(100);
 
-				if (null == IPCUtils.GetExistingService<IDictionaryService>(GetServiceAddress(liftPath)))
+				if (null == IpcSystem.GetExistingService<IDictionaryService>(DictionaryAccessor.GetServiceName(liftPath)))
 				{
 					return;
 				}
@@ -140,10 +140,8 @@ namespace WeSay.App.Tests
 						</entry>";
 			RunTest(kStartInUIMode, entriesXml, delegate(IDictionaryService dictionaryService)
 										   {
-											   string[] ids;
-											   string[] forms;
-											   dictionaryService.GetMatchingEntries("v", "foo", FindMethods.Exact, out ids, out forms);
-											   Assert.AreEqual(1, ids.Length);
+											   FindResult r = dictionaryService.GetMatchingEntries("v", "foo", FindMethods.Exact.ToString());
+											   Assert.AreEqual(1, r.ids.Length);
 										   });
 		}
 
@@ -163,10 +161,9 @@ namespace WeSay.App.Tests
 			RunTest(kStartInServerMode, entriesXml, delegate(IDictionaryService dictionaryService)
 										   {
 											  Assert.IsTrue(dictionaryService.IsInServerMode());
-											  string[] ids;
-											  string[] forms;
-											  dictionaryService.GetMatchingEntries("v", "foo", FindMethods.Exact, out ids, out forms);
-											   Assert.AreEqual(2, ids.Length);
+
+											  FindResult r = dictionaryService.GetMatchingEntries("v", "foo", FindMethods.Exact.ToString());
+											   Assert.AreEqual(2, r.ids.Length);
 										   });
 		}
 
@@ -215,10 +212,9 @@ namespace WeSay.App.Tests
 										  {
 											  string id = dictionaryService.AddEntry("v", "voom", "en", "def of voom", "v", "vlah voom!");
 											  Assert.IsNotNull(id);
-											  string[] ids;
-											  string[] forms;
-											  dictionaryService.GetMatchingEntries("v", "voom", FindMethods.Exact, out ids, out forms);
-											  Assert.AreEqual(id, ids[0]);
+
+											  FindResult r = dictionaryService.GetMatchingEntries("v", "voom", FindMethods.Exact.ToString());
+											  Assert.AreEqual(id, r.ids[0]);
 										  });
 		}
 
@@ -326,9 +322,9 @@ namespace WeSay.App.Tests
 			for (int i = 0; i < 40; i++)
 			{
 				Thread.Sleep(500);
-				string serviceAddress = GetServiceAddress(liftPath);
+				string serviceName = DictionaryAccessor.GetServiceName(liftPath);
 
-				dictionaryService = IPCUtils.GetExistingService<IDictionaryService>(serviceAddress);
+				dictionaryService = IpcSystem.GetExistingService<IDictionaryService>(serviceName);
 				if (dictionaryService != null)
 				{
 					dictionaryService.RegisterClient(clientIdForRegistering);
@@ -338,10 +334,5 @@ namespace WeSay.App.Tests
 			return dictionaryService;
 		}
 
-		private static string GetServiceAddress(string liftPath)
-		{
-			return IPCUtils.URLPrefix + "DictionaryServices/"
-				   + Uri.EscapeDataString(liftPath);
-		}
 	}
 }

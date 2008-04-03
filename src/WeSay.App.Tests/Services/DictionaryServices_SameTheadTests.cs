@@ -55,10 +55,9 @@ namespace WeSay.App.Tests
 		public void FindsNoExactMatch()
 		{
 			MakeTestLexEntry(_entries, "v", "foo1");
-			string[] ids;
-			string[] forms;
-			_dictionaryServiceProvider.GetMatchingEntries("v", "foo", FindMethods.Exact, out ids,out forms);
-			Assert.AreEqual(0, ids.Length);
+
+			FindResult r = _dictionaryServiceProvider.GetMatchingEntries("v", "foo", FindMethods.Exact.ToString());
+			Assert.AreEqual(0, r.ids.Length);
 		}
 
 	  /* These were good tests, but the method under test has been removed froom the service
@@ -97,10 +96,9 @@ namespace WeSay.App.Tests
 			LexEntry foo2 = MakeTestLexEntry(_entries, "v2", "foo2");
 			LexEntry foo3 = MakeTestLexEntry(_entries, "v", "foo3");
 
-			string[] ids;
-			string[] forms;
-			_dictionaryServiceProvider.GetMatchingEntries("v", "foo", FindMethods.DefaultApproximate, out ids, out forms);
-			Assert.AreEqual(2, ids.Length);
+
+			 FindResult r = _dictionaryServiceProvider.GetMatchingEntries("v", "foo", FindMethods.DefaultApproximate.ToString());
+			Assert.AreEqual(2, r.ids.Length);
 		}
 
 
@@ -111,10 +109,9 @@ namespace WeSay.App.Tests
 			MakeTestLexEntry(_entries, "v", "foo1");
 		   string id = _dictionaryServiceProvider.AddEntry("v", "voom", null, null, "v", "vlah voom!");
 		   Assert.IsNotNull(id);
-		   string[] ids;
-		   string[] forms;
-		   _dictionaryServiceProvider.GetMatchingEntries("v", "voom", FindMethods.Exact, out ids, out forms);
-		   Assert.AreEqual(id, ids[0]);
+
+			FindResult r = _dictionaryServiceProvider.GetMatchingEntries("v", "voom", FindMethods.Exact.ToString());
+		   Assert.AreEqual(id, r.ids[0]);
 		   string html = _dictionaryServiceProvider.GetHtmlForEntries(new string[] { id });
 		   Assert.IsTrue(html.Contains("vlah voom!"));
 		}
@@ -125,10 +122,9 @@ namespace WeSay.App.Tests
 		{
 		   string id = _dictionaryServiceProvider.AddEntry("v", "voom", "en", "def of voom", "v", "vlah voom!");
 		   Assert.IsNotNull(id);
-		   string[] ids;
-		   string[] forms;
-		   _dictionaryServiceProvider.GetMatchingEntries("v", "voom", FindMethods.Exact, out ids, out forms);
-		   Assert.AreEqual(id, ids[0]);
+
+			FindResult r = _dictionaryServiceProvider.GetMatchingEntries("v", "voom", FindMethods.Exact.ToString());
+		   Assert.AreEqual(id, r.ids[0]);
 		   string html = _dictionaryServiceProvider.GetHtmlForEntries(new string[] { id });
 		   Assert.IsTrue(html.Contains("vlah voom!"));
 		   Assert.IsTrue(html.Contains("def of voom"));
@@ -157,10 +153,9 @@ namespace WeSay.App.Tests
 		{
 		   string id = _dictionaryServiceProvider.AddEntry("v", "voom", null, null, null, null);
 		   Assert.IsNotNull(id);
-		   string[] ids;
-		   string[] forms;
-		   _dictionaryServiceProvider.GetMatchingEntries("v", "voom", FindMethods.Exact, out ids, out forms);
-		   Assert.AreEqual(id, ids[0]);
+
+			FindResult r = _dictionaryServiceProvider.GetMatchingEntries("v", "voom", FindMethods.Exact.ToString());
+		   Assert.AreEqual(id, r.ids[0]);
 		}
 
 	}

@@ -1,10 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-#if !MONO
-using System.ServiceModel;
-#endif
 using System.Text;
+using System.Threading;
 using Palaso.Services.Dictionary;
 using Palaso.Text;
 using Palaso.UI.WindowsForms.i8n;
@@ -17,10 +15,8 @@ using WeSay.Project;
 
 namespace WeSay.App
 {
-#if !MONO
-	[ServiceBehavior(InstanceContextMode = InstanceContextMode.Single, IncludeExceptionDetailInFaults =true)]
-#endif
-	public class DictionaryServiceProvider : Palaso.Services.Dictionary.IDictionaryService, IDisposable
+
+	public class DictionaryServiceProvider : MarshalByRefObject, Palaso.Services.Dictionary.IDictionaryServiceBase, IDisposable
 	{
 		private readonly WeSayWordsProject _project;
 		List<int> _registeredClientProcessIds;
@@ -28,6 +24,7 @@ namespace WeSay.App
 		private int _maxNumberOfEntriesToReturn = 20;
 		public event EventHandler LastClientDeregistered;
 		private WeSay.App.Services.HtmlArticleMaker _articleMaker;
+		private SynchronizationContext _uiSynchronizationContext;
 
 		public DictionaryServiceProvider(WeSayApp app, WeSayWordsProject project)
 		{
@@ -39,15 +36,30 @@ namespace WeSay.App
 										_project.LocateFile("PartsOfSpeech.xml"));
 		}
 
+		public SynchronizationContext UiSynchronizationContext
+		{
+			get { return _uiSynchronizationContext; }
+			set { _uiSynchronizationContext = value; }
+		}
+
 		#region IDictionaryService Members
 
 
-		public void GetMatchingEntries(string writingSystemId, string form, FindMethods method, out string[] ids,
-									   out string[] forms)
+
+		public FindResult GetMatchingEntries(string writingSystemId, string form, string findMethod)
 		{
-			   //in case something goes wrong
-				ids = new string[] {};
-				forms = new string[] {};
+			FindMethods method;
+			try
+			{
+				method = (FindMethods) Enum.Parse(typeof (FindMethods), findMethod);
+			}
+			catch(ArgumentException e)
+			{
+				throw new ArgumentException("'" + findMethod + "' is not a recognized find method.", e);
+			}
+
+			//in case something goes wrong
+			FindResult r = new FindResult();
 			try
 			{
 
@@ -55,7 +67,7 @@ namespace WeSay.App
 														method.ToString());
 				if (!_project.WritingSystems.ContainsKey(writingSystemId))
 				{
-					return;
+					return r;
 				}
 				WritingSystem ws = _project.WritingSystems[writingSystemId];
 
@@ -74,8 +86,8 @@ namespace WeSay.App
 																				_maxNumberOfEntriesToReturn);
 						break;
 				}
-				ids = new string[matches.Count];
-				forms = new string[matches.Count];
+				r.ids = new string[matches.Count];
+				r.forms = new string[matches.Count];
 				int i = 0;
 				foreach (LexEntry entry in matches)
 				{
@@ -83,8 +95,8 @@ namespace WeSay.App
 					{
 						break;
 					}
-					forms[i] = entry.LexicalForm.GetBestAlternative(writingSystemId);
-					ids[i] = entry.Id;
+					r.forms[i] = entry.LexicalForm.GetBestAlternative(writingSystemId);
+					r.ids[i] = entry.Id;
 					i++;
 				}
 			}
@@ -93,10 +105,24 @@ namespace WeSay.App
 				Palaso.Reporting.Logger.WriteEvent("Error from dictionary services, RegisterClient: " + e.Message);
 				Debug.Fail(e.Message);
 			}
+			return r;
 		}
 
-
 		public string GetHtmlForEntries(string[] entryIds)
+		{
+			if (UiSynchronizationContext != null)
+			{
+				string result = string.Empty;
+				UiSynchronizationContext.Send(delegate { result = GetHtmlForEntriesCore(entryIds); }, null);
+				return result;
+			}
+			else
+			{
+				return GetHtmlForEntriesCore(entryIds);
+			}
+		}
+
+		private string GetHtmlForEntriesCore(string[] entryIds)
 		{
 			try
 			{
@@ -132,46 +158,60 @@ namespace WeSay.App
 
 		public void RegisterClient(int clientProcessId)
 		{
-			try
-			{
-				Palaso.Reporting.Logger.WriteMinorEvent("dictionary services registering client {0}", clientProcessId);
-				Debug.Assert(!_registeredClientProcessIds.Contains(clientProcessId),
-							 "Warning: clientProcessId already registered once.");
-				if (!_registeredClientProcessIds.Contains(clientProcessId))
-				{
-					Palaso.Reporting.Logger.WriteMinorEvent("Registering Service Client {0}", clientProcessId);
-					_registeredClientProcessIds.Add(clientProcessId);
-				}
-			}
-			catch (Exception e)
-			{
-				Palaso.Reporting.Logger.WriteEvent("Error from dictionary services, RegisterClient: " + e.Message);
-				Debug.Fail(e.Message);
-			}
+			RunInSafeContext(delegate
+			 {
+				 try
+				 {
+					 Palaso.Reporting.Logger.WriteMinorEvent(
+						 "dictionary services registering client {0}", clientProcessId);
+					 Debug.Assert(!_registeredClientProcessIds.Contains(clientProcessId),
+								  "Warning: clientProcessId already registered once.");
+					 if (!_registeredClientProcessIds.Contains(clientProcessId))
+					 {
+						 Palaso.Reporting.Logger.WriteMinorEvent("Registering Service Client {0}",
+																 clientProcessId);
+						 _registeredClientProcessIds.Add(clientProcessId);
+					 }
+				 }
+				 catch (Exception e)
+				 {
+					 Palaso.Reporting.Logger.WriteEvent(
+						 "Error from dictionary services, RegisterClient: " + e.Message);
+					 Debug.Fail(e.Message);
+				 }
+			 });
 		}
 
 		public void DeregisterClient(int clientProcessId)
 		{
-			try
-			{
-				Palaso.Reporting.Logger.WriteMinorEvent("dictionary services deregistering client {0}", clientProcessId);
-				Debug.Assert(_registeredClientProcessIds.Contains(clientProcessId),
-							 "Warning: clientProcessId was not in list of clients.");
-				if (_registeredClientProcessIds.Contains(clientProcessId))
-				{
-					Palaso.Reporting.Logger.WriteMinorEvent("Deregistering Service Client {0}", clientProcessId);
-					_registeredClientProcessIds.Remove(clientProcessId);
-				}
-				if (_registeredClientProcessIds.Count == 0 && LastClientDeregistered != null)
-				{
-					LastClientDeregistered.Invoke(this, null);
-				}
-			}
-			catch (Exception e)
-			{
-				Palaso.Reporting.Logger.WriteEvent("Error from dictionary services, DeregisterClient: " + e.Message);
-				Debug.Fail(e.Message);
-			}
+			RunInSafeContext(delegate
+			 {
+				 try
+				 {
+					 Palaso.Reporting.Logger.WriteMinorEvent(
+						 "dictionary services deregistering client {0}", clientProcessId);
+					 Debug.Assert(_registeredClientProcessIds.Contains(clientProcessId),
+								  "Warning: clientProcessId was not in list of clients.");
+					 if (_registeredClientProcessIds.Contains(clientProcessId))
+					 {
+						 Palaso.Reporting.Logger.WriteMinorEvent(
+							 "Deregistering Service Client {0}", clientProcessId);
+						 _registeredClientProcessIds.Remove(clientProcessId);
+					 }
+					 if (_registeredClientProcessIds.Count == 0 &&
+						 LastClientDeregistered != null)
+					 {
+						 LastClientDeregistered.Invoke(this, null);
+					 }
+				 }
+				 catch (Exception e)
+				 {
+					 Palaso.Reporting.Logger.WriteEvent(
+						 "Error from dictionary services, DeregisterClient: " +
+						 e.Message);
+					 Debug.Fail(e.Message);
+				 }
+			 });
 		}
 
 		public void JumpToEntry(string entryId)
@@ -186,7 +226,27 @@ namespace WeSay.App
 		public string AddEntry(string lexemeFormWritingSystemId, string lexemeForm, string definitionWritingSystemId,
 							   string definition, string exampleWritingSystemId, string example)
 		{
+			if (UiSynchronizationContext != null)
+			{
+				string result=string.Empty;
+				UiSynchronizationContext.Send(
+					delegate
+						{
+							result = AddEntryCore(lexemeFormWritingSystemId, lexemeForm, definitionWritingSystemId,
+												definition, exampleWritingSystemId, example);
+						},null);
+				return result;
+			}
+			else
+			{
+				return AddEntryCore(lexemeFormWritingSystemId, lexemeForm, definitionWritingSystemId,
+							 definition, exampleWritingSystemId, example);
+			}
+		}
 
+		public string AddEntryCore(string lexemeFormWritingSystemId, string lexemeForm, string definitionWritingSystemId,
+							   string definition, string exampleWritingSystemId, string example)
+		{
 			if (string.IsNullOrEmpty(lexemeForm ))
 			{
 				Palaso.Reporting.Logger.WriteEvent("Dictionary Services AddEntry() called with Empty lexemeform");
@@ -239,21 +299,35 @@ namespace WeSay.App
 		{
 			return _app.CurrentUrl;
 		}
-
-		public void ShowUIWithUrl(string url)
+		private void RunInSafeContext(SendOrPostCallback core)
 		{
-			try
+			if (UiSynchronizationContext != null)
 			{
-				Palaso.Reporting.Logger.WriteMinorEvent("dictionary services ShowUIWithUrl({0})", url);
-				_app.GoToUrl(url);
+				UiSynchronizationContext.Send(
+					core, null);
 			}
-			catch (Exception e)
+			else
 			{
-				Palaso.Reporting.Logger.WriteEvent("Error from dictionary services, ShowUIWithUrl{0}: {1}",url, e.Message);
-				//url navigation errors are handled/reported at the point of failure
+				core.Invoke(null);
 			}
 		}
 
+		public void ShowUIWithUrl(string url)
+		{
+			RunInSafeContext(delegate
+								 {
+									 try
+									 {
+										 Palaso.Reporting.Logger.WriteMinorEvent("dictionary services ShowUIWithUrl({0})", url);
+										 _app.GoToUrl(url);
+									 }
+									 catch (Exception e)
+									 {
+										 Palaso.Reporting.Logger.WriteEvent("Error from dictionary services, ShowUIWithUrl{0}: {1}", url, e.Message);
+										 //url navigation errors are handled/reported at the point of failure
+									 }
+								 });
+		}
 
 		public bool IsInServerMode()
 		{
