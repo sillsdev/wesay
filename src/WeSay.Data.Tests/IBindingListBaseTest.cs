@@ -56,6 +56,7 @@ namespace WeSay.Data.Tests.IBindingListTests
 				{
 					Assert.IsTrue(_listChanged);
 					Assert.IsTrue(_listChangedEventArgs.ListChangedType == ListChangedType.ItemAdded);
+					Assert.AreEqual(count, _listChangedEventArgs.NewIndex);
 					Assert.AreEqual(-1, _listChangedEventArgs.OldIndex);
 				}
 			}
