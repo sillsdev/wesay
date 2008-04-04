@@ -5,8 +5,9 @@ using System.Xml;
 using Exortech.NetReflector;
 using NUnit.Framework;
 using WeSay.Foundation.Tests;
+using WeSay.Language;
 
-namespace WeSay.Language.Tests
+namespace WeSay.Foundation.Tests
 {
 	[TestFixture]
 	public class WritingSystemTests
@@ -17,14 +18,14 @@ namespace WeSay.Language.Tests
 		[SetUp]
 		public void Setup()
 		{
-			_path = Path.GetTempFileName();
-			_collection = new WritingSystemCollection();
+			this._path = Path.GetTempFileName();
+			this._collection = new WritingSystemCollection();
 		}
 
 		[TearDown]
 		public void TearDown()
 		{
-			File.Delete(_path);
+			File.Delete(this._path);
 		}
 
 		public static void WriteSampleWritingSystemFile(string path)
@@ -62,22 +63,31 @@ namespace WeSay.Language.Tests
 		[Test]
 		public void RightFont()
 		{
-			WriteSampleWritingSystemFile(_path);
-			_collection.Load(_path);
-			WritingSystem ws = _collection["PretendAnalysis"];
+			WriteSampleWritingSystemFile(this._path);
+			this._collection.Load(this._path);
+			WritingSystem ws = this._collection["PretendAnalysis"];
 			Assert.AreEqual("PretendAnalysis", ws.Id);
-			Assert.AreEqual("Courier New", ws.Font.Name);
-			Assert.AreEqual(10, ws.Font.Size);
+			// since Linux may not have CourierNew, we
+			// need to test against the font mapping
+			Font expectedFont = new Font("Courier New", 10);
+			Assert.AreEqual(expectedFont.Name, ws.Font.Name);
+			Assert.AreEqual(expectedFont.Size, ws.Font.Size);
 		}
 
 		[Test]
 		public void SerializeOne()
 		{
-			WritingSystem ws = new WritingSystem("one", new Font("Arial", 99));
+			// since Linux may not have Arial, we
+			// need to test against the font mapping
+			Font font = new Font("Arial", 99);
+			WritingSystem ws = new WritingSystem("one", font);
 			string s = NetReflector.Write(ws);
-			Assert.AreEqual(
-					"<WritingSystem><Abbreviation>one</Abbreviation><FontName>Arial</FontName><FontSize>99</FontSize><Id>one</Id><RightToLeft>False</RightToLeft><SortUsing>one</SortUsing></WritingSystem>",
-					s);
+			string expected = "<WritingSystem><Abbreviation>one</Abbreviation><FontName>"
+							  + font.Name
+							  + "</FontName><FontSize>"
+							  + font.Size
+							  + "</FontSize><Id>one</Id><RightToLeft>False</RightToLeft><SortUsing>one</SortUsing></WritingSystem>";
+			Assert.AreEqual(expected,s);
 		}
 
 		[Test]
@@ -90,10 +100,13 @@ namespace WeSay.Language.Tests
 							   r.Read(
 									   "<WritingSystem><FontName>Tahoma</FontName><FontSize>99</FontSize><Id>one</Id><SortUsing>one</SortUsing></WritingSystem>")
 					;
+			// since Linux may not have Tahoma, we
+			// need to test against the font mapping
+			Font font = new Font("Tahoma", 99);
 			Assert.IsNotNull(ws);
-			Assert.AreEqual("Tahoma", ws.FontName);
+			Assert.AreEqual(font.Name, ws.FontName);
 			Assert.AreEqual("one", ws.Id);
-			Assert.AreEqual(99, ws.FontSize);
+			Assert.AreEqual(font.Size, ws.FontSize);
 		}
 
 		[Test]
@@ -104,8 +117,8 @@ namespace WeSay.Language.Tests
 			XmlDocument doc = new XmlDocument();
 			doc.LoadXml(s);
 
-//            Assert.AreEqual(1, doc.SelectNodes("WritingSystemCollection/AnalysisWritingSystemDefaultId").Count);
-//            Assert.AreEqual(1, doc.SelectNodes("WritingSystemCollection/VernacularWritingSystemDefaultId").Count);
+			//            Assert.AreEqual(1, doc.SelectNodes("WritingSystemCollection/AnalysisWritingSystemDefaultId").Count);
+			//            Assert.AreEqual(1, doc.SelectNodes("WritingSystemCollection/VernacularWritingSystemDefaultId").Count);
 			Assert.AreEqual(2, doc.SelectNodes("WritingSystemCollection/members/WritingSystem").Count);
 		}
 
@@ -158,10 +171,10 @@ namespace WeSay.Language.Tests
 		[Test]
 		public void DeserializeCollectionViaLoad()
 		{
-			MakeSampleCollection().Write(XmlWriter.Create(_path));
+			MakeSampleCollection().Write(XmlWriter.Create(this._path));
 
 			WritingSystemCollection c = new WritingSystemCollection();
-			c.Load(_path);
+			c.Load(this._path);
 			Assert.IsNotNull(c);
 			Assert.AreEqual(2, c.Values.Count);
 		}
@@ -178,7 +191,7 @@ namespace WeSay.Language.Tests
 		public void Compare_en_sortsLikeEnglish()
 		{
 			WritingSystem writingSystem = new WritingSystem("one", new Font(FontFamily.GenericSansSerif, 11));
-			writingSystem.SortUsing = "en";
+			writingSystem.SortUsing = "en-US";
 			Assert.Greater(writingSystem.Compare("Èdit", "Edít"), 0);
 		}
 
