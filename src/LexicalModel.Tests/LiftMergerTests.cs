@@ -52,7 +52,7 @@ namespace WeSay.LexicalModel.Tests
 		{
 			Extensible extensibleInfo = new Extensible();
 			extensibleInfo.Id = "foo";
-			LexEntry e = _merger.GetOrMakeEntry(extensibleInfo);
+			LexEntry e = _merger.GetOrMakeEntry(extensibleInfo, 0);
 			Assert.AreEqual(extensibleInfo.Id, e.Id);
 			_merger.FinishEntry(e);
 			RefreshEntriesList();
@@ -64,7 +64,7 @@ namespace WeSay.LexicalModel.Tests
 		{
 			Extensible extensibleInfo = new Extensible();
 			extensibleInfo.Guid = Guid.NewGuid();
-			LexEntry e= _merger.GetOrMakeEntry(extensibleInfo);
+			LexEntry e= _merger.GetOrMakeEntry(extensibleInfo, 0);
 			Assert.AreEqual(extensibleInfo.Guid, e.Guid);
 			_merger.FinishEntry(e);
 			RefreshEntriesList();
@@ -78,7 +78,7 @@ namespace WeSay.LexicalModel.Tests
 			Extensible extensibleInfo = new Extensible();
 			extensibleInfo.CreationTime = DateTime.Parse("2/2/1969  12:15:12").ToUniversalTime();
 			extensibleInfo.ModificationTime = DateTime.Parse("10/11/1968  12:15:12").ToUniversalTime();
-			LexEntry e = _merger.GetOrMakeEntry(extensibleInfo);
+			LexEntry e = _merger.GetOrMakeEntry(extensibleInfo, 0);
 			Assert.AreEqual(extensibleInfo.CreationTime, e.CreationTime);
 			Assert.AreEqual(extensibleInfo.ModificationTime, e.ModificationTime);
 			_merger.FinishEntry(e);
@@ -91,7 +91,7 @@ namespace WeSay.LexicalModel.Tests
 		{
 			Extensible extensibleInfo = new Extensible();
 			extensibleInfo.Id = "hello";
-			LexEntry e = _merger.GetOrMakeEntry(extensibleInfo);
+			LexEntry e = _merger.GetOrMakeEntry(extensibleInfo, 0);
 			//no attempt is made to use that id
 			Assert.IsNotNull(e.Guid);
 			Assert.AreNotSame(Guid.Empty, e.Guid);
@@ -103,7 +103,7 @@ namespace WeSay.LexicalModel.Tests
 			Extensible extensibleInfo = new Extensible();
 			extensibleInfo = AddDates(extensibleInfo);
 
-			LexEntry e = _merger.GetOrMakeEntry(extensibleInfo);
+			LexEntry e = _merger.GetOrMakeEntry(extensibleInfo, 0);
 			Assert.AreEqual(extensibleInfo.CreationTime, e.CreationTime);
 			Assert.AreEqual(extensibleInfo.ModificationTime, e.ModificationTime);
 		}
@@ -119,7 +119,7 @@ namespace WeSay.LexicalModel.Tests
 		private LexEntry MakeSimpleEntry()
 		{
 			Extensible extensibleInfo = new Extensible();
-			return _merger.GetOrMakeEntry(extensibleInfo);
+			return _merger.GetOrMakeEntry(extensibleInfo, 0);
 		}
 
 
@@ -467,7 +467,7 @@ namespace WeSay.LexicalModel.Tests
 			extensibleInfo.ModificationTime = Extensible.ParseDateTimeCorrectly("2005-01-01");
 			Assert.AreEqual(DateTimeKind.Utc ,extensibleInfo.ModificationTime.Kind );
 
-			LexEntry found = _merger.GetOrMakeEntry(extensibleInfo);
+			LexEntry found = _merger.GetOrMakeEntry(extensibleInfo, 0);
 			Assert.IsNotNull(found);
 		}
 

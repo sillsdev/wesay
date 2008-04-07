@@ -15,7 +15,6 @@ namespace WeSay.LexicalModel
 	/// </summary>
 	public class LiftMerger : ILexiconMerger<WeSayDataObject, LexEntry,LexSense,LexExampleSentence>, IDisposable
 	{
-		private Db4oDataSource _dataSource;
 		private IRecordList<LexEntry> _entries;
 		private IList<String> _expectedOptionTraits;
 		private IList<string> _expectedOptionCollectionTraits;
@@ -27,15 +26,15 @@ namespace WeSay.LexicalModel
 
 		public LiftMerger(Db4oDataSource dataSource,  IRecordList<LexEntry> entries)
 		{
-			_dataSource = dataSource;
 			_entries = entries;
 			_expectedOptionTraits = new List<string>();
 			_expectedOptionCollectionTraits = new List<string>();
 			_historicalEntryCountProvider = HistoricalEntryCountProviderForDb4o.GetOrMakeFromDatabase(dataSource);
 		}
 
-		public LexEntry GetOrMakeEntry(Extensible eInfo)
+		public LexEntry GetOrMakeEntry(Extensible eInfo, int order)
 		{
+
 			LexEntry entry = null;
 #if merging
 	 This really slows us down to a crawl if the incoming lift has guids, yet
@@ -70,16 +69,14 @@ namespace WeSay.LexicalModel
 				entry = new LexEntry(eInfo, _historicalEntryCountProvider);
 			}
 
+			//todo: don't drop @order
+
 			entry.ModifiedTimeIsLocked = true; //while we build it up
 			return entry;
 		}
 
 		#region ILexiconMerger<WeSayDataObject,LexEntry,LexSense,LexExampleSentence> Members
 
-		public LexEntry GetOrMakeEntry(Extensible info, int order)
-		{
-			throw new NotImplementedException();
-		}
 
 		public void  EntryWasDeleted(Extensible info, DateTime dateDeleted)
 		{
@@ -111,7 +108,8 @@ namespace WeSay.LexicalModel
 
 		public LexSense GetOrMakeSubsense(LexSense sense, Extensible info)
 		{
-			throw new NotImplementedException();
+		   //todo: don't drop subsenses
+			return null;
 		}
 
 		public LexExampleSentence GetOrMakeExample(LexSense sense, Extensible eInfo)
@@ -133,12 +131,12 @@ namespace WeSay.LexicalModel
 
 		public WeSayDataObject MergeInPronunciation(LexEntry entry, LiftMultiText contents)
 		{
-			throw new NotImplementedException();
+			return null;
 		}
 
 		public WeSayDataObject MergeInVariant(LexEntry entry, LiftMultiText contents)
 		{
-			throw new NotImplementedException();
+			return null;
 		}
 
 		public void MergeInGloss(LexSense sense, LiftMultiText forms)
@@ -167,13 +165,9 @@ namespace WeSay.LexicalModel
 			MergeIn(example.Sentence, forms);
 		}
 
-		public void MergeInTranslationForm(LexExampleSentence example, string type, LiftMultiText multiText)
+		public void MergeInTranslationForm(LexExampleSentence example, string type, LiftMultiText forms)
 		{
-			throw new NotImplementedException();
-		}
-
-		public void MergeInTranslationForm(LexExampleSentence example, LiftMultiText forms)
-		{
+			//todo: do something with translation types
 			MergeIn(example.Translation, forms);
 		}
 
@@ -227,40 +221,43 @@ namespace WeSay.LexicalModel
 			AddOrAppendMultiTextProperty(extensible, contents, WeSayDataObject.WellKnownProperties.Note, " || ");
 		}
 
-		public void MergeInGrammaticalInfo(WeSayDataObject senseOrReversal, string val, List<Trait> traits)
-		{
-			throw new NotImplementedException();
-		}
+
 
 		public WeSayDataObject GetOrMakeParentReversal(WeSayDataObject parent, LiftMultiText contents, string type)
 		{
-			throw new NotImplementedException();
+			return null;
 		}
 
 		public WeSayDataObject MergeInReversal(LexSense sense, WeSayDataObject parent, LiftMultiText contents,
 											   string type)
 		{
-			throw new NotImplementedException();
+			return null;
 		}
 
 		public WeSayDataObject MergeInEtymology(LexEntry entry, string source, LiftMultiText form, LiftMultiText gloss)
 		{
-			throw new NotImplementedException();
+			return null;
 		}
 
 		public void ProcessRangeElement(string range, string id, string guid, string parent, LiftMultiText description,
 										LiftMultiText label, LiftMultiText abbrev)
 		{
-			throw new NotImplementedException();
+
 		}
 
 		public void ProcessFieldDefinition(string tag, LiftMultiText description)
 		{
-			throw new NotImplementedException();
+
 		}
 
-		public void MergeInGrammaticalInfo(LexSense sense, string val, List<Trait> traits)
+		public void MergeInGrammaticalInfo(WeSayDataObject senseOrReversal, string val, List<Trait> traits)
 		{
+			LexSense sense = senseOrReversal as LexSense;
+			if (sense == null)
+			{
+				return; //todo: preserve grammatical info on reversal, when we hand reversals
+			}
+
 			OptionRef o = sense.GetOrCreateProperty<OptionRef>(LexSense.WellKnownProperties.PartOfSpeech);
 			o.Value = val;
 			if (traits != null)
@@ -412,7 +409,6 @@ namespace WeSay.LexicalModel
 		public void MergeInField(WeSayDataObject extensible, string tagAttribute, DateTime dateCreated,
 								 DateTime dateModified, LiftMultiText contents, List<Trait> traits)
 		{
-			throw new NotImplementedException();
 		}
 
 		#endregion
