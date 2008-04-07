@@ -559,7 +559,7 @@ namespace WeSay.LexicalModel.Tests
 		{
 			LexEntry e = MakeSimpleEntry();
 			LiftMultiText t = new LiftMultiText();
-			t["z"] = "dub";
+			t["z"] = new LiftString("dub");
 			_merger.MergeInField(e, "flub", default(DateTime), default(DateTime), t);
 			Assert.AreEqual(1, e.Properties.Count);
 			Assert.AreEqual("flub", e.Properties[0].Key);
@@ -572,7 +572,7 @@ namespace WeSay.LexicalModel.Tests
 		{
 			LexEntry e = MakeSimpleEntry();
 			LiftMultiText t = new LiftMultiText();
-			t["z"] = "dub";
+			t["z"] = new LiftString("dub");
 			_merger.MergeInField(e, "flub", default(DateTime), default(DateTime), t);
 			Assert.AreEqual(1, e.Properties.Count);
 			Assert.AreEqual("flub", e.Properties[0].Key);
@@ -609,7 +609,7 @@ namespace WeSay.LexicalModel.Tests
 			LexSense s = _merger.GetOrMakeSense(e, extensibleInfo);
 
 			LiftMultiText caption = new LiftMultiText();
-			caption["aa"] = "acaption";
+			caption["aa"] = new LiftString("acaption");
 			_merger.MergeInPicture(s, "testPicture.png", caption);
 			PictureRef pict = s.GetProperty<PictureRef>("Picture");
 			Assert.AreEqual("testPicture.png", pict.Value);

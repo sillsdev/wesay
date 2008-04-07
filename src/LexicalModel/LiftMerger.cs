@@ -76,6 +76,11 @@ namespace WeSay.LexicalModel
 
 		#region ILexiconMerger<WeSayDataObject,LexEntry,LexSense,LexExampleSentence> Members
 
+		public LexEntry GetOrMakeEntry(Extensible info, int order)
+		{
+			throw new NotImplementedException();
+		}
+
 		public void  EntryWasDeleted(Extensible info, DateTime dateDeleted)
 		{
 			//there isn't anything we need to do; we just don't import it
@@ -104,6 +109,11 @@ namespace WeSay.LexicalModel
 			return s;
 		}
 
+		public LexSense GetOrMakeSubsense(LexSense sense, Extensible info)
+		{
+			throw new NotImplementedException();
+		}
+
 		public LexExampleSentence GetOrMakeExample(LexSense sense, Extensible eInfo)
 		{
 			LexExampleSentence ex = new LexExampleSentence(sense);
@@ -121,9 +131,19 @@ namespace WeSay.LexicalModel
 			AddOrAppendMultiTextProperty(entry, contents, LexEntry.WellKnownProperties.Citation, null);
 		}
 
+		public WeSayDataObject MergeInPronunciation(LexEntry entry, LiftMultiText contents)
+		{
+			throw new NotImplementedException();
+		}
+
+		public WeSayDataObject MergeInVariant(LexEntry entry, LiftMultiText contents)
+		{
+			throw new NotImplementedException();
+		}
+
 		public void MergeInGloss(LexSense sense, LiftMultiText forms)
 		{
-		   sense.Gloss.MergeInWithAppend(MultiText.Create(forms), "; ");
+		   sense.Gloss.MergeInWithAppend(MultiText.Create(forms.AsSimpleStrings), "; ");
 		   AddTraitsToMultiText(forms, sense.Gloss);
 		}
 
@@ -145,6 +165,11 @@ namespace WeSay.LexicalModel
 		public void MergeInExampleForm(LexExampleSentence example, LiftMultiText forms)//, string optionalSource)
 		{
 			MergeIn(example.Sentence, forms);
+		}
+
+		public void MergeInTranslationForm(LexExampleSentence example, string type, LiftMultiText multiText)
+		{
+			throw new NotImplementedException();
 		}
 
 		public void MergeInTranslationForm(LexExampleSentence example, LiftMultiText forms)
@@ -171,7 +196,7 @@ namespace WeSay.LexicalModel
 			pict.Value = href;
 			if (caption != null)
 			{
-				pict.Caption = MultiText.Create(caption);
+				pict.Caption = MultiText.Create(caption.AsSimpleStrings);
 			}
 		}
 
@@ -181,7 +206,7 @@ namespace WeSay.LexicalModel
 		public void MergeInNote(WeSayDataObject extensible, string type, LiftMultiText contents)
 		{
 			List<String> writingSystemAlternatives = new List<string>(contents.Count);
-			foreach (KeyValuePair<string, string> pair in contents)
+			foreach (KeyValuePair<string, string> pair in contents.AsSimpleStrings)
 			{
 				writingSystemAlternatives.Add(pair.Key);
 			}
@@ -189,7 +214,7 @@ namespace WeSay.LexicalModel
 			if (!string.IsNullOrEmpty(type))
 			{
 				List<String> keys = new List<string>(contents.Count);
-				foreach (KeyValuePair<string, string> pair in contents)
+				foreach (KeyValuePair<string, string> pair in contents.AsSimpleStrings)
 				{
 					keys.Add(pair.Key);
 				}
@@ -200,6 +225,38 @@ namespace WeSay.LexicalModel
 			}
 
 			AddOrAppendMultiTextProperty(extensible, contents, WeSayDataObject.WellKnownProperties.Note, " || ");
+		}
+
+		public void MergeInGrammaticalInfo(WeSayDataObject senseOrReversal, string val, List<Trait> traits)
+		{
+			throw new NotImplementedException();
+		}
+
+		public WeSayDataObject GetOrMakeParentReversal(WeSayDataObject parent, LiftMultiText contents, string type)
+		{
+			throw new NotImplementedException();
+		}
+
+		public WeSayDataObject MergeInReversal(LexSense sense, WeSayDataObject parent, LiftMultiText contents,
+											   string type)
+		{
+			throw new NotImplementedException();
+		}
+
+		public WeSayDataObject MergeInEtymology(LexEntry entry, string source, LiftMultiText form, LiftMultiText gloss)
+		{
+			throw new NotImplementedException();
+		}
+
+		public void ProcessRangeElement(string range, string id, string guid, string parent, LiftMultiText description,
+										LiftMultiText label, LiftMultiText abbrev)
+		{
+			throw new NotImplementedException();
+		}
+
+		public void ProcessFieldDefinition(string tag, LiftMultiText description)
+		{
+			throw new NotImplementedException();
 		}
 
 		public void MergeInGrammaticalInfo(LexSense sense, string val, List<Trait> traits)
@@ -225,7 +282,7 @@ namespace WeSay.LexicalModel
 		private static void AddOrAppendMultiTextProperty(WeSayDataObject dataObject, LiftMultiText contents, string propertyName, string noticeToPrependIfNotEmpty)
 		{
 			MultiText mt = dataObject.GetOrCreateProperty<MultiText>(propertyName);
-			mt.MergeInWithAppend(MultiText.Create(contents), string.IsNullOrEmpty(noticeToPrependIfNotEmpty) ? "; " : noticeToPrependIfNotEmpty);
+			mt.MergeInWithAppend(MultiText.Create(contents.AsSimpleStrings), string.IsNullOrEmpty(noticeToPrependIfNotEmpty) ? "; " : noticeToPrependIfNotEmpty);
 			//dataObject.GetOrCreateProperty<string>(propertyName) mt));
 		}
 
@@ -244,7 +301,7 @@ namespace WeSay.LexicalModel
 		public void MergeInField(WeSayDataObject extensible, string tagAttribute, DateTime dateCreated,
 								 DateTime dateModified, LiftMultiText contents)
 		{
-			MultiText t = MultiText.Create(contents);
+			MultiText t = MultiText.Create(contents.AsSimpleStrings);
 			extensible.Properties.Add(new KeyValuePair<string, object>(tagAttribute, t));
 
 			/* good idea, but it doesn't work.  It doesn't cause an update to the lift xml
@@ -330,7 +387,7 @@ namespace WeSay.LexicalModel
 		private static void MergeIn(MultiText multiText, LiftMultiText forms)
 		{
 
-			multiText.MergeIn(MultiText.Create(forms));
+			multiText.MergeIn(MultiText.Create(forms.AsSimpleStrings));
 			AddTraitsToMultiText(forms, multiText);
 		}
 
@@ -350,6 +407,12 @@ namespace WeSay.LexicalModel
 			{
 				_entries.Add(entry);
 			}
+		}
+
+		public void MergeInField(WeSayDataObject extensible, string tagAttribute, DateTime dateCreated,
+								 DateTime dateModified, LiftMultiText contents, List<Trait> traits)
+		{
+			throw new NotImplementedException();
 		}
 
 		#endregion
