@@ -148,8 +148,8 @@ namespace Addin.Transform.Tests
 
 		private string LaunchAddin()
 		{
-			string contents = @"<?xml version='1.0' encoding='utf-8'?>
-			<lift  version='0.10'>
+			string contents = string.Format(@"<?xml version='1.0' encoding='utf-8'?>
+			<lift  version='{0}'>
 				<entry id='one'
 					dateCreated='2008-02-06T09:46:31Z'
 					dateModified='2008-02-11T04:13:06Z'>
@@ -163,7 +163,7 @@ namespace Addin.Transform.Tests
 				</entry>
 				<entry id='two'>
 				</entry>
-			</lift>";
+			</lift>", LiftIO.Validator.LiftVersion);
 			if (WeSay.Project.WeSayWordsProject.Project.LiftIsLocked)
 			{
 				WeSay.Project.WeSayWordsProject.Project.ReleaseLockOnLift();

@@ -48,8 +48,8 @@ namespace Addin.LiftReports.Tests
 
 		private string LaunchAddin()
 		{
-			string contents = @"<?xml version='1.0' encoding='utf-8'?>
-<lift  version='0.10'><entry id='one'><sense><gloss lang='en'><text>hello</text></gloss></sense></entry><entry id='two'/></lift>";
+			string contents = string.Format(@"<?xml version='1.0' encoding='utf-8'?>
+<lift  version='{0}'><entry id='one'><sense><gloss lang='en'><text>hello</text></gloss></sense></entry><entry id='two'/></lift>", LiftIO.Validator.LiftVersion);
 			if (WeSay.Project.WeSayWordsProject.Project.LiftIsLocked)
 			{
 				WeSay.Project.WeSayWordsProject.Project.ReleaseLockOnLift();

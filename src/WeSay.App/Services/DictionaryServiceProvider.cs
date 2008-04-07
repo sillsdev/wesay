@@ -370,5 +370,10 @@ namespace WeSay.App
 		}
 
 		#endregion
+
+		public bool Ping()
+		{
+			return true;
+		}
 	}
 }

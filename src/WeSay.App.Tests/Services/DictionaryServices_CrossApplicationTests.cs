@@ -264,6 +264,9 @@ namespace WeSay.App.Tests
 			using (ProjectDirectorySetupForTesting projectDirectorySetup = new ProjectDirectorySetupForTesting(entriesXml))
 			{
 				Process p = LaunchDictionaryServiceApp(startInServerMode, projectDirectorySetup);
+				//enhance: is ther a way to know when the process is quiescent?
+				Thread.Sleep(2000);
+
 				IDictionaryService dictionaryService = GetDictionaryService(projectDirectorySetup.PathToLiftFile, Process.GetCurrentProcess().Id);
 				Assert.IsNotNull(dictionaryService, "Could not get ahold of a dictionary service from a launch of WeSay.  This can fail as a result of a timeout, if wesay was just too slow coming up.");
 				try
@@ -319,7 +322,7 @@ namespace WeSay.App.Tests
 		private static IDictionaryService GetDictionaryService(string liftPath, int clientIdForRegistering)
 		{
 			IDictionaryService dictionaryService=null;
-			for (int i = 0; i < 40; i++)
+			for (int i = 0; i < 3; i++)
 			{
 				Thread.Sleep(500);
 				string serviceName = DictionaryAccessor.GetServiceName(liftPath);
