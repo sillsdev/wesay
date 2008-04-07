@@ -3,8 +3,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using NUnit.Framework;
+using Palaso.Services;
 using Palaso.Services.Dictionary;
-using Palaso.Services.ForClients;
 using WeSay.Project.Tests;
 
 namespace WeSay.App.Tests

@@ -5,8 +5,8 @@ using System.Threading;
 using System.Windows.Forms;
 using CommandLine;
 using Palaso.Reporting;
+using Palaso.Services;
 using Palaso.Services.Dictionary;
-using Palaso.Services.ForClients;
 using Palaso.Services.ForServers;
 using Palaso.UI.WindowsForms.i8n;
 using WeSay.App.Properties;
@@ -182,18 +182,11 @@ namespace WeSay.App
 			//Problem: if there is already a cache miss, this will be slow, and somebody will time out
 			StartCacheWatchingStuff();
 
-			Palaso.Reporting.Logger.WriteMinorEvent("Starting Dictionary Services at {0}", DictionaryServiceAddress);
+			Palaso.Reporting.Logger.WriteMinorEvent("Starting Dictionary Services at {0}", DictionaryAccessor.GetServiceName(_project.PathToLiftFile));
 			IpcSystem.StartServingObject(DictionaryAccessor.GetServiceName(_project.PathToLiftFile), _dictionary);
 
 		}
 
-		private string DictionaryServiceAddress
-		{
-			get
-			{
-				return IpcSystem.GetUrlForService(DictionaryAccessor.GetServiceName(_project.PathToLiftFile), IpcSystem._defaultPort);
-			}
-		}
 
 		public bool IsInServerMode
 		{
