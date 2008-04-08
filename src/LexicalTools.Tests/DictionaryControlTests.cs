@@ -707,7 +707,6 @@ namespace WeSay.LexicalTools.Tests
 		/// Actually, I never was able to get this test to fail. Sigh.
 		/// </summary>
 		[Test]
-		[Category("CrashesInMono")]
 		public void GhostField_Trigger_RegressionTest()
 		{
 			ClickAddWord();
@@ -758,7 +757,6 @@ namespace WeSay.LexicalTools.Tests
 		}
 
 		[Test]
-		[Category("CrashesInMono")]
 		public void AfterAddingMeaning_RealMeaningLabelHasNumber()
 		{
 			ClickAddWord();
@@ -770,7 +768,6 @@ namespace WeSay.LexicalTools.Tests
 		/// Regression for WS-620
 		/// </summary>
 		[Test]
-		[Category("CrashesInMono")]
 		public void AfterAddingMeaning_GhostMeaningLabelHasNumber()
 		{
 			ClickAddWord();
