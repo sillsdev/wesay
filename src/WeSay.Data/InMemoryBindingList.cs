@@ -538,7 +538,7 @@ namespace WeSay.Data
 			for (int i = 0; i < Count; i++)
 			{
 				// must be in same order to be equal
-				if (this[i] != other[i])
+				if (!this[i].Equals(other[i]))
 				{
 					return false;
 				}
