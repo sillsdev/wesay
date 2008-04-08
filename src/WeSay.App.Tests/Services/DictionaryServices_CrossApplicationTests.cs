@@ -97,8 +97,10 @@ namespace WeSay.App.Tests
 				int firstClientId = Process.GetCurrentProcess().Id;
 
 				IDictionaryService dictionaryService = GetDictionaryService(projectDirectorySetup.PathToLiftFile, firstClientId);
+				Assert.IsNotNull(dictionaryService, "Could not get dictionary service, first time.");
 				int secondClientId = firstClientId + 1;//bad thing to do in a non-test setting
 				IDictionaryService dictionaryService2 = GetDictionaryService(projectDirectorySetup.PathToLiftFile, secondClientId);
+				Assert.IsNotNull(dictionaryService2, "Could not get dictionary service, second time.");
 				AssertServerIsRunning(projectDirectorySetup.PathToLiftFile);
 				dictionaryService.DeregisterClient(firstClientId);
 				AssertServerIsRunning(projectDirectorySetup.PathToLiftFile);
@@ -308,6 +310,8 @@ namespace WeSay.App.Tests
 			}
 			System.Diagnostics.ProcessStartInfo psi = new ProcessStartInfo(@"wesay.app.exe",arguments);
 			Process p = System.Diagnostics.Process.Start(psi);
+
+			Thread.Sleep(2000); // wait for process to start up
 
 			//this only works because we only launch it once... wouldn't be adequate logic if we
 			//might just be joining an existing process
