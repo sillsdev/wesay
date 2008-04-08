@@ -86,7 +86,7 @@ namespace WeSay.Project
 		}
 		public static string PathToPretendLiftFile
 		{
-			get { return Path.Combine(GetPretendProjectDirectory(), "pretend.lift"); }
+			get { return Path.Combine(GetPretendProjectDirectory(), "PRETEND.lift"); }
 		}
 
 		public void SetupProjectDirForTests(string pathToLift)

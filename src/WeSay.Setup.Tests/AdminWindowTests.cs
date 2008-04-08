@@ -82,7 +82,7 @@ namespace WeSay.Admin.Tests
 //            StreamWriter writer = File.CreateText(WeSayWordsProject.Project.PathToProjectTaskInventory);
 //            writer.Write(TestResources.tasks);
 //            writer.Close();
-			  File.Copy(Path.Combine(WeSayWordsProject.Project.ApplicationTestDirectory, "pretend.WeSayConfig"), WeSayWordsProject.Project.PathToConfigFile, true);
+			  File.Copy(Path.Combine(WeSayWordsProject.Project.ApplicationTestDirectory, "PRETEND.WeSayConfig"), WeSayWordsProject.Project.PathToConfigFile, true);
 			WalkTopLevelTabs();
 		}
 

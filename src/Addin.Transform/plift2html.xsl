@@ -31,7 +31,7 @@ BOGURAEV and NEFF Lit Linguist Computing.1992; 7: 110-112
   -->
   <xsl:output method="html" indent="yes" encoding="utf-8"/>
 
-  <xsl:param name="writing-system-info-file" select="'writingSystemPrefs.xml'"/>
+  <xsl:param name="writing-system-info-file" select="'WritingSystemPrefs.xml'"/>
   <xsl:param name="grammatical-info-optionslist-file"/>
   <xsl:param name="relations-optionslist-file"/>
   <!-- things like 'see' for cross-references and 'ant' for antonyms, 'syn' for synonyms, etc.-->

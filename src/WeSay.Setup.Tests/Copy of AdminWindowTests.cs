@@ -33,7 +33,7 @@ namespace WeSay.Setup.Tests
 		public void WalkTabsAfterOpeningPretendProject()
 		{
 			_window.OpenProject(BasilProject.GetPretendProjectDirectory());
-			File.Copy(Path.Combine(WeSayWordsProject.Project.ApplicationTestDirectory, "pretend.WeSayConfig"), WeSayWordsProject.Project.PathToConfigFile, true);
+			File.Copy(Path.Combine(WeSayWordsProject.Project.ApplicationTestDirectory, "PRETEND.WeSayConfig"), WeSayWordsProject.Project.PathToConfigFile, true);
 
 			ToolStrip toolstrip = (ToolStrip)_window.Controls.Find("_areasToolStrip", true)[0];
 			foreach (ToolStripButton button in toolstrip.Items)

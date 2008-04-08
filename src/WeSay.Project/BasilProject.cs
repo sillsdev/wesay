@@ -144,7 +144,7 @@ namespace WeSay.Project
 
 		private static string GetPathToWritingSystemPrefs(string parentDir)
 		{
-			return Path.Combine(parentDir, "writingSystemPrefs.xml");
+			return Path.Combine(parentDir, "WritingSystemPrefs.xml");
 		}
 
 

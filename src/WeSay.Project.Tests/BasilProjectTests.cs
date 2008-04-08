@@ -48,7 +48,7 @@ namespace WeSay.Project.Tests
 		{
 			Directory.CreateDirectory(_projectDirectory);
 			Directory.CreateDirectory(GetCommonDirectory());
-			string pathToWritingSystemPrefs = Path.Combine(GetCommonDirectory(), "writingSystemPrefs.xml");
+			string pathToWritingSystemPrefs = Path.Combine(GetCommonDirectory(), "WritingSystemPrefs.xml");
 			WritingSystemTests.WriteSampleWritingSystemFile(pathToWritingSystemPrefs);
 		}
 

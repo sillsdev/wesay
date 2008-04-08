@@ -73,13 +73,13 @@ namespace WeSay.Project.Tests
 		}
 		public string PathToWritingSystemFile
 		{
-			get { return Path.Combine(_experimentDir, "writingSystemPrefs.xml"); }
+			get { return Path.Combine(_experimentDir, "WritingSystemPrefs.xml"); }
 		}
 		public string PathToFactoryDefaultsPartsOfSpeech
 		{
 			get
 			{
-				string fileName="writingSystemPrefs.xml";
+				string fileName="WritingSystemPrefs.xml";
 				string path = Path.Combine(BasilProject.ApplicationCommonDirectory, fileName);
 				if (File.Exists(path))
 				{

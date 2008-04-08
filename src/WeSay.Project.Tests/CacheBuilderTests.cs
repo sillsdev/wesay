@@ -135,7 +135,7 @@ namespace WeSay.Project.Tests
 
 				   } while(Directory.Exists(directory));
 
-				   string target = Path.Combine(directory, "pretend.lift");
+				   string target = Path.Combine(directory, "PRETEND.lift");
 				   Directory.CreateDirectory(directory);
 				   try
 				   {

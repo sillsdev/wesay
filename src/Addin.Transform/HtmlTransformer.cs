@@ -91,7 +91,7 @@ namespace Addin.Transform
 
 			   XsltArgumentList arguments = new XsltArgumentList();
 			   arguments.AddParam("writing-system-info-file", string.Empty,
-								  projectInfo.LocateFile("writingSystemPrefs.xml"));
+								  projectInfo.LocateFile("WritingSystemPrefs.xml"));
 			   arguments.AddParam("grammatical-info-optionslist-file", string.Empty,
 								  projectInfo.LocateFile("PartsOfSpeech.xml"));
 			   arguments.AddParam("output-intented-for-winword", string.Empty, intendedForWinWord.ToString() + "()");

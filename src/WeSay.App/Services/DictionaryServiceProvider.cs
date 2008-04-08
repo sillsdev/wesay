@@ -32,7 +32,7 @@ namespace WeSay.App
 			_project = project;
 			_registeredClientProcessIds = new List<int>();
 
-			_articleMaker = new HtmlArticleMaker(_project.LocateFile("writingSystemPrefs.xml"),
+			_articleMaker = new HtmlArticleMaker(_project.LocateFile("WritingSystemPrefs.xml"),
 										_project.LocateFile("PartsOfSpeech.xml"));
 		}
 
