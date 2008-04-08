@@ -84,6 +84,27 @@ namespace WeSay.Project
 
 			project.SetupProjectDirForTests(PathToPretendLiftFile);
 		}
+
+		/// <summary>
+		/// See comment on BasilProject.InitializeForTests()
+		/// </summary>
+//        public static void InitializeForTests(string pathToLift)
+//        {
+//            WeSayWordsProject project = new WeSayWordsProject();
+//            project.ProjectDirectoryPath = Directory.GetParent(pathToLift).Parent.FullName;
+//            project.PathToLiftFile = pathToLift;
+//            ErrorReport.IsOkToInteractWithUser = false;
+//            project.LoadFromProjectDirectoryPath(project.ProjectDirectoryPath);
+//            project.StringCatalogSelector = "en";
+//        }
+//
+
+//        public static void InitializeForTests(WeSayWordsProject project)
+//        {
+//            Project = project;
+//        }
+
+
 		public static string PathToPretendLiftFile
 		{
 			get { return Path.Combine(GetPretendProjectDirectory(), "PRETEND.lift"); }

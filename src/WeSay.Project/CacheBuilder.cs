@@ -229,24 +229,46 @@ namespace WeSay.Project
 			return _prewiredEntries;
 		}
 
+		public void MigrateIfNeeded()
+		{
+			if(LiftIO.Migrator.IsMigrationNeeded(_sourceLIFTPath))
+			{
+
+				string oldVersion = LiftIO.Validator.GetLiftVersion(_sourceLIFTPath);
+				Logger.WriteEvent("Migrating from {0} to {1}", oldVersion, Validator.LiftVersion);
+				_progress.StatusLabel = string.Format("Migrating from {0} to {1}", oldVersion, Validator.LiftVersion);
+				string migratedFile = Migrator.MigrateToLatestVersion(_sourceLIFTPath);
+				string nameForOldFile = _sourceLIFTPath.Replace(".lift", "."+oldVersion+".lift");
+
+				File.Move(_sourceLIFTPath, nameForOldFile);
+				File.Move(migratedFile, _sourceLIFTPath);
+			}
+		}
+
 		public void DoWork(ProgressState progress)
 		{
 			Logger.WriteEvent("Building Caches");
 			_progress = progress;
 			_progress.State = ProgressState.StateValue.Busy;
 			_progress.StatusLabel = "Validating...";
-			string errors = Validator.GetAnyValidationErrors(_sourceLIFTPath);
-			if (errors != null && errors != string.Empty)
-			{
-				progress.StatusLabel = "Problem with file format...";
-				_progress.State = ProgressState.StateValue.StoppedWithError;
-				_progress.WriteToLog(
-						string.Format("There is a problem with the format of {0}. {1}", _sourceLIFTPath, errors));
-				Logger.WriteEvent("LIFT failed to validate.");
-				return;
-			}
+
+
 			try
 			{
+				MigrateIfNeeded();
+
+				string errors = Validator.GetAnyValidationErrors(_sourceLIFTPath);
+				if (errors != null && errors != string.Empty)
+				{
+					progress.StatusLabel = "Problem with file format...";
+					_progress.State = ProgressState.StateValue.StoppedWithError;
+					_progress.WriteToLog(
+							string.Format("There is a problem with the format of {0}. {1}", _sourceLIFTPath, errors));
+					Logger.WriteEvent("LIFT failed to validate.");
+					return;
+				}
+
+
 				progress.StatusLabel = "Building Caches...";
 				string tempCacheDirectory =
 						Directory.CreateDirectory(Path.Combine(Path.GetTempPath(), Path.GetRandomFileName())).FullName;
@@ -320,7 +342,16 @@ namespace WeSay.Project
 			}
 			finally
 			{
-				WeSayWordsProject.Project.CacheLocationOverride = null;
+				try// EVIL STATICS!
+				{
+					if (WeSayWordsProject.Project != null)
+					{
+						WeSayWordsProject.Project.CacheLocationOverride = null;
+					}
+				}
+				catch(Exception ) //swallow
+				{
+				}
 			}
 			Logger.WriteEvent("Done Building Caches");
 		}
@@ -422,9 +453,7 @@ namespace WeSay.Project
 
 			try
 			{
-				XmlDocument doc = new XmlDocument();
-				doc.Load(_sourceLIFTPath);
-				parser.ReadLiftDom(doc, File.GetLastWriteTimeUtc(_sourceLIFTPath));
+				parser.ReadLiftFile(_sourceLIFTPath);
 			}
 			catch(Exception error)
 			{

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Xml;
+using LiftIO;
 using NUnit.Framework;
 using WeSay.Foundation.Tests;
 using WeSay.Project;
@@ -21,7 +22,11 @@ namespace WeSay.Project.Tests
 		private string _projectName = "test";
 		private string _pathToTasksBase;
 
-		public ProjectDirectorySetupForTesting(string xmlOfEntries)
+		public ProjectDirectorySetupForTesting(string xmlOfEntries) : this(xmlOfEntries, Validator.LiftVersion)
+		{
+		}
+
+		public ProjectDirectorySetupForTesting(string xmlOfEntries, string liftVersion)
 		{
 			_experimentDir = MakeDir(Path.GetTempPath(), Path.GetRandomFileName());
 			using (WeSayWordsProject p = new WeSayWordsProject())
@@ -36,7 +41,7 @@ namespace WeSay.Project.Tests
 			}
 
 			//overwrite the blank lift file
-			string liftContents = string.Format("<?xml version='1.0' encoding='utf-8'?><lift version='{0}'>{1}</lift>", LiftIO.Validator.LiftVersion, xmlOfEntries);
+			string liftContents = string.Format("<?xml version='1.0' encoding='utf-8'?><lift version='{0}'>{1}</lift>", liftVersion, xmlOfEntries);
 			File.WriteAllText(PathToLiftFile, liftContents);
 		}
 
