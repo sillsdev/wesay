@@ -43,13 +43,6 @@ namespace WeSay.Language
 		private SortKeyGenerator _sortKeyGenerator;
 		private string _sortUsing;
 
-		//        public WritingSystem(string filePath)
-		//        {
-		//            _fontPrefsDoc = new XmlDocument();
-		//            _fontPrefsDoc.Load(filePath);
-		//            XmlNode node = _fontPrefsDoc.SelectSingleNode("writingSystemPrefs");
-		//            _id = node.Attributes["id"].Value;
-		//        }
 		public WritingSystem(XmlNode node): this()
 		{
 			_id = node.Attributes["id"].Value;
@@ -363,7 +356,7 @@ namespace WeSay.Language
 
 		private static CultureInfo GetCultureInfoFromWritingSystemId(string sortUsing)
 		{
-			CultureInfo ci = null;
+			CultureInfo ci;
 			try
 			{
 				ci = CultureInfo.GetCultureInfo(sortUsing);
@@ -374,10 +367,7 @@ namespace WeSay.Language
 				{
 					throw;
 				}
-				if (Environment.OSVersion.Platform != PlatformID.Unix)
-				{
-					ci = TryGetCultureInfoByIetfLanguageTag(sortUsing); // not supported by mono yet
-				}
+				ci = TryGetCultureInfoByIetfLanguageTag(sortUsing); // not supported by mono yet
 			}
 			return ci;
 		}
