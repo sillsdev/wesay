@@ -445,7 +445,7 @@ namespace WeSay.Project
 			foreach (LexRelation relation in collection.Relations)
 			{
 				_writer.WriteStartElement("relation");
-				_writer.WriteAttributeString("name", relation.FieldId);
+				_writer.WriteAttributeString("type", relation.FieldId);
 				_writer.WriteAttributeString("ref", relation.Key);
 				if (0 != (ExportOptions & Options.DereferenceRelations))
 				{
@@ -584,7 +584,7 @@ namespace WeSay.Project
 		{
 			if (thing.IsStarred )
 			{
-				_writer.WriteStartElement("trait");
+				_writer.WriteStartElement("annotation");
 				_writer.WriteAttributeString("name", "flag");
 				_writer.WriteAttributeString("value", "1");
 				_writer.WriteEndElement();

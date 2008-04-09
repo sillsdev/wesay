@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Xsl;
+using LiftIO;
 using Palaso.Progress;
 using Palaso.Reporting;
 using Palaso.UI.WindowsForms.Progress;
@@ -27,6 +28,11 @@ namespace WeSay.App
 			//NB: it's very important that any updates are consumed before the cache is rebuilt.
 			//Otherwise, the cache and lift will fall out of sync.
 			if (!LiftUpdateService.ConsumePendingLiftUpdates())
+			{
+				return false;
+			}
+
+			if (!MigrateIfNeeded())
 			{
 				return false;
 			}
@@ -162,7 +168,86 @@ namespace WeSay.App
 			File.Delete(newFilePath);
 		}
 
+		/// <summary>
+		///
+		/// </summary>
+		/// <returns>true if everything is ok, false if something went wrong</returns>
+		public bool MigrateIfNeeded()
+		{
+			if (LiftIO.Migrator.IsMigrationNeeded(_project.PathToLiftFile))
+			{
+				using (ProgressDialog dlg = new ProgressDialog())
+				{
+					dlg.Overview = "Please wait while WeSay migrates your lift database to the required version.";
+					BackgroundWorker cacheBuildingWork = new BackgroundWorker();
+					cacheBuildingWork.DoWork += DoMigrationWork;
+					dlg.BackgroundWorker = cacheBuildingWork;
+					dlg.CanCancel = false;
 
+					bool wasLocked = _project.LiftIsLocked;
+					if (wasLocked)
+					{
+						_project.ReleaseLockOnLift();
+					}
+					try
+					{
+						dlg.ShowDialog();
+						if (dlg.DialogResult != DialogResult.OK)
+						{
+							Exception err = dlg.ProgressStateResult.ExceptionThatWasEncountered;
+							if (err != null)
+							{
+								ErrorNotificationDialog.ReportException(err, null, false);
+							}
+							else if (dlg.ProgressStateResult.State == ProgressState.StateValue.StoppedWithError)
+							{
+								ErrorReport.ReportNonFatalMessage("Failed." + dlg.ProgressStateResult.LogString, null,
+																  false);
+							}
+							return false;
+						}
+					}
+					finally
+					{
+						if (wasLocked)
+						{
+							_project.LockLift();
+						}
+					}
+				}
+
+			}
+			return true;
+		}
+
+		private void DoMigrationWork(object obj, DoWorkEventArgs args)
+		{
+				ProgressState progressState = args.Argument as ProgressState;
+			try
+			{
+				string oldVersion = LiftIO.Validator.GetLiftVersion(_project.PathToLiftFile);
+				Logger.WriteEvent("Migrating from {0} to {1}", oldVersion, Validator.LiftVersion);
+				progressState.StatusLabel =
+					string.Format("Migrating from {0} to {1}", oldVersion, Validator.LiftVersion);
+				string migratedFile = Migrator.MigrateToLatestVersion(_project.PathToLiftFile);
+				string nameForOldFile = _project.PathToLiftFile.Replace(".lift", "." + oldVersion + ".lift");
+
+				File.Move(_project.PathToLiftFile, nameForOldFile);
+				File.Move(migratedFile, _project.PathToLiftFile);
+
+				args.Result = args.Argument as ProgressState;
+			}
+			catch (Exception e)
+			{
+				//currently, error reporter can choke because this is
+				//being called from a non sta thread.
+				//so let's leave it to the progress dialog to report the error
+				//                Reporting.ErrorReporter.ReportException(e,null, false);
+				progressState.ExceptionThatWasEncountered = e;
+				progressState.WriteToLog(e.Message);
+				progressState.State = ProgressState.StateValue.StoppedWithError;
+			}
+		}
 
 		private bool BringCachesUpToDate()
 		{

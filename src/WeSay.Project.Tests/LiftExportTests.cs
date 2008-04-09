@@ -244,7 +244,7 @@ namespace WeSay.Project.Tests
 			e.LexicalForm.SetAnnotationOfAlternativeIsStarred("x", true);
 			_exporter.Add(e);
 			_exporter.End();
-			AssertXPathNotNull("entry/lexical-unit/form[@lang='x']/trait[@name='flag' and @value='1']");
+			AssertXPathNotNull("entry/lexical-unit/form[@lang='x']/annotation[@name='flag' and @value='1']");
 		}
 
 		[Test]
@@ -271,7 +271,7 @@ namespace WeSay.Project.Tests
 			citation.SetAnnotationOfAlternativeIsStarred("x", true);
 			_exporter.Add(e);
 			_exporter.End();
-			AssertXPathNotNull("entry/citation/form[@lang='x']/trait[@name='flag' and @value='1']");
+			AssertXPathNotNull("entry/citation/form[@lang='x']/annotation[@name='flag' and @value='1']");
 		}
 
 		[Test]
@@ -292,7 +292,7 @@ namespace WeSay.Project.Tests
 			sense.Gloss.SetAnnotationOfAlternativeIsStarred("x", true);
 			_exporter.Add(sense);
 			_exporter.End();
-			AssertXPathNotNull("sense/gloss[@lang='x']/trait[@name='flag' and @value='1']");
+			AssertXPathNotNull("sense/gloss[@lang='x']/annotation[@name='flag' and @value='1']");
 		}
 
 		[Test]
@@ -344,7 +344,7 @@ namespace WeSay.Project.Tests
 			o.IsStarred = true;
 			_exporter.Add(sense);
 			_exporter.End();
-			AssertXPathNotNull("sense/grammatical-info[@value='orange']/trait[@name='flag' and @value='1']");
+			AssertXPathNotNull("sense/grammatical-info[@value='orange']/annotation[@name='flag' and @value='1']");
 		}
 
 
@@ -970,7 +970,7 @@ namespace WeSay.Project.Tests
 			relations.Relations.Add(new LexRelation(antonymRelationType.ID, "bee", sense));
 
 			_exporter.Add(sense);
-			CheckAnswer("<sense><relation name=\"synonym\" ref=\"one\" /><relation name=\"synonym\" ref=\"two\" /><relation name=\"antonym\" ref=\"bee\" /></sense>");
+			CheckAnswer("<sense><relation type=\"synonym\" ref=\"one\" /><relation type=\"synonym\" ref=\"two\" /><relation type=\"antonym\" ref=\"bee\" /></sense>");
 		}
 
 		private void CheckAnswer(string answer)

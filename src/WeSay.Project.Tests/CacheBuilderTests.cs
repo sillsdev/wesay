@@ -10,33 +10,7 @@ using WeSay.Project;
 
 namespace WeSay.Project.Tests
 {
-	/// <summary>
-	/// These tests use a non setup/teardown style (now prefered by JH)
-	/// </summary>
-	[TestFixture]
-	public class CacheBuilderTests2
-	{
-		[Test]
-		public void DoWork_GivenLiftVersionPoint10_LiftFileHasCurrentLiftVersionNumber()
-		{
-			//nb: most migration testing is done in the LiftIO library where the actual
-			//  migration happens.  So here we're ensuring that the migration mechanism was
-			//  triggered, and that the process left us with a modified (but not renamed)
-			//  lift file.
-			//nb: 0.10 was the first version where we started provinding a migration path.
-			//FLEx support for Lift started with 0.12
-			using (ProjectDirectorySetupForTesting dir = new ProjectDirectorySetupForTesting(string.Empty, "0.10"))
-			{
-				//review
-			   // WeSayWordsProject.InitializeForTests(dir.CreateLoadedProject());
 
-
-				CacheBuilder builder = new CacheBuilder(dir.PathToLiftFile);
-				builder.DoWork(new NullProgressState());
-				Assert.AreEqual(Validator.LiftVersion, Validator.GetLiftVersion(dir.PathToLiftFile));
-			}
-		}
-	}
 
 	[TestFixture]
 	public class CacheBuilderTests

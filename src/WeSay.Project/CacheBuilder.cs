@@ -229,21 +229,7 @@ namespace WeSay.Project
 			return _prewiredEntries;
 		}
 
-		public void MigrateIfNeeded()
-		{
-			if(LiftIO.Migrator.IsMigrationNeeded(_sourceLIFTPath))
-			{
 
-				string oldVersion = LiftIO.Validator.GetLiftVersion(_sourceLIFTPath);
-				Logger.WriteEvent("Migrating from {0} to {1}", oldVersion, Validator.LiftVersion);
-				_progress.StatusLabel = string.Format("Migrating from {0} to {1}", oldVersion, Validator.LiftVersion);
-				string migratedFile = Migrator.MigrateToLatestVersion(_sourceLIFTPath);
-				string nameForOldFile = _sourceLIFTPath.Replace(".lift", "."+oldVersion+".lift");
-
-				File.Move(_sourceLIFTPath, nameForOldFile);
-				File.Move(migratedFile, _sourceLIFTPath);
-			}
-		}
 
 		public void DoWork(ProgressState progress)
 		{
@@ -255,8 +241,6 @@ namespace WeSay.Project
 
 			try
 			{
-				MigrateIfNeeded();
-
 				string errors = Validator.GetAnyValidationErrors(_sourceLIFTPath);
 				if (errors != null && errors != string.Empty)
 				{

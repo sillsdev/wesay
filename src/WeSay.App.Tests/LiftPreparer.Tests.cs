@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Xml;
+using LiftIO;
 using NUnit.Framework;
+using Palaso.Progress;
 using WeSay.Project;
 using WeSay.Project.Tests;
 
@@ -18,6 +20,56 @@ namespace WeSay.App.Tests
 			Palaso.Reporting.ErrorReport.IsOkToInteractWithUser = false;
 		}
 
+		[Test]
+		public void MigrateIfNeeded_GivenLiftVersionPoint10_LiftFileHasCurrentLiftVersionNumber()
+		{
+			//nb: most migration testing is done in the LiftIO library where the actual
+			//  migration happens.  So here we're ensuring that the migration mechanism was
+			//  triggered, and that the process left us with a modified (but not renamed)
+			//  lift file.
+			//nb: 0.10 was the first version where we started provinding a migration path.
+			//FLEx support for Lift started with 0.12
+			using (ProjectDirectorySetupForTesting dir = new ProjectDirectorySetupForTesting(string.Empty, "0.10"))
+			{
+				using (WeSayWordsProject project = dir.CreateLoadedProject())
+				{
+					LiftPreparer preparer = new LiftPreparer(project);
+					Assert.IsTrue(preparer.MigrateIfNeeded(), "MigrateIfNeeded Failed");
+					Assert.AreEqual(Validator.LiftVersion, Validator.GetLiftVersion(dir.PathToLiftFile));
+				}
+			}
+		}
+
+		[Test]
+		public void MigrateIfNeeded_LiftIsLockedByProject_LockedAgainAfterMigration()
+		{
+			using (ProjectDirectorySetupForTesting dir = new ProjectDirectorySetupForTesting(string.Empty, "0.10"))
+			{
+				using (WeSayWordsProject proj = dir.CreateLoadedProject())
+				{
+					proj.LockLift();
+					LiftPreparer preparer = new LiftPreparer(proj);
+					Assert.IsTrue(preparer.MigrateIfNeeded(), "MigrateIfNeeded Failed");
+					Assert.IsTrue(proj.LiftIsLocked);
+				}
+			}
+		}
+
+		[Test]
+		public void MigrateIfNeeded_AlreadyCurrentLift_LiftUntouched()
+		{
+			using (ProjectDirectorySetupForTesting dir = new ProjectDirectorySetupForTesting(string.Empty, Validator.LiftVersion))
+			{
+				using (WeSayWordsProject project = dir.CreateLoadedProject())
+				{
+					DateTime startModTime = File.GetLastWriteTimeUtc(dir.PathToLiftFile);
+					LiftPreparer preparer = new LiftPreparer(project);
+					Assert.IsTrue(preparer.MigrateIfNeeded(), "MigrateIfNeeded Failed");
+					DateTime finishModTime = File.GetLastWriteTimeUtc(dir.PathToLiftFile);
+					Assert.AreEqual(startModTime, finishModTime);
+				}
+			}
+		}
 
 		[Test]
 		public void PopulateDefinitions_EmptyLift()
