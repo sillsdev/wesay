@@ -59,17 +59,16 @@ namespace WeSay.LexicalModel
 			}
 		} ;
 
-		public LexEntry(): base(null)
-		{
-			Init(null, Guid.NewGuid(), DateTime.UtcNow, DateTime.UtcNow);
-		}
+		public LexEntry(): this(null, System.Guid.NewGuid())
+		{}
 
 		public LexEntry(string id, Guid guid): base(null)
 		{
-			Init(id, guid, DateTime.UtcNow, DateTime.UtcNow);
+			DateTime now = DateTime.UtcNow;
+			Init(id, guid, now, now);
 		}
 
-		 public LexEntry(Extensible info, IHistoricalEntryCountProvider historicalCountProvider)
+		public LexEntry(Extensible info, IHistoricalEntryCountProvider historicalCountProvider)
 			 : base(null)
 		{
 			Init(info.Id, info.Guid, info.CreationTime, info.ModificationTime);
