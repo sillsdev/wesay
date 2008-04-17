@@ -80,6 +80,16 @@ namespace WeSay.Project
 		{
 			WeSayWordsProject project = new WeSayWordsProject();
 
+			try
+			{
+				File.Delete(PathToPretendLiftFile);
+			}
+			catch (Exception)
+			{
+			}
+
+			Directory.CreateDirectory(Path.GetDirectoryName(PathToPretendLiftFile));
+
 			//jdh added, amidst some confusion about why it was suddenly needed, on april 17,2007
 			Utilities.CreateEmptyLiftFile(PathToPretendLiftFile, "InitializeForTests()", true);
 
