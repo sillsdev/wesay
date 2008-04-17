@@ -37,7 +37,7 @@ BOGURAEV and NEFF Lit Linguist Computing.1992; 7: 110-112
   <!-- things like 'see' for cross-references and 'ant' for antonyms, 'syn' for synonyms, etc.-->
   <xsl:param name="optionslist-writing-system" select="'en'"/>
 
-  <xsl:param name="headword-writing-system" select="//entry/field[@tag='headword']/form/@lang"/>
+  <xsl:param name="headword-writing-system" select="//entry/field[@type='headword']/form/@lang"/>
 
   <xsl:param name="include-notes" select="false()"/>
   <xsl:param name="group-by-grammatical-info" select="true()"/>
@@ -92,7 +92,7 @@ BOGURAEV and NEFF Lit Linguist Computing.1992; 7: 110-112
   </xsl:template>
 
   <xsl:template name="output-headword">
-	<xsl:apply-templates select="field[@tag='headword']"/>
+	<xsl:apply-templates select="field[@type='headword']"/>
 	<xsl:text> </xsl:text>
   </xsl:template>
 
@@ -134,7 +134,7 @@ BOGURAEV and NEFF Lit Linguist Computing.1992; 7: 110-112
 	</xsl:choose>
 
 	<xsl:apply-templates select="trait"/>
-	<xsl:apply-templates select="field[not(@tag='headword')]"/>
+	<xsl:apply-templates select="field[not(@type='headword')]"/>
 
 	<xsl:if test="$entries-with-BaseForm-relation-rendered-as-subentries-of-base">
 	  <xsl:apply-templates
@@ -181,7 +181,7 @@ BOGURAEV and NEFF Lit Linguist Computing.1992; 7: 110-112
   <xsl:template match="entry[@dateDeleted]"/>
 
 
-  <xsl:template match="field[@tag='headword']">
+  <xsl:template match="field[@type='headword']">
 	<span class="headword">
 	  <xsl:apply-templates select="form[@lang=$headword-writing-system]"/>
 
@@ -377,7 +377,7 @@ BOGURAEV and NEFF Lit Linguist Computing.1992; 7: 110-112
 	</xsl:choose>
 	<xsl:text> </xsl:text>
 	<span class="relation-target">
-	  <xsl:apply-templates select="field[@tag='headword-of-target']"/>
+	  <xsl:apply-templates select="field[@type='headword-of-target']"/>
 	</span>
 	<xsl:text> </xsl:text>
   </xsl:template>

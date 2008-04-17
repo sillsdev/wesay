@@ -807,7 +807,7 @@ namespace WeSay.Project.Tests
 			m["zz"] = "orange";
 			_exporter.Add(sense);
 			_exporter.End();
-			AssertXPathNotNull("sense/field[@tag='flubadub']/form[@lang='zz' and text='orange']");
+			AssertXPathNotNull("sense/field[@type='flubadub']/form[@lang='zz' and text='orange']");
 		}
 
 		[Test]
@@ -818,7 +818,7 @@ namespace WeSay.Project.Tests
 			m["zz"] = "orange";
 			_exporter.Add(entry);
 			_exporter.End();
-			AssertXPathNotNull("entry/field[@tag='flubadub']/form[@lang='zz' and text='orange']");
+			AssertXPathNotNull("entry/field[@type='flubadub']/form[@lang='zz' and text='orange']");
 		}
 
 		[Test]
@@ -829,7 +829,7 @@ namespace WeSay.Project.Tests
 			m["zz"] = "orange";
 			_exporter.Add(example);
 			_exporter.End();
-			AssertXPathNotNull("example/field[@tag='flubadub']/form[@lang='zz' and text='orange']");
+			AssertXPathNotNull("example/field[@type='flubadub']/form[@lang='zz' and text='orange']");
 		}
 
 		[Test]

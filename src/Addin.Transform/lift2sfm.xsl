@@ -142,7 +142,7 @@
 	  <xsl:template match="field">
 		<xsl:apply-templates select="form">
 			<xsl:with-param name="prefix">
-				<xsl:value-of select="@tag"/>
+				<xsl:value-of select="@type"/>
 			 </xsl:with-param>
 		</xsl:apply-templates>
 	</xsl:template>
@@ -228,7 +228,7 @@
 		</xsl:apply-templates>
 	 </xsl:template>
 
-  <xsl:template match="field[@tag='Definition']">
+  <xsl:template match="field[@type='Definition']">
 	<!-- this is here as a result of a screwup where definition was treated as property, rather than a proper
 	part of lift... projects created after oct 23 2007 won't need this-->
 	<xsl:apply-templates select="form">
@@ -236,7 +236,7 @@
 	</xsl:apply-templates>
   </xsl:template>
 
-	<xsl:template match="field[@tag='Note']">
+	<xsl:template match="field[@type='Note']">
 		<xsl:apply-templates select="form">
 			<xsl:with-param name="prefix">nt</xsl:with-param>
 		</xsl:apply-templates>
@@ -244,14 +244,14 @@
 
 
 
-  <xsl:template match="field[@tag='LiteralMeaning']">
+  <xsl:template match="field[@type='LiteralMeaning']">
 	<!--review: notice we drop the language identifier completely -->
 	  <xsl:text>&nl;\lt </xsl:text><xsl:value-of select="form/text"/>
   </xsl:template>
 
   <!-- Wesay frowns on encouraging people to do homograph numbers, so it's not a build-in field.  As a concession,
   we detect that someone has added it as a custom field if they've named it anything reasonable-->
- <!-- <xsl:template match="field[contains(@tag,'omograph')] | field[contains(@tag,'omonym')]  | field[@tag='hm']">
+ <!-- <xsl:template match="field[contains(@type,'omograph')] | field[contains(@type,'omonym')]  | field[@type='hm']">
 	notice we drop the language identifier completely
 	<xsl:text>&nl;\hm </xsl:text><xsl:value-of select="form/text"/>
   </xsl:template>
@@ -259,7 +259,7 @@
   <!-- TODO: LIFT has a proper place for etymology, this won't address this. -->
   <!-- Wesay doesn't expect its users to doing etymology, so it's not a build-in field.  As a concession,
   we try to detect it and export it correctly -->
-  <xsl:template match="field[@tag='Etymology'] |field[@tag='et']">
+  <xsl:template match="field[@type='Etymology'] |field[@type='et']">
 	<!--notice we drop the language identifier completely -->
 	<xsl:text>&nl;\et </xsl:text>
 	<xsl:value-of select="form/text"/>
@@ -267,7 +267,7 @@
 
   <!-- Wesay doesn't expect its users to doing etymology, so it's not a build-in field.  As a concession,
   we try to detect it and export it correctly -->
-  <xsl:template match="field[contains(@tag,'orrowed')] |field[@tag='bw']">
+  <xsl:template match="field[contains(@type,'orrowed')] |field[@type='bw']">
 	<!--review: notice we drop the language identifier completely -->
 	<xsl:text>&nl;\bw </xsl:text>
 	<xsl:value-of select="form/text"/>
@@ -275,7 +275,7 @@
 
   <!-- Wesay doesn't expect its users to doing encyclopedic info, so it's not a build-in field.  As a concession,
   we try to detect it and export it correctly -->
-  <xsl:template match="field[@tag='EncyclopedicInformation'] |field[@tag='ee']">
+  <xsl:template match="field[@type='EncyclopedicInformation'] |field[@type='ee']">
 	<!--review: notice we drop the language identifier completely -->
 	<xsl:text>&nl;\ee </xsl:text>
 	<xsl:value-of select="form/text"/>

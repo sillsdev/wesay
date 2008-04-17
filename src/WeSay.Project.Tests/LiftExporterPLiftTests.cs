@@ -109,7 +109,7 @@ namespace WeSay.Project.Tests
 				_viewTemplate.Add(color);
 
 				Make(entries, _viewTemplate, _outputPath);
-				AssertXPathNotNull("lift/entry[@id='" + e1.Id + "']/field[@tag='"+"color"+"']", _outputPath);
+				AssertXPathNotNull("lift/entry[@id='" + e1.Id + "']/field[@type='"+"color"+"']", _outputPath);
 
 				//now make it invisible and it should disappear
 				_viewTemplate.GetField("color").Enabled = false;
@@ -164,7 +164,7 @@ namespace WeSay.Project.Tests
 
 				Make(entries, _viewTemplate, _outputPath);
 				AssertXPathNotNullWithArgs(_outputPath,
-								   "lift/entry/field[@tag='headword']/form[@lang='{0}']/text[text() = '{1}']",
+								   "lift/entry/field[@type='headword']/form[@lang='{0}']/text[text() = '{1}']",
 								   _headwordWritingSystemId, "thecitation");
 			}
 		}
@@ -220,13 +220,13 @@ namespace WeSay.Project.Tests
 		private void CheckRelationOutput(LexEntry targetEntry, string relationName)
 		{
 			AssertXPathNotNullWithArgs(_outputPath,
-									   "lift/entry/relation/field[@tag='headword-of-target']/form[@lang='{1}']/text[text() = '{2}']",
+									   "lift/entry/relation/field[@type='headword-of-target']/form[@lang='{1}']/text[text() = '{2}']",
 									   relationName, _headwordWritingSystemId, targetEntry.GetHeadWordForm(_headwordWritingSystemId));
 		}
 		private void CheckRelationNotOutput(string relationName)
 		{
 			AssertNoMatchForXPathWithArgs(_outputPath,
-									   "lift/entry/field[@tag='{0}-relation-headword']",
+									   "lift/entry/field[@type='{0}-relation-headword']",
 									   relationName, _headwordWritingSystemId);
 		}
 
