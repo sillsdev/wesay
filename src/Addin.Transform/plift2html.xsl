@@ -360,13 +360,13 @@ BOGURAEV and NEFF Lit Linguist Computing.1992; 7: 110-112
   <!--
 	Handle this:
 	<relation name="confer" ref="ane_ID0EIJAG">
-	  <field tag="headword-of-target">
+	  <field type="headword-of-target">
 		<form lang="v">
 		  <text>aneCitation</text>
 		</form>
 	  </field>
 	  </relation>-->
-  <xsl:template match="relation[field/@tag='headword-of-target']"> <!-- where plift generator found the target for us -->
+  <xsl:template match="relation[field/@type='headword-of-target']"> <!-- where plift generator found the target for us -->
 	<xsl:choose>
 	  <xsl:when test="@name = 'confer'">
 		<xsl:text>see</xsl:text>
