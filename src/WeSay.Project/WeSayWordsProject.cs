@@ -1106,8 +1106,8 @@ namespace WeSay.Project
 				{
 					//<field>s
 					GrepFile(PathToLiftFile,
-							 string.Format("tag\\s*=\\s*[\"']{0}[\"']", oldName),
-							 string.Format("tag=\"{0}\"", field.FieldName));
+							 string.Format("type\\s*=\\s*[\"']{0}[\"']", oldName),
+							 string.Format("type=\"{0}\"", field.FieldName));
 				}
 			}
 		}
