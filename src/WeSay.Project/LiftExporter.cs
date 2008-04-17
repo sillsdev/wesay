@@ -501,7 +501,7 @@ namespace WeSay.Project
 			{
 				_writer.WriteStartElement("field");
 
-				_writer.WriteAttributeString("tag", tag);
+				_writer.WriteAttributeString("type", tag);
 				WriteMultiTextNoWrapper(tag, text);
 				_writer.WriteEndElement();
 			}

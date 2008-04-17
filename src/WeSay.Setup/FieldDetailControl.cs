@@ -295,13 +295,13 @@ namespace WeSay.Setup
 				}
 				//we can't go from a multitext to to a simple option, if there is already data
 				conflictFound = conflictFound ||
-					WeSayWordsProject.Project.LiftHasMatchingElement("field", "tag", _field.FieldName);
+					WeSayWordsProject.Project.LiftHasMatchingElement("field", "type", _field.FieldName);
 			}
 			else if (newDataTypeName == Field.BuiltInDataType.OptionCollection.ToString())
 			{
 				//we can't go from a multitext to to a option collection, if there is already data
 				conflictFound =
-					WeSayWordsProject.Project.LiftHasMatchingElement("field", "tag", _field.FieldName);
+					WeSayWordsProject.Project.LiftHasMatchingElement("field", "type", _field.FieldName);
 			}
 
 			if (conflictFound)
