@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using LiftIO;
+using LiftIO.Parsing;
 using WeSay.Data;
 using WeSay.Foundation;
 using WeSay.Foundation.Options;
@@ -142,16 +143,16 @@ namespace WeSay.LexicalModel
 		public void MergeInGloss(LexSense sense, LiftMultiText forms)
 		{
 		   sense.Gloss.MergeInWithAppend(MultiText.Create(forms.AsSimpleStrings), "; ");
-		   AddTraitsToMultiText(forms, sense.Gloss);
+		   AddAnnotationsToMultiText(forms, sense.Gloss);
 		}
 
-		private static void AddTraitsToMultiText(LiftMultiText forms,  MultiText text)
+		private static void AddAnnotationsToMultiText(LiftMultiText forms,  MultiText text)
 		{
-			foreach (Trait trait in forms.Traits )
+			foreach (Annotation annotation in forms.Annotations)
 			{
-				if (trait.Name == "flag")
+				if (annotation.Name == "flag")
 				{
-					text.SetAnnotationOfAlternativeIsStarred(trait.LanguageHint, int.Parse(trait.Value) > 0);
+					text.SetAnnotationOfAlternativeIsStarred(annotation.LanguageHint, int.Parse(annotation.Value) > 0);
 				}
 				else
 				{
@@ -280,6 +281,8 @@ namespace WeSay.LexicalModel
 		{
 			MultiText mt = dataObject.GetOrCreateProperty<MultiText>(propertyName);
 			mt.MergeInWithAppend(MultiText.Create(contents.AsSimpleStrings), string.IsNullOrEmpty(noticeToPrependIfNotEmpty) ? "; " : noticeToPrependIfNotEmpty);
+			AddAnnotationsToMultiText(contents, mt);
+
 			//dataObject.GetOrCreateProperty<string>(propertyName) mt));
 		}
 
@@ -385,7 +388,7 @@ namespace WeSay.LexicalModel
 		{
 
 			multiText.MergeIn(MultiText.Create(forms.AsSimpleStrings));
-			AddTraitsToMultiText(forms, multiText);
+			AddAnnotationsToMultiText(forms, multiText);
 		}
 
 		 public void Dispose()

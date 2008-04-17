@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
+using LiftIO.Validation;
 using NUnit.Framework;
 using Palaso.Reporting;
 using WeSay.AddinLib;
@@ -163,7 +164,7 @@ namespace Addin.Transform.Tests
 				</entry>
 				<entry id='two'>
 				</entry>
-			</lift>", LiftIO.Validator.LiftVersion);
+			</lift>", Validator.LiftVersion);
 			if (WeSay.Project.WeSayWordsProject.Project.LiftIsLocked)
 			{
 				WeSay.Project.WeSayWordsProject.Project.ReleaseLockOnLift();

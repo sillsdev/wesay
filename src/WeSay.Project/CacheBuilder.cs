@@ -7,6 +7,8 @@ using System.Windows.Forms;
 using System.Xml;
 using Db4objects.Db4o;
 using LiftIO;
+using LiftIO.Parsing;
+using LiftIO.Validation;
 using Palaso.Progress;
 using Palaso.Reporting;
 using WeSay.App;
@@ -443,7 +445,7 @@ namespace WeSay.Project
 			{
 				//our parser failed.  Hopefully, because of bad lift. Validate it now  to
 				//see if that's the problem.
-				LiftIO.Validator.CheckLiftWithPossibleThrow(_sourceLIFTPath);
+				Validator.CheckLiftWithPossibleThrow(_sourceLIFTPath);
 
 				//if it got past that, ok, send along the error the parser encountered.
 				throw error;

@@ -8,6 +8,8 @@ using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Xsl;
 using LiftIO;
+using LiftIO.Migration;
+using LiftIO.Validation;
 using Palaso.Progress;
 using Palaso.Reporting;
 using Palaso.UI.WindowsForms.Progress;
@@ -174,7 +176,7 @@ namespace WeSay.App
 		/// <returns>true if everything is ok, false if something went wrong</returns>
 		public bool MigrateIfNeeded()
 		{
-			if (LiftIO.Migrator.IsMigrationNeeded(_project.PathToLiftFile))
+			if (Migrator.IsMigrationNeeded(_project.PathToLiftFile))
 			{
 				using (ProgressDialog dlg = new ProgressDialog())
 				{
@@ -225,13 +227,17 @@ namespace WeSay.App
 				ProgressState progressState = args.Argument as ProgressState;
 			try
 			{
-				string oldVersion = LiftIO.Validator.GetLiftVersion(_project.PathToLiftFile);
+				string oldVersion = Validator.GetLiftVersion(_project.PathToLiftFile);
 				Logger.WriteEvent("Migrating from {0} to {1}", oldVersion, Validator.LiftVersion);
 				progressState.StatusLabel =
 					string.Format("Migrating from {0} to {1}", oldVersion, Validator.LiftVersion);
 				string migratedFile = Migrator.MigrateToLatestVersion(_project.PathToLiftFile);
 				string nameForOldFile = _project.PathToLiftFile.Replace(".lift", "." + oldVersion + ".lift");
 
+				if(File.Exists(nameForOldFile )) // like, if we tried to convert it before and for some reason want to do it again
+				{
+					File.Delete(nameForOldFile);
+				}
 				File.Move(_project.PathToLiftFile, nameForOldFile);
 				File.Move(migratedFile, _project.PathToLiftFile);
 

@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Windows.Forms;
+using LiftIO.Validation;
 using Palaso.Progress;
 using WeSay.Data;
 using WeSay.LexicalModel;
@@ -76,7 +77,7 @@ namespace WeSay
 			 try
 			 {
 				 _progress.StatusLabel = "Validating...";
-				 string errors = LiftIO.Validator.GetAnyValidationErrors(_destinationLIFTPath);
+				 string errors = Validator.GetAnyValidationErrors(_destinationLIFTPath);
 				 if (errors != null && errors != String.Empty)
 				 {
 					 _progress.WriteToLog(errors);

@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Xml;
 using LiftIO;
+using LiftIO.Validation;
 using NUnit.Framework;
 using Palaso.Progress;
 using WeSay.Project;

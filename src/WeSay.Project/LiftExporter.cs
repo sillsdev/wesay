@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Text;
 using System.Xml;
+using LiftIO.Validation;
 using Palaso.Annotations;
 using Palaso.Reporting;
 using Palaso.Text;
@@ -106,7 +107,7 @@ namespace WeSay.Project
 
 			_writer.WriteStartDocument();
 			_writer.WriteStartElement("lift");
-			_writer.WriteAttributeString("version", LiftIO.Validator.LiftVersion);
+			_writer.WriteAttributeString("version", Validator.LiftVersion);
 			_writer.WriteAttributeString("producer",
 										 ProducerString);
 			// _writer.WriteAttributeString("xmlns", "flex", null, "http://fieldworks.sil.org");

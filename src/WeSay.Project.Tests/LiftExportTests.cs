@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Xml;
+using LiftIO.Validation;
 using NUnit.Framework;
 using WeSay.Data;
 using WeSay.Foundation;
@@ -55,7 +56,7 @@ namespace WeSay.Project.Tests
 			//which is what we use for tests.  The file version puts out utf-8
 			//CheckAnswer("<?xml version=\"1.0\" encoding=\"utf-16\"?><lift producer=\"WeSay.1Pt0Alpha\"/>");// xmlns:flex=\"http://fieldworks.sil.org\" />");
 			_exporter.End();
-			AssertXPathNotNull(string.Format("lift[@version='{0}']", LiftIO.Validator.LiftVersion));
+			AssertXPathNotNull(string.Format("lift[@version='{0}']", Validator.LiftVersion));
 			AssertXPathNotNull(string.Format("lift[@producer='{0}']", LiftExporter.ProducerString));
 		}
 

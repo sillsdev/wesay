@@ -12,6 +12,7 @@ using System.Xml;
 using System.Xml.XPath;
 using System.Xml.Xsl;
 using LiftIO;
+using LiftIO.Validation;
 using Mono.Addins;
 using Palaso.Reporting;
 using WeSay.AddinLib;

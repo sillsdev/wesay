@@ -6,6 +6,7 @@ using System.Threading;
 using System.Windows.Forms;
 using Db4objects.Db4o.Query;
 using LiftIO;
+using LiftIO.Merging;
 using Palaso.Reporting;
 using WeSay.Data;
 using WeSay.Foundation;

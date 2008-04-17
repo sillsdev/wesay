@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using LiftIO.Validation;
 using NUnit.Framework;
 using WeSay.AddinLib;
 using WeSay.Data;
@@ -56,7 +57,7 @@ namespace Addin.Transform.Tests
 				string.Format(
 					@"<?xml version='1.0' encoding='utf-8'?>
 <lift  version='{0}'><entry id='one'><sense><gloss lang='en'><text>hello</text></gloss></sense></entry><entry id='two'/></lift>",
-					LiftIO.Validator.LiftVersion);
+					Validator.LiftVersion);
 			if (WeSay.Project.WeSayWordsProject.Project.LiftIsLocked)
 			{
 				WeSay.Project.WeSayWordsProject.Project.ReleaseLockOnLift();

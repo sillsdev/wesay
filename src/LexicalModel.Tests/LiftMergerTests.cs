@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using LiftIO;
+using LiftIO.Parsing;
 using NUnit.Framework;
 using WeSay.Data;
 using WeSay.Foundation;
@@ -260,13 +261,13 @@ namespace WeSay.LexicalModel.Tests
 		{
 			LexSense sense = new LexSense();
 			LiftMultiText text = MakeBasicLiftMultiText();
-			AddTraitToLiftMultiText(text, "ws-one", "flag", "1");
+			AddAnnotationToLiftMultiText(text, "ws-one", "flag", "1");
 			_merger.MergeInGloss(sense, text);
 			Assert.IsTrue(sense.Gloss.GetAnnotationOfAlternativeIsStarred("ws-one"));
 			Assert.IsFalse(sense.Gloss.GetAnnotationOfAlternativeIsStarred("ws-two"));
 
 			text = MakeBasicLiftMultiText();
-			AddTraitToLiftMultiText(text, "ws-one", "flag", "0");
+			AddAnnotationToLiftMultiText(text, "ws-one", "flag", "0");
 			_merger.MergeInGloss(sense, text);
 			Assert.IsFalse(sense.Gloss.GetAnnotationOfAlternativeIsStarred("ws-one"));
 		}
@@ -276,17 +277,17 @@ namespace WeSay.LexicalModel.Tests
 		{
 			LexEntry entry = MakeSimpleEntry();
 			LiftMultiText text = MakeBasicLiftMultiText();
-			AddTraitToLiftMultiText(text, "ws-one", "flag", "1");
+			AddAnnotationToLiftMultiText(text, "ws-one", "flag", "1");
 			_merger.MergeInLexemeForm(entry, text);
 			Assert.IsTrue(entry.LexicalForm.GetAnnotationOfAlternativeIsStarred("ws-one"));
 			Assert.IsFalse(entry.LexicalForm.GetAnnotationOfAlternativeIsStarred("ws-two"));
 		}
 
-		private static void AddTraitToLiftMultiText(LiftMultiText text, string languageHint, string name, string value)
+		private static void AddAnnotationToLiftMultiText(LiftMultiText text, string languageHint, string name, string value)
 		{
-			Trait trait = new Trait(name, value);
-			trait.LanguageHint = languageHint;
-			text.Traits.Add(trait);
+			Annotation annotation = new Annotation(name, value, default(DateTime), null);
+			annotation.LanguageHint = languageHint;
+			text.Annotations.Add(annotation);
 		}
 
 		[Test]

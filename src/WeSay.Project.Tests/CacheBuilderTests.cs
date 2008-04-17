@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using Db4objects.Db4o;
 using LiftIO;
+using LiftIO.Validation;
 using NUnit.Framework;
 using Palaso.Progress;
 using WeSay.LexicalModel;
@@ -17,7 +18,7 @@ namespace WeSay.Project.Tests
 	{
 		private CacheBuilder _cacheBuilder;
 		private ProgressState _progress;
-		private string _simpleGoodLiftContents = string.Format("<?xml version='1.0' encoding='utf-8'?><lift version='{0}'><entry id='one'><sense><gloss lang='en'><text>hello</text></gloss></sense></entry><entry id='two'/></lift>", LiftIO.Validator.LiftVersion);
+		private string _simpleGoodLiftContents = string.Format("<?xml version='1.0' encoding='utf-8'?><lift version='{0}'><entry id='one'><sense><gloss lang='en'><text>hello</text></gloss></sense></entry><entry id='two'/></lift>", Validator.LiftVersion);
 		private string _log;
 
 		static protected string BackupPath
