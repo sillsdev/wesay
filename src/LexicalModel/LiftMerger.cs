@@ -108,9 +108,10 @@ namespace WeSay.LexicalModel
 			return s;
 		}
 
-		public LexSense GetOrMakeSubsense(LexSense sense, Extensible info)
+		public LexSense GetOrMakeSubsense(LexSense sense, Extensible info, string rawXml)
 		{
-		   //todo: don't drop subsenses
+			sense.GetOrCreateProperty<EmbeddedXmlCollection>("subSense").Values.Add(rawXml);
+
 			return null;
 		}
 
@@ -131,13 +132,15 @@ namespace WeSay.LexicalModel
 			AddOrAppendMultiTextProperty(entry, contents, LexEntry.WellKnownProperties.Citation, null);
 		}
 
-		public WeSayDataObject MergeInPronunciation(LexEntry entry, LiftMultiText contents)
+		public WeSayDataObject MergeInPronunciation(LexEntry entry, LiftMultiText contents, string rawXml)
 		{
+			entry.GetOrCreateProperty<EmbeddedXmlCollection>("pronunciation").Values.Add(rawXml);
 			return null;
 		}
 
-		public WeSayDataObject MergeInVariant(LexEntry entry, LiftMultiText contents)
+		public WeSayDataObject MergeInVariant(LexEntry entry, LiftMultiText contents, string rawXml)
 		{
+			entry.GetOrCreateProperty<EmbeddedXmlCollection>("variant").Values.Add(rawXml);
 			return null;
 		}
 
@@ -227,17 +230,20 @@ namespace WeSay.LexicalModel
 
 		public WeSayDataObject GetOrMakeParentReversal(WeSayDataObject parent, LiftMultiText contents, string type)
 		{
-			return null;
+			return null; // we'll get what we need from the rawxml of MergeInReversal
 		}
 
 		public WeSayDataObject MergeInReversal(LexSense sense, WeSayDataObject parent, LiftMultiText contents,
-											   string type)
+											   string type, string rawXml)
 		{
+			sense.GetOrCreateProperty<EmbeddedXmlCollection>("reversal").Values.Add(rawXml);
 			return null;
 		}
 
-		public WeSayDataObject MergeInEtymology(LexEntry entry, string source, LiftMultiText form, LiftMultiText gloss)
+		public WeSayDataObject MergeInEtymology(LexEntry entry, string source, LiftMultiText form, LiftMultiText gloss, string rawXml)
 		{
+			entry.GetOrCreateProperty<EmbeddedXmlCollection>("etymology").Values.Add(rawXml);
+
 			return null;
 		}
 
@@ -347,7 +353,7 @@ namespace WeSay.LexicalModel
 			//}
 		}
 
-		public void MergeInRelation(WeSayDataObject extensible, string relationFieldId, string targetId)
+		public void MergeInRelation(WeSayDataObject extensible, string relationFieldId, string targetId, string rawXml)
 		{
 			if (String.IsNullOrEmpty(relationFieldId))
 			{

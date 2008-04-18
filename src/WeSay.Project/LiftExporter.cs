@@ -213,9 +213,9 @@ namespace WeSay.Project
 			{
 				WriteHeadWordField(entry,"headword");
 			}
-			WriteWellKnownCustomMultiTextIfVisible(entry, LexEntry.WellKnownProperties.Citation, propertiesAlreadyOutput);
-			WriteWellKnownCustomMultiTextIfVisible(entry, LexEntry.WellKnownProperties.Note, propertiesAlreadyOutput);
-			WriteCustomPropertiesIfVisible(entry, propertiesAlreadyOutput);
+			WriteWellKnownCustomMultiText(entry, LexEntry.WellKnownProperties.Citation, propertiesAlreadyOutput);
+			WriteWellKnownCustomMultiText(entry, LexEntry.WellKnownProperties.Note, propertiesAlreadyOutput);
+			WriteCustomProperties(entry, propertiesAlreadyOutput);
 			foreach (LexSense sense in entry.Senses)
 			{
 				Add(sense);
@@ -299,9 +299,10 @@ namespace WeSay.Project
 			{
 				Add(example);
 			}
-			WriteWellKnownCustomMultiTextIfVisible(sense, LexSense.WellKnownProperties.Definition, propertiesAlreadyOutput);
-			WriteWellKnownCustomMultiTextIfVisible(sense, LexSense.WellKnownProperties.Note, propertiesAlreadyOutput);
-			WriteCustomPropertiesIfVisible(sense, propertiesAlreadyOutput);
+			WriteWellKnownCustomMultiText(sense, LexSense.WellKnownProperties.Definition, propertiesAlreadyOutput);
+			WriteWellKnownCustomMultiText(sense, LexSense.WellKnownProperties.Note, propertiesAlreadyOutput);
+		 //   WriteWellKnownUnimplementedProperty(sense, LexSense.WellKnownProperties.Note, propertiesAlreadyOutput);
+			WriteCustomProperties(sense, propertiesAlreadyOutput);
 			_writer.WriteEndElement();
 		}
 
@@ -326,7 +327,7 @@ namespace WeSay.Project
 			}
 		}
 
-		private void WriteWellKnownCustomMultiTextIfVisible(WeSayDataObject item, string property, List<string> propertiesAlreadyOutput)
+		private void WriteWellKnownCustomMultiText(WeSayDataObject item, string property, List<string> propertiesAlreadyOutput)
 		{
 			if (ShouldOutputProperty(property))
 			{
@@ -369,7 +370,7 @@ namespace WeSay.Project
 			return text.GetOrderedAndFilteredForms(f.WritingSystemIds);
 		}
 
-		private void WriteCustomPropertiesIfVisible(WeSayDataObject item, List<string> propertiesAlreadyOutput)
+		private void WriteCustomProperties(WeSayDataObject item, List<string> propertiesAlreadyOutput)
 		{
 			foreach (KeyValuePair<string, object> pair in item.Properties)
 			{
@@ -379,6 +380,11 @@ namespace WeSay.Project
 				}
 				if(!ShouldOutputProperty(pair.Key))
 				{
+					continue;
+				}
+				if (pair.Value is EmbeddedXmlCollection)
+				{
+					WriteEmbeddedXmlCollection(pair.Value as EmbeddedXmlCollection);
 					continue;
 				}
 				if (pair.Value is MultiText)
@@ -415,6 +421,14 @@ namespace WeSay.Project
 				throw new ApplicationException(
 					string.Format("The LIFT exporter was surprised to find a property '{0}' of type: {1}", pair.Key,
 								  pair.Value.GetType()));
+			}
+		}
+
+		private void WriteEmbeddedXmlCollection(EmbeddedXmlCollection collection)
+		{
+			foreach (string rawXml in collection.Values)
+			{
+				_writer.WriteRaw(rawXml);
 			}
 		}
 
@@ -556,12 +570,12 @@ namespace WeSay.Project
 
 			if (ShouldOutputProperty(LexExampleSentence.WellKnownProperties.ExampleSentence))
 			{
-				WriteWellKnownCustomMultiTextIfVisible(example, LexExampleSentence.WellKnownProperties.Note,
+				WriteWellKnownCustomMultiText(example, LexExampleSentence.WellKnownProperties.Note,
 											  propertiesAlreadyOutput);
 			}
 
 
-			WriteCustomPropertiesIfVisible(example, propertiesAlreadyOutput);
+			WriteCustomProperties(example, propertiesAlreadyOutput);
 			_writer.WriteEndElement();
 		}
 

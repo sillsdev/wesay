@@ -271,6 +271,8 @@ namespace WeSay.Foundation
 			NotifyPropertyChanged(e.PropertyName);
 		}
 
+
+
 		public TContents GetOrCreateProperty<TContents>(string fieldName)
 				where TContents : class, IParentable, new()
 		{
@@ -427,6 +429,30 @@ namespace WeSay.Foundation
 				}
 			}
 			_listOwner.NotifyPropertyChanged(_listName);
+		}
+	}
+
+	public class EmbeddedXmlCollection : IParentable
+	{
+		private List<string> _values;
+		private WeSayDataObject _parent;
+
+		public EmbeddedXmlCollection()
+		{
+			_values = new List<string>();
+		}
+
+
+
+		public WeSayDataObject Parent
+		{
+			set { _parent = value; }
+		}
+
+		public List<string> Values
+		{
+			get { return _values; }
+			set { _values = value; }
 		}
 	}
 }

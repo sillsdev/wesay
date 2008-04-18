@@ -191,7 +191,7 @@ namespace WeSay.LexicalModel.Tests
 		public void SenseGetsRelation()
 		{
 			LexSense sense = new LexSense();
-			_merger.MergeInRelation(sense, "synonym", "foo");
+			_merger.MergeInRelation(sense, "synonym", "foo", null);
 			LexRelationCollection synonyms= sense.GetProperty<LexRelationCollection>("synonym");
 			LexRelation relation = synonyms.Relations[0];
 			Assert.AreEqual("synonym", relation.FieldId);

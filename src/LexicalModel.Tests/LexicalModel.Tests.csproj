@@ -88,6 +88,7 @@
 	<Compile Include="EventsAndDates.cs" />
 	<Compile Include="Db4o-Specific\PersistenceTests.cs" />
 	<Compile Include="LiftMergerTests.cs" />
+	<Compile Include="LiftRoundTripTests.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
