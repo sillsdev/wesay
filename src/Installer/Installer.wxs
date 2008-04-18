@@ -175,8 +175,8 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 				  <Component Id="LiftIO.dll" Guid="{EC2E5E3E-19E8-4680-8377-447DBDDE9BDF}">
 					<File Id="LiftIO.dll" Name="LiftIO.dll" KeyPath="yes" Source="..\..\output\release\LiftIO.dll" />
 				  </Component>
-				  <Component Id="mono.relaxng.dll" Guid="{68959BF8-AC50-47FD-8B06-718B3E7FC6B6}">
-					<File Id="mono.relaxng.dll" Name="mono.relaxng.dll" KeyPath="yes" Source="..\..\output\release\mono.relaxng.dll" />
+				  <Component Id="Commons.Xml.Relaxng.dll" Guid="{68959BF8-AC50-47FD-8B06-718B3E7FC6B6}">
+					<File Id="Commons.Xml.Relaxng.dll" Name="Commons.Xml.Relaxng.dll" KeyPath="yes" Source="..\..\output\release\Commons.Xml.Relaxng.dll" />
 				  </Component>
 				  <Component Id="NetReflector.dll" Guid="{AE9F3A6E-390F-46B3-AFCB-CE8A2E8EC769}">
 					<File Id="NetReflector.dll" Name="NetReflector.dll" KeyPath="yes" Source="..\..\output\release\NetReflector.dll" />
@@ -326,7 +326,7 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 			  <ComponentRef Id="LexicalTools.dll" />
 			  <ComponentRef Id="LexicalTools.pdb" />
 			  <ComponentRef Id="LiftIO.dll" />
-			  <ComponentRef Id="mono.relaxng.dll" />
+			  <ComponentRef Id="Commons.Xml.Relaxng.dll" />
 			  <!--<ComponentRef Id="LiftIO.pdb" />-->
 			  <ComponentRef Id="NetReflector.dll" />
 			  <!--<ComponentRef Id="NetReflector.pdb" />-->
