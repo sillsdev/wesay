@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Text;
 using WeSay.Data;
 using WeSay.Foundation;
 
@@ -9,6 +11,7 @@ namespace WeSay.LexicalModel
 	{
 		//private readonly SenseGlossMultiText _gloss;
 		private readonly InMemoryBindingList<LexExampleSentence> _exampleSentences;
+		private string _id;
 
 		new public class WellKnownProperties : WeSayDataObject.WellKnownProperties
 		{
@@ -47,6 +50,17 @@ namespace WeSay.LexicalModel
 			base.WireUpEvents();
 			//WireUpChild(_gloss);
 			WireUpList(_exampleSentences, "exampleSentences");
+		}
+
+		public string GetOrCreateId()
+		{
+			if (String.IsNullOrEmpty(_id))
+			{
+				_id = Guid.NewGuid().ToString();
+				this.NotifyPropertyChanged("id");
+			}
+
+			return _id;
 		}
 
 		/// <summary>
@@ -90,6 +104,12 @@ namespace WeSay.LexicalModel
 					   ExampleSentences.Count == 0 &&
 					   !HasPropertiesForPurposesOfDeletion;
 			}
+		}
+
+		public string Id
+		{
+			get { return _id; }
+			set { _id = value; }
 		}
 
 		public override void CleanUpAfterEditting()

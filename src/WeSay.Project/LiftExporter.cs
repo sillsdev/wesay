@@ -281,6 +281,8 @@ namespace WeSay.Project
 			List<string> propertiesAlreadyOutput = new List<string>();
 
 			_writer.WriteStartElement("sense");
+			_writer.WriteAttributeString("id", sense.GetOrCreateId());
+
 			if (ShouldOutputProperty(LexSense.WellKnownProperties.PartOfSpeech))
 			{
 				WriteGrammi(sense);

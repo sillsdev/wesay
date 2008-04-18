@@ -499,6 +499,16 @@ namespace WeSay.Project.Tests
 		}
 
 		[Test]
+		public void Sense_HasId_RemembersId()
+		{
+			LexSense s = new LexSense();
+			 s.Id = "my id";
+			_exporter.Add(s);
+			_exporter.End();
+			ShouldContain("id=\"my id\"");
+		}
+
+		[Test]
 		public void Entry_EntryHasIdWithInvalidXMLCharacters_CharactersEscaped()
 		{
 			// technically the only invalid characters in an attribute are & < and " (when surrounded by ")
@@ -519,6 +529,15 @@ namespace WeSay.Project.Tests
 			ShouldContain(string.Format("id=\"{0}\"", LiftExporter.GetHumanReadableId(entry, new Dictionary<string, int>())));
 		}
 
+
+		[Test]
+		public void Sense_NoId_GetsId()
+		{
+			LexSense sense = new LexSense();
+			_exporter.Add(sense);
+			_exporter.End();
+			ShouldContain(string.Format("id=\"{0}\"", sense.Id));
+		}
 
 		/* this is not relevant, as we are currently using form_guid as the id
 		[Test]

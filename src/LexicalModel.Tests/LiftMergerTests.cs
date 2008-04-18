@@ -224,6 +224,15 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
+		public void SenseGetsId()
+		{
+			Extensible extensibleInfo = new Extensible();
+			extensibleInfo.Id = "foo";
+			LexSense s = _merger.GetOrMakeSense(new LexEntry(),extensibleInfo) ;
+			Assert.AreEqual(extensibleInfo.Id, s.Id);
+		}
+
+		[Test]
 		public void MultipleNotesCombined()
 		{
 			LexSense sense = new LexSense();

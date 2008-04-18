@@ -102,6 +102,7 @@ namespace WeSay.LexicalModel
 		{
 			//nb, has no guid or dates
 			LexSense s= new LexSense(entry);
+			s.Id = eInfo.Id;
 			entry.Senses.Add(s);
 
 			return s;
