@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Reflection;
 using System.Text.RegularExpressions;
@@ -89,9 +90,17 @@ namespace WeSay.Project
 			}
 
 			Directory.CreateDirectory(Path.GetDirectoryName(PathToPretendLiftFile));
-
-			//jdh added, amidst some confusion about why it was suddenly needed, on april 17,2007
 			Utilities.CreateEmptyLiftFile(PathToPretendLiftFile, "InitializeForTests()", true);
+
+			//setup writing systems
+			WritingSystemCollection wsc = new WritingSystemCollection();
+			wsc.Add(wsc.TestWritingSystemVernId, new WritingSystem(wsc.TestWritingSystemVernId, new Font("Courier", 10)));
+			wsc.Add(wsc.TestWritingSystemAnalId, new WritingSystem(wsc.TestWritingSystemAnalId, new Font("Arial", 15)));
+			if (File.Exists(PathToPretendWritingSystemPrefs))
+			{
+				File.Delete(PathToPretendWritingSystemPrefs);
+			}
+			wsc.Write(XmlWriter.Create(PathToPretendWritingSystemPrefs));
 
 			project.SetupProjectDirForTests(PathToPretendLiftFile);
 		}
@@ -120,15 +129,14 @@ namespace WeSay.Project
 		{
 			get { return Path.Combine(GetPretendProjectDirectory(), "PRETEND.lift"); }
 		}
-
+		public static string PathToPretendWritingSystemPrefs
+		{
+			get { return Path.Combine(GetPretendProjectDirectory(), "writingSystemPrefs.xml"); }
+		}
 		public void SetupProjectDirForTests(string pathToLift)
 		{
 			ProjectDirectoryPath = Directory.GetParent(pathToLift).Parent.FullName;
 			PathToLiftFile = pathToLift;
-//            if (!Directory.Exists(pathToLift))
-//            {
-//                Directory.CreateDirectory(pathToLift);
-//            }
 			if (File.Exists(PathToConfigFile))
 			{
 				File.Delete(PathToConfigFile);
