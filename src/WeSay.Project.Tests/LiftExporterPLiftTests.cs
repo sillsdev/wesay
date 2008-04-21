@@ -29,12 +29,13 @@ namespace WeSay.Project.Tests
 			Db4oLexModelHelper.InitializeForNonDbTests();
 			_outputPath = Path.Combine(Path.GetTempPath(), Path.GetTempFileName());
 
-			_writingSystemIds = new List<string>(new string[] { "first","second","third" });
+			_writingSystemIds = new List<string>(new string[] { "red","green","blue" });
 			_headwordWritingSystemId = _writingSystemIds[0];
 
 			_viewTemplate = new ViewTemplate();
 
-			_viewTemplate.Add(new Field(LexEntry.WellKnownProperties.LexicalUnit, "LexEntry", _writingSystemIds));
+			_viewTemplate.Add(new Field(LexEntry.WellKnownProperties.Citation, "LexEntry", new string[] { "blue", "red"}));
+			_viewTemplate.Add(new Field(LexEntry.WellKnownProperties.LexicalUnit, "LexEntry", new string[] { "red", "green", "blue" }));
 			_viewTemplate.Add(new Field(LexEntry.WellKnownProperties.BaseForm, "LexEntry", _writingSystemIds));
 
 			Field visibleCustom = new Field("VisibleCustom", "LexEntry", _writingSystemIds, Field.MultiplicityType.ZeroOr1, "MultiText");
@@ -64,8 +65,8 @@ namespace WeSay.Project.Tests
 				MakeTestLexEntry(entries, "flower");
 				LexEntry e2 =MakeTestLexEntry(entries, "one");
 				Make(entries, _viewTemplate, _outputPath);
-				AssertXPathNotNull("lift/entry[@id='"+e1.Id+"' and @order='46']", _outputPath);
-				AssertXPathNotNull("lift/entry[@id='"+e2.Id+"' and @order='46']", _outputPath);
+				AssertXPathNotNull(_outputPath, "lift/entry[@id='"+e1.Id+"' and @order='46']");
+				AssertXPathNotNull(_outputPath, "lift/entry[@id='"+e2.Id+"' and @order='46']");
 			}
 		}
 
@@ -92,7 +93,7 @@ namespace WeSay.Project.Tests
 				MakeTestLexEntry(entries, "sunset");
 
 				Make(entries, _viewTemplate, _outputPath);
-				AssertXPathNotNull("lift/entry[@id='" + e1.Id + "' and not(@order)]", _outputPath);
+				AssertXPathNotNull(_outputPath, "lift/entry[@id='" + e1.Id + "' and not(@order)]");
 			}
 		}
 
@@ -109,13 +110,13 @@ namespace WeSay.Project.Tests
 				_viewTemplate.Add(color);
 
 				Make(entries, _viewTemplate, _outputPath);
-				AssertXPathNotNull("lift/entry[@id='" + e1.Id + "']/field[@type='"+"color"+"']", _outputPath);
+				AssertXPathNotNull(_outputPath, "lift/entry[@id='" + e1.Id + "']/field[@type='"+"color"+"']");
 
 				//now make it invisible and it should disappear
 				_viewTemplate.GetField("color").Enabled = false;
 
 				Make(entries, _viewTemplate, _outputPath);
-				AssertNoMatchForXPath("lift/entry[@id='" + e1.Id + "']/field", _outputPath);
+				AssertNoMatchForXPath(_outputPath, "lift/entry[@id='" + e1.Id + "']/field");
 
 			}
 		}
@@ -128,8 +129,8 @@ namespace WeSay.Project.Tests
 				LexEntry entry = entries.AddNew();
 				entry.LexicalForm.SetAlternative(_writingSystemIds[1], "one");
 				Make(entries, _viewTemplate, _outputPath);
-				AssertXPathNotNull("lift/entry/lexical-unit/form[text='one']", _outputPath);
-				AssertNoMatchForXPath("lift/entry/lexical-unit/form[text='red']", _outputPath);
+				AssertXPathNotNull(_outputPath, "lift/entry/lexical-unit/form[text='one']");
+				AssertNoMatchForXPath(_outputPath, "lift/entry/lexical-unit/form[text='red']");
 			}
 		}
 
@@ -151,22 +152,66 @@ namespace WeSay.Project.Tests
 			}
 		}
 
-
 		[Test]
-		public void HeadWordField_Exported()
+		public void HeadWordField_CitationFieldEnabled_UsesCitationFormSettings()
 		{
+			_viewTemplate.GetField(LexEntry.WellKnownProperties.Citation).Enabled = true;
+
 			using (InMemoryRecordList<LexEntry> entries = new InMemoryRecordList<LexEntry>())
 			{
-				LexEntry entry = entries.AddNew();
-				entry.LexicalForm.SetAlternative(_headwordWritingSystemId, "thelexeme");
-				entry.CitationForm.SetAlternative(_headwordWritingSystemId, "thecitation");
+				MakeEntry(entries);
+				Make(entries, _viewTemplate, _outputPath);
+				Assert.AreEqual(2, _viewTemplate.GetField(LexEntry.WellKnownProperties.Citation).WritingSystemIds.Count);
+				AssertXPathNotNullWithArgs(_outputPath,
+								   "lift/entry/field[@type='headword']/form[@lang='{0}']/text[text() = '{1}']",
+								   _viewTemplate.GetField(LexEntry.WellKnownProperties.Citation).WritingSystemIds[0],
+								   "blueCitation");
+				//should fall through to lexeme form on red
+				AssertXPathNotNullWithArgs(_outputPath,
+									"lift/entry/field[@type='headword']/form[@lang='{0}']/text[text() = '{1}']",
+									_viewTemplate.GetField(LexEntry.WellKnownProperties.Citation).WritingSystemIds[1],
+									"redLexemeForm");
 
+				AssertNoMatchForXPath(_outputPath,
+									"lift/entry/field[@type='headword']/form[@lang='green']");
+			}
+		}
 
+		[Test]
+		public void HeadWordField_CitationFieldDisabled_UsesLexemeFormSettings()
+		{
+			_viewTemplate.GetField(LexEntry.WellKnownProperties.Citation).Enabled = false;
+
+			using (InMemoryRecordList<LexEntry> entries = new InMemoryRecordList<LexEntry>())
+			{
+				MakeEntry(entries);
 				Make(entries, _viewTemplate, _outputPath);
 				AssertXPathNotNullWithArgs(_outputPath,
 								   "lift/entry/field[@type='headword']/form[@lang='{0}']/text[text() = '{1}']",
-								   _headwordWritingSystemId, "thecitation");
+								   _headwordWritingSystemId, "redLexemeForm");
+
+
+				//nb: it's not clear what the "correct" behavior is, if the citation for is disabled for this user
+				//but a citation form does exist for this ws.
+
+				AssertXPathNotNullWithArgs(_outputPath,
+									"lift/entry/field[@type='headword']/form[@lang='{0}']/text[text() = '{1}']",
+									_writingSystemIds[1], "greenCitation");
+				AssertXPathNotNullWithArgs(_outputPath,
+									"lift/entry/field[@type='headword']/form[@lang='{0}']/text[text() = '{1}']",
+									_writingSystemIds[2], "blueCitation");
 			}
+		}
+
+		private void MakeEntry(InMemoryRecordList<LexEntry> entries)
+		{
+			LexEntry entry = entries.AddNew();
+			entry.LexicalForm.SetAlternative("red", "redLexemeForm");
+			entry.LexicalForm.SetAlternative("green", "greenLexemeForm");
+			entry.LexicalForm.SetAlternative("blue", "blueLexemeForm");
+			//leave this blank entry.CitationForm.SetAlternative("red", "redCitation");
+			entry.CitationForm.SetAlternative("green", "greenCitation");
+			entry.CitationForm.SetAlternative("blue", "blueCitation");
 		}
 
 
@@ -260,13 +305,13 @@ namespace WeSay.Project.Tests
 
 		private void AssertXPathNotNullWithArgs( string filePath, string xpathWithArgs, params object[] args)
 		{
-			AssertXPathNotNull(string.Format(xpathWithArgs, args), filePath);
+			AssertXPathNotNull(filePath, string.Format(xpathWithArgs, args));
 		}
 		private void AssertNoMatchForXPathWithArgs(string filePath, string xpathWithArgs, params object[] args)
 		{
-			AssertNoMatchForXPath(string.Format(xpathWithArgs, args), filePath);
+			AssertNoMatchForXPath(filePath, string.Format(xpathWithArgs, args));
 		}
-		private void AssertXPathNotNull(string xpath, string filePath)
+		private void AssertXPathNotNull(string filePath, string xpath)
 		{
 			XmlDocument doc = new XmlDocument();
 			try
@@ -289,7 +334,7 @@ namespace WeSay.Project.Tests
 
 
 
-		public static void AssertNoMatchForXPath(string xpath, string filePath)
+		public static void AssertNoMatchForXPath(string filePath, string xpath)
 		{
 			XmlDocument doc = new XmlDocument();
 			try

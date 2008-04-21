@@ -223,16 +223,53 @@ namespace WeSay.Project
 			_writer.WriteEndElement();
 		}
 
-		private void WriteHeadWordField(LexEntry entry, string fieldName)
+		/// <summary>
+		/// nb: this is used both for the headword of an article, but also for the target of a relation.
+		/// </summary>
+		private void WriteHeadWordField(LexEntry entry, string outputFieldName)
 		{
+			if(Template == null)
+			{
+				throw new ArgumentException("Expected a non-null Template");
+			}
 			MultiText headword = new MultiText();
+			Field fieldControllingHeadwordOutput = Template.GetField(LexEntry.WellKnownProperties.Citation);
+			if(fieldControllingHeadwordOutput == null || !fieldControllingHeadwordOutput.Enabled )
+			{
+				fieldControllingHeadwordOutput = Template.GetField(LexEntry.WellKnownProperties.LexicalUnit);
+				if (fieldControllingHeadwordOutput == null)
+				{
+					throw new ArgumentException("Expected to find LexicalUnit in the view Template");
+				}
+			}
+			//                headword.SetAlternative(HeadWordWritingSystemId, entry.GetHeadWordForm(HeadWordWritingSystemId));
 
-			//review: here I (jh) make a whole multitext out of the form, so I don't need
-			// to add specialized exporters for a non-multitext.  But anyhow,
-			//I'm wondering if we won't really need to have a multi-ws headword anyhow
-			headword.SetAlternative(HeadWordWritingSystemId, entry.GetHeadWordForm(HeadWordWritingSystemId));
-			WriteCustomMultiTextField(fieldName, headword);
+			foreach (string writingSystemId in fieldControllingHeadwordOutput.WritingSystemIds)
+			{
+				headword.SetAlternative(writingSystemId, entry.GetHeadWordForm(writingSystemId));
+			}
+			WriteMultiTextAsArtificialField(outputFieldName, headword);
+		}
 
+
+		/// <summary>
+		/// use this for multitexts that were somehow constructed during export, with no corresponding single property
+		/// </summary>
+		private void WriteMultiTextAsArtificialField(string outputFieldName, MultiText text)
+		{
+			if (!MultiText.IsEmpty(text))
+			{
+				_writer.WriteStartElement("field");
+
+				_writer.WriteAttributeString("type", outputFieldName);
+
+				if (!MultiText.IsEmpty(text))
+				{
+					Add(text.Forms, true);
+				}
+
+				_writer.WriteEndElement();
+			}
 		}
 
 		/// <summary>
@@ -583,17 +620,26 @@ namespace WeSay.Project
 
 		public void Add(string propertyName, MultiText text)
 		{
-			foreach (LanguageForm form in GetOrderedAndFilteredForms(text, propertyName))
+			Add(GetOrderedAndFilteredForms(text, propertyName), false);
+		}
+
+		private void Add(LanguageForm[] forms, bool doMarkTheFirst)
+		{
+			foreach (LanguageForm form in forms)
 			{
-					_writer.WriteStartElement("form");
-					_writer.WriteAttributeString("lang", form.WritingSystemId);
+				_writer.WriteStartElement("form");
+				_writer.WriteAttributeString("lang", form.WritingSystemId);
+				if (doMarkTheFirst)
+				{
+					doMarkTheFirst = false;
+					_writer.WriteAttributeString("first", "true");//useful for headword
+				}
+				_writer.WriteStartElement("text");
+				_writer.WriteString(form.Form);
+				_writer.WriteEndElement();
 
-					_writer.WriteStartElement("text");
-					_writer.WriteString(form.Form);
-					_writer.WriteEndElement();
-
-					WriteFlags(form);
-					_writer.WriteEndElement();
+				WriteFlags(form);
+				_writer.WriteEndElement();
 			}
 		}
 

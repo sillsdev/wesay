@@ -181,6 +181,8 @@ BOGURAEV and NEFF Lit Linguist Computing.1992; 7: 110-112
   <xsl:template match="entry[@dateDeleted]"/>
 
 
+  <!-- TODO: there is a @first='true' we can use to output, say, non-bold for the forms after the first one -->
+
   <xsl:template match="field[@type='headword']">
 	<span class="headword">
 	  <xsl:apply-templates select="form[@lang=$headword-writing-system]"/>
