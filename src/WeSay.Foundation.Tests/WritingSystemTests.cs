@@ -184,7 +184,9 @@ namespace WeSay.Foundation.Tests
 		{
 			WritingSystem writingSystem = new WritingSystem("one", new Font(FontFamily.GenericSansSerif, 11));
 			writingSystem.SortUsing = "fr";
-			Assert.Less(writingSystem.Compare("Èdit", "Edít"), 0);
+			//u00c8 is Latin Capital Letter E with Grave
+			//u00ed is Latin small letter i with acute
+			Assert.Less(writingSystem.Compare("\u00c8dit", "Ed\u00edt"), 0);
 		}
 
 		[Test]
@@ -192,7 +194,9 @@ namespace WeSay.Foundation.Tests
 		{
 			WritingSystem writingSystem = new WritingSystem("one", new Font(FontFamily.GenericSansSerif, 11));
 			writingSystem.SortUsing = "en-US";
-			Assert.Greater(writingSystem.Compare("Èdit", "Edít"), 0);
+			//u00c8 is Latin Capital Letter E with Grave
+			//u00ed is Latin small letter i with acute
+			Assert.Greater(writingSystem.Compare("\u00c8dit", "Ed\u00edt"), 0);
 		}
 
 		[Test]
