@@ -2,12 +2,9 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
-using Palaso.Progress;
 using Palaso.Reporting;
-using Palaso.UI.WindowsForms.Progress;
 using WeSay.Project;
 using WeSay.Setup.Properties;
-using WeSay.UI;
 
 namespace WeSay.Setup
 {
@@ -16,9 +13,6 @@ namespace WeSay.Setup
 		private WelcomeControl _welcomePage;
 		private SettingsControl _projectSettingsControl;
 		private WeSayWordsProject _project;
-		private ProgressDialogHandler _progressHandler;
-		private ProgressDialogProgressState _progressState;
-		private string _progressLog;
 
 		public AdminWindow(string[] args)
 		{
@@ -61,12 +55,12 @@ namespace WeSay.Setup
 		{
 			if (this.toolStrip2.InvokeRequired)
 			{
-				UpdateStuffCallback d = new UpdateStuffCallback(UpdateEnabledStates);
+				UpdateStuffCallback d = UpdateEnabledStates;
 				Invoke(d, new object[] {});
 			}
 			else
 			{
-				openProjectInWeSayToolStripMenuItem.Enabled = (_project != null) && (_progressHandler == null);
+				openProjectInWeSayToolStripMenuItem.Enabled = (_project != null);
 			}
 		}
 
@@ -112,20 +106,13 @@ namespace WeSay.Setup
 			string configFilePath = (string) sender;
 			if (!File.Exists(configFilePath))
 			{
-				Palaso.Reporting.ErrorReport.ReportNonFatalMessage(
+				ErrorReport.ReportNonFatalMessage(
 					"WeSay could not find the file at {0} anymore.  Maybe it was moved or renamed?", configFilePath);
 				return;
 			}
-			string first = Directory.GetParent(configFilePath).FullName;
-			if (WeSayWordsProject.IsValidProjectDirectory(Directory.GetParent(first).FullName))
-			{
-				OpenProject(configFilePath);
-			}
-			else
-			{
-				ErrorReport.ReportNonFatalMessage(
-						"Sorry, that file does not appear to be located in a valid WeSay Project directory.");
-			}
+
+			OpenProject(configFilePath);
+
 			if (Project != null)
 			{
 				Settings.Default.LastConfigFilePath = Project.PathToConfigFile;
@@ -252,9 +239,9 @@ namespace WeSay.Setup
 			Controls.Add(_welcomePage);
 			_welcomePage.BringToFront();
 			_welcomePage.Dock = DockStyle.Fill;
-			_welcomePage.NewProjectClicked += new EventHandler(OnCreateProject);
-			_welcomePage.OpenPreviousProjectClicked += new EventHandler(OnOpenProject);
-			_welcomePage.ChooseProjectClicked += new EventHandler(OnChooseProject);
+			_welcomePage.NewProjectClicked += OnCreateProject;
+			_welcomePage.OpenPreviousProjectClicked += OnOpenProject;
+			_welcomePage.ChooseProjectClicked += OnChooseProject;
 		}
 
 		private void InstallProjectsControls()
@@ -292,16 +279,6 @@ namespace WeSay.Setup
 
 		private void AdminWindow_FormClosing(object sender, FormClosingEventArgs e)
 		{
-			if (_progressHandler != null)
-			{
-				// Then Close() the dialog, to force a cancel
-				// Note, we don't use ForceClose() because we
-				// want to invoke the cancel behaviour
-				_progressHandler.CloseByCancellingThenCloseParent();
-				e.Cancel = true;
-				return;
-			}
-
 			try
 			{
 				if (Project != null)
@@ -321,109 +298,6 @@ namespace WeSay.Setup
 		{
 			new AboutBox().ShowDialog();
 		}
-
-		private void OnExportToLiftXmlToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-			if (!File.Exists(_project.PathToDb4oLexicalModelDB))
-			{
-				ErrorReport.ReportNonFatalMessage(
-						string.Format(
-								"Sorry, {0} cannot find a file which is necessary to perform the export on this project ({1})",
-								Application.ProductName,
-								_project.PathToDb4oLexicalModelDB));
-				return;
-			}
-
-//            OpenFileDialog openDialog = new OpenFileDialog();
-//            openDialog.Title="Choose the Words file to convert to LIFT";
-//            openDialog.FileName = WeSayWordsProject.Project.PathToLexicalModelDB;
-//            openDialog.Filter = "WeSay Words(*.words)|*.words";
-//            if (openDialog.ShowDialog() != DialogResult.OK)
-//            {
-//                return;
-//            }
-
-			SaveFileDialog saveDialog = new SaveFileDialog();
-			if (Settings.Default.LastLiftExportPath == String.Empty ||
-				!Directory.Exists(Settings.Default.LastLiftExportPath))
-			{
-				saveDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-			}
-			else
-			{
-				saveDialog.InitialDirectory = Settings.Default.LastLiftExportPath;
-			}
-			saveDialog.Title = "Save LIFT file as";
-			saveDialog.Filter = "LIFT XML (*.xml)|*.xml";
-			saveDialog.FileName = _project.Name + ".lift.xml";
-			if (saveDialog.ShowDialog() != DialogResult.OK)
-			{
-				return;
-			}
-			Settings.Default.LastLiftExportPath = Path.GetDirectoryName(saveDialog.FileName);
-
-			RunCommand(new ExportLIFTCommand(saveDialog.FileName, _project.PathToDb4oLexicalModelDB));
-		}
-
-		private void RunCommand(BasicCommand command)
-		{
-			_progressLog = "";
-			_progressHandler = new ProgressDialogHandler(this, command);
-			_progressHandler.Finished += new EventHandler(OnProgressHandler_Finished);
-			_progressState = new ProgressDialogProgressState(_progressHandler);
-			_progressState.Log += new EventHandler<ProgressState.LogEvent>(OnProgressState_Log);
-			UpdateEnabledStates();
-			command.BeginInvoke(_progressState);
-		}
-
-		private void OnProgressState_Log(object sender, ProgressState.LogEvent e)
-		{
-			_progressLog += e.message + "\r\n";
-		}
-
-		private void OnProgressHandler_Finished(object sender, EventArgs e)
-		{
-			_progressHandler = null;
-			UpdateEnabledStates();
-			if (_progressState.State == ProgressState.StateValue.StoppedWithError)
-			{
-				ErrorReport.ReportNonFatalMessage("WeSay ran into a problem.\r\n" + _progressLog);
-			}
-		}
-
-//
-//        private void OnImportFromLiftXml(object sender, EventArgs e)
-//        {
-//            OpenFileDialog openDialog = new OpenFileDialog();
-//            openDialog.Title = "Choose the LIFT xml file to convert to a WeSay Words file";
-//
-//            if (Settings.Default.LastLiftImportPath == String.Empty || !Directory.Exists(Settings.Default.LastLiftImportPath))
-//            {
-//                openDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-//            }
-//            else
-//            {
-//                openDialog.InitialDirectory = Settings.Default.LastLiftImportPath;
-//            }
-//
-//            openDialog.Filter = "LIFT XML (*.xml;*.lift)|*.xml;*.lift";
-//            if (openDialog.ShowDialog() != DialogResult.OK)
-//            {
-//                return;
-//            }
-//            Settings.Default.LastLiftImportPath = Path.GetDirectoryName(openDialog.FileName);
-//
-////            SaveFileDialog saveDialog = new SaveFileDialog();
-////            saveDialog.Title = "Save WeSay Words file as";
-////            saveDialog.Filter = "WeSay Words(*.words)|*.words";
-////            saveDialog.InitialDirectory = WeSayWordsProject.Project.PathToLexicalModelDB;
-////            if (saveDialog.ShowDialog() != DialogResult.OK)
-////            {
-////                return;
-////            }
-////            RunCommand(new ImportLIFTCommand(saveDialog.FileName, openDialog.FileName));
-//            RunCommand(new ImportLIFTCommand(openDialog.FileName));
-//        }
 
 		private void OnOpenThisProjectInWeSay(object sender, EventArgs e)
 		{
