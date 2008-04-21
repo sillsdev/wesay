@@ -55,7 +55,7 @@ namespace Addin.Transform
 
 		public override void Launch(Form parentForm, ProjectInfo projectInfo)
 		{
-			string output = CreateFileToOpen(projectInfo, false);
+			string output = CreateFileToOpen(projectInfo, true, true);
 			if (string.IsNullOrEmpty(output))
 			{
 				return; // get this when the user cancels
@@ -66,7 +66,7 @@ namespace Addin.Transform
 			}
 		}
 
-		protected string CreateFileToOpen(ProjectInfo projectInfo, bool intendedForWinWord)
+		protected string CreateFileToOpen(ProjectInfo projectInfo, bool includeXmlDirective, bool linkToUserCss)
 		{
 			//the problem we're addressing here is that when this is launched from the wesay configuration
 			//that won't (and doesn't want to) have locked up the db4o db by making a record list manager,
@@ -94,9 +94,11 @@ namespace Addin.Transform
 								  projectInfo.LocateFile("WritingSystemPrefs.xml"));
 			   arguments.AddParam("grammatical-info-optionslist-file", string.Empty,
 								  projectInfo.LocateFile("PartsOfSpeech.xml"));
-			   arguments.AddParam("output-intented-for-winword", string.Empty, intendedForWinWord.ToString() + "()");
+			   arguments.AddParam("link-to-usercss", string.Empty, linkToUserCss.ToString() + "()");
 
-			   return TransformLift(projectInfo, "plift2html.xsl", ".htm", arguments, true);
+			   return TransformLift(projectInfo, "plift2html.xsl", ".htm", arguments,
+				   //word doesn't notice that is is html if the <xml> directive is in there
+				   includeXmlDirective);
 		   }
 			finally
 		   {

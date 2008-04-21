@@ -58,7 +58,7 @@ namespace Addin.Transform
 
 		public override void Launch(Form parentForm, ProjectInfo projectInfo)
 		{
-			string htmlPath = CreateFileToOpen(projectInfo, true);
+			string htmlPath = CreateFileToOpen(projectInfo, true, false);
 			if(string.IsNullOrEmpty(htmlPath))
 			{
 				return; // get this when the user cancels
