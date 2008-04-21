@@ -355,7 +355,11 @@ namespace WeSay.Project.Tests
 			LexSense sense = new LexSense();
 			sense.Gloss["blue"] = "LessThan<GreaterThan>Ampersan&";
 			_exporter.Add(sense);
-			CheckAnswer("<sense><gloss lang=\"blue\"><text>LessThan&lt;GreaterThan&gt;Ampersan&amp;</text></gloss></sense>");
+			CheckAnswer(GetSenseElement(sense)+"<gloss lang=\"blue\"><text>LessThan&lt;GreaterThan&gt;Ampersan&amp;</text></gloss></sense>");
+		}
+		private string GetSenseElement(LexSense sense)
+		{
+			return  string.Format("<sense id=\"{0}\">", sense.GetOrCreateId());
 		}
 
 		[Test]
@@ -364,7 +368,7 @@ namespace WeSay.Project.Tests
 			LexSense sense = new LexSense();
 			sense.Gloss["x\"y"] = "test";
 			_exporter.Add(sense);
-			CheckAnswer("<sense><gloss lang=\"x&quot;y\"><text>test</text></gloss></sense>");
+			CheckAnswer(GetSenseElement(sense)+"<gloss lang=\"x&quot;y\"><text>test</text></gloss></sense>");
 		}
 
 		[Test]
@@ -427,8 +431,9 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void BlankSense()
 		{
-			_exporter.Add(new LexSense());
-			CheckAnswer("<sense />");
+			LexSense sense = new LexSense();
+			_exporter.Add(sense);
+			CheckAnswer(string.Format("<sense id=\"{0}\" />", sense.GetOrCreateId()));
 		}
 
 		[Test]
@@ -695,15 +700,16 @@ namespace WeSay.Project.Tests
 		{
 			LexEntry entry = new LexEntry();
 			entry.LexicalForm["blue"] = "ocean";
-			LexSense sense = new LexSense();
-			sense.Gloss["a"] = "aaa";
-			entry.Senses.Add(sense);
-			sense = new LexSense();
-			sense.Gloss["b"] = "bbb";
-			entry.Senses.Add(sense);
+			LexSense sense1 = new LexSense();
+			sense1.Gloss["a"] = "aaa";
+			entry.Senses.Add(sense1);
+			LexSense sense2 = new LexSense();
+			sense2.Gloss["b"] = "bbb";
+			entry.Senses.Add(sense2);
 			_exporter.Add(entry);
 
-			ShouldContain(string.Format("<sense><gloss lang=\"a\"><text>aaa</text></gloss></sense><sense><gloss lang=\"b\"><text>bbb</text></gloss></sense></entry>"));
+			ShouldContain(string.Format(GetSenseElement(sense1)+"<gloss lang=\"a\"><text>aaa</text></gloss></sense>"+
+				GetSenseElement(sense2)+"<gloss lang=\"b\"><text>bbb</text></gloss></sense></entry>"));
 			AssertXPathNotNull("entry[count(sense)=2]");
 		}
 
@@ -713,12 +719,12 @@ namespace WeSay.Project.Tests
 			LexEntry entry = new LexEntry();
 			entry.LexicalForm["blue"] = "ocean";
 
-			LexSense sense = new LexSense();
-			sense.Gloss["a"] = "aaa";
-			entry.Senses.Add(sense);
-			sense = new LexSense();
-			sense.Gloss["b"] = "bbb";
-			entry.Senses.Add(sense);
+			LexSense sense1 = new LexSense();
+			sense1.Gloss["a"] = "aaa";
+			entry.Senses.Add(sense1);
+			LexSense sense2 = new LexSense();
+			sense2.Gloss["b"] = "bbb";
+			entry.Senses.Add(sense2);
 
 			MultiText citation = entry.GetOrCreateProperty<MultiText>(LexEntry.WellKnownProperties.Citation);
 			citation["zz"] = "orange";
@@ -731,7 +737,8 @@ namespace WeSay.Project.Tests
 
 			_exporter.Add(entry);
 
-			ShouldContain(string.Format("<sense><gloss lang=\"a\"><text>aaa</text></gloss></sense><sense><gloss lang=\"b\"><text>bbb</text></gloss></sense></entry>"));
+			ShouldContain(string.Format(GetSenseElement(sense1) + "<gloss lang=\"a\"><text>aaa</text></gloss></sense>" +
+				GetSenseElement(sense2) + "<gloss lang=\"b\"><text>bbb</text></gloss></sense></entry>"));
 		}
 
 
@@ -881,7 +888,7 @@ namespace WeSay.Project.Tests
 			o.Value = "orange";
 			_exporter.Add(sense);
 			_exporter.End();
-			Assert.AreEqual("<sense><trait name=\"flub\" value=\"orange\" /></sense>", _stringBuilder.ToString());
+			Assert.AreEqual(GetSenseElement(sense)+"<trait name=\"flub\" value=\"orange\" /></sense>", _stringBuilder.ToString());
 		}
 
 		[Test]
@@ -946,7 +953,7 @@ namespace WeSay.Project.Tests
 			o.AddRange(new string[] { "orange", "blue" });
 			_exporter.Add(sense);
 			_exporter.End();
-			Assert.AreEqual("<sense><trait name=\"flubs\" value=\"orange\" /><trait name=\"flubs\" value=\"blue\" /></sense>", _stringBuilder.ToString());
+			Assert.AreEqual(GetSenseElement(sense)+"<trait name=\"flubs\" value=\"orange\" /><trait name=\"flubs\" value=\"blue\" /></sense>", _stringBuilder.ToString());
 		}
 
 		[Test]
@@ -969,7 +976,7 @@ namespace WeSay.Project.Tests
 			example.Sentence["red"] = "red sunset tonight";
 			sense.ExampleSentences.Add(example);
 			_exporter.Add(sense);
-			CheckAnswer("<sense><example><form lang=\"red\"><text>red sunset tonight</text></form></example></sense>");
+			CheckAnswer(GetSenseElement(sense)+"<example><form lang=\"red\"><text>red sunset tonight</text></form></example></sense>");
 		}
 
 
@@ -990,7 +997,7 @@ namespace WeSay.Project.Tests
 			relations.Relations.Add(new LexRelation(antonymRelationType.ID, "bee", sense));
 
 			_exporter.Add(sense);
-			CheckAnswer("<sense><relation type=\"synonym\" ref=\"one\" /><relation type=\"synonym\" ref=\"two\" /><relation type=\"antonym\" ref=\"bee\" /></sense>");
+			CheckAnswer(GetSenseElement(sense)+"<relation type=\"synonym\" ref=\"one\" /><relation type=\"synonym\" ref=\"two\" /><relation type=\"antonym\" ref=\"bee\" /></sense>");
 		}
 
 		private void CheckAnswer(string answer)
@@ -1030,7 +1037,7 @@ namespace WeSay.Project.Tests
 			p.Value = "bird.jpg";
 			_exporter.Add(sense);
 			_exporter.End();
-			CheckAnswer("<sense><picture href=\"bird.jpg\" /></sense>");
+			CheckAnswer(GetSenseElement(sense)+"<picture href=\"bird.jpg\" /></sense>");
 		}
 
 		[Test]
@@ -1043,7 +1050,7 @@ namespace WeSay.Project.Tests
 			p.Caption["aa"] = "aCaption";
 			_exporter.Add(sense);
 			_exporter.End();
-			CheckAnswer("<sense><picture href=\"bird.jpg\"><label><form lang=\"aa\"><text>aCaption</text></form></label></picture></sense>");
+			CheckAnswer(GetSenseElement(sense)+"<picture href=\"bird.jpg\"><label><form lang=\"aa\"><text>aCaption</text></form></label></picture></sense>");
 		}
 
 	}
