@@ -305,19 +305,15 @@ namespace WeSay.LexicalModel
 		/// <summary>
 		/// Handle LIFT's "field" entity which can be found on any subclass of "extensible"
 		/// </summary>
-		public void MergeInField(WeSayDataObject extensible, string tagAttribute, DateTime dateCreated,
-								 DateTime dateModified, LiftMultiText contents)
+		public void MergeInField(WeSayDataObject extensible, string typeAttribute, DateTime dateCreated,
+								 DateTime dateModified, LiftMultiText contents, List<Trait> traits)
 		{
 			MultiText t = MultiText.Create(contents.AsSimpleStrings);
-			extensible.Properties.Add(new KeyValuePair<string, object>(tagAttribute, t));
 
-			/* good idea, but it doesn't work.  It doesn't cause an update to the lift xml
-			 * if(extensible.GetType() == typeof(LexSense) && tagAttribute=="note")
-			{
-				//goose it into wanting to write this back out, in the corrected form (<note> instead of <field>)
-				extensible.SomethingWasModified("note");
-			}
-			*/
+			//enchance: instead of KeyValuePair, make a LiftField class, so we can either keep the
+			// other field stuff as xml (in order to round-trip it) or model it.
+
+			extensible.Properties.Add(new KeyValuePair<string, object>(typeAttribute, t));
 		}
 
 		/// <summary>
@@ -414,11 +410,6 @@ namespace WeSay.LexicalModel
 			{
 				_entries.Add(entry);
 			}
-		}
-
-		public void MergeInField(WeSayDataObject extensible, string tagAttribute, DateTime dateCreated,
-								 DateTime dateModified, LiftMultiText contents, List<Trait> traits)
-		{
 		}
 
 		#endregion

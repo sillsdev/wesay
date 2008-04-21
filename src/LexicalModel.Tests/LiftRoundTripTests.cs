@@ -115,6 +115,18 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
+		public void FieldOnEntry_ContentPreserved()
+		{
+			LexEntry e = MakeSimpleEntry();
+
+			_merger.MergeInField(e, "color", default(DateTime), default(DateTime), MakeBasicLiftMultiText(), null);
+			_exporter.Add(e);
+			_exporter.End();
+			AssertXPathNotNull("//entry/field[@type='color']/form[@lang='ws-one']");
+			AssertXPathNotNull("//entry/field[@type='color']/form[@lang='ws-two']");
+		}
+
+		[Test]
 		public void Variant()
 		{
 			LexEntry e = MakeSimpleEntry();

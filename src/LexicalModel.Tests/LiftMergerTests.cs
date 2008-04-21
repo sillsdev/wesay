@@ -570,7 +570,7 @@ namespace WeSay.LexicalModel.Tests
 			LexEntry e = MakeSimpleEntry();
 			LiftMultiText t = new LiftMultiText();
 			t["z"] = new LiftString("dub");
-			_merger.MergeInField(e, "flub", default(DateTime), default(DateTime), t);
+			_merger.MergeInField(e, "flub", default(DateTime), default(DateTime), t, null);
 			Assert.AreEqual(1, e.Properties.Count);
 			Assert.AreEqual("flub", e.Properties[0].Key);
 			MultiText mt = e.GetProperty<MultiText>("flub");
@@ -583,7 +583,7 @@ namespace WeSay.LexicalModel.Tests
 			LexEntry e = MakeSimpleEntry();
 			LiftMultiText t = new LiftMultiText();
 			t["z"] = new LiftString("dub");
-			_merger.MergeInField(e, "flub", default(DateTime), default(DateTime), t);
+			_merger.MergeInField(e, "flub", default(DateTime), default(DateTime), t, null);
 			Assert.AreEqual(1, e.Properties.Count);
 			Assert.AreEqual("flub", e.Properties[0].Key);
 			MultiText mt = e.GetProperty<MultiText>("flub");
