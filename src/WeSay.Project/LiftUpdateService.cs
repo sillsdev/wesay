@@ -147,12 +147,6 @@ namespace WeSay.Project
 			}
 
 			//Logger.WriteEvent("Incremental Update Done");
-
-			//the granularity of the file access time stamp is too blunt, so we
-			//avoid missing changes with this hack, for now (have *not* tested how small it could be)
-			Thread.Sleep(50);
-
-
 		}
 
 		/// <summary>
@@ -203,28 +197,13 @@ namespace WeSay.Project
 		}
 
 
-		private  string MakeIncrementFileName(DateTime time)
+		private static string MakeIncrementFileName(DateTime time)
 		{
-//            if (File.Exists(LiftIO.SynchronicMerger.BaseLiftFileName))
-//            {
-				string timeString = time.ToString("yyyy'-'MM'-'dd'T'HH'-'mm'-'ss'-'FFFFF UTC");
-				string path = Path.Combine(LiftDirectory, timeString);
-				path += SynchronicMerger.ExtensionOfIncrementalFiles;
-				return path;
-//            }
-//            else
-//            {
-//                return PathToBaseLiftFile;
-//            }
+			string timeString = time.ToString("yyyy'-'MM'-'dd'T'HH'-'mm'-'ss'-'FFFFF UTC");
+			string path = Path.Combine(LiftDirectory, timeString);
+			path += SynchronicMerger.ExtensionOfIncrementalFiles;
+			return path;
 		}
-
-//        public string PathToBaseLiftFile
-//        {
-//            get
-//            {
-//                return Path.Combine(LiftDirectory, LiftIO.SynchronicMerger.BaseLiftFileName);
-//            }
-//        }
 
 		/// <summary>
 		/// wierd name!
@@ -236,45 +215,40 @@ namespace WeSay.Project
 
 		protected static void RecordUpdateTime(DateTime time)
 		{
-//            string file = Path.Combine(LiftDirectory, s_updatePointFileName);
-//            if (!File.Exists(file))
-//            {
-//                File.Create(file).Close();
-//            }
-//
-//            File.SetLastWriteTimeUtc(file, time);
-
+			//// the resolution of the file modified time is a whole second on linux
+			//// so we need to set this to the ceiling of the time in seconds and then
+			//// wait until the actual time has passed this window
+			//int millisecondsLostInResolution = 1000 - time.Millisecond;
+			//time = time.AddMilliseconds(millisecondsLostInResolution);
+			//TimeSpan timeout = time - DateTime.UtcNow;
+			//if(timeout.Ticks > 0)
+			//{
+			//    Thread.Sleep(timeout);
+			//}
 			bool wasLocked = WeSayWordsProject.Project.LiftIsLocked;
 			if (wasLocked)
 			{
 				WeSayWordsProject.Project.ReleaseLockOnLift();
 			}
 			File.SetLastWriteTimeUtc(WeSayWordsProject.Project.PathToLiftFile, time);
+			//Debug.Assert(time == GetLastUpdateTime());
 			if (wasLocked)
 			{
 				WeSayWordsProject.Project.LockLift();
 			}
 		}
 
-		private  DateTime GetLastUpdateTime()
+		private static DateTime GetLastUpdateTime()
 		{
 			Debug.Assert(Directory.Exists(LiftDirectory));
-//            string file = Path.Combine(LiftDirectory, s_updatePointFileName);
-//            if (!File.Exists(file))
-//            {
-//                return DateTime.MinValue;
-//            }
-//            else
-//            {
-//                return File.GetLastWriteTimeUtc(file);
-//            }
-
 			return File.GetLastWriteTimeUtc(WeSayWordsProject.Project.PathToLiftFile);
 		}
 
 		public IList  GetRecordsNeedingUpdateInLift()
 		{
-			DateTime last = GetLastUpdateTime();
+			// by moving back 1 milliseconds, we ensure that we
+			// will get the correct records with just a > and not >= (see note below)
+			DateTime last = GetLastUpdateTime().AddMilliseconds(-1);
 			IQuery q =this._datasource.Data.Query();
 			q.Constrain(typeof(LexEntry));
 			//REVIEW: this is >, not >=. Could a change get lost if the

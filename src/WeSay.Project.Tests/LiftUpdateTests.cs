@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Threading;
 using System.Xml;
 using NUnit.Framework;
 using WeSay.App;
@@ -74,7 +75,8 @@ namespace WeSay.Project.Tests
 			_records.Add(MakeEntry());
 			_records.Add(MakeEntry());
 			_service.DoLiftUpdateNow(false);
-
+			// Linux has resolution of second not millisecond!
+			Thread.Sleep(1000);
 			_records.Add(new LexEntry());
 			_records.Add(new LexEntry());
 			_records.Add(new LexEntry());
