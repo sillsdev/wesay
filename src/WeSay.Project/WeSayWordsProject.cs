@@ -14,7 +14,6 @@ using System.Xml.XPath;
 using System.Xml.Xsl;
 using LiftIO;
 using LiftIO.Validation;
-using Mono.Addins;
 using Palaso.Reporting;
 using WeSay.AddinLib;
 using WeSay.Data;
@@ -31,13 +30,13 @@ namespace WeSay.Project
 		private IList<ITask> _tasks;
 		private ViewTemplate _defaultViewTemplate;
 		private IList<ViewTemplate> _viewTemplates;
-		private Dictionary<string, OptionsList> _optionLists;
+		private readonly Dictionary<string, OptionsList> _optionLists;
 		private string _pathToLiftFile;
 		private string _cacheLocationOverride;
 		private FileStream _liftFileStreamForLocking;
 		private LiftUpdateService _liftUpdateService;
 
-		private AddinSet _addins;
+		private readonly AddinSet _addins;
 		private IList<LexRelationType> _relationTypes;
 
 		public event EventHandler EditorsSaveNow;
@@ -155,15 +154,13 @@ namespace WeSay.Project
 		/// </summary>
 		public void InvalidateCacheSilently()
 		{
-			DateTime liftLastWriteTimeUtc = File.GetLastWriteTimeUtc(WeSayWordsProject.Project.PathToLiftFile);
-			if (File.Exists(WeSayWordsProject.Project.PathToDb4oLexicalModelDB))
+			DateTime liftLastWriteTimeUtc = File.GetLastWriteTimeUtc(Project.PathToLiftFile);
+			if (File.Exists(Project.PathToDb4oLexicalModelDB))
 			{
 				try // don't crash if we can't update
 				{
-					using (
-							Db4oDataSource ds =
-									new Db4oDataSource(
-											WeSayWordsProject.Project.PathToDb4oLexicalModelDB))
+					using (Db4oDataSource ds =
+								new Db4oDataSource(Project.PathToDb4oLexicalModelDB))
 					{
 						//this should be different now so the cache should be updated
 						//but it shouldn't be off by enough to make it so we lose
@@ -177,13 +174,13 @@ namespace WeSay.Project
 				{
 					try
 					{
-						File.Delete(WeSayWordsProject.Project.PathToDb4oLexicalModelDB);
+						File.Delete(Project.PathToDb4oLexicalModelDB);
 					}
 					catch(Exception )
 					{
-						Palaso.Reporting.ErrorReport.ReportNonFatalMessage(
+						ErrorReport.ReportNonFatalMessage(
 							"Please exit WeSay and manually delete this cache file: {0}.",
-							WeSayWordsProject.Project.PathToDb4oLexicalModelDB);
+							Project.PathToDb4oLexicalModelDB);
 					}
 				}
 
@@ -196,7 +193,7 @@ namespace WeSay.Project
 		public void HandleProbableCacheProblem(Exception error)
 		{
 #if DEBUG
-			Palaso.Reporting.ErrorReport.ReportNonFatalMessage(
+			ErrorReport.ReportNonFatalMessage(
 				"WeSay had a problem. You should quit now and let WeSay try to fix the problem when you run it again.\r\n\r\nIn the release build, the cache would now be invalidated and the user would not see the following crash dialog.");
 			throw error;
 #else
@@ -281,19 +278,8 @@ namespace WeSay.Project
 				//ProjectDirectoryPath = Directory.GetParent(Directory.GetParent(liftPath).FullName).FullName;
 				ProjectDirectoryPath = Directory.GetParent(liftPath).FullName;
 
-				if (CheckLexiconIsInValidProjectDirectory(liftPath))
-				{
-					ProjectDirectoryPath = ProjectDirectoryPath;
-
-					LoadFromProjectDirectoryPath(ProjectDirectoryPath);
-					return true;
-				}
-				else
-				{
-					PathToLiftFile = null;
-					ProjectDirectoryPath = null;
-					return false;
-				}
+				LoadFromProjectDirectoryPath(ProjectDirectoryPath);
+				return true;
 			}
 			catch (Exception e)
 			{
@@ -355,7 +341,7 @@ namespace WeSay.Project
 			InitializeViewTemplatesFromProjectFiles();
 		}
 
-		private void MoveFilesFromOldDirLayout(string projectDir)
+		private static void MoveFilesFromOldDirLayout(string projectDir)
 		{
 			MoveWeSayContentsToProjectDir(projectDir, "common");
 			MoveWeSayContentsToProjectDir(projectDir, "wesay");
@@ -414,7 +400,7 @@ namespace WeSay.Project
 			catch(Exception err)
 			{
 				ApplicationException e = new ApplicationException("Error while trying to migrate to new file structure. ", err);
-				Palaso.Reporting.ErrorNotificationDialog.ReportException(e);
+				ErrorNotificationDialog.ReportException(e);
 			}
 		}
 
@@ -448,7 +434,7 @@ namespace WeSay.Project
 			catch (Exception err)
 			{
 				ApplicationException e = new ApplicationException("Error while trying to move export files to new structure. ", err);
-				Palaso.Reporting.ErrorNotificationDialog.ReportException(e);
+				ErrorNotificationDialog.ReportException(e);
 			}
 		}
 
@@ -475,7 +461,7 @@ namespace WeSay.Project
 			return didMigrate;
 		}
 
-		private static void MigrateUsingXSLT(XPathDocument configurationDoc, string xsltName, string targetPath)
+		private static void MigrateUsingXSLT(IXPathNavigable configurationDoc, string xsltName, string targetPath)
 		{
 			Logger.WriteEvent("Migrating Configuration File {0}", xsltName);
 			using (
@@ -562,7 +548,7 @@ namespace WeSay.Project
 			return GetAddinNodes(GetConfigurationDoc());
 		}
 
-		private static XPathNodeIterator GetAddinNodes(XPathDocument configDoc)
+		private static XPathNodeIterator GetAddinNodes(IXPathNavigable configDoc)
 		{
 			try
 			{
@@ -583,7 +569,7 @@ namespace WeSay.Project
 		public ProjectInfo GetProjectInfoForAddin()
 		{
 			return new ProjectInfo(Name,
-								   BasilProject.ApplicationRootDirectory,
+								   ApplicationRootDirectory,
 								   ProjectDirectoryPath,
 								   PathToLiftFile,
 								   PathToExportDirectory,
@@ -614,32 +600,9 @@ namespace WeSay.Project
 			return projectDoc;
 		}
 
-		private static bool CheckLexiconIsInValidProjectDirectory(string liftPath)
-		{
-			DirectoryInfo lexiconDirectoryInfo = Directory.GetParent(liftPath);
-			DirectoryInfo projectRootDirectoryInfo = lexiconDirectoryInfo;
-			string lexiconDirectoryName = lexiconDirectoryInfo.Name;
-			if (Environment.OSVersion.Platform != PlatformID.Unix)
-			{
-				//windows
-				lexiconDirectoryName = lexiconDirectoryName.ToLowerInvariant();
-			}
-
-			if (projectRootDirectoryInfo == null ||
-			  //  lexiconDirectoryName != "wesay" ||
-				(!IsValidProjectDirectory(projectRootDirectoryInfo.FullName)))
-			{
-				string message =
-						"WeSay cannot open the lexicon, because it is not in a proper WeSay/Basil project structure.";
-				ErrorReport.ReportNonFatalMessage(message);
-				return false;
-			}
-			return true;
-		}
-
 		public string PathToDefaultConfig
 		{
-			get { return Path.Combine(BasilProject.ApplicationCommonDirectory, "default.WeSayConfig"); }
+			get { return Path.Combine(ApplicationCommonDirectory, "default.WeSayConfig"); }
 		}
 
 		public override void CreateEmptyProjectFiles(string projectDirectoryPath)
@@ -666,19 +629,6 @@ namespace WeSay.Project
 			{
 				Utilities.CreateEmptyLiftFile(PathToLiftFile, LiftExporter.ProducerString, false);
 			}
-		}
-
-		public static bool IsValidProjectDirectory(string dir)
-		{
-			string[] requiredDirectories = new string[] {};
-			foreach (string s in requiredDirectories)
-			{
-				if (!Directory.Exists(Path.Combine(dir, s)))
-				{
-					return false;
-				}
-			}
-			return true;
 		}
 
 		public string PathToConfigFile
@@ -966,7 +916,7 @@ namespace WeSay.Project
 				Field f = DefaultViewTemplate.GetField(LexEntry.WellKnownProperties.LexicalUnit);
 				if(f.WritingSystemIds.Count == 0)
 				{
-					return this.WritingSystems.UnknownVernacularWritingSystem;
+					return WritingSystems.UnknownVernacularWritingSystem;
 				}
 				return WritingSystems[f.WritingSystemIds[0]];
 			}
@@ -1231,7 +1181,7 @@ namespace WeSay.Project
 				catch (IOException)
 				{
 					//nb: we don't want to provide an option to cancel.  Better to crash than cancel.
-					Palaso.Reporting.ErrorReport.ReportNonFatalMessage(Application.ProductName+" was unable to get at the dictionary file to update it.  Please ensure that WeSay isn't running with it open, then click the 'OK' button below. If you cannot figure out what program has the LIFT file open, the best choice is to kill WeSay Configuration Tool using the Task Manager (ctrl+alt+del), so that the configuration does not fall out of sync with the LIFT file.");
+					ErrorReport.ReportNonFatalMessage(Application.ProductName+" was unable to get at the dictionary file to update it.  Please ensure that WeSay isn't running with it open, then click the 'OK' button below. If you cannot figure out what program has the LIFT file open, the best choice is to kill WeSay Configuration Tool using the Task Manager (ctrl+alt+del), so that the configuration does not fall out of sync with the LIFT file.");
 				}
 			} while (!succeeded);
 		}
@@ -1251,18 +1201,6 @@ namespace WeSay.Project
 			}
 			return false;
 		}
-
-		private static string GetUniqueFileName(string path)
-		{
-			int i = 1;
-			while (File.Exists(path + "old" + i))
-			{
-				++i;
-			}
-			return path + "old" + i;
-		}
-
-
 
 		/// <summary>
 		/// Files to process when backing up or checking in
@@ -1285,7 +1223,7 @@ namespace WeSay.Project
 			return files.ToArray();
 		}
 
-		private static bool Matches(string file, string[] antipatterns)
+		private static bool Matches(string file, IEnumerable<string> antipatterns)
 		{
 			foreach (string s in antipatterns)
 			{
