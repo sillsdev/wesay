@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Db4objects.Db4o;
-using LiftIO;
 using LiftIO.Validation;
 using NUnit.Framework;
 using Palaso.Progress;
@@ -18,7 +17,7 @@ namespace WeSay.Project.Tests
 	{
 		private CacheBuilder _cacheBuilder;
 		private ProgressState _progress;
-		private string _simpleGoodLiftContents = string.Format("<?xml version='1.0' encoding='utf-8'?><lift version='{0}'><entry id='one'><sense><gloss lang='en'><text>hello</text></gloss></sense></entry><entry id='two'/></lift>", Validator.LiftVersion);
+		private readonly string _simpleGoodLiftContents = string.Format("<?xml version='1.0' encoding='utf-8'?><lift version='{0}'><entry id='one'><sense><gloss lang='en'><text>hello</text></gloss></sense></entry><entry id='two'/></lift>", Validator.LiftVersion);
 		private string _log;
 
 		static protected string BackupPath
@@ -35,7 +34,7 @@ namespace WeSay.Project.Tests
 			WeSayWordsProject.InitializeForTests();
 			_cacheBuilder = new CacheBuilder(WeSayWordsProject.Project.PathToLiftFile);
 			_progress = new ConsoleProgress();
-			_progress.Log += new EventHandler<ProgressState.LogEvent>(OnLog);
+			_progress.Log += OnLog;
 		}
 
 
@@ -211,7 +210,7 @@ namespace WeSay.Project.Tests
 		public void OkIfNoExistingDbToBackup()
 		{
 			File.Delete(BackupPath);
-			MakeBackupOfExistingDBCore(BackupPath);
+			MakeBackupOfExistingDBCore();
 		}
 
 		[Test, Ignore("Do we really need a backup of the cache?")]
@@ -219,7 +218,7 @@ namespace WeSay.Project.Tests
 		{
 	//        File.WriteAllText(_cacheBuilder.DestinationDatabasePath, "old current");
 			File.Delete(BackupPath);
-			MakeBackupOfExistingDBCore(BackupPath);
+			MakeBackupOfExistingDBCore();
 			Assert.IsTrue(File.Exists(BackupPath));
 			Assert.IsTrue(File.ReadAllText(BackupPath) == "old current");
 		}
@@ -230,7 +229,7 @@ namespace WeSay.Project.Tests
 
 			File.WriteAllText(BackupPath, "old backup");
 	  //      File.WriteAllText(_cacheBuilder.DestinationDatabasePath, "old current");
-			MakeBackupOfExistingDBCore(BackupPath);
+			MakeBackupOfExistingDBCore();
 			Assert.IsTrue(File.Exists(BackupPath));
 			Assert.IsTrue(File.ReadAllText(BackupPath) == "old current");
 		}
@@ -241,10 +240,10 @@ namespace WeSay.Project.Tests
 			//just in case
 			File.Delete(BackupPath);
 
-			MakeBackupOfExistingDBCore(BackupPath);
+			MakeBackupOfExistingDBCore();
 		}
 
-		private void MakeBackupOfExistingDBCore(string backupPath)
+		private void MakeBackupOfExistingDBCore()
 		{
 			File.WriteAllText(_cacheBuilder.SourceLIFTPath, _simpleGoodLiftContents);
 			_cacheBuilder.DoWork(_progress);
