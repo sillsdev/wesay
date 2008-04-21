@@ -74,9 +74,9 @@ namespace WeSay.Project.Tests
 		{
 			_records.Add(MakeEntry());
 			_records.Add(MakeEntry());
-			_service.DoLiftUpdateNow(false);
 			// Linux has resolution of second not millisecond!
 			Thread.Sleep(1000);
+			_service.DoLiftUpdateNow(false);
 			_records.Add(new LexEntry());
 			_records.Add(new LexEntry());
 			_records.Add(new LexEntry());
