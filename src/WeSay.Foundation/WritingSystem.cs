@@ -367,7 +367,7 @@ namespace WeSay.Language
 				{
 					throw;
 				}
-				ci = TryGetCultureInfoByIetfLanguageTag(sortUsing); // not supported by mono yet
+				ci = TryGetCultureInfoByIetfLanguageTag(sortUsing);
 			}
 			return ci;
 		}
