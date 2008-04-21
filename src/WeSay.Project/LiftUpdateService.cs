@@ -2,10 +2,8 @@ using System;
 using System.Collections;
 using System.Diagnostics;
 using System.IO;
-using System.Threading;
 using System.Windows.Forms;
 using Db4objects.Db4o.Query;
-using LiftIO;
 using LiftIO.Merging;
 using Palaso.Reporting;
 using WeSay.Data;
@@ -199,10 +197,16 @@ namespace WeSay.Project
 
 		private static string MakeIncrementFileName(DateTime time)
 		{
-			string timeString = time.ToString("yyyy'-'MM'-'dd'T'HH'-'mm'-'ss'-'FFFFF UTC");
-			string path = Path.Combine(LiftDirectory, timeString);
-			path += SynchronicMerger.ExtensionOfIncrementalFiles;
-			return path;
+			while(true){
+				string timeString = time.ToString("yyyy'-'MM'-'dd'T'HH'-'mm'-'ss'-'FFFFFFF UTC");
+				string path = Path.Combine(LiftDirectory, timeString);
+				path += SynchronicMerger.ExtensionOfIncrementalFiles;
+				if(!File.Exists(path))
+				{
+					return path;
+				}
+				time = time.AddTicks(1);
+			}
 		}
 
 		/// <summary>
