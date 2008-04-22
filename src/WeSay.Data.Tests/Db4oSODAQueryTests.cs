@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using NUnit.Framework;
 
-namespace WeSay.Data.Tests.Db4oBindingListTests
+namespace WeSay.Data.Tests
 {
 	[TestFixture]
 	public class db4oBindingListSODAQuery
@@ -81,7 +81,7 @@ namespace WeSay.Data.Tests.Db4oBindingListTests
 			Assert.AreEqual("Gianna", _bindingList[0].StoredString);
 		}
 
-		public static Db4objects.Db4o.Query.IQuery TestItemHasChildWithEmptyString(Db4objects.Db4o.Query.IQuery query)
+		public Db4objects.Db4o.Query.IQuery TestItemHasChildWithEmptyString(Db4objects.Db4o.Query.IQuery query)
 		{
 			query.Constrain(typeof(TestItem));
 			ConstrainTestItemHasChildWithEmptyString(query);
@@ -106,7 +106,7 @@ namespace WeSay.Data.Tests.Db4oBindingListTests
 			Assert.AreEqual("Third", _bindingList[0].StoredString);
 		}
 
-		public static Db4objects.Db4o.Query.IQuery TestItemWithNoChildren(Db4objects.Db4o.Query.IQuery query)
+		public Db4objects.Db4o.Query.IQuery TestItemWithNoChildren(Db4objects.Db4o.Query.IQuery query)
 		{
 			query.Constrain(typeof(TestItem));
 			ConstrainTestItemWithNoChildren(query);
