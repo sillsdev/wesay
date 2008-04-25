@@ -47,6 +47,7 @@ BOGURAEV and NEFF Lit Linguist Computing.1992; 7: 110-112
   <xsl:template match="/">
 	<html>
 	  <head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<xsl:if test="$link-to-usercss">
 		  <link rel="stylesheet" href="user.css"> </link>
 		</xsl:if>
