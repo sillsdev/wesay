@@ -28,7 +28,7 @@ namespace WeSay.UI.AutoCompleteTextBox
 			if (visibility == CommonEnumerations.VisibilitySetting.ReadOnly)
 			{
 				_textBox.ReadOnly = true;
-				_textBox.Enabled = false;
+			  //  _textBox.Enabled = false;
 				_textBox.TabStop = false;
 
 				this.TabStop = false;
@@ -55,7 +55,7 @@ namespace WeSay.UI.AutoCompleteTextBox
 		/// <param name="e"></param>
 		void OnBackColorChanged(object sender, EventArgs e)
 		{
-			if (_textBox != null)
+			if (_textBox != null && _textBox.ReadOnly )
 			{
 				_textBox.BackColor = this.BackColor;
 			}

@@ -157,22 +157,24 @@ namespace WeSay.UI
 
 		private void _removeImageLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
 		{
-			try
-			{
-				if (File.Exists(this.GetPathToImage()))
-				{
-					string old = this.GetPathToImage();
-					_fileName = "Unused_" + _fileName;
-					if(!File.Exists(GetPathToImage()))
-					{
-						File.Move(old, GetPathToImage());
-					}
-				}
-			}
-			catch(Exception error)
-			{
-				Palaso.Reporting.ErrorReport.ReportNonFatalMessage(error.Message);
-			}
+//    Why did I think we should rename the photo... makes it hard to change your mind...
+//   I think we can better add a function some day to trim the photos to ones you're really using
+//            try
+//            {
+//                if (File.Exists(this.GetPathToImage()))
+//                {
+//                    string old = this.GetPathToImage();
+//                    _fileName = "Unused_" + _fileName;
+//                    if(!File.Exists(GetPathToImage()))
+//                    {
+//                        File.Move(old, GetPathToImage());
+//                    }
+//                }
+//            }
+//            catch(Exception error)
+//            {
+//                Palaso.Reporting.ErrorReport.ReportNonFatalMessage(error.Message);
+//            }
 
 			_fileName = string.Empty;
 			NotifyChanged();
