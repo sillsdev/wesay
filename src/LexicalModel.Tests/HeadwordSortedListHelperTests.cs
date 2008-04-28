@@ -44,7 +44,7 @@ namespace WeSay.LexicalModel.Tests
 			File.Delete(_filePath);
 		}
 
-		[Test, Ignore("not yet")]
+		[Test]
 		public void GetKeys_3EntriesWithLexemeForms_PairsAreSorted()
 		{
 			LexEntry e1 = (LexEntry) _entries.AddNew();
@@ -56,7 +56,7 @@ namespace WeSay.LexicalModel.Tests
 			long appleId = _recordListManager.DataSource.Data.Ext().GetID(e2);
 
 			LexEntry e3 = (LexEntry)_entries.AddNew();
-			e3.LexicalForm.SetAlternative(_headwordWritingSystem.Id, "pear");
+			e3.LexicalForm.SetAlternative(_headwordWritingSystem.Id, "xa");//has to be something low in the alphabet to test a bug we had
 			long pearId = _recordListManager.DataSource.Data.Ext().GetID(e3);
 
 			HeadwordSortedListHelper helper = new HeadwordSortedListHelper(_recordListManager,
