@@ -394,6 +394,10 @@ namespace WeSay.App
 					}
 				}
 			}
+			if (!File.Exists(liftPath))
+			{
+				return null;
+			}
 			return liftPath;
 		}
 
