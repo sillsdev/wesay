@@ -70,7 +70,7 @@ namespace WeSay.LexicalModel
 				entry = new LexEntry(eInfo, _historicalEntryCountProvider);
 			}
 
-			//todo: don't drop @order
+			entry.OrderForRoundTripping = order;
 
 			entry.ModifiedTimeIsLocked = true; //while we build it up
 			return entry;

@@ -45,6 +45,15 @@ namespace WeSay.LexicalModel
 			int ourIndex = _entryIdsSortedByHeadword.GetIds().IndexOf(databaseIdOfEntry);
 			string headword = entry.GetHeadWordForm(_headwordWritingSystem.Id);
 
+
+			//todo: this is bogus; it fullfills our round-tripping requirement, but would
+			//give us bogus homograph numbers
+
+			if (entry.OrderForRoundTripping > 0)
+			{
+				return entry.OrderForRoundTripping;
+			}
+
 			//what number are we?
 			int found = 0;
 			int searchIndex = ourIndex - 1;

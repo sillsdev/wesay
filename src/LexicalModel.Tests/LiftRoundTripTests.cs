@@ -29,7 +29,7 @@ namespace WeSay.LexicalModel.Tests
 			WeSayWordsProject.InitializeForTests();
 			_stringBuilder = new StringBuilder();
 
-			_exporter = new LiftExporter(_stringBuilder, true);
+			_exporter = new LiftExporter(_stringBuilder, false);
 
 			_tempFile = Path.GetTempFileName();
 			_dataSource = new Db4oDataSource(_tempFile);
@@ -124,6 +124,22 @@ namespace WeSay.LexicalModel.Tests
 			_exporter.End();
 			AssertXPathNotNull("//entry/field[@type='color']/form[@lang='ws-one']");
 			AssertXPathNotNull("//entry/field[@type='color']/form[@lang='ws-two']");
+		}
+
+		[Test]
+		public void Entry_Order()
+		{
+
+
+			Extensible extensibleInfo = new Extensible();
+			_exporter.Add(_merger.GetOrMakeEntry(extensibleInfo, 4));
+			_exporter.Add(_merger.GetOrMakeEntry(extensibleInfo, 1));
+			_exporter.Add(_merger.GetOrMakeEntry(extensibleInfo, 2));
+
+			_exporter.End();
+			AssertXPathNotNull("//entry[@order='1']");
+			AssertXPathNotNull("//entry[@order='2']");
+			AssertXPathNotNull("//entry[@order='4']");
 		}
 
 		[Test]

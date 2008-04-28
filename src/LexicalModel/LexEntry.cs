@@ -28,7 +28,10 @@ namespace WeSay.LexicalModel
 		/// the exporter will make up a reasonable one.
 		/// </summary>
 		private string _id;
-		private InMemoryBindingList<LexSense> _senses;
+
+		private int _orderForRoundTripping=0;
+
+		 private InMemoryBindingList<LexSense> _senses;
 		private DateTime _creationTime;
 		private DateTime _modificationTime;
 		private bool _isBeingDeleted;
@@ -412,6 +415,20 @@ namespace WeSay.LexicalModel
 			get
 			{
 				return GetOrCreateProperty<MultiText>(WellKnownProperties.Citation);
+			}
+		}
+
+		 /// <summary>
+		 /// The name here is to remind us that our homograph number
+		 /// system doesn't know how to take this into account
+		 /// </summary>
+		public int OrderForRoundTripping
+		{
+			get { return _orderForRoundTripping; }
+			set
+			{
+				_orderForRoundTripping = value;
+				NotifyPropertyChanged("order");
 			}
 		}
 

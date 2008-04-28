@@ -197,7 +197,14 @@ namespace WeSay.Project
 				int h = _homographCalculator.GetHomographNumber(entry);
 				if (h > 0)
 				{
-					  _writer.WriteAttributeString("order", h.ToString());
+					_writer.WriteAttributeString("order", h.ToString());
+				}
+			}
+			else
+			{
+				if (entry.OrderForRoundTripping > 0)
+				{
+					_writer.WriteAttributeString("order", entry.OrderForRoundTripping.ToString());
 				}
 			}
 
