@@ -74,7 +74,7 @@ namespace WeSay.LexicalModel.Tests
 				doc.WriteContentTo(writer);
 				writer.Flush();
 			}
-			Assert.IsNotNull(node);
+			Assert.IsNotNull(node, "Not matched: " + xpath);
 		}
 
 
@@ -124,6 +124,73 @@ namespace WeSay.LexicalModel.Tests
 			_exporter.End();
 			AssertXPathNotNull("//entry/field[@type='color']/form[@lang='ws-one']");
 			AssertXPathNotNull("//entry/field[@type='color']/form[@lang='ws-two']");
+		}
+
+		[Test]
+		public void ExampleTranslation_OneWithNoType()
+		{
+			LexEntry e = MakeSimpleEntry();
+			LexExampleSentence ex = (LexExampleSentence) ((LexSense) e.Senses.AddNew()).ExampleSentences.AddNew();
+			LiftIO.Parsing.LiftMultiText translation = new LiftIO.Parsing.LiftMultiText();
+			translation.Add("aa", "aaaa");
+			_merger.MergeInTranslationForm(ex, "", translation, "bogus raw xml");
+			_exporter.Add(e);
+			_exporter.End();
+			AssertXPathNotNull("//entry/sense/example/translation[not(@type)]/form[@lang='aa']");
+		}
+
+		[Test]
+		public void ExampleTranslations_MultipleTypes()
+		{
+			LexEntry e = MakeSimpleEntry();
+			LexExampleSentence ex = (LexExampleSentence)((LexSense)e.Senses.AddNew()).ExampleSentences.AddNew();
+			LiftIO.Parsing.LiftMultiText translation = new LiftIO.Parsing.LiftMultiText();
+			translation.Add("aa", "unmarked translation");
+			_merger.MergeInTranslationForm(ex, "", translation, "bogus raw xml");
+			LiftIO.Parsing.LiftMultiText t2 = new LiftIO.Parsing.LiftMultiText();
+			t2.Add("aa", "type2translation");
+			_merger.MergeInTranslationForm(ex, "type2", t2, "<translation type='type2'><bogus/></translation>");
+
+			_exporter.Add(e);
+			_exporter.End();
+			AssertXPathNotNull("//entry/sense/example/translation[not(@type)]/form[@lang='aa']/text[text()='unmarked translation']");
+			AssertXPathNotNull("//entry/sense/example/translation[@type='type2']/bogus");
+		}
+
+		[Test]
+		public void ExampleTranslations_UnmarkedThenFree()
+		{
+			LexEntry e = MakeSimpleEntry();
+			LexExampleSentence ex = (LexExampleSentence)((LexSense)e.Senses.AddNew()).ExampleSentences.AddNew();
+			LiftIO.Parsing.LiftMultiText translation = new LiftIO.Parsing.LiftMultiText();
+			translation.Add("aa", "unmarked translation");
+			_merger.MergeInTranslationForm(ex, "", translation, "bogus raw xml");
+			LiftIO.Parsing.LiftMultiText t2 = new LiftIO.Parsing.LiftMultiText();
+			t2.Add("aa", "freestuff");
+			_merger.MergeInTranslationForm(ex, "free", t2, "<translation type='free'><bogus/></translation>");
+
+			_exporter.Add(e);
+			_exporter.End();
+			AssertXPathNotNull("//entry/sense/example/translation[not(@type)]/form[@lang='aa']/text[text()='unmarked translation']");
+			AssertXPathNotNull("//entry/sense/example/translation[@type='free']/bogus");
+		}
+
+		[Test]
+		public void ExampleTranslations_FreeThenUnmarked()
+		{
+			LexEntry e = MakeSimpleEntry();
+			LexExampleSentence ex = (LexExampleSentence)((LexSense)e.Senses.AddNew()).ExampleSentences.AddNew();
+		   LiftIO.Parsing.LiftMultiText t2 = new LiftIO.Parsing.LiftMultiText();
+			t2.Add("aa", "freestuff");
+			_merger.MergeInTranslationForm(ex, "free", t2, "<translation type='free'><bogus/></translation>");
+			LiftIO.Parsing.LiftMultiText translation = new LiftIO.Parsing.LiftMultiText();
+			translation.Add("aa", "unmarked translation");
+			_merger.MergeInTranslationForm(ex, "", translation, "<translation><bogusUnmarked/></translation>");
+
+			_exporter.Add(e);
+			_exporter.End();
+			AssertXPathNotNull("//entry/sense/example/translation[not(@type)]/bogusUnmarked");
+			AssertXPathNotNull("//entry/sense/example/translation[@type='free']/form/text[text()='freestuff']");
 		}
 
 		[Test]

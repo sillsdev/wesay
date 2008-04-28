@@ -81,6 +81,7 @@ namespace WeSay.LexicalModel
 			{
 				return _translationType;
 			}
+			set { _translationType = value; }
 		}
 	}
 }

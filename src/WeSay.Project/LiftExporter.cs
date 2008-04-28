@@ -603,7 +603,22 @@ namespace WeSay.Project
 			}
 
 			WriteMultiTextNoWrapper(LexExampleSentence.WellKnownProperties.ExampleSentence, example.Sentence);
-			WriteMultiWithWrapperIfNonEmpty(LexExampleSentence.WellKnownProperties.Translation, "translation", example.Translation);
+		  //  WriteMultiWithWrapperIfNonEmpty(LexExampleSentence.WellKnownProperties.Translation, "translation", example.Translation);
+
+			if (!MultiText.IsEmpty(example.Translation))
+			{
+				_writer.WriteStartElement("translation");
+
+				if (!string.IsNullOrEmpty(example.TranslationType))
+				{
+					_writer.WriteAttributeString("type", example.TranslationType);
+					propertiesAlreadyOutput.Add("type");
+				}
+
+				Add(LexExampleSentence.WellKnownProperties.Translation, example.Translation);
+				_writer.WriteEndElement();
+			}
+
 
 			if (ShouldOutputProperty(LexExampleSentence.WellKnownProperties.ExampleSentence))
 			{

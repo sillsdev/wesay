@@ -400,25 +400,27 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
+		public void MergeInTranslationForm_TypeFree_GetContentsAndSavesType()
+		{
+			LexExampleSentence ex = new LexExampleSentence();
+			LiftIO.Parsing.LiftMultiText translation = new LiftIO.Parsing.LiftMultiText();
+			translation.Add("aa", "aaaa");
+			_merger.MergeInTranslationForm(ex, "free", translation, "bogus raw xml");
+			Assert.AreEqual("aaaa", ex.Translation["aa"]);
+			Assert.AreEqual("free", ex.TranslationType);
+		}
+
+		[Test]
 		public void MergeInTranslationForm_NoType_GetContents()
 		{
 			LexExampleSentence ex = new LexExampleSentence();
 			LiftIO.Parsing.LiftMultiText translation = new LiftIO.Parsing.LiftMultiText();
-			translation.Add("aa","aaaa");
-			_merger.MergeInTranslationForm(ex, null, translation);
-			Assert.AreEqual(ex.Translation["aa"], "aaaa");
+			translation.Add("aa", "aaaa");
+			_merger.MergeInTranslationForm(ex, "", translation, "bogus raw xml");
+			Assert.AreEqual("aaaa", ex.Translation["aa"]);
+			Assert.IsTrue(string.IsNullOrEmpty(ex.TranslationType));
 		}
 
-//        [Test]
-//        public void MergeInTranslationForm_SingleType_GetContentsAndSavesType()
-//        {
-//            LexExampleSentence ex = new LexExampleSentence();
-//            LiftIO.Parsing.LiftMultiText translation = new LiftIO.Parsing.LiftMultiText();
-//            translation.Add("aa", "aaaa");
-//            _merger.MergeInTranslationForm(ex, "someType", translation);
-//            Assert.AreEqual(ex.Translation["aa"], "aaaa");
-//            Assert.AreEqual(ex.TranslationType, "someType");
-//        }
 
 		private static void CheckCompleteEntry(LexEntry entry)
 		{

@@ -170,10 +170,19 @@ namespace WeSay.LexicalModel
 			MergeIn(example.Sentence, forms);
 		}
 
-		public void MergeInTranslationForm(LexExampleSentence example, string type, LiftMultiText forms)
+		public void MergeInTranslationForm(LexExampleSentence example, string type, LiftMultiText forms, string rawXml)
 		{
-			//todo: do something with translation types
-			MergeIn(example.Translation, forms);
+			bool alreadyHaveAPrimaryTranslation = example.Translation != null && !string.IsNullOrEmpty(example.Translation.GetFirstAlternative());
+			bool typeIsCompatibleWithWeSayPrimaryTranslation = string.IsNullOrEmpty(type) || type == "free";
+			if(!alreadyHaveAPrimaryTranslation && typeIsCompatibleWithWeSayPrimaryTranslation)
+			{
+				MergeIn(example.Translation, forms);
+				example.TranslationType = type;
+			}
+			else
+			{
+				example.GetOrCreateProperty<EmbeddedXmlCollection>("translation").Values.Add(rawXml);
+			}
 		}
 
 		public void MergeInSource(LexExampleSentence example, string source)
