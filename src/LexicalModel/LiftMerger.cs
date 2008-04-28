@@ -98,7 +98,7 @@ namespace WeSay.LexicalModel
 		}
 #endif
 
-		public LexSense GetOrMakeSense(LexEntry entry, Extensible eInfo)
+		public LexSense GetOrMakeSense(LexEntry entry, Extensible eInfo, string rawXml)
 		{
 			//nb, has no guid or dates
 			LexSense s= new LexSense(entry);

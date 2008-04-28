@@ -7,6 +7,7 @@ namespace WeSay.LexicalModel
 	{
 		private MultiText _sentence;
 		private MultiText _translation;
+		private string _translationType;
 
 		//!!What!! Is this done this way so that we don't end up storing
 		//  the data in the object database?
@@ -71,5 +72,15 @@ namespace WeSay.LexicalModel
 			}
 		}
 
+		/// <summary>
+		/// Supports round-tripping, though we don't use it
+		/// </summary>
+		public string TranslationType
+		{
+			get
+			{
+				return _translationType;
+			}
+		}
 	}
 }

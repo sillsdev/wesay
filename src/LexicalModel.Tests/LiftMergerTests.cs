@@ -228,7 +228,7 @@ namespace WeSay.LexicalModel.Tests
 		{
 			Extensible extensibleInfo = new Extensible();
 			extensibleInfo.Id = "foo";
-			LexSense s = _merger.GetOrMakeSense(new LexEntry(),extensibleInfo) ;
+			LexSense s = _merger.GetOrMakeSense(new LexEntry(),extensibleInfo, string.Empty) ;
 			Assert.AreEqual(extensibleInfo.Id, s.Id);
 		}
 
@@ -384,7 +384,7 @@ namespace WeSay.LexicalModel.Tests
 		{
 			Extensible extensibleInfo = new Extensible();
 			LexEntry e = MakeSimpleEntry();
-			LexSense s= _merger.GetOrMakeSense(e, extensibleInfo);
+			LexSense s= _merger.GetOrMakeSense(e, extensibleInfo, string.Empty);
 
 			LexExampleSentence ex = _merger.GetOrMakeExample(s, new Extensible());
 			ex.Sentence["foo"] = "this is a sentence";
@@ -398,6 +398,27 @@ namespace WeSay.LexicalModel.Tests
 			//now check it again, from the list
 			CheckCompleteEntry(_entries[0]);
 		}
+
+		[Test]
+		public void MergeInTranslationForm_NoType_GetContents()
+		{
+			LexExampleSentence ex = new LexExampleSentence();
+			LiftIO.Parsing.LiftMultiText translation = new LiftIO.Parsing.LiftMultiText();
+			translation.Add("aa","aaaa");
+			_merger.MergeInTranslationForm(ex, null, translation);
+			Assert.AreEqual(ex.Translation["aa"], "aaaa");
+		}
+
+//        [Test]
+//        public void MergeInTranslationForm_SingleType_GetContentsAndSavesType()
+//        {
+//            LexExampleSentence ex = new LexExampleSentence();
+//            LiftIO.Parsing.LiftMultiText translation = new LiftIO.Parsing.LiftMultiText();
+//            translation.Add("aa", "aaaa");
+//            _merger.MergeInTranslationForm(ex, "someType", translation);
+//            Assert.AreEqual(ex.Translation["aa"], "aaaa");
+//            Assert.AreEqual(ex.TranslationType, "someType");
+//        }
 
 		private static void CheckCompleteEntry(LexEntry entry)
 		{
@@ -604,7 +625,7 @@ namespace WeSay.LexicalModel.Tests
 		{
 			Extensible extensibleInfo = new Extensible();
 			LexEntry e = MakeSimpleEntry();
-			LexSense s = _merger.GetOrMakeSense(e, extensibleInfo);
+			LexSense s = _merger.GetOrMakeSense(e, extensibleInfo, string.Empty);
 
 			_merger.MergeInPicture(s, "testPicture.png", null);
 			PictureRef pict = s.GetProperty<PictureRef>("Picture");
@@ -616,7 +637,7 @@ namespace WeSay.LexicalModel.Tests
 		{
 			Extensible extensibleInfo = new Extensible();
 			LexEntry e = MakeSimpleEntry();
-			LexSense s = _merger.GetOrMakeSense(e, extensibleInfo);
+			LexSense s = _merger.GetOrMakeSense(e, extensibleInfo, string.Empty);
 
 			LiftMultiText caption = new LiftMultiText();
 			caption["aa"] = new LiftString("acaption");
