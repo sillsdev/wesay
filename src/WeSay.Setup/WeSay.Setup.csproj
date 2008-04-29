@@ -220,9 +220,9 @@
 	  <SubType>Designer</SubType>
 	  <DependentUpon>WritingSystemSetup.cs</DependentUpon>
 	</EmbeddedResource>
-	<EmbeddedResource Include="WritingSystemSort.resx">
+	<EmbeddedResource Include="WritingSystemSortControl.resx">
 	  <SubType>Designer</SubType>
-	  <DependentUpon>WritingSystemSort.cs</DependentUpon>
+	  <DependentUpon>WritingSystemSortControl.cs</DependentUpon>
 	</EmbeddedResource>
 	<None Include="app.config" />
 	<None Include="Properties\Settings.settings">
@@ -275,11 +275,11 @@
 	<Compile Include="WritingSystemSetup.Designer.cs">
 	  <DependentUpon>WritingSystemSetup.cs</DependentUpon>
 	</Compile>
-	<Compile Include="WritingSystemSort.cs">
+	<Compile Include="WritingSystemSortControl.cs">
 	  <SubType>UserControl</SubType>
 	</Compile>
-	<Compile Include="WritingSystemSort.Designer.cs">
-	  <DependentUpon>WritingSystemSort.cs</DependentUpon>
+	<Compile Include="WritingSystemSortControl.Designer.cs">
+	  <DependentUpon>WritingSystemSortControl.cs</DependentUpon>
 	</Compile>
   </ItemGroup>
   <ItemGroup>

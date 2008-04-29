@@ -40,7 +40,7 @@ namespace WeSay.Setup
 			this._fontsPage = new System.Windows.Forms.TabPage();
 			this._fontControl = new WeSay.Setup.FontControl();
 			this._sortingPage = new System.Windows.Forms.TabPage();
-			this._sortControl = new WeSay.Setup.WritingSystemSort();
+			this._sortControl = new WeSay.Setup.WritingSystemSortControl();
 			this.toolStrip1.SuspendLayout();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
@@ -226,7 +226,7 @@ namespace WeSay.Setup
 		private System.Windows.Forms.TabControl _tabControl;
 		private System.Windows.Forms.TabPage _basicPage;
 		private WritingSystemBasic _basicControl;
-		private WritingSystemSort _sortControl;
+		private WritingSystemSortControl _sortControl;
 		private System.Windows.Forms.TabPage _fontsPage;
 		private FontControl _fontControl;
 		private System.Windows.Forms.TabPage _sortingPage;

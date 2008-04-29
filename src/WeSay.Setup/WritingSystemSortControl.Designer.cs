@@ -2,7 +2,7 @@ using System.Drawing;
 
 namespace WeSay.Setup
 {
-	partial class WritingSystemSort
+	partial class WritingSystemSortControl
 	{
 		/// <summary>
 		/// Required designer variable.

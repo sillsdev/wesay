@@ -14,13 +14,13 @@ using WeSay.Project;
 
 namespace WeSay.Setup
 {
-	public partial class WritingSystemSort : UserControl
+	public partial class WritingSystemSortControl : UserControl
 	{
 		private WritingSystem _writingSystem;
 		private Color validBackgroundColor;
 		private Color invalidBackgroundColor;
 
-		public WritingSystemSort()
+		public WritingSystemSortControl()
 		{
 			InitializeComponent();
 			if (DesignMode)
@@ -94,13 +94,18 @@ namespace WeSay.Setup
 
 		private void ValidateCustomRules()
 		{
+			//prevent WS-708:  WritingSystem Sort trying to validate non-custom rules
+			if (!_writingSystem.UsesCustomSortRules)
+			{
+				return;
+			}
 			CustomSortRulesType customSortRulesType;
 			try
 			{
 				customSortRulesType =
 					(CustomSortRulesType) Enum.Parse(typeof (CustomSortRulesType), this._writingSystem.SortUsing);
 			}
-			catch(ArgumentException ) //handle ws-541 where somehow Kim got an 'x1' in there
+			catch(ArgumentException )
 			{
 				Palaso.Reporting.ErrorReport.ReportNonFatalMessage("WeSay could not understand this type of sorting ('{0}'). It will be reset.", this._writingSystem.SortUsing );
 				customSortRulesType = default(CustomSortRulesType);
@@ -164,7 +169,14 @@ namespace WeSay.Setup
 
 		public override void Refresh()
 		{
+			//handle WS-707 : ws loses custom simple contents if unmodified
+			if(_writingSystem.UsesCustomSortRules && string.IsNullOrEmpty(_writingSystem.CustomSortRules))
+			{
+				_writingSystem.SortUsing = _writingSystem.Id;
+			}
+
 			comboBoxCultures.SelectedValue = _writingSystem.SortUsing;
+
 			UpdateCustomRules();
 			base.Refresh();
 		}
