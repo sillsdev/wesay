@@ -701,5 +701,29 @@ namespace WeSay.Data.Tests.Db4oRecordListTests
 				}
 			}
 		}
+
+		[Test]
+		[Ignore("We shouldn't fix this. It will go away when we switch our database model. April 30, 2008 Eric Albright")]
+		public void FilterACopyShouldReleasePropertyChangedEventHandler()
+		{
+			SimpleIntTestClass item = new SimpleIntTestClass(0);
+			using (Db4oRecordList<SimpleIntTestClass> recordList = new Db4oRecordList<SimpleIntTestClass>(this._dataSource))
+			{
+				recordList.Add(item);
+				for (int i = 1; i < 50; i++)
+				{
+					recordList.Add(new SimpleIntTestClass(i));
+				}
+
+				using (Db4oRecordList<SimpleIntTestClass> recordListCopy = new Db4oRecordList<SimpleIntTestClass>(recordList))
+				{
+					recordListCopy.ApplyFilter(delegate(SimpleIntTestClass simpleIntTest)
+											{
+												return (11 == simpleIntTest.I);
+											});
+				}
+			}
+			item.I = 12;
+		}
 	}
 }
