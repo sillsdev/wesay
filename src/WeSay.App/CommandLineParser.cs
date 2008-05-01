@@ -678,14 +678,25 @@ namespace CommandLine
 			bool hadError = false;
 			if (args != null)
 			{
-				foreach (string argument in args)
+				foreach (string argItem in args)
 				{
-					if (argument.Length > 0)
+					string argument;
+					if (argItem.Length > 0)
 					{
+						//treat '/' as '-' if Windows but on Unix it is a directory separator
+						if(Environment.OSVersion.Platform != PlatformID.Unix
+							&& argItem[0] == '/')
+						{
+							argument = '-' + argItem.Substring(1);
+						}
+						else
+						{
+							argument = argItem;
+						}
+
 						switch (argument[0])
 						{
 							case '-':
-							case '/':
 								int endIndex = argument.IndexOfAny(new char[] {':', '+', '-'}, 1);
 								string option = argument.Substring(1, endIndex == -1 ? argument.Length - 1 : endIndex - 1);
 								string optionArgument;
