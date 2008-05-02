@@ -311,15 +311,16 @@ namespace WeSay.App.Tests
 			System.Diagnostics.ProcessStartInfo psi = new ProcessStartInfo(@"wesay.app.exe",arguments);
 			Process p = System.Diagnostics.Process.Start(psi);
 
-			Thread.Sleep(2000); // wait for process to start up
-
 			//this only works because we only launch it once... wouldn't be adequate logic if we
 			//might just be joining an existing process
 			if (!launchInServerMode)
 			{
-				Assert.IsTrue(p.WaitForInputIdle(25000),"Gave up waiting for the UI to come up.");
+				Assert.IsTrue(p.WaitForInputIdle(25000), "Gave up waiting for the UI to come up.");
 			}
-
+			else
+			{
+				Thread.Sleep(2000); // wait for process to start up
+			}
 			return p;
 		}
 

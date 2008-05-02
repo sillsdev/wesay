@@ -31,6 +31,7 @@ namespace WeSay.App
 		private CommandLineArguments _commandLineArguments = new CommandLineArguments();
 		private ServiceAppSingletonHelper _serviceAppSingletonHelper;
 		private TabbedForm _tabbedForm;
+		private IDisposable _serviceLifeTimeHelper;
 
 		[STAThread]
 		static void Main(string[] args)
@@ -93,43 +94,56 @@ namespace WeSay.App
 				}
 			}
 
-			DisplaySettings.Default.SkinName = Settings.Default.SkinName;
+			try
+			{
+				DisplaySettings.Default.SkinName = Settings.Default.SkinName;
 
-			_project = InitializeProject(_commandLineArguments.liftPath);
-			if (_project == null)
-			{
-				return;
-			}
-
-			if (_project.PathToWeSaySpecificFilesDirectoryInProject.IndexOf("PRETEND") <0)
-			{
-				RecoverUnsavedDataIfNeeded();
-			}
-			LiftPreparer preparer = new LiftPreparer(_project);
-			if (!preparer.MakeCacheAndLiftReady())
-			{
-				return;
-			}
-			using (_recordListManager= _project.MakeRecordListManager())
-			{
-				using (_dictionary = new DictionaryServiceProvider(this,_project))
+				_project = InitializeProject(_commandLineArguments.liftPath);
+				if (_project == null)
 				{
+					return;
+				}
 
-					_project.LiftUpdateService = SetupUpdateService(_recordListManager);
-					_project.LiftUpdateService.DoLiftUpdateNow(true);
+				if (_project.PathToWeSaySpecificFilesDirectoryInProject.IndexOf("PRETEND") < 0)
+				{
+					RecoverUnsavedDataIfNeeded();
+				}
+				LiftPreparer preparer = new LiftPreparer(_project);
+				if (!preparer.MakeCacheAndLiftReady())
+				{
+					return;
+				}
+				using (_recordListManager = _project.MakeRecordListManager())
+				{
+					using (_dictionary = new DictionaryServiceProvider(this, _project))
+					{
+						_project.LiftUpdateService = SetupUpdateService(_recordListManager);
+						_project.LiftUpdateService.DoLiftUpdateNow(true);
 
-					StartDictionaryServices();
-					_dictionary.LastClientDeregistered += _serviceAppSingletonHelper.OnExitIfInServerMode;
-					_serviceAppSingletonHelper.HandleEventsUntilExit(StartUserInterface);
+						StartDictionaryServices();
+						_dictionary.LastClientDeregistered += _serviceAppSingletonHelper.OnExitIfInServerMode;
+						_serviceAppSingletonHelper.HandleEventsUntilExit(StartUserInterface);
 
-					_dictionary.LastClientDeregistered -= _serviceAppSingletonHelper.OnExitIfInServerMode;
+						_dictionary.LastClientDeregistered -= _serviceAppSingletonHelper.OnExitIfInServerMode;
 
-					//do a last backup before exiting
-					_project.LiftUpdateService.DoLiftUpdateNow(true);
-					Logger.WriteEvent("App Exiting Normally.");
+						//do a last backup before exiting
+						_project.LiftUpdateService.DoLiftUpdateNow(true);
+						Logger.WriteEvent("App Exiting Normally.");
+					}
 				}
 			}
+			finally
+			{
+				 if (_serviceLifeTimeHelper != null)
+				{
+					_serviceLifeTimeHelper.Dispose();
+				}
+				if (_serviceAppSingletonHelper != null)
+				{
+					_serviceAppSingletonHelper.Dispose();
+				}
 
+			}
 			Logger.ShutDown();
 			Settings.Default.Save();
 		}
@@ -183,7 +197,7 @@ namespace WeSay.App
 			StartCacheWatchingStuff();
 
 			Palaso.Reporting.Logger.WriteMinorEvent("Starting Dictionary Services at {0}", DictionaryAccessor.GetServiceName(_project.PathToLiftFile));
-			IpcSystem.StartServingObject(DictionaryAccessor.GetServiceName(_project.PathToLiftFile), _dictionary);
+			_serviceLifeTimeHelper =  IpcSystem.StartServingObject(DictionaryAccessor.GetServiceName(_project.PathToLiftFile), _dictionary);
 
 		}
 
