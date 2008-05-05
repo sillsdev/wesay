@@ -179,6 +179,24 @@ namespace WeSay.Project.Tests
 //            ds.DataCommitted += new EventHandler(backupService.OnDataCommitted);
 //            backupService.DoLiftUpdateNow();
 //        }
-	}
 
+
+		[Test]
+		public void LiftIsFreshNow_NotLocked()
+		{
+			Thread.Sleep(2000);
+			LiftUpdateService.LiftIsFreshNow();
+			DateTime timeStamp = File.GetLastWriteTimeUtc(WeSayWordsProject.Project.PathToLiftFile);
+			TimeSpan lastWriteTimeSpan = DateTime.UtcNow - timeStamp;
+			Assert.Less(lastWriteTimeSpan.Milliseconds,2000);
+		}
+
+		[Test]
+		public void LiftIsFreshNow_Locked()
+		{
+			WeSayWordsProject.Project.LockLift();
+			LiftUpdateService.LiftIsFreshNow();
+			WeSayWordsProject.Project.ReleaseLockOnLift();
+		}
+	}
 }
