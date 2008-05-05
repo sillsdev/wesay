@@ -96,6 +96,7 @@
 	  <DesignTime>True</DesignTime>
 	  <DependentUpon>TestResources.resx</DependentUpon>
 	</Compile>
+	<Compile Include="WeSayWordsProjectLockingTests.cs" />
 	<Compile Include="ViewTemplatePersistenceTests.cs" />
 	<Compile Include="ViewTemplateTests.cs" />
 	<Compile Include="FieldTests.cs" />
