@@ -327,7 +327,7 @@ namespace WeSay.App.Tests
 		private static IDictionaryService GetDictionaryService(string liftPath, int clientIdForRegistering)
 		{
 			IDictionaryService dictionaryService=null;
-			for (int i = 0; i < 3; i++)
+			for (int i = 0; i < 20; i++)
 			{
 				Thread.Sleep(500);
 				string serviceName = DictionaryAccessor.GetServiceName(liftPath);
