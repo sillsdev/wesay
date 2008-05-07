@@ -36,8 +36,16 @@ namespace WeSay.Setup
 			_fontDialog.Font = _writingSystem.Font;
 			_fontDialog.ShowColor = false;
 			_fontDialog.ShowEffects = false;
-			if (DialogResult.OK != _fontDialog.ShowDialog())
+			try
 			{
+				if (DialogResult.OK != _fontDialog.ShowDialog())
+				{
+					return;
+				}
+			}
+			catch (Exception error)
+			{
+				Palaso.Reporting.ErrorReport.ReportNonFatalMessage("The Microsoft Font Dialog had a problem. We have seen this happen when you add a font to the system.  Try quitting this application and running it again."+System.Environment.NewLine+"The exception was: "+error.Message);
 				return;
 			}
 			_writingSystem.Font = _fontDialog.Font;
