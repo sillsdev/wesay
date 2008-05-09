@@ -20,6 +20,12 @@
   <Import Project="$(BaseDirectory)\bld\UpdateCsProjs.Targets"/>
   <Import Project="$(BaseDirectory)\bld\Version.Targets"/>
 
+  <!-- From http://msbuildtasks.tigris.org/ -->
+  <Import Project="$(MSBuildExtensionsPath)\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets"/>
+
+  <Target Name="Revert">
+	<SvnClient Command="revert" Arguments="$(BaseDirectory) --recursive"/>
+  </Target>
 
   <Target Name="Compile">
 	<MSBuild Projects="$(BaseDirectory)\src\WeSay.sln"
@@ -256,7 +262,8 @@
   </Target>
 
   <Target Name="Build">
-	<CallTarget Targets="UpdateCsProjs;
+	<CallTarget Targets="Revert;
+						UpdateCsProjs;
 						 Compile;
 						 Test;
 						 CreateSample;
