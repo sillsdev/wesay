@@ -140,7 +140,7 @@ namespace Addin.Transform
 				targs.inputDocument.Load(projectInfo.PathToLIFT);
 				XPathNavigator navigator = targs.inputDocument.CreateNavigator();
 
-				PrepareSorting(projectInfo, navigator);
+		  //      PrepareSorting(projectInfo, navigator);
 				targs.xsltStream = GetXsltStream(projectInfo, xsltName);
 				targs.xsltArguments = arguments;
 				if(!DoTransformWithProgressDialog(targs))

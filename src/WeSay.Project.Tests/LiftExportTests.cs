@@ -1037,7 +1037,7 @@ namespace WeSay.Project.Tests
 			p.Value = "bird.jpg";
 			_exporter.Add(sense);
 			_exporter.End();
-			CheckAnswer(GetSenseElement(sense)+"<picture href=\"bird.jpg\" /></sense>");
+			CheckAnswer(GetSenseElement(sense)+"<illustration href=\"bird.jpg\" /></sense>");
 		}
 
 		[Test]
@@ -1050,7 +1050,7 @@ namespace WeSay.Project.Tests
 			p.Caption["aa"] = "aCaption";
 			_exporter.Add(sense);
 			_exporter.End();
-			CheckAnswer(GetSenseElement(sense)+"<picture href=\"bird.jpg\"><label><form lang=\"aa\"><text>aCaption</text></form></label></picture></sense>");
+			CheckAnswer(GetSenseElement(sense)+"<illustration href=\"bird.jpg\"><label><form lang=\"aa\"><text>aCaption</text></form></label></illustration></sense>");
 		}
 
 	}

@@ -30,7 +30,8 @@ namespace WeSay.Project
 		{
 			NormalLift = 0,
 			DereferenceRelations = 1,
-			DetermineHeadword = 1
+			DereferenceOptions = 2,
+			DetermineHeadword = 4
 		} ;
 
 		private Options _options= Options.NormalLift;
@@ -66,7 +67,7 @@ namespace WeSay.Project
 		public void SetUpForPresentationLiftExport(ViewTemplate template, IHomographCalculator homographCalculator, IFindEntries entryFinder)
 		{
 			_homographCalculator = homographCalculator;
-			ExportOptions = LiftExporter.Options.DereferenceRelations | Options.DetermineHeadword;
+			ExportOptions = LiftExporter.Options.DereferenceRelations | Options.DereferenceOptions | Options.DetermineHeadword;
 			_entryFinder = entryFinder;
 			Template = template;
 		}
@@ -359,16 +360,51 @@ namespace WeSay.Project
 
 			if (pos != null && !pos.IsEmpty)
 			{
-				_writer.WriteStartElement("grammatical-info");
-				_writer.WriteAttributeString("value", pos.Value);
-				WriteFlags(pos);
-				_writer.WriteEndElement();
+				if (0 != (_options & Options.DereferenceOptions))
+				{
+					WriteDisplayNameFieldForOption(pos, LexSense.WellKnownProperties.PartOfSpeech);
+				}
+				else
+				{
+					_writer.WriteStartElement("grammatical-info");
+					_writer.WriteAttributeString("value", pos.Value);
+					WriteFlags(pos);
+					_writer.WriteEndElement();
+				}
 			}
 			else
 			{
 				//review
 				// I think this is right (Eric)
 			}
+		}
+
+		private void WriteDisplayNameFieldForOption(OptionRef optionRef, string fieldName)
+		{
+		  OptionsList list = WeSayWordsProject.Project.GetOptionsList(fieldName);
+		  if (list != null)
+		  {
+			  Option posOption = list.GetOptionFromKey(optionRef.Value);
+			  if (posOption == null)
+			  {
+				  return;
+			  }
+			  if (posOption.Name == null)
+			  {
+				  return;
+			  }
+
+			  LanguageForm[] labelForms =
+				  posOption.Name.GetOrderedAndFilteredForms(_viewTemplate.GetField(fieldName).WritingSystemIds);
+
+			  if (labelForms != null && labelForms.Length > 0)
+			  {
+				  _writer.WriteStartElement("field");
+				  _writer.WriteAttributeString("type", fieldName=="POS" ? "grammatical-info" : fieldName);
+				  Add(labelForms, false);
+				  _writer.WriteEndElement();
+			  }
+		  }
 		}
 
 		private void WriteWellKnownCustomMultiText(WeSayDataObject item, string property, List<string> propertiesAlreadyOutput)
@@ -459,7 +495,7 @@ namespace WeSay.Project
 				if (pair.Value is PictureRef)
 				{
 					PictureRef pictureRef = pair.Value as PictureRef;
-					WriteURLRef("picture", pictureRef.Value, pictureRef.Caption );
+					WriteURLRef("illustration", pictureRef.Value, pictureRef.Caption );
 					continue;
 				}
 				throw new ApplicationException(
@@ -571,11 +607,20 @@ namespace WeSay.Project
 		{
 			if (optionRef.Value.Length > 0)
 			{
-				_writer.WriteStartElement("trait");
-				_writer.WriteAttributeString("name", key);
-				_writer.WriteAttributeString("value", optionRef.Value);
+					if (0 != (ExportOptions & Options.DereferenceOptions))
+					{
+						WriteDisplayNameFieldForOption(optionRef, key);
+					}
+					else
+					{
+						_writer.WriteStartElement("trait");
+						_writer.WriteAttributeString("name", key);
+						_writer.WriteAttributeString("value", optionRef.Value);
+					_writer.WriteEndElement();
+					}
+
 				//  WriteRangeName(key);
-				_writer.WriteEndElement();
+
 			}
 		}
 

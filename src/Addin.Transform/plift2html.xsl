@@ -53,12 +53,26 @@ BOGURAEV and NEFF Lit Linguist Computing.1992; 7: 110-112
 		</xsl:if>
 		<style type="text/css"> div.entry { /* this gives us outdented headwords */ text-indent:
 		  -.5em; /* a slight outdent the width of a lower-case n */ margin-left: .5em; line-height:
-		  120%; } /* use sans serif for related words */ span.headword { /* Contemporary
+		  120%; } /* use sans serif for related words */
+		  span.headword {}
+		  /* span.headword.first  ---  css3, MS Word doesn't understand */
+		  span.headwordfirst
+		  {
+		  /* Contemporary
 		  dictionaries generally tend to use lower- or upper and lower-case forms for headwords, in
 		  a bolder and often sans serif type, at a slightly larger size than the entries. */
-		  font-family:sans-serif; /*to do: select the sans-serif variety from writing system*/
-		  font-weight:bold; font-size:108%; } span.homograph-number { font-family:sans-serif;
-		  font-weight:bold; font-size:50%; vertical-align: sub; } div.note { padding-right: 1em;
+
+		  font-family:sans-serif;
+
+		  /*to do: select the sans-serif variety from writing system*/
+
+		  font-size:108%;
+			font-weight:bold;
+		  }
+		  span.homograph-number { font-family:sans-serif;
+		  font-weight:bold; font-size:50%; vertical-align: sub; }
+
+		  div.note { padding-right: 1em;
 		  padding-left: 1em; background-color: #eeeeee; /*light-gray*/ } span.sense-number{ /*If a
 		  headword has multiple meanings or senses, the sense numbers appear in the bold weight of
 		  the entry type, both accented and neutralized by extra white space around them. */
@@ -185,8 +199,10 @@ BOGURAEV and NEFF Lit Linguist Computing.1992; 7: 110-112
   <!-- TODO: there is a @first='true' we can use to output, say, non-bold for the forms after the first one -->
 
   <xsl:template match="field[@type='headword']">
-	<span class="headword">
-	  <xsl:apply-templates select="form[@lang=$headword-writing-system]"/>
+   <!-- <span class="headword first">  -->
+	<span class="headwordfirst headword"> <!-- MS Word (2007) ignores after the first class name -->
+	  <!-- <xsl:apply-templates select="form[@lang=$headword-writing-system]"/> -->
+	  <xsl:apply-templates select="form[@first]"/>
 
 	  <xsl:variable name="homograph-number">
 		<xsl:value-of select="ancestor::entry/@order"/>
@@ -196,8 +212,9 @@ BOGURAEV and NEFF Lit Linguist Computing.1992; 7: 110-112
 		  <xsl:value-of select="$homograph-number"/>
 		</span>
 	  </xsl:if>
-
-	  <xsl:apply-templates select="form[not(@lang=$headword-writing-system)]"/>
+	</span>
+	<span class="headword">
+	  <xsl:apply-templates select="form[not(@first)]"/>
 	</span>
   </xsl:template>
 
@@ -272,6 +289,25 @@ BOGURAEV and NEFF Lit Linguist Computing.1992; 7: 110-112
 	<span class="meaning">
 	  <xsl:apply-templates/>
 	</span>
+	<xsl:text> </xsl:text>
+  </xsl:template>
+
+  <xsl:template match="illustration">
+	<div class="illustration">
+	  <xsl:element name="img">
+		<!-- added this to help word, but it didn't work -->
+		<xsl:attribute name="style">width:100; height:auto</xsl:attribute>
+		<xsl:attribute name="src">
+		  <xsl:text>../pictures/</xsl:text><xsl:value-of select="@href"/>
+		</xsl:attribute>
+		<xsl:attribute name="title">
+		  <!-- leave it up to the plift process to filter down to the one form it wants -->
+		  <xsl:value-of select="label/form/text"/>
+		</xsl:attribute>
+		<xsl:attribute name="width">100</xsl:attribute>
+	   </xsl:element>
+	</div>
+	<!-- todo: get the label out as a caption -->
 	<xsl:text> </xsl:text>
   </xsl:template>
 
@@ -385,19 +421,20 @@ BOGURAEV and NEFF Lit Linguist Computing.1992; 7: 110-112
 	<xsl:text> </xsl:text>
   </xsl:template>
 
-  <xsl:template match="grammatical-info">
+<!--  <xsl:template match="grammatical-info">
+For plift, this is moved to a field, so that no lookup of the actual forms needed. -->
+  <xsl:template match="field[@type='grammatical-info']">
 	<!--
-	we dropped, for example, the full point after part of speech
+	(Eric) dropped the full point after part of speech
 	abbreviations: its identity already having been underlined by
 	the use of italic, by its abbreviation and by recurrence,
 	there’s no need for a full point after n or vb.
 	-->
 	<span class="grammatical-info">
-	  <span class="{$optionslist-writing-system}">
-		<xsl:value-of select="@value"/>
-	  </span>
+	  <xsl:apply-templates/>
+	  <xsl:text> </xsl:text>
 	</span>
-	<xsl:text> </xsl:text>
+
 	<xsl:apply-templates select="trait"/>
   </xsl:template>
 
