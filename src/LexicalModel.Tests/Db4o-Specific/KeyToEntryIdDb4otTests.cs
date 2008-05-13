@@ -12,8 +12,8 @@ namespace WeSay.LexicalModel.Tests
 	public class KeyToEntryIdDb4otTests : BaseDb4oSpecificTests
 	{
 
-		[Test]
-		public void FindEntriesFromLexemeForm()
+		[Test, Ignore("not yet")]
+		public void GetGlossToEntryIdPairs_GetsKeyFromSimpleGloss()
 		{
 			CycleDatabase();
 //            LexEntry entry = new LexEntry();
