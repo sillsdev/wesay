@@ -249,13 +249,13 @@
 	</task>
   </tasks>
   <addins>
-	<addin id="SFM Exporter" showInWeSay="True">
+	<addin id="ManualBackupToDevice" showInWeSay="True" />
+	<addin id="Html Exporter" showInWeSay="True" />
+	<addin id="Export To SFM" showInWeSay="False">
 	  <SfmTransformSettings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-		<SfmTagConversions>
-		  lx_bth lx
-		  nt_en nt
-		  g_en ge
-		</SfmTagConversions>
+		<SfmTagConversions/>
+		<EnglishLanguageWritingSystemId>en</EnglishLanguageWritingSystemId>
+		<VernacularLanguageWritingSystemId>bth</VernacularLanguageWritingSystemId>
 	  </SfmTransformSettings>
 	</addin>
 	<addin id="SendProjectEmail" showInWeSay="True">
@@ -264,7 +264,5 @@
 		<Email>notARealAddress@somewhere.com</Email>
 	  </SendProjectEmailSettings>
 	</addin>
-	<addin id="ManualBackupToDevice" showInWeSay="True" />
-	<addin id="Html Exporter" showInWeSay="True" />
   </addins>
 </configuration>
