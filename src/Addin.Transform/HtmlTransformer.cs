@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using System.Xml.Xsl;
 using Mono.Addins;
 using Palaso.UI.WindowsForms.i8n;
+using Palaso.UI.WindowsForms.Progress;
 using WeSay.AddinLib;
 using WeSay.Data;
 using WeSay.Foundation;
@@ -81,11 +82,15 @@ namespace Addin.Transform
 			}
 		   try
 		   {
-
-			   PLiftMaker maker = new PLiftMaker();
-			   string pliftPath =
-				   maker.MakePLiftTempFile(Lexicon.RecordListManager,
-										   (WeSayWordsProject) projectInfo.Project);
+			   string pliftPath="";
+			   using (LameProgressDialog dlg = new LameProgressDialog("Exporting to PLift..."))
+			   {
+				   dlg.Show();
+				   PLiftMaker maker = new PLiftMaker();
+				   pliftPath =
+					   maker.MakePLiftTempFile(Lexicon.RecordListManager,
+											   (WeSayWordsProject) projectInfo.Project);
+			   }
 
 			   projectInfo.PathToLIFT = pliftPath;
 

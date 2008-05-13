@@ -232,7 +232,7 @@ namespace Addin.Transform
 					stream.Close();
 				}
 
-				progressState.StatusLabel = "Exporting...";
+				progressState.StatusLabel = "Transforming...";
 				int entriesCount = workerArguments.inputDocument.SelectNodes("//entry").Count;
 				progressState.TotalNumberOfSteps = entriesCount + workerArguments.postTransformSteps;
 				_staticProgressStateForWorker = progressState;
