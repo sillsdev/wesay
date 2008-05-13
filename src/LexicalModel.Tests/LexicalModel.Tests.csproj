@@ -75,6 +75,7 @@
 	<Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+	<Compile Include="Db4o-Specific\KeyToEntryIdDb4otTests.cs" />
 	<Compile Include="HeadwordSortedListHelperTests.cs" />
 	<Compile Include="Db4o-Specific\BaseDb4oSpecificTests.cs" />
 	<Compile Include="Binding.cs" />

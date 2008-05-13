@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using NUnit.Framework;
@@ -97,6 +98,62 @@ namespace WeSay.LexicalModel.Tests
 				count++;
 			}
 			Assert.AreEqual(2, count);
+		}
+
+		[Test]
+		public void GetKeys_ForSenseWithOnlyDefinition()
+		{
+			LexEntrySortHelper h = new LexEntrySortHelper(((Db4oRecordListManager)_recordListManager).DataSource, _writingSystem, false);
+			LexEntry e = new LexEntry();
+			LexSense s = (LexSense)e.Senses.AddNew();
+			s.Definition.SetAlternative(_writingSystem.Id, "a definition");
+
+			List<string> keys = new List<string>(h.GetKeys(e));
+			Assert.IsTrue(keys.Contains("a definition"));
+			Assert.AreEqual(1, keys.Count);
+		}
+
+
+		[Test]
+		public void GetKeys_ForSenseOnlyGloss()
+		{
+			LexEntrySortHelper h = new LexEntrySortHelper(((Db4oRecordListManager)_recordListManager).DataSource, _writingSystem, false);
+			LexEntry e = new LexEntry();
+			LexSense s = (LexSense)e.Senses.AddNew();
+			s.Gloss.SetAlternative(_writingSystem.Id, "a gloss");
+
+			List<string> keys = new List<string>(h.GetKeys(e));
+			Assert.IsTrue(keys.Contains("a gloss"));
+			Assert.AreEqual(1, keys.Count);
+		}
+
+		[Test]
+		public void GetKeys_ForSenseWithSameGlossAndDefinition_NoDuplicates()
+		{
+			LexEntrySortHelper h = new LexEntrySortHelper(((Db4oRecordListManager)_recordListManager).DataSource, _writingSystem, false);
+			LexEntry e = new LexEntry();
+			LexSense s = (LexSense)e.Senses.AddNew();
+			s.Definition.SetAlternative(_writingSystem.Id, "hamburger");
+			s.Gloss.SetAlternative(_writingSystem.Id, "hamburger");
+
+			List<string> keys = new List<string>(h.GetKeys(e));
+			Assert.IsTrue(keys.Contains("hamburger"));
+			Assert.AreEqual(1, keys.Count);
+		}
+
+		[Test]
+		public void GetKeys_ForSenseWithDifferntGlossAndDefinition_GetBoth()
+		{
+			LexEntrySortHelper h = new LexEntrySortHelper(((Db4oRecordListManager)_recordListManager).DataSource, _writingSystem, false);
+			LexEntry e = new LexEntry();
+			LexSense s = (LexSense)e.Senses.AddNew();
+			s.Definition.SetAlternative(_writingSystem.Id, "hamburger");
+			s.Gloss.SetAlternative(_writingSystem.Id, "fries");
+
+			List<string> keys = new List<string>(h.GetKeys(e));
+			Assert.IsTrue(keys.Contains("hamburger"));
+			Assert.IsTrue(keys.Contains("fries"));
+			Assert.AreEqual(2, keys.Count);
 		}
 
 		[Test]

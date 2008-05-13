@@ -74,6 +74,114 @@ namespace Addin.Transform.Tests
 			Assert.IsFalse(result.Contains("g_en"));
 		}
 
+		/// <summary>
+		/// this is a regression test.  It was not tagging pronunciation correctly
+		/// </summary>
+		[Test]
+		public void TagsPronunciationWithPh()
+		{
+			SfmTransformSettings settings = new SfmTransformSettings();
+			settings.SfmTagConversions = "";
+			settings.VernacularLanguageWritingSystemId = "bth";
+			settings.EnglishLanguageWritingSystemId = "en";
+			_addin.Settings = settings;
+
+
+			string contents = string.Format(@"<?xml version='1.0' encoding='utf-8'?>
+			<lift  version='{0}'>
+			  <entry id='abo-abo_ID0ENG' >
+				<lexical-unit>
+				  <form lang='bth'>
+					<text>bthform</text>
+				  </form>
+				</lexical-unit>
+				<pronunciation>
+				  <form lang='bth-fonipa'>
+					<text>thePronunciation</text>
+				  </form>
+				</pronunciation>
+			  </entry>
+			</lift>", Validator.LiftVersion);
+
+			string result = GetResultFromAddin(contents);
+			Assert.IsTrue(result.Contains("\\lx bthform"));
+			Assert.IsTrue(result.Contains("\\ph thePronunciation"));
+		 }
+
+
+		 [Test]
+		 public void UntypedRelationGetsCfTag()
+		 {
+
+			 /* um, relation without a type might not actually be valid lift */
+
+			 SfmTransformSettings settings = new SfmTransformSettings();
+			 settings.SfmTagConversions = "";
+			 settings.VernacularLanguageWritingSystemId = "bth";
+			 settings.EnglishLanguageWritingSystemId = "en";
+			 _addin.Settings = settings;
+
+
+			 string contents = string.Format(@"<?xml version='1.0' encoding='utf-8'?>
+			<lift  version='{0}'>
+			  <entry id='abo-abo_ID0ENG' >
+					  <relation ref='ebo' />
+			  </entry>
+			</lift>", Validator.LiftVersion);
+
+			 string result = GetResultFromAddin(contents);
+			 Assert.IsTrue(result.Contains("\\lf unknown = ebo"));
+		 }
+
+
+		[Test]
+		public void RelationTaggedWthType_OutputsTypeForTagAndLexemeFormOfTarget()
+		{
+			SfmTransformSettings settings = new SfmTransformSettings();
+			settings.SfmTagConversions = "";
+			settings.VernacularLanguageWritingSystemId = "bth";
+			settings.EnglishLanguageWritingSystemId = "en";
+			_addin.Settings = settings;
+
+
+			string contents = string.Format(@"<?xml version='1.0' encoding='utf-8'?>
+			<lift  version='{0}'>
+			  <entry id='abo-abo_ID0ENG' >
+					  <relation type='composition' ref='one' />
+			  </entry>
+			  <entry id='one' >
+				<lexical-unit>
+				  <form lang='bth'>
+					<text>lexemeOfOne</text>
+				  </form>
+				</lexical-unit>
+				</entry>
+			</lift>", Validator.LiftVersion);
+			string result = GetResultFromAddin(contents);
+			Console.WriteLine(result);
+			Assert.IsTrue(result.Contains("\\lf composition = lexemeOfOne"));
+		}
+
+		[Test]
+		public void Relation_TargetNotFoundOutputsId()
+		{
+			SfmTransformSettings settings = new SfmTransformSettings();
+			settings.SfmTagConversions = "";
+			settings.VernacularLanguageWritingSystemId = "bth";
+			settings.EnglishLanguageWritingSystemId = "en";
+			_addin.Settings = settings;
+
+
+			string contents = string.Format(@"<?xml version='1.0' encoding='utf-8'?>
+			<lift  version='{0}'>
+			  <entry id='one' >
+					  <relation type='composition' ref='id-of-missing' />
+			  </entry>
+			</lift>", Validator.LiftVersion);
+			string result = GetResultFromAddin(contents);
+			Assert.IsTrue(result.Contains("\\lf composition = id-of-missing"));
+		}
+
 		[Test]
 		public void ConvertsDatesToToolboxFormat()
 		{
@@ -92,9 +200,9 @@ namespace Addin.Transform.Tests
 		public void EmptyBaseFormNotOutput()
 		{
 			string result = LaunchWithConversionString("");
-			Assert.IsTrue(result.Contains("\\base"));
+			Assert.IsTrue(result.Contains("\\lf BaseForm"));
 			//should only have one, since the input has one empty, one non-empty
-			Assert.IsTrue(result.LastIndexOf("\\base") == result.IndexOf("\\base"));
+			Assert.IsTrue(result.LastIndexOf("\\lf BaseForm") == result.IndexOf("\\lf BaseForm"));
 		}
 
 		[Test]
@@ -154,8 +262,8 @@ namespace Addin.Transform.Tests
 				<entry id='one'
 					dateCreated='2008-02-06T09:46:31Z'
 					dateModified='2008-02-11T04:13:06Z'>
-					<relation name='BaseForm' ref=''/>
-					<relation name='BaseForm' ref='two'/>
+					<relation type='BaseForm' ref=''/>
+					<relation type='BaseForm' ref='two'/>
 				   <sense>
 						<gloss lang='en'><text>hello</text></gloss>
 						<trait name='SemanticDomainDdp4' value='1.1' />
@@ -165,6 +273,11 @@ namespace Addin.Transform.Tests
 				<entry id='two'>
 				</entry>
 			</lift>", Validator.LiftVersion);
+			return GetResultFromAddin(contents);
+		}
+
+		private string GetResultFromAddin(string contents)
+		{
 			if (WeSay.Project.WeSayWordsProject.Project.LiftIsLocked)
 			{
 				WeSay.Project.WeSayWordsProject.Project.ReleaseLockOnLift();
@@ -177,7 +290,6 @@ namespace Addin.Transform.Tests
 
 			return result;
 		}
-
 	}
 
 }

@@ -98,7 +98,8 @@ namespace WeSay.Data
 			if (_keyIdMap == null)
 			{
 				_keyIdMap = _sortHelper.GetKeyIdPairs();
-				_idKeyMap = _sortHelper.GetKeyIdPairs();
+				//same for now, but then gets sorted differently
+				_idKeyMap = new List<KeyValuePair<K, long>>(_keyIdMap);
 				Sort();
 			}
 

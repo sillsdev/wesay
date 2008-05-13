@@ -149,11 +149,21 @@
 
   <xsl:template match="relation">
 	<xsl:if test="not(@ref = '')">
-	  <xsl:text>&nl;\</xsl:text>
-	  <xsl:value-of select="@name"/>
-	  <xsl:text>   </xsl:text>
-	  <xsl:for-each select="//entry[@id=current()/@ref]/lexical-unit"><!-- todo: what if the ref is not found?-->
-		<xsl:apply-templates mode="raw"/>
+	  <xsl:text>&nl;\lf </xsl:text>
+	  <xsl:choose>
+		<xsl:when test="not(@type)">
+		  <xsl:text>unknown = </xsl:text>
+		</xsl:when>
+		<xsl:otherwise>
+		  <xsl:value-of select="@type"/>
+		  <xsl:text> = </xsl:text>
+		</xsl:otherwise>
+	  </xsl:choose>
+	  <xsl:if test="not(//entry[@id=current()/@ref]/lexical-unit/form/text)">
+		<xsl:value-of select="@ref"/> <!-- not found, just output the id -->
+	  </xsl:if>
+	  <xsl:for-each select="//entry[@id=current()/@ref]/lexical-unit/form/text"><!-- todo: what if the ref is not found?-->
+		  <xsl:apply-templates mode="raw"/>
 	  </xsl:for-each>
 	</xsl:if>
   </xsl:template>
@@ -197,6 +207,12 @@
 	  <xsl:with-param name="prefix">d</xsl:with-param>
 	</xsl:apply-templates>
 	<xsl:apply-templates select="translation"/>
+  </xsl:template>
+
+  <xsl:template match="pronunciation">
+	<!-- notice we drop the language identifier completely, for better or for worse -->
+	<xsl:text>&nl;\ph </xsl:text>
+	<xsl:value-of select="form/text"/>
   </xsl:template>
 
   <xsl:template match="note">
@@ -308,10 +324,7 @@
 		<xsl:apply-templates select="text" />
 	  </xsl:template>
 
-	   <xsl:template match="form" mode="raw">
-
-		<xsl:apply-templates select="text" />
-	  </xsl:template>
+   <xsl:template match="form" mode="raw"><xsl:apply-templates select="text" /></xsl:template>
 
 	<xsl:template match="text">
 		<xsl:value-of select="normalize-space()"/>
