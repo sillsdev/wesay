@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 
-namespace WeSay.Setup
+namespace WeSay.ConfigTool
 {
 	public partial class NewProject : Form
 	{

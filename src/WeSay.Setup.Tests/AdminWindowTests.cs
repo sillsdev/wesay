@@ -7,14 +7,14 @@ using NUnit.Framework;
 using NUnit.Extensions.Forms;
 using Palaso.Reporting;
 using WeSay.Project;
-using WeSay.Setup;
+using WeSay.ConfigTool;
 
-namespace WeSay.Admin.Tests
+namespace WeSay.ConfigTool.Tests.Tests
 {
 	[TestFixture]
 	public class AdminWindowTests : NUnitFormTest
 	{
-		private AdminWindow _window;
+		private ConfigurationWindow _window;
 		private string _projectFolder;
 		private FormTester _mainWindowTester;
 
@@ -22,7 +22,7 @@ namespace WeSay.Admin.Tests
 		{
 			Palaso.Reporting.ErrorReport.IsOkToInteractWithUser = false;
 			base.Setup();
-			_window = new AdminWindow(new string[] { });
+			_window = new ConfigurationWindow(new string[] { });
 			_window.Show();
 			_mainWindowTester = new FormTester(_window.Name, _window);
 

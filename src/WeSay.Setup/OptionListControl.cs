@@ -9,7 +9,7 @@ using WeSay.Foundation.Options;
 using WeSay.Project;
 using WeSay.UI;
 
-namespace WeSay.Setup
+namespace WeSay.ConfigTool
 {
 	public partial class OptionListControl : ConfigurationControlBase
 	{

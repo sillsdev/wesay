@@ -1,4 +1,4 @@
-namespace WeSay.Setup
+namespace WeSay.ConfigTool
 {
 	partial class WritingSystemSetup
 	{
@@ -36,11 +36,11 @@ namespace WeSay.Setup
 			this._wsListBox = new System.Windows.Forms.ListBox();
 			this._tabControl = new System.Windows.Forms.TabControl();
 			this._basicPage = new System.Windows.Forms.TabPage();
-			this._basicControl = new WeSay.Setup.WritingSystemBasic();
+			this._basicControl = new WritingSystemBasic();
 			this._fontsPage = new System.Windows.Forms.TabPage();
-			this._fontControl = new WeSay.Setup.FontControl();
+			this._fontControl = new FontControl();
 			this._sortingPage = new System.Windows.Forms.TabPage();
-			this._sortControl = new WeSay.Setup.WritingSystemSortControl();
+			this._sortControl = new WritingSystemSortControl();
 			this.toolStrip1.SuspendLayout();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();

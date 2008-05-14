@@ -1,14 +1,14 @@
 using System.IO;
 using NUnit.Framework;
 using NUnit.Extensions.Forms;
-using WeSay.Setup;
+using WeSay.ConfigTool;
 
-namespace WeSay.Admin.Tests
+namespace WeSay.ConfigTool.Tests.Tests
 {
 	[TestFixture]
 	public class TestProjectMenu//: NUnitFormTest
 	{
-		private AdminWindow _window;
+		private ConfigurationWindow _window;
 
 		public TestProjectMenu()
 		{
@@ -18,7 +18,7 @@ namespace WeSay.Admin.Tests
 		public void Setup()
 		{
 			Palaso.Reporting.ErrorReport.IsOkToInteractWithUser = false;
-			_window = new AdminWindow(new string[] { });
+			_window = new ConfigurationWindow(new string[] { });
 			_window.Show();
 		 }
 

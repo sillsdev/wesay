@@ -4,7 +4,7 @@ using System.Windows.Forms;
 using Palaso.Reporting;
 using WeSay.Language;
 
-namespace WeSay.Setup
+namespace WeSay.ConfigTool
 {
 	public partial class WritingSystemBasic : UserControl
 	{

@@ -1,9 +1,10 @@
 using System;
 using System.Windows.Forms;
 using Palaso.Reporting;
-using WeSay.Setup.Properties;
+using WeSay.ConfigTool.Properties;
+using WeSay.ConfigTool.Properties;
 
-namespace WeSay.Setup
+namespace WeSay.ConfigTool
 {
 	internal static class Program
 	{

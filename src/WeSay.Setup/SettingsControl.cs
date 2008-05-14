@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace WeSay.Setup
+namespace WeSay.ConfigTool
 {
 	public partial class SettingsControl : UserControl
 	{

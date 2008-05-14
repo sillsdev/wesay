@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace WeSay.Setup.Tests {
+namespace WeSay.ConfigTool.Tests {
 	using System;
 
 

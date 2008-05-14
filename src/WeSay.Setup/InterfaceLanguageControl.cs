@@ -12,7 +12,7 @@ using Palaso.UI.WindowsForms.i8n;
 using WeSay.Foundation;
 using WeSay.Project;
 
-namespace WeSay.Setup
+namespace WeSay.ConfigTool
 {
 	public partial class InterfaceLanguageControl : ConfigurationControlBase
 	{

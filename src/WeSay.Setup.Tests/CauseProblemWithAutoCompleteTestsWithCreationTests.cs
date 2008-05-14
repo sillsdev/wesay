@@ -2,20 +2,20 @@ using System.IO;
 using System.Windows.Forms;
 using NUnit.Framework;
 using WeSay.Project;
-using WeSay.Setup;
+using WeSay.ConfigTool;
 
-namespace WeSay.Setup.Tests
+namespace WeSay.ConfigTool.Tests
 {
 	[TestFixture]
 	public class CauseProblemWithAutoCompleteTestsWithCreationTests
 	{
-		private AdminWindow _window;
+		private ConfigurationWindow _window;
 
 		[SetUp]
 		public void Setup()
 		{
 			Palaso.Reporting.ErrorReport.IsOkToInteractWithUser = false;
-			_window = new AdminWindow(new string[] { });
+			_window = new ConfigurationWindow(new string[] { });
 			_window.Show();
 		}
 		[TearDown]

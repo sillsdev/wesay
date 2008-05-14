@@ -1,4 +1,6 @@
-namespace WeSay.Setup
+using Resources=WeSay.ConfigTool.Properties.Resources;
+
+namespace WeSay.ConfigTool
 {
 	partial class OptionListControl
 	{
@@ -158,7 +160,7 @@ namespace WeSay.Setup
 			//
 			// _btnAdd
 			//
-			this._btnAdd.Image = global::WeSay.Setup.Properties.Resources.NewOptionListItem;
+			this._btnAdd.Image = Resources.NewOptionListItem;
 			this._btnAdd.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this._btnAdd.Name = "_btnAdd";
 			this._btnAdd.Size = new System.Drawing.Size(91, 22);
@@ -167,7 +169,7 @@ namespace WeSay.Setup
 			//
 			// _btnDelete
 			//
-			this._btnDelete.Image = global::WeSay.Setup.Properties.Resources.deleteOptionListItem;
+			this._btnDelete.Image = Resources.deleteOptionListItem;
 			this._btnDelete.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this._btnDelete.Name = "_btnDelete";
 			this._btnDelete.Size = new System.Drawing.Size(100, 22);

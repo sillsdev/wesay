@@ -1,7 +1,8 @@
 using System.Windows.Forms;
-using WeSay.Setup.Properties;
+using WeSay.ConfigTool.Properties;
+using Resources=WeSay.ConfigTool.Properties.Resources;
 
-namespace WeSay.Setup
+namespace WeSay.ConfigTool
 {
 	partial class FieldsControl
 	{
@@ -50,7 +51,7 @@ namespace WeSay.Setup
 			this.tabPage1 = new System.Windows.Forms.TabPage();
 			this._descriptionBox = new System.Windows.Forms.Label();
 			this._setupTab = new System.Windows.Forms.TabPage();
-			this._fieldSetupControl = new WeSay.Setup.FieldDetailControl();
+			this._fieldSetupControl = new FieldDetailControl();
 			this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
 			this.label1 = new System.Windows.Forms.Label();
 			this.btnMoveDown = new System.Windows.Forms.Button();
@@ -150,7 +151,7 @@ namespace WeSay.Setup
 			// _btnAddField
 			//
 			this._btnAddField.ForeColor = System.Drawing.SystemColors.WindowText;
-			this._btnAddField.Image = global::WeSay.Setup.Properties.Resources.genericLittleNewButton;
+			this._btnAddField.Image = Resources.genericLittleNewButton;
 			this._btnAddField.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this._btnAddField.Name = "_btnAddField";
 			this._btnAddField.Size = new System.Drawing.Size(79, 22);
@@ -160,7 +161,7 @@ namespace WeSay.Setup
 			// _btnDeleteField
 			//
 			this._btnDeleteField.ForeColor = System.Drawing.SystemColors.WindowText;
-			this._btnDeleteField.Image = global::WeSay.Setup.Properties.Resources.GenericLittleDeletionButton;
+			this._btnDeleteField.Image = Resources.GenericLittleDeletionButton;
 			this._btnDeleteField.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this._btnDeleteField.Name = "_btnDeleteField";
 			this._btnDeleteField.Size = new System.Drawing.Size(88, 22);

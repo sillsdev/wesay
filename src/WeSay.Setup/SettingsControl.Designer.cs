@@ -1,6 +1,7 @@
 using System.Windows.Forms;
+using Resources=WeSay.ConfigTool.Properties.Resources;
 
-namespace WeSay.Setup
+namespace WeSay.ConfigTool
 {
 	partial class SettingsControl
 	{
@@ -74,7 +75,7 @@ namespace WeSay.Setup
 			this._tasksButton.CheckState = System.Windows.Forms.CheckState.Checked;
 			this._tasksButton.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this._tasksButton.ForeColor = System.Drawing.Color.DimGray;
-			this._tasksButton.Image = global::WeSay.Setup.Properties.Resources.ConfigTasks;
+			this._tasksButton.Image = Resources.ConfigTasks;
 			this._tasksButton.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this._tasksButton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
 			this._tasksButton.ImageTransparentColor = System.Drawing.Color.Magenta;
@@ -88,7 +89,7 @@ namespace WeSay.Setup
 			//
 			this._fieldsButton.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this._fieldsButton.ForeColor = System.Drawing.Color.DimGray;
-			this._fieldsButton.Image = global::WeSay.Setup.Properties.Resources.ConfigFields;
+			this._fieldsButton.Image = Resources.ConfigFields;
 			this._fieldsButton.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this._fieldsButton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
 			this._fieldsButton.ImageTransparentColor = System.Drawing.Color.Magenta;
@@ -102,7 +103,7 @@ namespace WeSay.Setup
 			//
 			this._writingSystemButton.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this._writingSystemButton.ForeColor = System.Drawing.Color.DimGray;
-			this._writingSystemButton.Image = global::WeSay.Setup.Properties.Resources.ConfigWritingSystems;
+			this._writingSystemButton.Image = Resources.ConfigWritingSystems;
 			this._writingSystemButton.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this._writingSystemButton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
 			this._writingSystemButton.ImageTransparentColor = System.Drawing.Color.Magenta;
@@ -116,7 +117,7 @@ namespace WeSay.Setup
 			//
 			this._actionsButton.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this._actionsButton.ForeColor = System.Drawing.Color.DimGray;
-			this._actionsButton.Image = global::WeSay.Setup.Properties.Resources.ConfigActions;
+			this._actionsButton.Image = Resources.ConfigActions;
 			this._actionsButton.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this._actionsButton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
 			this._actionsButton.ImageTransparentColor = System.Drawing.Color.Magenta;
@@ -130,7 +131,7 @@ namespace WeSay.Setup
 			//
 			this._interfaceLanguageButton.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this._interfaceLanguageButton.ForeColor = System.Drawing.Color.DimGray;
-			this._interfaceLanguageButton.Image = global::WeSay.Setup.Properties.Resources.ConfigInterfaceLanguage;
+			this._interfaceLanguageButton.Image = Resources.ConfigInterfaceLanguage;
 			this._interfaceLanguageButton.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this._interfaceLanguageButton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
 			this._interfaceLanguageButton.ImageTransparentColor = System.Drawing.Color.Magenta;
@@ -145,7 +146,7 @@ namespace WeSay.Setup
 			this._backupButton.BackColor = System.Drawing.SystemColors.ControlLight;
 			this._backupButton.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this._backupButton.ForeColor = System.Drawing.Color.DimGray;
-			this._backupButton.Image = global::WeSay.Setup.Properties.Resources.ConfigBackup;
+			this._backupButton.Image = Resources.ConfigBackup;
 			this._backupButton.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this._backupButton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
 			this._backupButton.ImageTransparentColor = System.Drawing.Color.Magenta;
@@ -159,7 +160,7 @@ namespace WeSay.Setup
 			//
 			this._optionsListButton.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Bold);
 			this._optionsListButton.ForeColor = System.Drawing.Color.DimGray;
-			this._optionsListButton.Image = global::WeSay.Setup.Properties.Resources.ConfigOptionLists;
+			this._optionsListButton.Image = Resources.ConfigOptionLists;
 			this._optionsListButton.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this._optionsListButton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
 			this._optionsListButton.ImageTransparentColor = System.Drawing.Color.Magenta;

@@ -1,4 +1,4 @@
-namespace WeSay.Setup
+namespace WeSay.ConfigTool
 {
 	partial class FieldDetailControl
 	{
@@ -41,7 +41,7 @@ namespace WeSay.Setup
 			this._dataTypeCombo = new System.Windows.Forms.ComboBox();
 			this._optionsFileName = new System.Windows.Forms.TextBox();
 			this.label6 = new System.Windows.Forms.Label();
-			this._writingSystemsControl = new WeSay.Setup.WritingSystemForFieldControl();
+			this._writingSystemsControl = new WritingSystemForFieldControl();
 			this._normallyHidden = new System.Windows.Forms.CheckBox();
 			this._description = new System.Windows.Forms.TextBox();
 			this._descriptionLabel = new System.Windows.Forms.Label();

@@ -1,8 +1,9 @@
 using System;
 using System.IO;
 using System.Windows.Forms;
+using Settings=WeSay.ConfigTool.Properties.Settings;
 
-namespace WeSay.Setup
+namespace WeSay.ConfigTool
 {
 	public partial class WelcomeControl : UserControl
 	{
@@ -14,7 +15,7 @@ namespace WeSay.Setup
 		{
 			InitializeComponent();
 
-		   string s = WeSay.Setup.Properties.Settings.Default.LastConfigFilePath;
+		   string s = Settings.Default.LastConfigFilePath;
 		   if (s != null && s.Length > 0 && File.Exists(s))
 		   {
 			   this.openRecentProject.Text = "Open " + Path.GetFileNameWithoutExtension(s);
@@ -31,7 +32,7 @@ namespace WeSay.Setup
 		{
 			if (OpenPreviousProjectClicked != null)
 			{
-				OpenPreviousProjectClicked.Invoke(WeSay.Setup.Properties.Settings.Default.LastConfigFilePath, null);
+				OpenPreviousProjectClicked.Invoke(Settings.Default.LastConfigFilePath, null);
 			}
 
 		}

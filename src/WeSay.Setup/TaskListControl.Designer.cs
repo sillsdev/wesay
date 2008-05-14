@@ -1,4 +1,6 @@
-namespace WeSay.Setup
+using Resources=WeSay.ConfigTool.Properties.Resources;
+
+namespace WeSay.ConfigTool
 {
 	partial class TaskListControl
 	{
@@ -118,7 +120,7 @@ namespace WeSay.Setup
 			// pictureBox1
 			//
 			this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.pictureBox1.Image = global::WeSay.Setup.Properties.Resources.construction;
+			this.pictureBox1.Image = Resources.construction;
 			this.pictureBox1.Location = new System.Drawing.Point(3, 308);
 			this.pictureBox1.Name = "pictureBox1";
 			this.pictureBox1.Size = new System.Drawing.Size(23, 24);

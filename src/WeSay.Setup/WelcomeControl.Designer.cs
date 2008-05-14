@@ -1,4 +1,6 @@
-namespace WeSay.Setup
+using Resources=WeSay.ConfigTool.Properties.Resources;
+
+namespace WeSay.ConfigTool
 {
 	partial class WelcomeControl
 	{
@@ -106,7 +108,7 @@ namespace WeSay.Setup
 			//
 			this.pictureBox1.BackColor = System.Drawing.Color.Transparent;
 			this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-			this.pictureBox1.Image = global::WeSay.Setup.Properties.Resources.WelcomeImage;
+			this.pictureBox1.Image = Resources.WelcomeImage;
 			this.pictureBox1.InitialImage = null;
 			this.pictureBox1.Location = new System.Drawing.Point(27, 21);
 			this.pictureBox1.Name = "pictureBox1";

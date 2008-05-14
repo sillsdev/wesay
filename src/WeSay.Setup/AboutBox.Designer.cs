@@ -1,6 +1,7 @@
-using WeSay.Setup.Properties;
+using WeSay.ConfigTool.Properties;
+using Resources=WeSay.ConfigTool.Properties.Resources;
 
-namespace WeSay.Setup
+namespace WeSay.ConfigTool
 {
 	partial class AboutBox
 	{
@@ -67,7 +68,7 @@ namespace WeSay.Setup
 			//
 			// logoPictureBox
 			//
-			this.logoPictureBox.Image = global::WeSay.Setup.Properties.Resources.WeSaySetupImage;
+			this.logoPictureBox.Image = Resources.WeSaySetupImage;
 			this.logoPictureBox.Location = new System.Drawing.Point(3, 3);
 			this.logoPictureBox.Name = "logoPictureBox";
 			this.tableLayoutPanel.SetRowSpan(this.logoPictureBox, 6);

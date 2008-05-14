@@ -3,10 +3,11 @@ using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 using Palaso.Reporting;
+using WeSay.ConfigTool.Properties;
 using WeSay.Project;
-using WeSay.Setup.Properties;
+using WeSay.ConfigTool.Properties;
 
-namespace WeSay.Setup
+namespace WeSay.ConfigTool
 {
 	public partial class ConfigurationWindow : Form
 	{

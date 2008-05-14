@@ -10,7 +10,7 @@ using System.Xml;
 using WeSay.Foundation;
 using WeSay.Project;
 
-namespace WeSay.Setup
+namespace WeSay.ConfigTool
 {
 	public partial class BackupPlanControl : ConfigurationControlBase
 	{

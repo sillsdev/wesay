@@ -1,6 +1,6 @@
 using System.Drawing;
 
-namespace WeSay.Setup
+namespace WeSay.ConfigTool
 {
 	partial class WritingSystemSortControl
 	{

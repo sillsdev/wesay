@@ -6,7 +6,7 @@ using Palaso.Reporting;
 using WeSay.AddinLib;
 using WeSay.Project;
 
-namespace WeSay.Setup
+namespace WeSay.ConfigTool
 {
 	public partial class ActionsControl: ConfigurationControlBase
 	{

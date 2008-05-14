@@ -1,4 +1,6 @@
-namespace WeSay.Setup
+using Resources=WeSay.ConfigTool.Properties.Resources;
+
+namespace WeSay.ConfigTool
 {
 	partial class BackupPlanControl
 	{
@@ -38,7 +40,7 @@ namespace WeSay.Setup
 			// pictureBox2
 			//
 			this.pictureBox2.BackColor = System.Drawing.Color.Transparent;
-			this.pictureBox2.Image = global::WeSay.Setup.Properties.Resources.construction;
+			this.pictureBox2.Image = Resources.construction;
 			this.pictureBox2.Location = new System.Drawing.Point(10, 12);
 			this.pictureBox2.Name = "pictureBox2";
 			this.pictureBox2.Size = new System.Drawing.Size(22, 25);

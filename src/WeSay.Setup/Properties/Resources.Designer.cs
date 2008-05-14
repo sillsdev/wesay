@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace WeSay.Setup.Properties {
+namespace WeSay.ConfigTool.Properties {
 	using System;
 
 

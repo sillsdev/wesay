@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using WeSay.Project;
 
-namespace WeSay.Setup
+namespace WeSay.ConfigTool
 {
 	public partial class FieldsControl : ConfigurationControlBase
 	{

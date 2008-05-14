@@ -5,7 +5,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.Reflection;
 
-namespace WeSay.Setup
+namespace WeSay.ConfigTool
 {
 	partial class AboutBox : Form
 	{

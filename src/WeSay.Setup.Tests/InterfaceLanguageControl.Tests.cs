@@ -7,12 +7,12 @@ using NUnit.Framework;
 using WeSay.Project;
 using NUnit.Extensions.Forms;
 
-namespace WeSay.Setup.Tests
+namespace WeSay.ConfigTool.Tests
 {
 	[TestFixture]
 	public class InterfaceLanguageControl
 	{
-		private AdminWindow _window;
+		private ConfigurationWindow _window;
 
 		[SetUp]
 		public void Setup()
@@ -166,7 +166,7 @@ namespace WeSay.Setup.Tests
 
 		private ComboBoxTester CreateNewAndGetLanguageCombo(string path)
 		{
-			_window = new AdminWindow(new string[] { });
+			_window = new ConfigurationWindow(new string[] { });
 			_window.Show();
 			_window.CreateAndOpenProject(path);
 			GoToUILanguageTab();
@@ -182,9 +182,9 @@ namespace WeSay.Setup.Tests
 
 		private void OpenExisting(string path)
 		{
-			_window = new AdminWindow(new string[] { });
+			_window = new ConfigurationWindow(new string[] { });
 			_window.Show();
-			_window = new AdminWindow(new string[] { });
+			_window = new ConfigurationWindow(new string[] { });
 			_window.Show();
 			_window.OpenProject(path);
 		}

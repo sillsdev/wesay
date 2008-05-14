@@ -1,4 +1,4 @@
-namespace WeSay.Setup
+namespace WeSay.ConfigTool
 {
 	partial class WritingSystemBasic
 	{

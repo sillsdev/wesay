@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace WeSay.Setup.Properties {
+namespace WeSay.ConfigTool.Properties {
 
 
 	[global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]

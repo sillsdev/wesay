@@ -1,6 +1,7 @@
-using WeSay.Setup.Properties;
+using WeSay.ConfigTool.Properties;
+using Resources=WeSay.ConfigTool.Properties.Resources;
 
-namespace WeSay.Setup
+namespace WeSay.ConfigTool
 {
 	partial class ConfigurationWindow
 	{
@@ -120,7 +121,7 @@ namespace WeSay.Setup
 			// toolStripButton8
 			//
 			this.toolStripButton8.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.toolStripButton8.Image = global::WeSay.Setup.Properties.Resources.NewProject;
+			this.toolStripButton8.Image = Resources.NewProject;
 			this.toolStripButton8.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
 			this.toolStripButton8.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.toolStripButton8.Margin = new System.Windows.Forms.Padding(10, 1, 15, 2);
@@ -132,7 +133,7 @@ namespace WeSay.Setup
 			// toolStripButton9
 			//
 			this.toolStripButton9.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.toolStripButton9.Image = global::WeSay.Setup.Properties.Resources.openProject;
+			this.toolStripButton9.Image = Resources.openProject;
 			this.toolStripButton9.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
 			this.toolStripButton9.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.toolStripButton9.Margin = new System.Windows.Forms.Padding(0, 1, 15, 2);
@@ -144,7 +145,7 @@ namespace WeSay.Setup
 			// toolStripButton10
 			//
 			this.toolStripButton10.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.toolStripButton10.Image = global::WeSay.Setup.Properties.Resources.about;
+			this.toolStripButton10.Image = Resources.about;
 			this.toolStripButton10.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.toolStripButton10.Margin = new System.Windows.Forms.Padding(0, 1, 15, 2);
 			this.toolStripButton10.Name = "toolStripButton10";
@@ -156,7 +157,7 @@ namespace WeSay.Setup
 			//
 			this.openProjectInWeSayToolStripMenuItem.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
 			this.openProjectInWeSayToolStripMenuItem.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-			this.openProjectInWeSayToolStripMenuItem.Image = global::WeSay.Setup.Properties.Resources.WeSayMenuSized;
+			this.openProjectInWeSayToolStripMenuItem.Image = Resources.WeSayMenuSized;
 			this.openProjectInWeSayToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.openProjectInWeSayToolStripMenuItem.Name = "openProjectInWeSayToolStripMenuItem";
 			this.openProjectInWeSayToolStripMenuItem.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
@@ -180,7 +181,7 @@ namespace WeSay.Setup
 			this.BackColor = System.Drawing.SystemColors.ControlLightLight;
 			this.ClientSize = new System.Drawing.Size(781, 522);
 			this.Controls.Add(this.toolStrip2);
-			this.Icon = global::WeSay.Setup.Properties.Resources.WeSaySetupApplicationIcon;
+			this.Icon = Resources.WeSaySetupApplicationIcon;
 			this.Name = "AdminWindow";
 			this.Text = "WeSay Configuration Tool";
 			this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.AdminWindow_FormClosed);

@@ -1,7 +1,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace WeSay.Setup
+namespace WeSay.ConfigTool
 {
 	public  class ConfigurationControlBase :UserControl
 	{

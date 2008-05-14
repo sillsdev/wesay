@@ -7,7 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using WeSay.Language;
 
-namespace WeSay.Setup
+namespace WeSay.ConfigTool
 {
 	public partial class FontControl : UserControl
 	{

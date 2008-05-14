@@ -8,7 +8,7 @@ using System.Windows.Forms;
 using System.Xml;
 using WeSay.Project;
 
-namespace WeSay.Setup
+namespace WeSay.ConfigTool
 {
 	public partial class TaskListControl : ConfigurationControlBase
 	{

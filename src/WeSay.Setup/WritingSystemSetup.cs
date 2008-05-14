@@ -5,7 +5,7 @@ using Palaso.Reporting;
 using WeSay.Language;
 using WeSay.Project;
 
-namespace WeSay.Setup
+namespace WeSay.ConfigTool
 {
 	public partial class WritingSystemSetup : ConfigurationControlBase
 	{
