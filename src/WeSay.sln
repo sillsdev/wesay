@@ -117,13 +117,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleDataProcessor", "Lift
 		Release.AspNetCompiler.Debug = "False"
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeSay.ConfigTool", "WeSay.Setup\WeSay.ConfigTool.csproj", "{54C943DB-7725-4F52-BCE4-86C3D3D5A66E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeSay.ConfigTool", "WeSay.ConfigTool\WeSay.ConfigTool.csproj", "{54C943DB-7725-4F52-BCE4-86C3D3D5A66E}"
 	ProjectSection(WebsiteProperties) = preProject
 		Debug.AspNetCompiler.Debug = "True"
 		Release.AspNetCompiler.Debug = "False"
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeSay.ConfigTool.Tests", "WeSay.Setup.Tests\WeSay.ConfigTool.Tests.csproj", "{FB7CFBB8-D7D0-4E9D-96CF-7D3D0D947EB5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeSay.ConfigTool.Tests", "WeSay.ConfigTool.Tests\WeSay.ConfigTool.Tests.csproj", "{FB7CFBB8-D7D0-4E9D-96CF-7D3D0D947EB5}"
 	ProjectSection(WebsiteProperties) = preProject
 		Debug.AspNetCompiler.Debug = "True"
 		Release.AspNetCompiler.Debug = "False"
