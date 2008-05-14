@@ -33,7 +33,7 @@ namespace WeSay.Setup
 											   "Thank you for letting us know you are using WeSay.",
 											   new int[] {1, 5, 20, 40, 60, 80, 100});
 
-			Application.Run(new AdminWindow(args));
+			Application.Run(new ConfigurationWindow(args));
 
 #if !DEBUG
 			try

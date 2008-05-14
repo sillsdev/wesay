@@ -8,13 +8,13 @@ using WeSay.Setup.Properties;
 
 namespace WeSay.Setup
 {
-	public partial class AdminWindow : Form
+	public partial class ConfigurationWindow : Form
 	{
 		private WelcomeControl _welcomePage;
 		private SettingsControl _projectSettingsControl;
 		private WeSayWordsProject _project;
 
-		public AdminWindow(string[] args)
+		public ConfigurationWindow(string[] args)
 		{
 			InitializeComponent();
 

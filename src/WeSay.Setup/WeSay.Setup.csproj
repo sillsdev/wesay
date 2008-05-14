@@ -97,11 +97,11 @@
 	<Compile Include="ActionsControl.Designer.cs">
 	  <DependentUpon>ActionsControl.cs</DependentUpon>
 	</Compile>
-	<Compile Include="AdminWindow.cs">
+	<Compile Include="ConfigurationWindow.cs">
 	  <SubType>Form</SubType>
 	</Compile>
-	<Compile Include="AdminWindow.Designer.cs">
-	  <DependentUpon>AdminWindow.cs</DependentUpon>
+	<Compile Include="ConfigurationWindow.Designer.cs">
+	  <DependentUpon>ConfigurationWindow.cs</DependentUpon>
 	</Compile>
 	<Compile Include="ConfigurationControlBase.cs">
 	  <SubType>UserControl</SubType>
@@ -159,9 +159,9 @@
 	  <SubType>Designer</SubType>
 	  <DependentUpon>ActionsControl.cs</DependentUpon>
 	</EmbeddedResource>
-	<EmbeddedResource Include="AdminWindow.resx">
+	<EmbeddedResource Include="ConfigurationWindow.resx">
 	  <SubType>Designer</SubType>
-	  <DependentUpon>AdminWindow.cs</DependentUpon>
+	  <DependentUpon>ConfigurationWindow.cs</DependentUpon>
 	</EmbeddedResource>
 	<EmbeddedResource Include="BackupPlanControl.resx">
 	  <DependentUpon>BackupPlanControl.cs</DependentUpon>

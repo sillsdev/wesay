@@ -2,7 +2,7 @@ using WeSay.Setup.Properties;
 
 namespace WeSay.Setup
 {
-	partial class AdminWindow
+	partial class ConfigurationWindow
 	{
 		/// <summary>
 		/// Required designer variable.
