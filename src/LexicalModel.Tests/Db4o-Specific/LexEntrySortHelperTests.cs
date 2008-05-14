@@ -180,5 +180,55 @@ namespace WeSay.LexicalModel.Tests
 			Assert.AreEqual(2, count);
 		}
 
+
+		[Test]
+		public void GetKeyIdPairs_NoGlossesOrDefinitions()
+		{
+			GetKeyIdPairs("", "", new string[] {});
+		}
+
+		[Test]
+		public void GetKeyIdPairs_Just2Glosses()
+		{
+			GetKeyIdPairs("a ; b", "", new string[] { "a", "b"});
+		}
+
+		[Test]
+		public void GetKeyIdPairs_JustDefinition()
+		{
+			GetKeyIdPairs("", "a", new string[] { "a" });
+		}
+		[Test]
+		public void GetKeyIdPairs_MixtureOfGlossesAndDefinitions()
+		{
+			GetKeyIdPairs("a ; b", "a; c", new string[] { "a", "b", "c" });
+		}
+
+		private void GetKeyIdPairs(string glosses, string definition, string[] expectedKeys)
+		{
+			Lexicon.Init((Db4oRecordListManager) _recordListManager);
+			LexEntrySortHelper h = new LexEntrySortHelper(((Db4oRecordListManager)_recordListManager).DataSource, _writingSystem, false);
+			LexEntry e = new LexEntry();
+
+
+			LexSense s = (LexSense)e.Senses.AddNew();
+			s.Gloss.SetAlternative(_writingSystem.Id, glosses);
+			s.Definition.SetAlternative(_writingSystem.Id, definition);
+			int count = 0;
+
+			Db4oRecordList<LexEntry> entriesList;
+
+			entriesList = (Db4oRecordList<LexEntry>) _recordListManager.GetListOfType<LexEntry>();
+			entriesList.Add(e);
+			long entryId = ((Db4oRecordListManager)_recordListManager).DataSource.Data.Ext().GetID(e);
+
+			foreach (KeyValuePair<string, long> pair in h.GetKeyIdPairs())
+			{
+				Assert.AreEqual(expectedKeys[count], pair.Key);
+				Assert.AreEqual(entryId, pair.Value);
+				count++;
+			}
+			Assert.AreEqual(expectedKeys.Length, count);
+		}
 	}
 }
