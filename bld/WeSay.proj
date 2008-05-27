@@ -23,8 +23,10 @@
   <!-- From http://msbuildtasks.tigris.org/ -->
   <Import Project="$(MSBuildExtensionsPath)\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets"/>
 
-  <Target Name="Revert">
-	<SvnClient Command="revert" Arguments="$(BaseDirectory) --recursive"/>
+  <!-- this is here to avoid the problem we were getting where we changed some assemblyinfo.cs, and teamcity did too... (need more).
+	At one point, we reverted everything, but then that just threw away the artifact dependencies we want to suck in from, for example, palaso.  -->
+  <Target Name="RevertSource">
+	<SvnClient Command="revert" Arguments="$(BaseDirectory)/src --recursive"/>
   </Target>
 
   <Target Name="Compile">
@@ -262,7 +264,7 @@
   </Target>
 
   <Target Name="Build">
-	<CallTarget Targets="Revert;
+	<CallTarget Targets="RevertSource;
 						UpdateCsProjs;
 						 Compile;
 						 Test;
