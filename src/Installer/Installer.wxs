@@ -275,9 +275,8 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 
 				  <Component Id="WeSay.AddinLib.dll" Guid="{8597A830-9A97-4A74-A25F-3FEDF7902222}">
 					<File Id="WeSay.AddinLib.dll" Name="WeSay.AddinLib.dll" KeyPath="yes" Source="..\..\output\release\WeSay.AddinLib.dll" />
-				  </Component>
-				  <Component Id="Mono.Addins.exe" Guid="{6A969A5B-E42E-4dc7-A486-7828B54D9522}">
-					<File Id="Mono.Addins.exe" Name="Mono.Addins.exe" KeyPath="yes" Source="..\..\output\release\Mono.Addins.exe" />
+					  <File Id="Mono.Addins.exe"
+					Name="Mono.Addins.exe" KeyPath="no" Source="..\..\output\release\Mono.Addins.exe" />
 				  </Component>
 
 				  <Component Id="Icu.Net.dll" Guid="{7EEB48AE-7494-4408-924F-24BCA99A6E22}">
@@ -361,7 +360,7 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 			  <ComponentRef Id="log4net.dll"/>
 			  <ComponentRef Id="commons.dll"/>
 			  <ComponentRef Id="WeSay.AddinLib.dll"/>
-			  <ComponentRef Id="Mono.Addins.exe"/>
+			 <!-- <ComponentRef Id="Mono.Addins.exe"/> -->
 
 			  <ComponentRef Id="Icu.Net.dll"/>
 
