@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: wesay\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2007-11-23 05:56+0000\n"
-"PO-Revision-Date: 2008-01-19 04:55+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2008-05-24 14:24+0000\n"
+"Last-Translator: Emilio Gómez Fernández <Unknown>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2008-02-05 09:12+0000\n"
+"X-Launchpad-Export-Date: 2008-06-02 09:36+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. The label for the 'dashboard'; the task which lets you see the status of other tasks and jump to them.
@@ -43,7 +43,7 @@ msgid "Add example sentences to entries where they are missing."
 msgstr "Añadir frases de ejemplo a las entradas cuando falten"
 
 msgid "Add Base Forms"
-msgstr ""
+msgstr "Añadir Formas Base"
 
 msgid ""
 "Identify the \"base form\" word that this word is built from. In the printed "
@@ -69,15 +69,18 @@ msgid ""
 msgstr ""
 
 msgid "Collect Words By Semantic Domain"
-msgstr ""
+msgstr "Recopilar palabras por dominios semánticos"
 
+#, fuzzy
 msgid ""
 "Collect new words organized by semantic domains and questions about those "
 "domains."
 msgstr ""
+"Recopilar nuevas palabras organizadas por dominios semánticos y preguntas "
+"acerca de los dominios"
 
 msgid "Actions"
-msgstr ""
+msgstr "Acciones"
 
 msgid "Looking for USB Keys..."
 msgstr "Buscando llaves USB..."
@@ -137,7 +140,7 @@ msgid "Export To SFM"
 msgstr "Exportar a SFM"
 
 msgid "Saves the lexicon in a form of standard format."
-msgstr ""
+msgstr "Guarda el léxico conforme a un formato estándar."
 
 #. The description of the Actions task.
 msgid "Backup, print, etc."
@@ -159,17 +162,18 @@ msgid "Cannot find {0}"
 msgstr "Imposible encontrar {0}"
 
 msgid "No Senses"
-msgstr ""
+msgstr "Sin Sentidos"
 
 #. This is what shows if the user is listing words by the glossing language, but the word doesn't have a gloss.
+#, fuzzy
 msgid "No Gloss"
-msgstr ""
+msgstr "Sin brillo"
 
 msgid "Hide Uncommon Fields"
-msgstr ""
+msgstr "Ocultar campos poco frecuentes"
 
 msgid "Show Uncommon Fields"
-msgstr ""
+msgstr "Mostrar campos poco frecuentes"
 
 msgid "&Delete This Word"
 msgstr "&Borrar esta palabra"
@@ -230,20 +234,22 @@ msgid "Completed:"
 msgstr "Completado:"
 
 #. The user will click this to say that this word has no baseform.  E.g. Kindess has Kind as a baseform, but Kind has no other word as a baseform.
+#, fuzzy
 msgid "This word has no Base Form"
-msgstr ""
+msgstr "Esta palabra no tiene una forma básica o raíz"
 
 #. Appended to the name of a task, in its tab, while the user is waiting for the task to come up.
 msgid "Loading..."
 msgstr "Cargando..."
 
 #. It's up to you whether to bother translating this or not.") + ": " + project.Name + "
+#, fuzzy
 msgid "WeSay"
-msgstr ""
+msgstr "NosotrosDecimos"
 
 #. The label for the field holding the citation form.
 msgid "CitationForm"
-msgstr ""
+msgstr "TipoCita"
 
 #. The label for the field showing the definition of the word.
 msgid "Definition"
@@ -260,7 +266,7 @@ msgstr "Nota"
 
 #. The label for the field showing Part Of Speech
 msgid "POS"
-msgstr ""
+msgstr "PDO"
 
 #. The label for the field showing a picture.
 msgid "Picture"
@@ -280,7 +286,7 @@ msgstr "Dom Sem"
 
 #. The label for the field showing the entry which this entry is derived from, is a subentry of, etc.
 msgid "Base Form"
-msgstr ""
+msgstr "Forma Base"
 
 #. This is shown in a combo-box (list of options, like Part Of Speech) when no option has been chosen, or the user just doesn't know what to put in this field.
 msgid "unknown"

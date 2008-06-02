@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: wesay\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2007-11-23 05:56+0000\n"
-"PO-Revision-Date: 2007-12-16 21:58+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2008-02-05 10:40+0000\n"
+"Last-Translator: Yannig MARCHEGAY (Kokoyaya) <yannig@marchegay.org>\n"
 "Language-Team: Occitan (post 1500) <oc@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2008-02-05 09:12+0000\n"
+"X-Launchpad-Export-Date: 2008-06-02 09:36+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. The label for the 'dashboard'; the task which lets you see the status of other tasks and jump to them.
@@ -37,7 +37,7 @@ msgid "Add a Part Of Speech to senses where they are missing."
 msgstr ""
 
 msgid "Add Examples"
-msgstr ""
+msgstr "Apondre d'exemples"
 
 msgid "Add example sentences to entries where they are missing."
 msgstr ""
@@ -169,10 +169,10 @@ msgid "Show Uncommon Fields"
 msgstr ""
 
 msgid "&Delete This Word"
-msgstr ""
+msgstr "&Suprimir aqueste mot"
 
 msgid "&New Word"
-msgstr ""
+msgstr "Mot &novèl"
 
 msgid "&Show All Fields"
 msgstr ""

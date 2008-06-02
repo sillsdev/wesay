@@ -1,16 +1,16 @@
-# Danish translation for wesay
-# Copyright (c) 2007 Rosetta Contributors and Canonical Ltd 2007
+# Vietnamese translation for wesay
+# Copyright (c) 2008 Rosetta Contributors and Canonical Ltd 2008
 # This file is distributed under the same license as the wesay package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2007.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: wesay\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2007-11-23 05:56+0000\n"
-"PO-Revision-Date: 2007-12-09 17:27+0000\n"
-"Last-Translator: carson <Unknown>\n"
-"Language-Team: Danish <da@li.org>\n"
+"PO-Revision-Date: 2008-03-18 08:37+0000\n"
+"Last-Translator: kawak <999999@operamail.com>\n"
+"Language-Team: Vietnamese <vi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -19,31 +19,32 @@ msgstr ""
 
 #. The label for the 'dashboard'; the task which lets you see the status of other tasks and jump to them.
 msgid "Home"
-msgstr "Hjem"
+msgstr "Trang Chính"
 
 msgid "Dictionary Browse & Edit"
-msgstr ""
+msgstr "Tìm và Biên tập Từ điển"
 
 msgid "Add Meanings"
-msgstr "Tilføj betydninger"
+msgstr "Thêm (định) nghĩa"
 
 msgid "Add meanings to entries where they are missing."
-msgstr "Tilføj betydninger hvor de mangler."
+msgstr "Thêm (định) nghĩa vào những mục từ chưa có (định) nghĩa"
 
 msgid "Add Parts of Speech"
-msgstr ""
+msgstr "Thêm từ loại"
 
 msgid "Add a Part Of Speech to senses where they are missing."
-msgstr ""
+msgstr "Thêm từ loại vào từng (định) nghĩa nếu như chưa có"
 
 msgid "Add Examples"
-msgstr "Tilføj eksempler"
+msgstr "Thêm thí dụ"
 
 msgid "Add example sentences to entries where they are missing."
-msgstr "Tilføj sætningseksempel hvor de mangler"
+msgstr "Thêm thí dụ vào những mục từ nào chưa có thí dụ"
 
+#, fuzzy
 msgid "Add Base Forms"
-msgstr ""
+msgstr "Thêm mục từ con"
 
 msgid ""
 "Identify the \"base form\" word that this word is built from. In the printed "
@@ -51,173 +52,183 @@ msgid ""
 msgstr ""
 
 msgid "Collect Word List (D)"
-msgstr ""
+msgstr "Thu thập danh sách từ (D)"
 
 msgid ""
 "Collect new words by translating from words in another language. This is a "
 "list of 1700 words from John Duerksen."
 msgstr ""
+"Thu thập từ mới bằng cách dịch những từ tiếng nước ngoài. Đây là danh sách "
+"1700 từ của John Duerksen."
 
 msgid "Collect Word List (PNG)"
-msgstr ""
+msgstr "Thu thập danh sách từ (PNG)"
 
 msgid ""
 "Collect new words by translating from words in another language. This is a "
 "list of around 900 words and phrases from PNG."
 msgstr ""
+"Thu thập từ mới bằng cách dịch những từ tiếng nước ngoài. Đây là danh sách "
+"khoảng 900 từ và ngữ lấy từ PNG."
 
 msgid "Collect Words By Semantic Domain"
-msgstr ""
+msgstr "Thu thập từ mới theo lĩnh vực ngữ nghĩa"
 
 msgid ""
 "Collect new words organized by semantic domains and questions about those "
 "domains."
 msgstr ""
+"Thu thập những từ mới được sắp xếp theo lĩnh vực ngữ nghĩa và những câu hỏi "
+"về những lĩnh vực đó."
 
 msgid "Actions"
-msgstr "Handlinger"
+msgstr "Hành động"
 
 msgid "Looking for USB Keys..."
-msgstr "Kigger efter USB kort..."
+msgstr "Tìm các khoá USB"
 
 msgid "Backing Up..."
-msgstr "Laver sikkerhedskopi..."
+msgstr "Sao lưu ..."
 
 msgid "Backup Complete"
-msgstr "Sikkerhedskopiering gennemført"
+msgstr "Sao lưu xong"
 
 msgid "Files backed up to {0}"
-msgstr "Sikkerhedskopieret til {0}"
+msgstr "Tệp được sao lưu vào {0}"
 
 msgid "Files were not backed up."
-msgstr "Filer blev ikke sikkerhedskopieret."
+msgstr "Tệp chưa được sao lưu"
 
 msgid "Please insert the USB Key to backup to."
-msgstr "Indsæt USB kort til at lagre sikkerhedskopi på."
+msgstr "Xin cắm khoá USB vào để sao lưu vào đó."
 
 msgid "&Cancel"
-msgstr "&Afbryd"
+msgstr "&Huỷ bỏ"
 
 #. Label for usb flash-drive backup action
 msgid "Backup To Device"
-msgstr "Sikkerhedskopi til medie"
+msgstr "Sao lưu vào thiết bị."
 
 #. description of usb backup action
 msgid "Saves a backup on an external device, like a USB key."
-msgstr "Gen en sikkerhedskopi på et eksternt medie, som et USB kort."
+msgstr ""
+"Lưu một bản sao lưu vào một thiết bị bên ngoài, chẳng hạn như một USB."
 
 msgid "Email My Work to {0}"
-msgstr "E-mail mit arbejde til {0}"
+msgstr "Gửi công trình này của tôi qua email cho {0}"
 
 msgid "Send a zipped email containing all your WeSay work."
-msgstr "Send en zipped e-mail indeholdende alt dit WeSay arbejde."
+msgstr ""
+"Gửi một bức email (có nén zip) chứa toàn bộ công trình WeSay của bạn."
 
 msgid "View Report"
-msgstr "Vis rapport"
+msgstr "Xem báo cáo"
 
 msgid "Shows some information about the lexicon."
-msgstr "Vis nogle informationer om leksikonet"
+msgstr "Cung cấp một số thông tin về bảng từ"
 
 msgid "Export to Word"
-msgstr "Eksportér til Word"
+msgstr "Xuất thành tệp Word."
 
 msgid "Creates a very basic dictionary publication in Microsoft Word."
-msgstr "Skab en meget simpel ordbog i Microsoft Word."
+msgstr "Tạo nên một xuất bản phẩm từ điển rất cơ bản trong Microsoft Word."
 
 msgid "Export to HTML"
-msgstr "Eksportér til HTML"
+msgstr "Xuất thành tệp HTML"
 
 msgid "Creates a simple Html version of the dictionary, ready for printing."
-msgstr "Skab en simpel Html version af ordbog, klar til print."
+msgstr ""
+"Tạo nên một phiên bản Html đơn giản của cuốn từ điển, sẵn sàng có thể đem in."
 
 msgid "Export To SFM"
-msgstr "Eksport til SFM"
+msgstr "Xuất thành tệp SFM"
 
 msgid "Saves the lexicon in a form of standard format."
-msgstr "Gen leksikaet i et standard format"
+msgstr "Lưu bảng từ vựng ở định dạng chuẩn."
 
 #. The description of the Actions task.
 msgid "Backup, print, etc."
-msgstr ""
+msgstr "Sao lưu, in, vv..."
 
 msgid "Current task:"
-msgstr "Aktuel opgave:"
+msgstr "Nhiệm vụ hiện nay:"
 
 msgid "Tasks"
-msgstr "Opgaver"
+msgstr "Tác vụ"
 
 msgid "Switch tasks and see current status of tasks"
-msgstr "Skift opgave og se aktuel opgavestatus"
+msgstr "Chuyển tác vụ và xem tình trạng hiện nay của các tác vụ"
 
 msgid "Your dictionary has {0} words"
-msgstr "Din ordbog har {0} ord"
+msgstr "Từ điển của bạn có {0} từ"
 
 msgid "Cannot find {0}"
-msgstr "Kan ikke finde {0}"
+msgstr "Không tìm thấy {0}"
 
 msgid "No Senses"
-msgstr "Ingen mening"
+msgstr "Không có nghĩa"
 
 #. This is what shows if the user is listing words by the glossing language, but the word doesn't have a gloss.
+#, fuzzy
 msgid "No Gloss"
-msgstr ""
+msgstr "Không có từ tương đương"
 
 msgid "Hide Uncommon Fields"
-msgstr ""
+msgstr "Không cho hiện các trường ít dùng"
 
 msgid "Show Uncommon Fields"
-msgstr ""
+msgstr "Cho hiện các trường ít dùng"
 
 msgid "&Delete This Word"
-msgstr "&Slet dette ord"
+msgstr "&Xoá từ này"
 
 msgid "&New Word"
-msgstr "&Nyt ord"
+msgstr "&Từ mới"
 
 msgid "&Show All Fields"
-msgstr ""
+msgstr "&Cho hiện tất cả các trường"
 
 #. The description of the 'Dictionary' task.  In place of the {0} will be the number of words in the dictionary.  In place of the {1} will be the name of the project.
 msgid "See all {0} {1} words."
-msgstr "Se alle {0} {1} ord."
+msgstr "Xem toàn bộ {0} {1} từ."
 
 #. The label for the field showing the Lexeme Form of the entry.
 msgid "Word"
-msgstr "Ord"
+msgstr "Từ"
 
 msgid "(Page Down Key)"
-msgstr "(Side ned tast)"
+msgstr ""
 
 msgid "(Enter Key)"
-msgstr "(Enter tast)"
+msgstr ""
 
 msgid "Try thinking of words you use to talk about these things."
-msgstr "Prøv at tænk på ord som du bruger til at tale om disse ting."
+msgstr ""
 
 msgid "Try thinking of ways to say these words in your language."
-msgstr "Prøv at tænke på måder at sige disse ord på dit sprog."
+msgstr ""
 
 msgid "Word:"
-msgstr "Ord:"
+msgstr ""
 
 #. This is the field containing an example sentence of a sense of a word.
 #. This is the field containing an example sentence of a sense of a word."), "Sentence
 msgid "Example"
-msgstr "Eksempel"
+msgstr "Thí dụ"
 
 #. This is the field for putting in a translation of an example sentence.
 msgid "Translation"
-msgstr "Oversættelse"
+msgstr "Dịch"
 
 #. This label is shown once, but has two roles.  1) it labels contains the gloss, and 2) marks the beginning of the set of fields which make up a sense. So, in english, if we labelled this 'gloss', it would describe the field well but wouldn't label the section well.
 msgid "Meaning"
-msgstr "Betydning"
+msgstr "Nghĩa"
 
 msgid "Congratulations. You have completed this task."
-msgstr "Tillykke. Du har afsluttet denne opgave."
+msgstr "Chúc mừng. Bạn đã hoàn thành tác vụ này."
 
 msgid "There is no work left to be done on this task."
-msgstr "Der er ikke mere arbejde tilbage på denne opgave."
+msgstr ""
 
 msgid "To Do:"
 msgstr ""
@@ -231,7 +242,7 @@ msgstr ""
 
 #. Appended to the name of a task, in its tab, while the user is waiting for the task to come up.
 msgid "Loading..."
-msgstr ""
+msgstr "Đang nạp..."
 
 #. It's up to you whether to bother translating this or not.") + ": " + project.Name + "
 msgid "WeSay"
@@ -243,7 +254,7 @@ msgstr ""
 
 #. The label for the field showing the definition of the word.
 msgid "Definition"
-msgstr "Definition"
+msgstr "Định nghĩa"
 
 #. The label for the field showing the literal meaning of idiom or proverb.
 msgid "Literal Meaning"
@@ -252,27 +263,27 @@ msgstr ""
 #. The label for the field showing a note.
 #. The label for the field showing a note.
 msgid "Note"
-msgstr "Kommentar"
+msgstr "Ghi chú"
 
 #. The label for the field showing Part Of Speech
 msgid "POS"
-msgstr "POS"
+msgstr ""
 
 #. The label for the field showing a picture.
 msgid "Picture"
-msgstr "Billede"
+msgstr "Hình ảnh"
 
 #. The label for the field showing an example use of the word.
 msgid "Example Sentence"
-msgstr "Sætningseksempel"
+msgstr "Câu thí dụ"
 
 #. The label for the field showing the example sentence translated into other languages.
 msgid "Example Translation"
-msgstr ""
+msgstr "Dịch câu thí dụ"
 
 #. The label for the field showing Semantic Domains
 msgid "Sem Dom"
-msgstr ""
+msgstr "Lĩnh vực ngữ nghĩa"
 
 #. The label for the field showing the entry which this entry is derived from, is a subentry of, etc.
 msgid "Base Form"
@@ -280,4 +291,4 @@ msgstr ""
 
 #. This is shown in a combo-box (list of options, like Part Of Speech) when no option has been chosen, or the user just doesn't know what to put in this field.
 msgid "unknown"
-msgstr "ukendt"
+msgstr "không rõ"

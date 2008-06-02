@@ -1,16 +1,16 @@
-# Danish translation for wesay
-# Copyright (c) 2007 Rosetta Contributors and Canonical Ltd 2007
+# Swedish translation for wesay
+# Copyright (c) 2008 Rosetta Contributors and Canonical Ltd 2008
 # This file is distributed under the same license as the wesay package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2007.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: wesay\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2007-11-23 05:56+0000\n"
-"PO-Revision-Date: 2007-12-09 17:27+0000\n"
-"Last-Translator: carson <Unknown>\n"
-"Language-Team: Danish <da@li.org>\n"
+"PO-Revision-Date: 2008-02-05 10:24+0000\n"
+"Last-Translator: Daniel Nylander <yeager@ubuntu.com>\n"
+"Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -19,16 +19,16 @@ msgstr ""
 
 #. The label for the 'dashboard'; the task which lets you see the status of other tasks and jump to them.
 msgid "Home"
-msgstr "Hjem"
+msgstr "Hem"
 
 msgid "Dictionary Browse & Edit"
 msgstr ""
 
 msgid "Add Meanings"
-msgstr "Tilføj betydninger"
+msgstr ""
 
 msgid "Add meanings to entries where they are missing."
-msgstr "Tilføj betydninger hvor de mangler."
+msgstr ""
 
 msgid "Add Parts of Speech"
 msgstr ""
@@ -37,10 +37,10 @@ msgid "Add a Part Of Speech to senses where they are missing."
 msgstr ""
 
 msgid "Add Examples"
-msgstr "Tilføj eksempler"
+msgstr ""
 
 msgid "Add example sentences to entries where they are missing."
-msgstr "Tilføj sætningseksempel hvor de mangler"
+msgstr ""
 
 msgid "Add Base Forms"
 msgstr ""
@@ -75,88 +75,88 @@ msgid ""
 msgstr ""
 
 msgid "Actions"
-msgstr "Handlinger"
+msgstr "Åtgärder"
 
 msgid "Looking for USB Keys..."
-msgstr "Kigger efter USB kort..."
+msgstr ""
 
 msgid "Backing Up..."
-msgstr "Laver sikkerhedskopi..."
+msgstr ""
 
 msgid "Backup Complete"
-msgstr "Sikkerhedskopiering gennemført"
+msgstr ""
 
 msgid "Files backed up to {0}"
-msgstr "Sikkerhedskopieret til {0}"
+msgstr ""
 
 msgid "Files were not backed up."
-msgstr "Filer blev ikke sikkerhedskopieret."
+msgstr ""
 
 msgid "Please insert the USB Key to backup to."
-msgstr "Indsæt USB kort til at lagre sikkerhedskopi på."
+msgstr ""
 
 msgid "&Cancel"
-msgstr "&Afbryd"
+msgstr ""
 
 #. Label for usb flash-drive backup action
 msgid "Backup To Device"
-msgstr "Sikkerhedskopi til medie"
+msgstr ""
 
 #. description of usb backup action
 msgid "Saves a backup on an external device, like a USB key."
-msgstr "Gen en sikkerhedskopi på et eksternt medie, som et USB kort."
+msgstr ""
 
 msgid "Email My Work to {0}"
-msgstr "E-mail mit arbejde til {0}"
+msgstr ""
 
 msgid "Send a zipped email containing all your WeSay work."
-msgstr "Send en zipped e-mail indeholdende alt dit WeSay arbejde."
+msgstr ""
 
 msgid "View Report"
-msgstr "Vis rapport"
+msgstr ""
 
 msgid "Shows some information about the lexicon."
-msgstr "Vis nogle informationer om leksikonet"
+msgstr ""
 
 msgid "Export to Word"
-msgstr "Eksportér til Word"
+msgstr ""
 
 msgid "Creates a very basic dictionary publication in Microsoft Word."
-msgstr "Skab en meget simpel ordbog i Microsoft Word."
+msgstr ""
 
 msgid "Export to HTML"
-msgstr "Eksportér til HTML"
+msgstr ""
 
 msgid "Creates a simple Html version of the dictionary, ready for printing."
-msgstr "Skab en simpel Html version af ordbog, klar til print."
+msgstr ""
 
 msgid "Export To SFM"
-msgstr "Eksport til SFM"
+msgstr ""
 
 msgid "Saves the lexicon in a form of standard format."
-msgstr "Gen leksikaet i et standard format"
+msgstr ""
 
 #. The description of the Actions task.
 msgid "Backup, print, etc."
 msgstr ""
 
 msgid "Current task:"
-msgstr "Aktuel opgave:"
+msgstr ""
 
 msgid "Tasks"
-msgstr "Opgaver"
+msgstr ""
 
 msgid "Switch tasks and see current status of tasks"
-msgstr "Skift opgave og se aktuel opgavestatus"
+msgstr ""
 
 msgid "Your dictionary has {0} words"
-msgstr "Din ordbog har {0} ord"
+msgstr ""
 
 msgid "Cannot find {0}"
-msgstr "Kan ikke finde {0}"
+msgstr ""
 
 msgid "No Senses"
-msgstr "Ingen mening"
+msgstr ""
 
 #. This is what shows if the user is listing words by the glossing language, but the word doesn't have a gloss.
 msgid "No Gloss"
@@ -169,55 +169,55 @@ msgid "Show Uncommon Fields"
 msgstr ""
 
 msgid "&Delete This Word"
-msgstr "&Slet dette ord"
+msgstr ""
 
 msgid "&New Word"
-msgstr "&Nyt ord"
+msgstr ""
 
 msgid "&Show All Fields"
 msgstr ""
 
 #. The description of the 'Dictionary' task.  In place of the {0} will be the number of words in the dictionary.  In place of the {1} will be the name of the project.
 msgid "See all {0} {1} words."
-msgstr "Se alle {0} {1} ord."
+msgstr ""
 
 #. The label for the field showing the Lexeme Form of the entry.
 msgid "Word"
-msgstr "Ord"
+msgstr ""
 
 msgid "(Page Down Key)"
-msgstr "(Side ned tast)"
+msgstr ""
 
 msgid "(Enter Key)"
-msgstr "(Enter tast)"
+msgstr ""
 
 msgid "Try thinking of words you use to talk about these things."
-msgstr "Prøv at tænk på ord som du bruger til at tale om disse ting."
+msgstr ""
 
 msgid "Try thinking of ways to say these words in your language."
-msgstr "Prøv at tænke på måder at sige disse ord på dit sprog."
+msgstr ""
 
 msgid "Word:"
-msgstr "Ord:"
+msgstr ""
 
 #. This is the field containing an example sentence of a sense of a word.
 #. This is the field containing an example sentence of a sense of a word."), "Sentence
 msgid "Example"
-msgstr "Eksempel"
+msgstr ""
 
 #. This is the field for putting in a translation of an example sentence.
 msgid "Translation"
-msgstr "Oversættelse"
+msgstr ""
 
 #. This label is shown once, but has two roles.  1) it labels contains the gloss, and 2) marks the beginning of the set of fields which make up a sense. So, in english, if we labelled this 'gloss', it would describe the field well but wouldn't label the section well.
 msgid "Meaning"
-msgstr "Betydning"
+msgstr ""
 
 msgid "Congratulations. You have completed this task."
-msgstr "Tillykke. Du har afsluttet denne opgave."
+msgstr ""
 
 msgid "There is no work left to be done on this task."
-msgstr "Der er ikke mere arbejde tilbage på denne opgave."
+msgstr ""
 
 msgid "To Do:"
 msgstr ""
@@ -235,7 +235,7 @@ msgstr ""
 
 #. It's up to you whether to bother translating this or not.") + ": " + project.Name + "
 msgid "WeSay"
-msgstr "WeSay"
+msgstr ""
 
 #. The label for the field holding the citation form.
 msgid "CitationForm"
@@ -243,7 +243,7 @@ msgstr ""
 
 #. The label for the field showing the definition of the word.
 msgid "Definition"
-msgstr "Definition"
+msgstr ""
 
 #. The label for the field showing the literal meaning of idiom or proverb.
 msgid "Literal Meaning"
@@ -252,19 +252,19 @@ msgstr ""
 #. The label for the field showing a note.
 #. The label for the field showing a note.
 msgid "Note"
-msgstr "Kommentar"
+msgstr ""
 
 #. The label for the field showing Part Of Speech
 msgid "POS"
-msgstr "POS"
+msgstr ""
 
 #. The label for the field showing a picture.
 msgid "Picture"
-msgstr "Billede"
+msgstr ""
 
 #. The label for the field showing an example use of the word.
 msgid "Example Sentence"
-msgstr "Sætningseksempel"
+msgstr ""
 
 #. The label for the field showing the example sentence translated into other languages.
 msgid "Example Translation"
@@ -280,4 +280,4 @@ msgstr ""
 
 #. This is shown in a combo-box (list of options, like Part Of Speech) when no option has been chosen, or the user just doesn't know what to put in this field.
 msgid "unknown"
-msgstr "ukendt"
+msgstr ""

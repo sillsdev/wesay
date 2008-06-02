@@ -8,215 +8,245 @@ msgstr ""
 "Project-Id-Version: wesay\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2007-11-23 05:56+0000\n"
-"PO-Revision-Date: 2007-12-20 09:26+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2008-05-05 07:48+0000\n"
+"Last-Translator: karivalkama <Unknown>\n"
 "Language-Team: Indonesian <id@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2008-02-05 09:12+0000\n"
+"X-Launchpad-Export-Date: 2008-06-02 09:36+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. The label for the 'dashboard'; the task which lets you see the status of other tasks and jump to them.
 msgid "Home"
-msgstr "Awal"
+msgstr "Halaman Utama"
 
+#, fuzzy
 msgid "Dictionary Browse & Edit"
-msgstr "Melihati dan Meredaksikan Kamus"
+msgstr "Baca dan memperbaikilah Kamus"
 
 #, fuzzy
 msgid "Add Meanings"
-msgstr "Menabahkan Arti-arti."
+msgstr "Tambah Arti"
 
+#, fuzzy
 msgid "Add meanings to entries where they are missing."
-msgstr "Menambahkan arti-arti pada kata-kata utama."
+msgstr "Tambalah arti pada kata-kata."
 
+#, fuzzy
 msgid "Add Parts of Speech"
-msgstr "Menambahkan istilah-istilah tata bahasa."
+msgstr "Tambalah jenis kata."
 
 msgid "Add a Part Of Speech to senses where they are missing."
-msgstr "Menambahkan istilah tata bahasa pada arti-arti."
+msgstr "Tambalah jenis kata pada semua arti kata."
 
 msgid "Add Examples"
-msgstr "Menambahkan contoh-contoh."
+msgstr "Tambah kalimat contoh."
 
+#, fuzzy
 msgid "Add example sentences to entries where they are missing."
-msgstr "Menambahkan kalimat-kalimat contoh pada kata-kata utama."
+msgstr "Tambalah kalimat contoh pada semua arti kata."
 
+#, fuzzy
 msgid "Add Base Forms"
-msgstr "Menambahkan kata-kata dasar."
+msgstr "Tambah kata dasar"
 
 msgid ""
 "Identify the \"base form\" word that this word is built from. In the printed "
 "dictionary, these can optionally be shown as subentries."
 msgstr ""
-"Namakanlah \"kata dasar\" buat kata ini.  Sebaliknya, dalam kamus yang akan "
-"dicetak, kata-kata dasar ini juga bisa dimasukkan sebagai kata utama."
+"Namakan kata dasar buat kata ini. Kata ini nanti bisa muncul sebagai bagian "
+"yang diturunkan dari (entri/lema/kata pokok) di kamus yang sudah diterbitkan."
 
+#, fuzzy
 msgid "Collect Word List (D)"
-msgstr "Mengumpulkan daftar kata. (D)"
+msgstr "Kumpulkan kata (D)."
 
+#, fuzzy
 msgid ""
 "Collect new words by translating from words in another language. This is a "
 "list of 1700 words from John Duerksen."
 msgstr ""
-"Mengumpulkan kata-kata baru dengan menerjemahkan dari kata-kata dalam bahasa "
-"lain. Daftar kata yang berikutnya (berjumlah 1700 buah kata) dari John "
-"Duerksen."
+"Kumpulkan kata dengan menerjemahkan dari bahasa lain. Daftar kata yang "
+"berikut berasal dari Pak Duerksen dan isinya 1700 buah kata."
 
+#, fuzzy
 msgid "Collect Word List (PNG)"
-msgstr "Mengumpulkan daftar kata (Papua Niugini)"
+msgstr "Kumpulkan daftar kata (Papua Niugini)"
 
+#, fuzzy
 msgid ""
 "Collect new words by translating from words in another language. This is a "
 "list of around 900 words and phrases from PNG."
 msgstr ""
-"Mengumpulkan kata-kata baru dengan menerjemahkan dari kata-kata dalam bahasa "
+"Kumpulkan kata-kata baru dengan menerjemahkan dari kata-kata dalam bahasa "
 "lain. Daftar kata dan frase yang berikutnya (berjumlah 900 buah) dari Papua "
 "Niugini."
 
+#, fuzzy
 msgid "Collect Words By Semantic Domain"
-msgstr "Mengumpulkan kata-kata sesuai dengan lingkungan arti."
+msgstr "Kumpulkan kata sesuai dengan bidang maknanya."
 
+#, fuzzy
 msgid ""
 "Collect new words organized by semantic domains and questions about those "
 "domains."
 msgstr ""
-"Mengumpulkan kata-kata baru yang diatur sesuai dengan lingkungan arti dan "
-"sesuai dengan pertanyaan-pertanyaan tentang lingkungan-lingkungan itu."
+"Kumpulkan kata sesuai dengan bidang maknanya. Berikut ada pertanyaan yang "
+"menolong dalam tugas ini."
 
 msgid "Actions"
-msgstr "Perbuatan-perbuatan."
+msgstr "Pilihlah tindakan yang diinginkan / dikehendaki."
 
 msgid "Looking for USB Keys..."
-msgstr "Flashdrive sedang dicari ..."
+msgstr "Flashdrive dicari sekarang ..."
 
 msgid "Backing Up..."
-msgstr "Cadangan sedang dibuat ..."
+msgstr "Berkas cadangan sedang disusun ..."
 
 msgid "Backup Complete"
-msgstr "Proses biking cadangan sudah selesai."
+msgstr "Berkas cadangan selesai disusun."
 
 msgid "Files backed up to {0}"
-msgstr "Cadangan map-map sudah ada pada {0}"
+msgstr "Berkas cadangan telah disusun pada {0}"
 
 msgid "Files were not backed up."
-msgstr "Cadangan map-map belum dibuat."
+msgstr "Berkas cadangan (tidak jadi / belum) disusun."
 
+#, fuzzy
 msgid "Please insert the USB Key to backup to."
-msgstr "Sebelum cadangan bisa dibuat, flashdrive harus dipasangkan."
+msgstr "Tolong pasangkan flashdrive supaya berkas cadangan bisa disusun."
 
 msgid "&Cancel"
 msgstr "&Batal"
 
 #. Label for usb flash-drive backup action
+#, fuzzy
 msgid "Backup To Device"
-msgstr "Membuat cadangan di flashdrive."
+msgstr "Susunlah berkas cadangan pada flashdrive."
 
 #. description of usb backup action
 msgid "Saves a backup on an external device, like a USB key."
 msgstr ""
-"Perbuatan ini akan menyimpan cadangan pada alat eksternal seperti flashdrive."
+"Susunlah berkas cadangan pada alat simpan berkas (lain) seperti flashdrive."
 
+#, fuzzy
 msgid "Email My Work to {0}"
-msgstr "Meneruskan karya Anda lewat email kepada {0}."
+msgstr "Kirimkanlah (kamus / perkerjaan) Anda kepada {0} lewat email."
 
+#, fuzzy
 msgid "Send a zipped email containing all your WeSay work."
-msgstr ""
-"Mengirim semua karya WeSay Anda  sebagai email yang ditekankan (zipped)."
+msgstr "Kirimkanlah kamus Anda dalam bentuk email yang ditekankan (zipped)."
 
 msgid "View Report"
-msgstr "Melihat laporan."
+msgstr "Bacalah laporan."
 
 msgid "Shows some information about the lexicon."
-msgstr "Melihat informasi tentang kamus."
+msgstr "Informasi tentang kamus diperlihatkan."
 
 msgid "Export to Word"
-msgstr "Mengirim ke program Word."
+msgstr "Ekspor ke program Word"
 
+#, fuzzy
 msgid "Creates a very basic dictionary publication in Microsoft Word."
-msgstr "Menciptakan kamus sederhana dengan Word."
+msgstr "Membuat kamus sederhana yang bisa dibuka dengan Word."
 
+#, fuzzy
 msgid "Export to HTML"
-msgstr "Membuatkan kopi dengan menerjemahkan ke dalam bahasa komputer HTML."
+msgstr ""
+"Membuat kamus dalam bentuk         yang bisa dibaca oleh siapa saja di "
+"internet. OR\n"
+"Mengubah kamus ke dalam bentuk  ..."
 
+#, fuzzy
 msgid "Creates a simple Html version of the dictionary, ready for printing."
 msgstr ""
-"Menciptakan kamus yang sederhana siap dicetak. Akan diterjemahkan ke dalam "
-"bahasa komputer HTML."
+"Membuat kamus sederhana dalam bentuk yang bisa dibaca di internet. Kamus "
+"sederhana ini juga siap dicetak."
 
+#, fuzzy
 msgid "Export To SFM"
 msgstr ""
-"Mebuatkan kopi dengan menerjemahkan ke dalam bahasa komputer SFM (Standard "
-"Format Markers-Tanda-tanda Format Norma)."
+"Membuat kamus dalam bentuk SFM.\n"
+"Mengubah kamus ke dalam bentuk SFM."
 
+#, fuzzy
 msgid "Saves the lexicon in a form of standard format."
-msgstr "Menyimpan kamusnya dengan pakai format norma yang tertentu."
+msgstr "Kamus disusun dalam bentuk SFM dan kemudian berkasnya disimpan."
 
 #. The description of the Actions task.
+#, fuzzy
 msgid "Backup, print, etc."
-msgstr "Membuat cadangan, memprint, dll."
+msgstr "Menyusun berkas cadangan, mencetak dll."
 
 msgid "Current task:"
-msgstr "Tugas aktuil:"
+msgstr "Tugas Anda."
 
 msgid "Tasks"
-msgstr "Tugas-tugas"
+msgstr "Bermacam tugas."
 
 msgid "Switch tasks and see current status of tasks"
-msgstr "Ganti tugas dan lihat status semua tugas aktuil."
+msgstr "Kemajuan semua tugas diperlihatkan. Sesudah itu tugas bisa diganti."
 
 msgid "Your dictionary has {0} words"
-msgstr "Kamus Anda punya {0} kata."
+msgstr ""
+"{0} Jumlah (kata dasar / kata pokok / lema / entri) (di dalam / pada) kamus "
+"Anda."
 
 msgid "Cannot find {0}"
-msgstr "{0} tidak bisa ditemukan."
+msgstr "{0} tidak bisa ditemukan"
 
 msgid "No Senses"
-msgstr "Arti-arti belum ada."
+msgstr "Arti lengkap belum ada."
 
 #. This is what shows if the user is listing words by the glossing language, but the word doesn't have a gloss.
 msgid "No Gloss"
-msgstr "Terjemahan kata belum ada."
+msgstr "Arti kata belum ada"
 
+#, fuzzy
 msgid "Hide Uncommon Fields"
-msgstr "Menyembunyikan kategori-kategori yang tidak biasa."
+msgstr "Baris yang jarang digunakan disembunyikan."
 
+#, fuzzy
 msgid "Show Uncommon Fields"
-msgstr "Lihatkan kategori yang tidak biasa."
+msgstr "Baris yang jarang digunakan diperlihatkan."
 
 msgid "&Delete This Word"
-msgstr "&Hapuskan Kata Ini."
+msgstr "&Hapuskan Kata Ini"
 
 msgid "&New Word"
-msgstr "&Kata Baru."
+msgstr "&Kata Baru"
 
+#, fuzzy
 msgid "&Show All Fields"
-msgstr "&Lihatkan Semua Kategori."
+msgstr "&Semua baris diperlihatkan."
 
 #. The description of the 'Dictionary' task.  In place of the {0} will be the number of words in the dictionary.  In place of the {1} will be the name of the project.
 msgid "See all {0} {1} words."
-msgstr "Melihat semua {0} {1} kata-kata."
+msgstr "Semua {0} {1}kata diperlihatkan."
 
 #. The label for the field showing the Lexeme Form of the entry.
 msgid "Word"
 msgstr "Kata"
 
+#, fuzzy
 msgid "(Page Down Key)"
-msgstr "(Tuts Lihat Yang Berikutnya)"
+msgstr "Halaman yang berikut."
 
+#, fuzzy
 msgid "(Enter Key)"
-msgstr "(Tuts Masukkan)"
+msgstr "Masukkan."
 
+#, fuzzy
 msgid "Try thinking of words you use to talk about these things."
 msgstr ""
-"Cobalah meningat/membayangkan kata-kata yang biasanya dipakai Anda untuk "
-"membicarakan hal-hal ini dan ketiklahnya."
+"Bayangkanlah kata-kata yang biasa dipakai untuk membicarakan hal ini, lalu "
+"catatkanlah mereka."
 
+#, fuzzy
 msgid "Try thinking of ways to say these words in your language."
 msgstr ""
-"Cobalah membayangkan cara-cara mengucapkan kata-kata ini dalam bahasa Anda "
-"dan ketiklahnya."
+"Bayankanlah kalimat-kalimat yang memakai kata ini, lalu catatkanlah mereka."
 
 msgid "Word:"
 msgstr "Kata:"
@@ -227,48 +257,51 @@ msgid "Example"
 msgstr "Kalimat contoh:"
 
 #. This is the field for putting in a translation of an example sentence.
+#, fuzzy
 msgid "Translation"
-msgstr "Terjemahan kalimatnya:"
+msgstr "Terjemahan kalimat contoh:"
 
 #. This label is shown once, but has two roles.  1) it labels contains the gloss, and 2) marks the beginning of the set of fields which make up a sense. So, in english, if we labelled this 'gloss', it would describe the field well but wouldn't label the section well.
 msgid "Meaning"
 msgstr "Terjemahan kata dan artinya:"
 
 msgid "Congratulations. You have completed this task."
-msgstr "Selamat berbahagia! Anda baru sudah selesai tugas ini."
+msgstr "Selamat! Tugas ini sudah selesai."
 
 msgid "There is no work left to be done on this task."
-msgstr "Semua pekerjaan yang terkait dengan tugas ini sudah selesai."
+msgstr "Tugas ini sudah selesai secara keseluruhan."
 
 msgid "To Do:"
-msgstr "Kata-kata yang belum diproses."
+msgstr "Tugas yang belum selesai secara keseluruhan."
 
 msgid "Completed:"
-msgstr "Kata-kata yang sudah diproses."
+msgstr "Tugas yang sudah selesai secara keseluruhan."
 
 #. The user will click this to say that this word has no baseform.  E.g. Kindess has Kind as a baseform, but Kind has no other word as a baseform.
 msgid "This word has no Base Form"
-msgstr "Kata dasar buat kata ini tidak ada."
+msgstr "Kata ini sudah kata dasar."
 
 #. Appended to the name of a task, in its tab, while the user is waiting for the task to come up.
+#, fuzzy
 msgid "Loading..."
-msgstr "Sabar dulu- sedang dibuka..."
+msgstr "Sedang dibuka ..."
 
 #. It's up to you whether to bother translating this or not.") + ": " + project.Name + "
 msgid "WeSay"
-msgstr "KamiKata"
+msgstr "Kamus Kami"
 
 #. The label for the field holding the citation form.
+#, fuzzy
 msgid "CitationForm"
-msgstr "Bentuk kutipan (kata utama) buat kata Ini."
+msgstr "Bentuk Kutipan"
 
 #. The label for the field showing the definition of the word.
 msgid "Definition"
-msgstr "Definisi buat kata ini."
+msgstr "Arti lengkap."
 
 #. The label for the field showing the literal meaning of idiom or proverb.
 msgid "Literal Meaning"
-msgstr "Artinya yang kharfiah buat kata ini."
+msgstr "Arti harfiah."
 
 #. The label for the field showing a note.
 #. The label for the field showing a note.
@@ -277,7 +310,7 @@ msgstr "Catatan"
 
 #. The label for the field showing Part Of Speech
 msgid "POS"
-msgstr "Istilah Tata Bahasa"
+msgstr "Jenis Kata"
 
 #. The label for the field showing a picture.
 msgid "Picture"
@@ -289,11 +322,11 @@ msgstr "Kalimat Contoh"
 
 #. The label for the field showing the example sentence translated into other languages.
 msgid "Example Translation"
-msgstr "Terjemahan Contoh"
+msgstr "Terjemahan kalimat contoh."
 
 #. The label for the field showing Semantic Domains
 msgid "Sem Dom"
-msgstr "Lingkungan Arti"
+msgstr "Bidang Makna"
 
 #. The label for the field showing the entry which this entry is derived from, is a subentry of, etc.
 msgid "Base Form"
@@ -301,4 +334,4 @@ msgstr "Kata Dasar"
 
 #. This is shown in a combo-box (list of options, like Part Of Speech) when no option has been chosen, or the user just doesn't know what to put in this field.
 msgid "unknown"
-msgstr "Belum Terentu"
+msgstr "Belum dicatat / dipilih."
