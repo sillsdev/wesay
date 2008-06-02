@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Data;
 using System.Text;
 using System.Windows.Forms;
+using Enchant;
 using WeSay.Language;
 using WeSay.Project;
 
@@ -13,10 +14,60 @@ namespace WeSay.ConfigTool
 	public partial class WritingSystemForFieldControl : UserControl
 	{
 		private Field _field;
+		private class WritingSystemListBoxAdaptor
+		{
+			private readonly WritingSystem _ws;
+			private readonly bool _hasSpellCheckerInstalled;
+			public WritingSystemListBoxAdaptor(WritingSystem ws, bool hasSpellCheckerInstalled)
+			{
+				this._ws = ws;
+				this._hasSpellCheckerInstalled = hasSpellCheckerInstalled;
+			}
 
+			public WritingSystem WritingSystem
+			{
+				get { return _ws; }
+			}
+
+			public bool HasSpellCheckerInstalled
+			{
+				get { return _hasSpellCheckerInstalled; }
+			}
+
+			public override string ToString()
+			{
+				string displayString = WritingSystem.ToString();
+				if(HasSpellCheckerInstalled)
+				{
+					displayString += " (Has spell checker)";
+				}
+				return displayString;
+			}
+		}
 		public WritingSystemForFieldControl()
 		{
 			InitializeComponent();
+		}
+
+		private static List<string> GetWritingSystemIdsWithSpellCheckingInstalled()
+		{
+			List<string> writingSystemIdsWithSpellCheckingInstalled = new List<string>();
+			try
+			{
+				Broker broker = new Broker();
+				foreach (WritingSystem ws in BasilProject.Project.WritingSystems.Values)
+				{
+					if (broker.DictionaryExists(ws.Id))
+					{
+						writingSystemIdsWithSpellCheckingInstalled.Add(ws.Id);
+					}
+				}
+			}
+			catch (DllNotFoundException)
+			{
+				//If Enchant is not installed we expect an exception.
+			}
+			return writingSystemIdsWithSpellCheckingInstalled;
 		}
 
 		public Field CurrentField
@@ -65,7 +116,7 @@ namespace WeSay.ConfigTool
 				if (this._writingSystemListBox.GetItemChecked(i) ||
 						i == aboutToBeCheckedItemIndex)
 				{
-					WritingSystem ws = (WritingSystem)this._writingSystemListBox.Items[i];
+					WritingSystem ws = ((WritingSystemListBoxAdaptor)this._writingSystemListBox.Items[i]).WritingSystem;
 					CurrentField.WritingSystemIds.Add(ws.Id);
 				}
 			}
@@ -75,7 +126,7 @@ namespace WeSay.ConfigTool
 		{
 			get
 			{
-				return _writingSystemListBox.SelectedItem.ToString();
+				return ((WritingSystemListBoxAdaptor)_writingSystemListBox.SelectedItem).WritingSystem.ToString();
 			}
 		}
 
@@ -146,18 +197,21 @@ namespace WeSay.ConfigTool
 			{
 				return;
 			}
+			List<string> writingSystemIdsWithSpellCheckingInstalled = GetWritingSystemIdsWithSpellCheckingInstalled();
+
 			_writingSystemListBox.Items.Clear();
 			foreach (WritingSystem ws in CurrentField.WritingSystems)
 			{
-				int i = _writingSystemListBox.Items.Add(ws);
+				bool hasSpellCheckerInstalled = writingSystemIdsWithSpellCheckingInstalled.Contains(ws.Id);
+				int i = _writingSystemListBox.Items.Add(new WritingSystemListBoxAdaptor(ws, hasSpellCheckerInstalled));
 				_writingSystemListBox.SetItemChecked(i, true);
-
 			}
 			foreach (WritingSystem ws in BasilProject.Project.WritingSystems.Values)
 			{
 				if (!CurrentField.WritingSystemIds.Contains(ws.Id))
 				{
-					int i = _writingSystemListBox.Items.Add(ws);
+					bool hasSpellCheckerInstalled = writingSystemIdsWithSpellCheckingInstalled.Contains(ws.Id);
+					int i = _writingSystemListBox.Items.Add(new WritingSystemListBoxAdaptor(ws, hasSpellCheckerInstalled));
 					_writingSystemListBox.SetItemChecked(i, false);
 				}
 			}

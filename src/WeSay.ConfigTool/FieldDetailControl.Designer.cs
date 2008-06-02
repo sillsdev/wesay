@@ -30,7 +30,6 @@ namespace WeSay.ConfigTool
 		{
 			this.components = new System.ComponentModel.Container();
 			this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-			this._optionListFileLabel = new System.Windows.Forms.Label();
 			this._fieldName = new System.Windows.Forms.TextBox();
 			this._displayLabel = new System.Windows.Forms.Label();
 			this._fieldNameLabel = new System.Windows.Forms.Label();
@@ -41,12 +40,16 @@ namespace WeSay.ConfigTool
 			this._dataTypeCombo = new System.Windows.Forms.ComboBox();
 			this._optionsFileName = new System.Windows.Forms.TextBox();
 			this.label6 = new System.Windows.Forms.Label();
-			this._writingSystemsControl = new WritingSystemForFieldControl();
+			this._writingSystemsControl = new WeSay.ConfigTool.WritingSystemForFieldControl();
 			this._normallyHidden = new System.Windows.Forms.CheckBox();
 			this._description = new System.Windows.Forms.TextBox();
 			this._descriptionLabel = new System.Windows.Forms.Label();
 			this._normallyHiddenLabel = new System.Windows.Forms.Label();
+			this._enableSpellingLabel = new System.Windows.Forms.Label();
+			this._optionListFileLabel = new System.Windows.Forms.Label();
+			this._enableSpelling = new System.Windows.Forms.CheckBox();
 			this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+			this.spellingNotEnabledWarning = new System.Windows.Forms.Label();
 			this.tableLayoutPanel1.SuspendLayout();
 			this.SuspendLayout();
 			//
@@ -55,7 +58,6 @@ namespace WeSay.ConfigTool
 			this.tableLayoutPanel1.ColumnCount = 2;
 			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 38.66667F));
 			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 61.33333F));
-			this.tableLayoutPanel1.Controls.Add(this._optionListFileLabel, 0, 4);
 			this.tableLayoutPanel1.Controls.Add(this._fieldName, 1, 1);
 			this.tableLayoutPanel1.Controls.Add(this._displayLabel, 0, 0);
 			this.tableLayoutPanel1.Controls.Add(this._fieldNameLabel, 0, 1);
@@ -65,42 +67,38 @@ namespace WeSay.ConfigTool
 			this.tableLayoutPanel1.Controls.Add(this._classNameCombo, 1, 2);
 			this.tableLayoutPanel1.Controls.Add(this._dataTypeCombo, 1, 3);
 			this.tableLayoutPanel1.Controls.Add(this._optionsFileName, 1, 4);
-			this.tableLayoutPanel1.Controls.Add(this.label6, 0, 6);
-			this.tableLayoutPanel1.Controls.Add(this._writingSystemsControl, 1, 6);
-			this.tableLayoutPanel1.Controls.Add(this._normallyHidden, 1, 5);
-			this.tableLayoutPanel1.Controls.Add(this._description, 1, 7);
-			this.tableLayoutPanel1.Controls.Add(this._descriptionLabel, 0, 7);
-			this.tableLayoutPanel1.Controls.Add(this._normallyHiddenLabel, 0, 5);
+			this.tableLayoutPanel1.Controls.Add(this.label6, 0, 8);
+			this.tableLayoutPanel1.Controls.Add(this._writingSystemsControl, 1, 8);
+			this.tableLayoutPanel1.Controls.Add(this._normallyHidden, 1, 7);
+			this.tableLayoutPanel1.Controls.Add(this._description, 1, 9);
+			this.tableLayoutPanel1.Controls.Add(this._descriptionLabel, 0, 9);
+			this.tableLayoutPanel1.Controls.Add(this._normallyHiddenLabel, 0, 7);
+			this.tableLayoutPanel1.Controls.Add(this._enableSpellingLabel, 0, 5);
+			this.tableLayoutPanel1.Controls.Add(this._optionListFileLabel, 0, 4);
+			this.tableLayoutPanel1.Controls.Add(this._enableSpelling, 1, 5);
+			this.tableLayoutPanel1.Controls.Add(this.spellingNotEnabledWarning, 0, 6);
 			this.tableLayoutPanel1.Location = new System.Drawing.Point(3, 17);
 			this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-			this.tableLayoutPanel1.RowCount = 8;
-			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 31F));
-			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
-			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 32F));
-			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 29F));
-			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 106F));
-			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 105F));
+			this.tableLayoutPanel1.RowCount = 11;
+			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel1.Size = new System.Drawing.Size(300, 387);
 			this.tableLayoutPanel1.TabIndex = 0;
-			//
-			// _optionListFileLabel
-			//
-			this._optionListFileLabel.AutoSize = true;
-			this._optionListFileLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this._optionListFileLabel.Location = new System.Drawing.Point(3, 115);
-			this._optionListFileLabel.Name = "_optionListFileLabel";
-			this._optionListFileLabel.Size = new System.Drawing.Size(95, 16);
-			this._optionListFileLabel.TabIndex = 8;
-			this._optionListFileLabel.Text = "Option List File";
-			this.toolTip1.SetToolTip(this._optionListFileLabel, "Options are stored in a xml file under this name.");
 			//
 			// _fieldName
 			//
 			this._fieldName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
 						| System.Windows.Forms.AnchorStyles.Right)));
-			this._fieldName.Location = new System.Drawing.Point(119, 30);
+			this._fieldName.Location = new System.Drawing.Point(119, 29);
 			this._fieldName.Name = "_fieldName";
 			this._fieldName.Size = new System.Drawing.Size(178, 20);
 			this._fieldName.TabIndex = 1;
@@ -123,7 +121,7 @@ namespace WeSay.ConfigTool
 			//
 			this._fieldNameLabel.AutoSize = true;
 			this._fieldNameLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this._fieldNameLabel.Location = new System.Drawing.Point(3, 27);
+			this._fieldNameLabel.Location = new System.Drawing.Point(3, 26);
 			this._fieldNameLabel.Name = "_fieldNameLabel";
 			this._fieldNameLabel.Size = new System.Drawing.Size(78, 16);
 			this._fieldNameLabel.TabIndex = 1;
@@ -139,14 +137,14 @@ namespace WeSay.ConfigTool
 			this._displayName.Size = new System.Drawing.Size(178, 20);
 			this._displayName.TabIndex = 0;
 			this.toolTip1.SetToolTip(this._displayName, "The name the user will see.");
-			this._displayName.Leave += new System.EventHandler(this.OnLeaveDisplayName);
 			this._displayName.TextChanged += new System.EventHandler(this.OnDisplayName_TextChanged);
+			this._displayName.Leave += new System.EventHandler(this.OnLeaveDisplayName);
 			//
 			// _classLabel
 			//
 			this._classLabel.AutoSize = true;
 			this._classLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this._classLabel.Location = new System.Drawing.Point(3, 54);
+			this._classLabel.Location = new System.Drawing.Point(3, 52);
 			this._classLabel.Name = "_classLabel";
 			this._classLabel.Size = new System.Drawing.Size(72, 16);
 			this._classLabel.TabIndex = 4;
@@ -157,7 +155,7 @@ namespace WeSay.ConfigTool
 			//
 			this._dataTypeLabel.AutoSize = true;
 			this._dataTypeLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this._dataTypeLabel.Location = new System.Drawing.Point(3, 85);
+			this._dataTypeLabel.Location = new System.Drawing.Point(3, 79);
 			this._dataTypeLabel.Name = "_dataTypeLabel";
 			this._dataTypeLabel.Size = new System.Drawing.Size(72, 16);
 			this._dataTypeLabel.TabIndex = 5;
@@ -170,7 +168,7 @@ namespace WeSay.ConfigTool
 						| System.Windows.Forms.AnchorStyles.Right)));
 			this._classNameCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this._classNameCombo.FormattingEnabled = true;
-			this._classNameCombo.Location = new System.Drawing.Point(119, 57);
+			this._classNameCombo.Location = new System.Drawing.Point(119, 55);
 			this._classNameCombo.Name = "_classNameCombo";
 			this._classNameCombo.Size = new System.Drawing.Size(178, 21);
 			this._classNameCombo.TabIndex = 2;
@@ -182,7 +180,7 @@ namespace WeSay.ConfigTool
 						| System.Windows.Forms.AnchorStyles.Right)));
 			this._dataTypeCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this._dataTypeCombo.FormattingEnabled = true;
-			this._dataTypeCombo.Location = new System.Drawing.Point(119, 88);
+			this._dataTypeCombo.Location = new System.Drawing.Point(119, 82);
 			this._dataTypeCombo.Name = "_dataTypeCombo";
 			this._dataTypeCombo.Size = new System.Drawing.Size(178, 21);
 			this._dataTypeCombo.TabIndex = 3;
@@ -193,7 +191,7 @@ namespace WeSay.ConfigTool
 			this._optionsFileName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
 						| System.Windows.Forms.AnchorStyles.Right)));
 			this._optionsFileName.Enabled = false;
-			this._optionsFileName.Location = new System.Drawing.Point(119, 118);
+			this._optionsFileName.Location = new System.Drawing.Point(119, 109);
 			this._optionsFileName.Name = "_optionsFileName";
 			this._optionsFileName.Size = new System.Drawing.Size(178, 20);
 			this._optionsFileName.TabIndex = 4;
@@ -203,7 +201,7 @@ namespace WeSay.ConfigTool
 			//
 			this.label6.AutoSize = true;
 			this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label6.Location = new System.Drawing.Point(3, 176);
+			this.label6.Location = new System.Drawing.Point(3, 207);
 			this.label6.Name = "label6";
 			this.label6.Size = new System.Drawing.Size(104, 16);
 			this.label6.TabIndex = 10;
@@ -214,7 +212,7 @@ namespace WeSay.ConfigTool
 			//
 			this._writingSystemsControl.CurrentField = null;
 			this._writingSystemsControl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this._writingSystemsControl.Location = new System.Drawing.Point(119, 179);
+			this._writingSystemsControl.Location = new System.Drawing.Point(119, 210);
 			this._writingSystemsControl.Name = "_writingSystemsControl";
 			this._writingSystemsControl.Size = new System.Drawing.Size(178, 100);
 			this._writingSystemsControl.TabIndex = 6;
@@ -222,7 +220,7 @@ namespace WeSay.ConfigTool
 			// _normallyHidden
 			//
 			this._normallyHidden.AutoSize = true;
-			this._normallyHidden.Location = new System.Drawing.Point(119, 150);
+			this._normallyHidden.Location = new System.Drawing.Point(119, 187);
 			this._normallyHidden.Name = "_normallyHidden";
 			this._normallyHidden.Size = new System.Drawing.Size(140, 17);
 			this._normallyHidden.TabIndex = 7;
@@ -236,7 +234,7 @@ namespace WeSay.ConfigTool
 			this._description.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
 						| System.Windows.Forms.AnchorStyles.Right)));
 			this._description.Enabled = false;
-			this._description.Location = new System.Drawing.Point(119, 285);
+			this._description.Location = new System.Drawing.Point(119, 316);
 			this._description.Multiline = true;
 			this._description.Name = "_description";
 			this._description.Size = new System.Drawing.Size(178, 99);
@@ -247,7 +245,7 @@ namespace WeSay.ConfigTool
 			//
 			this._descriptionLabel.AutoSize = true;
 			this._descriptionLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this._descriptionLabel.Location = new System.Drawing.Point(3, 282);
+			this._descriptionLabel.Location = new System.Drawing.Point(3, 313);
 			this._descriptionLabel.Name = "_descriptionLabel";
 			this._descriptionLabel.Size = new System.Drawing.Size(76, 16);
 			this._descriptionLabel.TabIndex = 9;
@@ -258,12 +256,58 @@ namespace WeSay.ConfigTool
 			//
 			this._normallyHiddenLabel.AutoSize = true;
 			this._normallyHiddenLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this._normallyHiddenLabel.Location = new System.Drawing.Point(3, 147);
+			this._normallyHiddenLabel.Location = new System.Drawing.Point(3, 184);
 			this._normallyHiddenLabel.Name = "_normallyHiddenLabel";
 			this._normallyHiddenLabel.Size = new System.Drawing.Size(57, 16);
 			this._normallyHiddenLabel.TabIndex = 10;
 			this._normallyHiddenLabel.Text = "Visibility";
 			this.toolTip1.SetToolTip(this._normallyHiddenLabel, "Tick this box for fields which are  not used in most records");
+			//
+			// _enableSpellingLabel
+			//
+			this._enableSpellingLabel.AutoSize = true;
+			this._enableSpellingLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this._enableSpellingLabel.Location = new System.Drawing.Point(3, 132);
+			this._enableSpellingLabel.Name = "_enableSpellingLabel";
+			this._enableSpellingLabel.Size = new System.Drawing.Size(57, 16);
+			this._enableSpellingLabel.TabIndex = 11;
+			this._enableSpellingLabel.Text = "Spelling";
+			this.toolTip1.SetToolTip(this._enableSpellingLabel, "Tick this box to enable spell checking for writing systems with installed spell c" +
+					"hecker support");
+			//
+			// _optionListFileLabel
+			//
+			this._optionListFileLabel.AutoSize = true;
+			this._optionListFileLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this._optionListFileLabel.Location = new System.Drawing.Point(3, 106);
+			this._optionListFileLabel.Name = "_optionListFileLabel";
+			this._optionListFileLabel.Size = new System.Drawing.Size(95, 16);
+			this._optionListFileLabel.TabIndex = 8;
+			this._optionListFileLabel.Text = "Option List File";
+			this.toolTip1.SetToolTip(this._optionListFileLabel, "Options are stored in a xml file under this name.");
+			//
+			// _enableSpelling
+			//
+			this._enableSpelling.AutoSize = true;
+			this._enableSpelling.Location = new System.Drawing.Point(119, 135);
+			this._enableSpelling.Name = "_enableSpelling";
+			this._enableSpelling.Size = new System.Drawing.Size(130, 17);
+			this._enableSpelling.TabIndex = 12;
+			this._enableSpelling.Text = "Enable spell checking";
+			this._enableSpelling.UseVisualStyleBackColor = true;
+			//
+			// spellingNotEnabledWarning
+			//
+			this.spellingNotEnabledWarning.AutoSize = true;
+			this.tableLayoutPanel1.SetColumnSpan(this.spellingNotEnabledWarning, 2);
+			this.spellingNotEnabledWarning.ForeColor = System.Drawing.Color.Crimson;
+			this.spellingNotEnabledWarning.Location = new System.Drawing.Point(3, 155);
+			this.spellingNotEnabledWarning.Margin = new System.Windows.Forms.Padding(3, 0, 3, 3);
+			this.spellingNotEnabledWarning.Name = "spellingNotEnabledWarning";
+			this.spellingNotEnabledWarning.Size = new System.Drawing.Size(263, 26);
+			this.spellingNotEnabledWarning.TabIndex = 13;
+			this.spellingNotEnabledWarning.Text = "Spellchecking has not been installed on this machine. Please install Enchant to e" +
+				"nable this feature.";
 			//
 			// FieldDetailControl
 			//
@@ -298,5 +342,8 @@ namespace WeSay.ConfigTool
 		private WritingSystemForFieldControl _writingSystemsControl;
 		private System.Windows.Forms.Label _normallyHiddenLabel;
 		private System.Windows.Forms.CheckBox _normallyHidden;
+		private System.Windows.Forms.Label _enableSpellingLabel;
+		private System.Windows.Forms.CheckBox _enableSpelling;
+		private System.Windows.Forms.Label spellingNotEnabledWarning;
 	}
 }

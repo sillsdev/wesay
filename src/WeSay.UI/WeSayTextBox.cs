@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Reflection;
 using System.Windows.Forms;
 using Palaso.UI.WindowsForms.Keyboarding;
+using Palaso.UI.WindowsForms.Spelling;
 using WeSay.Language;
 
 namespace WeSay.UI
@@ -16,6 +17,11 @@ namespace WeSay.UI
 		private bool _multiParagraph;
 		private readonly string _nameForLogging;
 		private bool _haveAlreadyLoggedTextChanged = false;
+		private bool _isSpellCheckingEnabled;
+		/// <summary>
+		/// Don't use this directly, use the Singleton Property TextBoxSpellChecker
+		/// </summary>
+		private static TextBoxSpellChecker _textBoxSpellChecker;
 
 		public WeSayTextBox()
 		{
@@ -183,7 +189,7 @@ namespace WeSay.UI
 									Font,
 									new Size(width, int.MaxValue),
 									flags);
-				return sz.Height;
+				return sz.Height+2; // add enough space for spell checking squiggle underneath
 			}
 		}
 
@@ -247,6 +253,44 @@ namespace WeSay.UI
 			set { this._multiParagraph = value; }
 		}
 
+		public bool IsSpellCheckingEnabled
+		{
+			get { return _isSpellCheckingEnabled; }
+			set
+			{
+				_isSpellCheckingEnabled = value;
+				if (_isSpellCheckingEnabled)
+				{
+					OnSpellCheckingEnabled();
+				}
+				else
+				{
+					OnSpellCheckingDisabled();
+				}
+			}
+		}
+
+
+		private void OnSpellCheckingDisabled()
+		{
+			WeSayTextBox.TextBoxSpellChecker.SetLanguageForSpellChecking(this, null);
+		}
+		private void OnSpellCheckingEnabled()
+		{
+			WeSayTextBox.TextBoxSpellChecker.SetLanguageForSpellChecking(this,_writingSystem.Id);
+		}
+
+		private static TextBoxSpellChecker TextBoxSpellChecker
+		{
+			get
+			{
+				if(_textBoxSpellChecker == null)
+				{
+					_textBoxSpellChecker = new TextBoxSpellChecker();
+				}
+				return _textBoxSpellChecker;
+			}
+		}
 
 
 		protected override void OnKeyPress(KeyPressEventArgs e)

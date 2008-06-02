@@ -5,7 +5,6 @@ using System.Windows.Forms;
 using Palaso.Reporting;
 using WeSay.ConfigTool.Properties;
 using WeSay.Project;
-using WeSay.ConfigTool.Properties;
 
 namespace WeSay.ConfigTool
 {

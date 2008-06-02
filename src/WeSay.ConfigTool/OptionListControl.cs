@@ -182,7 +182,8 @@ namespace WeSay.ConfigTool
 								 _currentField.FieldName,
 								 false,
 								 BasilProject.Project.WritingSystems,
-								 CommonEnumerations.VisibilitySetting.Visible);
+								 CommonEnumerations.VisibilitySetting.Visible,
+								 _currentField.IsSpellCheckingEnabled);
 				m.SizeChanged += new EventHandler(OnNameControlSizeChanged);
 				m.Bounds = _nameMultiTextControl.Bounds;
 				m.Top = _nameLabel.Top;

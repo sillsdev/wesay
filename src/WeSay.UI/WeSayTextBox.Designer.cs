@@ -17,6 +17,7 @@ namespace WeSay.UI
 			if (disposing && (components != null))
 			{
 				components.Dispose();
+				OnSpellCheckingDisabled();
 			}
 			base.Dispose(disposing);
 		}

@@ -28,10 +28,12 @@ namespace WeSay.ConfigTool
 		/// </summary>
 		private void InitializeComponent()
 		{
+			this.components = new System.ComponentModel.Container();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(WritingSystemForFieldControl));
 			this._writingSystemListBox = new System.Windows.Forms.CheckedListBox();
 			this.btnMoveDown = new System.Windows.Forms.Button();
 			this.btnMoveUp = new System.Windows.Forms.Button();
+			this._toolTip = new System.Windows.Forms.ToolTip(this.components);
 			this.SuspendLayout();
 			//
 			// _writingSystemListBox
@@ -86,8 +88,8 @@ namespace WeSay.ConfigTool
 			this.Controls.Add(this.btnMoveUp);
 			this.Controls.Add(this._writingSystemListBox);
 			this.Name = "WritingSystemForFieldControl";
-			this.VisibleChanged += new System.EventHandler(this.WritingSystemForFieldControl_VisibleChanged);
 			this.Load += new System.EventHandler(this.WritingSystemForFieldControl_Load);
+			this.VisibleChanged += new System.EventHandler(this.WritingSystemForFieldControl_VisibleChanged);
 			this.ResumeLayout(false);
 
 		}
@@ -97,6 +99,7 @@ namespace WeSay.ConfigTool
 		private System.Windows.Forms.Button btnMoveDown;
 		private System.Windows.Forms.Button btnMoveUp;
 		private System.Windows.Forms.CheckedListBox _writingSystemListBox;
+		private System.Windows.Forms.ToolTip _toolTip;
 
 	}
 }

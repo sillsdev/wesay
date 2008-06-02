@@ -21,6 +21,7 @@ namespace WeSay.Project
 		private string _className = string.Empty;
 		private string _dataTypeName;
 		private bool _enabled;
+		private bool _isSpellCheckingEnabled;
 		//private string _configurationName;
 
 		private bool _enabledNotSet = true;
@@ -494,7 +495,13 @@ namespace WeSay.Project
 				return true;
 			}
 		}
-
+		[Description("Do you want words in this field to be spell checked?")]
+		[ReflectorProperty("spellCheckingEnabled", Required = false)]
+		public bool IsSpellCheckingEnabled
+		{
+			get { return _isSpellCheckingEnabled; }
+			set { _isSpellCheckingEnabled = value; }
+		}
 
 
 		[Browsable(false)]

@@ -335,6 +335,7 @@ namespace WeSay.Project
 					"The definition of this sense of the word, in one or more languages. Shows up next to the Meaning label.";
 			definitionField.Visibility = CommonEnumerations.VisibilitySetting.Visible;
 			definitionField.Enabled = true;
+			definitionField.IsSpellCheckingEnabled = true;
 			masterTemplate.Add(definitionField);
 
 			//this is here so the PoMaker scanner can pick up a comment about this label
@@ -345,6 +346,7 @@ namespace WeSay.Project
 					"Normally a single word, used when interlinearizing texts.";
 			glossField.Visibility = CommonEnumerations.VisibilitySetting.NormallyHidden;
 			glossField.Enabled = false;
+			glossField.IsSpellCheckingEnabled = true;
 			masterTemplate.Add(glossField);
 
 			Field literalMeaningField = new Field("LiteralMeaning", "LexSense", defaultAnalysisSet);
@@ -355,6 +357,7 @@ namespace WeSay.Project
 					"Literal meaning of an idiom.";
 			literalMeaningField.Visibility = CommonEnumerations.VisibilitySetting.NormallyHidden;
 			literalMeaningField.Enabled = false;
+			literalMeaningField.IsSpellCheckingEnabled = true;
 			masterTemplate.Add(literalMeaningField);
 
 			Field noteField = new Field(WeSayDataObject.WellKnownProperties.Note, "WeSayDataObject", defaultAnalysisSet);
@@ -365,6 +368,7 @@ namespace WeSay.Project
 			noteField.Description = "A note.";
 			noteField.Visibility = CommonEnumerations.VisibilitySetting.NormallyHidden;
 			noteField.Enabled = true;
+			noteField.IsSpellCheckingEnabled = true;
 			masterTemplate.Add(noteField);
 
 //            Field entryNoteField = new Field(LexEntry.WellKnownProperties.Note, "LexEntry", defaultAnalysisSet);
@@ -414,6 +418,7 @@ namespace WeSay.Project
 			exampleField.DisplayName = "Example Sentence";
 			exampleField.Visibility = CommonEnumerations.VisibilitySetting.Visible;
 			exampleField.Enabled = true;
+			exampleField.IsSpellCheckingEnabled = true;
 			masterTemplate.Add(exampleField);
 
 			Field translationField =
@@ -425,6 +430,7 @@ namespace WeSay.Project
 			translationField.Description = "The translation of the example sentence into another language.";
 			translationField.Visibility = CommonEnumerations.VisibilitySetting.Visible;
 			translationField.Enabled = false;
+			translationField.IsSpellCheckingEnabled = true;
 			masterTemplate.Add(translationField);
 
 			Field ddp4Field = new Field("SemanticDomainDdp4", "LexSense", defaultAnalysisSet);

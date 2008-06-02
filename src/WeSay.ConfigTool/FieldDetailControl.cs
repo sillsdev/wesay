@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Windows.Forms;
+using Enchant;
 using Palaso.Reporting;
 using WeSay.Foundation;
 using WeSay.Project;
@@ -18,14 +19,38 @@ namespace WeSay.ConfigTool
 		public FieldDetailControl()
 		{
 			InitializeComponent();
+			if(DesignMode)
+			{
+				return;
+			}
+
 			this.toolTip1.SetToolTip(this._displayName, toolTip1.GetToolTip(_displayLabel));
 			this.toolTip1.SetToolTip(this._fieldName,  toolTip1.GetToolTip(_fieldNameLabel));
 			this.toolTip1.SetToolTip(this._description,  toolTip1.GetToolTip(_descriptionLabel));
 			this.toolTip1.SetToolTip(this._optionsFileName,  toolTip1.GetToolTip(_optionListFileLabel));
 			this.toolTip1.SetToolTip(this._dataTypeCombo,  toolTip1.GetToolTip(_displayLabel));
 			this.toolTip1.SetToolTip(this._classNameCombo, toolTip1.GetToolTip(_classLabel));
-			 this.toolTip1.SetToolTip(this._normallyHidden, toolTip1.GetToolTip(_normallyHiddenLabel));
+			this.toolTip1.SetToolTip(this._normallyHidden, toolTip1.GetToolTip(_normallyHiddenLabel));
+			this.toolTip1.SetToolTip(this._enableSpelling, toolTip1.GetToolTip(_enableSpellingLabel));
+			if(IsEnchantInstalled())
+			{
+				 spellingNotEnabledWarning.Visible = false;
+			}
 	   }
+
+		private static bool IsEnchantInstalled()
+		{
+			bool enchantInstalled = true;
+			try
+			{
+				using(new Broker()){}
+			}
+			catch
+			{
+				enchantInstalled = false;
+			}
+			return enchantInstalled;
+		}
 
 		public Field CurrentField
 		{
@@ -40,7 +65,7 @@ namespace WeSay.ConfigTool
 				_displayName.Text = _field.DisplayName;
 				_optionsFileName.Text = _field.OptionsListFile;
 				_description.Text = _field.Description;
-
+				_enableSpelling.Checked = _field.IsSpellCheckingEnabled;
 				_normallyHidden.Checked = _field.Visibility == CommonEnumerations.VisibilitySetting.NormallyHidden;
 
 				FillClassNameCombo();
@@ -127,6 +152,9 @@ namespace WeSay.ConfigTool
 		private void UpdateDisplay()
 		{
 			_optionListFileLabel.Visible = _optionsFileName.Visible = _field.ShowOptionListStuff;
+			bool isFieldMultiText = _field.DataTypeName == Field.BuiltInDataType.MultiText.ToString();
+			_enableSpellingLabel.Visible = _enableSpelling.Visible = isFieldMultiText;
+
 			if(String.IsNullOrEmpty(_fieldName.Text))
 			{
 				_fieldName.Text = _displayName.Text;
@@ -136,7 +164,6 @@ namespace WeSay.ConfigTool
 			_classNameCombo.Enabled = _field.UserCanDeleteOrModify;
 			_dataTypeCombo.Enabled = _field.UserCanDeleteOrModify;
 			_description.Enabled = _field.UserCanDeleteOrModify;
-
 			_normallyHidden.Enabled = _field.CanOmitFromMainViewTemplate;
 
 		}
@@ -195,6 +222,11 @@ namespace WeSay.ConfigTool
 				_field.Visibility = CommonEnumerations.VisibilitySetting.Visible;
 			}
 		}
+		private void _enableSpelling_CheckedChanged(object sender, EventArgs e)
+		{
+		   _field.IsSpellCheckingEnabled = _enableSpelling.Checked;
+		}
+
 
 		private void _optionsFileName_TextChanged(object sender, EventArgs e)
 		{
@@ -313,7 +345,5 @@ namespace WeSay.ConfigTool
 			return !conflictFound;
 		}
 
-
-
-	}
+	 }
 }

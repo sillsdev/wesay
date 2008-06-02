@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -19,6 +18,7 @@ namespace WeSay.UI
 		private static int _widthForWritingSystemLabels=-1;
 		private static WritingSystemCollection _allWritingSystems;
 		private static Font _writingSystemLabelFont;
+		private bool _isSpellCheckingEnabled;
 
 		public MultiTextControl() :this(null)
 		{
@@ -79,15 +79,21 @@ namespace WeSay.UI
 		}
 
 
-		public MultiTextControl(IList<WritingSystem> writingSystems, MultiText multiTextToCopyFormsFrom, string nameForTesting,
-			bool showAnnotationWidget, WritingSystemCollection allWritingSystems, CommonEnumerations.VisibilitySetting visibility)
+		public MultiTextControl(IList<WritingSystem> writingSystems,
+			MultiText multiTextToCopyFormsFrom,
+			string nameForTesting,
+			bool showAnnotationWidget,
+			WritingSystemCollection allWritingSystems,
+			CommonEnumerations.VisibilitySetting visibility,
+			bool isSpellCheckingEnabled)
 			: this(allWritingSystems)
 		{
 			Name = nameForTesting+"-mtc";
 			_writingSystemsForThisFIeld = writingSystems;
 			_showAnnotationWidget = showAnnotationWidget;
 			_visibility = visibility;
-			 BuildBoxes(multiTextToCopyFormsFrom);
+			_isSpellCheckingEnabled = isSpellCheckingEnabled;
+			BuildBoxes(multiTextToCopyFormsFrom);
 		}
 
 		protected override void OnResize(EventArgs eventargs)
@@ -269,6 +275,7 @@ namespace WeSay.UI
 			box.ReadOnly = (_visibility == CommonEnumerations.VisibilitySetting.ReadOnly);
 			box.Multiline = true;
 			box.WordWrap = true;
+			box.IsSpellCheckingEnabled = _isSpellCheckingEnabled;
 			//box.Enabled = !box.ReadOnly;
 
 			_textBoxes.Add(box);

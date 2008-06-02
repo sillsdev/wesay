@@ -104,7 +104,8 @@ namespace WeSay.LexicalTools
 										 field.Visibility != CommonEnumerations.VisibilitySetting.ReadOnly,
 										 //show annotation
 										 BasilProject.Project.WritingSystems,
-										 field.Visibility);
+										 field.Visibility,
+										 field.IsSpellCheckingEnabled);
 			}
 			else
 			{
@@ -155,7 +156,8 @@ namespace WeSay.LexicalTools
 											 fieldName + "_ghost",
 											 false,
 											 BasilProject.Project.WritingSystems,
-											 field.Visibility);
+											 field.Visibility,
+											 field.IsSpellCheckingEnabled);
 
 				Control refWidget = DetailList.AddWidgetRow(label, isHeading, m, insertAtRow + rowCount, true);
 
