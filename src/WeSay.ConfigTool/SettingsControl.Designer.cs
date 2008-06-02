@@ -54,8 +54,8 @@ namespace WeSay.ConfigTool
 			this._areasToolStrip.ImageScalingSize = new System.Drawing.Size(24, 24);
 			this._areasToolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
 			this._tasksButton,
-			this._fieldsButton,
 			this._writingSystemButton,
+			this._fieldsButton,
 			this._actionsButton,
 			this._interfaceLanguageButton,
 			this._backupButton,

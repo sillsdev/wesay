@@ -25,7 +25,6 @@ namespace WeSay.ConfigTool
 			   this.openRecentProject.Visible = false;
 			   this.openDifferentProject.Text = "Open Existing Project";
 		   }
-
 		}
 
 		private void openRecentProject_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

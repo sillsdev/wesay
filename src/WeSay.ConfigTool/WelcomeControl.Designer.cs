@@ -46,7 +46,7 @@ namespace WeSay.ConfigTool
 			this.panel1.Location = new System.Drawing.Point(0, 0);
 			this.panel1.Name = "panel1";
 			this.panel1.Size = new System.Drawing.Size(530, 45);
-			this.panel1.TabIndex = 0;
+			this.panel1.TabIndex = 3;
 			//
 			// textBox1
 			//
@@ -58,7 +58,7 @@ namespace WeSay.ConfigTool
 			this.textBox1.Name = "textBox1";
 			this.textBox1.ReadOnly = true;
 			this.textBox1.Size = new System.Drawing.Size(411, 20);
-			this.textBox1.TabIndex = 1;
+			this.textBox1.TabIndex = 4;
 			this.textBox1.TabStop = false;
 			this.textBox1.Text = "Use this tool to create and configure WeSay Projects.";
 			//
@@ -108,7 +108,7 @@ namespace WeSay.ConfigTool
 			//
 			this.pictureBox1.BackColor = System.Drawing.Color.Transparent;
 			this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-			this.pictureBox1.Image = Resources.WelcomeImage;
+			this.pictureBox1.Image = global::WeSay.ConfigTool.Properties.Resources.WelcomeImage;
 			this.pictureBox1.InitialImage = null;
 			this.pictureBox1.Location = new System.Drawing.Point(27, 21);
 			this.pictureBox1.Name = "pictureBox1";
