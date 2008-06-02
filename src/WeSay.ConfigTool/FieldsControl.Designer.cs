@@ -51,8 +51,6 @@ namespace WeSay.ConfigTool
 			this._btnAddField = new System.Windows.Forms.ToolStripButton();
 			this._btnDeleteField = new System.Windows.Forms.ToolStripButton();
 			this._tabControl = new System.Windows.Forms.TabControl();
-			this.tabPage1 = new System.Windows.Forms.TabPage();
-			this._descriptionBox = new System.Windows.Forms.Label();
 			this._setupTab = new System.Windows.Forms.TabPage();
 			this._fieldSetupControl = new WeSay.ConfigTool.FieldDetailControl();
 			this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
@@ -62,7 +60,6 @@ namespace WeSay.ConfigTool
 			this.splitContainer1.SuspendLayout();
 			this.toolStrip1.SuspendLayout();
 			this._tabControl.SuspendLayout();
-			this.tabPage1.SuspendLayout();
 			this._setupTab.SuspendLayout();
 			this.SuspendLayout();
 			//
@@ -156,6 +153,7 @@ namespace WeSay.ConfigTool
 			this._fieldsListBox.Location = new System.Drawing.Point(26, 4);
 			this._fieldsListBox.MultiSelect = false;
 			this._fieldsListBox.Name = "_fieldsListBox";
+			this._fieldsListBox.ShowItemToolTips = true;
 			this._fieldsListBox.Size = new System.Drawing.Size(171, 345);
 			this._fieldsListBox.TabIndex = 18;
 			this._fieldsListBox.UseCompatibleStateImageBehavior = false;
@@ -205,7 +203,6 @@ namespace WeSay.ConfigTool
 			//
 			// _tabControl
 			//
-			this._tabControl.Controls.Add(this.tabPage1);
 			this._tabControl.Controls.Add(this._setupTab);
 			this._tabControl.Dock = System.Windows.Forms.DockStyle.Fill;
 			this._tabControl.Location = new System.Drawing.Point(0, 0);
@@ -213,27 +210,6 @@ namespace WeSay.ConfigTool
 			this._tabControl.SelectedIndex = 0;
 			this._tabControl.Size = new System.Drawing.Size(372, 399);
 			this._tabControl.TabIndex = 1;
-			//
-			// tabPage1
-			//
-			this.tabPage1.Controls.Add(this._descriptionBox);
-			this.tabPage1.Location = new System.Drawing.Point(4, 22);
-			this.tabPage1.Name = "tabPage1";
-			this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-			this.tabPage1.Size = new System.Drawing.Size(364, 373);
-			this.tabPage1.TabIndex = 0;
-			this.tabPage1.Text = "About";
-			this.tabPage1.UseVisualStyleBackColor = true;
-			//
-			// _descriptionBox
-			//
-			this._descriptionBox.AutoSize = true;
-			this._descriptionBox.Location = new System.Drawing.Point(19, 30);
-			this._descriptionBox.MaximumSize = new System.Drawing.Size(300, 0);
-			this._descriptionBox.Name = "_descriptionBox";
-			this._descriptionBox.Size = new System.Drawing.Size(294, 52);
-			this._descriptionBox.TabIndex = 2;
-			this._descriptionBox.Text = resources.GetString("_descriptionBox.Text");
 			//
 			// _setupTab
 			//
@@ -282,8 +258,6 @@ namespace WeSay.ConfigTool
 			this.toolStrip1.ResumeLayout(false);
 			this.toolStrip1.PerformLayout();
 			this._tabControl.ResumeLayout(false);
-			this.tabPage1.ResumeLayout(false);
-			this.tabPage1.PerformLayout();
 			this._setupTab.ResumeLayout(false);
 			this.ResumeLayout(false);
 			this.PerformLayout();
@@ -299,12 +273,10 @@ namespace WeSay.ConfigTool
 		private System.Windows.Forms.ToolStrip toolStrip1;
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.TabControl _tabControl;
-		private System.Windows.Forms.TabPage tabPage1;
 		private System.Windows.Forms.TabPage _setupTab;
 		private System.Windows.Forms.ToolStripButton _btnAddField;
 		private System.Windows.Forms.ToolStripButton _btnDeleteField;
 		private FieldDetailControl _fieldSetupControl;
-		private Label _descriptionBox;
 		private ListView _fieldsListBox;
 		private Button btnMoveDown;
 		private Button btnMoveUp;

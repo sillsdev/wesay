@@ -295,6 +295,8 @@ namespace WeSay.ConfigTool
 			this._enableSpelling.TabIndex = 12;
 			this._enableSpelling.Text = "Enable spell checking";
 			this._enableSpelling.UseVisualStyleBackColor = true;
+			this._enableSpelling.CheckedChanged +=new System.EventHandler(_enableSpelling_CheckedChanged);
+
 			//
 			// spellingNotEnabledWarning
 			//
@@ -338,12 +340,12 @@ namespace WeSay.ConfigTool
 		private System.Windows.Forms.TextBox _optionsFileName;
 		private System.Windows.Forms.Label _descriptionLabel;
 		private System.Windows.Forms.Label label6;
-		private System.Windows.Forms.TextBox _description;
+		internal System.Windows.Forms.TextBox _description;
 		private WritingSystemForFieldControl _writingSystemsControl;
 		private System.Windows.Forms.Label _normallyHiddenLabel;
 		private System.Windows.Forms.CheckBox _normallyHidden;
 		private System.Windows.Forms.Label _enableSpellingLabel;
-		private System.Windows.Forms.CheckBox _enableSpelling;
+		internal System.Windows.Forms.CheckBox _enableSpelling;
 		private System.Windows.Forms.Label spellingNotEnabledWarning;
 	}
 }

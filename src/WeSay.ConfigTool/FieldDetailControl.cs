@@ -15,6 +15,7 @@ namespace WeSay.ConfigTool
 
 		public event EventHandler ClassOfFieldChanged;
 		public event EventHandler DisplayNameOfFieldChanged;
+		public event EventHandler DescriptionOfFieldChanged = delegate {};
 
 		public FieldDetailControl()
 		{
@@ -206,9 +207,9 @@ namespace WeSay.ConfigTool
 
 		private void _description_TextChanged(object sender, EventArgs e)
 		{
-			_field.Description = _description.Text.Trim();
-
-		}
+			 _field.Description = _description.Text.Trim();
+			DescriptionOfFieldChanged.Invoke(this, e);
+	   }
 
 
 		private void _normallyHidden_CheckedChanged(object sender, EventArgs e)

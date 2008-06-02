@@ -7,7 +7,7 @@
 	<ProjectGuid>{54C943DB-7725-4F52-BCE4-86C3D3D5A66E}</ProjectGuid>
 	<OutputType>WinExe</OutputType>
 	<AppDesignerFolder>Properties</AppDesignerFolder>
-	<RootNamespace>WeSay.Setup</RootNamespace>
+	<RootNamespace>WeSay.ConfigTool</RootNamespace>
 	<AssemblyName>WeSay Configuration Tool</AssemblyName>
 	<ApplicationIcon>..\..\artwork\WeSay.Setup.ico</ApplicationIcon>
   </PropertyGroup>

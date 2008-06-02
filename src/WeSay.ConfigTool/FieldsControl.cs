@@ -1,5 +1,4 @@
 using System;
-using System.Drawing;
 using System.Windows.Forms;
 using WeSay.ConfigTool.Properties;
 using WeSay.Project;
@@ -12,15 +11,15 @@ namespace WeSay.ConfigTool
 			: base("set up the fields for the dictionary")
 		{
 			InitializeComponent();
-			this._btnAddField.Image = Resources.genericLittleNewButton;
-			this._btnDeleteField.Image = Resources.GenericLittleDeletionButton;
-
-			//don't want grey
-			_descriptionBox.BackColor = SystemColors.Window;
-			_descriptionBox.ForeColor = SystemColors.WindowText;
+			_btnAddField.Image = Resources.genericLittleNewButton;
+			_btnDeleteField.Image = Resources.GenericLittleDeletionButton;
+			_fieldSetupControl.DescriptionOfFieldChanged += _fieldSetupControl_DescriptionOfFieldChanged;
 		}
 
-
+		void _fieldSetupControl_DescriptionOfFieldChanged(object sender, EventArgs e)
+		{
+			_fieldsListBox.SelectedItems[0].ToolTipText = CurrentField.Description;
+		}
 
 
 		private void FieldsControl_Load(object sender, EventArgs e)
@@ -30,25 +29,25 @@ namespace WeSay.ConfigTool
 
 			LoadInventory();
 			//nb: may important to do this after loading the inventory
-			this._fieldsListBox.ItemCheck += new ItemCheckEventHandler(this.OnFieldsListBox_ItemCheck);
-			_fieldSetupControl.ClassOfFieldChanged += new EventHandler(OnClassOfFieldChanged);
-			_fieldSetupControl.DisplayNameOfFieldChanged += new EventHandler(OnNameOfFieldChanged);
+			_fieldsListBox.ItemCheck += OnFieldsListBox_ItemCheck;
+			_fieldSetupControl.ClassOfFieldChanged += OnClassOfFieldChanged;
+			_fieldSetupControl.DisplayNameOfFieldChanged += OnNameOfFieldChanged;
 		}
 
 		private void OnNameOfFieldChanged(object sender, EventArgs e)
 		{
-			if(_fieldsListBox.SelectedItems.Count == 0)
+			if (_fieldsListBox.SelectedItems.Count == 0)
 				return;
 
 			Field f = (Field) _fieldsListBox.SelectedItems[0].Tag;
-			_fieldsListBox.SelectedItems[0].Text=f.DisplayName;
+			_fieldsListBox.SelectedItems[0].Text = f.DisplayName;
 		}
 
-		void OnClassOfFieldChanged(object sender, EventArgs e)
+		private void OnClassOfFieldChanged(object sender, EventArgs e)
 		{
 			Field f = CurrentField;
 			ViewTemplate.MoveToLastInClass(f);
-			LoadInventory();    // show it in its new location
+			LoadInventory(); // show it in its new location
 			MakeFieldTheSelectedOne(f);
 		}
 
@@ -66,6 +65,7 @@ namespace WeSay.ConfigTool
 				item.Tag = field;
 				item.Text = field.DisplayName;
 				item.Checked = field.Enabled;
+				item.ToolTipText = field.Description;
 				foreach (ListViewGroup group in _fieldsListBox.Groups)
 				{
 					if (field.ClassName == group.Name)
@@ -76,34 +76,30 @@ namespace WeSay.ConfigTool
 				_fieldsListBox.Items.Add(item);
 			}
 
-		   if(_fieldsListBox.Items.Count>0)
-			   _fieldsListBox.Items[0].Selected = true;
+			if (_fieldsListBox.Items.Count > 0)
+				_fieldsListBox.Items[0].Selected = true;
 		}
 
-		private ViewTemplate ViewTemplate
+		private static ViewTemplate ViewTemplate
 		{
-			get
-			{
-
-				return WeSayWordsProject.Project.DefaultViewTemplate;
-			}
+			get { return WeSayWordsProject.Project.DefaultViewTemplate; }
 		}
 
 		private void OnFieldsListBox_ItemCheck(object sender, ItemCheckEventArgs e)
 		{
-			if (CurrentField == null)//this gets called during population of the list,too
+			if (CurrentField == null) //this gets called during population of the list,too
 			{
 				return;
 			}
 
 			//nb: this is not necessarily the Current Field!  you can click check boxes without selecting a different item
-			Field touchedField = _fieldsListBox.Items[e.Index].Tag as Field;
-			if (e.NewValue== CheckState.Checked)
+			Field touchedField = (Field) _fieldsListBox.Items[e.Index].Tag;
+			if (e.NewValue == CheckState.Checked)
 			{
 				touchedField.Enabled = true;
 				//((Field) _fieldsListBox.SelectedItem).Enabled = true;
 			}
-			else if (e.NewValue== CheckState.Unchecked)
+			else if (e.NewValue == CheckState.Unchecked)
 			{
 				if (touchedField.CanOmitFromMainViewTemplate)
 				{
@@ -148,7 +144,7 @@ namespace WeSay.ConfigTool
 		{
 			get
 			{
-				if (_fieldsListBox.SelectedItems.Count == 0 && _fieldsListBox.Items.Count>0)
+				if (_fieldsListBox.SelectedItems.Count == 0 && _fieldsListBox.Items.Count > 0)
 				{
 					_fieldsListBox.Items[0].Selected = true; //did not select in time for the return statement
 					return _fieldsListBox.Items[0].Tag as Field;
@@ -157,13 +153,6 @@ namespace WeSay.ConfigTool
 				return (_fieldsListBox.SelectedItems[0].Tag) as Field;
 			}
 		}
-
-		private void LoadAboutFieldBox()
-		{
-			_descriptionBox.Text = CurrentField.Description;
-		//    _descriptionBox.Text = String.Format("{0} ({1}).  {2}", CurrentField.DisplayName, CurrentField.FieldName, CurrentField.Description);
-		}
-
 
 //        private void groupBox2_SizeChanged(object sender, EventArgs e)
 //        {
@@ -178,10 +167,11 @@ namespace WeSay.ConfigTool
 			_tabControl.SelectedTab = _setupTab;
 			MakeFieldTheSelectedOne(f);
 		}
-		private string MakeUniqueFieldName()
+
+		private static string MakeUniqueFieldName()
 		{
 			string baseName = Field.NewFieldNamePrefix;
-			for (int count = 0; count<1000 ; count++)
+			for (int count = 0; count < 1000; count++)
 			{
 				string check = baseName;
 				if (count > 0)
@@ -197,19 +187,16 @@ namespace WeSay.ConfigTool
 			return baseName;
 		}
 
-		private Field FindFieldWithFieldName(string name)
+		private static Field FindFieldWithFieldName(string name)
 		{
-			return ViewTemplate.Fields.Find(delegate(Field f)
-												{
-													return f.FieldName == name;
-												});
+			return ViewTemplate.Fields.Find(delegate(Field f) { return f.FieldName == name; });
 		}
 
 		private void MakeFieldTheSelectedOne(Field f)
 		{
 //            _fieldsListBox.SelectedIndices.Clear();
 //            _fieldsListBox.SelectedIndices.Add(GetItemOfField(f).Index);
-		 GetItemOfField(f).Selected = true;
+			GetItemOfField(f).Selected = true;
 		}
 
 		private ListViewItem GetItemOfField(Field f)
@@ -226,7 +213,7 @@ namespace WeSay.ConfigTool
 
 		private void OnDeleteField_Click(object sender, EventArgs e)
 		{
-			if (CurrentField ==null)
+			if (CurrentField == null)
 				return;
 			if (!CurrentField.UserCanDeleteOrModify)
 				return;
@@ -234,7 +221,7 @@ namespace WeSay.ConfigTool
 			int index = _fieldsListBox.SelectedIndices[0];
 			ViewTemplate.Fields.Remove(CurrentField);
 			LoadInventory();
-			if(_fieldsListBox.Items.Count>0)
+			if (_fieldsListBox.Items.Count > 0)
 			{
 				_fieldsListBox.SelectedIndices.Clear();
 				int indexToSelect = index == 0 ? 0 : index - 1;
@@ -244,7 +231,7 @@ namespace WeSay.ConfigTool
 			}
 		}
 
-	   /* private void OnPropertyValueChanged(object s, PropertyValueChangedEventArgs e)
+		/* private void OnPropertyValueChanged(object s, PropertyValueChangedEventArgs e)
 		{
 			if (e.ChangedItem.Label == "DataTypeName")
 			{
@@ -317,43 +304,25 @@ namespace WeSay.ConfigTool
 			}
 		}*/
 
-		private void FieldsControl_Resize(object sender, EventArgs e)
-		{
-			try//I've seen this crash when window is really small
-			{
-				//this is part of dealing with .net not adjusting stuff well for different dpis
-				splitContainer1.Dock = DockStyle.None;
-				splitContainer1.Width = this.Width - 20;
-			}
-			catch (Exception)
-			{
-				//swallow
-			}
-		}
-
-		private void OnSelectedFieldChanged(object sender, ListViewItemSelectionChangedEventArgs e)
+	private void OnSelectedFieldChanged(object sender, ListViewItemSelectionChangedEventArgs e)
 		{
 			btnMoveUp.Enabled = false;
 			btnMoveDown.Enabled = false;
 
-		   if(!e.IsSelected )
+			if (!e.IsSelected)
 				return;
 			if (CurrentField == null)
 			{
 				return;
 			}
 			_btnDeleteField.Enabled = CurrentField.UserCanDeleteOrModify;
-			_descriptionBox.Text = CurrentField.Description;
-
-			LoadAboutFieldBox();
-
 			//(WS-364): this is too blunt. They should be able to edit the display name
 			//    _fieldPropertyGrid.Enabled = CurrentField.UserCanDeleteOrModify;
 
 			//    _fieldPropertyGrid.SelectedObject = CurrentField;
 			_fieldSetupControl.CurrentField = CurrentField;
 
-			btnMoveUp.Enabled = CurrentField.UserCanRelocate &&  !ViewTemplate.IsFieldFirstInClass(CurrentField);
+			btnMoveUp.Enabled = CurrentField.UserCanRelocate && !ViewTemplate.IsFieldFirstInClass(CurrentField);
 			btnMoveDown.Enabled = CurrentField.UserCanRelocate && !ViewTemplate.IsFieldLastInClass(CurrentField);
 		}
 
@@ -361,7 +330,7 @@ namespace WeSay.ConfigTool
 		{
 			Field f = CurrentField;
 			ViewTemplate.MoveUpInClass(CurrentField);
-			this.LoadInventory();
+			LoadInventory();
 			MakeFieldTheSelectedOne(f);
 		}
 
@@ -369,11 +338,8 @@ namespace WeSay.ConfigTool
 		{
 			Field f = CurrentField;
 			ViewTemplate.MoveDownInClass(CurrentField);
-			this.LoadInventory();
+			LoadInventory();
 			MakeFieldTheSelectedOne(f);
 		}
-
-
 	}
-
 }
