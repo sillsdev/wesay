@@ -72,11 +72,13 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void WouldUpdateOnlyNewRecords()
 		{
-			_records.Add(MakeEntry());
-			_records.Add(MakeEntry());
-			// Linux has resolution of second not millisecond!
+			// Linux and fat32 has resolution of second not millisecond!
 			Thread.Sleep(1000);
+			_records.Add(MakeEntry());
+			_records.Add(MakeEntry());
 			_service.DoLiftUpdateNow(false);
+			// Linux and fat32 has resolution of second not millisecond!
+			Thread.Sleep(1000);
 			_records.Add(new LexEntry());
 			_records.Add(new LexEntry());
 			_records.Add(new LexEntry());
@@ -118,12 +120,17 @@ namespace WeSay.Project.Tests
 			WeSayWordsProject.Project.LockLift();//the next call will expect this to be locked
 
 			_service.DoLiftUpdateNow(true);
+			// Linux and fat32 has resolution of second not millisecond!
+			Thread.Sleep(1000);
 
 			//now delete it
 			_records.Remove(entryToDelete);
 			//this deletion event comes from a higher-level class we aren't using, so we raise it ourselves here:
 			_service.OnDataDeleted(this, new DeletedItemEventArgs(entryToDelete));
 			_service.DoLiftUpdateNow(true);
+			// Linux and fat32 has resolution of second not millisecond!
+			Thread.Sleep(1000);
+
 		}
 
 		[Test]
