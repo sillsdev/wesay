@@ -1,22 +1,23 @@
 using System;
-using System.Collections.Specialized;
 using System.Drawing;
 using System.Windows.Forms;
+using WeSay.ConfigTool.Properties;
 using WeSay.Project;
 
 namespace WeSay.ConfigTool
 {
 	public partial class FieldsControl : ConfigurationControlBase
 	{
-
 		public FieldsControl()
 			: base("set up the fields for the dictionary")
 		{
 			InitializeComponent();
+			this._btnAddField.Image = Resources.genericLittleNewButton;
+			this._btnDeleteField.Image = Resources.GenericLittleDeletionButton;
+
 			//don't want grey
 			_descriptionBox.BackColor = SystemColors.Window;
 			_descriptionBox.ForeColor = SystemColors.WindowText;
-			this.Resize +=new EventHandler(FieldsControl_Resize);
 		}
 
 
@@ -371,7 +372,6 @@ namespace WeSay.ConfigTool
 			this.LoadInventory();
 			MakeFieldTheSelectedOne(f);
 		}
-
 
 
 	}
