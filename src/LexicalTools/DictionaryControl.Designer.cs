@@ -50,13 +50,13 @@ namespace WeSay.LexicalTools
 			this._findWritingSystemId = new System.Windows.Forms.Label();
 			this._recordsListBox = new WeSay.UI.WeSayListView();
 			this.panelTools = new System.Windows.Forms.Panel();
+			this._showAllFieldsToggleButton = new System.Windows.Forms.Button();
 			this._btnDeleteWord = new System.Windows.Forms.Button();
 			this._btnNewWord = new System.Windows.Forms.Button();
 			this.panelDetail = new System.Windows.Forms.Panel();
 			this._entryViewControl = new WeSay.LexicalTools.EntryViewControl();
 			this._splitter = new WeSay.UI.CollapsibleSplitter();
 			this.localizationHelper1 = new WeSay.UI.LocalizationHelper(this.components);
-			this._showAllFieldsToggleButton = new System.Windows.Forms.Button();
 			this.panelWordList.SuspendLayout();
 			this.panelTools.SuspendLayout();
 			this.panelDetail.SuspendLayout();
@@ -97,6 +97,7 @@ namespace WeSay.LexicalTools
 			this._findText.BackColor = System.Drawing.Color.White;
 			this._findText.BorderStyle = System.Windows.Forms.BorderStyle.None;
 			this._findText.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this._findText.IsSpellCheckingEnabled = false;
 			this._findText.Location = new System.Drawing.Point(24, 3);
 			this._findText.Multiline = true;
 			this._findText.MultiParagraph = false;
@@ -105,8 +106,9 @@ namespace WeSay.LexicalTools
 			this._findText.PopupOffset = new System.Drawing.Point(0, 0);
 			this._findText.PopupSelectionBackColor = System.Drawing.SystemColors.Highlight;
 			this._findText.PopupSelectionForeColor = System.Drawing.SystemColors.HighlightText;
+			this._findText.PopupWidth = 120;
 			this._findText.SelectedItem = null;
-			this._findText.Size = new System.Drawing.Size(80, 19);
+			this._findText.Size = new System.Drawing.Size(80, 22);
 			this._findText.TabIndex = 1;
 			this._findText.AutoCompleteChoiceSelected += new System.EventHandler(this._findText_AutoCompleteChoiceSelected);
 			//
@@ -145,6 +147,7 @@ namespace WeSay.LexicalTools
 			this._recordsListBox.Name = "_recordsListBox";
 			this._recordsListBox.Size = new System.Drawing.Size(136, 236);
 			this._recordsListBox.TabIndex = 4;
+			this._recordsListBox.View = System.Windows.Forms.View.SmallIcon;
 			//
 			// panelTools
 			//
@@ -156,6 +159,24 @@ namespace WeSay.LexicalTools
 			this.panelTools.Name = "panelTools";
 			this.panelTools.Size = new System.Drawing.Size(493, 30);
 			this.panelTools.TabIndex = 5;
+			//
+			// _showAllFieldsToggleButton
+			//
+			this._showAllFieldsToggleButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this._showAllFieldsToggleButton.AutoSize = true;
+			this._showAllFieldsToggleButton.FlatAppearance.BorderSize = 0;
+			this._showAllFieldsToggleButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Orange;
+			this._showAllFieldsToggleButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+			this._showAllFieldsToggleButton.ImageAlign = System.Drawing.ContentAlignment.BottomLeft;
+			this._showAllFieldsToggleButton.Location = new System.Drawing.Point(363, 2);
+			this._showAllFieldsToggleButton.Margin = new System.Windows.Forms.Padding(0);
+			this._showAllFieldsToggleButton.Name = "_showAllFieldsToggleButton";
+			this._showAllFieldsToggleButton.Size = new System.Drawing.Size(120, 24);
+			this._showAllFieldsToggleButton.TabIndex = 2;
+			this._showAllFieldsToggleButton.Text = "~&Show All Fields";
+			this._showAllFieldsToggleButton.TextAlign = System.Drawing.ContentAlignment.BottomRight;
+			this._showAllFieldsToggleButton.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+			this._showAllFieldsToggleButton.Click += new System.EventHandler(this.OnShowAllFields_Click);
 			//
 			// _btnDeleteWord
 			//
@@ -205,14 +226,12 @@ namespace WeSay.LexicalTools
 			//
 			// _entryViewControl
 			//
-			//this._entryViewControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-			//            | System.Windows.Forms.AnchorStyles.Left)
-			//            | System.Windows.Forms.AnchorStyles.Right)));
-			this._entryViewControl.Dock = System.Windows.Forms.DockStyle.Fill;
 			this._entryViewControl.DataSource = null;
+			this._entryViewControl.Dock = System.Windows.Forms.DockStyle.Fill;
 			this._entryViewControl.Location = new System.Drawing.Point(0, 0);
 			this._entryViewControl.Margin = new System.Windows.Forms.Padding(0);
 			this._entryViewControl.Name = "_entryViewControl";
+			this._entryViewControl.ShowNormallyHiddenFields = false;
 			this._entryViewControl.Size = new System.Drawing.Size(345, 264);
 			this._entryViewControl.TabIndex = 0;
 			//
@@ -233,24 +252,6 @@ namespace WeSay.LexicalTools
 			// localizationHelper1
 			//
 			this.localizationHelper1.Parent = this;
-			//
-			// _showAllFieldsToggleButton
-			//
-			this._showAllFieldsToggleButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this._showAllFieldsToggleButton.AutoSize = true;
-			this._showAllFieldsToggleButton.FlatAppearance.BorderSize = 0;
-			this._showAllFieldsToggleButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Orange;
-			this._showAllFieldsToggleButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-			this._showAllFieldsToggleButton.ImageAlign = System.Drawing.ContentAlignment.BottomLeft;
-			this._showAllFieldsToggleButton.Location = new System.Drawing.Point(363, 2);
-			this._showAllFieldsToggleButton.Margin = new System.Windows.Forms.Padding(0);
-			this._showAllFieldsToggleButton.Name = "_showAllFieldsToggleButton";
-			this._showAllFieldsToggleButton.Size = new System.Drawing.Size(120, 24);
-			this._showAllFieldsToggleButton.TabIndex = 2;
-			this._showAllFieldsToggleButton.Text = "~&Show All Fields";
-			this._showAllFieldsToggleButton.TextAlign = System.Drawing.ContentAlignment.BottomRight;
-			this._showAllFieldsToggleButton.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-			this._showAllFieldsToggleButton.Click += new System.EventHandler(this.OnShowAllFields_Click);
 			//
 			// DictionaryControl
 			//

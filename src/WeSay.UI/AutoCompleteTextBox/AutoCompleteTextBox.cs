@@ -68,6 +68,10 @@ namespace WeSay.UI.AutoCompleteTextBox
 			set
 			{
 				this.mode = value;
+				if (Mode == EntryMode.List)
+				{
+					DisplayListIfTextTriggers();
+				}
 			}
 		}
 
@@ -83,9 +87,9 @@ namespace WeSay.UI.AutoCompleteTextBox
 			set
 			{
 				this._items = value;
-				if(Mode == EntryMode.List)
+				if (Mode == EntryMode.List)
 				{
-					UpdateList();
+					DisplayListIfTextTriggers();
 				}
 			}
 		}
@@ -506,6 +510,11 @@ namespace WeSay.UI.AutoCompleteTextBox
 		{
 			base.OnTextChanged (e);
 
+			DisplayListIfTextTriggers();
+		}
+
+		private void DisplayListIfTextTriggers()
+		{
 			if (TriggersEnabled)
 			{
 				switch (Triggers.OnTextChanged(Text))

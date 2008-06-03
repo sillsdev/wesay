@@ -13,6 +13,7 @@ using WeSay.LexicalModel;
 using WeSay.LexicalTools.Properties;
 using WeSay.Project;
 using WeSay.UI;
+using WeSay.UI.AutoCompleteTextBox;
 
 namespace WeSay.LexicalTools
 {
@@ -391,8 +392,37 @@ namespace WeSay.LexicalTools
 			SelectedIndexChanged.Invoke(this, null);
 			UpdateDisplay();
 		}
+		protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+		{
+			if(keyData == (Keys.Control | Keys.N))
+			{
+				AddNewWord();
+				return true;
+			}
+
+			if(keyData == (Keys.Control | Keys.F))
+			{
+				if(!_findText.Focused)
+				{
+					_findText.Focus();
+					_findText.Mode = WeSayAutoCompleteTextBox.EntryMode.List;
+				}
+				else
+				{
+					FindInList(_findText.Text);
+				}
+
+				return true;
+			}
+			return base.ProcessCmdKey(ref msg, keyData);
+		}
 
 		private void OnNewWord_Click(object sender, EventArgs e)
+		{
+			AddNewWord();
+		}
+
+		private void AddNewWord()
 		{
 			Logger.WriteEvent("NewWord_Click");
 
