@@ -663,6 +663,9 @@ namespace WeSay.LexicalTools
 
 		public override void Deactivate()
 		{
+			// get the counts cached before we deactivate
+			this.GetRemainingCount();
+			this.GetReferenceCount();
 			base.Deactivate();
 			_gatherControl.Dispose();
 			_gatherControl = null;
@@ -673,11 +676,31 @@ namespace WeSay.LexicalTools
 
 		protected override int ComputeCount(bool returnResultEvenIfExpensive)
 		{
-			return CountNotRelevant; //todo
+			if (!IsActive)
+			{
+				return TaskBase.CountNotComputed;
+			}
+			int remainingCount = DomainKeys.Count;
+
+			//Enhance: if we have access, all we really need is to walk through
+			//the index counting up unique semantic domain keys
+			for (int i = 0; i < DomainKeys.Count; i++)
+			{
+				if (_entries.BinarySearch(DomainKeys[i]) >=0)
+				{
+				  remainingCount--;
+				}
+			}
+
+			return remainingCount;
 		}
 		protected override int ComputeReferenceCount()
 		{
-			return CountNotRelevant; //todo
+			if (!IsActive)
+			{
+				return TaskBase.CountNotComputed;
+			}
+			return DomainKeys.Count;
 		}
 
 		public void GotoLastDomainWithAnswers()

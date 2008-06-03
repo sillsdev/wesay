@@ -64,12 +64,9 @@ namespace WeSay.App.Tests
 			get { return this._label; }
 		}
 
-		public int ReferenceCount
+		public int GetReferenceCount()
 		{
-			get
-			{
-				return -1;
-			}
+			return -1;
 		}
 
 		public string Description
@@ -82,18 +79,16 @@ namespace WeSay.App.Tests
 			get { return this._isPinned; }
 		}
 
-		public int Count
+		public int GetRemainingCount()
 		{
-			get
-			{
-				return 12;
-			}
+			return 12;
 		}
+
 		public int ExactCount
 		{
 			get
 			{
-				return Count;
+				return GetRemainingCount();
 			}
 		}
 		public bool MustBeActivatedDuringPreCache

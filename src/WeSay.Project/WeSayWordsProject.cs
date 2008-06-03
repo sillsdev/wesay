@@ -142,10 +142,18 @@ namespace WeSay.Project
 			}
 			string configName = Path.GetFileName(Project.PathToConfigFile);
 			File.Copy(Path.Combine(ApplicationTestDirectory, configName), Project.PathToConfigFile, true);
-
+			RemoveCache();
 			ErrorReport.IsOkToInteractWithUser = false;
 			LoadFromProjectDirectoryPath(ProjectDirectoryPath);
 			StringCatalogSelector = "en";
+		}
+
+		public void RemoveCache()
+		{
+			if (Directory.Exists(this.PathToCache))
+			{
+				Directory.Delete(this.PathToCache, true);
+			}
 		}
 
 		/// <summary>

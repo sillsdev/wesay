@@ -25,7 +25,8 @@ namespace WeSay.Project
 
 		Control Control { get;}
 		bool IsPinned { get; }
-		int Count { get; }
+		int GetRemainingCount();
+
 		int ExactCount // this may take awhile to get but will be correct (State may give you nothing if it takes awhile to get)
 		{
 			get;
@@ -34,10 +35,7 @@ namespace WeSay.Project
 		/// <summary>
 		/// Gives a sense of the overall size of the task versus what's left to do
 		/// </summary>
-		int ReferenceCount
-		{
-			get;
-		}
+		int GetReferenceCount();
 	}
 
 	/// <summary>

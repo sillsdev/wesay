@@ -28,6 +28,7 @@ namespace WeSay.LexicalTools.Tests
 		[SetUp]
 		public void Setup()
 		{
+			WeSayWordsProject.Project.RemoveCache();
 			_dbFilePath = Path.GetTempFileName();
 			_semanticDomainFilePath = Path.GetTempFileName();
 			CreateSemanticDomainFile();
@@ -404,6 +405,44 @@ namespace WeSay.LexicalTools.Tests
 			int originalCount = recordList.Count;
 			Task.AddWord("vernacular");
 			Assert.AreEqual(originalCount+1, recordList.Count);
+		}
+
+
+		[Test]
+		public void RemainingCount_Initially_RemainingCountEqualsReferenceCount()
+		{
+			Assert.AreEqual(Task.GetReferenceCount(), Task.GetRemainingCount());
+		}
+
+		[Test]
+		public void RemainingCount_NotYetActivated_NotComputedConstant()
+		{
+			Assert.AreEqual(TaskBase.CountNotComputed, _task.GetRemainingCount());
+		}
+
+		[Test]
+		public void ReferenceCount_NotYetActivated_NotComputedConstant()
+		{
+			Assert.AreEqual(TaskBase.CountNotComputed, _task.GetReferenceCount());
+		}
+
+		[Test]
+		public void RemainingCount_AddWordToPreviouslyEmptyDomain_RemainingCountDecreases()
+		{
+			int originalCount = Task.GetRemainingCount();
+			Task.CurrentDomainIndex = 3;
+			Task.AddWord("vernacular");
+			Assert.AreEqual(originalCount - 1, Task.GetRemainingCount());
+		}
+
+		[Test]
+		public void RemainingCount_RemoveWordCausingEmptyDomain_RemainingCountIncreases()
+		{
+			Task.CurrentDomainIndex = 3;
+			Task.AddWord("boo");
+			int originalCount = Task.GetRemainingCount();
+			Task.DetachFromMatchingEntries("boo");
+			Assert.AreEqual(originalCount + 1, Task.GetRemainingCount());
 		}
 
 		[Test]

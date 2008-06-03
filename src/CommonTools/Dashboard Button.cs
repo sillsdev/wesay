@@ -4,6 +4,7 @@ using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 using WeSay.Foundation;
 using WeSay.Foundation.Dashboard;
+using WeSay.Project;
 
 namespace WeSay.CommonTools
 {
@@ -164,20 +165,28 @@ namespace WeSay.CommonTools
 			int y = ClientRectangle.Bottom - 16;
 			int left = ClientRectangle.Left + LeftMarginWidth;
 			int rightEdge = ClientRectangle.Right - 15;
-			float percentDone = 30;
-			float rightEdgeOfDonePart =(float) (percentDone/100.0)*(rightEdge-left) + left;
-			e.Graphics.DrawLine(pen, left+nudge,
-								y + nudge,
-								rightEdgeOfDonePart + nudge,
-								y + nudge);
 
-			// Color todoColor = Contrast(ForeColor, (float)1.9);
-			pen = new Pen(_todoColor, 5);
-			e.Graphics.DrawLine(pen, rightEdgeOfDonePart + nudge,
-								y + nudge,
-								rightEdge + nudge,
-								y + nudge);
+			ITask task = this._thingToShowOnDashboard as ITask;
 
+			//if we don't know the actual count, or it is irrelevant, don't show the bar
+
+			if (task != null && task.GetReferenceCount() >0 && task.GetRemainingCount() >=0)
+			{
+				float percentDone = (float)100.0 * (task.GetReferenceCount()-task.GetRemainingCount())/task.GetReferenceCount();
+
+				 float rightEdgeOfDonePart = (float) (percentDone/100.0)*(rightEdge - left) + left;
+				e.Graphics.DrawLine(pen, left + nudge,
+									y + nudge,
+									rightEdgeOfDonePart + nudge,
+									y + nudge);
+
+				// Color todoColor = Contrast(ForeColor, (float)1.9);
+				pen = new Pen(_todoColor, 5);
+				e.Graphics.DrawLine(pen, rightEdgeOfDonePart + nudge,
+									y + nudge,
+									rightEdge + nudge,
+									y + nudge);
+			}
 			e.Graphics.DrawString(this.Text, this.Font, Brushes.Black, left+nudge, 10+nudge);
 		}
 

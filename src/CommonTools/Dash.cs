@@ -177,9 +177,10 @@ namespace WeSay.CommonTools
 		#region ITask Members
 
 		const int CountNotRelevant = -1;
-		public int ReferenceCount
+
+		public int GetReferenceCount()
 		{
-			get { return CountNotRelevant; }
+			return CountNotRelevant;
 		}
 
 		public bool IsPinned
@@ -187,9 +188,9 @@ namespace WeSay.CommonTools
 			get { return true; }
 		}
 
-		public int Count
+		public int GetRemainingCount()
 		{
-			get { return CountNotRelevant; }
+			return CountNotRelevant;
 		}
 
 		public int ExactCount

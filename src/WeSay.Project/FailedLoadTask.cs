@@ -83,12 +83,9 @@ namespace WeSay.Project
 
 		const int CountNotApplicable = -1;
 
-		public int Count
+		public int GetRemainingCount()
 		{
-			get
-			{
-				return CountNotApplicable;
-			}
+			return CountNotApplicable;
 		}
 
 		public int ExactCount
@@ -102,12 +99,9 @@ namespace WeSay.Project
 		/// <summary>
 		/// Gives a sense of the overall size of the task versus what's left to do
 		/// </summary>
-		public int ReferenceCount
+		public int GetReferenceCount()
 		{
-			get
-			{
-				return 0;
-			}
+			return 0;
 		}
 
 		#region IThingOnDashboard Members

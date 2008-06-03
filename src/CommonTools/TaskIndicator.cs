@@ -29,8 +29,8 @@ namespace WeSay.CommonTools
 			}
 			InitializeComponent();
 			_task = task;
-			_intray.Count = task.Count;
-			_intray.ReferenceCount = task.ReferenceCount;
+			_intray.Count = task.GetRemainingCount();
+			_intray.ReferenceCount = task.GetReferenceCount();
 
 			//_btnName.Font = StringCatalog.LabelFont;
 			this._btnName.Text = task.Label;//these have already gone through the StringCatalog

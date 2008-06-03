@@ -22,7 +22,7 @@ namespace WeSay.LexicalTools
 		private readonly bool _isPinned;
 		private readonly string _cachePath;
 		private readonly string _cacheFilePath;
-		private int _count;
+		private int _remainingCount;
 		private int _referenceCount;
 
 		public TaskBase(string label, string description, bool isPinned, IRecordListManager recordListManager)
@@ -91,7 +91,7 @@ namespace WeSay.LexicalTools
 				}
 				using (StreamWriter sw = File.CreateText(_cacheFilePath))
 				{
-					sw.Write(_count + ", " + _referenceCount);
+					sw.Write(_remainingCount + ", " + _referenceCount);
 				}
 			}
 			catch
@@ -102,8 +102,8 @@ namespace WeSay.LexicalTools
 
 		private void ReadCacheFile()
 		{
-			_count = CountNotRelevant;
-			_referenceCount = CountNotRelevant;
+			_remainingCount = CountNotComputed;
+			_referenceCount = CountNotComputed;
 			try
 			{
 				if (File.Exists(_cacheFilePath))
@@ -120,7 +120,7 @@ namespace WeSay.LexicalTools
 						}
 						if (values.Length > 0) //old style didn't have reference
 						{
-							bool gotIt = int.TryParse(values[0], out _count);
+							bool gotIt = int.TryParse(values[0], out _remainingCount);
 							Debug.Assert(gotIt);
 						}
 					}
@@ -178,21 +178,19 @@ namespace WeSay.LexicalTools
 		{
 			get { return _isPinned; }
 		}
+
 		/// <summary>
 		/// Gives a sense of how much work is left to be done
 		/// </summary>
-		public int Count
+		public int GetRemainingCount()
 		{
-			get
+			int count = ComputeCount(false);
+			if (count != CountNotComputed)
 			{
-				int count = ComputeCount(false);
-				if(count != CountNotComputed)
-				{
-					_count = count;
-					WriteCacheFile();
-				}
-				return _count;
+				_remainingCount = count;
+				WriteCacheFile();
 			}
+			return _remainingCount;
 		}
 
 		/// <summary>
@@ -206,28 +204,25 @@ namespace WeSay.LexicalTools
 		{
 			get
 			{
-				_count = ComputeCount(true);
+				_remainingCount = ComputeCount(true);
 				WriteCacheFile();
-				return _count;
+				return _remainingCount;
 			}
 		}
 
 		/// <summary>
 		/// Gives a sense of the overall size of the task
 		/// </summary>
-		public int ReferenceCount
+		public int GetReferenceCount()
 		{
-			get
+			int count = ComputeReferenceCount();
+			if (count != CountNotComputed)
 			{
-				int count = ComputeReferenceCount();
-				if (count != CountNotComputed)
-				{
-					_referenceCount = count;
-					WriteCacheFile();
-				}
-
-				return _referenceCount;
+				_referenceCount = count;
+				WriteCacheFile();
 			}
+
+			return _referenceCount;
 		}
 
 		/// <summary>
