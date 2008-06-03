@@ -24,6 +24,107 @@ namespace WeSay.UI
 			_SelectedIndexForUseBeforeSelectedIndicesAreInitialized = -1;
 		}
 
+		[DefaultValue(false)]
+		[Browsable(true)]
+		new public bool AutoArrange
+		{
+			get
+			{
+				return base.AutoArrange;
+			}
+			set
+			{
+				base.AutoArrange = value;
+			}
+		}
+
+		[DefaultValue(false)]
+		[Browsable(true)]
+		new public bool MultiSelect
+		{
+			get
+			{
+				return base.MultiSelect;
+			}
+			set
+			{
+				base.MultiSelect = value;
+			}
+		}
+
+		[DefaultValue(false)]
+		[Browsable(true)]
+		new public bool HideSelection
+		{
+			get
+			{
+				return base.HideSelection;
+			}
+			set
+			{
+				base.HideSelection = value;
+			}
+		}
+
+		[DefaultValue(false)]
+		[Browsable(true)]
+		new public bool LabelWrap
+		{
+			get
+			{
+				return base.LabelWrap;
+			}
+			set
+			{
+				base.LabelWrap = value;
+			}
+		}
+
+		[DefaultValue(true)]
+		[Browsable(false)]
+		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+		new public bool VirtualMode
+		{
+			get
+			{
+				return base.VirtualMode;
+			}
+			private set
+			{
+				base.VirtualMode = value;
+			}
+		}
+
+		[DefaultValue(true)]
+		[Browsable(false)]
+		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+		new public bool OwnerDraw
+		{
+			get
+			{
+				return base.OwnerDraw;
+			}
+			private set
+			{
+				base.OwnerDraw = value;
+			}
+		}
+
+		[DefaultValue(true)]
+		[Browsable(false)]
+		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+		new public bool UseCompatibleStateImageBehavior
+		{
+			get
+			{
+				return base.UseCompatibleStateImageBehavior;
+			}
+			private set
+			{
+				base.UseCompatibleStateImageBehavior = value;
+			}
+		}
+
 		protected override void OnCacheVirtualItems(CacheVirtualItemsEventArgs e)
 		{
 			_itemsCache.Clear();
@@ -62,6 +163,7 @@ namespace WeSay.UI
 		}
 
 		[Browsable(false)]
+		[DefaultValue(null)]
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
 		public WritingSystem WritingSystem
 		{
@@ -94,12 +196,16 @@ namespace WeSay.UI
 		}
 
 		//used when animating additions to the list
+		[Browsable(false)]
+		[DefaultValue(-1)]
+		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
 		public int ItemToNotDrawYet
 		{
 			get { return _itemToNotDrawYet; }
 			set { _itemToNotDrawYet = value; }
 		}
 
+		[DefaultValue(null)]
 		public IList DataSource
 		{
 			get { return _dataSource; }
@@ -322,6 +428,8 @@ namespace WeSay.UI
 		}
 
 		private bool _simulateListBoxBehavior;
+		[Browsable(true)]
+		[DefaultValue(true)]
 		public bool SimulateListBox {
 			get
 			{
@@ -352,6 +460,9 @@ namespace WeSay.UI
 		}
 
 		private int _SelectedIndexForUseBeforeSelectedIndicesAreInitialized;
+
+		[DefaultValue(-1)]
+		[Browsable(true)]
 		public int SelectedIndex
 		{
 			get
