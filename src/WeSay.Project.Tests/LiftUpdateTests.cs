@@ -72,10 +72,10 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void WouldUpdateOnlyNewRecords()
 		{
+			_records.Add(MakeEntry());
+			_records.Add(MakeEntry());
 			// Linux and fat32 has resolution of second not millisecond!
 			Thread.Sleep(1000);
-			_records.Add(MakeEntry());
-			_records.Add(MakeEntry());
 			_service.DoLiftUpdateNow(false);
 			// Linux and fat32 has resolution of second not millisecond!
 			Thread.Sleep(1000);
