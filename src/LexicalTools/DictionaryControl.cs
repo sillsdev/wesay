@@ -426,15 +426,23 @@ namespace WeSay.LexicalTools
 		{
 			Logger.WriteEvent("NewWord_Click");
 
+			LexEntry entry = new LexEntry();
+			//bool NoPriorSelection = _recordsListBox.SelectedIndex == -1;
+			//_recordListBoxActive = true; // allow onRecordSelectionChanged
+			if (_findText.Focused
+				&& !string.IsNullOrEmpty(_findText.Text)
+				&& IsWritingSystemUsedInLexicalForm(_listWritingSystem))
+			{
+				entry.LexicalForm[_listWritingSystem.Id] = _findText.Text.Trim();
+			}
+
 			if (!_btnNewWord.Focused)
 			{
 				// if we use a hot key, it may not have received the focus
 				// but we assume it has the focus when we do our selection change event
 				_btnNewWord.Focus();
 			}
-			LexEntry entry = new LexEntry();
-			//bool NoPriorSelection = _recordsListBox.SelectedIndex == -1;
-			//_recordListBoxActive = true; // allow onRecordSelectionChanged
+
 			_records.Add(entry);
 			_recordsListBox.SelectedIndex = _records.IndexOf(entry);
 			//if (NoPriorSelection)
