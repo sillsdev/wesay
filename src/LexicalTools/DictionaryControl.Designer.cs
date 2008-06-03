@@ -57,6 +57,7 @@ namespace WeSay.LexicalTools
 			this._entryViewControl = new WeSay.LexicalTools.EntryViewControl();
 			this._splitter = new WeSay.UI.CollapsibleSplitter();
 			this.localizationHelper1 = new WeSay.UI.LocalizationHelper(this.components);
+			this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
 			this.panelWordList.SuspendLayout();
 			this.panelTools.SuspendLayout();
 			this.panelDetail.SuspendLayout();
@@ -212,6 +213,7 @@ namespace WeSay.LexicalTools
 			this._btnNewWord.Text = "~&New Word";
 			this._btnNewWord.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
 			this._btnNewWord.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+			this.toolTip1.SetToolTip(this._btnNewWord, "Ctrl+N");
 			this._btnNewWord.Click += new System.EventHandler(this.OnNewWord_Click);
 			//
 			// panelDetail
@@ -293,6 +295,7 @@ namespace WeSay.LexicalTools
 		private Label _findWritingSystemId;
 		private LocalizationHelper localizationHelper1;
 		private Button _showAllFieldsToggleButton;
+		private ToolTip toolTip1;
 
 	}
 }
