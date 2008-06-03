@@ -432,6 +432,7 @@ namespace WeSay.LexicalTools
 			if (_findText.Focused
 				&& !string.IsNullOrEmpty(_findText.Text)
 				&& IsWritingSystemUsedInLexicalForm(_listWritingSystem))
+				//todo only create new when not found (doesn't already exist)
 			{
 				entry.LexicalForm[_listWritingSystem.Id] = _findText.Text.Trim();
 			}
