@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using WeSay.Foundation;
 using WeSay.Foundation.Dashboard;
 using WeSay.Project;
+using WeSay.UI;
 
 namespace WeSay.CommonTools
 {
@@ -12,7 +13,6 @@ namespace WeSay.CommonTools
 	{
 		private Color _borderColor=Color.Blue;
 		private Color _doneColor = Color.Blue;
-		private Color _todoColor = Color.LightBlue;
 		private bool _mouseIsDown;
 		protected const int ButtonDownHorizontalNudge = 2;
 		protected const int LeftMarginWidth= 5;
@@ -62,13 +62,6 @@ namespace WeSay.CommonTools
 			get { return _doneColor; }
 			set { _doneColor = value; }
 		}
-
-		public Color TodoColor
-		{
-			get { return _todoColor; }
-			set { _todoColor = value; }
-		}
-
 
 		private void DashboardButton_Click(object sender, EventArgs e)
 		{
@@ -160,16 +153,23 @@ namespace WeSay.CommonTools
 		protected virtual void PaintContents(PaintEventArgs e)
 		{
 			int nudge = CurrentMouseButtonNudge;
-			Pen pen = new Pen(_doneColor, 5);
+			Color doneColor = _doneColor;
+			Color todoColor = Color.FromArgb(100, doneColor);
+			if (DisplaySettings.Default.UsingProjectorScheme)
+			{
+				byte rgbMax = Math.Max(doneColor.R, Math.Max(doneColor.G, doneColor.B));
+				doneColor = Color.FromArgb(doneColor.R == rgbMax ? 255 : 0, doneColor.G == rgbMax ? 255 : 0,
+										   doneColor.B == rgbMax ? 255 : 0);
+				todoColor = Color.FromArgb(50, 0, 0, 0);
+			}
+			Pen pen = new Pen(doneColor, 5);
 
 			int y = ClientRectangle.Bottom - 16;
 			int left = ClientRectangle.Left + LeftMarginWidth;
 			int rightEdge = ClientRectangle.Right - 15;
-
 			ITask task = this._thingToShowOnDashboard as ITask;
 
 			//if we don't know the actual count, or it is irrelevant, don't show the bar
-
 			if (task != null && task.GetReferenceCount() >0 && task.GetRemainingCount() >=0)
 			{
 				float percentDone = (float)100.0 * (task.GetReferenceCount()-task.GetRemainingCount())/task.GetReferenceCount();
@@ -180,8 +180,7 @@ namespace WeSay.CommonTools
 									rightEdgeOfDonePart + nudge,
 									y + nudge);
 
-				// Color todoColor = Contrast(ForeColor, (float)1.9);
-				pen = new Pen(_todoColor, 5);
+				pen = new Pen(todoColor, 5);
 				e.Graphics.DrawLine(pen, rightEdgeOfDonePart + nudge,
 									y + nudge,
 									rightEdge + nudge,

@@ -42,12 +42,21 @@ namespace WeSay.Project
 			string pathToCacheDirectory = project.PathToCache;
 			if (GetCacheIsOutOfDate(project))
 			{
-				if (Directory.Exists(pathToCacheDirectory))
+				if (Directory.Exists(pathToCacheDirectory) && Directory.GetFileSystemEntries(pathToCacheDirectory).Length != 0)
 				{
-					Directory.Delete(pathToCacheDirectory, true);
+					try
+					{
+						Directory.Delete(pathToCacheDirectory, true);
+					}
+					catch(IOException)
+					{
+						// avoid crash if we managed to delete all files but not the directory itself
+						if (Directory.GetFileSystemEntries(pathToCacheDirectory).Length != 0)
+							throw;
+					}
 				}
 			}
-			if (!Directory.Exists(pathToCacheDirectory))
+			if (!Directory.Exists(pathToCacheDirectory) || !File.Exists(project.PathToDb4oLexicalModelDB))
 			{
 				return new CacheBuilder(project.PathToLiftFile);
 			}
@@ -299,9 +308,19 @@ namespace WeSay.Project
 				//string backupPath = _destinationDatabasePath + ".bak";
 				//not needed File.Delete(backupPath);
 				string cacheFolderName = WeSayWordsProject.Project.PathToCache; // _destinationDatabasePath + " Cache";
-				if (Directory.Exists(cacheFolderName))
+				// if directory is empty, don't delete because it may be in use
+				if (Directory.Exists(cacheFolderName) && Directory.GetFileSystemEntries(cacheFolderName).Length != 0)
 				{
-					Directory.Delete(cacheFolderName, true);
+					try
+					{
+						Directory.Delete(cacheFolderName, true);
+					}
+					catch (IOException)
+					{
+						// avoid crash if we managed to delete all files but not the directory itself
+						if (Directory.GetFileSystemEntries(cacheFolderName).Length != 0)
+							throw;
+					}
 					//fails if temp dir is on a different volume:
 					//Directory.Move(tempTarget + " Cache", cacheFolderName);
 				}

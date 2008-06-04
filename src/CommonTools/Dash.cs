@@ -1,8 +1,11 @@
 using System;
+using System.Diagnostics;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
+using System.IO;
 using Palaso.UI.WindowsForms.i8n;
+using Palaso.Reporting;
 using WeSay.AddinLib;
 using WeSay.Data;
 using WeSay.Foundation;
@@ -27,6 +30,41 @@ namespace WeSay.CommonTools
 		{
 			_recordListManager = RecordListManager;
 			_currentWorkTaskProvider = currentWorkTaskProvider;
+			InitializeContextMenu();
+		}
+
+		private void InitializeContextMenu()
+		{
+			ContextMenu = new ContextMenu();
+			ContextMenu.MenuItems.Add("Configure this project...", OnRunConfigureTool);
+			ContextMenu.MenuItems.Add("Use projector-friendly colors", OnToggleColorScheme);
+			ContextMenu.MenuItems[1].Checked = DisplaySettings.Default.UsingProjectorScheme;
+		}
+
+		private void OnToggleColorScheme(object sender, EventArgs e)
+		{
+			DisplaySettings.Default.ToggleColorScheme();
+			ContextMenu.MenuItems[1].Checked = DisplaySettings.Default.UsingProjectorScheme;
+			Invalidate(true);
+		}
+
+		private static void OnRunConfigureTool(object sender, EventArgs e)
+		{
+			string dir = Directory.GetParent(Application.ExecutablePath).FullName;
+			ProcessStartInfo startInfo =
+					new ProcessStartInfo(Path.Combine(dir, "WeSay Configuration Tool.exe"),
+										 string.Format("\"{0}\"", WeSayWordsProject.Project.PathToConfigFile));
+			try
+			{
+				Process.Start(startInfo);
+			}
+			catch
+			{
+				ErrorReport.ReportNonFatalMessage("Could not start " + startInfo.FileName);
+				return;
+			}
+
+			Application.Exit();
 		}
 
 		private int DetermineStandardButtonWidth()
@@ -114,7 +152,6 @@ namespace WeSay.CommonTools
 			button.AutoSize = false;
 			button.BorderColor = group.BorderColor;
 			button.DoneColor = group.DoneColor;
-			button.TodoColor = group.TodoColor;
 //            if (buttonWidth == 0)
 //                buttonWidth = item.WidthToDisplayFullSizeLabel;
 
@@ -238,16 +275,12 @@ namespace WeSay.CommonTools
 			_buttonGroups = new List<ButtonGroup>();
 			_buttonGroups.Add(new ButtonGroup(DashboardGroup.Gather, true,
 											  Color.FromArgb(155, 187, 89),
-											  Color.FromArgb(195, 214, 155),
-											  Color.FromArgb(235, 241, 222)));
+											  Color.FromArgb(195, 214, 155)));
 			_buttonGroups.Add(new ButtonGroup(DashboardGroup.Describe, true, Color.FromArgb(85, 142, 213),
-											  Color.FromArgb(185, 205, 229),
-											  Color.White));
+											  Color.FromArgb(185, 205, 229)));
 			_buttonGroups.Add(new ButtonGroup(DashboardGroup.Refine, true, Color.FromArgb(250, 192, 144),
-											  Color.FromArgb(252, 213, 181),
-											  Color.White));
+											  Color.FromArgb(252, 213, 181)));
 			_buttonGroups.Add(new ButtonGroup(DashboardGroup.Share, true, Color.FromArgb(119, 147, 60),
-											  Color.White,
 											  Color.White));
 
 			LocalizationHelper helper = new LocalizationHelper(null);
@@ -357,15 +390,13 @@ namespace WeSay.CommonTools
 		private readonly bool _makeButtonsSameSize;
 		private Color _doneColor;
 		private Color _borderColor;
-		private Color _todoColor;
 
-		public ButtonGroup(DashboardGroup group, bool makeButtonsSameSize, Color borderColor, Color doneColor, Color todoColor)
+		public ButtonGroup(DashboardGroup group, bool makeButtonsSameSize, Color borderColor, Color doneColor)
 		{
 			_group = group;
 			_makeButtonsSameSize = makeButtonsSameSize;
 			_borderColor = borderColor;
 			_doneColor = doneColor;
-			_todoColor = todoColor;
 		}
 
 		public bool MakeButtonsSameSize
@@ -383,11 +414,6 @@ namespace WeSay.CommonTools
 		public Color BorderColor
 		{
 			get { return _borderColor; }
-		}
-
-		public Color TodoColor
-		{
-			get { return _todoColor; }
 		}
 
 		public DashboardGroup Group

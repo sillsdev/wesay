@@ -251,6 +251,8 @@ namespace WeSay.LexicalTools
 
 		protected override int ComputeReferenceCount()
 		{
+			//TODO: Make this correct for Examples.  Currently it counts all words which
+			//gives an incorrect progress indicator when not all words have meanings
 			return RecordListManager.GetListOfType<LexEntry>().Count;
 		}
 
