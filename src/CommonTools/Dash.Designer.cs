@@ -33,23 +33,28 @@ namespace WeSay.CommonTools
 			//
 			// _flow
 			//
+			this._flow.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
 			this._flow.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-			this._flow.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(230)))), ((int)(((byte)(242)))));
+			this._flow.BackColor = System.Drawing.Color.Transparent;
 			this._flow.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
 			this._flow.Location = new System.Drawing.Point(20, 11);
 			this._flow.Name = "_flow";
-			this._flow.Size = new System.Drawing.Size(516, 492);
+			this._flow.Size = new System.Drawing.Size(465, 492);
 			this._flow.TabIndex = 0;
 			this._flow.WrapContents = false;
+			this._flow.Layout += new System.Windows.Forms.LayoutEventHandler(this._flow_Layout);
 			//
 			// Dash
 			//
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(230)))), ((int)(((byte)(242)))));
 			this.Controls.Add(this._flow);
 			this.Name = "Dash";
-			this.Size = new System.Drawing.Size(563, 519);
+			this.Size = new System.Drawing.Size(492, 519);
+			this.Layout += new System.Windows.Forms.LayoutEventHandler(this.Dash_Layout);
 			this.ResumeLayout(false);
 
 		}

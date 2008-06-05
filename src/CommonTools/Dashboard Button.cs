@@ -173,6 +173,7 @@ namespace WeSay.CommonTools
 			if (task != null && task.GetReferenceCount() >0 && task.GetRemainingCount() >=0)
 			{
 				float percentDone = (float)100.0 * (task.GetReferenceCount()-task.GetRemainingCount())/task.GetReferenceCount();
+				percentDone = Math.Max(Math.Min(percentDone, 100), 0); // ensure that 0 <= percentDone <= 100
 
 				 float rightEdgeOfDonePart = (float) (percentDone/100.0)*(rightEdge - left) + left;
 				e.Graphics.DrawLine(pen, left + nudge,

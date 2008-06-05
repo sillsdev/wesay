@@ -25,9 +25,11 @@ namespace WeSay.CommonTools
 		private List<ButtonGroup> _buttonGroups;
 		private bool _isActive=false;
 		private readonly ICurrentWorkTask _currentWorkTaskProvider;
+		private int _oldFlowWidth;
 
 		public Dash(IRecordListManager RecordListManager, ICurrentWorkTask currentWorkTaskProvider)
 		{
+			_oldFlowWidth = 0;
 			_recordListManager = RecordListManager;
 			_currentWorkTaskProvider = currentWorkTaskProvider;
 			InitializeContextMenu();
@@ -123,6 +125,9 @@ namespace WeSay.CommonTools
 			buttonFlow.FlowDirection = FlowDirection.LeftToRight;
 		   // buttonGroup.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 			buttonFlow.Margin =  new Padding(30,0,0,15);
+			buttonFlow.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+			buttonFlow.WrapContents = true;
+			//buttonFlow.Anchor = AnchorStyles.Left;
 			bool foundAtLeastOne = false;
 			foreach (IThingOnDashboard item in ThingsToMakeButtonsFor)
 			{
@@ -268,7 +273,7 @@ namespace WeSay.CommonTools
 		private void Initialize()
 		{
 			InitializeComponent();
-			this.BackColor = _flow.BackColor;
+			//this.BackColor = _flow.BackColor;
 
 			//_flow.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 
@@ -378,6 +383,29 @@ namespace WeSay.CommonTools
 		}
 
 		#endregion
+
+		private void Dash_Layout(object sender, LayoutEventArgs e)
+		{
+			if (_flow.Width == _oldFlowWidth)
+				return;
+			_oldFlowWidth = _flow.Width;
+			_flow.SuspendLayout();
+			foreach (Control control in _flow.Controls)
+			{
+				FlowLayoutPanel buttonGroup = control as FlowLayoutPanel;
+				if (buttonGroup == null)
+				{
+					continue;
+				}
+				buttonGroup.MaximumSize = new Size(_flow.Width - buttonGroup.Margin.Left - buttonGroup.Margin.Right, 0);
+			}
+			_flow.Height = _flow.GetPreferredSize(new Size(_flow.Width, 0)).Height;
+			_flow.ResumeLayout();
+		}
+
+		private void _flow_Layout(object sender, LayoutEventArgs e)
+		{
+		}
 	}
 
 
