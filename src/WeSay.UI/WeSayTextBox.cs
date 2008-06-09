@@ -277,7 +277,7 @@ namespace WeSay.UI
 		}
 		private void OnSpellCheckingEnabled()
 		{
-			WeSayTextBox.TextBoxSpellChecker.SetLanguageForSpellChecking(this,_writingSystem.Id);
+			WeSayTextBox.TextBoxSpellChecker.SetLanguageForSpellChecking(this,_writingSystem.SpellCheckingId);
 		}
 
 		private static TextBoxSpellChecker TextBoxSpellChecker

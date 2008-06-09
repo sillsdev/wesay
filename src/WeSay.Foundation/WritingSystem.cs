@@ -5,8 +5,10 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.Xml;
+using Enchant;
 using Exortech.NetReflector;
 using Palaso.Reporting;
+using Palaso.UI.WindowsForms.i8n;
 using Palaso.UI.WindowsForms.Keyboarding;
 using Palaso.WritingSystems.Collation;
 using Spart;
@@ -34,6 +36,7 @@ namespace WeSay.Language
 		public static string IdForUnknownVernacular = "v";
 		private string _abbreviation;
 		private string _customSortRules;
+		private string _spellCheckingId;
 
 		private Font _font;
 		private string _id;
@@ -241,6 +244,24 @@ namespace WeSay.Language
 		{
 			get { return _rightToLeft; }
 			set { _rightToLeft = value; }
+		}
+
+		[TypeConverter(typeof(SpellCheckerIdToDisplayStringConverter))]
+		[ReflectorProperty("SpellCheckingId", Required = false)]
+		public string SpellCheckingId
+		{
+			get
+			{
+				if (string.IsNullOrEmpty(_spellCheckingId))
+				{
+					return _id;
+				}
+				else
+				{
+					return _spellCheckingId;
+				}
+			}
+			set { _spellCheckingId = value; }
 		}
 
 		#region IComparer<string> Members
@@ -500,5 +521,155 @@ namespace WeSay.Language
 		private delegate SortKey SortKeyGenerator(string s);
 
 		#endregion
+
+		#region Nested type: SpellCheckerIdToDisplayStringConverter
+
+		public class SpellCheckerIdToDisplayStringConverter : StringConverter
+		{
+			public delegate IList<string> GetInstalledSpellCheckingIdsDelegate();
+
+			private GetInstalledSpellCheckingIdsDelegate _getInstalledSpellCheckingIdsStrategy = DefaultGetInstalledSpellCheckingIdsStrategy;
+
+			public GetInstalledSpellCheckingIdsDelegate GetInstalledSpellCheckingIdsStrategy
+			{
+				get { return _getInstalledSpellCheckingIdsStrategy; }
+				set
+				{
+					if (value == null)
+					{
+						_getInstalledSpellCheckingIdsStrategy = DefaultGetInstalledSpellCheckingIdsStrategy;
+					}
+					else
+					{
+						_getInstalledSpellCheckingIdsStrategy = value;
+					}
+				}
+			}
+
+			public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
+			{
+				//true means show a combobox
+				return true;
+			}
+
+			public override object ConvertTo(ITypeDescriptorContext context,
+											 CultureInfo culture,
+											 object value,
+											 Type destinationType)
+			{
+				if (destinationType == null)
+				{
+					throw new ArgumentNullException("destinationType");
+				}
+
+				if (destinationType != typeof(string))
+				{
+					throw GetConvertToException(value, destinationType);
+				}
+				if ((String)value == String.Empty)
+				{
+					return "none";
+				}
+				else
+				{
+					string valueAsString = value.ToString();
+					string display;
+					if (!GetInstalledSpellCheckingIdsStrategy().Contains(valueAsString))
+					{
+						string notInstalledTail = " (" + StringCatalog.Get("Not installed") + ")";
+						display = valueAsString + notInstalledTail;
+					}
+					else
+					{
+						try
+						{
+
+							string id = valueAsString.Replace('_', '-');
+							CultureInfo cultureInfo = CultureInfo.GetCultureInfoByIetfLanguageTag(id);
+							display = valueAsString + " (" + cultureInfo.NativeName + ")";
+						}
+						catch
+						{
+							// don't care if this fails it was just to add a little more info to user.
+							//mono doesn't support this now
+							display = valueAsString;
+						}
+					}
+					return display;
+				}
+			}
+
+			public override object ConvertFrom(ITypeDescriptorContext context,
+											   CultureInfo culture,
+											   object value)
+			{
+				if ((String)value == "none")
+				{
+					return String.Empty;
+				}
+				else
+				{
+					// display name is "en_US (English (United States))"
+					// we just want the first part so need to strip off any initial whitespace and get the first
+					// whitespace delimited token: en_US
+					string displayNameWhitespaceStrippedFromBeginning = value.ToString().TrimStart(null);
+					string[] whitespaceDelimitedTokens = displayNameWhitespaceStrippedFromBeginning.Split(null);
+					string id = whitespaceDelimitedTokens[0];
+					return id;
+				}
+			}
+
+			public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
+			{
+				return true;
+			}
+
+			public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType)
+			{
+				return true;
+			}
+
+			public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
+			{
+				//true will limit to list. false will show the list,
+				//but allow free-form entry
+				return false;
+			}
+
+			public override StandardValuesCollection GetStandardValues(
+					ITypeDescriptorContext context)
+			{
+				List<String> spellCheckerIds = new List<string>();
+				spellCheckerIds.Add(String.Empty); // for 'none'
+
+				try
+				{
+					spellCheckerIds.AddRange(GetInstalledSpellCheckingIdsStrategy());
+				}
+				catch
+				{
+					// do nothing if enchant is not installed
+				}
+				spellCheckerIds.Sort();
+				return new StandardValuesCollection(spellCheckerIds);
+			}
+
+			static private IList<string> DefaultGetInstalledSpellCheckingIdsStrategy()
+			{
+				List<string> installedSpellCheckingIds = new List<string>();
+				using (Broker broker = new Broker())
+				{
+					foreach (DictionaryInfo dictionary in broker.Dictionaries)
+					{
+						string id = dictionary.Language;
+						installedSpellCheckingIds.Add(id);
+					}
+				}
+				return installedSpellCheckingIds;
+			}
+		}
+
+		#endregion
+
 	}
 }

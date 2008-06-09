@@ -54,12 +54,14 @@ namespace WeSay.ConfigTool
 			List<string> writingSystemIdsWithSpellCheckingInstalled = new List<string>();
 			try
 			{
-				Broker broker = new Broker();
-				foreach (WritingSystem ws in BasilProject.Project.WritingSystems.Values)
+				using (Broker broker = new Broker())
 				{
-					if (broker.DictionaryExists(ws.Id))
+					foreach (WritingSystem ws in BasilProject.Project.WritingSystems.Values)
 					{
-						writingSystemIdsWithSpellCheckingInstalled.Add(ws.Id);
+						if (broker.DictionaryExists(ws.Id))
+						{
+							writingSystemIdsWithSpellCheckingInstalled.Add(ws.Id);
+						}
 					}
 				}
 			}

@@ -86,7 +86,8 @@ namespace WeSay.Foundation.Tests
 							  + font.Name
 							  + "</FontName><FontSize>"
 							  + font.Size
-							  + "</FontSize><Id>one</Id><RightToLeft>False</RightToLeft><SortUsing>one</SortUsing></WritingSystem>";
+							  + "</FontSize><Id>one</Id><RightToLeft>False</RightToLeft><SortUsing>one</SortUsing>"
+							  + "<SpellCheckingId>one</SpellCheckingId></WritingSystem>";
 			Assert.AreEqual(expected,s);
 		}
 
@@ -414,5 +415,36 @@ namespace WeSay.Foundation.Tests
 			Assert.AreNotEqual(writingSystem1.GetHashCode(), writingSystem2.GetHashCode());
 		}
 
+		[Test]
+		public void GetSpellCheckingId_Uninitialized_ReturnsId()
+		{
+			WritingSystem writingSystem = new WritingSystem();
+			writingSystem.Id = "en";
+			Assert.AreEqual("en", writingSystem.SpellCheckingId);
+		}
+
+		[Test]
+		public void GetAbbreviation_Uninitialized_ReturnsId()
+		{
+			WritingSystem writingSystem = new WritingSystem();
+			writingSystem.Id = "en";
+			Assert.AreEqual("en", writingSystem.Abbreviation);
+		}
+
+		[Test]
+		public void GetSpellcheckingId_SpellcheckingIdIsSet_ReturnsSpellCheckingId()
+		{
+			WritingSystem writingSystem = new WritingSystem();
+			writingSystem.SpellCheckingId = "en_US";
+			Assert.AreEqual("en_US", writingSystem.SpellCheckingId);
+		}
+
+		[Test]
+		public void GetAbbreviation_AbbreviationIsSet_ReturnsAbbreviation()
+		{
+			WritingSystem writingSystem = new WritingSystem();
+			writingSystem.Abbreviation = "eng";
+			Assert.AreEqual("eng", writingSystem.Abbreviation);
+		}
 	}
 }
