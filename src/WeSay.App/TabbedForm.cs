@@ -305,6 +305,8 @@ namespace WeSay.App
 			task.Control.Dock = DockStyle.Fill;
 			page.Controls.Add(task.Control);
 			task.Control.SelectNextControl(task.Control, true, true, true, true);
+			task.Control.PerformLayout();
+			task.Control.Invalidate(true);
 			page.Cursor = Cursors.Default;
 			_activeTask = task;
 			Palaso.Reporting.Logger.WriteEvent("Done Activating");

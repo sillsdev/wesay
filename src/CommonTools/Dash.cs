@@ -13,6 +13,7 @@ using WeSay.Foundation.Dashboard;
 using WeSay.LexicalModel;
 using WeSay.Project;
 using WeSay.UI;
+using System.Drawing.Drawing2D;
 
 namespace WeSay.CommonTools
 {
@@ -85,7 +86,7 @@ namespace WeSay.CommonTools
 		{
 			DictionaryStatusControl title = new DictionaryStatusControl(_recordListManager.GetListOfType<LexEntry>());
 			title.Font = new Font("Arial", 14);
-			title.BackColor = this.BackColor;
+			title.BackColor = Color.Transparent;
 			title.ShowLogo = true;
 			_flow.Controls.Add(title);
 
@@ -127,7 +128,6 @@ namespace WeSay.CommonTools
 			buttonFlow.Margin =  new Padding(30,0,0,15);
 			buttonFlow.AutoSizeMode = AutoSizeMode.GrowAndShrink;
 			buttonFlow.WrapContents = true;
-			//buttonFlow.Anchor = AnchorStyles.Left;
 			bool foundAtLeastOne = false;
 			foreach (IThingOnDashboard item in ThingsToMakeButtonsFor)
 			{
@@ -152,7 +152,7 @@ namespace WeSay.CommonTools
 		private Control MakeButton(IThingOnDashboard item, int buttonWidth, ButtonGroup group)
 		{
 			DashboardButton button = MakeButton(item);
-			button.BackColor = this.BackColor;
+			button.BackColor = Color.Transparent;
 			button.Font = this.Font;
 			button.AutoSize = false;
 			button.BorderColor = group.BorderColor;
@@ -215,6 +215,21 @@ namespace WeSay.CommonTools
 			}
 		}
 
+		private void ResizeFlows()
+		{
+			_flow.SuspendLayout();
+			foreach (Control control in _flow.Controls)
+			{
+				FlowLayoutPanel buttonGroup = control as FlowLayoutPanel;
+				if (buttonGroup == null)
+				{
+					continue;
+				}
+				buttonGroup.MaximumSize = new Size(_flow.Width - buttonGroup.Margin.Left - buttonGroup.Margin.Right, 0);
+			}
+			_flow.Height = _flow.GetPreferredSize(new Size(_flow.Width, 0)).Height;
+			_flow.ResumeLayout();
+		}
 
 		#region ITask Members
 
@@ -249,8 +264,6 @@ namespace WeSay.CommonTools
 
 			Initialize();
 			SuspendLayout();
-			this.Dock = DockStyle.Fill;
-			this.AutoScroll = true;
 			if (ThingsToMakeButtonsFor == null)
 			{
 				ThingsToMakeButtonsFor = new List<IThingOnDashboard>();
@@ -273,7 +286,7 @@ namespace WeSay.CommonTools
 		private void Initialize()
 		{
 			InitializeComponent();
-			//this.BackColor = _flow.BackColor;
+			this.BackColor = DisplaySettings.Default.GetEndBackgroundColor(this);
 
 			//_flow.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 
@@ -384,27 +397,30 @@ namespace WeSay.CommonTools
 
 		#endregion
 
-		private void Dash_Layout(object sender, LayoutEventArgs e)
+		protected override void OnLayout(LayoutEventArgs e)
 		{
+			base.OnLayout(e);
+			Invalidate(false);   // force redraw of background
 			if (_flow.Width == _oldFlowWidth)
 				return;
 			_oldFlowWidth = _flow.Width;
-			_flow.SuspendLayout();
-			foreach (Control control in _flow.Controls)
-			{
-				FlowLayoutPanel buttonGroup = control as FlowLayoutPanel;
-				if (buttonGroup == null)
-				{
-					continue;
-				}
-				buttonGroup.MaximumSize = new Size(_flow.Width - buttonGroup.Margin.Left - buttonGroup.Margin.Right, 0);
-			}
-			_flow.Height = _flow.GetPreferredSize(new Size(_flow.Width, 0)).Height;
-			_flow.ResumeLayout();
+			bool neededScroll = _flow.Bounds.Bottom >= ClientRectangle.Height;
+			ResizeFlows();
+			// If we need a scrollbar now, and we didn't before, do another layout
+			// to add the scrollbar.  This prevents some problems when resizing
+			if (!neededScroll && _flow.Bounds.Bottom >= ClientRectangle.Height)
+				base.OnLayout(e);
 		}
 
-		private void _flow_Layout(object sender, LayoutEventArgs e)
+		protected override void OnPaintBackground(PaintEventArgs e)
 		{
+			DisplaySettings.Default.PaintBackground(this, e);
+		}
+
+		protected override void OnScroll(ScrollEventArgs se)
+		{
+			base.OnScroll(se);
+			Invalidate(false);  // force redraw of background
 		}
 	}
 

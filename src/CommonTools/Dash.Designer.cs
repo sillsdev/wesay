@@ -28,8 +28,22 @@ namespace WeSay.CommonTools
 		/// </summary>
 		private void InitializeComponent()
 		{
+			System.Windows.Forms.Label DeveloperNote;
 			this._flow = new System.Windows.Forms.FlowLayoutPanel();
+			DeveloperNote = new System.Windows.Forms.Label();
 			this.SuspendLayout();
+			//
+			// DeveloperNote
+			//
+			DeveloperNote.AutoSize = true;
+			DeveloperNote.Enabled = false;
+			DeveloperNote.Location = new System.Drawing.Point(-3, 0);
+			DeveloperNote.Name = "DeveloperNote";
+			DeveloperNote.Size = new System.Drawing.Size(476, 13);
+			DeveloperNote.TabIndex = 1;
+			DeveloperNote.Text = "NOTE: This control should be the same size as the initial tab page size so the in" +
+				"itial layout is correct.";
+			DeveloperNote.Visible = false;
 			//
 			// _flow
 			//
@@ -40,22 +54,23 @@ namespace WeSay.CommonTools
 			this._flow.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
 			this._flow.Location = new System.Drawing.Point(20, 11);
 			this._flow.Name = "_flow";
-			this._flow.Size = new System.Drawing.Size(465, 492);
+			this._flow.Size = new System.Drawing.Size(600, 394);
 			this._flow.TabIndex = 0;
 			this._flow.WrapContents = false;
-			this._flow.Layout += new System.Windows.Forms.LayoutEventHandler(this._flow_Layout);
 			//
 			// Dash
 			//
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.AutoScroll = true;
 			this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
 			this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(230)))), ((int)(((byte)(242)))));
+			this.Controls.Add(DeveloperNote);
 			this.Controls.Add(this._flow);
 			this.Name = "Dash";
-			this.Size = new System.Drawing.Size(492, 519);
-			this.Layout += new System.Windows.Forms.LayoutEventHandler(this.Dash_Layout);
+			this.Size = new System.Drawing.Size(623, 408);
 			this.ResumeLayout(false);
+			this.PerformLayout();
 
 		}
 
