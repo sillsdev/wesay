@@ -49,7 +49,7 @@ namespace WeSay.LexicalModel
 			LexEntrySortHelper sortHelper = new LexEntrySortHelper(RecordListManager.DataSource,
 																   writingSystem,
 																   true);
-			CachedSortedDb4oList<string, LexEntry> entriesByLexicalForm = RecordListManager.GetSortedList(sortHelper);
+			IList<RecordToken> entriesByLexicalForm = RecordListManager.GetSortedList(sortHelper);
 			int index = entriesByLexicalForm.BinarySearch(lexicalForm);
 			while (index >= 0 && index < entriesByLexicalForm.Count &&
 				   entriesByLexicalForm.GetKey(index) == lexicalForm)
