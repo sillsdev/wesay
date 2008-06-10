@@ -18,8 +18,8 @@ namespace WeSay.LexicalModel.Tests
 		private LiftExporter _exporter;
 		private StringBuilder _stringBuilder;
 		private LiftMerger _merger;
-		protected Db4oDataSource _dataSource;
-		protected Db4oRecordList<LexEntry> _entries;
+		private Db4oDataSource _dataSource;
+		private Db4oRecordList<LexEntry> _entries;
 		private string _tempFile;
 
 		[SetUp]
@@ -34,7 +34,7 @@ namespace WeSay.LexicalModel.Tests
 			_tempFile = Path.GetTempFileName();
 			_dataSource = new Db4oDataSource(_tempFile);
 			_entries = new Db4oRecordList<LexEntry>(_dataSource);
-			_merger = new LiftMerger(_dataSource, _entries);
+			_merger = new LiftMerger(HistoricalEntryCountProviderForDb4o.GetOrMakeFromDatabase(_dataSource), _entries);
 		}
 
 		[TearDown]

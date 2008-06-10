@@ -21,7 +21,7 @@ namespace WeSay.LexicalModel
 	public class HomographCalculator : IHomographCalculator
 	{
 		private readonly WritingSystem _headwordWritingSystem;
-		private readonly Db4oRecordList<LexEntry> _records;
+		private readonly IRecordList<LexEntry> _records;
 		private CachedSortedDb4oList<string, LexEntry> _entryIdsSortedByHeadword;
 
 		public HomographCalculator(Db4oRecordListManager recordListManager, WritingSystem headwordWritingSystem)
@@ -32,7 +32,7 @@ namespace WeSay.LexicalModel
 										  headwordWritingSystem);
 			_entryIdsSortedByHeadword = recordListManager.GetSortedList(helper);
 
-			_records = (Db4oRecordList<LexEntry>) recordListManager.GetListOfType<LexEntry>();
+			_records = recordListManager.GetListOfType<LexEntry>();
 		}
 
 		#region IHomographCalculator Members

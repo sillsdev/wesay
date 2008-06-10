@@ -742,7 +742,7 @@ namespace WeSay.Data
 			}
 		}
 
-		public Db4oRecordList<T> MasterRecordList
+		internal Db4oRecordList<T> MasterRecordList
 		{
 			get { return _masterRecordList; }
 			set { _masterRecordList = value; }

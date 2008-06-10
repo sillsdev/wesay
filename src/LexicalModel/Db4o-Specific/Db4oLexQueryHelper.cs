@@ -210,9 +210,9 @@ namespace WeSay.LexicalModel.Db4o_Specific
 
 	public class InMemoryLexEntryFinder : IFindEntries
 	{
-		private readonly InMemoryRecordList<LexEntry> _recordList;
+		private readonly IRecordList<LexEntry> _recordList;
 
-		public InMemoryLexEntryFinder(InMemoryRecordList<LexEntry> recordList)
+		public InMemoryLexEntryFinder(IRecordList<LexEntry> recordList)
 		{
 			_recordList = recordList;
 		}

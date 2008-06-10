@@ -177,7 +177,7 @@ namespace WeSay.Project
 	{
 		private string _sourceLIFTPath;
 		private ProgressState _progress;
-		private Db4oRecordList<LexEntry> _prewiredEntries = null;
+		private IRecordList<LexEntry> _prewiredEntries = null;
 		private BackgroundWorker _backgroundWorker;
 
 		public CacheBuilder(string sourceLIFTPath)
@@ -210,7 +210,7 @@ namespace WeSay.Project
 		/// imported, such as building up indices.  The given entries list will be
 		/// used, and you can act on the events it fires.
 		/// </summary>
-		public Db4oRecordList<LexEntry> EntriesAlreadyWiredUp
+		public IRecordList<LexEntry> EntriesAlreadyWiredUp
 		{
 			set { _prewiredEntries = value; }
 		}
@@ -221,11 +221,11 @@ namespace WeSay.Project
 			set { _sourceLIFTPath = value; }
 		}
 
-		public Db4oRecordList<LexEntry> GetEntries(Db4oDataSource ds)
+		public IRecordList<LexEntry> GetEntries(IRecordListManager recordListManager)
 		{
 			if (_prewiredEntries == null)
 			{
-				return new Db4oRecordList<LexEntry>(ds);
+				return recordListManager.GetListOfType<LexEntry>();
 			}
 
 			return _prewiredEntries;
@@ -277,7 +277,7 @@ namespace WeSay.Project
 					//                    using (FileStream config = new FileStream(project.PathToProjectTaskInventory, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete))
 					SetupTasksToBuildCaches(recordListManager);
 
-					EntriesAlreadyWiredUp = (Db4oRecordList<LexEntry>) recordListManager.GetListOfType<LexEntry>();
+					EntriesAlreadyWiredUp = recordListManager.GetListOfType<LexEntry>();
 
 					if (Db4oLexModelHelper.Singleton == null)
 					{
@@ -286,7 +286,7 @@ namespace WeSay.Project
 					}
 
 
-					DoParsing(ds);
+					DoParsing(recordListManager, HistoricalEntryCountProviderForDb4o.GetOrMakeFromDatabase(ds));
 					if (_backgroundWorker != null && _backgroundWorker.CancellationPending)
 					{
 						return;
@@ -342,13 +342,13 @@ namespace WeSay.Project
 			Logger.WriteEvent("Done Building Caches");
 		}
 
-		private void DoParsing(Db4oDataSource ds)
+		private void DoParsing(IRecordListManager ds, IHistoricalEntryCountProvider historicalEntryCountProvider)
 		{
-			Db4oRecordList<LexEntry> entriesList = GetEntries(ds);
+			IRecordList<LexEntry> entriesList = GetEntries(ds);
 			try
 			{
-				entriesList.WriteCacheSize = 0; //don't write after every record
-				using (LiftMerger merger = new LiftMerger(ds, entriesList))
+//                entriesList.WriteCacheSize = 0; //don't write after every record
+				using (LiftMerger merger = new LiftMerger(historicalEntryCountProvider, entriesList))
 				{
 					foreach (string name in WeSayWordsProject.Project.OptionFieldNames)
 					{

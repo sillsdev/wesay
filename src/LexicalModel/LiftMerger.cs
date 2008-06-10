@@ -25,12 +25,12 @@ namespace WeSay.LexicalModel
 		/// </summary>
 		private IHistoricalEntryCountProvider _historicalEntryCountProvider;
 
-		public LiftMerger(Db4oDataSource dataSource,  IRecordList<LexEntry> entries)
+		public LiftMerger(IHistoricalEntryCountProvider historicalEntryCountProvider,  IRecordList<LexEntry> entries)
 		{
 			_entries = entries;
 			_expectedOptionTraits = new List<string>();
 			_expectedOptionCollectionTraits = new List<string>();
-			_historicalEntryCountProvider = HistoricalEntryCountProviderForDb4o.GetOrMakeFromDatabase(dataSource);
+			_historicalEntryCountProvider = historicalEntryCountProvider;
 		}
 
 		public LexEntry GetOrMakeEntry(Extensible eInfo, int order)

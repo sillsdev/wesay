@@ -8,7 +8,7 @@ namespace WeSay.LexicalModel.Tests
 {
 	public class BaseDb4oSpecificTests
 	{
-		protected Db4oRecordList<LexEntry> _entriesList;
+		internal Db4oRecordList<LexEntry> _entriesList;
 		protected Db4oDataSource _dataSource;
 		protected string _filePath ;
 		protected Db4oRecordListManager _recordListManager=null;

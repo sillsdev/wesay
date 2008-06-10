@@ -106,7 +106,7 @@ namespace WeSay.Data
 			}
 		}
 
-		public class FilteredDb4oRecordList<Key, T> : Db4oRecordList<T>, IBindingList where T : class, new()
+		internal class FilteredDb4oRecordList<Key, T> : Db4oRecordList<T>, IBindingList where T : class, new()
 		{
 			private bool _isSorted;
 			private IRecordList<T> _masterRecordList;

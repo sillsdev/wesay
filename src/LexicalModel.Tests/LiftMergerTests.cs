@@ -16,8 +16,8 @@ namespace WeSay.LexicalModel.Tests
 	public class LiftMergerTests : ILiftMergerTestSuite
 	{
 		private LiftMerger _merger;
-		protected Db4oDataSource _dataSource;
-		protected Db4oRecordList<LexEntry> _entries;
+		private Db4oDataSource _dataSource;
+		private Db4oRecordList<LexEntry> _entries;
 		private string _tempFile;
 
 		[SetUp]
@@ -30,7 +30,7 @@ namespace WeSay.LexicalModel.Tests
 			_entries = new Db4oRecordList<LexEntry>(_dataSource);
 			Db4oLexModelHelper.Initialize(_dataSource.Data);
 
-			_merger = new LiftMerger(_dataSource, _entries);
+			_merger = new LiftMerger(HistoricalEntryCountProviderForDb4o.GetOrMakeFromDatabase(_dataSource), _entries);
 		}
 
 		protected void RefreshEntriesList()
