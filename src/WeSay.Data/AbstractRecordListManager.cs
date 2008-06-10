@@ -25,7 +25,8 @@ namespace WeSay.Data
 		}
 
 		abstract protected IRecordList<T> CreateMasterRecordList<T>() where T : class, new();
-		abstract protected IRecordList<T> CreateFilteredRecordList<Key, T>(IFilter<T> filter, ISortHelper<Key, T> sortHelper) where T : class, new();
+		abstract protected IRecordList<T> CreateFilteredRecordList<T>(IFilter<T> filter, ISortHelper<T> sortHelper) where T : class, new();
+		public abstract T1 GetItem<T1>(long id);
 
 		#region IRecordListManager Members
 
@@ -48,7 +49,7 @@ namespace WeSay.Data
 			}
 		}
 
-		protected virtual IRecordList<T> CreateFilteredRecordListUnlessSlow<Key, T>(IFilter<T> filter, ISortHelper<Key, T> sortHelper) where T : class, new()
+		protected virtual IRecordList<T> CreateFilteredRecordListUnlessSlow<T>(IFilter<T> filter, ISortHelper<T> sortHelper) where T : class, new()
 		{
 			return null;
 		}
@@ -95,7 +96,7 @@ namespace WeSay.Data
 			return ((string)dictionaryEntry.Key).StartsWith("!");
 		}
 
-		public void Register<Key, T>(IFilter<T> filter, ISortHelper<Key, T> sortHelper) where T : class, new()
+		public void Register<Key, T>(IFilter<T> filter, ISortHelper<T> sortHelper) where T : class, new()
 		{
 			if (filter == null)
 			{
@@ -130,7 +131,7 @@ namespace WeSay.Data
 			DataDeleted.Invoke(this, new DeletedItemEventArgs(e.Item));
 		}
 
-		public IRecordList<T> GetListOfTypeFilteredFurther<Key, T>(IFilter<T> filter, ISortHelper<Key, T> sortHelper) where T : class, new()
+		public IRecordList<T> GetListOfTypeFilteredFurther<Key, T>(IFilter<T> filter, ISortHelper<T> sortHelper) where T : class, new()
 		{
 			if(filter == null)
 			{

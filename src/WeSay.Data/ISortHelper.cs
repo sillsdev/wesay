@@ -5,15 +5,14 @@ namespace WeSay.Data
 	/// <summary>
 	/// ISortHelper objects should also implement GetHashCode
 	/// </summary>
-	/// <typeparam name="Key"></typeparam>
 	/// <typeparam name="Value"></typeparam>
-	public interface ISortHelper<Key, Value> where Value : class, new()
+	public interface ISortHelper<Value> where Value : class, new()
 	{
-		IComparer<Key> KeyComparer{get;}
+		IComparer<string> KeyComparer{get;}
 
-		List<KeyValuePair<Key, long>> GetKeyIdPairs();
+		List<RecordToken> GetKeyIdPairs();
 
-		IEnumerable<Key> GetKeys(Value item);
+		IEnumerable<string> GetKeys(Value item);
 
 		/// <summary>
 		/// this is a name suitable for display to a human (or saving as a file)

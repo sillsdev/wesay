@@ -9,7 +9,7 @@ using WeSay.Data.Tests.IEnumerableTests;
 
 namespace WeSay.Data.Tests
 {
-	class TestSortHelper : ISortHelper<int, SimpleIntTestClass>
+	class TestSortHelper : ISortHelper<SimpleIntTestClass>
 	{
 		IExtObjectContainer _database;
 		public TestSortHelper(IExtObjectContainer database)
@@ -22,15 +22,15 @@ namespace WeSay.Data.Tests
 		}
 		#region IDb4oSortHelper<int,SimpleIntTestClass> Members
 
-		public IComparer<int> KeyComparer
+		public IComparer<string> KeyComparer
 		{
 			get
 			{
-				return Comparer<int>.Default;
+				return Comparer<string>.Default;
 			}
 		}
 
-		public List<KeyValuePair<int, long>> GetKeyIdPairs()
+		public List<RecordToken> GetKeyIdPairs()
 		{
 			IQuery query = _database.Query();
 			query.Constrain(typeof(SimpleIntTestClass));
@@ -40,7 +40,7 @@ namespace WeSay.Data.Tests
 
 			foreach (SimpleIntTestClass simpleIntTest in simpleIntTests)
 			{
-				result.Add(new KeyValuePair<int, long>(simpleIntTest.I, _database.GetID(simpleIntTest)));
+				result.Add(new RecordToken(simpleIntTest.I.ToString(), _database.GetID(simpleIntTest)));
 			}
 
 			return result;
@@ -390,7 +390,7 @@ namespace WeSay.Data.Tests
 	}
 
 
-	class TestItemSortHelper : ISortHelper<string, TestItem>
+	class TestItemSortHelper : ISortHelper<TestItem>
 	{
 		IExtObjectContainer _database;
 		public TestItemSortHelper(IExtObjectContainer database)
@@ -451,7 +451,7 @@ namespace WeSay.Data.Tests
 		Db4oDataSource _dataSource;
 		string _FilePath;
 		Db4oRecordListManager _manager;
-		CachedSortedDb4oList<string, TestItem> _sortedList;
+		CachedSortedDb4oList<TestItem> _sortedList;
 
 		[SetUp]
 		public void SetUp()

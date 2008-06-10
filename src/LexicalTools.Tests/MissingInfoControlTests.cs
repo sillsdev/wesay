@@ -13,7 +13,7 @@ namespace WeSay.LexicalTools.Tests
 	[TestFixture]
 	public class MissingInfoControlTests
 	{
-		private InMemoryRecordListManager _recordListManager;
+		private IRecordListManager _recordListManager;
 		private IRecordList<LexEntry> _missingTranslationRecordList;
 		private ViewTemplate _viewTemplate;
 		private MissingTranslationFilter _missingTranslation;

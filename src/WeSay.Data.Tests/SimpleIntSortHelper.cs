@@ -5,7 +5,7 @@ using Db4objects.Db4o.Query;
 
 namespace WeSay.Data.Tests
 {
-	public class SimpleIntSortHelper: ISortHelper<int, SimpleIntTestClass>
+	public class SimpleIntSortHelper: ISortHelper<SimpleIntTestClass>
 		{
 		private IRecordListManager _recordListManager;
 
@@ -17,17 +17,17 @@ namespace WeSay.Data.Tests
 
 		#region ISortHelper<Key,Value,long> Members
 
-			public IComparer<int> KeyComparer
+			public IComparer<string> KeyComparer
 			{
 				get
 				{
-					return Comparer<int>.Default;
+					return Comparer<string>.Default;
 				}
 			}
 
-			public List<KeyValuePair<int, long>> GetKeyIdPairs()
+			public List<RecordToken> GetKeyIdPairs()
 			{
-				List<KeyValuePair<int, long>> keyIdPairs = new List<KeyValuePair<int, long>>();
+				List<RecordToken> keyIdPairs = new List<RecordToken>();
 
 				if (_recordListManager is Db4oRecordListManager)
 				{
@@ -41,7 +41,7 @@ namespace WeSay.Data.Tests
 
 					foreach (SimpleIntTestClass simpleIntTestClass in resultList)
 					{
-						keyIdPairs.Add(new KeyValuePair<int, long>(simpleIntTestClass.I, database.GetID(simpleIntTestClass)));
+						keyIdPairs.Add(new RecordToken(simpleIntTestClass.I.ToString(), database.GetID(simpleIntTestClass)));
 					}
 
 				}
@@ -49,16 +49,16 @@ namespace WeSay.Data.Tests
 				{
 					foreach (SimpleIntTestClass testClass in _recordListManager.GetListOfType<SimpleIntTestClass>())
 					{
-						keyIdPairs.Add(new KeyValuePair<int, long>(testClass.I, 0L));
+						keyIdPairs.Add(new RecordToken(testClass.I.ToString(), 0L));
 					}
 				}
 				return keyIdPairs;
 			}
 
-			public IEnumerable<int> GetKeys(SimpleIntTestClass item)
+			public IEnumerable<string> GetKeys(SimpleIntTestClass item)
 			{
-				List<int> result = new List<int>();
-				result.Add(item.I);
+				List<string> result = new List<string>();
+				result.Add(item.I.ToString());
 				return result;
 			}
 

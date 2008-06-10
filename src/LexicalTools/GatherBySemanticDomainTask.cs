@@ -23,7 +23,7 @@ namespace WeSay.LexicalTools
 		private List<string> _domainKeys;
 		private List<string> _domainNames;
 		private List<string> _words;
-		private CachedSortedDb4oList<string, LexEntry> _entries;
+		private CachedSortedDb4oList<LexEntry> _entries;
 
 		private WritingSystem _semanticDomainWritingSystem;
 		private readonly Field _semanticDomainField;
@@ -701,7 +701,7 @@ namespace WeSay.LexicalTools
 
 	}
 
-	public class SemanticDomainSortHelper : ISortHelper<string, LexEntry>
+	public class SemanticDomainSortHelper : ISortHelper<LexEntry>
 	{
 		private readonly Db4oDataSource _db4oData;
 		private readonly string _semanticDomainFieldName;

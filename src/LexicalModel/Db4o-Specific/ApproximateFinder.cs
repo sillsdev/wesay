@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using WeSay.Data;
 using WeSay.Foundation;
 using WeSay.Language;
@@ -13,24 +12,23 @@ namespace WeSay.LexicalModel.Db4o_Specific
 	/// </summary>
 	public class ApproximateFinder
 	{
-		private LexEntrySortHelper _sortHelper;
-		private ReadOnlyCollection<KeyValuePair<string, long>> _keyIdMap;
-		private CachedSortedDb4oList<string, LexEntry> _pairStringLexEntryIdList;
+		private readonly LexEntrySortHelper _sortHelper;
+		private readonly IList<RecordToken> _recordTokens;
+		private readonly Db4oRecordListManager _recordListManager;
 
-		public ApproximateFinder(Db4oRecordListManager recordListManager, WritingSystem writingSystem)
+		public ApproximateFinder(Db4oRecordListManager recordListManager,
+								 WritingSystem writingSystem)
 		{
-			_sortHelper = new LexEntrySortHelper(recordListManager.DataSource,
-												 writingSystem,
-												 true /*IsWritingSystemUsedInLexicalForm*/
-				);
-			_pairStringLexEntryIdList = recordListManager.GetSortedList(_sortHelper);
-			_keyIdMap = _pairStringLexEntryIdList.KeyIdMap;
+			_recordListManager = recordListManager;
+			_sortHelper =
+					new LexEntrySortHelper(_recordListManager.DataSource, writingSystem, true
+							/*IsWritingSystemUsedInLexicalForm*/);
+			_recordTokens = recordListManager.GetSortedList(_sortHelper);
 		}
 
-		private string GetFormForMatching(object item)
+		private static string GetFormForMatchingStrategy(object item)
 		{
-			KeyValuePair<string, long> kv = (KeyValuePair<string, long>)item;
-			return kv.Key;
+			return ((RecordToken) item).DisplayString;
 		}
 
 		/// <summary>
@@ -41,14 +39,17 @@ namespace WeSay.LexicalModel.Db4o_Specific
 		/// <returns></returns>
 		public List<string> FindIds(string form, ApproximateMatcherOptions matcherOptions)
 		{
-			List<LexEntry> entries = FindEntries(form,matcherOptions, int.MaxValue);
-			return entries.ConvertAll(new Converter<LexEntry, string>(
-				delegate(LexEntry e) { return e.GetOrCreateId(true); }));
+			List<LexEntry> entries = FindEntries(form, matcherOptions, int.MaxValue);
+			return
+					entries.ConvertAll(
+							new Converter<LexEntry, string>(
+									delegate(LexEntry e) { return e.GetOrCreateId(true); }));
 		}
 
-		public List<LexEntry> FindEntries(string form, ApproximateMatcherOptions matcherOptions, int maximumNumberToRetrieve)
+		public List<LexEntry> FindEntries(string form,
+										  ApproximateMatcherOptions matcherOptions,
+										  int maximumNumberToRetrieve)
 		{
-
 			IList<object> pairs = GetKeyIdPairs(form, matcherOptions);
 			List<LexEntry> matches = new List<LexEntry>(pairs.Count);
 			foreach (KeyValuePair<string, long> pair in pairs)
@@ -58,9 +59,10 @@ namespace WeSay.LexicalModel.Db4o_Specific
 				{
 					break;
 				}
-				if (!pair.Key.EndsWith("*"))//be strict about entries added because of other writing-systems(e.g. reversals)
+				if (!pair.Key.EndsWith("*"))
+						//be strict about entries added because of other writing-systems(e.g. reversals)
 				{
-					LexEntry entry = _pairStringLexEntryIdList.GetValueFromId(pair.Value);
+					LexEntry entry = _recordListManager.GetItem<LexEntry>(pair.Value);
 					matches.Add(entry);
 				}
 			}
@@ -69,10 +71,11 @@ namespace WeSay.LexicalModel.Db4o_Specific
 
 		private IList<object> GetKeyIdPairs(string form, ApproximateMatcherOptions matcherOptions)
 		{
-			return ApproximateMatcher.FindClosestForms<object>(_keyIdMap,
-															   GetFormForMatching,
-															   form,
-															   matcherOptions);
+			return
+					ApproximateMatcher.FindClosestForms<object>(_recordTokens,
+																GetFormForMatchingStrategy,
+																form,
+																matcherOptions);
 		}
 
 		public List<string> FindForms(string form, ApproximateMatcherOptions matcherOptions)

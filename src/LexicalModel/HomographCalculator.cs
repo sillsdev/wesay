@@ -22,12 +22,14 @@ namespace WeSay.LexicalModel
 	{
 		private readonly WritingSystem _headwordWritingSystem;
 		private readonly IRecordList<LexEntry> _records;
-		private CachedSortedDb4oList<string, LexEntry> _entryIdsSortedByHeadword;
+		private IList<RecordToken> _entryIdsSortedByHeadword;
+		private Db4oRecordListManager _recordListManager;
 
 		public HomographCalculator(Db4oRecordListManager recordListManager, WritingSystem headwordWritingSystem)
 		{
 			_headwordWritingSystem = headwordWritingSystem;
 
+			this._recordListManager = recordListManager;
 			HeadwordSortedListHelper helper = new HeadwordSortedListHelper(recordListManager,
 										  headwordWritingSystem);
 			_entryIdsSortedByHeadword = recordListManager.GetSortedList(helper);
@@ -42,7 +44,16 @@ namespace WeSay.LexicalModel
 		public int GetHomographNumber(LexEntry entry)
 		{
 			long databaseIdOfEntry = _records.GetId(entry);
-			int ourIndex = _entryIdsSortedByHeadword.GetIds().IndexOf(databaseIdOfEntry);
+			// find our position within the sorted list of entries
+			int ourIndex = -1;
+			for(int i = 0; i != _entryIdsSortedByHeadword.Count; ++i)
+			{
+				if(_entryIdsSortedByHeadword[i].Id == databaseIdOfEntry)
+				{
+					ourIndex = i;
+					break;
+				}
+			}
 			string headword = entry.GetHeadWordForm(_headwordWritingSystem.Id);
 
 
@@ -56,16 +67,17 @@ namespace WeSay.LexicalModel
 
 			//what number are we?
 			int found = 0;
-			int searchIndex = ourIndex - 1;
-			while (searchIndex > -1)
+
+			for (int searchIndex = ourIndex - 1; searchIndex > -1; --searchIndex)
 			{
-				LexEntry previousGuy = _entryIdsSortedByHeadword.GetValue(searchIndex);
+				long searchId = _entryIdsSortedByHeadword[searchIndex].Id;
+				LexEntry previousGuy = _recordListManager.GetItem<LexEntry>(searchId);
+
 				if (headword != previousGuy.GetHeadWordForm(_headwordWritingSystem.Id))
 				{
 					break;
 				}
 				++found;
-				--searchIndex;
 			}
 
 			// if we're the first with this headword

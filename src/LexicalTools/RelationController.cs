@@ -22,7 +22,7 @@ namespace WeSay.LexicalTools
 		private readonly WeSayDataObject _relationParent;
 		private SimpleBinding<LexEntry> _binding;
 		private Control _control;
-		private CachedSortedDb4oList<string, LexEntry> _pairStringLexEntryIdList;
+		private CachedSortedDb4oList<LexEntry> _pairStringLexEntryIdList;
 		private ReadOnlyCollection<KeyValuePair<string, long>> _keyIdMap;
 
 		private RelationController(WeSayDataObject relationParent,
