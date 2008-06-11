@@ -26,7 +26,7 @@ namespace WeSay.Data
 		public int Compare(RecordToken x, RecordToken y)
 		{
 			int result = _keySorter.Compare(x.DisplayString, y.DisplayString);
-			if (result == 0)
+			if (result == 0 && !IgnoreId)
 			{
 				result = x.Id.CompareTo(y.Id);
 			}

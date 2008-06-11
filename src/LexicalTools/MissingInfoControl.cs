@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Windows.Forms;
 using Palaso.UI.WindowsForms.i8n;
 using WeSay.Data;
-using WeSay.Foundation;
 using WeSay.Language;
 using WeSay.LexicalModel;
 using WeSay.Project;
@@ -69,7 +68,7 @@ namespace WeSay.LexicalTools
 			_entryViewControl.KeyDown += OnKeyDown;
 			_entryViewControl.ViewTemplate = _viewTemplate;
 
-			_entryViewControl.RecordListManager = lexEntryRepository;
+			_entryViewControl.LexEntryRepository = lexEntryRepository;
 
 			_recordsListBox.DataSource = _records;
 			_records.ListChanged += OnRecordsListChanged;

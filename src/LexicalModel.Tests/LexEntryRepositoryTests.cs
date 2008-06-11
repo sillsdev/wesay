@@ -106,7 +106,7 @@ namespace WeSay.LexicalModel.Tests
 		{
 			SetupEntryWithGuid();
 
-			LexEntry found = _lexEntryRepository.GetLexEntryWithMatchingGuid(new Guid());
+			LexEntry found = _lexEntryRepository.GetLexEntryWithMatchingGuid(Guid.NewGuid());
 			Assert.IsNull(found);
 		}
 

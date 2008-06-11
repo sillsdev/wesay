@@ -109,7 +109,7 @@ namespace WeSay.LexicalTools
 		/// <summary>
 		/// Use for establishing relations been this entry and the rest
 		/// </summary>
-		public LexEntryRepository RecordListManager
+		public LexEntryRepository LexEntryRepository
 		{
 			set { _lexEntryRepository = value; }
 		}
@@ -217,7 +217,8 @@ namespace WeSay.LexicalTools
 			try
 			{
 #endif
-				_lexicalEntryPreview.Rtf = RtfRenderer.ToRtf(_record, _currentItemInFocus, _lexEntryRepository);
+			VerifyHasLexEntryRepository();
+			_lexicalEntryPreview.Rtf = RtfRenderer.ToRtf(_record, _currentItemInFocus, _lexEntryRepository);
 #if !DEBUG
 			}
 			catch (Exception)
@@ -225,6 +226,13 @@ namespace WeSay.LexicalTools
 				Palaso.Reporting.ErrorReport.ReportNonFatalMessage("There was an error refreshing the entry preview. If you were quiting the program, this is a know issue (WS-554) that we are trying to track down.  If you can make this happen again, please contact the developers.");
 			}
 #endif
+		}
+
+		private void VerifyHasLexEntryRepository() {
+			if(this._lexEntryRepository == null)
+			{
+				throw new InvalidOperationException("LexEntryRepository has not been initialized");
+			}
 		}
 
 		private void RefreshEntryDetail()
@@ -254,6 +262,7 @@ namespace WeSay.LexicalTools
 
 				if (_record != null)
 				{
+					VerifyHasLexEntryRepository();
 					LexEntryLayouter layout = new LexEntryLayouter(detailList, ViewTemplate, _lexEntryRepository);
 					layout.ShowNormallyHiddenFields = ShowNormallyHiddenFields;
 					layout.AddWidgets(_record);

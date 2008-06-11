@@ -74,7 +74,7 @@ namespace WeSay.LexicalTools
 														IntPtr.Zero);
 
 			Control_EntryDetailPanel.ViewTemplate = _viewTemplate;
-			Control_EntryDetailPanel.RecordListManager = this._lexEntryRepository;
+			Control_EntryDetailPanel.LexEntryRepository = this._lexEntryRepository;
 
 			SetListWritingSystem(_viewTemplate.GetDefaultWritingSystemForField(Field.FieldNames.EntryLexicalForm.ToString()));
 

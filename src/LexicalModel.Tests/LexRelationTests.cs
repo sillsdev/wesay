@@ -20,8 +20,7 @@ namespace WeSay.LexicalModel.Tests
 			WeSayWordsProject.InitializeForTests();
 
 			_filePath = Path.GetTempFileName();
-			_lexEntryRepository = new LexEntryRepository(new DoNothingModelConfiguration(), _filePath);
-			Db4oLexModelHelper.Initialize(_lexEntryRepository.DataSource.Data);
+			_lexEntryRepository = new LexEntryRepository(_filePath);
 
 		}
 
@@ -39,7 +38,7 @@ namespace WeSay.LexicalModel.Tests
 			LexRelationType synonymRelationType = new LexRelationType("synonym", LexRelationType.Multiplicities.Many, LexRelationType.TargetTypes.Sense);
 
 			LexRelation relation = new LexRelation(synonymRelationType.ID, null, sense);
-			Assert.AreEqual(null, relation.Target);
+			Assert.AreEqual(null, relation.GetTarget(_lexEntryRepository));
 			Assert.AreEqual(string.Empty, relation.Key);
 		}
 
@@ -51,7 +50,7 @@ namespace WeSay.LexicalModel.Tests
 
 			LexRelation relation = new LexRelation(synonymRelationType.ID, "something", sense);
 			relation.Key = null;
-			Assert.AreEqual(null, relation.Target);
+			Assert.AreEqual(null, relation.GetTarget(_lexEntryRepository));
 			Assert.AreEqual(string.Empty, relation.Key);
 		}
 

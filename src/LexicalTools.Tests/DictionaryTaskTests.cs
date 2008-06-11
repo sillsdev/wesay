@@ -30,7 +30,6 @@ namespace WeSay.LexicalTools.Tests
 			this._viewTemplate.Add(new Field(Field.FieldNames.EntryLexicalForm.ToString(), "LexEntry",vernacularWritingSystemIds));
 			this._viewTemplate.Add(new Field("Note", "LexEntry", new string[]{"en"}, Field.MultiplicityType.ZeroOr1, "MultiText" ));
 			_lexEntryRepository = new LexEntryRepository(_filePath);
-			Db4oLexModelHelper.Initialize(_lexEntryRepository.Db4oDataSource.Data);
 			_task = new DictionaryTask(_lexEntryRepository, _viewTemplate);
 		}
 

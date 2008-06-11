@@ -78,6 +78,7 @@ namespace WeSay.LexicalTools
 			{
 				throw new ArgumentNullException("viewTemplate");
 			}
+
 			_detailList = builder;
 			_viewTemplate = viewTemplate;
 			_lexEntryRepository = lexEntryRepository;

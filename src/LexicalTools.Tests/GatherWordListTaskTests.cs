@@ -33,7 +33,6 @@ namespace WeSay.LexicalTools.Tests
 			WeSayWordsProject.InitializeForTests();
 
 			_lexEntryRepository = new LexEntryRepository(_filePath); // InMemoryRecordListManager();
-			Db4oLexModelHelper.Initialize(_lexEntryRepository.Db4oDataSource.Data);
 			_glossingLanguageWSId = BasilProject.Project.WritingSystems.TestWritingSystemAnalId;
 			_vernacularLanguageWSId = BasilProject.Project.WritingSystems.TestWritingSystemVernId;
 
@@ -252,6 +251,26 @@ namespace WeSay.LexicalTools.Tests
 			Assert.AreEqual(1, _lexEntryRepository.CountAllEntries());
 	   }
 
+		[Test]
+		public void AddWordAlreadyInDBAddsAdditionalSense()
+		{
+			LexEntry e = _lexEntryRepository.CreateItem();
+			e.LexicalForm[VernWs.Id] = "uno";
+			Assert.AreEqual(1, _lexEntryRepository.CountAllEntries());
+			MultiText word = new MultiText();
+			word[VernWs.Id] = "uno";
+			Assert.AreEqual(0, e.Senses.Count);
+			_lexEntryRepository.SaveItem(e);
+
+			Task.NavigateFirstToShow();
+			Task.WordCollected(word);
+			Task.NavigateNext();
+			Task.WordCollected(word);
+
+			Assert.AreEqual(2, e.Senses.Count);
+			Assert.AreEqual(1, _lexEntryRepository.CountAllEntries());
+		}
+
 
 	   [Test]
 	   public void AddWordASecondTime_DoesNothing()
@@ -379,40 +398,6 @@ namespace WeSay.LexicalTools.Tests
 				BasilProject.Project.WritingSystems.TryGetValue(_vernacularLanguageWSId,out vernWs);
 				return vernWs;
 			}
-		}
-
-		[Test]
-		public void WordCollected_AddSenseAppendsToExistingLexEntry()
-		{
-			string formToFind = "Bank";
-			AddEntryWithLexemeForm("ignore1");
-			LexEntry entryToMatch = AddEntryWithLexemeForm(formToFind);
-			AddEntryWithLexemeForm("ignore2");
-
-			MultiText lexemeForm = new MultiText();
-			lexemeForm["en"] = formToFind;
-			Assert.AreEqual(0, entryToMatch.Senses.Count);
-
-			//add sense to empty entry
-			LexSense sense = new LexSense();
-			sense.Gloss["en"] = "money place";
-			Db4oLexQueryHelper.AddSenseToLexicon(_lexEntryRepository, lexemeForm, sense);
-			Assert.AreEqual(1, entryToMatch.Senses.Count);
-
-			//add sense to  entry which already has one sense
-			LexSense sense2 = new LexSense();
-			Db4oLexQueryHelper.AddSenseToLexicon(_lexEntryRepository, lexemeForm, sense2);
-			Assert.AreEqual(2, entryToMatch.Senses.Count);
-
-			sense.Gloss["en"] = "side of river";
-		}
-
-		private LexEntry AddEntryWithLexemeForm(string lexemeForm)
-		{
-			LexEntry entry = _lexEntryRepository.CreateItem();
-			entry.LexicalForm["en"] = lexemeForm;
-			_lexEntryRepository.SaveItem(entry);
-			return entry;
 		}
 
 

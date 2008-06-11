@@ -21,7 +21,6 @@ namespace Addin.Transform.Tests
 			WeSayWordsProject.InitializeForTests();
 			_filePath = Path.GetTempFileName();
 			_lexEntryRepository = new LexEntryRepository(_filePath);
-			Db4oLexModelHelper.Initialize(_lexEntryRepository.Db4oDataSource.Data);
 
 			_addin = new HtmlTransformer();
 			_addin.LaunchAfterTransform = false;

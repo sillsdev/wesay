@@ -17,6 +17,10 @@ namespace WeSay.LexicalTools
 
 		public static string ToRtf(LexEntry entry, CurrentItemEventArgs currentItem, LexEntryRepository lexEntryRepository)
 		{
+			if(lexEntryRepository == null)
+			{
+				throw new ArgumentNullException("lexEntryRepository");
+			}
 			if(entry == null)
 			{
 				return string.Empty;

@@ -78,9 +78,19 @@ namespace WeSay.LexicalModel
 			return GetItem(recordToken.Id);
 		}
 
+		public void SaveItems(IEnumerable<LexEntry> items)
+		{
+			foreach (LexEntry item in items)
+			{
+				_recordListManager.DataSource.Data.Set(item);
+			}
+			_recordListManager.DataSource.Data.Commit();
+		}
+
 		public void SaveItem(LexEntry item)
 		{
 			_recordListManager.DataSource.Data.Set(item);
+			_recordListManager.DataSource.Data.Commit();
 		}
 
 		public void DeleteItem(LexEntry item)

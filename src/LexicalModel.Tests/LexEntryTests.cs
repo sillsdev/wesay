@@ -34,7 +34,6 @@ namespace WeSay.LexicalModel.Tests
 			this._entry.PropertyChanged += new System.ComponentModel.PropertyChangedEventHandler(_entry_PropertyChanged);
 			this._removed = false;
 
-			Db4o_Specific.Db4oLexModelHelper.InitializeForNonDbTests();
 		}
 
 		void _entry_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)

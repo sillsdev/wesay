@@ -11,6 +11,27 @@ namespace WeSay.LexicalTools.Tests
 	[TestFixture]
 	public class MissingInfoTaskTests : TaskBaseTests
 	{
+		class NoEntriesFilter: IFilter<LexEntry>
+		{
+			public Predicate<LexEntry> FilteringPredicate
+			{
+				get
+				{
+					return ReturnFalse;
+				}
+			}
+			static bool ReturnFalse(LexEntry e)
+			{
+				return false;
+			}
+			public string Key
+			{
+				get
+				{
+					return "NoEntries";
+				}
+			}
+		}
 
 		LexEntryRepository _lexEntryRepository;
 		private string _filePath;
@@ -71,13 +92,9 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void Create_RecordsIsEmpty()
 		{
-			ClearMasterRecordList();
-			MissingInfoTask task = new MissingInfoTask(_lexEntryRepository, _filter, _label, _description, _viewTemplate, _fieldsToShow);
+			IFilter<LexEntry> filter = new NoEntriesFilter();
+			MissingInfoTask task = new MissingInfoTask(_lexEntryRepository, filter, _label, _description, _viewTemplate, _fieldsToShow);
 			Assert.IsNotNull(task);
-		}
-
-		private void ClearMasterRecordList() {
-			this._lexEntryRepository.GetListOfType<LexEntry>().Clear();
 		}
 
 		[Test]
@@ -144,12 +161,12 @@ namespace WeSay.LexicalTools.Tests
 			{
 				task.Deactivate();
 			}
-			ClearMasterRecordList();
+			_lexEntryRepository.CreateItem();
 			task.Activate();
 			try
 			{
 				Assert.AreEqual(string.Empty, ((MissingInfoControl)task.Control).EntryViewControl.ControlFormattedView.Text);
-				Assert.AreEqual(0, _lexEntryRepository.CountAllEntries());
+				Assert.AreEqual(2, _lexEntryRepository.CountAllEntries());
 			}
 			finally
 			{

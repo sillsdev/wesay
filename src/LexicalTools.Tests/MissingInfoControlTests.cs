@@ -1,5 +1,6 @@
 using System;
 using System.Drawing;
+using System.IO;
 using NUnit.Framework;
 using WeSay.Data;
 using WeSay.Foundation;
@@ -14,6 +15,7 @@ namespace WeSay.LexicalTools.Tests
 	public class MissingInfoControlTests
 	{
 		private LexEntryRepository _lexEntryRepository;
+		private string _filePath;
 		private IRecordList<LexEntry> _missingTranslationRecordList;
 		private ViewTemplate _viewTemplate;
 		private MissingTranslationFilter _missingTranslation;
@@ -60,29 +62,27 @@ namespace WeSay.LexicalTools.Tests
 		{
 			Db4oLexModelHelper.InitializeForNonDbTests();
 			WeSayWordsProject.InitializeForTests();
-			_lexEntryRepository = new InMemoryRecordListManager();
+
+			_filePath = Path.GetTempFileName();
+			_lexEntryRepository = new LexEntryRepository(_filePath);
+
 			_missingTranslation = new MissingTranslationFilter();
 
 			_writingSystem =
 					new WritingSystem("pretendVernacular", new Font(FontFamily.GenericSansSerif, 24));
 
-			LexEntrySortHelper lexEntrySortHelper = new LexEntrySortHelper(_writingSystem, true);
-			_lexEntryRepository.Register(_missingTranslation, lexEntrySortHelper);
+			CreateTestEntry("apple", "red thing", "An apple a day keeps the doctor away.");
+			CreateTestEntry("banana", "yellow food", "Monkeys like to eat bananas.");
+			CreateTestEntry("car",
+							"small motorized vehicle",
+							"Watch out for cars when you cross the street.");
+			CreateTestEntry("dog",
+							"animal with four legs; man's best friend",
+							"He walked his dog.");
+
 			_missingTranslationRecordList =
-					_lexEntryRepository.GetListOfTypeFilteredFurther(_missingTranslation,
-																	lexEntrySortHelper);
-			_missingTranslationRecordList.Add(
-					CreateTestEntry("apple", "red thing", "An apple a day keeps the doctor away."));
-			_missingTranslationRecordList.Add(
-					CreateTestEntry("banana", "yellow food", "Monkeys like to eat bananas."));
-			_missingTranslationRecordList.Add(
-					CreateTestEntry("car",
-									"small motorized vehicle",
-									"Watch out for cars when you cross the street."));
-			_missingTranslationRecordList.Add(
-					CreateTestEntry("dog",
-									"animal with four legs; man's best friend",
-									"He walked his dog."));
+					_lexEntryRepository.GetEntriesMatchingFilterSortedByLexicalUnit(
+							_missingTranslation, _writingSystem);
 
 			string[] analysisWritingSystemIds = new string[] {"analysis"};
 			string[] vernacularWritingSystemIds = new string[] {_writingSystem.Id};
@@ -112,12 +112,13 @@ namespace WeSay.LexicalTools.Tests
 
 		private LexEntry CreateTestEntry(string lexicalForm, string Definition, string exampleSentence)
 		{
-			LexEntry entry = new LexEntry();
+			LexEntry entry = _lexEntryRepository.CreateItem();
 			entry.LexicalForm[_writingSystem.Id] = lexicalForm;
 			LexSense sense = (LexSense) entry.Senses.AddNew();
 			sense.Definition["analysis"] = Definition;
 			LexExampleSentence example = (LexExampleSentence) sense.ExampleSentences.AddNew();
 			example.Sentence[_writingSystem.Id] = exampleSentence;
+			_lexEntryRepository.SaveItem(entry);
 			return entry;
 		}
 
@@ -132,6 +133,7 @@ namespace WeSay.LexicalTools.Tests
 		public void TearDown()
 		{
 			_lexEntryRepository.Dispose();
+			File.Delete(_filePath);
 		}
 
 		[Test]

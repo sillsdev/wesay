@@ -37,6 +37,16 @@ namespace WeSay.Data
 			}
 		}
 
+		public static bool operator !=(RepositoryId repositoryId1, RepositoryId repositoryId2)
+		{
+			return !Equals(repositoryId1, repositoryId2);
+		}
+
+		public static bool operator ==(RepositoryId repositoryId1, RepositoryId repositoryId2)
+		{
+			return Equals(repositoryId1, repositoryId2);
+		}
+
 		public abstract int CompareTo(RepositoryId other);
 		public abstract bool Equals(RepositoryId other);
 	}

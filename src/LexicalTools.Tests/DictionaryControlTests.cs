@@ -41,7 +41,6 @@ namespace WeSay.LexicalTools.Tests
 
 			_filePath = Path.GetTempFileName();
 			_lexEntryRepository = new LexEntryRepository(_filePath);
-			Db4oLexModelHelper.Initialize(_lexEntryRepository.Db4oDataSource.Data);
 
 			string[] analysisWritingSystemIds = new string[] { BasilProject.Project.WritingSystems.TestWritingSystemAnalId };
 			string[] vernacularWritingSystemIds = new string[] { _vernacularWritingSystem.Id };
