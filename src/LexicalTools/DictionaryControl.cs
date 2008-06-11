@@ -248,12 +248,16 @@ namespace WeSay.LexicalTools
 		}
 
 		private RecordToken GetRecordToken(LexEntry entry) {
-			LexEntrySortHelper sortHelper = new LexEntrySortHelper(this._lexEntryRepository,
-																   this._listWritingSystem,
-																   IsWritingSystemUsedInLexicalForm(
-																		   this._listWritingSystem));
-
-			return this._lexEntryRepository.GetRecordToken(entry, sortHelper);
+			IQuery<LexEntry> query = _lexEntryRepository.GetLexEntryQuery(
+				_listWritingSystem,
+				IsWritingSystemUsedInLexicalForm(_listWritingSystem)
+			);
+			RepositoryId id = _lexEntryRepository.GetId(entry);
+			foreach (string displayString in query.GetDisplayStrings(entry))
+			{
+				return new RecordToken(displayString, id);
+			}
+			return new RecordToken(string.Empty, id);
 		}
 
 		private void LoadRecords() {

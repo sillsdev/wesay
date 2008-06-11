@@ -30,16 +30,6 @@ namespace WeSay.LexicalModel
 			get { return _recordListManager.DataSource; }
 		}
 
-		public RecordToken GetRecordToken(LexEntry item, ISortHelper<LexEntry> sortHelper)
-		{
-			Db4oRepositoryId id = (Db4oRepositoryId) GetId(item);
-			foreach (string displayString in sortHelper.GetDisplayStrings(item))
-			{
-				return new RecordToken(displayString, id);
-			}
-			return new RecordToken(string.Empty, id);
-		}
-
 		public LexEntry CreateItem()
 		{
 			LexEntry item = new LexEntry(null, new Guid(), GetNextBirthOrder());
@@ -108,17 +98,18 @@ namespace WeSay.LexicalModel
 			type.Remove(GetItem(repositoryId));
 		}
 
+		public IQuery<LexEntry> GetLexEntryQuery(WritingSystem writingSystem, bool isWritingSystemUsedByLexicalForm)
+		{
+			return new Db4oLexEntryQuery(this, writingSystem, isWritingSystemUsedByLexicalForm);
+		}
 
 		public IList<RecordToken> GetEntriesWithSimilarLexicalForm(
 			string lexicalForm,
 			WritingSystem writingSystem,
 			ApproximateMatcherOptions matcherOptions)
 		{
-			LexEntrySortHelper sortHelper =
-					new LexEntrySortHelper(this,
-										   writingSystem,
-										   true /*IsWritingSystemUsedInLexicalForm*/);
-			List<RecordToken> recordTokens = this._recordListManager.GetSortedList(sortHelper);
+			IQuery<LexEntry> query = GetLexEntryQuery(writingSystem, true);
+			List<RecordToken> recordTokens = query.GetDisplayStringsForAllMatching();
 
 			// filter out any entries that were added because of other
 			// writing systems (e.g. reversals)
@@ -146,40 +137,46 @@ namespace WeSay.LexicalModel
 			return ((RecordToken)item).DisplayString;
 		}
 
+		public List<RecordToken> GetEntriesMatching(IQuery<LexEntry> query)
+		{
+			throw new NotImplementedException("GetEntriesMatching");
+			// Run the sorted query
+			List<RecordToken> recordTokens = query.GetDisplayStringsForAllMatching();
+			// Apply a filter
+		}
+
 		public List<RecordToken> GetEntriesWithMatchingLexicalForm(
 			string lexicalForm,
 			WritingSystem writingSystem)
 		{
 			// search dictionary for entry with new lexical form
-			LexEntrySortHelper sortHelper = new LexEntrySortHelper(this,
-																   writingSystem,
-																   true);
+			IQuery<LexEntry> query = GetLexEntryQuery(writingSystem, true);
+			List<RecordToken> recordTokens = query.GetDisplayStringsForAllMatching();
 
 			// This should probably be optimized by using a specific query
-			List<RecordToken> entriesByLexicalForm = _recordListManager.GetSortedList(sortHelper);
 			List<RecordToken> result = new List<RecordToken>();
-			int index = RecordToken.FindFirstWithDisplayString(entriesByLexicalForm, lexicalForm);
-			while (index >= 0 && index < entriesByLexicalForm.Count &&
-				   entriesByLexicalForm[index].DisplayString == lexicalForm)
+			int index = RecordToken.FindFirstWithDisplayString(recordTokens, lexicalForm);
+			while (index >= 0 && index < recordTokens.Count &&
+				   recordTokens[index].DisplayString == lexicalForm)
 			{
-				result.Add(entriesByLexicalForm[index]);
+				result.Add(recordTokens[index]);
 				++index;
 			}
 			return result;
 		}
 		public RecordTokenComparer GetRecordTokenComparerForLexicalForm(WritingSystem writingSystem)
 		{
-			LexEntrySortHelper sortHelper = new LexEntrySortHelper(this,
-																   writingSystem,
-																   true);
-			return new RecordTokenComparer(sortHelper.KeyComparer);
+			throw new NotImplementedException("GetRecordTokenComparerForLexicalForm");
+			//LexEntrySortHelper sortHelper = new LexEntrySortHelper(this,
+			//                                                       writingSystem,
+			//                                                       true);
+			//return new RecordTokenComparer(sortHelper.KeyComparer);
 		}
 
 		public IList<RecordToken> GetAllEntriesSortedByHeadword(WritingSystem headwordWritingSystem)
 		{
-			HeadwordSortedListHelper sortHelper = new HeadwordSortedListHelper(_recordListManager.DataSource,
-																			   headwordWritingSystem);
-			return _recordListManager.GetSortedList(sortHelper);
+			IQuery<LexEntry> query = new Db4oHeadwordQuery(Db4oDataSource, headwordWritingSystem);
+			return query.GetDisplayStringsForAllMatching();
 		}
 
 		public LexEntry GetLexEntryWithMatchingId(string id)
@@ -203,9 +200,8 @@ namespace WeSay.LexicalModel
 
 		public int GetHomographNumber(LexEntry entry, WritingSystem headwordWritingSystem)
 		{
-			HeadwordSortedListHelper helper = new HeadwordSortedListHelper(_recordListManager.DataSource,
-										  headwordWritingSystem);
-			IList<RecordToken> recordTokensSortedByHeadWord = _recordListManager.GetSortedList(helper);
+			IQuery<LexEntry> query = new Db4oHeadwordQuery(Db4oDataSource, headwordWritingSystem);
+			List<RecordToken> recordTokensSortedByHeadWord = query.GetDisplayStringsForAllMatching();
 			RepositoryId databaseIdOfEntry = GetId(entry);
 			// find our position within the sorted list of entries
 			int ourIndex = -1;
@@ -352,7 +348,8 @@ namespace WeSay.LexicalModel
 
 		public List<RecordToken> GetEntriesWithMatchingGlossSortedByLexicalForm(LanguageForm glossForm, WritingSystem lexicalUnitWritingSystem)
 		{
-			LexEntrySortHelper lexEntrySortHelper = new LexEntrySortHelper(this, lexicalUnitWritingSystem, true);
+			IQuery<LexEntry> query = GetLexEntryQuery(lexicalUnitWritingSystem, true);
+
 			List<RecordToken> matches = new List<RecordToken>();
 			RepositoryId[] repositoryIds = GetAllEntries();
 			foreach (RepositoryId repositoryId in repositoryIds)
@@ -362,7 +359,7 @@ namespace WeSay.LexicalModel
 				{
 					if (sense.Gloss[glossForm.WritingSystemId] == glossForm.Form)
 					{
-						foreach (string displayString in lexEntrySortHelper.GetDisplayStrings(entry))
+						foreach (string displayString in query.GetDisplayStrings(entry))
 						{
 							matches.Add(new RecordToken(displayString, repositoryId));
 						}
@@ -391,11 +388,8 @@ namespace WeSay.LexicalModel
 
 		public List<RecordToken> GetAllEntriesSortedByGloss(WritingSystem writingSystem)
 		{
-			LexEntrySortHelper sortHelper =
-					new LexEntrySortHelper(this,
-										   writingSystem,
-										   false /*IsWritingSystemUsedInLexicalForm*/);
-			return this._recordListManager.GetSortedList(sortHelper);
+			IQuery<LexEntry> query = GetLexEntryQuery(writingSystem, false);
+			return query.GetDisplayStringsForAllMatching();
 		}
 
 		public RepositoryId[] GetEntriesUpdatedSince(DateTime last)
