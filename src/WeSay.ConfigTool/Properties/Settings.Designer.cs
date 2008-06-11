@@ -25,18 +25,6 @@ namespace WeSay.ConfigTool.Properties {
 
 		[global::System.Configuration.UserScopedSettingAttribute()]
 		[global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-		[global::System.Configuration.DefaultSettingValueAttribute("")]
-		public string LastProjectPath {
-			get {
-				return ((string)(this["LastProjectPath"]));
-			}
-			set {
-				this["LastProjectPath"] = value;
-			}
-		}
-
-		[global::System.Configuration.UserScopedSettingAttribute()]
-		[global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
 		[global::System.Configuration.DefaultSettingValueAttribute("True")]
 		public bool NeedUpgrade {
 			get {
@@ -49,37 +37,12 @@ namespace WeSay.ConfigTool.Properties {
 
 		[global::System.Configuration.UserScopedSettingAttribute()]
 		[global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-		[global::System.Configuration.DefaultSettingValueAttribute("")]
-		public string LastLiftImportPath {
+		public global::WeSay.ConfigTool.MruProjects MruConfigFilePaths {
 			get {
-				return ((string)(this["LastLiftImportPath"]));
+				return ((global::WeSay.ConfigTool.MruProjects)(this["MruConfigFilePaths"]));
 			}
 			set {
-				this["LastLiftImportPath"] = value;
-			}
-		}
-
-		[global::System.Configuration.UserScopedSettingAttribute()]
-		[global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-		[global::System.Configuration.DefaultSettingValueAttribute("")]
-		public string LastLiftExportPath {
-			get {
-				return ((string)(this["LastLiftExportPath"]));
-			}
-			set {
-				this["LastLiftExportPath"] = value;
-			}
-		}
-
-		[global::System.Configuration.UserScopedSettingAttribute()]
-		[global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-		[global::System.Configuration.DefaultSettingValueAttribute("")]
-		public string LastConfigFilePath {
-			get {
-				return ((string)(this["LastConfigFilePath"]));
-			}
-			set {
-				this["LastConfigFilePath"] = value;
+				this["MruConfigFilePaths"] = value;
 			}
 		}
 	}

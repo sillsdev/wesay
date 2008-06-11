@@ -30,23 +30,30 @@ namespace WeSay.ConfigTool
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this.panel1 = new System.Windows.Forms.Panel();
+			this.blueBar = new System.Windows.Forms.Panel();
 			this.textBox1 = new System.Windows.Forms.TextBox();
-			this.openRecentProject = new System.Windows.Forms.LinkLabel();
 			this.openDifferentProject = new System.Windows.Forms.LinkLabel();
 			this.createNewProject = new System.Windows.Forms.LinkLabel();
 			this.pictureBox1 = new System.Windows.Forms.PictureBox();
+			this.recentProjectsLabel = new System.Windows.Forms.Label();
+			this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
+			this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+			this.secondCellPanel = new System.Windows.Forms.Panel();
+			this.firstCellPanel = new System.Windows.Forms.Panel();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+			this.tableLayoutPanel1.SuspendLayout();
+			this.secondCellPanel.SuspendLayout();
+			this.firstCellPanel.SuspendLayout();
 			this.SuspendLayout();
 			//
-			// panel1
+			// blueBar
 			//
-			this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(63)))), ((int)(((byte)(111)))), ((int)(((byte)(167)))));
-			this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
-			this.panel1.Location = new System.Drawing.Point(0, 0);
-			this.panel1.Name = "panel1";
-			this.panel1.Size = new System.Drawing.Size(530, 45);
-			this.panel1.TabIndex = 3;
+			this.blueBar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(63)))), ((int)(((byte)(111)))), ((int)(((byte)(167)))));
+			this.blueBar.Dock = System.Windows.Forms.DockStyle.Top;
+			this.blueBar.Location = new System.Drawing.Point(0, 0);
+			this.blueBar.Name = "blueBar";
+			this.blueBar.Size = new System.Drawing.Size(530, 45);
+			this.blueBar.TabIndex = 3;
 			//
 			// textBox1
 			//
@@ -62,27 +69,13 @@ namespace WeSay.ConfigTool
 			this.textBox1.TabStop = false;
 			this.textBox1.Text = "Use this tool to create and configure WeSay Projects.";
 			//
-			// openRecentProject
-			//
-			this.openRecentProject.AutoSize = true;
-			this.openRecentProject.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.openRecentProject.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
-			this.openRecentProject.LinkColor = System.Drawing.Color.Black;
-			this.openRecentProject.Location = new System.Drawing.Point(111, 146);
-			this.openRecentProject.Name = "openRecentProject";
-			this.openRecentProject.Size = new System.Drawing.Size(180, 26);
-			this.openRecentProject.TabIndex = 0;
-			this.openRecentProject.TabStop = true;
-			this.openRecentProject.Text = "Recently Opened";
-			this.openRecentProject.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.openRecentProject_LinkClicked);
-			//
 			// openDifferentProject
 			//
 			this.openDifferentProject.AutoSize = true;
 			this.openDifferentProject.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.openDifferentProject.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
 			this.openDifferentProject.LinkColor = System.Drawing.Color.Black;
-			this.openDifferentProject.Location = new System.Drawing.Point(112, 182);
+			this.openDifferentProject.Location = new System.Drawing.Point(4, 21);
 			this.openDifferentProject.Name = "openDifferentProject";
 			this.openDifferentProject.Size = new System.Drawing.Size(167, 20);
 			this.openDifferentProject.TabIndex = 1;
@@ -96,7 +89,7 @@ namespace WeSay.ConfigTool
 			this.createNewProject.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.createNewProject.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
 			this.createNewProject.LinkColor = System.Drawing.Color.Black;
-			this.createNewProject.Location = new System.Drawing.Point(112, 212);
+			this.createNewProject.Location = new System.Drawing.Point(3, 0);
 			this.createNewProject.Name = "createNewProject";
 			this.createNewProject.Size = new System.Drawing.Size(145, 20);
 			this.createNewProject.TabIndex = 2;
@@ -116,21 +109,81 @@ namespace WeSay.ConfigTool
 			this.pictureBox1.TabIndex = 0;
 			this.pictureBox1.TabStop = false;
 			//
+			// recentProjectsLabel
+			//
+			this.recentProjectsLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.recentProjectsLabel.Location = new System.Drawing.Point(3, 0);
+			this.recentProjectsLabel.Name = "recentProjectsLabel";
+			this.recentProjectsLabel.Size = new System.Drawing.Size(195, 20);
+			this.recentProjectsLabel.TabIndex = 6;
+			this.recentProjectsLabel.Text = "Open a Recent project:";
+			//
+			// flowLayoutPanel2
+			//
+			this.flowLayoutPanel2.AutoSize = true;
+			this.flowLayoutPanel2.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+			this.flowLayoutPanel2.Location = new System.Drawing.Point(3, 21);
+			this.flowLayoutPanel2.Name = "flowLayoutPanel2";
+			this.flowLayoutPanel2.Size = new System.Drawing.Size(206, 170);
+			this.flowLayoutPanel2.TabIndex = 0;
+			this.flowLayoutPanel2.WrapContents = false;
+			//
+			// tableLayoutPanel1
+			//
+			this.tableLayoutPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+						| System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
+			this.tableLayoutPanel1.ColumnCount = 2;
+			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 180F));
+			this.tableLayoutPanel1.Controls.Add(this.secondCellPanel, 1, 0);
+			this.tableLayoutPanel1.Controls.Add(this.firstCellPanel, 0, 0);
+			this.tableLayoutPanel1.Location = new System.Drawing.Point(85, 123);
+			this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+			this.tableLayoutPanel1.RowCount = 1;
+			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+			this.tableLayoutPanel1.Size = new System.Drawing.Size(398, 200);
+			this.tableLayoutPanel1.TabIndex = 9;
+			//
+			// secondCellPanel
+			//
+			this.secondCellPanel.Controls.Add(this.createNewProject);
+			this.secondCellPanel.Controls.Add(this.openDifferentProject);
+			this.secondCellPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.secondCellPanel.Location = new System.Drawing.Point(221, 3);
+			this.secondCellPanel.Name = "secondCellPanel";
+			this.secondCellPanel.Size = new System.Drawing.Size(174, 194);
+			this.secondCellPanel.TabIndex = 7;
+			//
+			// firstCellPanel
+			//
+			this.firstCellPanel.Controls.Add(this.flowLayoutPanel2);
+			this.firstCellPanel.Controls.Add(this.recentProjectsLabel);
+			this.firstCellPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.firstCellPanel.Location = new System.Drawing.Point(3, 3);
+			this.firstCellPanel.Name = "firstCellPanel";
+			this.firstCellPanel.Size = new System.Drawing.Size(212, 194);
+			this.firstCellPanel.TabIndex = 8;
+			//
 			// WelcomeControl
 			//
 			this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
 			this.BackColor = System.Drawing.Color.White;
-			this.Controls.Add(this.createNewProject);
-			this.Controls.Add(this.openDifferentProject);
-			this.Controls.Add(this.openRecentProject);
+			this.Controls.Add(this.tableLayoutPanel1);
 			this.Controls.Add(this.textBox1);
 			this.Controls.Add(this.pictureBox1);
-			this.Controls.Add(this.panel1);
+			this.Controls.Add(this.blueBar);
 			this.Name = "WelcomeControl";
 			this.Size = new System.Drawing.Size(530, 338);
 			this.Load += new System.EventHandler(this.WelcomeControl_Load);
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+			this.tableLayoutPanel1.ResumeLayout(false);
+			this.secondCellPanel.ResumeLayout(false);
+			this.secondCellPanel.PerformLayout();
+			this.firstCellPanel.ResumeLayout(false);
+			this.firstCellPanel.PerformLayout();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -139,11 +192,15 @@ namespace WeSay.ConfigTool
 		#endregion
 
 		private System.Windows.Forms.PictureBox pictureBox1;
-		private System.Windows.Forms.Panel panel1;
+		private System.Windows.Forms.Panel blueBar;
 		private System.Windows.Forms.TextBox textBox1;
-		private System.Windows.Forms.LinkLabel openRecentProject;
 		private System.Windows.Forms.LinkLabel openDifferentProject;
 		private System.Windows.Forms.LinkLabel createNewProject;
+		private System.Windows.Forms.Label recentProjectsLabel;
+		private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel2;
+		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+		private System.Windows.Forms.Panel secondCellPanel;
+		private System.Windows.Forms.Panel firstCellPanel;
 
 	}
 }

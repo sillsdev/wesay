@@ -101,6 +101,7 @@
 	<Compile Include="ActionsControl.Designer.cs">
 	  <DependentUpon>ActionsControl.cs</DependentUpon>
 	</Compile>
+	<Compile Include="MruProjects.cs" />
 	<Compile Include="ConfigurationWindow.cs">
 	  <SubType>Form</SubType>
 	</Compile>
@@ -243,6 +244,7 @@
 	  <DependentUpon>Settings.settings</DependentUpon>
 	  <DesignTimeSharedInput>True</DesignTimeSharedInput>
 	</Compile>
+	<Compile Include="Properties\Settings.cs" />
 	<Compile Include="TaskListControl.cs">
 	  <SubType>UserControl</SubType>
 	</Compile>

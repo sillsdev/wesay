@@ -66,19 +66,36 @@ namespace WeSay.ConfigTool
 
 		private void OnChooseProject(object sender, EventArgs e)
 		{
-			string initialDirectory = null;
-			if (!String.IsNullOrEmpty(Settings.Default.LastConfigFilePath))
+			OpenFileDialog dlg = new OpenFileDialog();
+			dlg.Title = "Open WeSay Project...";
+			dlg.DefaultExt = ".WeSayConfig";
+			dlg.Filter = "WeSay Configuration File (*.WeSayConfig)|*.WeSayConfig";
+			dlg.Multiselect = false;
+			dlg.InitialDirectory = GetInitialDirectory();
+			if (DialogResult.OK != dlg.ShowDialog(this))
 			{
+				return;
+			}
+
+			OnOpenProject(dlg.FileName, null);
+		}
+
+		private static string GetInitialDirectory()
+		{
+			string initialDirectory = null;
+			string latestProject = Settings.Default.MruConfigFilePaths.Latest;
+			if (!String.IsNullOrEmpty(latestProject))
+			{
+				Debug.Assert(File.Exists(latestProject));
 				try
 				{
-					if (File.Exists(Settings.Default.LastConfigFilePath))
-					{
-						initialDirectory = Path.GetDirectoryName(Settings.Default.LastConfigFilePath);
-					}
+					initialDirectory = Path.GetDirectoryName(latestProject);
 				}
 				catch
 				{
 					//swallow
+
+					//esa 2008-06-09 Why do we have this catch?
 				}
 			}
 
@@ -86,19 +103,7 @@ namespace WeSay.ConfigTool
 			{
 				initialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 			}
-
-			OpenFileDialog dlg = new OpenFileDialog();
-			dlg.Title = "Open WeSay Project...";
-			dlg.DefaultExt = ".WeSayConfig";
-			dlg.Filter = "WeSay Configuration File (*.WeSayConfig)|*.WeSayConfig";
-			dlg.Multiselect = false;
-			dlg.InitialDirectory = initialDirectory;
-			if (DialogResult.OK != dlg.ShowDialog(this))
-			{
-				return;
-			}
-
-			OnOpenProject(dlg.FileName, null);
+			return initialDirectory;
 		}
 
 		public void OnOpenProject(object sender, EventArgs e)
@@ -112,11 +117,6 @@ namespace WeSay.ConfigTool
 			}
 
 			OpenProject(configFilePath);
-
-			if (Project != null)
-			{
-				Settings.Default.LastConfigFilePath = Project.PathToConfigFile;
-			}
 		}
 
 		private void OnCreateProject(object sender, EventArgs e)
@@ -212,7 +212,12 @@ namespace WeSay.ConfigTool
 			}
 
 			SetupProjectControls();
-			Settings.Default.LastConfigFilePath = Project.PathToConfigFile;
+
+			if (Project != null)
+			{
+				Settings.Default.MruConfigFilePaths.AddNewPath(Project.PathToConfigFile);
+			}
+
 		}
 
 		private void SetupProjectControls()

@@ -1,20 +1,11 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="WeSay.Setup.Properties" GeneratedClassName="Settings">
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="WeSay.ConfigTool.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-	<Setting Name="LastProjectPath" Type="System.String" Scope="User">
-	  <Value Profile="(Default)" />
-	</Setting>
 	<Setting Name="NeedUpgrade" Type="System.Boolean" Scope="User">
 	  <Value Profile="(Default)">True</Value>
 	</Setting>
-	<Setting Name="LastLiftImportPath" Type="System.String" Scope="User">
-	  <Value Profile="(Default)" />
-	</Setting>
-	<Setting Name="LastLiftExportPath" Type="System.String" Scope="User">
-	  <Value Profile="(Default)" />
-	</Setting>
-	<Setting Name="LastConfigFilePath" Type="System.String" Scope="User">
+	<Setting Name="MruConfigFilePaths" GenerateDefaultValueInCode="false" Type="WeSay.ConfigTool.MruProjects" Scope="User">
 	  <Value Profile="(Default)" />
 	</Setting>
   </Settings>

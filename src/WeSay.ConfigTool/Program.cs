@@ -1,4 +1,5 @@
 using System;
+using System.Configuration;
 using System.Windows.Forms;
 using Palaso.Reporting;
 using WeSay.ConfigTool.Properties;
@@ -24,6 +25,7 @@ namespace WeSay.ConfigTool
 			{
 				Settings.Default.Upgrade();
 				Settings.Default.NeedUpgrade = false;
+				Settings.Default.Save();
 			}
 
 			UsageReporter.AppNameToUseInDialogs = "WeSay Configuration Tool";

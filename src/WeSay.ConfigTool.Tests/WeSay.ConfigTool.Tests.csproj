@@ -72,6 +72,7 @@
   <ItemGroup>
 	<Compile Include="AdminWindowTests.cs" />
 	<Compile Include="CauseProblemWithAutoCompleteTestsWithCreationTests.cs" />
+	<Compile Include="MruProjectsTest.cs" />
 	<Compile Include="FieldDetailControlTests.cs" />
 	<Compile Include="InterfaceLanguageControl.Tests.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />
