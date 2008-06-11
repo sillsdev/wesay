@@ -27,8 +27,8 @@ namespace WeSay.App
 #if !MONO
 		//private  ServiceHost _dictionaryHost;
 #endif
-		private  DictionaryServiceProvider _dictionary;
-		private  LexEntryRepository _lexEntryRepository ;
+		private DictionaryServiceProvider _dictionary;
+		private LexEntryRepository _lexEntryRepository ;
 		private CommandLineArguments _commandLineArguments = new CommandLineArguments();
 		private ServiceAppSingletonHelper _serviceAppSingletonHelper;
 		private TabbedForm _tabbedForm;
@@ -114,7 +114,7 @@ namespace WeSay.App
 				{
 					return;
 				}
-				using (_lexEntryRepository = _project.MakeRecordListManager())
+				using (_lexEntryRepository = new LexEntryRepository(_project.PathToDb4oLexicalModelDB))
 				{
 					using (_dictionary = new DictionaryServiceProvider(_lexEntryRepository, this, _project))
 					{

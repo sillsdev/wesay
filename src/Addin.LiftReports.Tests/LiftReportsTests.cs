@@ -56,7 +56,7 @@ namespace Addin.LiftReports.Tests
 				WeSay.Project.WeSayWordsProject.Project.ReleaseLockOnLift();
 			}
 			File.WriteAllText(WeSay.Project.WeSayWordsProject.Project.PathToLiftFile, contents);
-			_addin.Launch(null, WeSay.Project.WeSayWordsProject.Project.GetProjectInfoForAddin());
+			_addin.Launch(null, WeSay.Project.WeSayWordsProject.Project.GetProjectInfoForAddin(null));
 			Assert.IsTrue(File.Exists(_addin.PathToOutput));
 			string result = File.ReadAllText(_addin.PathToOutput);
 			Assert.Greater(result.Trim().Length, 0);

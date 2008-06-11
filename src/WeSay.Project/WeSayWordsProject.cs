@@ -566,17 +566,19 @@ namespace WeSay.Project
 			}
 		}
 
-		public ProjectInfo GetProjectInfoForAddin()
+		public ProjectInfo GetProjectInfoForAddin(LexEntryRepository lexEntryRepository)
 		{
-			return new ProjectInfo(Name,
-								   ApplicationRootDirectory,
-								   ProjectDirectoryPath,
-								   PathToLiftFile,
-								   PathToExportDirectory,
-								   GetFilesBelongingToProject(ProjectDirectoryPath),
-								   AddinSet.Singleton.LocateFile,
-								   WritingSystems,
-								   this);
+			return
+					new ProjectInfo(Name,
+									ApplicationRootDirectory,
+									ProjectDirectoryPath,
+									PathToLiftFile,
+									PathToExportDirectory,
+									GetFilesBelongingToProject(ProjectDirectoryPath),
+									AddinSet.Singleton.LocateFile,
+									WritingSystems,
+									lexEntryRepository,
+									this);
 		}
 
 
@@ -1235,26 +1237,5 @@ namespace WeSay.Project
 			return false;
 		}
 
-
-		public LexEntryRepository MakeRecordListManager()
-		{
-			LexEntryRepository lexEntryRepository;
-
-			if (PathToWeSaySpecificFilesDirectoryInProject.IndexOf("PRETEND") > -1)
-			{
-			//    IBindingList entries = new PretendRecordList();
-			//    lexEntryRepository = new InMemoryRecordListManager();
-			//    IRecordList<LexEntry> masterRecordList = lexEntryRepository.GetListOfType<LexEntry>();
-			//    foreach (LexEntry entry in entries)
-			//    {
-			//        masterRecordList.Add(entry);
-			//    }
-			}
-			else
-			{
-				lexEntryRepository = new LexEntryRepository(PathToDb4oLexicalModelDB);
-			}
-			return lexEntryRepository;
-		}
 	}
 }

@@ -236,7 +236,7 @@ namespace Addin.Transform.Tests
 		[Test]
 		public void CanGetXsltFromResource()
 		{
-			ProjectInfo info = WeSay.Project.WeSayWordsProject.Project.GetProjectInfoForAddin();
+			ProjectInfo info = WeSay.Project.WeSayWordsProject.Project.GetProjectInfoForAddin(null);
 			string path = info.LocateFile("lift2sfm.xsl");
 			if (!string.IsNullOrEmpty(path))
 			{
@@ -283,7 +283,7 @@ namespace Addin.Transform.Tests
 				WeSay.Project.WeSayWordsProject.Project.ReleaseLockOnLift();
 			}
 			File.WriteAllText(WeSay.Project.WeSayWordsProject.Project.PathToLiftFile, contents);
-			_addin.Launch(null, WeSay.Project.WeSayWordsProject.Project.GetProjectInfoForAddin());
+			_addin.Launch(null, WeSay.Project.WeSayWordsProject.Project.GetProjectInfoForAddin(null));
 			Assert.IsTrue(File.Exists(_addin.PathToOutput));
 			string result =File.ReadAllText(_addin.PathToOutput);
 			Assert.Greater(result.Trim().Length, 0);

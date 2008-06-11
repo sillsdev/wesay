@@ -75,7 +75,7 @@ namespace Addin.Transform
 			//So if we're in that situation, we temporarily try to make one and then release it,
 			//so it isn't locked when the user says "open wesay"
 
-			using (LexEntryRepository lexEntryRepository = ((WeSayWordsProject)projectInfo.Project).MakeRecordListManager())
+			using (LexEntryRepository lexEntryRepository = ((LexEntryRepository)projectInfo.LexEntryRepository))
 			{
 				string pliftPath;
 				using (LameProgressDialog dlg = new LameProgressDialog("Exporting to PLift..."))

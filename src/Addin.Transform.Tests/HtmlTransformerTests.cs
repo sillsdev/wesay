@@ -14,12 +14,14 @@ namespace Addin.Transform.Tests
 		public HtmlTransformer _addin;
 		private LexEntryRepository _lexEntryRepository;
 		private string _filePath;
+		private string _liftFilePath;
 
 		[SetUp]
 		public void Setup()
 		{
 			WeSayWordsProject.InitializeForTests();
 			_filePath = Path.GetTempFileName();
+			_liftFilePath = Path.GetTempFileName();
 			_lexEntryRepository = new LexEntryRepository(_filePath);
 
 			_addin = new HtmlTransformer();
@@ -35,6 +37,7 @@ namespace Addin.Transform.Tests
 			}
 			_lexEntryRepository.Dispose();
 			File.Delete(_filePath);
+			File.Delete(_liftFilePath);
 		}
 
 		[Test]
@@ -44,7 +47,7 @@ namespace Addin.Transform.Tests
 			Assert.IsTrue(File.Exists(_addin.PathToOutput));
 		}
 
-		private string LaunchAddin()
+		private void LaunchAddin()
 		{
 			string contents =
 					string.Format(
@@ -53,21 +56,20 @@ namespace Addin.Transform.Tests
 							Validator.LiftVersion);
 			if (WeSayWordsProject.Project.LiftIsLocked)
 			{
+				// shouldn't have to do this now?
 				WeSayWordsProject.Project.ReleaseLockOnLift();
 			}
-			File.WriteAllText(WeSayWordsProject.Project.PathToLiftFile, contents);
-			_addin.Launch(null, WeSayWordsProject.Project.GetProjectInfoForAddin());
+			File.WriteAllText(_liftFilePath, contents);
+			_addin.Launch(null, WeSayWordsProject.Project.GetProjectInfoForAddin(_lexEntryRepository));
 			Assert.IsTrue(File.Exists(_addin.PathToOutput));
 			string result = File.ReadAllText(_addin.PathToOutput);
 			Assert.Greater(result.Trim().Length, 0);
-
-			return result;
 		}
 
 		[Test]
 		public void CanGetXsltFromResource()
 		{
-			ProjectInfo info = WeSayWordsProject.Project.GetProjectInfoForAddin();
+			ProjectInfo info = WeSayWordsProject.Project.GetProjectInfoForAddin(null);
 			string path = info.LocateFile("plift2html.xsl");
 			if (!string.IsNullOrEmpty(path))
 			{
