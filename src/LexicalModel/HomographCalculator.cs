@@ -22,8 +22,8 @@ namespace WeSay.LexicalModel
 	{
 		private readonly WritingSystem _headwordWritingSystem;
 		private readonly IRecordList<LexEntry> _records;
-		private IList<RecordToken> _entryIdsSortedByHeadword;
-		private Db4oRecordListManager _recordListManager;
+		private readonly IList<RecordToken> _recordTokensSortedByHeadWord;
+		private readonly Db4oRecordListManager _recordListManager;
 
 		public HomographCalculator(Db4oRecordListManager recordListManager, WritingSystem headwordWritingSystem)
 		{
@@ -32,7 +32,7 @@ namespace WeSay.LexicalModel
 			this._recordListManager = recordListManager;
 			HeadwordSortedListHelper helper = new HeadwordSortedListHelper(recordListManager,
 										  headwordWritingSystem);
-			_entryIdsSortedByHeadword = recordListManager.GetSortedList(helper);
+			_recordTokensSortedByHeadWord = recordListManager.GetSortedList(helper);
 
 			_records = recordListManager.GetListOfType<LexEntry>();
 		}
@@ -46,9 +46,9 @@ namespace WeSay.LexicalModel
 			long databaseIdOfEntry = _records.GetId(entry);
 			// find our position within the sorted list of entries
 			int ourIndex = -1;
-			for(int i = 0; i != _entryIdsSortedByHeadword.Count; ++i)
+			for(int i = 0; i != _recordTokensSortedByHeadWord.Count; ++i)
 			{
-				if(_entryIdsSortedByHeadword[i].Id == databaseIdOfEntry)
+				if(_recordTokensSortedByHeadWord[i].Id == databaseIdOfEntry)
 				{
 					ourIndex = i;
 					break;
@@ -70,7 +70,7 @@ namespace WeSay.LexicalModel
 
 			for (int searchIndex = ourIndex - 1; searchIndex > -1; --searchIndex)
 			{
-				long searchId = _entryIdsSortedByHeadword[searchIndex].Id;
+				long searchId = _recordTokensSortedByHeadWord[searchIndex].Id;
 				LexEntry previousGuy = _recordListManager.GetItem<LexEntry>(searchId);
 
 				if (headword != previousGuy.GetHeadWordForm(_headwordWritingSystem.Id))
@@ -84,12 +84,13 @@ namespace WeSay.LexicalModel
 			if (found == 0)
 			{
 				//and we're the last entry
-				if (ourIndex + 1 >= _entryIdsSortedByHeadword.Count)
+				if (ourIndex + 1 >= _recordTokensSortedByHeadWord.Count)
 				{
 					return 0; //no homograph number
 				}
+				long nextId = _recordTokensSortedByHeadWord[ourIndex + 1].Id;
+				LexEntry nextGuy = _recordListManager.GetItem<LexEntry>(nextId);
 
-				LexEntry nextGuy = _entryIdsSortedByHeadword.GetValue(ourIndex +1);
 				// the next guy doesn't match
 				if (headword != nextGuy.GetHeadWordForm(_headwordWritingSystem.Id))
 				{

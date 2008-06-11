@@ -61,12 +61,12 @@ namespace WeSay.LexicalModel.Tests
 
 			HeadwordSortedListHelper helper = new HeadwordSortedListHelper(_recordListManager,
 													 _headwordWritingSystem);
-			CachedSortedDb4oList<string, LexEntry> list = _recordListManager.GetSortedList(helper);
+			List<RecordToken> list = _recordListManager.GetSortedList(helper);
 
 			Assert.AreEqual(3, list.Count);
-			Assert.AreEqual(appleId, list.GetId(0));
-			Assert.AreEqual(bankId, list.GetId(1));
-			Assert.AreEqual(pearId, list.GetId(2));
+			Assert.AreEqual(appleId, list[0].Id);
+			Assert.AreEqual(bankId, list[1].Id);
+			Assert.AreEqual(pearId, list[2].Id);
 		}
 
 	}

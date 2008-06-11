@@ -68,7 +68,7 @@ namespace WeSay.LexicalModel.Tests
 		{
 			LexEntrySortHelper h = new LexEntrySortHelper(((Db4oRecordListManager)_recordListManager).DataSource, _writingSystem, false);
 			int count = 0;
-			foreach (string s in h.GetKeys(new LexEntry()))
+			foreach (string s in h.GetDisplayStrings(new LexEntry()))
 			{
 				Assert.AreEqual("(No Gloss)", s);
 				count++;
@@ -84,7 +84,7 @@ namespace WeSay.LexicalModel.Tests
 			LexSense s = (LexSense) e.Senses.AddNew();
 			s.Gloss.SetAlternative(_writingSystem.Id, "gloss 1; gloss 2");
 			int count = 0;
-			foreach (string k in h.GetKeys(e))
+			foreach (string k in h.GetDisplayStrings(e))
 			{
 				switch(count)
 				{
@@ -108,7 +108,7 @@ namespace WeSay.LexicalModel.Tests
 			LexSense s = (LexSense)e.Senses.AddNew();
 			s.Definition.SetAlternative(_writingSystem.Id, "a definition");
 
-			List<string> keys = new List<string>(h.GetKeys(e));
+			List<string> keys = new List<string>(h.GetDisplayStrings(e));
 			Assert.IsTrue(keys.Contains("a definition"));
 			Assert.AreEqual(1, keys.Count);
 		}
@@ -122,7 +122,7 @@ namespace WeSay.LexicalModel.Tests
 			LexSense s = (LexSense)e.Senses.AddNew();
 			s.Gloss.SetAlternative(_writingSystem.Id, "a gloss");
 
-			List<string> keys = new List<string>(h.GetKeys(e));
+			List<string> keys = new List<string>(h.GetDisplayStrings(e));
 			Assert.IsTrue(keys.Contains("a gloss"));
 			Assert.AreEqual(1, keys.Count);
 		}
@@ -136,7 +136,7 @@ namespace WeSay.LexicalModel.Tests
 			s.Definition.SetAlternative(_writingSystem.Id, "hamburger");
 			s.Gloss.SetAlternative(_writingSystem.Id, "hamburger");
 
-			List<string> keys = new List<string>(h.GetKeys(e));
+			List<string> keys = new List<string>(h.GetDisplayStrings(e));
 			Assert.IsTrue(keys.Contains("hamburger"));
 			Assert.AreEqual(1, keys.Count);
 		}
@@ -150,7 +150,7 @@ namespace WeSay.LexicalModel.Tests
 			s.Definition.SetAlternative(_writingSystem.Id, "hamburger");
 			s.Gloss.SetAlternative(_writingSystem.Id, "fries");
 
-			List<string> keys = new List<string>(h.GetKeys(e));
+			List<string> keys = new List<string>(h.GetDisplayStrings(e));
 			Assert.IsTrue(keys.Contains("hamburger"));
 			Assert.IsTrue(keys.Contains("fries"));
 			Assert.AreEqual(2, keys.Count);
@@ -164,7 +164,7 @@ namespace WeSay.LexicalModel.Tests
 			LexSense s = (LexSense)e.Senses.AddNew();
 			s.Gloss.SetAlternative("analysis", "gloss 1; gloss 2");
 			int count = 0;
-			foreach (string k in h.GetKeys(e))
+			foreach (string k in h.GetDisplayStrings(e))
 			{
 				switch (count)
 				{
@@ -222,10 +222,10 @@ namespace WeSay.LexicalModel.Tests
 			entriesList.Add(e);
 			long entryId = ((Db4oRecordListManager)_recordListManager).DataSource.Data.Ext().GetID(e);
 
-			foreach (KeyValuePair<string, long> pair in h.GetKeyIdPairs())
+			foreach (RecordToken recordToken in h.GetRecordTokensForMatchingRecords())
 			{
-				Assert.AreEqual(expectedKeys[count], pair.Key);
-				Assert.AreEqual(entryId, pair.Value);
+				Assert.AreEqual(expectedKeys[count], recordToken.DisplayString);
+				Assert.AreEqual(entryId, recordToken.Id);
 				count++;
 			}
 			Assert.AreEqual(expectedKeys.Length, count);

@@ -22,8 +22,8 @@ namespace WeSay.LexicalTools
 		private readonly WeSayDataObject _relationParent;
 		private SimpleBinding<LexEntry> _binding;
 		private Control _control;
-		private CachedSortedDb4oList<LexEntry> _pairStringLexEntryIdList;
-		private ReadOnlyCollection<KeyValuePair<string, long>> _keyIdMap;
+		private List<RecordToken> _recordTokenList;
+		private LexEntrySortHelper _lexEntrySortHelper;
 
 		private RelationController(WeSayDataObject relationParent,
 								   LexRelationType relationType,
@@ -138,25 +138,23 @@ namespace WeSay.LexicalTools
 				//TODO: refactor this (sortHelper, pairStringLexEntryIdList, _keyIdMap, GetKeyIdPairFromLexEntry)
 				//      to use ApproximateFinder. Eventually refactor the automcompletetextbox to just take one
 
-				LexEntrySortHelper sortHelper =
-						new LexEntrySortHelper(
-								recordListManager.DataSource,
-								this._field.WritingSystems[0],
-								true);
-				CachedSortedDb4oList<string, LexEntry> pairStringLexEntryIdList = recordListManager.GetSortedList(sortHelper);
-				this._pairStringLexEntryIdList = pairStringLexEntryIdList;
-				this._keyIdMap = this._pairStringLexEntryIdList.KeyIdMap;
+				this._lexEntrySortHelper = new LexEntrySortHelper(
+						recordListManager.DataSource,
+						this._field.WritingSystems[0],
+						true);
+				List<RecordToken> recordTokenList = recordListManager.GetSortedList(this._lexEntrySortHelper);
+				this._recordTokenList = recordTokenList;
 
 				AutoCompleteWithCreationBox<object, LexEntry> picker = CreatePicker<object>(relation);
 				picker.GetKeyValueFromValue = GetKeyIdPairFromLexEntry;
 				picker.GetValueFromKeyValue = GetLexEntryFromKeyIdPair;
 
 				picker.Box.ItemDisplayStringAdaptor =
-						new PairStringLexEntryIdDisplayProvider(pairStringLexEntryIdList);
-				picker.Box.FormToObectFinder = FindPairStringLexEntryIdFromForm;
+						new PairStringLexEntryIdDisplayProvider(recordListManager);
+				picker.Box.FormToObectFinder = FindRecordTokenFromForm;
 				picker.Box.ItemFilterer = FindClosestAndNextClosestAndPrefixedPairStringLexEntryForms;
 
-				picker.Box.Items = this._keyIdMap;
+				picker.Box.Items = recordTokenList;
 				picker.Box.SelectedItem = GetKeyIdPairFromLexEntry((LexEntry)relation.Target);
 
 				picker.CreateNewClicked += OnCreateNewPairStringLexEntryId;
@@ -187,17 +185,17 @@ namespace WeSay.LexicalTools
 			{
 				return null;
 			}
-			int i = this._pairStringLexEntryIdList.IndexOf(e);
-			if(i<0)
+			List<RecordToken> lexEntryRecordTokens = this._lexEntrySortHelper.GetRecordTokens(e);
+			if (lexEntryRecordTokens.Count > 0)
 			{
-				return null;
+				return lexEntryRecordTokens[0];
 			}
-			return this._keyIdMap[i];
+			return null;
 		}
 
 		private LexEntry GetLexEntryFromKeyIdPair(object e) {
-			KeyValuePair<string, long> kv =(KeyValuePair<string,long>) e;
-			return this._pairStringLexEntryIdList.GetValueFromId(kv.Value);
+			RecordToken recordToken =(RecordToken)e;
+			return _recordListManager.GetItem<LexEntry>(recordToken.Id);
 		}
 
 		private AutoCompleteWithCreationBox<T, LexEntry> CreatePicker<T>(LexRelation relation) where T:class
@@ -256,14 +254,15 @@ namespace WeSay.LexicalTools
 			_binding.CurrentItemChanged += handler;
 		}
 
-		private object FindPairStringLexEntryIdFromForm(string form)
+		private object FindRecordTokenFromForm(string form)
 		{
-			int index = _pairStringLexEntryIdList.
-							BinarySearch(form);
-
+			RecordTokenComparer recordTokenComparer = new RecordTokenComparer(_lexEntrySortHelper.KeyComparer);
+			recordTokenComparer.IgnoreId = true;
+			RecordToken recordToken = new RecordToken(form, 0);
+			int index = this._recordTokenList.BinarySearch(recordToken, recordTokenComparer);
 			if (index >= 0)
 			{
-				return this._keyIdMap[index];
+				return _recordTokenList[index];
 			}
 			return null;
 		}

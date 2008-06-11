@@ -23,7 +23,7 @@ namespace WeSay.LexicalTools
 		private List<string> _domainKeys;
 		private List<string> _domainNames;
 		private List<string> _words;
-		private CachedSortedDb4oList<LexEntry> _entries;
+		private List<RecordToken> _recordTokens;
 
 		private WritingSystem _semanticDomainWritingSystem;
 		private readonly Field _semanticDomainField;
@@ -32,6 +32,7 @@ namespace WeSay.LexicalTools
 		private int _currentDomainIndex;
 		private int _currentQuestionIndex;
 		private bool _alreadyReportedWSLookupFailure= false;
+		private SemanticDomainSortHelper _sortHelper;
 
 		public GatherBySemanticDomainTask(IRecordListManager recordListManager,
 										  string label,
@@ -292,7 +293,9 @@ namespace WeSay.LexicalTools
 					GetWordsIndexes(CurrentDomainIndex, out beginIndex, out pastEndIndex);
 					for (int i = beginIndex; i < pastEndIndex; i++)
 					{
-						_words.Add(_entries.GetValue(i).LexicalForm.GetBestAlternative(WordWritingSystemId, "*"));
+						long id = this._recordTokens[i].Id;
+						LexEntry entry = RecordListManager.GetItem<LexEntry>(id);
+						_words.Add(entry.LexicalForm.GetBestAlternative(WordWritingSystemId, "*"));
 					}
 				}
 				_words.Sort(WordWritingSystem);
@@ -409,7 +412,8 @@ namespace WeSay.LexicalTools
 					LexEntry entry = new LexEntry();
 					entry.LexicalForm.SetAlternative(WordWritingSystemId, lexicalForm);
 					AddCurrentSemanticDomainToEntry(entry);
-					_entries.Add(entry);
+					RecordListManager.Add(entry);
+					LoadRecordTokens();
 				}
 				else
 				{
@@ -442,7 +446,7 @@ namespace WeSay.LexicalTools
 					DisassociateCurrentSemanticDomainFromEntry(entry); // might remove senses
 					if(entry.IsEmptyExceptForLexemeFormForPurposesOfDeletion)
 					{
-						_entries.Remove(entry); // if there are no senses left, get rid of it
+						RecordListManager.Delete<LexEntry>(entry); // if there are no senses left, get rid of it
 					}
 				}
 			}
@@ -531,15 +535,17 @@ namespace WeSay.LexicalTools
 		{
 			string domainKey = DomainKeys[domainIndex];
 
-			beginIndex = _entries.BinarySearch(domainKey);
+			RecordTokenComparer recordTokenComparer = new RecordTokenComparer(_sortHelper.KeyComparer);
+			RecordToken recordToken = new RecordToken(domainKey, 0);
+			beginIndex = this._recordTokens.BinarySearch(recordToken, recordTokenComparer);
 			if (beginIndex < 0)
 			{
 				pastEndIndex = beginIndex;
 				return;
 			}
 			pastEndIndex = beginIndex + 1;
-			while (pastEndIndex < _entries.Count &&
-				   _entries.GetKey(pastEndIndex) == domainKey)
+			while (pastEndIndex < this._recordTokens.Count &&
+				   this._recordTokens[pastEndIndex].DisplayString == domainKey)
 			{
 				++pastEndIndex;
 			}
@@ -649,9 +655,8 @@ namespace WeSay.LexicalTools
 				_semanticDomainOptionsList =
 						WeSayWordsProject.Project.GetOptionsList(_semanticDomainField, false);
 			}
-			_entries =
-					RecordListManager.GetSortedList(
-							new SemanticDomainSortHelper(RecordListManager.DataSource, _semanticDomainField.FieldName));
+			_sortHelper = new SemanticDomainSortHelper(this.RecordListManager.DataSource, this._semanticDomainField.FieldName);
+			LoadRecordTokens();
 
 			UpdateCurrentWords();
 			if (CurrentDomainIndex == -1)
@@ -659,6 +664,12 @@ namespace WeSay.LexicalTools
 				GotoLastDomainWithAnswers();
 			}
 			_gatherControl = new GatherBySemanticDomainsControl(this);
+		}
+
+		private void LoadRecordTokens()
+		{
+			this._recordTokens =
+					this.RecordListManager.GetSortedList(_sortHelper);
 		}
 
 		public override void Deactivate()
@@ -732,12 +743,12 @@ namespace WeSay.LexicalTools
 			get { return StringComparer.InvariantCulture; }
 		}
 
-		public List<KeyValuePair<string, long>> GetKeyIdPairs()
+		public List<RecordToken> GetRecordTokensForMatchingRecords()
 		{
-			return KeyToEntryIdInitializer.GetKeyToEntryIdPairs(_db4oData, GetKeys);
+			return KeyToEntryIdInitializer.GetKeyToEntryIdPairs(_db4oData, GetDisplayStrings);
 		}
 
-		public IEnumerable<string> GetKeys(LexEntry item)
+		public IEnumerable<string> GetDisplayStrings(LexEntry item)
 		{
 			List<string> keys = new List<string>();
 			foreach (LexSense sense in item.Senses)

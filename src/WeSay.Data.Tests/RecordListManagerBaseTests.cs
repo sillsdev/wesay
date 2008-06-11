@@ -350,7 +350,7 @@ namespace WeSay.Data.Tests
 		[ExpectedException(typeof (ArgumentNullException))]
 		public void GetListOfTypeFilteredFurther_NullSortHelper_Throws()
 		{
-			RecordListManager.GetListOfTypeFilteredFurther<int, SimpleIntTestClass>(Filter10to19, null);
+			RecordListManager.GetListOfTypeFilteredFurther(Filter10to19, null);
 		}
 	}
 }

@@ -44,17 +44,24 @@ namespace WeSay.LexicalModel
 		public static List<LexEntry> GetEntriesHavingLexicalForm(string lexicalForm,  WritingSystem writingSystem)
 		{
 			VerifyInitialized();
-			List<LexEntry> result = new List<LexEntry>();
 			// search dictionary for entry with new lexical form
 			LexEntrySortHelper sortHelper = new LexEntrySortHelper(RecordListManager.DataSource,
 																   writingSystem,
 																   true);
-			IList<RecordToken> entriesByLexicalForm = RecordListManager.GetSortedList(sortHelper);
-			int index = entriesByLexicalForm.BinarySearch(lexicalForm);
+
+			// This should probably be optimized by using a specific query
+			List<RecordToken> entriesByLexicalForm = RecordListManager.GetSortedList(sortHelper);
+			IComparer<string> stringComparer = sortHelper.KeyComparer;
+			List<LexEntry> result = new List<LexEntry>();
+			RecordTokenComparer comparer = new RecordTokenComparer(stringComparer);
+			comparer.IgnoreId = true;
+			RecordToken searchToken = new RecordToken(lexicalForm, 0);
+			int index = entriesByLexicalForm.BinarySearch(searchToken,comparer);
 			while (index >= 0 && index < entriesByLexicalForm.Count &&
-				   entriesByLexicalForm.GetKey(index) == lexicalForm)
+				   entriesByLexicalForm[index].DisplayString == lexicalForm)
 			{
-				result.Add(entriesByLexicalForm.GetValue(index));
+				long id = entriesByLexicalForm[index].Id;
+				result.Add(RecordListManager.GetItem<LexEntry>(id));
 				++index;
 			}
 			return result;
@@ -65,11 +72,11 @@ namespace WeSay.LexicalModel
 			VerifyInitialized();
 			HeadwordSortedListHelper sortHelper = new HeadwordSortedListHelper(RecordListManager,
 																			   headwordWritingSystem);
-			CachedSortedDb4oList<string, LexEntry> entryPairs = RecordListManager.GetSortedList(sortHelper);
+			IList<RecordToken> entryPairs = RecordListManager.GetSortedList(sortHelper);
 			List<LexEntry> result = new List<LexEntry>();
-			for (int index = 0; index < entryPairs.Count; index++)
+			foreach (RecordToken recordToken in entryPairs)
 			{
-				result.Add(entryPairs.GetValue(index));
+				result.Add(RecordListManager.GetItem<LexEntry>(recordToken.Id));
 			}
 			return result;
 		}

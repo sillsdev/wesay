@@ -49,31 +49,7 @@ namespace WeSay.Data
 			get { return _cachePath; }
 		}
 
-		public class RecordTokenComparer : IComparer<RecordToken>
-		{
-			private readonly IComparer<string> _keySorter;
-
-			public RecordTokenComparer(IComparer<string> keySorter)
-			{
-				_keySorter = keySorter;
-			}
-
-			#region IComparer<RecordToken> Members
-
-			public int Compare(RecordToken x, RecordToken y)
-			{
-				int result = _keySorter.Compare(x.DisplayString, y.DisplayString);
-				if (result == 0)
-				{
-					result = Comparer<long>.Default.Compare(x.Id, y.Id);
-				}
-				return result;
-			}
-
-			#endregion
-		} ;
-
-		public IList<RecordToken> GetSortedList<T>(ISortHelper<T> sortHelper) where T : class, new()
+		public List<RecordToken> GetSortedList<T>(ISortHelper<T> sortHelper) where T : class, new()
 		{
 			if (sortHelper == null)
 			{
@@ -82,13 +58,13 @@ namespace WeSay.Data
 			string recordListKey = RecordListKey<T>(null, sortHelper.Name);
 			if (!RecordLists.ContainsKey(recordListKey))
 			{
-				List<RecordToken> recordTokens = sortHelper.GetKeyIdPairs();
+				List<RecordToken> recordTokens = sortHelper.GetRecordTokensForMatchingRecords();
 
 				recordTokens.Sort(new RecordTokenComparer(sortHelper.KeyComparer));
 
 				RecordLists.Add(recordListKey, recordTokens);
 			}
-			return (IList<RecordToken>)RecordLists[recordListKey];
+			return (List<RecordToken>)RecordLists[recordListKey];
 		}
 
 		protected override IRecordList<T> CreateMasterRecordList<T>()
@@ -610,6 +586,37 @@ namespace WeSay.Data
 		public override T1 GetItem<T1>(long id)
 		{
 			return (T1) _dataSource.Data.Ext().GetByID(id);
+		}
+
+		public void Add<T>(T item) where T : class, new()
+		{
+			IRecordList<T> type = GetListOfType<T>();
+			type.Add(item);
+		}
+
+		public RecordToken GetRecordToken<T>(T item, ISortHelper<T> sortHelper) where T : class, new()
+		{
+			long id = GetId(item);
+			foreach (string displayString in sortHelper.GetDisplayStrings(item))
+			{
+				return new RecordToken(displayString, id);
+			}
+			return new RecordToken(string.Empty, id);
+		}
+
+		private long GetId<T>(T item) {
+			return this._dataSource.Data.Ext().GetID(item);
+		}
+
+		public void Delete<T>(T item) where T : class, new()
+		{
+			Delete<T>(GetId(item));
+		}
+
+		public void Delete<T>(long id) where T : class, new()
+		{
+			IRecordList<T> type = GetListOfType<T>();
+			type.Remove(GetItem<T>(id));
 		}
 	}
 }

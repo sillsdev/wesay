@@ -25,7 +25,7 @@ namespace WeSay.Data.Tests
 				}
 			}
 
-			public List<RecordToken> GetKeyIdPairs()
+			public List<RecordToken> GetRecordTokensForMatchingRecords()
 			{
 				List<RecordToken> keyIdPairs = new List<RecordToken>();
 
@@ -55,7 +55,7 @@ namespace WeSay.Data.Tests
 				return keyIdPairs;
 			}
 
-			public IEnumerable<string> GetKeys(SimpleIntTestClass item)
+			public IEnumerable<string> GetDisplayStrings(SimpleIntTestClass item)
 			{
 				List<string> result = new List<string>();
 				result.Add(item.I.ToString());

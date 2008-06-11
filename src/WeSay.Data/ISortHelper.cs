@@ -10,9 +10,9 @@ namespace WeSay.Data
 	{
 		IComparer<string> KeyComparer{get;}
 
-		List<RecordToken> GetKeyIdPairs();
+		List<RecordToken> GetRecordTokensForMatchingRecords();
 
-		IEnumerable<string> GetKeys(Value item);
+		IEnumerable<string> GetDisplayStrings(Value item);
 
 		/// <summary>
 		/// this is a name suitable for display to a human (or saving as a file)

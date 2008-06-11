@@ -96,7 +96,7 @@ namespace WeSay.Data
 			return ((string)dictionaryEntry.Key).StartsWith("!");
 		}
 
-		public void Register<Key, T>(IFilter<T> filter, ISortHelper<T> sortHelper) where T : class, new()
+		public void Register<T>(IFilter<T> filter, ISortHelper<T> sortHelper) where T : class, new()
 		{
 			if (filter == null)
 			{
@@ -131,7 +131,7 @@ namespace WeSay.Data
 			DataDeleted.Invoke(this, new DeletedItemEventArgs(e.Item));
 		}
 
-		public IRecordList<T> GetListOfTypeFilteredFurther<Key, T>(IFilter<T> filter, ISortHelper<T> sortHelper) where T : class, new()
+		public IRecordList<T> GetListOfTypeFilteredFurther<T>(IFilter<T> filter, ISortHelper<T> sortHelper) where T : class, new()
 		{
 			if(filter == null)
 			{

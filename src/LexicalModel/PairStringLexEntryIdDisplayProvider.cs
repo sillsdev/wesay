@@ -17,14 +17,14 @@ namespace WeSay.LexicalModel
 
 		public string GetDisplayLabel(object item)
 		{
-			KeyValuePair<string, long> kv = (KeyValuePair<string, long>)item;
-			return kv.Key;
+			RecordToken kv = (RecordToken)item;
+			return kv.DisplayString;
 		}
 
 		public string GetToolTip(object item)
 		{
-			KeyValuePair<string, long> kv = (KeyValuePair<string, long>)item;
-			LexEntry entry = this._recordListManager.GetItem<LexEntry>(kv.Value);
+			RecordToken kv = (RecordToken)item;
+			LexEntry entry = this._recordListManager.GetItem<LexEntry>(kv.Id);
 			return entry.GetToolTipText();
 		}
 

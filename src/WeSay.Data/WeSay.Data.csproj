@@ -76,6 +76,7 @@
 	<Compile Include="IRecordListManager.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />
 	<Compile Include="RecordToken.cs" />
+	<Compile Include="RecordTokenComparer.cs" />
 	<Compile Include="RecordTokensBindingListAdapter.cs" />
 	<Compile Include="SortedDb4oRecordList.cs" />
   </ItemGroup>
