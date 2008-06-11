@@ -57,13 +57,10 @@ namespace Addin.Transform.Tests
 				{
 					Lexicon.Init(recordListManager);
 
-					IHomographCalculator homographCalculator =
-						new HomographCalculator(recordListManager, p.DefaultViewTemplate.HeadwordWritingSytem);
-
 					PLiftMaker maker = new PLiftMaker();
 					IEnumerable<LexEntry> entries = Lexicon.GetAllEntriesSortedByHeadword(p.HeadWordWritingSystem);
 					Db4oLexEntryFinder finder = new Db4oLexEntryFinder(recordListManager.DataSource);
-					string path = maker.MakePLiftTempFile(entries, p.DefaultViewTemplate, homographCalculator, finder);
+					string path = maker.MakePLiftTempFile(entries, p.DefaultViewTemplate, finder);
 					Console.WriteLine(path);
 				}
 			}

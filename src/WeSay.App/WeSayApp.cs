@@ -327,7 +327,6 @@ namespace WeSay.App
 				_tabbedForm.Activate();
 				_tabbedForm.BringToFront();//needed if we were previously in server mode
 
-				RtfRenderer.HomographCalculator = new HomographCalculator((Db4oRecordListManager) _recordListManager, _project.DefaultViewTemplate.HeadwordWritingSytem);
 				RtfRenderer.HeadWordWritingSystemId = _project.DefaultViewTemplate.HeadwordWritingSytem.Id;
 
 				//run the ui

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Xml;
 using NUnit.Framework;
@@ -21,12 +22,19 @@ namespace WeSay.Project.Tests
 		private ViewTemplate _viewTemplate;
 		private List<string> _writingSystemIds;
 		private string _headwordWritingSystemId;
+		private Db4oRecordListManager _recordListManager;
+		string _FilePath;
 
 		[SetUp]
 		public void Setup()
 		{
 			BasilProject.InitializeForTests();
 			Db4oLexModelHelper.InitializeForNonDbTests();
+
+			_FilePath = System.IO.Path.GetTempFileName();
+			_recordListManager = new Db4oRecordListManager(new WeSayWordsDb4oModelConfiguration(), _FilePath);
+			Lexicon.Init((Db4oRecordListManager)_recordListManager);
+
 			_outputPath = Path.Combine(Path.GetTempPath(), Path.GetTempFileName());
 
 			_writingSystemIds = new List<string>(new string[] { "red","green","blue" });
@@ -48,6 +56,8 @@ namespace WeSay.Project.Tests
 		[TearDown]
 		public void TearDown()
 		{
+			this._recordListManager.Dispose();
+			System.IO.File.Delete(_FilePath);
 			if (File.Exists(_outputPath))
 			{
 				File.Delete(_outputPath);
@@ -55,25 +65,24 @@ namespace WeSay.Project.Tests
 		}
 
 		[Test]
-		public void HomographicEntriesHaveHomographNumber()
+		public void NonHomographicEntryHasNoHomographNumber()
 		{
-			DummyHomographCalculator.NumberToGiveAsHomograph = 46;
-
-			using (InMemoryRecordList<LexEntry> entries = new InMemoryRecordList<LexEntry>())
-			{
-				LexEntry e1 = MakeTestLexEntry(entries, "two");
-				MakeTestLexEntry(entries, "flower");
-				LexEntry e2 =MakeTestLexEntry(entries, "one");
-				Make(entries, _viewTemplate, _outputPath);
-				AssertXPathNotNull(_outputPath, "lift/entry[@id='"+e1.Id+"' and @order='46']");
-				AssertXPathNotNull(_outputPath, "lift/entry[@id='"+e2.Id+"' and @order='46']");
-			}
+			IRecordList<LexEntry> entries = _recordListManager.GetListOfType<LexEntry>();
+			LexEntry e1 = MakeTestLexEntryInHeadwordWritingSystem(entries, "two");
+			LexEntry e2 = MakeTestLexEntryInHeadwordWritingSystem(entries, "flower");
+			LexEntry e3 = MakeTestLexEntryInHeadwordWritingSystem(entries, "one");
+			Make(entries, _viewTemplate, _outputPath);
+			AssertXPathNotNull(_outputPath, "lift/entry[@id='" + e1.Id + "' and not(@order)]");
+			AssertXPathNotNull(_outputPath, "lift/entry[@id='" + e2.Id + "' and not(@order)]");
+			AssertXPathNotNull(_outputPath, "lift/entry[@id='" + e3.Id + "' and not(@order)]");
 		}
 
-		private void Make(InMemoryRecordList<LexEntry> entries, ViewTemplate template, string path)
+		private void Make(IRecordList<LexEntry> entries, ViewTemplate template, string path)
 		{
 			LiftExporter exporter = new LiftExporter(path);
-			exporter.SetUpForPresentationLiftExport(template, new DummyHomographCalculator(), new InMemoryLexEntryFinder(entries));
+			Db4oLexEntryFinder finder = new Db4oLexEntryFinder(_recordListManager.DataSource);
+
+			exporter.SetUpForPresentationLiftExport(template, finder);
 			foreach (LexEntry entry in entries)
 			{
 				exporter.Add(entry);
@@ -82,74 +91,67 @@ namespace WeSay.Project.Tests
 		}
 
 		[Test]
-		public void NonHomographicEntryHasNoHomographNumber()
+		public void HomographicEntriesHaveHomographNumber()
 		{
-			DummyHomographCalculator.NumberToGiveAsHomograph = 0;
+			IRecordList<LexEntry> entries = _recordListManager.GetListOfType<LexEntry>();
+			LexEntry e1 = MakeTestLexEntryInHeadwordWritingSystem(entries, "sunset");
+			LexEntry e2 = MakeTestLexEntryInHeadwordWritingSystem(entries, "flower");
+			LexEntry e3 = MakeTestLexEntryInHeadwordWritingSystem(entries, "sunset");
 
-			using (InMemoryRecordList<LexEntry> entries = new InMemoryRecordList<LexEntry>())
-			{
-				MakeTestLexEntry(entries, "sunset");
-				LexEntry e1 = MakeTestLexEntry(entries, "flower");
-				MakeTestLexEntry(entries, "sunset");
-
-				Make(entries, _viewTemplate, _outputPath);
-				AssertXPathNotNull(_outputPath, "lift/entry[@id='" + e1.Id + "' and not(@order)]");
-			}
+			Make(entries, _viewTemplate, _outputPath);
+			AssertXPathNotNull(_outputPath, "lift/entry[@id='" + e1.Id + "' and @order='1']");
+			AssertXPathNotNull(_outputPath, "lift/entry[@id='" + e2.Id + "' and not(@order)]");
+			AssertXPathNotNull(_outputPath, "lift/entry[@id='" + e3.Id + "' and @order='2']");
 		}
 
 		[Test]
 		public void HiddenFields_AreNotOutput()
 		{
-			using (InMemoryRecordList<LexEntry> entries = new InMemoryRecordList<LexEntry>())
-			{
-				LexEntry e1 = MakeTestLexEntry(entries, "sunset");
-				e1.GetOrCreateProperty<MultiText>("color").SetAlternative(_writingSystemIds[0], "red");
+			IRecordList<LexEntry> entries = _recordListManager.GetListOfType<LexEntry>();
+			LexEntry e1 = (LexEntry)entries.AddNew();
+			e1.LexicalForm["test"] = "sunset";
+			e1.GetOrCreateProperty<MultiText>("color").SetAlternative(_writingSystemIds[0], "red");
 
-				Field color = new Field("color", "LexEntry", _writingSystemIds, Field.MultiplicityType.ZeroOr1, "MultiText");
-				color.DisplayName = "color";
-				_viewTemplate.Add(color);
+			Field color = new Field("color", "LexEntry", _writingSystemIds, Field.MultiplicityType.ZeroOr1, "MultiText");
+			color.DisplayName = "color";
+			_viewTemplate.Add(color);
 
-				Make(entries, _viewTemplate, _outputPath);
-				AssertXPathNotNull(_outputPath, "lift/entry[@id='" + e1.Id + "']/field[@type='"+"color"+"']");
+			Make(entries, _viewTemplate, _outputPath);
+			AssertXPathNotNull(_outputPath, "lift/entry[@id='" + e1.Id + "']/field[@type='"+"color"+"']");
 
-				//now make it invisible and it should disappear
-				_viewTemplate.GetField("color").Enabled = false;
+			//now make it invisible and it should disappear
+			_viewTemplate.GetField("color").Enabled = false;
 
-				Make(entries, _viewTemplate, _outputPath);
-				AssertNoMatchForXPath(_outputPath, "lift/entry[@id='" + e1.Id + "']/field");
+			Make(entries, _viewTemplate, _outputPath);
+			AssertNoMatchForXPath(_outputPath, "lift/entry[@id='" + e1.Id + "']/field");
 
-			}
 		}
 
 		[Test]
 		public void LexemeForm_DisabledWritingSystems_AreNotOutput()
 		{
-			using (InMemoryRecordList<LexEntry> entries = new InMemoryRecordList<LexEntry>())
-			{
-				LexEntry entry = entries.AddNew();
-				entry.LexicalForm.SetAlternative(_writingSystemIds[1], "one");
-				Make(entries, _viewTemplate, _outputPath);
-				AssertXPathNotNull(_outputPath, "lift/entry/lexical-unit/form[text='one']");
-				AssertNoMatchForXPath(_outputPath, "lift/entry/lexical-unit/form[text='red']");
-			}
+			IRecordList<LexEntry> entries = _recordListManager.GetListOfType<LexEntry>();
+			LexEntry entry = (LexEntry) entries.AddNew();
+			entry.LexicalForm.SetAlternative(_writingSystemIds[1], "one");
+			Make(entries, _viewTemplate, _outputPath);
+			AssertXPathNotNull(_outputPath, "lift/entry/lexical-unit/form[text='one']");
+			AssertNoMatchForXPath(_outputPath, "lift/entry/lexical-unit/form[text='red']");
 		}
 
 		[Test]
 		public void WritingSystems_AreOutputInPrescribedOrder()
 		{
-			using (InMemoryRecordList<LexEntry> entries = new InMemoryRecordList<LexEntry>())
-			{
-				LexEntry entry = entries.AddNew();
-				entry.LexicalForm.SetAlternative(_writingSystemIds[1], "one");
-				entry.LexicalForm.SetAlternative(_writingSystemIds[2], "two");
-				entry.LexicalForm.SetAlternative(_writingSystemIds[0], "zero");
-				Make(entries, _viewTemplate, _outputPath);
-				XmlNodeList forms = GetNodes("lift/entry/lexical-unit/form", _outputPath);
+			IRecordList<LexEntry> entries = _recordListManager.GetListOfType<LexEntry>();
+			LexEntry entry = (LexEntry) entries.AddNew();
+			entry.LexicalForm.SetAlternative(_writingSystemIds[1], "one");
+			entry.LexicalForm.SetAlternative(_writingSystemIds[2], "two");
+			entry.LexicalForm.SetAlternative(_writingSystemIds[0], "zero");
+			Make(entries, _viewTemplate, _outputPath);
+			XmlNodeList forms = GetNodes("lift/entry/lexical-unit/form", _outputPath);
 
-				Assert.AreEqual(_writingSystemIds[0], forms[0].Attributes["lang"].InnerText);
-				Assert.AreEqual(_writingSystemIds[1], forms[1].Attributes["lang"].InnerText);
-				Assert.AreEqual(_writingSystemIds[2], forms[2].Attributes["lang"].InnerText);
-			}
+			Assert.AreEqual(_writingSystemIds[0], forms[0].Attributes["lang"].InnerText);
+			Assert.AreEqual(_writingSystemIds[1], forms[1].Attributes["lang"].InnerText);
+			Assert.AreEqual(_writingSystemIds[2], forms[2].Attributes["lang"].InnerText);
 		}
 
 		[Test]
@@ -157,24 +159,22 @@ namespace WeSay.Project.Tests
 		{
 			_viewTemplate.GetField(LexEntry.WellKnownProperties.Citation).Enabled = true;
 
-			using (InMemoryRecordList<LexEntry> entries = new InMemoryRecordList<LexEntry>())
-			{
-				MakeEntry(entries);
-				Make(entries, _viewTemplate, _outputPath);
-				Assert.AreEqual(2, _viewTemplate.GetField(LexEntry.WellKnownProperties.Citation).WritingSystemIds.Count);
-				AssertXPathNotNullWithArgs(_outputPath,
-								   "lift/entry/field[@type='headword']/form[@lang='{0}']/text[text() = '{1}']",
-								   _viewTemplate.GetField(LexEntry.WellKnownProperties.Citation).WritingSystemIds[0],
-								   "blueCitation");
-				//should fall through to lexeme form on red
-				AssertXPathNotNullWithArgs(_outputPath,
-									"lift/entry/field[@type='headword']/form[@lang='{0}']/text[text() = '{1}']",
-									_viewTemplate.GetField(LexEntry.WellKnownProperties.Citation).WritingSystemIds[1],
-									"redLexemeForm");
+			IRecordList<LexEntry> entries = _recordListManager.GetListOfType<LexEntry>();
+			MakeEntry(entries);
+			Make(entries, _viewTemplate, _outputPath);
+			Assert.AreEqual(2, _viewTemplate.GetField(LexEntry.WellKnownProperties.Citation).WritingSystemIds.Count);
+			AssertXPathNotNullWithArgs(_outputPath,
+							   "lift/entry/field[@type='headword']/form[@lang='{0}']/text[text() = '{1}']",
+							   _viewTemplate.GetField(LexEntry.WellKnownProperties.Citation).WritingSystemIds[0],
+							   "blueCitation");
+			//should fall through to lexeme form on red
+			AssertXPathNotNullWithArgs(_outputPath,
+								"lift/entry/field[@type='headword']/form[@lang='{0}']/text[text() = '{1}']",
+								_viewTemplate.GetField(LexEntry.WellKnownProperties.Citation).WritingSystemIds[1],
+								"redLexemeForm");
 
-				AssertNoMatchForXPath(_outputPath,
-									"lift/entry/field[@type='headword']/form[@lang='green']");
-			}
+			AssertNoMatchForXPath(_outputPath,
+								"lift/entry/field[@type='headword']/form[@lang='green']");
 		}
 
 		[Test]
@@ -182,30 +182,28 @@ namespace WeSay.Project.Tests
 		{
 			_viewTemplate.GetField(LexEntry.WellKnownProperties.Citation).Enabled = false;
 
-			using (InMemoryRecordList<LexEntry> entries = new InMemoryRecordList<LexEntry>())
-			{
-				MakeEntry(entries);
-				Make(entries, _viewTemplate, _outputPath);
-				AssertXPathNotNullWithArgs(_outputPath,
-								   "lift/entry/field[@type='headword']/form[@lang='{0}']/text[text() = '{1}']",
-								   _headwordWritingSystemId, "redLexemeForm");
+			IRecordList<LexEntry> entries = _recordListManager.GetListOfType<LexEntry>();
+			MakeEntry(entries);
+			Make(entries, _viewTemplate, _outputPath);
+			AssertXPathNotNullWithArgs(_outputPath,
+							   "lift/entry/field[@type='headword']/form[@lang='{0}']/text[text() = '{1}']",
+							   _headwordWritingSystemId, "redLexemeForm");
 
 
-				//nb: it's not clear what the "correct" behavior is, if the citation for is disabled for this user
-				//but a citation form does exist for this ws.
+			//nb: it's not clear what the "correct" behavior is, if the citation for is disabled for this user
+			//but a citation form does exist for this ws.
 
-				AssertXPathNotNullWithArgs(_outputPath,
-									"lift/entry/field[@type='headword']/form[@lang='{0}']/text[text() = '{1}']",
-									_writingSystemIds[1], "greenCitation");
-				AssertXPathNotNullWithArgs(_outputPath,
-									"lift/entry/field[@type='headword']/form[@lang='{0}']/text[text() = '{1}']",
-									_writingSystemIds[2], "blueCitation");
-			}
+			AssertXPathNotNullWithArgs(_outputPath,
+								"lift/entry/field[@type='headword']/form[@lang='{0}']/text[text() = '{1}']",
+								_writingSystemIds[1], "greenCitation");
+			AssertXPathNotNullWithArgs(_outputPath,
+								"lift/entry/field[@type='headword']/form[@lang='{0}']/text[text() = '{1}']",
+								_writingSystemIds[2], "blueCitation");
 		}
 
-		private void MakeEntry(InMemoryRecordList<LexEntry> entries)
+		private void MakeEntry(IBindingList entries)
 		{
-			LexEntry entry = entries.AddNew();
+			LexEntry entry = (LexEntry) entries.AddNew();
 			entry.LexicalForm.SetAlternative("red", "redLexemeForm");
 			entry.LexicalForm.SetAlternative("green", "greenLexemeForm");
 			entry.LexicalForm.SetAlternative("blue", "blueLexemeForm");
@@ -218,48 +216,42 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void RelationEntry_Empty_NothingExported()
 		{
-			using (InMemoryRecordList<LexEntry> entries = new InMemoryRecordList<LexEntry>())
-			{
-				LexEntry entry = entries.AddNew();
-				entry.LexicalForm.SetAlternative(_headwordWritingSystemId, "Gary");
-				entry.AddRelationTarget("brother", string.Empty);
+			IRecordList<LexEntry> entries = _recordListManager.GetListOfType<LexEntry>();
+			LexEntry entry = (LexEntry) entries.AddNew();
+			entry.LexicalForm.SetAlternative(_headwordWritingSystemId, "Gary");
+			entry.AddRelationTarget("brother", string.Empty);
 
-				Make(entries, _viewTemplate, _outputPath);
-				CheckRelationNotOutput("brother");
-			}
+			Make(entries, _viewTemplate, _outputPath);
+			CheckRelationNotOutput("brother");
 		}
 
 		[Test]
 		public void RelationEntry_NotFound_NothingExported()
 		{
-			using (InMemoryRecordList<LexEntry> entries = new InMemoryRecordList<LexEntry>())
-			{
-				LexEntry entry = entries.AddNew();
-				entry.LexicalForm.SetAlternative(_headwordWritingSystemId, "Gary");
-				entry.AddRelationTarget("brother", "notGonnaFindIt");
+			IRecordList<LexEntry> entries = _recordListManager.GetListOfType<LexEntry>();
+			LexEntry entry = (LexEntry) entries.AddNew();
+			entry.LexicalForm.SetAlternative(_headwordWritingSystemId, "Gary");
+			entry.AddRelationTarget("brother", "notGonnaFindIt");
 
-				Make(entries, _viewTemplate, _outputPath);
-				CheckRelationNotOutput("brother");
-			}
+			Make(entries, _viewTemplate, _outputPath);
+			CheckRelationNotOutput("brother");
 		}
 
 		[Test]
 		public void RelationEntry_Found_HeadWordExported()
 		{
-			using (InMemoryRecordList<LexEntry> entries = new InMemoryRecordList<LexEntry>())
-			{
-			   LexEntry targetEntry = entries.AddNew();
-			   targetEntry.LexicalForm.SetAlternative(_headwordWritingSystemId, "RickLexeme");
-			   targetEntry.CitationForm.SetAlternative(_headwordWritingSystemId, "Rick");
+			IRecordList<LexEntry> entries = _recordListManager.GetListOfType<LexEntry>();
+		   LexEntry targetEntry = (LexEntry) entries.AddNew();
+		   targetEntry.LexicalForm.SetAlternative(_headwordWritingSystemId, "RickLexeme");
+		   targetEntry.CitationForm.SetAlternative(_headwordWritingSystemId, "Rick");
 
-			   LexEntry entry = entries.AddNew();
-			   entry.LexicalForm.SetAlternative(_headwordWritingSystemId, "Gary");
+		   LexEntry entry = (LexEntry) entries.AddNew();
+		   entry.LexicalForm.SetAlternative(_headwordWritingSystemId, "Gary");
 
-			   entry.AddRelationTarget("brother", targetEntry.Id);
+		   entry.AddRelationTarget("brother", targetEntry.Id);
 
-				Make(entries, _viewTemplate, _outputPath);
-				CheckRelationOutput(targetEntry, "brother");
-			}
+			Make(entries, _viewTemplate, _outputPath);
+			CheckRelationOutput(targetEntry, "brother");
 		}
 
 		private void CheckRelationOutput(LexEntry targetEntry, string relationName)
@@ -275,10 +267,10 @@ namespace WeSay.Project.Tests
 									   relationName, _headwordWritingSystemId);
 		}
 
-		private static LexEntry MakeTestLexEntry(InMemoryRecordList<LexEntry> entries, string lexicalForm)
+		private LexEntry MakeTestLexEntryInHeadwordWritingSystem(IBindingList entries, string lexicalForm)
 		{
-			LexEntry entry = entries.AddNew();
-			entry.LexicalForm["test"] = lexicalForm;
+			LexEntry entry = (LexEntry) entries.AddNew();
+			entry.LexicalForm[_headwordWritingSystemId] = lexicalForm;
 			return entry;
 		}
 
@@ -365,18 +357,5 @@ namespace WeSay.Project.Tests
 			writer.Flush();
 		}
 
-		internal class DummyHomographCalculator : IHomographCalculator
-		{
-			public static int NumberToGiveAsHomograph = -1;
-
-			#region IHomographCalculator Members
-
-			public int GetHomographNumber(LexEntry entry)
-			{
-				return NumberToGiveAsHomograph;
-			}
-
-			#endregion
-		}
 	}
 }

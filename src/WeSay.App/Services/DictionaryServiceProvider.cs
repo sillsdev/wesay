@@ -129,9 +129,8 @@ namespace WeSay.App
 				Palaso.Reporting.Logger.WriteMinorEvent("GetHtmlForEntries()");
 				StringBuilder builder = new StringBuilder();
 				LiftExporter exporter = new LiftExporter(builder, true);
-				IHomographCalculator homographCalculator = new HomographCalculator(Lexicon.RecordListManager, _project.DefaultPrintingTemplate.HeadwordWritingSytem);
 				Db4oLexEntryFinder finder = new Db4oLexEntryFinder(Lexicon.RecordListManager.DataSource);
-				exporter.SetUpForPresentationLiftExport(_project.DefaultPrintingTemplate, homographCalculator, finder);
+				exporter.SetUpForPresentationLiftExport(_project.DefaultPrintingTemplate, finder);
 
 				foreach (string entryId in entryIds)
 				{

@@ -13,7 +13,6 @@ namespace WeSay.LexicalTools
 {
 	public static class RtfRenderer
 	{
-		static public IHomographCalculator HomographCalculator;
 		public static string HeadWordWritingSystemId;
 
 		public static string ToRtf(LexEntry entry, CurrentItemEventArgs currentItem)
@@ -106,13 +105,10 @@ namespace WeSay.LexicalTools
 				rtf.Append(headword.Form);
 			 //   rtf.Append(" ");
 
-				if (HomographCalculator != null)
+				int homographNumber = Lexicon.GetHomographNumber(entry, WeSayWordsProject.Project.DefaultViewTemplate.HeadwordWritingSytem);
+				if (homographNumber > 0)
 				{
-					int homographNumber = HomographCalculator.GetHomographNumber(entry);
-					if (homographNumber > 0)
-					{
-						rtf.Append(@"{\super " + homographNumber.ToString() + "}");
-					}
+					rtf.Append(@"{\super " + homographNumber.ToString() + "}");
 				}
 			}
 			else

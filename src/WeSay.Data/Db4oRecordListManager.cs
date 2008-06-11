@@ -604,7 +604,7 @@ namespace WeSay.Data
 			return new RecordToken(string.Empty, id);
 		}
 
-		private long GetId<T>(T item) {
+		public long GetId<T>(T item) {
 			return this._dataSource.Data.Ext().GetID(item);
 		}
 

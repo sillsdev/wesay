@@ -10,7 +10,7 @@ using WeSay.LexicalModel.Db4o_Specific;
 namespace WeSay.LexicalModel
 {
 
-	public class Lexicon
+	public static class Lexicon
 	{
 		 private static Db4oRecordListManager _recordListManager;
 
@@ -149,6 +149,75 @@ namespace WeSay.LexicalModel
 
 			}
 			_recordListManager = null;
+		}
+
+		public static int GetHomographNumber(LexEntry entry, WritingSystem headwordWritingSystem)
+		{
+			HeadwordSortedListHelper helper = new HeadwordSortedListHelper(_recordListManager,
+										  headwordWritingSystem);
+			IList<RecordToken> recordTokensSortedByHeadWord = _recordListManager.GetSortedList(helper);
+			long databaseIdOfEntry = _recordListManager.GetId(entry);
+			// find our position within the sorted list of entries
+			int ourIndex = -1;
+			for(int i = 0; i != recordTokensSortedByHeadWord.Count; ++i)
+			{
+				if(recordTokensSortedByHeadWord[i].Id == databaseIdOfEntry)
+				{
+					ourIndex = i;
+					break;
+				}
+			}
+			string headword = entry.GetHeadWordForm(headwordWritingSystem.Id);
+
+
+			//todo: this is bogus; it fullfills our round-tripping requirement, but would
+			//give us bogus homograph numbers
+
+			if (entry.OrderForRoundTripping > 0)
+			{
+				return entry.OrderForRoundTripping;
+			}
+
+			//what number are we?
+			int found = 0;
+
+			for (int searchIndex = ourIndex - 1; searchIndex > -1; --searchIndex)
+			{
+				long searchId = recordTokensSortedByHeadWord[searchIndex].Id;
+				LexEntry previousGuy = _recordListManager.GetItem<LexEntry>(searchId);
+
+				if (headword != previousGuy.GetHeadWordForm(headwordWritingSystem.Id))
+				{
+					break;
+				}
+				++found;
+			}
+
+			// if we're the first with this headword
+			if (found == 0)
+			{
+				//and we're the last entry
+				if (ourIndex + 1 >= recordTokensSortedByHeadWord.Count)
+				{
+					return 0; //no homograph number
+				}
+				long nextId = recordTokensSortedByHeadWord[ourIndex + 1].Id;
+				LexEntry nextGuy = _recordListManager.GetItem<LexEntry>(nextId);
+
+				// the next guy doesn't match
+				if (headword != nextGuy.GetHeadWordForm(headwordWritingSystem.Id))
+				{
+					return 0; //no homograph number
+				}
+				else
+				{
+					return 1;
+				}
+			}
+			//there were preceding homographs
+			return 1+found;
+
+			//todo: look at @order and the planned-for order-in-lift field on LexEntry
 		}
 	}
 }

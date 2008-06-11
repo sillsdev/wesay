@@ -22,7 +22,6 @@ namespace WeSay.Project
 		private XmlWriter _writer;
 		private Dictionary<string, int> _allIdsExportedSoFar;
 		private ViewTemplate _viewTemplate;
-		private IHomographCalculator _homographCalculator;
 		private IFindEntries _entryFinder;
 
 		[Flags]
@@ -64,9 +63,8 @@ namespace WeSay.Project
 			}
 		}
 
-		public void SetUpForPresentationLiftExport(ViewTemplate template, IHomographCalculator homographCalculator, IFindEntries entryFinder)
+		public void SetUpForPresentationLiftExport(ViewTemplate template, IFindEntries entryFinder)
 		{
-			_homographCalculator = homographCalculator;
 			ExportOptions = LiftExporter.Options.DereferenceRelations | Options.DereferenceOptions | Options.DetermineHeadword;
 			_entryFinder = entryFinder;
 			Template = template;
@@ -132,12 +130,6 @@ namespace WeSay.Project
 			set { _viewTemplate = value; }
 		}
 
-		public IHomographCalculator HomographCalculator
-		{
-			get { return _homographCalculator; }
-			set { _homographCalculator = value; }
-		}
-
 		public IFindEntries EntryFinder
 		{
 			get { return _entryFinder; }
@@ -193,20 +185,10 @@ namespace WeSay.Project
 			_writer.WriteStartElement("entry");
 			_writer.WriteAttributeString("id", GetHumanReadableId(entry, _allIdsExportedSoFar));
 
-			if (_homographCalculator != null)
+			int h = Lexicon.GetHomographNumber(entry, _viewTemplate.HeadwordWritingSytem);
+			if (h > 0)
 			{
-				int h = _homographCalculator.GetHomographNumber(entry);
-				if (h > 0)
-				{
-					_writer.WriteAttributeString("order", h.ToString());
-				}
-			}
-			else
-			{
-				if (entry.OrderForRoundTripping > 0)
-				{
-					_writer.WriteAttributeString("order", entry.OrderForRoundTripping.ToString());
-				}
+				_writer.WriteAttributeString("order", h.ToString());
 			}
 
 			System.Diagnostics.Debug.Assert(entry.CreationTime.Kind == DateTimeKind.Utc);

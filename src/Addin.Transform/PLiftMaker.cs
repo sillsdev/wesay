@@ -16,11 +16,11 @@ namespace Addin.Transform
 {
 	public class PLiftMaker
 	{
-		public string MakePLiftTempFile(IEnumerable<LexEntry> entries, ViewTemplate template, IHomographCalculator homographCalculator,  IFindEntries finder)
+		public string MakePLiftTempFile(IEnumerable<LexEntry> entries, ViewTemplate template, IFindEntries finder)
 		{
 			string path = Path.Combine(Path.GetTempPath(), Path.GetTempFileName());
 			LiftExporter exporter = new LiftExporter(path);
-			exporter.SetUpForPresentationLiftExport(template, homographCalculator, finder);
+			exporter.SetUpForPresentationLiftExport(template, finder);
 			foreach (LexEntry entry in entries)
 			{
 				exporter.Add(entry);
@@ -31,12 +31,10 @@ namespace Addin.Transform
 
 		public string MakePLiftTempFile( Db4oRecordListManager recordListManager, WeSayWordsProject project)
 		{
-			IHomographCalculator homographCalculator = new HomographCalculator(recordListManager, project.DefaultPrintingTemplate.HeadwordWritingSytem);
-
 			IEnumerable<LexEntry> entries = Lexicon.GetAllEntriesSortedByHeadword(project.DefaultPrintingTemplate.HeadwordWritingSytem);
 			Db4oLexEntryFinder finder = new Db4oLexEntryFinder(recordListManager.DataSource);
 
-			return MakePLiftTempFile(entries, project.DefaultPrintingTemplate, homographCalculator, finder);
+			return MakePLiftTempFile(entries, project.DefaultPrintingTemplate, finder);
 		}
 //
 //        public void MakeXHtmlFile(string outputPath, Db4oRecordListManager recordListManager, WeSayWordsProject project)
