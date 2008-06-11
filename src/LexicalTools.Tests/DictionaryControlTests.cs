@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Threading;
 using System.Windows.Forms;
@@ -6,6 +7,7 @@ using NUnit.Framework;
 using NUnit.Extensions.Forms;
 using WeSay.Data;
 using WeSay.Foundation;
+using WeSay.Language;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Db4o_Specific;
 using WeSay.Project;
@@ -19,7 +21,7 @@ namespace WeSay.LexicalTools.Tests
 		private DictionaryTask _task;
 		LexEntryRepository _lexEntryRepository;
 		string _filePath;
-		private string _vernacularWsId;
+		private WritingSystem _vernacularWritingSystem;
 		private TabControl _tabControl;
 		private Form _window;
 		private TabPage _detailTaskPage;
@@ -34,15 +36,15 @@ namespace WeSay.LexicalTools.Tests
 		public override void Setup()
 		{
 			base.Setup();
-			this._vernacularWsId = BasilProject.Project.WritingSystems.TestWritingSystemVernId;
-			RtfRenderer.HeadWordWritingSystemId = _vernacularWsId;
+			_vernacularWritingSystem = new WritingSystem(BasilProject.Project.WritingSystems.TestWritingSystemVernId, SystemFonts.DefaultFont);
+			RtfRenderer.HeadWordWritingSystemId = _vernacularWritingSystem.Id;
 
-			this._filePath = Path.GetTempFileName();
-			this._lexEntryRepository = new LexEntryRepository(new WeSayWordsDb4oModelConfiguration(), _filePath);
-			Db4oLexModelHelper.Initialize(this._lexEntryRepository.DataSource.Data);
+			_filePath = Path.GetTempFileName();
+			_lexEntryRepository = new LexEntryRepository(_filePath);
+			Db4oLexModelHelper.Initialize(_lexEntryRepository.Db4oDataSource.Data);
 
 			string[] analysisWritingSystemIds = new string[] { BasilProject.Project.WritingSystems.TestWritingSystemAnalId };
-			string[] vernacularWritingSystemIds = new string[] { this._vernacularWsId };
+			string[] vernacularWritingSystemIds = new string[] { _vernacularWritingSystem.Id };
 			ViewTemplate viewTemplate = new ViewTemplate();
 			viewTemplate.Add(new Field(Field.FieldNames.EntryLexicalForm.ToString(), "LexEntry",vernacularWritingSystemIds));
 			viewTemplate.Add(new Field("MyEntryCustom", "LexEntry", new string[]{"en"}, Field.MultiplicityType.ZeroOr1, "MultiText" ));
@@ -122,8 +124,8 @@ namespace WeSay.LexicalTools.Tests
 
 		private LexEntry AddEntry(string lexemeForm, string meaningWritingSystemId, string meaning, bool includeExample)
 		{
-			LexEntry entry = new LexEntry();
-			entry.LexicalForm.SetAlternative(this._vernacularWsId, lexemeForm);
+			LexEntry entry = _lexEntryRepository.CreateItem();
+			entry.LexicalForm.SetAlternative(_vernacularWritingSystem.Id, lexemeForm);
 
 			LexSense sense = (LexSense) entry.Senses.AddNew();
 #if GlossMeaning
@@ -138,7 +140,7 @@ namespace WeSay.LexicalTools.Tests
 				LexExampleSentence ex = (LexExampleSentence) sense.ExampleSentences.AddNew();
 				ex.Sentence.SetAlternative("x", "hello");
 			}
-			this._lexEntryRepository.Add(entry);
+			_lexEntryRepository.SaveItem(entry);
 			return entry;
 		}
 
@@ -183,11 +185,9 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void ClickingAddWordIncreasesRecordsByOne()
 		{
-			IRecordList<LexEntry> list = this._lexEntryRepository.GetListOfType<LexEntry>();
-			int before = list.Count;
+			int before = _lexEntryRepository.CountAllEntries();
 			ClickAddWord();
-			list = this._lexEntryRepository.GetListOfType<LexEntry>();
-			Assert.AreEqual(1 + before, list.Count);
+			Assert.AreEqual(1 + before, _lexEntryRepository.CountAllEntries());
 		}
 
 		[Test]
@@ -209,11 +209,9 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void ClickingDeleteWordDecreasesRecordsByOne()
 		{
-			IRecordList<LexEntry> list = this._lexEntryRepository.GetListOfType<LexEntry>();
-			int before = list.Count;
+			int before = _lexEntryRepository.CountAllEntries();
 			ClickDeleteWord();
-			list = this._lexEntryRepository.GetListOfType<LexEntry>();
-			Assert.AreEqual(before - 1, list.Count);
+			Assert.AreEqual(before - 1, _lexEntryRepository.CountAllEntries());
 		}
 
 		/// <summary>
@@ -223,13 +221,12 @@ namespace WeSay.LexicalTools.Tests
 		public void DeleteWordWhenEvenHasCleanup_Regression()
 		{
 			ClickAddWord();
-			IRecordList<LexEntry> list = this._lexEntryRepository.GetListOfType<LexEntry>();
-			int before = list.Count;
+			int before = _lexEntryRepository.CountAllEntries();
 
 			EntryViewControl parentControl = ((DictionaryControl)_task.Control).Control_EntryDetailPanel;
 			LexEntry entry = parentControl.DataSource;
 			const string form = "xx";
-			entry.LexicalForm.SetAlternative(_vernacularWsId, form);
+			entry.LexicalForm.SetAlternative(_vernacularWritingSystem.Id, form);
 			GoToLexicalEntryUseFind("Initial"); //go away
 			GoToLexicalEntryUseFind(form);//come back
 
@@ -238,8 +235,7 @@ namespace WeSay.LexicalTools.Tests
 
 			GetEditControl("*EntryLexicalForm").FocusOnFirstWsAlternative();
 			ClickDeleteWord();
-			list = this._lexEntryRepository.GetListOfType<LexEntry>();
-			Assert.AreEqual(before - 1, list.Count);
+			Assert.AreEqual(before - 1, _lexEntryRepository.CountAllEntries());
 		   // GoToLexicalEntryUseFind(form); should fail to find it
 
 			AssertExistenceOfEntryInList(form, false);
@@ -501,8 +497,9 @@ namespace WeSay.LexicalTools.Tests
 		{
 			TypeInLexicalForm("one");
 			ClickStarOfLexemeForm();
-			IRecordList<LexEntry> list = this._lexEntryRepository.GetListOfType<LexEntry>();
-			Assert.IsTrue(list[0].LexicalForm.GetAnnotationOfAlternativeIsStarred(_vernacularWsId));
+			IList<RecordToken> list = _lexEntryRepository.GetAllEntriesSortedByHeadword(_vernacularWritingSystem);
+			LexEntry entry = _lexEntryRepository.GetItem(list[0]);
+			Assert.IsTrue(entry.LexicalForm.GetAnnotationOfAlternativeIsStarred(_vernacularWritingSystem.Id));
 		}
 
 		[Test]
@@ -512,9 +509,10 @@ namespace WeSay.LexicalTools.Tests
    //         this._records[0].NotifyPropertyChanged("senses");
 		   // Application.DoEvents();
 			ClickStarOfLexemeForm();
-			IRecordList<LexEntry> list = this._lexEntryRepository.GetListOfType<LexEntry>();
+			IList<RecordToken> list = _lexEntryRepository.GetAllEntriesSortedByHeadword(_vernacularWritingSystem);
+			LexEntry entry = _lexEntryRepository.GetItem(list[0]);
 
-			Assert.IsTrue(list[0].LexicalForm.GetAnnotationOfAlternativeIsStarred(_vernacularWsId));
+			Assert.IsTrue(entry.LexicalForm.GetAnnotationOfAlternativeIsStarred(_vernacularWritingSystem.Id));
 		}
 
 		private void ClickStarOfLexemeForm()
@@ -599,7 +597,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			get
 			{
-				return ((DictionaryControl)_detailTaskPage.Controls[0]).CurrentRecord.LexicalForm.GetBestAlternative(_vernacularWsId);
+				return ((DictionaryControl)_detailTaskPage.Controls[0]).CurrentRecord.LexicalForm.GetBestAlternative(_vernacularWritingSystem.Id);
 			}
 		}
 

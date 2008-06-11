@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using WeSay.Data;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Db4o_Specific;
@@ -12,6 +13,7 @@ namespace WeSay.LexicalTools.Tests
 	{
 
 		LexEntryRepository _lexEntryRepository;
+		private string _filePath;
 
 		private IFilter<LexEntry> _filter;
 		private string _fieldsToShow;
@@ -25,37 +27,39 @@ namespace WeSay.LexicalTools.Tests
 		[SetUp]
 		public void Setup()
 		{
+			_filePath = Path.GetTempFileName();
+			_lexEntryRepository = new LexEntryRepository(_filePath);
+
 			Db4oLexModelHelper.InitializeForNonDbTests();
 			WeSayWordsProject.InitializeForTests();
 			RtfRenderer.HeadWordWritingSystemId = _vernacularWritingSystemId;
 
-			this._lexEntryRepository = new InMemoryRecordListManager();
 			Field field = new Field(LexSense.WellKnownProperties.Definition,"LexSense" , new string[]{"analysis"});
-			this._filter = new MissingItemFilter(field);
+			_filter = new MissingItemFilter(field);
 
-			LexEntry entry = new LexEntry();
-			this._lexicalForm = "vernacular";
+			LexEntry entry = _lexEntryRepository.CreateItem();
+			_lexicalForm = "vernacular";
 			entry.LexicalForm.SetAlternative(_vernacularWritingSystemId, _lexicalForm);
-			IRecordList<LexEntry> masterRecordList = this._lexEntryRepository.GetListOfType<LexEntry>();
-			masterRecordList.Add(entry);
+			_lexEntryRepository.SaveItem(entry);
 
-			this._fieldsToShow = "LexicalForm";
-			this._label = "My label";
-			this._description = "My description";
+			_fieldsToShow = "LexicalForm";
+			_label = "My label";
+			_description = "My description";
 
-			this._viewTemplate = new ViewTemplate();
-			this._viewTemplate.Add(new Field(LexEntry.WellKnownProperties.LexicalUnit, "LexEntry", new string[] { _vernacularWritingSystemId }));
-			this._viewTemplate.Add(new Field(LexSense.WellKnownProperties.Definition, "LexSense",new string[] { "en" }));
-			this._viewTemplate.Add(new Field(Field.FieldNames.ExampleSentence.ToString(), "LexExampleSentence",new string[] { "th" }));
+			_viewTemplate = new ViewTemplate();
+			_viewTemplate.Add(new Field(LexEntry.WellKnownProperties.LexicalUnit, "LexEntry", new string[] { _vernacularWritingSystemId }));
+			_viewTemplate.Add(new Field(LexSense.WellKnownProperties.Definition, "LexSense",new string[] { "en" }));
+			_viewTemplate.Add(new Field(Field.FieldNames.ExampleSentence.ToString(), "LexExampleSentence",new string[] { "th" }));
 
-			this._task = new MissingInfoTask(_lexEntryRepository, _filter, _label, _description, _viewTemplate, _fieldsToShow);
+			_task = new MissingInfoTask(_lexEntryRepository, _filter, _label, _description, _viewTemplate, _fieldsToShow);
 
 		}
 
 		[TearDown]
 		public void TearDown()
 		{
-			this._lexEntryRepository.Dispose();
+			_lexEntryRepository.Dispose();
+			File.Delete(_filePath);
 		}
 
 		[Test]
@@ -134,7 +138,7 @@ namespace WeSay.LexicalTools.Tests
 				Assert.IsTrue(
 					((MissingInfoControl)task.Control).EntryViewControl.ControlFormattedView.Text.Contains(_lexicalForm));
 
-				Assert.AreEqual(1, task.DataSource.Count);
+				Assert.AreEqual(1, _lexEntryRepository.CountAllEntries());
 			}
 			finally
 			{
@@ -145,7 +149,7 @@ namespace WeSay.LexicalTools.Tests
 			try
 			{
 				Assert.AreEqual(string.Empty, ((MissingInfoControl)task.Control).EntryViewControl.ControlFormattedView.Text);
-				Assert.AreEqual(0, task.DataSource.Count);
+				Assert.AreEqual(0, _lexEntryRepository.CountAllEntries());
 			}
 			finally
 			{

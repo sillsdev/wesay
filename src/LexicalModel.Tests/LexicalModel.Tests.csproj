@@ -75,7 +75,6 @@
 	<Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-	<Compile Include="HeadwordSortedListHelperTests.cs" />
 	<Compile Include="Binding.cs" />
 	<Compile Include="Db4o-Specific\Db4oProjectSetupForTesting.cs" />
 	<Compile Include="Db4o-Specific\LexEntrySortHelperTests.cs" />

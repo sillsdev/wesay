@@ -214,5 +214,33 @@ namespace WeSay.LexicalModel.Tests
 			_lexEntryRepository.SaveItem(entry);
 			return entry;
 		}
+
+		[Test]
+		public void GetAllEntriesSortedByHeadword_3EntriesWithLexemeForms_TokensAreSorted()
+		{
+			LexEntry e1 = _lexEntryRepository.CreateItem();
+			e1.LexicalForm.SetAlternative(_headwordWritingSystem.Id, "bank");
+			_lexEntryRepository.SaveItem(e1);
+			RepositoryId bankId = _lexEntryRepository.GetId(e1);
+
+			LexEntry e2 = _lexEntryRepository.CreateItem();
+			e2.LexicalForm.SetAlternative(_headwordWritingSystem.Id, "apple");
+			_lexEntryRepository.SaveItem(e2);
+			RepositoryId appleId = _lexEntryRepository.GetId(e2);
+
+			LexEntry e3 = _lexEntryRepository.CreateItem();
+			e3.LexicalForm.SetAlternative(_headwordWritingSystem.Id, "xa");//has to be something low in the alphabet to test a bug we had
+			_lexEntryRepository.SaveItem(e3);
+			RepositoryId xaId = _lexEntryRepository.GetId(e3);
+
+			IList<RecordToken> list = _lexEntryRepository.GetAllEntriesSortedByHeadword(_headwordWritingSystem);
+
+			Assert.AreEqual(3, list.Count);
+			Assert.AreEqual(appleId, list[0].Id);
+			Assert.AreEqual(bankId, list[1].Id);
+			Assert.AreEqual(xaId, list[2].Id);
+		}
+
+
 	}
 }
