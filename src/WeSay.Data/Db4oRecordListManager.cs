@@ -613,6 +613,11 @@ namespace WeSay.Data
 			Delete<T>(GetId(item));
 		}
 
+		public void Save<T>(T item)
+		{
+			_dataSource.Data.Set(item);
+		}
+
 		public void Delete<T>(long id) where T : class, new()
 		{
 			IRecordList<T> type = GetListOfType<T>();

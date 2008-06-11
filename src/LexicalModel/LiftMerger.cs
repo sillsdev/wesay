@@ -16,7 +16,7 @@ namespace WeSay.LexicalModel
 	/// </summary>
 	public class LiftMerger : ILexiconMerger<WeSayDataObject, LexEntry,LexSense,LexExampleSentence>, IDisposable
 	{
-		private IRecordList<LexEntry> _entries;
+		private Db4oRecordListManager _recordListManager;
 		private IList<String> _expectedOptionTraits;
 		private IList<string> _expectedOptionCollectionTraits;
 
@@ -25,9 +25,9 @@ namespace WeSay.LexicalModel
 		/// </summary>
 		private IHistoricalEntryCountProvider _historicalEntryCountProvider;
 
-		public LiftMerger(IHistoricalEntryCountProvider historicalEntryCountProvider,  IRecordList<LexEntry> entries)
+		public LiftMerger(IHistoricalEntryCountProvider historicalEntryCountProvider,  Db4oRecordListManager recordListManager)
 		{
-			_entries = entries;
+			_recordListManager = recordListManager;
 			_expectedOptionTraits = new List<string>();
 			_expectedOptionCollectionTraits = new List<string>();
 			_historicalEntryCountProvider = historicalEntryCountProvider;
@@ -415,10 +415,7 @@ namespace WeSay.LexicalModel
 		{
 			entry.GetOrCreateId(false);
 			entry.ModifiedTimeIsLocked = false;
-			if (!_entries.Contains(entry))
-			{
-				_entries.Add(entry);
-			}
+			_recordListManager.Save(entry);
 		}
 
 		#endregion

@@ -16,8 +16,7 @@ namespace WeSay.LexicalModel.Tests
 	public class LiftMergerTests : ILiftMergerTestSuite
 	{
 		private LiftMerger _merger;
-		private Db4oDataSource _dataSource;
-		private Db4oRecordList<LexEntry> _entries;
+		private Db4oRecordListManager _recordListManager;
 		private string _tempFile;
 
 		[SetUp]
@@ -26,25 +25,17 @@ namespace WeSay.LexicalModel.Tests
 			WeSayWordsProject.InitializeForTests();
 
 			_tempFile = Path.GetTempFileName();
-			_dataSource = new Db4oDataSource(_tempFile);
-			_entries = new Db4oRecordList<LexEntry>(_dataSource);
-			Db4oLexModelHelper.Initialize(_dataSource.Data);
+			_recordListManager = new Db4oRecordListManager(new WeSayWordsDb4oModelConfiguration(), _tempFile);
+			Db4oLexModelHelper.Initialize(_recordListManager.DataSource.Data);
 
-			_merger = new LiftMerger(HistoricalEntryCountProviderForDb4o.GetOrMakeFromDatabase(_dataSource), _entries);
-		}
-
-		protected void RefreshEntriesList()
-		{
-			_entries.Dispose();
-			_entries = new Db4oRecordList<LexEntry>(_dataSource);
+			_merger = new LiftMerger(HistoricalEntryCountProviderForDb4o.GetOrMakeFromDatabase(_recordListManager.DataSource), _recordListManager);
 		}
 
 		[TearDown]
 		public void TearDown()
 		{
 			_merger.Dispose();
-			_entries.Dispose();
-			_dataSource.Dispose();
+			_recordListManager.Dispose();
 			File.Delete(_tempFile);
 		}
 
@@ -56,8 +47,8 @@ namespace WeSay.LexicalModel.Tests
 			LexEntry e = _merger.GetOrMakeEntry(extensibleInfo, 0);
 			Assert.AreEqual(extensibleInfo.Id, e.Id);
 			_merger.FinishEntry(e);
-			RefreshEntriesList();
-			Assert.AreEqual(1, _entries.Count);
+			IRecordList<LexEntry> entries = this._recordListManager.GetListOfType<LexEntry>();
+			Assert.AreEqual(1, entries.Count);
 		}
 
 		[Test]
@@ -68,8 +59,8 @@ namespace WeSay.LexicalModel.Tests
 			LexEntry e= _merger.GetOrMakeEntry(extensibleInfo, 0);
 			Assert.AreEqual(extensibleInfo.Guid, e.Guid);
 			_merger.FinishEntry(e);
-			RefreshEntriesList();
-			Assert.AreEqual(1, _entries.Count);
+			IRecordList<LexEntry> entries = this._recordListManager.GetListOfType<LexEntry>();
+			Assert.AreEqual(1, entries.Count);
 		}
 
 
@@ -83,8 +74,8 @@ namespace WeSay.LexicalModel.Tests
 			Assert.AreEqual(extensibleInfo.CreationTime, e.CreationTime);
 			Assert.AreEqual(extensibleInfo.ModificationTime, e.ModificationTime);
 			_merger.FinishEntry(e);
-			RefreshEntriesList();
-			Assert.AreEqual(1, _entries.Count);
+			IRecordList<LexEntry> entries = this._recordListManager.GetListOfType<LexEntry>();
+			Assert.AreEqual(1, entries.Count);
 		}
 
 		[Test]
@@ -392,11 +383,11 @@ namespace WeSay.LexicalModel.Tests
 			_merger.FinishEntry(e);
 			CheckCompleteEntry(e);
 
-			RefreshEntriesList();
-			Assert.AreEqual(1, _entries.Count);
+			IRecordList<LexEntry> entries = this._recordListManager.GetListOfType<LexEntry>();
+			Assert.AreEqual(1, entries.Count);
 
 			//now check it again, from the list
-			CheckCompleteEntry(_entries[0]);
+			CheckCompleteEntry(entries[0]);
 		}
 
 		[Test]
@@ -494,7 +485,8 @@ namespace WeSay.LexicalModel.Tests
 			LexEntry e = new LexEntry(null, g);
 			e.CreationTime = extensibleInfo.CreationTime;
 			e.ModificationTime = extensibleInfo.ModificationTime;
-			_entries.Add(e);
+			IRecordList<LexEntry> entries = this._recordListManager.GetListOfType<LexEntry>();
+			entries.Add(e);
 
 		   //strip out the time
 			extensibleInfo.ModificationTime = Extensible.ParseDateTimeCorrectly("2005-01-01");

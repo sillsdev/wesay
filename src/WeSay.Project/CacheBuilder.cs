@@ -177,7 +177,6 @@ namespace WeSay.Project
 	{
 		private string _sourceLIFTPath;
 		private ProgressState _progress;
-		private IRecordList<LexEntry> _prewiredEntries = null;
 		private BackgroundWorker _backgroundWorker;
 
 		public CacheBuilder(string sourceLIFTPath)
@@ -205,33 +204,11 @@ namespace WeSay.Project
 			}
 		}
 
-		/// <summary>
-		/// caller can set this if you want some actions to happen as each entry is
-		/// imported, such as building up indices.  The given entries list will be
-		/// used, and you can act on the events it fires.
-		/// </summary>
-		public IRecordList<LexEntry> EntriesAlreadyWiredUp
-		{
-			set { _prewiredEntries = value; }
-		}
-
 		public string SourceLIFTPath
 		{
 			get { return _sourceLIFTPath; }
 			set { _sourceLIFTPath = value; }
 		}
-
-		public IRecordList<LexEntry> GetEntries(IRecordListManager recordListManager)
-		{
-			if (_prewiredEntries == null)
-			{
-				return recordListManager.GetListOfType<LexEntry>();
-			}
-
-			return _prewiredEntries;
-		}
-
-
 
 		public void DoWork(ProgressState progress)
 		{
@@ -264,7 +241,7 @@ namespace WeSay.Project
 				string db4oFileName = Path.GetFileName(WeSayWordsProject.Project.PathToDb4oLexicalModelDB);
 				string tempDb4oFilePath = Path.Combine(tempCacheDirectory, db4oFileName);
 
-				using (IRecordListManager recordListManager =
+				using (Db4oRecordListManager recordListManager =
 						new Db4oRecordListManager(new WeSayWordsDb4oModelConfiguration(), tempDb4oFilePath))
 				{
 					Db4oDataSource ds = ((Db4oRecordListManager) recordListManager).DataSource;
@@ -276,8 +253,6 @@ namespace WeSay.Project
 					//MONO bug as of 1.1.18 cannot bitwise or FileShare on FileStream constructor
 					//                    using (FileStream config = new FileStream(project.PathToProjectTaskInventory, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete))
 					SetupTasksToBuildCaches(recordListManager);
-
-					EntriesAlreadyWiredUp = recordListManager.GetListOfType<LexEntry>();
 
 					if (Db4oLexModelHelper.Singleton == null)
 					{
@@ -342,37 +317,26 @@ namespace WeSay.Project
 			Logger.WriteEvent("Done Building Caches");
 		}
 
-		private void DoParsing(IRecordListManager ds, IHistoricalEntryCountProvider historicalEntryCountProvider)
+		private void DoParsing(Db4oRecordListManager recordListManager, IHistoricalEntryCountProvider historicalEntryCountProvider)
 		{
-			IRecordList<LexEntry> entriesList = GetEntries(ds);
-			try
-			{
 //                entriesList.WriteCacheSize = 0; //don't write after every record
-				using (LiftMerger merger = new LiftMerger(historicalEntryCountProvider, entriesList))
-				{
-					foreach (string name in WeSayWordsProject.Project.OptionFieldNames)
-					{
-						merger.ExpectedOptionTraits.Add(name);
-						//_importer.ExpectedOptionTraits.Add(name);
-					}
-					foreach (string name in WeSayWordsProject.Project.OptionCollectionFieldNames)
-					{
-						merger.ExpectedOptionCollectionTraits.Add(name);
-					}
-
-					RunParser(merger);
-				}
-
-				UpdateDashboardStats();
-			}
-
-			finally
+			using (LiftMerger merger = new LiftMerger(historicalEntryCountProvider, recordListManager))
 			{
-				if (entriesList != _prewiredEntries) //did we create it?
+				foreach (string name in WeSayWordsProject.Project.OptionFieldNames)
 				{
-					entriesList.Dispose();
+					merger.ExpectedOptionTraits.Add(name);
+					//_importer.ExpectedOptionTraits.Add(name);
 				}
+				foreach (string name in WeSayWordsProject.Project.OptionCollectionFieldNames)
+				{
+					merger.ExpectedOptionCollectionTraits.Add(name);
+				}
+
+				RunParser(merger);
 			}
+
+			UpdateDashboardStats();
+
 		}
 
 		private static void UpdateDashboardStats()

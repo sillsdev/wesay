@@ -180,12 +180,18 @@ namespace WeSay.Project
 
 		public void Add(LexEntry entry)
 		{
+			ViewTemplate template = Template;
+			if (template == null)
+			{
+				template = WeSayWordsProject.Project.DefaultViewTemplate;
+			}
+
 			List<string> propertiesAlreadyOutput=new List<string>();
 
 			_writer.WriteStartElement("entry");
 			_writer.WriteAttributeString("id", GetHumanReadableId(entry, _allIdsExportedSoFar));
 
-			int h = Lexicon.GetHomographNumber(entry, _viewTemplate.HeadwordWritingSytem);
+			int h = Lexicon.GetHomographNumber(entry, template.HeadwordWritingSytem);
 			if (h > 0)
 			{
 				_writer.WriteAttributeString("order", h.ToString());
@@ -220,7 +226,7 @@ namespace WeSay.Project
 		{
 			if(Template == null)
 			{
-				throw new ArgumentException("Expected a non-null Template");
+				throw new InvalidOperationException("Expected a non-null Template");
 			}
 			MultiText headword = new MultiText();
 			Field fieldControllingHeadwordOutput = Template.GetField(LexEntry.WellKnownProperties.Citation);
