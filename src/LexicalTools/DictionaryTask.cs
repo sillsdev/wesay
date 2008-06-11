@@ -17,7 +17,7 @@ namespace WeSay.LexicalTools
 		private readonly ViewTemplate _viewTemplate;
 		private static readonly string kTaskLabel = "Dictionary Browse && Edit";
 
-		public DictionaryTask(IRecordListManager recordListManager,
+		public DictionaryTask(LexEntryRepository recordListManager,
 							ViewTemplate viewTemplate)
 			: base(kTaskLabel, string.Empty, true, recordListManager)
 		{
@@ -38,7 +38,7 @@ namespace WeSay.LexicalTools
 			{
 				RegisterWithCache(_viewTemplate);
 				base.Activate();
-				_dictionaryControl = new DictionaryControl(RecordListManager, ViewTemplate);
+				_dictionaryControl = new DictionaryControl(this.LexEntryRepository, ViewTemplate);
 				_dictionaryControl.SelectedIndexChanged += new EventHandler(OnRecordSelectionChanged);
 			}
 			catch (Palaso.Reporting.ConfigurationException)
@@ -73,7 +73,7 @@ namespace WeSay.LexicalTools
 
 		void OnRecordSelectionChanged(object sender, EventArgs e)
 		{
-			RecordListManager.GoodTimeToCommit();
+			this.LexEntryRepository.GoodTimeToCommit();
 		}
 
 		public override void Deactivate()
@@ -82,7 +82,7 @@ namespace WeSay.LexicalTools
 			_dictionaryControl.SelectedIndexChanged -= new EventHandler(OnRecordSelectionChanged);
 			_dictionaryControl.Dispose();
 			_dictionaryControl = null;
-			RecordListManager.GoodTimeToCommit();
+			this.LexEntryRepository.GoodTimeToCommit();
 		}
 
 		public override void GoToUrl(string url)
@@ -119,7 +119,7 @@ namespace WeSay.LexicalTools
 		{
 			get
 			{
-				IRecordList<LexEntry> data = RecordListManager.GetListOfType<LexEntry>();
+				IRecordList<LexEntry> data = this.LexEntryRepository.GetListOfType<LexEntry>();
 				return data;
 			}
 		}

@@ -11,7 +11,7 @@ namespace WeSay.LexicalTools.Tests
 	public class MissingInfoTaskTests : TaskBaseTests
 	{
 
-		IRecordListManager _recordListManager;
+		LexEntryRepository _recordListManager;
 
 		private IFilter<LexEntry> _filter;
 		private string _fieldsToShow;

@@ -17,7 +17,7 @@ namespace WeSay.LexicalTools.Tests
 	public class DictionaryControlTests : NUnitFormTest
 	{
 		private DictionaryTask _task;
-		Db4oRecordListManager _recordListManager;
+		LexEntryRepository _recordListManager;
 		string _filePath;
 		private string _vernacularWsId;
 		private TabControl _tabControl;
@@ -38,7 +38,7 @@ namespace WeSay.LexicalTools.Tests
 			RtfRenderer.HeadWordWritingSystemId = _vernacularWsId;
 
 			this._filePath = Path.GetTempFileName();
-			this._recordListManager = new Db4oRecordListManager(new WeSayWordsDb4oModelConfiguration(), _filePath);
+			this._recordListManager = new LexEntryRepository(new WeSayWordsDb4oModelConfiguration(), _filePath);
 			Db4oLexModelHelper.Initialize(this._recordListManager.DataSource.Data);
 			Lexicon.Init(this._recordListManager);
 

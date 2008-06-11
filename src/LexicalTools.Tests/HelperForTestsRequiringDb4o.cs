@@ -8,16 +8,16 @@ namespace WeSay.LexicalTools.Tests
 	public class HelperForTestsRequiringDb4o: IDisposable
 	{
 		private readonly string _filePath;
-		private readonly Db4oRecordListManager _manager;
+		private readonly LexEntryRepository _manager;
 
 		public HelperForTestsRequiringDb4o()
 		{
 			_filePath = Path.GetTempFileName();
-			_manager = new Db4oRecordListManager(new DoNothingModelConfiguration(), _filePath);
+			_manager = new LexEntryRepository(new DoNothingModelConfiguration(), _filePath);
 			Lexicon.Init(RecordListManager);
 		}
 
-		public Db4oRecordListManager RecordListManager
+		public LexEntryRepository RecordListManager
 		{
 			get { return _manager; }
 		}

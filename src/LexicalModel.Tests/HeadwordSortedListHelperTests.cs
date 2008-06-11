@@ -16,7 +16,7 @@ namespace WeSay.LexicalModel.Tests
 	{
 		ViewTemplate _viewTemplate;
 		string _filePath;
-		Db4oRecordListManager _recordListManager;
+		LexEntryRepository _recordListManager;
 		private WritingSystem _headwordWritingSystem;
 		private IRecordList<LexEntry> _entries;
 
@@ -31,7 +31,7 @@ namespace WeSay.LexicalModel.Tests
 
 			_filePath = Path.GetTempFileName();
 
-			_recordListManager = new Db4oRecordListManager(new WeSayWordsDb4oModelConfiguration(), _filePath);
+			_recordListManager = new LexEntryRepository(new WeSayWordsDb4oModelConfiguration(), _filePath);
 			Db4oLexModelHelper.Initialize(_recordListManager.DataSource.Data);
 			_entries = _recordListManager.GetListOfType<LexEntry>();
 

@@ -7,9 +7,9 @@ namespace WeSay.Data.Tests
 {
 	public class SimpleIntSortHelper: ISortHelper<SimpleIntTestClass>
 		{
-		private IRecordListManager _recordListManager;
+		private LexEntryRepository _recordListManager;
 
-		public SimpleIntSortHelper(IRecordListManager recordListManager)
+		public SimpleIntSortHelper(LexEntryRepository recordListManager)
 		{
 			_recordListManager = recordListManager;
 		}
@@ -29,9 +29,9 @@ namespace WeSay.Data.Tests
 			{
 				List<RecordToken> keyIdPairs = new List<RecordToken>();
 
-				if (_recordListManager is Db4oRecordListManager)
+				if (_recordListManager is LexEntryRepository)
 				{
-					Db4oDataSource db4oData = ((Db4oRecordListManager)_recordListManager).DataSource;
+					Db4oDataSource db4oData = ((LexEntryRepository)_recordListManager).DataSource;
 					IExtObjectContainer database = db4oData.Data.Ext();
 
 					IQuery query = database.Query();
@@ -41,7 +41,8 @@ namespace WeSay.Data.Tests
 
 					foreach (SimpleIntTestClass simpleIntTestClass in resultList)
 					{
-						keyIdPairs.Add(new RecordToken(simpleIntTestClass.I.ToString(), database.GetID(simpleIntTestClass)));
+						keyIdPairs.Add(new RecordToken(simpleIntTestClass.I.ToString(),
+							new Db4oRepositoryId(database.GetID(simpleIntTestClass))));
 					}
 
 				}
@@ -49,7 +50,8 @@ namespace WeSay.Data.Tests
 				{
 					foreach (SimpleIntTestClass testClass in _recordListManager.GetListOfType<SimpleIntTestClass>())
 					{
-						keyIdPairs.Add(new RecordToken(testClass.I.ToString(), 0L));
+						keyIdPairs.Add(new RecordToken(testClass.I.ToString(),
+							new Db4oRepositoryId(0L)));
 					}
 				}
 				return keyIdPairs;

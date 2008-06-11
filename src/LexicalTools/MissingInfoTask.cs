@@ -20,7 +20,7 @@ namespace WeSay.LexicalTools
 		private bool _isBaseFormFillingTask;
 
 
-		public MissingInfoTask(IRecordListManager recordListManager,
+		public MissingInfoTask(LexEntryRepository recordListManager,
 			IFilter<LexEntry> filter,
 					string label,
 					string description,
@@ -56,10 +56,10 @@ namespace WeSay.LexicalTools
 				}
 			}
 
-			if (recordListManager is Db4oRecordListManager)
+			if (recordListManager is LexEntryRepository)
 			{
 				_sortHelper =
-						new LexEntrySortHelper(((Db4oRecordListManager)recordListManager).DataSource,
+						new LexEntrySortHelper(((LexEntryRepository)recordListManager).DataSource,
 											   listWritingSystem,
 											   true);
 			}
@@ -82,7 +82,7 @@ namespace WeSay.LexicalTools
 		/// <param name="description">The task description</param>
 		/// <param name="viewTemplate">The base viewTemplate</param>
 		/// <param name="fieldsToShow">The fields to show from the base Field Inventory</param>
-		public MissingInfoTask(IRecordListManager recordListManager,
+		public MissingInfoTask(LexEntryRepository recordListManager,
 							IFilter<LexEntry>  filter,
 							string label,
 							string description,
@@ -122,7 +122,7 @@ namespace WeSay.LexicalTools
 				return base.Group;
 			}
 		}
-		public MissingInfoTask(IRecordListManager recordListManager,
+		public MissingInfoTask(LexEntryRepository recordListManager,
 			IFilter<LexEntry>  filter,
 					string label,
 					string description,
@@ -197,13 +197,13 @@ namespace WeSay.LexicalTools
 		{
 			base.Activate();
 
-			_missingInfoControl = new MissingInfoControl(DataSource, ViewTemplate, _filter.FilteringPredicate, RecordListManager);
+			_missingInfoControl = new MissingInfoControl(DataSource, ViewTemplate, _filter.FilteringPredicate, this.LexEntryRepository);
 			_missingInfoControl.SelectedIndexChanged += new EventHandler(OnRecordSelectionChanged);
 		}
 
 		void OnRecordSelectionChanged(object sender, EventArgs e)
 		{
-			RecordListManager.GoodTimeToCommit();
+			this.LexEntryRepository.GoodTimeToCommit();
 		}
 
 		public override void Deactivate()
@@ -215,7 +215,7 @@ namespace WeSay.LexicalTools
 			   _missingInfoControl.Dispose();
 		   }
 			_missingInfoControl = null;
-			RecordListManager.GoodTimeToCommit();
+			this.LexEntryRepository.GoodTimeToCommit();
 		}
 
 		/// <summary>
@@ -241,14 +241,14 @@ namespace WeSay.LexicalTools
 
 		protected override int ComputeReferenceCount()
 		{
-			return RecordListManager.GetListOfType<LexEntry>().Count;
+			return this.LexEntryRepository.GetListOfType<LexEntry>().Count;
 		}
 
 		public IRecordList<LexEntry> DataSource
 		{
 			get
 			{
-				IRecordList<LexEntry> data = RecordListManager.GetListOfTypeFilteredFurther(_filter, _sortHelper);
+				IRecordList<LexEntry> data = this.LexEntryRepository.GetListOfTypeFilteredFurther(_filter, _sortHelper);
 				_dataHasBeenRetrieved = true;
 				return data;
 			}

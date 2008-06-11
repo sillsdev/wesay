@@ -17,7 +17,7 @@ namespace WeSay.Data.Tests
 			base.TearDown();
 		}
 
-		protected override IRecordListManager CreateRecordListManager()
+		protected override LexEntryRepository CreateRecordListManager()
 		{
 			return new InMemoryRecordListManager();
 		}

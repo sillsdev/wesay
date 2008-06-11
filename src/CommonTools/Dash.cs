@@ -16,14 +16,14 @@ namespace WeSay.CommonTools
 
 	public partial class Dash : UserControl, ITask, IFinishCacheSetup
 	{
-		private readonly IRecordListManager _recordListManager;
+		private readonly LexEntryRepository _recordListManager;
 		private int _standardButtonWidth;
 		private IList<IThingOnDashboard> _thingsToMakeButtonsFor;
 		private List<ButtonGroup> _buttonGroups;
 		private bool _isActive=false;
 		private readonly ICurrentWorkTask _currentWorkTaskProvider;
 
-		public Dash(IRecordListManager RecordListManager, ICurrentWorkTask currentWorkTaskProvider)
+		public Dash(LexEntryRepository RecordListManager, ICurrentWorkTask currentWorkTaskProvider)
 		{
 			_recordListManager = RecordListManager;
 			_currentWorkTaskProvider = currentWorkTaskProvider;

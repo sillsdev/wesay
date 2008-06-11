@@ -15,7 +15,7 @@ namespace WeSay.Data
 			get { return this._itemDeleted; }
 		}
 	}
-	public abstract class AbstractRecordListManager : IRecordListManager
+	public abstract class AbstractRecordListManager : IPrivateRecordListManager
 	{
 		private bool _delayWritingCachesUntilDispose=false;
 		private Hashtable _filteredRecordLists;
@@ -28,7 +28,7 @@ namespace WeSay.Data
 		abstract protected IRecordList<T> CreateFilteredRecordList<T>(IFilter<T> filter, ISortHelper<T> sortHelper) where T : class, new();
 		public abstract T1 GetItem<T1>(long id);
 
-		#region IRecordListManager Members
+		#region LexEntryRepository Members
 
 		/// <summary>
 		/// Used when importing, where we want to go fast and don't care to have a good cache if we crash

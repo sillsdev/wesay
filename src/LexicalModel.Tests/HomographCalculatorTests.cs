@@ -22,7 +22,7 @@ namespace WeSay.LexicalModel.Tests
 		private Db4oRecordList<LexEntry> _records;
 		protected string _dbFile;
 		protected Db4oDataSource _dataSource;
-		Db4oRecordListManager _recordListManager;
+		LexEntryRepository _recordListManager;
 		private WritingSystem _headwordWritingSystem;
 
 		[SetUp]
@@ -30,8 +30,8 @@ namespace WeSay.LexicalModel.Tests
 		{
 			WeSayWordsProject.InitializeForTests();
 			_dbFile = Path.GetTempFileName();
-			_recordListManager = new Db4oRecordListManager(new WeSayWordsDb4oModelConfiguration(), _dbFile);
-			Lexicon.Init((Db4oRecordListManager)_recordListManager);
+			_recordListManager = new LexEntryRepository(new WeSayWordsDb4oModelConfiguration(), _dbFile);
+			Lexicon.Init((LexEntryRepository)_recordListManager);
 			Db4oLexModelHelper.Initialize(_recordListManager.DataSource.Data);
 			_records = (Db4oRecordList<LexEntry>) _recordListManager.GetListOfType<LexEntry>();
 			_headwordWritingSystem = new WritingSystem();

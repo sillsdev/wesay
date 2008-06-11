@@ -34,7 +34,7 @@ namespace WeSay.LexicalTools
 		private bool _alreadyReportedWSLookupFailure= false;
 		private SemanticDomainSortHelper _sortHelper;
 
-		public GatherBySemanticDomainTask(IRecordListManager recordListManager,
+		public GatherBySemanticDomainTask(LexEntryRepository recordListManager,
 										  string label,
 										  string description,
 										  string semanticDomainQuestionsFileName,
@@ -101,9 +101,9 @@ namespace WeSay.LexicalTools
 
 
 
-		private new Db4oRecordListManager RecordListManager
+		private new LexEntryRepository RecordListManager
 		{
-			get { return (Db4oRecordListManager) base.RecordListManager; }
+			get { return (LexEntryRepository) base.LexEntryRepository; }
 		}
 
 		/// <summary>

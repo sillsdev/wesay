@@ -241,27 +241,14 @@ namespace WeSay.Project
 				string db4oFileName = Path.GetFileName(WeSayWordsProject.Project.PathToDb4oLexicalModelDB);
 				string tempDb4oFilePath = Path.Combine(tempCacheDirectory, db4oFileName);
 
-				using (Db4oRecordListManager recordListManager =
-						new Db4oRecordListManager(new WeSayWordsDb4oModelConfiguration(), tempDb4oFilePath))
+				using (LexEntryRepository lexEntryRepository =
+						new LexEntryRepository(tempDb4oFilePath))
 				{
-					Db4oDataSource ds = ((Db4oRecordListManager) recordListManager).DataSource;
-					Db4oLexModelHelper.Initialize(ds.Data);
-					Lexicon.Init((Db4oRecordListManager)recordListManager);
-
-					//  Db4oRecordListManager ds = recordListManager as Db4oRecordListManager;
-
 					//MONO bug as of 1.1.18 cannot bitwise or FileShare on FileStream constructor
 					//                    using (FileStream config = new FileStream(project.PathToProjectTaskInventory, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete))
-					SetupTasksToBuildCaches(recordListManager);
+					SetupTasksToBuildCaches(lexEntryRepository);
 
-					if (Db4oLexModelHelper.Singleton == null)
-					{
-						Db4oLexModelHelper.Initialize(ds.Data);
-						Lexicon.Init((Db4oRecordListManager)recordListManager);
-					}
-
-
-					DoParsing(recordListManager, HistoricalEntryCountProviderForDb4o.GetOrMakeFromDatabase(ds));
+					DoParsing(lexEntryRepository, HistoricalEntryCountProviderForDb4o.GetOrMakeFromDatabase(ds));
 					if (_backgroundWorker != null && _backgroundWorker.CancellationPending)
 					{
 						return;
@@ -317,7 +304,7 @@ namespace WeSay.Project
 			Logger.WriteEvent("Done Building Caches");
 		}
 
-		private void DoParsing(Db4oRecordListManager recordListManager, IHistoricalEntryCountProvider historicalEntryCountProvider)
+		private void DoParsing(LexEntryRepository recordListManager, IHistoricalEntryCountProvider historicalEntryCountProvider)
 		{
 //                entriesList.WriteCacheSize = 0; //don't write after every record
 			using (LiftMerger merger = new LiftMerger(historicalEntryCountProvider, recordListManager))
@@ -350,9 +337,10 @@ namespace WeSay.Project
 			}
 		}
 
-		private static void SetupTasksToBuildCaches(IRecordListManager recordListManager)
+		private static void SetupTasksToBuildCaches(LexEntryRepository recordListManager)
 		{
-			recordListManager.DelayWritingCachesUntilDispose = true;
+			//todo unit of work?
+			//recordListManager.DelayWritingCachesUntilDispose = true;
 			ConfigFileTaskBuilder taskBuilder;
 			using (
 					FileStream configFile =

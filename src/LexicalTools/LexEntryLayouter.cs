@@ -15,7 +15,7 @@ namespace WeSay.LexicalTools
 	public class LexEntryLayouter : Layouter
 	{
 
-		public LexEntryLayouter(DetailList builder, ViewTemplate viewTemplate, IRecordListManager recordListManager)
+		public LexEntryLayouter(DetailList builder, ViewTemplate viewTemplate, LexEntryRepository recordListManager)
 			: base(builder, viewTemplate, recordListManager)
 		{
 		}

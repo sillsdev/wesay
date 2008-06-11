@@ -16,7 +16,7 @@ namespace WeSay.LexicalTools.Tests
 	[TestFixture]
 	public class GatherWordListTaskTests : TaskBaseTests
 	{
-		Db4oRecordListManager _recordListManager;
+		LexEntryRepository _recordListManager;
 		private string _wordListFilePath;
 		private string _dbFilePath;
 		private string[] _words=new string[] {"one","two","three"};
@@ -32,8 +32,8 @@ namespace WeSay.LexicalTools.Tests
 			//Db4oLexModelHelper.InitializeForNonDbTests();
 			WeSayWordsProject.InitializeForTests();
 
-			this._recordListManager = new Db4oRecordListManager(new WeSayWordsDb4oModelConfiguration(), _dbFilePath);// InMemoryRecordListManager();
-			Db4oLexModelHelper.Initialize(((Db4oRecordListManager)_recordListManager).DataSource.Data);
+			this._recordListManager = new LexEntryRepository(new WeSayWordsDb4oModelConfiguration(), _dbFilePath);// InMemoryRecordListManager();
+			Db4oLexModelHelper.Initialize(((LexEntryRepository)_recordListManager).DataSource.Data);
 			Lexicon.Init(_recordListManager);
 			_glossingLanguageWSId = BasilProject.Project.WritingSystems.TestWritingSystemAnalId;
 			_vernacularLanguageWSId = BasilProject.Project.WritingSystems.TestWritingSystemVernId;

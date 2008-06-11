@@ -16,7 +16,7 @@ namespace WeSay.LexicalModel.Tests
 	{
 		ViewTemplate _viewTemplate;
 		string _filePath;
-		IRecordListManager _recordListManager;
+		LexEntryRepository _recordListManager;
 		private WritingSystem _writingSystem;
 
 		[SetUp]
@@ -30,7 +30,7 @@ namespace WeSay.LexicalModel.Tests
 
 			_filePath = Path.GetTempFileName();
 
-			_recordListManager = new Db4oRecordListManager(new WeSayWordsDb4oModelConfiguration(), _filePath);
+			_recordListManager = new LexEntryRepository(new WeSayWordsDb4oModelConfiguration(), _filePath);
 
 		}
 
@@ -45,7 +45,7 @@ namespace WeSay.LexicalModel.Tests
 		[Test]
 		public void Constuct()
 		{
-			LexEntrySortHelper h = new LexEntrySortHelper(((Db4oRecordListManager)_recordListManager).DataSource, _writingSystem, true);
+			LexEntrySortHelper h = new LexEntrySortHelper(((LexEntryRepository)_recordListManager).DataSource, _writingSystem, true);
 			Assert.IsNotNull(h);
 		}
 
@@ -60,13 +60,13 @@ namespace WeSay.LexicalModel.Tests
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void Construct_NullWritingSystemId_Throws()
 		{
-			new LexEntrySortHelper(((Db4oRecordListManager)_recordListManager).DataSource, null, true);
+			new LexEntrySortHelper(((LexEntryRepository)_recordListManager).DataSource, null, true);
 		}
 
 		[Test]
 		public void GetKeys_ForGloss_LexEntryHasNoSenses_NotEmpty()
 		{
-			LexEntrySortHelper h = new LexEntrySortHelper(((Db4oRecordListManager)_recordListManager).DataSource, _writingSystem, false);
+			LexEntrySortHelper h = new LexEntrySortHelper(((LexEntryRepository)_recordListManager).DataSource, _writingSystem, false);
 			int count = 0;
 			foreach (string s in h.GetDisplayStrings(new LexEntry()))
 			{
@@ -79,7 +79,7 @@ namespace WeSay.LexicalModel.Tests
 		[Test]
 		public void GetKeys_ForCompoundGlossExactWritingSystem_SeparateKeys()
 		{
-			LexEntrySortHelper h = new LexEntrySortHelper(((Db4oRecordListManager)_recordListManager).DataSource, _writingSystem, false);
+			LexEntrySortHelper h = new LexEntrySortHelper(((LexEntryRepository)_recordListManager).DataSource, _writingSystem, false);
 			LexEntry e = new LexEntry();
 			LexSense s = (LexSense) e.Senses.AddNew();
 			s.Gloss.SetAlternative(_writingSystem.Id, "gloss 1; gloss 2");
@@ -103,7 +103,7 @@ namespace WeSay.LexicalModel.Tests
 		[Test]
 		public void GetKeys_ForSenseWithOnlyDefinition()
 		{
-			LexEntrySortHelper h = new LexEntrySortHelper(((Db4oRecordListManager)_recordListManager).DataSource, _writingSystem, false);
+			LexEntrySortHelper h = new LexEntrySortHelper(((LexEntryRepository)_recordListManager).DataSource, _writingSystem, false);
 			LexEntry e = new LexEntry();
 			LexSense s = (LexSense)e.Senses.AddNew();
 			s.Definition.SetAlternative(_writingSystem.Id, "a definition");
@@ -117,7 +117,7 @@ namespace WeSay.LexicalModel.Tests
 		[Test]
 		public void GetKeys_ForSenseOnlyGloss()
 		{
-			LexEntrySortHelper h = new LexEntrySortHelper(((Db4oRecordListManager)_recordListManager).DataSource, _writingSystem, false);
+			LexEntrySortHelper h = new LexEntrySortHelper(((LexEntryRepository)_recordListManager).DataSource, _writingSystem, false);
 			LexEntry e = new LexEntry();
 			LexSense s = (LexSense)e.Senses.AddNew();
 			s.Gloss.SetAlternative(_writingSystem.Id, "a gloss");
@@ -130,7 +130,7 @@ namespace WeSay.LexicalModel.Tests
 		[Test]
 		public void GetKeys_ForSenseWithSameGlossAndDefinition_NoDuplicates()
 		{
-			LexEntrySortHelper h = new LexEntrySortHelper(((Db4oRecordListManager)_recordListManager).DataSource, _writingSystem, false);
+			LexEntrySortHelper h = new LexEntrySortHelper(((LexEntryRepository)_recordListManager).DataSource, _writingSystem, false);
 			LexEntry e = new LexEntry();
 			LexSense s = (LexSense)e.Senses.AddNew();
 			s.Definition.SetAlternative(_writingSystem.Id, "hamburger");
@@ -144,7 +144,7 @@ namespace WeSay.LexicalModel.Tests
 		[Test]
 		public void GetKeys_ForSenseWithDifferntGlossAndDefinition_GetBoth()
 		{
-			LexEntrySortHelper h = new LexEntrySortHelper(((Db4oRecordListManager)_recordListManager).DataSource, _writingSystem, false);
+			LexEntrySortHelper h = new LexEntrySortHelper(((LexEntryRepository)_recordListManager).DataSource, _writingSystem, false);
 			LexEntry e = new LexEntry();
 			LexSense s = (LexSense)e.Senses.AddNew();
 			s.Definition.SetAlternative(_writingSystem.Id, "hamburger");
@@ -159,7 +159,7 @@ namespace WeSay.LexicalModel.Tests
 		[Test]
 		public void GetKeys_ForCompoundGlossFallBackWritingSystem_SeparateKeys()
 		{
-			LexEntrySortHelper h = new LexEntrySortHelper(((Db4oRecordListManager)_recordListManager).DataSource, _writingSystem, false);
+			LexEntrySortHelper h = new LexEntrySortHelper(((LexEntryRepository)_recordListManager).DataSource, _writingSystem, false);
 			LexEntry e = new LexEntry();
 			LexSense s = (LexSense)e.Senses.AddNew();
 			s.Gloss.SetAlternative("analysis", "gloss 1; gloss 2");
@@ -206,8 +206,8 @@ namespace WeSay.LexicalModel.Tests
 
 		private void GetKeyIdPairs(string glosses, string definition, string[] expectedKeys)
 		{
-			Lexicon.Init((Db4oRecordListManager) _recordListManager);
-			LexEntrySortHelper h = new LexEntrySortHelper(((Db4oRecordListManager)_recordListManager).DataSource, _writingSystem, false);
+			Lexicon.Init((LexEntryRepository) _recordListManager);
+			LexEntrySortHelper h = new LexEntrySortHelper(((LexEntryRepository)_recordListManager).DataSource, _writingSystem, false);
 			LexEntry e = new LexEntry();
 
 
@@ -220,7 +220,7 @@ namespace WeSay.LexicalModel.Tests
 
 			entriesList = (Db4oRecordList<LexEntry>) _recordListManager.GetListOfType<LexEntry>();
 			entriesList.Add(e);
-			long entryId = ((Db4oRecordListManager)_recordListManager).DataSource.Data.Ext().GetID(e);
+			long entryId = ((LexEntryRepository)_recordListManager).DataSource.Data.Ext().GetID(e);
 
 			foreach (RecordToken recordToken in h.GetRecordTokensForMatchingRecords())
 			{

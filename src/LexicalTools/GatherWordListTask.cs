@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
+using Palaso.Text;
 using WeSay.Data;
 using WeSay.Foundation;
 using WeSay.Language;
@@ -20,10 +21,11 @@ namespace WeSay.LexicalTools
 		private List<string> _words;
 		private int _currentWordIndex = 0;
 		private string _writingSystemIdForWordListWords;
+		private readonly WritingSystem _lexicalUnitWritingSystem;
 	   // private bool _suspendNotificationOfNavigation=false;
 
 
-		public GatherWordListTask(IRecordListManager recordListManager,
+		public GatherWordListTask(LexEntryRepository recordListManager,
 								  string label,
 								  string description,
 								  string wordListFileName,
@@ -43,6 +45,16 @@ namespace WeSay.LexicalTools
 			{
 				throw new ArgumentNullException("viewTemplate");
 			}
+			Field lexicalFormField = viewTemplate.GetField(Field.FieldNames.EntryLexicalForm.ToString());
+			if (lexicalFormField == null || lexicalFormField.WritingSystems.Count < 1)
+			{
+				_lexicalUnitWritingSystem = BasilProject.Project.WritingSystems.UnknownVernacularWritingSystem;
+			}
+			else
+			{
+				_lexicalUnitWritingSystem = lexicalFormField.WritingSystems[0];
+			}
+
 			_wordListFileName = wordListFileName;
 			_words = null;
 			_writingSystemIdForWordListWords = writingSystemIdForWordListLanguage;
@@ -108,7 +120,7 @@ namespace WeSay.LexicalTools
 			{
 				if (_gatherControl==null)
 			   {
-				   _gatherControl = new GatherWordListControl(this, ViewTemplate);
+				   _gatherControl = new GatherWordListControl(this, _lexicalUnitWritingSystem);
 			   }
 			   return _gatherControl;
 			}
@@ -188,8 +200,45 @@ namespace WeSay.LexicalTools
 			sense.Definition.MergeIn(CurrentWordAsMultiText);
 			sense.Gloss.MergeIn(CurrentWordAsMultiText);//we use this for matching up, and well, it probably is a good gloss
 
-			Db4oLexQueryHelper.AddSenseToLexicon(RecordListManager, newVernacularWord, sense);
-			RecordListManager.GoodTimeToCommit();
+			AddSenseToLexicon(newVernacularWord, sense);
+		}
+
+		/// <summary>
+		/// Try to add the sense to a matching entry. If none found, make a new entry with the sense
+		/// </summary>
+		private void AddSenseToLexicon(MultiText lexemeForm, LexSense sense)
+		{
+			//review: the desired semantics of this find are unclear, if we have more than one ws
+			IList<RecordToken> entriesWithSameForm =
+					LexEntryRepository.GetEntriesWithMatchingLexicalForm(
+							lexemeForm[_lexicalUnitWritingSystem.Id],
+							_lexicalUnitWritingSystem);
+			if (entriesWithSameForm.Count == 0)
+			{
+				LexEntry entry = LexEntryRepository.CreateItem();
+				entry.LexicalForm.MergeIn(lexemeForm);
+				entry.Senses.Add(sense);
+				LexEntryRepository.SaveItem(entry);
+			}
+			else
+			{
+				LexEntry entry = LexEntryRepository.GetItem(entriesWithSameForm[0].Id);
+
+				foreach (LexSense s in entry.Senses)
+				{
+					if (sense.Gloss.Forms.Length > 0)
+					{
+						LanguageForm glossWeAreAdding = sense.Gloss.Forms[0];
+						string glossInThisWritingSystem = s.Gloss.GetExactAlternative(glossWeAreAdding.WritingSystemId);
+						if (glossInThisWritingSystem == glossWeAreAdding.Form)
+						{
+							return; //don't add it again
+						}
+					}
+				}
+				entry.Senses.Add(sense);
+
+			}
 		}
 
 		public override void Deactivate()
@@ -200,7 +249,6 @@ namespace WeSay.LexicalTools
 				_gatherControl.Dispose();
 			}
 			_gatherControl = null;
-			RecordListManager.GoodTimeToCommit();
 		}
 
 		public void NavigatePrevious()
@@ -235,9 +283,9 @@ namespace WeSay.LexicalTools
 			CurrentWordIndex = 0;
 		}
 
-		public List<LexEntry> GetMatchingRecords(MultiText gloss)
+		public List<RecordToken> GetMatchingRecords(MultiText gloss)
 		{
-			return Db4oLexQueryHelper.FindObjectsFromLanguageForm<LexEntry, SenseGlossMultiText>(RecordListManager, gloss.GetFirstAlternative());
+			return LexEntryRepository.GetEntriesWithMatchingGlossSortedByLexicalForm(gloss.Find(_writingSystemIdForWordListWords), _lexicalUnitWritingSystem);
 		}
 
 		protected override int ComputeCount(bool returnResultEvenIfExpensive)
@@ -288,7 +336,7 @@ namespace WeSay.LexicalTools
 			entry.CleanUpAfterEditting();
 			if (entry.IsEmptyExceptForLexemeFormForPurposesOfDeletion)
 			{
-				Lexicon.RemoveEntry(entry);
+				LexEntryRepository.DeleteItem(entry);
 			}
 		}
 

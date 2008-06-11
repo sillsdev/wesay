@@ -45,7 +45,7 @@ namespace WeSay.LexicalModel
 		}
 	}
 
-	public class LexRelation : IParentable, IReferenceContainer, IValueHolder<LexEntry>, IReportEmptiness
+	public class LexRelation : IParentable, IReferenceContainer, IReportEmptiness
 	{
 		//private LexRelationType _type;
 		private string _fieldId;
@@ -100,16 +100,15 @@ namespace WeSay.LexicalModel
 
 		#region IReferenceContainer Members
 
-		public object Target
+		public string TargetId
 		{
 			get
 			{
-				return Lexicon.FindFirstLexEntryMatchingId(_targetId);
-				// return Lexicon.TheLexicon.FindEntryFromId(_targetId);
+				return _targetId;
 			}
 			set
 			{
-				if (value == Target)
+				if (value == TargetId)
 				{
 					return;
 				}
@@ -120,11 +119,20 @@ namespace WeSay.LexicalModel
 				}
 				else
 				{
-					LexEntry entry = (LexEntry)value;
-					_targetId = entry.GetOrCreateId(true);
+					_targetId = value;
 				}
 				NotifyPropertyChanged();
 			}
+		}
+
+		public LexEntry GetTarget(LexEntryRepository repository)
+		{
+			return repository.GetLexEntryWithMatchingId(TargetId);
+		}
+
+		public void SetTarget(LexEntry entry)
+		{
+			TargetId = entry.GetOrCreateId(true);
 		}
 
 		#endregion
@@ -145,19 +153,6 @@ namespace WeSay.LexicalModel
 				_parent.NotifyPropertyChanged("relation");
 			}
 		}
-
-		#region IValueHolder<LexEntry> Members
-
-		/// <summary>
-		///  IValueHolder<LexEntry>.Value
-		/// </summary>
-		public LexEntry Value
-		{
-			get{return (LexEntry)Target;}
-			set { Target = value; }
-		}
-
-		#endregion
 
 		#region IReportEmptiness Members
 	   public bool ShouldHoldUpDeletionOfParentObject

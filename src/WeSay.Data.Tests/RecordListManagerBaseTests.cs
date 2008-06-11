@@ -6,7 +6,7 @@ namespace WeSay.Data.Tests
 {
 	public abstract class RecordListManagerBaseTests
 	{
-		private IRecordListManager _recordListManager;
+		private LexEntryRepository _recordListManager;
 		private IRecordList<SimpleIntTestClass> _sourceRecords;
 		private SimpleIntFilter _filter10to19;
 		private SimpleIntFilter _filter11to12;
@@ -14,7 +14,7 @@ namespace WeSay.Data.Tests
 		private SimpleIntFilter _filter11to20;
 		private SimpleIntSortHelper _sortHelper;
 
-		protected IRecordListManager RecordListManager
+		protected LexEntryRepository RecordListManager
 		{
 			get { return _recordListManager; }
 		}
@@ -83,7 +83,7 @@ namespace WeSay.Data.Tests
 			_filter11to20 = new SimpleIntFilter(11, 20);
 		}
 
-		protected abstract IRecordListManager CreateRecordListManager();
+		protected abstract LexEntryRepository CreateRecordListManager();
 
 		public virtual void TearDown()
 		{

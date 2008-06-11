@@ -52,8 +52,8 @@ namespace Addin.Transform.Tests
 				p.LoadFromProjectDirectoryPath(@"E:\Users\John\Documents\WeSay\biatah");
 
 				using (
-					Db4oRecordListManager recordListManager =
-						new Db4oRecordListManager(new WeSayWordsDb4oModelConfiguration(), p.PathToDb4oLexicalModelDB))
+					LexEntryRepository recordListManager =
+						new LexEntryRepository(new WeSayWordsDb4oModelConfiguration(), p.PathToDb4oLexicalModelDB))
 				{
 					Lexicon.Init(recordListManager);
 

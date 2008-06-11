@@ -28,9 +28,9 @@ namespace WeSay.App.Tests
 
 
 
-		private IRecordListManager GetRecordListManager()
+		private LexEntryRepository GetRecordListManager()
 		{
-			IRecordListManager recordListManager;
+			LexEntryRepository recordListManager;
 			if (this._project.PathToWeSaySpecificFilesDirectoryInProject.IndexOf("PRETEND") > -1)
 			{
 				IBindingList entries = new PretendRecordList();
@@ -44,8 +44,8 @@ namespace WeSay.App.Tests
 			}
 			else
 			{
-				recordListManager = new Db4oRecordListManager(new WeSayWordsDb4oModelConfiguration(), this._project.PathToDb4oLexicalModelDB);
-				Db4oLexModelHelper.Initialize(((Db4oRecordListManager)recordListManager).DataSource.Data);
+				recordListManager = new LexEntryRepository(new WeSayWordsDb4oModelConfiguration(), this._project.PathToDb4oLexicalModelDB);
+				Db4oLexModelHelper.Initialize(((LexEntryRepository)recordListManager).DataSource.Data);
 			}
 			return recordListManager;
 		}

@@ -16,7 +16,7 @@ namespace Addin.Transform
 {
 	public class PLiftMaker
 	{
-		public string MakePLiftTempFile(IEnumerable<LexEntry> entries, ViewTemplate template, IFindEntries finder)
+		private string MakePLiftTempFile(IEnumerable<LexEntry> entries, ViewTemplate template, IFindEntries finder)
 		{
 			string path = Path.Combine(Path.GetTempPath(), Path.GetTempFileName());
 			LiftExporter exporter = new LiftExporter(path);
@@ -29,15 +29,20 @@ namespace Addin.Transform
 			return path;
 		}
 
-		public string MakePLiftTempFile( Db4oRecordListManager recordListManager, WeSayWordsProject project)
+		public string MakePLiftTempFile(LexEntryRepository lexEntryRepository, WeSayWordsProject project)
 		{
-			IEnumerable<LexEntry> entries = Lexicon.GetAllEntriesSortedByHeadword(project.DefaultPrintingTemplate.HeadwordWritingSytem);
-			Db4oLexEntryFinder finder = new Db4oLexEntryFinder(recordListManager.DataSource);
-
-			return MakePLiftTempFile(entries, project.DefaultPrintingTemplate, finder);
+			string path = Path.Combine(Path.GetTempPath(), Path.GetTempFileName());
+			LiftExporter exporter = new LiftExporter(path, lexEntryRepository);
+			ViewTemplate template = project.DefaultPrintingTemplate;
+			exporter.SetUpForPresentationLiftExport(template);
+			IList<RecordToken> recordTokens =
+					lexEntryRepository.GetAllEntriesSortedByHeadword(template.HeadwordWritingSytem);
+			exporter.Add(recordTokens);
+			exporter.End();
+			return path;
 		}
 //
-//        public void MakeXHtmlFile(string outputPath, Db4oRecordListManager recordListManager, WeSayWordsProject project)
+//        public void MakeXHtmlFile(string outputPath, LexEntryRepository recordListManager, WeSayWordsProject project)
 //        {
 //            IHomographCalculator homographCalculator = new HomographCalculator(recordListManager, project.DefaultPrintingTemplate.HeadwordWritingSytem);
 //

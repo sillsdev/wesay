@@ -40,7 +40,8 @@ namespace WeSay.Data.Tests
 
 			foreach (SimpleIntTestClass simpleIntTest in simpleIntTests)
 			{
-				result.Add(new RecordToken(simpleIntTest.I.ToString(), _database.GetID(simpleIntTest)));
+				result.Add(new RecordToken(simpleIntTest.I.ToString(),
+					new Db4oRepositoryId(_database.GetID(simpleIntTest))));
 			}
 
 			return result;
@@ -69,14 +70,14 @@ namespace WeSay.Data.Tests
 	//    Db4oDataSource _dataSource;
 	//    CachedSortedDb4oList<int, SimpleIntTestClass> _recordList;
 	//    string _FilePath;
-	//    Db4oRecordListManager _manager;
+	//    LexEntryRepository _manager;
 
 	//    [TestFixtureSetUp]
 	//    public void FixtureSetUp()
 	//    {
 	//        _FilePath = System.IO.Path.GetTempFileName();
 	//        this._dataSource = new Db4oDataSource(_FilePath);
-	//        this._manager = new Db4oRecordListManager(new DoNothingModelConfiguration(), this._FilePath);
+	//        this._manager = new LexEntryRepository(new DoNothingModelConfiguration(), this._FilePath);
 	//        this._recordList = this._manager.GetSortedList(new TestSortHelper(_dataSource.Data.Ext()));
 
 	//        this._enumerable = this._recordList;
@@ -100,14 +101,14 @@ namespace WeSay.Data.Tests
 	//    Db4oDataSource _dataSource;
 	//    CachedSortedDb4oList<int, SimpleIntTestClass> _recordList;
 	//    string _FilePath;
-	//    Db4oRecordListManager _manager;
+	//    LexEntryRepository _manager;
 
 	//    [TestFixtureSetUp]
 	//    public void FixtureSetUp()
 	//    {
 	//        _FilePath = System.IO.Path.GetTempFileName();
 	//        this._dataSource = new Db4oDataSource(_FilePath);
-	//        this._manager = new Db4oRecordListManager(new DoNothingModelConfiguration(), this._FilePath);
+	//        this._manager = new LexEntryRepository(new DoNothingModelConfiguration(), this._FilePath);
 	//        this._recordList = this._manager.GetSortedList(new TestSortHelper(_dataSource.Data.Ext()));
 
 
@@ -130,7 +131,7 @@ namespace WeSay.Data.Tests
 	//{
 	//    Db4oDataSource _dataSource;
 	//    string _FilePath;
-	//    Db4oRecordListManager _manager;
+	//    LexEntryRepository _manager;
 	//    CachedSortedDb4oList<int, SimpleIntTestClass> _sortedList;
 
 	//    [SetUp]
@@ -145,7 +146,7 @@ namespace WeSay.Data.Tests
 	//        }
 	//        this._dataSource.Data.Commit();
 
-	//        this._manager = new Db4oRecordListManager(new DoNothingModelConfiguration(), this._FilePath);
+	//        this._manager = new LexEntryRepository(new DoNothingModelConfiguration(), this._FilePath);
 
 	//        this._sortedList = this._manager.GetSortedList(new TestSortHelper(_dataSource.Data.Ext()));
 	//    }
@@ -176,7 +177,7 @@ namespace WeSay.Data.Tests
 	//    [ExpectedException(typeof(ArgumentNullException))]
 	//    public void Construct_NullSortHelper_Throws()
 	//    {
-	//        using (Db4oRecordListManager manager = new Db4oRecordListManager(new DoNothingModelConfiguration(), this._FilePath))
+	//        using (LexEntryRepository manager = new LexEntryRepository(new DoNothingModelConfiguration(), this._FilePath))
 	//        {
 	//            new CachedSortedDb4oList<int, SimpleIntTestClass>(manager, null);
 	//        }
@@ -423,7 +424,8 @@ namespace WeSay.Data.Tests
 			{
 				foreach (string s in item.StoredList)
 				{
-					result.Add(new RecordToken(s, _database.GetID(item)));
+					result.Add(new RecordToken(s,
+						new Db4oRepositoryId(_database.GetID(item))));
 				}
 			}
 
@@ -450,7 +452,7 @@ namespace WeSay.Data.Tests
 	//{
 	//    Db4oDataSource _dataSource;
 	//    string _FilePath;
-	//    Db4oRecordListManager _manager;
+	//    LexEntryRepository _manager;
 	//    CachedSortedDb4oList<TestItem> _sortedList;
 
 	//    [SetUp]
@@ -468,7 +470,7 @@ namespace WeSay.Data.Tests
 	//        }
 	//        this._dataSource.Data.Commit();
 
-	//        this._manager = new Db4oRecordListManager(new DoNothingModelConfiguration(), this._FilePath);
+	//        this._manager = new LexEntryRepository(new DoNothingModelConfiguration(), this._FilePath);
 
 	//        this._sortedList = this._manager.GetSortedList(new TestItemSortHelper(_dataSource.Data.Ext()));
 	//    }

@@ -63,6 +63,7 @@
 	<Compile Include="ComparisonHelper.cs" />
 	<Compile Include="DatabaseModified.cs" />
 	<Compile Include="Db4oRecordListManager.cs" />
+	<Compile Include="Db4oRepositoryId.cs" />
 	<Compile Include="InMemoryBindingList.cs" />
 	<Compile Include="ISortHelper.cs" />
 	<Compile Include="Db4oRecordList.cs" />
@@ -78,7 +79,7 @@
 	<Compile Include="RecordToken.cs" />
 	<Compile Include="RecordTokenComparer.cs" />
 	<Compile Include="RecordTokensBindingListAdapter.cs" />
-	<Compile Include="SortedDb4oRecordList.cs" />
+	<Compile Include="RepositoryId.cs" />
   </ItemGroup>
   <ItemGroup>
 	<ProjectReference Include="..\PlatformSpecific\PlatformSpecific.csproj">

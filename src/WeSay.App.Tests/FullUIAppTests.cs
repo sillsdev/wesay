@@ -19,7 +19,7 @@ namespace WeSay.App.Tests
 		private FormTester _mainWindowTester;
 
 		WeSayWordsProject _project;
-		private IRecordListManager _recordListManager;
+		private LexEntryRepository _recordListManager;
 
 
 

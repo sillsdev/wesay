@@ -15,7 +15,7 @@ namespace Addin.Transform.Tests
 	public class HtmlTransformerTests
 	{
 		public Transform.HtmlTransformer _addin;
-		private Db4oRecordListManager _recordListManager;
+		private LexEntryRepository _recordListManager;
 		private string _dbFile;
 
 		[SetUp]
@@ -23,7 +23,7 @@ namespace Addin.Transform.Tests
 		{
 			WeSayWordsProject.InitializeForTests();
 			_dbFile = Path.GetTempFileName();
-			_recordListManager = new Db4oRecordListManager(new WeSayWordsDb4oModelConfiguration(), _dbFile);
+			_recordListManager = new LexEntryRepository(new WeSayWordsDb4oModelConfiguration(), _dbFile);
 			Db4oLexModelHelper.Initialize(_recordListManager.DataSource.Data);
 
 			Lexicon.Init(_recordListManager);

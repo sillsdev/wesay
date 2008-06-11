@@ -27,7 +27,7 @@ namespace WeSay.LexicalTools
 		public MissingInfoControl(IRecordList<LexEntry> records,
 								  ViewTemplate viewTemplate,
 								  Predicate<LexEntry> isNotComplete,
-								  IRecordListManager recordListManager)
+								  LexEntryRepository recordListManager)
 		{
 			if (!DesignMode)
 			{

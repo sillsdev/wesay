@@ -22,7 +22,7 @@ namespace WeSay.Project.Tests
 		private ViewTemplate _viewTemplate;
 		private List<string> _writingSystemIds;
 		private string _headwordWritingSystemId;
-		private Db4oRecordListManager _recordListManager;
+		private LexEntryRepository _recordListManager;
 		string _FilePath;
 
 		[SetUp]
@@ -32,8 +32,8 @@ namespace WeSay.Project.Tests
 			Db4oLexModelHelper.InitializeForNonDbTests();
 
 			_FilePath = System.IO.Path.GetTempFileName();
-			_recordListManager = new Db4oRecordListManager(new WeSayWordsDb4oModelConfiguration(), _FilePath);
-			Lexicon.Init((Db4oRecordListManager)_recordListManager);
+			_recordListManager = new LexEntryRepository(new WeSayWordsDb4oModelConfiguration(), _FilePath);
+			Lexicon.Init((LexEntryRepository)_recordListManager);
 
 			_outputPath = Path.Combine(Path.GetTempPath(), Path.GetTempFileName());
 

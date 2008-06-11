@@ -110,7 +110,7 @@ namespace WeSay.LexicalTools
 		/// <summary>
 		/// Use for establishing relations been this entry and the rest
 		/// </summary>
-		public IRecordListManager RecordListManager
+		public LexEntryRepository RecordListManager
 		{
 			set { _recordListManager = value; }
 		}
@@ -290,7 +290,7 @@ namespace WeSay.LexicalTools
 		}
 
 		private CurrentItemEventArgs _currentItemInFocus;
-		private IRecordListManager _recordListManager;
+		private LexEntryRepository _recordListManager;
 		private bool _showNormallyHiddenFields=false;
 
 		private void LexPreviewWithEntryControl_BackColorChanged(object sender, EventArgs e)

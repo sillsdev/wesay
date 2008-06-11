@@ -18,7 +18,7 @@ namespace WeSay.LexicalModel.Tests
 		private LiftExporter _exporter;
 		private StringBuilder _stringBuilder;
 		private LiftMerger _merger;
-		private Db4oRecordListManager _recordListManager;
+		private LexEntryRepository _recordListManager;
 		private string _tempFile;
 
 		[SetUp]
@@ -31,7 +31,7 @@ namespace WeSay.LexicalModel.Tests
 			_exporter = new LiftExporter(_stringBuilder, false);
 
 			_tempFile = Path.GetTempFileName();
-			_recordListManager = new Db4oRecordListManager(new WeSayWordsDb4oModelConfiguration(), _tempFile);
+			_recordListManager = new LexEntryRepository(new WeSayWordsDb4oModelConfiguration(), _tempFile);
 			Lexicon.Init(_recordListManager);
 
 			_merger = new LiftMerger(HistoricalEntryCountProviderForDb4o.GetOrMakeFromDatabase(_recordListManager.DataSource), _recordListManager);

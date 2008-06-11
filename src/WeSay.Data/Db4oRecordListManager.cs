@@ -19,12 +19,12 @@ namespace WeSay.Data
 		public void Configure() {}
 	}
 
-	public class Db4oRecordListManager : AbstractRecordListManager
+	public class PrivateDb4oRecordListManager : AbstractRecordListManager
 	{
 		private Db4oDataSource _dataSource;
 		private string _cachePath;
 
-		public Db4oRecordListManager(IDb4oModelConfiguration config, string pathToDb4oFile)
+		public PrivateDb4oRecordListManager(IDb4oModelConfiguration config, string pathToDb4oFile)
 		{
 			try
 			{
@@ -194,14 +194,14 @@ namespace WeSay.Data
 
 			private class IdListComparer : IComparer<long>
 			{
-				private Dictionary<long, int> _mapIdToIndex;
+				private readonly Dictionary<long, int> _mapIdToIndex;
 
 				public IdListComparer(IList<RecordToken> baseList)
 				{
 					_mapIdToIndex = new Dictionary<long, int>(baseList.Count);
 					for(int i = 0; i < baseList.Count;++i)
 					{
-						_mapIdToIndex[baseList[i].Id] = i;
+						_mapIdToIndex[((Db4oRepositoryId)baseList[i].Id).Db4oId] = i;
 					}
 				}
 
@@ -209,7 +209,7 @@ namespace WeSay.Data
 
 				public int Compare(long x, long y)
 				{
-					return Comparer<long>.Default.Compare(_mapIdToIndex[x], _mapIdToIndex[y]);
+					return Comparer<int>.Default.Compare(_mapIdToIndex[x], _mapIdToIndex[y]);
 				}
 
 				#endregion
@@ -599,40 +599,5 @@ namespace WeSay.Data
 			return item;
 		}
 
-		public void Add<T>(T item) where T : class, new()
-		{
-			IRecordList<T> type = GetListOfType<T>();
-			type.Add(item);
-		}
-
-		public RecordToken GetRecordToken<T>(T item, ISortHelper<T> sortHelper) where T : class, new()
-		{
-			long id = GetId(item);
-			foreach (string displayString in sortHelper.GetDisplayStrings(item))
-			{
-				return new RecordToken(displayString, id);
-			}
-			return new RecordToken(string.Empty, id);
-		}
-
-		public long GetId<T>(T item) {
-			return this._dataSource.Data.Ext().GetID(item);
-		}
-
-		public void Delete<T>(T item) where T : class, new()
-		{
-			Delete<T>(GetId(item));
-		}
-
-		public void Save<T>(T item)
-		{
-			_dataSource.Data.Set(item);
-		}
-
-		public void Delete<T>(long id) where T : class, new()
-		{
-			IRecordList<T> type = GetListOfType<T>();
-			type.Remove(GetItem<T>(id));
-		}
 	}
 }

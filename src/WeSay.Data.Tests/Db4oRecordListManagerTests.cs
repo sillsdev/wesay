@@ -30,7 +30,7 @@ namespace WeSay.Data.Tests
 		[TearDown]
 		public override void TearDown()
 		{
-			string cacheDirectory = ((Db4oRecordListManager)RecordListManager).CachePath;
+			string cacheDirectory = ((LexEntryRepository)RecordListManager).CachePath;
 
 			base.TearDown();
 
@@ -46,9 +46,9 @@ namespace WeSay.Data.Tests
 			File.Delete(_filePath);
 		}
 
-		protected override IRecordListManager CreateRecordListManager()
+		protected override LexEntryRepository CreateRecordListManager()
 		{
-			return new Db4oRecordListManager(new DoNothingModelConfiguration(), _filePath);
+			return new LexEntryRepository(new DoNothingModelConfiguration(), _filePath);
 		}
 
 		[Test]
@@ -320,12 +320,12 @@ namespace WeSay.Data.Tests
 	public class Db4oRecordListManagerCacheTests
 	{
 		private string _filePath;
-		private IRecordListManager _recordListManager;
+		private LexEntryRepository _recordListManager;
 		private IRecordList<SimpleIntTestClass> _sourceRecords;
 		private SimpleIntFilter _filter11to17;
 		private SimpleIntSortHelper _sortHelper;
 
-		protected IRecordListManager RecordListManager
+		protected LexEntryRepository RecordListManager
 		{
 			get
 			{
@@ -353,7 +353,7 @@ namespace WeSay.Data.Tests
 		{
 			_filePath = Path.GetTempFileName();
 
-			_recordListManager = new Db4oRecordListManager(new DoNothingModelConfiguration(), _filePath);
+			_recordListManager = new LexEntryRepository(new DoNothingModelConfiguration(), _filePath);
 			PopupateMasterRecordList();
 
 			_filter11to17 = new SimpleIntFilter(11, 17);
@@ -362,7 +362,7 @@ namespace WeSay.Data.Tests
 			RecordListManager.Register(Filter11to17, SortHelper);
 			RecordListManager.GetListOfTypeFilteredFurther(Filter11to17, SortHelper);
 			RecordListManager.Dispose();
-			_recordListManager = new Db4oRecordListManager(new DoNothingModelConfiguration(), _filePath);
+			_recordListManager = new LexEntryRepository(new DoNothingModelConfiguration(), _filePath);
 
 			_filter11to17 = new SimpleIntFilter(11, 17);
 			_sortHelper = new SimpleIntSortHelper(RecordListManager);
@@ -382,7 +382,7 @@ namespace WeSay.Data.Tests
 		[TearDown]
 		public void TearDown()
 		{
-			string cacheDirectory = ((Db4oRecordListManager)RecordListManager).CachePath;
+			string cacheDirectory = ((LexEntryRepository)RecordListManager).CachePath;
 			RecordListManager.Dispose();
 			DirectoryInfo di = new DirectoryInfo(cacheDirectory);
 			foreach (FileInfo fileInfo in di.GetFiles("*.cache"))

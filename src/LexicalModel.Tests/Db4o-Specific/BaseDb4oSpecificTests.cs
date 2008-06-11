@@ -11,7 +11,7 @@ namespace WeSay.LexicalModel.Tests
 		internal Db4oRecordList<LexEntry> _entriesList;
 		protected Db4oDataSource _dataSource;
 		protected string _filePath ;
-		protected Db4oRecordListManager _recordListManager=null;
+		protected LexEntryRepository _recordListManager=null;
 
 		[SetUp]
 		public void Setup()
@@ -49,7 +49,7 @@ namespace WeSay.LexicalModel.Tests
 				_dataSource.Dispose();
 				_recordListManager.Dispose();
 			}
-			   _recordListManager = new Db4oRecordListManager(new DoNothingModelConfiguration(), _filePath);
+			   _recordListManager = new LexEntryRepository(new DoNothingModelConfiguration(), _filePath);
 
 			   _dataSource = _recordListManager.DataSource;
 			Db4oLexModelHelper.Initialize(_dataSource.Data);

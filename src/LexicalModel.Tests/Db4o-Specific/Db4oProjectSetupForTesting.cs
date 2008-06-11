@@ -22,7 +22,7 @@ namespace WeSay.Project.Tests
 		private bool _disposed = false;
 		private ProjectDirectorySetupForTesting _projectDirectory;
 		public WeSayWordsProject _project;
-		public Db4oRecordListManager _recordListManager;
+		public LexEntryRepository _recordListManager;
 
 		public Db4oProjectSetupForTesting(string xmlOfEntries)
 	   {
@@ -33,8 +33,8 @@ namespace WeSay.Project.Tests
 			CacheBuilder cacheBuilder = new CacheBuilder(_projectDirectory.PathToLiftFile);
 			cacheBuilder.DoWork(new NullProgressState());
 
-			this._recordListManager = new Db4oRecordListManager(new WeSayWordsDb4oModelConfiguration(), _project.PathToDb4oLexicalModelDB);// InMemoryRecordListManager();
-			Db4oLexModelHelper.Initialize(((Db4oRecordListManager)_recordListManager).DataSource.Data);
+			this._recordListManager = new LexEntryRepository(new WeSayWordsDb4oModelConfiguration(), _project.PathToDb4oLexicalModelDB);// InMemoryRecordListManager();
+			Db4oLexModelHelper.Initialize(((LexEntryRepository)_recordListManager).DataSource.Data);
 			Lexicon.Init(_recordListManager);
 
 	   }

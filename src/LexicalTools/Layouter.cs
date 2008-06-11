@@ -30,7 +30,7 @@ namespace WeSay.LexicalTools
 		/// <summary>
 		/// Use for establishing relations been this entry and the rest
 		/// </summary>
-		private readonly IRecordListManager _recordListManager;
+		private readonly LexEntryRepository _recordListManager;
 
 		private readonly ViewTemplate _viewTemplate;
 
@@ -57,7 +57,7 @@ namespace WeSay.LexicalTools
 		/// <summary>
 		/// Use for establishing relations been this entry and the rest
 		/// </summary>
-		protected IRecordListManager RecordListManager
+		protected LexEntryRepository RecordListManager
 		{
 			get { return this._recordListManager; }
 		}
@@ -68,7 +68,7 @@ namespace WeSay.LexicalTools
 			set { _showNormallyHiddenFields = value; }
 		}
 
-		protected Layouter(DetailList builder, ViewTemplate viewTemplate, IRecordListManager recordListManager)
+		protected Layouter(DetailList builder, ViewTemplate viewTemplate, LexEntryRepository recordListManager)
 		{
 			if (builder == null)
 			{

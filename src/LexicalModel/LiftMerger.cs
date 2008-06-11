@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using LiftIO;
 using LiftIO.Parsing;
-using WeSay.Data;
 using WeSay.Foundation;
 using WeSay.Foundation.Options;
 
@@ -16,18 +14,20 @@ namespace WeSay.LexicalModel
 	/// </summary>
 	public class LiftMerger : ILexiconMerger<WeSayDataObject, LexEntry,LexSense,LexExampleSentence>, IDisposable
 	{
-		private Db4oRecordListManager _recordListManager;
-		private IList<String> _expectedOptionTraits;
-		private IList<string> _expectedOptionCollectionTraits;
+		private readonly LexEntryRepository _lexEntryRepository;
+		private readonly IList<String> _expectedOptionTraits;
+		private readonly IList<string> _expectedOptionCollectionTraits;
 
 		/// <summary>
 		/// related to homograph number calculation
 		/// </summary>
-		private IHistoricalEntryCountProvider _historicalEntryCountProvider;
+		private readonly IHistoricalEntryCountProvider _historicalEntryCountProvider;
 
-		public LiftMerger(IHistoricalEntryCountProvider historicalEntryCountProvider,  Db4oRecordListManager recordListManager)
+		public LiftMerger(
+			IHistoricalEntryCountProvider historicalEntryCountProvider,
+			LexEntryRepository lexEntryRepository)
 		{
-			_recordListManager = recordListManager;
+			_lexEntryRepository = lexEntryRepository;
 			_expectedOptionTraits = new List<string>();
 			_expectedOptionCollectionTraits = new List<string>();
 			_historicalEntryCountProvider = historicalEntryCountProvider;
@@ -415,7 +415,7 @@ namespace WeSay.LexicalModel
 		{
 			entry.GetOrCreateId(false);
 			entry.ModifiedTimeIsLocked = false;
-			_recordListManager.Save(entry);
+			_lexEntryRepository.SaveItem(entry);
 		}
 
 		#endregion

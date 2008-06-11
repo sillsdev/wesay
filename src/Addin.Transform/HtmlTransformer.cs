@@ -75,10 +75,10 @@ namespace Addin.Transform
 			//So if we're in that situation, we temporarily try to make one and then release it,
 			//so it isn't locked when the user says "open wesay"
 
-			Db4oRecordListManager manager = null;
+			LexEntryRepository manager = null;
 			if (Lexicon.RecordListManager == null)
 			{
-				manager = (Db4oRecordListManager) ((WeSayWordsProject) projectInfo.Project).MakeRecordListManager();
+				manager = (LexEntryRepository) ((WeSayWordsProject) projectInfo.Project).MakeRecordListManager();
 			}
 		   try
 		   {

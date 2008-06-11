@@ -101,9 +101,9 @@ namespace WeSay.LexicalModel.Tests
 //    public void QueryAfterImportCrash()
 //    {
 //        string path = @"C:\WeSay\SampleProjects\Thai\wesay\tiny.words";
-//        using (IRecordListManager recordListManager = new Db4oRecordListManager(new WeSayWordsDb4oModelConfiguration(), path))
+//        using (LexEntryRepository recordListManager = new LexEntryRepository(new WeSayWordsDb4oModelConfiguration(), path))
 //        {
-//            Db4oRecordListManager listManager = recordListManager as Db4oRecordListManager;
+//            LexEntryRepository listManager = recordListManager as LexEntryRepository;
 //
 //            IQuery q = listManager.DataSource.Data.Query();
 //            q.Constrain(typeof (LexEntry));
@@ -122,9 +122,9 @@ namespace WeSay.LexicalModel.Tests
 //    public void GetAfterImportCrash()
 //    {
 //        string path = @"C:\WeSay\SampleProjects\Thai\wesay\tiny.words";
-//        using (IRecordListManager recordListManager = new Db4oRecordListManager(new WeSayWordsDb4oModelConfiguration(), path))
+//        using (LexEntryRepository recordListManager = new LexEntryRepository(new WeSayWordsDb4oModelConfiguration(), path))
 //        {
-//            Db4oRecordListManager listManager = recordListManager as Db4oRecordListManager;
+//            LexEntryRepository listManager = recordListManager as LexEntryRepository;
 //
 //            IList records = new WeSay.Data.Db4oRecordList<LexEntry>(listManager.DataSource);
 //

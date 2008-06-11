@@ -171,10 +171,10 @@ namespace WeSay.Project.Tests
 //            string path = @"C:\WeSay\SampleProjects\Thai\wesay\tiny.words";
 //            WeSayWordsProject project = new WeSayWordsProject();
 //            project.LoadFromLiftLexiconPath(path);
-//            IRecordListManager recordListManager;
-//            recordListManager = new Db4oRecordListManager(new WeSayWordsDb4oModelConfiguration(), project.PathToDb4oLexicalModelDB);
-//            Db4oLexModelHelper.Initialize(((Db4oRecordListManager)recordListManager).DataSource.Data);
-//            Db4oRecordListManager ds = recordListManager as Db4oRecordListManager;
+//            LexEntryRepository recordListManager;
+//            recordListManager = new LexEntryRepository(new WeSayWordsDb4oModelConfiguration(), project.PathToDb4oLexicalModelDB);
+//            Db4oLexModelHelper.Initialize(((LexEntryRepository)recordListManager).DataSource.Data);
+//            LexEntryRepository ds = recordListManager as LexEntryRepository;
 //            BackupService backupService = new BackupService(project.PathToLocalBackup, ds.DataSource);
 //            ds.DataCommitted += new EventHandler(backupService.OnDataCommitted);
 //            backupService.DoLiftUpdateNow();

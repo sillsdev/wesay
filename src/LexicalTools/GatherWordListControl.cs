@@ -24,7 +24,7 @@ namespace WeSay.LexicalTools
 		}
 
 		public GatherWordListControl(GatherWordListTask task,
-									 ViewTemplate viewTemplate)
+									 WritingSystem lexicalUnitWritingSystem)
 		{
 			_task = task;
 
@@ -34,15 +34,7 @@ namespace WeSay.LexicalTools
 
 			_listViewOfWordsMatchingCurrentItem.Items.Clear();
 
-			Field lexicalFormField = viewTemplate.GetField(Field.FieldNames.EntryLexicalForm.ToString());
-			if (lexicalFormField == null || lexicalFormField.WritingSystems.Count < 1)
-			{
-				_vernacularBox.WritingSystemsForThisField = new WritingSystem[] { BasilProject.Project.WritingSystems.UnknownVernacularWritingSystem };
-			}
-			else
-			{
-				_vernacularBox.WritingSystemsForThisField = new WritingSystem[] { lexicalFormField.WritingSystems[0] };
-			}
+			_vernacularBox.WritingSystemsForThisField = new WritingSystem[] { lexicalUnitWritingSystem };
 			_vernacularBox.TextChanged += new EventHandler(_vernacularBox_TextChanged);
 			_vernacularBox.KeyDown += new KeyEventHandler(_boxVernacularWord_KeyDown);
 			_vernacularBox.MinimumSize = this._boxForeignWord.Size;

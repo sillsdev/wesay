@@ -1,5 +1,5 @@
 using System;
-using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
@@ -36,15 +36,15 @@ namespace WeSay.Project
 		//private const string s_updatePointFileName = "updatePoint";
 		private const int _checkFrequency = 10;
 		private int _commitCount;
-		private Db4oDataSource _datasource;
+		private LexEntryRepository _lexEntryRepository;
 		private DateTime _timeOfLastQueryForNewRecords;
 		//private bool _didFindDataInCacheNeedingRecovery = false;
 
 		event EventHandler Updating;
 
-		public LiftUpdateService(Db4oDataSource datasource)
+		public LiftUpdateService(LexEntryRepository lexEntryRepository)
 		{
-			_datasource = datasource;
+			_lexEntryRepository = lexEntryRepository;
 		}
 
 
@@ -86,7 +86,8 @@ namespace WeSay.Project
 			}
 
 			LiftExporter exporter = new LiftExporter(/*WeSayWordsProject.Project.GetFieldToOptionListNameDictionary(), */
-				MakeIncrementFileName(DateTime.UtcNow));
+				MakeIncrementFileName(DateTime.UtcNow),
+				_lexEntryRepository);
 			exporter.AddDeletedEntry(entry);
 			exporter.End();
 		}
@@ -102,14 +103,14 @@ namespace WeSay.Project
 				Updating.Invoke(this, null);
 			}
 
-			IList records = GetRecordsNeedingUpdateInLift();
-			if (records.Count != 0)
+			IList<RepositoryId> repositoryIds = GetRecordsNeedingUpdateInLift();
+			if (repositoryIds.Count != 0)
 			{
 				LameProgressDialog dlg = null;
-				if (records.Count > 50)
+				if (repositoryIds.Count > 50)
 				{
 					//TODO: if we think this will actually ever be called, clean this up with a real, delayed-visibility dialog
-					dlg = new LameProgressDialog(string.Format("Doing incremental update of {0} records...", records.Count));
+					dlg = new LameProgressDialog(string.Format("Doing incremental update of {0} records...", repositoryIds.Count));
 					dlg.Show();
 					Application.DoEvents();
 				}
@@ -118,8 +119,9 @@ namespace WeSay.Project
 				{
 					LiftExporter exporter =
 						new LiftExporter(/*WeSayWordsProject.Project.GetFieldToOptionListNameDictionary(),*/
-										 MakeIncrementFileName(_timeOfLastQueryForNewRecords));
-					exporter.AddNoGeneric(records);
+										 MakeIncrementFileName(_timeOfLastQueryForNewRecords),
+										 _lexEntryRepository);
+					exporter.Add(repositoryIds);
 					exporter.End();
 
 					RecordUpdateTime(_timeOfLastQueryForNewRecords);
@@ -138,7 +140,7 @@ namespace WeSay.Project
 			{
 				if (ConsumePendingLiftUpdates())
 				{
-					CacheManager.UpdateSyncPointInCache(_datasource.Data,
+					CacheManager.UpdateSyncPointInCache(_lexEntryRepository.Data,
 															File.GetLastWriteTimeUtc(
 																WeSayWordsProject.Project.PathToLiftFile));
 				}
@@ -248,18 +250,11 @@ namespace WeSay.Project
 			return File.GetLastWriteTimeUtc(WeSayWordsProject.Project.PathToLiftFile);
 		}
 
-		public IList  GetRecordsNeedingUpdateInLift()
+		public IList<RepositoryId>  GetRecordsNeedingUpdateInLift()
 		{
-			// by moving back 1 milliseconds, we ensure that we
-			// will get the correct records with just a > and not >= (see note below)
-			DateTime last = GetLastUpdateTime().AddMilliseconds(-1);
-			IQuery q =this._datasource.Data.Query();
-			q.Constrain(typeof(LexEntry));
-			//REVIEW: this is >, not >=. Could a change get lost if the
-			//record was modified milliseconds before the last update?
-			q.Descend("_modificationTime").Constrain(last).Greater();
+			DateTime last = GetLastUpdateTime();
 			_timeOfLastQueryForNewRecords = DateTime.UtcNow;
-			return q.Execute();
+			return _lexEntryRepository.GetEntriesUpdatedSince(last);
 		}
 
 		/// <summary>

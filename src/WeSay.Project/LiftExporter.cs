@@ -9,6 +9,7 @@ using LiftIO.Validation;
 using Palaso.Annotations;
 using Palaso.Reporting;
 using Palaso.Text;
+using WeSay.Data;
 using WeSay.Foundation;
 using WeSay.Foundation.Options;
 using WeSay.LexicalModel;
@@ -22,7 +23,6 @@ namespace WeSay.Project
 		private XmlWriter _writer;
 		private Dictionary<string, int> _allIdsExportedSoFar;
 		private ViewTemplate _viewTemplate;
-		private IFindEntries _entryFinder;
 
 		[Flags]
 		public enum Options
@@ -35,7 +35,7 @@ namespace WeSay.Project
 
 		private Options _options= Options.NormalLift;
 		private string _headWordWritingSystemId;
-
+		private readonly LexEntryRepository _lexEntryRepository;
 
 		//   private Dictionary<string, string> _fieldToRangeSetPairs;
 		protected LiftExporter()
@@ -43,9 +43,10 @@ namespace WeSay.Project
 			_allIdsExportedSoFar = new Dictionary<string, int>();
 		}
 
-		public LiftExporter(/*Dictionary<string, string> fieldToOptionListName, */string path): this()
+		public LiftExporter(/*Dictionary<string, string> fieldToOptionListName, */string path, LexEntryRepository lexEntryRepository): this()
 		{
 			//   _fieldToRangeSetPairs = fieldToOptionListName;
+			_lexEntryRepository = lexEntryRepository;
 			_writer = XmlWriter.Create(path, PrepareSettings(false));
 			Start();
 		}
@@ -53,9 +54,10 @@ namespace WeSay.Project
 		/// <summary>
 		/// for automated testing
 		/// </summary>`
-		public LiftExporter(/*Dictionary<string, string> fieldToOptionListName,*/ StringBuilder builder, bool produceFragmentOnly)
+		public LiftExporter(/*Dictionary<string, string> fieldToOptionListName,*/ StringBuilder builder, bool produceFragmentOnly, LexEntryRepository lexEntryRepository)
 			:this()
 		{
+			_lexEntryRepository = lexEntryRepository;
 			_writer = XmlWriter.Create(builder, PrepareSettings(produceFragmentOnly));
 			if (!produceFragmentOnly)
 			{
@@ -63,10 +65,9 @@ namespace WeSay.Project
 			}
 		}
 
-		public void SetUpForPresentationLiftExport(ViewTemplate template, IFindEntries entryFinder)
+		public void SetUpForPresentationLiftExport(ViewTemplate template)
 		{
 			ExportOptions = LiftExporter.Options.DereferenceRelations | Options.DereferenceOptions | Options.DetermineHeadword;
-			_entryFinder = entryFinder;
 			Template = template;
 		}
 
@@ -130,12 +131,6 @@ namespace WeSay.Project
 			set { _viewTemplate = value; }
 		}
 
-		public IFindEntries EntryFinder
-		{
-			get { return _entryFinder; }
-			set { _entryFinder = value; }
-		}
-
 		public Options ExportOptions
 		{
 			get { return _options; }
@@ -162,20 +157,26 @@ namespace WeSay.Project
 			}
 		}
 
-		public void Add(IEnumerable<LexEntry> entries)
+		public void Add(IEnumerable<RecordToken> recordTokens)
 		{
-			foreach (LexEntry entry in entries)
+			foreach (RecordToken recordToken in recordTokens)
 			{
-				Add(entry);
+				Add(recordToken.Id);
 			}
 		}
 
-		public void AddNoGeneric(IEnumerable entries)
+		public void Add(IEnumerable<RepositoryId> repositoryIds)
 		{
-			foreach (LexEntry entry in entries)
+			foreach (RepositoryId id in repositoryIds)
 			{
-				Add(entry);
+				Add(id);
 			}
+		}
+
+		public void Add(RepositoryId id)
+		{
+			LexEntry entry = _lexEntryRepository.GetItem(id);
+			Add(entry);
 		}
 
 		public void Add(LexEntry entry)
@@ -191,7 +192,7 @@ namespace WeSay.Project
 			_writer.WriteStartElement("entry");
 			_writer.WriteAttributeString("id", GetHumanReadableId(entry, _allIdsExportedSoFar));
 
-			int h = Lexicon.GetHomographNumber(entry, template.HeadwordWritingSytem);
+			int h = _lexEntryRepository.GetHomographNumber(entry, template.HeadwordWritingSytem);
 			if (h > 0)
 			{
 				_writer.WriteAttributeString("order", h.ToString());
@@ -534,8 +535,7 @@ namespace WeSay.Project
 				_writer.WriteAttributeString("ref", relation.Key);
 				if (0 != (ExportOptions & Options.DereferenceRelations))
 				{
-					Debug.Assert(_entryFinder != null, "An IEntryFinder must be provide if DereferenceRelations is on.");
-					LexEntry target = _entryFinder.FindFirstEntryMatchingId(relation.Key);
+					LexEntry target = _lexEntryRepository.GetLexEntryWithMatchingId(relation.Key);
 					if (target != null)
 					{
 						WriteHeadWordField(target, "headword-of-target");

@@ -14,7 +14,7 @@ namespace WeSay.LexicalTools.Tests
 	[TestFixture]
 	public class GatherBySemanticDomainsTaskTests : TaskBaseTests
 	{
-		Db4oRecordListManager _recordListManager;
+		LexEntryRepository _recordListManager;
 		private string _semanticDomainFilePath;
 		private string _dbFilePath;
 		private ViewTemplate _viewTemplate;
@@ -32,7 +32,7 @@ namespace WeSay.LexicalTools.Tests
 			_semanticDomainFilePath = Path.GetTempFileName();
 			CreateSemanticDomainFile();
 
-			this._recordListManager = new Db4oRecordListManager(new WeSayWordsDb4oModelConfiguration(), _dbFilePath);// InMemoryRecordListManager();
+			this._recordListManager = new LexEntryRepository(new WeSayWordsDb4oModelConfiguration(), _dbFilePath);// InMemoryRecordListManager();
 			Db4oLexModelHelper.Initialize(_recordListManager.DataSource.Data);
 			Lexicon.Init(_recordListManager);
 			this._viewTemplate =MakeViewTemplate("en");

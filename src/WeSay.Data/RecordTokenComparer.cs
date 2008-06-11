@@ -28,7 +28,7 @@ namespace WeSay.Data
 			int result = _keySorter.Compare(x.DisplayString, y.DisplayString);
 			if (result == 0)
 			{
-				result = Comparer<long>.Default.Compare(x.Id, y.Id);
+				result = x.Id.CompareTo(y.Id);
 			}
 			return result;
 		}

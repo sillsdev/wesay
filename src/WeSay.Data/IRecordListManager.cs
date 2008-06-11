@@ -2,7 +2,7 @@ using System;
 
 namespace WeSay.Data
 {
-	public interface IRecordListManager: IDisposable
+	public interface IPrivateRecordListManager: IDisposable
 	{
 		void Register<T>(IFilter<T> filter, ISortHelper<T> sortHelper) where T : class, new();
 

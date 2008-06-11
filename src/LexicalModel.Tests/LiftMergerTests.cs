@@ -16,7 +16,7 @@ namespace WeSay.LexicalModel.Tests
 	public class LiftMergerTests : ILiftMergerTestSuite
 	{
 		private LiftMerger _merger;
-		private Db4oRecordListManager _recordListManager;
+		private LexEntryRepository _recordListManager;
 		private string _tempFile;
 
 		[SetUp]
@@ -25,7 +25,7 @@ namespace WeSay.LexicalModel.Tests
 			WeSayWordsProject.InitializeForTests();
 
 			_tempFile = Path.GetTempFileName();
-			_recordListManager = new Db4oRecordListManager(new WeSayWordsDb4oModelConfiguration(), _tempFile);
+			_recordListManager = new LexEntryRepository(new WeSayWordsDb4oModelConfiguration(), _tempFile);
 			Db4oLexModelHelper.Initialize(_recordListManager.DataSource.Data);
 
 			_merger = new LiftMerger(HistoricalEntryCountProviderForDb4o.GetOrMakeFromDatabase(_recordListManager.DataSource), _recordListManager);

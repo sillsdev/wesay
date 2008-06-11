@@ -14,7 +14,7 @@ namespace WeSay.LexicalTools.Tests
 	[TestFixture]
 	public class DictionaryTaskTests : TaskBaseTests
 	{
-		IRecordListManager _recordListManager;
+		LexEntryRepository _recordListManager;
 		ViewTemplate _viewTemplate;
 		private string _filePath;
 
@@ -29,9 +29,9 @@ namespace WeSay.LexicalTools.Tests
 			_viewTemplate = new ViewTemplate();
 			this._viewTemplate.Add(new Field(Field.FieldNames.EntryLexicalForm.ToString(), "LexEntry",vernacularWritingSystemIds));
 			this._viewTemplate.Add(new Field("Note", "LexEntry", new string[]{"en"}, Field.MultiplicityType.ZeroOr1, "MultiText" ));
-			_recordListManager = new Db4oRecordListManager(new WeSayWordsDb4oModelConfiguration(), _filePath);
-			Db4oLexModelHelper.Initialize(((Db4oRecordListManager)_recordListManager).DataSource.Data);
-		  Lexicon.Init((Db4oRecordListManager)_recordListManager);
+			_recordListManager = new LexEntryRepository(new WeSayWordsDb4oModelConfiguration(), _filePath);
+			Db4oLexModelHelper.Initialize(((LexEntryRepository)_recordListManager).DataSource.Data);
+		  Lexicon.Init((LexEntryRepository)_recordListManager);
 			_task = new DictionaryTask(_recordListManager, this._viewTemplate);
 		}
 
@@ -59,7 +59,7 @@ namespace WeSay.LexicalTools.Tests
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void Create_NullviewTemplate_Throws()
 		{
-			using (IRecordListManager recordListManager = new InMemoryRecordListManager())
+			using (LexEntryRepository recordListManager = new InMemoryRecordListManager())
 			{
 				new DictionaryTask(recordListManager, null);
 			}

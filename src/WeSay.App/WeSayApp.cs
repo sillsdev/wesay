@@ -27,7 +27,7 @@ namespace WeSay.App
 		//private  ServiceHost _dictionaryHost;
 #endif
 		private  DictionaryServiceProvider _dictionary;
-		private  IRecordListManager _recordListManager ;
+		private  LexEntryRepository _recordListManager ;
 		private CommandLineArguments _commandLineArguments = new CommandLineArguments();
 		private ServiceAppSingletonHelper _serviceAppSingletonHelper;
 		private TabbedForm _tabbedForm;
@@ -263,7 +263,7 @@ namespace WeSay.App
 				notify.Interrupt();
 			}
 
-//            Db4oRecordListManager manager = _recordListManager as Db4oRecordListManager;
+//            LexEntryRepository manager = _recordListManager as LexEntryRepository;
 //            if (manager != null)
 //            {
 //                HeadwordSortedListHelper helper = new HeadwordSortedListHelper(manager,
@@ -359,10 +359,10 @@ namespace WeSay.App
 
 		}
 
-		private LiftUpdateService SetupUpdateService(IRecordListManager recordListManager)
+		private LiftUpdateService SetupUpdateService(LexEntryRepository recordListManager)
 		{
 			LiftUpdateService liftUpdateService;
-			Db4oRecordListManager ds = (Db4oRecordListManager)    recordListManager;
+			LexEntryRepository ds = (LexEntryRepository)    recordListManager;
 			liftUpdateService = new LiftUpdateService(ds.DataSource);
 			ds.DataCommitted += new EventHandler(liftUpdateService.OnDataCommitted);
 			ds.DataDeleted +=new EventHandler<DeletedItemEventArgs>(liftUpdateService.OnDataDeleted);

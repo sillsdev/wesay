@@ -3,6 +3,7 @@ using System.Collections;
 using System.Diagnostics;
 using PicoContainer;
 using PicoContainer.Defaults;
+using WeSay.LexicalModel;
 using WeSay.Project;
 using System.IO;
 using System.Collections.Generic;
@@ -17,7 +18,7 @@ namespace WeSay.App
 		private IMutablePicoContainer _picoContext;
 		List<ITask> _tasks;
 
-		public ConfigFileTaskBuilder(Stream config, WeSayWordsProject project, ICurrentWorkTask currentWorkTask, IRecordListManager recordListManager)
+		public ConfigFileTaskBuilder(Stream config, WeSayWordsProject project, ICurrentWorkTask currentWorkTask, LexEntryRepository recordListManager)
 		{
 			_picoContext = new DefaultPicoContainer();
 

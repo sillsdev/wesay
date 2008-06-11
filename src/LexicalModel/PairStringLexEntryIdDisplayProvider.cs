@@ -7,11 +7,11 @@ namespace WeSay.LexicalModel
 {
 	public class PairStringLexEntryIdDisplayProvider : IDisplayStringAdaptor
 	{
-		private readonly IRecordListManager _recordListManager;
+		private readonly LexEntryRepository _lexEntryRepository;
 
-		public PairStringLexEntryIdDisplayProvider(IRecordListManager recordListManager)
+		public PairStringLexEntryIdDisplayProvider(LexEntryRepository lexEntryRepository)
 		{
-			_recordListManager = recordListManager;
+			_lexEntryRepository = lexEntryRepository;
 		}
 
 
@@ -23,8 +23,8 @@ namespace WeSay.LexicalModel
 
 		public string GetToolTip(object item)
 		{
-			RecordToken kv = (RecordToken)item;
-			LexEntry entry = this._recordListManager.GetItem<LexEntry>(kv.Id);
+			RecordToken recordToken = (RecordToken)item;
+			LexEntry entry = _lexEntryRepository.GetItem(recordToken.Id);
 			return entry.GetToolTipText();
 		}
 
