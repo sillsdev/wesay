@@ -50,29 +50,29 @@ namespace WeSay.LexicalModel.Db4o_Specific
 										  ApproximateMatcherOptions matcherOptions,
 										  int maximumNumberToRetrieve)
 		{
-			IList<object> pairs = GetKeyIdPairs(form, matcherOptions);
-			List<LexEntry> matches = new List<LexEntry>(pairs.Count);
-			foreach (KeyValuePair<string, long> pair in pairs)
+			IList<RecordToken> recordTokens = GetRecordTokens(form, matcherOptions);
+			List<LexEntry> matches = new List<LexEntry>(recordTokens.Count);
+			foreach (RecordToken recordToken in recordTokens)
 			{
 				maximumNumberToRetrieve--;
 				if (maximumNumberToRetrieve < 0)
 				{
 					break;
 				}
-				if (!pair.Key.EndsWith("*"))
+				if (!recordToken.DisplayString.EndsWith("*"))
 						//be strict about entries added because of other writing-systems(e.g. reversals)
 				{
-					LexEntry entry = _recordListManager.GetItem<LexEntry>(pair.Value);
+					LexEntry entry = _recordListManager.GetItem<LexEntry>(recordToken.Id);
 					matches.Add(entry);
 				}
 			}
 			return matches;
 		}
 
-		private IList<object> GetKeyIdPairs(string form, ApproximateMatcherOptions matcherOptions)
+		private IList<RecordToken> GetRecordTokens(string form, ApproximateMatcherOptions matcherOptions)
 		{
 			return
-					ApproximateMatcher.FindClosestForms<object>(_recordTokens,
+					ApproximateMatcher.FindClosestForms<RecordToken>(_recordTokens,
 																GetFormForMatchingStrategy,
 																form,
 																matcherOptions);
@@ -80,12 +80,12 @@ namespace WeSay.LexicalModel.Db4o_Specific
 
 		public List<string> FindForms(string form, ApproximateMatcherOptions matcherOptions)
 		{
-			IList<object> pairs = GetKeyIdPairs(form, matcherOptions);
-			List<string> matches = new List<string>(pairs.Count);
+			IList<RecordToken> recordTokens = GetRecordTokens(form, matcherOptions);
+			List<string> matches = new List<string>(recordTokens.Count);
 
-			foreach (KeyValuePair<string, long> pair in pairs)
+			foreach (RecordToken recordToken in recordTokens)
 			{
-				matches.Add(pair.Key);
+				matches.Add(recordToken.DisplayString);
 			}
 			return matches;
 		}
