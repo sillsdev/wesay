@@ -531,9 +531,7 @@ namespace WeSay.LexicalTools
 		{
 			string domainKey = DomainKeys[domainIndex];
 
-			RecordTokenComparer recordTokenComparer = LexEntryRepository.GetRecordTokenComparerForSemanticDomain(_semanticDomainField.FieldName);
-			RecordToken recordToken = new RecordToken(domainKey, RepositoryId.Empty);
-			beginIndex = recordTokens.BinarySearch(recordToken, recordTokenComparer);
+			beginIndex = RecordToken.FindFirstWithDisplayString(recordTokens, domainKey);
 			if (beginIndex < 0)
 			{
 				pastEndIndex = beginIndex;

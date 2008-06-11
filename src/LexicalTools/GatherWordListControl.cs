@@ -97,7 +97,7 @@ namespace WeSay.LexicalTools
 			{
 				_congratulationsControl.Hide();
 				Debug.Assert(_vernacularBox.TextBoxes.Count == 1, "other code here (for now), assumes exactly one ws/text box");
-				_boxForeignWord.Text = _task.CurrentWord;
+				_boxForeignWord.Text = _task.CurrentWordFromWordlist;
 				PopulateWordsMatchingCurrentItem();
 			}
 			UpdateEnabledStates();

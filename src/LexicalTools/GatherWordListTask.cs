@@ -9,7 +9,6 @@ using WeSay.Data;
 using WeSay.Foundation;
 using WeSay.Language;
 using WeSay.LexicalModel;
-using WeSay.LexicalModel.Db4o_Specific;
 using WeSay.Project;
 
 namespace WeSay.LexicalTools
@@ -20,7 +19,7 @@ namespace WeSay.LexicalTools
 		private GatherWordListControl _gatherControl;
 		private List<string> _words;
 		private int _currentWordIndex = 0;
-		private string _writingSystemIdForWordListWords;
+		private readonly string _writingSystemIdForWordListWords;
 		private readonly WritingSystem _lexicalUnitWritingSystem;
 	   // private bool _suspendNotificationOfNavigation=false;
 
@@ -103,7 +102,7 @@ namespace WeSay.LexicalTools
 			get {
 				if (_words != null)
 				{
-					return CurrentWordIndex >= _words.Count;
+					return CurrentIndexIntoWordlist >= _words.Count;
 				}
 				else
 					return true;
@@ -126,9 +125,9 @@ namespace WeSay.LexicalTools
 			}
 		}
 
-		public string CurrentWord
+		public string CurrentWordFromWordlist
 		{
-			get {return _words[CurrentWordIndex]; }
+			get {return _words[CurrentIndexIntoWordlist]; }
 		}
 
 		public bool CanNavigateNext
@@ -139,21 +138,21 @@ namespace WeSay.LexicalTools
 				{
 					return false;
 				}
-				return _words.Count > CurrentWordIndex;
+				return _words.Count > CurrentIndexIntoWordlist;
 			}
 		}
 
 		public bool CanNavigatePrevious
 		{
-			get { return CurrentWordIndex > 0; }
+			get { return CurrentIndexIntoWordlist > 0; }
 		}
 
-		protected int CurrentWordIndex
+		private int CurrentIndexIntoWordlist
 		{
 			get { return _currentWordIndex; }
 			set {
 				_currentWordIndex = value;
-				Debug.Assert(CurrentWordIndex >= 0);
+				Debug.Assert(CurrentIndexIntoWordlist >= 0);
 
 				//nb: (CurrentWordIndex == _words.Count) is used to mark the "all done" state:
 
@@ -189,7 +188,7 @@ namespace WeSay.LexicalTools
 			get
 			{
 				MultiText m = new MultiText();
-				m.SetAlternative(_writingSystemIdForWordListWords, CurrentWord);
+				m.SetAlternative(_writingSystemIdForWordListWords, CurrentWordFromWordlist);
 				return m;
 			}
 		}
@@ -253,17 +252,17 @@ namespace WeSay.LexicalTools
 
 		public void NavigatePrevious()
 		{
-			--CurrentWordIndex;
+			--CurrentIndexIntoWordlist;
 		}
 
 		public void NavigateNext()
 		{
 		   // _suspendNotificationOfNavigation = true;
 
-			CurrentWordIndex++;
+			CurrentIndexIntoWordlist++;
 			while (CanNavigateNext && GetMatchingRecords().Count > 0)
 			{
-				++CurrentWordIndex;
+				++CurrentIndexIntoWordlist;
 			}
 		  //  _suspendNotificationOfNavigation = false;
 //            if (UpdateSourceWord != null)
@@ -280,7 +279,7 @@ namespace WeSay.LexicalTools
 
 		public void NavigateAbsoluteFirst()
 		{
-			CurrentWordIndex = 0;
+			CurrentIndexIntoWordlist = 0;
 		}
 
 		public List<RecordToken> GetMatchingRecords()

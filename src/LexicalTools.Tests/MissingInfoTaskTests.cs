@@ -151,7 +151,6 @@ namespace WeSay.LexicalTools.Tests
 			task.Activate();
 			try
 			{
-
 				Assert.IsTrue(
 					((MissingInfoControl)task.Control).EntryViewControl.ControlFormattedView.Text.Contains(_lexicalForm));
 
@@ -165,7 +164,7 @@ namespace WeSay.LexicalTools.Tests
 			task.Activate();
 			try
 			{
-				Assert.AreEqual(string.Empty, ((MissingInfoControl)task.Control).EntryViewControl.ControlFormattedView.Text);
+				Assert.IsTrue(((MissingInfoControl)task.Control).EntryViewControl.DataSource.LexicalForm.Empty);
 				Assert.AreEqual(2, _lexEntryRepository.CountAllEntries());
 			}
 			finally

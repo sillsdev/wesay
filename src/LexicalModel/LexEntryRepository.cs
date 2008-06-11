@@ -89,6 +89,10 @@ namespace WeSay.LexicalModel
 
 		public void SaveItem(LexEntry item)
 		{
+			if (item == null)
+			{
+				throw new ArgumentNullException("item");
+			}
 			_recordListManager.DataSource.Data.Set(item);
 			_recordListManager.DataSource.Data.Commit();
 		}
@@ -153,12 +157,8 @@ namespace WeSay.LexicalModel
 
 			// This should probably be optimized by using a specific query
 			List<RecordToken> entriesByLexicalForm = _recordListManager.GetSortedList(sortHelper);
-			IComparer<string> stringComparer = sortHelper.KeyComparer;
 			List<RecordToken> result = new List<RecordToken>();
-			RecordTokenComparer comparer = new RecordTokenComparer(stringComparer);
-			comparer.IgnoreId = true;
-			RecordToken searchToken = new RecordToken(lexicalForm, RepositoryId.Empty);
-			int index = entriesByLexicalForm.BinarySearch(searchToken, comparer);
+			int index = RecordToken.FindFirstWithDisplayString(entriesByLexicalForm, lexicalForm);
 			while (index >= 0 && index < entriesByLexicalForm.Count &&
 				   entriesByLexicalForm[index].DisplayString == lexicalForm)
 			{
@@ -352,7 +352,7 @@ namespace WeSay.LexicalModel
 
 		public List<RecordToken> GetEntriesWithMatchingGlossSortedByLexicalForm(LanguageForm glossForm, WritingSystem lexicalUnitWritingSystem)
 		{
-			LexEntrySortHelper lexEntrySortHelper = new LexEntrySortHelper(lexicalUnitWritingSystem, true);
+			LexEntrySortHelper lexEntrySortHelper = new LexEntrySortHelper(this, lexicalUnitWritingSystem, true);
 			List<RecordToken> matches = new List<RecordToken>();
 			RepositoryId[] repositoryIds = GetAllEntries();
 			foreach (RepositoryId repositoryId in repositoryIds)
@@ -389,7 +389,7 @@ namespace WeSay.LexicalModel
 			return (LexEntry)matches[0];
 		}
 
-		public IList<RecordToken> GetAllEntriesSortedByGloss(WritingSystem writingSystem)
+		public List<RecordToken> GetAllEntriesSortedByGloss(WritingSystem writingSystem)
 		{
 			LexEntrySortHelper sortHelper =
 					new LexEntrySortHelper(this,
@@ -417,7 +417,8 @@ namespace WeSay.LexicalModel
 
 		public IRecordList<LexEntry> GetEntriesMatchingFilterSortedByLexicalUnit(IFilter<LexEntry> filter, WritingSystem lexicalUnitWritingSystem)
 		{
-			LexEntrySortHelper lexEntrySortHelper = new LexEntrySortHelper(lexicalUnitWritingSystem, true);
+			LexEntrySortHelper lexEntrySortHelper = new LexEntrySortHelper(this, lexicalUnitWritingSystem, true);
+			_recordListManager.Register(filter, lexEntrySortHelper);
 			return _recordListManager.GetListOfTypeFilteredFurther(filter, lexEntrySortHelper);
 		}
 

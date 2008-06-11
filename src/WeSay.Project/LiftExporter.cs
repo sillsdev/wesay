@@ -145,14 +145,6 @@ namespace WeSay.Project
 			_writer.Close();
 		}
 
-		public void Add(IList<LexEntry> entries, int startIndex, int howMany)
-		{
-			for (int i = startIndex; i < startIndex+howMany; i++)
-			{
-				Add(entries[i]);
-			}
-		}
-
 		public void Add(IEnumerable<RecordToken> recordTokens)
 		{
 			foreach (RecordToken recordToken in recordTokens)

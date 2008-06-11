@@ -79,9 +79,8 @@ namespace WeSay.Data
 		protected override IRecordList<T> CreateFilteredRecordList<T>(IFilter<T> filter,
 																		   ISortHelper<T> sortHelper)
 		{
-			IList<RecordToken> sortedList = GetSortedList(sortHelper);
 			FilteredDb4oRecordList<T> list =
-					new FilteredDb4oRecordList<T>(GetListOfType<T>(), filter, sortedList, CachePath, false);
+					new FilteredDb4oRecordList<T>(GetListOfType<T>(), filter, sortHelper, this, CachePath, false);
 			return list;
 		}
 
@@ -91,9 +90,7 @@ namespace WeSay.Data
 			IRecordList<T> recordList = null;
 			try
 			{
-				IList<RecordToken> sortedList = GetSortedList(sortHelper);
-
-				recordList = new FilteredDb4oRecordList<T>(GetListOfType<T>(), filter, sortedList, CachePath, true);
+				recordList = new FilteredDb4oRecordList<T>(GetListOfType<T>(), filter, sortHelper, this, CachePath, true);
 			}
 			catch (OperationCanceledException) {}
 			return recordList;
@@ -120,7 +117,8 @@ namespace WeSay.Data
 			private IFilter<T> _isRelevantFilter;
 			private string _cachePath;
 			private bool _isInitializingFromCache;
-			private IList<RecordToken> _sortedList;
+			private ISortHelper<T> _sortHelper;
+			private PrivateDb4oRecordListManager _recordListManager;
 
 			public Predicate<T> RelevancePredicate
 			{
@@ -128,16 +126,16 @@ namespace WeSay.Data
 			}
 
 			public FilteredDb4oRecordList(IRecordList<T> sourceRecords, IFilter<T> filter,
-										  IList<RecordToken> sortedList,
+										  ISortHelper<T> sortedList, PrivateDb4oRecordListManager recordListManager,
 										  string cachePath, bool constructOnlyIfFilterIsCached)
 					: base((Db4oRecordList<T>) sourceRecords)
 			{
 				WriteCacheSize = 0;
 				_cachePath = cachePath;
 				_isRelevantFilter = filter;
-				_sortedList = sortedList;
+				_sortHelper = sortedList;
 				_masterRecordList = sourceRecords;
-
+				_recordListManager = recordListManager;
 				if (constructOnlyIfFilterIsCached)
 				{
 					((Db4oList<T>) Records).ItemIds.Clear();
@@ -186,8 +184,9 @@ namespace WeSay.Data
 			private void Sort()
 			{
 				int oldCount = Count;
+				IList<RecordToken> sortedList = _recordListManager.GetSortedList(_sortHelper);
 
-				((Db4oList<T>) Records).ItemIds.Sort(new IdListComparer(_sortedList));
+				((Db4oList<T>)Records).ItemIds.Sort(new IdListComparer(sortedList));
 				Debug.Assert(oldCount == Count);
 				OnListReset();
 			}

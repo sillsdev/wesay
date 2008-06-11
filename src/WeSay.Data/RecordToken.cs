@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace WeSay.Data
 {
@@ -25,6 +26,14 @@ namespace WeSay.Data
 		public override string ToString()
 		{
 			return DisplayString;
+		}
+
+		public static int FindFirstWithDisplayString(List<RecordToken> recordTokens, string displayString)
+		{
+			return recordTokens.FindIndex(delegate (RecordToken r)
+							  { return r.DisplayString == displayString; });
+			// todo This could be a binary search. We need our own search so that
+			// we find the first element. The .net BinarySearch finds any, not the first.
 		}
 
 		public static bool operator !=(RecordToken recordToken1, RecordToken recordToken2)

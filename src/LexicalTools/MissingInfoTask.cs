@@ -190,7 +190,10 @@ namespace WeSay.LexicalTools
 
 		public override void Deactivate()
 		{
-			LexEntryRepository.SaveItem(_missingInfoControl.CurrentRecord);
+			if (_missingInfoControl != null)
+			{
+				LexEntryRepository.SaveItem(_missingInfoControl.CurrentRecord);
+			}
 			base.Deactivate();
 		   if (_missingInfoControl != null)
 		   {

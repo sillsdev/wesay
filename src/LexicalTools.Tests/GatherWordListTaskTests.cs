@@ -96,14 +96,14 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void InitiallyWordIsCorrect()
 		{
-			Assert.AreEqual("one",Task.CurrentWord);
+			Assert.AreEqual("one",Task.CurrentWordFromWordlist);
 		}
 
 		[Test]
 		public void CanNavigateToSecondWord()
 		{
 			Task.NavigateNext();
-			Assert.AreEqual("two", Task.CurrentWord);
+			Assert.AreEqual("two", Task.CurrentWordFromWordlist);
 		}
 
 		[Test]
@@ -111,7 +111,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			Task.NavigateNext();
 			 Task.NavigatePrevious();
-		   Assert.AreEqual("one", Task.CurrentWord);
+		   Assert.AreEqual("one", Task.CurrentWordFromWordlist);
 		}
 
 		[Test]
@@ -168,9 +168,11 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void NoWorkToDo()
 		{
+			Assert.IsFalse(Task.IsTaskComplete);
 			AddEntryAndSense("one");
 			AddEntryAndSense("two");
 			AddEntryAndSense("three");
+			Task.NavigateFirstToShow();
 			Assert.IsTrue(Task.IsTaskComplete);
 		}
 
@@ -180,7 +182,7 @@ namespace WeSay.LexicalTools.Tests
 			 //add a word with the first wordlist-word already in a sense
 			AddEntryAndSense("one");
 		   Task.NavigateFirstToShow();
-			Assert.AreEqual("two", Task.CurrentWord);
+			Assert.AreEqual("two", Task.CurrentWordFromWordlist);
 		}
 
 		[Test]
@@ -190,10 +192,10 @@ namespace WeSay.LexicalTools.Tests
 			AddEntryAndSense("three");
 
 			Task.NavigateFirstToShow();
-			Assert.AreEqual("one", Task.CurrentWord);
+			Assert.AreEqual("one", Task.CurrentWordFromWordlist);
 			Task.NavigateNext();
 			Assert.IsTrue(Task.CanNavigateNext);
-			Assert.AreEqual("two", Task.CurrentWord);
+			Assert.AreEqual("two", Task.CurrentWordFromWordlist);
 			Task.NavigateNext();
 			Assert.IsTrue(Task.IsTaskComplete);//we don't get to see "three"
 		}
@@ -204,9 +206,9 @@ namespace WeSay.LexicalTools.Tests
 			AddEntryAndSense("two");
 			Task.NavigateFirstToShow();
 
-			Assert.AreEqual("one", Task.CurrentWord);
+			Assert.AreEqual("one", Task.CurrentWordFromWordlist);
 			Task.NavigateNext();
-			Assert.AreEqual("three", Task.CurrentWord);
+			Assert.AreEqual("three", Task.CurrentWordFromWordlist);
 		}
 
 		[Test]
@@ -215,7 +217,7 @@ namespace WeSay.LexicalTools.Tests
 			AddEntryAndSense("one");
 			AddEntryAndSense("two");
 			Task.NavigateFirstToShow();
-			Assert.AreEqual("three", Task.CurrentWord);
+			Assert.AreEqual("three", Task.CurrentWordFromWordlist);
 		}
 
 		[Test]
@@ -277,8 +279,10 @@ namespace WeSay.LexicalTools.Tests
 	   {
 		   RecordToken token = PrepareEntryWithOneGloss();
 		   RecordToken token2 = PrepareEntryWithOneGloss();
-		   Assert.AreSame(token, token2);
 		   LexEntry entry = _lexEntryRepository.GetItem(token);
+		   LexEntry entry2 = _lexEntryRepository.GetItem(token2);
+		   Assert.AreSame(entry, entry2);
+
 		   Assert.AreEqual(1, entry.Senses.Count);
 		   Assert.AreEqual(1, _lexEntryRepository.CountAllEntries());
 	   }
@@ -286,7 +290,7 @@ namespace WeSay.LexicalTools.Tests
 		private void AddEntryAndSense(string gloss)
 		{
 			LexEntry e = _lexEntryRepository.CreateItem();
-			((LexSense) e.Senses.AddNew()).Gloss["en"] = gloss;
+			((LexSense)e.Senses.AddNew()).Gloss[_glossingLanguageWSId] = gloss;
 			_lexEntryRepository.SaveItem(e);
 		}
 

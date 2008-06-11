@@ -49,13 +49,19 @@ namespace WeSay.LexicalTools
 
 		void OnRecordSelectionChanged(object sender, EventArgs e)
 		{
-			LexEntryRepository.SaveItem(_dictionaryControl.CurrentRecord);
+			if (_dictionaryControl.CurrentRecord != null)
+			{
+				LexEntryRepository.SaveItem(_dictionaryControl.CurrentRecord);
+			}
 		}
 
 		public override void Deactivate()
 		{
 			base.Deactivate();
-			LexEntryRepository.SaveItem(_dictionaryControl.CurrentRecord);
+			if (_dictionaryControl.CurrentRecord != null)
+			{
+				LexEntryRepository.SaveItem(_dictionaryControl.CurrentRecord);
+			}
 			_dictionaryControl.SelectedIndexChanged -= new EventHandler(OnRecordSelectionChanged);
 			_dictionaryControl.Dispose();
 			_dictionaryControl = null;

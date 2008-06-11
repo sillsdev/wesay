@@ -145,6 +145,7 @@ namespace WeSay.LexicalTools
 			picker.Box.ItemFilterer = FindClosestAndNextClosestAndPrefixedPairStringLexEntryForms;
 
 			picker.Box.Items = recordTokenList;
+			picker.Box.SelectedItem = relation.GetTarget(_lexEntryRepository)
 //            picker.Box.SelectedItem = GetKeyIdPairFromLexEntry(relation.GetTarget(_lexEntryRepository));
 
 			picker.CreateNewClicked += OnCreateNewPairStringLexEntryId;
@@ -230,10 +231,7 @@ namespace WeSay.LexicalTools
 
 		private object FindRecordTokenFromForm(string form)
 		{
-			RecordTokenComparer recordTokenComparer = _lexEntryRepository.GetRecordTokenComparerForLexicalForm(_field.WritingSystems[0]);
-			recordTokenComparer.IgnoreId = true;
-			RecordToken recordToken = new RecordToken(form, RepositoryId.Empty);
-			int index = this._recordTokenList.BinarySearch(recordToken, recordTokenComparer);
+			int index = RecordToken.FindFirstWithDisplayString(_recordTokenList, form);
 			if (index >= 0)
 			{
 				return _recordTokenList[index];

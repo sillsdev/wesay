@@ -23,7 +23,7 @@ namespace WeSay.LexicalTools
 		private readonly ContextMenu _cmWritingSystems;
 		private WritingSystem _listWritingSystem;
 		private readonly LexEntryRepository _lexEntryRepository;
-		private IList<RecordToken> _records;
+		private List<RecordToken> _records;
 		private bool _keepRecordCurrent;
 
 		public DictionaryControl()
@@ -44,7 +44,7 @@ namespace WeSay.LexicalTools
 				throw new ArgumentNullException("viewTemplate");
 			}
 			_viewTemplate = viewTemplate;
-			this._lexEntryRepository = (LexEntryRepository) recordManager;
+			this._lexEntryRepository = recordManager;
 			_cmWritingSystems = new ContextMenu();
 
 			SetupPickerControlWritingSystems();
@@ -354,14 +354,7 @@ namespace WeSay.LexicalTools
 		private void SelectItemWithDisplayString(string text)
 		{
 			Logger.WriteMinorEvent("SelectItemWithDisplayString");
-			foreach (RecordToken recordToken in _records)
-			{
-				if (recordToken.DisplayString == text)
-				{
-					_recordsListBox.SelectedIndex = _records.IndexOf(recordToken);
-					break;
-				}
-			}
+			_recordsListBox.SelectedIndex = RecordToken.FindFirstWithDisplayString(_records, text);
 		}
 
 		private void OnRecordSelectionChanged(object sender, EventArgs e)
