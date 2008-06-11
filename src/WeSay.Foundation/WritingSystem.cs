@@ -354,6 +354,7 @@ namespace WeSay.Language
 			}
 		}
 
+		[DebuggerNonUserCode]
 		private static CultureInfo GetCultureInfoFromWritingSystemId(string sortUsing)
 		{
 			CultureInfo ci;
@@ -372,6 +373,7 @@ namespace WeSay.Language
 			return ci;
 		}
 
+		[DebuggerNonUserCode]
 		private static CultureInfo TryGetCultureInfoByIetfLanguageTag(string ietfLanguageTag)
 		{
 			CultureInfo ci = null;

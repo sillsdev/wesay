@@ -17,14 +17,12 @@ namespace WeSay.LexicalTools.Tests
 	public class DictionaryControlTests : NUnitFormTest
 	{
 		private DictionaryTask _task;
-		IRecordListManager _recordListManager;
+		Db4oRecordListManager _recordListManager;
 		string _filePath;
-		private IRecordList<LexEntry> _records;
 		private string _vernacularWsId;
 		private TabControl _tabControl;
 		private Form _window;
 		private TabPage _detailTaskPage;
-		private LexEntry _secondEntry;
 		private Field _definitionField;
 
 		[TestFixtureSetUp]
@@ -41,10 +39,8 @@ namespace WeSay.LexicalTools.Tests
 
 			this._filePath = Path.GetTempFileName();
 			this._recordListManager = new Db4oRecordListManager(new WeSayWordsDb4oModelConfiguration(), _filePath);
-			Db4oLexModelHelper.Initialize(((Db4oRecordListManager)_recordListManager).DataSource.Data);
-			Lexicon.Init((Db4oRecordListManager)_recordListManager);
-
-			this._records = this._recordListManager.GetListOfType<LexEntry>();
+			Db4oLexModelHelper.Initialize(this._recordListManager.DataSource.Data);
+			Lexicon.Init(this._recordListManager);
 
 			string[] analysisWritingSystemIds = new string[] { BasilProject.Project.WritingSystems.TestWritingSystemAnalId };
 			string[] vernacularWritingSystemIds = new string[] { this._vernacularWsId };
@@ -74,7 +70,7 @@ namespace WeSay.LexicalTools.Tests
 			viewTemplate.Add(new Field(Field.FieldNames.ExampleTranslation.ToString(), "LexExampleSentence",analysisWritingSystemIds));
 
 			AddEntry("Initial", analysisWritingSystemIds[0], "meaning", true);
-			_secondEntry = AddEntry("Secondary", analysisWritingSystemIds[0], "secondarymeaning", false);
+			AddEntry("Secondary", analysisWritingSystemIds[0], "secondarymeaning", false);
 			AddEntry("Tertiary", analysisWritingSystemIds[0], "meaning", true);
 
 
@@ -143,7 +139,7 @@ namespace WeSay.LexicalTools.Tests
 				LexExampleSentence ex = (LexExampleSentence) sense.ExampleSentences.AddNew();
 				ex.Sentence.SetAlternative("x", "hello");
 			}
-			this._records.Add(entry);
+			this._recordListManager.Add(entry);
 			return entry;
 		}
 
@@ -164,8 +160,6 @@ namespace WeSay.LexicalTools.Tests
 			_task.Deactivate();
 			this._recordListManager.Dispose();
 			_recordListManager = null;
-			_records.Dispose();
-			_records = null;
 			File.Delete(_filePath);
 			base.TearDown();
 		}
@@ -190,9 +184,11 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void ClickingAddWordIncreasesRecordsByOne()
 		{
-			int before = _records.Count;
+			IRecordList<LexEntry> list = this._recordListManager.GetListOfType<LexEntry>();
+			int before = list.Count;
 			ClickAddWord();
-			Assert.AreEqual(1 + before, _records.Count);
+			list = this._recordListManager.GetListOfType<LexEntry>();
+			Assert.AreEqual(1 + before, list.Count);
 		}
 
 		[Test]
@@ -214,9 +210,11 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void ClickingDeleteWordDecreasesRecordsByOne()
 		{
-			int before = _records.Count;
+			IRecordList<LexEntry> list = this._recordListManager.GetListOfType<LexEntry>();
+			int before = list.Count;
 			ClickDeleteWord();
-			Assert.AreEqual(before - 1, _records.Count);
+			list = this._recordListManager.GetListOfType<LexEntry>();
+			Assert.AreEqual(before - 1, list.Count);
 		}
 
 		/// <summary>
@@ -226,7 +224,8 @@ namespace WeSay.LexicalTools.Tests
 		public void DeleteWordWhenEvenHasCleanup_Regression()
 		{
 			ClickAddWord();
-			int before = _records.Count;
+			IRecordList<LexEntry> list = this._recordListManager.GetListOfType<LexEntry>();
+			int before = list.Count;
 
 			EntryViewControl parentControl = ((DictionaryControl)_task.Control).Control_EntryDetailPanel;
 			LexEntry entry = parentControl.DataSource;
@@ -240,7 +239,8 @@ namespace WeSay.LexicalTools.Tests
 
 			GetEditControl("*EntryLexicalForm").FocusOnFirstWsAlternative();
 			ClickDeleteWord();
-			Assert.AreEqual(before - 1, _records.Count);
+			list = this._recordListManager.GetListOfType<LexEntry>();
+			Assert.AreEqual(before - 1, list.Count);
 		   // GoToLexicalEntryUseFind(form); should fail to find it
 
 			AssertExistenceOfEntryInList(form, false);
@@ -502,7 +502,8 @@ namespace WeSay.LexicalTools.Tests
 		{
 			TypeInLexicalForm("one");
 			ClickStarOfLexemeForm();
-			Assert.IsTrue(this._records[0].LexicalForm.GetAnnotationOfAlternativeIsStarred(_vernacularWsId));
+			IRecordList<LexEntry> list = this._recordListManager.GetListOfType<LexEntry>();
+			Assert.IsTrue(list[0].LexicalForm.GetAnnotationOfAlternativeIsStarred(_vernacularWsId));
 		}
 
 		[Test]
@@ -512,7 +513,9 @@ namespace WeSay.LexicalTools.Tests
    //         this._records[0].NotifyPropertyChanged("senses");
 		   // Application.DoEvents();
 			ClickStarOfLexemeForm();
-			Assert.IsTrue(this._records[0].LexicalForm.GetAnnotationOfAlternativeIsStarred(_vernacularWsId));
+			IRecordList<LexEntry> list = this._recordListManager.GetListOfType<LexEntry>();
+
+			Assert.IsTrue(list[0].LexicalForm.GetAnnotationOfAlternativeIsStarred(_vernacularWsId));
 		}
 
 		private void ClickStarOfLexemeForm()

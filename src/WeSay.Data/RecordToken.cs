@@ -8,23 +8,61 @@ namespace WeSay.Data
 			_displayString = s;
 			_id = id;
 		}
-		private string _displayString;
-		private long _id;
+		private readonly string _displayString;
+		private readonly long _id;
 
 		public string DisplayString
 		{
 			get { return this._displayString; }
-			set { this._displayString = value; }
 		}
 
 		public long Id
 		{
 			get { return this._id; }
-			set { this._id = value; }
 		}
 		public override string ToString()
 		{
 			return DisplayString;
+		}
+
+		public override bool Equals(object obj)
+		{
+			if (ReferenceEquals(this, obj))
+			{
+				return true;
+			}
+
+			RecordToken other = obj as RecordToken;
+			if (other == null)
+			{
+				return false;
+			}
+			return (Id.Equals(other.Id)
+				 && DisplayString.Equals(other.DisplayString));
+		}
+
+		public static bool operator == (RecordToken rt1, RecordToken rt2)
+		{
+			if (ReferenceEquals(rt1, rt2))
+			{
+				return true;
+			}
+
+			if ((object)rt1 == null || (object)rt2 == null)
+			{
+				return false;
+			}
+
+			return (rt1.Id == rt2.Id && rt1.DisplayString == rt2.DisplayString);
+		}
+
+		public static bool operator !=(RecordToken rt1, RecordToken rt2)
+		{
+			return !(rt1 == rt2);
+		}
+		public override int GetHashCode()
+		{
+			return Id.GetHashCode() ^ DisplayString.GetHashCode();
 		}
 	}
 }

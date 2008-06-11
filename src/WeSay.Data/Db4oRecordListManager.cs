@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using Db4objects.Db4o.Ext;
 
 namespace WeSay.Data
 {
@@ -55,16 +56,17 @@ namespace WeSay.Data
 			{
 				throw new ArgumentNullException();
 			}
-			string recordListKey = RecordListKey<T>(null, sortHelper.Name);
-			if (!RecordLists.ContainsKey(recordListKey))
+			//string recordListKey = RecordListKey<T>(null, sortHelper.Name);
+			//if (!RecordLists.ContainsKey(recordListKey))
 			{
 				List<RecordToken> recordTokens = sortHelper.GetRecordTokensForMatchingRecords();
 
 				recordTokens.Sort(new RecordTokenComparer(sortHelper.KeyComparer));
+				return recordTokens;
 
-				RecordLists.Add(recordListKey, recordTokens);
+//                RecordLists.Add(recordListKey, recordTokens);
 			}
-			return (List<RecordToken>)RecordLists[recordListKey];
+//            return (List<RecordToken>)RecordLists[recordListKey];
 		}
 
 		protected override IRecordList<T> CreateMasterRecordList<T>()
@@ -585,7 +587,16 @@ namespace WeSay.Data
 
 		public override T1 GetItem<T1>(long id)
 		{
-			return (T1) _dataSource.Data.Ext().GetByID(id);
+			IExtObjectContainer database = this._dataSource.Data.Ext();
+			T1 item = (T1) database.GetByID(id);
+			if(item != null)
+			{
+				if (!database.IsActive(item))
+				{
+					database.Activate(item, int.MaxValue);
+				}
+			}
+			return item;
 		}
 
 		public void Add<T>(T item) where T : class, new()

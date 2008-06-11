@@ -23,8 +23,9 @@ namespace WeSay.LexicalTools
 		private readonly ContextMenu _cmWritingSystems;
 		private WritingSystem _listWritingSystem;
 		private readonly Db4oRecordListManager _recordManager;
-		private BindingList<RecordToken> _records;
+		private IList<RecordToken> _records;
 		private LexEntrySortHelper _sortHelper;
+		private bool _keepRecordCurrent;
 
 		public DictionaryControl()
 		{
@@ -101,12 +102,12 @@ namespace WeSay.LexicalTools
 				}
 				try
 				{
-					long id = this._records[this.CurrentIndex].Id;
+					long id = this._records[CurrentIndex].Id;
 					return _recordManager.GetItem<LexEntry>(id);
 				}
 				catch (Exception e)
 				{
-					WeSay.Project.WeSayWordsProject.Project.HandleProbableCacheProblem(e);
+					WeSayWordsProject.Project.HandleProbableCacheProblem(e);
 					return null;
 				}
 			}
@@ -149,7 +150,7 @@ namespace WeSay.LexicalTools
 				}
 				else
 				{
-					Palaso.Reporting.ErrorReport.ReportNonFatalMessage(
+					ErrorReport.ReportNonFatalMessage(
 							"There are no writing systems enabled for the Field '{0}'",
 							field.FieldName);
 				}
@@ -189,12 +190,9 @@ namespace WeSay.LexicalTools
 												 IsWritingSystemUsedInLexicalForm(
 														 this._listWritingSystem));
 			LoadRecords();
-			_recordsListBox.BeginUpdate();
-			_recordsListBox.DataSource = _records;
 			_recordsListBox.RetrieveVirtualItem += OnRetrieveVirtualItemEvent;
-			_recordsListBox.EndUpdate();
 
-			Control_EntryDetailPanel.DataSource = CurrentRecord;
+			SetRecordToBeEdited(CurrentRecord);
 			_recordsListBox.WritingSystem = _listWritingSystem;
 
 			int originalHeight = _findText.Height;
@@ -225,8 +223,40 @@ namespace WeSay.LexicalTools
 			_findText.Width = _btnFind.Left - _findText.Left;
 		}
 
+		private void SetRecordToBeEdited(LexEntry record) {
+			if (Control_EntryDetailPanel.DataSource != null)
+			{
+				Control_EntryDetailPanel.DataSource.PropertyChanged -= OnEntryChanged;
+			}
+			Control_EntryDetailPanel.DataSource = record;
+			if (record != null)
+			{
+				record.PropertyChanged += OnEntryChanged;
+			}
+		}
+
+		private void OnEntryChanged(object sender, PropertyChangedEventArgs e)
+		{
+			RecordToken recordToken = _recordManager.GetRecordToken((LexEntry)sender, _sortHelper);
+			string lastDisplayString = string.Empty;
+			if (_recordsListBox.SelectedIndex >= 0)
+			{
+				lastDisplayString = _records[_recordsListBox.SelectedIndex].DisplayString;
+			}
+			if (lastDisplayString != recordToken.DisplayString)
+			{
+				_keepRecordCurrent = true;
+				LoadRecords();
+				_recordsListBox.SelectedIndex = _records.IndexOf(recordToken);
+				_keepRecordCurrent = false;
+			}
+		}
+
 		private void LoadRecords() {
-			this._records = new BindingList<RecordToken>(this._recordManager.GetSortedList(this._sortHelper));
+			this._records = this._recordManager.GetSortedList(this._sortHelper);
+			_recordsListBox.BeginUpdate();
+			_recordsListBox.DataSource = new BindingList<RecordToken>(_records);
+			_recordsListBox.EndUpdate();
 		}
 
 		private void OnRetrieveVirtualItemEvent(object sender, RetrieveVirtualItemEventArgs e)
@@ -323,6 +353,8 @@ namespace WeSay.LexicalTools
 
 		private void OnRecordSelectionChanged(object sender, EventArgs e)
 		{
+			if (_keepRecordCurrent) return;
+
 			if (Control_EntryDetailPanel.DataSource == CurrentRecord)
 			{
 				//we were getting 3 calls to this for each click on a new word
@@ -333,13 +365,14 @@ namespace WeSay.LexicalTools
 			{
 				Logger.WriteEvent("RecordSelectionChanged to " +
 								  CurrentRecord.LexicalForm.GetFirstAlternative());
-				Control_EntryDetailPanel.DataSource = CurrentRecord;
 			}
 			else
 			{
 				Logger.WriteEvent(
 						"RecordSelectionChanged Skipping because record is null");
 			}
+
+			SetRecordToBeEdited(CurrentRecord);
 
 			SelectedIndexChanged.Invoke(this, null);
 			UpdateDisplay();
@@ -360,8 +393,10 @@ namespace WeSay.LexicalTools
 			_recordManager.Add(entry);
 			LoadRecords();
 			RecordToken recordToken = _recordManager.GetRecordToken(entry, _sortHelper);
-			_recordsListBox.SelectedIndex = _records.IndexOf(recordToken);
-			UpdateDisplay();
+			int index = this._records.IndexOf(recordToken);
+			Debug.Assert(index != -1);
+			_recordsListBox.SelectedIndex = index;
+			OnRecordSelectionChanged(_recordsListBox, new EventArgs());
 			_entryViewControl.Focus();
 		}
 
@@ -383,15 +418,14 @@ namespace WeSay.LexicalTools
 		   CurrentRecord.IsBeingDeleted = true;
 			RecordToken recordToken = _records[CurrentIndex];
 			_recordManager.Delete<LexEntry>(recordToken.Id);
-
+			int index = _recordsListBox.SelectedIndex;
 			LoadRecords();
-			OnRecordSelectionChanged(this, null);
-
-			if (CurrentRecord == null)
+			if(index >= _records.Count)
 			{
-				Control_EntryDetailPanel.DataSource = CurrentRecord;
+				index = _records.Count - 1;
 			}
-			UpdateDisplay();
+			_recordsListBox.SelectedIndex = index;
+			OnRecordSelectionChanged(this, null);
 			_entryViewControl.Focus();
 		}
 
