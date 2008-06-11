@@ -4,8 +4,6 @@ using System.Drawing;
 using System.Windows.Forms;
 using Palaso.UI.WindowsForms.i8n;
 using WeSay.AddinLib;
-using WeSay.Data;
-using WeSay.Foundation;
 using WeSay.Foundation.Dashboard;
 using WeSay.LexicalModel;
 using WeSay.Project;
@@ -16,7 +14,7 @@ namespace WeSay.CommonTools
 
 	public partial class Dash : UserControl, ITask, IFinishCacheSetup
 	{
-		private readonly LexEntryRepository _recordListManager;
+		private readonly LexEntryRepository _lexEntryRepository;
 		private int _standardButtonWidth;
 		private IList<IThingOnDashboard> _thingsToMakeButtonsFor;
 		private List<ButtonGroup> _buttonGroups;
@@ -25,7 +23,7 @@ namespace WeSay.CommonTools
 
 		public Dash(LexEntryRepository RecordListManager, ICurrentWorkTask currentWorkTaskProvider)
 		{
-			_recordListManager = RecordListManager;
+			_lexEntryRepository = RecordListManager;
 			_currentWorkTaskProvider = currentWorkTaskProvider;
 		}
 
@@ -43,9 +41,9 @@ namespace WeSay.CommonTools
 
 		private void Fill()
 		{
-			DictionaryStatusControl title = new DictionaryStatusControl(_recordListManager.GetListOfType<LexEntry>());
+			DictionaryStatusControl title = new DictionaryStatusControl(_lexEntryRepository.CountAllEntries());
 			title.Font = new Font("Arial", 14);
-			title.BackColor = this.BackColor;
+			title.BackColor = BackColor;
 			title.ShowLogo = true;
 			_flow.Controls.Add(title);
 
@@ -109,8 +107,8 @@ namespace WeSay.CommonTools
 		private Control MakeButton(IThingOnDashboard item, int buttonWidth, ButtonGroup group)
 		{
 			DashboardButton button = MakeButton(item);
-			button.BackColor = this.BackColor;
-			button.Font = this.Font;
+			button.BackColor = BackColor;
+			button.Font = Font;
 			button.AutoSize = false;
 			button.BorderColor = group.BorderColor;
 			button.DoneColor = group.DoneColor;
@@ -120,7 +118,7 @@ namespace WeSay.CommonTools
 
 			button.Size = new Size(buttonWidth, 40);
 			button.Text = item.LocalizedLabel;
-			button.Click += new EventHandler(OnButtonClick);
+			button.Click += OnButtonClick;
 			return button;
 		}
 
@@ -141,8 +139,8 @@ namespace WeSay.CommonTools
 
 					try
 					{
-						ProjectInfo projectInfo = WeSay.Project.WeSayWordsProject.Project.GetProjectInfoForAddin();
-						addin.Launch(this.ParentForm, projectInfo);
+						ProjectInfo projectInfo = WeSayWordsProject.Project.GetProjectInfoForAddin();
+						addin.Launch(ParentForm, projectInfo);
 					}
 					catch (Exception error)
 					{
@@ -206,16 +204,16 @@ namespace WeSay.CommonTools
 
 			Initialize();
 			SuspendLayout();
-			this.Dock = DockStyle.Fill;
-			this.AutoScroll = true;
+			Dock = DockStyle.Fill;
+			AutoScroll = true;
 			if (ThingsToMakeButtonsFor == null)
 			{
 				ThingsToMakeButtonsFor = new List<IThingOnDashboard>();
-				foreach (ITask task in Project.WeSayWordsProject.Project.Tasks)
+				foreach (ITask task in WeSayWordsProject.Project.Tasks)
 				{
 					ThingsToMakeButtonsFor.Add(task);
 				}
-				foreach (IThingOnDashboard action in AddinSet.GetAddinsForUser())
+				foreach (IWeSayAddin action in AddinSet.GetAddinsForUser())
 				{
 					ThingsToMakeButtonsFor.Add(action);
 				}
@@ -230,7 +228,7 @@ namespace WeSay.CommonTools
 		private void Initialize()
 		{
 			InitializeComponent();
-			this.BackColor = _flow.BackColor;
+			BackColor = _flow.BackColor;
 
 			//_flow.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 
@@ -293,11 +291,6 @@ namespace WeSay.CommonTools
 			get { return false; }
 		}
 
-		public void RegisterWithCache(ViewTemplate viewTemplate)
-		{
-
-		}
-
 		public Control Control
 		{
 			get { return this; }
@@ -354,9 +347,9 @@ namespace WeSay.CommonTools
 	{
 		private readonly DashboardGroup _group;
 		private readonly bool _makeButtonsSameSize;
-		private Color _doneColor;
-		private Color _borderColor;
-		private Color _todoColor;
+		private readonly Color _doneColor;
+		private readonly Color _borderColor;
+		private readonly Color _todoColor;
 
 		public ButtonGroup(DashboardGroup group, bool makeButtonsSameSize, Color borderColor, Color doneColor, Color todoColor)
 		{

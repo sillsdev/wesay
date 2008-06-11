@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Text;
 using System.Xml;
@@ -8,6 +9,7 @@ using NUnit.Framework;
 using WeSay.Data;
 using WeSay.Foundation;
 using WeSay.Foundation.Options;
+using WeSay.Language;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Db4o_Specific;
 using WeSay.Project;
@@ -20,12 +22,16 @@ namespace WeSay.Project.Tests
 		private LiftExporter _exporter;
 		private StringBuilder _stringBuilder;
 		private Dictionary<string, string> _fieldToOptionListName;
+		private string _filePath;
+		private LexEntryRepository _lexEntryRepository;
 
 		[SetUp]
 		public void Setup()
 		{
 			Db4oLexModelHelper.InitializeForNonDbTests();
-			WeSay.Project.WeSayWordsProject.InitializeForTests();
+			WeSayWordsProject.InitializeForTests();
+			_filePath = Path.GetTempFileName();
+			_lexEntryRepository = new LexEntryRepository(_filePath);
 			_fieldToOptionListName = new Dictionary<string, string>();
 			_stringBuilder = new StringBuilder();
 			PrepWriterForFragment();
@@ -33,19 +39,20 @@ namespace WeSay.Project.Tests
 
 		private void PrepWriterForFragment()
 		{
-			_exporter = new LiftExporter(/*_fieldToOptionListName,*/ _stringBuilder, true);
+			_exporter = new LiftExporter(/*_fieldToOptionListName,*/ _stringBuilder, true, _lexEntryRepository);
 		}
 
 		private void PrepWriterForFullDocument()
 		{
-			_exporter = new LiftExporter(/*_fieldToOptionListName,*/ _stringBuilder, false);
+			_exporter = new LiftExporter(/*_fieldToOptionListName,*/ _stringBuilder, false, _lexEntryRepository);
 		}
 
 
 		[TearDown]
 		public void TearDown()
 		{
-
+			_lexEntryRepository.Dispose();
+			File.Delete(_filePath);
 		}
 
 		[Test]
@@ -78,9 +85,9 @@ namespace WeSay.Project.Tests
 			PrepWriterForFullDocument();
 			using (InMemoryRecordList<LexEntry> entries = new InMemoryRecordList<LexEntry>())
 			{
-				MakeTestLexEntry(entries, "sunset");
-				MakeTestLexEntry(entries, "flower");
-				MakeTestLexEntry(entries, "orange");
+				MakeTestLexEntry("sunset");
+				MakeTestLexEntry("flower");
+				MakeTestLexEntry("orange");
 				_exporter.Add(entries, 1, 1);
 				_exporter.End();
 			}
@@ -97,9 +104,9 @@ namespace WeSay.Project.Tests
 			PrepWriterForFullDocument();
 			using (InMemoryRecordList<LexEntry> entries = new InMemoryRecordList<LexEntry>())
 			{
-				MakeTestLexEntry(entries, "sunset");
-				MakeTestLexEntry(entries, "flower");
-				MakeTestLexEntry(entries, "orange");
+				MakeTestLexEntry("sunset");
+				MakeTestLexEntry("flower");
+				MakeTestLexEntry("orange");
 
 				_exporter.Add(entries, 1, 0);
 				_exporter.End();
@@ -116,9 +123,9 @@ namespace WeSay.Project.Tests
 			PrepWriterForFullDocument();
 			using (InMemoryRecordList<LexEntry> entries = new InMemoryRecordList<LexEntry>())
 			{
-				MakeTestLexEntry(entries, "sunset");
-				MakeTestLexEntry(entries, "flower");
-				MakeTestLexEntry(entries, "orange");
+				MakeTestLexEntry("sunset");
+				MakeTestLexEntry("flower");
+				MakeTestLexEntry("orange");
 
 				_exporter.Add(entries, 3, 1);
 				_exporter.End();
@@ -132,18 +139,20 @@ namespace WeSay.Project.Tests
 			PrepWriterForFullDocument();
 			using (InMemoryRecordList<LexEntry> entries = new InMemoryRecordList<LexEntry>())
 			{
-				MakeTestLexEntry(entries, "sunset");
-				MakeTestLexEntry(entries, "flower");
-				MakeTestLexEntry(entries, "orange");
+				MakeTestLexEntry("sunset");
+				MakeTestLexEntry("flower");
+				MakeTestLexEntry("orange");
 
 				_exporter.Add(entries, 1, 4);
 				_exporter.End();
 			}
 		}
 
-		private static void MakeTestLexEntry(InMemoryRecordList<LexEntry> entries, string lexicalForm) {
-			LexEntry entry = entries.AddNew();
+		private void MakeTestLexEntry(string lexicalForm)
+		{
+			LexEntry entry = _lexEntryRepository.CreateItem();
 			entry.LexicalForm["test"] = lexicalForm;
+			_lexEntryRepository.SaveItem(entry);
 		}
 
 		[Test]
@@ -152,7 +161,7 @@ namespace WeSay.Project.Tests
 			string filePath = Path.GetTempFileName();
 			try
 			{
-				_exporter = new LiftExporter(/*_fieldToOptionListName,*/ filePath);
+				_exporter = new LiftExporter(/*_fieldToOptionListName,*/ filePath, _lexEntryRepository);
 				WriteTwoEntries();
 				XmlDocument doc = new XmlDocument();
 				doc.Load(filePath);
@@ -166,14 +175,11 @@ namespace WeSay.Project.Tests
 
 		private void WriteTwoEntries()
 		{
-			using (InMemoryRecordList<LexEntry> entries = new InMemoryRecordList<LexEntry>())
-			{
-				MakeTestLexEntry(entries, "sunset");
-				MakeTestLexEntry(entries, "flower");
+			MakeTestLexEntry("sunset");
+			MakeTestLexEntry("flower");
 
-				_exporter.Add(entries);
-				_exporter.End();
-			}
+			_exporter.Add(_lexEntryRepository.GetAllEntriesSortedByHeadword(new WritingSystem("test", SystemFonts.DefaultFont)));
+			_exporter.End();
 		}
 
 
@@ -357,7 +363,7 @@ namespace WeSay.Project.Tests
 			_exporter.Add(sense);
 			CheckAnswer(GetSenseElement(sense)+"<gloss lang=\"blue\"><text>LessThan&lt;GreaterThan&gt;Ampersan&amp;</text></gloss></sense>");
 		}
-		private string GetSenseElement(LexSense sense)
+		private static string GetSenseElement(LexSense sense)
 		{
 			return  string.Format("<sense id=\"{0}\">", sense.GetOrCreateId());
 		}
@@ -497,7 +503,7 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void Entry_HasId_RemembersId()
 		{
-			LexEntry entry = new LexEntry("my id", Guid.NewGuid());
+			LexEntry entry = new LexEntry("my id", Guid.NewGuid(), 0);
 			_exporter.Add(entry);
 			_exporter.End();
 			ShouldContain("id=\"my id\"");
@@ -517,7 +523,7 @@ namespace WeSay.Project.Tests
 		public void Entry_EntryHasIdWithInvalidXMLCharacters_CharactersEscaped()
 		{
 			// technically the only invalid characters in an attribute are & < and " (when surrounded by ")
-			LexEntry entry = new LexEntry("<>&\"\'", Guid.NewGuid());
+			LexEntry entry = new LexEntry("<>&\"\'", Guid.NewGuid(), 0);
 			_exporter.Add(entry);
 			_exporter.End();
 			ShouldContain("id=\"&lt;&gt;&amp;&quot;'\"");
@@ -563,7 +569,7 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void GetHumanReadableId_EntryHasId_GivesId()
 		{
-			LexEntry entry = new LexEntry("my id", Guid.NewGuid());
+			LexEntry entry = new LexEntry("my id", Guid.NewGuid(), 0);
 			Assert.AreEqual("my id", LiftExporter.GetHumanReadableId(entry, new Dictionary<string, int>()));
 		}
 
@@ -683,14 +689,14 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void GetHumanReadableId_IdIsSpace_NoForm()
 		{
-			LexEntry entry = new LexEntry(" ",Guid.NewGuid());
+			LexEntry entry = new LexEntry(" ",Guid.NewGuid(), 0);
 			Assert.IsTrue(LiftExporter.GetHumanReadableId(entry, new Dictionary<string, int>()).StartsWith("Id'dPrematurely_"));
 		}
 
 		[Test]
 		public void GetHumanReadableId_IdIsSpace_TreatedAsThoughNonExistentId()
 		{
-			LexEntry entry = new LexEntry(" ", Guid.NewGuid());
+			LexEntry entry = new LexEntry(" ", Guid.NewGuid(), 0);
 			entry.LexicalForm["green"] = "string";
 			Assert.IsTrue(LiftExporter.GetHumanReadableId(entry, new Dictionary<string, int>()).StartsWith("string"));
 		}

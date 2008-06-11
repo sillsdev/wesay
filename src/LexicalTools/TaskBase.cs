@@ -134,8 +134,6 @@ namespace WeSay.LexicalTools
 			}
 		}
 
-		public virtual void RegisterWithCache(ViewTemplate viewTemplate) {}
-
 		public virtual void Deactivate()
 		{
 			if (!IsActive)

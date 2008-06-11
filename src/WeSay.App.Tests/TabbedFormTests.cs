@@ -130,10 +130,6 @@ namespace WeSay.App.Tests
 
 		#endregion
 
-		public virtual void RegisterWithCache(ViewTemplate viewTemplate)
-		{
-
-		}
 	}
 
 	[TestFixture]

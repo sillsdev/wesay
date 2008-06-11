@@ -23,7 +23,6 @@ namespace WeSay.LexicalTools
 		private List<string> _domainKeys;
 		private List<string> _domainNames;
 		private List<string> _words;
-		private List<RecordToken> _recordTokens;
 
 		private WritingSystem _semanticDomainWritingSystem;
 		private readonly Field _semanticDomainField;
@@ -32,15 +31,14 @@ namespace WeSay.LexicalTools
 		private int _currentDomainIndex;
 		private int _currentQuestionIndex;
 		private bool _alreadyReportedWSLookupFailure= false;
-		private SemanticDomainSortHelper _sortHelper;
 
-		public GatherBySemanticDomainTask(LexEntryRepository recordListManager,
+		public GatherBySemanticDomainTask(LexEntryRepository lexEntryRepository,
 										  string label,
 										  string description,
 										  string semanticDomainQuestionsFileName,
 										  ViewTemplate viewTemplate,
 										  string semanticDomainFieldName)
-				: base(label, description, false, recordListManager, viewTemplate)
+				: base(label, description, false, lexEntryRepository, viewTemplate)
 		{
 			if (semanticDomainQuestionsFileName == null)
 			{
@@ -97,13 +95,6 @@ namespace WeSay.LexicalTools
 				+ WritingSystemIdForNamesAndQuestions
 				+ Path.GetExtension(nameFromTaskConfiguration);
 			return name;
-		}
-
-
-
-		private new LexEntryRepository RecordListManager
-		{
-			get { return (LexEntryRepository) base.LexEntryRepository; }
 		}
 
 		/// <summary>
@@ -267,14 +258,17 @@ namespace WeSay.LexicalTools
 		public int WordsInDomain(int domainIndex)
 		{
 			VerifyTaskActivated();
-
 			if (domainIndex < 0 || domainIndex >= _domainKeys.Count)
 			{
 				throw new ArgumentOutOfRangeException();
 			}
+
 			int beginIndex;
 			int pastEndIndex;
-			GetWordsIndexes(domainIndex, out beginIndex, out pastEndIndex);
+			GetWordsIndexes(GetAllEntriesSortedBySemanticDomain(),
+							domainIndex,
+							out beginIndex,
+							out pastEndIndex);
 			return pastEndIndex - beginIndex;
 		}
 
@@ -287,14 +281,13 @@ namespace WeSay.LexicalTools
 				if (_words == null)
 				{
 					_words = new List<string>();
-
+					List<RecordToken> recordTokens = GetAllEntriesSortedBySemanticDomain();
 					int beginIndex;
 					int pastEndIndex;
-					GetWordsIndexes(CurrentDomainIndex, out beginIndex, out pastEndIndex);
+					GetWordsIndexes(recordTokens, CurrentDomainIndex, out beginIndex, out pastEndIndex);
 					for (int i = beginIndex; i < pastEndIndex; i++)
 					{
-						long id = this._recordTokens[i].Id;
-						LexEntry entry = RecordListManager.GetItem<LexEntry>(id);
+						LexEntry entry = LexEntryRepository.GetItem(recordTokens[i]);
 						_words.Add(entry.LexicalForm.GetBestAlternative(WordWritingSystemId, "*"));
 					}
 				}
@@ -406,26 +399,26 @@ namespace WeSay.LexicalTools
 			}
 			if (lexicalForm != string.Empty)
 			{
-				List<LexEntry> entries = Lexicon.GetEntriesHavingLexicalForm(lexicalForm, WordWritingSystem);
-				if (entries.Count == 0)
+				IList<RecordToken> recordTokens = LexEntryRepository.GetEntriesWithMatchingLexicalForm(lexicalForm, WordWritingSystem);
+				if (recordTokens.Count == 0)
 				{
-					LexEntry entry = new LexEntry();
+					LexEntry entry = LexEntryRepository.CreateItem();
 					entry.LexicalForm.SetAlternative(WordWritingSystemId, lexicalForm);
 					AddCurrentSemanticDomainToEntry(entry);
-					RecordListManager.Add(entry);
-					LoadRecordTokens();
+					LexEntryRepository.SaveItem(entry);
+					GetAllEntriesSortedBySemanticDomain();
 				}
 				else
 				{
-					foreach (LexEntry entry in entries)
+					foreach (RecordToken recordToken in recordTokens)
 					{
+						LexEntry entry = LexEntryRepository.GetItem(recordToken);
 						AddCurrentSemanticDomainToEntry(entry);
 					}
 				}
 			}
 
 			UpdateCurrentWords();
-			RecordListManager.GoodTimeToCommit();
 		}
 
 		public void DetachFromMatchingEntries(string lexicalForm)
@@ -440,19 +433,14 @@ namespace WeSay.LexicalTools
 			{
 				// this task was coded to have a list of word-forms, not actual entries.
 				//so we have to go searching for possible matches at this point.
-				List<LexEntry> matchingEntries = Lexicon.GetEntriesHavingLexicalForm(lexicalForm, WordWritingSystem);
-				foreach (LexEntry entry in matchingEntries)
+				IList<RecordToken> matchingEntries = LexEntryRepository.GetEntriesWithMatchingLexicalForm(lexicalForm, WordWritingSystem);
+				foreach (RecordToken recordToken in matchingEntries)
 				{
-					DisassociateCurrentSemanticDomainFromEntry(entry); // might remove senses
-					if(entry.IsEmptyExceptForLexemeFormForPurposesOfDeletion)
-					{
-						RecordListManager.Delete<LexEntry>(entry); // if there are no senses left, get rid of it
-					}
+					DisassociateCurrentSemanticDomainFromEntry(recordToken); // might remove senses
 				}
 			}
 
 			UpdateCurrentWords();
-			RecordListManager.GoodTimeToCommit();
 		}
 
 		private bool EntryHasLexicalFormAndSemanticDomainAsOnlyContent(LexEntry entry)
@@ -501,10 +489,11 @@ namespace WeSay.LexicalTools
 			return true;
 		}
 
-		private void DisassociateCurrentSemanticDomainFromEntry(LexEntry entry)
+		private void DisassociateCurrentSemanticDomainFromEntry(RecordToken recordToken)
 		{
 			// have to iterate through these in reverse order
 			// since they might get modified
+			LexEntry entry = LexEntryRepository.GetItem(recordToken);
 			for (int i = entry.Senses.Count - 1; i >= 0; i--)
 			{
 				LexSense sense = (LexSense) entry.Senses[i];
@@ -516,9 +505,15 @@ namespace WeSay.LexicalTools
 				}
 			}
 			entry.CleanUpAfterEditting();
+			if (entry.IsEmptyExceptForLexemeFormForPurposesOfDeletion)
+			{
+				LexEntryRepository.DeleteItem(entry); // if there are no senses left, get rid of it
+			}
+			else
+			{
+				LexEntryRepository.SaveItem(entry);
+			}
 		}
-
-
 
 		private void AddCurrentSemanticDomainToEntry(LexEntry entry)
 		{
@@ -529,23 +524,24 @@ namespace WeSay.LexicalTools
 			{
 				semanticDomains.Add(CurrentDomainKey);
 			}
+			LexEntryRepository.SaveItem(entry);
 		}
 
-		private void GetWordsIndexes(int domainIndex, out int beginIndex, out int pastEndIndex)
+		private void GetWordsIndexes(List<RecordToken> recordTokens, int domainIndex, out int beginIndex, out int pastEndIndex)
 		{
 			string domainKey = DomainKeys[domainIndex];
 
-			RecordTokenComparer recordTokenComparer = new RecordTokenComparer(_sortHelper.KeyComparer);
-			RecordToken recordToken = new RecordToken(domainKey, 0);
-			beginIndex = this._recordTokens.BinarySearch(recordToken, recordTokenComparer);
+			RecordTokenComparer recordTokenComparer = LexEntryRepository.GetRecordTokenComparerForSemanticDomain(_semanticDomainField.FieldName);
+			RecordToken recordToken = new RecordToken(domainKey, RepositoryId.Empty);
+			beginIndex = recordTokens.BinarySearch(recordToken, recordTokenComparer);
 			if (beginIndex < 0)
 			{
 				pastEndIndex = beginIndex;
 				return;
 			}
 			pastEndIndex = beginIndex + 1;
-			while (pastEndIndex < this._recordTokens.Count &&
-				   this._recordTokens[pastEndIndex].DisplayString == domainKey)
+			while (pastEndIndex < recordTokens.Count &&
+				   recordTokens[pastEndIndex].DisplayString == domainKey)
 			{
 				++pastEndIndex;
 			}
@@ -655,8 +651,6 @@ namespace WeSay.LexicalTools
 				_semanticDomainOptionsList =
 						WeSayWordsProject.Project.GetOptionsList(_semanticDomainField, false);
 			}
-			_sortHelper = new SemanticDomainSortHelper(this.RecordListManager.DataSource, this._semanticDomainField.FieldName);
-			LoadRecordTokens();
 
 			UpdateCurrentWords();
 			if (CurrentDomainIndex == -1)
@@ -666,10 +660,9 @@ namespace WeSay.LexicalTools
 			_gatherControl = new GatherBySemanticDomainsControl(this);
 		}
 
-		private void LoadRecordTokens()
+		private List<RecordToken> GetAllEntriesSortedBySemanticDomain()
 		{
-			this._recordTokens =
-					this.RecordListManager.GetSortedList(_sortHelper);
+			return LexEntryRepository.GetAllEntriesSortedBySemanticDomain(_semanticDomainField.FieldName);
 		}
 
 		public override void Deactivate()
@@ -678,8 +671,6 @@ namespace WeSay.LexicalTools
 			_gatherControl.Dispose();
 			_gatherControl = null;
 			UpdateCurrentWords(); // clears out orphan records
-
-			RecordListManager.GoodTimeToCommit();
 		}
 
 		protected override int ComputeCount(bool returnResultEvenIfExpensive)
@@ -699,7 +690,10 @@ namespace WeSay.LexicalTools
 				CurrentDomainIndex = i;
 				int beginIndex;
 				int pastEndIndex;
-				GetWordsIndexes(CurrentDomainIndex, out beginIndex, out pastEndIndex);
+				GetWordsIndexes(GetAllEntriesSortedBySemanticDomain(),
+								CurrentDomainIndex,
+								out beginIndex,
+								out pastEndIndex);
 				if(pastEndIndex == beginIndex)
 				{
 					CurrentDomainIndex = (i==0)?i:i - 1;
@@ -712,73 +706,5 @@ namespace WeSay.LexicalTools
 
 	}
 
-	public class SemanticDomainSortHelper : ISortHelper<LexEntry>
-	{
-		private readonly Db4oDataSource _db4oData;
-		private readonly string _semanticDomainFieldName;
-
-		public SemanticDomainSortHelper(Db4oDataSource db4oData, string semanticDomainFieldName)
-		{
-			if (db4oData == null)
-			{
-				throw new ArgumentNullException("db4oData");
-			}
-			if (semanticDomainFieldName == null)
-			{
-				throw new ArgumentNullException("semanticDomainFieldName");
-			}
-			if (semanticDomainFieldName == string.Empty)
-			{
-				throw new ArgumentOutOfRangeException("semanticDomainFieldName");
-			}
-
-			_db4oData = db4oData;
-			_semanticDomainFieldName = semanticDomainFieldName;
-		}
-
-		#region IDb4oSortHelper<string,LexEntry> Members
-
-		public IComparer<string> KeyComparer
-		{
-			get { return StringComparer.InvariantCulture; }
-		}
-
-		public List<RecordToken> GetRecordTokensForMatchingRecords()
-		{
-			return KeyToEntryIdInitializer.GetKeyToEntryIdPairs(_db4oData, GetDisplayStrings);
-		}
-
-		public IEnumerable<string> GetDisplayStrings(LexEntry item)
-		{
-			List<string> keys = new List<string>();
-			foreach (LexSense sense in item.Senses)
-			{
-				OptionRefCollection semanticDomains = sense.GetProperty<OptionRefCollection>(_semanticDomainFieldName);
-
-				if (semanticDomains != null)
-				{
-					foreach (string s in semanticDomains.Keys)
-					{
-						if (!keys.Contains(s))
-						{
-							keys.Add(s);
-						}
-					}
-				}
-			}
-			return keys;
-		}
-
-		public string Name
-		{
-			get { return "LexEntry sorted by " + _semanticDomainFieldName; }
-		}
-
-		public override int GetHashCode()
-		{
-			return _semanticDomainFieldName.GetHashCode();
-		}
-		#endregion
-	}
 
 }

@@ -1238,13 +1238,13 @@ namespace WeSay.Project
 
 		public LexEntryRepository MakeRecordListManager()
 		{
-			LexEntryRepository recordListManager;
+			LexEntryRepository lexEntryRepository;
 
 			//if (PathToWeSaySpecificFilesDirectoryInProject.IndexOf("PRETEND") > -1)
 			//{
 			//    IBindingList entries = new PretendRecordList();
-			//    recordListManager = new InMemoryRecordListManager();
-			//    IRecordList<LexEntry> masterRecordList = recordListManager.GetListOfType<LexEntry>();
+			//    lexEntryRepository = new InMemoryRecordListManager();
+			//    IRecordList<LexEntry> masterRecordList = lexEntryRepository.GetListOfType<LexEntry>();
 			//    foreach (LexEntry entry in entries)
 			//    {
 			//        masterRecordList.Add(entry);
@@ -1252,9 +1252,9 @@ namespace WeSay.Project
 			//}
 			//else
 			//{
-				recordListManager = new LexEntryRepository(PathToDb4oLexicalModelDB);
+				lexEntryRepository = new LexEntryRepository(PathToDb4oLexicalModelDB);
 			//}
-			return recordListManager;
+			return lexEntryRepository;
 		}
 	}
 }

@@ -1,30 +1,24 @@
 using System;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows.Forms;
 using Palaso.UI.WindowsForms.i8n;
-using WeSay.Foundation;
-using WeSay.UI;
 
 namespace WeSay.CommonTools
 {
 	public partial class DictionaryStatusControl : UserControl
 	{
-		private IBindingList _records;
-
 		public DictionaryStatusControl()
 		{
-			Debug.Assert(this.DesignMode);
+			Debug.Assert(DesignMode);
 			InitializeComponent();
 			ShowLogo = false;
 		}
 
 
-		public DictionaryStatusControl(IBindingList records)
+		public DictionaryStatusControl(int count)
 		{
-			_records = records;
 			InitializeComponent();
-			this._dictionarySizeLabel.Text = String.Format(StringCatalog.Get(this._dictionarySizeLabel.Text), records.Count);
+			this._dictionarySizeLabel.Text = String.Format(StringCatalog.Get(this._dictionarySizeLabel.Text), count);
 		}
 
 		public bool ShowLogo

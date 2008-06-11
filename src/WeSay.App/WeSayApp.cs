@@ -10,6 +10,7 @@ using Palaso.Services.Dictionary;
 using Palaso.Services.ForServers;
 using Palaso.UI.WindowsForms.i8n;
 using WeSay.App.Properties;
+using WeSay.App.Services;
 using WeSay.Data;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Db4o_Specific;
@@ -27,7 +28,7 @@ namespace WeSay.App
 		//private  ServiceHost _dictionaryHost;
 #endif
 		private  DictionaryServiceProvider _dictionary;
-		private  LexEntryRepository _recordListManager ;
+		private  LexEntryRepository _lexEntryRepository ;
 		private CommandLineArguments _commandLineArguments = new CommandLineArguments();
 		private ServiceAppSingletonHelper _serviceAppSingletonHelper;
 		private TabbedForm _tabbedForm;
@@ -113,11 +114,11 @@ namespace WeSay.App
 				{
 					return;
 				}
-				using (_recordListManager = _project.MakeRecordListManager())
+				using (_lexEntryRepository = _project.MakeRecordListManager())
 				{
-					using (_dictionary = new DictionaryServiceProvider(this, _project))
+					using (_dictionary = new DictionaryServiceProvider(_lexEntryRepository, this, _project))
 					{
-						_project.LiftUpdateService = SetupUpdateService(_recordListManager);
+						_project.LiftUpdateService = SetupUpdateService(_lexEntryRepository);
 						_project.LiftUpdateService.DoLiftUpdateNow(true);
 
 						StartDictionaryServices();
@@ -155,22 +156,17 @@ namespace WeSay.App
 				return;
 			}
 
-
-			WeSayWordsDb4oModelConfiguration config = new WeSayWordsDb4oModelConfiguration();
-			config.Configure();
 			try
 			{
-				using (Db4oDataSource ds = new Db4oDataSource(_project.PathToDb4oLexicalModelDB))
+				using (LexEntryRepository lexEntryRepository = new LexEntryRepository(_project.PathToDb4oLexicalModelDB))
 				{
-					Db4oLexModelHelper.Initialize(ds.Data);
-					LiftUpdateService updateServiceForCrashRecovery = new LiftUpdateService(ds);
+					LiftUpdateService updateServiceForCrashRecovery = new LiftUpdateService(lexEntryRepository);
 					updateServiceForCrashRecovery.RecoverUnsavedChangesOutOfCacheIfNeeded();
-					Db4oLexModelHelper.Deinitialize(ds.Data);
 				}
 			}
-			catch (System.IO.IOException e)
+			catch (IOException e)
 			{
-				Palaso.Reporting.ErrorNotificationDialog.ReportException(e, null, false);
+				ErrorNotificationDialog.ReportException(e, null, false);
 				Thread.CurrentThread.Abort();
 			}
 		}
@@ -255,15 +251,14 @@ namespace WeSay.App
 
 			try
 			{
-				DictionaryTask dictionaryTask = new DictionaryTask(_recordListManager, _project.DefaultViewTemplate);
-				dictionaryTask.RegisterWithCache(_project.DefaultViewTemplate);
+				DictionaryTask dictionaryTask = new DictionaryTask(_lexEntryRepository, _project.DefaultViewTemplate);
 			}
 			finally
 			{
 				notify.Interrupt();
 			}
 
-//            LexEntryRepository manager = _recordListManager as LexEntryRepository;
+//            LexEntryRepository manager = _lexEntryRepository as LexEntryRepository;
 //            if (manager != null)
 //            {
 //                HeadwordSortedListHelper helper = new HeadwordSortedListHelper(manager,
@@ -318,7 +313,7 @@ namespace WeSay.App
 									   FileShare.ReadWrite))
 				{
 					builder = new ConfigFileTaskBuilder(configFile, _project,
-														_tabbedForm as ICurrentWorkTask, _recordListManager);
+														_tabbedForm as ICurrentWorkTask, _lexEntryRepository);
 				}
 				_project.Tasks = builder.Tasks;
 				Application.DoEvents();
@@ -359,13 +354,10 @@ namespace WeSay.App
 
 		}
 
-		private LiftUpdateService SetupUpdateService(LexEntryRepository recordListManager)
+		private LiftUpdateService SetupUpdateService(LexEntryRepository lexEntryRepository)
 		{
 			LiftUpdateService liftUpdateService;
-			LexEntryRepository ds = (LexEntryRepository)    recordListManager;
-			liftUpdateService = new LiftUpdateService(ds.DataSource);
-			ds.DataCommitted += new EventHandler(liftUpdateService.OnDataCommitted);
-			ds.DataDeleted +=new EventHandler<DeletedItemEventArgs>(liftUpdateService.OnDataDeleted);
+			liftUpdateService = new LiftUpdateService(lexEntryRepository);
 			return liftUpdateService;
 		}
 

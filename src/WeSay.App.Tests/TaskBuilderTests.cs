@@ -30,13 +30,13 @@ namespace WeSay.App.Tests
 
 		private LexEntryRepository GetRecordListManager()
 		{
-			LexEntryRepository recordListManager;
+			LexEntryRepository lexEntryRepository;
 			if (this._project.PathToWeSaySpecificFilesDirectoryInProject.IndexOf("PRETEND") > -1)
 			{
 				IBindingList entries = new PretendRecordList();
-				recordListManager = new InMemoryRecordListManager();
+				lexEntryRepository = new InMemoryRecordListManager();
 				Db4oLexModelHelper.InitializeForNonDbTests();
-				IRecordList<LexEntry> masterRecordList = recordListManager.GetListOfType<LexEntry>();
+				IRecordList<LexEntry> masterRecordList = lexEntryRepository.GetListOfType<LexEntry>();
 				foreach (LexEntry entry in entries)
 				{
 					masterRecordList.Add(entry);
@@ -44,10 +44,10 @@ namespace WeSay.App.Tests
 			}
 			else
 			{
-				recordListManager = new LexEntryRepository(new WeSayWordsDb4oModelConfiguration(), this._project.PathToDb4oLexicalModelDB);
-				Db4oLexModelHelper.Initialize(((LexEntryRepository)recordListManager).DataSource.Data);
+				lexEntryRepository = new LexEntryRepository(new WeSayWordsDb4oModelConfiguration(), this._project.PathToDb4oLexicalModelDB);
+				Db4oLexModelHelper.Initialize(((LexEntryRepository)lexEntryRepository).DataSource.Data);
 			}
-			return recordListManager;
+			return lexEntryRepository;
 		}
 
 	}

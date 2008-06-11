@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Drawing;
 using System.Windows.Forms;
 using WeSay.Data;
@@ -23,7 +22,6 @@ namespace WeSay.LexicalTools
 		private SimpleBinding<LexEntry> _binding;
 		private Control _control;
 		private List<RecordToken> _recordTokenList;
-		private LexEntrySortHelper _lexEntrySortHelper;
 
 		private RelationController(WeSayDataObject relationParent,
 								   LexRelationType relationType,
@@ -48,7 +46,7 @@ namespace WeSay.LexicalTools
 		public static Control CreateWidget(WeSayDataObject relationParent,
 										   LexRelationType relationType,
 										   Field field,
-										   LexEntryRepository recordListManager,
+										   LexEntryRepository lexEntryRepository,
 										   EventHandler<CurrentItemEventArgs>
 												   focus)
 		{
@@ -56,24 +54,24 @@ namespace WeSay.LexicalTools
 					new RelationController(relationParent,
 										   relationType,
 										   field,
-										   recordListManager,
+										   lexEntryRepository,
 										   focus);
 			return controller.Control;
 		}
 
-		private void OnCreateNewLexEntry(object sender,
-											  CreateNewArgs e)
-		{
-			LexEntry newGuy = CreateNewLexEntry(e);
-			e.NewlyCreatedItem = newGuy;
+		//private void OnCreateNewLexEntry(object sender,
+		//                                      CreateNewArgs e)
+		//{
+		//    LexEntry newGuy = CreateNewLexEntry(e);
+		//    e.NewlyCreatedItem = newGuy;
 
-		}
+		//}
 
 		private void OnCreateNewPairStringLexEntryId(object sender,
 									  CreateNewArgs e)
 		{
 			LexEntry newGuy = CreateNewLexEntry(e);
-			e.NewlyCreatedItem = GetKeyIdPairFromLexEntry(newGuy);
+//            e.NewlyCreatedItem = GetKeyIdPairFromLexEntry(newGuy);
 		}
 
 		private LexEntry CreateNewLexEntry(CreateNewArgs e) {
@@ -138,8 +136,8 @@ namespace WeSay.LexicalTools
 			this._recordTokenList = recordTokenList;
 
 			AutoCompleteWithCreationBox<object, LexEntry> picker = CreatePicker<object>(relation);
-			picker.GetKeyValueFromValue = GetKeyIdPairFromLexEntry;
-			picker.GetValueFromKeyValue = GetLexEntryFromKeyIdPair;
+			//picker.GetKeyValueFromValue = GetKeyIdPairFromLexEntry;
+			//picker.GetValueFromKeyValue = GetLexEntryFromKeyIdPair;
 
 			picker.Box.ItemDisplayStringAdaptor =
 					new PairStringLexEntryIdDisplayProvider(this._lexEntryRepository);
@@ -147,33 +145,32 @@ namespace WeSay.LexicalTools
 			picker.Box.ItemFilterer = FindClosestAndNextClosestAndPrefixedPairStringLexEntryForms;
 
 			picker.Box.Items = recordTokenList;
-			picker.Box.SelectedItem = GetKeyIdPairFromLexEntry((LexEntry)relation.Target);
+//            picker.Box.SelectedItem = GetKeyIdPairFromLexEntry(relation.GetTarget(_lexEntryRepository));
 
 			picker.CreateNewClicked += OnCreateNewPairStringLexEntryId;
 			this._control = picker;
 		}
 
-		private static LexEntry Identity(LexEntry e) {
-			return e;
-		}
+		//private static LexEntry Identity(LexEntry e) {
+		//    return e;
+		//}
 
-		private object GetKeyIdPairFromLexEntry(LexEntry e) {
-			if (e == null)
-			{
-				return null;
-			}
-			List<RecordToken> lexEntryRecordTokens = this._lexEntrySortHelper.GetRecordTokens(e);
-			if (lexEntryRecordTokens.Count > 0)
-			{
-				return lexEntryRecordTokens[0];
-			}
-			return null;
-		}
+		//private object GetKeyIdPairFromLexEntry(LexEntry e) {
+		//    if (e == null)
+		//    {
+		//        return null;
+		//    }
+		//    List<RecordToken> lexEntryRecordTokens = this._lexEntryRepository.GetRecordToken(e, );
+		//    if (lexEntryRecordTokens.Count > 0)
+		//    {
+		//        return lexEntryRecordTokens[0];
+		//    }
+		//    return null;
+		//}
 
-		private LexEntry GetLexEntryFromKeyIdPair(object e) {
-			RecordToken recordToken =(RecordToken)e;
-			return _lexEntryRepository.GetItem<LexEntry>(recordToken.Id);
-		}
+		//private LexEntry GetLexEntryFromKeyIdPair(object e) {
+		//    return _lexEntryRepository.GetItem((RecordToken)e);
+		//}
 
 		private AutoCompleteWithCreationBox<T, LexEntry> CreatePicker<T>(LexRelation relation) where T:class
 		{
@@ -200,9 +197,9 @@ namespace WeSay.LexicalTools
 				// picker.Box.ShowRedSquiggle = true;
 			}
 
-			_binding = new SimpleBinding<LexEntry>(relation, picker);
-			//for underlinging the relation in the preview pane
-			_binding.CurrentItemChanged += _focusDelegate;
+			//_binding = new SimpleBinding<LexEntry>(relation, picker);
+			////for underlinging the relation in the preview pane
+			//_binding.CurrentItemChanged += _focusDelegate;
 
 			return picker;
 		}
@@ -217,13 +214,13 @@ namespace WeSay.LexicalTools
 		}
 
 
-		private static IEnumerable FindClosestAndNextClosestAndPrefixedLexEntryForms(string text, IEnumerable items, IDisplayStringAdaptor adaptor)
-		{
-			return ApproximateMatcher.FindClosestForms<LexEntry>(items,
-															   adaptor.GetDisplayLabel,
-															   text,
-															   ApproximateMatcherOptions.IncludePrefixedAndNextClosestForms);
-		}
+		//private static IEnumerable FindClosestAndNextClosestAndPrefixedLexEntryForms(string text, IEnumerable items, IDisplayStringAdaptor adaptor)
+		//{
+		//    return ApproximateMatcher.FindClosestForms<LexEntry>(items,
+		//                                                       adaptor.GetDisplayLabel,
+		//                                                       text,
+		//                                                       ApproximateMatcherOptions.IncludePrefixedAndNextClosestForms);
+		//}
 
 
 		public void AddChangeBinding(EventHandler<CurrentItemEventArgs> handler)
@@ -233,9 +230,9 @@ namespace WeSay.LexicalTools
 
 		private object FindRecordTokenFromForm(string form)
 		{
-			RecordTokenComparer recordTokenComparer = new RecordTokenComparer(_lexEntrySortHelper.KeyComparer);
+			RecordTokenComparer recordTokenComparer = _lexEntryRepository.GetRecordTokenComparerForLexicalForm(_field.WritingSystems[0]);
 			recordTokenComparer.IgnoreId = true;
-			RecordToken recordToken = new RecordToken(form, 0);
+			RecordToken recordToken = new RecordToken(form, RepositoryId.Empty);
 			int index = this._recordTokenList.BinarySearch(recordToken, recordTokenComparer);
 			if (index >= 0)
 			{

@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using Db4objects.Db4o;
 using Db4objects.Db4o.Inside.Query;
 using Db4objects.Db4o.Query;
+using LiftIO.Parsing;
 using Palaso.Text;
 using WeSay.Data;
 using WeSay.Foundation;
+using WeSay.Foundation.Options;
 using WeSay.Language;
 using WeSay.LexicalModel.Db4o_Specific;
 
@@ -22,6 +24,12 @@ namespace WeSay.LexicalModel
 
 		private readonly PrivateDb4oRecordListManager _recordListManager;
 
+		//todo make this private and remove it.
+		public Db4oDataSource Db4oDataSource
+		{
+			get { return _recordListManager.DataSource; }
+		}
+
 		public RecordToken GetRecordToken(LexEntry item, ISortHelper<LexEntry> sortHelper)
 		{
 			Db4oRepositoryId id = (Db4oRepositoryId) GetId(item);
@@ -34,10 +42,24 @@ namespace WeSay.LexicalModel
 
 		public LexEntry CreateItem()
 		{
-			LexEntry item = new LexEntry();
+			LexEntry item = new LexEntry(null, new Guid(), GetNextBirthOrder());
 			IRecordList<LexEntry> type = _recordListManager.GetListOfType<LexEntry>();
 			type.Add(item);
 			return item;
+		}
+
+		public LexEntry CreateItem(Extensible eInfo)
+		{
+			LexEntry item = new LexEntry(eInfo, GetNextBirthOrder());
+			IRecordList<LexEntry> type = _recordListManager.GetListOfType<LexEntry>();
+			type.Add(item);
+			return item;
+		}
+
+		private int GetNextBirthOrder()
+		{
+			IHistoricalEntryCountProvider entryCountProvider = HistoricalEntryCountProviderForDb4o.GetOrMakeFromDatabase(this._recordListManager.DataSource);
+			return entryCountProvider.GetNextNumber();
 		}
 
 		public RepositoryId GetId(LexEntry item)
@@ -49,6 +71,11 @@ namespace WeSay.LexicalModel
 		public LexEntry GetItem(RepositoryId id)
 		{
 			return _recordListManager.GetItem<LexEntry>(((Db4oRepositoryId)id).Db4oId);
+		}
+
+		public LexEntry GetItem(RecordToken recordToken)
+		{
+			return GetItem(recordToken.Id);
 		}
 
 		public void SaveItem(LexEntry item)
@@ -105,7 +132,7 @@ namespace WeSay.LexicalModel
 			return ((RecordToken)item).DisplayString;
 		}
 
-		public IList<RecordToken> GetEntriesWithMatchingLexicalForm(
+		public List<RecordToken> GetEntriesWithMatchingLexicalForm(
 			string lexicalForm,
 			WritingSystem writingSystem)
 		{
@@ -120,7 +147,7 @@ namespace WeSay.LexicalModel
 			List<RecordToken> result = new List<RecordToken>();
 			RecordTokenComparer comparer = new RecordTokenComparer(stringComparer);
 			comparer.IgnoreId = true;
-			RecordToken searchToken = new RecordToken(lexicalForm, new Db4oRepositoryId(0));
+			RecordToken searchToken = new RecordToken(lexicalForm, RepositoryId.Empty);
 			int index = entriesByLexicalForm.BinarySearch(searchToken, comparer);
 			while (index >= 0 && index < entriesByLexicalForm.Count &&
 				   entriesByLexicalForm[index].DisplayString == lexicalForm)
@@ -129,6 +156,13 @@ namespace WeSay.LexicalModel
 				++index;
 			}
 			return result;
+		}
+		public RecordTokenComparer GetRecordTokenComparerForLexicalForm(WritingSystem writingSystem)
+		{
+			LexEntrySortHelper sortHelper = new LexEntrySortHelper(this,
+																   writingSystem,
+																   true);
+			return new RecordTokenComparer(sortHelper.KeyComparer);
 		}
 
 		public IList<RecordToken> GetAllEntriesSortedByHeadword(WritingSystem headwordWritingSystem)
@@ -140,7 +174,7 @@ namespace WeSay.LexicalModel
 
 		public LexEntry GetLexEntryWithMatchingId(string id)
 		{
-			Db4objects.Db4o.Query.IQuery q = _recordListManager.DataSource.Data.Query();
+			IQuery q = _recordListManager.DataSource.Data.Query();
 			q.Constrain(typeof(LexEntry));
 			q.Descend("_id").Constrain(id);
 			IObjectSet matches = q.Execute();
@@ -285,7 +319,7 @@ namespace WeSay.LexicalModel
 			return WrapDb4oIdsInRepositoryIds(db4oIds);
 		}
 
-		private RepositoryId[] WrapDb4oIdsInRepositoryIds(long[] db4oIds) {
+		private static RepositoryId[] WrapDb4oIdsInRepositoryIds(long[] db4oIds) {
 			RepositoryId[] ids = new RepositoryId[db4oIds.Length];
 			for (int i = 0; i != db4oIds.Length;++i)
 			{
@@ -293,6 +327,18 @@ namespace WeSay.LexicalModel
 			}
 			return ids;
 		}
+
+		public List<RecordToken> GetAllEntriesSortedBySemanticDomain(string fieldName)
+		{
+			SemanticDomainSortHelper sortHelper = new SemanticDomainSortHelper(_recordListManager.DataSource, fieldName);
+			return _recordListManager.GetSortedList(sortHelper);
+		}
+		public RecordTokenComparer GetRecordTokenComparerForSemanticDomain(string fieldName)
+		{
+			SemanticDomainSortHelper sortHelper = new SemanticDomainSortHelper(_recordListManager.DataSource, fieldName);
+			return new RecordTokenComparer(sortHelper.KeyComparer);
+		}
+
 
 		public List<RecordToken> GetEntriesWithMatchingGlossSortedByLexicalForm(LanguageForm glossForm, WritingSystem lexicalUnitWritingSystem)
 		{
@@ -317,7 +363,7 @@ namespace WeSay.LexicalModel
 		}
 		public LexEntry GetLexEntryWithMatchingGuid(Guid guid)
 		{
-			Db4objects.Db4o.Query.IQuery q = _recordListManager.DataSource.Data.Query();
+			IQuery q = _recordListManager.DataSource.Data.Query();
 			q.Constrain(typeof(LexEntry));
 			q.Descend("_guid").Constrain(guid);
 			IObjectSet matches = q.Execute();
@@ -353,6 +399,93 @@ namespace WeSay.LexicalModel
 			IObjectSet objectSet = q.Execute();
 			return WrapDb4oIdsInRepositoryIds(objectSet.Ext().GetIDs());
 		}
+
+		public int CountAllEntries()
+		{
+			return GetAllEntries().Length;
+		}
+
+		public IRecordList<LexEntry> GetEntriesMatchingFilterSortedByLexicalUnit(IFilter<LexEntry> filter, WritingSystem lexicalUnitWritingSystem)
+		{
+			LexEntrySortHelper lexEntrySortHelper = new LexEntrySortHelper(lexicalUnitWritingSystem, true);
+			return _recordListManager.GetListOfTypeFilteredFurther(filter, lexEntrySortHelper);
+		}
+
+	}
+
+	internal class SemanticDomainSortHelper : ISortHelper<LexEntry>
+	{
+		private readonly Db4oDataSource _db4oData;
+		private readonly string _semanticDomainFieldName;
+
+		public SemanticDomainSortHelper(Db4oDataSource db4oData, string semanticDomainFieldName)
+		{
+			if (db4oData == null)
+			{
+				throw new ArgumentNullException("db4oData");
+			}
+			if (semanticDomainFieldName == null)
+			{
+				throw new ArgumentNullException("semanticDomainFieldName");
+			}
+			if (semanticDomainFieldName == string.Empty)
+			{
+				throw new ArgumentOutOfRangeException("semanticDomainFieldName");
+			}
+
+			_db4oData = db4oData;
+			_semanticDomainFieldName = semanticDomainFieldName;
+		}
+
+		#region IDb4oSortHelper<string,LexEntry> Members
+
+		public IComparer<string> KeyComparer
+		{
+			get
+			{
+				return StringComparer.InvariantCulture;
+			}
+		}
+
+		public List<RecordToken> GetRecordTokensForMatchingRecords()
+		{
+			return KeyToEntryIdInitializer.GetKeyToEntryIdPairs(_db4oData, GetDisplayStrings);
+		}
+
+		public IEnumerable<string> GetDisplayStrings(LexEntry item)
+		{
+			List<string> keys = new List<string>();
+			foreach (LexSense sense in item.Senses)
+			{
+				OptionRefCollection semanticDomains = sense.GetProperty<OptionRefCollection>(_semanticDomainFieldName);
+
+				if (semanticDomains != null)
+				{
+					foreach (string s in semanticDomains.Keys)
+					{
+						if (!keys.Contains(s))
+						{
+							keys.Add(s);
+						}
+					}
+				}
+			}
+			return keys;
+		}
+
+		public string Name
+		{
+			get
+			{
+				return "LexEntry sorted by " + _semanticDomainFieldName;
+			}
+		}
+
+		public override int GetHashCode()
+		{
+			return _semanticDomainFieldName.GetHashCode();
+		}
+		#endregion
 	}
 
 }

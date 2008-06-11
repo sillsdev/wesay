@@ -18,19 +18,11 @@ namespace WeSay.LexicalModel
 		private readonly IList<String> _expectedOptionTraits;
 		private readonly IList<string> _expectedOptionCollectionTraits;
 
-		/// <summary>
-		/// related to homograph number calculation
-		/// </summary>
-		private readonly IHistoricalEntryCountProvider _historicalEntryCountProvider;
-
-		public LiftMerger(
-			IHistoricalEntryCountProvider historicalEntryCountProvider,
-			LexEntryRepository lexEntryRepository)
+		public LiftMerger(LexEntryRepository lexEntryRepository)
 		{
 			_lexEntryRepository = lexEntryRepository;
 			_expectedOptionTraits = new List<string>();
 			_expectedOptionCollectionTraits = new List<string>();
-			_historicalEntryCountProvider = historicalEntryCountProvider;
 		}
 
 		public LexEntry GetOrMakeEntry(Extensible eInfo, int order)
@@ -67,7 +59,7 @@ namespace WeSay.LexicalModel
 				}
 
 
-				entry = new LexEntry(eInfo, _historicalEntryCountProvider);
+				entry = _lexEntryRepository.CreateItem(eInfo);
 			}
 
 

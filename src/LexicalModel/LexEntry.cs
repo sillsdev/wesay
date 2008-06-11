@@ -63,26 +63,26 @@ namespace WeSay.LexicalModel
 			}
 		} ;
 
-		public LexEntry(): this(null, System.Guid.NewGuid())
+		public LexEntry(): this(null, System.Guid.NewGuid(), -1)
 		{}
 
-		public LexEntry(string id, Guid guid): base(null)
+		public LexEntry(string id, Guid guid, int birthOrder): base(null)
 		{
 			DateTime now = DateTime.UtcNow;
-			Init(id, guid, now, now);
+			Init(id, guid, now, now, birthOrder);
 		}
 
-		public LexEntry(Extensible info, IHistoricalEntryCountProvider historicalCountProvider)
+		public LexEntry(Extensible info, int birthOrder)
 			 : base(null)
 		{
-			Init(info.Id, info.Guid, info.CreationTime, info.ModificationTime);
-			 DetermineBirthOrder(historicalCountProvider);
+			Init(info.Id, info.Guid, info.CreationTime, info.ModificationTime, birthOrder);
 		}
 
-		private void Init(string id,Guid guid, DateTime creationTime, DateTime modifiedTime)
+		private void Init(string id,Guid guid, DateTime creationTime, DateTime modifiedTime, int birthOrder)
 		{
 			ModificationTime = modifiedTime;
 			ModifiedTimeIsLocked = true;
+			_birthOrder = birthOrder;
 
 			_id = id;
 			if (_id != null)

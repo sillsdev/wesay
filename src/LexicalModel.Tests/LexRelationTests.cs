@@ -12,7 +12,7 @@ namespace WeSay.LexicalModel.Tests
 	public class LexRelationTests
 	{
 		private string _filePath;
-		private LexEntryRepository _manager;
+		private LexEntryRepository _lexEntryRepository;
 
 		[SetUp]
 		public void Setup()
@@ -20,16 +20,15 @@ namespace WeSay.LexicalModel.Tests
 			WeSayWordsProject.InitializeForTests();
 
 			_filePath = Path.GetTempFileName();
-			_manager = new LexEntryRepository(new DoNothingModelConfiguration(), _filePath);
-			Lexicon.Init(_manager);
-			Db4oLexModelHelper.Initialize(_manager.DataSource.Data);
+			_lexEntryRepository = new LexEntryRepository(new DoNothingModelConfiguration(), _filePath);
+			Db4oLexModelHelper.Initialize(_lexEntryRepository.DataSource.Data);
 
 		}
 
 		[TearDown]
 		public void TearDown()
 		{
-			_manager.Dispose();
+			_lexEntryRepository.Dispose();
 			File.Delete(_filePath);
 		}
 

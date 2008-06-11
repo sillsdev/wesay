@@ -13,7 +13,7 @@ namespace WeSay.LexicalTools.Tests
 	[TestFixture]
 	public class MissingInfoControlTests
 	{
-		private LexEntryRepository _recordListManager;
+		private LexEntryRepository _lexEntryRepository;
 		private IRecordList<LexEntry> _missingTranslationRecordList;
 		private ViewTemplate _viewTemplate;
 		private MissingTranslationFilter _missingTranslation;
@@ -60,16 +60,16 @@ namespace WeSay.LexicalTools.Tests
 		{
 			Db4oLexModelHelper.InitializeForNonDbTests();
 			WeSayWordsProject.InitializeForTests();
-			_recordListManager = new InMemoryRecordListManager();
+			_lexEntryRepository = new InMemoryRecordListManager();
 			_missingTranslation = new MissingTranslationFilter();
 
 			_writingSystem =
 					new WritingSystem("pretendVernacular", new Font(FontFamily.GenericSansSerif, 24));
 
 			LexEntrySortHelper lexEntrySortHelper = new LexEntrySortHelper(_writingSystem, true);
-			_recordListManager.Register(_missingTranslation, lexEntrySortHelper);
+			_lexEntryRepository.Register(_missingTranslation, lexEntrySortHelper);
 			_missingTranslationRecordList =
-					_recordListManager.GetListOfTypeFilteredFurther(_missingTranslation,
+					_lexEntryRepository.GetListOfTypeFilteredFurther(_missingTranslation,
 																	lexEntrySortHelper);
 			_missingTranslationRecordList.Add(
 					CreateTestEntry("apple", "red thing", "An apple a day keeps the doctor away."));
@@ -131,7 +131,7 @@ namespace WeSay.LexicalTools.Tests
 		[TearDown]
 		public void TearDown()
 		{
-			_recordListManager.Dispose();
+			_lexEntryRepository.Dispose();
 		}
 
 		[Test]
@@ -142,7 +142,7 @@ namespace WeSay.LexicalTools.Tests
 							new MissingInfoControl(_missingTranslationRecordList,
 												   _viewTemplate,
 												   _missingTranslation.FilteringPredicate,
-												   _recordListManager))
+												   _lexEntryRepository))
 			{
 				Assert.IsNotNull(missingInfoControl);
 			}
@@ -156,7 +156,7 @@ namespace WeSay.LexicalTools.Tests
 					new MissingInfoControl(null,
 										   _viewTemplate,
 										   _missingTranslation.FilteringPredicate,
-										   _recordListManager)) {}
+										   _lexEntryRepository)) {}
 		}
 
 		[Test]
@@ -167,7 +167,7 @@ namespace WeSay.LexicalTools.Tests
 					new MissingInfoControl(_missingTranslationRecordList,
 										   null,
 										   _missingTranslation.FilteringPredicate,
-										   _recordListManager)) {}
+										   _lexEntryRepository)) {}
 		}
 
 		[Test]
@@ -178,7 +178,7 @@ namespace WeSay.LexicalTools.Tests
 					new MissingInfoControl(_missingTranslationRecordList,
 										   _viewTemplate,
 										   null,
-										   _recordListManager)) {}
+										   _lexEntryRepository)) {}
 		}
 
 		[Test]
@@ -200,7 +200,7 @@ namespace WeSay.LexicalTools.Tests
 							new MissingInfoControl(_missingTranslationRecordList,
 												   _viewTemplate,
 												   _missingTranslation.FilteringPredicate,
-												   _recordListManager))
+												   _lexEntryRepository))
 			{
 				Assert.AreEqual(_missingTranslationRecordList[0], missingInfoControl.CurrentRecord);
 			}
@@ -214,7 +214,7 @@ namespace WeSay.LexicalTools.Tests
 							new MissingInfoControl(_missingTranslationRecordList,
 												   _viewTemplate,
 												   _missingTranslation.FilteringPredicate,
-												   _recordListManager))
+												   _lexEntryRepository))
 			{
 				missingInfoControl.SetCurrentRecordToPrevious();
 				Assert.AreEqual(_missingTranslationRecordList[0], missingInfoControl.CurrentRecord);
@@ -229,7 +229,7 @@ namespace WeSay.LexicalTools.Tests
 							new MissingInfoControl(_missingTranslationRecordList,
 												   _viewTemplate,
 												   _missingTranslation.FilteringPredicate,
-												   _recordListManager))
+												   _lexEntryRepository))
 			{
 				missingInfoControl.SetCurrentRecordToNext();
 				missingInfoControl.SetCurrentRecordToPrevious();
@@ -245,7 +245,7 @@ namespace WeSay.LexicalTools.Tests
 							new MissingInfoControl(_missingTranslationRecordList,
 												   _viewTemplate,
 												   _missingTranslation.FilteringPredicate,
-												   _recordListManager))
+												   _lexEntryRepository))
 			{
 				int count = _missingTranslationRecordList.Count;
 				for (int i = 0;i <= count;i++)
@@ -265,7 +265,7 @@ namespace WeSay.LexicalTools.Tests
 							new MissingInfoControl(_missingTranslationRecordList,
 												   _viewTemplate,
 												   _missingTranslation.FilteringPredicate,
-												   _recordListManager))
+												   _lexEntryRepository))
 			{
 				missingInfoControl.SetCurrentRecordToNext();
 				Assert.AreEqual(_missingTranslationRecordList[1], missingInfoControl.CurrentRecord);
@@ -280,7 +280,7 @@ namespace WeSay.LexicalTools.Tests
 							new MissingInfoControl(_missingTranslationRecordList,
 												   _viewTemplate,
 												   _missingTranslation.FilteringPredicate,
-												   _recordListManager))
+												   _lexEntryRepository))
 			{
 				AddTranslationToEntry(missingInfoControl.CurrentRecord,
 									  "a bogus translation of example");
@@ -299,7 +299,7 @@ namespace WeSay.LexicalTools.Tests
 							new MissingInfoControl(_missingTranslationRecordList,
 												   _viewTemplate,
 												   _missingTranslation.FilteringPredicate,
-												   _recordListManager))
+												   _lexEntryRepository))
 			{
 				missingInfoControl.SetCurrentRecordToNext();
 				missingInfoControl.SetCurrentRecordToNext();
@@ -318,7 +318,7 @@ namespace WeSay.LexicalTools.Tests
 							new MissingInfoControl(_missingTranslationRecordList,
 												   _viewTemplate,
 												   _missingTranslation.FilteringPredicate,
-												   _recordListManager))
+												   _lexEntryRepository))
 			{
 				missingInfoControl.SetCurrentRecordToNext();
 				AddTranslationToEntry(missingInfoControl.CurrentRecord,
@@ -336,7 +336,7 @@ namespace WeSay.LexicalTools.Tests
 							new MissingInfoControl(_missingTranslationRecordList,
 												   _viewTemplate,
 												   _missingTranslation.FilteringPredicate,
-												   _recordListManager))
+												   _lexEntryRepository))
 			{
 				int count = _missingTranslationRecordList.Count;
 				for (int i = 0;i < count;i++)
@@ -361,7 +361,7 @@ namespace WeSay.LexicalTools.Tests
 							new MissingInfoControl(_missingTranslationRecordList,
 												   _viewTemplate,
 												   _missingTranslation.FilteringPredicate,
-												   _recordListManager))
+												   _lexEntryRepository))
 			{
 				int count = _missingTranslationRecordList.Count;
 				for (int i = 0;i < count - 2;i++)
@@ -384,7 +384,7 @@ namespace WeSay.LexicalTools.Tests
 							new MissingInfoControl(_missingTranslationRecordList,
 												   _viewTemplate,
 												   _missingTranslation.FilteringPredicate,
-												   _recordListManager))
+												   _lexEntryRepository))
 			{
 				int count = _missingTranslationRecordList.Count;
 				for (int i = 0;i < count;i++)
@@ -407,7 +407,7 @@ namespace WeSay.LexicalTools.Tests
 							new MissingInfoControl(_missingTranslationRecordList,
 												   _viewTemplate,
 												   _missingTranslation.FilteringPredicate,
-												   _recordListManager))
+												   _lexEntryRepository))
 			{
 				missingInfoControl.SetCurrentRecordToNext();
 				AddTranslationToEntry(missingInfoControl.CurrentRecord,
@@ -425,7 +425,7 @@ namespace WeSay.LexicalTools.Tests
 							new MissingInfoControl(_missingTranslationRecordList,
 												   _viewTemplate,
 												   _missingTranslation.FilteringPredicate,
-												   _recordListManager))
+												   _lexEntryRepository))
 			{
 				missingInfoControl.SetCurrentRecordToNext();
 				LexEntry currentRecord = missingInfoControl.CurrentRecord;
@@ -447,7 +447,7 @@ namespace WeSay.LexicalTools.Tests
 							new MissingInfoControl(_missingTranslationRecordList,
 												   _viewTemplate,
 												   _missingTranslation.FilteringPredicate,
-												   _recordListManager))
+												   _lexEntryRepository))
 			{
 				missingInfoControl.SetCurrentRecordToNext();
 				LexEntry currentRecord = missingInfoControl.CurrentRecord;

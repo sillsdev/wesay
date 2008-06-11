@@ -248,7 +248,7 @@ namespace WeSay.Project
 					//                    using (FileStream config = new FileStream(project.PathToProjectTaskInventory, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete))
 					SetupTasksToBuildCaches(lexEntryRepository);
 
-					DoParsing(lexEntryRepository, HistoricalEntryCountProviderForDb4o.GetOrMakeFromDatabase(ds));
+					DoParsing(lexEntryRepository);
 					if (_backgroundWorker != null && _backgroundWorker.CancellationPending)
 					{
 						return;
@@ -304,10 +304,10 @@ namespace WeSay.Project
 			Logger.WriteEvent("Done Building Caches");
 		}
 
-		private void DoParsing(LexEntryRepository recordListManager, IHistoricalEntryCountProvider historicalEntryCountProvider)
+		private void DoParsing(LexEntryRepository lexEntryRepository)
 		{
 //                entriesList.WriteCacheSize = 0; //don't write after every record
-			using (LiftMerger merger = new LiftMerger(historicalEntryCountProvider, recordListManager))
+			using (LiftMerger merger = new LiftMerger(lexEntryRepository))
 			{
 				foreach (string name in WeSayWordsProject.Project.OptionFieldNames)
 				{
@@ -337,10 +337,10 @@ namespace WeSay.Project
 			}
 		}
 
-		private static void SetupTasksToBuildCaches(LexEntryRepository recordListManager)
+		private static void SetupTasksToBuildCaches(LexEntryRepository lexEntryRepository)
 		{
 			//todo unit of work?
-			//recordListManager.DelayWritingCachesUntilDispose = true;
+			//lexEntryRepository.DelayWritingCachesUntilDispose = true;
 			ConfigFileTaskBuilder taskBuilder;
 			using (
 					FileStream configFile =
@@ -352,7 +352,7 @@ namespace WeSay.Project
 				taskBuilder = new ConfigFileTaskBuilder(configFile,
 														WeSayWordsProject.Project,
 														new EmptyCurrentWorkTask(),
-														recordListManager);
+														lexEntryRepository);
 			}
 
 			WeSayWordsProject.Project.Tasks = taskBuilder.Tasks;

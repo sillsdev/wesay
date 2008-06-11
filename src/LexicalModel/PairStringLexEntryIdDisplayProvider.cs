@@ -24,7 +24,7 @@ namespace WeSay.LexicalModel
 		public string GetToolTip(object item)
 		{
 			RecordToken recordToken = (RecordToken)item;
-			LexEntry entry = _lexEntryRepository.GetItem(recordToken.Id);
+			LexEntry entry = _lexEntryRepository.GetItem(recordToken);
 			return entry.GetToolTipText();
 		}
 

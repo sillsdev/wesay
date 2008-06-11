@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
+using WeSay.Data;
 using WeSay.Foundation;
 using WeSay.Language;
 using WeSay.LexicalModel;
@@ -117,9 +118,9 @@ namespace WeSay.LexicalTools
 		private void PopulateWordsMatchingCurrentItem()
 		{
 			_listViewOfWordsMatchingCurrentItem.Items.Clear();
-			foreach (LexEntry entry in this._task.CurrentEntriesSorted)
+			foreach (RecordToken recordToken in _task.GetMatchingRecords())
 			{
-				_listViewOfWordsMatchingCurrentItem.Items.Add(new EntryDisplayProxy(entry, _task.WordWritingSystem.Id));
+				_listViewOfWordsMatchingCurrentItem.Items.Add(recordToken);
 			}
 		}
 
@@ -198,9 +199,10 @@ namespace WeSay.LexicalTools
 			{
 				int selectedListIndex = _listViewOfWordsMatchingCurrentItem.SelectedIndices[0];
 				string word = _listViewOfWordsMatchingCurrentItem.SelectedItem.ToString();
-				LexEntry entry = ((EntryDisplayProxy)_listViewOfWordsMatchingCurrentItem.SelectedItem).Entry;
-				Debug.Assert(entry!=null);
-				if(entry==null)
+
+				RecordToken recordToken = (RecordToken)_listViewOfWordsMatchingCurrentItem.SelectedItem;
+				Debug.Assert(recordToken != null);
+				if (recordToken == null)
 				{
 					return;
 				}
@@ -212,7 +214,7 @@ namespace WeSay.LexicalTools
 								 // NB: don't do this before storing what they clicked on.
 			   AddCurrentWord();//don't throw away what they were typing
 
-				_task.TryToRemoveAssociationWithListWordFromEntry(entry);
+			   _task.TryToRemoveAssociationWithListWordFromEntry(recordToken);
 
 			   // _movingLabel.Go(word,_listViewOfWordsMatchingCurrentItem.GetItemRect(selectedListIndex).Location, _vernacularBox.Location)
 
@@ -226,26 +228,5 @@ namespace WeSay.LexicalTools
 			}
 		}
 
-
-		public class EntryDisplayProxy
-		{
-			private readonly string _writingSystemId;
-			private LexEntry _entry;
-			public EntryDisplayProxy(LexEntry entry, string writingSystemId)
-			{
-				_writingSystemId = writingSystemId;
-				_entry = entry;
-			}
-
-			public LexEntry Entry
-			{
-				get { return _entry; }
-			}
-
-			public override string ToString()
-			{
-				return _entry.LexicalForm.GetBestAlternative(_writingSystemId, "*");
-			}
-		}
 	}
 }

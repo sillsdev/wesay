@@ -15,7 +15,7 @@ namespace WeSay.LexicalTools
 	{
 		public static string HeadWordWritingSystemId;
 
-		public static string ToRtf(LexEntry entry, CurrentItemEventArgs currentItem)
+		public static string ToRtf(LexEntry entry, CurrentItemEventArgs currentItem, LexEntryRepository lexEntryRepository)
 		{
 			if(entry == null)
 			{
@@ -25,8 +25,7 @@ namespace WeSay.LexicalTools
 			StringBuilder rtf = new StringBuilder();
 			rtf.Append(@"{\rtf1\ansi\uc0\fs28 ");
 			rtf.Append(MakeFontTable());
-
-			RenderHeadword(entry, rtf);
+			RenderHeadword(entry, rtf, lexEntryRepository);
 
 			int senseNumber = 1;
 			foreach (LexSense sense in entry.Senses)
@@ -93,7 +92,7 @@ namespace WeSay.LexicalTools
 			return Utf16ToRtfAnsi(rtf.ToString());
 		}
 
-		private static void RenderHeadword(LexEntry entry, StringBuilder rtf)
+		private static void RenderHeadword(LexEntry entry, StringBuilder rtf, LexEntryRepository lexEntryRepository)
 		{
 			rtf.Append(@"{\b ");
 			LanguageForm  headword = entry.GetHeadWord(HeadWordWritingSystemId);
@@ -105,7 +104,7 @@ namespace WeSay.LexicalTools
 				rtf.Append(headword.Form);
 			 //   rtf.Append(" ");
 
-				int homographNumber = Lexicon.GetHomographNumber(entry, WeSayWordsProject.Project.DefaultViewTemplate.HeadwordWritingSytem);
+				int homographNumber = lexEntryRepository.GetHomographNumber(entry, WeSayWordsProject.Project.DefaultViewTemplate.HeadwordWritingSytem);
 				if (homographNumber > 0)
 				{
 					rtf.Append(@"{\super " + homographNumber.ToString() + "}");

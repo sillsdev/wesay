@@ -28,13 +28,13 @@ namespace WeSay.AddinLib
 			FileLocater locateFile,
 			WritingSystemCollection writingSystems,
 			object project)             // these signatures were to reduce the dependencies on addins that didn't need this stuff
-//            object recordListManager) // these signatures were to reduce the dependencies on addins that didn't need this stuff
+//            object lexEntryRepository) // these signatures were to reduce the dependencies on addins that didn't need this stuff
 		{
 			_pathToTopLevelDirectory = pathToTopLevelDirectory;
 			_locateFile = locateFile;
 			_writingSystems = writingSystems;
 			_project = project;
-		 //   _recordListManager = recordListManager;
+		 //   _lexEntryRepository = lexEntryRepository;
 			_filesBelongingToProject = filesBelongingToProject;
 			_name = name;
 			_pathToApplicationRootDirectory = pathToApplicationRootDirectory;
@@ -108,7 +108,7 @@ namespace WeSay.AddinLib
 
 //        public object RecordListManager
 //        {
-//            get { return _recordListManager; }
+//            get { return _lexEntryRepository; }
 //        }
 
 		public object Project

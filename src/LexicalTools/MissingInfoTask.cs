@@ -16,16 +16,15 @@ namespace WeSay.LexicalTools
 		private readonly IFilter<LexEntry> _filter;
 		private readonly ViewTemplate _viewTemplate;
 		private bool _dataHasBeenRetrieved;
-		private LexEntrySortHelper _sortHelper;
 		private bool _isBaseFormFillingTask;
+		private WritingSystem _writingSystem;
 
-
-		public MissingInfoTask(LexEntryRepository recordListManager,
-			IFilter<LexEntry> filter,
+		public MissingInfoTask(LexEntryRepository lexEntryRepository,
+					IFilter<LexEntry> filter,
 					string label,
 					string description,
 					ViewTemplate viewTemplate)
-			: base(label, description, false, recordListManager)
+			: base(label, description, false, lexEntryRepository)
 		{
 			if (filter == null)
 			{
@@ -38,9 +37,7 @@ namespace WeSay.LexicalTools
 
 			_filter = filter;
 			_viewTemplate = viewTemplate;
-
-
-			WritingSystem listWritingSystem = BasilProject.Project.WritingSystems.UnknownVernacularWritingSystem;
+			_writingSystem = BasilProject.Project.WritingSystems.UnknownVernacularWritingSystem;
 			// use the master view Template instead of the one for this task. (most likely the one for this
 			// task doesn't have the EntryLexicalForm field specified but the Master (Default) one will
 			Field field = WeSayWordsProject.Project.DefaultViewTemplate.GetField(Field.FieldNames.EntryLexicalForm.ToString());
@@ -48,7 +45,7 @@ namespace WeSay.LexicalTools
 			{
 				if (field.WritingSystems.Count > 0)
 				{
-					listWritingSystem = field.WritingSystems[0];
+					_writingSystem = field.WritingSystems[0];
 				}
 				else
 				{
@@ -56,39 +53,24 @@ namespace WeSay.LexicalTools
 				}
 			}
 
-			if (recordListManager is LexEntryRepository)
-			{
-				_sortHelper =
-						new LexEntrySortHelper(((LexEntryRepository)recordListManager).DataSource,
-											   listWritingSystem,
-											   true);
-			}
-			else
-			{
-				_sortHelper = new LexEntrySortHelper(listWritingSystem, true);
-			}
-
-			recordListManager.Register(filter, _sortHelper);
-			recordListManager.Register(new AllItems<LexEntry>(), _sortHelper);
-
 		}
 
 		/// <summary>
 		/// Creates a generic Lexical Field editing task
 		/// </summary>
-		/// <param name="recordListManager">The recordListManager that will provide the data</param>
+		/// <param name="lexEntryRepository">The lexEntryRepository that will provide the data</param>
 		/// <param name="filter">The filter that should be used to filter the data</param>
 		/// <param name="label">The task label</param>
 		/// <param name="description">The task description</param>
 		/// <param name="viewTemplate">The base viewTemplate</param>
 		/// <param name="fieldsToShow">The fields to show from the base Field Inventory</param>
-		public MissingInfoTask(LexEntryRepository recordListManager,
+		public MissingInfoTask(LexEntryRepository lexEntryRepository,
 							IFilter<LexEntry>  filter,
 							string label,
 							string description,
 							ViewTemplate viewTemplate,
 							string fieldsToShow)
-			:this(recordListManager, filter, label, description, viewTemplate)
+			:this(lexEntryRepository, filter, label, description, viewTemplate)
 		{
 			if (fieldsToShow == null)
 			{
@@ -122,14 +104,14 @@ namespace WeSay.LexicalTools
 				return base.Group;
 			}
 		}
-		public MissingInfoTask(LexEntryRepository recordListManager,
+		public MissingInfoTask(LexEntryRepository lexEntryRepository,
 			IFilter<LexEntry>  filter,
 					string label,
 					string description,
 					ViewTemplate viewTemplate,
 					string fieldsToShowEditable,
 					string fieldsToShowReadOnly)
-			: this(recordListManager, filter, label, description, viewTemplate, fieldsToShowEditable+" "+fieldsToShowReadOnly)
+			: this(lexEntryRepository, filter, label, description, viewTemplate, fieldsToShowEditable+" "+fieldsToShowReadOnly)
 		{
 			MarkReadOnlyFIelds(fieldsToShowReadOnly);
 		}
@@ -197,17 +179,18 @@ namespace WeSay.LexicalTools
 		{
 			base.Activate();
 
-			_missingInfoControl = new MissingInfoControl(DataSource, ViewTemplate, _filter.FilteringPredicate, this.LexEntryRepository);
+			_missingInfoControl = new MissingInfoControl(GetFilteredData(), ViewTemplate, _filter.FilteringPredicate, LexEntryRepository);
 			_missingInfoControl.SelectedIndexChanged += new EventHandler(OnRecordSelectionChanged);
 		}
 
 		void OnRecordSelectionChanged(object sender, EventArgs e)
 		{
-			this.LexEntryRepository.GoodTimeToCommit();
+			LexEntryRepository.SaveItem(_missingInfoControl.CurrentRecord);
 		}
 
 		public override void Deactivate()
 		{
+			LexEntryRepository.SaveItem(_missingInfoControl.CurrentRecord);
 			base.Deactivate();
 		   if (_missingInfoControl != null)
 		   {
@@ -215,7 +198,6 @@ namespace WeSay.LexicalTools
 			   _missingInfoControl.Dispose();
 		   }
 			_missingInfoControl = null;
-			this.LexEntryRepository.GoodTimeToCommit();
 		}
 
 		/// <summary>
@@ -234,24 +216,24 @@ namespace WeSay.LexicalTools
 		{
 			if (_dataHasBeenRetrieved || returnResultEvenIfExpensive)
 			{
-				return DataSource.Count;
+				return GetFilteredData().Count;
 			}
 			return CountNotComputed;
 		}
 
 		protected override int ComputeReferenceCount()
 		{
-			return this.LexEntryRepository.GetListOfType<LexEntry>().Count;
+			return LexEntryRepository.CountAllEntries();
 		}
 
-		public IRecordList<LexEntry> DataSource
+		public IRecordList<LexEntry> GetFilteredData()
 		{
-			get
-			{
-				IRecordList<LexEntry> data = this.LexEntryRepository.GetListOfTypeFilteredFurther(_filter, _sortHelper);
-				_dataHasBeenRetrieved = true;
-				return data;
-			}
+			IRecordList<LexEntry> data =
+					LexEntryRepository.GetEntriesMatchingFilterSortedByLexicalUnit(
+						_filter,
+						_writingSystem);
+			_dataHasBeenRetrieved = true;
+			return data;
 		}
 
 		public ViewTemplate ViewTemplate

@@ -22,7 +22,7 @@ namespace WeSay.Project.Tests
 		private bool _disposed = false;
 		private ProjectDirectorySetupForTesting _projectDirectory;
 		public WeSayWordsProject _project;
-		public LexEntryRepository _recordListManager;
+		public LexEntryRepository _lexEntryRepository;
 
 		public Db4oProjectSetupForTesting(string xmlOfEntries)
 	   {
@@ -33,10 +33,7 @@ namespace WeSay.Project.Tests
 			CacheBuilder cacheBuilder = new CacheBuilder(_projectDirectory.PathToLiftFile);
 			cacheBuilder.DoWork(new NullProgressState());
 
-			this._recordListManager = new LexEntryRepository(new WeSayWordsDb4oModelConfiguration(), _project.PathToDb4oLexicalModelDB);// InMemoryRecordListManager();
-			Db4oLexModelHelper.Initialize(((LexEntryRepository)_recordListManager).DataSource.Data);
-			Lexicon.Init(_recordListManager);
-
+			_lexEntryRepository = new LexEntryRepository(_project.PathToDb4oLexicalModelDB);// InMemoryRecordListManager();
 	   }
 
 	   #region IDisposable Members
@@ -72,7 +69,7 @@ namespace WeSay.Project.Tests
 			{
 				if (disposing)
 				{
-					_recordListManager.Dispose();
+					_lexEntryRepository.Dispose();
 					_project.Dispose();
 					_projectDirectory.Dispose();
 

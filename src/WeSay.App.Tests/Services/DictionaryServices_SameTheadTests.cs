@@ -28,7 +28,7 @@ namespace WeSay.App.Tests
 		public void SetupFixture()
 		{
 			_projectSetupSharedByAllTests = new Db4oProjectSetupForTesting(string.Empty);
-			_entries = _projectSetupSharedByAllTests._recordListManager.GetListOfType<LexEntry>();
+			_entries = _projectSetupSharedByAllTests._lexEntryRepository.GetListOfType<LexEntry>();
 		}
 
 		[SetUp]

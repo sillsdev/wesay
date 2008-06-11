@@ -25,13 +25,13 @@ namespace WeSay.LexicalTools
 	   // private bool _suspendNotificationOfNavigation=false;
 
 
-		public GatherWordListTask(LexEntryRepository recordListManager,
+		public GatherWordListTask(LexEntryRepository lexEntryRepository,
 								  string label,
 								  string description,
 								  string wordListFileName,
 								  string writingSystemIdForWordListLanguage,
 								  ViewTemplate viewTemplate)
-			: base(label, description, false, recordListManager, viewTemplate)
+			: base(label, description, false, lexEntryRepository, viewTemplate)
 		{
 			if (wordListFileName == null)
 			{
@@ -222,7 +222,7 @@ namespace WeSay.LexicalTools
 			}
 			else
 			{
-				LexEntry entry = LexEntryRepository.GetItem(entriesWithSameForm[0].Id);
+				LexEntry entry = LexEntryRepository.GetItem(entriesWithSameForm[0]);
 
 				foreach (LexSense s in entry.Senses)
 				{
@@ -261,7 +261,7 @@ namespace WeSay.LexicalTools
 		   // _suspendNotificationOfNavigation = true;
 
 			CurrentWordIndex++;
-			while (CanNavigateNext && GetMatchingRecords(CurrentWordAsMultiText).Count > 0)
+			while (CanNavigateNext && GetMatchingRecords().Count > 0)
 			{
 				++CurrentWordIndex;
 			}
@@ -283,9 +283,9 @@ namespace WeSay.LexicalTools
 			CurrentWordIndex = 0;
 		}
 
-		public List<RecordToken> GetMatchingRecords(MultiText gloss)
+		public List<RecordToken> GetMatchingRecords()
 		{
-			return LexEntryRepository.GetEntriesWithMatchingGlossSortedByLexicalForm(gloss.Find(_writingSystemIdForWordListWords), _lexicalUnitWritingSystem);
+			return LexEntryRepository.GetEntriesWithMatchingGlossSortedByLexicalForm(CurrentWordAsMultiText.Find(_writingSystemIdForWordListWords), _lexicalUnitWritingSystem);
 		}
 
 		protected override int ComputeCount(bool returnResultEvenIfExpensive)
@@ -300,11 +300,12 @@ namespace WeSay.LexicalTools
 		/// <summary>
 		/// Removes the sense (if otherwise empty) and deletes the entry if it has no reason left to live
 		/// </summary>
-		public void TryToRemoveAssociationWithListWordFromEntry(LexEntry entry)
+		public void TryToRemoveAssociationWithListWordFromEntry(RecordToken recordToken)
 		{
 
 			// have to iterate through these in reverse order
 			// since they might get modified
+			LexEntry entry = LexEntryRepository.GetItem(recordToken);
 			for (int i = entry.Senses.Count - 1; i >= 0; i--)
 			{
 				LexSense sense = (LexSense)entry.Senses[i];
@@ -338,6 +339,10 @@ namespace WeSay.LexicalTools
 			{
 				LexEntryRepository.DeleteItem(entry);
 			}
+			else
+			{
+				LexEntryRepository.SaveItem(entry);
+			}
 		}
 
 
@@ -346,17 +351,6 @@ namespace WeSay.LexicalTools
 		{
 			get { return _words[_currentWordIndex]; }
 		}
-
-		public IEnumerable<LexEntry> CurrentEntriesSorted
-		{
-			get
-			{
-				List<LexEntry> entries = GetMatchingRecords(CurrentWordAsMultiText);
-				entries.Sort(new EntryByBestLexemeFormAlternativeComparer(ViewTemplate.GetField(LexEntry.WellKnownProperties.LexicalUnit).WritingSystems[0]));
-				return entries;
-			}
-		}
-
 
 
 	}

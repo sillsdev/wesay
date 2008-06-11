@@ -45,6 +45,9 @@ namespace WeSay.Project
 		public LiftUpdateService(LexEntryRepository lexEntryRepository)
 		{
 			_lexEntryRepository = lexEntryRepository;
+			// todo LexEntryRepository owns a LiftUpdateService and manages it directly. e.g. on SaveItem
+			//_lexEntryRepository.Db4oDataSource.DataCommitted += new EventHandler(liftUpdateService.OnDataCommitted);
+			//_lexEntryRepository.Db4oDataSource.DataDeleted += new EventHandler<DeletedItemEventArgs>(liftUpdateService.OnDataDeleted);
 		}
 
 
@@ -140,7 +143,7 @@ namespace WeSay.Project
 			{
 				if (ConsumePendingLiftUpdates())
 				{
-					CacheManager.UpdateSyncPointInCache(_lexEntryRepository.Data,
+					CacheManager.UpdateSyncPointInCache(_lexEntryRepository.Db4oDataSource.Data,
 															File.GetLastWriteTimeUtc(
 																WeSayWordsProject.Project.PathToLiftFile));
 				}
@@ -270,7 +273,7 @@ namespace WeSay.Project
 					return;// setting permissions in the installer apparently was enough to mess this next line up on the sample data
 				}
 
-				IList records = GetRecordsNeedingUpdateInLift();
+				IList<RepositoryId> records = GetRecordsNeedingUpdateInLift();
 				if (records.Count == 0)
 				{
 					return;

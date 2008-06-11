@@ -29,12 +29,12 @@ namespace WeSay.Data
 			return Comparer<long>.Default.Compare(Db4oId, other.Db4oId);
 		}
 
-		public int CompareTo(RepositoryId other)
+		public override int CompareTo(RepositoryId other)
 		{
 			return CompareTo(other as Db4oRepositoryId);
 		}
 
-		public bool Equals(RepositoryId other)
+		public override bool Equals(RepositoryId other)
 		{
 			return Equals(other as Db4oRepositoryId);
 		}

@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
+using System.Drawing;
 using System.IO;
 using System.Xml;
 using NUnit.Framework;
-using WeSay.Data;
 using WeSay.Foundation;
+using WeSay.Language;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Db4o_Specific;
 using WeSay.Project;
@@ -21,8 +21,8 @@ namespace WeSay.Project.Tests
 		private string _outputPath;
 		private ViewTemplate _viewTemplate;
 		private List<string> _writingSystemIds;
-		private string _headwordWritingSystemId;
-		private LexEntryRepository _recordListManager;
+		private WritingSystem _headwordWritingSystem;
+		private LexEntryRepository _lexEntryRepository;
 		string _FilePath;
 
 		[SetUp]
@@ -31,14 +31,13 @@ namespace WeSay.Project.Tests
 			BasilProject.InitializeForTests();
 			Db4oLexModelHelper.InitializeForNonDbTests();
 
-			_FilePath = System.IO.Path.GetTempFileName();
-			_recordListManager = new LexEntryRepository(new WeSayWordsDb4oModelConfiguration(), _FilePath);
-			Lexicon.Init((LexEntryRepository)_recordListManager);
+			_FilePath = Path.GetTempFileName();
+			_lexEntryRepository = new LexEntryRepository(_FilePath);
 
 			_outputPath = Path.Combine(Path.GetTempPath(), Path.GetTempFileName());
 
 			_writingSystemIds = new List<string>(new string[] { "red","green","blue" });
-			_headwordWritingSystemId = _writingSystemIds[0];
+			_headwordWritingSystem = new WritingSystem(_writingSystemIds[0], new Font(FontFamily.GenericSansSerif, 10));
 
 			_viewTemplate = new ViewTemplate();
 
@@ -47,7 +46,7 @@ namespace WeSay.Project.Tests
 			_viewTemplate.Add(new Field(LexEntry.WellKnownProperties.BaseForm, "LexEntry", _writingSystemIds));
 
 			Field visibleCustom = new Field("VisibleCustom", "LexEntry", _writingSystemIds, Field.MultiplicityType.ZeroOr1, "MultiText");
-			visibleCustom.Visibility = WeSay.Foundation.CommonEnumerations.VisibilitySetting.Visible;
+			visibleCustom.Visibility = CommonEnumerations.VisibilitySetting.Visible;
 			visibleCustom.DisplayName = "VisibleCustom";
 			_viewTemplate.Add(visibleCustom);
 
@@ -56,8 +55,8 @@ namespace WeSay.Project.Tests
 		[TearDown]
 		public void TearDown()
 		{
-			this._recordListManager.Dispose();
-			System.IO.File.Delete(_FilePath);
+			this._lexEntryRepository.Dispose();
+			File.Delete(_FilePath);
 			if (File.Exists(_outputPath))
 			{
 				File.Delete(_outputPath);
@@ -67,38 +66,32 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void NonHomographicEntryHasNoHomographNumber()
 		{
-			IRecordList<LexEntry> entries = _recordListManager.GetListOfType<LexEntry>();
-			LexEntry e1 = MakeTestLexEntryInHeadwordWritingSystem(entries, "two");
-			LexEntry e2 = MakeTestLexEntryInHeadwordWritingSystem(entries, "flower");
-			LexEntry e3 = MakeTestLexEntryInHeadwordWritingSystem(entries, "one");
-			Make(entries, _viewTemplate, _outputPath);
+			LexEntry e1 = MakeTestLexEntryInHeadwordWritingSystem("two");
+			LexEntry e2 = MakeTestLexEntryInHeadwordWritingSystem("flower");
+			LexEntry e3 = MakeTestLexEntryInHeadwordWritingSystem("one");
+			Make(_viewTemplate, _outputPath);
 			AssertXPathNotNull(_outputPath, "lift/entry[@id='" + e1.Id + "' and not(@order)]");
 			AssertXPathNotNull(_outputPath, "lift/entry[@id='" + e2.Id + "' and not(@order)]");
 			AssertXPathNotNull(_outputPath, "lift/entry[@id='" + e3.Id + "' and not(@order)]");
 		}
 
-		private void Make(IRecordList<LexEntry> entries, ViewTemplate template, string path)
+		private void Make(ViewTemplate template, string path)
 		{
-			LiftExporter exporter = new LiftExporter(path);
-			Db4oLexEntryFinder finder = new Db4oLexEntryFinder(_recordListManager.DataSource);
+			LiftExporter exporter = new LiftExporter(path, _lexEntryRepository);
 
-			exporter.SetUpForPresentationLiftExport(template, finder);
-			foreach (LexEntry entry in entries)
-			{
-				exporter.Add(entry);
-			}
+			exporter.SetUpForPresentationLiftExport(template);
+			exporter.Add(_lexEntryRepository.GetAllEntriesSortedByHeadword(_headwordWritingSystem));
 			exporter.End();
 		}
 
 		[Test]
 		public void HomographicEntriesHaveHomographNumber()
 		{
-			IRecordList<LexEntry> entries = _recordListManager.GetListOfType<LexEntry>();
-			LexEntry e1 = MakeTestLexEntryInHeadwordWritingSystem(entries, "sunset");
-			LexEntry e2 = MakeTestLexEntryInHeadwordWritingSystem(entries, "flower");
-			LexEntry e3 = MakeTestLexEntryInHeadwordWritingSystem(entries, "sunset");
+			LexEntry e1 = MakeTestLexEntryInHeadwordWritingSystem("sunset");
+			LexEntry e2 = MakeTestLexEntryInHeadwordWritingSystem("flower");
+			LexEntry e3 = MakeTestLexEntryInHeadwordWritingSystem("sunset");
 
-			Make(entries, _viewTemplate, _outputPath);
+			Make(_viewTemplate, _outputPath);
 			AssertXPathNotNull(_outputPath, "lift/entry[@id='" + e1.Id + "' and @order='1']");
 			AssertXPathNotNull(_outputPath, "lift/entry[@id='" + e2.Id + "' and not(@order)]");
 			AssertXPathNotNull(_outputPath, "lift/entry[@id='" + e3.Id + "' and @order='2']");
@@ -107,22 +100,22 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void HiddenFields_AreNotOutput()
 		{
-			IRecordList<LexEntry> entries = _recordListManager.GetListOfType<LexEntry>();
-			LexEntry e1 = (LexEntry)entries.AddNew();
+			LexEntry e1 = _lexEntryRepository.CreateItem();
 			e1.LexicalForm["test"] = "sunset";
 			e1.GetOrCreateProperty<MultiText>("color").SetAlternative(_writingSystemIds[0], "red");
+			_lexEntryRepository.SaveItem(e1);
 
 			Field color = new Field("color", "LexEntry", _writingSystemIds, Field.MultiplicityType.ZeroOr1, "MultiText");
 			color.DisplayName = "color";
 			_viewTemplate.Add(color);
 
-			Make(entries, _viewTemplate, _outputPath);
+			Make(_viewTemplate, _outputPath);
 			AssertXPathNotNull(_outputPath, "lift/entry[@id='" + e1.Id + "']/field[@type='"+"color"+"']");
 
 			//now make it invisible and it should disappear
 			_viewTemplate.GetField("color").Enabled = false;
 
-			Make(entries, _viewTemplate, _outputPath);
+			Make(_viewTemplate, _outputPath);
 			AssertNoMatchForXPath(_outputPath, "lift/entry[@id='" + e1.Id + "']/field");
 
 		}
@@ -130,10 +123,11 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void LexemeForm_DisabledWritingSystems_AreNotOutput()
 		{
-			IRecordList<LexEntry> entries = _recordListManager.GetListOfType<LexEntry>();
-			LexEntry entry = (LexEntry) entries.AddNew();
+			LexEntry entry = _lexEntryRepository.CreateItem();
 			entry.LexicalForm.SetAlternative(_writingSystemIds[1], "one");
-			Make(entries, _viewTemplate, _outputPath);
+			_lexEntryRepository.SaveItem(entry);
+
+			Make(_viewTemplate, _outputPath);
 			AssertXPathNotNull(_outputPath, "lift/entry/lexical-unit/form[text='one']");
 			AssertNoMatchForXPath(_outputPath, "lift/entry/lexical-unit/form[text='red']");
 		}
@@ -141,12 +135,13 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void WritingSystems_AreOutputInPrescribedOrder()
 		{
-			IRecordList<LexEntry> entries = _recordListManager.GetListOfType<LexEntry>();
-			LexEntry entry = (LexEntry) entries.AddNew();
+			LexEntry entry = _lexEntryRepository.CreateItem();
 			entry.LexicalForm.SetAlternative(_writingSystemIds[1], "one");
 			entry.LexicalForm.SetAlternative(_writingSystemIds[2], "two");
 			entry.LexicalForm.SetAlternative(_writingSystemIds[0], "zero");
-			Make(entries, _viewTemplate, _outputPath);
+			_lexEntryRepository.SaveItem(entry);
+
+			Make(_viewTemplate, _outputPath);
 			XmlNodeList forms = GetNodes("lift/entry/lexical-unit/form", _outputPath);
 
 			Assert.AreEqual(_writingSystemIds[0], forms[0].Attributes["lang"].InnerText);
@@ -159,9 +154,8 @@ namespace WeSay.Project.Tests
 		{
 			_viewTemplate.GetField(LexEntry.WellKnownProperties.Citation).Enabled = true;
 
-			IRecordList<LexEntry> entries = _recordListManager.GetListOfType<LexEntry>();
-			MakeEntry(entries);
-			Make(entries, _viewTemplate, _outputPath);
+			MakeEntry();
+			Make(_viewTemplate, _outputPath);
 			Assert.AreEqual(2, _viewTemplate.GetField(LexEntry.WellKnownProperties.Citation).WritingSystemIds.Count);
 			AssertXPathNotNullWithArgs(_outputPath,
 							   "lift/entry/field[@type='headword']/form[@lang='{0}']/text[text() = '{1}']",
@@ -182,12 +176,11 @@ namespace WeSay.Project.Tests
 		{
 			_viewTemplate.GetField(LexEntry.WellKnownProperties.Citation).Enabled = false;
 
-			IRecordList<LexEntry> entries = _recordListManager.GetListOfType<LexEntry>();
-			MakeEntry(entries);
-			Make(entries, _viewTemplate, _outputPath);
+			MakeEntry();
+			Make(_viewTemplate, _outputPath);
 			AssertXPathNotNullWithArgs(_outputPath,
 							   "lift/entry/field[@type='headword']/form[@lang='{0}']/text[text() = '{1}']",
-							   _headwordWritingSystemId, "redLexemeForm");
+							   _headwordWritingSystem.Id, "redLexemeForm");
 
 
 			//nb: it's not clear what the "correct" behavior is, if the citation for is disabled for this user
@@ -201,56 +194,59 @@ namespace WeSay.Project.Tests
 								_writingSystemIds[2], "blueCitation");
 		}
 
-		private void MakeEntry(IBindingList entries)
+		private void MakeEntry()
 		{
-			LexEntry entry = (LexEntry) entries.AddNew();
+			LexEntry entry = _lexEntryRepository.CreateItem();
 			entry.LexicalForm.SetAlternative("red", "redLexemeForm");
 			entry.LexicalForm.SetAlternative("green", "greenLexemeForm");
 			entry.LexicalForm.SetAlternative("blue", "blueLexemeForm");
 			//leave this blank entry.CitationForm.SetAlternative("red", "redCitation");
 			entry.CitationForm.SetAlternative("green", "greenCitation");
 			entry.CitationForm.SetAlternative("blue", "blueCitation");
+			_lexEntryRepository.SaveItem(entry);
 		}
 
 
 		[Test]
 		public void RelationEntry_Empty_NothingExported()
 		{
-			IRecordList<LexEntry> entries = _recordListManager.GetListOfType<LexEntry>();
-			LexEntry entry = (LexEntry) entries.AddNew();
-			entry.LexicalForm.SetAlternative(_headwordWritingSystemId, "Gary");
+			LexEntry entry = _lexEntryRepository.CreateItem();
+			entry.LexicalForm.SetAlternative(_headwordWritingSystem.Id, "Gary");
 			entry.AddRelationTarget("brother", string.Empty);
+			_lexEntryRepository.SaveItem(entry);
 
-			Make(entries, _viewTemplate, _outputPath);
+			Make(_viewTemplate, _outputPath);
 			CheckRelationNotOutput("brother");
 		}
 
 		[Test]
 		public void RelationEntry_NotFound_NothingExported()
 		{
-			IRecordList<LexEntry> entries = _recordListManager.GetListOfType<LexEntry>();
-			LexEntry entry = (LexEntry) entries.AddNew();
-			entry.LexicalForm.SetAlternative(_headwordWritingSystemId, "Gary");
+			LexEntry entry = _lexEntryRepository.CreateItem();
+			entry.LexicalForm.SetAlternative(_headwordWritingSystem.Id, "Gary");
 			entry.AddRelationTarget("brother", "notGonnaFindIt");
+			_lexEntryRepository.SaveItem(entry);
 
-			Make(entries, _viewTemplate, _outputPath);
+			Make(_viewTemplate, _outputPath);
 			CheckRelationNotOutput("brother");
 		}
 
 		[Test]
 		public void RelationEntry_Found_HeadWordExported()
 		{
-			IRecordList<LexEntry> entries = _recordListManager.GetListOfType<LexEntry>();
-		   LexEntry targetEntry = (LexEntry) entries.AddNew();
-		   targetEntry.LexicalForm.SetAlternative(_headwordWritingSystemId, "RickLexeme");
-		   targetEntry.CitationForm.SetAlternative(_headwordWritingSystemId, "Rick");
+			LexEntry targetEntry = _lexEntryRepository.CreateItem();
 
-		   LexEntry entry = (LexEntry) entries.AddNew();
-		   entry.LexicalForm.SetAlternative(_headwordWritingSystemId, "Gary");
+		   targetEntry.LexicalForm.SetAlternative(_headwordWritingSystem.Id, "RickLexeme");
+		   targetEntry.CitationForm.SetAlternative(_headwordWritingSystem.Id, "Rick");
+		   _lexEntryRepository.SaveItem(targetEntry);
+
+		   LexEntry entry = _lexEntryRepository.CreateItem();
+		   entry.LexicalForm.SetAlternative(_headwordWritingSystem.Id, "Gary");
+		   _lexEntryRepository.SaveItem(entry);
 
 		   entry.AddRelationTarget("brother", targetEntry.Id);
 
-			Make(entries, _viewTemplate, _outputPath);
+			Make(_viewTemplate, _outputPath);
 			CheckRelationOutput(targetEntry, "brother");
 		}
 
@@ -258,23 +254,24 @@ namespace WeSay.Project.Tests
 		{
 			AssertXPathNotNullWithArgs(_outputPath,
 									   "lift/entry/relation/field[@type='headword-of-target']/form[@lang='{1}']/text[text() = '{2}']",
-									   relationName, _headwordWritingSystemId, targetEntry.GetHeadWordForm(_headwordWritingSystemId));
+									   relationName, _headwordWritingSystem.Id, targetEntry.GetHeadWordForm(_headwordWritingSystem.Id));
 		}
 		private void CheckRelationNotOutput(string relationName)
 		{
 			AssertNoMatchForXPathWithArgs(_outputPath,
 									   "lift/entry/field[@type='{0}-relation-headword']",
-									   relationName, _headwordWritingSystemId);
+									   relationName, _headwordWritingSystem.Id);
 		}
 
-		private LexEntry MakeTestLexEntryInHeadwordWritingSystem(IBindingList entries, string lexicalForm)
+		private LexEntry MakeTestLexEntryInHeadwordWritingSystem(string lexicalForm)
 		{
-			LexEntry entry = (LexEntry) entries.AddNew();
-			entry.LexicalForm[_headwordWritingSystemId] = lexicalForm;
+			LexEntry entry = _lexEntryRepository.CreateItem();
+			entry.LexicalForm[_headwordWritingSystem.Id] = lexicalForm;
+			_lexEntryRepository.SaveItem(entry);
 			return entry;
 		}
 
-		private XmlNodeList GetNodes(string xpath, string filePath)
+		private static XmlNodeList GetNodes(string xpath, string filePath)
 		{
 			XmlDocument doc = new XmlDocument();
 			try
@@ -295,15 +292,15 @@ namespace WeSay.Project.Tests
 			return nodes;
 		}
 
-		private void AssertXPathNotNullWithArgs( string filePath, string xpathWithArgs, params object[] args)
+		private static void AssertXPathNotNullWithArgs( string filePath, string xpathWithArgs, params object[] args)
 		{
 			AssertXPathNotNull(filePath, string.Format(xpathWithArgs, args));
 		}
-		private void AssertNoMatchForXPathWithArgs(string filePath, string xpathWithArgs, params object[] args)
+		private static void AssertNoMatchForXPathWithArgs(string filePath, string xpathWithArgs, params object[] args)
 		{
 			AssertNoMatchForXPath(filePath, string.Format(xpathWithArgs, args));
 		}
-		private void AssertXPathNotNull(string filePath, string xpath)
+		private static void AssertXPathNotNull(string filePath, string xpath)
 		{
 			XmlDocument doc = new XmlDocument();
 			try

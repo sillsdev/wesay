@@ -16,7 +16,7 @@ namespace WeSay.LexicalTools.Tests
 	[TestFixture]
 	public class GatherWordListTaskTests : TaskBaseTests
 	{
-		LexEntryRepository _recordListManager;
+		LexEntryRepository _lexEntryRepository;
 		private string _wordListFilePath;
 		private string _dbFilePath;
 		private string[] _words=new string[] {"one","two","three"};
@@ -32,9 +32,8 @@ namespace WeSay.LexicalTools.Tests
 			//Db4oLexModelHelper.InitializeForNonDbTests();
 			WeSayWordsProject.InitializeForTests();
 
-			this._recordListManager = new LexEntryRepository(new WeSayWordsDb4oModelConfiguration(), _dbFilePath);// InMemoryRecordListManager();
-			Db4oLexModelHelper.Initialize(((LexEntryRepository)_recordListManager).DataSource.Data);
-			Lexicon.Init(_recordListManager);
+			this._lexEntryRepository = new LexEntryRepository(new WeSayWordsDb4oModelConfiguration(), _dbFilePath);// InMemoryRecordListManager();
+			Db4oLexModelHelper.Initialize(((LexEntryRepository)_lexEntryRepository).DataSource.Data);
 			_glossingLanguageWSId = BasilProject.Project.WritingSystems.TestWritingSystemAnalId;
 			_vernacularLanguageWSId = BasilProject.Project.WritingSystems.TestWritingSystemVernId;
 
@@ -42,7 +41,7 @@ namespace WeSay.LexicalTools.Tests
 			_viewTemplate = new ViewTemplate();
 			this._viewTemplate.Add(new Field(Field.FieldNames.EntryLexicalForm.ToString(), "LexEntry", new string[] { BasilProject.Project.WritingSystems.TestWritingSystemVernId }));
 
-			this._task = new GatherWordListTask(_recordListManager,
+			this._task = new GatherWordListTask(_lexEntryRepository,
 												"label",
 												"description",
 												_wordListFilePath,
@@ -53,7 +52,7 @@ namespace WeSay.LexicalTools.Tests
 		[TearDown]
 		public void TearDown()
 		{
-			_recordListManager.Dispose();
+			_lexEntryRepository.Dispose();
 			File.Delete(_wordListFilePath);
 			File.Delete(_dbFilePath);
 		}
@@ -61,7 +60,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void EmptyTemplate()
 		{
-			GatherWordListTask g = new GatherWordListTask(_recordListManager,
+			GatherWordListTask g = new GatherWordListTask(_lexEntryRepository,
 														  "label",
 														  "description",
 														  _wordListFilePath,
@@ -74,7 +73,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test, ExpectedException(typeof(ErrorReport.NonFatalMessageSentToUserException))]
 		public void MissingWordListFileGivesMessage()
 		{
-			GatherWordListTask g = new GatherWordListTask(_recordListManager,
+			GatherWordListTask g = new GatherWordListTask(_lexEntryRepository,
 														  "label",
 														  "description",
 														  "NotThere.txt",
@@ -86,7 +85,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test, ExpectedException(typeof(ErrorReport.NonFatalMessageSentToUserException))]
 		public void WritingSystemNotInCurrentListGivesMessage()
 		{
-			GatherWordListTask g = new GatherWordListTask(_recordListManager,
+			GatherWordListTask g = new GatherWordListTask(_lexEntryRepository,
 														  "label",
 														  "description",
 														  _wordListFilePath,
@@ -224,11 +223,11 @@ namespace WeSay.LexicalTools.Tests
 		public void AddWordNotInDB()
 		{
 			Task.NavigateFirstToShow();
-			Assert.AreEqual(0, _recordListManager.GetListOfType<LexEntry>().Count);
+			Assert.AreEqual(0, _lexEntryRepository.GetListOfType<LexEntry>().Count);
 			MultiText word = new MultiText();
 			word[VernWs.Id] = "uno";
 			Task.WordCollected(word);
-			Assert.AreEqual(1, _recordListManager.GetListOfType<LexEntry>().Count);
+			Assert.AreEqual(1, _lexEntryRepository.GetListOfType<LexEntry>().Count);
 
 		   //this is an attempt to get a failure that I was able to get at one time in the
 			//app itself, but which I haven't got to fail under tests.  I believe I've
@@ -241,7 +240,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			LexEntry e = (LexEntry)EntriesList.AddNew();
 			e.LexicalForm[VernWs.Id] = "uno";
-			Assert.AreEqual(1, _recordListManager.GetListOfType<LexEntry>().Count);
+			Assert.AreEqual(1, _lexEntryRepository.GetListOfType<LexEntry>().Count);
 			MultiText word = new MultiText();
 			word[VernWs.Id] = "uno";
 			Assert.AreEqual(0, e.Senses.Count);
@@ -249,7 +248,7 @@ namespace WeSay.LexicalTools.Tests
 			Task.NavigateFirstToShow();
 			Task.WordCollected(word);
 			Assert.AreEqual(1, e.Senses.Count);
-			Assert.AreEqual(1, _recordListManager.GetListOfType<LexEntry>().Count);
+			Assert.AreEqual(1, _lexEntryRepository.GetListOfType<LexEntry>().Count);
 	   }
 
 
@@ -260,7 +259,7 @@ namespace WeSay.LexicalTools.Tests
 		   LexEntry entry2 =PrepareEntryWithOneGloss();
 		   Assert.AreSame(entry, entry2);
 		   Assert.AreEqual(1, entry.Senses.Count);
-		   Assert.AreEqual(1, _recordListManager.GetListOfType<LexEntry>().Count);
+		   Assert.AreEqual(1, _lexEntryRepository.GetListOfType<LexEntry>().Count);
 	   }
 
 		private void AddEntryAndSense(string gloss)
@@ -273,7 +272,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			get
 			{
-				IRecordList<LexEntry> list = _recordListManager.GetListOfType<LexEntry>();
+				IRecordList<LexEntry> list = _lexEntryRepository.GetListOfType<LexEntry>();
 				return list;
 			}
 		}
@@ -300,7 +299,7 @@ namespace WeSay.LexicalTools.Tests
 
 			//now simulate removing it, as when the user wants to correct spelling
 			Task.TryToRemoveAssociationWithListWordFromEntry(entry);
-			Assert.AreEqual(0, Lexicon.GetEntriesHavingLexicalForm("uno", VernWs).Count);
+			Assert.AreEqual(0, LexEntryRepository.GetEntriesWithMatchingLexicalForm("uno", VernWs).Count);
 		}
 
 
@@ -318,7 +317,7 @@ namespace WeSay.LexicalTools.Tests
 
 			//now simulate removing it, as when the user wants to correct spelling
 			Task.TryToRemoveAssociationWithListWordFromEntry(entry);
-			Assert.AreEqual(1, Lexicon.GetEntriesHavingLexicalForm("uno", VernWs).Count);
+			Assert.AreEqual(1, LexEntryRepository.GetEntriesWithMatchingLexicalForm("uno", VernWs).Count);
 			Assert.AreEqual(1,entry.Senses.Count);
 		}
 
@@ -337,7 +336,7 @@ namespace WeSay.LexicalTools.Tests
 
 			//now simulate removing it, as when the user wants to correct spelling
 			Task.TryToRemoveAssociationWithListWordFromEntry(entry);
-			Assert.AreEqual(1, Lexicon.GetEntriesHavingLexicalForm("uno", VernWs).Count);
+			Assert.AreEqual(1, LexEntryRepository.GetEntriesWithMatchingLexicalForm("uno", VernWs).Count);
 			Assert.AreEqual(1, entry.Senses.Count);
 		}
 
@@ -356,7 +355,7 @@ namespace WeSay.LexicalTools.Tests
 
 			//now simulate removing it, as when the user wants to correct spelling
 			Task.TryToRemoveAssociationWithListWordFromEntry(entry);
-			Assert.AreEqual(1, Lexicon.GetEntriesHavingLexicalForm("uno", VernWs).Count);
+			Assert.AreEqual(1, LexEntryRepository.GetEntriesWithMatchingLexicalForm("uno", VernWs).Count);
 			Assert.AreEqual(1, entry.Senses.Count);
 			Assert.AreEqual("one", sense.Gloss.GetExactAlternative(_glossingLanguageWSId), "should not remove the gloss");
 		}
@@ -368,9 +367,9 @@ namespace WeSay.LexicalTools.Tests
 
 			word.SetAlternative(_vernacularLanguageWSId,"uno");
 			Task.WordCollected(word);
-			Assert.AreEqual(1, Lexicon.GetEntriesHavingLexicalForm("uno", VernWs).Count);
+			Assert.AreEqual(1, LexEntryRepository.GetEntriesWithMatchingLexicalForm("uno", VernWs).Count);
 
-			IList<LexEntry> entries = Lexicon.GetEntriesHavingLexicalForm("uno", VernWs);
+			IList<LexEntry> entries = LexEntryRepository.GetEntriesWithMatchingLexicalForm("uno", VernWs);
 
 			return (LexEntry)entries[0];
 		}
@@ -384,6 +383,43 @@ namespace WeSay.LexicalTools.Tests
 				return vernWs;
 			}
 		}
+
+		[Test]
+		public void WordCollected_AddSenseAppendsToExistingLexEntry()
+		{
+			string formToFind = "Bank";
+			AddEntryWithLexemeForm("ignore1");
+			LexEntry entryToMatch = AddEntryWithLexemeForm(formToFind);
+			AddEntryWithLexemeForm("ignore2");
+
+			MultiText lexemeForm = new MultiText();
+			lexemeForm["en"] = formToFind;
+			Assert.AreEqual(0, entryToMatch.Senses.Count);
+
+			//add sense to empty entry
+			LexSense sense = new LexSense();
+			sense.Gloss["en"] = "money place";
+			Db4oLexQueryHelper.AddSenseToLexicon(_lexEntryRepository, lexemeForm, sense);
+			Assert.AreEqual(1, entryToMatch.Senses.Count);
+
+			//add sense to  entry which already has one sense
+			LexSense sense2 = new LexSense();
+			Db4oLexQueryHelper.AddSenseToLexicon(_lexEntryRepository, lexemeForm, sense2);
+			Assert.AreEqual(2, entryToMatch.Senses.Count);
+
+			sense.Gloss["en"] = "side of river";
+		}
+
+		private LexEntry AddEntryWithLexemeForm(string lexemeForm)
+		{
+			LexEntry entry = new LexEntry();
+			entry.LexicalForm["en"] = lexemeForm;
+			_entriesList.Add(entry);
+			return entry;
+		}
+
+
+
 	}
 
 }

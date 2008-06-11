@@ -15,7 +15,7 @@ namespace Addin.Transform.Tests
 	public class HtmlTransformerTests
 	{
 		public Transform.HtmlTransformer _addin;
-		private LexEntryRepository _recordListManager;
+		private LexEntryRepository _lexEntryRepository;
 		private string _dbFile;
 
 		[SetUp]
@@ -23,10 +23,8 @@ namespace Addin.Transform.Tests
 		{
 			WeSayWordsProject.InitializeForTests();
 			_dbFile = Path.GetTempFileName();
-			_recordListManager = new LexEntryRepository(new WeSayWordsDb4oModelConfiguration(), _dbFile);
-			Db4oLexModelHelper.Initialize(_recordListManager.DataSource.Data);
-
-			Lexicon.Init(_recordListManager);
+			_lexEntryRepository = new LexEntryRepository(new WeSayWordsDb4oModelConfiguration(), _dbFile);
+			Db4oLexModelHelper.Initialize(_lexEntryRepository.DataSource.Data);
 
 			_addin = new Transform.HtmlTransformer();
 			_addin.LaunchAfterTransform = false;
@@ -39,7 +37,7 @@ namespace Addin.Transform.Tests
 			{
 				File.Delete(_addin.PathToOutput);
 			}
-			_recordListManager.Dispose();
+			_lexEntryRepository.Dispose();
 			File.Delete(_dbFile);
 		}
 

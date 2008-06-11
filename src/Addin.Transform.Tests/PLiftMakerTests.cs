@@ -36,10 +36,9 @@ namespace Addin.Transform.Tests
 //
 //            using (Db4oProjectSetupForTesting projectSetup = new Db4oProjectSetupForTesting(xmlForEntries))
 //            {
-//                Lexicon.Init(projectSetup._recordListManager);
 //                PLiftMaker maker = new PLiftMaker();
 //                string outputPath = Path.Combine(projectSetup._project.PathToExportDirectory, projectSetup._project.Name + ".xhtml");
-//                maker.MakeXHtmlFile(outputPath, projectSetup._recordListManager, projectSetup._project);
+//                maker.MakeXHtmlFile(outputPath, projectSetup._lexEntryRepository, projectSetup._project);
 //                Assert.IsTrue(File.ReadAllText(outputPath).Contains("<span class=\"v\">fooOne"));
 //            }
 //        }
@@ -52,14 +51,12 @@ namespace Addin.Transform.Tests
 				p.LoadFromProjectDirectoryPath(@"E:\Users\John\Documents\WeSay\biatah");
 
 				using (
-					LexEntryRepository recordListManager =
+					LexEntryRepository lexEntryRepository =
 						new LexEntryRepository(new WeSayWordsDb4oModelConfiguration(), p.PathToDb4oLexicalModelDB))
 				{
-					Lexicon.Init(recordListManager);
-
 					PLiftMaker maker = new PLiftMaker();
 					IEnumerable<LexEntry> entries = Lexicon.GetAllEntriesSortedByHeadword(p.HeadWordWritingSystem);
-					Db4oLexEntryFinder finder = new Db4oLexEntryFinder(recordListManager.DataSource);
+					Db4oLexEntryFinder finder = new Db4oLexEntryFinder(lexEntryRepository.DataSource);
 					string path = maker.MakePLiftTempFile(entries, p.DefaultViewTemplate, finder);
 					Console.WriteLine(path);
 				}

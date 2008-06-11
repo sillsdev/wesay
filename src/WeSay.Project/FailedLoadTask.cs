@@ -57,11 +57,6 @@ namespace WeSay.Project
 			get { return false; }
 		}
 
-		public void RegisterWithCache(ViewTemplate viewTemplate)
-		{
-
-		}
-
 		public Control Control
 		{
 			get {

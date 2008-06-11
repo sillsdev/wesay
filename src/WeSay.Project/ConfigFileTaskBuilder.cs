@@ -18,14 +18,14 @@ namespace WeSay.App
 		private IMutablePicoContainer _picoContext;
 		List<ITask> _tasks;
 
-		public ConfigFileTaskBuilder(Stream config, WeSayWordsProject project, ICurrentWorkTask currentWorkTask, LexEntryRepository recordListManager)
+		public ConfigFileTaskBuilder(Stream config, WeSayWordsProject project, ICurrentWorkTask currentWorkTask, LexEntryRepository lexEntryRepository)
 		{
 			_picoContext = new DefaultPicoContainer();
 
 			_picoContext.RegisterComponentInstance("Project", project);
 			_picoContext.RegisterComponentInstance("Current Task Provider", currentWorkTask);
 
-			_picoContext.RegisterComponentInstance("All Entries", recordListManager);
+			_picoContext.RegisterComponentInstance("All Entries", lexEntryRepository);
 			XPathDocument doc = new XPathDocument(config);
 			InitializeComponents(doc);
 			InitializeTaskList(doc);
