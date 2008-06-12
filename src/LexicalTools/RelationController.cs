@@ -136,8 +136,8 @@ namespace WeSay.LexicalTools
 			this._recordTokenList = recordTokenList;
 
 			AutoCompleteWithCreationBox<RecordToken, string> picker = CreatePicker<RecordToken>(relation);
-			picker.GetKeyValueFromValue = GetRecordTokenFromDisplayString;
-			picker.GetValueFromKeyValue = GetDisplayStringFromRecordToken;
+			picker.GetKeyValueFromValue = GetRecordTokenFromTargetId;
+			picker.GetValueFromKeyValue = GetTargetIdFromRecordToken;
 
 			picker.Box.ItemDisplayStringAdaptor =
 					new PairStringLexEntryIdDisplayProvider(this._lexEntryRepository);
@@ -169,21 +169,23 @@ namespace WeSay.LexicalTools
 										});
 		}
 
-		private RecordToken GetRecordTokenFromDisplayString(string s) {
+		private RecordToken GetRecordTokenFromTargetId(string s) {
 			if (s == null)
 			{
 				return null;
 			}
+			LexEntry lexEntry = this._lexEntryRepository.GetLexEntryWithMatchingId(s);
+			RepositoryId id = this._lexEntryRepository.GetId(lexEntry);
 			List<RecordToken> recordTokenList = this._lexEntryRepository.GetAllEntriesSortedByLexicalForm(this._field.WritingSystems[0]);
 			return recordTokenList.Find(delegate (RecordToken token)
 										{
-											return token.DisplayString == s;
+											return token.Id == id;
 										});
 		}
 
-		private string GetDisplayStringFromRecordToken(RecordToken e)
+		private string GetTargetIdFromRecordToken(RecordToken e)
 		{
-			return e.DisplayString;
+			return _lexEntryRepository.GetItem(e).Id;
 		}
 
 		private AutoCompleteWithCreationBox<T, string> CreatePicker<T>(LexRelation relation) where T:class
