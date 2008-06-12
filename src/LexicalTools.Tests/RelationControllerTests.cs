@@ -1,6 +1,7 @@
 using System.IO;
 using System.Windows.Forms;
 using NUnit.Framework;
+using WeSay.Data;
 using WeSay.Foundation;
 using WeSay.LexicalModel;
 using WeSay.Project;
@@ -188,8 +189,8 @@ namespace WeSay.LexicalTools.Tests
 													delegate { });
 			c.Text = "new";
 
-			AutoCompleteWithCreationBox<object, LexEntry> picker =
-					(AutoCompleteWithCreationBox<object, LexEntry>) c;
+			AutoCompleteWithCreationBox<RecordToken, LexEntry> picker =
+					(AutoCompleteWithCreationBox<RecordToken, LexEntry>)c;
 			picker.CreateNewObjectFromText();
 
 			LexEntry newEntry = _lexEntryRepository.GetLexEntryWithMatchingId(relation.Key);
@@ -210,8 +211,8 @@ namespace WeSay.LexicalTools.Tests
 													delegate { });
 			Form form = new Form();
 			form.Controls.Add(c);
-			AutoCompleteWithCreationBox<object, LexEntry> picker =
-					(AutoCompleteWithCreationBox<object, LexEntry>) c;
+			AutoCompleteWithCreationBox<RecordToken, LexEntry> picker =
+					(AutoCompleteWithCreationBox<RecordToken, LexEntry>) c;
 			picker.Box.Paste("text");
 		}
 

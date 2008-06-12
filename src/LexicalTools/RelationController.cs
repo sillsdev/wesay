@@ -135,9 +135,9 @@ namespace WeSay.LexicalTools
 			List<RecordToken> recordTokenList = this._lexEntryRepository.GetAllEntriesSortedByLexicalForm(this._field.WritingSystems[0]);
 			this._recordTokenList = recordTokenList;
 
-			AutoCompleteWithCreationBox<object, LexEntry> picker = CreatePicker<object>(relation);
-			//picker.GetKeyValueFromValue = GetKeyIdPairFromLexEntry;
-			//picker.GetValueFromKeyValue = GetLexEntryFromKeyIdPair;
+			AutoCompleteWithCreationBox<RecordToken, LexEntry> picker = CreatePicker<RecordToken>(relation);
+			picker.GetKeyValueFromValue = GetRecordTokenPairFromLexEntry;
+			picker.GetValueFromKeyValue = GetLexEntryFromKeyIdPair;
 
 			picker.Box.ItemDisplayStringAdaptor =
 					new PairStringLexEntryIdDisplayProvider(this._lexEntryRepository);
@@ -145,8 +145,7 @@ namespace WeSay.LexicalTools
 			picker.Box.ItemFilterer = FindClosestAndNextClosestAndPrefixedPairStringLexEntryForms;
 
 			picker.Box.Items = recordTokenList;
-			picker.Box.SelectedItem = relation.GetTarget(_lexEntryRepository);
-//            picker.Box.SelectedItem = GetKeyIdPairFromLexEntry(relation.GetTarget(_lexEntryRepository));
+			picker.Box.SelectedItem = GetRecordTokenPairFromLexEntry(relation.GetTarget(_lexEntryRepository));
 
 			picker.CreateNewClicked += OnCreateNewPairStringLexEntryId;
 			this._control = picker;
@@ -156,22 +155,23 @@ namespace WeSay.LexicalTools
 		//    return e;
 		//}
 
-		//private object GetKeyIdPairFromLexEntry(LexEntry e) {
-		//    if (e == null)
-		//    {
-		//        return null;
-		//    }
-		//    List<RecordToken> lexEntryRecordTokens = this._lexEntryRepository.GetRecordToken(e, );
-		//    if (lexEntryRecordTokens.Count > 0)
-		//    {
-		//        return lexEntryRecordTokens[0];
-		//    }
-		//    return null;
-		//}
+		private RecordToken GetRecordTokenPairFromLexEntry(LexEntry e) {
+			if (e == null)
+			{
+				return null;
+			}
+			RepositoryId id = this._lexEntryRepository.GetId(e);
+			List<RecordToken> recordTokenList = this._lexEntryRepository.GetAllEntriesSortedByLexicalForm(this._field.WritingSystems[0]);
+			return recordTokenList.Find(delegate (RecordToken token)
+										{
+											return token.Id == id;
+										});
+		}
 
-		//private LexEntry GetLexEntryFromKeyIdPair(object e) {
-		//    return _lexEntryRepository.GetItem((RecordToken)e);
-		//}
+		private LexEntry GetLexEntryFromKeyIdPair(object e)
+		{
+			return _lexEntryRepository.GetItem((RecordToken)e);
+		}
 
 		private AutoCompleteWithCreationBox<T, LexEntry> CreatePicker<T>(LexRelation relation) where T:class
 		{
