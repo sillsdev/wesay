@@ -71,7 +71,7 @@ namespace WeSay.LexicalTools
 									  CreateNewArgs e)
 		{
 			LexEntry newGuy = CreateNewLexEntry(e);
-//            e.NewlyCreatedItem = GetKeyIdPairFromLexEntry(newGuy);
+			e.NewlyCreatedItem = GetRecordTokenFromLexEntry(newGuy);
 		}
 
 		private LexEntry CreateNewLexEntry(CreateNewArgs e) {
