@@ -45,7 +45,7 @@ namespace WeSay.LexicalModel
 		}
 	}
 
-	public class LexRelation : IParentable, IReferenceContainer, IReportEmptiness
+	public class LexRelation : IParentable, IValueHolder<string>, IReferenceContainer, IReportEmptiness
 	{
 		//private LexRelationType _type;
 		private string _fieldId;
@@ -177,6 +177,15 @@ namespace WeSay.LexicalModel
 		public bool ShouldBeRemovedFromParentDueToEmptiness
 		{
 			get {  return string.IsNullOrEmpty(Key);}
+		}
+
+		public string Value
+		{
+			get
+			{
+				return TargetId;
+			}
+			set { TargetId = value; }
 		}
 
 		#endregion

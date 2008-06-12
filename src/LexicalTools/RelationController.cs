@@ -19,7 +19,7 @@ namespace WeSay.LexicalTools
 		private readonly EventHandler<CurrentItemEventArgs> _focusDelegate;
 		private readonly LexRelationType _relationType;
 		private readonly WeSayDataObject _relationParent;
-		private SimpleBinding<LexEntry> _binding;
+		private SimpleBinding<string> _binding;
 		private Control _control;
 		private List<RecordToken> _recordTokenList;
 
@@ -135,9 +135,9 @@ namespace WeSay.LexicalTools
 			List<RecordToken> recordTokenList = this._lexEntryRepository.GetAllEntriesSortedByLexicalForm(this._field.WritingSystems[0]);
 			this._recordTokenList = recordTokenList;
 
-			AutoCompleteWithCreationBox<RecordToken, LexEntry> picker = CreatePicker<RecordToken>(relation);
-			picker.GetKeyValueFromValue = GetRecordTokenPairFromLexEntry;
-			picker.GetValueFromKeyValue = GetLexEntryFromKeyIdPair;
+			AutoCompleteWithCreationBox<RecordToken, string> picker = CreatePicker<RecordToken>(relation);
+			picker.GetKeyValueFromValue = GetRecordTokenFromDisplayString;
+			picker.GetValueFromKeyValue = GetDisplayStringFromRecordToken;
 
 			picker.Box.ItemDisplayStringAdaptor =
 					new PairStringLexEntryIdDisplayProvider(this._lexEntryRepository);
@@ -145,7 +145,7 @@ namespace WeSay.LexicalTools
 			picker.Box.ItemFilterer = FindClosestAndNextClosestAndPrefixedPairStringLexEntryForms;
 
 			picker.Box.Items = recordTokenList;
-			picker.Box.SelectedItem = GetRecordTokenPairFromLexEntry(relation.GetTarget(_lexEntryRepository));
+			picker.Box.SelectedItem = GetRecordTokenFromLexEntry(relation.GetTarget(_lexEntryRepository));
 
 			picker.CreateNewClicked += OnCreateNewPairStringLexEntryId;
 			this._control = picker;
@@ -155,27 +155,40 @@ namespace WeSay.LexicalTools
 		//    return e;
 		//}
 
-		private RecordToken GetRecordTokenPairFromLexEntry(LexEntry e) {
+		private RecordToken GetRecordTokenFromLexEntry(LexEntry e)
+		{
 			if (e == null)
 			{
 				return null;
 			}
 			RepositoryId id = this._lexEntryRepository.GetId(e);
 			List<RecordToken> recordTokenList = this._lexEntryRepository.GetAllEntriesSortedByLexicalForm(this._field.WritingSystems[0]);
-			return recordTokenList.Find(delegate (RecordToken token)
+			return recordTokenList.Find(delegate(RecordToken token)
 										{
 											return token.Id == id;
 										});
 		}
 
-		private LexEntry GetLexEntryFromKeyIdPair(object e)
-		{
-			return _lexEntryRepository.GetItem((RecordToken)e);
+		private RecordToken GetRecordTokenFromDisplayString(string s) {
+			if (s == null)
+			{
+				return null;
+			}
+			List<RecordToken> recordTokenList = this._lexEntryRepository.GetAllEntriesSortedByLexicalForm(this._field.WritingSystems[0]);
+			return recordTokenList.Find(delegate (RecordToken token)
+										{
+											return token.DisplayString == s;
+										});
 		}
 
-		private AutoCompleteWithCreationBox<T, LexEntry> CreatePicker<T>(LexRelation relation) where T:class
+		private string GetDisplayStringFromRecordToken(RecordToken e)
 		{
-			AutoCompleteWithCreationBox<T, LexEntry> picker = new AutoCompleteWithCreationBox<T, LexEntry>(CommonEnumerations.VisibilitySetting.Visible);
+			return e.DisplayString;
+		}
+
+		private AutoCompleteWithCreationBox<T, string> CreatePicker<T>(LexRelation relation) where T:class
+		{
+			AutoCompleteWithCreationBox<T, string> picker = new AutoCompleteWithCreationBox<T, string>(CommonEnumerations.VisibilitySetting.Visible);
 			picker.Box.Tag = relation;
 			//                    switch (type.TargetType)
 			//                    {
@@ -198,9 +211,9 @@ namespace WeSay.LexicalTools
 				// picker.Box.ShowRedSquiggle = true;
 			}
 
-			//_binding = new SimpleBinding<LexEntry>(relation, picker);
-			////for underlinging the relation in the preview pane
-			//_binding.CurrentItemChanged += _focusDelegate;
+			_binding = new SimpleBinding<string>(relation, picker);
+			//for underlinging the relation in the preview pane
+			_binding.CurrentItemChanged += _focusDelegate;
 
 			return picker;
 		}
