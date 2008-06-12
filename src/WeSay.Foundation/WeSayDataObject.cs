@@ -19,7 +19,7 @@ namespace WeSay.Foundation
 
 	public interface IReferenceContainer
 	{
-		object Target { get; set; }
+		string TargetId { get; set; }
 		string Key { get; set; }
 	}
 

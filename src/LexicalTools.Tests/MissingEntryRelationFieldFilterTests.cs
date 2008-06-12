@@ -1,3 +1,4 @@
+using System.IO;
 using NUnit.Framework;
 using WeSay.Data;
 using WeSay.LexicalModel;
@@ -8,17 +9,19 @@ namespace WeSay.LexicalTools.Tests
 	[TestFixture]
 	public class MissingEntryRelationFieldFilterTests
 	{
+		private LexEntryRepository _lexEntryRepository;
+		private string _filePath;
+
 		#region Setup/Teardown
 
 		[SetUp]
 		public void Setup()
 		{
-			_db4oTestHelper = new HelperForTestsRequiringDb4o();
-			_target = new LexEntry();
-			_source = new LexEntry();
-			IRecordList<LexEntry> lexEntries = this._db4oTestHelper.RecordListManager.GetListOfType<LexEntry>();
-			lexEntries.Add(_target);
-			lexEntries.Add(_source);
+			_filePath = Path.GetTempFileName();
+			_lexEntryRepository = new LexEntryRepository(_filePath);
+
+			_target = _lexEntryRepository.CreateItem();
+			_source = _lexEntryRepository.CreateItem();
 
 			Field relationField =
 					new Field("synonyms",
@@ -32,7 +35,8 @@ namespace WeSay.LexicalTools.Tests
 		[TearDown]
 		public void Teardown()
 		{
-			_db4oTestHelper.Dispose();
+			_lexEntryRepository.Dispose();
+			File.Delete(_filePath);
 		}
 
 		#endregion
@@ -40,14 +44,13 @@ namespace WeSay.LexicalTools.Tests
 		private MissingItemFilter _missingRelationFieldFilter;
 		private LexEntry _target;
 		private LexEntry _source;
-		private HelperForTestsRequiringDb4o _db4oTestHelper;
 
 		private void AddRelation()
 		{
 			LexRelationCollection synonyms =
 					_source.GetOrCreateProperty<LexRelationCollection>("synonyms");
 			LexRelation r = new LexRelation("synonyms", _target.GetOrCreateId(true), _source);
-			r.Target = _target;
+			r.SetTarget(_target);
 			synonyms.Relations.Add(r);
 		}
 

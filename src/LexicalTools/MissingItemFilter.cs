@@ -11,7 +11,7 @@ namespace WeSay.LexicalTools
 {
 	public class MissingItemFilter : IFilter<LexEntry>
 	{
-		private Field _field;
+		private readonly Field _field;
 
 		public MissingItemFilter(Field field)
 		{
@@ -95,7 +95,7 @@ namespace WeSay.LexicalTools
 					{
 						foreach (LexRelation r in collection.Relations)
 						{
-							if(r.Target !=null)
+							if(r.TargetId !=null)
 							{
 								return false; // has one non-empty relation
 							}

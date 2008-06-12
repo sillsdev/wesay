@@ -7,8 +7,6 @@ using System.IO;
 using Palaso.UI.WindowsForms.i8n;
 using Palaso.Reporting;
 using WeSay.AddinLib;
-using WeSay.Data;
-using WeSay.Foundation;
 using WeSay.Foundation.Dashboard;
 using WeSay.LexicalModel;
 using WeSay.Project;
@@ -20,7 +18,7 @@ namespace WeSay.CommonTools
 
 	public partial class Dash : UserControl, ITask, IFinishCacheSetup
 	{
-		private readonly IRecordListManager _recordListManager;
+		private readonly LexEntryRepository _lexEntryRepository;
 		private int _standardButtonWidth;
 		private IList<IThingOnDashboard> _thingsToMakeButtonsFor;
 		private List<ButtonGroup> _buttonGroups;
@@ -28,10 +26,10 @@ namespace WeSay.CommonTools
 		private readonly ICurrentWorkTask _currentWorkTaskProvider;
 		private int _oldFlowWidth;
 
-		public Dash(IRecordListManager RecordListManager, ICurrentWorkTask currentWorkTaskProvider)
+		public Dash(LexEntryRepository RecordListManager, ICurrentWorkTask currentWorkTaskProvider)
 		{
 			_oldFlowWidth = 0;
-			_recordListManager = RecordListManager;
+			_lexEntryRepository = RecordListManager;
 			_currentWorkTaskProvider = currentWorkTaskProvider;
 			InitializeContextMenu();
 		}
@@ -84,7 +82,7 @@ namespace WeSay.CommonTools
 
 		private void Fill()
 		{
-			DictionaryStatusControl title = new DictionaryStatusControl(_recordListManager.GetListOfType<LexEntry>());
+			DictionaryStatusControl title = new DictionaryStatusControl(_lexEntryRepository.CountAllEntries());
 			title.Font = new Font("Arial", 14);
 			title.BackColor = Color.Transparent;
 			title.ShowLogo = true;
@@ -162,7 +160,7 @@ namespace WeSay.CommonTools
 
 			button.Size = new Size(buttonWidth, 40);
 			button.Text = item.LocalizedLabel;
-			button.Click += new EventHandler(OnButtonClick);
+			button.Click += OnButtonClick;
 			return button;
 		}
 
@@ -183,8 +181,8 @@ namespace WeSay.CommonTools
 
 					try
 					{
-						ProjectInfo projectInfo = WeSay.Project.WeSayWordsProject.Project.GetProjectInfoForAddin();
-						addin.Launch(this.ParentForm, projectInfo);
+						ProjectInfo projectInfo = WeSayWordsProject.Project.GetProjectInfoForAddin(_lexEntryRepository);
+						addin.Launch(ParentForm, projectInfo);
 					}
 					catch (Exception error)
 					{
@@ -267,11 +265,11 @@ namespace WeSay.CommonTools
 			if (ThingsToMakeButtonsFor == null)
 			{
 				ThingsToMakeButtonsFor = new List<IThingOnDashboard>();
-				foreach (ITask task in Project.WeSayWordsProject.Project.Tasks)
+				foreach (ITask task in WeSayWordsProject.Project.Tasks)
 				{
 					ThingsToMakeButtonsFor.Add(task);
 				}
-				foreach (IThingOnDashboard action in AddinSet.GetAddinsForUser())
+				foreach (IWeSayAddin action in AddinSet.GetAddinsForUser())
 				{
 					ThingsToMakeButtonsFor.Add(action);
 				}
@@ -343,11 +341,6 @@ namespace WeSay.CommonTools
 		public bool MustBeActivatedDuringPreCache
 		{
 			get { return false; }
-		}
-
-		public void RegisterWithCache(ViewTemplate viewTemplate)
-		{
-
 		}
 
 		public Control Control

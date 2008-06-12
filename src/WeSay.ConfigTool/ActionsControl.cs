@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using Mono.Addins;
 using Palaso.Reporting;
 using WeSay.AddinLib;
+using WeSay.LexicalModel;
 using WeSay.Project;
 
 namespace WeSay.ConfigTool
@@ -68,7 +69,7 @@ namespace WeSay.ConfigTool
 		private void AddAddin(IWeSayAddin addin)
 		{
 			ActionItemControl control =
-				new ActionItemControl(addin, true, WeSayWordsProject.Project.GetProjectInfoForAddin());// GetProjectInfo());
+				new ActionItemControl(addin, true, WeSayWordsProject.Project.GetProjectInfoForAddin(null));// GetProjectInfo());
 			control.DoShowInWeSay = AddinSet.Singleton.DoShowInWeSay(addin.ID);
 			control.TabIndex = _addinsList.RowCount;
 			control.Launch += OnLaunchAction;
@@ -83,7 +84,10 @@ namespace WeSay.ConfigTool
 
 			try
 			{
-				addin.Launch(ParentForm, WeSayWordsProject.Project.GetProjectInfoForAddin());
+				using (LexEntryRepository lexEntryRepository = new LexEntryRepository(WeSayWordsProject.Project.PathToDb4oLexicalModelDB))
+				{
+					addin.Launch(ParentForm, WeSayWordsProject.Project.GetProjectInfoForAddin(lexEntryRepository));
+				}
 			}
 			catch (Exception error)
 			{

@@ -2,12 +2,12 @@ using System;
 
 namespace WeSay.Data
 {
-	public interface IRecordListManager: IDisposable
+	public interface IPrivateRecordListManager: IDisposable
 	{
-		void Register<Key, T>(IFilter<T> filter, ISortHelper<Key, T> sortHelper) where T : class, new();
+		void Register<T>(IFilter<T> filter, ISortHelper<T> sortHelper) where T : class, new();
 
 		IRecordList<T> GetListOfType<T>()  where T : class, new();
-		IRecordList<T> GetListOfTypeFilteredFurther<Key, T>(IFilter<T> filter, ISortHelper<Key, T> sortHelper) where T : class, new();
+		IRecordList<T> GetListOfTypeFilteredFurther<T>(IFilter<T> filter, ISortHelper<T> sortHelper) where T : class, new();
 
 		/// <summary>
 		/// Call this, for example, when switching records in the gui. You don't need to know
@@ -26,5 +26,8 @@ namespace WeSay.Data
 			get;
 			set;
 		}
+
+		T GetItem<T>(long id);
+
 	}
 }

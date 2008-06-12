@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
@@ -7,23 +6,20 @@ using System.Text;
 using System.Xml;
 using LiftIO.Validation;
 using Palaso.Annotations;
-using Palaso.Reporting;
 using Palaso.Text;
+using WeSay.Data;
 using WeSay.Foundation;
 using WeSay.Foundation.Options;
 using WeSay.LexicalModel;
-using WeSay.Project;
 
 namespace WeSay.Project
 {
 	public class LiftExporter
 	{
 		public const string LiftDateTimeFormat = "yyyy-MM-ddThh:mm:ssZ";
-		private XmlWriter _writer;
-		private Dictionary<string, int> _allIdsExportedSoFar;
+		private readonly XmlWriter _writer;
+		private readonly Dictionary<string, int> _allIdsExportedSoFar;
 		private ViewTemplate _viewTemplate;
-		private IHomographCalculator _homographCalculator;
-		private IFindEntries _entryFinder;
 
 		[Flags]
 		public enum Options
@@ -35,8 +31,7 @@ namespace WeSay.Project
 		} ;
 
 		private Options _options= Options.NormalLift;
-		private string _headWordWritingSystemId;
-
+		private readonly LexEntryRepository _lexEntryRepository;
 
 		//   private Dictionary<string, string> _fieldToRangeSetPairs;
 		protected LiftExporter()
@@ -44,9 +39,10 @@ namespace WeSay.Project
 			_allIdsExportedSoFar = new Dictionary<string, int>();
 		}
 
-		public LiftExporter(/*Dictionary<string, string> fieldToOptionListName, */string path): this()
+		public LiftExporter(/*Dictionary<string, string> fieldToOptionListName, */string path, LexEntryRepository lexEntryRepository): this()
 		{
 			//   _fieldToRangeSetPairs = fieldToOptionListName;
+			_lexEntryRepository = lexEntryRepository;
 			_writer = XmlWriter.Create(path, PrepareSettings(false));
 			Start();
 		}
@@ -54,9 +50,10 @@ namespace WeSay.Project
 		/// <summary>
 		/// for automated testing
 		/// </summary>`
-		public LiftExporter(/*Dictionary<string, string> fieldToOptionListName,*/ StringBuilder builder, bool produceFragmentOnly)
+		public LiftExporter(/*Dictionary<string, string> fieldToOptionListName,*/ StringBuilder builder, bool produceFragmentOnly, LexEntryRepository lexEntryRepository)
 			:this()
 		{
+			_lexEntryRepository = lexEntryRepository;
 			_writer = XmlWriter.Create(builder, PrepareSettings(produceFragmentOnly));
 			if (!produceFragmentOnly)
 			{
@@ -64,11 +61,9 @@ namespace WeSay.Project
 			}
 		}
 
-		public void SetUpForPresentationLiftExport(ViewTemplate template, IHomographCalculator homographCalculator, IFindEntries entryFinder)
+		public void SetUpForPresentationLiftExport(ViewTemplate template)
 		{
-			_homographCalculator = homographCalculator;
-			ExportOptions = LiftExporter.Options.DereferenceRelations | Options.DereferenceOptions | Options.DetermineHeadword;
-			_entryFinder = entryFinder;
+			ExportOptions = Options.DereferenceRelations | Options.DereferenceOptions | Options.DetermineHeadword;
 			Template = template;
 		}
 
@@ -132,18 +127,6 @@ namespace WeSay.Project
 			set { _viewTemplate = value; }
 		}
 
-		public IHomographCalculator HomographCalculator
-		{
-			get { return _homographCalculator; }
-			set { _homographCalculator = value; }
-		}
-
-		public IFindEntries EntryFinder
-		{
-			get { return _entryFinder; }
-			set { _entryFinder = value; }
-		}
-
 		public Options ExportOptions
 		{
 			get { return _options; }
@@ -162,56 +145,50 @@ namespace WeSay.Project
 			_writer.Close();
 		}
 
-		public void Add(IList<LexEntry> entries, int startIndex, int howMany)
+		public void Add(IEnumerable<RecordToken> recordTokens)
 		{
-			for (int i = startIndex; i < startIndex+howMany; i++)
+			foreach (RecordToken recordToken in recordTokens)
 			{
-				Add(entries[i]);
+				Add(recordToken.Id);
 			}
 		}
 
-		public void Add(IEnumerable<LexEntry> entries)
+		public void Add(IEnumerable<RepositoryId> repositoryIds)
 		{
-			foreach (LexEntry entry in entries)
+			foreach (RepositoryId id in repositoryIds)
 			{
-				Add(entry);
+				Add(id);
 			}
 		}
 
-		public void AddNoGeneric(IEnumerable entries)
+		public void Add(RepositoryId id)
 		{
-			foreach (LexEntry entry in entries)
-			{
-				Add(entry);
-			}
+			LexEntry entry = _lexEntryRepository.GetItem(id);
+			Add(entry);
 		}
 
 		public void Add(LexEntry entry)
 		{
+			ViewTemplate template = Template;
+			if (template == null)
+			{
+				template = WeSayWordsProject.Project.DefaultViewTemplate;
+			}
+
 			List<string> propertiesAlreadyOutput=new List<string>();
 
 			_writer.WriteStartElement("entry");
 			_writer.WriteAttributeString("id", GetHumanReadableId(entry, _allIdsExportedSoFar));
 
-			if (_homographCalculator != null)
+			int h = _lexEntryRepository.GetHomographNumber(entry, template.HeadwordWritingSytem);
+			if (h > 0)
 			{
-				int h = _homographCalculator.GetHomographNumber(entry);
-				if (h > 0)
-				{
-					_writer.WriteAttributeString("order", h.ToString());
-				}
-			}
-			else
-			{
-				if (entry.OrderForRoundTripping > 0)
-				{
-					_writer.WriteAttributeString("order", entry.OrderForRoundTripping.ToString());
-				}
+				_writer.WriteAttributeString("order", h.ToString());
 			}
 
-			System.Diagnostics.Debug.Assert(entry.CreationTime.Kind == DateTimeKind.Utc);
+			Debug.Assert(entry.CreationTime.Kind == DateTimeKind.Utc);
 			_writer.WriteAttributeString("dateCreated", entry.CreationTime.ToString(LiftDateTimeFormat));
-			System.Diagnostics.Debug.Assert(entry.ModificationTime.Kind == DateTimeKind.Utc);
+			Debug.Assert(entry.ModificationTime.Kind == DateTimeKind.Utc);
 			_writer.WriteAttributeString("dateModified", entry.ModificationTime.ToString(LiftDateTimeFormat));
 			_writer.WriteAttributeString("guid", entry.Guid.ToString());
 			// _writer.WriteAttributeString("flex", "id", "http://fieldworks.sil.org", entry.Guid.ToString());
@@ -238,7 +215,7 @@ namespace WeSay.Project
 		{
 			if(Template == null)
 			{
-				throw new ArgumentException("Expected a non-null Template");
+				throw new InvalidOperationException("Expected a non-null Template");
 			}
 			MultiText headword = new MultiText();
 			Field fieldControllingHeadwordOutput = Template.GetField(LexEntry.WellKnownProperties.Citation);
@@ -407,7 +384,7 @@ namespace WeSay.Project
 		  }
 		}
 
-		private void WriteWellKnownCustomMultiText(WeSayDataObject item, string property, List<string> propertiesAlreadyOutput)
+		private void WriteWellKnownCustomMultiText(WeSayDataObject item, string property, ICollection<string> propertiesAlreadyOutput)
 		{
 			if (ShouldOutputProperty(property))
 			{
@@ -450,7 +427,7 @@ namespace WeSay.Project
 			return text.GetOrderedAndFilteredForms(f.WritingSystemIds);
 		}
 
-		private void WriteCustomProperties(WeSayDataObject item, List<string> propertiesAlreadyOutput)
+		private void WriteCustomProperties(WeSayDataObject item, ICollection<string> propertiesAlreadyOutput)
 		{
 			foreach (KeyValuePair<string, object> pair in item.Properties)
 			{
@@ -492,9 +469,9 @@ namespace WeSay.Project
 					WriteFlagState(pair.Key, pair.Value as FlagState);
 					continue;
 				}
-				if (pair.Value is PictureRef)
+				PictureRef pictureRef = pair.Value as PictureRef;
+				if (pictureRef != null)
 				{
-					PictureRef pictureRef = pair.Value as PictureRef;
 					WriteURLRef("illustration", pictureRef.Value, pictureRef.Caption );
 					continue;
 				}
@@ -546,8 +523,7 @@ namespace WeSay.Project
 				_writer.WriteAttributeString("ref", relation.Key);
 				if (0 != (ExportOptions & Options.DereferenceRelations))
 				{
-					Debug.Assert(_entryFinder != null, "An IEntryFinder must be provide if DereferenceRelations is on.");
-					LexEntry target = _entryFinder.FindFirstEntryMatchingId(relation.Key);
+					LexEntry target = _lexEntryRepository.GetLexEntryWithMatchingId(relation.Key);
 					if (target != null)
 					{
 						WriteHeadWordField(target, "headword-of-target");
@@ -556,24 +532,6 @@ namespace WeSay.Project
 				_writer.WriteEndElement();
 
 
-			}
-		}
-
-		private string HeadWordWritingSystemId
-		{
-			get
-			{
-				if (_headWordWritingSystemId == null)
-				{
-					Debug.Assert(_viewTemplate != null,"Should not be in here if not template was specified.");
-					if (_viewTemplate.HeadwordWritingSytem == null)
-						throw new ConfigurationException("Could not get a HeadwordWritingSytem from the ViewTemplate.");
-					if (string.IsNullOrEmpty(_viewTemplate.HeadwordWritingSytem.Id))
-						throw new ConfigurationException("HeadwordWritingSytem had an empty id.");
-					//cache this
-					_headWordWritingSystemId = _viewTemplate.HeadwordWritingSytem.Id;
-				}
-				return _headWordWritingSystemId;
 			}
 		}
 
@@ -690,7 +648,7 @@ namespace WeSay.Project
 			Add(GetOrderedAndFilteredForms(text, propertyName), false);
 		}
 
-		private void Add(LanguageForm[] forms, bool doMarkTheFirst)
+		private void Add(IEnumerable<LanguageForm> forms, bool doMarkTheFirst)
 		{
 			foreach (LanguageForm form in forms)
 			{

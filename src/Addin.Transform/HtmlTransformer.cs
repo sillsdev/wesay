@@ -75,43 +75,37 @@ namespace Addin.Transform
 			//So if we're in that situation, we temporarily try to make one and then release it,
 			//so it isn't locked when the user says "open wesay"
 
-			Db4oRecordListManager manager = null;
-			if (Lexicon.RecordListManager == null)
+			using (LexEntryRepository lexEntryRepository = ((LexEntryRepository)projectInfo.LexEntryRepository))
 			{
-				manager = (Db4oRecordListManager) ((WeSayWordsProject) projectInfo.Project).MakeRecordListManager();
+				string pliftPath;
+				using (LameProgressDialog dlg = new LameProgressDialog("Exporting to PLift..."))
+				{
+					dlg.Show();
+					PLiftMaker maker = new PLiftMaker();
+					pliftPath =
+							maker.MakePLiftTempFile(lexEntryRepository,
+													(WeSayWordsProject) projectInfo.Project);
+				}
+
+				projectInfo.PathToLIFT = pliftPath;
+
+				XsltArgumentList arguments = new XsltArgumentList();
+				arguments.AddParam("writing-system-info-file",
+								   string.Empty,
+								   projectInfo.LocateFile("WritingSystemPrefs.xml"));
+				arguments.AddParam("grammatical-info-optionslist-file",
+								   string.Empty,
+								   projectInfo.LocateFile("PartsOfSpeech.xml"));
+				arguments.AddParam("link-to-usercss", string.Empty, linkToUserCss.ToString() + "()");
+
+				return
+						TransformLift(projectInfo,
+									  "plift2html.xsl",
+									  ".htm",
+									  arguments,
+									  //word doesn't notice that is is html if the <xml> directive is in there
+									  includeXmlDirective);
 			}
-		   try
-		   {
-			   string pliftPath="";
-			   using (LameProgressDialog dlg = new LameProgressDialog("Exporting to PLift..."))
-			   {
-				   dlg.Show();
-				   PLiftMaker maker = new PLiftMaker();
-				   pliftPath =
-					   maker.MakePLiftTempFile(Lexicon.RecordListManager,
-											   (WeSayWordsProject) projectInfo.Project);
-			   }
-
-			   projectInfo.PathToLIFT = pliftPath;
-
-			   XsltArgumentList arguments = new XsltArgumentList();
-			   arguments.AddParam("writing-system-info-file", string.Empty,
-								  projectInfo.LocateFile("WritingSystemPrefs.xml"));
-			   arguments.AddParam("grammatical-info-optionslist-file", string.Empty,
-								  projectInfo.LocateFile("PartsOfSpeech.xml"));
-			   arguments.AddParam("link-to-usercss", string.Empty, linkToUserCss.ToString() + "()");
-
-			   return TransformLift(projectInfo, "plift2html.xsl", ".htm", arguments,
-				   //word doesn't notice that is is html if the <xml> directive is in there
-				   includeXmlDirective);
-		   }
-			finally
-		   {
-			   if (manager != null)
-			   {
-				   Lexicon.DeInitialize(true);
-			   }
-		   }
 		}
 	}
 }

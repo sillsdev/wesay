@@ -5,7 +5,7 @@ using System.ComponentModel;
 
 namespace WeSay.Data
 {
-	public abstract class AbstractRecordList<T> : IRecordList<T> where T : class, new()
+	internal abstract class AbstractRecordList<T> : IRecordList<T> where T : class, new()
 	{
 		private IList<T> _records;
 
@@ -29,6 +29,7 @@ namespace WeSay.Data
 		}
 
 		public abstract int GetIndexFromId(long id);
+		public abstract long GetId(T item);
 
 		private PropertyDescriptor _sortProperty;
 		private ListSortDirection _listSortDirection;

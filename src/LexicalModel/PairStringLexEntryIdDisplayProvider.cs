@@ -7,24 +7,24 @@ namespace WeSay.LexicalModel
 {
 	public class PairStringLexEntryIdDisplayProvider : IDisplayStringAdaptor
 	{
-		private readonly CachedSortedDb4oList<string, LexEntry> _cachedSortedDb4oList;
+		private readonly LexEntryRepository _lexEntryRepository;
 
-		public PairStringLexEntryIdDisplayProvider(CachedSortedDb4oList<string, LexEntry> cachedSortedDb4oList)
+		public PairStringLexEntryIdDisplayProvider(LexEntryRepository lexEntryRepository)
 		{
-			_cachedSortedDb4oList = cachedSortedDb4oList;
+			_lexEntryRepository = lexEntryRepository;
 		}
 
 
 		public string GetDisplayLabel(object item)
 		{
-			KeyValuePair<string, long> kv = (KeyValuePair<string, long>)item;
-			return kv.Key;
+			RecordToken kv = (RecordToken)item;
+			return kv.DisplayString;
 		}
 
 		public string GetToolTip(object item)
 		{
-			KeyValuePair<string, long> kv = (KeyValuePair<string, long>)item;
-			LexEntry entry = this._cachedSortedDb4oList.GetValueFromId(kv.Value);
+			RecordToken recordToken = (RecordToken)item;
+			LexEntry entry = _lexEntryRepository.GetItem(recordToken);
 			return entry.GetToolTipText();
 		}
 

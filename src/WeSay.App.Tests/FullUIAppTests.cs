@@ -19,7 +19,7 @@ namespace WeSay.App.Tests
 		private FormTester _mainWindowTester;
 
 		WeSayWordsProject _project;
-		private IRecordListManager _recordListManager;
+		private LexEntryRepository _lexEntryRepository;
 
 
 
@@ -39,10 +39,10 @@ namespace WeSay.App.Tests
 			_project.Tasks.Add(new MockTask("Dashboard", "The control center.", true));
 
 
-			_recordListManager = new InMemoryRecordListManager();
+			_lexEntryRepository = new InMemoryRecordListManager();
 			LexEntry entry = new LexEntry();
-			_recordListManager.Get<LexEntry>().Add(entry);
-			_project.Tasks.Add(new WeSay.LexicalTools.EntryDetailTask(_recordListManager));
+			_lexEntryRepository.Get<LexEntry>().Add(entry);
+			_project.Tasks.Add(new WeSay.LexicalTools.EntryDetailTask(_lexEntryRepository));
 
 		}
 
@@ -58,7 +58,7 @@ namespace WeSay.App.Tests
 //            _project.Tasks.Clear();
 			this.tabbedForm.Dispose();
 			_project.Dispose();
-			_recordListManager.Dispose();
+			_lexEntryRepository.Dispose();
 
 		}
 

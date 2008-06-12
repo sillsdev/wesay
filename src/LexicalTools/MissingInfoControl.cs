@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Windows.Forms;
 using Palaso.UI.WindowsForms.i8n;
 using WeSay.Data;
-using WeSay.Foundation;
 using WeSay.Language;
 using WeSay.LexicalModel;
 using WeSay.Project;
@@ -20,6 +19,7 @@ namespace WeSay.LexicalTools
 		private LexEntry _previousRecord;
 		private LexEntry _nextRecord;
 
+		private readonly LexEntryRepository _lexEntryRepository;
 		private readonly ViewTemplate _viewTemplate;
 		private readonly Predicate<LexEntry> _isNotComplete;
 		public event EventHandler SelectedIndexChanged;
@@ -27,7 +27,7 @@ namespace WeSay.LexicalTools
 		public MissingInfoControl(IRecordList<LexEntry> records,
 								  ViewTemplate viewTemplate,
 								  Predicate<LexEntry> isNotComplete,
-								  IRecordListManager recordListManager)
+								  LexEntryRepository lexEntryRepository)
 		{
 			if (!DesignMode)
 			{
@@ -43,9 +43,9 @@ namespace WeSay.LexicalTools
 				{
 					throw new ArgumentNullException("isNotComplete");
 				}
-				if (recordListManager == null)
+				if (lexEntryRepository == null)
 				{
-					throw new ArgumentNullException("recordListManager");
+					throw new ArgumentNullException("lexEntryRepository");
 				}
 			}
 
@@ -61,13 +61,14 @@ namespace WeSay.LexicalTools
 
 			_records = records;
 			_completedRecords = new InMemoryBindingList<LexEntry>();
+			_lexEntryRepository = lexEntryRepository;
 			_viewTemplate = viewTemplate;
 			_isNotComplete = isNotComplete;
 			InitializeDisplaySettings();
 			_entryViewControl.KeyDown += OnKeyDown;
 			_entryViewControl.ViewTemplate = _viewTemplate;
 
-			_entryViewControl.RecordListManager = recordListManager;
+			_entryViewControl.LexEntryRepository = lexEntryRepository;
 
 			_recordsListBox.DataSource = _records;
 			_records.ListChanged += OnRecordsListChanged;

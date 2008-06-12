@@ -4,7 +4,7 @@ using System.ComponentModel;
 
 namespace WeSay.Data
 {
-	public class InMemoryRecordList<T> : AbstractRecordList<T> where T : class, new()
+	internal class InMemoryRecordList<T> : AbstractRecordList<T> where T : class, new()
 	{
 		bool _isSorted;
 		bool _isFiltered;
@@ -125,6 +125,11 @@ namespace WeSay.Data
 		public override int GetIndexFromId(long id)
 		{
 			return (int)id;
+		}
+
+		public override long GetId(T item)
+		{
+			throw new Exception("The method or operation is not implemented.");
 		}
 
 		public void RegisterItemPropertyChangedHandler(T item, bool register)

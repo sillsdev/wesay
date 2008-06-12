@@ -15,8 +15,8 @@ namespace WeSay.LexicalTools
 	/// </summary>
 	public class LexSenseLayouter : Layouter
 	{
-		public LexSenseLayouter(DetailList builder, ViewTemplate viewTemplate, IRecordListManager recordListManager)
-			: base(builder, viewTemplate, recordListManager)
+		public LexSenseLayouter(DetailList builder, ViewTemplate viewTemplate, LexEntryRepository lexEntryRepository)
+			: base(builder, viewTemplate, lexEntryRepository)
 		{
 		}
 

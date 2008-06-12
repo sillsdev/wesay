@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using LiftIO;
 using LiftIO.Parsing;
-using WeSay.Data;
 using WeSay.Foundation;
 using WeSay.Foundation.Options;
 
@@ -16,21 +14,15 @@ namespace WeSay.LexicalModel
 	/// </summary>
 	public class LiftMerger : ILexiconMerger<WeSayDataObject, LexEntry,LexSense,LexExampleSentence>, IDisposable
 	{
-		private IRecordList<LexEntry> _entries;
-		private IList<String> _expectedOptionTraits;
-		private IList<string> _expectedOptionCollectionTraits;
+		private readonly LexEntryRepository _lexEntryRepository;
+		private readonly IList<String> _expectedOptionTraits;
+		private readonly IList<string> _expectedOptionCollectionTraits;
 
-		/// <summary>
-		/// related to homograph number calculation
-		/// </summary>
-		private IHistoricalEntryCountProvider _historicalEntryCountProvider;
-
-		public LiftMerger(Db4oDataSource dataSource,  IRecordList<LexEntry> entries)
+		public LiftMerger(LexEntryRepository lexEntryRepository)
 		{
-			_entries = entries;
+			_lexEntryRepository = lexEntryRepository;
 			_expectedOptionTraits = new List<string>();
 			_expectedOptionCollectionTraits = new List<string>();
-			_historicalEntryCountProvider = HistoricalEntryCountProviderForDb4o.GetOrMakeFromDatabase(dataSource);
 		}
 
 		public LexEntry GetOrMakeEntry(Extensible eInfo, int order)
@@ -67,7 +59,7 @@ namespace WeSay.LexicalModel
 				}
 
 
-				entry = new LexEntry(eInfo, _historicalEntryCountProvider);
+				entry = _lexEntryRepository.CreateItem(eInfo);
 			}
 
 
@@ -415,10 +407,7 @@ namespace WeSay.LexicalModel
 		{
 			entry.GetOrCreateId(false);
 			entry.ModifiedTimeIsLocked = false;
-			if (!_entries.Contains(entry))
-			{
-				_entries.Add(entry);
-			}
+			_lexEntryRepository.SaveItem(entry);
 		}
 
 		#endregion

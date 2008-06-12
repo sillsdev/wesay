@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using WeSay.Data;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Db4o_Specific;
@@ -10,8 +11,30 @@ namespace WeSay.LexicalTools.Tests
 	[TestFixture]
 	public class MissingInfoTaskTests : TaskBaseTests
 	{
+		class NoEntriesFilter: IFilter<LexEntry>
+		{
+			public Predicate<LexEntry> FilteringPredicate
+			{
+				get
+				{
+					return ReturnFalse;
+				}
+			}
+			static bool ReturnFalse(LexEntry e)
+			{
+				return false;
+			}
+			public string Key
+			{
+				get
+				{
+					return "NoEntries";
+				}
+			}
+		}
 
-		IRecordListManager _recordListManager;
+		LexEntryRepository _lexEntryRepository;
+		private string _filePath;
 
 		private IFilter<LexEntry> _filter;
 		private string _fieldsToShow;
@@ -25,37 +48,39 @@ namespace WeSay.LexicalTools.Tests
 		[SetUp]
 		public void Setup()
 		{
+			_filePath = Path.GetTempFileName();
+			_lexEntryRepository = new LexEntryRepository(_filePath);
+
 			Db4oLexModelHelper.InitializeForNonDbTests();
 			WeSayWordsProject.InitializeForTests();
 			RtfRenderer.HeadWordWritingSystemId = _vernacularWritingSystemId;
 
-			this._recordListManager = new InMemoryRecordListManager();
 			Field field = new Field(LexSense.WellKnownProperties.Definition,"LexSense" , new string[]{"analysis"});
-			this._filter = new MissingItemFilter(field);
+			_filter = new MissingItemFilter(field);
 
-			LexEntry entry = new LexEntry();
-			this._lexicalForm = "vernacular";
+			LexEntry entry = _lexEntryRepository.CreateItem();
+			_lexicalForm = "vernacular";
 			entry.LexicalForm.SetAlternative(_vernacularWritingSystemId, _lexicalForm);
-			IRecordList<LexEntry> masterRecordList = this._recordListManager.GetListOfType<LexEntry>();
-			masterRecordList.Add(entry);
+			_lexEntryRepository.SaveItem(entry);
 
-			this._fieldsToShow = "LexicalForm";
-			this._label = "My label";
-			this._description = "My description";
+			_fieldsToShow = "LexicalForm";
+			_label = "My label";
+			_description = "My description";
 
-			this._viewTemplate = new ViewTemplate();
-			this._viewTemplate.Add(new Field(LexEntry.WellKnownProperties.LexicalUnit, "LexEntry", new string[] { _vernacularWritingSystemId }));
-			this._viewTemplate.Add(new Field(LexSense.WellKnownProperties.Definition, "LexSense",new string[] { "en" }));
-			this._viewTemplate.Add(new Field(Field.FieldNames.ExampleSentence.ToString(), "LexExampleSentence",new string[] { "th" }));
+			_viewTemplate = new ViewTemplate();
+			_viewTemplate.Add(new Field(LexEntry.WellKnownProperties.LexicalUnit, "LexEntry", new string[] { _vernacularWritingSystemId }));
+			_viewTemplate.Add(new Field(LexSense.WellKnownProperties.Definition, "LexSense",new string[] { "en" }));
+			_viewTemplate.Add(new Field(Field.FieldNames.ExampleSentence.ToString(), "LexExampleSentence",new string[] { "th" }));
 
-			this._task = new MissingInfoTask(_recordListManager, _filter, _label, _description, _viewTemplate, _fieldsToShow);
+			_task = new MissingInfoTask(_lexEntryRepository, _filter, _label, _description, _viewTemplate, _fieldsToShow);
 
 		}
 
 		[TearDown]
 		public void TearDown()
 		{
-			this._recordListManager.Dispose();
+			_lexEntryRepository.Dispose();
+			File.Delete(_filePath);
 		}
 
 		[Test]
@@ -67,13 +92,9 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void Create_RecordsIsEmpty()
 		{
-			ClearMasterRecordList();
-			MissingInfoTask task = new MissingInfoTask(_recordListManager, _filter, _label, _description, _viewTemplate, _fieldsToShow);
+			IFilter<LexEntry> filter = new NoEntriesFilter();
+			MissingInfoTask task = new MissingInfoTask(_lexEntryRepository, filter, _label, _description, _viewTemplate, _fieldsToShow);
 			Assert.IsNotNull(task);
-		}
-
-		private void ClearMasterRecordList() {
-			this._recordListManager.GetListOfType<LexEntry>().Clear();
 		}
 
 		[Test]
@@ -87,28 +108,28 @@ namespace WeSay.LexicalTools.Tests
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void Create_FilterIsNull_ThrowsArgumentNullException()
 		{
-			new MissingInfoTask(_recordListManager, null, _label, _description, _viewTemplate, _fieldsToShow);
+			new MissingInfoTask(_lexEntryRepository, null, _label, _description, _viewTemplate, _fieldsToShow);
 		}
 
 		[Test]
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void Create_LabelIsNull_ThrowsArgumentNullException()
 		{
-			new MissingInfoTask(_recordListManager, _filter, null, _description, _viewTemplate, _fieldsToShow);
+			new MissingInfoTask(_lexEntryRepository, _filter, null, _description, _viewTemplate, _fieldsToShow);
 		}
 
 		[Test]
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void Create_DescriptionIsNull_ThrowsArgumentNullException()
 		{
-			new MissingInfoTask(_recordListManager, _filter, _label, null, _viewTemplate, _fieldsToShow);
+			new MissingInfoTask(_lexEntryRepository, _filter, _label, null, _viewTemplate, _fieldsToShow);
 		}
 
 		[Test]
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void Create_FieldFilterIsNull_ThrowsArgumentNullException()
 		{
-			new MissingInfoTask(_recordListManager, _filter, _label, _description, _viewTemplate, null);
+			new MissingInfoTask(_lexEntryRepository, _filter, _label, _description, _viewTemplate, null);
 		}
 
 		[Test]
@@ -130,22 +151,21 @@ namespace WeSay.LexicalTools.Tests
 			task.Activate();
 			try
 			{
-
 				Assert.IsTrue(
 					((MissingInfoControl)task.Control).EntryViewControl.ControlFormattedView.Text.Contains(_lexicalForm));
 
-				Assert.AreEqual(1, task.DataSource.Count);
+				Assert.AreEqual(1, _lexEntryRepository.CountAllEntries());
 			}
 			finally
 			{
 				task.Deactivate();
 			}
-			ClearMasterRecordList();
+			_lexEntryRepository.CreateItem();
 			task.Activate();
 			try
 			{
-				Assert.AreEqual(string.Empty, ((MissingInfoControl)task.Control).EntryViewControl.ControlFormattedView.Text);
-				Assert.AreEqual(0, task.DataSource.Count);
+				Assert.IsTrue(((MissingInfoControl)task.Control).EntryViewControl.DataSource.LexicalForm.Empty);
+				Assert.AreEqual(2, _lexEntryRepository.CountAllEntries());
 			}
 			finally
 			{
@@ -162,7 +182,7 @@ namespace WeSay.LexicalTools.Tests
 			viewTemplate.Add(new Field("SingleField", "LexSense", writingSystemIds));
 			viewTemplate.Add(new Field("Field", "LexSense", writingSystemIds));
 
-			MissingInfoTask task = new MissingInfoTask(_recordListManager, _filter, _label, _description, viewTemplate, "Single");
+			MissingInfoTask task = new MissingInfoTask(_lexEntryRepository, _filter, _label, _description, viewTemplate, "Single");
 			Assert.AreEqual(true, task.ViewTemplate.Contains("Single"));
 			Assert.AreEqual(false, task.ViewTemplate.Contains("SingleField"));
 			Assert.AreEqual(false, task.ViewTemplate.Contains("Field"));
@@ -177,7 +197,7 @@ namespace WeSay.LexicalTools.Tests
 			viewTemplate.Add(new Field("Second", "LexSense", writingSystemIds));
 			viewTemplate.Add(new Field("FirstSecond", "LexSense", writingSystemIds));
 
-			MissingInfoTask task = new MissingInfoTask(_recordListManager, _filter, _label, _description, viewTemplate, "First Second");
+			MissingInfoTask task = new MissingInfoTask(_lexEntryRepository, _filter, _label, _description, viewTemplate, "First Second");
 			Assert.AreEqual(true, task.ViewTemplate.Contains("First"));
 			Assert.AreEqual(true, task.ViewTemplate.Contains("Second"));
 			Assert.AreEqual(false, task.ViewTemplate.Contains("FirstSecond"));
@@ -195,7 +215,7 @@ namespace WeSay.LexicalTools.Tests
 			viewTemplate.Add(new Field("SecondThird", "LexSense", writingSystemIds));
 			viewTemplate.Add(new Field("FirstSecondThird", "LexSense", writingSystemIds));
 
-			MissingInfoTask task = new MissingInfoTask(_recordListManager, _filter, _label, _description, viewTemplate, "First Second Third");
+			MissingInfoTask task = new MissingInfoTask(_lexEntryRepository, _filter, _label, _description, viewTemplate, "First Second Third");
 			Assert.AreEqual(true, task.ViewTemplate.Contains("First"));
 			Assert.AreEqual(true, task.ViewTemplate.Contains("Second"));
 			Assert.AreEqual(true, task.ViewTemplate.Contains("Third"));
@@ -211,7 +231,7 @@ namespace WeSay.LexicalTools.Tests
 			viewTemplate.Add(new Field("Dummy", "LexSense", writingSystemIds));
 			viewTemplate.Add(new Field("PrefixDummy", "LexSense", writingSystemIds));
 
-			MissingInfoTask task = new MissingInfoTask(_recordListManager, _filter, _label, _description, viewTemplate, "PrefixDummy Dummy");
+			MissingInfoTask task = new MissingInfoTask(_lexEntryRepository, _filter, _label, _description, viewTemplate, "PrefixDummy Dummy");
 			Assert.AreEqual(true, task.ViewTemplate.Contains("Dummy"));
 			Assert.AreEqual(true, task.ViewTemplate.Contains("PrefixDummy"));
 		}
@@ -224,7 +244,7 @@ namespace WeSay.LexicalTools.Tests
 			viewTemplate.Add(new Field("Dummy", "LexSense", writingSystemIds));
 			viewTemplate.Add(new Field("PrefixDummy", "LexSense", writingSystemIds));
 
-			MissingInfoTask task = new MissingInfoTask(_recordListManager, _filter, _label, _description, viewTemplate, "Dummy");
+			MissingInfoTask task = new MissingInfoTask(_lexEntryRepository, _filter, _label, _description, viewTemplate, "Dummy");
 			Assert.AreEqual(true, task.ViewTemplate.Contains("Dummy"));
 			Assert.AreEqual(false, task.ViewTemplate.Contains("PrefixDummy"));
 		}
@@ -240,7 +260,7 @@ namespace WeSay.LexicalTools.Tests
 			viewTemplate.Add(field);
 			viewTemplate.Add(new Field("PrefixDummy", "LexSense", writingSystemIds));
 
-			MissingInfoTask task = new MissingInfoTask(_recordListManager, _filter, _label, _description, viewTemplate, "PrefixDummy Dummy");
+			MissingInfoTask task = new MissingInfoTask(_lexEntryRepository, _filter, _label, _description, viewTemplate, "PrefixDummy Dummy");
 			Assert.AreEqual(true, task.ViewTemplate.Contains("Dummy"));
 		}
 

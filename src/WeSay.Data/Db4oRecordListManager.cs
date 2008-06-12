@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using Db4objects.Db4o.Ext;
 
 namespace WeSay.Data
 {
@@ -18,12 +19,12 @@ namespace WeSay.Data
 		public void Configure() {}
 	}
 
-	public class Db4oRecordListManager : AbstractRecordListManager
+	public class PrivateDb4oRecordListManager : AbstractRecordListManager
 	{
 		private Db4oDataSource _dataSource;
 		private string _cachePath;
 
-		public Db4oRecordListManager(IDb4oModelConfiguration config, string pathToDb4oFile)
+		public PrivateDb4oRecordListManager(IDb4oModelConfiguration config, string pathToDb4oFile)
 		{
 			try
 			{
@@ -49,18 +50,23 @@ namespace WeSay.Data
 			get { return _cachePath; }
 		}
 
-		public CachedSortedDb4oList<K, T> GetSortedList<K, T>(ISortHelper<K, T> sortHelper) where T : class, new()
+		public List<RecordToken> GetSortedList<T>(ISortHelper<T> sortHelper) where T : class, new()
 		{
 			if (sortHelper == null)
 			{
 				throw new ArgumentNullException();
 			}
-			string recordListKey = RecordListKey<T>(null, sortHelper.Name);
-			if (!RecordLists.ContainsKey(recordListKey))
+			//string recordListKey = RecordListKey<T>(null, sortHelper.Name);
+			//if (!RecordLists.ContainsKey(recordListKey))
 			{
-				RecordLists.Add(recordListKey, new CachedSortedDb4oList<K, T>(this, sortHelper));
+				List<RecordToken> recordTokens = sortHelper.GetRecordTokensForMatchingRecords();
+
+				recordTokens.Sort(new RecordTokenComparer(sortHelper.KeyComparer));
+				return recordTokens;
+
+//                RecordLists.Add(recordListKey, recordTokens);
 			}
-			return (CachedSortedDb4oList<K, T>) RecordLists[recordListKey];
+//            return (List<RecordToken>)RecordLists[recordListKey];
 		}
 
 		protected override IRecordList<T> CreateMasterRecordList<T>()
@@ -70,24 +76,21 @@ namespace WeSay.Data
 			return recordList;
 		}
 
-		protected override IRecordList<T> CreateFilteredRecordList<Key, T>(IFilter<T> filter,
-																		   ISortHelper<Key, T> sortHelper)
+		protected override IRecordList<T> CreateFilteredRecordList<T>(IFilter<T> filter,
+																		   ISortHelper<T> sortHelper)
 		{
-			CachedSortedDb4oList<Key, T> sortedList = GetSortedList(sortHelper);
-			FilteredDb4oRecordList<Key, T> list =
-					new FilteredDb4oRecordList<Key, T>(GetListOfType<T>(), filter, sortedList, CachePath, false);
+			FilteredDb4oRecordList<T> list =
+					new FilteredDb4oRecordList<T>(GetListOfType<T>(), filter, sortHelper, this, CachePath, false);
 			return list;
 		}
 
-		protected override IRecordList<T> CreateFilteredRecordListUnlessSlow<Key, T>(IFilter<T> filter,
-																					 ISortHelper<Key, T> sortHelper)
+		protected override IRecordList<T> CreateFilteredRecordListUnlessSlow<T>(IFilter<T> filter,
+																					 ISortHelper<T> sortHelper)
 		{
 			IRecordList<T> recordList = null;
 			try
 			{
-				CachedSortedDb4oList<Key, T> sortedList = GetSortedList(sortHelper);
-
-				recordList = new FilteredDb4oRecordList<Key, T>(GetListOfType<T>(), filter, sortedList, CachePath, true);
+				recordList = new FilteredDb4oRecordList<T>(GetListOfType<T>(), filter, sortHelper, this, CachePath, true);
 			}
 			catch (OperationCanceledException) {}
 			return recordList;
@@ -106,7 +109,7 @@ namespace WeSay.Data
 			}
 		}
 
-		public class FilteredDb4oRecordList<Key, T> : Db4oRecordList<T>, IBindingList where T : class, new()
+		internal class FilteredDb4oRecordList<T> : Db4oRecordList<T>, IBindingList where T : class, new()
 		{
 			private bool _isSorted;
 			private IRecordList<T> _masterRecordList;
@@ -114,7 +117,8 @@ namespace WeSay.Data
 			private IFilter<T> _isRelevantFilter;
 			private string _cachePath;
 			private bool _isInitializingFromCache;
-			private CachedSortedDb4oList<Key, T> _sortedList;
+			private ISortHelper<T> _sortHelper;
+			private PrivateDb4oRecordListManager _recordListManager;
 
 			public Predicate<T> RelevancePredicate
 			{
@@ -122,16 +126,16 @@ namespace WeSay.Data
 			}
 
 			public FilteredDb4oRecordList(IRecordList<T> sourceRecords, IFilter<T> filter,
-										  CachedSortedDb4oList<Key, T> sortedList,
+										  ISortHelper<T> sortedList, PrivateDb4oRecordListManager recordListManager,
 										  string cachePath, bool constructOnlyIfFilterIsCached)
 					: base((Db4oRecordList<T>) sourceRecords)
 			{
 				WriteCacheSize = 0;
 				_cachePath = cachePath;
 				_isRelevantFilter = filter;
-				_sortedList = sortedList;
+				_sortHelper = sortedList;
 				_masterRecordList = sourceRecords;
-
+				_recordListManager = recordListManager;
 				if (constructOnlyIfFilterIsCached)
 				{
 					((Db4oList<T>) Records).ItemIds.Clear();
@@ -180,22 +184,23 @@ namespace WeSay.Data
 			private void Sort()
 			{
 				int oldCount = Count;
+				IList<RecordToken> sortedList = _recordListManager.GetSortedList(_sortHelper);
 
-				((Db4oList<T>) Records).ItemIds.Sort(new IdListComparer(_sortedList.GetIds()));
+				((Db4oList<T>)Records).ItemIds.Sort(new IdListComparer(sortedList));
 				Debug.Assert(oldCount == Count);
 				OnListReset();
 			}
 
 			private class IdListComparer : IComparer<long>
 			{
-				private Dictionary<long, int> _mapIdToIndex;
+				private readonly Dictionary<long, int> _mapIdToIndex;
 
-				public IdListComparer(IList<long> baseList)
+				public IdListComparer(IList<RecordToken> baseList)
 				{
 					_mapIdToIndex = new Dictionary<long, int>(baseList.Count);
 					for(int i = 0; i < baseList.Count;++i)
 					{
-						_mapIdToIndex[baseList[i]] = i;
+						_mapIdToIndex[((Db4oRepositoryId)baseList[i].Id).Db4oId] = i;
 					}
 				}
 
@@ -203,7 +208,7 @@ namespace WeSay.Data
 
 				public int Compare(long x, long y)
 				{
-					return Comparer<long>.Default.Compare(_mapIdToIndex[x], _mapIdToIndex[y]);
+					return Comparer<int>.Default.Compare(_mapIdToIndex[x], _mapIdToIndex[y]);
 				}
 
 				#endregion
@@ -474,11 +479,11 @@ namespace WeSay.Data
 				base.OnItemAdded(newIndex);
 			}
 
-			public Key GetKey(int index)
-			{
-				long id = ((Db4oList<T>) Records).ItemIds[index];
-				return _sortedList.GetKeyFromId(id);
-			}
+			//public string GetKey(int index)
+			//{
+			//    long id = ((Db4oList<T>) Records).ItemIds[index];
+			//    return _sortedList.GetKeyFromId(id);
+			//}
 
 			public T GetValue(int index)
 			{
@@ -578,5 +583,20 @@ namespace WeSay.Data
 			_dataSource.Data.Commit();
 			return true;
 		}
+
+		public override T1 GetItem<T1>(long id)
+		{
+			IExtObjectContainer database = this._dataSource.Data.Ext();
+			T1 item = (T1) database.GetByID(id);
+			if(item != null)
+			{
+				if (!database.IsActive(item))
+				{
+					database.Activate(item, int.MaxValue);
+				}
+			}
+			return item;
+		}
+
 	}
 }

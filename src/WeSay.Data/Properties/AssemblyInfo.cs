@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following
@@ -35,3 +36,8 @@ using System.Runtime.InteropServices;
 
 [assembly: System.CLSCompliant(true)]
 [assembly: System.Security.Permissions.SecurityPermission(System.Security.Permissions.SecurityAction.RequestMinimum, Execution=true)]
+[assembly: InternalsVisibleTo("WeSay.Data.Tests")]
+[assembly: InternalsVisibleTo("WeSay.Project.Tests")]
+[assembly: InternalsVisibleTo("LexicalModel.Tests")]
+[assembly: InternalsVisibleTo("LexicalTools.Tests")]
+[assembly: InternalsVisibleTo("WeSay.App.Tests")]

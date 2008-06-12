@@ -21,8 +21,6 @@ namespace WeSay.Project
 		/// </summary>
 		bool MustBeActivatedDuringPreCache { get;}
 
-		void RegisterWithCache(ViewTemplate viewTemplate);
-
 		Control Control { get;}
 		bool IsPinned { get; }
 		int GetRemainingCount();

@@ -574,17 +574,19 @@ namespace WeSay.Project
 			}
 		}
 
-		public ProjectInfo GetProjectInfoForAddin()
+		public ProjectInfo GetProjectInfoForAddin(LexEntryRepository lexEntryRepository)
 		{
-			return new ProjectInfo(Name,
-								   ApplicationRootDirectory,
-								   ProjectDirectoryPath,
-								   PathToLiftFile,
-								   PathToExportDirectory,
-								   GetFilesBelongingToProject(ProjectDirectoryPath),
-								   AddinSet.Singleton.LocateFile,
-								   WritingSystems,
-								   this);
+			return
+					new ProjectInfo(Name,
+									ApplicationRootDirectory,
+									ProjectDirectoryPath,
+									PathToLiftFile,
+									PathToExportDirectory,
+									GetFilesBelongingToProject(ProjectDirectoryPath),
+									AddinSet.Singleton.LocateFile,
+									WritingSystems,
+									lexEntryRepository,
+									this);
 		}
 
 
@@ -1243,28 +1245,5 @@ namespace WeSay.Project
 			return false;
 		}
 
-
-		public IRecordListManager MakeRecordListManager()
-		{
-			IRecordListManager recordListManager;
-
-			if (PathToWeSaySpecificFilesDirectoryInProject.IndexOf("PRETEND") > -1)
-			{
-				IBindingList entries = new PretendRecordList();
-				recordListManager = new InMemoryRecordListManager();
-				IRecordList<LexEntry> masterRecordList = recordListManager.GetListOfType<LexEntry>();
-				foreach (LexEntry entry in entries)
-				{
-					masterRecordList.Add(entry);
-				}
-			}
-			else
-			{
-				recordListManager = new Db4oRecordListManager(new WeSayWordsDb4oModelConfiguration(), PathToDb4oLexicalModelDB);
-				Db4oLexModelHelper.Initialize(((Db4oRecordListManager)recordListManager).DataSource.Data);
-				Lexicon.Init(recordListManager as Db4oRecordListManager);
-			}
-			return recordListManager;
-		}
 	}
 }

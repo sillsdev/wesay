@@ -14,8 +14,8 @@ namespace WeSay.LexicalTools
 		private readonly ViewTemplate _viewTemplate;
 
 		protected WordGatheringTaskBase(string label, string description, bool isPinned,
-										IRecordListManager recordListManager, ViewTemplate viewTemplate)
-			: base(label, description, isPinned, recordListManager)
+										LexEntryRepository lexEntryRepository, ViewTemplate viewTemplate)
+			: base(label, description, isPinned, lexEntryRepository)
 		{
 			if (viewTemplate == null)
 			{

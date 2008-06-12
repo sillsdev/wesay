@@ -1,7 +1,7 @@
+using System.IO;
 using NUnit.Framework;
 using Palaso.Services.Dictionary;
 using WeSay.App.Services;
-using WeSay.Data;
 using WeSay.LexicalModel;
 using WeSay.Project.Tests;
 
@@ -17,8 +17,10 @@ namespace WeSay.App.Tests
 	[TestFixture]
 	public class DictionaryService_SameTheadTests
 	{
+		private LexEntryRepository _lexEntryRepository;
+		private string _filePath;
+
 		private Db4oProjectSetupForTesting _projectSetupSharedByAllTests;
-		private IRecordList<LexEntry> _entries;
 		private DictionaryServiceProvider _dictionaryServiceProvider;
 
 		/// <summary>
@@ -28,39 +30,47 @@ namespace WeSay.App.Tests
 		public void SetupFixture()
 		{
 			_projectSetupSharedByAllTests = new Db4oProjectSetupForTesting(string.Empty);
-			_entries = _projectSetupSharedByAllTests._recordListManager.GetListOfType<LexEntry>();
 		}
 
 		[SetUp]
 		public void Setup()
 		{
-			_entries.Clear();//let each test have a clean slate
-			_dictionaryServiceProvider = new DictionaryServiceProvider(null, _projectSetupSharedByAllTests._project);
+			_filePath = Path.GetTempFileName();
+			_lexEntryRepository = new LexEntryRepository(_filePath);
+			_dictionaryServiceProvider =
+					new DictionaryServiceProvider(_lexEntryRepository,
+												  null,
+												  _projectSetupSharedByAllTests._project);
 		}
 
 		[TestFixtureTearDown]
 		public void FixtureTearDown()
 		{
+			_lexEntryRepository.Dispose();
 			_projectSetupSharedByAllTests.Dispose();
+			File.Delete(_filePath);
 		}
 
-		private static LexEntry MakeTestLexEntry(IRecordList<LexEntry> entries, string writingSystemId, string lexicalForm)
+		private void MakeTestLexEntry(string writingSystemId, string lexicalForm)
 		{
-			LexEntry entry = (LexEntry)entries.AddNew();
+			LexEntry entry = _lexEntryRepository.CreateItem();
 			entry.LexicalForm.SetAlternative(writingSystemId, lexicalForm);
-			return entry;
+			_lexEntryRepository.SaveItem(entry);
 		}
 
 		[Test]
 		public void FindsNoExactMatch()
 		{
-			MakeTestLexEntry(_entries, "v", "foo1");
+			MakeTestLexEntry("v", "foo1");
 
-			FindResult r = _dictionaryServiceProvider.GetMatchingEntries("v", "foo", FindMethods.Exact.ToString());
+			FindResult r =
+					_dictionaryServiceProvider.GetMatchingEntries("v",
+																  "foo",
+																  FindMethods.Exact.ToString());
 			Assert.AreEqual(0, r.ids.Length);
 		}
 
-	  /* These were good tests, but the method under test has been removed froom the service
+		/* These were good tests, but the method under test has been removed froom the service
 	   * until we see if it is actually  needed.
 	   [Test]
 		public void GetFormsFromIdsWhenEachIsOk()
@@ -92,71 +102,82 @@ namespace WeSay.App.Tests
 			//NB: specifics of the matching behavior belong in lower level tests of the matcher; we're
 			//just checking that it generally does something
 
-			MakeTestLexEntry(_entries, "v", "foo1");
-			LexEntry foo2 = MakeTestLexEntry(_entries, "v2", "foo2");
-			LexEntry foo3 = MakeTestLexEntry(_entries, "v", "foo3");
+			MakeTestLexEntry("v", "foo1");
+			MakeTestLexEntry("v2", "foo2");
+			MakeTestLexEntry("v", "foo3");
 
-
-			 FindResult r = _dictionaryServiceProvider.GetMatchingEntries("v", "foo", FindMethods.DefaultApproximate.ToString());
+			FindResult r =
+					_dictionaryServiceProvider.GetMatchingEntries("v",
+																  "foo",
+																  FindMethods.DefaultApproximate.
+																		  ToString());
 			Assert.AreEqual(2, r.ids.Length);
 		}
-
-
 
 		[Test]
 		public void CreateNewEntryWithExampleButNoDef()
 		{
-			MakeTestLexEntry(_entries, "v", "foo1");
-		   string id = _dictionaryServiceProvider.AddEntry("v", "voom", null, null, "v", "vlah voom!");
-		   Assert.IsNotNull(id);
+			MakeTestLexEntry("v", "foo1");
+			string id =
+					_dictionaryServiceProvider.AddEntry("v", "voom", null, null, "v", "vlah voom!");
+			Assert.IsNotNull(id);
 
-			FindResult r = _dictionaryServiceProvider.GetMatchingEntries("v", "voom", FindMethods.Exact.ToString());
-		   Assert.AreEqual(id, r.ids[0]);
-		   string html = _dictionaryServiceProvider.GetHtmlForEntries(new string[] { id });
-		   Assert.IsTrue(html.Contains("vlah voom!"));
+			FindResult r =
+					_dictionaryServiceProvider.GetMatchingEntries("v",
+																  "voom",
+																  FindMethods.Exact.ToString());
+			Assert.AreEqual(id, r.ids[0]);
+			string html = _dictionaryServiceProvider.GetHtmlForEntries(new string[] {id});
+			Assert.IsTrue(html.Contains("vlah voom!"));
 		}
-
 
 		[Test]
 		public void CreateNewEntryWithAllFieldsDoesCreateIt()
 		{
-		   string id = _dictionaryServiceProvider.AddEntry("v", "voom", "en", "def of voom", "v", "vlah voom!");
-		   Assert.IsNotNull(id);
+			string id =
+					_dictionaryServiceProvider.AddEntry("v",
+														"voom",
+														"en",
+														"def of voom",
+														"v",
+														"vlah voom!");
+			Assert.IsNotNull(id);
 
-			FindResult r = _dictionaryServiceProvider.GetMatchingEntries("v", "voom", FindMethods.Exact.ToString());
-		   Assert.AreEqual(id, r.ids[0]);
-		   string html = _dictionaryServiceProvider.GetHtmlForEntries(new string[] { id });
-		   Assert.IsTrue(html.Contains("vlah voom!"));
-		   Assert.IsTrue(html.Contains("def of voom"));
+			FindResult r =
+					_dictionaryServiceProvider.GetMatchingEntries("v",
+																  "voom",
+																  FindMethods.Exact.ToString());
+			Assert.AreEqual(id, r.ids[0]);
+			string html = _dictionaryServiceProvider.GetHtmlForEntries(new string[] {id});
+			Assert.IsTrue(html.Contains("vlah voom!"));
+			Assert.IsTrue(html.Contains("def of voom"));
 		}
-
-
-
 
 		[Test]
 		public void CreateNewEntryWithUnknownWritingSystemReturnsNull()
 		{
-		   string id = _dictionaryServiceProvider.AddEntry("bogus", "voom", null, null, null, null);
-		   Assert.IsNull(id);
+			string id = _dictionaryServiceProvider.AddEntry("bogus", "voom", null, null, null, null);
+			Assert.IsNull(id);
 		}
 
 		[Test]
 		public void CreateNewEntryWithEmptyLexemeFormReturnsNull()
 		{
-		   string id = _dictionaryServiceProvider.AddEntry("v", "", null, null, null, null);
-		   Assert.IsNull(id);
+			string id = _dictionaryServiceProvider.AddEntry("v", "", null, null, null, null);
+			Assert.IsNull(id);
 		}
-
 
 		[Test]
 		public void CreateNewEntryWithOnlyLexemeFormDoesCreateIt()
 		{
-		   string id = _dictionaryServiceProvider.AddEntry("v", "voom", null, null, null, null);
-		   Assert.IsNotNull(id);
+			string id = _dictionaryServiceProvider.AddEntry("v", "voom", null, null, null, null);
+			Assert.IsNotNull(id);
 
-			FindResult r = _dictionaryServiceProvider.GetMatchingEntries("v", "voom", FindMethods.Exact.ToString());
-		   Assert.AreEqual(id, r.ids[0]);
+			FindResult r =
+					_dictionaryServiceProvider.GetMatchingEntries("v",
+																  "voom",
+																  FindMethods.Exact.ToString());
+			Assert.AreEqual(id, r.ids[0]);
 		}
-
 	}
 }

@@ -10,7 +10,7 @@ namespace WeSay.Data
 		  return new InMemoryRecordList<T>();
 		}
 
-		protected override IRecordList<T> CreateFilteredRecordList<Key, T>(IFilter<T> filter, ISortHelper<Key, T> sortHelper)
+		protected override IRecordList<T> CreateFilteredRecordList<T>(IFilter<T> filter, ISortHelper<T> sortHelper)
 		{
 		  return new FilteredInMemoryRecordList<T>(GetListOfType<T>(), filter.FilteringPredicate);
 		}
@@ -145,7 +145,6 @@ namespace WeSay.Data
 				}
 			}
 
-
 			#region IDisposable Members
 
 			protected override void Dispose(bool disposing)
@@ -162,6 +161,11 @@ namespace WeSay.Data
 				base.Dispose(disposing);
 			}
 			#endregion
+		}
+
+		public override T1 GetItem<T1>(long id)
+		{
+			throw new NotImplementedException();
 		}
 	}
 }

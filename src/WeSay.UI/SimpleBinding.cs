@@ -1,6 +1,5 @@
 using System;
 using System.ComponentModel;
-using System.Diagnostics;
 using WeSay.Foundation;
 
 namespace WeSay.UI
@@ -23,10 +22,10 @@ namespace WeSay.UI
 		public SimpleBinding(IValueHolder<TValueType> dataTarget, IBindableControl<TValueType> widgetTarget)
 		{
 			_dataTarget = dataTarget;
-			_dataTarget.PropertyChanged += new PropertyChangedEventHandler(OnDataPropertyChanged);
+			_dataTarget.PropertyChanged += OnDataPropertyChanged;
 			_widget = widgetTarget;
-			_widget.ValueChanged += new EventHandler(OnWidgetValueChanged);
-			_widget.GoingAway += new EventHandler(_target_HandleDestroyed);
+			_widget.ValueChanged += OnWidgetValueChanged;
+			_widget.GoingAway += _target_HandleDestroyed;
 
 			//Debug.WriteLine("++++++Constructed SimpleBinding boundTo: " + this._widget.Value);
 		}
@@ -69,10 +68,10 @@ namespace WeSay.UI
 				return; //teardown was called twice
 			}
 
-			_dataTarget.PropertyChanged -= new PropertyChangedEventHandler(OnDataPropertyChanged);
+			_dataTarget.PropertyChanged -= OnDataPropertyChanged;
 			_dataTarget = null;
-			_widget.ValueChanged -= new EventHandler(OnWidgetValueChanged);
-			_widget.GoingAway -= new EventHandler(_target_HandleDestroyed);
+			_widget.ValueChanged -= OnWidgetValueChanged;
+			_widget.GoingAway -= _target_HandleDestroyed;
 			_widget = null;
 		}
 

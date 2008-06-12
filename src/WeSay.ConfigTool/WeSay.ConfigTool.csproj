@@ -117,7 +117,6 @@
 	<Compile Include="BackupPlanControl.Designer.cs">
 	  <DependentUpon>BackupPlanControl.cs</DependentUpon>
 	</Compile>
-	<Compile Include="ExportLIFTCommand.cs" />
 	<Compile Include="FieldsControl.cs">
 	  <SubType>UserControl</SubType>
 	</Compile>

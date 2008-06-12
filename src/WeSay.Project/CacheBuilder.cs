@@ -186,7 +186,6 @@ namespace WeSay.Project
 	{
 		private string _sourceLIFTPath;
 		private ProgressState _progress;
-		private Db4oRecordList<LexEntry> _prewiredEntries = null;
 		private BackgroundWorker _backgroundWorker;
 
 		public CacheBuilder(string sourceLIFTPath)
@@ -214,33 +213,11 @@ namespace WeSay.Project
 			}
 		}
 
-		/// <summary>
-		/// caller can set this if you want some actions to happen as each entry is
-		/// imported, such as building up indices.  The given entries list will be
-		/// used, and you can act on the events it fires.
-		/// </summary>
-		public Db4oRecordList<LexEntry> EntriesAlreadyWiredUp
-		{
-			set { _prewiredEntries = value; }
-		}
-
 		public string SourceLIFTPath
 		{
 			get { return _sourceLIFTPath; }
 			set { _sourceLIFTPath = value; }
 		}
-
-		public Db4oRecordList<LexEntry> GetEntries(Db4oDataSource ds)
-		{
-			if (_prewiredEntries == null)
-			{
-				return new Db4oRecordList<LexEntry>(ds);
-			}
-
-			return _prewiredEntries;
-		}
-
-
 
 		public void DoWork(ProgressState progress)
 		{
@@ -273,29 +250,14 @@ namespace WeSay.Project
 				string db4oFileName = Path.GetFileName(WeSayWordsProject.Project.PathToDb4oLexicalModelDB);
 				string tempDb4oFilePath = Path.Combine(tempCacheDirectory, db4oFileName);
 
-				using (IRecordListManager recordListManager =
-						new Db4oRecordListManager(new WeSayWordsDb4oModelConfiguration(), tempDb4oFilePath))
+				using (LexEntryRepository lexEntryRepository =
+						new LexEntryRepository(tempDb4oFilePath))
 				{
-					Db4oDataSource ds = ((Db4oRecordListManager) recordListManager).DataSource;
-					Db4oLexModelHelper.Initialize(ds.Data);
-					Lexicon.Init((Db4oRecordListManager)recordListManager);
-
-					//  Db4oRecordListManager ds = recordListManager as Db4oRecordListManager;
-
 					//MONO bug as of 1.1.18 cannot bitwise or FileShare on FileStream constructor
 					//                    using (FileStream config = new FileStream(project.PathToProjectTaskInventory, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete))
-					SetupTasksToBuildCaches(recordListManager);
+					SetupTasksToBuildCaches(lexEntryRepository);
 
-					EntriesAlreadyWiredUp = (Db4oRecordList<LexEntry>) recordListManager.GetListOfType<LexEntry>();
-
-					if (Db4oLexModelHelper.Singleton == null)
-					{
-						Db4oLexModelHelper.Initialize(ds.Data);
-						Lexicon.Init((Db4oRecordListManager)recordListManager);
-					}
-
-
-					DoParsing(ds);
+					DoParsing(lexEntryRepository);
 					if (_backgroundWorker != null && _backgroundWorker.CancellationPending)
 					{
 						return;
@@ -361,37 +323,26 @@ namespace WeSay.Project
 			Logger.WriteEvent("Done Building Caches");
 		}
 
-		private void DoParsing(Db4oDataSource ds)
+		private void DoParsing(LexEntryRepository lexEntryRepository)
 		{
-			Db4oRecordList<LexEntry> entriesList = GetEntries(ds);
-			try
+//                entriesList.WriteCacheSize = 0; //don't write after every record
+			using (LiftMerger merger = new LiftMerger(lexEntryRepository))
 			{
-				entriesList.WriteCacheSize = 0; //don't write after every record
-				using (LiftMerger merger = new LiftMerger(ds, entriesList))
+				foreach (string name in WeSayWordsProject.Project.OptionFieldNames)
 				{
-					foreach (string name in WeSayWordsProject.Project.OptionFieldNames)
-					{
-						merger.ExpectedOptionTraits.Add(name);
-						//_importer.ExpectedOptionTraits.Add(name);
-					}
-					foreach (string name in WeSayWordsProject.Project.OptionCollectionFieldNames)
-					{
-						merger.ExpectedOptionCollectionTraits.Add(name);
-					}
-
-					RunParser(merger);
+					merger.ExpectedOptionTraits.Add(name);
+					//_importer.ExpectedOptionTraits.Add(name);
+				}
+				foreach (string name in WeSayWordsProject.Project.OptionCollectionFieldNames)
+				{
+					merger.ExpectedOptionCollectionTraits.Add(name);
 				}
 
-				UpdateDashboardStats();
+				RunParser(merger);
 			}
 
-			finally
-			{
-				if (entriesList != _prewiredEntries) //did we create it?
-				{
-					entriesList.Dispose();
-				}
-			}
+			UpdateDashboardStats();
+
 		}
 
 		private static void UpdateDashboardStats()
@@ -405,9 +356,10 @@ namespace WeSay.Project
 			}
 		}
 
-		private static void SetupTasksToBuildCaches(IRecordListManager recordListManager)
+		private static void SetupTasksToBuildCaches(LexEntryRepository lexEntryRepository)
 		{
-			recordListManager.DelayWritingCachesUntilDispose = true;
+			//todo unit of work?
+			//lexEntryRepository.DelayWritingCachesUntilDispose = true;
 			ConfigFileTaskBuilder taskBuilder;
 			using (
 					FileStream configFile =
@@ -419,7 +371,7 @@ namespace WeSay.Project
 				taskBuilder = new ConfigFileTaskBuilder(configFile,
 														WeSayWordsProject.Project,
 														new EmptyCurrentWorkTask(),
-														recordListManager);
+														lexEntryRepository);
 			}
 
 			WeSayWordsProject.Project.Tasks = taskBuilder.Tasks;

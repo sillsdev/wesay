@@ -74,25 +74,16 @@ namespace WeSay.Foundation.Options
 		}
 
 		// IReferenceContainer
-		public object Target
+		public string TargetId
 		{
 			get
 			{
-				// return Lexicon.FindFirstLexEntryMatchingId(_targetId);
-				// OptionsList pretend = null;
-				//return pretend.GetOptionFromKey(_humanReadableKey);
-				throw new NotImplementedException();
-
+				return _humanReadableKey;
 			}
 			set
 			{
-				if(value == null && String.IsNullOrEmpty(_humanReadableKey))
-				{
-					return;
-				}
-
-				Option o = value as Option;
-				if (o.Key == _humanReadableKey)
+				if (value == _humanReadableKey ||
+					(value == null && _humanReadableKey == string.Empty))
 				{
 					return;
 				}
@@ -103,12 +94,23 @@ namespace WeSay.Foundation.Options
 				}
 				else
 				{
-					_humanReadableKey = o.Key;
+					_humanReadableKey = value;
 				}
 				NotifyPropertyChanged();
 			}
 		}
 
+		public void SetTarget(Option o)
+		{
+			if (o == null)
+			{
+				TargetId = string.Empty;
+			}
+			else
+			{
+				TargetId = o.Key;
+			}
+		}
 
 		#endregion
 

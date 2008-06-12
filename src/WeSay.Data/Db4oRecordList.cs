@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace WeSay.Data
 {
-	public class Db4oRecordList<T> : AbstractRecordList<T> where T : class, new()
+	internal class Db4oRecordList<T> : AbstractRecordList<T> where T : class, new()
 	{
-  //committing is handled by Db4oRecordListManager when told to.
+  //committing is handled by LexEntryRepository when told to.
 		private static int defaultWriteCacheSize = 0; // 0 means never commit until database closes, 1 means commit after each write
 
 		private void Initialize(Db4oDataSource dataSource, Predicate<T> filter, Comparison<T> sort, SodaQueryProvider sodaQuery)
@@ -65,7 +65,6 @@ namespace WeSay.Data
 			Records = records;
 		}
 
-		[CLSCompliant(false)]
 		public Db4oRecordList(Db4oDataSource dataSource, SodaQueryProvider sodaQuery)
 		{
 			Initialize(dataSource, null, null, sodaQuery);
@@ -129,7 +128,6 @@ namespace WeSay.Data
 //            return false;
 //        }
 
-		[CLSCompliant(false)]
 		public SodaQueryProvider SodaQuery
 		{
 			get {
@@ -230,7 +228,7 @@ namespace WeSay.Data
 			return index;
 		}
 
-		public long GetId(T item)
+		public override long GetId(T item)
 		{
 			int index = IndexOf(item);
 			if(index == -1)

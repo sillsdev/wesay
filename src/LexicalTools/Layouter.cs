@@ -30,7 +30,7 @@ namespace WeSay.LexicalTools
 		/// <summary>
 		/// Use for establishing relations been this entry and the rest
 		/// </summary>
-		private readonly IRecordListManager _recordListManager;
+		private readonly LexEntryRepository _lexEntryRepository;
 
 		private readonly ViewTemplate _viewTemplate;
 
@@ -57,9 +57,9 @@ namespace WeSay.LexicalTools
 		/// <summary>
 		/// Use for establishing relations been this entry and the rest
 		/// </summary>
-		protected IRecordListManager RecordListManager
+		protected LexEntryRepository RecordListManager
 		{
-			get { return this._recordListManager; }
+			get { return this._lexEntryRepository; }
 		}
 
 		public bool ShowNormallyHiddenFields
@@ -68,7 +68,7 @@ namespace WeSay.LexicalTools
 			set { _showNormallyHiddenFields = value; }
 		}
 
-		protected Layouter(DetailList builder, ViewTemplate viewTemplate, IRecordListManager recordListManager)
+		protected Layouter(DetailList builder, ViewTemplate viewTemplate, LexEntryRepository lexEntryRepository)
 		{
 			if (builder == null)
 			{
@@ -78,9 +78,10 @@ namespace WeSay.LexicalTools
 			{
 				throw new ArgumentNullException("viewTemplate");
 			}
+
 			_detailList = builder;
 			_viewTemplate = viewTemplate;
-			_recordListManager = recordListManager;
+			_lexEntryRepository = lexEntryRepository;
 		}
 
 		/// <summary>
@@ -370,7 +371,7 @@ namespace WeSay.LexicalTools
 					RelationController.CreateWidget(target,
 													type,
 													field,
-													_recordListManager,
+													_lexEntryRepository,
 													_detailList.OnBinding_ChangeOfWhichItemIsInFocus);
 		}
 

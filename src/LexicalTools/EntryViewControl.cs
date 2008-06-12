@@ -3,7 +3,6 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows.Forms;
 using Palaso.Reporting;
-using WeSay.Data;
 using WeSay.LexicalModel;
 using WeSay.Project;
 using WeSay.UI;
@@ -93,8 +92,8 @@ namespace WeSay.LexicalTools
 					_currentItemInFocus = null;
 					if (_record != null)
 					{
-						_record.PropertyChanged += new PropertyChangedEventHandler(OnRecordPropertyChanged);
-						_record.EmptyObjectsRemoved += new EventHandler(OnEmptyObjectsRemoved);
+						_record.PropertyChanged += OnRecordPropertyChanged;
+						_record.EmptyObjectsRemoved += OnEmptyObjectsRemoved;
 					}
 					Logger.WriteMinorEvent("Datasource set calling RefreshLexicalEntryPreview()");
 					RefreshLexicalEntryPreview();
@@ -110,9 +109,9 @@ namespace WeSay.LexicalTools
 		/// <summary>
 		/// Use for establishing relations been this entry and the rest
 		/// </summary>
-		public IRecordListManager RecordListManager
+		public LexEntryRepository LexEntryRepository
 		{
-			set { _recordListManager = value; }
+			set { _lexEntryRepository = value; }
 		}
 
 		public bool ShowNormallyHiddenFields
@@ -180,7 +179,7 @@ namespace WeSay.LexicalTools
 					if (_cleanupTimer == null)
 					{
 						_cleanupTimer = new Timer();
-						_cleanupTimer.Tick += new EventHandler(OnCleanupTimer_Tick);
+						_cleanupTimer.Tick += OnCleanupTimer_Tick;
 						_cleanupTimer.Interval = 500;
 					}
 					_cleanupTimer.Tag = entry;
@@ -218,7 +217,8 @@ namespace WeSay.LexicalTools
 			try
 			{
 #endif
-				_lexicalEntryPreview.Rtf = RtfRenderer.ToRtf(_record, _currentItemInFocus);
+			VerifyHasLexEntryRepository();
+			_lexicalEntryPreview.Rtf = RtfRenderer.ToRtf(_record, _currentItemInFocus, _lexEntryRepository);
 #if !DEBUG
 			}
 			catch (Exception)
@@ -226,6 +226,13 @@ namespace WeSay.LexicalTools
 				Palaso.Reporting.ErrorReport.ReportNonFatalMessage("There was an error refreshing the entry preview. If you were quiting the program, this is a know issue (WS-554) that we are trying to track down.  If you can make this happen again, please contact the developers.");
 			}
 #endif
+		}
+
+		private void VerifyHasLexEntryRepository() {
+			if(this._lexEntryRepository == null)
+			{
+				throw new InvalidOperationException("LexEntryRepository has not been initialized");
+			}
 		}
 
 		private void RefreshEntryDetail()
@@ -255,7 +262,8 @@ namespace WeSay.LexicalTools
 
 				if (_record != null)
 				{
-					LexEntryLayouter layout = new LexEntryLayouter(detailList, ViewTemplate, _recordListManager);
+					VerifyHasLexEntryRepository();
+					LexEntryLayouter layout = new LexEntryLayouter(detailList, ViewTemplate, _lexEntryRepository);
 					layout.ShowNormallyHiddenFields = ShowNormallyHiddenFields;
 					layout.AddWidgets(_record);
 				}
@@ -278,7 +286,7 @@ namespace WeSay.LexicalTools
 			}
 			catch (ConfigurationException e)
 			{
-				Palaso.Reporting.ErrorReport.ReportNonFatalMessage(e.Message);
+				ErrorReport.ReportNonFatalMessage(e.Message);
 			}
 		}
 
@@ -290,7 +298,7 @@ namespace WeSay.LexicalTools
 		}
 
 		private CurrentItemEventArgs _currentItemInFocus;
-		private IRecordListManager _recordListManager;
+		private LexEntryRepository _lexEntryRepository;
 		private bool _showNormallyHiddenFields=false;
 
 		private void LexPreviewWithEntryControl_BackColorChanged(object sender, EventArgs e)

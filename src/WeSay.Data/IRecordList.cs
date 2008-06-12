@@ -78,6 +78,7 @@ namespace WeSay.Data
 		new void Clear();
 
 		int GetIndexFromId(long id);
+		long GetId(T item);
 	}
 
 	public interface IControlCachingBehavior

@@ -17,9 +17,9 @@ namespace WeSay.LexicalTools
 		private readonly ViewTemplate _viewTemplate;
 		private static readonly string kTaskLabel = "Dictionary Browse && Edit";
 
-		public DictionaryTask(IRecordListManager recordListManager,
+		public DictionaryTask(LexEntryRepository lexEntryRepository,
 							ViewTemplate viewTemplate)
-			: base(kTaskLabel, string.Empty, true, recordListManager)
+			: base(kTaskLabel, string.Empty, true, lexEntryRepository)
 		{
 #if JustForCodeScanner
 			StringCatalog.Get(kTaskLabel,
@@ -36,9 +36,8 @@ namespace WeSay.LexicalTools
 		{
 			try
 			{
-				RegisterWithCache(_viewTemplate);
 				base.Activate();
-				_dictionaryControl = new DictionaryControl(RecordListManager, ViewTemplate);
+				_dictionaryControl = new DictionaryControl(this.LexEntryRepository, ViewTemplate);
 				_dictionaryControl.SelectedIndexChanged += new EventHandler(OnRecordSelectionChanged);
 			}
 			catch (Palaso.Reporting.ConfigurationException)
@@ -48,41 +47,24 @@ namespace WeSay.LexicalTools
 			}
 		}
 
-		/// <summary>
-		/// This is static and public so we can keep the cache current with what this needs
-		/// even if we are running in ServerMode
-		/// </summary>
-		/// <param name="viewTemplate"></param>
-		public override void RegisterWithCache(ViewTemplate viewTemplate)
-		{
-			Field field = viewTemplate.GetField(Field.FieldNames.EntryLexicalForm.ToString());
-			if (field != null)
-			{
-				Lexicon.RegisterFieldWithCache(field.WritingSystems, true);
-			}
-			field = viewTemplate.GetField(LexSense.WellKnownProperties.Gloss);
-			if (field != null)
-			{
-				Lexicon.RegisterFieldWithCache(field.WritingSystems, false);
-			}
-
-			Lexicon.RegisterHeadwordListWithCache(viewTemplate.HeadwordWritingSystems);
-
-		}
-
-
 		void OnRecordSelectionChanged(object sender, EventArgs e)
 		{
-			RecordListManager.GoodTimeToCommit();
+			if (_dictionaryControl.CurrentRecord != null)
+			{
+				LexEntryRepository.SaveItem(_dictionaryControl.CurrentRecord);
+			}
 		}
 
 		public override void Deactivate()
 		{
 			base.Deactivate();
+			if (_dictionaryControl.CurrentRecord != null)
+			{
+				LexEntryRepository.SaveItem(_dictionaryControl.CurrentRecord);
+			}
 			_dictionaryControl.SelectedIndexChanged -= new EventHandler(OnRecordSelectionChanged);
 			_dictionaryControl.Dispose();
 			_dictionaryControl = null;
-			RecordListManager.GoodTimeToCommit();
 		}
 
 		public override void GoToUrl(string url)
@@ -111,16 +93,7 @@ namespace WeSay.LexicalTools
 		{
 			get
 			{
-				return String.Format(StringCatalog.Get("~See all {0} {1} words.", "The description of the 'Dictionary' task.  In place of the {0} will be the number of words in the dictionary.  In place of the {1} will be the name of the project."), DataSource.Count, BasilProject.Project.Name);
-			}
-		}
-
-		public IRecordList<LexEntry> DataSource
-		{
-			get
-			{
-				IRecordList<LexEntry> data = RecordListManager.GetListOfType<LexEntry>();
-				return data;
+				return String.Format(StringCatalog.Get("~See all {0} {1} words.", "The description of the 'Dictionary' task.  In place of the {0} will be the number of words in the dictionary.  In place of the {1} will be the name of the project."), ComputeCount(true), BasilProject.Project.Name);
 			}
 		}
 
@@ -131,7 +104,7 @@ namespace WeSay.LexicalTools
 
 		protected override int ComputeCount(bool returnResultEvenIfExpensive)
 		{
-			return DataSource.Count;
+			return LexEntryRepository.CountAllEntries();
 		}
 
 		protected override int ComputeReferenceCount()
