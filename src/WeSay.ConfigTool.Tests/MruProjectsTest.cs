@@ -53,11 +53,10 @@ namespace WeSay.ConfigTool.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof (ArgumentException))]
-		public void AddNewPath_PathDoesNotExist_Throws()
+		public void AddNewPath_PathDoesNotExist_ReturnsFalse()
 		{
 			string nonExistentFileName = Path.GetRandomFileName();
-			_mruProjects.AddNewPath(nonExistentFileName);
+			Assert.AreEqual(false, _mruProjects.AddNewPath(nonExistentFileName));
 		}
 
 		[Test]
