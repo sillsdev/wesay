@@ -68,6 +68,11 @@ namespace WeSay.LexicalModel
 
 		public LexEntry GetItem(RecordToken recordToken)
 		{
+			if (recordToken == null)
+			{
+				throw new ArgumentNullException("recordToken");
+			}
+
 			return GetItem(recordToken.Id);
 		}
 
@@ -413,11 +418,18 @@ namespace WeSay.LexicalModel
 			return GetAllEntries().Length;
 		}
 
-		public IRecordList<LexEntry> GetEntriesMatchingFilterSortedByLexicalUnit(IFilter<LexEntry> filter, WritingSystem lexicalUnitWritingSystem)
+		public List<RecordToken> GetEntriesMatchingFilterSortedByLexicalUnit(
+			IFilter<LexEntry> filter,
+			WritingSystem lexicalUnitWritingSystem)
 		{
 			LexEntrySortHelper lexEntrySortHelper = new LexEntrySortHelper(this, lexicalUnitWritingSystem, true);
 			_recordListManager.Register(filter, lexEntrySortHelper);
-			return _recordListManager.GetListOfTypeFilteredFurther(filter, lexEntrySortHelper);
+			List<RecordToken> result = new List<RecordToken>();
+			foreach (LexEntry entry in _recordListManager.GetListOfTypeFilteredFurther(filter, lexEntrySortHelper))
+			{
+				result.Add(new  RecordToken(entry.LexicalForm[lexicalUnitWritingSystem.Id],GetId(entry)));
+			}
+			return result;
 		}
 
 

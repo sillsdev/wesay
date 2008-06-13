@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using NUnit.Framework;
@@ -16,7 +17,7 @@ namespace WeSay.LexicalTools.Tests
 	{
 		private LexEntryRepository _lexEntryRepository;
 		private string _filePath;
-		private IRecordList<LexEntry> _missingTranslationRecordList;
+		private List<RecordToken> _missingTranslationRecordList;
 		private ViewTemplate _viewTemplate;
 		private MissingTranslationFilter _missingTranslation;
 		private WritingSystem _writingSystem;
@@ -284,7 +285,7 @@ namespace WeSay.LexicalTools.Tests
 												   _missingTranslation.FilteringPredicate,
 												   _lexEntryRepository))
 			{
-				AddTranslationToEntry(missingInfoControl.CurrentRecord,
+				AddTranslationToEntry(missingInfoControl.CurrentEntry,
 									  "a bogus translation of example");
 				missingInfoControl.SetCurrentRecordToPrevious();
 				Assert.AreEqual(_missingTranslationRecordList[0], missingInfoControl.CurrentRecord);
@@ -305,7 +306,7 @@ namespace WeSay.LexicalTools.Tests
 			{
 				missingInfoControl.SetCurrentRecordToNext();
 				missingInfoControl.SetCurrentRecordToNext();
-				AddTranslationToEntry(missingInfoControl.CurrentRecord,
+				AddTranslationToEntry(missingInfoControl.CurrentEntry,
 									  "a bogus translation of example");
 				missingInfoControl.SetCurrentRecordToPrevious();
 				Assert.AreEqual(_missingTranslationRecordList[1], missingInfoControl.CurrentRecord);
@@ -323,7 +324,7 @@ namespace WeSay.LexicalTools.Tests
 												   _lexEntryRepository))
 			{
 				missingInfoControl.SetCurrentRecordToNext();
-				AddTranslationToEntry(missingInfoControl.CurrentRecord,
+				AddTranslationToEntry(missingInfoControl.CurrentEntry,
 									  "a bogus translation of example");
 				missingInfoControl.SetCurrentRecordToPrevious();
 				Assert.AreEqual(_missingTranslationRecordList[0], missingInfoControl.CurrentRecord);
@@ -345,7 +346,7 @@ namespace WeSay.LexicalTools.Tests
 				{
 					missingInfoControl.SetCurrentRecordToNext();
 				}
-				AddTranslationToEntry(missingInfoControl.CurrentRecord,
+				AddTranslationToEntry(missingInfoControl.CurrentEntry,
 									  "a bogus translation of example");
 				missingInfoControl.SetCurrentRecordToPrevious();
 				Assert.AreEqual(_missingTranslationRecordList[count - 2],
@@ -370,7 +371,7 @@ namespace WeSay.LexicalTools.Tests
 				{
 					missingInfoControl.SetCurrentRecordToNext();
 				}
-				AddTranslationToEntry(missingInfoControl.CurrentRecord,
+				AddTranslationToEntry(missingInfoControl.CurrentEntry,
 									  "a bogus translation of example");
 				missingInfoControl.SetCurrentRecordToPrevious();
 				Assert.AreEqual(_missingTranslationRecordList[count - 3],
@@ -393,7 +394,7 @@ namespace WeSay.LexicalTools.Tests
 				{
 					missingInfoControl.SetCurrentRecordToNext();
 				}
-				AddTranslationToEntry(missingInfoControl.CurrentRecord,
+				AddTranslationToEntry(missingInfoControl.CurrentEntry,
 									  "a bogus translation of example");
 				missingInfoControl.SetCurrentRecordToNext();
 				Assert.AreEqual(_missingTranslationRecordList[count - 2],
@@ -412,7 +413,7 @@ namespace WeSay.LexicalTools.Tests
 												   _lexEntryRepository))
 			{
 				missingInfoControl.SetCurrentRecordToNext();
-				AddTranslationToEntry(missingInfoControl.CurrentRecord,
+				AddTranslationToEntry(missingInfoControl.CurrentEntry,
 									  "a bogus translation of example");
 				missingInfoControl.SetCurrentRecordToNext();
 				Assert.AreEqual(_missingTranslationRecordList[1], missingInfoControl.CurrentRecord);
@@ -430,7 +431,7 @@ namespace WeSay.LexicalTools.Tests
 												   _lexEntryRepository))
 			{
 				missingInfoControl.SetCurrentRecordToNext();
-				LexEntry currentRecord = missingInfoControl.CurrentRecord;
+				LexEntry currentRecord = missingInfoControl.CurrentEntry;
 				AddTranslationToEntry(currentRecord, "a bogus translation of example");
 				Assert.AreEqual(missingInfoControl._completedRecordsListBox.SelectedItem,
 								currentRecord);
@@ -452,7 +453,7 @@ namespace WeSay.LexicalTools.Tests
 												   _lexEntryRepository))
 			{
 				missingInfoControl.SetCurrentRecordToNext();
-				LexEntry currentRecord = missingInfoControl.CurrentRecord;
+				LexEntry currentRecord = missingInfoControl.CurrentEntry;
 				AddTranslationToEntry(currentRecord, "a bogus translation of example");
 				AddTranslationToEntry(currentRecord, string.Empty);
 				Assert.AreEqual(missingInfoControl._recordsListBox.SelectedItem, currentRecord);

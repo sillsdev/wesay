@@ -20,7 +20,7 @@ namespace WeSay.LexicalTools
 		{
 			if (disposing && !IsDisposed)
 			{
-				_records.ListChanged -= OnRecordsListChanged;
+				//_records.ListChanged -= OnRecordsListChanged;
 
 				_recordsListBox.SelectedIndexChanged -= OnRecordSelectionChanged;
 				//_recordsListBox.Enter += _recordsListBox_Enter;
@@ -39,9 +39,9 @@ namespace WeSay.LexicalTools
 				//}
 
 
-				if (_currentRecord != null)
+				if (this.CurrentEntry != null)
 				{
-					_currentRecord.PropertyChanged -= OnCurrentRecordPropertyChanged;
+					this.CurrentEntry.PropertyChanged -= OnCurrentRecordPropertyChanged;
 				}
 			}
 			if (disposing && (components != null))

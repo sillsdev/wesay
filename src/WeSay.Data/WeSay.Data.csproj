@@ -57,7 +57,7 @@
 	<Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-	<Compile Include="AbstractRecordListManager.cs" />
+	<Compile Include="DeletedItemEventArgs.cs" />
 	<Compile Include="CacheHelper.cs" />
 	<Compile Include="ComparisonHelper.cs" />
 	<Compile Include="DatabaseModified.cs" />

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Forms;
 using Palaso.UI.WindowsForms.i8n;
@@ -185,14 +186,14 @@ namespace WeSay.LexicalTools
 
 		void OnRecordSelectionChanged(object sender, EventArgs e)
 		{
-			LexEntryRepository.SaveItem(_missingInfoControl.CurrentRecord);
+			LexEntryRepository.SaveItem(_missingInfoControl.CurrentEntry);
 		}
 
 		public override void Deactivate()
 		{
 			if (_missingInfoControl != null)
 			{
-				LexEntryRepository.SaveItem(_missingInfoControl.CurrentRecord);
+				LexEntryRepository.SaveItem(_missingInfoControl.CurrentEntry);
 			}
 			base.Deactivate();
 		   if (_missingInfoControl != null)
@@ -231,9 +232,9 @@ namespace WeSay.LexicalTools
 			return LexEntryRepository.CountAllEntries();
 		}
 
-		public IRecordList<LexEntry> GetFilteredData()
+		public List<RecordToken> GetFilteredData()
 		{
-			IRecordList<LexEntry> data =
+			List<RecordToken> data =
 					LexEntryRepository.GetEntriesMatchingFilterSortedByLexicalUnit(
 						_filter,
 						_writingSystem);
