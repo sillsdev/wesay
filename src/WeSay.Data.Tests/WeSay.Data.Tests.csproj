@@ -51,8 +51,6 @@
 	<Compile Include="Db4oSODAQueryTests.cs" />
 	<Compile Include="IFilterableTest.cs" />
 	<Compile Include="RecordListManagerBaseTests.cs" />
-	<Compile Include="InMemoryRecordListManagerTests.cs" />
-	<Compile Include="InMemoryRecordListTests.cs" />
 	<Compile Include="IBindingListBaseTest.cs" />
 	<Compile Include="ICollectionBaseTest.cs" />
 	<Compile Include="IEnumerableBaseTest.cs" />

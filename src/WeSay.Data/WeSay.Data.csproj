@@ -57,7 +57,6 @@
 	<Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-	<Compile Include="AbstractRecordList.cs" />
 	<Compile Include="AbstractRecordListManager.cs" />
 	<Compile Include="CacheHelper.cs" />
 	<Compile Include="ComparisonHelper.cs" />
@@ -71,8 +70,6 @@
 	<Compile Include="Db4oDataSource.cs" />
 	<Compile Include="Db4oList.cs" />
 	<Compile Include="IFilterable.cs" />
-	<Compile Include="InMemoryRecordList.cs" />
-	<Compile Include="InMemoryRecordListManager.cs" />
 	<Compile Include="IRecordList.cs" />
 	<Compile Include="IRecordListManager.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />

@@ -487,7 +487,7 @@ namespace WeSay.Data
 			((Db4oList<T>)Records).RemoveSort();
 		}
 
-		private void Dispose(bool disposing)
+		protected  virtual void Dispose(bool disposing)
 		{
 			if (!IsDisposed)
 			{
