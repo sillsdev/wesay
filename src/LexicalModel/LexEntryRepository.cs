@@ -109,7 +109,7 @@ namespace WeSay.LexicalModel
 			ApproximateMatcherOptions matcherOptions)
 		{
 			IQuery<LexEntry> query = GetLexEntryQuery(writingSystem, true);
-			List<RecordToken> recordTokens = query.GetDisplayStringsForAllMatching();
+			List<RecordToken> recordTokens = query.RetrieveItems();
 
 			// filter out any entries that were added because of other
 			// writing systems (e.g. reversals)
@@ -141,7 +141,7 @@ namespace WeSay.LexicalModel
 		{
 			throw new NotImplementedException("GetEntriesMatching");
 			// Run the sorted query
-			List<RecordToken> recordTokens = query.GetDisplayStringsForAllMatching();
+			List<RecordToken> recordTokens = query.RetrieveItems();
 			// Apply a filter
 		}
 
@@ -151,7 +151,7 @@ namespace WeSay.LexicalModel
 		{
 			// search dictionary for entry with new lexical form
 			IQuery<LexEntry> query = GetLexEntryQuery(writingSystem, true);
-			List<RecordToken> recordTokens = query.GetDisplayStringsForAllMatching();
+			List<RecordToken> recordTokens = query.RetrieveItems();
 
 			// This should probably be optimized by using a specific query
 			List<RecordToken> result = new List<RecordToken>();
@@ -176,7 +176,7 @@ namespace WeSay.LexicalModel
 		public IList<RecordToken> GetAllEntriesSortedByHeadword(WritingSystem headwordWritingSystem)
 		{
 			IQuery<LexEntry> query = new Db4oHeadwordQuery(Db4oDataSource, headwordWritingSystem);
-			return query.GetDisplayStringsForAllMatching();
+			return query.RetrieveItems();
 		}
 
 		public LexEntry GetLexEntryWithMatchingId(string id)
@@ -201,7 +201,7 @@ namespace WeSay.LexicalModel
 		public int GetHomographNumber(LexEntry entry, WritingSystem headwordWritingSystem)
 		{
 			IQuery<LexEntry> query = new Db4oHeadwordQuery(Db4oDataSource, headwordWritingSystem);
-			List<RecordToken> recordTokensSortedByHeadWord = query.GetDisplayStringsForAllMatching();
+			List<RecordToken> recordTokensSortedByHeadWord = query.RetrieveItems();
 			RepositoryId databaseIdOfEntry = GetId(entry);
 			// find our position within the sorted list of entries
 			int ourIndex = -1;
@@ -389,7 +389,7 @@ namespace WeSay.LexicalModel
 		public List<RecordToken> GetAllEntriesSortedByGloss(WritingSystem writingSystem)
 		{
 			IQuery<LexEntry> query = GetLexEntryQuery(writingSystem, false);
-			return query.GetDisplayStringsForAllMatching();
+			return query.RetrieveItems();
 		}
 
 		public RepositoryId[] GetEntriesUpdatedSince(DateTime last)

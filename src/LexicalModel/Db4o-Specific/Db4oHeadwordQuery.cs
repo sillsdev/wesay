@@ -41,7 +41,7 @@ namespace WeSay.LexicalModel.Db4o_Specific
 			return keys;
 		}
 
-		public List<RecordToken> GetDisplayStringsForAllMatching()
+		public List<RecordToken> RetrieveItems()
 		{
 			List<RecordToken> result = new List<RecordToken>();
 

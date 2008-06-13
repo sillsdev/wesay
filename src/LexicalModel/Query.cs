@@ -7,6 +7,6 @@ namespace WeSay.LexicalModel
 	{
 		//bool Matches(T item);
 		IEnumerable<string> GetDisplayStrings(T item);
-		List<RecordToken> GetDisplayStringsForAllMatching();
+		List<RecordToken> RetrieveItems();
 	}
 }

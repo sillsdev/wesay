@@ -100,7 +100,7 @@ namespace WeSay.LexicalModel.Db4o_Specific
 			return keys.Keys;
 		}
 
-		public List<RecordToken> GetDisplayStringsForAllMatching()
+		public List<RecordToken> RetrieveItems()
 		{
 			if (_lexEntryRepository != null)
 			{
