@@ -24,7 +24,7 @@ namespace WeSay.LexicalTools
 		private readonly ContextMenu _cmWritingSystems;
 		private WritingSystem _listWritingSystem;
 		private readonly LexEntryRepository _lexEntryRepository;
-		private List<RecordToken> _records;
+		private List<RecordToken<LexEntry>> _records;
 		private bool _keepRecordCurrent;
 
 		public DictionaryControl()
@@ -233,32 +233,16 @@ namespace WeSay.LexicalTools
 
 		private void OnEntryChanged(object sender, PropertyChangedEventArgs e)
 		{
-			RecordToken recordToken = GetRecordToken((LexEntry) sender);
-			string lastDisplayString = string.Empty;
-			if (_recordsListBox.SelectedIndex >= 0)
-			{
-				lastDisplayString = _records[_recordsListBox.SelectedIndex].DisplayString;
-			}
-			if (lastDisplayString != recordToken.DisplayString)
+			RecordToken<LexEntry> recordToken = _records[CurrentIndex];
+			if(!recordToken.IsFresh)
 			{
 				_keepRecordCurrent = true;
 				LoadRecords();
-				_recordsListBox.SelectedIndex = _records.IndexOf(recordToken);
+				int index = this._records.IndexOf(recordToken);
+				Debug.Assert(index != -1);
+				_recordsListBox.SelectedIndex = index;
 				_keepRecordCurrent = false;
 			}
-		}
-
-		private RecordToken GetRecordToken(LexEntry entry) {
-			IQuery<LexEntry> query = _lexEntryRepository.GetLexEntryQuery(
-				_listWritingSystem,
-				IsWritingSystemUsedInLexicalForm(_listWritingSystem)
-			);
-			RepositoryId id = _lexEntryRepository.GetId(entry);
-			foreach (string displayString in query.GetDisplayStrings(entry))
-			{
-				return new RecordToken(displayString, id);
-			}
-			return new RecordToken(string.Empty, id);
 		}
 
 		private void LoadRecords() {
@@ -273,7 +257,7 @@ namespace WeSay.LexicalTools
 
 			}
 			_recordsListBox.BeginUpdate();
-			_recordsListBox.DataSource = new BindingList<RecordToken>(_records);
+			_recordsListBox.DataSource = new BindingList<RecordToken<LexEntry>>(_records);
 			_recordsListBox.EndUpdate();
 		}
 
@@ -352,14 +336,13 @@ namespace WeSay.LexicalTools
 			{
 				throw new NavigationException("Could not find the entry with id " + entryId);
 			}
-			RecordToken recordToken = GetRecordToken(entry);
-			SelectItemWithDisplayString(recordToken.DisplayString);
+			_recordsListBox.SelectedIndex = RecordToken<LexEntry>.IndexOf(_records, entry);
 		}
 
 		private void SelectItemWithDisplayString(string text)
 		{
 			Logger.WriteMinorEvent("SelectItemWithDisplayString");
-			_recordsListBox.SelectedIndex = RecordToken.FindFirstWithDisplayString(_records, text);
+			_recordsListBox.SelectedIndex = RecordToken<LexEntry>.FindFirstWithDisplayString(_records, text);
 		}
 
 		private void OnRecordSelectionChanged(object sender, EventArgs e)
@@ -440,8 +423,7 @@ namespace WeSay.LexicalTools
 				_btnNewWord.Focus();
 			}
 			LoadRecords();
-			RecordToken recordToken = GetRecordToken(entry);
-			int index = this._records.IndexOf(recordToken);
+			int index = RecordToken<LexEntry>.IndexOf(_records, entry);
 			Debug.Assert(index != -1);
 			_recordsListBox.SelectedIndex = index;
 			OnRecordSelectionChanged(_recordsListBox, new EventArgs());
@@ -464,7 +446,7 @@ namespace WeSay.LexicalTools
 				_btnDeleteWord.Focus();
 			}
 		   CurrentRecord.IsBeingDeleted = true;
-			RecordToken recordToken = _records[CurrentIndex];
+		   RecordToken<LexEntry> recordToken = _records[CurrentIndex];
 			this._lexEntryRepository.DeleteItem(recordToken.Id);
 			int index = _recordsListBox.SelectedIndex;
 			LoadRecords();

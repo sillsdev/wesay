@@ -145,9 +145,9 @@ namespace WeSay.Project
 			_writer.Close();
 		}
 
-		public void Add(IEnumerable<RecordToken> recordTokens)
+		public void Add(IEnumerable<RecordToken<LexEntry>> recordTokens)
 		{
-			foreach (RecordToken recordToken in recordTokens)
+			foreach (RecordToken<LexEntry> recordToken in recordTokens)
 			{
 				Add(recordToken.Id);
 			}

@@ -118,7 +118,7 @@ namespace WeSay.LexicalTools
 		private void PopulateWordsMatchingCurrentItem()
 		{
 			_listViewOfWordsMatchingCurrentItem.Items.Clear();
-			foreach (RecordToken recordToken in _task.GetMatchingRecords())
+			foreach (RecordToken<LexEntry> recordToken in _task.GetMatchingRecords())
 			{
 				_listViewOfWordsMatchingCurrentItem.Items.Add(recordToken);
 			}
@@ -200,7 +200,7 @@ namespace WeSay.LexicalTools
 				int selectedListIndex = _listViewOfWordsMatchingCurrentItem.SelectedIndices[0];
 				string word = _listViewOfWordsMatchingCurrentItem.SelectedItem.ToString();
 
-				RecordToken recordToken = (RecordToken)_listViewOfWordsMatchingCurrentItem.SelectedItem;
+				RecordToken<LexEntry> recordToken = (RecordToken<LexEntry>)_listViewOfWordsMatchingCurrentItem.SelectedItem;
 				Debug.Assert(recordToken != null);
 				if (recordToken == null)
 				{

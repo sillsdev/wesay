@@ -100,7 +100,7 @@ namespace WeSay.LexicalModel.Db4o_Specific
 			return keys.Keys;
 		}
 
-		public List<RecordToken> RetrieveItems()
+		public List<RecordToken<LexEntry>> RetrieveItems()
 		{
 			if (_lexEntryRepository != null)
 			{
@@ -119,13 +119,15 @@ namespace WeSay.LexicalModel.Db4o_Specific
 			  * return KeyToEntryIdInitializer.GetGlossToEntryIdPairs(_db4oData,
 			  *                                                            _writingSystem.Id);
 			  */
-					List<RecordToken> tokens = new List<RecordToken>();
+					List<RecordToken<LexEntry>> tokens = new List<RecordToken<LexEntry>>();
 					foreach (RepositoryId id in _lexEntryRepository.GetAllEntries())
 					{
 						LexEntry entry = _lexEntryRepository.GetItem(id);
+						int i = 0;
 						foreach (string s in GetDisplayStrings(entry))
 						{
-							tokens.Add(new RecordToken(s, id));
+							tokens.Add(new RecordToken<LexEntry>(_lexEntryRepository, this, i, s, id));
+							++i;
 						}
 					}
 					return tokens;
@@ -134,7 +136,7 @@ namespace WeSay.LexicalModel.Db4o_Specific
 			throw new InvalidOperationException();
 		}
 
-		private List<RecordToken> GetAllEntriesSortedByLexicalForm()
+		private List<RecordToken<LexEntry>> GetAllEntriesSortedByLexicalForm()
 		{
 			IExtObjectContainer database = _lexEntryRepository.Db4oDataSource.Data.Ext();
 
@@ -146,7 +148,7 @@ namespace WeSay.LexicalModel.Db4o_Specific
 			query.Constrain(typeof(LexicalFormMultiText));
 			IObjectSet lexicalForms = query.Execute();
 
-			List<RecordToken> result = new List<RecordToken>();
+			List<RecordToken<LexEntry>> result = new List<RecordToken<LexEntry>>();
 
 			foreach (LexicalFormMultiText lexicalForm in lexicalForms)
 			{
@@ -170,12 +172,15 @@ namespace WeSay.LexicalModel.Db4o_Specific
 											"This is what shows for a word in a list when the user hasn't yet typed anything in for the word.  Like if you click the 'New Word' button repeatedly.") +
 						  ")";
 				}
-				result.Add(new RecordToken(displayString, new Db4oRepositoryId(ids[0])));
+				Db4oRepositoryId id = new Db4oRepositoryId(ids[0]);
+				int i = result.FindAll(delegate(RecordToken<LexEntry> match)
+							   { return match.Id == id; }).Count;
+				result.Add(new RecordToken<LexEntry>(_lexEntryRepository, this, i, displayString, id));
 			}
 
 			Db4oLexModelHelper.Singleton.DoNotActivateTypes = OriginalList;
 
-			result.Sort(new RecordTokenComparer(_writingSystem));
+			result.Sort(new RecordTokenComparer<LexEntry>(_writingSystem));
 			return result;
 		}
 	}

@@ -14,18 +14,18 @@ namespace WeSay.LexicalTools
 {
 	public partial class MissingInfoControl: UserControl
 	{
-		private readonly BindingList<RecordToken> _completedRecords;
-		private readonly BindingList<RecordToken> _todoRecords;
-		private RecordToken _currentRecord;
-		private RecordToken _previousRecord;
-		private RecordToken _nextRecord;
+		private readonly BindingList<RecordToken<LexEntry>> _completedRecords;
+		private readonly BindingList<RecordToken<LexEntry>> _todoRecords;
+		private RecordToken<LexEntry> _currentRecord;
+		private RecordToken<LexEntry> _previousRecord;
+		private RecordToken<LexEntry> _nextRecord;
 
 		private readonly LexEntryRepository _lexEntryRepository;
 		private readonly ViewTemplate _viewTemplate;
 		private readonly Predicate<LexEntry> _isNotComplete;
 		public event EventHandler SelectedIndexChanged;
 
-		public MissingInfoControl(List<RecordToken> records,
+		public MissingInfoControl(List<RecordToken<LexEntry>> records,
 								  ViewTemplate viewTemplate,
 								  Predicate<LexEntry> isNotComplete,
 								  LexEntryRepository lexEntryRepository)
@@ -60,8 +60,8 @@ namespace WeSay.LexicalTools
 				return;
 			}
 
-			_completedRecords = new BindingList<RecordToken>();
-			_todoRecords = new BindingList<RecordToken>(records);
+			_completedRecords = new BindingList<RecordToken<LexEntry>>();
+			_todoRecords = new BindingList<RecordToken<LexEntry>>(records);
 
 			_lexEntryRepository = lexEntryRepository;
 			_viewTemplate = viewTemplate;
@@ -354,7 +354,7 @@ namespace WeSay.LexicalTools
 		/// Sets current record as selected in record list or completed record list
 		/// </summary>
 		/// <value>null if record list is empty</value>
-		public RecordToken CurrentRecord
+		public RecordToken<LexEntry> CurrentRecord
 		{
 			get { return _currentRecord; }
 			private set

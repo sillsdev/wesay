@@ -277,10 +277,10 @@ namespace WeSay.LexicalTools.Tests
 	   [Test]
 	   public void AddWordASecondTime_DoesNothing()
 	   {
-		   RecordToken token = PrepareEntryWithOneGloss();
-		   RecordToken token2 = PrepareEntryWithOneGloss();
-		   LexEntry entry = _lexEntryRepository.GetItem(token);
-		   LexEntry entry2 = _lexEntryRepository.GetItem(token2);
+		   RecordToken<LexEntry> token = PrepareEntryWithOneGloss();
+		   RecordToken<LexEntry> token2 = PrepareEntryWithOneGloss();
+		   LexEntry entry = token.RealObject;
+		   LexEntry entry2 = token2.RealObject;
 		   Assert.AreSame(entry, entry2);
 
 		   Assert.AreEqual(1, entry.Senses.Count);
@@ -312,7 +312,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void RemovingGlossFromEmptyEntry_RemovesEntry()
 		{
-			RecordToken token = PrepareEntryWithOneGloss();
+			RecordToken<LexEntry> token = PrepareEntryWithOneGloss();
 
 			//now simulate removing it, as when the user wants to correct spelling
 			Task.TryToRemoveAssociationWithListWordFromEntry(token);
@@ -326,7 +326,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void RemovingGlossFromEntryWithOtherSenses_OnlyRemovesGloss()
 		{
-			RecordToken token = PrepareEntryWithOneGloss();
+			RecordToken<LexEntry> token = PrepareEntryWithOneGloss();
 			//now tweak the entry
 			LexEntry entry = _lexEntryRepository.GetItem(token);
 			LexSense leaveAloneSense = (LexSense)entry.Senses.AddNew();
@@ -346,7 +346,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void RemovingAssociationWith_OnlyRemovesGloss()
 		{
-			RecordToken token = PrepareEntryWithOneGloss();
+			RecordToken<LexEntry> token = PrepareEntryWithOneGloss();
 			//now tweak the entry
 			LexEntry entry = _lexEntryRepository.GetItem(token);
 			LexSense leaveAloneSense = (LexSense)entry.Senses.AddNew();
@@ -366,7 +366,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void RemovingAssociationWhereSenseHasExample_DoesNothing()
 		{
-			RecordToken token = PrepareEntryWithOneGloss();
+			RecordToken<LexEntry> token = PrepareEntryWithOneGloss();
 			//now tweak the entry
 			LexEntry entry = _lexEntryRepository.GetItem(token);
 			LexSense sense = (LexSense)entry.Senses[0];
@@ -380,7 +380,7 @@ namespace WeSay.LexicalTools.Tests
 			Assert.AreEqual("one", sense.Gloss.GetExactAlternative(_glossingLanguageWSId), "should not remove the gloss");
 		}
 
-		private RecordToken PrepareEntryWithOneGloss()
+		private RecordToken<LexEntry> PrepareEntryWithOneGloss()
 		{
 			Task.NavigateAbsoluteFirst();
 			MultiText word = new MultiText();
@@ -389,7 +389,7 @@ namespace WeSay.LexicalTools.Tests
 			Task.WordCollected(word);
 			Assert.AreEqual(1, _lexEntryRepository.GetEntriesWithMatchingLexicalForm("uno", VernWs).Count);
 
-			IList<RecordToken> entries = _lexEntryRepository.GetEntriesWithMatchingLexicalForm("uno", VernWs);
+			IList<RecordToken<LexEntry>> entries = _lexEntryRepository.GetEntriesWithMatchingLexicalForm("uno", VernWs);
 
 			return entries[0];
 		}

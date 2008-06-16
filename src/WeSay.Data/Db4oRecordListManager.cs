@@ -89,7 +89,7 @@ namespace WeSay.Data
 			get { return this._filteredRecordLists; }
 		}
 
-		public List<RecordToken> GetSortedList<T>(ISortHelper<T> sortHelper) where T : class, new()
+		public List<RecordToken<T>> GetSortedList<T>(ISortHelper<T> sortHelper) where T : class, new()
 		{
 			if (sortHelper == null)
 			{
@@ -98,9 +98,9 @@ namespace WeSay.Data
 			//string recordListKey = RecordListKey<T>(null, sortHelper.Name);
 			//if (!RecordLists.ContainsKey(recordListKey))
 			{
-				List<RecordToken> recordTokens = sortHelper.GetRecordTokensForMatchingRecords();
+				List<RecordToken<T>> recordTokens = sortHelper.RetrieveItems();
 
-				recordTokens.Sort(new RecordTokenComparer(sortHelper.KeyComparer));
+				recordTokens.Sort(new RecordTokenComparer<T>(sortHelper.KeyComparer));
 				return recordTokens;
 
 //                RecordLists.Add(recordListKey, recordTokens);
@@ -213,7 +213,7 @@ namespace WeSay.Data
 			private void Sort()
 			{
 				int oldCount = Count;
-				IList<RecordToken> sortedList = _recordListManager.GetSortedList(_sortHelper);
+				IList<RecordToken<T>> sortedList = _recordListManager.GetSortedList(_sortHelper);
 
 				((Db4oList<T>)Records).ItemIds.Sort(new IdListComparer(sortedList));
 				Debug.Assert(oldCount == Count);
@@ -224,7 +224,7 @@ namespace WeSay.Data
 			{
 				private readonly Dictionary<long, int> _mapIdToIndex;
 
-				public IdListComparer(IList<RecordToken> baseList)
+				public IdListComparer(IList<RecordToken<T>> baseList)
 				{
 					_mapIdToIndex = new Dictionary<long, int>(baseList.Count);
 					for(int i = 0; i < baseList.Count;++i)

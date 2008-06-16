@@ -232,9 +232,9 @@ namespace WeSay.LexicalTools
 			return LexEntryRepository.CountAllEntries();
 		}
 
-		public List<RecordToken> GetFilteredData()
+		public List<RecordToken<LexEntry>> GetFilteredData()
 		{
-			List<RecordToken> data =
+			List<RecordToken<LexEntry>> data =
 					LexEntryRepository.GetEntriesMatchingFilterSortedByLexicalUnit(
 						_filter,
 						_writingSystem);

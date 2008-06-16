@@ -208,7 +208,7 @@ namespace WeSay.LexicalTools
 		private void AddSenseToLexicon(MultiText lexemeForm, LexSense sense)
 		{
 			//review: the desired semantics of this find are unclear, if we have more than one ws
-			IList<RecordToken> entriesWithSameForm =
+			IList<RecordToken<LexEntry>> entriesWithSameForm =
 					LexEntryRepository.GetEntriesWithMatchingLexicalForm(
 							lexemeForm[_lexicalUnitWritingSystem.Id],
 							_lexicalUnitWritingSystem);
@@ -282,7 +282,7 @@ namespace WeSay.LexicalTools
 			CurrentIndexIntoWordlist = 0;
 		}
 
-		public List<RecordToken> GetMatchingRecords()
+		public List<RecordToken<LexEntry>> GetMatchingRecords()
 		{
 			return LexEntryRepository.GetEntriesWithMatchingGlossSortedByLexicalForm(CurrentWordAsMultiText.Find(_writingSystemIdForWordListWords), _lexicalUnitWritingSystem);
 		}
@@ -299,7 +299,7 @@ namespace WeSay.LexicalTools
 		/// <summary>
 		/// Removes the sense (if otherwise empty) and deletes the entry if it has no reason left to live
 		/// </summary>
-		public void TryToRemoveAssociationWithListWordFromEntry(RecordToken recordToken)
+		public void TryToRemoveAssociationWithListWordFromEntry(RecordToken<LexEntry> recordToken)
 		{
 
 			// have to iterate through these in reverse order

@@ -1,12 +1,12 @@
 using System.Collections.Generic;
 using WeSay.Data;
 
-namespace WeSay.LexicalModel
+namespace WeSay.Data
 {
 	public interface IQuery<T>
 	{
 		//bool Matches(T item);
 		IEnumerable<string> GetDisplayStrings(T item);
-		List<RecordToken> RetrieveItems();
+		List<RecordToken<T>> RetrieveItems();
 	}
 }

@@ -73,7 +73,7 @@ namespace WeSay.App.Services
 				}
 				WritingSystem ws = _project.WritingSystems[writingSystemId];
 
-				IList<RecordToken> matches;
+				IList<RecordToken<LexEntry>> matches;
 				switch (method)
 				{
 					case FindMethods.Exact:
@@ -93,9 +93,9 @@ namespace WeSay.App.Services
 				r.ids = new string[matches.Count];
 				r.forms = new string[matches.Count];
 				int i = 0;
-				foreach (RecordToken token in matches)
+				foreach (RecordToken<LexEntry> token in matches)
 				{
-					LexEntry entry = _lexEntryRepository.GetItem(token);
+					LexEntry entry = token.RealObject;
 					if (i == _maxNumberOfEntriesToReturn)
 					{
 						break;

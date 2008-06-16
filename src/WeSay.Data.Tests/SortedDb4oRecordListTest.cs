@@ -9,60 +9,60 @@ using WeSay.Data.Tests.IEnumerableTests;
 
 namespace WeSay.Data.Tests
 {
-	class TestSortHelper : ISortHelper<SimpleIntTestClass>
-	{
-		IExtObjectContainer _database;
-		public TestSortHelper(IExtObjectContainer database)
-		{
-			if (database == null)
-			{
-				throw new ArgumentNullException();
-			}
-			_database = database;
-		}
-		#region IDb4oSortHelper<int,SimpleIntTestClass> Members
+	//class TestSortHelper : ISortHelper<SimpleIntTestClass>
+	//{
+	//    IExtObjectContainer _database;
+	//    public TestSortHelper(IExtObjectContainer database)
+	//    {
+	//        if (database == null)
+	//        {
+	//            throw new ArgumentNullException();
+	//        }
+	//        _database = database;
+	//    }
+	//    #region IDb4oSortHelper<int,SimpleIntTestClass> Members
 
-		public IComparer<string> KeyComparer
-		{
-			get
-			{
-				return Comparer<string>.Default;
-			}
-		}
+	//    public IComparer<string> KeyComparer
+	//    {
+	//        get
+	//        {
+	//            return Comparer<string>.Default;
+	//        }
+	//    }
 
-		public List<RecordToken> GetRecordTokensForMatchingRecords()
-		{
-			IQuery query = _database.Query();
-			query.Constrain(typeof(SimpleIntTestClass));
-			IObjectSet simpleIntTests = query.Execute();
+	//    public List<RecordToken<SimpleIntTestClass>> RetrieveItems()
+	//    {
+	//        IQuery query = _database.Query();
+	//        query.Constrain(typeof(SimpleIntTestClass));
+	//        IObjectSet simpleIntTests = query.Execute();
 
-			List<RecordToken> result = new List<RecordToken>();
+	//        List<RecordToken<SimpleIntTestClass>> result = new List<RecordToken<SimpleIntTestClass>>();
 
-			foreach (SimpleIntTestClass simpleIntTest in simpleIntTests)
-			{
-				result.Add(new RecordToken(simpleIntTest.I.ToString(),
-					new Db4oRepositoryId(_database.GetID(simpleIntTest))));
-			}
+	//        foreach (SimpleIntTestClass simpleIntTest in simpleIntTests)
+	//        {
+	//            result.Add(new RecordToken<SimpleIntTestClass>(simpleIntTest.I.ToString(),
+	//                new Db4oRepositoryId(_database.GetID(simpleIntTest))));
+	//        }
 
-			return result;
-		}
+	//        return result;
+	//    }
 
-		public IEnumerable<string> GetDisplayStrings(SimpleIntTestClass item)
-		{
-			List<string> result = new List<string>();
-			result.Add(item.I.ToString());
-			return result;
-		}
+	//    public IEnumerable<string> GetDisplayStrings(SimpleIntTestClass item)
+	//    {
+	//        List<string> result = new List<string>();
+	//        result.Add(item.I.ToString());
+	//        return result;
+	//    }
 
-		public string Name
-		{
-			get
-			{
-				return "identity";
-			}
-		}
-		#endregion
-	}
+	//    public string Name
+	//    {
+	//        get
+	//        {
+	//            return "identity";
+	//        }
+	//    }
+	//    #endregion
+	//}
 
 	//[TestFixture]
 	//public class CachedSortedDb4oListIEnumerableTests : IEnumerableBaseTest<int>
@@ -391,61 +391,61 @@ namespace WeSay.Data.Tests
 	//}
 
 
-	class TestItemSortHelper : ISortHelper<TestItem>
-	{
-		IExtObjectContainer _database;
-		public TestItemSortHelper(IExtObjectContainer database)
-		{
-			if (database == null)
-			{
-				throw new ArgumentNullException();
-			}
-			_database = database;
-		}
-		#region IDb4oSortHelper<int,TestItem> Members
+	//class TestItemSortHelper : ISortHelper<TestItem>
+	//{
+	//    IExtObjectContainer _database;
+	//    public TestItemSortHelper(IExtObjectContainer database)
+	//    {
+	//        if (database == null)
+	//        {
+	//            throw new ArgumentNullException();
+	//        }
+	//        _database = database;
+	//    }
+	//    #region IDb4oSortHelper<int,TestItem> Members
 
-		public IComparer<string> KeyComparer
-		{
-			get
-			{
-				return Comparer<string>.Default;
-			}
-		}
+	//    public IComparer<string> KeyComparer
+	//    {
+	//        get
+	//        {
+	//            return Comparer<string>.Default;
+	//        }
+	//    }
 
-		public List<RecordToken> GetRecordTokensForMatchingRecords()
-		{
-			IQuery query = _database.Query();
-			query.Constrain(typeof(TestItem));
-			IObjectSet testItems = query.Execute();
+	//    public List<RecordToken<TestItem>> RetrieveItems()
+	//    {
+	//        IQuery query = _database.Query();
+	//        query.Constrain(typeof(TestItem));
+	//        IObjectSet testItems = query.Execute();
 
-			List<RecordToken> result = new List<RecordToken>();
+	//        List<RecordToken<TestItem>> result = new List<RecordToken<TestItem>>();
 
-			foreach (TestItem item in testItems)
-			{
-				foreach (string s in item.StoredList)
-				{
-					result.Add(new RecordToken(s,
-						new Db4oRepositoryId(_database.GetID(item))));
-				}
-			}
+	//        foreach (TestItem item in testItems)
+	//        {
+	//            foreach (string s in item.StoredList)
+	//            {
+	//                result.Add(new RecordToken<TestItem>(s,
+	//                    new Db4oRepositoryId(_database.GetID(item))));
+	//            }
+	//        }
 
-			return result;
-		}
+	//        return result;
+	//    }
 
-		public IEnumerable<string> GetDisplayStrings(TestItem item)
-		{
-			return item.StoredList;
-		}
+	//    public IEnumerable<string> GetDisplayStrings(TestItem item)
+	//    {
+	//        return item.StoredList;
+	//    }
 
-		public string Name
-		{
-			get
-			{
-				return "storedList";
-			}
-		}
-		#endregion
-	}
+	//    public string Name
+	//    {
+	//        get
+	//        {
+	//            return "storedList";
+	//        }
+	//    }
+	//    #endregion
+	//}
 
 	//[TestFixture]
 	//public class SortedDb4oRecordListTestComplexData

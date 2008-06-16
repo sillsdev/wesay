@@ -281,7 +281,7 @@ namespace WeSay.LexicalTools
 				if (_words == null)
 				{
 					_words = new List<string>();
-					List<RecordToken> recordTokens = GetAllEntriesSortedBySemanticDomain();
+					List<RecordToken<LexEntry>> recordTokens = GetAllEntriesSortedBySemanticDomain();
 					int beginIndex;
 					int pastEndIndex;
 					GetWordsIndexes(recordTokens, CurrentDomainIndex, out beginIndex, out pastEndIndex);
@@ -399,7 +399,7 @@ namespace WeSay.LexicalTools
 			}
 			if (lexicalForm != string.Empty)
 			{
-				IList<RecordToken> recordTokens = LexEntryRepository.GetEntriesWithMatchingLexicalForm(lexicalForm, WordWritingSystem);
+				IList<RecordToken<LexEntry>> recordTokens = LexEntryRepository.GetEntriesWithMatchingLexicalForm(lexicalForm, WordWritingSystem);
 				if (recordTokens.Count == 0)
 				{
 					LexEntry entry = LexEntryRepository.CreateItem();
@@ -410,7 +410,7 @@ namespace WeSay.LexicalTools
 				}
 				else
 				{
-					foreach (RecordToken recordToken in recordTokens)
+					foreach (RecordToken<LexEntry> recordToken in recordTokens)
 					{
 						LexEntry entry = LexEntryRepository.GetItem(recordToken);
 						AddCurrentSemanticDomainToEntry(entry);
@@ -433,8 +433,8 @@ namespace WeSay.LexicalTools
 			{
 				// this task was coded to have a list of word-forms, not actual entries.
 				//so we have to go searching for possible matches at this point.
-				IList<RecordToken> matchingEntries = LexEntryRepository.GetEntriesWithMatchingLexicalForm(lexicalForm, WordWritingSystem);
-				foreach (RecordToken recordToken in matchingEntries)
+				IList<RecordToken<LexEntry>> matchingEntries = LexEntryRepository.GetEntriesWithMatchingLexicalForm(lexicalForm, WordWritingSystem);
+				foreach (RecordToken<LexEntry> recordToken in matchingEntries)
 				{
 					DisassociateCurrentSemanticDomainFromEntry(recordToken); // might remove senses
 				}
@@ -489,7 +489,7 @@ namespace WeSay.LexicalTools
 			return true;
 		}
 
-		private void DisassociateCurrentSemanticDomainFromEntry(RecordToken recordToken)
+		private void DisassociateCurrentSemanticDomainFromEntry(RecordToken<LexEntry> recordToken)
 		{
 			// have to iterate through these in reverse order
 			// since they might get modified
@@ -527,11 +527,11 @@ namespace WeSay.LexicalTools
 			LexEntryRepository.SaveItem(entry);
 		}
 
-		private void GetWordsIndexes(List<RecordToken> recordTokens, int domainIndex, out int beginIndex, out int pastEndIndex)
+		private void GetWordsIndexes(List<RecordToken<LexEntry>> recordTokens, int domainIndex, out int beginIndex, out int pastEndIndex)
 		{
 			string domainKey = DomainKeys[domainIndex];
 
-			beginIndex = RecordToken.FindFirstWithDisplayString(recordTokens, domainKey);
+			beginIndex = RecordToken<LexEntry>.FindFirstWithDisplayString(recordTokens, domainKey);
 			if (beginIndex < 0)
 			{
 				pastEndIndex = beginIndex;
@@ -658,7 +658,7 @@ namespace WeSay.LexicalTools
 			_gatherControl = new GatherBySemanticDomainsControl(this);
 		}
 
-		private List<RecordToken> GetAllEntriesSortedBySemanticDomain()
+		private List<RecordToken<LexEntry>> GetAllEntriesSortedBySemanticDomain()
 		{
 			return LexEntryRepository.GetAllEntriesSortedBySemanticDomain(_semanticDomainField.FieldName);
 		}
@@ -683,7 +683,7 @@ namespace WeSay.LexicalTools
 			int remainingCount = DomainKeys.Count;
 
 			string lastDomain = null;
-			foreach (RecordToken token in GetAllEntriesSortedBySemanticDomain())
+			foreach (RecordToken<LexEntry> token in GetAllEntriesSortedBySemanticDomain())
 			{
 				if (token.DisplayString != lastDomain)
 				{

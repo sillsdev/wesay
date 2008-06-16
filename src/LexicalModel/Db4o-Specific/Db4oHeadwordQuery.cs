@@ -13,10 +13,12 @@ namespace WeSay.LexicalModel.Db4o_Specific
 		private readonly Db4oDataSource _db4oData; // for data
 		private readonly WritingSystem _writingSystem;
 		private readonly IHistoricalEntryCountProvider _historicalEntryCountProvider;
+		private readonly LexEntryRepository _repository;
 
-		public Db4oHeadwordQuery(Db4oDataSource ds, WritingSystem writingSystem)
+		public Db4oHeadwordQuery(LexEntryRepository repository, Db4oDataSource ds, WritingSystem writingSystem)
 		{
 			_db4oData = ds;
+			this._repository = repository;
 			_writingSystem = writingSystem;
 
 			_historicalEntryCountProvider =
@@ -41,9 +43,9 @@ namespace WeSay.LexicalModel.Db4o_Specific
 			return keys;
 		}
 
-		public List<RecordToken> RetrieveItems()
+		public List<RecordToken<LexEntry>> RetrieveItems()
 		{
-			List<RecordToken> result = new List<RecordToken>();
+			List<RecordToken<LexEntry>> result = new List<RecordToken<LexEntry>>();
 
 			IObjectSet set = _db4oData.Data.Get(typeof(LexEntry));
 
@@ -52,12 +54,14 @@ namespace WeSay.LexicalModel.Db4o_Specific
 			//and citation form for each entry, and compute the headword.
 			foreach (LexEntry entry in set)
 			{
+				int i = 0;
 				foreach (string key in GetDisplayStrings(entry))
 				{
-					result.Add(new RecordToken(key, new Db4oRepositoryId(_db4oData.Data.Ext().GetID(entry))));
+					result.Add(new RecordToken<LexEntry>(_repository, this, i, key, new Db4oRepositoryId(_db4oData.Data.Ext().GetID(entry))));
+					++i;
 				}
 			}
-			result.Sort(new RecordTokenComparer(StringComparer.Ordinal));
+			result.Sort(new RecordTokenComparer<LexEntry>(StringComparer.Ordinal));
 			return result;
 		}
 	}

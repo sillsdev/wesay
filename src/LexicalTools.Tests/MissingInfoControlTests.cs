@@ -17,7 +17,7 @@ namespace WeSay.LexicalTools.Tests
 	{
 		private LexEntryRepository _lexEntryRepository;
 		private string _filePath;
-		private List<RecordToken> _missingTranslationRecordList;
+		private List<RecordToken<LexEntry>> _missingTranslationRecordList;
 		private ViewTemplate _viewTemplate;
 		private MissingTranslationFilter _missingTranslation;
 		private WritingSystem _writingSystem;

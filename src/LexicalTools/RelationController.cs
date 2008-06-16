@@ -21,7 +21,7 @@ namespace WeSay.LexicalTools
 		private readonly WeSayDataObject _relationParent;
 		private SimpleBinding<string> _binding;
 		private Control _control;
-		private List<RecordToken> _recordTokenList;
+		private List<RecordToken<LexEntry>> _recordTokenList;
 
 		private RelationController(WeSayDataObject relationParent,
 								   LexRelationType relationType,
@@ -132,10 +132,10 @@ namespace WeSay.LexicalTools
 			//TODO: refactor this (sortHelper, pairStringLexEntryIdList, _keyIdMap, GetKeyIdPairFromLexEntry)
 			//      to use ApproximateFinder. Eventually refactor the automcompletetextbox to just take one
 
-			List<RecordToken> recordTokenList = this._lexEntryRepository.GetAllEntriesSortedByLexicalForm(this._field.WritingSystems[0]);
+			List<RecordToken<LexEntry>> recordTokenList = this._lexEntryRepository.GetAllEntriesSortedByLexicalForm(this._field.WritingSystems[0]);
 			this._recordTokenList = recordTokenList;
 
-			AutoCompleteWithCreationBox<RecordToken, string> picker = CreatePicker<RecordToken>(relation);
+			AutoCompleteWithCreationBox<RecordToken<LexEntry>, string> picker = CreatePicker<RecordToken<LexEntry>>(relation);
 			picker.GetKeyValueFromValue = GetRecordTokenFromTargetId;
 			picker.GetValueFromKeyValue = GetTargetIdFromRecordToken;
 
@@ -155,35 +155,36 @@ namespace WeSay.LexicalTools
 		//    return e;
 		//}
 
-		private RecordToken GetRecordTokenFromLexEntry(LexEntry e)
+		private RecordToken<LexEntry> GetRecordTokenFromLexEntry(LexEntry e)
 		{
 			if (e == null)
 			{
 				return null;
 			}
 			RepositoryId id = this._lexEntryRepository.GetId(e);
-			List<RecordToken> recordTokenList = this._lexEntryRepository.GetAllEntriesSortedByLexicalForm(this._field.WritingSystems[0]);
-			return recordTokenList.Find(delegate(RecordToken token)
+			List<RecordToken<LexEntry>> recordTokenList = this._lexEntryRepository.GetAllEntriesSortedByLexicalForm(this._field.WritingSystems[0]);
+			return recordTokenList.Find(delegate(RecordToken<LexEntry> token)
 										{
 											return token.Id == id;
 										});
 		}
 
-		private RecordToken GetRecordTokenFromTargetId(string s) {
+		private RecordToken<LexEntry> GetRecordTokenFromTargetId(string s)
+		{
 			if (s == null)
 			{
 				return null;
 			}
 			LexEntry lexEntry = this._lexEntryRepository.GetLexEntryWithMatchingId(s);
 			RepositoryId id = this._lexEntryRepository.GetId(lexEntry);
-			List<RecordToken> recordTokenList = this._lexEntryRepository.GetAllEntriesSortedByLexicalForm(this._field.WritingSystems[0]);
-			return recordTokenList.Find(delegate (RecordToken token)
+			List<RecordToken<LexEntry>> recordTokenList = this._lexEntryRepository.GetAllEntriesSortedByLexicalForm(this._field.WritingSystems[0]);
+			return recordTokenList.Find(delegate(RecordToken<LexEntry> token)
 										{
 											return token.Id == id;
 										});
 		}
 
-		private string GetTargetIdFromRecordToken(RecordToken e)
+		private string GetTargetIdFromRecordToken(RecordToken<LexEntry> e)
 		{
 			return _lexEntryRepository.GetItem(e).Id;
 		}
@@ -246,7 +247,7 @@ namespace WeSay.LexicalTools
 
 		private object FindRecordTokenFromForm(string form)
 		{
-			int index = RecordToken.FindFirstWithDisplayString(_recordTokenList, form);
+			int index = RecordToken<LexEntry>.FindFirstWithDisplayString(_recordTokenList, form);
 			if (index >= 0)
 			{
 				return _recordTokenList[index];

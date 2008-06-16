@@ -1,10 +1,8 @@
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace WeSay.Data
 {
-	public class RecordTokenComparer : IComparer<RecordToken>
+	public class RecordTokenComparer<T> : IComparer<RecordToken<T>>
 	{
 		private readonly IComparer<string> _keySorter;
 		private bool _ignoreId;
@@ -23,7 +21,7 @@ namespace WeSay.Data
 
 		#region IComparer<RecordToken> Members
 
-		public int Compare(RecordToken x, RecordToken y)
+		public int Compare(RecordToken<T> x, RecordToken<T> y)
 		{
 			int result = _keySorter.Compare(x.DisplayString, y.DisplayString);
 			if (result == 0 && !IgnoreId)

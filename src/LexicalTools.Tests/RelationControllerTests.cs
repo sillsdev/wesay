@@ -189,8 +189,8 @@ namespace WeSay.LexicalTools.Tests
 													delegate { });
 			c.Text = "new";
 
-			AutoCompleteWithCreationBox<RecordToken, string> picker =
-					(AutoCompleteWithCreationBox<RecordToken, string>)c;
+			AutoCompleteWithCreationBox<RecordToken<LexEntry>, string> picker =
+					(AutoCompleteWithCreationBox<RecordToken<LexEntry>, string>)c;
 			picker.CreateNewObjectFromText();
 
 			LexEntry newEntry = _lexEntryRepository.GetLexEntryWithMatchingId(relation.Key);
@@ -211,8 +211,8 @@ namespace WeSay.LexicalTools.Tests
 													delegate { });
 			Form form = new Form();
 			form.Controls.Add(c);
-			AutoCompleteWithCreationBox<RecordToken, string> picker =
-					(AutoCompleteWithCreationBox<RecordToken, string>) c;
+			AutoCompleteWithCreationBox<RecordToken<LexEntry>, string> picker =
+					(AutoCompleteWithCreationBox<RecordToken<LexEntry>, string>)c;
 			picker.Box.Paste("text");
 		}
 

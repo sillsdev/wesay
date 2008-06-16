@@ -64,6 +64,7 @@
 	<Compile Include="Db4oRecordListManager.cs" />
 	<Compile Include="Db4oRepositoryId.cs" />
 	<Compile Include="InMemoryBindingList.cs" />
+	<Compile Include="IRepository.cs" />
 	<Compile Include="ISortHelper.cs" />
 	<Compile Include="Db4oRecordList.cs" />
 	<Compile Include="IFilter.cs" />
@@ -73,6 +74,7 @@
 	<Compile Include="IRecordList.cs" />
 	<Compile Include="IRecordListManager.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />
+	<Compile Include="Query.cs" />
 	<Compile Include="RecordToken.cs" />
 	<Compile Include="RecordTokenComparer.cs" />
 	<Compile Include="RecordTokensBindingListAdapter.cs" />
