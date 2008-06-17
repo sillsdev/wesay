@@ -5,9 +5,9 @@ using System.Collections;
 
 namespace WeSay.Data
 {
-	public class InMemoryBindingList<T> : IBindingList, IEquatable<IBindingList>, IList<T>, ICollection<T>, IEnumerable<T> where T : class, new()
+	public class InMemoryBindingList<T> : IBindingList, IEquatable<IBindingList>, IList<T> where T : class, new()
 	{
-		List<T> _list;
+		readonly List<T> _list;
 		PropertyDescriptor _sortProperty;
 		ListSortDirection _listSortDirection;
 		bool _isSorted;

@@ -3,14 +3,11 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
-using Db4objects.Db4o.Query;
 using LiftIO.Merging;
 using Palaso.Reporting;
 using WeSay.Data;
 using WeSay.Foundation;
 using WeSay.LexicalModel;
-using WeSay.Project;
-
 
 /*  Analysis of what happens to the data when there is a crash
  *              (Note, you can simulate crash by doing shift-pause from a WeSayTextBox)
@@ -36,7 +33,7 @@ namespace WeSay.Project
 		//private const string s_updatePointFileName = "updatePoint";
 		private const int _checkFrequency = 10;
 		private int _commitCount;
-		private LexEntryRepository _lexEntryRepository;
+		private readonly LexEntryRepository _lexEntryRepository;
 		private DateTime _timeOfLastQueryForNewRecords;
 		//private bool _didFindDataInCacheNeedingRecovery = false;
 
@@ -174,16 +171,16 @@ namespace WeSay.Project
 					string contents = File.ReadAllText(error.PathToNewFile);
 					if (contents.Trim().Length == 0)
 					{
-					   Palaso.Reporting.ErrorReport.ReportNonFatalMessage(
+					   ErrorReport.ReportNonFatalMessage(
 							"It looks as though WeSay recently crashed while attempting to save.  It will try again to preserve your work, but you will want to check to make sure nothing was lost.");
 						File.Delete(error.PathToNewFile);
 					}
 					else
 					{
 						File.Move(error.PathToNewFile, error.PathToNewFile + ".bad");
-						Palaso.Reporting.ErrorReport.ReportNonFatalMessage(
+						ErrorReport.ReportNonFatalMessage(
 							"WeSay was unable to save some work you did in the previous session.  The work might be recoverable from the file {0}. The next screen will allow you to send a report of this to the developers.", error.PathToNewFile + ".bad");
-						Palaso.Reporting.ErrorNotificationDialog.ReportException(error, null, false);
+						ErrorNotificationDialog.ReportException(error, null, false);
 					}
 					return false;
 				}
@@ -268,7 +265,7 @@ namespace WeSay.Project
 		{
 			try
 			{
-				if (CacheManager.GetAssumeCacheIsFresh(Project.WeSayWordsProject.Project.PathToCache))
+				if (CacheManager.GetAssumeCacheIsFresh(WeSayWordsProject.Project.PathToCache))
 				{
 					return;// setting permissions in the installer apparently was enough to mess this next line up on the sample data
 				}
@@ -281,25 +278,25 @@ namespace WeSay.Project
 
 				try
 				{
-					Palaso.Reporting.ErrorReport.ReportNonFatalMessage(
+					ErrorReport.ReportNonFatalMessage(
 						"It appears that WeSay did not exit normally last time.  WeSay will now attempt to recover the {0} records which were not saved.",
 						records.Count);
 					DoLiftUpdateNow(false);
 //                    _didFindDataInCacheNeedingRecovery = true;
-					Palaso.Reporting.ErrorReport.ReportNonFatalMessage("Your work was successfully recovered.");
+					ErrorReport.ReportNonFatalMessage("Your work was successfully recovered.");
 				}
 				catch (Exception)
 				{
-					Palaso.Reporting.ErrorReport.ReportNonFatalMessage(
+					ErrorReport.ReportNonFatalMessage(
 						"Sorry, WeSay was unable to recover some of your work.");
-					Project.WeSayWordsProject.Project.InvalidateCacheSilently();
+					WeSayWordsProject.Project.InvalidateCacheSilently();
 				}
 			}
 			catch (Exception)
 			{
-				Palaso.Reporting.ErrorReport.ReportNonFatalMessage(
+				ErrorReport.ReportNonFatalMessage(
 					"WeSay had a problem reading the cache.  It will now be rebuilt");
-				Project.WeSayWordsProject.Project.InvalidateCacheSilently();
+				WeSayWordsProject.Project.InvalidateCacheSilently();
 			}
 		}
 	}

@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using System.Windows.Forms;
 using WeSay.UI;
 using WeSay.UI.Buttons;
@@ -39,9 +38,9 @@ namespace WeSay.LexicalTools
 				//}
 
 
-				if (this.CurrentEntry != null)
+				if (CurrentEntry != null)
 				{
-					this.CurrentEntry.PropertyChanged -= OnCurrentRecordPropertyChanged;
+					CurrentEntry.PropertyChanged -= OnCurrentRecordPropertyChanged;
 				}
 			}
 			if (disposing && (components != null))
