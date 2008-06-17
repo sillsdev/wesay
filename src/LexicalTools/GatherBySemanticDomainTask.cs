@@ -445,7 +445,7 @@ namespace WeSay.LexicalTools
 		{
 			// have to iterate through these in reverse order
 			// since they might get modified
-			LexEntry entry = LexEntryRepository.GetItem(recordToken);
+			LexEntry entry = recordToken.RealObject;
 			for (int i = entry.Senses.Count - 1; i >= 0; i--)
 			{
 				LexSense sense = (LexSense) entry.Senses[i];
