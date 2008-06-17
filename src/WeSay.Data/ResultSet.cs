@@ -5,7 +5,7 @@ using System.ComponentModel;
 
 namespace WeSay.Data
 {
-	public class ResultSet<T> : IEnumerable<RecordToken<T>>
+	public class ResultSet<T> : IEnumerable<RecordToken<T>>, IEnumerable<RepositoryId>
 	{
 		private readonly List<RecordToken<T>> _results;
 		private readonly IRepository<T> _repository;
@@ -239,6 +239,18 @@ namespace WeSay.Data
 		public IEnumerator GetEnumerator()
 		{
 			return ((IEnumerable<RecordToken<T>>) this).GetEnumerator();
+		}
+
+		#endregion
+
+		#region IEnumerable<RepositoryId> Members
+
+		IEnumerator<RepositoryId> IEnumerable<RepositoryId>.GetEnumerator()
+		{
+			foreach (RecordToken<T> recordToken in this)
+			{
+				yield return (recordToken.Id);
+			}
 		}
 
 		#endregion
