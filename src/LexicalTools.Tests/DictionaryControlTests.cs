@@ -496,7 +496,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			TypeInLexicalForm("one");
 			ClickStarOfLexemeForm();
-			IList<RecordToken<LexEntry>> list = _lexEntryRepository.GetAllEntriesSortedByHeadword(_vernacularWritingSystem);
+			ResultSet<LexEntry> list = _lexEntryRepository.GetAllEntriesSortedByHeadword(_vernacularWritingSystem);
 			LexEntry entry = _lexEntryRepository.GetItem(list[0]);
 			Assert.IsTrue(entry.LexicalForm.GetAnnotationOfAlternativeIsStarred(_vernacularWritingSystem.Id));
 		}
@@ -508,7 +508,7 @@ namespace WeSay.LexicalTools.Tests
    //         this._records[0].NotifyPropertyChanged("senses");
 		   // Application.DoEvents();
 			ClickStarOfLexemeForm();
-			IList<RecordToken<LexEntry>> list = _lexEntryRepository.GetAllEntriesSortedByHeadword(_vernacularWritingSystem);
+			ResultSet<LexEntry> list = _lexEntryRepository.GetAllEntriesSortedByHeadword(_vernacularWritingSystem);
 			LexEntry entry = _lexEntryRepository.GetItem(list[0]);
 
 			Assert.IsTrue(entry.LexicalForm.GetAnnotationOfAlternativeIsStarred(_vernacularWritingSystem.Id));

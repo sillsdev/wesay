@@ -73,7 +73,7 @@ namespace WeSay.App.Services
 				}
 				WritingSystem ws = _project.WritingSystems[writingSystemId];
 
-				IList<RecordToken<LexEntry>> matches;
+				ResultSet<LexEntry> matches;
 				switch (method)
 				{
 					case FindMethods.Exact:

@@ -389,7 +389,7 @@ namespace WeSay.LexicalTools.Tests
 			Task.WordCollected(word);
 			Assert.AreEqual(1, _lexEntryRepository.GetEntriesWithMatchingLexicalForm("uno", VernWs).Count);
 
-			IList<RecordToken<LexEntry>> entries = _lexEntryRepository.GetEntriesWithMatchingLexicalForm("uno", VernWs);
+			ResultSet<LexEntry> entries = _lexEntryRepository.GetEntriesWithMatchingLexicalForm("uno", VernWs);
 
 			return entries[0];
 		}

@@ -35,7 +35,7 @@ namespace Addin.Transform
 			LiftExporter exporter = new LiftExporter(path, lexEntryRepository);
 			ViewTemplate template = project.DefaultPrintingTemplate;
 			exporter.SetUpForPresentationLiftExport(template);
-			IList<RecordToken<LexEntry>> recordTokens =
+			ResultSet<LexEntry> recordTokens =
 					lexEntryRepository.GetAllEntriesSortedByHeadword(template.HeadwordWritingSytem);
 			exporter.Add(recordTokens);
 			exporter.End();

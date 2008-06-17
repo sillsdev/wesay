@@ -79,6 +79,7 @@
 	<Compile Include="RecordTokenComparer.cs" />
 	<Compile Include="RecordTokensBindingListAdapter.cs" />
 	<Compile Include="RepositoryId.cs" />
+	<Compile Include="ResultSet.cs" />
   </ItemGroup>
   <ItemGroup>
 	<ProjectReference Include="..\PlatformSpecific\PlatformSpecific.csproj">

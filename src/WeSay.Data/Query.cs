@@ -7,6 +7,6 @@ namespace WeSay.Data
 	{
 		//bool Matches(T item);
 		IEnumerable<string> GetDisplayStrings(T item);
-		List<RecordToken<T>> RetrieveItems();
+		ResultSet<T> RetrieveItems();
 	}
 }

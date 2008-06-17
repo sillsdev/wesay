@@ -208,7 +208,7 @@ namespace WeSay.LexicalTools
 		private void AddSenseToLexicon(MultiText lexemeForm, LexSense sense)
 		{
 			//review: the desired semantics of this find are unclear, if we have more than one ws
-			IList<RecordToken<LexEntry>> entriesWithSameForm =
+			ResultSet<LexEntry> entriesWithSameForm =
 					LexEntryRepository.GetEntriesWithMatchingLexicalForm(
 							lexemeForm[_lexicalUnitWritingSystem.Id],
 							_lexicalUnitWritingSystem);
@@ -282,7 +282,7 @@ namespace WeSay.LexicalTools
 			CurrentIndexIntoWordlist = 0;
 		}
 
-		public List<RecordToken<LexEntry>> GetMatchingRecords()
+		public ResultSet<LexEntry> GetMatchingRecords()
 		{
 			return LexEntryRepository.GetEntriesWithMatchingGlossSortedByLexicalForm(CurrentWordAsMultiText.Find(_writingSystemIdForWordListWords), _lexicalUnitWritingSystem);
 		}

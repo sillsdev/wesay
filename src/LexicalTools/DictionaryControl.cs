@@ -24,7 +24,7 @@ namespace WeSay.LexicalTools
 		private readonly ContextMenu _cmWritingSystems;
 		private WritingSystem _listWritingSystem;
 		private readonly LexEntryRepository _lexEntryRepository;
-		private List<RecordToken<LexEntry>> _records;
+		private ResultSet<LexEntry> _records;
 		private bool _keepRecordCurrent;
 
 		public DictionaryControl()
@@ -233,12 +233,21 @@ namespace WeSay.LexicalTools
 
 		private void OnEntryChanged(object sender, PropertyChangedEventArgs e)
 		{
+			Debug.Assert(CurrentIndex != -1);
 			RecordToken<LexEntry> recordToken = _records[CurrentIndex];
 			if(!recordToken.IsFresh)
 			{
+				recordToken.Refresh();
 				_keepRecordCurrent = true;
 				LoadRecords();
-				int index = this._records.IndexOf(recordToken);
+				int index = this._records.FindFirstIndex(recordToken);
+				//may not have been successful with the refresh of the recordToken
+				// in which case we should just try to go to the first with
+				// the same id
+				if(index < 0)
+				{
+				   index = this._records.FindFirstIndex(recordToken.Id);
+				}
 				Debug.Assert(index != -1);
 				_recordsListBox.SelectedIndex = index;
 				_keepRecordCurrent = false;
@@ -257,7 +266,7 @@ namespace WeSay.LexicalTools
 
 			}
 			_recordsListBox.BeginUpdate();
-			_recordsListBox.DataSource = new BindingList<RecordToken<LexEntry>>(_records);
+			_recordsListBox.DataSource = (BindingList<RecordToken<LexEntry>>)_records;
 			_recordsListBox.EndUpdate();
 		}
 
@@ -336,13 +345,13 @@ namespace WeSay.LexicalTools
 			{
 				throw new NavigationException("Could not find the entry with id " + entryId);
 			}
-			_recordsListBox.SelectedIndex = RecordToken<LexEntry>.IndexOf(_records, entry);
+			_recordsListBox.SelectedIndex = _records.FindFirstIndex(entry);
 		}
 
 		private void SelectItemWithDisplayString(string text)
 		{
 			Logger.WriteMinorEvent("SelectItemWithDisplayString");
-			_recordsListBox.SelectedIndex = RecordToken<LexEntry>.FindFirstWithDisplayString(_records, text);
+			_recordsListBox.SelectedIndex = _records.FindFirstIndexWithDisplayString(text);
 		}
 
 		private void OnRecordSelectionChanged(object sender, EventArgs e)
@@ -423,7 +432,7 @@ namespace WeSay.LexicalTools
 				_btnNewWord.Focus();
 			}
 			LoadRecords();
-			int index = RecordToken<LexEntry>.IndexOf(_records, entry);
+			int index = _records.FindFirstIndex(entry);
 			Debug.Assert(index != -1);
 			_recordsListBox.SelectedIndex = index;
 			OnRecordSelectionChanged(_recordsListBox, new EventArgs());

@@ -111,13 +111,13 @@ namespace WeSay.LexicalModel
 			return new Db4oLexEntryQuery(this, writingSystem, isWritingSystemUsedByLexicalForm);
 		}
 
-		public IList<RecordToken<LexEntry>> GetEntriesWithSimilarLexicalForm(
+		public ResultSet<LexEntry> GetEntriesWithSimilarLexicalForm(
 			string lexicalForm,
 			WritingSystem writingSystem,
 			ApproximateMatcherOptions matcherOptions)
 		{
 			IQuery<LexEntry> query = GetLexEntryQuery(writingSystem, true);
-			List<RecordToken<LexEntry>> recordTokens = query.RetrieveItems();
+			List<RecordToken<LexEntry>> recordTokens = new List<RecordToken<LexEntry>>(query.RetrieveItems());
 
 			// filter out any entries that were added because of other
 			// writing systems (e.g. reversals)
@@ -134,10 +134,10 @@ namespace WeSay.LexicalModel
 				}
 			}
 
-			return ApproximateMatcher.FindClosestForms<RecordToken<LexEntry>>(recordTokens,
+			return new ResultSet<LexEntry>(this, ApproximateMatcher.FindClosestForms<RecordToken<LexEntry>>(recordTokens,
 													GetFormForMatchingStrategy,
 													lexicalForm,
-													matcherOptions);
+													matcherOptions));
 		}
 
 		private static string GetFormForMatchingStrategy(object item)
@@ -145,32 +145,32 @@ namespace WeSay.LexicalModel
 			return ((RecordToken<LexEntry>)item).DisplayString;
 		}
 
-		public List<RecordToken<LexEntry>> GetEntriesMatching(IQuery<LexEntry> query)
+		public ResultSet<LexEntry> GetEntriesMatching(IQuery<LexEntry> query)
 		{
 			throw new NotImplementedException("GetEntriesMatching");
 			// Run the sorted query
-			List<RecordToken<LexEntry>> recordTokens = query.RetrieveItems();
+			ResultSet<LexEntry> recordTokens = query.RetrieveItems();
 			// Apply a filter
 		}
 
-		public List<RecordToken<LexEntry>> GetEntriesWithMatchingLexicalForm(
+		public ResultSet<LexEntry> GetEntriesWithMatchingLexicalForm(
 			string lexicalForm,
 			WritingSystem writingSystem)
 		{
 			// search dictionary for entry with new lexical form
 			IQuery<LexEntry> query = GetLexEntryQuery(writingSystem, true);
-			List<RecordToken<LexEntry>> recordTokens = query.RetrieveItems();
+			ResultSet<LexEntry> recordTokens = query.RetrieveItems();
 
 			// This should probably be optimized by using a specific query
 			List<RecordToken<LexEntry>> result = new List<RecordToken<LexEntry>>();
-			int index = RecordToken<LexEntry>.FindFirstWithDisplayString(recordTokens, lexicalForm);
+			int index = recordTokens.FindFirstIndexWithDisplayString(lexicalForm);
 			while (index >= 0 && index < recordTokens.Count &&
 				   recordTokens[index].DisplayString == lexicalForm)
 			{
 				result.Add(recordTokens[index]);
 				++index;
 			}
-			return result;
+			return new ResultSet<LexEntry>(this, result);
 		}
 		public RecordTokenComparer<LexEntry> GetRecordTokenComparerForLexicalForm(WritingSystem writingSystem)
 		{
@@ -181,7 +181,7 @@ namespace WeSay.LexicalModel
 			//return new RecordTokenComparer(sortHelper.KeyComparer);
 		}
 
-		public IList<RecordToken<LexEntry>> GetAllEntriesSortedByHeadword(WritingSystem headwordWritingSystem)
+		public ResultSet<LexEntry> GetAllEntriesSortedByHeadword(WritingSystem headwordWritingSystem)
 		{
 			IQuery<LexEntry> query = new Db4oHeadwordQuery(this, Db4oDataSource, headwordWritingSystem);
 			return query.RetrieveItems();
@@ -209,7 +209,7 @@ namespace WeSay.LexicalModel
 		public int GetHomographNumber(LexEntry entry, WritingSystem headwordWritingSystem)
 		{
 			IQuery<LexEntry> query = new Db4oHeadwordQuery(this, Db4oDataSource, headwordWritingSystem);
-			List<RecordToken<LexEntry>> recordTokensSortedByHeadWord = query.RetrieveItems();
+			ResultSet<LexEntry> recordTokensSortedByHeadWord = query.RetrieveItems();
 			RepositoryId databaseIdOfEntry = GetId(entry);
 			// find our position within the sorted list of entries
 			int ourIndex = -1;
@@ -317,7 +317,7 @@ namespace WeSay.LexicalModel
 		}
 		#endregion
 
-		public List<RecordToken<LexEntry>> GetAllEntriesSortedByLexicalForm(WritingSystem writingSystem)
+		public ResultSet<LexEntry> GetAllEntriesSortedByLexicalForm(WritingSystem writingSystem)
 		{
 			List<RecordToken<LexEntry>> list = KeyToEntryIdInitializer.GetLexicalFormToEntryIdPairs(this,
 										 GetLexEntryQuery(writingSystem, true),
@@ -325,7 +325,7 @@ namespace WeSay.LexicalModel
 										writingSystem.Id);
 
 			list.Sort(new RecordTokenComparer<LexEntry>(writingSystem));
-			return list;
+			return new ResultSet<LexEntry>(this, list);
 		}
 		internal RepositoryId[] GetAllEntries()
 		{
@@ -344,10 +344,10 @@ namespace WeSay.LexicalModel
 			return ids;
 		}
 
-		public List<RecordToken<LexEntry>> GetAllEntriesSortedBySemanticDomain(string fieldName)
+		public ResultSet<LexEntry> GetAllEntriesSortedBySemanticDomain(string fieldName)
 		{
 			SemanticDomainSortHelper sortHelper = new SemanticDomainSortHelper(this, _recordListManager.DataSource, fieldName);
-			return _recordListManager.GetSortedList(sortHelper);
+			return new ResultSet<LexEntry>(this, _recordListManager.GetSortedList(sortHelper));
 		}
 		public RecordTokenComparer<LexEntry> GetRecordTokenComparerForSemanticDomain(string fieldName)
 		{
@@ -356,7 +356,7 @@ namespace WeSay.LexicalModel
 		}
 
 
-		public List<RecordToken<LexEntry>> GetEntriesWithMatchingGlossSortedByLexicalForm(LanguageForm glossForm, WritingSystem lexicalUnitWritingSystem)
+		public ResultSet<LexEntry> GetEntriesWithMatchingGlossSortedByLexicalForm(LanguageForm glossForm, WritingSystem lexicalUnitWritingSystem)
 		{
 			IQuery<LexEntry> query = GetLexEntryQuery(lexicalUnitWritingSystem, true);
 
@@ -378,7 +378,7 @@ namespace WeSay.LexicalModel
 					}
 				}
 			}
-			return matches;
+			return new ResultSet<LexEntry>(this, matches);
 		}
 		public LexEntry GetLexEntryWithMatchingGuid(Guid guid)
 		{
@@ -398,7 +398,7 @@ namespace WeSay.LexicalModel
 			return (LexEntry)matches[0];
 		}
 
-		public List<RecordToken<LexEntry>> GetAllEntriesSortedByGloss(WritingSystem writingSystem)
+		public ResultSet<LexEntry> GetAllEntriesSortedByGloss(WritingSystem writingSystem)
 		{
 			IQuery<LexEntry> query = GetLexEntryQuery(writingSystem, false);
 			return query.RetrieveItems();
@@ -478,9 +478,9 @@ namespace WeSay.LexicalModel
 				}
 			}
 
-			public List<RecordToken<LexEntry>> RetrieveItems()
+			public ResultSet<LexEntry> RetrieveItems()
 			{
-				return KeyToEntryIdInitializer.GetKeyToEntryIdPairs(_repository, this, _db4oData, GetDisplayStrings);
+				return new ResultSet<LexEntry>(_repository, KeyToEntryIdInitializer.GetKeyToEntryIdPairs(_repository, this, _db4oData, GetDisplayStrings));
 			}
 
 			public IEnumerable<string> GetDisplayStrings(LexEntry item)

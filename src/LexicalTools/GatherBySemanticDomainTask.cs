@@ -9,7 +9,6 @@ using WeSay.Foundation;
 using WeSay.Foundation.Options;
 using WeSay.Language;
 using WeSay.LexicalModel;
-using WeSay.LexicalModel.Db4o_Specific;
 using WeSay.Project;
 
 namespace WeSay.LexicalTools
@@ -281,7 +280,7 @@ namespace WeSay.LexicalTools
 				if (_words == null)
 				{
 					_words = new List<string>();
-					List<RecordToken<LexEntry>> recordTokens = GetAllEntriesSortedBySemanticDomain();
+					ResultSet<LexEntry> recordTokens = GetAllEntriesSortedBySemanticDomain();
 					int beginIndex;
 					int pastEndIndex;
 					GetWordsIndexes(recordTokens, CurrentDomainIndex, out beginIndex, out pastEndIndex);
@@ -399,7 +398,7 @@ namespace WeSay.LexicalTools
 			}
 			if (lexicalForm != string.Empty)
 			{
-				IList<RecordToken<LexEntry>> recordTokens = LexEntryRepository.GetEntriesWithMatchingLexicalForm(lexicalForm, WordWritingSystem);
+				ResultSet<LexEntry> recordTokens = LexEntryRepository.GetEntriesWithMatchingLexicalForm(lexicalForm, WordWritingSystem);
 				if (recordTokens.Count == 0)
 				{
 					LexEntry entry = LexEntryRepository.CreateItem();
@@ -412,8 +411,7 @@ namespace WeSay.LexicalTools
 				{
 					foreach (RecordToken<LexEntry> recordToken in recordTokens)
 					{
-						LexEntry entry = LexEntryRepository.GetItem(recordToken);
-						AddCurrentSemanticDomainToEntry(entry);
+						AddCurrentSemanticDomainToEntry(recordToken.RealObject);
 					}
 				}
 			}
@@ -433,7 +431,7 @@ namespace WeSay.LexicalTools
 			{
 				// this task was coded to have a list of word-forms, not actual entries.
 				//so we have to go searching for possible matches at this point.
-				IList<RecordToken<LexEntry>> matchingEntries = LexEntryRepository.GetEntriesWithMatchingLexicalForm(lexicalForm, WordWritingSystem);
+				ResultSet<LexEntry> matchingEntries = LexEntryRepository.GetEntriesWithMatchingLexicalForm(lexicalForm, WordWritingSystem);
 				foreach (RecordToken<LexEntry> recordToken in matchingEntries)
 				{
 					DisassociateCurrentSemanticDomainFromEntry(recordToken); // might remove senses
@@ -527,11 +525,11 @@ namespace WeSay.LexicalTools
 			LexEntryRepository.SaveItem(entry);
 		}
 
-		private void GetWordsIndexes(List<RecordToken<LexEntry>> recordTokens, int domainIndex, out int beginIndex, out int pastEndIndex)
+		private void GetWordsIndexes(ResultSet<LexEntry> recordTokens, int domainIndex, out int beginIndex, out int pastEndIndex)
 		{
 			string domainKey = DomainKeys[domainIndex];
 
-			beginIndex = RecordToken<LexEntry>.FindFirstWithDisplayString(recordTokens, domainKey);
+			beginIndex = recordTokens.FindFirstIndexWithDisplayString(domainKey);
 			if (beginIndex < 0)
 			{
 				pastEndIndex = beginIndex;
@@ -658,7 +656,7 @@ namespace WeSay.LexicalTools
 			_gatherControl = new GatherBySemanticDomainsControl(this);
 		}
 
-		private List<RecordToken<LexEntry>> GetAllEntriesSortedBySemanticDomain()
+		private ResultSet<LexEntry> GetAllEntriesSortedBySemanticDomain()
 		{
 			return LexEntryRepository.GetAllEntriesSortedBySemanticDomain(_semanticDomainField.FieldName);
 		}

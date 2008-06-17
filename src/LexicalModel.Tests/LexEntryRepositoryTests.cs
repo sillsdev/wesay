@@ -51,7 +51,7 @@ namespace WeSay.LexicalModel.Tests
 			MakeTestLexEntry("v","foo3");
 			WritingSystem ws = new WritingSystem("v", SystemFonts.DefaultFont);
 
-			IList<RecordToken<LexEntry>> matches = _lexEntryRepository.GetEntriesWithSimilarLexicalForm("foo", ws, ApproximateMatcherOptions.IncludePrefixedForms);
+			ResultSet<LexEntry> matches = _lexEntryRepository.GetEntriesWithSimilarLexicalForm("foo", ws, ApproximateMatcherOptions.IncludePrefixedForms);
 			Assert.AreEqual(2, matches.Count);
 			Assert.AreNotEqual(entryInOtherWritingSystem, matches[1].DisplayString);
 		}
@@ -68,7 +68,7 @@ namespace WeSay.LexicalModel.Tests
 			_lexEntryRepository.Db4oDataSource.Data.Set(new LanguageForm("en", "findme", new MultiText()));
 			CycleDatabase();
 			WritingSystem writingSystem = new WritingSystem("en", SystemFonts.DefaultFont);
-			List<RecordToken<LexEntry>> list = _lexEntryRepository.GetEntriesWithMatchingLexicalForm("findme", writingSystem);
+			ResultSet<LexEntry> list = _lexEntryRepository.GetEntriesWithMatchingLexicalForm("findme", writingSystem);
 			Assert.AreEqual(1, list.Count);
 		}
 
@@ -131,7 +131,7 @@ namespace WeSay.LexicalModel.Tests
 			_lexEntryRepository.Db4oDataSource.Data.Set(glossLanguageForm);
 
 			WritingSystem writingSystem = new WritingSystem("en", SystemFonts.DefaultFont);
-			List<RecordToken<LexEntry>> list = _lexEntryRepository.GetEntriesWithMatchingGlossSortedByLexicalForm(glossLanguageForm, writingSystem);
+			ResultSet<LexEntry> list = _lexEntryRepository.GetEntriesWithMatchingGlossSortedByLexicalForm(glossLanguageForm, writingSystem);
 			Assert.AreEqual(1, list.Count);
 		}
 
@@ -233,7 +233,7 @@ namespace WeSay.LexicalModel.Tests
 			_lexEntryRepository.SaveItem(e3);
 			RepositoryId xaId = _lexEntryRepository.GetId(e3);
 
-			IList<RecordToken<LexEntry>> list = _lexEntryRepository.GetAllEntriesSortedByHeadword(_headwordWritingSystem);
+			ResultSet<LexEntry> list = _lexEntryRepository.GetAllEntriesSortedByHeadword(_headwordWritingSystem);
 
 			Assert.AreEqual(3, list.Count);
 			Assert.AreEqual(appleId, list[0].Id);

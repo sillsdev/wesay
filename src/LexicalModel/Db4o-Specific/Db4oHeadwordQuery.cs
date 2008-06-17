@@ -43,7 +43,7 @@ namespace WeSay.LexicalModel.Db4o_Specific
 			return keys;
 		}
 
-		public List<RecordToken<LexEntry>> RetrieveItems()
+		public ResultSet<LexEntry> RetrieveItems()
 		{
 			List<RecordToken<LexEntry>> result = new List<RecordToken<LexEntry>>();
 
@@ -62,7 +62,7 @@ namespace WeSay.LexicalModel.Db4o_Specific
 				}
 			}
 			result.Sort(new RecordTokenComparer<LexEntry>(StringComparer.Ordinal));
-			return result;
+			return new ResultSet<LexEntry>(_repository, result);
 		}
 	}
 }

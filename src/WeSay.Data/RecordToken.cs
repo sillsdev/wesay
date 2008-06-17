@@ -1,11 +1,10 @@
 using System;
-using System.Collections.Generic;
 
 namespace WeSay.Data
 {
 	public class RecordToken<T>: IEquatable<RecordToken<T>>
 	{
-		private readonly string _displayString;
+		private string _displayString;
 		private readonly RepositoryId _id;
 		private readonly IRepository<T> _repository;
 		private readonly IQuery<T> _query;
@@ -53,20 +52,40 @@ namespace WeSay.Data
 
 		public bool IsFresh
 		{
-			get {
-				int i = 0;
-				foreach (string displayString in this._query.GetDisplayStrings(RealObject))
-				{
-					if (i == this._index)
-					{
-						return DisplayString == displayString;
-					}
-					++i;
-				}
-				return false;
+			get
+			{
+				return DisplayString == GetRefreshedDisplayStringForObject();
 			}
 		}
 
+		/// <summary>
+		/// Attempts to freshen the display string when activity on the object
+		/// may have changed it. This is not guaranteed to make the recordtoken
+		/// fresh. (A record may have two recordtokens associated with it but after editing
+		/// only have one. The second is stale no matter how much refreshing happens.)
+		/// </summary>
+		public void Refresh()
+		{
+			string refreshedDisplayStringForObject = GetRefreshedDisplayStringForObject();
+			if (refreshedDisplayStringForObject != null)
+			{
+				this._displayString = refreshedDisplayStringForObject;
+			}
+		}
+
+		private string GetRefreshedDisplayStringForObject()
+		{
+			int i = 0;
+			foreach (string displayString in this._query.GetDisplayStrings(RealObject))
+			{
+				if (i == this._index)
+				{
+					return displayString;
+				}
+				++i;
+			}
+			return null;
+		}
 
 		// proxy object
 		public T RealObject
@@ -77,13 +96,6 @@ namespace WeSay.Data
 			}
 		}
 
-		public static int FindFirstWithDisplayString(List<RecordToken<T>> recordTokens, string displayString)
-		{
-			return recordTokens.FindIndex(delegate (RecordToken<T> r)
-							  { return r.DisplayString == displayString; });
-			// todo This could be a binary search. We need our own search so that
-			// we find the first element. The .net BinarySearch finds any, not the first.
-		}
 
 		public static bool operator !=(RecordToken<T> recordToken1, RecordToken<T> recordToken2)
 		{
@@ -117,48 +129,5 @@ namespace WeSay.Data
 		{
 			return _displayString.GetHashCode() + 29 * _id.GetHashCode();
 		}
-
-		public static int IndexOf(List<RecordToken<T>> records, T item, int index, int count)
-		{
-			if(index < 0 || index >= records.Count)
-			{
-				throw new ArgumentOutOfRangeException("index");
-			}
-
-			if(index + count > records.Count)
-			{
-				throw new ArgumentOutOfRangeException("count");
-			}
-
-			RepositoryId id = null;
-			if (records.Count > 0)
-			{
-				id = records[0]._repository.GetId(item);
-			}
-
-			for(int i = index; i < index + count; ++i)
-			{
-				if(records[i].Id == id)
-				{
-					return i;
-				}
-			}
-			return -1;
-		}
-
-		public static int IndexOf(List<RecordToken<T>> records, T item)
-		{
-			if(records.Count == 0)
-			{
-				return -1;
-			}
-			return IndexOf(records, item, 0, records.Count);
-		}
-
-		public static int IndexOf(List<RecordToken<T>> records, T item, int index)
-		{
-			return IndexOf(records, item, index, records.Count-index);
-		}
-
 	}
 }

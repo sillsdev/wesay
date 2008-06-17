@@ -98,7 +98,7 @@ namespace WeSay.Data
 			//string recordListKey = RecordListKey<T>(null, sortHelper.Name);
 			//if (!RecordLists.ContainsKey(recordListKey))
 			{
-				List<RecordToken<T>> recordTokens = sortHelper.RetrieveItems();
+				List<RecordToken<T>> recordTokens = new List<RecordToken<T>>(sortHelper.RetrieveItems());
 
 				recordTokens.Sort(new RecordTokenComparer<T>(sortHelper.KeyComparer));
 				return recordTokens;

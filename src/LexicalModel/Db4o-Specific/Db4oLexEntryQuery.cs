@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
 using Db4objects.Db4o;
 using Db4objects.Db4o.Ext;
 using Db4objects.Db4o.Query;
@@ -100,14 +99,13 @@ namespace WeSay.LexicalModel.Db4o_Specific
 			return keys.Keys;
 		}
 
-		public List<RecordToken<LexEntry>> RetrieveItems()
+		public ResultSet<LexEntry> RetrieveItems()
 		{
 			if (_lexEntryRepository != null)
 			{
 				if (_isWritingSystemIdUsedByLexicalForm)
 				{
-					return GetAllEntriesSortedByLexicalForm();
-					return _lexEntryRepository.GetAllEntriesSortedByLexicalForm(_writingSystem);
+					return new ResultSet<LexEntry>(_lexEntryRepository, GetAllEntriesSortedByLexicalForm());
 				}
 				else
 				{
@@ -130,7 +128,7 @@ namespace WeSay.LexicalModel.Db4o_Specific
 							++i;
 						}
 					}
-					return tokens;
+					return new ResultSet<LexEntry>(_lexEntryRepository, tokens);
 				}
 			}
 			throw new InvalidOperationException();
