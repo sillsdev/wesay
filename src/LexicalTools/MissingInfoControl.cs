@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows.Forms;
@@ -25,7 +24,7 @@ namespace WeSay.LexicalTools
 		private readonly Predicate<LexEntry> _isNotComplete;
 		public event EventHandler SelectedIndexChanged;
 
-		public MissingInfoControl(List<RecordToken<LexEntry>> records,
+		public MissingInfoControl(ResultSet<LexEntry> records,
 								  ViewTemplate viewTemplate,
 								  Predicate<LexEntry> isNotComplete,
 								  LexEntryRepository lexEntryRepository)
@@ -61,7 +60,7 @@ namespace WeSay.LexicalTools
 			}
 
 			_completedRecords = new BindingList<RecordToken<LexEntry>>();
-			_todoRecords = new BindingList<RecordToken<LexEntry>>(records);
+			_todoRecords = (BindingList<RecordToken<LexEntry>>)records;
 
 			_lexEntryRepository = lexEntryRepository;
 			_viewTemplate = viewTemplate;
@@ -361,9 +360,9 @@ namespace WeSay.LexicalTools
 			{
 				if (_currentRecord != value)
 				{
-					if (this.CurrentEntry != null)
+					if (CurrentEntry != null)
 					{
-						this.CurrentEntry.PropertyChanged -= OnCurrentRecordPropertyChanged;
+						CurrentEntry.PropertyChanged -= OnCurrentRecordPropertyChanged;
 					}
 
 					_currentRecord = value;
@@ -373,9 +372,9 @@ namespace WeSay.LexicalTools
 					}
 					else
 					{
-						this._currentEntry = this._lexEntryRepository.GetItem(this._currentRecord);
-						this.CurrentEntry.PropertyChanged += OnCurrentRecordPropertyChanged;
-						_entryViewControl.DataSource = this.CurrentEntry;
+						CurrentEntry = this._lexEntryRepository.GetItem(this._currentRecord);
+						CurrentEntry.PropertyChanged += OnCurrentRecordPropertyChanged;
+						_entryViewControl.DataSource = CurrentEntry;
 						_congratulationsControl.Hide();
 					}
 				}
@@ -385,6 +384,10 @@ namespace WeSay.LexicalTools
 		public LexEntry CurrentEntry
 		{
 			get { return this._currentEntry; }
+			private set
+			{
+				_currentEntry = value;
+			}
 		}
 
 		//private void OnRecordsListChanged(object sender, ListChangedEventArgs e)
@@ -413,8 +416,8 @@ namespace WeSay.LexicalTools
 
 		private void OnCurrentRecordPropertyChanged(object sender, PropertyChangedEventArgs e)
 		{
-			Debug.Assert(sender == this.CurrentEntry);
-			if (_isNotComplete(this.CurrentEntry))
+			Debug.Assert(sender == CurrentEntry);
+			if (_isNotComplete(CurrentEntry))
 			{
 				if (_completedRecords.Contains(_currentRecord))
 				{

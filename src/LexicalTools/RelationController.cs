@@ -138,8 +138,7 @@ namespace WeSay.LexicalTools
 			picker.GetKeyValueFromValue = GetRecordTokenFromTargetId;
 			picker.GetValueFromKeyValue = GetTargetIdFromRecordToken;
 
-			picker.Box.ItemDisplayStringAdaptor =
-					new PairStringLexEntryIdDisplayProvider(this._lexEntryRepository);
+			picker.Box.ItemDisplayStringAdaptor = new PairStringLexEntryIdDisplayProvider();
 			picker.Box.FormToObectFinder = FindRecordTokenFromForm;
 			picker.Box.ItemFilterer = FindClosestAndNextClosestAndPrefixedPairStringLexEntryForms;
 

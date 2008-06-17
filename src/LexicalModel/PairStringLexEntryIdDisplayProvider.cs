@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using WeSay.Data;
 using WeSay.Foundation;
 using WeSay.LexicalModel;
@@ -7,14 +6,6 @@ namespace WeSay.LexicalModel
 {
 	public class PairStringLexEntryIdDisplayProvider : IDisplayStringAdaptor
 	{
-		private readonly LexEntryRepository _lexEntryRepository;
-
-		public PairStringLexEntryIdDisplayProvider(LexEntryRepository lexEntryRepository)
-		{
-			_lexEntryRepository = lexEntryRepository;
-		}
-
-
 		public string GetDisplayLabel(object item)
 		{
 			RecordToken<LexEntry> kv = (RecordToken<LexEntry>)item;
@@ -24,7 +15,7 @@ namespace WeSay.LexicalModel
 		public string GetToolTip(object item)
 		{
 			RecordToken<LexEntry> recordToken = (RecordToken<LexEntry>)item;
-			LexEntry entry = _lexEntryRepository.GetItem(recordToken);
+			LexEntry entry = recordToken.RealObject;
 			return entry.GetToolTipText();
 		}
 

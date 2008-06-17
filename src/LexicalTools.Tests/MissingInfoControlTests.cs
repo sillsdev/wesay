@@ -1,10 +1,8 @@
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using NUnit.Framework;
 using WeSay.Data;
-using WeSay.Foundation;
 using WeSay.Language;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Db4o_Specific;
@@ -17,7 +15,7 @@ namespace WeSay.LexicalTools.Tests
 	{
 		private LexEntryRepository _lexEntryRepository;
 		private string _filePath;
-		private List<RecordToken<LexEntry>> _missingTranslationRecordList;
+		private ResultSet<LexEntry> _missingTranslationRecordList;
 		private ViewTemplate _viewTemplate;
 		private MissingTranslationFilter _missingTranslation;
 		private WritingSystem _writingSystem;

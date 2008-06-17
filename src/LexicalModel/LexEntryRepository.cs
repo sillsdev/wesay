@@ -421,7 +421,7 @@ namespace WeSay.LexicalModel
 			return GetAllEntries().Length;
 		}
 
-		public List<RecordToken<LexEntry>> GetEntriesMatchingFilterSortedByLexicalUnit(
+		public ResultSet<LexEntry> GetEntriesMatchingFilterSortedByLexicalUnit(
 			IFilter<LexEntry> filter,
 			WritingSystem lexicalUnitWritingSystem)
 		{
@@ -438,7 +438,7 @@ namespace WeSay.LexicalModel
 
 				result.Add(new RecordToken<LexEntry>(this, lexEntrySortHelper, i, entry.LexicalForm[lexicalUnitWritingSystem.Id], id));
 			}
-			return result;
+			return new ResultSet<LexEntry>(this, result);
 		}
 
 

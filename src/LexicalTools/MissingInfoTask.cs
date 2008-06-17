@@ -1,12 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Windows.Forms;
 using Palaso.UI.WindowsForms.i8n;
+using WeSay.Data;
 using WeSay.Foundation;
 using WeSay.Language;
 using WeSay.LexicalModel;
-using WeSay.Data;
 using WeSay.Project;
 
 namespace WeSay.LexicalTools
@@ -17,8 +16,8 @@ namespace WeSay.LexicalTools
 		private readonly IFilter<LexEntry> _filter;
 		private readonly ViewTemplate _viewTemplate;
 		private bool _dataHasBeenRetrieved;
-		private bool _isBaseFormFillingTask;
-		private WritingSystem _writingSystem;
+		private readonly bool _isBaseFormFillingTask;
+		private readonly WritingSystem _writingSystem;
 
 		public MissingInfoTask(LexEntryRepository lexEntryRepository,
 					IFilter<LexEntry> filter,
@@ -83,7 +82,6 @@ namespace WeSay.LexicalTools
 			_isBaseFormFillingTask = filter is MissingItemFilter && fieldsToShow.Contains(LexEntry.WellKnownProperties.BaseForm);
 			if (_isBaseFormFillingTask)
 			{
-				MissingItemFilter f = filter as MissingItemFilter;
 				Field flagField = new Field();
 				flagField.DisplayName = StringCatalog.Get("~This word has no Base Form", "The user will click this to say that this word has no baseform.  E.g. Kindess has Kind as a baseform, but Kind has no other word as a baseform.");
 				flagField.DataTypeName = "Flag";
@@ -94,7 +92,7 @@ namespace WeSay.LexicalTools
 			}
 		}
 
-		public override WeSay.Foundation.Dashboard.DashboardGroup Group
+		public override Foundation.Dashboard.DashboardGroup Group
 		{
 			get
 			{
@@ -129,7 +127,7 @@ namespace WeSay.LexicalTools
 					if(s==field.FieldName)
 					{
 						Field readOnlyVersion = new Field(field);
-						readOnlyVersion.Visibility = WeSay.Foundation.CommonEnumerations.VisibilitySetting.ReadOnly;
+						readOnlyVersion.Visibility = CommonEnumerations.VisibilitySetting.ReadOnly;
 						_viewTemplate.Remove(field);
 						_viewTemplate.Insert(i, readOnlyVersion);
 					}
@@ -137,11 +135,11 @@ namespace WeSay.LexicalTools
 			}
 		}
 
-		static private ViewTemplate CreateViewTemplateFromListOfFields(ViewTemplate baseViewTemplate, string fieldsToShow)
+		static private ViewTemplate CreateViewTemplateFromListOfFields(IEnumerable<Field> fieldList, string fieldsToShow)
 		{
 			string[] fields = SplitUpFieldNames(fieldsToShow);
 			ViewTemplate viewTemplate = new ViewTemplate();
-			foreach (Field field in baseViewTemplate)
+			foreach (Field field in fieldList)
 			{
 				if(Array.IndexOf(fields, field.FieldName) >= 0)
 				{
@@ -181,7 +179,7 @@ namespace WeSay.LexicalTools
 			base.Activate();
 
 			_missingInfoControl = new MissingInfoControl(GetFilteredData(), ViewTemplate, _filter.FilteringPredicate, LexEntryRepository);
-			_missingInfoControl.SelectedIndexChanged += new EventHandler(OnRecordSelectionChanged);
+			_missingInfoControl.SelectedIndexChanged += OnRecordSelectionChanged;
 		}
 
 		void OnRecordSelectionChanged(object sender, EventArgs e)
@@ -198,7 +196,7 @@ namespace WeSay.LexicalTools
 			base.Deactivate();
 		   if (_missingInfoControl != null)
 		   {
-			   _missingInfoControl.SelectedIndexChanged -= new EventHandler(OnRecordSelectionChanged);
+			   _missingInfoControl.SelectedIndexChanged -= OnRecordSelectionChanged;
 			   _missingInfoControl.Dispose();
 		   }
 			_missingInfoControl = null;
@@ -232,9 +230,9 @@ namespace WeSay.LexicalTools
 			return LexEntryRepository.CountAllEntries();
 		}
 
-		public List<RecordToken<LexEntry>> GetFilteredData()
+		public ResultSet<LexEntry> GetFilteredData()
 		{
-			List<RecordToken<LexEntry>> data =
+			ResultSet<LexEntry> data =
 					LexEntryRepository.GetEntriesMatchingFilterSortedByLexicalUnit(
 						_filter,
 						_writingSystem);
