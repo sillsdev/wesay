@@ -324,7 +324,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			RecordToken<LexEntry> token = PrepareEntryWithOneGloss();
 			//now tweak the entry
-			LexEntry entry = _lexEntryRepository.GetItem(token);
+			LexEntry entry = token.RealObject;
 			LexSense leaveAloneSense = (LexSense)entry.Senses.AddNew();
 			leaveAloneSense.Gloss.SetAlternative(_glossingLanguageWSId, "single");
 			Assert.AreEqual(2, entry.Senses.Count);
@@ -344,7 +344,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			RecordToken<LexEntry> token = PrepareEntryWithOneGloss();
 			//now tweak the entry
-			LexEntry entry = _lexEntryRepository.GetItem(token);
+			LexEntry entry = token.RealObject;
 			LexSense leaveAloneSense = (LexSense)entry.Senses.AddNew();
 			leaveAloneSense.Gloss.SetAlternative(_glossingLanguageWSId, "single");
 			Assert.AreEqual(2, entry.Senses.Count);
@@ -364,7 +364,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			RecordToken<LexEntry> token = PrepareEntryWithOneGloss();
 			//now tweak the entry
-			LexEntry entry = _lexEntryRepository.GetItem(token);
+			LexEntry entry = token.RealObject;
 			LexSense sense = (LexSense)entry.Senses[0];
 			LexExampleSentence ex= (LexExampleSentence) sense.ExampleSentences.AddNew();
 			ex.Sentence.SetAlternative(VernWs.Id, "blah blah");
