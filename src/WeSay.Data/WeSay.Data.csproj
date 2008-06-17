@@ -77,7 +77,6 @@
 	<Compile Include="Query.cs" />
 	<Compile Include="RecordToken.cs" />
 	<Compile Include="RecordTokenComparer.cs" />
-	<Compile Include="RecordTokensBindingListAdapter.cs" />
 	<Compile Include="RepositoryId.cs" />
 	<Compile Include="ResultSet.cs" />
   </ItemGroup>
