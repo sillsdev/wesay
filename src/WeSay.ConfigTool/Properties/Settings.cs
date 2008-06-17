@@ -1,17 +1,15 @@
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Configuration;
 using System.Diagnostics;
-using System.Text;
 
-namespace WeSay.ConfigTool.Properties {
-
+namespace WeSay.ConfigTool.Properties
+{
 	internal sealed partial class Settings
 	{
 		private void Initialize()
 		{
-			if(MruConfigFilePaths == null)
+			if (MruConfigFilePaths == null)
 			{
 				MruConfigFilePaths = new MruProjects();
 			}
@@ -22,17 +20,17 @@ namespace WeSay.ConfigTool.Properties {
 			Initialize();
 		}
 
-		public Settings(string settingsKey) : base(settingsKey)
+		public Settings(string settingsKey): base(settingsKey)
 		{
 			Initialize();
 		}
 
-		public Settings(IComponent owner) : base(owner)
+		public Settings(IComponent owner): base(owner)
 		{
 			Initialize();
 		}
 
-		public Settings(IComponent owner, string settingsKey) : base(owner, settingsKey)
+		public Settings(IComponent owner, string settingsKey): base(owner, settingsKey)
 		{
 			Initialize();
 		}
@@ -54,7 +52,7 @@ namespace WeSay.ConfigTool.Properties {
 
 		// need to have this declaration or else we cannot upgrade by using GetPreviousVersion (it doesn't know whether
 		// it is user scoped or application scoped)
-		[UserScopedSettingAttribute]
+		[UserScopedSetting]
 		[DebuggerNonUserCode]
 		[DefaultSettingValueAttribute("")]
 		[Obsolete("Please use MruConfigFilePaths instead")]
@@ -63,13 +61,14 @@ namespace WeSay.ConfigTool.Properties {
 		{
 			get
 			{
-				throw new NotSupportedException("LastConfigFilePath is obsolete please use MruConfigFilePaths instead");
+				throw new NotSupportedException(
+						"LastConfigFilePath is obsolete please use MruConfigFilePaths instead");
 			}
 			set
 			{
-				throw new NotSupportedException("LastConfigFilePath is obsolete please use MruConfigFilePaths instead");
+				throw new NotSupportedException(
+						"LastConfigFilePath is obsolete please use MruConfigFilePaths instead");
 			}
 		}
-
 	}
 }

@@ -1,13 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Windows.Forms;
-using NUnit.Framework;
-using NUnit.Extensions.Forms;
-using WeSay.Data;
-using WeSay.LexicalModel;
-using WeSay.UI;
-
 namespace WeSay.App.Tests
 {
 #if forFuture

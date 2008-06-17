@@ -3,14 +3,14 @@ using System.ComponentModel;
 using System.ComponentModel.Design;
 using System.Windows.Forms;
 using Palaso.UI.WindowsForms.i8n;
-using WeSay.Foundation;
+using WeSay.UI.Buttons;
 
 namespace WeSay.UI
 {
 	[Designer(typeof (LocalizationHelperDesigner))]
 	[ToolboxItem(true)]
 	[ProvideProperty("ParentFo", typeof (Form))]
-	public partial class LocalizationHelper : Component, ISupportInitialize, IExtenderProvider
+	public partial class LocalizationHelper: Component, ISupportInitialize, IExtenderProvider
 	{
 		private bool _alreadyChanging;
 		private Control _parent;
@@ -44,7 +44,8 @@ namespace WeSay.UI
 			}
 			Control control = (Control) sender;
 			_alreadyChanging = true;
-			if (!(control is WeSay.UI.Buttons.RegionButton))//making a big font on these things that don't have text was causing them to grow
+			if (!(control is RegionButton))
+					//making a big font on these things that don't have text was causing them to grow
 			{
 				control.Font = StringCatalog.ModifyFontForLocalization(control.Font);
 			}
@@ -57,15 +58,17 @@ namespace WeSay.UI
 			{
 				return;
 			}
-			Control control = (Control)sender;
+			Control control = (Control) sender;
 
 			if (control.Text.Contains("{0}"))
 			{
-				return; //they're going to have to format it anyways, so we can't fix it automatically
+				return;
+				//they're going to have to format it anyways, so we can't fix it automatically
 			}
 
 			_alreadyChanging = true;
-			if (!String.IsNullOrEmpty(control.Text)) //don't try to translation, for example, buttons with no label
+			if (!String.IsNullOrEmpty(control.Text))
+					//don't try to translation, for example, buttons with no label
 			{
 				control.Text = StringCatalog.Get(control.Text);
 			}
@@ -97,8 +100,8 @@ namespace WeSay.UI
 				if (child is Label || child is Button)
 				{
 					// Debug.WriteLine("Wiring to " + child.Name);
-					child.TextChanged += new EventHandler(OnTextChanged);
-					child.FontChanged += new EventHandler(OnFontChanged);
+					child.TextChanged += OnTextChanged;
+					child.FontChanged += OnFontChanged;
 
 					OnTextChanged(child, null);
 					OnFontChanged(child, null);
@@ -131,13 +134,13 @@ namespace WeSay.UI
 	/// <summary>
 	///   Designer object used to set the Parent property.
 	/// </summary>
-	internal class LocalizationHelperDesigner : ComponentDesigner
+	internal class LocalizationHelperDesigner: ComponentDesigner
 	{
 		///   <summary>
 		///   Sets the Parent property to "this" -
 		///   the Form/UserControl where the component is being dropped.
 		///   </summary>
-		[Obsolete()]
+		[Obsolete]
 		public override void OnSetComponentDefaults()
 		{
 			LocalizationHelper rp = (LocalizationHelper) Component;

@@ -418,7 +418,6 @@ namespace WeSay.LexicalTools.Tests
 			Assert.AreEqual(originalCount + 1, _lexEntryRepository.CountAllEntries());
 		}
 
-
 		[Test]
 		public void RemainingCount_Initially_RemainingCountEqualsReferenceCount()
 		{

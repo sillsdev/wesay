@@ -5,20 +5,19 @@ using Db4objects.Db4o.Ext;
 using Db4objects.Db4o.Query;
 using Palaso.UI.WindowsForms.i8n;
 using WeSay.Data;
-using WeSay.Language;
-using WeSay.LexicalModel;
+using WeSay.Foundation;
 
-namespace WeSay.LexicalModel.Db4o_Specific
+namespace WeSay.LexicalModel.Db4oSpecific
 {
-	internal class Db4oLexEntryQuery : IQuery<LexEntry>
+	internal class Db4oLexEntryQuery: IQuery<LexEntry>
 	{
 		private readonly LexEntryRepository _lexEntryRepository; // for data
 		private readonly WritingSystem _writingSystem;
 		private readonly bool _isWritingSystemIdUsedByLexicalForm;
 
 		public Db4oLexEntryQuery(LexEntryRepository lexEntryRepository,
-								  WritingSystem writingSystem,
-								  bool isWritingSystemIdUsedByLexicalForm)
+								 WritingSystem writingSystem,
+								 bool isWritingSystemIdUsedByLexicalForm)
 		{
 			if (lexEntryRepository == null)
 			{
@@ -33,7 +32,6 @@ namespace WeSay.LexicalModel.Db4o_Specific
 			_writingSystem = writingSystem;
 			_isWritingSystemIdUsedByLexicalForm = isWritingSystemIdUsedByLexicalForm;
 		}
-
 
 		public IEnumerable<string> GetDisplayStrings(LexEntry item)
 		{
@@ -63,22 +61,18 @@ namespace WeSay.LexicalModel.Db4o_Specific
 				{
 					hasSense = true;
 
-					foreach (
-							string s in
-									KeyToEntryIdInitializer.SplitGlossAtSemicolon(sense.Gloss,
-																				  _writingSystem.Id)
-							)
+					foreach (string s in
+							KeyToEntryIdInitializer.SplitGlossAtSemicolon(sense.Gloss,
+																		  _writingSystem.Id))
 					{
 						if (s != "*" && !keys.ContainsKey(s))
 						{
 							keys.Add(s, null);
 						}
 					}
-					foreach (
-							string s in
-									KeyToEntryIdInitializer.SplitGlossAtSemicolon(sense.Definition,
-																				  _writingSystem.Id)
-							)
+					foreach (string s in
+							KeyToEntryIdInitializer.SplitGlossAtSemicolon(sense.Definition,
+																		  _writingSystem.Id))
 					{
 						if (s != "*" && !keys.ContainsKey(s))
 						{
@@ -105,7 +99,9 @@ namespace WeSay.LexicalModel.Db4o_Specific
 			{
 				if (_isWritingSystemIdUsedByLexicalForm)
 				{
-					return new ResultSet<LexEntry>(_lexEntryRepository, GetAllEntriesSortedByLexicalForm());
+					return
+							new ResultSet<LexEntry>(_lexEntryRepository,
+													GetAllEntriesSortedByLexicalForm());
 				}
 				else
 				{
@@ -124,7 +120,8 @@ namespace WeSay.LexicalModel.Db4o_Specific
 						int i = 0;
 						foreach (string s in GetDisplayStrings(entry))
 						{
-							tokens.Add(new RecordToken<LexEntry>(_lexEntryRepository, this, i, s, id));
+							tokens.Add(
+									new RecordToken<LexEntry>(_lexEntryRepository, this, i, s, id));
 							++i;
 						}
 					}
@@ -140,10 +137,10 @@ namespace WeSay.LexicalModel.Db4o_Specific
 
 			List<Type> OriginalList = Db4oLexModelHelper.Singleton.DoNotActivateTypes;
 			Db4oLexModelHelper.Singleton.DoNotActivateTypes = new List<Type>();
-			Db4oLexModelHelper.Singleton.DoNotActivateTypes.Add(typeof(LexEntry));
+			Db4oLexModelHelper.Singleton.DoNotActivateTypes.Add(typeof (LexEntry));
 
 			IQuery query = database.Query();
-			query.Constrain(typeof(LexicalFormMultiText));
+			query.Constrain(typeof (LexicalFormMultiText));
 			IObjectSet lexicalForms = query.Execute();
 
 			List<RecordToken<LexEntry>> result = new List<RecordToken<LexEntry>>();
@@ -151,7 +148,7 @@ namespace WeSay.LexicalModel.Db4o_Specific
 			foreach (LexicalFormMultiText lexicalForm in lexicalForms)
 			{
 				query = database.Query();
-				query.Constrain(typeof(LexEntry));
+				query.Constrain(typeof (LexEntry));
 				query.Descend("_lexicalForm").Constrain(lexicalForm).Identity();
 				long[] ids = query.Execute().Ext().GetIDs();
 
@@ -166,14 +163,17 @@ namespace WeSay.LexicalModel.Db4o_Specific
 				if (displayString == "*")
 				{
 					displayString = "(" +
-						  StringCatalog.Get("~Empty",
-											"This is what shows for a word in a list when the user hasn't yet typed anything in for the word.  Like if you click the 'New Word' button repeatedly.") +
-						  ")";
+									StringCatalog.Get("~Empty",
+													  "This is what shows for a word in a list when the user hasn't yet typed anything in for the word.  Like if you click the 'New Word' button repeatedly.") +
+									")";
 				}
 				Db4oRepositoryId id = new Db4oRepositoryId(ids[0]);
-				int i = result.FindAll(delegate(RecordToken<LexEntry> match)
-							   { return match.Id == id; }).Count;
-				result.Add(new RecordToken<LexEntry>(_lexEntryRepository, this, i, displayString, id));
+				int i =
+						result.FindAll(
+								delegate(RecordToken<LexEntry> match) { return match.Id == id; }).
+								Count;
+				result.Add(
+						new RecordToken<LexEntry>(_lexEntryRepository, this, i, displayString, id));
 			}
 
 			Db4oLexModelHelper.Singleton.DoNotActivateTypes = OriginalList;

@@ -4,7 +4,7 @@ using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using Palaso.UI.WindowsForms.i8n;
-using WeSay.Foundation.Dashboard;
+using WeSay.Foundation;
 using WeSay.LexicalModel;
 using WeSay.Project;
 

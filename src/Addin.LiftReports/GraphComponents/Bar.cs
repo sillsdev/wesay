@@ -1,4 +1,5 @@
 #region copyright info
+
 //
 // Written by Anup. V (anupshubha@yahoo.com)
 // Copyright (c) 2006.
@@ -15,14 +16,10 @@
 // Please use and enjoy. Please let me know of any bugs/mods/improvements
 // that you have found/implemented and I will fix/incorporate them into
 // this file.
+
 #endregion copyright info
 
-using System;
-using System.Collections;
-using System.Windows.Forms;
-using System.ComponentModel;
-
-namespace GraphComponents
+namespace Addin.LiftReports.GraphComponents
 {
 	/// <summary>
 	/// Provides a simple structure for getting and setting properties for
@@ -33,18 +30,19 @@ namespace GraphComponents
 		/// <summary>
 		/// Name of the bar
 		/// </summary>
-		string name;
+		private string name;
+
 		/// <summary>
 		/// Current value of the bar
 		/// </summary>
-		float barValue;
+		private float barValue;
 
 		/// <summary>
 		/// Name of the bar
 		/// </summary>
 		public string Name
 		{
-			get { return name;  }
+			get { return name; }
 			set { name = value; }
 		}
 
@@ -53,7 +51,7 @@ namespace GraphComponents
 		/// </summary>
 		public float BarValue
 		{
-			get { return barValue;  }
+			get { return barValue; }
 			set { barValue = value; }
 		}
 
@@ -63,10 +61,10 @@ namespace GraphComponents
 			this.barValue = barValue;
 		}
 
-		public Bar ()
+		public Bar()
 		{
-			this.name     = "";
-			this.barValue = 35.0F;
+			name = "";
+			barValue = 35.0F;
 		}
 	}
 }

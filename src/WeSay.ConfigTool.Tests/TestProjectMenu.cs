@@ -1,28 +1,23 @@
 using System.IO;
-using NUnit.Framework;
 using NUnit.Extensions.Forms;
-using WeSay.ConfigTool;
+using NUnit.Framework;
+using Palaso.Reporting;
+using WeSay.Foundation.Tests;
 
-namespace WeSay.ConfigTool.Tests.Tests
+namespace WeSay.ConfigTool.Tests
 {
 	[TestFixture]
-	public class TestProjectMenu//: NUnitFormTest
+	public class TestProjectMenu //: NUnitFormTest
 	{
 		private ConfigurationWindow _window;
-
-		public TestProjectMenu()
-		{
-		}
 
 		[SetUp]
 		public void Setup()
 		{
-			Palaso.Reporting.ErrorReport.IsOkToInteractWithUser = false;
-			_window = new ConfigurationWindow(new string[] { });
+			ErrorReport.IsOkToInteractWithUser = false;
+			_window = new ConfigurationWindow(new string[] {});
 			_window.Show();
-		 }
-
-
+		}
 
 		[Test]
 		public void ProjectIsCreated()
@@ -36,18 +31,20 @@ namespace WeSay.ConfigTool.Tests.Tests
 			}
 			finally
 			{
-				WeSay.Foundation.Tests.TestUtilities.DeleteFolderThatMayBeInUse(path);
+				TestUtilities.DeleteFolderThatMayBeInUse(path);
 			}
 		}
 
-		[Test, Ignore("Haven't got the ability to find controls inside the filedialog yet")]
+		[Test]
+		[Ignore("Haven't got the ability to find controls inside the filedialog yet")]
 		public void TestUsingOpenProject()
 		{
 			FormTester AdminWindow = new FormTester("WeSay Admin");
 
-			ToolStripMenuItemTester projectToolStripMenuItem = new ToolStripMenuItemTester("projectToolStripMenuItem");
-			ToolStripMenuItemTester newProjectToolStripMenuItem = new ToolStripMenuItemTester("newProjectToolStripMenuItem");
-
+			ToolStripMenuItemTester projectToolStripMenuItem =
+					new ToolStripMenuItemTester("projectToolStripMenuItem");
+			ToolStripMenuItemTester newProjectToolStripMenuItem =
+					new ToolStripMenuItemTester("newProjectToolStripMenuItem");
 
 			projectToolStripMenuItem.Click();
 			//       ExpectModal("Browse For Folder", "ClickOKInFileDialog", true);
@@ -57,25 +54,28 @@ namespace WeSay.ConfigTool.Tests.Tests
 			AdminWindow.Close();
 		}
 
-		[Test,Ignore("couldn't get test to word")]
+		[Test]
+		[Ignore("couldn't get test to word")]
 		public void TestOpenProjectInWeSayClient()
 		{
-			string path = Path.Combine(Path.GetTempPath(), Path.GetFileNameWithoutExtension(Path.GetRandomFileName  ()));
+			string path =
+					Path.Combine(Path.GetTempPath(),
+								 Path.GetFileNameWithoutExtension(Path.GetRandomFileName()));
 			try
 			{
 				_window.CreateAndOpenProject(path);
 
-				ToolStripMenuItemTester projectToolStripMenuItem = new ToolStripMenuItemTester("projectToolStripMenuItem");
+				ToolStripMenuItemTester projectToolStripMenuItem =
+						new ToolStripMenuItemTester("projectToolStripMenuItem");
 				ToolStripMenuItemTester launchProjectToolStripMenuItem =
-					new ToolStripMenuItemTester("openThisProjectInWeSayToolStripMenuItem");
+						new ToolStripMenuItemTester("openThisProjectInWeSayToolStripMenuItem");
 				projectToolStripMenuItem.Click();
 				launchProjectToolStripMenuItem.Click();
 				_window.Close();
-
 			}
 			finally
 			{
-				Directory.Delete(path,true);
+				Directory.Delete(path, true);
 			}
 		}
 
@@ -116,15 +116,15 @@ namespace WeSay.ConfigTool.Tests.Tests
 
 		public void CancelModal()
 		{
-			NUnit.Extensions.Forms.FileDialogTester x = new FileDialogTester("Browse For Folder");
+			FileDialogTester x = new FileDialogTester("Browse For Folder");
 			x.ClickCancel();
-			ButtonTester t = new NUnit.Extensions.Forms.ButtonTester("Cancel");
+			ButtonTester t = new ButtonTester("Cancel");
 			t.Click();
 		}
 
 		public void ClickOKInFileDialog()
 		{
-			ButtonTester t = new NUnit.Extensions.Forms.ButtonTester("OK");
+			ButtonTester t = new ButtonTester("OK");
 			t.Click();
 		}
 

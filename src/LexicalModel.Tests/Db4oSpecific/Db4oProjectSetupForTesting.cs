@@ -1,10 +1,9 @@
 using System;
 using Palaso.Progress;
-using WeSay.Data;
-using WeSay.LexicalModel;
-using WeSay.LexicalModel.Db4o_Specific;
+using WeSay.Project;
+using WeSay.Project.Tests;
 
-namespace WeSay.Project.Tests
+namespace WeSay.LexicalModel.Tests.Db4oSpecific
 {
 	/// <summary>
 	/// This creates (and disposes of) a temporary, fully-functional,
@@ -15,17 +14,16 @@ namespace WeSay.Project.Tests
 	///
 	///  This is extremely slow to use. TODO: provide a way to generate the folder once and
 	/// just reuse copies of it for each test.
-
 	/// </summary>
-	public class Db4oProjectSetupForTesting:IDisposable
+	public class Db4oProjectSetupForTesting: IDisposable
 	{
 		private bool _disposed = false;
-		private ProjectDirectorySetupForTesting _projectDirectory;
+		private readonly ProjectDirectorySetupForTesting _projectDirectory;
 		public WeSayWordsProject _project;
 		public LexEntryRepository _lexEntryRepository;
 
 		public Db4oProjectSetupForTesting(string xmlOfEntries)
-	   {
+		{
 			_projectDirectory = new ProjectDirectorySetupForTesting(xmlOfEntries);
 
 			_project = new WeSayWordsProject();
@@ -33,29 +31,25 @@ namespace WeSay.Project.Tests
 			CacheBuilder cacheBuilder = new CacheBuilder(_projectDirectory.PathToLiftFile);
 			cacheBuilder.DoWork(new NullProgressState());
 
-			_lexEntryRepository = new LexEntryRepository(_project.PathToDb4oLexicalModelDB);// InMemoryRecordListManager();
-	   }
+			_lexEntryRepository = new LexEntryRepository(_project.PathToDb4oLexicalModelDB);
+			// InMemoryRecordListManager();
+		}
 
-	   #region IDisposable Members
-
+		#region IDisposable Members
 
 		~Db4oProjectSetupForTesting()
 		{
-			if (!this._disposed)
+			if (!_disposed)
 			{
-				throw new InvalidOperationException("Disposed not explicitly called on " + GetType().FullName + ".");
+				throw new InvalidOperationException("Disposed not explicitly called on " +
+													GetType().FullName + ".");
 			}
 		}
 
 		public bool IsDisposed
 		{
-			get
-			{
-				return _disposed;
-			}
+			get { return _disposed; }
 		}
-
-
 
 		public void Dispose()
 		{
@@ -72,17 +66,16 @@ namespace WeSay.Project.Tests
 					_lexEntryRepository.Dispose();
 					_project.Dispose();
 					_projectDirectory.Dispose();
-
 				}
 
 				// shared (dispose and finalizable) cleanup logic
-				this._disposed = true;
+				_disposed = true;
 			}
 		}
 
 		protected void VerifyNotDisposed()
 		{
-			if (this._disposed)
+			if (_disposed)
 			{
 				throw new ObjectDisposedException(GetType().FullName);
 			}

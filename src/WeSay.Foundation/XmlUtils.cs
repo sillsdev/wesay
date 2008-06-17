@@ -38,9 +38,9 @@ namespace WeSay.Foundation
 		/// </summary>
 		public static bool GetBooleanAttributeValue(string sValue)
 		{
-			return (sValue != null
-				&& (sValue.ToLower().Equals("true")
-				|| sValue.ToLower().Equals("yes")));
+			return
+					(sValue != null &&
+					 (sValue.ToLower().Equals("true") || sValue.ToLower().Equals("yes")));
 		}
 
 		/// <summary>
@@ -65,7 +65,9 @@ namespace WeSay.Foundation
 		{
 			string val = GetOptionalAttributeValue(node, attrName);
 			if (val == null)
+			{
 				return defaultVal;
+			}
 			return Int32.Parse(val);
 		}
 
@@ -80,8 +82,10 @@ namespace WeSay.Foundation
 			string input = GetManditoryAttributeValue(node, attrName);
 			string[] vals = input.Split(',');
 			int[] result = new int[vals.Length];
-			for (int i = 0; i < vals.Length; i++)
+			for (int i = 0;i < vals.Length;i++)
+			{
 				result[i] = Int32.Parse(vals[i]);
+			}
 			return result;
 		}
 
@@ -92,15 +96,19 @@ namespace WeSay.Foundation
 		/// <returns></returns>
 		public static string MakeIntegerListValue(int[] vals)
 		{
-			StringBuilder builder = new StringBuilder(vals.Length * 7); // enough unless VERY big numbers
-			for (int i = 0; i < vals.Length; i++)
+			StringBuilder builder = new StringBuilder(vals.Length * 7);
+			// enough unless VERY big numbers
+			for (int i = 0;i < vals.Length;i++)
 			{
 				if (i != 0)
+				{
 					builder.Append(",");
+				}
 				builder.Append(vals[i].ToString());
 			}
 			return builder.ToString();
 		}
+
 		/// <summary>
 		/// Make a comma-separated list of the ToStrings of the values in the list.
 		/// </summary>
@@ -108,11 +116,14 @@ namespace WeSay.Foundation
 		/// <returns></returns>
 		public static string MakeListValue(List<int> vals)
 		{
-			StringBuilder builder = new StringBuilder(vals.Count * 7); // enough unless VERY big numbers
-			for (int i = 0; i < vals.Count; i++)
+			StringBuilder builder = new StringBuilder(vals.Count * 7);
+			// enough unless VERY big numbers
+			for (int i = 0;i < vals.Count;i++)
 			{
 				if (i != 0)
+				{
 					builder.Append(",");
+				}
 				builder.Append(vals[i].ToString());
 			}
 			return builder.ToString();
@@ -125,9 +136,15 @@ namespace WeSay.Foundation
 		/// <param name="attrName">The attribute to find.</param>
 		/// <param name="defaultValue"></param>
 		/// <returns>The value of the attribute, or the default value, if the attribute dismissing</returns>
-		public static bool GetOptionalBooleanAttributeValue(XmlNode node, string attrName, bool defaultValue)
+		public static bool GetOptionalBooleanAttributeValue(XmlNode node,
+															string attrName,
+															bool defaultValue)
 		{
-			return GetBooleanAttributeValue(GetOptionalAttributeValue(node, attrName, defaultValue?"true":"false"));
+			return
+					GetBooleanAttributeValue(
+							GetOptionalAttributeValue(node,
+													  attrName,
+													  defaultValue ? "true" : "false"));
 		}
 
 		/// <summary>
@@ -150,7 +167,7 @@ namespace WeSay.Foundation
 		/// <returns>The value of the attribute, or null, if not found.</returns>
 		public static string GetAttributeValue(XmlNode node, string attrName)
 		{
-			return XmlUtils.GetOptionalAttributeValue(node, attrName);
+			return GetOptionalAttributeValue(node, attrName);
 		}
 
 		/// <summary>
@@ -181,13 +198,18 @@ namespace WeSay.Foundation
 		/// <param name="node">The XmlNode to look in.</param>
 		/// <param name="attrName">The attribute to find.</param>
 		/// <returns>The value of the attribute, or null, if not found.</returns>
-		public static string GetOptionalAttributeValue(XmlNode node, string attrName, string defaultString)
+		/// <param name="defaultString"></param>
+		public static string GetOptionalAttributeValue(XmlNode node,
+													   string attrName,
+													   string defaultString)
 		{
 			if (node != null && node.Attributes != null)
 			{
 				XmlAttribute xa = node.Attributes[attrName];
 				if (xa != null)
+				{
 					return xa.Value;
+				}
 			}
 			return defaultString;
 		}
@@ -198,16 +220,22 @@ namespace WeSay.Foundation
 		/// <param name="node">The XmlNode to look in.</param>
 		/// <param name="attrName">The attribute to find.</param>
 		/// <returns>The value of the attribute, or null, if not found.</returns>
-		public static string GetOptionalAttributeValue(XPathNavigator  node, string attrName, string defaultString)
+		/// <param name="defaultString"></param>
+		public static string GetOptionalAttributeValue(XPathNavigator node,
+													   string attrName,
+													   string defaultString)
 		{
 			if (node != null && node.HasAttributes)
 			{
 				string s = node.GetAttribute(attrName, string.Empty);
 				if (!string.IsNullOrEmpty(s))
+				{
 					return s;
+				}
 			}
 			return defaultString;
 		}
+
 		/// <summary>
 		/// Return the node that has the desired 'name', either the input node or a decendent.
 		/// </summary>
@@ -217,14 +245,20 @@ namespace WeSay.Foundation
 		public static XmlNode FindNode(XmlNode node, string name)
 		{
 			if (node.Name == name)
+			{
 				return node;
+			}
 			foreach (XmlNode childNode in node.ChildNodes)
 			{
 				if (childNode.Name == name)
+				{
 					return childNode;
+				}
 				XmlNode n = FindNode(childNode, name);
 				if (n != null)
+				{
 					return n;
+				}
 			}
 			return null;
 		}
@@ -240,28 +274,26 @@ namespace WeSay.Foundation
 		/// </exception>
 		public static string GetManditoryAttributeValue(XmlNode node, string attrName)
 		{
-			string retval = XmlUtils.GetOptionalAttributeValue(node, attrName, null);
+			string retval = GetOptionalAttributeValue(node, attrName, null);
 			if (retval == null)
 			{
-				throw new ApplicationException("The attribute'"
-					+ attrName
-					+ "' is mandatory, but was missing. "
-					+ node.OuterXml);
+				throw new ApplicationException("The attribute'" + attrName +
+											   "' is mandatory, but was missing. " + node.OuterXml);
 			}
 			return retval;
 		}
+
 		public static string GetManditoryAttributeValue(XPathNavigator node, string attrName)
 		{
-			string retval = XmlUtils.GetOptionalAttributeValue(node, attrName, null);
+			string retval = GetOptionalAttributeValue(node, attrName, null);
 			if (retval == null)
 			{
-				throw new ApplicationException("The attribute'"
-					+ attrName
-					+ "' is mandatory, but was missing. "
-					+ node.OuterXml);
+				throw new ApplicationException("The attribute'" + attrName +
+											   "' is mandatory, but was missing. " + node.OuterXml);
 			}
 			return retval;
 		}
+
 		/// <summary>
 		/// Append an attribute with the specified name and value to parent.
 		/// </summary>
@@ -284,36 +316,56 @@ namespace WeSay.Foundation
 		/// <param name="node1"></param>
 		/// <param name="node2"></param>
 		/// <returns></returns>
-		static public bool NodesMatch(XmlNode node1, XmlNode node2)
+		public static bool NodesMatch(XmlNode node1, XmlNode node2)
 		{
 			if (node1 == null && node2 == null)
+			{
 				return true;
+			}
 			if (node1 == null || node2 == null)
+			{
 				return false;
+			}
 			if (node1.Name != node2.Name)
+			{
 				return false;
+			}
 			if (node1.InnerText != node2.InnerText)
+			{
 				return false;
+			}
 			if (node1.Attributes == null && node2.Attributes != null)
+			{
 				return false;
+			}
 			if (node1.Attributes != null && node2.Attributes == null)
+			{
 				return false;
+			}
 			if (node1.Attributes != null)
 			{
 				if (node1.Attributes.Count != node2.Attributes.Count)
+				{
 					return false;
-				for (int i = 0; i < node1.Attributes.Count; i++)
+				}
+				for (int i = 0;i < node1.Attributes.Count;i++)
 				{
 					XmlAttribute xa1 = node1.Attributes[i];
 					XmlAttribute xa2 = node2.Attributes[xa1.Name];
 					if (xa2 == null || xa1.Value != xa2.Value)
+					{
 						return false;
+					}
 				}
 			}
 			if (node1.ChildNodes == null && node2.ChildNodes != null)
+			{
 				return false;
+			}
 			if (node1.ChildNodes != null && node2.ChildNodes == null)
+			{
 				return false;
+			}
 			if (node1.ChildNodes != null)
 			{
 				int ichild1 = 0; // index node1.ChildNodes
@@ -340,10 +392,14 @@ namespace WeSay.Foundation
 					}
 
 					if (foundComment)
+					{
 						continue;
+					}
 
 					if (!NodesMatch(child1, child2))
+					{
 						return false;
+					}
 					ichild1++;
 					ichild2++;
 				}
@@ -365,20 +421,24 @@ namespace WeSay.Foundation
 		public static XmlNode GetFirstNonCommentChild(XmlNode node)
 		{
 			if (node == null)
+			{
 				return null;
-			foreach(XmlNode child in node.ChildNodes)
+			}
+			foreach (XmlNode child in node.ChildNodes)
+			{
 				if (!(child is XmlComment))
+				{
 					return child;
+				}
+			}
 			return null;
 		}
-
 
 		/// <summary>
 		/// Fix the string to be safe in a text region of XML.
 		/// </summary>
 		/// <param name="sInput"></param>
 		/// <returns></returns>
-
 		public static string MakeSafeXml(string sInput)
 		{
 			string sOutput = sInput;
@@ -397,7 +457,6 @@ namespace WeSay.Foundation
 		/// </summary>
 		/// <param name="sInput"></param>
 		/// <returns></returns>
-
 		public static string MakeSafeXmlAttribute(string sInput)
 		{
 			string sOutput = sInput;

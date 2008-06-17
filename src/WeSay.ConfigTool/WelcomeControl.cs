@@ -1,13 +1,12 @@
 using System;
-using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
-using Settings=WeSay.ConfigTool.Properties.Settings;
+using WeSay.ConfigTool.Properties;
 
 namespace WeSay.ConfigTool
 {
-	public partial class WelcomeControl : UserControl
+	public partial class WelcomeControl: UserControl
 	{
 		public event EventHandler NewProjectClicked;
 		public event EventHandler OpenPreviousProjectClicked;
@@ -18,15 +17,15 @@ namespace WeSay.ConfigTool
 			InitializeComponent();
 
 			if (Settings.Default.MruConfigFilePaths.Paths.Length != 0)
-		   {
-			   CreateRecentProjectsList();
-		   }
-		   else
-		   {
-			   this.firstCellPanel.Visible = false;
-			   this.tableLayoutPanel1.ColumnStyles[0].Width = 0;
-			   this.openDifferentProject.Text = "Open Existing Project";
-		   }
+			{
+				CreateRecentProjectsList();
+			}
+			else
+			{
+				firstCellPanel.Visible = false;
+				tableLayoutPanel1.ColumnStyles[0].Width = 0;
+				openDifferentProject.Text = "Open Existing Project";
+			}
 		}
 
 		private void CreateRecentProjectsList()
@@ -41,12 +40,22 @@ namespace WeSay.ConfigTool
 				recentProjectLabel.LinkBehavior = LinkBehavior.HoverUnderline;
 				if (!haveProcessedTopMostProject)
 				{
-					recentProjectLabel.Font = new Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+					recentProjectLabel.Font =
+							new Font("Microsoft Sans Serif",
+									 12F,
+									 FontStyle.Bold,
+									 GraphicsUnit.Point,
+									 0);
 					haveProcessedTopMostProject = true;
 				}
 				else
 				{
-					recentProjectLabel.Font = new Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+					recentProjectLabel.Font =
+							new Font("Microsoft Sans Serif",
+									 12F,
+									 FontStyle.Regular,
+									 GraphicsUnit.Point,
+									 0);
 				}
 				recentProjectLabel.Tag = path;
 				recentProjectLabel.LinkClicked += openRecentProject_LinkClicked;
@@ -58,14 +67,13 @@ namespace WeSay.ConfigTool
 		{
 			if (OpenPreviousProjectClicked != null)
 			{
-				OpenPreviousProjectClicked.Invoke(((LinkLabel)sender).Tag, null);
+				OpenPreviousProjectClicked.Invoke(((LinkLabel) sender).Tag, null);
 			}
-
 		}
 
 		private void openDifferentProject_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
 		{
-			if (ChooseProjectClicked  != null)
+			if (ChooseProjectClicked != null)
 			{
 				ChooseProjectClicked.Invoke(this, null);
 			}
@@ -73,7 +81,7 @@ namespace WeSay.ConfigTool
 
 		private void createNewProject_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
 		{
-			 if (NewProjectClicked != null)
+			if (NewProjectClicked != null)
 			{
 				NewProjectClicked.Invoke(this, null);
 			}
@@ -89,11 +97,6 @@ namespace WeSay.ConfigTool
 			{
 				openDifferentProject.Focus();
 			}
-		}
-
-		private void flowLayoutPanel1_Paint(object sender, PaintEventArgs e)
-		{
-
 		}
 	}
 }

@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
 namespace Addin.Transform
 {
@@ -13,12 +12,17 @@ namespace Addin.Transform
 			{
 				Prince p = new Prince();
 				if (p == null)
+				{
 					return false;
+				}
 
 				return File.Exists(GetPrincePath());
 			}
 		}
-		public static bool CreatePdf(string htmlPath, IEnumerable<string> styleSheetPaths, string pdfPath)
+
+		public static bool CreatePdf(string htmlPath,
+									 IEnumerable<string> styleSheetPaths,
+									 string pdfPath)
 		{
 			if (Environment.OSVersion.Platform == PlatformID.Unix)
 			{
@@ -32,7 +36,7 @@ namespace Addin.Transform
 			}
 			else
 			{
-				p = new Prince();  //maybe it would look in %path%?
+				p = new Prince(); //maybe it would look in %path%?
 			}
 			p.SetHTML(true);
 			foreach (string styleSheetPath in styleSheetPaths)
@@ -44,7 +48,7 @@ namespace Addin.Transform
 
 		private static string GetPrincePath()
 		{
-			string princePath = System.Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
+			string princePath = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
 			princePath = Path.Combine(princePath, "prince");
 			princePath = Path.Combine(princePath, "engine");
 			princePath = Path.Combine(princePath, "bin");

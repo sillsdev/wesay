@@ -8,10 +8,17 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Addin.Transform {
-	using System;
+using System.CodeDom.Compiler;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
+using System.Drawing;
+using System.Globalization;
+using System.Resources;
+using System.Runtime.CompilerServices;
 
-
+namespace Addin.Transform
+{
 	/// <summary>
 	///   A strongly-typed resource class, for looking up localized strings, etc.
 	/// </summary>
@@ -19,27 +26,31 @@ namespace Addin.Transform {
 	// class via a tool like ResGen or Visual Studio.
 	// To add or remove a member, edit your .ResX file then rerun ResGen
 	// with the /str option, or rebuild your VS project.
-	[global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "2.0.0.0")]
-	[global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-	[global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-	internal class Resources {
+	[GeneratedCode("System.Resources.Tools.StronglyTypedResourceBuilder", "2.0.0.0")]
+	[DebuggerNonUserCode()]
+	[CompilerGenerated()]
+	internal class Resources
+	{
+		private static ResourceManager resourceMan;
 
-		private static global::System.Resources.ResourceManager resourceMan;
+		private static CultureInfo resourceCulture;
 
-		private static global::System.Globalization.CultureInfo resourceCulture;
-
-		[global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-		internal Resources() {
-		}
+		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+		internal Resources() {}
 
 		/// <summary>
 		///   Returns the cached ResourceManager instance used by this class.
 		/// </summary>
-		[global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-		internal static global::System.Resources.ResourceManager ResourceManager {
-			get {
-				if (object.ReferenceEquals(resourceMan, null)) {
-					global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Addin.Transform.Resources", typeof(Resources).Assembly);
+		[EditorBrowsable(EditorBrowsableState.Advanced)]
+		internal static ResourceManager ResourceManager
+		{
+			get
+			{
+				if (ReferenceEquals(resourceMan, null))
+				{
+					ResourceManager temp =
+							new ResourceManager("Addin.Transform.Resources",
+												typeof (Resources).Assembly);
 					resourceMan = temp;
 				}
 				return resourceMan;
@@ -50,55 +61,64 @@ namespace Addin.Transform {
 		///   Overrides the current thread's CurrentUICulture property for all
 		///   resource lookups using this strongly typed resource class.
 		/// </summary>
-		[global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-		internal static global::System.Globalization.CultureInfo Culture {
-			get {
-				return resourceCulture;
-			}
-			set {
-				resourceCulture = value;
-			}
+		[EditorBrowsable(EditorBrowsableState.Advanced)]
+		internal static CultureInfo Culture
+		{
+			get { return resourceCulture; }
+			set { resourceCulture = value; }
 		}
 
-		internal static System.Drawing.Bitmap gears {
-			get {
+		internal static Bitmap gears
+		{
+			get
+			{
 				object obj = ResourceManager.GetObject("gears", resourceCulture);
-				return ((System.Drawing.Bitmap)(obj));
+				return ((Bitmap) (obj));
 			}
 		}
 
-		internal static System.Drawing.Bitmap greenPrinter {
-			get {
+		internal static Bitmap greenPrinter
+		{
+			get
+			{
 				object obj = ResourceManager.GetObject("greenPrinter", resourceCulture);
-				return ((System.Drawing.Bitmap)(obj));
+				return ((Bitmap) (obj));
 			}
 		}
 
-		internal static System.Drawing.Bitmap pdfDictionary {
-			get {
+		internal static Bitmap pdfDictionary
+		{
+			get
+			{
 				object obj = ResourceManager.GetObject("pdfDictionary", resourceCulture);
-				return ((System.Drawing.Bitmap)(obj));
+				return ((Bitmap) (obj));
 			}
 		}
 
-		internal static System.Drawing.Bitmap printButtonImage {
-			get {
+		internal static Bitmap printButtonImage
+		{
+			get
+			{
 				object obj = ResourceManager.GetObject("printButtonImage", resourceCulture);
-				return ((System.Drawing.Bitmap)(obj));
+				return ((Bitmap) (obj));
 			}
 		}
 
-		internal static System.Drawing.Bitmap SfmTransformerButtonImage {
-			get {
+		internal static Bitmap SfmTransformerButtonImage
+		{
+			get
+			{
 				object obj = ResourceManager.GetObject("SfmTransformerButtonImage", resourceCulture);
-				return ((System.Drawing.Bitmap)(obj));
+				return ((Bitmap) (obj));
 			}
 		}
 
-		internal static System.Drawing.Bitmap wordExport {
-			get {
+		internal static Bitmap wordExport
+		{
+			get
+			{
 				object obj = ResourceManager.GetObject("wordExport", resourceCulture);
-				return ((System.Drawing.Bitmap)(obj));
+				return ((Bitmap) (obj));
 			}
 		}
 	}

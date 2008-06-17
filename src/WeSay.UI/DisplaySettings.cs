@@ -16,23 +16,19 @@ namespace WeSay.UI
 			SetColors();
 		}
 
-
 		private Color _backgroundColor;
 		private Color _currentIndicatorColor;
 		private Color _wsLabelColor;
 		private Color _startBackgroundColorDefault;
 		private Color _endBackgroundColorDefault;
-		private Hashtable _startBackgroundColors;
-		private Hashtable _endBackgroundColors;
+		private readonly Hashtable _startBackgroundColors;
+		private readonly Hashtable _endBackgroundColors;
 
 		private string _skinName;
 
 		public Color BackgroundColor
 		{
-			get
-			{
-				return _backgroundColor;
-			}
+			get { return _backgroundColor; }
 			set { _backgroundColor = value; }
 		}
 
@@ -68,14 +64,18 @@ namespace WeSay.UI
 		public Color GetStartBackgroundColor(object obj)
 		{
 			if (obj != null && _startBackgroundColors.Contains(obj.GetType().Name))
+			{
 				return (Color) _startBackgroundColors[obj.GetType().Name];
+			}
 			return _startBackgroundColorDefault;
 		}
 
 		public Color GetEndBackgroundColor(object obj)
 		{
 			if (obj != null && _endBackgroundColors.Contains(obj.GetType().Name))
-				return (Color)_endBackgroundColors[obj.GetType().Name];
+			{
+				return (Color) _endBackgroundColors[obj.GetType().Name];
+			}
 			return _endBackgroundColorDefault;
 		}
 
@@ -84,13 +84,14 @@ namespace WeSay.UI
 			Color startColor = GetStartBackgroundColor(obj);
 			Color endColor = GetEndBackgroundColor(obj);
 			return
-				Color.FromArgb((startColor.R + endColor.R)/2, (startColor.G + endColor.G)/2,
-							   (startColor.B + endColor.B)/2);
+					Color.FromArgb((startColor.R + endColor.R) / 2,
+								   (startColor.G + endColor.G) / 2,
+								   (startColor.B + endColor.B) / 2);
 		}
 
 		public void ToggleColorScheme()
 		{
-			if(_skinName != "projector")
+			if (_skinName != "projector")
 			{
 				_skinName = "projector";
 			}
@@ -103,10 +104,7 @@ namespace WeSay.UI
 
 		public string SkinName
 		{
-			get
-			{
-				return _skinName;
-			}
+			get { return _skinName; }
 
 			set
 			{
@@ -118,8 +116,10 @@ namespace WeSay.UI
 		public void PaintBackground(Control control, PaintEventArgs e)
 		{
 			LinearGradientBrush gradBrush =
-				new LinearGradientBrush(control.ClientRectangle, GetStartBackgroundColor(control),
-										GetEndBackgroundColor(control), LinearGradientMode.Vertical);
+					new LinearGradientBrush(control.ClientRectangle,
+											GetStartBackgroundColor(control),
+											GetEndBackgroundColor(control),
+											LinearGradientMode.Vertical);
 			e.Graphics.FillRectangle(gradBrush, e.ClipRectangle);
 			gradBrush.Dispose();
 		}
@@ -128,7 +128,7 @@ namespace WeSay.UI
 		{
 			if (_skinName == "projector")
 			{
-				BackgroundColor = System.Drawing.Color.LightGreen;
+				BackgroundColor = Color.LightGreen;
 				StartBackgroundColorDefault = Color.White;
 				EndBackgroundColorDefault = Color.LightGreen;
 				_startBackgroundColors["Dash"] = Color.White;
@@ -137,18 +137,17 @@ namespace WeSay.UI
 			}
 			else
 			{
-//original                BackgroundColor = Color.FromArgb(235, 255, 215);
+				//original                BackgroundColor = Color.FromArgb(235, 255, 215);
 				BackgroundColor = Color.FromArgb(203, 255, 185);
 				StartBackgroundColorDefault = Color.FromArgb(229, 255, 220);
 				EndBackgroundColorDefault = Color.FromArgb(203, 255, 185);
-				_startBackgroundColors["Dash"] = Color.FromArgb(232, 242, 255);  // 220,230,242
+				_startBackgroundColors["Dash"] = Color.FromArgb(232, 242, 255); // 220,230,242
 				_endBackgroundColors["Dash"] = Color.FromArgb(186, 211, 242);
 
-			   // CurrentIndicatorColor = Color.FromArgb(((int)(((byte)(242)))), ((int)(((byte)(253)))), ((int)(((byte)(219)))));
+				// CurrentIndicatorColor = Color.FromArgb(((int)(((byte)(242)))), ((int)(((byte)(253)))), ((int)(((byte)(219)))));
 				_wsLabelColor = Color.Gray;
-
 			}
-			 CurrentIndicatorColor = BackgroundColor;
+			CurrentIndicatorColor = BackgroundColor;
 		}
 	}
 }

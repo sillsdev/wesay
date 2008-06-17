@@ -1,24 +1,23 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text.RegularExpressions;
 using LiftIO.Validation;
 using NUnit.Framework;
 using Palaso.Reporting;
 using WeSay.AddinLib;
+using WeSay.Project;
 
 namespace Addin.Transform.Tests
 {
 	[TestFixture]
 	public class SfmTransformerTests
 	{
-		public Transform.SfmTransformer _addin;
+		public SfmTransformer _addin;
 
 		[SetUp]
 		public void Setup()
 		{
-			WeSay.Project.WeSayWordsProject.InitializeForTests();
-			_addin = new Transform.SfmTransformer();
+			WeSayWordsProject.InitializeForTests();
+			_addin = new SfmTransformer();
 			_addin.LaunchAfterTransform = false;
 		}
 
@@ -51,7 +50,8 @@ namespace Addin.Transform.Tests
 			LaunchWithConversionString("");
 		}
 
-		[Test, ExpectedException(typeof(UnauthorizedAccessException))]
+		[Test]
+		[ExpectedException(typeof (UnauthorizedAccessException))]
 		public void ThrowsMeaningfulExceptionIfOutputFileIsLocked()
 		{
 			try
@@ -86,8 +86,9 @@ namespace Addin.Transform.Tests
 			settings.EnglishLanguageWritingSystemId = "en";
 			_addin.Settings = settings;
 
-
-			string contents = string.Format(@"<?xml version='1.0' encoding='utf-8'?>
+			string contents =
+					string.Format(
+							@"<?xml version='1.0' encoding='utf-8'?>
 			<lift  version='{0}'>
 			  <entry id='abo-abo_ID0ENG' >
 				<lexical-unit>
@@ -101,38 +102,38 @@ namespace Addin.Transform.Tests
 				  </form>
 				</pronunciation>
 			  </entry>
-			</lift>", Validator.LiftVersion);
+			</lift>",
+							Validator.LiftVersion);
 
 			string result = GetResultFromAddin(contents);
 			Assert.IsTrue(result.Contains("\\lx bthform"));
 			Assert.IsTrue(result.Contains("\\ph thePronunciation"));
-		 }
+		}
 
+		[Test]
+		public void UntypedRelationGetsCfTag()
+		{
+			/* um, relation without a type might not actually be valid lift */
 
-		 [Test]
-		 public void UntypedRelationGetsCfTag()
-		 {
+			SfmTransformSettings settings = new SfmTransformSettings();
+			settings.SfmTagConversions = "";
+			settings.VernacularLanguageWritingSystemId = "bth";
+			settings.EnglishLanguageWritingSystemId = "en";
+			_addin.Settings = settings;
 
-			 /* um, relation without a type might not actually be valid lift */
-
-			 SfmTransformSettings settings = new SfmTransformSettings();
-			 settings.SfmTagConversions = "";
-			 settings.VernacularLanguageWritingSystemId = "bth";
-			 settings.EnglishLanguageWritingSystemId = "en";
-			 _addin.Settings = settings;
-
-
-			 string contents = string.Format(@"<?xml version='1.0' encoding='utf-8'?>
+			string contents =
+					string.Format(
+							@"<?xml version='1.0' encoding='utf-8'?>
 			<lift  version='{0}'>
 			  <entry id='abo-abo_ID0ENG' >
 					  <relation ref='ebo' />
 			  </entry>
-			</lift>", Validator.LiftVersion);
+			</lift>",
+							Validator.LiftVersion);
 
-			 string result = GetResultFromAddin(contents);
-			 Assert.IsTrue(result.Contains("\\lf unknown = ebo"));
-		 }
-
+			string result = GetResultFromAddin(contents);
+			Assert.IsTrue(result.Contains("\\lf unknown = ebo"));
+		}
 
 		[Test]
 		public void RelationTaggedWthType_OutputsTypeForTagAndLexemeFormOfTarget()
@@ -143,8 +144,9 @@ namespace Addin.Transform.Tests
 			settings.EnglishLanguageWritingSystemId = "en";
 			_addin.Settings = settings;
 
-
-			string contents = string.Format(@"<?xml version='1.0' encoding='utf-8'?>
+			string contents =
+					string.Format(
+							@"<?xml version='1.0' encoding='utf-8'?>
 			<lift  version='{0}'>
 			  <entry id='abo-abo_ID0ENG' >
 					  <relation type='composition' ref='one' />
@@ -156,7 +158,8 @@ namespace Addin.Transform.Tests
 				  </form>
 				</lexical-unit>
 				</entry>
-			</lift>", Validator.LiftVersion);
+			</lift>",
+							Validator.LiftVersion);
 			string result = GetResultFromAddin(contents);
 			Console.WriteLine(result);
 			Assert.IsTrue(result.Contains("\\lf composition = lexemeOfOne"));
@@ -171,13 +174,15 @@ namespace Addin.Transform.Tests
 			settings.EnglishLanguageWritingSystemId = "en";
 			_addin.Settings = settings;
 
-
-			string contents = string.Format(@"<?xml version='1.0' encoding='utf-8'?>
+			string contents =
+					string.Format(
+							@"<?xml version='1.0' encoding='utf-8'?>
 			<lift  version='{0}'>
 			  <entry id='one' >
 					  <relation type='composition' ref='id-of-missing' />
 			  </entry>
-			</lift>", Validator.LiftVersion);
+			</lift>",
+							Validator.LiftVersion);
 			string result = GetResultFromAddin(contents);
 			Assert.IsTrue(result.Contains("\\lf composition = id-of-missing"));
 		}
@@ -220,11 +225,12 @@ namespace Addin.Transform.Tests
 		[Test]
 		public void BogusExpressionDoesntCrash()
 		{
-			Palaso.Reporting.ErrorReport.JustRecordNonFatalMessagesForTesting = true;
+			ErrorReport.JustRecordNonFatalMessagesForTesting = true;
 			Assert.IsNull(ErrorReport.PreviousNonFatalMessage);
-			LaunchWithConversionString("{foo "  //missing "to"
-				+System.Environment.NewLine+"{foo $3" //bogus group refference
-				+System.Environment.NewLine+"[ foo"); // this is the one that is failing
+			LaunchWithConversionString("{foo " //missing "to"
+									   + Environment.NewLine + "{foo $3" //bogus group refference
+									   + Environment.NewLine + "[ foo");
+			// this is the one that is failing
 			Assert.IsNotNull(ErrorReport.PreviousNonFatalMessage);
 		}
 
@@ -233,17 +239,17 @@ namespace Addin.Transform.Tests
 		{
 			LaunchWithConversionString("hello hellothere");
 		}
+
 		[Test]
 		public void CanGetXsltFromResource()
 		{
-			ProjectInfo info = WeSay.Project.WeSayWordsProject.Project.GetProjectInfoForAddin(null);
+			ProjectInfo info = WeSayWordsProject.Project.GetProjectInfoForAddin(null);
 			string path = info.LocateFile("lift2sfm.xsl");
 			if (!string.IsNullOrEmpty(path))
 			{
 				File.Delete(path);
 			}
-			Stream stream = LiftTransformer.GetXsltStream(info,
-										  "lift2sfm.xsl");
+			Stream stream = LiftTransformer.GetXsltStream(info, "lift2sfm.xsl");
 			Assert.IsNotNull(stream);
 		}
 
@@ -257,7 +263,9 @@ namespace Addin.Transform.Tests
 
 		private string LaunchAddin()
 		{
-			string contents = string.Format(@"<?xml version='1.0' encoding='utf-8'?>
+			string contents =
+					string.Format(
+							@"<?xml version='1.0' encoding='utf-8'?>
 			<lift  version='{0}'>
 				<entry id='one'
 					dateCreated='2008-02-06T09:46:31Z'
@@ -272,24 +280,24 @@ namespace Addin.Transform.Tests
 				</entry>
 				<entry id='two'>
 				</entry>
-			</lift>", Validator.LiftVersion);
+			</lift>",
+							Validator.LiftVersion);
 			return GetResultFromAddin(contents);
 		}
 
 		private string GetResultFromAddin(string contents)
 		{
-			if (WeSay.Project.WeSayWordsProject.Project.LiftIsLocked)
+			if (WeSayWordsProject.Project.LiftIsLocked)
 			{
-				WeSay.Project.WeSayWordsProject.Project.ReleaseLockOnLift();
+				WeSayWordsProject.Project.ReleaseLockOnLift();
 			}
-			File.WriteAllText(WeSay.Project.WeSayWordsProject.Project.PathToLiftFile, contents);
-			_addin.Launch(null, WeSay.Project.WeSayWordsProject.Project.GetProjectInfoForAddin(null));
+			File.WriteAllText(WeSayWordsProject.Project.PathToLiftFile, contents);
+			_addin.Launch(null, WeSayWordsProject.Project.GetProjectInfoForAddin(null));
 			Assert.IsTrue(File.Exists(_addin.PathToOutput));
-			string result =File.ReadAllText(_addin.PathToOutput);
+			string result = File.ReadAllText(_addin.PathToOutput);
 			Assert.Greater(result.Trim().Length, 0);
 
 			return result;
 		}
 	}
-
 }

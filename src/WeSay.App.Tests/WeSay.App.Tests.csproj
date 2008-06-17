@@ -95,7 +95,6 @@
 	<Compile Include="Services\HtmlArticleMakerTests.cs" />
 	<Compile Include="TabbedFormNavigationTests.cs" />
 	<Compile Include="TabbedFormTests.cs" />
-	<Compile Include="MakeTestFiles.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

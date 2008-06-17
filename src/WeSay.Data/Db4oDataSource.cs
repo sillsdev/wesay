@@ -3,36 +3,46 @@
 #endif
 
 using System;
+using System.Data.Common;
+using System.IO;
 using System.Runtime.Serialization;
+using Db4objects.Db4o;
+using Db4objects.Db4o.Config;
+
 #if THROW_ON_OPTIMIZATION_FAILURE
 using Db4objects.Db4o.Diagnostic;
 #endif
 
 namespace WeSay.Data
 {
-  [Serializable]
-  public sealed class Db4oException : System.Data.Common.DbException
-  {
-	public Db4oException() {}
-	public Db4oException(string message):base(message) {}
-	private Db4oException(SerializationInfo info, StreamingContext context) : base(info, context) {}
-	public Db4oException(string message, Exception innerException) : base(message, innerException) {}
-	public Db4oException(string message, int errorCode) : base(message, errorCode) {}
-  }
-	public class Db4oDataSource : IDisposable
+	[Serializable]
+	public sealed class Db4oException: DbException
 	{
-		Db4objects.Db4o.IObjectContainer _db;
+		public Db4oException() {}
+		public Db4oException(string message): base(message) {}
+		private Db4oException(SerializationInfo info, StreamingContext context): base(info, context) {}
+
+		public Db4oException(string message, Exception innerException)
+				: base(message, innerException) {}
+
+		public Db4oException(string message, int errorCode): base(message, errorCode) {}
+	}
+
+	public class Db4oDataSource: IDisposable
+	{
+		private IObjectContainer _db;
 		private bool _disposed;
 
 		public Db4oDataSource(string filePath)
 		{
-			Db4objects.Db4o.Config.IConfiguration db4oConfiguration = Db4objects.Db4o.Db4oFactory.Configure();
+			IConfiguration db4oConfiguration = Db4oFactory.Configure();
 			db4oConfiguration.MarkTransient("NonSerialized"); // this attribute is build-in to .net
 
-			_db = Db4objects.Db4o.Db4oFactory.OpenFile(filePath);
+			_db = Db4oFactory.OpenFile(filePath);
 			if (_db == null)
 			{
-				throw new System.IO.IOException("Problem opening " + filePath + ". Maybe it is in use by another program.");
+				throw new IOException("Problem opening " + filePath +
+									  ". Maybe it is in use by another program.");
 			}
 #if THROW_ON_OPTIMIZATION_FAILURE
 			((Db4objects.Db4o.YapStream)_db).GetNativeQueryHandler().QueryOptimizationFailure += new Db4objects.Db4o.Inside.Query.QueryOptimizationFailureHandler(OnQueryOptimizationFailure);
@@ -50,12 +60,13 @@ namespace WeSay.Data
 			throw new Db4oException("Query not Optimized", args.Reason);
 		}
 #endif
+
 		[CLSCompliant(false)]
-		public Db4objects.Db4o.IObjectContainer Data
+		public IObjectContainer Data
 		{
 			get
 			{
-				if (this._disposed)
+				if (_disposed)
 				{
 					throw new ObjectDisposedException("Db4oDataSource");
 				}
@@ -67,23 +78,24 @@ namespace WeSay.Data
 
 		public void Dispose()
 		{
-		  Dispose(true);
+			Dispose(true);
 		}
-	  protected virtual void Dispose(bool disposing)
-	  {
-		if (!this._disposed)
-		{
-		  if (disposing)
-		  {
-			_db.Close();
-			_db.Dispose();
-			_db = null;
-			GC.SuppressFinalize(this);
-		  }
-		}
-		_disposed = true;
-	  }
-		#endregion
 
+		protected virtual void Dispose(bool disposing)
+		{
+			if (!_disposed)
+			{
+				if (disposing)
+				{
+					_db.Close();
+					_db.Dispose();
+					_db = null;
+					GC.SuppressFinalize(this);
+				}
+			}
+			_disposed = true;
+		}
+
+		#endregion
 	}
 }

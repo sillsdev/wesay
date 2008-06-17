@@ -2,20 +2,20 @@ using System;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
+using Palaso.Reporting;
 using WeSay.Foundation;
 
 namespace WeSay.UI
 {
-	public partial class PictureControl : UserControl, IBindableControl<string>
+	public partial class PictureControl: UserControl, IBindableControl<string>
 	{
-		private string _nameForLogging;
+		private readonly string _nameForLogging;
 		public event EventHandler ValueChanged;
 		public event EventHandler GoingAway;
 
-
 		private string _fileName;
-		private string _storageFolderPath;
-		private Color _shyLinkColor = Color.LightGray;
+		private readonly string _storageFolderPath;
+		private readonly Color _shyLinkColor = Color.LightGray;
 
 		public PictureControl(string nameForLogging, string storageFolderPath)
 		{
@@ -81,7 +81,6 @@ namespace WeSay.UI
 
 			_chooseImageLink.LinkColor = _shyLinkColor;
 			_removeImageLink.LinkColor = _shyLinkColor;
-
 		}
 
 		private void ImageDisplayWidget_Load(object sender, EventArgs e)
@@ -97,10 +96,11 @@ namespace WeSay.UI
 				dialog.Filter = "Images|*.jpg;*.png;*.bmp;*.gif";
 				dialog.Multiselect = false;
 				dialog.Title = "Choose image";
-				dialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
+				dialog.InitialDirectory =
+						Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
 				if (dialog.ShowDialog() == DialogResult.OK)
 				{
-					_fileName = System.IO.Path.GetFileName(dialog.FileName);
+					_fileName = Path.GetFileName(dialog.FileName);
 					if (File.Exists(GetPathToImage()))
 					{
 						File.Delete(GetPathToImage());
@@ -113,26 +113,25 @@ namespace WeSay.UI
 			}
 			catch (Exception error)
 			{
-				Palaso.Reporting.ErrorReport.ReportNonFatalMessage("Something went wrong getting the picture. " +
-																   error.Message);
+				ErrorReport.ReportNonFatalMessage("Something went wrong getting the picture. " +
+												  error.Message);
 			}
 		}
 
 		private void NotifyChanged()
 		{
-			Palaso.Reporting.Logger.WriteMinorEvent("Picture Control Changed ({0})", this._nameForLogging);
+			Logger.WriteMinorEvent("Picture Control Changed ({0})", _nameForLogging);
 			if (ValueChanged != null)
 			{
 				ValueChanged.Invoke(this, null);
 			}
 		}
 
-
 		protected override void OnHandleDestroyed(EventArgs e)
 		{
 			if (GoingAway != null)
 			{
-				GoingAway.Invoke(this, null);//shake any bindings to us loose
+				GoingAway.Invoke(this, null); //shake any bindings to us loose
 			}
 			GoingAway = null;
 			base.OnHandleDestroyed(e);
@@ -140,41 +139,35 @@ namespace WeSay.UI
 
 		public string Value
 		{
-			get
-			{
-				return _fileName;
-			}
-			set
-			{
-			   _fileName = value;
-			}
+			get { return _fileName; }
+			set { _fileName = value; }
 		}
 
 		private string GetPathToImage()
 		{
-			return System.IO.Path.Combine(_storageFolderPath, _fileName);
+			return Path.Combine(_storageFolderPath, _fileName);
 		}
 
 		private void _removeImageLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
 		{
-//    Why did I think we should rename the photo... makes it hard to change your mind...
-//   I think we can better add a function some day to trim the photos to ones you're really using
-//            try
-//            {
-//                if (File.Exists(this.GetPathToImage()))
-//                {
-//                    string old = this.GetPathToImage();
-//                    _fileName = "Unused_" + _fileName;
-//                    if(!File.Exists(GetPathToImage()))
-//                    {
-//                        File.Move(old, GetPathToImage());
-//                    }
-//                }
-//            }
-//            catch(Exception error)
-//            {
-//                Palaso.Reporting.ErrorReport.ReportNonFatalMessage(error.Message);
-//            }
+			//    Why did I think we should rename the photo... makes it hard to change your mind...
+			//   I think we can better add a function some day to trim the photos to ones you're really using
+			//            try
+			//            {
+			//                if (File.Exists(this.GetPathToImage()))
+			//                {
+			//                    string old = this.GetPathToImage();
+			//                    _fileName = "Unused_" + _fileName;
+			//                    if(!File.Exists(GetPathToImage()))
+			//                    {
+			//                        File.Move(old, GetPathToImage());
+			//                    }
+			//                }
+			//            }
+			//            catch(Exception error)
+			//            {
+			//                Palaso.Reporting.ErrorReport.ReportNonFatalMessage(error.Message);
+			//            }
 
 			_fileName = string.Empty;
 			NotifyChanged();
@@ -189,7 +182,6 @@ namespace WeSay.UI
 		private void _chooseImageLink_MouseEnter(object sender, EventArgs e)
 		{
 			_chooseImageLink.LinkColor = Color.Blue;
-
 		}
 
 		private void _chooseImageLink_MouseLeave(object sender, EventArgs e)
@@ -206,14 +198,12 @@ namespace WeSay.UI
 		{
 			_chooseImageLink.LinkColor = Color.Blue;
 			_removeImageLink.LinkColor = Color.Blue;
-
 		}
 
 		private void ImageDisplayWidget_MouseLeave(object sender, EventArgs e)
 		{
 			_chooseImageLink.LinkColor = _shyLinkColor;
 			_removeImageLink.LinkColor = _shyLinkColor;
-
 		}
 	}
 }

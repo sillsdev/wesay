@@ -21,10 +21,8 @@ namespace WeSay.Data
 					result.Append('%');
 					result.Append(Convert.ToByte(c).ToString("x"));
 				}
-
 			}
 			return result.ToString();
 		}
 	}
-
 }

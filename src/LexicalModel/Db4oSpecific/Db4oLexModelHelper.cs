@@ -5,7 +5,7 @@ using Db4objects.Db4o.Events;
 using WeSay.Foundation;
 using Debug=System.Diagnostics.Debug;
 
-namespace WeSay.LexicalModel.Db4o_Specific
+namespace WeSay.LexicalModel.Db4oSpecific
 {
 	/// <summary>
 	/// All db4o-specific code for WeSayDataObjects is isolated here
@@ -31,8 +31,7 @@ namespace WeSay.LexicalModel.Db4o_Specific
 			}
 			_doNotActivateTypes = new List<Type>();
 
-			IEventRegistry r =
-					EventRegistryFactory.ForObjectContainer(container);
+			IEventRegistry r = EventRegistryFactory.ForObjectContainer(container);
 			r.Activated += OnActivated;
 			r.Activating += OnActivating;
 		}
@@ -65,8 +64,7 @@ namespace WeSay.LexicalModel.Db4o_Specific
 				return;
 			}
 
-			IEventRegistry r =
-					EventRegistryFactory.ForObjectContainer(_container);
+			IEventRegistry r = EventRegistryFactory.ForObjectContainer(_container);
 			r.Activated -= OnActivated;
 			_container = null;
 			_singleton = null;

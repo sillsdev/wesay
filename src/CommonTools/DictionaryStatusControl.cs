@@ -5,7 +5,7 @@ using Palaso.UI.WindowsForms.i8n;
 
 namespace WeSay.CommonTools
 {
-	public partial class DictionaryStatusControl : UserControl
+	public partial class DictionaryStatusControl: UserControl
 	{
 		public DictionaryStatusControl()
 		{
@@ -14,33 +14,25 @@ namespace WeSay.CommonTools
 			ShowLogo = false;
 		}
 
-
 		public DictionaryStatusControl(int count)
 		{
 			InitializeComponent();
-			this._dictionarySizeLabel.Text = String.Format(StringCatalog.Get(this._dictionarySizeLabel.Text), count);
+			_dictionarySizeLabel.Text =
+					String.Format(StringCatalog.Get(_dictionarySizeLabel.Text), count);
 		}
 
 		public bool ShowLogo
 		{
-			set
-			{
-				_logoImage.Visible = value;
-			}
+			set { _logoImage.Visible = value; }
 		}
-		private void _dictionarySizeLabel_Click(object sender, EventArgs e)
-		{
 
-		}
+		private void _dictionarySizeLabel_Click(object sender, EventArgs e) {}
 
 		private void DictionaryStatusControl_FontChanged(object sender, EventArgs e)
 		{
-			this._dictionarySizeLabel.Font = this.Font;
+			_dictionarySizeLabel.Font = Font;
 		}
 
-		private void _dictionarySizeLabel_FontChanged(object sender, EventArgs e)
-		{
-
-		}
+		private void _dictionarySizeLabel_FontChanged(object sender, EventArgs e) {}
 	}
 }

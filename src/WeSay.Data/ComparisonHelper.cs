@@ -1,6 +1,6 @@
-using System.ComponentModel;
-using System.Collections.Generic;
 using System.Collections;
+using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace System
 {
@@ -27,16 +27,11 @@ namespace System
 		/// </summary>
 		public static Predicate<T> DefaultPredicate
 		{
-			get
-			{
-				return delegate(T item)
-					{
-						return true;
-					};
-			}
+			get { return delegate(T item) { return true; }; }
 		}
+
 		/// <summary>
-		/// Default property predicate which gets property value from <see cref="PropertyDescriptor"/> and compares it to key value using <see cref="EqualityComparer{object}.Default.Equals"/>.
+		/// Default property predicate which gets property value from <see cref="PropertyDescriptor"/> and compares it to key value using <see cref="EqualityComparer{T}.Default.Equals"/>.
 		/// </summary>
 		/// <remarks>If item is null, the predicate returns false.</remarks>
 		public static PropertyPredicate<T> DefaultPropertyPredicate
@@ -44,14 +39,21 @@ namespace System
 			get
 			{
 				return delegate(T item, PropertyDescriptor property, object key)
-					{
-						if (item == null)
-							return false;
-						else
-							return EqualityComparer<object>.Default.Equals(property.GetValue(item), key);
-					};
+					   {
+						   if (item == null)
+						   {
+							   return false;
+						   }
+						   else
+						   {
+							   return
+									   EqualityComparer<object>.Default.Equals(
+											   property.GetValue(item), key);
+						   }
+					   };
 			}
 		}
+
 		/// <summary>
 		/// Default comparison using <see cref="Comparer{}.Default"/>.
 		/// </summary>
@@ -59,6 +61,7 @@ namespace System
 		{
 			get { return GetComparison(null); }
 		}
+
 		/// <summary>
 		/// Default property comparison which uses <see cref="PropertyDescriptor.GetValue"/> to get values of compared items` properties and compares the values using <see cref="Comparer.Default.Compare"/>.
 		/// </summary>
@@ -67,22 +70,20 @@ namespace System
 			get
 			{
 				return delegate(T item1, T item2, PropertyDescriptor property)
-					{
-						object value1 = property.GetValue(item1);
-						object value2 = property.GetValue(item2);
-						return Comparer.Default.Compare(value1, value2);
-					};
+					   {
+						   object value1 = property.GetValue(item1);
+						   object value2 = property.GetValue(item2);
+						   return Comparer.Default.Compare(value1, value2);
+					   };
 			}
 		}
+
 		/// <summary>
 		/// Default equality comparison using <see cref="EqualityComparer{}.Default"/> comparer.
 		/// </summary>
 		public static EqualityComparison<T> DefaultEqualityComparison
 		{
-			get
-			{
-				return GetEqualityComparison(EqualityComparer<T>.Default);
-			}
+			get { return GetEqualityComparison(EqualityComparer<T>.Default); }
 		}
 
 		/// <summary>
@@ -94,12 +95,12 @@ namespace System
 		public static Predicate<T> GetInversePredicate(Predicate<T> predicate)
 		{
 			if (predicate == null)
+			{
 				throw new ArgumentNullException("predicate");
-			return delegate(T item)
-				{
-					return !predicate(item);
-				};
+			}
+			return delegate(T item) { return !predicate(item); };
 		}
+
 		/// <summary>
 		/// Converts <paramref name="comparer"/> to comparison type.
 		/// </summary>
@@ -108,12 +109,12 @@ namespace System
 		public static Comparison<T> GetComparison(Comparer<T> comparer)
 		{
 			if (comparer == null)
+			{
 				comparer = Comparer<T>.Default;
-			return delegate(T x, T y)
-				{
-					return comparer.Compare(x, y);
-				};
+			}
+			return delegate(T x, T y) { return comparer.Compare(x, y); };
 		}
+
 		/// <summary>
 		/// Converts <paramref name="comparison"/> to comparison with opposite direction order.
 		/// </summary>
@@ -123,14 +124,20 @@ namespace System
 		/// If <paramref name="direction"/> is <see cref="ListSortDirection.Descending"/>, <see cref="GetDescendingComparison"/> is used, otherwise <paramref name="comparison"/> is returned directly.
 		/// </returns>
 		/// <exception cref="ArgumentNullException"><paramref name="comparison"/> is null.</exception>
-		public static Comparison<T> GetComparison(Comparison<T> comparison, ListSortDirection direction)
+		public static Comparison<T> GetComparison(Comparison<T> comparison,
+												  ListSortDirection direction)
 		{
 			if (comparison == null)
+			{
 				throw new ArgumentNullException("comparison");
+			}
 			if (direction == ListSortDirection.Descending)
-				comparison = ComparisonHelper<T>.GetDescendingComparison(comparison);
+			{
+				comparison = GetDescendingComparison(comparison);
+			}
 			return comparison;
 		}
+
 		/// <summary>
 		/// Converts <paramref name="comparison"/> to comparison with opposite direction order.
 		/// </summary>
@@ -140,27 +147,29 @@ namespace System
 		public static Comparison<T> GetDescendingComparison(Comparison<T> comparison)
 		{
 			if (comparison == null)
+			{
 				throw new ArgumentNullException("comparison");
-			return delegate(T x, T y)
-				{
-					return -comparison(x, y);
-				};
+			}
+			return delegate(T x, T y) { return -comparison(x, y); };
 		}
+
 		/// <summary>
 		/// Gets property comparison with opposite sort direction than <paramref name="comparison"/>.
 		/// </summary>
 		/// <param name="comparison">Ascending comparison.</param>
 		/// <returns>Descending comparison.</returns>
 		/// <exception cref="ArgumentNullException"><paramref name="comparison"/> is null.</exception>
-		public static PropertyComparison<T> GetDescendingPropertyComparison(PropertyComparison<T> comparison)
+		public static PropertyComparison<T> GetDescendingPropertyComparison(
+				PropertyComparison<T> comparison)
 		{
 			if (comparison == null)
+			{
 				throw new ArgumentNullException("comparison");
-			return delegate(T x, T y, PropertyDescriptor property)
-				{
-					return -comparison(x, y, property);
-				};
+			}
+			return
+					delegate(T x, T y, PropertyDescriptor property) { return -comparison(x, y, property); };
 		}
+
 		/// <summary>
 		/// Converts <paramref name="comparison"/> to comparison with opposite direction order.
 		/// </summary>
@@ -171,14 +180,19 @@ namespace System
 		/// </returns>
 		/// <exception cref="ArgumentNullException"><paramref name="comparison"/> is null.</exception>
 		public static PropertyComparison<T> GetPropertyComparison(PropertyComparison<T> comparison,
-			ListSortDirection direction)
+																  ListSortDirection direction)
 		{
 			if (comparison == null)
+			{
 				throw new ArgumentNullException("comparison");
+			}
 			if (direction == ListSortDirection.Descending)
-				comparison = ComparisonHelper<T>.GetDescendingPropertyComparison(comparison);
+			{
+				comparison = GetDescendingPropertyComparison(comparison);
+			}
 			return comparison;
 		}
+
 		/// <summary>
 		/// Gets equality comparison from comparison, which returns true, if comparison returns 0.
 		/// </summary>
@@ -188,12 +202,12 @@ namespace System
 		public static EqualityComparison<T> GetEqualityComparison(Comparison<T> comparison)
 		{
 			if (comparison == null)
+			{
 				throw new ArgumentNullException("comparison");
-			return delegate(T x, T y)
-				{
-					return comparison(x, y) == 0;
-				};
+			}
+			return delegate(T x, T y) { return comparison(x, y) == 0; };
 		}
+
 		/// <summary>
 		/// Gets equality comparison from comparer.
 		/// </summary>
@@ -203,14 +217,12 @@ namespace System
 		public static EqualityComparison<T> GetEqualityComparison(EqualityComparer<T> comparer)
 		{
 			if (comparer == null)
+			{
 				throw new ArgumentNullException("comparer");
-			return delegate(T x, T y)
-				{
-					return comparer.Equals(x, y);
-				};
+			}
+			return delegate(T x, T y) { return comparer.Equals(x, y); };
 		}
 	}
-
 
 	/// <summary>
 	/// Used for finding an item by its property value.
@@ -221,7 +233,6 @@ namespace System
 	/// <param name="key">Item property value to find.</param>
 	/// <returns>true, if item has the specified property value.</returns>
 	public delegate bool PropertyPredicate<T>(T item, PropertyDescriptor property, object key);
-
 
 	/// <summary>
 	/// Used for sorting items by their property.
@@ -236,7 +247,6 @@ namespace System
 	/// 1, if <paramref name="item1"/> is bigger than <paramref name="item2"/>.
 	/// </returns>
 	public delegate int PropertyComparison<T>(T item1, T item2, PropertyDescriptor property);
-
 
 	/// <summary>
 	/// Compares items whether they are equal or not.

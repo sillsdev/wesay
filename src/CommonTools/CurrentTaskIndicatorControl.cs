@@ -1,16 +1,17 @@
 using System;
+using System.Drawing;
 using System.Windows.Forms;
 using WeSay.UI;
 
 namespace WeSay.CommonTools
 {
-	public partial class CurrentTaskIndicatorControl : UserControl
+	public partial class CurrentTaskIndicatorControl: UserControl
 	{
 		private readonly TaskIndicator _content;
 
 		public CurrentTaskIndicatorControl()
 		{
-			if(!DesignMode)
+			if (!DesignMode)
 			{
 				throw new NotSupportedException("Only allowed in Design Mode");
 			}
@@ -24,7 +25,7 @@ namespace WeSay.CommonTools
 			InitializeComponent();
 
 			UpdateColors();
-			content.Location = new System.Drawing.Point(70, 35);
+			content.Location = new Point(70, 35);
 			content.AutoSize = false;
 			content.Width = Width - 80;
 			content.Height = 100;
@@ -35,7 +36,7 @@ namespace WeSay.CommonTools
 
 		public void UpdateColors()
 		{
-			this._shapeControl.CenterColor = DisplaySettings.Default.CurrentIndicatorColor;
+			_shapeControl.CenterColor = DisplaySettings.Default.CurrentIndicatorColor;
 			label1.BackColor = _shapeControl.CenterColor;
 			_content.BackColor = _shapeControl.CenterColor;
 		}

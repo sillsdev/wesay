@@ -9,52 +9,40 @@ namespace WeSay.UI.AutoCompleteTextBox
 	/// Summary description for TextLengthTrigger.
 	/// </summary>
 	[Serializable]
-	public class ShortCutTrigger : AutoCompleteTrigger
+	public class ShortCutTrigger: AutoCompleteTrigger
 	{
 		private Keys shortCut = Keys.None;
+
 		public Keys ShortCut
 		{
-			get
-			{
-				return this.shortCut;
-			}
-			set
-			{
-				this.shortCut = value;
-			}
+			get { return shortCut; }
+			set { shortCut = value; }
 		}
 
 		private TriggerState result = TriggerState.None;
+
 		public TriggerState ResultState
 		{
-			get
-			{
-				return this.result;
-			}
-			set
-			{
-				this.result = value;
-			}
+			get { return result; }
+			set { result = value; }
 		}
 
-		public ShortCutTrigger()
-		{
-		}
+		public ShortCutTrigger() {}
 
 		public ShortCutTrigger(Keys shortCutKeys, TriggerState resultState)
 		{
-			this.shortCut = shortCutKeys;
-			this.result = resultState;
+			shortCut = shortCutKeys;
+			result = resultState;
 		}
 
 		public override TriggerState OnCommandKey(Keys keyData)
 		{
 			if (keyData == ShortCut)
+			{
 				return ResultState;
+			}
 
 			return TriggerState.None;
 		}
-
-
 	}
 }

@@ -30,7 +30,7 @@ namespace WeSay.Project
 			DetermineHeadword = 4
 		} ;
 
-		private Options _options= Options.NormalLift;
+		private Options _options = Options.NormalLift;
 		private readonly LexEntryRepository _lexEntryRepository;
 
 		//   private Dictionary<string, string> _fieldToRangeSetPairs;
@@ -39,7 +39,8 @@ namespace WeSay.Project
 			_allIdsExportedSoFar = new Dictionary<string, int>();
 		}
 
-		public LiftExporter(/*Dictionary<string, string> fieldToOptionListName, */string path, LexEntryRepository lexEntryRepository): this()
+		public LiftExporter( /*Dictionary<string, string> fieldToOptionListName, */
+				string path, LexEntryRepository lexEntryRepository): this()
 		{
 			//   _fieldToRangeSetPairs = fieldToOptionListName;
 			_lexEntryRepository = lexEntryRepository;
@@ -50,8 +51,11 @@ namespace WeSay.Project
 		/// <summary>
 		/// for automated testing
 		/// </summary>`
-		public LiftExporter(/*Dictionary<string, string> fieldToOptionListName,*/ StringBuilder builder, bool produceFragmentOnly, LexEntryRepository lexEntryRepository)
-			:this()
+		public LiftExporter(
+				/*Dictionary<string, string> fieldToOptionListName,*/
+				StringBuilder builder,
+				bool produceFragmentOnly,
+				LexEntryRepository lexEntryRepository): this()
 		{
 			_lexEntryRepository = lexEntryRepository;
 			_writer = XmlWriter.Create(builder, PrepareSettings(produceFragmentOnly));
@@ -63,21 +67,22 @@ namespace WeSay.Project
 
 		public void SetUpForPresentationLiftExport(ViewTemplate template)
 		{
-			ExportOptions = Options.DereferenceRelations | Options.DereferenceOptions | Options.DetermineHeadword;
+			ExportOptions = Options.DereferenceRelations | Options.DereferenceOptions |
+							Options.DetermineHeadword;
 			Template = template;
 		}
 
-//        public Dictionary<string, string> FieldToRangeSetPairs
-//        {
-//            get
-//            {
-//                return _fieldToRangeSetPairs;
-//            }
-//            set
-//            {
-//                _fieldToRangeSetPairs = value;
-//            }
-//        }
+		//        public Dictionary<string, string> FieldToRangeSetPairs
+		//        {
+		//            get
+		//            {
+		//                return _fieldToRangeSetPairs;
+		//            }
+		//            set
+		//            {
+		//                _fieldToRangeSetPairs = value;
+		//            }
+		//        }
 
 		private static XmlWriterSettings PrepareSettings(bool produceFragmentOnly)
 		{
@@ -85,7 +90,7 @@ namespace WeSay.Project
 			if (produceFragmentOnly)
 			{
 				settings.ConformanceLevel = ConformanceLevel.Fragment;
-				settings.Indent = false;//helps with tests that just do a string compare
+				settings.Indent = false; //helps with tests that just do a string compare
 			}
 			else
 			{
@@ -100,22 +105,16 @@ namespace WeSay.Project
 
 		private void Start()
 		{
-
 			_writer.WriteStartDocument();
 			_writer.WriteStartElement("lift");
 			_writer.WriteAttributeString("version", Validator.LiftVersion);
-			_writer.WriteAttributeString("producer",
-										 ProducerString);
+			_writer.WriteAttributeString("producer", ProducerString);
 			// _writer.WriteAttributeString("xmlns", "flex", null, "http://fieldworks.sil.org");
 		}
 
 		public static string ProducerString
 		{
-			get
-			{
-				return "WeSay " +
-					   Assembly.GetExecutingAssembly().GetName().Version;
-			}
+			get { return "WeSay " + Assembly.GetExecutingAssembly().GetName().Version; }
 		}
 
 		/// <summary>
@@ -137,9 +136,8 @@ namespace WeSay.Project
 		{
 			if (_writer.Settings.ConformanceLevel != ConformanceLevel.Fragment)
 			{
-				_writer.WriteEndElement();//lift
+				_writer.WriteEndElement(); //lift
 				_writer.WriteEndDocument();
-
 			}
 			_writer.Flush();
 			_writer.Close();
@@ -167,7 +165,7 @@ namespace WeSay.Project
 				template = WeSayWordsProject.Project.DefaultViewTemplate;
 			}
 
-			List<string> propertiesAlreadyOutput=new List<string>();
+			List<string> propertiesAlreadyOutput = new List<string>();
 
 			_writer.WriteStartElement("entry");
 			_writer.WriteAttributeString("id", GetHumanReadableId(entry, _allIdsExportedSoFar));
@@ -179,19 +177,27 @@ namespace WeSay.Project
 			}
 
 			Debug.Assert(entry.CreationTime.Kind == DateTimeKind.Utc);
-			_writer.WriteAttributeString("dateCreated", entry.CreationTime.ToString(LiftDateTimeFormat));
+			_writer.WriteAttributeString("dateCreated",
+										 entry.CreationTime.ToString(LiftDateTimeFormat));
 			Debug.Assert(entry.ModificationTime.Kind == DateTimeKind.Utc);
-			_writer.WriteAttributeString("dateModified", entry.ModificationTime.ToString(LiftDateTimeFormat));
+			_writer.WriteAttributeString("dateModified",
+										 entry.ModificationTime.ToString(LiftDateTimeFormat));
 			_writer.WriteAttributeString("guid", entry.Guid.ToString());
 			// _writer.WriteAttributeString("flex", "id", "http://fieldworks.sil.org", entry.Guid.ToString());
-			WriteMultiWithWrapperIfNonEmpty(LexEntry.WellKnownProperties.LexicalUnit, "lexical-unit",entry.LexicalForm);
+			WriteMultiWithWrapperIfNonEmpty(LexEntry.WellKnownProperties.LexicalUnit,
+											"lexical-unit",
+											entry.LexicalForm);
 
 			if (0 != (_options & Options.DetermineHeadword))
 			{
-				WriteHeadWordField(entry,"headword");
+				WriteHeadWordField(entry, "headword");
 			}
-			WriteWellKnownCustomMultiText(entry, LexEntry.WellKnownProperties.Citation, propertiesAlreadyOutput);
-			WriteWellKnownCustomMultiText(entry, LexEntry.WellKnownProperties.Note, propertiesAlreadyOutput);
+			WriteWellKnownCustomMultiText(entry,
+										  LexEntry.WellKnownProperties.Citation,
+										  propertiesAlreadyOutput);
+			WriteWellKnownCustomMultiText(entry,
+										  LexEntry.WellKnownProperties.Note,
+										  propertiesAlreadyOutput);
 			WriteCustomProperties(entry, propertiesAlreadyOutput);
 			foreach (LexSense sense in entry.Senses)
 			{
@@ -205,15 +211,17 @@ namespace WeSay.Project
 		/// </summary>
 		private void WriteHeadWordField(LexEntry entry, string outputFieldName)
 		{
-			if(Template == null)
+			if (Template == null)
 			{
 				throw new InvalidOperationException("Expected a non-null Template");
 			}
 			MultiText headword = new MultiText();
-			Field fieldControllingHeadwordOutput = Template.GetField(LexEntry.WellKnownProperties.Citation);
-			if(fieldControllingHeadwordOutput == null || !fieldControllingHeadwordOutput.Enabled )
+			Field fieldControllingHeadwordOutput =
+					Template.GetField(LexEntry.WellKnownProperties.Citation);
+			if (fieldControllingHeadwordOutput == null || !fieldControllingHeadwordOutput.Enabled)
 			{
-				fieldControllingHeadwordOutput = Template.GetField(LexEntry.WellKnownProperties.LexicalUnit);
+				fieldControllingHeadwordOutput =
+						Template.GetField(LexEntry.WellKnownProperties.LexicalUnit);
 				if (fieldControllingHeadwordOutput == null)
 				{
 					throw new ArgumentException("Expected to find LexicalUnit in the view Template");
@@ -228,11 +236,10 @@ namespace WeSay.Project
 			WriteMultiTextAsArtificialField(outputFieldName, headword);
 		}
 
-
 		/// <summary>
 		/// use this for multitexts that were somehow constructed during export, with no corresponding single property
 		/// </summary>
-		private void WriteMultiTextAsArtificialField(string outputFieldName, MultiText text)
+		private void WriteMultiTextAsArtificialField(string outputFieldName, MultiTextBase text)
 		{
 			if (!MultiText.IsEmpty(text))
 			{
@@ -261,7 +268,7 @@ namespace WeSay.Project
 		/// idsAndCounts will produce different results each time it runs
 		/// </remarks>
 		/// <returns>A base id composed with its count</returns>
-		static public string GetHumanReadableId(LexEntry entry, Dictionary<string, int> idsAndCounts)
+		public static string GetHumanReadableId(LexEntry entry, Dictionary<string, int> idsAndCounts)
 		{
 			string id = entry.GetOrCreateId(true);
 			/*         if (id == null || id.Length == 0)       // if the entry doesn't claim to have an id
@@ -304,18 +311,24 @@ namespace WeSay.Project
 			}
 			if (ShouldOutputProperty(LexSense.WellKnownProperties.Gloss))
 			{
-				WriteOneElementPerFormIfNonEmpty(LexSense.WellKnownProperties.Gloss, "gloss", sense.Gloss, ';');
+				WriteOneElementPerFormIfNonEmpty(LexSense.WellKnownProperties.Gloss,
+												 "gloss",
+												 sense.Gloss,
+												 ';');
 				propertiesAlreadyOutput.Add(LexSense.WellKnownProperties.Gloss);
 			}
-
 
 			foreach (LexExampleSentence example in sense.ExampleSentences)
 			{
 				Add(example);
 			}
-			WriteWellKnownCustomMultiText(sense, LexSense.WellKnownProperties.Definition, propertiesAlreadyOutput);
-			WriteWellKnownCustomMultiText(sense, LexSense.WellKnownProperties.Note, propertiesAlreadyOutput);
-		 //   WriteWellKnownUnimplementedProperty(sense, LexSense.WellKnownProperties.Note, propertiesAlreadyOutput);
+			WriteWellKnownCustomMultiText(sense,
+										  LexSense.WellKnownProperties.Definition,
+										  propertiesAlreadyOutput);
+			WriteWellKnownCustomMultiText(sense,
+										  LexSense.WellKnownProperties.Note,
+										  propertiesAlreadyOutput);
+			//   WriteWellKnownUnimplementedProperty(sense, LexSense.WellKnownProperties.Note, propertiesAlreadyOutput);
 			WriteCustomProperties(sense, propertiesAlreadyOutput);
 			_writer.WriteEndElement();
 		}
@@ -323,7 +336,9 @@ namespace WeSay.Project
 		private void WriteGrammi(LexSense sense)
 		{
 			if (!ShouldOutputProperty(LexSense.WellKnownProperties.PartOfSpeech))
+			{
 				return;
+			}
 
 			OptionRef pos = sense.GetProperty<OptionRef>(LexSense.WellKnownProperties.PartOfSpeech);
 
@@ -350,33 +365,37 @@ namespace WeSay.Project
 
 		private void WriteDisplayNameFieldForOption(OptionRef optionRef, string fieldName)
 		{
-		  OptionsList list = WeSayWordsProject.Project.GetOptionsList(fieldName);
-		  if (list != null)
-		  {
-			  Option posOption = list.GetOptionFromKey(optionRef.Value);
-			  if (posOption == null)
-			  {
-				  return;
-			  }
-			  if (posOption.Name == null)
-			  {
-				  return;
-			  }
+			OptionsList list = WeSayWordsProject.Project.GetOptionsList(fieldName);
+			if (list != null)
+			{
+				Option posOption = list.GetOptionFromKey(optionRef.Value);
+				if (posOption == null)
+				{
+					return;
+				}
+				if (posOption.Name == null)
+				{
+					return;
+				}
 
-			  LanguageForm[] labelForms =
-				  posOption.Name.GetOrderedAndFilteredForms(_viewTemplate.GetField(fieldName).WritingSystemIds);
+				LanguageForm[] labelForms =
+						posOption.Name.GetOrderedAndFilteredForms(
+								_viewTemplate.GetField(fieldName).WritingSystemIds);
 
-			  if (labelForms != null && labelForms.Length > 0)
-			  {
-				  _writer.WriteStartElement("field");
-				  _writer.WriteAttributeString("type", fieldName=="POS" ? "grammatical-info" : fieldName);
-				  Add(labelForms, false);
-				  _writer.WriteEndElement();
-			  }
-		  }
+				if (labelForms != null && labelForms.Length > 0)
+				{
+					_writer.WriteStartElement("field");
+					_writer.WriteAttributeString("type",
+												 fieldName == "POS" ? "grammatical-info" : fieldName);
+					Add(labelForms, false);
+					_writer.WriteEndElement();
+				}
+			}
 		}
 
-		private void WriteWellKnownCustomMultiText(WeSayDataObject item, string property, ICollection<string> propertiesAlreadyOutput)
+		private void WriteWellKnownCustomMultiText(WeSayDataObject item,
+												   string property,
+												   ICollection<string> propertiesAlreadyOutput)
 		{
 			if (ShouldOutputProperty(property))
 			{
@@ -390,11 +409,15 @@ namespace WeSay.Project
 
 		private bool ShouldOutputProperty(string property)
 		{
-			if(Template == null)
+			if (Template == null)
+			{
 				return true;
+			}
 			Field f = Template.GetField(property);
-			if(f==null)
+			if (f == null)
+			{
 				return false;
+			}
 			return (f.Enabled);
 		}
 
@@ -405,7 +428,7 @@ namespace WeSay.Project
 		/// <param name="text"></param>
 		/// <param name="propertyName"></param>
 		/// <returns></returns>
-		private LanguageForm[] GetOrderedAndFilteredForms(MultiText text, string propertyName)
+		private LanguageForm[] GetOrderedAndFilteredForms(MultiTextBase text, string propertyName)
 		{
 			if (Template == null)
 			{
@@ -419,7 +442,8 @@ namespace WeSay.Project
 			return text.GetOrderedAndFilteredForms(f.WritingSystemIds);
 		}
 
-		private void WriteCustomProperties(WeSayDataObject item, ICollection<string> propertiesAlreadyOutput)
+		private void WriteCustomProperties(WeSayDataObject item,
+										   ICollection<string> propertiesAlreadyOutput)
 		{
 			foreach (KeyValuePair<string, object> pair in item.Properties)
 			{
@@ -427,7 +451,7 @@ namespace WeSay.Project
 				{
 					continue;
 				}
-				if(!ShouldOutputProperty(pair.Key))
+				if (!ShouldOutputProperty(pair.Key))
 				{
 					continue;
 				}
@@ -464,12 +488,14 @@ namespace WeSay.Project
 				PictureRef pictureRef = pair.Value as PictureRef;
 				if (pictureRef != null)
 				{
-					WriteURLRef("illustration", pictureRef.Value, pictureRef.Caption );
+					WriteURLRef("illustration", pictureRef.Value, pictureRef.Caption);
 					continue;
 				}
 				throw new ApplicationException(
-					string.Format("The LIFT exporter was surprised to find a property '{0}' of type: {1}", pair.Key,
-								  pair.Value.GetType()));
+						string.Format(
+								"The LIFT exporter was surprised to find a property '{0}' of type: {1}",
+								pair.Key,
+								pair.Value.GetType()));
 			}
 		}
 
@@ -498,7 +524,8 @@ namespace WeSay.Project
 			{
 				_writer.WriteStartElement("trait");
 				_writer.WriteAttributeString("name", key);
-				_writer.WriteAttributeString("value", "set");//this attr required by lift schema, though we don't use it
+				_writer.WriteAttributeString("value", "set");
+				//this attr required by lift schema, though we don't use it
 				_writer.WriteEndElement();
 			}
 		}
@@ -506,7 +533,9 @@ namespace WeSay.Project
 		private void WriteRelationCollection(string key, LexRelationCollection collection)
 		{
 			if (!ShouldOutputProperty(key))
+			{
 				return;
+			}
 
 			foreach (LexRelation relation in collection.Relations)
 			{
@@ -522,20 +551,20 @@ namespace WeSay.Project
 					}
 				}
 				_writer.WriteEndElement();
-
-
 			}
 		}
 
 		private void WriteOptionRefCollection(string traitName, OptionRefCollection collection)
 		{
 			if (!ShouldOutputProperty(traitName))
+			{
 				return;
+			}
 			foreach (string key in collection.Keys)
 			{
 				_writer.WriteStartElement("trait");
 				_writer.WriteAttributeString("name", traitName);
-				_writer.WriteAttributeString("value", key);//yes, the 'value' here is an option key
+				_writer.WriteAttributeString("value", key); //yes, the 'value' here is an option key
 				// WriteRangeName(key);
 				_writer.WriteEndElement();
 			}
@@ -557,36 +586,37 @@ namespace WeSay.Project
 		{
 			if (optionRef.Value.Length > 0)
 			{
-					if (0 != (ExportOptions & Options.DereferenceOptions))
-					{
-						WriteDisplayNameFieldForOption(optionRef, key);
-					}
-					else
-					{
-						_writer.WriteStartElement("trait");
-						_writer.WriteAttributeString("name", key);
-						_writer.WriteAttributeString("value", optionRef.Value);
+				if (0 != (ExportOptions & Options.DereferenceOptions))
+				{
+					WriteDisplayNameFieldForOption(optionRef, key);
+				}
+				else
+				{
+					_writer.WriteStartElement("trait");
+					_writer.WriteAttributeString("name", key);
+					_writer.WriteAttributeString("value", optionRef.Value);
 					_writer.WriteEndElement();
-					}
+				}
 
 				//  WriteRangeName(key);
-
 			}
 		}
 
-//        private void WriteRangeName(string key)
-//        {
-//            string rangeSet;
-//            if (_fieldToRangeSetPairs.TryGetValue(key, out rangeSet))
-//            {
-//                _writer.WriteAttributeString("range", rangeSet);
-//            }
-//        }
+		//        private void WriteRangeName(string key)
+		//        {
+		//            string rangeSet;
+		//            if (_fieldToRangeSetPairs.TryGetValue(key, out rangeSet))
+		//            {
+		//                _writer.WriteAttributeString("range", rangeSet);
+		//            }
+		//        }
 
 		public void Add(LexExampleSentence example)
 		{
 			if (!ShouldOutputProperty(LexExampleSentence.WellKnownProperties.ExampleSentence))
+			{
 				return;
+			}
 
 			List<string> propertiesAlreadyOutput = new List<string>();
 			_writer.WriteStartElement("example");
@@ -604,8 +634,9 @@ namespace WeSay.Project
 				}
 			}
 
-			WriteMultiTextNoWrapper(LexExampleSentence.WellKnownProperties.ExampleSentence, example.Sentence);
-		  //  WriteMultiWithWrapperIfNonEmpty(LexExampleSentence.WellKnownProperties.Translation, "translation", example.Translation);
+			WriteMultiTextNoWrapper(LexExampleSentence.WellKnownProperties.ExampleSentence,
+									example.Sentence);
+			//  WriteMultiWithWrapperIfNonEmpty(LexExampleSentence.WellKnownProperties.Translation, "translation", example.Translation);
 
 			if (!MultiText.IsEmpty(example.Translation))
 			{
@@ -621,19 +652,16 @@ namespace WeSay.Project
 				_writer.WriteEndElement();
 			}
 
-
 			if (ShouldOutputProperty(LexExampleSentence.WellKnownProperties.ExampleSentence))
 			{
-				WriteWellKnownCustomMultiText(example, LexExampleSentence.WellKnownProperties.Note,
+				WriteWellKnownCustomMultiText(example,
+											  LexExampleSentence.WellKnownProperties.Note,
 											  propertiesAlreadyOutput);
 			}
-
 
 			WriteCustomProperties(example, propertiesAlreadyOutput);
 			_writer.WriteEndElement();
 		}
-
-
 
 		public void Add(string propertyName, MultiText text)
 		{
@@ -649,7 +677,7 @@ namespace WeSay.Project
 				if (doMarkTheFirst)
 				{
 					doMarkTheFirst = false;
-					_writer.WriteAttributeString("first", "true");//useful for headword
+					_writer.WriteAttributeString("first", "true"); //useful for headword
 				}
 				_writer.WriteStartElement("text");
 				_writer.WriteString(form.Form);
@@ -662,7 +690,7 @@ namespace WeSay.Project
 
 		private void WriteFlags(IAnnotatable thing)
 		{
-			if (thing.IsStarred )
+			if (thing.IsStarred)
 			{
 				_writer.WriteStartElement("annotation");
 				_writer.WriteAttributeString("name", "flag");
@@ -671,44 +699,44 @@ namespace WeSay.Project
 			}
 		}
 
-
 		private void WriteMultiTextNoWrapper(string propertyName, MultiText text)
 		{
-
 			if (!MultiText.IsEmpty(text))
 			{
 				Add(propertyName, text);
 			}
 		}
 
-		private void WriteOneElementPerFormIfNonEmpty(string propertyName, string wrapperName, MultiText text, char delimeter)
+		private void WriteOneElementPerFormIfNonEmpty(string propertyName,
+													  string wrapperName,
+													  MultiTextBase text,
+													  char delimeter)
 		{
 			if (!MultiText.IsEmpty(text))
 			{
 				foreach (LanguageForm alternative in GetOrderedAndFilteredForms(text, propertyName))
 				{
-						foreach (string part in alternative.Form.Split(new char[] { delimeter }))
+					foreach (string part in alternative.Form.Split(new char[] {delimeter}))
+					{
+						string trimmed = part.Trim();
+						if (part != string.Empty)
 						{
-							string trimmed = part.Trim();
-							if (part != string.Empty)
-							{
-								_writer.WriteStartElement(wrapperName);
-								_writer.WriteAttributeString("lang", alternative.WritingSystemId);
-								_writer.WriteStartElement("text");
-								_writer.WriteString(trimmed);
-								_writer.WriteEndElement();
-								WriteFlags(alternative);
-								_writer.WriteEndElement();
-							}
+							_writer.WriteStartElement(wrapperName);
+							_writer.WriteAttributeString("lang", alternative.WritingSystemId);
+							_writer.WriteStartElement("text");
+							_writer.WriteString(trimmed);
+							_writer.WriteEndElement();
+							WriteFlags(alternative);
+							_writer.WriteEndElement();
 						}
+					}
 				}
 			}
 		}
 
-
-
-
-		private bool WriteMultiWithWrapperIfNonEmpty(string propertyName, string wrapperName, MultiText text)
+		private bool WriteMultiWithWrapperIfNonEmpty(string propertyName,
+													 string wrapperName,
+													 MultiText text)
 		{
 			if (!MultiText.IsEmpty(text))
 			{
@@ -724,14 +752,14 @@ namespace WeSay.Project
 		{
 			_writer.WriteStartElement("entry");
 			_writer.WriteAttributeString("id", GetHumanReadableId(entry, _allIdsExportedSoFar));
-			_writer.WriteAttributeString("dateCreated", entry.CreationTime.ToString(LiftDateTimeFormat));
-			_writer.WriteAttributeString("dateModified", entry.ModificationTime.ToString(LiftDateTimeFormat));
+			_writer.WriteAttributeString("dateCreated",
+										 entry.CreationTime.ToString(LiftDateTimeFormat));
+			_writer.WriteAttributeString("dateModified",
+										 entry.ModificationTime.ToString(LiftDateTimeFormat));
 			_writer.WriteAttributeString("guid", entry.Guid.ToString());
 			_writer.WriteAttributeString("dateDeleted", DateTime.UtcNow.ToString(LiftDateTimeFormat));
 
 			_writer.WriteEndElement();
 		}
 	}
-
-
 }

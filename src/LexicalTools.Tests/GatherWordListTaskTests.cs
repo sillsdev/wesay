@@ -3,22 +3,21 @@ using NUnit.Framework;
 using Palaso.Reporting;
 using WeSay.Data;
 using WeSay.Foundation;
-using WeSay.Language;
 using WeSay.LexicalModel;
 using WeSay.Project;
 
 namespace WeSay.LexicalTools.Tests
 {
 	[TestFixture]
-	public class GatherWordListTaskTests : TaskBaseTests
+	public class GatherWordListTaskTests: TaskBaseTests
 	{
-		LexEntryRepository _lexEntryRepository;
+		private LexEntryRepository _lexEntryRepository;
 		private string _wordListFilePath;
 		private string _filePath;
-		private readonly string[] _words = new string[] {"one","two","three"};
-		ViewTemplate _viewTemplate;
-		private string _glossingLanguageWSId ;
-		private string _vernacularLanguageWSId ;
+		private readonly string[] _words = new string[] {"one", "two", "three"};
+		private ViewTemplate _viewTemplate;
+		private string _glossingLanguageWSId;
+		private string _vernacularLanguageWSId;
 
 		[SetUp]
 		public void Setup()
@@ -34,14 +33,19 @@ namespace WeSay.LexicalTools.Tests
 
 			File.WriteAllLines(_wordListFilePath, _words);
 			_viewTemplate = new ViewTemplate();
-			this._viewTemplate.Add(new Field(Field.FieldNames.EntryLexicalForm.ToString(), "LexEntry", new string[] { BasilProject.Project.WritingSystems.TestWritingSystemVernId }));
+			_viewTemplate.Add(
+					new Field(Field.FieldNames.EntryLexicalForm.ToString(),
+							  "LexEntry",
+							  new string[]
+									  {BasilProject.Project.WritingSystems.TestWritingSystemVernId}));
 
-			this._task = new GatherWordListTask(_lexEntryRepository,
-												"label",
-												"description",
-												_wordListFilePath,
-												_glossingLanguageWSId,
-												_viewTemplate);
+			_task =
+					new GatherWordListTask(_lexEntryRepository,
+										   "label",
+										   "description",
+										   _wordListFilePath,
+										   _glossingLanguageWSId,
+										   _viewTemplate);
 		}
 
 		[TearDown]
@@ -55,44 +59,49 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void EmptyTemplate()
 		{
-			GatherWordListTask g = new GatherWordListTask(_lexEntryRepository,
-														  "label",
-														  "description",
-														  _wordListFilePath,
-														  WritingSystem.IdForUnknownAnalysis,
-														  new ViewTemplate());
+			GatherWordListTask g =
+					new GatherWordListTask(_lexEntryRepository,
+										   "label",
+										   "description",
+										   _wordListFilePath,
+										   WritingSystem.IdForUnknownAnalysis,
+										   new ViewTemplate());
 
 			Assert.IsNotNull(g);
 		}
 
-		[Test, ExpectedException(typeof(ErrorReport.NonFatalMessageSentToUserException))]
+		[Test]
+		[ExpectedException(typeof (ErrorReport.NonFatalMessageSentToUserException))]
 		public void MissingWordListFileGivesMessage()
 		{
-			GatherWordListTask g = new GatherWordListTask(_lexEntryRepository,
-														  "label",
-														  "description",
-														  "NotThere.txt",
-														  WritingSystem.IdForUnknownAnalysis,
-														  new ViewTemplate());
-			g.Activate();//should give a box to user, an exception in this text environment
+			GatherWordListTask g =
+					new GatherWordListTask(_lexEntryRepository,
+										   "label",
+										   "description",
+										   "NotThere.txt",
+										   WritingSystem.IdForUnknownAnalysis,
+										   new ViewTemplate());
+			g.Activate(); //should give a box to user, an exception in this text environment
 		}
 
-		[Test, ExpectedException(typeof(ErrorReport.NonFatalMessageSentToUserException))]
+		[Test]
+		[ExpectedException(typeof (ErrorReport.NonFatalMessageSentToUserException))]
 		public void WritingSystemNotInCurrentListGivesMessage()
 		{
-			GatherWordListTask g = new GatherWordListTask(_lexEntryRepository,
-														  "label",
-														  "description",
-														  _wordListFilePath,
-														  "z7z",
-														  new ViewTemplate());
-			g.Activate();//should give a box to user, an exception in this text environment
+			GatherWordListTask g =
+					new GatherWordListTask(_lexEntryRepository,
+										   "label",
+										   "description",
+										   _wordListFilePath,
+										   "z7z",
+										   new ViewTemplate());
+			g.Activate(); //should give a box to user, an exception in this text environment
 		}
 
 		[Test]
 		public void InitiallyWordIsCorrect()
 		{
-			Assert.AreEqual("one",Task.CurrentWordFromWordlist);
+			Assert.AreEqual("one", Task.CurrentWordFromWordlist);
 		}
 
 		[Test]
@@ -106,8 +115,8 @@ namespace WeSay.LexicalTools.Tests
 		public void CanNavigateBackToFirstWord()
 		{
 			Task.NavigateNext();
-			 Task.NavigatePrevious();
-		   Assert.AreEqual("one", Task.CurrentWordFromWordlist);
+			Task.NavigatePrevious();
+			Assert.AreEqual("one", Task.CurrentWordFromWordlist);
 		}
 
 		[Test]
@@ -115,32 +124,32 @@ namespace WeSay.LexicalTools.Tests
 		{
 			Assert.IsTrue(Task.CanNavigateNext);
 		}
+
 		[Test]
 		public void InitiallyCannotNavigatePrevious()
 		{
 			Assert.IsFalse(Task.CanNavigatePrevious);
 		}
+
 		[Test]
 		public void NavigateNextEnabledFalseAtEnd()
 		{
 			Assert.IsTrue(Task.CanNavigateNext);
 			NextToEnd();
 			Assert.IsFalse(Task.CanNavigateNext);
-	   }
+		}
 
 		private void NextToEnd()
 		{
-			for (int i = 0; i < _words.Length; i++)
+			for (int i = 0;i < _words.Length;i++)
 			{
 				Task.NavigateNext();
 			}
-
 		}
 
-		[Test,Ignore("Can't be tested on task, make sure it is correct on view.")]
-		public void GoingToNextWordSavesCurrentGloss()
-		{
-		}
+		[Test]
+		[Ignore("Can't be tested on task, make sure it is correct on view.")]
+		public void GoingToNextWordSavesCurrentGloss() {}
 
 		[Test]
 		public void IsTaskCompleteTrueAtEnd()
@@ -151,6 +160,7 @@ namespace WeSay.LexicalTools.Tests
 			Task.NavigatePrevious();
 			Assert.IsFalse(Task.IsTaskComplete);
 		}
+
 		[Test]
 		public void CanBackupFromEnd()
 		{
@@ -175,9 +185,9 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void FirstWordAlreadyCollected()
 		{
-			 //add a word with the first wordlist-word already in a sense
+			//add a word with the first wordlist-word already in a sense
 			AddEntryAndSense("one");
-		   Task.NavigateFirstToShow();
+			Task.NavigateFirstToShow();
 			Assert.AreEqual("two", Task.CurrentWordFromWordlist);
 		}
 
@@ -193,7 +203,7 @@ namespace WeSay.LexicalTools.Tests
 			Assert.IsTrue(Task.CanNavigateNext);
 			Assert.AreEqual("two", Task.CurrentWordFromWordlist);
 			Task.NavigateNext();
-			Assert.IsTrue(Task.IsTaskComplete);//we don't get to see "three"
+			Assert.IsTrue(Task.IsTaskComplete); //we don't get to see "three"
 		}
 
 		[Test]
@@ -226,7 +236,7 @@ namespace WeSay.LexicalTools.Tests
 			Task.WordCollected(word);
 			Assert.AreEqual(1, _lexEntryRepository.CountAllEntries());
 
-		   //this is an attempt to get a failure that I was able to get at one time in the
+			//this is an attempt to get a failure that I was able to get at one time in the
 			//app itself, but which I haven't got to fail under tests.  I believe I've
 			//fixed the bug, but alas this never really demonstrated it.
 			Assert.AreEqual(1, Task.GetMatchingRecords().Count);
@@ -247,7 +257,7 @@ namespace WeSay.LexicalTools.Tests
 			Task.WordCollected(word);
 			Assert.AreEqual(1, e.Senses.Count);
 			Assert.AreEqual(1, _lexEntryRepository.CountAllEntries());
-	   }
+		}
 
 		[Test]
 		public void AddWordAlreadyInDBAddsAdditionalSense()
@@ -269,24 +279,23 @@ namespace WeSay.LexicalTools.Tests
 			Assert.AreEqual(1, _lexEntryRepository.CountAllEntries());
 		}
 
+		[Test]
+		public void AddWordASecondTime_DoesNothing()
+		{
+			RecordToken<LexEntry> token = PrepareEntryWithOneGloss();
+			RecordToken<LexEntry> token2 = PrepareEntryWithOneGloss();
+			LexEntry entry = token.RealObject;
+			LexEntry entry2 = token2.RealObject;
+			Assert.AreSame(entry, entry2);
 
-	   [Test]
-	   public void AddWordASecondTime_DoesNothing()
-	   {
-		   RecordToken<LexEntry> token = PrepareEntryWithOneGloss();
-		   RecordToken<LexEntry> token2 = PrepareEntryWithOneGloss();
-		   LexEntry entry = token.RealObject;
-		   LexEntry entry2 = token2.RealObject;
-		   Assert.AreSame(entry, entry2);
-
-		   Assert.AreEqual(1, entry.Senses.Count);
-		   Assert.AreEqual(1, _lexEntryRepository.CountAllEntries());
-	   }
+			Assert.AreEqual(1, entry.Senses.Count);
+			Assert.AreEqual(1, _lexEntryRepository.CountAllEntries());
+		}
 
 		private void AddEntryAndSense(string gloss)
 		{
 			LexEntry e = _lexEntryRepository.CreateItem();
-			((LexSense)e.Senses.AddNew()).Gloss[_glossingLanguageWSId] = gloss;
+			((LexSense) e.Senses.AddNew()).Gloss[_glossingLanguageWSId] = gloss;
 			_lexEntryRepository.SaveItem(e);
 		}
 
@@ -312,9 +321,10 @@ namespace WeSay.LexicalTools.Tests
 
 			//now simulate removing it, as when the user wants to correct spelling
 			Task.TryToRemoveAssociationWithListWordFromEntry(token);
-			Assert.AreEqual(0, _lexEntryRepository.GetEntriesWithMatchingLexicalForm("uno", VernWs).Count);
+			Assert.AreEqual(0,
+							_lexEntryRepository.GetEntriesWithMatchingLexicalForm("uno", VernWs).
+									Count);
 		}
-
 
 		/// <summary>
 		/// test support for spell fixing
@@ -325,16 +335,17 @@ namespace WeSay.LexicalTools.Tests
 			RecordToken<LexEntry> token = PrepareEntryWithOneGloss();
 			//now tweak the entry
 			LexEntry entry = token.RealObject;
-			LexSense leaveAloneSense = (LexSense)entry.Senses.AddNew();
+			LexSense leaveAloneSense = (LexSense) entry.Senses.AddNew();
 			leaveAloneSense.Gloss.SetAlternative(_glossingLanguageWSId, "single");
 			Assert.AreEqual(2, entry.Senses.Count);
 
 			//now simulate removing it, as when the user wants to correct spelling
 			Task.TryToRemoveAssociationWithListWordFromEntry(token);
-			Assert.AreEqual(1, _lexEntryRepository.GetEntriesWithMatchingLexicalForm("uno", VernWs).Count);
+			Assert.AreEqual(1,
+							_lexEntryRepository.GetEntriesWithMatchingLexicalForm("uno", VernWs).
+									Count);
 			Assert.AreEqual(1, entry.Senses.Count);
 		}
-
 
 		/// <summary>
 		/// test support for spell fixing
@@ -345,16 +356,17 @@ namespace WeSay.LexicalTools.Tests
 			RecordToken<LexEntry> token = PrepareEntryWithOneGloss();
 			//now tweak the entry
 			LexEntry entry = token.RealObject;
-			LexSense leaveAloneSense = (LexSense)entry.Senses.AddNew();
+			LexSense leaveAloneSense = (LexSense) entry.Senses.AddNew();
 			leaveAloneSense.Gloss.SetAlternative(_glossingLanguageWSId, "single");
 			Assert.AreEqual(2, entry.Senses.Count);
 
 			//now simulate removing it, as when the user wants to correct spelling
 			Task.TryToRemoveAssociationWithListWordFromEntry(token);
-			Assert.AreEqual(1, _lexEntryRepository.GetEntriesWithMatchingLexicalForm("uno", VernWs).Count);
+			Assert.AreEqual(1,
+							_lexEntryRepository.GetEntriesWithMatchingLexicalForm("uno", VernWs).
+									Count);
 			Assert.AreEqual(1, entry.Senses.Count);
 		}
-
 
 		/// <summary>
 		/// test support for spell fixing (ideally, this would move the sense, but this what we do for now)
@@ -365,15 +377,19 @@ namespace WeSay.LexicalTools.Tests
 			RecordToken<LexEntry> token = PrepareEntryWithOneGloss();
 			//now tweak the entry
 			LexEntry entry = token.RealObject;
-			LexSense sense = (LexSense)entry.Senses[0];
-			LexExampleSentence ex= (LexExampleSentence) sense.ExampleSentences.AddNew();
+			LexSense sense = (LexSense) entry.Senses[0];
+			LexExampleSentence ex = (LexExampleSentence) sense.ExampleSentences.AddNew();
 			ex.Sentence.SetAlternative(VernWs.Id, "blah blah");
 
 			//now simulate removing it, as when the user wants to correct spelling
 			Task.TryToRemoveAssociationWithListWordFromEntry(token);
-			Assert.AreEqual(1, _lexEntryRepository.GetEntriesWithMatchingLexicalForm("uno", VernWs).Count);
+			Assert.AreEqual(1,
+							_lexEntryRepository.GetEntriesWithMatchingLexicalForm("uno", VernWs).
+									Count);
 			Assert.AreEqual(1, entry.Senses.Count);
-			Assert.AreEqual("one", sense.Gloss.GetExactAlternative(_glossingLanguageWSId), "should not remove the gloss");
+			Assert.AreEqual("one",
+							sense.Gloss.GetExactAlternative(_glossingLanguageWSId),
+							"should not remove the gloss");
 		}
 
 		private RecordToken<LexEntry> PrepareEntryWithOneGloss()
@@ -381,11 +397,14 @@ namespace WeSay.LexicalTools.Tests
 			Task.NavigateAbsoluteFirst();
 			MultiText word = new MultiText();
 
-			word.SetAlternative(_vernacularLanguageWSId,"uno");
+			word.SetAlternative(_vernacularLanguageWSId, "uno");
 			Task.WordCollected(word);
-			Assert.AreEqual(1, _lexEntryRepository.GetEntriesWithMatchingLexicalForm("uno", VernWs).Count);
+			Assert.AreEqual(1,
+							_lexEntryRepository.GetEntriesWithMatchingLexicalForm("uno", VernWs).
+									Count);
 
-			ResultSet<LexEntry> entries = _lexEntryRepository.GetEntriesWithMatchingLexicalForm("uno", VernWs);
+			ResultSet<LexEntry> entries =
+					_lexEntryRepository.GetEntriesWithMatchingLexicalForm("uno", VernWs);
 
 			return entries[0];
 		}
@@ -395,13 +414,9 @@ namespace WeSay.LexicalTools.Tests
 			get
 			{
 				WritingSystem vernWs;
-				BasilProject.Project.WritingSystems.TryGetValue(_vernacularLanguageWSId,out vernWs);
+				BasilProject.Project.WritingSystems.TryGetValue(_vernacularLanguageWSId, out vernWs);
 				return vernWs;
 			}
 		}
-
-
-
 	}
-
 }

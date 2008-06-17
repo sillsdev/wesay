@@ -7,7 +7,7 @@ using System.Windows.Forms;
 namespace WeSay.UI.Buttons
 {
 	[Description("Region Button Control")]
-	public abstract class RegionButton : Button
+	public abstract class RegionButton: Button
 	{
 		private Rectangle _textAndImageRectangle;
 
@@ -57,8 +57,12 @@ namespace WeSay.UI.Buttons
 
 		protected Rectangle TextAndImageRectangle
 		{
-			get { return this._textAndImageRectangle; }
-			set { this._textAndImageRectangle = value; Invalidate(); }
+			get { return _textAndImageRectangle; }
+			set
+			{
+				_textAndImageRectangle = value;
+				Invalidate();
+			}
 		}
 
 		protected override void OnPaint(PaintEventArgs e)
@@ -67,7 +71,8 @@ namespace WeSay.UI.Buttons
 			g.SmoothingMode = SmoothingMode.AntiAlias;
 			FillBackground(g, ClientRectangle);
 
-			GraphicsPath buttonPath = new GraphicsPath(Path.PathPoints, Path.PathTypes, Path.FillMode);
+			GraphicsPath buttonPath =
+					new GraphicsPath(Path.PathPoints, Path.PathTypes, Path.FillMode);
 
 			// size so it will fit in clip region
 			float depth = 4;
@@ -78,7 +83,9 @@ namespace WeSay.UI.Buttons
 			Color startColor = BackColor;
 			if (FlatStyle != FlatStyle.Flat)
 			{
-			  startColor = (IsDown) ? ControlPaint.Dark(BackColor) : ControlPaint.Light(BackColor, 1f);
+				startColor = (IsDown)
+									 ? ControlPaint.Dark(BackColor)
+									 : ControlPaint.Light(BackColor, 1f);
 			}
 
 			if (!IsDown)
@@ -87,7 +94,7 @@ namespace WeSay.UI.Buttons
 				{
 					startColor = ControlPaint.Light(hotColor, 1f);
 				}
-				else if(IsDefault)
+				else if (IsDefault)
 				{
 					startColor = ControlPaint.Light(activeColor, 1);
 				}
@@ -96,13 +103,15 @@ namespace WeSay.UI.Buttons
 			Color endColor = BackColor;
 			if (FlatStyle != FlatStyle.Flat)
 			{
-			  endColor = (IsDown) ? ControlPaint.LightLight(BackColor) : ControlPaint.Dark(BackColor);
+				endColor = (IsDown)
+								   ? ControlPaint.LightLight(BackColor)
+								   : ControlPaint.Dark(BackColor);
 			}
 			if (!IsDown)
 			{
 				if (IsHot)
 				{
-					endColor = hotColor;// ControlPaint.Dark(hotColor);
+					endColor = hotColor; // ControlPaint.Dark(hotColor);
 				}
 				else if (IsDefault)
 				{
@@ -110,11 +119,16 @@ namespace WeSay.UI.Buttons
 				}
 			}
 
-			using (LinearGradientBrush brush = new LinearGradientBrush(ClientRectangle, startColor, endColor, LinearGradientMode.Vertical))
+			using (
+					LinearGradientBrush brush =
+							new LinearGradientBrush(ClientRectangle,
+													startColor,
+													endColor,
+													LinearGradientMode.Vertical))
 			{
 				Blend blend = new Blend();
-				blend.Positions = new float[] { 0, .1f,.35f, .7f, .9f, 1 };
-				blend.Factors   = new float[] { 0, 0,  .5f, .5f, 1,   1 };
+				blend.Positions = new float[] {0, .1f, .35f, .7f, .9f, 1};
+				blend.Factors = new float[] {0, 0, .5f, .5f, 1, 1};
 				brush.Blend = blend;
 				g.FillPath(brush, buttonPath); // 3d effect
 			}
@@ -132,13 +146,16 @@ namespace WeSay.UI.Buttons
 				using (Pen pen = new Pen(ControlPaint.Dark(BackColor), 1))
 				{
 					pen.DashStyle = DashStyle.Dash;
-					pen.DashPattern = new float[]{3f, 1.5f};
+					pen.DashPattern = new float[] {3f, 1.5f};
 					g.DrawPath(pen, buttonPath); //outline
 				}
 			}
 
-			using (Brush brush = new SolidBrush((IsDown) ? ControlPaint.Dark(BackColor, .01f):
-														   ControlPaint.Light(BackColor, .01f)))
+			using (
+					Brush brush =
+							new SolidBrush((IsDown)
+												   ? ControlPaint.Dark(BackColor, .01f)
+												   : ControlPaint.Light(BackColor, .01f)))
 			{
 				g.FillPath(brush, buttonPath); // top surface of button
 			}
@@ -161,8 +178,7 @@ namespace WeSay.UI.Buttons
 			bounds.Inflate(2, 2);
 			float buttonWidth = bounds.Width;
 			float buttonHeight = bounds.Height;
-			matrix.Scale(1 - depth/buttonWidth,
-						 1 - depth/buttonHeight);
+			matrix.Scale(1 - depth / buttonWidth, 1 - depth / buttonHeight);
 			buttonPath.Transform(matrix);
 
 			matrix = new Matrix();
@@ -186,7 +202,7 @@ namespace WeSay.UI.Buttons
 				switch (ImageAlign)
 				{
 					case ContentAlignment.BottomCenter:
-						x += (buttonRect.Width - Image.Width)/2;
+						x += (buttonRect.Width - Image.Width) / 2;
 						y += buttonRect.Height - Image.Height;
 						break;
 					case ContentAlignment.BottomLeft:
@@ -246,7 +262,7 @@ namespace WeSay.UI.Buttons
 		/// </summary>
 		/// <param name="g">Graphics Object</param>
 		/// <param name="textRect">Rectangle defining the button text area</param>
-		private void DrawText(Graphics g, Rectangle textRect)
+		private void DrawText(IDeviceContext g, Rectangle textRect)
 		{
 			TextFormatFlags flags = TextFormatFlags.LeftAndRightPadding;
 

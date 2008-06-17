@@ -71,9 +71,6 @@
 	<Compile Include="Animator.cs" />
 	<Compile Include="AnnotationWidget.cs">
 	</Compile>
-	<Compile Include="ArrowButton.cs">
-	  <SubType>Component</SubType>
-	</Compile>
 	<Compile Include="AutoCompleteTextBox\AutoCompleteTextBox.cs">
 	  <SubType>Component</SubType>
 	</Compile>
@@ -204,10 +201,6 @@
 	</ProjectReference>
   </ItemGroup>
   <ItemGroup>
-	<EmbeddedResource Include="ArrowButton.resx">
-	  <DependentUpon>ArrowButton.cs</DependentUpon>
-	  <SubType>Designer</SubType>
-	</EmbeddedResource>
 	<EmbeddedResource Include="AutoCompleteTextBox\AutoCompleteWithCreationBox.resx">
 	  <DependentUpon>AutoCompleteWithCreationBox.cs</DependentUpon>
 	  <SubType>Designer</SubType>
