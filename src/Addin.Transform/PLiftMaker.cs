@@ -1,15 +1,8 @@
-
-
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
-using Palaso.UI.WindowsForms.i8n;
-using Palaso.UI.WindowsForms.Progress;
 using WeSay.Data;
 using WeSay.LexicalModel;
-using WeSay.LexicalModel.Db4o_Specific;
 using WeSay.Project;
 
 namespace Addin.Transform

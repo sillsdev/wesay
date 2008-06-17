@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
 using Db4objects.Db4o;
 using Palaso.Base32;
 using WeSay.Data;

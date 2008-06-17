@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using NUnit.Framework;
 using Palaso.Reporting;
@@ -8,7 +5,6 @@ using WeSay.Data;
 using WeSay.Foundation;
 using WeSay.Language;
 using WeSay.LexicalModel;
-using WeSay.LexicalModel.Db4o_Specific;
 using WeSay.Project;
 
 namespace WeSay.LexicalTools.Tests
@@ -19,7 +15,7 @@ namespace WeSay.LexicalTools.Tests
 		LexEntryRepository _lexEntryRepository;
 		private string _wordListFilePath;
 		private string _filePath;
-		private string[] _words = new string[] {"one","two","three"};
+		private readonly string[] _words = new string[] {"one","two","three"};
 		ViewTemplate _viewTemplate;
 		private string _glossingLanguageWSId ;
 		private string _vernacularLanguageWSId ;

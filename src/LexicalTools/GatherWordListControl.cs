@@ -3,12 +3,8 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 using WeSay.Data;
-using WeSay.Foundation;
 using WeSay.Language;
 using WeSay.LexicalModel;
-using WeSay.Project;
-using WeSay.UI;
-
 
 namespace WeSay.LexicalTools
 {
@@ -36,8 +32,8 @@ namespace WeSay.LexicalTools
 			_listViewOfWordsMatchingCurrentItem.Items.Clear();
 
 			_vernacularBox.WritingSystemsForThisField = new WritingSystem[] { lexicalUnitWritingSystem };
-			_vernacularBox.TextChanged += new EventHandler(_vernacularBox_TextChanged);
-			_vernacularBox.KeyDown += new KeyEventHandler(_boxVernacularWord_KeyDown);
+			_vernacularBox.TextChanged += _vernacularBox_TextChanged;
+			_vernacularBox.KeyDown += _boxVernacularWord_KeyDown;
 			_vernacularBox.MinimumSize = this._boxForeignWord.Size;
 
 			_listViewOfWordsMatchingCurrentItem.WritingSystem = _task.WordWritingSystem;
@@ -46,7 +42,7 @@ namespace WeSay.LexicalTools
 			UpdateStuff();
 
 			_movingLabel.Font = _vernacularBox.TextBoxes[0].Font;
-			_movingLabel.Finished += new EventHandler(OnAnimator_Finished);
+			_movingLabel.Finished += OnAnimator_Finished;
 		}
 
 		private void InitializeDisplaySettings()
@@ -201,11 +197,6 @@ namespace WeSay.LexicalTools
 				string word = _listViewOfWordsMatchingCurrentItem.SelectedItem.ToString();
 
 				RecordToken<LexEntry> recordToken = (RecordToken<LexEntry>)_listViewOfWordsMatchingCurrentItem.SelectedItem;
-				Debug.Assert(recordToken != null);
-				if (recordToken == null)
-				{
-					return;
-				}
 				Point start = _listViewOfWordsMatchingCurrentItem.GetItemRectangle(selectedListIndex).Location;
 				start.Offset(_listViewOfWordsMatchingCurrentItem.Location);
 				Point destination = _vernacularBox.Location;

@@ -21,8 +21,8 @@ namespace WeSay.Data
 
 	public class PrivateDb4oRecordListManager : IPrivateRecordListManager
 	{
-		private Db4oDataSource _dataSource;
-		private string _cachePath;
+		private readonly Db4oDataSource _dataSource;
+		private readonly string _cachePath;
 		private bool _delayWritingCachesUntilDispose=false;
 		private Hashtable _filteredRecordLists;
 		private bool _disposed;
@@ -138,16 +138,16 @@ namespace WeSay.Data
 		}
 
 
-		internal class FilteredDb4oRecordList<T> : Db4oRecordList<T>, IBindingList where T : class, new()
+		internal class FilteredDb4oRecordList<T> : Db4oRecordList<T> where T : class, new()
 		{
 			private bool _isSorted;
 			private IRecordList<T> _masterRecordList;
 			private bool _isSourceMasterRecord;
-			private IFilter<T> _isRelevantFilter;
-			private string _cachePath;
-			private bool _isInitializingFromCache;
-			private ISortHelper<T> _sortHelper;
-			private PrivateDb4oRecordListManager _recordListManager;
+			private readonly IFilter<T> _isRelevantFilter;
+			private readonly string _cachePath;
+			private readonly bool _isInitializingFromCache;
+			private readonly ISortHelper<T> _sortHelper;
+			private readonly PrivateDb4oRecordListManager _recordListManager;
 
 			public Predicate<T> RelevancePredicate
 			{
@@ -201,11 +201,9 @@ namespace WeSay.Data
 				{
 					SerializeRecordIds();
 				}
-				MasterRecordList.ListChanged += new ListChangedEventHandler(OnMasterRecordListListChanged);
-				MasterRecordList.ContentOfItemInListChanged +=
-						new ListChangedEventHandler(OnMasterRecordListContentOfItemInListChanged);
-				MasterRecordList.DeletingRecord +=
-						new EventHandler<RecordListEventArgs<T>>(OnMasterRecordListDeletingRecord);
+				MasterRecordList.ListChanged += OnMasterRecordListListChanged;
+				MasterRecordList.ContentOfItemInListChanged += OnMasterRecordListContentOfItemInListChanged;
+				MasterRecordList.DeletingRecord += OnMasterRecordListDeletingRecord;
 			}
 
 			// use the SortedList to determine the order of the filtered list items.
@@ -520,20 +518,20 @@ namespace WeSay.Data
 			}
 
 			// returns the value object. use GetKey to return the Key
-			object IList.this[int index]
-			{
-				get
-				{
-					VerifyNotDisposed();
-					VerifySorted();
-					return GetValue(index);
-				}
-				set
-				{
-					VerifyNotDisposed();
-					throw new NotSupportedException();
-				}
-			}
+			//object IList.this[int index]
+			//{
+			//    get
+			//    {
+			//        VerifyNotDisposed();
+			//        VerifySorted();
+			//        return GetValue(index);
+			//    }
+			//    set
+			//    {
+			//        VerifyNotDisposed();
+			//        throw new NotSupportedException();
+			//    }
+			//}
 
 			public override int IndexOf(T item)
 			{
@@ -542,12 +540,12 @@ namespace WeSay.Data
 				return base.IndexOf(item);
 			}
 
-			int IList.IndexOf(object value)
-			{
-				VerifyNotDisposed();
-				VerifySorted();
-				return IndexOf((T) value);
-			}
+			//int IList.IndexOf(object value)
+			//{
+			//    VerifyNotDisposed();
+			//    VerifySorted();
+			//    return IndexOf((T) value);
+			//}
 
 			protected override bool ShouldReplaceRecord(int index, T value)
 			{
@@ -693,7 +691,7 @@ namespace WeSay.Data
 			if (!RecordLists.ContainsKey(recordListKey))
 			{
 				IRecordList<T> MasterRecordList = CreateMasterRecordList<T>();
-				MasterRecordList.DeletingRecord += new EventHandler<RecordListEventArgs<T>>(MasterRecordList_DeletingRecord<T>);
+				MasterRecordList.DeletingRecord += MasterRecordList_DeletingRecord;
 				RecordLists.Add(recordListKey, MasterRecordList);
 			}
 			return (IRecordList<T>)RecordLists[recordListKey];

@@ -60,7 +60,6 @@
 	<Compile Include="SimpleIntFilter.cs" />
 	<Compile Include="SimpleIntSortHelper.cs" />
 	<Compile Include="SimpleIntTestClass.cs" />
-	<Compile Include="SortedDb4oRecordListTest.cs" />
 	<Compile Include="TestItem.cs" />
   </ItemGroup>
   <ItemGroup>

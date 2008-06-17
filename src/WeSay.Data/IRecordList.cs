@@ -29,11 +29,11 @@ namespace WeSay.Data
 		/// <summary>
 		/// See <see cref="Item"/>.
 		/// </summary>
-		private T _item;
+		private readonly T _item;
 	}
 
 
-	public interface IRecordList<T> : IBindingList, IControlCachingBehavior, IList<T>, ICollection<T>, IFilterable<T>, IDisposable, IEquatable<IRecordList<T>>, IEnumerable<T> where T : class, new()
+	public interface IRecordList<T> : IBindingList, IControlCachingBehavior, IList<T>, IFilterable<T>, IDisposable, IEquatable<IRecordList<T>> where T : class, new()
 	{
 		event EventHandler<RecordListEventArgs<T>> AddingRecord;
 		event EventHandler<RecordListEventArgs<T>> DeletingRecord;

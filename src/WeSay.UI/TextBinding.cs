@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using WeSay.Foundation;
 
 namespace WeSay.UI
@@ -13,22 +14,22 @@ namespace WeSay.UI
 		public event EventHandler<CurrentItemEventArgs> ChangeOfWhichItemIsInFocus = delegate
 																			 {
 																			 };
-		private string _writingSystemId;
+		private readonly string _writingSystemId;
 		private INotifyPropertyChanged _dataTarget;
 		private WeSayTextBox _textBoxTarget;
 		private bool _inMidstOfChange;
 
 		public TextBinding(INotifyPropertyChanged dataTarget, string writingSystemId, WeSayTextBox widgetTarget)
 		{
-			System.Diagnostics.Debug.Assert(dataTarget != null);
+			Debug.Assert(dataTarget != null);
 			_dataTarget = dataTarget;
-			_dataTarget.PropertyChanged += new PropertyChangedEventHandler(OnDataPropertyChanged);
+			_dataTarget.PropertyChanged += OnDataPropertyChanged;
 			_writingSystemId = writingSystemId;
 			_textBoxTarget = widgetTarget;
-			_textBoxTarget.TextChanged += new EventHandler(OnTextBoxChanged);
-			_textBoxTarget.HandleDestroyed += new EventHandler(_textBoxTarget_HandleDestroyed);
-			_textBoxTarget.Disposed += new EventHandler(_textBoxTarget_Disposed);
-			_textBoxTarget.Enter += new EventHandler(OnTextBoxEntered);
+			_textBoxTarget.TextChanged += OnTextBoxChanged;
+			_textBoxTarget.HandleDestroyed += _textBoxTarget_HandleDestroyed;
+			_textBoxTarget.Disposed += _textBoxTarget_Disposed;
+			_textBoxTarget.Enter += OnTextBoxEntered;
 		}
 
 		void _textBoxTarget_Disposed(object sender, EventArgs e)
@@ -65,11 +66,11 @@ namespace WeSay.UI
 				return; //teardown was called twice
 			}
 
-			_dataTarget.PropertyChanged -= new PropertyChangedEventHandler(OnDataPropertyChanged);
+			_dataTarget.PropertyChanged -= OnDataPropertyChanged;
 			_dataTarget = null;
-			_textBoxTarget.TextChanged -= new EventHandler(OnTextBoxChanged);
-			_textBoxTarget.HandleDestroyed -= new EventHandler(_textBoxTarget_HandleDestroyed);
-			_textBoxTarget.Disposed -= new EventHandler(_textBoxTarget_Disposed);
+			_textBoxTarget.TextChanged -= OnTextBoxChanged;
+			_textBoxTarget.HandleDestroyed -= _textBoxTarget_HandleDestroyed;
+			_textBoxTarget.Disposed -= _textBoxTarget_Disposed;
 			_textBoxTarget = null;
 		}
 
@@ -99,7 +100,7 @@ namespace WeSay.UI
 
 		protected string GetTargetValue()
 		{
-			System.Diagnostics.Debug.Assert(_dataTarget != null, "Perhaps the binding was already torn down?");
+			Debug.Assert(_dataTarget != null, "Perhaps the binding was already torn down?");
 			MultiText text = _dataTarget as MultiText;
 			if (text == null)
 				throw new ArgumentException("Binding can't handle that type of target.");
@@ -108,7 +109,7 @@ namespace WeSay.UI
 
 		protected virtual void SetTargetValue(string s)
 		{
-			System.Diagnostics.Debug.Assert(_dataTarget != null, "Perhaps the binding was already torn down?");
+			Debug.Assert(_dataTarget != null, "Perhaps the binding was already torn down?");
 			if (_inMidstOfChange)
 				return;
 

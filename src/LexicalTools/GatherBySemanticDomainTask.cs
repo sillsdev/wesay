@@ -441,52 +441,6 @@ namespace WeSay.LexicalTools
 			UpdateCurrentWords();
 		}
 
-		private bool EntryHasLexicalFormAndSemanticDomainAsOnlyContent(LexEntry entry)
-		{
-			if (entry.LexicalForm.Count > 1)
-			{
-				return false;
-			}
-
-			if (entry.LexicalForm.Count == 1 &&
-				!entry.LexicalForm.ContainsAlternative(WordWritingSystemId))
-			{
-				return false;
-			}
-
-			if (entry.HasProperties)
-			{
-				return false;
-			}
-
-			if (entry.Senses.Count > 1)
-			{
-				return false;
-			}
-
-			if (entry.Senses.Count == 1)
-			{
-				LexSense sense = (LexSense) entry.Senses[0];
-
-				if (!sense.IsEmptyForPurposesOfDeletion)
-				{
-					return false;
-				}
-
-				if (sense.Properties.Count == 1)
-				{
-					OptionRefCollection semanticDomains =
-							sense.GetProperty<OptionRefCollection>(_semanticDomainField.FieldName);
-					if (semanticDomains == null)
-					{
-						return false;
-					}
-				}
-			}
-
-			return true;
-		}
-
 		private void DisassociateCurrentSemanticDomainFromEntry(RecordToken<LexEntry> recordToken)
 		{
 			// have to iterate through these in reverse order
@@ -664,8 +618,8 @@ namespace WeSay.LexicalTools
 		public override void Deactivate()
 		{
 			// get the counts cached before we deactivate
-			this.GetRemainingCount();
-			this.GetReferenceCount();
+			GetRemainingCount();
+			GetReferenceCount();
 			base.Deactivate();
 			_gatherControl.Dispose();
 			_gatherControl = null;
@@ -676,7 +630,7 @@ namespace WeSay.LexicalTools
 		{
 			if (!IsActive)
 			{
-				return TaskBase.CountNotComputed;
+				return CountNotComputed;
 			}
 			int remainingCount = DomainKeys.Count;
 
@@ -696,7 +650,7 @@ namespace WeSay.LexicalTools
 		{
 			if (!IsActive)
 			{
-				return TaskBase.CountNotComputed;
+				return CountNotComputed;
 			}
 			return DomainKeys.Count;
 		}

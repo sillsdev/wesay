@@ -1,13 +1,12 @@
 using System;
 using System.ComponentModel;
-using Db4objects.Db4o.Diagnostic;
 using NUnit.Framework;
-using WeSay.Data.Tests.IEnumerableTests;
-using WeSay.Data.Tests.ICollectionTests;
-using WeSay.Data.Tests.IListTests;
 using WeSay.Data.Tests.IBindingListTests;
+using WeSay.Data.Tests.ICollectionTests;
+using WeSay.Data.Tests.IEnumerableTests;
+using WeSay.Data.Tests.IListTests;
 
-namespace WeSay.Data.Tests.Db4oRecordListTests
+namespace WeSay.Data.Tests
 {
 	[TestFixture]
 	public class Db4oRecordListIEnumerableTests : IEnumerableBaseTest<TestItem>
@@ -19,8 +18,8 @@ namespace WeSay.Data.Tests.Db4oRecordListTests
 		[TestFixtureSetUp]
 		public void FixtureSetUp()
 		{
-			_FilePath = System.IO.Path.GetTempFileName();
-			this._dataSource = new Db4oDataSource(_FilePath);
+			this._FilePath = System.IO.Path.GetTempFileName();
+			this._dataSource = new Db4oDataSource(this._FilePath);
 			this._recordList = new Db4oRecordList<TestItem>(this._dataSource);
 
 			this._enumerable = this._recordList;
@@ -34,7 +33,7 @@ namespace WeSay.Data.Tests.Db4oRecordListTests
 		{
 			this._recordList.Dispose();
 			this._dataSource.Dispose();
-			System.IO.File.Delete(_FilePath);
+			System.IO.File.Delete(this._FilePath);
 		}
 	}
 
@@ -48,8 +47,8 @@ namespace WeSay.Data.Tests.Db4oRecordListTests
 		[TestFixtureSetUp]
 		public void FixtureSetUp()
 		{
-			_FilePath = System.IO.Path.GetTempFileName();
-			this._dataSource = new Db4oDataSource(_FilePath);
+			this._FilePath = System.IO.Path.GetTempFileName();
+			this._dataSource = new Db4oDataSource(this._FilePath);
 			this._recordList = new Db4oRecordList<TestItem>(this._dataSource);
 
 			this._enumerable = this._recordList;
@@ -61,10 +60,9 @@ namespace WeSay.Data.Tests.Db4oRecordListTests
 		{
 			this._recordList.Dispose();
 			this._dataSource.Dispose();
-			System.IO.File.Delete(_FilePath);
+			System.IO.File.Delete(this._FilePath);
 		}
 	}
-
 
 	[TestFixture]
 	public class Db4oRecordListICollectionTest : ICollectionBaseTest<TestItem>
@@ -76,8 +74,8 @@ namespace WeSay.Data.Tests.Db4oRecordListTests
 		[TestFixtureSetUp]
 		public void FixtureSetUp()
 		{
-			_FilePath = System.IO.Path.GetTempFileName();
-			this._dataSource = new Db4oDataSource(_FilePath);
+			this._FilePath = System.IO.Path.GetTempFileName();
+			this._dataSource = new Db4oDataSource(this._FilePath);
 			this._recordList = new Db4oRecordList<TestItem>(this._dataSource);
 
 			this._collection = this._recordList;
@@ -91,10 +89,9 @@ namespace WeSay.Data.Tests.Db4oRecordListTests
 		{
 			this._recordList.Dispose();
 			this._dataSource.Dispose();
-			System.IO.File.Delete(_FilePath);
+			System.IO.File.Delete(this._FilePath);
 		}
 	}
-
 
 	[TestFixture]
 	public class Db4oRecordListICollectionWithNoDataTest : ICollectionBaseTest<TestItem>
@@ -106,8 +103,8 @@ namespace WeSay.Data.Tests.Db4oRecordListTests
 		[TestFixtureSetUp]
 		public void FixtureSetUp()
 		{
-			_FilePath = System.IO.Path.GetTempFileName();
-			this._dataSource = new Db4oDataSource(_FilePath);
+			this._FilePath = System.IO.Path.GetTempFileName();
+			this._dataSource = new Db4oDataSource(this._FilePath);
 			this._recordList = new Db4oRecordList<TestItem>(this._dataSource);
 
 			this._collection = this._recordList;
@@ -119,7 +116,7 @@ namespace WeSay.Data.Tests.Db4oRecordListTests
 		{
 			this._recordList.Dispose();
 			this._dataSource.Dispose();
-			System.IO.File.Delete(_FilePath);
+			System.IO.File.Delete(this._FilePath);
 		}
 	}
 
@@ -133,8 +130,8 @@ namespace WeSay.Data.Tests.Db4oRecordListTests
 		[SetUp]
 		public void SetUp()
 		{
-			_FilePath = System.IO.Path.GetTempFileName();
-			this._dataSource = new Db4oDataSource(_FilePath);
+			this._FilePath = System.IO.Path.GetTempFileName();
+			this._dataSource = new Db4oDataSource(this._FilePath);
 			this._recordList = new Db4oRecordList<TestItem>(this._dataSource);
 
 			this._list = this._recordList;
@@ -151,7 +148,7 @@ namespace WeSay.Data.Tests.Db4oRecordListTests
 		{
 			this._recordList.Dispose();
 			this._dataSource.Dispose();
-			System.IO.File.Delete(_FilePath);
+			System.IO.File.Delete(this._FilePath);
 		}
 
 	}
@@ -166,8 +163,8 @@ namespace WeSay.Data.Tests.Db4oRecordListTests
 		[SetUp]
 		public void SetUp()
 		{
-			_FilePath = System.IO.Path.GetTempFileName();
-			this._dataSource = new Db4oDataSource(_FilePath);
+			this._FilePath = System.IO.Path.GetTempFileName();
+			this._dataSource = new Db4oDataSource(this._FilePath);
 			this._recordList = new Db4oRecordList<TestItem>(this._dataSource);
 
 			this._list = this._recordList;
@@ -181,7 +178,7 @@ namespace WeSay.Data.Tests.Db4oRecordListTests
 		{
 			this._recordList.Dispose();
 			this._dataSource.Dispose();
-			System.IO.File.Delete(_FilePath);
+			System.IO.File.Delete(this._FilePath);
 		}
 
 	}
@@ -196,8 +193,8 @@ namespace WeSay.Data.Tests.Db4oRecordListTests
 		[SetUp]
 		public override void SetUp()
 		{
-			_FilePath = System.IO.Path.GetTempFileName();
-			this._dataSource = new Db4oDataSource(_FilePath);
+			this._FilePath = System.IO.Path.GetTempFileName();
+			this._dataSource = new Db4oDataSource(this._FilePath);
 			this._recordList = new Db4oRecordList<TestItem>(this._dataSource);
 			this._bindingList = this._recordList;
 
@@ -218,20 +215,20 @@ namespace WeSay.Data.Tests.Db4oRecordListTests
 		{
 			this._recordList.Dispose();
 			this._dataSource.Dispose();
-			System.IO.File.Delete(_FilePath);
+			System.IO.File.Delete(this._FilePath);
 		}
 
 		protected override void VerifySortAscending()
 		{
-			Assert.AreEqual(1, _recordList[0].StoredInt);
-			Assert.AreEqual(2, _recordList[1].StoredInt);
+			Assert.AreEqual(1, this._recordList[0].StoredInt);
+			Assert.AreEqual(2, this._recordList[1].StoredInt);
 			base.VerifySortAscending();
 		}
 
 		protected override void VerifySortDescending()
 		{
-			Assert.AreEqual(2, _recordList[0].StoredInt);
-			Assert.AreEqual(1, _recordList[1].StoredInt);
+			Assert.AreEqual(2, this._recordList[0].StoredInt);
+			Assert.AreEqual(1, this._recordList[1].StoredInt);
 			base.VerifySortDescending();
 		}
 	}
@@ -246,8 +243,8 @@ namespace WeSay.Data.Tests.Db4oRecordListTests
 		[SetUp]
 		public override void SetUp()
 		{
-			_FilePath = System.IO.Path.GetTempFileName();
-			this._dataSource = new Db4oDataSource(_FilePath);
+			this._FilePath = System.IO.Path.GetTempFileName();
+			this._dataSource = new Db4oDataSource(this._FilePath);
 			this._db4oRecordList = new Db4oRecordList<TestItem>(this._dataSource);
 			this._bindingList = this._db4oRecordList;
 
@@ -263,7 +260,7 @@ namespace WeSay.Data.Tests.Db4oRecordListTests
 		{
 			this._db4oRecordList.Dispose();
 			this._dataSource.Dispose();
-			System.IO.File.Delete(_FilePath);
+			System.IO.File.Delete(this._FilePath);
 		}
 	}
 
@@ -277,8 +274,8 @@ namespace WeSay.Data.Tests.Db4oRecordListTests
 		[SetUp]
 		public override void SetUp()
 		{
-			_FilePath = System.IO.Path.GetTempFileName();
-			this._dataSource = new Db4oDataSource(_FilePath);
+			this._FilePath = System.IO.Path.GetTempFileName();
+			this._dataSource = new Db4oDataSource(this._FilePath);
 			this._db4oRecordList = new Db4oRecordList<TestItem>(this._dataSource);
 			this._recordList = this._db4oRecordList;
 
@@ -295,7 +292,7 @@ namespace WeSay.Data.Tests.Db4oRecordListTests
 		{
 			this._db4oRecordList.Dispose();
 			this._dataSource.Dispose();
-			System.IO.File.Delete(_FilePath);
+			System.IO.File.Delete(this._FilePath);
 		}
 
 		protected override void Change(TestItem item)
@@ -314,8 +311,8 @@ namespace WeSay.Data.Tests.Db4oRecordListTests
 		[SetUp]
 		public override void SetUp()
 		{
-			_FilePath = System.IO.Path.GetTempFileName();
-			this._dataSource = new Db4oDataSource(_FilePath);
+			this._FilePath = System.IO.Path.GetTempFileName();
+			this._dataSource = new Db4oDataSource(this._FilePath);
 			this._db4oRecordList = new Db4oRecordList<TestItem>(this._dataSource);
 			this._recordList = this._db4oRecordList;
 			this._changedFieldName = "StoredInt";
@@ -327,7 +324,7 @@ namespace WeSay.Data.Tests.Db4oRecordListTests
 		{
 			this._db4oRecordList.Dispose();
 			this._dataSource.Dispose();
-			System.IO.File.Delete(_FilePath);
+			System.IO.File.Delete(this._FilePath);
 		}
 
 		protected override void Change(TestItem item)
@@ -349,13 +346,13 @@ namespace WeSay.Data.Tests.Db4oRecordListTests
 
 		public void _adaptor_ListChanged(object sender, ListChangedEventArgs e)
 		{
-			_listChanged = true;
-			_listChangedEventArgs = e;
+			this._listChanged = true;
+			this._listChangedEventArgs = e;
 		}
 
 		private void AssertListChanged()
 		{
-			Assert.IsTrue(_listChanged);
+			Assert.IsTrue(this._listChanged);
 			Assert.AreEqual(ListChangedType.Reset, this._listChangedEventArgs.ListChangedType);
 			ResetListChanged();
 		}
@@ -368,19 +365,19 @@ namespace WeSay.Data.Tests.Db4oRecordListTests
 		[SetUp]
 		public void SetUp()
 		{
-			_filePath = System.IO.Path.GetTempFileName();
-			this._dataSource = new Db4oDataSource(_filePath);
+			this._filePath = System.IO.Path.GetTempFileName();
+			this._dataSource = new Db4oDataSource(this._filePath);
 			this._recordList = new Db4oRecordList<TestItem>(this._dataSource);
-			this._recordList.ListChanged += new ListChangedEventHandler(_adaptor_ListChanged);
+			this._recordList.ListChanged += _adaptor_ListChanged;
 
-			_eric = new TestItem("Eric", 1, new DateTime(2006, 2, 28));
-			_allison = new TestItem("Allison", 2, new DateTime(2006, 1, 08));
-			_jared = new TestItem("Jared", 3, new DateTime(2006, 7, 10));
-			_gianna = new TestItem("Gianna", 4, new DateTime(2006, 7, 17));
-			this._recordList.Add(_jared);
-			this._recordList.Add(_gianna);
-			this._recordList.Add(_eric);
-			this._recordList.Add(_allison);
+			this._eric = new TestItem("Eric", 1, new DateTime(2006, 2, 28));
+			this._allison = new TestItem("Allison", 2, new DateTime(2006, 1, 08));
+			this._jared = new TestItem("Jared", 3, new DateTime(2006, 7, 10));
+			this._gianna = new TestItem("Gianna", 4, new DateTime(2006, 7, 17));
+			this._recordList.Add(this._jared);
+			this._recordList.Add(this._gianna);
+			this._recordList.Add(this._eric);
+			this._recordList.Add(this._allison);
 			ResetListChanged();
 		}
 
@@ -389,102 +386,102 @@ namespace WeSay.Data.Tests.Db4oRecordListTests
 		{
 			this._recordList.Dispose();
 			this._dataSource.Dispose();
-			System.IO.File.Delete(_filePath);
+			System.IO.File.Delete(this._filePath);
 		}
 
 		[Test]
 		public void SortIntAscending()
 		{
-			Assert.IsFalse(_listChanged);
+			Assert.IsFalse(this._listChanged);
 
 			PropertyDescriptorCollection pdc = TypeDescriptor.GetProperties(typeof(TestItem));
 			PropertyDescriptor pd = pdc.Find("StoredInt", false);
 			this._recordList.ApplySort(pd, ListSortDirection.Ascending);
 
-			Assert.AreEqual(_eric, this._recordList[0]);
-			Assert.AreEqual(_allison, this._recordList[1]);
-			Assert.AreEqual(_jared, this._recordList[2]);
-			Assert.AreEqual(_gianna, this._recordList[3]);
+			Assert.AreEqual(this._eric, this._recordList[0]);
+			Assert.AreEqual(this._allison, this._recordList[1]);
+			Assert.AreEqual(this._jared, this._recordList[2]);
+			Assert.AreEqual(this._gianna, this._recordList[3]);
 			AssertListChanged();
 		}
 
 		[Test]
 		public void SortIntDescending()
 		{
-			Assert.IsFalse(_listChanged);
+			Assert.IsFalse(this._listChanged);
 
 			PropertyDescriptorCollection pdc = TypeDescriptor.GetProperties(typeof(TestItem));
 			PropertyDescriptor pd = pdc.Find("StoredInt", false);
 			this._recordList.ApplySort(pd, ListSortDirection.Descending);
 
-			Assert.AreEqual(_gianna, this._recordList[0]);
-			Assert.AreEqual(_jared, this._recordList[1]);
-			Assert.AreEqual(_allison, this._recordList[2]);
-			Assert.AreEqual(_eric, this._recordList[3]);
+			Assert.AreEqual(this._gianna, this._recordList[0]);
+			Assert.AreEqual(this._jared, this._recordList[1]);
+			Assert.AreEqual(this._allison, this._recordList[2]);
+			Assert.AreEqual(this._eric, this._recordList[3]);
 			AssertListChanged();
 		}
 
 		[Test]
 		public void SortDateAscending()
 		{
-			Assert.IsFalse(_listChanged);
+			Assert.IsFalse(this._listChanged);
 
 			PropertyDescriptorCollection pdc = TypeDescriptor.GetProperties(typeof(TestItem));
 			PropertyDescriptor pd = pdc.Find("StoredDateTime", false);
 			this._recordList.ApplySort(pd, ListSortDirection.Ascending);
 
-			Assert.AreEqual(_allison, this._recordList[0]);
-			Assert.AreEqual(_eric, this._recordList[1]);
-			Assert.AreEqual(_jared, this._recordList[2]);
-			Assert.AreEqual(_gianna, this._recordList[3]);
+			Assert.AreEqual(this._allison, this._recordList[0]);
+			Assert.AreEqual(this._eric, this._recordList[1]);
+			Assert.AreEqual(this._jared, this._recordList[2]);
+			Assert.AreEqual(this._gianna, this._recordList[3]);
 			AssertListChanged();
 		}
 
 		[Test]
 		public void SortDateDescending()
 		{
-			Assert.IsFalse(_listChanged);
+			Assert.IsFalse(this._listChanged);
 
 			PropertyDescriptorCollection pdc = TypeDescriptor.GetProperties(typeof(TestItem));
 			PropertyDescriptor pd = pdc.Find("StoredDateTime", false);
 			this._recordList.ApplySort(pd, ListSortDirection.Descending);
 
-			Assert.AreEqual(_gianna, this._recordList[0]);
-			Assert.AreEqual(_jared, this._recordList[1]);
-			Assert.AreEqual(_eric, this._recordList[2]);
-			Assert.AreEqual(_allison, this._recordList[3]);
+			Assert.AreEqual(this._gianna, this._recordList[0]);
+			Assert.AreEqual(this._jared, this._recordList[1]);
+			Assert.AreEqual(this._eric, this._recordList[2]);
+			Assert.AreEqual(this._allison, this._recordList[3]);
 			AssertListChanged();
 		}
 
 		[Test]
 		public void SortStringAscending()
 		{
-			Assert.IsFalse(_listChanged);
+			Assert.IsFalse(this._listChanged);
 
 			PropertyDescriptorCollection pdc = TypeDescriptor.GetProperties(typeof(TestItem));
 			PropertyDescriptor pd = pdc.Find("StoredString", false);
 			this._recordList.ApplySort(pd, ListSortDirection.Ascending);
 
-			Assert.AreEqual(_allison, this._recordList[0]);
-			Assert.AreEqual(_eric, this._recordList[1]);
-			Assert.AreEqual(_gianna, this._recordList[2]);
-			Assert.AreEqual(_jared, this._recordList[3]);
+			Assert.AreEqual(this._allison, this._recordList[0]);
+			Assert.AreEqual(this._eric, this._recordList[1]);
+			Assert.AreEqual(this._gianna, this._recordList[2]);
+			Assert.AreEqual(this._jared, this._recordList[3]);
 			AssertListChanged();
 		}
 
 		[Test]
 		public void SortStringDescending()
 		{
-			Assert.IsFalse(_listChanged);
+			Assert.IsFalse(this._listChanged);
 
 			PropertyDescriptorCollection pdc = TypeDescriptor.GetProperties(typeof(TestItem));
 			PropertyDescriptor pd = pdc.Find("StoredString", false);
 			this._recordList.ApplySort(pd, ListSortDirection.Descending);
 
-			Assert.AreEqual(_jared, this._recordList[0]);
-			Assert.AreEqual(_gianna, this._recordList[1]);
-			Assert.AreEqual(_eric, this._recordList[2]);
-			Assert.AreEqual(_allison, this._recordList[3]);
+			Assert.AreEqual(this._jared, this._recordList[0]);
+			Assert.AreEqual(this._gianna, this._recordList[1]);
+			Assert.AreEqual(this._eric, this._recordList[2]);
+			Assert.AreEqual(this._allison, this._recordList[3]);
 			AssertListChanged();
 		}
 
@@ -507,13 +504,13 @@ namespace WeSay.Data.Tests.Db4oRecordListTests
 		[SetUp]
 		public void SetUp()
 		{
-			_filePath = System.IO.Path.GetTempFileName();
+			this._filePath = System.IO.Path.GetTempFileName();
 			OpenDatabase();
 
-			_jared = new TestItem("Jared", 3, new DateTime(2006, 7, 10));
-			_gianna = new TestItem("Gianna", 4, new DateTime(2006, 7, 17));
-			this._recordList.Add(_jared);
-			this._recordList.Add(_gianna);
+			this._jared = new TestItem("Jared", 3, new DateTime(2006, 7, 10));
+			this._gianna = new TestItem("Gianna", 4, new DateTime(2006, 7, 17));
+			this._recordList.Add(this._jared);
+			this._recordList.Add(this._gianna);
 		}
 
 		[TearDown]
@@ -521,76 +518,76 @@ namespace WeSay.Data.Tests.Db4oRecordListTests
 		{
 			this._recordList.Dispose();
 			this._dataSource.Dispose();
-			System.IO.File.Delete(_filePath);
+			System.IO.File.Delete(this._filePath);
 		}
 
 		[Test]
 		public void ChangeAfterAdd()
 		{
-			_jared.StoredInt = 1;
+			this._jared.StoredInt = 1;
 
-			Assert.AreEqual(_jared, _recordList[0]);
-			Assert.AreEqual(1, _recordList[0].StoredInt);
+			Assert.AreEqual(this._jared, this._recordList[0]);
+			Assert.AreEqual(1, this._recordList[0].StoredInt);
 
 			ReOpenDatabase();
 
-			Assert.AreEqual(_jared, _recordList[0]);
-			Assert.AreEqual(1, _recordList[0].StoredInt);
+			Assert.AreEqual(this._jared, this._recordList[0]);
+			Assert.AreEqual(1, this._recordList[0].StoredInt);
 		}
 
 		[Test]
 		public void ChangeAfterClosed()
 		{
-			Assert.IsTrue(_recordList.Contains(_jared));
+			Assert.IsTrue(this._recordList.Contains(this._jared));
 			ReOpenDatabase();
-			Assert.IsFalse(_recordList.Contains(_jared)); // should no longer contain this instance
-			Assert.AreEqual(_jared, _recordList[0]);
-			_jared.StoredInt = 1; // should not be wired up to throw events to old bindinglist anymore
-			Assert.AreNotEqual(_jared, _recordList[0]);
+			Assert.IsFalse(this._recordList.Contains(this._jared)); // should no longer contain this instance
+			Assert.AreEqual(this._jared, this._recordList[0]);
+			this._jared.StoredInt = 1; // should not be wired up to throw events to old bindinglist anymore
+			Assert.AreNotEqual(this._jared, this._recordList[0]);
 		}
 
 		[Test]
 		public void ChangeAfterReopen()
 		{
 			ReOpenDatabase();
-			Assert.AreEqual(3, _recordList[0].StoredInt);
+			Assert.AreEqual(3, this._recordList[0].StoredInt);
 
-			TestItem item = _recordList[0];
+			TestItem item = this._recordList[0];
 			item.StoredInt = 1;
-			Assert.AreEqual(1, _recordList[0].StoredInt);
+			Assert.AreEqual(1, this._recordList[0].StoredInt);
 
 			ReOpenDatabase();
 
-			Assert.AreEqual(1, _recordList[0].StoredInt);
+			Assert.AreEqual(1, this._recordList[0].StoredInt);
 		}
 
 		[Test]
 		public void ChangeAfterGet()
 		{
-			TestItem item = _recordList[0];
+			TestItem item = this._recordList[0];
 			item.StoredInt = 1;
-			item = _recordList[1];
+			item = this._recordList[1];
 			item.StoredInt = 2;
 
 			ReOpenDatabase();
 
-			Assert.AreEqual(1, _recordList[0].StoredInt);
-			Assert.AreEqual(2, _recordList[1].StoredInt);
+			Assert.AreEqual(1, this._recordList[0].StoredInt);
+			Assert.AreEqual(2, this._recordList[1].StoredInt);
 		}
 
 		[Test]
 		public void ChangeAfterAddNew()
 		{
-			TestItem item = (TestItem)((IBindingList)_recordList).AddNew();
-			int index = _recordList.IndexOf(item);
-			Assert.AreEqual(_recordList.Count - 1, index);
+			TestItem item = (TestItem)((IBindingList)this._recordList).AddNew();
+			int index = this._recordList.IndexOf(item);
+			Assert.AreEqual(this._recordList.Count - 1, index);
 			Assert.AreEqual(0, item.StoredInt);
 			item.StoredInt = 11;
 
 			ReOpenDatabase();
-			Assert.IsFalse(_recordList.Contains(item)); // when the database is reopened, the link to the database is lost
-			Assert.AreEqual(item, _recordList[0]);
-			Assert.AreEqual(11, _recordList[0].StoredInt);
+			Assert.IsFalse(this._recordList.Contains(item)); // when the database is reopened, the link to the database is lost
+			Assert.AreEqual(item, this._recordList[0]);
+			Assert.AreEqual(11, this._recordList[0].StoredInt);
 		}
 
 		private void ReOpenDatabase()
@@ -602,7 +599,7 @@ namespace WeSay.Data.Tests.Db4oRecordListTests
 
 		private void OpenDatabase()
 		{
-			this._dataSource = new Db4oDataSource(_filePath);
+			this._dataSource = new Db4oDataSource(this._filePath);
 			this._recordList = new Db4oRecordList<TestItem>(this._dataSource);
 			PropertyDescriptorCollection pdc = TypeDescriptor.GetProperties(typeof(TestItem));
 			PropertyDescriptor pd = pdc.Find("StoredDateTime", false);
@@ -628,13 +625,13 @@ namespace WeSay.Data.Tests.Db4oRecordListTests
 
 			Assert.AreEqual(items, root.Depth);
 			this._recordList.Add(root);
-			Assert.AreEqual(1, _recordList.Count);
+			Assert.AreEqual(1, this._recordList.Count);
 			Assert.AreEqual(root, this._recordList[0]);
 			Assert.AreEqual(items, this._recordList[0].Depth);
 
 			ReOpenDatabase();
-			Assert.AreEqual(1, _recordList.Count);
-			Assert.AreEqual(root, _recordList[0]);
+			Assert.AreEqual(1, this._recordList.Count);
+			Assert.AreEqual(root, this._recordList[0]);
 			Assert.AreEqual(items, this._recordList[0].Depth);
 		}
 
@@ -672,15 +669,15 @@ namespace WeSay.Data.Tests.Db4oRecordListTests
 		[SetUp]
 		public void SetUp()
 		{
-			_FilePath = System.IO.Path.GetTempFileName();
-			this._dataSource = new Db4oDataSource(_FilePath);
+			this._FilePath = System.IO.Path.GetTempFileName();
+			this._dataSource = new Db4oDataSource(this._FilePath);
 		}
 
 		[TearDown]
 		public void TestFixtureTearDown()
 		{
 			this._dataSource.Dispose();
-			System.IO.File.Delete(_FilePath);
+			System.IO.File.Delete(this._FilePath);
 		}
 
 		[Test]
@@ -718,9 +715,9 @@ namespace WeSay.Data.Tests.Db4oRecordListTests
 				using (Db4oRecordList<SimpleIntTestClass> recordListCopy = new Db4oRecordList<SimpleIntTestClass>(recordList))
 				{
 					recordListCopy.ApplyFilter(delegate(SimpleIntTestClass simpleIntTest)
-											{
-												return (11 == simpleIntTest.I);
-											});
+											   {
+												   return (11 == simpleIntTest.I);
+											   });
 				}
 			}
 			item.I = 12;

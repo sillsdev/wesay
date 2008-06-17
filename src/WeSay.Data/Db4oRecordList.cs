@@ -53,7 +53,7 @@ namespace WeSay.Data
 			records.RefreshActivationDepth = 99;
 			records.SetActivationDepth = 99;
 			//            records.RequeryAndRefresh(false);
-			records.Storing += new EventHandler<Db4oListEventArgs<T>>(OnRecordStoring);
+			records.Storing += OnRecordStoring;
 		}
 
 		public Db4oRecordList(Db4oDataSource dataSource)
@@ -457,7 +457,7 @@ namespace WeSay.Data
 			int index = ((Db4oList<T>) Records).ItemIds.IndexOf(id);
 			if(index == -1)
 			{
-				throw new ArgumentOutOfRangeException("id not valid");
+				throw new ArgumentOutOfRangeException("id");
 			}
 			return index;
 		}

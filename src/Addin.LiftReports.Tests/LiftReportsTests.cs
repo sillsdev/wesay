@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using LiftIO.Validation;
 using NUnit.Framework;
@@ -9,7 +8,7 @@ namespace Addin.LiftReports.Tests
 	[TestFixture]
 	public class LiftReportsTests
 	{
-		public  Addin.LiftReports.ReportMaker _addin;
+		public  ReportMaker _addin;
 
 		[SetUp]
 		public void Setup()
