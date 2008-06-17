@@ -49,6 +49,20 @@ namespace WeSay.Data
 
 		public abstract int CompareTo(RepositoryId other);
 		public abstract bool Equals(RepositoryId other);
+
+		public override bool Equals(object obj)
+		{
+			if (ReferenceEquals(this, obj))
+			{
+				return true;
+			}
+			return Equals(obj as RepositoryId);
+		}
+
+		public override int GetHashCode()
+		{
+			return 0;
+		}
 	}
 
 }
