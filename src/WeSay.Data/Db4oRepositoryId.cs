@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace WeSay.Data
 {
 	//todo eventually should be internal
-	public class Db4oRepositoryId : RepositoryId
+	public sealed class Db4oRepositoryId : RepositoryId
 	{
 		private readonly long _id;
 		public Db4oRepositoryId(long id)

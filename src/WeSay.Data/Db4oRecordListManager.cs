@@ -14,12 +14,12 @@ namespace WeSay.Data
 		void Configure();
 	}
 
-	public class DoNothingModelConfiguration : IDb4oModelConfiguration
+	public sealed class DoNothingModelConfiguration : IDb4oModelConfiguration
 	{
 		public void Configure() {}
 	}
 
-	public class PrivateDb4oRecordListManager : IPrivateRecordListManager
+	public sealed class PrivateDb4oRecordListManager : IPrivateRecordListManager
 	{
 		private readonly Db4oDataSource _dataSource;
 		private readonly string _cachePath;

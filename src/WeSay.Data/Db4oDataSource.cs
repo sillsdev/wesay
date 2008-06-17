@@ -11,11 +11,11 @@ using Db4objects.Db4o.Diagnostic;
 namespace WeSay.Data
 {
   [Serializable]
-  public class Db4oException : System.Data.Common.DbException
+  public sealed class Db4oException : System.Data.Common.DbException
   {
 	public Db4oException() {}
 	public Db4oException(string message):base(message) {}
-	protected Db4oException(SerializationInfo info, StreamingContext context) : base(info, context) {}
+	private Db4oException(SerializationInfo info, StreamingContext context) : base(info, context) {}
 	public Db4oException(string message, Exception innerException) : base(message, innerException) {}
 	public Db4oException(string message, int errorCode) : base(message, errorCode) {}
   }

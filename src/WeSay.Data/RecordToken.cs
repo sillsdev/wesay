@@ -2,7 +2,7 @@ using System;
 
 namespace WeSay.Data
 {
-	public class RecordToken<T>: IEquatable<RecordToken<T>>
+	public sealed class RecordToken<T>: IEquatable<RecordToken<T>>
 	{
 		private string _displayString;
 		private readonly RepositoryId _id;

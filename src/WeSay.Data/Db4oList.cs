@@ -46,7 +46,7 @@ namespace WeSay.Data
 	/// </remarks>
 	/// <typeparam name="T">List item type.</typeparam>
 	[TypeConverter(typeof (ExpandableObjectConverter))]
-	internal class Db4oList<T>
+	internal sealed class Db4oList<T>
 			: IList<T>, IDisposable
 			where T : class
 	{

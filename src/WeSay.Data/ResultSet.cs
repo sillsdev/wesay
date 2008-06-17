@@ -5,7 +5,7 @@ using System.ComponentModel;
 
 namespace WeSay.Data
 {
-	public class ResultSet<T> : IEnumerable<RecordToken<T>>, IEnumerable<RepositoryId>
+	public sealed class ResultSet<T> : IEnumerable<RecordToken<T>>, IEnumerable<RepositoryId>
 	{
 		private readonly List<RecordToken<T>> _results;
 		private readonly IRepository<T> _repository;

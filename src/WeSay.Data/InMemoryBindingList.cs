@@ -5,7 +5,7 @@ using System.Collections;
 
 namespace WeSay.Data
 {
-	public class InMemoryBindingList<T> : IBindingList, IEquatable<IBindingList>, IList<T> where T : class, new()
+	public sealed class InMemoryBindingList<T> : IBindingList, IEquatable<IBindingList>, IList<T> where T : class, new()
 	{
 		readonly List<T> _list;
 		PropertyDescriptor _sortProperty;

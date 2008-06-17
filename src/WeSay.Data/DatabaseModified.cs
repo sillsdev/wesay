@@ -2,7 +2,7 @@ using System;
 
 namespace WeSay.Data
 {
-	public class DatabaseModified
+	public sealed class DatabaseModified
 	{
 		private DateTime _lastModified;
 
