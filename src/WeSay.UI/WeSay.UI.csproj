@@ -198,10 +198,6 @@
 	</Compile>
   </ItemGroup>
   <ItemGroup>
-	<ProjectReference Include="..\PlatformSpecific\PlatformSpecific.csproj">
-	  <Project>{55E6BAB0-9B46-4C89-8773-4432417C1ADF}</Project>
-	  <Name>PlatformSpecific</Name>
-	</ProjectReference>
 	<ProjectReference Include="..\WeSay.Foundation\WeSay.Foundation.csproj">
 	  <Project>{F12EB680-0990-4900-B77E-0FBF2E28A815}</Project>
 	  <Name>WeSay.Foundation</Name>
