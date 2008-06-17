@@ -48,11 +48,6 @@ namespace WeSay.Data
 
 		void IBindingList.AddIndex(PropertyDescriptor property)
 		{
-		  AddIndex(property);
-		}
-
-		protected virtual void AddIndex(PropertyDescriptor property)
-		{
 		}
 
 		public T AddNew()
@@ -71,44 +66,23 @@ namespace WeSay.Data
 		{
 			get
 			{
-				return AllowEdit;
+				return true;
 			}
 		}
-		protected virtual bool AllowEdit
+		bool IBindingList.AllowNew
 		{
 		  get
 		  {
 			return true;
 		  }
 		}
-		bool IBindingList.AllowNew
-		{
-		  get
-		  {
-			return AllowNew;
-		  }
-		}
-		protected virtual bool AllowNew
+		bool IBindingList.AllowRemove
 		{
 			get
 			{
 				return true;
 			}
 		}
-		bool IBindingList.AllowRemove
-		{
-			get
-			{
-				return AllowRemove;
-			}
-		}
-	  protected virtual bool AllowRemove
-	  {
-		get
-		{
-		  return true;
-		}
-	  }
 
 		public void ApplySort(PropertyDescriptor property, ListSortDirection direction)
 		{
@@ -130,13 +104,8 @@ namespace WeSay.Data
 
 		int IBindingList.Find(PropertyDescriptor property, object key)
 		{
-		  return Find();
+			throw new NotSupportedException();
 		}
-
-	  protected virtual int Find()
-	  {
-		throw new NotSupportedException();
-	  }
 
 		public bool IsSorted
 		{
@@ -146,27 +115,27 @@ namespace WeSay.Data
 			}
 		}
 
-		protected virtual void OnItemAdded(int newIndex)
+		private void OnItemAdded(int newIndex)
 		{
 			OnListChanged(new ListChangedEventArgs(ListChangedType.ItemAdded, newIndex));
 		}
 
-		protected virtual void OnItemChanged(int newIndex)
+		private void OnItemChanged(int newIndex)
 		{
 			OnListChanged(new ListChangedEventArgs(ListChangedType.ItemChanged, newIndex));
 		}
 
-		protected virtual void OnItemDeleted(int oldIndex)
+		private void OnItemDeleted(int oldIndex)
 		{
 			OnListChanged(new ListChangedEventArgs(ListChangedType.ItemDeleted, oldIndex));
 		}
 
-		protected virtual void OnListReset()
+		private void OnListReset()
 		{
 			OnListChanged(new ListChangedEventArgs(ListChangedType.Reset, -1));
 		}
 
-		protected virtual void OnListChanged(ListChangedEventArgs e)
+		private void OnListChanged(ListChangedEventArgs e)
 		{
 			ListChanged(this, e);
 		}
@@ -177,12 +146,8 @@ namespace WeSay.Data
 
 		void IBindingList.RemoveIndex(PropertyDescriptor property)
 		{
-		  RemoveIndex(property);
 		}
 
-	  protected virtual void RemoveIndex(PropertyDescriptor property)
-	  {
-	  }
 
 	  public void RemoveSort()
 		{
@@ -214,49 +179,27 @@ namespace WeSay.Data
 		{
 			get
 			{
-				return SupportsChangeNotification;
+				return true;
 			}
 		}
 
-	  protected virtual bool SupportsChangeNotification
-	  {
-		get
-		{
-		  return true;
-		}
-	  }
 
 	  bool IBindingList.SupportsSearching
 		{
 			get
 			{
-				return SupportsSearching;
+				return false;
 			}
 		}
 
-	  protected virtual bool SupportsSearching
-	  {
-		get
-		{
-		  return false;
-		}
-	  }
 
 	  bool IBindingList.SupportsSorting
 		{
 			get
 			{
-				return SupportsSorting;
+				return true;
 			}
 		}
-
-	  protected virtual bool SupportsSorting
-	  {
-		get
-		{
-		  return true;
-		}
-	  }
 
 #endregion
 
@@ -469,33 +412,17 @@ namespace WeSay.Data
 		{
 			get
 			{
-				return IsSynchronized;
+				return false;
 			}
 		}
-
-	  protected virtual bool IsSynchronized
-	  {
-		get
-		{
-		  return false;
-		}
-	  }
 
 		object ICollection.SyncRoot
 		{
 		  get
 		  {
-			return SyncRoot;
+			return this;
 		  }
 		}
-
-	  protected virtual object SyncRoot
-	  {
-		get
-		{
-		  return this;
-		}
-	  }
 
 		#endregion
 
@@ -503,13 +430,8 @@ namespace WeSay.Data
 
 		IEnumerator IEnumerable.GetEnumerator()
 		{
-		  return GetEnumerator();
+			return ((IEnumerable) _list).GetEnumerator();
 		}
-
-	  protected virtual IEnumerator GetEnumerator()
-	  {
-		return ((IEnumerable) _list).GetEnumerator();
-	  }
 
 	  #endregion
 

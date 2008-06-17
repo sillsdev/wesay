@@ -2,7 +2,6 @@ using System;
 using System.CodeDom.Compiler;
 using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -20,8 +19,6 @@ using WeSay.Data;
 using WeSay.Foundation.Options;
 using WeSay.Language;
 using WeSay.LexicalModel;
-using WeSay.LexicalModel.Db4o_Specific;
-using WeSay.LexicalModel.Tests;
 
 namespace WeSay.Project
 {
@@ -150,9 +147,9 @@ namespace WeSay.Project
 
 		public void RemoveCache()
 		{
-			if (Directory.Exists(this.PathToCache))
+			if (Directory.Exists(PathToCache))
 			{
-				Directory.Delete(this.PathToCache, true);
+				Directory.Delete(PathToCache, true);
 			}
 		}
 
