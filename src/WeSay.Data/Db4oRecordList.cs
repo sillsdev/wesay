@@ -941,7 +941,7 @@ namespace WeSay.Data
 				return false;
 			}
 
-			return Equals((object) recordList);
+			return Equals(recordList);
 		}
 
 		public override int GetHashCode()

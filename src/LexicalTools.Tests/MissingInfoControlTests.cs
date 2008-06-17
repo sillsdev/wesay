@@ -431,8 +431,8 @@ namespace WeSay.LexicalTools.Tests
 												   _lexEntryRepository))
 			{
 				missingInfoControl.SetCurrentRecordToNext();
-				LexEntry currentRecord = missingInfoControl.CurrentEntry;
-				AddTranslationToEntry(currentRecord, "a bogus translation of example");
+				RecordToken<LexEntry> currentRecord = missingInfoControl.CurrentRecord;
+				AddTranslationToEntry(missingInfoControl.CurrentEntry, "a bogus translation of example");
 				Assert.AreEqual(missingInfoControl._completedRecordsListBox.SelectedItem,
 								currentRecord);
 				Assert.IsFalse(missingInfoControl._recordsListBox.DataSource.Contains(currentRecord));
@@ -453,9 +453,9 @@ namespace WeSay.LexicalTools.Tests
 												   _lexEntryRepository))
 			{
 				missingInfoControl.SetCurrentRecordToNext();
-				LexEntry currentRecord = missingInfoControl.CurrentEntry;
-				AddTranslationToEntry(currentRecord, "a bogus translation of example");
-				AddTranslationToEntry(currentRecord, string.Empty);
+				RecordToken<LexEntry> currentRecord = missingInfoControl.CurrentRecord;
+				AddTranslationToEntry(missingInfoControl.CurrentEntry, "a bogus translation of example");
+				AddTranslationToEntry(missingInfoControl.CurrentEntry, string.Empty);
 				Assert.AreEqual(missingInfoControl._recordsListBox.SelectedItem, currentRecord);
 				Assert.IsFalse(
 						missingInfoControl._completedRecordsListBox.DataSource.Contains(currentRecord));
