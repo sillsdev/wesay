@@ -1,8 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
+using WeSay.Data;
 
-namespace Repository
+namespace WeSay.Data
 {
 	public interface IRepository<T>
 	{

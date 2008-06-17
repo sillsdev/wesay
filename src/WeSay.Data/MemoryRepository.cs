@@ -1,14 +1,14 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Text;
+using WeSay.Data;
 
-namespace Repository
+namespace WeSay.Data
 {
 	class MemoryRepository<T>:IRepository<T> where T : new()
 	{
-		private Hashtable hashtableIdToObject = new Hashtable();
-		private Hashtable hashtableObjectToId = new Hashtable();
+		private readonly Hashtable hashtableIdToObject = new Hashtable();
+		private readonly Hashtable hashtableObjectToId = new Hashtable();
 
 		public T CreateItem()
 		{
@@ -64,13 +64,8 @@ namespace Repository
 
 			public MemoryRepositoryId()
 			{
-				this.id = nextId;
+				id = nextId;
 				++nextId;
-			}
-
-			public int Id
-			{
-				get { return id; }
 			}
 
 			public static bool operator !=(MemoryRepositoryId memoryRepositoryId1, MemoryRepositoryId memoryRepositoryId2)
@@ -86,7 +81,7 @@ namespace Repository
 			public bool Equals(MemoryRepositoryId memoryRepositoryId)
 			{
 				if (memoryRepositoryId == null) return false;
-				if (!base.Equals(memoryRepositoryId)) return false;
+
 				return id == memoryRepositoryId.id;
 			}
 
@@ -99,6 +94,25 @@ namespace Repository
 			public override int GetHashCode()
 			{
 				return id;
+			}
+
+			public int CompareTo(MemoryRepositoryId other)
+			{
+				if (other == null)
+				{
+					return -1;
+				}
+				return Comparer<int>.Default.Compare(id, other.id);
+			}
+
+			public override int CompareTo(RepositoryId other)
+			{
+				return CompareTo(other as MemoryRepositoryId);
+			}
+
+			public override bool Equals(RepositoryId other)
+			{
+				return Equals(other as MemoryRepositoryId);
 			}
 		}
 	}

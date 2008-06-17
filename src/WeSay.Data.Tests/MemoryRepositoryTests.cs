@@ -1,9 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
 using NUnit.Framework;
+using WeSay.Data;
 
-namespace Repository.RespositoryTests
+namespace WeSay.Data.Tests
 {
 	public class TestClass
 	{
@@ -55,5 +53,4 @@ namespace Repository.RespositoryTests
 		}
 
 	}
-
 }

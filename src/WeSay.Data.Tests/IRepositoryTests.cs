@@ -1,10 +1,8 @@
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Text;
 using NUnit.Framework;
+using WeSay.Data;
 
-namespace Repository.RespositoryTests
+namespace WeSay.Data.Tests
 {
 	public class IRepositoryStateUnitializedTests<T> where T: new()
 	{

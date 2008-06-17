@@ -50,6 +50,8 @@
 	<Compile Include="Db4oRecordListTests.cs" />
 	<Compile Include="Db4oSODAQueryTests.cs" />
 	<Compile Include="IFilterableTest.cs" />
+	<Compile Include="IRepositoryTests.cs" />
+	<Compile Include="MemoryRepositoryTests.cs" />
 	<Compile Include="RecordListManagerBaseTests.cs" />
 	<Compile Include="IBindingListBaseTest.cs" />
 	<Compile Include="ICollectionBaseTest.cs" />
