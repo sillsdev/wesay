@@ -233,6 +233,11 @@ namespace WeSay.LexicalTools
 		/// </returns>
 		protected abstract int ComputeReferenceCount();
 
+		public bool AreCountsRelevant()
+		{
+			return GetReferenceCount() != CountNotRelevant && GetRemainingCount() != CountNotRelevant;
+		}
+
 		protected IRecordListManager RecordListManager
 		{
 			get { return _recordListManager; }

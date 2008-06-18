@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
@@ -117,6 +118,11 @@ namespace WeSay.UI
 
 		public void PaintBackground(Control control, PaintEventArgs e)
 		{
+			Debug.Assert(control != null);
+			Debug.Assert(e != null);
+			// If the rectangle is non-existent, then don't try to paint it - exceptions will happen
+			if (control.ClientRectangle.Width <= 0 || control.ClientRectangle.Height <= 0)
+				return;
 			LinearGradientBrush gradBrush =
 				new LinearGradientBrush(control.ClientRectangle, GetStartBackgroundColor(control),
 										GetEndBackgroundColor(control), LinearGradientMode.Vertical);
@@ -142,7 +148,7 @@ namespace WeSay.UI
 				StartBackgroundColorDefault = Color.FromArgb(229, 255, 220);
 				EndBackgroundColorDefault = Color.FromArgb(203, 255, 185);
 				_startBackgroundColors["Dash"] = Color.FromArgb(232, 242, 255);  // 220,230,242
-				_endBackgroundColors["Dash"] = Color.FromArgb(186, 211, 242);
+				_endBackgroundColors["Dash"] = Color.FromArgb(164, 191, 224);  // 186, 211, 242
 
 			   // CurrentIndicatorColor = Color.FromArgb(((int)(((byte)(242)))), ((int)(((byte)(253)))), ((int)(((byte)(219)))));
 				_wsLabelColor = Color.Gray;

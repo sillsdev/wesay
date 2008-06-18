@@ -84,6 +84,11 @@ namespace WeSay.App.Tests
 			return 12;
 		}
 
+		public bool AreCountsRelevant()
+		{
+			return false;
+		}
+
 		public int ExactCount
 		{
 			get

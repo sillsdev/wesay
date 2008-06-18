@@ -36,6 +36,11 @@ namespace WeSay.Project
 		/// Gives a sense of the overall size of the task versus what's left to do
 		/// </summary>
 		int GetReferenceCount();
+
+		/// <summary>
+		/// Returns whether or not the GetReferenceCount and GetRemainingCount mean anything
+		/// </summary>
+		bool AreCountsRelevant();
 	}
 
 	/// <summary>

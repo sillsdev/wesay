@@ -104,6 +104,11 @@ namespace WeSay.Project
 			return 0;
 		}
 
+		public bool AreCountsRelevant()
+		{
+			return false;
+		}
+
 		#region IThingOnDashboard Members
 
 
