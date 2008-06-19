@@ -51,9 +51,17 @@ namespace WeSay.CommonTools
 
 			int left = ClientRectangle.Left + LeftMarginWidth + ImageWidth + SpaceBetweenImageAndLabel;
 			int top = ClientRectangle.Top + TopMarginWidth;
+			int textBottom = ClientRectangle.Bottom - BottomMarginWidth;
+
+			if (HasProgressBar())
+			{
+				textBottom -= ProgressBarHeight + ProgressBarTopMargin;
+				PaintProgressBar(e.Graphics);
+			}
+
 			TextRenderer.DrawText(e.Graphics, Text, Font, new Rectangle(left + CurrentMouseButtonNudge,
 				top + CurrentMouseButtonNudge, ClientRectangle.Right - left - RightMarginWidth + 1,
-				ClientRectangle.Bottom - BottomMarginWidth - top + 1), Color.Black, FormatFlags);
+				textBottom - top + 1), Color.Black, FormatFlags);
 		}
 
 		public override IEnumerable<Size> GetPossibleButtonSizes()
@@ -61,11 +69,12 @@ namespace WeSay.CommonTools
 			List<Size> textSizes = GetPossibleTextSizes();
 			Dictionary<int, int> workingSizes = new Dictionary<int, int>(textSizes.Count);
 			List<Size> possibleSizes = new List<Size>(textSizes.Count);
-			int minimumButtonHeight = TopMarginWidth + BottomMarginWidth + ImageWidth;
+			int spaceForProgressBar = HasProgressBar() ? ProgressBarHeight + ProgressBarTopMargin : 0;
+			int minimumButtonHeight = TopMarginWidth + BottomMarginWidth + ImageWidth + spaceForProgressBar;
 			foreach (Size size in textSizes)
 			{
 				Size possibleSize = new Size(size.Width + LeftMarginWidth + RightMarginWidth + ImageWidth + SpaceBetweenImageAndLabel,
-											 size.Height + TopMarginWidth + BottomMarginWidth);
+											 size.Height + TopMarginWidth + BottomMarginWidth + spaceForProgressBar);
 				// if text size would be too short, adjust to fit image
 				possibleSize.Height = Math.Max(possibleSize.Height, minimumButtonHeight);
 				// Ensure that we only end up with the smallest width for a height.  We could end up with multiple
@@ -84,6 +93,19 @@ namespace WeSay.CommonTools
 				possibleSizes.Add(new Size(size.Value, size.Key));
 			}
 			return possibleSizes;
+		}
+
+		private void InitializeComponent()
+		{
+			this.SuspendLayout();
+			//
+			// DashboardButtonWithIcon
+			//
+			this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+			this.DoubleBuffered = true;
+			this.Name = "DashboardButtonWithIcon";
+			this.ResumeLayout(false);
+
 		}
 
 	}

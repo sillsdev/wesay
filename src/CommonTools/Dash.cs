@@ -17,6 +17,7 @@ namespace WeSay.CommonTools
 {
 	public partial class Dash : UserControl, ITask, IFinishCacheSetup
 	{
+		private DictionaryStatusControl _title;
 		private readonly IRecordListManager _recordListManager;
 		private IList<IThingOnDashboard> _thingsToMakeButtonsFor;
 		private List<ButtonGroup> _buttonGroups;
@@ -71,11 +72,12 @@ namespace WeSay.CommonTools
 
 		private void AddItemsToFlow()
 		{
-			DictionaryStatusControl title = new DictionaryStatusControl(_recordListManager.GetListOfType<LexEntry>());
-			title.Font = new Font("Arial", 14);
-			title.BackColor = Color.Transparent;
-			title.ShowLogo = true;
-			_flow.Controls.Add(title);
+			_title = new DictionaryStatusControl(_recordListManager.GetListOfType<LexEntry>());
+			_title.Font = new Font("Arial", 14);
+			_title.BackColor = Color.Transparent;
+			_title.ShowLogo = true;
+			_title.Width = _flow.Width - _title.Margin.Left - _title.Margin.Right;
+			_flow.Controls.Add(_title);
 
 			foreach (ButtonGroup group in _buttonGroups)
 			{
@@ -106,6 +108,7 @@ namespace WeSay.CommonTools
 			if (foundAtLeastOne)
 			{
 				Label header = new Label();
+				header.AutoSize = true;
 				header.Text = StringCatalog.Get(buttonGroup.Group.ToString());
 				header.Font = new Font("Arial", 12);
 				_flow.Controls.Add(header);
@@ -117,7 +120,7 @@ namespace WeSay.CommonTools
 		{
 			DashboardButton button = MakeButton(item);
 			button.BackColor = Color.Transparent;
-			button.Font = Font;
+			button.Font = StringCatalog.ModifyFontForLocalization(Font);
 			button.AutoSize = false;
 			button.BorderColor = group.BorderColor;
 			button.DoneColor = group.DoneColor;
@@ -698,6 +701,12 @@ namespace WeSay.CommonTools
 			Invalidate(false); // force redraw of background
 			Size oldBestSize = _bestButtonSize;
 			_bestButtonSize = GetBestButtonSize();
+			if (_title != null && _flow.Width != _oldFlowWidth)
+			{
+				// for some reason, anchoring the title on the left and right didn't work,
+				// so I have to set the size manually
+				_title.Width = _flow.Width - _title.Margin.Left - _title.Margin.Right;
+			}
 			if (_bestButtonSize != oldBestSize)
 			{
 				ResizeButtons();
@@ -717,6 +726,12 @@ namespace WeSay.CommonTools
 		protected override void OnPaintBackground(PaintEventArgs e)
 		{
 			DisplaySettings.Default.PaintBackground(this, e);
+		}
+
+		protected override void OnMouseWheel(MouseEventArgs e)
+		{
+			base.OnMouseWheel(e);
+			Invalidate(true); // force redraw of background
 		}
 
 		protected override void OnScroll(ScrollEventArgs se)

@@ -43,10 +43,6 @@ namespace WeSay.CommonTools
 			this.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
 			this.Name = "DashboardButton";
 			this.Size = new System.Drawing.Size(166, 50);
-			this.Click += new System.EventHandler(this.DashboardButton_Click);
-			this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.DashboardButton_MouseDown);
-			this.MouseLeave += new System.EventHandler(this.DashboardButton_MouseLeave);
-			this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.DashboardButton_MouseUp);
 			this.ResumeLayout(false);
 
 		}

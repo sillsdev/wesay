@@ -72,6 +72,12 @@ namespace WeSay.UI
 			_alreadyChanging = false;
 		}
 
+		void OnControlAdded(object sender, ControlEventArgs e)
+		{
+			WireToConrol(e.Control);
+			WireToChildren(e.Control);
+		}
+
 		#region ISupportInitialize Members
 
 		///<summary>
@@ -91,19 +97,25 @@ namespace WeSay.UI
 
 		private void WireToChildren(Control control)
 		{
+			control.ControlAdded += new ControlEventHandler(OnControlAdded);
 			//Debug.WriteLine("Wiring to children of " + control.Name);
 			foreach (Control child in control.Controls)
 			{
-				if (child is Label || child is Button)
-				{
-					// Debug.WriteLine("Wiring to " + child.Name);
-					child.TextChanged += new EventHandler(OnTextChanged);
-					child.FontChanged += new EventHandler(OnFontChanged);
-
-					OnTextChanged(child, null);
-					OnFontChanged(child, null);
-				}
+				WireToConrol(child);
 				WireToChildren(child);
+			}
+		}
+
+		private void WireToConrol(Control control)
+		{
+			if (control is Label || control is Button)
+			{
+				// Debug.WriteLine("Wiring to " + control.Name);
+				control.TextChanged += new EventHandler(OnTextChanged);
+				control.FontChanged += new EventHandler(OnFontChanged);
+
+				OnTextChanged(control, null);
+				OnFontChanged(control, null);
 			}
 		}
 
