@@ -20,23 +20,12 @@ namespace WeSay.CommonTools
 			:base(thingToShowOnDashboard)
 		 {
 			_image = thingToShowOnDashboard.DashboardButtonImage;
+			InitializeComponent();
 		}
 
 		public DashboardButtonWithIcon()
 		{
-
-		}
-		protected override void OnLoad(EventArgs e)
-		{
-			base.OnLoad(e);
-			if (ThingToShowOnDashboard.DashboardButtonStyle == ButtonStyle.IconVariableWidth)
-			{
-				int labelWidth =
-					TextRenderer.MeasureText(Text, Font, new Size(int.MaxValue, int.MaxValue),
-											 TextFormatFlags.LeftAndRightPadding).Width;
-
-				Width = ImageWidth + SpaceBetweenImageAndLabel + labelWidth + 10;
-			}
+			InitializeComponent();
 		}
 
 		protected override void PaintContents(PaintEventArgs e)
@@ -101,7 +90,6 @@ namespace WeSay.CommonTools
 			//
 			// DashboardButtonWithIcon
 			//
-			this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
 			this.DoubleBuffered = true;
 			this.Name = "DashboardButtonWithIcon";
 			this.ResumeLayout(false);

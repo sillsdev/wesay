@@ -120,7 +120,7 @@ namespace WeSay.CommonTools
 		{
 			DashboardButton button = MakeButton(item);
 			button.BackColor = Color.Transparent;
-			button.Font = StringCatalog.ModifyFontForLocalization(Font);
+			button.Font = Font;
 			button.AutoSize = false;
 			button.BorderColor = group.BorderColor;
 			button.DoneColor = group.DoneColor;

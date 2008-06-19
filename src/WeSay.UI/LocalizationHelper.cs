@@ -108,7 +108,7 @@ namespace WeSay.UI
 
 		private void WireToConrol(Control control)
 		{
-			if (control is Label || control is Button)
+			if (control is Label || control is IButtonControl)
 			{
 				// Debug.WriteLine("Wiring to " + control.Name);
 				control.TextChanged += new EventHandler(OnTextChanged);

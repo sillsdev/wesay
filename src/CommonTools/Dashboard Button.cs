@@ -9,8 +9,9 @@ using WeSay.UI;
 
 namespace WeSay.CommonTools
 {
-	public partial class DashboardButton : UserControl
+	public partial class DashboardButton : UserControl, IButtonControl
 	{
+		private DialogResult _dialogResult;
 		private Color _borderColor = Color.Blue;
 		private Color _doneColor = Color.Blue;
 		private bool _mouseIsDown;
@@ -358,5 +359,34 @@ namespace WeSay.CommonTools
 			}
 			return base.ProcessMnemonic(charCode);
 		}
+
+		#region IButtonControl Members
+
+		public DialogResult DialogResult
+		{
+			get
+			{
+				return _dialogResult;
+			}
+			set
+			{
+				if (Enum.IsDefined(typeof(DialogResult), value))
+				{
+					_dialogResult = value;
+				}
+			}
+		}
+
+		public void NotifyDefault(bool value) {}
+
+		public void PerformClick()
+		{
+			if (CanSelect)
+			{
+				OnClick(EventArgs.Empty);
+			}
+		}
+
+		#endregion
 	}
 }
