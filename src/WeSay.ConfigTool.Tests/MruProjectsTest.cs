@@ -16,11 +16,9 @@ namespace WeSay.ConfigTool.Tests
 		}
 
 		[TearDown]
-		public void TearDown()
-		{
-		}
+		public void TearDown() {}
 
-		private class TempFile : IDisposable
+		private class TempFile: IDisposable
 		{
 			private readonly string fileName;
 
@@ -69,8 +67,7 @@ namespace WeSay.ConfigTool.Tests
 		[Test]
 		public void GetPaths_AddTwoFiles_BothFilesInListInInverseOrder()
 		{
-			using (TempFile firstFileIn = new TempFile(),
-							secondFileIn = new TempFile())
+			using (TempFile firstFileIn = new TempFile(), secondFileIn = new TempFile())
 			{
 				_mruProjects.AddNewPath(firstFileIn.FileName);
 				_mruProjects.AddNewPath(secondFileIn.FileName);
@@ -88,8 +85,7 @@ namespace WeSay.ConfigTool.Tests
 		[Test]
 		public void SetPaths_Null_ClearsPaths()
 		{
-			using (TempFile file1 = new TempFile(),
-						   file2 = new TempFile())
+			using (TempFile file1 = new TempFile(), file2 = new TempFile())
 			{
 				_mruProjects.Paths = new string[] {file1.FileName, file2.FileName};
 				_mruProjects.Paths = null;
@@ -106,9 +102,7 @@ namespace WeSay.ConfigTool.Tests
 		[Test]
 		public void SetPaths_InitializeWithValues_ValuesWereInitialized()
 		{
-			using (TempFile file1 = new TempFile(),
-						   file2 = new TempFile(),
-						   file3 = new TempFile())
+			using (TempFile file1 = new TempFile(), file2 = new TempFile(), file3 = new TempFile())
 			{
 				_mruProjects.Paths = new string[] {file1.FileName, file2.FileName, file3.FileName};
 				Assert.AreEqual(3, _mruProjects.Paths.Length);
@@ -119,15 +113,13 @@ namespace WeSay.ConfigTool.Tests
 		}
 
 		[Test]
-		public void AddNewPath_AddPathThatIsAlreadyInMruPaths_PathIsRemovedFromOldPositionAndMovedToTopPosition()
+		public void
+				AddNewPath_AddPathThatIsAlreadyInMruPaths_PathIsRemovedFromOldPositionAndMovedToTopPosition
+				()
 		{
-			using (TempFile file1 = new TempFile(),
-						   file2 = new TempFile(),
-						   file3= new TempFile())
+			using (TempFile file1 = new TempFile(), file2 = new TempFile(), file3 = new TempFile())
 			{
-				_mruProjects.Paths = new string[] {file1.FileName,
-												   file2.FileName,
-												   file3.FileName};
+				_mruProjects.Paths = new string[] {file1.FileName, file2.FileName, file3.FileName};
 				_mruProjects.AddNewPath(file2.FileName);
 				string[] mruPaths = _mruProjects.Paths;
 				Assert.AreEqual(3, mruPaths.Length);
@@ -140,19 +132,14 @@ namespace WeSay.ConfigTool.Tests
 		[Test]
 		public void SetPaths_MultipleInstancesOfSamePath_OnlyMostRecentInstanceIsStored()
 		{
-			using (TempFile file1 = new TempFile(),
-							file2 = new TempFile(),
-							file3= new TempFile())
+			using (TempFile file1 = new TempFile(), file2 = new TempFile(), file3 = new TempFile())
 			{
-				_mruProjects.Paths = new string[]{ file1.FileName,
-												   file2.FileName,
-												   file1.FileName,
-												   file3.FileName};
-				Assert.AreEqual(3,_mruProjects.Paths.Length);
+				_mruProjects.Paths =
+						new string[]
+								{file1.FileName, file2.FileName, file1.FileName, file3.FileName};
+				Assert.AreEqual(3, _mruProjects.Paths.Length);
 				Assert.AreEqual(file1.FileName, _mruProjects.Paths[0]);
-
 			}
 		}
-
 	}
 }

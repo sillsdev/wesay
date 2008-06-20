@@ -3,9 +3,9 @@ using System.Windows.Forms;
 
 namespace Addin.Backup
 {
-	public partial class SendProjectEmailSettingsDialog : Form
+	public partial class SendProjectEmailSettingsDialog: Form
 	{
-		private SendProjectEmailSettings _settings;
+		private readonly SendProjectEmailSettings _settings;
 
 		internal SendProjectEmailSettingsDialog(SendProjectEmailSettings settings)
 		{
@@ -18,7 +18,7 @@ namespace Addin.Backup
 		private void _cancelButton_Click(object sender, EventArgs e)
 		{
 			DialogResult = DialogResult.Cancel;
-			this.Close();
+			Close();
 		}
 
 		private void _okButton_Click(object sender, EventArgs e)
@@ -29,11 +29,6 @@ namespace Addin.Backup
 			Close();
 		}
 
-		private void textBox2_TextChanged(object sender, EventArgs e)
-		{
-
-		}
-
-
+		private void textBox2_TextChanged(object sender, EventArgs e) {}
 	}
 }

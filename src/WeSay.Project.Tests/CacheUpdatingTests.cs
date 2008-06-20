@@ -1,9 +1,8 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Threading;
 using Db4objects.Db4o;
 using NUnit.Framework;
+using WeSay.Foundation.Tests;
 
 namespace WeSay.Project.Tests
 {
@@ -22,18 +21,18 @@ namespace WeSay.Project.Tests
 		{
 			_experimentDir = MakeDir(Path.GetTempPath(), Path.GetRandomFileName());
 			_projectDir = MakeDir(_experimentDir, "TestProj");
-			_weSayDir = _projectDir;// MakeDir(_projectDir, "WeSay");
+			_weSayDir = _projectDir; // MakeDir(_projectDir, "WeSay");
 			_liftPath = Path.Combine(_weSayDir, "test.lift");
 			MakeEmptyFile(_liftPath);
 			_project = new WeSayWordsProject();
 			_project.PathToLiftFile = _liftPath;
 		}
 
-		private void MakeEmptyFile(string path)
+		private static void MakeEmptyFile(string path)
 		{
 			using (StreamWriter s = File.CreateText(path))
 			{
-				s.Close();  //must close and dispose to reliably free the lock
+				s.Close(); //must close and dispose to reliably free the lock
 			}
 		}
 
@@ -41,14 +40,16 @@ namespace WeSay.Project.Tests
 		public void TearDown()
 		{
 			_project.Dispose();
-			WeSay.Foundation.Tests.TestUtilities.DeleteFolderThatMayBeInUse(_experimentDir);
+			TestUtilities.DeleteFolderThatMayBeInUse(_experimentDir);
 		}
+
 		private static string MakeDir(string existingParent, string newChild)
 		{
 			string dir = Path.Combine(existingParent, newChild);
 			Directory.CreateDirectory(dir);
 			return dir;
 		}
+
 		[Test]
 		public void MissingCacheDirTriggersUpdate()
 		{
@@ -68,15 +69,15 @@ namespace WeSay.Project.Tests
 			string cacheDir = MakeDir(_weSayDir, "Cache");
 			string s = Path.Combine(cacheDir, "test.words");
 			MakeEmptyFile(s);
-			File.SetLastWriteTimeUtc(s, TimeOfUpdate.Subtract(new TimeSpan(1))); //just one tick older
+			File.SetLastWriteTimeUtc(s, TimeOfUpdate.Subtract(new TimeSpan(1)));
+			//just one tick older
 			OutOfDate();
 		}
-
 
 		[Test]
 		public void MissingWordsFileTriggersUpdate()
 		{
-			string cacheDir = MakeDir(_weSayDir, "Cache");
+			MakeDir(_weSayDir, "Cache");
 			OutOfDate();
 		}
 
@@ -84,7 +85,10 @@ namespace WeSay.Project.Tests
 		public void OlderLiftFileTriggersUpdate()
 		{
 			MakeDir(_weSayDir, "Cache");
-			using (IObjectContainer db = Db4oFactory.OpenFile(Project.WeSayWordsProject.Project.PathToDb4oLexicalModelDB))
+			using (
+					IObjectContainer db =
+							Db4oFactory.OpenFile(WeSayWordsProject.Project.PathToDb4oLexicalModelDB)
+					)
 			{
 				db.Close();
 			}
@@ -98,7 +102,10 @@ namespace WeSay.Project.Tests
 		{
 			MakeDir(_weSayDir, "Cache");
 
-			using (IObjectContainer db = Db4oFactory.OpenFile(Project.WeSayWordsProject.Project.PathToDb4oLexicalModelDB))
+			using (
+					IObjectContainer db =
+							Db4oFactory.OpenFile(WeSayWordsProject.Project.PathToDb4oLexicalModelDB)
+					)
 			{
 				CacheManager.UpdateSyncPointInCache(db, File.GetLastWriteTimeUtc(_liftPath));
 				db.Close();
@@ -106,17 +113,11 @@ namespace WeSay.Project.Tests
 			UpToDate();
 		}
 
-
-
 		private DateTime TimeOfUpdate
 		{
-			get
-			{
-			   return File.GetLastWriteTimeUtc(_liftPath);
+			get { return File.GetLastWriteTimeUtc(_liftPath); }
+		}
 
-			}
-
-	}
 		private void UpToDate()
 		{
 			Assert.IsFalse(CacheManager.GetCacheIsOutOfDate(_project));
@@ -124,8 +125,7 @@ namespace WeSay.Project.Tests
 
 		private void OutOfDate()
 		{
-			Assert.IsTrue(CacheManager.GetCacheIsOutOfDate (_project));
+			Assert.IsTrue(CacheManager.GetCacheIsOutOfDate(_project));
 		}
 	}
-
 }

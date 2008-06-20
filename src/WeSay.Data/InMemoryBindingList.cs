@@ -1,24 +1,24 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Collections;
 
 namespace WeSay.Data
 {
-	public class InMemoryBindingList<T> : IBindingList, IEquatable<IBindingList>, IList<T>, ICollection<T>, IEnumerable<T> where T : class, new()
+	public sealed class InMemoryBindingList<T>: IBindingList, IEquatable<IBindingList>, IList<T>
+			where T : class, new()
 	{
-		List<T> _list;
-		PropertyDescriptor _sortProperty;
-		ListSortDirection _listSortDirection;
-		bool _isSorted;
+		private readonly List<T> _list;
+		private PropertyDescriptor _sortProperty;
+		private ListSortDirection _listSortDirection;
+		private bool _isSorted;
 
 		public InMemoryBindingList()
 		{
 			_list = new List<T>();
 		}
 
-		public InMemoryBindingList(IBindingList original)
-			: this()
+		public InMemoryBindingList(IBindingList original): this()
 		{
 			AddRange(original);
 			_isSorted = original.IsSorted;
@@ -40,20 +40,13 @@ namespace WeSay.Data
 			IEnumerator enumerator = collection.GetEnumerator();
 			while (enumerator.MoveNext())
 			{
-				Add((T)enumerator.Current);
+				Add((T) enumerator.Current);
 			}
 		}
 
 		#region IBindingList Members
 
-		void IBindingList.AddIndex(PropertyDescriptor property)
-		{
-		  AddIndex(property);
-		}
-
-		protected virtual void AddIndex(PropertyDescriptor property)
-		{
-		}
+		void IBindingList.AddIndex(PropertyDescriptor property) {}
 
 		public T AddNew()
 		{
@@ -69,56 +62,32 @@ namespace WeSay.Data
 
 		bool IBindingList.AllowEdit
 		{
-			get
-			{
-				return AllowEdit;
-			}
+			get { return true; }
 		}
-		protected virtual bool AllowEdit
-		{
-		  get
-		  {
-			return true;
-		  }
-		}
+
 		bool IBindingList.AllowNew
 		{
-		  get
-		  {
-			return AllowNew;
-		  }
+			get { return true; }
 		}
-		protected virtual bool AllowNew
-		{
-			get
-			{
-				return true;
-			}
-		}
+
 		bool IBindingList.AllowRemove
 		{
-			get
-			{
-				return AllowRemove;
-			}
+			get { return true; }
 		}
-	  protected virtual bool AllowRemove
-	  {
-		get
-		{
-		  return true;
-		}
-	  }
 
 		public void ApplySort(PropertyDescriptor property, ListSortDirection direction)
 		{
 			if (_list.Count > 1)
 			{
 				Comparison<T> sort = delegate(T item1, T item2)
-				{
-					PropertyComparison<T> propertySorter = ComparisonHelper<T>.GetPropertyComparison(ComparisonHelper<T>.DefaultPropertyComparison, direction);
-					return propertySorter(item1, item2, property);
-				};
+									 {
+										 PropertyComparison<T> propertySorter =
+												 ComparisonHelper<T>.GetPropertyComparison(
+														 ComparisonHelper<T>.
+																 DefaultPropertyComparison,
+														 direction);
+										 return propertySorter(item1, item2, property);
+									 };
 
 				_list.Sort(sort);
 				_sortProperty = property;
@@ -130,61 +99,44 @@ namespace WeSay.Data
 
 		int IBindingList.Find(PropertyDescriptor property, object key)
 		{
-		  return Find();
+			throw new NotSupportedException();
 		}
-
-	  protected virtual int Find()
-	  {
-		throw new NotSupportedException();
-	  }
 
 		public bool IsSorted
 		{
-			get
-			{
-				return _isSorted;
-			}
+			get { return _isSorted; }
 		}
 
-		protected virtual void OnItemAdded(int newIndex)
+		private void OnItemAdded(int newIndex)
 		{
 			OnListChanged(new ListChangedEventArgs(ListChangedType.ItemAdded, newIndex));
 		}
 
-		protected virtual void OnItemChanged(int newIndex)
+		private void OnItemChanged(int newIndex)
 		{
 			OnListChanged(new ListChangedEventArgs(ListChangedType.ItemChanged, newIndex));
 		}
 
-		protected virtual void OnItemDeleted(int oldIndex)
+		private void OnItemDeleted(int oldIndex)
 		{
 			OnListChanged(new ListChangedEventArgs(ListChangedType.ItemDeleted, oldIndex));
 		}
 
-		protected virtual void OnListReset()
+		private void OnListReset()
 		{
 			OnListChanged(new ListChangedEventArgs(ListChangedType.Reset, -1));
 		}
 
-		protected virtual void OnListChanged(ListChangedEventArgs e)
+		private void OnListChanged(ListChangedEventArgs e)
 		{
 			ListChanged(this, e);
 		}
 
-		public event ListChangedEventHandler ListChanged = delegate
-		{
-		};
+		public event ListChangedEventHandler ListChanged = delegate { };
 
-		void IBindingList.RemoveIndex(PropertyDescriptor property)
-		{
-		  RemoveIndex(property);
-		}
+		void IBindingList.RemoveIndex(PropertyDescriptor property) {}
 
-	  protected virtual void RemoveIndex(PropertyDescriptor property)
-	  {
-	  }
-
-	  public void RemoveSort()
+		public void RemoveSort()
 		{
 			if (IsSorted)
 			{
@@ -196,69 +148,30 @@ namespace WeSay.Data
 
 		public ListSortDirection SortDirection
 		{
-			get
-			{
-				return _listSortDirection;
-			}
+			get { return _listSortDirection; }
 		}
 
 		public PropertyDescriptor SortProperty
 		{
-			get
-			{
-				return _sortProperty;
-			}
+			get { return _sortProperty; }
 		}
 
 		bool IBindingList.SupportsChangeNotification
 		{
-			get
-			{
-				return SupportsChangeNotification;
-			}
+			get { return true; }
 		}
 
-	  protected virtual bool SupportsChangeNotification
-	  {
-		get
+		bool IBindingList.SupportsSearching
 		{
-		  return true;
+			get { return false; }
 		}
-	  }
 
-	  bool IBindingList.SupportsSearching
+		bool IBindingList.SupportsSorting
 		{
-			get
-			{
-				return SupportsSearching;
-			}
+			get { return true; }
 		}
 
-	  protected virtual bool SupportsSearching
-	  {
-		get
-		{
-		  return false;
-		}
-	  }
-
-	  bool IBindingList.SupportsSorting
-		{
-			get
-			{
-				return SupportsSorting;
-			}
-		}
-
-	  protected virtual bool SupportsSorting
-	  {
-		get
-		{
-		  return true;
-		}
-	  }
-
-#endregion
+		#endregion
 
 		#region IList<T> Members
 
@@ -281,10 +194,7 @@ namespace WeSay.Data
 
 		public T this[int index]
 		{
-			get
-			{
-				return _list[index];
-			}
+			get { return _list[index]; }
 			set
 			{
 				_list[index] = value;
@@ -298,7 +208,7 @@ namespace WeSay.Data
 
 		int IList.Add(object value)
 		{
-			T item = (T)value;
+			T item = (T) value;
 			Add(item);
 			return IndexOf(item);
 		}
@@ -310,38 +220,32 @@ namespace WeSay.Data
 
 		bool IList.Contains(object value)
 		{
-			return Contains((T)value);
+			return Contains((T) value);
 		}
 
 		int IList.IndexOf(object value)
 		{
-			return IndexOf((T)value);
+			return IndexOf((T) value);
 		}
 
 		void IList.Insert(int index, object value)
 		{
-			Insert(index, (T)value);
+			Insert(index, (T) value);
 		}
 
 		public bool IsFixedSize
 		{
-			get
-			{
-				return false;
-			}
+			get { return false; }
 		}
 
 		bool IList.IsReadOnly
 		{
-			get
-			{
-				return IsReadOnly;
-			}
+			get { return IsReadOnly; }
 		}
 
 		void IList.Remove(object value)
 		{
-			Remove((T)value);
+			Remove((T) value);
 		}
 
 		private void CheckIndex(int index)
@@ -368,7 +272,7 @@ namespace WeSay.Data
 			set
 			{
 				CheckIndex(index);
-				_list[index] = (T)value;
+				_list[index] = (T) value;
 				OnItemChanged(index);
 			}
 		}
@@ -401,24 +305,19 @@ namespace WeSay.Data
 
 		public int Count
 		{
-			get
-			{
-				return _list.Count;
-			}
+			get { return _list.Count; }
 		}
 
 		public bool IsReadOnly
 		{
-			get
-			{
-				return false;
-			}
+			get { return false; }
 		}
 
 		public bool Remove(T item)
 		{
 			int index = _list.IndexOf(item);
-			if(index != -1){
+			if (index != -1)
+			{
 				_list.RemoveAt(index);
 				OnItemDeleted(index);
 				return true;
@@ -442,7 +341,8 @@ namespace WeSay.Data
 			}
 			if (index + Count > array.Length)
 			{
-				throw new ArgumentException("array not large enough to fit collection starting at index");
+				throw new ArgumentException(
+						"array not large enough to fit collection starting at index");
 			}
 			if (array.Rank > 1)
 			{
@@ -459,43 +359,18 @@ namespace WeSay.Data
 
 		int ICollection.Count
 		{
-			get
-			{
-				return Count;
-			}
+			get { return Count; }
 		}
 
 		bool ICollection.IsSynchronized
 		{
-			get
-			{
-				return IsSynchronized;
-			}
+			get { return false; }
 		}
-
-	  protected virtual bool IsSynchronized
-	  {
-		get
-		{
-		  return false;
-		}
-	  }
 
 		object ICollection.SyncRoot
 		{
-		  get
-		  {
-			return SyncRoot;
-		  }
+			get { return this; }
 		}
-
-	  protected virtual object SyncRoot
-	  {
-		get
-		{
-		  return this;
-		}
-	  }
 
 		#endregion
 
@@ -503,25 +378,19 @@ namespace WeSay.Data
 
 		IEnumerator IEnumerable.GetEnumerator()
 		{
-		  return GetEnumerator();
+			return ((IEnumerable) _list).GetEnumerator();
 		}
 
-	  protected virtual IEnumerator GetEnumerator()
-	  {
-		return ((IEnumerable) _list).GetEnumerator();
-	  }
-
-	  #endregion
+		#endregion
 
 		#region IEnumerable<T> Members
 
 		IEnumerator<T> IEnumerable<T>.GetEnumerator()
 		{
-			return ((IEnumerable<T>)_list).GetEnumerator();
+			return ((IEnumerable<T>) _list).GetEnumerator();
 		}
 
 		#endregion
-
 
 		#region IEquatable<IBindingList> Members
 
@@ -535,7 +404,7 @@ namespace WeSay.Data
 			{
 				return false;
 			}
-			for (int i = 0; i < Count; i++)
+			for (int i = 0;i < Count;i++)
 			{
 				// must be in same order to be equal
 				if (!this[i].Equals(other[i]))
@@ -560,6 +429,7 @@ namespace WeSay.Data
 
 			return Equals(recordList);
 		}
+
 		#endregion
 
 		public override int GetHashCode()

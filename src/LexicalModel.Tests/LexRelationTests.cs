@@ -1,10 +1,6 @@
-using System;
-using System.Collections.Generic;
 using System.IO;
 using NUnit.Framework;
-using WeSay.LexicalModel.Db4o_Specific;
 using WeSay.Project;
-using WeSay.Data;
 
 namespace WeSay.LexicalModel.Tests
 {
@@ -12,7 +8,7 @@ namespace WeSay.LexicalModel.Tests
 	public class LexRelationTests
 	{
 		private string _filePath;
-		private Db4oRecordListManager _manager;
+		private LexEntryRepository _lexEntryRepository;
 
 		[SetUp]
 		public void Setup()
@@ -20,16 +16,13 @@ namespace WeSay.LexicalModel.Tests
 			WeSayWordsProject.InitializeForTests();
 
 			_filePath = Path.GetTempFileName();
-			_manager = new Db4oRecordListManager(new DoNothingModelConfiguration(), _filePath);
-			Lexicon.Init(_manager);
-			Db4oLexModelHelper.Initialize(_manager.DataSource.Data);
-
+			_lexEntryRepository = new LexEntryRepository(_filePath);
 		}
 
 		[TearDown]
 		public void TearDown()
 		{
-			_manager.Dispose();
+			_lexEntryRepository.Dispose();
 			File.Delete(_filePath);
 		}
 
@@ -37,10 +30,13 @@ namespace WeSay.LexicalModel.Tests
 		public void Construct_TargetIdNull_TargetIdIsEmptyString()
 		{
 			LexSense sense = new LexSense();
-			LexRelationType synonymRelationType = new LexRelationType("synonym", LexRelationType.Multiplicities.Many, LexRelationType.TargetTypes.Sense);
+			LexRelationType synonymRelationType =
+					new LexRelationType("synonym",
+										LexRelationType.Multiplicities.Many,
+										LexRelationType.TargetTypes.Sense);
 
 			LexRelation relation = new LexRelation(synonymRelationType.ID, null, sense);
-			Assert.AreEqual(null, relation.Target);
+			Assert.AreEqual(null, relation.GetTarget(_lexEntryRepository));
 			Assert.AreEqual(string.Empty, relation.Key);
 		}
 
@@ -48,14 +44,15 @@ namespace WeSay.LexicalModel.Tests
 		public void TargetId_SetNull_GetStringEmpty()
 		{
 			LexSense sense = new LexSense();
-			LexRelationType synonymRelationType = new LexRelationType("synonym", LexRelationType.Multiplicities.Many, LexRelationType.TargetTypes.Sense);
+			LexRelationType synonymRelationType =
+					new LexRelationType("synonym",
+										LexRelationType.Multiplicities.Many,
+										LexRelationType.TargetTypes.Sense);
 
 			LexRelation relation = new LexRelation(synonymRelationType.ID, "something", sense);
 			relation.Key = null;
-			Assert.AreEqual(null, relation.Target);
+			Assert.AreEqual(null, relation.GetTarget(_lexEntryRepository));
 			Assert.AreEqual(string.Empty, relation.Key);
 		}
-
 	}
-
 }

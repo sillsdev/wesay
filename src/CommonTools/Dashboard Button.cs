@@ -1,9 +1,9 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
-using WeSay.Foundation.Dashboard;
+using WeSay.Foundation;
 using WeSay.Project;
 using WeSay.UI;
 
@@ -59,7 +59,6 @@ namespace WeSay.CommonTools
 			set { _doneColor = value; }
 		}
 
-
 		/// <summary>
 		/// From a comment in http://www.codeproject.com/KB/GDI-plus/ExtendedGraphics.aspx
 		/// </summary>
@@ -82,8 +81,12 @@ namespace WeSay.CommonTools
 			int diameter = radius*2;
 			g.AddArc(x + lw, y, diameter, diameter, 180, 90);
 			g.AddArc(x + (width - diameter - lw), y, diameter, diameter, 270, 90);
-			g.AddArc(x + (width - diameter - lw), y + (height - diameter - lw),
-					 diameter, diameter, 360, 90);
+			g.AddArc(x + (width - diameter - lw),
+					 y + (height - diameter - lw),
+					 diameter,
+					 diameter,
+					 360,
+					 90);
 			g.AddArc(x + lw, y + (height - diameter - lw), diameter, diameter, 90, 90);
 			g.CloseFigure();
 			return g;
@@ -177,8 +180,10 @@ namespace WeSay.CommonTools
 			if (DisplaySettings.Default.UsingProjectorScheme)
 			{
 				byte rgbMax = Math.Max(doneColor.R, Math.Max(doneColor.G, doneColor.B));
-				doneColor = Color.FromArgb(doneColor.R == rgbMax ? 255 : 0, doneColor.G == rgbMax ? 255 : 0,
-										   doneColor.B == rgbMax ? 255 : 0);
+				doneColor =
+						Color.FromArgb(doneColor.R == rgbMax ? 255 : 0,
+									   doneColor.G == rgbMax ? 255 : 0,
+									   doneColor.B == rgbMax ? 255 : 0);
 				todoColor = Color.FromArgb(50, 0, 0, 0);
 			}
 			Pen pen = new Pen(doneColor, ProgressBarHeight);
@@ -187,7 +192,6 @@ namespace WeSay.CommonTools
 			int left = ClientRectangle.Left + LeftMarginWidth;
 			int rightEdge = ClientRectangle.Right - RightMarginWidth;
 			int progressBarTop = ClientRectangle.Bottom - BottomMarginWidth - (HasProgressBar() ? ProgressBarHeight : 0);
-
 			float percentDone = (float)100.0 * (task.GetReferenceCount() - task.GetRemainingCount()) /
 								task.GetReferenceCount();
 			percentDone = Math.Max(Math.Min(percentDone, 100), 0); // ensure that 0 <= percentDone <= 100
@@ -278,7 +282,6 @@ namespace WeSay.CommonTools
 			base.OnClick(e);
 			Selected(this, e);
 		}
-
 		protected override void OnMouseUp(MouseEventArgs e)
 		{
 			base.OnMouseUp(e);
@@ -289,7 +292,6 @@ namespace WeSay.CommonTools
 			_mouseIsDown = false;
 			Invalidate();
 		}
-
 		protected override void OnMouseDown(MouseEventArgs e)
 		{
 			base.OnMouseDown(e);

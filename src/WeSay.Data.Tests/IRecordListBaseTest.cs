@@ -1,9 +1,9 @@
-using NUnit.Framework;
 using System.ComponentModel;
+using NUnit.Framework;
 
 namespace WeSay.Data.Tests
 {
-	public abstract class IRecordListBaseTest<T> where T: class, new()
+	public abstract class IRecordListBaseTest<T> where T : class, new()
 	{
 		protected IRecordList<T> _recordList;
 		protected string _changedFieldName;
@@ -14,8 +14,8 @@ namespace WeSay.Data.Tests
 
 		protected void ResetListChanged()
 		{
-			this._listChanged = false;
-			this._listChangedEventArgs = null;
+			_listChanged = false;
+			_listChangedEventArgs = null;
 		}
 
 		public void _bindingList_ListChanged(object sender, ListChangedEventArgs e)
@@ -24,7 +24,7 @@ namespace WeSay.Data.Tests
 			_listChangedEventArgs = e;
 		}
 
-		void _recordList_ContentOfItemInListChanged(object sender, ListChangedEventArgs e)
+		private void _recordList_ContentOfItemInListChanged(object sender, ListChangedEventArgs e)
 		{
 			_listContentsChanged = true;
 			_listChangedEventArgs = e;
@@ -33,13 +33,12 @@ namespace WeSay.Data.Tests
 		[SetUp]
 		public virtual void SetUp()
 		{
-			this._recordList.ListChanged += new ListChangedEventHandler(_bindingList_ListChanged);
-			this._recordList.ContentOfItemInListChanged += new ListChangedEventHandler(_recordList_ContentOfItemInListChanged);
+			_recordList.ListChanged += _bindingList_ListChanged;
+			_recordList.ContentOfItemInListChanged += _recordList_ContentOfItemInListChanged;
 			_listChanged = false;
 			_listContentsChanged = false;
 			_listChangedEventArgs = null;
 		}
-
 
 		[Test]
 		public virtual void ListChangedOnReplace()

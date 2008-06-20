@@ -1,34 +1,31 @@
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Text;
 using System.Threading;
 
 namespace WeSay.Foundation.Tests
 {
 	public class TestUtilities
 	{
-		  public static void DeleteFolderThatMayBeInUse(string folder)
+		public static void DeleteFolderThatMayBeInUse(string folder)
 		{
 			if (Directory.Exists(folder))
 			{
-				for(int i=0; i<50; i++)//wait up to five seconds
+				for (int i = 0;i < 50;i++) //wait up to five seconds
 				{
 					try
 					{
 						Directory.Delete(folder, true);
 						return;
 					}
-					catch (Exception)
-					{
-					}
+					catch (Exception) {}
 					Thread.Sleep(100);
 				}
 				//maybe we can at least clear it out a bit
 				try
 				{
-					Debug.WriteLine("TestUtilities.DeleteFolderThatMayBeInUse(): gave up trying to delete the whole folder. Some files may be abandoned in your temp folder." );
+					Debug.WriteLine(
+							"TestUtilities.DeleteFolderThatMayBeInUse(): gave up trying to delete the whole folder. Some files may be abandoned in your temp folder.");
 
 					string[] files = Directory.GetFiles(folder, "*.*", SearchOption.AllDirectories);
 					foreach (string s in files)
@@ -39,10 +36,7 @@ namespace WeSay.Foundation.Tests
 					Thread.Sleep(1000);
 					Directory.Delete(folder, true);
 				}
-				catch (Exception)
-				{
-				}
-
+				catch (Exception) {}
 			}
 		}
 	}

@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using System.Windows.Forms;
 using WeSay.UI;
 using WeSay.UI.Buttons;
@@ -20,7 +19,7 @@ namespace WeSay.LexicalTools
 		{
 			if (disposing && !IsDisposed)
 			{
-				_records.ListChanged -= OnRecordsListChanged;
+				//_records.ListChanged -= OnRecordsListChanged;
 
 				_recordsListBox.SelectedIndexChanged -= OnRecordSelectionChanged;
 				//_recordsListBox.Enter += _recordsListBox_Enter;
@@ -39,9 +38,9 @@ namespace WeSay.LexicalTools
 				//}
 
 
-				if (_currentRecord != null)
+				if (CurrentEntry != null)
 				{
-					_currentRecord.PropertyChanged -= OnCurrentRecordPropertyChanged;
+					CurrentEntry.PropertyChanged -= OnCurrentRecordPropertyChanged;
 				}
 			}
 			if (disposing && (components != null))

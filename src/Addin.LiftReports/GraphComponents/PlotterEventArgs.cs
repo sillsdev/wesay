@@ -1,4 +1,5 @@
 #region copyright info
+
 //
 // Written by Anup. V (anupshubha@yahoo.com)
 // Copyright (c) 2006.
@@ -15,21 +16,22 @@
 // Please use and enjoy. Please let me know of any bugs/mods/improvements
 // that you have found/implemented and I will fix/incorporate them into
 // this file.
+
 #endregion copyright info
 
 using System;
 
-namespace GraphComponents
+namespace Addin.LiftReports.GraphComponents
 {
 	/// <summary>
 	/// EventArgs class containing information about the plotter
 	/// </summary>
-	public class PlotterEventArgs : EventArgs
+	public class PlotterEventArgs: EventArgs
 	{
 		/// <summary>
 		/// The plotter that caused the event to be raised
 		/// </summary>
-		Plotter plotter;
+		private readonly Plotter plotter;
 
 		/// <summary>
 		/// The plotter that caused the event to be raised
@@ -43,7 +45,7 @@ namespace GraphComponents
 		/// Constructor
 		/// </summary>
 		/// <param name="plotter">The plotter that caused the event to be raised</param>
-		public PlotterEventArgs (Plotter plotter)
+		public PlotterEventArgs(Plotter plotter)
 		{
 			this.plotter = plotter;
 		}

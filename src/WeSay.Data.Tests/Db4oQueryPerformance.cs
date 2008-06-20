@@ -31,8 +31,8 @@ namespace WeSay.Data.Tests
 
 		public class LanguageForm
 		{
-			private string _writingSystemId;
-			private string _form;
+			private readonly string _writingSystemId;
+			private readonly string _form;
 
 			public LanguageForm(string writingSystemId, string form)
 			{
@@ -66,9 +66,9 @@ namespace WeSay.Data.Tests
 
 			_db = Db4oFactory.OpenFile(_filePath);
 			((YapStream) _db).GetNativeQueryHandler().QueryOptimizationFailure +=
-					new QueryOptimizationFailureHandler(OnQueryOptimizationFailure);
+					OnQueryOptimizationFailure;
 
-			for (int i = 0; i < 10000; i++)
+			for (int i = 0;i < 10000;i++)
 			{
 				Entry e = new Entry();
 				e.name = new MultiText();
@@ -80,7 +80,7 @@ namespace WeSay.Data.Tests
 
 			_db.Commit();
 			_db.Dispose();
-			_db = Db4objects.Db4o.Db4oFactory.OpenFile(_filePath);
+			_db = Db4oFactory.OpenFile(_filePath);
 		}
 
 		[TearDown]
@@ -96,47 +96,57 @@ namespace WeSay.Data.Tests
 			Stopwatch stopwatch = new Stopwatch();
 
 			stopwatch.Start();
-			IList<Entry> matches = _db.Query<Entry>(delegate(Entry e) { return e.name._forms[0].Form == "en-99"; });
+			IList<Entry> matches =
+					_db.Query<Entry>(delegate(Entry e) { return e.name._forms[0].Form == "en-99"; });
 			stopwatch.Stop();
 			Assert.AreEqual(1, matches.Count);
-			Console.WriteLine("FindWithNativeUsingArray " + stopwatch.ElapsedMilliseconds/1000.0 + " seconds");
+			Console.WriteLine("FindWithNativeUsingArray " + stopwatch.ElapsedMilliseconds / 1000.0 +
+							  " seconds");
 		}
 
-		[Test, Ignore("Broke mysteriously, but it's not actually testing our code.")]
+		[Test]
+		[Ignore("Broke mysteriously, but it's not actually testing our code.")]
 		public void FindWithNativeNoArray()
 		{
 			Stopwatch stopwatch = new Stopwatch();
 
 			stopwatch.Start();
-			IList<Entry> matches = _db.Query<Entry>(delegate(Entry e) { return e.name._singleForm.Form == "99"; });
+			IList<Entry> matches =
+					_db.Query<Entry>(delegate(Entry e) { return e.name._singleForm.Form == "99"; });
 			stopwatch.Stop();
 			Assert.AreEqual(1, matches.Count);
-			Console.WriteLine("FindWithNativeNoArray " + stopwatch.ElapsedMilliseconds/1000.0 + " seconds");
+			Console.WriteLine("FindWithNativeNoArray " + stopwatch.ElapsedMilliseconds / 1000.0 +
+							  " seconds");
 		}
 
-		[Test, Ignore("Broke mysteriously, but it's not actually testing our code.")]
+		[Test]
+		[Ignore("Broke mysteriously, but it's not actually testing our code.")]
 		public void FindRawForm()
 		{
 			Stopwatch stopwatch = new Stopwatch();
 
 			stopwatch.Start();
-			IList<LanguageForm> matches = _db.Query<LanguageForm>(delegate(LanguageForm f) { return f.Form == "99"; });
+			IList<LanguageForm> matches =
+					_db.Query<LanguageForm>(delegate(LanguageForm f) { return f.Form == "99"; });
 			stopwatch.Stop();
 			Assert.AreEqual(1, matches.Count);
-			Console.WriteLine("FindRawForm " + stopwatch.ElapsedMilliseconds/1000.0 + " seconds");
+			Console.WriteLine("FindRawForm " + stopwatch.ElapsedMilliseconds / 1000.0 + " seconds");
 		}
 
-		[Test, Ignore("Broke mysteriously, but it's not actually testing our code.")]
+		[Test]
+		[Ignore("Broke mysteriously, but it's not actually testing our code.")]
 		public void SimpleStringSearch()
 		{
 			IObjectContainer db = MakeFlatStringDatabase(true);
 			Stopwatch stopwatch = new Stopwatch();
 
 			stopwatch.Start();
-			IList<LanguageForm> matches = db.Query<LanguageForm>(delegate(LanguageForm f) { return f.Form == "99"; });
+			IList<LanguageForm> matches =
+					db.Query<LanguageForm>(delegate(LanguageForm f) { return f.Form == "99"; });
 			stopwatch.Stop();
 			Assert.AreEqual(1, matches.Count);
-			Console.WriteLine("SimpleStringSearch " + stopwatch.ElapsedMilliseconds/1000.0 + " seconds");
+			Console.WriteLine("SimpleStringSearch " + stopwatch.ElapsedMilliseconds / 1000.0 +
+							  " seconds");
 
 			db.Dispose();
 			_db4oConfiguration.Diagnostic().RemoveAllListeners();
@@ -183,9 +193,9 @@ namespace WeSay.Data.Tests
 
 			IObjectContainer db = Db4oFactory.OpenFile(path);
 			((YapStream) db).GetNativeQueryHandler().QueryOptimizationFailure +=
-					new QueryOptimizationFailureHandler(OnQueryOptimizationFailure);
+					OnQueryOptimizationFailure;
 
-			for (int i = 0; i < 10000; i++)
+			for (int i = 0;i < 10000;i++)
 			{
 				LanguageForm f = new LanguageForm("en", i.ToString());
 				db.Set(f);
@@ -194,7 +204,8 @@ namespace WeSay.Data.Tests
 			return db;
 		}
 
-		private static void OnQueryOptimizationFailure(object sender, QueryOptimizationFailureEventArgs args)
+		private static void OnQueryOptimizationFailure(object sender,
+													   QueryOptimizationFailureEventArgs args)
 		{
 			Console.WriteLine("Query not Optimized:");
 			Console.WriteLine(args.Reason);

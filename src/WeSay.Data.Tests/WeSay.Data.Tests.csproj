@@ -45,14 +45,10 @@
   </PropertyGroup>
   <ItemGroup>
 	<Compile Include="Db4oQueryPerformance.cs" />
-	<Compile Include="Db4oRecordListManagerTests.cs" />
 	<Compile Include="InMemoryBindingListTests.cs" />
 	<Compile Include="Db4oRecordListTests.cs" />
 	<Compile Include="Db4oSODAQueryTests.cs" />
 	<Compile Include="IFilterableTest.cs" />
-	<Compile Include="RecordListManagerBaseTests.cs" />
-	<Compile Include="InMemoryRecordListManagerTests.cs" />
-	<Compile Include="InMemoryRecordListTests.cs" />
 	<Compile Include="IBindingListBaseTest.cs" />
 	<Compile Include="ICollectionBaseTest.cs" />
 	<Compile Include="IEnumerableBaseTest.cs" />
@@ -60,9 +56,7 @@
 	<Compile Include="IRecordListBaseTest.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />
 	<Compile Include="SimpleIntFilter.cs" />
-	<Compile Include="SimpleIntSortHelper.cs" />
 	<Compile Include="SimpleIntTestClass.cs" />
-	<Compile Include="SortedDb4oRecordListTest.cs" />
 	<Compile Include="TestItem.cs" />
   </ItemGroup>
   <ItemGroup>

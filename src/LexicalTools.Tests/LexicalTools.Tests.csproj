@@ -72,7 +72,6 @@
   </ItemGroup>
   <ItemGroup>
 	<Compile Include="GatherBySemanticDomainTaskTests.cs" />
-	<Compile Include="HelperForTestsRequiringDb4o.cs" />
 	<Compile Include="MissingEntryRelationFieldFilterTests.cs" />
 	<Compile Include="MissingLexicalFormFilterTests.cs" />
 	<Compile Include="MissingExampleTranslationFilterTests.cs" />

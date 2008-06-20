@@ -1,6 +1,5 @@
 using NUnit.Framework;
 using WeSay.LexicalModel;
-using WeSay.LexicalTools;
 using WeSay.Project;
 
 namespace WeSay.LexicalTools.Tests
@@ -13,8 +12,11 @@ namespace WeSay.LexicalTools.Tests
 		[SetUp]
 		public void Setup()
 		{
-			Field field = new Field(LexSense.WellKnownProperties.Definition, "LexSense", new string[] { "analysis" });
-			this._missingMeaningFilter = new MissingItemFilter(field);
+			Field field =
+					new Field(LexSense.WellKnownProperties.Definition,
+							  "LexSense",
+							  new string[] {"analysis"});
+			_missingMeaningFilter = new MissingItemFilter(field);
 		}
 
 		[Test]
@@ -46,7 +48,7 @@ namespace WeSay.LexicalTools.Tests
 		public void SenseDefinitionWritingSystemNoAnalysis()
 		{
 			LexEntry entry = new LexEntry();
-			LexSense sense = (LexSense)entry.Senses.AddNew();
+			LexSense sense = (LexSense) entry.Senses.AddNew();
 			sense.Definition["vernacular"] = "filler";
 			Assert.AreEqual(true, _missingMeaningFilter.FilteringPredicate(entry));
 		}
@@ -55,7 +57,7 @@ namespace WeSay.LexicalTools.Tests
 		public void OneSenseDefinitionWithOneWithoutWritingSystems()
 		{
 			LexEntry entry = new LexEntry();
-			LexSense sense = (LexSense)entry.Senses.AddNew();
+			LexSense sense = (LexSense) entry.Senses.AddNew();
 			sense.Definition["analysis"] = "filler";
 			entry.Senses.AddNew();
 			Assert.AreEqual(true, _missingMeaningFilter.FilteringPredicate(entry));
@@ -65,9 +67,9 @@ namespace WeSay.LexicalTools.Tests
 		public void OneSenseDefinitionWritingSystemWithOneWithoutAnalysis()
 		{
 			LexEntry entry = new LexEntry();
-			LexSense sense = (LexSense)entry.Senses.AddNew();
+			LexSense sense = (LexSense) entry.Senses.AddNew();
 			sense.Definition["analysis"] = "filler";
-			sense = (LexSense)entry.Senses.AddNew();
+			sense = (LexSense) entry.Senses.AddNew();
 			sense.Definition["vernacular"] = "filler";
 			Assert.AreEqual(true, _missingMeaningFilter.FilteringPredicate(entry));
 		}

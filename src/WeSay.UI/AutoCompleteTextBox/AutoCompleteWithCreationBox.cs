@@ -6,32 +6,38 @@ using WeSay.Foundation;
 
 namespace WeSay.UI.AutoCompleteTextBox
 {
-	public partial class AutoCompleteWithCreationBox<KV, ValueT> : UserControl, IBindableControl<ValueT> where ValueT : class
+	public partial class AutoCompleteWithCreationBox<KV, ValueT>: UserControl,
+																  IBindableControl<ValueT>
+			where ValueT : class
 	{
 		private readonly CommonEnumerations.VisibilitySetting _visibility;
 		public event EventHandler<CreateNewArgs> CreateNewClicked;
 
 		public delegate ValueT GetValueFromKeyValueDelegate(KV t);
+
 		public delegate KV GetKeyValueFromValueDelegate(ValueT t);
 
 		private GetValueFromKeyValueDelegate _getValueFromKeyValueDelegate;
 		private GetKeyValueFromValueDelegate _getKeyValueFromValueDelegate;
+
 		public AutoCompleteWithCreationBox(CommonEnumerations.VisibilitySetting visibility)
 		{
 			_visibility = visibility;
 			InitializeComponent();
 
-			if(DesignMode)
+			if (DesignMode)
+			{
 				return;
+			}
 
 			//todo: what other cases make sense
 			if (visibility == CommonEnumerations.VisibilitySetting.ReadOnly)
 			{
 				_textBox.ReadOnly = true;
-			  //  _textBox.Enabled = false;
+				//  _textBox.Enabled = false;
 				_textBox.TabStop = false;
 
-				this.TabStop = false;
+				TabStop = false;
 			}
 
 			_textBox.SelectedItemChanged += OnSelectedItemChanged;
@@ -40,7 +46,7 @@ namespace WeSay.UI.AutoCompleteTextBox
 			LostFocus += OnFocusChanged;
 			_textBox.LostFocus += OnFocusChanged;
 			AddNewButton.LostFocus += OnFocusChanged;
-			BackColorChanged += new EventHandler(OnBackColorChanged);
+			BackColorChanged += OnBackColorChanged;
 			UpdateDisplay();
 			GetValueFromKeyValue = CastKeyValueToValue;
 			GetKeyValueFromValue = CastValueToKeyValue;
@@ -53,11 +59,11 @@ namespace WeSay.UI.AutoCompleteTextBox
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		void OnBackColorChanged(object sender, EventArgs e)
+		private void OnBackColorChanged(object sender, EventArgs e)
 		{
-			if (_textBox != null && _textBox.ReadOnly )
+			if (_textBox != null && _textBox.ReadOnly)
 			{
-				_textBox.BackColor = this.BackColor;
+				_textBox.BackColor = BackColor;
 			}
 		}
 
@@ -68,20 +74,21 @@ namespace WeSay.UI.AutoCompleteTextBox
 			return size;
 		}
 
-
-		void _textBox_SizeChanged(object sender, EventArgs e)
+		private void _textBox_SizeChanged(object sender, EventArgs e)
 		{
 			Height = GetPreferredHeight();
 		}
 
-		private int GetPreferredHeight() {
-			return Math.Max(this._addNewButton.Height, this._textBox.Height);
+		private int GetPreferredHeight()
+		{
+			return Math.Max(_addNewButton.Height, _textBox.Height);
 		}
 
 		private static KV CastValueToKeyValue(ValueT v)
 		{
-			return (KV) ((object)v);
+			return (KV) ((object) v);
 		}
+
 		internal Button AddNewButton
 		{
 			get { return _addNewButton; }
@@ -89,16 +96,16 @@ namespace WeSay.UI.AutoCompleteTextBox
 
 		private static ValueT CastKeyValueToValue(KV t)
 		{
-			return (ValueT)((object)t);
+			return (ValueT) ((object) t);
 		}
 
-		void OnFocusChanged(object sender, EventArgs e)
+		private void OnFocusChanged(object sender, EventArgs e)
 		{
 			UpdateDisplay();
-			Invalidate();//to reshow any warning icons we don't show in a different focus situation
+			Invalidate(); //to reshow any warning icons we don't show in a different focus situation
 		}
 
-		void OnSelectedItemChanged(object sender, EventArgs e)
+		private void OnSelectedItemChanged(object sender, EventArgs e)
 		{
 			UpdateDisplay();
 			if (ValueChanged != null)
@@ -109,22 +116,22 @@ namespace WeSay.UI.AutoCompleteTextBox
 
 		public WeSayAutoCompleteTextBox Box
 		{
-			get
-			{
-				return this._textBox;
-			}
-		}
-		protected override void  OnPaint(PaintEventArgs e)
-		{
-			base.OnPaint(e);
-			 if (!ContainsFocus &&  HasProblems)
-			 {
-				 int y = e.ClipRectangle.Top;
-				 e.Graphics.DrawString("!", new Font(FontFamily.GenericSansSerif, 14, FontStyle.Bold),
-					 Brushes.Red, e.ClipRectangle.Left + _textBox.Width + 10, y);
-			 }
+			get { return _textBox; }
 		}
 
+		protected override void OnPaint(PaintEventArgs e)
+		{
+			base.OnPaint(e);
+			if (!ContainsFocus && HasProblems)
+			{
+				int y = e.ClipRectangle.Top;
+				e.Graphics.DrawString("!",
+									  new Font(FontFamily.GenericSansSerif, 14, FontStyle.Bold),
+									  Brushes.Red,
+									  e.ClipRectangle.Left + _textBox.Width + 10,
+									  y);
+			}
+		}
 
 		internal bool HasProblems
 		{
@@ -137,7 +144,6 @@ namespace WeSay.UI.AutoCompleteTextBox
 			}
 		}
 
-
 		#region IBindableControl<T> Members
 
 		public event EventHandler ValueChanged;
@@ -145,60 +151,41 @@ namespace WeSay.UI.AutoCompleteTextBox
 
 		public override string Text
 		{
-			get
-			{
-				return Box.Text;
-			}
-			set
-			{
-				Box.Text = value;
-			}
+			get { return Box.Text; }
+			set { Box.Text = value; }
 		}
 
-		 public ValueT Value
+		public ValueT Value
 		{
 			get
 			{
-				if(Box.SelectedItem ==null)
+				if (Box.SelectedItem == null)
+				{
 					return null;
+				}
 				else
 				{
-						return GetValueFromKeyValue.Invoke((KV)Box.SelectedItem);
+					return GetValueFromKeyValue.Invoke((KV) Box.SelectedItem);
 				}
 			}
-			set
-			{
-				Box.SelectedItem = GetKeyValueFromValue.Invoke(value);
-			}
+			set { Box.SelectedItem = GetKeyValueFromValue.Invoke(value); }
 		}
 
 		public GetValueFromKeyValueDelegate GetValueFromKeyValue
 		{
-			get
-			{
-				return this._getValueFromKeyValueDelegate;
-			}
-			set
-			{
-				this._getValueFromKeyValueDelegate = value;
-			}
+			get { return _getValueFromKeyValueDelegate; }
+			set { _getValueFromKeyValueDelegate = value; }
 		}
 
 		public GetKeyValueFromValueDelegate GetKeyValueFromValue
 		{
-			get
-			{
-				return this._getKeyValueFromValueDelegate;
-			}
-			set
-			{
-				this._getKeyValueFromValueDelegate = value;
-			}
+			get { return _getKeyValueFromValueDelegate; }
+			set { _getKeyValueFromValueDelegate = value; }
 		}
 
 		#endregion
 
-		void box_TextChanged(object sender, EventArgs e)
+		private void box_TextChanged(object sender, EventArgs e)
 		{
 			UpdateDisplay();
 		}
@@ -207,7 +194,7 @@ namespace WeSay.UI.AutoCompleteTextBox
 		{
 			if (GoingAway != null)
 			{
-				GoingAway.Invoke(this, null);//shake any bindings to us loose
+				GoingAway.Invoke(this, null); //shake any bindings to us loose
 			}
 			GoingAway = null;
 			base.OnHandleDestroyed(e);
@@ -230,11 +217,10 @@ namespace WeSay.UI.AutoCompleteTextBox
 			base.Dispose(disposing);
 		}
 
-
 		private void UpdateElementWidth()
 		{
 			SuspendLayout();
-			if (this._textBox.Text.Length == 0)
+			if (_textBox.Text.Length == 0)
 			{
 				_textBox.Width = _textBox.MinimumSize.Width;
 				return;
@@ -242,21 +228,22 @@ namespace WeSay.UI.AutoCompleteTextBox
 
 			//NB:... doing CreateGraphics makes a bunch of events fire
 
-
 			using (Graphics g = _textBox.CreateGraphics())
 			{
-				TextFormatFlags flags = TextFormatFlags.TextBoxControl |
-										TextFormatFlags.Default |
-										TextFormatFlags.NoClipping | TextFormatFlags.LeftAndRightPadding;
+				TextFormatFlags flags = TextFormatFlags.TextBoxControl | TextFormatFlags.Default |
+										TextFormatFlags.NoClipping |
+										TextFormatFlags.LeftAndRightPadding;
 
-				Size sz = TextRenderer.MeasureText(g, _textBox.Text,
-												   _textBox.Font,
-												   new Size(int.MaxValue, _textBox.Height),
-												   flags);
+				Size sz =
+						TextRenderer.MeasureText(g,
+												 _textBox.Text,
+												 _textBox.Font,
+												 new Size(int.MaxValue, _textBox.Height),
+												 flags);
 
 				_textBox.Width = Math.Max(_textBox.MinimumSize.Width, sz.Width);
 			}
-			if(AddNewButton.Visible)
+			if (AddNewButton.Visible)
 			{
 				Width = _textBox.Width + AddNewButton.Width;
 			}
@@ -270,73 +257,68 @@ namespace WeSay.UI.AutoCompleteTextBox
 
 		private void UpdateDisplay()
 		{
-			AddNewButton.Visible = CreateNewClicked !=null
-				&& _textBox.SelectedItem == null
-				&& !string.IsNullOrEmpty(_textBox.Text)
-				&& ContainsFocus;
+			AddNewButton.Visible = CreateNewClicked != null && _textBox.SelectedItem == null &&
+								   !string.IsNullOrEmpty(_textBox.Text) && ContainsFocus;
 			UpdateElementWidth();
 
-		 //   if (ContainsFocus)
+			//   if (ContainsFocus)
 			{
 				if (Box.SelectedItem != null)
 				{
-					this.Box.ForeColor = Color.Black;
+					Box.ForeColor = Color.Black;
 				}
 				else
 				{
-					this.Box.ForeColor = Color.DarkBlue;
+					Box.ForeColor = Color.DarkBlue;
 				}
 			}
 			//this behavior may have to become a parameter
 			if (!ContainsFocus && HasProblems)
 			{
-				this.Box.BackColor = Color.Red;
+				Box.BackColor = Color.Red;
 			}
 			else
-				this.Box.BackColor = SystemColors.Window;
+			{
+				Box.BackColor = SystemColors.Window;
+			}
 		}
+
 		public void CreateNewObjectFromText()
 		{
-			Debug.Assert(CreateNewClicked != null, "This shouldn't be called if CreateNewClicked handler is missing.");
+			Debug.Assert(CreateNewClicked != null,
+						 "This shouldn't be called if CreateNewClicked handler is missing.");
 			CreateNewArgs creationArgs = new CreateNewArgs(_textBox.Text);
 			CreateNewClicked.Invoke(this, creationArgs);
 			_textBox.SelectedItem = creationArgs.NewlyCreatedItem;
 		}
+
 		private void OnAddNewButton_Click(object sender, EventArgs e)
 		{
 			CreateNewObjectFromText();
 		}
+	}
 
+	/// <summary>
+	/// Use to make a new object from a simple form, and to notify the control of what
+	/// object was created.
+	/// </summary>
+	public class CreateNewArgs: EventArgs
+	{
+		public string LabelOfNewItem;
+		private object _newlyCreatedItem;
 
-	  }
-	  /// <summary>
-	  /// Use to make a new object from a simple form, and to notify the control of what
-	  /// object was created.
-	  /// </summary>
-	  public class CreateNewArgs : EventArgs
-	  {
-		  public string LabelOfNewItem;
-		  private object _newlyCreatedItem;
+		public CreateNewArgs(string labelOfNewItem)
+		{
+			LabelOfNewItem = labelOfNewItem;
+		}
 
-		  public CreateNewArgs(string labelOfNewItem)
-		  {
-			  LabelOfNewItem = labelOfNewItem;
-		  }
-
-		  /// <summary>
-		  /// Receiver fills this in after creating something
-		  /// </summary>
-		  public object NewlyCreatedItem
-		  {
-			  get
-			  {
-				  return _newlyCreatedItem;
-			  }
-			  set
-			  {
-				  _newlyCreatedItem = value;
-			  }
-		  }
-	  }
-
+		/// <summary>
+		/// Receiver fills this in after creating something
+		/// </summary>
+		public object NewlyCreatedItem
+		{
+			get { return _newlyCreatedItem; }
+			set { _newlyCreatedItem = value; }
+		}
+	}
 }

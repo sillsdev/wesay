@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using Db4objects.Db4o.Ext;
 
 namespace WeSay.Data
 {
@@ -13,18 +14,23 @@ namespace WeSay.Data
 		void Configure();
 	}
 
-	public class DoNothingModelConfiguration : IDb4oModelConfiguration
+	public sealed class DoNothingModelConfiguration: IDb4oModelConfiguration
 	{
 		public void Configure() {}
 	}
 
-	public class Db4oRecordListManager : AbstractRecordListManager
+	public sealed class PrivateDb4oRecordListManager: IPrivateRecordListManager
 	{
-		private Db4oDataSource _dataSource;
-		private string _cachePath;
+		private readonly Db4oDataSource _dataSource;
+		private readonly string _cachePath;
+		private bool _delayWritingCachesUntilDispose = false;
+		private Hashtable _filteredRecordLists;
+		private bool _disposed;
 
-		public Db4oRecordListManager(IDb4oModelConfiguration config, string pathToDb4oFile)
+		public PrivateDb4oRecordListManager(IDb4oModelConfiguration config, string pathToDb4oFile)
 		{
+			_filteredRecordLists = new Hashtable();
+
 			try
 			{
 				config.Configure();
@@ -49,89 +55,116 @@ namespace WeSay.Data
 			get { return _cachePath; }
 		}
 
-		public CachedSortedDb4oList<K, T> GetSortedList<K, T>(ISortHelper<K, T> sortHelper) where T : class, new()
+		public bool DelayWritingCachesUntilDispose
+		{
+			get { return _delayWritingCachesUntilDispose; }
+			set
+			{
+				_delayWritingCachesUntilDispose = value;
+				foreach (IControlCachingBehavior list in _filteredRecordLists)
+				{
+					list.DelayWritingCachesUntilDispose = value;
+				}
+			}
+		}
+
+		public bool IsDisposed
+		{
+			get { return _disposed; }
+			private set { _disposed = value; }
+		}
+
+		private Hashtable RecordLists
+		{
+			get { return _filteredRecordLists; }
+		}
+
+		public static List<RecordToken<T>> GetSortedList<T>(ISortHelper<T> sortHelper)
+				where T : class, new()
 		{
 			if (sortHelper == null)
 			{
 				throw new ArgumentNullException();
 			}
-			string recordListKey = RecordListKey<T>(null, sortHelper.Name);
-			if (!RecordLists.ContainsKey(recordListKey))
+			//string recordListKey = RecordListKey<T>(null, sortHelper.Name);
+			//if (!RecordLists.ContainsKey(recordListKey))
 			{
-				RecordLists.Add(recordListKey, new CachedSortedDb4oList<K, T>(this, sortHelper));
+				List<RecordToken<T>> recordTokens =
+						new List<RecordToken<T>>(sortHelper.RetrieveItems());
+
+				recordTokens.Sort(new RecordTokenComparer<T>(sortHelper.KeyComparer));
+				return recordTokens;
+
+				//                RecordLists.Add(recordListKey, recordTokens);
 			}
-			return (CachedSortedDb4oList<K, T>) RecordLists[recordListKey];
+			//            return (List<RecordToken>)RecordLists[recordListKey];
 		}
 
-		protected override IRecordList<T> CreateMasterRecordList<T>()
+		private IRecordList<T> CreateMasterRecordList<T>() where T : class, new()
 		{
 			Db4oRecordList<T> recordList = new Db4oRecordList<T>(_dataSource);
 			recordList.DelayWritingCachesUntilDispose = DelayWritingCachesUntilDispose;
 			return recordList;
 		}
 
-		protected override IRecordList<T> CreateFilteredRecordList<Key, T>(IFilter<T> filter,
-																		   ISortHelper<Key, T> sortHelper)
+		private IRecordList<T> CreateFilteredRecordList<T>(IFilter<T> filter,
+														   ISortHelper<T> sortHelper)
+				where T : class, new()
 		{
-			CachedSortedDb4oList<Key, T> sortedList = GetSortedList(sortHelper);
-			FilteredDb4oRecordList<Key, T> list =
-					new FilteredDb4oRecordList<Key, T>(GetListOfType<T>(), filter, sortedList, CachePath, false);
+			FilteredDb4oRecordList<T> list =
+					new FilteredDb4oRecordList<T>(GetListOfType<T>(),
+												  filter,
+												  sortHelper,
+												  CachePath,
+												  false);
 			return list;
 		}
 
-		protected override IRecordList<T> CreateFilteredRecordListUnlessSlow<Key, T>(IFilter<T> filter,
-																					 ISortHelper<Key, T> sortHelper)
+		private IRecordList<T> CreateFilteredRecordListUnlessSlow<T>(IFilter<T> filter,
+																	 ISortHelper<T> sortHelper)
+				where T : class, new()
 		{
 			IRecordList<T> recordList = null;
 			try
 			{
-				CachedSortedDb4oList<Key, T> sortedList = GetSortedList(sortHelper);
-
-				recordList = new FilteredDb4oRecordList<Key, T>(GetListOfType<T>(), filter, sortedList, CachePath, true);
+				recordList =
+						new FilteredDb4oRecordList<T>(GetListOfType<T>(),
+													  filter,
+													  sortHelper,
+													  CachePath,
+													  true);
 			}
 			catch (OperationCanceledException) {}
 			return recordList;
 		}
 
-		protected override void Dispose(bool disposing)
-		{
-			bool canBeDisposed = !IsDisposed;
-			base.Dispose(disposing);
-			if (canBeDisposed && disposing)
-			{
-				if (DataSource != null)
-				{
-					DataSource.Dispose();
-				}
-			}
-		}
-
-		public class FilteredDb4oRecordList<Key, T> : Db4oRecordList<T>, IBindingList where T : class, new()
+		internal class FilteredDb4oRecordList<T>: Db4oRecordList<T> where T : class, new()
 		{
 			private bool _isSorted;
 			private IRecordList<T> _masterRecordList;
 			private bool _isSourceMasterRecord;
-			private IFilter<T> _isRelevantFilter;
-			private string _cachePath;
-			private bool _isInitializingFromCache;
-			private CachedSortedDb4oList<Key, T> _sortedList;
+			private readonly IFilter<T> _isRelevantFilter;
+			private readonly string _cachePath;
+			private readonly bool _isInitializingFromCache;
+			private readonly ISortHelper<T> _sortHelper;
 
 			public Predicate<T> RelevancePredicate
 			{
 				get { return _isRelevantFilter.FilteringPredicate; }
 			}
 
-			public FilteredDb4oRecordList(IRecordList<T> sourceRecords, IFilter<T> filter,
-										  CachedSortedDb4oList<Key, T> sortedList,
-										  string cachePath, bool constructOnlyIfFilterIsCached)
+			public FilteredDb4oRecordList(IRecordList<T> sourceRecords,
+										  IFilter<T> filter,
+										  ISortHelper<T> sortedList,
+										  string cachePath,
+										  bool constructOnlyIfFilterIsCached)
 					: base((Db4oRecordList<T>) sourceRecords)
 			{
 				WriteCacheSize = 0;
 				_cachePath = cachePath;
 				_isRelevantFilter = filter;
-				_sortedList = sortedList;
+				_sortHelper = sortedList;
 				_masterRecordList = sourceRecords;
-
 				if (constructOnlyIfFilterIsCached)
 				{
 					((Db4oList<T>) Records).ItemIds.Clear();
@@ -168,11 +201,10 @@ namespace WeSay.Data
 				{
 					SerializeRecordIds();
 				}
-				MasterRecordList.ListChanged += new ListChangedEventHandler(OnMasterRecordListListChanged);
+				MasterRecordList.ListChanged += OnMasterRecordListListChanged;
 				MasterRecordList.ContentOfItemInListChanged +=
-						new ListChangedEventHandler(OnMasterRecordListContentOfItemInListChanged);
-				MasterRecordList.DeletingRecord +=
-						new EventHandler<RecordListEventArgs<T>>(OnMasterRecordListDeletingRecord);
+						OnMasterRecordListContentOfItemInListChanged;
+				MasterRecordList.DeletingRecord += OnMasterRecordListDeletingRecord;
 			}
 
 			// use the SortedList to determine the order of the filtered list items.
@@ -180,22 +212,23 @@ namespace WeSay.Data
 			private void Sort()
 			{
 				int oldCount = Count;
+				IList<RecordToken<T>> sortedList = GetSortedList(_sortHelper);
 
-				((Db4oList<T>) Records).ItemIds.Sort(new IdListComparer(_sortedList.GetIds()));
+				((Db4oList<T>) Records).ItemIds.Sort(new IdListComparer(sortedList));
 				Debug.Assert(oldCount == Count);
 				OnListReset();
 			}
 
-			private class IdListComparer : IComparer<long>
+			private class IdListComparer: IComparer<long>
 			{
-				private Dictionary<long, int> _mapIdToIndex;
+				private readonly Dictionary<long, int> _mapIdToIndex;
 
-				public IdListComparer(IList<long> baseList)
+				public IdListComparer(IList<RecordToken<T>> baseList)
 				{
 					_mapIdToIndex = new Dictionary<long, int>(baseList.Count);
-					for(int i = 0; i < baseList.Count;++i)
+					for (int i = 0;i < baseList.Count;++i)
 					{
-						_mapIdToIndex[baseList[i]] = i;
+						_mapIdToIndex[((Db4oRepositoryId) baseList[i].Id).Db4oId] = i;
 					}
 				}
 
@@ -203,7 +236,7 @@ namespace WeSay.Data
 
 				public int Compare(long x, long y)
 				{
-					return Comparer<long>.Default.Compare(_mapIdToIndex[x], _mapIdToIndex[y]);
+					return Comparer<int>.Default.Compare(_mapIdToIndex[x], _mapIdToIndex[y]);
 				}
 
 				#endregion
@@ -211,7 +244,13 @@ namespace WeSay.Data
 
 			private string CacheFilePath
 			{
-				get { return Path.Combine(_cachePath, CacheHelper.EscapeFileNameString(_isRelevantFilter.Key) + ".cache"); }
+				get
+				{
+					return
+							Path.Combine(_cachePath,
+										 CacheHelper.EscapeFileNameString(_isRelevantFilter.Key) +
+										 ".cache");
+				}
 			}
 
 			public IRecordList<T> MasterRecordList
@@ -272,9 +311,10 @@ namespace WeSay.Data
 
 			private int GetFilterHashCode()
 			{
-				byte[] bytes = ((Db4oList<T>) Records).Filter.Method.GetMethodBody().GetILAsByteArray();
+				byte[] bytes =
+						((Db4oList<T>) Records).Filter.Method.GetMethodBody().GetILAsByteArray();
 				int hashCode = 0;
-				for (int i = 0; i < bytes.Length; i++)
+				for (int i = 0;i < bytes.Length;i++)
 				{
 					byte b = bytes[i];
 					hashCode ^= b;
@@ -322,7 +362,8 @@ namespace WeSay.Data
 				_isSourceMasterRecord = false;
 			}
 
-			private void OnMasterRecordListContentOfItemInListChanged(object sender, ListChangedEventArgs e)
+			private void OnMasterRecordListContentOfItemInListChanged(object sender,
+																	  ListChangedEventArgs e)
 			{
 				IRecordList<T> masterRecordList = (IRecordList<T>) sender;
 				_isSourceMasterRecord = true;
@@ -436,7 +477,7 @@ namespace WeSay.Data
 						OnItemDeleted(index);
 					}
 
-//                    Remove(item);
+					//                    Remove(item);
 #if DEBUG
 					if (!MasterRecordList.DelayWritingCachesUntilDispose)
 					{
@@ -474,11 +515,11 @@ namespace WeSay.Data
 				base.OnItemAdded(newIndex);
 			}
 
-			public Key GetKey(int index)
-			{
-				long id = ((Db4oList<T>) Records).ItemIds[index];
-				return _sortedList.GetKeyFromId(id);
-			}
+			//public string GetKey(int index)
+			//{
+			//    long id = ((Db4oList<T>) Records).ItemIds[index];
+			//    return _sortedList.GetKeyFromId(id);
+			//}
 
 			public T GetValue(int index)
 			{
@@ -486,34 +527,34 @@ namespace WeSay.Data
 			}
 
 			// returns the value object. use GetKey to return the Key
-			object IList.this[int index]
-			{
-				get
-				{
-					VerifyNotDisposed();
-					VerifySorted();
-					return GetValue(index);
-				}
-				set
-				{
-					VerifyNotDisposed();
-					throw new NotSupportedException();
-				}
-			}
+			//object IList.this[int index]
+			//{
+			//    get
+			//    {
+			//        VerifyNotDisposed();
+			//        VerifySorted();
+			//        return GetValue(index);
+			//    }
+			//    set
+			//    {
+			//        VerifyNotDisposed();
+			//        throw new NotSupportedException();
+			//    }
+			//}
 
 			public override int IndexOf(T item)
 			{
 				VerifyNotDisposed();
-//                VerifySorted();
+				//                VerifySorted();
 				return base.IndexOf(item);
 			}
 
-			int IList.IndexOf(object value)
-			{
-				VerifyNotDisposed();
-				VerifySorted();
-				return IndexOf((T) value);
-			}
+			//int IList.IndexOf(object value)
+			//{
+			//    VerifyNotDisposed();
+			//    VerifySorted();
+			//    return IndexOf((T) value);
+			//}
 
 			protected override bool ShouldReplaceRecord(int index, T value)
 			{
@@ -572,11 +613,223 @@ namespace WeSay.Data
 			#endregion
 		}
 
-		protected override bool CommitIfNeeded()
+		private bool CommitIfNeeded()
 		{
 			//right now we don't check to see if committing is needed
 			_dataSource.Data.Commit();
 			return true;
+		}
+
+		public T1 GetItem<T1>(long id)
+		{
+			IExtObjectContainer database = _dataSource.Data.Ext();
+			T1 item = (T1) database.GetByID(id);
+			if (item != null)
+			{
+				if (!database.IsActive(item))
+				{
+					database.Activate(item, int.MaxValue);
+				}
+			}
+			return item;
+		}
+
+		private static string RecordListKey<T>(string filterName, string sorterName)
+				where T : class, new()
+		{
+			string prefix = "!"; // for normal filtered, sorted lists
+			if (string.IsNullOrEmpty(filterName))
+			{
+				if (string.IsNullOrEmpty(sorterName))
+				{
+					// this is our master record list
+					prefix = "#";
+				}
+				else
+				{
+					// this is a master sorted list
+					prefix = "@";
+				}
+			}
+			else
+			{
+				if (string.IsNullOrEmpty(sorterName))
+				{
+					throw new ArgumentOutOfRangeException("sorterName",
+														  "cannot be null or empty when filterName is present");
+				}
+			}
+
+			return prefix + typeof (T).FullName + filterName + sorterName;
+		}
+
+		public static bool IsMasterRecordList(DictionaryEntry dictionaryEntry)
+		{
+			return ((string) dictionaryEntry.Key).StartsWith("#");
+		}
+
+		public static bool IsMasterSortedRecordList(DictionaryEntry dictionaryEntry)
+		{
+			return ((string) dictionaryEntry.Key).StartsWith("@");
+		}
+
+		public static bool IsFilteredRecordList(DictionaryEntry dictionaryEntry)
+		{
+			return ((string) dictionaryEntry.Key).StartsWith("!");
+		}
+
+		public void Register<T>(IFilter<T> filter, ISortHelper<T> sortHelper) where T : class, new()
+		{
+			if (filter == null)
+			{
+				throw new ArgumentNullException("filter");
+			}
+			if (sortHelper == null)
+			{
+				throw new ArgumentNullException("sortHelper");
+			}
+
+			string recordListKey = RecordListKey<T>(filter.Key, sortHelper.Name);
+			if (!RecordLists.ContainsKey(recordListKey))
+			{
+				RecordLists.Add(recordListKey,
+								CreateFilteredRecordListUnlessSlow(filter, sortHelper));
+			}
+		}
+
+		public IRecordList<T> GetListOfType<T>() where T : class, new()
+		{
+			string recordListKey = RecordListKey<T>(null, null);
+			if (!RecordLists.ContainsKey(recordListKey))
+			{
+				IRecordList<T> MasterRecordList = CreateMasterRecordList<T>();
+				MasterRecordList.DeletingRecord += MasterRecordList_DeletingRecord;
+				RecordLists.Add(recordListKey, MasterRecordList);
+			}
+			return (IRecordList<T>) RecordLists[recordListKey];
+		}
+
+		private void MasterRecordList_DeletingRecord<T>(object sender, RecordListEventArgs<T> e)
+				where T : class, new()
+		{
+			DataDeleted.Invoke(this, new DeletedItemEventArgs(e.Item));
+		}
+
+		public IRecordList<T> GetListOfTypeFilteredFurther<T>(IFilter<T> filter,
+															  ISortHelper<T> sortHelper)
+				where T : class, new()
+		{
+			if (filter == null)
+			{
+				throw new ArgumentNullException("filter");
+			}
+			if (sortHelper == null)
+			{
+				throw new ArgumentNullException("sortHelper");
+			}
+			string recordListKey = RecordListKey<T>(filter.Key, sortHelper.Name);
+			if (!RecordLists.ContainsKey(recordListKey))
+			{
+				throw new InvalidOperationException(
+						"Filter must be registered before it can be retrieved with GetListOfType.");
+			}
+			IRecordList<T> recordList = (IRecordList<T>) RecordLists[recordListKey];
+			if (recordList == null)
+			{
+				recordList = CreateFilteredRecordList(filter, sortHelper);
+				RecordLists[recordListKey] = recordList;
+			}
+			return recordList;
+		}
+
+		~PrivateDb4oRecordListManager()
+		{
+			if (!_disposed)
+			{
+				throw new InvalidOperationException("Disposed not explicitly called on " +
+													GetType().FullName + ".");
+			}
+		}
+
+		public void Dispose()
+		{
+			Dispose(true);
+			GC.SuppressFinalize(this);
+		}
+
+		private void Dispose(bool disposing)
+		{
+			if (!IsDisposed)
+			{
+				if (disposing)
+				{
+					// dispose-only, i.e. non-finalizable logic
+					// we need to dispose masters last
+					foreach (DictionaryEntry dictionaryEntry in RecordLists)
+					{
+						if (IsFilteredRecordList(dictionaryEntry))
+						{
+							IDisposable disposable = dictionaryEntry.Value as IDisposable;
+							if (disposable != null)
+							{
+								disposable.Dispose();
+							}
+						}
+					}
+					foreach (DictionaryEntry dictionaryEntry in RecordLists)
+					{
+						if (IsMasterSortedRecordList(dictionaryEntry))
+						{
+							IDisposable disposable = dictionaryEntry.Value as IDisposable;
+							if (disposable != null)
+							{
+								disposable.Dispose();
+							}
+						}
+					}
+
+					foreach (DictionaryEntry dictionaryEntry in RecordLists)
+					{
+						if (IsMasterRecordList(dictionaryEntry))
+						{
+							IDisposable disposable = dictionaryEntry.Value as IDisposable;
+							if (disposable != null)
+							{
+								disposable.Dispose();
+							}
+						}
+					}
+
+					_filteredRecordLists = null;
+				}
+				if (DataSource != null)
+				{
+					DataSource.Dispose();
+				}
+
+				// shared (dispose and finalizable) cleanup logic
+				IsDisposed = true;
+			}
+		}
+
+		private void VerifyNotDisposed()
+		{
+			if (IsDisposed)
+			{
+				throw new ObjectDisposedException(GetType().FullName);
+			}
+		}
+
+		public event EventHandler DataCommitted = delegate { };
+
+		public event EventHandler<DeletedItemEventArgs> DataDeleted = delegate { };
+
+		public void GoodTimeToCommit()
+		{
+			if (CommitIfNeeded())
+			{
+				DataCommitted.Invoke(this, null);
+			}
 		}
 	}
 }

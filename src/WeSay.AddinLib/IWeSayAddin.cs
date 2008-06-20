@@ -3,40 +3,23 @@ using System.Drawing;
 using System.Windows.Forms;
 using Mono.Addins;
 using WeSay.Foundation;
-using WeSay.Foundation.Dashboard;
 
 namespace WeSay.AddinLib
 {
-//    public interface IHasSettings
-//    {
-//        bool EditSettings();
-//    }
-
 	public delegate string FileLocater(string fileName);
 
 	[TypeExtensionPoint]
-	public interface IWeSayAddin : IThingOnDashboard
+	public interface IWeSayAddin: IThingOnDashboard
 	{
+		Image ButtonImage { get; }
 
-		Image ButtonImage { get;}
+		bool Available { get; }
 
-		bool Available { get;}
+		string LocalizedName { get; }
 
+		string ShortDescription { get; }
 
-		string LocalizedName
-		{
-			get;
-		}
-
-		string ShortDescription
-		{
-			get;
-		}
-
-		String ID
-		{
-			get;
-		}
+		String ID { get; }
 
 		void Launch(Form parentForm, ProjectInfo projectInfo);
 	}
@@ -45,19 +28,6 @@ namespace WeSay.AddinLib
 	{
 		bool DoShowSettingsDialog(Form parentForm, ProjectInfo projectInfo);
 
-		object Settings
-		{
-			get;
-			set;
-		}
-
+		object Settings { get; set; }
 	}
-
-//    public interface IWeSayProjectAwareAddin
-//    {
-//        WeSay.Project.WeSayWordsProject Project
-//        {
-//            set;
-//        }
-//    }
 }

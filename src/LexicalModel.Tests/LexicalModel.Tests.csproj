@@ -75,18 +75,13 @@
 	<Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-	<Compile Include="HeadwordSortedListHelperTests.cs" />
-	<Compile Include="Db4o-Specific\BaseDb4oSpecificTests.cs" />
 	<Compile Include="Binding.cs" />
-	<Compile Include="Db4o-Specific\Db4oLexQueryHelperTests.cs" />
-	<Compile Include="Db4o-Specific\Db4oProjectSetupForTesting.cs" />
-	<Compile Include="HomographCalculatorTests.cs" />
-	<Compile Include="Db4o-Specific\LexEntrySortHelperTests.cs" />
+	<Compile Include="Db4oSpecific\Db4oProjectSetupForTesting.cs" />
 	<Compile Include="LexEntryTests.cs" />
-	<Compile Include="LexiconTests.cs" />
+	<Compile Include="LexEntryRepositoryTests.cs" />
 	<Compile Include="LexRelationTests.cs" />
 	<Compile Include="EventsAndDates.cs" />
-	<Compile Include="Db4o-Specific\PersistenceTests.cs" />
+	<Compile Include="Db4oSpecific\PersistenceTests.cs" />
 	<Compile Include="LiftMergerTests.cs" />
 	<Compile Include="LiftRoundTripTests.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />

@@ -1,10 +1,9 @@
-
 using System;
 using System.Windows.Forms;
 using NUnit.Framework;
 using WeSay.Foundation;
 using WeSay.LexicalModel;
-using WeSay.LexicalModel.Db4o_Specific;
+using WeSay.LexicalModel.Db4oSpecific;
 using WeSay.Project;
 using WeSay.UI;
 
@@ -23,15 +22,14 @@ namespace WeSay.LexicalTools.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof(ArgumentNullException))]
+		[ExpectedException(typeof (ArgumentNullException))]
 		public void Create_NullBuilder_Throws()
 		{
 			new LexEntryLayouter(null, new ViewTemplate(), null);
-
 		}
 
 		[Test]
-		[ExpectedException(typeof(ArgumentNullException))]
+		[ExpectedException(typeof (ArgumentNullException))]
 		public void Create_NullviewTemplate_Throws()
 		{
 			using (DetailList detailList = new DetailList())
@@ -43,7 +41,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void RightNumberOfRows()
 		{
-			using (DetailList dl = MakeDetailList(false))
+			using (MakeDetailList(false))
 			{
 				Assert.AreEqual(14, _rowCount);
 			}
@@ -52,7 +50,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void RightNumberOfRowsWithShowAll()
 		{
-			using (DetailList dl = MakeDetailList(true))
+			using (MakeDetailList(true))
 			{
 				Assert.AreEqual(16, _rowCount); //12 + 2 *(1 ghost example + 1 rare multitext)
 			}
@@ -91,10 +89,13 @@ namespace WeSay.LexicalTools.Tests
 			}
 		}
 
-		private static LexEntry GetNewEntry() {
+		private static LexEntry GetNewEntry()
+		{
 			LexEntry entry = new LexEntry();
-			entry.LexicalForm[BasilProject.Project.WritingSystems.TestWritingSystemVernId] = "WordInVernacular";
-			entry.LexicalForm[BasilProject.Project.WritingSystems.TestWritingSystemAnalId] = "WordInAnalysis";
+			entry.LexicalForm[BasilProject.Project.WritingSystems.TestWritingSystemVernId] =
+					"WordInVernacular";
+			entry.LexicalForm[BasilProject.Project.WritingSystems.TestWritingSystemAnalId] =
+					"WordInAnalysis";
 			AddSense(entry);
 			AddSense(entry);
 			return entry;
@@ -102,10 +103,15 @@ namespace WeSay.LexicalTools.Tests
 
 		private DetailList MakeDetailList(bool showNormallyHiddenFields)
 		{
-			string[] analysisWritingSystemIds = new string[] { BasilProject.Project.WritingSystems.TestWritingSystemAnalId };
-			string[] vernacularWritingSystemIds = new string[] { BasilProject.Project.WritingSystems.TestWritingSystemVernId };
+			string[] analysisWritingSystemIds =
+					new string[] {BasilProject.Project.WritingSystems.TestWritingSystemAnalId};
+			string[] vernacularWritingSystemIds =
+					new string[] {BasilProject.Project.WritingSystems.TestWritingSystemVernId};
 			ViewTemplate viewTemplate = new ViewTemplate();
-			Field field = new Field(Field.FieldNames.EntryLexicalForm.ToString(), "LexEntry", vernacularWritingSystemIds);
+			Field field =
+					new Field(Field.FieldNames.EntryLexicalForm.ToString(),
+							  "LexEntry",
+							  vernacularWritingSystemIds);
 			field.DisplayName = "Word";
 			viewTemplate.Add(field);
 #if GlossMeaning
@@ -114,8 +120,14 @@ namespace WeSay.LexicalTools.Tests
 			string meaningFieldName = LexSense.WellKnownProperties.Definition;
 #endif
 			viewTemplate.Add(new Field(meaningFieldName, "LexSense", analysisWritingSystemIds));
-			viewTemplate.Add(new Field(Field.FieldNames.ExampleSentence.ToString(), "LexExampleSentence", vernacularWritingSystemIds));
-			viewTemplate.Add(new Field(Field.FieldNames.ExampleTranslation.ToString(), "LexExampleSentence", analysisWritingSystemIds));
+			viewTemplate.Add(
+					new Field(Field.FieldNames.ExampleSentence.ToString(),
+							  "LexExampleSentence",
+							  vernacularWritingSystemIds));
+			viewTemplate.Add(
+					new Field(Field.FieldNames.ExampleTranslation.ToString(),
+							  "LexExampleSentence",
+							  analysisWritingSystemIds));
 
 			Field rare = new Field("rare", "LexSense", analysisWritingSystemIds);
 			rare.Visibility = CommonEnumerations.VisibilitySetting.NormallyHidden;
@@ -139,7 +151,10 @@ namespace WeSay.LexicalTools.Tests
 #if GlossMeaning
 			sense.Gloss[WeSayWordsProject.Project.DefaultViewTemplate.GetField("SenseGloss").WritingSystemIds[0]] = "GlossInAnalysis";
 #else
-			sense.Definition[WeSayWordsProject.Project.DefaultViewTemplate.GetField(LexSense.WellKnownProperties.Definition).WritingSystemIds[0]] = "MeaningInAnalysis";
+			sense.Definition[
+					WeSayWordsProject.Project.DefaultViewTemplate.GetField(
+							LexSense.WellKnownProperties.Definition).WritingSystemIds[0]] =
+					"MeaningInAnalysis";
 #endif
 			AddExample(sense);
 			AddExample(sense);
@@ -148,7 +163,8 @@ namespace WeSay.LexicalTools.Tests
 		private static void AddExample(LexSense sense)
 		{
 			LexExampleSentence example = (LexExampleSentence) sense.ExampleSentences.AddNew();
-			example.Sentence[BasilProject.Project.WritingSystems.TestWritingSystemVernId] = "sentence";
+			example.Sentence[BasilProject.Project.WritingSystems.TestWritingSystemVernId] =
+					"sentence";
 		}
 	}
 }

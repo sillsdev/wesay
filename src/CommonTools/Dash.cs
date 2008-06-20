@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
@@ -7,8 +7,7 @@ using System.Windows.Forms;
 using Palaso.Reporting;
 using Palaso.UI.WindowsForms.i8n;
 using WeSay.AddinLib;
-using WeSay.Data;
-using WeSay.Foundation.Dashboard;
+using WeSay.Foundation;
 using WeSay.LexicalModel;
 using WeSay.Project;
 using WeSay.UI;
@@ -18,7 +17,7 @@ namespace WeSay.CommonTools
 	public partial class Dash : UserControl, ITask, IFinishCacheSetup
 	{
 		private DictionaryStatusControl _title;
-		private readonly IRecordListManager _recordListManager;
+		private readonly LexEntryRepository _lexEntryRepository;
 		private IList<IThingOnDashboard> _thingsToMakeButtonsFor;
 		private List<ButtonGroup> _buttonGroups;
 		private bool _isActive = false;
@@ -28,10 +27,10 @@ namespace WeSay.CommonTools
 		private Size _bestButtonSize;
 		private bool _addedAllButtons = false;
 
-		public Dash(IRecordListManager RecordListManager, ICurrentWorkTask currentWorkTaskProvider)
+		public Dash(LexEntryRepository RecordListManager, ICurrentWorkTask currentWorkTaskProvider)
 		{
 			_oldFlowWidth = 0;
-			_recordListManager = RecordListManager;
+			_lexEntryRepository = RecordListManager;
 			_currentWorkTaskProvider = currentWorkTaskProvider;
 			InitializeContextMenu();
 		}
@@ -55,8 +54,9 @@ namespace WeSay.CommonTools
 		{
 			string dir = Directory.GetParent(Application.ExecutablePath).FullName;
 			ProcessStartInfo startInfo =
-				new ProcessStartInfo(Path.Combine(dir, "WeSay Configuration Tool.exe"),
-									 string.Format("\"{0}\"", WeSayWordsProject.Project.PathToConfigFile));
+					new ProcessStartInfo(Path.Combine(dir, "WeSay Configuration Tool.exe"),
+										 string.Format("\"{0}\"",
+													   WeSayWordsProject.Project.PathToConfigFile));
 			try
 			{
 				Process.Start(startInfo);
@@ -72,7 +72,7 @@ namespace WeSay.CommonTools
 
 		private void AddItemsToFlow()
 		{
-			_title = new DictionaryStatusControl(_recordListManager.GetListOfType<LexEntry>());
+			_title = new DictionaryStatusControl(_lexEntryRepository.CountAllEntries());
 			_title.Font = new Font("Arial", 14);
 			_title.BackColor = Color.Transparent;
 			_title.ShowLogo = true;
@@ -98,7 +98,9 @@ namespace WeSay.CommonTools
 			foreach (IThingOnDashboard item in ThingsToMakeButtonsFor)
 			{
 				if (item == this)
+				{
 					continue;
+				}
 				if (item.Group == buttonGroup.Group)
 				{
 					buttonFlow.Controls.Add(MakeButton(item, buttonGroup));
@@ -148,7 +150,8 @@ namespace WeSay.CommonTools
 
 					try
 					{
-						ProjectInfo projectInfo = WeSayWordsProject.Project.GetProjectInfoForAddin();
+						ProjectInfo projectInfo =
+								WeSayWordsProject.Project.GetProjectInfoForAddin(_lexEntryRepository);
 						addin.Launch(ParentForm, projectInfo);
 					}
 					catch (Exception error)
@@ -160,7 +163,6 @@ namespace WeSay.CommonTools
 				}
 			}
 		}
-
 
 		public DashboardButton MakeButton(IThingOnDashboard item)
 		{
@@ -189,7 +191,8 @@ namespace WeSay.CommonTools
 				{
 					continue;
 				}
-				buttonGroup.MaximumSize = new Size(_flow.Width - buttonGroup.Margin.Left - buttonGroup.Margin.Right, 0);
+				buttonGroup.MaximumSize =
+						new Size(_flow.Width - buttonGroup.Margin.Left - buttonGroup.Margin.Right, 0);
 			}
 			_flow.Height = _flow.GetPreferredSize(new Size(_flow.Width, 0)).Height;
 			_flow.ResumeLayout();
@@ -560,7 +563,8 @@ namespace WeSay.CommonTools
 		{
 			if (IsActive)
 			{
-				throw new InvalidOperationException("Activate should not be called when object is active.");
+				throw new InvalidOperationException(
+						"Activate should not be called when object is active.");
 			}
 
 			Initialize();
@@ -590,15 +594,22 @@ namespace WeSay.CommonTools
 			BackColor = DisplaySettings.Default.GetEndBackgroundColor(this);
 
 			_buttonGroups = new List<ButtonGroup>();
-			_buttonGroups.Add(new ButtonGroup(DashboardGroup.Gather,
-											  Color.FromArgb(155, 187, 89),
-											  Color.FromArgb(195, 214, 155)));
-			_buttonGroups.Add(new ButtonGroup(DashboardGroup.Describe, Color.FromArgb(85, 142, 213),
-											  Color.FromArgb(185, 205, 229)));
-			_buttonGroups.Add(new ButtonGroup(DashboardGroup.Refine, Color.FromArgb(250, 192, 144),
-											  Color.FromArgb(252, 213, 181)));
-			_buttonGroups.Add(new ButtonGroup(DashboardGroup.Share, Color.FromArgb(119, 147, 60),
-											  Color.White));
+			_buttonGroups.Add(
+					new ButtonGroup(DashboardGroup.Gather,
+									Color.FromArgb(155, 187, 89),
+									Color.FromArgb(195, 214, 155)));
+			_buttonGroups.Add(
+					new ButtonGroup(DashboardGroup.Describe,
+									Color.FromArgb(85, 142, 213),
+									Color.FromArgb(185, 205, 229)));
+			_buttonGroups.Add(
+					new ButtonGroup(DashboardGroup.Refine,
+									Color.FromArgb(250, 192, 144),
+									Color.FromArgb(252, 213, 181)));
+			_buttonGroups.Add(
+					new ButtonGroup(DashboardGroup.Share,
+									Color.FromArgb(119, 147, 60),
+									Color.White));
 
 			LocalizationHelper helper = new LocalizationHelper(null);
 			helper.Parent = this;
@@ -609,15 +620,14 @@ namespace WeSay.CommonTools
 		{
 			if (!IsActive)
 			{
-				throw new InvalidOperationException("Deactivate should only be called once after Activate.");
+				throw new InvalidOperationException(
+						"Deactivate should only be called once after Activate.");
 			}
 			Controls.Clear();
 			_isActive = false;
 		}
 
-		public void GoToUrl(string url)
-		{
-		}
+		public void GoToUrl(string url) {}
 
 		public bool IsActive
 		{
@@ -642,10 +652,6 @@ namespace WeSay.CommonTools
 		public bool MustBeActivatedDuringPreCache
 		{
 			get { return false; }
-		}
-
-		public void RegisterWithCache(ViewTemplate viewTemplate)
-		{
 		}
 
 		public Control Control
@@ -712,7 +718,9 @@ namespace WeSay.CommonTools
 				ResizeButtons();
 			}
 			if (_bestButtonSize == oldBestSize && _flow.Width == _oldFlowWidth)
+			{
 				return;
+			}
 			_oldFlowWidth = _flow.Width;
 			bool neededScroll = _flow.Bounds.Bottom >= ClientRectangle.Height;
 			ResizeFlows();
@@ -720,7 +728,9 @@ namespace WeSay.CommonTools
 			// to add the scrollbar.  This prevents some problems when resizing
 			if ((!neededScroll && _flow.Bounds.Bottom >= ClientRectangle.Height)
 				|| (neededScroll && _flow.Bounds.Bottom < ClientRectangle.Height))
+			{
 				base.OnLayout(e);
+			}
 		}
 
 		protected override void OnPaintBackground(PaintEventArgs e)
@@ -740,7 +750,6 @@ namespace WeSay.CommonTools
 			Invalidate(false); // force redraw of background
 		}
 	}
-
 
 	internal class ButtonGroup
 	{

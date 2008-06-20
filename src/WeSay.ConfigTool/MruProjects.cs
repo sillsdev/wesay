@@ -9,19 +9,18 @@ namespace WeSay.ConfigTool
 	[XmlRoot("RecentlyUsedFiles")]
 	public class MruProjects
 	{
-		static public MruProjects CreateOne
-	{
-		get
+		public static MruProjects CreateOne
 		{
-			return new MruProjects();
+			get { return new MruProjects(); }
 		}
 
-	}
 		private readonly List<string> _paths;
+
 		public MruProjects()
 		{
 			_paths = new List<string>();
 		}
+
 		[XmlElement("Path")]
 		public string[] Paths
 		{
@@ -32,7 +31,7 @@ namespace WeSay.ConfigTool
 			}
 			set
 			{
-				 _paths.Clear();
+				_paths.Clear();
 				if (value != null)
 				{
 					foreach (string path in value)
@@ -43,7 +42,6 @@ namespace WeSay.ConfigTool
 						}
 					}
 				}
-
 			}
 		}
 
@@ -62,7 +60,7 @@ namespace WeSay.ConfigTool
 
 		private IEnumerable<string> GetNonStalePaths()
 		{
-		   foreach (string path in _paths)
+			foreach (string path in _paths)
 			{
 				if (File.Exists(path))
 				{
