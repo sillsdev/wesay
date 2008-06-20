@@ -25,7 +25,7 @@ namespace WeSay.Data.Tests
 	public class MemoryRepositoryCreateItemTransitionTests : IRepositoryCreateItemTransitionTests<TestClass>
 	{
 		[SetUp]
-		public void Setup()
+		protected void Setup()
 		{
 			RepositoryUnderTest = new MemoryRepository<TestClass>();
 		}
