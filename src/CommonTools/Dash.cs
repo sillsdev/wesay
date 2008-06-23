@@ -17,6 +17,7 @@ namespace WeSay.CommonTools
 {
 	public partial class Dash : UserControl, ITask, IFinishCacheSetup
 	{
+		private const double GoldRatio = 4.0; // arbitrary ratio we think looks the best for button sizes
 		private DictionaryStatusControl _title;
 		private readonly IRecordListManager _recordListManager;
 		private IList<IThingOnDashboard> _thingsToMakeButtonsFor;
@@ -27,6 +28,9 @@ namespace WeSay.CommonTools
 		private List<Size> _smallestPossibleButtonSizes;
 		private Size _bestButtonSize;
 		private bool _addedAllButtons = false;
+		private const TextFormatFlags ToolTipFormatFlags = TextFormatFlags.WordBreak |
+														   TextFormatFlags.NoFullWidthCharacterBreak |
+														   TextFormatFlags.LeftAndRightPadding;
 
 		public Dash(IRecordListManager RecordListManager, ICurrentWorkTask currentWorkTaskProvider)
 		{
@@ -34,6 +38,7 @@ namespace WeSay.CommonTools
 			_recordListManager = RecordListManager;
 			_currentWorkTaskProvider = currentWorkTaskProvider;
 			InitializeContextMenu();
+			Initialize();
 		}
 
 		private void InitializeContextMenu()
@@ -77,6 +82,7 @@ namespace WeSay.CommonTools
 			_title.BackColor = Color.Transparent;
 			_title.ShowLogo = true;
 			_title.Width = _flow.Width - _title.Margin.Left - _title.Margin.Right;
+			_title.TabStop = false;
 			_flow.Controls.Add(_title);
 
 			foreach (ButtonGroup group in _buttonGroups)
@@ -125,10 +131,29 @@ namespace WeSay.CommonTools
 			button.BorderColor = group.BorderColor;
 			button.DoneColor = group.DoneColor;
 
+			button.Dock = DockStyle.None;
+			button.Anchor = AnchorStyles.None;
 			button.Size = _bestButtonSize;
+			button.SizeChanged += ButtonSizeChanged;
 			button.Text = item.LocalizedLabel;
 			button.Click += OnButtonClick;
+			// if fonts or text are localized, we will need to re-measure stuff
+			button.TextChanged += delegate { _smallestPossibleButtonSizes = null; };
+			button.FontChanged += delegate { _smallestPossibleButtonSizes = null; };
+			_toolTip.SetToolTip(button, item.Description);
 			return button;
+		}
+
+		void ButtonSizeChanged(object sender, EventArgs e)
+		{
+			// Buttons were being slightly resized when you went to another tab and came back during the
+			// call to add the Dash control to the tab page.  The change appears to be from something in
+			// windows forms that I couldn't figure out, so this just sets the size back to what we want.
+			Control control = (Control) sender;
+			if (_bestButtonSize != Size.Empty && _bestButtonSize != control.Size)
+			{
+				control.Size = _bestButtonSize;
+			}
 		}
 
 		private void OnButtonClick(object sender, EventArgs e)
@@ -399,10 +424,10 @@ namespace WeSay.CommonTools
 
 			List<Size> result = RemoveClippedButtonSizes(smallestPossibleSizes, availableSpaceForButtons.Width);
 			result = RemoveScrolledButtonSizes(result, availableSpaceForButtons, buttonsPerGroup);
-			return GetBestSizeBasedOnRatio(result);
+			return GetBestSizeBasedOnRatio(result, GoldRatio);
 		}
 
-		private static Size GetBestSizeBasedOnRatio(IEnumerable<Size> possibleSizes)
+		private static Size GetBestSizeBasedOnRatio(IEnumerable<Size> possibleSizes, double targetRatio)
 		{
 			Debug.Assert(possibleSizes != null); // per contract
 			Debug.Assert(possibleSizes.GetEnumerator().MoveNext());
@@ -410,11 +435,10 @@ namespace WeSay.CommonTools
 
 			Size bestSize = Size.Empty;
 			double bestRatio = double.PositiveInfinity;
-			const double goldRatio = 4.0; // arbitrary ratio we think looks the best
 			foreach (Size size in possibleSizes)
 			{
 				double ratio = (double) size.Width/size.Height;
-				if (Math.Abs(ratio - goldRatio) <= Math.Abs(bestRatio - goldRatio))
+				if (Math.Abs(ratio - targetRatio) <= Math.Abs(bestRatio - targetRatio))
 				{
 					bestRatio = ratio;
 					bestSize = size;
@@ -563,7 +587,6 @@ namespace WeSay.CommonTools
 				throw new InvalidOperationException("Activate should not be called when object is active.");
 			}
 
-			Initialize();
 			SuspendLayout();
 			if (ThingsToMakeButtonsFor == null)
 			{
@@ -599,10 +622,6 @@ namespace WeSay.CommonTools
 											  Color.FromArgb(252, 213, 181)));
 			_buttonGroups.Add(new ButtonGroup(DashboardGroup.Share, Color.FromArgb(119, 147, 60),
 											  Color.White));
-
-			LocalizationHelper helper = new LocalizationHelper(null);
-			helper.Parent = this;
-			helper.EndInit();
 		}
 
 		public void Deactivate()
@@ -611,7 +630,7 @@ namespace WeSay.CommonTools
 			{
 				throw new InvalidOperationException("Deactivate should only be called once after Activate.");
 			}
-			Controls.Clear();
+			_flow.Controls.Clear();
 			_isActive = false;
 		}
 
@@ -731,13 +750,34 @@ namespace WeSay.CommonTools
 		protected override void OnMouseWheel(MouseEventArgs e)
 		{
 			base.OnMouseWheel(e);
-			Invalidate(true); // force redraw of background
+			Invalidate(false); // force redraw of background
 		}
 
 		protected override void OnScroll(ScrollEventArgs se)
 		{
 			base.OnScroll(se);
 			Invalidate(false); // force redraw of background
+		}
+
+		private void _toolTip_Draw(object sender, DrawToolTipEventArgs e)
+		{
+			e.DrawBackground();
+			e.DrawBorder();
+			Font localizedFont = StringCatalog.ModifyFontForLocalization(SystemFonts.DefaultFont);
+			Rectangle bounds = new Rectangle(e.Bounds.Left + 3, e.Bounds.Top + 3, e.Bounds.Width - 6, e.Bounds.Height - 8);
+			TextRenderer.DrawText(e.Graphics, e.ToolTipText, localizedFont, bounds, Color.Black, ToolTipFormatFlags);
+		}
+
+		private void _toolTip_Popup(object sender, PopupEventArgs e)
+		{
+			ToolTip toolTip = (ToolTip) sender;
+			string description = toolTip.GetToolTip(e.AssociatedControl);
+			Graphics g = Graphics.FromHwnd(e.AssociatedWindow.Handle);
+			Font localizedFont = StringCatalog.ModifyFontForLocalization(SystemFonts.DefaultFont);
+			List<Size> possibleSizes = DisplaySettings.GetPossibleTextSizes(g, description, localizedFont, ToolTipFormatFlags);
+			Size bestSize = GetBestSizeBasedOnRatio(possibleSizes, GoldRatio);
+			e.ToolTipSize = new Size(bestSize.Width + 6, bestSize.Height + 8);
+			g.Dispose();
 		}
 	}
 

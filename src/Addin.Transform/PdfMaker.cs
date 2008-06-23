@@ -24,7 +24,7 @@ namespace Addin.Transform
 			get { return "PdfMaker"; }
 		}
 
-		public override string ShortDescription
+		public override string Description
 		{
 			get
 			{

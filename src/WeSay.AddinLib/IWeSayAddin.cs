@@ -28,11 +28,6 @@ namespace WeSay.AddinLib
 			get;
 		}
 
-		string ShortDescription
-		{
-			get;
-		}
-
 		String ID
 		{
 			get;

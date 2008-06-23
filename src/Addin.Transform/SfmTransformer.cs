@@ -32,7 +32,7 @@ namespace Addin.Transform
 			}
 		}
 
-		public override  string ShortDescription
+		public override  string Description
 		{
 			get
 			{

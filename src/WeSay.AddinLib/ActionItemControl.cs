@@ -45,7 +45,6 @@ namespace WeSay.AddinLib
 			_inAdminMode = inAdminMode;
 			_projectInfo = projectInfo;
 			InitializeComponent();
-			_actionName.Font = StringCatalog.ModifyFontForLocalization(_actionName.Font);
 			_description.Font = StringCatalog.ModifyFontForLocalization(_description.Font);
 
 			_toggleShowInWeSay.Visible = inAdminMode;
@@ -163,7 +162,7 @@ namespace WeSay.AddinLib
 		{
 			UpdateEnabledStates();
 			_actionName.Text = _addin.LocalizedName;
-			_description.Text = _addin.ShortDescription;
+			_description.Text = _addin.Description;
 
 			if (_inAdminMode && !DoShowInWeSay)
 			{

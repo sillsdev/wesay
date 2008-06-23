@@ -41,7 +41,7 @@ namespace Addin.LiftReports
 			}
 		}
 
-		public string ShortDescription
+		public string Description
 		{
 			get
 			{

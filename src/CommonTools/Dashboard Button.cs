@@ -229,37 +229,11 @@ namespace WeSay.CommonTools
 		/// Computes possible minimum requires sizes to fit the button text
 		/// </summary>
 		/// <returns>Possible sizes</returns>
-		protected virtual List<Size> GetPossibleTextSizes()
+		protected List<Size> GetPossibleTextSizes()
 		{
-			Dictionary<int, int> requiredSizes = new Dictionary<int, int>();
 			Graphics g = Graphics.FromHwnd(Handle);
-			int maxWidth;
-			Size sizeNeeded;
-			sizeNeeded = TextRenderer.MeasureText(g, Text, Font, new Size(int.MaxValue, int.MaxValue), FormatFlags);
-			maxWidth = sizeNeeded.Width;
-			requiredSizes.Add(sizeNeeded.Height, sizeNeeded.Width);
-			for (int i = 1; i < maxWidth; ++i)
-			{
-				sizeNeeded = TextRenderer.MeasureText(g, Text, Font, new Size(i, int.MaxValue), FormatFlags);
-				if (!requiredSizes.ContainsKey(sizeNeeded.Height))
-				{
-					requiredSizes.Add(sizeNeeded.Height, sizeNeeded.Width);
-				}
-				else if (sizeNeeded.Width < requiredSizes[sizeNeeded.Height])
-				{
-					requiredSizes[sizeNeeded.Height] = sizeNeeded.Width;
-				}
-				// skip unnecessary checks
-				if (sizeNeeded.Width > i)
-					i = sizeNeeded.Width;
-			}
+			List<Size> possibleSizes = DisplaySettings.GetPossibleTextSizes(g, Text, Font, FormatFlags);
 			g.Dispose();
-			// convert to return type
-			List<Size> possibleSizes = new List<Size>(requiredSizes.Count);
-			foreach (KeyValuePair<int, int> size in requiredSizes)
-			{
-				possibleSizes.Add(new Size(size.Value, size.Key));
-			}
 			return possibleSizes;
 		}
 

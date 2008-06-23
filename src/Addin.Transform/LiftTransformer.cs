@@ -35,7 +35,7 @@ namespace Addin.Transform
 			get;
 		}
 
-		public abstract string ShortDescription
+		public abstract string Description
 		{
 			get;
 		}

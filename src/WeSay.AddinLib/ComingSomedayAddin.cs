@@ -52,7 +52,7 @@ namespace WeSay.AddinLib
 			}
 		}
 
-		public string ShortDescription
+		public string Description
 		{
 			get
 			{

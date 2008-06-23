@@ -32,7 +32,6 @@ namespace WeSay.LexicalTools
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this.components = new System.ComponentModel.Container();
 			System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("blah");
 			System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("stuff");
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GatherBySemanticDomainsControl));
@@ -50,8 +49,6 @@ namespace WeSay.LexicalTools
 			this._btnPrevious = new WeSay.UI.Buttons.PreviousButton();
 			this._btnNext = new WeSay.UI.Buttons.NextButton();
 			this._btnAddWord = new WeSay.UI.Buttons.AddButton();
-			this.localizationHelper1 = new WeSay.UI.LocalizationHelper(this.components);
-			((System.ComponentModel.ISupportInitialize)(this.localizationHelper1)).BeginInit();
 			this.SuspendLayout();
 			//
 			// _domainName
@@ -68,35 +65,36 @@ namespace WeSay.LexicalTools
 			this._domainName.Size = new System.Drawing.Size(434, 27);
 			this._domainName.TabIndex = 20;
 			this._domainName.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this._domainName_DrawItem);
-			this._domainName.SelectedIndexChanged += new System.EventHandler(this._domainName_SelectedIndexChanged);
 			this._domainName.MeasureItem += new System.Windows.Forms.MeasureItemEventHandler(this._domainName_MeasureItem);
+			this._domainName.SelectedIndexChanged += new System.EventHandler(this._domainName_SelectedIndexChanged);
 			//
 			// label3
 			//
 			this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.label3.AutoSize = true;
-			this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.75F, System.Drawing.FontStyle.Bold);
 			this.label3.Location = new System.Drawing.Point(10, 355);
 			this.label3.Name = "label3";
-			this.label3.Size = new System.Drawing.Size(45, 13);
+			this.label3.Size = new System.Drawing.Size(40, 15);
 			this.label3.TabIndex = 19;
-			this.label3.Text = "~Word";
+			this.label3.Text = "Word";
 			//
 			// _listViewWords
 			//
 			this._listViewWords.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
 						| System.Windows.Forms.AnchorStyles.Right)));
 			this._listViewWords.ColumnWidth = 100;
+			this._listViewWords.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
 			this._listViewWords.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this._listViewWords.ItemHeight = 20;
 			this._listViewWords.Items.AddRange(new object[] {
 			listViewItem1,
 			listViewItem2});
+			this._listViewWords.ItemToNotDrawYet = null;
 			this._listViewWords.Location = new System.Drawing.Point(15, 273);
 			this._listViewWords.MultiColumn = true;
 			this._listViewWords.Name = "_listViewWords";
-			this._listViewWords.Size = new System.Drawing.Size(622, 65);
-			this._listViewWords.Sorted = false;
+			this._listViewWords.Size = new System.Drawing.Size(622, 64);
 			this._listViewWords.TabIndex = 17;
 			this._listViewWords.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this._listViewWords_KeyPress);
 			this._listViewWords.Click += new System.EventHandler(this._listViewWords_Click);
@@ -105,36 +103,46 @@ namespace WeSay.LexicalTools
 			//
 			this.label5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.label5.AutoSize = true;
-			this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F);
 			this.label5.ForeColor = System.Drawing.Color.DarkGray;
 			this.label5.Location = new System.Drawing.Point(535, 54);
 			this.label5.Name = "label5";
-			this.label5.Size = new System.Drawing.Size(109, 15);
+			this.label5.Size = new System.Drawing.Size(112, 16);
 			this.label5.TabIndex = 16;
-			this.label5.Text = "~(Page Down Key)";
+			this.label5.Text = "(Page Down Key)";
 			//
 			// label4
 			//
 			this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.label4.AutoSize = true;
-			this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F);
 			this.label4.ForeColor = System.Drawing.Color.DarkGray;
 			this.label4.Location = new System.Drawing.Point(573, 352);
 			this.label4.Name = "label4";
-			this.label4.Size = new System.Drawing.Size(74, 15);
+			this.label4.Size = new System.Drawing.Size(73, 16);
 			this.label4.TabIndex = 14;
-			this.label4.Text = "~(Enter Key)";
+			this.label4.Text = "(Enter Key)";
+			//
+			// _movingLabel
+			//
+			this._movingLabel.BackColor = System.Drawing.Color.Transparent;
+			this._movingLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
+			this._movingLabel.Location = new System.Drawing.Point(0, 0);
+			this._movingLabel.Name = "_movingLabel";
+			this._movingLabel.Size = new System.Drawing.Size(100, 23);
+			this._movingLabel.TabIndex = 25;
+			this._movingLabel.Visible = false;
 			//
 			// _instructionLabel
 			//
 			this._instructionLabel.AutoSize = true;
-			this._instructionLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this._instructionLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.75F);
 			this._instructionLabel.ForeColor = System.Drawing.Color.DarkGray;
 			this._instructionLabel.Location = new System.Drawing.Point(11, 7);
 			this._instructionLabel.Name = "_instructionLabel";
-			this._instructionLabel.Size = new System.Drawing.Size(408, 20);
+			this._instructionLabel.Size = new System.Drawing.Size(413, 20);
 			this._instructionLabel.TabIndex = 15;
-			this._instructionLabel.Text = "~Try thinking of words you use to talk about these things.";
+			this._instructionLabel.Text = "Try thinking of words you use to talk about these things.";
 			//
 			// _question
 			//
@@ -142,7 +150,7 @@ namespace WeSay.LexicalTools
 						| System.Windows.Forms.AnchorStyles.Right)));
 			this._question.AutoEllipsis = true;
 			this._question.BackColor = System.Drawing.Color.MistyRose;
-			this._question.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this._question.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.75F, System.Drawing.FontStyle.Bold);
 			this._question.Location = new System.Drawing.Point(15, 189);
 			this._question.Name = "_question";
 			this._question.Size = new System.Drawing.Size(622, 78);
@@ -155,7 +163,7 @@ namespace WeSay.LexicalTools
 						| System.Windows.Forms.AnchorStyles.Right)));
 			this._description.AutoEllipsis = true;
 			this._description.BackColor = System.Drawing.Color.MistyRose;
-			this._description.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this._description.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.5F);
 			this._description.Location = new System.Drawing.Point(15, 85);
 			this._description.Name = "_description";
 			this._description.Size = new System.Drawing.Size(622, 90);
@@ -182,6 +190,10 @@ namespace WeSay.LexicalTools
 			this._vernacularBox.AutoSize = true;
 			this._vernacularBox.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
 			this._vernacularBox.BackColor = System.Drawing.Color.White;
+			this._vernacularBox.ColumnCount = 3;
+			this._vernacularBox.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this._vernacularBox.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this._vernacularBox.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
 			this._vernacularBox.Location = new System.Drawing.Point(49, 374);
 			this._vernacularBox.Name = "_vernacularBox";
 			this._vernacularBox.ShowAnnotationWidget = false;
@@ -225,10 +237,6 @@ namespace WeSay.LexicalTools
 			this._btnAddWord.TabIndex = 10;
 			this._btnAddWord.Click += new System.EventHandler(this._btnAddWord_Click);
 			//
-			// localizationHelper1
-			//
-			this.localizationHelper1.Parent = this;
-			//
 			// GatherBySemanticDomainsControl
 			//
 			this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -250,7 +258,6 @@ namespace WeSay.LexicalTools
 			this.Name = "GatherBySemanticDomainsControl";
 			this.Size = new System.Drawing.Size(654, 386);
 			this.BackColorChanged += new System.EventHandler(this.GatherWordListControl_BackColorChanged);
-			((System.ComponentModel.ISupportInitialize)(this.localizationHelper1)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -273,7 +280,6 @@ namespace WeSay.LexicalTools
 		private System.Windows.Forms.Label _question;
 		private System.Windows.Forms.Label _description;
 		private WeSay.UI.CirclesProgressIndicator _questionIndicator;
-		private LocalizationHelper localizationHelper1;
 		private MovingLabel _movingLabel;
 
 	}

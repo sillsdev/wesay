@@ -12,7 +12,6 @@ namespace WeSay.Project
 		void GoToUrl(string url);
 		bool IsActive { get; }
 		string Label { get; }
-		string Description { get; }
 
 		/// <summary>
 		/// most of our tasks, so far, have a lot of caching to do; saying 'true' to this gives them

@@ -28,9 +28,12 @@ namespace WeSay.App
 		/// </summary>
 		private void InitializeComponent()
 		{
+			this.components = new System.ComponentModel.Container();
 			this.tabControl1 = new System.Windows.Forms.TabControl();
 			this.tabPage2 = new System.Windows.Forms.TabPage();
+			this._localizationHelper = new WeSay.UI.LocalizationHelper(this.components);
 			this.tabControl1.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this._localizationHelper)).BeginInit();
 			this.SuspendLayout();
 			//
 			// tabControl1
@@ -53,6 +56,10 @@ namespace WeSay.App
 			this.tabPage2.Text = "tabPage2";
 			this.tabPage2.UseVisualStyleBackColor = true;
 			//
+			// _localizationHelper
+			//
+			this._localizationHelper.Parent = this;
+			//
 			// TabbedForm
 			//
 			this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -63,12 +70,15 @@ namespace WeSay.App
 			this.Name = "TabbedForm";
 			this.Text = "WeSay";
 			this.tabControl1.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this._localizationHelper)).EndInit();
 			this.ResumeLayout(false);
+
 		}
 
 		#endregion
 
 		private System.Windows.Forms.TabControl tabControl1;
 		private System.Windows.Forms.TabPage tabPage2;
+		private WeSay.UI.LocalizationHelper _localizationHelper;
 	}
 }

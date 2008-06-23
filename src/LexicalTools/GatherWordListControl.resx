@@ -121,8 +121,8 @@
   <data name="_btnPreviousWord.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
 	<value>
 		iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-		YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAABQgAA
-		AUIBzQ/xxwAAAvVJREFUSEvtk9tP0mEcxrUsKechdcnwgDOstYaHFAFtalOnc8w8ICAIzAOpqHhCzEMh
+		YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAABQQAA
+		AUEBYLbQqgAAAvVJREFUSEvtk9tP0mEcxrUsKechdcnwgDOstYaHFAFtalOnc8w8ICAIzAOpqHhCzEMh
 		RggqKJBIMmaaeCrNK3Otm/6BrvsDuuqyi25ae3pfppsrqS68ar3bc/F+372f5/t9fr83LOxfX+ECccql
 		Mx2yqooTKdLkrBeJ09rODMyrZSUoh8vfbx16cWbgQmnqtW6T+OPmWw9eHLjOBiyUphWOOTSft9954dk1
 		EbAThZI0A1/KTj+pErKv6uVE/lVEJXJO47RP/3X90AXP3hRcOw+xdrAAq18Pi28A5uU+mLw9MHq6MLbQ
@@ -199,7 +199,4 @@
 		5gtM1EsS7ek8iukE5//bJP8EDeEcKSsNhxKQaE+TI3sA5AfD3j0zzUJe0QAAAABJRU5ErkJggg==
 </value>
   </data>
-  <metadata name="localizationHelper1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-	<value>17, 17</value>
-  </metadata>
 </root>

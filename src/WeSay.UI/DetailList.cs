@@ -161,7 +161,7 @@ namespace WeSay.UI
 			{
 				label.Font = new Font(StringCatalog.LabelFont /* label.Font*/, FontStyle.Bold);
 			}
-			label.Font =StringCatalog.ModifyFontForLocalization(label.Font);
+			//label.Font =StringCatalog.ModifyFontForLocalization(label.Font);
 			label.Text = fieldLabel;
 			label.AutoSize = true;
 

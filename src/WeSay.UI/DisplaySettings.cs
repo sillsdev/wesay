@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -155,6 +156,38 @@ namespace WeSay.UI
 
 			}
 			 CurrentIndicatorColor = BackgroundColor;
+		}
+
+		public static List<Size> GetPossibleTextSizes(IDeviceContext dc, string text, Font font, TextFormatFlags textFormatFlags)
+		{
+			Dictionary<int, int> requiredSizes = new Dictionary<int, int>();
+			int maxWidth;
+			Size sizeNeeded;
+			sizeNeeded = TextRenderer.MeasureText(dc, text, font, new Size(int.MaxValue, int.MaxValue), textFormatFlags);
+			maxWidth = sizeNeeded.Width;
+			requiredSizes.Add(sizeNeeded.Height, sizeNeeded.Width);
+			for (int i = 1; i < maxWidth; ++i)
+			{
+				sizeNeeded = TextRenderer.MeasureText(dc, text, font, new Size(i, int.MaxValue), textFormatFlags);
+				if (!requiredSizes.ContainsKey(sizeNeeded.Height))
+				{
+					requiredSizes.Add(sizeNeeded.Height, sizeNeeded.Width);
+				}
+				else if (sizeNeeded.Width < requiredSizes[sizeNeeded.Height])
+				{
+					requiredSizes[sizeNeeded.Height] = sizeNeeded.Width;
+				}
+				// skip unnecessary checks
+				if (sizeNeeded.Width > i)
+					i = sizeNeeded.Width;
+			}
+			// convert to return type
+			List<Size> possibleSizes = new List<Size>(requiredSizes.Count);
+			foreach (KeyValuePair<int, int> size in requiredSizes)
+			{
+				possibleSizes.Add(new Size(size.Value, size.Key));
+			}
+			return possibleSizes;
 		}
 	}
 }
