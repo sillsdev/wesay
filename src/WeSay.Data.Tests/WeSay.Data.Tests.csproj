@@ -45,13 +45,13 @@
   </PropertyGroup>
   <ItemGroup>
 	<Compile Include="Db4oQueryPerformance.cs" />
+	<Compile Include="Db4oRepositoryTests.cs" />
 	<Compile Include="InMemoryBindingListTests.cs" />
 	<Compile Include="Db4oRecordListTests.cs" />
 	<Compile Include="Db4oSODAQueryTests.cs" />
 	<Compile Include="IFilterableTest.cs" />
 	<Compile Include="IRepositoryTests.cs" />
 	<Compile Include="MemoryRepositoryTests.cs" />
-	<Compile Include="RecordListManagerBaseTests.cs" />
 	<Compile Include="IBindingListBaseTest.cs" />
 	<Compile Include="ICollectionBaseTest.cs" />
 	<Compile Include="IEnumerableBaseTest.cs" />
@@ -71,7 +71,9 @@
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\Db4objects.Db4o.Tools.dll</HintPath>
 	</Reference>
-	<Reference Include="nunit.framework, Version=2.4.7.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL" />
+	<Reference Include="nunit.framework, Version=2.4.7.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+	  <SpecificVersion>False</SpecificVersion>
+	</Reference>
 	<Reference Include="System" />
 	<Reference Include="System.Data" />
 	<Reference Include="System.Xml" />

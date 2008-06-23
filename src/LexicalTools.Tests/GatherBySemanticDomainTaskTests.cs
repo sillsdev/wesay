@@ -398,9 +398,9 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void AddWord_EmptyWord_NotAddedToDatabase()
 		{
-			int originalCount = _lexEntryRepository.CountAllEntries();
+			int originalCount = _lexEntryRepository.CountAllItems();
 			Task.AddWord(string.Empty);
-			Assert.AreEqual(originalCount, _lexEntryRepository.CountAllEntries());
+			Assert.AreEqual(originalCount, _lexEntryRepository.CountAllItems());
 		}
 
 		[Test]
@@ -413,9 +413,9 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void AddWord_NewWord_AddedToDatabase()
 		{
-			int originalCount = _lexEntryRepository.CountAllEntries();
+			int originalCount = _lexEntryRepository.CountAllItems();
 			Task.AddWord("vernacular");
-			Assert.AreEqual(originalCount + 1, _lexEntryRepository.CountAllEntries());
+			Assert.AreEqual(originalCount + 1, _lexEntryRepository.CountAllItems());
 		}
 
 		[Test]
@@ -458,10 +458,10 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void AddWord_NewWord_AddedToCurrentWords()
 		{
-			int originalCount = _lexEntryRepository.CountAllEntries();
+			int originalCount = _lexEntryRepository.CountAllItems();
 			Task.AddWord("vernacular");
 			Assert.Contains("vernacular", Task.CurrentWords);
-			Assert.AreEqual(originalCount + 1, _lexEntryRepository.CountAllEntries());
+			Assert.AreEqual(originalCount + 1, _lexEntryRepository.CountAllItems());
 		}
 
 		[Test]
@@ -471,9 +471,9 @@ namespace WeSay.LexicalTools.Tests
 			AddEntryToRecordList("raposa", "fox");
 			AddEntryToRecordList("cachorro", "dog");
 
-			int originalCount = _lexEntryRepository.CountAllEntries();
+			int originalCount = _lexEntryRepository.CountAllItems();
 			Task.AddWord("raposa");
-			Assert.AreEqual(originalCount, _lexEntryRepository.CountAllEntries());
+			Assert.AreEqual(originalCount, _lexEntryRepository.CountAllItems());
 		}
 
 		[Test]
@@ -494,12 +494,12 @@ namespace WeSay.LexicalTools.Tests
 							LexSense.WellKnownProperties.SemanticDomainsDdp4);
 			o.Add(Task.DomainKeys[0]);
 			_lexEntryRepository.SaveItem(e);
-			int originalCount = _lexEntryRepository.CountAllEntries();
+			int originalCount = _lexEntryRepository.CountAllItems();
 
 			Task.CurrentDomainIndex = 0;
 			Task.DetachFromMatchingEntries("peixe");
 
-			Assert.AreEqual(originalCount - 1, _lexEntryRepository.CountAllEntries());
+			Assert.AreEqual(originalCount - 1, _lexEntryRepository.CountAllItems());
 		}
 
 		[Test]
@@ -511,7 +511,7 @@ namespace WeSay.LexicalTools.Tests
 
 			Task.DetachFromMatchingEntries("raposa");
 			Assert.IsFalse(Task.CurrentWords.Contains("raposa"));
-			Assert.AreEqual(3, _lexEntryRepository.CountAllEntries());
+			Assert.AreEqual(3, _lexEntryRepository.CountAllItems());
 		}
 
 		[Test]
@@ -540,12 +540,12 @@ namespace WeSay.LexicalTools.Tests
 							LexSense.WellKnownProperties.SemanticDomainsDdp4);
 			o.Add(Task.DomainKeys[0]);
 			_lexEntryRepository.SaveItem(e);
-			int originalCount = _lexEntryRepository.CountAllEntries();
+			int originalCount = _lexEntryRepository.CountAllItems();
 
 			Task.CurrentDomainIndex = 0;
 			Task.DetachFromMatchingEntries("peixe");
 
-			Assert.AreEqual(originalCount, _lexEntryRepository.CountAllEntries());
+			Assert.AreEqual(originalCount, _lexEntryRepository.CountAllItems());
 		}
 
 		[Test]
@@ -561,12 +561,12 @@ namespace WeSay.LexicalTools.Tests
 							LexSense.WellKnownProperties.SemanticDomainsDdp4);
 			o.Add(Task.DomainKeys[0]);
 			_lexEntryRepository.SaveItem(e);
-			int originalCount = _lexEntryRepository.CountAllEntries();
+			int originalCount = _lexEntryRepository.CountAllItems();
 
 			Task.CurrentDomainIndex = 0;
 			Task.DetachFromMatchingEntries("peixe");
 
-			Assert.AreEqual(originalCount, _lexEntryRepository.CountAllEntries());
+			Assert.AreEqual(originalCount, _lexEntryRepository.CountAllItems());
 			Assert.AreEqual(1, e.Senses.Count);
 		}
 
@@ -582,12 +582,12 @@ namespace WeSay.LexicalTools.Tests
 							LexSense.WellKnownProperties.SemanticDomainsDdp4);
 			o.Add(Task.DomainKeys[0]);
 			_lexEntryRepository.SaveItem(e);
-			int originalCount = _lexEntryRepository.CountAllEntries();
+			int originalCount = _lexEntryRepository.CountAllItems();
 
 			Task.CurrentDomainIndex = 0;
 			Task.DetachFromMatchingEntries("peixe");
 
-			Assert.AreEqual(originalCount, _lexEntryRepository.CountAllEntries());
+			Assert.AreEqual(originalCount, _lexEntryRepository.CountAllItems());
 		}
 
 		[Test]
@@ -604,12 +604,12 @@ namespace WeSay.LexicalTools.Tests
 							LexSense.WellKnownProperties.SemanticDomainsDdp4);
 			o.Add(Task.DomainKeys[0]);
 			_lexEntryRepository.SaveItem(e);
-			int originalCount = _lexEntryRepository.CountAllEntries();
+			int originalCount = _lexEntryRepository.CountAllItems();
 
 			Task.CurrentDomainIndex = 0;
 			Task.DetachFromMatchingEntries("peixe");
 
-			Assert.AreEqual(originalCount, _lexEntryRepository.CountAllEntries());
+			Assert.AreEqual(originalCount, _lexEntryRepository.CountAllItems());
 		}
 
 		[Test]
@@ -627,12 +627,12 @@ namespace WeSay.LexicalTools.Tests
 			mt["en"] = "hello";
 			_lexEntryRepository.SaveItem(e);
 
-			int originalCount = _lexEntryRepository.CountAllEntries();
+			int originalCount = _lexEntryRepository.CountAllItems();
 
 			Task.CurrentDomainIndex = 0;
 			Task.DetachFromMatchingEntries("peixe");
 
-			Assert.AreEqual(originalCount, _lexEntryRepository.CountAllEntries());
+			Assert.AreEqual(originalCount, _lexEntryRepository.CountAllItems());
 		}
 
 		[Test]
@@ -645,12 +645,12 @@ namespace WeSay.LexicalTools.Tests
 			mt["en"] = "hello";
 			_lexEntryRepository.SaveItem(e);
 
-			int originalCount = _lexEntryRepository.CountAllEntries();
+			int originalCount = _lexEntryRepository.CountAllItems();
 
 			Task.CurrentDomainIndex = 0;
 			Task.DetachFromMatchingEntries("peixe");
 
-			Assert.AreEqual(originalCount, _lexEntryRepository.CountAllEntries());
+			Assert.AreEqual(originalCount, _lexEntryRepository.CountAllItems());
 		}
 
 		[Test]
@@ -669,12 +669,12 @@ namespace WeSay.LexicalTools.Tests
 			optionRef.Value = "hello";
 			_lexEntryRepository.SaveItem(e);
 
-			int originalCount = _lexEntryRepository.CountAllEntries();
+			int originalCount = _lexEntryRepository.CountAllItems();
 
 			Task.CurrentDomainIndex = 0;
 			Task.DetachFromMatchingEntries("peixe");
 
-			Assert.AreEqual(originalCount, _lexEntryRepository.CountAllEntries());
+			Assert.AreEqual(originalCount, _lexEntryRepository.CountAllItems());
 		}
 
 		[Test]
@@ -688,12 +688,12 @@ namespace WeSay.LexicalTools.Tests
 							LexSense.WellKnownProperties.SemanticDomainsDdp4);
 			o.Add(Task.DomainKeys[0]);
 			_lexEntryRepository.SaveItem(e);
-			int originalCount = _lexEntryRepository.CountAllEntries();
+			int originalCount = _lexEntryRepository.CountAllItems();
 
 			Task.CurrentDomainIndex = 0;
 			Task.DetachFromMatchingEntries("peshi");
 
-			Assert.AreEqual(originalCount, _lexEntryRepository.CountAllEntries());
+			Assert.AreEqual(originalCount, _lexEntryRepository.CountAllItems());
 		}
 
 		#region Navigation

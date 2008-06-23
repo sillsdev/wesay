@@ -228,9 +228,9 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void ClickingAddWordIncreasesRecordsByOne()
 		{
-			int before = _lexEntryRepository.CountAllEntries();
+			int before = _lexEntryRepository.CountAllItems();
 			ClickAddWord();
-			Assert.AreEqual(1 + before, _lexEntryRepository.CountAllEntries());
+			Assert.AreEqual(1 + before, _lexEntryRepository.CountAllItems());
 		}
 
 		[Test]
@@ -252,9 +252,9 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void ClickingDeleteWordDecreasesRecordsByOne()
 		{
-			int before = _lexEntryRepository.CountAllEntries();
+			int before = _lexEntryRepository.CountAllItems();
 			ClickDeleteWord();
-			Assert.AreEqual(before - 1, _lexEntryRepository.CountAllEntries());
+			Assert.AreEqual(before - 1, _lexEntryRepository.CountAllItems());
 		}
 
 		/// <summary>
@@ -264,7 +264,7 @@ namespace WeSay.LexicalTools.Tests
 		public void DeleteWordWhenEvenHasCleanup_Regression()
 		{
 			ClickAddWord();
-			int before = _lexEntryRepository.CountAllEntries();
+			int before = _lexEntryRepository.CountAllItems();
 
 			EntryViewControl parentControl =
 					((DictionaryControl) _task.Control).Control_EntryDetailPanel;
@@ -280,7 +280,7 @@ namespace WeSay.LexicalTools.Tests
 
 			GetEditControl("*EntryLexicalForm").FocusOnFirstWsAlternative();
 			ClickDeleteWord();
-			Assert.AreEqual(before - 1, _lexEntryRepository.CountAllEntries());
+			Assert.AreEqual(before - 1, _lexEntryRepository.CountAllItems());
 			// GoToLexicalEntryUseFind(form); should fail to find it
 
 			AssertExistenceOfEntryInList(form, false);

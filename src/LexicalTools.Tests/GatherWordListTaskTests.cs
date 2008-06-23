@@ -230,11 +230,11 @@ namespace WeSay.LexicalTools.Tests
 		public void AddWordNotInDB()
 		{
 			Task.NavigateFirstToShow();
-			Assert.AreEqual(0, _lexEntryRepository.CountAllEntries());
+			Assert.AreEqual(0, _lexEntryRepository.CountAllItems());
 			MultiText word = new MultiText();
 			word[VernWs.Id] = "uno";
 			Task.WordCollected(word);
-			Assert.AreEqual(1, _lexEntryRepository.CountAllEntries());
+			Assert.AreEqual(1, _lexEntryRepository.CountAllItems());
 
 			//this is an attempt to get a failure that I was able to get at one time in the
 			//app itself, but which I haven't got to fail under tests.  I believe I've
@@ -247,7 +247,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			LexEntry e = _lexEntryRepository.CreateItem();
 			e.LexicalForm[VernWs.Id] = "uno";
-			Assert.AreEqual(1, _lexEntryRepository.CountAllEntries());
+			Assert.AreEqual(1, _lexEntryRepository.CountAllItems());
 			MultiText word = new MultiText();
 			word[VernWs.Id] = "uno";
 			Assert.AreEqual(0, e.Senses.Count);
@@ -256,7 +256,7 @@ namespace WeSay.LexicalTools.Tests
 			Task.NavigateFirstToShow();
 			Task.WordCollected(word);
 			Assert.AreEqual(1, e.Senses.Count);
-			Assert.AreEqual(1, _lexEntryRepository.CountAllEntries());
+			Assert.AreEqual(1, _lexEntryRepository.CountAllItems());
 		}
 
 		[Test]
@@ -264,7 +264,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			LexEntry e = _lexEntryRepository.CreateItem();
 			e.LexicalForm[VernWs.Id] = "uno";
-			Assert.AreEqual(1, _lexEntryRepository.CountAllEntries());
+			Assert.AreEqual(1, _lexEntryRepository.CountAllItems());
 			MultiText word = new MultiText();
 			word[VernWs.Id] = "uno";
 			Assert.AreEqual(0, e.Senses.Count);
@@ -276,7 +276,7 @@ namespace WeSay.LexicalTools.Tests
 			Task.WordCollected(word);
 
 			Assert.AreEqual(2, e.Senses.Count);
-			Assert.AreEqual(1, _lexEntryRepository.CountAllEntries());
+			Assert.AreEqual(1, _lexEntryRepository.CountAllItems());
 		}
 
 		[Test]
@@ -289,7 +289,7 @@ namespace WeSay.LexicalTools.Tests
 			Assert.AreSame(entry, entry2);
 
 			Assert.AreEqual(1, entry.Senses.Count);
-			Assert.AreEqual(1, _lexEntryRepository.CountAllEntries());
+			Assert.AreEqual(1, _lexEntryRepository.CountAllItems());
 		}
 
 		private void AddEntryAndSense(string gloss)

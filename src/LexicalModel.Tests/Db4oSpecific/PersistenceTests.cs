@@ -48,7 +48,7 @@ namespace WeSay.LexicalModel.Tests.Db4oSpecific
 
 		private LexEntry GetFirstEntry()
 		{
-			RepositoryId[] repositoryIds = _lexEntryRepository.GetAllEntries();
+			RepositoryId[] repositoryIds = _lexEntryRepository.GetAllItems();
 			if (repositoryIds != null && repositoryIds.Length > 0)
 			{
 				return _lexEntryRepository.GetItem(repositoryIds[0]);
@@ -75,7 +75,7 @@ namespace WeSay.LexicalModel.Tests.Db4oSpecific
 			int activations = Db4oLexModelHelper.Singleton.ActivationCount;
 			CycleDatabase();
 			entry = GetFirstEntry();
-			Assert.AreEqual(1, _lexEntryRepository.CountAllEntries());
+			Assert.AreEqual(1, _lexEntryRepository.CountAllItems());
 			Assert.AreEqual(1, entry.Senses.Count);
 			Assert.AreEqual(activations + 1 /*entry*/+ 1 /*sense*/,
 							Db4oLexModelHelper.Singleton.ActivationCount);
@@ -92,7 +92,7 @@ namespace WeSay.LexicalModel.Tests.Db4oSpecific
 			GetFirstEntry();
 			Assert.AreEqual(activations + 1, Db4oLexModelHelper.Singleton.ActivationCount);
 			//get the same entry again
-			_lexEntryRepository.GetAllEntries();
+			_lexEntryRepository.GetAllItems();
 			Assert.AreEqual(activations + 1, Db4oLexModelHelper.Singleton.ActivationCount);
 		}
 
@@ -103,7 +103,7 @@ namespace WeSay.LexicalModel.Tests.Db4oSpecific
 
 			CycleDatabase();
 			LexEntry entry = GetFirstEntry();
-			Assert.AreEqual(1, _lexEntryRepository.CountAllEntries());
+			Assert.AreEqual(1, _lexEntryRepository.CountAllItems());
 			entry.LexicalForm["en"] = "x";
 			_lexEntryRepository.SaveItem(entry);
 			CycleDatabase();

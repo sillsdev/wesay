@@ -245,7 +245,7 @@ namespace WeSay.LexicalTools
 		{
 			//TODO: Make this correct for Examples.  Currently it counts all words which
 			//gives an incorrect progress indicator when not all words have meanings
-			return LexEntryRepository.CountAllEntries();
+			return LexEntryRepository.CountAllItems();
 		}
 
 		public ResultSet<LexEntry> GetFilteredData()

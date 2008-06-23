@@ -3,53 +3,46 @@ using WeSay.Data;
 
 namespace WeSay.Data.Tests
 {
-	public class TestClass
-	{
-		private string String;
-		private int Int;
-
-	}
-
 	[TestFixture]
-	public class MemoryRepositoryStateUnitializedTests : IRepositoryStateUnitializedTests<TestClass>
+	public class MemoryRepositoryStateUnitializedTests : IRepositoryStateUnitializedTests<TestItem>
 	{
 		[SetUp]
 		public void Setup()
 		{
-			RepositoryUnderTest = new MemoryRepository<TestClass>();
+			RepositoryUnderTest = new MemoryRepository<TestItem>();
 		}
 
 	}
 
 	[TestFixture]
-	public class MemoryRepositoryCreateItemTransitionTests : IRepositoryCreateItemTransitionTests<TestClass>
+	public class MemoryRepositoryCreateItemTransitionTests : IRepositoryCreateItemTransitionTests<TestItem>
 	{
 		[SetUp]
 		protected void Setup()
 		{
-			RepositoryUnderTest = new MemoryRepository<TestClass>();
+			RepositoryUnderTest = new MemoryRepository<TestItem>();
 		}
 
 	}
 
 	[TestFixture]
-	public class MemoryRepositoryDeleteItemTransitionTests : IRepositoryDeleteItemTransitionTests<TestClass>
+	public class MemoryRepositoryDeleteItemTransitionTests : IRepositoryDeleteItemTransitionTests<TestItem>
 	{
 		[SetUp]
 		public void Setup()
 		{
-			RepositoryUnderTest = new MemoryRepository<TestClass>();
+			RepositoryUnderTest = new MemoryRepository<TestItem>();
 		}
 
 	}
 
 	[TestFixture]
-	public class MemoryRepositoryDeleteIdTransitionTests : IRepositoryDeleteIdTransitionTests<TestClass>
+	public class MemoryRepositoryDeleteIdTransitionTests : IRepositoryDeleteIdTransitionTests<TestItem>
 	{
 		[SetUp]
 		public void Setup()
 		{
-			RepositoryUnderTest = new MemoryRepository<TestClass>();
+			RepositoryUnderTest = new MemoryRepository<TestItem>();
 		}
 
 	}

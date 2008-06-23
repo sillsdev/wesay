@@ -13,6 +13,7 @@ using Debug=System.Diagnostics.Debug;
 
 namespace WeSay.LexicalModel
 {
+
 	public class LexEntryRepository: IRepository<LexEntry>, IDisposable
 	{
 		public LexEntryRepository(string path)
@@ -30,17 +31,17 @@ namespace WeSay.LexicalModel
 			get { return _recordListManager.DataSource; }
 		}
 
+		public DateTime LastModified
+		{
+			get { throw new NotImplementedException(); }
+		}
+
 		public LexEntry CreateItem()
 		{
 			LexEntry item = new LexEntry(null, new Guid(), GetNextBirthOrder());
 			IRecordList<LexEntry> type = _recordListManager.GetListOfType<LexEntry>();
 			type.Add(item);
 			return item;
-		}
-
-		public int CountAllItems()
-		{
-			return CountAllEntries();
 		}
 
 		public LexEntry CreateItem(Extensible eInfo)
@@ -356,13 +357,18 @@ namespace WeSay.LexicalModel
 			return new ResultSet<LexEntry>(this, list);
 		}
 
-		internal RepositoryId[] GetAllEntries()
+		public RepositoryId[] GetAllItems()
 		{
 			GenericObjectSetFacade<LexEntry> items =
 					(GenericObjectSetFacade<LexEntry>)
 					_recordListManager.DataSource.Data.Query<LexEntry>();
 			long[] db4oIds = items._delegate.GetIDs();
 			return WrapDb4oIdsInRepositoryIds(db4oIds);
+		}
+
+		public RepositoryId[] ItemsModifiedSince(DateTime dateTime)
+		{
+			throw new NotImplementedException();
 		}
 
 		private static RepositoryId[] WrapDb4oIdsInRepositoryIds(long[] db4oIds)
@@ -398,7 +404,7 @@ namespace WeSay.LexicalModel
 			IQuery<LexEntry> query = GetLexEntryQuery(lexicalUnitWritingSystem, true);
 
 			List<RecordToken<LexEntry>> matches = new List<RecordToken<LexEntry>>();
-			RepositoryId[] repositoryIds = GetAllEntries();
+			RepositoryId[] repositoryIds = GetAllItems();
 			foreach (RepositoryId repositoryId in repositoryIds)
 			{
 				int i = 0;
@@ -462,9 +468,9 @@ namespace WeSay.LexicalModel
 			return WrapDb4oIdsInRepositoryIds(objectSet.Ext().GetIDs());
 		}
 
-		public int CountAllEntries()
+		public int CountAllItems()
 		{
-			return GetAllEntries().Length;
+			return GetAllItems().Length;
 		}
 
 		public ResultSet<LexEntry> GetEntriesMatchingFilterSortedByLexicalUnit(

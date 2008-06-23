@@ -57,6 +57,7 @@
 	<Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+	<Compile Include="Db4oRepository.cs" />
 	<Compile Include="DeletedItemEventArgs.cs" />
 	<Compile Include="CacheHelper.cs" />
 	<Compile Include="ComparisonHelper.cs" />

@@ -44,7 +44,7 @@ namespace WeSay.LexicalModel.Tests
 			LexEntry e = _merger.GetOrMakeEntry(extensibleInfo, 0);
 			Assert.AreEqual(extensibleInfo.Id, e.Id);
 			_merger.FinishEntry(e);
-			Assert.AreEqual(1, _lexEntryRepository.CountAllEntries());
+			Assert.AreEqual(1, _lexEntryRepository.CountAllItems());
 		}
 
 		[Test]
@@ -55,7 +55,7 @@ namespace WeSay.LexicalModel.Tests
 			LexEntry e = _merger.GetOrMakeEntry(extensibleInfo, 0);
 			Assert.AreEqual(extensibleInfo.Guid, e.Guid);
 			_merger.FinishEntry(e);
-			Assert.AreEqual(1, _lexEntryRepository.CountAllEntries());
+			Assert.AreEqual(1, _lexEntryRepository.CountAllItems());
 		}
 
 		[Test]
@@ -69,7 +69,7 @@ namespace WeSay.LexicalModel.Tests
 			Assert.AreEqual(extensibleInfo.CreationTime, e.CreationTime);
 			Assert.AreEqual(extensibleInfo.ModificationTime, e.ModificationTime);
 			_merger.FinishEntry(e);
-			Assert.AreEqual(1, _lexEntryRepository.CountAllEntries());
+			Assert.AreEqual(1, _lexEntryRepository.CountAllItems());
 		}
 
 		[Test]
@@ -382,7 +382,7 @@ namespace WeSay.LexicalModel.Tests
 			_merger.FinishEntry(e);
 			CheckCompleteEntry(e);
 
-			RepositoryId[] entries = _lexEntryRepository.GetAllEntries();
+			RepositoryId[] entries = _lexEntryRepository.GetAllItems();
 			Assert.AreEqual(1, entries.Length);
 
 			//now check it again, from the list

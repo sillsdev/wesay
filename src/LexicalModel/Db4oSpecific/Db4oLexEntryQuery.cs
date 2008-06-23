@@ -114,7 +114,7 @@ namespace WeSay.LexicalModel.Db4oSpecific
 			  *                                                            _writingSystem.Id);
 			  */
 					List<RecordToken<LexEntry>> tokens = new List<RecordToken<LexEntry>>();
-					foreach (RepositoryId id in _lexEntryRepository.GetAllEntries())
+					foreach (RepositoryId id in _lexEntryRepository.GetAllItems())
 					{
 						LexEntry entry = _lexEntryRepository.GetItem(id);
 						int i = 0;
