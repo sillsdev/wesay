@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using Db4objects.Db4o;
 using Palaso.Base32;
 using WeSay.Data;
@@ -11,7 +12,6 @@ namespace WeSay.LexicalModel.Db4oSpecific
 	{
 		private readonly Db4oDataSource _db4oData; // for data
 		private readonly WritingSystem _writingSystem;
-		private readonly IHistoricalEntryCountProvider _historicalEntryCountProvider;
 		private readonly LexEntryRepository _repository;
 
 		public Db4oHeadwordQuery(LexEntryRepository repository,
@@ -21,9 +21,6 @@ namespace WeSay.LexicalModel.Db4oSpecific
 			_db4oData = ds;
 			_repository = repository;
 			_writingSystem = writingSystem;
-
-			_historicalEntryCountProvider =
-					HistoricalEntryCountProviderForDb4o.GetOrMakeFromDatabase(_db4oData);
 		}
 
 		public IEnumerable<string> GetDisplayStrings(LexEntry item)
@@ -38,7 +35,8 @@ namespace WeSay.LexicalModel.Db4oSpecific
 
 			//this will change to incorporate homograph number, when the user can edit that (or we
 			//import it)
-			key += "_" + item.DetermineBirthOrder(_historicalEntryCountProvider).ToString("000000");
+			string universalSortableDateTimePattern = DateTimeFormatInfo.InvariantInfo.UniversalSortableDateTimePattern;
+			key += "_" + item.CreationTime.ToString(universalSortableDateTimePattern);
 
 			keys.Add(key);
 			return keys;

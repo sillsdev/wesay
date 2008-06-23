@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace WeSay.Data
 {
-	public sealed class RecordTokenComparer<T>: IComparer<RecordToken<T>>
+	public sealed class RecordTokenComparer<T>: IComparer<RecordToken<T>> where T:class, new()
 	{
 		private readonly IComparer<string> _keySorter;
 

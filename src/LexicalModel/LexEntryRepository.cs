@@ -14,101 +14,74 @@ using Debug=System.Diagnostics.Debug;
 namespace WeSay.LexicalModel
 {
 
-	public class LexEntryRepository: IRepository<LexEntry>, IDisposable
+	public class LexEntryRepository: IRepository<LexEntry>
 	{
+		private readonly IRepository<LexEntry> _decoratedRepository;
 		public LexEntryRepository(string path)
 		{
-			_recordListManager =
-					new PrivateDb4oRecordListManager(new WeSayWordsDb4oModelConfiguration(), path);
-			Db4oLexModelHelper.Initialize(_recordListManager.DataSource.Data);
-		}
-
-		private readonly PrivateDb4oRecordListManager _recordListManager;
-
-		//todo make this private and remove it.
-		public Db4oDataSource Db4oDataSource
-		{
-			get { return _recordListManager.DataSource; }
+			//use default of Db4oRepository for now
+			//todo: eventually use synchronicRepository with Db4o and Lift
+			_decoratedRepository = new Db4oRepository<LexEntry>(path);
 		}
 
 		public DateTime LastModified
 		{
-			get { throw new NotImplementedException(); }
+			get
+			{
+				return _decoratedRepository.LastModified;
+			}
 		}
 
 		public LexEntry CreateItem()
 		{
-			LexEntry item = new LexEntry(null, new Guid(), GetNextBirthOrder());
-			IRecordList<LexEntry> type = _recordListManager.GetListOfType<LexEntry>();
-			type.Add(item);
+			LexEntry item = this._decoratedRepository.CreateItem();
 			return item;
 		}
 
+		// todo:remove
 		public LexEntry CreateItem(Extensible eInfo)
 		{
-			LexEntry item = new LexEntry(eInfo, GetNextBirthOrder());
-			IRecordList<LexEntry> type = _recordListManager.GetListOfType<LexEntry>();
-			type.Add(item);
+			LexEntry item = this._decoratedRepository.CreateItem();
+			item.Guid = eInfo.Guid;
+			item.Id = eInfo.Id;
+			item.ModificationTime = eInfo.ModificationTime;
+			item.CreationTime = eInfo.CreationTime;
 			return item;
-		}
-
-		private int GetNextBirthOrder()
-		{
-			IHistoricalEntryCountProvider entryCountProvider =
-					HistoricalEntryCountProviderForDb4o.GetOrMakeFromDatabase(
-							_recordListManager.DataSource);
-			return entryCountProvider.GetNextNumber();
 		}
 
 		public RepositoryId GetId(LexEntry item)
 		{
-			long id = _recordListManager.DataSource.Data.Ext().GetID(item);
-			return new Db4oRepositoryId(id);
+			return _decoratedRepository.GetId(item);
 		}
 
 		public LexEntry GetItem(RepositoryId id)
 		{
-			return _recordListManager.GetItem<LexEntry>(((Db4oRepositoryId) id).Db4oId);
-		}
-
-		public LexEntry GetItem(RecordToken<LexEntry> recordToken)
-		{
-			if (recordToken == null)
-			{
-				throw new ArgumentNullException("recordToken");
-			}
-
-			return GetItem(recordToken.Id);
+			return _decoratedRepository.GetItem(id);
 		}
 
 		public void SaveItems(IEnumerable<LexEntry> items)
 		{
-			foreach (LexEntry item in items)
-			{
-				_recordListManager.DataSource.Data.Set(item);
-			}
-			_recordListManager.DataSource.Data.Commit();
+			_decoratedRepository.SaveItems(items);
+		}
+
+		public ResultSet<LexEntry> GetItemsMatching(Query query)
+		{
+			return _decoratedRepository.GetItemsMatching(query);
 		}
 
 		public void SaveItem(LexEntry item)
 		{
-			if (item == null)
-			{
-				throw new ArgumentNullException("item");
-			}
-			_recordListManager.DataSource.Data.Set(item);
-			_recordListManager.DataSource.Data.Commit();
+			_decoratedRepository.SaveItem(item);
 		}
 
 		public void DeleteItem(LexEntry item)
 		{
-			DeleteItem(GetId(item));
+			_decoratedRepository.DeleteItem(item);
 		}
 
 		public void DeleteItem(RepositoryId repositoryId)
 		{
-			IRecordList<LexEntry> type = _recordListManager.GetListOfType<LexEntry>();
-			type.Remove(GetItem(repositoryId));
+			_decoratedRepository.DeleteItem(repositoryId);
 		}
 
 		public IQuery<LexEntry> GetLexEntryQuery(WritingSystem writingSystem,
@@ -194,9 +167,41 @@ namespace WeSay.LexicalModel
 
 		public ResultSet<LexEntry> GetAllEntriesSortedByHeadword(WritingSystem headwordWritingSystem)
 		{
-			IQuery<LexEntry> query =
-					new Db4oHeadwordQuery(this, Db4oDataSource, headwordWritingSystem);
-			return query.RetrieveItems();
+			Query entriesWithCitationForms =
+				GetAllEntriesQuery().Having("CitationForm")
+									.Having("Forms").Show("Form")
+									.Having("WritingSystemId").Equals(headwordWritingSystem.Id);
+
+
+			Query entriesWithoutCitationForm = GetAllEntriesQuery();
+			entriesWithCitationForms.AddCriterion("CitationForm/Forms[WritingSystemId", Operation.DoesNotContain, headwordWritingSystem.Id);
+			entriesWithCitationForms.AddResult("CitationForm/Forms/Form", Order.Unsorted);
+
+			allLexEntries.AddResult("LexicalForm/Forms/Form", Order.Unsorted);
+			ResultSet<LexEntry> r = GetItemsMatching(allLexEntries);
+			List<RecordToken<LexEntry>> result = new List<RecordToken<LexEntry>>(r.Count);
+			foreach (RecordToken<LexEntry> token in r)
+			{
+				string headword = HeadwordFromCitationFormAndLexicalForm(token.Results[0], token.Results[1]);
+				result.Add(new RecordToken<LexEntry>(this, headword, token.Id));
+			}
+			result.Sort(new RecordTokenComparer<LexEntry>(headwordWritingSystem));
+			return new ResultSet<LexEntry>(this, result);
+
+			//IQuery<LexEntry> query =
+			//        new Db4oHeadwordQuery(this, Db4oDataSource, headwordWritingSystem);
+			//return query.RetrieveItems();
+		}
+
+		private static string HeadwordFromCitationFormAndLexicalForm(
+			string citation,
+			string lexicalForm)
+		{
+			if (String.IsNullOrEmpty(citation))
+			{
+				return lexicalForm;
+			}
+			return citation;
 		}
 
 		public LexEntry GetLexEntryWithMatchingId(string id)
@@ -325,7 +330,7 @@ namespace WeSay.LexicalModel
 				if (disposing)
 				{
 					// dispose-only, i.e. non-finalizable logic
-					_recordListManager.Dispose();
+					_decoratedRepository.Dispose();
 				}
 
 				// shared (dispose and finalizable) cleanup logic
@@ -359,26 +364,7 @@ namespace WeSay.LexicalModel
 
 		public RepositoryId[] GetAllItems()
 		{
-			GenericObjectSetFacade<LexEntry> items =
-					(GenericObjectSetFacade<LexEntry>)
-					_recordListManager.DataSource.Data.Query<LexEntry>();
-			long[] db4oIds = items._delegate.GetIDs();
-			return WrapDb4oIdsInRepositoryIds(db4oIds);
-		}
-
-		public RepositoryId[] ItemsModifiedSince(DateTime dateTime)
-		{
-			throw new NotImplementedException();
-		}
-
-		private static RepositoryId[] WrapDb4oIdsInRepositoryIds(long[] db4oIds)
-		{
-			RepositoryId[] ids = new RepositoryId[db4oIds.Length];
-			for (int i = 0;i != db4oIds.Length;++i)
-			{
-				ids[i] = new Db4oRepositoryId(db4oIds[i]);
-			}
-			return ids;
+			return _decoratedRepository.GetAllItems();
 		}
 
 		public ResultSet<LexEntry> GetAllEntriesSortedBySemanticDomain(string fieldName)
@@ -452,25 +438,60 @@ namespace WeSay.LexicalModel
 
 		public ResultSet<LexEntry> GetAllEntriesSortedByGloss(WritingSystem writingSystem)
 		{
+			Query allEntriesByGloss = GetAllEntriesQuery();
+			allEntriesByGloss.AddResult("Senses/Gloss/Forms/Form");
 			IQuery<LexEntry> query = GetLexEntryQuery(writingSystem, false);
 			return query.RetrieveItems();
 		}
-
-		public RepositoryId[] GetEntriesUpdatedSince(DateTime last)
+		public static IEnumerable<string> SplitGlossAtSemicolon(MultiText gloss,
+														string writingSystemId)
 		{
-			// by moving back 1 milliseconds, we ensure that we
-			// will get the correct records with just a > and not >=
-			last = last.AddMilliseconds(-1);
-			IQuery q = _recordListManager.DataSource.Data.Query();
-			q.Constrain(typeof (LexEntry));
-			q.Descend("_modificationTime").Constrain(last).Greater();
-			IObjectSet objectSet = q.Execute();
-			return WrapDb4oIdsInRepositoryIds(objectSet.Ext().GetIDs());
+			bool exact = true;
+			string glossText = gloss.GetExactAlternative(writingSystemId);
+			if (glossText == string.Empty)
+			{
+				exact = false;
+				glossText = gloss.GetBestAlternative(writingSystemId, "*");
+				if (glossText == "*")
+				{
+					glossText = string.Empty;
+				}
+			}
+
+			List<string> result = new List<string>();
+			string[] keylist = glossText.Split(new char[] { ';' });
+			for (int i = 0; i < keylist.Length; i++)
+			{
+				string k = keylist[i].Trim();
+				if ( /*keylist.Length > 1 &&*/ k.Length == 0)
+				{
+					continue;
+				}
+				if (exact || i == keylist.Length - 1)
+				{
+					result.Add(k);
+				}
+				else
+				{
+					result.Add(k + "*");
+				}
+			}
+			return result;
+		}
+
+
+		private Query GetAllEntriesQuery() {
+			return new Query("LexEntry");
+		}
+
+		public RepositoryId[] GetItemsModifiedSince(DateTime last)
+		{
+			return _decoratedRepository.GetItemsModifiedSince(last);
 		}
 
 		public int CountAllItems()
 		{
-			return GetAllItems().Length;
+			return _decoratedRepository.CountAllItems();
 		}
 
 		public ResultSet<LexEntry> GetEntriesMatchingFilterSortedByLexicalUnit(

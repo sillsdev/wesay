@@ -450,7 +450,7 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void Entry_HasId_RemembersId()
 		{
-			LexEntry entry = new LexEntry("my id", Guid.NewGuid(), 0);
+			LexEntry entry = new LexEntry("my id", Guid.NewGuid());
 			_exporter.Add(entry);
 			_exporter.End();
 			ShouldContain("id=\"my id\"");
@@ -470,7 +470,7 @@ namespace WeSay.Project.Tests
 		public void Entry_EntryHasIdWithInvalidXMLCharacters_CharactersEscaped()
 		{
 			// technically the only invalid characters in an attribute are & < and " (when surrounded by ")
-			LexEntry entry = new LexEntry("<>&\"\'", Guid.NewGuid(), 0);
+			LexEntry entry = new LexEntry("<>&\"\'", Guid.NewGuid());
 			_exporter.Add(entry);
 			_exporter.End();
 			ShouldContain("id=\"&lt;&gt;&amp;&quot;'\"");
@@ -518,7 +518,7 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void GetHumanReadableId_EntryHasId_GivesId()
 		{
-			LexEntry entry = new LexEntry("my id", Guid.NewGuid(), 0);
+			LexEntry entry = new LexEntry("my id", Guid.NewGuid());
 			Assert.AreEqual("my id",
 							LiftExporter.GetHumanReadableId(entry, new Dictionary<string, int>()));
 		}
@@ -640,7 +640,7 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void GetHumanReadableId_IdIsSpace_NoForm()
 		{
-			LexEntry entry = new LexEntry(" ", Guid.NewGuid(), 0);
+			LexEntry entry = new LexEntry(" ", Guid.NewGuid());
 			Assert.IsTrue(
 					LiftExporter.GetHumanReadableId(entry, new Dictionary<string, int>()).StartsWith
 							("Id'dPrematurely_"));
@@ -649,7 +649,7 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void GetHumanReadableId_IdIsSpace_TreatedAsThoughNonExistentId()
 		{
-			LexEntry entry = new LexEntry(" ", Guid.NewGuid(), 0);
+			LexEntry entry = new LexEntry(" ", Guid.NewGuid());
 			entry.LexicalForm["green"] = "string";
 			Assert.IsTrue(
 					LiftExporter.GetHumanReadableId(entry, new Dictionary<string, int>()).StartsWith

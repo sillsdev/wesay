@@ -291,7 +291,7 @@ namespace WeSay.LexicalTools
 									out pastEndIndex);
 					for (int i = beginIndex;i < pastEndIndex;i++)
 					{
-						LexEntry entry = LexEntryRepository.GetItem(recordTokens[i]);
+						LexEntry entry = recordTokens[i].RealObject;
 						_words.Add(entry.LexicalForm.GetBestAlternative(WordWritingSystemId, "*"));
 					}
 				}

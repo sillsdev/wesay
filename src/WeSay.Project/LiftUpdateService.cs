@@ -257,7 +257,7 @@ namespace WeSay.Project
 		{
 			DateTime last = GetLastUpdateTime();
 			_timeOfLastQueryForNewRecords = DateTime.UtcNow;
-			return _lexEntryRepository.GetEntriesUpdatedSince(last);
+			return _lexEntryRepository.GetItemsModifiedSince(last);
 		}
 
 		/// <summary>

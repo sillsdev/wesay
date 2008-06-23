@@ -548,7 +548,7 @@ namespace WeSay.LexicalTools.Tests
 			ClickStarOfLexemeForm();
 			ResultSet<LexEntry> list =
 					_lexEntryRepository.GetAllEntriesSortedByHeadword(_vernacularWritingSystem);
-			LexEntry entry = _lexEntryRepository.GetItem(list[0]);
+			LexEntry entry = list[0].RealObject;
 			Assert.IsTrue(
 					entry.LexicalForm.GetAnnotationOfAlternativeIsStarred(
 							_vernacularWritingSystem.Id));
@@ -563,7 +563,7 @@ namespace WeSay.LexicalTools.Tests
 			ClickStarOfLexemeForm();
 			ResultSet<LexEntry> list =
 					_lexEntryRepository.GetAllEntriesSortedByHeadword(_vernacularWritingSystem);
-			LexEntry entry = _lexEntryRepository.GetItem(list[0]);
+			LexEntry entry = list[0].RealObject;
 
 			Assert.IsTrue(
 					entry.LexicalForm.GetAnnotationOfAlternativeIsStarred(

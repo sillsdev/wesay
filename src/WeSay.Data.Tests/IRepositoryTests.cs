@@ -98,7 +98,7 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void ItemsModifiedSince_ReturnsEmptyArray()
 		{
-			Assert.IsEmpty(RepositoryUnderTest.ItemsModifiedSince(DateTime.MinValue));
+			Assert.IsEmpty(RepositoryUnderTest.GetItemsModifiedSince(DateTime.MinValue));
 		}
 
 		class MyRepositoryId : RepositoryId
@@ -214,7 +214,7 @@ namespace WeSay.Data.Tests
 			Thread.Sleep(50);
 			DateTime timeOfSave = DateTime.UtcNow;
 			RepositoryUnderTest.SaveItem(item);
-			Assert.AreEqual(id, RepositoryUnderTest.ItemsModifiedSince(timeOfSave)[0]);
+			Assert.AreEqual(id, RepositoryUnderTest.GetItemsModifiedSince(timeOfSave)[0]);
 		}
 
 		[Test]
@@ -232,7 +232,7 @@ namespace WeSay.Data.Tests
 		{
 			SetState();
 			TimeSpan timeSpan = new TimeSpan(1, 0, 0); //1 hour
-			Assert.AreEqual(RepositoryUnderTest.GetId(item), RepositoryUnderTest.ItemsModifiedSince(DateTime.UtcNow - timeSpan)[0]);
+			Assert.AreEqual(RepositoryUnderTest.GetId(item), RepositoryUnderTest.GetItemsModifiedSince(DateTime.UtcNow - timeSpan)[0]);
 		}
 
 
@@ -247,9 +247,9 @@ namespace WeSay.Data.Tests
 			DateTime timeBetweenCreatedItems = DateTime.Now;
 			Thread.Sleep(50);
 			T item2 = RepositoryUnderTest.CreateItem();
-			Assert.AreEqual(1, RepositoryUnderTest.ItemsModifiedSince(timeBetweenCreatedItems).Length);
+			Assert.AreEqual(1, RepositoryUnderTest.GetItemsModifiedSince(timeBetweenCreatedItems).Length);
 			Assert.AreEqual(RepositoryUnderTest.GetId(item2),
-				RepositoryUnderTest.ItemsModifiedSince(timeBetweenCreatedItems)[0]);
+				RepositoryUnderTest.GetItemsModifiedSince(timeBetweenCreatedItems)[0]);
 		}
 	}
 
@@ -346,7 +346,7 @@ namespace WeSay.Data.Tests
 		public void ItemsModifiedSince_ReturnsEmptyArray()
 		{
 			SetState();
-			Assert.IsEmpty(RepositoryUnderTest.ItemsModifiedSince(DateTime.MinValue));
+			Assert.IsEmpty(RepositoryUnderTest.GetItemsModifiedSince(DateTime.MinValue));
 		}
 	}
 
@@ -443,7 +443,7 @@ namespace WeSay.Data.Tests
 		public void ItemsModifiedSince_ReturnsEmptyArray()
 		{
 			SetState();
-			Assert.IsEmpty(RepositoryUnderTest.ItemsModifiedSince(DateTime.MinValue));
+			Assert.IsEmpty(RepositoryUnderTest.GetItemsModifiedSince(DateTime.MinValue));
 		}
 	}
 }
