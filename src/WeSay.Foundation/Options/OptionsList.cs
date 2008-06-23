@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -7,12 +8,11 @@ using Palaso.Annotations;
 
 namespace WeSay.Foundation.Options
 {
-
     /// <summary>
     /// This is like a PossibilityList in FieldWorks, or RangeSet in Toolbox
     /// </summary>
     [XmlRoot("optionsList")]
-    public class OptionsList 
+	public class OptionsList
     {
         private List<Option> _options;
 
@@ -38,7 +38,7 @@ namespace WeSay.Foundation.Options
         }
 
         [XmlElement(typeof (Option), ElementName = "option")]
-        [System.CLSCompliant(false)]
+		[CLSCompliant(false)]
         public List<Option> Options
         {
             get { return _options; }
@@ -83,19 +83,20 @@ namespace WeSay.Foundation.Options
             foreach (Option option in Options)
             {
                 if (option.Key == value)
+				{
                     return option;
+				}
             }
             return null;
         }
-
     }
+
     /// <summary>
     /// Just makes the xml serialization work right
     /// </summary>
     public class OptionsListWrapper
     {
-        [XmlElement(typeof(Option), ElementName = "option")]
+		[XmlElement(typeof (Option), ElementName = "option")]
         public List<Option> options;
     }
-
 }

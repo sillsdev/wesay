@@ -3,31 +3,29 @@ using WeSay.Foundation;
 
 namespace WeSay.LexicalModel
 {
-	sealed public class LexExampleSentence : WeSayDataObject
+	public sealed class LexExampleSentence: WeSayDataObject
 	{
-		private MultiText _sentence;
-		private MultiText _translation;
+		private readonly MultiText _sentence;
+		private readonly MultiText _translation;
 		private string _translationType;
 
 		//!!What!! Is this done this way so that we don't end up storing
 		//  the data in the object database?
-		new public class WellKnownProperties : WeSayDataObject.WellKnownProperties
+		public new class WellKnownProperties: WeSayDataObject.WellKnownProperties
 		{
-			static public string ExampleSentence = "ExampleSentence";
-			static public string Translation = "ExampleTranslation";
-			static public string Source = "source";
+			public static string ExampleSentence = "ExampleSentence";
+			public static string Translation = "ExampleTranslation";
+			public static string Source = "source";
 
-
-			static public bool Contains(string fieldName)
+			public static bool Contains(string fieldName)
 			{
-				List<string> list = new List<string>(new string[] {ExampleSentence, Source, Translation });
+				List<string> list =
+						new List<string>(new string[] {ExampleSentence, Source, Translation});
 				return list.Contains(fieldName);
 			}
-
 		} ;
 
-		public LexExampleSentence(WeSayDataObject parent)
-			: base(parent)
+		public LexExampleSentence(WeSayDataObject parent): base(parent)
 		{
 			_sentence = new MultiText(this);
 			_translation = new MultiText(this);
@@ -35,15 +33,11 @@ namespace WeSay.LexicalModel
 			WireUpEvents();
 		}
 
-
 		/// <summary>
 		/// Used when a list of these items adds via "AddNew", where we have to have a default constructor.
 		/// The parent is added in an even handler, on the parent, which is called by the list.
 		/// </summary>
-		public LexExampleSentence()
-			: this(null)
-		{
-		}
+		public LexExampleSentence(): this(null) {}
 
 		protected override void WireUpEvents()
 		{
@@ -64,12 +58,7 @@ namespace WeSay.LexicalModel
 
 		public override bool IsEmpty
 		{
-			get
-			{
-				return Sentence.Empty &&
-					   Translation.Empty &&
-					   !HasProperties;
-			}
+			get { return Sentence.Empty && Translation.Empty && !HasProperties; }
 		}
 
 		/// <summary>
@@ -77,10 +66,7 @@ namespace WeSay.LexicalModel
 		/// </summary>
 		public string TranslationType
 		{
-			get
-			{
-				return _translationType;
-			}
+			get { return _translationType; }
 			set { _translationType = value; }
 		}
 	}

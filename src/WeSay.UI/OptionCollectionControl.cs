@@ -1,12 +1,13 @@
+using System;
 using System.Text;
 using System.Windows.Forms;
 using WeSay.Foundation.Options;
 
 namespace WeSay.UI
 {
-	public partial class OptionCollectionControl : UserControl
+	public partial class OptionCollectionControl: UserControl
 	{
-		private OptionRefCollection _optionRefCollection;
+		private readonly OptionRefCollection _optionRefCollection;
 		private OptionsList _list;
 		private string _idOfPreferredWritingSystem;
 
@@ -15,8 +16,9 @@ namespace WeSay.UI
 			InitializeComponent();
 		}
 
-
-		public OptionCollectionControl(OptionRefCollection optionRefCollection, OptionsList list, string idOfPreferredWritingSystem)
+		public OptionCollectionControl(OptionRefCollection optionRefCollection,
+									   OptionsList list,
+									   string idOfPreferredWritingSystem)
 		{
 			_optionRefCollection = optionRefCollection;
 			_list = list;
@@ -36,18 +38,16 @@ namespace WeSay.UI
 			_textBox.Text = builder.ToString();
 		}
 
-
-		private void OptionCollectionControl_BackColorChanged(object sender, System.EventArgs e)
+		private void OptionCollectionControl_BackColorChanged(object sender, EventArgs e)
 		{
-			this._textBox.BackColor = this.BackColor;
+			_textBox.BackColor = BackColor;
 		}
 
-		private void OptionCollectionControl_Load(object sender, System.EventArgs e)
+		private void OptionCollectionControl_Load(object sender, EventArgs e)
 		{
 			//read only
-			this.TabStop = false;
-			this.BackColor = this.Parent.BackColor;
+			TabStop = false;
+			BackColor = Parent.BackColor;
 		}
-
 	}
 }

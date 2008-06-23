@@ -1,6 +1,7 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
+using Palaso.Reporting;
 using WeSay.Foundation;
 using WeSay.UI.Properties;
 
@@ -14,19 +15,25 @@ namespace WeSay.UI
 		/// This will be referencing the actual annotation of the object
 		/// </summary>
 		//private Annotation _annotation;
+		private readonly MultiText _multitext;
 
-		private MultiText _multitext;
-		private string _writingSystemId;
-		private string _nameForTesting;
-	  private bool _hot;
-		private static Image CheckedImage = Resources.FlagOn.GetThumbnailImage(20, 20, ReturnFalse, IntPtr.Zero);
-		private static Image HotCheckedImage = Resources.HotFlagOn.GetThumbnailImage(20, 20, ReturnFalse, IntPtr.Zero);
-		private static Image UncheckedImage = Resources.FlagOff.GetThumbnailImage(20, 20, ReturnFalse, IntPtr.Zero);
-		private static Image HotUncheckedImage = Resources.HotFlagOff.GetThumbnailImage(20, 20, ReturnFalse, IntPtr.Zero);
+		private readonly string _writingSystemId;
+		private readonly string _nameForTesting;
+		private bool _hot;
 
-		public AnnotationWidget(MultiText multitext,
-								string writingSystemId,
-								string nameForTesting)
+		private static readonly Image CheckedImage =
+				Resources.FlagOn.GetThumbnailImage(20, 20, ReturnFalse, IntPtr.Zero);
+
+		private static readonly Image HotCheckedImage =
+				Resources.HotFlagOn.GetThumbnailImage(20, 20, ReturnFalse, IntPtr.Zero);
+
+		private static readonly Image UncheckedImage =
+				Resources.FlagOff.GetThumbnailImage(20, 20, ReturnFalse, IntPtr.Zero);
+
+		private static readonly Image HotUncheckedImage =
+				Resources.HotFlagOff.GetThumbnailImage(20, 20, ReturnFalse, IntPtr.Zero);
+
+		public AnnotationWidget(MultiText multitext, string writingSystemId, string nameForTesting)
 		{
 			_nameForTesting = nameForTesting;
 			_multitext = multitext;
@@ -57,86 +64,84 @@ namespace WeSay.UI
 		{
 			_flagButton = new CheckBox();
 			_flagButton.Appearance = Appearance.Button;
-		  _flagButton.AutoCheck = true;
-		  _flagButton.Size = new Size(22, 22);
-		  _flagButton.ThreeState = false;
-		  _flagButton.Text = string.Empty;
-		  _flagButton.FlatStyle = FlatStyle.Flat;
-		  _flagButton.FlatAppearance.BorderSize = 0;
-		  _flagButton.FlatAppearance.MouseOverBackColor = Color.White;
-		  _flagButton.FlatAppearance.MouseDownBackColor = Color.White;
+			_flagButton.AutoCheck = true;
+			_flagButton.Size = new Size(22, 22);
+			_flagButton.ThreeState = false;
+			_flagButton.Text = string.Empty;
+			_flagButton.FlatStyle = FlatStyle.Flat;
+			_flagButton.FlatAppearance.BorderSize = 0;
+			_flagButton.FlatAppearance.MouseOverBackColor = Color.White;
+			_flagButton.FlatAppearance.MouseDownBackColor = Color.White;
 
-		  _flagButton.Location = new Point(
-			  -1 + panelSize.Width - _flagButton.Width,
-				1);
-//          _flagButton.Location = new Point(
-//              -1 + panelSize.Width - _flagButton.Width,
-//              -1 + panelSize.Height - _flagButton.Height);
+			_flagButton.Location = new Point(-1 + panelSize.Width - _flagButton.Width, 1);
+			//          _flagButton.Location = new Point(
+			//              -1 + panelSize.Width - _flagButton.Width,
+			//              -1 + panelSize.Height - _flagButton.Height);
 
 			_flagButton.Anchor = AnchorStyles.Top | AnchorStyles.Right;
 			_flagButton.TabStop = false;
 			_flagButton.Checked = FlagIsOn;
 			_flagButton.Name = _nameForTesting;
-			_flagButton.MouseEnter += new EventHandler(_flagButton_MouseEnter);
-			_flagButton.MouseLeave += new EventHandler(_flagButton_MouseLeave);
-			_flagButton.CheckedChanged += new EventHandler(OnFlagButtonCheckedChanged);
+			_flagButton.MouseEnter += _flagButton_MouseEnter;
+			_flagButton.MouseLeave += _flagButton_MouseLeave;
+			_flagButton.CheckedChanged += OnFlagButtonCheckedChanged;
 
 			SetFlagImage();
 
 			return _flagButton;
 		}
 
-	  void _flagButton_MouseLeave(object sender, EventArgs e)
-	  {
-		_hot = false;
-		SetFlagImage();
-	}
-
-	  void _flagButton_MouseEnter(object sender, EventArgs e)
-	  {
-		_hot = true;
-		SetFlagImage();
-	}
-
-	  void OnFlagButtonCheckedChanged(object sender, EventArgs e)
-	  {
-		  Palaso.Reporting.Logger.WriteMinorEvent("OnFlagButtonCheckedChanged ({0})", _flagButton.Checked);
-		SetFlagImage();
-
-		_flagButton.Refresh(); // give visual feedback right away since the next action can take some time
-		FlagIsOn = _flagButton.Checked;
-	  }
-
-	  private void SetFlagImage()
-	  {
-		if (_flagButton.Checked)
+		private void _flagButton_MouseLeave(object sender, EventArgs e)
 		{
-		  if (_hot)
-		  {
-			_flagButton.Image = HotCheckedImage;
-		  }
-		  else
-		  {
-			_flagButton.Image = CheckedImage;
-		  }
+			_hot = false;
+			SetFlagImage();
 		}
-		else
+
+		private void _flagButton_MouseEnter(object sender, EventArgs e)
 		{
-		  if (_hot)
-		  {
-			_flagButton.Image = HotUncheckedImage;
-		  }
-		  else
-		  {
-			_flagButton.Image = UncheckedImage;
-		  }
+			_hot = true;
+			SetFlagImage();
 		}
-	  }
 
-	  private static bool ReturnFalse()
-	  {
-		return false;
-	  }
+		private void OnFlagButtonCheckedChanged(object sender, EventArgs e)
+		{
+			Logger.WriteMinorEvent("OnFlagButtonCheckedChanged ({0})", _flagButton.Checked);
+			SetFlagImage();
 
+			_flagButton.Refresh();
+			// give visual feedback right away since the next action can take some time
+			FlagIsOn = _flagButton.Checked;
+		}
+
+		private void SetFlagImage()
+		{
+			if (_flagButton.Checked)
+			{
+				if (_hot)
+				{
+					_flagButton.Image = HotCheckedImage;
+				}
+				else
+				{
+					_flagButton.Image = CheckedImage;
+				}
+			}
+			else
+			{
+				if (_hot)
+				{
+					_flagButton.Image = HotUncheckedImage;
+				}
+				else
+				{
+					_flagButton.Image = UncheckedImage;
+				}
+			}
+		}
+
+		private static bool ReturnFalse()
+		{
+			return false;
+		}
 	}
 }

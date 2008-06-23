@@ -3,9 +3,9 @@ using System.Drawing;
 using System.IO;
 using NUnit.Framework;
 using WeSay.Data;
-using WeSay.Language;
+using WeSay.Foundation;
 using WeSay.LexicalModel;
-using WeSay.LexicalModel.Db4o_Specific;
+using WeSay.LexicalModel.Db4oSpecific;
 using WeSay.Project;
 
 namespace WeSay.LexicalTools.Tests
@@ -75,9 +75,7 @@ namespace WeSay.LexicalTools.Tests
 			CreateTestEntry("car",
 							"small motorized vehicle",
 							"Watch out for cars when you cross the street.");
-			CreateTestEntry("dog",
-							"animal with four legs; man's best friend",
-							"He walked his dog.");
+			CreateTestEntry("dog", "animal with four legs; man's best friend", "He walked his dog.");
 
 			_missingTranslationRecordList =
 					_lexEntryRepository.GetEntriesMatchingFilterSortedByLexicalUnit(
@@ -97,8 +95,6 @@ namespace WeSay.LexicalTools.Tests
 							  "LexSense",
 							  analysisWritingSystemIds));
 
-
-
 			_viewTemplate.Add(
 					new Field(Field.FieldNames.ExampleSentence.ToString(),
 							  "LexExampleSentence",
@@ -109,7 +105,7 @@ namespace WeSay.LexicalTools.Tests
 							  analysisWritingSystemIds));
 		}
 
-		private LexEntry CreateTestEntry(string lexicalForm, string Definition, string exampleSentence)
+		private void CreateTestEntry(string lexicalForm, string Definition, string exampleSentence)
 		{
 			LexEntry entry = _lexEntryRepository.CreateItem();
 			entry.LexicalForm[_writingSystem.Id] = lexicalForm;
@@ -118,7 +114,7 @@ namespace WeSay.LexicalTools.Tests
 			LexExampleSentence example = (LexExampleSentence) sense.ExampleSentences.AddNew();
 			example.Sentence[_writingSystem.Id] = exampleSentence;
 			_lexEntryRepository.SaveItem(entry);
-			return entry;
+			return;
 		}
 
 		private static void AddTranslationToEntry(LexEntry entry, string translation)
@@ -430,7 +426,8 @@ namespace WeSay.LexicalTools.Tests
 			{
 				missingInfoControl.SetCurrentRecordToNext();
 				RecordToken<LexEntry> currentRecord = missingInfoControl.CurrentRecord;
-				AddTranslationToEntry(missingInfoControl.CurrentEntry, "a bogus translation of example");
+				AddTranslationToEntry(missingInfoControl.CurrentEntry,
+									  "a bogus translation of example");
 				Assert.AreEqual(missingInfoControl._completedRecordsListBox.SelectedItem,
 								currentRecord);
 				Assert.IsFalse(missingInfoControl._recordsListBox.DataSource.Contains(currentRecord));
@@ -452,16 +449,19 @@ namespace WeSay.LexicalTools.Tests
 			{
 				missingInfoControl.SetCurrentRecordToNext();
 				RecordToken<LexEntry> currentRecord = missingInfoControl.CurrentRecord;
-				AddTranslationToEntry(missingInfoControl.CurrentEntry, "a bogus translation of example");
+				AddTranslationToEntry(missingInfoControl.CurrentEntry,
+									  "a bogus translation of example");
 				AddTranslationToEntry(missingInfoControl.CurrentEntry, string.Empty);
 				Assert.AreEqual(missingInfoControl._recordsListBox.SelectedItem, currentRecord);
 				Assert.IsFalse(
-						missingInfoControl._completedRecordsListBox.DataSource.Contains(currentRecord));
+						missingInfoControl._completedRecordsListBox.DataSource.Contains(
+								currentRecord));
 #if Visual
 				DebugShowState(missingInfoControl, currentRecord);
 #endif
 			}
 		}
+
 #if Visual
 		private static void DebugShowState(MissingInfoControl missingInfoControl,
 										   LexEntry currentRecord)

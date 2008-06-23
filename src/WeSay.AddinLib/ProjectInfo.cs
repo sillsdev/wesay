@@ -1,4 +1,4 @@
-using WeSay.Language;
+using WeSay.Foundation;
 
 namespace WeSay.AddinLib
 {
@@ -24,8 +24,10 @@ namespace WeSay.AddinLib
 						   string[] filesBelongingToProject,
 						   FileLocater locateFile,
 						   WritingSystemCollection writingSystems,
-						   object lexEntryRepository, // these signatures were to reduce the dependencies on addins that didn't need this stuff
-						   object project) // these signatures were to reduce the dependencies on addins that didn't need this stuff
+						   object lexEntryRepository,
+						   // these signatures were to reduce the dependencies on addins that didn't need this stuff
+						   object project)
+				// these signatures were to reduce the dependencies on addins that didn't need this stuff
 
 		{
 			_pathToTopLevelDirectory = pathToTopLevelDirectory;

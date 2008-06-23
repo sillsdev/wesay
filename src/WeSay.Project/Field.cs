@@ -6,7 +6,6 @@ using System.Xml;
 using Exortech.NetReflector;
 using Exortech.NetReflector.Util;
 using WeSay.Foundation;
-using WeSay.Language;
 using WeSay.LexicalModel;
 
 namespace WeSay.Project
@@ -43,7 +42,9 @@ namespace WeSay.Project
 			RelationToOneEntry
 		}
 
-		private CommonEnumerations.VisibilitySetting _visibility = CommonEnumerations.VisibilitySetting.Visible;
+		private CommonEnumerations.VisibilitySetting _visibility =
+				CommonEnumerations.VisibilitySetting.Visible;
+
 		private string _optionsListFile;
 
 		/// <summary>
@@ -67,10 +68,14 @@ namespace WeSay.Project
 		}
 
 		public Field(string fieldName, string className, IEnumerable<string> writingSystemIds)
-				: this(fieldName, className, writingSystemIds, MultiplicityType.ZeroOr1, "MultiText") {}
+				: this(fieldName, className, writingSystemIds, MultiplicityType.ZeroOr1, "MultiText"
+						) {}
 
-		public Field(string fieldName, string className, IEnumerable<string> writingSystemIds,
-					 MultiplicityType multiplicity, string dataTypeName)
+		public Field(string fieldName,
+					 string className,
+					 IEnumerable<string> writingSystemIds,
+					 MultiplicityType multiplicity,
+					 string dataTypeName)
 		{
 			if (writingSystemIds == null)
 			{
@@ -107,7 +112,9 @@ namespace WeSay.Project
 		public static string MakeFieldNameSafe(string text)
 		{
 			//parentheses mess up our greps, don't really belong in xml names
-			char[] charsToRemove = new char[] {' ','(',')', '*', ']', '[', '?', '{','}','\\','<', '>','+', '&'};
+			char[] charsToRemove =
+					new char[]
+							{' ', '(', ')', '*', ']', '[', '?', '{', '}', '\\', '<', '>', '+', '&'};
 			foreach (char c in charsToRemove)
 			{
 				text = text.Replace(c.ToString(), "");
@@ -115,7 +122,9 @@ namespace WeSay.Project
 			return text.Trim();
 		}
 
-		private void Initialize(string fieldName, string dataTypeName, MultiplicityType multiplicity,
+		private void Initialize(string fieldName,
+								string dataTypeName,
+								MultiplicityType multiplicity,
 								IEnumerable<string> writingSystemIds)
 		{
 			FieldName = fieldName;
@@ -123,13 +132,16 @@ namespace WeSay.Project
 			_multiplicity = multiplicity;
 			DataTypeName = dataTypeName;
 
-			Debug.Assert(FieldNames.EntryLexicalForm.ToString() == LexEntry.WellKnownProperties.LexicalUnit);
-			Debug.Assert(FieldNames.ExampleSentence.ToString() == LexExampleSentence.WellKnownProperties.ExampleSentence);
-			Debug.Assert(FieldNames.ExampleTranslation.ToString() == LexExampleSentence.WellKnownProperties.Translation);
-
+			Debug.Assert(FieldNames.EntryLexicalForm.ToString() ==
+						 LexEntry.WellKnownProperties.LexicalUnit);
+			Debug.Assert(FieldNames.ExampleSentence.ToString() ==
+						 LexExampleSentence.WellKnownProperties.ExampleSentence);
+			Debug.Assert(FieldNames.ExampleTranslation.ToString() ==
+						 LexExampleSentence.WellKnownProperties.Translation);
 		}
 
-		[Description("The name of the field, as it will appear in the LIFT file. This is not visible to the WeSay user."
+		[Description(
+				"The name of the field, as it will appear in the LIFT file. This is not visible to the WeSay user."
 				)]
 		[ReflectorCollection("fieldName", Required = true)]
 		public string FieldName
@@ -138,7 +150,8 @@ namespace WeSay.Project
 			{
 				if (_fieldName == null)
 				{
-					throw new ArgumentNullException("FieldName");
+					throw new InvalidOperationException(
+							"FieldName must be set before it can be used.");
 				}
 				return _fieldName;
 			}
@@ -146,7 +159,7 @@ namespace WeSay.Project
 			{
 				if (value == null)
 				{
-					throw new ArgumentNullException("FieldName");
+					throw new ArgumentNullException("value");
 				}
 				_fieldName = MakeFieldNameSafe(value);
 				if (_fieldName == "Definition") //versions prior to oct-23-2007 had the case wrong
@@ -157,10 +170,8 @@ namespace WeSay.Project
 				{
 					_fieldName = "citation";
 				}
-
 			}
 		}
-
 
 		public string Key
 		{
@@ -182,33 +193,33 @@ namespace WeSay.Project
 			set { _displayName = value; }
 		}
 
-//        /// <summary>
-//        /// this is needed for fields like sense note vs entry not, where in the app, they should have the same label
-//        /// </summary>
-//        [Description("The label of the field as it will be displayed in the config tool.")]
-//        [ReflectorCollection("configurationName", Required = false)]
-//        public string ConfigurationName
-//        {
-//            get
-//            {
-//                if (String.IsNullOrEmpty(_configurationName))
-//                {
-//                    return DisplayName;
-//                }
-//                return _configurationName;
-//            }
-//            set
-//            {
-//                if(value == DisplayName)//don't make a distinction unless you need to
-//                {
-//                    _configurationName = String.Empty;
-//                }
-//                else
-//                {
-//                    _configurationName = value;
-//                }
-//            }
-//        }
+		//        /// <summary>
+		//        /// this is needed for fields like sense note vs entry not, where in the app, they should have the same label
+		//        /// </summary>
+		//        [Description("The label of the field as it will be displayed in the config tool.")]
+		//        [ReflectorCollection("configurationName", Required = false)]
+		//        public string ConfigurationName
+		//        {
+		//            get
+		//            {
+		//                if (String.IsNullOrEmpty(_configurationName))
+		//                {
+		//                    return DisplayName;
+		//                }
+		//                return _configurationName;
+		//            }
+		//            set
+		//            {
+		//                if(value == DisplayName)//don't make a distinction unless you need to
+		//                {
+		//                    _configurationName = String.Empty;
+		//                }
+		//                else
+		//                {
+		//                    _configurationName = value;
+		//                }
+		//            }
+		//        }
 
 		[TypeConverter(typeof (ParentClassConverter))]
 		[Description("The parent of this field. E.g. Entry, Sense, Example.")]
@@ -219,7 +230,8 @@ namespace WeSay.Project
 			{
 				if (_className.Length == 0)
 				{
-					throw new InvalidOperationException("className has not been initialized correctly");
+					throw new InvalidOperationException(
+							"className has not been initialized correctly");
 				}
 				return _className;
 			}
@@ -236,8 +248,9 @@ namespace WeSay.Project
 						_className = value;
 						break;
 					default:
-						throw new ArgumentOutOfRangeException(
-								"className must be WeSayDataObject, LexEntry, LexSense, or LexExampleSentence");
+						throw new ArgumentOutOfRangeException("value",
+															  value,
+															  "className must be WeSayDataObject, LexEntry, LexSense, or LexExampleSentence");
 				}
 			}
 		}
@@ -281,20 +294,21 @@ namespace WeSay.Project
 		{
 			get
 			{
-				if (_fieldName==FieldNames.EntryLexicalForm.ToString()
-					|| _fieldName == LexSense.WellKnownProperties.Definition
-					|| _fieldName == FieldNames.ExampleSentence.ToString())
+				if (_fieldName == FieldNames.EntryLexicalForm.ToString() ||
+					_fieldName == LexSense.WellKnownProperties.Definition ||
+					_fieldName == FieldNames.ExampleSentence.ToString())
 				{
 					return false;
 				}
-
 
 				return true;
 			}
 		}
 
 		[TypeConverter(typeof (DataTypeClassConverter))]
-		[Description("The type of the field. E.g. multilingual text, option, option collection, relation.")]
+		[Description(
+				"The type of the field. E.g. multilingual text, option, option collection, relation."
+				)]
 		[ReflectorProperty("dataType", Required = true)]
 		public string DataTypeName
 		{
@@ -302,7 +316,8 @@ namespace WeSay.Project
 			set { _dataTypeName = value; }
 		}
 
-		[Description("For options and option collections, the name of the xml file containing the valid set of options."
+		[Description(
+				"For options and option collections, the name of the xml file containing the valid set of options."
 				)]
 		[ReflectorProperty("optionsListFile", Required = false)]
 		public string OptionsListFile
@@ -331,7 +346,7 @@ namespace WeSay.Project
 					return true;
 				}
 
- #if GlossMeaning
+#if GlossMeaning
 				if (FieldName == FieldNames.SenseGloss.ToString())
 				{
 					return true;
@@ -359,14 +374,13 @@ namespace WeSay.Project
 					i++;
 					if (s == null)
 					{
-						throw new ArgumentNullException("writingSystem",
+						throw new ArgumentNullException("value",
 														"Writing System argument" + i + "is null");
 					}
 				}
 				_writingSystemIds = new List<string>(value);
 			}
 		}
-
 
 		[Browsable(false)]
 		public string Description
@@ -386,7 +400,7 @@ namespace WeSay.Project
 
 				//for backward compatibility:
 				//we now use Enabled=false rather than Invisible
-				if(_visibility == CommonEnumerations.VisibilitySetting.Invisible)
+				if (_visibility == CommonEnumerations.VisibilitySetting.Invisible)
 				{
 					_visibility = CommonEnumerations.VisibilitySetting.Visible;
 					Enabled = false;
@@ -399,7 +413,7 @@ namespace WeSay.Project
 		{
 			get
 			{
-				if(_enabledNotSet) //for backwards compatibility, before we added Enabled
+				if (_enabledNotSet) //for backwards compatibility, before we added Enabled
 				{
 					Enabled = Visibility == CommonEnumerations.VisibilitySetting.Visible;
 				}
@@ -424,19 +438,19 @@ namespace WeSay.Project
 		/// <summary>
 		/// built-in fields have properties which aren't user editable
 		/// </summary>
-//        [Browsable(false)]
-//        public bool CanOnlyEditDisplayName
-//        {
-//            get { return IsBuiltInViaCode; }
-//        }
-
+		//        [Browsable(false)]
+		//        public bool CanOnlyEditDisplayName
+		//        {
+		//            get { return IsBuiltInViaCode; }
+		//        }
 		[Browsable(false)]
 		public bool ShowOptionListStuff
 		{
 			get
 			{
-				return DataTypeName == Field.BuiltInDataType.Option.ToString()
-					   || DataTypeName == Field.BuiltInDataType.OptionCollection.ToString();
+				return
+						DataTypeName == BuiltInDataType.Option.ToString() ||
+						DataTypeName == BuiltInDataType.OptionCollection.ToString();
 			}
 		}
 
@@ -464,12 +478,12 @@ namespace WeSay.Project
 
 		public bool GetDoShow(IReportEmptiness data, bool showNormallyHiddenFields)
 		{
-			return _enabled &&
-				(
-					(showNormallyHiddenFields || (data!=null && data.ShouldCountAsFilledForPurposesOfConditionalDisplay)) ||
-
-				   (_visibility == CommonEnumerations.VisibilitySetting.Visible ||
-					_visibility == CommonEnumerations.VisibilitySetting.ReadOnly));
+			return
+					_enabled &&
+					((showNormallyHiddenFields ||
+					  (data != null && data.ShouldCountAsFilledForPurposesOfConditionalDisplay)) ||
+					 (_visibility == CommonEnumerations.VisibilitySetting.Visible ||
+					  _visibility == CommonEnumerations.VisibilitySetting.ReadOnly));
 		}
 
 		public static string NewFieldNamePrefix
@@ -481,20 +495,25 @@ namespace WeSay.Project
 		{
 			get
 			{
-				if(_fieldName == FieldNames.EntryLexicalForm.ToString())
+				if (_fieldName == FieldNames.EntryLexicalForm.ToString())
+				{
 					return false;
+				}
 
 #if GlossMeaning
 				if(_fieldName == FieldNames.SenseGloss.ToString())
 					return false;
 #else
 				if (_fieldName == LexSense.WellKnownProperties.Definition)
+				{
 					return false;
+				}
 #endif
 
 				return true;
 			}
 		}
+
 		[Description("Do you want words in this field to be spell checked?")]
 		[ReflectorProperty("spellCheckingEnabled", Required = false)]
 		public bool IsSpellCheckingEnabled
@@ -503,12 +522,10 @@ namespace WeSay.Project
 			set { _isSpellCheckingEnabled = value; }
 		}
 
-
 		[Browsable(false)]
 		public bool HasWritingSystem(string writingSystemId)
 		{
-			return _writingSystemIds.Exists(
-					delegate(string s) { return s == writingSystemId; });
+			return _writingSystemIds.Exists(delegate(string s) { return s == writingSystemId; });
 		}
 
 		public static void ModifyMasterFromUser(Field master, Field user)
@@ -519,32 +536,34 @@ namespace WeSay.Project
 			master.Visibility = user.Visibility;
 		}
 
-//        private static List<string> GetIntersectionOfWsIdLists(Field master, Field user)
-//        {
-//            List<string> l = new List<string>();
-//            foreach (string id in master.WritingSystemIds)
-//            {
-//                if (user.WritingSystemIds.Contains(id))
-//                {
-//                    l.Add(id);
-//                }
-//            }
-//            return l;
-//        }
+		//        private static List<string> GetIntersectionOfWsIdLists(Field master, Field user)
+		//        {
+		//            List<string> l = new List<string>();
+		//            foreach (string id in master.WritingSystemIds)
+		//            {
+		//                if (user.WritingSystemIds.Contains(id))
+		//                {
+		//                    l.Add(id);
+		//                }
+		//            }
+		//            return l;
+		//        }
 
 		#region persistence
 
-		internal class WsIdCollectionSerializerFactory : ISerialiserFactory
+		internal class WsIdCollectionSerializerFactory: ISerialiserFactory
 		{
-			public IXmlMemberSerialiser Create(ReflectorMember member, ReflectorPropertyAttribute attribute)
+			public IXmlMemberSerialiser Create(ReflectorMember member,
+											   ReflectorPropertyAttribute attribute)
 			{
 				return new WsIdCollectionSerializer(member, attribute);
 			}
 		}
 
-		internal class WsIdCollectionSerializer : XmlMemberSerialiser
+		internal class WsIdCollectionSerializer: XmlMemberSerialiser
 		{
-			public WsIdCollectionSerializer(ReflectorMember member, ReflectorPropertyAttribute attribute)
+			public WsIdCollectionSerializer(ReflectorMember member,
+											ReflectorPropertyAttribute attribute)
 					: base(member, attribute) {}
 
 			public override void Write(XmlWriter writer, object target)
@@ -571,10 +590,9 @@ namespace WeSay.Project
 		}
 
 		#endregion
-
 	}
 
-	internal class ParentClassConverter : WeSayStringConverter
+	internal class ParentClassConverter: WeSayStringConverter
 	{
 		public override string[] ValidStrings
 		{
@@ -582,7 +600,7 @@ namespace WeSay.Project
 		}
 	}
 
-	internal class DataTypeClassConverter : WeSayStringConverter
+	internal class DataTypeClassConverter: WeSayStringConverter
 	{
 		public override string[] ValidStrings
 		{
@@ -590,7 +608,7 @@ namespace WeSay.Project
 		}
 	}
 
-	internal abstract class WeSayStringConverter : StringConverter
+	internal abstract class WeSayStringConverter: StringConverter
 	{
 		public abstract string[] ValidStrings { get; }
 
@@ -641,8 +659,7 @@ namespace WeSay.Project
 			return true;
 		}
 
-		public override StandardValuesCollection
-				GetStandardValues(ITypeDescriptorContext context)
+		public override StandardValuesCollection GetStandardValues(ITypeDescriptorContext context)
 		{
 			return new StandardValuesCollection(ValidStrings);
 		}

@@ -4,7 +4,7 @@ using System.Windows.Forms;
 using NUnit.Framework;
 using WeSay.Foundation.Options;
 using WeSay.LexicalModel;
-using WeSay.LexicalModel.Db4o_Specific;
+using WeSay.LexicalModel.Db4oSpecific;
 using WeSay.Project;
 using WeSay.UI;
 
@@ -113,7 +113,7 @@ namespace WeSay.LexicalTools.Tests
 			OptionRef o;
 			o = sense.GetOrCreateProperty<OptionRef>("POS");
 			o.Value = "noun";
-					//nb: this is the key, which for noun happens to be the English display name tested for below
+			//nb: this is the key, which for noun happens to be the English display name tested for below
 			using (EntryViewControl entryViewControl = CreateForm(apple))
 			{
 				Assert.IsTrue(entryViewControl.ControlFormattedView.Text.Contains("noun"));
@@ -345,9 +345,9 @@ namespace WeSay.LexicalTools.Tests
 		}
 
 		private EntryViewControl CreateFilteredForm(LexEntry entry,
-														   string field,
-														   string className,
-														   params string[] writingSystems)
+													string field,
+													string className,
+													params string[] writingSystems)
 		{
 			ViewTemplate viewTemplate = new ViewTemplate();
 			viewTemplate.Add(new Field(field, className, writingSystems));
@@ -358,9 +358,7 @@ namespace WeSay.LexicalTools.Tests
 			return entryViewControl;
 		}
 
-		private LexEntry CreateTestEntry(string lexicalForm,
-												string meaning,
-												string exampleSentence)
+		private LexEntry CreateTestEntry(string lexicalForm, string meaning, string exampleSentence)
 		{
 			LexEntry entry = _lexEntryRepository.CreateItem();
 			entry.LexicalForm[GetSomeValidWsIdForField("EntryLexicalForm")] = lexicalForm;

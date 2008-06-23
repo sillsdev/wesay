@@ -3,21 +3,23 @@ using System.Collections.Generic;
 using Db4objects.Db4o;
 using Palaso.Base32;
 using WeSay.Data;
-using WeSay.Language;
+using WeSay.Foundation;
 
-namespace WeSay.LexicalModel.Db4o_Specific
+namespace WeSay.LexicalModel.Db4oSpecific
 {
-	internal class Db4oHeadwordQuery : IQuery<LexEntry>
+	internal class Db4oHeadwordQuery: IQuery<LexEntry>
 	{
 		private readonly Db4oDataSource _db4oData; // for data
 		private readonly WritingSystem _writingSystem;
 		private readonly IHistoricalEntryCountProvider _historicalEntryCountProvider;
 		private readonly LexEntryRepository _repository;
 
-		public Db4oHeadwordQuery(LexEntryRepository repository, Db4oDataSource ds, WritingSystem writingSystem)
+		public Db4oHeadwordQuery(LexEntryRepository repository,
+								 Db4oDataSource ds,
+								 WritingSystem writingSystem)
 		{
 			_db4oData = ds;
-			this._repository = repository;
+			_repository = repository;
 			_writingSystem = writingSystem;
 
 			_historicalEntryCountProvider =
@@ -46,7 +48,7 @@ namespace WeSay.LexicalModel.Db4o_Specific
 		{
 			List<RecordToken<LexEntry>> result = new List<RecordToken<LexEntry>>();
 
-			IObjectSet set = _db4oData.Data.Get(typeof(LexEntry));
+			IObjectSet set = _db4oData.Data.Get(typeof (LexEntry));
 
 			//enhance: This will be slow and take a lot of ram, as it will bring each entry
 			//into ram.  It is theoretically possible to just query on the lexemeform
@@ -56,7 +58,13 @@ namespace WeSay.LexicalModel.Db4o_Specific
 				int i = 0;
 				foreach (string key in GetDisplayStrings(entry))
 				{
-					result.Add(new RecordToken<LexEntry>(_repository, this, i, key, new Db4oRepositoryId(_db4oData.Data.Ext().GetID(entry))));
+					result.Add(
+							new RecordToken<LexEntry>(_repository,
+													  this,
+													  i,
+													  key,
+													  new Db4oRepositoryId(
+															  _db4oData.Data.Ext().GetID(entry))));
 					++i;
 				}
 			}

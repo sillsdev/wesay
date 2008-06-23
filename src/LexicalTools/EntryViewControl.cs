@@ -9,7 +9,7 @@ using WeSay.UI;
 
 namespace WeSay.LexicalTools
 {
-	public partial class EntryViewControl : UserControl
+	public partial class EntryViewControl: UserControl
 	{
 		private ViewTemplate _viewTemplate;
 		private LexEntry _record;
@@ -83,7 +83,8 @@ namespace WeSay.LexicalTools
 				{
 					if (_record != null && !_record.IsBeingDeleted)
 					{
-						Logger.WriteMinorEvent("Datasource set. Calling _record.CleanUpAfterEditting()");
+						Logger.WriteMinorEvent(
+								"Datasource set. Calling _record.CleanUpAfterEditting()");
 						_record.PropertyChanged -= OnRecordPropertyChanged;
 						_record.EmptyObjectsRemoved -= OnEmptyObjectsRemoved;
 						_record.CleanUpAfterEditting();
@@ -146,12 +147,14 @@ namespace WeSay.LexicalTools
 			Logger.WriteMinorEvent("OnEmptyObjectsRemoved: b4 RefreshEntryDetial");
 			RefreshEntryDetail();
 			Logger.WriteMinorEvent("OnEmptyObjectsRemoved: b4  Application.DoEvents()");
-			Application.DoEvents(); //TODO: We need to remove this.  It's a dangerous thing in a historically buggy spot
+			Application.DoEvents();
+			//TODO: We need to remove this.  It's a dangerous thing in a historically buggy spot
 			Logger.WriteMinorEvent("OnEmptyObjectsRemoved: b4 MoveInsertionPoint");
 			if (row != null)
 			{
 				row = Math.Min((int) row, _detailListControl.Count - 1);
-				Debug.Assert(row > -1, "You've reproduced bug ws-511!"); // bug WS-511, which we haven't yet been able to reproduce
+				Debug.Assert(row > -1, "You've reproduced bug ws-511!");
+				// bug WS-511, which we haven't yet been able to reproduce
 				row = Math.Max((int) row, 0); //would get around bug WS-511
 				_detailListControl.MoveInsertionPoint((int) row);
 			}
@@ -200,7 +203,7 @@ namespace WeSay.LexicalTools
 
 		protected void VerifyNotDisposed()
 		{
-			if (this._isDisposed)
+			if (_isDisposed)
 			{
 #if DEBUG
 				throw new ObjectDisposedException(GetType().FullName);
@@ -218,7 +221,8 @@ namespace WeSay.LexicalTools
 			{
 #endif
 			VerifyHasLexEntryRepository();
-			_lexicalEntryPreview.Rtf = RtfRenderer.ToRtf(_record, _currentItemInFocus, _lexEntryRepository);
+			_lexicalEntryPreview.Rtf =
+					RtfRenderer.ToRtf(_record, _currentItemInFocus, _lexEntryRepository);
 #if !DEBUG
 			}
 			catch (Exception)
@@ -228,8 +232,9 @@ namespace WeSay.LexicalTools
 #endif
 		}
 
-		private void VerifyHasLexEntryRepository() {
-			if(this._lexEntryRepository == null)
+		private void VerifyHasLexEntryRepository()
+		{
+			if (_lexEntryRepository == null)
 			{
 				throw new InvalidOperationException("LexEntryRepository has not been initialized");
 			}
@@ -263,7 +268,8 @@ namespace WeSay.LexicalTools
 				if (_record != null)
 				{
 					VerifyHasLexEntryRepository();
-					LexEntryLayouter layout = new LexEntryLayouter(detailList, ViewTemplate, _lexEntryRepository);
+					LexEntryLayouter layout =
+							new LexEntryLayouter(detailList, ViewTemplate, _lexEntryRepository);
 					layout.ShowNormallyHiddenFields = ShowNormallyHiddenFields;
 					layout.AddWidgets(_record);
 				}
@@ -271,7 +277,7 @@ namespace WeSay.LexicalTools
 				_panelEntry.Controls.Add(detailList);
 				detailList.ResumeLayout(true);
 				detailList.Visible = true;
-				_panelEntry.Controls.SetChildIndex(detailList,0);
+				_panelEntry.Controls.SetChildIndex(detailList, 0);
 
 				if (oldDetailList != null)
 				{
@@ -282,7 +288,6 @@ namespace WeSay.LexicalTools
 				detailList.ChangeOfWhichItemIsInFocus += OnChangeOfWhichItemIsInFocus;
 				detailList.KeyDown += _detailListControl_KeyDown;
 				_panelEntry.ResumeLayout(false);
-
 			}
 			catch (ConfigurationException e)
 			{
@@ -299,7 +304,7 @@ namespace WeSay.LexicalTools
 
 		private CurrentItemEventArgs _currentItemInFocus;
 		private LexEntryRepository _lexEntryRepository;
-		private bool _showNormallyHiddenFields=false;
+		private bool _showNormallyHiddenFields = false;
 
 		private void LexPreviewWithEntryControl_BackColorChanged(object sender, EventArgs e)
 		{
@@ -309,11 +314,11 @@ namespace WeSay.LexicalTools
 
 		~EntryViewControl()
 		{
-			if (!this._isDisposed)
+			if (!_isDisposed)
 			{
-				throw new InvalidOperationException("Disposed not explicitly called on " + GetType().FullName + ".");
+				throw new InvalidOperationException("Disposed not explicitly called on " +
+													GetType().FullName + ".");
 			}
-
 		}
 
 		// hack to get around the fact that SplitContainer takes over the

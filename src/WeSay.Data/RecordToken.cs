@@ -2,13 +2,14 @@ using System;
 
 namespace WeSay.Data
 {
-	public class RecordToken<T>: IEquatable<RecordToken<T>>
+	public sealed class RecordToken<T>: IEquatable<RecordToken<T>>
 	{
 		private string _displayString;
 		private readonly RepositoryId _id;
 		private readonly IRepository<T> _repository;
 		private readonly IQuery<T> _query;
 		private readonly int _index;
+
 		public RecordToken(IRepository<T> repository, IQuery<T> query, int index)
 		{
 			if (repository == null)
@@ -19,7 +20,7 @@ namespace WeSay.Data
 			{
 				throw new ArgumentNullException("query");
 			}
-			if(index < 0)
+			if (index < 0)
 			{
 				throw new ArgumentOutOfRangeException("index", "must be positive");
 			}
@@ -28,23 +29,27 @@ namespace WeSay.Data
 			_index = index;
 		}
 
-		public RecordToken(IRepository<T> repository, IQuery<T> query, int index, string s, RepositoryId id)
-			: this(repository, query, index)
+		public RecordToken(IRepository<T> repository,
+						   IQuery<T> query,
+						   int index,
+						   string s,
+						   RepositoryId id): this(repository, query, index)
 		{
 			_displayString = s;
-			this._query = query;
+			_query = query;
 			_id = id;
 		}
 
 		public string DisplayString
 		{
-			get { return this._displayString; }
+			get { return _displayString; }
 		}
 
 		public RepositoryId Id
 		{
-			get { return this._id; }
+			get { return _id; }
 		}
+
 		public override string ToString()
 		{
 			return DisplayString;
@@ -52,10 +57,7 @@ namespace WeSay.Data
 
 		public bool IsFresh
 		{
-			get
-			{
-				return DisplayString == GetRefreshedDisplayStringForObject();
-			}
+			get { return DisplayString == GetRefreshedDisplayStringForObject(); }
 		}
 
 		/// <summary>
@@ -69,16 +71,16 @@ namespace WeSay.Data
 			string refreshedDisplayStringForObject = GetRefreshedDisplayStringForObject();
 			if (refreshedDisplayStringForObject != null)
 			{
-				this._displayString = refreshedDisplayStringForObject;
+				_displayString = refreshedDisplayStringForObject;
 			}
 		}
 
 		private string GetRefreshedDisplayStringForObject()
 		{
 			int i = 0;
-			foreach (string displayString in this._query.GetDisplayStrings(RealObject))
+			foreach (string displayString in _query.GetDisplayStrings(RealObject))
 			{
-				if (i == this._index)
+				if (i == _index)
 				{
 					return displayString;
 				}
@@ -90,12 +92,8 @@ namespace WeSay.Data
 		// proxy object
 		public T RealObject
 		{
-			get
-			{
-				return _repository.GetItem(Id);
-			}
+			get { return _repository.GetItem(Id); }
 		}
-
 
 		public static bool operator !=(RecordToken<T> recordToken1, RecordToken<T> recordToken2)
 		{
@@ -113,7 +111,9 @@ namespace WeSay.Data
 			{
 				return false;
 			}
-			return Equals(_displayString, recordToken._displayString) && Equals(_id, recordToken._id);
+			return
+					Equals(_displayString, recordToken._displayString) &&
+					Equals(_id, recordToken._id);
 		}
 
 		public override bool Equals(object obj)

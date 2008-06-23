@@ -1,27 +1,22 @@
 ﻿using System;
+
 namespace WeSay.Data
 {
 	public interface IFilter<T>
 	{
-		Predicate<T> FilteringPredicate
-		{
-			get;
-		}
+		Predicate<T> FilteringPredicate { get; }
 
-		string Key
-		{
-			get;
-		}
+		string Key { get; }
 	}
 
-	public class AllItems<T> : IFilter<T>
+	public class AllItems<T>: IFilter<T>
 	{
 		public Predicate<T> FilteringPredicate
 		{
 			get { return ReturnTrue; }
 		}
 
-		static private bool ReturnTrue(T t)
+		private static bool ReturnTrue(T t)
 		{
 			return true;
 		}
@@ -34,5 +29,4 @@ namespace WeSay.Data
 			get { return "AllItems"; }
 		}
 	}
-
 }

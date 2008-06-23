@@ -4,7 +4,7 @@ using System.Text;
 
 namespace WeSay.Data
 {
-	public class CacheHelper
+	public static class CacheHelper
 	{
 		public static string EscapeFileNameString(string fileName)
 		{
@@ -21,10 +21,8 @@ namespace WeSay.Data
 					result.Append('%');
 					result.Append(Convert.ToByte(c).ToString("x"));
 				}
-
 			}
 			return result.ToString();
 		}
 	}
-
 }

@@ -8,7 +8,6 @@ using Palaso.Services.Dictionary;
 using Palaso.UI.WindowsForms.i8n;
 using WeSay.Data;
 using WeSay.Foundation;
-using WeSay.Language;
 using WeSay.LexicalModel;
 using WeSay.Project;
 

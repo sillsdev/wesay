@@ -1,6 +1,6 @@
 using System.Drawing;
 
-namespace WeSay.Foundation.Dashboard
+namespace WeSay.Foundation
 {
 	public interface IThingOnDashboard
 	{
@@ -11,7 +11,6 @@ namespace WeSay.Foundation.Dashboard
 		ButtonStyle DashboardButtonStyle { get; }
 
 		Image DashboardButtonImage { get; }
-
 	}
 
 	public enum ButtonStyle

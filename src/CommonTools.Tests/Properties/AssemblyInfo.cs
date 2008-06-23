@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("WeSay.PlatformSpecific")]
+[assembly: AssemblyTitle("CommonTools.Tests")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("PlatformSpecific")]
-[assembly: AssemblyCopyright("")]
+[assembly: AssemblyProduct("CommonTools.Tests")]
+[assembly: AssemblyCopyright("Copyright ©  2008")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("3de83a12-1b93-4266-8f94-111d93b9971e")]
+[assembly: Guid("cf3aa3c1-a45e-48f2-bece-572cd994ce41")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -33,6 +33,3 @@ using System.Runtime.InteropServices;
 // by using the '*' as shown below:
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
-
-[assembly: System.CLSCompliant(true)]
-[assembly: System.Security.Permissions.SecurityPermission(System.Security.Permissions.SecurityAction.RequestMinimum, Execution = true)]

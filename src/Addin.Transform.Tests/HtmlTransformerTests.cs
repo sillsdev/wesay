@@ -3,7 +3,6 @@ using LiftIO.Validation;
 using NUnit.Framework;
 using WeSay.AddinLib;
 using WeSay.LexicalModel;
-using WeSay.LexicalModel.Db4o_Specific;
 using WeSay.Project;
 
 namespace Addin.Transform.Tests
@@ -60,7 +59,8 @@ namespace Addin.Transform.Tests
 				WeSayWordsProject.Project.ReleaseLockOnLift();
 			}
 			File.WriteAllText(_liftFilePath, contents);
-			_addin.Launch(null, WeSayWordsProject.Project.GetProjectInfoForAddin(_lexEntryRepository));
+			_addin.Launch(null,
+						  WeSayWordsProject.Project.GetProjectInfoForAddin(_lexEntryRepository));
 			Assert.IsTrue(File.Exists(_addin.PathToOutput));
 			string result = File.ReadAllText(_addin.PathToOutput);
 			Assert.Greater(result.Trim().Length, 0);

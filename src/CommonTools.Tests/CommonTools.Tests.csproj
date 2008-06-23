@@ -4,17 +4,17 @@
 	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
 	<ProductVersion>8.0.50727</ProductVersion>
 	<SchemaVersion>2.0</SchemaVersion>
-	<ProjectGuid>{C7C9A512-40CE-4D8C-A8DE-48F41572E007}</ProjectGuid>
+	<ProjectGuid>{7A931E9F-DE70-4E5A-93F9-241DA03E9D67}</ProjectGuid>
 	<OutputType>Library</OutputType>
 	<AppDesignerFolder>Properties</AppDesignerFolder>
-	<RootNamespace>WeSay.MonoSpecific</RootNamespace>
-	<AssemblyName>MonoSpecific</AssemblyName>
+	<RootNamespace>CommonTools.Tests</RootNamespace>
+	<AssemblyName>CommonTools.Tests</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
 	<DebugSymbols>true</DebugSymbols>
 	<DebugType>full</DebugType>
 	<Optimize>false</Optimize>
-	<OutputPath>..\..\output\Debug\</OutputPath>
+	<OutputPath>bin\Debug\</OutputPath>
 	<DefineConstants>DEBUG;TRACE</DefineConstants>
 	<ErrorReport>prompt</ErrorReport>
 	<WarningLevel>4</WarningLevel>
@@ -22,35 +22,39 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
 	<DebugType>pdbonly</DebugType>
 	<Optimize>true</Optimize>
-	<OutputPath>..\..\output\Release\</OutputPath>
+	<OutputPath>bin\Release\</OutputPath>
 	<DefineConstants>TRACE</DefineConstants>
 	<ErrorReport>prompt</ErrorReport>
 	<WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Mono Debug|AnyCPU' ">
-	<DebugSymbols>true</DebugSymbols>
-	<OutputPath>..\..\output\Mono Debug\</OutputPath>
-	<DefineConstants>TRACE;DEBUG;MONO</DefineConstants>
-	<DebugType>full</DebugType>
-	<PlatformTarget>AnyCPU</PlatformTarget>
-	<ErrorReport>prompt</ErrorReport>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Mono Release|AnyCPU' ">
-	<OutputPath>..\..\output\Mono Release\</OutputPath>
-	<DefineConstants>TRACE;MONO</DefineConstants>
-	<Optimize>true</Optimize>
-	<DebugType>pdbonly</DebugType>
-	<PlatformTarget>AnyCPU</PlatformTarget>
-	<ErrorReport>prompt</ErrorReport>
-  </PropertyGroup>
   <ItemGroup>
+	<Reference Include="nunit.framework, Version=2.2.8.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\nunit.framework.dll</HintPath>
+	</Reference>
 	<Reference Include="System" />
 	<Reference Include="System.Data" />
+	<Reference Include="System.Drawing" />
+	<Reference Include="System.Windows.Forms" />
 	<Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-	<Compile Include="ComponentModelStuff.cs" />
+	<Compile Include="DashTests.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+	<ProjectReference Include="..\CommonTools\CommonTools.csproj">
+	  <Project>{64726381-FEA8-47D5-A884-18AED42E93B6}</Project>
+	  <Name>CommonTools</Name>
+	</ProjectReference>
+	<ProjectReference Include="..\WeSay.Foundation\WeSay.Foundation.csproj">
+	  <Project>{F12EB680-0990-4900-B77E-0FBF2E28A815}</Project>
+	  <Name>WeSay.Foundation</Name>
+	</ProjectReference>
+	<ProjectReference Include="..\WeSay.Project\WeSay.Project.csproj">
+	  <Project>{5CFD0BB3-5B2A-4911-B220-9C2286151BF0}</Project>
+	  <Name>WeSay.Project</Name>
+	</ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

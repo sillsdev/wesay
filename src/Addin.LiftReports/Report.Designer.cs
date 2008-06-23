@@ -1,11 +1,11 @@
-namespace LiftReports
+namespace Addin.LiftReports
 {
 	partial class Report
 	{
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
-		private System.ComponentModel.IContainer components = null;
+		private readonly System.ComponentModel.IContainer components = null;
 
 		/// <summary>
 		/// Clean up any resources being used.
@@ -13,9 +13,9 @@ namespace LiftReports
 		/// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
 		protected override void Dispose(bool disposing)
 		{
-			if (disposing && (components != null))
+			if (disposing && (this.components != null))
 			{
-				components.Dispose();
+				this.components.Dispose();
 			}
 			base.Dispose(disposing);
 		}

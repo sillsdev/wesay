@@ -11,15 +11,15 @@ namespace WeSay.UI
 	/// </summary>
 	public class TextBinding
 	{
-		public event EventHandler<CurrentItemEventArgs> ChangeOfWhichItemIsInFocus = delegate
-																			 {
-																			 };
+		public event EventHandler<CurrentItemEventArgs> ChangeOfWhichItemIsInFocus = delegate { };
 		private readonly string _writingSystemId;
 		private INotifyPropertyChanged _dataTarget;
 		private WeSayTextBox _textBoxTarget;
 		private bool _inMidstOfChange;
 
-		public TextBinding(INotifyPropertyChanged dataTarget, string writingSystemId, WeSayTextBox widgetTarget)
+		public TextBinding(INotifyPropertyChanged dataTarget,
+						   string writingSystemId,
+						   WeSayTextBox widgetTarget)
 		{
 			Debug.Assert(dataTarget != null);
 			_dataTarget = dataTarget;
@@ -32,23 +32,23 @@ namespace WeSay.UI
 			_textBoxTarget.Enter += OnTextBoxEntered;
 		}
 
-		void _textBoxTarget_Disposed(object sender, EventArgs e)
+		private void _textBoxTarget_Disposed(object sender, EventArgs e)
 		{
 			TearDown();
 		}
 
-		void _textBoxTarget_HandleDestroyed(object sender, EventArgs e)
+		private void _textBoxTarget_HandleDestroyed(object sender, EventArgs e)
 		{
 			TearDown();
 		}
 
-		void OnTextBoxEntered(object sender, EventArgs e)
+		private void OnTextBoxEntered(object sender, EventArgs e)
 		{
-			ChangeOfWhichItemIsInFocus(sender, new CurrentItemEventArgs(DataTarget, _writingSystemId));
+			ChangeOfWhichItemIsInFocus(sender,
+									   new CurrentItemEventArgs(DataTarget, _writingSystemId));
 		}
 
-
-		void OnTextBoxChanged(object sender, EventArgs e)
+		private void OnTextBoxChanged(object sender, EventArgs e)
 		{
 			SetTargetValue(_textBoxTarget.Text);
 		}
@@ -83,9 +83,11 @@ namespace WeSay.UI
 			// be: the teardown happens as a result of code which is also listening to the notifypropertychanged event
 			// but which happens before this. Even though the event handler has been removed, it will
 			// still fire this event.
-			if (_dataTarget == null || _inMidstOfChange ||
-				e.PropertyName != _writingSystemId) //FIX THIS
+			if (_dataTarget == null || _inMidstOfChange || e.PropertyName != _writingSystemId)
+					//FIX THIS
+			{
 				return;
+			}
 
 			try
 			{
@@ -103,7 +105,9 @@ namespace WeSay.UI
 			Debug.Assert(_dataTarget != null, "Perhaps the binding was already torn down?");
 			MultiText text = _dataTarget as MultiText;
 			if (text == null)
+			{
 				throw new ArgumentException("Binding can't handle that type of target.");
+			}
 			return text[_writingSystemId];
 		}
 
@@ -111,7 +115,9 @@ namespace WeSay.UI
 		{
 			Debug.Assert(_dataTarget != null, "Perhaps the binding was already torn down?");
 			if (_inMidstOfChange)
+			{
 				return;
+			}
 
 			try
 			{
@@ -119,18 +125,19 @@ namespace WeSay.UI
 
 				if (_dataTarget is MultiText)
 				{
-					MultiText text = (MultiText)_dataTarget;
+					MultiText text = (MultiText) _dataTarget;
 					text[_writingSystemId] = s;
 				}
-				//else if (_dataTarget as IBindingList != null)
-				//{
-				//    IBindingList list = _dataTarget as IBindingList;
-				//    //in addition to add a menu item, this will fire events on the object that owns the list
-				//    list.AddNew();
-				//}
+						//else if (_dataTarget as IBindingList != null)
+						//{
+						//    IBindingList list = _dataTarget as IBindingList;
+						//    //in addition to add a menu item, this will fire events on the object that owns the list
+						//    list.AddNew();
+						//}
 				else
+				{
 					throw new ArgumentException("Binding doesn't understand that type of target.");
-
+				}
 			}
 			finally
 			{
@@ -140,22 +147,19 @@ namespace WeSay.UI
 
 		public INotifyPropertyChanged DataTarget
 		{
-			get
-			{
-				return _dataTarget;
-			}
+			get { return _dataTarget; }
 		}
 
 		//protected string WritingSystemId
 		//{
 		//    get { return _writingSystemId; }
 		//}
-//        public WeSayTextBox TextBoxTarget
-//        {
-//            get
-//            {
-//                return _textBoxTarget;
-//            }
-//        }
+		//        public WeSayTextBox TextBoxTarget
+		//        {
+		//            get
+		//            {
+		//                return _textBoxTarget;
+		//            }
+		//        }
 	}
 }

@@ -1,5 +1,4 @@
-﻿using System;
-namespace WeSay.Project
+﻿namespace WeSay.Project
 {
 	public interface IProject
 	{

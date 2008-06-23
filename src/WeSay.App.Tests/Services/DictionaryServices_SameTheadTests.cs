@@ -3,9 +3,9 @@ using NUnit.Framework;
 using Palaso.Services.Dictionary;
 using WeSay.App.Services;
 using WeSay.LexicalModel;
-using WeSay.Project.Tests;
+using WeSay.LexicalModel.Tests.Db4oSpecific;
 
-namespace WeSay.App.Tests
+namespace WeSay.App.Tests.Services
 {
 	/// <summary>
 	/// These tests just test the details of some calls; the tests in

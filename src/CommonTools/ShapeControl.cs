@@ -404,7 +404,7 @@ namespace WeSay.CommonTools
 			//Rendering with Gradient
 			if (_usegradient)
 			{
-				using(PathGradientBrush br = new PathGradientBrush(_outline))
+				using (PathGradientBrush br = new PathGradientBrush(_outline))
 				{
 					br.CenterColor = _centercolor;
 					br.SurroundColors = new Color[] {_surroundcolor};
@@ -422,7 +422,7 @@ namespace WeSay.CommonTools
 			//Rendering with Border
 			if (_borderwidth > 0)
 			{
-				using(Pen p = new Pen(_bordercolor, _borderwidth * 2))
+				using (Pen p = new Pen(_bordercolor, _borderwidth * 2))
 				{
 					p.DashStyle = _borderstyle;
 					pe.Graphics.SmoothingMode = SmoothingMode.HighQuality;

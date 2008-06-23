@@ -2,10 +2,10 @@ using System;
 
 namespace WeSay.Data.Tests
 {
-	public class SimpleIntFilter : IFilter<SimpleIntTestClass>
+	public class SimpleIntFilter: IFilter<SimpleIntTestClass>
 	{
-		int _lowerBound;
-		int _upperBound;
+		private readonly int _lowerBound;
+		private readonly int _upperBound;
 		private bool _useInverseFilter;
 
 		public SimpleIntFilter(int lowerBound, int upperBound)
@@ -13,13 +13,14 @@ namespace WeSay.Data.Tests
 			_lowerBound = lowerBound;
 			_upperBound = upperBound;
 		}
+
 		#region IFilter<SimpleIntTestClass> Members
 
 		public Predicate<SimpleIntTestClass> FilteringPredicate
 		{
 			get
 			{
-				if(!UseInverseFilter)
+				if (!UseInverseFilter)
 				{
 					return filter1;
 				}
@@ -29,16 +30,13 @@ namespace WeSay.Data.Tests
 
 		public string Key
 		{
-			get
-			{
-				return ToString() + _lowerBound + "-" + _upperBound;
-			}
+			get { return ToString() + _lowerBound + "-" + _upperBound; }
 		}
 
 		public bool UseInverseFilter
 		{
-			get { return this._useInverseFilter; }
-			set { this._useInverseFilter = value; }
+			get { return _useInverseFilter; }
+			set { _useInverseFilter = value; }
 		}
 
 		private bool filter1(SimpleIntTestClass simpleIntTest)

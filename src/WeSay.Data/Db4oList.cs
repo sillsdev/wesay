@@ -1,6 +1,6 @@
 using System;
-using System.Collections.Generic;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using Db4objects.Db4o;
 using Db4objects.Db4o.Ext;
@@ -46,9 +46,7 @@ namespace WeSay.Data
 	/// </remarks>
 	/// <typeparam name="T">List item type.</typeparam>
 	[TypeConverter(typeof (ExpandableObjectConverter))]
-	internal class Db4oList<T>
-			: IList<T>, IDisposable
-			where T : class
+	internal class Db4oList<T>: IList<T>, IDisposable where T : class
 	{
 		#region Constructors
 
@@ -77,9 +75,10 @@ namespace WeSay.Data
 		/// <param name="filter">Initial <see cref="Filter"/>.</param>
 		/// <param name="sorter">Initial <see cref="Sorter"/>.</param>
 		/// <exception cref="ArgumentNullException"><paramref name="database"/> is null.</exception>
-		public Db4oList(IObjectContainer database, IEnumerable items,
-						Predicate<T> filter, Comparison<T> sorter)
-				: this(database)
+		public Db4oList(IObjectContainer database,
+						IEnumerable items,
+						Predicate<T> filter,
+						Comparison<T> sorter): this(database)
 		{
 			InitItems(items, filter, sorter, false);
 		}
@@ -93,9 +92,10 @@ namespace WeSay.Data
 		/// <param name="filter">Initial <see cref="Filter"/>.</param>
 		/// <param name="sorter">Initial <see cref="Sorter"/>.</param>
 		/// <exception cref="ArgumentNullException"><paramref name="database"/> is null.</exception>
-		public Db4oList(IObjectContainer database, IList<long> itemIds,
-						Predicate<T> filter, Comparison<T> sorter)
-				: this(database)
+		public Db4oList(IObjectContainer database,
+						IList<long> itemIds,
+						Predicate<T> filter,
+						Comparison<T> sorter): this(database)
 		{
 			if (itemIds == null)
 			{
@@ -123,25 +123,25 @@ namespace WeSay.Data
 		/// Fired when activating of <see cref="Db4oListEventArgs<T>.Item"/> by db4o is needed.
 		/// If item was activated during the event, <see cref="Db4oListEventArgs<T>.Cancel"/> must be set to true.
 		/// </summary>
-		public event EventHandler<Db4oListEventArgs<T>> Activating = delegate {};
+		public event EventHandler<Db4oListEventArgs<T>> Activating = delegate { };
 
 		/// <summary>
 		/// Fired when deactivating of <see cref="Db4oListEventArgs<T>.Item"/> by db4o is needed.
 		/// If item was deactivated during the event, <see cref="Db4oListEventArgs<T>.Cancel"/> must be set to true.
 		/// </summary>
-		public event EventHandler<Db4oListEventArgs<T>> Deactivating = delegate {};
+		public event EventHandler<Db4oListEventArgs<T>> Deactivating = delegate { };
 
 		/// <summary>
 		/// Fired when storing (adding or updating) of <see cref="Db4oListEventArgs<T>.Item"/> by db4o is needed.
 		/// If item was stored during the event, <see cref="Db4oListEventArgs<T>.Cancel"/> must be set to true.
 		/// </summary>
-		public event EventHandler<Db4oListEventArgs<T>> Storing = delegate {};
+		public event EventHandler<Db4oListEventArgs<T>> Storing = delegate { };
 
 		/// <summary>
 		/// Fired when deleting of <see cref="Db4oListEventArgs<T>.Item"/> (which is not activated) by db4o is needed.
 		/// If item was deleted during the event, <see cref="Db4oListEventArgs<T>.Cancel"/> must be set to true.
 		/// </summary>
-		public event EventHandler<Db4oListEventArgs<T>> Deleting = delegate {};
+		public event EventHandler<Db4oListEventArgs<T>> Deleting = delegate { };
 
 		/// <summary>
 		/// Fires <see cref="Activating"/> event.
@@ -215,7 +215,7 @@ namespace WeSay.Data
 				VerifyNotDisposed();
 				return _itemIds;
 			}
-						set
+			set
 			{
 				VerifyNotDisposed();
 				if (value == null)
@@ -224,7 +224,6 @@ namespace WeSay.Data
 				}
 				_itemIds = value;
 			}
-
 		}
 
 		/// <summary>
@@ -341,7 +340,9 @@ namespace WeSay.Data
 			{
 				if (value < 0)
 				{
-					throw new ArgumentOutOfRangeException("SetActivationDepth", value, "Must be >= 0.");
+					throw new ArgumentOutOfRangeException("SetActivationDepth",
+														  value,
+														  "Must be >= 0.");
 				}
 				_setActivationDepth = value;
 			}
@@ -368,7 +369,9 @@ namespace WeSay.Data
 				VerifyNotDisposed();
 				if (value <= 0)
 				{
-					throw new ArgumentOutOfRangeException("PeekPersistedActivationDepth", value, "Must be > 0.");
+					throw new ArgumentOutOfRangeException("PeekPersistedActivationDepth",
+														  value,
+														  "Must be > 0.");
 				}
 				_peekPersistedActivationDepth = value;
 			}
@@ -391,7 +394,9 @@ namespace WeSay.Data
 				VerifyNotDisposed();
 				if (value <= 0)
 				{
-					throw new ArgumentOutOfRangeException("PeekPersistedActivationDepth", value, "Must be > 0.");
+					throw new ArgumentOutOfRangeException("PeekPersistedActivationDepth",
+														  value,
+														  "Must be > 0.");
 				}
 				_peekPersistedActivationDepth = value;
 			}
@@ -460,7 +465,9 @@ namespace WeSay.Data
 		/// <param name="commit">Whether to call <see cref="Commit"/>.</param>
 		/// <exception cref="ArgumentNullException"><paramref name="items"/> is null.</exception>
 		public void InitItems(IEnumerable items,
-									  Predicate<T> filter, Comparison<T> sorter, bool commit)
+							  Predicate<T> filter,
+							  Comparison<T> sorter,
+							  bool commit)
 		{
 			VerifyNotDisposed();
 
@@ -579,7 +586,9 @@ namespace WeSay.Data
 		/// <param name="filter">Query filtering predicate (like <see cref="Filter"/>).</param>
 		/// <param name="sorter">Query sorting (like <see cref="Sorter"/>).</param>
 		/// <returns>List.</returns>
-		public static Db4oList<T> Query(IObjectContainer database, Predicate<T> filter, Comparison<T> sorter)
+		public static Db4oList<T> Query(IObjectContainer database,
+										Predicate<T> filter,
+										Comparison<T> sorter)
 		{
 			Db4oList<T> list = new Db4oList<T>(database);
 			list.Query(filter, sorter, false);
@@ -602,7 +611,7 @@ namespace WeSay.Data
 		public void Refresh()
 		{
 			VerifyNotDisposed();
-			for (int i = Count - 1; i >= 0; i--)
+			for (int i = Count - 1;i >= 0;i--)
 			{
 				RefreshAt(i);
 			}
@@ -673,7 +682,7 @@ namespace WeSay.Data
 			IList<DatabaseModified> modifiedList = Database.Query<DatabaseModified>();
 			DatabaseModified databaseModified;
 			int count = modifiedList.Count;
-			while(count > 1)
+			while (count > 1)
 			{
 				DatabaseModified modified = modifiedList[1];
 				Database.Delete(modified);
@@ -706,11 +715,11 @@ namespace WeSay.Data
 				_writeCacheCurrentSize = 0;
 				object item;
 				int count = _deleteCache.Count;
-				for (int i = 0; i < count; i++)
+				for (int i = 0;i < count;i++)
 				{
 					ItemIds.Add(_deleteCache.Dequeue());
 				}
-				for (int i = Count - 1; i >= 0; i--)
+				for (int i = Count - 1;i >= 0;i--)
 				{
 					item = GetItem(ItemIds[i], false);
 					if (item == null)
@@ -785,7 +794,9 @@ namespace WeSay.Data
 			}
 			if (count > Count - index)
 			{
-				throw new ArgumentOutOfRangeException("count", count, "So many items are not available.");
+				throw new ArgumentOutOfRangeException("count",
+													  count,
+													  "So many items are not available.");
 			}
 			if (array == null)
 			{
@@ -803,7 +814,7 @@ namespace WeSay.Data
 			{
 				throw new ArgumentException("Does not have enough space.", "array");
 			}
-			for (int i = 0; i < count; i++)
+			for (int i = 0;i < count;i++)
 			{
 				array[arrayIndex + i] = this[index + i];
 			}
@@ -820,9 +831,7 @@ namespace WeSay.Data
 			bool ret = false;
 			if (IsChange(change, Db4oListChanges.Filter) && IsChange(change, Db4oListChanges.Sort))
 			{
-				if (
-						_filterCalled && _initFilter != Filter ||
-						_sortCalled && _initSorter != Sorter)
+				if (_filterCalled && _initFilter != Filter || _sortCalled && _initSorter != Sorter)
 				{
 					Query(_initFilter, _initSorter, false);
 					ret = true;
@@ -1233,12 +1242,12 @@ namespace WeSay.Data
 			int index = -1;
 			//try
 			//{
-				//ValidateItem(item);
-				long id = GetItemId(item);
-				if (id > 0)
-				{
-					index = ItemIds.IndexOf(id);
-				}
+			//ValidateItem(item);
+			long id = GetItemId(item);
+			if (id > 0)
+			{
+				index = ItemIds.IndexOf(id);
+			}
 			//}
 			//catch (ArgumentException) {}
 			return index;
@@ -1315,7 +1324,9 @@ namespace WeSay.Data
 					bool storeAgain = Equaler == null;
 					if (!storeAgain)
 					{
-						T oldValue = (T) Database.PeekPersisted(value, PeekPersistedActivationDepth, false);
+						T oldValue =
+								(T)
+								Database.PeekPersisted(value, PeekPersistedActivationDepth, false);
 						storeAgain = !Equaler(oldValue, value);
 					}
 					if (storeAgain)
@@ -1352,7 +1363,7 @@ namespace WeSay.Data
 		public void Clear()
 		{
 			VerifyNotDisposed();
-			for (int i = 0; i < ItemIds.Count; i++)
+			for (int i = 0;i < ItemIds.Count;i++)
 			{
 				DeleteItem(ItemIds[i], false);
 			}
@@ -1433,7 +1444,7 @@ namespace WeSay.Data
 		IEnumerator<T> IEnumerable<T>.GetEnumerator()
 		{
 			int count = ItemIds.Count;
-			for (int i = 0; i < count; i++)
+			for (int i = 0;i < count;i++)
 			{
 				yield return this[i];
 			}
@@ -1445,11 +1456,11 @@ namespace WeSay.Data
 
 		#region Enumerator
 
-		public struct Enumerator : IEnumerator<T>
+		public struct Enumerator: IEnumerator<T>
 		{
-			Db4oList<T> _collection;
-			int _index;
-			bool _isDisposed;
+			private Db4oList<T> _collection;
+			private int _index;
+			private bool _isDisposed;
 
 			public Enumerator(Db4oList<T> collection)
 			{
@@ -1512,7 +1523,7 @@ namespace WeSay.Data
 
 			#region IEnumerator Members
 
-			object System.Collections.IEnumerator.Current
+			object IEnumerator.Current
 			{
 				get
 				{
@@ -1554,7 +1565,7 @@ namespace WeSay.Data
 		/// Enumerator.
 		/// See <see cref="IEnumerable"/>.
 		/// </summary>
-		IEnumerator System.Collections.IEnumerable.GetEnumerator()
+		IEnumerator IEnumerable.GetEnumerator()
 		{
 			return GetEnumerator();
 		}
@@ -1580,7 +1591,8 @@ namespace WeSay.Data
 					// results from db4o native query
 			else if (items is GenericObjectSetFacade<T>)
 			{
-				GenericObjectSetFacade<T> genericObjectSetFacade = items as GenericObjectSetFacade<T>;
+				GenericObjectSetFacade<T> genericObjectSetFacade =
+						items as GenericObjectSetFacade<T>;
 				ids = genericObjectSetFacade._delegate.GetIDs();
 			}
 			return ids;
@@ -1614,8 +1626,9 @@ namespace WeSay.Data
 				item = ActivateItem(id);
 				if (item == null)
 				{
-					throw new InvalidOperationException("Object with Id = " + id + " does not exists in database " +
-														Database + ".");
+					throw new InvalidOperationException("Object with Id = " + id +
+														" does not exists in database " + Database +
+														".");
 				}
 			}
 			else
@@ -1640,7 +1653,9 @@ namespace WeSay.Data
 			}
 			if (!Filter(item))
 			{
-				throw new ArgumentOutOfRangeException("item", item, "Does not satisfy Filter condition.");
+				throw new ArgumentOutOfRangeException("item",
+													  item,
+													  "Does not satisfy Filter condition.");
 			}
 		}
 
@@ -1705,7 +1720,7 @@ namespace WeSay.Data
 									Math.Min(ReadCacheSize, extraFreeSize);
 			long id;
 			T item;
-			for (int i = 0; i < deactivationCount; i++)
+			for (int i = 0;i < deactivationCount;i++)
 			{
 				id = _readCache.Dequeue();
 				item = GetItem(id, false);
@@ -1997,7 +2012,7 @@ namespace WeSay.Data
 					int count = _readCache.Count;
 					long id;
 					T item;
-					for (int i = 0; i < count; ++i)
+					for (int i = 0;i < count;++i)
 					{
 						id = _readCache.Dequeue();
 						item = GetItem(id, false);
@@ -2008,7 +2023,6 @@ namespace WeSay.Data
 								RegisterItemPropertyChangedHandler(item, false);
 							}
 						}
-
 					}
 				}
 				_disposed = true;
@@ -2040,7 +2054,7 @@ namespace WeSay.Data
 	/// <see cref="Db4oList`1"/> event arguments.
 	/// </summary>
 	/// <typeparam name="T">List item type.</typeparam>
-	public class Db4oListEventArgs<T> : CancelEventArgs
+	public class Db4oListEventArgs<T>: CancelEventArgs
 	{
 		/// <summary>
 		/// Constructor with <see cref="CancelEventArgs.Cancel"/> false and <see cref="Item"/> null.
@@ -2056,7 +2070,7 @@ namespace WeSay.Data
 			_item = item;
 		}
 
-		public Db4oListEventArgs(T item, string propertyName) : this(item)
+		public Db4oListEventArgs(T item, string propertyName): this(item)
 		{
 			_propertyName = propertyName;
 		}

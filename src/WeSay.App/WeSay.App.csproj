@@ -101,7 +101,7 @@
 	</Compile>
 	<Compile Include="registrySettingsProvider.cs" />
 	<Compile Include="Services\HtmlArticleMaker.cs" />
-	<Compile Include="Settings.cs" />
+	<Compile Include="Properties\Settings.cs" />
 	<Compile Include="TabbedForm.cs">
 	  <SubType>Form</SubType>
 	</Compile>

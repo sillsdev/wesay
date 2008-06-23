@@ -1,27 +1,25 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Text;
 using System.Windows.Forms;
 using Enchant;
-using WeSay.Language;
+using WeSay.Foundation;
 using WeSay.Project;
 
 namespace WeSay.ConfigTool
 {
-	public partial class WritingSystemForFieldControl : UserControl
+	public partial class WritingSystemForFieldControl: UserControl
 	{
 		private Field _field;
+
 		private class WritingSystemListBoxAdaptor
 		{
 			private readonly WritingSystem _ws;
 			private readonly bool _hasSpellCheckerInstalled;
+
 			public WritingSystemListBoxAdaptor(WritingSystem ws, bool hasSpellCheckerInstalled)
 			{
-				this._ws = ws;
-				this._hasSpellCheckerInstalled = hasSpellCheckerInstalled;
+				_ws = ws;
+				_hasSpellCheckerInstalled = hasSpellCheckerInstalled;
 			}
 
 			public WritingSystem WritingSystem
@@ -37,13 +35,14 @@ namespace WeSay.ConfigTool
 			public override string ToString()
 			{
 				string displayString = WritingSystem.ToString();
-				if(HasSpellCheckerInstalled)
+				if (HasSpellCheckerInstalled)
 				{
 					displayString += " (Has spell checker)";
 				}
 				return displayString;
 			}
 		}
+
 		public WritingSystemForFieldControl()
 		{
 			InitializeComponent();
@@ -79,19 +78,20 @@ namespace WeSay.ConfigTool
 				_field = value;
 				if (Visible)
 				{
-					LoadWritingSystemBox(); // refresh these since they might have changed on another tab
+					LoadWritingSystemBox();
+					// refresh these since they might have changed on another tab
 				}
 			}
 			get { return _field; }
 		}
 
-
-
 		private void _writingSystemListBox_ItemCheck(object sender, ItemCheckEventArgs e)
 		{
 			//happens when we are setting initial checkbox states from code
 			if (_writingSystemListBox.SelectedItem == null)
+			{
 				return;
+			}
 
 			if (e.NewValue == CheckState.Checked)
 			{
@@ -109,16 +109,16 @@ namespace WeSay.ConfigTool
 			SaveWritingSystemIdsForField(-1);
 		}
 
-
 		private void SaveWritingSystemIdsForField(int aboutToBeCheckedItemIndex)
 		{
 			CurrentField.WritingSystemIds.Clear();
-			for (int i = 0; i < this._writingSystemListBox.Items.Count; i++)
+			for (int i = 0;i < _writingSystemListBox.Items.Count;i++)
 			{
-				if (this._writingSystemListBox.GetItemChecked(i) ||
-						i == aboutToBeCheckedItemIndex)
+				if (_writingSystemListBox.GetItemChecked(i) || i == aboutToBeCheckedItemIndex)
 				{
-					WritingSystem ws = ((WritingSystemListBoxAdaptor)this._writingSystemListBox.Items[i]).WritingSystem;
+					WritingSystem ws =
+							((WritingSystemListBoxAdaptor) _writingSystemListBox.Items[i]).
+									WritingSystem;
 					CurrentField.WritingSystemIds.Add(ws.Id);
 				}
 			}
@@ -128,16 +128,18 @@ namespace WeSay.ConfigTool
 		{
 			get
 			{
-				return ((WritingSystemListBoxAdaptor)_writingSystemListBox.SelectedItem).WritingSystem.ToString();
+				return
+						((WritingSystemListBoxAdaptor) _writingSystemListBox.SelectedItem).
+								WritingSystem.ToString();
 			}
 		}
 
-		void _writingSystemListBox_SelectedIndexChanged(object sender, EventArgs e)
+		private void _writingSystemListBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			RefreshMoveButtons();
 		}
 
-		void OnBtnMoveUpClick(object sender, EventArgs e)
+		private void OnBtnMoveUpClick(object sender, EventArgs e)
 		{
 			object item = _writingSystemListBox.SelectedItem;
 			int index = _writingSystemListBox.SelectedIndex;
@@ -159,7 +161,7 @@ namespace WeSay.ConfigTool
 			RefreshMoveButtons();
 		}
 
-		void OnBtnMoveDownClick(object sender, EventArgs e)
+		private void OnBtnMoveDownClick(object sender, EventArgs e)
 		{
 			object item = _writingSystemListBox.SelectedItem;
 			int index = _writingSystemListBox.SelectedIndex;
@@ -183,14 +185,14 @@ namespace WeSay.ConfigTool
 
 		private void RefreshMoveButtons()
 		{
-			this.btnMoveUp.Enabled = this._writingSystemListBox.SelectedIndex > 0;
-			this.btnMoveDown.Enabled = this._writingSystemListBox.SelectedIndex < this._writingSystemListBox.Items.Count - 1;
+			btnMoveUp.Enabled = _writingSystemListBox.SelectedIndex > 0;
+			btnMoveDown.Enabled = _writingSystemListBox.SelectedIndex <
+								  _writingSystemListBox.Items.Count - 1;
 		}
 
 		private void WritingSystemForFieldControl_Load(object sender, EventArgs e)
 		{
 			RefreshMoveButtons();
-
 		}
 
 		private void LoadWritingSystemBox()
@@ -199,30 +201,36 @@ namespace WeSay.ConfigTool
 			{
 				return;
 			}
-			List<string> writingSystemIdsWithSpellCheckingInstalled = GetWritingSystemIdsWithSpellCheckingInstalled();
+			List<string> writingSystemIdsWithSpellCheckingInstalled =
+					GetWritingSystemIdsWithSpellCheckingInstalled();
 
 			_writingSystemListBox.Items.Clear();
 			foreach (WritingSystem ws in CurrentField.WritingSystems)
 			{
-				bool hasSpellCheckerInstalled = writingSystemIdsWithSpellCheckingInstalled.Contains(ws.Id);
-				int i = _writingSystemListBox.Items.Add(new WritingSystemListBoxAdaptor(ws, hasSpellCheckerInstalled));
+				bool hasSpellCheckerInstalled =
+						writingSystemIdsWithSpellCheckingInstalled.Contains(ws.Id);
+				int i =
+						_writingSystemListBox.Items.Add(
+								new WritingSystemListBoxAdaptor(ws, hasSpellCheckerInstalled));
 				_writingSystemListBox.SetItemChecked(i, true);
 			}
 			foreach (WritingSystem ws in BasilProject.Project.WritingSystems.Values)
 			{
 				if (!CurrentField.WritingSystemIds.Contains(ws.Id))
 				{
-					bool hasSpellCheckerInstalled = writingSystemIdsWithSpellCheckingInstalled.Contains(ws.Id);
-					int i = _writingSystemListBox.Items.Add(new WritingSystemListBoxAdaptor(ws, hasSpellCheckerInstalled));
+					bool hasSpellCheckerInstalled =
+							writingSystemIdsWithSpellCheckingInstalled.Contains(ws.Id);
+					int i =
+							_writingSystemListBox.Items.Add(
+									new WritingSystemListBoxAdaptor(ws, hasSpellCheckerInstalled));
 					_writingSystemListBox.SetItemChecked(i, false);
 				}
 			}
-
 		}
 
 		private void WritingSystemForFieldControl_VisibleChanged(object sender, EventArgs e)
 		{
-			LoadWritingSystemBox();// choices might have changed
+			LoadWritingSystemBox(); // choices might have changed
 		}
 	}
 }

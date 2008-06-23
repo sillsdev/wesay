@@ -3,7 +3,7 @@ using System.IO;
 using NUnit.Framework;
 using Palaso.Reporting;
 using WeSay.Foundation.Options;
-using WeSay.Project;
+using WeSay.LexicalModel;
 
 namespace WeSay.Project.Tests
 {
@@ -15,19 +15,21 @@ namespace WeSay.Project.Tests
 		[SetUp]
 		public void Setup()
 		{
-			Palaso.Reporting.ErrorReport.IsOkToInteractWithUser = false;
-			DirectoryInfo dirProject = Directory.CreateDirectory(Path.Combine(Path.GetTempPath(), Path.GetRandomFileName()));
-			this._projectDirectory = dirProject.FullName;
+			ErrorReport.IsOkToInteractWithUser = false;
+			DirectoryInfo dirProject =
+					Directory.CreateDirectory(
+							Path.Combine(Path.GetTempPath(), Path.GetRandomFileName()));
+			_projectDirectory = dirProject.FullName;
 		}
 
 		[TearDown]
 		public void TearDown()
 		{
-			Directory.Delete(this._projectDirectory, true);
+			Directory.Delete(_projectDirectory, true);
 		}
 
-
-		[Test, Ignore()]
+		[Test]
+		[Ignore]
 		public void MakeProjectFiles()
 		{
 			string path = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
@@ -45,7 +47,8 @@ namespace WeSay.Project.Tests
 			}
 		}
 
-		[Test, ExpectedException(typeof(ErrorReport.NonFatalMessageSentToUserException))]
+		[Test]
+		[ExpectedException(typeof (ErrorReport.NonFatalMessageSentToUserException))]
 		public void WeSayDirNotInValidBasilDir()
 		{
 			string experimentDir = MakeDir(Path.GetTempPath(), Path.GetRandomFileName());
@@ -58,26 +61,25 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void LoadPartsOfSpeechList()
 		{
-			WeSayWordsProject p = CreateAndLoad(false);
+			WeSayWordsProject p = CreateAndLoad();
 			Field f = new Field();
 			f.OptionsListFile = "PartsOfSpeech.xml";
 			OptionsList list = p.GetOptionsList(f, false);
-			Assert.IsTrue(list.Options.Count>2);
+			Assert.IsTrue(list.Options.Count > 2);
 		}
 
 		[Test]
 		public void CorrectFieldToOptionListNameDictionary()
 		{
-			WeSayWordsProject p = CreateAndLoad(false);
+			WeSayWordsProject p = CreateAndLoad();
 			Field f = new Field();
 			f.OptionsListFile = "PartsOfSpeech.xml";
 			OptionsList list = p.GetOptionsList(f, false);
 			Dictionary<string, string> dict = p.GetFieldToOptionListNameDictionary();
-			Assert.AreEqual("PartsOfSpeech", dict[LexicalModel.LexSense.WellKnownProperties.PartOfSpeech]);
+			Assert.AreEqual("PartsOfSpeech", dict[LexSense.WellKnownProperties.PartOfSpeech]);
 		}
 
-
-		private static WeSayWordsProject CreateAndLoad(bool doMakeFileMatchingProjectName)
+		private static WeSayWordsProject CreateAndLoad()
 		{
 			string experimentDir = MakeDir(Path.GetTempPath(), Path.GetRandomFileName());
 			string projectDir = MakeDir(experimentDir, "TestProj");
@@ -86,35 +88,21 @@ namespace WeSay.Project.Tests
 			return p;
 		}
 
-
-//        [Test]
-//        public void LoadFromOldStructure(bool doMakeFileMatchingProjectName)
-//        {
-//            string experimentDir = MakeDir(Path.GetTempPath(), Path.GetRandomFileName());
-//            string projectDir = MakeDir(experimentDir, "TestProj");
-//        }
-
-
-		//private static void MakeDummyWordsFile(string fileName, string weSayDir)
-		//{
-		//    File.Create(Path.Combine(weSayDir, fileName)).Close();
-		//}
-
 		private static string MakeDir(string existingParent, string newChild)
 		{
-			string dir = Path.Combine(existingParent,newChild);
+			string dir = Path.Combine(existingParent, newChild);
 			Directory.CreateDirectory(dir);
 			return dir;
 		}
 
-		private static bool TryLoading(string lexiconPath, string experimentDir)
+		private static void TryLoading(string lexiconPath, string experimentDir)
 		{
 			try
 			{
 				WeSayWordsProject p = new WeSayWordsProject();
 				lexiconPath = p.UpdateFileStructure(lexiconPath);
 
-				return p.LoadFromLiftLexiconPath(lexiconPath);
+				p.LoadFromLiftLexiconPath(lexiconPath);
 			}
 			finally
 			{
@@ -146,27 +134,11 @@ namespace WeSay.Project.Tests
 			TryFieldNameChangeAfterMakingSafe("?color{", "color");
 		}
 
-//        [Test]
-//        public void MakeFieldNameChange_FromNameWithParens_MakesChange()
-//        {
-//            TryFieldNameChangeAfterMakingSafe("color(", "color");
-//        }
-//
-//        [Test]
-//        public void MakeFieldNameChange_FromNameWithSlash_MakesChange()
-//        {
-//            TryFieldNameChangeAfterMakingSafe("color\\", "color");
-//        }
-//
-//        [Test]
-//        public void MakeFieldNameChange_ToNameWithSlash_MakesChange()
-//        {
-//            TryFieldNameChangeAfterMakingSafe("color", "color\\");
-//        }
-
-		private void TryFieldNameChangeAfterMakingSafe(string oldName, string newName)
+		private static void TryFieldNameChangeAfterMakingSafe(string oldName, string newName)
 		{
-			using (ProjectDirectorySetupForTesting dir = new ProjectDirectorySetupForTesting(string.Empty))
+			using (
+					ProjectDirectorySetupForTesting dir =
+							new ProjectDirectorySetupForTesting(string.Empty))
 			{
 				WeSayWordsProject p = dir.CreateLoadedProject();
 				p.ViewTemplates.Add(new ViewTemplate());

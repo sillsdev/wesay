@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using System.Xml;
 using System.Xml.XPath;
 using Mono.Addins;
+using Palaso.Reporting;
 using WeSay.Foundation;
 
 namespace WeSay.AddinLib
@@ -12,40 +13,34 @@ namespace WeSay.AddinLib
 	public class AddinSet
 	{
 		private static AddinSet _singleton;
-		private FileLocater _locateFile;
+		private readonly FileLocater _locateFile;
 		private Dictionary<string, string> _addinSettings = null;
-		private List<string> _addinsToShowInWeSay = new List<string>();
+		private readonly List<string> _addinsToShowInWeSay = new List<string>();
 
 		public delegate XPathNodeIterator AddinSettingsGetter();
 
-		private AddinSettingsGetter _getSettingsNodesFromConfiguration;
+		private readonly AddinSettingsGetter _getSettingsNodesFromConfiguration;
 
-		public static AddinSet Create(AddinSettingsGetter getSettingsNodesFromConfiguration, FileLocater locateFile)
+		public static AddinSet Create(AddinSettingsGetter getSettingsNodesFromConfiguration,
+									  FileLocater locateFile)
 		{
-		   _singleton = new AddinSet(getSettingsNodesFromConfiguration,locateFile);
+			_singleton = new AddinSet(getSettingsNodesFromConfiguration, locateFile);
 
-		   return _singleton;
+			return _singleton;
 		}
 
-
-		public  static AddinSet Singleton
+		public static AddinSet Singleton
 		{
-			get
-			{
-				return _singleton;
-			}
+			get { return _singleton; }
 		}
 
 		public FileLocater LocateFile
 		{
-			get
-			{
-				return _locateFile;
-			}
+			get { return _locateFile; }
 		}
 
 		private AddinSet(AddinSettingsGetter getSettingsNodesFromConfiguration,
-			FileLocater locateFile)
+						 FileLocater locateFile)
 		{
 			_locateFile = locateFile;
 			_getSettingsNodesFromConfiguration = getSettingsNodesFromConfiguration;
@@ -95,7 +90,6 @@ namespace WeSay.AddinLib
 			}
 		}
 
-
 		public void Load(XPathNodeIterator addinNodes)
 		{
 			_addinSettings = new Dictionary<string, string>();
@@ -103,7 +97,6 @@ namespace WeSay.AddinLib
 			{
 				foreach (XPathNavigator node in addinNodes)
 				{
-
 					string sid = XmlUtils.GetManditoryAttributeValue(node, "id");
 					// Guid id = new Guid(sid);
 					SetDoShowInWeSay(sid, XmlUtils.GetBooleanAttributeValue(node, "showInWeSay"));
@@ -124,7 +117,6 @@ namespace WeSay.AddinLib
 
 			List<string> leftToOutput = new List<string>(_addinsToShowInWeSay);
 
-
 			foreach (KeyValuePair<string, string> pair in _addinSettings)
 			{
 				WriteAddinNode(pair.Key, pair.Value, writer);
@@ -141,8 +133,8 @@ namespace WeSay.AddinLib
 		private void WriteAddinNode(string id, string settingsXml, XmlWriter writer)
 		{
 			writer.WriteStartElement("addin");
-			writer.WriteAttributeString("id", id.ToString());
-		   // writer.WriteAttributeString("name", name);
+			writer.WriteAttributeString("id", id);
+			// writer.WriteAttributeString("name", name);
 			writer.WriteAttributeString("showInWeSay", DoShowInWeSay(id).ToString());
 
 			if (settingsXml != null)
@@ -152,13 +144,13 @@ namespace WeSay.AddinLib
 			writer.WriteEndElement();
 		}
 
-		static public List<IWeSayAddin> GetAddinsForUser()
+		public static List<IWeSayAddin> GetAddinsForUser()
 		{
 			List<IWeSayAddin> addins = new List<IWeSayAddin>();
 			try
 			{
 				List<string> alreadyFound = new List<string>();
-				Palaso.Reporting.Logger.WriteMinorEvent("Loading Addins");
+				Logger.WriteMinorEvent("Loading Addins");
 				if (!AddinManager.IsInitialized)
 				{
 					//                AddinManager.Initialize(Application.UserAppDataPath);
@@ -175,9 +167,10 @@ namespace WeSay.AddinLib
 					AddinManager.Initialize(Application.UserAppDataPath);
 				}
 
-				foreach (IWeSayAddin addin in AddinManager.GetExtensionObjects(typeof(IWeSayAddin)))
+				foreach (IWeSayAddin addin in AddinManager.GetExtensionObjects(typeof (IWeSayAddin))
+						)
 				{
-					if (AddinSet.Singleton.DoShowInWeSay(addin.ID))
+					if (Singleton.DoShowInWeSay(addin.ID))
 					{
 						//this alreadyFound business is a hack to prevent duplication in some
 						// situation I haven't tracked down yet.
@@ -191,9 +184,9 @@ namespace WeSay.AddinLib
 			}
 			catch (Exception error)
 			{
-				Palaso.Reporting.ErrorReport.ReportNonFatalMessage(
-					"WeSay encountered an error while looking for Addins (e.g., Actions).  The error was: {0}",
-					error.Message);
+				ErrorReport.ReportNonFatalMessage(
+						"WeSay encountered an error while looking for Addins (e.g., Actions).  The error was: {0}",
+						error.Message);
 			}
 			return addins;
 		}

@@ -1,9 +1,7 @@
-using System;
-using System.Drawing;
 using System.Collections;
-using System.Windows.Forms;
+using System.Drawing;
 
-namespace GraphComponents
+namespace Addin.LiftReports.GraphComponents
 {
 	/// <summary>
 	/// This class represents a channel (the word 'Channel' is normally used while
@@ -14,30 +12,37 @@ namespace GraphComponents
 	public class Channel
 	{
 		#region variables
+
 		/// <summary>
 		/// Minimum value to display on the Y axis
 		/// </summary>
 		private float minimumValue;
+
 		/// <summary>
 		/// Maximum value to display on the Y axis
 		/// </summary>
 		private float maximumValue = 100;
+
 		/// <summary>
 		/// Current y value of the channel
 		/// </summary>
 		private float currentValue;
+
 		/// <summary>
 		/// Name for the Y axis. Eg. Voltage, Current etc
 		/// </summary>
 		private string name;
+
 		/// <summary>
 		/// A flag indicating whether the channel is enabled or not
 		/// </summary>
 		private bool enabled;
+
 		/// <summary>
 		/// Color of the channel
 		/// </summary>
 		private Color channelColor = Color.Green;
+
 		/// <summary>
 		/// Offset of the cursor from the center line
 		/// </summary>
@@ -46,12 +51,12 @@ namespace GraphComponents
 		/// <summary>
 		/// Points stored as new values are updated to the plotter
 		/// </summary>
-		private Hashtable points = new Hashtable ();
+		private readonly Hashtable points = new Hashtable();
 
 		/// <summary>
 		/// the X axis cursor line associated with the channel
 		/// </summary>
-		private Cursor channelCursor;
+		private readonly Cursor channelCursor;
 
 		/// <summary>
 		/// Total time elapsed while plotting
@@ -63,15 +68,17 @@ namespace GraphComponents
 		/// ie. The X distance between 2 points
 		/// </summary>
 		private int plotRate;
+
 		#endregion variables
 
 		#region properties
+
 		/// <summary>
 		/// Minimum value to display on the Y axis
 		/// </summary>
 		public float MinimumValue
 		{
-			get { return minimumValue;  }
+			get { return minimumValue; }
 			set { minimumValue = value; }
 		}
 
@@ -80,7 +87,7 @@ namespace GraphComponents
 		/// </summary>
 		public float MaximumValue
 		{
-			get { return maximumValue;  }
+			get { return maximumValue; }
 			set { maximumValue = value; }
 		}
 
@@ -89,12 +96,12 @@ namespace GraphComponents
 		/// </summary>
 		public float CurrentValue
 		{
-			get { return currentValue;  }
+			get { return currentValue; }
 			set
 			{
 				currentValue = value;
-				PointF p = new PointF (totalTimeElapsed, currentValue);
-				points.Add (points.Count, p);
+				PointF p = new PointF(totalTimeElapsed, currentValue);
+				points.Add(points.Count, p);
 				totalTimeElapsed += PlotRate;
 			}
 		}
@@ -106,7 +113,7 @@ namespace GraphComponents
 		/// </summary>
 		public bool Enabled
 		{
-			get { return enabled;  }
+			get { return enabled; }
 			set { enabled = value; }
 		}
 
@@ -115,7 +122,7 @@ namespace GraphComponents
 		/// </summary>
 		public string YAxisName
 		{
-			get { return name;  }
+			get { return name; }
 			set { name = value; }
 		}
 
@@ -124,7 +131,7 @@ namespace GraphComponents
 		/// </summary>
 		public Color ChannelColor
 		{
-			get { return channelColor;  }
+			get { return channelColor; }
 			set { channelColor = value; }
 		}
 
@@ -133,7 +140,7 @@ namespace GraphComponents
 		/// </summary>
 		internal float CursorOffset
 		{
-			get { return cursorOffset;  }
+			get { return cursorOffset; }
 			set
 			{
 				cursorOffset = value;
@@ -158,7 +165,7 @@ namespace GraphComponents
 		/// </summary>
 		internal int PlotRate
 		{
-			get { return plotRate;  }
+			get { return plotRate; }
 			set { plotRate = value; }
 		}
 
@@ -177,43 +184,50 @@ namespace GraphComponents
 		{
 			get { return points; }
 		}
+
 		#endregion properties
 
 		#region methods
+
 		public Channel()
 		{
-			channelCursor = new Cursor (this);
+			channelCursor = new Cursor(this);
 		}
 
-		public Channel (float minValue, float maxValue, string yAxisName)
+		public Channel(float minValue, float maxValue, string yAxisName)
 		{
-			this.minimumValue = minValue;
-			this.maximumValue = maxValue;
-			this.YAxisName    = yAxisName;
+			minimumValue = minValue;
+			maximumValue = maxValue;
+			YAxisName = yAxisName;
 
-			channelCursor = new Cursor (this);
+			channelCursor = new Cursor(this);
 		}
 
-		public Channel (float minValue, float maxValue, string yAxisName, bool enabled)
+		public Channel(float minValue, float maxValue, string yAxisName, bool enabled)
 		{
-			this.minimumValue = minValue;
-			this.maximumValue = maxValue;
-			this.YAxisName    = yAxisName;
-			this.enabled      = enabled;
+			minimumValue = minValue;
+			maximumValue = maxValue;
+			YAxisName = yAxisName;
+			this.enabled = enabled;
 
-			channelCursor = new Cursor (this);
+			channelCursor = new Cursor(this);
 		}
 
-		public Channel (float minValue, float maxValue, string yAxisName, bool enabled, Color channelColor)
+		public Channel(float minValue,
+					   float maxValue,
+					   string yAxisName,
+					   bool enabled,
+					   Color channelColor)
 		{
-			this.minimumValue = minValue;
-			this.maximumValue = maxValue;
-			this.YAxisName    = yAxisName;
-			this.enabled      = enabled;
+			minimumValue = minValue;
+			maximumValue = maxValue;
+			YAxisName = yAxisName;
+			this.enabled = enabled;
 			this.channelColor = channelColor;
 
-			channelCursor = new Cursor (this);
+			channelCursor = new Cursor(this);
 		}
+
 		#endregion methods
 	}
 }

@@ -4,53 +4,55 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
+using Palaso.Text;
 using WeSay.Foundation;
-using WeSay.Language;
 
 namespace WeSay.UI
 {
-	public partial class MultiTextControl : TableLayoutPanel
+	public partial class MultiTextControl: TableLayoutPanel
 	{
 		private IList<WritingSystem> _writingSystemsForThisFIeld;
-		private List<WeSayTextBox> _textBoxes;
+		private readonly List<WeSayTextBox> _textBoxes;
 		private bool _showAnnotationWidget;
-		private CommonEnumerations.VisibilitySetting _visibility= CommonEnumerations.VisibilitySetting.Visible;
-		private static int _widthForWritingSystemLabels=-1;
+
+		private readonly CommonEnumerations.VisibilitySetting _visibility =
+				CommonEnumerations.VisibilitySetting.Visible;
+
+		private static int _widthForWritingSystemLabels = -1;
 		private static WritingSystemCollection _allWritingSystems;
 		private static Font _writingSystemLabelFont;
-		private bool _isSpellCheckingEnabled;
+		private readonly bool _isSpellCheckingEnabled;
 
-		public MultiTextControl() :this(null)
+		public MultiTextControl(): this(null)
 		{
 			//design mode only
 			InitializeComponent();
 			AutoSize = false;
-			Size = new Size(100,20);
+			Size = new Size(100, 20);
 		}
 
 		public MultiTextControl(WritingSystemCollection allWritingSystems)
 		{
 			SuspendLayout();
 			_allWritingSystems = allWritingSystems;
-			this.components = new Container();
+			components = new Container();
 			InitializeComponent();
 			_textBoxes = new List<WeSayTextBox>();
-		   //this.BackColor = System.Drawing.Color.Crimson;
+			//this.BackColor = System.Drawing.Color.Crimson;
 			_writingSystemLabelFont = new Font(FontFamily.GenericSansSerif, 9);
 
 			if (-1 == WidthForWritingSystemLabels)
 			{
 				//happens when this is from a hand-placed designer piece,
 				//in which case we don't really care about aligning anyhow
-				ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));//ws label
+				ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize)); //ws label
 			}
 			else
 			{
 				ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, WidthForWritingSystemLabels));
 			}
-			ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));//text
-			ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));//annotation widget
-
+			ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100)); //text
+			ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize)); //annotation widget
 
 			ResumeLayout(false);
 		}
@@ -59,7 +61,7 @@ namespace WeSay.UI
 		{
 			if (TextBoxes.Count > 0)
 			{
-				this.TextBoxes[0].Focus();
+				TextBoxes[0].Focus();
 			}
 		}
 
@@ -67,28 +69,26 @@ namespace WeSay.UI
 		///we actually have a parent to do this.</remarks>
 		private void OnParentChanged(object sender, EventArgs e)
 		{
-			if (this.Parent !=null && _visibility == CommonEnumerations.VisibilitySetting.ReadOnly)
+			if (Parent != null && _visibility == CommonEnumerations.VisibilitySetting.ReadOnly)
 			{
-				BackColor = this.Parent.BackColor;
+				BackColor = Parent.BackColor;
 				foreach (WeSayTextBox box in _textBoxes)
 				{
-					box.BackColor = this.Parent.BackColor;
+					box.BackColor = Parent.BackColor;
 					box.TabStop = false;
 				}
 			}
 		}
 
-
 		public MultiTextControl(IList<WritingSystem> writingSystems,
-			MultiText multiTextToCopyFormsFrom,
-			string nameForTesting,
-			bool showAnnotationWidget,
-			WritingSystemCollection allWritingSystems,
-			CommonEnumerations.VisibilitySetting visibility,
-			bool isSpellCheckingEnabled)
-			: this(allWritingSystems)
+								MultiText multiTextToCopyFormsFrom,
+								string nameForTesting,
+								bool showAnnotationWidget,
+								WritingSystemCollection allWritingSystems,
+								CommonEnumerations.VisibilitySetting visibility,
+								bool isSpellCheckingEnabled): this(allWritingSystems)
 		{
-			Name = nameForTesting+"-mtc";
+			Name = nameForTesting + "-mtc";
 			_writingSystemsForThisFIeld = writingSystems;
 			_showAnnotationWidget = showAnnotationWidget;
 			_visibility = visibility;
@@ -106,9 +106,11 @@ namespace WeSay.UI
 		{
 			int[] widths = GetColumnWidths();
 			if (widths == null || widths.Length < 2)
+			{
 				return;
+			}
 			int width = widths[1];
-			foreach (WeSayTextBox box in this._textBoxes)
+			foreach (WeSayTextBox box in _textBoxes)
 			{
 				box.Width = width;
 			}
@@ -117,10 +119,7 @@ namespace WeSay.UI
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
 		public List<WeSayTextBox> TextBoxes
 		{
-			get
-			{
-				return _textBoxes;
-			}
+			get { return _textBoxes; }
 		}
 
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
@@ -131,7 +130,7 @@ namespace WeSay.UI
 				//we don't have a binding that would keep an internal multitext up to date.
 				//This seems cleaner and sufficient, at the moment.
 				MultiText mt = new MultiText();
-				foreach (WeSayTextBox box in TextBoxes )
+				foreach (WeSayTextBox box in TextBoxes)
 				{
 					mt.SetAlternative(box.WritingSystem.Id, box.Text);
 				}
@@ -158,7 +157,7 @@ namespace WeSay.UI
 				WeSayTextBox box = AddTextBox(writingSystem, multiText);
 
 				Label label = AddWritingSystemLabel(box);
-				label.Click += new EventHandler(subControl_Click);
+				label.Click += subControl_Click;
 
 				Controls.Add(label, 0, RowCount);
 				Controls.Add(box, 1, RowCount);
@@ -167,9 +166,11 @@ namespace WeSay.UI
 				{
 					//TODO: THIS IS TRANSITIONAL CODE... AnnotationWidget should probably become a full control (or go away)
 					AnnotationWidget aw =
-						new AnnotationWidget(multiText, writingSystem.Id, box.Name + "-annotationWidget");
-					Control annotationControl = aw.MakeControl(new Size());//p.Size);
-					annotationControl.Click += new EventHandler(subControl_Click);
+							new AnnotationWidget(multiText,
+												 writingSystem.Id,
+												 box.Name + "-annotationWidget");
+					Control annotationControl = aw.MakeControl(new Size()); //p.Size);
+					annotationControl.Click += subControl_Click;
 					annotationControl.Anchor = AnchorStyles.Right | AnchorStyles.Top;
 					Controls.Add(annotationControl, 2, RowCount);
 				}
@@ -182,7 +183,6 @@ namespace WeSay.UI
 
 			ResumeLayout(false);
 		}
-
 
 		protected override void OnMouseClick(MouseEventArgs e)
 		{
@@ -197,22 +197,21 @@ namespace WeSay.UI
 			}
 		}
 
-		void subControl_Click(object sender, EventArgs e)
+		private void subControl_Click(object sender, EventArgs e)
 		{
-			Control c = GetControlFromPosition(1, GetRow((Control)sender));
+			Control c = GetControlFromPosition(1, GetRow((Control) sender));
 			FocusWithInsertionPointAtEnd(c);
 		}
 
-		private static void FocusWithInsertionPointAtEnd(Control c) {
+		private static void FocusWithInsertionPointAtEnd(Control c)
+		{
 			c.Focus();
 			TextBox tb = c as TextBox;
-			if(tb != null)
+			if (tb != null)
 			{
-				tb.Select(1000, 0);//go to end}
+				tb.Select(1000, 0); //go to end}
 			}
 		}
-
-
 
 		/// <summary>
 		/// We want all the texts to line up, so we have to take into account the maximum
@@ -230,7 +229,9 @@ namespace WeSay.UI
 					{
 						foreach (WritingSystem ws in _allWritingSystems.Values)
 						{
-							Size size = TextRenderer.MeasureText(ws.Abbreviation, _writingSystemLabelFont);
+							Size size =
+									TextRenderer.MeasureText(ws.Abbreviation,
+															 _writingSystemLabelFont);
 
 							if (size.Width > _widthForWritingSystemLabels)
 							{
@@ -242,7 +243,8 @@ namespace WeSay.UI
 				return _widthForWritingSystemLabels;
 			}
 		}
-		static private Label AddWritingSystemLabel(WeSayTextBox box)
+
+		private static Label AddWritingSystemLabel(WeSayTextBox box)
 		{
 			Label label = new Label();
 			label.Text = box.WritingSystem.Abbreviation;
@@ -252,24 +254,31 @@ namespace WeSay.UI
 
 			label.AutoSize = true;
 
-//            Graphics g = CreateGraphics();
-//            int descent = box.Font.FontFamily.GetCellDescent(box.Font.Style);
-//            int descentPixel = (int) (box.Font.Size * descent / box.Font.FontFamily.GetEmHeight(box.Font.Style));
-//
-//            //todo: this only takes into account the textbox descent, not the label's!
-//            label.Location = new Point(0, (int) (box.Bottom -
-//                                                 ( g.MeasureString(label.Text, label.Font).Height + descentPixel )) );
+			//            Graphics g = CreateGraphics();
+			//            int descent = box.Font.FontFamily.GetCellDescent(box.Font.Style);
+			//            int descentPixel = (int) (box.Font.Size * descent / box.Font.FontFamily.GetEmHeight(box.Font.Style));
+			//
+			//            //todo: this only takes into account the textbox descent, not the label's!
+			//            label.Location = new Point(0, (int) (box.Bottom -
+			//                                                 ( g.MeasureString(label.Text, label.Font).Height + descentPixel )) );
 
 			//todo: switch to TextRenderer.Measure
-			int labelAscentInPixels = (int)(label.Font.Size * label.Font.FontFamily.GetCellAscent(label.Font.Style) / label.Font.FontFamily.GetEmHeight(box.Font.Style));
-			int contentAscentInPixels = (int)(box.Font.Size * box.Font.FontFamily.GetCellAscent(box.Font.Style) / label.Font.FontFamily.GetEmHeight(box.Font.Style));
-			int howMuchFartherDownToPlaceLabelThanText = Math.Max(0, contentAscentInPixels - labelAscentInPixels);
+			int labelAscentInPixels =
+					(int)
+					(label.Font.Size * label.Font.FontFamily.GetCellAscent(label.Font.Style) /
+					 label.Font.FontFamily.GetEmHeight(box.Font.Style));
+			int contentAscentInPixels =
+					(int)
+					(box.Font.Size * box.Font.FontFamily.GetCellAscent(box.Font.Style) /
+					 label.Font.FontFamily.GetEmHeight(box.Font.Style));
+			int howMuchFartherDownToPlaceLabelThanText =
+					Math.Max(0, contentAscentInPixels - labelAscentInPixels);
 
-			label.Margin = new Padding(0, box.Top + howMuchFartherDownToPlaceLabelThanText,0,0);
+			label.Margin = new Padding(0, box.Top + howMuchFartherDownToPlaceLabelThanText, 0, 0);
 			return label;
 		}
 
-		private WeSayTextBox AddTextBox(WritingSystem writingSystem, MultiText multiText)
+		private WeSayTextBox AddTextBox(WritingSystem writingSystem, MultiTextBase multiText)
 		{
 			WeSayTextBox box = new WeSayTextBox(writingSystem, Name);
 			box.ReadOnly = (_visibility == CommonEnumerations.VisibilitySetting.ReadOnly);
@@ -279,21 +288,22 @@ namespace WeSay.UI
 			//box.Enabled = !box.ReadOnly;
 
 			_textBoxes.Add(box);
-			box.Name = Name.Replace("-mtc","") + "_" + writingSystem.Id; //for automated tests to find this particular guy
+			box.Name = Name.Replace("-mtc", "") + "_" + writingSystem.Id;
+			//for automated tests to find this particular guy
 			box.Text = multiText[writingSystem.Id];
 
-			box.TextChanged += new EventHandler(OnTextOfSomeBoxChanged);
-			box.KeyDown += new KeyEventHandler(OnKeyDownInSomeBox);
+			box.TextChanged += OnTextOfSomeBoxChanged;
+			box.KeyDown += OnKeyDownInSomeBox;
 
 			return box;
 		}
 
-		void OnKeyDownInSomeBox(object sender, KeyEventArgs e)
+		private void OnKeyDownInSomeBox(object sender, KeyEventArgs e)
 		{
-		  OnKeyDown(e);
+			OnKeyDown(e);
 		}
 
-		void OnTextOfSomeBoxChanged(object sender, EventArgs e)
+		private void OnTextOfSomeBoxChanged(object sender, EventArgs e)
 		{
 			OnTextChanged(e);
 		}
@@ -311,11 +321,12 @@ namespace WeSay.UI
 
 		public bool ShowAnnotationWidget
 		{
-			get { return this._showAnnotationWidget; }
-			set {
-				if (this._showAnnotationWidget != value)
+			get { return _showAnnotationWidget; }
+			set
+			{
+				if (_showAnnotationWidget != value)
 				{
-					this._showAnnotationWidget = value;
+					_showAnnotationWidget = value;
 					BuildBoxes(MultiText);
 				}
 			}

@@ -1,12 +1,12 @@
-using System;
 using System.Collections.Generic;
 
 namespace WeSay.Data
 {
 	//todo eventually should be internal
-	public class Db4oRepositoryId : RepositoryId
+	public sealed class Db4oRepositoryId: RepositoryId
 	{
 		private readonly long _id;
+
 		public Db4oRepositoryId(long id)
 		{
 			_id = id;
@@ -14,15 +14,12 @@ namespace WeSay.Data
 
 		public long Db4oId
 		{
-			get
-			{
-				return this._id;
-			}
+			get { return _id; }
 		}
 
 		public int CompareTo(Db4oRepositoryId other)
 		{
-			if(other == null)
+			if (other == null)
 			{
 				return -1;
 			}
@@ -39,12 +36,14 @@ namespace WeSay.Data
 			return Equals(other as Db4oRepositoryId);
 		}
 
-		public static bool operator !=(Db4oRepositoryId db4oRepositoryId1, Db4oRepositoryId db4oRepositoryId2)
+		public static bool operator !=(
+				Db4oRepositoryId db4oRepositoryId1, Db4oRepositoryId db4oRepositoryId2)
 		{
 			return !Equals(db4oRepositoryId1, db4oRepositoryId2);
 		}
 
-		public static bool operator ==(Db4oRepositoryId db4oRepositoryId1, Db4oRepositoryId db4oRepositoryId2)
+		public static bool operator ==(
+				Db4oRepositoryId db4oRepositoryId1, Db4oRepositoryId db4oRepositoryId2)
 		{
 			return Equals(db4oRepositoryId1, db4oRepositoryId2);
 		}
@@ -69,7 +68,7 @@ namespace WeSay.Data
 
 		public override int GetHashCode()
 		{
-			return (int)_id;
+			return (int) _id;
 		}
 	}
 }

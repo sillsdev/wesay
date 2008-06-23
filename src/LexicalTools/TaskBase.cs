@@ -1,10 +1,10 @@
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using Palaso.UI.WindowsForms.i8n;
-using WeSay.Foundation.Dashboard;
+using WeSay.Foundation;
 using WeSay.LexicalModel;
 using WeSay.Project;
 
@@ -230,6 +230,11 @@ namespace WeSay.LexicalTools
 		/// An integer indicating how much work there is total
 		/// </returns>
 		protected abstract int ComputeReferenceCount();
+
+		public bool AreCountsRelevant()
+		{
+			return GetReferenceCount() != CountNotRelevant && GetRemainingCount() != CountNotRelevant;
+		}
 
 		protected LexEntryRepository LexEntryRepository
 		{
