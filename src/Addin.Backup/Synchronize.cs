@@ -39,7 +39,7 @@ namespace Addin.Backup
 			}
 		}
 
-		public string ShortDescription
+		public string Description
 		{
 			get
 			{

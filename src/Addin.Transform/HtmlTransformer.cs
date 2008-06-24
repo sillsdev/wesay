@@ -19,7 +19,7 @@ namespace Addin.Transform
 			get { return StringCatalog.Get("~Export to HTML"); }
 		}
 
-		public override string ShortDescription
+		public override  string Description
 		{
 			get
 			{

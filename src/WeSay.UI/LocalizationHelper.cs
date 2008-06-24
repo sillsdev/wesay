@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.Design;
+using System.Diagnostics;
+using System.Drawing;
 using System.Windows.Forms;
 using Palaso.UI.WindowsForms.i8n;
 using WeSay.UI.Buttons;
@@ -12,7 +15,9 @@ namespace WeSay.UI
 	[ProvideProperty("ParentFo", typeof (Form))]
 	public partial class LocalizationHelper: Component, ISupportInitialize, IExtenderProvider
 	{
+		private Dictionary<Control, TextFontPair> _originalControlProperties = new Dictionary<Control, TextFontPair>();
 		private bool _alreadyChanging;
+		private bool _wiredToParent;
 		private Control _parent;
 
 		public LocalizationHelper()
@@ -33,7 +38,22 @@ namespace WeSay.UI
 		public Control Parent
 		{
 			get { return _parent; }
-			set { _parent = value; }
+			set
+			{
+				if (_parent == value)
+				{
+					return;
+				}
+				if (_wiredToParent && _parent != null)
+				{
+					UnwireFromChildren(_parent);
+				}
+				_parent = value;
+				if (_wiredToParent && _parent != null)
+				{
+					WireToChildren(_parent);
+				}
+			}
 		}
 
 		private void OnFontChanged(object sender, EventArgs e)
@@ -44,6 +64,7 @@ namespace WeSay.UI
 			}
 			Control control = (Control) sender;
 			_alreadyChanging = true;
+			_originalControlProperties[control].Font = control.Font;
 			if (!(control is RegionButton))
 					//making a big font on these things that don't have text was causing them to grow
 			{
@@ -67,6 +88,7 @@ namespace WeSay.UI
 			}
 
 			_alreadyChanging = true;
+			_originalControlProperties[control].Text = control.Text;
 			if (!String.IsNullOrEmpty(control.Text))
 					//don't try to translation, for example, buttons with no label
 			{
@@ -75,10 +97,86 @@ namespace WeSay.UI
 			_alreadyChanging = false;
 		}
 
-		void OnControlAdded(object sender, ControlEventArgs e)
+		private void OnControlAdded(object sender, ControlEventArgs e)
 		{
-			WireToConrol(e.Control);
+			WireToControl(e.Control);
 			WireToChildren(e.Control);
+		}
+
+		private void OnControlRemoved(object sender, ControlEventArgs e)
+		{
+			UnwireFromControl(e.Control);
+			UnwireFromChildren(e.Control);
+		}
+
+		private void OnControlDisposed(object sender, EventArgs e)
+		{
+			Control control = (Control) sender;
+			if (control != Parent)
+			{
+				UnwireFromControl(control);
+			}
+			UnwireFromChildren(control);
+		}
+
+		private void WireToChildren(Control control)
+		{
+			Debug.Assert(control != null);
+			//Debug.WriteLine("Wiring to children of " + control.Name);
+			control.ControlAdded += OnControlAdded;
+			control.ControlRemoved += OnControlRemoved;
+			control.Disposed += OnControlDisposed;
+			foreach (Control child in control.Controls)
+			{
+				WireToControl(child);
+				WireToChildren(child);
+			}
+		}
+
+		private void WireToControl(Control control)
+		{
+			Debug.Assert(control != null);
+			if (IsAllowedControl(control))
+			{
+				// Debug.WriteLine("Wiring to " + control.Name);
+				control.TextChanged += OnTextChanged;
+				control.FontChanged += OnFontChanged;
+				_originalControlProperties.Add(control, new TextFontPair(control.Text, control.Font));
+				OnTextChanged(control, null);
+				OnFontChanged(control, null);
+			}
+		}
+
+		private void UnwireFromChildren(Control control)
+		{
+			Debug.Assert(control != null);
+			control.ControlAdded -= OnControlAdded;
+			control.ControlRemoved -= OnControlRemoved;
+			control.Disposed -= OnControlDisposed;
+			//Debug.WriteLine("Unwiring from children of " + control.Name);
+			foreach (Control child in control.Controls)
+			{
+				UnwireFromControl(child);
+				UnwireFromChildren(child);
+			}
+		}
+
+		private void UnwireFromControl(Control control)
+		{
+			Debug.Assert(control != null);
+			if (IsAllowedControl(control))
+			{
+				control.TextChanged -= OnTextChanged;
+				control.FontChanged -= OnFontChanged;
+				control.Text = _originalControlProperties[control].Text;
+				control.Font = _originalControlProperties[control].Font;
+				_originalControlProperties.Remove(control);
+			}
+		}
+
+		private static bool IsAllowedControl(Control control)
+		{
+			return control is Label || control is IButtonControl || control is TabControl;
 		}
 
 		#region ISupportInitialize Members
@@ -87,7 +185,9 @@ namespace WeSay.UI
 		///Signals the object that initialization is starting.
 		///</summary>
 		///
-		public void BeginInit() {}
+		public void BeginInit()
+		{
+		}
 
 		///<summary>
 		///Signals the object that initialization is complete.
@@ -95,30 +195,10 @@ namespace WeSay.UI
 		///
 		public void EndInit()
 		{
-			WireToChildren(Parent);
-		}
-
-		private void WireToChildren(Control control)
-		{
-			control.ControlAdded += new ControlEventHandler(OnControlAdded);
-			//Debug.WriteLine("Wiring to children of " + control.Name);
-			foreach (Control child in control.Controls)
+			if (!_wiredToParent && Parent != null)
 			{
-				WireToConrol(child);
-				WireToChildren(child);
-			}
-		}
-
-		private void WireToConrol(Control control)
-		{
-			if (control is Label || control is IButtonControl)
-			{
-				// Debug.WriteLine("Wiring to " + control.Name);
-				control.TextChanged += OnTextChanged;
-				control.FontChanged += OnFontChanged;
-
-				OnTextChanged(control, null);
-				OnFontChanged(control, null);
+				_wiredToParent = true;
+				WireToChildren(Parent);
 			}
 		}
 
@@ -141,6 +221,30 @@ namespace WeSay.UI
 		}
 
 		#endregion
+
+		private class TextFontPair
+		{
+			private string _text;
+			private Font _font;
+
+			public TextFontPair(string text, Font font)
+			{
+				_text = text;
+				_font = font;
+			}
+
+			public string Text
+			{
+				get { return _text; }
+				set { _text = value; }
+			}
+
+			public Font Font
+			{
+				get { return _font; }
+				set { _font = value; }
+			}
+		}
 	}
 
 	/// <summary>

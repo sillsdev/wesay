@@ -96,7 +96,8 @@ namespace WeSay.UI
 					}
 				}
 				return null;
-			} //set
+			}
+			//set
 			//{
 			//    //Keep track of the active control ourselves by storing it in a private member, note that
 			//    //that we only allow the active control to be set if it is actually a child of ours.
@@ -160,7 +161,7 @@ namespace WeSay.UI
 			{
 				label.Font = new Font(StringCatalog.LabelFont /* label.Font*/, FontStyle.Bold);
 			}
-			label.Font = StringCatalog.ModifyFontForLocalization(label.Font);
+			//label.Font =StringCatalog.ModifyFontForLocalization(label.Font);
 			label.Text = fieldLabel;
 			label.AutoSize = true;
 

@@ -28,7 +28,7 @@ namespace Addin.Transform
 			get { return StringCatalog.Get("~Export To SFM"); }
 		}
 
-		public override string ShortDescription
+		public override  string Description
 		{
 			get { return StringCatalog.Get("~Saves the lexicon in a form of standard format."); }
 		}

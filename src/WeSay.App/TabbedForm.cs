@@ -25,7 +25,6 @@ namespace WeSay.App
 			InitializeComponent();
 			tabControl1.TabPages.Clear();
 			tabControl1.Selected += OnTabSelected;
-			tabControl1.Font = StringCatalog.ModifyFontForLocalization(tabControl1.Font);
 
 			synchronizationContext = WindowsFormsSynchronizationContext.Current;
 			Debug.Assert(synchronizationContext != null);

@@ -31,7 +31,7 @@ namespace Addin.LiftReports
 			get { return StringCatalog.Get("~View Report"); }
 		}
 
-		public string ShortDescription
+		public string Description
 		{
 			get { return StringCatalog.Get("~Shows some information about the lexicon."); }
 		}

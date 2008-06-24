@@ -32,12 +32,11 @@ namespace WeSay.LexicalTools
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this.components = new System.ComponentModel.Container();
 			System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("stuff");
 			System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("blah");
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GatherWordListControl));
 			this._instructionLabel = new System.Windows.Forms.Label();
-			this._listViewOfWordsMatchingCurrentItem = new WeSayListBox();
+			this._listViewOfWordsMatchingCurrentItem = new WeSay.UI.WeSayListBox();
 			this.label3 = new System.Windows.Forms.Label();
 			this._boxForeignWord = new System.Windows.Forms.TextBox();
 			this.panel1 = new System.Windows.Forms.Panel();
@@ -49,36 +48,36 @@ namespace WeSay.LexicalTools
 			this._btnNextWord = new WeSay.UI.Buttons.NextButton();
 			this._btnAddWord = new WeSay.UI.Buttons.AddButton();
 			this._congratulationsControl = new WeSay.LexicalTools.CongratulationsControl();
-			this.localizationHelper1 = new WeSay.UI.LocalizationHelper(this.components);
-			((System.ComponentModel.ISupportInitialize)(this.localizationHelper1)).BeginInit();
 			this.SuspendLayout();
 			//
 			// _instructionLabel
 			//
 			this._instructionLabel.AutoSize = true;
-			this._instructionLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this._instructionLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.75F);
 			this._instructionLabel.ForeColor = System.Drawing.Color.DarkGray;
 			this._instructionLabel.Location = new System.Drawing.Point(8, 8);
 			this._instructionLabel.Name = "_instructionLabel";
-			this._instructionLabel.Size = new System.Drawing.Size(415, 20);
+			this._instructionLabel.Size = new System.Drawing.Size(424, 20);
 			this._instructionLabel.TabIndex = 2;
-			this._instructionLabel.Text = "~Try thinking of ways to say these words in your language.";
+			this._instructionLabel.Text = "Try thinking of ways to say these words in your language.";
 			//
 			// _listViewOfWordsMatchingCurrentItem
 			//
 			this._listViewOfWordsMatchingCurrentItem.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
 						| System.Windows.Forms.AnchorStyles.Left)
 						| System.Windows.Forms.AnchorStyles.Right)));
+			this._listViewOfWordsMatchingCurrentItem.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
 			this._listViewOfWordsMatchingCurrentItem.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this._listViewOfWordsMatchingCurrentItem.ItemHeight = 20;
-			this._listViewOfWordsMatchingCurrentItem.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
+			this._listViewOfWordsMatchingCurrentItem.Items.AddRange(new object[] {
 			listViewItem1,
 			listViewItem2});
+			this._listViewOfWordsMatchingCurrentItem.ItemToNotDrawYet = null;
 			this._listViewOfWordsMatchingCurrentItem.Location = new System.Drawing.Point(11, 169);
 			this._listViewOfWordsMatchingCurrentItem.MinimumSize = new System.Drawing.Size(315, 84);
 			this._listViewOfWordsMatchingCurrentItem.MultiColumn = true;
 			this._listViewOfWordsMatchingCurrentItem.Name = "_listViewOfWordsMatchingCurrentItem";
-			this._listViewOfWordsMatchingCurrentItem.Size = new System.Drawing.Size(315, 126);
+			this._listViewOfWordsMatchingCurrentItem.Size = new System.Drawing.Size(315, 124);
 			this._listViewOfWordsMatchingCurrentItem.TabIndex = 4;
 			this._listViewOfWordsMatchingCurrentItem.TabStop = false;
 			this._listViewOfWordsMatchingCurrentItem.Click += new System.EventHandler(this.OnListViewOfWordsMatchingCurrentItem_Click);
@@ -86,12 +85,12 @@ namespace WeSay.LexicalTools
 			// label3
 			//
 			this.label3.AutoSize = true;
-			this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.75F);
 			this.label3.Location = new System.Drawing.Point(8, 120);
 			this.label3.Name = "label3";
-			this.label3.Size = new System.Drawing.Size(60, 20);
+			this.label3.Size = new System.Drawing.Size(54, 20);
 			this.label3.TabIndex = 6;
-			this.label3.Text = "~Word:";
+			this.label3.Text = "Word:";
 			//
 			// _boxForeignWord
 			//
@@ -122,25 +121,35 @@ namespace WeSay.LexicalTools
 			//
 			this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.label4.AutoSize = true;
-			this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F);
 			this.label4.ForeColor = System.Drawing.Color.DarkGray;
 			this.label4.Location = new System.Drawing.Point(405, 125);
 			this.label4.Name = "label4";
-			this.label4.Size = new System.Drawing.Size(74, 15);
+			this.label4.Size = new System.Drawing.Size(73, 16);
 			this.label4.TabIndex = 2;
-			this.label4.Text = "~(Enter Key)";
+			this.label4.Text = "(Enter Key)";
 			//
 			// label5
 			//
 			this.label5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.label5.AutoSize = true;
-			this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F);
 			this.label5.ForeColor = System.Drawing.Color.DarkGray;
 			this.label5.Location = new System.Drawing.Point(410, 72);
 			this.label5.Name = "label5";
-			this.label5.Size = new System.Drawing.Size(109, 15);
+			this.label5.Size = new System.Drawing.Size(112, 16);
 			this.label5.TabIndex = 2;
-			this.label5.Text = "~(Page Down Key)";
+			this.label5.Text = "(Page Down Key)";
+			//
+			// _movingLabel
+			//
+			this._movingLabel.BackColor = System.Drawing.Color.Transparent;
+			this._movingLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
+			this._movingLabel.Location = new System.Drawing.Point(0, 0);
+			this._movingLabel.Name = "_movingLabel";
+			this._movingLabel.Size = new System.Drawing.Size(100, 23);
+			this._movingLabel.TabIndex = 10;
+			this._movingLabel.Visible = false;
 			//
 			// _vernacularBox
 			//
@@ -150,6 +159,9 @@ namespace WeSay.LexicalTools
 			this._vernacularBox.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
 			this._vernacularBox.BackColor = System.Drawing.Color.White;
 			this._vernacularBox.ColumnCount = 3;
+			this._vernacularBox.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this._vernacularBox.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this._vernacularBox.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
 			this._vernacularBox.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
 			this._vernacularBox.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
 			this._vernacularBox.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
@@ -215,10 +227,6 @@ namespace WeSay.LexicalTools
 			this._congratulationsControl.Size = new System.Drawing.Size(507, 370);
 			this._congratulationsControl.TabIndex = 9;
 			//
-			// localizationHelper1
-			//
-			this.localizationHelper1.Parent = this;
-			//
 			// GatherWordListControl
 			//
 			this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -241,7 +249,6 @@ namespace WeSay.LexicalTools
 			this.Size = new System.Drawing.Size(511, 429);
 			this.Load += new System.EventHandler(this.GatherWordListControl_Load);
 			this.BackColorChanged += new System.EventHandler(this.GatherWordListControl_BackColorChanged);
-			((System.ComponentModel.ISupportInitialize)(this.localizationHelper1)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -261,7 +268,6 @@ namespace WeSay.LexicalTools
 		private System.Windows.Forms.Label label5;
 		private MultiTextControl _vernacularBox;
 		private CongratulationsControl _congratulationsControl;
-		private LocalizationHelper localizationHelper1;
 		private WeSay.UI.MovingLabel _movingLabel;
 
 

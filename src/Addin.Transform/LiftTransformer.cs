@@ -34,6 +34,7 @@ namespace Addin.Transform
 		public abstract string LocalizedName { get; }
 
 		public abstract string ShortDescription { get; }
+		public abstract string Description
 
 		#region IWeSayAddin Members
 

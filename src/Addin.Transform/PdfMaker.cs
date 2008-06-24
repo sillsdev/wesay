@@ -23,7 +23,7 @@ namespace Addin.Transform
 			get { return "PdfMaker"; }
 		}
 
-		public override string ShortDescription
+		public override string Description
 		{
 			get { return "EXPERIMENTAL: " + "Create a publication and open it in a PDF reader."; }
 		}

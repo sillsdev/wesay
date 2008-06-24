@@ -17,8 +17,6 @@ namespace WeSay.AddinLib
 
 		string LocalizedName { get; }
 
-		string ShortDescription { get; }
-
 		String ID { get; }
 
 		void Launch(Form parentForm, ProjectInfo projectInfo);

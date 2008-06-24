@@ -62,12 +62,10 @@ namespace WeSay.LexicalTools
 			this.panelDetail = new System.Windows.Forms.Panel();
 			this._entryViewControl = new WeSay.LexicalTools.EntryViewControl();
 			this._splitter = new WeSay.UI.CollapsibleSplitter();
-			this.localizationHelper1 = new WeSay.UI.LocalizationHelper(this.components);
 			this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
 			this.panelWordList.SuspendLayout();
 			this.panelTools.SuspendLayout();
 			this.panelDetail.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.localizationHelper1)).BeginInit();
 			this.SuspendLayout();
 			//
 			// panelWordList
@@ -90,6 +88,7 @@ namespace WeSay.LexicalTools
 			this._btnFind.FlatAppearance.BorderSize = 0;
 			this._btnFind.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Orange;
 			this._btnFind.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+			this._btnFind.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
 			this._btnFind.Location = new System.Drawing.Point(105, 3);
 			this._btnFind.Name = "_btnFind";
 			this._btnFind.Size = new System.Drawing.Size(20, 20);
@@ -126,6 +125,7 @@ namespace WeSay.LexicalTools
 			this._writingSystemChooser.FlatAppearance.BorderSize = 0;
 			this._writingSystemChooser.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Orange;
 			this._writingSystemChooser.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+			this._writingSystemChooser.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
 			this._writingSystemChooser.Location = new System.Drawing.Point(124, 3);
 			this._writingSystemChooser.Name = "_writingSystemChooser";
 			this._writingSystemChooser.Size = new System.Drawing.Size(15, 19);
@@ -136,6 +136,7 @@ namespace WeSay.LexicalTools
 			// _findWritingSystemId
 			//
 			this._findWritingSystemId.BackColor = System.Drawing.Color.White;
+			this._findWritingSystemId.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
 			this._findWritingSystemId.ForeColor = System.Drawing.Color.LightGray;
 			this._findWritingSystemId.Location = new System.Drawing.Point(4, 3);
 			this._findWritingSystemId.Name = "_findWritingSystemId";
@@ -174,13 +175,14 @@ namespace WeSay.LexicalTools
 			this._showAllFieldsToggleButton.FlatAppearance.BorderSize = 0;
 			this._showAllFieldsToggleButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Orange;
 			this._showAllFieldsToggleButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+			this._showAllFieldsToggleButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
 			this._showAllFieldsToggleButton.ImageAlign = System.Drawing.ContentAlignment.BottomLeft;
-			this._showAllFieldsToggleButton.Location = new System.Drawing.Point(363, 2);
+			this._showAllFieldsToggleButton.Location = new System.Drawing.Point(363, 1);
 			this._showAllFieldsToggleButton.Margin = new System.Windows.Forms.Padding(0);
 			this._showAllFieldsToggleButton.Name = "_showAllFieldsToggleButton";
-			this._showAllFieldsToggleButton.Size = new System.Drawing.Size(120, 24);
+			this._showAllFieldsToggleButton.Size = new System.Drawing.Size(120, 25);
 			this._showAllFieldsToggleButton.TabIndex = 2;
-			this._showAllFieldsToggleButton.Text = "~&Show All Fields";
+			this._showAllFieldsToggleButton.Text = "&Show All Fields";
 			this._showAllFieldsToggleButton.TextAlign = System.Drawing.ContentAlignment.BottomRight;
 			this._showAllFieldsToggleButton.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
 			this._showAllFieldsToggleButton.Click += new System.EventHandler(this.OnShowAllFields_Click);
@@ -192,13 +194,14 @@ namespace WeSay.LexicalTools
 			this._btnDeleteWord.FlatAppearance.BorderSize = 0;
 			this._btnDeleteWord.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Orange;
 			this._btnDeleteWord.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+			this._btnDeleteWord.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
 			this._btnDeleteWord.ImageAlign = System.Drawing.ContentAlignment.BottomLeft;
-			this._btnDeleteWord.Location = new System.Drawing.Point(148, 2);
+			this._btnDeleteWord.Location = new System.Drawing.Point(148, 1);
 			this._btnDeleteWord.Margin = new System.Windows.Forms.Padding(0);
 			this._btnDeleteWord.Name = "_btnDeleteWord";
-			this._btnDeleteWord.Size = new System.Drawing.Size(138, 24);
+			this._btnDeleteWord.Size = new System.Drawing.Size(138, 25);
 			this._btnDeleteWord.TabIndex = 1;
-			this._btnDeleteWord.Text = "~&Delete This Word";
+			this._btnDeleteWord.Text = "&Delete This Word";
 			this._btnDeleteWord.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
 			this._btnDeleteWord.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
 			this._btnDeleteWord.Click += new System.EventHandler(this.OnDeleteWord_Click);
@@ -210,13 +213,14 @@ namespace WeSay.LexicalTools
 			this._btnNewWord.FlatAppearance.BorderSize = 0;
 			this._btnNewWord.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Orange;
 			this._btnNewWord.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+			this._btnNewWord.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
 			this._btnNewWord.ImageAlign = System.Drawing.ContentAlignment.BottomLeft;
-			this._btnNewWord.Location = new System.Drawing.Point(0, 2);
+			this._btnNewWord.Location = new System.Drawing.Point(0, 1);
 			this._btnNewWord.Margin = new System.Windows.Forms.Padding(0);
 			this._btnNewWord.Name = "_btnNewWord";
-			this._btnNewWord.Size = new System.Drawing.Size(125, 24);
+			this._btnNewWord.Size = new System.Drawing.Size(125, 25);
 			this._btnNewWord.TabIndex = 0;
-			this._btnNewWord.Text = "~&New Word";
+			this._btnNewWord.Text = "&New Word";
 			this._btnNewWord.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
 			this._btnNewWord.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
 			this.toolTip1.SetToolTip(this._btnNewWord, "Ctrl+N");
@@ -257,10 +261,6 @@ namespace WeSay.LexicalTools
 			this._splitter.TabIndex = 1;
 			this._splitter.TabStop = false;
 			//
-			// localizationHelper1
-			//
-			this.localizationHelper1.Parent = this;
-			//
 			// DictionaryControl
 			//
 			this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -276,7 +276,6 @@ namespace WeSay.LexicalTools
 			this.panelTools.ResumeLayout(false);
 			this.panelTools.PerformLayout();
 			this.panelDetail.ResumeLayout(false);
-			((System.ComponentModel.ISupportInitialize)(this.localizationHelper1)).EndInit();
 			this.ResumeLayout(false);
 
 		}
@@ -299,7 +298,6 @@ namespace WeSay.LexicalTools
 		private Button _writingSystemChooser;
 		private CollapsibleSplitter _splitter;
 		private Label _findWritingSystemId;
-		private LocalizationHelper localizationHelper1;
 		private Button _showAllFieldsToggleButton;
 		private ToolTip toolTip1;
 

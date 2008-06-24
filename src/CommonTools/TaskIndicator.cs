@@ -36,7 +36,6 @@ namespace WeSay.CommonTools
 			//_btnName.Font = StringCatalog.LabelFont;
 			_btnName.Text = task.Label; //these have already gone through the StringCatalog
 			_textShortDescription.Text = task.Description;
-			//these have already gone through the StringCatalog
 			_textShortDescription.Font =
 					StringCatalog.ModifyFontForLocalization(_textShortDescription.Font);
 		}

@@ -40,7 +40,7 @@ namespace WeSay.AddinLib
 			get { return _name; }
 		}
 
-		public string ShortDescription
+		public string Description
 		{
 			get { return /*"Coming Someday: "+*/ _shortDescription; }
 		}
