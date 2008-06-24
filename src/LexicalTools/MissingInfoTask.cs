@@ -23,9 +23,12 @@ namespace WeSay.LexicalTools
 		public MissingInfoTask(IRecordListManager recordListManager,
 			IFilter<LexEntry> filter,
 					string label,
+					string longLabel,
 					string description,
+					string remainingCountText,
+					string referenceCountText,
 					ViewTemplate viewTemplate)
-			: base(label, description, false, recordListManager)
+			: base(label, longLabel, description, remainingCountText, referenceCountText, false, recordListManager)
 		{
 			if (filter == null)
 			{
@@ -73,22 +76,43 @@ namespace WeSay.LexicalTools
 
 		}
 
+		public MissingInfoTask(IRecordListManager recordListManager,
+			IFilter<LexEntry> filter,
+					string label,
+					string longLabel,
+					string description,
+					ViewTemplate viewTemplate)
+			: this(recordListManager, filter, label, longLabel, description, string.Empty, string.Empty, viewTemplate) {}
+
+		public MissingInfoTask(IRecordListManager recordListManager,
+			IFilter<LexEntry> filter,
+					string label,
+					string description,
+					ViewTemplate viewTemplate)
+			: this(recordListManager, filter, label, label, description, string.Empty, string.Empty, viewTemplate) { }
+
 		/// <summary>
 		/// Creates a generic Lexical Field editing task
 		/// </summary>
 		/// <param name="recordListManager">The recordListManager that will provide the data</param>
 		/// <param name="filter">The filter that should be used to filter the data</param>
 		/// <param name="label">The task label</param>
+		/// <param name="longLabel">Slightly longer task label (for ToolTips)</param>
 		/// <param name="description">The task description</param>
+		/// <param name="remainingCountText">Text describing the remaining count</param>
+		/// <param name="referenceCountText">Text describing the reference count</param>
 		/// <param name="viewTemplate">The base viewTemplate</param>
 		/// <param name="fieldsToShow">The fields to show from the base Field Inventory</param>
 		public MissingInfoTask(IRecordListManager recordListManager,
 							IFilter<LexEntry>  filter,
 							string label,
+							string longLabel,
 							string description,
+							string remainingCountText,
+							string referenceCountText,
 							ViewTemplate viewTemplate,
 							string fieldsToShow)
-			:this(recordListManager, filter, label, description, viewTemplate)
+			:this(recordListManager, filter, label, longLabel, description, remainingCountText, referenceCountText, viewTemplate)
 		{
 			if (fieldsToShow == null)
 			{
@@ -111,6 +135,23 @@ namespace WeSay.LexicalTools
 			}
 		}
 
+		public MissingInfoTask(IRecordListManager recordListManager,
+					IFilter<LexEntry>  filter,
+					string label,
+					string longLabel,
+					string description,
+					ViewTemplate viewTemplate,
+					string fieldsToShow)
+			:this(recordListManager, filter, label, longLabel, description, string.Empty, string.Empty, viewTemplate, fieldsToShow) {}
+
+		public MissingInfoTask(IRecordListManager recordListManager,
+			IFilter<LexEntry> filter,
+			string label,
+			string description,
+			ViewTemplate viewTemplate,
+			string fieldsToShow)
+			: this(recordListManager, filter, label, label, description, string.Empty, string.Empty, viewTemplate, fieldsToShow) { }
+
 		public override WeSay.Foundation.Dashboard.DashboardGroup Group
 		{
 			get
@@ -125,14 +166,40 @@ namespace WeSay.LexicalTools
 		public MissingInfoTask(IRecordListManager recordListManager,
 			IFilter<LexEntry>  filter,
 					string label,
+					string longLabel,
+					string description,
+					string remainingCountText,
+					string referenceCountText,
+					ViewTemplate viewTemplate,
+					string fieldsToShowEditable,
+					string fieldsToShowReadOnly)
+			: this(recordListManager, filter, label, longLabel, description, remainingCountText,
+				   referenceCountText, viewTemplate, fieldsToShowEditable+" "+fieldsToShowReadOnly)
+		{
+			MarkReadOnlyFIelds(fieldsToShowReadOnly);
+		}
+
+		public MissingInfoTask(IRecordListManager recordListManager,
+			IFilter<LexEntry>  filter,
+					string label,
+					string longLabel,
 					string description,
 					ViewTemplate viewTemplate,
 					string fieldsToShowEditable,
 					string fieldsToShowReadOnly)
-			: this(recordListManager, filter, label, description, viewTemplate, fieldsToShowEditable+" "+fieldsToShowReadOnly)
-		{
-			MarkReadOnlyFIelds(fieldsToShowReadOnly);
-		}
+			:this(recordListManager, filter, label, longLabel, description, string.Empty, string.Empty,
+				  viewTemplate, fieldsToShowEditable, fieldsToShowReadOnly) {}
+
+		public MissingInfoTask(IRecordListManager recordListManager,
+			IFilter<LexEntry> filter,
+					string label,
+					string description,
+					ViewTemplate viewTemplate,
+					string fieldsToShowEditable,
+					string fieldsToShowReadOnly)
+			: this(recordListManager, filter, label, label, description, string.Empty, string.Empty,
+				  viewTemplate, fieldsToShowEditable, fieldsToShowReadOnly) { }
+
 
 		private void MarkReadOnlyFIelds(string fieldsToShowReadOnly)
 		{

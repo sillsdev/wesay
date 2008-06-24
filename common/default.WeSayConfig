@@ -21,7 +21,10 @@
 		<field>definition</field>
 	  </filter>
 	  <label>Add Meanings</label>
+	  <longLabel>Add Meanings To Entries</longLabel>
 	  <description>Add meanings to entries where they are missing.</description>
+	  <remainingCountText>Entries without meanings:</remainingCountText>
+	  <referenceCountText>Total entries:</referenceCountText>
 	  <viewTemplate ref="Default View Template" />
 	  <showfields>definition</showfields>
 	  <readOnly>SemanticDomainDdp4</readOnly>

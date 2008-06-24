@@ -57,9 +57,14 @@ namespace Addin.Transform
 			get { return WeSay.Foundation.Dashboard.DashboardGroup.Share; }
 		}
 
-		public string LocalizedLabel
+		public abstract string LocalizedLabel
 		{
-			get { return this.LocalizedName; }
+			get;
+		}
+
+		public abstract string LocalizedLongLabel
+		{
+			get;
 		}
 
 		public WeSay.Foundation.Dashboard.ButtonStyle DashboardButtonStyle

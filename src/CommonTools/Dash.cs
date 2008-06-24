@@ -140,7 +140,7 @@ namespace WeSay.CommonTools
 			// if fonts or text are localized, we will need to re-measure stuff
 			button.TextChanged += delegate { _smallestPossibleButtonSizes = null; };
 			button.FontChanged += delegate { _smallestPossibleButtonSizes = null; };
-			_toolTip.SetToolTip(button, item.Description);
+			_toolTip.SetToolTip(button, item.LocalizedLabel + GetToolTipDescription(item));
 			return button;
 		}
 
@@ -630,6 +630,7 @@ namespace WeSay.CommonTools
 			{
 				throw new InvalidOperationException("Deactivate should only be called once after Activate.");
 			}
+			_toolTip.RemoveAll();
 			_flow.Controls.Clear();
 			_isActive = false;
 		}
@@ -672,6 +673,16 @@ namespace WeSay.CommonTools
 			get { return this; }
 		}
 
+		public string GetRemainingCountText()
+		{
+			throw new NotImplementedException();
+		}
+
+		public string GetReferenceCountText()
+		{
+			throw new NotImplementedException();
+		}
+
 		#region IThingOnDashboard Members
 
 		public DashboardGroup Group
@@ -680,6 +691,11 @@ namespace WeSay.CommonTools
 		}
 
 		public string LocalizedLabel
+		{
+			get { throw new NotImplementedException(); }
+		}
+
+		public string LocalizedLongLabel
 		{
 			get { throw new NotImplementedException(); }
 		}
@@ -761,23 +777,61 @@ namespace WeSay.CommonTools
 
 		private void _toolTip_Draw(object sender, DrawToolTipEventArgs e)
 		{
-			e.DrawBackground();
+			DashboardButton button = e.AssociatedControl as DashboardButton;
+			// Default behavior for non-button tooltips
+			if (button == null)
+			{
+				e.DrawBackground();
+				e.DrawBorder();
+				e.DrawText();
+				return;
+			}
+			DisplaySettings.Default.PaintBackground(e.Graphics, e.Bounds, this);
 			e.DrawBorder();
+			string title = button.ThingToShowOnDashboard.LocalizedLongLabel;
 			Font localizedFont = StringCatalog.ModifyFontForLocalization(SystemFonts.DefaultFont);
-			Rectangle bounds = new Rectangle(e.Bounds.Left + 3, e.Bounds.Top + 3, e.Bounds.Width - 6, e.Bounds.Height - 8);
-			TextRenderer.DrawText(e.Graphics, e.ToolTipText, localizedFont, bounds, Color.Black, ToolTipFormatFlags);
+			Font boldFont = new Font(localizedFont, FontStyle.Bold);
+			int titleHeight = TextRenderer.MeasureText(e.Graphics, title, boldFont, new Size(e.Bounds.Width - 6, int.MaxValue),
+													   ToolTipFormatFlags).Height;
+			Rectangle titleBounds = new Rectangle(e.Bounds.Left + 3, e.Bounds.Top + 3, e.Bounds.Width - 6, e.Bounds.Top + 2 + titleHeight);
+			Rectangle descriptionBounds = new Rectangle(e.Bounds.Left + 18, e.Bounds.Top + 3 + titleHeight,
+														 e.Bounds.Width - 21, e.Bounds.Height - 8 - titleHeight);
+			TextRenderer.DrawText(e.Graphics, title, boldFont, titleBounds, Color.Black, ToolTipFormatFlags);
+			TextRenderer.DrawText(e.Graphics, GetToolTipDescription(button.ThingToShowOnDashboard), localizedFont, descriptionBounds, Color.Black, ToolTipFormatFlags);
+			localizedFont.Dispose();
+			boldFont.Dispose();
 		}
 
 		private void _toolTip_Popup(object sender, PopupEventArgs e)
 		{
-			ToolTip toolTip = (ToolTip) sender;
-			string description = toolTip.GetToolTip(e.AssociatedControl);
+			DashboardButton button = e.AssociatedControl as DashboardButton;
+			if (button == null)
+			{
+				return;
+			}
+			string title = button.ThingToShowOnDashboard.LocalizedLongLabel;
 			Graphics g = Graphics.FromHwnd(e.AssociatedWindow.Handle);
 			Font localizedFont = StringCatalog.ModifyFontForLocalization(SystemFonts.DefaultFont);
-			List<Size> possibleSizes = DisplaySettings.GetPossibleTextSizes(g, description, localizedFont, ToolTipFormatFlags);
-			Size bestSize = GetBestSizeBasedOnRatio(possibleSizes, GoldRatio);
+			Font boldFont = new Font(localizedFont, FontStyle.Bold);
+			List<Size> possibleSizes = DisplaySettings.GetPossibleTextSizes(g, GetToolTipDescription(button.ThingToShowOnDashboard), localizedFont, ToolTipFormatFlags);
+			Size bestSize = GetBestSizeBasedOnRatio(possibleSizes, 3.0);
+			bestSize.Width += 15;
+			bestSize.Height += TextRenderer.MeasureText(g, title, boldFont, new Size(bestSize.Width, int.MaxValue), ToolTipFormatFlags).Height;
 			e.ToolTipSize = new Size(bestSize.Width + 6, bestSize.Height + 8);
 			g.Dispose();
+			localizedFont.Dispose();
+			boldFont.Dispose();
+		}
+
+		private static string GetToolTipDescription(IThingOnDashboard dashboardItem)
+		{
+			string toolTipString = "\n" + dashboardItem.Description;
+			ITask task = dashboardItem as ITask;
+			if (task != null && task.GetReferenceCount() >= 0 && task.GetRemainingCount() >= 0)
+			{
+				toolTipString += "\n\n" + task.GetRemainingCountText() + "\n" + task.GetReferenceCountText();
+			}
+			return toolTipString;
 		}
 	}
 

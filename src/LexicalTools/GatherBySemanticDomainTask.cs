@@ -35,11 +35,14 @@ namespace WeSay.LexicalTools
 
 		public GatherBySemanticDomainTask(IRecordListManager recordListManager,
 										  string label,
+										  string longLabel,
 										  string description,
+										  string remainingCountText,
+										  string referenceCountText,
 										  string semanticDomainQuestionsFileName,
 										  ViewTemplate viewTemplate,
 										  string semanticDomainFieldName)
-				: base(label, description, false, recordListManager, viewTemplate)
+				: base(label, longLabel, description, remainingCountText, referenceCountText, false, recordListManager, viewTemplate)
 		{
 			if (semanticDomainQuestionsFileName == null)
 			{
@@ -83,6 +86,25 @@ namespace WeSay.LexicalTools
 
 			_semanticDomainField = viewTemplate.GetField(semanticDomainFieldName);
 		}
+
+		public GatherBySemanticDomainTask(IRecordListManager recordListManager,
+										  string label,
+										  string longLabel,
+										  string description,
+										  string semanticDomainQuestionsFileName,
+										  ViewTemplate viewTemplate,
+										  string semanticDomainFieldName)
+			:this(recordListManager, label, longLabel, description, string.Empty, string.Empty,
+				  semanticDomainQuestionsFileName, viewTemplate, semanticDomainFieldName) {}
+
+		public GatherBySemanticDomainTask(IRecordListManager recordListManager,
+										  string label,
+										  string description,
+										  string semanticDomainQuestionsFileName,
+										  ViewTemplate viewTemplate,
+										  string semanticDomainFieldName)
+			: this(recordListManager, label, label, description, string.Empty, string.Empty,
+				  semanticDomainQuestionsFileName, viewTemplate, semanticDomainFieldName) { }
 
 		private string DetermineActualQuestionsFileName(string nameFromTaskConfiguration)
 		{

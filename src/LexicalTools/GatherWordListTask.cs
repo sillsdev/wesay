@@ -25,11 +25,12 @@ namespace WeSay.LexicalTools
 
 		public GatherWordListTask(IRecordListManager recordListManager,
 								  string label,
+								  string longLabel,
 								  string description,
 								  string wordListFileName,
 								  string writingSystemIdForWordListLanguage,
 								  ViewTemplate viewTemplate)
-			: base(label, description, false, recordListManager, viewTemplate)
+			: base(label, longLabel, description, false, recordListManager, viewTemplate)
 		{
 			if (wordListFileName == null)
 			{
@@ -47,6 +48,15 @@ namespace WeSay.LexicalTools
 			_words = null;
 			_writingSystemIdForWordListWords = writingSystemIdForWordListLanguage;
 		}
+
+		public GatherWordListTask(IRecordListManager recordListManager,
+								  string label,
+								  string description,
+								  string wordListFileName,
+								  string writingSystemIdForWordListLanguage,
+								  ViewTemplate viewTemplate)
+			: this(recordListManager, label, label, description, wordListFileName, writingSystemIdForWordListLanguage, viewTemplate) {}
+
 
 
 		private void LoadWordList()

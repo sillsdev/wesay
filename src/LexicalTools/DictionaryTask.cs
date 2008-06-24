@@ -19,11 +19,11 @@ namespace WeSay.LexicalTools
 
 		public DictionaryTask(IRecordListManager recordListManager,
 							ViewTemplate viewTemplate)
-			: base(kTaskLabel, string.Empty, true, recordListManager)
+			: base(kTaskLabel, kTaskLabel, string.Empty, true, recordListManager)
 		{
 #if JustForCodeScanner
 			StringCatalog.Get(kTaskLabel,
-							  "The label for the task that lets you see all entries, search for entries, and edit various fields.  We don't like the English name very much, so feel free to call this something very different in the language your are translating to.");
+							  "The label for the task that lets you see all entries, search for entries, and edit various fields.  We don't like the English name very much, so feel free to call this something very different in the language you are translating to.");
 #endif
 			if (viewTemplate == null)
 			{

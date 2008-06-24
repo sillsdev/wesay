@@ -80,7 +80,12 @@ namespace Addin.Backup
 
 		public string LocalizedLabel
 		{
-			get { return StringCatalog.Get("~Backup", "Short buton label for usb flash-drive backup action"); }
+			get { return StringCatalog.Get("~Backup", "Short button label for usb flash-drive backup action"); }
+		}
+
+		public string LocalizedLongLabel
+		{
+			get { return LocalizedName; }
 		}
 
 		public ButtonStyle DashboardButtonStyle

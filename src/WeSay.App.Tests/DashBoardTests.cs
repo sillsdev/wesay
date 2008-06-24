@@ -41,15 +41,15 @@ namespace WeSay.App.Tests
 		private List<IThingOnDashboard> GetButtonItems()
 		{
 			List<IThingOnDashboard> buttonItems = new List<IThingOnDashboard>();
-			buttonItems.Add(new ThingThatGetsAButton(DashboardGroup.Gather, "Semantic Domains", "Semantic Domains description"));
-			buttonItems.Add(new ThingThatGetsAButton(DashboardGroup.Gather, "PNG Word List", "PNG Word List description"));
-			buttonItems.Add(new ThingThatGetsAButton(DashboardGroup.Describe, "Nuhu Sapoo Definitions", "Nuhu Sapoo Definitions description"));
-			buttonItems.Add(new ThingThatGetsAButton(DashboardGroup.Describe, "Example Sentences", "Example Sentences description"));
-			buttonItems.Add(new ThingThatGetsAButton(DashboardGroup.Describe, "English Definitions", "English Definitions description"));
-			buttonItems.Add(new ThingThatGetsAButton(DashboardGroup.Describe, "Translate Examples To English", "Translate Examples To English description"));
-			buttonItems.Add(new ThingThatGetsAButton(DashboardGroup.Describe, "Dictionary Browse && Edit", "Dictionary Browse && Edit description", ButtonStyle.IconFixedWidth, null/*CommonTools.Properties.Resources.blueDictionary*/));
-			buttonItems.Add(new ThingThatGetsAButton(DashboardGroup.Refine, "Identify Base Forms", "Identify Base Forms description"));
-			buttonItems.Add(new ThingThatGetsAButton(DashboardGroup.Refine, "Review", "Review description"));
+			buttonItems.Add(new ThingThatGetsAButton(DashboardGroup.Gather, "Semantic Domains", "Semantic Domains Long Label", "Semantic Domains description"));
+			buttonItems.Add(new ThingThatGetsAButton(DashboardGroup.Gather, "PNG Word List", "PNG Word List Long Label", "PNG Word List description"));
+			buttonItems.Add(new ThingThatGetsAButton(DashboardGroup.Describe, "Nuhu Sapoo Definitions", "Nuhu Sapoo Definitions Long Label", "Nuhu Sapoo Definitions description"));
+			buttonItems.Add(new ThingThatGetsAButton(DashboardGroup.Describe, "Example Sentences", "Example Sentences Long Label", "Example Sentences description"));
+			buttonItems.Add(new ThingThatGetsAButton(DashboardGroup.Describe, "English Definitions", "English Definitions Long Label", "English Definitions description"));
+			buttonItems.Add(new ThingThatGetsAButton(DashboardGroup.Describe, "Translate Examples To English", "Translate Examples To English Long Label", "Translate Examples To English description"));
+			buttonItems.Add(new ThingThatGetsAButton(DashboardGroup.Describe, "Dictionary Browse && Edit", "Dictionary Browse && Edit Long Label", "Dictionary Browse && Edit description", ButtonStyle.IconFixedWidth, null/*CommonTools.Properties.Resources.blueDictionary*/));
+			buttonItems.Add(new ThingThatGetsAButton(DashboardGroup.Refine, "Identify Base Forms", "Identify Base Forms Long Label", "Identify Base Forms description"));
+			buttonItems.Add(new ThingThatGetsAButton(DashboardGroup.Refine, "Review", "Review Long Label", "Review description"));
 
 //            buttonItems.Add(new ThingThatGetsAButton(DashboardGroup.Share, "Print", ButtonStyle.IconVariableWidth, Addin..Properties.Resources.greenPrinter));
 //            buttonItems.Add(new ThingThatGetsAButton(DashboardGroup.Share, "Email", ButtonStyle.IconVariableWidth, CommonTools.Properties.Resources.greenEmail));
@@ -63,6 +63,7 @@ namespace WeSay.App.Tests
 	{
 		private readonly DashboardGroup _group;
 		private readonly string _localizedLabel;
+		private readonly string _localizedLongLabel;
 		private readonly string _description;
 		private Font _font;
 		private ButtonStyle _style;
@@ -70,18 +71,20 @@ namespace WeSay.App.Tests
 
 
 
-		public ThingThatGetsAButton(DashboardGroup group, string localizedLabel, string description, ButtonStyle style, Image image)
+		public ThingThatGetsAButton(DashboardGroup group, string localizedLabel, string localizedLongLabel, string description,
+									ButtonStyle style, Image image)
 		{
 			_image = image;
 			DashboardButtonStyle = style;
 			_group = group;
 			_localizedLabel = localizedLabel;
+			_localizedLongLabel = localizedLongLabel;
 			_description = description;
 			Font = new Font("Arial", 10);
 		}
 
-		public ThingThatGetsAButton(DashboardGroup group, string localizedLabel, string description)
-			: this(group, localizedLabel, description, ButtonStyle.VariableAmount, null)
+		public ThingThatGetsAButton(DashboardGroup group, string localizedLabel, string localizedLongLabel, string description)
+			: this(group, localizedLabel, localizedLongLabel, description, ButtonStyle.VariableAmount, null)
 		{
 		}
 
@@ -107,6 +110,11 @@ namespace WeSay.App.Tests
 		public string LocalizedLabel
 		{
 			get { return _localizedLabel; }
+		}
+
+		public string LocalizedLongLabel
+		{
+			get { return _localizedLongLabel; }
 		}
 
 		public string Description

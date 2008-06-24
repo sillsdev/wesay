@@ -13,9 +13,10 @@ namespace WeSay.LexicalTools
 		private readonly WritingSystem _lexicalFormWritingSystem;
 		private readonly ViewTemplate _viewTemplate;
 
-		protected WordGatheringTaskBase(string label, string description, bool isPinned,
-										IRecordListManager recordListManager, ViewTemplate viewTemplate)
-			: base(label, description, isPinned, recordListManager)
+		protected WordGatheringTaskBase(string label, string longLabel, string description, string remainingCountText,
+										string referenceCountText, bool isPinned, IRecordListManager recordListManager,
+										ViewTemplate viewTemplate)
+			: base(label, longLabel, description, remainingCountText, referenceCountText, isPinned, recordListManager)
 		{
 			if (viewTemplate == null)
 			{
@@ -33,6 +34,10 @@ namespace WeSay.LexicalTools
 				_lexicalFormWritingSystem = lexicalFormField.WritingSystems[0];
 			}
 		}
+
+		protected WordGatheringTaskBase(string label, string longLabel, string description, bool isPinned,
+										IRecordListManager recordListManager, ViewTemplate viewTemplate)
+			: this(label, longLabel, description, string.Empty, string.Empty, isPinned, recordListManager, viewTemplate) {}
 
 		public  override WeSay.Foundation.Dashboard.DashboardGroup Group
 		{

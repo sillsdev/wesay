@@ -101,6 +101,14 @@ namespace Addin.Backup
 			get { return this.LocalizedName; }
 		}
 
+		public string LocalizedLongLabel
+		{
+			get
+			{
+				return StringCatalog.Get("~Synchronize With Repository", "Long label for synchronize action.");
+			}
+		}
+
 		public WeSay.Foundation.Dashboard.ButtonStyle DashboardButtonStyle
 		{
 			get { return WeSay.Foundation.Dashboard.ButtonStyle.IconVariableWidth; }
