@@ -2,17 +2,17 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 using Palaso.Reporting;
-using WeSay.Language;
+using WeSay.Foundation;
 using WeSay.Project;
 
 namespace WeSay.ConfigTool
 {
-	public partial class WritingSystemSetup : ConfigurationControlBase
+	public partial class WritingSystemSetup: ConfigurationControlBase
 	{
-		public WritingSystemSetup():base("set up fonts, keyboards, and sorting")
+		public WritingSystemSetup(): base("set up fonts, keyboards, and sorting")
 		{
 			InitializeComponent();
-			Resize += new EventHandler(WritingSystemSetup_Resize);
+			Resize += WritingSystemSetup_Resize;
 		}
 
 		private void WritingSystemSetup_Resize(object sender, EventArgs e)
@@ -21,7 +21,6 @@ namespace WeSay.ConfigTool
 			splitContainer1.Dock = DockStyle.None;
 			splitContainer1.Width = Width - 25;
 		}
-
 
 		public void WritingSystemSetup_Load(object sender, EventArgs e)
 		{
@@ -40,7 +39,7 @@ namespace WeSay.ConfigTool
 			_wsListBox.Items.Clear();
 			foreach (WritingSystem w in BasilProject.Project.WritingSystems.Values)
 			{
-				_wsListBox.Items.Add(new WsDisplayProxy(w, BasilProject.Project.WritingSystems));
+				_wsListBox.Items.Add(new WsDisplayProxy(w));
 			}
 			_wsListBox.Sorted = true;
 			if (_wsListBox.Items.Count > 0)
@@ -67,8 +66,8 @@ namespace WeSay.ConfigTool
 			}
 
 			_btnRemove.Enabled = true;
-//                (SelectedWritingSystem != BasilProject.Project.WritingSystems.AnalysisWritingSystemDefault)
-//              && (SelectedWritingSystem != BasilProject.Project.WritingSystems.VernacularWritingSystemDefault);
+			//                (SelectedWritingSystem != BasilProject.Project.WritingSystems.AnalysisWritingSystemDefault)
+			//              && (SelectedWritingSystem != BasilProject.Project.WritingSystems.VernacularWritingSystemDefault);
 			_basicControl.WritingSystem = SelectedWritingSystem;
 			_sortControl.WritingSystem = SelectedWritingSystem;
 			_fontControl.WritingSystem = SelectedWritingSystem;
@@ -120,7 +119,7 @@ namespace WeSay.ConfigTool
 			else
 			{
 				BasilProject.Project.WritingSystems.Add(w.Id, w);
-				WsDisplayProxy item = new WsDisplayProxy(w, BasilProject.Project.WritingSystems);
+				WsDisplayProxy item = new WsDisplayProxy(w);
 				_wsListBox.Items.Add(item);
 				_wsListBox.SelectedItem = item;
 			}
@@ -139,14 +138,14 @@ namespace WeSay.ConfigTool
 			{
 				string oldId = args.OldValue.ToString();
 				WeSayWordsProject.Project.MakeWritingSystemIdChange(ws, oldId);
-//                Reporting.ErrorReporter.ReportNonFatalMessage(
-//                    "Currently, WeSay does not make a corresponding change to the id of this writing system in your LIFT xml file.  Please do that yourself, using something like NotePad to search for lang=\"{0}\" and change to lang=\"{1}\"",
-//                    ws.Id, oldId);
+				//                Reporting.ErrorReporter.ReportNonFatalMessage(
+				//                    "Currently, WeSay does not make a corresponding change to the id of this writing system in your LIFT xml file.  Please do that yourself, using something like NotePad to search for lang=\"{0}\" and change to lang=\"{1}\"",
+				//                    ws.Id, oldId);
 			}
 
 			//_wsListBox.Refresh(); didn't work
 			//this.Refresh();   didn't work
-			for (int i = 0; i < _wsListBox.Items.Count; i++)
+			for (int i = 0;i < _wsListBox.Items.Count;i++)
 			{
 				_wsListBox.Items[i] = _wsListBox.Items[i];
 			}
@@ -164,14 +163,6 @@ namespace WeSay.ConfigTool
 				}
 			}
 		}
-
-		//private void MakeWritingSystemIdChange(string oldId, string newId)
-		//{
-		//    foreach (Field field in WeSayWordsProject.Project.DefaultViewTemplate)
-		//    {
-		//        field.ChangeWritingSystemId(oldId, newId);
-		//    }
-		//}
 	}
 
 	/// <summary>
@@ -180,50 +171,11 @@ namespace WeSay.ConfigTool
 	public class WsDisplayProxy
 	{
 		private WritingSystem _writingSystem;
-		private WritingSystemCollection _collection;
 
-		public WsDisplayProxy(WritingSystem ws, WritingSystemCollection collection)
+		public WsDisplayProxy(WritingSystem ws)
 		{
 			_writingSystem = ws;
-			_collection = collection;
 		}
-
-//        public bool IsAnalysisDefault
-//        {
-//            get
-//            {
-//                return _collection.AnalysisWritingSystemDefault == _writingSystem;
-//            }
-//            set
-//            {
-//                if (value)
-//                {
-//                    _collection.AnalysisWritingSystemDefaultId = _writingSystem.Id;
-//                }
-//                else
-//                {
-//                    Debug.Fail("Can't really handle setting to false.");
-//                }
-//            }
-//        }
-//        public bool IsVernacularDefault
-//        {
-//            get
-//            {
-//                return _collection.VernacularWritingSystemDefault == _writingSystem;
-//            }
-//            set
-//            {
-//                if (value)
-//                {
-//                    _collection.VernacularWritingSystemDefaultId = _writingSystem.Id;
-//                }
-//                else
-//                {
-//                    Debug.Fail("Can't really handle setting to false.");
-//                }
-//            }
-//        }
 
 		public WritingSystem WritingSystem
 		{
@@ -234,21 +186,14 @@ namespace WeSay.ConfigTool
 		public override string ToString()
 		{
 			string s = _writingSystem.ToString();
-//            if (IsVernacularDefault )
-//            {
-//                s += " (V)";
-//            }
-//             if (IsAnalysisDefault)
-//            {
-//                s += " (A)";
-//            }
-
 
 			switch (s)
 			{
 				default:
 					if (s == WritingSystem.IdForUnknownVernacular)
+					{
 						s += " (Change to your Vernacular)";
+					}
 					break;
 				case "fr":
 					s += " (French)";

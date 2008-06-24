@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using Mono.Addins;
 using Palaso.Reporting;
 using WeSay.AddinLib;
+using WeSay.LexicalModel;
 using WeSay.Project;
 
 namespace WeSay.ConfigTool
@@ -23,7 +24,7 @@ namespace WeSay.ConfigTool
 		//    _addinsList.Height = (Height - _addinsList.Top) - 40;
 		//}
 
-		 private void LoadAddins()
+		private void LoadAddins()
 		{
 			List<string> alreadyFound = new List<string>();
 
@@ -38,16 +39,14 @@ namespace WeSay.ConfigTool
 				AddinManager.Initialize(Application.UserAppDataPath);
 				//these (at least AddinLoaded) does get called after initialize, when you
 				//do a search for objects (e.g. GetExtensionObjects())
-				AddinManager.AddinLoaded +=AddinManager_AddinLoaded;
-				AddinManager.AddinLoadError +=AddinManager_AddinLoadError;
-				AddinManager.AddinUnloaded +=AddinManager_AddinUnloaded;
-				AddinManager.ExtensionChanged +=AddinManager_ExtensionChanged;
+				AddinManager.AddinLoaded += AddinManager_AddinLoaded;
+				AddinManager.AddinLoadError += AddinManager_AddinLoadError;
+				AddinManager.AddinUnloaded += AddinManager_AddinUnloaded;
+				AddinManager.ExtensionChanged += AddinManager_ExtensionChanged;
 			}
 
-			foreach (
-					IWeSayAddin addin in
-							AddinManager.GetExtensionObjects(
-									typeof (IWeSayAddin)))
+			foreach (IWeSayAddin addin in
+					AddinManager.GetExtensionObjects(typeof (IWeSayAddin)))
 			{
 				//this alreadyFound business is a hack to prevent duplication in some
 				// situation I haven't tracked down yet.
@@ -57,18 +56,21 @@ namespace WeSay.ConfigTool
 					AddAddin(addin);
 				}
 			}
-//            AddAddin(new ComingSomedayAddin("Export To OpenOffice", ""));
-//            AddAddin(new ComingSomedayAddin("Export To Lexique Pro", ""));
-//            AddAddin(
-//                    new ComingSomedayAddin("Send project to developers",
-//                                           "Sends your project to WeSay for help/debugging."));
+			//            AddAddin(new ComingSomedayAddin("Export To OpenOffice", ""));
+			//            AddAddin(new ComingSomedayAddin("Export To Lexique Pro", ""));
+			//            AddAddin(
+			//                    new ComingSomedayAddin("Send project to developers",
+			//                                           "Sends your project to WeSay for help/debugging."));
 			_addinsList.ResumeLayout();
 		}
 
 		private void AddAddin(IWeSayAddin addin)
 		{
 			ActionItemControl control =
-				new ActionItemControl(addin, true, WeSayWordsProject.Project.GetProjectInfoForAddin());// GetProjectInfo());
+					new ActionItemControl(addin,
+										  true,
+										  WeSayWordsProject.Project.GetProjectInfoForAddin(null));
+			// GetProjectInfo());
 			control.DoShowInWeSay = AddinSet.Singleton.DoShowInWeSay(addin.ID);
 			control.TabIndex = _addinsList.RowCount;
 			control.Launch += OnLaunchAction;
@@ -79,11 +81,18 @@ namespace WeSay.ConfigTool
 
 		private void OnLaunchAction(object sender, EventArgs e)
 		{
-			IWeSayAddin addin = (IWeSayAddin)sender;
+			IWeSayAddin addin = (IWeSayAddin) sender;
 
 			try
 			{
-				addin.Launch(ParentForm, WeSayWordsProject.Project.GetProjectInfoForAddin());
+				using (
+						LexEntryRepository lexEntryRepository =
+								new LexEntryRepository(
+										WeSayWordsProject.Project.PathToDb4oLexicalModelDB))
+				{
+					addin.Launch(ParentForm,
+								 WeSayWordsProject.Project.GetProjectInfoForAddin(lexEntryRepository));
+				}
 			}
 			catch (Exception error)
 			{
@@ -91,20 +100,17 @@ namespace WeSay.ConfigTool
 			}
 		}
 
-		private static void AddinManager_ExtensionChanged(object sender,
-												   ExtensionEventArgs args)
+		private static void AddinManager_ExtensionChanged(object sender, ExtensionEventArgs args)
 		{
 			Logger.WriteEvent("Addin 'extensionChanged': {0}", args.Path);
 		}
 
-		private static void AddinManager_AddinUnloaded(object sender,
-												AddinEventArgs args)
+		private static void AddinManager_AddinUnloaded(object sender, AddinEventArgs args)
 		{
 			Logger.WriteEvent("Addin unloaded: {0}", args.AddinId);
 		}
 
-		private static void AddinManager_AddinLoadError(object sender,
-												 AddinErrorEventArgs args)
+		private static void AddinManager_AddinLoadError(object sender, AddinErrorEventArgs args)
 		{
 			Logger.WriteEvent("Addin load error: {0}", args.AddinId);
 		}

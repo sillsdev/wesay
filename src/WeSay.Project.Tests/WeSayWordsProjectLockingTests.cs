@@ -12,7 +12,7 @@ namespace WeSay.Project.Tests
 		public void Setup()
 		{
 			_p = new WeSayWordsProject();
-			this._p.PathToLiftFile = Path.GetTempFileName();
+			_p.PathToLiftFile = Path.GetTempFileName();
 		}
 
 		[TearDown]
@@ -22,7 +22,7 @@ namespace WeSay.Project.Tests
 			{
 				_p.ReleaseLockOnLift();
 			}
-			File.Delete(this._p.PathToLiftFile);
+			File.Delete(_p.PathToLiftFile);
 		}
 
 		[Test]
@@ -36,7 +36,7 @@ namespace WeSay.Project.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof(IOException))]
+		[ExpectedException(typeof (IOException))]
 		public void LockLift()
 		{
 			_p.LockLift();
@@ -48,9 +48,7 @@ namespace WeSay.Project.Tests
 		{
 			_p.LockLift();
 			_p.ReleaseLockOnLift();
-			using (File.Open(_p.PathToLiftFile, FileMode.Open))
-			{
-			}
+			using (File.Open(_p.PathToLiftFile, FileMode.Open)) {}
 		}
 	}
 }

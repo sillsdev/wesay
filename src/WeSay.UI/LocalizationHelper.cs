@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.Design;
@@ -13,7 +13,7 @@ namespace WeSay.UI
 	[Designer(typeof (LocalizationHelperDesigner))]
 	[ToolboxItem(true)]
 	[ProvideProperty("ParentFo", typeof (Form))]
-	public partial class LocalizationHelper : Component, ISupportInitialize, IExtenderProvider
+	public partial class LocalizationHelper: Component, ISupportInitialize, IExtenderProvider
 	{
 		private Dictionary<Control, TextFontPair> _originalControlProperties = new Dictionary<Control, TextFontPair>();
 		private bool _alreadyChanging;
@@ -66,7 +66,7 @@ namespace WeSay.UI
 			_alreadyChanging = true;
 			_originalControlProperties[control].Font = control.Font;
 			if (!(control is RegionButton))
-				//making a big font on these things that don't have text was causing them to grow
+					//making a big font on these things that don't have text was causing them to grow
 			{
 				control.Font = StringCatalog.ModifyFontForLocalization(control.Font);
 			}
@@ -83,12 +83,14 @@ namespace WeSay.UI
 
 			if (control.Text.Contains("{0}"))
 			{
-				return; //they're going to have to format it anyways, so we can't fix it automatically
+				return;
+				//they're going to have to format it anyways, so we can't fix it automatically
 			}
 
 			_alreadyChanging = true;
 			_originalControlProperties[control].Text = control.Text;
-			if (!String.IsNullOrEmpty(control.Text)) //don't try to translation, for example, buttons with no label
+			if (!String.IsNullOrEmpty(control.Text))
+					//don't try to translation, for example, buttons with no label
 			{
 				control.Text = StringCatalog.Get(control.Text);
 			}
@@ -248,7 +250,7 @@ namespace WeSay.UI
 	/// <summary>
 	///   Designer object used to set the Parent property.
 	/// </summary>
-	internal class LocalizationHelperDesigner : ComponentDesigner
+	internal class LocalizationHelperDesigner: ComponentDesigner
 	{
 		///   <summary>
 		///   Sets the Parent property to "this" -

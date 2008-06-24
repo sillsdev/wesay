@@ -1,22 +1,21 @@
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using Palaso.UI.WindowsForms.i8n;
-using WeSay.Data;
 using WeSay.Foundation;
-using WeSay.Foundation.Dashboard;
+using WeSay.LexicalModel;
 using WeSay.Project;
 
 namespace WeSay.LexicalTools
 {
-	public abstract class TaskBase : ITask
+	public abstract class TaskBase: ITask
 	{
 		public const int CountNotRelevant = -1;
 		public const int CountNotComputed = -2;
 
-		private readonly IRecordListManager _recordListManager;
+		private readonly LexEntryRepository _lexEntryRepository;
 		private readonly string _label;
 		private readonly string _description;
 		private readonly bool _isPinned;
@@ -25,7 +24,10 @@ namespace WeSay.LexicalTools
 		private int _remainingCount;
 		private int _referenceCount;
 
-		public TaskBase(string label, string description, bool isPinned, IRecordListManager recordListManager)
+		public TaskBase(string label,
+						string description,
+						bool isPinned,
+						LexEntryRepository lexEntryRepository)
 		{
 			if (label == null)
 			{
@@ -35,11 +37,11 @@ namespace WeSay.LexicalTools
 			{
 				throw new ArgumentNullException("description");
 			}
-			if (recordListManager == null)
+			if (lexEntryRepository == null)
 			{
-				throw new ArgumentNullException("recordListManager");
+				throw new ArgumentNullException("lexEntryRepository");
 			}
-			_recordListManager = recordListManager;
+			_lexEntryRepository = lexEntryRepository;
 			_label = label;
 			_description = description;
 			_isPinned = isPinned;
@@ -61,11 +63,11 @@ namespace WeSay.LexicalTools
 		{
 			if (IsActive)
 			{
-				throw new InvalidOperationException("Activate should not be called when object is active.");
+				throw new InvalidOperationException(
+						"Activate should not be called when object is active.");
 			}
 			IsActive = true;
 		}
-
 
 		public bool MustBeActivatedDuringPreCache
 		{
@@ -132,16 +134,12 @@ namespace WeSay.LexicalTools
 			}
 		}
 
-		public virtual void RegisterWithCache(ViewTemplate viewTemplate)
-		{
-
-		}
-
 		public virtual void Deactivate()
 		{
 			if (!IsActive)
 			{
-				throw new InvalidOperationException("Deactivate should only be called once after Activate.");
+				throw new InvalidOperationException(
+						"Deactivate should only be called once after Activate.");
 			}
 			IsActive = false;
 		}
@@ -238,9 +236,9 @@ namespace WeSay.LexicalTools
 			return GetReferenceCount() != CountNotRelevant && GetRemainingCount() != CountNotRelevant;
 		}
 
-		protected IRecordListManager RecordListManager
+		protected LexEntryRepository LexEntryRepository
 		{
-			get { return _recordListManager; }
+			get { return _lexEntryRepository; }
 		}
 
 		public bool IsActive
@@ -251,11 +249,10 @@ namespace WeSay.LexicalTools
 
 		#region IThingOnDashboard Members
 
-		public virtual WeSay.Foundation.Dashboard.DashboardGroup Group
+		public virtual DashboardGroup Group
 		{
-			get { return WeSay.Foundation.Dashboard.DashboardGroup.Describe; }
+			get { return DashboardGroup.Describe; }
 		}
-
 
 		public string LocalizedLabel
 		{
@@ -269,7 +266,7 @@ namespace WeSay.LexicalTools
 
 		public virtual Image DashboardButtonImage
 		{
-			get { return null;}
+			get { return null; }
 		}
 
 		#endregion

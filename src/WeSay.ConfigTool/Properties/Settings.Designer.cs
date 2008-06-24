@@ -8,42 +8,40 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace WeSay.ConfigTool.Properties {
+using System.CodeDom.Compiler;
+using System.Configuration;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 
+namespace WeSay.ConfigTool.Properties
+{
+	[CompilerGenerated()]
+	[GeneratedCode("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator",
+			"8.0.0.0")]
+	internal sealed partial class Settings: ApplicationSettingsBase
+	{
+		private static Settings defaultInstance = ((Settings) (Synchronized(new Settings())));
 
-	[global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-	[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "8.0.0.0")]
-	internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
-
-		private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
-
-		public static Settings Default {
-			get {
-				return defaultInstance;
-			}
+		public static Settings Default
+		{
+			get { return defaultInstance; }
 		}
 
-		[global::System.Configuration.UserScopedSettingAttribute()]
-		[global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-		[global::System.Configuration.DefaultSettingValueAttribute("True")]
-		public bool NeedUpgrade {
-			get {
-				return ((bool)(this["NeedUpgrade"]));
-			}
-			set {
-				this["NeedUpgrade"] = value;
-			}
+		[UserScopedSetting()]
+		[DebuggerNonUserCode()]
+		[DefaultSettingValue("True")]
+		public bool NeedUpgrade
+		{
+			get { return ((bool) (this["NeedUpgrade"])); }
+			set { this["NeedUpgrade"] = value; }
 		}
 
-		[global::System.Configuration.UserScopedSettingAttribute()]
-		[global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-		public global::WeSay.ConfigTool.MruProjects MruConfigFilePaths {
-			get {
-				return ((global::WeSay.ConfigTool.MruProjects)(this["MruConfigFilePaths"]));
-			}
-			set {
-				this["MruConfigFilePaths"] = value;
-			}
+		[UserScopedSetting()]
+		[DebuggerNonUserCode()]
+		public MruProjects MruConfigFilePaths
+		{
+			get { return ((MruProjects) (this["MruConfigFilePaths"])); }
+			set { this["MruConfigFilePaths"] = value; }
 		}
 	}
 }

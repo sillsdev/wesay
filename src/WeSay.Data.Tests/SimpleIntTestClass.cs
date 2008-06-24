@@ -3,39 +3,38 @@ using System.ComponentModel;
 
 namespace WeSay.Data.Tests
 {
-
-	public class SimpleIntTestClass : INotifyPropertyChanged, IComparable, IComparable<SimpleIntTestClass>
+	public class SimpleIntTestClass: INotifyPropertyChanged,
+									 IComparable,
+									 IComparable<SimpleIntTestClass>
 	{
-		int _i;
-		public SimpleIntTestClass()
-		{
-		}
+		private int _i;
+		public SimpleIntTestClass() {}
 
 		public SimpleIntTestClass(int i)
 		{
-			this._i = i;
+			_i = i;
 		}
 
-		public static PropertyDescriptor IPropertyDescriptor{
+		public static PropertyDescriptor IPropertyDescriptor
+		{
 			get
 			{
-				PropertyDescriptorCollection pdc = TypeDescriptor.GetProperties(typeof(SimpleIntTestClass));
+				PropertyDescriptorCollection pdc =
+						TypeDescriptor.GetProperties(typeof (SimpleIntTestClass));
 				return pdc.Find("I", false);
 			}
 		}
 
 		public int I
 		{
-			get
-			{
-				return _i;
-			}
+			get { return _i; }
 			set
 			{
 				_i = value;
 				OnPropertyChanged(new PropertyChangedEventArgs("I"));
 			}
 		}
+
 		public override string ToString()
 		{
 			return I.ToString();
@@ -44,13 +43,13 @@ namespace WeSay.Data.Tests
 		#region INotifyPropertyChanged Members
 
 		public event PropertyChangedEventHandler PropertyChanged;
+
 		protected virtual void OnPropertyChanged(PropertyChangedEventArgs e)
 		{
 			if (PropertyChanged != null)
 			{
 				PropertyChanged(this, e);
 			}
-
 		}
 
 		#endregion
@@ -59,7 +58,7 @@ namespace WeSay.Data.Tests
 
 		int IComparable.CompareTo(object obj)
 		{
-			return CompareTo((SimpleIntTestClass)obj);
+			return CompareTo((SimpleIntTestClass) obj);
 		}
 
 		#endregion

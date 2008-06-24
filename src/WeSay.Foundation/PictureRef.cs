@@ -2,7 +2,7 @@ using System.ComponentModel;
 
 namespace WeSay.Foundation
 {
-	public class PictureRef : IParentable, IValueHolder<string>, IReportEmptiness
+	public class PictureRef: IParentable, IValueHolder<string>, IReportEmptiness
 	{
 		private string _fileName;
 		private MultiText _caption;
@@ -22,10 +22,7 @@ namespace WeSay.Foundation
 
 		public WeSayDataObject Parent
 		{
-			set
-			{
-				_parent = value;
-			}
+			set { _parent = value; }
 		}
 
 		#endregion
@@ -42,33 +39,24 @@ namespace WeSay.Foundation
 
 			if (_parent != null)
 			{
-				this._parent.NotifyPropertyChanged("picture");
+				_parent.NotifyPropertyChanged("picture");
 			}
 		}
 
 		public string Value
 		{
-			get
-			{
-				return this._fileName;
-			}
+			get { return _fileName; }
 			set
 			{
-				this._fileName = value;
+				_fileName = value;
 				NotifyPropertyChanged();
 			}
 		}
 
 		public MultiText Caption
 		{
-			get
-			{
-				return _caption;
-			}
-			set
-			{
-				_caption = value;
-			}
+			get { return _caption; }
+			set { _caption = value; }
 		}
 
 		#region IReportEmptiness Members
@@ -88,9 +76,7 @@ namespace WeSay.Foundation
 			get { return string.IsNullOrEmpty(_fileName); }
 		}
 
-		public void RemoveEmptyStuff()
-		{
-		}
+		public void RemoveEmptyStuff() {}
 
 		#endregion
 	}

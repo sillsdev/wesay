@@ -123,12 +123,6 @@
 	<Compile Include="XmlUtils.cs" />
   </ItemGroup>
   <ItemGroup>
-	<ProjectReference Include="..\PlatformSpecific\PlatformSpecific.csproj">
-	  <Project>{55E6BAB0-9B46-4C89-8773-4432417C1ADF}</Project>
-	  <Name>PlatformSpecific</Name>
-	</ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
 	<EmbeddedResource Include="LameProgressDialog.resx">
 	  <DependentUpon>LameProgressDialog.cs</DependentUpon>
 	  <SubType>Designer</SubType>

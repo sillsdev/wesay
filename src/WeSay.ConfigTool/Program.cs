@@ -1,5 +1,4 @@
 using System;
-using System.Configuration;
 using System.Windows.Forms;
 using Palaso.Reporting;
 using WeSay.ConfigTool.Properties;
@@ -42,7 +41,7 @@ namespace WeSay.ConfigTool
 			{
 #endif
 			Logger.WriteEvent("App Exiting Normally.");
-				Logger.ShutDown();
+			Logger.ShutDown();
 #if !DEBUG
 			}
 			catch (Exception err)
@@ -50,7 +49,7 @@ namespace WeSay.ConfigTool
 			 // we don't know what caused ws-596, but it isn't worth crashing over
 			}
 #endif
-			}
+		}
 
 		private static void SetupErrorHandling()
 		{

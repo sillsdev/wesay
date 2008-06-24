@@ -20,6 +20,12 @@ namespace WeSay.LexicalTools
 			if (disposing && !IsDisposed)
 			{
 				_recordsListBox.SelectedIndexChanged -= OnRecordSelectionChanged;
+
+				if (Control_EntryDetailPanel.DataSource != null)
+				{
+					Control_EntryDetailPanel.DataSource.PropertyChanged -= OnEntryChanged;
+				}
+
 				//_recordsListBox.Enter -= _recordsListBox_Enter;
 				//_recordsListBox.Leave -= _recordsListBox_Leave;
 				//_recordsListBox.DataSource = null; // without this, the currency manager keeps trying to work

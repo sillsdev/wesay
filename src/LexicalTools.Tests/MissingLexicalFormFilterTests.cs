@@ -1,6 +1,5 @@
 using NUnit.Framework;
 using WeSay.LexicalModel;
-using WeSay.LexicalTools;
 using WeSay.Project;
 
 namespace WeSay.LexicalTools.Tests
@@ -13,8 +12,11 @@ namespace WeSay.LexicalTools.Tests
 		[SetUp]
 		public void Setup()
 		{
-			Field field = new Field(Field.FieldNames.EntryLexicalForm.ToString(), "LexEntry", new string[] { "vernacular" });
-			this._missingLexicalFormFilter = new MissingItemFilter(field);
+			Field field =
+					new Field(Field.FieldNames.EntryLexicalForm.ToString(),
+							  "LexEntry",
+							  new string[] {"vernacular"});
+			_missingLexicalFormFilter = new MissingItemFilter(field);
 		}
 
 		[Test]

@@ -5,11 +5,10 @@ using System.Xml;
 using Palaso.Reporting;
 using Palaso.UI.WindowsForms.i8n;
 using WeSay.Foundation;
-using WeSay.Language;
 
 namespace WeSay.Project
 {
-	public class BasilProject : IProject, IDisposable
+	public class BasilProject: IProject, IDisposable
 	{
 		private static BasilProject _singleton;
 		private string _uiFontName;
@@ -20,7 +19,7 @@ namespace WeSay.Project
 			set { _singleton = value; }
 		}
 
-		private WritingSystemCollection _writingSystems;
+		private readonly WritingSystemCollection _writingSystems;
 		private string _projectDirectoryPath = string.Empty;
 		private string _stringCatalogSelector = string.Empty;
 		private float _uiFontSize;
@@ -67,7 +66,8 @@ namespace WeSay.Project
 		/// </summary>
 		/// <param name="projectDirectoryPath"></param>
 		/// <param name="dontInitialize"></param>
-		public virtual void LoadFromProjectDirectoryPath(string projectDirectoryPath, bool dontInitialize)
+		public virtual void LoadFromProjectDirectoryPath(string projectDirectoryPath,
+														 bool dontInitialize)
 		{
 			_projectDirectoryPath = projectDirectoryPath;
 			if (!dontInitialize)
@@ -80,7 +80,7 @@ namespace WeSay.Project
 		public virtual void CreateEmptyProjectFiles(string projectDirectoryPath)
 		{
 			_projectDirectoryPath = projectDirectoryPath;
-		  //  Directory.CreateDirectory(ProjectCommonDirectory);
+			//  Directory.CreateDirectory(ProjectCommonDirectory);
 			InitStringCatalog();
 			InitWritingSystems();
 			Save();
@@ -131,22 +131,27 @@ namespace WeSay.Project
 
 		public string PathToWritingSystemPrefs
 		{
-			get { return GetPathToWritingSystemPrefs(PathToDirectoryContaingWritingSystemFilesInProject/*ProjectCommonDirectory*/); }
+			get
+			{
+				return
+						GetPathToWritingSystemPrefs(
+								PathToDirectoryContaingWritingSystemFilesInProject
+								/*ProjectCommonDirectory*/);
+			}
 		}
 
-//        public string PathToOptionsLists
-//        {
-//            get
-//            {
-//                return GetPathToWritingSystemPrefs(CommonDirectory);
-//            }
-//        }
+		//        public string PathToOptionsLists
+		//        {
+		//            get
+		//            {
+		//                return GetPathToWritingSystemPrefs(CommonDirectory);
+		//            }
+		//        }
 
 		private static string GetPathToWritingSystemPrefs(string parentDir)
 		{
 			return Path.Combine(parentDir, "WritingSystemPrefs.xml");
 		}
-
 
 		public string PathToDirectoryContaingWritingSystemFilesInProject
 		{
@@ -175,7 +180,12 @@ namespace WeSay.Project
 
 		public string PathToStringCatalogInProjectDir
 		{
-			get { return Path.Combine(ProjectDirectoryPath/*ProjectCommonDirectory*/, _stringCatalogSelector + ".po"); }
+			get
+			{
+				return
+						Path.Combine(ProjectDirectoryPath /*ProjectCommonDirectory*/,
+									 _stringCatalogSelector + ".po");
+			}
 		}
 
 		public static string ApplicationCommonDirectory
@@ -235,10 +245,7 @@ namespace WeSay.Project
 
 		public virtual string Name
 		{
-			get
-			{
-				return "Need to override";
-			}
+			get { return "Need to override"; }
 		}
 
 		public virtual void Dispose()
@@ -262,13 +269,13 @@ namespace WeSay.Project
 			}
 		}
 
-//        /// <summary>
-//        /// Get the options lists, e.g. PartsOfSpeech, from files
-//        /// </summary>
-//        private void InitOptionsLists()
-//        {
-//            Directory.
-//        }
+		//        /// <summary>
+		//        /// Get the options lists, e.g. PartsOfSpeech, from files
+		//        /// </summary>
+		//        private void InitOptionsLists()
+		//        {
+		//            Directory.
+		//        }
 
 		public string StringCatalogSelector
 		{
@@ -281,11 +288,13 @@ namespace WeSay.Project
 			get { return _uiFontName; }
 			set { _uiFontName = value; }
 		}
+
 		protected float UiFontSizeInPoints
 		{
 			get { return _uiFontSize; }
 			set { _uiFontSize = value; }
 		}
+
 		private void InitStringCatalog()
 		{
 			try

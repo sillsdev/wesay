@@ -1,12 +1,8 @@
-using System;
-using System.Collections.Generic;
 using System.IO;
 using LiftIO.Validation;
 using NUnit.Framework;
 using WeSay.AddinLib;
-using WeSay.Data;
 using WeSay.LexicalModel;
-using WeSay.LexicalModel.Db4o_Specific;
 using WeSay.Project;
 
 namespace Addin.Transform.Tests
@@ -14,21 +10,20 @@ namespace Addin.Transform.Tests
 	[TestFixture]
 	public class HtmlTransformerTests
 	{
-		public Transform.HtmlTransformer _addin;
-		private Db4oRecordListManager _recordListManager;
-		private string _dbFile;
+		public HtmlTransformer _addin;
+		private LexEntryRepository _lexEntryRepository;
+		private string _filePath;
+		private string _liftFilePath;
 
 		[SetUp]
 		public void Setup()
 		{
 			WeSayWordsProject.InitializeForTests();
-			_dbFile = Path.GetTempFileName();
-			_recordListManager = new Db4oRecordListManager(new WeSayWordsDb4oModelConfiguration(), _dbFile);
-			Db4oLexModelHelper.Initialize(_recordListManager.DataSource.Data);
+			_filePath = Path.GetTempFileName();
+			_liftFilePath = Path.GetTempFileName();
+			_lexEntryRepository = new LexEntryRepository(_filePath);
 
-			Lexicon.Init(_recordListManager);
-
-			_addin = new Transform.HtmlTransformer();
+			_addin = new HtmlTransformer();
 			_addin.LaunchAfterTransform = false;
 		}
 
@@ -39,8 +34,9 @@ namespace Addin.Transform.Tests
 			{
 				File.Delete(_addin.PathToOutput);
 			}
-			_recordListManager.Dispose();
-			File.Delete(_dbFile);
+			_lexEntryRepository.Dispose();
+			File.Delete(_filePath);
+			File.Delete(_liftFilePath);
 		}
 
 		[Test]
@@ -50,40 +46,37 @@ namespace Addin.Transform.Tests
 			Assert.IsTrue(File.Exists(_addin.PathToOutput));
 		}
 
-
-		private string LaunchAddin()
+		private void LaunchAddin()
 		{
 			string contents =
-				string.Format(
-					@"<?xml version='1.0' encoding='utf-8'?>
+					string.Format(
+							@"<?xml version='1.0' encoding='utf-8'?>
 <lift  version='{0}'><entry id='one'><sense><gloss lang='en'><text>hello</text></gloss></sense></entry><entry id='two'/></lift>",
-					Validator.LiftVersion);
-			if (WeSay.Project.WeSayWordsProject.Project.LiftIsLocked)
+							Validator.LiftVersion);
+			if (WeSayWordsProject.Project.LiftIsLocked)
 			{
-				WeSay.Project.WeSayWordsProject.Project.ReleaseLockOnLift();
+				// shouldn't have to do this now?
+				WeSayWordsProject.Project.ReleaseLockOnLift();
 			}
-			File.WriteAllText(WeSay.Project.WeSayWordsProject.Project.PathToLiftFile, contents);
-			_addin.Launch(null, WeSay.Project.WeSayWordsProject.Project.GetProjectInfoForAddin());
+			File.WriteAllText(_liftFilePath, contents);
+			_addin.Launch(null,
+						  WeSayWordsProject.Project.GetProjectInfoForAddin(_lexEntryRepository));
 			Assert.IsTrue(File.Exists(_addin.PathToOutput));
-			string result =File.ReadAllText(_addin.PathToOutput);
+			string result = File.ReadAllText(_addin.PathToOutput);
 			Assert.Greater(result.Trim().Length, 0);
-
-			return result;
 		}
 
 		[Test]
 		public void CanGetXsltFromResource()
 		{
-			ProjectInfo info = WeSay.Project.WeSayWordsProject.Project.GetProjectInfoForAddin();
+			ProjectInfo info = WeSayWordsProject.Project.GetProjectInfoForAddin(null);
 			string path = info.LocateFile("plift2html.xsl");
 			if (!string.IsNullOrEmpty(path))
 			{
 				File.Delete(path);
 			}
-			Stream stream = LiftTransformer.GetXsltStream(info,
-										  "plift2html.xsl");
+			Stream stream = LiftTransformer.GetXsltStream(info, "plift2html.xsl");
 			Assert.IsNotNull(stream);
 		}
 	}
-
 }

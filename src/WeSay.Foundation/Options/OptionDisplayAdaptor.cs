@@ -5,17 +5,17 @@ using System.Text.RegularExpressions;
 
 namespace WeSay.Foundation.Options
 {
-	public class OptionDisplayAdaptor : IChoiceSystemAdaptor<Option, String, OptionRef>
+	public class OptionDisplayAdaptor: IChoiceSystemAdaptor<Option, string, OptionRef>
 	{
 		private readonly OptionsList _allOptions;
 		private readonly string _preferredWritingSystemId;
-		private IDisplayStringAdaptor _toolTipAdaptor;
+		private readonly IDisplayStringAdaptor _toolTipAdaptor;
 
-		public OptionDisplayAdaptor(OptionsList allOptions,  string preferredWritingSystemId)
+		public OptionDisplayAdaptor(OptionsList allOptions, string preferredWritingSystemId)
 		{
-			this._allOptions = allOptions;
-			this._preferredWritingSystemId = preferredWritingSystemId;
-			this._toolTipAdaptor = null;
+			_allOptions = allOptions;
+			_preferredWritingSystemId = preferredWritingSystemId;
+			_toolTipAdaptor = null;
 		}
 
 		#region IDisplayStringAdaptor Members
@@ -23,13 +23,15 @@ namespace WeSay.Foundation.Options
 		public string GetDisplayLabel(object item)
 		{
 			if (item == null)
+			{
 				return string.Empty;
+			}
 
-			Option option = item as Option;// _allOptions.GetOptionFromKey((string)item);
+			Option option = item as Option; // _allOptions.GetOptionFromKey((string)item);
 
 			if (option == null)
 			{
-				return (string)item;   // no matching object, just show the key
+				return (string) item; // no matching object, just show the key
 			}
 
 			return option.Name.GetBestAlternative(_preferredWritingSystemId);
@@ -37,13 +39,13 @@ namespace WeSay.Foundation.Options
 
 		public string GetToolTip(object item)
 		{
-			Option option = item as Option;
+			Option option = (Option) item;
 			return option.Description.GetBestAlternative(_preferredWritingSystemId);
 		}
 
 		public string GetToolTipTitle(object item)
 		{
-			Option option = item as Option;
+			Option option = (Option) item;
 			return option.Abbreviation.GetBestAlternative(_preferredWritingSystemId);
 		}
 
@@ -60,16 +62,13 @@ namespace WeSay.Foundation.Options
 		/// GetValueFromKeyValueDelegate
 		/// </summary>
 		/// <returns></returns>
-		public Option GetOptionFromKey(string s)//review: is this the key?
+		public Option GetOptionFromKey(string s) //review: is this the key?
 		{
-			Option result = _allOptions.Options.Find(delegate(Option opt)
-														 {
-															 return opt.Key == s;
-														 });
+			Option result = _allOptions.Options.Find(delegate(Option opt) { return opt.Key == s; });
 
 			// string name = " no match";
-//                if (result != null)
-//                    name = result.Name.GetFirstAlternative();
+			//                if (result != null)
+			//                    name = result.Name.GetFirstAlternative();
 			//Debug.WriteLine("GetOptionFromKey(" + s + ") = " + name);
 			return result;
 		}
@@ -93,7 +92,6 @@ namespace WeSay.Foundation.Options
 					//_toolTipAdaptor = new
 				}
 				return _toolTipAdaptor;
-
 			}
 		}
 
@@ -116,9 +114,9 @@ namespace WeSay.Foundation.Options
 
 		public Option GetValueFromForm(string form)
 		{
-			foreach (Option item in this._allOptions.Options)
+			foreach (Option item in _allOptions.Options)
 			{
-				if (String.Compare(GetDisplayLabel(item),form, true) == 0)
+				if (String.Compare(GetDisplayLabel(item), form, true) == 0)
 				{
 					return item;
 				}
@@ -131,59 +129,69 @@ namespace WeSay.Foundation.Options
 			return GetValueFromForm(form);
 		}
 
-		public IEnumerable GetItemsToOffer(string text, IEnumerable items, IDisplayStringAdaptor adaptor)
+		public IEnumerable GetItemsToOffer(string text,
+										   IEnumerable items,
+										   IDisplayStringAdaptor adaptor)
 		{
 			List<Option> show = new List<Option>();
+#if !DEBUG
 			try
 			{
-				//enhance: make that text safe for regex. for now, we just swallow the exception
-				string pattern = @"(^|[^\w])("+ text +@")[^\w]";
-				System.Text.RegularExpressions.Regex MatchWholeWordNoCase =
+#endif
+			//enhance: make that text safe for regex. for now, we just swallow the exception
+			string pattern = @"(^|[^\w])(" + text + @")[^\w]";
+			Regex MatchWholeWordNoCase =
 					new Regex(pattern, RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
-				foreach (Option option in _allOptions.Options)
+			foreach (Option option in _allOptions.Options)
+			{
+				//todo: make this prefferd script(s) savvy
+				if (
+						option.Name.GetFirstAlternative().StartsWith(text,
+																	 StringComparison.
+																			 CurrentCultureIgnoreCase))
 				{
-					//todo: make this prefferd script(s) savvy
-					if (option.Name.GetFirstAlternative().StartsWith(text, StringComparison.CurrentCultureIgnoreCase))
+					show.Add(option);
+				}
+			}
+			foreach (Option option in _allOptions.Options)
+			{
+				//todo: make this prefferd script(s) savvy
+				if (
+						option.Abbreviation.GetFirstAlternative().StartsWith(text,
+																			 StringComparison.
+																					 CurrentCultureIgnoreCase))
+				{
+					if (!show.Contains(option))
 					{
 						show.Add(option);
 					}
 				}
+			}
+			//  if(show.Count == 0)
+			{
 				foreach (Option option in _allOptions.Options)
 				{
 					//todo: make this prefferd script(s) savvy
-					if (
-						option.Abbreviation.GetFirstAlternative().StartsWith(text,
-																			 StringComparison.CurrentCultureIgnoreCase))
+					if (MatchWholeWordNoCase.IsMatch(option.Description.GetFirstAlternative()))
 					{
 						if (!show.Contains(option))
-							show.Add(option);
-					}
-				}
-				//  if(show.Count == 0)
-				{
-					foreach (Option option in _allOptions.Options)
-					{
-						//todo: make this prefferd script(s) savvy
-						if (MatchWholeWordNoCase.IsMatch(option.Description.GetFirstAlternative()))
 						{
-							if (!show.Contains(option))
-								show.Add(option);
+							show.Add(option);
 						}
 					}
 				}
 			}
+#if !DEBUG
+			}
 			catch (Exception e)
 			{
-#if DEBUG
-				throw e;
-#endif
 				//not worth crashing over some regex problem
 			}
+#endif
 			return show;
 		}
+
 		#endregion
-
-
 	}
 }

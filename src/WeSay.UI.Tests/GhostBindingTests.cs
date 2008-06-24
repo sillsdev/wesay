@@ -4,7 +4,6 @@ using System.Drawing;
 using NUnit.Framework;
 using WeSay.Data;
 using WeSay.Foundation;
-using WeSay.Language;
 using WeSay.Project;
 
 namespace WeSay.UI.Tests
@@ -12,19 +11,21 @@ namespace WeSay.UI.Tests
 	[TestFixture]
 	public class GhostBindingTests
 	{
-		private Papa _papa = new Papa();
+		private readonly Papa _papa = new Papa();
 		private WeSayTextBox _ghostFirstNameWidget;
 		private WeSayTextBox _papaNameWidget;
 		private GhostBinding<Child> _binding;
 		protected bool _didNotify;
-		private string _writingSystemId = BasilProject.Project.WritingSystems.TestWritingSystemAnalId;
 
-		public class Child : WeSayDataObject
+		private readonly string _writingSystemId =
+				BasilProject.Project.WritingSystems.TestWritingSystemAnalId;
+
+		public class Child: WeSayDataObject
 		{
 			private MultiText first = new MultiText();
 			private MultiText middle = new MultiText();
 
-			public Child() : base(null) {}
+			public Child(): base(null) {}
 
 			public MultiText First
 			{
@@ -44,11 +45,11 @@ namespace WeSay.UI.Tests
 			}
 		}
 
-		public class Papa : WeSayDataObject
+		public class Papa: WeSayDataObject
 		{
-			private InMemoryBindingList<Child> _children = new InMemoryBindingList<Child>();
+			private readonly InMemoryBindingList<Child> _children = new InMemoryBindingList<Child>();
 
-			public Papa() : base(null)
+			public Papa(): base(null)
 			{
 				_children = new InMemoryBindingList<Child>();
 
@@ -72,9 +73,13 @@ namespace WeSay.UI.Tests
 			}
 		}
 
-		private void _binding_LayoutNeededAfterMadeReal(object sender, IBindingList list, int index,
-														MultiTextControl previouslyGhostedControlToReuse,
-														bool doGoToNextField, EventArgs args)
+		private void _binding_LayoutNeededAfterMadeReal(object sender,
+														IBindingList list,
+														int index,
+														MultiTextControl
+																previouslyGhostedControlToReuse,
+														bool doGoToNextField,
+														EventArgs args)
 		{
 			_didNotify = true;
 		}
@@ -84,11 +89,16 @@ namespace WeSay.UI.Tests
 		{
 			BasilProject.InitializeForTests();
 
-			WritingSystem writingSystem = new WritingSystem(_writingSystemId, new Font(FontFamily.GenericSansSerif, 24));
+			WritingSystem writingSystem =
+					new WritingSystem(_writingSystemId, new Font(FontFamily.GenericSansSerif, 24));
 			_papaNameWidget = new WeSayTextBox(writingSystem, null);
 			_papaNameWidget.Text = "John";
 			_ghostFirstNameWidget = new WeSayTextBox(writingSystem, null);
-			_binding = new GhostBinding<Child>(_papa.Children, "First", writingSystem, _ghostFirstNameWidget);
+			_binding =
+					new GhostBinding<Child>(_papa.Children,
+											"First",
+											writingSystem,
+											_ghostFirstNameWidget);
 			_didNotify = false;
 			//Window w = new Window("test");
 			//VBox box = new VBox();
@@ -98,8 +108,8 @@ namespace WeSay.UI.Tests
 			//box.ShowAll();
 			//w.ShowAll();
 			_papaNameWidget.Show();
-//            while (Gtk.Application.EventsPending())
-//            { Gtk.Application.RunIteration(); }
+			//            while (Gtk.Application.EventsPending())
+			//            { Gtk.Application.RunIteration(); }
 
 			//Application.Run();
 			_papaNameWidget.Focus();
@@ -127,10 +137,9 @@ namespace WeSay.UI.Tests
 		public void NewItemTriggersEvent()
 		{
 			_binding.ReferenceControl = _papaNameWidget;
-					//just has to be *something*, else the trigger won't call us back
+			//just has to be *something*, else the trigger won't call us back
 
-			_binding.LayoutNeededAfterMadeReal +=
-					new GhostBinding<Child>.LayoutNeededHandler(_binding_LayoutNeededAfterMadeReal);
+			_binding.LayoutNeededAfterMadeReal += _binding_LayoutNeededAfterMadeReal;
 			_ghostFirstNameWidget.Text = "Samuel";
 			_ghostFirstNameWidget.PretendLostFocus();
 			Assert.IsTrue(_didNotify);

@@ -1,16 +1,14 @@
 using System;
-using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
-using Db4objects.Db4o.Query;
+using LiftIO;
 using LiftIO.Merging;
 using Palaso.Reporting;
 using WeSay.Data;
 using WeSay.Foundation;
 using WeSay.LexicalModel;
-using WeSay.Project;
-
 
 /*  Analysis of what happens to the data when there is a crash
  *              (Note, you can simulate crash by doing shift-pause from a WeSayTextBox)
@@ -29,6 +27,7 @@ using WeSay.Project;
  * Y                corrupt, but exporter ended normally                    WOULD LOOSE DATA
  *
  */
+
 namespace WeSay.Project
 {
 	public class LiftUpdateService
@@ -36,25 +35,23 @@ namespace WeSay.Project
 		//private const string s_updatePointFileName = "updatePoint";
 		private const int _checkFrequency = 10;
 		private int _commitCount;
-		private Db4oDataSource _datasource;
+		private readonly LexEntryRepository _lexEntryRepository;
 		private DateTime _timeOfLastQueryForNewRecords;
 		//private bool _didFindDataInCacheNeedingRecovery = false;
 
-		event EventHandler Updating;
+		private event EventHandler Updating;
 
-		public LiftUpdateService(Db4oDataSource datasource)
+		public LiftUpdateService(LexEntryRepository lexEntryRepository)
 		{
-			_datasource = datasource;
+			_lexEntryRepository = lexEntryRepository;
+			// todo LexEntryRepository owns a LiftUpdateService and manages it directly. e.g. on SaveItem
+			//_lexEntryRepository.Db4oDataSource.DataCommitted += new EventHandler(liftUpdateService.OnDataCommitted);
+			//_lexEntryRepository.Db4oDataSource.DataDeleted += new EventHandler<DeletedItemEventArgs>(liftUpdateService.OnDataDeleted);
 		}
-
-
 
 		private static string LiftDirectory
 		{
-			get
-			{
-				return Path.GetDirectoryName(WeSayWordsProject.Project.PathToLiftFile);
-			}
+			get { return Path.GetDirectoryName(WeSayWordsProject.Project.PathToLiftFile); }
 		}
 
 		/// <summary>
@@ -85,31 +82,33 @@ namespace WeSay.Project
 				return;
 			}
 
-			LiftExporter exporter = new LiftExporter(/*WeSayWordsProject.Project.GetFieldToOptionListNameDictionary(), */
-				MakeIncrementFileName(DateTime.UtcNow));
+			LiftExporter exporter =
+					new LiftExporter( /*WeSayWordsProject.Project.GetFieldToOptionListNameDictionary(), */
+							MakeIncrementFileName(DateTime.UtcNow), _lexEntryRepository);
 			exporter.AddDeletedEntry(entry);
 			exporter.End();
 		}
 
-
-
 		public void DoLiftUpdateNow(bool mergeIntoSingleFileBeforeReturning)
 		{
-		   // Logger.WriteEvent("Incremental Update Start");
+			// Logger.WriteEvent("Incremental Update Start");
 
 			if (Updating != null)
 			{
 				Updating.Invoke(this, null);
 			}
 
-			IList records = GetRecordsNeedingUpdateInLift();
-			if (records.Count != 0)
+			IList<RepositoryId> repositoryIds = GetRecordsNeedingUpdateInLift();
+			if (repositoryIds.Count != 0)
 			{
 				LameProgressDialog dlg = null;
-				if (records.Count > 50)
+				if (repositoryIds.Count > 50)
 				{
 					//TODO: if we think this will actually ever be called, clean this up with a real, delayed-visibility dialog
-					dlg = new LameProgressDialog(string.Format("Doing incremental update of {0} records...", records.Count));
+					dlg =
+							new LameProgressDialog(
+									string.Format("Doing incremental update of {0} records...",
+												  repositoryIds.Count));
 					dlg.Show();
 					Application.DoEvents();
 				}
@@ -117,9 +116,10 @@ namespace WeSay.Project
 				try
 				{
 					LiftExporter exporter =
-						new LiftExporter(/*WeSayWordsProject.Project.GetFieldToOptionListNameDictionary(),*/
-										 MakeIncrementFileName(_timeOfLastQueryForNewRecords));
-					exporter.AddNoGeneric(records);
+							new LiftExporter( /*WeSayWordsProject.Project.GetFieldToOptionListNameDictionary(),*/
+									MakeIncrementFileName(_timeOfLastQueryForNewRecords),
+									_lexEntryRepository);
+					exporter.Add(repositoryIds);
 					exporter.End();
 
 					RecordUpdateTime(_timeOfLastQueryForNewRecords);
@@ -138,9 +138,10 @@ namespace WeSay.Project
 			{
 				if (ConsumePendingLiftUpdates())
 				{
-					CacheManager.UpdateSyncPointInCache(_datasource.Data,
-															File.GetLastWriteTimeUtc(
-																WeSayWordsProject.Project.PathToLiftFile));
+					CacheManager.UpdateSyncPointInCache(_lexEntryRepository.Db4oDataSource.Data,
+														File.GetLastWriteTimeUtc(
+																WeSayWordsProject.Project.
+																		PathToLiftFile));
 				}
 			}
 
@@ -155,7 +156,9 @@ namespace WeSay.Project
 		{
 			//merge the increment files
 
-			if (SynchronicMerger.GetPendingUpdateFiles(WeSayWordsProject.Project.PathToLiftFile).Length > 0)
+			if (
+					SynchronicMerger.GetPendingUpdateFiles(WeSayWordsProject.Project.PathToLiftFile)
+							.Length > 0)
 			{
 				Logger.WriteEvent("Running Synchronic Merger");
 				try
@@ -164,44 +167,46 @@ namespace WeSay.Project
 					WeSayWordsProject.Project.ReleaseLockOnLift();
 					merger.MergeUpdatesIntoFile(WeSayWordsProject.Project.PathToLiftFile);
 				}
-				catch (LiftIO.BadUpdateFileException error)
+				catch (BadUpdateFileException error)
 				{
 					string contents = File.ReadAllText(error.PathToNewFile);
 					if (contents.Trim().Length == 0)
 					{
-					   Palaso.Reporting.ErrorReport.ReportNonFatalMessage(
-							"It looks as though WeSay recently crashed while attempting to save.  It will try again to preserve your work, but you will want to check to make sure nothing was lost.");
+						ErrorReport.ReportNonFatalMessage(
+								"It looks as though WeSay recently crashed while attempting to save.  It will try again to preserve your work, but you will want to check to make sure nothing was lost.");
 						File.Delete(error.PathToNewFile);
 					}
 					else
 					{
 						File.Move(error.PathToNewFile, error.PathToNewFile + ".bad");
-						Palaso.Reporting.ErrorReport.ReportNonFatalMessage(
-							"WeSay was unable to save some work you did in the previous session.  The work might be recoverable from the file {0}. The next screen will allow you to send a report of this to the developers.", error.PathToNewFile + ".bad");
-						Palaso.Reporting.ErrorNotificationDialog.ReportException(error, null, false);
+						ErrorReport.ReportNonFatalMessage(
+								"WeSay was unable to save some work you did in the previous session.  The work might be recoverable from the file {0}. The next screen will allow you to send a report of this to the developers.",
+								error.PathToNewFile + ".bad");
+						ErrorNotificationDialog.ReportException(error, null, false);
 					}
 					return false;
 				}
 				catch (Exception e)
 				{
-					throw new ApplicationException("Could not finish updating LIFT dictionary file.", e);
+					throw new ApplicationException(
+							"Could not finish updating LIFT dictionary file.", e);
 				}
 				finally
 				{
 					WeSayWordsProject.Project.LockLift();
 				}
 			}
-		   return true;
+			return true;
 		}
-
 
 		private static string MakeIncrementFileName(DateTime time)
 		{
-			while(true){
+			while (true)
+			{
 				string timeString = time.ToString("yyyy'-'MM'-'dd'T'HH'-'mm'-'ss'-'FFFFFFF UTC");
 				string path = Path.Combine(LiftDirectory, timeString);
 				path += SynchronicMerger.ExtensionOfIncrementalFiles;
-				if(!File.Exists(path))
+				if (!File.Exists(path))
 				{
 					return path;
 				}
@@ -248,18 +253,11 @@ namespace WeSay.Project
 			return File.GetLastWriteTimeUtc(WeSayWordsProject.Project.PathToLiftFile);
 		}
 
-		public IList  GetRecordsNeedingUpdateInLift()
+		public IList<RepositoryId> GetRecordsNeedingUpdateInLift()
 		{
-			// by moving back 1 milliseconds, we ensure that we
-			// will get the correct records with just a > and not >= (see note below)
-			DateTime last = GetLastUpdateTime().AddMilliseconds(-1);
-			IQuery q =this._datasource.Data.Query();
-			q.Constrain(typeof(LexEntry));
-			//REVIEW: this is >, not >=. Could a change get lost if the
-			//record was modified milliseconds before the last update?
-			q.Descend("_modificationTime").Constrain(last).Greater();
+			DateTime last = GetLastUpdateTime();
 			_timeOfLastQueryForNewRecords = DateTime.UtcNow;
-			return q.Execute();
+			return _lexEntryRepository.GetEntriesUpdatedSince(last);
 		}
 
 		/// <summary>
@@ -270,12 +268,13 @@ namespace WeSay.Project
 		{
 			try
 			{
-				if (CacheManager.GetAssumeCacheIsFresh(Project.WeSayWordsProject.Project.PathToCache))
+				if (CacheManager.GetAssumeCacheIsFresh(WeSayWordsProject.Project.PathToCache))
 				{
-					return;// setting permissions in the installer apparently was enough to mess this next line up on the sample data
+					return;
+					// setting permissions in the installer apparently was enough to mess this next line up on the sample data
 				}
 
-				IList records = GetRecordsNeedingUpdateInLift();
+				IList<RepositoryId> records = GetRecordsNeedingUpdateInLift();
 				if (records.Count == 0)
 				{
 					return;
@@ -283,25 +282,25 @@ namespace WeSay.Project
 
 				try
 				{
-					Palaso.Reporting.ErrorReport.ReportNonFatalMessage(
-						"It appears that WeSay did not exit normally last time.  WeSay will now attempt to recover the {0} records which were not saved.",
-						records.Count);
+					ErrorReport.ReportNonFatalMessage(
+							"It appears that WeSay did not exit normally last time.  WeSay will now attempt to recover the {0} records which were not saved.",
+							records.Count);
 					DoLiftUpdateNow(false);
-//                    _didFindDataInCacheNeedingRecovery = true;
-					Palaso.Reporting.ErrorReport.ReportNonFatalMessage("Your work was successfully recovered.");
+					//                    _didFindDataInCacheNeedingRecovery = true;
+					ErrorReport.ReportNonFatalMessage("Your work was successfully recovered.");
 				}
 				catch (Exception)
 				{
-					Palaso.Reporting.ErrorReport.ReportNonFatalMessage(
-						"Sorry, WeSay was unable to recover some of your work.");
-					Project.WeSayWordsProject.Project.InvalidateCacheSilently();
+					ErrorReport.ReportNonFatalMessage(
+							"Sorry, WeSay was unable to recover some of your work.");
+					WeSayWordsProject.Project.InvalidateCacheSilently();
 				}
 			}
 			catch (Exception)
 			{
-				Palaso.Reporting.ErrorReport.ReportNonFatalMessage(
-					"WeSay had a problem reading the cache.  It will now be rebuilt");
-				Project.WeSayWordsProject.Project.InvalidateCacheSilently();
+				ErrorReport.ReportNonFatalMessage(
+						"WeSay had a problem reading the cache.  It will now be rebuilt");
+				WeSayWordsProject.Project.InvalidateCacheSilently();
 			}
 		}
 	}

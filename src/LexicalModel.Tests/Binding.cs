@@ -1,19 +1,12 @@
-using System;
 using NUnit.Framework;
-using System.Diagnostics;
-using System.Xml;
-using System.Collections.Generic;
-using WeSay.LexicalModel;
 
-namespace LexicalModel.Tests
+namespace WeSay.LexicalModel.Tests
 {
 	[TestFixture]
 	public class Binding
 	{
 		[SetUp]
-		public void Setup()
-		{
-		}
+		public void Setup() {}
 
 		[Test]
 		public void Test()

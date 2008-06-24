@@ -3,19 +3,15 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Reflection;
-using System.Windows.Forms;
-using System.Xml;
 using Db4objects.Db4o;
-using LiftIO;
 using LiftIO.Parsing;
 using LiftIO.Validation;
 using Palaso.Progress;
 using Palaso.Reporting;
-using WeSay.App;
 using WeSay.Data;
 using WeSay.Foundation;
 using WeSay.LexicalModel;
-using WeSay.LexicalModel.Db4o_Specific;
+using Debug=System.Diagnostics.Debug;
 
 namespace WeSay.Project
 {
@@ -42,21 +38,25 @@ namespace WeSay.Project
 			string pathToCacheDirectory = project.PathToCache;
 			if (GetCacheIsOutOfDate(project))
 			{
-				if (Directory.Exists(pathToCacheDirectory) && Directory.GetFileSystemEntries(pathToCacheDirectory).Length != 0)
+				if (Directory.Exists(pathToCacheDirectory) &&
+					Directory.GetFileSystemEntries(pathToCacheDirectory).Length != 0)
 				{
 					try
 					{
 						Directory.Delete(pathToCacheDirectory, true);
 					}
-					catch(IOException)
+					catch (IOException)
 					{
 						// avoid crash if we managed to delete all files but not the directory itself
 						if (Directory.GetFileSystemEntries(pathToCacheDirectory).Length != 0)
+						{
 							throw;
+						}
 					}
 				}
 			}
-			if (!Directory.Exists(pathToCacheDirectory) || !File.Exists(project.PathToDb4oLexicalModelDB))
+			if (!Directory.Exists(pathToCacheDirectory) ||
+				!File.Exists(project.PathToDb4oLexicalModelDB))
 			{
 				return new CacheBuilder(project.PathToLiftFile);
 			}
@@ -67,8 +67,7 @@ namespace WeSay.Project
 		{
 			string pathToCacheDirectory = project.PathToCache;
 			string db4oPath = project.PathToDb4oLexicalModelDB;
-			if (!Directory.Exists(pathToCacheDirectory) ||
-				(!File.Exists(db4oPath)))
+			if (!Directory.Exists(pathToCacheDirectory) || (!File.Exists(db4oPath)))
 			{
 				return true;
 			}
@@ -81,8 +80,10 @@ namespace WeSay.Project
 
 			using (Db4oDataSource ds = new Db4oDataSource(project.PathToDb4oLexicalModelDB))
 			{
-				return (!GetSyncPointInCacheMatches(ds, File.GetLastWriteTimeUtc(project.PathToLiftFile)))
-					|| (!GetModelVersionInCacheMatches(ds));
+				return
+						(!GetSyncPointInCacheMatches(ds,
+													 File.GetLastWriteTimeUtc(project.PathToLiftFile))) ||
+						(!GetModelVersionInCacheMatches(ds));
 			}
 		}
 
@@ -99,9 +100,10 @@ namespace WeSay.Project
 			public string GetCurrentModelVersion()
 			{
 				Assembly assembly = Assembly.GetExecutingAssembly();
-				System.Diagnostics.Debug.Assert(assembly != null);
-				object[] attributes = assembly.GetCustomAttributes(typeof (AssemblyFileVersionAttribute), false);
-				System.Diagnostics.Debug.Assert(attributes.Length > 0);
+				Debug.Assert(assembly != null);
+				object[] attributes =
+						assembly.GetCustomAttributes(typeof (AssemblyFileVersionAttribute), false);
+				Debug.Assert(attributes.Length > 0);
 				return ((AssemblyFileVersionAttribute) attributes[0]).Version;
 			}
 
@@ -186,7 +188,6 @@ namespace WeSay.Project
 	{
 		private string _sourceLIFTPath;
 		private ProgressState _progress;
-		private Db4oRecordList<LexEntry> _prewiredEntries = null;
 		private BackgroundWorker _backgroundWorker;
 
 		public CacheBuilder(string sourceLIFTPath)
@@ -214,33 +215,11 @@ namespace WeSay.Project
 			}
 		}
 
-		/// <summary>
-		/// caller can set this if you want some actions to happen as each entry is
-		/// imported, such as building up indices.  The given entries list will be
-		/// used, and you can act on the events it fires.
-		/// </summary>
-		public Db4oRecordList<LexEntry> EntriesAlreadyWiredUp
-		{
-			set { _prewiredEntries = value; }
-		}
-
 		public string SourceLIFTPath
 		{
 			get { return _sourceLIFTPath; }
 			set { _sourceLIFTPath = value; }
 		}
-
-		public Db4oRecordList<LexEntry> GetEntries(Db4oDataSource ds)
-		{
-			if (_prewiredEntries == null)
-			{
-				return new Db4oRecordList<LexEntry>(ds);
-			}
-
-			return _prewiredEntries;
-		}
-
-
 
 		public void DoWork(ProgressState progress)
 		{
@@ -248,7 +227,6 @@ namespace WeSay.Project
 			_progress = progress;
 			_progress.State = ProgressState.StateValue.Busy;
 			_progress.StatusLabel = "Validating...";
-
 
 			try
 			{
@@ -258,44 +236,33 @@ namespace WeSay.Project
 					progress.StatusLabel = "Problem with file format...";
 					_progress.State = ProgressState.StateValue.StoppedWithError;
 					_progress.WriteToLog(
-							string.Format("There is a problem with the format of {0}. {1}", _sourceLIFTPath, errors));
+							string.Format("There is a problem with the format of {0}. {1}",
+										  _sourceLIFTPath,
+										  errors));
 					Logger.WriteEvent("LIFT failed to validate.");
 					return;
 				}
 
-
 				progress.StatusLabel = "Building Caches...";
 				string tempCacheDirectory =
-						Directory.CreateDirectory(Path.Combine(Path.GetTempPath(), Path.GetRandomFileName())).FullName;
+						Directory.CreateDirectory(
+								Path.Combine(Path.GetTempPath(), Path.GetRandomFileName())).FullName;
 				WeSayWordsProject.Project.CacheLocationOverride = tempCacheDirectory;
 
 				//same name, but in a temp directory
-				string db4oFileName = Path.GetFileName(WeSayWordsProject.Project.PathToDb4oLexicalModelDB);
+				string db4oFileName =
+						Path.GetFileName(WeSayWordsProject.Project.PathToDb4oLexicalModelDB);
 				string tempDb4oFilePath = Path.Combine(tempCacheDirectory, db4oFileName);
 
-				using (IRecordListManager recordListManager =
-						new Db4oRecordListManager(new WeSayWordsDb4oModelConfiguration(), tempDb4oFilePath))
+				using (
+						LexEntryRepository lexEntryRepository =
+								new LexEntryRepository(tempDb4oFilePath))
 				{
-					Db4oDataSource ds = ((Db4oRecordListManager) recordListManager).DataSource;
-					Db4oLexModelHelper.Initialize(ds.Data);
-					Lexicon.Init((Db4oRecordListManager)recordListManager);
-
-					//  Db4oRecordListManager ds = recordListManager as Db4oRecordListManager;
-
 					//MONO bug as of 1.1.18 cannot bitwise or FileShare on FileStream constructor
 					//                    using (FileStream config = new FileStream(project.PathToProjectTaskInventory, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete))
-					SetupTasksToBuildCaches(recordListManager);
+					SetupTasksToBuildCaches(lexEntryRepository);
 
-					EntriesAlreadyWiredUp = (Db4oRecordList<LexEntry>) recordListManager.GetListOfType<LexEntry>();
-
-					if (Db4oLexModelHelper.Singleton == null)
-					{
-						Db4oLexModelHelper.Initialize(ds.Data);
-						Lexicon.Init((Db4oRecordListManager)recordListManager);
-					}
-
-
-					DoParsing(ds);
+					DoParsing(lexEntryRepository);
 					if (_backgroundWorker != null && _backgroundWorker.CancellationPending)
 					{
 						return;
@@ -307,9 +274,11 @@ namespace WeSay.Project
 				//if we got this far without an error, move it
 				//string backupPath = _destinationDatabasePath + ".bak";
 				//not needed File.Delete(backupPath);
-				string cacheFolderName = WeSayWordsProject.Project.PathToCache; // _destinationDatabasePath + " Cache";
+				string cacheFolderName = WeSayWordsProject.Project.PathToCache;
+				// _destinationDatabasePath + " Cache";
 				// if directory is empty, don't delete because it may be in use
-				if (Directory.Exists(cacheFolderName) && Directory.GetFileSystemEntries(cacheFolderName).Length != 0)
+				if (Directory.Exists(cacheFolderName) &&
+					Directory.GetFileSystemEntries(cacheFolderName).Length != 0)
 				{
 					try
 					{
@@ -319,18 +288,26 @@ namespace WeSay.Project
 					{
 						// avoid crash if we managed to delete all files but not the directory itself
 						if (Directory.GetFileSystemEntries(cacheFolderName).Length != 0)
+						{
 							throw;
+						}
 					}
 					//fails if temp dir is on a different volume:
 					//Directory.Move(tempTarget + " Cache", cacheFolderName);
 				}
 				SafeMoveDirectory(tempCacheDirectory, cacheFolderName);
 
-				using (Db4oDataSource ds = new Db4oDataSource(WeSayWordsProject.Project.PathToDb4oLexicalModelDB))
+				using (
+						Db4oDataSource ds =
+								new Db4oDataSource(
+										WeSayWordsProject.Project.PathToDb4oLexicalModelDB))
 				{
-					CacheManager.UpdateSyncPointInCache(ds.Data, File.GetLastWriteTimeUtc(_sourceLIFTPath));
+					CacheManager.UpdateSyncPointInCache(ds.Data,
+														File.GetLastWriteTimeUtc(_sourceLIFTPath));
 					File.WriteAllText(
-							Path.Combine(WeSayWordsProject.Project.PathToCache, CacheManager.kCacheIsFreshIndicator), "");
+							Path.Combine(WeSayWordsProject.Project.PathToCache,
+										 CacheManager.kCacheIsFreshIndicator),
+							"");
 				}
 
 				_progress.State = ProgressState.StateValue.Finished;
@@ -340,58 +317,47 @@ namespace WeSay.Project
 				//currently, error reporter can choke because this is
 				//being called from a non sta thread.
 				//so let's leave it to the progress dialog to report the error
-//                Reporting.ErrorReporter.ReportException(e,null, false);
+				//                Reporting.ErrorReporter.ReportException(e,null, false);
 				_progress.ExceptionThatWasEncountered = e;
 				_progress.WriteToLog(e.Message);
 				_progress.State = ProgressState.StateValue.StoppedWithError;
 			}
 			finally
 			{
-				try// EVIL STATICS!
+				try // EVIL STATICS!
 				{
 					if (WeSayWordsProject.Project != null)
 					{
 						WeSayWordsProject.Project.CacheLocationOverride = null;
 					}
 				}
-				catch(Exception ) //swallow
+				catch (Exception)
 				{
+					//swallow
 				}
 			}
 			Logger.WriteEvent("Done Building Caches");
 		}
 
-		private void DoParsing(Db4oDataSource ds)
+		private void DoParsing(LexEntryRepository lexEntryRepository)
 		{
-			Db4oRecordList<LexEntry> entriesList = GetEntries(ds);
-			try
+			//                entriesList.WriteCacheSize = 0; //don't write after every record
+			using (LiftMerger merger = new LiftMerger(lexEntryRepository))
 			{
-				entriesList.WriteCacheSize = 0; //don't write after every record
-				using (LiftMerger merger = new LiftMerger(ds, entriesList))
+				foreach (string name in WeSayWordsProject.Project.OptionFieldNames)
 				{
-					foreach (string name in WeSayWordsProject.Project.OptionFieldNames)
-					{
-						merger.ExpectedOptionTraits.Add(name);
-						//_importer.ExpectedOptionTraits.Add(name);
-					}
-					foreach (string name in WeSayWordsProject.Project.OptionCollectionFieldNames)
-					{
-						merger.ExpectedOptionCollectionTraits.Add(name);
-					}
-
-					RunParser(merger);
+					merger.ExpectedOptionTraits.Add(name);
+					//_importer.ExpectedOptionTraits.Add(name);
+				}
+				foreach (string name in WeSayWordsProject.Project.OptionCollectionFieldNames)
+				{
+					merger.ExpectedOptionCollectionTraits.Add(name);
 				}
 
-				UpdateDashboardStats();
+				RunParser(merger);
 			}
 
-			finally
-			{
-				if (entriesList != _prewiredEntries) //did we create it?
-				{
-					entriesList.Dispose();
-				}
-			}
+			UpdateDashboardStats();
 		}
 
 		private static void UpdateDashboardStats()
@@ -405,9 +371,10 @@ namespace WeSay.Project
 			}
 		}
 
-		private static void SetupTasksToBuildCaches(IRecordListManager recordListManager)
+		private static void SetupTasksToBuildCaches(LexEntryRepository lexEntryRepository)
 		{
-			recordListManager.DelayWritingCachesUntilDispose = true;
+			//todo unit of work?
+			//lexEntryRepository.DelayWritingCachesUntilDispose = true;
 			ConfigFileTaskBuilder taskBuilder;
 			using (
 					FileStream configFile =
@@ -416,10 +383,11 @@ namespace WeSay.Project
 										   FileAccess.Read,
 										   FileShare.ReadWrite))
 			{
-				taskBuilder = new ConfigFileTaskBuilder(configFile,
-														WeSayWordsProject.Project,
-														new EmptyCurrentWorkTask(),
-														recordListManager);
+				taskBuilder =
+						new ConfigFileTaskBuilder(configFile,
+												  WeSayWordsProject.Project,
+												  new EmptyCurrentWorkTask(),
+												  lexEntryRepository);
 			}
 
 			WeSayWordsProject.Project.Tasks = taskBuilder.Tasks;
@@ -435,52 +403,44 @@ namespace WeSay.Project
 			}
 		}
 
-		private void RunParser( LiftMerger merger)
+		private void RunParser(
+				ILexiconMerger<WeSayDataObject, LexEntry, LexSense, LexExampleSentence> merger)
 		{
 			LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence> parser =
-				new LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence>(merger);
+					new LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence>(merger);
 
-			parser.SetTotalNumberSteps +=
-				new EventHandler
-					<LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence>.StepsArgs>(
-					parser_SetTotalNumberSteps);
-			parser.SetStepsCompleted +=
-				new EventHandler
-					<
-						LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence>.
-							ProgressEventArgs>(
-					parser_SetStepsCompleted);
+			parser.SetTotalNumberSteps += parser_SetTotalNumberSteps;
+			parser.SetStepsCompleted += parser_SetStepsCompleted;
 
-			parser.ParsingWarning +=
-				new EventHandler
-					<LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence>.ErrorArgs>(
-					parser_ParsingWarning);
+			parser.ParsingWarning += parser_ParsingWarning;
 
 			try
 			{
 				parser.ReadLiftFile(_sourceLIFTPath);
 			}
-			catch(Exception error)
+			catch (Exception)
 			{
 				//our parser failed.  Hopefully, because of bad lift. Validate it now  to
 				//see if that's the problem.
 				Validator.CheckLiftWithPossibleThrow(_sourceLIFTPath);
 
 				//if it got past that, ok, send along the error the parser encountered.
-				throw error;
+				throw;
 			}
 		}
 
 		private void parser_ParsingWarning(object sender,
-										   LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence>.ErrorArgs
-												   e)
+										   LiftParser
+												   <WeSayDataObject, LexEntry, LexSense,
+												   LexExampleSentence>.ErrorArgs e)
 		{
 			_progress.WriteToLog(e.Exception.Message);
 		}
 
 		private void parser_SetStepsCompleted(object sender,
-											  LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence>.
-													  ProgressEventArgs e)
+											  LiftParser
+													  <WeSayDataObject, LexEntry, LexSense,
+													  LexExampleSentence>.ProgressEventArgs e)
 		{
 			_progress.NumberOfStepsCompleted = e.Progress;
 			if (_backgroundWorker != null)
@@ -490,8 +450,9 @@ namespace WeSay.Project
 		}
 
 		private void parser_SetTotalNumberSteps(object sender,
-												LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence>.
-														StepsArgs e)
+												LiftParser
+														<WeSayDataObject, LexEntry, LexSense,
+														LexExampleSentence>.StepsArgs e)
 		{
 			_progress.TotalNumberOfSteps = e.Steps;
 		}
@@ -515,8 +476,7 @@ namespace WeSay.Project
 					i++;
 				}
 				newPath += i;
-				Directory.Move(WeSayWordsProject.Project.PathToLiftBackupDir,
-							   newPath);
+				Directory.Move(WeSayWordsProject.Project.PathToLiftBackupDir, newPath);
 			}
 		}
 
@@ -524,8 +484,7 @@ namespace WeSay.Project
 		/// Recursive procedure to copy folder to another volume
 		/// cleaned up from http://www.codeproject.com/cs/files/CopyFiles.asp
 		/// </summary>
-		private static void SafeMoveDirectory(string sourceDir,
-											  string destinationDir)
+		private static void SafeMoveDirectory(string sourceDir, string destinationDir)
 		{
 			DirectoryInfo sourceDirInfo = new DirectoryInfo(sourceDir);
 			FileInfo[] files = sourceDirInfo.GetFiles();

@@ -1,35 +1,34 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
+using Palaso.Reporting;
+using Palaso.Text;
 using WeSay.Data;
 using WeSay.Foundation;
-using WeSay.Language;
 using WeSay.LexicalModel;
-using WeSay.LexicalModel.Db4o_Specific;
 using WeSay.Project;
 
 namespace WeSay.LexicalTools
 {
-	public class GatherWordListTask : WordGatheringTaskBase
+	public class GatherWordListTask: WordGatheringTaskBase
 	{
 		private readonly string _wordListFileName;
 		private GatherWordListControl _gatherControl;
 		private List<string> _words;
 		private int _currentWordIndex = 0;
-		private string _writingSystemIdForWordListWords;
-	   // private bool _suspendNotificationOfNavigation=false;
+		private readonly string _writingSystemIdForWordListWords;
+		private readonly WritingSystem _lexicalUnitWritingSystem;
+		// private bool _suspendNotificationOfNavigation=false;
 
-
-		public GatherWordListTask(IRecordListManager recordListManager,
+		public GatherWordListTask(LexEntryRepository lexEntryRepository,
 								  string label,
 								  string description,
 								  string wordListFileName,
 								  string writingSystemIdForWordListLanguage,
 								  ViewTemplate viewTemplate)
-			: base(label, description, false, recordListManager, viewTemplate)
+				: base(label, description, false, lexEntryRepository, viewTemplate)
 		{
 			if (wordListFileName == null)
 			{
@@ -43,26 +42,41 @@ namespace WeSay.LexicalTools
 			{
 				throw new ArgumentNullException("viewTemplate");
 			}
+			Field lexicalFormField =
+					viewTemplate.GetField(Field.FieldNames.EntryLexicalForm.ToString());
+			if (lexicalFormField == null || lexicalFormField.WritingSystems.Count < 1)
+			{
+				_lexicalUnitWritingSystem =
+						BasilProject.Project.WritingSystems.UnknownVernacularWritingSystem;
+			}
+			else
+			{
+				_lexicalUnitWritingSystem = lexicalFormField.WritingSystems[0];
+			}
+
 			_wordListFileName = wordListFileName;
 			_words = null;
 			_writingSystemIdForWordListWords = writingSystemIdForWordListLanguage;
 		}
 
-
 		private void LoadWordList()
 		{
-			string pathLocal = Path.Combine(WeSayWordsProject.Project.PathToWeSaySpecificFilesDirectoryInProject, _wordListFileName);
+			string pathLocal =
+					Path.Combine(
+							WeSayWordsProject.Project.PathToWeSaySpecificFilesDirectoryInProject,
+							_wordListFileName);
 			string pathToUse = pathLocal;
 			if (!File.Exists(pathLocal))
 			{
 				string pathInProgramDir =
-					Path.Combine(WeSayWordsProject.ApplicationCommonDirectory, _wordListFileName);
+						Path.Combine(WeSayWordsProject.ApplicationCommonDirectory, _wordListFileName);
 				pathToUse = pathInProgramDir;
 				if (!File.Exists(pathToUse))
 				{
-					Palaso.Reporting.ErrorReport.ReportNonFatalMessage(
-						"WeSay could not find the wordlist.  It expected to find it either at {0} or {1}.", pathLocal,
-						pathInProgramDir);
+					ErrorReport.ReportNonFatalMessage(
+							"WeSay could not find the wordlist.  It expected to find it either at {0} or {1}.",
+							pathLocal,
+							pathInProgramDir);
 					return;
 				}
 			}
@@ -79,22 +93,25 @@ namespace WeSay.LexicalTools
 						break;
 					}
 					_words.Add(s);
-				} while (true);
+				}
+				while (true);
 			}
 
 			NavigateFirstToShow();
 		}
 
-
 		public bool IsTaskComplete
 		{
-			get {
+			get
+			{
 				if (_words != null)
 				{
-					return CurrentWordIndex >= _words.Count;
+					return CurrentIndexIntoWordlist >= _words.Count;
 				}
 				else
+				{
 					return true;
+				}
 			}
 		}
 
@@ -106,17 +123,17 @@ namespace WeSay.LexicalTools
 		{
 			get
 			{
-				if (_gatherControl==null)
-			   {
-				   _gatherControl = new GatherWordListControl(this, ViewTemplate);
-			   }
-			   return _gatherControl;
+				if (_gatherControl == null)
+				{
+					_gatherControl = new GatherWordListControl(this, _lexicalUnitWritingSystem);
+				}
+				return _gatherControl;
 			}
 		}
 
-		public string CurrentWord
+		public string CurrentWordFromWordlist
 		{
-			get {return _words[CurrentWordIndex]; }
+			get { return _words[CurrentIndexIntoWordlist]; }
 		}
 
 		public bool CanNavigateNext
@@ -127,36 +144,41 @@ namespace WeSay.LexicalTools
 				{
 					return false;
 				}
-				return _words.Count > CurrentWordIndex;
+				return _words.Count > CurrentIndexIntoWordlist;
 			}
 		}
 
 		public bool CanNavigatePrevious
 		{
-			get { return CurrentWordIndex > 0; }
+			get { return CurrentIndexIntoWordlist > 0; }
 		}
 
-		protected int CurrentWordIndex
+		private int CurrentIndexIntoWordlist
 		{
 			get { return _currentWordIndex; }
-			set {
+			set
+			{
 				_currentWordIndex = value;
-				Debug.Assert(CurrentWordIndex >= 0);
+				Debug.Assert(CurrentIndexIntoWordlist >= 0);
 
 				//nb: (CurrentWordIndex == _words.Count) is used to mark the "all done" state:
 
-//                if (!_suspendNotificationOfNavigation && UpdateSourceWord != null)
-//                {
-//                    UpdateSourceWord.Invoke(this, null);
-//                }
+				//                if (!_suspendNotificationOfNavigation && UpdateSourceWord != null)
+				//                {
+				//                    UpdateSourceWord.Invoke(this, null);
+				//                }
 			}
 		}
 
 		public override void Activate()
 		{
-			if (!WeSayWordsProject.Project.WritingSystems.ContainsKey(_writingSystemIdForWordListWords))
+			if (
+					!WeSayWordsProject.Project.WritingSystems.ContainsKey(
+							 _writingSystemIdForWordListWords))
 			{
-				Palaso.Reporting.ErrorReport.ReportNonFatalMessage("The writing system of the words in the word list will be used to add reversals and definitions.  Therefore, it needs to be in the list of writing systems for this project.  Either change the writing system that this task uses for the word list (currently '{0}') or add a writing system with this id to the project.", _writingSystemIdForWordListWords);
+				ErrorReport.ReportNonFatalMessage(
+						"The writing system of the words in the word list will be used to add reversals and definitions.  Therefore, it needs to be in the list of writing systems for this project.  Either change the writing system that this task uses for the word list (currently '{0}') or add a writing system with this id to the project.",
+						_writingSystemIdForWordListWords);
 			}
 
 			if (_words == null)
@@ -166,9 +188,6 @@ namespace WeSay.LexicalTools
 			base.Activate();
 		}
 
-
-
-
 		/// <summary>
 		/// Someday, we may indeed have multi-string foreign words
 		/// </summary>
@@ -177,7 +196,7 @@ namespace WeSay.LexicalTools
 			get
 			{
 				MultiText m = new MultiText();
-				m.SetAlternative(_writingSystemIdForWordListWords, CurrentWord);
+				m.SetAlternative(_writingSystemIdForWordListWords, CurrentWordFromWordlist);
 				return m;
 			}
 		}
@@ -186,10 +205,47 @@ namespace WeSay.LexicalTools
 		{
 			LexSense sense = new LexSense();
 			sense.Definition.MergeIn(CurrentWordAsMultiText);
-			sense.Gloss.MergeIn(CurrentWordAsMultiText);//we use this for matching up, and well, it probably is a good gloss
+			sense.Gloss.MergeIn(CurrentWordAsMultiText);
+			//we use this for matching up, and well, it probably is a good gloss
 
-			Db4oLexQueryHelper.AddSenseToLexicon(RecordListManager, newVernacularWord, sense);
-			RecordListManager.GoodTimeToCommit();
+			AddSenseToLexicon(newVernacularWord, sense);
+		}
+
+		/// <summary>
+		/// Try to add the sense to a matching entry. If none found, make a new entry with the sense
+		/// </summary>
+		private void AddSenseToLexicon(MultiTextBase lexemeForm, LexSense sense)
+		{
+			//review: the desired semantics of this find are unclear, if we have more than one ws
+			ResultSet<LexEntry> entriesWithSameForm =
+					LexEntryRepository.GetEntriesWithMatchingLexicalForm(
+							lexemeForm[_lexicalUnitWritingSystem.Id], _lexicalUnitWritingSystem);
+			if (entriesWithSameForm.Count == 0)
+			{
+				LexEntry entry = LexEntryRepository.CreateItem();
+				entry.LexicalForm.MergeIn(lexemeForm);
+				entry.Senses.Add(sense);
+				LexEntryRepository.SaveItem(entry);
+			}
+			else
+			{
+				LexEntry entry = LexEntryRepository.GetItem(entriesWithSameForm[0]);
+
+				foreach (LexSense s in entry.Senses)
+				{
+					if (sense.Gloss.Forms.Length > 0)
+					{
+						LanguageForm glossWeAreAdding = sense.Gloss.Forms[0];
+						string glossInThisWritingSystem =
+								s.Gloss.GetExactAlternative(glossWeAreAdding.WritingSystemId);
+						if (glossInThisWritingSystem == glossWeAreAdding.Form)
+						{
+							return; //don't add it again
+						}
+					}
+				}
+				entry.Senses.Add(sense);
+			}
 		}
 
 		public override void Deactivate()
@@ -200,28 +256,27 @@ namespace WeSay.LexicalTools
 				_gatherControl.Dispose();
 			}
 			_gatherControl = null;
-			RecordListManager.GoodTimeToCommit();
 		}
 
 		public void NavigatePrevious()
 		{
-			--CurrentWordIndex;
+			--CurrentIndexIntoWordlist;
 		}
 
 		public void NavigateNext()
 		{
-		   // _suspendNotificationOfNavigation = true;
+			// _suspendNotificationOfNavigation = true;
 
-			CurrentWordIndex++;
-			while (CanNavigateNext && GetMatchingRecords(CurrentWordAsMultiText).Count > 0)
+			CurrentIndexIntoWordlist++;
+			while (CanNavigateNext && GetMatchingRecords().Count > 0)
 			{
-				++CurrentWordIndex;
+				++CurrentIndexIntoWordlist;
 			}
-		  //  _suspendNotificationOfNavigation = false;
-//            if (UpdateSourceWord != null)
-//            {
-//                UpdateSourceWord.Invoke(this, null);
-//            }
+			//  _suspendNotificationOfNavigation = false;
+			//            if (UpdateSourceWord != null)
+			//            {
+			//                UpdateSourceWord.Invoke(this, null);
+			//            }
 		}
 
 		public void NavigateFirstToShow()
@@ -232,18 +287,22 @@ namespace WeSay.LexicalTools
 
 		public void NavigateAbsoluteFirst()
 		{
-			CurrentWordIndex = 0;
+			CurrentIndexIntoWordlist = 0;
 		}
 
-		public List<LexEntry> GetMatchingRecords(MultiText gloss)
+		public ResultSet<LexEntry> GetMatchingRecords()
 		{
-			return Db4oLexQueryHelper.FindObjectsFromLanguageForm<LexEntry, SenseGlossMultiText>(RecordListManager, gloss.GetFirstAlternative());
+			return
+					LexEntryRepository.GetEntriesWithMatchingGlossSortedByLexicalForm(
+							CurrentWordAsMultiText.Find(_writingSystemIdForWordListWords),
+							_lexicalUnitWritingSystem);
 		}
 
 		protected override int ComputeCount(bool returnResultEvenIfExpensive)
 		{
 			return CountNotRelevant;
 		}
+
 		protected override int ComputeReferenceCount()
 		{
 			return CountNotRelevant; //Todo
@@ -252,26 +311,28 @@ namespace WeSay.LexicalTools
 		/// <summary>
 		/// Removes the sense (if otherwise empty) and deletes the entry if it has no reason left to live
 		/// </summary>
-		public void TryToRemoveAssociationWithListWordFromEntry(LexEntry entry)
+		public void TryToRemoveAssociationWithListWordFromEntry(RecordToken<LexEntry> recordToken)
 		{
-
 			// have to iterate through these in reverse order
 			// since they might get modified
-			for (int i = entry.Senses.Count - 1; i >= 0; i--)
+			LexEntry entry = recordToken.RealObject;
+			for (int i = entry.Senses.Count - 1;i >= 0;i--)
 			{
-				LexSense sense = (LexSense)entry.Senses[i];
-				if(sense.Gloss !=null)
+				LexSense sense = (LexSense) entry.Senses[i];
+				if (sense.Gloss != null)
 				{
-					if(sense.Gloss.ContainsAlternative(_writingSystemIdForWordListWords))
+					if (sense.Gloss.ContainsAlternative(_writingSystemIdForWordListWords))
 					{
 						if (sense.Gloss[_writingSystemIdForWordListWords] == CurrentListWord)
 						{
 							//since we copy the gloss into the defniition, too, if that hasn't been
 							//modified, then we don't want to let it being non-empty keep us from
 							//removing the sense. We're trying to enable typo correcting.
-							if (sense.Definition[_writingSystemIdForWordListWords] == CurrentListWord)
+							if (sense.Definition[_writingSystemIdForWordListWords] ==
+								CurrentListWord)
 							{
-								sense.Definition.SetAlternative(_writingSystemIdForWordListWords, null);
+								sense.Definition.SetAlternative(_writingSystemIdForWordListWords,
+																null);
 								sense.Definition.RemoveEmptyStuff();
 							}
 							sense.Gloss.SetAlternative(_writingSystemIdForWordListWords, null);
@@ -279,7 +340,8 @@ namespace WeSay.LexicalTools
 							if (!sense.IsEmptyForPurposesOfDeletion)
 							{
 								//removing the gloss didn't make it empty. So repent of removing the gloss.
-								sense.Gloss.SetAlternative(_writingSystemIdForWordListWords, CurrentListWord);
+								sense.Gloss.SetAlternative(_writingSystemIdForWordListWords,
+														   CurrentListWord);
 							}
 						}
 					}
@@ -288,28 +350,17 @@ namespace WeSay.LexicalTools
 			entry.CleanUpAfterEditting();
 			if (entry.IsEmptyExceptForLexemeFormForPurposesOfDeletion)
 			{
-				Lexicon.RemoveEntry(entry);
+				LexEntryRepository.DeleteItem(entry);
+			}
+			else
+			{
+				LexEntryRepository.SaveItem(entry);
 			}
 		}
-
-
 
 		private string CurrentListWord
 		{
 			get { return _words[_currentWordIndex]; }
 		}
-
-		public IEnumerable<LexEntry> CurrentEntriesSorted
-		{
-			get
-			{
-				List<LexEntry> entries = GetMatchingRecords(CurrentWordAsMultiText);
-				entries.Sort(new EntryByBestLexemeFormAlternativeComparer(ViewTemplate.GetField(LexEntry.WellKnownProperties.LexicalUnit).WritingSystems[0]));
-				return entries;
-			}
-		}
-
-
-
 	}
 }

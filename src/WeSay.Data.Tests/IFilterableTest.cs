@@ -1,18 +1,19 @@
 using System;
 using System.ComponentModel;
+using System.IO;
+using Db4objects.Db4o;
+using Db4objects.Db4o.Config;
 using NUnit.Framework;
 
-namespace WeSay.Data.Tests.Db4oBindingListTests
+namespace WeSay.Data.Tests
 {
 	[TestFixture]
 	public class Db4oFilterableTest
 	{
-
-		Db4oDataSource _dataSource;
-		Db4oRecordList<TestItem> _bindingList;
-		string _filePath;
-		TestItem _jared, _gianna;
-
+		private Db4oDataSource _dataSource;
+		private Db4oRecordList<TestItem> _bindingList;
+		private string _filePath;
+		private TestItem _jared, _gianna;
 
 		private bool _listChanged;
 		private ListChangedEventArgs _listChangedEventArgs;
@@ -26,20 +27,21 @@ namespace WeSay.Data.Tests.Db4oBindingListTests
 		private void AssertListChanged()
 		{
 			Assert.IsTrue(_listChanged);
-			Assert.AreEqual(ListChangedType.Reset, this._listChangedEventArgs.ListChangedType);
+			Assert.AreEqual(ListChangedType.Reset, _listChangedEventArgs.ListChangedType);
 			ResetListChanged();
 		}
+
 		private void ResetListChanged()
 		{
-			this._listChanged = false;
-			this._listChangedEventArgs = null;
+			_listChanged = false;
+			_listChangedEventArgs = null;
 		}
 
 		[TestFixtureSetUp]
 		public void TestFixtureSetup()
 		{
-			Db4objects.Db4o.Config.IConfiguration configuration = Db4objects.Db4o.Db4oFactory.Configure();
-			Db4objects.Db4o.Config.IObjectClass objectClass = configuration.ObjectClass(typeof(TestItem));
+			IConfiguration configuration = Db4oFactory.Configure();
+			IObjectClass objectClass = configuration.ObjectClass(typeof (TestItem));
 			objectClass.ObjectField("_storedInt").Indexed(true);
 			objectClass.ObjectField("_storedString").Indexed(true);
 		}
@@ -47,45 +49,43 @@ namespace WeSay.Data.Tests.Db4oBindingListTests
 		[SetUp]
 		public void SetUp()
 		{
-			_filePath = System.IO.Path.GetTempFileName();
-			this._dataSource = new Db4oDataSource(_filePath);
-			this._bindingList = new Db4oRecordList<TestItem>(this._dataSource);
-			this._bindingList.ListChanged += new ListChangedEventHandler(_adaptor_ListChanged);
+			_filePath = Path.GetTempFileName();
+			_dataSource = new Db4oDataSource(_filePath);
+			_bindingList = new Db4oRecordList<TestItem>(_dataSource);
+			_bindingList.ListChanged += _adaptor_ListChanged;
 
 			_jared = new TestItem("Jared", 1, new DateTime(2003, 7, 10));
 			_gianna = new TestItem("Gianna", 2, new DateTime(2006, 7, 17));
-			this._bindingList.Add(_jared);
-			this._bindingList.Add(_gianna);
+			_bindingList.Add(_jared);
+			_bindingList.Add(_gianna);
 			ResetListChanged();
 		}
 
 		[TearDown]
 		public void TestFixtureTearDown()
 		{
-			this._bindingList.Dispose();
-			this._dataSource.Dispose();
-			System.IO.File.Delete(_filePath);
+			_bindingList.Dispose();
+			_dataSource.Dispose();
+			File.Delete(_filePath);
 		}
 
 		[Test]
 		public void Filter()
 		{
-			Assert.AreEqual(2, this._bindingList.Count);
+			Assert.AreEqual(2, _bindingList.Count);
 			Assert.IsFalse(_listChanged);
-			this._bindingList.ApplyFilter(delegate(TestItem item)
-			{
-				return item.StoredInt == 1;
-			});
-			Assert.AreEqual(1, this._bindingList.Count);
-			Assert.AreEqual(_jared, this._bindingList[0]);
+			_bindingList.ApplyFilter(delegate(TestItem item) { return item.StoredInt == 1; });
+			Assert.AreEqual(1, _bindingList.Count);
+			Assert.AreEqual(_jared, _bindingList[0]);
 			AssertListChanged();
 		}
+
 		[Test]
 		public void ClearFilter()
 		{
 			Filter();
-			this._bindingList.RemoveFilter();
-			Assert.AreEqual(2, this._bindingList.Count);
+			_bindingList.RemoveFilter();
+			Assert.AreEqual(2, _bindingList.Count);
 			AssertListChanged();
 		}
 
@@ -94,12 +94,10 @@ namespace WeSay.Data.Tests.Db4oBindingListTests
 		{
 			Filter();
 
-			this._bindingList.ApplyFilter(delegate(TestItem item)
-			{
-				return item.StoredString.StartsWith("Gia");
-			});
-			Assert.AreEqual(1, this._bindingList.Count);
-			Assert.AreEqual(_gianna, this._bindingList[0]);
+			_bindingList.ApplyFilter(
+					delegate(TestItem item) { return item.StoredString.StartsWith("Gia"); });
+			Assert.AreEqual(1, _bindingList.Count);
+			Assert.AreEqual(_gianna, _bindingList[0]);
 			AssertListChanged();
 		}
 	}
@@ -107,53 +105,54 @@ namespace WeSay.Data.Tests.Db4oBindingListTests
 	[TestFixture]
 	public class IndexedFilters
 	{
-		Db4oDataSource _dataSource;
-		Db4oRecordList<SimpleIntTestClass> _bindingList;
-		string _filePath;
-		const int _bindingListSize = 1000;
-		Predicate<SimpleIntTestClass> _filter = delegate(SimpleIntTestClass item)
-									 {
-										 return item.I > 100 && item.I <= 200;
-									 };
+		private Db4oDataSource _dataSource;
+		private Db4oRecordList<SimpleIntTestClass> _bindingList;
+		private string _filePath;
+		private const int _bindingListSize = 1000;
+
+		private readonly Predicate<SimpleIntTestClass> _filter =
+				delegate(SimpleIntTestClass item) { return item.I > 100 && item.I <= 200; };
 
 		[TestFixtureSetUp]
 		public void TestFixtureSetup()
 		{
-			Db4objects.Db4o.Config.IConfiguration configuration = Db4objects.Db4o.Db4oFactory.Configure();
-			Db4objects.Db4o.Config.IObjectClass objectClass = configuration.ObjectClass(typeof(SimpleIntTestClass));
+			IConfiguration configuration = Db4oFactory.Configure();
+			IObjectClass objectClass = configuration.ObjectClass(typeof (SimpleIntTestClass));
 			objectClass.ObjectField("_i").Indexed(true);
 		}
 
 		[SetUp]
 		public void SetUp()
 		{
-			_filePath = System.IO.Path.GetTempFileName();
-			this._dataSource = new Db4oDataSource(_filePath);
-			this._bindingList = new Db4oRecordList<SimpleIntTestClass>(this._dataSource);
+			_filePath = Path.GetTempFileName();
+			_dataSource = new Db4oDataSource(_filePath);
+			_bindingList = new Db4oRecordList<SimpleIntTestClass>(_dataSource);
 			Construct();
 		}
 
 		[TearDown]
 		public void TearDown()
 		{
-			this._bindingList.Dispose();
-			this._dataSource.Dispose();
-			System.IO.File.Delete(_filePath);
+			_bindingList.Dispose();
+			_dataSource.Dispose();
+			File.Delete(_filePath);
 		}
 
 		public void Construct()
 		{
-			for (int i = 0; i < _bindingListSize; ++i)
+			for (int i = 0;i < _bindingListSize;++i)
 			{
-				this._bindingList.Add(new SimpleIntTestClass(i));
+				_bindingList.Add(new SimpleIntTestClass(i));
 			}
 		}
 
 		[Test]
 		public void ConstructWithFilter()
 		{
-			this._dataSource.Data.Commit();
-			using (Db4oRecordList<SimpleIntTestClass> newBindingList = new Db4oRecordList<SimpleIntTestClass>(this._dataSource, _filter))
+			_dataSource.Data.Commit();
+			using (
+					Db4oRecordList<SimpleIntTestClass> newBindingList =
+							new Db4oRecordList<SimpleIntTestClass>(_dataSource, _filter))
 			{
 				Assert.AreEqual(100, newBindingList.Count);
 			}
@@ -163,7 +162,9 @@ namespace WeSay.Data.Tests.Db4oBindingListTests
 		[Ignore("db4o bug gives improper result if _bindingList is not committed first")]
 		public void ConstructWithFilterDb4oBug()
 		{
-			using (Db4oRecordList<SimpleIntTestClass> newBindingList = new Db4oRecordList<SimpleIntTestClass>(this._dataSource, _filter))
+			using (
+					Db4oRecordList<SimpleIntTestClass> newBindingList =
+							new Db4oRecordList<SimpleIntTestClass>(_dataSource, _filter))
 			{
 				Assert.AreEqual(100, newBindingList.Count);
 			}
@@ -172,7 +173,9 @@ namespace WeSay.Data.Tests.Db4oBindingListTests
 		[Test]
 		public void ApplyFilter()
 		{
-			using (Db4oRecordList<SimpleIntTestClass> newBindingList = new Db4oRecordList<SimpleIntTestClass>(this._dataSource))
+			using (
+					Db4oRecordList<SimpleIntTestClass> newBindingList =
+							new Db4oRecordList<SimpleIntTestClass>(_dataSource))
 			{
 				newBindingList.ApplyFilter(_filter);
 				Assert.AreEqual(100, newBindingList.Count);

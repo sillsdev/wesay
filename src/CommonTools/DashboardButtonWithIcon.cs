@@ -1,24 +1,23 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
-using WeSay.Foundation.Dashboard;
-
+using WeSay.Foundation;
 
 //!!!!!!!!!!!!!! see http://www.codeproject.com/KB/GDI-plus/colormatrix.aspx  for a way
 // to automatically re-color the icons. THe key search terms are "Color Matrix" and "Sepia"
 
 namespace WeSay.CommonTools
 {
-	public class DashboardButtonWithIcon : DashboardButton
+	public class DashboardButtonWithIcon: DashboardButton
 	{
 		private readonly Image _image;
 		private const int ImageWidth = 30;
 		private const int SpaceBetweenImageAndLabel=10;
 
 		public DashboardButtonWithIcon(IThingOnDashboard thingToShowOnDashboard)
-			:base(thingToShowOnDashboard)
-		 {
+				: base(thingToShowOnDashboard)
+		{
 			_image = thingToShowOnDashboard.DashboardButtonImage;
 			InitializeComponent();
 		}
@@ -86,15 +85,14 @@ namespace WeSay.CommonTools
 
 		private void InitializeComponent()
 		{
-			this.SuspendLayout();
+			SuspendLayout();
 			//
 			// DashboardButtonWithIcon
 			//
-			this.DoubleBuffered = true;
-			this.Name = "DashboardButtonWithIcon";
-			this.ResumeLayout(false);
+			DoubleBuffered = true;
+			Name = "DashboardButtonWithIcon";
+			ResumeLayout(false);
 
 		}
-
 	}
 }

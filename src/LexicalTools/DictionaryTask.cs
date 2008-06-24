@@ -1,25 +1,23 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
+using Palaso.Reporting;
 using Palaso.UI.WindowsForms.i8n;
-using WeSay.Data;
 using WeSay.Foundation;
-using WeSay.Foundation.Dashboard;
 using WeSay.LexicalModel;
 using WeSay.LexicalTools.Properties;
 using WeSay.Project;
 
 namespace WeSay.LexicalTools
 {
-	public class DictionaryTask : TaskBase
+	public class DictionaryTask: TaskBase
 	{
 		private DictionaryControl _dictionaryControl;
 		private readonly ViewTemplate _viewTemplate;
 		private static readonly string kTaskLabel = "Dictionary Browse && Edit";
 
-		public DictionaryTask(IRecordListManager recordListManager,
-							ViewTemplate viewTemplate)
-			: base(kTaskLabel, string.Empty, true, recordListManager)
+		public DictionaryTask(LexEntryRepository lexEntryRepository, ViewTemplate viewTemplate)
+				: base(kTaskLabel, string.Empty, true, lexEntryRepository)
 		{
 #if JustForCodeScanner
 			StringCatalog.Get(kTaskLabel,
@@ -36,53 +34,35 @@ namespace WeSay.LexicalTools
 		{
 			try
 			{
-				RegisterWithCache(_viewTemplate);
 				base.Activate();
-				_dictionaryControl = new DictionaryControl(RecordListManager, ViewTemplate);
-				_dictionaryControl.SelectedIndexChanged += new EventHandler(OnRecordSelectionChanged);
+				_dictionaryControl = new DictionaryControl(LexEntryRepository, ViewTemplate);
+				_dictionaryControl.SelectedIndexChanged += OnRecordSelectionChanged;
 			}
-			catch (Palaso.Reporting.ConfigurationException)
+			catch (ConfigurationException)
 			{
 				IsActive = false;
 				throw;
 			}
 		}
 
-		/// <summary>
-		/// This is static and public so we can keep the cache current with what this needs
-		/// even if we are running in ServerMode
-		/// </summary>
-		/// <param name="viewTemplate"></param>
-		public override void RegisterWithCache(ViewTemplate viewTemplate)
+		private void OnRecordSelectionChanged(object sender, EventArgs e)
 		{
-			Field field = viewTemplate.GetField(Field.FieldNames.EntryLexicalForm.ToString());
-			if (field != null)
+			if (_dictionaryControl.CurrentRecord != null)
 			{
-				Lexicon.RegisterFieldWithCache(field.WritingSystems, true);
+				LexEntryRepository.SaveItem(_dictionaryControl.CurrentRecord);
 			}
-			field = viewTemplate.GetField(LexSense.WellKnownProperties.Gloss);
-			if (field != null)
-			{
-				Lexicon.RegisterFieldWithCache(field.WritingSystems, false);
-			}
-
-			Lexicon.RegisterHeadwordListWithCache(viewTemplate.HeadwordWritingSystems);
-
-		}
-
-
-		void OnRecordSelectionChanged(object sender, EventArgs e)
-		{
-			RecordListManager.GoodTimeToCommit();
 		}
 
 		public override void Deactivate()
 		{
 			base.Deactivate();
-			_dictionaryControl.SelectedIndexChanged -= new EventHandler(OnRecordSelectionChanged);
+			if (_dictionaryControl.CurrentRecord != null)
+			{
+				LexEntryRepository.SaveItem(_dictionaryControl.CurrentRecord);
+			}
+			_dictionaryControl.SelectedIndexChanged -= OnRecordSelectionChanged;
 			_dictionaryControl.Dispose();
 			_dictionaryControl = null;
-			RecordListManager.GoodTimeToCommit();
 		}
 
 		public override void GoToUrl(string url)
@@ -90,7 +70,7 @@ namespace WeSay.LexicalTools
 			_dictionaryControl.GoToEntry(GetEntryFromUrl(url));
 		}
 
-		private string GetEntryFromUrl(string url)
+		private static string GetEntryFromUrl(string url)
 		{
 			return url;
 		}
@@ -101,37 +81,30 @@ namespace WeSay.LexicalTools
 		/// <remarks>Non null only when task is activated</remarks>
 		public override Control Control
 		{
-			get
-			{
-				return _dictionaryControl;
-			}
+			get { return _dictionaryControl; }
 		}
 
 		public override string Description
 		{
 			get
 			{
-				return String.Format(StringCatalog.Get("~See all {0} {1} words.", "The description of the 'Dictionary' task.  In place of the {0} will be the number of words in the dictionary.  In place of the {1} will be the name of the project."), DataSource.Count, BasilProject.Project.Name);
-			}
-		}
-
-		public IRecordList<LexEntry> DataSource
-		{
-			get
-			{
-				IRecordList<LexEntry> data = RecordListManager.GetListOfType<LexEntry>();
-				return data;
+				return
+						String.Format(
+								StringCatalog.Get("~See all {0} {1} words.",
+												  "The description of the 'Dictionary' task.  In place of the {0} will be the number of words in the dictionary.  In place of the {1} will be the name of the project."),
+								ComputeCount(true),
+								BasilProject.Project.Name);
 			}
 		}
 
 		public ViewTemplate ViewTemplate
 		{
-			get { return this._viewTemplate; }
+			get { return _viewTemplate; }
 		}
 
 		protected override int ComputeCount(bool returnResultEvenIfExpensive)
 		{
-			return DataSource.Count;
+			return LexEntryRepository.CountAllEntries();
 		}
 
 		protected override int ComputeReferenceCount()

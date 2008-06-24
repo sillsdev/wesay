@@ -2,8 +2,8 @@ using System;
 using System.ComponentModel;
 using System.Reflection;
 using System.Windows.Forms;
+using Palaso.Reporting;
 using WeSay.Foundation;
-using WeSay.Language;
 
 namespace WeSay.UI
 {
@@ -12,23 +12,27 @@ namespace WeSay.UI
 	/// when the user enters information in this "ghost" text box, events are fired that will cause the
 	/// actual object to the created and filled in with the data the user has entered.
 	/// </summary>
-	public class GhostBinding<T> where T: new()
+	public class GhostBinding<T> where T : new()
 	{
 		/// <summary>
 		/// Can be used to track which data item the user is currently editting, to,
 		/// for example, hilight that piece in a preview control
 		/// </summary>
-		public event EventHandler<CurrentItemEventArgs> CurrentItemChanged = delegate
-																	 {
-																	 };
+		public event EventHandler<CurrentItemEventArgs> CurrentItemChanged = delegate { };
 
-		private WritingSystem _writingSystem;
-		private string _propertyName;
+		private readonly WritingSystem _writingSystem;
+		private readonly string _propertyName;
 		private IBindingList _listTarget;
 		private WeSayTextBox _textBoxTarget;
 		private Control _referenceControl;
 
-		public delegate void LayoutNeededHandler(GhostBinding<T> sender, IBindingList list, int index, MultiTextControl previouslyGhostedControlToReuse, bool doGoToNextField, EventArgs args);
+		public delegate void LayoutNeededHandler(
+				GhostBinding<T> sender,
+				IBindingList list,
+				int index,
+				MultiTextControl previouslyGhostedControlToReuse,
+				bool doGoToNextField,
+				EventArgs args);
 
 		/// <summary>
 		/// Fires at some point after the user has entered some information in the ghost text box.
@@ -38,24 +42,25 @@ namespace WeSay.UI
 
 		private bool _inMidstOfTrigger = false;
 
-		public GhostBinding(IBindingList targetList, string propertyName, WritingSystem writingSystem, WeSayTextBox textBoxTarget)
+		public GhostBinding(IBindingList targetList,
+							string propertyName,
+							WritingSystem writingSystem,
+							WeSayTextBox textBoxTarget)
 		{
-		   _listTarget= targetList;
-//           _listTarget.ListChanged +=new ListChangedEventHandler(_listTarget_ListChanged);
-		   _propertyName=propertyName;
-		   _writingSystem = writingSystem;
+			_listTarget = targetList;
+			//           _listTarget.ListChanged +=new ListChangedEventHandler(_listTarget_ListChanged);
+			_propertyName = propertyName;
+			_writingSystem = writingSystem;
 
-		   _textBoxTarget = textBoxTarget;
-		   _textBoxTarget.KeyDown += new KeyEventHandler(_textBoxTarget_KeyDown);
-		   _textBoxTarget.LostFocus += new EventHandler(_textBoxTarget_LostFocus);
-//           _textBoxTarget.TextChanged += new EventHandler(_textBoxTarget_TextChanged);
-		   _textBoxTarget.Enter += new EventHandler(OnTextBoxEntered);
-		   _textBoxTarget.HandleDestroyed += new EventHandler(_textBoxTarget_HandleDestroyed);
-		   _textBoxTarget.Disposed += new EventHandler(_textBoxTarget_Disposed);
+			_textBoxTarget = textBoxTarget;
+			_textBoxTarget.KeyDown += _textBoxTarget_KeyDown;
+			_textBoxTarget.LostFocus += _textBoxTarget_LostFocus;
+			_textBoxTarget.Enter += OnTextBoxEntered;
+			_textBoxTarget.HandleDestroyed += _textBoxTarget_HandleDestroyed;
+			_textBoxTarget.Disposed += _textBoxTarget_Disposed;
 		}
 
-
-		void _textBoxTarget_KeyDown(object sender, KeyEventArgs e)
+		private void _textBoxTarget_KeyDown(object sender, KeyEventArgs e)
 		{
 			if (e.KeyCode == Keys.Return)
 			{
@@ -69,36 +74,35 @@ namespace WeSay.UI
 			}
 		}
 
-
 		/// <summary>
 		/// this only gets called when the control is actually, like, maybe finalized
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		void _textBoxTarget_HandleDestroyed(object sender, EventArgs e)
+		private void _textBoxTarget_HandleDestroyed(object sender, EventArgs e)
 		{
 			TearDown();
 		}
 
-		void _textBoxTarget_Disposed(object sender, EventArgs e)
+		private void _textBoxTarget_Disposed(object sender, EventArgs e)
 		{
 			TearDown();
 		}
 
-		void _textBoxTarget_LostFocus(object sender, EventArgs e)
+		private void _textBoxTarget_LostFocus(object sender, EventArgs e)
 		{
-			 TimeForRealObject(true);
+			TimeForRealObject(true);
 		}
 
 		//void _textBoxTarget_TextChanged(object sender, EventArgs e)
 		//{
-//            if ( _textBoxTarget.Text.Trim().Length > 0)
-//            {
-//                TimeForRealObject();
-//            }
+		//            if ( _textBoxTarget.Text.Trim().Length > 0)
+		//            {
+		//                TimeForRealObject();
+		//            }
 		//}
 
-		void OnTextBoxEntered(object sender, EventArgs e)
+		private void OnTextBoxEntered(object sender, EventArgs e)
 		{
 			CurrentItemChanged(sender, new CurrentItemEventArgs(_propertyName, _writingSystem.Id));
 		}
@@ -124,28 +128,27 @@ namespace WeSay.UI
 		//    TearDown();
 		//}
 
-	   /// <summary>
+		/// <summary>
 		/// Drop our connections to everything so garbage collection can happen and we aren't
 		/// a zombie responding to data change events.
 		/// </summary>
 		private void TearDown()
 		{
-		 //   Debug.Assert(!_inMidstOfTrigger);
-		   // Debug.WriteLine(" GhostBindingTearDown boundTo: " + this._textBoxTarget.Name);
+			//   Debug.Assert(!_inMidstOfTrigger);
+			// Debug.WriteLine(" GhostBindingTearDown boundTo: " + this._textBoxTarget.Name);
 
 			if (_listTarget == null)
 			{
 				return; //teardown was called twice
 			}
 			_referenceControl = null;
-//            _listTarget.ListChanged -=new ListChangedEventHandler(_listTarget_ListChanged);
+			//            _listTarget.ListChanged -=new ListChangedEventHandler(_listTarget_ListChanged);
 			_listTarget = null;
-//            _textBoxTarget.TextChanged -= new EventHandler(_textBoxTarget_TextChanged);
-			_textBoxTarget.HandleDestroyed -= new EventHandler(_textBoxTarget_HandleDestroyed);
-			_textBoxTarget.Disposed -= new EventHandler(_textBoxTarget_Disposed);
+			//            _textBoxTarget.TextChanged -= new EventHandler(_textBoxTarget_TextChanged);
+			_textBoxTarget.HandleDestroyed -= _textBoxTarget_HandleDestroyed;
+			_textBoxTarget.Disposed -= _textBoxTarget_Disposed;
 			_textBoxTarget = null;
 		}
-
 
 		/// <summary>
 		/// The reference control is the one we need to use when it comes time to insert
@@ -158,34 +161,30 @@ namespace WeSay.UI
 			set { _referenceControl = value; }
 		}
 
+		//        /// <summary>
+		//        /// Handle the case where some mechanism (including this class) makes a change to the list we are
+		//        /// here to add items to.
+		//        /// Our job in this case is fire the events which switch the UI for the ghost widget over from Ghost to Real.
+		//        /// </summary>
+		//        /// <param name="sender"></param>
+		//        /// <param name="e"></param>
+		//        void  _listTarget_ListChanged(object sender, ListChangedEventArgs e)
+		//        {
 
+		//            //REVIEW: JH says... dont we only want to trigger if it was *this* guy that is responsible?)
 
+		////            if (e.ListChangedType == ListChangedType.ItemAdded)
+		////            {
+		////                object newGuy = _listTarget[e.NewIndex];
+		////                FillInMultiTextOfNewObject(newGuy, _propertyName, _writingSystem, _textBoxTarget.Text);
+		////                if (LayoutNeededAfterMadeReal != null)
+		////                {
+		////                    LayoutNeededAfterMadeReal.Invoke(this, _listTarget, e.NewIndex, null);
+		////                }
+		////            }
+		//        }
 
-//        /// <summary>
-//        /// Handle the case where some mechanism (including this class) makes a change to the list we are
-//        /// here to add items to.
-//        /// Our job in this case is fire the events which switch the UI for the ghost widget over from Ghost to Real.
-//        /// </summary>
-//        /// <param name="sender"></param>
-//        /// <param name="e"></param>
-//        void  _listTarget_ListChanged(object sender, ListChangedEventArgs e)
-//        {
-
-//            //REVIEW: JH says... dont we only want to trigger if it was *this* guy that is responsible?)
-
-
-////            if (e.ListChangedType == ListChangedType.ItemAdded)
-////            {
-////                object newGuy = _listTarget[e.NewIndex];
-////                FillInMultiTextOfNewObject(newGuy, _propertyName, _writingSystem, _textBoxTarget.Text);
-////                if (LayoutNeededAfterMadeReal != null)
-////                {
-////                    LayoutNeededAfterMadeReal.Invoke(this, _listTarget, e.NewIndex, null);
-////                }
-////            }
-//        }
-
-		protected  void TimeForRealObject(bool doGoToNextField)
+		protected void TimeForRealObject(bool doGoToNextField)
 		{
 			if (_listTarget == null)
 			{
@@ -197,7 +196,7 @@ namespace WeSay.UI
 			{
 				return;
 			}
-			Palaso.Reporting.Logger.WriteMinorEvent("TimeForRealObject:"+_propertyName);
+			Logger.WriteMinorEvent("TimeForRealObject:" + _propertyName);
 
 			//don't let the code here trigger the ghost all over again
 			if (_inMidstOfTrigger)
@@ -208,12 +207,12 @@ namespace WeSay.UI
 
 			IBindingList list = _listTarget;
 			//in addition to adding a list item, this will fire events on the object that owns the list
-			Palaso.Reporting.Logger.WriteMinorEvent("Before AddNew in TimeForRealObject");
+			Logger.WriteMinorEvent("Before AddNew in TimeForRealObject");
 
-//!!!! Anything can happen to our internal state after this point so don't rely on any objects sticking
-// around and not being null!
+			//!!!! Anything can happen to our internal state after this point so don't rely on any objects sticking
+			// around and not being null!
 			T newGuy = new T();
-			Palaso.Reporting.Logger.WriteMinorEvent("After AddNew in TimeForRealObject");
+			Logger.WriteMinorEvent("After AddNew in TimeForRealObject");
 
 			//if (_textBoxTarget == null)
 			//{
@@ -226,18 +225,26 @@ namespace WeSay.UI
 			list.Add(newGuy);
 			if (LayoutNeededAfterMadeReal != null && ReferenceControl != null)
 			{
-				LayoutNeededAfterMadeReal.Invoke(this, list, list.IndexOf(newGuy), null/*todo*/, doGoToNextField, null);
+				LayoutNeededAfterMadeReal.Invoke(this,
+												 list,
+												 list.IndexOf(newGuy),
+												 null /*todo*/,
+												 doGoToNextField,
+												 null);
 			}
 			textBoxTarget.Text = "";
 			_inMidstOfTrigger = false;
 			//_textBoxTarget.PrepareForFadeIn();
-		 }
+		}
 
-		private static void FillInMultiTextOfNewObject(object o, string propertyName, WritingSystem writingSystem, string value)
+		private static void FillInMultiTextOfNewObject(object o,
+													   string propertyName,
+													   WritingSystem writingSystem,
+													   string value)
 		{
-		   PropertyInfo info = o.GetType().GetProperty(propertyName);
-		   MultiText text = (MultiText) info.GetValue(o, null);
-		   text.SetAlternative(writingSystem.Id, value);
+			PropertyInfo info = o.GetType().GetProperty(propertyName);
+			MultiText text = (MultiText) info.GetValue(o, null);
+			text.SetAlternative(writingSystem.Id, value);
 		}
 	}
 }

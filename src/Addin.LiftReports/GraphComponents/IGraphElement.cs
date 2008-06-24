@@ -1,4 +1,5 @@
 #region copyright info
+
 //
 // Written by Anup. V (anupshubha@yahoo.com)
 // Copyright (c) 2006.
@@ -15,19 +16,18 @@
 // Please use and enjoy. Please let me know of any bugs/mods/improvements
 // that you have found/implemented and I will fix/incorporate them into
 // this file.
+
 #endregion copyright info
 
-using System;
 using System.Drawing;
-using System.Drawing.Drawing2D;
 
-namespace GraphComponents
+namespace Addin.LiftReports.GraphComponents
 {
 	/// <summary>
 	/// Defines the drawing constraint that all graph types must implement.
 	/// </summary>
-	interface IGraphElement
+	internal interface IGraphElement
 	{
-		void Draw (Graphics graphics);
+		void Draw(Graphics graphics);
 	}
 }

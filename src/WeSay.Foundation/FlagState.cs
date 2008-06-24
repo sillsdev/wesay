@@ -5,7 +5,7 @@ namespace WeSay.Foundation
 	/// <summary>
 	/// Holds a boolean value for, for example, a checkbox
 	/// </summary>
-	public class FlagState : IParentable, IValueHolder<bool>, IReportEmptiness
+	public class FlagState: IParentable, IValueHolder<bool>, IReportEmptiness
 	{
 		/// <summary>
 		/// This "backreference" is used to notify the parent of changes.
@@ -20,19 +20,11 @@ namespace WeSay.Foundation
 		/// </summary>
 		public event PropertyChangedEventHandler PropertyChanged;
 
-
-		public FlagState()//WeSay.Foundation.WeSayDataObject parent)
-		{
-		}
-
 		#region IParentable Members
 
 		public WeSayDataObject Parent
 		{
-			set
-			{
-				_parent = value;
-			}
+			set { _parent = value; }
 		}
 
 		#endregion
@@ -49,19 +41,16 @@ namespace WeSay.Foundation
 
 			if (_parent != null)
 			{
-				this._parent.NotifyPropertyChanged("checkBox");
+				_parent.NotifyPropertyChanged("checkBox");
 			}
 		}
 
 		public bool Value
 		{
-			get
-			{
-				return this._isChecked;
-			}
+			get { return _isChecked; }
 			set
 			{
-				this._isChecked = value;
+				_isChecked = value;
 				// this.Guid = value.Guid;
 				NotifyPropertyChanged();
 			}
@@ -84,9 +73,7 @@ namespace WeSay.Foundation
 			get { return !_isChecked; }
 		}
 
-		public void RemoveEmptyStuff()
-		{
-		}
+		public void RemoveEmptyStuff() {}
 
 		#endregion
 	}

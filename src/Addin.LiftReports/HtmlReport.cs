@@ -1,22 +1,18 @@
+using System;
 using System.IO;
 using Addin.LiftReports.Properties;
 using NVelocity;
 using NVelocity.App;
+using Palaso.Reporting;
 
 namespace Addin.LiftReports
 {
 	public class HtmlReport
 	{
-		public HtmlReport()
-		{
-
-		}
-
 		public string GenerateReport(string pathToLIFT)
 		{
-
 			Velocity.Init();
-			NVelocity.VelocityContext context = new NVelocity.VelocityContext();
+			VelocityContext context = new VelocityContext();
 
 			context.Put("pathToLift", pathToLIFT);
 			XPathChart chart = new XPathChart();
@@ -32,7 +28,7 @@ namespace Addin.LiftReports
 				}
 				Directory.CreateDirectory(dir);
 				string path = Path.Combine(dir, "WeSayReport.htm");
-			   // File.Copy("chart.png", Path.Combine(dir, "chart.png"));
+				// File.Copy("chart.png", Path.Combine(dir, "chart.png"));
 
 				context.Put("foo", new Foo(dir));
 
@@ -53,9 +49,9 @@ namespace Addin.LiftReports
 				}
 				return path;
 			}
-			catch (System.Exception e)
+			catch (Exception e)
 			{
-				Palaso.Reporting.ErrorReport.ReportNonFatalMessage("Problem creating report : " + e);
+				ErrorReport.ReportNonFatalMessage("Problem creating report : " + e);
 			}
 			return null;
 		}
@@ -64,6 +60,7 @@ namespace Addin.LiftReports
 	public class Foo
 	{
 		protected string _dir;
+
 		public Foo(string dir)
 		{
 			_dir = dir;
@@ -78,11 +75,7 @@ namespace Addin.LiftReports
 
 		public string Name
 		{
-			get
-			{
-				return "FOOOOO";
-			}
+			get { return "FOOOOO"; }
 		}
 	}
-
 }

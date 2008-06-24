@@ -5,7 +5,6 @@ using System.Windows.Forms;
 using Palaso.UI.WindowsForms.i8n;
 using WeSay.Data;
 using WeSay.Foundation;
-using WeSay.Language;
 using WeSay.LexicalModel;
 using WeSay.Project;
 using WeSay.UI;
@@ -14,20 +13,21 @@ namespace WeSay.LexicalTools
 {
 	public partial class MissingInfoControl: UserControl
 	{
-		private readonly IRecordList<LexEntry> _records;
-		private readonly InMemoryBindingList<LexEntry> _completedRecords;
-		private LexEntry _currentRecord;
-		private LexEntry _previousRecord;
-		private LexEntry _nextRecord;
+		private readonly BindingList<RecordToken<LexEntry>> _completedRecords;
+		private readonly BindingList<RecordToken<LexEntry>> _todoRecords;
+		private RecordToken<LexEntry> _currentRecord;
+		private RecordToken<LexEntry> _previousRecord;
+		private RecordToken<LexEntry> _nextRecord;
 
+		private readonly LexEntryRepository _lexEntryRepository;
 		private readonly ViewTemplate _viewTemplate;
 		private readonly Predicate<LexEntry> _isNotComplete;
 		public event EventHandler SelectedIndexChanged;
 
-		public MissingInfoControl(IRecordList<LexEntry> records,
+		public MissingInfoControl(ResultSet<LexEntry> records,
 								  ViewTemplate viewTemplate,
 								  Predicate<LexEntry> isNotComplete,
-								  IRecordListManager recordListManager)
+								  LexEntryRepository lexEntryRepository)
 		{
 			if (!DesignMode)
 			{
@@ -43,9 +43,9 @@ namespace WeSay.LexicalTools
 				{
 					throw new ArgumentNullException("isNotComplete");
 				}
-				if (recordListManager == null)
+				if (lexEntryRepository == null)
 				{
-					throw new ArgumentNullException("recordListManager");
+					throw new ArgumentNullException("lexEntryRepository");
 				}
 			}
 
@@ -59,18 +59,20 @@ namespace WeSay.LexicalTools
 				return;
 			}
 
-			_records = records;
-			_completedRecords = new InMemoryBindingList<LexEntry>();
+			_completedRecords = new BindingList<RecordToken<LexEntry>>();
+			_todoRecords = (BindingList<RecordToken<LexEntry>>) records;
+
+			_lexEntryRepository = lexEntryRepository;
 			_viewTemplate = viewTemplate;
 			_isNotComplete = isNotComplete;
 			InitializeDisplaySettings();
 			_entryViewControl.KeyDown += OnKeyDown;
 			_entryViewControl.ViewTemplate = _viewTemplate;
 
-			_entryViewControl.RecordListManager = recordListManager;
+			_entryViewControl.LexEntryRepository = lexEntryRepository;
 
-			_recordsListBox.DataSource = _records;
-			_records.ListChanged += OnRecordsListChanged;
+			_recordsListBox.DataSource = _todoRecords;
+			//            _records.ListChanged += OnRecordsListChanged;
 			// this needs to be after so it will get change event after the ListBox
 
 			WritingSystem listWritingSystem = GetListWritingSystem();
@@ -160,6 +162,7 @@ namespace WeSay.LexicalTools
 
 		private bool _recordsListBoxActive;
 		private bool _completedRecordsListBoxActive;
+		private LexEntry _currentEntry;
 
 		private void _recordsListBox_Leave(object sender, EventArgs e)
 		{
@@ -224,12 +227,12 @@ namespace WeSay.LexicalTools
 				_btnNextWord.Focus();
 			}
 
-			if (_records.Count > 0)
+			if (_todoRecords.Count > 0)
 			{
-				CurrentRecord = _nextRecord ?? _records[_records.Count - 1];
-				SelectCurrentRecordInRecordList();
+				CurrentRecord = _nextRecord ?? _todoRecords[_todoRecords.Count - 1];
+				SelectCurrentRecordInTodoRecordList();
 				_recordsListBox.Focus();
-						// change the focus so that the next focus event will for sure work
+				// change the focus so that the next focus event will for sure work
 				_entryViewControl.Focus();
 				UpdatePreviousAndNextRecords();
 			}
@@ -243,7 +246,7 @@ namespace WeSay.LexicalTools
 
 		public void SetCurrentRecordToPrevious()
 		{
-			if (_records.Count > 0)
+			if (_todoRecords.Count > 0)
 			{
 				if (!_btnPreviousWord.Focused)
 				{
@@ -252,10 +255,10 @@ namespace WeSay.LexicalTools
 					_btnPreviousWord.Focus();
 				}
 
-				CurrentRecord = _previousRecord ?? _records[0];
-				SelectCurrentRecordInRecordList();
+				CurrentRecord = _previousRecord ?? _todoRecords[0];
+				SelectCurrentRecordInTodoRecordList();
 				_recordsListBox.Focus();
-						// change the focus so that the next focus event will for sure work
+				// change the focus so that the next focus event will for sure work
 				_entryViewControl.Focus();
 				UpdatePreviousAndNextRecords();
 			}
@@ -264,15 +267,17 @@ namespace WeSay.LexicalTools
 		private void UpdatePreviousAndNextRecords()
 		{
 			int currentIndex = RecordListCurrentIndex;
-			_previousRecord = (currentIndex > 0) ? _records[currentIndex - 1] : null;
-			_nextRecord = (currentIndex < _records.Count - 1) ? _records[currentIndex + 1] : null;
+			_previousRecord = (currentIndex > 0) ? _todoRecords[currentIndex - 1] : null;
+			_nextRecord = (currentIndex < _todoRecords.Count - 1)
+								  ? _todoRecords[currentIndex + 1]
+								  : null;
 		}
 
 		private void SetCurrentRecordFromRecordList()
 		{
 			ClearSelectionForCompletedRecordsListBox();
 
-			if (_records.Count == 0)
+			if (_todoRecords.Count == 0)
 			{
 				CurrentRecord = null;
 				_congratulationsControl.Show(
@@ -289,7 +294,7 @@ namespace WeSay.LexicalTools
 				}
 				if (RecordListCurrentIndex != -1)
 				{
-					CurrentRecord = _records[RecordListCurrentIndex];
+					CurrentRecord = _todoRecords[RecordListCurrentIndex];
 				}
 				UpdatePreviousAndNextRecords();
 			}
@@ -310,7 +315,7 @@ namespace WeSay.LexicalTools
 			}
 
 			// only do something if an item is being selected (not deselected)
-			if(_completedRecordsListBox.SelectedIndex == -1)
+			if (_completedRecordsListBox.SelectedIndex == -1)
 			{
 				return;
 			}
@@ -350,47 +355,59 @@ namespace WeSay.LexicalTools
 		/// Sets current record as selected in record list or completed record list
 		/// </summary>
 		/// <value>null if record list is empty</value>
-		public LexEntry CurrentRecord
+		public RecordToken<LexEntry> CurrentRecord
 		{
 			get { return _currentRecord; }
 			private set
 			{
 				if (_currentRecord != value)
 				{
-					if (_currentRecord != null)
+					if (CurrentEntry != null)
 					{
-						_currentRecord.PropertyChanged -= OnCurrentRecordPropertyChanged;
+						CurrentEntry.PropertyChanged -= OnCurrentRecordPropertyChanged;
 					}
+
 					_currentRecord = value;
-					_entryViewControl.DataSource = value;
-					if (_currentRecord != null)
+					if (_currentRecord == null)
 					{
-						_currentRecord.PropertyChanged += OnCurrentRecordPropertyChanged;
+						_entryViewControl.DataSource = null;
+					}
+					else
+					{
+						CurrentEntry = _lexEntryRepository.GetItem(_currentRecord);
+						CurrentEntry.PropertyChanged += OnCurrentRecordPropertyChanged;
+						_entryViewControl.DataSource = CurrentEntry;
 						_congratulationsControl.Hide();
 					}
 				}
 			}
 		}
 
-		private void OnRecordsListChanged(object sender, ListChangedEventArgs e)
+		public LexEntry CurrentEntry
 		{
-			switch(e.ListChangedType)
-			{
-				case ListChangedType.ItemAdded:
-					SelectCurrentRecordInRecordList();
-					break;
-				case ListChangedType.ItemDeleted:
-					ClearSelectionForRecordsListBox();
-					break;
-				case ListChangedType.Reset:
-					SelectCurrentRecordInRecordList();
-					break;
-			}
+			get { return _currentEntry; }
+			private set { _currentEntry = value; }
 		}
 
-		private void SelectCurrentRecordInRecordList()
+		//private void OnRecordsListChanged(object sender, ListChangedEventArgs e)
+		//{
+		//    switch(e.ListChangedType)
+		//    {
+		//        case ListChangedType.ItemAdded:
+		//            SelectCurrentRecordInTodoRecordList();
+		//            break;
+		//        case ListChangedType.ItemDeleted:
+		//            ClearSelectionForRecordsListBox();
+		//            break;
+		//        case ListChangedType.Reset:
+		//            SelectCurrentRecordInTodoRecordList();
+		//            break;
+		//    }
+		//}
+
+		private void SelectCurrentRecordInTodoRecordList()
 		{
-			int index = _records.IndexOf(CurrentRecord);
+			int index = _todoRecords.IndexOf(CurrentRecord);
 			Debug.Assert(index != -1);
 			_recordsListBox.SelectedIndex = index;
 			ClearSelectionForCompletedRecordsListBox();
@@ -398,25 +415,38 @@ namespace WeSay.LexicalTools
 
 		private void OnCurrentRecordPropertyChanged(object sender, PropertyChangedEventArgs e)
 		{
-			LexEntry entry = (LexEntry) sender;
-			if (_isNotComplete(entry))
+			Debug.Assert(sender == CurrentEntry);
+			if (_isNotComplete(CurrentEntry))
 			{
-				if (_completedRecords.Contains(entry))
+				if (_completedRecords.Contains(_currentRecord))
 				{
-					_completedRecords.Remove(entry);
-					ClearSelectionForCompletedRecordsListBox();
+					_completedRecords.Remove(_currentRecord);
 				}
+				if (!_todoRecords.Contains(_currentRecord))
+				{
+					_todoRecords.Add(_currentRecord);
+				}
+				SelectCurrentRecordInTodoRecordList();
 			}
 			else
 			{
-				if (!_completedRecords.Contains(entry))
+				if (_todoRecords.Contains(_currentRecord))
 				{
-					_completedRecords.Add(entry);
-					int index = _completedRecords.IndexOf(entry);
-					_completedRecordsListBox.SelectedIndex = index;
-					ClearSelectionForRecordsListBox();
+					_todoRecords.Remove(_currentRecord);
 				}
+				if (!_completedRecords.Contains(_currentRecord))
+				{
+					_completedRecords.Add(_currentRecord);
+				}
+				SelectCurrentRecordInCompletedRecordList();
 			}
+		}
+
+		private void SelectCurrentRecordInCompletedRecordList()
+		{
+			int index = _completedRecords.IndexOf(_currentRecord);
+			_completedRecordsListBox.SelectedIndex = index;
+			ClearSelectionForRecordsListBox();
 		}
 
 		private void ClearSelectionForCompletedRecordsListBox()
@@ -473,5 +503,4 @@ namespace WeSay.LexicalTools
 			_entryViewControl.Select();
 		}
 	}
-
 }

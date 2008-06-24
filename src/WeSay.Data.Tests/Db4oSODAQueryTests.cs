@@ -1,5 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
+using Db4objects.Db4o;
+using Db4objects.Db4o.Ext;
+using Db4objects.Db4o.Query;
 using NUnit.Framework;
 
 namespace WeSay.Data.Tests
@@ -7,29 +11,31 @@ namespace WeSay.Data.Tests
 	[TestFixture]
 	public class db4oBindingListSODAQuery
 	{
-		Db4oDataSource _dataSource;
-		Db4oRecordList<TestItem> _bindingList;
-		string _FilePath;
+		private Db4oDataSource _dataSource;
+		private Db4oRecordList<TestItem> _bindingList;
+		private string _FilePath;
 
 		[SetUp]
 		public void SetUp()
 		{
+			_FilePath = Path.GetTempFileName();
+			_dataSource = new Db4oDataSource(_FilePath);
+			_bindingList = new Db4oRecordList<TestItem>(_dataSource);
 
-			_FilePath = System.IO.Path.GetTempFileName();
-			this._dataSource = new Db4oDataSource(_FilePath);
-			this._bindingList = new Db4oRecordList<TestItem>(this._dataSource);
-
-			this._bindingList.Add(new TestItem("Jared", 1, new DateTime(2003, 7, 10)));
-			this._bindingList.Add(new TestItem("Gianna", 2, new DateTime(2006, 7, 17)));
-			this._bindingList.Add(new TestItem("Third", 2, new DateTime(2006, 9, 17)));
+			_bindingList.Add(new TestItem("Jared", 1, new DateTime(2003, 7, 10)));
+			_bindingList.Add(new TestItem("Gianna", 2, new DateTime(2006, 7, 17)));
+			_bindingList.Add(new TestItem("Third", 2, new DateTime(2006, 9, 17)));
 
 			List<ChildTestItem> jaredchildren = new List<ChildTestItem>();
-			jaredchildren.Add(new ChildTestItem("Jared Child of Jared", 3, new DateTime(2003, 7, 10)));
-			jaredchildren.Add(new ChildTestItem("Gianna Child of Jared", 4, new DateTime(2006, 7, 17)));
+			jaredchildren.Add(
+					new ChildTestItem("Jared Child of Jared", 3, new DateTime(2003, 7, 10)));
+			jaredchildren.Add(
+					new ChildTestItem("Gianna Child of Jared", 4, new DateTime(2006, 7, 17)));
 			_bindingList[0].Children = jaredchildren;
 
 			List<ChildTestItem> giannachildren = new List<ChildTestItem>();
-			giannachildren.Add(new ChildTestItem("Jared Child of Gianna", 5, new DateTime(2003, 7, 10)));
+			giannachildren.Add(
+					new ChildTestItem("Jared Child of Gianna", 5, new DateTime(2003, 7, 10)));
 			giannachildren.Add(new ChildTestItem(String.Empty, 6, new DateTime(2006, 7, 17)));
 			_bindingList[1].Children = giannachildren;
 
@@ -39,31 +45,31 @@ namespace WeSay.Data.Tests
 		[TearDown]
 		public void TearDown()
 		{
-			this._bindingList.Dispose();
-			this._dataSource.Dispose();
-			System.IO.File.Delete(_FilePath);
+			_bindingList.Dispose();
+			_dataSource.Dispose();
+			File.Delete(_FilePath);
 		}
 
 		[Test]
 		public void Everything()
 		{
-			_bindingList.SodaQuery = delegate(Db4objects.Db4o.Query.IQuery query)
-			{
-				query.Constrain(typeof(TestItem));
-				return query;
-			};
+			_bindingList.SodaQuery = delegate(IQuery query)
+									 {
+										 query.Constrain(typeof (TestItem));
+										 return query;
+									 };
 			Assert.AreEqual(3, _bindingList.Count);
 		}
 
 		[Test]
 		public void StoredStringEqualGianna()
 		{
-			_bindingList.SodaQuery = delegate(Db4objects.Db4o.Query.IQuery query)
-			{
-				query.Constrain(typeof(TestItem));
-				query.Descend("_storedString").Constrain("Gianna");
-				return query;
-			};
+			_bindingList.SodaQuery = delegate(IQuery query)
+									 {
+										 query.Constrain(typeof (TestItem));
+										 query.Descend("_storedString").Constrain("Gianna");
+										 return query;
+									 };
 			Assert.AreEqual(1, _bindingList.Count);
 			Assert.AreEqual("Gianna", _bindingList[0].StoredString);
 		}
@@ -81,16 +87,18 @@ namespace WeSay.Data.Tests
 			Assert.AreEqual("Gianna", _bindingList[0].StoredString);
 		}
 
-		public Db4objects.Db4o.Query.IQuery TestItemHasChildWithEmptyString(Db4objects.Db4o.Query.IQuery query)
+		public IQuery TestItemHasChildWithEmptyString(IQuery query)
 		{
-			query.Constrain(typeof(TestItem));
+			query.Constrain(typeof (TestItem));
 			ConstrainTestItemHasChildWithEmptyString(query);
 			return query;
 		}
 
-		public static Db4objects.Db4o.Query.IConstraint ConstrainTestItemHasChildWithEmptyString(Db4objects.Db4o.Query.IQuery query)
+		public static IConstraint ConstrainTestItemHasChildWithEmptyString(IQuery query)
 		{
-			return query.Descend("_childTestItems").Descend("_storedString").Constrain(string.Empty).Equal();
+			return
+					query.Descend("_childTestItems").Descend("_storedString").Constrain(string.Empty)
+							.Equal();
 		}
 
 		[Test]
@@ -106,16 +114,16 @@ namespace WeSay.Data.Tests
 			Assert.AreEqual("Third", _bindingList[0].StoredString);
 		}
 
-		public Db4objects.Db4o.Query.IQuery TestItemWithNoChildren(Db4objects.Db4o.Query.IQuery query)
+		public IQuery TestItemWithNoChildren(IQuery query)
 		{
-			query.Constrain(typeof(TestItem));
+			query.Constrain(typeof (TestItem));
 			ConstrainTestItemWithNoChildren(query);
 			return query;
 		}
 
-		public static Db4objects.Db4o.Query.IConstraint ConstrainTestItemWithNoChildren(Db4objects.Db4o.Query.IQuery query)
+		public static IConstraint ConstrainTestItemWithNoChildren(IQuery query)
 		{
-			return query.Descend("_childTestItems").Constrain(typeof(ChildTestItem)).Not();
+			return query.Descend("_childTestItems").Constrain(typeof (ChildTestItem)).Not();
 		}
 
 		[Test]
@@ -133,10 +141,11 @@ namespace WeSay.Data.Tests
 			Assert.AreEqual("Third", _bindingList[1].StoredString);
 		}
 
-		public Db4objects.Db4o.Query.IQuery TestItemWithNoChildrenOrWithChildWithEmptyString(Db4objects.Db4o.Query.IQuery query)
+		public IQuery TestItemWithNoChildrenOrWithChildWithEmptyString(IQuery query)
 		{
-			query.Constrain(typeof(TestItem));
-			ConstrainTestItemHasChildWithEmptyString(query).Or(ConstrainTestItemWithNoChildren(query));
+			query.Constrain(typeof (TestItem));
+			ConstrainTestItemHasChildWithEmptyString(query).Or(
+					ConstrainTestItemWithNoChildren(query));
 			return query;
 		}
 
@@ -150,14 +159,15 @@ namespace WeSay.Data.Tests
 		{
 			public int Hour;
 			public int Minute;
+
 			public Time(int hour, int minute)
 			{
 				Hour = hour;
 				Minute = minute;
 			}
-			public Time()
-			{
-			}
+
+			public Time() {}
+
 			public override string ToString()
 			{
 				return Hour + ":" + Minute;
@@ -168,24 +178,26 @@ namespace WeSay.Data.Tests
 		{
 			public string Label;
 			public List<Time> Times;
+
 			public override string ToString()
 			{
 				string result = Label;
-				foreach(Time time in Times){
+				foreach (Time time in Times)
+				{
 					result += " " + time;
 				}
 				return result;
 			}
 		}
 
-		Db4objects.Db4o.Ext.IExtObjectContainer _db;
-		string _FilePath;
+		private IExtObjectContainer _db;
+		private string _FilePath;
 
 		[SetUp]
 		public void SetUp()
 		{
-			_FilePath = System.IO.Path.GetTempFileName();
-			_db = Db4objects.Db4o.Db4oFactory.OpenFile(_FilePath).Ext();
+			_FilePath = Path.GetTempFileName();
+			_db = Db4oFactory.OpenFile(_FilePath).Ext();
 
 			TestClass testClass = new TestClass();
 			testClass.Label = "Meal times";
@@ -193,18 +205,18 @@ namespace WeSay.Data.Tests
 			testClass.Times.Add(new Time(7, 30));
 			testClass.Times.Add(new Time(12, 0));
 			testClass.Times.Add(new Time(17, 20));
-			_db.Set(testClass,5);
+			_db.Set(testClass, 5);
 
 			testClass = new TestClass();
 			testClass.Label = "Free time";
 			testClass.Times = new List<Time>();
-			_db.Set(testClass,5);
+			_db.Set(testClass, 5);
 
 			testClass = new TestClass();
 			testClass.Label = "Bed time";
 			testClass.Times = new List<Time>();
 			testClass.Times.Add(new Time(21, 30));
-			_db.Set(testClass,5);
+			_db.Set(testClass, 5);
 
 			_db.Commit();
 		}
@@ -213,69 +225,69 @@ namespace WeSay.Data.Tests
 		public void TearDown()
 		{
 			_db.Dispose();
-			System.IO.File.Delete(_FilePath);
+			File.Delete(_FilePath);
 		}
 
 		[Test]
 		public void AllTestClasses()
 		{
-			Db4objects.Db4o.Query.IQuery query = _db.Query();
-			query.Constrain(typeof(TestClass));
-			Db4objects.Db4o.IObjectSet result = query.Execute();
+			IQuery query = _db.Query();
+			query.Constrain(typeof (TestClass));
+			IObjectSet result = query.Execute();
 			Assert.AreEqual(3, result.Count);
 		}
 
 		[Test]
 		public void StoredStringEqualBedTime()
 		{
-			Db4objects.Db4o.Query.IQuery query = _db.Query();
-			query.Constrain(typeof(TestClass));
+			IQuery query = _db.Query();
+			query.Constrain(typeof (TestClass));
 			query.Descend("Label").Constrain("Bed time");
 
-			Db4objects.Db4o.IObjectSet result = query.Execute();
+			IObjectSet result = query.Execute();
 			Assert.AreEqual(1, result.Count);
-			Assert.AreEqual("Bed time", ((TestClass)result[0]).Label);
+			Assert.AreEqual("Bed time", ((TestClass) result[0]).Label);
 		}
 
 		[Test]
 		public void HasTime12oClock()
 		{
-			Db4objects.Db4o.Query.IQuery query = _db.Query();
-			query.Constrain(typeof(TestClass));
+			IQuery query = _db.Query();
+			query.Constrain(typeof (TestClass));
 			query.Descend("Times").Descend("Hour").Constrain(12).Equal();
 
-			Db4objects.Db4o.IObjectSet result = query.Execute();
+			IObjectSet result = query.Execute();
 			Assert.AreEqual(1, result.Count);
-			Assert.AreEqual("Meal times", ((TestClass)result[0]).Label);
+			Assert.AreEqual("Meal times", ((TestClass) result[0]).Label);
 		}
 
 		[Test]
 		public void HasNoTimes()
 		{
-			Db4objects.Db4o.Query.IQuery query = _db.Query();
-			query.Constrain(typeof(TestClass));
-			query.Descend("Times").Constrain(typeof(Time)).Not();
+			IQuery query = _db.Query();
+			query.Constrain(typeof (TestClass));
+			query.Descend("Times").Constrain(typeof (Time)).Not();
 
-			Db4objects.Db4o.IObjectSet result = query.Execute();
+			IObjectSet result = query.Execute();
 			Assert.AreEqual(1, result.Count);
-			Assert.AreEqual("Free time", ((TestClass)result[0]).Label);
+			Assert.AreEqual("Free time", ((TestClass) result[0]).Label);
 		}
 
 		[Test]
 		[Ignore("Waiting for db4o fix")]
 		public void HasTime12oClockOrHasNoTimes()
 		{
-			Db4objects.Db4o.Query.IQuery query = _db.Query();
-			Db4objects.Db4o.Query.IConstraint hasTime12oClock = query.Descend("Times").Descend("Hour").Constrain(12).Equal();
-			Db4objects.Db4o.Query.IConstraint hasNoTimes = query.Descend("Times").Constrain(typeof(Time)).Not();
-			query.Constrain(typeof(TestClass));
+			IQuery query = _db.Query();
+			IConstraint hasTime12oClock =
+					query.Descend("Times").Descend("Hour").Constrain(12).Equal();
+			IConstraint hasNoTimes = query.Descend("Times").Constrain(typeof (Time)).Not();
+			query.Constrain(typeof (TestClass));
 			query.Constrain(hasTime12oClock.Or(hasNoTimes));
 
-			Db4objects.Db4o.IObjectSet result = query.Execute();
+			IObjectSet result = query.Execute();
 			Assert.AreEqual(2, result.Count);
-			Assert.AreEqual("Meal times", ((TestClass)result[0]).Label);
-			Assert.AreEqual("Free times", ((TestClass)result[1]).Label);
+			Assert.AreEqual("Meal times", ((TestClass) result[0]).Label);
+			Assert.AreEqual("Free times", ((TestClass) result[1]).Label);
 		}
 	}
-
 }

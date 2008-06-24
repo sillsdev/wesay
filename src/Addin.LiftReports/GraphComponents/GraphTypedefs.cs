@@ -1,4 +1,5 @@
 #region copyright info
+
 //
 // Written by Anup. V (anupshubha@yahoo.com)
 // Copyright (c) 2006.
@@ -15,22 +16,23 @@
 // Please use and enjoy. Please let me know of any bugs/mods/improvements
 // that you have found/implemented and I will fix/incorporate them into
 // this file.
+
 #endregion copyright info
 
 using System;
 
-namespace GraphComponents
+namespace Addin.LiftReports.GraphComponents
 {
 	/// <summary>
 	/// Style in which the gridlines appear on the graph
 	/// </summary>
 	[Flags]
-	public enum GridStyles : int
+	public enum GridStyles
 	{
-		None       = 0,
+		None = 0,
 		Horizontal = 1,
-		Vertical   = 2,
-		Grid       = 3,
+		Vertical = 2,
+		Grid = 3,
 	}
 
 	/// <summary>
@@ -90,5 +92,4 @@ namespace GraphComponents
 		/// </summary>
 		Smart,
 	}
-
 }

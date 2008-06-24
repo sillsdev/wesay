@@ -1,14 +1,10 @@
-using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Text;
+using System.IO;
 using System.Windows.Forms;
 using NUnit.Framework;
-using WeSay.App.Properties;
 using WeSay.CommonTools;
-using WeSay.Data;
 using WeSay.Foundation;
-using WeSay.Foundation.Dashboard;
 using WeSay.LexicalModel;
 
 namespace WeSay.App.Tests
@@ -16,29 +12,41 @@ namespace WeSay.App.Tests
 	[TestFixture]
 	public class DashBoardTests
 	{
+		private LexEntryRepository _lexEntryRepository;
+		private string _filePath;
+
 		[SetUp]
 		public void Setup()
 		{
+			_filePath = Path.GetTempFileName();
+			_lexEntryRepository = new LexEntryRepository(_filePath);
+
 			Form window = new Form();
 			window.Size = new Size(800, 600);
-			InMemoryRecordListManager manager = new InMemoryRecordListManager();
-			IRecordList<LexEntry> entries = manager.GetListOfType<LexEntry>();
-			entries.AddNew();
 
-			Dash dash = new Dash(manager, null);
-			dash.ThingsToMakeButtonsFor= GetButtonItems();
+			_lexEntryRepository.CreateItem();
+
+			Dash dash = new Dash(_lexEntryRepository, null);
+			dash.ThingsToMakeButtonsFor = GetButtonItems();
 			dash.Dock = DockStyle.Fill;
 			window.Controls.Add(dash);
 			window.BackColor = dash.BackColor;
 			dash.Activate();
 			Application.Run(window);
 		}
-		[Test, Ignore("not really a test")]
-		public void Run()
+
+		[TearDown]
+		public void Teardown()
 		{
+			_lexEntryRepository.Dispose();
+			File.Delete(_filePath);
 		}
 
-		private List<IThingOnDashboard> GetButtonItems()
+		[Test]
+		[Ignore("not really a test")]
+		public void Run() {}
+
+		private static List<IThingOnDashboard> GetButtonItems()
 		{
 			List<IThingOnDashboard> buttonItems = new List<IThingOnDashboard>();
 			buttonItems.Add(new ThingThatGetsAButton(DashboardGroup.Gather, "Semantic Domains", "Semantic Domains description"));
@@ -59,18 +67,20 @@ namespace WeSay.App.Tests
 		}
 	}
 
-	class ThingThatGetsAButton : IThingOnDashboard
+	internal class ThingThatGetsAButton: IThingOnDashboard
 	{
 		private readonly DashboardGroup _group;
 		private readonly string _localizedLabel;
 		private readonly string _description;
 		private Font _font;
 		private ButtonStyle _style;
-		private Image _image;
+		private readonly Image _image;
 
-
-
-		public ThingThatGetsAButton(DashboardGroup group, string localizedLabel, string description, ButtonStyle style, Image image)
+		public ThingThatGetsAButton(DashboardGroup group,
+									string localizedLabel,
+									string description,
+									ButtonStyle style,
+									Image image)
 		{
 			_image = image;
 			DashboardButtonStyle = style;
@@ -90,10 +100,13 @@ namespace WeSay.App.Tests
 		{
 			get
 			{
-				return TextRenderer.MeasureText(LocalizedLabel, Font, new Size(int.MaxValue, int.MaxValue), TextFormatFlags.LeftAndRightPadding).Width;
+				return
+						TextRenderer.MeasureText(LocalizedLabel,
+												 Font,
+												 new Size(int.MaxValue, int.MaxValue),
+												 TextFormatFlags.LeftAndRightPadding).Width;
 			}
 		}
-
 
 		#region IThingOnDashboard Members
 
@@ -130,12 +143,9 @@ namespace WeSay.App.Tests
 
 		public Image DashboardButtonImage
 		{
-			get { return _image;  }
+			get { return _image; }
 		}
 
 		#endregion
 	}
-
-
-
 }

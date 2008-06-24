@@ -1,32 +1,27 @@
-using System;
-using System.ComponentModel;
+﻿using System;
 using System.Diagnostics;
 using System.Windows.Forms;
 using System.Drawing;
 using Palaso.UI.WindowsForms.i8n;
-using WeSay.Foundation;
-using WeSay.UI;
 
 namespace WeSay.CommonTools
 {
-	public partial class DictionaryStatusControl : UserControl
+	public partial class DictionaryStatusControl: UserControl
 	{
 		private Size _oldLabelSize;
-		private IBindingList _records;
 
 		public DictionaryStatusControl()
 		{
-			Debug.Assert(this.DesignMode);
+			Debug.Assert(DesignMode);
 			InitializeComponent();
 			ShowLogo = false;
 		}
 
-
-		public DictionaryStatusControl(IBindingList records)
+		public DictionaryStatusControl(int count)
 		{
-			_records = records;
 			InitializeComponent();
-			this._dictionarySizeLabel.Text = String.Format(StringCatalog.Get(this._dictionarySizeLabel.Text), records.Count);
+			_dictionarySizeLabel.Text =
+					String.Format(StringCatalog.Get(_dictionarySizeLabel.Text), count);
 	   }
 
 		public bool ShowLogo
@@ -41,13 +36,15 @@ namespace WeSay.CommonTools
 		private void UpdateSize()
 		{
 			int newHeight = _logoImage.Visible ? _logoImage.Location.Y + _logoImage.Height : 0;
-			newHeight = Math.Max(_dictionarySizeLabel.Location.Y + _dictionarySizeLabel.Height, newHeight);
+			newHeight =
+					Math.Max(_dictionarySizeLabel.Location.Y + _dictionarySizeLabel.Height,
+							 newHeight);
 			Height = newHeight;
 		}
 
 		private void DictionaryStatusControl_FontChanged(object sender, EventArgs e)
 		{
-			this._dictionarySizeLabel.Font = this.Font;
+			_dictionarySizeLabel.Font = Font;
 		}
 
 		private void _dictionarySizeLabel_SizeChanged(object sender, EventArgs e)
