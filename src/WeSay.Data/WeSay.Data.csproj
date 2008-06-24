@@ -73,6 +73,7 @@
 	<Compile Include="IFilterable.cs" />
 	<Compile Include="IRecordList.cs" />
 	<Compile Include="IRecordListManager.cs" />
+	<Compile Include="MemoryRepository.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />
 	<Compile Include="IQuery.cs" />
 	<Compile Include="RecordToken.cs" />

@@ -38,6 +38,11 @@ namespace WeSay.LexicalModel
 			return item;
 		}
 
+		public int CountAllItems()
+		{
+			return CountAllEntries();
+		}
+
 		public LexEntry CreateItem(Extensible eInfo)
 		{
 			LexEntry item = new LexEntry(eInfo, GetNextBirthOrder());
