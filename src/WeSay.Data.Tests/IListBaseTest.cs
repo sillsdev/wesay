@@ -3,13 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework;
 
-
-namespace WeSay.Data.Tests.IListTests
+namespace WeSay.Data.Tests
 {
-	// Four Types of IList : FixedSizeReadOnly, FixedSizeReadWrite,
-	//                       VariableSizeReadOnly, VariableSizeReadWrite
-
-
 	public class IListBaseTest<T>
 	{
 		protected IList _list;
@@ -22,72 +17,75 @@ namespace WeSay.Data.Tests.IListTests
 		{
 			if (_list.Count > 0)
 			{
-				Assert.AreEqual(this._firstItem, this._list[0]);
+				Assert.AreEqual(_firstItem, _list[0]);
 			}
 		}
 
 		[Test]
-		[ExpectedException(typeof(ArgumentOutOfRangeException))]
+		[ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public void GetItemNegativeIndex()
 		{
-			T item = (T)this._list[-1];
+			T item = (T) _list[-1];
 		}
 
 		[Test]
-		[ExpectedException(typeof(ArgumentOutOfRangeException))]
+		[ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public void GetItemPastTheEnd()
 		{
-			T item = (T)this._list[this._list.Count];
+			T item = (T) _list[_list.Count];
 		}
 
 		[Test]
 		public void Contains()
 		{
-			Assert.IsFalse(this._list.Contains(default(T)));
+			Assert.IsFalse(_list.Contains(default(T)));
 			if (_list.Count > 0)
 			{
-				Assert.IsTrue(this._list.Contains(this._firstItem));
+				Assert.IsTrue(_list.Contains(_firstItem));
 			}
 		}
 
 		[Test]
 		public void IndexOf()
 		{
-			Assert.AreEqual(-1, this._list.IndexOf(default(T)));
-			if (this._list.Count > 0)
+			Assert.AreEqual(-1, _list.IndexOf(default(T)));
+			if (_list.Count > 0)
 			{
-				Assert.AreEqual(0, this._list.IndexOf(this._firstItem));
-				Assert.AreEqual(this._list.Count - 1, this._list.IndexOf(this._list[this._list.Count - 1]));
+				Assert.AreEqual(0, _list.IndexOf(_firstItem));
+				Assert.AreEqual(_list.Count - 1, _list.IndexOf(_list[_list.Count - 1]));
 			}
 		}
 
 		#region Read-Write
+
 		public void SetItem()
 		{
 			if (!_isSorted)
 			{
-				if (this._list.Count == 0)
+				if (_list.Count == 0)
 				{
-					this._list.Add(this._newItem);
-					this._list.Add(this._firstItem);
-					this._list.Add(this._newItem);
+					_list.Add(_newItem);
+					_list.Add(_firstItem);
+					_list.Add(_newItem);
 				}
-				Assert.AreNotEqual(this._newItem, this._list[1]);
-				this._list[1] = this._newItem;
-				Assert.AreEqual(this._newItem, this._list[1]);
+				Assert.AreNotEqual(_newItem, _list[1]);
+				_list[1] = _newItem;
+				Assert.AreEqual(_newItem, _list[1]);
 			}
 		}
+
 		public void SetItemNotSupported()
 		{
 			if (_isSorted)
 			{
-				this._list[1] = this._firstItem;
+				_list[1] = _firstItem;
 			}
 			else
 			{
 				throw new NotSupportedException();
 			}
 		}
+
 		public void SetItemNegativeIndex()
 		{
 			if (_isSorted)
@@ -96,7 +94,7 @@ namespace WeSay.Data.Tests.IListTests
 			}
 			else
 			{
-				this._list[-1] = this._firstItem;
+				_list[-1] = _firstItem;
 			}
 		}
 
@@ -108,43 +106,45 @@ namespace WeSay.Data.Tests.IListTests
 			}
 			else
 			{
-				this._list[this._list.Count] = this._firstItem;
+				_list[_list.Count] = _firstItem;
 			}
 		}
+
 		#endregion
 
 		#region Variable-Size
+
 		public void Add()
 		{
-			int count = this._list.Count;
-			this._list.Add(_newItem);
-			Assert.AreEqual(count + 1, this._list.Count);
-			Assert.AreEqual(_newItem, this._list[count]);
+			int count = _list.Count;
+			_list.Add(_newItem);
+			Assert.AreEqual(count + 1, _list.Count);
+			Assert.AreEqual(_newItem, _list[count]);
 		}
 
 		public void Clear()
 		{
-			this._list.Clear();
-			Assert.AreEqual(0, this._list.Count);
+			_list.Clear();
+			Assert.AreEqual(0, _list.Count);
 		}
 
 		public void Insert()
 		{
 			if (!_isSorted)
 			{
-				int count = this._list.Count;
-				this._list.Insert(0, this._newItem);
-				Assert.AreEqual(count + 1, this._list.Count);
-				Assert.AreEqual(this._newItem, this._list[0]);
+				int count = _list.Count;
+				_list.Insert(0, _newItem);
+				Assert.AreEqual(count + 1, _list.Count);
+				Assert.AreEqual(_newItem, _list[0]);
 				if (count > 0)
 				{
-					Assert.AreEqual(this._firstItem, this._list[1]);
-					Assert.AreNotEqual(this._firstItem, this._list[2]);
-					Assert.AreNotEqual(this._newItem, this._list[this._list.Count - 1]);
+					Assert.AreEqual(_firstItem, _list[1]);
+					Assert.AreNotEqual(_firstItem, _list[2]);
+					Assert.AreNotEqual(_newItem, _list[_list.Count - 1]);
 				}
-				this._list.Insert(this._list.Count, this._newItem);
-				Assert.AreEqual(count + 2, this._list.Count);
-				Assert.AreEqual(this._newItem, this._list[this._list.Count - 1]);
+				_list.Insert(_list.Count, _newItem);
+				Assert.AreEqual(count + 2, _list.Count);
+				Assert.AreEqual(_newItem, _list[_list.Count - 1]);
 			}
 		}
 
@@ -152,7 +152,7 @@ namespace WeSay.Data.Tests.IListTests
 		{
 			if (_isSorted)
 			{
-				this._list.Insert(0, this._newItem);
+				_list.Insert(0, _newItem);
 			}
 			else
 			{
@@ -168,7 +168,7 @@ namespace WeSay.Data.Tests.IListTests
 			}
 			else
 			{
-				this._list.Insert(-1, this._newItem);
+				_list.Insert(-1, _newItem);
 			}
 		}
 
@@ -180,70 +180,73 @@ namespace WeSay.Data.Tests.IListTests
 			}
 			else
 			{
-				this._list.Insert(this._list.Count + 1, this._newItem);
+				_list.Insert(_list.Count + 1, _newItem);
 			}
 		}
 
 		public void Remove()
 		{
-			this._list.Add(this._newItem);
-			int count = this._list.Count;
-			this._list.Remove(this._newItem);
-			Assert.AreEqual(count - 1, this._list.Count);
-			if (this._list.Count > 0)
+			_list.Add(_newItem);
+			int count = _list.Count;
+			_list.Remove(_newItem);
+			Assert.AreEqual(count - 1, _list.Count);
+			if (_list.Count > 0)
 			{
-				count = this._list.Count;
-				this._list.Remove(this._firstItem);
-				Assert.AreEqual(count - 1, this._list.Count);
+				count = _list.Count;
+				_list.Remove(_firstItem);
+				Assert.AreEqual(count - 1, _list.Count);
 			}
-			if (this._list.Count > 0)
+			if (_list.Count > 0)
 			{
-				Assert.AreNotEqual(this._firstItem, this._list[0]);
+				Assert.AreNotEqual(_firstItem, _list[0]);
 			}
 
-			count = this._list.Count;
-			this._list.Remove(this._firstItem);
-			Assert.AreEqual(count, this._list.Count);
+			count = _list.Count;
+			_list.Remove(_firstItem);
+			Assert.AreEqual(count, _list.Count);
 		}
+
 		public void RemoveAt()
 		{
-			int count = this._list.Count;
+			int count = _list.Count;
 			if (count == 0)
 			{
-				this._list.Add(this._newItem);
+				_list.Add(_newItem);
 				count = 1;
 			}
-			this._list.RemoveAt(0);
-			if (this._list.Count > 0)
+			_list.RemoveAt(0);
+			if (_list.Count > 0)
 			{
-				Assert.AreNotEqual(this._newItem, this._list[0]);
+				Assert.AreNotEqual(_newItem, _list[0]);
 			}
-			Assert.AreEqual(count - 1, this._list.Count);
+			Assert.AreEqual(count - 1, _list.Count);
 		}
 
 		public void RemoveAtNegativeIndex()
 		{
-			this._list.RemoveAt(-1);
+			_list.RemoveAt(-1);
 		}
 
 		public void RemoveAtPastTheEnd()
 		{
-			this._list.RemoveAt(this._list.Count);
+			_list.RemoveAt(_list.Count);
 		}
+
 		#endregion
 	}
-	public class IListVariableSizeReadWriteBaseTest<T> : IListBaseTest<T>
+
+	public class IListVariableSizeReadWriteBaseTest<T>: IListBaseTest<T>
 	{
 		[Test]
 		public void IsFixedSize()
 		{
-			Assert.IsFalse(this._list.IsFixedSize);
+			Assert.IsFalse(_list.IsFixedSize);
 		}
 
 		[Test]
 		public void IsReadOnly()
 		{
-			Assert.IsFalse(this._list.IsReadOnly);
+			Assert.IsFalse(_list.IsReadOnly);
 		}
 
 		[Test]
@@ -253,19 +256,18 @@ namespace WeSay.Data.Tests.IListTests
 		}
 
 		[Test]
-		[ExpectedException(typeof(ArgumentOutOfRangeException))]
+		[ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public new void SetItemNegativeIndex()
 		{
 			base.SetItemNegativeIndex();
 		}
 
 		[Test]
-		[ExpectedException(typeof(ArgumentOutOfRangeException))]
+		[ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public new void SetItemPastTheEnd()
 		{
 			base.SetItemPastTheEnd();
 		}
-
 
 		[Test]
 		public new void Add()
@@ -286,14 +288,14 @@ namespace WeSay.Data.Tests.IListTests
 		}
 
 		[Test]
-		[ExpectedException(typeof(ArgumentOutOfRangeException))]
+		[ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public new void InsertNegativeIndex()
 		{
 			base.InsertNegativeIndex();
 		}
 
 		[Test]
-		[ExpectedException(typeof(ArgumentOutOfRangeException))]
+		[ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public new void InsertPastTheEnd()
 		{
 			base.InsertPastTheEnd();
@@ -312,91 +314,91 @@ namespace WeSay.Data.Tests.IListTests
 		}
 
 		[Test]
-		[ExpectedException(typeof(ArgumentOutOfRangeException))]
+		[ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public new void RemoveAtNegativeIndex()
 		{
 			base.RemoveAtNegativeIndex();
 		}
 
 		[Test]
-		[ExpectedException(typeof(ArgumentOutOfRangeException))]
+		[ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public new void RemoveAtPastTheEnd()
 		{
 			base.RemoveAtPastTheEnd();
 		}
-
 	}
 
-	public class IListVariableSizeReadOnlyBaseTest<T> : IListBaseTest<T>
+	public class IListVariableSizeReadOnlyBaseTest<T>: IListBaseTest<T>
 	{
 		[Test]
 		public void IsFixedSize()
 		{
-			Assert.IsFalse(this._list.IsFixedSize);
+			Assert.IsFalse(_list.IsFixedSize);
 		}
 
 		[Test]
 		public void IsReadOnly()
 		{
-			Assert.IsTrue(this._list.IsReadOnly);
+			Assert.IsTrue(_list.IsReadOnly);
 		}
 
 		[Test]
-		[ExpectedException(typeof(NotSupportedException))]
+		[ExpectedException(typeof (NotSupportedException))]
 		public new void SetItem()
 		{
 			base.SetItem();
 		}
 
 		[Test]
-		[ExpectedException(typeof(NotSupportedException))]
+		[ExpectedException(typeof (NotSupportedException))]
 		public new void Add()
 		{
 			base.Add();
 		}
 
 		[Test]
-		[ExpectedException(typeof(NotSupportedException))]
+		[ExpectedException(typeof (NotSupportedException))]
 		public new void Clear()
 		{
 			base.Clear();
 		}
 
 		[Test]
-		[ExpectedException(typeof(NotSupportedException))]
+		[ExpectedException(typeof (NotSupportedException))]
 		public new void Insert()
 		{
 			base.Insert();
 		}
 
 		[Test]
-		[ExpectedException(typeof(NotSupportedException))]
+		[ExpectedException(typeof (NotSupportedException))]
 		public new void Remove()
 		{
 			base.Remove();
 		}
 
 		[Test]
-		[ExpectedException(typeof(NotSupportedException))]
+		[ExpectedException(typeof (NotSupportedException))]
 		public new void RemoveAt()
 		{
 			base.RemoveAt();
 		}
 	}
 
-	public class IListFixedSizeReadWriteBaseTest<T> : IListBaseTest<T>
+	public class IListFixedSizeReadWriteBaseTest<T>: IListBaseTest<T>
 	{
 		[Test]
 		public void IsFixedSize()
 		{
-			Assert.IsTrue(this._list.IsFixedSize);
+			Assert.IsTrue(_list.IsFixedSize);
 		}
 
 		[Test]
 		public void IsReadOnly()
 		{
-			Assert.IsFalse(this._list.IsReadOnly);
+			Assert.IsFalse(_list.IsReadOnly);
 		}
+
 		[Test]
 		public new void SetItem()
 		{
@@ -404,117 +406,114 @@ namespace WeSay.Data.Tests.IListTests
 		}
 
 		[Test]
-		[ExpectedException(typeof(ArgumentOutOfRangeException))]
+		[ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public new void SetItemNegativeIndex()
 		{
 			base.SetItemNegativeIndex();
 		}
 
 		[Test]
-		[ExpectedException(typeof(ArgumentOutOfRangeException))]
+		[ExpectedException(typeof (ArgumentOutOfRangeException))]
 		public new void SetItemPastTheEnd()
 		{
 			base.SetItemPastTheEnd();
 		}
 
 		[Test]
-		[ExpectedException(typeof(NotSupportedException))]
+		[ExpectedException(typeof (NotSupportedException))]
 		public new void Add()
 		{
 			base.Add();
 		}
 
 		[Test]
-		[ExpectedException(typeof(NotSupportedException))]
+		[ExpectedException(typeof (NotSupportedException))]
 		public new void Clear()
 		{
 			base.Clear();
 		}
 
 		[Test]
-		[ExpectedException(typeof(NotSupportedException))]
+		[ExpectedException(typeof (NotSupportedException))]
 		public new void Insert()
 		{
 			base.Insert();
 		}
 
 		[Test]
-		[ExpectedException(typeof(NotSupportedException))]
+		[ExpectedException(typeof (NotSupportedException))]
 		public new void Remove()
 		{
 			base.Remove();
 		}
 
 		[Test]
-		[ExpectedException(typeof(NotSupportedException))]
+		[ExpectedException(typeof (NotSupportedException))]
 		public new void RemoveAt()
 		{
 			base.RemoveAt();
 		}
 	}
 
-	public class IListFixedSizeReadOnlyBaseTest<T> : IListBaseTest<T>
+	public class IListFixedSizeReadOnlyBaseTest<T>: IListBaseTest<T>
 	{
 		[Test]
 		public void IsFixedSize()
 		{
-			Assert.IsTrue(this._list.IsFixedSize);
+			Assert.IsTrue(_list.IsFixedSize);
 		}
 
 		[Test]
 		public void IsReadOnly()
 		{
-			Assert.IsTrue(this._list.IsReadOnly);
+			Assert.IsTrue(_list.IsReadOnly);
 		}
 
 		[Test]
-		[ExpectedException(typeof(NotSupportedException))]
+		[ExpectedException(typeof (NotSupportedException))]
 		public new void SetItem()
 		{
 			base.SetItem();
 		}
 
 		[Test]
-		[ExpectedException(typeof(NotSupportedException))]
+		[ExpectedException(typeof (NotSupportedException))]
 		public new void Add()
 		{
 			base.Add();
 		}
 
 		[Test]
-		[ExpectedException(typeof(NotSupportedException))]
+		[ExpectedException(typeof (NotSupportedException))]
 		public new void Clear()
 		{
 			base.Clear();
 		}
 
 		[Test]
-		[ExpectedException(typeof(NotSupportedException))]
+		[ExpectedException(typeof (NotSupportedException))]
 		public new void Insert()
 		{
 			base.Insert();
 		}
 
 		[Test]
-		[ExpectedException(typeof(NotSupportedException))]
+		[ExpectedException(typeof (NotSupportedException))]
 		public new void Remove()
 		{
 			base.Remove();
 		}
 
 		[Test]
-		[ExpectedException(typeof(NotSupportedException))]
+		[ExpectedException(typeof (NotSupportedException))]
 		public new void RemoveAt()
 		{
 			base.RemoveAt();
 		}
-
 	}
 
-
-
 	[TestFixture]
-	public class IListTest : IListVariableSizeReadWriteBaseTest<int>
+	public class IListTest: IListVariableSizeReadWriteBaseTest<int>
 	{
 		[SetUp]
 		public void SetUp()
@@ -527,14 +526,14 @@ namespace WeSay.Data.Tests.IListTests
 			list.Add(7);
 			list.Add(9);
 
-			this._list = list;
-			this._firstItem = 1;
-			this._newItem = 11;
+			_list = list;
+			_firstItem = 1;
+			_newItem = 11;
 		}
 	}
 
 	[TestFixture]
-	public class IListStringTest : IListVariableSizeReadWriteBaseTest<string>
+	public class IListStringTest: IListVariableSizeReadWriteBaseTest<string>
 	{
 		[SetUp]
 		public void SetUp()
@@ -547,46 +546,26 @@ namespace WeSay.Data.Tests.IListTests
 			list.Add("7");
 			list.Add("9");
 
-			this._list = list;
-			this._firstItem = "1";
-			this._newItem = "11";
+			_list = list;
+			_firstItem = "1";
+			_newItem = "11";
 		}
 	}
 
 	[TestFixture]
-	public class IListNoDataTest : IListVariableSizeReadWriteBaseTest<string>
+	public class IListNoDataTest: IListVariableSizeReadWriteBaseTest<string>
 	{
 		[SetUp]
 		public void SetUp()
 		{
-			this._list = new List<string>();
-			this._firstItem = null;
-			this._newItem = "11";
+			_list = new List<string>();
+			_firstItem = null;
+			_newItem = "11";
 		}
 	}
 
 	[TestFixture]
-	public class IListFixedSizeReadOnlyTest : IListFixedSizeReadOnlyBaseTest<string>
-	{
-		[SetUp]
-		public void SetUp()
-		{
-			ArrayList list = new ArrayList();
-
-			list.Add("1");
-			list.Add("3");
-			list.Add("5");
-			list.Add("7");
-			list.Add("9");
-
-			this._list = ArrayList.ReadOnly(list);
-			this._firstItem = "1";
-			this._newItem = "11";
-		}
-	}
-
-	[TestFixture]
-	public class IListFixedSizeReadWriteTest : IListFixedSizeReadWriteBaseTest<string>
+	public class IListFixedSizeReadOnlyTest: IListFixedSizeReadOnlyBaseTest<string>
 	{
 		[SetUp]
 		public void SetUp()
@@ -599,11 +578,29 @@ namespace WeSay.Data.Tests.IListTests
 			list.Add("7");
 			list.Add("9");
 
-			this._list = ArrayList.FixedSize(list);
-			this._firstItem = "1";
-			this._newItem = "11";
+			_list = ArrayList.ReadOnly(list);
+			_firstItem = "1";
+			_newItem = "11";
 		}
 	}
 
+	[TestFixture]
+	public class IListFixedSizeReadWriteTest: IListFixedSizeReadWriteBaseTest<string>
+	{
+		[SetUp]
+		public void SetUp()
+		{
+			ArrayList list = new ArrayList();
 
+			list.Add("1");
+			list.Add("3");
+			list.Add("5");
+			list.Add("7");
+			list.Add("9");
+
+			_list = ArrayList.FixedSize(list);
+			_firstItem = "1";
+			_newItem = "11";
+		}
+	}
 }

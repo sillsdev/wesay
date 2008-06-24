@@ -4,13 +4,14 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Reflection;
 using System.Windows.Forms;
+using Palaso.Reporting;
 using Palaso.UI.WindowsForms.Keyboarding;
 using Palaso.UI.WindowsForms.Spelling;
-using WeSay.Language;
+using WeSay.Foundation;
 
 namespace WeSay.UI
 {
-	public partial class WeSayTextBox : TextBox
+	public partial class WeSayTextBox: TextBox
 	{
 		private WritingSystem _writingSystem;
 
@@ -18,6 +19,7 @@ namespace WeSay.UI
 		private readonly string _nameForLogging;
 		private bool _haveAlreadyLoggedTextChanged = false;
 		private bool _isSpellCheckingEnabled;
+
 		/// <summary>
 		/// Don't use this directly, use the Singleton Property TextBoxSpellChecker
 		/// </summary>
@@ -26,8 +28,10 @@ namespace WeSay.UI
 		public WeSayTextBox()
 		{
 			InitializeComponent();
-			if(DesignMode)
+			if (DesignMode)
+			{
 				return;
+			}
 			GotFocus += OnGotFocus;
 			LostFocus += OnLostFocus;
 			KeyPress += WeSayTextBox_KeyPress;
@@ -41,14 +45,13 @@ namespace WeSay.UI
 			}
 		}
 
-
-		void OnKeyDown(object sender, KeyEventArgs e)
+		private void OnKeyDown(object sender, KeyEventArgs e)
 		{
 			if (e.KeyCode == Keys.F4)
 			{
 				if (SelectionLength == 0)
 				{
-					if (Text !=null)   //grab the whole field
+					if (Text != null) //grab the whole field
 					{
 						DoToolboxJump(Text.Trim());
 					}
@@ -67,65 +70,70 @@ namespace WeSay.UI
 			{
 				throw new ApplicationException("User-invoked test crash.");
 			}
-			if(e.KeyCode == Keys.PageDown)
+			if (e.KeyCode == Keys.PageDown)
 			{
 				e.Handled = false;
 			}
 		}
 
-
-		static private void DoToolboxJump(string word)
+		private static void DoToolboxJump(string word)
 		{
 			try
 			{
-				Palaso.Reporting.Logger.WriteMinorEvent("Jumping to Toolbox");
+				Logger.WriteMinorEvent("Jumping to Toolbox");
 				Type toolboxJumperType = Type.GetTypeFromProgID("Toolbox.Jump");
 				if (toolboxJumperType != null)
 				{
 					Object toolboxboxJumper = Activator.CreateInstance(toolboxJumperType);
 					if ((toolboxboxJumper != null))
 					{
-						object[] args = new object[] { word };
-						toolboxJumperType.InvokeMember("Jump", BindingFlags.InvokeMethod, null, toolboxboxJumper, args);
+						object[] args = new object[] {word};
+						toolboxJumperType.InvokeMember("Jump",
+													   BindingFlags.InvokeMethod,
+													   null,
+													   toolboxboxJumper,
+													   args);
 					}
 				}
 			}
 			catch (Exception)
 			{
-				Palaso.Reporting.ErrorReport.ReportNonFatalMessage("Could not get a connection to Toolbox.");
+				ErrorReport.ReportNonFatalMessage("Could not get a connection to Toolbox.");
 				throw;
 			}
 		}
 
-		void WeSayTextBox_TextChanged(object sender, EventArgs e)
+		private void WeSayTextBox_TextChanged(object sender, EventArgs e)
 		{
 			//only first change per focus session will be logged
-			if (!_haveAlreadyLoggedTextChanged &&
-				Focused/*try not to report when code is changing us*/)
+			if (!_haveAlreadyLoggedTextChanged && Focused
+					/*try not to report when code is changing us*/)
 			{
 				_haveAlreadyLoggedTextChanged = true;
-				Palaso.Reporting.Logger.WriteMinorEvent("First_TextChange (could be paste via mouse) {0}:{1}", _nameForLogging, _writingSystem.Id);
+				Logger.WriteMinorEvent("First_TextChange (could be paste via mouse) {0}:{1}",
+									   _nameForLogging,
+									   _writingSystem.Id);
 			}
 		}
 
-		void WeSayTextBox_KeyPress(object sender, KeyPressEventArgs e)
+		private void WeSayTextBox_KeyPress(object sender, KeyPressEventArgs e)
 		{
 			//only first change per focus session will be logged
 			if (!_haveAlreadyLoggedTextChanged)
 			{
 				_haveAlreadyLoggedTextChanged = true;
-				Palaso.Reporting.Logger.WriteMinorEvent("First_KeyPress {0}:{1}", _nameForLogging, _writingSystem.Id);
+				Logger.WriteMinorEvent("First_KeyPress {0}:{1}", _nameForLogging, _writingSystem.Id);
 			}
 		}
 
-		void OnLostFocus(object sender, EventArgs e)
+		private void OnLostFocus(object sender, EventArgs e)
 		{
-			Palaso.Reporting.Logger.WriteMinorEvent("LostFocus {0}:{1}", _nameForLogging, _writingSystem.Id);
+			Logger.WriteMinorEvent("LostFocus {0}:{1}", _nameForLogging, _writingSystem.Id);
 		}
 
-		void OnGotFocus(object sender, EventArgs e)
+		private void OnGotFocus(object sender, EventArgs e)
 		{
-			Palaso.Reporting.Logger.WriteMinorEvent("Focus {0}:{1}", _nameForLogging, _writingSystem.Id);
+			Logger.WriteMinorEvent("Focus {0}:{1}", _nameForLogging, _writingSystem.Id);
 			_haveAlreadyLoggedTextChanged = false;
 		}
 
@@ -172,8 +180,7 @@ namespace WeSay.UI
 		{
 			using (Graphics g = CreateGraphics())
 			{
-				TextFormatFlags flags = TextFormatFlags.TextBoxControl |
-										TextFormatFlags.Default |
+				TextFormatFlags flags = TextFormatFlags.TextBoxControl | TextFormatFlags.Default |
 										TextFormatFlags.NoClipping;
 				if (Multiline && WordWrap)
 				{
@@ -183,33 +190,28 @@ namespace WeSay.UI
 				{
 					flags |= TextFormatFlags.RightToLeft;
 				}
-				Size sz = TextRenderer.MeasureText(g,
-												   Text + "\n",
-												   // need extra new line to handle case where ends in new line (since last newline is ignored)
-									Font,
-									new Size(width, int.MaxValue),
-									flags);
-				return sz.Height+2; // add enough space for spell checking squiggle underneath
+				Size sz =
+						TextRenderer.MeasureText(g,
+												 Text + "\n",
+												 // need extra new line to handle case where ends in new line (since last newline is ignored)
+												 Font,
+												 new Size(width, int.MaxValue),
+												 flags);
+				return sz.Height + 2; // add enough space for spell checking squiggle underneath
 			}
 		}
 
-		public WeSayTextBox(WritingSystem ws, string nameForLogging):this()
+		public WeSayTextBox(WritingSystem ws, string nameForLogging): this()
 		{
 			_nameForLogging = nameForLogging;
-			 WritingSystem = ws;
+			WritingSystem = ws;
 		}
 
 		[Browsable(false)]
 		public override string Text
 		{
-			set
-			{
-				base.Text = value;
-			}
-			get
-			{
-				return base.Text;
-			}
+			set { base.Text = value; }
+			get { return base.Text; }
 		}
 
 		[Browsable(false)]
@@ -218,23 +220,24 @@ namespace WeSay.UI
 		{
 			get
 			{
-				if(_writingSystem == null)
+				if (_writingSystem == null)
 				{
-					throw new InvalidOperationException("WritingSystem must be initialized prior to use.");
+					throw new InvalidOperationException(
+							"WritingSystem must be initialized prior to use.");
 				}
 				return _writingSystem;
 			}
 			set
 			{
-				if(value == null)
+				if (value == null)
 				{
 					throw new ArgumentNullException();
 				}
 				_writingSystem = value;
 				Font = value.Font;
 
-	 //hack for testing
-			 //   this.Height = (int) Math.Ceiling( Font.GetHeight());
+				//hack for testing
+				//   this.Height = (int) Math.Ceiling( Font.GetHeight());
 
 				if (value.RightToLeft)
 				{
@@ -249,8 +252,8 @@ namespace WeSay.UI
 
 		public bool MultiParagraph
 		{
-			get { return this._multiParagraph; }
-			set { this._multiParagraph = value; }
+			get { return _multiParagraph; }
+			set { _multiParagraph = value; }
 		}
 
 		public bool IsSpellCheckingEnabled
@@ -270,28 +273,27 @@ namespace WeSay.UI
 			}
 		}
 
-
 		private void OnSpellCheckingDisabled()
 		{
 			TextBoxSpellChecker.SetLanguageForSpellChecking(this, null);
 		}
+
 		private void OnSpellCheckingEnabled()
 		{
-			TextBoxSpellChecker.SetLanguageForSpellChecking(this,_writingSystem.SpellCheckingId);
+			TextBoxSpellChecker.SetLanguageForSpellChecking(this, _writingSystem.SpellCheckingId);
 		}
 
 		private static TextBoxSpellChecker TextBoxSpellChecker
 		{
 			get
 			{
-				if(_textBoxSpellChecker == null)
+				if (_textBoxSpellChecker == null)
 				{
 					_textBoxSpellChecker = new TextBoxSpellChecker();
 				}
 				return _textBoxSpellChecker;
 			}
 		}
-
 
 		protected override void OnKeyPress(KeyPressEventArgs e)
 		{
@@ -300,8 +302,8 @@ namespace WeSay.UI
 				e.Handled = true;
 			}
 			base.OnKeyPress(e);
-
 		}
+
 		//public bool IsGhost
 		//{
 		//    get
@@ -360,7 +362,8 @@ namespace WeSay.UI
 		{
 			if (_writingSystem == null)
 			{
-				throw new InvalidOperationException("WritingSystem must be initialized prior to use.");
+				throw new InvalidOperationException(
+						"WritingSystem must be initialized prior to use.");
 			}
 
 			if (_writingSystem.KeyboardName == null || _writingSystem.KeyboardName == string.Empty)
@@ -368,11 +371,8 @@ namespace WeSay.UI
 				KeyboardController.DeactivateKeyboard();
 				return;
 			}
-			KeyboardController.ActivateKeyboard(this._writingSystem.KeyboardName);
-
+			KeyboardController.ActivateKeyboard(_writingSystem.KeyboardName);
 		}
-
-
 
 		protected override void OnLeave(EventArgs e)
 		{
@@ -386,7 +386,8 @@ namespace WeSay.UI
 		{
 			if (_writingSystem == null)
 			{
-				throw new InvalidOperationException("WritingSystem must be initialized prior to use.");
+				throw new InvalidOperationException(
+						"WritingSystem must be initialized prior to use.");
 			}
 
 			KeyboardController.DeactivateKeyboard();

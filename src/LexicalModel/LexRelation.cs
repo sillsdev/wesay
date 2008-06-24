@@ -45,22 +45,25 @@ namespace WeSay.LexicalModel
 		}
 	}
 
-	public class LexRelation : IParentable, IValueHolder<string>, IReferenceContainer, IReportEmptiness
+	public class LexRelation: IParentable,
+							  IValueHolder<string>,
+							  IReferenceContainer,
+							  IReportEmptiness
 	{
 		//private LexRelationType _type;
 		private string _fieldId;
 		//private WeSayDataObject _target;
 		private string _targetId;
 		private WeSayDataObject _parent;
-//
-//        public LexRelation()
-//        {
-//        }
+		//
+		//        public LexRelation()
+		//        {
+		//        }
 
 		public LexRelation(string fieldId, string targetId, WeSayDataObject parent)
 		{
 			_fieldId = fieldId;
-			_targetId = targetId??string.Empty;
+			_targetId = targetId ?? string.Empty;
 			_parent = parent;
 		}
 
@@ -70,20 +73,20 @@ namespace WeSay.LexicalModel
 		public string Key
 		{
 			get { return _targetId; }
-			set { _targetId = value??string.Empty; }
+			set { _targetId = value ?? string.Empty; }
 		}
 
-//        public LexRelationType Type
-//        {
-//            get
-//            {
-//                return _type;
-//            }
-//            set
-//            {
-//                _type = value;
-//            }
-//        }
+		//        public LexRelationType Type
+		//        {
+		//            get
+		//            {
+		//                return _type;
+		//            }
+		//            set
+		//            {
+		//                _type = value;
+		//            }
+		//        }
 
 		#region IParentable Members
 
@@ -102,10 +105,7 @@ namespace WeSay.LexicalModel
 
 		public string TargetId
 		{
-			get
-			{
-				return _targetId;
-			}
+			get { return _targetId; }
 			set
 			{
 				if (value == TargetId)
@@ -155,14 +155,11 @@ namespace WeSay.LexicalModel
 		}
 
 		#region IReportEmptiness Members
-	   public bool ShouldHoldUpDeletionOfParentObject
-		{
-			get
-			{
-				return false;
-			}
-		}
 
+		public bool ShouldHoldUpDeletionOfParentObject
+		{
+			get { return false; }
+		}
 
 		public void RemoveEmptyStuff()
 		{
@@ -176,22 +173,16 @@ namespace WeSay.LexicalModel
 
 		public bool ShouldBeRemovedFromParentDueToEmptiness
 		{
-			get {  return string.IsNullOrEmpty(Key);}
+			get { return string.IsNullOrEmpty(Key); }
 		}
 
 		public string Value
 		{
-			get
-			{
-				return TargetId;
-			}
+			get { return TargetId; }
 			set { TargetId = value; }
 		}
 
 		#endregion
-
-
-
 
 		#region INotifyPropertyChanged Members
 
@@ -204,7 +195,7 @@ namespace WeSay.LexicalModel
 		#endregion
 	}
 
-	public class LexRelationCollection : IParentable, IReportEmptiness
+	public class LexRelationCollection: IParentable, IReportEmptiness
 	{
 		private WeSayDataObject _parent;
 		private List<LexRelation> _relations = new List<LexRelation>();
@@ -225,31 +216,27 @@ namespace WeSay.LexicalModel
 			set { _relations = value; }
 		}
 
-
-
-//
-//        public bool IsEmpty
-//        {
-//            get
-//            {
-//                foreach (LexRelation relation in _relations)
-//                {
-//                    if (!relation.ShouldCountAsFilledForPurposesOfConditionalDisplay)
-//                    {
-//                        return false;
-//                    }
-//                }
-//                return true;
-//            }
-//        }
+		//
+		//        public bool IsEmpty
+		//        {
+		//            get
+		//            {
+		//                foreach (LexRelation relation in _relations)
+		//                {
+		//                    if (!relation.ShouldCountAsFilledForPurposesOfConditionalDisplay)
+		//                    {
+		//                        return false;
+		//                    }
+		//                }
+		//                return true;
+		//            }
+		//        }
 
 		#region IReportEmptiness Members
 
-			   public bool ShouldHoldUpDeletionOfParentObject
+		public bool ShouldHoldUpDeletionOfParentObject
 		{
-			get
-			{
-				return false;//don't hold up deleting just because of these
+			get { return false; //don't hold up deleting just because of these
 			}
 		}
 
@@ -303,6 +290,5 @@ namespace WeSay.LexicalModel
 		}
 
 		#endregion
-
 	}
 }

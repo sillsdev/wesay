@@ -1,4 +1,3 @@
-
 using System.Collections;
 using System.Collections.Generic;
 
@@ -11,34 +10,29 @@ namespace WeSay.Foundation
 		string GetToolTipTitle(object item);
 	}
 
-	public class ToStringAutoCompleteAdaptor : IDisplayStringAdaptor
+	public class ToStringAutoCompleteAdaptor: IDisplayStringAdaptor
 	{
-
 		public string GetDisplayLabel(object item)
 		{
 			return item.ToString();
 		}
+
 		public string GetToolTip(object item)
 		{
 			return "";
 		}
 
-
 		public string GetToolTipTitle(object item)
 		{
 			return "";
 		}
-
 	}
 
-
-
-	public interface IChoiceSystemAdaptor<KV, ValueT, KEY_CONTAINER> : IDisplayStringAdaptor
-		where ValueT : class
+	public interface IChoiceSystemAdaptor<KV, ValueT, KEY_CONTAINER>: IDisplayStringAdaptor
+			where ValueT : class
 	{
 		void UpdateKeyContainerFromKeyValue(KV kv, KEY_CONTAINER kc);
-		IDisplayStringAdaptor ToolTipAdaptor { get;}
-
+		IDisplayStringAdaptor ToolTipAdaptor { get; }
 
 		ValueT GetValueFromKeyValue(KV kv);
 
@@ -50,15 +44,13 @@ namespace WeSay.Foundation
 		object GetValueFromFormNonGeneric(string form);
 
 		IEnumerable GetItemsToOffer(string text, IEnumerable items, IDisplayStringAdaptor adaptor);
-
 	}
-
 
 	/// <summary>
 	/// This is used to convert from the IEnuerable<string> that the cache give us
 	/// to the IEnumerable<object> that AutoComplete needs.
 	/// </summary>
-	public class StringToObjectEnumerableWrapper : IEnumerable<object>
+	public class StringToObjectEnumerableWrapper: IEnumerable<object>
 	{
 		private readonly IEnumerable<string> _stringCollection;
 
@@ -77,21 +69,13 @@ namespace WeSay.Foundation
 
 		public IEnumerator GetEnumerator()
 		{
-			return ((IEnumerable<object>)this).GetEnumerator();
+			return ((IEnumerable<object>) this).GetEnumerator();
 		}
-
 	}
-
 
 	public interface IChoice
 	{
-		string Label
-		{
-			get;
-		}
-		string Key
-		{
-			get;
-		}
+		string Label { get; }
+		string Key { get; }
 	}
 }

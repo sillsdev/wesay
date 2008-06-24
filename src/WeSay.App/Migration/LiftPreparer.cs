@@ -3,10 +3,8 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
-using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Xml;
-using System.Xml.Xsl;
 using LiftIO;
 using LiftIO.Migration;
 using LiftIO.Validation;
@@ -15,11 +13,12 @@ using Palaso.Reporting;
 using Palaso.UI.WindowsForms.Progress;
 using WeSay.Project;
 
-namespace WeSay.App
+namespace WeSay.App.Migration
 {
 	internal class LiftPreparer
 	{
-		private WeSayWordsProject _project;
+		private readonly WeSayWordsProject _project;
+
 		public LiftPreparer(WeSayWordsProject project)
 		{
 			_project = project;
@@ -63,16 +62,17 @@ namespace WeSay.App
 			{
 				dlg.Overview = "Please wait while WeSay preprocesses your LIFT file.";
 				BackgroundWorker preprocessWorker = new BackgroundWorker();
-				preprocessWorker.DoWork += new DoWorkEventHandler(OnDoPreprocessLiftWork);
+				preprocessWorker.DoWork += OnDoPreprocessLiftWork;
 				dlg.BackgroundWorker = preprocessWorker;
 				dlg.CanCancel = true;
 				dlg.ShowDialog();
 				if (dlg.ProgressStateResult.ExceptionThatWasEncountered != null)
 				{
 					ErrorReport.ReportNonFatalMessage(
-						String.Format("WeSay encountered an error while preprocessing the file '{0}'.  Error was: {1}",
-						_project.PathToLiftFile,
-						dlg.ProgressStateResult.ExceptionThatWasEncountered.Message));
+							String.Format(
+									"WeSay encountered an error while preprocessing the file '{0}'.  Error was: {1}",
+									_project.PathToLiftFile,
+									dlg.ProgressStateResult.ExceptionThatWasEncountered.Message));
 				}
 				return (dlg.DialogResult == DialogResult.OK);
 			}
@@ -80,13 +80,13 @@ namespace WeSay.App
 
 		private void OnDoPreprocessLiftWork(object sender, DoWorkEventArgs e)
 		{
-			BackgroundWorkerState state = (BackgroundWorkerState)e.Argument;
+			BackgroundWorkerState state = (BackgroundWorkerState) e.Argument;
 			state.StatusLabel = "Preprocessing...";
 			try
 			{
 				_project.ReleaseLockOnLift();
 				string pathToLift = _project.PathToLiftFile;
-				string outputPath = LiftIO.Utilities.ProcessLiftForLaterMerging(pathToLift);
+				string outputPath = Utilities.ProcessLiftForLaterMerging(pathToLift);
 				//    int liftProducerVersion = GetLiftProducerVersion(pathToLift);
 
 				outputPath = PopulateDefinitions(outputPath);
@@ -96,7 +96,8 @@ namespace WeSay.App
 			{
 				state.ExceptionThatWasEncountered = error;
 				state.State = ProgressState.StateValue.StoppedWithError;
-				throw; // this will put the exception in the e.Error arg of the RunWorkerCompletedEventArgs
+				throw;
+				// this will put the exception in the e.Error arg of the RunWorkerCompletedEventArgs
 			}
 			finally
 			{
@@ -104,49 +105,51 @@ namespace WeSay.App
 			}
 		}
 
-		internal string PopulateDefinitions(string pathToLift)
+		internal static string PopulateDefinitions(string pathToLift)
 		{
 			string outputPath = Path.Combine(Path.GetTempPath(), Path.GetTempFileName());
 			XmlWriterSettings settings = new XmlWriterSettings();
 			settings.Indent = true;
 			settings.NewLineOnAttributes = true;
 
-			using (Stream xsltStream =
-								Assembly.GetExecutingAssembly().GetManifestResourceStream("WeSay.App.Migration.populateDefinitionFromGloss.xslt"))
+			using (
+					Stream xsltStream =
+							Assembly.GetExecutingAssembly().GetManifestResourceStream(
+									"WeSay.App.Migration.populateDefinitionFromGloss.xslt"))
 			{
 				TransformWithProgressDialog transformer =
-					new TransformWithProgressDialog(pathToLift, outputPath, xsltStream, "//sense");
+						new TransformWithProgressDialog(pathToLift,
+														outputPath,
+														xsltStream,
+														"//sense");
 				transformer.TaskMessage = "Populating Definitions from Glosses";
 				transformer.Transform(true);
 				return outputPath;
 			}
 		}
 
-
 		//        private int GetLiftProducerVersion(string pathToLift)
 		//        {
 		//            string s = FindFirstInstanceOfPatternInFile(pathToLift, "producer=\"()\"");
 		//        }
 
-
-		private static string FindFirstInstanceOfPatternInFile(string inputPath, string pattern)
-		{
-			Regex regex = new Regex(pattern);
-			using (StreamReader reader = File.OpenText(inputPath))
-			{
-				while (!reader.EndOfStream)
-				{
-					Match m = regex.Match(reader.ReadLine());
-					if (m != null)
-					{
-						return m.Value;
-					}
-				}
-				reader.Close();
-			}
-			return string.Empty;
-		}
-
+		//private static string FindFirstInstanceOfPatternInFile(string inputPath, string pattern)
+		//{
+		//    Regex regex = new Regex(pattern);
+		//    using (StreamReader reader = File.OpenText(inputPath))
+		//    {
+		//        while (!reader.EndOfStream)
+		//        {
+		//            Match m = regex.Match(reader.ReadLine());
+		//            if (m != null)
+		//            {
+		//                return m.Value;
+		//            }
+		//        }
+		//        reader.Close();
+		//    }
+		//    return string.Empty;
+		//}
 
 		private static void MoveTempOverRealAndBackup(string existingPath, string newFilePath)
 		{
@@ -180,7 +183,8 @@ namespace WeSay.App
 			{
 				using (ProgressDialog dlg = new ProgressDialog())
 				{
-					dlg.Overview = "Please wait while WeSay migrates your lift database to the required version.";
+					dlg.Overview =
+							"Please wait while WeSay migrates your lift database to the required version.";
 					BackgroundWorker cacheBuildingWork = new BackgroundWorker();
 					cacheBuildingWork.DoWork += DoMigrationWork;
 					dlg.BackgroundWorker = cacheBuildingWork;
@@ -201,10 +205,13 @@ namespace WeSay.App
 							{
 								ErrorNotificationDialog.ReportException(err, null, false);
 							}
-							else if (dlg.ProgressStateResult.State == ProgressState.StateValue.StoppedWithError)
+							else if (dlg.ProgressStateResult.State ==
+									 ProgressState.StateValue.StoppedWithError)
 							{
-								ErrorReport.ReportNonFatalMessage("Failed." + dlg.ProgressStateResult.LogString, null,
-																  false);
+								ErrorReport.ReportNonFatalMessage(
+										"Failed." + dlg.ProgressStateResult.LogString,
+										null,
+										false);
 							}
 							return false;
 						}
@@ -217,24 +224,25 @@ namespace WeSay.App
 						}
 					}
 				}
-
 			}
 			return true;
 		}
 
 		private void DoMigrationWork(object obj, DoWorkEventArgs args)
 		{
-				ProgressState progressState = args.Argument as ProgressState;
+			ProgressState progressState = (ProgressState) args.Argument;
 			try
 			{
 				string oldVersion = Validator.GetLiftVersion(_project.PathToLiftFile);
 				Logger.WriteEvent("Migrating from {0} to {1}", oldVersion, Validator.LiftVersion);
 				progressState.StatusLabel =
-					string.Format("Migrating from {0} to {1}", oldVersion, Validator.LiftVersion);
+						string.Format("Migrating from {0} to {1}", oldVersion, Validator.LiftVersion);
 				string migratedFile = Migrator.MigrateToLatestVersion(_project.PathToLiftFile);
-				string nameForOldFile = _project.PathToLiftFile.Replace(".lift", "." + oldVersion + ".lift");
+				string nameForOldFile =
+						_project.PathToLiftFile.Replace(".lift", "." + oldVersion + ".lift");
 
-				if(File.Exists(nameForOldFile )) // like, if we tried to convert it before and for some reason want to do it again
+				if (File.Exists(nameForOldFile))
+						// like, if we tried to convert it before and for some reason want to do it again
 				{
 					File.Delete(nameForOldFile);
 				}
@@ -273,9 +281,10 @@ namespace WeSay.App
 					return false;
 				}
 
-				dlg.Overview = "Please wait while WeSay updates its caches to match the new or modified LIFT file.";
+				dlg.Overview =
+						"Please wait while WeSay updates its caches to match the new or modified LIFT file.";
 				BackgroundWorker cacheBuildingWork = new BackgroundWorker();
-				cacheBuildingWork.DoWork += new DoWorkEventHandler(builder.OnDoWork);
+				cacheBuildingWork.DoWork += builder.OnDoWork;
 				dlg.BackgroundWorker = cacheBuildingWork;
 				dlg.CanCancel = true;
 				dlg.ShowDialog();
@@ -284,19 +293,24 @@ namespace WeSay.App
 					Exception err = dlg.ProgressStateResult.ExceptionThatWasEncountered;
 					if (err != null)
 					{
-						if (err is LiftIO.LiftFormatException)
+						if (err is LiftFormatException)
 						{
-							Palaso.Reporting.ErrorReport.ReportNonFatalMessage(
-								"WeSay had problems with the content of the dictionary file.\r\n\r\n" + err.Message);
+							ErrorReport.ReportNonFatalMessage(
+									"WeSay had problems with the content of the dictionary file.\r\n\r\n" +
+									err.Message);
 						}
 						else
 						{
 							ErrorNotificationDialog.ReportException(err, null, false);
 						}
 					}
-					else if (dlg.ProgressStateResult.State == ProgressState.StateValue.StoppedWithError)
+					else if (dlg.ProgressStateResult.State ==
+							 ProgressState.StateValue.StoppedWithError)
 					{
-						ErrorReport.ReportNonFatalMessage("Could not build caches. " + dlg.ProgressStateResult.LogString, null, false);
+						ErrorReport.ReportNonFatalMessage(
+								"Could not build caches. " + dlg.ProgressStateResult.LogString,
+								null,
+								false);
 					}
 					return false;
 				}
@@ -305,5 +319,4 @@ namespace WeSay.App
 			return true;
 		}
 	}
-
 }

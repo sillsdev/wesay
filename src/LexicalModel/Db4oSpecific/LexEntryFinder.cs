@@ -1,15 +1,10 @@
-using System;
-using System.Collections.Generic;
-using Db4objects.Db4o;
-using Palaso.Text;
 using WeSay.Data;
-using WeSay.Foundation;
 
-namespace WeSay.LexicalModel.Db4o_Specific
+namespace WeSay.LexicalModel.Db4oSpecific
 {
 	public class Db4oLexEntryFinder: IFindEntries
 	{
-		private LexEntryRepository _lexEntryRepository;
+		private readonly LexEntryRepository _lexEntryRepository;
 
 		public Db4oLexEntryFinder(LexEntryRepository lexEntryRepository)
 		{
@@ -22,7 +17,7 @@ namespace WeSay.LexicalModel.Db4o_Specific
 		}
 	}
 
-	public class InMemoryLexEntryFinder : IFindEntries
+	public class InMemoryLexEntryFinder: IFindEntries
 	{
 		private readonly IRecordList<LexEntry> _recordList;
 
@@ -35,8 +30,10 @@ namespace WeSay.LexicalModel.Db4o_Specific
 		{
 			foreach (LexEntry entry in _recordList)
 			{
-				if(entry.Id == id)
+				if (entry.Id == id)
+				{
 					return entry;
+				}
 			}
 			return null;
 		}

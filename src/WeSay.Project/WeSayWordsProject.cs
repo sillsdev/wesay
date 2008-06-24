@@ -2,7 +2,6 @@ using System;
 using System.CodeDom.Compiler;
 using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -17,15 +16,13 @@ using LiftIO.Validation;
 using Palaso.Reporting;
 using WeSay.AddinLib;
 using WeSay.Data;
+using WeSay.Foundation;
 using WeSay.Foundation.Options;
-using WeSay.Language;
 using WeSay.LexicalModel;
-using WeSay.LexicalModel.Db4o_Specific;
-using WeSay.LexicalModel.Tests;
 
 namespace WeSay.Project
 {
-	public class WeSayWordsProject : BasilProject
+	public class WeSayWordsProject: BasilProject
 	{
 		private IList<ITask> _tasks;
 		private ViewTemplate _defaultViewTemplate;
@@ -41,12 +38,13 @@ namespace WeSay.Project
 
 		public event EventHandler EditorsSaveNow;
 
-		public class StringPair :EventArgs {
+		public class StringPair: EventArgs
+		{
 			public string from;
 			public string to;
 		}
-		public event EventHandler<StringPair> WritingSystemChanged;
 
+		public event EventHandler<StringPair> WritingSystemChanged;
 
 		public WeSayWordsProject()
 		{
@@ -84,17 +82,17 @@ namespace WeSay.Project
 			{
 				File.Delete(PathToPretendLiftFile);
 			}
-			catch (Exception)
-			{
-			}
+			catch (Exception) {}
 
 			Directory.CreateDirectory(Path.GetDirectoryName(PathToPretendLiftFile));
 			Utilities.CreateEmptyLiftFile(PathToPretendLiftFile, "InitializeForTests()", true);
 
 			//setup writing systems
 			WritingSystemCollection wsc = new WritingSystemCollection();
-			wsc.Add(wsc.TestWritingSystemVernId, new WritingSystem(wsc.TestWritingSystemVernId, new Font("Courier", 10)));
-			wsc.Add(wsc.TestWritingSystemAnalId, new WritingSystem(wsc.TestWritingSystemAnalId, new Font("Arial", 15)));
+			wsc.Add(wsc.TestWritingSystemVernId,
+					new WritingSystem(wsc.TestWritingSystemVernId, new Font("Courier", 10)));
+			wsc.Add(wsc.TestWritingSystemAnalId,
+					new WritingSystem(wsc.TestWritingSystemAnalId, new Font("Arial", 15)));
 			if (File.Exists(PathToPretendWritingSystemPrefs))
 			{
 				File.Delete(PathToPretendWritingSystemPrefs);
@@ -104,34 +102,16 @@ namespace WeSay.Project
 			project.SetupProjectDirForTests(PathToPretendLiftFile);
 		}
 
-		/// <summary>
-		/// See comment on BasilProject.InitializeForTests()
-		/// </summary>
-//        public static void InitializeForTests(string pathToLift)
-//        {
-//            WeSayWordsProject project = new WeSayWordsProject();
-//            project.ProjectDirectoryPath = Directory.GetParent(pathToLift).Parent.FullName;
-//            project.PathToLiftFile = pathToLift;
-//            ErrorReport.IsOkToInteractWithUser = false;
-//            project.LoadFromProjectDirectoryPath(project.ProjectDirectoryPath);
-//            project.StringCatalogSelector = "en";
-//        }
-//
-
-//        public static void InitializeForTests(WeSayWordsProject project)
-//        {
-//            Project = project;
-//        }
-
-
 		public static string PathToPretendLiftFile
 		{
 			get { return Path.Combine(GetPretendProjectDirectory(), "PRETEND.lift"); }
 		}
+
 		public static string PathToPretendWritingSystemPrefs
 		{
 			get { return Path.Combine(GetPretendProjectDirectory(), "writingSystemPrefs.xml"); }
 		}
+
 		public void SetupProjectDirForTests(string pathToLift)
 		{
 			ProjectDirectoryPath = Directory.GetParent(pathToLift).Parent.FullName;
@@ -141,7 +121,9 @@ namespace WeSay.Project
 				File.Delete(PathToConfigFile);
 			}
 			string configName = Path.GetFileName(Project.PathToConfigFile);
-			File.Copy(Path.Combine(ApplicationTestDirectory, configName), Project.PathToConfigFile, true);
+			File.Copy(Path.Combine(ApplicationTestDirectory, configName),
+					  Project.PathToConfigFile,
+					  true);
 			RemoveCache();
 			ErrorReport.IsOkToInteractWithUser = false;
 			LoadFromProjectDirectoryPath(ProjectDirectoryPath);
@@ -150,9 +132,9 @@ namespace WeSay.Project
 
 		public void RemoveCache()
 		{
-			if (Directory.Exists(this.PathToCache))
+			if (Directory.Exists(PathToCache))
 			{
-				Directory.Delete(this.PathToCache, true);
+				Directory.Delete(PathToCache, true);
 			}
 		}
 
@@ -167,8 +149,7 @@ namespace WeSay.Project
 			{
 				try // don't crash if we can't update
 				{
-					using (Db4oDataSource ds =
-								new Db4oDataSource(Project.PathToDb4oLexicalModelDB))
+					using (Db4oDataSource ds = new Db4oDataSource(Project.PathToDb4oLexicalModelDB))
 					{
 						//this should be different now so the cache should be updated
 						//but it shouldn't be off by enough to make it so we lose
@@ -184,16 +165,16 @@ namespace WeSay.Project
 					{
 						File.Delete(Project.PathToDb4oLexicalModelDB);
 					}
-					catch(Exception )
+					catch (Exception)
 					{
 						ErrorReport.ReportNonFatalMessage(
-							"Please exit WeSay and manually delete this cache file: {0}.",
-							Project.PathToDb4oLexicalModelDB);
+								"Please exit WeSay and manually delete this cache file: {0}.",
+								Project.PathToDb4oLexicalModelDB);
 					}
 				}
-
 			}
 		}
+
 		/// <summary>
 		/// exception handlers should call this when the database or other caches seem broken or out of sync
 		/// </summary>
@@ -202,7 +183,7 @@ namespace WeSay.Project
 		{
 #if DEBUG
 			ErrorReport.ReportNonFatalMessage(
-				"WeSay had a problem. You should quit now and let WeSay try to fix the problem when you run it again.\r\n\r\nIn the release build, the cache would now be invalidated and the user would not see the following crash dialog.");
+					"WeSay had a problem. You should quit now and let WeSay try to fix the problem when you run it again.\r\n\r\nIn the release build, the cache would now be invalidated and the user would not see the following crash dialog.");
 			throw error;
 #else
 			InvalidateCacheSilently();
@@ -337,7 +318,7 @@ namespace WeSay.Project
 					UiFontName = nav.GetAttribute("uiFont", "");
 					string s = nav.GetAttribute("uiFontSize", string.Empty);
 					float f;
-					if(!float.TryParse(s, out f) || f==0)
+					if (!float.TryParse(s, out f) || f == 0)
 					{
 						f = 12;
 					}
@@ -356,8 +337,6 @@ namespace WeSay.Project
 			MoveExportAndLexiqueProFilesToNewDirStructure(projectDir);
 		}
 
-
-
 		private static void MoveWeSayContentsToProjectDir(string projectDir, string subDirName)
 		{
 			try
@@ -365,7 +344,7 @@ namespace WeSay.Project
 				string sourceDir = Path.Combine(projectDir, subDirName);
 				//overcome a problem someone might have, where the installer places the new sample files
 				//right in there alongside the old.
-				if(projectDir.Contains("biatah"))
+				if (projectDir.Contains("biatah"))
 				{
 					if (Directory.Exists(sourceDir))
 					{
@@ -399,20 +378,24 @@ namespace WeSay.Project
 					{
 						Directory.Delete(sourceDir);
 					}
-					catch(Exception)
+					catch (Exception)
 					{
 						//no big deal if other files prevent deleting it
 					}
 				}
 			}
-			catch(Exception err)
+			catch (Exception err)
 			{
-				ApplicationException e = new ApplicationException("Error while trying to migrate to new file structure. ", err);
+				ApplicationException e =
+						new ApplicationException(
+								"Error while trying to migrate to new file structure. ", err);
 				ErrorNotificationDialog.ReportException(e);
 			}
 		}
 
-		private static void MoveSubDirectory(string targetParentDir, string subDirName, string directoryToMoveName)
+		private static void MoveSubDirectory(string targetParentDir,
+											 string subDirName,
+											 string directoryToMoveName)
 		{
 			string moveDir = Path.Combine(subDirName, directoryToMoveName);
 			if (Directory.Exists(moveDir))
@@ -429,7 +412,8 @@ namespace WeSay.Project
 				string presumedExportName = Path.GetFileName(projectDir);
 				string targetDir = Path.Combine(projectDir, "export");
 				Directory.CreateDirectory(targetDir);
-				foreach (string source in Directory.GetFiles(projectDir, presumedExportName + "-sfm*.*"))
+				foreach (string source in
+						Directory.GetFiles(projectDir, presumedExportName + "-sfm*.*"))
 				{
 					string target = Path.Combine(targetDir, Path.GetFileName(source));
 					if (File.Exists(target))
@@ -441,14 +425,15 @@ namespace WeSay.Project
 			}
 			catch (Exception err)
 			{
-				ApplicationException e = new ApplicationException("Error while trying to move export files to new structure. ", err);
+				ApplicationException e =
+						new ApplicationException(
+								"Error while trying to move export files to new structure. ", err);
 				ErrorNotificationDialog.ReportException(e);
 			}
 		}
 
-
-
-		public static bool MigrateConfigurationXmlIfNeeded(XPathDocument configurationDoc, string targetPath)
+		public static bool MigrateConfigurationXmlIfNeeded(XPathDocument configurationDoc,
+														   string targetPath)
 		{
 			Logger.WriteEvent("Checking if migration of configuration is needed.");
 
@@ -460,22 +445,26 @@ namespace WeSay.Project
 				configurationDoc = new XPathDocument(targetPath);
 				didMigrate = true;
 			}
-			if (configurationDoc.CreateNavigator().SelectSingleNode("configuration[@version='1']") != null)
+			if (
+					configurationDoc.CreateNavigator().SelectSingleNode(
+							"configuration[@version='1']") != null)
 			{
-				MigrateUsingXSLT(configurationDoc, "MigrateConfig1To2.xsl", targetPath) ;
+				MigrateUsingXSLT(configurationDoc, "MigrateConfig1To2.xsl", targetPath);
 				configurationDoc = new XPathDocument(targetPath);
 				didMigrate = true;
 			}
 			return didMigrate;
 		}
 
-		private static void MigrateUsingXSLT(IXPathNavigable configurationDoc, string xsltName, string targetPath)
+		private static void MigrateUsingXSLT(IXPathNavigable configurationDoc,
+											 string xsltName,
+											 string targetPath)
 		{
 			Logger.WriteEvent("Migrating Configuration File {0}", xsltName);
 			using (
-				Stream stream =
-					Assembly.GetExecutingAssembly().GetManifestResourceStream(typeof (WeSayWordsProject),
-																			  xsltName))
+					Stream stream =
+							Assembly.GetExecutingAssembly().GetManifestResourceStream(
+									typeof (WeSayWordsProject), xsltName))
 			{
 				XslCompiledTransform transform = new XslCompiledTransform();
 				using (XmlReader reader = XmlReader.Create(stream))
@@ -486,7 +475,8 @@ namespace WeSay.Project
 					{
 						transform.Transform(configurationDoc, writer);
 						TempFileCollection tempfiles = transform.TemporaryFiles;
-						if (tempfiles != null)  // tempfiles will be null when debugging is not enabled
+						if (tempfiles != null)
+								// tempfiles will be null when debugging is not enabled
 						{
 							tempfiles.Delete();
 						}
@@ -504,11 +494,11 @@ namespace WeSay.Project
 			}
 		}
 
-//        public void LoadFromConfigFilePath(string path)
-//        {
-//            DirectoryInfo weSayDirectoryInfo = Directory.GetParent(path);
-//
-//        }
+		//        public void LoadFromConfigFilePath(string path)
+		//        {
+		//            DirectoryInfo weSayDirectoryInfo = Directory.GetParent(path);
+		//
+		//        }
 
 		private void InitializeViewTemplatesFromProjectFiles()
 		{
@@ -523,7 +513,8 @@ namespace WeSay.Project
 					if (projectDoc != null)
 					{
 						XPathNodeIterator nodes =
-								projectDoc.CreateNavigator().Select("configuration/components/viewTemplate");
+								projectDoc.CreateNavigator().Select(
+										"configuration/components/viewTemplate");
 						foreach (XPathNavigator node in nodes)
 						{
 							ViewTemplate userTemplate = new ViewTemplate();
@@ -589,8 +580,6 @@ namespace WeSay.Project
 									this);
 		}
 
-
-
 		private XPathDocument GetConfigurationDoc()
 		{
 			XPathDocument projectDoc = null;
@@ -603,7 +592,8 @@ namespace WeSay.Project
 				}
 				catch (Exception e)
 				{
-					ErrorReport.ReportNonFatalMessage("There was a problem reading the task xml. " + e.Message);
+					ErrorReport.ReportNonFatalMessage("There was a problem reading the task xml. " +
+													  e.Message);
 					projectDoc = null;
 				}
 			}
@@ -646,7 +636,9 @@ namespace WeSay.Project
 			get
 			{
 				string name = Path.GetFileNameWithoutExtension(PathToLiftFile);
-				return Path.Combine(PathToWeSaySpecificFilesDirectoryInProject, name + ".WeSayConfig");
+				return
+						Path.Combine(PathToWeSaySpecificFilesDirectoryInProject,
+									 name + ".WeSayConfig");
 			}
 		}
 
@@ -698,10 +690,7 @@ namespace WeSay.Project
 
 		public override string Name
 		{
-			get
-			{
-				return Path.GetFileNameWithoutExtension(PathToLiftFile);
-			}
+			get { return Path.GetFileNameWithoutExtension(PathToLiftFile); }
 		}
 
 		public string PathToLiftFile
@@ -726,7 +715,8 @@ namespace WeSay.Project
 				}
 				else
 				{
-					ProjectDirectoryPath = Path.GetDirectoryName(value);// Directory.GetParent(value).Parent.FullName;
+					ProjectDirectoryPath = Path.GetDirectoryName(value);
+					// Directory.GetParent(value).Parent.FullName;
 				}
 			}
 		}
@@ -753,11 +743,7 @@ namespace WeSay.Project
 
 		public string PathToPictures
 		{
-			get
-			{
-				return Path.Combine(PathToWeSaySpecificFilesDirectoryInProject,
-									"pictures");
-			}
+			get { return Path.Combine(PathToWeSaySpecificFilesDirectoryInProject, "pictures"); }
 		}
 
 		private static string GetPathToCacheFromPathToLift(string pathToLift)
@@ -790,11 +776,11 @@ namespace WeSay.Project
 				return path;
 			}
 
-//            path = Path.Combine(ProjectCommonDirectory, fileName);
-//            if (File.Exists(path))
-//            {
-//                return path;
-//            }
+			//            path = Path.Combine(ProjectCommonDirectory, fileName);
+			//            if (File.Exists(path))
+			//            {
+			//                return path;
+			//            }
 
 			path = Path.Combine(ApplicationCommonDirectory, fileName);
 			if (File.Exists(path))
@@ -826,7 +812,6 @@ namespace WeSay.Project
 		{
 			get { return Path.Combine(ProjectDirectoryPath, "wesay"); }
 		}
-
 
 		public ViewTemplate DefaultViewTemplate
 		{
@@ -924,7 +909,7 @@ namespace WeSay.Project
 			get
 			{
 				Field f = DefaultViewTemplate.GetField(LexEntry.WellKnownProperties.LexicalUnit);
-				if(f.WritingSystemIds.Count == 0)
+				if (f.WritingSystemIds.Count == 0)
 				{
 					return WritingSystems.UnknownVernacularWritingSystem;
 				}
@@ -936,7 +921,6 @@ namespace WeSay.Project
 		{
 			get { return DefaultViewTemplate; }
 		}
-
 
 		public override void Save()
 		{
@@ -960,14 +944,15 @@ namespace WeSay.Project
 			writer.WriteEndDocument();
 			writer.Close();
 
-			base.Save(); // nb: this saves the writing system stuff, so if it is called before EditorsSaveNow, we won't get the latest stuff from editors working on them.
+			base.Save();
+			// nb: this saves the writing system stuff, so if it is called before EditorsSaveNow, we won't get the latest stuff from editors working on them.
 		}
 
 		public Field GetFieldFromDefaultViewTemplate(string fieldName)
 		{
 			foreach (Field field in DefaultViewTemplate.Fields)
 			{
-				if (field.FieldName  == fieldName)
+				if (field.FieldName == fieldName)
 				{
 					return field;
 				}
@@ -978,7 +963,7 @@ namespace WeSay.Project
 		public OptionsList GetOptionsList(string fieldName)
 		{
 			Field field = GetFieldFromDefaultViewTemplate(fieldName);
-			if(field==null)
+			if (field == null)
 			{
 				return null;
 			}
@@ -999,14 +984,16 @@ namespace WeSay.Project
 				return list;
 			}
 
-			string pathInProject = Path.Combine(PathToWeSaySpecificFilesDirectoryInProject, field.OptionsListFile);
+			string pathInProject =
+					Path.Combine(PathToWeSaySpecificFilesDirectoryInProject, field.OptionsListFile);
 			if (File.Exists(pathInProject))
 			{
 				LoadOptionsList(pathInProject);
 			}
 			else
 			{
-				string pathInProgramDir = Path.Combine(ApplicationCommonDirectory, field.OptionsListFile);
+				string pathInProgramDir =
+						Path.Combine(ApplicationCommonDirectory, field.OptionsListFile);
 				if (!File.Exists(pathInProgramDir))
 				{
 					if (createIfFileMissing)
@@ -1018,10 +1005,10 @@ namespace WeSay.Project
 					else
 					{
 						throw new ConfigurationException(
-							"Could not find the optionsList file {0}. Expected to find it at: {1} or {2}",
-							field.OptionsListFile,
-							pathInProject,
-							pathInProgramDir);
+								"Could not find the optionsList file {0}. Expected to find it at: {1} or {2}",
+								field.OptionsListFile,
+								pathInProject,
+								pathInProgramDir);
 					}
 				}
 				LoadOptionsList(pathInProgramDir);
@@ -1048,7 +1035,8 @@ namespace WeSay.Project
 			{
 				if (field.OptionsListFile != null && field.OptionsListFile.Trim() != "")
 				{
-					fieldToOptionListName.Add(field.FieldName, GetListNameFromFileName(field.OptionsListFile));
+					fieldToOptionListName.Add(field.FieldName,
+											  GetListNameFromFileName(field.OptionsListFile));
 				}
 			}
 			return fieldToOptionListName;
@@ -1056,7 +1044,8 @@ namespace WeSay.Project
 
 		private static string GetListNameFromFileName(string file)
 		{
-			return Path.GetFileNameWithoutExtension(file);//file.Substring(0, file.IndexOf(".xml"));
+			return Path.GetFileNameWithoutExtension(file);
+			//file.Substring(0, file.IndexOf(".xml"));
 		}
 
 		public void MakeFieldNameChange(Field field, string oldName)
@@ -1073,8 +1062,8 @@ namespace WeSay.Project
 			if (File.Exists(PathToLiftFile))
 			{
 				//traits
-				if (field.DataTypeName == Field.BuiltInDataType.Option.ToString()
-					|| field.DataTypeName == Field.BuiltInDataType.OptionCollection.ToString())
+				if (field.DataTypeName == Field.BuiltInDataType.Option.ToString() ||
+					field.DataTypeName == Field.BuiltInDataType.OptionCollection.ToString())
 				{
 					GrepFile(PathToLiftFile,
 							 string.Format("name\\s*=\\s*[\"']{0}[\"']", oldName),
@@ -1097,7 +1086,6 @@ namespace WeSay.Project
 			WritingSystems.IdOfWritingSystemChanged(ws, oldId);
 			DefaultViewTemplate.ChangeWritingSystemId(oldId, ws.Id);
 
-
 			if (File.Exists(PathToLiftFile))
 			{
 				//todo: expand the regular expression here to account for all reasonable patterns
@@ -1106,7 +1094,7 @@ namespace WeSay.Project
 						 string.Format("lang=\"{0}\"", ws.Id));
 			}
 
-			if(WritingSystemChanged!=null)
+			if (WritingSystemChanged != null)
 			{
 				StringPair p = new StringPair();
 				p.from = oldId;
@@ -1151,13 +1139,10 @@ namespace WeSay.Project
 			return false;
 		}
 
-
 		private static void GrepFile(string inputPath, string pattern, string replaceWith)
 		{
 			Regex regex = new Regex(pattern, RegexOptions.Compiled);
 			string tempPath = inputPath + ".tmp";
-
-
 
 			using (StreamReader reader = File.OpenText(inputPath))
 			{
@@ -1177,7 +1162,9 @@ namespace WeSay.Project
 			ReplaceFileWithUserInteractionIfNeeded(tempPath, inputPath, backupPath);
 		}
 
-		private static void ReplaceFileWithUserInteractionIfNeeded(string tempPath, string inputPath, string backupPath)
+		private static void ReplaceFileWithUserInteractionIfNeeded(string tempPath,
+																   string inputPath,
+																   string backupPath)
 		{
 			bool succeeded = false;
 			do
@@ -1191,9 +1178,11 @@ namespace WeSay.Project
 				catch (IOException)
 				{
 					//nb: we don't want to provide an option to cancel.  Better to crash than cancel.
-					ErrorReport.ReportNonFatalMessage(Application.ProductName+" was unable to get at the dictionary file to update it.  Please ensure that WeSay isn't running with it open, then click the 'OK' button below. If you cannot figure out what program has the LIFT file open, the best choice is to kill WeSay Configuration Tool using the Task Manager (ctrl+alt+del), so that the configuration does not fall out of sync with the LIFT file.");
+					ErrorReport.ReportNonFatalMessage(Application.ProductName +
+													  " was unable to get at the dictionary file to update it.  Please ensure that WeSay isn't running with it open, then click the 'OK' button below. If you cannot figure out what program has the LIFT file open, the best choice is to kill WeSay Configuration Tool using the Task Manager (ctrl+alt+del), so that the configuration does not fall out of sync with the LIFT file.");
 				}
-			} while (!succeeded);
+			}
+			while (!succeeded);
 		}
 
 		public bool LiftHasMatchingElement(string element, string attribute, string attributeValue)
@@ -1220,7 +1209,8 @@ namespace WeSay.Project
 		public static string[] GetFilesBelongingToProject(string pathToProjectRoot)
 		{
 			List<String> files = new List<string>();
-			string[] allFiles = Directory.GetFiles(pathToProjectRoot, "*", SearchOption.AllDirectories);
+			string[] allFiles =
+					Directory.GetFiles(pathToProjectRoot, "*", SearchOption.AllDirectories);
 			string[] antipatterns = {"Cache", "cache", ".bak", ".old", ".liftold"};
 
 			foreach (string file in allFiles)
@@ -1244,6 +1234,5 @@ namespace WeSay.Project
 			}
 			return false;
 		}
-
 	}
 }

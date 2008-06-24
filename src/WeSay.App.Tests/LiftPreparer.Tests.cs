@@ -1,12 +1,10 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Xml;
-using LiftIO;
 using LiftIO.Validation;
 using NUnit.Framework;
-using Palaso.Progress;
+using Palaso.Reporting;
+using WeSay.App.Migration;
 using WeSay.Project;
 using WeSay.Project.Tests;
 
@@ -18,7 +16,7 @@ namespace WeSay.App.Tests
 		[SetUp]
 		public void Setup()
 		{
-			Palaso.Reporting.ErrorReport.IsOkToInteractWithUser = false;
+			ErrorReport.IsOkToInteractWithUser = false;
 		}
 
 		[Test]
@@ -30,13 +28,16 @@ namespace WeSay.App.Tests
 			//  lift file.
 			//nb: 0.10 was the first version where we started provinding a migration path.
 			//FLEx support for Lift started with 0.12
-			using (ProjectDirectorySetupForTesting dir = new ProjectDirectorySetupForTesting(string.Empty, "0.10"))
+			using (
+					ProjectDirectorySetupForTesting dir =
+							new ProjectDirectorySetupForTesting(string.Empty, "0.10"))
 			{
 				using (WeSayWordsProject project = dir.CreateLoadedProject())
 				{
 					LiftPreparer preparer = new LiftPreparer(project);
 					Assert.IsTrue(preparer.MigrateIfNeeded(), "MigrateIfNeeded Failed");
-					Assert.AreEqual(Validator.LiftVersion, Validator.GetLiftVersion(dir.PathToLiftFile));
+					Assert.AreEqual(Validator.LiftVersion,
+									Validator.GetLiftVersion(dir.PathToLiftFile));
 				}
 			}
 		}
@@ -44,7 +45,9 @@ namespace WeSay.App.Tests
 		[Test]
 		public void MigrateIfNeeded_LiftIsLockedByProject_LockedAgainAfterMigration()
 		{
-			using (ProjectDirectorySetupForTesting dir = new ProjectDirectorySetupForTesting(string.Empty, "0.10"))
+			using (
+					ProjectDirectorySetupForTesting dir =
+							new ProjectDirectorySetupForTesting(string.Empty, "0.10"))
 			{
 				using (WeSayWordsProject proj = dir.CreateLoadedProject())
 				{
@@ -59,7 +62,10 @@ namespace WeSay.App.Tests
 		[Test]
 		public void MigrateIfNeeded_AlreadyCurrentLift_LiftUntouched()
 		{
-			using (ProjectDirectorySetupForTesting dir = new ProjectDirectorySetupForTesting(string.Empty, Validator.LiftVersion))
+			using (
+					ProjectDirectorySetupForTesting dir =
+							new ProjectDirectorySetupForTesting(string.Empty, Validator.LiftVersion)
+					)
 			{
 				using (WeSayWordsProject project = dir.CreateLoadedProject())
 				{
@@ -75,10 +81,9 @@ namespace WeSay.App.Tests
 		[Test]
 		public void PopulateDefinitions_EmptyLift()
 		{
-			XmlDocument dom =  GetTransformedDom("");
+			XmlDocument dom = GetTransformedDom("");
 			Expect(dom, "lift", 1);
 		}
-
 
 		[Test]
 		public void PopulateDefinitions_GetsDefinitionWithConcatenatedGlosses()
@@ -97,7 +102,9 @@ namespace WeSay.App.Tests
 			XmlDocument dom = GetTransformedDom(entriesXml);
 			Expect(dom, "lift/entry/sense/gloss", 2);
 			Expect(dom, "lift/entry/sense/definition", 1);
-			ExpectSingleInstanceWithInnerXml(dom, "lift/entry/sense/definition/form[@lang='en']/text", "one; two");
+			ExpectSingleInstanceWithInnerXml(dom,
+											 "lift/entry/sense/definition/form[@lang='en']/text",
+											 "one; two");
 		}
 
 		[Test]
@@ -125,34 +132,43 @@ namespace WeSay.App.Tests
 			XmlDocument dom = GetTransformedDom(entriesXml);
 			Expect(dom, "lift/entry/sense/gloss", 2);
 			Expect(dom, "lift/entry/sense/definition", 1);
-			ExpectSingleInstanceWithInnerXml(dom, "lift/entry/sense/definition/form[@lang='a']/text", "a definition");
-			ExpectSingleInstanceWithInnerXml(dom, "lift/entry/sense/definition/form[@lang='b']/text", "b definition");
-			ExpectSingleInstanceWithInnerXml(dom, "lift/entry/sense/definition/form[@lang='c']/text", "c gloss");
+			ExpectSingleInstanceWithInnerXml(dom,
+											 "lift/entry/sense/definition/form[@lang='a']/text",
+											 "a definition");
+			ExpectSingleInstanceWithInnerXml(dom,
+											 "lift/entry/sense/definition/form[@lang='b']/text",
+											 "b definition");
+			ExpectSingleInstanceWithInnerXml(dom,
+											 "lift/entry/sense/definition/form[@lang='c']/text",
+											 "c gloss");
 		}
 
-		private void Expect(XmlDocument dom, string xpath, int expectedCount)
+		private static void Expect(XmlNode dom, string xpath, int expectedCount)
 		{
 			Assert.AreEqual(expectedCount, dom.SelectNodes(xpath).Count);
 		}
 
-		private void ExpectSingleInstanceWithInnerXml(XmlDocument dom, string xpath, string expectedValue)
+		private static void ExpectSingleInstanceWithInnerXml(XmlNode dom,
+															 string xpath,
+															 string expectedValue)
 		{
 			Assert.AreEqual(1, dom.SelectNodes(xpath).Count);
 			Assert.AreEqual(expectedValue, dom.SelectNodes(xpath)[0].InnerXml);
 		}
 
-		private XmlDocument GetTransformedDom(string entriesXml)
+		private static XmlDocument GetTransformedDom(string entriesXml)
 		{
 			XmlDocument doc = new XmlDocument();
-			using (Project.Tests.ProjectDirectorySetupForTesting pd = new ProjectDirectorySetupForTesting(entriesXml))
+			using (
+					ProjectDirectorySetupForTesting pd =
+							new ProjectDirectorySetupForTesting(entriesXml))
 			{
 				using (WeSayWordsProject project = pd.CreateLoadedProject())
 				{
-					LiftPreparer preparer = new LiftPreparer(project);
-					string outputPath = preparer.PopulateDefinitions(project.PathToLiftFile);
+					string outputPath = LiftPreparer.PopulateDefinitions(project.PathToLiftFile);
 					Assert.IsTrue(File.Exists(outputPath));
 					doc.Load(outputPath);
-			   }
+				}
 			}
 			return doc;
 		}

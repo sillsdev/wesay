@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
+using LiftIO;
 using LiftIO.Merging;
 using Palaso.Reporting;
 using WeSay.Data;
@@ -26,6 +27,7 @@ using WeSay.LexicalModel;
  * Y                corrupt, but exporter ended normally                    WOULD LOOSE DATA
  *
  */
+
 namespace WeSay.Project
 {
 	public class LiftUpdateService
@@ -37,7 +39,7 @@ namespace WeSay.Project
 		private DateTime _timeOfLastQueryForNewRecords;
 		//private bool _didFindDataInCacheNeedingRecovery = false;
 
-		event EventHandler Updating;
+		private event EventHandler Updating;
 
 		public LiftUpdateService(LexEntryRepository lexEntryRepository)
 		{
@@ -47,14 +49,9 @@ namespace WeSay.Project
 			//_lexEntryRepository.Db4oDataSource.DataDeleted += new EventHandler<DeletedItemEventArgs>(liftUpdateService.OnDataDeleted);
 		}
 
-
-
 		private static string LiftDirectory
 		{
-			get
-			{
-				return Path.GetDirectoryName(WeSayWordsProject.Project.PathToLiftFile);
-			}
+			get { return Path.GetDirectoryName(WeSayWordsProject.Project.PathToLiftFile); }
 		}
 
 		/// <summary>
@@ -85,18 +82,16 @@ namespace WeSay.Project
 				return;
 			}
 
-			LiftExporter exporter = new LiftExporter(/*WeSayWordsProject.Project.GetFieldToOptionListNameDictionary(), */
-				MakeIncrementFileName(DateTime.UtcNow),
-				_lexEntryRepository);
+			LiftExporter exporter =
+					new LiftExporter( /*WeSayWordsProject.Project.GetFieldToOptionListNameDictionary(), */
+							MakeIncrementFileName(DateTime.UtcNow), _lexEntryRepository);
 			exporter.AddDeletedEntry(entry);
 			exporter.End();
 		}
 
-
-
 		public void DoLiftUpdateNow(bool mergeIntoSingleFileBeforeReturning)
 		{
-		   // Logger.WriteEvent("Incremental Update Start");
+			// Logger.WriteEvent("Incremental Update Start");
 
 			if (Updating != null)
 			{
@@ -110,7 +105,10 @@ namespace WeSay.Project
 				if (repositoryIds.Count > 50)
 				{
 					//TODO: if we think this will actually ever be called, clean this up with a real, delayed-visibility dialog
-					dlg = new LameProgressDialog(string.Format("Doing incremental update of {0} records...", repositoryIds.Count));
+					dlg =
+							new LameProgressDialog(
+									string.Format("Doing incremental update of {0} records...",
+												  repositoryIds.Count));
 					dlg.Show();
 					Application.DoEvents();
 				}
@@ -118,9 +116,9 @@ namespace WeSay.Project
 				try
 				{
 					LiftExporter exporter =
-						new LiftExporter(/*WeSayWordsProject.Project.GetFieldToOptionListNameDictionary(),*/
-										 MakeIncrementFileName(_timeOfLastQueryForNewRecords),
-										 _lexEntryRepository);
+							new LiftExporter( /*WeSayWordsProject.Project.GetFieldToOptionListNameDictionary(),*/
+									MakeIncrementFileName(_timeOfLastQueryForNewRecords),
+									_lexEntryRepository);
 					exporter.Add(repositoryIds);
 					exporter.End();
 
@@ -141,8 +139,9 @@ namespace WeSay.Project
 				if (ConsumePendingLiftUpdates())
 				{
 					CacheManager.UpdateSyncPointInCache(_lexEntryRepository.Db4oDataSource.Data,
-															File.GetLastWriteTimeUtc(
-																WeSayWordsProject.Project.PathToLiftFile));
+														File.GetLastWriteTimeUtc(
+																WeSayWordsProject.Project.
+																		PathToLiftFile));
 				}
 			}
 
@@ -157,7 +156,9 @@ namespace WeSay.Project
 		{
 			//merge the increment files
 
-			if (SynchronicMerger.GetPendingUpdateFiles(WeSayWordsProject.Project.PathToLiftFile).Length > 0)
+			if (
+					SynchronicMerger.GetPendingUpdateFiles(WeSayWordsProject.Project.PathToLiftFile)
+							.Length > 0)
 			{
 				Logger.WriteEvent("Running Synchronic Merger");
 				try
@@ -166,44 +167,46 @@ namespace WeSay.Project
 					WeSayWordsProject.Project.ReleaseLockOnLift();
 					merger.MergeUpdatesIntoFile(WeSayWordsProject.Project.PathToLiftFile);
 				}
-				catch (LiftIO.BadUpdateFileException error)
+				catch (BadUpdateFileException error)
 				{
 					string contents = File.ReadAllText(error.PathToNewFile);
 					if (contents.Trim().Length == 0)
 					{
-					   ErrorReport.ReportNonFatalMessage(
-							"It looks as though WeSay recently crashed while attempting to save.  It will try again to preserve your work, but you will want to check to make sure nothing was lost.");
+						ErrorReport.ReportNonFatalMessage(
+								"It looks as though WeSay recently crashed while attempting to save.  It will try again to preserve your work, but you will want to check to make sure nothing was lost.");
 						File.Delete(error.PathToNewFile);
 					}
 					else
 					{
 						File.Move(error.PathToNewFile, error.PathToNewFile + ".bad");
 						ErrorReport.ReportNonFatalMessage(
-							"WeSay was unable to save some work you did in the previous session.  The work might be recoverable from the file {0}. The next screen will allow you to send a report of this to the developers.", error.PathToNewFile + ".bad");
+								"WeSay was unable to save some work you did in the previous session.  The work might be recoverable from the file {0}. The next screen will allow you to send a report of this to the developers.",
+								error.PathToNewFile + ".bad");
 						ErrorNotificationDialog.ReportException(error, null, false);
 					}
 					return false;
 				}
 				catch (Exception e)
 				{
-					throw new ApplicationException("Could not finish updating LIFT dictionary file.", e);
+					throw new ApplicationException(
+							"Could not finish updating LIFT dictionary file.", e);
 				}
 				finally
 				{
 					WeSayWordsProject.Project.LockLift();
 				}
 			}
-		   return true;
+			return true;
 		}
-
 
 		private static string MakeIncrementFileName(DateTime time)
 		{
-			while(true){
+			while (true)
+			{
 				string timeString = time.ToString("yyyy'-'MM'-'dd'T'HH'-'mm'-'ss'-'FFFFFFF UTC");
 				string path = Path.Combine(LiftDirectory, timeString);
 				path += SynchronicMerger.ExtensionOfIncrementalFiles;
-				if(!File.Exists(path))
+				if (!File.Exists(path))
 				{
 					return path;
 				}
@@ -250,7 +253,7 @@ namespace WeSay.Project
 			return File.GetLastWriteTimeUtc(WeSayWordsProject.Project.PathToLiftFile);
 		}
 
-		public IList<RepositoryId>  GetRecordsNeedingUpdateInLift()
+		public IList<RepositoryId> GetRecordsNeedingUpdateInLift()
 		{
 			DateTime last = GetLastUpdateTime();
 			_timeOfLastQueryForNewRecords = DateTime.UtcNow;
@@ -267,7 +270,8 @@ namespace WeSay.Project
 			{
 				if (CacheManager.GetAssumeCacheIsFresh(WeSayWordsProject.Project.PathToCache))
 				{
-					return;// setting permissions in the installer apparently was enough to mess this next line up on the sample data
+					return;
+					// setting permissions in the installer apparently was enough to mess this next line up on the sample data
 				}
 
 				IList<RepositoryId> records = GetRecordsNeedingUpdateInLift();
@@ -279,23 +283,23 @@ namespace WeSay.Project
 				try
 				{
 					ErrorReport.ReportNonFatalMessage(
-						"It appears that WeSay did not exit normally last time.  WeSay will now attempt to recover the {0} records which were not saved.",
-						records.Count);
+							"It appears that WeSay did not exit normally last time.  WeSay will now attempt to recover the {0} records which were not saved.",
+							records.Count);
 					DoLiftUpdateNow(false);
-//                    _didFindDataInCacheNeedingRecovery = true;
+					//                    _didFindDataInCacheNeedingRecovery = true;
 					ErrorReport.ReportNonFatalMessage("Your work was successfully recovered.");
 				}
 				catch (Exception)
 				{
 					ErrorReport.ReportNonFatalMessage(
-						"Sorry, WeSay was unable to recover some of your work.");
+							"Sorry, WeSay was unable to recover some of your work.");
 					WeSayWordsProject.Project.InvalidateCacheSilently();
 				}
 			}
 			catch (Exception)
 			{
 				ErrorReport.ReportNonFatalMessage(
-					"WeSay had a problem reading the cache.  It will now be rebuilt");
+						"WeSay had a problem reading the cache.  It will now be rebuilt");
 				WeSayWordsProject.Project.InvalidateCacheSilently();
 			}
 		}

@@ -6,7 +6,6 @@ using NUnit.Framework;
 using Palaso.Text;
 using WeSay.Data;
 using WeSay.Foundation;
-using WeSay.Language;
 
 namespace WeSay.LexicalModel.Tests
 {
@@ -42,15 +41,20 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
-		public void GetEntriesByApproximateLexicalFormShouldNotContainMatchesFromOtherWritingSystems()
+		public void GetEntriesByApproximateLexicalFormShouldNotContainMatchesFromOtherWritingSystems
+				()
 		{
 			const string entryInOtherWritingSystem = "foo2";
-			MakeTestLexEntry("v","foo1");
+			MakeTestLexEntry("v", "foo1");
 			MakeTestLexEntry("en", entryInOtherWritingSystem);
-			MakeTestLexEntry("v","foo3");
+			MakeTestLexEntry("v", "foo3");
 			WritingSystem ws = new WritingSystem("v", SystemFonts.DefaultFont);
 
-			ResultSet<LexEntry> matches = _lexEntryRepository.GetEntriesWithSimilarLexicalForm("foo", ws, ApproximateMatcherOptions.IncludePrefixedForms);
+			ResultSet<LexEntry> matches =
+					_lexEntryRepository.GetEntriesWithSimilarLexicalForm("foo",
+																		 ws,
+																		 ApproximateMatcherOptions.
+																				 IncludePrefixedForms);
 			Assert.AreEqual(2, matches.Count);
 			Assert.AreNotEqual(entryInOtherWritingSystem, matches[1].DisplayString);
 		}
@@ -64,10 +68,12 @@ namespace WeSay.LexicalModel.Tests
 			_lexEntryRepository.SaveItem(entry);
 			CycleDatabase();
 			//don't want to find this one
-			_lexEntryRepository.Db4oDataSource.Data.Set(new LanguageForm("en", "findme", new MultiText()));
+			_lexEntryRepository.Db4oDataSource.Data.Set(
+					new LanguageForm("en", "findme", new MultiText()));
 			CycleDatabase();
 			WritingSystem writingSystem = new WritingSystem("en", SystemFonts.DefaultFont);
-			ResultSet<LexEntry> list = _lexEntryRepository.GetEntriesWithMatchingLexicalForm("findme", writingSystem);
+			ResultSet<LexEntry> list =
+					_lexEntryRepository.GetEntriesWithMatchingLexicalForm("findme", writingSystem);
 			Assert.AreEqual(1, list.Count);
 		}
 
@@ -80,7 +86,8 @@ namespace WeSay.LexicalModel.Tests
 			Assert.AreEqual("hello", found.LexicalForm["en"]);
 		}
 
-		private Guid SetupEntryWithGuid() {
+		private Guid SetupEntryWithGuid()
+		{
 			CycleDatabase();
 			AddEntryWithGloss("hello");
 
@@ -92,12 +99,13 @@ namespace WeSay.LexicalModel.Tests
 			return g;
 		}
 
-		private void CreateEntryWithGuid(Guid g) {
+		private void CreateEntryWithGuid(Guid g)
+		{
 			Extensible extensible = new Extensible();
 			extensible.Guid = g;
-			LexEntry entry = this._lexEntryRepository.CreateItem(extensible);
+			LexEntry entry = _lexEntryRepository.CreateItem(extensible);
 			entry.LexicalForm["en"] = "hello";
-			this._lexEntryRepository.SaveItem(entry);
+			_lexEntryRepository.SaveItem(entry);
 		}
 
 		[Test]
@@ -109,13 +117,14 @@ namespace WeSay.LexicalModel.Tests
 			Assert.IsNull(found);
 		}
 
-		[Test, ExpectedException(typeof(ApplicationException))]
+		[Test]
+		[ExpectedException(typeof (ApplicationException))]
 		public void MultipleGuidMatchesThrows()
 		{
 			Guid g = SetupEntryWithGuid();
 			CreateEntryWithGuid(g);
 			CycleDatabase();
-		   _lexEntryRepository.GetLexEntryWithMatchingGuid(g);
+			_lexEntryRepository.GetLexEntryWithMatchingGuid(g);
 		}
 
 		[Test]
@@ -130,14 +139,16 @@ namespace WeSay.LexicalModel.Tests
 			_lexEntryRepository.Db4oDataSource.Data.Set(glossLanguageForm);
 
 			WritingSystem writingSystem = new WritingSystem("en", SystemFonts.DefaultFont);
-			ResultSet<LexEntry> list = _lexEntryRepository.GetEntriesWithMatchingGlossSortedByLexicalForm(glossLanguageForm, writingSystem);
+			ResultSet<LexEntry> list =
+					_lexEntryRepository.GetEntriesWithMatchingGlossSortedByLexicalForm(
+							glossLanguageForm, writingSystem);
 			Assert.AreEqual(1, list.Count);
 		}
 
 		private void AddEntryWithGloss(string gloss)
 		{
 			LexEntry entry = _lexEntryRepository.CreateItem();
-			LexSense sense = (LexSense)entry.Senses.AddNew();
+			LexSense sense = (LexSense) entry.Senses.AddNew();
 			sense.Gloss["en"] = gloss;
 			_lexEntryRepository.SaveItem(entry);
 		}
@@ -155,30 +166,27 @@ namespace WeSay.LexicalModel.Tests
 		public void GetHomographNumber_OnlyOneEntry_Returns0()
 		{
 			LexEntry entry1 = MakeEntryWithLexemeForm(_headwordWritingSystem.Id, "blue");
-			Assert.AreEqual(0, _lexEntryRepository.GetHomographNumber(entry1, _headwordWritingSystem));
+			Assert.AreEqual(0,
+							_lexEntryRepository.GetHomographNumber(entry1, _headwordWritingSystem));
 		}
-
-
 
 		[Test]
 		public void GetHomographNumber_FirstEntryWithFollowingHomograph_Returns1()
 		{
 			LexEntry entry1 = MakeEntryWithLexemeForm(_headwordWritingSystem.Id, "blue");
 			MakeEntryWithLexemeForm(_headwordWritingSystem.Id, "blue");
-			Assert.AreEqual(1, _lexEntryRepository.GetHomographNumber(entry1, _headwordWritingSystem));
+			Assert.AreEqual(1,
+							_lexEntryRepository.GetHomographNumber(entry1, _headwordWritingSystem));
 		}
-
-
 
 		[Test]
 		public void GetHomographNumber_SecondEntry_Returns2()
 		{
 			MakeEntryWithLexemeForm(_headwordWritingSystem.Id, "blue");
 			LexEntry entry2 = MakeEntryWithLexemeForm(_headwordWritingSystem.Id, "blue");
-			Assert.AreEqual(2, _lexEntryRepository.GetHomographNumber(entry2, _headwordWritingSystem));
+			Assert.AreEqual(2,
+							_lexEntryRepository.GetHomographNumber(entry2, _headwordWritingSystem));
 		}
-
-
 
 		[Test]
 		public void GetHomographNumber_ThirdEntry_Returns3()
@@ -187,7 +195,8 @@ namespace WeSay.LexicalModel.Tests
 			MakeEntryWithLexemeForm(_headwordWritingSystem.Id, "blue");
 			MakeEntryWithLexemeForm(_headwordWritingSystem.Id, "blue");
 			LexEntry entry3 = MakeEntryWithLexemeForm(_headwordWritingSystem.Id, "blue");
-			Assert.AreEqual(3, _lexEntryRepository.GetHomographNumber(entry3, _headwordWritingSystem));
+			Assert.AreEqual(3,
+							_lexEntryRepository.GetHomographNumber(entry3, _headwordWritingSystem));
 		}
 
 		[Test]
@@ -196,15 +205,17 @@ namespace WeSay.LexicalModel.Tests
 			LexEntry entry1 = MakeEntryWithLexemeForm(_headwordWritingSystem.Id, "blue");
 			LexEntry entry2 = MakeEntryWithLexemeForm(_headwordWritingSystem.Id, "blue");
 			LexEntry entry3 = MakeEntryWithLexemeForm(_headwordWritingSystem.Id, "blue");
-			Assert.AreEqual(1, _lexEntryRepository.GetHomographNumber(entry1, _headwordWritingSystem));
-			Assert.AreEqual(3, _lexEntryRepository.GetHomographNumber(entry3, _headwordWritingSystem));
-			Assert.AreEqual(2, _lexEntryRepository.GetHomographNumber(entry2, _headwordWritingSystem));
+			Assert.AreEqual(1,
+							_lexEntryRepository.GetHomographNumber(entry1, _headwordWritingSystem));
+			Assert.AreEqual(3,
+							_lexEntryRepository.GetHomographNumber(entry3, _headwordWritingSystem));
+			Assert.AreEqual(2,
+							_lexEntryRepository.GetHomographNumber(entry2, _headwordWritingSystem));
 		}
 
-		[Test, Ignore("not implemented")]
-		public void GetHomographNumber_HonorsOrderAttribute()
-		{
-		}
+		[Test]
+		[Ignore("not implemented")]
+		public void GetHomographNumber_HonorsOrderAttribute() {}
 
 		private LexEntry MakeEntryWithLexemeForm(string writingSystemId, string lexicalUnit)
 		{
@@ -228,18 +239,18 @@ namespace WeSay.LexicalModel.Tests
 			RepositoryId appleId = _lexEntryRepository.GetId(e2);
 
 			LexEntry e3 = _lexEntryRepository.CreateItem();
-			e3.LexicalForm.SetAlternative(_headwordWritingSystem.Id, "xa");//has to be something low in the alphabet to test a bug we had
+			e3.LexicalForm.SetAlternative(_headwordWritingSystem.Id, "xa");
+			//has to be something low in the alphabet to test a bug we had
 			_lexEntryRepository.SaveItem(e3);
 			RepositoryId xaId = _lexEntryRepository.GetId(e3);
 
-			ResultSet<LexEntry> list = _lexEntryRepository.GetAllEntriesSortedByHeadword(_headwordWritingSystem);
+			ResultSet<LexEntry> list =
+					_lexEntryRepository.GetAllEntriesSortedByHeadword(_headwordWritingSystem);
 
 			Assert.AreEqual(3, list.Count);
 			Assert.AreEqual(appleId, list[0].Id);
 			Assert.AreEqual(bankId, list[1].Id);
 			Assert.AreEqual(xaId, list[2].Id);
 		}
-
-
 	}
 }

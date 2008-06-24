@@ -1,5 +1,4 @@
 using NUnit.Framework;
-using WeSay.ConfigTool;
 using WeSay.Project;
 
 namespace WeSay.ConfigTool.Tests
@@ -16,7 +15,7 @@ namespace WeSay.ConfigTool.Tests
 			BasilProject.InitializeForTests();
 			_control = new FieldDetailControl();
 
-			_field = new Field("test", "LexEntry", new string[]{"en_US"});
+			_field = new Field("test", "LexEntry", new string[] {"en_US"});
 			_control.CurrentField = _field;
 		}
 
@@ -31,13 +30,10 @@ namespace WeSay.ConfigTool.Tests
 		{
 			string descriptionOfFieldInEvent = string.Empty;
 			_field.Description = "original description";
-				_control.DescriptionOfFieldChanged += delegate
-														 {
-															 descriptionOfFieldInEvent = _field.Description;
-														 };
-				_control._description.Text = "new description";
-				Assert.AreEqual("new description", descriptionOfFieldInEvent);
-
+			_control.DescriptionOfFieldChanged +=
+					delegate { descriptionOfFieldInEvent = _field.Description; };
+			_control._description.Text = "new description";
+			Assert.AreEqual("new description", descriptionOfFieldInEvent);
 		}
 
 		[Test]

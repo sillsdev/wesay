@@ -13,7 +13,7 @@ namespace WeSay.Foundation.Options
 									  IReportEmptiness
 	{
 		// private readonly List<string> _keys;
-		private BindingList<OptionRef> _members;
+		private readonly BindingList<OptionRef> _members;
 
 		/// <summary>
 		/// This "backreference" is used to notify the parent of changes.
@@ -21,20 +21,17 @@ namespace WeSay.Foundation.Options
 		/// </summary>
 		private IReceivePropertyChangeNotifications _whomToNotify;
 
-		private BindingList<OptionRef> _optionRefProxyList = new BindingList<OptionRef>();
+		public OptionRefCollection(): this(null) {}
 
-		public OptionRefCollection(): this(null)
-		{
-		}
 		public OptionRefCollection(IReceivePropertyChangeNotifications whomToNotify)
 		{
 			_whomToNotify = whomToNotify;
 			//_keys = new List<string>();
 			_members = new BindingList<OptionRef>();
-			_members.ListChanged += new ListChangedEventHandler(_members_ListChanged);
+			_members.ListChanged += _members_ListChanged;
 		}
 
-		void _members_ListChanged(object sender, ListChangedEventArgs e)
+		private void _members_ListChanged(object sender, ListChangedEventArgs e)
 		{
 			NotifyPropertyChanged();
 		}
@@ -46,26 +43,25 @@ namespace WeSay.Foundation.Options
 
 		#region ICollection<string> Members
 
-//        void ICollection<string>.Add(string key)
-//        {
-//            if (Keys.Contains(key))
-//            {
-//                throw new ArgumentOutOfRangeException("key", key,
-//                        "OptionRefCollection already contains that key");
-//            }
-//
-//            Add(key);
-//        }
+		//        void ICollection<string>.Add(string key)
+		//        {
+		//            if (Keys.Contains(key))
+		//            {
+		//                throw new ArgumentOutOfRangeException("key", key,
+		//                        "OptionRefCollection already contains that key");
+		//            }
+		//
+		//            Add(key);
+		//        }
 
 		private OptionRef FindByKey(string key)
 		{
 			foreach (OptionRef _member in _members)
 			{
-				if(_member.Key == key)
+				if (_member.Key == key)
 				{
 					return _member;
 				}
-
 			}
 			return null;
 		}
@@ -78,9 +74,9 @@ namespace WeSay.Foundation.Options
 		public bool Remove(string key)
 		{
 			OptionRef or = FindByKey(key);
-			if (or!=null)
+			if (or != null)
 			{
-				this._members.Remove(or);
+				_members.Remove(or);
 				NotifyPropertyChanged();
 				return true;
 			}
@@ -91,8 +87,10 @@ namespace WeSay.Foundation.Options
 		{
 			foreach (OptionRef _member in _members)
 			{
-				if(_member.Key == key)
+				if (_member.Key == key)
+				{
 					return true;
+				}
 			}
 			return false;
 			//return Keys.Contains(key);
@@ -109,25 +107,25 @@ namespace WeSay.Foundation.Options
 			NotifyPropertyChanged();
 		}
 
-//        public void CopyTo(string[] array, int arrayIndex)
-//        {
-//            Keys.CopyTo(array, arrayIndex);
-//        }
-//
-//        public bool IsReadOnly
-//        {
-//            get { return false; }
-//        }
-//
-//        public IEnumerator<string> GetEnumerator()
-//        {
-//            return Keys.GetEnumerator();
-//        }
-//
-//        IEnumerator IEnumerable.GetEnumerator()
-//        {
-//            return Keys.GetEnumerator();
-//        }
+		//        public void CopyTo(string[] array, int arrayIndex)
+		//        {
+		//            Keys.CopyTo(array, arrayIndex);
+		//        }
+		//
+		//        public bool IsReadOnly
+		//        {
+		//            get { return false; }
+		//        }
+		//
+		//        public IEnumerator<string> GetEnumerator()
+		//        {
+		//            return Keys.GetEnumerator();
+		//        }
+		//
+		//        IEnumerator IEnumerable.GetEnumerator()
+		//        {
+		//            return Keys.GetEnumerator();
+		//        }
 
 		#endregion
 
@@ -188,7 +186,7 @@ namespace WeSay.Foundation.Options
 			bool changed = false;
 			foreach (string key in keys)
 			{
-				if ( this.Contains(key))
+				if (Contains(key))
 				{
 					continue;
 				}
@@ -235,14 +233,14 @@ namespace WeSay.Foundation.Options
 				{
 					if (!string.IsNullOrEmpty(s))
 					{
-						return false;   // one non-empty is enough to keep us around
+						return false; // one non-empty is enough to keep us around
 					}
 				}
 				return true;
 			}
 		}
 
-		public IEnumerable<string>Keys
+		public IEnumerable<string> Keys
 		{
 			get
 			{
@@ -261,37 +259,41 @@ namespace WeSay.Foundation.Options
 		public string KeyAtIndex(int index)
 		{
 			if (index < 0)
+			{
 				throw new ArgumentException("index");
+			}
 			if (index >= _members.Count)
+			{
 				throw new ArgumentException("index");
+			}
 			return _members[index].Key;
 		}
 
-//        public IEnumerable<OptionRef> AsEnumeratorOfOptionRefs
-//        {
-//            get
-//            {
-//                foreach (string key in _keys)
-//                {
-//                    OptionRef or = new OptionRef();
-//                    or.Value = key;
-//                   yield return or;
-//                }
-//            }
-//        }
+		//        public IEnumerable<OptionRef> AsEnumeratorOfOptionRefs
+		//        {
+		//            get
+		//            {
+		//                foreach (string key in _keys)
+		//                {
+		//                    OptionRef or = new OptionRef();
+		//                    or.Value = key;
+		//                   yield return or;
+		//                }
+		//            }
+		//        }
 
-//        public IBindingList GetConnectedBindingListOfOptionRefs()
-//        {
-//            foreach (string key in _keys)
-//                {
-//                    OptionRef or = new OptionRef();
-//                    or.Key = key;
-//                    or.Parent = (WeSayDataObject) _whomToNotify ;
-//
-//                    _optionRefProxyList.Add(or);
-//                }
-//
-//        }
+		//        public IBindingList GetConnectedBindingListOfOptionRefs()
+		//        {
+		//            foreach (string key in _keys)
+		//                {
+		//                    OptionRef or = new OptionRef();
+		//                    or.Key = key;
+		//                    or.Parent = (WeSayDataObject) _whomToNotify ;
+		//
+		//                    _optionRefProxyList.Add(or);
+		//                }
+		//
+		//        }
 
 		public void RemoveEmptyStuff()
 		{
@@ -305,7 +307,7 @@ namespace WeSay.Foundation.Options
 			}
 			foreach (OptionRef or in condemened)
 			{
-				this.Members.Remove(or);
+				Members.Remove(or);
 			}
 		}
 

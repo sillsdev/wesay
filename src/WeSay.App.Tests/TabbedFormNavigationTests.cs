@@ -21,7 +21,7 @@ namespace WeSay.App.Tests
 		public void Setup()
 		{
 			string entriesXml =
-				@"<entry id='foo1'><lexical-unit><form lang='v'><text>fooOne</text></form></lexical-unit></entry>
+					@"<entry id='foo1'><lexical-unit><form lang='v'><text>fooOne</text></form></lexical-unit></entry>
 								<entry id='foo2'><lexical-unit><form lang='v'><text>fooTwo</text></form></lexical-unit></entry>
 								<entry id='foo3'><lexical-unit><form lang='v'><text>fooThree</text></form></lexical-unit></entry>";
 			_projectDirectory = new ProjectDirectorySetupForTesting(entriesXml);
@@ -31,7 +31,7 @@ namespace WeSay.App.Tests
 			_tabbedForm = new TabbedForm();
 			_project.Tasks = new List<ITask>();
 			_dashboardTask = new MockTask("Dashboard", "The control center.", true);
-			_project.Tasks.Add(this._dashboardTask);
+			_project.Tasks.Add(_dashboardTask);
 			_dictionaryTask = new MockTask("Dictionary blah blah", "The whole lexicon.", true);
 			_project.Tasks.Add(_dictionaryTask);
 
@@ -47,13 +47,15 @@ namespace WeSay.App.Tests
 		[Test]
 		public void ShouldRaiseIntializedEventWhenReadyForNavigation()
 		{
-			_tabbedForm.IntializationComplete += new EventHandler(OnTabbedForm_IntializationComplete);
+			_tabbedForm.IntializationComplete += OnTabbedForm_IntializationComplete;
 			_tabbedForm.ContinueLaunchingAfterInitialDisplay();
 			Application.DoEvents();
-			for (int i = 0; i < 1000; i++)
+			for (int i = 0;i < 1000;i++)
 			{
 				if (_didRaiseInitializedEvent)
+				{
 					break;
+				}
 				Application.DoEvents();
 			}
 			Assert.IsTrue(_didRaiseInitializedEvent);
@@ -64,12 +66,11 @@ namespace WeSay.App.Tests
 			_didRaiseInitializedEvent = true;
 		}
 
-
 		[Test]
 		public void ShouldSwitchToDictionaryTaskWhenURLCallsForItAndIsNew()
 		{
-				_tabbedForm.GoToUrl("foo2");
-				Assert.AreEqual(_dictionaryTask, _tabbedForm.ActiveTask);
+			_tabbedForm.GoToUrl("foo2");
+			Assert.AreEqual(_dictionaryTask, _tabbedForm.ActiveTask);
 		}
 
 		[Test]
@@ -84,7 +85,7 @@ namespace WeSay.App.Tests
 		[Test]
 		public void ShouldStayInDictionaryTaskWhenURLCallsForIt()
 		{
-			_tabbedForm.ActiveTask =_dictionaryTask;
+			_tabbedForm.ActiveTask = _dictionaryTask;
 			_tabbedForm.GoToUrl("foo2");
 			Assert.AreEqual(_dictionaryTask, _tabbedForm.ActiveTask);
 		}
@@ -95,13 +96,15 @@ namespace WeSay.App.Tests
 			_tabbedForm.GoToUrl("foo2");
 			Assert.AreEqual("foo2", _tabbedForm.CurrentUrl);
 		}
+
 		[Test]
 		public void ShouldAskTaskToGoToRequestedUrl()
 		{
 			_tabbedForm.GoToUrl("foo2");
 			Assert.AreEqual("foo2", _dictionaryTask._urlThatItWasToldToGoTo);
 		}
-/*
+
+		/*
  * TODO
 		[Test]
 		public void ShouldGiveMessageIfNeededTaskIsNotFound()
@@ -113,5 +116,4 @@ namespace WeSay.App.Tests
 		}
  */
 	}
-
 }

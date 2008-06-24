@@ -54,7 +54,7 @@ namespace WeSay.CommonTools
 			this._flow.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
 			this._flow.Location = new System.Drawing.Point(20, 11);
 			this._flow.Name = "_flow";
-			this._flow.Size = new System.Drawing.Size(600, 394);
+			this._flow.Size = new System.Drawing.Size(603, 397);
 			this._flow.TabIndex = 0;
 			this._flow.WrapContents = false;
 			//

@@ -42,15 +42,14 @@ namespace WeSay.CommonTools
 			//
 			this._dictionarySizeLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this._dictionarySizeLabel.AutoSize = true;
-			this._dictionarySizeLabel.Font = new System.Drawing.Font("Arial", 16F);
-			this._dictionarySizeLabel.Location = new System.Drawing.Point(67, 27);
+			this._dictionarySizeLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 18.25F);
+			this._dictionarySizeLabel.Location = new System.Drawing.Point(67, 23);
 			this._dictionarySizeLabel.Margin = new System.Windows.Forms.Padding(3, 0, 3, 4);
 			this._dictionarySizeLabel.Name = "_dictionarySizeLabel";
-			this._dictionarySizeLabel.Size = new System.Drawing.Size(305, 25);
+			this._dictionarySizeLabel.Size = new System.Drawing.Size(355, 29);
 			this._dictionarySizeLabel.TabIndex = 5;
 			this._dictionarySizeLabel.Text = "~Your dictionary has {0} words";
-			this._dictionarySizeLabel.Click += new System.EventHandler(this._dictionarySizeLabel_Click);
-			this._dictionarySizeLabel.FontChanged += new System.EventHandler(this._dictionarySizeLabel_FontChanged);
+			this._dictionarySizeLabel.SizeChanged += new System.EventHandler(this._dictionarySizeLabel_SizeChanged);
 			//
 			// localizationHelper1
 			//
@@ -76,6 +75,7 @@ namespace WeSay.CommonTools
 			this._flow.Name = "_flow";
 			this._flow.Size = new System.Drawing.Size(538, 57);
 			this._flow.TabIndex = 7;
+			this._flow.WrapContents = false;
 			//
 			// DictionaryStatusControl
 			//

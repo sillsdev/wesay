@@ -4,7 +4,7 @@ using System.IO;
 using System.Windows.Forms;
 using NUnit.Framework;
 using WeSay.CommonTools;
-using WeSay.Foundation.Dashboard;
+using WeSay.Foundation;
 using WeSay.LexicalModel;
 
 namespace WeSay.App.Tests
@@ -46,7 +46,7 @@ namespace WeSay.App.Tests
 		[Ignore("not really a test")]
 		public void Run() {}
 
-		private List<IThingOnDashboard> GetButtonItems()
+		private static List<IThingOnDashboard> GetButtonItems()
 		{
 			List<IThingOnDashboard> buttonItems = new List<IThingOnDashboard>();
 			buttonItems.Add(new ThingThatGetsAButton(DashboardGroup.Gather, "Semantic Domains"));

@@ -4,9 +4,9 @@ using NUnit.Framework;
 using WeSay.Data;
 using WeSay.Foundation;
 using WeSay.Foundation.Options;
-using WeSay.LexicalModel.Db4o_Specific;
+using WeSay.LexicalModel.Db4oSpecific;
 
-namespace WeSay.LexicalModel.Tests.Db4o_Specific
+namespace WeSay.LexicalModel.Tests.Db4oSpecific
 {
 	[TestFixture]
 	public class PersistenceTests
@@ -99,10 +99,10 @@ namespace WeSay.LexicalModel.Tests.Db4o_Specific
 		[Test]
 		public void ShallowChange()
 		{
-			LexEntry entry = _lexEntryRepository.CreateItem();
+			_lexEntryRepository.CreateItem();
 
 			CycleDatabase();
-			entry = GetFirstEntry();
+			LexEntry entry = GetFirstEntry();
 			Assert.AreEqual(1, _lexEntryRepository.CountAllEntries());
 			entry.LexicalForm["en"] = "x";
 			_lexEntryRepository.SaveItem(entry);

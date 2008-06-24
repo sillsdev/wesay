@@ -1,4 +1,5 @@
 #region copyright info
+
 //
 // Written by Anup. V (anupshubha@yahoo.com)
 // Copyright (c) 2006.
@@ -15,32 +16,33 @@
 // Please use and enjoy. Please let me know of any bugs/mods/improvements
 // that you have found/implemented and I will fix/incorporate them into
 // this file.
+
 #endregion copyright info
 
-using System;
+using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
-using System.ComponentModel;
-using System.Drawing.Drawing2D;
 
-namespace GraphComponents
+namespace Addin.LiftReports.GraphComponents
 {
 	/// <summary>
 	/// The base class for graphs. Provides the basic framework of a graph.
 	/// </summary>
-	public class Graph : System.Windows.Forms.UserControl, IGraphElement
+	public class Graph: UserControl, IGraphElement
 	{
 		#region variables
+
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
-		private System.ComponentModel.Container components = null;
+		private readonly Container components = null;
 
 		/// <summary>
 		/// Area of the rectangle that is bounded by the 2 axes. This is the
 		/// area of the graph without any margins
 		/// </summary>
 		private Rectangle graphArea;
+
 		/// <summary>
 		/// The amount of transparency in the bar. Values range from 0 to 255
 		/// 0 is fully transparent, 255 is opaque.
@@ -50,11 +52,12 @@ namespace GraphComponents
 		/// <summary>
 		/// Color of the graphArea
 		/// </summary>
-		private Color graphAreaColor       = Color.White;
+		private Color graphAreaColor = Color.White;
+
 		/// <summary>
 		/// Color of the gridlines
 		/// </summary>
-		private Color gridlineColor        = Color.LightGray;
+		private Color gridlineColor = Color.LightGray;
 
 		/// <summary>
 		/// Style of the gridlines
@@ -65,6 +68,7 @@ namespace GraphComponents
 		/// No. of graduations on the X axis
 		/// </summary>
 		private int graduationsX = 5;
+
 		/// <summary>
 		/// No. of graduations on the Y axis
 		/// </summary>
@@ -74,6 +78,7 @@ namespace GraphComponents
 		/// Color of the X axis
 		/// </summary>
 		private Color xAxisColor = Color.Black;
+
 		/// <summary>
 		/// Color of the Y axis
 		/// </summary>
@@ -87,246 +92,244 @@ namespace GraphComponents
 		#endregion variables
 
 		#region properties
+
 		#region ValueFormat
+
 		/// <summary>
 		/// The .NET style of format for displaying the value and axis. Eg. {0:F}, {0:E} etc
 		/// </summary>
-		[
-		Browsable(true),
-		DesignerSerializationVisibility(DesignerSerializationVisibility.Visible),
-		Category("Appearance"),
-		Description("The .NET style of format for displaying the value. Eg. {0:F}, {0:E} etc")
-		]
+		[Browsable(true)]
+		[DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+		[Category("Appearance")]
+		[Description("The .NET style of format for displaying the value. Eg. {0:F}, {0:E} etc")]
 		public string ValueFormat
 		{
 			get { return valueFormat; }
 			set
 			{
 				valueFormat = value;
-				RefreshDisplay ();
+				RefreshDisplay();
 			}
 		}
+
 		#endregion ValueFormat
 
 		#region XAxisColor
+
 		/// <summary>
 		/// Color of the X axis
 		/// </summary>
-		[
-		Browsable(true),
-		DesignerSerializationVisibility(DesignerSerializationVisibility.Visible),
-		Category("Appearance"),
-		Description("Color of the X axis")
-		]
+		[Browsable(true)]
+		[DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+		[Category("Appearance")]
+		[Description("Color of the X axis")]
 		public virtual Color XAxisColor
 		{
 			get { return xAxisColor; }
 			set
 			{
 				xAxisColor = value;
-				RefreshDisplay ();
-
+				RefreshDisplay();
 			}
 		}
+
 		#endregion XAxisColor
 
 		#region YAxisColor
+
 		/// <summary>
 		/// Color of the Y axis
 		/// </summary>
-		[
-		Browsable(true),
-		DesignerSerializationVisibility(DesignerSerializationVisibility.Visible),
-		Category("Appearance"),
-		Description("Color of the Y axis")
-		]
+		[Browsable(true)]
+		[DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+		[Category("Appearance")]
+		[Description("Color of the Y axis")]
 		public virtual Color YAxisColor
 		{
 			get { return yAxisColor; }
-			set
-			{
-				yAxisColor = value;
-			}
+			set { yAxisColor = value; }
 		}
+
 		#endregion YAxisColor
 
 		#region Trancparency
+
 		/// <summary>
 		/// The amount of transparency in the bar. Values range from 0 to 255.
 		/// 0 is fully transparent, 255 is opaque.
 		/// </summary>
-		[
-		Browsable(true),
-		DesignerSerializationVisibility(DesignerSerializationVisibility.Visible),
-		Category("Appearance"),
-		Description("The amount of transparency in the bar. Values range from 0 to 255. 0 is fully transparent, 255 is opaque.")
-		]
+		[Browsable(true)]
+		[DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+		[Category("Appearance")]
+		[Description(
+				"The amount of transparency in the bar. Values range from 0 to 255. 0 is fully transparent, 255 is opaque."
+				)]
 		public byte Transparency
 		{
 			get { return transparency; }
 			set
 			{
 				transparency = value;
-				RefreshDisplay ();
+				RefreshDisplay();
 			}
 		}
+
 		#endregion Transparency
 
 		#region GridlineColor
+
 		/// <summary>
 		/// Color of the gridlines
 		/// </summary>
-		[
-		Browsable(true),
-		DesignerSerializationVisibility(DesignerSerializationVisibility.Visible),
-		Category("Appearance"),
-		Description("Color of the grid lines")
-		]
+		[Browsable(true)]
+		[DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+		[Category("Appearance")]
+		[Description("Color of the grid lines")]
 		public Color GridlineColor
 		{
 			get { return gridlineColor; }
 			set
 			{
 				gridlineColor = value;
-				RefreshDisplay ();
+				RefreshDisplay();
 			}
 		}
+
 		#endregion GridlineColor
 
 		#region GraphAreaColor
+
 		/// <summary>
 		/// Color of the graph's area
 		/// </summary>
-		[
-		Browsable(true),
-		DesignerSerializationVisibility(DesignerSerializationVisibility.Visible),
-		Category("Appearance"),
-		Description("Color of the graph's area")
-		]
+		[Browsable(true)]
+		[DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+		[Category("Appearance")]
+		[Description("Color of the graph's area")]
 		public virtual Color GraphAreaColor
 		{
 			get { return graphAreaColor; }
 			set
 			{
 				graphAreaColor = value;
-				RefreshDisplay ();
+				RefreshDisplay();
 			}
 		}
+
 		#endregion GraphAreaColor
 
 		#region Gridlines
-		[
-		/// <summary>
-		/// Style of the gridlines
-		/// </summary>
-		Browsable(true),
-		DesignerSerializationVisibility(DesignerSerializationVisibility.Visible),
-		Category("Appearance"),
-		Description("Style of the gridlines")
-		]
+
+		[ /// <summary>
+				/// Style of the gridlines
+				/// </summary>
+				Browsable(true)]
+		[DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+		[Category("Appearance")]
+		[Description("Style of the gridlines")]
 		public virtual GridStyles Gridlines
 		{
 			get { return gridlines; }
 			set
 			{
 				gridlines = value;
-				RefreshDisplay ();
+				RefreshDisplay();
 			}
 		}
+
 		#endregion Gridlines
 
 		#region GraduationsX
+
 		/// <summary>
 		/// No. of graduations on the X axis
 		/// </summary>
-		[
-		Browsable(true),
-		DesignerSerializationVisibility(DesignerSerializationVisibility.Visible),
-		Category("Appearance"),
-		Description("No. of graduations on the X axis")
-		]
+		[Browsable(true)]
+		[DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+		[Category("Appearance")]
+		[Description("No. of graduations on the X axis")]
 		public int GraduationsX
 		{
 			get { return graduationsX; }
 			set
 			{
 				graduationsX = value;
-				RefreshDisplay ();
+				RefreshDisplay();
 			}
 		}
+
 		#endregion GraduationsX
 
 		#region GraduationsY
+
 		/// <summary>
 		/// No. of graduations on the Y axis
 		/// </summary>
-		[
-		Browsable(true),
-		DesignerSerializationVisibility(DesignerSerializationVisibility.Visible),
-		Category("Appearance"),
-		Description("No. of graduations on the Y axis")
-		]
+		[Browsable(true)]
+		[DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+		[Category("Appearance")]
+		[Description("No. of graduations on the Y axis")]
 		public int GraduationsY
 		{
 			get { return graduationsY; }
 			set
 			{
 				graduationsY = value;
-				RefreshDisplay ();
+				RefreshDisplay();
 			}
 		}
+
 		#endregion GraduationsY
 
 		#region GraphArea
+
 		/// <summary>
 		/// Area of the rectangle that is bounded by the 2 axes. This is the
 		/// area of the graph without any margins
 		/// </summary>
-		[
-		Browsable(false)
-		]
+		[Browsable(false)]
 		public Rectangle GraphArea
 		{
 			get { return graphArea; }
-			set
-			{
-				graphArea = value;
-			}
+			set { graphArea = value; }
 		}
+
 		#endregion GraphArea
+
 		#endregion properties
 
 		#region methods
+
 		/// <summary>
 		/// Clean up any resources being used.
 		/// </summary>
-		protected override void Dispose( bool disposing )
+		protected override void Dispose(bool disposing)
 		{
-			if( disposing )
+			if (disposing)
 			{
-				if( components != null )
+				if (components != null)
+				{
 					components.Dispose();
+				}
 			}
-			base.Dispose( disposing );
+			base.Dispose(disposing);
 		}
 
 		/// <summary>
 		/// Refreshes the display by updating the control. This is the
 		/// refresh method during runtime and in the designer.
 		/// </summary>
-		protected void RefreshDisplay ()
+		protected void RefreshDisplay()
 		{
-			Invalidate ();
-			this.Update ();
+			Invalidate();
+			Update();
 		}
 
 		/// <summary>
 		/// Draws the bar. This method is overridden in the derived class.
 		/// </summary>
 		/// <param name="graphics"></param>
-		public virtual void Draw(Graphics graphics)
-		{
-		}
+		public virtual void Draw(Graphics graphics) {}
 
 		#endregion methods
 	}

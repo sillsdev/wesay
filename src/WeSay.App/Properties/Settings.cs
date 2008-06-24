@@ -1,8 +1,9 @@
+using System.ComponentModel;
 using System.Configuration;
+using Microsoft.Samples.Windows.Forms.RegistrySettingsProvider;
 
-namespace WeSay.App.Properties {
-
-
+namespace WeSay.App.Properties
+{
 	// This class allows you to handle specific events on the settings class:
 	//  The SettingChanging event is raised before a setting's value is changed.
 	//  The PropertyChanged event is raised after a setting's value is changed.
@@ -11,11 +12,11 @@ namespace WeSay.App.Properties {
 
 	//problems with user.config: http://blogs.msdn.com/rprabhu/articles/433979.aspx
 	//registry sample: http://www.sellsbrothers.com/writing/default.aspx?content=dotnet2customsettingsprovider.htm
-	[SettingsProvider(typeof(Microsoft.Samples.Windows.Forms.RegistrySettingsProvider.RegistrySettingsProvider ))]
+	[SettingsProvider(typeof (RegistrySettingsProvider))]
 	internal sealed partial class Settings
 	{
-
-		public Settings() {
+		public Settings()
+		{
 			// // To add event handlers for saving and changing settings, uncomment the lines below:
 			//
 			// this.SettingChanging += this.SettingChangingEventHandler;
@@ -25,7 +26,7 @@ namespace WeSay.App.Properties {
 			PropertyChanged += PropertyChangedEventHandler;
 		}
 
-		private void PropertyChangedEventHandler(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+		private void PropertyChangedEventHandler(object sender, PropertyChangedEventArgs e)
 		{
 			Save();
 		}

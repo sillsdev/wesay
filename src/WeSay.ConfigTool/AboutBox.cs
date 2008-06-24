@@ -1,13 +1,13 @@
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Windows.Forms;
+using System.Diagnostics;
+using System.IO;
 using System.Reflection;
+using System.Windows.Forms;
+using Palaso.Reporting;
 
 namespace WeSay.ConfigTool
 {
-	partial class AboutBox : Form
+	internal partial class AboutBox: Form
 	{
 		public AboutBox()
 		{
@@ -17,9 +17,9 @@ namespace WeSay.ConfigTool
 			//  Change assembly information settings for your application through either:
 			//  - Project->Properties->Application->Assembly Information
 			//  - AssemblyInfo.cs
-			this.Text = String.Format("About {0}", AssemblyTitle);
-			this.labelProductName.Text = AssemblyProduct;
-			this.labelVersion.Text = String.Format("Version {0}", AssemblyVersion);
+			Text = String.Format("About {0}", AssemblyTitle);
+			labelProductName.Text = AssemblyProduct;
+			labelVersion.Text = String.Format("Version {0}", AssemblyVersion);
 		}
 
 		#region Assembly Attribute Accessors
@@ -29,18 +29,22 @@ namespace WeSay.ConfigTool
 			get
 			{
 				// Get all Title attributes on this assembly
-				object[] attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyTitleAttribute), false);
+				object[] attributes =
+						Assembly.GetExecutingAssembly().GetCustomAttributes(
+								typeof (AssemblyTitleAttribute), false);
 				// If there is at least one Title attribute
 				if (attributes.Length > 0)
 				{
 					// Select the first one
-					AssemblyTitleAttribute titleAttribute = (AssemblyTitleAttribute)attributes[0];
+					AssemblyTitleAttribute titleAttribute = (AssemblyTitleAttribute) attributes[0];
 					// If it is not an empty string, return it
 					if (titleAttribute.Title != "")
+					{
 						return titleAttribute.Title;
+					}
 				}
 				// If there was no Title attribute, or if the Title attribute was the empty string, return the .exe name
-				return System.IO.Path.GetFileNameWithoutExtension(Assembly.GetExecutingAssembly().CodeBase);
+				return Path.GetFileNameWithoutExtension(Assembly.GetExecutingAssembly().CodeBase);
 			}
 		}
 
@@ -48,7 +52,7 @@ namespace WeSay.ConfigTool
 		{
 			get
 			{
-				return Palaso.Reporting.ErrorReport.UserFriendlyVersionString;
+				return ErrorReport.UserFriendlyVersionString;
 				//return Assembly.GetExecutingAssembly().GetName().Version.ToString();
 			}
 		}
@@ -58,12 +62,16 @@ namespace WeSay.ConfigTool
 			get
 			{
 				// Get all Description attributes on this assembly
-				object[] attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyDescriptionAttribute), false);
+				object[] attributes =
+						Assembly.GetExecutingAssembly().GetCustomAttributes(
+								typeof (AssemblyDescriptionAttribute), false);
 				// If there aren't any Description attributes, return an empty string
 				if (attributes.Length == 0)
+				{
 					return "";
+				}
 				// If there is a Description attribute, return its value
-				return ((AssemblyDescriptionAttribute)attributes[0]).Description;
+				return ((AssemblyDescriptionAttribute) attributes[0]).Description;
 			}
 		}
 
@@ -72,12 +80,16 @@ namespace WeSay.ConfigTool
 			get
 			{
 				// Get all Product attributes on this assembly
-				object[] attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyProductAttribute), false);
+				object[] attributes =
+						Assembly.GetExecutingAssembly().GetCustomAttributes(
+								typeof (AssemblyProductAttribute), false);
 				// If there aren't any Product attributes, return an empty string
 				if (attributes.Length == 0)
+				{
 					return "";
+				}
 				// If there is a Product attribute, return its value
-				return ((AssemblyProductAttribute)attributes[0]).Product;
+				return ((AssemblyProductAttribute) attributes[0]).Product;
 			}
 		}
 
@@ -86,12 +98,16 @@ namespace WeSay.ConfigTool
 			get
 			{
 				// Get all Copyright attributes on this assembly
-				object[] attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyCopyrightAttribute), false);
+				object[] attributes =
+						Assembly.GetExecutingAssembly().GetCustomAttributes(
+								typeof (AssemblyCopyrightAttribute), false);
 				// If there aren't any Copyright attributes, return an empty string
 				if (attributes.Length == 0)
+				{
 					return "";
+				}
 				// If there is a Copyright attribute, return its value
-				return ((AssemblyCopyrightAttribute)attributes[0]).Copyright;
+				return ((AssemblyCopyrightAttribute) attributes[0]).Copyright;
 			}
 		}
 
@@ -100,21 +116,25 @@ namespace WeSay.ConfigTool
 			get
 			{
 				// GetListOfType all Company attributes on this assembly
-				object[] attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyCompanyAttribute), false);
+				object[] attributes =
+						Assembly.GetExecutingAssembly().GetCustomAttributes(
+								typeof (AssemblyCompanyAttribute), false);
 				// If there aren't any Company attributes, return an empty string
 				if (attributes.Length == 0)
+				{
 					return "";
+				}
 				// If there is a Company attribute, return its value
-				return ((AssemblyCompanyAttribute)attributes[0]).Company;
+				return ((AssemblyCompanyAttribute) attributes[0]).Company;
 			}
 		}
+
 		#endregion
 
 		private void goWeSayOrg_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
 		{
-		 //couldn't figure out how to get that to work:   System.Diagnostics.Process.Start("http://" + e.Link.LinkData);
-			System.Diagnostics.Process.Start("http://www.wesay.org");
-
+			//couldn't figure out how to get that to work:   System.Diagnostics.Process.Start("http://" + e.Link.LinkData);
+			Process.Start("http://www.wesay.org");
 		}
 	}
 }
