@@ -91,6 +91,7 @@
 	<Compile Include="MigrationTests.cs" />
 	<Compile Include="LiftExporterPLiftTests.cs" />
 	<Compile Include="ProjectDirectorySetupForTesting.cs" />
+	<Compile Include="LiftRepositoryTests.cs" />
 	<Compile Include="TestResources.Designer.cs">
 	  <AutoGen>True</AutoGen>
 	  <DesignTime>True</DesignTime>
