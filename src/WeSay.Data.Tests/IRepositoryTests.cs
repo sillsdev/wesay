@@ -110,7 +110,7 @@ namespace WeSay.Data.Tests
 			}
 			else
 			{
-				Assert.Ignore("Does not apply.");
+				Assert.Ignore("Repository supports queries.");
 			}
 		}
 
@@ -123,7 +123,7 @@ namespace WeSay.Data.Tests
 			}
 			else
 			{
-				Assert.IsTrue(true);
+				Assert.Ignore("Repository does not support queries.");
 			}
 		}
 
@@ -287,7 +287,7 @@ namespace WeSay.Data.Tests
 			}
 			else
 			{
-				Assert.Ignore("Does not apply.");
+				Assert.Ignore("Repository does not support queries.");
 			}
 		}
 	}
@@ -509,7 +509,7 @@ namespace WeSay.Data.Tests
 			}
 			else
 			{
-				Assert.Ignore("Does not apply.");
+				Assert.Ignore("Repository does not support queries.");
 			}
 		}
 	}
