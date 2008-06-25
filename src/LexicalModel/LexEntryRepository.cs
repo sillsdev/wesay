@@ -33,6 +33,11 @@ namespace WeSay.LexicalModel
 			}
 		}
 
+		public DateTime LastModified
+		{
+			get { throw new NotImplementedException(); }
+		}
+
 		public LexEntry CreateItem()
 		{
 			LexEntry item = new LexEntry(null, new Guid(), GetNextBirthOrder());
@@ -100,6 +105,21 @@ namespace WeSay.LexicalModel
 			_recordListManager.DataSource.Data.Commit();
 		}
 
+		public bool CanQuery()
+		{
+			throw new NotImplementedException();
+		}
+
+		public bool CanPersist()
+		{
+			throw new NotImplementedException();
+		}
+
+		public RepositoryId[] GetItemsMatchingQuery()
+		{
+			throw new NotImplementedException();
+		}
+
 		public void DeleteItem(LexEntry item)
 		{
 			DeleteItem(GetId(item));
@@ -109,6 +129,16 @@ namespace WeSay.LexicalModel
 		{
 			IRecordList<LexEntry> type = _recordListManager.GetListOfType<LexEntry>();
 			type.Remove(GetItem(repositoryId));
+		}
+
+		public RepositoryId[] GetAllItems()
+		{
+			throw new NotImplementedException();
+		}
+
+		public RepositoryId[] ItemsModifiedSince(DateTime dateTime)
+		{
+			throw new NotImplementedException();
 		}
 
 		public IQuery<LexEntry> GetLexEntryQuery(WritingSystem writingSystem, bool isWritingSystemUsedByLexicalForm)
