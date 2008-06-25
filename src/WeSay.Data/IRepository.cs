@@ -16,5 +16,8 @@ namespace WeSay.Data
 		RepositoryId[] GetAllItems();
 		RepositoryId[] ItemsModifiedSince(DateTime dateTime);
 		void SaveItem(T item);
+		bool CanQuery();
+		bool CanPersist();
+		RepositoryId[] GetItemsMatchingQuery();
 	}
 }

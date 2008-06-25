@@ -1,5 +1,4 @@
 using System;
-using System.Globalization;
 using System.Threading;
 using NUnit.Framework;
 using WeSay.Data;
@@ -99,6 +98,33 @@ namespace WeSay.Data.Tests
 		public void ItemsModifiedSince_ReturnsEmptyArray()
 		{
 			Assert.IsEmpty(RepositoryUnderTest.ItemsModifiedSince(DateTime.MinValue));
+		}
+
+		[Test]
+		[ExpectedException(typeof(NotSupportedException))]
+		public void GetItemMatchingQuery_CanQueryIsFalse_Throws()
+		{
+			if(!RepositoryUnderTest.CanQuery())
+			{
+				RepositoryUnderTest.GetItemsMatchingQuery();
+			}
+			else
+			{
+				Assert.Ignore("Does not apply.");
+			}
+		}
+
+		[Test]
+		public void GetItemMatchingQuery_Query_ReturnsItemsMatchingQuery()
+		{
+			if(RepositoryUnderTest.CanQuery())
+			{
+				Assert.IsEmpty(RepositoryUnderTest.GetItemsMatchingQuery());
+			}
+			else
+			{
+				Assert.IsTrue(true);
+			}
 		}
 
 		class MyRepositoryId : RepositoryId
@@ -208,7 +234,7 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		public void ItemsModifiedSince_SaveItem_ReturnsItem()
+		public void ItemsModifiedSince_SaveItem_ReturnsItemAsModified()
 		{
 			SetState();
 			Thread.Sleep(50);
@@ -241,7 +267,6 @@ namespace WeSay.Data.Tests
 		//any input ItemsModifiedSince() to UTC. That is what this test checks for everybody else.
 		public void ItemsModifiedSince_NonUTCDateTime_ReturnsIdsModifiedSince()
 		{
-			TimeSpan OffSet = new TimeSpan(0, 2, 0); //2 minutes
 			SetState();
 			Thread.Sleep(50);
 			DateTime timeBetweenCreatedItems = DateTime.Now;
@@ -250,6 +275,19 @@ namespace WeSay.Data.Tests
 			Assert.AreEqual(1, RepositoryUnderTest.ItemsModifiedSince(timeBetweenCreatedItems).Length);
 			Assert.AreEqual(RepositoryUnderTest.GetId(item2),
 				RepositoryUnderTest.ItemsModifiedSince(timeBetweenCreatedItems)[0]);
+		}
+
+		[Test]
+		public void GetItemMatchingQuery_Query_ReturnsitemsMatchingQuery()
+		{
+			if(RepositoryUnderTest.CanQuery())
+			{
+				Assert.AreEqual(RepositoryUnderTest.GetId(item), RepositoryUnderTest.GetItemsMatchingQuery());
+			}
+			else
+			{
+				Assert.Ignore("Does not apply.");
+			}
 		}
 	}
 
@@ -348,6 +386,19 @@ namespace WeSay.Data.Tests
 			SetState();
 			Assert.IsEmpty(RepositoryUnderTest.ItemsModifiedSince(DateTime.MinValue));
 		}
+
+		[Test]
+		public void GetItemMatchingQuery_ReturnsEmpty()
+		{
+			if (RepositoryUnderTest.CanQuery())
+			{
+				Assert.IsEmpty(RepositoryUnderTest.GetItemsMatchingQuery());
+			}
+			else
+			{
+				Assert.Ignore("Does not apply.");
+			}
+		}
 	}
 
 	public class IRepositoryDeleteIdTransitionTests<T> where T : new()
@@ -444,6 +495,19 @@ namespace WeSay.Data.Tests
 		{
 			SetState();
 			Assert.IsEmpty(RepositoryUnderTest.ItemsModifiedSince(DateTime.MinValue));
+		}
+
+		[Test]
+		public void GetItemMatchingQuery_ReturnsEmpty()
+		{
+			if (RepositoryUnderTest.CanQuery())
+			{
+				Assert.IsEmpty(RepositoryUnderTest.GetItemsMatchingQuery());
+			}
+			else
+			{
+				Assert.Ignore("Does not apply.");
+			}
 		}
 	}
 }

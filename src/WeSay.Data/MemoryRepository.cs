@@ -112,6 +112,21 @@ namespace WeSay.Data
 			LastModified = timeOfSave;
 		}
 
+		public bool CanQuery()
+		{
+			return false;
+		}
+
+		public bool CanPersist()
+		{
+			return false;
+		}
+
+		public RepositoryId[] GetItemsMatchingQuery()
+		{
+			throw new NotSupportedException("A MemoryRepository can not be queried.");
+		}
+
 		public int CountAllItems()
 		{
 			return idToObjectHashtable.Count;
