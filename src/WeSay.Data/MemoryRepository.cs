@@ -127,6 +127,11 @@ namespace WeSay.Data
 			throw new NotSupportedException("A MemoryRepository can not be queried.");
 		}
 
+		public void Dispose()
+		{
+			//do nothing
+		}
+
 		public int CountAllItems()
 		{
 			return idToObjectHashtable.Count;

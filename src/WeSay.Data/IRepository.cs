@@ -19,5 +19,6 @@ namespace WeSay.Data
 		bool CanQuery();
 		bool CanPersist();
 		RepositoryId[] GetItemsMatchingQuery();
+		void Dispose();
 	}
 }
