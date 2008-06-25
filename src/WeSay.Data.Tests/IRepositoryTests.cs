@@ -280,6 +280,7 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void GetItemMatchingQuery_Query_ReturnsitemsMatchingQuery()
 		{
+			SetState();
 			if(RepositoryUnderTest.CanQuery())
 			{
 				Assert.AreEqual(RepositoryUnderTest.GetId(item), RepositoryUnderTest.GetItemsMatchingQuery());
@@ -390,6 +391,7 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void GetItemMatchingQuery_ReturnsEmpty()
 		{
+			SetState();
 			if (RepositoryUnderTest.CanQuery())
 			{
 				Assert.IsEmpty(RepositoryUnderTest.GetItemsMatchingQuery());
@@ -500,6 +502,7 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void GetItemMatchingQuery_ReturnsEmpty()
 		{
+			SetState();
 			if (RepositoryUnderTest.CanQuery())
 			{
 				Assert.IsEmpty(RepositoryUnderTest.GetItemsMatchingQuery());
