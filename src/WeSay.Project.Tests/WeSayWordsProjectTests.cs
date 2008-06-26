@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
+using System.Xml;
+using System.Xml.XPath;
 using NUnit.Framework;
 using Palaso.Reporting;
 using WeSay.Foundation.Options;
@@ -11,6 +13,8 @@ namespace WeSay.Project.Tests
 	public class WeSayWordsProjectTests
 	{
 		private string _projectDirectory;
+		private string _pathToInputConfig;
+		private string _outputPath;
 
 		[SetUp]
 		public void Setup()
@@ -18,12 +22,16 @@ namespace WeSay.Project.Tests
 			Palaso.Reporting.ErrorReport.IsOkToInteractWithUser = false;
 			DirectoryInfo dirProject = Directory.CreateDirectory(Path.Combine(Path.GetTempPath(), Path.GetRandomFileName()));
 			this._projectDirectory = dirProject.FullName;
+			_pathToInputConfig = Path.GetTempFileName();
+			_outputPath = Path.GetTempFileName();
 		}
 
 		[TearDown]
 		public void TearDown()
 		{
 			Directory.Delete(this._projectDirectory, true);
+			File.Delete(_pathToInputConfig);
+			File.Delete(_outputPath);
 		}
 
 
@@ -144,6 +152,26 @@ namespace WeSay.Project.Tests
 			TryFieldNameChangeAfterMakingSafe("{color", "}color");
 			TryFieldNameChangeAfterMakingSafe("color{", "color}");
 			TryFieldNameChangeAfterMakingSafe("?color{", "color");
+		}
+
+		[Test]
+		public void MigrateAndSaveProduceSameVersion()
+		{
+			File.WriteAllText(_pathToInputConfig, "<?xml version='1.0' encoding='utf-8'?><tasks><components><viewTemplate></viewTemplate></components><task id='Dashboard' class='WeSay.CommonTools.DashboardControl' assembly='CommonTools' default='true'></task></tasks>");
+			XPathDocument doc = new XPathDocument(_pathToInputConfig);
+			WeSay.Project.WeSayWordsProject.MigrateConfigurationXmlIfNeeded(doc, _outputPath);
+			XmlDocument docFile = new XmlDocument();
+			docFile.Load(_outputPath);
+			XmlNode node = docFile.SelectSingleNode("configuration");
+			string migrateVersion = node.Attributes["version"].Value;
+
+			WeSayWordsProject p = CreateAndLoad(true);
+			p.Save();
+			docFile.Load(p.PathToConfigFile);
+			node = docFile.SelectSingleNode("configuration");
+			string saveVersion = node.Attributes["version"].Value;
+
+			Assert.AreEqual(saveVersion, migrateVersion);
 		}
 
 //        [Test]

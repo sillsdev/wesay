@@ -393,6 +393,15 @@ namespace WeSay.App
 
 			WeSayWordsProject.Project.LockLift(); // Consume will expect it to be locked already
 
+			try
+			{
+				project.MigrateConfigurationXmlIfNeeded();
+			}
+			catch (Exception e)
+			{
+				Logger.WriteMinorEvent("Exception while migrating configuration file: {0}", e.ToString());
+			}
+
 			return project;
 		}
 

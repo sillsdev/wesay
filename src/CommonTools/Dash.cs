@@ -814,7 +814,7 @@ namespace WeSay.CommonTools
 			Font localizedFont = StringCatalog.ModifyFontForLocalization(SystemFonts.DefaultFont);
 			Font boldFont = new Font(localizedFont, FontStyle.Bold);
 			List<Size> possibleSizes = DisplaySettings.GetPossibleTextSizes(g, GetToolTipDescription(button.ThingToShowOnDashboard), localizedFont, ToolTipFormatFlags);
-			Size bestSize = GetBestSizeBasedOnRatio(possibleSizes, 3.0);
+			Size bestSize = GetBestSizeBasedOnRatio(possibleSizes, GoldRatio);
 			bestSize.Width += 15;
 			bestSize.Height += TextRenderer.MeasureText(g, title, boldFont, new Size(bestSize.Width, int.MaxValue), ToolTipFormatFlags).Height;
 			e.ToolTipSize = new Size(bestSize.Width + 6, bestSize.Height + 8);

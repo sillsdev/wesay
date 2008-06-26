@@ -39,7 +39,6 @@ namespace WeSay.Project.Tests
 			outputDoc.Load(_outputPath);
 			Assert.IsNotNull(outputDoc.SelectSingleNode("configuration[@version='2']"));
 		}
-
 		[Test]
 		public void DoesMigrateV1File()
 		{
@@ -47,15 +46,37 @@ namespace WeSay.Project.Tests
 							  "<?xml version='1.0' encoding='utf-8'?><configuration version='1'><components><viewTemplate></viewTemplate></components><tasks><task id='Dashboard' class='WeSay.CommonTools.DashboardControl' assembly='CommonTools' default='true'></task></tasks></configuration>");
 			XPathDocument doc = new XPathDocument(_pathToInputConfig);
 			bool didMigrate = WeSay.Project.WeSayWordsProject.MigrateConfigurationXmlIfNeeded(doc, _outputPath);
-			 Assert.IsTrue(didMigrate);
+			Assert.IsTrue(didMigrate);
 			AssertXPathNotNull("configuration[@version='2']", _outputPath);
 		}
 
+		//TODO: When updating to new dashboard, remove this test and don't ignore "DoesMigrateV2File" and "DoesNotTouchV3File"
 		[Test]
 		public void DoesNotTouchV2File()
 		{
 			File.WriteAllText(_pathToInputConfig,
 							  "<?xml version='1.0' encoding='utf-8'?><configuration version='2'></configuration>");
+			XPathDocument doc = new XPathDocument(_pathToInputConfig);
+			bool didMigrate = WeSay.Project.WeSayWordsProject.MigrateConfigurationXmlIfNeeded(doc, _outputPath);
+			Assert.IsFalse(didMigrate);
+		}
+
+		[Test, Ignore]
+		public void DoesMigrateV2File()
+		{
+			File.WriteAllText(_pathToInputConfig,
+							  "<?xml version='1.0' encoding='utf-8'?><configuration version='2'><components><viewTemplate></viewTemplate></components><tasks><task id='Dashboard' class='WeSay.CommonTools.DashboardControl' assembly='CommonTools' default='true'></task></tasks></configuration>");
+			XPathDocument doc = new XPathDocument(_pathToInputConfig);
+			bool didMigrate = WeSay.Project.WeSayWordsProject.MigrateConfigurationXmlIfNeeded(doc, _outputPath);
+			Assert.IsTrue(didMigrate);
+			AssertXPathNotNull("configuration[@version='3']", _outputPath);
+		}
+
+		[Test, Ignore]
+		public void DoesNotTouchV3File()
+		{
+			File.WriteAllText(_pathToInputConfig,
+							  "<?xml version='1.0' encoding='utf-8'?><configuration version='3'></configuration>");
 			XPathDocument doc = new XPathDocument(_pathToInputConfig);
 			bool didMigrate = WeSay.Project.WeSayWordsProject.MigrateConfigurationXmlIfNeeded(doc, _outputPath);
 			Assert.IsFalse(didMigrate);
