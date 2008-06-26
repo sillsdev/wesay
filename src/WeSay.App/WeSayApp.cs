@@ -397,9 +397,9 @@ namespace WeSay.App
 			{
 				project.MigrateConfigurationXmlIfNeeded();
 			}
-			catch (Exception e)
+			catch
 			{
-				Logger.WriteMinorEvent("Exception while migrating configuration file: {0}", e.ToString());
+				ErrorReport.ReportNonFatalMessage("WeSay was unable to migrate the WeSay configuration file for the new version of WeSay. This may cause WeSay to not function properly. Try opening the project in the WeSay Configuration Tool to fix this.");
 			}
 
 			return project;
