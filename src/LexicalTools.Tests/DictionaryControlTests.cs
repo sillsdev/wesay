@@ -360,6 +360,17 @@ namespace WeSay.LexicalTools.Tests
 		}
 
 		[Test]
+		public void EmptyDictionary_AddWordsTwice_OneWordExists()
+		{
+			ListViewTester l = new ListViewTester("_recordsListBox", _window);
+			StartWithEmpty();
+			ClickAddWord();
+			Assert.AreEqual(1, l.Properties.Items.Count);
+			ClickAddWord();
+			Assert.AreEqual(1, l.Properties.Items.Count);
+		}
+
+		[Test]
 		public void EmptyDictionary_AddWords_CanTypeInFirstField()
 		{
 			DeleteAllEntries();

@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
@@ -426,15 +427,46 @@ namespace WeSay.LexicalTools
 		{
 			Logger.WriteEvent("NewWord_Click");
 
-			LexEntry entry = new LexEntry();
+			LexEntry entry = null;
+			string lexicalForm = string.Empty;
+			bool needNewEntry = true;
 			//bool NoPriorSelection = _recordsListBox.SelectedIndex == -1;
 			//_recordListBoxActive = true; // allow onRecordSelectionChanged
 			if (_findText.Focused
 				&& !string.IsNullOrEmpty(_findText.Text)
 				&& IsWritingSystemUsedInLexicalForm(_listWritingSystem))
-				//todo only create new when not found (doesn't already exist)
 			{
-				entry.LexicalForm[_listWritingSystem.Id] = _findText.Text.Trim();
+				lexicalForm = _findText.Text.Trim();
+				//only create new when not found (doesn't already exist)
+				int index = ((CachedSortedDb4oList<string, LexEntry>)_records).BinarySearch(lexicalForm);
+				if (index >= 0)
+				{
+					_recordsListBox.SelectedIndex = index;
+					entry = CurrentRecord;
+					needNewEntry = false;
+				}
+			}
+
+			List<LexEntry> emptyList = Lexicon.GetEntriesHavingLexicalForm("(Empty)", _listWritingSystem);
+			if (emptyList.Count > 0 && needNewEntry)
+			{
+				foreach (LexEntry emptyEntry in emptyList)
+				{
+					if (emptyEntry.LexicalForm[_listWritingSystem.Id] != "(Empty)")
+					{
+						entry = emptyEntry;
+						entry.LexicalForm[_listWritingSystem.Id] = lexicalForm;
+						needNewEntry = false;
+						break;
+					}
+				}
+			}
+
+			if (needNewEntry)
+			{
+				entry = new LexEntry();
+				entry.LexicalForm[_listWritingSystem.Id] = lexicalForm;
+				_records.Add(entry);
 			}
 
 			if (!_btnNewWord.Focused)
@@ -444,7 +476,6 @@ namespace WeSay.LexicalTools
 				_btnNewWord.Focus();
 			}
 
-			_records.Add(entry);
 			_recordsListBox.SelectedIndex = _records.IndexOf(entry);
 			//if (NoPriorSelection)
 			//{
