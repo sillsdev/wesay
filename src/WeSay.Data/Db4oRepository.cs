@@ -8,16 +8,7 @@ namespace WeSay.Data
 {
 	public class Db4oRepository<T> : IRepository<T> where T:class, new()
 	{
-		private readonly PrivateDb4oRecordListManager _recordListManager;
-
-		//todo make this private and remove it.
-		public Db4oDataSource Db4oDataSource
-		{
-			get
-			{
-				return _recordListManager.DataSource;
-			}
-		}
+		//private readonly PrivateDb4oRecordListManager _recordListManager;
 
 		public Db4oRepository(string path)
 		{
