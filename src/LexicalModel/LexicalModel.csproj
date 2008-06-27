@@ -73,15 +73,11 @@
 	<Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-	<Compile Include="Db4oSpecific\Db4oHeadwordQuery.cs" />
-	<Compile Include="Db4oSpecific\Db4oLexEntryQuery.cs" />
 	<Compile Include="Db4oSpecific\Db4oLexModelHelper.cs" />
 	<Compile Include="Db4oSpecific\LexEntryFinder.cs" />
 	<Compile Include="Db4oSpecific\WeSayWordsDb4oModelConfiguration.cs" />
-	<Compile Include="Db4oSpecific\KeyToEntryIdInitializer.cs" />
 	<Compile Include="LexEntry.cs" />
 	<Compile Include="LexEntryRepository.cs" />
-	<Compile Include="LexEntrySortHelper.cs" />
 	<Compile Include="LexExampleSentence.cs" />
 	<Compile Include="LexRelation.cs" />
 	<Compile Include="LexSense.cs" />

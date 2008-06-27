@@ -7,7 +7,7 @@ namespace WeSay.LexicalTools.Tests
 	[TestFixture]
 	public class MissingExampleSentenceFilterTests
 	{
-		private MissingItemFilter _missingExampleSentenceFilter;
+		private MissingFieldQuery _missingExampleSentenceFilter;
 		//private string kNameOfSkipTrait = "flag_skip_LexExampleSentence";
 
 		[SetUp]
@@ -17,7 +17,7 @@ namespace WeSay.LexicalTools.Tests
 					new Field(Field.FieldNames.ExampleSentence.ToString(),
 							  "LexExampleSentence",
 							  new string[] {"vernacular"});
-			_missingExampleSentenceFilter = new MissingItemFilter(field);
+			_missingExampleSentenceFilter = new MissingFieldQuery(field);
 		}
 
 		[Test]

@@ -2,7 +2,7 @@ using System;
 
 namespace WeSay.Data.Tests
 {
-	public class SimpleIntFilter: IFilter<SimpleIntTestClass>
+	public class SimpleIntFilter: IFieldQuery<SimpleIntTestClass>
 	{
 		private readonly int _lowerBound;
 		private readonly int _upperBound;

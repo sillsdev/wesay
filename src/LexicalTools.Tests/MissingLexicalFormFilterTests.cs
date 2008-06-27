@@ -7,7 +7,7 @@ namespace WeSay.LexicalTools.Tests
 	[TestFixture]
 	public class MissingLexicalFormFilterTests
 	{
-		private MissingItemFilter _missingLexicalFormFilter;
+		private MissingFieldQuery _missingLexicalFormFilter;
 
 		[SetUp]
 		public void Setup()
@@ -16,7 +16,7 @@ namespace WeSay.LexicalTools.Tests
 					new Field(Field.FieldNames.EntryLexicalForm.ToString(),
 							  "LexEntry",
 							  new string[] {"vernacular"});
-			_missingLexicalFormFilter = new MissingItemFilter(field);
+			_missingLexicalFormFilter = new MissingFieldQuery(field);
 		}
 
 		[Test]

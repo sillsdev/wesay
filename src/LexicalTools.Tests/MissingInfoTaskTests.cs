@@ -11,7 +11,7 @@ namespace WeSay.LexicalTools.Tests
 	[TestFixture]
 	public class MissingInfoTaskTests: TaskBaseTests
 	{
-		private class NoEntriesFilter: IFilter<LexEntry>
+		private class NoEntriesFilter: IFieldQuery<LexEntry>
 		{
 			public Predicate<LexEntry> FilteringPredicate
 			{
@@ -32,7 +32,7 @@ namespace WeSay.LexicalTools.Tests
 		private LexEntryRepository _lexEntryRepository;
 		private string _filePath;
 
-		private IFilter<LexEntry> _filter;
+		private IFieldQuery<LexEntry> _filter;
 		private string _fieldsToShow;
 		private string _label;
 		private string _description;
@@ -55,7 +55,7 @@ namespace WeSay.LexicalTools.Tests
 					new Field(LexSense.WellKnownProperties.Definition,
 							  "LexSense",
 							  new string[] {"analysis"});
-			_filter = new MissingItemFilter(field);
+			_filter = new MissingFieldQuery(field);
 
 			LexEntry entry = _lexEntryRepository.CreateItem();
 			_lexicalForm = "vernacular";
@@ -105,7 +105,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void Create_RecordsIsEmpty()
 		{
-			IFilter<LexEntry> filter = new NoEntriesFilter();
+			IFieldQuery<LexEntry> filter = new NoEntriesFilter();
 			MissingInfoTask task =
 					new MissingInfoTask(_lexEntryRepository,
 										filter,

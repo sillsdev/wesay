@@ -20,7 +20,7 @@ namespace WeSay.LexicalTools.Tests
 		private MissingTranslationFilter _missingTranslation;
 		private WritingSystem _writingSystem;
 
-		public class MissingTranslationFilter: IFilter<LexEntry>
+		public class MissingTranslationFilter: IFieldQuery<LexEntry>
 		{
 			private static bool IsMissingTranslation(LexEntry entry)
 			{

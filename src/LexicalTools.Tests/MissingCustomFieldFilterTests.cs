@@ -9,14 +9,14 @@ namespace WeSay.LexicalTools.Tests
 	[TestFixture]
 	public class MissingSenseExampleCustomFieldFilterTests
 	{
-		private MissingItemFilter _missingCustomFieldFilter;
+		private MissingFieldQuery _missingCustomFieldFilter;
 
 		[SetUp]
 		public void Setup()
 		{
 			Field field =
 					new Field("customField", "LexExampleSentence", new string[] {"vernacular"});
-			_missingCustomFieldFilter = new MissingItemFilter(field);
+			_missingCustomFieldFilter = new MissingFieldQuery(field);
 		}
 
 		[Test]
@@ -129,13 +129,13 @@ namespace WeSay.LexicalTools.Tests
 	[TestFixture]
 	public class MissingEntryCustomFieldFilterTests
 	{
-		private MissingItemFilter _missingCustomFieldFilter;
+		private MissingFieldQuery _missingCustomFieldFilter;
 
 		[SetUp]
 		public void Setup()
 		{
 			Field field = new Field("customField", "LexEntry", new string[] {"vernacular"});
-			_missingCustomFieldFilter = new MissingItemFilter(field);
+			_missingCustomFieldFilter = new MissingFieldQuery(field);
 		}
 
 		[Test]
@@ -169,7 +169,7 @@ namespace WeSay.LexicalTools.Tests
 	[TestFixture]
 	public class MissingSenseCustomFieldFilterTests
 	{
-		private MissingItemFilter _missingCustomFieldFilter;
+		private MissingFieldQuery _missingCustomFieldFilter;
 
 		[SetUp]
 		public void Setup()
@@ -180,7 +180,7 @@ namespace WeSay.LexicalTools.Tests
 							  new string[] {"vernacular"},
 							  Field.MultiplicityType.ZeroOr1,
 							  "Option");
-			_missingCustomFieldFilter = new MissingItemFilter(field);
+			_missingCustomFieldFilter = new MissingFieldQuery(field);
 		}
 
 		[Test]
