@@ -23,9 +23,9 @@ namespace WeSay.LexicalModel.Db4oSpecific
 			_writingSystem = writingSystem;
 		}
 
-		public IEnumerable<string> GetDisplayStrings(LexEntry item)
+		public IEnumerable<string[]> GetDisplayStrings(LexEntry item)
 		{
-			List<string> keys = new List<string>();
+			List<string[]> keys = new List<string[]>();
 			string form = item.GetHeadWordForm(_writingSystem.Id);
 			byte[] keydata = _writingSystem.GetSortKey(form).KeyData;
 
@@ -38,7 +38,9 @@ namespace WeSay.LexicalModel.Db4oSpecific
 			string universalSortableDateTimePattern = DateTimeFormatInfo.InvariantInfo.UniversalSortableDateTimePattern;
 			key += "_" + item.CreationTime.ToString(universalSortableDateTimePattern);
 
-			keys.Add(key);
+			string[] columns = new string[1];
+			columns[0] = key;
+			keys.Add(columns);
 			return keys;
 		}
 
@@ -54,12 +56,10 @@ namespace WeSay.LexicalModel.Db4oSpecific
 			foreach (LexEntry entry in set)
 			{
 				int i = 0;
-				foreach (string key in GetDisplayStrings(entry))
+				foreach (string[] key in GetDisplayStrings(entry))
 				{
 					result.Add(
 							new RecordToken<LexEntry>(_repository,
-													  this,
-													  i,
 													  key,
 													  new Db4oRepositoryId(
 															  _db4oData.Data.Ext().GetID(entry))));

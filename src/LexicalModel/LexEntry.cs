@@ -413,7 +413,16 @@ namespace WeSay.LexicalModel
 				NotifyPropertyChanged("order");
 			}
 		}
-
+		public MultiText VirtualHeadWord
+		{
+			get
+			{
+				MultiText headword = new MultiText();
+				headword.MergeIn(LexicalForm);
+				headword.MergeIn(CitationForm);
+				return headword;
+			}
+		}
 		public LanguageForm GetHeadWord(string writingSystemId)
 		{
 			if (string.IsNullOrEmpty(writingSystemId))

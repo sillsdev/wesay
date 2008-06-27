@@ -33,7 +33,7 @@ namespace WeSay.LexicalModel.Db4oSpecific
 			_isWritingSystemIdUsedByLexicalForm = isWritingSystemIdUsedByLexicalForm;
 		}
 
-		public IEnumerable<string> GetDisplayStrings(LexEntry item)
+		public IEnumerable<string[]> GetDisplayStrings(LexEntry item)
 		{
 			//List<string> keys = new List<string>();
 			//using a dictionary here just to prevent duplicate keys
@@ -90,7 +90,12 @@ namespace WeSay.LexicalModel.Db4oSpecific
 							null);
 				}
 			}
-			return keys.Keys;
+			foreach (string key in keys.Keys)
+			{
+				string[] columns = new string[1];
+				columns[0] = key;
+				yield return columns;
+			}
 		}
 
 		public ResultSet<LexEntry> RetrieveItems()
@@ -118,10 +123,10 @@ namespace WeSay.LexicalModel.Db4oSpecific
 					{
 						LexEntry entry = _lexEntryRepository.GetItem(id);
 						int i = 0;
-						foreach (string s in GetDisplayStrings(entry))
+						foreach (string[] s in GetDisplayStrings(entry))
 						{
 							tokens.Add(
-									new RecordToken<LexEntry>(_lexEntryRepository, this, i, s, id));
+									new RecordToken<LexEntry>(_lexEntryRepository, s, id));
 							++i;
 						}
 					}
@@ -173,7 +178,7 @@ namespace WeSay.LexicalModel.Db4oSpecific
 								delegate(RecordToken<LexEntry> match) { return match.Id == id; }).
 								Count;
 				result.Add(
-						new RecordToken<LexEntry>(_lexEntryRepository, this, i, displayString, id));
+						new RecordToken<LexEntry>(_lexEntryRepository, displayString, id));
 			}
 
 			Db4oLexModelHelper.Singleton.DoNotActivateTypes = OriginalList;

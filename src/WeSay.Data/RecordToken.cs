@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace WeSay.Data
@@ -7,7 +8,7 @@ namespace WeSay.Data
 	{
 		public delegate IEnumerable<string[]> DisplayStringGenerator(T item);
 
-		private readonly string[] _displayStrings;
+		private readonly Dictionary<string, object> _queryResults;
 		private readonly RepositoryId _id;
 		private readonly IRepository<T> _repository;
 
@@ -20,47 +21,33 @@ namespace WeSay.Data
 			_repository = repository;
 		}
 
+		[Obsolete]
 		public RecordToken(IRepository<T> repository,
 						   string s,
 						   RepositoryId id)
-			: this(repository, new string[] { s }, id)
+			: this(repository, new Dictionary<string, object>(), id)
 		{
+			_queryResults.Add("", s);
 		}
 
 		public RecordToken(IRepository<T> repository,
-				   string[] s,
+				   Dictionary<string, object> queryResults,
 				   RepositoryId id)
 			: this(repository)
 		{
-			_displayStrings = s;
+			_queryResults = queryResults;
 			_id = id;
 		}
 
+		[Obsolete]
 		public string DisplayString
 		{
-			get { return _displayStrings[0]; }
+			get { return (string)_queryResults[""]; }
 		}
 
 		public RepositoryId Id
 		{
 			get { return _id; }
-		}
-
-		public override string ToString()
-		{
-			return DisplayString;
-		}
-
-		private static bool ContainSameResults(string[] results, string[] strings)
-		{
-			if(results.Length != strings.Length)
-				return false;
-			for(int i = 0; i != results.Length;++i)
-			{
-				if(results[i] != strings[i])
-					return false;
-			}
-			return true;
 		}
 
 		// proxy object
@@ -69,11 +56,11 @@ namespace WeSay.Data
 			get { return _repository.GetItem(Id); }
 		}
 
-		public string[] Results
+		public IDictionary<string, object> Results
 		{
 			get
 			{
-				return _displayStrings;
+				return _queryResults;
 			}
 		}
 
@@ -93,8 +80,9 @@ namespace WeSay.Data
 			{
 				return false;
 			}
-			return ContainSameResults(_displayStrings, recordToken._displayStrings)
-				   && Equals(_id, recordToken._id);
+			return Equals(_id, recordToken._id)
+				   && new DictionaryEqualityComparer<string, object>()
+					  .Equals(_queryResults, recordToken._queryResults);
 		}
 
 		public override bool Equals(object obj)
@@ -106,10 +94,34 @@ namespace WeSay.Data
 			return Equals(obj as RecordToken<T>);
 		}
 
-		//todo: fixme to incorporate each of the displaystrings
 		public override int GetHashCode()
 		{
-			return _displayStrings.GetHashCode() + 29 * _id.GetHashCode();
+			int queryResultsHash = new DictionaryEqualityComparer<string, object>()
+											.GetHashCode(this._queryResults);
+			return queryResultsHash + 29 * _id.GetHashCode();
 		}
 	}
+
+	//todo: write tests and hashcode
+	public class DictionaryEqualityComparer<Key, Value> : EqualityComparer<Dictionary<Key, Value>>
+	{
+		public override bool Equals(Dictionary<Key, Value> x, Dictionary<Key, Value> y)
+		{
+			if (x.Count != y.Count)
+				return false;
+			foreach (Key key in x.Keys)
+			{
+				if (!Equals(x[key],y[key]))
+					return false;
+			}
+			return true;
+		}
+
+		public override int GetHashCode(Dictionary<Key, Value> obj)
+		{
+			throw new NotImplementedException();
+		}
+	}
+
+
 }
