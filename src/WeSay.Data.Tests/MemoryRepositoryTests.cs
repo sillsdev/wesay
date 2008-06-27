@@ -12,6 +12,12 @@ namespace WeSay.Data.Tests
 			RepositoryUnderTest = new MemoryRepository<TestItem>();
 		}
 
+		[TearDown]
+		public void Teardown()
+		{
+			RepositoryUnderTest.Dispose();
+		}
+
 	}
 
 	[TestFixture]
@@ -23,6 +29,11 @@ namespace WeSay.Data.Tests
 			RepositoryUnderTest = new MemoryRepository<TestItem>();
 		}
 
+		[TearDown]
+		public void Teardown()
+		{
+			RepositoryUnderTest.Dispose();
+		}
 	}
 
 	[TestFixture]
@@ -34,6 +45,11 @@ namespace WeSay.Data.Tests
 			RepositoryUnderTest = new MemoryRepository<TestItem>();
 		}
 
+		[TearDown]
+		public void Teardown()
+		{
+			RepositoryUnderTest.Dispose();
+		}
 	}
 
 	[TestFixture]
@@ -45,5 +61,10 @@ namespace WeSay.Data.Tests
 			RepositoryUnderTest = new MemoryRepository<TestItem>();
 		}
 
+		[TearDown]
+		public void Teardown()
+		{
+			RepositoryUnderTest.Dispose();
+		}
 	}
 }

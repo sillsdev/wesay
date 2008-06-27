@@ -2,7 +2,7 @@ using System;
 using System.ComponentModel;
 using System.Threading;
 using NUnit.Framework;
-using WeSay.LexicalModel.Db4oSpecific;
+using WeSay.LexicalModel.Tests.Db4oSpecific;
 
 namespace WeSay.LexicalModel.Tests
 {

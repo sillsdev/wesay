@@ -1,10 +1,11 @@
 using System.ComponentModel;
 using System.IO;
+using Db4objects.Db4o;
+using Db4objects.Db4o.Events;
 using NUnit.Framework;
 using WeSay.Data;
 using WeSay.Foundation;
 using WeSay.Foundation.Options;
-using WeSay.LexicalModel.Db4oSpecific;
 
 namespace WeSay.LexicalModel.Tests.Db4oSpecific
 {
@@ -14,8 +15,26 @@ namespace WeSay.LexicalModel.Tests.Db4oSpecific
 		protected bool _didNotify;
 
 		protected string _filePath;
-		protected LexEntryRepository _lexEntryRepository = null;
+		private Db4oRepository<LexEntry> _db4oRepository = null;
+		/// <summary>
+		/// for tests
+		/// </summary>
+		private int _activationCount = 0;
 
+		private Db4oDataSource _container;
+
+		/// <summary>
+		/// how many times an Object has been activated
+		/// </summary>
+		public int ActivationCount
+		{
+			get { return this._activationCount; }
+		}
+
+		private void OnActivated(object sender, ObjectEventArgs args)
+		{
+			this._activationCount++;
+		}
 		[SetUp]
 		public void Setup()
 		{
@@ -26,12 +45,16 @@ namespace WeSay.LexicalModel.Tests.Db4oSpecific
 		[TearDown]
 		public void TearDown()
 		{
-			if (_lexEntryRepository != null)
+			IEventRegistry r = EventRegistryFactory.ForObjectContainer(this._container);
+			r.Activated -= OnActivated;
+			this._container = null;
+
+			if (_db4oRepository != null)
 			{
-				_lexEntryRepository.Dispose();
+				_db4oRepository.Dispose();
 			}
 
-			if (_filePath != "")
+			if (File.Exists(_filePath))
 			{
 				File.Delete(_filePath);
 			}
@@ -39,19 +62,23 @@ namespace WeSay.LexicalModel.Tests.Db4oSpecific
 
 		protected void CycleDatabase()
 		{
-			if (_lexEntryRepository != null)
+			if (_db4oRepository != null)
 			{
-				_lexEntryRepository.Dispose();
+				_db4oRepository.Dispose();
 			}
-			_lexEntryRepository = new LexEntryRepository(_filePath);
+			_container = new Db4oDataSource(_filePath);
+			IEventRegistry r = EventRegistryFactory.ForObjectContainer(_container.Data);
+			r.Activated += OnActivated;
+
+			_db4oRepository = new Db4oRepository<LexEntry>(_container.Data);
 		}
 
 		private LexEntry GetFirstEntry()
 		{
-			RepositoryId[] repositoryIds = _lexEntryRepository.GetAllItems();
+			RepositoryId[] repositoryIds = _db4oRepository.GetAllItems();
 			if (repositoryIds != null && repositoryIds.Length > 0)
 			{
-				return _lexEntryRepository.GetItem(repositoryIds[0]);
+				return _db4oRepository.GetItem(repositoryIds[0]);
 			}
 			return null;
 		}
@@ -64,18 +91,18 @@ namespace WeSay.LexicalModel.Tests.Db4oSpecific
 		[Test]
 		public void HelperGetsActivationCall()
 		{
-			LexEntry entry = _lexEntryRepository.CreateItem();
+			LexEntry entry = _db4oRepository.CreateItem();
 			entry.LexicalForm.SetAlternative("en", "test");
 
 			LexSense sense = (LexSense) entry.Senses.AddNew();
-			_lexEntryRepository.SaveItem(entry);
+			_db4oRepository.SaveItem(entry);
 
 			Assert.AreEqual(entry, sense.Parent);
 
 			int activations = Db4oLexModelHelper.Singleton.ActivationCount;
 			CycleDatabase();
 			entry = GetFirstEntry();
-			Assert.AreEqual(1, _lexEntryRepository.CountAllItems());
+			Assert.AreEqual(1, _db4oRepository.CountAllItems());
 			Assert.AreEqual(1, entry.Senses.Count);
 			Assert.AreEqual(activations + 1 /*entry*/+ 1 /*sense*/,
 							Db4oLexModelHelper.Singleton.ActivationCount);
@@ -84,28 +111,28 @@ namespace WeSay.LexicalModel.Tests.Db4oSpecific
 		[Test]
 		public void EntryOnlyActivatedOnce()
 		{
-			LexEntry entry = _lexEntryRepository.CreateItem();
-			_lexEntryRepository.SaveItem(entry);
+			LexEntry entry = _db4oRepository.CreateItem();
+			_db4oRepository.SaveItem(entry);
 
 			int activations = Db4oLexModelHelper.Singleton.ActivationCount;
 			CycleDatabase();
 			GetFirstEntry();
 			Assert.AreEqual(activations + 1, Db4oLexModelHelper.Singleton.ActivationCount);
 			//get the same entry again
-			_lexEntryRepository.GetAllItems();
+			_db4oRepository.GetAllItems();
 			Assert.AreEqual(activations + 1, Db4oLexModelHelper.Singleton.ActivationCount);
 		}
 
 		[Test]
 		public void ShallowChange()
 		{
-			_lexEntryRepository.CreateItem();
+			_db4oRepository.CreateItem();
 
 			CycleDatabase();
 			LexEntry entry = GetFirstEntry();
-			Assert.AreEqual(1, _lexEntryRepository.CountAllItems());
+			Assert.AreEqual(1, _db4oRepository.CountAllItems());
 			entry.LexicalForm["en"] = "x";
-			_lexEntryRepository.SaveItem(entry);
+			_db4oRepository.SaveItem(entry);
 			CycleDatabase();
 			entry = GetFirstEntry();
 			Assert.AreEqual("x", entry.LexicalForm["en"]);
@@ -141,9 +168,9 @@ namespace WeSay.LexicalModel.Tests.Db4oSpecific
 		[Test]
 		public void SaveCustomTextField()
 		{
-			LexEntry entry = _lexEntryRepository.CreateItem();
+			LexEntry entry = _db4oRepository.CreateItem();
 			entry.GetOrCreateProperty<MultiText>("testField")["en"] = "test";
-			_lexEntryRepository.SaveItem(entry);
+			_db4oRepository.SaveItem(entry);
 
 			CycleDatabase();
 			entry = GetFirstEntry();
@@ -153,10 +180,10 @@ namespace WeSay.LexicalModel.Tests.Db4oSpecific
 		[Test]
 		public void SaveOptionRefField()
 		{
-			LexEntry entry = _lexEntryRepository.CreateItem();
+			LexEntry entry = _db4oRepository.CreateItem();
 			//Option z = new Option("test", "t", Guid.NewGuid());
 			entry.GetOrCreateProperty<OptionRef>("testOption").Value = "test";
-			_lexEntryRepository.SaveItem(entry);
+			_db4oRepository.SaveItem(entry);
 			CycleDatabase();
 			entry = GetFirstEntry();
 			Assert.AreEqual("test", entry.GetOrCreateProperty<OptionRef>("testOption").Value);
@@ -165,18 +192,18 @@ namespace WeSay.LexicalModel.Tests.Db4oSpecific
 		[Test]
 		public void DeepChange()
 		{
-			LexEntry entry = _lexEntryRepository.CreateItem();
+			LexEntry entry = _db4oRepository.CreateItem();
 			entry.LexicalForm["en"] = "12";
 			LexSense sense = (LexSense) entry.Senses.AddNew();
 			LexExampleSentence example = (LexExampleSentence) sense.ExampleSentences.AddNew();
 			example.Sentence["th"] = "sawa";
-			_lexEntryRepository.SaveItem(entry);
+			_db4oRepository.SaveItem(entry);
 
 			CycleDatabase();
 			entry = GetFirstEntry();
 			((LexExampleSentence) ((LexSense) entry.Senses[0]).ExampleSentences[0]).Sentence["th"] =
 					"sawadee";
-			_lexEntryRepository.SaveItem(entry);
+			_db4oRepository.SaveItem(entry);
 			CycleDatabase();
 			entry = GetFirstEntry();
 			Assert.AreEqual("sawadee",
@@ -187,11 +214,11 @@ namespace WeSay.LexicalModel.Tests.Db4oSpecific
 		[Test]
 		public void DeepNotifyAfterDepersist()
 		{
-			LexEntry entry = _lexEntryRepository.CreateItem();
+			LexEntry entry = _db4oRepository.CreateItem();
 			LexSense sense = (LexSense) entry.Senses.AddNew();
 			LexExampleSentence example = (LexExampleSentence) sense.ExampleSentences.AddNew();
 			example.Sentence["th"] = "sawa";
-			_lexEntryRepository.SaveItem(entry);
+			_db4oRepository.SaveItem(entry);
 
 			CycleDatabase();
 			entry = GetFirstEntry();

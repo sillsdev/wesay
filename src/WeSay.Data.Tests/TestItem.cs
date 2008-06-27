@@ -156,7 +156,12 @@ namespace WeSay.Data.Tests
 
 		public override int GetHashCode()
 		{
-			return _storedInt ^ _storedString.GetHashCode() ^ _storedDateTime.GetHashCode();
+			int hash = _storedInt;
+			if(_storedString != null)
+			{
+				hash ^= _storedString.GetHashCode();
+			}
+			return  hash ^ _storedDateTime.GetHashCode();
 		}
 
 		public int StoredInt

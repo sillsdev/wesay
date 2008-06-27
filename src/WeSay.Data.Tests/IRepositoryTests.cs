@@ -1,5 +1,4 @@
 using System;
-using System.Globalization;
 using System.Threading;
 using NUnit.Framework;
 using WeSay.Data;
@@ -120,7 +119,6 @@ namespace WeSay.Data.Tests
 		private IRepository<T> _repositoryUnderTest;
 		private T item;
 		private RepositoryId id;
-		private DateTime modifiedTimePreTestedStateSwitch;
 
 		public IRepository<T> RepositoryUnderTest
 		{
@@ -137,7 +135,6 @@ namespace WeSay.Data.Tests
 
 		public void SetState()
 		{
-			modifiedTimePreTestedStateSwitch = RepositoryUnderTest.LastModified;
 			item = RepositoryUnderTest.CreateItem();
 			id = RepositoryUnderTest.GetId(item);
 		}
@@ -175,13 +172,15 @@ namespace WeSay.Data.Tests
 		public void GetId_CalledTwiceWithSameItem_ReturnsSameId()
 		{
 			SetState();
-			Assert.AreSame(RepositoryUnderTest.GetId(item), RepositoryUnderTest.GetId(item));
+			Assert.AreEqual(RepositoryUnderTest.GetId(item), RepositoryUnderTest.GetId(item));
 		}
 
 		[Test]
 		public void LastModified_IsChanged()
 		{
+			DateTime modifiedTimePreTestedStateSwitch = RepositoryUnderTest.LastModified;
 			SetState();
+
 			Assert.Greater(RepositoryUnderTest.LastModified, modifiedTimePreTestedStateSwitch);
 		}
 
@@ -258,7 +257,6 @@ namespace WeSay.Data.Tests
 		private IRepository<T> _repositoryUnderTest;
 		private T item;
 		private RepositoryId id;
-		private DateTime modifiedTimePreTestedStateSwitch;
 
 		public IRepository<T> RepositoryUnderTest
 		{
@@ -275,11 +273,18 @@ namespace WeSay.Data.Tests
 
 		public void SetState()
 		{
-			item = RepositoryUnderTest.CreateItem();
-			id = RepositoryUnderTest.GetId(item);
-			modifiedTimePreTestedStateSwitch = RepositoryUnderTest.LastModified;
+			CreateInitialItem();
+			WaitThenDeleteItem();
+		}
+
+		private void WaitThenDeleteItem() {
 			Thread.Sleep(50);
-			RepositoryUnderTest.DeleteItem(item);
+			RepositoryUnderTest.DeleteItem(this.item);
+		}
+
+		private void CreateInitialItem() {
+			this.item = RepositoryUnderTest.CreateItem();
+			this.id = RepositoryUnderTest.GetId(this.item);
 		}
 
 		[Test]
@@ -316,7 +321,9 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void LastModified_IsChanged()
 		{
-			SetState();
+			CreateInitialItem();
+			DateTime modifiedTimePreTestedStateSwitch = RepositoryUnderTest.LastModified;
+			WaitThenDeleteItem();
 			Assert.Greater(RepositoryUnderTest.LastModified, modifiedTimePreTestedStateSwitch);
 		}
 
@@ -355,7 +362,6 @@ namespace WeSay.Data.Tests
 		private IRepository<T> _repositoryUnderTest;
 		private T item;
 		private RepositoryId id;
-		private DateTime modifiedTimePreTestedStateSwitch;
 
 		public IRepository<T> RepositoryUnderTest
 		{
@@ -372,11 +378,18 @@ namespace WeSay.Data.Tests
 
 		public void SetState()
 		{
-			item = RepositoryUnderTest.CreateItem();
-			id = RepositoryUnderTest.GetId(item);
-			modifiedTimePreTestedStateSwitch = RepositoryUnderTest.LastModified;
+			CreateItemToTest();
+			WaitThenDeleteItem();
+		}
+
+		private void WaitThenDeleteItem() {
 			Thread.Sleep(50);
-			RepositoryUnderTest.DeleteItem(id);
+			RepositoryUnderTest.DeleteItem(this.id);
+		}
+
+		private void CreateItemToTest() {
+			this.item = RepositoryUnderTest.CreateItem();
+			this.id = RepositoryUnderTest.GetId(this.item);
 		}
 
 		[Test]
@@ -413,7 +426,9 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void LastModified_ItemIsDeleted_IsChanged()
 		{
-			SetState();
+			CreateItemToTest();
+			DateTime modifiedTimePreTestedStateSwitch = RepositoryUnderTest.LastModified;
+			WaitThenDeleteItem();
 			Assert.Greater(RepositoryUnderTest.LastModified, modifiedTimePreTestedStateSwitch);
 		}
 

@@ -16,7 +16,6 @@ namespace Addin.Transform.Tests
 		[SetUp]
 		public void Setup()
 		{
-			Db4oLexModelHelper.InitializeForNonDbTests();
 			_outputPath = Path.Combine(Path.GetTempPath(), Path.GetTempFileName());
 			ErrorReport.IsOkToInteractWithUser = false;
 		}

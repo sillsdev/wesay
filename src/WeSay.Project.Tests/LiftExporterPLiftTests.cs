@@ -27,7 +27,6 @@ namespace WeSay.Project.Tests
 		public void Setup()
 		{
 			BasilProject.InitializeForTests();
-			Db4oLexModelHelper.InitializeForNonDbTests();
 
 			_FilePath = Path.GetTempFileName();
 			_lexEntryRepository = new LexEntryRepository(_FilePath);

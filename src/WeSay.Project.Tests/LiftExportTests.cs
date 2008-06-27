@@ -25,7 +25,6 @@ namespace WeSay.Project.Tests
 		[SetUp]
 		public void Setup()
 		{
-			Db4oLexModelHelper.InitializeForNonDbTests();
 			WeSayWordsProject.InitializeForTests();
 			_filePath = Path.GetTempFileName();
 			_lexEntryRepository = new LexEntryRepository(_filePath);

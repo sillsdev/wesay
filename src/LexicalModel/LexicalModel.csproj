@@ -73,7 +73,6 @@
 	<Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-	<Compile Include="Db4oSpecific\Db4oLexModelHelper.cs" />
 	<Compile Include="Db4oSpecific\LexEntryFinder.cs" />
 	<Compile Include="Db4oSpecific\WeSayWordsDb4oModelConfiguration.cs" />
 	<Compile Include="LexEntry.cs" />
