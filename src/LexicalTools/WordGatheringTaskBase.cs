@@ -25,14 +25,15 @@ namespace WeSay.LexicalTools
 			_viewTemplate = viewTemplate;
 			Field lexicalFormField =
 					viewTemplate.GetField(Field.FieldNames.EntryLexicalForm.ToString());
-			if (lexicalFormField == null || lexicalFormField.WritingSystems.Count < 1)
+			WritingSystemCollection writingSystems = BasilProject.Project.WritingSystems;
+			if (lexicalFormField == null || lexicalFormField.WritingSystemIds.Count < 1)
 			{
 				_lexicalFormWritingSystem =
-						BasilProject.Project.WritingSystems.UnknownVernacularWritingSystem;
+						writingSystems.UnknownVernacularWritingSystem;
 			}
 			else
 			{
-				_lexicalFormWritingSystem = lexicalFormField.WritingSystems[0];
+				_lexicalFormWritingSystem = writingSystems[lexicalFormField.WritingSystemIds[0]];
 			}
 		}
 

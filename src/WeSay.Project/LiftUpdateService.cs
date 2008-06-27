@@ -138,10 +138,13 @@ namespace WeSay.Project
 			{
 				if (ConsumePendingLiftUpdates())
 				{
+//todo
+#if FIXME //commented to allow compile even though lexEntryRepository doesn't provide a datasource anymore
 					CacheManager.UpdateSyncPointInCache(_lexEntryRepository.Db4oDataSource.Data,
 														File.GetLastWriteTimeUtc(
 																WeSayWordsProject.Project.
 																		PathToLiftFile));
+#endif
 				}
 			}
 

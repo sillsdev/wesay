@@ -1,6 +1,7 @@
 ﻿using System;
+using WeSay.LexicalModel;
 
-namespace WeSay.Project
+namespace WeSay.LexicalModel
 {
 	public interface IFieldQuery<T>
 	{

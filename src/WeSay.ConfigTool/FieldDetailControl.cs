@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using Enchant;
 using Palaso.Reporting;
 using WeSay.Foundation;
+using WeSay.LexicalModel;
 using WeSay.Project;
 
 namespace WeSay.ConfigTool

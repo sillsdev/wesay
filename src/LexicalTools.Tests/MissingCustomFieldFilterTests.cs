@@ -2,7 +2,6 @@ using NUnit.Framework;
 using WeSay.Foundation;
 using WeSay.Foundation.Options;
 using WeSay.LexicalModel;
-using WeSay.Project;
 
 namespace WeSay.LexicalTools.Tests
 {

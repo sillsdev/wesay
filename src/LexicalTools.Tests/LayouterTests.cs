@@ -3,7 +3,6 @@ using System.Windows.Forms;
 using NUnit.Framework;
 using WeSay.Foundation;
 using WeSay.LexicalModel;
-using WeSay.LexicalModel.Tests.Db4oSpecific;
 using WeSay.Project;
 using WeSay.UI;
 
@@ -17,7 +16,6 @@ namespace WeSay.LexicalTools.Tests
 		[SetUp]
 		public void Setup()
 		{
-			Db4oLexModelHelper.InitializeForNonDbTests();
 			WeSayWordsProject.InitializeForTests();
 		}
 

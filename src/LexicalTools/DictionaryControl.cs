@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
@@ -121,9 +122,10 @@ namespace WeSay.LexicalTools
 			Field field = _viewTemplate.GetField(fieldName);
 			if (field != null)
 			{
-				if (field.WritingSystems.Count > 0)
+				if (field.WritingSystemIds.Count > 0)
 				{
-					foreach (WritingSystem writingSystem in field.WritingSystems)
+					IList<WritingSystem> writingSystems = BasilProject.Project.WritingSystemsFromIds(field.WritingSystemIds);
+					foreach (WritingSystem writingSystem in writingSystems)
 					{
 						AddWritingSystemToPicker(writingSystem, field);
 					}
@@ -147,10 +149,10 @@ namespace WeSay.LexicalTools
 			_cmWritingSystems.MenuItems.Add(item);
 		}
 
-		private bool IsWritingSystemUsedInLexicalForm(WritingSystem writingSystem)
+		private bool IsWritingSystemUsedInLexicalForm(string writingSystemId)
 		{
 			return
-					_viewTemplate.IsWritingSystemUsedInField(writingSystem,
+					_viewTemplate.IsWritingSystemUsedInField(writingSystemId,
 															 Field.FieldNames.EntryLexicalForm.
 																	 ToString());
 		}
@@ -218,28 +220,29 @@ namespace WeSay.LexicalTools
 		{
 			Debug.Assert(CurrentIndex != -1);
 			RecordToken<LexEntry> recordToken = _records[CurrentIndex];
-			if (!recordToken.IsFresh)
-			{
-				recordToken.Refresh();
-				_keepRecordCurrent = true;
-				LoadRecords();
-				int index = _records.FindFirstIndex(recordToken);
-				//may not have been successful with the refresh of the recordToken
-				// in which case we should just try to go to the first with
-				// the same id
-				if (index < 0)
-				{
-					index = _records.FindFirstIndex(recordToken.Id);
-				}
-				Debug.Assert(index != -1);
-				_recordsListBox.SelectedIndex = index;
-				_keepRecordCurrent = false;
-			}
+//todo: figure out how to keep our list up to date as records change
+			//if (!recordToken.IsFresh)
+			//{
+			//    recordToken.Refresh();
+			//    _keepRecordCurrent = true;
+			//    LoadRecords();
+			//    int index = _records.FindFirstIndex(recordToken);
+			//    //may not have been successful with the refresh of the recordToken
+			//    // in which case we should just try to go to the first with
+			//    // the same id
+			//    if (index < 0)
+			//    {
+			//        index = _records.FindFirstIndex(recordToken.Id);
+			//    }
+			//    Debug.Assert(index != -1);
+			//    _recordsListBox.SelectedIndex = index;
+			//    _keepRecordCurrent = false;
+			//}
 		}
 
 		private void LoadRecords()
 		{
-			if (IsWritingSystemUsedInLexicalForm(_listWritingSystem))
+			if (IsWritingSystemUsedInLexicalForm(_listWritingSystem.Id))
 			{
 				_records = _lexEntryRepository.GetAllEntriesSortedByLexicalForm(_listWritingSystem);
 			}
@@ -416,7 +419,7 @@ namespace WeSay.LexicalTools
 			//bool NoPriorSelection = _recordsListBox.SelectedIndex == -1;
 			//_recordListBoxActive = true; // allow onRecordSelectionChanged
 			if (_findText.Focused && !string.IsNullOrEmpty(_findText.Text) &&
-				IsWritingSystemUsedInLexicalForm(_listWritingSystem))
+				IsWritingSystemUsedInLexicalForm(_listWritingSystem.Id))
 					//todo only create new when not found (doesn't already exist)
 			{
 				entry.LexicalForm[_listWritingSystem.Id] = _findText.Text.Trim();

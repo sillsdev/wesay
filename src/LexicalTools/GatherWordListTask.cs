@@ -44,14 +44,16 @@ namespace WeSay.LexicalTools
 			}
 			Field lexicalFormField =
 					viewTemplate.GetField(Field.FieldNames.EntryLexicalForm.ToString());
-			if (lexicalFormField == null || lexicalFormField.WritingSystems.Count < 1)
+			if (lexicalFormField == null || lexicalFormField.WritingSystemIds.Count < 1)
 			{
 				_lexicalUnitWritingSystem =
 						BasilProject.Project.WritingSystems.UnknownVernacularWritingSystem;
 			}
 			else
 			{
-				_lexicalUnitWritingSystem = lexicalFormField.WritingSystems[0];
+				string firstWSid = lexicalFormField.WritingSystemIds[0];
+				WritingSystem firstWS = BasilProject.Project.WritingSystems[firstWSid];
+				_lexicalUnitWritingSystem = firstWS;
 			}
 
 			_wordListFileName = wordListFileName;
@@ -125,7 +127,7 @@ namespace WeSay.LexicalTools
 			{
 				if (_gatherControl == null)
 				{
-					_gatherControl = new GatherWordListControl(this, _lexicalUnitWritingSystem);
+					_gatherControl = new GatherWordListControl(this, _lexicalUnitWritingSystem.Id);
 				}
 				return _gatherControl;
 			}

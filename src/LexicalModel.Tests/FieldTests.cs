@@ -1,7 +1,8 @@
 using System;
 using NUnit.Framework;
+using WeSay.LexicalModel;
 
-namespace WeSay.Project.Tests
+namespace WeSay.LexicalModel.Tests
 {
 	[TestFixture]
 	public class FieldTests

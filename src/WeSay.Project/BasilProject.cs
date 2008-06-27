@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Xml;
@@ -121,6 +122,16 @@ namespace WeSay.Project
 		public WritingSystemCollection WritingSystems
 		{
 			get { return _writingSystems; }
+		}
+
+		public IList<WritingSystem> WritingSystemsFromIds(IEnumerable<string> writingSystemIds)
+		{
+				List<WritingSystem> l = new List<WritingSystem>();
+				foreach (string id in writingSystemIds)
+				{
+					l.Add(WritingSystems[id]);
+				}
+				return l;
 		}
 
 		public string ProjectDirectoryPath

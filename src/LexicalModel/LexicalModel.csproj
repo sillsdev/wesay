@@ -73,8 +73,9 @@
 	<Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-	<Compile Include="Db4oSpecific\LexEntryFinder.cs" />
 	<Compile Include="Db4oSpecific\WeSayWordsDb4oModelConfiguration.cs" />
+	<Compile Include="Field.cs" />
+	<Compile Include="IFieldQuery.cs" />
 	<Compile Include="LexEntry.cs" />
 	<Compile Include="LexEntryRepository.cs" />
 	<Compile Include="LexExampleSentence.cs" />

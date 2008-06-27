@@ -1,12 +1,11 @@
 using Db4objects.Db4o;
 using Db4objects.Db4o.Config;
 using Palaso.Text;
-using WeSay.Data;
 using WeSay.Foundation;
 
 namespace WeSay.LexicalModel.Db4oSpecific
 {
-	public class WeSayWordsDb4oModelConfiguration: IDb4oModelConfiguration
+	public class WeSayWordsDb4oModelConfiguration//: IDb4oModelConfiguration
 	{
 		public void Configure()
 		{

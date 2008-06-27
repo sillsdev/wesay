@@ -19,7 +19,6 @@ namespace WeSay.LexicalTools
 		private RecordToken<LexEntry> _previousRecord;
 		private RecordToken<LexEntry> _nextRecord;
 
-		private readonly LexEntryRepository _lexEntryRepository;
 		private readonly ViewTemplate _viewTemplate;
 		private readonly Predicate<LexEntry> _isNotComplete;
 		public event EventHandler SelectedIndexChanged;
@@ -62,7 +61,6 @@ namespace WeSay.LexicalTools
 			_completedRecords = new BindingList<RecordToken<LexEntry>>();
 			_todoRecords = (BindingList<RecordToken<LexEntry>>) records;
 
-			_lexEntryRepository = lexEntryRepository;
 			_viewTemplate = viewTemplate;
 			_isNotComplete = isNotComplete;
 			InitializeDisplaySettings();
@@ -131,8 +129,8 @@ namespace WeSay.LexicalTools
 
 		private static WritingSystem GetListWritingSystem()
 		{
-			WritingSystem listWritingSystem =
-					BasilProject.Project.WritingSystems.UnknownVernacularWritingSystem;
+			WritingSystemCollection writingSystems = BasilProject.Project.WritingSystems;
+			WritingSystem listWritingSystem = writingSystems.UnknownVernacularWritingSystem;
 
 			// use the master view Template instead of the one for this task. (most likely the one for this
 			// task doesn't have the EntryLexicalForm field specified but the Master (Default) one will
@@ -142,9 +140,9 @@ namespace WeSay.LexicalTools
 
 			if (field != null)
 			{
-				if (field.WritingSystems.Count > 0)
+				if (field.WritingSystemIds.Count > 0)
 				{
-					listWritingSystem = field.WritingSystems[0];
+					listWritingSystem = writingSystems[field.WritingSystemIds[0]];
 				}
 				else
 				{

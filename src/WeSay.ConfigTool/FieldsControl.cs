@@ -1,6 +1,7 @@
 using System;
 using System.Windows.Forms;
 using WeSay.ConfigTool.Properties;
+using WeSay.LexicalModel;
 using WeSay.Project;
 
 namespace WeSay.ConfigTool

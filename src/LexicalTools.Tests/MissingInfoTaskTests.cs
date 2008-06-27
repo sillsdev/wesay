@@ -1,9 +1,7 @@
 using System;
 using System.IO;
 using NUnit.Framework;
-using WeSay.Data;
 using WeSay.LexicalModel;
-using WeSay.LexicalModel.Tests.Db4oSpecific;
 using WeSay.Project;
 
 namespace WeSay.LexicalTools.Tests
@@ -27,6 +25,11 @@ namespace WeSay.LexicalTools.Tests
 			{
 				get { return "NoEntries"; }
 			}
+
+			public Field Field
+			{
+				get { return new Field();}
+			}
 		}
 
 		private LexEntryRepository _lexEntryRepository;
@@ -47,7 +50,6 @@ namespace WeSay.LexicalTools.Tests
 			_filePath = Path.GetTempFileName();
 			_lexEntryRepository = new LexEntryRepository(_filePath);
 
-			Db4oLexModelHelper.InitializeForNonDbTests();
 			WeSayWordsProject.InitializeForTests();
 			RtfRenderer.HeadWordWritingSystemId = _vernacularWritingSystemId;
 

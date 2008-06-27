@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using Enchant;
 using WeSay.Foundation;
+using WeSay.LexicalModel;
 using WeSay.Project;
 
 namespace WeSay.ConfigTool
@@ -205,7 +206,8 @@ namespace WeSay.ConfigTool
 					GetWritingSystemIdsWithSpellCheckingInstalled();
 
 			_writingSystemListBox.Items.Clear();
-			foreach (WritingSystem ws in CurrentField.WritingSystems)
+			IList<WritingSystem> writingSystems = BasilProject.Project.WritingSystemsFromIds(CurrentField.WritingSystemIds);
+			foreach (WritingSystem ws in writingSystems)
 			{
 				bool hasSpellCheckerInstalled =
 						writingSystemIdsWithSpellCheckingInstalled.Contains(ws.Id);

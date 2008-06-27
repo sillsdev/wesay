@@ -126,8 +126,9 @@ namespace WeSay.LexicalTools
 			//TODO: refactor this (sortHelper, pairStringLexEntryIdList, _keyIdMap, GetKeyIdPairFromLexEntry)
 			//      to use ApproximateFinder. Eventually refactor the automcompletetextbox to just take one
 
+			WritingSystem writingSystem = GetWritingSystemFromField();
 			ResultSet<LexEntry> recordTokenList =
-					_lexEntryRepository.GetAllEntriesSortedByLexicalForm(_field.WritingSystems[0]);
+					_lexEntryRepository.GetAllEntriesSortedByLexicalForm(writingSystem);
 			_resultSet = recordTokenList;
 
 			AutoCompleteWithCreationBox<RecordToken<LexEntry>, string> picker =
@@ -147,6 +148,11 @@ namespace WeSay.LexicalTools
 			_control = picker;
 		}
 
+		private WritingSystem GetWritingSystemFromField() {
+			string firstWsId = this._field.WritingSystemIds[0];
+			return BasilProject.Project.WritingSystems[firstWsId];
+		}
+
 		//private static LexEntry Identity(LexEntry e) {
 		//    return e;
 		//}
@@ -157,8 +163,9 @@ namespace WeSay.LexicalTools
 			{
 				return null;
 			}
+			WritingSystem writingSystem = GetWritingSystemFromField();
 			ResultSet<LexEntry> resultSet =
-					_lexEntryRepository.GetAllEntriesSortedByLexicalForm(_field.WritingSystems[0]);
+					_lexEntryRepository.GetAllEntriesSortedByLexicalForm(writingSystem);
 			int index = resultSet.FindFirstIndex(e);
 			if (index < 0)
 			{
@@ -203,7 +210,7 @@ namespace WeSay.LexicalTools
 			//                        default:
 			//                            break;
 			//                    }
-			picker.Box.WritingSystem = _field.WritingSystems[0];
+			picker.Box.WritingSystem = GetWritingSystemFromField();
 
 			//review:
 			picker.Box.MinimumSize = new Size(40, 10);

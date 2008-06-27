@@ -1,6 +1,5 @@
 using System.ComponentModel;
 using System.IO;
-using Db4objects.Db4o;
 using Db4objects.Db4o.Events;
 using NUnit.Framework;
 using WeSay.Data;
@@ -45,7 +44,7 @@ namespace WeSay.LexicalModel.Tests.Db4oSpecific
 		[TearDown]
 		public void TearDown()
 		{
-			IEventRegistry r = EventRegistryFactory.ForObjectContainer(this._container);
+			IEventRegistry r = EventRegistryFactory.ForObjectContainer(this._container.Data);
 			r.Activated -= OnActivated;
 			this._container = null;
 
@@ -70,7 +69,7 @@ namespace WeSay.LexicalModel.Tests.Db4oSpecific
 			IEventRegistry r = EventRegistryFactory.ForObjectContainer(_container.Data);
 			r.Activated += OnActivated;
 
-			_db4oRepository = new Db4oRepository<LexEntry>(_container.Data);
+			_db4oRepository = new Db4oRepository<LexEntry>(_container);
 		}
 
 		private LexEntry GetFirstEntry()
@@ -99,13 +98,13 @@ namespace WeSay.LexicalModel.Tests.Db4oSpecific
 
 			Assert.AreEqual(entry, sense.Parent);
 
-			int activations = Db4oLexModelHelper.Singleton.ActivationCount;
+			int activations = ActivationCount;
 			CycleDatabase();
 			entry = GetFirstEntry();
 			Assert.AreEqual(1, _db4oRepository.CountAllItems());
 			Assert.AreEqual(1, entry.Senses.Count);
 			Assert.AreEqual(activations + 1 /*entry*/+ 1 /*sense*/,
-							Db4oLexModelHelper.Singleton.ActivationCount);
+							ActivationCount);
 		}
 
 		[Test]
@@ -114,13 +113,13 @@ namespace WeSay.LexicalModel.Tests.Db4oSpecific
 			LexEntry entry = _db4oRepository.CreateItem();
 			_db4oRepository.SaveItem(entry);
 
-			int activations = Db4oLexModelHelper.Singleton.ActivationCount;
+			int activations = ActivationCount;
 			CycleDatabase();
 			GetFirstEntry();
-			Assert.AreEqual(activations + 1, Db4oLexModelHelper.Singleton.ActivationCount);
+			Assert.AreEqual(activations + 1, ActivationCount);
 			//get the same entry again
 			_db4oRepository.GetAllItems();
-			Assert.AreEqual(activations + 1, Db4oLexModelHelper.Singleton.ActivationCount);
+			Assert.AreEqual(activations + 1, ActivationCount);
 		}
 
 		[Test]
@@ -136,33 +135,6 @@ namespace WeSay.LexicalModel.Tests.Db4oSpecific
 			CycleDatabase();
 			entry = GetFirstEntry();
 			Assert.AreEqual("x", entry.LexicalForm["en"]);
-		}
-
-		[Test]
-		public void TempCreateLittleFile()
-		{
-			string path = Path.GetTempFileName();
-			using (Db4oDataSource ds = new Db4oDataSource(path))
-			{
-				if (Db4oLexModelHelper.Singleton != null)
-				{
-					Db4oLexModelHelper.Singleton.Dispose();
-				}
-
-				using (Db4oRecordList<LexEntry> entries = new Db4oRecordList<LexEntry>(ds))
-				{
-					Db4oLexModelHelper.Initialize(ds.Data);
-					LexEntry one = new LexEntry();
-					//one.GetOrCreateProperty<MultiText>("testField")["en"] = "test";
-					entries.Add(one);
-					LexEntry two = new LexEntry();
-					// two.GetOrCreateProperty<MultiText>("testField")["en"] = "test";
-					entries.Add(two);
-				}
-				ds.Data.Commit();
-				ds.Data.Close();
-			}
-			File.Delete(path);
 		}
 
 		[Test]

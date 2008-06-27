@@ -15,7 +15,6 @@ namespace WeSay.LexicalModel.Tests
 		[SetUp]
 		public void Setup()
 		{
-			Db4oLexModelHelper.InitializeForNonDbTests();
 			_entry = new LexEntry();
 			_entry.PropertyChanged += _entry_PropertyChanged;
 			_didNotify = false;

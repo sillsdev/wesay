@@ -44,9 +44,10 @@ namespace WeSay.LexicalTools
 							Field.FieldNames.EntryLexicalForm.ToString());
 			if (field != null)
 			{
-				if (field.WritingSystems.Count > 0)
+				if (field.WritingSystemIds.Count > 0)
 				{
-					_writingSystem = field.WritingSystems[0];
+					_writingSystem =
+						BasilProject.Project.WritingSystems[field.WritingSystemIds[0]];
 				}
 				else
 				{
@@ -251,7 +252,7 @@ namespace WeSay.LexicalTools
 		public ResultSet<LexEntry> GetFilteredData()
 		{
 			ResultSet<LexEntry> data =
-					LexEntryRepository.GetEntriesMatchingFilterSortedByLexicalUnit(_filter,
+					LexEntryRepository.GetEntriesMatchingFilterSortedByLexicalUnit(_filter.Field,
 																				   _writingSystem);
 			_dataHasBeenRetrieved = true;
 			return data;

@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using WeSay.LexicalModel;
 using WeSay.Project;
 
 namespace WeSay.ConfigTool.Tests

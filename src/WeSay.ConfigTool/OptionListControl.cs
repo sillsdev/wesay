@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using Palaso.Reporting;
 using WeSay.Foundation;
 using WeSay.Foundation.Options;
+using WeSay.LexicalModel;
 using WeSay.Project;
 using WeSay.UI;
 
@@ -182,7 +183,7 @@ namespace WeSay.ConfigTool
 
 				_currentOption = proxy.UnderlyingOption;
 				MultiTextControl m =
-						new MultiTextControl(_currentField.WritingSystems,
+						new MultiTextControl(_currentField.WritingSystemIds,
 											 _currentOption.Name,
 											 _currentField.FieldName,
 											 false,

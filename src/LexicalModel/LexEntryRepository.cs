@@ -361,33 +361,33 @@ namespace WeSay.LexicalModel
 
 
 		public ResultSet<LexEntry> GetEntriesMatchingFilterSortedByLexicalUnit(
-				IFieldQuery<LexEntry> filter, WritingSystem lexicalUnitWritingSystem)
+				Field filter, WritingSystem lexicalUnitWritingSystem)
 		{
-			filter.
-			LexEntrySortHelper lexEntrySortHelper =
-					new LexEntrySortHelper(this, lexicalUnitWritingSystem, true);
-			_recordListManager.Register(filter, lexEntrySortHelper);
-			List<RecordToken<LexEntry>> result = new List<RecordToken<LexEntry>>();
-			foreach (LexEntry entry in
-					_recordListManager.GetListOfTypeFilteredFurther(filter, lexEntrySortHelper))
-			{
-				RepositoryId id = GetId(entry);
-				int i =
-						result.FindAll(
-								delegate(RecordToken<LexEntry> match)
-								{
-									return match.Id == id;
-								}).
-								Count;
+			throw new NotImplementedException();
+			//LexEntrySortHelper lexEntrySortHelper =
+			//        new LexEntrySortHelper(this, lexicalUnitWritingSystem, true);
+			//_recordListManager.Register(filter, lexEntrySortHelper);
+			//List<RecordToken<LexEntry>> result = new List<RecordToken<LexEntry>>();
+			//foreach (LexEntry entry in
+			//        _recordListManager.GetListOfTypeFilteredFurther(filter, lexEntrySortHelper))
+			//{
+			//    RepositoryId id = GetId(entry);
+			//    int i =
+			//            result.FindAll(
+			//                    delegate(RecordToken<LexEntry> match)
+			//                    {
+			//                        return match.Id == id;
+			//                    }).
+			//                    Count;
 
-				result.Add(
-						new RecordToken<LexEntry>(this,
-												  lexEntrySortHelper,
-												  i,
-												  entry.LexicalForm[lexicalUnitWritingSystem.Id],
-												  id));
-			}
-			return new ResultSet<LexEntry>(this, result);
+			//    result.Add(
+			//            new RecordToken<LexEntry>(this,
+			//                                      lexEntrySortHelper,
+			//                                      i,
+			//                                      entry.LexicalForm[lexicalUnitWritingSystem.Id],
+			//                                      id));
+			//}
+			//return new ResultSet<LexEntry>(this, result);
 		}
 		#region IDisposable Members
 

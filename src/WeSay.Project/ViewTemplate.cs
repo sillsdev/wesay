@@ -49,9 +49,13 @@ namespace WeSay.Project
 			get { return GetDefaultWritingSystemForField(LexEntry.WellKnownProperties.LexicalUnit); }
 		}
 
-		public IList<WritingSystem> HeadwordWritingSystems
+		public IList<WritingSystem> HeadwordWritingSystemIds
 		{
-			get { return GetField(LexEntry.WellKnownProperties.LexicalUnit).WritingSystems; }
+			get
+			{
+				IList<string> ids = GetField(LexEntry.WellKnownProperties.LexicalUnit).WritingSystemIds;
+				return BasilProject.Project.WritingSystemsFromIds(ids);
+			}
 		}
 
 		///<summary>
@@ -554,32 +558,33 @@ namespace WeSay.Project
 			}
 		}
 
-		public bool IsWritingSystemUsedInField(WritingSystem writingSystem, string fieldName)
+		public bool IsWritingSystemUsedInField(string writingSystemId, string fieldName)
 		{
 			Field field = GetField(fieldName);
 			if (field != null)
 			{
-				return field.WritingSystems.Contains(writingSystem);
+				return field.WritingSystemIds.Contains(writingSystemId);
 			}
 			return false;
 		}
 
 		public WritingSystem GetDefaultWritingSystemForField(string fieldName)
 		{
+			WritingSystemCollection writingSystems = BasilProject.Project.WritingSystems;
 			WritingSystem listWritingSystem = null;
 			Field field = GetField(fieldName);
 			//Debug.Assert(field != null, fieldName + "not found.");
 			if (field != null)
 			{
-				if (field.WritingSystems.Count > 0)
+				if (field.WritingSystemIds.Count > 0)
 				{
-					listWritingSystem = field.WritingSystems[0];
+					listWritingSystem = writingSystems[field.WritingSystemIds[0]];
 				}
 			}
 			if (listWritingSystem == null)
 			{
 				listWritingSystem =
-						BasilProject.Project.WritingSystems.UnknownVernacularWritingSystem;
+						writingSystems.UnknownVernacularWritingSystem;
 			}
 			return listWritingSystem;
 		}

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Forms;
 using Palaso.UI.WindowsForms.i8n;
@@ -99,7 +100,7 @@ namespace WeSay.LexicalTools
 			if (_previouslyGhostedControlToReuse == null)
 			{
 				m =
-						new MultiTextControl(field.WritingSystems,
+						new MultiTextControl(field.WritingSystemIds,
 											 multiTextToBindTo,
 											 field.FieldName,
 											 field.Visibility !=
@@ -160,7 +161,7 @@ namespace WeSay.LexicalTools
 				field.Visibility == CommonEnumerations.VisibilitySetting.Visible)
 			{
 				MultiTextControl m =
-						new MultiTextControl(field.WritingSystems,
+						new MultiTextControl(field.WritingSystemIds,
 											 new MultiText(),
 											 fieldName + "_ghost",
 											 false,
@@ -441,12 +442,12 @@ namespace WeSay.LexicalTools
 					target.GetOrCreateProperty<OptionRefCollection>(field.FieldName);
 			//            OptionCollectionControl control =
 			//                   new OptionCollectionControl(refsOfChoices, availableOptions, field.WritingSystemIds[0]);
-
+			IList<WritingSystem> writingSystems = BasilProject.Project.WritingSystemsFromIds(field.WritingSystemIds);
 			ReferenceCollectionEditor<Option, string, OptionRef> control =
 					new ReferenceCollectionEditor<Option, string, OptionRef>(refsOfChoices.Members,
 																			 availableOptions.
-																					 Options,
-																			 field.WritingSystems,
+																			 Options,
+																			 writingSystems,
 																			 field.Visibility,
 																			 new OptionDisplayAdaptor
 																					 (availableOptions,

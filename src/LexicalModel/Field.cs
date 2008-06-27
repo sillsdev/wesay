@@ -8,7 +8,7 @@ using Exortech.NetReflector.Util;
 using WeSay.Foundation;
 using WeSay.LexicalModel;
 
-namespace WeSay.Project
+namespace WeSay.LexicalModel
 {
 	[ReflectorType("field")]
 	public class Field
@@ -81,27 +81,27 @@ namespace WeSay.Project
 			{
 				throw new ArgumentNullException();
 			}
-			ClassName = className;
-			Enabled = true; //without this lots of tests would need updating
+			this.ClassName = className;
+			this.Enabled = true; //without this lots of tests would need updating
 			Initialize(fieldName, dataTypeName, multiplicity, writingSystemIds);
 		}
 
 		public Field(Field field)
 		{
-			FieldName = field.FieldName;
-			ClassName = field.ClassName;
-			_writingSystemIds = new List<string>();
+			this.FieldName = field.FieldName;
+			this.ClassName = field.ClassName;
+			this._writingSystemIds = new List<string>();
 			foreach (string id in field.WritingSystemIds)
 			{
-				WritingSystemIds.Add(id);
+				this.WritingSystemIds.Add(id);
 			}
-			Description = field.Description;
-			DisplayName = field.DisplayName;
-			Multiplicity = field.Multiplicity;
-			Visibility = field.Visibility;
-			DataTypeName = field.DataTypeName;
-			OptionsListFile = field.OptionsListFile;
-			Enabled = field.Enabled;
+			this.Description = field.Description;
+			this.DisplayName = field.DisplayName;
+			this.Multiplicity = field.Multiplicity;
+			this.Visibility = field.Visibility;
+			this.DataTypeName = field.DataTypeName;
+			this.OptionsListFile = field.OptionsListFile;
+			this.Enabled = field.Enabled;
 		}
 
 		/// <summary>
@@ -127,10 +127,10 @@ namespace WeSay.Project
 								MultiplicityType multiplicity,
 								IEnumerable<string> writingSystemIds)
 		{
-			FieldName = fieldName;
-			WritingSystemIds = new List<string>(writingSystemIds);
-			_multiplicity = multiplicity;
-			DataTypeName = dataTypeName;
+			this.FieldName = fieldName;
+			this.WritingSystemIds = new List<string>(writingSystemIds);
+			this._multiplicity = multiplicity;
+			this.DataTypeName = dataTypeName;
 
 			Debug.Assert(FieldNames.EntryLexicalForm.ToString() ==
 						 LexEntry.WellKnownProperties.LexicalUnit);
@@ -148,12 +148,12 @@ namespace WeSay.Project
 		{
 			get
 			{
-				if (_fieldName == null)
+				if (this._fieldName == null)
 				{
 					throw new InvalidOperationException(
 							"FieldName must be set before it can be used.");
 				}
-				return _fieldName;
+				return this._fieldName;
 			}
 			set
 			{
@@ -161,21 +161,21 @@ namespace WeSay.Project
 				{
 					throw new ArgumentNullException("value");
 				}
-				_fieldName = MakeFieldNameSafe(value);
-				if (_fieldName == "Definition") //versions prior to oct-23-2007 had the case wrong
+				this._fieldName = MakeFieldNameSafe(value);
+				if (this._fieldName == "Definition") //versions prior to oct-23-2007 had the case wrong
 				{
-					_fieldName = "definition";
+					this._fieldName = "definition";
 				}
-				if (_fieldName == "CitationForm") //versions prior to nov-8-2007 had the name wrong
+				if (this._fieldName == "CitationForm") //versions prior to nov-8-2007 had the name wrong
 				{
-					_fieldName = "citation";
+					this._fieldName = "citation";
 				}
 			}
 		}
 
 		public string Key
 		{
-			get { return _className + "." + _fieldName; }
+			get { return this._className + "." + this._fieldName; }
 		}
 
 		[Description("The label of the field as it will be displayed to the user.")]
@@ -184,13 +184,13 @@ namespace WeSay.Project
 		{
 			get
 			{
-				if (String.IsNullOrEmpty(_displayName))
+				if (String.IsNullOrEmpty(this._displayName))
 				{
-					return "*" + FieldName;
+					return "*" + this.FieldName;
 				}
-				return _displayName;
+				return this._displayName;
 			}
-			set { _displayName = value; }
+			set { this._displayName = value; }
 		}
 
 		//        /// <summary>
@@ -228,12 +228,12 @@ namespace WeSay.Project
 		{
 			get
 			{
-				if (_className.Length == 0)
+				if (this._className.Length == 0)
 				{
 					throw new InvalidOperationException(
 							"className has not been initialized correctly");
 				}
-				return _className;
+				return this._className;
 			}
 			set
 			{
@@ -245,7 +245,7 @@ namespace WeSay.Project
 					case "LexEntry":
 					case "LexSense":
 					case "LexExampleSentence":
-						_className = value;
+						this._className = value;
 						break;
 					default:
 						throw new ArgumentOutOfRangeException("value",
@@ -260,27 +260,27 @@ namespace WeSay.Project
 		{
 			get
 			{
-				if (IsBuiltInViaCode)
+				if (this.IsBuiltInViaCode)
 				{
 					return false;
 				}
 
-				if (WeSayDataObject.WellKnownProperties.Contains(FieldName))
+				if (WeSayDataObject.WellKnownProperties.Contains(this.FieldName))
 				{
 					return false;
 				}
 
-				if (LexEntry.WellKnownProperties.Contains(FieldName))
+				if (LexEntry.WellKnownProperties.Contains(this.FieldName))
 				{
 					return false;
 				}
 
-				if (LexSense.WellKnownProperties.ContainsAnyCaseVersionOf(FieldName))
+				if (LexSense.WellKnownProperties.ContainsAnyCaseVersionOf(this.FieldName))
 				{
 					return false;
 				}
 
-				if (LexExampleSentence.WellKnownProperties.Contains(FieldName))
+				if (LexExampleSentence.WellKnownProperties.Contains(this.FieldName))
 				{
 					return false;
 				}
@@ -294,9 +294,9 @@ namespace WeSay.Project
 		{
 			get
 			{
-				if (_fieldName == FieldNames.EntryLexicalForm.ToString() ||
-					_fieldName == LexSense.WellKnownProperties.Definition ||
-					_fieldName == FieldNames.ExampleSentence.ToString())
+				if (this._fieldName == FieldNames.EntryLexicalForm.ToString() ||
+					this._fieldName == LexSense.WellKnownProperties.Definition ||
+					this._fieldName == FieldNames.ExampleSentence.ToString())
 				{
 					return false;
 				}
@@ -312,8 +312,8 @@ namespace WeSay.Project
 		[ReflectorProperty("dataType", Required = true)]
 		public string DataTypeName
 		{
-			get { return _dataTypeName; }
-			set { _dataTypeName = value; }
+			get { return this._dataTypeName; }
+			set { this._dataTypeName = value; }
 		}
 
 		[Description(
@@ -322,8 +322,8 @@ namespace WeSay.Project
 		[ReflectorProperty("optionsListFile", Required = false)]
 		public string OptionsListFile
 		{
-			get { return _optionsListFile; }
-			set { _optionsListFile = value; }
+			get { return this._optionsListFile; }
+			set { this._optionsListFile = value; }
 		}
 
 		[Browsable(false)]
@@ -331,17 +331,17 @@ namespace WeSay.Project
 		{
 			get
 			{
-				if (FieldName == FieldNames.EntryLexicalForm.ToString())
+				if (this.FieldName == FieldNames.EntryLexicalForm.ToString())
 				{
 					return true;
 				}
 
-				if (FieldName == FieldNames.ExampleSentence.ToString())
+				if (this.FieldName == FieldNames.ExampleSentence.ToString())
 				{
 					return true;
 				}
 
-				if (FieldName == FieldNames.ExampleTranslation.ToString())
+				if (this.FieldName == FieldNames.ExampleTranslation.ToString())
 				{
 					return true;
 				}
@@ -358,14 +358,14 @@ namespace WeSay.Project
 
 		public override string ToString()
 		{
-			return DisplayName;
+			return this.DisplayName;
 		}
 
 		[Browsable(false)]
 		[ReflectorProperty("writingSystems", typeof (WsIdCollectionSerializerFactory))]
 		public IList<string> WritingSystemIds
 		{
-			get { return _writingSystemIds; }
+			get { return this._writingSystemIds; }
 			set
 			{
 				int i = 0;
@@ -378,32 +378,32 @@ namespace WeSay.Project
 														"Writing System argument" + i + "is null");
 					}
 				}
-				_writingSystemIds = new List<string>(value);
+				this._writingSystemIds = new List<string>(value);
 			}
 		}
 
 		[Browsable(false)]
 		public string Description
 		{
-			get { return _description; }
-			set { _description = value; }
+			get { return this._description; }
+			set { this._description = value; }
 		}
 
 		[Browsable(false)]
 		[ReflectorCollection("visibility", Required = false)]
 		public CommonEnumerations.VisibilitySetting Visibility
 		{
-			get { return _visibility; }
+			get { return this._visibility; }
 			set
 			{
-				_visibility = value;
+				this._visibility = value;
 
 				//for backward compatibility:
 				//we now use Enabled=false rather than Invisible
-				if (_visibility == CommonEnumerations.VisibilitySetting.Invisible)
+				if (this._visibility == CommonEnumerations.VisibilitySetting.Invisible)
 				{
-					_visibility = CommonEnumerations.VisibilitySetting.Visible;
-					Enabled = false;
+					this._visibility = CommonEnumerations.VisibilitySetting.Visible;
+					this.Enabled = false;
 				}
 			}
 		}
@@ -413,25 +413,25 @@ namespace WeSay.Project
 		{
 			get
 			{
-				if (_enabledNotSet) //for backwards compatibility, before we added Enabled
+				if (this._enabledNotSet) //for backwards compatibility, before we added Enabled
 				{
-					Enabled = Visibility == CommonEnumerations.VisibilitySetting.Visible;
+					this.Enabled = this.Visibility == CommonEnumerations.VisibilitySetting.Visible;
 				}
-				return _enabled;
+				return this._enabled;
 			}
 			set
 			{
-				_enabled = value;
-				_enabledNotSet = false;
+				this._enabled = value;
+				this._enabledNotSet = false;
 			}
 		}
 
 		public void ChangeWritingSystemId(string oldId, string newId)
 		{
-			int i = _writingSystemIds.FindIndex(delegate(string id) { return id == oldId; });
+			int i = this._writingSystemIds.FindIndex(delegate(string id) { return id == oldId; });
 			if (i > -1)
 			{
-				_writingSystemIds[i] = newId;
+				this._writingSystemIds[i] = newId;
 			}
 		}
 
@@ -449,22 +449,8 @@ namespace WeSay.Project
 			get
 			{
 				return
-						DataTypeName == BuiltInDataType.Option.ToString() ||
-						DataTypeName == BuiltInDataType.OptionCollection.ToString();
-			}
-		}
-
-		[Browsable(false)]
-		public IList<WritingSystem> WritingSystems
-		{
-			get
-			{
-				List<WritingSystem> l = new List<WritingSystem>();
-				foreach (string id in _writingSystemIds)
-				{
-					l.Add(BasilProject.Project.WritingSystems[id]);
-				}
-				return l;
+						this.DataTypeName == BuiltInDataType.Option.ToString() ||
+						this.DataTypeName == BuiltInDataType.OptionCollection.ToString();
 			}
 		}
 
@@ -472,18 +458,18 @@ namespace WeSay.Project
 		[ReflectorProperty("multiplicity", Required = false)]
 		public MultiplicityType Multiplicity
 		{
-			get { return _multiplicity; }
-			set { _multiplicity = value; }
+			get { return this._multiplicity; }
+			set { this._multiplicity = value; }
 		}
 
 		public bool GetDoShow(IReportEmptiness data, bool showNormallyHiddenFields)
 		{
 			return
-					_enabled &&
+					this._enabled &&
 					((showNormallyHiddenFields ||
 					  (data != null && data.ShouldCountAsFilledForPurposesOfConditionalDisplay)) ||
-					 (_visibility == CommonEnumerations.VisibilitySetting.Visible ||
-					  _visibility == CommonEnumerations.VisibilitySetting.ReadOnly));
+					 (this._visibility == CommonEnumerations.VisibilitySetting.Visible ||
+					  this._visibility == CommonEnumerations.VisibilitySetting.ReadOnly));
 		}
 
 		public static string NewFieldNamePrefix
@@ -495,7 +481,7 @@ namespace WeSay.Project
 		{
 			get
 			{
-				if (_fieldName == FieldNames.EntryLexicalForm.ToString())
+				if (this._fieldName == FieldNames.EntryLexicalForm.ToString())
 				{
 					return false;
 				}
@@ -504,7 +490,7 @@ namespace WeSay.Project
 				if(_fieldName == FieldNames.SenseGloss.ToString())
 					return false;
 #else
-				if (_fieldName == LexSense.WellKnownProperties.Definition)
+				if (this._fieldName == LexSense.WellKnownProperties.Definition)
 				{
 					return false;
 				}
@@ -518,14 +504,14 @@ namespace WeSay.Project
 		[ReflectorProperty("spellCheckingEnabled", Required = false)]
 		public bool IsSpellCheckingEnabled
 		{
-			get { return _isSpellCheckingEnabled; }
-			set { _isSpellCheckingEnabled = value; }
+			get { return this._isSpellCheckingEnabled; }
+			set { this._isSpellCheckingEnabled = value; }
 		}
 
 		[Browsable(false)]
 		public bool HasWritingSystem(string writingSystemId)
 		{
-			return _writingSystemIds.Exists(delegate(string s) { return s == writingSystemId; });
+			return this._writingSystemIds.Exists(delegate(string s) { return s == writingSystemId; });
 		}
 
 		public static void ModifyMasterFromUser(Field master, Field user)
@@ -661,7 +647,7 @@ namespace WeSay.Project
 
 		public override StandardValuesCollection GetStandardValues(ITypeDescriptorContext context)
 		{
-			return new StandardValuesCollection(ValidStrings);
+			return new StandardValuesCollection(this.ValidStrings);
 		}
 	}
 }
