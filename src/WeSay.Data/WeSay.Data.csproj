@@ -64,6 +64,7 @@
 	<Compile Include="DatabaseModified.cs" />
 	<Compile Include="Db4oRecordListManager.cs" />
 	<Compile Include="Db4oRepositoryId.cs" />
+	<Compile Include="DictionaryEqualityComparer.cs" />
 	<Compile Include="InMemoryBindingList.cs" />
 	<Compile Include="IRepository.cs" />
 	<Compile Include="ISortHelper.cs" />

@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -30,7 +31,7 @@ namespace WeSay.Foundation
 	}
 
 	[ReflectorType("WritingSystem")]
-	public class WritingSystem: IComparer<string>
+	public class WritingSystem: IComparer<string>, IComparer
 	{
 		public static string IdForUnknownAnalysis = "en";
 		public static string IdForUnknownVernacular = "v";
@@ -281,6 +282,12 @@ namespace WeSay.Foundation
 		{
 			return _sortComparer(x, y);
 		}
+
+		public int Compare(object x, object y)
+		{
+			return Compare((string) x, (string) y);
+		}
+
 
 		#endregion
 
@@ -673,5 +680,6 @@ namespace WeSay.Foundation
 		}
 
 		#endregion
+
 	}
 }

@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using Db4objects.Db4o;
-using Db4objects.Db4o.Inside.Query;
 using Db4objects.Db4o.Query;
 using LiftIO.Parsing;
 using Palaso.Text;
@@ -95,29 +94,9 @@ namespace WeSay.LexicalModel
 																	ApproximateMatcherOptions
 																			matcherOptions)
 		{
-			IQuery<LexEntry> query = GetLexEntryQuery(writingSystem, true);
-			List<RecordToken<LexEntry>> recordTokens =
-					new List<RecordToken<LexEntry>>(query.RetrieveItems());
-
-			// filter out any entries that were added because of other
-			// writing systems (e.g. reversals)
-			int index = 0;
-			while (index != recordTokens.Count)
-			{
-				if (recordTokens[index].DisplayString.EndsWith("*"))
-				{
-					recordTokens.RemoveAt(index);
-				}
-				else
-				{
-					++index;
-				}
-			}
-
-			return
-					new ResultSet<LexEntry>(this,
-											ApproximateMatcher.FindClosestForms
-													<RecordToken<LexEntry>>(recordTokens,
+			return new ResultSet<LexEntry>(this,
+										   ApproximateMatcher.FindClosestForms
+													<RecordToken<LexEntry>>(GetAllEntriesSortedByLexicalForm(writingSystem),
 																			GetFormForMatchingStrategy,
 																			lexicalForm,
 																			matcherOptions));
@@ -125,128 +104,85 @@ namespace WeSay.LexicalModel
 
 		private static string GetFormForMatchingStrategy(object item)
 		{
-			return ((RecordToken<LexEntry>) item).DisplayString;
-		}
-
-		public ResultSet<LexEntry> GetEntriesMatching(IQuery<LexEntry> query)
-		{
-			throw new NotImplementedException("GetEntriesMatching");
-			// Run the sorted query
-			//ResultSet<LexEntry> recordTokens = query.RetrieveItems();
-			// Apply a filter
+			return (string)((RecordToken<LexEntry>) item).Results["Form"];
 		}
 
 		public ResultSet<LexEntry> GetEntriesWithMatchingLexicalForm(string lexicalForm,
 																	 WritingSystem writingSystem)
 		{
-			// search dictionary for entry with new lexical form
-			IQuery<LexEntry> query = GetLexEntryQuery(writingSystem, true);
-			ResultSet<LexEntry> recordTokens = query.RetrieveItems();
-
-			// This should probably be optimized by using a specific query
-			List<RecordToken<LexEntry>> result = new List<RecordToken<LexEntry>>();
-			int index = recordTokens.FindFirstIndexWithDisplayString(lexicalForm);
-			while (index >= 0 && index < recordTokens.Count &&
-				   recordTokens[index].DisplayString == lexicalForm)
-			{
-				result.Add(recordTokens[index]);
-				++index;
-			}
-			return new ResultSet<LexEntry>(this, result);
-		}
-
-		public RecordTokenComparer<LexEntry> GetRecordTokenComparerForLexicalForm(
-				WritingSystem writingSystem)
-		{
-			throw new NotImplementedException("GetRecordTokenComparerForLexicalForm");
-			//LexEntrySortHelper sortHelper = new LexEntrySortHelper(this,
-			//                                                       writingSystem,
-			//                                                       true);
-			//return new RecordTokenComparer(sortHelper.KeyComparer);
-		}
-
-		IEnumerable<string[]> GetCitationForms(LexEntry e)
-		{
-			string[] result = new string[2];
-			foreach (LanguageForm form in e.CitationForm.Forms)
-			{
-				result[0] = form.WritingSystemId;
-				result[1] = form.Form;
-				yield return result;
-			}
+			ResultSet<LexEntry> resultSet = GetAllEntriesSortedByLexicalForm(writingSystem);
+			resultSet.RemoveAll(delegate (RecordToken<LexEntry> token)
+								{
+									return (string)token.Results["Form"] != lexicalForm;
+								});
+			return resultSet;
 		}
 
 		public ResultSet<LexEntry> GetAllEntriesSortedByHeadword(WritingSystem headwordWritingSystem)
 		{
-
 			Query entriesByHeadwordQuery = GetAllLexEntriesQuery().In("VirtualHeadWord")
 									.ForEach("Forms").Show("Form").Show("WritingSystemId");
-
-			ResultSet<LexEntry> entriesByHeadword = GetItemsMatching(entriesByHeadwordQuery);
-			// sort by repositoryId, writingSystem
-			entriesByHeadword.Sort( new SortKeyDefinition("Id", Comparer<RepositoryId>.Default),
-									new SortKeyDefinition("WritingSystemId", Comparer<string>.Default));
-			// remove all entries with writing system != headwordWritingSystem
-			//            make sure always have one entry though
-			// sort: by headword
-			ResultSet<LexEntry> entriesByLexicalForm = GetItemsMatching(entriesByLexicalFormQuery);
-			// sort: by repository id, writingSystemId (headwordWritingSystem to top)
-			// walk list of entries, removing duplicate entries which have same repository id
-			//                       if first entry for a repository id does not have writing
-			//                       system == headwordWritingSystem then replace display string
-			//                       to empty string and writingSystemId to headword
-			// merge: replace entriesByLexicalForm with entriesByCitationForm when they have same repository id
-
-			for(int i = 0; i != entriesByLexicalForm.)
-			foreach (RecordToken<LexEntry> token in entriesByLexicalForm)
-			{
-
-			}
-
-			List<RecordToken<LexEntry>> result = new List<RecordToken<LexEntry>>(r.Count);
-			foreach (RecordToken<LexEntry> token in r)
-			{
-				string headword = HeadwordFromCitationFormAndLexicalForm(token.Results[0], token.Results[1]);
-				result.Add(new RecordToken<LexEntry>(this, headword, token.Id));
-			}
-			result.Sort(new RecordTokenComparer<LexEntry>(headwordWritingSystem));
-			return new ResultSet<LexEntry>(this, result);
-
-			//IQuery<LexEntry> query =
-			//        new Db4oHeadwordQuery(this, Db4oDataSource, headwordWritingSystem);
-			//return query.RetrieveItems();
+			return GetItemsMatching(entriesByHeadwordQuery, headwordWritingSystem);
 		}
 
-		private static string HeadwordFromCitationFormAndLexicalForm(
-			string citation,
-			string lexicalForm)
+		private ResultSet<LexEntry> FilterEntriesToOnlyThoseWithWritingSystemId(ResultSet<LexEntry> entriesWithAllHeadwords, string headwordWritingSystemId)
 		{
-			if (String.IsNullOrEmpty(citation))
+			entriesWithAllHeadwords.Sort(new SortDefinition("RepositoryId", Comparer<RepositoryId>.Default));
+
+			// remove all entries with writing system != headwordWritingSystem
+			//            make sure always have one entry though
+			// walk list of entries, removing duplicate entries which have same repository id
+			//     if there is no entry for a repository id that has
+			//     writingSystemId == headwordWritingSystem then
+			//     insert an empty form with writingSystemId to headwordId
+
+			Dictionary<string, object> emptyResults = new Dictionary<string, object>();
+			emptyResults.Add("Form",string.Empty);
+			emptyResults.Add("WritingSystemId",headwordWritingSystemId);
+
+			List<RecordToken<LexEntry>> entriesWithHeadword = new List<RecordToken<LexEntry>>();
+			RepositoryId previousRepositoryId = null;
+			bool headWordRepositoryIdFound = false;
+
+			foreach (RecordToken<LexEntry> token in entriesWithAllHeadwords)
 			{
-				return lexicalForm;
+				if(token.Id != previousRepositoryId)
+				{
+					if(!headWordRepositoryIdFound)
+					{
+						entriesWithHeadword.Add(new RecordToken<LexEntry>(this, emptyResults, previousRepositoryId));
+					}
+					headWordRepositoryIdFound = false;
+					previousRepositoryId = token.Id;
+				}
+
+				if ((string)token.Results["WritingSystemId"] == headwordWritingSystemId)
+				{
+					entriesWithHeadword.Add(token);
+					headWordRepositoryIdFound = true;
+				}
+
 			}
-			return citation;
+			if(!headWordRepositoryIdFound)
+			{
+				entriesWithHeadword.Add(new RecordToken<LexEntry>(this, emptyResults, previousRepositoryId));
+			}
+			return new ResultSet<LexEntry>(this, entriesWithHeadword);
 		}
 
 		public LexEntry GetLexEntryWithMatchingId(string id)
 		{
-			IQuery q = _recordListManager.DataSource.Data.Query();
-			q.Constrain(typeof (LexEntry));
-			q.Descend("_id").Constrain(id);
-			IObjectSet matches = q.Execute();
-			if (matches.Count == 0)
+			Query idOfEntries = GetAllLexEntriesQuery().Show("Id");
+			ResultSet<LexEntry> items = GetItemsMatching(idOfEntries);
+			RecordToken<LexEntry> first = items.FindFirst(delegate(RecordToken<LexEntry> token)
+												{
+													return (string)token.Results["Id"] == id;
+												});
+			if(first == null)
 			{
 				return null;
 			}
-			if (matches.Count > 1) //review: not sure if we should throw or not
-			{
-				throw new ApplicationException(
-						String.Format("There were {0} objects found with the id {1}",
-									  matches.Count,
-									  id));
-			}
-			Debug.Assert(matches[0].GetType() == typeof (LexEntry));
-			return (LexEntry) matches[0];
+			return first.RealObject;
 		}
 
 		public int GetHomographNumber(LexEntry entry, WritingSystem headwordWritingSystem)
@@ -374,16 +310,18 @@ namespace WeSay.LexicalModel
 
 		public ResultSet<LexEntry> GetAllEntriesSortedByLexicalForm(WritingSystem writingSystem)
 		{
-			List<RecordToken<LexEntry>> list =
-					KeyToEntryIdInitializer.GetLexicalFormToEntryIdPairs(this,
-																		 GetLexEntryQuery(
-																				 writingSystem, true),
-																		 _recordListManager.
-																				 DataSource,
-																		 writingSystem.Id);
+			Query entriesByHeadwordQuery = GetAllLexEntriesQuery().In("LexicalForm")
+						.ForEach("Forms").Show("Form").Show("WritingSystemId");
 
-			list.Sort(new RecordTokenComparer<LexEntry>(writingSystem));
-			return new ResultSet<LexEntry>(this, list);
+			return GetItemsMatching(entriesByHeadwordQuery, writingSystem);
+		}
+
+		private ResultSet<LexEntry> GetItemsMatching(Query entriesByHeadwordQuery, WritingSystem writingSystem) {
+			ResultSet<LexEntry> entriesWithAllHeadwords = GetItemsMatching(entriesByHeadwordQuery);
+			ResultSet<LexEntry> result = FilterEntriesToOnlyThoseWithWritingSystemId(entriesWithAllHeadwords, writingSystem.Id);
+
+			result.Sort(new SortDefinition("Form", writingSystem));
+			return result;
 		}
 
 		public RepositoryId[] GetAllItems()
@@ -393,19 +331,15 @@ namespace WeSay.LexicalModel
 
 		public ResultSet<LexEntry> GetAllEntriesSortedBySemanticDomain(string fieldName)
 		{
-			SemanticDomainSortHelper sortHelper =
-					new SemanticDomainSortHelper(this, _recordListManager.DataSource, fieldName);
-			return
-					new ResultSet<LexEntry>(this,
-											PrivateDb4oRecordListManager.GetSortedList(sortHelper));
-		}
+			Query allSenseProperties = GetAllLexEntriesQuery().ForEach("Senses")
+						.ForEach("Properties").Show("Key").Show("Value");
 
-		public RecordTokenComparer<LexEntry> GetRecordTokenComparerForSemanticDomain(
-				string fieldName)
-		{
-			SemanticDomainSortHelper sortHelper =
-					new SemanticDomainSortHelper(this, _recordListManager.DataSource, fieldName);
-			return new RecordTokenComparer<LexEntry>(sortHelper.KeyComparer);
+			ResultSet<LexEntry> results = GetItemsMatching(allSenseProperties);
+			results.RemoveAll(delegate (RecordToken<LexEntry> token)
+				{
+					return (string)token.Results["Key"] != fieldName;
+				});
+			return results;
 		}
 
 		public ResultSet<LexEntry> GetEntriesWithMatchingGlossSortedByLexicalForm(
@@ -505,7 +439,7 @@ namespace WeSay.LexicalModel
 
 
 		private static Query GetAllLexEntriesQuery() {
-			return new Query("LexEntry");
+			return new Query(typeof(LexEntry));
 		}
 
 		public RepositoryId[] GetItemsModifiedSince(DateTime last)
@@ -542,92 +476,6 @@ namespace WeSay.LexicalModel
 												  id));
 			}
 			return new ResultSet<LexEntry>(this, result);
-		}
-
-		private class SemanticDomainSortHelper: ISortHelper<LexEntry>
-		{
-			private readonly Db4oDataSource _db4oData;
-			private readonly LexEntryRepository _repository;
-			private readonly string _semanticDomainFieldName;
-
-			public SemanticDomainSortHelper(LexEntryRepository repository,
-											Db4oDataSource db4oData,
-											string semanticDomainFieldName)
-			{
-				if (db4oData == null)
-				{
-					throw new ArgumentNullException("db4oData");
-				}
-				if (semanticDomainFieldName == null)
-				{
-					throw new ArgumentNullException("semanticDomainFieldName");
-				}
-				if (semanticDomainFieldName == string.Empty)
-				{
-					throw new ArgumentOutOfRangeException("semanticDomainFieldName");
-				}
-
-				_db4oData = db4oData;
-				_repository = repository;
-				_semanticDomainFieldName = semanticDomainFieldName;
-			}
-
-			#region IDb4oSortHelper<string,LexEntry> Members
-
-			public IComparer<string> KeyComparer
-			{
-				get { return StringComparer.InvariantCulture; }
-			}
-
-			public ResultSet<LexEntry> RetrieveItems()
-			{
-				return
-						new ResultSet<LexEntry>(_repository,
-												KeyToEntryIdInitializer.GetKeyToEntryIdPairs(
-														_repository,
-														this,
-														_db4oData,
-														GetDisplayStrings));
-			}
-
-			public IEnumerable<string[]> GetDisplayStrings(LexEntry item)
-			{
-				List<string> keys = new List<string>();
-				foreach (LexSense sense in item.Senses)
-				{
-					OptionRefCollection semanticDomains =
-							sense.GetProperty<OptionRefCollection>(_semanticDomainFieldName);
-
-					if (semanticDomains != null)
-					{
-						foreach (string s in semanticDomains.Keys)
-						{
-							if (!keys.Contains(s))
-							{
-								keys.Add(s);
-							}
-						}
-					}
-				}
-				foreach (string key in keys)
-				{
-					string[] columns = new string[1];
-					columns[0] = key;
-					yield return columns;
-				}
-			}
-
-			public string Name
-			{
-				get { return "LexEntry sorted by " + _semanticDomainFieldName; }
-			}
-
-			public override int GetHashCode()
-			{
-				return _semanticDomainFieldName.GetHashCode();
-			}
-
-			#endregion
 		}
 	}
 }

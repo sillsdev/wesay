@@ -32,6 +32,11 @@ namespace WeSay.Data
 			get { return _results[index]; }
 		}
 
+		public void RemoveAll(Predicate<RecordToken<T>> match)
+		{
+			_results.RemoveAll(match);
+		}
+
 		public int Count
 		{
 			get { return _results.Count; }
@@ -47,19 +52,21 @@ namespace WeSay.Data
 		}
 
 		#region FindFirst(Index) Of DisplayString
-
+		[Obsolete]
 		public RecordToken<T> FindFirstWithDisplayString(string displayString)
 		{
 			int index = FindFirstIndexWithDisplayString(displayString);
 			return GetItemFromIndex(index);
 		}
 
+		[Obsolete]
 		public RecordToken<T> FindFirstWithDisplayString(string displayString, int startIndex)
 		{
 			int index = FindFirstIndexWithDisplayString(displayString, startIndex);
 			return GetItemFromIndex(index);
 		}
 
+		[Obsolete]
 		public RecordToken<T> FindFirstWithDisplayString(string displayString,
 														 int startIndex,
 														 int count)
@@ -68,6 +75,7 @@ namespace WeSay.Data
 			return GetItemFromIndex(index);
 		}
 
+		[Obsolete]
 		public int FindFirstIndexWithDisplayString(string displayString)
 		{
 			return
@@ -77,6 +85,7 @@ namespace WeSay.Data
 			// we find the first element. The .net BinarySearch finds any, not the first.
 		}
 
+		[Obsolete]
 		public int FindFirstIndexWithDisplayString(string displayString, int startIndex, int count)
 		{
 			return
@@ -85,6 +94,7 @@ namespace WeSay.Data
 									   delegate(RecordToken<T> r) { return r.DisplayString == displayString; });
 		}
 
+		[Obsolete]
 		public int FindFirstIndexWithDisplayString(string displayString, int startIndex)
 		{
 			return
@@ -94,6 +104,47 @@ namespace WeSay.Data
 
 		#endregion
 
+		#region FindFirst(Index) Of DisplayString
+		public RecordToken<T> FindFirst(Predicate<RecordToken<T>> match)
+		{
+			int index = FindFirstIndex(match);
+			return GetItemFromIndex(index);
+		}
+
+		public RecordToken<T> FindFirst(int startIndex,
+										Predicate<RecordToken<T>> match)
+		{
+			int index = FindFirstIndex(startIndex, match);
+			return GetItemFromIndex(index);
+		}
+
+		public RecordToken<T> FindFirst(int startIndex,
+										int count,
+										Predicate<RecordToken<T>> match)
+		{
+			int index = FindFirstIndex(startIndex, count, match);
+			return GetItemFromIndex(index);
+		}
+
+		public int FindFirstIndex(Predicate<RecordToken<T>> match)
+		{
+			return _results.FindIndex(match);
+		}
+
+		public int FindFirstIndex(int startIndex,
+								  int count,
+								  Predicate<RecordToken<T>> match)
+		{
+			return _results.FindIndex(startIndex, count, match);
+		}
+
+		public int FindFirstIndex(int startIndex,
+								  Predicate<RecordToken<T>> match)
+		{
+			return _results.FindIndex(startIndex,match);
+		}
+
+		#endregion
 		#region FindFirst(Index) of RepositoryId
 
 		public RecordToken<T> FindFirst(RepositoryId id)
@@ -234,5 +285,17 @@ namespace WeSay.Data
 		}
 
 		#endregion
+
+		public void Sort(params SortDefinition[] sortkeys)
+		{
+			throw new NotImplementedException();
+		}
+
+	}
+	public class SortDefinition
+	{
+		public SortDefinition(string field, IComparer comparer)
+		{
+		}
 	}
 }
