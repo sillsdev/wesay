@@ -64,6 +64,7 @@
 	<Compile Include="SimpleIntFilter.cs" />
 	<Compile Include="SimpleIntTestClass.cs" />
 	<Compile Include="TestItem.cs" />
+	<Compile Include="TestMultiple.cs" />
   </ItemGroup>
   <ItemGroup>
 	<Reference Include="Db4objects.Db4o, Version=6.0.2.0, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL">

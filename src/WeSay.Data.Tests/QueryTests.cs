@@ -191,6 +191,53 @@ namespace WeSay.Data.Tests
 			// since it is generated
 			results.GetEnumerator().MoveNext();
 		}
+
+		[Test]
+		[ExpectedException(typeof(ArgumentOutOfRangeException))]
+		public void Show_LabelAlreadyUsed_Throws()
+		{
+			new Query(typeof(TestItem)).Show("StoredString")
+				.ForEach("Children").Show("StoredString");
+		}
+
+		[Test]
+		public void Show_DifferentLabel_Okay()
+		{
+			new Query(typeof(TestItem)).Show("StoredString")
+				.ForEach("Children").Show("StoredString","ChildrenStoredString");
+		}
+
+		[Test]
+		[ExpectedException(typeof(ArgumentOutOfRangeException))]
+		public void Show_LabelAlreadyUsedInBranch_Throws()
+		{
+			Query query = new Query(typeof (TestItem));
+			query.In("Child").Show("StoredString");
+			query.ForEach("Children").Show("StoredString");
+		}
+
+		[Test]
+		public void Show_DifferentLabelInBranch_Okay()
+		{
+			Query query = new Query(typeof(TestItem));
+			query.In("Child").Show("StoredString","ChildStoredString");
+			query.ForEach("Children").Show("StoredString","ChildrenStoredString");
+		}
+
+		[Test]
+		[ExpectedException(typeof(ArgumentOutOfRangeException))]
+		public void ShowEach_LabelAlreadyUsed_Throws()
+		{
+			new Query(typeof(TestMultiple)).ShowEach("Strings", "a")
+				.ShowEach("KeyValuePairs", "a");
+		}
+
+		[Test]
+		public void ShowEach_DifferentLabel_Okay()
+		{
+			new Query(typeof(TestMultiple)).ShowEach("Strings", "a")
+				.ShowEach("KeyValuePairs", "b");
+		}
 	}
 	[TestFixture]
 	public class EmptyItemQueryTests
@@ -358,15 +405,16 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void GetResults_ShowStoredStringAndStoredStringsForEachChildren_ThreeItems()
 		{
-			Query allStoredIntsInChildren = new Query(typeof(TestItem)).Show("StoredString").ForEach("Children").Show("StoredString");
+			Query allStoredIntsInChildren = new Query(typeof(TestItem)).Show("StoredString").
+				ForEach("Children").Show("StoredString", "ChildStoredString");
 
 			IEnumerable<Dictionary<string, object>> results = allStoredIntsInChildren.GetResults(this.item);
 
 			Dictionary<string, object>[] expectedResult = new Dictionary<string, object>[]
 					{
-							new Result(new KV("StoredString", "top"), new KV("StoredInt", 1)),
-							new Result(new KV("StoredString", "top"), new KV("StoredInt", 2)),
-							new Result(new KV("StoredString", "top"), new KV("StoredInt", 3))
+							new Result(new KV("StoredString", "top"), new KV("ChildStoredString", "1")),
+							new Result(new KV("StoredString", "top"), new KV("ChildStoredString", "2")),
+							new Result(new KV("StoredString", "top"), new KV("ChildStoredString", "3"))
 					};
 			Assert.DoAssert(new DictionaryContentAsserter<string, object>(expectedResult, results));
 		}
@@ -375,17 +423,17 @@ namespace WeSay.Data.Tests
 		public void GetResults_ShowStoredStringChildStoredStringAndStoredStringsForEachChildren_ThreeItems()
 		{
 			Query query = new Query(typeof(TestItem)).Show("StoredString");
-			query.In("Child").Show("StoredString");
-			query.ForEach("Children").Show("StoredString");
+			query.In("Child").Show("StoredString", "ChildStoredString");
+			query.ForEach("Children").Show("StoredString", "ChildrenStoredString");
 
 			IEnumerable<Dictionary<string, object>> results = query.GetResults(this.item);
 
 			//todo: Duplicate keys are not allowed - protect for this in the query.
 			Dictionary<string, object>[] expectedResult = new Dictionary<string, object>[]
 					{
-							new Result(new KV("StoredString", "top"), new KV("StoredString", null), new KV("StoredString", "1")),
-							new Result(new KV("StoredString", "top"), new KV("StoredString", null), new KV("StoredString", "2")),
-							new Result(new KV("StoredString", "top"), new KV("StoredString", null), new KV("StoredString", "3"))
+							new Result(new KV("StoredString", "top"), new KV("ChildStoredString", null), new KV("ChildrenStoredString", "1")),
+							new Result(new KV("StoredString", "top"), new KV("ChildStoredString", null), new KV("ChildrenStoredString", "2")),
+							new Result(new KV("StoredString", "top"), new KV("ChildStoredString", null), new KV("ChildrenStoredString", "3"))
 					};
 
 			Assert.DoAssert(new DictionaryContentAsserter<string, object>(expectedResult, results));
@@ -396,37 +444,6 @@ namespace WeSay.Data.Tests
 	[TestFixture]
 	public class ItemWithMultiplesTests
 	{
-		private class TestMultiple
-		{
-			public TestMultiple()
-			{
-				_strings = new List<string>();
-				_keyValuePairs = new List<KeyValuePair<string, string>>();
-			}
-
-			public readonly List<string> _strings;
-
-			public List<string> Strings
-			{
-				get { return this._strings; }
-			}
-
-			public List<KeyValuePair<string, string>> KeyValuePairs
-			{
-				get { return this._keyValuePairs; }
-			}
-
-			public readonly List<KeyValuePair<string, string> > _keyValuePairs;
-
-			public string String
-			{
-				set { this._string = value; }
-				get { return this._string; }
-			}
-
-			public string _string;
-		}
-
 		private TestMultiple item;
 		[SetUp]
 		public void Setup()

@@ -74,6 +74,7 @@ namespace WeSay.Data
 		private List<Query> _nestedQueries;
 		private List<KeyValuePair<string, MethodInfo>> _resultProperties;
 		private readonly Type _t;
+		private List<string> _labelRegistry;
 
 		protected virtual void GetResultsCore(List<Dictionary<string, object>> result, object o)
 		{
@@ -121,26 +122,31 @@ namespace WeSay.Data
 				throw new InvalidOperationException();
 			}
 
-			Query baseQuery = this;
-			if (this._root != null)
-			{
-				baseQuery = this._root;
-			}
+			Query root = GetRoot();
 
-			if (!baseQuery._t.IsInstanceOfType(o))
+			if (!root._t.IsInstanceOfType(o))
 			{
 				throw new ArgumentOutOfRangeException("o",
 													  o,
 													  "Argument is type " + o.GetType().Name +
-													  " but should be of type " + baseQuery._t.Name);
+													  " but should be of type " + root._t.Name);
 			}
 
 			List<Dictionary<string, object>> results = new List<Dictionary<string, object>>();
-			baseQuery.GetResultsCore(results, o);
+			root.GetResultsCore(results, o);
 			foreach (Dictionary<string, object> result in results)
 			{
 				yield return result;
 			}
+		}
+
+		private Query GetRoot() {
+			Query root = this;
+			if (this._root != null)
+			{
+				root = this._root;
+			}
+			return root;
 		}
 
 		private readonly Query _root;
@@ -161,6 +167,7 @@ namespace WeSay.Data
 			}
 			_root = null;
 			_t = t;
+			_labelRegistry = null;
 		}
 
 		protected virtual string TypeName
@@ -190,6 +197,20 @@ namespace WeSay.Data
 			return q;
 		}
 
+		private void RegisterLabel(string label)
+		{
+			Query root = GetRoot();
+			if (root._labelRegistry == null)
+			{
+				root._labelRegistry = new List<string>();
+			}
+			if (root._labelRegistry.Contains(label))
+			{
+				throw new ArgumentOutOfRangeException("label", label, "Label has already been used in Query");
+			}
+			root._labelRegistry.Add(label);
+		}
+
 		public Query Show(string fieldName)
 		{
 			return Show(fieldName, fieldName);
@@ -202,6 +223,8 @@ namespace WeSay.Data
 			{
 				throw new ArgumentOutOfRangeException("fieldName", fieldName, "Property implements IEnumerable<T>; use ShowEach instead");
 			}
+			RegisterLabel(label);
+
 			ResultProperties.Add(new KeyValuePair<string, MethodInfo>(label, mi));
 			return this;
 		}
@@ -218,6 +241,7 @@ namespace WeSay.Data
 			{
 				throw new ArgumentOutOfRangeException("fieldName", fieldName, "Property does not implement IEnumerable<T>; use Show instead");
 			}
+			RegisterLabel(label);
 
 			ResultProperties.Add(new KeyValuePair<string, MethodInfo>(label, mi));
 			return this;
