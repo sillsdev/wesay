@@ -6,7 +6,7 @@ using WeSay.Data;
 
 namespace WeSay.Data.Tests
 {
-	public class IRepositoryStateUnitializedTests<T> where T: new()
+	public class IRepositoryStateUnitializedTests<T> where T: class, new()
 	{
 		private IRepository<T> _repositoryUnderTest;
 
@@ -115,7 +115,7 @@ namespace WeSay.Data.Tests
 		}
 	}
 
-	public class IRepositoryCreateItemTransitionTests<T> where T : new()
+	public class IRepositoryCreateItemTransitionTests<T> where T : class, new()
 	{
 		private IRepository<T> _repositoryUnderTest;
 		private T item;
@@ -253,7 +253,7 @@ namespace WeSay.Data.Tests
 		}
 	}
 
-	public class IRepositoryDeleteItemTransitionTests<T> where T : new()
+	public class IRepositoryDeleteItemTransitionTests<T> where T : class, new()
 	{
 		private IRepository<T> _repositoryUnderTest;
 		private T item;
@@ -350,7 +350,7 @@ namespace WeSay.Data.Tests
 		}
 	}
 
-	public class IRepositoryDeleteIdTransitionTests<T> where T : new()
+	public class IRepositoryDeleteIdTransitionTests<T> where T : class, new()
 	{
 		private IRepository<T> _repositoryUnderTest;
 		private T item;

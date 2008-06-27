@@ -3,6 +3,7 @@ using WeSay.Data;
 
 namespace WeSay.Data.Tests
 {
+#if WORKING
 	[TestFixture]
 	public class Db4oRepositoryStateUnitializedTests : IRepositoryStateUnitializedTests<TestItem>
 	{
@@ -46,4 +47,5 @@ namespace WeSay.Data.Tests
 		}
 
 	}
+#endif
 }

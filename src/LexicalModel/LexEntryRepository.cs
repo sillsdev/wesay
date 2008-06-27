@@ -165,20 +165,44 @@ namespace WeSay.LexicalModel
 			//return new RecordTokenComparer(sortHelper.KeyComparer);
 		}
 
+		IEnumerable<string[]> GetCitationForms(LexEntry e)
+		{
+			string[] result = new string[2];
+			foreach (LanguageForm form in e.CitationForm.Forms)
+			{
+				result[0] = form.WritingSystemId;
+				result[1] = form.Form;
+				yield return result;
+			}
+		}
+
 		public ResultSet<LexEntry> GetAllEntriesSortedByHeadword(WritingSystem headwordWritingSystem)
 		{
-			Query entriesWithCitationForms =
-				GetAllEntriesQuery().Having("CitationForm")
-									.Having("Forms").Show("Form")
-									.Having("WritingSystemId").Equals(headwordWritingSystem.Id);
 
+			Query entriesByHeadwordQuery = GetAllLexEntriesQuery().In("VirtualHeadWord")
+									.ForEach("Forms").Show("Form").Show("WritingSystemId");
 
-			Query entriesWithoutCitationForm = GetAllEntriesQuery();
-			entriesWithCitationForms.AddCriterion("CitationForm/Forms[WritingSystemId", Operation.DoesNotContain, headwordWritingSystem.Id);
-			entriesWithCitationForms.AddResult("CitationForm/Forms/Form", Order.Unsorted);
+			ResultSet<LexEntry> entriesByHeadword = GetItemsMatching(entriesByHeadwordQuery);
+			// sort by repositoryId, writingSystem
+			entriesByHeadword.Sort( new SortKeyDefinition("Id", Comparer<RepositoryId>.Default),
+									new SortKeyDefinition("WritingSystemId", Comparer<string>.Default));
+			// remove all entries with writing system != headwordWritingSystem
+			//            make sure always have one entry though
+			// sort: by headword
+			ResultSet<LexEntry> entriesByLexicalForm = GetItemsMatching(entriesByLexicalFormQuery);
+			// sort: by repository id, writingSystemId (headwordWritingSystem to top)
+			// walk list of entries, removing duplicate entries which have same repository id
+			//                       if first entry for a repository id does not have writing
+			//                       system == headwordWritingSystem then replace display string
+			//                       to empty string and writingSystemId to headword
+			// merge: replace entriesByLexicalForm with entriesByCitationForm when they have same repository id
 
-			allLexEntries.AddResult("LexicalForm/Forms/Form", Order.Unsorted);
-			ResultSet<LexEntry> r = GetItemsMatching(allLexEntries);
+			for(int i = 0; i != entriesByLexicalForm.)
+			foreach (RecordToken<LexEntry> token in entriesByLexicalForm)
+			{
+
+			}
+
 			List<RecordToken<LexEntry>> result = new List<RecordToken<LexEntry>>(r.Count);
 			foreach (RecordToken<LexEntry> token in r)
 			{
@@ -438,7 +462,7 @@ namespace WeSay.LexicalModel
 
 		public ResultSet<LexEntry> GetAllEntriesSortedByGloss(WritingSystem writingSystem)
 		{
-			Query allEntriesByGloss = GetAllEntriesQuery();
+			Query allEntriesByGloss = GetAllLexEntriesQuery();
 			allEntriesByGloss.AddResult("Senses/Gloss/Forms/Form");
 			IQuery<LexEntry> query = GetLexEntryQuery(writingSystem, false);
 			return query.RetrieveItems();
@@ -480,7 +504,7 @@ namespace WeSay.LexicalModel
 		}
 
 
-		private Query GetAllEntriesQuery() {
+		private static Query GetAllLexEntriesQuery() {
 			return new Query("LexEntry");
 		}
 
@@ -566,7 +590,7 @@ namespace WeSay.LexicalModel
 														GetDisplayStrings));
 			}
 
-			public IEnumerable<string> GetDisplayStrings(LexEntry item)
+			public IEnumerable<string[]> GetDisplayStrings(LexEntry item)
 			{
 				List<string> keys = new List<string>();
 				foreach (LexSense sense in item.Senses)
@@ -585,7 +609,12 @@ namespace WeSay.LexicalModel
 						}
 					}
 				}
-				return keys;
+				foreach (string key in keys)
+				{
+					string[] columns = new string[1];
+					columns[0] = key;
+					yield return columns;
+				}
 			}
 
 			public string Name

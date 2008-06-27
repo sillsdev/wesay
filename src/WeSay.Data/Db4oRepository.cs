@@ -21,9 +21,11 @@ namespace WeSay.Data
 
 		public Db4oRepository(string path)
 		{
+#if FIXME
 			_recordListManager =
 					new PrivateDb4oRecordListManager(new WeSayWordsDb4oModelConfiguration(), path);
 			Db4oLexModelHelper.Initialize(_recordListManager.DataSource.Data);
+#endif
 		}
 
 		public DateTime LastModified
