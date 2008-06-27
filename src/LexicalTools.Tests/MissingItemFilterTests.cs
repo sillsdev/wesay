@@ -12,14 +12,14 @@ namespace WeSay.LexicalTools.Tests
 		{
 			Field field =
 					new Field("customField", "LexExampleSentence", new string[] {"vernacular"});
-			Assert.IsNotNull(new MissingItemFilter(field));
+			Assert.IsNotNull(new MissingFieldQuery(field));
 		}
 
 		[Test]
 		[ExpectedException(typeof (ArgumentNullException))]
 		public void ConstructWithField_NullField_Throws()
 		{
-			new MissingItemFilter(null);
+			new MissingFieldQuery(null);
 		}
 
 		[Test]
@@ -27,14 +27,14 @@ namespace WeSay.LexicalTools.Tests
 		{
 			ViewTemplate f = new ViewTemplate();
 			f.Add(new Field("field1", "LexEntry", new string[] {"en", "br", "th"}));
-			Assert.IsNotNull(new MissingItemFilter(f, "field1"));
+			Assert.IsNotNull(new MissingFieldQuery(f, "field1"));
 		}
 
 		[Test]
 		[ExpectedException(typeof (ArgumentNullException))]
 		public void ConstructWithFieldTemplate_NullFieldTemplate_Throws()
 		{
-			new MissingItemFilter(null, "field1");
+			new MissingFieldQuery(null, "field1");
 		}
 
 		[Test]
@@ -43,7 +43,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			ViewTemplate f = new ViewTemplate();
 			f.Add(new Field("field1", "LexEntry", new string[] {"en", "br", "th"}));
-			new MissingItemFilter(f, null);
+			new MissingFieldQuery(f, null);
 		}
 
 		[Test]
@@ -52,19 +52,19 @@ namespace WeSay.LexicalTools.Tests
 		{
 			ViewTemplate f = new ViewTemplate();
 			f.Add(new Field("field1", "LexEntry", new string[] {"en", "br", "th"}));
-			new MissingItemFilter(f, "field");
+			new MissingFieldQuery(f, "field");
 		}
 
 		[Test]
 		public void Key_SameFieldParameters_Same()
 		{
-			MissingItemFilter filter1 =
-					new MissingItemFilter(
+			MissingFieldQuery filter1 =
+					new MissingFieldQuery(
 							new Field("customField",
 									  "LexExampleSentence",
 									  new string[] {"vernacular"}));
-			MissingItemFilter filter2 =
-					new MissingItemFilter(
+			MissingFieldQuery filter2 =
+					new MissingFieldQuery(
 							new Field("customField",
 									  "LexExampleSentence",
 									  new string[] {"vernacular"}));
@@ -74,13 +74,13 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void Key_DifferentWS_Different()
 		{
-			MissingItemFilter filter1 =
-					new MissingItemFilter(
+			MissingFieldQuery filter1 =
+					new MissingFieldQuery(
 							new Field("customField",
 									  "LexExampleSentence",
 									  new string[] {"vernacular"}));
-			MissingItemFilter filter2 =
-					new MissingItemFilter(
+			MissingFieldQuery filter2 =
+					new MissingFieldQuery(
 							new Field("customField", "LexExampleSentence", new string[] {"analysis"}));
 			Assert.IsFalse(filter1.Key == filter2.Key);
 		}
@@ -88,13 +88,13 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void Key_MultipleWSInDifferentOrder_Same()
 		{
-			MissingItemFilter filter1 =
-					new MissingItemFilter(
+			MissingFieldQuery filter1 =
+					new MissingFieldQuery(
 							new Field("customField",
 									  "LexExampleSentence",
 									  new string[] {"vernacular", "analysis"}));
-			MissingItemFilter filter2 =
-					new MissingItemFilter(
+			MissingFieldQuery filter2 =
+					new MissingFieldQuery(
 							new Field("customField",
 									  "LexExampleSentence",
 									  new string[] {"analysis", "vernacular"}));
@@ -106,7 +106,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			Field field =
 					new Field("customField", "LexExampleSentence", new string[] {"vernacular"});
-			MissingItemFilter f = new MissingItemFilter(field);
+			MissingFieldQuery f = new MissingFieldQuery(field);
 			Assert.IsFalse(f.FilteringPredicate(null));
 		}
 	}

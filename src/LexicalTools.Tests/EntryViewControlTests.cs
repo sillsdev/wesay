@@ -4,7 +4,7 @@ using System.Windows.Forms;
 using NUnit.Framework;
 using WeSay.Foundation.Options;
 using WeSay.LexicalModel;
-using WeSay.LexicalModel.Db4oSpecific;
+using WeSay.LexicalModel.Tests.Db4oSpecific;
 using WeSay.Project;
 using WeSay.UI;
 
@@ -27,7 +27,6 @@ namespace WeSay.LexicalTools.Tests
 		[SetUp]
 		public void SetUp()
 		{
-			Db4oLexModelHelper.InitializeForNonDbTests();
 			WeSayWordsProject.InitializeForTests();
 
 			_filePath = Path.GetTempFileName();

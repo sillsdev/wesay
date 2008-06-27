@@ -7,7 +7,7 @@ namespace WeSay.LexicalTools.Tests
 	[TestFixture]
 	public class MissingMeaningFilterTests
 	{
-		private MissingItemFilter _missingMeaningFilter;
+		private MissingFieldQuery _missingMeaningFilter;
 
 		[SetUp]
 		public void Setup()
@@ -16,7 +16,7 @@ namespace WeSay.LexicalTools.Tests
 					new Field(LexSense.WellKnownProperties.Definition,
 							  "LexSense",
 							  new string[] {"analysis"});
-			_missingMeaningFilter = new MissingItemFilter(field);
+			_missingMeaningFilter = new MissingFieldQuery(field);
 		}
 
 		[Test]

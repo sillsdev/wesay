@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Text;
-using LiftIO.Parsing;
 using Palaso.Reporting;
 using Palaso.Text;
 using Palaso.UI.WindowsForms.i8n;
@@ -40,13 +39,6 @@ namespace WeSay.LexicalModel
 		[NonSerialized]
 		private bool _modifiedTimeIsLocked = false;
 
-		/// <summary>
-		/// This is used in homograph calculation.  When reading in from lift,
-		/// each entry should get this set in order, thus preserving the (un-desirable, in my (jh's) opinion)
-		/// the LIFT spec's assertion that the relative order of entries is significant.
-		/// </summary>
-		private int _birthOrder = -1;
-
 		//!!What!! Is this done this way so that we don't end up storing
 		//  the data in the object database?
 		public new class WellKnownProperties: WeSayDataObject.WellKnownProperties
@@ -65,34 +57,23 @@ namespace WeSay.LexicalModel
 			}
 		} ;
 
-		public LexEntry(): this(null, Guid.NewGuid(), -1) {}
+		public LexEntry(): this(null, Guid.NewGuid()) {}
 
-		public LexEntry(string id, Guid guid, int birthOrder): base(null)
+		public LexEntry(string id, Guid guid): base(null)
 		{
 			DateTime now = DateTime.UtcNow;
-			Init(id, guid, now, now, birthOrder);
-		}
-
-		public LexEntry(Extensible info, int birthOrder): base(null)
-		{
-			Init(info.Id, info.Guid, info.CreationTime, info.ModificationTime, birthOrder);
+			Init(id, guid, now, now);
 		}
 
 		private void Init(string id,
 						  Guid guid,
 						  DateTime creationTime,
-						  DateTime modifiedTime,
-						  int birthOrder)
+						  DateTime modifiedTime)
 		{
 			ModificationTime = modifiedTime;
 			ModifiedTimeIsLocked = true;
-			_birthOrder = birthOrder;
 
-			_id = id;
-			if (_id != null)
-			{
-				_id = _id.Trim().Normalize(NormalizationForm.FormD);
-			}
+			Id = id;
 			if (guid == Guid.Empty)
 			{
 				_guid = Guid.NewGuid();
@@ -183,17 +164,6 @@ namespace WeSay.LexicalModel
 		{
 			get
 			{
-#if DEBUG
-				//Why have this requirement, when the helper isn't needed in a non-db-test context?
-				//ONly because I don't know how else to make sure it is initialized when
-				// it *is* needed.
-				if (Db4oLexModelHelper.Singleton == null)
-				{
-					throw new ApplicationException(
-							"This class should not be used without initializing Db4oLexModelHelper.");
-				}
-#endif
-
 				return _lexicalForm;
 			}
 		}
@@ -266,6 +236,20 @@ namespace WeSay.LexicalModel
 		public string Id
 		{
 			get { return GetOrCreateId(false); }
+			set
+			{
+				string id = value;
+				if (value != null)
+				{
+					id = value.Trim().Normalize(NormalizationForm.FormD);
+					if(id.Length == 0)
+					{
+						id = null;
+					}
+				}
+				_id = id;
+
+			}
 		}
 
 		public override void CleanUpAfterEditting()
@@ -418,26 +402,16 @@ namespace WeSay.LexicalModel
 				NotifyPropertyChanged("order");
 			}
 		}
-
-		/// <summary>
-		/// The "birth order" of this entry, relative to all other entries
-		/// that have ever been in this version of the cache.
-		/// This is used in homograph number calculation
-		/// </summary>
-		public int DetermineBirthOrder(IHistoricalEntryCountProvider historicalCountProvider)
+		public MultiText VirtualHeadWord
 		{
-			if (_birthOrder < 0)
+			get
 			{
-				_birthOrder = historicalCountProvider.GetNextNumber();
-				//this lead to a bug that got expensive to fix,ws-647
-				//NotifyPropertyChanged("birthOrder");
-				//we can get away with not notifying by
-				//1) doing this determination during creation while cache building
-				//2) with a new entry, it is going to get called before the store happens
+				MultiText headword = new MultiText();
+				headword.MergeIn(LexicalForm);
+				headword.MergeIn(CitationForm);
+				return headword;
 			}
-			return _birthOrder;
 		}
-
 		public LanguageForm GetHeadWord(string writingSystemId)
 		{
 			if (string.IsNullOrEmpty(writingSystemId))

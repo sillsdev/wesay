@@ -10,11 +10,11 @@ using WeSay.Project;
 
 namespace WeSay.LexicalTools
 {
-	public class MissingItemFilter: IFilter<LexEntry>
+	public class MissingFieldQuery: IFieldQuery<LexEntry>
 	{
 		private readonly Field _field;
 
-		public MissingItemFilter(Field field)
+		public MissingFieldQuery(Field field)
 		{
 			if (field == null)
 			{
@@ -23,7 +23,7 @@ namespace WeSay.LexicalTools
 			_field = field;
 		}
 
-		public MissingItemFilter(ViewTemplate viewTemplate, string fieldName)
+		public MissingFieldQuery(ViewTemplate viewTemplate, string fieldName)
 		{
 			if (viewTemplate == null)
 			{
@@ -52,8 +52,8 @@ namespace WeSay.LexicalTools
 		{
 			get
 			{
-				string key = "Missing " + _field.FieldName;
-				List<string> writingSystemIds = new List<string>(_field.WritingSystemIds);
+				string key = "Missing " + this.Field.FieldName;
+				List<string> writingSystemIds = new List<string>(this.Field.WritingSystemIds);
 				writingSystemIds.Sort(StringComparer.InvariantCulture);
 				foreach (string writingSystemId in writingSystemIds)
 				{
@@ -71,12 +71,17 @@ namespace WeSay.LexicalTools
 
 		public string FieldName
 		{
-			get { return _field.FieldName; }
+			get { return this.Field.FieldName; }
+		}
+
+		public Field Field
+		{
+			get { return this._field; }
 		}
 
 		private bool IsMissingDataInWritingSystem(object content)
 		{
-			switch (_field.DataTypeName)
+			switch (this.Field.DataTypeName)
 			{
 				case "Option":
 					return ((OptionRef) content).IsEmpty;
@@ -86,7 +91,7 @@ namespace WeSay.LexicalTools
 					return IsMissingWritingSystem((MultiText) content);
 				case "RelationToOneEntry":
 					LexRelationCollection collection = (LexRelationCollection) content;
-					if (IsSkipped(collection.Parent, _field.FieldName))
+					if (IsSkipped(collection.Parent, this.Field.FieldName))
 					{
 						return false;
 					}
@@ -115,7 +120,7 @@ namespace WeSay.LexicalTools
 				return false;
 			}
 
-			switch (_field.ClassName)
+			switch (this.Field.ClassName)
 			{
 				case "LexEntry":
 					return IsMissingLexEntryField(entry);
@@ -123,7 +128,7 @@ namespace WeSay.LexicalTools
 				case "LexExampleSentence":
 					foreach (LexSense sense in entry.Senses)
 					{
-						if (_field.ClassName == "LexSense")
+						if (this.Field.ClassName == "LexSense")
 						{
 							if (IsMissingLexSenseField(sense))
 							{
@@ -134,7 +139,7 @@ namespace WeSay.LexicalTools
 						{
 							foreach (LexExampleSentence example in sense.ExampleSentences)
 							{
-								if (_field.ClassName == "LexExampleSentence")
+								if (this.Field.ClassName == "LexExampleSentence")
 								{
 									if (IsMissingLexExampleSentenceField(example))
 									{
@@ -143,7 +148,7 @@ namespace WeSay.LexicalTools
 								}
 							}
 							if (sense.ExampleSentences.Count == 0 &&
-								(_field.FieldName == Field.FieldNames.ExampleSentence.ToString()))
+								(this.Field.FieldName == Field.FieldNames.ExampleSentence.ToString()))
 							{
 								//ghost field
 								return true;
@@ -151,7 +156,7 @@ namespace WeSay.LexicalTools
 						}
 					}
 					if (entry.Senses.Count == 0 &&
-						(_field.FieldName == LexSense.WellKnownProperties.Definition))
+						(this.Field.FieldName == LexSense.WellKnownProperties.Definition))
 					{
 						//ghost field
 						return true;
@@ -172,17 +177,17 @@ namespace WeSay.LexicalTools
 
 		private bool IsMissingLexExampleSentenceField(LexExampleSentence example)
 		{
-			if (!_field.IsBuiltInViaCode)
+			if (!this.Field.IsBuiltInViaCode)
 			{
 				return IsMissingCustomField(example);
 			}
 			else
 			{
-				if (_field.FieldName == Field.FieldNames.ExampleSentence.ToString())
+				if (this.Field.FieldName == Field.FieldNames.ExampleSentence.ToString())
 				{
 					return IsMissingWritingSystem(example.Sentence);
 				}
-				else if (_field.FieldName == Field.FieldNames.ExampleTranslation.ToString())
+				else if (this.Field.FieldName == Field.FieldNames.ExampleTranslation.ToString())
 				{
 					return IsMissingWritingSystem(example.Translation);
 				}
@@ -196,7 +201,7 @@ namespace WeSay.LexicalTools
 
 		private bool IsMissingLexSenseField(WeSayDataObject sense)
 		{
-			if (!_field.IsBuiltInViaCode)
+			if (!this.Field.IsBuiltInViaCode)
 			{
 				return IsMissingCustomField(sense);
 			}
@@ -216,13 +221,13 @@ namespace WeSay.LexicalTools
 
 		private bool IsMissingLexEntryField(LexEntry entry)
 		{
-			if (!_field.IsBuiltInViaCode)
+			if (!this.Field.IsBuiltInViaCode)
 			{
 				return IsMissingCustomField(entry);
 			}
 			else
 			{
-				if (_field.FieldName == Field.FieldNames.EntryLexicalForm.ToString())
+				if (this.Field.FieldName == Field.FieldNames.EntryLexicalForm.ToString())
 				{
 					if (IsMissingWritingSystem(entry.LexicalForm))
 					{
@@ -239,17 +244,17 @@ namespace WeSay.LexicalTools
 
 		private bool IsMissingCustomField(WeSayDataObject weSayData)
 		{
-			IParentable field = weSayData.GetProperty<IParentable>(_field.FieldName);
+			IParentable field = weSayData.GetProperty<IParentable>(this.Field.FieldName);
 			if (field == null)
 			{
-				return !IsSkipped(weSayData, _field.FieldName);
+				return !IsSkipped(weSayData, this.Field.FieldName);
 			}
 			return IsMissingDataInWritingSystem(field);
 		}
 
 		private bool IsMissingWritingSystem(MultiTextBase field)
 		{
-			foreach (string wsId in _field.WritingSystemIds)
+			foreach (string wsId in this.Field.WritingSystemIds)
 			{
 				if (field[wsId].Length == 0)
 				{

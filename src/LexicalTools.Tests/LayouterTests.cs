@@ -3,7 +3,7 @@ using System.Windows.Forms;
 using NUnit.Framework;
 using WeSay.Foundation;
 using WeSay.LexicalModel;
-using WeSay.LexicalModel.Db4oSpecific;
+using WeSay.LexicalModel.Tests.Db4oSpecific;
 using WeSay.Project;
 using WeSay.UI;
 

@@ -5,7 +5,7 @@ using NUnit.Framework;
 using WeSay.Data;
 using WeSay.Foundation;
 using WeSay.LexicalModel;
-using WeSay.LexicalModel.Db4oSpecific;
+using WeSay.LexicalModel.Tests.Db4oSpecific;
 using WeSay.Project;
 
 namespace WeSay.LexicalTools.Tests
@@ -20,7 +20,7 @@ namespace WeSay.LexicalTools.Tests
 		private MissingTranslationFilter _missingTranslation;
 		private WritingSystem _writingSystem;
 
-		public class MissingTranslationFilter: IFilter<LexEntry>
+		public class MissingTranslationFilter: IFieldQuery<LexEntry>
 		{
 			private static bool IsMissingTranslation(LexEntry entry)
 			{

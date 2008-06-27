@@ -104,7 +104,7 @@ namespace WeSay.LexicalTools
 
 		protected override int ComputeCount(bool returnResultEvenIfExpensive)
 		{
-			return LexEntryRepository.CountAllEntries();
+			return LexEntryRepository.CountAllItems();
 		}
 
 		protected override int ComputeReferenceCount()

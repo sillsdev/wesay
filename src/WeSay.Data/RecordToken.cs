@@ -1,48 +1,48 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace WeSay.Data
 {
-	public sealed class RecordToken<T>: IEquatable<RecordToken<T>>
+	public sealed class RecordToken<T>: IEquatable<RecordToken<T>> where T:class ,new()
 	{
-		private string _displayString;
+		public delegate IEnumerable<string[]> DisplayStringGenerator(T item);
+
+		private readonly Dictionary<string, object> _queryResults;
 		private readonly RepositoryId _id;
 		private readonly IRepository<T> _repository;
-		private readonly IQuery<T> _query;
-		private readonly int _index;
 
-		public RecordToken(IRepository<T> repository, IQuery<T> query, int index)
+		public RecordToken(IRepository<T> repository)
 		{
 			if (repository == null)
 			{
 				throw new ArgumentNullException("repository");
 			}
-			if (query == null)
-			{
-				throw new ArgumentNullException("query");
-			}
-			if (index < 0)
-			{
-				throw new ArgumentOutOfRangeException("index", "must be positive");
-			}
 			_repository = repository;
-			_query = query;
-			_index = index;
+		}
+
+		[Obsolete]
+		public RecordToken(IRepository<T> repository,
+						   string s,
+						   RepositoryId id)
+			: this(repository, new Dictionary<string, object>(), id)
+		{
+			_queryResults.Add("", s);
 		}
 
 		public RecordToken(IRepository<T> repository,
-						   IQuery<T> query,
-						   int index,
-						   string s,
-						   RepositoryId id): this(repository, query, index)
+				   Dictionary<string, object> queryResults,
+				   RepositoryId id)
+			: this(repository)
 		{
-			_displayString = s;
-			_query = query;
+			_queryResults = queryResults;
 			_id = id;
 		}
 
+		[Obsolete]
 		public string DisplayString
 		{
-			get { return _displayString; }
+			get { return (string)_queryResults[""]; }
 		}
 
 		public RepositoryId Id
@@ -50,49 +50,18 @@ namespace WeSay.Data
 			get { return _id; }
 		}
 
-		public override string ToString()
-		{
-			return DisplayString;
-		}
-
-		public bool IsFresh
-		{
-			get { return DisplayString == GetRefreshedDisplayStringForObject(); }
-		}
-
-		/// <summary>
-		/// Attempts to freshen the display string when activity on the object
-		/// may have changed it. This is not guaranteed to make the recordtoken
-		/// fresh. (A record may have two recordtokens associated with it but after editing
-		/// only have one. The second is stale no matter how much refreshing happens.)
-		/// </summary>
-		public void Refresh()
-		{
-			string refreshedDisplayStringForObject = GetRefreshedDisplayStringForObject();
-			if (refreshedDisplayStringForObject != null)
-			{
-				_displayString = refreshedDisplayStringForObject;
-			}
-		}
-
-		private string GetRefreshedDisplayStringForObject()
-		{
-			int i = 0;
-			foreach (string displayString in _query.GetDisplayStrings(RealObject))
-			{
-				if (i == _index)
-				{
-					return displayString;
-				}
-				++i;
-			}
-			return null;
-		}
-
 		// proxy object
 		public T RealObject
 		{
 			get { return _repository.GetItem(Id); }
+		}
+
+		public IDictionary<string, object> Results
+		{
+			get
+			{
+				return _queryResults;
+			}
 		}
 
 		public static bool operator !=(RecordToken<T> recordToken1, RecordToken<T> recordToken2)
@@ -111,9 +80,9 @@ namespace WeSay.Data
 			{
 				return false;
 			}
-			return
-					Equals(_displayString, recordToken._displayString) &&
-					Equals(_id, recordToken._id);
+			return Equals(_id, recordToken._id)
+				   && new DictionaryEqualityComparer<string, object>()
+					  .Equals(_queryResults, recordToken._queryResults);
 		}
 
 		public override bool Equals(object obj)
@@ -127,7 +96,9 @@ namespace WeSay.Data
 
 		public override int GetHashCode()
 		{
-			return _displayString.GetHashCode() + 29 * _id.GetHashCode();
+			int queryResultsHash = new DictionaryEqualityComparer<string, object>()
+											.GetHashCode(this._queryResults);
+			return queryResultsHash + 29 * _id.GetHashCode();
 		}
 	}
 }

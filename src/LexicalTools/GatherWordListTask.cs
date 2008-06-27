@@ -229,7 +229,7 @@ namespace WeSay.LexicalTools
 			}
 			else
 			{
-				LexEntry entry = LexEntryRepository.GetItem(entriesWithSameForm[0]);
+				LexEntry entry = entriesWithSameForm[0].RealObject;
 
 				foreach (LexSense s in entry.Senses)
 				{

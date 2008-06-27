@@ -252,9 +252,20 @@ namespace WeSay.LexicalTools
 			_recordsListBox.EndUpdate();
 		}
 
+		//todo: support fallback to best form
 		private void OnRetrieveVirtualItemEvent(object sender, RetrieveVirtualItemEventArgs e)
 		{
 			string displayString = _records[e.ItemIndex].DisplayString;
+			if(string.IsNullOrEmpty(displayString))
+			{
+				displayString = "(" +
+					  StringCatalog.Get("~Empty",
+										"This is what shows for a word in a list when the user hasn't yet typed anything in for the word.  Like if you click the 'New Word' button repeatedly.") +
+					  //StringCatalog.Get("~No Gloss",
+					  //                        "This is what shows if the user is listing words by the glossing language, but the word doesn't have a gloss.") +
+
+					  ")";
+			}
 			e.Item = new ListViewItem(displayString);
 		}
 

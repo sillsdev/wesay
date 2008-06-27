@@ -374,7 +374,7 @@ namespace WeSay.LexicalTools
 					}
 					else
 					{
-						CurrentEntry = _lexEntryRepository.GetItem(_currentRecord);
+						CurrentEntry = _currentRecord.RealObject;
 						CurrentEntry.PropertyChanged += OnCurrentRecordPropertyChanged;
 						_entryViewControl.DataSource = CurrentEntry;
 						_congratulationsControl.Hide();

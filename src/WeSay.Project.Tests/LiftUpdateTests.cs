@@ -48,7 +48,7 @@ namespace WeSay.Project.Tests
 		{
 			IList<RepositoryId> newGuys = _service.GetRecordsNeedingUpdateInLift();
 
-			Assert.AreEqual(_lexEntryRepository.CountAllEntries(), newGuys.Count);
+			Assert.AreEqual(_lexEntryRepository.CountAllItems(), newGuys.Count);
 		}
 
 		//        [Test]

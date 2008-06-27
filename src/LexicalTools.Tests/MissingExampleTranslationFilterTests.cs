@@ -7,7 +7,7 @@ namespace WeSay.LexicalTools.Tests
 	[TestFixture]
 	public class MissingExampleTranslationFilterTests
 	{
-		private MissingItemFilter _missingExampleTranslationFilter;
+		private MissingFieldQuery _missingExampleTranslationFilter;
 
 		[SetUp]
 		public void Setup()
@@ -16,7 +16,7 @@ namespace WeSay.LexicalTools.Tests
 					new Field(Field.FieldNames.ExampleTranslation.ToString(),
 							  "LexExampleSentence",
 							  new string[] {"analysis"});
-			_missingExampleTranslationFilter = new MissingItemFilter(field);
+			_missingExampleTranslationFilter = new MissingFieldQuery(field);
 		}
 
 		[Test]

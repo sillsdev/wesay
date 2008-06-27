@@ -181,9 +181,9 @@ namespace WeSay.LexicalTools
 			return GetRecordTokenFromLexEntry(lexEntry);
 		}
 
-		private string GetTargetIdFromRecordToken(RecordToken<LexEntry> e)
+		private static string GetTargetIdFromRecordToken(RecordToken<LexEntry> e)
 		{
-			return _lexEntryRepository.GetItem(e).Id;
+			return e.RealObject.Id;
 		}
 
 		private AutoCompleteWithCreationBox<T, string> CreatePicker<T>(LexRelation relation)

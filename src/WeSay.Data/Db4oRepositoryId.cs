@@ -3,7 +3,7 @@ using System.Collections.Generic;
 namespace WeSay.Data
 {
 	//todo eventually should be internal
-	public sealed class Db4oRepositoryId: RepositoryId
+	internal sealed class Db4oRepositoryId: RepositoryId
 	{
 		private readonly long _id;
 
@@ -69,6 +69,11 @@ namespace WeSay.Data
 		public override int GetHashCode()
 		{
 			return (int) _id;
+		}
+
+		public override string ToString()
+		{
+			return _id.ToString();
 		}
 	}
 }

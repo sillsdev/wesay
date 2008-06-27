@@ -4,7 +4,7 @@ using System.Text;
 using System.Xml;
 using LiftIO.Parsing;
 using NUnit.Framework;
-using WeSay.LexicalModel.Db4oSpecific;
+using WeSay.LexicalModel.Tests.Db4oSpecific;
 using WeSay.Project;
 
 namespace WeSay.LexicalModel.Tests
