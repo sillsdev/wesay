@@ -812,6 +812,7 @@ namespace WeSay.LexicalTools.Tests
 		public void AddingNewWord_HidesCustomShyGuy()
 		{
 			ClickAddWord();
+			TypeInLexicalForm("foo");
 			Assert.IsNull(GetEditControl("MyShyEntryCustom"));
 			ButtonTester btn = new ButtonTester("_showAllFieldsToggleButton", _window);
 			Assert.IsTrue(btn.Text.Contains("Show"));
@@ -827,6 +828,7 @@ namespace WeSay.LexicalTools.Tests
 		public void AddingNewWord_ClearsShowHiddenState()
 		{
 			ClickAddWord();
+			TypeInLexicalForm("foo");
 			ButtonTester btn = new ButtonTester("_showAllFieldsToggleButton", _window);
 			Assert.IsTrue(btn.Text.Contains("Show"));
 			btn.Click();
@@ -838,6 +840,7 @@ namespace WeSay.LexicalTools.Tests
 		public void DeletingWord_ClearsShowHiddenState()
 		{
 			ClickAddWord();
+			TypeInLexicalForm("foo");
 			ClickAddWord();
 			ButtonTester btn = new ButtonTester("_showAllFieldsToggleButton", _window);
 			Assert.IsTrue(btn.Text.Contains("Show"));
