@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Threading;
 using NUnit.Framework;
 using WeSay.Data;
@@ -8,6 +9,7 @@ namespace WeSay.Data.Tests
 	public class IRepositoryStateUnitializedTests<T> where T: new()
 	{
 		private IRepository<T> _repositoryUnderTest;
+		private string _persistedFilePath = null;
 
 		public IRepository<T> RepositoryUnderTest
 		{
@@ -20,6 +22,19 @@ namespace WeSay.Data.Tests
 				return _repositoryUnderTest;
 			}
 			set { _repositoryUnderTest = value; }
+		}
+
+		public string PersistedFilePath
+		{
+			get
+			{
+				if (string.IsNullOrEmpty(_persistedFilePath))
+				{
+					throw new InvalidOperationException("Please provide the path that the Repository is being persisted to.");
+				}
+				return _persistedFilePath;
+			}
+			set { _persistedFilePath = value; }
 		}
 
 		[Test]
@@ -147,6 +162,7 @@ namespace WeSay.Data.Tests
 		private T item;
 		private RepositoryId id;
 		private DateTime modifiedTimePreTestedStateSwitch;
+		private string _persistedFilePath = null;
 
 		public IRepository<T> RepositoryUnderTest
 		{
@@ -161,11 +177,38 @@ namespace WeSay.Data.Tests
 			set { _repositoryUnderTest = value; }
 		}
 
+		public string PersistedFilePath
+		{
+			get
+			{
+				if (string.IsNullOrEmpty(_persistedFilePath))
+				{
+					throw new InvalidOperationException("Please provide the path that the Repository is being persisted to.");
+				}
+				return _persistedFilePath;
+			}
+			set { _persistedFilePath = value; }
+		}
+
 		public void SetState()
 		{
 			modifiedTimePreTestedStateSwitch = RepositoryUnderTest.LastModified;
 			item = RepositoryUnderTest.CreateItem();
 			id = RepositoryUnderTest.GetId(item);
+		}
+
+		[Test]
+		public void FileWasCreatedCorrectly()
+		{
+			SetState();
+			if(RepositoryUnderTest.CanPersist())
+			{
+				Assert.IsTrue(File.Exists(PersistedFilePath));
+			}
+			else
+			{
+				Assert.Ignore("Repository can not be persisted.");
+			}
 		}
 
 		[Test]
@@ -290,6 +333,20 @@ namespace WeSay.Data.Tests
 				Assert.Ignore("Repository does not support queries.");
 			}
 		}
+
+		[Test]
+		public virtual void ItemHasBeenPersisted()
+		{
+			SetState();
+			if(!RepositoryUnderTest.CanPersist())
+			{
+				Assert.Ignore("Repository can not be persisted.");
+			}
+			else
+			{
+				throw new NotImplementedException("You must implement a test to verify that the created item has been persisted.");
+			}
+		}
 	}
 
 	public class IRepositoryDeleteItemTransitionTests<T> where T : new()
@@ -298,6 +355,7 @@ namespace WeSay.Data.Tests
 		private T item;
 		private RepositoryId id;
 		private DateTime modifiedTimePreTestedStateSwitch;
+		private string _persistedFilePath = null;
 
 		public IRepository<T> RepositoryUnderTest
 		{
@@ -310,6 +368,19 @@ namespace WeSay.Data.Tests
 				return _repositoryUnderTest;
 			}
 			set { _repositoryUnderTest = value; }
+		}
+
+		public string PersistedFilePath
+		{
+			get
+			{
+				if (string.IsNullOrEmpty(_persistedFilePath))
+				{
+					throw new InvalidOperationException("Please provide the path that the Repository is being persisted to.");
+				}
+				return _persistedFilePath;
+			}
+			set { _persistedFilePath = value; }
 		}
 
 		public void SetState()
@@ -398,8 +469,23 @@ namespace WeSay.Data.Tests
 			}
 			else
 			{
-				Assert.Ignore("Does not apply.");
+				Assert.Ignore("Repository does not support queries.");
 			}
+		}
+
+		[Test]
+		public virtual void DeletionOfItemHasBeenPersisted()
+		{
+			SetState();
+			if (!RepositoryUnderTest.CanPersist())
+			{
+				Assert.Ignore("Repository can not be persisted.");
+			}
+			else
+			{
+				throw new NotImplementedException("You must implement a test to verify that the item deletion has been persisted.");
+			}
+
 		}
 	}
 
@@ -409,6 +495,7 @@ namespace WeSay.Data.Tests
 		private T item;
 		private RepositoryId id;
 		private DateTime modifiedTimePreTestedStateSwitch;
+		private string _persistedFilePath = null;
 
 		public IRepository<T> RepositoryUnderTest
 		{
@@ -421,6 +508,19 @@ namespace WeSay.Data.Tests
 				return _repositoryUnderTest;
 			}
 			set { _repositoryUnderTest = value; }
+		}
+
+		public string PersistedFilePath
+		{
+			get
+			{
+				if (string.IsNullOrEmpty(_persistedFilePath))
+				{
+					throw new InvalidOperationException("Please provide the path that the Repository is being persisted to.");
+				}
+				return _persistedFilePath;
+			}
+			set { _persistedFilePath = value; }
 		}
 
 		public void SetState()
@@ -511,6 +611,21 @@ namespace WeSay.Data.Tests
 			{
 				Assert.Ignore("Repository does not support queries.");
 			}
+		}
+
+		[Test]
+		public virtual void DeletionOfItemHasBeenPersisted()
+		{
+			SetState();
+			if (!RepositoryUnderTest.CanPersist())
+			{
+				Assert.Ignore("Repository can not be persisted.");
+			}
+			else
+			{
+				throw new NotImplementedException("You must implement a test to verify that the item deletion has been persisted.");
+			}
+
 		}
 	}
 }

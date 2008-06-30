@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using WeSay.Data;
 using WeSay.LexicalModel;
@@ -10,6 +11,11 @@ namespace WeSay.Project
 	{
 		private DateTime lastModified;
 
+		public LiftRepository(string filePath)
+		{
+			File.Create(filePath);
+		}
+
 		public DateTime LastModified
 		{
 			get { return lastModified; }
@@ -17,32 +23,32 @@ namespace WeSay.Project
 
 		public LexEntry CreateItem()
 		{
-			throw new NotImplementedException();
+			return new LexEntry();
 		}
 
 		public int CountAllItems()
 		{
-			throw new NotImplementedException();
+			return 0;
 		}
 
 		public RepositoryId GetId(LexEntry item)
 		{
-			throw new NotImplementedException();
+			throw new ArgumentOutOfRangeException("item");
 		}
 
 		public LexEntry GetItem(RepositoryId id)
 		{
-			throw new NotImplementedException();
+			throw new ArgumentOutOfRangeException("id");
 		}
 
 		public void DeleteItem(LexEntry item)
 		{
-			throw new NotImplementedException();
+			throw new ArgumentOutOfRangeException("item");
 		}
 
 		public void DeleteItem(RepositoryId id)
 		{
-			throw new NotImplementedException();
+			throw new ArgumentOutOfRangeException("id");
 		}
 
 		public RepositoryId[] GetAllItems()
@@ -57,20 +63,25 @@ namespace WeSay.Project
 
 		public void SaveItem(LexEntry item)
 		{
-			throw new NotImplementedException();
+			throw new ArgumentOutOfRangeException("item");
 		}
 
 		public bool CanQuery()
 		{
-			throw new NotImplementedException();
+			return false;
 		}
 
 		public bool CanPersist()
 		{
-			throw new NotImplementedException();
+			return true;
 		}
 
 		public RepositoryId[] GetItemsMatchingQuery()
+		{
+			throw new NotSupportedException();
+		}
+
+		public void Dispose()
 		{
 			throw new NotImplementedException();
 		}
