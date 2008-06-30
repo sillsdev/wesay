@@ -290,9 +290,13 @@ namespace WeSay.Data
 		public override string ToString()
 		{
 			StringBuilder sb = new StringBuilder();
-			sb.Append("Query [");
+			if (_root == null)
+			{
+				sb.Append("Query ");
+			}
+			sb.Append('[');
 			sb.Append(TypeName);
-			sb.Append(" ");
+			sb.Append(' ');
 			if (_nestedQueries != null)
 			{
 				foreach (Query query in _nestedQueries)
@@ -309,6 +313,7 @@ namespace WeSay.Data
 					sb.Append(result.Name);
 				}
 			}
+
 			sb.Append("] ");
 			return sb.ToString();
 		}
