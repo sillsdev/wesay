@@ -1,21 +1,37 @@
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 using WeSay.Foundation;
-using WeSay.Foundation.Dashboard;
 using WeSay.Project;
 using WeSay.UI;
 
 namespace WeSay.CommonTools
 {
-	public partial class DashboardButton : UserControl
+	public partial class DashboardButton : UserControl, IButtonControl
 	{
-		private Color _borderColor=Color.Blue;
+		private DialogResult _dialogResult;
+		private Color _borderColor = Color.Blue;
 		private Color _doneColor = Color.Blue;
 		private bool _mouseIsDown;
-		protected const int ButtonDownHorizontalNudge = 2;
-		protected const int LeftMarginWidth= 5;
+		private bool _mouseInControl;
+		private bool _keyIsDown;
+		// default format flags for text rendering
+		protected const TextFormatFlags FormatFlags = TextFormatFlags.WordBreak |
+													  TextFormatFlags.NoFullWidthCharacterBreak |
+													  TextFormatFlags.LeftAndRightPadding;
+
+		protected const int ShadowWidth = 3;
+		protected const int ButtonDownHorizontalNudge = ShadowWidth;
+		protected const int LeftMarginWidth = 5;
+		protected const int RightMarginWidth = 5 + ShadowWidth;
+		protected const int TopMarginWidth = 10;
+		protected const int BottomMarginWidth = 8 + ShadowWidth;
+		protected const int ProgressBarHeight = 5;
+		protected const int ProgressBarTopMargin = 5;
+		protected virtual int ProgressBarLeftMargin { get { return 5; } }
+		protected virtual int ProgressBarRightMargin { get { return 5; } }
 		private readonly IThingOnDashboard _thingToShowOnDashboard;
 
 		public event EventHandler Selected = delegate { };
@@ -24,32 +40,12 @@ namespace WeSay.CommonTools
 		{
 			_thingToShowOnDashboard = thingToShowOnDashboard;
 			InitializeComponent();
-
 		}
 
 		public DashboardButton()
 		{
 			InitializeComponent();
-
 		}
-
-		public override string Text
-		{
-			get
-			{
-				return base.Text;
-			}
-			set
-			{
-				base.Text = value;
-				int requiredWidth = GetRequiredWidth();
-				if (requiredWidth > Width)
-				{
-					Width = requiredWidth;
-				}
-			}
-		}
-
 
 		public Color BorderColor
 		{
@@ -63,12 +59,6 @@ namespace WeSay.CommonTools
 			set { _doneColor = value; }
 		}
 
-		private void DashboardButton_Click(object sender, EventArgs e)
-		{
-			Selected(this, e);
-		}
-
-
 		/// <summary>
 		/// From a comment in http://www.codeproject.com/KB/GDI-plus/ExtendedGraphics.aspx
 		/// </summary>
@@ -80,125 +70,178 @@ namespace WeSay.CommonTools
 		/// <param name="lw"></param>
 		/// <returns></returns>
 		public static GraphicsPath RoundRect(int x, int y,
-				int width, int height,
-				int radius, int lw)
-		// x,y - top left corner of rounded rectangle
-		// width, height - width and height of round rect
-		// radius - radius for corners
-		// lw - line width (for Graphics.Pen)
+											 int width, int height,
+											 int radius, int lw)
+			// x,y - top left corner of rounded rectangle
+			// width, height - width and height of round rect
+			// radius - radius for corners
+			// lw - line width (for Graphics.Pen)
 		{
 			GraphicsPath g = new GraphicsPath();
-			int diameter = radius * 2;
+			int diameter = radius*2;
 			g.AddArc(x + lw, y, diameter, diameter, 180, 90);
 			g.AddArc(x + (width - diameter - lw), y, diameter, diameter, 270, 90);
-			g.AddArc(x + (width - diameter - lw), y + (height - diameter - lw),
-					 diameter, diameter, 360, 90);
+			g.AddArc(x + (width - diameter - lw),
+					 y + (height - diameter - lw),
+					 diameter,
+					 diameter,
+					 360,
+					 90);
 			g.AddArc(x + lw, y + (height - diameter - lw), diameter, diameter, 90, 90);
 			g.CloseFigure();
 			return g;
 		}
 
+		protected override void OnGotFocus(EventArgs e)
+		{
+			base.OnGotFocus(e);
+			Invalidate();
+		}
+
+		protected override void OnLostFocus(EventArgs e)
+		{
+			base.OnLostFocus(e);
+			Invalidate();
+		}
+
 		protected override void OnPaint(PaintEventArgs e)
 		{
-
-			int borderWidth = 1;
+			int borderWidth = Focused ? 3 : 1;
 			int radius = 8;
-			int shadowWidth=3;
 
 			//draw shadow
-			Rectangle rectangle = new Rectangle(this.ClientRectangle.Left + shadowWidth,
-											this.ClientRectangle.Top + shadowWidth,
-											this.ClientRectangle.Width - shadowWidth,
-											this.ClientRectangle.Height - shadowWidth);
-			GraphicsPath path = GetButtonShapePath(rectangle, radius+shadowWidth, borderWidth);
-			e.Graphics.FillPath(Brushes.LightGray, path);
-
-			//draw the fron part
-
-			if(!_mouseIsDown)
+			Rectangle rectangle;
+			GraphicsPath path;
+			if (CurrentMouseButtonNudge == 0)
 			{
-				rectangle = new Rectangle(this.ClientRectangle.Left,
-										  this.ClientRectangle.Top,
-										  this.ClientRectangle.Width - shadowWidth,
-										  this.ClientRectangle.Height - shadowWidth);
+				rectangle = new Rectangle(ClientRectangle.Left + ShadowWidth,
+										  ClientRectangle.Top + ShadowWidth,
+										  ClientRectangle.Width - ShadowWidth,
+										  ClientRectangle.Height - ShadowWidth);
+				path = GetButtonShapePath(rectangle, radius + ShadowWidth, 0);
+				e.Graphics.FillPath(Brushes.LightGray, path);
 			}
-			else
-			{
-				rectangle = new Rectangle(this.ClientRectangle.Left+2,
-										  this.ClientRectangle.Top+2,
-										  this.ClientRectangle.Width - shadowWidth,
-										  this.ClientRectangle.Height - shadowWidth);
-			}
+
+			//draw the front part
+			rectangle = new Rectangle(ClientRectangle.Left + CurrentMouseButtonNudge,
+									  ClientRectangle.Top + CurrentMouseButtonNudge + borderWidth - 1,
+									  ClientRectangle.Width - ShadowWidth,
+									  ClientRectangle.Height - ShadowWidth - borderWidth + 1);
 			path = GetButtonShapePath(rectangle, radius, borderWidth);
 
 			e.Graphics.FillPath(Brushes.White, path);
 			e.Graphics.DrawPath(new Pen(_borderColor, borderWidth), path);
 
 			PaintContents(e);
-
-			base.OnPaint(e);
-
 		}
 
 		protected int CurrentMouseButtonNudge
 		{
-			get { return _mouseIsDown ? ButtonDownHorizontalNudge : 0; }
+			get { return ((_mouseIsDown && _mouseInControl) || _keyIsDown) ? ButtonDownHorizontalNudge : 0; }
 		}
 
 		public IThingOnDashboard ThingToShowOnDashboard
 		{
-			get { return this._thingToShowOnDashboard; }
+			get { return _thingToShowOnDashboard; }
 		}
 
 		protected virtual void PaintContents(PaintEventArgs e)
 		{
 			int nudge = CurrentMouseButtonNudge;
+
+			int textBottom = ClientRectangle.Bottom - BottomMarginWidth;
+			int left = ClientRectangle.Left + LeftMarginWidth;
+
+			if (HasProgressBar())
+			{
+				textBottom -= ProgressBarHeight + ProgressBarTopMargin;
+				PaintProgressBar(e.Graphics);
+			}
+			int textTop = ClientRectangle.Top + TopMarginWidth;
+			// +1 is to fix off-by-one of width = right-left+1
+			TextRenderer.DrawText(e.Graphics, Text, Font, new Rectangle(left + nudge, textTop + nudge,
+																		ClientRectangle.Right - left - RightMarginWidth +
+																		1,
+																		textBottom - textTop + 1),
+								  Color.Black, FormatFlags);
+		}
+
+		protected virtual void PaintProgressBar(Graphics graphics)
+		{
+			ITask task = _thingToShowOnDashboard as ITask;
+			//if we don't know the actual count, or it is irrelevant, don't show the bar
+			if (task == null || task.GetReferenceCount() <= 0 || task.GetRemainingCount() < 0)
+			{
+				return;
+			}
+
 			Color doneColor = _doneColor;
 			Color todoColor = Color.FromArgb(100, doneColor);
 			if (DisplaySettings.Default.UsingProjectorScheme)
 			{
 				byte rgbMax = Math.Max(doneColor.R, Math.Max(doneColor.G, doneColor.B));
-				doneColor = Color.FromArgb(doneColor.R == rgbMax ? 255 : 0, doneColor.G == rgbMax ? 255 : 0,
-										   doneColor.B == rgbMax ? 255 : 0);
+				doneColor =
+						Color.FromArgb(doneColor.R == rgbMax ? 255 : 0,
+									   doneColor.G == rgbMax ? 255 : 0,
+									   doneColor.B == rgbMax ? 255 : 0);
 				todoColor = Color.FromArgb(50, 0, 0, 0);
 			}
-			Pen pen = new Pen(doneColor, 5);
+			Pen pen = new Pen(doneColor, ProgressBarHeight);
 
-			int y = ClientRectangle.Bottom - 16;
+			int nudge = CurrentMouseButtonNudge;
 			int left = ClientRectangle.Left + LeftMarginWidth;
-			int rightEdge = ClientRectangle.Right - 15;
-			ITask task = this._thingToShowOnDashboard as ITask;
+			int rightEdge = ClientRectangle.Right - RightMarginWidth;
+			int progressBarTop = ClientRectangle.Bottom - BottomMarginWidth - (HasProgressBar() ? ProgressBarHeight : 0);
+			float percentDone = (float)100.0 * (task.GetReferenceCount() - task.GetRemainingCount()) /
+								task.GetReferenceCount();
+			percentDone = Math.Max(Math.Min(percentDone, 100), 0); // ensure that 0 <= percentDone <= 100
 
-			//if we don't know the actual count, or it is irrelevant, don't show the bar
-			if (task != null && task.GetReferenceCount() >0 && task.GetRemainingCount() >=0)
-			{
-				float percentDone = (float)100.0 * (task.GetReferenceCount()-task.GetRemainingCount())/task.GetReferenceCount();
-				percentDone = Math.Max(Math.Min(percentDone, 100), 0); // ensure that 0 <= percentDone <= 100
+			float rightEdgeOfDonePart = (float) (percentDone/100.0)*(rightEdge - left - ProgressBarLeftMargin - ProgressBarRightMargin)
+										+ left + ProgressBarLeftMargin;
+			graphics.DrawLine(pen, left + nudge + ProgressBarLeftMargin,
+							  progressBarTop + nudge,
+							  rightEdgeOfDonePart + nudge,
+							  progressBarTop + nudge);
 
-				 float rightEdgeOfDonePart = (float) (percentDone/100.0)*(rightEdge - left) + left;
-				e.Graphics.DrawLine(pen, left + nudge,
-									y + nudge,
-									rightEdgeOfDonePart + nudge,
-									y + nudge);
-
-				pen = new Pen(todoColor, 5);
-				e.Graphics.DrawLine(pen, rightEdgeOfDonePart + nudge,
-									y + nudge,
-									rightEdge + nudge,
-									y + nudge);
-			}
-			e.Graphics.DrawString(this.Text, this.Font, Brushes.Black, left+nudge, 10+nudge);
+			pen = new Pen(todoColor, ProgressBarHeight);
+			graphics.DrawLine(pen, rightEdgeOfDonePart + nudge,
+							  progressBarTop + nudge,
+							  rightEdge + nudge - ProgressBarRightMargin,
+							  progressBarTop + nudge);
 		}
 
-
-		public virtual int GetRequiredWidth()
+		public virtual bool HasProgressBar()
 		{
-			int textWidth= TextRenderer.MeasureText(Text, this.Font, new Size(int.MaxValue, int.MaxValue), TextFormatFlags.LeftAndRightPadding).Width + ButtonDownHorizontalNudge;
-			int unknownHack = 20;
-			return textWidth + ButtonDownHorizontalNudge + LeftMarginWidth + unknownHack;
+			ITask task = _thingToShowOnDashboard as ITask;
+			return task != null && task.AreCountsRelevant();
 		}
 
-		private GraphicsPath GetButtonShapePath(Rectangle rectangle, int radius, int borderWidth)
+		public virtual IEnumerable<Size> GetPossibleButtonSizes()
+		{
+			List<Size> textSizes = GetPossibleTextSizes();
+			List<Size> possibleSizes = new List<Size>(textSizes.Count);
+			foreach (Size size in textSizes)
+			{
+				possibleSizes.Add(new Size(size.Width + LeftMarginWidth + RightMarginWidth,
+										   size.Height + TopMarginWidth + BottomMarginWidth +
+										   (HasProgressBar() ? ProgressBarTopMargin + ProgressBarHeight : 0)));
+			}
+			return possibleSizes;
+		}
+
+		/// <summary>
+		/// Computes possible minimum requires sizes to fit the button text
+		/// </summary>
+		/// <returns>Possible sizes</returns>
+		protected List<Size> GetPossibleTextSizes()
+		{
+			Graphics g = Graphics.FromHwnd(Handle);
+			List<Size> possibleSizes = DisplaySettings.GetPossibleTextSizes(g, Text, Font, FormatFlags);
+			g.Dispose();
+			return possibleSizes;
+		}
+
+		private static GraphicsPath GetButtonShapePath(Rectangle rectangle, int radius, int borderWidth)
 		{
 			return RoundRect(rectangle.Left,
 							 rectangle.Top,
@@ -208,24 +251,118 @@ namespace WeSay.CommonTools
 							 borderWidth);
 		}
 
-
-
-		protected void DashboardButton_MouseDown(object sender, MouseEventArgs e)
+		protected override void OnClick(EventArgs e)
 		{
+			base.OnClick(e);
+			Selected(this, e);
+		}
+		protected override void OnMouseUp(MouseEventArgs e)
+		{
+			base.OnMouseUp(e);
+			if (!Enabled)
+			{
+				return;
+			}
+			_mouseIsDown = false;
+			Invalidate();
+		}
+		protected override void OnMouseDown(MouseEventArgs e)
+		{
+			base.OnMouseDown(e);
+			if (!Enabled)
+			{
+				return;
+			}
 			_mouseIsDown = true;
 			Invalidate();
 		}
 
-		protected void DashboardButton_MouseUp(object sender, MouseEventArgs e)
+		protected override void OnMouseMove(MouseEventArgs e)
 		{
-			_mouseIsDown = false;
-			Invalidate();
+			base.OnMouseMove(e);
+			if (!Enabled)
+			{
+				return;
+			}
+			if (ClientRectangle.Contains(e.Location) != _mouseInControl)
+			{
+				_mouseInControl = ClientRectangle.Contains(e.Location);
+				if (_mouseIsDown)
+				{
+					Invalidate();
+				}
+			}
 		}
 
-		protected void DashboardButton_MouseLeave(object sender, EventArgs e)
+		protected override void OnKeyDown(KeyEventArgs e)
 		{
-			_mouseIsDown = false;
-			Invalidate();
+			base.OnKeyDown(e);
+			if (!Enabled)
+			{
+				return;
+			}
+			if (e.KeyCode == Keys.Space || e.KeyCode == Keys.Enter)
+			{
+				_keyIsDown = true;
+				Invalidate();
+			}
 		}
+
+		protected override void OnKeyUp(KeyEventArgs e)
+		{
+			base.OnKeyUp(e);
+			if (!Enabled)
+			{
+				return;
+			}
+			if (e.KeyCode == Keys.Space || e.KeyCode == Keys.Enter)
+			{
+				if (_keyIsDown)
+				{
+					OnClick(EventArgs.Empty);
+				}
+				_keyIsDown = false;
+				Invalidate();
+			}
+		}
+
+		protected override bool ProcessMnemonic(char charCode)
+		{
+			if (IsMnemonic(charCode, Text))
+			{
+				OnClick(EventArgs.Empty);
+				return true;
+			}
+			return base.ProcessMnemonic(charCode);
+		}
+
+		#region IButtonControl Members
+
+		public DialogResult DialogResult
+		{
+			get
+			{
+				return _dialogResult;
+			}
+			set
+			{
+				if (Enum.IsDefined(typeof(DialogResult), value))
+				{
+					_dialogResult = value;
+				}
+			}
+		}
+
+		public void NotifyDefault(bool value) {}
+
+		public void PerformClick()
+		{
+			if (CanSelect)
+			{
+				OnClick(EventArgs.Empty);
+			}
+		}
+
+		#endregion
 	}
 }

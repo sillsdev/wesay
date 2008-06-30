@@ -1,21 +1,21 @@
 using System;
-using WeSay.Data;
 using WeSay.Foundation;
-using WeSay.Foundation.Dashboard;
-using WeSay.Language;
 using WeSay.LexicalModel;
 using WeSay.Project;
 
 namespace WeSay.LexicalTools
 {
-	public abstract class WordGatheringTaskBase : TaskBase
+	public abstract class WordGatheringTaskBase: TaskBase
 	{
 		private readonly WritingSystem _lexicalFormWritingSystem;
 		private readonly ViewTemplate _viewTemplate;
 
-		protected WordGatheringTaskBase(string label, string description, bool isPinned,
-										LexEntryRepository lexEntryRepository, ViewTemplate viewTemplate)
-			: base(label, description, isPinned, lexEntryRepository)
+		protected WordGatheringTaskBase(string label,
+										string description,
+										bool isPinned,
+										LexEntryRepository lexEntryRepository,
+										ViewTemplate viewTemplate)
+				: base(label, description, isPinned, lexEntryRepository)
 		{
 			if (viewTemplate == null)
 			{
@@ -23,28 +23,29 @@ namespace WeSay.LexicalTools
 			}
 
 			_viewTemplate = viewTemplate;
-			Field lexicalFormField = viewTemplate.GetField(Field.FieldNames.EntryLexicalForm.ToString());
-			if (lexicalFormField == null || lexicalFormField.WritingSystems.Count < 1)
+			Field lexicalFormField =
+					viewTemplate.GetField(Field.FieldNames.EntryLexicalForm.ToString());
+			WritingSystemCollection writingSystems = BasilProject.Project.WritingSystems;
+			if (lexicalFormField == null || lexicalFormField.WritingSystemIds.Count < 1)
 			{
-				_lexicalFormWritingSystem = BasilProject.Project.WritingSystems.UnknownVernacularWritingSystem;
+				_lexicalFormWritingSystem =
+						writingSystems.UnknownVernacularWritingSystem;
 			}
 			else
 			{
-				_lexicalFormWritingSystem = lexicalFormField.WritingSystems[0];
+				_lexicalFormWritingSystem = writingSystems[lexicalFormField.WritingSystemIds[0]];
 			}
 		}
 
-		public  override WeSay.Foundation.Dashboard.DashboardGroup Group
+		public override DashboardGroup Group
 		{
-			get { return WeSay.Foundation.Dashboard.DashboardGroup.Gather; }
+			get { return DashboardGroup.Gather; }
 		}
-
 
 		public override ButtonStyle DashboardButtonStyle
 		{
 			get { return ButtonStyle.FixedAmount; }
 		}
-
 
 		public string WordWritingSystemId
 		{
@@ -66,7 +67,7 @@ namespace WeSay.LexicalTools
 
 		protected ViewTemplate ViewTemplate
 		{
-			get { return this._viewTemplate; }
+			get { return _viewTemplate; }
 		}
 	}
 }

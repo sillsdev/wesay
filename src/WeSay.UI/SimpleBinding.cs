@@ -10,16 +10,15 @@ namespace WeSay.UI
 	/// Changes in either one are reflected in the other.
 	/// </summary>
 	public class SimpleBinding<TValueType>
-	 {
-		public event EventHandler<CurrentItemEventArgs> CurrentItemChanged = delegate
-		{
-		};
+	{
+		public event EventHandler<CurrentItemEventArgs> CurrentItemChanged = delegate { };
 
 		private IValueHolder<TValueType> _dataTarget;
 		private IBindableControl<TValueType> _widget;
 		private bool _inMidstOfChange;
 
-		public SimpleBinding(IValueHolder<TValueType> dataTarget, IBindableControl<TValueType> widgetTarget)
+		public SimpleBinding(IValueHolder<TValueType> dataTarget,
+							 IBindableControl<TValueType> widgetTarget)
 		{
 			_dataTarget = dataTarget;
 			_dataTarget.PropertyChanged += OnDataPropertyChanged;
@@ -30,26 +29,26 @@ namespace WeSay.UI
 			//Debug.WriteLine("++++++Constructed SimpleBinding boundTo: " + this._widget.Value);
 		}
 
-		void _target_HandleDestroyed(object sender, EventArgs e)
+		private void _target_HandleDestroyed(object sender, EventArgs e)
 		{
 			TearDown();
 		}
 
-//      todo: Make some kind of "infocus" event  void OnTextBoxEntered(object sender, EventArgs e)
-//        {
-//            CurrentItemChanged(sender, new CurrentItemEventArgs(DataTarget, _writingSystemId));
-//        }
+		//      todo: Make some kind of "infocus" event  void OnTextBoxEntered(object sender, EventArgs e)
+		//        {
+		//            CurrentItemChanged(sender, new CurrentItemEventArgs(DataTarget, _writingSystemId));
+		//        }
 
-
-		void OnWidgetValueChanged(object sender, EventArgs e)
+		private void OnWidgetValueChanged(object sender, EventArgs e)
 		{
 #if DEBUG
 			if (_widget == null)
 			{
-				throw new Exception("SimpleBinding called after tearing down (apparently). Did editting the widget make something delete it?  Then perhaps SimpleBinding got the valueCHanged event afterwards... to late!");
+				throw new Exception(
+						"SimpleBinding called after tearing down (apparently). Did editting the widget make something delete it?  Then perhaps SimpleBinding got the valueCHanged event afterwards... to late!");
 			}
 #endif
-			if(_widget!=null) //would not be worth crashing over in release build
+			if (_widget != null) //would not be worth crashing over in release build
 			{
 				SetDataTargetValue(_widget.Value);
 			}
@@ -61,7 +60,7 @@ namespace WeSay.UI
 		/// </summary>
 		private void TearDown()
 		{
-		  //  Debug.WriteLine("-----TearDown SimpleBinding  boundTo: " + this._widget.Value);
+			//  Debug.WriteLine("-----TearDown SimpleBinding  boundTo: " + this._widget.Value);
 
 			if (_dataTarget == null)
 			{
@@ -80,8 +79,10 @@ namespace WeSay.UI
 		/// </summary>
 		protected virtual void OnDataPropertyChanged(object sender, PropertyChangedEventArgs e)
 		{
-			if (_inMidstOfChange )
+			if (_inMidstOfChange)
+			{
 				return;
+			}
 
 			try
 			{
@@ -98,14 +99,18 @@ namespace WeSay.UI
 		{
 			IValueHolder<TValueType> holder = _dataTarget;
 			if (holder == null)
+			{
 				throw new ArgumentException("Binding can't handle that type of target.");
+			}
 			return holder.Value;
 		}
 
 		protected virtual void SetDataTargetValue(TValueType value)
 		{
 			if (_inMidstOfChange)
+			{
 				return;
+			}
 
 			try
 			{
@@ -116,7 +121,6 @@ namespace WeSay.UI
 					throw new ArgumentException("Binding found data target null.");
 				}
 				_dataTarget.Value = value;
-
 			}
 			finally
 			{
@@ -126,11 +130,7 @@ namespace WeSay.UI
 
 		public INotifyPropertyChanged DataTarget
 		{
-			get
-			{
-				return _dataTarget;
-			}
+			get { return _dataTarget; }
 		}
-
 	}
 }

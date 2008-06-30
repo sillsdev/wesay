@@ -28,7 +28,7 @@ namespace WeSay.LexicalTools
 								   LexEntryRepository lexEntryRepository,
 								   EventHandler<CurrentItemEventArgs> focus)
 		{
-			this._relationParent = relationParent;
+			_relationParent = relationParent;
 			_relationType = relationType;
 			_field = field;
 			_lexEntryRepository = lexEntryRepository;
@@ -46,8 +46,7 @@ namespace WeSay.LexicalTools
 										   LexRelationType relationType,
 										   Field field,
 										   LexEntryRepository lexEntryRepository,
-										   EventHandler<CurrentItemEventArgs>
-												   focus)
+										   EventHandler<CurrentItemEventArgs> focus)
 		{
 			RelationController controller =
 					new RelationController(relationParent,
@@ -66,20 +65,19 @@ namespace WeSay.LexicalTools
 
 		//}
 
-		private void OnCreateNewPairStringLexEntryId(object sender,
-									  CreateNewArgs e)
+		private void OnCreateNewPairStringLexEntryId(object sender, CreateNewArgs e)
 		{
 			LexEntry newGuy = CreateNewLexEntry(e);
 			e.NewlyCreatedItem = GetRecordTokenFromLexEntry(newGuy);
 		}
 
-		private LexEntry CreateNewLexEntry(CreateNewArgs e) {
+		private LexEntry CreateNewLexEntry(CreateNewArgs e)
+		{
 			LexEntry newGuy = _lexEntryRepository.CreateItem();
-			newGuy.LexicalForm.SetAlternative(this._field.WritingSystemIds[0],
-											  e.LabelOfNewItem);
+			newGuy.LexicalForm.SetAlternative(_field.WritingSystemIds[0], e.LabelOfNewItem);
 			//hack: if something is a baseform itself, it isn't likely to have its own baseform
 			//This satisfies Rene's request of WS-419
-			if (this._field.FieldName == "BaseForm")
+			if (_field.FieldName == "BaseForm")
 			{
 				newGuy.SetFlag("flag_skip_BaseForm");
 			}
@@ -92,8 +90,7 @@ namespace WeSay.LexicalTools
 			// this will get a collection if we already have some for this field, or else
 			// it will make one. If unused, it will be cleaned up at the right time by the WeSayDataObject parent.
 			LexRelationCollection targetRelationCollection =
-					this._relationParent.GetOrCreateProperty<LexRelationCollection>(
-							_field.FieldName);
+					_relationParent.GetOrCreateProperty<LexRelationCollection>(_field.FieldName);
 
 			switch (_relationType.Multiplicity)
 			{
@@ -102,39 +99,40 @@ namespace WeSay.LexicalTools
 					if (targetRelationCollection.Relations.Count > 0)
 					{
 						relation = targetRelationCollection.Relations[0];
-						relation.Parent = this._relationParent;
+						relation.Parent = _relationParent;
 					}
 					else
 					{
 						//we have to make one so we can show the control. It will be cleaned up, if not used, by the WeSayDataObject target
-						relation =
-								new LexRelation(_field.FieldName,
-												string.Empty,
-												this._relationParent);
+						relation = new LexRelation(_field.FieldName, string.Empty, _relationParent);
 						targetRelationCollection.Relations.Add(relation);
 					}
 
 					InitializeRelationControl(relation);
 
 					break;
-//                case LexRelationType.Multiplicities.Many:
-//                    _control = new ReferenceCollectionEditor<LexRelation>
-//                                    (targetRelationCollection.Relations,
-//                                     _field.WritingSystemIds);
-//                    break;
+					//                case LexRelationType.Multiplicities.Many:
+					//                    _control = new ReferenceCollectionEditor<LexRelation>
+					//                                    (targetRelationCollection.Relations,
+					//                                     _field.WritingSystemIds);
+					//                    break;
 				default:
 					break;
 			}
 		}
 
-		private void InitializeRelationControl(LexRelation relation) {
+		private void InitializeRelationControl(LexRelation relation)
+		{
 			//TODO: refactor this (sortHelper, pairStringLexEntryIdList, _keyIdMap, GetKeyIdPairFromLexEntry)
 			//      to use ApproximateFinder. Eventually refactor the automcompletetextbox to just take one
 
-			ResultSet<LexEntry> recordTokenList = this._lexEntryRepository.GetAllEntriesSortedByLexicalForm(this._field.WritingSystems[0]);
-			this._resultSet = recordTokenList;
+			WritingSystem writingSystem = GetWritingSystemFromField();
+			ResultSet<LexEntry> recordTokenList =
+					_lexEntryRepository.GetAllEntriesSortedByLexicalForm(writingSystem);
+			_resultSet = recordTokenList;
 
-			AutoCompleteWithCreationBox<RecordToken<LexEntry>, string> picker = CreatePicker<RecordToken<LexEntry>>(relation);
+			AutoCompleteWithCreationBox<RecordToken<LexEntry>, string> picker =
+					CreatePicker<RecordToken<LexEntry>>(relation);
 			picker.GetKeyValueFromValue = GetRecordTokenFromTargetId;
 			picker.GetValueFromKeyValue = GetTargetIdFromRecordToken;
 
@@ -143,10 +141,16 @@ namespace WeSay.LexicalTools
 			picker.Box.ItemFilterer = FindClosestAndNextClosestAndPrefixedPairStringLexEntryForms;
 
 			picker.Box.Items = recordTokenList;
-			picker.Box.SelectedItem = GetRecordTokenFromLexEntry(relation.GetTarget(_lexEntryRepository));
+			picker.Box.SelectedItem =
+					GetRecordTokenFromLexEntry(relation.GetTarget(_lexEntryRepository));
 
 			picker.CreateNewClicked += OnCreateNewPairStringLexEntryId;
-			this._control = picker;
+			_control = picker;
+		}
+
+		private WritingSystem GetWritingSystemFromField() {
+			string firstWsId = this._field.WritingSystemIds[0];
+			return BasilProject.Project.WritingSystems[firstWsId];
 		}
 
 		//private static LexEntry Identity(LexEntry e) {
@@ -159,7 +163,9 @@ namespace WeSay.LexicalTools
 			{
 				return null;
 			}
-			ResultSet<LexEntry> resultSet = this._lexEntryRepository.GetAllEntriesSortedByLexicalForm(this._field.WritingSystems[0]);
+			WritingSystem writingSystem = GetWritingSystemFromField();
+			ResultSet<LexEntry> resultSet =
+					_lexEntryRepository.GetAllEntriesSortedByLexicalForm(writingSystem);
 			int index = resultSet.FindFirstIndex(e);
 			if (index < 0)
 			{
@@ -174,22 +180,25 @@ namespace WeSay.LexicalTools
 			{
 				return null;
 			}
-			LexEntry lexEntry = this._lexEntryRepository.GetLexEntryWithMatchingId(s);
-			if(lexEntry == null)
+			LexEntry lexEntry = _lexEntryRepository.GetLexEntryWithMatchingId(s);
+			if (lexEntry == null)
 			{
 				return null;
 			}
 			return GetRecordTokenFromLexEntry(lexEntry);
 		}
 
-		private string GetTargetIdFromRecordToken(RecordToken<LexEntry> e)
+		private static string GetTargetIdFromRecordToken(RecordToken<LexEntry> e)
 		{
-			return _lexEntryRepository.GetItem(e).Id;
+			return e.RealObject.Id;
 		}
 
-		private AutoCompleteWithCreationBox<T, string> CreatePicker<T>(LexRelation relation) where T:class
+		private AutoCompleteWithCreationBox<T, string> CreatePicker<T>(LexRelation relation)
+				where T : class
 		{
-			AutoCompleteWithCreationBox<T, string> picker = new AutoCompleteWithCreationBox<T, string>(CommonEnumerations.VisibilitySetting.Visible);
+			AutoCompleteWithCreationBox<T, string> picker =
+					new AutoCompleteWithCreationBox<T, string>(
+							CommonEnumerations.VisibilitySetting.Visible);
 			picker.Box.Tag = relation;
 			//                    switch (type.TargetType)
 			//                    {
@@ -201,12 +210,11 @@ namespace WeSay.LexicalTools
 			//                        default:
 			//                            break;
 			//                    }
-			picker.Box.WritingSystem = this._field.WritingSystems[0];
+			picker.Box.WritingSystem = GetWritingSystemFromField();
 
 			//review:
 			picker.Box.MinimumSize = new Size(40, 10);
-			if (picker.Box.SelectedItem == null &&
-				!string.IsNullOrEmpty(relation.Key))
+			if (picker.Box.SelectedItem == null && !string.IsNullOrEmpty(relation.Key))
 			{
 				picker.Box.Text = relation.Key;
 				// picker.Box.ShowRedSquiggle = true;
@@ -219,15 +227,16 @@ namespace WeSay.LexicalTools
 			return picker;
 		}
 
-
-		private static IEnumerable FindClosestAndNextClosestAndPrefixedPairStringLexEntryForms(string text, IEnumerable items, IDisplayStringAdaptor adaptor)
+		private static IEnumerable FindClosestAndNextClosestAndPrefixedPairStringLexEntryForms(
+				string text, IEnumerable items, IDisplayStringAdaptor adaptor)
 		{
-			return ApproximateMatcher.FindClosestForms<object>(items,
-															   adaptor.GetDisplayLabel,
-															   text,
-															   ApproximateMatcherOptions.IncludePrefixedAndNextClosestForms);
+			return
+					ApproximateMatcher.FindClosestForms<object>(items,
+																adaptor.GetDisplayLabel,
+																text,
+																ApproximateMatcherOptions.
+																		IncludePrefixedAndNextClosestForms);
 		}
-
 
 		//private static IEnumerable FindClosestAndNextClosestAndPrefixedLexEntryForms(string text, IEnumerable items, IDisplayStringAdaptor adaptor)
 		//{
@@ -237,7 +246,6 @@ namespace WeSay.LexicalTools
 		//                                                       ApproximateMatcherOptions.IncludePrefixedAndNextClosestForms);
 		//}
 
-
 		public void AddChangeBinding(EventHandler<CurrentItemEventArgs> handler)
 		{
 			_binding.CurrentItemChanged += handler;
@@ -245,28 +253,27 @@ namespace WeSay.LexicalTools
 
 		private object FindRecordTokenFromForm(string form)
 		{
-			return this._resultSet.FindFirstWithDisplayString(form);
+			return _resultSet.FindFirst(delegate (RecordToken<LexEntry> token)
+											 {
+												 return (string)token.Results["Form"] == form;
+											 });
 		}
 
-
-
-
-
-//        #region Nested type: WeSayDataObjectLabelAdaptor
-//
-//        private class PairStringLexEntryIdLabelAdaptor : IDisplayStringAdaptor
-//        {
-//            #region IDisplayStringAdaptor Members
-//
-//            public string GetDisplayLabel(object item)
-//            {
-//                KeyValuePair<string, long> kv = (KeyValuePair<string,long>)item;
-//                return kv.Key;
-//            }
-//
-//            #endregion
-//        }
-//
-//        #endregion
+		//        #region Nested type: WeSayDataObjectLabelAdaptor
+		//
+		//        private class PairStringLexEntryIdLabelAdaptor : IDisplayStringAdaptor
+		//        {
+		//            #region IDisplayStringAdaptor Members
+		//
+		//            public string GetDisplayLabel(object item)
+		//            {
+		//                KeyValuePair<string, long> kv = (KeyValuePair<string,long>)item;
+		//                return kv.Key;
+		//            }
+		//
+		//            #endregion
+		//        }
+		//
+		//        #endregion
 	}
 }

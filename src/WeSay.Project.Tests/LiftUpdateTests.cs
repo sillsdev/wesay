@@ -48,7 +48,7 @@ namespace WeSay.Project.Tests
 		{
 			IList<RepositoryId> newGuys = _service.GetRecordsNeedingUpdateInLift();
 
-			Assert.AreEqual(_lexEntryRepository.CountAllEntries(), newGuys.Count);
+			Assert.AreEqual(_lexEntryRepository.CountAllItems(), newGuys.Count);
 		}
 
 		//        [Test]
@@ -119,7 +119,6 @@ namespace WeSay.Project.Tests
 			_service.DoLiftUpdateNow(true);
 			// Linux and fat32 has resolution of second not millisecond!
 			Thread.Sleep(1000);
-
 		}
 
 		[Test]

@@ -1,13 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Xml;
-using LiftIO;
 using LiftIO.Validation;
 using NUnit.Framework;
 using WeSay.Foundation.Tests;
-using WeSay.Project;
 
 namespace WeSay.Project.Tests
 {
@@ -16,16 +13,15 @@ namespace WeSay.Project.Tests
 	///
 	/// Also see: Db4oProjectSetupForTesting, which encapsulates this
 	/// </summary>
-	public class ProjectDirectorySetupForTesting : IDisposable
+	public class ProjectDirectorySetupForTesting: IDisposable
 	{
 		private bool _disposed = false;
 		private readonly string _experimentDir;
-		private string _projectName = "test";
-		private string _pathToTasksBase;
+		private readonly string _projectName = "test";
+		private readonly string _pathToTasksBase;
 
-		public ProjectDirectorySetupForTesting(string xmlOfEntries) : this(xmlOfEntries, Validator.LiftVersion)
-		{
-		}
+		public ProjectDirectorySetupForTesting(string xmlOfEntries)
+				: this(xmlOfEntries, Validator.LiftVersion) {}
 
 		public ProjectDirectorySetupForTesting(string xmlOfEntries, string liftVersion)
 		{
@@ -37,21 +33,25 @@ namespace WeSay.Project.Tests
 				Assert.IsTrue(File.Exists(p.PathToConfigFile));
 				_pathToTasksBase = Path.Combine(p.ProjectDirectoryPath, "temptasks.xml");
 				File.Copy(p.PathToConfigFile, _pathToTasksBase);
-				p.EditorsSaveNow += new EventHandler(p_EditorsSaveNow);
+				p.EditorsSaveNow += p_EditorsSaveNow;
 				p.Save();
 			}
 
 			//overwrite the blank lift file
-			string liftContents = string.Format("<?xml version='1.0' encoding='utf-8'?><lift version='{0}'>{1}</lift>", liftVersion, xmlOfEntries);
+			string liftContents =
+					string.Format(
+							"<?xml version='1.0' encoding='utf-8'?><lift version='{0}'>{1}</lift>",
+							liftVersion,
+							xmlOfEntries);
 			File.WriteAllText(PathToLiftFile, liftContents);
 		}
 
-		void p_EditorsSaveNow(object sender, EventArgs e)
+		private void p_EditorsSaveNow(object sender, EventArgs e)
 		{
 			//ok, the hard part is that now we have a config with tasks, but no view template.
-			System.Xml.XmlDocument doc = new XmlDocument();
+			XmlDocument doc = new XmlDocument();
 			doc.Load(_pathToTasksBase);
-			XmlWriter writer = sender as XmlWriter;
+			XmlWriter writer = (XmlWriter) sender;
 			IList<ViewTemplate> viewTemplates = WeSayWordsProject.Project.ViewTemplates;
 			writer.WriteStartElement("components");
 			foreach (ViewTemplate template in viewTemplates)
@@ -77,15 +77,17 @@ namespace WeSay.Project.Tests
 		{
 			get { return Path.Combine(_experimentDir, "test.lift"); }
 		}
+
 		public string PathToWritingSystemFile
 		{
 			get { return Path.Combine(_experimentDir, "WritingSystemPrefs.xml"); }
 		}
+
 		public string PathToFactoryDefaultsPartsOfSpeech
 		{
 			get
 			{
-				string fileName="WritingSystemPrefs.xml";
+				string fileName = "WritingSystemPrefs.xml";
 				string path = Path.Combine(BasilProject.ApplicationCommonDirectory, fileName);
 				if (File.Exists(path))
 				{
@@ -100,32 +102,29 @@ namespace WeSay.Project.Tests
 				return path;
 			}
 		}
+
 		private static string MakeDir(string existingParent, string newChild)
 		{
 			string dir = Path.Combine(existingParent, newChild);
 			Directory.CreateDirectory(dir);
 			return dir;
 		}
-		#region IDisposable Members
 
+		#region IDisposable Members
 
 		~ProjectDirectorySetupForTesting()
 		{
-			if (!this._disposed)
+			if (!_disposed)
 			{
-				throw new InvalidOperationException("Disposed not explicitly called on " + GetType().FullName + ".");
+				throw new InvalidOperationException("Disposed not explicitly called on " +
+													GetType().FullName + ".");
 			}
 		}
 
 		public bool IsDisposed
 		{
-			get
-			{
-				return _disposed;
-			}
+			get { return _disposed; }
 		}
-
-
 
 		public void Dispose()
 		{
@@ -143,13 +142,13 @@ namespace WeSay.Project.Tests
 				}
 
 				// shared (dispose and finalizable) cleanup logic
-				this._disposed = true;
+				_disposed = true;
 			}
 		}
 
 		protected void VerifyNotDisposed()
 		{
-			if (this._disposed)
+			if (_disposed)
 			{
 				throw new ObjectDisposedException(GetType().FullName);
 			}

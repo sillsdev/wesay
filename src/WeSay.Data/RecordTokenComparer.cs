@@ -1,37 +1,62 @@
+using System;
 using System.Collections.Generic;
 
 namespace WeSay.Data
 {
-	public class RecordTokenComparer<T> : IComparer<RecordToken<T>>
+	public sealed class RecordTokenComparer<T>: IComparer<RecordToken<T>> where T:class, new()
 	{
-		private readonly IComparer<string> _keySorter;
-		private bool _ignoreId;
-
-		public RecordTokenComparer(IComparer<string> keySorter)
+		private readonly IEnumerable<SortDefinition> _sortDefinitions;
+		public RecordTokenComparer(IEnumerable<SortDefinition> sortDefinitions)
 		{
-			_ignoreId = false;
-			_keySorter = keySorter;
-		}
-
-		public bool IgnoreId
-		{
-			get { return this._ignoreId; }
-			set { this._ignoreId = value; }
+			if (sortDefinitions == null)
+			{
+				throw new ArgumentNullException("sortDefinitions");
+			}
+			if (sortDefinitions.GetEnumerator().MoveNext() == false)
+			{
+				throw new ArgumentException("sortDefinitions cannot be an empty array");
+			}
+			_sortDefinitions = sortDefinitions;
 		}
 
 		#region IComparer<RecordToken> Members
 
 		public int Compare(RecordToken<T> x, RecordToken<T> y)
 		{
-			int result = _keySorter.Compare(x.DisplayString, y.DisplayString);
-			if (result == 0 && !IgnoreId)
+			int result = 0;
+			foreach (SortDefinition definition in _sortDefinitions)
 			{
-				result = x.Id.CompareTo(y.Id);
+				result = definition.Comparer.Compare(GetFieldValue(x, definition),
+													 GetFieldValue(y, definition));
+				if(result != 0)
+				{
+					return result;
+				}
 			}
 			return result;
 		}
 
+		private static object GetFieldValue(RecordToken<T> token,
+											SortDefinition definition) {
+			object value;
+			if (token == null)
+			{
+				value = null;
+			}
+			else if (definition.Field == "RepositoryId")
+			{
+				value = token.Id;
+			}
+			else
+			{
+				if (!token.Results.TryGetValue(definition.Field, out value))
+				{
+					value = null;
+				}
+			}
+			return value;
+		}
+
 		#endregion
 	} ;
-
 }

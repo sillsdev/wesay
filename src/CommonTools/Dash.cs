@@ -1,30 +1,35 @@
-using System;
-using System.Diagnostics;
+﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
-using System.Windows.Forms;
 using System.IO;
-using Palaso.UI.WindowsForms.i8n;
+using System.Windows.Forms;
 using Palaso.Reporting;
+using Palaso.UI.WindowsForms.i8n;
 using WeSay.AddinLib;
-using WeSay.Foundation.Dashboard;
+using WeSay.Foundation;
 using WeSay.LexicalModel;
 using WeSay.Project;
 using WeSay.UI;
-using System.Drawing.Drawing2D;
 
 namespace WeSay.CommonTools
 {
-
 	public partial class Dash : UserControl, ITask, IFinishCacheSetup
 	{
+		private const double GoldRatio = 4.0; // arbitrary ratio we think looks the best for button sizes
+		private DictionaryStatusControl _title;
 		private readonly LexEntryRepository _lexEntryRepository;
-		private int _standardButtonWidth;
 		private IList<IThingOnDashboard> _thingsToMakeButtonsFor;
 		private List<ButtonGroup> _buttonGroups;
-		private bool _isActive=false;
+		private bool _isActive = false;
 		private readonly ICurrentWorkTask _currentWorkTaskProvider;
 		private int _oldFlowWidth;
+		private List<Size> _smallestPossibleButtonSizes;
+		private Size _bestButtonSize;
+		private bool _addedAllButtons = false;
+		private const TextFormatFlags ToolTipFormatFlags = TextFormatFlags.WordBreak |
+														   TextFormatFlags.NoFullWidthCharacterBreak |
+														   TextFormatFlags.LeftAndRightPadding;
 
 		public Dash(LexEntryRepository RecordListManager, ICurrentWorkTask currentWorkTaskProvider)
 		{
@@ -32,6 +37,7 @@ namespace WeSay.CommonTools
 			_lexEntryRepository = RecordListManager;
 			_currentWorkTaskProvider = currentWorkTaskProvider;
 			InitializeContextMenu();
+			Initialize();
 		}
 
 		private void InitializeContextMenu()
@@ -54,7 +60,8 @@ namespace WeSay.CommonTools
 			string dir = Directory.GetParent(Application.ExecutablePath).FullName;
 			ProcessStartInfo startInfo =
 					new ProcessStartInfo(Path.Combine(dir, "WeSay Configuration Tool.exe"),
-										 string.Format("\"{0}\"", WeSayWordsProject.Project.PathToConfigFile));
+										 string.Format("\"{0}\"",
+													   WeSayWordsProject.Project.PathToConfigFile));
 			try
 			{
 				Process.Start(startInfo);
@@ -68,78 +75,48 @@ namespace WeSay.CommonTools
 			Application.Exit();
 		}
 
-		private int DetermineStandardButtonWidth()
+		private void AddItemsToFlow()
 		{
-			int maxRequestedWidth = 30;
-			foreach (IThingOnDashboard item in ThingsToMakeButtonsFor)
-			{
-				int w = 100;// item.WidthToDisplayFullSizeLabel;
-				if(w > maxRequestedWidth)
-					maxRequestedWidth = w;
-			}
-			return maxRequestedWidth;
-		}
-
-		private void Fill()
-		{
-			DictionaryStatusControl title = new DictionaryStatusControl(_lexEntryRepository.CountAllEntries());
-			title.Font = new Font("Arial", 14);
-			title.BackColor = Color.Transparent;
-			title.ShowLogo = true;
-			_flow.Controls.Add(title);
-
-			_standardButtonWidth = DetermineStandardButtonWidth();
-			_standardButtonWidth += 30;//for space between text and button
+			_title = new DictionaryStatusControl(_lexEntryRepository.CountAllItems());
+			_title.Font = new Font("Arial", 14);
+			_title.BackColor = Color.Transparent;
+			_title.ShowLogo = true;
+			_title.Width = _flow.Width - _title.Margin.Left - _title.Margin.Right;
+			_title.TabStop = false;
+			_flow.Controls.Add(_title);
 
 			foreach (ButtonGroup group in _buttonGroups)
 			{
-				if (!group.MakeButtonsSameSize)
-				{
-					AddButtonGroup(group, 0);
-				}
-				else
-				{
-					AddButtonGroup(group, _standardButtonWidth);
-				}
+				AddButtonGroupToFlow(group);
 			}
-		 }
+			_addedAllButtons = true;
+		}
 
-//        private IEnumerable<string> GetGroups()
-//        {
-//            List<string> foundGroups = new List<string>();
-//            foreach (IThingOnDashboard item in _thingsToMakeButtonsFor)
-//            {
-//                if (!foundGroups.Contains(item.GroupName))
-//                {
-//                    foundGroups.Add(item.GroupName);
-//                    yield return item.GroupName;
-//                }
-//            }
-//        }
-
-		private void AddButtonGroup(ButtonGroup buttonGroup, int buttonWidth)
+		private void AddButtonGroupToFlow(ButtonGroup buttonGroup)
 		{
 			FlowLayoutPanel buttonFlow = new FlowLayoutPanel();
 			buttonFlow.AutoSize = true;
 			buttonFlow.FlowDirection = FlowDirection.LeftToRight;
-		   // buttonGroup.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			buttonFlow.Margin =  new Padding(30,0,0,15);
+			buttonFlow.Margin = new Padding(30, 0, 0, 15);
 			buttonFlow.AutoSizeMode = AutoSizeMode.GrowAndShrink;
 			buttonFlow.WrapContents = true;
 			bool foundAtLeastOne = false;
 			foreach (IThingOnDashboard item in ThingsToMakeButtonsFor)
 			{
 				if (item == this)
+				{
 					continue;
+				}
 				if (item.Group == buttonGroup.Group)
 				{
-					buttonFlow.Controls.Add(MakeButton(item, buttonWidth, buttonGroup));
+					buttonFlow.Controls.Add(MakeButton(item, buttonGroup));
 					foundAtLeastOne = true;
 				}
 			}
 			if (foundAtLeastOne)
 			{
 				Label header = new Label();
+				header.AutoSize = true;
 				header.Text = StringCatalog.Get(buttonGroup.Group.ToString());
 				header.Font = new Font("Arial", 12);
 				_flow.Controls.Add(header);
@@ -147,26 +124,43 @@ namespace WeSay.CommonTools
 			}
 		}
 
-		private Control MakeButton(IThingOnDashboard item, int buttonWidth, ButtonGroup group)
+		private Control MakeButton(IThingOnDashboard item, ButtonGroup group)
 		{
 			DashboardButton button = MakeButton(item);
 			button.BackColor = Color.Transparent;
-			button.Font = this.Font;
+			button.Font = Font;
 			button.AutoSize = false;
 			button.BorderColor = group.BorderColor;
 			button.DoneColor = group.DoneColor;
-//            if (buttonWidth == 0)
-//                buttonWidth = item.WidthToDisplayFullSizeLabel;
 
-			button.Size = new Size(buttonWidth, 40);
+			button.Dock = DockStyle.None;
+			button.Anchor = AnchorStyles.None;
+			button.Size = _bestButtonSize;
+			button.SizeChanged += ButtonSizeChanged;
 			button.Text = item.LocalizedLabel;
 			button.Click += OnButtonClick;
+			// if fonts or text are localized, we will need to re-measure stuff
+			button.TextChanged += delegate { _smallestPossibleButtonSizes = null; };
+			button.FontChanged += delegate { _smallestPossibleButtonSizes = null; };
+			_toolTip.SetToolTip(button, item.Description);
 			return button;
 		}
 
-		void OnButtonClick(object sender, EventArgs e)
+		void ButtonSizeChanged(object sender, EventArgs e)
 		{
-			DashboardButton b = (DashboardButton)sender;
+			// Buttons were being slightly resized when you went to another tab and came back during the
+			// call to add the Dash control to the tab page.  The change appears to be from something in
+			// windows forms that I couldn't figure out, so this just sets the size back to what we want.
+			Control control = (Control) sender;
+			if (_bestButtonSize != Size.Empty && _bestButtonSize != control.Size)
+			{
+				control.Size = _bestButtonSize;
+			}
+		}
+
+		private void OnButtonClick(object sender, EventArgs e)
+		{
+			DashboardButton b = (DashboardButton) sender;
 			ITask task = b.ThingToShowOnDashboard as ITask;
 			if (task != null && _currentWorkTaskProvider != null)
 			{
@@ -181,20 +175,19 @@ namespace WeSay.CommonTools
 
 					try
 					{
-						ProjectInfo projectInfo = WeSayWordsProject.Project.GetProjectInfoForAddin(_lexEntryRepository);
+						ProjectInfo projectInfo =
+								WeSayWordsProject.Project.GetProjectInfoForAddin(_lexEntryRepository);
 						addin.Launch(ParentForm, projectInfo);
 					}
 					catch (Exception error)
 					{
-						Palaso.Reporting.ErrorReport.ReportNonFatalMessage(error.Message);
+						ErrorReport.ReportNonFatalMessage(error.Message);
 					}
 
 					Cursor.Current = Cursors.Default;
-
 				}
 			}
 		}
-
 
 		public DashboardButton MakeButton(IThingOnDashboard item)
 		{
@@ -223,15 +216,347 @@ namespace WeSay.CommonTools
 				{
 					continue;
 				}
-				buttonGroup.MaximumSize = new Size(_flow.Width - buttonGroup.Margin.Left - buttonGroup.Margin.Right, 0);
+				buttonGroup.MaximumSize =
+						new Size(_flow.Width - buttonGroup.Margin.Left - buttonGroup.Margin.Right, 0);
 			}
 			_flow.Height = _flow.GetPreferredSize(new Size(_flow.Width, 0)).Height;
 			_flow.ResumeLayout();
 		}
 
+		private void ResizeButtons()
+		{
+			_flow.SuspendLayout();
+			foreach (Control buttonGroup in _flow.Controls)
+			{
+				foreach (Control control in buttonGroup.Controls)
+				{
+					DashboardButton button = control as DashboardButton;
+					if (button == null)
+					{
+						continue;
+					}
+					button.Size = _bestButtonSize;
+				}
+			}
+			_flow.ResumeLayout();
+		}
+
+		private IEnumerable<IEnumerable<Size>> GetAllPossibleButtonSizes()
+		{
+			List<IEnumerable<Size>> sizes = new List<IEnumerable<Size>>();
+			foreach (Control buttonGroup in _flow.Controls)
+			{
+				foreach (Control buttonControl in buttonGroup.Controls)
+				{
+					DashboardButton button = buttonControl as DashboardButton;
+					if (button == null)
+					{
+						continue;
+					}
+					sizes.Add(button.GetPossibleButtonSizes());
+				}
+			}
+			return sizes;
+		}
+
+		private static int CompareSizesByHeightThenWidth(Size x, Size y)
+		{
+			int retval = x.Height.CompareTo(y.Height);
+			if (retval == 0)
+			{
+				retval = x.Width.CompareTo(y.Width);
+			}
+			return retval;
+		}
+
+		private static int CompareSizesByWidthThenHeight(Size x, Size y)
+		{
+			int retval = x.Width.CompareTo(y.Width);
+			if (retval == 0)
+			{
+				retval = x.Height.CompareTo(y.Height);
+			}
+			return retval;
+		}
+
+		private List<Size> SmallestPossibleButtonSizes
+		{
+			get
+			{
+				if (_smallestPossibleButtonSizes == null && _addedAllButtons)
+				{
+					_smallestPossibleButtonSizes = ComputeSmallestPossibleButtonSizes(GetAllPossibleButtonSizes());
+				}
+				return _smallestPossibleButtonSizes;
+			}
+		}
+
+		internal static List<Size> ComputeSmallestPossibleButtonSizes(
+			IEnumerable<IEnumerable<Size>> possibleSizesOfButtons)
+		{
+			List<Size> result = new List<Size>();
+			Debug.Assert(possibleSizesOfButtons != null);   // per contract
+			foreach (IEnumerable<Size> possibleSizesFor1Button in possibleSizesOfButtons)
+			{
+				result = MergeButtonSizes(result, possibleSizesFor1Button);
+			}
+
+			return result;
+		}
+
+		private static List<Size> MergeButtonSizes(IEnumerable<Size> sizeList1, IEnumerable<Size> sizeList2)
+		{
+			List<Size> result;
+			if (sizeList1 == null && sizeList2 == null)
+			{
+				return null;
+			}
+			else if (sizeList1 == null || !sizeList1.GetEnumerator().MoveNext())
+			{
+				result = new List<Size>(sizeList2);
+			}
+			else if (sizeList2 == null || !sizeList2.GetEnumerator().MoveNext())
+			{
+				result = new List<Size>(sizeList1);
+			}
+			else
+			{
+				result = CombineButtonSizes(sizeList1, sizeList2);
+			}
+
+			RemoveDuplicateHeights(result);
+			RemoveDuplicateWidths(result);
+			return result;
+		}
+
+		private static void RemoveDuplicateHeights(List<Size> result)
+		{
+			RemoveDuplicates(result, CompareSizesByHeightThenWidth,
+							 delegate(Size x, Size y) { return x.Height.Equals(y.Height); });
+		}
+
+		private static void RemoveDuplicateWidths(List<Size> result)
+		{
+			RemoveDuplicates(result, CompareSizesByWidthThenHeight,
+							 delegate(Size x, Size y) { return x.Width.Equals(y.Width); });
+		}
+
+		private static void RemoveDuplicates(List<Size> result, Comparison<Size> sortComparer,
+											 EqualityComparison<Size> equalComparer)
+		{
+			Size prevSize = new Size(int.MaxValue, int.MaxValue);
+			result.Sort(sortComparer);
+			int i = 0;
+			while (i < result.Count)
+			{
+				if (equalComparer(result[i], prevSize))
+				{
+					result.RemoveAt(i);
+				}
+				else
+				{
+					prevSize = result[i];
+					++i;
+				}
+			}
+		}
+
+		private static List<Size> CombineButtonSizes(IEnumerable<Size> sizeList1, IEnumerable<Size> sizeList2)
+		{
+			Debug.Assert(sizeList1 != null);
+			Debug.Assert(sizeList2 != null);
+			Debug.Assert(sizeList1.GetEnumerator().MoveNext());
+				// per contract: both lists must contain at least one value
+			Debug.Assert(sizeList2.GetEnumerator().MoveNext());
+			List<Size> result = new List<Size>();
+
+			// merge possibleSizesFor1Button and result into workingSizes
+			foreach (Size size1 in sizeList1)
+			{
+				foreach (Size size2 in sizeList2)
+				{
+					result.Add(
+						new Size(Math.Max(size1.Width, size2.Width), Math.Max(size1.Height, size2.Height)));
+				}
+			}
+			Debug.Assert(result.Count != 0); // per contract
+			return result;
+		}
+
+		private List<int> GetButtonsPerGroup()
+		{
+			if (_buttonGroups == null || ThingsToMakeButtonsFor == null)
+			{
+				return new List<int>();
+			}
+			Dictionary<DashboardGroup, int> buttonsPerGroup = new Dictionary<DashboardGroup, int>(_buttonGroups.Count);
+			foreach (ButtonGroup group in _buttonGroups)
+			{
+				buttonsPerGroup.Add(group.Group, 0);
+			}
+			foreach (IThingOnDashboard item in ThingsToMakeButtonsFor)
+			{
+				if (item == this)
+					continue;
+				if (buttonsPerGroup.ContainsKey(item.Group))
+				{
+					++buttonsPerGroup[item.Group];
+				}
+			}
+			List<int> buttonsPerGroupList = new List<int>(buttonsPerGroup.Count);
+			foreach (KeyValuePair<DashboardGroup, int> pair in buttonsPerGroup)
+			{
+				if (pair.Value > 0)
+					buttonsPerGroupList.Add(pair.Value);
+			}
+			return buttonsPerGroupList;
+		}
+
+		private Size GetBestButtonSize()
+		{
+			return
+				ComputeBestButtonSize(SmallestPossibleButtonSizes, GetAvailableSpaceForButtons(), GetButtonsPerGroup());
+		}
+
+		internal static Size ComputeBestButtonSize(List<Size> smallestPossibleSizes, Size availableSpaceForButtons, IEnumerable<int> buttonsPerGroup)
+		{
+			if (smallestPossibleSizes == null || smallestPossibleSizes.Count == 0)
+			{
+				return Size.Empty;
+			}
+
+			List<Size> result = RemoveClippedButtonSizes(smallestPossibleSizes, availableSpaceForButtons.Width);
+			result = RemoveScrolledButtonSizes(result, availableSpaceForButtons, buttonsPerGroup);
+			return GetBestSizeBasedOnRatio(result, GoldRatio);
+		}
+
+		private static Size GetBestSizeBasedOnRatio(IEnumerable<Size> possibleSizes, double targetRatio)
+		{
+			Debug.Assert(possibleSizes != null); // per contract
+			Debug.Assert(possibleSizes.GetEnumerator().MoveNext());
+				// contract: possibleSizes must contain at least one size
+
+			Size bestSize = Size.Empty;
+			double bestRatio = double.PositiveInfinity;
+			foreach (Size size in possibleSizes)
+			{
+				double ratio = (double) size.Width/size.Height;
+				if (Math.Abs(ratio - targetRatio) <= Math.Abs(bestRatio - targetRatio))
+				{
+					bestRatio = ratio;
+					bestSize = size;
+				}
+			}
+			Debug.Assert(bestSize != Size.Empty); // per contract
+			return bestSize;
+		}
+
+		private static List<Size> RemoveScrolledButtonSizes(IEnumerable<Size> possibleSizes, Size availableSpaceForButtons, IEnumerable<int> buttonsPerGroup)
+		{
+			Debug.Assert(possibleSizes != null); // per contract
+			Debug.Assert(possibleSizes.GetEnumerator().MoveNext());
+				// contract: possibleSizes must contain at least one size
+
+			List<Size> result = new List<Size>();
+			int smallestHeight = int.MaxValue;
+			foreach (Size size in possibleSizes)
+			{
+				int heightNeeded = CalculateHeightNeededForButtons(size, availableSpaceForButtons.Width, buttonsPerGroup);
+				// consider all heights that don't cause scroll as the same
+				heightNeeded = Math.Max(heightNeeded, availableSpaceForButtons.Height);
+				if (heightNeeded < smallestHeight)
+				{
+					// found one that causes less scroll, so clear out old values
+					result.Clear();
+					smallestHeight = heightNeeded;
+				}
+				if (heightNeeded == smallestHeight)
+				{
+					result.Add(size);
+				}
+			}
+
+			Debug.Assert(result.Count > 0); // contract: returned list must have at least one member
+			return result;
+		}
+
+		private static int CalculateHeightNeededForButtons(Size size, int availableWidthForButtons, IEnumerable<int> buttonsPerGroup)
+		{
+			const int widthBetweenButtons = 6; // default margin padding on controls
+			const int heightBetweenRows = 6;
+			int maxButtonsInRow = (int) Math.Floor((double) availableWidthForButtons/(size.Width + widthBetweenButtons));
+			maxButtonsInRow = Math.Max(maxButtonsInRow, 1); // always at least one button in a row
+			int heightNeeded = 0;
+			foreach (int buttonsInGroup in buttonsPerGroup)
+			{
+				int rowsNeeded = (int) Math.Ceiling((double) buttonsInGroup/maxButtonsInRow);
+				heightNeeded += rowsNeeded*(size.Height + heightBetweenRows);
+			}
+			return heightNeeded;
+		}
+
+		private static List<Size> RemoveClippedButtonSizes(IEnumerable<Size> possibleSizes, int availableWidthForButtons)
+		{
+			Debug.Assert(possibleSizes != null); // per contract
+			List<Size> sortedSizes = new List<Size>(possibleSizes);
+			List<Size> workingSizes = new List<Size>(sortedSizes.Count);
+			Debug.Assert(sortedSizes.Count > 0); // per contract
+
+			sortedSizes.Sort(CompareSizesByWidthThenHeight);
+			// if all sizes are clipped, return least clipped
+			if (sortedSizes[0].Width > availableWidthForButtons)
+			{
+				workingSizes.Add(sortedSizes[0]);
+			}
+			else
+			{
+				// find sizes that are not clipped
+				foreach (Size size in sortedSizes)
+				{
+					if (size.Width <= availableWidthForButtons)
+					{
+						workingSizes.Add(size);
+					}
+					else
+					{
+						break;
+					}
+				}
+			}
+			Debug.Assert(workingSizes.Count > 0); // contract: returned list must have at least one member
+			return workingSizes;
+		}
+
+		/// <summary>
+		/// This method calculates the total space available for all the buttons on our form once space is removed
+		/// for all the other controls.
+		/// </summary>
+		private Size GetAvailableSpaceForButtons()
+		{
+			Size sizeForButtons = new Size(_flow.ClientRectangle.Width, ClientRectangle.Height - _flow.Location.Y);
+
+			foreach (Control control in _flow.Controls)
+			{
+				sizeForButtons.Height -= control.Margin.Top + control.Margin.Bottom;
+				FlowLayoutPanel flow = control as FlowLayoutPanel;
+				if (flow != null)
+				{
+					sizeForButtons.Width = _flow.ClientRectangle.Width - flow.Margin.Left - flow.Margin.Right;
+				}
+				else
+				{
+					sizeForButtons.Height -= control.Height;
+				}
+			}
+			// If we're already scrolling, the width of the scrollbar is already figured in to _flow.ClientRectangle.Width
+			// Otherwise, pretend like we will need a scrollbar to may sizing work better when we do
+			sizeForButtons.Width -= (VScroll ? 0 : SystemInformation.VerticalScrollBarWidth);
+			return sizeForButtons;
+		}
+
 		#region ITask Members
 
-		const int CountNotRelevant = -1;
+		private const int CountNotRelevant = -1;
 
 		public int GetReferenceCount()
 		{
@@ -248,6 +573,11 @@ namespace WeSay.CommonTools
 			return CountNotRelevant;
 		}
 
+		public bool AreCountsRelevant()
+		{
+			return false;
+		}
+
 		public int ExactCount
 		{
 			get { return CountNotRelevant; }
@@ -257,10 +587,10 @@ namespace WeSay.CommonTools
 		{
 			if (IsActive)
 			{
-				throw new InvalidOperationException("Activate should not be called when object is active.");
+				throw new InvalidOperationException(
+						"Activate should not be called when object is active.");
 			}
 
-			Initialize();
 			SuspendLayout();
 			if (ThingsToMakeButtonsFor == null)
 			{
@@ -276,7 +606,7 @@ namespace WeSay.CommonTools
 			}
 
 
-			Fill();
+			AddItemsToFlow();
 			ResumeLayout(true);
 			_isActive = true;
 		}
@@ -284,39 +614,39 @@ namespace WeSay.CommonTools
 		private void Initialize()
 		{
 			InitializeComponent();
-			this.BackColor = DisplaySettings.Default.GetEndBackgroundColor(this);
-
-			//_flow.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			BackColor = DisplaySettings.Default.GetEndBackgroundColor(this);
 
 			_buttonGroups = new List<ButtonGroup>();
-			_buttonGroups.Add(new ButtonGroup(DashboardGroup.Gather, true,
-											  Color.FromArgb(155, 187, 89),
-											  Color.FromArgb(195, 214, 155)));
-			_buttonGroups.Add(new ButtonGroup(DashboardGroup.Describe, true, Color.FromArgb(85, 142, 213),
-											  Color.FromArgb(185, 205, 229)));
-			_buttonGroups.Add(new ButtonGroup(DashboardGroup.Refine, true, Color.FromArgb(250, 192, 144),
-											  Color.FromArgb(252, 213, 181)));
-			_buttonGroups.Add(new ButtonGroup(DashboardGroup.Share, true, Color.FromArgb(119, 147, 60),
-											  Color.White));
-
-			LocalizationHelper helper = new LocalizationHelper(null);
-			helper.Parent = this;
-			helper.EndInit();
+			_buttonGroups.Add(
+					new ButtonGroup(DashboardGroup.Gather,
+									Color.FromArgb(155, 187, 89),
+									Color.FromArgb(195, 214, 155)));
+			_buttonGroups.Add(
+					new ButtonGroup(DashboardGroup.Describe,
+									Color.FromArgb(85, 142, 213),
+									Color.FromArgb(185, 205, 229)));
+			_buttonGroups.Add(
+					new ButtonGroup(DashboardGroup.Refine,
+									Color.FromArgb(250, 192, 144),
+									Color.FromArgb(252, 213, 181)));
+			_buttonGroups.Add(
+					new ButtonGroup(DashboardGroup.Share,
+									Color.FromArgb(119, 147, 60),
+									Color.White));
 		}
 
 		public void Deactivate()
 		{
 			if (!IsActive)
 			{
-				throw new InvalidOperationException("Deactivate should only be called once after Activate.");
+				throw new InvalidOperationException(
+						"Deactivate should only be called once after Activate.");
 			}
-			Controls.Clear();
+			_flow.Controls.Clear();
 			_isActive = false;
 		}
 
-		public void GoToUrl(string url)
-		{
-		}
+		public void GoToUrl(string url) {}
 
 		public bool IsActive
 		{
@@ -328,8 +658,8 @@ namespace WeSay.CommonTools
 			get
 			{
 				return
-						StringCatalog.Get("~Home",
-										  "The label for the 'dashboard'; the task which lets you see the status of other tasks and jump to them.");
+					StringCatalog.Get("~Home",
+									  "The label for the 'dashboard'; the task which lets you see the status of other tasks and jump to them.");
 			}
 		}
 
@@ -393,16 +723,33 @@ namespace WeSay.CommonTools
 		protected override void OnLayout(LayoutEventArgs e)
 		{
 			base.OnLayout(e);
-			Invalidate(false);   // force redraw of background
-			if (_flow.Width == _oldFlowWidth)
+			Invalidate(false); // force redraw of background
+			Size oldBestSize = _bestButtonSize;
+			_bestButtonSize = GetBestButtonSize();
+			if (_title != null && _flow.Width != _oldFlowWidth)
+			{
+				// for some reason, anchoring the title on the left and right didn't work,
+				// so I have to set the size manually
+				_title.Width = _flow.Width - _title.Margin.Left - _title.Margin.Right;
+			}
+			if (_bestButtonSize != oldBestSize)
+			{
+				ResizeButtons();
+			}
+			if (_bestButtonSize == oldBestSize && _flow.Width == _oldFlowWidth)
+			{
 				return;
+			}
 			_oldFlowWidth = _flow.Width;
 			bool neededScroll = _flow.Bounds.Bottom >= ClientRectangle.Height;
 			ResizeFlows();
 			// If we need a scrollbar now, and we didn't before, do another layout
 			// to add the scrollbar.  This prevents some problems when resizing
-			if (!neededScroll && _flow.Bounds.Bottom >= ClientRectangle.Height)
+			if ((!neededScroll && _flow.Bounds.Bottom >= ClientRectangle.Height)
+				|| (neededScroll && _flow.Bounds.Bottom < ClientRectangle.Height))
+			{
 				base.OnLayout(e);
+			}
 		}
 
 		protected override void OnPaintBackground(PaintEventArgs e)
@@ -410,38 +757,52 @@ namespace WeSay.CommonTools
 			DisplaySettings.Default.PaintBackground(this, e);
 		}
 
+		protected override void OnMouseWheel(MouseEventArgs e)
+		{
+			base.OnMouseWheel(e);
+			Invalidate(false); // force redraw of background
+		}
+
 		protected override void OnScroll(ScrollEventArgs se)
 		{
 			base.OnScroll(se);
-			Invalidate(false);  // force redraw of background
+			Invalidate(false); // force redraw of background
+		}
+
+		private void _toolTip_Draw(object sender, DrawToolTipEventArgs e)
+		{
+			e.DrawBackground();
+			e.DrawBorder();
+			Font localizedFont = StringCatalog.ModifyFontForLocalization(SystemFonts.DefaultFont);
+			Rectangle bounds = new Rectangle(e.Bounds.Left + 3, e.Bounds.Top + 3, e.Bounds.Width - 6, e.Bounds.Height - 8);
+			TextRenderer.DrawText(e.Graphics, e.ToolTipText, localizedFont, bounds, Color.Black, ToolTipFormatFlags);
+		}
+
+		private void _toolTip_Popup(object sender, PopupEventArgs e)
+		{
+			ToolTip toolTip = (ToolTip) sender;
+			string description = toolTip.GetToolTip(e.AssociatedControl);
+			Graphics g = Graphics.FromHwnd(e.AssociatedWindow.Handle);
+			Font localizedFont = StringCatalog.ModifyFontForLocalization(SystemFonts.DefaultFont);
+			List<Size> possibleSizes = DisplaySettings.GetPossibleTextSizes(g, description, localizedFont, ToolTipFormatFlags);
+			Size bestSize = GetBestSizeBasedOnRatio(possibleSizes, GoldRatio);
+			e.ToolTipSize = new Size(bestSize.Width + 6, bestSize.Height + 8);
+			g.Dispose();
 		}
 	}
-
-
-
-
 
 	internal class ButtonGroup
 	{
 		private readonly DashboardGroup _group;
-		private readonly bool _makeButtonsSameSize;
-		private Color _doneColor;
-		private Color _borderColor;
+		private readonly Color _doneColor;
+		private readonly Color _borderColor;
 
-		public ButtonGroup(DashboardGroup group, bool makeButtonsSameSize, Color borderColor, Color doneColor)
+		public ButtonGroup(DashboardGroup group, Color borderColor, Color doneColor)
 		{
 			_group = group;
-			_makeButtonsSameSize = makeButtonsSameSize;
 			_borderColor = borderColor;
 			_doneColor = doneColor;
 		}
-
-		public bool MakeButtonsSameSize
-		{
-			get { return _makeButtonsSameSize; }
-		}
-
-
 
 		public Color DoneColor
 		{

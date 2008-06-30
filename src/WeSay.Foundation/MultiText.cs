@@ -1,15 +1,11 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
+using Palaso.Text;
+
 //using Exortech.NetReflector;
 //using Exortech.NetReflector.Util;
-using Palaso.Text;
-using WeSay.Foundation;
 
 namespace WeSay.Foundation
 {
@@ -19,23 +15,16 @@ namespace WeSay.Foundation
 	//NO: we haven't been able to do a reasonalbly compact xml representation except with custom deserializer
 	//[ReflectorType("multiText")]
 	[XmlInclude(typeof (LanguageForm))]
-	public class MultiText : MultiTextBase, IParentable, IReportEmptiness, System.Xml.Serialization.IXmlSerializable
+	public class MultiText: MultiTextBase, IParentable, IReportEmptiness, IXmlSerializable
 	{
-		private WeSayDataObject _parent=null;
+		private WeSayDataObject _parent = null;
 
-		public MultiText(WeSayDataObject parent) : base()
+		public MultiText(WeSayDataObject parent)
 		{
 			_parent = parent;
 		}
 
-
-		public MultiText()
-			: base()
-		{
-
-		}
-
-
+		public MultiText() {}
 
 		/// <summary>
 		/// We have this pesky "backreference" solely to enable fast
@@ -65,7 +54,6 @@ namespace WeSay.Foundation
 			set { _parent = value; }
 		}
 
-
 		/// <summary>
 		/// Subclasses should provide a "Parent" property which set the proper class.
 		/// </summary>
@@ -73,8 +61,6 @@ namespace WeSay.Foundation
 		{
 			get { return Parent; }
 		}
-
-
 
 		#region IEnumerable Members
 
@@ -104,23 +90,23 @@ namespace WeSay.Foundation
 			foreach (XmlNode form in d.SelectNodes("*/form"))
 			{
 				string s = form.InnerText.Trim().Replace('\n', ' ').Replace("  ", " ");
-				if(form.Attributes.GetNamedItem("ws")!=null) //old style, but out there
+				if (form.Attributes.GetNamedItem("ws") != null) //old style, but out there
 				{
-					this.SetAlternative(form.Attributes["ws"].Value, s);
+					SetAlternative(form.Attributes["ws"].Value, s);
 				}
 				else
 				{
-					this.SetAlternative(form.Attributes["lang"].Value, s);
+					SetAlternative(form.Attributes["lang"].Value, s);
 				}
 			}
-//reader.ReadEndElement();
+			//reader.ReadEndElement();
 		}
 
 		///<summary>
 		/// required by IXmlSerializable.
 		/// This is wierd and sad, but this is tuned to the format we want in OptionLists.
 		///</summary>
-	   public void WriteXml(XmlWriter writer)
+		public void WriteXml(XmlWriter writer)
 		{
 			foreach (LanguageForm form in Forms)
 			{
@@ -161,18 +147,17 @@ namespace WeSay.Foundation
 			}
 			foreach (LanguageForm f in condemened)
 			{
-				this.RemoveLanguageForm(f);
+				RemoveLanguageForm(f);
 			}
 		}
 
 		#endregion
 
-		public static new MultiText Create(Dictionary<string, string> forms)
+		public new static MultiText Create(Dictionary<string, string> forms)
 		{
 			MultiText m = new MultiText();
 			CopyForms(forms, m);
 			return m;
 		}
 	}
-
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
@@ -8,7 +9,6 @@ using Palaso.Reporting;
 using Palaso.UI.WindowsForms.i8n;
 using WeSay.Data;
 using WeSay.Foundation;
-using WeSay.Language;
 using WeSay.LexicalModel;
 using WeSay.LexicalTools.Properties;
 using WeSay.Project;
@@ -32,8 +32,7 @@ namespace WeSay.LexicalTools
 			InitializeComponent();
 		}
 
-		public DictionaryControl(LexEntryRepository recordManager,
-								 ViewTemplate viewTemplate)
+		public DictionaryControl(LexEntryRepository recordManager, ViewTemplate viewTemplate)
 		{
 			if (recordManager == null)
 			{
@@ -44,7 +43,7 @@ namespace WeSay.LexicalTools
 				throw new ArgumentNullException("viewTemplate");
 			}
 			_viewTemplate = viewTemplate;
-			this._lexEntryRepository = recordManager;
+			_lexEntryRepository = recordManager;
 			_cmWritingSystems = new ContextMenu();
 
 			SetupPickerControlWritingSystems();
@@ -53,38 +52,25 @@ namespace WeSay.LexicalTools
 			InitializeDisplaySettings();
 
 			_writingSystemChooser.Image =
-					Resources.Expand.GetThumbnailImage(6,
-													   6,
-													   ReturnFalse,
-													   IntPtr.Zero);
-			_btnFind.Image =
-					Resources.Find.GetThumbnailImage(18,
-													 18,
-													 ReturnFalse,
-													 IntPtr.Zero);
+					Resources.Expand.GetThumbnailImage(6, 6, ReturnFalse, IntPtr.Zero);
+			_btnFind.Image = Resources.Find.GetThumbnailImage(18, 18, ReturnFalse, IntPtr.Zero);
 			_btnDeleteWord.Image =
-					Resources.DeleteWord.GetThumbnailImage(18,
-														   18,
-														   ReturnFalse,
-														   IntPtr.Zero);
+					Resources.DeleteWord.GetThumbnailImage(18, 18, ReturnFalse, IntPtr.Zero);
 			_btnNewWord.Image =
-					Resources.NewWord.GetThumbnailImage(18,
-														18,
-														ReturnFalse,
-														IntPtr.Zero);
+					Resources.NewWord.GetThumbnailImage(18, 18, ReturnFalse, IntPtr.Zero);
 
 			Control_EntryDetailPanel.ViewTemplate = _viewTemplate;
-			Control_EntryDetailPanel.LexEntryRepository = this._lexEntryRepository;
+			Control_EntryDetailPanel.LexEntryRepository = _lexEntryRepository;
 
-			SetListWritingSystem(_viewTemplate.GetDefaultWritingSystemForField(Field.FieldNames.EntryLexicalForm.ToString()));
+			SetListWritingSystem(
+					_viewTemplate.GetDefaultWritingSystemForField(
+							Field.FieldNames.EntryLexicalForm.ToString()));
 
 			_findText.KeyDown += _findText_KeyDown;
-			_recordsListBox.SelectedIndexChanged +=OnRecordSelectionChanged;
+			_recordsListBox.SelectedIndexChanged += OnRecordSelectionChanged;
 
 			UpdateDisplay();
 		}
-
-
 
 		public EntryViewControl Control_EntryDetailPanel
 		{
@@ -101,8 +87,8 @@ namespace WeSay.LexicalTools
 				}
 				try
 				{
-					RepositoryId id = this._records[CurrentIndex].Id;
-					return this._lexEntryRepository.GetItem(id);
+					RepositoryId id = _records[CurrentIndex].Id;
+					return _lexEntryRepository.GetItem(id);
 				}
 				catch (Exception e)
 				{
@@ -122,11 +108,8 @@ namespace WeSay.LexicalTools
 		private void InitializeDisplaySettings()
 		{
 			BackColor = DisplaySettings.Default.BackgroundColor;
-			this._findWritingSystemId.ForeColor = DisplaySettings.Default.WritingSystemLabelColor;
-
+			_findWritingSystemId.ForeColor = DisplaySettings.Default.WritingSystemLabelColor;
 		}
-
-
 
 		private void SetupPickerControlWritingSystems()
 		{
@@ -134,15 +117,15 @@ namespace WeSay.LexicalTools
 			RegisterFieldWithPicker(LexSense.WellKnownProperties.Gloss); //Reversal
 		}
 
-
 		private void RegisterFieldWithPicker(string fieldName)
 		{
 			Field field = _viewTemplate.GetField(fieldName);
 			if (field != null)
 			{
-				if (field.WritingSystems.Count > 0)
+				if (field.WritingSystemIds.Count > 0)
 				{
-					foreach (WritingSystem writingSystem in field.WritingSystems)
+					IList<WritingSystem> writingSystems = BasilProject.Project.WritingSystemsFromIds(field.WritingSystemIds);
+					foreach (WritingSystem writingSystem in writingSystems)
 					{
 						AddWritingSystemToPicker(writingSystem, field);
 					}
@@ -155,21 +138,23 @@ namespace WeSay.LexicalTools
 				}
 			}
 		}
+
 		private void AddWritingSystemToPicker(WritingSystem writingSystem, Field field)
 		{
 			MenuItem item =
-				new MenuItem(
-					writingSystem.Id + "\t" +
-					StringCatalog.Get(field.DisplayName),
-					OnCmWritingSystemClicked);
+					new MenuItem(writingSystem.Id + "\t" + StringCatalog.Get(field.DisplayName),
+								 OnCmWritingSystemClicked);
 			item.RadioCheck = true;
 			item.Tag = writingSystem;
 			_cmWritingSystems.MenuItems.Add(item);
 		}
 
-		private bool IsWritingSystemUsedInLexicalForm(WritingSystem writingSystem)
+		private bool IsWritingSystemUsedInLexicalForm(string writingSystemId)
 		{
-			return _viewTemplate.IsWritingSystemUsedInField(writingSystem, Field.FieldNames.EntryLexicalForm.ToString());
+			return
+					_viewTemplate.IsWritingSystemUsedInField(writingSystemId,
+															 Field.FieldNames.EntryLexicalForm.
+																	 ToString());
 		}
 
 		public void SetListWritingSystem(WritingSystem writingSystem)
@@ -218,7 +203,8 @@ namespace WeSay.LexicalTools
 			_findText.Width = _btnFind.Left - _findText.Left;
 		}
 
-		private void SetRecordToBeEdited(LexEntry record) {
+		private void SetRecordToBeEdited(LexEntry record)
+		{
 			if (Control_EntryDetailPanel.DataSource != null)
 			{
 				Control_EntryDetailPanel.DataSource.PropertyChanged -= OnEntryChanged;
@@ -234,52 +220,68 @@ namespace WeSay.LexicalTools
 		{
 			Debug.Assert(CurrentIndex != -1);
 			RecordToken<LexEntry> recordToken = _records[CurrentIndex];
-			if(!recordToken.IsFresh)
+//todo: figure out how to keep our list up to date as records change
+			//if (!recordToken.IsFresh)
+			//{
+			//    recordToken.Refresh();
+			//    _keepRecordCurrent = true;
+			//    LoadRecords();
+			//    int index = _records.FindFirstIndex(recordToken);
+			//    //may not have been successful with the refresh of the recordToken
+			//    // in which case we should just try to go to the first with
+			//    // the same id
+			//    if (index < 0)
+			//    {
+			//        index = _records.FindFirstIndex(recordToken.Id);
+			//    }
+			//    Debug.Assert(index != -1);
+			//    _recordsListBox.SelectedIndex = index;
+			//    _keepRecordCurrent = false;
+			//}
+		}
+
+		private void LoadRecords()
+		{
+			if (IsWritingSystemUsedInLexicalForm(_listWritingSystem.Id))
 			{
-				recordToken.Refresh();
-				_keepRecordCurrent = true;
-				LoadRecords();
-				int index = this._records.FindFirstIndex(recordToken);
-				//may not have been successful with the refresh of the recordToken
-				// in which case we should just try to go to the first with
-				// the same id
-				if(index < 0)
-				{
-				   index = this._records.FindFirstIndex(recordToken.Id);
-				}
-				Debug.Assert(index != -1);
-				_recordsListBox.SelectedIndex = index;
-				_keepRecordCurrent = false;
+				_records = _lexEntryRepository.GetAllEntriesSortedByLexicalForm(_listWritingSystem);
 			}
-		}
-
-		private void LoadRecords() {
-
-			if(IsWritingSystemUsedInLexicalForm(this._listWritingSystem))
-			{
-				this._records = this._lexEntryRepository.GetAllEntriesSortedByLexicalForm(_listWritingSystem);
-		}
 			else
 			{
-				this._records = this._lexEntryRepository.GetAllEntriesSortedByGloss(_listWritingSystem);
-
+				_records = _lexEntryRepository.GetAllEntriesSortedByGloss(_listWritingSystem);
 			}
 			_recordsListBox.BeginUpdate();
-			_recordsListBox.DataSource = (BindingList<RecordToken<LexEntry>>)_records;
+			_recordsListBox.DataSource = (BindingList<RecordToken<LexEntry>>) _records;
 			_recordsListBox.EndUpdate();
 		}
 
+		//todo: support fallback to best form
 		private void OnRetrieveVirtualItemEvent(object sender, RetrieveVirtualItemEventArgs e)
 		{
-			string displayString = _records[e.ItemIndex].DisplayString;
+			string displayString = (string) _records[e.ItemIndex].Results["Form"];
+			if(string.IsNullOrEmpty(displayString))
+			{
+				displayString = "(" +
+					  StringCatalog.Get("~Empty",
+										"This is what shows for a word in a list when the user hasn't yet typed anything in for the word.  Like if you click the 'New Word' button repeatedly.") +
+					  //StringCatalog.Get("~No Gloss",
+					  //                        "This is what shows if the user is listing words by the glossing language, but the word doesn't have a gloss.") +
+
+					  ")";
+			}
 			e.Item = new ListViewItem(displayString);
 		}
 
-		private static IEnumerable FindClosestAndNextClosestAndPrefixedForms(string text, IEnumerable items, IDisplayStringAdaptor adaptor)
+		private static IEnumerable FindClosestAndNextClosestAndPrefixedForms(string text,
+																			 IEnumerable items,
+																			 IDisplayStringAdaptor
+																					 adaptor)
 		{
-			return ApproximateMatcher.FindClosestForms(items,
-															   text,
-															   ApproximateMatcherOptions.IncludePrefixedAndNextClosestForms);
+			return
+					ApproximateMatcher.FindClosestForms(items,
+														text,
+														ApproximateMatcherOptions.
+																IncludePrefixedAndNextClosestForms);
 		}
 
 		private void OnCmWritingSystemClicked(object sender, EventArgs e)
@@ -304,8 +306,7 @@ namespace WeSay.LexicalTools
 											 _writingSystemChooser.Height));
 		}
 
-		private void OnFindWritingSystemId_MouseClick(object sender,
-													  MouseEventArgs e)
+		private void OnFindWritingSystemId_MouseClick(object sender, MouseEventArgs e)
 		{
 			Logger.WriteMinorEvent("FindWritingSystemId_MouseClick");
 			_findText.Focus();
@@ -315,8 +316,7 @@ namespace WeSay.LexicalTools
 
 		private void _findText_KeyDown(object sender, KeyEventArgs e)
 		{
-			if (e.Modifiers == Keys.None &&
-				e.KeyData == Keys.Enter)
+			if (e.Modifiers == Keys.None && e.KeyData == Keys.Enter)
 			{
 				e.Handled = true;
 				e.SuppressKeyPress = true; // otherwise it beeps!
@@ -324,8 +324,7 @@ namespace WeSay.LexicalTools
 			}
 		}
 
-		private void _findText_AutoCompleteChoiceSelected(object sender,
-														  EventArgs e)
+		private void _findText_AutoCompleteChoiceSelected(object sender, EventArgs e)
 		{
 			SelectItemWithDisplayString(_findText.Text);
 		}
@@ -350,12 +349,19 @@ namespace WeSay.LexicalTools
 		private void SelectItemWithDisplayString(string text)
 		{
 			Logger.WriteMinorEvent("SelectItemWithDisplayString");
-			_recordsListBox.SelectedIndex = _records.FindFirstIndexWithDisplayString(text);
+			_recordsListBox.SelectedIndex =
+					_records.FindFirstIndex(delegate(RecordToken<LexEntry> token)
+											{
+												return (string) token.Results["Form"] == text;
+											});
 		}
 
 		private void OnRecordSelectionChanged(object sender, EventArgs e)
 		{
-			if (_keepRecordCurrent) return;
+			if (_keepRecordCurrent)
+			{
+				return;
+			}
 
 			if (Control_EntryDetailPanel.DataSource == CurrentRecord)
 			{
@@ -370,8 +376,7 @@ namespace WeSay.LexicalTools
 			}
 			else
 			{
-				Logger.WriteEvent(
-						"RecordSelectionChanged Skipping because record is null");
+				Logger.WriteEvent("RecordSelectionChanged Skipping because record is null");
 			}
 
 			SetRecordToBeEdited(CurrentRecord);
@@ -379,17 +384,18 @@ namespace WeSay.LexicalTools
 			SelectedIndexChanged.Invoke(this, null);
 			UpdateDisplay();
 		}
+
 		protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
 		{
-			if(keyData == (Keys.Control | Keys.N))
+			if (keyData == (Keys.Control | Keys.N))
 			{
 				AddNewWord();
 				return true;
 			}
 
-			if(keyData == (Keys.Control | Keys.F))
+			if (keyData == (Keys.Control | Keys.F))
 			{
-				if(!_findText.Focused)
+				if (!_findText.Focused)
 				{
 					_findText.Focus();
 					_findText.Mode = WeSayAutoCompleteTextBox.EntryMode.List;
@@ -413,13 +419,12 @@ namespace WeSay.LexicalTools
 		{
 			Logger.WriteEvent("NewWord_Click");
 
-			LexEntry entry = this._lexEntryRepository.CreateItem();
+			LexEntry entry = _lexEntryRepository.CreateItem();
 			//bool NoPriorSelection = _recordsListBox.SelectedIndex == -1;
 			//_recordListBoxActive = true; // allow onRecordSelectionChanged
-			if (_findText.Focused
-				&& !string.IsNullOrEmpty(_findText.Text)
-				&& IsWritingSystemUsedInLexicalForm(_listWritingSystem))
-				//todo only create new when not found (doesn't already exist)
+			if (_findText.Focused && !string.IsNullOrEmpty(_findText.Text) &&
+				IsWritingSystemUsedInLexicalForm(_listWritingSystem.Id))
+					//todo only create new when not found (doesn't already exist)
 			{
 				entry.LexicalForm[_listWritingSystem.Id] = _findText.Text.Trim();
 			}
@@ -453,12 +458,12 @@ namespace WeSay.LexicalTools
 				// but we assume it has the focus when we do our selection change event
 				_btnDeleteWord.Focus();
 			}
-		   CurrentRecord.IsBeingDeleted = true;
-		   RecordToken<LexEntry> recordToken = _records[CurrentIndex];
-			this._lexEntryRepository.DeleteItem(recordToken.Id);
+			CurrentRecord.IsBeingDeleted = true;
+			RecordToken<LexEntry> recordToken = _records[CurrentIndex];
+			_lexEntryRepository.DeleteItem(recordToken.Id);
 			int index = _recordsListBox.SelectedIndex;
 			LoadRecords();
-			if(index >= _records.Count)
+			if (index >= _records.Count)
 			{
 				index = _records.Count - 1;
 			}

@@ -3,8 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework;
 
-
-namespace WeSay.Data.Tests.IEnumerableTests
+namespace WeSay.Data.Tests
 {
 	/// <summary>
 	/// A collection of _itemCount items should be initialized in _enumerable.
@@ -17,7 +16,7 @@ namespace WeSay.Data.Tests.IEnumerableTests
 		[Test]
 		public void Enumerator()
 		{
-			IEnumerator enumerator = this._enumerable.GetEnumerator();
+			IEnumerator enumerator = _enumerable.GetEnumerator();
 			Assert.IsNotNull(enumerator);
 		}
 
@@ -25,7 +24,7 @@ namespace WeSay.Data.Tests.IEnumerableTests
 		public void ForEach()
 		{
 			int i = 0;
-			foreach (T item in this._enumerable)
+			foreach (T item in _enumerable)
 			{
 				Assert.IsNotNull(item);
 				i++;
@@ -36,12 +35,12 @@ namespace WeSay.Data.Tests.IEnumerableTests
 		[Test]
 		public void Current()
 		{
-			IEnumerator enumerator = this._enumerable.GetEnumerator();
+			IEnumerator enumerator = _enumerable.GetEnumerator();
 			T prevCurrent = default(T);
-			for (int i = 0; i < _itemCount; ++i)
+			for (int i = 0;i < _itemCount;++i)
 			{
 				Assert.IsTrue(enumerator.MoveNext());
-				T current = (T)enumerator.Current;
+				T current = (T) enumerator.Current;
 				Assert.IsNotNull(current);
 				Assert.AreNotSame(prevCurrent, current);
 				prevCurrent = current;
@@ -52,7 +51,7 @@ namespace WeSay.Data.Tests.IEnumerableTests
 		[Test]
 		public void MoveNext()
 		{
-			IEnumerator enumerator = this._enumerable.GetEnumerator();
+			IEnumerator enumerator = _enumerable.GetEnumerator();
 			int i = 0;
 			while (enumerator.MoveNext())
 			{
@@ -64,13 +63,13 @@ namespace WeSay.Data.Tests.IEnumerableTests
 		[Test]
 		public void Reset()
 		{
-			IEnumerator enumerator = this._enumerable.GetEnumerator();
+			IEnumerator enumerator = _enumerable.GetEnumerator();
 			enumerator.Reset();
-			if (this._itemCount > 0)
+			if (_itemCount > 0)
 			{
 				Assert.IsTrue(enumerator.MoveNext());
 
-				T first = (T)enumerator.Current;
+				T first = (T) enumerator.Current;
 				enumerator.Reset();
 				Assert.IsTrue(enumerator.MoveNext());
 				Assert.AreEqual(first, enumerator.Current);
@@ -81,18 +80,17 @@ namespace WeSay.Data.Tests.IEnumerableTests
 			}
 		}
 
-
 		/// <summary>
 		/// After an enumerator is created, the MoveNext method must be
 		/// called to advance the enumerator to the first element of the
 		/// collection before reading the value of the Current property.
 		/// </summary>
 		[Test]
-		[ExpectedException(typeof(InvalidOperationException))]
+		[ExpectedException(typeof (InvalidOperationException))]
 		public void CurrentThrowsBeforeMoveNext()
 		{
-			IEnumerator enumerator = this._enumerable.GetEnumerator();
-			T current = (T)enumerator.Current;
+			IEnumerator enumerator = _enumerable.GetEnumerator();
+			T current = (T) enumerator.Current;
 		}
 
 		/// <summary>
@@ -101,13 +99,13 @@ namespace WeSay.Data.Tests.IEnumerableTests
 		/// collection before reading the value of the Current property.
 		/// </summary>
 		[Test]
-		[ExpectedException(typeof(InvalidOperationException))]
+		[ExpectedException(typeof (InvalidOperationException))]
 		public void CurrentThrowsAfterResetBeforeMoveNext()
 		{
-			IEnumerator enumerator = this._enumerable.GetEnumerator();
+			IEnumerator enumerator = _enumerable.GetEnumerator();
 			enumerator.MoveNext();
 			enumerator.Reset();
-			T current = (T)enumerator.Current;
+			T current = (T) enumerator.Current;
 		}
 
 		/// <summary>
@@ -115,19 +113,17 @@ namespace WeSay.Data.Tests.IEnumerableTests
 		/// MoveNext returned false, which indicates the end of the collection.
 		/// </summary>
 		[Test]
-		[ExpectedException(typeof(InvalidOperationException))]
+		[ExpectedException(typeof (InvalidOperationException))]
 		public void CurrentThrowsAtEndOfCollection()
 		{
-			IEnumerator enumerator = this._enumerable.GetEnumerator();
-			while (enumerator.MoveNext())
-			{
-			}
-			T current = (T)enumerator.Current;
+			IEnumerator enumerator = _enumerable.GetEnumerator();
+			while (enumerator.MoveNext()) {}
+			T current = (T) enumerator.Current;
 		}
 	}
 
 	[TestFixture]
-	public class IEnumerableTest : IEnumerableBaseTest<int>
+	public class IEnumerableTest: IEnumerableBaseTest<int>
 	{
 		[TestFixtureSetUp]
 		public void FixtureSetUp()
@@ -140,13 +136,13 @@ namespace WeSay.Data.Tests.IEnumerableTests
 			list.Add(7);
 			list.Add(9);
 
-			this._enumerable = list;
-			this._itemCount = list.Count;
+			_enumerable = list;
+			_itemCount = list.Count;
 		}
 	}
 
 	[TestFixture]
-	public class IEnumerableStringListTest : IEnumerableBaseTest<string>
+	public class IEnumerableStringListTest: IEnumerableBaseTest<string>
 	{
 		[TestFixtureSetUp]
 		public void FixtureSetUp()
@@ -159,19 +155,19 @@ namespace WeSay.Data.Tests.IEnumerableTests
 			list.Add("7");
 			list.Add("9");
 
-			this._enumerable = list;
-			this._itemCount = list.Count;
+			_enumerable = list;
+			_itemCount = list.Count;
 		}
 	}
 
 	[TestFixture]
-	public class IEnumerableNoDataTest : IEnumerableBaseTest<string>
+	public class IEnumerableNoDataTest: IEnumerableBaseTest<string>
 	{
 		[SetUp]
 		public void SetUp()
 		{
-			this._enumerable = new List<string>();
-			this._itemCount = 0;
+			_enumerable = new List<string>();
+			_itemCount = 0;
 		}
 	}
 }

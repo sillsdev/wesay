@@ -1,6 +1,6 @@
 using System.Drawing;
 
-namespace WeSay.Foundation.Dashboard
+namespace WeSay.Foundation
 {
 	public interface IThingOnDashboard
 	{
@@ -8,10 +8,11 @@ namespace WeSay.Foundation.Dashboard
 
 		string LocalizedLabel { get; }
 
+		string Description { get; }
+
 		ButtonStyle DashboardButtonStyle { get; }
 
 		Image DashboardButtonImage { get; }
-
 	}
 
 	public enum ButtonStyle

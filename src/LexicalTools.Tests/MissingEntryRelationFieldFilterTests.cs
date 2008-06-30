@@ -1,8 +1,6 @@
 using System.IO;
 using NUnit.Framework;
-using WeSay.Data;
 using WeSay.LexicalModel;
-using WeSay.Project;
 
 namespace WeSay.LexicalTools.Tests
 {
@@ -29,7 +27,7 @@ namespace WeSay.LexicalTools.Tests
 							  new string[] {"vernacular"},
 							  Field.MultiplicityType.ZeroOr1,
 							  "RelationToOneEntry");
-			_missingRelationFieldFilter = new MissingItemFilter(relationField);
+			_missingRelationFieldFilter = new MissingFieldQuery(relationField);
 		}
 
 		[TearDown]
@@ -41,7 +39,7 @@ namespace WeSay.LexicalTools.Tests
 
 		#endregion
 
-		private MissingItemFilter _missingRelationFieldFilter;
+		private MissingFieldQuery _missingRelationFieldFilter;
 		private LexEntry _target;
 		private LexEntry _source;
 

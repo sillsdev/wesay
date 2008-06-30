@@ -3,7 +3,6 @@ using System.IO;
 using NUnit.Framework;
 using Palaso.Reporting;
 using WeSay.LexicalModel;
-using WeSay.LexicalModel.Db4o_Specific;
 using WeSay.Project;
 
 namespace Addin.Transform.Tests
@@ -11,14 +10,11 @@ namespace Addin.Transform.Tests
 	[TestFixture]
 	public class PLiftMakerTests
 	{
-		private PLiftMaker _maker;
 		private string _outputPath;
 
 		[SetUp]
 		public void Setup()
 		{
-			Db4oLexModelHelper.InitializeForNonDbTests();
-			_maker = new PLiftMaker();
 			_outputPath = Path.Combine(Path.GetTempPath(), Path.GetTempFileName());
 			ErrorReport.IsOkToInteractWithUser = false;
 		}

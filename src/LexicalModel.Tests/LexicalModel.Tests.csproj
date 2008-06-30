@@ -76,13 +76,13 @@
   </ItemGroup>
   <ItemGroup>
 	<Compile Include="Binding.cs" />
-	<Compile Include="Db4o-Specific\Db4oProjectSetupForTesting.cs" />
-	<Compile Include="Db4o-Specific\LexEntrySortHelperTests.cs" />
+	<Compile Include="Db4oSpecific\Db4oProjectSetupForTesting.cs" />
+	<Compile Include="FieldTests.cs" />
 	<Compile Include="LexEntryTests.cs" />
 	<Compile Include="LexEntryRepositoryTests.cs" />
 	<Compile Include="LexRelationTests.cs" />
 	<Compile Include="EventsAndDates.cs" />
-	<Compile Include="Db4o-Specific\PersistenceTests.cs" />
+	<Compile Include="Db4oSpecific\PersistenceTests.cs" />
 	<Compile Include="LiftMergerTests.cs" />
 	<Compile Include="LiftRoundTripTests.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />

@@ -1,6 +1,4 @@
 using NUnit.Framework;
-using WeSay.LexicalModel;
-using WeSay.LexicalModel.Tests;
 
 namespace WeSay.LexicalTools.Tests
 {
@@ -10,43 +8,42 @@ namespace WeSay.LexicalTools.Tests
 		[SetUp]
 		public void Setup()
 		{
-		   // Application.Init();
+			// Application.Init();
 		}
 
-//        [Test]
-//        public void SmokeTest()
-//        {
-//            EntryViewTool tool = new EntryViewTool(new PretendRecordList());
-//            VBox container = new VBox();
-//            tool.Container = container;
-//
-//            tool.Activate();
-//            tool.Deactivate();
-//            tool.Activate();
-//            tool.Deactivate();
-//
-//            Assert.AreNotEqual(null, tool.Label);
-//        }
-//
-//        [Test]
-//        public void IterateForwardThroughAllRecords()
-//        {
-//            PretendRecordList records = new PretendRecordList();
-//            EntryViewTool tool = new EntryViewTool(records);
-//            VBox container = new VBox();
-//            tool.Container = container;
-//            tool.Activate();
-//
-//            int count = records.Count;
-//            for(int i = 0; i < count; ++i){
-//                tool.OnNextClicked(tool, new System.EventArgs());
-//            }
-//
-//            tool.Deactivate();
-//
-//            Assert.AreNotEqual(null, tool.Label);
-//        }
-
+		//        [Test]
+		//        public void SmokeTest()
+		//        {
+		//            EntryViewTool tool = new EntryViewTool(new PretendRecordList());
+		//            VBox container = new VBox();
+		//            tool.Container = container;
+		//
+		//            tool.Activate();
+		//            tool.Deactivate();
+		//            tool.Activate();
+		//            tool.Deactivate();
+		//
+		//            Assert.AreNotEqual(null, tool.Label);
+		//        }
+		//
+		//        [Test]
+		//        public void IterateForwardThroughAllRecords()
+		//        {
+		//            PretendRecordList records = new PretendRecordList();
+		//            EntryViewTool tool = new EntryViewTool(records);
+		//            VBox container = new VBox();
+		//            tool.Container = container;
+		//            tool.Activate();
+		//
+		//            int count = records.Count;
+		//            for(int i = 0; i < count; ++i){
+		//                tool.OnNextClicked(tool, new System.EventArgs());
+		//            }
+		//
+		//            tool.Deactivate();
+		//
+		//            Assert.AreNotEqual(null, tool.Label);
+		//        }
 	}
 
 	//[TestFixture]

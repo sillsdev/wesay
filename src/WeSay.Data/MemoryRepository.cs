@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace WeSay.Data
 {
-	class MemoryRepository<T>:IRepository<T> where T : new()
+	class MemoryRepository<T>:IRepository<T> where T : class, new()
 	{
 		private readonly Hashtable idToObjectHashtable = new Hashtable();
 		private readonly Hashtable objectToIdHashtable = new Hashtable();
@@ -73,7 +73,7 @@ namespace WeSay.Data
 			return ids;
 		}
 
-		public RepositoryId[] ItemsModifiedSince(DateTime dateTime)
+		public RepositoryId[] GetItemsModifiedSince(DateTime dateTime)
 		{
 			int numberOfIds;
 			List<RepositoryId> modifiedSinceList = new List<RepositoryId>();
@@ -120,14 +120,15 @@ namespace WeSay.Data
 			return false;
 		}
 
-		public RepositoryId[] GetItemsMatchingQuery()
+
+		public void SaveItems(IEnumerable<T> items)
 		{
-			throw new NotSupportedException("A MemoryRepository can not be queried.");
+			throw new NotImplementedException();
 		}
 
-		public void Dispose()
+		public ResultSet<T> GetItemsMatching(Query query)
 		{
-			//do nothing
+			throw new NotImplementedException();
 		}
 
 		public int CountAllItems()
@@ -153,6 +154,49 @@ namespace WeSay.Data
 			return (T)idToObjectHashtable[id];
 		}
 
+		#region IDisposable Members
+#if DEBUG
+		~MemoryRepository()
+		{
+			if (!this._disposed)
+			{
+				throw new ApplicationException("Disposed not explicitly called on MemoryRepository.");
+			}
+		}
+#endif
+
+		private bool _disposed = false;
+
+		public void Dispose()
+		{
+			Dispose(true);
+			GC.SuppressFinalize(this);
+		}
+
+		protected virtual void Dispose(bool disposing)
+		{
+			if (!this._disposed)
+			{
+				if (disposing)
+				{
+					// dispose-only, i.e. non-finalizable logic
+
+				}
+
+				// shared (dispose and finalizable) cleanup logic
+				this._disposed = true;
+			}
+		}
+
+		protected void VerifyNotDisposed()
+		{
+			if (this._disposed)
+			{
+				throw new ObjectDisposedException("MemoryRepository");
+			}
+		}
+		#endregion
+
 		private class MemoryRepositoryId : RepositoryId
 		{
 			private static int nextId = 1;
@@ -176,14 +220,16 @@ namespace WeSay.Data
 
 			public bool Equals(MemoryRepositoryId memoryRepositoryId)
 			{
-				if (memoryRepositoryId == null) return false;
+				if (memoryRepositoryId == null)
+					return false;
 
 				return id == memoryRepositoryId.id;
 			}
 
 			public override bool Equals(object obj)
 			{
-				if (ReferenceEquals(this, obj)) return true;
+				if (ReferenceEquals(this, obj))
+					return true;
 				return Equals(obj as MemoryRepositoryId);
 			}
 
@@ -211,5 +257,5 @@ namespace WeSay.Data
 				return Equals(other as MemoryRepositoryId);
 			}
 		}
-	}
+   }
 }

@@ -8,7 +8,6 @@ using Palaso.Services.Dictionary;
 using Palaso.UI.WindowsForms.i8n;
 using WeSay.Data;
 using WeSay.Foundation;
-using WeSay.Language;
 using WeSay.LexicalModel;
 using WeSay.Project;
 
@@ -303,16 +302,19 @@ namespace WeSay.App.Services
 			LexSense sense = null;
 			if (!string.IsNullOrEmpty(definition))
 			{
-				sense = (LexSense) e.Senses.AddNew();
+				sense = new LexSense() ;
+				e.Senses.Add(sense);
 				sense.Definition.SetAlternative(definitionWritingSystemId, definition);
 			}
 			if (!string.IsNullOrEmpty(example))
 			{
 				if (sense == null)
 				{
-					sense = (LexSense) e.Senses.AddNew();
+					sense = new LexSense();
+					e.Senses.Add(sense);
 				}
-				LexExampleSentence ex = (LexExampleSentence) sense.ExampleSentences.AddNew();
+				LexExampleSentence ex = new LexExampleSentence();
+				sense.ExampleSentences.Add(ex);
 				ex.Sentence.SetAlternative(exampleWritingSystemId, example);
 			}
 			_lexEntryRepository.SaveItem(e);

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using Palaso.Reporting;
 using WeSay.Foundation.Options;
 
 namespace WeSay.Foundation
@@ -23,7 +24,8 @@ namespace WeSay.Foundation
 		string Key { get; set; }
 	}
 
-	public abstract class WeSayDataObject : INotifyPropertyChanged, IReceivePropertyChangeNotifications
+	public abstract class WeSayDataObject: INotifyPropertyChanged,
+										   IReceivePropertyChangeNotifications
 	{
 		[NonSerialized]
 		private ArrayList _listEventHelpers;
@@ -149,7 +151,8 @@ namespace WeSay.Foundation
 
 		public void WireUpChild(INotifyPropertyChanged child)
 		{
-			child.PropertyChanged -= OnChildObjectPropertyChanged;//prevent the bug where we were acquiring these with each GetProperty<> call
+			child.PropertyChanged -= OnChildObjectPropertyChanged;
+			//prevent the bug where we were acquiring these with each GetProperty<> call
 			child.PropertyChanged += OnChildObjectPropertyChanged;
 			if (child is WeSayDataObject)
 			{
@@ -184,15 +187,22 @@ namespace WeSay.Foundation
 			// remove any custom fields that are empty
 			int originalCount = Properties.Count;
 
-			for (int i = originalCount - 1;i >= 0;i--)// NB: counting backwards
+			for (int i = originalCount - 1;i >= 0;i--) // NB: counting backwards
 			{
 				//trying to reproduce ws-564
 				Debug.Assert(Properties.Count > i, "Likely hit the ws-564 bug.");
 
 				if (Properties.Count <= i)
 				{
-					Palaso.Reporting.ErrorNotificationDialog.ReportException(new Exception(string.Format("Error (not shown to user): Number of properties was orginally {0}, is now {1}, but the index is {2}. PLEASE help us reproduce this bug.", originalCount,
-													   Properties.Count, i)), null, false);
+					ErrorNotificationDialog.ReportException(
+							new Exception(
+									string.Format(
+											"Error (not shown to user): Number of properties was orginally {0}, is now {1}, but the index is {2}. PLEASE help us reproduce this bug.",
+											originalCount,
+											Properties.Count,
+											i)),
+							null,
+							false);
 					break; // things are screwy, give up before someone gets hurt.
 				}
 
@@ -204,9 +214,9 @@ namespace WeSay.Foundation
 
 				if (IsPropertyEmpty(property))
 				{
-					Palaso.Reporting.Logger.WriteMinorEvent("Removing {0} due to emptiness.", property.ToString());
+					Logger.WriteMinorEvent("Removing {0} due to emptiness.", property.ToString());
 					Properties.RemoveAt(i);
-				   // don't: this just makes for false modified events: NotifyPropertyChanged(property.ToString());
+					// don't: this just makes for false modified events: NotifyPropertyChanged(property.ToString());
 				}
 			}
 		}
@@ -227,9 +237,7 @@ namespace WeSay.Foundation
 			}
 			else if (property is IReportEmptiness)
 			{
-				return
-						((IReportEmptiness) property).
-								ShouldBeRemovedFromParentDueToEmptiness;
+				return ((IReportEmptiness) property).ShouldBeRemovedFromParentDueToEmptiness;
 			}
 			//            Debug.Fail("Unknown property type");
 			return false; //don't throw it away if you don't know what it is
@@ -265,13 +273,10 @@ namespace WeSay.Foundation
 		}
 
 		protected virtual void OnChildObjectPropertyChanged(object sender,
-															PropertyChangedEventArgs
-																	e)
+															PropertyChangedEventArgs e)
 		{
 			NotifyPropertyChanged(e.PropertyName);
 		}
-
-
 
 		public TContents GetOrCreateProperty<TContents>(string fieldName)
 				where TContents : class, IParentable, new()
@@ -301,8 +306,8 @@ namespace WeSay.Foundation
 		/// </summary>
 		/// <typeparam name="TContents"></typeparam>
 		/// <returns>null if not found</returns>
-		public TContents GetProperty<TContents>(string fieldName)
-				where TContents : class //, IParentable
+		public TContents GetProperty<TContents>(string fieldName) where TContents : class
+				//, IParentable
 		{
 			KeyValuePair<string, object> found =
 					Properties.Find(
@@ -369,16 +374,15 @@ namespace WeSay.Foundation
 		public class WellKnownProperties
 		{
 			public static string Note = "note";
-			static public bool Contains(string fieldName)
+
+			public static bool Contains(string fieldName)
 			{
-				List<string> list = new List<string>(new string[] { Note });
+				List<string> list = new List<string>(new string[] {Note});
 				return list.Contains(fieldName);
 			}
 		} ;
 
 		#endregion
-
-
 	}
 
 	public interface IReportEmptiness
@@ -402,9 +406,7 @@ namespace WeSay.Foundation
 		private readonly string _listName;
 		private readonly WeSayDataObject _listOwner;
 
-		public ListEventHelper(WeSayDataObject listOwner,
-							   IBindingList list,
-							   string listName)
+		public ListEventHelper(WeSayDataObject listOwner, IBindingList list, string listName)
 		{
 			_listOwner = listOwner;
 			_listName = listName;
@@ -420,8 +422,7 @@ namespace WeSay.Foundation
 			if (e.ListChangedType == ListChangedType.ItemAdded)
 			{
 				IBindingList list = (IBindingList) sender;
-				INotifyPropertyChanged newGuy =
-						(INotifyPropertyChanged) list[e.NewIndex];
+				INotifyPropertyChanged newGuy = (INotifyPropertyChanged) list[e.NewIndex];
 				_listOwner.WireUpChild(newGuy);
 				if (newGuy is WeSayDataObject)
 				{
@@ -432,7 +433,7 @@ namespace WeSay.Foundation
 		}
 	}
 
-	public class EmbeddedXmlCollection : IParentable
+	public class EmbeddedXmlCollection: IParentable
 	{
 		private List<string> _values;
 		private WeSayDataObject _parent;
@@ -441,8 +442,6 @@ namespace WeSay.Foundation
 		{
 			_values = new List<string>();
 		}
-
-
 
 		public WeSayDataObject Parent
 		{

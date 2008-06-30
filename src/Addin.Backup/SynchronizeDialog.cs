@@ -4,13 +4,12 @@ using System.Drawing;
 using System.Windows.Forms;
 using Palaso.UI.WindowsForms.i8n;
 using WeSay.AddinLib;
-using WeSay.Foundation;
 
 namespace Addin.Backup
 {
-	public partial class SynchronizeDialog : Form
+	public partial class SynchronizeDialog: Form
 	{
-		private ProjectInfo _projectInfo;
+		private readonly ProjectInfo _projectInfo;
 		private readonly SynchronizeSettings _settings;
 
 		public SynchronizeDialog(ProjectInfo projectInfo, SynchronizeSettings settings)
@@ -24,11 +23,10 @@ namespace Addin.Backup
 			_cancelButton.Font = StringCatalog.ModifyFontForLocalization(_cancelButton.Font);
 		}
 
-
 		private void Dialog_Load(object sender, EventArgs e)
 		{
 			bool hadProblems = false;
-			System.Diagnostics.Process p = new Process();
+			Process p = new Process();
 			p.StartInfo.FileName = _settings.GetRuntimeProcessPath(_projectInfo);
 			p.StartInfo.Arguments = _settings.GetRuntimeArguments(_projectInfo);
 			p.StartInfo.WorkingDirectory = _projectInfo.PathToTopLevelDirectory;
@@ -41,10 +39,9 @@ namespace Addin.Backup
 			{
 				p.Start();
 
-
 				_outputBox.ForeColor = Color.Red;
 				string error = p.StandardError.ReadToEnd();
-				if(error.Length > 0)
+				if (error.Length > 0)
 				{
 					hadProblems = true;
 				}

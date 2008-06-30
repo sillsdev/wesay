@@ -4,7 +4,6 @@ using System.Windows.Forms;
 using NUnit.Framework;
 using WeSay.Foundation.Options;
 using WeSay.LexicalModel;
-using WeSay.LexicalModel.Db4o_Specific;
 using WeSay.Project;
 using WeSay.UI;
 
@@ -27,7 +26,6 @@ namespace WeSay.LexicalTools.Tests
 		[SetUp]
 		public void SetUp()
 		{
-			Db4oLexModelHelper.InitializeForNonDbTests();
 			WeSayWordsProject.InitializeForTests();
 
 			_filePath = Path.GetTempFileName();
@@ -109,11 +107,11 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void FormattedView_ShowsPartOfSpeech()
 		{
-			LexSense sense = (LexSense) apple.Senses[0];
+			LexSense sense = apple.Senses[0];
 			OptionRef o;
 			o = sense.GetOrCreateProperty<OptionRef>("POS");
 			o.Value = "noun";
-					//nb: this is the key, which for noun happens to be the English display name tested for below
+			//nb: this is the key, which for noun happens to be the English display name tested for below
 			using (EntryViewControl entryViewControl = CreateForm(apple))
 			{
 				Assert.IsTrue(entryViewControl.ControlFormattedView.Text.Contains("noun"));
@@ -345,9 +343,9 @@ namespace WeSay.LexicalTools.Tests
 		}
 
 		private EntryViewControl CreateFilteredForm(LexEntry entry,
-														   string field,
-														   string className,
-														   params string[] writingSystems)
+													string field,
+													string className,
+													params string[] writingSystems)
 		{
 			ViewTemplate viewTemplate = new ViewTemplate();
 			viewTemplate.Add(new Field(field, className, writingSystems));
@@ -358,20 +356,20 @@ namespace WeSay.LexicalTools.Tests
 			return entryViewControl;
 		}
 
-		private LexEntry CreateTestEntry(string lexicalForm,
-												string meaning,
-												string exampleSentence)
+		private LexEntry CreateTestEntry(string lexicalForm, string meaning, string exampleSentence)
 		{
 			LexEntry entry = _lexEntryRepository.CreateItem();
 			entry.LexicalForm[GetSomeValidWsIdForField("EntryLexicalForm")] = lexicalForm;
-			LexSense sense = (LexSense) entry.Senses.AddNew();
+			LexSense sense = new LexSense();
+			entry.Senses.Add(sense);
 #if GlossMeaning
 			sense.Gloss[GetSomeValidWsIdForField("SenseGloss")] = meaning;
 #else
 			sense.Definition[WeSayWordsProject.Project.WritingSystems.TestWritingSystemAnalId] =
 					meaning;
 #endif
-			LexExampleSentence example = (LexExampleSentence) sense.ExampleSentences.AddNew();
+			LexExampleSentence example = new LexExampleSentence();
+			sense.ExampleSentences.Add(example);
 			example.Sentence[GetSomeValidWsIdForField("ExampleSentence")] = exampleSentence;
 			_lexEntryRepository.SaveItem(entry);
 			return entry;
@@ -392,17 +390,15 @@ namespace WeSay.LexicalTools.Tests
 		private static string GetMeaning(LexEntry entry)
 		{
 #if GlossMeaning
-			return ((LexSense)entry.Senses[0]).Gloss.GetFirstAlternative();
+			return entry.Senses[0].Gloss.GetFirstAlternative();
 #else
-			return ((LexSense) entry.Senses[0]).Definition.GetFirstAlternative();
+			return entry.Senses[0].Definition.GetFirstAlternative();
 #endif
 		}
 
 		private static string GetExampleSentence(LexEntry entry)
 		{
-			return
-					((LexExampleSentence) ((LexSense) entry.Senses[0]).ExampleSentences[0]).Sentence
-							.GetFirstAlternative();
+			return entry.Senses[0].ExampleSentences[0].Sentence.GetFirstAlternative();
 		}
 	}
 }

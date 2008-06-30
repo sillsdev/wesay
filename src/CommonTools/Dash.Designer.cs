@@ -28,8 +28,10 @@ namespace WeSay.CommonTools
 		/// </summary>
 		private void InitializeComponent()
 		{
+			this.components = new System.ComponentModel.Container();
 			System.Windows.Forms.Label DeveloperNote;
 			this._flow = new System.Windows.Forms.FlowLayoutPanel();
+			this._toolTip = new System.Windows.Forms.ToolTip(this.components);
 			DeveloperNote = new System.Windows.Forms.Label();
 			this.SuspendLayout();
 			//
@@ -37,9 +39,10 @@ namespace WeSay.CommonTools
 			//
 			DeveloperNote.AutoSize = true;
 			DeveloperNote.Enabled = false;
+			DeveloperNote.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
 			DeveloperNote.Location = new System.Drawing.Point(-3, 0);
 			DeveloperNote.Name = "DeveloperNote";
-			DeveloperNote.Size = new System.Drawing.Size(476, 13);
+			DeveloperNote.Size = new System.Drawing.Size(547, 15);
 			DeveloperNote.TabIndex = 1;
 			DeveloperNote.Text = "NOTE: This control should be the same size as the initial tab page size so the in" +
 				"itial layout is correct.";
@@ -54,9 +57,15 @@ namespace WeSay.CommonTools
 			this._flow.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
 			this._flow.Location = new System.Drawing.Point(20, 11);
 			this._flow.Name = "_flow";
-			this._flow.Size = new System.Drawing.Size(600, 394);
+			this._flow.Size = new System.Drawing.Size(603, 397);
 			this._flow.TabIndex = 0;
 			this._flow.WrapContents = false;
+			//
+			// _toolTip
+			//
+			this._toolTip.OwnerDraw = true;
+			this._toolTip.Popup += new System.Windows.Forms.PopupEventHandler(this._toolTip_Popup);
+			this._toolTip.Draw += new System.Windows.Forms.DrawToolTipEventHandler(this._toolTip_Draw);
 			//
 			// Dash
 			//
@@ -77,5 +86,6 @@ namespace WeSay.CommonTools
 		#endregion
 
 		private System.Windows.Forms.FlowLayoutPanel _flow;
+		private System.Windows.Forms.ToolTip _toolTip;
 	}
 }

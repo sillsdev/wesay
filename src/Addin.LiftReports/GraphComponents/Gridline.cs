@@ -1,16 +1,14 @@
-using System;
 using System.Drawing;
-using System.Windows.Forms;
 using System.Drawing.Drawing2D;
 
-namespace GraphComponents
+namespace Addin.LiftReports.GraphComponents
 {
 	/// <summary>
 	/// Draws the grid lines for the graph.
 	/// </summary>
-	class Gridline : IGraphElement
+	internal class Gridline: IGraphElement
 	{
-		Graph parentGraph;
+		private readonly Graph parentGraph;
 
 		public Gridline(Graph parentGraph)
 		{
@@ -19,24 +17,28 @@ namespace GraphComponents
 
 		#region IGraphElement Members
 
-		public void Draw(System.Drawing.Graphics graphics)
+		public void Draw(Graphics graphics)
 		{
-			Pen graphAreaPen       = new Pen (parentGraph.GridlineColor);
+			Pen graphAreaPen = new Pen(parentGraph.GridlineColor);
 			graphAreaPen.DashStyle = DashStyle.Dash;
 
-			Brush graphAreaBrush   = new SolidBrush (parentGraph.GraphAreaColor);
+			Brush graphAreaBrush = new SolidBrush(parentGraph.GraphAreaColor);
 
-			graphics.FillRectangle (graphAreaBrush, parentGraph.GraphArea);
-			graphics.DrawRectangle (graphAreaPen, parentGraph.GraphArea);
+			graphics.FillRectangle(graphAreaBrush, parentGraph.GraphArea);
+			graphics.DrawRectangle(graphAreaPen, parentGraph.GraphArea);
 
 			if ((parentGraph.Gridlines & GridStyles.Horizontal) == GridStyles.Horizontal)
 			{
-				graphics.SetClip (parentGraph.GraphArea);
+				graphics.SetClip(parentGraph.GraphArea);
 
 				int gridSize = parentGraph.GraphArea.Height / parentGraph.GraduationsY;
-				for (int i = 0; i < parentGraph.GraphArea.Height; i += gridSize)
+				for (int i = 0;i < parentGraph.GraphArea.Height;i += gridSize)
 				{
-					graphics.DrawLine (graphAreaPen, parentGraph.GraphArea.Left, parentGraph.GraphArea.Top + i, parentGraph.GraphArea.Right, parentGraph.GraphArea.Top + i);
+					graphics.DrawLine(graphAreaPen,
+									  parentGraph.GraphArea.Left,
+									  parentGraph.GraphArea.Top + i,
+									  parentGraph.GraphArea.Right,
+									  parentGraph.GraphArea.Top + i);
 				}
 			}
 
@@ -44,15 +46,18 @@ namespace GraphComponents
 			{
 				int gridSize = parentGraph.GraphArea.Width / parentGraph.GraduationsX;
 
-				for (int i = 0; i < parentGraph.GraphArea.Width; i += gridSize)
+				for (int i = 0;i < parentGraph.GraphArea.Width;i += gridSize)
 				{
-					graphics.DrawLine (graphAreaPen, parentGraph.GraphArea.Left + i, parentGraph.GraphArea.Bottom, parentGraph.GraphArea.Left + i, parentGraph.GraphArea.Top);
+					graphics.DrawLine(graphAreaPen,
+									  parentGraph.GraphArea.Left + i,
+									  parentGraph.GraphArea.Bottom,
+									  parentGraph.GraphArea.Left + i,
+									  parentGraph.GraphArea.Top);
 				}
 			}
 
-			graphAreaPen.Dispose ();
-			graphAreaBrush.Dispose ();
-
+			graphAreaPen.Dispose();
+			graphAreaBrush.Dispose();
 		}
 
 		#endregion

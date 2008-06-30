@@ -5,7 +5,7 @@ using System.Windows.Forms;
 
 namespace WeSay.ConfigTool
 {
-	public partial class NewProject : Form
+	public partial class NewProject: Form
 	{
 		public NewProject()
 		{
@@ -23,7 +23,9 @@ namespace WeSay.ConfigTool
 				if (dirs.Length > 1)
 				{
 					string root = Path.Combine(dirs[dirs.Length - 3], dirs[dirs.Length - 2]);
-					_pathLabel.Text = String.Format("Project will be created at: {0}", Path.Combine(root, dirs[dirs.Length - 1]));
+					_pathLabel.Text =
+							String.Format("Project will be created at: {0}",
+										  Path.Combine(root, dirs[dirs.Length - 1]));
 				}
 
 				_pathLabel.Invalidate();
@@ -48,21 +50,20 @@ namespace WeSay.ConfigTool
 			{
 				//http://regexlib.com/Search.aspx?k=file+name
 				//Regex legalFilePattern = new Regex(@"(.*?)");
-//               if (!(legalFilePattern.IsMatch(_textProjectName.Text)))
-//               {
-//                   return false;
-//               }
+				//               if (!(legalFilePattern.IsMatch(_textProjectName.Text)))
+				//               {
+				//                   return false;
+				//               }
 
 				if (_textProjectName.Text.Trim().Length < 1)
 				{
 					return false;
 				}
 
-
 				if (_textProjectName.Text.IndexOfAny(Path.GetInvalidFileNameChars()) > -1)
-			   {
-				   return false;
-			   }
+				{
+					return false;
+				}
 
 				if (Directory.Exists(SelectedPath) || File.Exists(SelectedPath))
 				{
@@ -72,33 +73,32 @@ namespace WeSay.ConfigTool
 			}
 		}
 
-		private string DestinationDirectory
+		private static string DestinationDirectory
 		{
 			get
 			{
-				return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "WeSay");
-
+				return
+						Path.Combine(
+								Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+								"WeSay");
 			}
 		}
 
 		public string SelectedPath
 		{
-			get
-			{
-				return Path.Combine(DestinationDirectory, _textProjectName.Text);
-			}
+			get { return Path.Combine(DestinationDirectory, _textProjectName.Text); }
 		}
 
 		private void btnOK_Click(object sender, EventArgs e)
 		{
-			this.DialogResult = DialogResult.OK;
-			this.Close();
+			DialogResult = DialogResult.OK;
+			Close();
 		}
 
 		private void btnCancel_Click(object sender, EventArgs e)
 		{
-			this.DialogResult = DialogResult.Cancel;
-			this.Close();
+			DialogResult = DialogResult.Cancel;
+			Close();
 		}
 	}
 }

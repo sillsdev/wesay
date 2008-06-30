@@ -31,14 +31,11 @@ namespace WeSay.CommonTools
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this.components = new System.ComponentModel.Container();
 			this._layout = new System.Windows.Forms.TableLayoutPanel();
 			this._btnName = new System.Windows.Forms.Button();
 			this._textShortDescription = new System.Windows.Forms.Label();
-			this.localizationHelper1 = new WeSay.UI.LocalizationHelper(this.components);
 			this._intray = new WeSay.CommonTools.ItemsToDoIndicator();
 			this._layout.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.localizationHelper1)).BeginInit();
 			this.SuspendLayout();
 			//
 			// _layout
@@ -52,14 +49,13 @@ namespace WeSay.CommonTools
 			this._layout.Controls.Add(this._btnName);
 			this._layout.Controls.Add(this._textShortDescription);
 			this._layout.Location = new System.Drawing.Point(79, 9);
+			this._layout.Margin = new System.Windows.Forms.Padding(0);
 			this._layout.Name = "_layout";
 			this._layout.RowCount = 2;
 			this._layout.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this._layout.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this._layout.Size = new System.Drawing.Size(302, 95);
+			this._layout.Size = new System.Drawing.Size(302, 52);
 			this._layout.TabIndex = 4;
-			this._layout.Padding = new Padding(0);
-			this._layout.Margin = new Padding(0);
 			//
 			// _btnName
 			//
@@ -68,10 +64,10 @@ namespace WeSay.CommonTools
 			this._btnName.AutoSize = true;
 			this._btnName.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
 			this._btnName.BackColor = System.Drawing.Color.AliceBlue;
-			this._btnName.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this._btnName.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.75F, System.Drawing.FontStyle.Bold);
 			this._btnName.Location = new System.Drawing.Point(3, 3);
 			this._btnName.Name = "_btnName";
-			this._btnName.Size = new System.Drawing.Size(296, 41);
+			this._btnName.Size = new System.Drawing.Size(296, 30);
 			this._btnName.TabIndex = 1;
 			this._btnName.Text = "Gather from Foo words";
 			this._btnName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -83,16 +79,12 @@ namespace WeSay.CommonTools
 			this._textShortDescription.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
 						| System.Windows.Forms.AnchorStyles.Right)));
 			this._textShortDescription.AutoSize = true;
-			this._textShortDescription.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this._textShortDescription.Location = new System.Drawing.Point(3, 47);
+			this._textShortDescription.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F);
+			this._textShortDescription.Location = new System.Drawing.Point(3, 36);
 			this._textShortDescription.Name = "_textShortDescription";
-			this._textShortDescription.Size = new System.Drawing.Size(296, 12);
+			this._textShortDescription.Size = new System.Drawing.Size(296, 16);
 			this._textShortDescription.TabIndex = 2;
 			this._textShortDescription.Text = "See words in Foo, write the same words in Boo";
-			//
-			// localizationHelper1
-			//
-			this.localizationHelper1.Parent = this;
 			//
 			// _intray
 			//
@@ -110,17 +102,16 @@ namespace WeSay.CommonTools
 			//
 			this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-			this.Controls.Add(this._intray);
-			this.Controls.Add(this._layout);
 			this.AutoSize = true;
 			this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			this.Controls.Add(this._intray);
+			this.Controls.Add(this._layout);
 			this.DoubleBuffered = true;
 			this.Name = "TaskIndicator";
-			this.Size = new System.Drawing.Size(387, 107);
+			this.Size = new System.Drawing.Size(387, 61);
 			this.BackColorChanged += new System.EventHandler(this.TaskIndicator_BackColorChanged);
 			this._layout.ResumeLayout(false);
 			this._layout.PerformLayout();
-			((System.ComponentModel.ISupportInitialize)(this.localizationHelper1)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -132,6 +123,5 @@ namespace WeSay.CommonTools
 		private System.Windows.Forms.Button _btnName;
 		private System.Windows.Forms.Label _textShortDescription;
 		private ItemsToDoIndicator _intray;
-		private WeSay.UI.LocalizationHelper localizationHelper1;
 	}
 }

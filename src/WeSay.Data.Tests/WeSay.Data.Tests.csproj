@@ -45,24 +45,22 @@
   </PropertyGroup>
   <ItemGroup>
 	<Compile Include="Db4oQueryPerformance.cs" />
-	<Compile Include="Db4oRecordListManagerTests.cs" />
+	<Compile Include="Db4oRepositoryTests.cs" />
 	<Compile Include="InMemoryBindingListTests.cs" />
-	<Compile Include="Db4oRecordListTests.cs" />
 	<Compile Include="Db4oSODAQueryTests.cs" />
-	<Compile Include="IFilterableTest.cs" />
 	<Compile Include="IRepositoryTests.cs" />
+	<Compile Include="DictionaryContentAsserter.cs" />
 	<Compile Include="MemoryRepositoryTests.cs" />
-	<Compile Include="RecordListManagerBaseTests.cs" />
 	<Compile Include="IBindingListBaseTest.cs" />
 	<Compile Include="ICollectionBaseTest.cs" />
 	<Compile Include="IEnumerableBaseTest.cs" />
 	<Compile Include="IListBaseTest.cs" />
-	<Compile Include="IRecordListBaseTest.cs" />
+	<Compile Include="PermuterTests.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />
-	<Compile Include="SimpleIntFilter.cs" />
-	<Compile Include="SimpleIntSortHelper.cs" />
+	<Compile Include="QueryTests.cs" />
 	<Compile Include="SimpleIntTestClass.cs" />
 	<Compile Include="TestItem.cs" />
+	<Compile Include="TestMultiple.cs" />
   </ItemGroup>
   <ItemGroup>
 	<Reference Include="Db4objects.Db4o, Version=6.0.2.0, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL">

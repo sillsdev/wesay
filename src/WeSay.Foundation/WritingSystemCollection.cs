@@ -3,10 +3,10 @@ using System.Drawing;
 using System.Xml;
 using Exortech.NetReflector;
 
-namespace WeSay.Language
+namespace WeSay.Foundation
 {
 	[ReflectorType("WritingSystemCollection")]
-	public class WritingSystemCollection : Dictionary<string, WritingSystem>
+	public class WritingSystemCollection: Dictionary<string, WritingSystem>
 	{
 		public void Load(string path)
 		{
@@ -21,7 +21,6 @@ namespace WeSay.Language
 				reader.Close();
 			}
 		}
-
 
 		public new WritingSystem this[string key]
 		{
@@ -51,124 +50,114 @@ namespace WeSay.Language
 			}
 		}
 
-		static private NetReflectorTypeTable MakeTypeTable()
+		private static NetReflectorTypeTable MakeTypeTable()
 		{
 			NetReflectorTypeTable t = new NetReflectorTypeTable();
-			t.Add(typeof(WritingSystemCollection));
-			t.Add(typeof(WritingSystem));
+			t.Add(typeof (WritingSystemCollection));
+			t.Add(typeof (WritingSystem));
 			return t;
 		}
 
 		public void IdOfWritingSystemChanged(WritingSystem ws, string oldKey)
 		{
 			Remove(oldKey);
-//            if (_analysisWritingSystemDefaultId == oldKey)
-//            {
-//                _analysisWritingSystemDefaultId = ws.Id;
-//            }
-//            if (_vernacularWritingSystemDefaultId  == oldKey)
-//            {
-//                _vernacularWritingSystemDefaultId = ws.Id;
-//            }
+			//            if (_analysisWritingSystemDefaultId == oldKey)
+			//            {
+			//                _analysisWritingSystemDefaultId = ws.Id;
+			//            }
+			//            if (_vernacularWritingSystemDefaultId  == oldKey)
+			//            {
+			//                _vernacularWritingSystemDefaultId = ws.Id;
+			//            }
 			Add(ws.Id, ws);
 		}
 
-//        private WritingSystem FindIndexWithoutUsingId(WritingSystem ws)
-//        {
-//            foreach (WritingSystem w in this.Values)
-//            {
-//                if (w == ws)
-//                {
-//                      return w;
-//                }
-//            }
-//            return null;
-//        }
+		//        private WritingSystem FindIndexWithoutUsingId(WritingSystem ws)
+		//        {
+		//            foreach (WritingSystem w in this.Values)
+		//            {
+		//                if (w == ws)
+		//                {
+		//                      return w;
+		//                }
+		//            }
+		//            return null;
+		//        }
 
-//        private string GetIdOfLabelledWritingSystem(string label)
-//        {
-//            return _fontPrefsDoc.SelectSingleNode("prefs").Attributes[label].Value;
-//        }
+		//        private string GetIdOfLabelledWritingSystem(string label)
+		//        {
+		//            return _fontPrefsDoc.SelectSingleNode("prefs").Attributes[label].Value;
+		//        }
 
 		public WritingSystem UnknownAnalysisWritingSystem
 		{
-			get
-			{
-				return this[WritingSystem.IdForUnknownAnalysis];
-			}
+			get { return this[WritingSystem.IdForUnknownAnalysis]; }
 		}
+
 		public WritingSystem UnknownVernacularWritingSystem
 		{
-			get
-			{
-				return this[WritingSystem.IdForUnknownVernacular];
-			}
+			get { return this[WritingSystem.IdForUnknownVernacular]; }
 		}
+
 		//        public WritingSystem AnalysisWritingSystemDefault
-//        {
-//            get
-//            {
-//                WritingSystem ws;
-//                TryGetValue(_analysisWritingSystemDefaultId, out ws);
-//                return ws;
-//            }
-//        }
-//
-//        public WritingSystem VernacularWritingSystemDefault
-//        {
-//            get
-//            {
-//                WritingSystem ws;
-//                TryGetValue(_vernacularWritingSystemDefaultId, out ws);
-//                return ws;
-//            }
-//        }
+		//        {
+		//            get
+		//            {
+		//                WritingSystem ws;
+		//                TryGetValue(_analysisWritingSystemDefaultId, out ws);
+		//                return ws;
+		//            }
+		//        }
+		//
+		//        public WritingSystem VernacularWritingSystemDefault
+		//        {
+		//            get
+		//            {
+		//                WritingSystem ws;
+		//                TryGetValue(_vernacularWritingSystemDefaultId, out ws);
+		//                return ws;
+		//            }
+		//        }
 
-//        [ReflectorProperty("AnalysisWritingSystemDefaultId", Required = true)]
-//        public string AnalysisWritingSystemDefaultId
-//        {
-//            get
-//            {
-//                if (_analysisWritingSystemDefaultId == null)
-//                    return "";//a null would omit the xml attribute when serializing
-//
-//                return _analysisWritingSystemDefaultId;
-//            }
-//            set
-//            {
-//                _analysisWritingSystemDefaultId = value;
-//            }
-//        }
-//
-//        [ReflectorProperty("VernacularWritingSystemDefaultId", Required = true)]
-//        public string VernacularWritingSystemDefaultId
-//        {
-//            get
-//            {
-//                if (_vernacularWritingSystemDefaultId == null)
-//                    return "";//a null would omit the xml attribute when serializing
-//                return _vernacularWritingSystemDefaultId;
-//            }
-//            set
-//            {
-//                _vernacularWritingSystemDefaultId = value;
-//            }
-//        }
-
+		//        [ReflectorProperty("AnalysisWritingSystemDefaultId", Required = true)]
+		//        public string AnalysisWritingSystemDefaultId
+		//        {
+		//            get
+		//            {
+		//                if (_analysisWritingSystemDefaultId == null)
+		//                    return "";//a null would omit the xml attribute when serializing
+		//
+		//                return _analysisWritingSystemDefaultId;
+		//            }
+		//            set
+		//            {
+		//                _analysisWritingSystemDefaultId = value;
+		//            }
+		//        }
+		//
+		//        [ReflectorProperty("VernacularWritingSystemDefaultId", Required = true)]
+		//        public string VernacularWritingSystemDefaultId
+		//        {
+		//            get
+		//            {
+		//                if (_vernacularWritingSystemDefaultId == null)
+		//                    return "";//a null would omit the xml attribute when serializing
+		//                return _vernacularWritingSystemDefaultId;
+		//            }
+		//            set
+		//            {
+		//                _vernacularWritingSystemDefaultId = value;
+		//            }
+		//        }
 
 		public string TestWritingSystemAnalId
 		{
-			get
-			{
-				return "PretendAnalysis";
-			}
+			get { return "PretendAnalysis"; }
 		}
+
 		public string TestWritingSystemVernId
 		{
-			get
-			{
-				return "PretendVernacular";
-			}
+			get { return "PretendVernacular"; }
 		}
 
 		/// <summary>
@@ -180,15 +169,15 @@ namespace WeSay.Language
 			get
 			{
 				WritingSystem[] holder = new WritingSystem[Values.Count];
-				Values.CopyTo(holder,0);
+				Values.CopyTo(holder, 0);
 				return holder;
 			}
 			set
 			{
 				Clear();
-				foreach(WritingSystem w in value)
+				foreach (WritingSystem w in value)
 				{
-					Add(w.Id,w);
+					Add(w.Id, w);
 				}
 			}
 		}
@@ -202,6 +191,5 @@ namespace WeSay.Language
 		//    }
 		//    return this[id];
 		//}
-
 	}
 }

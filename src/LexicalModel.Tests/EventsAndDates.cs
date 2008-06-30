@@ -1,12 +1,9 @@
 using System;
+using System.ComponentModel;
+using System.Threading;
 using NUnit.Framework;
-using System.Diagnostics;
-using System.Xml;
-using System.Collections.Generic;
-using WeSay.LexicalModel;
-using WeSay.LexicalModel.Db4o_Specific;
 
-namespace LexicalModel.Tests
+namespace WeSay.LexicalModel.Tests
 {
 	[TestFixture]
 	public class EventsAndDates
@@ -17,13 +14,12 @@ namespace LexicalModel.Tests
 		[SetUp]
 		public void Setup()
 		{
-			Db4oLexModelHelper.InitializeForNonDbTests();
-		   _entry = new LexEntry();
-		   _entry.PropertyChanged += new System.ComponentModel.PropertyChangedEventHandler(_entry_PropertyChanged);
+			_entry = new LexEntry();
+			_entry.PropertyChanged += _entry_PropertyChanged;
 			_didNotify = false;
 		}
 
-		void _entry_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+		private void _entry_PropertyChanged(object sender, PropertyChangedEventArgs e)
 		{
 			_didNotify = true;
 		}
@@ -44,9 +40,9 @@ namespace LexicalModel.Tests
 		public void ModifiedDateAfterMultiTextChange()
 		{
 			long start = _entry.ModificationTime.Ticks;
-			System.Threading.Thread.Sleep(100);//else modtime doesn't change
+			Thread.Sleep(100); //else modtime doesn't change
 			_entry.LexicalForm["foo"] = "hello";
-			Assert.Greater((decimal)_entry.ModificationTime.Ticks, start);
+			Assert.Greater((decimal) _entry.ModificationTime.Ticks, start);
 			Assert.IsTrue(_didNotify);
 		}
 
@@ -54,40 +50,47 @@ namespace LexicalModel.Tests
 		public void ModifiedDateAfterLexSenseVectorChanges()
 		{
 			long start = _entry.ModificationTime.Ticks;
-			System.Threading.Thread.Sleep(100);//else modtime doesn't change
-			_entry.Senses.AddNew();
-			Assert.Greater((decimal)_entry.ModificationTime.Ticks, start);
+			Thread.Sleep(100); //else modtime doesn't change
+			_entry.Senses.Add(new LexSense());;
+			Assert.Greater((decimal) _entry.ModificationTime.Ticks, start);
 			Assert.IsTrue(_didNotify);
 		}
+
 		[Test]
 		public void ModifiedDateAfterLexSenseGlossChange()
 		{
-			LexSense sense = (LexSense) _entry.Senses.AddNew();
+			LexSense sense = new LexSense();
+			_entry.Senses.Add(sense);
 			long start = _entry.ModificationTime.Ticks;
-			System.Threading.Thread.Sleep(100);//else modtime doesn't change
+			Thread.Sleep(100); //else modtime doesn't change
 			sense.Gloss["foo"] = "hello";
-			Assert.Greater((decimal)_entry.ModificationTime.Ticks, start);
+			Assert.Greater((decimal) _entry.ModificationTime.Ticks, start);
 			Assert.IsTrue(_didNotify);
 		}
+
 		[Test]
 		public void ModifiedDateAfterAddingExampleSentence()
 		{
-			LexSense sense = (LexSense) _entry.Senses.AddNew();
-			 long start = _entry.ModificationTime.Ticks;
-			System.Threading.Thread.Sleep(100);//else modtime doesn't change
-		   LexExampleSentence example = (LexExampleSentence) sense.ExampleSentences.AddNew();
-			Assert.Greater((decimal)_entry.ModificationTime.Ticks, start);
+			LexSense sense = new LexSense();
+			_entry.Senses.Add(sense);
+			long start = _entry.ModificationTime.Ticks;
+			Thread.Sleep(100); //else modtime doesn't change
+			sense.ExampleSentences.Add(new LexExampleSentence());;
+			Assert.Greater((decimal) _entry.ModificationTime.Ticks, start);
 			Assert.IsTrue(_didNotify);
 		}
+
 		[Test]
 		public void ModifiedDateAfterChangingExampleSentence()
 		{
-			LexSense sense = (LexSense) _entry.Senses.AddNew();
+			LexSense sense = new LexSense();
+			_entry.Senses.Add(sense);
 			long start = _entry.ModificationTime.Ticks;
-			System.Threading.Thread.Sleep(100);//else modtime doesn't change
-			LexExampleSentence example = (LexExampleSentence) sense.ExampleSentences.AddNew();
+			Thread.Sleep(100); //else modtime doesn't change
+			LexExampleSentence example = new LexExampleSentence();
+			sense.ExampleSentences.Add(example);
 			example.Sentence["foo"] = "hello";
-			Assert.Greater((decimal)_entry.ModificationTime.Ticks, start);
+			Assert.Greater((decimal) _entry.ModificationTime.Ticks, start);
 			Assert.IsTrue(_didNotify);
 		}
 	}

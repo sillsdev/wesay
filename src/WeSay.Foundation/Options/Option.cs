@@ -5,15 +5,14 @@ using Exortech.NetReflector;
 namespace WeSay.Foundation.Options
 {
 	[XmlRoot("option")]
-	public class Option : IChoice
+	public class Option: IChoice
 	{
 		private MultiText _abbreviation;
 		private MultiText _description;
 		private string _humanReadableKey;
 		private MultiText _name;
 
-		public Option()
-			: this(string.Empty, new MultiText()) {}
+		public Option(): this(string.Empty, new MultiText()) {}
 
 		public Option(string humanReadableKey, MultiText name) //, Guid guid)
 		{
@@ -25,7 +24,7 @@ namespace WeSay.Foundation.Options
 
 		public string Label
 		{
-			get { return this._name.GetFirstAlternative(); }
+			get { return _name.GetFirstAlternative(); }
 		}
 
 		#endregion
@@ -53,8 +52,8 @@ namespace WeSay.Foundation.Options
 				{
 					_humanReadableKey = GetDefaultKey();
 				}
-					//the idea here is, we're delaying setting the key in concrete for as long as possible
-					//this allows the ui to continue to auto-create the key during a ui session.
+						//the idea here is, we're delaying setting the key in concrete for as long as possible
+						//this allows the ui to continue to auto-create the key during a ui session.
 				else if (value != GetDefaultKey())
 				{
 					_humanReadableKey = value;
@@ -62,8 +61,8 @@ namespace WeSay.Foundation.Options
 			}
 		}
 
-//        [ReflectorProperty("name", typeof (MultiTextSerializorFactory),
-//            Required = true)]
+		//        [ReflectorProperty("name", typeof (MultiTextSerializorFactory),
+		//            Required = true)]
 		[XmlElement("name")]
 		public MultiText Name
 		{
@@ -71,8 +70,8 @@ namespace WeSay.Foundation.Options
 			set { _name = value; }
 		}
 
-//        [ReflectorProperty("abbreviation", typeof (MultiTextSerializorFactory),
-//            Required = false)]
+		//        [ReflectorProperty("abbreviation", typeof (MultiTextSerializorFactory),
+		//            Required = false)]
 		[XmlElement("abbreviation")]
 		public MultiText Abbreviation
 		{
@@ -86,9 +85,10 @@ namespace WeSay.Foundation.Options
 			}
 			set { _abbreviation = value; }
 		}
-//
-//        [ReflectorProperty("description", typeof (MultiTextSerializorFactory),
-//            Required = false)]
+
+		//
+		//        [ReflectorProperty("description", typeof (MultiTextSerializorFactory),
+		//            Required = false)]
 		[XmlElement("description")]
 		public MultiText Description
 		{
@@ -112,8 +112,6 @@ namespace WeSay.Foundation.Options
 			}
 			return Guid.NewGuid().ToString();
 		}
-
-
 
 		//        [ReflectorProperty("guid", Required = false)]
 		//        public Guid Guid
@@ -173,7 +171,5 @@ namespace WeSay.Foundation.Options
 		}
 
 		#endregion
-
-
 	}
 }

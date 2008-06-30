@@ -4,17 +4,16 @@ using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 using System.Xml;
+using Palaso.Reporting;
 using WeSay.Data;
 using WeSay.Foundation;
 using WeSay.Foundation.Options;
-using WeSay.Language;
 using WeSay.LexicalModel;
 using WeSay.Project;
 
 namespace WeSay.LexicalTools
 {
-
-	public class GatherBySemanticDomainTask : WordGatheringTaskBase
+	public class GatherBySemanticDomainTask: WordGatheringTaskBase
 	{
 		private readonly string _semanticDomainQuestionsFileName;
 		private GatherBySemanticDomainsControl _gatherControl;
@@ -29,7 +28,7 @@ namespace WeSay.LexicalTools
 
 		private int _currentDomainIndex;
 		private int _currentQuestionIndex;
-		private bool _alreadyReportedWSLookupFailure= false;
+		private bool _alreadyReportedWSLookupFailure = false;
 
 		public GatherBySemanticDomainTask(LexEntryRepository lexEntryRepository,
 										  string label,
@@ -51,12 +50,14 @@ namespace WeSay.LexicalTools
 			_currentDomainIndex = -1;
 			_currentQuestionIndex = 0;
 			_words = null;
-			_semanticDomainQuestionsFileName = DetermineActualQuestionsFileName(semanticDomainQuestionsFileName);
+			_semanticDomainQuestionsFileName =
+					DetermineActualQuestionsFileName(semanticDomainQuestionsFileName);
 			if (!File.Exists(_semanticDomainQuestionsFileName))
 			{
 				string pathInProject =
-						Path.Combine(WeSayWordsProject.Project.PathToWeSaySpecificFilesDirectoryInProject,
-									 _semanticDomainQuestionsFileName);
+						Path.Combine(
+								WeSayWordsProject.Project.PathToWeSaySpecificFilesDirectoryInProject,
+								_semanticDomainQuestionsFileName);
 				if (File.Exists(pathInProject))
 				{
 					_semanticDomainQuestionsFileName = pathInProject;
@@ -85,14 +86,14 @@ namespace WeSay.LexicalTools
 		private string DetermineActualQuestionsFileName(string nameFromTaskConfiguration)
 		{
 			int extension = nameFromTaskConfiguration.LastIndexOf('-');
-			if(extension == -1)
+			if (extension == -1)
 			{
 				return nameFromTaskConfiguration;
 			}
 
-			string name = nameFromTaskConfiguration.Substring(0, extension + 1)
-				+ WritingSystemIdForNamesAndQuestions
-				+ Path.GetExtension(nameFromTaskConfiguration);
+			string name = nameFromTaskConfiguration.Substring(0, extension + 1) +
+						  WritingSystemIdForNamesAndQuestions +
+						  Path.GetExtension(nameFromTaskConfiguration);
 			return name;
 		}
 
@@ -111,7 +112,6 @@ namespace WeSay.LexicalTools
 
 		public List<string> DomainKeys
 		{
-
 			get
 			{
 				VerifyTaskActivated();
@@ -172,7 +172,9 @@ namespace WeSay.LexicalTools
 
 		private Option GetOptionFromKey(string key)
 		{
-			return _semanticDomainOptionsList.Options.Find(delegate(Option o) { return o.Key == key; });
+			return
+					_semanticDomainOptionsList.Options.Find(
+							delegate(Option o) { return o.Key == key; });
 		}
 
 		public string CurrentDomainDescription
@@ -283,10 +285,13 @@ namespace WeSay.LexicalTools
 					ResultSet<LexEntry> recordTokens = GetAllEntriesSortedBySemanticDomain();
 					int beginIndex;
 					int pastEndIndex;
-					GetWordsIndexes(recordTokens, CurrentDomainIndex, out beginIndex, out pastEndIndex);
-					for (int i = beginIndex; i < pastEndIndex; i++)
+					GetWordsIndexes(recordTokens,
+									CurrentDomainIndex,
+									out beginIndex,
+									out pastEndIndex);
+					for (int i = beginIndex;i < pastEndIndex;i++)
 					{
-						LexEntry entry = LexEntryRepository.GetItem(recordTokens[i]);
+						LexEntry entry = recordTokens[i].RealObject;
 						_words.Add(entry.LexicalForm.GetBestAlternative(WordWritingSystemId, "*"));
 					}
 				}
@@ -340,8 +345,7 @@ namespace WeSay.LexicalTools
 			{
 				VerifyTaskActivated();
 
-				if (_currentDomainIndex == 0 &&
-					_currentQuestionIndex == 0)
+				if (_currentDomainIndex == 0 && _currentQuestionIndex == 0)
 				{
 					return false;
 				}
@@ -349,7 +353,6 @@ namespace WeSay.LexicalTools
 				return true;
 			}
 		}
-
 
 		public string SemanticDomainWritingSystemId
 		{
@@ -398,7 +401,9 @@ namespace WeSay.LexicalTools
 			}
 			if (lexicalForm != string.Empty)
 			{
-				ResultSet<LexEntry> recordTokens = LexEntryRepository.GetEntriesWithMatchingLexicalForm(lexicalForm, WordWritingSystem);
+				ResultSet<LexEntry> recordTokens =
+						LexEntryRepository.GetEntriesWithMatchingLexicalForm(lexicalForm,
+																			 WordWritingSystem);
 				if (recordTokens.Count == 0)
 				{
 					LexEntry entry = LexEntryRepository.CreateItem();
@@ -431,7 +436,9 @@ namespace WeSay.LexicalTools
 			{
 				// this task was coded to have a list of word-forms, not actual entries.
 				//so we have to go searching for possible matches at this point.
-				ResultSet<LexEntry> matchingEntries = LexEntryRepository.GetEntriesWithMatchingLexicalForm(lexicalForm, WordWritingSystem);
+				ResultSet<LexEntry> matchingEntries =
+						LexEntryRepository.GetEntriesWithMatchingLexicalForm(lexicalForm,
+																			 WordWritingSystem);
 				foreach (RecordToken<LexEntry> recordToken in matchingEntries)
 				{
 					DisassociateCurrentSemanticDomainFromEntry(recordToken); // might remove senses
@@ -445,10 +452,10 @@ namespace WeSay.LexicalTools
 		{
 			// have to iterate through these in reverse order
 			// since they might get modified
-			LexEntry entry = LexEntryRepository.GetItem(recordToken);
-			for (int i = entry.Senses.Count - 1; i >= 0; i--)
+			LexEntry entry = recordToken.RealObject;
+			for (int i = entry.Senses.Count - 1;i >= 0;i--)
 			{
-				LexSense sense = (LexSense) entry.Senses[i];
+				LexSense sense = entry.Senses[i];
 				OptionRefCollection semanticDomains =
 						sense.GetProperty<OptionRefCollection>(_semanticDomainField.FieldName);
 				if (semanticDomains != null)
@@ -479,11 +486,17 @@ namespace WeSay.LexicalTools
 			LexEntryRepository.SaveItem(entry);
 		}
 
-		private void GetWordsIndexes(ResultSet<LexEntry> recordTokens, int domainIndex, out int beginIndex, out int pastEndIndex)
+		private void GetWordsIndexes(ResultSet<LexEntry> recordTokens,
+									 int domainIndex,
+									 out int beginIndex,
+									 out int pastEndIndex)
 		{
 			string domainKey = DomainKeys[domainIndex];
 
-			beginIndex = recordTokens.FindFirstIndexWithDisplayString(domainKey);
+			beginIndex = recordTokens.FindFirstIndex(delegate(RecordToken<LexEntry> token)
+													 {
+														 return (string) token.Results["SemanticDomain"] == domainKey;
+													 });
 			if (beginIndex < 0)
 			{
 				pastEndIndex = beginIndex;
@@ -491,7 +504,7 @@ namespace WeSay.LexicalTools
 			}
 			pastEndIndex = beginIndex + 1;
 			while (pastEndIndex < recordTokens.Count &&
-				   recordTokens[pastEndIndex].DisplayString == domainKey)
+				   (string)recordTokens[pastEndIndex].Results["SemanticDomain"] == domainKey)
 			{
 				++pastEndIndex;
 			}
@@ -512,7 +525,8 @@ namespace WeSay.LexicalTools
 				//string ws = reader.GetAttribute("lang"); got it from the configuration file
 
 				// should verify that this writing system is in optionslist
-				_semanticDomainWritingSystem = BasilProject.Project.WritingSystems[WritingSystemIdForNamesAndQuestions];
+				_semanticDomainWritingSystem =
+						BasilProject.Project.WritingSystems[WritingSystemIdForNamesAndQuestions];
 				string semanticDomainType = reader.GetAttribute("semantic-domain-type");
 				// should verify that domain type matches type of optionList in semantic domain field
 
@@ -558,16 +572,16 @@ namespace WeSay.LexicalTools
 				try
 				{
 					ws =
-						ViewTemplate.GetField(
-							LexSense.WellKnownProperties.SemanticDomainsDdp4).WritingSystemIds[0];
+							ViewTemplate.GetField(LexSense.WellKnownProperties.SemanticDomainsDdp4).
+									WritingSystemIds[0];
 				}
 				catch (Exception)
 				{
 					if (!_alreadyReportedWSLookupFailure)
 					{
 						_alreadyReportedWSLookupFailure = true;
-						Palaso.Reporting.ErrorReport.ReportNonFatalMessage(
-							"WeSay was unable to get a writing system to use from the configuration Semantic Domain Field. English will be used.");
+						ErrorReport.ReportNonFatalMessage(
+								"WeSay was unable to get a writing system to use from the configuration Semantic Domain Field. English will be used.");
 					}
 				}
 				return ws;
@@ -612,7 +626,9 @@ namespace WeSay.LexicalTools
 
 		private ResultSet<LexEntry> GetAllEntriesSortedBySemanticDomain()
 		{
-			return LexEntryRepository.GetAllEntriesSortedBySemanticDomain(_semanticDomainField.FieldName);
+			return
+					LexEntryRepository.GetAllEntriesSortedBySemanticDomain(
+							_semanticDomainField.FieldName);
 		}
 
 		public override void Deactivate()
@@ -637,15 +653,17 @@ namespace WeSay.LexicalTools
 			string lastDomain = null;
 			foreach (RecordToken<LexEntry> token in GetAllEntriesSortedBySemanticDomain())
 			{
-				if (token.DisplayString != lastDomain)
+				string semanticDomain = (string)token.Results["SemanticDomain"];
+				if (semanticDomain != lastDomain)
 				{
-					lastDomain = token.DisplayString;
+					lastDomain = semanticDomain;
 					remainingCount--;
 				}
 			}
 
 			return remainingCount;
 		}
+
 		protected override int ComputeReferenceCount()
 		{
 			if (!IsActive)
@@ -658,7 +676,7 @@ namespace WeSay.LexicalTools
 		public void GotoLastDomainWithAnswers()
 		{
 			VerifyTaskActivated();
-			for (int i = 0; i < DomainKeys.Count; i++)
+			for (int i = 0;i < DomainKeys.Count;i++)
 			{
 				CurrentDomainIndex = i;
 				int beginIndex;
@@ -667,17 +685,14 @@ namespace WeSay.LexicalTools
 								CurrentDomainIndex,
 								out beginIndex,
 								out pastEndIndex);
-				if(pastEndIndex == beginIndex)
+				if (pastEndIndex == beginIndex)
 				{
-					CurrentDomainIndex = (i==0)?i:i - 1;
+					CurrentDomainIndex = (i == 0) ? i : i - 1;
 					return;
 				}
 			}
 			// there were no empty domains. Stay at the last domain (as a side effect of having positioned
 			// ourself in the above loop
 		}
-
 	}
-
-
 }

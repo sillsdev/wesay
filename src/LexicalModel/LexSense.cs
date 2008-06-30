@@ -1,38 +1,46 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Text;
+using Palaso.Reporting;
 using WeSay.Data;
 using WeSay.Foundation;
 
 namespace WeSay.LexicalModel
 {
-	public sealed class LexSense : WeSayDataObject
+	public sealed class LexSense: WeSayDataObject
 	{
 		//private readonly SenseGlossMultiText _gloss;
 		private readonly InMemoryBindingList<LexExampleSentence> _exampleSentences;
 		private string _id;
 
-		new public class WellKnownProperties : WeSayDataObject.WellKnownProperties
+		public new class WellKnownProperties: WeSayDataObject.WellKnownProperties
 		{
+			public static string PartOfSpeech = "POS";
+			public static string SemanticDomainsDdp4 = "SemanticDomainDdp4";
 
-			static public string PartOfSpeech = "POS";
-			static public string SemanticDomainsDdp4 = "SemanticDomainDdp4";
-			static public string Definition = "definition";//the lower case here is defined by LIFT standard
-			static public string Picture = "Picture";
-			static public string Gloss = "gloss";
+			public static string Definition = "definition";
+			//the lower case here is defined by LIFT standard
+
+			public static string Picture = "Picture";
+			public static string Gloss = "gloss";
 			//static public string Relations = "relations";
-			static public bool ContainsAnyCaseVersionOf(string fieldName)
+			public static bool ContainsAnyCaseVersionOf(string fieldName)
 			{
-				List<string> list = new List<string>(new string[] { PartOfSpeech, Definition, SemanticDomainsDdp4, Picture, Note, Gloss });
-				return list.Contains(fieldName) || list.Contains(fieldName.ToLower()) || list.Contains(fieldName.ToUpper());
+				List<string> list =
+						new List<string>(
+								new string[]
+										{
+												PartOfSpeech, Definition, SemanticDomainsDdp4, Picture,
+												Note, Gloss
+										});
+				return
+						list.Contains(fieldName) || list.Contains(fieldName.ToLower()) ||
+						list.Contains(fieldName.ToUpper());
 			}
 		} ;
 
-		public LexSense(WeSayDataObject parent)
-			: base(parent)
+		public LexSense(WeSayDataObject parent): base(parent)
 		{
-		 //   _gloss = new SenseGlossMultiText(this);
+			//   _gloss = new SenseGlossMultiText(this);
 			_exampleSentences = new InMemoryBindingList<LexExampleSentence>();
 			WireUpEvents();
 		}
@@ -41,9 +49,7 @@ namespace WeSay.LexicalModel
 		/// Used when a list of these items adds via "AddNew", where we have to have a default constructor.
 		/// The parent is added in an event handler, on the parent, which is called by the list.
 		/// </summary>
-		public LexSense(): this(null)
-		{
-		}
+		public LexSense(): this(null) {}
 
 		protected override void WireUpEvents()
 		{
@@ -57,7 +63,7 @@ namespace WeSay.LexicalModel
 			if (String.IsNullOrEmpty(_id))
 			{
 				_id = Guid.NewGuid().ToString();
-				this.NotifyPropertyChanged("id");
+				NotifyPropertyChanged("id");
 			}
 
 			return _id;
@@ -70,39 +76,33 @@ namespace WeSay.LexicalModel
 		/// to hide this (hopefully temporary) performance implementation detail. </remarks>
 		public MultiText Gloss
 		{
-			get
-			{
-				return GetOrCreateProperty<SenseGlossMultiText>(LexSense.WellKnownProperties.Gloss);
-			}
+			get { return GetOrCreateProperty<SenseGlossMultiText>(WellKnownProperties.Gloss); }
 		}
 
 		public MultiText Definition
 		{
-			get { return this.GetOrCreateProperty<MultiText>(LexSense.WellKnownProperties.Definition); }
+			get { return GetOrCreateProperty<MultiText>(WellKnownProperties.Definition); }
 		}
 
-		public IBindingList ExampleSentences
+		public IList<LexExampleSentence> ExampleSentences
 		{
 			get { return _exampleSentences; }
 		}
 
 		public override bool IsEmpty
 		{
-			get {
-				return Gloss.Empty &&
-					   ExampleSentences.Count == 0 &&
-					   !HasProperties;
-			}
+			get { return Gloss.Empty && ExampleSentences.Count == 0 && !HasProperties; }
 		}
 
 		public bool IsEmptyForPurposesOfDeletion
 		{
-			get {
-				SenseGlossMultiText gloss = GetProperty<SenseGlossMultiText>(LexSense.WellKnownProperties.Gloss);
-				bool noGloss = (gloss == null) || gloss.Empty; // careful, just asking the later will actually create a gloss
-				return noGloss &&
-					   ExampleSentences.Count == 0 &&
-					   !HasPropertiesForPurposesOfDeletion;
+			get
+			{
+				SenseGlossMultiText gloss =
+						GetProperty<SenseGlossMultiText>(WellKnownProperties.Gloss);
+				bool noGloss = (gloss == null) || gloss.Empty;
+				// careful, just asking the later will actually create a gloss
+				return noGloss && ExampleSentences.Count == 0 && !HasPropertiesForPurposesOfDeletion;
 			}
 		}
 
@@ -121,28 +121,29 @@ namespace WeSay.LexicalModel
 			}
 			CleanUpEmptyObjects();
 		}
+
 		public override void CleanUpEmptyObjects()
 		{
 			base.CleanUpEmptyObjects();
 
-			for (int i = 0; i < this._exampleSentences.Count; i++)
+			for (int i = 0;i < _exampleSentences.Count;i++)
 			{
 				_exampleSentences[i].CleanUpEmptyObjects();
 			}
 
 			// remove any example sentences that are empty
-			int count = this._exampleSentences.Count;
+			int count = _exampleSentences.Count;
 
-			for (int i = count - 1; i >= 0 ; i--)
+			for (int i = count - 1;i >= 0;i--)
 			{
-				if(this._exampleSentences[i].IsEmpty)
+				if (_exampleSentences[i].IsEmpty)
 				{
-					this._exampleSentences.RemoveAt(i);
+					_exampleSentences.RemoveAt(i);
 				}
 			}
-			if(count != this._exampleSentences.Count)
+			if (count != _exampleSentences.Count)
 			{
-				Palaso.Reporting.Logger.WriteMinorEvent("Empty example removed");
+				Logger.WriteMinorEvent("Empty example removed");
 				OnEmptyObjectsRemoved();
 			}
 		}
@@ -151,16 +152,11 @@ namespace WeSay.LexicalModel
 	/// <summary>
 	/// See comment in MultiText.cs for an explanation of this class.
 	/// </summary>
-	public class SenseGlossMultiText : MultiText
+	public class SenseGlossMultiText: MultiText
 	{
-		public SenseGlossMultiText(LexSense parent)
-			: base(parent)
-		{
-		}
+		public SenseGlossMultiText(WeSayDataObject parent): base(parent) {}
 
-		public SenseGlossMultiText()
-		{
-		}
+		public SenseGlossMultiText() {}
 
 		public new LexSense Parent
 		{

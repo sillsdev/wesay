@@ -6,7 +6,7 @@ using WeSay.Data;
 
 namespace WeSay.Data.Tests
 {
-	public class IRepositoryStateUnitializedTests<T> where T: new()
+	public class IRepositoryStateUnitializedTests<T> where T: class, new()
 	{
 		private IRepository<T> _repositoryUnderTest;
 		private string _persistedFilePath = null;
@@ -112,7 +112,7 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void ItemsModifiedSince_ReturnsEmptyArray()
 		{
-			Assert.IsEmpty(RepositoryUnderTest.ItemsModifiedSince(DateTime.MinValue));
+			Assert.IsEmpty(RepositoryUnderTest.GetItemsModifiedSince(DateTime.MinValue));
 		}
 
 		[Test]
@@ -156,12 +156,11 @@ namespace WeSay.Data.Tests
 		}
 	}
 
-	public class IRepositoryCreateItemTransitionTests<T> where T : new()
+	public class IRepositoryCreateItemTransitionTests<T> where T : class, new()
 	{
 		private IRepository<T> _repositoryUnderTest;
 		private T item;
 		private RepositoryId id;
-		private DateTime modifiedTimePreTestedStateSwitch;
 		private string _persistedFilePath = null;
 
 		public IRepository<T> RepositoryUnderTest
@@ -192,7 +191,6 @@ namespace WeSay.Data.Tests
 
 		public void SetState()
 		{
-			modifiedTimePreTestedStateSwitch = RepositoryUnderTest.LastModified;
 			item = RepositoryUnderTest.CreateItem();
 			id = RepositoryUnderTest.GetId(item);
 		}
@@ -244,13 +242,15 @@ namespace WeSay.Data.Tests
 		public void GetId_CalledTwiceWithSameItem_ReturnsSameId()
 		{
 			SetState();
-			Assert.AreSame(RepositoryUnderTest.GetId(item), RepositoryUnderTest.GetId(item));
+			Assert.AreEqual(RepositoryUnderTest.GetId(item), RepositoryUnderTest.GetId(item));
 		}
 
 		[Test]
 		public void LastModified_IsChanged()
 		{
+			DateTime modifiedTimePreTestedStateSwitch = RepositoryUnderTest.LastModified;
 			SetState();
+
 			Assert.Greater(RepositoryUnderTest.LastModified, modifiedTimePreTestedStateSwitch);
 		}
 
@@ -283,7 +283,7 @@ namespace WeSay.Data.Tests
 			Thread.Sleep(50);
 			DateTime timeOfSave = DateTime.UtcNow;
 			RepositoryUnderTest.SaveItem(item);
-			Assert.AreEqual(id, RepositoryUnderTest.ItemsModifiedSince(timeOfSave)[0]);
+			Assert.AreEqual(id, RepositoryUnderTest.GetItemsModifiedSince(timeOfSave)[0]);
 		}
 
 		[Test]
@@ -301,7 +301,7 @@ namespace WeSay.Data.Tests
 		{
 			SetState();
 			TimeSpan timeSpan = new TimeSpan(1, 0, 0); //1 hour
-			Assert.AreEqual(RepositoryUnderTest.GetId(item), RepositoryUnderTest.ItemsModifiedSince(DateTime.UtcNow - timeSpan)[0]);
+			Assert.AreEqual(RepositoryUnderTest.GetId(item), RepositoryUnderTest.GetItemsModifiedSince(DateTime.UtcNow - timeSpan)[0]);
 		}
 
 
@@ -315,9 +315,9 @@ namespace WeSay.Data.Tests
 			DateTime timeBetweenCreatedItems = DateTime.Now;
 			Thread.Sleep(50);
 			T item2 = RepositoryUnderTest.CreateItem();
-			Assert.AreEqual(1, RepositoryUnderTest.ItemsModifiedSince(timeBetweenCreatedItems).Length);
+			Assert.AreEqual(1, RepositoryUnderTest.GetItemsModifiedSince(timeBetweenCreatedItems).Length);
 			Assert.AreEqual(RepositoryUnderTest.GetId(item2),
-				RepositoryUnderTest.ItemsModifiedSince(timeBetweenCreatedItems)[0]);
+				RepositoryUnderTest.GetItemsModifiedSince(timeBetweenCreatedItems)[0]);
 		}
 
 		[Test]
@@ -349,12 +349,11 @@ namespace WeSay.Data.Tests
 		}
 	}
 
-	public class IRepositoryDeleteItemTransitionTests<T> where T : new()
+	public class IRepositoryDeleteItemTransitionTests<T> where T : class, new()
 	{
 		private IRepository<T> _repositoryUnderTest;
 		private T item;
 		private RepositoryId id;
-		private DateTime modifiedTimePreTestedStateSwitch;
 		private string _persistedFilePath = null;
 
 		public IRepository<T> RepositoryUnderTest
@@ -385,11 +384,18 @@ namespace WeSay.Data.Tests
 
 		public void SetState()
 		{
-			item = RepositoryUnderTest.CreateItem();
-			id = RepositoryUnderTest.GetId(item);
-			modifiedTimePreTestedStateSwitch = RepositoryUnderTest.LastModified;
+			CreateInitialItem();
+			WaitThenDeleteItem();
+		}
+
+		private void WaitThenDeleteItem() {
 			Thread.Sleep(50);
-			RepositoryUnderTest.DeleteItem(item);
+			RepositoryUnderTest.DeleteItem(this.item);
+		}
+
+		private void CreateInitialItem() {
+			this.item = RepositoryUnderTest.CreateItem();
+			this.id = RepositoryUnderTest.GetId(this.item);
 		}
 
 		[Test]
@@ -426,7 +432,9 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void LastModified_IsChanged()
 		{
-			SetState();
+			CreateInitialItem();
+			DateTime modifiedTimePreTestedStateSwitch = RepositoryUnderTest.LastModified;
+			WaitThenDeleteItem();
 			Assert.Greater(RepositoryUnderTest.LastModified, modifiedTimePreTestedStateSwitch);
 		}
 
@@ -456,7 +464,7 @@ namespace WeSay.Data.Tests
 		public void ItemsModifiedSince_ReturnsEmptyArray()
 		{
 			SetState();
-			Assert.IsEmpty(RepositoryUnderTest.ItemsModifiedSince(DateTime.MinValue));
+			Assert.IsEmpty(RepositoryUnderTest.GetItemsModifiedSince(DateTime.MinValue));
 		}
 
 		[Test]
@@ -489,12 +497,11 @@ namespace WeSay.Data.Tests
 		}
 	}
 
-	public class IRepositoryDeleteIdTransitionTests<T> where T : new()
+	public class IRepositoryDeleteIdTransitionTests<T> where T : class, new()
 	{
 		private IRepository<T> _repositoryUnderTest;
 		private T item;
 		private RepositoryId id;
-		private DateTime modifiedTimePreTestedStateSwitch;
 		private string _persistedFilePath = null;
 
 		public IRepository<T> RepositoryUnderTest
@@ -525,11 +532,18 @@ namespace WeSay.Data.Tests
 
 		public void SetState()
 		{
-			item = RepositoryUnderTest.CreateItem();
-			id = RepositoryUnderTest.GetId(item);
-			modifiedTimePreTestedStateSwitch = RepositoryUnderTest.LastModified;
+			CreateItemToTest();
+			WaitThenDeleteItem();
+		}
+
+		private void WaitThenDeleteItem() {
 			Thread.Sleep(50);
-			RepositoryUnderTest.DeleteItem(id);
+			RepositoryUnderTest.DeleteItem(this.id);
+		}
+
+		private void CreateItemToTest() {
+			this.item = RepositoryUnderTest.CreateItem();
+			this.id = RepositoryUnderTest.GetId(this.item);
 		}
 
 		[Test]
@@ -566,7 +580,9 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void LastModified_ItemIsDeleted_IsChanged()
 		{
-			SetState();
+			CreateItemToTest();
+			DateTime modifiedTimePreTestedStateSwitch = RepositoryUnderTest.LastModified;
+			WaitThenDeleteItem();
 			Assert.Greater(RepositoryUnderTest.LastModified, modifiedTimePreTestedStateSwitch);
 		}
 
@@ -596,7 +612,7 @@ namespace WeSay.Data.Tests
 		public void ItemsModifiedSince_ReturnsEmptyArray()
 		{
 			SetState();
-			Assert.IsEmpty(RepositoryUnderTest.ItemsModifiedSince(DateTime.MinValue));
+			Assert.IsEmpty(RepositoryUnderTest.GetItemsModifiedSince(DateTime.MinValue));
 		}
 
 		[Test]

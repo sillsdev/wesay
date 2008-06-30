@@ -3,9 +3,8 @@ using System.Drawing;
 using System.IO;
 using NUnit.Framework;
 using WeSay.Data;
-using WeSay.Language;
+using WeSay.Foundation;
 using WeSay.LexicalModel;
-using WeSay.LexicalModel.Db4o_Specific;
 using WeSay.Project;
 
 namespace WeSay.LexicalTools.Tests
@@ -17,55 +16,39 @@ namespace WeSay.LexicalTools.Tests
 		private string _filePath;
 		private ResultSet<LexEntry> _missingTranslationRecordList;
 		private ViewTemplate _viewTemplate;
-		private MissingTranslationFilter _missingTranslation;
 		private WritingSystem _writingSystem;
 
-		public class MissingTranslationFilter: IFilter<LexEntry>
+		private static bool IsMissingTranslation(LexEntry entry)
 		{
-			private static bool IsMissingTranslation(LexEntry entry)
+			if (entry == null)
 			{
-				if (entry == null)
+				return false;
+			}
+			bool hasSense = false;
+			bool hasExample = false;
+			foreach (LexSense sense in entry.Senses)
+			{
+				hasSense = true;
+				foreach (LexExampleSentence exampleSentence in sense.ExampleSentences)
 				{
-					return false;
-				}
-				bool hasSense = false;
-				bool hasExample = false;
-				foreach (LexSense sense in entry.Senses)
-				{
-					hasSense = true;
-					foreach (LexExampleSentence exampleSentence in sense.ExampleSentences)
+					hasExample = true;
+					if (exampleSentence.Translation["analysis"].Length == 0)
 					{
-						hasExample = true;
-						if (exampleSentence.Translation["analysis"].Length == 0)
-						{
-							return true;
-						}
+						return true;
 					}
 				}
-				return !(hasSense && hasExample);
 			}
-
-			public Predicate<LexEntry> FilteringPredicate
-			{
-				get { return IsMissingTranslation; }
-			}
-
-			public string Key
-			{
-				get { return "MissingTranslationFilter"; }
-			}
+			return !(hasSense && hasExample);
 		}
+
 
 		[SetUp]
 		public void SetUp()
 		{
-			Db4oLexModelHelper.InitializeForNonDbTests();
 			WeSayWordsProject.InitializeForTests();
 
 			_filePath = Path.GetTempFileName();
 			_lexEntryRepository = new LexEntryRepository(_filePath);
-
-			_missingTranslation = new MissingTranslationFilter();
 
 			_writingSystem =
 					new WritingSystem("pretendVernacular", new Font(FontFamily.GenericSansSerif, 24));
@@ -75,13 +58,7 @@ namespace WeSay.LexicalTools.Tests
 			CreateTestEntry("car",
 							"small motorized vehicle",
 							"Watch out for cars when you cross the street.");
-			CreateTestEntry("dog",
-							"animal with four legs; man's best friend",
-							"He walked his dog.");
-
-			_missingTranslationRecordList =
-					_lexEntryRepository.GetEntriesMatchingFilterSortedByLexicalUnit(
-							_missingTranslation, _writingSystem);
+			CreateTestEntry("dog", "animal with four legs; man's best friend", "He walked his dog.");
 
 			string[] analysisWritingSystemIds = new string[] {"analysis"};
 			string[] vernacularWritingSystemIds = new string[] {_writingSystem.Id};
@@ -97,34 +74,40 @@ namespace WeSay.LexicalTools.Tests
 							  "LexSense",
 							  analysisWritingSystemIds));
 
-
-
 			_viewTemplate.Add(
 					new Field(Field.FieldNames.ExampleSentence.ToString(),
 							  "LexExampleSentence",
 							  vernacularWritingSystemIds));
-			_viewTemplate.Add(
-					new Field(Field.FieldNames.ExampleTranslation.ToString(),
-							  "LexExampleSentence",
-							  analysisWritingSystemIds));
+			Field exampleTranslationField = new Field(Field.FieldNames.ExampleTranslation.ToString(),
+													  "LexExampleSentence",
+													  analysisWritingSystemIds);
+			_viewTemplate.Add(exampleTranslationField);
+
+			_missingTranslationRecordList =
+		_lexEntryRepository.GetEntriesMatchingFilterSortedByLexicalUnit(
+				exampleTranslationField, _writingSystem);
+
+
 		}
 
-		private LexEntry CreateTestEntry(string lexicalForm, string Definition, string exampleSentence)
+		private void CreateTestEntry(string lexicalForm, string Definition, string exampleSentence)
 		{
 			LexEntry entry = _lexEntryRepository.CreateItem();
 			entry.LexicalForm[_writingSystem.Id] = lexicalForm;
-			LexSense sense = (LexSense) entry.Senses.AddNew();
+			LexSense sense = new LexSense();
+			entry.Senses.Add(sense);
 			sense.Definition["analysis"] = Definition;
-			LexExampleSentence example = (LexExampleSentence) sense.ExampleSentences.AddNew();
+			LexExampleSentence example = new LexExampleSentence();
+			sense.ExampleSentences.Add(example);
 			example.Sentence[_writingSystem.Id] = exampleSentence;
 			_lexEntryRepository.SaveItem(entry);
-			return entry;
+			return;
 		}
 
 		private static void AddTranslationToEntry(LexEntry entry, string translation)
 		{
-			LexSense sense = (LexSense) entry.Senses[0];
-			LexExampleSentence example = (LexExampleSentence) sense.ExampleSentences[0];
+			LexSense sense = entry.Senses[0];
+			LexExampleSentence example = sense.ExampleSentences[0];
 			example.Translation["analysis"] = translation;
 		}
 
@@ -142,7 +125,7 @@ namespace WeSay.LexicalTools.Tests
 					MissingInfoControl missingInfoControl =
 							new MissingInfoControl(_missingTranslationRecordList,
 												   _viewTemplate,
-												   _missingTranslation.FilteringPredicate,
+												   IsMissingTranslation,
 												   _lexEntryRepository))
 			{
 				Assert.IsNotNull(missingInfoControl);
@@ -156,7 +139,7 @@ namespace WeSay.LexicalTools.Tests
 			using (
 					new MissingInfoControl(null,
 										   _viewTemplate,
-										   _missingTranslation.FilteringPredicate,
+										   IsMissingTranslation,
 										   _lexEntryRepository)) {}
 		}
 
@@ -167,7 +150,7 @@ namespace WeSay.LexicalTools.Tests
 			using (
 					new MissingInfoControl(_missingTranslationRecordList,
 										   null,
-										   _missingTranslation.FilteringPredicate,
+										   IsMissingTranslation,
 										   _lexEntryRepository)) {}
 		}
 
@@ -189,7 +172,7 @@ namespace WeSay.LexicalTools.Tests
 			using (
 					new MissingInfoControl(_missingTranslationRecordList,
 										   _viewTemplate,
-										   _missingTranslation.FilteringPredicate,
+										   IsMissingTranslation,
 										   null)) {}
 		}
 
@@ -200,7 +183,7 @@ namespace WeSay.LexicalTools.Tests
 					MissingInfoControl missingInfoControl =
 							new MissingInfoControl(_missingTranslationRecordList,
 												   _viewTemplate,
-												   _missingTranslation.FilteringPredicate,
+												   IsMissingTranslation,
 												   _lexEntryRepository))
 			{
 				Assert.AreEqual(_missingTranslationRecordList[0], missingInfoControl.CurrentRecord);
@@ -214,7 +197,7 @@ namespace WeSay.LexicalTools.Tests
 					MissingInfoControl missingInfoControl =
 							new MissingInfoControl(_missingTranslationRecordList,
 												   _viewTemplate,
-												   _missingTranslation.FilteringPredicate,
+												   IsMissingTranslation,
 												   _lexEntryRepository))
 			{
 				missingInfoControl.SetCurrentRecordToPrevious();
@@ -229,7 +212,7 @@ namespace WeSay.LexicalTools.Tests
 					MissingInfoControl missingInfoControl =
 							new MissingInfoControl(_missingTranslationRecordList,
 												   _viewTemplate,
-												   _missingTranslation.FilteringPredicate,
+												   IsMissingTranslation,
 												   _lexEntryRepository))
 			{
 				missingInfoControl.SetCurrentRecordToNext();
@@ -245,7 +228,7 @@ namespace WeSay.LexicalTools.Tests
 					MissingInfoControl missingInfoControl =
 							new MissingInfoControl(_missingTranslationRecordList,
 												   _viewTemplate,
-												   _missingTranslation.FilteringPredicate,
+												   IsMissingTranslation,
 												   _lexEntryRepository))
 			{
 				int count = _missingTranslationRecordList.Count;
@@ -265,7 +248,7 @@ namespace WeSay.LexicalTools.Tests
 					MissingInfoControl missingInfoControl =
 							new MissingInfoControl(_missingTranslationRecordList,
 												   _viewTemplate,
-												   _missingTranslation.FilteringPredicate,
+												   IsMissingTranslation,
 												   _lexEntryRepository))
 			{
 				missingInfoControl.SetCurrentRecordToNext();
@@ -280,7 +263,7 @@ namespace WeSay.LexicalTools.Tests
 					MissingInfoControl missingInfoControl =
 							new MissingInfoControl(_missingTranslationRecordList,
 												   _viewTemplate,
-												   _missingTranslation.FilteringPredicate,
+												   IsMissingTranslation,
 												   _lexEntryRepository))
 			{
 				AddTranslationToEntry(missingInfoControl.CurrentEntry,
@@ -299,7 +282,7 @@ namespace WeSay.LexicalTools.Tests
 					MissingInfoControl missingInfoControl =
 							new MissingInfoControl(_missingTranslationRecordList,
 												   _viewTemplate,
-												   _missingTranslation.FilteringPredicate,
+												   IsMissingTranslation,
 												   _lexEntryRepository))
 			{
 				missingInfoControl.SetCurrentRecordToNext();
@@ -318,7 +301,7 @@ namespace WeSay.LexicalTools.Tests
 					MissingInfoControl missingInfoControl =
 							new MissingInfoControl(_missingTranslationRecordList,
 												   _viewTemplate,
-												   _missingTranslation.FilteringPredicate,
+												   IsMissingTranslation,
 												   _lexEntryRepository))
 			{
 				missingInfoControl.SetCurrentRecordToNext();
@@ -336,7 +319,7 @@ namespace WeSay.LexicalTools.Tests
 					MissingInfoControl missingInfoControl =
 							new MissingInfoControl(_missingTranslationRecordList,
 												   _viewTemplate,
-												   _missingTranslation.FilteringPredicate,
+												   IsMissingTranslation,
 												   _lexEntryRepository))
 			{
 				int count = _missingTranslationRecordList.Count;
@@ -361,7 +344,7 @@ namespace WeSay.LexicalTools.Tests
 					MissingInfoControl missingInfoControl =
 							new MissingInfoControl(_missingTranslationRecordList,
 												   _viewTemplate,
-												   _missingTranslation.FilteringPredicate,
+												   IsMissingTranslation,
 												   _lexEntryRepository))
 			{
 				int count = _missingTranslationRecordList.Count;
@@ -384,7 +367,7 @@ namespace WeSay.LexicalTools.Tests
 					MissingInfoControl missingInfoControl =
 							new MissingInfoControl(_missingTranslationRecordList,
 												   _viewTemplate,
-												   _missingTranslation.FilteringPredicate,
+												   IsMissingTranslation,
 												   _lexEntryRepository))
 			{
 				int count = _missingTranslationRecordList.Count;
@@ -407,7 +390,7 @@ namespace WeSay.LexicalTools.Tests
 					MissingInfoControl missingInfoControl =
 							new MissingInfoControl(_missingTranslationRecordList,
 												   _viewTemplate,
-												   _missingTranslation.FilteringPredicate,
+												   IsMissingTranslation,
 												   _lexEntryRepository))
 			{
 				missingInfoControl.SetCurrentRecordToNext();
@@ -425,12 +408,13 @@ namespace WeSay.LexicalTools.Tests
 					MissingInfoControl missingInfoControl =
 							new MissingInfoControl(_missingTranslationRecordList,
 												   _viewTemplate,
-												   _missingTranslation.FilteringPredicate,
+												   IsMissingTranslation,
 												   _lexEntryRepository))
 			{
 				missingInfoControl.SetCurrentRecordToNext();
 				RecordToken<LexEntry> currentRecord = missingInfoControl.CurrentRecord;
-				AddTranslationToEntry(missingInfoControl.CurrentEntry, "a bogus translation of example");
+				AddTranslationToEntry(missingInfoControl.CurrentEntry,
+									  "a bogus translation of example");
 				Assert.AreEqual(missingInfoControl._completedRecordsListBox.SelectedItem,
 								currentRecord);
 				Assert.IsFalse(missingInfoControl._recordsListBox.DataSource.Contains(currentRecord));
@@ -447,21 +431,24 @@ namespace WeSay.LexicalTools.Tests
 					MissingInfoControl missingInfoControl =
 							new MissingInfoControl(_missingTranslationRecordList,
 												   _viewTemplate,
-												   _missingTranslation.FilteringPredicate,
+												   IsMissingTranslation,
 												   _lexEntryRepository))
 			{
 				missingInfoControl.SetCurrentRecordToNext();
 				RecordToken<LexEntry> currentRecord = missingInfoControl.CurrentRecord;
-				AddTranslationToEntry(missingInfoControl.CurrentEntry, "a bogus translation of example");
+				AddTranslationToEntry(missingInfoControl.CurrentEntry,
+									  "a bogus translation of example");
 				AddTranslationToEntry(missingInfoControl.CurrentEntry, string.Empty);
 				Assert.AreEqual(missingInfoControl._recordsListBox.SelectedItem, currentRecord);
 				Assert.IsFalse(
-						missingInfoControl._completedRecordsListBox.DataSource.Contains(currentRecord));
+						missingInfoControl._completedRecordsListBox.DataSource.Contains(
+								currentRecord));
 #if Visual
 				DebugShowState(missingInfoControl, currentRecord);
 #endif
 			}
 		}
+
 #if Visual
 		private static void DebugShowState(MissingInfoControl missingInfoControl,
 										   LexEntry currentRecord)

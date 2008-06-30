@@ -57,36 +57,25 @@
 	<Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+	<Compile Include="Db4oRepository.cs" />
 	<Compile Include="DeletedItemEventArgs.cs" />
 	<Compile Include="CacheHelper.cs" />
 	<Compile Include="ComparisonHelper.cs" />
 	<Compile Include="DatabaseModified.cs" />
-	<Compile Include="Db4oRecordListManager.cs" />
 	<Compile Include="Db4oRepositoryId.cs" />
+	<Compile Include="DictionaryEqualityComparer.cs" />
 	<Compile Include="InMemoryBindingList.cs" />
 	<Compile Include="IRepository.cs" />
-	<Compile Include="ISortHelper.cs" />
-	<Compile Include="Db4oRecordList.cs" />
-	<Compile Include="IFilter.cs" />
 	<Compile Include="Db4oDataSource.cs" />
-	<Compile Include="Db4oList.cs" />
-	<Compile Include="IFilterable.cs" />
-	<Compile Include="IRecordList.cs" />
-	<Compile Include="IRecordListManager.cs" />
 	<Compile Include="MemoryRepository.cs" />
+	<Compile Include="Permuter.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />
+	<Compile Include="IQuery.cs" />
 	<Compile Include="Query.cs" />
 	<Compile Include="RecordToken.cs" />
 	<Compile Include="RecordTokenComparer.cs" />
-	<Compile Include="RecordTokensBindingListAdapter.cs" />
 	<Compile Include="RepositoryId.cs" />
 	<Compile Include="ResultSet.cs" />
-  </ItemGroup>
-  <ItemGroup>
-	<ProjectReference Include="..\PlatformSpecific\PlatformSpecific.csproj">
-	  <Project>{55E6BAB0-9B46-4C89-8773-4432417C1ADF}</Project>
-	  <Name>PlatformSpecific</Name>
-	</ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

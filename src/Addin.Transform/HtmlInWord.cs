@@ -3,21 +3,18 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 using Mono.Addins;
+using Palaso.Reporting;
 using Palaso.UI.WindowsForms.i8n;
 using WeSay.AddinLib;
-using WeSay.Foundation;
 
 namespace Addin.Transform
 {
 	[Extension]
-	public class HtmlInWord : HtmlTransformer
+	public class HtmlInWord: HtmlTransformer
 	{
 		public override string LocalizedName
 		{
-			get
-			{
-				return StringCatalog.Get("~Export to Word");
-			}
+			get { return StringCatalog.Get("~Export to Word"); }
 		}
 
 		public override string ID
@@ -25,27 +22,25 @@ namespace Addin.Transform
 			get { return "ExportToWord"; }
 		}
 
-		public override string ShortDescription
+		public override string Description
 		{
 			get
 			{
-				return StringCatalog.Get("~Creates a very basic dictionary publication in Microsoft Word.");
+				return
+						StringCatalog.Get(
+								"~Creates a very basic dictionary publication in Microsoft Word.");
 			}
 		}
 
-
 		public override Image ButtonImage
 		{
-			get
-			{
-				return Resources.wordExport;
-			}
+			get { return Resources.wordExport; }
 		}
 
 		public override void Launch(Form parentForm, ProjectInfo projectInfo)
 		{
 			string output = CreateFileToOpen(projectInfo, false, false);
-			if(string.IsNullOrEmpty(output))
+			if (string.IsNullOrEmpty(output))
 			{
 				return; // get this when the user cancels
 			}
@@ -57,12 +52,12 @@ namespace Addin.Transform
 					si.FileName = "WinWord.exe";
 					//this flag f makes word create a new, untitled file
 					//enhance: so, it would be nice to create this in temp (and deleting it later?)
-					si.Arguments = "/f \"" + output+"\"";
+					si.Arguments = "/f \"" + output + "\"";
 					Process.Start(si);
 				}
 				catch (Exception e)
 				{
-					Palaso.Reporting.ErrorReport.ReportNonFatalMessage(e.Message);
+					ErrorReport.ReportNonFatalMessage(e.Message);
 				}
 			}
 		}

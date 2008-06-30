@@ -5,11 +5,13 @@ using System.ComponentModel;
 
 namespace WeSay.Data
 {
-	public class ResultSet<T> : IEnumerable<RecordToken<T>>
+	public sealed class ResultSet<T>: IEnumerable<RecordToken<T>>, IEnumerable<RepositoryId> where T:class,new()
 	{
 		private readonly List<RecordToken<T>> _results;
 		private readonly IRepository<T> _repository;
-		public ResultSet(IRepository<T> repository, List<RecordToken<T>> results) {
+
+		public ResultSet(IRepository<T> repository, List<RecordToken<T>> results)
+		{
 			if (repository == null)
 			{
 				throw new ArgumentNullException("repository");
@@ -18,28 +20,26 @@ namespace WeSay.Data
 			{
 				throw new ArgumentNullException("results");
 			}
-			this._results = results;
+			_results = results;
 			_repository = repository;
 		}
 
 		public ResultSet(IRepository<T> repository, IEnumerable<RecordToken<T>> results)
-			: this(repository, new List<RecordToken<T>>(results))
-		{}
+				: this(repository, new List<RecordToken<T>>(results)) {}
 
 		public RecordToken<T> this[int index]
 		{
-			get
-			{
-				return _results[index];
-			}
+			get { return _results[index]; }
+		}
+
+		public void RemoveAll(Predicate<RecordToken<T>> match)
+		{
+			_results.RemoveAll(match);
 		}
 
 		public int Count
 		{
-			get
-			{
-				return _results.Count;
-			}
+			get { return _results.Count; }
 		}
 
 		private RecordToken<T> GetItemFromIndex(int index)
@@ -52,56 +52,46 @@ namespace WeSay.Data
 		}
 
 		#region FindFirst(Index) Of DisplayString
-
-		public RecordToken<T> FindFirstWithDisplayString(string displayString)
+		public RecordToken<T> FindFirst(Predicate<RecordToken<T>> match)
 		{
-			int index = FindFirstIndexWithDisplayString(displayString);
+			int index = FindFirstIndex(match);
 			return GetItemFromIndex(index);
 		}
 
-		public RecordToken<T> FindFirstWithDisplayString(string displayString, int startIndex)
+		public RecordToken<T> FindFirst(int startIndex,
+										Predicate<RecordToken<T>> match)
 		{
-			int index = FindFirstIndexWithDisplayString(displayString, startIndex);
+			int index = FindFirstIndex(startIndex, match);
 			return GetItemFromIndex(index);
 		}
 
-		public RecordToken<T> FindFirstWithDisplayString(string displayString, int startIndex, int count)
+		public RecordToken<T> FindFirst(int startIndex,
+										int count,
+										Predicate<RecordToken<T>> match)
 		{
-			int index = FindFirstIndexWithDisplayString(displayString, startIndex, count);
+			int index = FindFirstIndex(startIndex, count, match);
 			return GetItemFromIndex(index);
 		}
 
-		public int FindFirstIndexWithDisplayString(string displayString)
+		public int FindFirstIndex(Predicate<RecordToken<T>> match)
 		{
-			return _results.FindIndex(delegate(RecordToken<T> r)
-							  {
-								  return r.DisplayString == displayString;
-							  });
-			// todo This could be a binary search. We need our own search so that
-			// we find the first element. The .net BinarySearch finds any, not the first.
+			return _results.FindIndex(match);
 		}
 
-		public int FindFirstIndexWithDisplayString(string displayString, int startIndex, int count)
+		public int FindFirstIndex(int startIndex,
+								  int count,
+								  Predicate<RecordToken<T>> match)
 		{
-			return _results.FindIndex(startIndex,
-									  count,
-									  delegate(RecordToken<T> r)
-									  {
-										  return r.DisplayString == displayString;
-									  });
+			return _results.FindIndex(startIndex, count, match);
 		}
 
-		public int FindFirstIndexWithDisplayString(string displayString, int startIndex)
+		public int FindFirstIndex(int startIndex,
+								  Predicate<RecordToken<T>> match)
 		{
-			return _results.FindIndex(startIndex,
-									  delegate(RecordToken<T> r)
-									  {
-										  return r.DisplayString == displayString;
-									  });
+			return _results.FindIndex(startIndex,match);
 		}
 
 		#endregion
-
 		#region FindFirst(Index) of RepositoryId
 
 		public RecordToken<T> FindFirst(RepositoryId id)
@@ -124,33 +114,28 @@ namespace WeSay.Data
 
 		public int FindFirstIndex(RepositoryId id, int startIndex, int count)
 		{
-			return _results.FindIndex(startIndex,
-									  count,
-									  delegate(RecordToken<T> r)
-										  {
-											  return (r.Id == id);
-										  });
+			return
+					_results.FindIndex(startIndex,
+									   count,
+									   delegate(RecordToken<T> r) { return (r.Id == id); });
 		}
 
 		public int FindFirstIndex(RepositoryId id)
 		{
-			return _results.FindIndex(delegate(RecordToken<T> r)
-										  {
-											  return (r.Id == id);
-										  });
+			return _results.FindIndex(delegate(RecordToken<T> r) { return (r.Id == id); });
 		}
 
 		public int FindFirstIndex(RepositoryId id, int startIndex)
 		{
-			return _results.FindIndex(startIndex,
-									  delegate(RecordToken<T> r)
-										  {
-											  return (r.Id == id);
-										  });
+			return
+					_results.FindIndex(startIndex,
+									   delegate(RecordToken<T> r) { return (r.Id == id); });
 		}
+
 		#endregion
 
 		#region FindFirst(Index) of T
+
 		public RecordToken<T> FindFirst(T item)
 		{
 			int index = FindFirstIndex(item);
@@ -193,29 +178,22 @@ namespace WeSay.Data
 
 		public int FindFirstIndex(RecordToken<T> token, int startIndex, int count)
 		{
-			return _results.FindIndex(startIndex,
-									  count,
-									  delegate(RecordToken<T> r)
-									  {
-										  return (r == token);
-									  });
+			return
+					_results.FindIndex(startIndex,
+									   count,
+									   delegate(RecordToken<T> r) { return (r == token); });
 		}
 
 		public int FindFirstIndex(RecordToken<T> token)
 		{
-			return _results.FindIndex(delegate(RecordToken<T> r)
-										  {
-											  return (r == token);
-										  });
+			return _results.FindIndex(delegate(RecordToken<T> r) { return (r == token); });
 		}
 
 		public int FindFirstIndex(RecordToken<T> token, int startIndex)
 		{
-			return _results.FindIndex(startIndex,
-									  delegate(RecordToken<T> r)
-									  {
-										  return (r == token);
-									  });
+			return
+					_results.FindIndex(startIndex,
+									   delegate(RecordToken<T> r) { return (r == token); });
 		}
 
 		#endregion
@@ -229,7 +207,7 @@ namespace WeSay.Data
 
 		IEnumerator<RecordToken<T>> IEnumerable<RecordToken<T>>.GetEnumerator()
 		{
-			return this._results.GetEnumerator();
+			return _results.GetEnumerator();
 		}
 
 		#endregion
@@ -242,5 +220,43 @@ namespace WeSay.Data
 		}
 
 		#endregion
+
+		#region IEnumerable<RepositoryId> Members
+
+		IEnumerator<RepositoryId> IEnumerable<RepositoryId>.GetEnumerator()
+		{
+			foreach (RecordToken<T> recordToken in this)
+			{
+				yield return (recordToken.Id);
+			}
+		}
+
+		#endregion
+
+		public void Sort(params SortDefinition[] sortDefinitions)
+		{
+			_results.Sort(new RecordTokenComparer<T>(sortDefinitions));
+		}
+
+	}
+	public class SortDefinition
+	{
+		private readonly string _field;
+		private readonly IComparer _comparer;
+		public SortDefinition(string field, IComparer comparer)
+		{
+			this._field = field;
+			this._comparer = comparer;
+		}
+
+		public string Field
+		{
+			get { return this._field; }
+		}
+
+		public IComparer Comparer
+		{
+			get { return this._comparer; }
+		}
 	}
 }

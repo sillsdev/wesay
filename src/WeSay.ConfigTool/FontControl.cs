@@ -1,15 +1,12 @@
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Text;
 using System.Windows.Forms;
-using WeSay.Language;
+using Palaso.Reporting;
+using WeSay.Foundation;
 
 namespace WeSay.ConfigTool
 {
-	public partial class FontControl : UserControl
+	public partial class FontControl: UserControl
 	{
 		private WritingSystem _writingSystem;
 
@@ -22,10 +19,10 @@ namespace WeSay.ConfigTool
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
 		public WritingSystem WritingSystem
 		{
-			get { return this._writingSystem; }
+			get { return _writingSystem; }
 			set
 			{
-				this._writingSystem = value;
+				_writingSystem = value;
 
 				UpdateFontDisplay();
 			}
@@ -45,20 +42,24 @@ namespace WeSay.ConfigTool
 			}
 			catch (Exception error)
 			{
-				Palaso.Reporting.ErrorReport.ReportNonFatalMessage("The Microsoft Font Dialog had a problem. We have seen this happen when you add a font to the system.  Try quitting this application and running it again."+System.Environment.NewLine+"The exception was: "+error.Message);
+				ErrorReport.ReportNonFatalMessage(
+						"The Microsoft Font Dialog had a problem. We have seen this happen when you add a font to the system.  Try quitting this application and running it again." +
+						Environment.NewLine + "The exception was: " + error.Message);
 				return;
 			}
 			_writingSystem.Font = _fontDialog.Font;
 			UpdateFontDisplay();
-		  }
+		}
 
 		private void UpdateFontDisplay()
 		{
 			_fontInfoDisplay.Text =
-				string.Format("{0}, {1}", this.WritingSystem.Font.Name, Math.Round(this.WritingSystem.Font.Size));
-			_sampleTextBox.WritingSystem =WritingSystem;
+					string.Format("{0}, {1}",
+								  WritingSystem.Font.Name,
+								  Math.Round(WritingSystem.Font.Size));
+			_sampleTextBox.WritingSystem = WritingSystem;
 			_sampleTextBox.Text = string.Empty;
-			this.Invalidate();
+			Invalidate();
 		}
 	}
 }
