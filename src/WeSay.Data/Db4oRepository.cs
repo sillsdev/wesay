@@ -137,9 +137,19 @@ namespace WeSay.Data
 			Database.Commit();
 		}
 
+		// Not fast but correct
 		public ResultSet<T> GetItemsMatching(Query query)
 		{
-			throw new NotImplementedException();
+			List<RecordToken<T>> results = new List<RecordToken<T>>();
+			IList<T> allItems = Database.Query<T>();
+			foreach (T t in allItems)
+			{
+				foreach (Dictionary<string, object> result in query.GetResults(t))
+				{
+					results.Add(new RecordToken<T>(this, result, GetId(t)));
+				}
+			}
+			return new ResultSet<T>(this, results);
 		}
 
 		public void SaveItem(T item)
