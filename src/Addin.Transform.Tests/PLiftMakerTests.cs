@@ -3,7 +3,6 @@ using System.IO;
 using NUnit.Framework;
 using Palaso.Reporting;
 using WeSay.LexicalModel;
-using WeSay.LexicalModel.Db4oSpecific;
 using WeSay.Project;
 
 namespace Addin.Transform.Tests

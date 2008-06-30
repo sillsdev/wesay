@@ -93,7 +93,8 @@ namespace WeSay.LexicalModel.Tests.Db4oSpecific
 			LexEntry entry = _db4oRepository.CreateItem();
 			entry.LexicalForm.SetAlternative("en", "test");
 
-			LexSense sense = (LexSense) entry.Senses.AddNew();
+			LexSense sense = new LexSense();
+			entry.Senses.Add(sense);
 			_db4oRepository.SaveItem(entry);
 
 			Assert.AreEqual(entry, sense.Parent);
@@ -166,29 +167,30 @@ namespace WeSay.LexicalModel.Tests.Db4oSpecific
 		{
 			LexEntry entry = _db4oRepository.CreateItem();
 			entry.LexicalForm["en"] = "12";
-			LexSense sense = (LexSense) entry.Senses.AddNew();
-			LexExampleSentence example = (LexExampleSentence) sense.ExampleSentences.AddNew();
+			LexSense sense = new LexSense();
+			entry.Senses.Add(sense);
+			LexExampleSentence example = new LexExampleSentence();
+			sense.ExampleSentences.Add(example);
 			example.Sentence["th"] = "sawa";
 			_db4oRepository.SaveItem(entry);
 
 			CycleDatabase();
 			entry = GetFirstEntry();
-			((LexExampleSentence) ((LexSense) entry.Senses[0]).ExampleSentences[0]).Sentence["th"] =
-					"sawadee";
+			entry.Senses[0].ExampleSentences[0].Sentence["th"] = "sawadee";
 			_db4oRepository.SaveItem(entry);
 			CycleDatabase();
 			entry = GetFirstEntry();
-			Assert.AreEqual("sawadee",
-							((LexExampleSentence) ((LexSense) entry.Senses[0]).ExampleSentences[0]).
-									Sentence["th"]);
+			Assert.AreEqual("sawadee", entry.Senses[0].ExampleSentences[0].Sentence["th"]);
 		}
 
 		[Test]
 		public void DeepNotifyAfterDepersist()
 		{
 			LexEntry entry = _db4oRepository.CreateItem();
-			LexSense sense = (LexSense) entry.Senses.AddNew();
-			LexExampleSentence example = (LexExampleSentence) sense.ExampleSentences.AddNew();
+			LexSense sense = new LexSense();
+			entry.Senses.Add(sense);
+			LexExampleSentence example = new LexExampleSentence();
+			sense.ExampleSentences.Add(example);
 			example.Sentence["th"] = "sawa";
 			_db4oRepository.SaveItem(entry);
 
@@ -196,8 +198,7 @@ namespace WeSay.LexicalModel.Tests.Db4oSpecific
 			entry = GetFirstEntry();
 			entry.PropertyChanged += _entry_PropertyChanged;
 			_didNotify = false;
-			((LexExampleSentence) ((LexSense) entry.Senses[0]).ExampleSentences[0]).Sentence["th"] =
-					"sawadeekap";
+			entry.Senses[0].ExampleSentences[0].Sentence["th"] = "sawadeekap";
 			Assert.IsTrue(_didNotify);
 		}
 	}

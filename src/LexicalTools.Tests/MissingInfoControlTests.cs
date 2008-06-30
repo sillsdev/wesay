@@ -94,9 +94,11 @@ namespace WeSay.LexicalTools.Tests
 		{
 			LexEntry entry = _lexEntryRepository.CreateItem();
 			entry.LexicalForm[_writingSystem.Id] = lexicalForm;
-			LexSense sense = (LexSense) entry.Senses.AddNew();
+			LexSense sense = new LexSense();
+			entry.Senses.Add(sense);
 			sense.Definition["analysis"] = Definition;
-			LexExampleSentence example = (LexExampleSentence) sense.ExampleSentences.AddNew();
+			LexExampleSentence example = new LexExampleSentence();
+			sense.ExampleSentences.Add(example);
 			example.Sentence[_writingSystem.Id] = exampleSentence;
 			_lexEntryRepository.SaveItem(entry);
 			return;
@@ -104,8 +106,8 @@ namespace WeSay.LexicalTools.Tests
 
 		private static void AddTranslationToEntry(LexEntry entry, string translation)
 		{
-			LexSense sense = (LexSense) entry.Senses[0];
-			LexExampleSentence example = (LexExampleSentence) sense.ExampleSentences[0];
+			LexSense sense = entry.Senses[0];
+			LexExampleSentence example = sense.ExampleSentences[0];
 			example.Translation["analysis"] = translation;
 		}
 

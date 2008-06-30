@@ -1,5 +1,5 @@
 using System;
-using System.ComponentModel;
+using System.Collections.Generic;
 using System.Drawing;
 using NUnit.Framework;
 using WeSay.Data;
@@ -74,7 +74,7 @@ namespace WeSay.UI.Tests
 		}
 
 		private void _binding_LayoutNeededAfterMadeReal(object sender,
-														IBindingList list,
+														IList<Child> list,
 														int index,
 														MultiTextControl
 																previouslyGhostedControlToReuse,

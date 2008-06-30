@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using Palaso.Reporting;
 using WeSay.Data;
 using WeSay.Foundation;
@@ -85,7 +84,7 @@ namespace WeSay.LexicalModel
 			get { return GetOrCreateProperty<MultiText>(WellKnownProperties.Definition); }
 		}
 
-		public IBindingList ExampleSentences
+		public IList<LexExampleSentence> ExampleSentences
 		{
 			get { return _exampleSentences; }
 		}

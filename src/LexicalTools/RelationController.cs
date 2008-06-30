@@ -253,7 +253,10 @@ namespace WeSay.LexicalTools
 
 		private object FindRecordTokenFromForm(string form)
 		{
-			return _resultSet.FindFirstWithDisplayString(form);
+			return _resultSet.FindFirst(delegate (RecordToken<LexEntry> token)
+											 {
+												 return (string)token.Results["Form"] == form;
+											 });
 		}
 
 		//        #region Nested type: WeSayDataObjectLabelAdaptor

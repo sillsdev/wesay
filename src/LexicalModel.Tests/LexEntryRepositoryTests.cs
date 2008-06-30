@@ -149,7 +149,8 @@ namespace WeSay.LexicalModel.Tests
 		private void AddEntryWithGloss(string gloss)
 		{
 			LexEntry entry = _lexEntryRepository.CreateItem();
-			LexSense sense = (LexSense) entry.Senses.AddNew();
+			LexSense sense = new LexSense();
+			entry.Senses.Add(new LexSense());
 			sense.Gloss["en"] = gloss;
 			_lexEntryRepository.SaveItem(entry);
 		}

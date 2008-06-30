@@ -168,7 +168,8 @@ namespace WeSay.LexicalTools.Tests
 			LexEntry entry = _lexEntryRepository.CreateItem();
 			entry.LexicalForm.SetAlternative(_vernacularWritingSystem.Id, lexemeForm);
 
-			LexSense sense = (LexSense) entry.Senses.AddNew();
+			LexSense sense = new LexSense();
+			entry.Senses.Add(sense);
 #if GlossMeaning
 			sense.Gloss[
 				WeSayWordsProject.Project.DefaultViewTemplate.GetField("SenseGloss").WritingSystemIds[0]] =
@@ -178,7 +179,8 @@ namespace WeSay.LexicalTools.Tests
 #endif
 			if (includeExample)
 			{
-				LexExampleSentence ex = (LexExampleSentence) sense.ExampleSentences.AddNew();
+				LexExampleSentence ex = new LexExampleSentence();
+				sense.ExampleSentences.Add(ex);
 				ex.Sentence.SetAlternative("x", "hello");
 			}
 			_lexEntryRepository.SaveItem(entry);
@@ -533,11 +535,11 @@ namespace WeSay.LexicalTools.Tests
 
 			Assert.AreEqual(0, entry.Properties.Count);
 #if GlossMeaning
-			Assert.AreEqual(0, ((LexSense)entry.Senses[0]).Properties.Count);
+			Assert.AreEqual(0, entry.Senses[0].Properties.Count);
 #else
-			Assert.AreEqual(1, ((LexSense) entry.Senses[0]).Properties.Count);
+			Assert.AreEqual(1, entry.Senses[0].Properties.Count);
 			Assert.AreEqual(LexSense.WellKnownProperties.Definition,
-							((LexSense) entry.Senses[0]).Properties[0].Key);
+							entry.Senses[0].Properties[0].Key);
 #endif
 		}
 
@@ -762,7 +764,7 @@ namespace WeSay.LexicalTools.Tests
 							GetCurrentEntry().Senses.Count,
 							"this test assumes an entry with 1 sense");
 			Assert.AreEqual(0,
-							((LexSense) (GetCurrentEntry().Senses[0])).ExampleSentences.Count,
+							GetCurrentEntry().Senses[0].ExampleSentences.Count,
 							"this test assumes a sense w/ no example");
 			MultiTextControl editControl = GetEditControl("Meaning 1");
 			editControl.TextBoxes[0].Focus();

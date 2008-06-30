@@ -17,8 +17,8 @@ namespace WeSay.Data.Tests
 
 	class KV
 	{
-		private string key;
-		private object value;
+		private readonly string key;
+		private readonly object value;
 
 		public string Key
 		{

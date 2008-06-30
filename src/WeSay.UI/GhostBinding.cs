@@ -1,5 +1,5 @@
 using System;
-using System.ComponentModel;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Windows.Forms;
 using Palaso.Reporting;
@@ -22,13 +22,13 @@ namespace WeSay.UI
 
 		private readonly WritingSystem _writingSystem;
 		private readonly string _propertyName;
-		private IBindingList _listTarget;
+		private IList<T> _listTarget;
 		private WeSayTextBox _textBoxTarget;
 		private Control _referenceControl;
 
 		public delegate void LayoutNeededHandler(
 				GhostBinding<T> sender,
-				IBindingList list,
+				IList<T> list,
 				int index,
 				MultiTextControl previouslyGhostedControlToReuse,
 				bool doGoToNextField,
@@ -42,7 +42,7 @@ namespace WeSay.UI
 
 		private bool _inMidstOfTrigger = false;
 
-		public GhostBinding(IBindingList targetList,
+		public GhostBinding(IList<T> targetList,
 							string propertyName,
 							WritingSystem writingSystem,
 							WeSayTextBox textBoxTarget)
@@ -205,7 +205,7 @@ namespace WeSay.UI
 			}
 			_inMidstOfTrigger = true;
 
-			IBindingList list = _listTarget;
+			IList<T> list = _listTarget;
 			//in addition to adding a list item, this will fire events on the object that owns the list
 			Logger.WriteMinorEvent("Before AddNew in TimeForRealObject");
 

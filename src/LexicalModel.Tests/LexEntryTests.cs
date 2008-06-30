@@ -18,7 +18,8 @@ namespace WeSay.LexicalModel.Tests
 		public void Setup()
 		{
 			_entry = new LexEntry();
-			_sense = (LexSense) _entry.Senses.AddNew();
+			_sense = new LexSense();
+			_entry.Senses.Add(_sense);
 #if GlossMeaning
 			this._sense.Gloss["th"] = "sense";
 #else
@@ -27,7 +28,8 @@ namespace WeSay.LexicalModel.Tests
 			MultiText customFieldInSense =
 					_sense.GetOrCreateProperty<MultiText>("customFieldInSense");
 			customFieldInSense["th"] = "custom";
-			_examples = (LexExampleSentence) _sense.ExampleSentences.AddNew();
+			_examples = new LexExampleSentence();
+			_sense.ExampleSentences.Add(_examples);
 			_examples.Sentence["th"] = "example";
 			_examples.Translation["en"] = "translation";
 			MultiText customFieldInExample =

@@ -222,7 +222,8 @@ namespace WeSay.LexicalTools.Tests
 
 			entry.LexicalForm.SetAlternative("vernacular", lexemeForm);
 
-			LexSense sense = (LexSense) entry.Senses.AddNew();
+			LexSense sense = new LexSense();
+			entry.Senses.Add(sense);
 			sense.Gloss[
 					WeSayWordsProject.Project.DefaultViewTemplate.GetField(
 							LexSense.WellKnownProperties.Gloss).WritingSystemIds[0]] = meaning;

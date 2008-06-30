@@ -52,59 +52,6 @@ namespace WeSay.Data
 		}
 
 		#region FindFirst(Index) Of DisplayString
-		[Obsolete]
-		public RecordToken<T> FindFirstWithDisplayString(string displayString)
-		{
-			int index = FindFirstIndexWithDisplayString(displayString);
-			return GetItemFromIndex(index);
-		}
-
-		[Obsolete]
-		public RecordToken<T> FindFirstWithDisplayString(string displayString, int startIndex)
-		{
-			int index = FindFirstIndexWithDisplayString(displayString, startIndex);
-			return GetItemFromIndex(index);
-		}
-
-		[Obsolete]
-		public RecordToken<T> FindFirstWithDisplayString(string displayString,
-														 int startIndex,
-														 int count)
-		{
-			int index = FindFirstIndexWithDisplayString(displayString, startIndex, count);
-			return GetItemFromIndex(index);
-		}
-
-		[Obsolete]
-		public int FindFirstIndexWithDisplayString(string displayString)
-		{
-			return
-					_results.FindIndex(
-							delegate(RecordToken<T> r) { return r.DisplayString == displayString; });
-			// todo This could be a binary search. We need our own search so that
-			// we find the first element. The .net BinarySearch finds any, not the first.
-		}
-
-		[Obsolete]
-		public int FindFirstIndexWithDisplayString(string displayString, int startIndex, int count)
-		{
-			return
-					_results.FindIndex(startIndex,
-									   count,
-									   delegate(RecordToken<T> r) { return r.DisplayString == displayString; });
-		}
-
-		[Obsolete]
-		public int FindFirstIndexWithDisplayString(string displayString, int startIndex)
-		{
-			return
-					_results.FindIndex(startIndex,
-									   delegate(RecordToken<T> r) { return r.DisplayString == displayString; });
-		}
-
-		#endregion
-
-		#region FindFirst(Index) Of DisplayString
 		public RecordToken<T> FindFirst(Predicate<RecordToken<T>> match)
 		{
 			int index = FindFirstIndex(match);

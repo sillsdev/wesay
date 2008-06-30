@@ -302,16 +302,19 @@ namespace WeSay.App.Services
 			LexSense sense = null;
 			if (!string.IsNullOrEmpty(definition))
 			{
-				sense = (LexSense) e.Senses.AddNew();
+				sense = new LexSense() ;
+				e.Senses.Add(sense);
 				sense.Definition.SetAlternative(definitionWritingSystemId, definition);
 			}
 			if (!string.IsNullOrEmpty(example))
 			{
 				if (sense == null)
 				{
-					sense = (LexSense) e.Senses.AddNew();
+					sense = new LexSense();
+					e.Senses.Add(sense);
 				}
-				LexExampleSentence ex = (LexExampleSentence) sense.ExampleSentences.AddNew();
+				LexExampleSentence ex = new LexExampleSentence();
+				sense.ExampleSentences.Add(ex);
 				ex.Sentence.SetAlternative(exampleWritingSystemId, example);
 			}
 			_lexEntryRepository.SaveItem(e);

@@ -87,12 +87,12 @@ namespace WeSay.LexicalTools
 		/// <summary>
 		/// actually add the widgets that are needed to the detailed list
 		/// </summary>
-		public int AddWidgets(IBindingList list, int index)
+		public int AddWidgets(IList<WeSayDataObject> list, int index)
 		{
 			return AddWidgets(list, index, -1);
 		}
 
-		internal abstract int AddWidgets(IBindingList list, int index, int row);
+		internal abstract int AddWidgets(IList<WeSayDataObject> list, int index, int row);
 
 		protected Control MakeBoundControl(MultiText multiTextToBindTo, Field field)
 		{
@@ -148,12 +148,12 @@ namespace WeSay.LexicalTools
 		//            return m;
 		//        }
 
-		protected int MakeGhostWidget<T>(IBindingList list,
+		protected int MakeGhostWidget<T>(IList<T> list,
 										 int insertAtRow,
 										 string fieldName,
 										 string label,
 										 string propertyName,
-										 bool isHeading) where T : new()
+										 bool isHeading) where T : WeSayDataObject, new()
 		{
 			int rowCount = 0;
 			Field field = ActiveViewTemplate.GetField(fieldName);
@@ -175,7 +175,7 @@ namespace WeSay.LexicalTools
 				foreach (WeSayTextBox box in m.TextBoxes)
 				{
 					GhostBinding<T> g =
-							MakeGhostBinding<T>(list, propertyName, box.WritingSystem, box);
+							MakeGhostBinding(list, propertyName, box.WritingSystem, box);
 					g.ReferenceControl = refWidget;
 				}
 				return 1;
@@ -186,7 +186,7 @@ namespace WeSay.LexicalTools
 			}
 		}
 
-		protected GhostBinding<T> MakeGhostBinding<T>(IBindingList list,
+		protected GhostBinding<T> MakeGhostBinding<T>(IList<T> list,
 													  string ghostPropertyName,
 													  WritingSystem writingSystem,
 													  WeSayTextBox entry) where T : new()
@@ -199,7 +199,7 @@ namespace WeSay.LexicalTools
 		}
 
 		protected virtual void OnGhostBindingLayoutNeeded<T>(GhostBinding<T> sender,
-															 IBindingList list,
+															 IList<T> list,
 															 int index,
 															 MultiTextControl
 																	 previouslyGhostedControlToReuse,
@@ -207,10 +207,10 @@ namespace WeSay.LexicalTools
 															 EventArgs args) where T : new()
 		{
 			_previouslyGhostedControlToReuse = previouslyGhostedControlToReuse;
-			AddWidgetsAfterGhostTrigger(list, index, sender.ReferenceControl, doGoToNextField);
+			AddWidgetsAfterGhostTrigger((IList<WeSayDataObject>)list, index, sender.ReferenceControl, doGoToNextField);
 		}
 
-		protected void AddWidgetsAfterGhostTrigger(IBindingList list,
+		protected void AddWidgetsAfterGhostTrigger(IList<WeSayDataObject> list,
 												   int indexOfNewGuyInList,
 												   Control refControl,
 												   bool doGoToNextField)
@@ -229,10 +229,10 @@ namespace WeSay.LexicalTools
 			}
 		}
 
-		protected virtual void UpdateGhostLabel(IBindingList list, int index) {}
+		protected virtual void UpdateGhostLabel(IList<WeSayDataObject> list, int index) {}
 
 		protected static int AddChildrenWidgets(Layouter layouter,
-												IBindingList list,
+												IList<WeSayDataObject> list,
 												int insertAtRow,
 												int rowCount)
 		{

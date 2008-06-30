@@ -42,6 +42,13 @@ namespace WeSay.LexicalTools.Tests
 												   LexSense.WellKnownProperties.SemanticDomainsDdp4);
 		}
 
+		private static LexSense AddNewSenseToEntry(LexEntry e)
+		{
+			LexSense s = new LexSense();
+			e.Senses.Add(s);
+			return s;
+		}
+
 		private static ViewTemplate MakeViewTemplate(string nameAndQuestionWritingSystem)
 		{
 			Field semanticDomainField =
@@ -98,7 +105,7 @@ namespace WeSay.LexicalTools.Tests
 
 		private void AddSenseToEntry(LexEntry e, string gloss)
 		{
-			LexSense s = (LexSense) e.Senses.AddNew();
+			LexSense s = AddNewSenseToEntry(e);
 			s.Gloss.SetAlternative("en", gloss);
 			OptionRefCollection o =
 					s.GetOrCreateProperty<OptionRefCollection>(
@@ -345,7 +352,7 @@ namespace WeSay.LexicalTools.Tests
 			Task.CurrentDomainIndex = 1;
 			LexEntry e = _lexEntryRepository.CreateItem();
 			e.LexicalForm.SetAlternative("br", "peixe");
-			LexSense s = (LexSense) e.Senses.AddNew();
+			LexSense s = AddNewSenseToEntry(e);
 			s.Gloss.SetAlternative("en", "fish");
 			OptionRefCollection o =
 					s.GetOrCreateProperty<OptionRefCollection>(
@@ -488,7 +495,8 @@ namespace WeSay.LexicalTools.Tests
 		{
 			LexEntry e = _lexEntryRepository.CreateItem();
 			e.LexicalForm.SetAlternative("br", "peixe");
-			LexSense s = (LexSense) e.Senses.AddNew();
+			LexSense s = new LexSense();
+			e.Senses.Add(s);
 			OptionRefCollection o =
 					s.GetOrCreateProperty<OptionRefCollection>(
 							LexSense.WellKnownProperties.SemanticDomainsDdp4);
@@ -532,9 +540,10 @@ namespace WeSay.LexicalTools.Tests
 		{
 			LexEntry e = _lexEntryRepository.CreateItem();
 			e.LexicalForm.SetAlternative("br", "peixe");
-			LexSense s = (LexSense) e.Senses.AddNew();
+			LexSense s = AddNewSenseToEntry(e);
 			s.Gloss.SetAlternative("en", "fish");
-			s = (LexSense) e.Senses.AddNew();
+			s = new LexSense();
+			e.Senses.Add(s);
 			OptionRefCollection o =
 					s.GetOrCreateProperty<OptionRefCollection>(
 							LexSense.WellKnownProperties.SemanticDomainsDdp4);
@@ -553,9 +562,10 @@ namespace WeSay.LexicalTools.Tests
 		{
 			LexEntry e = _lexEntryRepository.CreateItem();
 			e.LexicalForm.SetAlternative("br", "peixe");
-			LexSense s = (LexSense) e.Senses.AddNew();
+			LexSense s = AddNewSenseToEntry(e);
 			s.Gloss.SetAlternative("en", "fish");
-			s = (LexSense) e.Senses.AddNew();
+			s = AddNewSenseToEntry(e);
+
 			OptionRefCollection o =
 					s.GetOrCreateProperty<OptionRefCollection>(
 							LexSense.WellKnownProperties.SemanticDomainsDdp4);
@@ -576,7 +586,8 @@ namespace WeSay.LexicalTools.Tests
 			LexEntry e = _lexEntryRepository.CreateItem();
 			e.LexicalForm.SetAlternative("br", "peixe");
 			e.LexicalForm.SetAlternative("v", "peshi");
-			LexSense s = (LexSense) e.Senses.AddNew();
+			LexSense s = AddNewSenseToEntry(e);
+
 			OptionRefCollection o =
 					s.GetOrCreateProperty<OptionRefCollection>(
 							LexSense.WellKnownProperties.SemanticDomainsDdp4);
@@ -598,7 +609,8 @@ namespace WeSay.LexicalTools.Tests
 			MultiText mt = e.GetOrCreateProperty<MultiText>("custom");
 			mt["en"] = "hello";
 
-			LexSense s = (LexSense) e.Senses.AddNew();
+			LexSense s = AddNewSenseToEntry(e);
+
 			OptionRefCollection o =
 					s.GetOrCreateProperty<OptionRefCollection>(
 							LexSense.WellKnownProperties.SemanticDomainsDdp4);
@@ -617,7 +629,8 @@ namespace WeSay.LexicalTools.Tests
 		{
 			LexEntry e = _lexEntryRepository.CreateItem();
 			e.LexicalForm.SetAlternative("br", "peixe");
-			LexSense s = (LexSense) e.Senses.AddNew();
+			LexSense s = AddNewSenseToEntry(e);
+
 			OptionRefCollection o =
 					s.GetOrCreateProperty<OptionRefCollection>(
 							LexSense.WellKnownProperties.SemanticDomainsDdp4);
@@ -640,7 +653,8 @@ namespace WeSay.LexicalTools.Tests
 		{
 			LexEntry e = _lexEntryRepository.CreateItem();
 			e.LexicalForm.SetAlternative("br", "peixe");
-			e.Senses.AddNew();
+			AddNewSenseToEntry(e);
+
 			MultiText mt = e.GetOrCreateProperty<MultiText>("custom");
 			mt["en"] = "hello";
 			_lexEntryRepository.SaveItem(e);
@@ -658,13 +672,15 @@ namespace WeSay.LexicalTools.Tests
 		{
 			LexEntry e = _lexEntryRepository.CreateItem();
 			e.LexicalForm.SetAlternative("br", "peixe");
-			LexSense s = (LexSense) e.Senses.AddNew();
+			LexSense s = AddNewSenseToEntry(e);
+
 			OptionRefCollection o =
 					s.GetOrCreateProperty<OptionRefCollection>(
 							LexSense.WellKnownProperties.SemanticDomainsDdp4);
 			o.Add(Task.DomainKeys[0]);
 
-			LexExampleSentence example = (LexExampleSentence) s.ExampleSentences.AddNew();
+			LexExampleSentence example = new LexExampleSentence();
+			s.ExampleSentences.Add(example);
 			OptionRef optionRef = example.GetOrCreateProperty<OptionRef>("custom");
 			optionRef.Value = "hello";
 			_lexEntryRepository.SaveItem(e);
@@ -682,7 +698,8 @@ namespace WeSay.LexicalTools.Tests
 		{
 			LexEntry e = _lexEntryRepository.CreateItem();
 			e.LexicalForm.SetAlternative("v", "peshi");
-			LexSense s = (LexSense) e.Senses.AddNew();
+			LexSense s = AddNewSenseToEntry(e);
+
 			OptionRefCollection o =
 					s.GetOrCreateProperty<OptionRefCollection>(
 							LexSense.WellKnownProperties.SemanticDomainsDdp4);

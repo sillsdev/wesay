@@ -206,7 +206,7 @@ namespace WeSay.LexicalModel
 				throw new ArgumentNullException("fieldName");
 			}
 			Query allSenseProperties = GetAllLexEntriesQuery().ForEach("Senses")
-						.ForEach("Properties").Show("Key").Show("Value");
+						.ForEach("Properties").Show("Key").Show("Value","SemanticDomain");
 
 			ResultSet<LexEntry> results = GetItemsMatching(allSenseProperties);
 			results.RemoveAll(delegate (RecordToken<LexEntry> token)

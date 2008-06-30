@@ -455,7 +455,7 @@ namespace WeSay.LexicalTools
 			LexEntry entry = recordToken.RealObject;
 			for (int i = entry.Senses.Count - 1;i >= 0;i--)
 			{
-				LexSense sense = (LexSense) entry.Senses[i];
+				LexSense sense = entry.Senses[i];
 				OptionRefCollection semanticDomains =
 						sense.GetProperty<OptionRefCollection>(_semanticDomainField.FieldName);
 				if (semanticDomains != null)
@@ -493,7 +493,10 @@ namespace WeSay.LexicalTools
 		{
 			string domainKey = DomainKeys[domainIndex];
 
-			beginIndex = recordTokens.FindFirstIndexWithDisplayString(domainKey);
+			beginIndex = recordTokens.FindFirstIndex(delegate(RecordToken<LexEntry> token)
+													 {
+														 return (string) token.Results["SemanticDomain"] == domainKey;
+													 });
 			if (beginIndex < 0)
 			{
 				pastEndIndex = beginIndex;
@@ -501,7 +504,7 @@ namespace WeSay.LexicalTools
 			}
 			pastEndIndex = beginIndex + 1;
 			while (pastEndIndex < recordTokens.Count &&
-				   recordTokens[pastEndIndex].DisplayString == domainKey)
+				   (string)recordTokens[pastEndIndex].Results["SemanticDomain"] == domainKey)
 			{
 				++pastEndIndex;
 			}
@@ -650,9 +653,10 @@ namespace WeSay.LexicalTools
 			string lastDomain = null;
 			foreach (RecordToken<LexEntry> token in GetAllEntriesSortedBySemanticDomain())
 			{
-				if (token.DisplayString != lastDomain)
+				string semanticDomain = (string)token.Results["SemanticDomain"];
+				if (semanticDomain != lastDomain)
 				{
-					lastDomain = token.DisplayString;
+					lastDomain = semanticDomain;
 					remainingCount--;
 				}
 			}

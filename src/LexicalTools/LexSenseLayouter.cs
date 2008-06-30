@@ -1,8 +1,8 @@
-using System.Collections;
-using System.ComponentModel;
+using System.Collections.Generic;
 using System.Windows.Forms;
 using Palaso.Reporting;
 using Palaso.UI.WindowsForms.i8n;
+using WeSay.Foundation;
 using WeSay.LexicalModel;
 using WeSay.Project;
 using WeSay.UI;
@@ -19,7 +19,7 @@ namespace WeSay.LexicalTools
 								LexEntryRepository lexEntryRepository)
 				: base(builder, viewTemplate, lexEntryRepository) {}
 
-		internal override int AddWidgets(IBindingList list, int index, int insertAtRow)
+		internal override int AddWidgets(IList<WeSayDataObject> list, int index, int insertAtRow)
 		{
 			int rowCount = 0;
 			DetailList.SuspendLayout();
@@ -73,7 +73,7 @@ namespace WeSay.LexicalTools
 
 				rowCount =
 						AddChildrenWidgets(exampleLayouter,
-										   sense.ExampleSentences,
+										   (IList<WeSayDataObject>) sense.ExampleSentences,
 										   insertAtRow,
 										   rowCount);
 
@@ -94,24 +94,24 @@ namespace WeSay.LexicalTools
 			return rowCount;
 		}
 
-		public int AddGhost(IBindingList list, bool isHeading)
+		public int AddGhost(IList<LexSense> list, bool isHeading)
 		{
 			int insertAtRow = -1;
-			string label = GetLabelForMeaning(list);
+			string label = GetLabelForMeaning((ICollection<WeSayDataObject>) list);
 #if GlossMeaning
 			return MakeGhostWidget<LexSense>(list, insertAtRow, Field.FieldNames.SenseGloss.ToString(), label, "Gloss", isHeading);
 #else
 			return
-					MakeGhostWidget<LexSense>(list,
-											  insertAtRow,
-											  LexSense.WellKnownProperties.Definition,
-											  label,
-											  "Definition",
-											  isHeading);
+					MakeGhostWidget(list,
+								  insertAtRow,
+								  LexSense.WellKnownProperties.Definition,
+								  label,
+								  "Definition",
+								  isHeading);
 #endif
 		}
 
-		private static string GetLabelForMeaning(ICollection list)
+		private static string GetLabelForMeaning(ICollection<WeSayDataObject> list)
 		{
 			string label =
 					StringCatalog.Get("~Meaning",
@@ -123,7 +123,7 @@ namespace WeSay.LexicalTools
 			return label;
 		}
 
-		protected override void UpdateGhostLabel(IBindingList list, int rowOfGhost)
+		protected override void UpdateGhostLabel(IList<WeSayDataObject> list, int rowOfGhost)
 		{
 			DetailList.GetLabelControlFromRow(rowOfGhost).Text = GetLabelForMeaning(list);
 		}

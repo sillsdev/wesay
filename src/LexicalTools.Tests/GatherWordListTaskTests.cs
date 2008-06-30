@@ -295,7 +295,9 @@ namespace WeSay.LexicalTools.Tests
 		private void AddEntryAndSense(string gloss)
 		{
 			LexEntry e = _lexEntryRepository.CreateItem();
-			((LexSense) e.Senses.AddNew()).Gloss[_glossingLanguageWSId] = gloss;
+			LexSense sense = new LexSense();
+			e.Senses.Add(sense);
+			sense.Gloss[_glossingLanguageWSId] = gloss;
 			_lexEntryRepository.SaveItem(e);
 		}
 
@@ -335,7 +337,8 @@ namespace WeSay.LexicalTools.Tests
 			RecordToken<LexEntry> token = PrepareEntryWithOneGloss();
 			//now tweak the entry
 			LexEntry entry = token.RealObject;
-			LexSense leaveAloneSense = (LexSense) entry.Senses.AddNew();
+			LexSense leaveAloneSense = new LexSense();
+			entry.Senses.Add(leaveAloneSense);
 			leaveAloneSense.Gloss.SetAlternative(_glossingLanguageWSId, "single");
 			Assert.AreEqual(2, entry.Senses.Count);
 
@@ -356,7 +359,8 @@ namespace WeSay.LexicalTools.Tests
 			RecordToken<LexEntry> token = PrepareEntryWithOneGloss();
 			//now tweak the entry
 			LexEntry entry = token.RealObject;
-			LexSense leaveAloneSense = (LexSense) entry.Senses.AddNew();
+			LexSense leaveAloneSense = new LexSense();
+			entry.Senses.Add(leaveAloneSense);
 			leaveAloneSense.Gloss.SetAlternative(_glossingLanguageWSId, "single");
 			Assert.AreEqual(2, entry.Senses.Count);
 
@@ -377,8 +381,9 @@ namespace WeSay.LexicalTools.Tests
 			RecordToken<LexEntry> token = PrepareEntryWithOneGloss();
 			//now tweak the entry
 			LexEntry entry = token.RealObject;
-			LexSense sense = (LexSense) entry.Senses[0];
-			LexExampleSentence ex = (LexExampleSentence) sense.ExampleSentences.AddNew();
+			LexSense sense = entry.Senses[0];
+			LexExampleSentence ex = new LexExampleSentence();
+			sense.ExampleSentences.Add(ex);
 			ex.Sentence.SetAlternative(VernWs.Id, "blah blah");
 
 			//now simulate removing it, as when the user wants to correct spelling

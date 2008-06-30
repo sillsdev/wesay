@@ -1,7 +1,8 @@
-using System.ComponentModel;
+using System.Collections.Generic;
 using System.Windows.Forms;
 using Palaso.Reporting;
 using Palaso.UI.WindowsForms.i8n;
+using WeSay.Foundation;
 using WeSay.LexicalModel;
 using WeSay.Project;
 using WeSay.UI;
@@ -16,7 +17,7 @@ namespace WeSay.LexicalTools
 		public LexExampleSentenceLayouter(DetailList builder, ViewTemplate viewTemplate)
 				: base(builder, viewTemplate, null) {}
 
-		internal override int AddWidgets(IBindingList list, int index, int insertAtRow)
+		internal override int AddWidgets(IList<WeSayDataObject> list, int index, int insertAtRow)
 		{
 			DetailList.SuspendLayout();
 			int rowCount = 0;
@@ -65,16 +66,16 @@ namespace WeSay.LexicalTools
 			return rowCount;
 		}
 
-		public int AddGhost(IBindingList list, int insertAtRow)
+		public int AddGhost(IList<LexExampleSentence> list, int insertAtRow)
 		{
 			return
-					MakeGhostWidget<LexExampleSentence>(list,
-														insertAtRow,
-														Field.FieldNames.ExampleSentence.ToString(),
-														StringCatalog.Get("~Example",
-																		  "This is the field containing an example sentence of a sense of a word."),
-														"Sentence",
-														false);
+					MakeGhostWidget(list,
+									insertAtRow,
+									Field.FieldNames.ExampleSentence.ToString(),
+									StringCatalog.Get("~Example",
+													  "This is the field containing an example sentence of a sense of a word."),
+									"Sentence",
+									false);
 		}
 	}
 }

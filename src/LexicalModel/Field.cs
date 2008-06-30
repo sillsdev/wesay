@@ -6,7 +6,6 @@ using System.Xml;
 using Exortech.NetReflector;
 using Exortech.NetReflector.Util;
 using WeSay.Foundation;
-using WeSay.LexicalModel;
 
 namespace WeSay.LexicalModel
 {
@@ -81,27 +80,27 @@ namespace WeSay.LexicalModel
 			{
 				throw new ArgumentNullException();
 			}
-			this.ClassName = className;
-			this.Enabled = true; //without this lots of tests would need updating
+			ClassName = className;
+			Enabled = true; //without this lots of tests would need updating
 			Initialize(fieldName, dataTypeName, multiplicity, writingSystemIds);
 		}
 
 		public Field(Field field)
 		{
-			this.FieldName = field.FieldName;
-			this.ClassName = field.ClassName;
-			this._writingSystemIds = new List<string>();
+			FieldName = field.FieldName;
+			ClassName = field.ClassName;
+			_writingSystemIds = new List<string>();
 			foreach (string id in field.WritingSystemIds)
 			{
-				this.WritingSystemIds.Add(id);
+				WritingSystemIds.Add(id);
 			}
-			this.Description = field.Description;
-			this.DisplayName = field.DisplayName;
-			this.Multiplicity = field.Multiplicity;
-			this.Visibility = field.Visibility;
-			this.DataTypeName = field.DataTypeName;
-			this.OptionsListFile = field.OptionsListFile;
-			this.Enabled = field.Enabled;
+			Description = field.Description;
+			DisplayName = field.DisplayName;
+			Multiplicity = field.Multiplicity;
+			Visibility = field.Visibility;
+			DataTypeName = field.DataTypeName;
+			OptionsListFile = field.OptionsListFile;
+			Enabled = field.Enabled;
 		}
 
 		/// <summary>
@@ -127,10 +126,10 @@ namespace WeSay.LexicalModel
 								MultiplicityType multiplicity,
 								IEnumerable<string> writingSystemIds)
 		{
-			this.FieldName = fieldName;
-			this.WritingSystemIds = new List<string>(writingSystemIds);
-			this._multiplicity = multiplicity;
-			this.DataTypeName = dataTypeName;
+			FieldName = fieldName;
+			WritingSystemIds = new List<string>(writingSystemIds);
+			_multiplicity = multiplicity;
+			DataTypeName = dataTypeName;
 
 			Debug.Assert(FieldNames.EntryLexicalForm.ToString() ==
 						 LexEntry.WellKnownProperties.LexicalUnit);
@@ -148,12 +147,12 @@ namespace WeSay.LexicalModel
 		{
 			get
 			{
-				if (this._fieldName == null)
+				if (_fieldName == null)
 				{
 					throw new InvalidOperationException(
 							"FieldName must be set before it can be used.");
 				}
-				return this._fieldName;
+				return _fieldName;
 			}
 			set
 			{
@@ -161,21 +160,21 @@ namespace WeSay.LexicalModel
 				{
 					throw new ArgumentNullException("value");
 				}
-				this._fieldName = MakeFieldNameSafe(value);
-				if (this._fieldName == "Definition") //versions prior to oct-23-2007 had the case wrong
+				_fieldName = MakeFieldNameSafe(value);
+				if (_fieldName == "Definition") //versions prior to oct-23-2007 had the case wrong
 				{
-					this._fieldName = "definition";
+					_fieldName = "definition";
 				}
-				if (this._fieldName == "CitationForm") //versions prior to nov-8-2007 had the name wrong
+				if (_fieldName == "CitationForm") //versions prior to nov-8-2007 had the name wrong
 				{
-					this._fieldName = "citation";
+					_fieldName = "citation";
 				}
 			}
 		}
 
 		public string Key
 		{
-			get { return this._className + "." + this._fieldName; }
+			get { return _className + "." + _fieldName; }
 		}
 
 		[Description("The label of the field as it will be displayed to the user.")]
@@ -184,13 +183,13 @@ namespace WeSay.LexicalModel
 		{
 			get
 			{
-				if (String.IsNullOrEmpty(this._displayName))
+				if (String.IsNullOrEmpty(_displayName))
 				{
-					return "*" + this.FieldName;
+					return "*" + FieldName;
 				}
-				return this._displayName;
+				return _displayName;
 			}
-			set { this._displayName = value; }
+			set { _displayName = value; }
 		}
 
 		//        /// <summary>
@@ -228,12 +227,12 @@ namespace WeSay.LexicalModel
 		{
 			get
 			{
-				if (this._className.Length == 0)
+				if (_className.Length == 0)
 				{
 					throw new InvalidOperationException(
 							"className has not been initialized correctly");
 				}
-				return this._className;
+				return _className;
 			}
 			set
 			{
@@ -245,7 +244,7 @@ namespace WeSay.LexicalModel
 					case "LexEntry":
 					case "LexSense":
 					case "LexExampleSentence":
-						this._className = value;
+						_className = value;
 						break;
 					default:
 						throw new ArgumentOutOfRangeException("value",
@@ -260,27 +259,27 @@ namespace WeSay.LexicalModel
 		{
 			get
 			{
-				if (this.IsBuiltInViaCode)
+				if (IsBuiltInViaCode)
 				{
 					return false;
 				}
 
-				if (WeSayDataObject.WellKnownProperties.Contains(this.FieldName))
+				if (WeSayDataObject.WellKnownProperties.Contains(FieldName))
 				{
 					return false;
 				}
 
-				if (LexEntry.WellKnownProperties.Contains(this.FieldName))
+				if (LexEntry.WellKnownProperties.Contains(FieldName))
 				{
 					return false;
 				}
 
-				if (LexSense.WellKnownProperties.ContainsAnyCaseVersionOf(this.FieldName))
+				if (LexSense.WellKnownProperties.ContainsAnyCaseVersionOf(FieldName))
 				{
 					return false;
 				}
 
-				if (LexExampleSentence.WellKnownProperties.Contains(this.FieldName))
+				if (LexExampleSentence.WellKnownProperties.Contains(FieldName))
 				{
 					return false;
 				}
@@ -294,9 +293,9 @@ namespace WeSay.LexicalModel
 		{
 			get
 			{
-				if (this._fieldName == FieldNames.EntryLexicalForm.ToString() ||
-					this._fieldName == LexSense.WellKnownProperties.Definition ||
-					this._fieldName == FieldNames.ExampleSentence.ToString())
+				if (_fieldName == FieldNames.EntryLexicalForm.ToString() ||
+					_fieldName == LexSense.WellKnownProperties.Definition ||
+					_fieldName == FieldNames.ExampleSentence.ToString())
 				{
 					return false;
 				}
@@ -312,8 +311,8 @@ namespace WeSay.LexicalModel
 		[ReflectorProperty("dataType", Required = true)]
 		public string DataTypeName
 		{
-			get { return this._dataTypeName; }
-			set { this._dataTypeName = value; }
+			get { return _dataTypeName; }
+			set { _dataTypeName = value; }
 		}
 
 		[Description(
@@ -322,8 +321,8 @@ namespace WeSay.LexicalModel
 		[ReflectorProperty("optionsListFile", Required = false)]
 		public string OptionsListFile
 		{
-			get { return this._optionsListFile; }
-			set { this._optionsListFile = value; }
+			get { return _optionsListFile; }
+			set { _optionsListFile = value; }
 		}
 
 		[Browsable(false)]
@@ -331,17 +330,17 @@ namespace WeSay.LexicalModel
 		{
 			get
 			{
-				if (this.FieldName == FieldNames.EntryLexicalForm.ToString())
+				if (FieldName == FieldNames.EntryLexicalForm.ToString())
 				{
 					return true;
 				}
 
-				if (this.FieldName == FieldNames.ExampleSentence.ToString())
+				if (FieldName == FieldNames.ExampleSentence.ToString())
 				{
 					return true;
 				}
 
-				if (this.FieldName == FieldNames.ExampleTranslation.ToString())
+				if (FieldName == FieldNames.ExampleTranslation.ToString())
 				{
 					return true;
 				}
@@ -358,14 +357,14 @@ namespace WeSay.LexicalModel
 
 		public override string ToString()
 		{
-			return this.DisplayName;
+			return DisplayName;
 		}
 
 		[Browsable(false)]
 		[ReflectorProperty("writingSystems", typeof (WsIdCollectionSerializerFactory))]
 		public IList<string> WritingSystemIds
 		{
-			get { return this._writingSystemIds; }
+			get { return _writingSystemIds; }
 			set
 			{
 				int i = 0;
@@ -378,32 +377,32 @@ namespace WeSay.LexicalModel
 														"Writing System argument" + i + "is null");
 					}
 				}
-				this._writingSystemIds = new List<string>(value);
+				_writingSystemIds = new List<string>(value);
 			}
 		}
 
 		[Browsable(false)]
 		public string Description
 		{
-			get { return this._description; }
-			set { this._description = value; }
+			get { return _description; }
+			set { _description = value; }
 		}
 
 		[Browsable(false)]
 		[ReflectorCollection("visibility", Required = false)]
 		public CommonEnumerations.VisibilitySetting Visibility
 		{
-			get { return this._visibility; }
+			get { return _visibility; }
 			set
 			{
-				this._visibility = value;
+				_visibility = value;
 
 				//for backward compatibility:
 				//we now use Enabled=false rather than Invisible
-				if (this._visibility == CommonEnumerations.VisibilitySetting.Invisible)
+				if (_visibility == CommonEnumerations.VisibilitySetting.Invisible)
 				{
-					this._visibility = CommonEnumerations.VisibilitySetting.Visible;
-					this.Enabled = false;
+					_visibility = CommonEnumerations.VisibilitySetting.Visible;
+					Enabled = false;
 				}
 			}
 		}
@@ -413,25 +412,25 @@ namespace WeSay.LexicalModel
 		{
 			get
 			{
-				if (this._enabledNotSet) //for backwards compatibility, before we added Enabled
+				if (_enabledNotSet) //for backwards compatibility, before we added Enabled
 				{
-					this.Enabled = this.Visibility == CommonEnumerations.VisibilitySetting.Visible;
+					Enabled = Visibility == CommonEnumerations.VisibilitySetting.Visible;
 				}
-				return this._enabled;
+				return _enabled;
 			}
 			set
 			{
-				this._enabled = value;
-				this._enabledNotSet = false;
+				_enabled = value;
+				_enabledNotSet = false;
 			}
 		}
 
 		public void ChangeWritingSystemId(string oldId, string newId)
 		{
-			int i = this._writingSystemIds.FindIndex(delegate(string id) { return id == oldId; });
+			int i = _writingSystemIds.FindIndex(delegate(string id) { return id == oldId; });
 			if (i > -1)
 			{
-				this._writingSystemIds[i] = newId;
+				_writingSystemIds[i] = newId;
 			}
 		}
 
@@ -449,8 +448,8 @@ namespace WeSay.LexicalModel
 			get
 			{
 				return
-						this.DataTypeName == BuiltInDataType.Option.ToString() ||
-						this.DataTypeName == BuiltInDataType.OptionCollection.ToString();
+						DataTypeName == BuiltInDataType.Option.ToString() ||
+						DataTypeName == BuiltInDataType.OptionCollection.ToString();
 			}
 		}
 
@@ -458,18 +457,18 @@ namespace WeSay.LexicalModel
 		[ReflectorProperty("multiplicity", Required = false)]
 		public MultiplicityType Multiplicity
 		{
-			get { return this._multiplicity; }
-			set { this._multiplicity = value; }
+			get { return _multiplicity; }
+			set { _multiplicity = value; }
 		}
 
 		public bool GetDoShow(IReportEmptiness data, bool showNormallyHiddenFields)
 		{
 			return
-					this._enabled &&
+					_enabled &&
 					((showNormallyHiddenFields ||
 					  (data != null && data.ShouldCountAsFilledForPurposesOfConditionalDisplay)) ||
-					 (this._visibility == CommonEnumerations.VisibilitySetting.Visible ||
-					  this._visibility == CommonEnumerations.VisibilitySetting.ReadOnly));
+					 (_visibility == CommonEnumerations.VisibilitySetting.Visible ||
+					  _visibility == CommonEnumerations.VisibilitySetting.ReadOnly));
 		}
 
 		public static string NewFieldNamePrefix
@@ -481,7 +480,7 @@ namespace WeSay.LexicalModel
 		{
 			get
 			{
-				if (this._fieldName == FieldNames.EntryLexicalForm.ToString())
+				if (_fieldName == FieldNames.EntryLexicalForm.ToString())
 				{
 					return false;
 				}
@@ -490,7 +489,7 @@ namespace WeSay.LexicalModel
 				if(_fieldName == FieldNames.SenseGloss.ToString())
 					return false;
 #else
-				if (this._fieldName == LexSense.WellKnownProperties.Definition)
+				if (_fieldName == LexSense.WellKnownProperties.Definition)
 				{
 					return false;
 				}
@@ -504,14 +503,14 @@ namespace WeSay.LexicalModel
 		[ReflectorProperty("spellCheckingEnabled", Required = false)]
 		public bool IsSpellCheckingEnabled
 		{
-			get { return this._isSpellCheckingEnabled; }
-			set { this._isSpellCheckingEnabled = value; }
+			get { return _isSpellCheckingEnabled; }
+			set { _isSpellCheckingEnabled = value; }
 		}
 
 		[Browsable(false)]
 		public bool HasWritingSystem(string writingSystemId)
 		{
-			return this._writingSystemIds.Exists(delegate(string s) { return s == writingSystemId; });
+			return _writingSystemIds.Exists(delegate(string s) { return s == writingSystemId; });
 		}
 
 		public static void ModifyMasterFromUser(Field master, Field user)
@@ -647,7 +646,7 @@ namespace WeSay.LexicalModel
 
 		public override StandardValuesCollection GetStandardValues(ITypeDescriptorContext context)
 		{
-			return new StandardValuesCollection(this.ValidStrings);
+			return new StandardValuesCollection(ValidStrings);
 		}
 	}
 }

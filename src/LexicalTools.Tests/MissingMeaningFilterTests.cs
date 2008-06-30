@@ -18,11 +18,19 @@ namespace WeSay.LexicalTools.Tests
 			_missingMeaningFilter = new MissingFieldQuery(field);
 		}
 
+		private static LexEntry CreateEmptyEntryWithOneSense() {
+			LexEntry entry = new LexEntry();
+			LexSense sense = new LexSense();
+			entry.Senses.Add(sense);
+			return entry;
+		}
+
 		[Test]
 		public void SenseDefinitionHasAnalysisWritingSystem()
 		{
-			LexEntry entry = new LexEntry();
-			LexSense sense = (LexSense) entry.Senses.AddNew();
+			LexEntry entry = CreateEmptyEntryWithOneSense();
+			LexSense sense = entry.Senses[0];
+
 			sense.Definition["analysis"] = "filler";
 
 			Assert.AreEqual(false, _missingMeaningFilter.FilteringPredicate(entry));
@@ -38,16 +46,17 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void SenseDefinitionNoWritingSystems()
 		{
-			LexEntry entry = new LexEntry();
-			entry.Senses.AddNew();
+			LexEntry entry = CreateEmptyEntryWithOneSense();
+
 			Assert.AreEqual(true, _missingMeaningFilter.FilteringPredicate(entry));
 		}
 
 		[Test]
 		public void SenseDefinitionWritingSystemNoAnalysis()
 		{
-			LexEntry entry = new LexEntry();
-			LexSense sense = (LexSense) entry.Senses.AddNew();
+			LexEntry entry = CreateEmptyEntryWithOneSense();
+			LexSense sense = entry.Senses[0];
+
 			sense.Definition["vernacular"] = "filler";
 			Assert.AreEqual(true, _missingMeaningFilter.FilteringPredicate(entry));
 		}
@@ -55,20 +64,23 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void OneSenseDefinitionWithOneWithoutWritingSystems()
 		{
-			LexEntry entry = new LexEntry();
-			LexSense sense = (LexSense) entry.Senses.AddNew();
+			LexEntry entry = CreateEmptyEntryWithOneSense();
+			LexSense sense = entry.Senses[0];
+
 			sense.Definition["analysis"] = "filler";
-			entry.Senses.AddNew();
+			entry.Senses.Add(new LexSense());
 			Assert.AreEqual(true, _missingMeaningFilter.FilteringPredicate(entry));
 		}
 
 		[Test]
 		public void OneSenseDefinitionWritingSystemWithOneWithoutAnalysis()
 		{
-			LexEntry entry = new LexEntry();
-			LexSense sense = (LexSense) entry.Senses.AddNew();
+			LexEntry entry = CreateEmptyEntryWithOneSense();
+			LexSense sense = entry.Senses[0];
+
 			sense.Definition["analysis"] = "filler";
-			sense = (LexSense) entry.Senses.AddNew();
+			sense = new LexSense();
+			entry.Senses.Add(sense);
 			sense.Definition["vernacular"] = "filler";
 			Assert.AreEqual(true, _missingMeaningFilter.FilteringPredicate(entry));
 		}

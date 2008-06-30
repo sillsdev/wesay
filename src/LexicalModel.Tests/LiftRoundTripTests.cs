@@ -4,7 +4,6 @@ using System.Text;
 using System.Xml;
 using LiftIO.Parsing;
 using NUnit.Framework;
-using WeSay.LexicalModel.Tests.Db4oSpecific;
 using WeSay.Project;
 
 namespace WeSay.LexicalModel.Tests
@@ -100,7 +99,9 @@ namespace WeSay.LexicalModel.Tests
 					</sense>
 			</entry>";
 
-			_merger.GetOrMakeSubsense((LexSense) e.Senses.AddNew(), new Extensible(), xml);
+			LexSense sense = new LexSense();
+			e.Senses.Add(sense);
+			_merger.GetOrMakeSubsense(sense, new Extensible(), xml);
 			_exporter.Add(e);
 			_exporter.End();
 			AssertXPathNotNull("//entry/sense/subsense[@id='opon_1b' and @order='2']/gloss");
@@ -142,8 +143,10 @@ namespace WeSay.LexicalModel.Tests
 		public void ExampleTranslation_OneWithNoType()
 		{
 			LexEntry e = MakeSimpleEntry();
-			LexExampleSentence ex =
-					(LexExampleSentence) ((LexSense) e.Senses.AddNew()).ExampleSentences.AddNew();
+			LexSense sense = new LexSense();
+			e.Senses.Add(sense);
+			LexExampleSentence ex = new LexExampleSentence();
+			sense.ExampleSentences.Add(ex);
 			LiftMultiText translation = new LiftMultiText();
 			translation.Add("aa", "aaaa");
 			_merger.MergeInTranslationForm(ex, "", translation, "bogus raw xml");
@@ -156,8 +159,10 @@ namespace WeSay.LexicalModel.Tests
 		public void ExampleTranslations_MultipleTypes()
 		{
 			LexEntry e = MakeSimpleEntry();
-			LexExampleSentence ex =
-					(LexExampleSentence) ((LexSense) e.Senses.AddNew()).ExampleSentences.AddNew();
+			LexSense sense = new LexSense();
+			e.Senses.Add(sense);
+			LexExampleSentence ex = new LexExampleSentence();
+			sense.ExampleSentences.Add(ex);
 			LiftMultiText translation = new LiftMultiText();
 			translation.Add("aa", "unmarked translation");
 			_merger.MergeInTranslationForm(ex, "", translation, "bogus raw xml");
@@ -179,8 +184,11 @@ namespace WeSay.LexicalModel.Tests
 		public void ExampleTranslations_UnmarkedThenFree()
 		{
 			LexEntry e = MakeSimpleEntry();
-			LexExampleSentence ex =
-					(LexExampleSentence) ((LexSense) e.Senses.AddNew()).ExampleSentences.AddNew();
+			LexSense sense = new LexSense();
+			e.Senses.Add(sense);
+			LexExampleSentence ex = new LexExampleSentence();
+			sense.ExampleSentences.Add(ex);
+
 			LiftMultiText translation = new LiftMultiText();
 			translation.Add("aa", "unmarked translation");
 			_merger.MergeInTranslationForm(ex, "", translation, "bogus raw xml");
@@ -202,8 +210,11 @@ namespace WeSay.LexicalModel.Tests
 		public void ExampleTranslations_FreeThenUnmarked()
 		{
 			LexEntry e = MakeSimpleEntry();
-			LexExampleSentence ex =
-					(LexExampleSentence) ((LexSense) e.Senses.AddNew()).ExampleSentences.AddNew();
+			LexSense sense = new LexSense();
+			e.Senses.Add(sense);
+			LexExampleSentence ex = new LexExampleSentence();
+			sense.ExampleSentences.Add(ex);
+
 			LiftMultiText t2 = new LiftMultiText();
 			t2.Add("aa", "freestuff");
 			_merger.MergeInTranslationForm(ex,
@@ -288,7 +299,9 @@ namespace WeSay.LexicalModel.Tests
 				</sense>
 			  </entry>";
 
-			_merger.MergeInReversal((LexSense) e.Senses.AddNew(), null, null, null, xml);
+			LexSense sense = new LexSense();
+			e.Senses.Add(sense);
+			_merger.MergeInReversal(sense, null, null, null, xml);
 			_exporter.Add(e);
 			_exporter.End();
 			AssertXPathNotNull("//entry/sense/reversal/main/form/text[text()='vegetable']");

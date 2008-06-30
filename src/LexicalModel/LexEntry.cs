@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Text;
 using Palaso.Reporting;
@@ -8,7 +7,6 @@ using Palaso.Text;
 using Palaso.UI.WindowsForms.i8n;
 using WeSay.Data;
 using WeSay.Foundation;
-using WeSay.LexicalModel.Db4oSpecific;
 
 namespace WeSay.LexicalModel
 {
@@ -201,7 +199,7 @@ namespace WeSay.LexicalModel
 			}
 		}
 
-		public IBindingList Senses
+		public IList<LexSense> Senses
 		{
 			get { return _senses; }
 		}
@@ -309,7 +307,8 @@ namespace WeSay.LexicalModel
 					return sense;
 				}
 			}
-			LexSense newSense = (LexSense) Senses.AddNew();
+			LexSense newSense = new LexSense();
+			Senses.Add(newSense);
 #if GlossMeaning
 			newSense.Gloss.MergeIn(meaning);
 #else

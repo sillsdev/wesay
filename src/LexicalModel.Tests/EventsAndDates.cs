@@ -2,7 +2,6 @@ using System;
 using System.ComponentModel;
 using System.Threading;
 using NUnit.Framework;
-using WeSay.LexicalModel.Tests.Db4oSpecific;
 
 namespace WeSay.LexicalModel.Tests
 {
@@ -52,7 +51,7 @@ namespace WeSay.LexicalModel.Tests
 		{
 			long start = _entry.ModificationTime.Ticks;
 			Thread.Sleep(100); //else modtime doesn't change
-			_entry.Senses.AddNew();
+			_entry.Senses.Add(new LexSense());;
 			Assert.Greater((decimal) _entry.ModificationTime.Ticks, start);
 			Assert.IsTrue(_didNotify);
 		}
@@ -60,7 +59,8 @@ namespace WeSay.LexicalModel.Tests
 		[Test]
 		public void ModifiedDateAfterLexSenseGlossChange()
 		{
-			LexSense sense = (LexSense) _entry.Senses.AddNew();
+			LexSense sense = new LexSense();
+			_entry.Senses.Add(sense);
 			long start = _entry.ModificationTime.Ticks;
 			Thread.Sleep(100); //else modtime doesn't change
 			sense.Gloss["foo"] = "hello";
@@ -71,10 +71,11 @@ namespace WeSay.LexicalModel.Tests
 		[Test]
 		public void ModifiedDateAfterAddingExampleSentence()
 		{
-			LexSense sense = (LexSense) _entry.Senses.AddNew();
+			LexSense sense = new LexSense();
+			_entry.Senses.Add(sense);
 			long start = _entry.ModificationTime.Ticks;
 			Thread.Sleep(100); //else modtime doesn't change
-			sense.ExampleSentences.AddNew();
+			sense.ExampleSentences.Add(new LexExampleSentence());;
 			Assert.Greater((decimal) _entry.ModificationTime.Ticks, start);
 			Assert.IsTrue(_didNotify);
 		}
@@ -82,10 +83,12 @@ namespace WeSay.LexicalModel.Tests
 		[Test]
 		public void ModifiedDateAfterChangingExampleSentence()
 		{
-			LexSense sense = (LexSense) _entry.Senses.AddNew();
+			LexSense sense = new LexSense();
+			_entry.Senses.Add(sense);
 			long start = _entry.ModificationTime.Ticks;
 			Thread.Sleep(100); //else modtime doesn't change
-			LexExampleSentence example = (LexExampleSentence) sense.ExampleSentences.AddNew();
+			LexExampleSentence example = new LexExampleSentence();
+			sense.ExampleSentences.Add(example);
 			example.Sentence["foo"] = "hello";
 			Assert.Greater((decimal) _entry.ModificationTime.Ticks, start);
 			Assert.IsTrue(_didNotify);

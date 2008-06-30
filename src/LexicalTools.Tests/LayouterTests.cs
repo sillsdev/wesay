@@ -145,7 +145,8 @@ namespace WeSay.LexicalTools.Tests
 
 		private static void AddSense(LexEntry entry)
 		{
-			LexSense sense = (LexSense) entry.Senses.AddNew();
+			LexSense sense = new LexSense();
+			entry.Senses.Add(sense);
 #if GlossMeaning
 			sense.Gloss[WeSayWordsProject.Project.DefaultViewTemplate.GetField("SenseGloss").WritingSystemIds[0]] = "GlossInAnalysis";
 #else
@@ -160,7 +161,8 @@ namespace WeSay.LexicalTools.Tests
 
 		private static void AddExample(LexSense sense)
 		{
-			LexExampleSentence example = (LexExampleSentence) sense.ExampleSentences.AddNew();
+			LexExampleSentence example = new LexExampleSentence();
+			sense.ExampleSentences.Add(example);
 			example.Sentence[BasilProject.Project.WritingSystems.TestWritingSystemVernId] =
 					"sentence";
 		}

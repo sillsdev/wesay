@@ -414,9 +414,9 @@ namespace WeSay.LexicalModel.Tests
 		private static void CheckCompleteEntry(LexEntry entry)
 		{
 			Assert.AreEqual(1, entry.Senses.Count);
-			LexSense sense = (LexSense) entry.Senses[0];
+			LexSense sense = entry.Senses[0];
 			Assert.AreEqual(1, sense.ExampleSentences.Count);
-			LexExampleSentence example = (LexExampleSentence) sense.ExampleSentences[0];
+			LexExampleSentence example = sense.ExampleSentences[0];
 			Assert.AreEqual("this is a sentence", example.Sentence["foo"]);
 			Assert.AreEqual("aaaa", example.Translation["aa"]);
 			Assert.AreEqual(entry, sense.Parent);

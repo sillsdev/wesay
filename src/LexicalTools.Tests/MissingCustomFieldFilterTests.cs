@@ -18,12 +18,21 @@ namespace WeSay.LexicalTools.Tests
 			_missingCustomFieldFilter = new MissingFieldQuery(field);
 		}
 
+		private static LexEntry CreateEmptyLexEntryWithOneEmptySentence()
+		{
+			LexEntry entry = new LexEntry();
+			LexSense sense = new LexSense();
+			entry.Senses.Add(sense);
+			sense.ExampleSentences.Add(new LexExampleSentence());
+			return entry;
+		}
+
 		[Test]
 		public void SenseExampleCustomFieldHasVernacularWritingSystem()
 		{
-			LexEntry entry = new LexEntry();
-			LexSense sense = (LexSense) entry.Senses.AddNew();
-			LexExampleSentence example = (LexExampleSentence) sense.ExampleSentences.AddNew();
+			LexEntry entry = CreateEmptyLexEntryWithOneEmptySentence();
+			LexExampleSentence example = entry.Senses[0].ExampleSentences[0];
+
 			MultiText custom = example.GetOrCreateProperty<MultiText>("customField");
 			custom["vernacular"] = "filler";
 
@@ -41,25 +50,24 @@ namespace WeSay.LexicalTools.Tests
 		public void SenseExampleCustomFieldNoParent()
 		{
 			LexEntry entry = new LexEntry();
-			entry.Senses.AddNew();
+			entry.Senses.Add(new LexSense());
 			Assert.AreEqual(false, _missingCustomFieldFilter.FilteringPredicate(entry));
 		}
 
 		[Test]
 		public void SenseExampleCustomFieldHasNoWritingSystems()
 		{
-			LexEntry entry = new LexEntry();
-			LexSense sense = (LexSense) entry.Senses.AddNew();
-			sense.ExampleSentences.AddNew();
+			LexEntry entry = CreateEmptyLexEntryWithOneEmptySentence();
+
 			Assert.AreEqual(true, _missingCustomFieldFilter.FilteringPredicate(entry));
 		}
 
 		[Test]
 		public void CustomFieldWritingSystemNoVernacular()
 		{
-			LexEntry entry = new LexEntry();
-			LexSense sense = (LexSense) entry.Senses.AddNew();
-			LexExampleSentence example = (LexExampleSentence) sense.ExampleSentences.AddNew();
+			LexEntry entry = CreateEmptyLexEntryWithOneEmptySentence();
+			LexExampleSentence example = entry.Senses[0].ExampleSentences[0];
+
 			MultiText custom = example.GetOrCreateProperty<MultiText>("customField");
 			custom["analysis"] = "filler";
 			Assert.AreEqual(true, _missingCustomFieldFilter.FilteringPredicate(entry));
@@ -68,14 +76,15 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void OneSenseExampleCustomFieldWithOneWithoutWritingSystems()
 		{
-			LexEntry entry = new LexEntry();
-			LexSense sense = (LexSense) entry.Senses.AddNew();
-			LexExampleSentence example = (LexExampleSentence) sense.ExampleSentences.AddNew();
+			LexEntry entry = CreateEmptyLexEntryWithOneEmptySentence();
+			LexExampleSentence example = entry.Senses[0].ExampleSentences[0];
+
 			MultiText custom = example.GetOrCreateProperty<MultiText>("customField");
 			custom["vernacular"] = "filler";
 
-			sense = (LexSense) entry.Senses.AddNew();
-			sense.ExampleSentences.AddNew();
+			LexSense sense = new LexSense();
+			entry.Senses.Add(sense);
+			sense.ExampleSentences.Add(new LexExampleSentence());
 
 			Assert.AreEqual(true, _missingCustomFieldFilter.FilteringPredicate(entry));
 		}
@@ -83,14 +92,16 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void OneSenseExampleCustomFieldWritingSystemWithOneWithoutAnalysis()
 		{
-			LexEntry entry = new LexEntry();
-			LexSense sense = (LexSense) entry.Senses.AddNew();
-			LexExampleSentence example = (LexExampleSentence) sense.ExampleSentences.AddNew();
+			LexEntry entry = CreateEmptyLexEntryWithOneEmptySentence();
+			LexExampleSentence example = entry.Senses[0].ExampleSentences[0];
+
 			MultiText custom = example.GetOrCreateProperty<MultiText>("customField");
 			custom["vernacular"] = "filler";
 
-			sense = (LexSense) entry.Senses.AddNew();
-			example = (LexExampleSentence) sense.ExampleSentences.AddNew();
+			LexSense sense = new LexSense();
+			entry.Senses.Add(sense);
+			example = new LexExampleSentence();
+			sense.ExampleSentences.Add(example);
 			custom = example.GetOrCreateProperty<MultiText>("customField");
 			custom["analysis"] = "filler";
 
@@ -100,25 +111,26 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void SenseOneExampleCustomWithOneWithoutWritingSystems()
 		{
-			LexEntry entry = new LexEntry();
-			LexSense sense = (LexSense) entry.Senses.AddNew();
-			LexExampleSentence example = (LexExampleSentence) sense.ExampleSentences.AddNew();
+			LexEntry entry = CreateEmptyLexEntryWithOneEmptySentence();
+			LexExampleSentence example = entry.Senses[0].ExampleSentences[0];
+
 			MultiText custom = example.GetOrCreateProperty<MultiText>("customField");
 			custom["vernacular"] = "filler";
-			sense.ExampleSentences.AddNew();
+			entry.Senses[0].ExampleSentences.Add(new LexExampleSentence());
 			Assert.AreEqual(true, _missingCustomFieldFilter.FilteringPredicate(entry));
 		}
 
 		[Test]
 		public void SenseOneExampleCustomWritingSystemWithOneWithoutAnalysis()
 		{
-			LexEntry entry = new LexEntry();
-			LexSense sense = (LexSense) entry.Senses.AddNew();
-			LexExampleSentence example = (LexExampleSentence) sense.ExampleSentences.AddNew();
+			LexEntry entry = CreateEmptyLexEntryWithOneEmptySentence();
+			LexExampleSentence example = entry.Senses[0].ExampleSentences[0];
+
 			MultiText custom = example.GetOrCreateProperty<MultiText>("customField");
 			custom["vernacular"] = "filler";
 
-			example = (LexExampleSentence) sense.ExampleSentences.AddNew();
+			example = new LexExampleSentence();
+			entry.Senses[0].ExampleSentences.Add(example);
 			custom = example.GetOrCreateProperty<MultiText>("customField");
 			custom["analysis"] = "filler";
 			Assert.AreEqual(true, _missingCustomFieldFilter.FilteringPredicate(entry));
@@ -186,7 +198,8 @@ namespace WeSay.LexicalTools.Tests
 		public void SenseHasCustomField()
 		{
 			LexEntry entry = new LexEntry();
-			LexSense sense = (LexSense) entry.Senses.AddNew();
+			LexSense sense = new LexSense();
+			entry.Senses.Add(sense);
 			OptionRef custom = sense.GetOrCreateProperty<OptionRef>("customField");
 			custom.Value = "filler";
 
@@ -204,7 +217,8 @@ namespace WeSay.LexicalTools.Tests
 		public void SenseCustomFieldHasNoValue()
 		{
 			LexEntry entry = new LexEntry();
-			LexSense sense = (LexSense) entry.Senses.AddNew();
+			LexSense sense = new LexSense();
+			entry.Senses.Add(sense);
 			sense.Gloss["analysis"] = "filler";
 			sense.GetOrCreateProperty<OptionRef>("customField");
 			Assert.AreEqual(true, _missingCustomFieldFilter.FilteringPredicate(entry));
