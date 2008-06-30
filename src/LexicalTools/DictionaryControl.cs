@@ -152,7 +152,10 @@ namespace WeSay.LexicalTools
 				{
 					foreach (WritingSystem writingSystem in field.WritingSystems)
 					{
-						AddWritingSystemToPicker(writingSystem, field);
+						if (!WritingSystemExistsInPicker(writingSystem))
+						{
+							AddWritingSystemToPicker(writingSystem, field);
+						}
 					}
 				}
 				else
@@ -173,6 +176,18 @@ namespace WeSay.LexicalTools
 			item.RadioCheck = true;
 			item.Tag = writingSystem;
 			_cmWritingSystems.MenuItems.Add(item);
+		}
+
+		private bool WritingSystemExistsInPicker(WritingSystem writingSystem)
+		{
+			foreach (MenuItem item in _cmWritingSystems.MenuItems)
+			{
+				if (writingSystem.Id == ((WritingSystem)item.Tag).Id)
+				{
+					return true;
+				}
+			}
+			return false;
 		}
 
 		private bool IsWritingSystemUsedInLexicalForm(WritingSystem writingSystem)
