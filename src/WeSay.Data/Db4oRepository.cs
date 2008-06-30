@@ -144,6 +144,7 @@ namespace WeSay.Data
 			IList<T> allItems = Database.Query<T>();
 			foreach (T t in allItems)
 			{
+				Database.Activate(t, int.MaxValue);
 				foreach (Dictionary<string, object> result in query.GetResults(t))
 				{
 					results.Add(new RecordToken<T>(this, result, GetId(t)));
@@ -165,7 +166,7 @@ namespace WeSay.Data
 				throw new ArgumentNullException("item");
 			}
 			VerifyItemExistsInRepository(item);
-			Database.Set(item);
+			Database.Set(item,int.MaxValue);
 		}
 
 		private void VerifyItemExistsInRepository(T item)

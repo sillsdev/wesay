@@ -30,11 +30,20 @@ namespace WeSay.Data
 		}
 
 		public RecordToken(IRepository<T> repository,
-				   Dictionary<string, object> queryResults,
+				   IDictionary<string, object> queryResults,
 				   RepositoryId id)
 			: this(repository)
 		{
-			_queryResults = queryResults;
+			if (queryResults == null)
+			{
+				throw new ArgumentNullException("queryResults");
+			}
+			if (id == null)
+			{
+				throw new ArgumentNullException("id");
+			}
+			_repository = repository;
+			_queryResults = new Dictionary<string, object>(queryResults); // we need to own this
 			_id = id;
 		}
 

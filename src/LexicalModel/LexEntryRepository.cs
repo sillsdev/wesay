@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using LiftIO.Parsing;
 using Palaso.Text;
 using WeSay.Data;
@@ -120,8 +121,14 @@ namespace WeSay.LexicalModel
 			{
 				throw new ArgumentOutOfRangeException("entry", entry, "Entry not in repository");
 			}
-
-			return (int) first.Results["HomographNumber"];
+			if ((bool)first.Results["HasHomograph"])
+			{
+				return (int) first.Results["HomographNumber"];
+			}
+			else
+			{
+				return 0;
+			}
 		}
 
 		//todo: look at @order and the planned-for order-in-lift field on LexEntry
@@ -143,6 +150,7 @@ namespace WeSay.LexicalModel
 
 			string previousHeadWord = null;
 			int homographNumber = 1;
+			IDictionary<string, object> previousResults = null;
 			foreach (RecordToken<LexEntry> token in itemsMatching)
 			{
 				IDictionary<string, object> results = token.Results;
@@ -160,6 +168,21 @@ namespace WeSay.LexicalModel
 				results.Remove("OrderForRoundTripping");
 				results.Remove("CreationTime");
 				results.Add("HomographNumber", homographNumber);
+				switch(homographNumber)
+				{
+					case 1:
+						results.Add("HasHomograph", false);
+						break;
+					case 2:
+						Debug.Assert(previousResults != null);
+						previousResults["HasHomograph"] = true;
+						results.Add("HasHomograph", true);
+						break;
+					default:
+						results.Add("HasHomograph", true);
+						break;
+				}
+				previousResults = results;
 			}
 			return itemsMatching;
 		}
@@ -190,16 +213,25 @@ namespace WeSay.LexicalModel
 			return GetItemsMatchingQueryFilteredAndSortedByWritingSystem(query, "Definition/Form", "Definition/WritingSystemId", writingSystem);
 		}
 
-		private ResultSet<LexEntry> GetItemsMatchingQueryFilteredAndSortedByWritingSystem(Query entriesByHeadwordQuery, string formField, string writingSystemIdField, WritingSystem writingSystem)
+		private ResultSet<LexEntry> GetItemsMatchingQueryFilteredAndSortedByWritingSystem(
+			Query query,
+			string formField,
+			string writingSystemIdField,
+			WritingSystem writingSystem)
 		{
-			ResultSet<LexEntry> entriesWithAllHeadwords = GetItemsMatching(entriesByHeadwordQuery);
-			ResultSet<LexEntry> result = FilterEntriesToOnlyThoseWithWritingSystemId(entriesWithAllHeadwords, formField, writingSystemIdField, writingSystem.Id);
+			ResultSet<LexEntry> allEntriesMatchingQuery = GetItemsMatching(query);
+			ResultSet<LexEntry> result = FilterEntriesToOnlyThoseWithWritingSystemId(
+											allEntriesMatchingQuery,
+											formField,
+											writingSystemIdField,
+											writingSystem.Id);
 
 			result.Sort(new SortDefinition(formField, writingSystem));
 			return result;
 		}
 
-		public ResultSet<LexEntry> GetAllEntriesSortedBySemanticDomain(string fieldName)
+		public ResultSet<LexEntry> GetAllEntriesSortedBySemanticDomain(
+			string fieldName)
 		{
 			if (fieldName == null)
 			{
@@ -271,10 +303,15 @@ namespace WeSay.LexicalModel
 			{
 				return null;
 			}
-			int nextItem = index + 1;
-			if (nextItem <= items.Count)
+			if (index + 1 < items.Count)
 			{
-				if((Guid)items[nextItem].Results["Guid"] == guid)
+				int nextIndex = items.FindFirstIndex(index,
+									delegate(RecordToken<LexEntry> token)
+									{
+										return (Guid)token.Results["Guid"] == guid;
+									});
+
+				if(nextIndex >= 0)
 				{
 					throw new ApplicationException("More than one entry exists with the guid " +
 												   guid);
@@ -360,22 +397,24 @@ namespace WeSay.LexicalModel
 
 			foreach (RecordToken<LexEntry> token in entriesWithAllHeadwords)
 			{
-				if (token.Id != previousRepositoryId)
+				if (previousRepositoryId != null && token.Id != previousRepositoryId)
 				{
 					if (!headWordRepositoryIdFound)
 					{
-						entriesWithHeadword.Add(new RecordToken<LexEntry>(this, emptyResults, previousRepositoryId));
+						entriesWithHeadword.Add(
+								new RecordToken<LexEntry>(this, emptyResults, previousRepositoryId));
 					}
 					headWordRepositoryIdFound = false;
-					previousRepositoryId = token.Id;
 				}
+				previousRepositoryId = token.Id;
 
-				if ((string)token.Results[writingSystemIdField] == headwordWritingSystemId)
+				object writingSystemId;
+				if (token.Results.TryGetValue(writingSystemIdField, out writingSystemId)
+					&& (string) writingSystemId == headwordWritingSystemId)
 				{
 					entriesWithHeadword.Add(token);
 					headWordRepositoryIdFound = true;
 				}
-
 			}
 			if (!headWordRepositoryIdFound)
 			{

@@ -26,40 +26,35 @@ namespace WeSay.Data
 			int result = 0;
 			foreach (SortDefinition definition in _sortDefinitions)
 			{
-				object yFieldValue;
-				if (y == null)
-				{
-					yFieldValue = null;
-				}
-				else if(definition.Field == "RepositoryId")
-				{
-					yFieldValue = y.Id;
-				}
-				else
-				{
-					yFieldValue = y.Results[definition.Field];
-				}
-
-				object xFieldValue;
-				if (x == null)
-				{
-					xFieldValue = null;
-				}
-				else if (definition.Field == "RepositoryId")
-				{
-					xFieldValue = x.Id;
-				}
-				else
-				{
-					xFieldValue = x.Results[definition.Field];
-				}
-				result = definition.Comparer.Compare(xFieldValue, yFieldValue);
+				result = definition.Comparer.Compare(GetFieldValue(x, definition),
+													 GetFieldValue(y, definition));
 				if(result != 0)
 				{
 					return result;
 				}
 			}
 			return result;
+		}
+
+		private static object GetFieldValue(RecordToken<T> token,
+											SortDefinition definition) {
+			object value;
+			if (token == null)
+			{
+				value = null;
+			}
+			else if (definition.Field == "RepositoryId")
+			{
+				value = token.Id;
+			}
+			else
+			{
+				if (!token.Results.TryGetValue(definition.Field, out value))
+				{
+					value = null;
+				}
+			}
+			return value;
 		}
 
 		#endregion

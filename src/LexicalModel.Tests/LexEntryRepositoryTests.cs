@@ -199,8 +199,7 @@ namespace WeSay.LexicalModel.Tests
 			MakeEntryWithLexemeForm(_headwordWritingSystem.Id, "blue");
 			MakeEntryWithLexemeForm(_headwordWritingSystem.Id, "blue");
 			LexEntry entry3 = MakeEntryWithLexemeForm(_headwordWritingSystem.Id, "blue");
-			Assert.AreEqual(3,
-							_lexEntryRepository.GetHomographNumber(entry3, _headwordWritingSystem));
+			Assert.AreEqual(3, _lexEntryRepository.GetHomographNumber(entry3, _headwordWritingSystem));
 		}
 
 		[Test]
