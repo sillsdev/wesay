@@ -263,14 +263,24 @@ namespace WeSay.LexicalModel
 		{
 			Query query = GetAllLexEntriesQuery().Show("Guid");
 			ResultSet<LexEntry> items = GetItemsMatching(query);
-			RecordToken<LexEntry> first = items.FindFirst(delegate(RecordToken<LexEntry> token)
+			int index = items.FindFirstIndex(delegate(RecordToken<LexEntry> token)
 												{
 													return (Guid)token.Results["Guid"] == guid;
 												});
-			if (first == null)
+			if (index < 0)
 			{
 				return null;
 			}
+			int nextItem = index + 1;
+			if (nextItem <= items.Count)
+			{
+				if((Guid)items[nextItem].Results["Guid"] == guid)
+				{
+					throw new ApplicationException("More than one entry exists with the guid " +
+												   guid);
+				}
+			}
+			RecordToken<LexEntry> first = items[index];
 			return first.RealObject;
 		}
 

@@ -22,9 +22,7 @@ namespace WeSay.LexicalModel.Tests
 		public void Setup()
 		{
 			_filePath = Path.GetTempFileName();
-			_datasource = new Db4oDataSource(_filePath);
-			_db4oRepository = new Db4oRepository<LexEntry>(_datasource);
-			_lexEntryRepository = new LexEntryRepository(_db4oRepository);
+			CycleDatabase();
 			_headwordWritingSystem = new WritingSystem();
 			_headwordWritingSystem.Id = "primary";
 		}
@@ -60,7 +58,7 @@ namespace WeSay.LexicalModel.Tests
 																		 ApproximateMatcherOptions.
 																				 IncludePrefixedForms);
 			Assert.AreEqual(2, matches.Count);
-			Assert.AreNotEqual(entryInOtherWritingSystem, matches[1].DisplayString);
+			Assert.AreNotEqual(entryInOtherWritingSystem, matches[1].Results["Form"]);
 		}
 
 		[Test]
@@ -162,7 +160,9 @@ namespace WeSay.LexicalModel.Tests
 			{
 				_lexEntryRepository.Dispose();
 			}
-			_lexEntryRepository = new LexEntryRepository(_filePath);
+			_datasource = new Db4oDataSource(_filePath);
+			_db4oRepository = new Db4oRepository<LexEntry>(_datasource);
+			_lexEntryRepository = new LexEntryRepository(_db4oRepository);
 		}
 
 		[Test]
