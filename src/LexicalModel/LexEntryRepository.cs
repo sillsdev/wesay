@@ -326,6 +326,11 @@ namespace WeSay.LexicalModel
 
 		private ResultSet<LexEntry> FilterEntriesToOnlyThoseWithWritingSystemId(ResultSet<LexEntry> entriesWithAllHeadwords, string formField, string writingSystemIdField, string headwordWritingSystemId)
 		{
+			if (entriesWithAllHeadwords.Count == 0)
+			{
+				return entriesWithAllHeadwords;
+			}
+
 			entriesWithAllHeadwords.Sort(new SortDefinition("RepositoryId", Comparer<RepositoryId>.Default));
 
 			// remove all entries with writing system != headwordWritingSystem
