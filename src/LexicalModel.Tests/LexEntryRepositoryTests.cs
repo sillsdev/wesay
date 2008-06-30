@@ -15,12 +15,16 @@ namespace WeSay.LexicalModel.Tests
 		private string _filePath;
 		private LexEntryRepository _lexEntryRepository;
 		private WritingSystem _headwordWritingSystem;
+		private Db4oRepository<LexEntry> _db4oRepository;
+		private Db4oDataSource _datasource;
 
 		[SetUp]
 		public void Setup()
 		{
 			_filePath = Path.GetTempFileName();
-			_lexEntryRepository = new LexEntryRepository(_filePath);
+			_datasource = new Db4oDataSource(_filePath);
+			_db4oRepository = new Db4oRepository<LexEntry>(_datasource);
+			_lexEntryRepository = new LexEntryRepository(_db4oRepository);
 			_headwordWritingSystem = new WritingSystem();
 			_headwordWritingSystem.Id = "primary";
 		}
@@ -68,8 +72,7 @@ namespace WeSay.LexicalModel.Tests
 			_lexEntryRepository.SaveItem(entry);
 			CycleDatabase();
 			//don't want to find this one
-			_lexEntryRepository.Db4oDataSource.Data.Set(
-					new LanguageForm("en", "findme", new MultiText()));
+			_datasource.Data.Set(new LanguageForm("en", "findme", new MultiText()));
 			CycleDatabase();
 			WritingSystem writingSystem = new WritingSystem("en", SystemFonts.DefaultFont);
 			ResultSet<LexEntry> list =
@@ -136,7 +139,7 @@ namespace WeSay.LexicalModel.Tests
 			CycleDatabase();
 			//don't want to find this one
 			LanguageForm glossLanguageForm = new LanguageForm("en", gloss, new MultiText());
-			_lexEntryRepository.Db4oDataSource.Data.Set(glossLanguageForm);
+			_datasource.Data.Set(glossLanguageForm);
 
 			WritingSystem writingSystem = new WritingSystem("en", SystemFonts.DefaultFont);
 			ResultSet<LexEntry> list =

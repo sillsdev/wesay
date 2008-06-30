@@ -18,6 +18,16 @@ namespace WeSay.LexicalModel
 			_decoratedRepository = new Db4oRepository<LexEntry>(path);
 		}
 
+		public LexEntryRepository(IRepository<LexEntry> decoratedRepository)
+		{
+			if (decoratedRepository == null)
+			{
+				throw new ArgumentNullException("decoratedRepository");
+			}
+
+			_decoratedRepository = decoratedRepository;
+		}
+
 		public DateTime LastModified
 		{
 			get
