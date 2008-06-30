@@ -9,6 +9,7 @@ namespace WeSay.LexicalModel.Db4oSpecific
 {
 	public class Db4oLexEntryRepository: Db4oRepository<LexEntry>
 	{
+
 		public Db4oLexEntryRepository(Db4oDataSource database): base(database)
 		{
 			Initialize();
@@ -36,7 +37,25 @@ namespace WeSay.LexicalModel.Db4oSpecific
 
 			//activate all the children
 			Database.Activate(o, int.MaxValue);
+			this._activationCount++;
 			o.FinishActivation();
+		}
+
+		/// <summary>
+		/// for tests
+		/// </summary>
+		private int _activationCount = 0;
+
+		/// <summary>
+		/// for tests
+		/// how many times an Object has been activated
+		/// </summary>
+		internal int ActivationCount
+		{
+			get
+			{
+				return this._activationCount;
+			}
 		}
 
 		private static void ConfigureDatabase()
@@ -79,5 +98,17 @@ namespace WeSay.LexicalModel.Db4oSpecific
 			objectClass.ObjectField("_forms").Indexed(true);
 			objectClass.CascadeOnDelete(true);
 		}
+		protected override void Dispose(bool disposing)
+		{
+			if(disposing)
+			{
+				IEventRegistry r = EventRegistryFactory.ForObjectContainer(this.Database);
+				r.Activated -= OnActivated;
+
+			}
+			base.Dispose(disposing);
+		}
 	}
+
+
 }
