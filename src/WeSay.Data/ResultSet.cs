@@ -286,16 +286,30 @@ namespace WeSay.Data
 
 		#endregion
 
-		public void Sort(params SortDefinition[] sortkeys)
+		public void Sort(params SortDefinition[] sortDefinitions)
 		{
-			throw new NotImplementedException();
+			_results.Sort(new RecordTokenComparer<T>(sortDefinitions));
 		}
 
 	}
 	public class SortDefinition
 	{
+		private readonly string _field;
+		private readonly IComparer _comparer;
 		public SortDefinition(string field, IComparer comparer)
 		{
+			this._field = field;
+			this._comparer = comparer;
+		}
+
+		public string Field
+		{
+			get { return this._field; }
+		}
+
+		public IComparer Comparer
+		{
+			get { return this._comparer; }
 		}
 	}
 }
