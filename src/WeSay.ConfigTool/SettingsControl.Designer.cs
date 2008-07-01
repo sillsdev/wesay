@@ -146,14 +146,14 @@ namespace WeSay.ConfigTool
 			this._backupButton.BackColor = System.Drawing.SystemColors.ControlLight;
 			this._backupButton.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this._backupButton.ForeColor = System.Drawing.Color.DimGray;
-			this._backupButton.Image = Resources.ConfigBackup;
+			this._backupButton.Image = Resources.chorus;
 			this._backupButton.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this._backupButton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
 			this._backupButton.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this._backupButton.Margin = new System.Windows.Forms.Padding(6, 10, 0, 2);
 			this._backupButton.Name = "_backupButton";
 			this._backupButton.Size = new System.Drawing.Size(171, 36);
-			this._backupButton.Text = "Backup Plan";
+			this._backupButton.Text = "Collaboration";
 			this._backupButton.Click += new System.EventHandler(this.OnAreaButton_Click);
 			//
 			// _optionsListButton

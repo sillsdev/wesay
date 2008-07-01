@@ -1,23 +1,18 @@
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.IO;
-using System.Text;
-using System.Windows.Forms;
-using System.Xml;
-using WeSay.Foundation;
-using WeSay.Project;
 
 namespace WeSay.ConfigTool
 {
 	public partial class BackupPlanControl : ConfigurationControlBase
 	{
 		public BackupPlanControl()
-			: base("set up backup plan")
+			: base("set up synchronization with team members")
 		{
 			InitializeComponent();
+		}
+
+		private void syncPanel1_Load(object sender, EventArgs e)
+		{
+
 		}
 
 	}
