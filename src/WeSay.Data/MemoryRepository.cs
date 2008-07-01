@@ -32,6 +32,10 @@ namespace WeSay.Data
 
 		public void DeleteItem(T item)
 		{
+			if( item == null)
+			{
+				throw new ArgumentNullException("item");
+			}
 			if (!objectToIdHashtable.ContainsKey(item))
 			{
 				throw new ArgumentOutOfRangeException("item");
@@ -61,6 +65,10 @@ namespace WeSay.Data
 
 		public void SaveItem(T item)
 		{
+			if(item == null)
+			{
+				throw new ArgumentNullException("item");
+			}
 			if(!objectToIdHashtable.ContainsKey(item))
 			{
 				throw new ArgumentOutOfRangeException("item", "The item must exist in the repository before it can be saved.");

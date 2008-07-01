@@ -30,6 +30,14 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
+		[ExpectedException(typeof(ArgumentNullException))]
+		public void DeleteItem_Null_Throws()
+		{
+			T item = new T();
+			RepositoryUnderTest.DeleteItem((T) null);
+		}
+
+		[Test]
 		[ExpectedException(typeof(ArgumentOutOfRangeException))]
 		public void DeleteItem_ItemDoesNotExist_Throws()
 		{
@@ -43,6 +51,14 @@ namespace WeSay.Data.Tests
 		{
 			MyRepositoryId id = new MyRepositoryId();
 			RepositoryUnderTest.DeleteItem(id);
+		}
+
+		[Test]
+		[ExpectedException(typeof(ArgumentNullException))]
+		public void DeleteItemById_Null_Throws()
+		{
+			MyRepositoryId id = new MyRepositoryId();
+			RepositoryUnderTest.DeleteItem((RepositoryId) null);
 		}
 
 		[Test]
@@ -88,6 +104,14 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
+		[ExpectedException(typeof(ArgumentNullException))]
+		public void Save_Null_Throws()
+		{
+			T item = new T();
+			RepositoryUnderTest.SaveItem(null);
+		}
+
+		[Test]
 		[ExpectedException(typeof(ArgumentOutOfRangeException))]
 		public void Save_Throws()
 		{
@@ -105,7 +129,7 @@ namespace WeSay.Data.Tests
 			}
 			else
 			{
-				Assert.Ignore("This repository supports queries.");
+				Assert.Ignore("Repository supports queries.");
 			}
 		}
 
