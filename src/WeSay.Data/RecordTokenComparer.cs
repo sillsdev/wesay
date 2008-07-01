@@ -49,7 +49,7 @@ namespace WeSay.Data
 			}
 			else
 			{
-				if (!token.Results.TryGetValue(definition.Field, out value))
+				if (!token.TryGetValue(definition.Field, out value))
 				{
 					value = null;
 				}

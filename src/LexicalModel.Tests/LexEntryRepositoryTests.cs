@@ -6,6 +6,7 @@ using NUnit.Framework;
 using Palaso.Text;
 using WeSay.Data;
 using WeSay.Foundation;
+using WeSay.LexicalModel.Db4oSpecific;
 
 namespace WeSay.LexicalModel.Tests
 {
@@ -15,7 +16,7 @@ namespace WeSay.LexicalModel.Tests
 		private string _filePath;
 		private LexEntryRepository _lexEntryRepository;
 		private WritingSystem _headwordWritingSystem;
-		private Db4oRepository<LexEntry> _db4oRepository;
+		private Db4oLexEntryRepository _db4oRepository;
 		private Db4oDataSource _datasource;
 
 		[SetUp]
@@ -58,7 +59,7 @@ namespace WeSay.LexicalModel.Tests
 																		 ApproximateMatcherOptions.
 																				 IncludePrefixedForms);
 			Assert.AreEqual(2, matches.Count);
-			Assert.AreNotEqual(entryInOtherWritingSystem, matches[1].Results["Form"]);
+			Assert.AreNotEqual(entryInOtherWritingSystem, matches[1]["Form"]);
 		}
 
 		[Test]
@@ -150,7 +151,7 @@ namespace WeSay.LexicalModel.Tests
 		{
 			LexEntry entry = _lexEntryRepository.CreateItem();
 			LexSense sense = new LexSense();
-			entry.Senses.Add(new LexSense());
+			entry.Senses.Add(sense);
 			sense.Gloss["en"] = gloss;
 			_lexEntryRepository.SaveItem(entry);
 		}
@@ -162,7 +163,7 @@ namespace WeSay.LexicalModel.Tests
 				_lexEntryRepository.Dispose();
 			}
 			_datasource = new Db4oDataSource(_filePath);
-			_db4oRepository = new Db4oRepository<LexEntry>(_datasource);
+			_db4oRepository = new Db4oLexEntryRepository(_datasource);
 			_lexEntryRepository = new LexEntryRepository(_db4oRepository);
 		}
 

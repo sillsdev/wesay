@@ -7,17 +7,23 @@ namespace WeSay.Data
 	{
 		public delegate IEnumerable<string[]> DisplayStringGenerator(T item);
 
-		private readonly Dictionary<string, object> _queryResults;
+		private Dictionary<string, object> _queryResults;
 		private readonly RepositoryId _id;
 		private readonly IRepository<T> _repository;
 
-		public RecordToken(IRepository<T> repository)
+		public RecordToken(IRepository<T> repository,
+						   RepositoryId id)
 		{
 			if (repository == null)
 			{
 				throw new ArgumentNullException("repository");
 			}
+			if (id == null)
+			{
+				throw new ArgumentNullException("id");
+			}
 			_repository = repository;
+			_id = id;
 		}
 
 		[Obsolete]
@@ -32,19 +38,14 @@ namespace WeSay.Data
 		public RecordToken(IRepository<T> repository,
 				   IDictionary<string, object> queryResults,
 				   RepositoryId id)
-			: this(repository)
+			: this(repository, id)
 		{
 			if (queryResults == null)
 			{
 				throw new ArgumentNullException("queryResults");
 			}
-			if (id == null)
-			{
-				throw new ArgumentNullException("id");
-			}
 			_repository = repository;
 			_queryResults = new Dictionary<string, object>(queryResults); // we need to own this
-			_id = id;
 		}
 
 		[Obsolete]
@@ -64,11 +65,34 @@ namespace WeSay.Data
 			get { return _repository.GetItem(Id); }
 		}
 
-		public IDictionary<string, object> Results
+		public bool TryGetValue(string fieldName, out object value)
+		{
+			value = null;
+			if(_queryResults == null)
+			{
+				return false;
+			}
+			return _queryResults.TryGetValue(fieldName, out value);
+		}
+
+		public object this[string fieldName]
 		{
 			get
 			{
-				return _queryResults;
+				object value;
+				if(TryGetValue(fieldName, out value))
+				{
+					return value;
+				}
+				return null;
+			}
+			set
+			{
+				if(_queryResults == null)
+				{
+					_queryResults = new Dictionary<string, object>();
+				}
+				_queryResults[fieldName] = value;
 			}
 		}
 

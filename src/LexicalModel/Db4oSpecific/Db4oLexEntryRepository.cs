@@ -1,13 +1,64 @@
 using Db4objects.Db4o;
 using Db4objects.Db4o.Config;
+using Db4objects.Db4o.Events;
 using Palaso.Text;
+using WeSay.Data;
 using WeSay.Foundation;
 
 namespace WeSay.LexicalModel.Db4oSpecific
 {
-	public class WeSayWordsDb4oModelConfiguration//: IDb4oModelConfiguration
+	public class Db4oLexEntryRepository: Db4oRepository<LexEntry>
 	{
-		public void Configure()
+
+		public Db4oLexEntryRepository(Db4oDataSource database): base(database)
+		{
+			Initialize();
+		}
+
+		public Db4oLexEntryRepository(string path): base(path)
+		{
+			Initialize();
+		}
+
+		private void Initialize()
+		{
+			ConfigureDatabase();
+			IEventRegistry r = EventRegistryFactory.ForObjectContainer(Database);
+			r.Activated += OnActivated;
+		}
+
+		private void OnActivated(object sender, ObjectEventArgs args)
+		{
+			WeSayDataObject o = args.Object as WeSayDataObject;
+			if (o == null)
+			{
+				return;
+			}
+
+			//activate all the children
+			Database.Activate(o, int.MaxValue);
+			this._activationCount++;
+			o.FinishActivation();
+		}
+
+		/// <summary>
+		/// for tests
+		/// </summary>
+		private int _activationCount = 0;
+
+		/// <summary>
+		/// for tests
+		/// how many times an Object has been activated
+		/// </summary>
+		internal int ActivationCount
+		{
+			get
+			{
+				return this._activationCount;
+			}
+		}
+
+		private static void ConfigureDatabase()
 		{
 			IConfiguration db4oConfiguration = Db4oFactory.Configure();
 			db4oConfiguration.ClassActivationDepthConfigurable(true);
@@ -47,5 +98,17 @@ namespace WeSay.LexicalModel.Db4oSpecific
 			objectClass.ObjectField("_forms").Indexed(true);
 			objectClass.CascadeOnDelete(true);
 		}
+		protected override void Dispose(bool disposing)
+		{
+			if(disposing)
+			{
+				IEventRegistry r = EventRegistryFactory.ForObjectContainer(this.Database);
+				r.Activated -= OnActivated;
+
+			}
+			base.Dispose(disposing);
+		}
 	}
+
+
 }

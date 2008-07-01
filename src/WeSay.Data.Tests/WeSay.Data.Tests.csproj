@@ -58,6 +58,7 @@
 	<Compile Include="PermuterTests.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />
 	<Compile Include="QueryTests.cs" />
+	<Compile Include="ResultSetTests.cs" />
 	<Compile Include="SimpleIntTestClass.cs" />
 	<Compile Include="TestItem.cs" />
 	<Compile Include="TestMultiple.cs" />
