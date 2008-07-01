@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using System.Threading;
 using NUnit.Framework;
 using WeSay.Data;
@@ -9,7 +8,7 @@ namespace WeSay.Data.Tests
 	public class IRepositoryStateUnitializedTests<T> where T: class, new()
 	{
 		private IRepository<T> _repositoryUnderTest;
-		private string _persistedFilePath = null;
+		private readonly Query query = new Query(typeof(T));
 
 		public IRepository<T> RepositoryUnderTest
 		{
@@ -22,19 +21,6 @@ namespace WeSay.Data.Tests
 				return _repositoryUnderTest;
 			}
 			set { _repositoryUnderTest = value; }
-		}
-
-		public string PersistedFilePath
-		{
-			get
-			{
-				if (string.IsNullOrEmpty(_persistedFilePath))
-				{
-					throw new InvalidOperationException("Please provide the path that the Repository is being persisted to.");
-				}
-				return _persistedFilePath;
-			}
-			set { _persistedFilePath = value; }
 		}
 
 		[Test]
@@ -110,31 +96,25 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		public void ItemsModifiedSince_ReturnsEmptyArray()
-		{
-			Assert.IsEmpty(RepositoryUnderTest.GetItemsModifiedSince(DateTime.MinValue));
-		}
-
-		[Test]
 		[ExpectedException(typeof(NotSupportedException))]
-		public void GetItemMatchingQuery_CanQueryIsFalse_Throws()
+		public void GetItemsMatchingQuery_CanQueryIsFalse_Throws()
 		{
 			if(!RepositoryUnderTest.CanQuery())
 			{
-				RepositoryUnderTest.GetItemsMatchingQuery();
+				RepositoryUnderTest.GetItemsMatching(query);
 			}
 			else
 			{
-				Assert.Ignore("Repository supports queries.");
+				Assert.Ignore("This repository supports queries.");
 			}
 		}
 
 		[Test]
-		public void GetItemMatchingQuery_Query_ReturnsItemsMatchingQuery()
+		public virtual void GetItemMatchingQuery_Query_ReturnsEmpty()
 		{
 			if(RepositoryUnderTest.CanQuery())
 			{
-				Assert.IsEmpty(RepositoryUnderTest.GetItemsMatchingQuery());
+				Assert.AreEqual(0, RepositoryUnderTest.GetItemsMatching(query).Count);
 			}
 			else
 			{
@@ -161,7 +141,7 @@ namespace WeSay.Data.Tests
 		private IRepository<T> _repositoryUnderTest;
 		private T item;
 		private RepositoryId id;
-		private string _persistedFilePath = null;
+		private readonly Query query = new Query(typeof(T));
 
 		public IRepository<T> RepositoryUnderTest
 		{
@@ -176,37 +156,10 @@ namespace WeSay.Data.Tests
 			set { _repositoryUnderTest = value; }
 		}
 
-		public string PersistedFilePath
-		{
-			get
-			{
-				if (string.IsNullOrEmpty(_persistedFilePath))
-				{
-					throw new InvalidOperationException("Please provide the path that the Repository is being persisted to.");
-				}
-				return _persistedFilePath;
-			}
-			set { _persistedFilePath = value; }
-		}
-
 		public void SetState()
 		{
 			item = RepositoryUnderTest.CreateItem();
 			id = RepositoryUnderTest.GetId(item);
-		}
-
-		[Test]
-		public void FileWasCreatedCorrectly()
-		{
-			SetState();
-			if(RepositoryUnderTest.CanPersist())
-			{
-				Assert.IsTrue(File.Exists(PersistedFilePath));
-			}
-			else
-			{
-				Assert.Ignore("Repository can not be persisted.");
-			}
 		}
 
 		[Test]
@@ -277,16 +230,6 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		public void ItemsModifiedSince_SaveItem_ReturnsItemAsModified()
-		{
-			SetState();
-			Thread.Sleep(50);
-			DateTime timeOfSave = DateTime.UtcNow;
-			RepositoryUnderTest.SaveItem(item);
-			Assert.AreEqual(id, RepositoryUnderTest.GetItemsModifiedSince(timeOfSave)[0]);
-		}
-
-		[Test]
 		public void LastModified_SaveItem_ReturnsCorrectTime()
 		{
 			SetState();
@@ -297,36 +240,14 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		public void ItemsModifiedSince_ReturnsIdsOfItemsModifiedSince()
-		{
-			SetState();
-			TimeSpan timeSpan = new TimeSpan(1, 0, 0); //1 hour
-			Assert.AreEqual(RepositoryUnderTest.GetId(item), RepositoryUnderTest.GetItemsModifiedSince(DateTime.UtcNow - timeSpan)[0]);
-		}
-
-
-		[Test]
-		//This test will not fail if you are in GMC+0 Timezone! If this is true for you, please be sure to transform
-		//any input ItemsModifiedSince() to UTC. That is what this test checks for everybody else.
-		public void ItemsModifiedSince_NonUTCDateTime_ReturnsIdsModifiedSince()
-		{
-			SetState();
-			Thread.Sleep(50);
-			DateTime timeBetweenCreatedItems = DateTime.Now;
-			Thread.Sleep(50);
-			T item2 = RepositoryUnderTest.CreateItem();
-			Assert.AreEqual(1, RepositoryUnderTest.GetItemsModifiedSince(timeBetweenCreatedItems).Length);
-			Assert.AreEqual(RepositoryUnderTest.GetId(item2),
-				RepositoryUnderTest.GetItemsModifiedSince(timeBetweenCreatedItems)[0]);
-		}
-
-		[Test]
-		public void GetItemMatchingQuery_Query_ReturnsitemsMatchingQuery()
+		public void GetItemMatchingQuery_Query_ReturnsItemsMatchingQuery()
 		{
 			SetState();
 			if(RepositoryUnderTest.CanQuery())
 			{
-				Assert.AreEqual(RepositoryUnderTest.GetId(item), RepositoryUnderTest.GetItemsMatchingQuery());
+				ResultSet<T> resultSet = RepositoryUnderTest.GetItemsMatching(query);
+				Assert.AreEqual(1, resultSet.Count);
+				Assert.AreEqual(item, resultSet[0].RealObject);
 			}
 			else
 			{
@@ -354,7 +275,7 @@ namespace WeSay.Data.Tests
 		private IRepository<T> _repositoryUnderTest;
 		private T item;
 		private RepositoryId id;
-		private string _persistedFilePath = null;
+		private readonly Query query = new Query(typeof(T));
 
 		public IRepository<T> RepositoryUnderTest
 		{
@@ -367,19 +288,6 @@ namespace WeSay.Data.Tests
 				return _repositoryUnderTest;
 			}
 			set { _repositoryUnderTest = value; }
-		}
-
-		public string PersistedFilePath
-		{
-			get
-			{
-				if (string.IsNullOrEmpty(_persistedFilePath))
-				{
-					throw new InvalidOperationException("Please provide the path that the Repository is being persisted to.");
-				}
-				return _persistedFilePath;
-			}
-			set { _persistedFilePath = value; }
 		}
 
 		public void SetState()
@@ -461,27 +369,6 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		public void ItemsModifiedSince_ReturnsEmptyArray()
-		{
-			SetState();
-			Assert.IsEmpty(RepositoryUnderTest.GetItemsModifiedSince(DateTime.MinValue));
-		}
-
-		[Test]
-		public void GetItemMatchingQuery_ReturnsEmpty()
-		{
-			SetState();
-			if (RepositoryUnderTest.CanQuery())
-			{
-				Assert.IsEmpty(RepositoryUnderTest.GetItemsMatchingQuery());
-			}
-			else
-			{
-				Assert.Ignore("Repository does not support queries.");
-			}
-		}
-
-		[Test]
 		public virtual void DeletionOfItemHasBeenPersisted()
 		{
 			SetState();
@@ -493,7 +380,19 @@ namespace WeSay.Data.Tests
 			{
 				throw new NotImplementedException("You must implement a test to verify that the item deletion has been persisted.");
 			}
+		}
 
+		[Test]
+		public virtual void GetItemMatchingQuery_Query_ReturnsEmpty()
+		{
+			if (RepositoryUnderTest.CanQuery())
+			{
+				Assert.AreEqual(0, RepositoryUnderTest.GetItemsMatching(query).Count);
+			}
+			else
+			{
+				Assert.Ignore("Repository does not support queries.");
+			}
 		}
 	}
 
@@ -502,7 +401,7 @@ namespace WeSay.Data.Tests
 		private IRepository<T> _repositoryUnderTest;
 		private T item;
 		private RepositoryId id;
-		private string _persistedFilePath = null;
+		private readonly Query query = new Query(typeof(T));
 
 		public IRepository<T> RepositoryUnderTest
 		{
@@ -515,19 +414,6 @@ namespace WeSay.Data.Tests
 				return _repositoryUnderTest;
 			}
 			set { _repositoryUnderTest = value; }
-		}
-
-		public string PersistedFilePath
-		{
-			get
-			{
-				if (string.IsNullOrEmpty(_persistedFilePath))
-				{
-					throw new InvalidOperationException("Please provide the path that the Repository is being persisted to.");
-				}
-				return _persistedFilePath;
-			}
-			set { _persistedFilePath = value; }
 		}
 
 		public void SetState()
@@ -609,27 +495,6 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		public void ItemsModifiedSince_ReturnsEmptyArray()
-		{
-			SetState();
-			Assert.IsEmpty(RepositoryUnderTest.GetItemsModifiedSince(DateTime.MinValue));
-		}
-
-		[Test]
-		public void GetItemMatchingQuery_ReturnsEmpty()
-		{
-			SetState();
-			if (RepositoryUnderTest.CanQuery())
-			{
-				Assert.IsEmpty(RepositoryUnderTest.GetItemsMatchingQuery());
-			}
-			else
-			{
-				Assert.Ignore("Repository does not support queries.");
-			}
-		}
-
-		[Test]
 		public virtual void DeletionOfItemHasBeenPersisted()
 		{
 			SetState();
@@ -641,7 +506,19 @@ namespace WeSay.Data.Tests
 			{
 				throw new NotImplementedException("You must implement a test to verify that the item deletion has been persisted.");
 			}
+		}
 
+		[Test]
+		public virtual void GetItemMatchingQuery_Query_ReturnsEmpty()
+		{
+			if (RepositoryUnderTest.CanQuery())
+			{
+				Assert.AreEqual(0, RepositoryUnderTest.GetItemsMatching(query).Count);
+			}
+			else
+			{
+				Assert.Ignore("Repository does not support queries.");
+			}
 		}
 	}
 }

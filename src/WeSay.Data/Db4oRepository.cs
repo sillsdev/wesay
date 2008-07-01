@@ -159,6 +159,16 @@ namespace WeSay.Data
 			Database.Commit();
 		}
 
+		public bool CanQuery()
+		{
+			throw new NotImplementedException();
+		}
+
+		public bool CanPersist()
+		{
+			throw new NotImplementedException();
+		}
+
 		private void SaveItemCore(T item)
 		{
 			if (item == null)

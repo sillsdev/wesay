@@ -15,11 +15,9 @@ namespace WeSay.Data
 		void DeleteItem(T item);
 		void DeleteItem(RepositoryId id);
 		RepositoryId[] GetAllItems();
-		RepositoryId[] GetItemsModifiedSince(DateTime dateTime);
 		void SaveItem(T item);
 		bool CanQuery();
 		bool CanPersist();
-
 		void SaveItems(IEnumerable<T> items);
 		ResultSet<T> GetItemsMatching(Query query);
 	}

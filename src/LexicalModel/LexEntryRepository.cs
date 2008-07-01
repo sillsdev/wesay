@@ -54,11 +54,6 @@ namespace WeSay.LexicalModel
 			return item;
 		}
 
-		public RepositoryId[] GetItemsModifiedSince(DateTime last)
-		{
-			return _decoratedRepository.GetItemsModifiedSince(last);
-		}
-
 		public RepositoryId[] GetAllItems()
 		{
 			return _decoratedRepository.GetAllItems();
@@ -119,15 +114,6 @@ namespace WeSay.LexicalModel
 			_decoratedRepository.DeleteItem(repositoryId);
 		}
 
-		public RepositoryId[] GetAllItems()
-		{
-			throw new NotImplementedException();
-		}
-
-		public RepositoryId[] ItemsModifiedSince(DateTime dateTime)
-		{
-			throw new NotImplementedException();
-		}
 		public int GetHomographNumber(LexEntry entry, WritingSystem headwordWritingSystem)
 		{
 			if (entry == null)

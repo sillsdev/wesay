@@ -56,6 +56,11 @@ namespace WeSay.Project
 			throw new NotImplementedException();
 		}
 
+		public RepositoryId[] GetItemsModifiedSince(DateTime dateTime)
+		{
+			throw new NotImplementedException();
+		}
+
 		public RepositoryId[] ItemsModifiedSince(DateTime dateTime)
 		{
 			throw new NotImplementedException();
@@ -74,6 +79,16 @@ namespace WeSay.Project
 		public bool CanPersist()
 		{
 			return true;
+		}
+
+		public void SaveItems(IEnumerable<LexEntry> items)
+		{
+			throw new NotImplementedException();
+		}
+
+		public ResultSet<LexEntry> GetItemsMatching(Query query)
+		{
+			throw new NotImplementedException();
 		}
 
 		public RepositoryId[] GetItemsMatchingQuery()

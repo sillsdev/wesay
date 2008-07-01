@@ -11,13 +11,15 @@ namespace WeSay.Data
 		private readonly RepositoryId _id;
 		private readonly IRepository<T> _repository;
 
-		public RecordToken(IRepository<T> repository)
+		public RecordToken(IRepository<T> repository, RepositoryId id)
 		{
 			if (repository == null)
 			{
 				throw new ArgumentNullException("repository");
 			}
+			if (id == null) throw new ArgumentNullException("id");
 			_repository = repository;
+			_id = id;
 		}
 
 		[Obsolete]
@@ -32,19 +34,14 @@ namespace WeSay.Data
 		public RecordToken(IRepository<T> repository,
 				   IDictionary<string, object> queryResults,
 				   RepositoryId id)
-			: this(repository)
+			: this(repository, id)
 		{
 			if (queryResults == null)
 			{
 				throw new ArgumentNullException("queryResults");
 			}
-			if (id == null)
-			{
-				throw new ArgumentNullException("id");
-			}
 			_repository = repository;
 			_queryResults = new Dictionary<string, object>(queryResults); // we need to own this
-			_id = id;
 		}
 
 		[Obsolete]

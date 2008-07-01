@@ -8,8 +8,6 @@ namespace WeSay.Data
 	{
 		private readonly Hashtable idToObjectHashtable = new Hashtable();
 		private readonly Hashtable objectToIdHashtable = new Hashtable();
-		private readonly List<KeyValuePair<DateTime, RepositoryId>> modifiedToIdList =
-			new List<KeyValuePair<DateTime, RepositoryId>>();
 		private DateTime lastModified = DateTime.MinValue;
 
 		public DateTime LastModified
@@ -28,7 +26,6 @@ namespace WeSay.Data
 			MemoryRepositoryId id = new MemoryRepositoryId();
 			idToObjectHashtable.Add(id, t);
 			objectToIdHashtable.Add(t, id);
-			modifiedToIdList.Add(new KeyValuePair<DateTime, RepositoryId>(DateTime.UtcNow, id));
 			LastModified = DateTime.Now;
 			return t;
 		}
@@ -39,7 +36,6 @@ namespace WeSay.Data
 			{
 				throw new ArgumentOutOfRangeException("item");
 			}
-			DeleteFromModifiedTimeList(item);
 			idToObjectHashtable.Remove(objectToIdHashtable[item]);
 			objectToIdHashtable.Remove(item);
 			LastModified = DateTime.Now;
@@ -55,16 +51,6 @@ namespace WeSay.Data
 			DeleteItem(item);
 		}
 
-		private void DeleteFromModifiedTimeList(T item)
-		{
-			KeyValuePair<DateTime, RepositoryId> modifiedTimeToRemove =
-				modifiedToIdList.Find(delegate(KeyValuePair<DateTime, RepositoryId> keyValuePair)
-									  {
-										  return keyValuePair.Value == GetId(item);
-									  });
-			modifiedToIdList.Remove(modifiedTimeToRemove);
-		}
-
 		public RepositoryId[] GetAllItems()
 		{
 			int numberOfIds = idToObjectHashtable.Keys.Count;
@@ -73,46 +59,19 @@ namespace WeSay.Data
 			return ids;
 		}
 
-		public RepositoryId[] GetItemsModifiedSince(DateTime dateTime)
-		{
-			int numberOfIds;
-			List<RepositoryId> modifiedSinceList = new List<RepositoryId>();
-
-			dateTime = dateTime.ToUniversalTime();
-			foreach (KeyValuePair<DateTime, RepositoryId> keyValuePair in modifiedToIdList)
-			{
-				if(keyValuePair.Key >= dateTime)
-				{
-					modifiedSinceList.Add(keyValuePair.Value);
-				}
-			}
-			numberOfIds = modifiedSinceList.Count;
-			RepositoryId[] ids = new RepositoryId[numberOfIds];
-			modifiedSinceList.CopyTo(ids, 0);
-
-			return ids;
-		}
-
 		public void SaveItem(T item)
 		{
-			DateTime timeOfSave = DateTime.UtcNow;
-			KeyValuePair<DateTime, RepositoryId> modifiedTimeAndIdOfItem =
-				modifiedToIdList.Find(delegate(KeyValuePair<DateTime, RepositoryId> keyValuePair)
-									  {
-										  return keyValuePair.Value == GetId(item);
-									  });
-			if (modifiedTimeAndIdOfItem.Value == null)
+			if(!objectToIdHashtable.ContainsKey(item))
 			{
-				throw new ArgumentOutOfRangeException("item");
+				throw new ArgumentOutOfRangeException("item", "The item must exist in the repository before it can be saved.");
 			}
-			modifiedToIdList.Remove(modifiedTimeAndIdOfItem);
-			modifiedToIdList.Add(new KeyValuePair<DateTime, RepositoryId>(timeOfSave, GetId(item)));
+			DateTime timeOfSave = DateTime.UtcNow;
 			LastModified = timeOfSave;
 		}
 
 		public bool CanQuery()
 		{
-			return false;
+			return true;
 		}
 
 		public bool CanPersist()
@@ -123,12 +82,29 @@ namespace WeSay.Data
 
 		public void SaveItems(IEnumerable<T> items)
 		{
-			throw new NotImplementedException();
+			//foreach (T t in items)
+			//{
+			//    SaveItem(t);
+			//}
 		}
 
 		public ResultSet<T> GetItemsMatching(Query query)
 		{
-			throw new NotImplementedException();
+			List<RecordToken<T>> results = new List<RecordToken<T>>();
+			foreach (T item in objectToIdHashtable.Keys)
+			{
+				bool hasResults = false;
+				foreach (Dictionary<string, object> result in query.GetResults(item))
+				{
+					hasResults = true;
+					results.Add(new RecordToken<T>(this, result, GetId(item)));
+				}
+				if(!hasResults)
+				{
+					results.Add(new RecordToken<T>(this, GetId(item)));
+				}
+			}
+			return new ResultSet<T>(this, results);
 		}
 
 		public int CountAllItems()
