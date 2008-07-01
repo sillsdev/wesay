@@ -238,6 +238,11 @@ namespace WeSay.Data
 			_results.Sort(new RecordTokenComparer<T>(sortDefinitions));
 		}
 
+		public void SortByRepositoryId()
+		{
+			Sort(new SortDefinition("RepositoryId", Comparer<RepositoryId>.Default));
+		}
+
 	}
 	public class SortDefinition
 	{
