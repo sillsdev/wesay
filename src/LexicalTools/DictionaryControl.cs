@@ -446,7 +446,7 @@ namespace WeSay.LexicalTools
 				//only create new when not found (doesn't already exist)
 				int existingIndex = _records.FindFirstIndex(delegate(RecordToken<LexEntry> token)
 											{
-												return (string) token.Results["Form"] == lexicalForm;
+												return (string) token["Form"] == lexicalForm;
 											});
 				if (existingIndex >= 0)
 				{
