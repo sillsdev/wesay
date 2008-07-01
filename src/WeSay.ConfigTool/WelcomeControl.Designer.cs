@@ -75,7 +75,7 @@ namespace WeSay.ConfigTool
 			this.openDifferentProject.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.openDifferentProject.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
 			this.openDifferentProject.LinkColor = System.Drawing.Color.Black;
-			this.openDifferentProject.Location = new System.Drawing.Point(4, 21);
+			this.openDifferentProject.Location = new System.Drawing.Point(3, 0);
 			this.openDifferentProject.Name = "openDifferentProject";
 			this.openDifferentProject.Size = new System.Drawing.Size(167, 20);
 			this.openDifferentProject.TabIndex = 1;
@@ -89,7 +89,7 @@ namespace WeSay.ConfigTool
 			this.createNewProject.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.createNewProject.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
 			this.createNewProject.LinkColor = System.Drawing.Color.Black;
-			this.createNewProject.Location = new System.Drawing.Point(3, 0);
+			this.createNewProject.Location = new System.Drawing.Point(3, 20);
 			this.createNewProject.Name = "createNewProject";
 			this.createNewProject.Size = new System.Drawing.Size(145, 20);
 			this.createNewProject.TabIndex = 2;
@@ -114,36 +114,38 @@ namespace WeSay.ConfigTool
 			this.recentProjectsLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.recentProjectsLabel.Location = new System.Drawing.Point(3, 0);
 			this.recentProjectsLabel.Name = "recentProjectsLabel";
-			this.recentProjectsLabel.Size = new System.Drawing.Size(195, 20);
+			this.recentProjectsLabel.Size = new System.Drawing.Size(168, 20);
 			this.recentProjectsLabel.TabIndex = 6;
-			this.recentProjectsLabel.Text = "Open a Recent project:";
+			this.recentProjectsLabel.Text = "Open Recent Project";
 			//
 			// flowLayoutPanel2
 			//
 			this.flowLayoutPanel2.AutoSize = true;
 			this.flowLayoutPanel2.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-			this.flowLayoutPanel2.Location = new System.Drawing.Point(3, 21);
+			this.flowLayoutPanel2.Location = new System.Drawing.Point(28, 23);
+			this.flowLayoutPanel2.MaximumSize = new System.Drawing.Size(0, 200);
 			this.flowLayoutPanel2.Name = "flowLayoutPanel2";
-			this.flowLayoutPanel2.Size = new System.Drawing.Size(206, 170);
+			this.flowLayoutPanel2.Size = new System.Drawing.Size(0, 0);
 			this.flowLayoutPanel2.TabIndex = 0;
 			this.flowLayoutPanel2.WrapContents = false;
 			//
 			// tableLayoutPanel1
 			//
-			this.tableLayoutPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-						| System.Windows.Forms.AnchorStyles.Left)
+			this.tableLayoutPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
 						| System.Windows.Forms.AnchorStyles.Right)));
-			this.tableLayoutPanel1.ColumnCount = 2;
+			this.tableLayoutPanel1.AutoSize = true;
+			this.tableLayoutPanel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			this.tableLayoutPanel1.ColumnCount = 1;
 			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 180F));
-			this.tableLayoutPanel1.Controls.Add(this.secondCellPanel, 1, 0);
+			this.tableLayoutPanel1.Controls.Add(this.secondCellPanel, 0, 1);
 			this.tableLayoutPanel1.Controls.Add(this.firstCellPanel, 0, 0);
 			this.tableLayoutPanel1.Location = new System.Drawing.Point(85, 123);
 			this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-			this.tableLayoutPanel1.RowCount = 1;
+			this.tableLayoutPanel1.RowCount = 2;
 			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 63F));
 			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-			this.tableLayoutPanel1.Size = new System.Drawing.Size(398, 200);
+			this.tableLayoutPanel1.Size = new System.Drawing.Size(180, 95);
 			this.tableLayoutPanel1.TabIndex = 9;
 			//
 			// secondCellPanel
@@ -151,19 +153,20 @@ namespace WeSay.ConfigTool
 			this.secondCellPanel.Controls.Add(this.createNewProject);
 			this.secondCellPanel.Controls.Add(this.openDifferentProject);
 			this.secondCellPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.secondCellPanel.Location = new System.Drawing.Point(221, 3);
+			this.secondCellPanel.Location = new System.Drawing.Point(3, 35);
 			this.secondCellPanel.Name = "secondCellPanel";
-			this.secondCellPanel.Size = new System.Drawing.Size(174, 194);
+			this.secondCellPanel.Size = new System.Drawing.Size(174, 57);
 			this.secondCellPanel.TabIndex = 7;
 			//
 			// firstCellPanel
 			//
+			this.firstCellPanel.AutoSize = true;
 			this.firstCellPanel.Controls.Add(this.flowLayoutPanel2);
 			this.firstCellPanel.Controls.Add(this.recentProjectsLabel);
-			this.firstCellPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.firstCellPanel.Dock = System.Windows.Forms.DockStyle.Top;
 			this.firstCellPanel.Location = new System.Drawing.Point(3, 3);
 			this.firstCellPanel.Name = "firstCellPanel";
-			this.firstCellPanel.Size = new System.Drawing.Size(212, 194);
+			this.firstCellPanel.Size = new System.Drawing.Size(174, 26);
 			this.firstCellPanel.TabIndex = 8;
 			//
 			// WelcomeControl
@@ -180,6 +183,7 @@ namespace WeSay.ConfigTool
 			this.Load += new System.EventHandler(this.WelcomeControl_Load);
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
 			this.tableLayoutPanel1.ResumeLayout(false);
+			this.tableLayoutPanel1.PerformLayout();
 			this.secondCellPanel.ResumeLayout(false);
 			this.secondCellPanel.PerformLayout();
 			this.firstCellPanel.ResumeLayout(false);
