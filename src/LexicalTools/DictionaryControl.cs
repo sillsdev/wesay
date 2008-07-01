@@ -127,7 +127,10 @@ namespace WeSay.LexicalTools
 					IList<WritingSystem> writingSystems = BasilProject.Project.WritingSystemsFromIds(field.WritingSystemIds);
 					foreach (WritingSystem writingSystem in writingSystems)
 					{
-						AddWritingSystemToPicker(writingSystem, field);
+						if (!WritingSystemExistsInPicker(writingSystem))
+						{
+							AddWritingSystemToPicker(writingSystem, field);
+						}
 					}
 				}
 				else
@@ -147,6 +150,18 @@ namespace WeSay.LexicalTools
 			item.RadioCheck = true;
 			item.Tag = writingSystem;
 			_cmWritingSystems.MenuItems.Add(item);
+		}
+
+		private bool WritingSystemExistsInPicker(WritingSystem writingSystem)
+		{
+			foreach (MenuItem item in _cmWritingSystems.MenuItems)
+			{
+				if (writingSystem.Id == ((WritingSystem)item.Tag).Id)
+				{
+					return true;
+				}
+			}
+			return false;
 		}
 
 		private bool IsWritingSystemUsedInLexicalForm(string writingSystemId)
@@ -420,13 +435,32 @@ namespace WeSay.LexicalTools
 			Logger.WriteEvent("NewWord_Click");
 
 			LexEntry entry = _lexEntryRepository.CreateItem();
+			string lexicalForm = string.Empty;
+			bool needNewEntry = true;
 			//bool NoPriorSelection = _recordsListBox.SelectedIndex == -1;
 			//_recordListBoxActive = true; // allow onRecordSelectionChanged
 			if (_findText.Focused && !string.IsNullOrEmpty(_findText.Text) &&
 				IsWritingSystemUsedInLexicalForm(_listWritingSystem.Id))
-					//todo only create new when not found (doesn't already exist)
 			{
-				entry.LexicalForm[_listWritingSystem.Id] = _findText.Text.Trim();
+				lexicalForm = _findText.Text.Trim();
+				//only create new when not found (doesn't already exist)
+				int existingIndex = _records.FindFirstIndex(delegate(RecordToken<LexEntry> token)
+											{
+												return (string) token.Results["Form"] == lexicalForm;
+											});
+				if (existingIndex >= 0)
+				{
+					_recordsListBox.SelectedIndex = existingIndex;
+					entry = CurrentRecord;
+					needNewEntry = false;
+				}
+			}
+
+			if (needNewEntry)
+			{
+				entry = _lexEntryRepository.CreateItem();
+				entry.LexicalForm[_listWritingSystem.Id] = lexicalForm;
+				_lexEntryRepository.SaveItem(entry);
 			}
 
 			if (!_btnNewWord.Focused)
@@ -436,9 +470,9 @@ namespace WeSay.LexicalTools
 				_btnNewWord.Focus();
 			}
 			LoadRecords();
-			int index = _records.FindFirstIndex(entry);
-			Debug.Assert(index != -1);
-			_recordsListBox.SelectedIndex = index;
+			int selectIndex = _records.FindFirstIndex(entry);
+			Debug.Assert(selectIndex != -1);
+			_recordsListBox.SelectedIndex = selectIndex;
 			OnRecordSelectionChanged(_recordsListBox, new EventArgs());
 			_entryViewControl.Focus();
 		}

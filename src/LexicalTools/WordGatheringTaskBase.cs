@@ -11,11 +11,14 @@ namespace WeSay.LexicalTools
 		private readonly ViewTemplate _viewTemplate;
 
 		protected WordGatheringTaskBase(string label,
+										string longLabel,
 										string description,
+										string remainingCountText,
+										string referenceCountText,
 										bool isPinned,
 										LexEntryRepository lexEntryRepository,
 										ViewTemplate viewTemplate)
-				: base(label, description, isPinned, lexEntryRepository)
+				: base(label, longLabel, description, remainingCountText, referenceCountText, isPinned, lexEntryRepository)
 		{
 			if (viewTemplate == null)
 			{
@@ -36,6 +39,14 @@ namespace WeSay.LexicalTools
 				_lexicalFormWritingSystem = writingSystems[lexicalFormField.WritingSystemIds[0]];
 			}
 		}
+
+		protected WordGatheringTaskBase(string label,
+										string longLabel,
+										string description,
+										bool isPinned,
+										LexEntryRepository lexEntryRepository,
+										ViewTemplate viewTemplate)
+				: this(label, longLabel, description, string.Empty, string.Empty, isPinned, lexEntryRepository, viewTemplate) { }
 
 		public override DashboardGroup Group
 		{

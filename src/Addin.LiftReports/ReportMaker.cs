@@ -72,6 +72,11 @@ namespace Addin.LiftReports
 
 		public string LocalizedLabel
 		{
+			get { return StringCatalog.Get("~Report"); }
+		}
+
+		public string LocalizedLongLabel
+		{
 			get { return LocalizedName; }
 		}
 

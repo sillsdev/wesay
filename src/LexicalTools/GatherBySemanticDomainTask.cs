@@ -32,11 +32,14 @@ namespace WeSay.LexicalTools
 
 		public GatherBySemanticDomainTask(LexEntryRepository lexEntryRepository,
 										  string label,
+										  string longLabel,
 										  string description,
+										  string remainingCountText,
+										  string referenceCountText,
 										  string semanticDomainQuestionsFileName,
 										  ViewTemplate viewTemplate,
 										  string semanticDomainFieldName)
-				: base(label, description, false, lexEntryRepository, viewTemplate)
+				: base(label, longLabel, description, remainingCountText, referenceCountText, false, lexEntryRepository, viewTemplate)
 		{
 			if (semanticDomainQuestionsFileName == null)
 			{

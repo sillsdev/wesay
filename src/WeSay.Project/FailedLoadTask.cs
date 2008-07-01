@@ -9,11 +9,13 @@ namespace WeSay.Project
 	public class FailedLoadTask: ITask
 	{
 		private readonly string _label;
+		private readonly string _longLabel;
 		private readonly string _description;
 
-		public FailedLoadTask(string label, string description)
+		public FailedLoadTask(string label, string longLabel, string description)
 		{
 			_label = label;
+			_longLabel = longLabel;
 			_description = description;
 		}
 
@@ -96,6 +98,16 @@ namespace WeSay.Project
 			return false;
 		}
 
+		public string GetRemainingCountText()
+		{
+			return string.Empty;
+		}
+
+		public string GetReferenceCountText()
+		{
+			return string.Empty;
+		}
+
 		#region IThingOnDashboard Members
 
 		public DashboardGroup Group
@@ -106,6 +118,11 @@ namespace WeSay.Project
 		public string LocalizedLabel
 		{
 			get { return StringCatalog.Get(_label); }
+		}
+
+		public string LocalizedLongLabel
+		{
+			get { return StringCatalog.Get(_longLabel); }
 		}
 
 		public ButtonStyle DashboardButtonStyle

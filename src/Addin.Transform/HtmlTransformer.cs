@@ -19,6 +19,16 @@ namespace Addin.Transform
 			get { return StringCatalog.Get("~Export to HTML"); }
 		}
 
+		public override string LocalizedLabel
+		{
+			get { return LocalizedName; }
+		}
+
+		public override string LocalizedLongLabel
+		{
+			get { return LocalizedName; }
+		}
+
 		public override  string Description
 		{
 			get

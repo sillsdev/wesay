@@ -28,7 +28,17 @@ namespace Addin.Transform
 			get { return StringCatalog.Get("~Export To SFM"); }
 		}
 
-		public override  string Description
+		public override string LocalizedLabel
+		{
+			get { return LocalizedName; }
+		}
+
+		public override string LocalizedLongLabel
+		{
+			get { return LocalizedName; }
+		}
+
+		public override string Description
 		{
 			get { return StringCatalog.Get("~Saves the lexicon in a form of standard format."); }
 		}

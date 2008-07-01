@@ -152,6 +152,11 @@ namespace Addin.Backup
 
 		public string LocalizedLabel
 		{
+			get { return StringCatalog.Get("~Email"); }
+		}
+
+		public string LocalizedLongLabel
+		{
 			get { return LocalizedName; }
 		}
 

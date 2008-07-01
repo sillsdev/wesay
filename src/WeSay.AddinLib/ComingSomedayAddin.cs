@@ -9,18 +9,21 @@ namespace WeSay.AddinLib
 	public class ComingSomedayAddin: IWeSayAddin
 	{
 		private readonly string _name;
+		private readonly string _longName;
 		private readonly string _shortDescription;
 		private readonly Image _buttonImage = null;
 
-		public ComingSomedayAddin(string name, string shortDescription)
+		public ComingSomedayAddin(string name, string longName, string shortDescription)
 		{
 			_name = name;
+			_longName = longName;
 			_shortDescription = shortDescription;
 		}
 
-		public ComingSomedayAddin(string name, string shortDescription, Image buttonImage)
+		public ComingSomedayAddin(string name, string longName, string shortDescription, Image buttonImage)
 		{
 			_name = name;
+			_longName = longName;
 			_shortDescription = shortDescription;
 			_buttonImage = buttonImage;
 		}
@@ -71,6 +74,11 @@ namespace WeSay.AddinLib
 		public string LocalizedLabel
 		{
 			get { return LocalizedName; }
+		}
+
+		public string LocalizedLongLabel
+		{
+			get { return _longName; }
 		}
 
 		public ButtonStyle DashboardButtonStyle

@@ -131,6 +131,19 @@ namespace WeSay.UI
 			gradBrush.Dispose();
 		}
 
+		public void PaintBackground(Graphics graphics, Rectangle rectangle, object objectForColor)
+		{
+			Debug.Assert(graphics != null);
+			// If the rectangle is non-existent, then don't try to paint it - exceptions will happen
+			if (rectangle.Width <= 0 || rectangle.Height <= 0)
+				return;
+			LinearGradientBrush gradBrush =
+				new LinearGradientBrush(rectangle, GetStartBackgroundColor(objectForColor),
+										GetEndBackgroundColor(objectForColor), LinearGradientMode.Vertical);
+			graphics.FillRectangle(gradBrush, rectangle);
+			gradBrush.Dispose();
+		}
+
 		private void SetColors()
 		{
 			if (_skinName == "projector")
