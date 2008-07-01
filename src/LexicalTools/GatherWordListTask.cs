@@ -127,7 +127,7 @@ namespace WeSay.LexicalTools
 			{
 				if (_gatherControl == null)
 				{
-					_gatherControl = new GatherWordListControl(this, _lexicalUnitWritingSystem.Id);
+					_gatherControl = new GatherWordListControl(this, _lexicalUnitWritingSystem);
 				}
 				return _gatherControl;
 			}

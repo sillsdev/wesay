@@ -11,7 +11,7 @@ namespace WeSay.UI
 {
 	public partial class MultiTextControl: TableLayoutPanel
 	{
-		private IList<string> _writingSystemsForThisField;
+		private IList<WritingSystem> _writingSystemsForThisField;
 		private readonly List<WeSayTextBox> _textBoxes;
 		private bool _showAnnotationWidget;
 
@@ -89,7 +89,14 @@ namespace WeSay.UI
 								bool isSpellCheckingEnabled): this(allWritingSystems)
 		{
 			Name = nameForTesting + "-mtc";
-			_writingSystemsForThisField = writingSystemIds;
+			_writingSystemsForThisField = new List<WritingSystem>();
+			foreach (KeyValuePair<string, WritingSystem> pair in allWritingSystems)
+			{
+				if(writingSystemIds.Contains(pair.Key))
+				{
+					_writingSystemsForThisField.Add(pair.Value);
+				}
+			}
 			_showAnnotationWidget = showAnnotationWidget;
 			_visibility = visibility;
 			_isSpellCheckingEnabled = isSpellCheckingEnabled;
@@ -150,10 +157,10 @@ namespace WeSay.UI
 				RowStyles.Clear();
 			}
 			Debug.Assert(RowCount == 0);
-			foreach (string writingSystemId in WritingSystemIdsForThisField)
+			foreach (WritingSystem writingSystem in WritingSystemsForThisField)
 			{
 				RowStyles.Add(new RowStyle(SizeType.AutoSize));
-				WeSayTextBox box = AddTextBox(writingSystemId,
+				WeSayTextBox box = AddTextBox(writingSystem,
 											  multiText);
 
 				Label label = AddWritingSystemLabel(box);
@@ -167,7 +174,7 @@ namespace WeSay.UI
 					//TODO: THIS IS TRANSITIONAL CODE... AnnotationWidget should probably become a full control (or go away)
 					AnnotationWidget aw =
 							new AnnotationWidget(multiText,
-												 writingSystemId,
+												 writingSystem.Id,
 												 box.Name + "-annotationWidget");
 					Control annotationControl = aw.MakeControl(new Size()); //p.Size);
 					annotationControl.Click += subControl_Click;
@@ -278,10 +285,9 @@ namespace WeSay.UI
 			return label;
 		}
 
-		private WeSayTextBox AddTextBox(string writingSystemId, MultiTextBase multiText)
+		private WeSayTextBox AddTextBox(WritingSystem writingSystem, MultiTextBase multiText)
 		{
-			WeSayTextBox box = new WeSayTextBox(_allWritingSystems[writingSystemId],
-												Name);
+			WeSayTextBox box = new WeSayTextBox(writingSystem, Name);
 			box.ReadOnly = (_visibility == CommonEnumerations.VisibilitySetting.ReadOnly);
 			box.Multiline = true;
 			box.WordWrap = true;
@@ -289,9 +295,9 @@ namespace WeSay.UI
 			//box.Enabled = !box.ReadOnly;
 
 			_textBoxes.Add(box);
-			box.Name = Name.Replace("-mtc", "") + "_" + writingSystemId;
+			box.Name = Name.Replace("-mtc", "") + "_" + writingSystem.Id;
 			//for automated tests to find this particular guy
-			box.Text = multiText[writingSystemId];
+			box.Text = multiText[writingSystem.Id];
 
 			box.TextChanged += OnTextOfSomeBoxChanged;
 			box.KeyDown += OnKeyDownInSomeBox;
@@ -310,7 +316,7 @@ namespace WeSay.UI
 		}
 
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-		public IList<string> WritingSystemIdsForThisField
+		public IList<WritingSystem> WritingSystemsForThisField
 		{
 			get { return _writingSystemsForThisField; }
 			set
