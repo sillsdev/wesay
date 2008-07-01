@@ -19,13 +19,13 @@ namespace WeSay.LexicalTools
 								LexEntryRepository lexEntryRepository)
 				: base(builder, viewTemplate, lexEntryRepository) {}
 
-		internal override int AddWidgets(IList<WeSayDataObject> list, int index, int insertAtRow)
+		internal override int AddWidgets(WeSayDataObject wsdo, int insertAtRow)
 		{
+			LexSense sense = (LexSense)wsdo;
 			int rowCount = 0;
 			DetailList.SuspendLayout();
 			try
 			{
-				LexSense sense = (LexSense) list[index];
 #if GlossMeaning
 				Field field = ActiveViewTemplate.GetField(Field.FieldNames.SenseGloss.ToString());
 				if (field != null && field.GetDoShow(sense.Gloss, this.ShowNormallyHiddenFields))
@@ -73,7 +73,7 @@ namespace WeSay.LexicalTools
 
 				rowCount =
 						AddChildrenWidgets(exampleLayouter,
-										   (IList<WeSayDataObject>) sense.ExampleSentences,
+										   sense.ExampleSentences,
 										   insertAtRow,
 										   rowCount);
 
@@ -97,7 +97,7 @@ namespace WeSay.LexicalTools
 		public int AddGhost(IList<LexSense> list, bool isHeading)
 		{
 			int insertAtRow = -1;
-			string label = GetLabelForMeaning((ICollection<WeSayDataObject>) list);
+			string label = GetLabelForMeaning(list.Count);
 #if GlossMeaning
 			return MakeGhostWidget<LexSense>(list, insertAtRow, Field.FieldNames.SenseGloss.ToString(), label, "Gloss", isHeading);
 #else
@@ -111,21 +111,21 @@ namespace WeSay.LexicalTools
 #endif
 		}
 
-		private static string GetLabelForMeaning(ICollection<WeSayDataObject> list)
+		private static string GetLabelForMeaning(int itemCount)
 		{
 			string label =
 					StringCatalog.Get("~Meaning",
 									  "This label is shown once, but has two roles.  1) it labels the defintion field, and 2) marks the beginning of the set of fields which make up a sense. So, in english, if we labelled this 'definition', it would describe the field well but wouldn't label the section well.");
-			if (list.Count > 0)
+			if (itemCount > 0)
 			{
-				label += " " + (list.Count + 1);
+				label += " " + (itemCount + 1);
 			}
 			return label;
 		}
 
-		protected override void UpdateGhostLabel(IList<WeSayDataObject> list, int rowOfGhost)
+		protected override void UpdateGhostLabel(int itemCount, int rowOfGhost)
 		{
-			DetailList.GetLabelControlFromRow(rowOfGhost).Text = GetLabelForMeaning(list);
+			DetailList.GetLabelControlFromRow(rowOfGhost).Text = GetLabelForMeaning(itemCount);
 		}
 	}
 }

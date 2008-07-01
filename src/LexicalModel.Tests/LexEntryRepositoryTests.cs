@@ -59,7 +59,7 @@ namespace WeSay.LexicalModel.Tests
 																		 ApproximateMatcherOptions.
 																				 IncludePrefixedForms);
 			Assert.AreEqual(2, matches.Count);
-			Assert.AreNotEqual(entryInOtherWritingSystem, matches[1].Results["Form"]);
+			Assert.AreNotEqual(entryInOtherWritingSystem, matches[1]["Form"]);
 		}
 
 		[Test]

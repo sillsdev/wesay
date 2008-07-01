@@ -17,13 +17,14 @@ namespace WeSay.LexicalTools
 		public LexExampleSentenceLayouter(DetailList builder, ViewTemplate viewTemplate)
 				: base(builder, viewTemplate, null) {}
 
-		internal override int AddWidgets(IList<WeSayDataObject> list, int index, int insertAtRow)
+		internal override int AddWidgets(WeSayDataObject wsdo, int insertAtRow)
 		{
+			LexExampleSentence example = (LexExampleSentence)wsdo;
+
 			DetailList.SuspendLayout();
 			int rowCount = 0;
 			try
 			{
-				LexExampleSentence example = (LexExampleSentence) list[index];
 
 				Field field =
 						ActiveViewTemplate.GetField(Field.FieldNames.ExampleSentence.ToString());

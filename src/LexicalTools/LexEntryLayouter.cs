@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Windows.Forms;
 using Palaso.UI.WindowsForms.i8n;
 using WeSay.Foundation;
@@ -23,9 +22,9 @@ namespace WeSay.LexicalTools
 			return AddWidgets(entry, -1);
 		}
 
-		internal override int AddWidgets(IList<WeSayDataObject> list, int index, int insertAtRow)
+		internal override int AddWidgets(WeSayDataObject wsdo, int insertAtRow)
 		{
-			return AddWidgets((LexEntry) list[index], insertAtRow);
+			return AddWidgets((LexEntry) wsdo, insertAtRow);
 		}
 
 		internal int AddWidgets(LexEntry entry, int insertAtRow)
@@ -49,7 +48,7 @@ namespace WeSay.LexicalTools
 			LexSenseLayouter layouter =
 					new LexSenseLayouter(DetailList, ActiveViewTemplate, RecordListManager);
 			layouter.ShowNormallyHiddenFields = ShowNormallyHiddenFields;
-			rowCount = AddChildrenWidgets(layouter, (IList<WeSayDataObject>)entry.Senses, insertAtRow, rowCount);
+			rowCount = AddChildrenWidgets(layouter, entry.Senses, insertAtRow, rowCount);
 			//add a ghost
 			rowCount += layouter.AddGhost(entry.Senses, true);
 

@@ -258,7 +258,7 @@ namespace WeSay.LexicalTools
 		//todo: support fallback to best form
 		private void OnRetrieveVirtualItemEvent(object sender, RetrieveVirtualItemEventArgs e)
 		{
-			string displayString = (string) _records[e.ItemIndex].Results["Form"];
+			string displayString = (string) _records[e.ItemIndex]["Form"];
 			if(string.IsNullOrEmpty(displayString))
 			{
 				displayString = "(" +
@@ -352,7 +352,7 @@ namespace WeSay.LexicalTools
 			_recordsListBox.SelectedIndex =
 					_records.FindFirstIndex(delegate(RecordToken<LexEntry> token)
 											{
-												return (string) token.Results["Form"] == text;
+												return (string) token["Form"] == text;
 											});
 		}
 
