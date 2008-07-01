@@ -43,9 +43,9 @@ namespace WeSay.CommonTools
 			this._dictionarySizeLabel.Location = new System.Drawing.Point(67, 22);
 			this._dictionarySizeLabel.Margin = new System.Windows.Forms.Padding(3, 0, 3, 4);
 			this._dictionarySizeLabel.Name = "_dictionarySizeLabel";
-			this._dictionarySizeLabel.Size = new System.Drawing.Size(361, 30);
+			this._dictionarySizeLabel.Size = new System.Drawing.Size(340, 30);
 			this._dictionarySizeLabel.TabIndex = 5;
-			this._dictionarySizeLabel.Text = "~Your dictionary has {0} words";
+			this._dictionarySizeLabel.Text = "~{1} dictionary has {0} words";
 			this._dictionarySizeLabel.SizeChanged += new System.EventHandler(this._dictionarySizeLabel_SizeChanged);
 			//
 			// _logoImage

@@ -161,7 +161,12 @@ namespace Addin.Backup
 
 		public string LocalizedLabel
 		{
-			get { return this.LocalizedName; }
+			get { return StringCatalog.Get("~Email"); }
+		}
+
+		public string LocalizedLongLabel
+		{
+			get { return LocalizedName; }
 		}
 
 		public WeSay.Foundation.Dashboard.ButtonStyle DashboardButtonStyle

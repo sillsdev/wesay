@@ -8,6 +8,8 @@ namespace WeSay.Foundation.Dashboard
 
 		string LocalizedLabel { get; }
 
+		string LocalizedLongLabel { get; }
+
 		string Description { get; }
 
 		ButtonStyle DashboardButtonStyle { get; }

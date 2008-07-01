@@ -106,7 +106,7 @@ namespace WeSay.App
 							message = e.Message;
 						}
 					}
-					iTask = new FailedLoadTask(id, message);
+					iTask = new FailedLoadTask(id, id, message);
 				}
 				_tasks.Add(iTask);
 			}

@@ -24,7 +24,6 @@ namespace WeSay.ConfigTool
 		   else
 		   {
 			   this.firstCellPanel.Visible = false;
-			   this.tableLayoutPanel1.ColumnStyles[0].Width = 0;
 			   this.openDifferentProject.Text = "Open Existing Project";
 		   }
 		}

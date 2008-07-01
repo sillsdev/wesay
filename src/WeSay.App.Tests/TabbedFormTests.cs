@@ -89,6 +89,16 @@ namespace WeSay.App.Tests
 			return false;
 		}
 
+		public string GetRemainingCountText()
+		{
+			return "Remaining: " + GetRemainingCount();
+		}
+
+		public string GetReferenceCountText()
+		{
+			return "Reference: " + GetReferenceCount();
+		}
+
 		public int ExactCount
 		{
 			get
@@ -114,6 +124,11 @@ namespace WeSay.App.Tests
 		}
 
 		public string LocalizedLabel
+		{
+			get { throw new NotImplementedException(); }
+		}
+
+		public string LocalizedLongLabel
 		{
 			get { throw new NotImplementedException(); }
 		}

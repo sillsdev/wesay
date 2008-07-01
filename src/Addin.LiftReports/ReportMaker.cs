@@ -100,7 +100,12 @@ namespace Addin.LiftReports
 
 		public string LocalizedLabel
 		{
-			get { return this.LocalizedName; }
+			get { return StringCatalog.Get("~Report"); }
+		}
+
+		public string LocalizedLongLabel
+		{
+			get { return LocalizedName; }
 		}
 
 		public WeSay.Foundation.Dashboard.ButtonStyle DashboardButtonStyle

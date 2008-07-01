@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Threading;
 using System.Windows.Forms;
@@ -357,6 +358,17 @@ namespace WeSay.LexicalTools.Tests
 			ClickAddWord();
 			TextBoxTester t = new TextBoxTester(GetLexicalFormControlName(), _window);
 			Assert.IsTrue(t.Properties.Visible);
+		}
+
+		[Test]
+		public void EmptyDictionary_AddWordsTwice_OneWordExists()
+		{
+			ListViewTester l = new ListViewTester("_recordsListBox", _window);
+			StartWithEmpty();
+			ClickAddWord();
+			Assert.AreEqual(1, l.Properties.Items.Count);
+			ClickAddWord();
+			Assert.AreEqual(1, l.Properties.Items.Count);
 		}
 
 		[Test]
@@ -801,6 +813,7 @@ namespace WeSay.LexicalTools.Tests
 		public void AddingNewWord_HidesCustomShyGuy()
 		{
 			ClickAddWord();
+			TypeInLexicalForm("foo");
 			Assert.IsNull(GetEditControl("MyShyEntryCustom"));
 			ButtonTester btn = new ButtonTester("_showAllFieldsToggleButton", _window);
 			Assert.IsTrue(btn.Text.Contains("Show"));
@@ -816,6 +829,7 @@ namespace WeSay.LexicalTools.Tests
 		public void AddingNewWord_ClearsShowHiddenState()
 		{
 			ClickAddWord();
+			TypeInLexicalForm("foo");
 			ButtonTester btn = new ButtonTester("_showAllFieldsToggleButton", _window);
 			Assert.IsTrue(btn.Text.Contains("Show"));
 			btn.Click();
@@ -827,6 +841,7 @@ namespace WeSay.LexicalTools.Tests
 		public void DeletingWord_ClearsShowHiddenState()
 		{
 			ClickAddWord();
+			TypeInLexicalForm("foo");
 			ClickAddWord();
 			ButtonTester btn = new ButtonTester("_showAllFieldsToggleButton", _window);
 			Assert.IsTrue(btn.Text.Contains("Show"));
@@ -853,6 +868,46 @@ namespace WeSay.LexicalTools.Tests
 		{
 			DictionaryControl control = (DictionaryControl)_task.Control;
 			control.GoToEntry("bogus");
+		}
+
+		[Test]
+		public void ClickOnWhiteSpaceToRightOfEntry_ThenKeyboardNavigate_CorrectEntrySelected()
+		{
+			ListViewTester l = new ListViewTester("_recordsListBox", _window);
+			MouseController mc = new MouseController(l);
+			KeyboardController kc = new KeyboardController(l);
+			l.Select(0);
+			Rectangle r = l.Properties.GetItemRect(1);
+			mc.Click(r.Right + 1, r.Top + 1);
+			kc.Press("{DOWN}");
+			Assert.AreEqual(2, l.Properties.SelectedIndices[0]);
+		}
+
+		[Test]
+		public void ClickOnWhiteSpaceToRightOfEntry_EntryAlreadySelected_DeleteButtonStaysEnabled()
+		{
+			ListViewTester l = new ListViewTester("_recordsListBox", _window);
+			ButtonTester b = new ButtonTester("_btnDeleteWord", _window);
+			MouseController mc = new MouseController(l);
+			Rectangle r = l.Properties.GetItemRect(0);
+			mc.Click(r.Right + 1, r.Top + 1);
+			// move enough to not count as a double-click
+			mc.Click(r.Right + SystemInformation.DoubleClickSize.Width + 2, r.Top + 1);
+			Assert.IsTrue(b.Properties.Enabled);
+		}
+
+		[Test]
+		public void DoubleClickOnWhiteSpaceToRightOfEntry_EntryAlreadySelected_EntryStaysSelected()
+		{
+			ListViewTester l = new ListViewTester("_recordsListBox", _window);
+			ButtonTester b = new ButtonTester("_btnDeleteWord", _window);
+			MouseController mc = new MouseController(l);
+			Rectangle r = l.Properties.GetItemRect(0);
+			mc.Click(r.Right + 1, r.Top + 1);
+			// move enough to not confuse click with double-click
+			mc.DoubleClick(r.Right + SystemInformation.DoubleClickSize.Width + 2, r.Top + 1);
+			Assert.AreEqual(1, l.Properties.SelectedIndices.Count);
+			Assert.AreEqual(0, l.Properties.SelectedIndices[0]);
 		}
 //
 //        [Test]

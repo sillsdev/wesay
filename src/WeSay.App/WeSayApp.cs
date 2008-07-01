@@ -393,6 +393,15 @@ namespace WeSay.App
 
 			WeSayWordsProject.Project.LockLift(); // Consume will expect it to be locked already
 
+			try
+			{
+				project.MigrateConfigurationXmlIfNeeded();
+			}
+			catch
+			{
+				ErrorReport.ReportNonFatalMessage("WeSay was unable to migrate the WeSay configuration file for the new version of WeSay. This may cause WeSay to not function properly. Try opening the project in the WeSay Configuration Tool to fix this.");
+			}
+
 			return project;
 		}
 

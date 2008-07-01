@@ -32,7 +32,17 @@ namespace Addin.Transform
 			}
 		}
 
-		public override  string Description
+		public override string LocalizedLabel
+		{
+			get { return LocalizedName; }
+		}
+
+		public override string LocalizedLongLabel
+		{
+			get { return LocalizedName; }
+		}
+
+		public override string Description
 		{
 			get
 			{

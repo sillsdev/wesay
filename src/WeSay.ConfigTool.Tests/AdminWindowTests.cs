@@ -195,6 +195,12 @@ namespace WeSay.ConfigTool.Tests.Tests
 			WeSayWordsProject.InitializeForTests(); // for Teardown
 		}
 
+		[Test]
+		public void ExistingProjectGetsNewTasks()
+		{
+			_window.CreateAndOpenProject(_projectFolder);
+
+		}
 
 	}
 }

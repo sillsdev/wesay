@@ -40,6 +40,9 @@ namespace WeSay.Project
 		/// Returns whether or not the GetReferenceCount and GetRemainingCount mean anything
 		/// </summary>
 		bool AreCountsRelevant();
+
+		string GetRemainingCountText();
+		string GetReferenceCountText();
 	}
 
 	/// <summary>
