@@ -15,7 +15,6 @@ namespace WeSay.LexicalModel.Tests.Db4oSpecific
 
 		protected string _filePath;
 		private Db4oLexEntryRepository _db4oRepository = null;
-		private Db4oDataSource _container;
 
 		[SetUp]
 		public void Setup()
@@ -27,8 +26,6 @@ namespace WeSay.LexicalModel.Tests.Db4oSpecific
 		[TearDown]
 		public void TearDown()
 		{
-			this._container = null;
-
 			if (_db4oRepository != null)
 			{
 				_db4oRepository.Dispose();
@@ -46,8 +43,7 @@ namespace WeSay.LexicalModel.Tests.Db4oSpecific
 			{
 				_db4oRepository.Dispose();
 			}
-			_container = new Db4oDataSource(_filePath);
-			_db4oRepository = new Db4oLexEntryRepository(_container);
+			_db4oRepository = new Db4oLexEntryRepository(_filePath);
 		}
 
 		private LexEntry GetFirstEntry()

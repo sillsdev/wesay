@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 using WeSay.Data;
+using WeSay.Foundation;
 using WeSay.LexicalModel;
 using WeSay.UI;
 
@@ -21,7 +22,7 @@ namespace WeSay.LexicalTools
 			InitializeComponent();
 		}
 
-		public GatherWordListControl(GatherWordListTask task, string lexicalUnitWritingSystemId)
+		public GatherWordListControl(GatherWordListTask task, WritingSystem lexicalUnitWritingSystem)
 		{
 			_task = task;
 
@@ -31,8 +32,8 @@ namespace WeSay.LexicalTools
 
 			_listViewOfWordsMatchingCurrentItem.Items.Clear();
 
-			_vernacularBox.WritingSystemIdsForThisField =
-					new string[] {lexicalUnitWritingSystemId};
+			_vernacularBox.WritingSystemsForThisField =
+					new WritingSystem[] {lexicalUnitWritingSystem};
 			_vernacularBox.TextChanged += _vernacularBox_TextChanged;
 			_vernacularBox.KeyDown += _boxVernacularWord_KeyDown;
 			_vernacularBox.MinimumSize = _boxForeignWord.Size;

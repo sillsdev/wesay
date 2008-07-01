@@ -5,6 +5,7 @@ using LiftIO.Parsing;
 using Palaso.Text;
 using WeSay.Data;
 using WeSay.Foundation;
+using WeSay.Foundation.Options;
 using WeSay.LexicalModel.Db4oSpecific;
 
 namespace WeSay.LexicalModel
@@ -235,15 +236,47 @@ namespace WeSay.LexicalModel
 			{
 				throw new ArgumentNullException("fieldName");
 			}
-			Query allSenseProperties = GetAllLexEntriesQuery().ForEach("Senses")
-						.ForEach("Properties").Show("Key").Show("Value","SemanticDomain");
+			Query allSensePropertiesQuery = GetAllLexEntriesQuery().ForEach("Senses")
+						.ForEach("Properties").Show("Key").Show("Value","SemanticDomains");
 
-			ResultSet<LexEntry> results = GetItemsMatching(allSenseProperties);
-			results.RemoveAll(delegate (RecordToken<LexEntry> token)
+			ResultSet<LexEntry> allSenseProperties = GetItemsMatching(allSensePropertiesQuery);
+			allSenseProperties.RemoveAll(delegate(RecordToken<LexEntry> token)
 				{
 					return (string)token["Key"] != fieldName;
 				});
-			return results;
+
+			List<RecordToken<LexEntry>> result = new List<RecordToken<LexEntry>>();
+			foreach (RecordToken<LexEntry> token in allSenseProperties)
+			{
+				OptionRefCollection semanticDomains = (OptionRefCollection) token["SemanticDomains"];
+				foreach (string semanticDomain in semanticDomains.Keys)
+				{
+					RecordToken<LexEntry> newToken = new RecordToken<LexEntry>(this, token.Id);
+					newToken["SemanticDomain"] = semanticDomain;
+					result.Add(newToken);
+				}
+			}
+			ResultSet<LexEntry> resultSet = new ResultSet<LexEntry>(this, result);
+			resultSet.Sort(new SortDefinition("SemanticDomain", StringComparer.InvariantCulture),
+						   new SortDefinition("RepositoryId", Comparer<RepositoryId>.Default));
+
+			return RemoveDuplicateResults(resultSet);
+		}
+
+		private ResultSet<LexEntry> RemoveDuplicateResults(
+			ResultSet<LexEntry> resultSet)
+		{
+			List<RecordToken<LexEntry>> result = new List<RecordToken<LexEntry>>();
+			RecordToken<LexEntry> previousToken = null;
+			foreach (RecordToken<LexEntry> token in resultSet)
+			{
+				if(token != previousToken)
+				{
+					result.Add(token);
+				}
+				previousToken = token;
+			}
+			return new ResultSet<LexEntry>(this, result);
 		}
 
 		public ResultSet<LexEntry> GetEntriesWithMatchingGlossSortedByLexicalForm(
@@ -384,7 +417,7 @@ namespace WeSay.LexicalModel
 				return allResults;
 			}
 
-			allResults.Sort(new SortDefinition("RepositoryId", Comparer<RepositoryId>.Default));
+			allResults.SortByRepositoryId();
 
 			// remove all entries with writing system != headwordWritingSystem
 			//            make sure always have one entry though

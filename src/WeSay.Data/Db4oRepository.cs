@@ -8,10 +8,19 @@ namespace WeSay.Data
 {
 	public class Db4oRepository<T> : IRepository<T> where T:class, new()
 	{
-		//private readonly PrivateDb4oRecordListManager _recordListManager;
 		private readonly Db4oDataSource _database;
-		private const int ActivationDepth = int.MaxValue;
-		protected IExtObjectContainer Database
+		private const int ActivationDepth = 99;
+
+		[CLSCompliant(false)]
+		protected IExtObjectContainer InternalDatabase
+		{
+			get
+			{
+				return Database;
+			}
+		}
+
+		internal IExtObjectContainer Database
 		{
 			get
 			{
