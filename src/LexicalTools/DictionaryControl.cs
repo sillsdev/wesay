@@ -381,6 +381,8 @@ namespace WeSay.LexicalTools
 			if (Control_EntryDetailPanel.DataSource == CurrentRecord)
 			{
 				//we were getting 3 calls to this for each click on a new word
+				// update display to catch changes from null to current value
+				UpdateDisplay();
 				return;
 			}
 
