@@ -26,15 +26,6 @@ namespace WeSay.Data
 			_id = id;
 		}
 
-		[Obsolete]
-		public RecordToken(IRepository<T> repository,
-						   string s,
-						   RepositoryId id)
-			: this(repository, new Dictionary<string, object>(), id)
-		{
-			_queryResults.Add("", s);
-		}
-
 		public RecordToken(IRepository<T> repository,
 				   IDictionary<string, object> queryResults,
 				   RepositoryId id)
@@ -46,12 +37,6 @@ namespace WeSay.Data
 			}
 			_repository = repository;
 			_queryResults = new Dictionary<string, object>(queryResults); // we need to own this
-		}
-
-		[Obsolete]
-		public string DisplayString
-		{
-			get { return (string)_queryResults[""]; }
 		}
 
 		public RepositoryId Id

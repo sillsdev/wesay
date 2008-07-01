@@ -7,54 +7,20 @@ namespace WeSay.Data.Tests
 	[TestFixture]
 	public class ResultSetTests
 	{
-		class MyRepositoryId:RepositoryId
-		{
-			private readonly int id;
-
-			public MyRepositoryId(int id)
-			{
-				this.id = id;
-			}
-
-			public override int CompareTo(RepositoryId other)
-			{
-				MyRepositoryId otherAsMy = other as MyRepositoryId;
-				if(otherAsMy == null)
-				{
-					return 1;
-				}
-				return Comparer<int>.Default.Compare(id, otherAsMy.id);
-			}
-
-			public override bool Equals(RepositoryId other)
-			{
-				MyRepositoryId otherAsMy = other as MyRepositoryId;
-				if (otherAsMy == null)
-				{
-					return false;
-				}
-				return id == otherAsMy.id;
-			}
-		}
-
-		private class MyType
-		{
-		}
-
 		[Test]
 		public void FindFirstIndex_RepositoryIdEqualToOneInList_Index()
 		{
-			MemoryRepository<MyType> repository = new MemoryRepository<MyType>();
-			List<RecordToken<MyType>> results = new List<RecordToken<MyType>>();
+			MemoryRepository<TestItem> repository = new MemoryRepository<TestItem>();
+			List<RecordToken<TestItem>> results = new List<RecordToken<TestItem>>();
 
-			results.Add(new RecordToken<MyType>(repository, new MyRepositoryId(8)));
-			results.Add(new RecordToken<MyType>(repository, new MyRepositoryId(12)));
-			results.Add(new RecordToken<MyType>(repository, new MyRepositoryId(1)));
-			results.Add(new RecordToken<MyType>(repository, new MyRepositoryId(3)));
+			results.Add(new RecordToken<TestItem>(repository, new TestRepositoryId(8)));
+			results.Add(new RecordToken<TestItem>(repository, new TestRepositoryId(12)));
+			results.Add(new RecordToken<TestItem>(repository, new TestRepositoryId(1)));
+			results.Add(new RecordToken<TestItem>(repository, new TestRepositoryId(3)));
 
-			ResultSet<MyType> resultSet = new ResultSet<MyType>(repository, results);
+			ResultSet<TestItem> resultSet = new ResultSet<TestItem>(repository, results);
 
-			int index = resultSet.FindFirstIndex(new MyRepositoryId(1));
+			int index = resultSet.FindFirstIndex(new TestRepositoryId(1));
 			Assert.AreEqual(2, index);
 		}
 
