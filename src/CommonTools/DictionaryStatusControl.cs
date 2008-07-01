@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using System.Drawing;
 using Palaso.UI.WindowsForms.i8n;
 using WeSay.Foundation;
+using WeSay.Project;
 using WeSay.UI;
 
 namespace WeSay.CommonTools
@@ -26,7 +27,8 @@ namespace WeSay.CommonTools
 		{
 			_records = records;
 			InitializeComponent();
-			this._dictionarySizeLabel.Text = String.Format(StringCatalog.Get(this._dictionarySizeLabel.Text), records.Count);
+			this._dictionarySizeLabel.Text = String.Format(StringCatalog.Get(this._dictionarySizeLabel.Text),
+														   records.Count, WeSayWordsProject.Project.Name);
 	   }
 
 		public bool ShowLogo
