@@ -249,14 +249,25 @@ namespace WeSay.Data.Tests
 				throw new NotImplementedException();
 			}
 
-			public RepositoryId[] GetItemsModifiedSince(DateTime dateTime)
+			public void SaveItem(TestItem item)
 			{
 				throw new NotImplementedException();
 			}
 
-			public void SaveItem(TestItem item)
+			public bool CanQuery
 			{
-				throw new NotImplementedException();
+				get
+				{
+					return false;
+				}
+			}
+
+			public bool CanPersist
+			{
+				get
+				{
+					return false;
+				}
 			}
 
 			public void SaveItems(IEnumerable<TestItem> items)

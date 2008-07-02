@@ -8,6 +8,7 @@ namespace WeSay.Data.Tests
 	public class IRepositoryStateUnitializedTests<T> where T: class, new()
 	{
 		private IRepository<T> _repositoryUnderTest;
+		private readonly Query query = new Query(typeof(T));
 
 		public IRepository<T> RepositoryUnderTest
 		{
@@ -29,6 +30,14 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
+		[ExpectedException(typeof(ArgumentNullException))]
+		public void DeleteItem_Null_Throws()
+		{
+			T item = new T();
+			RepositoryUnderTest.DeleteItem((T) null);
+		}
+
+		[Test]
 		[ExpectedException(typeof(ArgumentOutOfRangeException))]
 		public void DeleteItem_ItemDoesNotExist_Throws()
 		{
@@ -42,6 +51,14 @@ namespace WeSay.Data.Tests
 		{
 			MyRepositoryId id = new MyRepositoryId();
 			RepositoryUnderTest.DeleteItem(id);
+		}
+
+		[Test]
+		[ExpectedException(typeof(ArgumentNullException))]
+		public void DeleteItemById_Null_Throws()
+		{
+			MyRepositoryId id = new MyRepositoryId();
+			RepositoryUnderTest.DeleteItem((RepositoryId) null);
 		}
 
 		[Test]
@@ -87,6 +104,14 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
+		[ExpectedException(typeof(ArgumentNullException))]
+		public void Save_Null_Throws()
+		{
+			T item = new T();
+			RepositoryUnderTest.SaveItem(null);
+		}
+
+		[Test]
 		[ExpectedException(typeof(ArgumentOutOfRangeException))]
 		public void Save_Throws()
 		{
@@ -95,9 +120,30 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		public void ItemsModifiedSince_ReturnsEmptyArray()
+		[ExpectedException(typeof(NotSupportedException))]
+		public void GetItemsMatchingQuery_CanQueryIsFalse_Throws()
 		{
-			Assert.IsEmpty(RepositoryUnderTest.GetItemsModifiedSince(DateTime.MinValue));
+			if(!RepositoryUnderTest.CanQuery)
+			{
+				RepositoryUnderTest.GetItemsMatching(query);
+			}
+			else
+			{
+				Assert.Ignore("Repository supports queries.");
+			}
+		}
+
+		[Test]
+		public virtual void GetItemMatchingQuery_Query_ReturnsEmpty()
+		{
+			if(RepositoryUnderTest.CanQuery)
+			{
+				Assert.AreEqual(0, RepositoryUnderTest.GetItemsMatching(query).Count);
+			}
+			else
+			{
+				Assert.Ignore("Repository does not support queries.");
+			}
 		}
 
 		class MyRepositoryId : RepositoryId
@@ -119,6 +165,7 @@ namespace WeSay.Data.Tests
 		private IRepository<T> _repositoryUnderTest;
 		private T item;
 		private RepositoryId id;
+		private readonly Query query = new Query(typeof(T));
 
 		public IRepository<T> RepositoryUnderTest
 		{
@@ -207,16 +254,6 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		public void ItemsModifiedSince_SaveItem_ReturnsItem()
-		{
-			SetState();
-			Thread.Sleep(50);
-			DateTime timeOfSave = DateTime.UtcNow;
-			RepositoryUnderTest.SaveItem(item);
-			Assert.AreEqual(id, RepositoryUnderTest.GetItemsModifiedSince(timeOfSave)[0]);
-		}
-
-		[Test]
 		public void LastModified_SaveItem_ReturnsCorrectTime()
 		{
 			SetState();
@@ -227,28 +264,33 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		public void ItemsModifiedSince_ReturnsIdsOfItemsModifiedSince()
+		public void GetItemMatchingQuery_Query_ReturnsItemsMatchingQuery()
 		{
 			SetState();
-			TimeSpan timeSpan = new TimeSpan(1, 0, 0); //1 hour
-			Assert.AreEqual(RepositoryUnderTest.GetId(item), RepositoryUnderTest.GetItemsModifiedSince(DateTime.UtcNow - timeSpan)[0]);
+			if(RepositoryUnderTest.CanQuery)
+			{
+				ResultSet<T> resultSet = RepositoryUnderTest.GetItemsMatching(query);
+				Assert.AreEqual(1, resultSet.Count);
+				Assert.AreEqual(item, resultSet[0].RealObject);
+			}
+			else
+			{
+				Assert.Ignore("Repository does not support queries.");
+			}
 		}
 
-
 		[Test]
-		//This test will not fail if you are in GMC+0 Timezone! If this is true for you, please be sure to transform
-		//any input ItemsModifiedSince() to UTC. That is what this test checks for everybody else.
-		public void ItemsModifiedSince_NonUTCDateTime_ReturnsIdsModifiedSince()
+		public virtual void ItemHasBeenPersisted()
 		{
-			TimeSpan OffSet = new TimeSpan(0, 2, 0); //2 minutes
 			SetState();
-			Thread.Sleep(50);
-			DateTime timeBetweenCreatedItems = DateTime.Now;
-			Thread.Sleep(50);
-			T item2 = RepositoryUnderTest.CreateItem();
-			Assert.AreEqual(1, RepositoryUnderTest.GetItemsModifiedSince(timeBetweenCreatedItems).Length);
-			Assert.AreEqual(RepositoryUnderTest.GetId(item2),
-				RepositoryUnderTest.GetItemsModifiedSince(timeBetweenCreatedItems)[0]);
+			if(!RepositoryUnderTest.CanPersist)
+			{
+				Assert.Ignore("Repository can not be persisted.");
+			}
+			else
+			{
+				throw new NotImplementedException("You must implement a test to verify that the created item has been persisted.");
+			}
 		}
 	}
 
@@ -257,6 +299,7 @@ namespace WeSay.Data.Tests
 		private IRepository<T> _repositoryUnderTest;
 		private T item;
 		private RepositoryId id;
+		private readonly Query query = new Query(typeof(T));
 
 		public IRepository<T> RepositoryUnderTest
 		{
@@ -350,10 +393,30 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		public void ItemsModifiedSince_ReturnsEmptyArray()
+		public virtual void DeletionOfItemHasBeenPersisted()
 		{
 			SetState();
-			Assert.IsEmpty(RepositoryUnderTest.GetItemsModifiedSince(DateTime.MinValue));
+			if (!RepositoryUnderTest.CanPersist)
+			{
+				Assert.Ignore("Repository can not be persisted.");
+			}
+			else
+			{
+				throw new NotImplementedException("You must implement a test to verify that the item deletion has been persisted.");
+			}
+		}
+
+		[Test]
+		public virtual void GetItemMatchingQuery_Query_ReturnsEmpty()
+		{
+			if (RepositoryUnderTest.CanQuery)
+			{
+				Assert.AreEqual(0, RepositoryUnderTest.GetItemsMatching(query).Count);
+			}
+			else
+			{
+				Assert.Ignore("Repository does not support queries.");
+			}
 		}
 	}
 
@@ -362,6 +425,7 @@ namespace WeSay.Data.Tests
 		private IRepository<T> _repositoryUnderTest;
 		private T item;
 		private RepositoryId id;
+		private readonly Query query = new Query(typeof(T));
 
 		public IRepository<T> RepositoryUnderTest
 		{
@@ -455,10 +519,30 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		public void ItemsModifiedSince_ReturnsEmptyArray()
+		public virtual void DeletionOfItemHasBeenPersisted()
 		{
 			SetState();
-			Assert.IsEmpty(RepositoryUnderTest.GetItemsModifiedSince(DateTime.MinValue));
+			if (!RepositoryUnderTest.CanPersist)
+			{
+				Assert.Ignore("Repository can not be persisted.");
+			}
+			else
+			{
+				throw new NotImplementedException("You must implement a test to verify that the item deletion has been persisted.");
+			}
+		}
+
+		[Test]
+		public virtual void GetItemMatchingQuery_Query_ReturnsEmpty()
+		{
+			if (RepositoryUnderTest.CanQuery)
+			{
+				Assert.AreEqual(0, RepositoryUnderTest.GetItemsMatching(query).Count);
+			}
+			else
+			{
+				Assert.Ignore("Repository does not support queries.");
+			}
 		}
 	}
 }

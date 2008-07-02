@@ -41,6 +41,16 @@ namespace WeSay.Data
 			get { throw new NotImplementedException(); }
 		}
 
+		bool IRepository<T>.CanQuery
+		{
+			get { return true; }
+		}
+
+		bool IRepository<T>.CanPersist
+		{
+			get { return true; }
+		}
+
 		public T CreateItem()
 		{
 			T item = new T();
@@ -181,6 +191,16 @@ namespace WeSay.Data
 		{
 			SaveItemCore(item);
 			Database.Commit();
+		}
+
+		public bool CanQuery()
+		{
+			throw new NotImplementedException();
+		}
+
+		public bool CanPersist()
+		{
+			throw new NotImplementedException();
 		}
 
 		private void SaveItemCore(T item)

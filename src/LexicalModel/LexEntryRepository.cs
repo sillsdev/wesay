@@ -56,11 +56,6 @@ namespace WeSay.LexicalModel
 			return item;
 		}
 
-		public RepositoryId[] GetItemsModifiedSince(DateTime last)
-		{
-			return _decoratedRepository.GetItemsModifiedSince(last);
-		}
-
 		public RepositoryId[] GetAllItems()
 		{
 			return _decoratedRepository.GetAllItems();
@@ -94,6 +89,24 @@ namespace WeSay.LexicalModel
 		public void SaveItem(LexEntry item)
 		{
 			_decoratedRepository.SaveItem(item);
+		}
+
+		public bool CanQuery
+		{
+			get { return _decoratedRepository.CanQuery; }
+		}
+
+		public bool CanPersist
+		{
+			get
+			{
+				return _decoratedRepository.CanPersist;
+			}
+		}
+
+		public RepositoryId[] GetItemsMatchingQuery()
+		{
+			throw new NotImplementedException();
 		}
 
 		public void DeleteItem(LexEntry item)
@@ -549,5 +562,11 @@ namespace WeSay.LexicalModel
 		}
 
 		#endregion
+
+		//todo: make this private and part of synchronic repository
+		public IList<RepositoryId> GetItemsModifiedSince(DateTime last)
+		{
+			throw new NotImplementedException();
+		}
 	}
 }

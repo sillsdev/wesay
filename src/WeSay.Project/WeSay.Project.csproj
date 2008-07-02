@@ -89,6 +89,7 @@
 	<Compile Include="ConfigFileTaskBuilder.cs" />
 	<Compile Include="FailedLoadTask.cs" />
 	<Compile Include="LiftExporter.cs" />
+	<Compile Include="LiftRepository.cs" />
 	<Compile Include="LiftUpdateService.cs" />
 	<Compile Include="ViewTemplate.cs" />
 	<Compile Include="ICurrentWorkTask.cs" />
