@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Windows.Forms;
 using System.Drawing;
 using Palaso.UI.WindowsForms.i8n;
+using WeSay.Project;
 
 namespace WeSay.CommonTools
 {
@@ -20,8 +21,8 @@ namespace WeSay.CommonTools
 		public DictionaryStatusControl(int count)
 		{
 			InitializeComponent();
-			_dictionarySizeLabel.Text =
-					String.Format(StringCatalog.Get(_dictionarySizeLabel.Text), count);
+			_dictionarySizeLabel.Text = String.Format(StringCatalog.Get(this._dictionarySizeLabel.Text),
+													  count, WeSayWordsProject.Project.Name);
 	   }
 
 		public bool ShowLogo

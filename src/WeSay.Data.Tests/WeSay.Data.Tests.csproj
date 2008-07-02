@@ -56,11 +56,15 @@
 	<Compile Include="IEnumerableBaseTest.cs" />
 	<Compile Include="IListBaseTest.cs" />
 	<Compile Include="PermuterTests.cs" />
+	<Compile Include="PreciseDateTimeTests.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />
 	<Compile Include="QueryTests.cs" />
+	<Compile Include="RecordTokenTests.cs" />
+	<Compile Include="ResultSetTests.cs" />
 	<Compile Include="SimpleIntTestClass.cs" />
 	<Compile Include="TestItem.cs" />
 	<Compile Include="TestMultiple.cs" />
+	<Compile Include="TestRepositoryId.cs" />
   </ItemGroup>
   <ItemGroup>
 	<Reference Include="Db4objects.Db4o, Version=6.0.2.0, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL">

@@ -18,9 +18,9 @@ namespace WeSay.CommonTools
 		private bool _mouseInControl;
 		private bool _keyIsDown;
 		// default format flags for text rendering
-		protected const TextFormatFlags FormatFlags = TextFormatFlags.WordBreak |
-													  TextFormatFlags.NoFullWidthCharacterBreak |
-													  TextFormatFlags.LeftAndRightPadding;
+		protected const TextFormatFlags _defaultTextFormatFlags = TextFormatFlags.WordBreak |
+																  TextFormatFlags.NoFullWidthCharacterBreak |
+																  TextFormatFlags.LeftAndRightPadding;
 
 		protected const int ShadowWidth = 3;
 		protected const int ButtonDownHorizontalNudge = ShadowWidth;
@@ -334,6 +334,18 @@ namespace WeSay.CommonTools
 				return true;
 			}
 			return base.ProcessMnemonic(charCode);
+		}
+
+		protected TextFormatFlags FormatFlags
+		{
+			get
+			{
+				if (RightToLeft == RightToLeft.Yes)
+				{
+					return _defaultTextFormatFlags | TextFormatFlags.RightToLeft;
+				}
+				return _defaultTextFormatFlags & ~TextFormatFlags.RightToLeft;
+			}
 		}
 
 		#region IButtonControl Members

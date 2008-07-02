@@ -38,7 +38,10 @@ namespace WeSay.LexicalTools.Tests
 		private IFieldQuery<LexEntry> _filter;
 		private string _fieldsToShow;
 		private string _label;
+		private string _longLabel;
 		private string _description;
+		private string _remainingCountText;
+		private string _referenceCountText;
 
 		private string _lexicalForm;
 		private ViewTemplate _viewTemplate;
@@ -63,6 +66,9 @@ namespace WeSay.LexicalTools.Tests
 			_lexicalForm = "vernacular";
 			entry.LexicalForm.SetAlternative(_vernacularWritingSystemId, _lexicalForm);
 			_lexEntryRepository.SaveItem(entry);
+			_longLabel = "Long label";
+			_remainingCountText = "Remaining count:";
+			_referenceCountText = "Reference count:";
 
 			_fieldsToShow = "LexicalForm";
 			_label = "My label";
@@ -86,7 +92,10 @@ namespace WeSay.LexicalTools.Tests
 					new MissingInfoTask(_lexEntryRepository,
 										_filter,
 										_label,
+										_longLabel,
 										_description,
+										_remainingCountText,
+										_referenceCountText,
 										_viewTemplate,
 										_fieldsToShow);
 		}
@@ -112,7 +121,10 @@ namespace WeSay.LexicalTools.Tests
 					new MissingInfoTask(_lexEntryRepository,
 										filter,
 										_label,
+										_longLabel,
 										_description,
+										_remainingCountText,
+										_referenceCountText,
 										_viewTemplate,
 										_fieldsToShow);
 			Assert.IsNotNull(task);
@@ -122,7 +134,7 @@ namespace WeSay.LexicalTools.Tests
 		[ExpectedException(typeof (ArgumentNullException))]
 		public void Create_RecordsIsNull_ThrowsArgumentNullException()
 		{
-			new MissingInfoTask(null, _filter, _label, _description, _viewTemplate, _fieldsToShow);
+			new MissingInfoTask(null, _filter, _label, _longLabel, _description, _remainingCountText, _referenceCountText, _viewTemplate, _fieldsToShow);
 		}
 
 		[Test]
@@ -132,7 +144,10 @@ namespace WeSay.LexicalTools.Tests
 			new MissingInfoTask(_lexEntryRepository,
 								null,
 								_label,
+								_longLabel,
 								_description,
+								_remainingCountText,
+								_referenceCountText,
 								_viewTemplate,
 								_fieldsToShow);
 		}
@@ -143,8 +158,11 @@ namespace WeSay.LexicalTools.Tests
 		{
 			new MissingInfoTask(_lexEntryRepository,
 								_filter,
+								_label,
 								null,
 								_description,
+								_remainingCountText,
+								_referenceCountText,
 								_viewTemplate,
 								_fieldsToShow);
 		}
@@ -156,9 +174,19 @@ namespace WeSay.LexicalTools.Tests
 			new MissingInfoTask(_lexEntryRepository,
 								_filter,
 								_label,
+								_longLabel,
 								null,
+								_remainingCountText,
+								_referenceCountText,
 								_viewTemplate,
 								_fieldsToShow);
+		}
+
+		[Test]
+		[ExpectedException(typeof(ArgumentNullException))]
+		public void Create_ReferenceCountTextIsNull_ThrowsArgumentNullException()
+		{
+			new MissingInfoTask(_lexEntryRepository, _filter, _label, _longLabel, _description, _remainingCountText, null, _viewTemplate, _fieldsToShow);
 		}
 
 		[Test]
@@ -168,7 +196,10 @@ namespace WeSay.LexicalTools.Tests
 			new MissingInfoTask(_lexEntryRepository,
 								_filter,
 								_label,
+								_longLabel,
 								_description,
+								_remainingCountText,
+								_referenceCountText,
 								_viewTemplate,
 								null);
 		}
@@ -230,7 +261,10 @@ namespace WeSay.LexicalTools.Tests
 					new MissingInfoTask(_lexEntryRepository,
 										_filter,
 										_label,
+										_longLabel,
 										_description,
+										_remainingCountText,
+										_referenceCountText,
 										viewTemplate,
 										"Single");
 			Assert.AreEqual(true, task.ViewTemplate.Contains("Single"));
@@ -251,7 +285,10 @@ namespace WeSay.LexicalTools.Tests
 					new MissingInfoTask(_lexEntryRepository,
 										_filter,
 										_label,
+										_longLabel,
 										_description,
+										_remainingCountText,
+										_referenceCountText,
 										viewTemplate,
 										"First Second");
 			Assert.AreEqual(true, task.ViewTemplate.Contains("First"));
@@ -275,7 +312,10 @@ namespace WeSay.LexicalTools.Tests
 					new MissingInfoTask(_lexEntryRepository,
 										_filter,
 										_label,
+										_longLabel,
 										_description,
+										_remainingCountText,
+										_referenceCountText,
 										viewTemplate,
 										"First Second Third");
 			Assert.AreEqual(true, task.ViewTemplate.Contains("First"));
@@ -297,7 +337,10 @@ namespace WeSay.LexicalTools.Tests
 					new MissingInfoTask(_lexEntryRepository,
 										_filter,
 										_label,
+										_longLabel,
 										_description,
+										_remainingCountText,
+										_referenceCountText,
 										viewTemplate,
 										"PrefixDummy Dummy");
 			Assert.AreEqual(true, task.ViewTemplate.Contains("Dummy"));
@@ -316,7 +359,10 @@ namespace WeSay.LexicalTools.Tests
 					new MissingInfoTask(_lexEntryRepository,
 										_filter,
 										_label,
+										_longLabel,
 										_description,
+										_remainingCountText,
+										_referenceCountText,
 										viewTemplate,
 										"Dummy");
 			Assert.AreEqual(true, task.ViewTemplate.Contains("Dummy"));
@@ -337,7 +383,10 @@ namespace WeSay.LexicalTools.Tests
 					new MissingInfoTask(_lexEntryRepository,
 										_filter,
 										_label,
+										_longLabel,
 										_description,
+										_remainingCountText,
+										_referenceCountText,
 										viewTemplate,
 										"PrefixDummy Dummy");
 			Assert.AreEqual(true, task.ViewTemplate.Contains("Dummy"));

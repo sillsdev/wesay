@@ -54,10 +54,14 @@ namespace WeSay.Data
 
 			protected override MethodInfo GetMethodInfo(string name)
 			{
-				PropertyInfo property = this._property.ReturnType.GetProperty(name);
+				Type returnType = this._property.ReturnType;
+				PropertyInfo property = returnType.GetProperty(name);
 				if(property == null)
 				{
-					throw new ArgumentOutOfRangeException("name", name, "There is no property with the given name");
+					throw new ArgumentOutOfRangeException("name",
+									name,
+									String.Format("There is no property in class {0} with the given name",
+												  returnType.Name));
 				}
 				return property.GetGetMethod();
 			}
@@ -290,9 +294,13 @@ namespace WeSay.Data
 		public override string ToString()
 		{
 			StringBuilder sb = new StringBuilder();
-			sb.Append("Query [");
+			if (_root == null)
+			{
+				sb.Append("Query ");
+			}
+			sb.Append('[');
 			sb.Append(TypeName);
-			sb.Append(" ");
+			sb.Append(' ');
 			if (_nestedQueries != null)
 			{
 				foreach (Query query in _nestedQueries)
@@ -309,6 +317,7 @@ namespace WeSay.Data
 					sb.Append(result.Name);
 				}
 			}
+
 			sb.Append("] ");
 			return sb.ToString();
 		}

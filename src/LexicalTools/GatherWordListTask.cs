@@ -24,11 +24,12 @@ namespace WeSay.LexicalTools
 
 		public GatherWordListTask(LexEntryRepository lexEntryRepository,
 								  string label,
+								  string longLabel,
 								  string description,
 								  string wordListFileName,
 								  string writingSystemIdForWordListLanguage,
 								  ViewTemplate viewTemplate)
-				: base(label, description, false, lexEntryRepository, viewTemplate)
+				: base(label, longLabel, description, false, lexEntryRepository, viewTemplate)
 		{
 			if (wordListFileName == null)
 			{
@@ -127,7 +128,7 @@ namespace WeSay.LexicalTools
 			{
 				if (_gatherControl == null)
 				{
-					_gatherControl = new GatherWordListControl(this, _lexicalUnitWritingSystem.Id);
+					_gatherControl = new GatherWordListControl(this, _lexicalUnitWritingSystem);
 				}
 				return _gatherControl;
 			}

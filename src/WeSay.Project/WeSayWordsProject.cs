@@ -432,8 +432,12 @@ namespace WeSay.Project
 			}
 		}
 
-		public static bool MigrateConfigurationXmlIfNeeded(XPathDocument configurationDoc,
-														   string targetPath)
+		public bool MigrateConfigurationXmlIfNeeded()
+		{
+			return MigrateConfigurationXmlIfNeeded(new XPathDocument(PathToConfigFile), PathToConfigFile);
+		}
+
+		public static bool MigrateConfigurationXmlIfNeeded(XPathDocument configurationDoc, string targetPath)
 		{
 			Logger.WriteEvent("Checking if migration of configuration is needed.");
 
@@ -453,6 +457,13 @@ namespace WeSay.Project
 				configurationDoc = new XPathDocument(targetPath);
 				didMigrate = true;
 			}
+			//TODO: Uncomment when we want to migrate to new dashboard and strings
+			//if (configurationDoc.CreateNavigator().SelectSingleNode("configuration[@version='2']") != null)
+			//{
+			//    MigrateUsingXSLT(configurationDoc, "MigrateConfig2To3.xsl", targetPath);
+			//    configurationDoc = new XPathDocument(targetPath);
+			//    didMigrate = true;
+			//}
 			return didMigrate;
 		}
 
@@ -471,7 +482,9 @@ namespace WeSay.Project
 				{
 					transform.Load(reader);
 					string tempPath = Path.GetTempFileName();
-					using (XmlWriter writer = XmlWriter.Create(tempPath))
+					XmlWriterSettings settings = new XmlWriterSettings();
+					settings.Indent = true;
+					using (XmlWriter writer = XmlWriter.Create(tempPath, settings))
 					{
 						transform.Transform(configurationDoc, writer);
 						TempFileCollection tempfiles = transform.TemporaryFiles;
@@ -617,6 +630,7 @@ namespace WeSay.Project
 
 			//hack
 			File.Copy(PathToDefaultConfig, PathToConfigFile, true);
+			MigrateConfigurationXmlIfNeeded();
 
 			_defaultViewTemplate = ViewTemplate.MakeMasterTemplate(WritingSystems);
 			_viewTemplates = new List<ViewTemplate>();
@@ -932,7 +946,8 @@ namespace WeSay.Project
 			XmlWriter writer = XmlWriter.Create(Project.PathToConfigFile, settings);
 			writer.WriteStartDocument();
 			writer.WriteStartElement("configuration");
-			writer.WriteAttributeString("version", "1");
+			//TODO: Update to version 3 when we migrate to new dashboard
+			writer.WriteAttributeString("version", "2");
 
 			if (EditorsSaveNow != null)
 			{

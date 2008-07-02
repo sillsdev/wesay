@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Forms;
@@ -87,12 +88,12 @@ namespace WeSay.LexicalTools
 		/// <summary>
 		/// actually add the widgets that are needed to the detailed list
 		/// </summary>
-		public int AddWidgets(IList<WeSayDataObject> list, int index)
+		public int AddWidgets(WeSayDataObject wsdo)
 		{
-			return AddWidgets(list, index, -1);
+			return AddWidgets(wsdo, -1);
 		}
 
-		internal abstract int AddWidgets(IList<WeSayDataObject> list, int index, int row);
+		internal abstract int AddWidgets(WeSayDataObject wsdo, int row);
 
 		protected Control MakeBoundControl(MultiText multiTextToBindTo, Field field)
 		{
@@ -189,7 +190,7 @@ namespace WeSay.LexicalTools
 		protected GhostBinding<T> MakeGhostBinding<T>(IList<T> list,
 													  string ghostPropertyName,
 													  WritingSystem writingSystem,
-													  WeSayTextBox entry) where T : new()
+													  WeSayTextBox entry) where T : WeSayDataObject, new()
 		{
 			GhostBinding<T> binding =
 					new GhostBinding<T>(list, ghostPropertyName, writingSystem, entry);
@@ -204,20 +205,20 @@ namespace WeSay.LexicalTools
 															 MultiTextControl
 																	 previouslyGhostedControlToReuse,
 															 bool doGoToNextField,
-															 EventArgs args) where T : new()
+															 EventArgs args) where T : WeSayDataObject, new()
 		{
 			_previouslyGhostedControlToReuse = previouslyGhostedControlToReuse;
-			AddWidgetsAfterGhostTrigger((IList<WeSayDataObject>)list, index, sender.ReferenceControl, doGoToNextField);
+			AddWidgetsAfterGhostTrigger(list[index], list.Count, sender.ReferenceControl, doGoToNextField);
 		}
 
-		protected void AddWidgetsAfterGhostTrigger(IList<WeSayDataObject> list,
-												   int indexOfNewGuyInList,
+		protected void AddWidgetsAfterGhostTrigger(WeSayDataObject wsdo,
+												   int countOfRows,
 												   Control refControl,
 												   bool doGoToNextField)
 		{
 			int ghostRow = _detailList.GetRow(refControl);
-			UpdateGhostLabel(list, ghostRow);
-			AddWidgets(list, indexOfNewGuyInList, ghostRow);
+			UpdateGhostLabel(countOfRows, ghostRow);
+			AddWidgets(wsdo, ghostRow);
 			Application.DoEvents();
 			if (doGoToNextField)
 			{
@@ -229,14 +230,14 @@ namespace WeSay.LexicalTools
 			}
 		}
 
-		protected virtual void UpdateGhostLabel(IList<WeSayDataObject> list, int index) {}
+		protected virtual void UpdateGhostLabel(int itemCount, int index) {}
 
 		protected static int AddChildrenWidgets(Layouter layouter,
-												IList<WeSayDataObject> list,
+												IEnumerable list,
 												int insertAtRow,
 												int rowCount)
 		{
-			for (int i = 0;i < list.Count;i++)
+			foreach (WeSayDataObject o in list)
 			{
 				int r;
 				if (insertAtRow < 0)
@@ -247,7 +248,7 @@ namespace WeSay.LexicalTools
 				{
 					r = insertAtRow + rowCount;
 				}
-				rowCount += layouter.AddWidgets(list, i, r);
+				rowCount += layouter.AddWidgets(o, r);
 			}
 			return rowCount;
 		}

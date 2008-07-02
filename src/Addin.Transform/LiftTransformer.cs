@@ -48,9 +48,14 @@ namespace Addin.Transform
 			get { return DashboardGroup.Share; }
 		}
 
-		public string LocalizedLabel
+		public abstract string LocalizedLabel
 		{
-			get { return LocalizedName; }
+			get;
+		}
+
+		public abstract string LocalizedLongLabel
+		{
+			get;
 		}
 
 		public ButtonStyle DashboardButtonStyle

@@ -42,6 +42,7 @@ namespace WeSay.LexicalTools.Tests
 			_task =
 					new GatherWordListTask(_lexEntryRepository,
 										   "label",
+												"long label",
 										   "description",
 										   _wordListFilePath,
 										   _glossingLanguageWSId,
@@ -62,6 +63,7 @@ namespace WeSay.LexicalTools.Tests
 			GatherWordListTask g =
 					new GatherWordListTask(_lexEntryRepository,
 										   "label",
+														  "long label",
 										   "description",
 										   _wordListFilePath,
 										   WritingSystem.IdForUnknownAnalysis,
@@ -77,6 +79,7 @@ namespace WeSay.LexicalTools.Tests
 			GatherWordListTask g =
 					new GatherWordListTask(_lexEntryRepository,
 										   "label",
+														  "long label",
 										   "description",
 										   "NotThere.txt",
 										   WritingSystem.IdForUnknownAnalysis,
@@ -91,6 +94,7 @@ namespace WeSay.LexicalTools.Tests
 			GatherWordListTask g =
 					new GatherWordListTask(_lexEntryRepository,
 										   "label",
+														  "long label",
 										   "description",
 										   _wordListFilePath,
 										   "z7z",

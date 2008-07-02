@@ -1,10 +1,10 @@
 using System.ComponentModel;
 using System.IO;
-using Db4objects.Db4o.Events;
 using NUnit.Framework;
 using WeSay.Data;
 using WeSay.Foundation;
 using WeSay.Foundation.Options;
+using WeSay.LexicalModel.Db4oSpecific;
 
 namespace WeSay.LexicalModel.Tests.Db4oSpecific
 {
@@ -14,26 +14,8 @@ namespace WeSay.LexicalModel.Tests.Db4oSpecific
 		protected bool _didNotify;
 
 		protected string _filePath;
-		private Db4oRepository<LexEntry> _db4oRepository = null;
-		/// <summary>
-		/// for tests
-		/// </summary>
-		private int _activationCount = 0;
+		private Db4oLexEntryRepository _db4oRepository = null;
 
-		private Db4oDataSource _container;
-
-		/// <summary>
-		/// how many times an Object has been activated
-		/// </summary>
-		public int ActivationCount
-		{
-			get { return this._activationCount; }
-		}
-
-		private void OnActivated(object sender, ObjectEventArgs args)
-		{
-			this._activationCount++;
-		}
 		[SetUp]
 		public void Setup()
 		{
@@ -44,10 +26,6 @@ namespace WeSay.LexicalModel.Tests.Db4oSpecific
 		[TearDown]
 		public void TearDown()
 		{
-			IEventRegistry r = EventRegistryFactory.ForObjectContainer(this._container.Data);
-			r.Activated -= OnActivated;
-			this._container = null;
-
 			if (_db4oRepository != null)
 			{
 				_db4oRepository.Dispose();
@@ -65,11 +43,7 @@ namespace WeSay.LexicalModel.Tests.Db4oSpecific
 			{
 				_db4oRepository.Dispose();
 			}
-			_container = new Db4oDataSource(_filePath);
-			IEventRegistry r = EventRegistryFactory.ForObjectContainer(_container.Data);
-			r.Activated += OnActivated;
-
-			_db4oRepository = new Db4oRepository<LexEntry>(_container);
+			_db4oRepository = new Db4oLexEntryRepository(_filePath);
 		}
 
 		private LexEntry GetFirstEntry()
@@ -99,13 +73,13 @@ namespace WeSay.LexicalModel.Tests.Db4oSpecific
 
 			Assert.AreEqual(entry, sense.Parent);
 
-			int activations = ActivationCount;
+			int activations = _db4oRepository.ActivationCount;
 			CycleDatabase();
 			entry = GetFirstEntry();
 			Assert.AreEqual(1, _db4oRepository.CountAllItems());
 			Assert.AreEqual(1, entry.Senses.Count);
 			Assert.AreEqual(activations + 1 /*entry*/+ 1 /*sense*/,
-							ActivationCount);
+							_db4oRepository.ActivationCount);
 		}
 
 		[Test]
@@ -114,13 +88,13 @@ namespace WeSay.LexicalModel.Tests.Db4oSpecific
 			LexEntry entry = _db4oRepository.CreateItem();
 			_db4oRepository.SaveItem(entry);
 
-			int activations = ActivationCount;
+			int activations = _db4oRepository.ActivationCount;
 			CycleDatabase();
 			GetFirstEntry();
-			Assert.AreEqual(activations + 1, ActivationCount);
+			Assert.AreEqual(activations + 1, _db4oRepository.ActivationCount);
 			//get the same entry again
 			_db4oRepository.GetAllItems();
-			Assert.AreEqual(activations + 1, ActivationCount);
+			Assert.AreEqual(activations + 1, _db4oRepository.ActivationCount);
 		}
 
 		[Test]

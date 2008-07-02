@@ -77,15 +77,9 @@ namespace WeSay.Data
 			LastModified = timeOfSave;
 		}
 
-		public bool CanQuery()
-		{
-			return true;
-		}
+		public bool CanQuery { get { return true; } }
 
-		public bool CanPersist()
-		{
-			return false;
-		}
+		public bool CanPersist { get { return false; } }
 
 
 		public void SaveItems(IEnumerable<T> items)

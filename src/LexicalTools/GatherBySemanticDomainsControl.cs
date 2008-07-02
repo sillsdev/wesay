@@ -1,6 +1,7 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
+using WeSay.Foundation;
 using WeSay.UI;
 
 namespace WeSay.LexicalTools
@@ -50,8 +51,8 @@ namespace WeSay.LexicalTools
 
 				_description.Visible = false;
 			}
-			_vernacularBox.WritingSystemIdsForThisField =
-					new string[] {_presentationModel.WordWritingSystemId};
+			_vernacularBox.WritingSystemsForThisField =
+					new WritingSystem[] {_presentationModel.WordWritingSystem};
 			_listViewWords.WritingSystem = _presentationModel.WordWritingSystem;
 			//  _listViewWords.ItemHeight = (int)Math.Ceiling(_presentationModel.WordWritingSystem.Font.GetHeight());
 

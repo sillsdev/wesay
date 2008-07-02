@@ -124,8 +124,9 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void LexemeForm_SingleWritingSystem()
 		{
-			LexEntry e = new LexEntry();
+			LexEntry e = _lexEntryRepository.CreateItem();
 			e.LexicalForm["xx"] = "foo";
+			_lexEntryRepository.SaveItem(e);
 			_exporter.Add(e);
 			_exporter.End();
 
@@ -161,8 +162,9 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void LexicalUnit()
 		{
-			LexEntry e = new LexEntry();
+			LexEntry e = _lexEntryRepository.CreateItem();
 			e.LexicalForm.SetAlternative("x", "orange");
+			_lexEntryRepository.SaveItem(e);
 			_exporter.Add(e);
 			_exporter.End();
 			AssertXPathNotNull("entry/lexical-unit/form[@lang='x']/text[text()='orange']");
@@ -172,9 +174,11 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void LexicalUnitWithStarredForm()
 		{
-			LexEntry e = new LexEntry();
+			LexEntry e = _lexEntryRepository.CreateItem();
+
 			e.LexicalForm.SetAlternative("x", "orange");
 			e.LexicalForm.SetAnnotationOfAlternativeIsStarred("x", true);
+			_lexEntryRepository.SaveItem(e);
 			_exporter.Add(e);
 			_exporter.End();
 			AssertXPathNotNull(
@@ -184,10 +188,11 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void Citation()
 		{
-			LexEntry entry = new LexEntry();
+			LexEntry entry = _lexEntryRepository.CreateItem();
 			MultiText citation =
 					entry.GetOrCreateProperty<MultiText>(LexEntry.WellKnownProperties.Citation);
 			citation["zz"] = "orange";
+			_lexEntryRepository.SaveItem(entry);
 			_exporter.Add(entry);
 			_exporter.End();
 			AssertXPathNotNull("entry/citation/form[@lang='zz']/text[text()='orange']");
@@ -198,12 +203,14 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void CitationWithStarredForm()
 		{
-			LexEntry e = new LexEntry();
+			LexEntry e = _lexEntryRepository.CreateItem();
+
 			MultiText citation =
 					e.GetOrCreateProperty<MultiText>(LexEntry.WellKnownProperties.Citation);
 
 			citation.SetAlternative("x", "orange");
 			citation.SetAnnotationOfAlternativeIsStarred("x", true);
+			_lexEntryRepository.SaveItem(e);
 			_exporter.Add(e);
 			_exporter.End();
 			AssertXPathNotNull(
@@ -382,7 +389,8 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void EntryGuid()
 		{
-			LexEntry entry = new LexEntry();
+			LexEntry entry = _lexEntryRepository.CreateItem();
+
 			_exporter.Add(entry);
 			ShouldContain(string.Format("guid=\"{0}\"", entry.Guid));
 		}
@@ -390,7 +398,8 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void LexEntry_becomes_entry()
 		{
-			LexEntry entry = new LexEntry();
+			LexEntry entry = _lexEntryRepository.CreateItem();
+
 			_exporter.Add(entry);
 			_exporter.End();
 			Assert.IsTrue(_stringBuilder.ToString().StartsWith("<entry"));
@@ -424,7 +433,7 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void EntryHasDateCreated()
 		{
-			LexEntry entry = new LexEntry();
+			LexEntry entry = _lexEntryRepository.CreateItem();
 			_exporter.Add(entry);
 			_exporter.End();
 			ShouldContain(
@@ -435,9 +444,10 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void EntryHasDateModified()
 		{
-			LexEntry entry = new LexEntry();
+			LexEntry entry = _lexEntryRepository.CreateItem();
 			entry.LexicalForm["test"] = "lexicalForm";
 			// make dateModified different than dateCreated
+			_lexEntryRepository.SaveItem(entry);
 			_exporter.Add(entry);
 			_exporter.End();
 			ShouldContain(
@@ -448,7 +458,9 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void Entry_HasId_RemembersId()
 		{
-			LexEntry entry = new LexEntry("my id", Guid.NewGuid());
+			LexEntry entry = _lexEntryRepository.CreateItem();
+			entry.Id = "my id";
+			_lexEntryRepository.SaveItem(entry);
 			_exporter.Add(entry);
 			_exporter.End();
 			ShouldContain("id=\"my id\"");
@@ -467,8 +479,10 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void Entry_EntryHasIdWithInvalidXMLCharacters_CharactersEscaped()
 		{
+			LexEntry entry = _lexEntryRepository.CreateItem();
 			// technically the only invalid characters in an attribute are & < and " (when surrounded by ")
-			LexEntry entry = new LexEntry("<>&\"\'", Guid.NewGuid());
+			entry.Id = "<>&\"\'";
+			_lexEntryRepository.SaveItem(entry);
 			_exporter.Add(entry);
 			_exporter.End();
 			ShouldContain("id=\"&lt;&gt;&amp;&quot;'\"");
@@ -477,8 +491,9 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void Entry_NoId_GetsHumanReadableId()
 		{
-			LexEntry entry = new LexEntry();
+			LexEntry entry = _lexEntryRepository.CreateItem();
 			entry.LexicalForm["test"] = "lexicalForm";
+			_lexEntryRepository.SaveItem(entry);
 			// make dateModified different than dateCreated
 			_exporter.Add(entry);
 			_exporter.End();
@@ -516,7 +531,9 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void GetHumanReadableId_EntryHasId_GivesId()
 		{
-			LexEntry entry = new LexEntry("my id", Guid.NewGuid());
+			LexEntry entry = _lexEntryRepository.CreateItem();
+			entry.Id = "my id";
+			_lexEntryRepository.SaveItem(entry);
 			Assert.AreEqual("my id",
 							LiftExporter.GetHumanReadableId(entry, new Dictionary<string, int>()));
 		}
@@ -657,7 +674,7 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void EntryWithSenses()
 		{
-			LexEntry entry = new LexEntry();
+			LexEntry entry = _lexEntryRepository.CreateItem();
 			entry.LexicalForm["blue"] = "ocean";
 			LexSense sense1 = new LexSense();
 			sense1.Gloss["a"] = "aaa";
@@ -665,6 +682,7 @@ namespace WeSay.Project.Tests
 			LexSense sense2 = new LexSense();
 			sense2.Gloss["b"] = "bbb";
 			entry.Senses.Add(sense2);
+			_lexEntryRepository.SaveItem(entry);
 			_exporter.Add(entry);
 
 			ShouldContain(
@@ -678,7 +696,8 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void SensesAreLastObjectsInEntry() // this helps conversions to sfm
 		{
-			LexEntry entry = new LexEntry();
+			LexEntry entry = _lexEntryRepository.CreateItem();
+
 			entry.LexicalForm["blue"] = "ocean";
 
 			LexSense sense1 = new LexSense();
@@ -698,6 +717,7 @@ namespace WeSay.Project.Tests
 			MultiText field = entry.GetOrCreateProperty<MultiText>("custom");
 			field["zz"] = "orange";
 
+			_lexEntryRepository.SaveItem(entry);
 			_exporter.Add(entry);
 
 			ShouldContain(
@@ -710,9 +730,11 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void NoteOnEntry_OutputAsNote()
 		{
-			LexEntry entry = new LexEntry();
+			LexEntry entry = _lexEntryRepository.CreateItem();
+
 			MultiText m = entry.GetOrCreateProperty<MultiText>(LexEntry.WellKnownProperties.Note);
 			m["zz"] = "orange";
+			_lexEntryRepository.SaveItem(entry);
 			_exporter.Add(entry);
 			_exporter.End();
 			AssertXPathNotNull("entry/note/form[@lang='zz' and text='orange']");
@@ -722,8 +744,10 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void EmptyNoteOnEntry_NoOutput()
 		{
-			LexEntry entry = new LexEntry();
+			LexEntry entry = _lexEntryRepository.CreateItem();
+
 			entry.GetOrCreateProperty<MultiText>(LexEntry.WellKnownProperties.Note);
+			_lexEntryRepository.SaveItem(entry);
 			_exporter.Add(entry);
 			_exporter.End();
 			AssertXPathNotNull("entry[not(note)]");
@@ -804,9 +828,11 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void CustomMultiTextOnEntry()
 		{
-			LexEntry entry = new LexEntry();
+			LexEntry entry = _lexEntryRepository.CreateItem();
+
 			MultiText m = entry.GetOrCreateProperty<MultiText>("flubadub");
 			m["zz"] = "orange";
+			_lexEntryRepository.SaveItem(entry);
 			_exporter.Add(entry);
 			_exporter.End();
 			AssertXPathNotNull("entry/field[@type='flubadub']/form[@lang='zz' and text='orange']");
@@ -837,9 +863,11 @@ namespace WeSay.Project.Tests
 		public void CustomOptionRefOnEntry()
 		{
 			_fieldToOptionListName.Add("flub", "kindsOfFlubs");
-			LexEntry entry = new LexEntry();
+			LexEntry entry = _lexEntryRepository.CreateItem();
+
 			OptionRef o = entry.GetOrCreateProperty<OptionRef>("flub");
 			o.Value = "orange";
+			_lexEntryRepository.SaveItem(entry);
 			_exporter.Add(entry);
 			_exporter.End();
 			AssertXPathNotNull("entry/trait[@name='flub' and @value='orange']");
@@ -903,9 +931,11 @@ namespace WeSay.Project.Tests
 		public void CustomOptionRefCollectionOnEntry()
 		{
 			_fieldToOptionListName.Add("flubs", "colors");
-			LexEntry entry = new LexEntry();
+			LexEntry entry = _lexEntryRepository.CreateItem();
+
 			OptionRefCollection o = entry.GetOrCreateProperty<OptionRefCollection>("flubs");
 			o.AddRange(new string[] {"orange", "blue"});
+			_lexEntryRepository.SaveItem(entry);
 			_exporter.Add(entry);
 			_exporter.End();
 			AssertXPathNotNull("entry/trait[@name='flubs' and @value='orange']");
@@ -990,8 +1020,10 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void FlagOnEntry_OutputAsTrait()
 		{
-			LexEntry entry = new LexEntry();
+			LexEntry entry = _lexEntryRepository.CreateItem();
+
 			entry.SetFlag("ATestFlag");
+			_lexEntryRepository.SaveItem(entry);
 			_exporter.Add(entry);
 			_exporter.End();
 			AssertXPathNotNull("entry/trait[@name='ATestFlag' and @value]");
@@ -1000,9 +1032,11 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void FlagCleared_NoOutput()
 		{
-			LexEntry entry = new LexEntry();
+			LexEntry entry = _lexEntryRepository.CreateItem();
+
 			entry.SetFlag("ATestFlag");
 			entry.ClearFlag("ATestFlag");
+			_lexEntryRepository.SaveItem(entry);
 			_exporter.Add(entry);
 			_exporter.End();
 			AssertXPathNotNull("entry[not(trait)]");

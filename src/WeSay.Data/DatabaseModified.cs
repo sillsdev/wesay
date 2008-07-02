@@ -7,6 +7,11 @@ namespace WeSay.Data
 	{
 		private DateTime _lastModified;
 
+		public DatabaseModified()
+		{
+			_lastModified = DateTime.MinValue;
+		}
+
 		public DateTime LastModified
 		{
 			get

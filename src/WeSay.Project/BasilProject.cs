@@ -94,7 +94,9 @@ namespace WeSay.Project
 
 		public virtual void Save(string projectDirectoryPath)
 		{
-			XmlWriter writer = XmlWriter.Create(PathToWritingSystemPrefs);
+			XmlWriterSettings settings = new XmlWriterSettings();
+			settings.Indent = true;
+			XmlWriter writer = XmlWriter.Create(PathToWritingSystemPrefs, settings);
 			_writingSystems.Write(writer);
 			writer.Close();
 		}

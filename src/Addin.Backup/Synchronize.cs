@@ -91,6 +91,14 @@ namespace Addin.Backup
 			get { return LocalizedName; }
 		}
 
+		public string LocalizedLongLabel
+		{
+			get
+			{
+				return StringCatalog.Get("~Synchronize With Repository", "Long label for synchronize action.");
+			}
+		}
+
 		public ButtonStyle DashboardButtonStyle
 		{
 			get { return ButtonStyle.IconVariableWidth; }

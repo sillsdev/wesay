@@ -74,6 +74,11 @@ namespace Addin.Backup
 			}
 		}
 
+		public string LocalizedLongLabel
+		{
+			get { return LocalizedName; }
+		}
+
 		public ButtonStyle DashboardButtonStyle
 		{
 			get { return ButtonStyle.IconVariableWidth; }

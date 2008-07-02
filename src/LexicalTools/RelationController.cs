@@ -255,7 +255,7 @@ namespace WeSay.LexicalTools
 		{
 			return _resultSet.FindFirst(delegate (RecordToken<LexEntry> token)
 											 {
-												 return (string)token.Results["Form"] == form;
+												 return (string)token["Form"] == form;
 											 });
 		}
 

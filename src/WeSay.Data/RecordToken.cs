@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace WeSay.Data
@@ -7,28 +7,23 @@ namespace WeSay.Data
 	{
 		public delegate IEnumerable<string[]> DisplayStringGenerator(T item);
 
-		private readonly Dictionary<string, object> _queryResults;
+		private Dictionary<string, object> _queryResults;
 		private readonly RepositoryId _id;
 		private readonly IRepository<T> _repository;
 
-		public RecordToken(IRepository<T> repository, RepositoryId id)
+		public RecordToken(IRepository<T> repository,
+						   RepositoryId id)
 		{
 			if (repository == null)
 			{
 				throw new ArgumentNullException("repository");
 			}
-			if (id == null) throw new ArgumentNullException("id");
+			if (id == null)
+			{
+				throw new ArgumentNullException("id");
+			}
 			_repository = repository;
 			_id = id;
-		}
-
-		[Obsolete]
-		public RecordToken(IRepository<T> repository,
-						   string s,
-						   RepositoryId id)
-			: this(repository, new Dictionary<string, object>(), id)
-		{
-			_queryResults.Add("", s);
 		}
 
 		public RecordToken(IRepository<T> repository,
@@ -44,12 +39,6 @@ namespace WeSay.Data
 			_queryResults = new Dictionary<string, object>(queryResults); // we need to own this
 		}
 
-		[Obsolete]
-		public string DisplayString
-		{
-			get { return (string)_queryResults[""]; }
-		}
-
 		public RepositoryId Id
 		{
 			get { return _id; }
@@ -61,11 +50,34 @@ namespace WeSay.Data
 			get { return _repository.GetItem(Id); }
 		}
 
-		public IDictionary<string, object> Results
+		public bool TryGetValue(string fieldName, out object value)
+		{
+			value = null;
+			if(_queryResults == null)
+			{
+				return false;
+			}
+			return _queryResults.TryGetValue(fieldName, out value);
+		}
+
+		public object this[string fieldName]
 		{
 			get
 			{
-				return _queryResults;
+				object value;
+				if(TryGetValue(fieldName, out value))
+				{
+					return value;
+				}
+				return null;
+			}
+			set
+			{
+				if(_queryResults == null)
+				{
+					_queryResults = new Dictionary<string, object>();
+				}
+				_queryResults[fieldName] = value;
 			}
 		}
 

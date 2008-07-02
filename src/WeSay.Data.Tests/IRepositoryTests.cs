@@ -121,7 +121,7 @@ namespace WeSay.Data.Tests
 		[ExpectedException(typeof(NotSupportedException))]
 		public void GetItemsMatchingQuery_CanQueryIsFalse_Throws()
 		{
-			if(!RepositoryUnderTest.CanQuery())
+			if(!RepositoryUnderTest.CanQuery)
 			{
 				RepositoryUnderTest.GetItemsMatching(query);
 			}
@@ -134,7 +134,7 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void GetItemMatchingQuery_Query_ReturnsEmpty()
 		{
-			if(RepositoryUnderTest.CanQuery())
+			if(RepositoryUnderTest.CanQuery)
 			{
 				Assert.AreEqual(0, RepositoryUnderTest.GetItemsMatching(query).Count);
 			}
@@ -313,7 +313,7 @@ namespace WeSay.Data.Tests
 		public void GetItemMatchingQuery_Query_ReturnsItemsMatchingQuery()
 		{
 			SetState();
-			if(RepositoryUnderTest.CanQuery())
+			if(RepositoryUnderTest.CanQuery)
 			{
 				ResultSet<T> resultSet = RepositoryUnderTest.GetItemsMatching(query);
 				Assert.AreEqual(1, resultSet.Count);
@@ -329,9 +329,8 @@ namespace WeSay.Data.Tests
 		public void CreatedItemHasBeenPersisted()
 		{
 			SetState();
-			if (!RepositoryUnderTest.CanPersist())
+			if(!RepositoryUnderTest.CanPersist)
 			{
-				Assert.Ignore("Repository can not be persisted.");
 			}
 			else
 			{
@@ -494,9 +493,23 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
+		public virtual void DeletionOfItemHasBeenPersisted()
+		{
+			SetState();
+			if (!RepositoryUnderTest.CanPersist)
+			{
+				Assert.Ignore("Repository can not be persisted.");
+			}
+			else
+			{
+				throw new NotImplementedException("You must implement a test to verify that the item deletion has been persisted.");
+			}
+		}
+
+		[Test]
 		public void GetItemMatchingQuery_Query_ReturnsEmpty()
 		{
-			if (RepositoryUnderTest.CanQuery())
+			if (RepositoryUnderTest.CanQuery)
 			{
 				Assert.AreEqual(0, RepositoryUnderTest.GetItemsMatching(query).Count);
 			}
@@ -628,9 +641,23 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
+		public virtual void DeletionOfItemHasBeenPersisted()
+		{
+			SetState();
+			if (!RepositoryUnderTest.CanPersist)
+			{
+				Assert.Ignore("Repository can not be persisted.");
+			}
+			else
+			{
+				throw new NotImplementedException("You must implement a test to verify that the item deletion has been persisted.");
+			}
+		}
+
+		[Test]
 		public void GetItemMatchingQuery_Query_ReturnsEmpty()
 		{
-			if (RepositoryUnderTest.CanQuery())
+			if (RepositoryUnderTest.CanQuery)
 			{
 				Assert.AreEqual(0, RepositoryUnderTest.GetItemsMatching(query).Count);
 			}

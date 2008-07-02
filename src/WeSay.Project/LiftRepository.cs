@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using WeSay.Data;
 using WeSay.LexicalModel;
 
@@ -71,14 +70,14 @@ namespace WeSay.Project
 			throw new ArgumentOutOfRangeException("item");
 		}
 
-		public bool CanQuery()
+		public bool CanQuery
 		{
-			return false;
+			get { return false; }
 		}
 
-		public bool CanPersist()
+		public bool CanPersist
 		{
-			return true;
+			get { return true; }
 		}
 
 		public void SaveItems(IEnumerable<LexEntry> items)

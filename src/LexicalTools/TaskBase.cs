@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Palaso.UI.WindowsForms.i8n;
 using WeSay.Foundation;
@@ -17,7 +18,10 @@ namespace WeSay.LexicalTools
 
 		private readonly LexEntryRepository _lexEntryRepository;
 		private readonly string _label;
+		private readonly string _longLabel;
 		private readonly string _description;
+		private readonly string _remainingCountText;
+		private readonly string _referenceCountText;
 		private readonly bool _isPinned;
 		private readonly string _cachePath;
 		private readonly string _cacheFilePath;
@@ -25,7 +29,10 @@ namespace WeSay.LexicalTools
 		private int _referenceCount;
 
 		public TaskBase(string label,
+						string longLabel,
 						string description,
+						string remainingCountText,
+						string referenceCountText,
 						bool isPinned,
 						LexEntryRepository lexEntryRepository)
 		{
@@ -33,17 +40,34 @@ namespace WeSay.LexicalTools
 			{
 				throw new ArgumentNullException("label");
 			}
+			if (longLabel == null)
+			{
+				throw new ArgumentNullException("longLabel");
+			}
 			if (description == null)
 			{
 				throw new ArgumentNullException("description");
+			}
+			if (remainingCountText == null)
+			{
+				throw new ArgumentNullException("remainingCountText");
+			}
+			if (referenceCountText == null)
+			{
+				throw new ArgumentNullException("referenceCountText");
 			}
 			if (lexEntryRepository == null)
 			{
 				throw new ArgumentNullException("lexEntryRepository");
 			}
 			_lexEntryRepository = lexEntryRepository;
-			_label = label;
-			_description = description;
+			// convert any amount of whitespace to one space
+			Regex rgx = new Regex("\\s+");
+			_label = rgx.Replace(label.Trim(), " ");
+			_longLabel = rgx.Replace(longLabel.Trim(), " ");
+			_description = rgx.Replace(description.Trim(), " ");
+			_remainingCountText = rgx.Replace(remainingCountText.Trim(), " ");
+			_referenceCountText = rgx.Replace(referenceCountText.Trim(), " ");
 			_isPinned = isPinned;
 
 			_cachePath = WeSayWordsProject.Project.PathToCache;
@@ -51,6 +75,13 @@ namespace WeSay.LexicalTools
 
 			ReadCacheFile();
 		}
+
+		public TaskBase(string label,
+						string longLabel,
+						string description,
+						bool isPinned,
+						LexEntryRepository lexEntryRepository)
+			: this(label, longLabel, description, string.Empty, string.Empty, isPinned, lexEntryRepository) { }
 
 		public virtual string Description
 		{
@@ -231,6 +262,44 @@ namespace WeSay.LexicalTools
 		/// </returns>
 		protected abstract int ComputeReferenceCount();
 
+		public string GetRemainingCountText()
+		{
+			string result = _remainingCountText.Trim();
+			int remainingCount = GetRemainingCount();
+			if (result == string.Empty)
+			{
+				result = StringCatalog.Get("~Remaining:", "Generic desciption of how many items in a task are left to do.");
+			}
+			if (remainingCount >= 0)
+			{
+				result += " " + remainingCount;
+			}
+			else
+			{
+				result = string.Empty;
+			}
+			return result;
+		}
+
+		public string GetReferenceCountText()
+		{
+			string result = _referenceCountText.Trim();
+			int referenceCount = GetReferenceCount();
+			if (result == string.Empty)
+			{
+				result = StringCatalog.Get("~Total:", "Generic description of how many total items there are in a task.");
+			}
+			if (referenceCount >= 0)
+			{
+				result += " " + referenceCount;
+			}
+			else
+			{
+				result = string.Empty;
+			}
+			return result;
+		}
+
 		public bool AreCountsRelevant()
 		{
 			return GetReferenceCount() != CountNotRelevant && GetRemainingCount() != CountNotRelevant;
@@ -257,6 +326,11 @@ namespace WeSay.LexicalTools
 		public string LocalizedLabel
 		{
 			get { return StringCatalog.Get(_label); }
+		}
+
+		public string LocalizedLongLabel
+		{
+			get { return StringCatalog.Get(_longLabel); }
 		}
 
 		public virtual ButtonStyle DashboardButtonStyle

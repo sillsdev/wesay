@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 using WeSay.Foundation;
+using Palaso.Reporting;
 
 namespace WeSay.UI
 {
@@ -257,6 +258,19 @@ namespace WeSay.UI
 		private bool _clickSelecting;
 		private Point _currentMouseLocation;
 
+		protected override void WndProc(ref Message m)
+		{
+			// ignore double-clicks - WM_LBUTTONDBLCLK == 0x0203, WM_RBUTTONDBLCLK = 0x0206
+			// Can't just override OnDoubleClick because that is not called if the user
+			// clicks on blank space within the ListView control.
+			if (m.Msg == 0x0203 || m.Msg == 0x0206)
+			{
+				m.Result = new IntPtr(0);
+				return;
+			}
+			base.WndProc(ref m);
+		}
+
 		protected override void OnClick(EventArgs e)
 		{
 			_clickSelecting = false;
@@ -319,6 +333,7 @@ namespace WeSay.UI
 				if (item != null)
 				{
 					SelectedIndex = item.Index;
+					item.Focused = true;
 				}
 				else
 				{
@@ -327,6 +342,14 @@ namespace WeSay.UI
 					if (index != -1)
 					{
 						SelectedIndex = index;
+						if (VirtualMode)
+						{
+							GetVirtualItem(index).Focused = true;
+						}
+						else
+						{
+							Items[index].Focused = true;
+						}
 					}
 				}
 			}
