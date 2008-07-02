@@ -457,33 +457,28 @@ namespace WeSay.LexicalTools
 		{
 			Logger.WriteEvent("NewWord_Click");
 
-			LexEntry entry = _lexEntryRepository.CreateItem();
-			string lexicalForm = string.Empty;
-			bool needNewEntry = true;
-			//bool NoPriorSelection = _recordsListBox.SelectedIndex == -1;
-			//_recordListBoxActive = true; // allow onRecordSelectionChanged
-			if (_findText.Focused && !string.IsNullOrEmpty(_findText.Text) &&
-				IsWritingSystemUsedInLexicalForm(_listWritingSystem.Id))
+			// only create a new word when there is not an empty word already
+			int emptyWordIndex = GetEmptyWordIndex();
+			int selectIndex;
+			if (emptyWordIndex == -1)
 			{
-				lexicalForm = _findText.Text.Trim();
-				//only create new when not found (doesn't already exist)
-				int existingIndex = _records.FindFirstIndex(delegate(RecordToken<LexEntry> token)
-											{
-												return (string) token["Form"] == lexicalForm;
-											});
-				if (existingIndex >= 0)
+				LexEntry entry = this._lexEntryRepository.CreateItem();
+				//bool NoPriorSelection = _recordsListBox.SelectedIndex == -1;
+				//_recordListBoxActive = true; // allow onRecordSelectionChanged
+				if (_findText.Focused && !string.IsNullOrEmpty(_findText.Text) &&
+					IsWritingSystemUsedInLexicalForm(_listWritingSystem.Id))
 				{
-					_recordsListBox.SelectedIndex = existingIndex;
-					entry = CurrentRecord;
-					needNewEntry = false;
+					entry.LexicalForm[_listWritingSystem.Id] = _findText.Text.Trim();
+					;
+					_lexEntryRepository.SaveItem(entry);
 				}
-			}
 
-			if (needNewEntry)
+				LoadRecords();
+				selectIndex = this._records.FindFirstIndex(entry);
+			}
+			else
 			{
-				entry = _lexEntryRepository.CreateItem();
-				entry.LexicalForm[_listWritingSystem.Id] = lexicalForm;
-				_lexEntryRepository.SaveItem(entry);
+				selectIndex = emptyWordIndex;
 			}
 
 			if (!_btnNewWord.Focused)
@@ -492,12 +487,28 @@ namespace WeSay.LexicalTools
 				// but we assume it has the focus when we do our selection change event
 				_btnNewWord.Focus();
 			}
-			LoadRecords();
-			int selectIndex = _records.FindFirstIndex(entry);
 			Debug.Assert(selectIndex != -1);
 			_recordsListBox.SelectedIndex = selectIndex;
 			OnRecordSelectionChanged(_recordsListBox, new EventArgs());
 			_entryViewControl.Focus();
+		}
+
+		private int GetEmptyWordIndex()
+		{
+			// empty forms will always sort to the top
+			for(int i = 0; i < _records.Count;++i)
+			{
+				if(!string.IsNullOrEmpty((string)_records[i]["Form"]))
+				{
+					break;
+				}
+
+				if(_records[i].RealObject.IsEmpty)
+				{
+					return i;
+				}
+			}
+			return -1; // there is no empty word
 		}
 
 		private void OnDeleteWord_Click(object sender, EventArgs e)
