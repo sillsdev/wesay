@@ -69,6 +69,7 @@
 	<Compile Include="Db4oDataSource.cs" />
 	<Compile Include="MemoryRepository.cs" />
 	<Compile Include="Permuter.cs" />
+	<Compile Include="PreciseDateTime.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />
 	<Compile Include="IQuery.cs" />
 	<Compile Include="Query.cs" />
