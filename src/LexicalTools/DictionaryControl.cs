@@ -454,22 +454,14 @@ namespace WeSay.LexicalTools
 				&& IsWritingSystemUsedInLexicalForm(_listWritingSystem))
 			{
 				lexicalForm = _findText.Text.Trim();
-				//only create new when not found (doesn't already exist)
-				int index = ((CachedSortedDb4oList<string, LexEntry>)_records).BinarySearch(lexicalForm);
-				if (index >= 0)
-				{
-					_recordsListBox.SelectedIndex = index;
-					entry = CurrentRecord;
-					needNewEntry = false;
-				}
 			}
 
 			List<LexEntry> emptyList = Lexicon.GetEntriesHavingLexicalForm("(Empty)", _listWritingSystem);
-			if (emptyList.Count > 0 && needNewEntry)
+			if (emptyList.Count > 0)
 			{
 				foreach (LexEntry emptyEntry in emptyList)
 				{
-					if (emptyEntry.LexicalForm[_listWritingSystem.Id] != "(Empty)")
+					if (emptyEntry.IsEmpty)
 					{
 						entry = emptyEntry;
 						entry.LexicalForm[_listWritingSystem.Id] = lexicalForm;

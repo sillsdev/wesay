@@ -382,6 +382,42 @@ namespace WeSay.LexicalTools.Tests
 		}
 
 		[Test]
+		public void NewWord_DictionaryContainsWordEmpty_ContainsBlankAndEmpty()
+		{
+			StartWithEmpty();
+			ClickAddWord();
+			TypeInLexicalForm("(Empty)");
+			ClickAddWord();
+			Assert.AreEqual(2, _records.Count);
+			LexicalFormMustMatch(string.Empty);
+			ListViewTester l = new ListViewTester("_recordsListBox", _window);
+			// select other entry
+			l.Select((l.Properties.SelectedIndices[0] + 1) % 2);
+			LexicalFormMustMatch("(Empty)");
+		}
+
+		[Test]
+		public void NewWord_NonEmptyEntryWithNoLexicalFormInCurrentWritingSystem_EntryStillAdded()
+		{
+			StartWithEmpty();
+			ClickAddWord();
+			_records[0].LexicalForm[_vernacularWsId + "X"] = "something";
+			ClickAddWord();
+			Assert.AreEqual(2, _records.Count);
+		}
+
+		[Test]
+		public void NewWord_NonEmptyEntryWithNoLexicalForm_EntryStillAdded()
+		{
+			StartWithEmpty();
+			ClickAddWord();
+			_records[0].Senses.AddNew();
+			((LexSense)_records[0].Senses[0]).Definition.Add("blah");
+			ClickAddWord();
+			Assert.AreEqual(2, _records.Count);
+		}
+
+		[Test]
 		public void EmptyDictionary_DeleteButtonDisabled()
 		{
 			StartWithEmpty();
@@ -625,13 +661,18 @@ namespace WeSay.LexicalTools.Tests
 			l.Click();
 		}
 
+		private void ClickFindButton()
+		{
+			ButtonTester b = new ButtonTester("_btnFind", this._window);
+			b.Click();
+		}
+
 		[Test]
-		public void EnterText_PressFindButton_Finds()
+		public void FindText_EnterTextThenPressFindButton_Finds()
 		{
 			TextBoxTester t = new TextBoxTester("_findText", _window);
 			t.Enter("Secondary");
-			ButtonTester b = new ButtonTester("_btnFind", _window);
-			b.Click();
+			ClickFindButton();
 			ListViewTester l = new ListViewTester("_recordsListBox", _window);
 
 			string label = GetSelectedLabel((WeSayListView)l.Properties);
@@ -650,6 +691,68 @@ namespace WeSay.LexicalTools.Tests
 
 			string label = GetSelectedLabel((WeSayListView)l.Properties);
 			Assert.AreEqual("Secondary", label);
+		}
+
+		[Test]
+		public void FindText_EnterWordNotInDictionaryThenPressCtrlN_AddsWordInFindText()
+		{
+			TextBoxTester t = new TextBoxTester("_findText", _window);
+			t.Enter("NewWord");
+			PressCtrlN(t);
+
+			VerifySelectedWordIs("NewWord");
+		}
+
+		private void VerifySelectedWordIs(string word)
+		{
+			ListViewTester l = new ListViewTester("_recordsListBox", this._window);
+
+			string label = GetSelectedLabel((WeSayListView)l.Properties);
+			Assert.AreEqual(word, label);
+		}
+
+		private static void PressCtrlN(ControlTester t)
+		{
+			KeyboardController kc = new KeyboardController(t);
+			kc.Press("^n"); // Ctrl+N - N must be lowercase for this to work
+			kc.Release("^n");
+			kc.Dispose();
+		}
+
+		[Test]
+		public void FindText_EnterWordInDictionaryThenPressCtrlN_AddsWordInFindTextSoTwoEntries()
+		{
+			TextBoxTester t = new TextBoxTester("_findText", _window);
+			t.Properties.Focus();
+			t.Enter("Secondary");
+			PressCtrlN(t);
+			VerifySelectedWordIs("Secondary");
+			Assert.AreEqual(2, Lexicon.GetEntriesHavingLexicalForm("Secondary", BasilProject.Project.WritingSystems[_vernacularWsId]).Count);
+		}
+
+		[Test]
+		public void NewWord_FindTextNotInDictionary_CreatesNewEmptyWord()
+		{
+			TextBoxTester t = new TextBoxTester("_findText", _window);
+			t.Enter("NewWord");
+
+			ClickAddWord();
+			VerifyNewEmptyWordCreated();
+		}
+
+		private void VerifyNewEmptyWordCreated()
+		{
+			LexEntry entry = GetCurrentEntry();
+			Assert.AreEqual(0, entry.LexicalForm.Count);
+		}
+
+		[Test]
+		public void NewWord_FindTextInDictionary_CreatesNewEmptyWord()
+		{
+			TextBoxTester t = new TextBoxTester("_findText", _window);
+			t.Enter("Secondary");
+			ClickAddWord();
+			VerifyNewEmptyWordCreated();
 		}
 
 		[Test]
@@ -880,6 +983,7 @@ namespace WeSay.LexicalTools.Tests
 			Rectangle r = l.Properties.GetItemRect(1);
 			mc.Click(r.Right + 1, r.Top + 1);
 			kc.Press("{DOWN}");
+			kc.Release("{DOWN}");
 			Assert.AreEqual(2, l.Properties.SelectedIndices[0]);
 		}
 
