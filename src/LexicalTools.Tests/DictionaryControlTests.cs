@@ -637,8 +637,7 @@ namespace WeSay.LexicalTools.Tests
 
 		private static string GetLexicalFormControlName()
 		{
-			return
-					Field.FieldNames.EntryLexicalForm + "_" +
+			return  Field.FieldNames.EntryLexicalForm + "_" +
 					BasilProject.Project.WritingSystems.TestWritingSystemVernId;
 		}
 
@@ -669,8 +668,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			get
 			{
-				return
-						((DictionaryControl) _detailTaskPage.Controls[0]).CurrentRecord.LexicalForm.
+				return  ((DictionaryControl) _detailTaskPage.Controls[0]).CurrentRecord.LexicalForm.
 								GetBestAlternative(_vernacularWritingSystem.Id);
 			}
 		}
@@ -942,10 +940,10 @@ namespace WeSay.LexicalTools.Tests
 		{
 			ListViewTester l = new ListViewTester("_recordsListBox", _window);
 			MouseController mc = new MouseController(l);
-			KeyboardController kc = new KeyboardController(l);
 			l.Select(0);
 			Rectangle r = l.Properties.GetItemRect(1);
 			mc.Click(r.Right + 1, r.Top + 1);
+			KeyboardController kc = new KeyboardController(l);
 			kc.Press("{DOWN}");
 			Assert.AreEqual(2, l.Properties.SelectedIndices[0]);
 		}
