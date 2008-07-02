@@ -84,7 +84,7 @@ namespace WeSay.LexicalTools.Tests
 			_viewTemplate.Add(exampleTranslationField);
 
 			_missingTranslationRecordList =
-		_lexEntryRepository.GetEntriesMatchingFilterSortedByLexicalUnit(
+		_lexEntryRepository.GetEntriesWithMissingFieldSortedByLexicalUnit(
 				exampleTranslationField, _writingSystem);
 
 

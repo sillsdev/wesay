@@ -81,6 +81,7 @@
 	<Compile Include="LexExampleSentence.cs" />
 	<Compile Include="LexRelation.cs" />
 	<Compile Include="LexSense.cs" />
+	<Compile Include="MissingItemFilter.cs" />
 	<Compile Include="PairStringLexEntryIdDisplayProvider.cs" />
 	<Compile Include="Phonetic.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />

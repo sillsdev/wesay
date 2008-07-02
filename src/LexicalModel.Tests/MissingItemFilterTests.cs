@@ -1,9 +1,8 @@
 using System;
 using NUnit.Framework;
 using WeSay.LexicalModel;
-using WeSay.Project;
 
-namespace WeSay.LexicalTools.Tests
+namespace WeSay.LexicalModel.Tests
 {
 	[TestFixture]
 	public class MissingItemFilterTests
@@ -21,39 +20,6 @@ namespace WeSay.LexicalTools.Tests
 		public void ConstructWithField_NullField_Throws()
 		{
 			new MissingFieldQuery(null);
-		}
-
-		[Test]
-		public void ConstructWithFieldTemplate()
-		{
-			ViewTemplate f = new ViewTemplate();
-			f.Add(new Field("field1", "LexEntry", new string[] {"en", "br", "th"}));
-			Assert.IsNotNull(new MissingFieldQuery(f, "field1"));
-		}
-
-		[Test]
-		[ExpectedException(typeof (ArgumentNullException))]
-		public void ConstructWithFieldTemplate_NullFieldTemplate_Throws()
-		{
-			new MissingFieldQuery(null, "field1");
-		}
-
-		[Test]
-		[ExpectedException(typeof (ArgumentNullException))]
-		public void ConstructWithFieldTemplate_NullFieldName_Throws()
-		{
-			ViewTemplate f = new ViewTemplate();
-			f.Add(new Field("field1", "LexEntry", new string[] {"en", "br", "th"}));
-			new MissingFieldQuery(f, null);
-		}
-
-		[Test]
-		[ExpectedException(typeof (ArgumentOutOfRangeException))]
-		public void ConstructWithFieldTemplate_FieldNameNotInFieldTemplate_Throws()
-		{
-			ViewTemplate f = new ViewTemplate();
-			f.Add(new Field("field1", "LexEntry", new string[] {"en", "br", "th"}));
-			new MissingFieldQuery(f, "field");
 		}
 
 		[Test]

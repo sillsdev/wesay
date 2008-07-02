@@ -4,10 +4,8 @@ using System.Diagnostics;
 using Palaso.Text;
 using WeSay.Foundation;
 using WeSay.Foundation.Options;
-using WeSay.LexicalModel;
-using WeSay.Project;
 
-namespace WeSay.LexicalTools
+namespace WeSay.LexicalModel
 {
 	public class MissingFieldQuery: IFieldQuery<LexEntry>
 	{
@@ -18,26 +16,6 @@ namespace WeSay.LexicalTools
 			if (field == null)
 			{
 				throw new ArgumentNullException();
-			}
-			_field = field;
-		}
-
-		public MissingFieldQuery(ViewTemplate viewTemplate, string fieldName)
-		{
-			if (viewTemplate == null)
-			{
-				throw new ArgumentNullException("viewTemplate");
-			}
-			if (fieldName == null)
-			{
-				throw new ArgumentNullException("fieldName");
-			}
-			Field field;
-			if (!viewTemplate.TryGetField(fieldName, out field))
-			{
-				throw new ArgumentOutOfRangeException("viewTemplate",
-													  "ViewTemplate is missing " + fieldName +
-													  " field definition");
 			}
 			_field = field;
 		}

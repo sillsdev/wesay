@@ -85,6 +85,7 @@
 	<Compile Include="Db4oSpecific\PersistenceTests.cs" />
 	<Compile Include="LiftMergerTests.cs" />
 	<Compile Include="LiftRoundTripTests.cs" />
+	<Compile Include="MissingItemFilterTests.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
