@@ -685,13 +685,18 @@ namespace WeSay.LexicalTools.Tests
 			l.Click();
 		}
 
+		private void ClickFindButton()
+		{
+			ButtonTester b = new ButtonTester("_btnFind", this._window);
+			b.Click();
+		}
+
 		[Test]
-		public void EnterText_PressFindButton_Finds()
+		public void FindText_EnterTextThenPressFindButton_Finds()
 		{
 			TextBoxTester t = new TextBoxTester("_findText", _window);
 			t.Enter("Secondary");
-			ButtonTester b = new ButtonTester("_btnFind", _window);
-			b.Click();
+			ClickFindButton();
 			ListViewTester l = new ListViewTester("_recordsListBox", _window);
 
 			string label = GetSelectedLabel((WeSayListView) l.Properties);
@@ -710,6 +715,62 @@ namespace WeSay.LexicalTools.Tests
 
 			string label = GetSelectedLabel((WeSayListView) l.Properties);
 			Assert.AreEqual("Secondary", label);
+		}
+
+		[Test]
+		public void FindText_EnterWordNotInDictionaryThenPressCtrlN_AddsWordInFindText()
+		{
+			TextBoxTester t = new TextBoxTester("_findText", _window);
+			t.Enter("NewWord");
+			PressCtrlN(t);
+
+			VerifySelectedWordIs("NewWord");
+		}
+
+		private void VerifySelectedWordIs(string word) {
+			ListViewTester l = new ListViewTester("_recordsListBox", this._window);
+
+			string label = GetSelectedLabel((WeSayListView)l.Properties);
+			Assert.AreEqual(word, label);
+		}
+
+		private static void PressCtrlN(ControlTester t) {
+			KeyboardController kc = new KeyboardController(t);
+			kc.Press("^n"); // Ctrl+N
+		}
+
+		[Test]
+		public void FindText_EnterWordInDictionaryThenPressCtrlN_AddsWordInFindTextSoTwoEntries()
+		{
+			TextBoxTester t = new TextBoxTester("_findText", _window);
+			t.Enter("Secondary");
+			PressCtrlN(t);
+			VerifySelectedWordIs("Secondary");
+			Assert.AreEqual(2, _lexEntryRepository.GetEntriesWithMatchingLexicalForm("Secondary",_vernacularWritingSystem).Count);
+		}
+
+		[Test]
+		public void NewWord_FindTextNotInDictionary_CreatesNewEmptyWord()
+		{
+			TextBoxTester t = new TextBoxTester("_findText", _window);
+			t.Enter("NewWord");
+
+			ClickAddWord();
+			VerifyNewEmptyWordCreated();
+		}
+
+		private void VerifyNewEmptyWordCreated() {
+			LexEntry entry = GetCurrentEntry();
+			Assert.AreEqual(0, entry.LexicalForm.Count);
+		}
+
+		[Test]
+		public void NewWord_FindTextInDictionary_CreatesNewEmptyWord()
+		{
+			TextBoxTester t = new TextBoxTester("_findText", _window);
+			t.Enter("Secondary");
+			ClickAddWord();
+			VerifyNewEmptyWordCreated();
 		}
 
 		[Test]
