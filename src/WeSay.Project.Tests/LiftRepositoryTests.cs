@@ -39,6 +39,11 @@ namespace WeSay.Project.Tests
 		{
 			File.Delete(this._persistedFilePath);
 		}
+
+		protected override void RepopulateRepositoryFromPersistedData()
+		{
+			//Do Nothing.
+		}
 	}
 
 	[TestFixture]
@@ -57,6 +62,11 @@ namespace WeSay.Project.Tests
 		{
 			File.Delete(this._persistedFilePath);
 		}
+
+		protected override void RepopulateRepositoryFromPersistedData()
+		{
+			//Do Nothing.
+		}
 	}
 
 	[TestFixture]
@@ -74,6 +84,11 @@ namespace WeSay.Project.Tests
 		public void Teardown()
 		{
 			File.Delete(this._persistedFilePath);
+		}
+
+		protected override void RepopulateRepositoryFromPersistedData()
+		{
+			//Do Nothing.
 		}
 	}
 }

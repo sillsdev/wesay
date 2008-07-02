@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using NUnit.Framework;
 using WeSay.Data;
+using System.Reflection;
 
 namespace WeSay.Data.Tests
 {
@@ -46,18 +47,18 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
+		[ExpectedException(typeof(ArgumentNullException))]
+		public void DeleteItemById_Null_Throws()
+		{
+			RepositoryUnderTest.DeleteItem((RepositoryId) null);
+		}
+
+		[Test]
 		[ExpectedException(typeof(ArgumentOutOfRangeException))]
 		public void DeleteItemById_ItemDoesNotExist_Throws()
 		{
 			MyRepositoryId id = new MyRepositoryId();
 			RepositoryUnderTest.DeleteItem(id);
-		}
-
-		[Test]
-		[ExpectedException(typeof(ArgumentNullException))]
-		public void DeleteItemById_Null_Throws()
-		{
-			RepositoryUnderTest.DeleteItem((RepositoryId) null);
 		}
 
 		[Test]
@@ -164,11 +165,10 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void SaveItems_ListIsEmpty_DoNotChangeLastModified()
 		{
-			Assert.Fail("Problem with DateTime resolution.");
 			List<T> itemsToSave = new List<T>();
-			DateTime timePreSave = DateTime.UtcNow;
+			DateTime modifiedTimePreTestedStateSwitch = RepositoryUnderTest.LastModified;
 			RepositoryUnderTest.SaveItems(itemsToSave);
-			Assert.AreEqual(timePreSave, RepositoryUnderTest.LastModified);
+			Assert.AreEqual(modifiedTimePreTestedStateSwitch, RepositoryUnderTest.LastModified);
 		}
 
 		class MyRepositoryId : RepositoryId
@@ -190,7 +190,6 @@ namespace WeSay.Data.Tests
 		private IRepository<T> _repositoryUnderTest;
 		private T item;
 		private RepositoryId id;
-		private readonly Query query = new Query(typeof(T));
 
 		public IRepository<T> RepositoryUnderTest
 		{
@@ -286,18 +285,16 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void SaveItem_LastModifiedIsChangedToLaterTime()
 		{
-			Assert.Fail("Problem with DateTime resolution.");
 			SetState();
-			DateTime timePreSave = DateTime.UtcNow;
+			DateTime modifiedTimePreTestedStateSwitch = RepositoryUnderTest.LastModified;
 			RepositoryUnderTest.SaveItem(item);
-			Assert.Greater((decimal) RepositoryUnderTest.LastModified.Ticks, timePreSave.Ticks);
+			Assert.Greater(RepositoryUnderTest.LastModified, modifiedTimePreTestedStateSwitch);
 		}
 
 		[Test]
 		public void SaveItem_LastModifiedIsSetInUTC()
 		{
 			SetState();
-			Thread.Sleep(50);
 			RepositoryUnderTest.SaveItem(item);
 			Assert.AreEqual(DateTimeKind.Utc, RepositoryUnderTest.LastModified.Kind);
 		}
@@ -310,14 +307,31 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		public void GetItemMatchingQuery_Query_ReturnsItemsMatchingQuery()
+		public void GetItemMatchingQuery_QueryWithOutShow_ReturnsItemsMatchingQuery()
 		{
+			Query queryWithoutShow = new Query(typeof(T));
 			SetState();
 			if(RepositoryUnderTest.CanQuery)
 			{
-				ResultSet<T> resultSet = RepositoryUnderTest.GetItemsMatching(query);
+				ResultSet<T> resultSet = RepositoryUnderTest.GetItemsMatching(queryWithoutShow);
 				Assert.AreEqual(1, resultSet.Count);
 				Assert.AreEqual(item, resultSet[0].RealObject);
+				Assert.AreEqual(id, resultSet[0].Id);
+			}
+			else
+			{
+				Assert.Ignore("Repository does not support queries.");
+			}
+		}
+
+		[Test]
+		public void GetItemMatchingQuery_QueryWithShow_ReturnsItemsMatchingQuery()
+		{
+			SetState();
+			if (RepositoryUnderTest.CanQuery)
+			{
+				Assert.Ignore(@"This Test is highly dependant on the type of objects that are
+							being managed by the repository and as such should be tested elsewhere.");
 			}
 			else
 			{
@@ -343,14 +357,12 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void SaveItems_LastModifiedIsChangedToLaterTime()
 		{
-			Assert.Fail("Problem with DateTime resolution.");
 			SetState();
 			List<T> itemsToSave = new List<T>();
 			itemsToSave.Add(item);
-			DateTime timePreSave = DateTime.UtcNow;
-			Thread.Sleep(1000);
+			DateTime modifiedTimePreTestedStateSwitch = RepositoryUnderTest.LastModified;
 			RepositoryUnderTest.SaveItems(itemsToSave);
-			Assert.Greater((decimal)RepositoryUnderTest.LastModified.Ticks, timePreSave.Ticks);
+			Assert.Greater(RepositoryUnderTest.LastModified, modifiedTimePreTestedStateSwitch);
 		}
 
 		[Test]
@@ -400,11 +412,10 @@ namespace WeSay.Data.Tests
 		public void SetState()
 		{
 			CreateInitialItem();
-			WaitThenDeleteItem();
+			DeleteItem();
 		}
 
-		private void WaitThenDeleteItem() {
-			Thread.Sleep(50);
+		private void DeleteItem() {
 			RepositoryUnderTest.DeleteItem(this.item);
 		}
 
@@ -426,7 +437,7 @@ namespace WeSay.Data.Tests
 		public void DeleteItem_HasBeenPersisted()
 		{
 			SetState();
-			if (!RepositoryUnderTest.CanPersist())
+			if (!RepositoryUnderTest.CanPersist)
 			{
 				Assert.Ignore("Repository can not be persisted.");
 			}
@@ -463,10 +474,9 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void LastModified_IsChangedToLaterTime()
 		{
-			Assert.Fail("Problem with DateTime resolution.");
 			CreateInitialItem();
 			DateTime modifiedTimePreTestedStateSwitch = RepositoryUnderTest.LastModified;
-			WaitThenDeleteItem();
+			DeleteItem();
 			Assert.Greater(RepositoryUnderTest.LastModified, modifiedTimePreTestedStateSwitch);
 		}
 
@@ -548,11 +558,10 @@ namespace WeSay.Data.Tests
 		public void SetState()
 		{
 			CreateItemToTest();
-			WaitThenDeleteItem();
+			DeleteItem();
 		}
 
-		private void WaitThenDeleteItem() {
-			Thread.Sleep(50);
+		private void DeleteItem() {
 			RepositoryUnderTest.DeleteItem(this.id);
 		}
 
@@ -574,7 +583,7 @@ namespace WeSay.Data.Tests
 		public void DeleteItem_HasBeenPersisted()
 		{
 			SetState();
-			if (!RepositoryUnderTest.CanPersist())
+			if (!RepositoryUnderTest.CanPersist)
 			{
 				Assert.Ignore("Repository can not be persisted.");
 			}
@@ -611,10 +620,9 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void LastModified_ItemIsDeleted_IsChangedToLaterTime()
 		{
-			Assert.Fail("Problem with DateTime resolution.");
 			CreateItemToTest();
 			DateTime modifiedTimePreTestedStateSwitch = RepositoryUnderTest.LastModified;
-			WaitThenDeleteItem();
+			DeleteItem();
 			Assert.Greater(RepositoryUnderTest.LastModified, modifiedTimePreTestedStateSwitch);
 		}
 

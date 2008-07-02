@@ -20,13 +20,17 @@ namespace WeSay.Data
 			}
 		}
 
+		public bool CanQuery { get { return true; } }
+
+		public bool CanPersist { get { return false; } }
+
 		public T CreateItem()
 		{
 			T t = new T();
 			MemoryRepositoryId id = new MemoryRepositoryId();
 			idToObjectHashtable.Add(id, t);
 			objectToIdHashtable.Add(t, id);
-			LastModified = DateTime.UtcNow;
+			LastModified = PreciseDateTime.UtcNow;
 			return t;
 		}
 
@@ -42,7 +46,7 @@ namespace WeSay.Data
 			}
 			idToObjectHashtable.Remove(objectToIdHashtable[item]);
 			objectToIdHashtable.Remove(item);
-			LastModified = DateTime.Now;
+			LastModified = PreciseDateTime.UtcNow;
 		}
 
 		public void DeleteItem(RepositoryId id)
@@ -73,14 +77,9 @@ namespace WeSay.Data
 			{
 				throw new ArgumentOutOfRangeException("item", "The item must exist in the repository before it can be saved.");
 			}
-			DateTime timeOfSave = DateTime.UtcNow;
+			DateTime timeOfSave = PreciseDateTime.UtcNow;
 			LastModified = timeOfSave;
 		}
-
-		public bool CanQuery { get { return true; } }
-
-		public bool CanPersist { get { return false; } }
-
 
 		public void SaveItems(IEnumerable<T> items)
 		{
