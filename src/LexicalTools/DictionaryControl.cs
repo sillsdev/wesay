@@ -235,24 +235,18 @@ namespace WeSay.LexicalTools
 		{
 			Debug.Assert(CurrentIndex != -1);
 			RecordToken<LexEntry> recordToken = _records[CurrentIndex];
-//todo: figure out how to keep our list up to date as records change
-			//if (!recordToken.IsFresh)
-			//{
-			//    recordToken.Refresh();
-			//    _keepRecordCurrent = true;
-			//    LoadRecords();
-			//    int index = _records.FindFirstIndex(recordToken);
-			//    //may not have been successful with the refresh of the recordToken
-			//    // in which case we should just try to go to the first with
-			//    // the same id
-			//    if (index < 0)
-			//    {
-			//        index = _records.FindFirstIndex(recordToken.Id);
-			//    }
-			//    Debug.Assert(index != -1);
-			//    _recordsListBox.SelectedIndex = index;
-			//    _keepRecordCurrent = false;
-			//}
+			_keepRecordCurrent = true;
+			LoadRecords();
+			int index = _records.FindFirstIndex(recordToken);
+			//may not have been successful in which case we should
+			//just try to go to the first with the same id
+			if (index < 0)
+			{
+				index = _records.FindFirstIndex(recordToken.Id);
+			}
+			Debug.Assert(index != -1);
+			_recordsListBox.SelectedIndex = index;
+			_keepRecordCurrent = false;
 		}
 
 		private void LoadRecords()
