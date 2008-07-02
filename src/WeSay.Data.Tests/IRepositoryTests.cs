@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using NUnit.Framework;
 using WeSay.Data;
@@ -33,7 +34,6 @@ namespace WeSay.Data.Tests
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void DeleteItem_Null_Throws()
 		{
-			T item = new T();
 			RepositoryUnderTest.DeleteItem((T) null);
 		}
 
@@ -57,7 +57,6 @@ namespace WeSay.Data.Tests
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void DeleteItemById_Null_Throws()
 		{
-			MyRepositoryId id = new MyRepositoryId();
 			RepositoryUnderTest.DeleteItem((RepositoryId) null);
 		}
 
@@ -107,13 +106,12 @@ namespace WeSay.Data.Tests
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void Save_Null_Throws()
 		{
-			T item = new T();
 			RepositoryUnderTest.SaveItem(null);
 		}
 
 		[Test]
 		[ExpectedException(typeof(ArgumentOutOfRangeException))]
-		public void Save_Throws()
+		public void Save_ItemDoesNotExist_Throws()
 		{
 			T item = new T();
 			RepositoryUnderTest.SaveItem(item);
@@ -134,7 +132,7 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		public virtual void GetItemMatchingQuery_Query_ReturnsEmpty()
+		public void GetItemMatchingQuery_Query_ReturnsEmpty()
 		{
 			if(RepositoryUnderTest.CanQuery())
 			{
@@ -144,6 +142,33 @@ namespace WeSay.Data.Tests
 			{
 				Assert.Ignore("Repository does not support queries.");
 			}
+		}
+
+		[Test]
+		[ExpectedException(typeof(ArgumentNullException))]
+		public void SaveItems_Null_Throws()
+		{
+			RepositoryUnderTest.SaveItems(null);
+		}
+
+		[Test]
+		[ExpectedException(typeof(ArgumentOutOfRangeException))]
+		public void SaveItems_ItemDoesNotExist_Throws()
+		{
+			T item = new T();
+			List <T> itemsToSave = new List<T>();
+			itemsToSave.Add(item);
+			RepositoryUnderTest.SaveItems(itemsToSave);
+		}
+
+		[Test]
+		public void SaveItems_ListIsEmpty_DoNotChangeLastModified()
+		{
+			Assert.Fail("Problem with DateTime resolution.");
+			List<T> itemsToSave = new List<T>();
+			DateTime timePreSave = DateTime.UtcNow;
+			RepositoryUnderTest.SaveItems(itemsToSave);
+			Assert.AreEqual(timePreSave, RepositoryUnderTest.LastModified);
 		}
 
 		class MyRepositoryId : RepositoryId
@@ -160,7 +185,7 @@ namespace WeSay.Data.Tests
 		}
 	}
 
-	public class IRepositoryCreateItemTransitionTests<T> where T : class, new()
+	public abstract class IRepositoryCreateItemTransitionTests<T> where T : class, new()
 	{
 		private IRepository<T> _repositoryUnderTest;
 		private T item;
@@ -185,6 +210,11 @@ namespace WeSay.Data.Tests
 			item = RepositoryUnderTest.CreateItem();
 			id = RepositoryUnderTest.GetId(item);
 		}
+
+		//This method is used to test whether data has been persisted.
+		//This method should dispose of the current repository and reload it from persisted data
+		//For repositories that don't support persistence this method should do nothing
+		protected abstract void RepopulateRepositoryFromPersistedData();
 
 		[Test]
 		public void CountAllItems_ReturnsNumberOfItemsInRepository()
@@ -254,13 +284,29 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		public void LastModified_SaveItem_ReturnsCorrectTime()
+		public void SaveItem_LastModifiedIsChangedToLaterTime()
+		{
+			Assert.Fail("Problem with DateTime resolution.");
+			SetState();
+			DateTime timePreSave = DateTime.UtcNow;
+			RepositoryUnderTest.SaveItem(item);
+			Assert.Greater((decimal) RepositoryUnderTest.LastModified.Ticks, timePreSave.Ticks);
+		}
+
+		[Test]
+		public void SaveItem_LastModifiedIsSetInUTC()
 		{
 			SetState();
 			Thread.Sleep(50);
-			DateTime timeOfSave = DateTime.UtcNow;
 			RepositoryUnderTest.SaveItem(item);
-			Assert.AreEqual(timeOfSave, RepositoryUnderTest.LastModified);
+			Assert.AreEqual(DateTimeKind.Utc, RepositoryUnderTest.LastModified.Kind);
+		}
+
+		[Test]
+		public void SaveItem_ItemHasBeenPersisted()
+		{
+			Assert.Ignore(@"This Test is highly dependant on the type of objects that are
+							being managed by the repository and as such should be tested elsewhere.");
 		}
 
 		[Test]
@@ -280,21 +326,54 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		public virtual void ItemHasBeenPersisted()
+		public void CreatedItemHasBeenPersisted()
 		{
 			SetState();
-			if(!RepositoryUnderTest.CanPersist())
+			if (!RepositoryUnderTest.CanPersist())
 			{
 				Assert.Ignore("Repository can not be persisted.");
 			}
 			else
 			{
-				throw new NotImplementedException("You must implement a test to verify that the created item has been persisted.");
+				RepopulateRepositoryFromPersistedData();
+				T itemFromPersistedData = RepositoryUnderTest.GetItem(id);
+				Assert.AreEqual(item, itemFromPersistedData);
 			}
+		}
+
+		[Test]
+		public void SaveItems_LastModifiedIsChangedToLaterTime()
+		{
+			Assert.Fail("Problem with DateTime resolution.");
+			SetState();
+			List<T> itemsToSave = new List<T>();
+			itemsToSave.Add(item);
+			DateTime timePreSave = DateTime.UtcNow;
+			Thread.Sleep(1000);
+			RepositoryUnderTest.SaveItems(itemsToSave);
+			Assert.Greater((decimal)RepositoryUnderTest.LastModified.Ticks, timePreSave.Ticks);
+		}
+
+		[Test]
+		public void SaveItems_LastModifiedIsSetInUTC()
+		{
+			SetState();
+			List<T> itemsToSave = new List<T>();
+			itemsToSave.Add(item);
+			Thread.Sleep(50);
+			RepositoryUnderTest.SaveItems(itemsToSave);
+			Assert.AreEqual(DateTimeKind.Utc, RepositoryUnderTest.LastModified.Kind);
+		}
+
+		[Test]
+		public void SaveItems_ItemHasBeenPersisted()
+		{
+			Assert.Ignore(@"This Test is highly dependant on the type of objects that are
+							being managed by the repository and as such should be tested elsewhere.");
 		}
 	}
 
-	public class IRepositoryDeleteItemTransitionTests<T> where T : class, new()
+	public abstract class IRepositoryDeleteItemTransitionTests<T> where T : class, new()
 	{
 		private IRepository<T> _repositoryUnderTest;
 		private T item;
@@ -313,6 +392,11 @@ namespace WeSay.Data.Tests
 			}
 			set { _repositoryUnderTest = value; }
 		}
+
+		//This method is used to test whether data has been persisted.
+		//This method should dispose of the current repository and reload it from persisted data
+		//For repositories that don't support persistence this method should do nothing
+		protected abstract void RepopulateRepositoryFromPersistedData();
 
 		public void SetState()
 		{
@@ -339,6 +423,22 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
+		[ExpectedException(typeof(ArgumentOutOfRangeException))]
+		public void DeleteItem_HasBeenPersisted()
+		{
+			SetState();
+			if (!RepositoryUnderTest.CanPersist())
+			{
+				Assert.Ignore("Repository can not be persisted.");
+			}
+			else
+			{
+				RepopulateRepositoryFromPersistedData();
+				RepositoryUnderTest.GetItem(id);
+			}
+		}
+
+		[Test]
 		public void CountAllItems_ReturnsNumberOfItemsInRepository()
 		{
 			SetState();
@@ -362,8 +462,9 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		public void LastModified_IsChanged()
+		public void LastModified_IsChangedToLaterTime()
 		{
+			Assert.Fail("Problem with DateTime resolution.");
 			CreateInitialItem();
 			DateTime modifiedTimePreTestedStateSwitch = RepositoryUnderTest.LastModified;
 			WaitThenDeleteItem();
@@ -393,21 +494,7 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		public virtual void DeletionOfItemHasBeenPersisted()
-		{
-			SetState();
-			if (!RepositoryUnderTest.CanPersist())
-			{
-				Assert.Ignore("Repository can not be persisted.");
-			}
-			else
-			{
-				throw new NotImplementedException("You must implement a test to verify that the item deletion has been persisted.");
-			}
-		}
-
-		[Test]
-		public virtual void GetItemMatchingQuery_Query_ReturnsEmpty()
+		public void GetItemMatchingQuery_Query_ReturnsEmpty()
 		{
 			if (RepositoryUnderTest.CanQuery())
 			{
@@ -420,7 +507,7 @@ namespace WeSay.Data.Tests
 		}
 	}
 
-	public class IRepositoryDeleteIdTransitionTests<T> where T : class, new()
+	public abstract class IRepositoryDeleteIdTransitionTests<T> where T : class, new()
 	{
 		private IRepository<T> _repositoryUnderTest;
 		private T item;
@@ -439,6 +526,11 @@ namespace WeSay.Data.Tests
 			}
 			set { _repositoryUnderTest = value; }
 		}
+
+		//This method is used to test whether data has been persisted.
+		//This method should dispose of the current repository and reload it from persisted data
+		//For repositories that don't support persistence this method should do nothing
+		protected abstract void RepopulateRepositoryFromPersistedData();
 
 		public void SetState()
 		{
@@ -465,6 +557,22 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
+		[ExpectedException(typeof(ArgumentOutOfRangeException))]
+		public void DeleteItem_HasBeenPersisted()
+		{
+			SetState();
+			if (!RepositoryUnderTest.CanPersist())
+			{
+				Assert.Ignore("Repository can not be persisted.");
+			}
+			else
+			{
+				RepopulateRepositoryFromPersistedData();
+				RepositoryUnderTest.GetItem(id);
+			}
+		}
+
+		[Test]
 		public void CountAllItems_DeleteItem_ReturnsNumberOfItemsInRepository()
 		{
 			SetState();
@@ -488,8 +596,9 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		public void LastModified_ItemIsDeleted_IsChanged()
+		public void LastModified_ItemIsDeleted_IsChangedToLaterTime()
 		{
+			Assert.Fail("Problem with DateTime resolution.");
 			CreateItemToTest();
 			DateTime modifiedTimePreTestedStateSwitch = RepositoryUnderTest.LastModified;
 			WaitThenDeleteItem();
@@ -519,21 +628,7 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		public virtual void DeletionOfItemHasBeenPersisted()
-		{
-			SetState();
-			if (!RepositoryUnderTest.CanPersist())
-			{
-				Assert.Ignore("Repository can not be persisted.");
-			}
-			else
-			{
-				throw new NotImplementedException("You must implement a test to verify that the item deletion has been persisted.");
-			}
-		}
-
-		[Test]
-		public virtual void GetItemMatchingQuery_Query_ReturnsEmpty()
+		public void GetItemMatchingQuery_Query_ReturnsEmpty()
 		{
 			if (RepositoryUnderTest.CanQuery())
 			{

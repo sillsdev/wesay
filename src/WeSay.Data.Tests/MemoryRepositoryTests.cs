@@ -34,6 +34,11 @@ namespace WeSay.Data.Tests
 		{
 			RepositoryUnderTest.Dispose();
 		}
+
+		protected override void RepopulateRepositoryFromPersistedData()
+		{
+			//Do nothing.
+		}
 	}
 
 	[TestFixture]
@@ -50,6 +55,11 @@ namespace WeSay.Data.Tests
 		{
 			RepositoryUnderTest.Dispose();
 		}
+
+		protected override void RepopulateRepositoryFromPersistedData()
+		{
+			//Do nothing.
+		}
 	}
 
 	[TestFixture]
@@ -65,6 +75,11 @@ namespace WeSay.Data.Tests
 		public void Teardown()
 		{
 			RepositoryUnderTest.Dispose();
+		}
+
+		protected override void RepopulateRepositoryFromPersistedData()
+		{
+			//Do nothing.
 		}
 	}
 }

@@ -42,6 +42,10 @@ namespace WeSay.Data.Tests
 			File.Delete(_name);
 		}
 
+		protected override void RepopulateRepositoryFromPersistedData()
+		{
+			throw new System.NotImplementedException();
+		}
 	}
 
 	[TestFixture]
@@ -62,6 +66,10 @@ namespace WeSay.Data.Tests
 			File.Delete(_name);
 		}
 
+		protected override void RepopulateRepositoryFromPersistedData()
+		{
+			throw new System.NotImplementedException();
+		}
 	}
 
 	[TestFixture]
@@ -80,6 +88,11 @@ namespace WeSay.Data.Tests
 		{
 			RepositoryUnderTest.Dispose();
 			File.Delete(_name);
+		}
+
+		protected override void RepopulateRepositoryFromPersistedData()
+		{
+			throw new System.NotImplementedException();
 		}
 	}
 }

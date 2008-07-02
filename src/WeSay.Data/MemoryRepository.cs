@@ -26,7 +26,7 @@ namespace WeSay.Data
 			MemoryRepositoryId id = new MemoryRepositoryId();
 			idToObjectHashtable.Add(id, t);
 			objectToIdHashtable.Add(t, id);
-			LastModified = DateTime.Now;
+			LastModified = DateTime.UtcNow;
 			return t;
 		}
 
@@ -90,10 +90,14 @@ namespace WeSay.Data
 
 		public void SaveItems(IEnumerable<T> items)
 		{
-			//foreach (T t in items)
-			//{
-			//    SaveItem(t);
-			//}
+			if(items == null)
+			{
+				throw new ArgumentNullException("items");
+			}
+			foreach (T t in items)
+			{
+				SaveItem(t);
+			}
 		}
 
 		public ResultSet<T> GetItemsMatching(Query query)
