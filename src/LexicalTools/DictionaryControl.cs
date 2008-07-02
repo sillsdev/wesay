@@ -270,14 +270,27 @@ namespace WeSay.LexicalTools
 			_recordsListBox.EndUpdate();
 		}
 
-		//todo: support fallback to best form
 		private void OnRetrieveVirtualItemEvent(object sender, RetrieveVirtualItemEventArgs e)
 		{
-			string displayString = (string) _records[e.ItemIndex]["Form"];
-			if(string.IsNullOrEmpty(displayString))
+			RecordToken<LexEntry> recordToken = this._records[e.ItemIndex];
+			string displayString = (string) recordToken["Form"];
+			e.Item = new ListViewItem(displayString);
+			if (!string.IsNullOrEmpty(displayString))
+			{
+				return;
+			}
+
+			bool writingSystemUsedInLexicalForm = IsWritingSystemUsedInLexicalForm(this._listWritingSystem.Id);
+			if(writingSystemUsedInLexicalForm)
+			{
+				displayString = recordToken.RealObject.LexicalForm.GetBestAlternative(_listWritingSystem.Id, string.Empty);
+				e.Item.Font = new Font(e.Item.Font, FontStyle.Italic);
+			}
+
+			if (string.IsNullOrEmpty(displayString))
 			{
 				displayString = "(";
-				if (IsWritingSystemUsedInLexicalForm(_listWritingSystem.Id))
+				if (writingSystemUsedInLexicalForm)
 				{
 					displayString +=
 							StringCatalog.Get("~Empty",
@@ -292,7 +305,7 @@ namespace WeSay.LexicalTools
 				}
 				displayString += ")";
 			}
-			e.Item = new ListViewItem(displayString);
+			e.Item.Text = displayString;
 		}
 
 		private static IEnumerable FindClosestAndNextClosestAndPrefixedForms(string text,
