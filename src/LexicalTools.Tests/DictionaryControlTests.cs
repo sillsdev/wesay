@@ -53,7 +53,7 @@ namespace WeSay.LexicalTools.Tests
 			viewTemplate.Add(
 					new Field("MyEntryCustom",
 							  "LexEntry",
-							  new string[] {"en"},
+							  analysisWritingSystemIds,
 							  Field.MultiplicityType.ZeroOr1,
 							  "MultiText"));
 
@@ -67,7 +67,7 @@ namespace WeSay.LexicalTools.Tests
 			Field shy1 =
 					new Field("MyShyEntryCustom",
 							  "LexEntry",
-							  new string[] {"en"},
+							  analysisWritingSystemIds,
 							  Field.MultiplicityType.ZeroOr1,
 							  "MultiText");
 			shy1.Visibility = CommonEnumerations.VisibilitySetting.NormallyHidden;
@@ -86,7 +86,7 @@ namespace WeSay.LexicalTools.Tests
 			viewTemplate.Add(
 					new Field("MySenseCustom",
 							  "LexSense",
-							  new string[] {"en"},
+							  analysisWritingSystemIds,
 							  Field.MultiplicityType.ZeroOr1,
 							  "MultiText"));
 			viewTemplate.Add(
@@ -456,6 +456,13 @@ namespace WeSay.LexicalTools.Tests
 		public void CustomTextFieldPreservedNoOtherEditing()
 		{
 			CustomTextFieldPreservedCore("*MyEntryCustom");
+			EnsureHasOneEntryProperty();
+		}
+
+		private void EnsureHasOneEntryProperty() {
+			LexEntry entry = GetCurrentEntry();
+			entry.CleanUpAfterEditting();
+			Assert.AreEqual(1, entry.Properties.Count);
 		}
 
 		[Test]
@@ -465,6 +472,7 @@ namespace WeSay.LexicalTools.Tests
 			t.Enter("test");
 
 			CustomTextFieldPreservedCore("*MyEntryCustom");
+			EnsureHasOneEntryProperty();
 		}
 
 		private void CustomTextFieldPreservedCore(string fieldLabel)
@@ -474,8 +482,6 @@ namespace WeSay.LexicalTools.Tests
 			box.Focus();
 			box.Text = "a note";
 			LexEntry entry = GetCurrentEntry();
-			Assert.AreEqual(1, GetCurrentEntry().Properties.Count);
-
 			CycleTheCurrentEntryOutAndBackIn(entry);
 
 			note = GetEditControl(fieldLabel);
@@ -489,8 +495,6 @@ namespace WeSay.LexicalTools.Tests
 			combo.Value = "verb";
 
 			LexEntry entry = GetCurrentEntry();
-			Assert.AreEqual(1, GetCurrentEntry().Properties.Count);
-
 			CycleTheCurrentEntryOutAndBackIn(entry);
 
 			combo = GetOptionControl(fieldLabel);
@@ -501,12 +505,22 @@ namespace WeSay.LexicalTools.Tests
 		public void CustomOptionRefOnSensePreserved()
 		{
 			CustomOptionRefPreservedCore("POS");
+			EnsureHasTwoSenseProperties();
 		}
 
 		[Test]
 		public void CustomTextFieldOnSensePreserved()
 		{
 			CustomTextFieldPreservedCore("s-note");
+			EnsureHasTwoSenseProperties();
+		}
+
+		private void EnsureHasTwoSenseProperties()
+		{
+			LexEntry entry = GetCurrentEntry();
+			entry.CleanUpAfterEditting();
+			//one for definition, one for custom field
+			Assert.AreEqual(2, entry.Senses[0].Properties.Count);
 		}
 
 		private void CycleTheCurrentEntryOutAndBackIn(LexEntry entry)
