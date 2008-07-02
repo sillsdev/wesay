@@ -94,6 +94,7 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
+		[ExpectedException(typeof(ArgumentNullException))]
 		public void GetIndexer_NullFieldName_Throws()
 		{
 			Token[null] = null;

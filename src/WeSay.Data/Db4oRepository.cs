@@ -38,7 +38,35 @@ namespace WeSay.Data
 
 		public DateTime LastModified
 		{
-			get { throw new NotImplementedException(); }
+			get
+			{
+				DatabaseModified databaseModified = GetDatabaseModified();
+				return databaseModified.LastModified;
+			}
+			private set
+			{
+				DatabaseModified databaseModified = GetDatabaseModified();
+				databaseModified.LastModified = value;
+				Database.Set(databaseModified);
+			}
+		}
+
+		private DatabaseModified GetDatabaseModified() {
+			IList<DatabaseModified> query = Database.Query<DatabaseModified>();
+			DatabaseModified databaseModified;
+			switch (query.Count)
+			{
+				case 0:
+					databaseModified = new DatabaseModified();
+					Database.Set(databaseModified);
+					break;
+				case 1:
+					databaseModified = query[0];
+					break;
+				default:
+					throw new InvalidOperationException();
+			}
+			return databaseModified;
 		}
 
 		bool IRepository<T>.CanQuery
@@ -55,7 +83,7 @@ namespace WeSay.Data
 		{
 			T item = new T();
 			Database.Set(item, ActivationDepth);
-			Database.Commit();
+			Commit();
 			return item;
 		}
 
@@ -113,7 +141,7 @@ namespace WeSay.Data
 			EnsureItemActive(item);
 
 			Database.Delete(item);
-			Database.Commit();
+			Commit();
 		}
 
 		public void DeleteItem(RepositoryId id)
@@ -162,7 +190,7 @@ namespace WeSay.Data
 			{
 				SaveItemCore(item);
 			}
-			Database.Commit();
+			Commit();
 		}
 
 		// Not fast but correct
@@ -190,6 +218,11 @@ namespace WeSay.Data
 		public void SaveItem(T item)
 		{
 			SaveItemCore(item);
+			Commit();
+		}
+
+		private void Commit() {
+			LastModified = DateTime.UtcNow;
 			Database.Commit();
 		}
 
