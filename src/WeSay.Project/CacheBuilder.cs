@@ -342,7 +342,7 @@ namespace WeSay.Project
 		private void DoParsing(LexEntryRepository lexEntryRepository)
 		{
 			//                entriesList.WriteCacheSize = 0; //don't write after every record
-			using (LiftMerger merger = new LiftMerger(lexEntryRepository))
+			using (LiftMerger merger = new LiftMerger())
 			{
 				foreach (string name in WeSayWordsProject.Project.OptionFieldNames)
 				{

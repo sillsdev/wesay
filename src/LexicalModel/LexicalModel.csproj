@@ -82,6 +82,8 @@
 	<Compile Include="LexRelation.cs" />
 	<Compile Include="LexSense.cs" />
 	<Compile Include="LiftExporter.cs" />
+	<Compile Include="LiftRepository.cs" />
+	<Compile Include="LiftUpdateService.cs" />
 	<Compile Include="MissingItemFilter.cs" />
 	<Compile Include="PairStringLexEntryIdDisplayProvider.cs" />
 	<Compile Include="Phonetic.cs" />

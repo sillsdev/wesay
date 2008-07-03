@@ -27,7 +27,7 @@ namespace WeSay.LexicalModel.Tests
 			_lexEntryRepository = new LexEntryRepository(_tempFile);
 			_exporter = new LiftExporter(_stringBuilder, false);
 
-			_merger = new LiftMerger(_lexEntryRepository);
+			_merger = new LiftMerger();
 		}
 
 		[TearDown]

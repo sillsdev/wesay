@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Windows.Forms;
 using LiftIO;
 using LiftIO.Merging;
 using Palaso.Reporting;

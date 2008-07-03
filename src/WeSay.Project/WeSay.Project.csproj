@@ -88,8 +88,6 @@
 	<Compile Include="CacheBuilder.cs" />
 	<Compile Include="ConfigFileTaskBuilder.cs" />
 	<Compile Include="FailedLoadTask.cs" />
-	<Compile Include="LiftRepository.cs" />
-	<Compile Include="LiftUpdateService.cs" />
 	<Compile Include="PLiftExporter.cs" />
 	<Compile Include="ViewTemplate.cs" />
 	<Compile Include="ICurrentWorkTask.cs" />
