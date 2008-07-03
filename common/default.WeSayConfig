@@ -16,10 +16,7 @@
 	</task>
 	<task id="AddMeanings" class="WeSay.LexicalTools.MissingInfoTask" assembly="LexicalTools" visible="false">
 	  <entries ref="All Entries" />
-	  <filter class="WeSay.LexicalTools.MissingItemFilter" assembly="LexicalTools">
-		<viewTemplate ref="Default View Template" />
-		<field>definition</field>
-	  </filter>
+	  <field>definition</field>
 	  <label>Add Meanings</label>
 	  <description>Add meanings to entries where they are missing.</description>
 	  <viewTemplate ref="Default View Template" />
@@ -28,10 +25,7 @@
 	</task>
 	<task id="AddPartOfSpeech" class="WeSay.LexicalTools.MissingInfoTask" assembly="LexicalTools" visible="false">
 	  <entries ref="All Entries" />
-	  <filter class="WeSay.LexicalTools.MissingItemFilter" assembly="LexicalTools">
-		<viewTemplate ref="Default View Template" />
-		<field>POS</field>
-	  </filter>
+	  <field>POS</field>
 	  <label>Add Parts of Speech</label>
 	  <description>Add a Part Of Speech to senses where they are missing.</description>
 	  <viewTemplate ref="Default View Template" />
@@ -40,10 +34,7 @@
 	</task>
 	<task id="AddExamples" class="WeSay.LexicalTools.MissingInfoTask" assembly="LexicalTools" visible="false">
 	  <entries ref="All Entries" />
-	  <filter class="WeSay.LexicalTools.MissingItemFilter" assembly="LexicalTools">
-		<viewTemplate ref="Default View Template" />
-		<field>ExampleSentence</field>
-	  </filter>
+	  <field>ExampleSentence</field>
 	  <label>Add Examples</label>
 	  <description>Add example sentences to entries where they are missing.</description>
 	  <viewTemplate ref="Default View Template" />
@@ -52,10 +43,7 @@
 	</task>
 	<task id="AddBaseForms" class="WeSay.LexicalTools.MissingInfoTask" assembly="LexicalTools" visible="false">
 	  <entries ref="All Entries" />
-	  <filter class="WeSay.LexicalTools.MissingItemFilter" assembly="LexicalTools">
-		<viewTemplate ref="Default View Template" />
-		<field>BaseForm</field>
-	  </filter>
+	  <field>BaseForm</field>
 	  <label>Add Base Forms</label>
 	  <description>Identify the "base form" word that this word is built from. In the printed dictionary, these can optionally be shown as subentries.</description>
 	  <viewTemplate ref="Default View Template" />

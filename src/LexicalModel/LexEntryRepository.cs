@@ -423,7 +423,7 @@ namespace WeSay.LexicalModel
 			ResultSet<LexEntry> allResults,
 			string formField,
 			string writingSystemIdField,
-			string headwordWritingSystemId)
+			string filterOnWritingSystemId)
 		{
 			if (allResults.Count == 0)
 			{
@@ -433,15 +433,15 @@ namespace WeSay.LexicalModel
 			allResults.SortByRepositoryId();
 
 			// remove all entries with writing system != headwordWritingSystem
-			//            make sure always have one entry though
+			//     make sure always have one entry though
 			// walk list of entries, removing duplicate entries which have same repository id
 			//     if there is no entry for a repository id that has
-			//     writingSystemId == headwordWritingSystem then
-			//     insert an empty form with writingSystemId to headwordId
+			//     writingSystemId == filterOnWritingSystemId then
+			//     insert an empty form with writingSystemId set to filterOnWritingSystemId
 
 			Dictionary<string, object> emptyResults = new Dictionary<string, object>();
 			emptyResults.Add(formField, string.Empty);
-			emptyResults.Add(writingSystemIdField, headwordWritingSystemId);
+			emptyResults.Add(writingSystemIdField, filterOnWritingSystemId);
 
 			List<RecordToken<LexEntry>> filteredResults = new List<RecordToken<LexEntry>>();
 			bool headWordRepositoryIdFound = false;
@@ -460,19 +460,20 @@ namespace WeSay.LexicalModel
 					headWordRepositoryIdFound = false;
 				}
 
-				object writingSystemId;
-				if (token.TryGetValue(writingSystemIdField, out writingSystemId))
+				object id;
+				if (token.TryGetValue(writingSystemIdField, out id))
 				{
-					if((string) writingSystemId == headwordWritingSystemId)
+					if((string) id == filterOnWritingSystemId)
 					{
 						filteredResults.Add(token);
 						headWordRepositoryIdFound = true;
 					}
 				}
 				else {
-					// we have an entry but without a headword id. Create an empty one
+					// we have an entry but without a form with the given id.
+					// Create an empty one
 					token[formField] = string.Empty;
-					token[writingSystemIdField] = headwordWritingSystemId;
+					token[writingSystemIdField] = filterOnWritingSystemId;
 					filteredResults.Add(token);
 					headWordRepositoryIdFound = true;
 				}
@@ -481,8 +482,8 @@ namespace WeSay.LexicalModel
 			if (!headWordRepositoryIdFound)
 			{
 				filteredResults.Add(new RecordToken<LexEntry>(this,
-																  emptyResults,
-																  previousToken.Id));
+															  emptyResults,
+															  previousToken.Id));
 			}
 			return new ResultSet<LexEntry>(this, filteredResults);
 		}
@@ -492,11 +493,17 @@ namespace WeSay.LexicalModel
 				Field field, WritingSystem lexicalUnitWritingSystem)
 		{
 			Predicate<LexEntry> filteringPredicate = new MissingFieldQuery(field).FilteringPredicate;
-			Query filter = new Query.PredicateQuery<LexEntry>(filteringPredicate);
-			filter.In("LexicalForm").ForEach("Forms").Show("Form").Show("WritingSystemId");
+			Query query = new Query.PredicateQuery<LexEntry>(filteringPredicate);
+			query.In("LexicalForm").ForEach("Forms").Show("Form").Show("WritingSystemId");
 
 
-			throw new NotImplementedException();
+			ResultSet<LexEntry> itemsMatching = GetItemsMatchingQueryFilteredAndSortedByWritingSystem(query, "Form", "WritingSystemId", lexicalUnitWritingSystem);
+			//remove items that don't match our filteringPredicate
+			itemsMatching.RemoveAll(delegate(RecordToken<LexEntry> token)
+								{
+									return !(bool)token["Matches"];
+								});
+			return itemsMatching;
 		}
 		#region IDisposable Members
 
@@ -544,10 +551,18 @@ namespace WeSay.LexicalModel
 
 		#endregion
 
+		[Obsolete]
 		//todo: make this private and part of synchronic repository
 		public IList<RepositoryId> GetItemsModifiedSince(DateTime last)
 		{
-			throw new NotImplementedException();
+			Query query = new Query(typeof(LexEntry)).Show("ModificationTime");
+			ResultSet<LexEntry> items = GetItemsMatching(query);
+			// remove items that were modified before last
+			items.RemoveAll(delegate(RecordToken<LexEntry> token)
+								{
+									return (DateTime)token["ModificationTime"] < last;
+								});
+			return new List<RepositoryId>(items);
 		}
 	}
 }
