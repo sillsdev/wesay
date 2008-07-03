@@ -60,7 +60,7 @@ namespace WeSay.LexicalModel
 
 		public LexEntry(string id, Guid guid): base(null)
 		{
-			DateTime now = DateTime.UtcNow;
+			DateTime now = PreciseDateTime.UtcNow;
 			Init(id, guid, now, now);
 		}
 
@@ -125,7 +125,7 @@ namespace WeSay.LexicalModel
 		public override void SomethingWasModified(string propertyModified)
 		{
 			base.SomethingWasModified(propertyModified);
-			ModificationTime = DateTime.UtcNow;
+			ModificationTime = PreciseDateTime.UtcNow;
 			//too soon to make id: this method is called after first keystroke
 			//  GetOrCreateId(false);
 		}
