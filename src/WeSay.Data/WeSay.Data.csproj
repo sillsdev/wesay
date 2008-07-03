@@ -59,7 +59,6 @@
   <ItemGroup>
 	<Compile Include="Db4oRepository.cs" />
 	<Compile Include="DeletedItemEventArgs.cs" />
-	<Compile Include="CacheHelper.cs" />
 	<Compile Include="ComparisonHelper.cs" />
 	<Compile Include="DatabaseModified.cs" />
 	<Compile Include="Db4oRepositoryId.cs" />
@@ -77,6 +76,7 @@
 	<Compile Include="RecordTokenComparer.cs" />
 	<Compile Include="RepositoryId.cs" />
 	<Compile Include="ResultSet.cs" />
+	<Compile Include="SynchronicRepository.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
