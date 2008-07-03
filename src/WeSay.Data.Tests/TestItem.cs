@@ -113,7 +113,10 @@ namespace WeSay.Data.Tests
 			}
 		}
 
-		public TestItem() {}
+		public TestItem()
+		{
+			_storedDateTime = PreciseDateTime.UtcNow;
+		}
 
 		public TestItem(string s, int i, DateTime d)
 		{
