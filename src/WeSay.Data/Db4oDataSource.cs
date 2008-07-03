@@ -16,7 +16,7 @@ using Db4objects.Db4o.Diagnostic;
 namespace WeSay.Data
 {
 	[Serializable]
-	public sealed class Db4oException: DbException
+	internal sealed class Db4oException: DbException
 	{
 		public Db4oException() {}
 		public Db4oException(string message): base(message) {}

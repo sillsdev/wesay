@@ -7,12 +7,12 @@ namespace WeSay.Data.Tests
 	[TestFixture]
 	public class InMemoryBindingListIEnumerableTests: IEnumerableBaseTest<TestItem>
 	{
-		private InMemoryBindingList<TestItem> _bindingList;
+		private BindingList<TestItem> _bindingList;
 
 		[TestFixtureSetUp]
 		public void FixtureSetUp()
 		{
-			_bindingList = new InMemoryBindingList<TestItem>();
+			_bindingList = new BindingList<TestItem>();
 
 			_enumerable = _bindingList;
 			_bindingList.Add(new TestItem("Jared", 1, new DateTime(2003, 7, 10)));
@@ -27,7 +27,7 @@ namespace WeSay.Data.Tests
 		[TestFixtureSetUp]
 		public void FixtureSetUp()
 		{
-			_enumerable = new InMemoryBindingList<TestItem>();
+			_enumerable = new BindingList<TestItem>();
 			_itemCount = 0;
 		}
 	}
@@ -35,12 +35,12 @@ namespace WeSay.Data.Tests
 	[TestFixture]
 	public class InMemoryBindingListICollectionTest: ICollectionBaseTest<TestItem>
 	{
-		private InMemoryBindingList<TestItem> _bindingList;
+		private BindingList<TestItem> _bindingList;
 
 		[TestFixtureSetUp]
 		public void FixtureSetUp()
 		{
-			_bindingList = new InMemoryBindingList<TestItem>();
+			_bindingList = new BindingList<TestItem>();
 
 			_collection = _bindingList;
 			_bindingList.Add(new TestItem("Jared", 1, new DateTime(2003, 7, 10)));
@@ -55,7 +55,7 @@ namespace WeSay.Data.Tests
 		[TestFixtureSetUp]
 		public void FixtureSetUp()
 		{
-			_collection = new InMemoryBindingList<TestItem>();
+			_collection = new BindingList<TestItem>();
 			_itemCount = 0;
 		}
 	}
@@ -63,12 +63,12 @@ namespace WeSay.Data.Tests
 	[TestFixture]
 	public class InMemoryBindingListIListTest: IListVariableSizeReadWriteBaseTest<TestItem>
 	{
-		private InMemoryBindingList<TestItem> _bindingList;
+		private BindingList<TestItem> _bindingList;
 
 		[SetUp]
 		public void SetUp()
 		{
-			_bindingList = new InMemoryBindingList<TestItem>();
+			_bindingList = new BindingList<TestItem>();
 
 			_list = _bindingList;
 			TestItem firstItem = new TestItem("Jared", 1, new DateTime(2003, 7, 10));
@@ -87,7 +87,7 @@ namespace WeSay.Data.Tests
 		[SetUp]
 		public void SetUp()
 		{
-			_list = new InMemoryBindingList<TestItem>();
+			_list = new BindingList<TestItem>();
 			_firstItem = null;
 			_newItem = new TestItem();
 			_isSorted = true;
@@ -97,12 +97,12 @@ namespace WeSay.Data.Tests
 	[TestFixture]
 	public class InMemoryBindingListIBindingListTest: IBindingListBaseTest<TestItem, int>
 	{
-		private InMemoryBindingList<TestItem> _inMemoryBindingList;
+		private BindingList<TestItem> _inMemoryBindingList;
 
 		[SetUp]
 		public override void SetUp()
 		{
-			_inMemoryBindingList = new InMemoryBindingList<TestItem>();
+			_inMemoryBindingList = new BindingList<TestItem>();
 			_bindingList = _inMemoryBindingList;
 
 			PropertyDescriptorCollection pdc = TypeDescriptor.GetProperties(typeof (TestItem));
@@ -138,7 +138,7 @@ namespace WeSay.Data.Tests
 		[SetUp]
 		public override void SetUp()
 		{
-			_bindingList = new InMemoryBindingList<TestItem>();
+			_bindingList = new BindingList<TestItem>();
 
 			_newItem = new TestItem();
 			_key = 1;
@@ -151,7 +151,7 @@ namespace WeSay.Data.Tests
 	[TestFixture]
 	public class InMemoryBindingListSortedTest
 	{
-		private InMemoryBindingList<TestItem> _bindingList;
+		private BindingList<TestItem> _bindingList;
 
 		private TestItem _jared, _gianna, _eric, _allison;
 
@@ -180,7 +180,7 @@ namespace WeSay.Data.Tests
 		[SetUp]
 		public void SetUp()
 		{
-			_bindingList = new InMemoryBindingList<TestItem>();
+			_bindingList = new BindingList<TestItem>();
 			_bindingList.ListChanged += _adaptor_ListChanged;
 
 			_eric = new TestItem("Eric", 1, new DateTime(2006, 2, 28));
@@ -201,7 +201,7 @@ namespace WeSay.Data.Tests
 
 			PropertyDescriptorCollection pdc = TypeDescriptor.GetProperties(typeof (TestItem));
 			PropertyDescriptor pd = pdc.Find("StoredInt", false);
-			_bindingList.ApplySort(pd, ListSortDirection.Ascending);
+			((IBindingList)_bindingList).ApplySort(pd, ListSortDirection.Ascending);
 
 			Assert.AreEqual(_eric, _bindingList[0]);
 			Assert.AreEqual(_allison, _bindingList[1]);
@@ -217,7 +217,7 @@ namespace WeSay.Data.Tests
 
 			PropertyDescriptorCollection pdc = TypeDescriptor.GetProperties(typeof (TestItem));
 			PropertyDescriptor pd = pdc.Find("StoredInt", false);
-			_bindingList.ApplySort(pd, ListSortDirection.Descending);
+			((IBindingList)_bindingList).ApplySort(pd, ListSortDirection.Descending);
 
 			Assert.AreEqual(_gianna, _bindingList[0]);
 			Assert.AreEqual(_jared, _bindingList[1]);
@@ -233,7 +233,7 @@ namespace WeSay.Data.Tests
 
 			PropertyDescriptorCollection pdc = TypeDescriptor.GetProperties(typeof (TestItem));
 			PropertyDescriptor pd = pdc.Find("StoredDateTime", false);
-			_bindingList.ApplySort(pd, ListSortDirection.Ascending);
+			((IBindingList)_bindingList).ApplySort(pd, ListSortDirection.Ascending);
 
 			Assert.AreEqual(_allison, _bindingList[0]);
 			Assert.AreEqual(_eric, _bindingList[1]);
@@ -249,7 +249,7 @@ namespace WeSay.Data.Tests
 
 			PropertyDescriptorCollection pdc = TypeDescriptor.GetProperties(typeof (TestItem));
 			PropertyDescriptor pd = pdc.Find("StoredDateTime", false);
-			_bindingList.ApplySort(pd, ListSortDirection.Descending);
+			((IBindingList)_bindingList).ApplySort(pd, ListSortDirection.Descending);
 
 			Assert.AreEqual(_gianna, _bindingList[0]);
 			Assert.AreEqual(_jared, _bindingList[1]);
@@ -265,7 +265,7 @@ namespace WeSay.Data.Tests
 
 			PropertyDescriptorCollection pdc = TypeDescriptor.GetProperties(typeof (TestItem));
 			PropertyDescriptor pd = pdc.Find("StoredString", false);
-			_bindingList.ApplySort(pd, ListSortDirection.Ascending);
+			((IBindingList)_bindingList).ApplySort(pd, ListSortDirection.Ascending);
 
 			Assert.AreEqual(_allison, _bindingList[0]);
 			Assert.AreEqual(_eric, _bindingList[1]);
@@ -281,7 +281,7 @@ namespace WeSay.Data.Tests
 
 			PropertyDescriptorCollection pdc = TypeDescriptor.GetProperties(typeof (TestItem));
 			PropertyDescriptor pd = pdc.Find("StoredString", false);
-			_bindingList.ApplySort(pd, ListSortDirection.Descending);
+			((IBindingList)_bindingList).ApplySort(pd, ListSortDirection.Descending);
 
 			Assert.AreEqual(_jared, _bindingList[0]);
 			Assert.AreEqual(_gianna, _bindingList[1]);

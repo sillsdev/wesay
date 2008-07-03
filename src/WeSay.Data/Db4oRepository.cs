@@ -6,7 +6,7 @@ using Db4objects.Db4o.Query;
 
 namespace WeSay.Data
 {
-	public class Db4oRepository<T> : IRepository<T> where T:class, new()
+	internal class Db4oRepository<T> : IRepository<T> where T:class, new()
 	{
 		private readonly Db4oDataSource _database;
 		private const int ActivationDepth = 99;

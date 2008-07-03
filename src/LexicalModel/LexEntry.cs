@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Text;
 using Palaso.Reporting;
@@ -29,7 +30,7 @@ namespace WeSay.LexicalModel
 
 		private int _orderForRoundTripping = 0;
 
-		private InMemoryBindingList<LexSense> _senses;
+		private BindingList<LexSense> _senses;
 		private DateTime _creationTime;
 		private DateTime _modificationTime;
 		private bool _isBeingDeleted;
@@ -81,7 +82,7 @@ namespace WeSay.LexicalModel
 				_guid = guid;
 			}
 			_lexicalForm = new LexicalFormMultiText(this);
-			_senses = new InMemoryBindingList<LexSense>();
+			_senses = new BindingList<LexSense>();
 			CreationTime = creationTime;
 
 			WireUpEvents();

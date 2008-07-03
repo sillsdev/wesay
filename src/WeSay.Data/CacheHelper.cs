@@ -4,7 +4,7 @@ using System.Text;
 
 namespace WeSay.Data
 {
-	public static class CacheHelper
+	internal static class CacheHelper
 	{
 		public static string EscapeFileNameString(string fileName)
 		{

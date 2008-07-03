@@ -83,7 +83,8 @@ namespace WeSay.LexicalModel
 
 		public ResultSet<LexEntry> GetItemsMatching(Query query)
 		{
-			return _decoratedRepository.GetItemsMatching(query);
+			throw new NotSupportedException("Please use more specific methods. For now, we don't support using any general query for optimization reasons.");
+			//return _decoratedRepository.GetItemsMatching(query);
 		}
 
 		public void SaveItem(LexEntry item)
@@ -102,11 +103,6 @@ namespace WeSay.LexicalModel
 			{
 				return _decoratedRepository.CanPersist;
 			}
-		}
-
-		public RepositoryId[] GetItemsMatchingQuery()
-		{
-			throw new NotImplementedException();
 		}
 
 		public void DeleteItem(LexEntry item)

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using NUnit.Framework;
 using WeSay.Data;
@@ -47,16 +48,16 @@ namespace WeSay.UI.Tests
 
 		public class Papa: WeSayDataObject
 		{
-			private readonly InMemoryBindingList<Child> _children = new InMemoryBindingList<Child>();
+			private readonly BindingList<Child> _children = new BindingList<Child>();
 
 			public Papa(): base(null)
 			{
-				_children = new InMemoryBindingList<Child>();
+				_children = new BindingList<Child>();
 
 				WireUpEvents();
 			}
 
-			public InMemoryBindingList<Child> Children
+			public BindingList<Child> Children
 			{
 				get { return _children; }
 			}

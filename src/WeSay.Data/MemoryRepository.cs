@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace WeSay.Data
 {
-	class MemoryRepository<T>:IRepository<T> where T : class, new()
+	internal class MemoryRepository<T>:IRepository<T> where T : class, new()
 	{
 		private readonly Hashtable idToObjectHashtable = new Hashtable();
 		private readonly Hashtable objectToIdHashtable = new Hashtable();

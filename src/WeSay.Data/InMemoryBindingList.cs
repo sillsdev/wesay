@@ -5,7 +5,7 @@ using System.ComponentModel;
 
 namespace WeSay.Data
 {
-	public sealed class InMemoryBindingList<T>: IBindingList, IEquatable<IBindingList>, IList<T>
+	sealed class __InMemoryBindingList<T>: IBindingList, IEquatable<IBindingList>, IList<T>
 			where T : class, new()
 	{
 		private readonly List<T> _list;
@@ -13,12 +13,12 @@ namespace WeSay.Data
 		private ListSortDirection _listSortDirection;
 		private bool _isSorted;
 
-		public InMemoryBindingList()
+		public __InMemoryBindingList()
 		{
 			_list = new List<T>();
 		}
 
-		public InMemoryBindingList(IBindingList original): this()
+		public __InMemoryBindingList(IBindingList original): this()
 		{
 			AddRange(original);
 			_isSorted = original.IsSorted;
