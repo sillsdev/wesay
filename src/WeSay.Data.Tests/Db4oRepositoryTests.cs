@@ -33,8 +33,13 @@ namespace WeSay.Data.Tests
 		public void Setup()
 		{
 			this._name = Path.GetTempFileName();
-			RepositoryUnderTest = new Db4oRepository<TestItem>(_name);
+			CreateRepository();
 		}
+
+		private void CreateRepository() {
+			RepositoryUnderTest = new Db4oRepository<TestItem>(this._name);
+		}
+
 		[TearDown]
 		public void Teardown()
 		{
@@ -44,7 +49,8 @@ namespace WeSay.Data.Tests
 
 		protected override void RepopulateRepositoryFromPersistedData()
 		{
-			throw new System.NotImplementedException();
+			RepositoryUnderTest.Dispose();
+			CreateRepository();
 		}
 	}
 
@@ -52,13 +58,18 @@ namespace WeSay.Data.Tests
 	public class Db4oRepositoryDeleteItemTransitionTests : IRepositoryDeleteItemTransitionTests<TestItem>
 	{
 		private string _name;
-
 		[SetUp]
 		public void Setup()
 		{
 			this._name = Path.GetTempFileName();
-			RepositoryUnderTest = new Db4oRepository<TestItem>(_name);
+			CreateRepository();
 		}
+
+		private void CreateRepository()
+		{
+			RepositoryUnderTest = new Db4oRepository<TestItem>(this._name);
+		}
+
 		[TearDown]
 		public void Teardown()
 		{
@@ -68,7 +79,8 @@ namespace WeSay.Data.Tests
 
 		protected override void RepopulateRepositoryFromPersistedData()
 		{
-			throw new System.NotImplementedException();
+			RepositoryUnderTest.Dispose();
+			CreateRepository();
 		}
 	}
 
@@ -81,8 +93,14 @@ namespace WeSay.Data.Tests
 		public void Setup()
 		{
 			this._name = Path.GetTempFileName();
-			RepositoryUnderTest = new Db4oRepository<TestItem>(_name);
+			CreateRepository();
 		}
+
+		private void CreateRepository()
+		{
+			RepositoryUnderTest = new Db4oRepository<TestItem>(this._name);
+		}
+
 		[TearDown]
 		public void Teardown()
 		{
@@ -92,7 +110,8 @@ namespace WeSay.Data.Tests
 
 		protected override void RepopulateRepositoryFromPersistedData()
 		{
-			throw new System.NotImplementedException();
+			RepositoryUnderTest.Dispose();
+			CreateRepository();
 		}
 	}
 }

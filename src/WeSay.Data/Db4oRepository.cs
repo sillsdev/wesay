@@ -186,11 +186,20 @@ namespace WeSay.Data
 
 		public void SaveItems(IEnumerable<T> items)
 		{
+			if (items == null)
+			{
+				throw new ArgumentNullException("items");
+			}
+			bool hasItems = false;
 			foreach (T item in items)
 			{
 				SaveItemCore(item);
+				hasItems = true;
 			}
-			Commit();
+			if (hasItems)
+			{
+				Commit();
+			}
 		}
 
 		// Not fast but correct
