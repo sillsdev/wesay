@@ -12,14 +12,14 @@ namespace WeSay.LexicalTools
 	public class MissingInfoTask: TaskBase
 	{
 		private MissingInfoControl _missingInfoControl;
-		private readonly IFieldQuery<LexEntry> _filter;
+		private readonly Field _missingInfoField;
 		private readonly ViewTemplate _viewTemplate;
 		private bool _dataHasBeenRetrieved;
 		private readonly bool _isBaseFormFillingTask;
 		private readonly WritingSystem _writingSystem;
 
 		public MissingInfoTask(LexEntryRepository lexEntryRepository,
-							   IFieldQuery<LexEntry> filter,
+							   Field missingInfoField,
 							   string label,
 							   string longLabel,
 							   string description,
@@ -28,16 +28,16 @@ namespace WeSay.LexicalTools
 							   ViewTemplate viewTemplate)
 			: base(label, longLabel, description, remainingCountText, referenceCountText, false, lexEntryRepository)
 		{
-			if (filter == null)
+			if (missingInfoField == null)
 			{
-				throw new ArgumentNullException("filter");
+				throw new ArgumentNullException("missingInfoField");
 			}
 			if (viewTemplate == null)
 			{
 				throw new ArgumentNullException("viewTemplate");
 			}
 
-			_filter = filter;
+			_missingInfoField = missingInfoField;
 			_viewTemplate = viewTemplate;
 			_writingSystem = BasilProject.Project.WritingSystems.UnknownVernacularWritingSystem;
 			// use the master view Template instead of the one for this task. (most likely the one for this
@@ -69,7 +69,7 @@ namespace WeSay.LexicalTools
 		/// Creates a generic Lexical Field editing task
 		/// </summary>
 		/// <param name="lexEntryRepository">The lexEntryRepository that will provide the data</param>
-		/// <param name="filter">The filter that should be used to filter the data</param>
+		/// <param name="missingInfoField">The field declaration of what is missing</param>
 		/// <param name="label">The task label</param>
 		/// <param name="longLabel">Slightly longer task label (for ToolTips)</param>
 		/// <param name="description">The task description</param>
@@ -78,7 +78,7 @@ namespace WeSay.LexicalTools
 		/// <param name="viewTemplate">The base viewTemplate</param>
 		/// <param name="fieldsToShow">The fields to show from the base Field Inventory</param>
 		public MissingInfoTask(LexEntryRepository lexEntryRepository,
-							   IFieldQuery<LexEntry> filter,
+							   Field missingInfoField,
 							   string label,
 							string longLabel,
 							   string description,
@@ -86,7 +86,7 @@ namespace WeSay.LexicalTools
 							string referenceCountText,
 							   ViewTemplate viewTemplate,
 							   string fieldsToShow)
-				: this(lexEntryRepository, filter, label, longLabel, description, remainingCountText, referenceCountText, viewTemplate)
+			: this(lexEntryRepository, missingInfoField, label, longLabel, description, remainingCountText, referenceCountText, viewTemplate)
 		{
 			if (fieldsToShow == null)
 			{
@@ -95,8 +95,7 @@ namespace WeSay.LexicalTools
 			_viewTemplate = CreateViewTemplateFromListOfFields(viewTemplate, fieldsToShow);
 
 			//hack until we overhaul how Tasks are setup:
-			_isBaseFormFillingTask = filter is MissingFieldQuery &&
-									 fieldsToShow.Contains(LexEntry.WellKnownProperties.BaseForm);
+			_isBaseFormFillingTask = fieldsToShow.Contains(LexEntry.WellKnownProperties.BaseForm);
 			if (_isBaseFormFillingTask)
 			{
 				Field flagField = new Field();
@@ -105,7 +104,7 @@ namespace WeSay.LexicalTools
 										  "The user will click this to say that this word has no baseform.  E.g. Kindess has Kind as a baseform, but Kind has no other word as a baseform.");
 				flagField.DataTypeName = "Flag";
 				flagField.ClassName = "LexEntry";
-				flagField.FieldName = "flag_skip_" + ((MissingFieldQuery) filter).FieldName;
+				flagField.FieldName = "flag_skip_" + missingInfoField.FieldName;
 				flagField.Enabled = true;
 				_viewTemplate.Add(flagField);
 			}
@@ -124,7 +123,7 @@ namespace WeSay.LexicalTools
 		}
 
 		public MissingInfoTask(LexEntryRepository lexEntryRepository,
-							   IFieldQuery<LexEntry> filter,
+							   Field missingInfoField,
 							   string label,
 							   string longLabel,
 							   string description,
@@ -134,7 +133,7 @@ namespace WeSay.LexicalTools
 							   string fieldsToShowEditable,
 							   string fieldsToShowReadOnly)
 				: this(lexEntryRepository,
-					   filter,
+					   missingInfoField,
 					   label,
 					   longLabel,
 					   description,
@@ -210,10 +209,11 @@ namespace WeSay.LexicalTools
 		{
 			base.Activate();
 
+			Predicate<LexEntry> filteringPredicate = new MissingFieldQuery(_missingInfoField).FilteringPredicate;
 			_missingInfoControl =
 					new MissingInfoControl(GetFilteredData(),
 										   ViewTemplate,
-										   _filter.FilteringPredicate,
+										   filteringPredicate,
 										   LexEntryRepository);
 			_missingInfoControl.SelectedIndexChanged += OnRecordSelectionChanged;
 		}
@@ -266,7 +266,7 @@ namespace WeSay.LexicalTools
 		public ResultSet<LexEntry> GetFilteredData()
 		{
 			ResultSet<LexEntry> data =
-					LexEntryRepository.GetEntriesMatchingFilterSortedByLexicalUnit(_filter.Field,
+					LexEntryRepository.GetEntriesWithMissingFieldSortedByLexicalUnit(_missingInfoField,
 																				   _writingSystem);
 			_dataHasBeenRetrieved = true;
 			return data;

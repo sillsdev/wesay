@@ -9,6 +9,24 @@ namespace WeSay.Data
 {
 	public class Query
 	{
+		[Obsolete]
+		sealed public class PredicateQuery<T>: Query
+		{
+			private readonly Predicate<T> _predicate;
+
+			public PredicateQuery(Predicate<T> predicate): base(typeof(T))
+			{
+					_predicate = predicate;
+			}
+
+			protected override void GetResultsCore(List<Dictionary<string, object>> result, object o)
+			{
+				bool matches = _predicate((T) o);
+				Dictionary<string, object> dict = new Dictionary<string, object>();
+				dict["matches"] = matches;
+				result.Add(dict);
+			}
+		}
 		sealed private class ForEachQuery : Query
 		{
 			private readonly MethodInfo _property;

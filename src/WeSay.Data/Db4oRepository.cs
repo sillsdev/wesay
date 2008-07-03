@@ -222,7 +222,7 @@ namespace WeSay.Data
 		}
 
 		private void Commit() {
-			LastModified = DateTime.UtcNow;
+			LastModified = PreciseDateTime.UtcNow;
 			Database.Commit();
 		}
 

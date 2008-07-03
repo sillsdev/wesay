@@ -235,24 +235,18 @@ namespace WeSay.LexicalTools
 		{
 			Debug.Assert(CurrentIndex != -1);
 			RecordToken<LexEntry> recordToken = _records[CurrentIndex];
-//todo: figure out how to keep our list up to date as records change
-			//if (!recordToken.IsFresh)
-			//{
-			//    recordToken.Refresh();
-			//    _keepRecordCurrent = true;
-			//    LoadRecords();
-			//    int index = _records.FindFirstIndex(recordToken);
-			//    //may not have been successful with the refresh of the recordToken
-			//    // in which case we should just try to go to the first with
-			//    // the same id
-			//    if (index < 0)
-			//    {
-			//        index = _records.FindFirstIndex(recordToken.Id);
-			//    }
-			//    Debug.Assert(index != -1);
-			//    _recordsListBox.SelectedIndex = index;
-			//    _keepRecordCurrent = false;
-			//}
+			_keepRecordCurrent = true;
+			LoadRecords();
+			int index = _records.FindFirstIndex(recordToken);
+			//may not have been successful in which case we should
+			//just try to go to the first with the same id
+			if (index < 0)
+			{
+				index = _records.FindFirstIndex(recordToken.Id);
+			}
+			Debug.Assert(index != -1);
+			_recordsListBox.SelectedIndex = index;
+			_keepRecordCurrent = false;
 		}
 
 		private void LoadRecords()
@@ -270,21 +264,42 @@ namespace WeSay.LexicalTools
 			_recordsListBox.EndUpdate();
 		}
 
-		//todo: support fallback to best form
 		private void OnRetrieveVirtualItemEvent(object sender, RetrieveVirtualItemEventArgs e)
 		{
-			string displayString = (string) _records[e.ItemIndex]["Form"];
-			if(string.IsNullOrEmpty(displayString))
-			{
-				displayString = "(" +
-					  StringCatalog.Get("~Empty",
-										"This is what shows for a word in a list when the user hasn't yet typed anything in for the word.  Like if you click the 'New Word' button repeatedly.") +
-					  //StringCatalog.Get("~No Gloss",
-					  //                        "This is what shows if the user is listing words by the glossing language, but the word doesn't have a gloss.") +
-
-					  ")";
-			}
+			RecordToken<LexEntry> recordToken = this._records[e.ItemIndex];
+			string displayString = (string) recordToken["Form"];
 			e.Item = new ListViewItem(displayString);
+			if (!string.IsNullOrEmpty(displayString))
+			{
+				return;
+			}
+
+			bool writingSystemUsedInLexicalForm = IsWritingSystemUsedInLexicalForm(this._listWritingSystem.Id);
+			if(writingSystemUsedInLexicalForm)
+			{
+				displayString = recordToken.RealObject.LexicalForm.GetBestAlternative(_listWritingSystem.Id, string.Empty);
+				e.Item.Font = new Font(e.Item.Font, FontStyle.Italic);
+			}
+
+			if (string.IsNullOrEmpty(displayString))
+			{
+				displayString = "(";
+				if (writingSystemUsedInLexicalForm)
+				{
+					displayString +=
+							StringCatalog.Get("~Empty",
+											  "This is what shows for a word in a list when the user hasn't yet typed anything in for the word.  Like if you click the 'New Word' button repeatedly.");
+				}
+				else
+				{
+					displayString +=
+							StringCatalog.Get("~No Gloss",
+											  "This is what shows if the user is listing words by the glossing language, but the word doesn't have a gloss.");
+
+				}
+				displayString += ")";
+			}
+			e.Item.Text = displayString;
 		}
 
 		private static IEnumerable FindClosestAndNextClosestAndPrefixedForms(string text,
@@ -436,33 +451,28 @@ namespace WeSay.LexicalTools
 		{
 			Logger.WriteEvent("NewWord_Click");
 
-			LexEntry entry = _lexEntryRepository.CreateItem();
-			string lexicalForm = string.Empty;
-			bool needNewEntry = true;
-			//bool NoPriorSelection = _recordsListBox.SelectedIndex == -1;
-			//_recordListBoxActive = true; // allow onRecordSelectionChanged
-			if (_findText.Focused && !string.IsNullOrEmpty(_findText.Text) &&
-				IsWritingSystemUsedInLexicalForm(_listWritingSystem.Id))
+			// only create a new word when there is not an empty word already
+			int emptyWordIndex = GetEmptyWordIndex();
+			int selectIndex;
+			if (emptyWordIndex == -1)
 			{
-				lexicalForm = _findText.Text.Trim();
-				//only create new when not found (doesn't already exist)
-				int existingIndex = _records.FindFirstIndex(delegate(RecordToken<LexEntry> token)
-											{
-												return (string) token["Form"] == lexicalForm;
-											});
-				if (existingIndex >= 0)
+				LexEntry entry = this._lexEntryRepository.CreateItem();
+				//bool NoPriorSelection = _recordsListBox.SelectedIndex == -1;
+				//_recordListBoxActive = true; // allow onRecordSelectionChanged
+				if (_findText.Focused && !string.IsNullOrEmpty(_findText.Text) &&
+					IsWritingSystemUsedInLexicalForm(_listWritingSystem.Id))
 				{
-					_recordsListBox.SelectedIndex = existingIndex;
-					entry = CurrentRecord;
-					needNewEntry = false;
+					entry.LexicalForm[_listWritingSystem.Id] = _findText.Text.Trim();
+					;
+					_lexEntryRepository.SaveItem(entry);
 				}
-			}
 
-			if (needNewEntry)
+				LoadRecords();
+				selectIndex = this._records.FindFirstIndex(entry);
+			}
+			else
 			{
-				entry = _lexEntryRepository.CreateItem();
-				entry.LexicalForm[_listWritingSystem.Id] = lexicalForm;
-				_lexEntryRepository.SaveItem(entry);
+				selectIndex = emptyWordIndex;
 			}
 
 			if (!_btnNewWord.Focused)
@@ -471,12 +481,28 @@ namespace WeSay.LexicalTools
 				// but we assume it has the focus when we do our selection change event
 				_btnNewWord.Focus();
 			}
-			LoadRecords();
-			int selectIndex = _records.FindFirstIndex(entry);
 			Debug.Assert(selectIndex != -1);
 			_recordsListBox.SelectedIndex = selectIndex;
 			OnRecordSelectionChanged(_recordsListBox, new EventArgs());
 			_entryViewControl.Focus();
+		}
+
+		private int GetEmptyWordIndex()
+		{
+			// empty forms will always sort to the top
+			for(int i = 0; i < _records.Count;++i)
+			{
+				if(!string.IsNullOrEmpty((string)_records[i]["Form"]))
+				{
+					break;
+				}
+
+				if(_records[i].RealObject.IsEmpty)
+				{
+					return i;
+				}
+			}
+			return -1; // there is no empty word
 		}
 
 		private void OnDeleteWord_Click(object sender, EventArgs e)

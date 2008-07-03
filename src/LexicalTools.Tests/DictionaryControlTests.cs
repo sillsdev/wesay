@@ -53,7 +53,7 @@ namespace WeSay.LexicalTools.Tests
 			viewTemplate.Add(
 					new Field("MyEntryCustom",
 							  "LexEntry",
-							  new string[] {"en"},
+							  analysisWritingSystemIds,
 							  Field.MultiplicityType.ZeroOr1,
 							  "MultiText"));
 
@@ -67,7 +67,7 @@ namespace WeSay.LexicalTools.Tests
 			Field shy1 =
 					new Field("MyShyEntryCustom",
 							  "LexEntry",
-							  new string[] {"en"},
+							  analysisWritingSystemIds,
 							  Field.MultiplicityType.ZeroOr1,
 							  "MultiText");
 			shy1.Visibility = CommonEnumerations.VisibilitySetting.NormallyHidden;
@@ -86,7 +86,7 @@ namespace WeSay.LexicalTools.Tests
 			viewTemplate.Add(
 					new Field("MySenseCustom",
 							  "LexSense",
-							  new string[] {"en"},
+							  analysisWritingSystemIds,
 							  Field.MultiplicityType.ZeroOr1,
 							  "MultiText"));
 			viewTemplate.Add(
@@ -456,6 +456,13 @@ namespace WeSay.LexicalTools.Tests
 		public void CustomTextFieldPreservedNoOtherEditing()
 		{
 			CustomTextFieldPreservedCore("*MyEntryCustom");
+			EnsureHasOneEntryProperty();
+		}
+
+		private void EnsureHasOneEntryProperty() {
+			LexEntry entry = GetCurrentEntry();
+			entry.CleanUpAfterEditting();
+			Assert.AreEqual(1, entry.Properties.Count);
 		}
 
 		[Test]
@@ -465,6 +472,7 @@ namespace WeSay.LexicalTools.Tests
 			t.Enter("test");
 
 			CustomTextFieldPreservedCore("*MyEntryCustom");
+			EnsureHasOneEntryProperty();
 		}
 
 		private void CustomTextFieldPreservedCore(string fieldLabel)
@@ -474,8 +482,6 @@ namespace WeSay.LexicalTools.Tests
 			box.Focus();
 			box.Text = "a note";
 			LexEntry entry = GetCurrentEntry();
-			Assert.AreEqual(1, GetCurrentEntry().Properties.Count);
-
 			CycleTheCurrentEntryOutAndBackIn(entry);
 
 			note = GetEditControl(fieldLabel);
@@ -489,8 +495,6 @@ namespace WeSay.LexicalTools.Tests
 			combo.Value = "verb";
 
 			LexEntry entry = GetCurrentEntry();
-			Assert.AreEqual(1, GetCurrentEntry().Properties.Count);
-
 			CycleTheCurrentEntryOutAndBackIn(entry);
 
 			combo = GetOptionControl(fieldLabel);
@@ -501,12 +505,22 @@ namespace WeSay.LexicalTools.Tests
 		public void CustomOptionRefOnSensePreserved()
 		{
 			CustomOptionRefPreservedCore("POS");
+			EnsureHasTwoSenseProperties();
 		}
 
 		[Test]
 		public void CustomTextFieldOnSensePreserved()
 		{
 			CustomTextFieldPreservedCore("s-note");
+			EnsureHasTwoSenseProperties();
+		}
+
+		private void EnsureHasTwoSenseProperties()
+		{
+			LexEntry entry = GetCurrentEntry();
+			entry.CleanUpAfterEditting();
+			//one for definition, one for custom field
+			Assert.AreEqual(2, entry.Senses[0].Properties.Count);
 		}
 
 		private void CycleTheCurrentEntryOutAndBackIn(LexEntry entry)
@@ -637,8 +651,7 @@ namespace WeSay.LexicalTools.Tests
 
 		private static string GetLexicalFormControlName()
 		{
-			return
-					Field.FieldNames.EntryLexicalForm + "_" +
+			return  Field.FieldNames.EntryLexicalForm + "_" +
 					BasilProject.Project.WritingSystems.TestWritingSystemVernId;
 		}
 
@@ -669,8 +682,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			get
 			{
-				return
-						((DictionaryControl) _detailTaskPage.Controls[0]).CurrentRecord.LexicalForm.
+				return  ((DictionaryControl) _detailTaskPage.Controls[0]).CurrentRecord.LexicalForm.
 								GetBestAlternative(_vernacularWritingSystem.Id);
 			}
 		}
@@ -687,13 +699,18 @@ namespace WeSay.LexicalTools.Tests
 			l.Click();
 		}
 
+		private void ClickFindButton()
+		{
+			ButtonTester b = new ButtonTester("_btnFind", this._window);
+			b.Click();
+		}
+
 		[Test]
-		public void EnterText_PressFindButton_Finds()
+		public void FindText_EnterTextThenPressFindButton_Finds()
 		{
 			TextBoxTester t = new TextBoxTester("_findText", _window);
 			t.Enter("Secondary");
-			ButtonTester b = new ButtonTester("_btnFind", _window);
-			b.Click();
+			ClickFindButton();
 			ListViewTester l = new ListViewTester("_recordsListBox", _window);
 
 			string label = GetSelectedLabel((WeSayListView) l.Properties);
@@ -712,6 +729,62 @@ namespace WeSay.LexicalTools.Tests
 
 			string label = GetSelectedLabel((WeSayListView) l.Properties);
 			Assert.AreEqual("Secondary", label);
+		}
+
+		[Test]
+		public void FindText_EnterWordNotInDictionaryThenPressCtrlN_AddsWordInFindText()
+		{
+			TextBoxTester t = new TextBoxTester("_findText", _window);
+			t.Enter("NewWord");
+			PressCtrlN(t);
+
+			VerifySelectedWordIs("NewWord");
+		}
+
+		private void VerifySelectedWordIs(string word) {
+			ListViewTester l = new ListViewTester("_recordsListBox", this._window);
+
+			string label = GetSelectedLabel((WeSayListView)l.Properties);
+			Assert.AreEqual(word, label);
+		}
+
+		private static void PressCtrlN(ControlTester t) {
+			KeyboardController kc = new KeyboardController(t);
+			kc.Press("^n"); // Ctrl+N
+		}
+
+		[Test]
+		public void FindText_EnterWordInDictionaryThenPressCtrlN_AddsWordInFindTextSoTwoEntries()
+		{
+			TextBoxTester t = new TextBoxTester("_findText", _window);
+			t.Enter("Secondary");
+			PressCtrlN(t);
+			VerifySelectedWordIs("Secondary");
+			Assert.AreEqual(2, _lexEntryRepository.GetEntriesWithMatchingLexicalForm("Secondary",_vernacularWritingSystem).Count);
+		}
+
+		[Test]
+		public void NewWord_FindTextNotInDictionary_CreatesNewEmptyWord()
+		{
+			TextBoxTester t = new TextBoxTester("_findText", _window);
+			t.Enter("NewWord");
+
+			ClickAddWord();
+			VerifyNewEmptyWordCreated();
+		}
+
+		private void VerifyNewEmptyWordCreated() {
+			LexEntry entry = GetCurrentEntry();
+			Assert.AreEqual(0, entry.LexicalForm.Count);
+		}
+
+		[Test]
+		public void NewWord_FindTextInDictionary_CreatesNewEmptyWord()
+		{
+			TextBoxTester t = new TextBoxTester("_findText", _window);
+			t.Enter("Secondary");
+			ClickAddWord();
+			VerifyNewEmptyWordCreated();
 		}
 
 		[Test]
@@ -942,10 +1015,10 @@ namespace WeSay.LexicalTools.Tests
 		{
 			ListViewTester l = new ListViewTester("_recordsListBox", _window);
 			MouseController mc = new MouseController(l);
-			KeyboardController kc = new KeyboardController(l);
 			l.Select(0);
 			Rectangle r = l.Properties.GetItemRect(1);
 			mc.Click(r.Right + 1, r.Top + 1);
+			KeyboardController kc = new KeyboardController(l);
 			kc.Press("{DOWN}");
 			Assert.AreEqual(2, l.Properties.SelectedIndices[0]);
 		}
