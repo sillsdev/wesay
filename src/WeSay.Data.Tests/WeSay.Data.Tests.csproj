@@ -46,7 +46,6 @@
   <ItemGroup>
 	<Compile Include="Db4oQueryPerformance.cs" />
 	<Compile Include="Db4oRepositoryTests.cs" />
-	<Compile Include="InMemoryBindingListTests.cs" />
 	<Compile Include="Db4oSODAQueryTests.cs" />
 	<Compile Include="IRepositoryTests.cs" />
 	<Compile Include="DictionaryContentAsserter.cs" />
