@@ -23,8 +23,9 @@ namespace WeSay.Data
 			{
 				bool matches = _predicate((T) o);
 				Dictionary<string, object> dict = new Dictionary<string, object>();
-				dict["matches"] = matches;
+				dict["Matches"] = matches;
 				result.Add(dict);
+				GetNestedQueryResults(result, o);
 			}
 		}
 		sealed private class ForEachQuery : Query
@@ -101,9 +102,13 @@ namespace WeSay.Data
 		protected virtual void GetResultsCore(List<Dictionary<string, object>> result, object o)
 		{
 			PermuteResultsAtThisLevel(result, o);
-			if (_nestedQueries != null)
+			GetNestedQueryResults(result, o);
+		}
+
+		protected void GetNestedQueryResults(List<Dictionary<string, object>> result, object o) {
+			if (this._nestedQueries != null)
 			{
-				foreach (Query query in _nestedQueries)
+				foreach (Query query in this._nestedQueries)
 				{
 					query.GetResultsCore(result, o);
 				}

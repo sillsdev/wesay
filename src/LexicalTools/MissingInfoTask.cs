@@ -19,7 +19,7 @@ namespace WeSay.LexicalTools
 		private readonly WritingSystem _writingSystem;
 
 		public MissingInfoTask(LexEntryRepository lexEntryRepository,
-							   Field missingInfoField,
+							   string missingInfoField,
 							   string label,
 							   string longLabel,
 							   string description,
@@ -37,7 +37,7 @@ namespace WeSay.LexicalTools
 				throw new ArgumentNullException("viewTemplate");
 			}
 
-			_missingInfoField = missingInfoField;
+			_missingInfoField = viewTemplate[missingInfoField];
 			_viewTemplate = viewTemplate;
 			_writingSystem = BasilProject.Project.WritingSystems.UnknownVernacularWritingSystem;
 			// use the master view Template instead of the one for this task. (most likely the one for this
@@ -78,7 +78,7 @@ namespace WeSay.LexicalTools
 		/// <param name="viewTemplate">The base viewTemplate</param>
 		/// <param name="fieldsToShow">The fields to show from the base Field Inventory</param>
 		public MissingInfoTask(LexEntryRepository lexEntryRepository,
-							   Field missingInfoField,
+							   string missingInfoField,
 							   string label,
 							string longLabel,
 							   string description,
@@ -104,7 +104,7 @@ namespace WeSay.LexicalTools
 										  "The user will click this to say that this word has no baseform.  E.g. Kindess has Kind as a baseform, but Kind has no other word as a baseform.");
 				flagField.DataTypeName = "Flag";
 				flagField.ClassName = "LexEntry";
-				flagField.FieldName = "flag_skip_" + missingInfoField.FieldName;
+				flagField.FieldName = "flag_skip_" + missingInfoField;
 				flagField.Enabled = true;
 				_viewTemplate.Add(flagField);
 			}
@@ -123,7 +123,7 @@ namespace WeSay.LexicalTools
 		}
 
 		public MissingInfoTask(LexEntryRepository lexEntryRepository,
-							   Field missingInfoField,
+							   string missingInfoField,
 							   string label,
 							   string longLabel,
 							   string description,

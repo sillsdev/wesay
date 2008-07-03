@@ -75,7 +75,7 @@ namespace WeSay.Project
 				Field field;
 				if (!TryGetField(fieldName, out field))
 				{
-					throw new ArgumentOutOfRangeException();
+					throw new ArgumentOutOfRangeException("fieldName", fieldName, "View template does not contain a defintion for the given fieldname");
 				}
 				return field;
 			}
