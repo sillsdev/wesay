@@ -63,7 +63,10 @@ namespace WeSay.CommonTools
 			//
 			// _toolTip
 			//
+			this._toolTip.AutoPopDelay = 15000;
+			this._toolTip.InitialDelay = 500;
 			this._toolTip.OwnerDraw = true;
+			this._toolTip.ReshowDelay = 100;
 			this._toolTip.Popup += new System.Windows.Forms.PopupEventHandler(this._toolTip_Popup);
 			this._toolTip.Draw += new System.Windows.Forms.DrawToolTipEventHandler(this._toolTip_Draw);
 			//

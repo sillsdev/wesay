@@ -423,6 +423,46 @@ namespace WeSay.LexicalTools.Tests
 		}
 
 		[Test]
+		public void NewWord_DictionaryContainsWordEmpty_ContainsBlankAndEmpty()
+		{
+			StartWithEmpty();
+			ClickAddWord();
+			TypeInLexicalForm("(Empty)");
+			ClickAddWord();
+			Assert.AreEqual(2, _lexEntryRepository.CountAllItems());
+			LexicalFormMustMatch(string.Empty);
+			ListViewTester l = new ListViewTester("_recordsListBox", _window);
+			// select other entry
+			l.Select((l.Properties.SelectedIndices[0] + 1) % 2);
+			LexicalFormMustMatch("(Empty)");
+		}
+
+		[Test]
+		public void NewWord_NonEmptyEntryWithNoLexicalFormInCurrentWritingSystem_EntryStillAdded()
+		{
+			StartWithEmpty();
+			ClickAddWord();
+			RepositoryId[] repositoryId = _lexEntryRepository.GetAllItems();
+			LexEntry entry = _lexEntryRepository.GetItem(repositoryId[0]);
+			entry.LexicalForm[_vernacularWritingSystem.Id + "X"] = "something";
+			ClickAddWord();
+			Assert.AreEqual(2, _lexEntryRepository.CountAllItems());
+		}
+
+		[Test]
+		public void NewWord_NonEmptyEntryWithNoLexicalForm_EntryStillAdded()
+		{
+			StartWithEmpty();
+			ClickAddWord();
+			RepositoryId[] repositoryId = _lexEntryRepository.GetAllItems();
+			LexEntry entry = _lexEntryRepository.GetItem(repositoryId[0]);
+			entry.Senses.Add(new LexSense(entry));
+			((LexSense)entry.Senses[0]).Definition.Add("blah");
+			ClickAddWord();
+			Assert.AreEqual(2, _lexEntryRepository.CountAllItems());
+		}
+
+		[Test]
 		public void EmptyDictionary_DeleteButtonDisabled()
 		{
 			StartWithEmpty();
@@ -741,16 +781,21 @@ namespace WeSay.LexicalTools.Tests
 			VerifySelectedWordIs("NewWord");
 		}
 
-		private void VerifySelectedWordIs(string word) {
+		private void VerifySelectedWordIs(string word)
+		{
 			ListViewTester l = new ListViewTester("_recordsListBox", this._window);
 
 			string label = GetSelectedLabel((WeSayListView)l.Properties);
 			Assert.AreEqual(word, label);
 		}
 
-		private static void PressCtrlN(ControlTester t) {
-			KeyboardController kc = new KeyboardController(t);
-			kc.Press("^n"); // Ctrl+N
+		private static void PressCtrlN(ControlTester t)
+		{
+			using (KeyboardController kc = new KeyboardController(t))
+			{
+				kc.Press("^n"); // Ctrl+N - N must be lowercase for this to work
+				kc.Release("^n");
+			}
 		}
 
 		[Test]
@@ -773,7 +818,8 @@ namespace WeSay.LexicalTools.Tests
 			VerifyNewEmptyWordCreated();
 		}
 
-		private void VerifyNewEmptyWordCreated() {
+		private void VerifyNewEmptyWordCreated()
+		{
 			LexEntry entry = GetCurrentEntry();
 			Assert.AreEqual(0, entry.LexicalForm.Count);
 		}
@@ -1011,43 +1057,18 @@ namespace WeSay.LexicalTools.Tests
 		}
 
 		[Test]
-		public void ClickOnWhiteSpaceToRightOfEntry_ThenKeyboardNavigate_CorrectEntrySelected()
-		{
-			ListViewTester l = new ListViewTester("_recordsListBox", _window);
-			MouseController mc = new MouseController(l);
-			l.Select(0);
-			Rectangle r = l.Properties.GetItemRect(1);
-			mc.Click(r.Right + 1, r.Top + 1);
-			KeyboardController kc = new KeyboardController(l);
-			kc.Press("{DOWN}");
-			Assert.AreEqual(2, l.Properties.SelectedIndices[0]);
-		}
-
-		[Test]
 		public void ClickOnWhiteSpaceToRightOfEntry_EntryAlreadySelected_DeleteButtonStaysEnabled()
 		{
 			ListViewTester l = new ListViewTester("_recordsListBox", _window);
 			ButtonTester b = new ButtonTester("_btnDeleteWord", _window);
-			MouseController mc = new MouseController(l);
-			Rectangle r = l.Properties.GetItemRect(0);
-			mc.Click(r.Right + 1, r.Top + 1);
-			// move enough to not count as a double-click
-			mc.Click(r.Right + SystemInformation.DoubleClickSize.Width + 2, r.Top + 1);
+			using (MouseController mc = new MouseController(l))
+			{
+				Rectangle r = l.Properties.GetItemRect(0);
+				mc.Click(r.Right + 1, r.Top + 1);
+				// move enough to not count as a double-click
+				mc.Click(r.Right + SystemInformation.DoubleClickSize.Width + 2, r.Top + 1);
+			}
 			Assert.IsTrue(b.Properties.Enabled);
-		}
-
-		[Test]
-		public void DoubleClickOnWhiteSpaceToRightOfEntry_EntryAlreadySelected_EntryStaysSelected()
-		{
-			ListViewTester l = new ListViewTester("_recordsListBox", _window);
-			ButtonTester b = new ButtonTester("_btnDeleteWord", _window);
-			MouseController mc = new MouseController(l);
-			Rectangle r = l.Properties.GetItemRect(0);
-			mc.Click(r.Right + 1, r.Top + 1);
-			// move enough to not confuse click with double-click
-			mc.DoubleClick(r.Right + SystemInformation.DoubleClickSize.Width + 2, r.Top + 1);
-			Assert.AreEqual(1, l.Properties.SelectedIndices.Count);
-			Assert.AreEqual(0, l.Properties.SelectedIndices[0]);
 		}
 
 		//

@@ -463,7 +463,6 @@ namespace WeSay.LexicalTools
 					IsWritingSystemUsedInLexicalForm(_listWritingSystem.Id))
 				{
 					entry.LexicalForm[_listWritingSystem.Id] = _findText.Text.Trim();
-					;
 					_lexEntryRepository.SaveItem(entry);
 				}
 

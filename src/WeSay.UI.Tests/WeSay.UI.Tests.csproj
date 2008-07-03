@@ -50,6 +50,10 @@
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\nunit.framework.dll</HintPath>
 	</Reference>
+	<Reference Include="NUnitForms, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\NUnitForms.dll</HintPath>
+	</Reference>
 	<Reference Include="Palaso, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\Palaso.dll</HintPath>
@@ -73,6 +77,7 @@
 	  <DesignTime>True</DesignTime>
 	  <DependentUpon>TestResources.resx</DependentUpon>
 	</Compile>
+	<Compile Include="WeSayListViewTests.cs" />
 	<Compile Include="WeSayTextBoxTests.cs" />
   </ItemGroup>
   <ItemGroup>
