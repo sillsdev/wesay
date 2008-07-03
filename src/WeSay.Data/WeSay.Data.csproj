@@ -60,7 +60,6 @@
 	<Compile Include="Db4oRepository.cs" />
 	<Compile Include="DeletedItemEventArgs.cs" />
 	<Compile Include="CacheHelper.cs" />
-	<Compile Include="ComparisonHelper.cs" />
 	<Compile Include="DatabaseModified.cs" />
 	<Compile Include="Db4oRepositoryId.cs" />
 	<Compile Include="DictionaryEqualityComparer.cs" />

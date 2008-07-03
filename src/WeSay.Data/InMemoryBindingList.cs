@@ -77,24 +77,7 @@ namespace WeSay.Data
 
 		public void ApplySort(PropertyDescriptor property, ListSortDirection direction)
 		{
-			if (_list.Count > 1)
-			{
-				Comparison<T> sort = delegate(T item1, T item2)
-									 {
-										 PropertyComparison<T> propertySorter =
-												 ComparisonHelper<T>.GetPropertyComparison(
-														 ComparisonHelper<T>.
-																 DefaultPropertyComparison,
-														 direction);
-										 return propertySorter(item1, item2, property);
-									 };
-
-				_list.Sort(sort);
-				_sortProperty = property;
-				_listSortDirection = direction;
-				_isSorted = true;
-				OnListReset();
-			}
+			throw new NotSupportedException();
 		}
 
 		int IBindingList.Find(PropertyDescriptor property, object key)
@@ -168,7 +151,7 @@ namespace WeSay.Data
 
 		bool IBindingList.SupportsSorting
 		{
-			get { return true; }
+			get { return false; }
 		}
 
 		#endregion
