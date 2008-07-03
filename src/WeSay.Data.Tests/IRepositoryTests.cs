@@ -68,11 +68,9 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		//IsThisNeeded?
-		public void GetId_Item_ReturnsTypeRepositoryId()
+		public void GetAllItems_ReturnsEmptyArray()
 		{
-			T item = RepositoryUnderTest.CreateItem();
-			Assert.IsInstanceOfType(typeof(RepositoryId), RepositoryUnderTest.GetId(item));
+			Assert.IsEmpty(RepositoryUnderTest.GetAllItems());
 		}
 
 		[Test]
@@ -92,15 +90,36 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		public void LastModified_ReturnsMinimumPossibleTime()
+		[ExpectedException(typeof(NotSupportedException))]
+		public void GetItemsMatchingQuery_CanQueryIsFalse_Throws()
 		{
-			Assert.AreEqual(DateTime.MinValue, RepositoryUnderTest.LastModified);
+			if (!RepositoryUnderTest.CanQuery)
+			{
+				RepositoryUnderTest.GetItemsMatching(query);
+			}
+			else
+			{
+				Assert.Ignore("Repository supports queries.");
+			}
 		}
 
 		[Test]
-		public void GetAllItems_ReturnsEmptyArray()
+		public void GetItemMatchingQuery_Query_ReturnsEmpty()
 		{
-			Assert.IsEmpty(RepositoryUnderTest.GetAllItems());
+			if (RepositoryUnderTest.CanQuery)
+			{
+				Assert.AreEqual(0, RepositoryUnderTest.GetItemsMatching(query).Count);
+			}
+			else
+			{
+				Assert.Ignore("Repository does not support queries.");
+			}
+		}
+
+		[Test]
+		public void LastModified_ReturnsMinimumPossibleTime()
+		{
+			Assert.AreEqual(DateTime.MinValue, RepositoryUnderTest.LastModified);
 		}
 
 		[Test]
@@ -116,33 +135,6 @@ namespace WeSay.Data.Tests
 		{
 			T item = new T();
 			RepositoryUnderTest.SaveItem(item);
-		}
-
-		[Test]
-		[ExpectedException(typeof(NotSupportedException))]
-		public void GetItemsMatchingQuery_CanQueryIsFalse_Throws()
-		{
-			if(!RepositoryUnderTest.CanQuery)
-			{
-				RepositoryUnderTest.GetItemsMatching(query);
-			}
-			else
-			{
-				Assert.Ignore("Repository supports queries.");
-			}
-		}
-
-		[Test]
-		public void GetItemMatchingQuery_Query_ReturnsEmpty()
-		{
-			if(RepositoryUnderTest.CanQuery)
-			{
-				Assert.AreEqual(0, RepositoryUnderTest.GetItemsMatching(query).Count);
-			}
-			else
-			{
-				Assert.Ignore("Repository does not support queries.");
-			}
 		}
 
 		[Test]
@@ -216,10 +208,60 @@ namespace WeSay.Data.Tests
 		protected abstract void RepopulateRepositoryFromPersistedData();
 
 		[Test]
-		public void CountAllItems_ReturnsNumberOfItemsInRepository()
+		public void CreateItem_ReturnsUniqueItem()
+		{
+			SetState();
+			Assert.AreNotEqual(item, RepositoryUnderTest.CreateItem());
+		}
+
+		[Test]
+		public void CreatedItemHasBeenPersisted()
+		{
+			SetState();
+			if (!RepositoryUnderTest.CanPersist)
+			{
+			}
+			else
+			{
+				RepopulateRepositoryFromPersistedData();
+				T itemFromPersistedData = RepositoryUnderTest.GetItem(id);
+				Assert.AreEqual(item, itemFromPersistedData);
+			}
+		}
+
+		[Test]
+		public void CountAllItems_ReturnsOne()
 		{
 			SetState();
 			Assert.AreEqual(1, RepositoryUnderTest.CountAllItems());
+		}
+
+		[Test]
+		public void GetAllItems_ReturnsIdItem()
+		{
+			SetState();
+			Assert.AreEqual(RepositoryUnderTest.GetId(item), RepositoryUnderTest.GetAllItems()[0]);
+		}
+
+		[Test]
+		public void GetAllItems_ReturnsCorrectNumberOfExistingItems()
+		{
+			SetState();
+			Assert.AreEqual(1, RepositoryUnderTest.GetAllItems().Length);
+		}
+
+		[Test]
+		public void GetId_CalledTwiceWithSameItem_ReturnsSameId()
+		{
+			SetState();
+			Assert.AreEqual(RepositoryUnderTest.GetId(item), RepositoryUnderTest.GetId(item));
+		}
+
+		[Test]
+		public void GetId_Item_ReturnsIdOfItem()
+		{
+			SetState();
+			Assert.AreSame(id, RepositoryUnderTest.GetId(item));
 		}
 
 		[Test]
@@ -237,18 +279,36 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		//Same as test above
-		public void GetId_Item_ReturnsIdOfItem()
+		public void GetItemMatchingQuery_QueryWithOutShow_ReturnsAllItems()
 		{
+			Query queryWithoutShow = new Query(typeof(T));
 			SetState();
-			Assert.AreSame(item, RepositoryUnderTest.GetItem(id));
+			if (RepositoryUnderTest.CanQuery)
+			{
+				ResultSet<T> resultSet = RepositoryUnderTest.GetItemsMatching(queryWithoutShow);
+				Assert.AreEqual(1, resultSet.Count);
+				Assert.AreEqual(item, resultSet[0].RealObject);
+				Assert.AreEqual(id, resultSet[0].Id);
+			}
+			else
+			{
+				Assert.Ignore("Repository does not support queries.");
+			}
 		}
 
 		[Test]
-		public void GetId_CalledTwiceWithSameItem_ReturnsSameId()
+		public void GetItemMatchingQuery_QueryWithShow_ReturnsAllItemsAndFieldsMatchingQuery()
 		{
 			SetState();
-			Assert.AreEqual(RepositoryUnderTest.GetId(item), RepositoryUnderTest.GetId(item));
+			if (RepositoryUnderTest.CanQuery)
+			{
+				Assert.Ignore(@"This Test is highly dependant on the type of objects that are
+							being managed by the repository and as such should be tested elsewhere.");
+			}
+			else
+			{
+				Assert.Ignore("Repository does not support queries.");
+			}
 		}
 
 		[Test]
@@ -260,26 +320,11 @@ namespace WeSay.Data.Tests
 			Assert.Greater(RepositoryUnderTest.LastModified, modifiedTimePreTestedStateSwitch);
 		}
 
-
 		[Test]
 		public void LastModified_IsSetInUTC()
 		{
 			SetState();
 			Assert.AreEqual(DateTimeKind.Utc, RepositoryUnderTest.LastModified.Kind);
-		}
-
-		[Test]
-		public void GetAllItems_ReturnsIdsOfExistingItems()
-		{
-			SetState();
-			Assert.AreEqual(RepositoryUnderTest.GetId(item),RepositoryUnderTest.GetAllItems()[0]);
-		}
-
-		[Test]
-		public void GetAllItems_ReturnsCorrectNumberOfExistingItems()
-		{
-			SetState();
-			Assert.AreEqual(1, RepositoryUnderTest.GetAllItems().Length);
 		}
 
 		[Test]
@@ -304,54 +349,6 @@ namespace WeSay.Data.Tests
 		{
 			Assert.Ignore(@"This Test is highly dependant on the type of objects that are
 							being managed by the repository and as such should be tested elsewhere.");
-		}
-
-		[Test]
-		public void GetItemMatchingQuery_QueryWithOutShow_ReturnsItemsMatchingQuery()
-		{
-			Query queryWithoutShow = new Query(typeof(T));
-			SetState();
-			if(RepositoryUnderTest.CanQuery)
-			{
-				ResultSet<T> resultSet = RepositoryUnderTest.GetItemsMatching(queryWithoutShow);
-				Assert.AreEqual(1, resultSet.Count);
-				Assert.AreEqual(item, resultSet[0].RealObject);
-				Assert.AreEqual(id, resultSet[0].Id);
-			}
-			else
-			{
-				Assert.Ignore("Repository does not support queries.");
-			}
-		}
-
-		[Test]
-		public void GetItemMatchingQuery_QueryWithShow_ReturnsItemsMatchingQuery()
-		{
-			SetState();
-			if (RepositoryUnderTest.CanQuery)
-			{
-				Assert.Ignore(@"This Test is highly dependant on the type of objects that are
-							being managed by the repository and as such should be tested elsewhere.");
-			}
-			else
-			{
-				Assert.Ignore("Repository does not support queries.");
-			}
-		}
-
-		[Test]
-		public void CreatedItemHasBeenPersisted()
-		{
-			SetState();
-			if(!RepositoryUnderTest.CanPersist)
-			{
-			}
-			else
-			{
-				RepopulateRepositoryFromPersistedData();
-				T itemFromPersistedData = RepositoryUnderTest.GetItem(id);
-				Assert.AreEqual(item, itemFromPersistedData);
-			}
 		}
 
 		[Test]
@@ -449,10 +446,17 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		public void CountAllItems_ReturnsNumberOfItemsInRepository()
+		public void CountAllItems_ReturnsZero()
 		{
 			SetState();
 			Assert.AreEqual(0, RepositoryUnderTest.CountAllItems());
+		}
+
+		[Test]
+		public void GetAllItems_ReturnsEmptyArray()
+		{
+			SetState();
+			Assert.IsEmpty(RepositoryUnderTest.GetAllItems());
 		}
 
 		[Test]
@@ -472,6 +476,20 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
+		public void GetItemMatchingQuery_Query_ReturnsEmpty()
+		{
+			SetState();
+			if (RepositoryUnderTest.CanQuery)
+			{
+				Assert.AreEqual(0, RepositoryUnderTest.GetItemsMatching(query).Count);
+			}
+			else
+			{
+				Assert.Ignore("Repository does not support queries.");
+			}
+		}
+
+		[Test]
 		public void LastModified_IsChangedToLaterTime()
 		{
 			CreateInitialItem();
@@ -488,45 +506,21 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		public void GetAllItems_ReturnsIdsOfExistingItems()
-		{
-			SetState();
-			Assert.IsEmpty(RepositoryUnderTest.GetAllItems());
-		}
-
-		[Test]
 		[ExpectedException(typeof(ArgumentOutOfRangeException))]
-		public void Save_Throws()
+		public void Save_ItemDoesNotExist_Throws()
 		{
 			SetState();
 			RepositoryUnderTest.SaveItem(item);
 		}
 
 		[Test]
-		public virtual void DeletionOfItemHasBeenPersisted()
+		[ExpectedException(typeof(ArgumentOutOfRangeException))]
+		public void SaveItems_ItemDoesNotExist_Throws()
 		{
-			SetState();
-			if (!RepositoryUnderTest.CanPersist)
-			{
-				Assert.Ignore("Repository can not be persisted.");
-			}
-			else
-			{
-				throw new NotImplementedException("You must implement a test to verify that the item deletion has been persisted.");
-			}
-		}
-
-		[Test]
-		public void GetItemMatchingQuery_Query_ReturnsEmpty()
-		{
-			if (RepositoryUnderTest.CanQuery)
-			{
-				Assert.AreEqual(0, RepositoryUnderTest.GetItemsMatching(query).Count);
-			}
-			else
-			{
-				Assert.Ignore("Repository does not support queries.");
-			}
+			T itemNotInRepository = new T();
+			List<T> itemsToSave = new List<T>();
+			itemsToSave.Add(itemNotInRepository);
+			RepositoryUnderTest.SaveItems(itemsToSave);
 		}
 	}
 
@@ -595,10 +589,17 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		public void CountAllItems_DeleteItem_ReturnsNumberOfItemsInRepository()
+		public void CountAllItems_ReturnsZero()
 		{
 			SetState();
 			Assert.AreEqual(0, RepositoryUnderTest.CountAllItems());
+		}
+
+		[Test]
+		public void GetAllItems_ReturnsEmptyArray()
+		{
+			SetState();
+			Assert.IsEmpty(RepositoryUnderTest.GetAllItems());
 		}
 
 		[Test]
@@ -618,6 +619,20 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
+		public void GetItemMatchingQuery_Query_ReturnsEmpty()
+		{
+			SetState();
+			if (RepositoryUnderTest.CanQuery)
+			{
+				Assert.AreEqual(0, RepositoryUnderTest.GetItemsMatching(query).Count);
+			}
+			else
+			{
+				Assert.Ignore("Repository does not support queries.");
+			}
+		}
+
+		[Test]
 		public void LastModified_ItemIsDeleted_IsChangedToLaterTime()
 		{
 			CreateItemToTest();
@@ -634,45 +649,21 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		public void GetAllItems_ReturnsIdsOfExistingItems()
-		{
-			SetState();
-			Assert.IsEmpty(RepositoryUnderTest.GetAllItems());
-		}
-
-		[Test]
 		[ExpectedException(typeof(ArgumentOutOfRangeException))]
-		public void Save_Throws()
+		public void Save_ItemDoesNotExist_Throws()
 		{
 			SetState();
 			RepositoryUnderTest.SaveItem(item);
 		}
 
 		[Test]
-		public virtual void DeletionOfItemHasBeenPersisted()
+		[ExpectedException(typeof(ArgumentOutOfRangeException))]
+		public void SaveItems_ItemDoesNotExist_Throws()
 		{
-			SetState();
-			if (!RepositoryUnderTest.CanPersist)
-			{
-				Assert.Ignore("Repository can not be persisted.");
-			}
-			else
-			{
-				throw new NotImplementedException("You must implement a test to verify that the item deletion has been persisted.");
-			}
-		}
-
-		[Test]
-		public void GetItemMatchingQuery_Query_ReturnsEmpty()
-		{
-			if (RepositoryUnderTest.CanQuery)
-			{
-				Assert.AreEqual(0, RepositoryUnderTest.GetItemsMatching(query).Count);
-			}
-			else
-			{
-				Assert.Ignore("Repository does not support queries.");
-			}
+			T itemNotInRepository = new T();
+			List<T> itemsToSave = new List<T>();
+			itemsToSave.Add(itemNotInRepository);
+			RepositoryUnderTest.SaveItems(itemsToSave);
 		}
 	}
 }
