@@ -133,8 +133,10 @@ namespace WeSay.App.Services
 			{
 				Logger.WriteMinorEvent("GetHtmlForEntries()");
 				StringBuilder builder = new StringBuilder();
-				LiftExporter exporter = new LiftExporter(builder, true, _lexEntryRepository);
-				exporter.SetUpForPresentationLiftExport(_project.DefaultPrintingTemplate);
+				PLiftExporter exporter = new PLiftExporter(builder,
+														true,
+														_lexEntryRepository,
+														_project.DefaultPrintingTemplate);
 
 				foreach (string entryId in entryIds)
 				{

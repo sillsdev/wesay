@@ -749,8 +749,10 @@ namespace WeSay.LexicalTools.Tests
 		}
 
 		private static void PressCtrlN(ControlTester t) {
-			KeyboardController kc = new KeyboardController(t);
-			kc.Press("^n"); // Ctrl+N
+			using (KeyboardController kc = new KeyboardController(t))
+			{
+				kc.Press("^n"); // Ctrl+N
+			}
 		}
 
 		[Test]
@@ -1014,12 +1016,17 @@ namespace WeSay.LexicalTools.Tests
 		public void ClickOnWhiteSpaceToRightOfEntry_ThenKeyboardNavigate_CorrectEntrySelected()
 		{
 			ListViewTester l = new ListViewTester("_recordsListBox", _window);
-			MouseController mc = new MouseController(l);
 			l.Select(0);
 			Rectangle r = l.Properties.GetItemRect(1);
-			mc.Click(r.Right + 1, r.Top + 1);
-			KeyboardController kc = new KeyboardController(l);
-			kc.Press("{DOWN}");
+			using (MouseController mc = new MouseController(l))
+			{
+				mc.Click(r.Right + 1, r.Top + 1);
+			}
+
+			using (KeyboardController kc = new KeyboardController(l))
+			{
+				kc.Press("{DOWN}");
+			}
 			Assert.AreEqual(2, l.Properties.SelectedIndices[0]);
 		}
 
@@ -1028,11 +1035,13 @@ namespace WeSay.LexicalTools.Tests
 		{
 			ListViewTester l = new ListViewTester("_recordsListBox", _window);
 			ButtonTester b = new ButtonTester("_btnDeleteWord", _window);
-			MouseController mc = new MouseController(l);
 			Rectangle r = l.Properties.GetItemRect(0);
-			mc.Click(r.Right + 1, r.Top + 1);
-			// move enough to not count as a double-click
-			mc.Click(r.Right + SystemInformation.DoubleClickSize.Width + 2, r.Top + 1);
+			using (MouseController mc = new MouseController(l))
+			{
+				mc.Click(r.Right + 1, r.Top + 1);
+				// move enough to not count as a double-click
+				mc.Click(r.Right + SystemInformation.DoubleClickSize.Width + 2, r.Top + 1);
+			}
 			Assert.IsTrue(b.Properties.Enabled);
 		}
 
@@ -1040,12 +1049,13 @@ namespace WeSay.LexicalTools.Tests
 		public void DoubleClickOnWhiteSpaceToRightOfEntry_EntryAlreadySelected_EntryStaysSelected()
 		{
 			ListViewTester l = new ListViewTester("_recordsListBox", _window);
-			ButtonTester b = new ButtonTester("_btnDeleteWord", _window);
-			MouseController mc = new MouseController(l);
 			Rectangle r = l.Properties.GetItemRect(0);
-			mc.Click(r.Right + 1, r.Top + 1);
-			// move enough to not confuse click with double-click
-			mc.DoubleClick(r.Right + SystemInformation.DoubleClickSize.Width + 2, r.Top + 1);
+			using (MouseController mc = new MouseController(l))
+			{
+				mc.Click(r.Right + 1, r.Top + 1);
+				// move enough to not confuse click with double-click
+				mc.DoubleClick(r.Right + SystemInformation.DoubleClickSize.Width + 2, r.Top + 1);
+			}
 			Assert.AreEqual(1, l.Properties.SelectedIndices.Count);
 			Assert.AreEqual(0, l.Properties.SelectedIndices[0]);
 		}

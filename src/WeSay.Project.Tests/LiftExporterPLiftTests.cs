@@ -4,9 +4,9 @@ using System.Drawing;
 using System.IO;
 using System.Xml;
 using NUnit.Framework;
+using WeSay.Data;
 using WeSay.Foundation;
 using WeSay.LexicalModel;
-using WeSay.LexicalModel.Db4oSpecific;
 
 namespace WeSay.Project.Tests
 {
@@ -87,10 +87,20 @@ namespace WeSay.Project.Tests
 
 		private void Make(ViewTemplate template, string path)
 		{
-			LiftExporter exporter = new LiftExporter(path, _lexEntryRepository);
+			PLiftExporter exporter = new PLiftExporter(path,
+													   _lexEntryRepository,
+													   template);
 
-			exporter.SetUpForPresentationLiftExport(template);
-			exporter.Add(_lexEntryRepository.GetAllEntriesSortedByHeadword(_headwordWritingSystem));
+			ResultSet<LexEntry> allEntriesSortedByHeadword = this._lexEntryRepository.GetAllEntriesSortedByHeadword(this._headwordWritingSystem);
+			foreach (RecordToken<LexEntry> token in allEntriesSortedByHeadword)
+			{
+				int homographNumber = 0;
+				if ((bool)token["HasHomograph"])
+				{
+					homographNumber = (int)token["HomographNumber"];
+				}
+				exporter.Add(token.RealObject, homographNumber);
+			}
 			exporter.End();
 		}
 

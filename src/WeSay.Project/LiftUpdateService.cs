@@ -84,7 +84,7 @@ namespace WeSay.Project
 
 			LiftExporter exporter =
 					new LiftExporter( /*WeSayWordsProject.Project.GetFieldToOptionListNameDictionary(), */
-							MakeIncrementFileName(DateTime.UtcNow), _lexEntryRepository);
+							MakeIncrementFileName(DateTime.UtcNow));
 			exporter.AddDeletedEntry(entry);
 			exporter.End();
 		}
@@ -117,9 +117,12 @@ namespace WeSay.Project
 				{
 					LiftExporter exporter =
 							new LiftExporter( /*WeSayWordsProject.Project.GetFieldToOptionListNameDictionary(),*/
-									MakeIncrementFileName(_timeOfLastQueryForNewRecords),
-									_lexEntryRepository);
-					exporter.Add(repositoryIds);
+									MakeIncrementFileName(_timeOfLastQueryForNewRecords));
+					foreach (RepositoryId id in repositoryIds)
+					{
+						LexEntry entry = this._lexEntryRepository.GetItem(id);
+						exporter.Add(entry);
+					}
 					exporter.End();
 
 					RecordUpdateTime(_timeOfLastQueryForNewRecords);

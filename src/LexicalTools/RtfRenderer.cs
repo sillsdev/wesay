@@ -123,7 +123,7 @@ namespace WeSay.LexicalTools
 						lexEntryRepository.GetHomographNumber(entry,
 															  WeSayWordsProject.Project.
 																	  DefaultViewTemplate.
-																	  HeadwordWritingSytem);
+																	  HeadwordWritingSystem);
 				if (homographNumber > 0)
 				{
 					rtf.Append(@"{\super " + homographNumber + "}");

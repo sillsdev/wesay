@@ -6,6 +6,7 @@ using System.Text;
 using System.Xml;
 using LiftIO.Validation;
 using NUnit.Framework;
+using WeSay.Data;
 using WeSay.Foundation;
 using WeSay.Foundation.Options;
 using WeSay.LexicalModel;
@@ -34,14 +35,12 @@ namespace WeSay.Project.Tests
 
 		private void PrepWriterForFragment()
 		{
-			_exporter = new LiftExporter( /*_fieldToOptionListName,*/
-					_stringBuilder, true, _lexEntryRepository);
+			_exporter = new LiftExporter(_stringBuilder, true);
 		}
 
 		private void PrepWriterForFullDocument()
 		{
-			_exporter = new LiftExporter( /*_fieldToOptionListName,*/
-					_stringBuilder, false, _lexEntryRepository);
+			_exporter = new LiftExporter(_stringBuilder, false);
 		}
 
 		[TearDown]
@@ -86,8 +85,7 @@ namespace WeSay.Project.Tests
 			string filePath = Path.GetTempFileName();
 			try
 			{
-				_exporter =
-						new LiftExporter( /*_fieldToOptionListName,*/ filePath, _lexEntryRepository);
+				_exporter = new LiftExporter(filePath);
 				WriteTwoEntries();
 				XmlDocument doc = new XmlDocument();
 				doc.Load(filePath);
@@ -103,10 +101,12 @@ namespace WeSay.Project.Tests
 		{
 			MakeTestLexEntry("sunset");
 			MakeTestLexEntry("flower");
-
-			_exporter.Add(
-					_lexEntryRepository.GetAllEntriesSortedByHeadword(
-							new WritingSystem("test", SystemFonts.DefaultFont)));
+			ResultSet<LexEntry> allEntriesSortedByHeadword = this._lexEntryRepository.GetAllEntriesSortedByHeadword(
+					new WritingSystem("test", SystemFonts.DefaultFont));
+			foreach (RecordToken<LexEntry> token in allEntriesSortedByHeadword)
+			{
+				_exporter.Add(token.RealObject);
+			}
 			_exporter.End();
 		}
 

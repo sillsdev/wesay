@@ -44,12 +44,12 @@ namespace WeSay.Project
 
 		//todo: this is simplistic. Switch to the plural form
 		[Obsolete]
-		public WritingSystem HeadwordWritingSytem
+		public WritingSystem HeadwordWritingSystem
 		{
 			get { return GetDefaultWritingSystemForField(LexEntry.WellKnownProperties.LexicalUnit); }
 		}
 
-		public IList<WritingSystem> HeadwordWritingSystemIds
+		public IList<WritingSystem> HeadwordWritingSystems
 		{
 			get
 			{

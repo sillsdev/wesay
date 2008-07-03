@@ -338,7 +338,7 @@ namespace WeSay.App
 				_tabbedForm.BringToFront(); //needed if we were previously in server mode
 
 				RtfRenderer.HeadWordWritingSystemId =
-						_project.DefaultViewTemplate.HeadwordWritingSytem.Id;
+						_project.DefaultViewTemplate.HeadwordWritingSystem.Id;
 
 				//run the ui
 				Application.Run(_tabbedForm);
