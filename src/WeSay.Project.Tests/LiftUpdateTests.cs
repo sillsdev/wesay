@@ -115,7 +115,7 @@ namespace WeSay.Project.Tests
 			//now delete it
 			_lexEntryRepository.DeleteItem(entryToDelete);
 			//this deletion event comes from a higher-level class we aren't using, so we raise it ourselves here:
-			_service.OnDataDeleted(this, new DeletedItemEventArgs(entryToDelete));
+			_service.OnDataDeleted(entryToDelete, new EventArgs());
 			_service.DoLiftUpdateNow(true);
 			// Linux and fat32 has resolution of second not millisecond!
 			Thread.Sleep(1000);

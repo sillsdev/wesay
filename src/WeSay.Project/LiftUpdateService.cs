@@ -74,9 +74,9 @@ namespace WeSay.Project
 			DoLiftUpdateNow(false);
 		}
 
-		public void OnDataDeleted(object sender, DeletedItemEventArgs e)
+		public void OnDataDeleted(object sender, EventArgs e)
 		{
-			LexEntry entry = e.ItemDeleted as LexEntry;
+			LexEntry entry = (LexEntry)sender;
 			if (entry == null)
 			{
 				return;
