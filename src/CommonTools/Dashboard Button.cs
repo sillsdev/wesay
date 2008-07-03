@@ -24,10 +24,10 @@ namespace WeSay.CommonTools
 
 		protected const int ShadowWidth = 3;
 		protected const int ButtonDownHorizontalNudge = ShadowWidth;
-		protected const int LeftMarginWidth = 5;
-		protected const int RightMarginWidth = 5 + ShadowWidth;
-		protected const int TopMarginWidth = 10;
-		protected const int BottomMarginWidth = 8 + ShadowWidth;
+		protected const int LeftMarginWidth = 8;
+		protected const int RightMarginWidth = 8 + ShadowWidth;
+		protected const int TopMarginWidth = 11;
+		protected const int BottomMarginWidth = 9 + ShadowWidth;
 		protected const int ProgressBarHeight = 5;
 		protected const int ProgressBarTopMargin = 5;
 		protected virtual int ProgressBarLeftMargin { get { return 5; } }
@@ -103,7 +103,7 @@ namespace WeSay.CommonTools
 
 		protected override void OnPaint(PaintEventArgs e)
 		{
-			int borderWidth = Focused ? 3 : 1;
+			int borderWidth = Focused ? 2 : 1;
 			int radius = 8;
 
 			//draw shadow
@@ -128,6 +128,17 @@ namespace WeSay.CommonTools
 
 			e.Graphics.FillPath(Brushes.White, path);
 			e.Graphics.DrawPath(new Pen(_borderColor, borderWidth), path);
+			if (Focused)
+			{
+				rectangle.X += 4;
+				rectangle.Y += 3;
+				rectangle.Width -= 9;
+				rectangle.Height -= 8;
+				path = GetButtonShapePath(rectangle, radius, 1);
+				Pen p = new Pen(_borderColor, 1);
+				p.DashStyle = DashStyle.Dot;
+				e.Graphics.DrawPath(p, path);
+			}
 
 			PaintContents(e);
 		}
