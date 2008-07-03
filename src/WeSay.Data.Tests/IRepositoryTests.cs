@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Threading;
 using NUnit.Framework;
 using WeSay.Data;
-using System.Reflection;
 
 namespace WeSay.Data.Tests
 {
@@ -261,7 +260,7 @@ namespace WeSay.Data.Tests
 		public void GetId_Item_ReturnsIdOfItem()
 		{
 			SetState();
-			Assert.AreSame(id, RepositoryUnderTest.GetId(item));
+			Assert.AreEqual(id, RepositoryUnderTest.GetId(item));
 		}
 
 		[Test]
