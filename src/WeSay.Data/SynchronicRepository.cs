@@ -4,12 +4,53 @@ using System.Text;
 
 namespace WeSay.Data
 {
+	public abstract class SynchronizableRepository<T> : IRepository<T> where T: class, new()
+	{
+		internal abstract void AddItem(T item);
+
+		#region IRepository<T> Members
+
+		public abstract DateTime LastModified {get;}
+
+		public abstract bool CanQuery {get;}
+
+		public abstract bool CanPersist {get;}
+
+		public abstract T CreateItem();
+
+		public abstract int CountAllItems();
+
+		public abstract RepositoryId GetId(T item);
+
+		public abstract T GetItem(RepositoryId id);
+
+		public abstract void DeleteItem(T item);
+
+		public abstract void DeleteItem(RepositoryId id);
+
+		public abstract RepositoryId[] GetAllItems();
+
+		public abstract void SaveItem(T item);
+
+		public abstract void SaveItems(IEnumerable<T> items);
+
+		public abstract ResultSet<T> GetItemsMatching(Query query);
+
+		#endregion
+
+		#region IDisposable Members
+
+		public void Dispose() { }
+
+		#endregion
+	}
+
 	public class SynchronicRepository<T> : IRepository<T> where T: class, new()
 	{
-		IRepository<T> _primary;
-		IRepository<T> _secondary;
+		SynchronizableRepository<T> _primary;
+		SynchronizableRepository<T> _secondary;
 
-		SynchronicRepository(IRepository<T> primary, IRepository<T> secondary)
+		public SynchronicRepository(SynchronizableRepository<T> primary, SynchronizableRepository<T> secondary)
 		{
 			if (primary == null)
 			{
@@ -19,6 +60,10 @@ namespace WeSay.Data
 			{
 				throw new ArgumentNullException("secondary");
 			}
+			if (primary == secondary)
+			{
+				throw new ArgumentException("primary and secondary must not be equal");
+			}
 			_primary = primary;
 			_secondary = secondary;
 		}
@@ -27,7 +72,7 @@ namespace WeSay.Data
 
 		public DateTime LastModified
 		{
-			get { throw new Exception("The method or operation is not implemented."); }
+			get { return _primary.LastModified; }
 		}
 
 		public bool CanQuery
@@ -42,7 +87,9 @@ namespace WeSay.Data
 
 		public T CreateItem()
 		{
-			return _primary.CreateItem();
+			T item = _primary.CreateItem();
+			_secondary.AddItem(item);
+			return item;
 		}
 
 		public int CountAllItems()

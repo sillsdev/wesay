@@ -62,6 +62,7 @@
 	<Compile Include="RecordTokenTests.cs" />
 	<Compile Include="ResultSetTests.cs" />
 	<Compile Include="SimpleIntTestClass.cs" />
+	<Compile Include="SynchronicRepositoryTests.cs" />
 	<Compile Include="TestItem.cs" />
 	<Compile Include="TestMultiple.cs" />
 	<Compile Include="TestRepositoryId.cs" />
