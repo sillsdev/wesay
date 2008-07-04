@@ -157,16 +157,6 @@ namespace WeSay.Data.Tests
 					(_storedDateTime == item._storedDateTime);
 		}
 
-		public override int GetHashCode()
-		{
-			int hash = _storedInt;
-			if(_storedString != null)
-			{
-				hash ^= _storedString.GetHashCode();
-			}
-			return  hash ^ _storedDateTime.GetHashCode();
-		}
-
 		public int StoredInt
 		{
 			get { return _storedInt; }

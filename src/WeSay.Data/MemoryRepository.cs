@@ -233,18 +233,3 @@ namespace WeSay.Data
 				{
 					return -1;
 				}
-				return Comparer<int>.Default.Compare(id, other.id);
-			}
-
-			public override int CompareTo(RepositoryId other)
-			{
-				return CompareTo(other as MemoryRepositoryId);
-			}
-
-			public override bool Equals(RepositoryId other)
-			{
-				return Equals(other as MemoryRepositoryId);
-			}
-		}
-   }
-}
