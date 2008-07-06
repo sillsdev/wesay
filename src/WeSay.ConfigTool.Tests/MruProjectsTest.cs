@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using NUnit.Framework;
+using WeSay.Foundation.Tests;
 
 namespace WeSay.ConfigTool.Tests
 {
@@ -20,35 +21,35 @@ namespace WeSay.ConfigTool.Tests
 		{
 		}
 
-		private class TempFile : IDisposable
-		{
-			private readonly string fileName;
-
-			public TempFile()
-			{
-				fileName = Path.GetTempFileName();
-			}
-
-			public string FileName
-			{
-				get { return fileName; }
-			}
-
-			public void Dispose()
-			{
-				File.Delete(FileName);
-			}
-		}
+//        private class TempFile : IDisposable
+//        {
+//            private readonly string fileName;
+//
+//            public TempFile()
+//            {
+//                fileName = Path.GetTempFileName();
+//            }
+//
+//            public string FolderPath
+//            {
+//                get { return fileName; }
+//            }
+//
+//            public void Dispose()
+//            {
+//                File.Delete(FolderPath);
+//            }
+//        }
 
 		[Test]
 		public void AddNewPath_PathExists_PathAtTopOfList()
 		{
 			using (TempFile existingFile = new TempFile())
 			{
-				_mruProjects.AddNewPath(existingFile.FileName);
+				_mruProjects.AddNewPath(existingFile.FilePath);
 				string[] mruPaths = _mruProjects.Paths;
 				Assert.AreEqual(1, mruPaths.Length);
-				Assert.AreEqual(existingFile.FileName, mruPaths[0]);
+				Assert.AreEqual(existingFile.FilePath, mruPaths[0]);
 			}
 		}
 
@@ -72,16 +73,16 @@ namespace WeSay.ConfigTool.Tests
 			using (TempFile firstFileIn = new TempFile(),
 							secondFileIn = new TempFile())
 			{
-				_mruProjects.AddNewPath(firstFileIn.FileName);
-				_mruProjects.AddNewPath(secondFileIn.FileName);
+				_mruProjects.AddNewPath(firstFileIn.FilePath);
+				_mruProjects.AddNewPath(secondFileIn.FilePath);
 				string[] mruProjectsPaths = _mruProjects.Paths;
 				foreach (string path in mruProjectsPaths)
 				{
 					Console.WriteLine(path);
 				}
 				Assert.AreEqual(2, mruProjectsPaths.Length);
-				Assert.AreEqual(secondFileIn.FileName, mruProjectsPaths[0]);
-				Assert.AreEqual(firstFileIn.FileName, mruProjectsPaths[1]);
+				Assert.AreEqual(secondFileIn.FilePath, mruProjectsPaths[0]);
+				Assert.AreEqual(firstFileIn.FilePath, mruProjectsPaths[1]);
 			}
 		}
 
@@ -91,7 +92,7 @@ namespace WeSay.ConfigTool.Tests
 			using (TempFile file1 = new TempFile(),
 						   file2 = new TempFile())
 			{
-				_mruProjects.Paths = new string[] {file1.FileName, file2.FileName};
+				_mruProjects.Paths = new string[] {file1.FilePath, file2.FilePath};
 				_mruProjects.Paths = null;
 				Assert.IsNotNull(_mruProjects.Paths);
 				foreach (string path in _mruProjects.Paths)
@@ -110,11 +111,11 @@ namespace WeSay.ConfigTool.Tests
 						   file2 = new TempFile(),
 						   file3 = new TempFile())
 			{
-				_mruProjects.Paths = new string[] {file1.FileName, file2.FileName, file3.FileName};
+				_mruProjects.Paths = new string[] {file1.FilePath, file2.FilePath, file3.FilePath};
 				Assert.AreEqual(3, _mruProjects.Paths.Length);
-				Assert.AreEqual(file1.FileName, _mruProjects.Paths[0]);
-				Assert.AreEqual(file2.FileName, _mruProjects.Paths[1]);
-				Assert.AreEqual(file3.FileName, _mruProjects.Paths[2]);
+				Assert.AreEqual(file1.FilePath, _mruProjects.Paths[0]);
+				Assert.AreEqual(file2.FilePath, _mruProjects.Paths[1]);
+				Assert.AreEqual(file3.FilePath, _mruProjects.Paths[2]);
 			}
 		}
 
@@ -125,15 +126,15 @@ namespace WeSay.ConfigTool.Tests
 						   file2 = new TempFile(),
 						   file3= new TempFile())
 			{
-				_mruProjects.Paths = new string[] {file1.FileName,
-												   file2.FileName,
-												   file3.FileName};
-				_mruProjects.AddNewPath(file2.FileName);
+				_mruProjects.Paths = new string[] {file1.FilePath,
+												   file2.FilePath,
+												   file3.FilePath};
+				_mruProjects.AddNewPath(file2.FilePath);
 				string[] mruPaths = _mruProjects.Paths;
 				Assert.AreEqual(3, mruPaths.Length);
-				Assert.AreEqual(file2.FileName, mruPaths[0]);
-				Assert.AreEqual(file1.FileName, mruPaths[1]);
-				Assert.AreEqual(file3.FileName, mruPaths[2]);
+				Assert.AreEqual(file2.FilePath, mruPaths[0]);
+				Assert.AreEqual(file1.FilePath, mruPaths[1]);
+				Assert.AreEqual(file3.FilePath, mruPaths[2]);
 			}
 		}
 
@@ -144,12 +145,12 @@ namespace WeSay.ConfigTool.Tests
 							file2 = new TempFile(),
 							file3= new TempFile())
 			{
-				_mruProjects.Paths = new string[]{ file1.FileName,
-												   file2.FileName,
-												   file1.FileName,
-												   file3.FileName};
+				_mruProjects.Paths = new string[]{ file1.FilePath,
+												   file2.FilePath,
+												   file1.FilePath,
+												   file3.FilePath};
 				Assert.AreEqual(3,_mruProjects.Paths.Length);
-				Assert.AreEqual(file1.FileName, _mruProjects.Paths[0]);
+				Assert.AreEqual(file1.FilePath, _mruProjects.Paths[0]);
 
 			}
 		}

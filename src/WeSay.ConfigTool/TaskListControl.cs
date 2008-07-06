@@ -44,10 +44,10 @@ namespace WeSay.ConfigTool
 			{
 				_taskList.SelectedIndex = 0;
 			}
-			WeSayWordsProject.Project.EditorsSaveNow += new EventHandler(Project_HackedEditorsSaveNow);
+			WeSayWordsProject.Project.EditorsSaveNow += new EventHandler(OnEditorsSaveNow);
 		}
 
-		void Project_HackedEditorsSaveNow(object owriter, EventArgs e)
+		void OnEditorsSaveNow(object owriter, EventArgs e)
 		{
 			XmlWriter writer = (XmlWriter)owriter;
 

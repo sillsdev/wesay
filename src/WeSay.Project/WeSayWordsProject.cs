@@ -38,6 +38,7 @@ namespace WeSay.Project
 
 		private readonly AddinSet _addins;
 		private IList<LexRelationType> _relationTypes;
+		private ChorusBackupMaker _backupMaker;
 
 		public event EventHandler EditorsSaveNow;
 
@@ -52,6 +53,7 @@ namespace WeSay.Project
 		{
 			_addins = AddinSet.Create(GetAddinNodes, LocateFile);
 			_optionLists = new Dictionary<string, OptionsList>();
+			BackupMaker = new ChorusBackupMaker();
 		}
 
 		public IList<ITask> Tasks
@@ -347,6 +349,25 @@ namespace WeSay.Project
 			}
 			base.LoadFromProjectDirectoryPath(projectDirectoryPath);
 			InitializeViewTemplatesFromProjectFiles();
+
+			LoadBackupPlan();
+		}
+
+		private void LoadBackupPlan()
+		{
+			//what a mess. I hate .net new fangled xml stuff...
+			XPathDocument projectDoc = GetConfigurationDoc();
+			XPathNavigator backupPlanNav = projectDoc.CreateNavigator();
+			backupPlanNav = backupPlanNav.SelectSingleNode("configuration/" + ChorusBackupMaker.ElementName);
+			if (backupPlanNav == null)
+			{
+				//make sure we have a fresh copy with any defaults
+				BackupMaker = new ChorusBackupMaker();
+				return;
+			}
+
+			XmlReader r = XmlReader.Create(new StringReader(backupPlanNav.OuterXml));
+			BackupMaker = ChorusBackupMaker.LoadFromReader(r);
 		}
 
 		private static void MoveFilesFromOldDirLayout(string projectDir)
@@ -949,6 +970,12 @@ namespace WeSay.Project
 			get { return DefaultViewTemplate; }
 		}
 
+		public ChorusBackupMaker BackupMaker
+		{
+			get { return _backupMaker; }
+			set { _backupMaker = value; }
+		}
+
 
 		public override void Save()
 		{
@@ -967,6 +994,8 @@ namespace WeSay.Project
 			{
 				EditorsSaveNow.Invoke(writer, null);
 			}
+
+			BackupMaker.Save(writer);
 
 			_addins.Save(writer);
 

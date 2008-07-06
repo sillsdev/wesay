@@ -129,27 +129,27 @@ namespace WeSay.ConfigTool
 			CreateAndOpenProject(dlg.SelectedPath);
 		}
 
-		public void CreateAndOpenProject(string path)
+		public void CreateAndOpenProject(string directoryPath)
 		{
 			//the "wesay" part my not exist yet
-			if (!Directory.GetParent(path).Exists)
+			if (!Directory.GetParent(directoryPath).Exists)
 			{
-				Directory.GetParent(path).Create();
+				Directory.GetParent(directoryPath).Create();
 			}
 
-			CreateNewProject(path);
+			CreateNewProject(directoryPath);
 			_project.Save();
-			OpenProject(path);
+			OpenProject(directoryPath);
 		}
 
-		private void CreateNewProject(string path)
+		private void CreateNewProject(string directoryPath)
 		{
 			WeSayWordsProject p;
 
 			try
 			{
 				p = new WeSayWordsProject();
-				p.CreateEmptyProjectFiles(path);
+				p.CreateEmptyProjectFiles(directoryPath);
 			}
 			catch (Exception e)
 			{
