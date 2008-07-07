@@ -144,6 +144,7 @@ namespace WeSay.App
 				}
 
 			}
+			_project.BackupMaker.BackupNow(_project.ProjectDirectoryPath);
 			Logger.ShutDown();
 			Settings.Default.Save();
 		}
