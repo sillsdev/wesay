@@ -4,13 +4,13 @@ using System.Collections.Generic;
 
 namespace WeSay.Data
 {
-	class MemoryRepository<T>:SynchronizableRepository<T>, IRepository<T> where T : class, new()
+	class MemoryRepository<T>:IRepository<T> where T : class, new()
 	{
 		private readonly Hashtable idToObjectHashtable = new Hashtable();
 		private readonly Hashtable objectToIdHashtable = new Hashtable();
 		private DateTime lastModified = DateTime.MinValue;
 
-		public override DateTime LastModified
+		public DateTime LastModified
 		{
 			get { return lastModified; }
 			private set
@@ -20,11 +20,11 @@ namespace WeSay.Data
 			}
 		}
 
-		public override bool CanQuery { get { return true; } }
+		public bool CanQuery { get { return true; } }
 
-		public override bool CanPersist { get { return false; } }
+		public bool CanPersist { get { return false; } }
 
-		public override T CreateItem()
+		public T CreateItem()
 		{
 			T t = new T();
 			MemoryRepositoryId id = new MemoryRepositoryId();
@@ -34,15 +34,7 @@ namespace WeSay.Data
 			return t;
 		}
 
-		public void AddItem(T item)
-		{
-			MemoryRepositoryId id = new MemoryRepositoryId();
-			idToObjectHashtable.Add(id, item);
-			objectToIdHashtable.Add(item, id);
-			LastModified = PreciseDateTime.UtcNow;
-		}
-
-		public override void DeleteItem(T item)
+		public void DeleteItem(T item)
 		{
 			if( item == null)
 			{
@@ -57,7 +49,7 @@ namespace WeSay.Data
 			LastModified = PreciseDateTime.UtcNow;
 		}
 
-		public override void DeleteItem(RepositoryId id)
+		public void DeleteItem(RepositoryId id)
 		{
 			if (!idToObjectHashtable.ContainsKey(id))
 			{
@@ -67,7 +59,7 @@ namespace WeSay.Data
 			DeleteItem(item);
 		}
 
-		public override RepositoryId[] GetAllItems()
+		public RepositoryId[] GetAllItems()
 		{
 			int numberOfIds = idToObjectHashtable.Keys.Count;
 			RepositoryId[] ids = new RepositoryId[numberOfIds];
@@ -75,7 +67,7 @@ namespace WeSay.Data
 			return ids;
 		}
 
-		public override void SaveItem(T item)
+		public void SaveItem(T item)
 		{
 			if(item == null)
 			{
@@ -89,7 +81,7 @@ namespace WeSay.Data
 			LastModified = timeOfSave;
 		}
 
-		public override void SaveItems(IEnumerable<T> items)
+		public void SaveItems(IEnumerable<T> items)
 		{
 			if(items == null)
 			{
@@ -101,7 +93,7 @@ namespace WeSay.Data
 			}
 		}
 
-		public override ResultSet<T> GetItemsMatching(Query query)
+		public ResultSet<T> GetItemsMatching(Query query)
 		{
 			List<RecordToken<T>> results = new List<RecordToken<T>>();
 			foreach (T item in objectToIdHashtable.Keys)
@@ -120,12 +112,12 @@ namespace WeSay.Data
 			return new ResultSet<T>(this, results);
 		}
 
-		public override int CountAllItems()
+		public int CountAllItems()
 		{
 			return idToObjectHashtable.Count;
 		}
 
-		public override RepositoryId GetId(T item)
+		public RepositoryId GetId(T item)
 		{
 			if (!objectToIdHashtable.ContainsKey(item))
 			{
@@ -134,7 +126,7 @@ namespace WeSay.Data
 			return (RepositoryId)objectToIdHashtable[item];
 		}
 
-		public override T GetItem(RepositoryId id)
+		public T GetItem(RepositoryId id)
 		{
 			if (!idToObjectHashtable.ContainsKey(id))
 			{
@@ -233,3 +225,18 @@ namespace WeSay.Data
 				{
 					return -1;
 				}
+				return Comparer<int>.Default.Compare(id, other.id);
+			}
+
+			public override int CompareTo(RepositoryId other)
+			{
+				return CompareTo(other as MemoryRepositoryId);
+			}
+
+			public override bool Equals(RepositoryId other)
+			{
+				return Equals(other as MemoryRepositoryId);
+			}
+		}
+	}
+}
