@@ -50,6 +50,11 @@ namespace WeSay.Project
 			throw new ArgumentOutOfRangeException("id");
 		}
 
+		public void DeleteAllItems()
+		{
+			throw new NotImplementedException();
+		}
+
 		public RepositoryId[] GetAllItems()
 		{
 			throw new NotImplementedException();

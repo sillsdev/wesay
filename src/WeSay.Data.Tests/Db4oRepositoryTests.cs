@@ -114,4 +114,35 @@ namespace WeSay.Data.Tests
 			CreateRepository();
 		}
 	}
+
+	[TestFixture]
+	public class Db4oRepositoryDeleteAllItemsTransitionTests : IRepositoryDeleteAllItemsTransitionTests<TestItem>
+	{
+		private string _name;
+
+		[SetUp]
+		public void Setup()
+		{
+			this._name = Path.GetTempFileName();
+			CreateRepository();
+		}
+
+		private void CreateRepository()
+		{
+			RepositoryUnderTest = new Db4oRepository<TestItem>(this._name);
+		}
+
+		[TearDown]
+		public void Teardown()
+		{
+			RepositoryUnderTest.Dispose();
+			File.Delete(_name);
+		}
+
+		protected override void RepopulateRepositoryFromPersistedData()
+		{
+			RepositoryUnderTest.Dispose();
+			CreateRepository();
+		}
+	}
 }

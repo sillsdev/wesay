@@ -11,7 +11,7 @@ namespace WeSay.Data.Tests
         [SetUp]
         public void Setup()
         {
-            RepositoryUnderTest = new SynchronicRepository<TestItem>(new MemoryRepository<TestItem>(), new MemoryRepository<TestItem>(), SynchronicRepositoryTests.CopyTestItem);
+			RepositoryUnderTest = new SynchronicRepository<TestItem>(new MemoryRepository<TestItem>(), new MemoryRepository<TestItem>());
         }
 
         [TearDown]
@@ -28,7 +28,7 @@ namespace WeSay.Data.Tests
         [SetUp]
         protected void Setup()
         {
-            RepositoryUnderTest = new SynchronicRepository<TestItem>(new MemoryRepository<TestItem>(), new MemoryRepository<TestItem>(), SynchronicRepositoryTests.CopyTestItem);
+			RepositoryUnderTest = new SynchronicRepository<TestItem>(new MemoryRepository<TestItem>(), new MemoryRepository<TestItem>());
         }
 
         [TearDown]
@@ -49,7 +49,7 @@ namespace WeSay.Data.Tests
         [SetUp]
         public void Setup()
         {
-            RepositoryUnderTest = new SynchronicRepository<TestItem>(new MemoryRepository<TestItem>(), new MemoryRepository<TestItem>(), SynchronicRepositoryTests.CopyTestItem);
+			RepositoryUnderTest = new SynchronicRepository<TestItem>(new MemoryRepository<TestItem>(), new MemoryRepository<TestItem>());
         }
 
         [TearDown]
@@ -70,7 +70,28 @@ namespace WeSay.Data.Tests
         [SetUp]
         public void Setup()
         {
-            RepositoryUnderTest = new SynchronicRepository<TestItem>(new MemoryRepository<TestItem>(), new MemoryRepository<TestItem>(), SynchronicRepositoryTests.CopyTestItem);
+			RepositoryUnderTest = new SynchronicRepository<TestItem>(new MemoryRepository<TestItem>(), new MemoryRepository<TestItem>());
+		}
+
+		[TearDown]
+		public void Teardown()
+		{
+			RepositoryUnderTest.Dispose();
+		}
+
+		protected override void RepopulateRepositoryFromPersistedData()
+		{
+			//Do nothing.
+		}
+	}
+
+	[TestFixture]
+	public class SynchronicRepositoryDeleteAllItemsTransitionTests : IRepositoryDeleteAllItemsTransitionTests<TestItem>
+	{
+		[SetUp]
+		public void Setup()
+		{
+			RepositoryUnderTest = new SynchronicRepository<TestItem>(new MemoryRepository<TestItem>(), new MemoryRepository<TestItem>());
         }
 
         [TearDown]
@@ -91,16 +112,6 @@ namespace WeSay.Data.Tests
         IRepository<TestItem> _primary;
         IRepository<TestItem> _secondary;
         SynchronicRepository<TestItem> _synchronic;
-
-        public static void CopyTestItem(TestItem destination, TestItem source)
-        {
-            destination.Child = source.Child;
-            destination.Children = source.Children;
-            destination.StoredDateTime = source.StoredDateTime;
-            destination.StoredInt = source.StoredInt;
-            destination.StoredList = source.StoredList;
-            destination.StoredString = source.StoredString;
-        }
 
         [SetUp]
         public void Setup()

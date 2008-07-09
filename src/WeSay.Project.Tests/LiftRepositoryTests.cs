@@ -91,4 +91,27 @@ namespace WeSay.Project.Tests
 			//Do Nothing.
 		}
 	}
+
+	[TestFixture]
+	public class LiftRepositoryDeleteAllItemsTransitionTests : IRepositoryDeleteAllItemsTransitionTests<LexEntry>
+	{
+		private string _persistedFilePath;
+		[SetUp]
+		public void Setup()
+		{
+			this._persistedFilePath = Path.GetTempFileName();
+			RepositoryUnderTest = new LiftRepository(this._persistedFilePath);
+		}
+
+		[TearDown]
+		public void Teardown()
+		{
+			File.Delete(this._persistedFilePath);
+		}
+
+		protected override void RepopulateRepositoryFromPersistedData()
+		{
+			//Do Nothing.
+		}
+	}
 }

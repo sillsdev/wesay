@@ -245,6 +245,11 @@ namespace WeSay.Data.Tests
 				throw new NotImplementedException();
 			}
 
+			public void DeleteAllItems()
+			{
+				throw new NotImplementedException();
+			}
+
 			public RepositoryId[] GetAllItems()
 			{
 				throw new NotImplementedException();

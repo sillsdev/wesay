@@ -153,6 +153,17 @@ namespace WeSay.Data
 			DeleteItem(GetItem(id));
 		}
 
+		public void DeleteAllItems()
+		{
+			IObjectSet objectSet = Database.Query(typeof(T));
+			foreach (object item in objectSet.Ext())
+			{
+				EnsureItemActive((T) item);
+				Database.Delete(item);
+			}
+			Commit();
+		}
+
 		public RepositoryId[] GetAllItems()
 		{
 			IObjectSet objectSet = Database.Query(typeof(T));

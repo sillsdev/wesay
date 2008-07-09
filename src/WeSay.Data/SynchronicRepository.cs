@@ -66,13 +66,16 @@ namespace WeSay.Data
                 slave = _secondary;
             }
 
-            RepositoryId[] ids = slave.GetAllItems();
-            foreach (RepositoryId id in ids)
+			RepositoryId[] ids = master.GetAllItems();
+
+			// avoid doing anything which would change LastModifiedTime if both are empty
+			if (ids.Length == 0 && slave.CountAllItems() == 0)
             {
-                slave.DeleteItem(id);
+				return;
             }
 
-            ids = master.GetAllItems();
+			slave.DeleteAllItems();
+
             foreach (RepositoryId id in ids)
             {
                 T slaveItem = slave.CreateItem();
@@ -84,7 +87,7 @@ namespace WeSay.Data
 
         public DateTime LastModified
         {
-            get { return _primary.LastModified; }
+			get { return new DateTime(Math.Max(_primary.LastModified.Ticks, _secondary.LastModified.Ticks), DateTimeKind.Utc); }
         }
 
         public bool CanQuery
@@ -139,6 +142,12 @@ namespace WeSay.Data
             _primary.DeleteItem(id);
             _primarySecondaryMap.Remove(id);
         }
+
+		public void DeleteAllItems()
+		{
+			_primary.DeleteAllItems();
+			_secondary.DeleteAllItems();
+		}
 
         public RepositoryId[] GetAllItems()
         {

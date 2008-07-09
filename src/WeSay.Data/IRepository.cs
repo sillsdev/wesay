@@ -16,6 +16,7 @@ namespace WeSay.Data
 		T GetItem(RepositoryId id);
 		void DeleteItem(T item);
 		void DeleteItem(RepositoryId id);
+		void DeleteAllItems();
 		RepositoryId[] GetAllItems();
 		void SaveItem(T item);
 		void SaveItems(IEnumerable<T> items);

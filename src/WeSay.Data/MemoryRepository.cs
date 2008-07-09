@@ -59,6 +59,13 @@ namespace WeSay.Data
 			DeleteItem(item);
 		}
 
+		public void DeleteAllItems()
+		{
+			idToObjectHashtable.Clear();
+			objectToIdHashtable.Clear();
+			LastModified = PreciseDateTime.UtcNow;
+		}
+
 		public RepositoryId[] GetAllItems()
 		{
 			int numberOfIds = idToObjectHashtable.Keys.Count;

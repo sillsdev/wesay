@@ -119,6 +119,11 @@ namespace WeSay.LexicalModel
 			_decoratedRepository.DeleteItem(repositoryId);
 		}
 
+		public void DeleteAllItems()
+		{
+			_decoratedRepository.DeleteAllItems();
+		}
+
 		public int GetHomographNumber(LexEntry entry, WritingSystem headwordWritingSystem)
 		{
 			if (entry == null)

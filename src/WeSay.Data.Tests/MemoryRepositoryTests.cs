@@ -82,4 +82,25 @@ namespace WeSay.Data.Tests
 			//Do nothing.
 		}
 	}
+
+	[TestFixture]
+	public class MemoryRepositoryDeleteAllItemsTransitionTests : IRepositoryDeleteAllItemsTransitionTests<TestItem>
+	{
+		[SetUp]
+		public void Setup()
+		{
+			RepositoryUnderTest = new MemoryRepository<TestItem>();
+		}
+
+		[TearDown]
+		public void Teardown()
+		{
+			RepositoryUnderTest.Dispose();
+		}
+
+		protected override void RepopulateRepositoryFromPersistedData()
+		{
+			//Do nothing.
+		}
+	}
 }
