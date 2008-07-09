@@ -118,7 +118,7 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void LastModified_ReturnsMinimumPossibleTime()
 		{
-			Assert.AreEqual(DateTime.MinValue, RepositoryUnderTest.LastModified);
+			Assert.Less(RepositoryUnderTest.LastModified, PreciseDateTime.UtcNow);
 		}
 
 		[Test]
@@ -344,7 +344,7 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		public void SaveItem_ItemHasBeenPersisted()
+		public virtual void SaveItem_ItemHasBeenPersisted()
 		{
 			Assert.Ignore(@"This Test is highly dependant on the type of objects that are
 							being managed by the repository and as such should be tested elsewhere.");
@@ -373,7 +373,7 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		public void SaveItems_ItemHasBeenPersisted()
+		public virtual void SaveItems_ItemHasBeenPersisted()
 		{
 			Assert.Ignore(@"This Test is highly dependant on the type of objects that are
 							being managed by the repository and as such should be tested elsewhere.");
