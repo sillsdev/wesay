@@ -106,15 +106,6 @@ namespace WeSay.App
 					return;
 				}
 
-				if (_project.PathToWeSaySpecificFilesDirectoryInProject.IndexOf("PRETEND") < 0)
-				{
-					RecoverUnsavedDataIfNeeded();
-				}
-				LiftPreparer preparer = new LiftPreparer(_project);
-				if (!preparer.MakeCacheAndLiftReady())
-				{
-					return;
-				}
 				using (
 						_lexEntryRepository =
 						new LexEntryRepository(_project.PathToDb4oLexicalModelDB))
@@ -123,8 +114,16 @@ namespace WeSay.App
 							_dictionary =
 							new DictionaryServiceProvider(_lexEntryRepository, this, _project))
 					{
-						_project.LiftUpdateService = SetupUpdateService(_lexEntryRepository);
-						_project.LiftUpdateService.DoLiftUpdateNow(true);
+						if (_project.PathToWeSaySpecificFilesDirectoryInProject.IndexOf("PRETEND") < 0)
+						{
+							RecoverUnsavedDataIfNeeded();
+						}
+						LiftPreparer preparer = new LiftPreparer(_project, _lexEntryRepository);
+						if (!preparer.MakeCacheAndLiftReady())
+						{
+							return;
+						}
+						_lexEntryRepository.BackendDoLiftUpdateNow(true);
 
 						StartDictionaryServices();
 						_dictionary.LastClientDeregistered +=
@@ -135,7 +134,7 @@ namespace WeSay.App
 								_serviceAppSingletonHelper.OnExitIfInServerMode;
 
 						//do a last backup before exiting
-						_project.LiftUpdateService.DoLiftUpdateNow(true);
+						_lexEntryRepository.BackendDoLiftUpdateNow(true);
 						Logger.WriteEvent("App Exiting Normally.");
 					}
 				}
@@ -155,6 +154,7 @@ namespace WeSay.App
 			Settings.Default.Save();
 		}
 
+		//!!! Move this into LexEntryRepository and maybe lower.
 		private void RecoverUnsavedDataIfNeeded()
 		{
 			if (!File.Exists(_project.PathToDb4oLexicalModelDB))
@@ -164,14 +164,7 @@ namespace WeSay.App
 
 			try
 			{
-				using (
-						LexEntryRepository lexEntryRepository =
-								new LexEntryRepository(_project.PathToDb4oLexicalModelDB))
-				{
-					LiftUpdateService updateServiceForCrashRecovery =
-							new LiftUpdateService(lexEntryRepository);
-					updateServiceForCrashRecovery.RecoverUnsavedChangesOutOfCacheIfNeeded();
-				}
+				_lexEntryRepository.BackendRecoverUnsavedChangesOutOfCacheIfNeeded();
 			}
 			catch (IOException e)
 			{

@@ -11,6 +11,7 @@ using LiftIO.Validation;
 using Palaso.Progress;
 using Palaso.Reporting;
 using Palaso.UI.WindowsForms.Progress;
+using WeSay.LexicalModel;
 using WeSay.Project;
 
 namespace WeSay.App.Migration
@@ -18,17 +19,19 @@ namespace WeSay.App.Migration
 	internal class LiftPreparer
 	{
 		private readonly WeSayWordsProject _project;
+		private LexEntryRepository _repository;
 
-		public LiftPreparer(WeSayWordsProject project)
+		public LiftPreparer(WeSayWordsProject project, LexEntryRepository repository)
 		{
 			_project = project;
+			_repository = repository;
 		}
 
 		public bool MakeCacheAndLiftReady()
 		{
 			//NB: it's very important that any updates are consumed before the cache is rebuilt.
 			//Otherwise, the cache and lift will fall out of sync.
-			if (!LiftUpdateService.ConsumePendingLiftUpdates())
+			if (!_repository.BackendConsumePendingLiftUpdates()) //!!! During migration this would fail CJP
 			{
 				return false;
 			}
@@ -38,20 +41,22 @@ namespace WeSay.App.Migration
 				return false;
 			}
 
-			if (!BringCachesUpToDate())
+			if (!_repository.BackendBringCachesUpToDate())
 			{
 				return false;
 			}
-			if (CacheManager.GetAssumeCacheIsFresh(_project.PathToCache))
-			{
-				//prevent the update service from thinking the LIFT file is really old
-				//compared to the cache, due to the installer messing with the dates.
-				LiftUpdateService.LiftIsFreshNow();
-			}
-			//whether or not we're out of date, remove this indicator file, which is only to get
-			//fresh-from-install launchign without an installer-induced
-			//false dirty cache signal
-			CacheManager.RemoveAssumeCacheIsFreshIndicator();
+
+			// Check this out !!! We still need to fix the 'fresh install' problem. CJP
+			//if (CacheManager.GetAssumeCacheIsFresh(_project.PathToCache))
+			//{
+			//    //prevent the update service from thinking the LIFT file is really old
+			//    //compared to the cache, due to the installer messing with the dates.
+			//    LiftUpdateService.LiftIsFreshNow();
+			//}
+			////whether or not we're out of date, remove this indicator file, which is only to get
+			////fresh-from-install launchign without an installer-induced
+			////false dirty cache signal
+			//CacheManager.RemoveAssumeCacheIsFreshIndicator();
 
 			return true;
 		}
@@ -314,7 +319,7 @@ namespace WeSay.App.Migration
 					}
 					return false;
 				}
-				LiftUpdateService.LiftIsFreshNow();
+				_repository.BackendLiftIsFreshNow();
 			}
 			return true;
 		}

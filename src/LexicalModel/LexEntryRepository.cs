@@ -565,5 +565,30 @@ namespace WeSay.LexicalModel
 								});
 			return new List<RepositoryId>(items);
 		}
+
+		public void BackendDoLiftUpdateNow(bool p)
+		{
+			throw new Exception("The method or operation is not implemented.");
+		}
+
+		public bool BackendConsumePendingLiftUpdates()
+		{
+			throw new Exception("The method or operation is not implemented.");
+		}
+
+		public bool BackendBringCachesUpToDate()
+		{
+			throw new Exception("The method or operation is not implemented.");
+		}
+
+		public void BackendLiftIsFreshNow()
+		{
+			throw new Exception("The method or operation is not implemented.");
+		}
+
+		public void BackendRecoverUnsavedChangesOutOfCacheIfNeeded()
+		{
+			throw new Exception("The method or operation is not implemented.");
+		}
 	}
 }
