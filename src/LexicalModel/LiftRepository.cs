@@ -1,23 +1,26 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
+using LiftIO;
+using LiftIO.Merging;
 using LiftIO.Parsing;
 using LiftIO.Validation;
+using Palaso.Reporting;
 using WeSay.Data;
 using WeSay.Foundation;
-using WeSay.LexicalModel;
 
 namespace WeSay.LexicalModel
 {
-	public class LiftRepository:IRepository<LexEntry>
+	internal class LiftRepository : MemoryRepository<LexEntry>
 	{
-		private class GuidRepositoryId:RepositoryId
+		private class GuidRepositoryId : RepositoryId
 		{
-			private Guid _id;
+			private readonly Guid _id;
 
 			public GuidRepositoryId(Guid id)
 			{
-				this._id = id;
+				_id = id;
 			}
 
 			public override int CompareTo(RepositoryId other)
@@ -27,11 +30,11 @@ namespace WeSay.LexicalModel
 
 			public int CompareTo(GuidRepositoryId other)
 			{
-				if(other == null)
+				if (other == null)
 				{
 					return 1;
 				}
-				return Comparer<Guid>.Default.Compare(this._id, other._id);
+				return Comparer<Guid>.Default.Compare(_id, other._id);
 			}
 
 			public override bool Equals(RepositoryId other)
@@ -41,146 +44,89 @@ namespace WeSay.LexicalModel
 
 			public bool Equals(GuidRepositoryId other)
 			{
-				if(other == null)
+				if (other == null)
 				{
 					return false;
 				}
-				return Equals(this._id, other._id);
+				return Equals(_id, other._id);
 			}
-
 		}
 
 		private readonly string _liftFilePath;
-		private DateTime lastModified;
+		private FileStream _liftFileStreamForLocking;
 		private readonly Dictionary<GuidRepositoryId, LexEntry> _entries;
 
 		public LiftRepository(string filePath)
 		{
-			this._liftFilePath = filePath;
-			this.lastModified = File.GetLastWriteTimeUtc(this._liftFilePath);
+			_liftFilePath = filePath;
+			LockLift();
+			LastModified = File.GetLastWriteTimeUtc(_liftFilePath);
 			_entries = new Dictionary<GuidRepositoryId, LexEntry>();
 			LoadAllLexEntries();
 		}
 
-		public DateTime LastModified
+		public override LexEntry CreateItem()
 		{
-			get { return this.lastModified; }
+			LexEntry item = base.CreateItem();
+			UpdateLiftFile(item);
+			return item;
 		}
 
-		public LexEntry CreateItem()
+		public override int CountAllItems()
 		{
-			//todo write out new LexEntry
-			return new LexEntry();
+			return base.CountAllItems();
 		}
 
-		public int CountAllItems()
+		public override RepositoryId GetId(LexEntry item)
 		{
-			return GetAllItems().Length;
+			return base.GetId(item);
 		}
 
-		public RepositoryId GetId(LexEntry item)
+		public override LexEntry GetItem(RepositoryId id)
 		{
-			return new GuidRepositoryId(item.Guid);
+			return base.GetItem(id);
 		}
 
-		public LexEntry GetItem(RepositoryId id)
+		public override void DeleteItem(LexEntry item)
 		{
-			LoadAllLexEntries();
-			return _entries[(GuidRepositoryId)id];
+			base.DeleteItem(item);
 		}
 
-		public void DeleteItem(LexEntry item)
+		public override void DeleteItem(RepositoryId id)
 		{
-			//todo write out new LexEntry
-			throw new ArgumentOutOfRangeException("item");
+			base.DeleteItem(id);
 		}
 
-		public void DeleteItem(RepositoryId id)
+		public override RepositoryId[] GetAllItems()
 		{
-			DeleteItem(GetItem(id));
+			return base.GetAllItems();
 		}
 
-		public RepositoryId[] GetAllItems()
+		public override void SaveItem(LexEntry item)
 		{
-			LoadAllLexEntries();
-			GuidRepositoryId[] result = new GuidRepositoryId[_entries.Count];
-			_entries.Keys.CopyTo(result, 0);
-			return result;
+			base.SaveItem(item);
 		}
 
-		public void SaveItem(LexEntry item)
-		{
-			//todo write out new LexEntry
-			throw new ArgumentOutOfRangeException("item");
-		}
-
-		public bool CanQuery
+		public override bool CanQuery
 		{
 			get { return false; }
 		}
 
-		public bool CanPersist
+		public override bool CanPersist
 		{
 			get { return true; }
 		}
 
-		public void SaveItems(IEnumerable<LexEntry> items)
+		public override void SaveItems(IEnumerable<LexEntry> items)
 		{
-			if (items == null)
-			{
-				throw new ArgumentNullException("items");
-			}
-
-			UpdateLiftFile(items);
+			base.SaveItems(items);
 		}
 
-		public ResultSet<LexEntry> GetItemsMatching(Query query)
+		public override ResultSet<LexEntry> GetItemsMatching(Query query)
 		{
 			throw new NotSupportedException("Querying is not supported");
 		}
 
-		#region IDisposable Members
-#if DEBUG
-		~LiftRepository()
-		{
-			if (!this._disposed)
-			{
-				throw new ApplicationException("Disposed not explicitly called on LiftRepository.");
-			}
-		}
-#endif
-
-		private bool _disposed = false;
-
-		public void Dispose()
-		{
-			Dispose(true);
-			GC.SuppressFinalize(this);
-		}
-
-		protected virtual void Dispose(bool disposing)
-		{
-			if (!this._disposed)
-			{
-				if (disposing)
-				{
-					// dispose-only, i.e. non-finalizable logic
-
-				}
-
-				// shared (dispose and finalizable) cleanup logic
-				this._disposed = true;
-			}
-		}
-
-		protected void VerifyNotDisposed()
-		{
-			if (this._disposed)
-			{
-				throw new ObjectDisposedException("LiftRepository");
-			}
-		}
-		#endregion
 		private void LoadAllLexEntries()
 		{
 			_entries.Clear();
@@ -188,8 +134,8 @@ namespace WeSay.LexicalModel
 			{
 				merger.EntryCreatedEvent += OnEntryCreated;
 				LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence> parser =
-						new LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence>(
-								merger);
+					new LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence>(
+						merger);
 
 				parser.SetTotalNumberSteps += parser_SetTotalNumberSteps;
 				parser.SetStepsCompleted += parser_SetStepsCompleted;
@@ -212,42 +158,39 @@ namespace WeSay.LexicalModel
 			}
 		}
 
+		public override void Dispose()
+		{
+			UnLockLift();
+			base.Dispose();
+		}
+
 		private void OnEntryCreated(object sender, LiftMerger.EntryCreatedEventArgs e)
 		{
 			_entries.Add(new GuidRepositoryId(e.Entry.Guid),
-							e.Entry);
+						 e.Entry);
 		}
+
 		private void parser_ParsingWarning(object sender,
-										   LiftParser
-												   <WeSayDataObject, LexEntry, LexSense,
-												   LexExampleSentence>.ErrorArgs e)
+										   LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence>.ErrorArgs
+											   e)
 		{
 		}
 
 		private void parser_SetStepsCompleted(object sender,
-											  LiftParser
-													  <WeSayDataObject, LexEntry, LexSense,
-													  LexExampleSentence>.ProgressEventArgs e)
+											  LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence>.
+												  ProgressEventArgs e)
 		{
 		}
 
 		private void parser_SetTotalNumberSteps(object sender,
-												LiftParser
-														<WeSayDataObject, LexEntry, LexSense,
-														LexExampleSentence>.StepsArgs e)
+												LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence>.
+													StepsArgs e)
 		{
 		}
 
-		//private const string s_updatePointFileName = "updatePoint";
-		private const int _checkFrequency = 10;
-		private int _commitCount;
-		private readonly LexEntryRepository _lexEntryRepository;
-		private DateTime _timeOfLastQueryForNewRecords;
-		//private bool _didFindDataInCacheNeedingRecovery = false;
+		//private DateTime _timeOfLastQueryForNewRecords;
 
-		private event EventHandler Updating;
-
-		private static string LiftDirectory
+		private string LiftDirectory
 		{
 			get { return Path.GetDirectoryName(_liftFilePath); }
 		}
@@ -275,15 +218,15 @@ namespace WeSay.LexicalModel
 
 		public void OnDataDeleted(object sender, EventArgs e)
 		{
-			LexEntry entry = (LexEntry)sender;
+			LexEntry entry = (LexEntry) sender;
 			if (entry == null)
 			{
 				return;
 			}
 
 			LiftExporter exporter =
-					new LiftExporter( /*WeSayWordsProject.Project.GetFieldToOptionListNameDictionary(), */
-							MakeIncrementFileName(DateTime.UtcNow));
+				new LiftExporter( /*WeSayWordsProject.Project.GetFieldToOptionListNameDictionary(), */
+					MakeIncrementFileName(DateTime.UtcNow));
 			exporter.AddDeletedEntry(entry);
 			exporter.End();
 		}
@@ -294,76 +237,60 @@ namespace WeSay.LexicalModel
 			MergeIncrementFiles();
 		}
 
+		private void UpdateLiftFile(LexEntry entryToUpdate)
+		{
+			CreateIncrementFile(entryToUpdate);
+			MergeIncrementFiles();
+		}
+
+		private void CreateIncrementFile(LexEntry entryToUpdate)
+		{
+			LiftExporter exporter = new LiftExporter(MakeIncrementFileName(PreciseDateTime.UtcNow));
+			//!!!exporter.Start(); //!!! Would be nice to have this CJP 2008-07-09
+			exporter.Add(entryToUpdate);
+			exporter.End();
+
+			RecordUpdateTime(PreciseDateTime.UtcNow); //Why do we need to call this??? TA 7-4-2008
+		}
+
 		private void CreateIncrementFile(IEnumerable<LexEntry> entriesToUpdate)
 		{
-			//What is this for? TA 7-4-2008
-			//if (Updating != null)
-			//{
-			//    Updating.Invoke(this, null);
-			////}
-
-			//Can't get the count of an IEnumerable. What to do? TA -7-4-2008
-			//    LameProgressDialog dlg = null;
-			//    if (repositoryIds.Count > 50)
-			//    {
-			//        //TODO: if we think this will actually ever be called, clean this up with a real, delayed-visibility dialog
-			//        dlg =
-			//                new LameProgressDialog(
-			//                        string.Format("Doing incremental update of {0} records...",
-			//                                      repositoryIds.Count));
-			//        dlg.Show();
-			//        Application.DoEvents();
-			//    }
-
-				try
+				LiftExporter exporter = null;
+				foreach (LexEntry entry in entriesToUpdate)
 				{
-					bool startOfFileWritten = false;
-					foreach (LexEntry entry in entriesToUpdate)
+					if (exporter == null)
 					{
-						if (!startOfFileWritten)
-						{
-							LiftExporter exporter =
-								new LiftExporter( /*WeSayWordsProject.Project.GetFieldToOptionListNameDictionary(),*/
-												  MakeIncrementFileName(_timeOfLastQueryForNewRecords));
-							startOfFileWritten = true;
-						}
-						exporter.Add(entry);
+						exporter =
+							new LiftExporter(MakeIncrementFileName(PreciseDateTime.UtcNow));
+						//!!!exporter.Start(); //!!! Would be nice to have this CJP 2008-07-09
 					}
-					if (startOfFileWritten)
-					{
-						exporter.End();
-					}
-
-					RecordUpdateTime(_timeOfLastQueryForNewRecords);  //Why do we need to call this? TA 7-4-2008
+					exporter.Add(entry);
 				}
-				finally
+				if (exporter != null)
 				{
-				//See comment above. TA 7-4-2008
-				//    if (dlg != null)
-				//    {
-				//        dlg.Close();
-				//        dlg.Dispose();
-				//    }
+					exporter.End();
 				}
+
+				RecordUpdateTime(PreciseDateTime.UtcNow); //Why do we need to call this??? TA 7-4-2008
 		}
 
 		/// <summary>
 		///
 		/// </summary>
 		/// <returns>false if it failed (and it would have already reported the error)</returns>
-		public static bool MergeIncrementFiles()
+		public bool MergeIncrementFiles()
 		{
 			//merge the increment files
 
 			if (
-					SynchronicMerger.GetPendingUpdateFiles(WeSayWordsProject.Project.PathToLiftFile)
-							.Length > 0)
+				SynchronicMerger.GetPendingUpdateFiles(_liftFilePath)
+					.Length > 0)
 			{
-				Logger.WriteEvent("Running Synchronic Merger");
+				//Logger.WriteEvent("Running Synchronic Merger"); //needed??? TA 2008-07-09
 				try
 				{
 					SynchronicMerger merger = new SynchronicMerger();
-					WeSayWordsProject.Project.ReleaseLockOnLift();
+					UnLockLift();
 					merger.MergeUpdatesIntoFile(_liftFilePath);
 				}
 				catch (BadUpdateFileException error)
@@ -372,15 +299,15 @@ namespace WeSay.LexicalModel
 					if (contents.Trim().Length == 0)
 					{
 						ErrorReport.ReportNonFatalMessage(
-								"It looks as though WeSay recently crashed while attempting to save.  It will try again to preserve your work, but you will want to check to make sure nothing was lost.");
+							"It looks as though WeSay recently crashed while attempting to save.  It will try again to preserve your work, but you will want to check to make sure nothing was lost.");
 						File.Delete(error.PathToNewFile);
 					}
 					else
 					{
 						File.Move(error.PathToNewFile, error.PathToNewFile + ".bad");
 						ErrorReport.ReportNonFatalMessage(
-								"WeSay was unable to save some work you did in the previous session.  The work might be recoverable from the file {0}. The next screen will allow you to send a report of this to the developers.",
-								error.PathToNewFile + ".bad");
+							"WeSay was unable to save some work you did in the previous session.  The work might be recoverable from the file {0}. The next screen will allow you to send a report of this to the developers.",
+							error.PathToNewFile + ".bad");
 						ErrorNotificationDialog.ReportException(error, null, false);
 					}
 					return false;
@@ -388,17 +315,17 @@ namespace WeSay.LexicalModel
 				catch (Exception e)
 				{
 					throw new ApplicationException(
-							"Could not finish updating LIFT dictionary file.", e);
+						"Could not finish updating LIFT dictionary file.", e);
 				}
 				finally
 				{
-					WeSayWordsProject.Project.LockLift();
+					LockLift();
 				}
 			}
 			return true;
 		}
 
-		private static string MakeIncrementFileName(DateTime time)
+		private string MakeIncrementFileName(DateTime time)
 		{
 			while (true)
 			{
@@ -413,16 +340,17 @@ namespace WeSay.LexicalModel
 			}
 		}
 
-		/// <summary>
-		/// wierd name!
-		/// </summary>
-		public static void LiftIsFreshNow()
-		{
-			RecordUpdateTime(DateTime.UtcNow);
-		}
+		//I don't think this is needed anymore TA 7-9-2008
+		///// <summary>
+		///// wierd name!
+		///// </summary>
+		//public static void LiftIsFreshNow()
+		//{
+		//    RecordUpdateTime(DateTime.UtcNow);
+		//}
 
-		//What is this method for? TA 7-4-2008
-		protected static void RecordUpdateTime(DateTime time)
+		//What is this method for??? TA 7-4-2008
+		private void RecordUpdateTime(DateTime time)
 		{
 			//// the resolution of the file modified time is a whole second on linux
 			//// so we need to set this to the ceiling of the time in seconds and then
@@ -434,73 +362,57 @@ namespace WeSay.LexicalModel
 			//{
 			//    Thread.Sleep(timeout);
 			//}
-			bool wasLocked = WeSayWordsProject.Project.LiftIsLocked;
+			bool wasLocked = LiftIsLocked;
 			if (wasLocked)
 			{
-				WeSayWordsProject.Project.ReleaseLockOnLift();
+				UnLockLift();
 			}
 			File.SetLastWriteTimeUtc(_liftFilePath, time);
 			//Debug.Assert(time == GetLastUpdateTime());
 			if (wasLocked)
 			{
-				WeSayWordsProject.Project.LockLift();
+				LockLift();
 			}
 		}
-		private static DateTime GetLastUpdateTime()
-		{
-			Debug.Assert(Directory.Exists(LiftDirectory));
-			return File.GetLastWriteTimeUtc(WeSayWordsProject.Project.PathToLiftFile);
-		}
 
-		public IList<RepositoryId> GetRecordsNeedingUpdateInLift()
-		{
-			DateTime last = GetLastUpdateTime();
-			_timeOfLastQueryForNewRecords = DateTime.UtcNow;
-			return _lexEntryRepository.GetItemsModifiedSince(last);
-		}
+		//I don't think this is needed anymore!!! TA 7-9-2008
+		//private static DateTime GetLastUpdateTime()
+		//{
+		//    Debug.Assert(Directory.Exists(LiftDirectory));
+		//    return File.GetLastWriteTimeUtc(_liftFilePath);
+		//}
 
-		/// <summary>
-		/// Used to try again to get data out of the cache in case it crashed last time
-		/// We can be successful at saving on startup if the crash was somehow related to the UI (as in WS-554)
+
+		//I don't think this is needed anymore TA 7-9-2008
+		//public IList<RepositoryId> GetRecordsNeedingUpdateInLift()
+		//{
+		//    DateTime last = GetLastUpdateTime();
+		//    _timeOfLastQueryForNewRecords = DateTime.UtcNow;
+		//    return _lexEntryRepository.GetItemsModifiedSince(last);
+		//}
+
+		/// <remark>
+		/// The protection provided by this simple approach is obviously limited;
+		/// it will keep the lift file safe normally... but could lead to non-data-losing crashes
+		/// if some automated process was sitting out there, just waiting to open as soon as we realease
 		/// </summary>
-		public void RecoverUnsavedChangesOutOfCacheIfNeeded()
+		public void UnLockLift()
 		{
-			try
-			{
-				if (CacheManager.GetAssumeCacheIsFresh(WeSayWordsProject.Project.PathToCache))
-				{
-					return;
-					// setting permissions in the installer apparently was enough to mess this next line up on the sample data
-				}
+			Debug.Assert(_liftFileStreamForLocking != null);
+			_liftFileStreamForLocking.Close();
+			_liftFileStreamForLocking.Dispose();
+			_liftFileStreamForLocking = null;
+		}
 
-				IList<RepositoryId> records = GetRecordsNeedingUpdateInLift();
-				if (records.Count == 0)
-				{
-					return;
-				}
+		public bool LiftIsLocked
+		{
+			get { return _liftFileStreamForLocking != null; }
+		}
 
-				try
-				{
-					ErrorReport.ReportNonFatalMessage(
-							"It appears that WeSay did not exit normally last time.  WeSay will now attempt to recover the {0} records which were not saved.",
-							records.Count);
-					DoLiftUpdateNow(false);
-					//                    _didFindDataInCacheNeedingRecovery = true;
-					ErrorReport.ReportNonFatalMessage("Your work was successfully recovered.");
-				}
-				catch (Exception)
-				{
-					ErrorReport.ReportNonFatalMessage(
-							"Sorry, WeSay was unable to recover some of your work.");
-					WeSayWordsProject.Project.InvalidateCacheSilently();
-				}
-			}
-			catch (Exception)
-			{
-				ErrorReport.ReportNonFatalMessage(
-						"WeSay had a problem reading the cache.  It will now be rebuilt");
-				WeSayWordsProject.Project.InvalidateCacheSilently();
-			}
+		public void LockLift()
+		{
+			Debug.Assert(_liftFileStreamForLocking == null);
+			_liftFileStreamForLocking = File.OpenRead(_liftFilePath);
 		}
 	}
 }
