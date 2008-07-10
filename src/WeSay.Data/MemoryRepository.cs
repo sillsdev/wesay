@@ -6,8 +6,8 @@ namespace WeSay.Data
 {
 	internal class MemoryRepository<T>:IRepository<T> where T : class, new()
 	{
-		private readonly Hashtable idToObjectHashtable = new Hashtable();
-		private readonly Hashtable objectToIdHashtable = new Hashtable();
+		protected readonly Dictionary<RepositoryId, T> idToObjectHashtable = new Dictionary<RepositoryId, T> ();
+		protected readonly Dictionary<T, RepositoryId> objectToIdHashtable = new Dictionary<T, RepositoryId>();
 		private DateTime lastModified = DateTime.MinValue;
 
 		public DateTime LastModified
