@@ -54,57 +54,18 @@ namespace WeSay.LexicalModel
 
 		private readonly string _liftFilePath;
 		private FileStream _liftFileStreamForLocking;
-		private readonly Dictionary<GuidRepositoryId, LexEntry> _entries;
 
 		public LiftRepository(string filePath)
 		{
 			_liftFilePath = filePath;
+			if(!File.Exists(filePath))
+			{
+				LiftExporter exporter = new LiftExporter(filePath);
+				exporter.End();
+			}
 			LockLift();
 			LastModified = File.GetLastWriteTimeUtc(_liftFilePath);
-			_entries = new Dictionary<GuidRepositoryId, LexEntry>();
 			LoadAllLexEntries();
-		}
-
-		public override LexEntry CreateItem()
-		{
-			LexEntry item = base.CreateItem();
-			UpdateLiftFile(item);
-			return item;
-		}
-
-		public override int CountAllItems()
-		{
-			return base.CountAllItems();
-		}
-
-		public override RepositoryId GetId(LexEntry item)
-		{
-			return base.GetId(item);
-		}
-
-		public override LexEntry GetItem(RepositoryId id)
-		{
-			return base.GetItem(id);
-		}
-
-		public override void DeleteItem(LexEntry item)
-		{
-			base.DeleteItem(item);
-		}
-
-		public override void DeleteItem(RepositoryId id)
-		{
-			base.DeleteItem(id);
-		}
-
-		public override RepositoryId[] GetAllItems()
-		{
-			return base.GetAllItems();
-		}
-
-		public override void SaveItem(LexEntry item)
-		{
-			base.SaveItem(item);
 		}
 
 		public override bool CanQuery
@@ -117,11 +78,6 @@ namespace WeSay.LexicalModel
 			get { return true; }
 		}
 
-		public override void SaveItems(IEnumerable<LexEntry> items)
-		{
-			base.SaveItems(items);
-		}
-
 		public override ResultSet<LexEntry> GetItemsMatching(Query query)
 		{
 			throw new NotSupportedException("Querying is not supported");
@@ -129,7 +85,8 @@ namespace WeSay.LexicalModel
 
 		private void LoadAllLexEntries()
 		{
-			_entries.Clear();
+			objectToIdHashtable.Clear();
+			idToObjectHashtable.Clear();
 			using (LiftMerger merger = new LiftMerger())
 			{
 				merger.EntryCreatedEvent += OnEntryCreated;
@@ -166,8 +123,9 @@ namespace WeSay.LexicalModel
 
 		private void OnEntryCreated(object sender, LiftMerger.EntryCreatedEventArgs e)
 		{
-			_entries.Add(new GuidRepositoryId(e.Entry.Guid),
+			idToObjectHashtable.Add(new GuidRepositoryId(e.Entry.Guid),
 						 e.Entry);
+			objectToIdHashtable.Add(e.Entry, new GuidRepositoryId(e.Entry.Guid));
 		}
 
 		private void parser_ParsingWarning(object sender,
