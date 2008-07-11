@@ -110,9 +110,9 @@ namespace WeSay.LexicalModel
 			{
 				CreationTime = new DateTime(_creationTime.Ticks, DateTimeKind.Utc);
 			}
-			if (_modificationTime.Kind != DateTimeKind.Utc)
+			if (ModificationTime.Kind != DateTimeKind.Utc)
 			{
-				ModificationTime = new DateTime(_modificationTime.Ticks, DateTimeKind.Utc);
+				ModificationTime = new DateTime(ModificationTime.Ticks, DateTimeKind.Utc);
 			}
 
 			Debug.Assert(CreationTime.Kind == DateTimeKind.Utc);
@@ -173,7 +173,9 @@ namespace WeSay.LexicalModel
 			set
 			{
 				Debug.Assert(value.Kind == DateTimeKind.Utc);
-				_creationTime = value;
+				//converting time to LiftFormatResolution
+				_creationTime = new DateTime(value.Year, value.Month, value.Day, value.Hour, value.Minute,
+													 value.Second, value.Kind);
 			}
 		}
 
@@ -195,7 +197,9 @@ namespace WeSay.LexicalModel
 				if (!ModifiedTimeIsLocked)
 				{
 					Debug.Assert(value.Kind == DateTimeKind.Utc);
-					_modificationTime = value;
+					//converting time to LiftFormatResolution
+					_modificationTime = new DateTime(value.Year, value.Month, value.Day, value.Hour, value.Minute,
+													 value.Second, value.Kind);
 				}
 			}
 		}
