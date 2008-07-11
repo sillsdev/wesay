@@ -195,10 +195,22 @@ namespace WeSay.Data.Tests
 			set { _repositoryUnderTest = value; }
 		}
 
+		protected T Item
+		{
+			get { return item; }
+			set { item = value; }
+		}
+
+		protected RepositoryId Id
+		{
+			get { return id; }
+			set { id = value; }
+		}
+
 		public void SetState()
 		{
-			item = RepositoryUnderTest.CreateItem();
-			id = RepositoryUnderTest.GetId(item);
+			Item = RepositoryUnderTest.CreateItem();
+			Id = RepositoryUnderTest.GetId(Item);
 		}
 
 		//This method is used to test whether data has been persisted.
@@ -210,7 +222,7 @@ namespace WeSay.Data.Tests
 		public void CreateItem_ReturnsUniqueItem()
 		{
 			SetState();
-			Assert.AreNotEqual(item, RepositoryUnderTest.CreateItem());
+			Assert.AreNotEqual(Item, RepositoryUnderTest.CreateItem());
 		}
 
 		[Test]
@@ -224,7 +236,7 @@ namespace WeSay.Data.Tests
 		public void GetAllItems_ReturnsIdItem()
 		{
 			SetState();
-			Assert.AreEqual(RepositoryUnderTest.GetId(item), RepositoryUnderTest.GetAllItems()[0]);
+			Assert.AreEqual(RepositoryUnderTest.GetId(Item), RepositoryUnderTest.GetAllItems()[0]);
 		}
 
 		[Test]
@@ -238,28 +250,28 @@ namespace WeSay.Data.Tests
 		public void GetId_CalledTwiceWithSameItem_ReturnsSameId()
 		{
 			SetState();
-			Assert.AreEqual(RepositoryUnderTest.GetId(item), RepositoryUnderTest.GetId(item));
+			Assert.AreEqual(RepositoryUnderTest.GetId(Item), RepositoryUnderTest.GetId(Item));
 		}
 
 		[Test]
 		public void GetId_Item_ReturnsIdOfItem()
 		{
 			SetState();
-			Assert.AreEqual(id, RepositoryUnderTest.GetId(item));
+			Assert.AreEqual(Id, RepositoryUnderTest.GetId(Item));
 		}
 
 		[Test]
 		public void GetItem_Id_ReturnsItemWithId()
 		{
 			SetState();
-			Assert.AreSame(item, RepositoryUnderTest.GetItem(id));
+			Assert.AreSame(Item, RepositoryUnderTest.GetItem(Id));
 		}
 
 		[Test]
 		public void GetItem_CalledTwiceWithSameId_ReturnsSameItem()
 		{
 			SetState();
-			Assert.AreSame(RepositoryUnderTest.GetItem(id), RepositoryUnderTest.GetItem(id));
+			Assert.AreSame(RepositoryUnderTest.GetItem(Id), RepositoryUnderTest.GetItem(Id));
 		}
 
 		[Test]
@@ -271,8 +283,8 @@ namespace WeSay.Data.Tests
 			{
 				ResultSet<T> resultSet = RepositoryUnderTest.GetItemsMatching(queryWithoutShow);
 				Assert.AreEqual(1, resultSet.Count);
-				Assert.AreEqual(item, resultSet[0].RealObject);
-				Assert.AreEqual(id, resultSet[0].Id);
+				Assert.AreEqual(Item, resultSet[0].RealObject);
+				Assert.AreEqual(Id, resultSet[0].Id);
 			}
 			else
 			{
@@ -316,7 +328,7 @@ namespace WeSay.Data.Tests
 		{
 			SetState();
 			DateTime modifiedTimePreTestedStateSwitch = RepositoryUnderTest.LastModified;
-			RepositoryUnderTest.SaveItem(item);
+			RepositoryUnderTest.SaveItem(Item);
 			Assert.Greater(RepositoryUnderTest.LastModified, modifiedTimePreTestedStateSwitch);
 		}
 
@@ -324,7 +336,7 @@ namespace WeSay.Data.Tests
 		public void SaveItem_LastModifiedIsSetInUTC()
 		{
 			SetState();
-			RepositoryUnderTest.SaveItem(item);
+			RepositoryUnderTest.SaveItem(Item);
 			Assert.AreEqual(DateTimeKind.Utc, RepositoryUnderTest.LastModified.Kind);
 		}
 
@@ -338,10 +350,7 @@ namespace WeSay.Data.Tests
 			}
 			else
 			{
-				CreateNewRepositoryFromPersistedData();
-				T itemFromPersistedData = RepositoryUnderTest.GetItem(id);
-
-				Assert.AreEqual(item, itemFromPersistedData);
+				Assert.Fail("This test is dependant on the Type of item you are storing in your repository. As such you must override it.");
 			}
 		}
 
@@ -350,7 +359,7 @@ namespace WeSay.Data.Tests
 		{
 			SetState();
 			List<T> itemsToSave = new List<T>();
-			itemsToSave.Add(item);
+			itemsToSave.Add(Item);
 			DateTime modifiedTimePreTestedStateSwitch = RepositoryUnderTest.LastModified;
 			RepositoryUnderTest.SaveItems(itemsToSave);
 			Assert.Greater(RepositoryUnderTest.LastModified, modifiedTimePreTestedStateSwitch);
@@ -361,7 +370,7 @@ namespace WeSay.Data.Tests
 		{
 			SetState();
 			List<T> itemsToSave = new List<T>();
-			itemsToSave.Add(item);
+			itemsToSave.Add(Item);
 			Thread.Sleep(50);
 			RepositoryUnderTest.SaveItems(itemsToSave);
 			Assert.AreEqual(DateTimeKind.Utc, RepositoryUnderTest.LastModified.Kind);
@@ -377,9 +386,7 @@ namespace WeSay.Data.Tests
 			}
 			else
 			{
-				CreateNewRepositoryFromPersistedData();
-				T itemFromPersistedData = RepositoryUnderTest.GetItem(id);
-				Assert.AreEqual(item, itemFromPersistedData);
+				Assert.Fail("This test is dependant on the Type of item you are storing in your repository. As such you must override it.");
 			}
 		}
 	}
@@ -403,11 +410,23 @@ namespace WeSay.Data.Tests
 			set { _repositoryUnderTest = value; }
 		}
 
+		protected T Item
+		{
+			get { return item; }
+			set { item = value; }
+		}
+
+		protected RepositoryId Id
+		{
+			get { return id; }
+			set { id = value; }
+		}
+
 		public void SetState()
 		{
 			RepositoryId[] idsFrompersistedData = RepositoryUnderTest.GetAllItems();
-			id = idsFrompersistedData[0];
-			item = RepositoryUnderTest.GetItem(id);
+			Id = idsFrompersistedData[0];
+			Item = RepositoryUnderTest.GetItem(Id);
 		}
 
 		//This method is used to test whether data has been persisted.
@@ -419,7 +438,7 @@ namespace WeSay.Data.Tests
 		public void CreateItem_ReturnsUniqueItem()
 		{
 			SetState();
-			Assert.AreNotEqual(item, RepositoryUnderTest.CreateItem());
+			Assert.AreNotEqual(Item, RepositoryUnderTest.CreateItem());
 		}
 
 		[Test]
@@ -433,7 +452,7 @@ namespace WeSay.Data.Tests
 		public void GetAllItems_ReturnsIdItem()
 		{
 			SetState();
-			Assert.AreEqual(RepositoryUnderTest.GetId(item), RepositoryUnderTest.GetAllItems()[0]);
+			Assert.AreEqual(RepositoryUnderTest.GetId(Item), RepositoryUnderTest.GetAllItems()[0]);
 		}
 
 		[Test]
@@ -447,28 +466,28 @@ namespace WeSay.Data.Tests
 		public void GetId_CalledTwiceWithSameItem_ReturnsSameId()
 		{
 			SetState();
-			Assert.AreEqual(RepositoryUnderTest.GetId(item), RepositoryUnderTest.GetId(item));
+			Assert.AreEqual(RepositoryUnderTest.GetId(Item), RepositoryUnderTest.GetId(Item));
 		}
 
 		[Test]
 		public void GetId_Item_ReturnsIdOfItem()
 		{
 			SetState();
-			Assert.AreEqual(id, RepositoryUnderTest.GetId(item));
+			Assert.AreEqual(Id, RepositoryUnderTest.GetId(Item));
 		}
 
 		[Test]
 		public void GetItem_Id_ReturnsItemWithId()
 		{
 			SetState();
-			Assert.AreSame(item, RepositoryUnderTest.GetItem(id));
+			Assert.AreSame(Item, RepositoryUnderTest.GetItem(Id));
 		}
 
 		[Test]
 		public void GetItem_CalledTwiceWithSameId_ReturnsSameItem()
 		{
 			SetState();
-			Assert.AreSame(RepositoryUnderTest.GetItem(id), RepositoryUnderTest.GetItem(id));
+			Assert.AreSame(RepositoryUnderTest.GetItem(Id), RepositoryUnderTest.GetItem(Id));
 		}
 
 		[Test]
@@ -480,8 +499,8 @@ namespace WeSay.Data.Tests
 			{
 				ResultSet<T> resultSet = RepositoryUnderTest.GetItemsMatching(queryWithoutShow);
 				Assert.AreEqual(1, resultSet.Count);
-				Assert.AreEqual(item, resultSet[0].RealObject);
-				Assert.AreEqual(id, resultSet[0].Id);
+				Assert.AreEqual(Item, resultSet[0].RealObject);
+				Assert.AreEqual(Id, resultSet[0].Id);
 			}
 			else
 			{
@@ -529,7 +548,7 @@ namespace WeSay.Data.Tests
 		{
 			SetState();
 			DateTime modifiedTimePreTestedStateSwitch = RepositoryUnderTest.LastModified;
-			RepositoryUnderTest.SaveItem(item);
+			RepositoryUnderTest.SaveItem(Item);
 			Assert.Greater(RepositoryUnderTest.LastModified, modifiedTimePreTestedStateSwitch);
 		}
 
@@ -537,12 +556,12 @@ namespace WeSay.Data.Tests
 		public void SaveItem_LastModifiedIsSetInUTC()
 		{
 			SetState();
-			RepositoryUnderTest.SaveItem(item);
+			RepositoryUnderTest.SaveItem(Item);
 			Assert.AreEqual(DateTimeKind.Utc, RepositoryUnderTest.LastModified.Kind);
 		}
 
 		[Test]
-		public void SaveItem_ItemHasBeenPersisted()
+		public virtual void SaveItem_ItemHasBeenPersisted()
 		{
 			SetState();
 			if (!RepositoryUnderTest.CanPersist)
@@ -551,9 +570,7 @@ namespace WeSay.Data.Tests
 			}
 			else
 			{
-				CreateNewRepositoryFromPersistedData();
-				T itemFromPersistedData = RepositoryUnderTest.GetItem(id);
-				Assert.AreEqual(item, itemFromPersistedData);
+				Assert.Fail("This test is dependant on the Type of item you are storing in your repository. As such you must override it.");
 			}
 		}
 
@@ -562,7 +579,7 @@ namespace WeSay.Data.Tests
 		{
 			SetState();
 			List<T> itemsToSave = new List<T>();
-			itemsToSave.Add(item);
+			itemsToSave.Add(Item);
 			DateTime modifiedTimePreTestedStateSwitch = RepositoryUnderTest.LastModified;
 			RepositoryUnderTest.SaveItems(itemsToSave);
 			Assert.Greater(RepositoryUnderTest.LastModified, modifiedTimePreTestedStateSwitch);
@@ -573,14 +590,14 @@ namespace WeSay.Data.Tests
 		{
 			SetState();
 			List<T> itemsToSave = new List<T>();
-			itemsToSave.Add(item);
+			itemsToSave.Add(Item);
 			Thread.Sleep(50);
 			RepositoryUnderTest.SaveItems(itemsToSave);
 			Assert.AreEqual(DateTimeKind.Utc, RepositoryUnderTest.LastModified.Kind);
 		}
 
 		[Test]
-		public void SaveItems_ItemHasBeenPersisted()
+		public virtual void SaveItems_ItemHasBeenPersisted()
 		{
 			SetState();
 			if (!RepositoryUnderTest.CanPersist)
@@ -589,9 +606,7 @@ namespace WeSay.Data.Tests
 			}
 			else
 			{
-				CreateNewRepositoryFromPersistedData();
-				T itemFromPersistedData = RepositoryUnderTest.GetItem(id);
-				Assert.AreEqual(item, itemFromPersistedData);
+				Assert.Fail("This test is dependant on the Type of item you are storing in your repository. As such you must override it.");
 			}
 		}
 	}

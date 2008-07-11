@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using NUnit.Framework;
 using WeSay.Data.Tests;
@@ -84,6 +85,26 @@ namespace WeSay.LexicalModel.Tests
 			Assert.AreEqual(persistedFileTime, RepositoryUnderTest.LastModified);
 		}
 
+		public override void SaveItem_ItemHasBeenPersisted()
+		{
+			SetState();
+			string contentsOfPersistedFile = File.ReadAllText(_persistedFilePath);
+			Item.ModificationTime = DateTime.UtcNow;
+			RepositoryUnderTest.SaveItem(Item);
+			Assert.AreNotEqual(contentsOfPersistedFile, File.ReadAllText(_persistedFilePath));
+		}
+
+		public override void SaveItems_ItemHasBeenPersisted()
+		{
+			SetState();
+			string contentsOfPersistedFile = File.ReadAllText(_persistedFilePath);
+			Item.ModificationTime = DateTime.UtcNow;
+			List<LexEntry> entryToBeSaved = new List<LexEntry>();
+			entryToBeSaved.Add(Item);
+			RepositoryUnderTest.SaveItems(entryToBeSaved);
+			Assert.AreNotEqual(contentsOfPersistedFile, File.ReadAllText(_persistedFilePath));
+		}
+
 		protected override void CreateNewRepositoryFromPersistedData()
 		{
 			RepositoryUnderTest.Dispose();
@@ -108,6 +129,34 @@ namespace WeSay.LexicalModel.Tests
 		{
 			RepositoryUnderTest.Dispose();
 			File.Delete(this._persistedFilePath);
+		}
+
+		public override void SaveItem_ItemHasBeenPersisted()
+		{
+			SetState();
+			RepositoryUnderTest.SaveItem(Item);
+			string contentsOfPersistedFile = File.ReadAllText(_persistedFilePath);
+			Assert.IsNotEmpty(contentsOfPersistedFile);
+			CreateNewRepositoryFromPersistedData();
+			LexEntry newLexEntry = RepositoryUnderTest.GetItem(Id);
+			RepositoryUnderTest.SaveItem(newLexEntry);
+			Assert.AreEqual(contentsOfPersistedFile, File.ReadAllText(_persistedFilePath));
+		}
+
+		public override void SaveItems_ItemHasBeenPersisted()
+		{
+			SetState();
+			List<LexEntry> itemsToBeSaved = new List<LexEntry>();
+			itemsToBeSaved.Add(Item);
+			RepositoryUnderTest.SaveItems(itemsToBeSaved);
+			string contentsOfPersistedFile = File.ReadAllText(_persistedFilePath);
+			Assert.IsNotEmpty(contentsOfPersistedFile);
+			CreateNewRepositoryFromPersistedData();
+			LexEntry newLexEntry = RepositoryUnderTest.GetItem(Id);
+			List<LexEntry> newItemsToBeSaved = new List<LexEntry>();
+			newItemsToBeSaved.Add(Item);
+			RepositoryUnderTest.SaveItem(newLexEntry);
+			Assert.AreEqual(contentsOfPersistedFile, File.ReadAllText(_persistedFilePath));
 		}
 
 		protected override void CreateNewRepositoryFromPersistedData()
