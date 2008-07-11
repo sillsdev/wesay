@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using NUnit.Framework;
 using WeSay.Data;
@@ -47,6 +48,7 @@ namespace WeSay.LexicalModel.Tests
 		public void Setup()
 		{
 			this._persistedFilePath = Path.GetRandomFileName();
+			_persistedFilePath = Path.GetFullPath(_persistedFilePath);
 			this.RepositoryUnderTest = new LiftRepository(this._persistedFilePath);
 		}
 
@@ -79,7 +81,8 @@ namespace WeSay.LexicalModel.Tests
 		[Test]
 		public override void LastModified_IsSetToPersistedDatasLastChangedTime()
 		{
-			Assert.Fail();
+			DateTime persistedFileTime = File.GetLastWriteTimeUtc(_persistedFilePath);
+			Assert.AreEqual(persistedFileTime, RepositoryUnderTest.LastModified);
 		}
 
 		protected override void RepopulateRepositoryFromPersistedData()
@@ -97,6 +100,7 @@ namespace WeSay.LexicalModel.Tests
 		public void Setup()
 		{
 			this._persistedFilePath = Path.GetRandomFileName();
+			_persistedFilePath = Path.GetFullPath(_persistedFilePath);
 			this.RepositoryUnderTest = new LiftRepository(this._persistedFilePath);
 		}
 
@@ -112,16 +116,6 @@ namespace WeSay.LexicalModel.Tests
 			RepositoryUnderTest.Dispose();
 			RepositoryUnderTest = new LiftRepository(_persistedFilePath);
 		}
-
-		//public override void SaveItem_ItemHasBeenPersisted()
-		//{
-		//    Assert.Fail();
-		//}
-
-		//public override void SaveItems_ItemHasBeenPersisted()
-		//{
-		//    Assert.Fail();
-		//}
 	}
 
 	[TestFixture]
@@ -132,6 +126,7 @@ namespace WeSay.LexicalModel.Tests
 		public void Setup()
 		{
 			this._persistedFilePath = Path.GetRandomFileName();
+			_persistedFilePath = Path.GetFullPath(_persistedFilePath);
 			this.RepositoryUnderTest = new LiftRepository(this._persistedFilePath);
 		}
 
@@ -157,6 +152,7 @@ namespace WeSay.LexicalModel.Tests
 		public void Setup()
 		{
 			this._persistedFilePath = Path.GetRandomFileName();
+			_persistedFilePath = Path.GetFullPath(_persistedFilePath);
 			this.RepositoryUnderTest = new LiftRepository(this._persistedFilePath);
 		}
 
