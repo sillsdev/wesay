@@ -14,44 +14,6 @@ namespace WeSay.LexicalModel
 {
 	internal class LiftRepository : MemoryRepository<LexEntry>
 	{
-		private class GuidRepositoryId : RepositoryId
-		{
-			private readonly Guid _id;
-
-			public GuidRepositoryId(Guid id)
-			{
-				_id = id;
-			}
-
-			public override int CompareTo(RepositoryId other)
-			{
-				return CompareTo(other as GuidRepositoryId);
-			}
-
-			public int CompareTo(GuidRepositoryId other)
-			{
-				if (other == null)
-				{
-					return 1;
-				}
-				return Comparer<Guid>.Default.Compare(_id, other._id);
-			}
-
-			public override bool Equals(RepositoryId other)
-			{
-				return Equals(other as GuidRepositoryId);
-			}
-
-			public bool Equals(GuidRepositoryId other)
-			{
-				if (other == null)
-				{
-					return false;
-				}
-				return Equals(_id, other._id);
-			}
-		}
-
 		private readonly string _liftFilePath;
 		private FileStream _liftFileStreamForLocking;
 
@@ -66,6 +28,53 @@ namespace WeSay.LexicalModel
 			LockLift();
 			LastModified = File.GetLastWriteTimeUtc(_liftFilePath);
 			LoadAllLexEntries();
+		}
+
+		public override LexEntry  CreateItem()
+		{
+			LexEntry newEntry = new LexEntry();
+			GuidRepositoryId id = new GuidRepositoryId(newEntry.Guid);
+			idToObjectHashtable.Add(id, newEntry);
+			objectToIdHashtable.Add(newEntry, id);
+			LastModified = PreciseDateTime.UtcNow;
+			UpdateLiftFileWithModified(newEntry);
+			return newEntry;
+		}
+
+		public override void DeleteItem(RepositoryId id)
+		{
+			LexEntry itemToDelete = GetItem(id);
+			UpdateLiftFileWithDeleted(itemToDelete);
+			base.DeleteItem(id);
+		}
+
+		public override void DeleteItem(LexEntry item)
+		{
+			if (item == null)
+			{
+				throw new ArgumentNullException("item");
+			}
+			if (!objectToIdHashtable.ContainsKey(item))
+			{
+				throw new ArgumentOutOfRangeException("item");
+			}
+
+			UpdateLiftFileWithDeleted(item);
+			idToObjectHashtable.Remove(objectToIdHashtable[item]);
+			objectToIdHashtable.Remove(item);
+			LastModified = PreciseDateTime.UtcNow;
+		}
+
+		public override void SaveItem(LexEntry item)
+		{
+			base.SaveItem(item);
+			UpdateLiftFileWithModified(item);
+		}
+
+		public override void SaveItems(IEnumerable<LexEntry> items)
+		{
+			base.SaveItems(items);
+			UpdateLiftFileWithModified(items);
 		}
 
 		public override bool CanQuery
@@ -128,6 +137,7 @@ namespace WeSay.LexicalModel
 			objectToIdHashtable.Add(e.Entry, new GuidRepositoryId(e.Entry.Guid));
 		}
 
+		//???? Erik added these and I'm not sure why. TA 2008-07-10
 		private void parser_ParsingWarning(object sender,
 										   LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence>.ErrorArgs
 											   e)
@@ -174,34 +184,31 @@ namespace WeSay.LexicalModel
 		//    DoLiftUpdateNow(false);
 		//}
 
-		public void OnDataDeleted(object sender, EventArgs e)
+		private void UpdateLiftFileWithModified(IEnumerable<LexEntry> entriesToUpdate)
 		{
-			LexEntry entry = (LexEntry) sender;
-			if (entry == null)
-			{
-				return;
-			}
-
-			LiftExporter exporter =
-				new LiftExporter( /*WeSayWordsProject.Project.GetFieldToOptionListNameDictionary(), */
-					MakeIncrementFileName(DateTime.UtcNow));
-			exporter.AddDeletedEntry(entry);
-			exporter.End();
-		}
-
-		private void UpdateLiftFile(IEnumerable<LexEntry> entriesToUpdate)
-		{
-			CreateIncrementFile(entriesToUpdate);
+			CreateFileContainingModified(entriesToUpdate);
 			MergeIncrementFiles();
 		}
 
-		private void UpdateLiftFile(LexEntry entryToUpdate)
+		private void UpdateLiftFileWithModified(LexEntry entryToUpdate)
 		{
-			CreateIncrementFile(entryToUpdate);
+			CreateFileContainingModified(entryToUpdate);
 			MergeIncrementFiles();
 		}
 
-		private void CreateIncrementFile(LexEntry entryToUpdate)
+		private void UpdateLiftFileWithDeleted(IEnumerable<LexEntry> entriesToDelete)
+		{
+			CreateFileContainingDeleted(entriesToDelete);
+			MergeIncrementFiles();
+		}
+
+		private void UpdateLiftFileWithDeleted(LexEntry entryToDelete)
+		{
+			CreateFileContainingDeleted(entryToDelete);
+			MergeIncrementFiles();
+		}
+
+		private void CreateFileContainingModified(LexEntry entryToUpdate)
 		{
 			LiftExporter exporter = new LiftExporter(MakeIncrementFileName(PreciseDateTime.UtcNow));
 			//!!!exporter.Start(); //!!! Would be nice to have this CJP 2008-07-09
@@ -211,7 +218,7 @@ namespace WeSay.LexicalModel
 			RecordUpdateTime(PreciseDateTime.UtcNow); //Why do we need to call this??? TA 7-4-2008
 		}
 
-		private void CreateIncrementFile(IEnumerable<LexEntry> entriesToUpdate)
+		private void CreateFileContainingModified(IEnumerable<LexEntry> entriesToUpdate)
 		{
 				LiftExporter exporter = null;
 				foreach (LexEntry entry in entriesToUpdate)
@@ -230,6 +237,37 @@ namespace WeSay.LexicalModel
 				}
 
 				RecordUpdateTime(PreciseDateTime.UtcNow); //Why do we need to call this??? TA 7-4-2008
+		}
+
+		private void CreateFileContainingDeleted(LexEntry entryToDelete)
+		{
+			LiftExporter exporter = new LiftExporter(MakeIncrementFileName(PreciseDateTime.UtcNow));
+			//!!!exporter.Start(); //!!! Would be nice to have this CJP 2008-07-09
+			exporter.AddDeletedEntry(entryToDelete);
+			exporter.End();
+
+			RecordUpdateTime(PreciseDateTime.UtcNow); //Why do we need to call this??? TA 7-4-2008
+		}
+
+		private void CreateFileContainingDeleted(IEnumerable<LexEntry> entriesToDelete)
+		{
+			LiftExporter exporter = null;
+			foreach (LexEntry entry in entriesToDelete)
+			{
+				if (exporter == null)
+				{
+					exporter =
+						new LiftExporter(MakeIncrementFileName(PreciseDateTime.UtcNow));
+					//!!!exporter.Start(); //!!! Would be nice to have this CJP 2008-07-09
+				}
+				exporter.AddDeletedEntry(entry);
+			}
+			if (exporter != null)
+			{
+				exporter.End();
+			}
+
+			RecordUpdateTime(PreciseDateTime.UtcNow); //Why do we need to call this??? TA 7-4-2008
 		}
 
 		/// <summary>
@@ -371,6 +409,44 @@ namespace WeSay.LexicalModel
 		{
 			Debug.Assert(_liftFileStreamForLocking == null);
 			_liftFileStreamForLocking = File.OpenRead(_liftFilePath);
+		}
+
+		private class GuidRepositoryId : RepositoryId
+		{
+			private readonly Guid _id;
+
+			public GuidRepositoryId(Guid id)
+			{
+				_id = id;
+			}
+
+			public override int CompareTo(RepositoryId other)
+			{
+				return CompareTo(other as GuidRepositoryId);
+			}
+
+			public int CompareTo(GuidRepositoryId other)
+			{
+				if (other == null)
+				{
+					return 1;
+				}
+				return Comparer<Guid>.Default.Compare(_id, other._id);
+			}
+
+			public override bool Equals(RepositoryId other)
+			{
+				return Equals(other as GuidRepositoryId);
+			}
+
+			public bool Equals(GuidRepositoryId other)
+			{
+				if (other == null)
+				{
+					return false;
+				}
+				return Equals(_id, other._id);
+			}
 		}
 	}
 }
