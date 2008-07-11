@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading;
 using NUnit.Framework;
 using WeSay.Data;
@@ -215,21 +214,6 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		public void CreatedItemHasBeenPersisted()
-		{
-			SetState();
-			if (!RepositoryUnderTest.CanPersist)
-			{
-			}
-			else
-			{
-				RepopulateRepositoryFromPersistedData();
-				T itemFromPersistedData = RepositoryUnderTest.GetItem(id);
-				Assert.AreEqual(item, itemFromPersistedData);
-			}
-		}
-
-		[Test]
 		public void CountAllItems_ReturnsOne()
 		{
 			SetState();
@@ -347,14 +331,16 @@ namespace WeSay.Data.Tests
 		[Test]
 		public virtual void SaveItem_ItemHasBeenPersisted()
 		{
+			SetState();
 			if (!RepositoryUnderTest.CanPersist)
 			{
-
+				Assert.Ignore("Repository can not be persisted");
 			}
 			else
 			{
-				Assert.Fail(@"This Test is highly dependant on the type of objects that are
-							being managed by the repository and as such should be overridden.");
+				RepopulateRepositoryFromPersistedData();
+				T itemFromPersistedData = RepositoryUnderTest.GetItem(id);
+				Assert.AreEqual(item, itemFromPersistedData);
 			}
 		}
 
@@ -383,14 +369,16 @@ namespace WeSay.Data.Tests
 		[Test]
 		public virtual void SaveItems_ItemHasBeenPersisted()
 		{
+			SetState();
 			if(!RepositoryUnderTest.CanPersist)
 			{
-
+				Assert.Ignore("Repository can not be persisted");
 			}
 			else
 			{
-				Assert.Fail(@"This Test is highly dependant on the type of objects that are
-							being managed by the repository and as such should be tested elsewhere.");
+				RepopulateRepositoryFromPersistedData();
+				T itemFromPersistedData = RepositoryUnderTest.GetItem(id);
+				Assert.AreEqual(item, itemFromPersistedData);
 			}
 		}
 	}
@@ -431,21 +419,6 @@ namespace WeSay.Data.Tests
 		{
 			SetState();
 			Assert.AreNotEqual(item, RepositoryUnderTest.CreateItem());
-		}
-
-		[Test]
-		public void CreatedItemHasBeenPersisted()
-		{
-			SetState();
-			if (!RepositoryUnderTest.CanPersist)
-			{
-			}
-			else
-			{
-				RepopulateRepositoryFromPersistedData();
-				T itemFromPersistedData = RepositoryUnderTest.GetItem(id);
-				Assert.AreEqual(item, itemFromPersistedData);
-			}
 		}
 
 		[Test]
@@ -568,16 +541,18 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		public virtual void SaveItem_ItemHasBeenPersisted()
+		public void SaveItem_ItemHasBeenPersisted()
 		{
+			SetState();
 			if (!RepositoryUnderTest.CanPersist)
 			{
-
+				Assert.Ignore("Repository can not be persisted.");
 			}
 			else
 			{
-				Assert.Fail(@"This Test is highly dependant on the type of objects that are
-							being managed by the repository and as such should be overridden.");
+				RepopulateRepositoryFromPersistedData();
+				T itemFromPersistedData = RepositoryUnderTest.GetItem(id);
+				Assert.AreEqual(item, itemFromPersistedData);
 			}
 		}
 
@@ -604,16 +579,18 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		public virtual void SaveItems_ItemHasBeenPersisted()
+		public void SaveItems_ItemHasBeenPersisted()
 		{
+			SetState();
 			if (!RepositoryUnderTest.CanPersist)
 			{
-
+				Assert.Ignore("Repository can not be persisted.");
 			}
 			else
 			{
-				Assert.Fail(@"This Test is highly dependant on the type of objects that are
-							being managed by the repository and as such should be overridden.");
+				RepopulateRepositoryFromPersistedData();
+				T itemFromPersistedData = RepositoryUnderTest.GetItem(id);
+				Assert.AreEqual(item, itemFromPersistedData);
 			}
 		}
 	}
@@ -646,6 +623,7 @@ namespace WeSay.Data.Tests
 		public void SetState()
 		{
 			CreateInitialItem();
+			SaveItem();
 			DeleteItem();
 		}
 
@@ -656,6 +634,11 @@ namespace WeSay.Data.Tests
 		private void CreateInitialItem() {
 			this.item = RepositoryUnderTest.CreateItem();
 			this.id = RepositoryUnderTest.GetId(this.item);
+		}
+
+		private void SaveItem()
+		{
+			RepositoryUnderTest.SaveItem(item);
 		}
 
 		[Test]
@@ -744,7 +727,7 @@ namespace WeSay.Data.Tests
 
 		[Test]
 		[ExpectedException(typeof(ArgumentOutOfRangeException))]
-		public void Save_ItemDoesNotExist_Throws()
+		public void SaveItem_ItemDoesNotExist_Throws()
 		{
 			SetState();
 			RepositoryUnderTest.SaveItem(item);
@@ -754,6 +737,7 @@ namespace WeSay.Data.Tests
 		[ExpectedException(typeof(ArgumentOutOfRangeException))]
 		public void SaveItems_ItemDoesNotExist_Throws()
 		{
+			SetState();
 			T itemNotInRepository = new T();
 			List<T> itemsToSave = new List<T>();
 			itemsToSave.Add(itemNotInRepository);
@@ -789,6 +773,7 @@ namespace WeSay.Data.Tests
 		public void SetState()
 		{
 			CreateItemToTest();
+			SaveItem();
 			DeleteItem();
 		}
 
@@ -799,6 +784,11 @@ namespace WeSay.Data.Tests
 		private void CreateItemToTest() {
 			this.item = RepositoryUnderTest.CreateItem();
 			this.id = RepositoryUnderTest.GetId(this.item);
+		}
+
+		private void SaveItem()
+		{
+			RepositoryUnderTest.SaveItem(item);
 		}
 
 		[Test]
@@ -887,7 +877,7 @@ namespace WeSay.Data.Tests
 
 		[Test]
 		[ExpectedException(typeof(ArgumentOutOfRangeException))]
-		public void Save_ItemDoesNotExist_Throws()
+		public void SaveItem_ItemDoesNotExist_Throws()
 		{
 			SetState();
 			RepositoryUnderTest.SaveItem(item);
@@ -897,6 +887,7 @@ namespace WeSay.Data.Tests
 		[ExpectedException(typeof(ArgumentOutOfRangeException))]
 		public void SaveItems_ItemDoesNotExist_Throws()
 		{
+			SetState();
 			T itemNotInRepository = new T();
 			List<T> itemsToSave = new List<T>();
 			itemsToSave.Add(itemNotInRepository);
