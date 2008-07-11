@@ -70,6 +70,7 @@
 	</Reference>
 	<Reference Include="System" />
 	<Reference Include="System.Data" />
+	<Reference Include="System.Windows.Forms" />
 	<Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -81,6 +82,9 @@
 	<Compile Include="LexExampleSentence.cs" />
 	<Compile Include="LexRelation.cs" />
 	<Compile Include="LexSense.cs" />
+	<Compile Include="LiftExporter.cs" />
+	<Compile Include="LiftRepository.cs" />
+	<Compile Include="LiftUpdateService.cs" />
 	<Compile Include="MissingItemFilter.cs" />
 	<Compile Include="PairStringLexEntryIdDisplayProvider.cs" />
 	<Compile Include="Phonetic.cs" />

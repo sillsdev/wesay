@@ -25,9 +25,9 @@ namespace WeSay.LexicalModel.Tests
 
 			_tempFile = Path.GetTempFileName();
 			_lexEntryRepository = new LexEntryRepository(_tempFile);
-			_exporter = new LiftExporter(_stringBuilder, false, _lexEntryRepository);
+			_exporter = new LiftExporter(_stringBuilder, false);
 
-			_merger = new LiftMerger(_lexEntryRepository);
+			_merger = new LiftMerger();
 		}
 
 		[TearDown]
@@ -138,9 +138,9 @@ namespace WeSay.LexicalModel.Tests
 			this._merger.FinishEntry(entry1);
 			LexEntry entry2 = this._merger.GetOrMakeEntry(extensibleInfo, 2);
 			this._merger.FinishEntry(entry2);
-			_exporter.Add(entry4);
-			_exporter.Add(entry1);
-			_exporter.Add(entry2);
+			_exporter.Add(entry4, 3);
+			_exporter.Add(entry1, 1);
+			_exporter.Add(entry2, 2);
 
 			_exporter.End();
 			AssertXPathNotNull("//entry[@order='1']");

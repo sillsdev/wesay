@@ -329,6 +329,8 @@ namespace WeSay.CommonTools
 			return result;
 		}
 
+		private delegate bool EqualityComparison<T>(T x, T y);
+
 		private static void RemoveDuplicateHeights(List<Size> result)
 		{
 			RemoveDuplicates(result, CompareSizesByHeightThenWidth,

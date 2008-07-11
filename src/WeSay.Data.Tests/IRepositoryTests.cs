@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Threading;
 using NUnit.Framework;
 using WeSay.Data;
-using System.Reflection;
 
 namespace WeSay.Data.Tests
 {
@@ -126,7 +125,7 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void LastModified_ReturnsMinimumPossibleTime()
 		{
-			Assert.AreEqual(DateTime.MinValue, RepositoryUnderTest.LastModified);
+			Assert.Less(RepositoryUnderTest.LastModified, PreciseDateTime.UtcNow);
 		}
 
 		[Test]
@@ -203,37 +202,34 @@ namespace WeSay.Data.Tests
 			set { _repositoryUnderTest = value; }
 		}
 
+		protected T Item
+		{
+			get { return item; }
+			set { item = value; }
+		}
+
+		protected RepositoryId Id
+		{
+			get { return id; }
+			set { id = value; }
+		}
+
 		public void SetState()
 		{
-			item = RepositoryUnderTest.CreateItem();
-			id = RepositoryUnderTest.GetId(item);
+			Item = RepositoryUnderTest.CreateItem();
+			Id = RepositoryUnderTest.GetId(Item);
 		}
 
 		//This method is used to test whether data has been persisted.
 		//This method should dispose of the current repository and reload it from persisted data
 		//For repositories that don't support persistence this method should do nothing
-		protected abstract void RepopulateRepositoryFromPersistedData();
+		protected abstract void CreateNewRepositoryFromPersistedData();
 
 		[Test]
 		public void CreateItem_ReturnsUniqueItem()
 		{
 			SetState();
-			Assert.AreNotEqual(item, RepositoryUnderTest.CreateItem());
-		}
-
-		[Test]
-		public void CreatedItemHasBeenPersisted()
-		{
-			SetState();
-			if (!RepositoryUnderTest.CanPersist)
-			{
-			}
-			else
-			{
-				RepopulateRepositoryFromPersistedData();
-				T itemFromPersistedData = RepositoryUnderTest.GetItem(id);
-				Assert.AreEqual(item, itemFromPersistedData);
-			}
+			Assert.AreNotEqual(Item, RepositoryUnderTest.CreateItem());
 		}
 
 		[Test]
@@ -247,7 +243,7 @@ namespace WeSay.Data.Tests
 		public void GetAllItems_ReturnsIdItem()
 		{
 			SetState();
-			Assert.AreEqual(RepositoryUnderTest.GetId(item), RepositoryUnderTest.GetAllItems()[0]);
+			Assert.AreEqual(RepositoryUnderTest.GetId(Item), RepositoryUnderTest.GetAllItems()[0]);
 		}
 
 		[Test]
@@ -261,28 +257,28 @@ namespace WeSay.Data.Tests
 		public void GetId_CalledTwiceWithSameItem_ReturnsSameId()
 		{
 			SetState();
-			Assert.AreEqual(RepositoryUnderTest.GetId(item), RepositoryUnderTest.GetId(item));
+			Assert.AreEqual(RepositoryUnderTest.GetId(Item), RepositoryUnderTest.GetId(Item));
 		}
 
 		[Test]
 		public void GetId_Item_ReturnsIdOfItem()
 		{
 			SetState();
-			Assert.AreSame(id, RepositoryUnderTest.GetId(item));
+			Assert.AreEqual(Id, RepositoryUnderTest.GetId(Item));
 		}
 
 		[Test]
 		public void GetItem_Id_ReturnsItemWithId()
 		{
 			SetState();
-			Assert.AreSame(item, RepositoryUnderTest.GetItem(id));
+			Assert.AreSame(Item, RepositoryUnderTest.GetItem(Id));
 		}
 
 		[Test]
 		public void GetItem_CalledTwiceWithSameId_ReturnsSameItem()
 		{
 			SetState();
-			Assert.AreSame(RepositoryUnderTest.GetItem(id), RepositoryUnderTest.GetItem(id));
+			Assert.AreSame(RepositoryUnderTest.GetItem(Id), RepositoryUnderTest.GetItem(Id));
 		}
 
 		[Test]
@@ -294,8 +290,8 @@ namespace WeSay.Data.Tests
 			{
 				ResultSet<T> resultSet = RepositoryUnderTest.GetItemsMatching(queryWithoutShow);
 				Assert.AreEqual(1, resultSet.Count);
-				Assert.AreEqual(item, resultSet[0].RealObject);
-				Assert.AreEqual(id, resultSet[0].Id);
+				Assert.AreEqual(Item, resultSet[0].RealObject);
+				Assert.AreEqual(Id, resultSet[0].Id);
 			}
 			else
 			{
@@ -310,7 +306,7 @@ namespace WeSay.Data.Tests
 			if (RepositoryUnderTest.CanQuery)
 			{
 				Assert.Ignore(@"This Test is highly dependant on the type of objects that are
-							being managed by the repository and as such should be tested elsewhere.");
+							being managed by the repository and as such should be overridden.");
 			}
 			else
 			{
@@ -339,7 +335,7 @@ namespace WeSay.Data.Tests
 		{
 			SetState();
 			DateTime modifiedTimePreTestedStateSwitch = RepositoryUnderTest.LastModified;
-			RepositoryUnderTest.SaveItem(item);
+			RepositoryUnderTest.SaveItem(Item);
 			Assert.Greater(RepositoryUnderTest.LastModified, modifiedTimePreTestedStateSwitch);
 		}
 
@@ -347,15 +343,22 @@ namespace WeSay.Data.Tests
 		public void SaveItem_LastModifiedIsSetInUTC()
 		{
 			SetState();
-			RepositoryUnderTest.SaveItem(item);
+			RepositoryUnderTest.SaveItem(Item);
 			Assert.AreEqual(DateTimeKind.Utc, RepositoryUnderTest.LastModified.Kind);
 		}
 
 		[Test]
-		public void SaveItem_ItemHasBeenPersisted()
+		public virtual void SaveItem_ItemHasBeenPersisted()
 		{
-			Assert.Ignore(@"This Test is highly dependant on the type of objects that are
-							being managed by the repository and as such should be tested elsewhere.");
+			SetState();
+			if (!RepositoryUnderTest.CanPersist)
+			{
+				Assert.Ignore("Repository can not be persisted");
+			}
+			else
+			{
+				Assert.Fail("This test is dependant on the Type of item you are storing in your repository. As such you must override it.");
+			}
 		}
 
 		[Test]
@@ -363,7 +366,7 @@ namespace WeSay.Data.Tests
 		{
 			SetState();
 			List<T> itemsToSave = new List<T>();
-			itemsToSave.Add(item);
+			itemsToSave.Add(Item);
 			DateTime modifiedTimePreTestedStateSwitch = RepositoryUnderTest.LastModified;
 			RepositoryUnderTest.SaveItems(itemsToSave);
 			Assert.Greater(RepositoryUnderTest.LastModified, modifiedTimePreTestedStateSwitch);
@@ -374,17 +377,244 @@ namespace WeSay.Data.Tests
 		{
 			SetState();
 			List<T> itemsToSave = new List<T>();
-			itemsToSave.Add(item);
+			itemsToSave.Add(Item);
 			Thread.Sleep(50);
 			RepositoryUnderTest.SaveItems(itemsToSave);
 			Assert.AreEqual(DateTimeKind.Utc, RepositoryUnderTest.LastModified.Kind);
 		}
 
 		[Test]
-		public void SaveItems_ItemHasBeenPersisted()
+		public virtual void SaveItems_ItemHasBeenPersisted()
 		{
-			Assert.Ignore(@"This Test is highly dependant on the type of objects that are
+			SetState();
+			if(!RepositoryUnderTest.CanPersist)
+			{
+				Assert.Ignore("Repository can not be persisted");
+			}
+			else
+			{
+				Assert.Fail("This test is dependant on the Type of item you are storing in your repository. As such you must override it.");
+			}
+		}
+	}
+
+	public abstract class IRepositoryPopulateFromPersistedTests<T> where T : class, new()
+	{
+		private IRepository<T> _repositoryUnderTest;
+		private T item;
+		private RepositoryId id;
+
+		public IRepository<T> RepositoryUnderTest
+		{
+			get
+			{
+				if (_repositoryUnderTest == null)
+				{
+					throw new InvalidOperationException("RepositoryUnderTest must be set before the tests are run.");
+				}
+				return _repositoryUnderTest;
+			}
+			set { _repositoryUnderTest = value; }
+		}
+
+		protected T Item
+		{
+			get { return item; }
+			set { item = value; }
+		}
+
+		protected RepositoryId Id
+		{
+			get { return id; }
+			set { id = value; }
+		}
+
+		public void SetState()
+		{
+			RepositoryId[] idsFrompersistedData = RepositoryUnderTest.GetAllItems();
+			Id = idsFrompersistedData[0];
+			Item = RepositoryUnderTest.GetItem(Id);
+		}
+
+		//This method is used to test whether data has been persisted.
+		//This method should dispose of the current repository and reload it from persisted data
+		//For repositories that don't support persistence this method should do nothing
+		protected abstract void CreateNewRepositoryFromPersistedData();
+
+		[Test]
+		public void CreateItem_ReturnsUniqueItem()
+		{
+			SetState();
+			Assert.AreNotEqual(Item, RepositoryUnderTest.CreateItem());
+		}
+
+		[Test]
+		public void CountAllItems_ReturnsOne()
+		{
+			SetState();
+			Assert.AreEqual(1, RepositoryUnderTest.CountAllItems());
+		}
+
+		[Test]
+		public void GetAllItems_ReturnsIdItem()
+		{
+			SetState();
+			Assert.AreEqual(RepositoryUnderTest.GetId(Item), RepositoryUnderTest.GetAllItems()[0]);
+		}
+
+		[Test]
+		public void GetAllItems_ReturnsCorrectNumberOfExistingItems()
+		{
+			SetState();
+			Assert.AreEqual(1, RepositoryUnderTest.GetAllItems().Length);
+		}
+
+		[Test]
+		public void GetId_CalledTwiceWithSameItem_ReturnsSameId()
+		{
+			SetState();
+			Assert.AreEqual(RepositoryUnderTest.GetId(Item), RepositoryUnderTest.GetId(Item));
+		}
+
+		[Test]
+		public void GetId_Item_ReturnsIdOfItem()
+		{
+			SetState();
+			Assert.AreEqual(Id, RepositoryUnderTest.GetId(Item));
+		}
+
+		[Test]
+		public void GetItem_Id_ReturnsItemWithId()
+		{
+			SetState();
+			Assert.AreSame(Item, RepositoryUnderTest.GetItem(Id));
+		}
+
+		[Test]
+		public void GetItem_CalledTwiceWithSameId_ReturnsSameItem()
+		{
+			SetState();
+			Assert.AreSame(RepositoryUnderTest.GetItem(Id), RepositoryUnderTest.GetItem(Id));
+		}
+
+		[Test]
+		public void GetItemMatchingQuery_QueryWithOutShow_ReturnsAllItems()
+		{
+			Query queryWithoutShow = new Query(typeof(T));
+			SetState();
+			if (RepositoryUnderTest.CanQuery)
+			{
+				ResultSet<T> resultSet = RepositoryUnderTest.GetItemsMatching(queryWithoutShow);
+				Assert.AreEqual(1, resultSet.Count);
+				Assert.AreEqual(Item, resultSet[0].RealObject);
+				Assert.AreEqual(Id, resultSet[0].Id);
+			}
+			else
+			{
+				Assert.Ignore("Repository does not support queries.");
+			}
+		}
+
+		[Test]
+		public void GetItemMatchingQuery_QueryWithShow_ReturnsAllItemsAndFieldsMatchingQuery()
+		{
+			SetState();
+			if (RepositoryUnderTest.CanQuery)
+			{
+				Assert.Ignore(@"This Test is highly dependant on the type of objects that are
 							being managed by the repository and as such should be tested elsewhere.");
+			}
+			else
+			{
+				Assert.Ignore("Repository does not support queries.");
+			}
+		}
+
+		[Test]
+		public virtual void LastModified_IsSetToPersistedDatasLastChangedTime()
+		{
+			if(!RepositoryUnderTest.CanPersist)
+			{
+				Assert.Ignore("Repository can not be persisted");
+			}
+			else
+			{
+				Assert.Fail("This test is dependant on how you are persisting your data, please override this test.");
+			}
+		}
+
+		[Test]
+		public void LastModified_IsSetInUTC()
+		{
+			SetState();
+			Assert.AreEqual(DateTimeKind.Utc, RepositoryUnderTest.LastModified.Kind);
+		}
+
+		[Test]
+		public void SaveItem_LastModifiedIsChangedToLaterTime()
+		{
+			SetState();
+			DateTime modifiedTimePreTestedStateSwitch = RepositoryUnderTest.LastModified;
+			RepositoryUnderTest.SaveItem(Item);
+			Assert.Greater(RepositoryUnderTest.LastModified, modifiedTimePreTestedStateSwitch);
+		}
+
+		[Test]
+		public void SaveItem_LastModifiedIsSetInUTC()
+		{
+			SetState();
+			RepositoryUnderTest.SaveItem(Item);
+			Assert.AreEqual(DateTimeKind.Utc, RepositoryUnderTest.LastModified.Kind);
+		}
+
+		[Test]
+		public virtual void SaveItem_ItemHasBeenPersisted()
+		{
+			SetState();
+			if (!RepositoryUnderTest.CanPersist)
+			{
+				Assert.Ignore("Repository can not be persisted.");
+			}
+			else
+			{
+				Assert.Fail("This test is dependant on the Type of item you are storing in your repository. As such you must override it.");
+			}
+		}
+
+		[Test]
+		public void SaveItems_LastModifiedIsChangedToLaterTime()
+		{
+			SetState();
+			List<T> itemsToSave = new List<T>();
+			itemsToSave.Add(Item);
+			DateTime modifiedTimePreTestedStateSwitch = RepositoryUnderTest.LastModified;
+			RepositoryUnderTest.SaveItems(itemsToSave);
+			Assert.Greater(RepositoryUnderTest.LastModified, modifiedTimePreTestedStateSwitch);
+		}
+
+		[Test]
+		public void SaveItems_LastModifiedIsSetInUTC()
+		{
+			SetState();
+			List<T> itemsToSave = new List<T>();
+			itemsToSave.Add(Item);
+			Thread.Sleep(50);
+			RepositoryUnderTest.SaveItems(itemsToSave);
+			Assert.AreEqual(DateTimeKind.Utc, RepositoryUnderTest.LastModified.Kind);
+		}
+
+		[Test]
+		public virtual void SaveItems_ItemHasBeenPersisted()
+		{
+			SetState();
+			if (!RepositoryUnderTest.CanPersist)
+			{
+				Assert.Ignore("Repository can not be persisted.");
+			}
+			else
+			{
+				Assert.Fail("This test is dependant on the Type of item you are storing in your repository. As such you must override it.");
+			}
 		}
 	}
 
@@ -411,11 +641,12 @@ namespace WeSay.Data.Tests
 		//This method is used to test whether data has been persisted.
 		//This method should dispose of the current repository and reload it from persisted data
 		//For repositories that don't support persistence this method should do nothing
-		protected abstract void RepopulateRepositoryFromPersistedData();
+		protected abstract void CreateNewRepositoryFromPersistedData();
 
 		public void SetState()
 		{
 			CreateInitialItem();
+			SaveItem();
 			DeleteItem();
 		}
 
@@ -426,6 +657,11 @@ namespace WeSay.Data.Tests
 		private void CreateInitialItem() {
 			this.item = RepositoryUnderTest.CreateItem();
 			this.id = RepositoryUnderTest.GetId(this.item);
+		}
+
+		private void SaveItem()
+		{
+			RepositoryUnderTest.SaveItem(item);
 		}
 
 		[Test]
@@ -447,7 +683,7 @@ namespace WeSay.Data.Tests
 			}
 			else
 			{
-				RepopulateRepositoryFromPersistedData();
+				CreateNewRepositoryFromPersistedData();
 				RepositoryUnderTest.GetItem(id);
 			}
 		}
@@ -514,7 +750,7 @@ namespace WeSay.Data.Tests
 
 		[Test]
 		[ExpectedException(typeof(ArgumentOutOfRangeException))]
-		public void Save_ItemDoesNotExist_Throws()
+		public void SaveItem_ItemDoesNotExist_Throws()
 		{
 			SetState();
 			RepositoryUnderTest.SaveItem(item);
@@ -524,6 +760,7 @@ namespace WeSay.Data.Tests
 		[ExpectedException(typeof(ArgumentOutOfRangeException))]
 		public void SaveItems_ItemDoesNotExist_Throws()
 		{
+			SetState();
 			T itemNotInRepository = new T();
 			List<T> itemsToSave = new List<T>();
 			itemsToSave.Add(itemNotInRepository);
@@ -554,11 +791,12 @@ namespace WeSay.Data.Tests
 		//This method is used to test whether data has been persisted.
 		//This method should dispose of the current repository and reload it from persisted data
 		//For repositories that don't support persistence this method should do nothing
-		protected abstract void RepopulateRepositoryFromPersistedData();
+		protected abstract void CreateNewRepositoryFromPersistedData();
 
 		public void SetState()
 		{
 			CreateItemToTest();
+			SaveItem();
 			DeleteItem();
 		}
 
@@ -569,6 +807,11 @@ namespace WeSay.Data.Tests
 		private void CreateItemToTest() {
 			this.item = RepositoryUnderTest.CreateItem();
 			this.id = RepositoryUnderTest.GetId(this.item);
+		}
+
+		private void SaveItem()
+		{
+			RepositoryUnderTest.SaveItem(item);
 		}
 
 		[Test]
@@ -590,7 +833,7 @@ namespace WeSay.Data.Tests
 			}
 			else
 			{
-				RepopulateRepositoryFromPersistedData();
+				CreateNewRepositoryFromPersistedData();
 				RepositoryUnderTest.GetItem(id);
 			}
 		}
@@ -657,7 +900,7 @@ namespace WeSay.Data.Tests
 
 		[Test]
 		[ExpectedException(typeof(ArgumentOutOfRangeException))]
-		public void Save_ItemDoesNotExist_Throws()
+		public void SaveItem_ItemDoesNotExist_Throws()
 		{
 			SetState();
 			RepositoryUnderTest.SaveItem(item);
@@ -667,6 +910,7 @@ namespace WeSay.Data.Tests
 		[ExpectedException(typeof(ArgumentOutOfRangeException))]
 		public void SaveItems_ItemDoesNotExist_Throws()
 		{
+			SetState();
 			T itemNotInRepository = new T();
 			List<T> itemsToSave = new List<T>();
 			itemsToSave.Add(itemNotInRepository);

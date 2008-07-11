@@ -25,7 +25,7 @@ namespace WeSay.LexicalModel.Tests
 			_tempFile = Path.GetTempFileName();
 			_lexEntryRepository = new LexEntryRepository(_tempFile);
 
-			_merger = new LiftMerger(_lexEntryRepository);
+			_merger = new LiftMerger();
 		}
 
 		[TearDown]

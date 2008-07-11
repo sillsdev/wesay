@@ -5,6 +5,7 @@ using LiftIO.Validation;
 using NUnit.Framework;
 using Palaso.Reporting;
 using WeSay.App.Migration;
+using WeSay.LexicalModel;
 using WeSay.Project;
 using WeSay.Project.Tests;
 
@@ -13,10 +14,22 @@ namespace WeSay.App.Tests
 	[TestFixture]
 	public class LiftPreparerTests
 	{
+		private LexEntryRepository _lexEntryRepository;
+		private string _filePath;
+
 		[SetUp]
 		public void Setup()
 		{
+			_lexEntryRepository = new LexEntryRepository(_filePath);
+			_filePath = Path.GetTempFileName();
 			ErrorReport.IsOkToInteractWithUser = false;
+		}
+
+		[TearDown]
+		public void TearDown()
+		{
+			_lexEntryRepository.Dispose();
+			File.Delete(_filePath);
 		}
 
 		[Test]

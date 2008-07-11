@@ -83,6 +83,12 @@ namespace WeSay.LexicalModel
 
 		public ResultSet<LexEntry> GetItemsMatching(Query query)
 		{
+			throw new NotSupportedException("Please use more specific methods. For now, we don't support using any general query for optimization reasons.");
+			//return _decoratedRepository.GetItemsMatching(query);
+		}
+
+		private ResultSet<LexEntry> GetItemsMatchingCore(Query query)
+		{
 			return _decoratedRepository.GetItemsMatching(query);
 		}
 
@@ -102,11 +108,6 @@ namespace WeSay.LexicalModel
 			{
 				return _decoratedRepository.CanPersist;
 			}
-		}
-
-		public RepositoryId[] GetItemsMatchingQuery()
-		{
-			throw new NotImplementedException();
 		}
 
 		public void DeleteItem(LexEntry item)
@@ -236,7 +237,7 @@ namespace WeSay.LexicalModel
 			string writingSystemIdField,
 			WritingSystem writingSystem)
 		{
-			ResultSet<LexEntry> allEntriesMatchingQuery = GetItemsMatching(query);
+			ResultSet<LexEntry> allEntriesMatchingQuery = GetItemsMatchingCore(query);
 			ResultSet<LexEntry> result = FilterEntriesToOnlyThoseWithWritingSystemId(
 											allEntriesMatchingQuery,
 											formField,
@@ -257,7 +258,7 @@ namespace WeSay.LexicalModel
 			Query allSensePropertiesQuery = GetAllLexEntriesQuery().ForEach("Senses")
 						.ForEach("Properties").Show("Key").Show("Value","SemanticDomains");
 
-			ResultSet<LexEntry> allSenseProperties = GetItemsMatching(allSensePropertiesQuery);
+			ResultSet<LexEntry> allSenseProperties = GetItemsMatchingCore(allSensePropertiesQuery);
 			allSenseProperties.RemoveAll(delegate(RecordToken<LexEntry> token)
 				{
 					return (string)token["Key"] != fieldName;
@@ -332,7 +333,7 @@ namespace WeSay.LexicalModel
 				throw new ArgumentNullException("id");
 			}
 			Query idOfEntries = GetAllLexEntriesQuery().Show("Id");
-			ResultSet<LexEntry> items = GetItemsMatching(idOfEntries);
+			ResultSet<LexEntry> items = GetItemsMatchingCore(idOfEntries);
 			RecordToken<LexEntry> first = items.FindFirst(delegate(RecordToken<LexEntry> token)
 												{
 													return (string)token["Id"] == id;
@@ -347,7 +348,7 @@ namespace WeSay.LexicalModel
 		public LexEntry GetLexEntryWithMatchingGuid(Guid guid)
 		{
 			Query query = GetAllLexEntriesQuery().Show("Guid");
-			ResultSet<LexEntry> items = GetItemsMatching(query);
+			ResultSet<LexEntry> items = GetItemsMatchingCore(query);
 			int index = items.FindFirstIndex(delegate(RecordToken<LexEntry> token)
 												{
 													return (Guid)token["Guid"] == guid;
@@ -561,13 +562,38 @@ namespace WeSay.LexicalModel
 		public IList<RepositoryId> GetItemsModifiedSince(DateTime last)
 		{
 			Query query = new Query(typeof(LexEntry)).Show("ModificationTime");
-			ResultSet<LexEntry> items = GetItemsMatching(query);
+			ResultSet<LexEntry> items = GetItemsMatchingCore(query);
 			// remove items that were modified before last
 			items.RemoveAll(delegate(RecordToken<LexEntry> token)
 								{
 									return (DateTime)token["ModificationTime"] < last;
 								});
 			return new List<RepositoryId>(items);
+		}
+
+		public void BackendDoLiftUpdateNow(bool p)
+		{
+			throw new Exception("The method or operation is not implemented.");
+		}
+
+		public bool BackendConsumePendingLiftUpdates()
+		{
+			throw new Exception("The method or operation is not implemented.");
+		}
+
+		public bool BackendBringCachesUpToDate()
+		{
+			throw new Exception("The method or operation is not implemented.");
+		}
+
+		public void BackendLiftIsFreshNow()
+		{
+			throw new Exception("The method or operation is not implemented.");
+		}
+
+		public void BackendRecoverUnsavedChangesOutOfCacheIfNeeded()
+		{
+			throw new Exception("The method or operation is not implemented.");
 		}
 	}
 }

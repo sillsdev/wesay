@@ -86,12 +86,10 @@
 	<Compile Include="BasilProjectTests.cs" />
 	<Compile Include="CacheBuilderTests.cs" />
 	<Compile Include="CacheUpdatingTests.cs" />
-	<Compile Include="LiftExportTests.cs" />
 	<Compile Include="LiftUpdateTests.cs" />
 	<Compile Include="MigrationTests.cs" />
 	<Compile Include="LiftExporterPLiftTests.cs" />
 	<Compile Include="ProjectDirectorySetupForTesting.cs" />
-	<Compile Include="LiftRepositoryTests.cs" />
 	<Compile Include="TestResources.Designer.cs">
 	  <AutoGen>True</AutoGen>
 	  <DesignTime>True</DesignTime>

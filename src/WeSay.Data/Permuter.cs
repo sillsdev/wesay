@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace WeSay.Data
 {
-	public static class Permuter
+	internal static class Permuter
 	{
 		// if we start with: {}      and add : a we get {a}
 		// if we start with: {a}     and add : b we get {a,b}

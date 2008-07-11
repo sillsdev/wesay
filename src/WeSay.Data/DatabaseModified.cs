@@ -3,7 +3,7 @@ using System.Diagnostics;
 
 namespace WeSay.Data
 {
-	public sealed class DatabaseModified
+	internal sealed class DatabaseModified
 	{
 		private DateTime _lastModified;
 

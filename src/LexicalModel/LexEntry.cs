@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Text;
 using Palaso.Reporting;
@@ -29,7 +30,7 @@ namespace WeSay.LexicalModel
 
 		private int _orderForRoundTripping = 0;
 
-		private InMemoryBindingList<LexSense> _senses;
+		private BindingList<LexSense> _senses;
 		private DateTime _creationTime;
 		private DateTime _modificationTime;
 		private bool _isBeingDeleted;
@@ -59,7 +60,7 @@ namespace WeSay.LexicalModel
 
 		public LexEntry(string id, Guid guid): base(null)
 		{
-			DateTime now = DateTime.UtcNow;
+			DateTime now = PreciseDateTime.UtcNow;
 			Init(id, guid, now, now);
 		}
 
@@ -81,7 +82,7 @@ namespace WeSay.LexicalModel
 				_guid = guid;
 			}
 			_lexicalForm = new LexicalFormMultiText(this);
-			_senses = new InMemoryBindingList<LexSense>();
+			_senses = new BindingList<LexSense>();
 			CreationTime = creationTime;
 
 			WireUpEvents();
@@ -109,9 +110,9 @@ namespace WeSay.LexicalModel
 			{
 				CreationTime = new DateTime(_creationTime.Ticks, DateTimeKind.Utc);
 			}
-			if (_modificationTime.Kind != DateTimeKind.Utc)
+			if (ModificationTime.Kind != DateTimeKind.Utc)
 			{
-				ModificationTime = new DateTime(_modificationTime.Ticks, DateTimeKind.Utc);
+				ModificationTime = new DateTime(ModificationTime.Ticks, DateTimeKind.Utc);
 			}
 
 			Debug.Assert(CreationTime.Kind == DateTimeKind.Utc);
@@ -124,7 +125,7 @@ namespace WeSay.LexicalModel
 		public override void SomethingWasModified(string propertyModified)
 		{
 			base.SomethingWasModified(propertyModified);
-			ModificationTime = DateTime.UtcNow;
+			ModificationTime = PreciseDateTime.UtcNow;
 			//too soon to make id: this method is called after first keystroke
 			//  GetOrCreateId(false);
 		}
@@ -172,7 +173,9 @@ namespace WeSay.LexicalModel
 			set
 			{
 				Debug.Assert(value.Kind == DateTimeKind.Utc);
-				_creationTime = value;
+				//converting time to LiftFormatResolution
+				_creationTime = new DateTime(value.Year, value.Month, value.Day, value.Hour, value.Minute,
+													 value.Second, value.Kind);
 			}
 		}
 
@@ -194,7 +197,9 @@ namespace WeSay.LexicalModel
 				if (!ModifiedTimeIsLocked)
 				{
 					Debug.Assert(value.Kind == DateTimeKind.Utc);
-					_modificationTime = value;
+					//converting time to LiftFormatResolution
+					_modificationTime = new DateTime(value.Year, value.Month, value.Day, value.Hour, value.Minute,
+													 value.Second, value.Kind);
 				}
 			}
 		}

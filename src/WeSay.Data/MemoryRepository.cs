@@ -4,27 +4,27 @@ using System.Collections.Generic;
 
 namespace WeSay.Data
 {
-	class MemoryRepository<T>:IRepository<T> where T : class, new()
+	internal class MemoryRepository<T>:IRepository<T> where T : class, new()
 	{
-		private readonly Hashtable idToObjectHashtable = new Hashtable();
-		private readonly Hashtable objectToIdHashtable = new Hashtable();
+		protected readonly Dictionary<RepositoryId, T> idToObjectHashtable = new Dictionary<RepositoryId, T> ();
+		protected readonly Dictionary<T, RepositoryId> objectToIdHashtable = new Dictionary<T, RepositoryId>();
 		private DateTime lastModified = DateTime.MinValue;
 
 		public DateTime LastModified
 		{
 			get { return lastModified; }
-			private set
+			protected set
 			{
 				value = value.ToUniversalTime();
 				lastModified = value;
 			}
 		}
 
-		public bool CanQuery { get { return true; } }
+		public virtual bool CanQuery { get { return true; } }
 
-		public bool CanPersist { get { return false; } }
+		public virtual bool CanPersist { get { return false; } }
 
-		public T CreateItem()
+		public virtual T CreateItem()
 		{
 			T t = new T();
 			MemoryRepositoryId id = new MemoryRepositoryId();
@@ -34,7 +34,7 @@ namespace WeSay.Data
 			return t;
 		}
 
-		public void DeleteItem(T item)
+		public virtual void DeleteItem(T item)
 		{
 			if( item == null)
 			{
@@ -49,7 +49,7 @@ namespace WeSay.Data
 			LastModified = PreciseDateTime.UtcNow;
 		}
 
-		public void DeleteItem(RepositoryId id)
+		public virtual void DeleteItem(RepositoryId id)
 		{
 			if (!idToObjectHashtable.ContainsKey(id))
 			{
@@ -74,7 +74,7 @@ namespace WeSay.Data
 			return ids;
 		}
 
-		public void SaveItem(T item)
+		public virtual void SaveItem(T item)
 		{
 			if(item == null)
 			{
@@ -88,7 +88,7 @@ namespace WeSay.Data
 			LastModified = timeOfSave;
 		}
 
-		public void SaveItems(IEnumerable<T> items)
+		public virtual void SaveItems(IEnumerable<T> items)
 		{
 			if(items == null)
 			{
@@ -100,7 +100,7 @@ namespace WeSay.Data
 			}
 		}
 
-		public ResultSet<T> GetItemsMatching(Query query)
+		public virtual ResultSet<T> GetItemsMatching(Query query)
 		{
 			List<RecordToken<T>> results = new List<RecordToken<T>>();
 			foreach (T item in objectToIdHashtable.Keys)
@@ -119,12 +119,12 @@ namespace WeSay.Data
 			return new ResultSet<T>(this, results);
 		}
 
-		public int CountAllItems()
+		public virtual int CountAllItems()
 		{
 			return idToObjectHashtable.Count;
 		}
 
-		public RepositoryId GetId(T item)
+		public virtual RepositoryId GetId(T item)
 		{
 			if (!objectToIdHashtable.ContainsKey(item))
 			{
@@ -133,7 +133,7 @@ namespace WeSay.Data
 			return (RepositoryId)objectToIdHashtable[item];
 		}
 
-		public T GetItem(RepositoryId id)
+		public virtual T GetItem(RepositoryId id)
 		{
 			if (!idToObjectHashtable.ContainsKey(id))
 			{
@@ -155,7 +155,7 @@ namespace WeSay.Data
 
 		private bool _disposed = false;
 
-		public void Dispose()
+		public virtual void Dispose()
 		{
 			Dispose(true);
 			GC.SuppressFinalize(this);

@@ -83,7 +83,9 @@
 	<Compile Include="LexRelationTests.cs" />
 	<Compile Include="EventsAndDates.cs" />
 	<Compile Include="Db4oSpecific\PersistenceTests.cs" />
+	<Compile Include="LiftExportTests.cs" />
 	<Compile Include="LiftMergerTests.cs" />
+	<Compile Include="LiftRepositoryTests.cs" />
 	<Compile Include="LiftRoundTripTests.cs" />
 	<Compile Include="MissingItemFilterTests.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />

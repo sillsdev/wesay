@@ -26,12 +26,22 @@ namespace Addin.Transform
 										WeSayWordsProject project)
 		{
 			string path = Path.Combine(Path.GetTempPath(), Path.GetTempFileName());
-			LiftExporter exporter = new LiftExporter(path, lexEntryRepository);
 			ViewTemplate template = project.DefaultPrintingTemplate;
-			exporter.SetUpForPresentationLiftExport(template);
+			PLiftExporter exporter = new PLiftExporter(path,
+													   lexEntryRepository,
+													   template);
 			ResultSet<LexEntry> recordTokens =
-					lexEntryRepository.GetAllEntriesSortedByHeadword(template.HeadwordWritingSytem);
-			exporter.Add(recordTokens);
+					lexEntryRepository.GetAllEntriesSortedByHeadword(template.HeadwordWritingSystem);
+			foreach (RecordToken<LexEntry> token in recordTokens)
+			{
+				int homographNumber = 0;
+				if((bool)token["HasHomograph"])
+				{
+					homographNumber = (int) token["HomographNumber"];
+				}
+				exporter.Add(token.RealObject, homographNumber);
+			}
+
 			exporter.End();
 			return path;
 		}
@@ -39,9 +49,9 @@ namespace Addin.Transform
 		//
 		//        public void MakeXHtmlFile(string outputPath, LexEntryRepository lexEntryRepository, WeSayWordsProject project)
 		//        {
-		//            IHomographCalculator homographCalculator = new HomographCalculator(lexEntryRepository, project.DefaultPrintingTemplate.HeadwordWritingSytem);
+		//            IHomographCalculator homographCalculator = new HomographCalculator(lexEntryRepository, project.DefaultPrintingTemplate.HeadwordWritingSystem);
 		//
-		//            IEnumerable<LexEntry> entries = Lexicon.GetAllEntriesSortedByHeadword(project.DefaultPrintingTemplate.HeadwordWritingSytem);
+		//            IEnumerable<LexEntry> entries = Lexicon.GetAllEntriesSortedByHeadword(project.DefaultPrintingTemplate.HeadwordWritingSystem);
 		//            Db4oLexEntryFinder finder = new Db4oLexEntryFinder(lexEntryRepository.DataSource);
 		//
 		//            string pliftPath = MakePLiftTempFile(entries, project.DefaultPrintingTemplate, homographCalculator, finder);

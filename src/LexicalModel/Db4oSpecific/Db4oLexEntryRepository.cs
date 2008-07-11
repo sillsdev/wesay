@@ -7,7 +7,7 @@ using WeSay.Foundation;
 
 namespace WeSay.LexicalModel.Db4oSpecific
 {
-	public class Db4oLexEntryRepository: Db4oRepository<LexEntry>
+	internal sealed class Db4oLexEntryRepository: Db4oRepository<LexEntry>
 	{
 		private static WeSayDb4oConfigurator configurator = new WeSayDb4oConfigurator();
 		// we need the following code to run once, before the database is constructed

@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using Palaso.Reporting;
-using WeSay.Data;
 using WeSay.Foundation;
 
 namespace WeSay.LexicalModel
@@ -9,7 +9,7 @@ namespace WeSay.LexicalModel
 	public sealed class LexSense: WeSayDataObject
 	{
 		//private readonly SenseGlossMultiText _gloss;
-		private readonly InMemoryBindingList<LexExampleSentence> _exampleSentences;
+		private readonly BindingList<LexExampleSentence> _exampleSentences;
 		private string _id;
 
 		public new class WellKnownProperties: WeSayDataObject.WellKnownProperties
@@ -41,7 +41,7 @@ namespace WeSay.LexicalModel
 		public LexSense(WeSayDataObject parent): base(parent)
 		{
 			//   _gloss = new SenseGlossMultiText(this);
-			_exampleSentences = new InMemoryBindingList<LexExampleSentence>();
+			_exampleSentences = new BindingList<LexExampleSentence>();
 			WireUpEvents();
 		}
 

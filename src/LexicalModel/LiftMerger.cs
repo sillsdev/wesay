@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using LiftIO.Parsing;
 using Palaso.Text;
+using WeSay.Data;
 using WeSay.Foundation;
 using WeSay.Foundation.Options;
 
@@ -16,13 +17,22 @@ namespace WeSay.LexicalModel
 	public class LiftMerger: ILexiconMerger<WeSayDataObject, LexEntry, LexSense, LexExampleSentence>,
 							 IDisposable
 	{
-		private readonly LexEntryRepository _lexEntryRepository;
+		public class EntryCreatedEventArgs:EventArgs
+		{
+			public readonly LexEntry Entry;
+
+			public EntryCreatedEventArgs(LexEntry entry)
+			{
+				this.Entry = entry;
+			}
+		}
+
+		public event EventHandler<EntryCreatedEventArgs> EntryCreatedEvent = delegate { };
 		private readonly IList<String> _expectedOptionTraits;
 		private readonly IList<string> _expectedOptionCollectionTraits;
 
-		public LiftMerger(LexEntryRepository lexEntryRepository)
+		public LiftMerger()
 		{
-			_lexEntryRepository = lexEntryRepository;
 			_expectedOptionTraits = new List<string>();
 			_expectedOptionCollectionTraits = new List<string>();
 		}
@@ -51,15 +61,19 @@ namespace WeSay.LexicalModel
 			{
 				if (eInfo.CreationTime == default(DateTime))
 				{
-					eInfo.CreationTime = DateTime.UtcNow;
+					eInfo.CreationTime = PreciseDateTime.UtcNow;
 				}
 
 				if (eInfo.ModificationTime == default(DateTime))
 				{
-					eInfo.ModificationTime = DateTime.UtcNow;
+					eInfo.ModificationTime = PreciseDateTime.UtcNow;
 				}
 
-				entry = _lexEntryRepository.CreateItem(eInfo);
+				entry = new LexEntry();
+				entry.Id = eInfo.Id;
+				entry.Guid = eInfo.Guid;
+				entry.CreationTime = eInfo.CreationTime;
+				entry.ModificationTime = eInfo.ModificationTime;
 			}
 
 			entry.ModifiedTimeIsLocked = true; //while we build it up
@@ -441,7 +455,7 @@ namespace WeSay.LexicalModel
 		{
 			entry.GetOrCreateId(false);
 			entry.ModifiedTimeIsLocked = false;
-			_lexEntryRepository.SaveItem(entry);
+			EntryCreatedEvent.Invoke(this, new EntryCreatedEventArgs(entry));
 		}
 
 		#endregion

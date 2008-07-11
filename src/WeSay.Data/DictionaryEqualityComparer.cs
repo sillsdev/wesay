@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace WeSay.Data
 {
 	//todo: write tests and hashcode
-	public class DictionaryEqualityComparer<Key, Value> : EqualityComparer<Dictionary<Key, Value>>
+	internal class DictionaryEqualityComparer<Key, Value> : EqualityComparer<Dictionary<Key, Value>>
 	{
 		public override bool Equals(Dictionary<Key, Value> x, Dictionary<Key, Value> y)
 		{

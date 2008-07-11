@@ -789,12 +789,10 @@ namespace WeSay.LexicalTools.Tests
 			Assert.AreEqual(word, label);
 		}
 
-		private static void PressCtrlN(ControlTester t)
-		{
+		private static void PressCtrlN(ControlTester t) {
 			using (KeyboardController kc = new KeyboardController(t))
 			{
-				kc.Press("^n"); // Ctrl+N - N must be lowercase for this to work
-				kc.Release("^n");
+				kc.Press("^n"); // Ctrl+N
 			}
 		}
 
