@@ -204,7 +204,7 @@ namespace WeSay.Data.Tests
 		//This method is used to test whether data has been persisted.
 		//This method should dispose of the current repository and reload it from persisted data
 		//For repositories that don't support persistence this method should do nothing
-		protected abstract void RepopulateRepositoryFromPersistedData();
+		protected abstract void CreateNewRepositoryFromPersistedData();
 
 		[Test]
 		public void CreateItem_ReturnsUniqueItem()
@@ -338,8 +338,9 @@ namespace WeSay.Data.Tests
 			}
 			else
 			{
-				RepopulateRepositoryFromPersistedData();
+				CreateNewRepositoryFromPersistedData();
 				T itemFromPersistedData = RepositoryUnderTest.GetItem(id);
+
 				Assert.AreEqual(item, itemFromPersistedData);
 			}
 		}
@@ -376,7 +377,7 @@ namespace WeSay.Data.Tests
 			}
 			else
 			{
-				RepopulateRepositoryFromPersistedData();
+				CreateNewRepositoryFromPersistedData();
 				T itemFromPersistedData = RepositoryUnderTest.GetItem(id);
 				Assert.AreEqual(item, itemFromPersistedData);
 			}
@@ -412,7 +413,7 @@ namespace WeSay.Data.Tests
 		//This method is used to test whether data has been persisted.
 		//This method should dispose of the current repository and reload it from persisted data
 		//For repositories that don't support persistence this method should do nothing
-		protected abstract void RepopulateRepositoryFromPersistedData();
+		protected abstract void CreateNewRepositoryFromPersistedData();
 
 		[Test]
 		public void CreateItem_ReturnsUniqueItem()
@@ -550,7 +551,7 @@ namespace WeSay.Data.Tests
 			}
 			else
 			{
-				RepopulateRepositoryFromPersistedData();
+				CreateNewRepositoryFromPersistedData();
 				T itemFromPersistedData = RepositoryUnderTest.GetItem(id);
 				Assert.AreEqual(item, itemFromPersistedData);
 			}
@@ -588,7 +589,7 @@ namespace WeSay.Data.Tests
 			}
 			else
 			{
-				RepopulateRepositoryFromPersistedData();
+				CreateNewRepositoryFromPersistedData();
 				T itemFromPersistedData = RepositoryUnderTest.GetItem(id);
 				Assert.AreEqual(item, itemFromPersistedData);
 			}
@@ -618,7 +619,7 @@ namespace WeSay.Data.Tests
 		//This method is used to test whether data has been persisted.
 		//This method should dispose of the current repository and reload it from persisted data
 		//For repositories that don't support persistence this method should do nothing
-		protected abstract void RepopulateRepositoryFromPersistedData();
+		protected abstract void CreateNewRepositoryFromPersistedData();
 
 		public void SetState()
 		{
@@ -660,7 +661,7 @@ namespace WeSay.Data.Tests
 			}
 			else
 			{
-				RepopulateRepositoryFromPersistedData();
+				CreateNewRepositoryFromPersistedData();
 				RepositoryUnderTest.GetItem(id);
 			}
 		}
@@ -768,7 +769,7 @@ namespace WeSay.Data.Tests
 		//This method is used to test whether data has been persisted.
 		//This method should dispose of the current repository and reload it from persisted data
 		//For repositories that don't support persistence this method should do nothing
-		protected abstract void RepopulateRepositoryFromPersistedData();
+		protected abstract void CreateNewRepositoryFromPersistedData();
 
 		public void SetState()
 		{
@@ -810,7 +811,7 @@ namespace WeSay.Data.Tests
 			}
 			else
 			{
-				RepopulateRepositoryFromPersistedData();
+				CreateNewRepositoryFromPersistedData();
 				RepositoryUnderTest.GetItem(id);
 			}
 		}

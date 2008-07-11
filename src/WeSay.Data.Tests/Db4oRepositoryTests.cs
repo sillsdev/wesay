@@ -47,7 +47,7 @@ namespace WeSay.Data.Tests
 			File.Delete(_name);
 		}
 
-		protected override void RepopulateRepositoryFromPersistedData()
+		protected override void CreateNewRepositoryFromPersistedData()
 		{
 			RepositoryUnderTest.Dispose();
 			CreateRepository();
@@ -77,7 +77,7 @@ namespace WeSay.Data.Tests
 			File.Delete(_name);
 		}
 
-		protected override void RepopulateRepositoryFromPersistedData()
+		protected override void CreateNewRepositoryFromPersistedData()
 		{
 			RepositoryUnderTest.Dispose();
 			CreateRepository();
@@ -108,7 +108,7 @@ namespace WeSay.Data.Tests
 			File.Delete(_name);
 		}
 
-		protected override void RepopulateRepositoryFromPersistedData()
+		protected override void CreateNewRepositoryFromPersistedData()
 		{
 			RepositoryUnderTest.Dispose();
 			CreateRepository();

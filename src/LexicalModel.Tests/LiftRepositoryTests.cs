@@ -1,7 +1,6 @@
 using System;
 using System.IO;
 using NUnit.Framework;
-using WeSay.Data;
 using WeSay.Data.Tests;
 using WeSay.LexicalModel;
 
@@ -85,7 +84,7 @@ namespace WeSay.LexicalModel.Tests
 			Assert.AreEqual(persistedFileTime, RepositoryUnderTest.LastModified);
 		}
 
-		protected override void RepopulateRepositoryFromPersistedData()
+		protected override void CreateNewRepositoryFromPersistedData()
 		{
 			RepositoryUnderTest.Dispose();
 			RepositoryUnderTest = new LiftRepository(_persistedFilePath);
@@ -111,7 +110,7 @@ namespace WeSay.LexicalModel.Tests
 			File.Delete(this._persistedFilePath);
 		}
 
-		protected override void RepopulateRepositoryFromPersistedData()
+		protected override void CreateNewRepositoryFromPersistedData()
 		{
 			RepositoryUnderTest.Dispose();
 			RepositoryUnderTest = new LiftRepository(_persistedFilePath);
@@ -137,7 +136,7 @@ namespace WeSay.LexicalModel.Tests
 			File.Delete(this._persistedFilePath);
 		}
 
-		protected override void RepopulateRepositoryFromPersistedData()
+		protected override void CreateNewRepositoryFromPersistedData()
 		{
 			RepositoryUnderTest.Dispose();
 			RepositoryUnderTest = new LiftRepository(_persistedFilePath);
@@ -163,7 +162,7 @@ namespace WeSay.LexicalModel.Tests
 			File.Delete(this._persistedFilePath);
 		}
 
-		protected override void RepopulateRepositoryFromPersistedData()
+		protected override void CreateNewRepositoryFromPersistedData()
 		{
 			RepositoryUnderTest.Dispose();
 			RepositoryUnderTest = new LiftRepository(_persistedFilePath);
