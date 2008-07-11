@@ -85,6 +85,7 @@ namespace WeSay.LexicalModel.Tests
 			Assert.AreEqual(persistedFileTime, RepositoryUnderTest.LastModified);
 		}
 
+		//!!!This Test is a workaround because equals on a lexentry is reference dependant TA 2008-07-11
 		public override void SaveItem_ItemHasBeenPersisted()
 		{
 			SetState();
@@ -94,6 +95,7 @@ namespace WeSay.LexicalModel.Tests
 			Assert.AreNotEqual(contentsOfPersistedFile, File.ReadAllText(_persistedFilePath));
 		}
 
+		//!!!This Test is a workaround because equals on a lexentry is reference dependant TA 2008-07-11
 		public override void SaveItems_ItemHasBeenPersisted()
 		{
 			SetState();
@@ -131,6 +133,7 @@ namespace WeSay.LexicalModel.Tests
 			File.Delete(this._persistedFilePath);
 		}
 
+		//!!!This Test is a workaround because equals on a lexentry is reference dependant TA 2008-07-11
 		public override void SaveItem_ItemHasBeenPersisted()
 		{
 			SetState();
@@ -143,6 +146,7 @@ namespace WeSay.LexicalModel.Tests
 			Assert.AreEqual(contentsOfPersistedFile, File.ReadAllText(_persistedFilePath));
 		}
 
+		//!!!This Test is a workaround because equals on a lexentry is reference dependant TA 2008-07-11
 		public override void SaveItems_ItemHasBeenPersisted()
 		{
 			SetState();
