@@ -40,7 +40,7 @@ namespace WeSay.LexicalModel.Tests
 		public void ModifiedDateAfterMultiTextChange()
 		{
 			long start = _entry.ModificationTime.Ticks;
-			Thread.Sleep(100); //else modtime doesn't change
+			Thread.Sleep(1000); //else modtime doesn't change
 			_entry.LexicalForm["foo"] = "hello";
 			Assert.Greater((decimal) _entry.ModificationTime.Ticks, start);
 			Assert.IsTrue(_didNotify);
@@ -50,7 +50,7 @@ namespace WeSay.LexicalModel.Tests
 		public void ModifiedDateAfterLexSenseVectorChanges()
 		{
 			long start = _entry.ModificationTime.Ticks;
-			Thread.Sleep(100); //else modtime doesn't change
+			Thread.Sleep(1000); //else modtime doesn't change
 			_entry.Senses.Add(new LexSense());;
 			Assert.Greater((decimal) _entry.ModificationTime.Ticks, start);
 			Assert.IsTrue(_didNotify);
@@ -62,7 +62,7 @@ namespace WeSay.LexicalModel.Tests
 			LexSense sense = new LexSense();
 			_entry.Senses.Add(sense);
 			long start = _entry.ModificationTime.Ticks;
-			Thread.Sleep(100); //else modtime doesn't change
+			Thread.Sleep(1000); //else modtime doesn't change
 			sense.Gloss["foo"] = "hello";
 			Assert.Greater((decimal) _entry.ModificationTime.Ticks, start);
 			Assert.IsTrue(_didNotify);
@@ -74,7 +74,7 @@ namespace WeSay.LexicalModel.Tests
 			LexSense sense = new LexSense();
 			_entry.Senses.Add(sense);
 			long start = _entry.ModificationTime.Ticks;
-			Thread.Sleep(100); //else modtime doesn't change
+			Thread.Sleep(1000); //else modtime doesn't change
 			sense.ExampleSentences.Add(new LexExampleSentence());;
 			Assert.Greater((decimal) _entry.ModificationTime.Ticks, start);
 			Assert.IsTrue(_didNotify);
@@ -86,7 +86,7 @@ namespace WeSay.LexicalModel.Tests
 			LexSense sense = new LexSense();
 			_entry.Senses.Add(sense);
 			long start = _entry.ModificationTime.Ticks;
-			Thread.Sleep(100); //else modtime doesn't change
+			Thread.Sleep(1000); //else modtime doesn't change
 			LexExampleSentence example = new LexExampleSentence();
 			sense.ExampleSentences.Add(example);
 			example.Sentence["foo"] = "hello";
