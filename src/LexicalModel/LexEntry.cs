@@ -173,6 +173,7 @@ namespace WeSay.LexicalModel
 			set
 			{
 				Debug.Assert(value.Kind == DateTimeKind.Utc);
+				//_creationTime = value;
 				//converting time to LiftFormatResolution
 				_creationTime = new DateTime(value.Year, value.Month, value.Day, value.Hour, value.Minute,
 													 value.Second, value.Kind);
@@ -197,6 +198,7 @@ namespace WeSay.LexicalModel
 				if (!ModifiedTimeIsLocked)
 				{
 					Debug.Assert(value.Kind == DateTimeKind.Utc);
+					//_modificationTime = value;
 					//converting time to LiftFormatResolution
 					_modificationTime = new DateTime(value.Year, value.Month, value.Day, value.Hour, value.Minute,
 													 value.Second, value.Kind);
