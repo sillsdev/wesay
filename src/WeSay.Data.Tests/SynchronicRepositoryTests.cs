@@ -37,7 +37,7 @@ namespace WeSay.Data.Tests
             RepositoryUnderTest.Dispose();
         }
 
-        protected override void RepopulateRepositoryFromPersistedData()
+		protected override void CreateNewRepositoryFromPersistedData()
         {
             //Do nothing.
         }
@@ -58,7 +58,7 @@ namespace WeSay.Data.Tests
             RepositoryUnderTest.Dispose();
         }
 
-        protected override void RepopulateRepositoryFromPersistedData()
+		protected override void CreateNewRepositoryFromPersistedData()
         {
             //Do nothing.
         }
@@ -79,7 +79,7 @@ namespace WeSay.Data.Tests
 			RepositoryUnderTest.Dispose();
 		}
 
-		protected override void RepopulateRepositoryFromPersistedData()
+		protected override void CreateNewRepositoryFromPersistedData()
 		{
 			//Do nothing.
 		}
