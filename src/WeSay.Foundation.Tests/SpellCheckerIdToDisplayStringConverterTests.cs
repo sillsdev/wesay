@@ -18,7 +18,7 @@ namespace WeSay.Foundation.Tests
 		public void Setup()
 		{
 			_idKnownToWindows = "en_US";
-			_idNotKnownToWindows = "ne_NP";
+			_idNotKnownToWindows = "xY_Xy";
 			_spellCheckerIdToDisplayStringConverter =
 					new WritingSystem.SpellCheckerIdToDisplayStringConverter();
 			_spellCheckerIdToDisplayStringConverter.GetInstalledSpellCheckingIdsStrategy =
