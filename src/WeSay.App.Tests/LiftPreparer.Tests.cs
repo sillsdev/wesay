@@ -47,7 +47,7 @@ namespace WeSay.App.Tests
 			{
 				using (WeSayWordsProject project = dir.CreateLoadedProject())
 				{
-					LiftPreparer preparer = new LiftPreparer(project);
+					LiftPreparer preparer = new LiftPreparer(project, _lexEntryRepository);
 					Assert.IsTrue(preparer.MigrateIfNeeded(), "MigrateIfNeeded Failed");
 					Assert.AreEqual(Validator.LiftVersion,
 									Validator.GetLiftVersion(dir.PathToLiftFile));
@@ -65,7 +65,7 @@ namespace WeSay.App.Tests
 				using (WeSayWordsProject proj = dir.CreateLoadedProject())
 				{
 					proj.LockLift();
-					LiftPreparer preparer = new LiftPreparer(proj);
+					LiftPreparer preparer = new LiftPreparer(proj, _lexEntryRepository);
 					Assert.IsTrue(preparer.MigrateIfNeeded(), "MigrateIfNeeded Failed");
 					Assert.IsTrue(proj.LiftIsLocked);
 				}
@@ -83,7 +83,7 @@ namespace WeSay.App.Tests
 				using (WeSayWordsProject project = dir.CreateLoadedProject())
 				{
 					DateTime startModTime = File.GetLastWriteTimeUtc(dir.PathToLiftFile);
-					LiftPreparer preparer = new LiftPreparer(project);
+					LiftPreparer preparer = new LiftPreparer(project, _lexEntryRepository);
 					Assert.IsTrue(preparer.MigrateIfNeeded(), "MigrateIfNeeded Failed");
 					DateTime finishModTime = File.GetLastWriteTimeUtc(dir.PathToLiftFile);
 					Assert.AreEqual(startModTime, finishModTime);
