@@ -204,7 +204,7 @@ namespace WeSay.Project
 		public void OnDoWork(object sender, DoWorkEventArgs e)
 		{
 			_backgroundWorker = sender as BackgroundWorker;
-			DoWork(e.Argument as ProgressState);
+			//DoWork(e.Argument as ProgressState);
 			e.Result = e.Argument as ProgressState;
 
 			//this is weird, but needed for the caller to know that we quite because
@@ -223,142 +223,142 @@ namespace WeSay.Project
 
 		public void DoWork(ProgressState progress)
 		{
-			Logger.WriteEvent("Building Caches");
-			_progress = progress;
-			_progress.State = ProgressState.StateValue.Busy;
-			_progress.StatusLabel = "Validating...";
+		//    Logger.WriteEvent("Building Caches");
+		//    _progress = progress;
+		//    _progress.State = ProgressState.StateValue.Busy;
+		//    _progress.StatusLabel = "Validating...";
 
-			try
-			{
-				string errors = Validator.GetAnyValidationErrors(_sourceLIFTPath);
-				if (errors != null && errors != string.Empty)
-				{
-					progress.StatusLabel = "Problem with file format...";
-					_progress.State = ProgressState.StateValue.StoppedWithError;
-					_progress.WriteToLog(
-							string.Format("There is a problem with the format of {0}. {1}",
-										  _sourceLIFTPath,
-										  errors));
-					Logger.WriteEvent("LIFT failed to validate.");
-					return;
-				}
+		//    try
+		//    {
+		//        string errors = Validator.GetAnyValidationErrors(_sourceLIFTPath);
+		//        if (errors != null && errors != string.Empty)
+		//        {
+		//            progress.StatusLabel = "Problem with file format...";
+		//            _progress.State = ProgressState.StateValue.StoppedWithError;
+		//            _progress.WriteToLog(
+		//                    string.Format("There is a problem with the format of {0}. {1}",
+		//                                  _sourceLIFTPath,
+		//                                  errors));
+		//            Logger.WriteEvent("LIFT failed to validate.");
+		//            return;
+		//        }
 
-				progress.StatusLabel = "Building Caches...";
-				string tempCacheDirectory =
-						Directory.CreateDirectory(
-								Path.Combine(Path.GetTempPath(), Path.GetRandomFileName())).FullName;
-				WeSayWordsProject.Project.CacheLocationOverride = tempCacheDirectory;
+		//        progress.StatusLabel = "Building Caches...";
+		//        string tempCacheDirectory =
+		//                Directory.CreateDirectory(
+		//                        Path.Combine(Path.GetTempPath(), Path.GetRandomFileName())).FullName;
+		//        WeSayWordsProject.Project.CacheLocationOverride = tempCacheDirectory;
 
-				//same name, but in a temp directory
-				string db4oFileName =
-						Path.GetFileName(WeSayWordsProject.Project.PathToDb4oLexicalModelDB);
-				string tempDb4oFilePath = Path.Combine(tempCacheDirectory, db4oFileName);
+		//        //same name, but in a temp directory
+		//        string db4oFileName =
+		//                Path.GetFileName(WeSayWordsProject.Project.PathToDb4oLexicalModelDB);
+		//        string tempDb4oFilePath = Path.Combine(tempCacheDirectory, db4oFileName);
 
-				using (
-						LexEntryRepository lexEntryRepository =
-								new LexEntryRepository(tempDb4oFilePath))
-				{
-					//MONO bug as of 1.1.18 cannot bitwise or FileShare on FileStream constructor
-					//                    using (FileStream config = new FileStream(project.PathToProjectTaskInventory, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete))
-					SetupTasksToBuildCaches(lexEntryRepository);
+		//        using (
+		//                LexEntryRepository lexEntryRepository =
+		//                        new LexEntryRepository(tempDb4oFilePath))
+		//        {
+		//            //MONO bug as of 1.1.18 cannot bitwise or FileShare on FileStream constructor
+		//            //                    using (FileStream config = new FileStream(project.PathToProjectTaskInventory, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete))
+		//            SetupTasksToBuildCaches(lexEntryRepository);
 
-					DoParsing(lexEntryRepository);
-					if (_backgroundWorker != null && _backgroundWorker.CancellationPending)
-					{
-						return;
-					}
-				}
-				WeSayWordsProject.Project.CacheLocationOverride = null;
-				ClearTheIncrementalBackupDirectory();
+		//            DoParsing(lexEntryRepository);
+		//            if (_backgroundWorker != null && _backgroundWorker.CancellationPending)
+		//            {
+		//                return;
+		//            }
+		//        }
+		//        WeSayWordsProject.Project.CacheLocationOverride = null;
+		//        ClearTheIncrementalBackupDirectory();
 
-				//if we got this far without an error, move it
-				//string backupPath = _destinationDatabasePath + ".bak";
-				//not needed File.Delete(backupPath);
-				string cacheFolderName = WeSayWordsProject.Project.PathToCache;
-				// _destinationDatabasePath + " Cache";
-				// if directory is empty, don't delete because it may be in use
-				if (Directory.Exists(cacheFolderName) &&
-					Directory.GetFileSystemEntries(cacheFolderName).Length != 0)
-				{
-					try
-					{
-						Directory.Delete(cacheFolderName, true);
-					}
-					catch (IOException)
-					{
-						// avoid crash if we managed to delete all files but not the directory itself
-						if (Directory.GetFileSystemEntries(cacheFolderName).Length != 0)
-						{
-							throw;
-						}
-					}
-					//fails if temp dir is on a different volume:
-					//Directory.Move(tempTarget + " Cache", cacheFolderName);
-				}
-				SafeMoveDirectory(tempCacheDirectory, cacheFolderName);
+		//        //if we got this far without an error, move it
+		//        //string backupPath = _destinationDatabasePath + ".bak";
+		//        //not needed File.Delete(backupPath);
+		//        string cacheFolderName = WeSayWordsProject.Project.PathToCache;
+		//        // _destinationDatabasePath + " Cache";
+		//        // if directory is empty, don't delete because it may be in use
+		//        if (Directory.Exists(cacheFolderName) &&
+		//            Directory.GetFileSystemEntries(cacheFolderName).Length != 0)
+		//        {
+		//            try
+		//            {
+		//                Directory.Delete(cacheFolderName, true);
+		//            }
+		//            catch (IOException)
+		//            {
+		//                // avoid crash if we managed to delete all files but not the directory itself
+		//                if (Directory.GetFileSystemEntries(cacheFolderName).Length != 0)
+		//                {
+		//                    throw;
+		//                }
+		//            }
+		//            //fails if temp dir is on a different volume:
+		//            //Directory.Move(tempTarget + " Cache", cacheFolderName);
+		//        }
+		//        SafeMoveDirectory(tempCacheDirectory, cacheFolderName);
 
-				using (
-						Db4oDataSource ds =
-								new Db4oDataSource(
-										WeSayWordsProject.Project.PathToDb4oLexicalModelDB))
-				{
-					CacheManager.UpdateSyncPointInCache(ds.Data,
-														File.GetLastWriteTimeUtc(_sourceLIFTPath));
-					File.WriteAllText(
-							Path.Combine(WeSayWordsProject.Project.PathToCache,
-										 CacheManager.kCacheIsFreshIndicator),
-							"");
-				}
+		//        using (
+		//                Db4oDataSource ds =
+		//                        new Db4oDataSource(
+		//                                WeSayWordsProject.Project.PathToDb4oLexicalModelDB))
+		//        {
+		//            CacheManager.UpdateSyncPointInCache(ds.Data,
+		//                                                File.GetLastWriteTimeUtc(_sourceLIFTPath));
+		//            File.WriteAllText(
+		//                    Path.Combine(WeSayWordsProject.Project.PathToCache,
+		//                                 CacheManager.kCacheIsFreshIndicator),
+		//                    "");
+		//        }
 
-				_progress.State = ProgressState.StateValue.Finished;
-			}
-			catch (Exception e)
-			{
-				//currently, error reporter can choke because this is
-				//being called from a non sta thread.
-				//so let's leave it to the progress dialog to report the error
-				//                Reporting.ErrorReporter.ReportException(e,null, false);
-				_progress.ExceptionThatWasEncountered = e;
-				_progress.WriteToLog(e.Message);
-				_progress.State = ProgressState.StateValue.StoppedWithError;
-			}
-			finally
-			{
-				try // EVIL STATICS!
-				{
-					if (WeSayWordsProject.Project != null)
-					{
-						WeSayWordsProject.Project.CacheLocationOverride = null;
-					}
-				}
-				catch (Exception)
-				{
-					//swallow
-				}
-			}
-			Logger.WriteEvent("Done Building Caches");
+		//        _progress.State = ProgressState.StateValue.Finished;
+		//    }
+		//    catch (Exception e)
+		//    {
+		//        //currently, error reporter can choke because this is
+		//        //being called from a non sta thread.
+		//        //so let's leave it to the progress dialog to report the error
+		//        //                Reporting.ErrorReporter.ReportException(e,null, false);
+		//        _progress.ExceptionThatWasEncountered = e;
+		//        _progress.WriteToLog(e.Message);
+		//        _progress.State = ProgressState.StateValue.StoppedWithError;
+		//    }
+		//    finally
+		//    {
+		//        try // EVIL STATICS!
+		//        {
+		//            if (WeSayWordsProject.Project != null)
+		//            {
+		//                WeSayWordsProject.Project.CacheLocationOverride = null;
+		//            }
+		//        }
+		//        catch (Exception)
+		//        {
+		//            //swallow
+		//        }
+		//    }
+		//    Logger.WriteEvent("Done Building Caches");
 		}
 
-		private void DoParsing(LexEntryRepository lexEntryRepository)
-		{
-			//                entriesList.WriteCacheSize = 0; //don't write after every record
-			using (LiftMerger merger = new LiftMerger())
-			{
-				foreach (string name in WeSayWordsProject.Project.OptionFieldNames)
-				{
-					merger.ExpectedOptionTraits.Add(name);
-					//_importer.ExpectedOptionTraits.Add(name);
-				}
-				foreach (string name in WeSayWordsProject.Project.OptionCollectionFieldNames)
-				{
-					merger.ExpectedOptionCollectionTraits.Add(name);
-				}
+		//private void DoParsing(LexEntryRepository lexEntryRepository)
+		//{
+		//    //                entriesList.WriteCacheSize = 0; //don't write after every record
+		//    using (LiftMerger merger = new LiftMerger())
+		//    {
+		//        foreach (string name in WeSayWordsProject.Project.OptionFieldNames)
+		//        {
+		//            merger.ExpectedOptionTraits.Add(name);
+		//            //_importer.ExpectedOptionTraits.Add(name);
+		//        }
+		//        foreach (string name in WeSayWordsProject.Project.OptionCollectionFieldNames)
+		//        {
+		//            merger.ExpectedOptionCollectionTraits.Add(name);
+		//        }
 
-				RunParser(merger);
-			}
+		//        RunParser(merger);
+		//    }
 
-			UpdateDashboardStats();
-		}
+		//    UpdateDashboardStats();
+		//}
 
 		private static void UpdateDashboardStats()
 		{
