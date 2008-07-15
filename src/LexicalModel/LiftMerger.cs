@@ -14,7 +14,7 @@ namespace WeSay.LexicalModel
 	///
 	/// NB: this doesn't yet merge (dec 2006). Just blindly adds.
 	/// </summary>
-	public class LiftMerger: ILexiconMerger<WeSayDataObject, LexEntry, LexSense, LexExampleSentence>,
+	internal class LiftMerger: ILexiconMerger<WeSayDataObject, LexEntry, LexSense, LexExampleSentence>,
 							 IDisposable
 	{
 		public class EntryCreatedEventArgs:EventArgs
@@ -30,11 +30,13 @@ namespace WeSay.LexicalModel
 		public event EventHandler<EntryCreatedEventArgs> EntryCreatedEvent = delegate { };
 		private readonly IList<String> _expectedOptionTraits;
 		private readonly IList<string> _expectedOptionCollectionTraits;
+		private readonly LiftRepository _repository;
 
-		public LiftMerger()
+		public LiftMerger(LiftRepository repository)
 		{
 			_expectedOptionTraits = new List<string>();
 			_expectedOptionCollectionTraits = new List<string>();
+			_repository = repository;
 		}
 
 		public LexEntry GetOrMakeEntry(Extensible eInfo, int order)
@@ -57,23 +59,24 @@ namespace WeSay.LexicalModel
 				}
 			}
 #endif
-			if (entry == null)
-			{
-				if (eInfo.CreationTime == default(DateTime))
+			if (eInfo.CreationTime == default(DateTime))
 				{
 					eInfo.CreationTime = PreciseDateTime.UtcNow;
 				}
 
-				if (eInfo.ModificationTime == default(DateTime))
+			if (eInfo.ModificationTime == default(DateTime))
 				{
 					eInfo.ModificationTime = PreciseDateTime.UtcNow;
 				}
 
-				entry = new LexEntry();
+				entry = _repository.CreateItem();
 				entry.Id = eInfo.Id;
 				entry.Guid = eInfo.Guid;
 				entry.CreationTime = eInfo.CreationTime;
 				entry.ModificationTime = eInfo.ModificationTime;
+			if(_repository.LastModified < entry.ModificationTime)
+			{
+				_repository.LastModified = entry.ModificationTime;
 			}
 
 			entry.ModifiedTimeIsLocked = true; //while we build it up
@@ -455,7 +458,6 @@ namespace WeSay.LexicalModel
 		{
 			entry.GetOrCreateId(false);
 			entry.ModifiedTimeIsLocked = false;
-			EntryCreatedEvent.Invoke(this, new EntryCreatedEventArgs(entry));
 		}
 
 		#endregion
