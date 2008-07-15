@@ -31,6 +31,7 @@ namespace SampleDataProcessor
 
 			new WeSayWordsProject();
 			WeSayWordsProject.Project.LoadFromLiftLexiconPath(sourcePath);
+			//todo this should be re-implemented if needed with SynchronicRepository
 			CacheBuilder builder = new CacheBuilder(sourcePath);
 			BackgroundWorker cacheBuildingWork = new BackgroundWorker();
 			cacheBuildingWork.DoWork += builder.OnDoWork;
