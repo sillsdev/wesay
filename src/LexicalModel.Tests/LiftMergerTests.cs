@@ -14,7 +14,7 @@ namespace WeSay.LexicalModel.Tests
 	public class LiftMergerTests: ILiftMergerTestSuite
 	{
 		private LiftMerger _merger;
-		private LexEntryRepository _lexEntryRepository;
+		private LiftRepository _repository;
 		private string _tempFile;
 
 		[SetUp]
@@ -23,16 +23,15 @@ namespace WeSay.LexicalModel.Tests
 			WeSayWordsProject.InitializeForTests();
 
 			_tempFile = Path.GetTempFileName();
-			_lexEntryRepository = new LexEntryRepository(_tempFile);
-
-			_merger = new LiftMerger();
+			_repository = new LiftRepository(_tempFile);
+			_merger = new LiftMerger(_repository);
 		}
 
 		[TearDown]
 		public void TearDown()
 		{
 			_merger.Dispose();
-			_lexEntryRepository.Dispose();
+			_repository.Dispose();
 			File.Delete(_tempFile);
 		}
 
@@ -44,7 +43,7 @@ namespace WeSay.LexicalModel.Tests
 			LexEntry e = _merger.GetOrMakeEntry(extensibleInfo, 0);
 			Assert.AreEqual(extensibleInfo.Id, e.Id);
 			_merger.FinishEntry(e);
-			Assert.AreEqual(1, _lexEntryRepository.CountAllItems());
+			Assert.AreEqual(1, _repository.CountAllItems());
 		}
 
 		[Test]
@@ -55,7 +54,7 @@ namespace WeSay.LexicalModel.Tests
 			LexEntry e = _merger.GetOrMakeEntry(extensibleInfo, 0);
 			Assert.AreEqual(extensibleInfo.Guid, e.Guid);
 			_merger.FinishEntry(e);
-			Assert.AreEqual(1, _lexEntryRepository.CountAllItems());
+			Assert.AreEqual(1, _repository.CountAllItems());
 		}
 
 		[Test]
@@ -69,7 +68,7 @@ namespace WeSay.LexicalModel.Tests
 			Assert.AreEqual(extensibleInfo.CreationTime, e.CreationTime);
 			Assert.AreEqual(extensibleInfo.ModificationTime, e.ModificationTime);
 			_merger.FinishEntry(e);
-			Assert.AreEqual(1, _lexEntryRepository.CountAllItems());
+			Assert.AreEqual(1, _repository.CountAllItems());
 		}
 
 		[Test]
@@ -382,11 +381,11 @@ namespace WeSay.LexicalModel.Tests
 			_merger.FinishEntry(e);
 			CheckCompleteEntry(e);
 
-			RepositoryId[] entries = _lexEntryRepository.GetAllItems();
+			RepositoryId[] entries = _repository.GetAllItems();
 			Assert.AreEqual(1, entries.Length);
 
 			//now check it again, from the list
-			CheckCompleteEntry(_lexEntryRepository.GetItem(entries[0]));
+			CheckCompleteEntry(_repository.GetItem(entries[0]));
 		}
 
 		[Test]
@@ -475,19 +474,23 @@ namespace WeSay.LexicalModel.Tests
 #endif
 		}
 
-		[Test]
+		[Test, Ignore("This test is defective. found is always true CJP 2008-07-14")]
 		public void EntryWithIncomingUnspecifiedModTimeNotPruned()
 		{
 			Guid g = Guid.NewGuid();
-			Extensible extensibleInfo = CreateFullextensibleInfo(g);
-			LexEntry e = _lexEntryRepository.CreateItem(extensibleInfo);
-			_lexEntryRepository.SaveItem(e);
+			Extensible eInfo = CreateFullextensibleInfo(g);
+			LexEntry item = _repository.CreateItem();
+			item.Guid = eInfo.Guid;
+			item.Id = eInfo.Id;
+			item.ModificationTime = eInfo.ModificationTime;
+			item.CreationTime = eInfo.CreationTime;
+			_repository.SaveItem(item);
 
 			//strip out the time
-			extensibleInfo.ModificationTime = Extensible.ParseDateTimeCorrectly("2005-01-01");
-			Assert.AreEqual(DateTimeKind.Utc, extensibleInfo.ModificationTime.Kind);
+			eInfo.ModificationTime = Extensible.ParseDateTimeCorrectly("2005-01-01");
+			Assert.AreEqual(DateTimeKind.Utc, eInfo.ModificationTime.Kind);
 
-			LexEntry found = _merger.GetOrMakeEntry(extensibleInfo, 0);
+			LexEntry found = _merger.GetOrMakeEntry(eInfo, 0);
 			Assert.IsNotNull(found);
 		}
 
