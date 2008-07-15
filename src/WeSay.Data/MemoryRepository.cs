@@ -13,7 +13,7 @@ namespace WeSay.Data
 		public DateTime LastModified
 		{
 			get { return lastModified; }
-			protected set
+			internal set
 			{
 				value = value.ToUniversalTime();
 				lastModified = value;
@@ -30,7 +30,6 @@ namespace WeSay.Data
 			MemoryRepositoryId id = new MemoryRepositoryId();
 			idToObjectHashtable.Add(id, t);
 			objectToIdHashtable.Add(t, id);
-			LastModified = PreciseDateTime.UtcNow;
 			return t;
 		}
 
