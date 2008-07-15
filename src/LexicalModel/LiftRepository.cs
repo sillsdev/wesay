@@ -20,25 +20,15 @@ namespace WeSay.LexicalModel
 		public LiftRepository(string filePath)
 		{
 			_liftFilePath = filePath;
-			if(!File.Exists(filePath))
+			FileInfo fileInfo = new FileInfo(_liftFilePath);
+			if (!fileInfo.Exists || fileInfo.Length == 0)
 			{
 				LiftExporter exporter = new LiftExporter(filePath);
 				exporter.End();
 			}
 			LockLift();
-			LastModified = File.GetLastWriteTimeUtc(_liftFilePath);
+			LastModified = DateTime.MinValue;
 			LoadAllLexEntries();
-		}
-
-		public override LexEntry  CreateItem()
-		{
-			LexEntry newEntry = new LexEntry();
-			GuidRepositoryId id = new GuidRepositoryId(newEntry.Guid);
-			idToObjectHashtable.Add(id, newEntry);
-			objectToIdHashtable.Add(newEntry, id);
-			LastModified = PreciseDateTime.UtcNow;
-			UpdateLiftFileWithModified(newEntry);
-			return newEntry;
 		}
 
 		public override void DeleteItem(RepositoryId id)
@@ -77,28 +67,15 @@ namespace WeSay.LexicalModel
 			UpdateLiftFileWithModified(items);
 		}
 
-		public override bool CanQuery
-		{
-			get { return false; }
-		}
-
 		public override bool CanPersist
 		{
 			get { return true; }
 		}
 
-		public override ResultSet<LexEntry> GetItemsMatching(Query query)
-		{
-			throw new NotSupportedException("Querying is not supported");
-		}
-
 		private void LoadAllLexEntries()
 		{
-			objectToIdHashtable.Clear();
-			idToObjectHashtable.Clear();
-			using (LiftMerger merger = new LiftMerger())
+			using (LiftMerger merger = new LiftMerger(this))
 			{
-				merger.EntryCreatedEvent += OnEntryCreated;
 				LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence> parser =
 					new LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence>(
 						merger);
@@ -130,14 +107,7 @@ namespace WeSay.LexicalModel
 			base.Dispose();
 		}
 
-		private void OnEntryCreated(object sender, LiftMerger.EntryCreatedEventArgs e)
-		{
-			idToObjectHashtable.Add(new GuidRepositoryId(e.Entry.Guid),
-						 e.Entry);
-			objectToIdHashtable.Add(e.Entry, new GuidRepositoryId(e.Entry.Guid));
-		}
-
-		//???? Erik added these and I'm not sure why. TA 2008-07-10
+		//???? Eric added these and I'm not sure why. TA 2008-07-10
 		private void parser_ParsingWarning(object sender,
 										   LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence>.ErrorArgs
 											   e)
@@ -409,44 +379,6 @@ namespace WeSay.LexicalModel
 		{
 			Debug.Assert(_liftFileStreamForLocking == null);
 			_liftFileStreamForLocking = File.OpenRead(_liftFilePath);
-		}
-
-		private class GuidRepositoryId : RepositoryId
-		{
-			private readonly Guid _id;
-
-			public GuidRepositoryId(Guid id)
-			{
-				_id = id;
-			}
-
-			public override int CompareTo(RepositoryId other)
-			{
-				return CompareTo(other as GuidRepositoryId);
-			}
-
-			public int CompareTo(GuidRepositoryId other)
-			{
-				if (other == null)
-				{
-					return 1;
-				}
-				return Comparer<Guid>.Default.Compare(_id, other._id);
-			}
-
-			public override bool Equals(RepositoryId other)
-			{
-				return Equals(other as GuidRepositoryId);
-			}
-
-			public bool Equals(GuidRepositoryId other)
-			{
-				if (other == null)
-				{
-					return false;
-				}
-				return Equals(_id, other._id);
-			}
 		}
 	}
 }
