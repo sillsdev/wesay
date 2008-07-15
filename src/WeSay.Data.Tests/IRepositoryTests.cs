@@ -332,7 +332,7 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		public virtual void SaveItem_ItemHasBeenPersisted()
+		public void SaveItem_ItemHasBeenPersisted()
 		{
 			SetState();
 			if (!RepositoryUnderTest.CanPersist)
@@ -341,7 +341,10 @@ namespace WeSay.Data.Tests
 			}
 			else
 			{
-				Assert.Fail("This test is dependant on the Type of item you are storing in your repository. As such you must override it.");
+				SetState();
+				RepositoryUnderTest.SaveItem(Item);
+				CreateNewRepositoryFromPersistedData();
+				Assert.AreEqual(1, RepositoryUnderTest.CountAllItems());
 			}
 		}
 
@@ -368,7 +371,7 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		public virtual void SaveItems_ItemHasBeenPersisted()
+		public void SaveItems_ItemHasBeenPersisted()
 		{
 			SetState();
 			if(!RepositoryUnderTest.CanPersist)
@@ -377,7 +380,12 @@ namespace WeSay.Data.Tests
 			}
 			else
 			{
-				Assert.Fail("This test is dependant on the Type of item you are storing in your repository. As such you must override it.");
+				SetState();
+				List<T> itemsToBeSaved = new List<T>();
+				itemsToBeSaved.Add(Item);
+				RepositoryUnderTest.SaveItems(itemsToBeSaved);
+				CreateNewRepositoryFromPersistedData();
+				Assert.AreEqual(1, RepositoryUnderTest.CountAllItems());
 			}
 		}
 	}
@@ -552,20 +560,6 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		public virtual void SaveItem_ItemHasBeenPersisted()
-		{
-			SetState();
-			if (!RepositoryUnderTest.CanPersist)
-			{
-				Assert.Ignore("Repository can not be persisted.");
-			}
-			else
-			{
-				Assert.Fail("This test is dependant on the Type of item you are storing in your repository. As such you must override it.");
-			}
-		}
-
-		[Test]
 		public void SaveItems_LastModifiedIsChangedToLaterTime()
 		{
 			SetState();
@@ -585,20 +579,6 @@ namespace WeSay.Data.Tests
 			Thread.Sleep(50);
 			RepositoryUnderTest.SaveItems(itemsToSave);
 			Assert.AreEqual(DateTimeKind.Utc, RepositoryUnderTest.LastModified.Kind);
-		}
-
-		[Test]
-		public virtual void SaveItems_ItemHasBeenPersisted()
-		{
-			SetState();
-			if (!RepositoryUnderTest.CanPersist)
-			{
-				Assert.Ignore("Repository can not be persisted.");
-			}
-			else
-			{
-				Assert.Fail("This test is dependant on the Type of item you are storing in your repository. As such you must override it.");
-			}
 		}
 	}
 

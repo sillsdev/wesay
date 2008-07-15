@@ -108,28 +108,6 @@ namespace WeSay.LexicalModel.Tests
 			Assert.AreEqual(Item.ModificationTime, RepositoryUnderTest.LastModified);
 		}
 
-		//!!!This Test is a workaround because equals on a lexentry is reference dependant TA 2008-07-11
-		public override void SaveItem_ItemHasBeenPersisted()
-		{
-			SetState();
-			string contentsOfPersistedFile = File.ReadAllText(_persistedFilePath);
-			Item.ModificationTime = DateTime.UtcNow;
-			RepositoryUnderTest.SaveItem(Item);
-			Assert.AreNotEqual(contentsOfPersistedFile, File.ReadAllText(_persistedFilePath));
-		}
-
-		//!!!This Test is a workaround because equals on a lexentry is reference dependant TA 2008-07-11
-		public override void SaveItems_ItemHasBeenPersisted()
-		{
-			SetState();
-			string contentsOfPersistedFile = File.ReadAllText(_persistedFilePath);
-			Item.ModificationTime = DateTime.UtcNow;
-			List<LexEntry> entryToBeSaved = new List<LexEntry>();
-			entryToBeSaved.Add(Item);
-			RepositoryUnderTest.SaveItems(entryToBeSaved);
-			Assert.AreNotEqual(contentsOfPersistedFile, File.ReadAllText(_persistedFilePath));
-		}
-
 		protected override void CreateNewRepositoryFromPersistedData()
 		{
 			RepositoryUnderTest.Dispose();
@@ -154,26 +132,6 @@ namespace WeSay.LexicalModel.Tests
 		{
 			RepositoryUnderTest.Dispose();
 			File.Delete(this._persistedFilePath);
-		}
-
-		//!!!This Test is a workaround because equals on a lexentry is reference dependant TA 2008-07-11
-		public override void SaveItem_ItemHasBeenPersisted()
-		{
-			SetState();
-			RepositoryUnderTest.SaveItem(Item);
-			CreateNewRepositoryFromPersistedData();
-			Assert.AreEqual(1, RepositoryUnderTest.CountAllItems());
-		}
-
-		//!!!This Test is a workaround because equals on a lexentry is reference dependant TA 2008-07-11
-		public override void SaveItems_ItemHasBeenPersisted()
-		{
-			SetState();
-			List<LexEntry> itemsToBeSaved = new List<LexEntry>();
-			itemsToBeSaved.Add(Item);
-			RepositoryUnderTest.SaveItems(itemsToBeSaved);
-			CreateNewRepositoryFromPersistedData();
-			Assert.AreEqual(1, RepositoryUnderTest.CountAllItems());
 		}
 
 		protected override void CreateNewRepositoryFromPersistedData()
