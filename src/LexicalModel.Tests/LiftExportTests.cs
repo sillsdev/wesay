@@ -9,7 +9,6 @@ using NUnit.Framework;
 using WeSay.Data;
 using WeSay.Foundation;
 using WeSay.Foundation.Options;
-using WeSay.LexicalModel;
 using WeSay.Project;
 
 namespace WeSay.LexicalModel.Tests
@@ -17,38 +16,354 @@ namespace WeSay.LexicalModel.Tests
 	[TestFixture]
 	public class LiftExportTests
 	{
+		#region Setup/Teardown
+
+		[SetUp]
+		public void Setup()
+		{
+			WeSayWordsProject.InitializeForTests();
+			_filePath = Path.GetTempFileName();
+			LiftRepository repository = new LiftRepository(_filePath);
+			_lexEntryRepository = new LexEntryRepository(repository);
+			_fieldToOptionListName = new Dictionary<string, string>();
+			_stringBuilder = new StringBuilder();
+			PrepWriterForFragment();
+		}
+
+		[TearDown]
+		public void TearDown()
+		{
+			_lexEntryRepository.Dispose();
+			File.Delete(_filePath);
+		}
+
+		#endregion
+
 		private LiftExporter _exporter;
 		private StringBuilder _stringBuilder;
 		private Dictionary<string, string> _fieldToOptionListName;
 		private string _filePath;
 		private LexEntryRepository _lexEntryRepository;
 
-		[SetUp]
-		public void Setup()
-		{
-			WeSayWordsProject.InitializeForTests();
-			this._filePath = Path.GetTempFileName();
-			this._lexEntryRepository = new LexEntryRepository(this._filePath);
-			this._fieldToOptionListName = new Dictionary<string, string>();
-			this._stringBuilder = new StringBuilder();
-			PrepWriterForFragment();
-		}
-
 		private void PrepWriterForFragment()
 		{
-			this._exporter = new LiftExporter(this._stringBuilder, true);
+			_exporter = new LiftExporter(_stringBuilder, true);
 		}
 
 		private void PrepWriterForFullDocument()
 		{
-			this._exporter = new LiftExporter(this._stringBuilder, false);
+			_exporter = new LiftExporter(_stringBuilder, false);
 		}
 
-		[TearDown]
-		public void TearDown()
+		private void MakeTestLexEntry(string lexicalForm)
 		{
-			this._lexEntryRepository.Dispose();
-			File.Delete(this._filePath);
+			LexEntry entry = _lexEntryRepository.CreateItem();
+			entry.LexicalForm["test"] = lexicalForm;
+			_lexEntryRepository.SaveItem(entry);
+		}
+
+		private void WriteTwoEntries()
+		{
+			MakeTestLexEntry("sunset");
+			MakeTestLexEntry("flower");
+			ResultSet<LexEntry> allEntriesSortedByHeadword = _lexEntryRepository.GetAllEntriesSortedByHeadword(
+				new WritingSystem("test", SystemFonts.DefaultFont));
+			foreach (RecordToken<LexEntry> token in allEntriesSortedByHeadword)
+			{
+				_exporter.Add(token.RealObject);
+			}
+			_exporter.End();
+		}
+
+		private void AssertXPathNotNull(string xpath)
+		{
+			XmlDocument doc = new XmlDocument();
+			doc.LoadXml(_stringBuilder.ToString());
+			XmlNode node = doc.SelectSingleNode(xpath);
+			if (node == null)
+			{
+				XmlWriterSettings settings = new XmlWriterSettings();
+				settings.Indent = true;
+				settings.ConformanceLevel = ConformanceLevel.Fragment;
+				XmlWriter writer = XmlWriter.Create(Console.Out, settings);
+				doc.WriteContentTo(writer);
+				writer.Flush();
+			}
+			Assert.IsNotNull(node);
+		}
+
+		private static string GetSenseElement(LexSense sense)
+		{
+			return string.Format("<sense id=\"{0}\">", sense.GetOrCreateId());
+		}
+
+		private string GetStringAttributeOfTopElement(string attribute)
+		{
+			XmlDocument doc = new XmlDocument();
+			doc.LoadXml(_stringBuilder.ToString());
+			return doc.FirstChild.Attributes[attribute].ToString();
+		}
+
+		private void ShouldContain(string s)
+		{
+			_exporter.End();
+			Assert.IsTrue(_stringBuilder.ToString().Contains(s),
+						  "\n'{0}' is not contained in\n'{1}'",
+						  s,
+						  _stringBuilder.ToString());
+		}
+
+		private void CheckAnswer(string answer)
+		{
+			_exporter.End();
+			Assert.AreEqual(answer, _stringBuilder.ToString());
+		}
+
+		[Test]
+		public void AddUsingWholeList_TwoEntries_HasTwoEntries()
+		{
+			PrepWriterForFullDocument();
+			WriteTwoEntries();
+			XmlDocument doc = new XmlDocument();
+			doc.LoadXml(_stringBuilder.ToString());
+			Assert.AreEqual(2, doc.SelectNodes("lift/entry").Count);
+		}
+
+		[Test]
+		public void AttributesWithProblematicCharacters()
+		{
+			LexSense sense = new LexSense();
+			sense.Gloss["x\"y"] = "test";
+			_exporter.Add(sense);
+			CheckAnswer(GetSenseElement(sense) +
+						"<gloss lang=\"x&quot;y\"><text>test</text></gloss></sense>");
+		}
+
+		[Test]
+		public void BlankExample()
+		{
+			_exporter.Add(new LexExampleSentence());
+			CheckAnswer("<example />");
+		}
+
+		[Test]
+		public void BlankGrammi()
+		{
+			LexSense sense = new LexSense();
+			OptionRef o =
+				sense.GetOrCreateProperty<OptionRef>(LexSense.WellKnownProperties.PartOfSpeech);
+			o.Value = string.Empty;
+			_exporter.Add(sense);
+			_exporter.End();
+			AssertXPathNotNull("sense[not(grammatical-info)]");
+			AssertXPathNotNull("sense[not(trait)]");
+		}
+
+		[Test]
+		public void BlankMultiText()
+		{
+			_exporter.Add(null, new MultiText());
+			CheckAnswer("");
+		}
+
+		[Test]
+		public void BlankSense()
+		{
+			LexSense sense = new LexSense();
+			_exporter.Add(sense);
+			CheckAnswer(string.Format("<sense id=\"{0}\" />", sense.GetOrCreateId()));
+		}
+
+		[Test]
+		public void Citation()
+		{
+			LexEntry entry = _lexEntryRepository.CreateItem();
+			MultiText citation =
+				entry.GetOrCreateProperty<MultiText>(LexEntry.WellKnownProperties.Citation);
+			citation["zz"] = "orange";
+			_lexEntryRepository.SaveItem(entry);
+			_exporter.Add(entry);
+			_exporter.End();
+			AssertXPathNotNull("entry/citation/form[@lang='zz']/text[text()='orange']");
+			AssertXPathNotNull("entry/citation/form[@lang='zz'][not(trait)]");
+			AssertXPathNotNull("entry[not(field)]");
+		}
+
+		[Test]
+		public void CitationWithStarredForm()
+		{
+			LexEntry e = _lexEntryRepository.CreateItem();
+
+			MultiText citation =
+				e.GetOrCreateProperty<MultiText>(LexEntry.WellKnownProperties.Citation);
+
+			citation.SetAlternative("x", "orange");
+			citation.SetAnnotationOfAlternativeIsStarred("x", true);
+			_lexEntryRepository.SaveItem(e);
+			_exporter.Add(e);
+			_exporter.End();
+			AssertXPathNotNull(
+				"entry/citation/form[@lang='x']/annotation[@name='flag' and @value='1']");
+		}
+
+		[Test]
+		public void CustomMultiTextOnEntry()
+		{
+			LexEntry entry = _lexEntryRepository.CreateItem();
+
+			MultiText m = entry.GetOrCreateProperty<MultiText>("flubadub");
+			m["zz"] = "orange";
+			_lexEntryRepository.SaveItem(entry);
+			_exporter.Add(entry);
+			_exporter.End();
+			AssertXPathNotNull("entry/field[@type='flubadub']/form[@lang='zz' and text='orange']");
+		}
+
+		[Test]
+		public void CustomMultiTextOnExample()
+		{
+			LexExampleSentence example = new LexExampleSentence();
+			MultiText m = example.GetOrCreateProperty<MultiText>("flubadub");
+			m["zz"] = "orange";
+			_exporter.Add(example);
+			_exporter.End();
+			AssertXPathNotNull("example/field[@type='flubadub']/form[@lang='zz' and text='orange']");
+		}
+
+		[Test]
+		public void CustomMultiTextOnSense()
+		{
+			LexSense sense = new LexSense();
+			MultiText m = sense.GetOrCreateProperty<MultiText>("flubadub");
+			m["zz"] = "orange";
+			_exporter.Add(sense);
+			_exporter.End();
+			AssertXPathNotNull("sense/field[@type='flubadub']/form[@lang='zz' and text='orange']");
+		}
+
+		[Test]
+		public void CustomOptionRefCollectionOnEntry()
+		{
+			_fieldToOptionListName.Add("flubs", "colors");
+			LexEntry entry = _lexEntryRepository.CreateItem();
+
+			OptionRefCollection o = entry.GetOrCreateProperty<OptionRefCollection>("flubs");
+			o.AddRange(new string[] {"orange", "blue"});
+			_lexEntryRepository.SaveItem(entry);
+			_exporter.Add(entry);
+			_exporter.End();
+			AssertXPathNotNull("entry/trait[@name='flubs' and @value='orange']");
+			AssertXPathNotNull("entry/trait[@name='flubs' and @value='blue']");
+			AssertXPathNotNull("entry[count(trait) =2]");
+		}
+
+		[Test]
+		public void CustomOptionRefCollectionOnExample()
+		{
+			_fieldToOptionListName.Add("flubs", "colors");
+			LexExampleSentence example = new LexExampleSentence();
+			OptionRefCollection o = example.GetOrCreateProperty<OptionRefCollection>("flubs");
+			o.AddRange(new string[] {"orange", "blue"});
+			_exporter.Add(example);
+			_exporter.End();
+			Assert.AreEqual(
+				"<example><trait name=\"flubs\" value=\"orange\" /><trait name=\"flubs\" value=\"blue\" /></example>",
+				_stringBuilder.ToString());
+		}
+
+		[Test]
+		public void CustomOptionRefCollectionOnSense()
+		{
+			_fieldToOptionListName.Add("flubs", "colors");
+			LexSense sense = new LexSense();
+			OptionRefCollection o = sense.GetOrCreateProperty<OptionRefCollection>("flubs");
+			o.AddRange(new string[] {"orange", "blue"});
+			_exporter.Add(sense);
+			_exporter.End();
+			Assert.AreEqual(
+				GetSenseElement(sense) +
+				"<trait name=\"flubs\" value=\"orange\" /><trait name=\"flubs\" value=\"blue\" /></sense>",
+				_stringBuilder.ToString());
+		}
+
+		[Test]
+		public void CustomOptionRefOnEntry()
+		{
+			_fieldToOptionListName.Add("flub", "kindsOfFlubs");
+			LexEntry entry = _lexEntryRepository.CreateItem();
+
+			OptionRef o = entry.GetOrCreateProperty<OptionRef>("flub");
+			o.Value = "orange";
+			_lexEntryRepository.SaveItem(entry);
+			_exporter.Add(entry);
+			_exporter.End();
+			AssertXPathNotNull("entry/trait[@name='flub' and @value='orange']");
+		}
+
+		[Test]
+		public void CustomOptionRefOnExample()
+		{
+			_fieldToOptionListName.Add("flub", "kindsOfFlubs");
+			LexExampleSentence example = new LexExampleSentence();
+			OptionRef o = example.GetOrCreateProperty<OptionRef>("flub");
+			o.Value = "orange";
+			_exporter.Add(example);
+			_exporter.End();
+			Assert.AreEqual("<example><trait name=\"flub\" value=\"orange\" /></example>",
+							_stringBuilder.ToString());
+		}
+
+		[Test]
+		public void CustomOptionRefOnSense()
+		{
+			_fieldToOptionListName.Add("flub", "kindsOfFlubs");
+			LexSense sense = new LexSense();
+			OptionRef o = sense.GetOrCreateProperty<OptionRef>("flub");
+			o.Value = "orange";
+			_exporter.Add(sense);
+			_exporter.End();
+			Assert.AreEqual(
+				GetSenseElement(sense) + "<trait name=\"flub\" value=\"orange\" /></sense>",
+				_stringBuilder.ToString());
+		}
+
+		[Test]
+		public void CustomOptionRefOnSenseWithGrammi()
+		{
+			_fieldToOptionListName.Add("flub", "kindsOfFlubs");
+			LexSense sense = new LexSense();
+			OptionRef grammi =
+				sense.GetOrCreateProperty<OptionRef>(LexSense.WellKnownProperties.PartOfSpeech);
+			grammi.Value = "verb";
+
+			OptionRef o = sense.GetOrCreateProperty<OptionRef>("flub");
+			o.Value = "orange";
+			_exporter.Add(sense);
+			_exporter.End();
+			AssertXPathNotNull("sense/trait[@name='flub' and @value='orange']");
+			AssertXPathNotNull("sense[count(trait)=1]");
+		}
+
+		[Test]
+		public void DefinitionOnSense_OutputAsDefinition()
+		{
+			LexSense sense = new LexSense();
+			MultiText m =
+				sense.GetOrCreateProperty<MultiText>(LexSense.WellKnownProperties.Definition);
+			m["zz"] = "orange";
+			_exporter.Add(sense);
+			_exporter.End();
+			AssertXPathNotNull("sense/definition/form[@lang='zz']/text[text()='orange']");
+			AssertXPathNotNull("sense[not(field)]");
+		}
+
+		[Test]
+		public void DeletedEntry()
+		{
+			LexEntry entry = new LexEntry();
+			_exporter.AddDeletedEntry(entry);
+			_exporter.End();
+			Assert.IsNotNull(GetStringAttributeOfTopElement("dateDeleted"));
 		}
 
 		[Test]
@@ -58,292 +373,50 @@ namespace WeSay.LexicalModel.Tests
 			//NOTE: the utf-16 here is an artifact of the xmlwriter when writing to a stringbuilder,
 			//which is what we use for tests.  The file version puts out utf-8
 			//CheckAnswer("<?xml version=\"1.0\" encoding=\"utf-16\"?><lift producer=\"WeSay.1Pt0Alpha\"/>");// xmlns:flex=\"http://fieldworks.sil.org\" />");
-			this._exporter.End();
+			_exporter.End();
 			AssertXPathNotNull(string.Format("lift[@version='{0}']", Validator.LiftVersion));
 			AssertXPathNotNull(string.Format("lift[@producer='{0}']", LiftExporter.ProducerString));
 		}
 
 		[Test]
-		public void AddUsingWholeList_TwoEntries_HasTwoEntries()
-		{
-			PrepWriterForFullDocument();
-			WriteTwoEntries();
-			XmlDocument doc = new XmlDocument();
-			doc.LoadXml(this._stringBuilder.ToString());
-			Assert.AreEqual(2, doc.SelectNodes("lift/entry").Count);
-		}
-
-		private void MakeTestLexEntry(string lexicalForm)
-		{
-			LexEntry entry = this._lexEntryRepository.CreateItem();
-			entry.LexicalForm["test"] = lexicalForm;
-			this._lexEntryRepository.SaveItem(entry);
-		}
-
-		[Test]
-		public void WriteToFile()
-		{
-			string filePath = Path.GetTempFileName();
-			try
-			{
-				this._exporter = new LiftExporter(filePath);
-				WriteTwoEntries();
-				XmlDocument doc = new XmlDocument();
-				doc.Load(filePath);
-				Assert.AreEqual(2, doc.SelectNodes("lift/entry").Count);
-			}
-			finally
-			{
-				File.Delete(filePath);
-			}
-		}
-
-		private void WriteTwoEntries()
-		{
-			MakeTestLexEntry("sunset");
-			MakeTestLexEntry("flower");
-			ResultSet<LexEntry> allEntriesSortedByHeadword = this._lexEntryRepository.GetAllEntriesSortedByHeadword(
-					new WritingSystem("test", SystemFonts.DefaultFont));
-			foreach (RecordToken<LexEntry> token in allEntriesSortedByHeadword)
-			{
-				this._exporter.Add(token.RealObject);
-			}
-			this._exporter.End();
-		}
-
-		[Test]
-		public void MultiText()
-		{
-			MultiText text = new MultiText();
-			text["blue"] = "ocean";
-			text["red"] = "sunset";
-			this._exporter.Add(null, text);
-			CheckAnswer(
-					"<form lang=\"blue\"><text>ocean</text></form><form lang=\"red\"><text>sunset</text></form>");
-		}
-
-		[Test]
-		public void LexemeForm_SingleWritingSystem()
-		{
-			LexEntry e = this._lexEntryRepository.CreateItem();
-			e.LexicalForm["xx"] = "foo";
-			this._lexEntryRepository.SaveItem(e);
-			this._exporter.Add(e);
-			this._exporter.End();
-
-			AssertXPathNotNull("//lexical-unit/form[@lang='xx']");
-		}
-
-		private void AssertXPathNotNull(string xpath)
-		{
-			XmlDocument doc = new XmlDocument();
-			doc.LoadXml(this._stringBuilder.ToString());
-			XmlNode node = doc.SelectSingleNode(xpath);
-			if (node == null)
-			{
-				XmlWriterSettings settings = new XmlWriterSettings();
-				settings.Indent = true;
-				settings.ConformanceLevel = ConformanceLevel.Fragment;
-				XmlWriter writer = XmlTextWriter.Create(Console.Out, settings);
-				doc.WriteContentTo(writer);
-				writer.Flush();
-			}
-			Assert.IsNotNull(node);
-		}
-
-		[Test]
-		public void LexSense_becomes_sense()
+		public void EmptyCustomMultiText()
 		{
 			LexSense sense = new LexSense();
-			this._exporter.Add(sense);
-			this._exporter.End();
-			Assert.IsTrue(this._stringBuilder.ToString().StartsWith("<sense"));
+			sense.GetOrCreateProperty<MultiText>("flubadub");
+			_exporter.Add(sense);
+			_exporter.End();
+			AssertXPathNotNull("sense[not(field)]");
 		}
 
 		[Test]
-		public void LexicalUnit()
-		{
-			LexEntry e = this._lexEntryRepository.CreateItem();
-			e.LexicalForm.SetAlternative("x", "orange");
-			this._lexEntryRepository.SaveItem(e);
-			this._exporter.Add(e);
-			this._exporter.End();
-			AssertXPathNotNull("entry/lexical-unit/form[@lang='x']/text[text()='orange']");
-			AssertXPathNotNull("entry/lexical-unit/form[@lang='x'][not(trait)]");
-		}
-
-		[Test]
-		public void LexicalUnitWithStarredForm()
-		{
-			LexEntry e = this._lexEntryRepository.CreateItem();
-
-			e.LexicalForm.SetAlternative("x", "orange");
-			e.LexicalForm.SetAnnotationOfAlternativeIsStarred("x", true);
-			this._lexEntryRepository.SaveItem(e);
-			this._exporter.Add(e);
-			this._exporter.End();
-			AssertXPathNotNull(
-					"entry/lexical-unit/form[@lang='x']/annotation[@name='flag' and @value='1']");
-		}
-
-		[Test]
-		public void Citation()
-		{
-			LexEntry entry = this._lexEntryRepository.CreateItem();
-			MultiText citation =
-					entry.GetOrCreateProperty<MultiText>(LexEntry.WellKnownProperties.Citation);
-			citation["zz"] = "orange";
-			this._lexEntryRepository.SaveItem(entry);
-			this._exporter.Add(entry);
-			this._exporter.End();
-			AssertXPathNotNull("entry/citation/form[@lang='zz']/text[text()='orange']");
-			AssertXPathNotNull("entry/citation/form[@lang='zz'][not(trait)]");
-			AssertXPathNotNull("entry[not(field)]");
-		}
-
-		[Test]
-		public void CitationWithStarredForm()
-		{
-			LexEntry e = this._lexEntryRepository.CreateItem();
-
-			MultiText citation =
-					e.GetOrCreateProperty<MultiText>(LexEntry.WellKnownProperties.Citation);
-
-			citation.SetAlternative("x", "orange");
-			citation.SetAnnotationOfAlternativeIsStarred("x", true);
-			this._lexEntryRepository.SaveItem(e);
-			this._exporter.Add(e);
-			this._exporter.End();
-			AssertXPathNotNull(
-					"entry/citation/form[@lang='x']/annotation[@name='flag' and @value='1']");
-		}
-
-		[Test]
-		public void Gloss()
+		public void EmptyCustomOptionRef()
 		{
 			LexSense sense = new LexSense();
-			sense.Gloss["blue"] = "ocean";
-			this._exporter.Add(sense);
-			this._exporter.End();
-			AssertXPathNotNull("sense/gloss[@lang='blue']/text[text()='ocean']");
-		}
-
-		[Test]
-		public void GlossWithStarredForm()
-		{
-			LexSense sense = new LexSense();
-			sense.Gloss.SetAlternative("x", "orange");
-			sense.Gloss.SetAnnotationOfAlternativeIsStarred("x", true);
-			this._exporter.Add(sense);
-			this._exporter.End();
-			AssertXPathNotNull("sense/gloss[@lang='x']/annotation[@name='flag' and @value='1']");
-		}
-
-		[Test]
-		public void Gloss_MultipleGlossesSplitIntoSeparateEntries()
-		{
-			LexSense sense = new LexSense();
-			sense.Gloss["a"] = "aaa; bbb; ccc";
-			sense.Gloss["x"] = "xx";
-			this._exporter.Add(sense);
-			this._exporter.End();
-			AssertXPathNotNull("sense[count(gloss)=4]");
-			AssertXPathNotNull("sense/gloss[@lang='a' and text='aaa']");
-			AssertXPathNotNull("sense/gloss[@lang='a' and text='bbb']");
-			AssertXPathNotNull("sense/gloss[@lang='a' and text='ccc']");
-			AssertXPathNotNull("sense/gloss[@lang='x' and text='xx']");
-		}
-
-		[Test]
-		public void Grammi()
-		{
-			LexSense sense = new LexSense();
-			OptionRef o =
-					sense.GetOrCreateProperty<OptionRef>(LexSense.WellKnownProperties.PartOfSpeech);
-			o.Value = "orange";
-			this._exporter.Add(sense);
-			this._exporter.End();
-			AssertXPathNotNull("sense/grammatical-info[@value='orange']");
+			sense.GetOrCreateProperty<OptionRef>("flubadub");
+			_exporter.Add(sense);
+			_exporter.End();
 			AssertXPathNotNull("sense[not(trait)]");
 		}
 
 		[Test]
-		public void BlankGrammi()
+		public void EmptyCustomOptionRefCollection()
 		{
 			LexSense sense = new LexSense();
-			OptionRef o =
-					sense.GetOrCreateProperty<OptionRef>(LexSense.WellKnownProperties.PartOfSpeech);
-			o.Value = string.Empty;
-			this._exporter.Add(sense);
-			this._exporter.End();
-			AssertXPathNotNull("sense[not(grammatical-info)]");
+			sense.GetOrCreateProperty<OptionRefCollection>("flubadub");
+			_exporter.Add(sense);
+			_exporter.End();
 			AssertXPathNotNull("sense[not(trait)]");
 		}
 
 		[Test]
-		public void GrammiWithStarredForm()
+		public void EmptyDefinitionOnSense_NotOutput()
 		{
 			LexSense sense = new LexSense();
-			OptionRef o =
-					sense.GetOrCreateProperty<OptionRef>(LexSense.WellKnownProperties.PartOfSpeech);
-			o.Value = "orange";
-			o.IsStarred = true;
-			this._exporter.Add(sense);
-			this._exporter.End();
-			AssertXPathNotNull(
-					"sense/grammatical-info[@value='orange']/annotation[@name='flag' and @value='1']");
-		}
-
-		[Test]
-		public void GlossWithProblematicCharacters()
-		{
-			LexSense sense = new LexSense();
-			sense.Gloss["blue"] = "LessThan<GreaterThan>Ampersan&";
-			this._exporter.Add(sense);
-			CheckAnswer(GetSenseElement(sense) +
-						"<gloss lang=\"blue\"><text>LessThan&lt;GreaterThan&gt;Ampersan&amp;</text></gloss></sense>");
-		}
-
-		private static string GetSenseElement(LexSense sense)
-		{
-			return string.Format("<sense id=\"{0}\">", sense.GetOrCreateId());
-		}
-
-		[Test]
-		public void AttributesWithProblematicCharacters()
-		{
-			LexSense sense = new LexSense();
-			sense.Gloss["x\"y"] = "test";
-			this._exporter.Add(sense);
-			CheckAnswer(GetSenseElement(sense) +
-						"<gloss lang=\"x&quot;y\"><text>test</text></gloss></sense>");
-		}
-
-		[Test]
-		public void BlankMultiText()
-		{
-			this._exporter.Add(null, new MultiText());
-			CheckAnswer("");
-		}
-
-		[Test]
-		public void BlankExample()
-		{
-			this._exporter.Add(new LexExampleSentence());
-			CheckAnswer("<example />");
-		}
-
-		[Test]
-		public void ExampleSourceAsAttribute()
-		{
-			LexExampleSentence ex = new LexExampleSentence();
-			OptionRef z =
-					ex.GetOrCreateProperty<OptionRef>(LexExampleSentence.WellKnownProperties.Source);
-			z.Value = "hearsay";
-
-			this._exporter.Add(ex);
-			this._exporter.End();
-			AssertXPathNotNull("example[@source='hearsay']");
+			sense.GetOrCreateProperty<MultiText>(LexSense.WellKnownProperties.Definition);
+			_exporter.Add(sense);
+			_exporter.End();
+			AssertXPathNotNull("sense[not(definition)]");
+			AssertXPathNotNull("sense[not(field)]");
 		}
 
 		[Test]
@@ -351,9 +424,116 @@ namespace WeSay.LexicalModel.Tests
 		{
 			LexExampleSentence ex = new LexExampleSentence();
 			ex.GetOrCreateProperty<OptionRef>(LexExampleSentence.WellKnownProperties.Source);
-			this._exporter.Add(ex);
-			this._exporter.End();
+			_exporter.Add(ex);
+			_exporter.End();
 			AssertXPathNotNull("example[not(@source)]");
+		}
+
+		[Test]
+		public void EmptyNoteOnEntry_NoOutput()
+		{
+			LexEntry entry = _lexEntryRepository.CreateItem();
+
+			entry.GetOrCreateProperty<MultiText>(WeSayDataObject.WellKnownProperties.Note);
+			_lexEntryRepository.SaveItem(entry);
+			_exporter.Add(entry);
+			_exporter.End();
+			AssertXPathNotNull("entry[not(note)]");
+			AssertXPathNotNull("entry[not(field)]");
+		}
+
+		[Test]
+		public void Entry_EntryHasIdWithInvalidXMLCharacters_CharactersEscaped()
+		{
+			LexEntry entry = _lexEntryRepository.CreateItem();
+			// technically the only invalid characters in an attribute are & < and " (when surrounded by ")
+			entry.Id = "<>&\"\'";
+			_lexEntryRepository.SaveItem(entry);
+			_exporter.Add(entry);
+			_exporter.End();
+			ShouldContain("id=\"&lt;&gt;&amp;&quot;'\"");
+		}
+
+		[Test]
+		public void Entry_HasId_RemembersId()
+		{
+			LexEntry entry = _lexEntryRepository.CreateItem();
+			entry.Id = "my id";
+			_lexEntryRepository.SaveItem(entry);
+			_exporter.Add(entry);
+			_exporter.End();
+			ShouldContain("id=\"my id\"");
+		}
+
+		[Test]
+		public void Entry_NoId_GetsHumanReadableId()
+		{
+			LexEntry entry = _lexEntryRepository.CreateItem();
+			entry.LexicalForm["test"] = "lexicalForm";
+			_lexEntryRepository.SaveItem(entry);
+			// make dateModified different than dateCreated
+			_exporter.Add(entry);
+			_exporter.End();
+			ShouldContain(
+				string.Format("id=\"{0}\"",
+							  LiftExporter.GetHumanReadableId(entry,
+															  new Dictionary<string, int>())));
+		}
+
+		[Test]
+		public void EntryGuid()
+		{
+			LexEntry entry = _lexEntryRepository.CreateItem();
+
+			_exporter.Add(entry);
+			ShouldContain(string.Format("guid=\"{0}\"", entry.Guid));
+		}
+
+		[Test]
+		public void EntryHasDateCreated()
+		{
+			LexEntry entry = _lexEntryRepository.CreateItem();
+			_exporter.Add(entry);
+			_exporter.End();
+			ShouldContain(
+				string.Format("dateCreated=\"{0}\"",
+							  entry.CreationTime.ToString("yyyy-MM-ddThh:mm:ssZ")));
+		}
+
+		[Test]
+		public void EntryHasDateModified()
+		{
+			LexEntry entry = _lexEntryRepository.CreateItem();
+			entry.LexicalForm["test"] = "lexicalForm";
+			// make dateModified different than dateCreated
+			_lexEntryRepository.SaveItem(entry);
+			_exporter.Add(entry);
+			_exporter.End();
+			ShouldContain(
+				string.Format("dateModified=\"{0}\"",
+							  entry.ModificationTime.ToString("yyyy-MM-ddThh:mm:ssZ")));
+		}
+
+		[Test]
+		public void EntryWithSenses()
+		{
+			LexEntry entry = _lexEntryRepository.CreateItem();
+			entry.LexicalForm["blue"] = "ocean";
+			LexSense sense1 = new LexSense();
+			sense1.Gloss["a"] = "aaa";
+			entry.Senses.Add(sense1);
+			LexSense sense2 = new LexSense();
+			sense2.Gloss["b"] = "bbb";
+			entry.Senses.Add(sense2);
+			_lexEntryRepository.SaveItem(entry);
+			_exporter.Add(entry);
+
+			ShouldContain(
+				string.Format(GetSenseElement(sense1) +
+							  "<gloss lang=\"a\"><text>aaa</text></gloss></sense>" +
+							  GetSenseElement(sense2) +
+							  "<gloss lang=\"b\"><text>bbb</text></gloss></sense></entry>"));
+			AssertXPathNotNull("entry[count(sense)=2]");
 		}
 
 		[Test]
@@ -362,9 +542,9 @@ namespace WeSay.LexicalModel.Tests
 			LexExampleSentence example = new LexExampleSentence();
 			example.Sentence["blue"] = "ocean's eleven";
 			example.Sentence["red"] = "red sunset tonight";
-			this._exporter.Add(example);
+			_exporter.Add(example);
 			CheckAnswer(
-					"<example><form lang=\"blue\"><text>ocean's eleven</text></form><form lang=\"red\"><text>red sunset tonight</text></form></example>");
+				"<example><form lang=\"blue\"><text>ocean's eleven</text></form><form lang=\"red\"><text>red sunset tonight</text></form></example>");
 		}
 
 		[Test]
@@ -374,143 +554,47 @@ namespace WeSay.LexicalModel.Tests
 			example.Sentence["blue"] = "ocean's eleven";
 			example.Sentence["red"] = "red sunset tonight";
 			example.Translation["green"] = "blah blah";
-			this._exporter.Add(example);
+			_exporter.Add(example);
 			CheckAnswer(
-					"<example><form lang=\"blue\"><text>ocean's eleven</text></form><form lang=\"red\"><text>red sunset tonight</text></form><translation><form lang=\"green\"><text>blah blah</text></form></translation></example>");
+				"<example><form lang=\"blue\"><text>ocean's eleven</text></form><form lang=\"red\"><text>red sunset tonight</text></form><translation><form lang=\"green\"><text>blah blah</text></form></translation></example>");
 		}
 
 		[Test]
-		public void BlankSense()
+		public void ExampleSourceAsAttribute()
 		{
-			LexSense sense = new LexSense();
-			this._exporter.Add(sense);
-			CheckAnswer(string.Format("<sense id=\"{0}\" />", sense.GetOrCreateId()));
+			LexExampleSentence ex = new LexExampleSentence();
+			OptionRef z =
+				ex.GetOrCreateProperty<OptionRef>(LexExampleSentence.WellKnownProperties.Source);
+			z.Value = "hearsay";
+
+			_exporter.Add(ex);
+			_exporter.End();
+			AssertXPathNotNull("example[@source='hearsay']");
 		}
 
 		[Test]
-		public void EntryGuid()
+		public void FlagCleared_NoOutput()
 		{
-			LexEntry entry = this._lexEntryRepository.CreateItem();
+			LexEntry entry = _lexEntryRepository.CreateItem();
 
-			this._exporter.Add(entry);
-			ShouldContain(string.Format("guid=\"{0}\"", entry.Guid));
+			entry.SetFlag("ATestFlag");
+			entry.ClearFlag("ATestFlag");
+			_lexEntryRepository.SaveItem(entry);
+			_exporter.Add(entry);
+			_exporter.End();
+			AssertXPathNotNull("entry[not(trait)]");
 		}
 
 		[Test]
-		public void LexEntry_becomes_entry()
+		public void FlagOnEntry_OutputAsTrait()
 		{
-			LexEntry entry = this._lexEntryRepository.CreateItem();
+			LexEntry entry = _lexEntryRepository.CreateItem();
 
-			this._exporter.Add(entry);
-			this._exporter.End();
-			Assert.IsTrue(this._stringBuilder.ToString().StartsWith("<entry"));
-		}
-
-		[Test]
-		public void DeletedEntry()
-		{
-			LexEntry entry = new LexEntry();
-			this._exporter.AddDeletedEntry(entry);
-			this._exporter.End();
-			Assert.IsNotNull(GetStringAttributeOfTopElement("dateDeleted"));
-		}
-
-		private string GetStringAttributeOfTopElement(string attribute)
-		{
-			XmlDocument doc = new XmlDocument();
-			doc.LoadXml(this._stringBuilder.ToString());
-			return doc.FirstChild.Attributes[attribute].ToString();
-		}
-
-		private void ShouldContain(string s)
-		{
-			this._exporter.End();
-			Assert.IsTrue(this._stringBuilder.ToString().Contains(s),
-						  "\n'{0}' is not contained in\n'{1}'",
-						  s,
-						  this._stringBuilder.ToString());
-		}
-
-		[Test]
-		public void EntryHasDateCreated()
-		{
-			LexEntry entry = this._lexEntryRepository.CreateItem();
-			this._exporter.Add(entry);
-			this._exporter.End();
-			ShouldContain(
-					string.Format("dateCreated=\"{0}\"",
-								  entry.CreationTime.ToString("yyyy-MM-ddThh:mm:ssZ")));
-		}
-
-		[Test]
-		public void EntryHasDateModified()
-		{
-			LexEntry entry = this._lexEntryRepository.CreateItem();
-			entry.LexicalForm["test"] = "lexicalForm";
-			// make dateModified different than dateCreated
-			this._lexEntryRepository.SaveItem(entry);
-			this._exporter.Add(entry);
-			this._exporter.End();
-			ShouldContain(
-					string.Format("dateModified=\"{0}\"",
-								  entry.ModificationTime.ToString("yyyy-MM-ddThh:mm:ssZ")));
-		}
-
-		[Test]
-		public void Entry_HasId_RemembersId()
-		{
-			LexEntry entry = this._lexEntryRepository.CreateItem();
-			entry.Id = "my id";
-			this._lexEntryRepository.SaveItem(entry);
-			this._exporter.Add(entry);
-			this._exporter.End();
-			ShouldContain("id=\"my id\"");
-		}
-
-		[Test]
-		public void Sense_HasId_RemembersId()
-		{
-			LexSense s = new LexSense();
-			s.Id = "my id";
-			this._exporter.Add(s);
-			this._exporter.End();
-			ShouldContain("id=\"my id\"");
-		}
-
-		[Test]
-		public void Entry_EntryHasIdWithInvalidXMLCharacters_CharactersEscaped()
-		{
-			LexEntry entry = this._lexEntryRepository.CreateItem();
-			// technically the only invalid characters in an attribute are & < and " (when surrounded by ")
-			entry.Id = "<>&\"\'";
-			this._lexEntryRepository.SaveItem(entry);
-			this._exporter.Add(entry);
-			this._exporter.End();
-			ShouldContain("id=\"&lt;&gt;&amp;&quot;'\"");
-		}
-
-		[Test]
-		public void Entry_NoId_GetsHumanReadableId()
-		{
-			LexEntry entry = this._lexEntryRepository.CreateItem();
-			entry.LexicalForm["test"] = "lexicalForm";
-			this._lexEntryRepository.SaveItem(entry);
-			// make dateModified different than dateCreated
-			this._exporter.Add(entry);
-			this._exporter.End();
-			ShouldContain(
-					string.Format("id=\"{0}\"",
-								  LiftExporter.GetHumanReadableId(entry,
-																  new Dictionary<string, int>())));
-		}
-
-		[Test]
-		public void Sense_NoId_GetsId()
-		{
-			LexSense sense = new LexSense();
-			this._exporter.Add(sense);
-			this._exporter.End();
-			ShouldContain(string.Format("id=\"{0}\"", sense.Id));
+			entry.SetFlag("ATestFlag");
+			_lexEntryRepository.SaveItem(entry);
+			_exporter.Add(entry);
+			_exporter.End();
+			AssertXPathNotNull("entry/trait[@name='ATestFlag' and @value]");
 		}
 
 		/* this is not relevant, as we are currently using form_guid as the id
@@ -532,9 +616,9 @@ namespace WeSay.LexicalModel.Tests
 		[Test]
 		public void GetHumanReadableId_EntryHasId_GivesId()
 		{
-			LexEntry entry = this._lexEntryRepository.CreateItem();
+			LexEntry entry = _lexEntryRepository.CreateItem();
 			entry.Id = "my id";
-			this._lexEntryRepository.SaveItem(entry);
+			_lexEntryRepository.SaveItem(entry);
 			Assert.AreEqual("my id",
 							LiftExporter.GetHumanReadableId(entry, new Dictionary<string, int>()));
 		}
@@ -658,8 +742,8 @@ namespace WeSay.LexicalModel.Tests
 		{
 			LexEntry entry = new LexEntry(" ", Guid.NewGuid());
 			Assert.IsTrue(
-					LiftExporter.GetHumanReadableId(entry, new Dictionary<string, int>()).StartsWith
-							("Id'dPrematurely_"));
+				LiftExporter.GetHumanReadableId(entry, new Dictionary<string, int>()).StartsWith
+					("Id'dPrematurely_"));
 		}
 
 		[Test]
@@ -668,103 +752,163 @@ namespace WeSay.LexicalModel.Tests
 			LexEntry entry = new LexEntry(" ", Guid.NewGuid());
 			entry.LexicalForm["green"] = "string";
 			Assert.IsTrue(
-					LiftExporter.GetHumanReadableId(entry, new Dictionary<string, int>()).StartsWith
-							("string"));
+				LiftExporter.GetHumanReadableId(entry, new Dictionary<string, int>()).StartsWith
+					("string"));
 		}
 
 		[Test]
-		public void EntryWithSenses()
+		public void Gloss()
 		{
-			LexEntry entry = this._lexEntryRepository.CreateItem();
-			entry.LexicalForm["blue"] = "ocean";
-			LexSense sense1 = new LexSense();
-			sense1.Gloss["a"] = "aaa";
-			entry.Senses.Add(sense1);
-			LexSense sense2 = new LexSense();
-			sense2.Gloss["b"] = "bbb";
-			entry.Senses.Add(sense2);
-			this._lexEntryRepository.SaveItem(entry);
-			this._exporter.Add(entry);
-
-			ShouldContain(
-					string.Format(GetSenseElement(sense1) +
-								  "<gloss lang=\"a\"><text>aaa</text></gloss></sense>" +
-								  GetSenseElement(sense2) +
-								  "<gloss lang=\"b\"><text>bbb</text></gloss></sense></entry>"));
-			AssertXPathNotNull("entry[count(sense)=2]");
+			LexSense sense = new LexSense();
+			sense.Gloss["blue"] = "ocean";
+			_exporter.Add(sense);
+			_exporter.End();
+			AssertXPathNotNull("sense/gloss[@lang='blue']/text[text()='ocean']");
 		}
 
 		[Test]
-		public void SensesAreLastObjectsInEntry() // this helps conversions to sfm
+		public void Gloss_MultipleGlossesSplitIntoSeparateEntries()
 		{
-			LexEntry entry = this._lexEntryRepository.CreateItem();
+			LexSense sense = new LexSense();
+			sense.Gloss["a"] = "aaa; bbb; ccc";
+			sense.Gloss["x"] = "xx";
+			_exporter.Add(sense);
+			_exporter.End();
+			AssertXPathNotNull("sense[count(gloss)=4]");
+			AssertXPathNotNull("sense/gloss[@lang='a' and text='aaa']");
+			AssertXPathNotNull("sense/gloss[@lang='a' and text='bbb']");
+			AssertXPathNotNull("sense/gloss[@lang='a' and text='ccc']");
+			AssertXPathNotNull("sense/gloss[@lang='x' and text='xx']");
+		}
 
-			entry.LexicalForm["blue"] = "ocean";
+		[Test]
+		public void GlossWithProblematicCharacters()
+		{
+			LexSense sense = new LexSense();
+			sense.Gloss["blue"] = "LessThan<GreaterThan>Ampersan&";
+			_exporter.Add(sense);
+			CheckAnswer(GetSenseElement(sense) +
+						"<gloss lang=\"blue\"><text>LessThan&lt;GreaterThan&gt;Ampersan&amp;</text></gloss></sense>");
+		}
 
-			LexSense sense1 = new LexSense();
-			sense1.Gloss["a"] = "aaa";
-			entry.Senses.Add(sense1);
-			LexSense sense2 = new LexSense();
-			sense2.Gloss["b"] = "bbb";
-			entry.Senses.Add(sense2);
+		[Test]
+		public void GlossWithStarredForm()
+		{
+			LexSense sense = new LexSense();
+			sense.Gloss.SetAlternative("x", "orange");
+			sense.Gloss.SetAnnotationOfAlternativeIsStarred("x", true);
+			_exporter.Add(sense);
+			_exporter.End();
+			AssertXPathNotNull("sense/gloss[@lang='x']/annotation[@name='flag' and @value='1']");
+		}
 
-			MultiText citation =
-					entry.GetOrCreateProperty<MultiText>(LexEntry.WellKnownProperties.Citation);
-			citation["zz"] = "orange";
+		[Test]
+		public void Grammi()
+		{
+			LexSense sense = new LexSense();
+			OptionRef o =
+				sense.GetOrCreateProperty<OptionRef>(LexSense.WellKnownProperties.PartOfSpeech);
+			o.Value = "orange";
+			_exporter.Add(sense);
+			_exporter.End();
+			AssertXPathNotNull("sense/grammatical-info[@value='orange']");
+			AssertXPathNotNull("sense[not(trait)]");
+		}
 
-			MultiText note = entry.GetOrCreateProperty<MultiText>(LexEntry.WellKnownProperties.Note);
-			note["zz"] = "orange";
+		[Test]
+		public void GrammiWithStarredForm()
+		{
+			LexSense sense = new LexSense();
+			OptionRef o =
+				sense.GetOrCreateProperty<OptionRef>(LexSense.WellKnownProperties.PartOfSpeech);
+			o.Value = "orange";
+			o.IsStarred = true;
+			_exporter.Add(sense);
+			_exporter.End();
+			AssertXPathNotNull(
+				"sense/grammatical-info[@value='orange']/annotation[@name='flag' and @value='1']");
+		}
 
-			MultiText field = entry.GetOrCreateProperty<MultiText>("custom");
-			field["zz"] = "orange";
+		[Test]
+		public void LexemeForm_SingleWritingSystem()
+		{
+			LexEntry e = _lexEntryRepository.CreateItem();
+			e.LexicalForm["xx"] = "foo";
+			_lexEntryRepository.SaveItem(e);
+			_exporter.Add(e);
+			_exporter.End();
 
-			this._lexEntryRepository.SaveItem(entry);
-			this._exporter.Add(entry);
+			AssertXPathNotNull("//lexical-unit/form[@lang='xx']");
+		}
 
-			ShouldContain(
-					string.Format(GetSenseElement(sense1) +
-								  "<gloss lang=\"a\"><text>aaa</text></gloss></sense>" +
-								  GetSenseElement(sense2) +
-								  "<gloss lang=\"b\"><text>bbb</text></gloss></sense></entry>"));
+		[Test]
+		public void LexEntry_becomes_entry()
+		{
+			LexEntry entry = _lexEntryRepository.CreateItem();
+
+			_exporter.Add(entry);
+			_exporter.End();
+			Assert.IsTrue(_stringBuilder.ToString().StartsWith("<entry"));
+		}
+
+		[Test]
+		public void LexicalUnit()
+		{
+			LexEntry e = _lexEntryRepository.CreateItem();
+			e.LexicalForm.SetAlternative("x", "orange");
+			_lexEntryRepository.SaveItem(e);
+			_exporter.Add(e);
+			_exporter.End();
+			AssertXPathNotNull("entry/lexical-unit/form[@lang='x']/text[text()='orange']");
+			AssertXPathNotNull("entry/lexical-unit/form[@lang='x'][not(trait)]");
+		}
+
+		[Test]
+		public void LexicalUnitWithStarredForm()
+		{
+			LexEntry e = _lexEntryRepository.CreateItem();
+
+			e.LexicalForm.SetAlternative("x", "orange");
+			e.LexicalForm.SetAnnotationOfAlternativeIsStarred("x", true);
+			_lexEntryRepository.SaveItem(e);
+			_exporter.Add(e);
+			_exporter.End();
+			AssertXPathNotNull(
+				"entry/lexical-unit/form[@lang='x']/annotation[@name='flag' and @value='1']");
+		}
+
+		[Test]
+		public void LexSense_becomes_sense()
+		{
+			LexSense sense = new LexSense();
+			_exporter.Add(sense);
+			_exporter.End();
+			Assert.IsTrue(_stringBuilder.ToString().StartsWith("<sense"));
+		}
+
+		[Test]
+		public void MultiText()
+		{
+			MultiText text = new MultiText();
+			text["blue"] = "ocean";
+			text["red"] = "sunset";
+			_exporter.Add(null, text);
+			CheckAnswer(
+				"<form lang=\"blue\"><text>ocean</text></form><form lang=\"red\"><text>sunset</text></form>");
 		}
 
 		[Test]
 		public void NoteOnEntry_OutputAsNote()
 		{
-			LexEntry entry = this._lexEntryRepository.CreateItem();
+			LexEntry entry = _lexEntryRepository.CreateItem();
 
-			MultiText m = entry.GetOrCreateProperty<MultiText>(LexEntry.WellKnownProperties.Note);
+			MultiText m = entry.GetOrCreateProperty<MultiText>(WeSayDataObject.WellKnownProperties.Note);
 			m["zz"] = "orange";
-			this._lexEntryRepository.SaveItem(entry);
-			this._exporter.Add(entry);
-			this._exporter.End();
+			_lexEntryRepository.SaveItem(entry);
+			_exporter.Add(entry);
+			_exporter.End();
 			AssertXPathNotNull("entry/note/form[@lang='zz' and text='orange']");
 			AssertXPathNotNull("entry[not(field)]");
-		}
-
-		[Test]
-		public void EmptyNoteOnEntry_NoOutput()
-		{
-			LexEntry entry = this._lexEntryRepository.CreateItem();
-
-			entry.GetOrCreateProperty<MultiText>(LexEntry.WellKnownProperties.Note);
-			this._lexEntryRepository.SaveItem(entry);
-			this._exporter.Add(entry);
-			this._exporter.End();
-			AssertXPathNotNull("entry[not(note)]");
-			AssertXPathNotNull("entry[not(field)]");
-		}
-
-		[Test]
-		public void NoteOnSense_OutputAsNote()
-		{
-			LexSense sense = new LexSense();
-			MultiText m = sense.GetOrCreateProperty<MultiText>(LexSense.WellKnownProperties.Note);
-			m["zz"] = "orange";
-			this._exporter.Add(sense);
-			this._exporter.End();
-			AssertXPathNotNull("sense/note/form[@lang='zz' and text='orange']");
-			AssertXPathNotNull("sense[not(field)]");
 		}
 
 		[Test]
@@ -772,275 +916,25 @@ namespace WeSay.LexicalModel.Tests
 		{
 			LexExampleSentence example = new LexExampleSentence();
 			MultiText m =
-					example.GetOrCreateProperty<MultiText>(
-							LexExampleSentence.WellKnownProperties.Note);
+				example.GetOrCreateProperty<MultiText>(
+					WeSayDataObject.WellKnownProperties.Note);
 			m["zz"] = "orange";
-			this._exporter.Add(example);
-			this._exporter.End();
+			_exporter.Add(example);
+			_exporter.End();
 			AssertXPathNotNull("example/note/form[@lang='zz' and text='orange']");
 			AssertXPathNotNull("example[not(field)]");
 		}
 
 		[Test]
-		public void DefinitionOnSense_OutputAsDefinition()
+		public void NoteOnSense_OutputAsNote()
 		{
 			LexSense sense = new LexSense();
-			MultiText m =
-					sense.GetOrCreateProperty<MultiText>(LexSense.WellKnownProperties.Definition);
+			MultiText m = sense.GetOrCreateProperty<MultiText>(WeSayDataObject.WellKnownProperties.Note);
 			m["zz"] = "orange";
-			this._exporter.Add(sense);
-			this._exporter.End();
-			AssertXPathNotNull("sense/definition/form[@lang='zz']/text[text()='orange']");
+			_exporter.Add(sense);
+			_exporter.End();
+			AssertXPathNotNull("sense/note/form[@lang='zz' and text='orange']");
 			AssertXPathNotNull("sense[not(field)]");
-		}
-
-		[Test]
-		public void EmptyDefinitionOnSense_NotOutput()
-		{
-			LexSense sense = new LexSense();
-			sense.GetOrCreateProperty<MultiText>(LexSense.WellKnownProperties.Definition);
-			this._exporter.Add(sense);
-			this._exporter.End();
-			AssertXPathNotNull("sense[not(definition)]");
-			AssertXPathNotNull("sense[not(field)]");
-		}
-
-		[Test]
-		public void EmptyCustomMultiText()
-		{
-			LexSense sense = new LexSense();
-			sense.GetOrCreateProperty<MultiText>("flubadub");
-			this._exporter.Add(sense);
-			this._exporter.End();
-			AssertXPathNotNull("sense[not(field)]");
-		}
-
-		[Test]
-		public void CustomMultiTextOnSense()
-		{
-			LexSense sense = new LexSense();
-			MultiText m = sense.GetOrCreateProperty<MultiText>("flubadub");
-			m["zz"] = "orange";
-			this._exporter.Add(sense);
-			this._exporter.End();
-			AssertXPathNotNull("sense/field[@type='flubadub']/form[@lang='zz' and text='orange']");
-		}
-
-		[Test]
-		public void CustomMultiTextOnEntry()
-		{
-			LexEntry entry = this._lexEntryRepository.CreateItem();
-
-			MultiText m = entry.GetOrCreateProperty<MultiText>("flubadub");
-			m["zz"] = "orange";
-			this._lexEntryRepository.SaveItem(entry);
-			this._exporter.Add(entry);
-			this._exporter.End();
-			AssertXPathNotNull("entry/field[@type='flubadub']/form[@lang='zz' and text='orange']");
-		}
-
-		[Test]
-		public void CustomMultiTextOnExample()
-		{
-			LexExampleSentence example = new LexExampleSentence();
-			MultiText m = example.GetOrCreateProperty<MultiText>("flubadub");
-			m["zz"] = "orange";
-			this._exporter.Add(example);
-			this._exporter.End();
-			AssertXPathNotNull("example/field[@type='flubadub']/form[@lang='zz' and text='orange']");
-		}
-
-		[Test]
-		public void EmptyCustomOptionRef()
-		{
-			LexSense sense = new LexSense();
-			sense.GetOrCreateProperty<OptionRef>("flubadub");
-			this._exporter.Add(sense);
-			this._exporter.End();
-			AssertXPathNotNull("sense[not(trait)]");
-		}
-
-		[Test]
-		public void CustomOptionRefOnEntry()
-		{
-			this._fieldToOptionListName.Add("flub", "kindsOfFlubs");
-			LexEntry entry = this._lexEntryRepository.CreateItem();
-
-			OptionRef o = entry.GetOrCreateProperty<OptionRef>("flub");
-			o.Value = "orange";
-			this._lexEntryRepository.SaveItem(entry);
-			this._exporter.Add(entry);
-			this._exporter.End();
-			AssertXPathNotNull("entry/trait[@name='flub' and @value='orange']");
-		}
-
-		[Test]
-		public void CustomOptionRefOnSense()
-		{
-			this._fieldToOptionListName.Add("flub", "kindsOfFlubs");
-			LexSense sense = new LexSense();
-			OptionRef o = sense.GetOrCreateProperty<OptionRef>("flub");
-			o.Value = "orange";
-			this._exporter.Add(sense);
-			this._exporter.End();
-			Assert.AreEqual(
-					GetSenseElement(sense) + "<trait name=\"flub\" value=\"orange\" /></sense>",
-					this._stringBuilder.ToString());
-		}
-
-		[Test]
-		public void CustomOptionRefOnSenseWithGrammi()
-		{
-			this._fieldToOptionListName.Add("flub", "kindsOfFlubs");
-			LexSense sense = new LexSense();
-			OptionRef grammi =
-					sense.GetOrCreateProperty<OptionRef>(LexSense.WellKnownProperties.PartOfSpeech);
-			grammi.Value = "verb";
-
-			OptionRef o = sense.GetOrCreateProperty<OptionRef>("flub");
-			o.Value = "orange";
-			this._exporter.Add(sense);
-			this._exporter.End();
-			AssertXPathNotNull("sense/trait[@name='flub' and @value='orange']");
-			AssertXPathNotNull("sense[count(trait)=1]");
-		}
-
-		[Test]
-		public void CustomOptionRefOnExample()
-		{
-			this._fieldToOptionListName.Add("flub", "kindsOfFlubs");
-			LexExampleSentence example = new LexExampleSentence();
-			OptionRef o = example.GetOrCreateProperty<OptionRef>("flub");
-			o.Value = "orange";
-			this._exporter.Add(example);
-			this._exporter.End();
-			Assert.AreEqual("<example><trait name=\"flub\" value=\"orange\" /></example>",
-							this._stringBuilder.ToString());
-		}
-
-		[Test]
-		public void EmptyCustomOptionRefCollection()
-		{
-			LexSense sense = new LexSense();
-			sense.GetOrCreateProperty<OptionRefCollection>("flubadub");
-			this._exporter.Add(sense);
-			this._exporter.End();
-			AssertXPathNotNull("sense[not(trait)]");
-		}
-
-		[Test]
-		public void CustomOptionRefCollectionOnEntry()
-		{
-			this._fieldToOptionListName.Add("flubs", "colors");
-			LexEntry entry = this._lexEntryRepository.CreateItem();
-
-			OptionRefCollection o = entry.GetOrCreateProperty<OptionRefCollection>("flubs");
-			o.AddRange(new string[] {"orange", "blue"});
-			this._lexEntryRepository.SaveItem(entry);
-			this._exporter.Add(entry);
-			this._exporter.End();
-			AssertXPathNotNull("entry/trait[@name='flubs' and @value='orange']");
-			AssertXPathNotNull("entry/trait[@name='flubs' and @value='blue']");
-			AssertXPathNotNull("entry[count(trait) =2]");
-		}
-
-		[Test]
-		public void CustomOptionRefCollectionOnSense()
-		{
-			this._fieldToOptionListName.Add("flubs", "colors");
-			LexSense sense = new LexSense();
-			OptionRefCollection o = sense.GetOrCreateProperty<OptionRefCollection>("flubs");
-			o.AddRange(new string[] {"orange", "blue"});
-			this._exporter.Add(sense);
-			this._exporter.End();
-			Assert.AreEqual(
-					GetSenseElement(sense) +
-					"<trait name=\"flubs\" value=\"orange\" /><trait name=\"flubs\" value=\"blue\" /></sense>",
-					this._stringBuilder.ToString());
-		}
-
-		[Test]
-		public void CustomOptionRefCollectionOnExample()
-		{
-			this._fieldToOptionListName.Add("flubs", "colors");
-			LexExampleSentence example = new LexExampleSentence();
-			OptionRefCollection o = example.GetOrCreateProperty<OptionRefCollection>("flubs");
-			o.AddRange(new string[] {"orange", "blue"});
-			this._exporter.Add(example);
-			this._exporter.End();
-			Assert.AreEqual(
-					"<example><trait name=\"flubs\" value=\"orange\" /><trait name=\"flubs\" value=\"blue\" /></example>",
-					this._stringBuilder.ToString());
-		}
-
-		[Test]
-		public void SenseWithExample()
-		{
-			LexSense sense = new LexSense();
-			LexExampleSentence example = new LexExampleSentence();
-			example.Sentence["red"] = "red sunset tonight";
-			sense.ExampleSentences.Add(example);
-			this._exporter.Add(sense);
-			CheckAnswer(GetSenseElement(sense) +
-						"<example><form lang=\"red\"><text>red sunset tonight</text></form></example></sense>");
-		}
-
-		[Test]
-		public void SenseWithSynonymRelations()
-		{
-			LexSense sense = new LexSense();
-
-			LexRelationType synonymRelationType =
-					new LexRelationType("synonym",
-										LexRelationType.Multiplicities.Many,
-										LexRelationType.TargetTypes.Sense);
-
-			LexRelationType antonymRelationType =
-					new LexRelationType("antonym",
-										LexRelationType.Multiplicities.Many,
-										LexRelationType.TargetTypes.Sense);
-
-			LexRelationCollection relations = new LexRelationCollection();
-			sense.Properties.Add(new KeyValuePair<string, object>("relations", relations));
-
-			relations.Relations.Add(new LexRelation(synonymRelationType.ID, "one", sense));
-			relations.Relations.Add(new LexRelation(synonymRelationType.ID, "two", sense));
-			relations.Relations.Add(new LexRelation(antonymRelationType.ID, "bee", sense));
-
-			this._exporter.Add(sense);
-			CheckAnswer(GetSenseElement(sense) +
-						"<relation type=\"synonym\" ref=\"one\" /><relation type=\"synonym\" ref=\"two\" /><relation type=\"antonym\" ref=\"bee\" /></sense>");
-		}
-
-		private void CheckAnswer(string answer)
-		{
-			this._exporter.End();
-			Assert.AreEqual(answer, this._stringBuilder.ToString());
-		}
-
-		[Test]
-		public void FlagOnEntry_OutputAsTrait()
-		{
-			LexEntry entry = this._lexEntryRepository.CreateItem();
-
-			entry.SetFlag("ATestFlag");
-			this._lexEntryRepository.SaveItem(entry);
-			this._exporter.Add(entry);
-			this._exporter.End();
-			AssertXPathNotNull("entry/trait[@name='ATestFlag' and @value]");
-		}
-
-		[Test]
-		public void FlagCleared_NoOutput()
-		{
-			LexEntry entry = this._lexEntryRepository.CreateItem();
-
-			entry.SetFlag("ATestFlag");
-			entry.ClearFlag("ATestFlag");
-			this._lexEntryRepository.SaveItem(entry);
-			this._exporter.Add(entry);
-			this._exporter.End();
-			AssertXPathNotNull("entry[not(trait)]");
 		}
 
 		[Test]
@@ -1049,8 +943,8 @@ namespace WeSay.LexicalModel.Tests
 			LexSense sense = new LexSense();
 			PictureRef p = sense.GetOrCreateProperty<PictureRef>("Picture");
 			p.Value = "bird.jpg";
-			this._exporter.Add(sense);
-			this._exporter.End();
+			_exporter.Add(sense);
+			_exporter.End();
 			CheckAnswer(GetSenseElement(sense) + "<illustration href=\"bird.jpg\" /></sense>");
 		}
 
@@ -1062,10 +956,120 @@ namespace WeSay.LexicalModel.Tests
 			p.Value = "bird.jpg";
 			p.Caption = new MultiText();
 			p.Caption["aa"] = "aCaption";
-			this._exporter.Add(sense);
-			this._exporter.End();
+			_exporter.Add(sense);
+			_exporter.End();
 			CheckAnswer(GetSenseElement(sense) +
 						"<illustration href=\"bird.jpg\"><label><form lang=\"aa\"><text>aCaption</text></form></label></illustration></sense>");
+		}
+
+		[Test]
+		public void Sense_HasId_RemembersId()
+		{
+			LexSense s = new LexSense();
+			s.Id = "my id";
+			_exporter.Add(s);
+			_exporter.End();
+			ShouldContain("id=\"my id\"");
+		}
+
+		[Test]
+		public void Sense_NoId_GetsId()
+		{
+			LexSense sense = new LexSense();
+			_exporter.Add(sense);
+			_exporter.End();
+			ShouldContain(string.Format("id=\"{0}\"", sense.Id));
+		}
+
+		[Test]
+		public void SensesAreLastObjectsInEntry() // this helps conversions to sfm
+		{
+			LexEntry entry = _lexEntryRepository.CreateItem();
+
+			entry.LexicalForm["blue"] = "ocean";
+
+			LexSense sense1 = new LexSense();
+			sense1.Gloss["a"] = "aaa";
+			entry.Senses.Add(sense1);
+			LexSense sense2 = new LexSense();
+			sense2.Gloss["b"] = "bbb";
+			entry.Senses.Add(sense2);
+
+			MultiText citation =
+				entry.GetOrCreateProperty<MultiText>(LexEntry.WellKnownProperties.Citation);
+			citation["zz"] = "orange";
+
+			MultiText note = entry.GetOrCreateProperty<MultiText>(WeSayDataObject.WellKnownProperties.Note);
+			note["zz"] = "orange";
+
+			MultiText field = entry.GetOrCreateProperty<MultiText>("custom");
+			field["zz"] = "orange";
+
+			_lexEntryRepository.SaveItem(entry);
+			_exporter.Add(entry);
+
+			ShouldContain(
+				string.Format(GetSenseElement(sense1) +
+							  "<gloss lang=\"a\"><text>aaa</text></gloss></sense>" +
+							  GetSenseElement(sense2) +
+							  "<gloss lang=\"b\"><text>bbb</text></gloss></sense></entry>"));
+		}
+
+		[Test]
+		public void SenseWithExample()
+		{
+			LexSense sense = new LexSense();
+			LexExampleSentence example = new LexExampleSentence();
+			example.Sentence["red"] = "red sunset tonight";
+			sense.ExampleSentences.Add(example);
+			_exporter.Add(sense);
+			CheckAnswer(GetSenseElement(sense) +
+						"<example><form lang=\"red\"><text>red sunset tonight</text></form></example></sense>");
+		}
+
+		[Test]
+		public void SenseWithSynonymRelations()
+		{
+			LexSense sense = new LexSense();
+
+			LexRelationType synonymRelationType =
+				new LexRelationType("synonym",
+									LexRelationType.Multiplicities.Many,
+									LexRelationType.TargetTypes.Sense);
+
+			LexRelationType antonymRelationType =
+				new LexRelationType("antonym",
+									LexRelationType.Multiplicities.Many,
+									LexRelationType.TargetTypes.Sense);
+
+			LexRelationCollection relations = new LexRelationCollection();
+			sense.Properties.Add(new KeyValuePair<string, object>("relations", relations));
+
+			relations.Relations.Add(new LexRelation(synonymRelationType.ID, "one", sense));
+			relations.Relations.Add(new LexRelation(synonymRelationType.ID, "two", sense));
+			relations.Relations.Add(new LexRelation(antonymRelationType.ID, "bee", sense));
+
+			_exporter.Add(sense);
+			CheckAnswer(GetSenseElement(sense) +
+						"<relation type=\"synonym\" ref=\"one\" /><relation type=\"synonym\" ref=\"two\" /><relation type=\"antonym\" ref=\"bee\" /></sense>");
+		}
+
+		[Test]
+		public void WriteToFile()
+		{
+			string filePath = Path.GetTempFileName();
+			try
+			{
+				_exporter = new LiftExporter(filePath);
+				WriteTwoEntries();
+				XmlDocument doc = new XmlDocument();
+				doc.Load(filePath);
+				Assert.AreEqual(2, doc.SelectNodes("lift/entry").Count);
+			}
+			finally
+			{
+				File.Delete(filePath);
+			}
 		}
 	}
 }
