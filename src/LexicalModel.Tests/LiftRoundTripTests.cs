@@ -14,7 +14,7 @@ namespace WeSay.LexicalModel.Tests
 		private LiftExporter _exporter;
 		private StringBuilder _stringBuilder;
 		private LiftMerger _merger;
-		private LexEntryRepository _lexEntryRepository;
+		private LiftRepository _repository;
 		private string _tempFile;
 
 		[SetUp]
@@ -24,17 +24,16 @@ namespace WeSay.LexicalModel.Tests
 			_stringBuilder = new StringBuilder();
 
 			_tempFile = Path.GetTempFileName();
-			_lexEntryRepository = new LexEntryRepository(_tempFile);
 			_exporter = new LiftExporter(_stringBuilder, false);
-
-			_merger = new LiftMerger();
+			_repository = new LiftRepository(_tempFile);
+			_merger = new LiftMerger(_repository);
 		}
 
 		[TearDown]
 		public void TearDown()
 		{
 			_merger.Dispose();
-			_lexEntryRepository.Dispose();
+			_repository.Dispose();
 			File.Delete(_tempFile);
 		}
 
