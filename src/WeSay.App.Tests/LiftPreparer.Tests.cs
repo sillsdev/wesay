@@ -20,8 +20,8 @@ namespace WeSay.App.Tests
 		[SetUp]
 		public void Setup()
 		{
-			_lexEntryRepository = new LexEntryRepository(_filePath);
 			_filePath = Path.GetTempFileName();
+			_lexEntryRepository = new LexEntryRepository(_filePath);
 			ErrorReport.IsOkToInteractWithUser = false;
 		}
 
