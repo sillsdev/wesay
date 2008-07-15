@@ -125,7 +125,7 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void LastModified_ReturnsMinimumPossibleTime()
 		{
-			Assert.Less(RepositoryUnderTest.LastModified, PreciseDateTime.UtcNow);
+			Assert.AreEqual(RepositoryUnderTest.LastModified, DateTime.MinValue);
 		}
 
 		[Test]
@@ -312,22 +312,6 @@ namespace WeSay.Data.Tests
 			{
 				Assert.Ignore("Repository does not support queries.");
 			}
-		}
-
-		[Test]
-		public void LastModified_IsChanged()
-		{
-			DateTime modifiedTimePreTestedStateSwitch = RepositoryUnderTest.LastModified;
-			SetState();
-
-			Assert.Greater(RepositoryUnderTest.LastModified, modifiedTimePreTestedStateSwitch);
-		}
-
-		[Test]
-		public void LastModified_IsSetInUTC()
-		{
-			SetState();
-			Assert.AreEqual(DateTimeKind.Utc, RepositoryUnderTest.LastModified.Kind);
 		}
 
 		[Test]
