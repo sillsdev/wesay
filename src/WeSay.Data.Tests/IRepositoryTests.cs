@@ -531,7 +531,7 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		public virtual void LastModified_IsSetToPersistedDatasLastChangedTime()
+		public virtual void LastModified_IsSetToMostRecentLexentryInPersistedDatasLastModifiedTime()
 		{
 			if(!RepositoryUnderTest.CanPersist)
 			{
