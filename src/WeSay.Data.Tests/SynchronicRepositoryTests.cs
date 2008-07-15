@@ -195,8 +195,10 @@ namespace WeSay.Data.Tests
         {
             TestItem item = _primary.CreateItem();
             item.StoredString = "item one";
+			_primary.SaveItem(item);
             item = _primary.CreateItem();
             item.StoredString = "item two";
+			_primary.SaveItem(item);
             _synchronic = new SynchronicRepository<TestItem>(_primary, _secondary);
             Assert.AreEqual(2, _secondary.CountAllItems());
             List<string> strings = new List<string>(2);
