@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using NUnit.Framework;
 using WeSay.Data.Tests;
+using WeSay.Data;
 using WeSay.LexicalModel;
 
 namespace WeSay.LexicalModel.Tests
@@ -58,6 +59,28 @@ namespace WeSay.LexicalModel.Tests
 			RepositoryUnderTest.Dispose();
 			File.Delete(this._persistedFilePath);
 		}
+
+		[Test]
+		public void Constructor_FileDoesNotExist_EmptyLiftFileIsCreated()
+		{
+			string nonExistentFileToBeCreated = Path.GetTempPath() + Path.GetRandomFileName();
+			LiftRepository testRepoitory = new LiftRepository(nonExistentFileToBeCreated);
+			string fileContent = File.ReadAllText(nonExistentFileToBeCreated);
+			const string emptyLiftFileContent = @"<?xml version=""1.0"" encoding=""utf-8""?>
+<lift version=""0.12"" producer=""WeSay 1.0.0.0"" />";
+			Assert.AreEqual(emptyLiftFileContent, fileContent);
+		}
+
+		[Test]
+		public void Constructor_FileIsEmpty_MakeFileAnEmptyLiftFile()
+		{
+			string emptyFileToBeFilled = Path.GetTempFileName();
+			LiftRepository testRepoitory = new LiftRepository(emptyFileToBeFilled);
+			string fileContent = File.ReadAllText(emptyFileToBeFilled);
+			const string emptyLiftFileContent = @"<?xml version=""1.0"" encoding=""utf-8""?>
+<lift version=""0.12"" producer=""WeSay 1.0.0.0"" />";
+			Assert.AreEqual(emptyLiftFileContent, fileContent);
+		}
 	}
 
 	[TestFixture]
@@ -79,10 +102,10 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
-		public override void LastModified_IsSetToPersistedDatasLastChangedTime()
+		public override void LastModified_IsSetToMostRecentLexentryInPersistedDatasLastModifiedTime()
 		{
-			DateTime persistedFileTime = File.GetLastWriteTimeUtc(_persistedFilePath);
-			Assert.AreEqual(persistedFileTime, RepositoryUnderTest.LastModified);
+			SetState();
+			Assert.AreEqual(Item.ModificationTime, RepositoryUnderTest.LastModified);
 		}
 
 		//!!!This Test is a workaround because equals on a lexentry is reference dependant TA 2008-07-11
@@ -138,12 +161,8 @@ namespace WeSay.LexicalModel.Tests
 		{
 			SetState();
 			RepositoryUnderTest.SaveItem(Item);
-			string contentsOfPersistedFile = File.ReadAllText(_persistedFilePath);
-			Assert.IsNotEmpty(contentsOfPersistedFile);
 			CreateNewRepositoryFromPersistedData();
-			LexEntry newLexEntry = RepositoryUnderTest.GetItem(Id);
-			RepositoryUnderTest.SaveItem(newLexEntry);
-			Assert.AreEqual(contentsOfPersistedFile, File.ReadAllText(_persistedFilePath));
+			Assert.AreEqual(1, RepositoryUnderTest.CountAllItems());
 		}
 
 		//!!!This Test is a workaround because equals on a lexentry is reference dependant TA 2008-07-11
@@ -153,14 +172,8 @@ namespace WeSay.LexicalModel.Tests
 			List<LexEntry> itemsToBeSaved = new List<LexEntry>();
 			itemsToBeSaved.Add(Item);
 			RepositoryUnderTest.SaveItems(itemsToBeSaved);
-			string contentsOfPersistedFile = File.ReadAllText(_persistedFilePath);
-			Assert.IsNotEmpty(contentsOfPersistedFile);
 			CreateNewRepositoryFromPersistedData();
-			LexEntry newLexEntry = RepositoryUnderTest.GetItem(Id);
-			List<LexEntry> newItemsToBeSaved = new List<LexEntry>();
-			newItemsToBeSaved.Add(Item);
-			RepositoryUnderTest.SaveItem(newLexEntry);
-			Assert.AreEqual(contentsOfPersistedFile, File.ReadAllText(_persistedFilePath));
+			Assert.AreEqual(1, RepositoryUnderTest.CountAllItems());
 		}
 
 		protected override void CreateNewRepositoryFromPersistedData()
