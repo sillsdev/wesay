@@ -341,7 +341,6 @@ namespace WeSay.Data.Tests
 			}
 			else
 			{
-				SetState();
 				RepositoryUnderTest.SaveItem(Item);
 				CreateNewRepositoryFromPersistedData();
 				Assert.AreEqual(1, RepositoryUnderTest.CountAllItems());
@@ -380,7 +379,6 @@ namespace WeSay.Data.Tests
 			}
 			else
 			{
-				SetState();
 				List<T> itemsToBeSaved = new List<T>();
 				itemsToBeSaved.Add(Item);
 				RepositoryUnderTest.SaveItems(itemsToBeSaved);
