@@ -9,7 +9,7 @@ using WeSay.LexicalModel;
 
 namespace WeSay.Project.Tests
 {
-	[TestFixture]
+	[TestFixture, Ignore("This class is going away. TA 2008-07-16")]
 	public class CacheBuilderTests
 	{
 		private CacheBuilder _cacheBuilder;
