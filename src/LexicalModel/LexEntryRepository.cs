@@ -573,27 +573,34 @@ namespace WeSay.LexicalModel
 
 		public void BackendDoLiftUpdateNow(bool p)
 		{
-			throw new Exception("The method or operation is not implemented.");
+			//Do Nothing
+			//throw new Exception("The method or operation is not implemented.");
 		}
 
 		public bool BackendConsumePendingLiftUpdates()
 		{
-			throw new Exception("The method or operation is not implemented.");
+			//Do Nothing
+			return true;
+			//throw new Exception("The method or operation is not implemented.");
 		}
 
 		public bool BackendBringCachesUpToDate()
 		{
-			throw new Exception("The method or operation is not implemented.");
+			//Do Nothing
+			return true;
+			//throw new Exception("The method or operation is not implemented.");
 		}
 
 		public void BackendLiftIsFreshNow()
 		{
-			throw new Exception("The method or operation is not implemented.");
+			//Do Nothing
+			//throw new Exception("The method or operation is not implemented.");
 		}
 
 		public void BackendRecoverUnsavedChangesOutOfCacheIfNeeded()
 		{
-			throw new Exception("The method or operation is not implemented.");
+			//Do Nothing
+			//throw new Exception("The method or operation is not implemented.");
 		}
 	}
 }

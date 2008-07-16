@@ -145,11 +145,11 @@ namespace WeSay.Project
 		public void InvalidateCacheSilently()
 		{
 			DateTime liftLastWriteTimeUtc = File.GetLastWriteTimeUtc(Project.PathToLiftFile);
-			if (File.Exists(Project.PathToDb4oLexicalModelDB))
+			if (File.Exists(Project.PathToRepository))
 			{
 				try // don't crash if we can't update
 				{
-					using (Db4oDataSource ds = new Db4oDataSource(Project.PathToDb4oLexicalModelDB))
+					using (Db4oDataSource ds = new Db4oDataSource(Project.PathToRepository))
 					{
 						//this should be different now so the cache should be updated
 						//but it shouldn't be off by enough to make it so we lose
@@ -163,13 +163,13 @@ namespace WeSay.Project
 				{
 					try
 					{
-						File.Delete(Project.PathToDb4oLexicalModelDB);
+						File.Delete(Project.PathToRepository);
 					}
 					catch (Exception)
 					{
 						ErrorReport.ReportNonFatalMessage(
 								"Please exit WeSay and manually delete this cache file: {0}.",
-								Project.PathToDb4oLexicalModelDB);
+								Project.PathToRepository);
 					}
 				}
 			}
@@ -765,9 +765,10 @@ namespace WeSay.Project
 			return Path.Combine(Path.GetDirectoryName(pathToLift), "Cache");
 		}
 
-		public string PathToDb4oLexicalModelDB
+		public string PathToRepository
 		{
-			get { return GetPathToDb4oLexicalModelDBFromPathToLift(PathToLiftFile); }
+			get { return PathToLiftFile; }
+			//get { return GetPathToDb4oLexicalModelDBFromPathToLift(PathToLiftFile); }
 		}
 
 		public string GetPathToDb4oLexicalModelDBFromPathToLift(string pathToLift)
