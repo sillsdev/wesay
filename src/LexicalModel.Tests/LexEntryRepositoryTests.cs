@@ -7,6 +7,7 @@ using LiftIO.Parsing;
 using NUnit.Framework;
 using Palaso.Text;
 using WeSay.Data;
+using WeSay.Data.Tests;
 using WeSay.Foundation;
 using WeSay.LexicalModel.Db4oSpecific;
 
@@ -310,4 +311,197 @@ namespace WeSay.LexicalModel.Tests
 			Assert.AreEqual(xaId, list[2].Id);
 		}
 	}
-}
+
+		[TestFixture]
+		public class LexEntryRepositoryStateUnitializedTests:IRepositoryStateUnitializedTests<LexEntry>
+		{
+			private string _persistedFilePath;
+			[SetUp]
+			public void Setup()
+			{
+				this._persistedFilePath = Path.GetRandomFileName();
+				_persistedFilePath = Path.GetFullPath(_persistedFilePath);
+				this.RepositoryUnderTest = new LexEntryRepository(this._persistedFilePath);
+			}
+
+			[TearDown]
+			public void Teardown()
+			{
+				RepositoryUnderTest.Dispose();
+				File.Delete(this._persistedFilePath);
+			}
+		}
+
+		[TestFixture]
+		public class LexEntryRepositoryCreatedFromPersistedData : IRepositoryPopulateFromPersistedTests<LexEntry>
+		{
+			private string _persistedFilePath;
+			[SetUp]
+			public void Setup()
+			{
+				this._persistedFilePath = LiftFileInitializer.MakeFile();
+				this.RepositoryUnderTest = new LexEntryRepository(this._persistedFilePath);
+			}
+
+			[TearDown]
+			public void Teardown()
+			{
+				RepositoryUnderTest.Dispose();
+				File.Delete(this._persistedFilePath);
+			}
+
+			[Test]
+			public override void LastModified_IsSetToMostRecentLexentryInPersistedDatasLastModifiedTime()
+			{
+				SetState();
+				Assert.AreEqual(Item.ModificationTime, RepositoryUnderTest.LastModified);
+			}
+
+			[Test]
+			public void Constructor_FileIsWriteable()
+			{
+				SetState();
+				FileStream fileStream = File.OpenWrite(_persistedFilePath);
+				Assert.IsTrue(fileStream.CanWrite);
+				fileStream.Close();
+			}
+
+
+
+		[Test]
+		public void Constructor_LexEntryIsDirtyIsFalse()
+		{
+			SetState();
+			Assert.IsFalse(Item.IsDirty);
+		}
+
+			protected override void CreateNewRepositoryFromPersistedData()
+			{
+				RepositoryUnderTest.Dispose();
+				RepositoryUnderTest = new LexEntryRepository(_persistedFilePath);
+			}
+		}
+
+		[TestFixture]
+		public class LexEntryRepositoryCreateItemTransitionTests : IRepositoryCreateItemTransitionTests<LexEntry>
+		{
+			private string _persistedFilePath;
+			[SetUp]
+			public void Setup()
+			{
+				this._persistedFilePath = Path.GetRandomFileName();
+				_persistedFilePath = Path.GetFullPath(_persistedFilePath);
+				this.RepositoryUnderTest = new LexEntryRepository(this._persistedFilePath);
+			}
+
+			[TearDown]
+			public void Teardown()
+			{
+				RepositoryUnderTest.Dispose();
+				File.Delete(this._persistedFilePath);
+			}
+
+
+
+			[Test]
+			public void SaveItem_LexEntryIsDirtyIsFalse()
+			{
+				SetState();
+				RepositoryUnderTest.SaveItem(Item);
+				Assert.IsFalse(Item.IsDirty);
+			}
+
+			[Test]
+			public void SaveItems_LexEntryIsDirtyIsFalse()
+			{
+				SetState();
+				List<LexEntry> itemsToBeSaved = new List<LexEntry>();
+				itemsToBeSaved.Add(Item);
+				RepositoryUnderTest.SaveItems(itemsToBeSaved);
+				Assert.IsFalse(Item.IsDirty);
+			}
+
+			[Test]
+			public void Constructor_LexEntryIsDirtyIsTrue()
+			{
+				SetState();
+				Assert.IsTrue(Item.IsDirty);
+			}
+
+			protected override void CreateNewRepositoryFromPersistedData()
+			{
+				RepositoryUnderTest.Dispose();
+				RepositoryUnderTest = new LexEntryRepository(_persistedFilePath);
+			}
+		}
+
+		[TestFixture]
+		public class LexEntryRepositoryDeleteItemTransitionTests : IRepositoryDeleteItemTransitionTests<LexEntry>
+		{
+			private string _persistedFilePath;
+			[SetUp]
+			public void Setup()
+			{
+				this._persistedFilePath = Path.GetRandomFileName();
+				_persistedFilePath = Path.GetFullPath(_persistedFilePath);
+				this.RepositoryUnderTest = new LexEntryRepository(this._persistedFilePath);
+			}
+
+			[TearDown]
+			public void Teardown()
+			{
+				RepositoryUnderTest.Dispose();
+				File.Delete(this._persistedFilePath);
+			}
+
+			[Test]
+			[ExpectedException(typeof(ArgumentOutOfRangeException))]
+			public override void SaveItem_ItemDoesNotExist_Throws()
+			{
+				SetState();
+				Item.Senses.Add(new LexSense());
+				RepositoryUnderTest.SaveItem(Item);
+			}
+
+			protected override void CreateNewRepositoryFromPersistedData()
+			{
+				RepositoryUnderTest.Dispose();
+				RepositoryUnderTest = new LexEntryRepository(_persistedFilePath);
+			}
+		}
+
+		[TestFixture]
+		public class LexEntryRepositoryDeleteIdTransitionTests : IRepositoryDeleteIdTransitionTests<LexEntry>
+		{
+			private string _persistedFilePath;
+			[SetUp]
+			public void Setup()
+			{
+				this._persistedFilePath = Path.GetRandomFileName();
+				_persistedFilePath = Path.GetFullPath(_persistedFilePath);
+				this.RepositoryUnderTest = new LexEntryRepository(this._persistedFilePath);
+			}
+
+			[TearDown]
+			public void Teardown()
+			{
+				RepositoryUnderTest.Dispose();
+				File.Delete(this._persistedFilePath);
+			}
+
+			[Test]
+			[ExpectedException(typeof(ArgumentOutOfRangeException))]
+			public override void SaveItem_ItemDoesNotExist_Throws()
+			{
+				SetState();
+				Item.Senses.Add(new LexSense());
+				RepositoryUnderTest.SaveItem(Item);
+			}
+
+			protected override void CreateNewRepositoryFromPersistedData()
+			{
+				RepositoryUnderTest.Dispose();
+				RepositoryUnderTest = new LexEntryRepository(_persistedFilePath);
+			}
+		}
+	}
