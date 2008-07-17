@@ -62,14 +62,6 @@ namespace WeSay.Foundation
 			get { return Parent; }
 		}
 
-		#region IEnumerable Members
-
-		#endregion
-
-		#region IEquatable<MultiText> Members
-
-		#endregion
-
 		///<summary>
 		/// required by IXmlSerializable
 		///</summary>
