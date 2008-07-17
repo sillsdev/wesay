@@ -59,7 +59,7 @@ namespace WeSay.ConfigTool.Tests
 			_window.CreateAndOpenProject(_projectFolder);
 			paths.Add(BasilProject.Project.PathToWritingSystemPrefs);
 			paths.Add(WeSayWordsProject.Project.PathToConfigFile);
-			//paths.Add(WeSayWordsProject.Project.PathToDb4oLexicalModelDB);
+			//paths.Add(WeSayWordsProject.Project.PathToRepository);
 			_mainWindowTester.Close();
 			foreach (string p in paths)
 			{

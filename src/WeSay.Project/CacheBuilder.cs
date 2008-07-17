@@ -56,7 +56,7 @@ namespace WeSay.Project
 				}
 			}
 			if (!Directory.Exists(pathToCacheDirectory) ||
-				!File.Exists(project.PathToDb4oLexicalModelDB))
+				!File.Exists(project.PathToRepository))
 			{
 				return new CacheBuilder(project.PathToLiftFile);
 			}
@@ -66,7 +66,7 @@ namespace WeSay.Project
 		public static bool GetCacheIsOutOfDate(WeSayWordsProject project)
 		{
 			string pathToCacheDirectory = project.PathToCache;
-			string db4oPath = project.PathToDb4oLexicalModelDB;
+			string db4oPath = project.PathToRepository;
 			if (!Directory.Exists(pathToCacheDirectory) || (!File.Exists(db4oPath)))
 			{
 				return true;
@@ -78,7 +78,7 @@ namespace WeSay.Project
 			}
 			//|| (File.GetLastWriteTimeUtc(project.PathToLiftFile) > File.GetLastWriteTimeUtc(db4oPath)));
 
-			using (Db4oDataSource ds = new Db4oDataSource(project.PathToDb4oLexicalModelDB))
+			using (Db4oDataSource ds = new Db4oDataSource(project.PathToRepository))
 			{
 				return
 						(!GetSyncPointInCacheMatches(ds,
@@ -251,7 +251,7 @@ namespace WeSay.Project
 
 		//        //same name, but in a temp directory
 		//        string db4oFileName =
-		//                Path.GetFileName(WeSayWordsProject.Project.PathToDb4oLexicalModelDB);
+		//                Path.GetFileName(WeSayWordsProject.Project.PathToRepository);
 		//        string tempDb4oFilePath = Path.Combine(tempCacheDirectory, db4oFileName);
 
 		//        using (
@@ -300,7 +300,7 @@ namespace WeSay.Project
 		//        using (
 		//                Db4oDataSource ds =
 		//                        new Db4oDataSource(
-		//                                WeSayWordsProject.Project.PathToDb4oLexicalModelDB))
+		//                                WeSayWordsProject.Project.PathToRepository))
 		//        {
 		//            CacheManager.UpdateSyncPointInCache(ds.Data,
 		//                                                File.GetLastWriteTimeUtc(_sourceLIFTPath));

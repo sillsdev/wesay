@@ -31,7 +31,7 @@ namespace WeSay.LexicalModel.Tests.Db4oSpecific
 			CacheBuilder cacheBuilder = new CacheBuilder(_projectDirectory.PathToLiftFile);
 			cacheBuilder.DoWork(new NullProgressState());
 
-			_lexEntryRepository = new LexEntryRepository(_project.PathToDb4oLexicalModelDB);
+			_lexEntryRepository = new LexEntryRepository(_project.PathToRepository);
 			// InMemoryRecordListManager();
 		}
 

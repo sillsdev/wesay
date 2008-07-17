@@ -89,7 +89,6 @@ namespace WeSay.App.Migration
 			state.StatusLabel = "Preprocessing...";
 			try
 			{
-				_project.ReleaseLockOnLift();
 				string pathToLift = _project.PathToLiftFile;
 				string outputPath = Utilities.ProcessLiftForLaterMerging(pathToLift);
 				//    int liftProducerVersion = GetLiftProducerVersion(pathToLift);
@@ -103,10 +102,6 @@ namespace WeSay.App.Migration
 				state.State = ProgressState.StateValue.StoppedWithError;
 				throw;
 				// this will put the exception in the e.Error arg of the RunWorkerCompletedEventArgs
-			}
-			finally
-			{
-				_project.LockLift();
 			}
 		}
 
@@ -195,38 +190,23 @@ namespace WeSay.App.Migration
 					dlg.BackgroundWorker = cacheBuildingWork;
 					dlg.CanCancel = false;
 
-					bool wasLocked = _project.LiftIsLocked;
-					if (wasLocked)
+					dlg.ShowDialog();
+					if (dlg.DialogResult != DialogResult.OK)
 					{
-						_project.ReleaseLockOnLift();
-					}
-					try
-					{
-						dlg.ShowDialog();
-						if (dlg.DialogResult != DialogResult.OK)
+						Exception err = dlg.ProgressStateResult.ExceptionThatWasEncountered;
+						if (err != null)
 						{
-							Exception err = dlg.ProgressStateResult.ExceptionThatWasEncountered;
-							if (err != null)
-							{
-								ErrorNotificationDialog.ReportException(err, null, false);
-							}
-							else if (dlg.ProgressStateResult.State ==
-									 ProgressState.StateValue.StoppedWithError)
-							{
-								ErrorReport.ReportNonFatalMessage(
-										"Failed." + dlg.ProgressStateResult.LogString,
-										null,
-										false);
-							}
-							return false;
+							ErrorNotificationDialog.ReportException(err, null, false);
 						}
-					}
-					finally
-					{
-						if (wasLocked)
+						else if (dlg.ProgressStateResult.State ==
+								 ProgressState.StateValue.StoppedWithError)
 						{
-							_project.LockLift();
+							ErrorReport.ReportNonFatalMessage(
+									"Failed." + dlg.ProgressStateResult.LogString,
+									null,
+									false);
 						}
+						return false;
 					}
 				}
 			}

@@ -53,11 +53,6 @@ namespace Addin.Transform.Tests
 							@"<?xml version='1.0' encoding='utf-8'?>
 <lift  version='{0}'><entry id='one'><sense><gloss lang='en'><text>hello</text></gloss></sense></entry><entry id='two'/></lift>",
 							Validator.LiftVersion);
-			if (WeSayWordsProject.Project.LiftIsLocked)
-			{
-				// shouldn't have to do this now?
-				WeSayWordsProject.Project.ReleaseLockOnLift();
-			}
 			File.WriteAllText(_liftFilePath, contents);
 			_addin.Launch(null,
 						  WeSayWordsProject.Project.GetProjectInfoForAddin(_lexEntryRepository));

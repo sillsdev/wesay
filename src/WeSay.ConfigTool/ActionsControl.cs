@@ -88,7 +88,7 @@ namespace WeSay.ConfigTool
 				using (
 						LexEntryRepository lexEntryRepository =
 								new LexEntryRepository(
-										WeSayWordsProject.Project.PathToDb4oLexicalModelDB))
+										WeSayWordsProject.Project.PathToRepository))
 				{
 					addin.Launch(ParentForm,
 								 WeSayWordsProject.Project.GetProjectInfoForAddin(lexEntryRepository));

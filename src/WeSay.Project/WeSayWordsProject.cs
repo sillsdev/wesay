@@ -683,12 +683,12 @@ namespace WeSay.Project
 		/// it will keep the lift file safe normally... but could lead to non-data-loosing crashes
 		/// if some automated process was sitting out there, just waiting to open as soon as we realease
 		/// </summary>
-		public void ReleaseLockOnLift()
+		private void ReleaseLockOnLift()
 		{
-			Debug.Assert(_liftFileStreamForLocking != null);
-			_liftFileStreamForLocking.Close();
-			_liftFileStreamForLocking.Dispose();
-			_liftFileStreamForLocking = null;
+			//Debug.Assert(_liftFileStreamForLocking != null);
+			//_liftFileStreamForLocking.Close();
+			//_liftFileStreamForLocking.Dispose();
+			//_liftFileStreamForLocking = null;
 		}
 
 		public bool LiftIsLocked
@@ -696,10 +696,10 @@ namespace WeSay.Project
 			get { return _liftFileStreamForLocking != null; }
 		}
 
-		public void LockLift()
+		private void LockLift()
 		{
-			Debug.Assert(_liftFileStreamForLocking == null);
-			_liftFileStreamForLocking = File.OpenRead(PathToLiftFile);
+			//Debug.Assert(_liftFileStreamForLocking == null);
+			//_liftFileStreamForLocking = File.OpenRead(PathToLiftFile);
 		}
 
 		public override string Name

@@ -64,7 +64,6 @@ namespace WeSay.App.Tests
 			{
 				using (WeSayWordsProject proj = dir.CreateLoadedProject())
 				{
-					proj.LockLift();
 					LiftPreparer preparer = new LiftPreparer(proj, _lexEntryRepository);
 					Assert.IsTrue(preparer.MigrateIfNeeded(), "MigrateIfNeeded Failed");
 					Assert.IsTrue(proj.LiftIsLocked);

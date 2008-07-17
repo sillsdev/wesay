@@ -189,7 +189,7 @@ namespace WeSay.Project.Tests
 
 			_cacheBuilder.DoWork(_progress);
 			//   WaitForFinish();
-			string dbPath = WeSayWordsProject.Project.PathToDb4oLexicalModelDB;
+			string dbPath = WeSayWordsProject.Project.PathToRepository;
 			using (IObjectContainer db = Db4oFactory.OpenFile(dbPath))
 			{
 				IList<LexEntry> x = db.Query<LexEntry>();

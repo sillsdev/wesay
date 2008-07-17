@@ -108,6 +108,14 @@ namespace WeSay.LexicalModel.Tests
 			Assert.AreEqual(Item.ModificationTime, RepositoryUnderTest.LastModified);
 		}
 
+		[Test]
+		public void Constructor_FileIsWriteable()
+		{
+			FileStream fileStream = File.OpenWrite(_persistedFilePath);
+			Assert.IsTrue(fileStream.CanWrite);
+			fileStream.Close();
+		}
+
 		protected override void CreateNewRepositoryFromPersistedData()
 		{
 			RepositoryUnderTest.Dispose();

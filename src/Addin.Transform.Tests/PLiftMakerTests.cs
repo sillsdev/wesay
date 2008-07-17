@@ -43,7 +43,7 @@ namespace Addin.Transform.Tests
 
 				using (
 						LexEntryRepository lexEntryRepository =
-								new LexEntryRepository(p.PathToDb4oLexicalModelDB))
+								new LexEntryRepository(p.PathToRepository))
 				{
 					PLiftMaker maker = new PLiftMaker();
 					string path = maker.MakePLiftTempFile(lexEntryRepository, p);

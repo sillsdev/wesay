@@ -287,10 +287,6 @@ namespace Addin.Transform.Tests
 
 		private string GetResultFromAddin(string contents)
 		{
-			if (WeSayWordsProject.Project.LiftIsLocked)
-			{
-				WeSayWordsProject.Project.ReleaseLockOnLift();
-			}
 			File.WriteAllText(WeSayWordsProject.Project.PathToLiftFile, contents);
 			_addin.Launch(null, WeSayWordsProject.Project.GetProjectInfoForAddin(null));
 			Assert.IsTrue(File.Exists(_addin.PathToOutput));

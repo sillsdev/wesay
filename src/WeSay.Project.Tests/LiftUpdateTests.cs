@@ -170,7 +170,7 @@
 //        //            WeSayWordsProject project = new WeSayWordsProject();
 //        //            project.LoadFromLiftLexiconPath(path);
 //        //            LexEntryRepository lexEntryRepository;
-//        //            lexEntryRepository = new LexEntryRepository(new WeSayWordsDb4oModelConfiguration(), project.PathToDb4oLexicalModelDB);
+//        //            lexEntryRepository = new LexEntryRepository(new WeSayWordsDb4oModelConfiguration(), project.PathToRepository);
 //        //            Db4oLexModelHelper.Initialize(((LexEntryRepository)lexEntryRepository).DataSource.Data);
 //        //            LexEntryRepository ds = lexEntryRepository as LexEntryRepository;
 //        //            BackupService backupService = new BackupService(project.PathToLocalBackup, ds.DataSource);

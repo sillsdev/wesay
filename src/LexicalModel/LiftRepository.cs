@@ -21,6 +21,9 @@ namespace WeSay.LexicalModel
 		{
 			_liftFilePath = filePath;
 			FileInfo fileInfo = new FileInfo(_liftFilePath);
+			//check if file is writeable
+			FileStream fileStream = fileInfo.OpenWrite();
+			fileStream.Close();
 			if (!fileInfo.Exists || fileInfo.Length == 0)
 			{
 				LiftExporter exporter = new LiftExporter(filePath);
@@ -333,7 +336,7 @@ namespace WeSay.LexicalModel
 			{
 				UnLockLift();
 			}
-			File.SetLastWriteTimeUtc(_liftFilePath, time);
+			//File.SetLastWriteTimeUtc(_liftFilePath, time);
 			//Debug.Assert(time == GetLastUpdateTime());
 			if (wasLocked)
 			{
@@ -362,23 +365,23 @@ namespace WeSay.LexicalModel
 		/// it will keep the lift file safe normally... but could lead to non-data-losing crashes
 		/// if some automated process was sitting out there, just waiting to open as soon as we realease
 		/// </summary>
-		public void UnLockLift()
+		private void UnLockLift()
 		{
-			Debug.Assert(_liftFileStreamForLocking != null);
-			_liftFileStreamForLocking.Close();
-			_liftFileStreamForLocking.Dispose();
-			_liftFileStreamForLocking = null;
+			//Debug.Assert(_liftFileStreamForLocking != null);
+			//_liftFileStreamForLocking.Close();
+			//_liftFileStreamForLocking.Dispose();
+			//_liftFileStreamForLocking = null;
 		}
 
-		public bool LiftIsLocked
+		private bool LiftIsLocked
 		{
 			get { return _liftFileStreamForLocking != null; }
 		}
 
-		public void LockLift()
+		private void LockLift()
 		{
-			Debug.Assert(_liftFileStreamForLocking == null);
-			_liftFileStreamForLocking = File.OpenRead(_liftFilePath);
+			//Debug.Assert(_liftFileStreamForLocking == null);
+			//_liftFileStreamForLocking = File.OpenRead(_liftFilePath);
 		}
 	}
 }

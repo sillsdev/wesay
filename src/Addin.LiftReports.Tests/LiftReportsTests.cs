@@ -45,10 +45,6 @@ namespace Addin.LiftReports.Tests
 							@"<?xml version='1.0' encoding='utf-8'?>
 <lift  version='{0}'><entry id='one'><sense><gloss lang='en'><text>hello</text></gloss></sense></entry><entry id='two'/></lift>",
 							Validator.LiftVersion);
-			if (WeSayWordsProject.Project.LiftIsLocked)
-			{
-				WeSayWordsProject.Project.ReleaseLockOnLift();
-			}
 			File.WriteAllText(WeSayWordsProject.Project.PathToLiftFile, contents);
 			_addin.Launch(null, WeSayWordsProject.Project.GetProjectInfoForAddin(null));
 			Assert.IsTrue(File.Exists(_addin.PathToOutput));
