@@ -303,5 +303,29 @@ namespace WeSay.LexicalModel.Tests
 			citation.SetAlternative("b", "bater");
 			Assert.AreEqual("apple", entry.GetHeadWordForm("a"));
 		}
+
+		[Test]
+		public void LexEntryConstructor_IsDirtyReturnsTrue()
+		{
+			LexEntry entry = new LexEntry();
+			Assert.IsTrue(entry.IsDirty);
+		}
+
+		[Test]
+		public void Clean_IsDirtyReturnsFalse()
+		{
+			LexEntry entry = new LexEntry();
+			entry.Clean();
+			Assert.IsFalse(entry.IsDirty);
+		}
+
+		[Test]
+		public void LexEntryChanges_IsDirtyReturnsTrue()
+		{
+			LexEntry entry = new LexEntry();
+			entry.Clean();
+			entry.Senses.Add(new LexSense());
+			Assert.IsTrue(entry.IsDirty);
+		}
 	}
 }

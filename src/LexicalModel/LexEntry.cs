@@ -34,6 +34,7 @@ namespace WeSay.LexicalModel
 		private DateTime _creationTime;
 		private DateTime _modificationTime;
 		private bool _isBeingDeleted;
+		private bool _isDirty;
 
 		[NonSerialized]
 		private bool _modifiedTimeIsLocked = false;
@@ -61,6 +62,7 @@ namespace WeSay.LexicalModel
 		public LexEntry(string id, Guid guid): base(null)
 		{
 			DateTime now = PreciseDateTime.UtcNow;
+			_isDirty = true;
 			Init(id, guid, now, now);
 		}
 
@@ -126,8 +128,14 @@ namespace WeSay.LexicalModel
 		{
 			base.SomethingWasModified(propertyModified);
 			ModificationTime = PreciseDateTime.UtcNow;
+			_isDirty = true;
 			//too soon to make id: this method is called after first keystroke
 			//  GetOrCreateId(false);
+		}
+
+		public void Clean()
+		{
+			_isDirty = false;
 		}
 
 		public string GetOrCreateId(bool doCreateEvenIfNoLexemeForm)
@@ -418,6 +426,12 @@ namespace WeSay.LexicalModel
 				return headword;
 			}
 		}
+
+		public bool IsDirty
+		{
+			get { return _isDirty; }
+		}
+
 		public LanguageForm GetHeadWord(string writingSystemId)
 		{
 			if (string.IsNullOrEmpty(writingSystemId))

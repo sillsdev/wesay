@@ -638,5 +638,13 @@ namespace WeSay.LexicalModel.Tests
 			Assert.AreEqual("testPicture.png", pict.Value);
 			Assert.AreEqual("acaption", pict.Caption["aa"]);
 		}
+
+		[Test]
+		public void LexEntryIsDirtyIFalse()
+		{
+			Extensible extensibleInfo = new Extensible();
+			LexEntry entry = _merger.GetOrMakeEntry(extensibleInfo, 0);
+			Assert.IsFalse(entry.IsDirty);
+		}
 	}
 }

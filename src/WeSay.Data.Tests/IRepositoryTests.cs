@@ -600,6 +600,11 @@ namespace WeSay.Data.Tests
 			set { _repositoryUnderTest = value; }
 		}
 
+		public T Item
+		{
+			get { return item; }
+		}
+
 		//This method is used to test whether data has been persisted.
 		//This method should dispose of the current repository and reload it from persisted data
 		//For repositories that don't support persistence this method should do nothing
@@ -613,17 +618,17 @@ namespace WeSay.Data.Tests
 		}
 
 		private void DeleteItem() {
-			RepositoryUnderTest.DeleteItem(this.item);
+			RepositoryUnderTest.DeleteItem(this.Item);
 		}
 
 		private void CreateInitialItem() {
 			this.item = RepositoryUnderTest.CreateItem();
-			this.id = RepositoryUnderTest.GetId(this.item);
+			this.id = RepositoryUnderTest.GetId(this.Item);
 		}
 
 		private void SaveItem()
 		{
-			RepositoryUnderTest.SaveItem(item);
+			RepositoryUnderTest.SaveItem(Item);
 		}
 
 		[Test]
@@ -631,7 +636,7 @@ namespace WeSay.Data.Tests
 		public void DeleteItem_ItemDoesNotExist_Throws()
 		{
 			SetState();
-			RepositoryUnderTest.DeleteItem(item);
+			RepositoryUnderTest.DeleteItem(Item);
 		}
 
 		[Test]
@@ -669,7 +674,7 @@ namespace WeSay.Data.Tests
 		public void GetId_DeletedItemWithId_Throws()
 		{
 			SetState();
-			RepositoryUnderTest.GetId(item);
+			RepositoryUnderTest.GetId(Item);
 		}
 
 		[Test]
@@ -712,10 +717,10 @@ namespace WeSay.Data.Tests
 
 		[Test]
 		[ExpectedException(typeof(ArgumentOutOfRangeException))]
-		public void SaveItem_ItemDoesNotExist_Throws()
+		public virtual void SaveItem_ItemDoesNotExist_Throws()
 		{
 			SetState();
-			RepositoryUnderTest.SaveItem(item);
+			RepositoryUnderTest.SaveItem(Item);
 		}
 
 		[Test]
@@ -750,6 +755,11 @@ namespace WeSay.Data.Tests
 			set { _repositoryUnderTest = value; }
 		}
 
+		public T Item
+		{
+			get { return item; }
+		}
+
 		//This method is used to test whether data has been persisted.
 		//This method should dispose of the current repository and reload it from persisted data
 		//For repositories that don't support persistence this method should do nothing
@@ -768,12 +778,12 @@ namespace WeSay.Data.Tests
 
 		private void CreateItemToTest() {
 			this.item = RepositoryUnderTest.CreateItem();
-			this.id = RepositoryUnderTest.GetId(this.item);
+			this.id = RepositoryUnderTest.GetId(this.Item);
 		}
 
 		private void SaveItem()
 		{
-			RepositoryUnderTest.SaveItem(item);
+			RepositoryUnderTest.SaveItem(Item);
 		}
 
 		[Test]
@@ -819,7 +829,7 @@ namespace WeSay.Data.Tests
 		public void GetId_DeletedItemWithId_Throws()
 		{
 			SetState();
-			RepositoryUnderTest.GetId(item);
+			RepositoryUnderTest.GetId(Item);
 		}
 
 		[Test]
@@ -862,10 +872,10 @@ namespace WeSay.Data.Tests
 
 		[Test]
 		[ExpectedException(typeof(ArgumentOutOfRangeException))]
-		public void SaveItem_ItemDoesNotExist_Throws()
+		public virtual void SaveItem_ItemDoesNotExist_Throws()
 		{
 			SetState();
-			RepositoryUnderTest.SaveItem(item);
+			RepositoryUnderTest.SaveItem(Item);
 		}
 
 		[Test]

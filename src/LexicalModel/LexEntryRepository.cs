@@ -88,13 +88,29 @@ namespace WeSay.LexicalModel
 
 		public void SaveItems(IEnumerable<LexEntry> items)
 		{
-			_decoratedRepository.SaveItems(items);
+			if (items == null)
+			{
+				throw new ArgumentNullException("items");
+			}
+			List<LexEntry> dirtyItems = new List<LexEntry>();
+			foreach (LexEntry item in items)
+			{
+				if(item.IsDirty)
+				{
+					dirtyItems.Add(item);
+				}
+			}
+			_decoratedRepository.SaveItems(dirtyItems);
+			foreach (LexEntry item in dirtyItems)
+			{
+				item.Clean();
+			}
 		}
 
 		public ResultSet<LexEntry> GetItemsMatching(Query query)
 		{
-			throw new NotSupportedException("Please use more specific methods. For now, we don't support using any general query for optimization reasons.");
-			//return _decoratedRepository.GetItemsMatching(query);
+			//throw new NotSupportedException("Please use more specific methods. For now, we don't support using any general query for optimization reasons.");
+			return _decoratedRepository.GetItemsMatching(query);
 		}
 
 		private ResultSet<LexEntry> GetItemsMatchingCore(Query query)
@@ -104,7 +120,16 @@ namespace WeSay.LexicalModel
 
 		public void SaveItem(LexEntry item)
 		{
-			_decoratedRepository.SaveItem(item);
+			if (item == null)
+			{
+				throw new ArgumentNullException("item");
+			}
+			if(item.IsDirty)
+			{
+				_decoratedRepository.SaveItem(item);
+				item.Clean();
+			}
+
 		}
 
 		public bool CanQuery
