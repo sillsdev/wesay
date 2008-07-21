@@ -60,20 +60,20 @@ namespace WeSay.LexicalModel
 			}
 #endif
 			if (eInfo.CreationTime == default(DateTime))
-				{
-					eInfo.CreationTime = PreciseDateTime.UtcNow;
-				}
+			{
+				eInfo.CreationTime = PreciseDateTime.UtcNow;
+			}
 
 			if (eInfo.ModificationTime == default(DateTime))
-				{
-					eInfo.ModificationTime = PreciseDateTime.UtcNow;
-				}
+			{
+				eInfo.ModificationTime = PreciseDateTime.UtcNow;
+			}
 
-				entry = _repository.CreateItem();
-				entry.Id = eInfo.Id;
-				entry.Guid = eInfo.Guid;
-				entry.CreationTime = eInfo.CreationTime;
-				entry.ModificationTime = eInfo.ModificationTime;
+			entry = _repository.CreateItem();
+			entry.Id = eInfo.Id;
+			entry.Guid = eInfo.Guid;
+			entry.CreationTime = eInfo.CreationTime;
+			entry.ModificationTime = eInfo.ModificationTime;
 			if(_repository.LastModified < entry.ModificationTime)
 			{
 				_repository.LastModified = entry.ModificationTime;

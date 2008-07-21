@@ -640,11 +640,11 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
-		public void LexEntryIsDirtyIFalse()
+		public void GetOrMakeEntry_ReturnedLexEntryIsDirty()
 		{
 			Extensible extensibleInfo = new Extensible();
 			LexEntry entry = _merger.GetOrMakeEntry(extensibleInfo, 0);
-			Assert.IsFalse(entry.IsDirty);
+			Assert.IsTrue(entry.IsDirty);
 		}
 	}
 }
