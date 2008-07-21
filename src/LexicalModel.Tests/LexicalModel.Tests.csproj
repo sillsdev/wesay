@@ -85,6 +85,7 @@
 	<Compile Include="Db4oSpecific\PersistenceTests.cs" />
 	<Compile Include="LiftExportTests.cs" />
 	<Compile Include="LiftMergerTests.cs" />
+	<Compile Include="LiftPreparer.Tests.cs" />
 	<Compile Include="LiftRepositoryTests.cs" />
 	<Compile Include="LiftRoundTripTests.cs" />
 	<Compile Include="MissingItemFilterTests.cs" />

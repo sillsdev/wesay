@@ -9,7 +9,6 @@ using Palaso.Services;
 using Palaso.Services.Dictionary;
 using Palaso.Services.ForServers;
 using Palaso.UI.WindowsForms.i8n;
-using WeSay.App.Migration;
 using WeSay.App.Properties;
 using WeSay.App.Services;
 using WeSay.LexicalModel;
@@ -117,12 +116,6 @@ namespace WeSay.App
 						{
 							RecoverUnsavedDataIfNeeded();
 						}
-						LiftPreparer preparer = new LiftPreparer(_project, _lexEntryRepository);
-						if (!preparer.MakeCacheAndLiftReady())
-						{
-							return;
-						}
-						_lexEntryRepository.BackendDoLiftUpdateNow(true);
 
 						//StartDictionaryServices();
 						//_dictionary.LastClientDeregistered +=

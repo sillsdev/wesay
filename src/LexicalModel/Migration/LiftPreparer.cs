@@ -5,46 +5,41 @@ using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
 using System.Xml;
+
 using LiftIO;
 using LiftIO.Migration;
 using LiftIO.Validation;
+
 using Palaso.Progress;
 using Palaso.Reporting;
 using Palaso.UI.WindowsForms.Progress;
-using WeSay.LexicalModel;
-using WeSay.Project;
 
-namespace WeSay.App.Migration
+namespace WeSay.LexicalModel.Migration
 {
 	internal class LiftPreparer
 	{
-		private readonly WeSayWordsProject _project;
-		private LexEntryRepository _repository;
+		private LiftRepository _repository;
+		private string _liftFilePath;
 
-		public LiftPreparer(WeSayWordsProject project, LexEntryRepository repository)
+		[Obsolete]
+		public LiftPreparer(string liftFilePath, LiftRepository repository)
 		{
-			_project = project;
 			_repository = repository;
+			_liftFilePath = liftFilePath;
 		}
 
 		public bool MakeCacheAndLiftReady()
 		{
-			//NB: it's very important that any updates are consumed before the cache is rebuilt.
-			//Otherwise, the cache and lift will fall out of sync.
-			if (!_repository.BackendConsumePendingLiftUpdates()) //!!! During migration this would fail CJP
-			{
-				return false;
-			}
 
 			if (!MigrateIfNeeded())
 			{
 				return false;
 			}
 
-			if (!_repository.BackendBringCachesUpToDate())
-			{
-				return false;
-			}
+			//if (!_repository.BackendBringCachesUpToDate())
+			//{
+			//    return false;
+			//}
 
 			// Check this out !!! We still need to fix the 'fresh install' problem. CJP
 			//if (CacheManager.GetAssumeCacheIsFresh(_project.PathToCache))
@@ -76,7 +71,7 @@ namespace WeSay.App.Migration
 					ErrorReport.ReportNonFatalMessage(
 							String.Format(
 									"WeSay encountered an error while preprocessing the file '{0}'.  Error was: {1}",
-									_project.PathToLiftFile,
+									_liftFilePath,
 									dlg.ProgressStateResult.ExceptionThatWasEncountered.Message));
 				}
 				return (dlg.DialogResult == DialogResult.OK);
@@ -89,7 +84,7 @@ namespace WeSay.App.Migration
 			state.StatusLabel = "Preprocessing...";
 			try
 			{
-				string pathToLift = _project.PathToLiftFile;
+				string pathToLift = _liftFilePath;
 				string outputPath = Utilities.ProcessLiftForLaterMerging(pathToLift);
 				//    int liftProducerVersion = GetLiftProducerVersion(pathToLift);
 
@@ -179,7 +174,7 @@ namespace WeSay.App.Migration
 		/// <returns>true if everything is ok, false if something went wrong</returns>
 		public bool MigrateIfNeeded()
 		{
-			if (Migrator.IsMigrationNeeded(_project.PathToLiftFile))
+			if (Migrator.IsMigrationNeeded(_liftFilePath))
 			{
 				using (ProgressDialog dlg = new ProgressDialog())
 				{
@@ -218,21 +213,21 @@ namespace WeSay.App.Migration
 			ProgressState progressState = (ProgressState) args.Argument;
 			try
 			{
-				string oldVersion = Validator.GetLiftVersion(_project.PathToLiftFile);
+				string oldVersion = Validator.GetLiftVersion(_liftFilePath);
 				Logger.WriteEvent("Migrating from {0} to {1}", oldVersion, Validator.LiftVersion);
 				progressState.StatusLabel =
 						string.Format("Migrating from {0} to {1}", oldVersion, Validator.LiftVersion);
-				string migratedFile = Migrator.MigrateToLatestVersion(_project.PathToLiftFile);
+				string migratedFile = Migrator.MigrateToLatestVersion(_liftFilePath);
 				string nameForOldFile =
-						_project.PathToLiftFile.Replace(".lift", "." + oldVersion + ".lift");
+						_liftFilePath.Replace(".lift", "." + oldVersion + ".lift");
 
 				if (File.Exists(nameForOldFile))
 						// like, if we tried to convert it before and for some reason want to do it again
 				{
 					File.Delete(nameForOldFile);
 				}
-				File.Move(_project.PathToLiftFile, nameForOldFile);
-				File.Move(migratedFile, _project.PathToLiftFile);
+				File.Move(_liftFilePath, nameForOldFile);
+				File.Move(migratedFile, _liftFilePath);
 
 				args.Result = args.Argument as ProgressState;
 			}
@@ -248,60 +243,60 @@ namespace WeSay.App.Migration
 			}
 		}
 
-		private bool BringCachesUpToDate()
-		{
-			Debug.Assert(!string.IsNullOrEmpty(_project.PathToLiftFile));
-			CacheBuilder builder = CacheManager.GetCacheBuilderIfNeeded(_project);
+		//private bool BringCachesUpToDate()
+		//{
+		//    Debug.Assert(!string.IsNullOrEmpty(_liftFilePath));
+		//    CacheBuilder builder = CacheManager.GetCacheBuilderIfNeeded(_project);
 
-			if (builder == null)
-			{
-				return true;
-			}
+		//    if (builder == null)
+		//    {
+		//        return true;
+		//    }
 
-			//ProgressState progressState = new WeSay.Foundation.ConsoleProgress();//new ProgressState(progressDialogHandler);
-			using (ProgressDialog dlg = new ProgressDialog())
-			{
-				if (!PreprocessLift())
-				{
-					return false;
-				}
+		//    //ProgressState progressState = new WeSay.Foundation.ConsoleProgress();//new ProgressState(progressDialogHandler);
+		//    using (ProgressDialog dlg = new ProgressDialog())
+		//    {
+		//        if (!PreprocessLift())
+		//        {
+		//            return false;
+		//        }
 
-				dlg.Overview =
-						"Please wait while WeSay updates its caches to match the new or modified LIFT file.";
-				BackgroundWorker cacheBuildingWork = new BackgroundWorker();
-				cacheBuildingWork.DoWork += builder.OnDoWork;
-				dlg.BackgroundWorker = cacheBuildingWork;
-				dlg.CanCancel = true;
-				dlg.ShowDialog();
-				if (dlg.DialogResult != DialogResult.OK)
-				{
-					Exception err = dlg.ProgressStateResult.ExceptionThatWasEncountered;
-					if (err != null)
-					{
-						if (err is LiftFormatException)
-						{
-							ErrorReport.ReportNonFatalMessage(
-									"WeSay had problems with the content of the dictionary file.\r\n\r\n" +
-									err.Message);
-						}
-						else
-						{
-							ErrorNotificationDialog.ReportException(err, null, false);
-						}
-					}
-					else if (dlg.ProgressStateResult.State ==
-							 ProgressState.StateValue.StoppedWithError)
-					{
-						ErrorReport.ReportNonFatalMessage(
-								"Could not build caches. " + dlg.ProgressStateResult.LogString,
-								null,
-								false);
-					}
-					return false;
-				}
-				_repository.BackendLiftIsFreshNow();
-			}
-			return true;
-		}
+		//        dlg.Overview =
+		//                "Please wait while WeSay updates its caches to match the new or modified LIFT file.";
+		//        BackgroundWorker cacheBuildingWork = new BackgroundWorker();
+		//        cacheBuildingWork.DoWork += builder.OnDoWork;
+		//        dlg.BackgroundWorker = cacheBuildingWork;
+		//        dlg.CanCancel = true;
+		//        dlg.ShowDialog();
+		//        if (dlg.DialogResult != DialogResult.OK)
+		//        {
+		//            Exception err = dlg.ProgressStateResult.ExceptionThatWasEncountered;
+		//            if (err != null)
+		//            {
+		//                if (err is LiftFormatException)
+		//                {
+		//                    ErrorReport.ReportNonFatalMessage(
+		//                            "WeSay had problems with the content of the dictionary file.\r\n\r\n" +
+		//                            err.Message);
+		//                }
+		//                else
+		//                {
+		//                    ErrorNotificationDialog.ReportException(err, null, false);
+		//                }
+		//            }
+		//            else if (dlg.ProgressStateResult.State ==
+		//                     ProgressState.StateValue.StoppedWithError)
+		//            {
+		//                ErrorReport.ReportNonFatalMessage(
+		//                        "Could not build caches. " + dlg.ProgressStateResult.LogString,
+		//                        null,
+		//                        false);
+		//            }
+		//            return false;
+		//        }
+		//        _repository.BackendLiftIsFreshNow();
+		//    }
+		//    return true;
+		//}
 	}
 }

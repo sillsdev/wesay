@@ -92,7 +92,6 @@
 	<Compile Include="LongStartupNotification.Designer.cs">
 	  <DependentUpon>LongStartupNotification.cs</DependentUpon>
 	</Compile>
-	<Compile Include="Migration\LiftPreparer.cs" />
 	<Compile Include="Services\DictionaryServiceProvider.cs" />
 	<Compile Include="Properties\Resources.Designer.cs">
 	  <AutoGen>True</AutoGen>
@@ -164,7 +163,6 @@
 	  <SubType>Designer</SubType>
 	  <DependentUpon>LongStartupNotification.cs</DependentUpon>
 	</EmbeddedResource>
-	<EmbeddedResource Include="Migration\populateDefinitionFromGloss.xslt" />
   </ItemGroup>
   <ItemGroup>
 	<EmbeddedResource Include="..\Addin.Transform\plift2html.xsl">

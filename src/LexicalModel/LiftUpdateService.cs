@@ -88,67 +88,6 @@ namespace WeSay.LexicalModel
 		//    exporter.End();
 		//}
 
-//        public void DoLiftUpdateNow(bool mergeIntoSingleFileBeforeReturning)
-//        {
-//            // Logger.WriteEvent("Incremental Update Start");
-
-//            if (Updating != null)
-//            {
-//                Updating.Invoke(this, null);
-//            }
-
-//            IList<RepositoryId> repositoryIds = GetRecordsNeedingUpdateInLift();
-//            if (repositoryIds.Count != 0)
-//            {
-//                LameProgressDialog dlg = null;
-//                if (repositoryIds.Count > 50)
-//                {
-//                    //TODO: if we think this will actually ever be called, clean this up with a real, delayed-visibility dialog
-//                    dlg =
-//                            new LameProgressDialog(
-//                                    string.Format("Doing incremental update of {0} records...",
-//                                                  repositoryIds.Count));
-//                    dlg.Show();
-//                    Application.DoEvents();
-//                }
-
-//                try
-//                {
-//                    LiftExporter exporter =
-//                            new LiftExporter( /*WeSayWordsProject.Project.GetFieldToOptionListNameDictionary(),*/
-//                                    MakeIncrementFileName(_timeOfLastQueryForNewRecords));
-//                    foreach (RepositoryId id in repositoryIds)
-//                    {
-//                        LexEntry entry = this._lexEntryRepository.GetItem(id);
-//                        exporter.Add(entry);
-//                    }
-//                    exporter.End();
-
-//                    RecordUpdateTime(_timeOfLastQueryForNewRecords);
-//                }
-//                finally
-//                {
-//                    if (dlg != null)
-//                    {
-//                        dlg.Close();
-//                        dlg.Dispose();
-//                    }
-//                }
-//            }
-
-//            if (mergeIntoSingleFileBeforeReturning)
-//            {
-//                if (ConsumePendingLiftUpdates())
-//                {
-//                    //todo
-//#if FIXME //commented to allow compile even though lexEntryRepository doesn't provide a datasource anymore
-//                    CacheManager.UpdateSyncPointInCache(_lexEntryRepository.Db4oDataSource.Data,
-//                                                        File.GetLastWriteTimeUtc(
-//                                                                WeSayWordsProject.Project.
-//                                                                        PathToLiftFile));
-//#endif
-//                }
-//            }
 
 //            //Logger.WriteEvent("Incremental Update Done");
 //        }

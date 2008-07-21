@@ -85,6 +85,7 @@
 	<Compile Include="LiftExporter.cs" />
 	<Compile Include="LiftRepository.cs" />
 	<Compile Include="LiftUpdateService.cs" />
+	<Compile Include="Migration\LiftPreparer.cs" />
 	<Compile Include="MissingItemFilter.cs" />
 	<Compile Include="PairStringLexEntryIdDisplayProvider.cs" />
 	<Compile Include="Phonetic.cs" />
@@ -101,6 +102,9 @@
 	  <Project>{F12EB680-0990-4900-B77E-0FBF2E28A815}</Project>
 	  <Name>WeSay.Foundation</Name>
 	</ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+	<EmbeddedResource Include="Migration\populateDefinitionFromGloss.xslt" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modifyy your build process, add your task inside one of the targets below and uncomment it.

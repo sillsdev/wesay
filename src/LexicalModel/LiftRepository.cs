@@ -9,6 +9,7 @@ using LiftIO.Validation;
 using Palaso.Reporting;
 using WeSay.Data;
 using WeSay.Foundation;
+using WeSay.LexicalModel.Migration;
 
 namespace WeSay.LexicalModel
 {
@@ -24,6 +25,8 @@ namespace WeSay.LexicalModel
 			//check if file is writeable
 			FileStream fileStream = fileInfo.OpenWrite();
 			fileStream.Close();
+			// Prepare lift file (merge and migrate) if required.
+			PrepareLiftFile();
 			if (!fileInfo.Exists || fileInfo.Length == 0)
 			{
 				LiftExporter exporter = new LiftExporter(filePath);
@@ -33,6 +36,15 @@ namespace WeSay.LexicalModel
 			LastModified = DateTime.MinValue;
 			LoadAllLexEntries();
 		}
+
+		private void PrepareLiftFile()
+		{
+			MergeIncrementFiles();  //??? Would this fail during migration. Check LiftIO. CJP
+			LiftPreparer preparer = new LiftPreparer(_liftFilePath, this);
+			preparer.MigrateIfNeeded();
+		}
+
+
 
 		public override void DeleteItem(RepositoryId id)
 		{
