@@ -102,10 +102,20 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
-		public override void LastModified_IsSetToMostRecentLexentryInPersistedDatasLastModifiedTime()
+		public override void LastModified_IsSetToMostRecentItemInPersistedDatasLastModifiedTime()
 		{
 			SetState();
 			Assert.AreEqual(Item.ModificationTime, RepositoryUnderTest.LastModified);
+		}
+
+		[Test]
+		public override void GetItemMatchingQuery_QueryWithShow_ReturnsAllItemsAndFieldsMatchingQuery()
+		{
+			SetState();
+			Query query = new Query(typeof(LexEntry)).Show("LexicalForm");
+			ResultSet<LexEntry> resultsOfQuery = RepositoryUnderTest.GetItemsMatching(query);
+			Assert.AreEqual(1, resultsOfQuery.Count);
+			Assert.AreEqual("Sonne", resultsOfQuery[0]["LexicalForm"].ToString());
 		}
 
 		[Test]
@@ -140,6 +150,17 @@ namespace WeSay.LexicalModel.Tests
 		{
 			RepositoryUnderTest.Dispose();
 			File.Delete(this._persistedFilePath);
+		}
+
+		[Test]
+		public override void GetItemMatchingQuery_QueryWithShow_ReturnsAllItemsAndFieldsMatchingQuery()
+		{
+			SetState();
+			Item.LexicalForm["de"] = "Sonne";
+			Query query = new Query(typeof(LexEntry)).Show("LexicalForm");
+			ResultSet<LexEntry> resultsOfQuery = RepositoryUnderTest.GetItemsMatching(query);
+			Assert.AreEqual(1, resultsOfQuery.Count);
+			Assert.AreEqual("Sonne", resultsOfQuery[0]["LexicalForm"].ToString());
 		}
 
 		protected override void CreateNewRepositoryFromPersistedData()
