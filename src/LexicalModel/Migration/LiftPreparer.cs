@@ -18,42 +18,11 @@ namespace WeSay.LexicalModel.Migration
 {
 	internal class LiftPreparer
 	{
-		private LiftRepository _repository;
 		private string _liftFilePath;
 
-		[Obsolete]
-		public LiftPreparer(string liftFilePath, LiftRepository repository)
+		public LiftPreparer(string liftFilePath)
 		{
-			_repository = repository;
 			_liftFilePath = liftFilePath;
-		}
-
-		public bool MakeCacheAndLiftReady()
-		{
-
-			if (!MigrateIfNeeded())
-			{
-				return false;
-			}
-
-			//if (!_repository.BackendBringCachesUpToDate())
-			//{
-			//    return false;
-			//}
-
-			// Check this out !!! We still need to fix the 'fresh install' problem. CJP
-			//if (CacheManager.GetAssumeCacheIsFresh(_project.PathToCache))
-			//{
-			//    //prevent the update service from thinking the LIFT file is really old
-			//    //compared to the cache, due to the installer messing with the dates.
-			//    LiftUpdateService.LiftIsFreshNow();
-			//}
-			////whether or not we're out of date, remove this indicator file, which is only to get
-			////fresh-from-install launchign without an installer-induced
-			////false dirty cache signal
-			//CacheManager.RemoveAssumeCacheIsFreshIndicator();
-
-			return true;
 		}
 
 		private bool PreprocessLift()

@@ -59,7 +59,7 @@ namespace WeSay.LexicalModel.Tests
 			//nb: 0.10 was the first version where we started provinding a migration path.
 			//FLEx support for Lift started with 0.12
 			CreateLiftFileForTesting("0.10");
-			LiftPreparer preparer = new LiftPreparer(_liftFilePath, _liftRepository);
+			LiftPreparer preparer = new LiftPreparer(_liftFilePath);
 			Assert.IsTrue(preparer.MigrateIfNeeded(), "MigrateIfNeeded Failed");
 			Assert.AreEqual(Validator.LiftVersion,
 							Validator.GetLiftVersion(_liftFilePath));
@@ -69,7 +69,7 @@ namespace WeSay.LexicalModel.Tests
 		public void MigrateIfNeeded_LiftIsLockedByProject_LockedAgainAfterMigration()
 		{
 			CreateLiftFileForTesting("0.10");
-			LiftPreparer preparer = new LiftPreparer(_liftFilePath, _liftRepository);
+			LiftPreparer preparer = new LiftPreparer(_liftFilePath);
 			Assert.IsTrue(preparer.MigrateIfNeeded(), "MigrateIfNeeded Failed");
 			Assert.IsTrue(_liftRepository.IsLiftFileLocked);
 		}
@@ -79,7 +79,7 @@ namespace WeSay.LexicalModel.Tests
 		{
 			CreateLiftFileForTesting(Validator.LiftVersion);
 			DateTime startModTime = File.GetLastWriteTimeUtc(_liftFilePath);
-			LiftPreparer preparer = new LiftPreparer(_liftFilePath, _liftRepository);
+			LiftPreparer preparer = new LiftPreparer(_liftFilePath);
 			Assert.IsTrue(preparer.MigrateIfNeeded(), "MigrateIfNeeded Failed");
 			DateTime finishModTime = File.GetLastWriteTimeUtc(_liftFilePath);
 			Assert.AreEqual(startModTime, finishModTime);

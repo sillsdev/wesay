@@ -38,7 +38,7 @@ namespace WeSay.LexicalModel
 		private void PrepareLiftFile()
 		{
 			MergeIncrementFiles();  //??? Would this fail during migration. Check LiftIO. CJP
-			LiftPreparer preparer = new LiftPreparer(_liftFilePath, this);
+			LiftPreparer preparer = new LiftPreparer(_liftFilePath);
 			preparer.MigrateIfNeeded();
 		}
 
