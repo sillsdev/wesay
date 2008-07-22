@@ -351,6 +351,33 @@ namespace WeSay.LexicalModel.Tests
 			}
 
 			[Test]
+			public override void SaveItem_LastModifiedIsChangedToLaterTime()
+			{
+				SetState();
+				DateTime modifiedTimePreSave = RepositoryUnderTest.LastModified;
+				MakeItemDirty(Item);
+				RepositoryUnderTest.SaveItem(Item);
+				Assert.Greater(RepositoryUnderTest.LastModified, modifiedTimePreSave);
+			}
+
+			[Test]
+			public override void SaveItems_LastModifiedIsChangedToLaterTime()
+			{
+				SetState();
+				List<LexEntry> itemsToSave = new List<LexEntry>();
+				itemsToSave.Add(Item);
+				DateTime modifiedTimePreSave = RepositoryUnderTest.LastModified;
+				MakeItemDirty(Item);
+				RepositoryUnderTest.SaveItems(itemsToSave);
+				Assert.Greater(RepositoryUnderTest.LastModified, modifiedTimePreSave);
+			}
+
+			private static void MakeItemDirty(LexEntry Item)
+			{
+				Item.Senses.Add(new LexSense());
+			}
+
+			[Test]
 			public override void LastModified_IsSetToMostRecentLexentryInPersistedDatasLastModifiedTime()
 			{
 				SetState();
@@ -365,8 +392,6 @@ namespace WeSay.LexicalModel.Tests
 				Assert.IsTrue(fileStream.CanWrite);
 				fileStream.Close();
 			}
-
-
 
 		[Test]
 		public void Constructor_LexEntryIsDirtyIsFalse()

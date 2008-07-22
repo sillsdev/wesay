@@ -300,7 +300,7 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		public void GetItemMatchingQuery_QueryWithShow_ReturnsAllItemsAndFieldsMatchingQuery()
+		public virtual void GetItemMatchingQuery_QueryWithShow_ReturnsAllItemsAndFieldsMatchingQuery()
 		{
 			SetState();
 			if (RepositoryUnderTest.CanQuery)
@@ -431,6 +431,7 @@ namespace WeSay.Data.Tests
 		//For repositories that don't support persistence this method should do nothing
 		protected abstract void CreateNewRepositoryFromPersistedData();
 
+
 		[Test]
 		public void CreateItem_ReturnsUniqueItem()
 		{
@@ -506,7 +507,7 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		public void GetItemMatchingQuery_QueryWithShow_ReturnsAllItemsAndFieldsMatchingQuery()
+		public virtual void GetItemMatchingQuery_QueryWithShow_ReturnsAllItemsAndFieldsMatchingQuery()
 		{
 			SetState();
 			if (RepositoryUnderTest.CanQuery)
@@ -541,12 +542,12 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		public void SaveItem_LastModifiedIsChangedToLaterTime()
+		public virtual void SaveItem_LastModifiedIsChangedToLaterTime()
 		{
 			SetState();
-			DateTime modifiedTimePreTestedStateSwitch = RepositoryUnderTest.LastModified;
+			DateTime modifiedTimePreSave = RepositoryUnderTest.LastModified;
 			RepositoryUnderTest.SaveItem(Item);
-			Assert.Greater(RepositoryUnderTest.LastModified, modifiedTimePreTestedStateSwitch);
+			Assert.Greater(RepositoryUnderTest.LastModified, modifiedTimePreSave);
 		}
 
 		[Test]
@@ -558,14 +559,14 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		public void SaveItems_LastModifiedIsChangedToLaterTime()
+		public virtual void SaveItems_LastModifiedIsChangedToLaterTime()
 		{
 			SetState();
 			List<T> itemsToSave = new List<T>();
 			itemsToSave.Add(Item);
-			DateTime modifiedTimePreTestedStateSwitch = RepositoryUnderTest.LastModified;
+			DateTime modifiedTimePreSave = RepositoryUnderTest.LastModified;
 			RepositoryUnderTest.SaveItems(itemsToSave);
-			Assert.Greater(RepositoryUnderTest.LastModified, modifiedTimePreTestedStateSwitch);
+			Assert.Greater(RepositoryUnderTest.LastModified, modifiedTimePreSave);
 		}
 
 		[Test]
