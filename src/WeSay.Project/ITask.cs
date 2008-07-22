@@ -5,6 +5,17 @@ using WeSay.Foundation.Dashboard;
 
 namespace WeSay.Project
 {
+	/// <summary>
+	/// This is the preferred way to activate any indices (caches) your task wants to have installed
+	/// during changes to the cache.  THe old method was to actually get activated, which is crazy because
+	/// it means we're setting up ui and such, even if wesay is a server, just starting up, running tests, etc.
+	/// </summary>
+	public interface ISetupIndices
+	{
+		void RegisterIndicesNow(ViewTemplate viewTemplate);
+
+	}
+
 	public interface ITask : IThingOnDashboard
 	{
 		void Activate();
@@ -14,13 +25,13 @@ namespace WeSay.Project
 		string Label { get; }
 
 		/// <summary>
-		/// most of our tasks, so far, have a lot of caching to do; saying 'true' to this gives them
+		/// ***** Deprecated:  Use ISetupIndices instead, and return false for this.
+		/// Most of our tasks, so far, have a lot of caching to do; saying 'true' to this gives them
 		/// a chance to be activated while the import (cache building) happens, which is a lot
 		/// more efficient than waiting for the user to click on them.
 		/// </summary>
 		bool MustBeActivatedDuringPreCache { get;}
 
-		void RegisterWithCache(ViewTemplate viewTemplate);
 
 		Control Control { get;}
 		bool IsPinned { get; }

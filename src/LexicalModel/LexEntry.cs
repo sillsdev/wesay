@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Text;
+using Db4objects.Db4o;
+using Db4objects.Db4o.Ext;
 using LiftIO;
 using LiftIO.Parsing;
 using Palaso.Text;
@@ -483,6 +485,20 @@ namespace WeSay.LexicalModel
 			LexRelationCollection relations = GetOrCreateProperty<LexRelationCollection>(LexEntry.WellKnownProperties.BaseForm);
 			relations.Relations.Add(new LexRelation(relationName, targetId, this));
 		}
+
+		#region Implementation of IObjectCallbacks
+
+		public void ObjectOnDelete(IObjectContainer container)
+		{
+			throw new System.NotImplementedException();
+		}
+
+		public void ObjectOnUpdate(IObjectContainer container)
+		{
+			throw new System.NotImplementedException();
+		}
+
+		#endregion
 	}
 
 	/// <summary>

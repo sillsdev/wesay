@@ -10,9 +10,10 @@ using WeSay.Project;
 
 namespace WeSay.LexicalTools
 {
-	public class MissingInfoTask : TaskBase
+	public class MissingInfoTask : TaskBase, ISetupIndices
 	{
 		private MissingInfoControl _missingInfoControl;
+		private readonly IRecordListManager _recordListManager;
 		private readonly IFilter<LexEntry> _filter;
 		private readonly ViewTemplate _viewTemplate;
 		private bool _dataHasBeenRetrieved;
@@ -39,10 +40,17 @@ namespace WeSay.LexicalTools
 				throw new ArgumentNullException("viewTemplate");
 			}
 
+			_recordListManager = recordListManager;
 			_filter = filter;
 			_viewTemplate = viewTemplate;
 
 
+
+			RegisterIndicesNow(viewTemplate);
+		}
+
+		public void RegisterIndicesNow(ViewTemplate viewTemplate)
+		{
 			WritingSystem listWritingSystem = BasilProject.Project.WritingSystems.UnknownVernacularWritingSystem;
 			// use the master view Template instead of the one for this task. (most likely the one for this
 			// task doesn't have the EntryLexicalForm field specified but the Master (Default) one will
@@ -59,10 +67,10 @@ namespace WeSay.LexicalTools
 				}
 			}
 
-			if (recordListManager is Db4oRecordListManager)
+			if (_recordListManager is Db4oRecordListManager)
 			{
 				_sortHelper =
-						new LexEntrySortHelper(((Db4oRecordListManager)recordListManager).DataSource,
+						new LexEntrySortHelper(((Db4oRecordListManager)_recordListManager).DataSource,
 											   listWritingSystem,
 											   true);
 			}
@@ -70,10 +78,15 @@ namespace WeSay.LexicalTools
 			{
 				_sortHelper = new LexEntrySortHelper(listWritingSystem, true);
 			}
+			_recordListManager.Register(_filter, _sortHelper);
+			_recordListManager.Register(new AllItems<LexEntry>(), _sortHelper);
+		}
 
-			recordListManager.Register(filter, _sortHelper);
-			recordListManager.Register(new AllItems<LexEntry>(), _sortHelper);
 
+		//Instead, use ISetupIndices
+		public override bool MustBeActivatedDuringPreCache
+		{
+			get { return false; }
 		}
 
 		public MissingInfoTask(IRecordListManager recordListManager,

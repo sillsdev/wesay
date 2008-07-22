@@ -42,6 +42,11 @@ namespace WeSay.Project.Tests
 			}
 
 			//overwrite the blank lift file
+			CreateLiftFile(liftVersion, xmlOfEntries);
+		}
+
+		private void CreateLiftFile(string liftVersion, string xmlOfEntries)
+		{
 			string liftContents = string.Format("<?xml version='1.0' encoding='utf-8'?><lift version='{0}'>{1}</lift>", liftVersion, xmlOfEntries);
 			File.WriteAllText(PathToLiftFile, liftContents);
 		}
@@ -162,6 +167,12 @@ namespace WeSay.Project.Tests
 			WeSayWordsProject p = new WeSayWordsProject();
 			p.LoadFromLiftLexiconPath(PathToLiftFile);
 			return p;
+		}
+
+		public WeSayWordsProject CreateLoadedProject(string xmlOfEntries, string liftVersion)
+		{
+			CreateLiftFile(liftVersion, xmlOfEntries);
+			return CreateLoadedProject();
 		}
 	}
 }

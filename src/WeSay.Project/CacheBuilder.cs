@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Reflection;
-using System.Windows.Forms;
-using System.Xml;
 using Db4objects.Db4o;
-using LiftIO;
+using LiftIO.Merging;
 using LiftIO.Parsing;
 using LiftIO.Validation;
 using Palaso.Progress;
@@ -16,6 +14,7 @@ using WeSay.Data;
 using WeSay.Foundation;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Db4o_Specific;
+using Debug=System.Diagnostics.Debug;
 
 namespace WeSay.Project
 {
@@ -40,27 +39,41 @@ namespace WeSay.Project
 		public static CacheBuilder GetCacheBuilderIfNeeded(WeSayWordsProject project)
 		{
 			string pathToCacheDirectory = project.PathToCache;
-			if (GetCacheIsOutOfDate(project))
+			if (!GetCacheIsOutOfDate(project))
+				return null;
+
+
+			bool isPossibleToJustDoUpdate = project.LiftChangeDetector != null &&
+										project.LiftChangeDetector.CanProvideChangeRecord;
+
+			if (!isPossibleToJustDoUpdate)
 			{
-				if (Directory.Exists(pathToCacheDirectory) && Directory.GetFileSystemEntries(pathToCacheDirectory).Length != 0)
+				RemoveCacheDirectory(pathToCacheDirectory);
+			}
+
+			CacheBuilder builder = new CacheBuilder(project.PathToLiftFile);
+			builder.LiftChangeDetector = project.LiftChangeDetector;
+			return builder;
+		}
+
+		private static void RemoveCacheDirectory(string pathToCacheDirectory)
+		{
+			if (Directory.Exists(pathToCacheDirectory) &&
+				Directory.GetFileSystemEntries(pathToCacheDirectory).Length != 0)
+			{
+				try
 				{
-					try
+					Directory.Delete(pathToCacheDirectory, true);
+				}
+				catch (IOException)
+				{
+					// avoid crash if we managed to delete all files but not the directory itself
+					if (Directory.GetFileSystemEntries(pathToCacheDirectory).Length != 0)
 					{
-						Directory.Delete(pathToCacheDirectory, true);
-					}
-					catch(IOException)
-					{
-						// avoid crash if we managed to delete all files but not the directory itself
-						if (Directory.GetFileSystemEntries(pathToCacheDirectory).Length != 0)
-							throw;
+						throw;
 					}
 				}
 			}
-			if (!Directory.Exists(pathToCacheDirectory) || !File.Exists(project.PathToDb4oLexicalModelDB))
-			{
-				return new CacheBuilder(project.PathToLiftFile);
-			}
-			return null;
 		}
 
 		public static bool GetCacheIsOutOfDate(WeSayWordsProject project)
@@ -82,38 +95,13 @@ namespace WeSay.Project
 			using (Db4oDataSource ds = new Db4oDataSource(project.PathToDb4oLexicalModelDB))
 			{
 				return (!GetSyncPointInCacheMatches(ds, File.GetLastWriteTimeUtc(project.PathToLiftFile)))
-					|| (!GetModelVersionInCacheMatches(ds));
+					   || (!GetModelVersionInCacheMatches(ds));
 			}
 		}
 
 		public static bool GetAssumeCacheIsFresh(string pathToCacheDirectory)
 		{
 			return File.Exists(Path.Combine(pathToCacheDirectory, kCacheIsFreshIndicator));
-		}
-
-		private class SyncPoint
-		{
-			public DateTime when;
-			private string _modelVersion;
-
-			public string GetCurrentModelVersion()
-			{
-				Assembly assembly = Assembly.GetExecutingAssembly();
-				System.Diagnostics.Debug.Assert(assembly != null);
-				object[] attributes = assembly.GetCustomAttributes(typeof (AssemblyFileVersionAttribute), false);
-				System.Diagnostics.Debug.Assert(attributes.Length > 0);
-				return ((AssemblyFileVersionAttribute) attributes[0]).Version;
-			}
-
-			public void SetModelVersion()
-			{
-				_modelVersion = GetCurrentModelVersion();
-			}
-
-			public bool ModelMatchesCurrentVersion()
-			{
-				return _modelVersion == GetCurrentModelVersion();
-			}
 		}
 
 		[CLSCompliant(false)]
@@ -180,19 +168,72 @@ namespace WeSay.Project
 				return result[0].ModelMatchesCurrentVersion();
 			}
 		}
+
+		#region Nested type: SyncPoint
+
+		private class SyncPoint
+		{
+			private string _modelVersion;
+			public DateTime when;
+
+			public string GetCurrentModelVersion()
+			{
+				Assembly assembly = Assembly.GetExecutingAssembly();
+				Debug.Assert(assembly != null);
+				object[] attributes = assembly.GetCustomAttributes(typeof (AssemblyFileVersionAttribute), false);
+				Debug.Assert(attributes.Length > 0);
+				return ((AssemblyFileVersionAttribute) attributes[0]).Version;
+			}
+
+			public void SetModelVersion()
+			{
+				_modelVersion = GetCurrentModelVersion();
+			}
+
+			public bool ModelMatchesCurrentVersion()
+			{
+				return _modelVersion == GetCurrentModelVersion();
+			}
+		}
+
+		#endregion
 	}
 
 	public class CacheBuilder
 	{
-		private string _sourceLIFTPath;
-		private ProgressState _progress;
-		private Db4oRecordList<LexEntry> _prewiredEntries = null;
 		private BackgroundWorker _backgroundWorker;
+		private ILiftChangeDetector _liftChangeDetector;
+		private Db4oRecordList<LexEntry> _prewiredEntries;
+		private ProgressState _progress;
+		private string _sourceLIFTPath;
+
 
 		public CacheBuilder(string sourceLIFTPath)
 		{
 			// _destinationDatabasePath = destinationDatabasePath;
 			_sourceLIFTPath = sourceLIFTPath;
+		}
+
+		/// <summary>
+		/// caller can set this if you want some actions to happen as each entry is
+		/// imported, such as building up indices.  The given entries list will be
+		/// used, and you can act on the events it fires.
+		/// </summary>
+		public Db4oRecordList<LexEntry> EntriesAlreadyWiredUp
+		{
+			set { _prewiredEntries = value; }
+		}
+
+		public string SourceLIFTPath
+		{
+			get { return _sourceLIFTPath; }
+			set { _sourceLIFTPath = value; }
+		}
+
+		public ILiftChangeDetector LiftChangeDetector
+		{
+			get { return _liftChangeDetector; }
+			set { _liftChangeDetector = value; }
 		}
 
 		/// <summary>
@@ -214,22 +255,6 @@ namespace WeSay.Project
 			}
 		}
 
-		/// <summary>
-		/// caller can set this if you want some actions to happen as each entry is
-		/// imported, such as building up indices.  The given entries list will be
-		/// used, and you can act on the events it fires.
-		/// </summary>
-		public Db4oRecordList<LexEntry> EntriesAlreadyWiredUp
-		{
-			set { _prewiredEntries = value; }
-		}
-
-		public string SourceLIFTPath
-		{
-			get { return _sourceLIFTPath; }
-			set { _sourceLIFTPath = value; }
-		}
-
 		public Db4oRecordList<LexEntry> GetEntries(Db4oDataSource ds)
 		{
 			if (_prewiredEntries == null)
@@ -241,32 +266,90 @@ namespace WeSay.Project
 		}
 
 
-
 		public void DoWork(ProgressState progress)
 		{
-			Logger.WriteEvent("Building Caches");
 			_progress = progress;
 			_progress.State = ProgressState.StateValue.Busy;
 			_progress.StatusLabel = "Validating...";
 
 
+			Logger.WriteEvent("Validating Lift");
+			string errors = Validator.GetAnyValidationErrors(_sourceLIFTPath);
+			if (errors != null && errors != string.Empty)
+			{
+				progress.StatusLabel = "Problem with file format...";
+				_progress.State = ProgressState.StateValue.StoppedWithError;
+				_progress.WriteToLog(
+					string.Format("There is a problem with the format of {0}. {1}", _sourceLIFTPath, errors));
+				Logger.WriteEvent("LIFT failed to validate.");
+				return;
+			}
+
+			if (_liftChangeDetector != null && _liftChangeDetector.CanProvideChangeRecord)
+			{
+				UpdateCacheWithChangedEntries(progress);
+			}
+			else
+			{
+				BuildNewCache(progress);
+			}
+
+			if (_liftChangeDetector != null)
+			{
+				_liftChangeDetector.Reset();
+			}
+		}
+
+		/// <summary>
+		/// If we know which entries have been modified, we can speed things up by just updating,
+		/// adding, and deleting some entries.
+		/// </summary>
+		private void UpdateCacheWithChangedEntries(ProgressState progress)
+		{
+			Logger.WriteEvent("Performing partial cache update.");
+			progress.StatusLabel = "Updating Caches...";
 			try
 			{
-				string errors = Validator.GetAnyValidationErrors(_sourceLIFTPath);
-				if (errors != null && errors != string.Empty)
+				using (IRecordListManager recordListManager =
+					new Db4oRecordListManager(new WeSayWordsDb4oModelConfiguration(), WeSayWordsProject.Project.PathToDb4oLexicalModelDB))
 				{
-					progress.StatusLabel = "Problem with file format...";
-					_progress.State = ProgressState.StateValue.StoppedWithError;
-					_progress.WriteToLog(
-							string.Format("There is a problem with the format of {0}. {1}", _sourceLIFTPath, errors));
-					Logger.WriteEvent("LIFT failed to validate.");
-					return;
+					Db4oDataSource ds = ((Db4oRecordListManager) recordListManager).DataSource;
+
+					//TODO: is this right to do every time?
+					Db4oLexModelHelper.Initialize(ds.Data);
+					Lexicon.Init((Db4oRecordListManager) recordListManager);
+
+					//TODO: is this right to do every time?
+					SetupTasksToBuildCaches(recordListManager, WeSayWordsProject.Project.DefaultViewTemplate);
+
+					//TODO: what's this about?
+					EntriesAlreadyWiredUp = (Db4oRecordList<LexEntry>)recordListManager.GetListOfType<LexEntry>();
+
+					DoParsing(ds);
+					_progress.State = ProgressState.StateValue.Finished;
 				}
+			}
+			catch (Exception e)
+			{
+				//currently, error reporter can choke because this is
+				//being called from a non sta thread.
+				//so let's leave it to the progress dialog to report the error
+				//                Reporting.ErrorReporter.ReportException(e,null, false);
+				_progress.ExceptionThatWasEncountered = e;
+				_progress.WriteToLog(e.Message);
+				_progress.State = ProgressState.StateValue.StoppedWithError;
+			}
+			Logger.WriteEvent("Done Updating Caches");
+		}
 
-
+		private void BuildNewCache(ProgressState progress)
+		{
+			try
+			{
+				Logger.WriteEvent("Building Caches");
 				progress.StatusLabel = "Building Caches...";
 				string tempCacheDirectory =
-						Directory.CreateDirectory(Path.Combine(Path.GetTempPath(), Path.GetRandomFileName())).FullName;
+					Directory.CreateDirectory(Path.Combine(Path.GetTempPath(), Path.GetRandomFileName())).FullName;
 				WeSayWordsProject.Project.CacheLocationOverride = tempCacheDirectory;
 
 				//same name, but in a temp directory
@@ -274,27 +357,31 @@ namespace WeSay.Project
 				string tempDb4oFilePath = Path.Combine(tempCacheDirectory, db4oFileName);
 
 				using (IRecordListManager recordListManager =
-						new Db4oRecordListManager(new WeSayWordsDb4oModelConfiguration(), tempDb4oFilePath))
+					new Db4oRecordListManager(new WeSayWordsDb4oModelConfiguration(), tempDb4oFilePath))
 				{
 					Db4oDataSource ds = ((Db4oRecordListManager) recordListManager).DataSource;
 					Db4oLexModelHelper.Initialize(ds.Data);
-					Lexicon.Init((Db4oRecordListManager)recordListManager);
+					Lexicon.Init((Db4oRecordListManager) recordListManager);
 
 					//  Db4oRecordListManager ds = recordListManager as Db4oRecordListManager;
 
 					//MONO bug as of 1.1.18 cannot bitwise or FileShare on FileStream constructor
 					//                    using (FileStream config = new FileStream(project.PathToProjectTaskInventory, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete))
-					SetupTasksToBuildCaches(recordListManager);
+					SetupTasksToBuildCaches(recordListManager, WeSayWordsProject.Project.DefaultViewTemplate);
 
 					EntriesAlreadyWiredUp = (Db4oRecordList<LexEntry>) recordListManager.GetListOfType<LexEntry>();
 
 					if (Db4oLexModelHelper.Singleton == null)
 					{
 						Db4oLexModelHelper.Initialize(ds.Data);
-						Lexicon.Init((Db4oRecordListManager)recordListManager);
+						Lexicon.Init((Db4oRecordListManager) recordListManager);
 					}
 
 
+					if (_liftChangeDetector != null)
+					{
+						_liftChangeDetector.ClearCache();
+					}
 					DoParsing(ds);
 					if (_backgroundWorker != null && _backgroundWorker.CancellationPending)
 					{
@@ -319,7 +406,9 @@ namespace WeSay.Project
 					{
 						// avoid crash if we managed to delete all files but not the directory itself
 						if (Directory.GetFileSystemEntries(cacheFolderName).Length != 0)
+						{
 							throw;
+						}
 					}
 					//fails if temp dir is on a different volume:
 					//Directory.Move(tempTarget + " Cache", cacheFolderName);
@@ -330,8 +419,9 @@ namespace WeSay.Project
 				{
 					CacheManager.UpdateSyncPointInCache(ds.Data, File.GetLastWriteTimeUtc(_sourceLIFTPath));
 					File.WriteAllText(
-							Path.Combine(WeSayWordsProject.Project.PathToCache, CacheManager.kCacheIsFreshIndicator), "");
+						Path.Combine(WeSayWordsProject.Project.PathToCache, CacheManager.kCacheIsFreshIndicator), "");
 				}
+
 
 				_progress.State = ProgressState.StateValue.Finished;
 			}
@@ -347,14 +437,14 @@ namespace WeSay.Project
 			}
 			finally
 			{
-				try// EVIL STATICS!
+				try // EVIL STATICS!
 				{
 					if (WeSayWordsProject.Project != null)
 					{
 						WeSayWordsProject.Project.CacheLocationOverride = null;
 					}
 				}
-				catch(Exception ) //swallow
+				catch (Exception) //swallow
 				{
 				}
 			}
@@ -379,7 +469,7 @@ namespace WeSay.Project
 						merger.ExpectedOptionCollectionTraits.Add(name);
 					}
 
-					RunParser(merger);
+					RunParser(merger, _liftChangeDetector);
 				}
 
 				UpdateDashboardStats();
@@ -396,25 +486,28 @@ namespace WeSay.Project
 
 		private static void UpdateDashboardStats()
 		{
-			foreach (ITask task in WeSayWordsProject.Project.Tasks)
+			if (WeSayWordsProject.Project.Tasks != null)
 			{
-				if (task is IFinishCacheSetup)
+				foreach (ITask task in WeSayWordsProject.Project.Tasks)
 				{
-					((IFinishCacheSetup) task).FinishCacheSetup();
+					if (task is IFinishCacheSetup)
+					{
+						((IFinishCacheSetup) task).FinishCacheSetup();
+					}
 				}
 			}
 		}
 
-		private static void SetupTasksToBuildCaches(IRecordListManager recordListManager)
+		private void SetupTasksToBuildCaches(IRecordListManager recordListManager, ViewTemplate viewTemplate)
 		{
 			recordListManager.DelayWritingCachesUntilDispose = true;
 			ConfigFileTaskBuilder taskBuilder;
 			using (
-					FileStream configFile =
-							new FileStream(WeSayWordsProject.Project.PathToConfigFile,
-										   FileMode.Open,
-										   FileAccess.Read,
-										   FileShare.ReadWrite))
+				FileStream configFile =
+					new FileStream(WeSayWordsProject.Project.PathToConfigFile,
+								   FileMode.Open,
+								   FileAccess.Read,
+								   FileShare.ReadWrite))
 			{
 				taskBuilder = new ConfigFileTaskBuilder(configFile,
 														WeSayWordsProject.Project,
@@ -424,10 +517,16 @@ namespace WeSay.Project
 
 			WeSayWordsProject.Project.Tasks = taskBuilder.Tasks;
 
+			_progress.StatusLabel = "Setting Up Indices...";
 			//give the tasks a chance to register with the recordlistmanager
 			foreach (ITask task in taskBuilder.Tasks)
 			{
-				if (task.MustBeActivatedDuringPreCache)
+				ISetupIndices setup = task as ISetupIndices;
+				if (setup != null)
+				{
+					setup.RegisterIndicesNow(viewTemplate);
+				}
+				else if (task.MustBeActivatedDuringPreCache)
 				{
 					task.Activate();
 					task.Deactivate();
@@ -435,32 +534,25 @@ namespace WeSay.Project
 			}
 		}
 
-		private void RunParser( LiftMerger merger)
+		private void RunParser(LiftMerger merger, ILiftChangeDetector changeDetector)
 		{
 			LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence> parser =
 				new LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence>(merger);
 
-			parser.SetTotalNumberSteps +=
-				new EventHandler
-					<LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence>.StepsArgs>(
-					parser_SetTotalNumberSteps);
-			parser.SetStepsCompleted +=
-				new EventHandler
-					<
-						LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence>.
-							ProgressEventArgs>(
-					parser_SetStepsCompleted);
-
-			parser.ParsingWarning +=
-				new EventHandler
-					<LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence>.ErrorArgs>(
-					parser_ParsingWarning);
-
+			if (changeDetector != null && changeDetector.CanProvideChangeRecord)
+			{
+				parser.ChangeDetector = changeDetector;
+				merger.UpdatingRatherThanRebuilding = true;
+			}
+			parser.SetTotalNumberSteps +=parser_SetTotalNumberSteps;
+			parser.SetStepsCompleted +=parser_SetStepsCompleted;
+			parser.ParsingWarning +=parser_ParsingWarning;
+			parser.SetProgressMessage +=OnParserProgressMessage;
 			try
 			{
 				parser.ReadLiftFile(_sourceLIFTPath);
 			}
-			catch(Exception error)
+			catch (Exception error)
 			{
 				//our parser failed.  Hopefully, because of bad lift. Validate it now  to
 				//see if that's the problem.
@@ -471,16 +563,21 @@ namespace WeSay.Project
 			}
 		}
 
+		private void OnParserProgressMessage(object sender, LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence>.MessageArgs e)
+		{
+			_progress.StatusLabel = e.Message;
+		}
+
 		private void parser_ParsingWarning(object sender,
 										   LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence>.ErrorArgs
-												   e)
+											   e)
 		{
 			_progress.WriteToLog(e.Exception.Message);
 		}
 
 		private void parser_SetStepsCompleted(object sender,
 											  LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence>.
-													  ProgressEventArgs e)
+												  ProgressEventArgs e)
 		{
 			_progress.NumberOfStepsCompleted = e.Progress;
 			if (_backgroundWorker != null)
@@ -491,7 +588,7 @@ namespace WeSay.Project
 
 		private void parser_SetTotalNumberSteps(object sender,
 												LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence>.
-														StepsArgs e)
+													StepsArgs e)
 		{
 			_progress.TotalNumberOfSteps = e.Steps;
 		}

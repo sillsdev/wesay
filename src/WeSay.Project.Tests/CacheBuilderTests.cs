@@ -2,14 +2,17 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Db4objects.Db4o;
+using LiftIO.Merging;
 using LiftIO.Validation;
 using NUnit.Framework;
 using Palaso.Progress;
+using WeSay.Foundation.Tests;
 using WeSay.LexicalModel;
 using WeSay.Project;
 
 namespace WeSay.Project.Tests
 {
+
 
 
 	[TestFixture]
@@ -63,6 +66,10 @@ namespace WeSay.Project.Tests
 			}
 			WeSayWordsProject.Project.Dispose();
 		}
+
+
+
+
 		[Test]
 		public void GoodLiftStopsWithProgressInFinishedState()
 		{
@@ -81,6 +88,7 @@ namespace WeSay.Project.Tests
 		{
 			SimpleGoodLiftCore(true);
 		}
+
 
 		private void SimpleGoodLiftCore(bool doMakeExistingFilesThatNeedToBeReplaced)
 		{
@@ -276,15 +284,35 @@ namespace WeSay.Project.Tests
 			Assert.IsFalse(File.Exists(deleteThisGuy));
 	   }
 
-		//jh added
-//        public void WaitForFinish()
-//        {
-//            while (!this._finished)
-//            {
-//                Application.DoEvents();
-//                Thread.Sleep(5);
-//            }
-//        }
+
 	}
 
+	public class DummyLiftChangeDetector : ILiftChangeDetector
+	{
+		private bool _haveCache = false;
+
+		public DummyLiftChangeDetector()
+		{
+			Reset();
+		}
+		public void Reset()
+		{
+			_haveCache = true;
+		}
+
+		public void ClearCache()
+		{
+			_haveCache = false;
+		}
+
+		public ILiftChangeReport GetChangeReport(IProgress progress)
+		{
+			throw new System.NotImplementedException();
+		}
+
+		public bool CanProvideChangeRecord
+		{
+			get { return _haveCache; }
+		}
+	}
 }

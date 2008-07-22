@@ -92,9 +92,8 @@ namespace WeSay.LexicalTools
 		}
 
 
-		public bool MustBeActivatedDuringPreCache
-		{
-			get { return true; }
+		public abstract bool MustBeActivatedDuringPreCache
+		{ get;
 		}
 
 		private static string MakeSafeName(string fileName)
@@ -157,10 +156,6 @@ namespace WeSay.LexicalTools
 			}
 		}
 
-		public virtual void RegisterWithCache(ViewTemplate viewTemplate)
-		{
-
-		}
 
 		public virtual void Deactivate()
 		{

@@ -29,7 +29,7 @@ namespace WeSay.App
 		{
 			//NB: it's very important that any updates are consumed before the cache is rebuilt.
 			//Otherwise, the cache and lift will fall out of sync.
-			if (!LiftUpdateService.ConsumePendingLiftUpdates())
+			if (!LiftUpdateService.ConsumePendingLiftUpdates(_project, _project.LiftChangeDetector))
 			{
 				return false;
 			}

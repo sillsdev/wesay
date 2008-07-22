@@ -11,7 +11,7 @@ using WeSay.Project;
 
 namespace WeSay.LexicalTools
 {
-	public class DictionaryTask : TaskBase
+	public class DictionaryTask : TaskBase, ISetupIndices
 	{
 		private DictionaryControl _dictionaryControl;
 		private readonly ViewTemplate _viewTemplate;
@@ -40,7 +40,7 @@ namespace WeSay.LexicalTools
 		{
 			try
 			{
-				RegisterWithCache(_viewTemplate);
+				RegisterIndicesNow(_viewTemplate);
 				base.Activate();
 				_dictionaryControl = new DictionaryControl(RecordListManager, ViewTemplate);
 				_dictionaryControl.SelectedIndexChanged += new EventHandler(OnRecordSelectionChanged);
@@ -52,12 +52,14 @@ namespace WeSay.LexicalTools
 			}
 		}
 
+
 		/// <summary>
+		/// ISetupIndices
 		/// This is static and public so we can keep the cache current with what this needs
 		/// even if we are running in ServerMode
 		/// </summary>
 		/// <param name="viewTemplate"></param>
-		public override void RegisterWithCache(ViewTemplate viewTemplate)
+		public void RegisterIndicesNow(ViewTemplate viewTemplate)
 		{
 			Field field = viewTemplate.GetField(Field.FieldNames.EntryLexicalForm.ToString());
 			if (field != null)
@@ -74,6 +76,10 @@ namespace WeSay.LexicalTools
 
 		}
 
+		public override bool MustBeActivatedDuringPreCache
+		{
+			get { return false; }// instead, use the ISetupIndices method
+		}
 
 		void OnRecordSelectionChanged(object sender, EventArgs e)
 		{

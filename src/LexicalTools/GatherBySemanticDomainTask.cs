@@ -15,7 +15,7 @@ using WeSay.Project;
 namespace WeSay.LexicalTools
 {
 
-	public class GatherBySemanticDomainTask : WordGatheringTaskBase
+	public class GatherBySemanticDomainTask : WordGatheringTaskBase, ISetupIndices
 	{
 		private readonly string _semanticDomainQuestionsFileName;
 		private GatherBySemanticDomainsControl _gatherControl;
@@ -32,6 +32,8 @@ namespace WeSay.LexicalTools
 		private int _currentDomainIndex;
 		private int _currentQuestionIndex;
 		private bool _alreadyReportedWSLookupFailure= false;
+		private ViewTemplate _viewTemplate;
+		private string _semanticDomainFieldName;
 
 		public GatherBySemanticDomainTask(IRecordListManager recordListManager,
 										  string label,
@@ -84,7 +86,9 @@ namespace WeSay.LexicalTools
 				}
 			}
 
-			_semanticDomainField = viewTemplate.GetField(semanticDomainFieldName);
+			_viewTemplate = viewTemplate;
+			_semanticDomainFieldName = semanticDomainFieldName;
+			_semanticDomainField = _viewTemplate.GetField(_semanticDomainFieldName);
 		}
 
 		public GatherBySemanticDomainTask(IRecordListManager recordListManager,
@@ -671,6 +675,7 @@ namespace WeSay.LexicalTools
 				_semanticDomainOptionsList =
 						WeSayWordsProject.Project.GetOptionsList(_semanticDomainField, false);
 			}
+			RegisterIndicesNow(_viewTemplate);
 			_entries =
 					RecordListManager.GetSortedList(
 							new SemanticDomainSortHelper(RecordListManager.DataSource, _semanticDomainField.FieldName));
@@ -681,6 +686,25 @@ namespace WeSay.LexicalTools
 				GotoLastDomainWithAnswers();
 			}
 			_gatherControl = new GatherBySemanticDomainsControl(this);
+		}
+
+
+		/// <summary>
+		/// ISetupIndices
+		/// This is public so we can keep the cache current with what this needs
+		/// even if we are running in ServerMode, rebuilding cache, etc.
+		/// </summary>
+		/// <param name="viewTemplate"></param>
+		public void RegisterIndicesNow(ViewTemplate viewTemplate)
+		{
+			RecordListManager.GetSortedList(
+				new SemanticDomainSortHelper(RecordListManager.DataSource, _semanticDomainField.FieldName));
+		}
+
+		//Instead, use ISetupIndices
+		public override bool MustBeActivatedDuringPreCache
+		{
+			get { return false; }
 		}
 
 		public override void Deactivate()

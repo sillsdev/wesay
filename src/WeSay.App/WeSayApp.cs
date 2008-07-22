@@ -256,8 +256,10 @@ namespace WeSay.App
 
 			try
 			{
-				DictionaryTask dictionaryTask = new DictionaryTask(_recordListManager, _project.DefaultViewTemplate);
-				dictionaryTask.RegisterWithCache(_project.DefaultViewTemplate);
+				//review: what about other tasks?  See how the cachebuilder actually gets a list of installed
+				//tasks and enumerates through each one to see what might need a chance to register indices
+				ISetupIndices indexSetup = new DictionaryTask(_recordListManager, _project.DefaultViewTemplate);
+				indexSetup.RegisterIndicesNow(_project.DefaultViewTemplate);
 			}
 			finally
 			{
@@ -367,7 +369,7 @@ namespace WeSay.App
 			Db4oRecordListManager ds = (Db4oRecordListManager)    recordListManager;
 			liftUpdateService = new LiftUpdateService(ds.DataSource);
 			ds.DataCommitted += new EventHandler(liftUpdateService.OnDataCommitted);
-			ds.DataDeleted +=new EventHandler<DeletedItemEventArgs>(liftUpdateService.OnDataDeleted);
+			ds.DataDeleted += new EventHandler<DeletedItemEventArgs>(liftUpdateService.OnDataDeleted);
 			return liftUpdateService;
 		}
 

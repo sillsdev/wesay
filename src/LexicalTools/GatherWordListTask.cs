@@ -259,6 +259,11 @@ namespace WeSay.LexicalTools
 			return CountNotRelevant; //Todo
 		}
 
+		public override bool MustBeActivatedDuringPreCache
+		{
+			get { return false; }// there are no indices I can see in this class (and if there were, we'd use ISetupIndices)
+		}
+
 		/// <summary>
 		/// Removes the sense (if otherwise empty) and deletes the entry if it has no reason left to live
 		/// </summary>

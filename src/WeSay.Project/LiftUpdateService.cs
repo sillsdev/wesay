@@ -136,7 +136,7 @@ namespace WeSay.Project
 
 			if (mergeIntoSingleFileBeforeReturning)
 			{
-				if (ConsumePendingLiftUpdates())
+				if (ConsumePendingLiftUpdates(WeSayWordsProject.Project, WeSayWordsProject.Project.LiftChangeDetector))
 				{
 					CacheManager.UpdateSyncPointInCache(_datasource.Data,
 															File.GetLastWriteTimeUtc(
@@ -151,18 +151,21 @@ namespace WeSay.Project
 		///
 		/// </summary>
 		/// <returns>false if it failed (and it would have already reported the error)</returns>
-		public static bool ConsumePendingLiftUpdates()
+		public static bool ConsumePendingLiftUpdates(WeSayWordsProject project, LiftChangeDetector liftChangeDetector)
 		{
 			//merge the increment files
 
-			if (SynchronicMerger.GetPendingUpdateFiles(WeSayWordsProject.Project.PathToLiftFile).Length > 0)
+			if (SynchronicMerger.GetPendingUpdateFiles(project.PathToLiftFile).Length > 0)
 			{
 				Logger.WriteEvent("Running Synchronic Merger");
 				try
 				{
 					SynchronicMerger merger = new SynchronicMerger();
-					WeSayWordsProject.Project.ReleaseLockOnLift();
-					merger.MergeUpdatesIntoFile(WeSayWordsProject.Project.PathToLiftFile);
+					project.ReleaseLockOnLift();
+					if (merger.MergeUpdatesIntoFile(project.PathToLiftFile))
+					{
+						liftChangeDetector.Reset();
+					}
 				}
 				catch (LiftIO.BadUpdateFileException error)
 				{
@@ -188,7 +191,7 @@ namespace WeSay.Project
 				}
 				finally
 				{
-					WeSayWordsProject.Project.LockLift();
+					project.LockLift();
 				}
 			}
 		   return true;

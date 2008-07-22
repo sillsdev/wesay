@@ -398,6 +398,10 @@ namespace WeSay.Language
 			CultureInfo ci = null;
 			try
 			{
+				//todo: GetCultureInfoByIetfLanguageTag is listed as deprecated in the .net docs.
+				// It's also painful because it throws and exception to say "sorry, don't have it",
+				// when this is not really an error condition for us.  It looks like GetCultures
+				// could be used instead, by looping through them all
 				ci = CultureInfo.GetCultureInfoByIetfLanguageTag(ietfLanguageTag);
 			}
 			catch (ArgumentException ex)

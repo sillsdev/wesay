@@ -13,6 +13,7 @@ using System.Xml;
 using System.Xml.XPath;
 using System.Xml.Xsl;
 using LiftIO;
+using LiftIO.Merging;
 using LiftIO.Validation;
 using Palaso.Reporting;
 using WeSay.AddinLib;
@@ -39,6 +40,7 @@ namespace WeSay.Project
 		private readonly AddinSet _addins;
 		private IList<LexRelationType> _relationTypes;
 		private ChorusBackupMaker _backupMaker;
+		public LiftChangeDetector LiftChangeDetector;
 
 		public event EventHandler EditorsSaveNow;
 
@@ -178,6 +180,8 @@ namespace WeSay.Project
 						//out yet and so are still pending in the db.
 						CacheManager.UpdateSyncPointInCache(ds.Data,
 															liftLastWriteTimeUtc.AddMilliseconds(10));
+
+						LiftChangeDetector.ClearCache();
 					}
 				}
 				catch
@@ -350,6 +354,7 @@ namespace WeSay.Project
 			base.LoadFromProjectDirectoryPath(projectDirectoryPath);
 			InitializeViewTemplatesFromProjectFiles();
 
+			LiftChangeDetector = new LiftChangeDetector(PathToLiftFile,PathToCache);
 			LoadBackupPlan();
 		}
 
@@ -357,6 +362,9 @@ namespace WeSay.Project
 		{
 			//what a mess. I hate .net new fangled xml stuff...
 			XPathDocument projectDoc = GetConfigurationDoc();
+			if(projectDoc ==null)
+				return;//some tests don't have one of these around
+
 			XPathNavigator backupPlanNav = projectDoc.CreateNavigator();
 			backupPlanNav = backupPlanNav.SelectSingleNode("configuration/" + ChorusBackupMaker.ElementName);
 			if (backupPlanNav == null)

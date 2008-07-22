@@ -5,6 +5,7 @@ using LiftIO.Parsing;
 using WeSay.Data;
 using WeSay.Foundation;
 using WeSay.Foundation.Options;
+using WeSay.LexicalModel.Db4o_Specific;
 
 namespace WeSay.LexicalModel
 {
@@ -25,6 +26,8 @@ namespace WeSay.LexicalModel
 		/// </summary>
 		private IHistoricalEntryCountProvider _historicalEntryCountProvider;
 
+		public bool UpdatingRatherThanRebuilding=false;
+
 		public LiftMerger(Db4oDataSource dataSource,  IRecordList<LexEntry> entries)
 		{
 			_entries = entries;
@@ -35,8 +38,31 @@ namespace WeSay.LexicalModel
 
 		public LexEntry GetOrMakeEntry(Extensible eInfo, int order)
 		{
-
 			LexEntry entry = null;
+
+			if (UpdatingRatherThanRebuilding)//parser should be using the LiftChangeDetector, calling us only with entries that need changing
+			{
+				if (eInfo.Guid != Guid.Empty)
+				{
+					entry = Db4oLexQueryHelper.FindObjectFromGuid<LexEntry>(Lexicon.RecordListManager.DataSource,
+																			eInfo.Guid);
+				}
+				if (entry == null && !string.IsNullOrEmpty(eInfo.Id))
+				{
+					entry = Lexicon.FindFirstLexEntryMatchingId(eInfo.Id);
+				}
+				if (entry == null)
+				{
+					//must be an addition (if it's supposed to be an edit, something is very wrong, but we don't have a way to know with the current code)
+				}
+				else
+				{
+					_entries.Remove(entry);
+				}
+				entry = null;
+
+			}
+
 #if merging
 	 This really slows us down to a crawl if the incoming lift has guids, yet
 	 we aren't really merging, so its a waste of time.
@@ -79,11 +105,22 @@ namespace WeSay.LexicalModel
 		#region ILexiconMerger<WeSayDataObject,LexEntry,LexSense,LexExampleSentence> Members
 
 
-		public void  EntryWasDeleted(Extensible info, DateTime dateDeleted)
+		public void  EntryWasDeleted(Extensible eInfo, DateTime dateDeleted)
 		{
-			//there isn't anything we need to do; we just don't import it
-			// since we always update file in place, the info will still stay in the lift file
-			// even though we don't import it.
+			LexEntry entry = null;
+			if (eInfo.Guid != Guid.Empty)
+			{
+				entry = Db4oLexQueryHelper.FindObjectFromGuid<LexEntry>(Lexicon.RecordListManager.DataSource,
+																		eInfo.Guid);
+			}
+			if (entry == null && !string.IsNullOrEmpty(eInfo.Id))
+			{
+				entry = Lexicon.FindFirstLexEntryMatchingId(eInfo.Id);
+			}
+			if (entry != null)
+			{
+				_entries.Remove(entry);
+			}
 		}
 
 		#endregion

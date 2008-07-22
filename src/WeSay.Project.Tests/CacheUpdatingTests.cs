@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using Db4objects.Db4o;
+using LiftIO.Validation;
 using NUnit.Framework;
+using Palaso.Progress;
+using WeSay.LexicalModel;
 
 namespace WeSay.Project.Tests
 {
@@ -112,11 +115,11 @@ namespace WeSay.Project.Tests
 		{
 			get
 			{
-			   return File.GetLastWriteTimeUtc(_liftPath);
+				return File.GetLastWriteTimeUtc(_liftPath);
 
 			}
 
-	}
+		}
 		private void UpToDate()
 		{
 			Assert.IsFalse(CacheManager.GetCacheIsOutOfDate(_project));
@@ -124,8 +127,11 @@ namespace WeSay.Project.Tests
 
 		private void OutOfDate()
 		{
-			Assert.IsTrue(CacheManager.GetCacheIsOutOfDate (_project));
+			Assert.IsTrue(CacheManager.GetCacheIsOutOfDate(_project));
 		}
+
+
+
 	}
 
 }
