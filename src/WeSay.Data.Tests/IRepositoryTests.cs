@@ -305,7 +305,7 @@ namespace WeSay.Data.Tests
 			SetState();
 			if (RepositoryUnderTest.CanQuery)
 			{
-				Assert.Ignore(@"This Test is highly dependant on the type of objects that are
+				Assert.Fail(@"This Test is highly dependant on the type of objects that are
 							being managed by the repository and as such should be overridden.");
 			}
 			else
@@ -512,7 +512,7 @@ namespace WeSay.Data.Tests
 			SetState();
 			if (RepositoryUnderTest.CanQuery)
 			{
-				Assert.Ignore(@"This Test is highly dependant on the type of objects that are
+				Assert.Fail(@"This Test is highly dependant on the type of objects that are
 							being managed by the repository and as such should be tested elsewhere.");
 			}
 			else
@@ -522,7 +522,7 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		public virtual void LastModified_IsSetToMostRecentLexentryInPersistedDatasLastModifiedTime()
+		public virtual void LastModified_IsSetToMostRecentItemInPersistedDatasLastModifiedTime()
 		{
 			if(!RepositoryUnderTest.CanPersist)
 			{
