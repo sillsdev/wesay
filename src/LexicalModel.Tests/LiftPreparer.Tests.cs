@@ -1,32 +1,52 @@
 using System;
 using System.IO;
 using System.Xml;
+using LiftIO;
 using LiftIO.Validation;
 using NUnit.Framework;
 using Palaso.Reporting;
 using WeSay.LexicalModel;
+using WeSay.LexicalModel.Migration;
 
 namespace WeSay.LexicalModel.Tests
 {
 	[TestFixture]
 	public class LiftPreparerTests
 	{
-		private LexEntryRepository _lexEntryRepository;
-		private string _filePath;
+		private LiftRepository _liftRepository;
+		private string _liftFilePath;
 
 		[SetUp]
 		public void Setup()
 		{
-			_filePath = Path.GetTempFileName();
-			_lexEntryRepository = new LexEntryRepository(_filePath);
+			_liftFilePath = Path.GetTempFileName();
+			_liftFilePath = _liftFilePath.Replace(".tmp", ".lift");
+			_liftRepository = new LiftRepository(_liftFilePath);
 			ErrorReport.IsOkToInteractWithUser = false;
 		}
 
 		[TearDown]
 		public void TearDown()
 		{
-			_lexEntryRepository.Dispose();
-			File.Delete(_filePath);
+			_liftRepository.Dispose();
+			File.Delete(_liftFilePath);
+		}
+
+		private void CreateLiftFileForTesting(string liftVersion, string xmlEntries)
+		{
+			Utilities.CreateEmptyLiftFile(_liftFilePath, LiftExporter.ProducerString, true);
+			//overwrite the blank lift file
+			string liftContents =
+					String.Format(
+							"<?xml version='1.0' encoding='utf-8'?><lift version='{0}'>{1}</lift>",
+							liftVersion,
+							xmlEntries);
+			File.WriteAllText(_liftFilePath, liftContents);
+		}
+
+		private void CreateLiftFileForTesting(string liftVersion)
+		{
+			CreateLiftFileForTesting(liftVersion, String.Empty);
 		}
 
 		[Test]
@@ -38,59 +58,37 @@ namespace WeSay.LexicalModel.Tests
 			//  lift file.
 			//nb: 0.10 was the first version where we started provinding a migration path.
 			//FLEx support for Lift started with 0.12
-			using (
-					ProjectDirectorySetupForTesting dir =
-							new ProjectDirectorySetupForTesting(string.Empty, "0.10"))
-			{
-				using (WeSayWordsProject project = dir.CreateLoadedProject())
-				{
-					LiftPreparer preparer = new LiftPreparer(project, _lexEntryRepository);
-					Assert.IsTrue(preparer.MigrateIfNeeded(), "MigrateIfNeeded Failed");
-					Assert.AreEqual(Validator.LiftVersion,
-									Validator.GetLiftVersion(dir.PathToLiftFile));
-				}
-			}
+			CreateLiftFileForTesting("0.10");
+			LiftPreparer preparer = new LiftPreparer(_liftFilePath, _liftRepository);
+			Assert.IsTrue(preparer.MigrateIfNeeded(), "MigrateIfNeeded Failed");
+			Assert.AreEqual(Validator.LiftVersion,
+							Validator.GetLiftVersion(_liftFilePath));
 		}
 
 		[Test]
 		public void MigrateIfNeeded_LiftIsLockedByProject_LockedAgainAfterMigration()
 		{
-			using (
-					ProjectDirectorySetupForTesting dir =
-							new ProjectDirectorySetupForTesting(string.Empty, "0.10"))
-			{
-				using (WeSayWordsProject proj = dir.CreateLoadedProject())
-				{
-					LiftPreparer preparer = new LiftPreparer(proj, _lexEntryRepository);
-					Assert.IsTrue(preparer.MigrateIfNeeded(), "MigrateIfNeeded Failed");
-					Assert.IsTrue(proj.LiftIsLocked);
-				}
-			}
+			CreateLiftFileForTesting("0.10");
+			LiftPreparer preparer = new LiftPreparer(_liftFilePath, _liftRepository);
+			Assert.IsTrue(preparer.MigrateIfNeeded(), "MigrateIfNeeded Failed");
+			Assert.IsTrue(_liftRepository.IsLiftFileLocked);
 		}
 
 		[Test]
 		public void MigrateIfNeeded_AlreadyCurrentLift_LiftUntouched()
 		{
-			using (
-					ProjectDirectorySetupForTesting dir =
-							new ProjectDirectorySetupForTesting(string.Empty, Validator.LiftVersion)
-					)
-			{
-				using (WeSayWordsProject project = dir.CreateLoadedProject())
-				{
-					DateTime startModTime = File.GetLastWriteTimeUtc(dir.PathToLiftFile);
-					LiftPreparer preparer = new LiftPreparer(project, _lexEntryRepository);
-					Assert.IsTrue(preparer.MigrateIfNeeded(), "MigrateIfNeeded Failed");
-					DateTime finishModTime = File.GetLastWriteTimeUtc(dir.PathToLiftFile);
-					Assert.AreEqual(startModTime, finishModTime);
-				}
-			}
+			CreateLiftFileForTesting(Validator.LiftVersion);
+			DateTime startModTime = File.GetLastWriteTimeUtc(_liftFilePath);
+			LiftPreparer preparer = new LiftPreparer(_liftFilePath, _liftRepository);
+			Assert.IsTrue(preparer.MigrateIfNeeded(), "MigrateIfNeeded Failed");
+			DateTime finishModTime = File.GetLastWriteTimeUtc(_liftFilePath);
+			Assert.AreEqual(startModTime, finishModTime);
 		}
 
 		[Test]
 		public void PopulateDefinitions_EmptyLift()
 		{
-			XmlDocument dom = GetTransformedDom("");
+			XmlDocument dom = PopulateDefinitionsInDom("");
 			Expect(dom, "lift", 1);
 		}
 
@@ -108,7 +106,7 @@ namespace WeSay.LexicalModel.Tests
 							</gloss>
 						</sense>
 					</entry>";
-			XmlDocument dom = GetTransformedDom(entriesXml);
+			XmlDocument dom = PopulateDefinitionsInDom(entriesXml);
 			Expect(dom, "lift/entry/sense/gloss", 2);
 			Expect(dom, "lift/entry/sense/definition", 1);
 			ExpectSingleInstanceWithInnerXml(dom,
@@ -138,7 +136,7 @@ namespace WeSay.LexicalModel.Tests
 							</gloss>
 						</sense>
 					</entry>";
-			XmlDocument dom = GetTransformedDom(entriesXml);
+			XmlDocument dom = PopulateDefinitionsInDom(entriesXml);
 			Expect(dom, "lift/entry/sense/gloss", 2);
 			Expect(dom, "lift/entry/sense/definition", 1);
 			ExpectSingleInstanceWithInnerXml(dom,
@@ -165,20 +163,13 @@ namespace WeSay.LexicalModel.Tests
 			Assert.AreEqual(expectedValue, dom.SelectNodes(xpath)[0].InnerXml);
 		}
 
-		private static XmlDocument GetTransformedDom(string entriesXml)
+		private XmlDocument PopulateDefinitionsInDom(string entriesXml)
 		{
 			XmlDocument doc = new XmlDocument();
-			using (
-					ProjectDirectorySetupForTesting pd =
-							new ProjectDirectorySetupForTesting(entriesXml))
-			{
-				using (WeSayWordsProject project = pd.CreateLoadedProject())
-				{
-					string outputPath = LiftPreparer.PopulateDefinitions(project.PathToLiftFile);
-					Assert.IsTrue(File.Exists(outputPath));
-					doc.Load(outputPath);
-				}
-			}
+			CreateLiftFileForTesting(Validator.LiftVersion, entriesXml);
+			string outputPath = LiftPreparer.PopulateDefinitions(_liftFilePath);
+			Assert.IsTrue(File.Exists(outputPath));
+			doc.Load(outputPath);
 			return doc;
 		}
 	}

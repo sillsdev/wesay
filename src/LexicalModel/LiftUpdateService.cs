@@ -179,7 +179,7 @@ namespace WeSay.LexicalModel
 		//    //{
 		//    //    Thread.Sleep(timeout);
 		//    //}
-		//    bool wasLocked = WeSayWordsProject.Project.LiftIsLocked;
+		//    bool wasLocked = WeSayWordsProject.Project.IsLiftFileLocked;
 		//    if (wasLocked)
 		//    {
 		//        WeSayWordsProject.Project.ReleaseLockOnLift();

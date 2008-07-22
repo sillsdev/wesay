@@ -25,8 +25,6 @@ namespace WeSay.LexicalModel
 			//check if file is writeable
 			FileStream fileStream = fileInfo.OpenWrite();
 			fileStream.Close();
-			// Prepare lift file (merge and migrate) if required.
-			PrepareLiftFile();
 			if (!fileInfo.Exists || fileInfo.Length == 0)
 			{
 				LiftExporter exporter = new LiftExporter(filePath);
@@ -343,7 +341,7 @@ namespace WeSay.LexicalModel
 			//{
 			//    Thread.Sleep(timeout);
 			//}
-			bool wasLocked = LiftIsLocked;
+			bool wasLocked = IsLiftFileLocked;
 			if (wasLocked)
 			{
 				UnLockLift();
@@ -385,7 +383,7 @@ namespace WeSay.LexicalModel
 			//_liftFileStreamForLocking = null;
 		}
 
-		private bool LiftIsLocked
+		public bool IsLiftFileLocked
 		{
 			get { return _liftFileStreamForLocking != null; }
 		}

@@ -84,7 +84,6 @@
   </ItemGroup>
   <ItemGroup>
 	<Compile Include="DashBoardTests.cs" />
-	<Compile Include="LiftPreparer.Tests.cs" />
 	<Compile Include="Services\DictionaryServices_CrossApplicationTests.cs" />
 	<Compile Include="Services\DictionaryServices_SameTheadTests.cs" />
 	<Compile Include="FullUIAppTests.cs" />

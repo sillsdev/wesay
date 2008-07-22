@@ -110,7 +110,7 @@ namespace WeSay.LexicalModel.Migration
 			using (
 					Stream xsltStream =
 							Assembly.GetExecutingAssembly().GetManifestResourceStream(
-									"WeSay.App.Migration.populateDefinitionFromGloss.xslt"))
+									"WeSay.LexicalModel.Migration.populateDefinitionFromGloss.xslt"))
 			{
 				TransformWithProgressDialog transformer =
 						new TransformWithProgressDialog(pathToLift,
@@ -180,9 +180,9 @@ namespace WeSay.LexicalModel.Migration
 				{
 					dlg.Overview =
 							"Please wait while WeSay migrates your lift database to the required version.";
-					BackgroundWorker cacheBuildingWork = new BackgroundWorker();
-					cacheBuildingWork.DoWork += DoMigrationWork;
-					dlg.BackgroundWorker = cacheBuildingWork;
+					BackgroundWorker migrationWorker = new BackgroundWorker();
+					migrationWorker.DoWork += DoMigrationWork;
+					dlg.BackgroundWorker = migrationWorker;
 					dlg.CanCancel = false;
 
 					dlg.ShowDialog();
