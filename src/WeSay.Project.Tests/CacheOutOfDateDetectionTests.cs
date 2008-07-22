@@ -11,7 +11,7 @@ using WeSay.LexicalModel;
 namespace WeSay.Project.Tests
 {
 	[TestFixture]
-	public class CacheUpdatingTests
+	public class CacheOutOfDateDetectionTests
 	{
 		private string _experimentDir;
 
