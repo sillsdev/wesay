@@ -25,13 +25,13 @@ namespace WeSay.LexicalModel.Migration
 			_liftFilePath = liftFilePath;
 		}
 
-		private bool PreprocessLift()
+		private bool PopulateDefinitionsWithUI()
 		{
 			using (ProgressDialog dlg = new ProgressDialog())
 			{
 				dlg.Overview = "Please wait while WeSay preprocesses your LIFT file.";
 				BackgroundWorker preprocessWorker = new BackgroundWorker();
-				preprocessWorker.DoWork += OnDoPreprocessLiftWork;
+				preprocessWorker.DoWork += DoPopulateDefinitionsWork;
 				dlg.BackgroundWorker = preprocessWorker;
 				dlg.CanCancel = true;
 				dlg.ShowDialog();
@@ -47,10 +47,14 @@ namespace WeSay.LexicalModel.Migration
 			}
 		}
 
-		private void OnDoPreprocessLiftWork(object sender, DoWorkEventArgs e)
+		private void DoPopulateDefinitionsWork(object sender, DoWorkEventArgs args)
 		{
-			BackgroundWorkerState state = (BackgroundWorkerState) e.Argument;
-			state.StatusLabel = "Preprocessing...";
+			PopulateDefinitions((ProgressState) args.Argument);
+		}
+
+		internal void PopulateDefinitions(ProgressState state)
+		{
+			state.StatusLabel = "Updating Lift File...";
 			try
 			{
 				string pathToLift = _liftFilePath;
@@ -150,7 +154,7 @@ namespace WeSay.LexicalModel.Migration
 					dlg.Overview =
 							"Please wait while WeSay migrates your lift database to the required version.";
 					BackgroundWorker migrationWorker = new BackgroundWorker();
-					migrationWorker.DoWork += DoMigrationWork;
+					migrationWorker.DoWork += DoMigrateLiftFile;
 					dlg.BackgroundWorker = migrationWorker;
 					dlg.CanCancel = false;
 
@@ -177,28 +181,31 @@ namespace WeSay.LexicalModel.Migration
 			return true;
 		}
 
-		private void DoMigrationWork(object obj, DoWorkEventArgs args)
+		private void DoMigrateLiftFile(object obj, DoWorkEventArgs args)
 		{
-			ProgressState progressState = (ProgressState) args.Argument;
+			MigrateLiftFile((ProgressState) args.Argument);
+		}
+
+		private void MigrateLiftFile(ProgressState state)
+		{
 			try
 			{
 				string oldVersion = Validator.GetLiftVersion(_liftFilePath);
-				Logger.WriteEvent("Migrating from {0} to {1}", oldVersion, Validator.LiftVersion);
-				progressState.StatusLabel =
-						string.Format("Migrating from {0} to {1}", oldVersion, Validator.LiftVersion);
+				string status = String.Format("Migrating from {0} to {1}", oldVersion, Validator.LiftVersion);
+				Logger.WriteEvent(status);
+				state.StatusLabel = status;
 				string migratedFile = Migrator.MigrateToLatestVersion(_liftFilePath);
-				string nameForOldFile =
-						_liftFilePath.Replace(".lift", "." + oldVersion + ".lift");
+				string nameForOldFile = _liftFilePath.Replace(".lift", "." + oldVersion + ".lift");
 
 				if (File.Exists(nameForOldFile))
-						// like, if we tried to convert it before and for some reason want to do it again
+				// like, if we tried to convert it before and for some reason want to do it again
 				{
 					File.Delete(nameForOldFile);
 				}
 				File.Move(_liftFilePath, nameForOldFile);
 				File.Move(migratedFile, _liftFilePath);
 
-				args.Result = args.Argument as ProgressState;
+				//args.Result = args.Argument as ProgressState; //!!!
 			}
 			catch (Exception e)
 			{
@@ -206,9 +213,9 @@ namespace WeSay.LexicalModel.Migration
 				//being called from a non sta thread.
 				//so let's leave it to the progress dialog to report the error
 				//                Reporting.ErrorReporter.ReportException(e,null, false);
-				progressState.ExceptionThatWasEncountered = e;
-				progressState.WriteToLog(e.Message);
-				progressState.State = ProgressState.StateValue.StoppedWithError;
+				state.ExceptionThatWasEncountered = e;
+				state.WriteToLog(e.Message);
+				state.State = ProgressState.StateValue.StoppedWithError;
 			}
 		}
 
@@ -225,7 +232,7 @@ namespace WeSay.LexicalModel.Migration
 		//    //ProgressState progressState = new WeSay.Foundation.ConsoleProgress();//new ProgressState(progressDialogHandler);
 		//    using (ProgressDialog dlg = new ProgressDialog())
 		//    {
-		//        if (!PreprocessLift())
+		//        if (!PopulateDefinitionsWithUI())
 		//        {
 		//            return false;
 		//        }
