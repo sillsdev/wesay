@@ -1,6 +1,5 @@
 using System;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
@@ -141,6 +140,11 @@ namespace WeSay.LexicalModel.Migration
 			File.Delete(newFilePath);
 		}
 
+		public bool IsMigrationNeeded()
+		{
+			return Migrator.IsMigrationNeeded(_liftFilePath);
+		}
+
 		/// <summary>
 		///
 		/// </summary>
@@ -186,7 +190,7 @@ namespace WeSay.LexicalModel.Migration
 			MigrateLiftFile((ProgressState) args.Argument);
 		}
 
-		private void MigrateLiftFile(ProgressState state)
+		public void MigrateLiftFile(ProgressState state)
 		{
 			try
 			{

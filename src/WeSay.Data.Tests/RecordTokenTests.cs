@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using NUnit.Framework;
+using Palaso.Progress;
 
 namespace WeSay.Data.Tests
 {
@@ -212,6 +213,11 @@ namespace WeSay.Data.Tests
 			public DateTime LastModified
 			{
 				get { throw new NotImplementedException(); }
+			}
+
+			public void Startup(ProgressState state)
+			{
+				throw new NotImplementedException();
 			}
 
 			public TestItem CreateItem()

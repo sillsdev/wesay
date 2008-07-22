@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
+using Palaso.Progress;
 
 namespace WeSay.Data
 {
@@ -100,7 +101,11 @@ namespace WeSay.Data
             get { return _primary.CanPersist || _secondary.CanPersist; }
         }
 
-        public T CreateItem()
+		public void Startup(ProgressState state)
+		{
+		}
+
+		public T CreateItem()
         {
             T item = _primary.CreateItem();
             T item2 = _secondary.CreateItem();

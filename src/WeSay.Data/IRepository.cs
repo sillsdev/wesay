@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
-using WeSay.Data;
+
+using Palaso.Progress;
 
 namespace WeSay.Data
 {
@@ -10,6 +11,7 @@ namespace WeSay.Data
 		bool CanQuery { get; }
 		bool CanPersist { get; }
 
+		void Startup(ProgressState state);
 		T CreateItem();
 		int CountAllItems();
 		RepositoryId GetId(T item);

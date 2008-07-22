@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using LiftIO.Parsing;
+using Palaso.Progress;
 using Palaso.Text;
 using WeSay.Data;
 using WeSay.Foundation;
@@ -636,6 +637,11 @@ namespace WeSay.LexicalModel
 		{
 			//Do Nothing
 			//throw new Exception("The method or operation is not implemented.");
+		}
+
+		public void Startup(ProgressState state)
+		{
+			_decoratedRepository.Startup(state);
 		}
 	}
 }

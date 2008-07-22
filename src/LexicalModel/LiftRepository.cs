@@ -6,6 +6,7 @@ using LiftIO;
 using LiftIO.Merging;
 using LiftIO.Parsing;
 using LiftIO.Validation;
+using Palaso.Progress;
 using Palaso.Reporting;
 using WeSay.Data;
 using WeSay.Foundation;
@@ -35,14 +36,15 @@ namespace WeSay.LexicalModel
 			LoadAllLexEntries();
 		}
 
-		private void PrepareLiftFile()
+		public override void Startup(ProgressState state)
 		{
-			MergeIncrementFiles();  //??? Would this fail during migration. Check LiftIO. CJP
 			LiftPreparer preparer = new LiftPreparer(_liftFilePath);
-			preparer.MigrateIfNeeded();
+			if (preparer.IsMigrationNeeded())
+			{
+				preparer.MigrateLiftFile(state);
+			}
+			preparer.PopulateDefinitions(state);
 		}
-
-
 
 		public override void DeleteItem(RepositoryId id)
 		{

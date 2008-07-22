@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Db4objects.Db4o;
 using Db4objects.Db4o.Ext;
 using Db4objects.Db4o.Query;
+using Palaso.Progress;
 
 namespace WeSay.Data
 {
@@ -77,6 +78,10 @@ namespace WeSay.Data
 		bool IRepository<T>.CanPersist
 		{
 			get { return true; }
+		}
+
+		public void Startup(ProgressState state)
+		{
 		}
 
 		public T CreateItem()

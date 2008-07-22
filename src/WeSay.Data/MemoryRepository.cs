@@ -1,6 +1,6 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
+using Palaso.Progress;
 
 namespace WeSay.Data
 {
@@ -23,6 +23,10 @@ namespace WeSay.Data
 		public virtual bool CanQuery { get { return true; } }
 
 		public virtual bool CanPersist { get { return false; } }
+
+		public virtual void Startup(ProgressState state)
+		{
+		}
 
 		public virtual T CreateItem()
 		{
