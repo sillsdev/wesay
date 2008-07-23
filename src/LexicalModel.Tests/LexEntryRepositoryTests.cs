@@ -19,13 +19,13 @@ namespace WeSay.LexicalModel.Tests
 		private string _filePath;
 		private LexEntryRepository _lexEntryRepository;
 		private WritingSystem _headwordWritingSystem;
-		private Db4oLexEntryRepository _db4oRepository;
+		//private Db4oLexEntryRepository _db4oRepository;
 
 		[SetUp]
 		public void Setup()
 		{
 			_filePath = Path.GetTempFileName();
-			CycleDatabase();
+			_lexEntryRepository = new LexEntryRepository(_filePath);
 			_headwordWritingSystem = new WritingSystem();
 			_headwordWritingSystem.Id = "primary";
 		}
@@ -46,8 +46,7 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
-		public void GetEntriesByApproximateLexicalFormShouldNotContainMatchesFromOtherWritingSystems
-				()
+		public void GetEntriesByApproximateLexicalForm_RepositoryContainsEntriesWithDifferingWritingSystems_OnlyFindEntriesMatchingTheGivenWritingSystem()
 		{
 			const string entryInOtherWritingSystem = "foo2";
 			MakeTestLexEntry("v", "foo1");
@@ -61,28 +60,28 @@ namespace WeSay.LexicalModel.Tests
 																		 ApproximateMatcherOptions.
 																				 IncludePrefixedForms);
 			Assert.AreEqual(2, matches.Count);
-			Assert.AreNotEqual(entryInOtherWritingSystem, matches[1]["Form"]);
+			Assert.AreEqual("foo1", matches[0]["Form"]);
+			Assert.AreEqual("foo3", matches[1]["Form"]);
 		}
 
 		[Test]
-		public void FindEntriesFromLexemeForm()
+		public void GetEntriesWithMatchingLexicalForm_RepositoryContainsTwoEntriesWithDifferingLexicalForms_OnlyEntryWithmatchingLexicalFormIsFound()
 		{
-			CycleDatabase();
-			LexEntry entry = _lexEntryRepository.CreateItem();
-			entry.LexicalForm["en"] = "findme";
-			_lexEntryRepository.SaveItem(entry);
-			CycleDatabase();
+			LexEntry entryToFind = _lexEntryRepository.CreateItem();
+			entryToFind.LexicalForm["en"] = "find me";
+			_lexEntryRepository.SaveItem(entryToFind);
 			//don't want to find this one
-			_db4oRepository.Database.Set(new LanguageForm("en", "findme", new MultiText()));
-			CycleDatabase();
+			LexEntry entryToIgnore = _lexEntryRepository.CreateItem();
+			entryToIgnore.LexicalForm["en"] = "don't find me";
+			_lexEntryRepository.SaveItem(entryToIgnore);
 			WritingSystem writingSystem = new WritingSystem("en", SystemFonts.DefaultFont);
 			ResultSet<LexEntry> list =
-					_lexEntryRepository.GetEntriesWithMatchingLexicalForm("findme", writingSystem);
+					_lexEntryRepository.GetEntriesWithMatchingLexicalForm("find me", writingSystem);
 			Assert.AreEqual(1, list.Count);
 		}
 
 		[Test]
-		public void FindEntryFromGuid()
+		public void GetLexEntryWithMatchingGuid_FindEntryFromGuid()
 		{
 			Guid g = SetupEntryWithGuid();
 
@@ -92,14 +91,12 @@ namespace WeSay.LexicalModel.Tests
 
 		private Guid SetupEntryWithGuid()
 		{
-			CycleDatabase();
 			AddEntryWithGloss("hello");
 
 			Guid g = Guid.NewGuid();
 			CreateEntryWithGuid(g);
 
 			AddEntryWithGloss("world");
-			CycleDatabase();
 			return g;
 		}
 
@@ -113,10 +110,9 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
-		public void CannotFindEntryFromGuid()
+		public void GetLexEntryWithMatchingGuid_GuidDoesNotExist_ReturnsNull()
 		{
 			SetupEntryWithGuid();
-
 			LexEntry found = _lexEntryRepository.GetLexEntryWithMatchingGuid(Guid.NewGuid());
 			Assert.IsNull(found);
 		}
@@ -127,21 +123,17 @@ namespace WeSay.LexicalModel.Tests
 		{
 			Guid g = SetupEntryWithGuid();
 			CreateEntryWithGuid(g);
-			CycleDatabase();
 			_lexEntryRepository.GetLexEntryWithMatchingGuid(g);
 		}
 
 		[Test]
-		public void FindEntriesFromGloss()
+		public void
+			GetEntriesWithMatchingGlossSortedByLexicalForm_RepositoryContainsTwoEntriesWithDifferingLexicalForms_OnlyEntryWithmatchingLexicalFormIsFound()
 		{
-			CycleDatabase();
-			string gloss = "ant";
-			AddEntryWithGloss(gloss);
-			CycleDatabase();
-			//don't want to find this one
-			LanguageForm glossLanguageForm = new LanguageForm("en", gloss, new MultiText());
-			_db4oRepository.Database.Set(glossLanguageForm);
-
+			string glossToFind = "Gloss To Find.";
+			AddEntryWithGloss(glossToFind);
+			AddEntryWithGloss("Gloss Not To Find.");
+			LanguageForm glossLanguageForm = new LanguageForm("en", glossToFind, new MultiText());
 			WritingSystem writingSystem = new WritingSystem("en", SystemFonts.DefaultFont);
 			ResultSet<LexEntry> list =
 					_lexEntryRepository.GetEntriesWithMatchingGlossSortedByLexicalForm(
@@ -156,16 +148,6 @@ namespace WeSay.LexicalModel.Tests
 			entry.Senses.Add(sense);
 			sense.Gloss["en"] = gloss;
 			_lexEntryRepository.SaveItem(entry);
-		}
-
-		private void CycleDatabase()
-		{
-			if (_lexEntryRepository != null)
-			{
-				_lexEntryRepository.Dispose();
-			}
-			_db4oRepository = new Db4oLexEntryRepository(_filePath);
-			_lexEntryRepository = new LexEntryRepository(_db4oRepository);
 		}
 
 		[Test]
@@ -572,7 +554,8 @@ namespace WeSay.LexicalModel.Tests
 
 		protected override void RepopulateRepositoryFromPersistedData()
 		{
-			//Do nothing.
+			RepositoryUnderTest.Dispose();
+			RepositoryUnderTest = new LexEntryRepository(_persistedFilePath);
 		}
 	}
 	}
