@@ -374,7 +374,7 @@ namespace WeSay.LexicalModel.Tests
 
 			private static void MakeItemDirty(LexEntry Item)
 			{
-				Item.Senses.Add(new LexSense());
+				Item.LexicalForm["de"] = "Sonne";
 			}
 
 			[Test]
@@ -550,4 +550,29 @@ namespace WeSay.LexicalModel.Tests
 				RepositoryUnderTest = new LexEntryRepository(_persistedFilePath);
 			}
 		}
+
+	[TestFixture]
+	public class LexEntryRepositoryDeleteAllItemsTransitionTests : IRepositoryDeleteAllItemsTransitionTests<LexEntry>
+	{
+		private string _persistedFilePath;
+
+		[SetUp]
+		public void Setup()
+		{
+			_persistedFilePath = Path.GetRandomFileName();
+			_persistedFilePath = Path.GetFullPath(_persistedFilePath);
+			RepositoryUnderTest = new LiftRepository(_persistedFilePath);
+		}
+
+		[TearDown]
+		public void Teardown()
+		{
+			RepositoryUnderTest.Dispose();
+		}
+
+		protected override void RepopulateRepositoryFromPersistedData()
+		{
+			//Do nothing.
+		}
+	}
 	}
