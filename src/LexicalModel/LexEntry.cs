@@ -18,7 +18,7 @@ namespace WeSay.LexicalModel
 	/// </summary>
 	public class LexEntry: WeSayDataObject
 	{
-		private LexicalFormMultiText _lexicalForm;
+		private MultiText _lexicalForm;
 		private Guid _guid;
 
 		/// <summary>
@@ -83,7 +83,7 @@ namespace WeSay.LexicalModel
 			{
 				_guid = guid;
 			}
-			_lexicalForm = new LexicalFormMultiText(this);
+			_lexicalForm = new MultiText(this);
 			_senses = new BindingList<LexSense>();
 			CreationTime = creationTime;
 
@@ -470,18 +470,6 @@ namespace WeSay.LexicalModel
 		}
 	}
 
-	/// <summary>
-	/// See comment in MultiText.cs for an explanation of this class.
-	/// </summary>
-	public class LexicalFormMultiText: MultiText
-	{
-		public LexicalFormMultiText(WeSayDataObject parent): base(parent) {}
-
-		public new LexEntry Parent
-		{
-			get { return base.Parent as LexEntry; }
-		}
-	}
 
 	public interface IFindEntries
 	{
