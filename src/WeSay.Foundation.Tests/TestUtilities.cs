@@ -8,9 +8,25 @@ using WeSay.Foundation.Tests;
 
 namespace WeSay.Foundation.Tests
 {
+		public class TempLiftFile : TempFile
+	{
+
+		public TempLiftFile(string xmlOfEntries)
+			: this(xmlOfEntries, LiftIO.Validation.Validator.LiftVersion)
+		{
+		}
+
+		public TempLiftFile(string xmlOfEntries, string claimedLiftVersion)
+		{
+
+			string liftContents = string.Format("<?xml version='1.0' encoding='utf-8'?><lift version='{0}'>{1}</lift>", claimedLiftVersion, xmlOfEntries);
+			File.WriteAllText(_filePath, liftContents);
+		}
+	}
+
 	public class TempFile : IDisposable
 	{
-		private readonly string _filePath;
+		protected readonly string _filePath;
 
 		public TempFile()
 		{

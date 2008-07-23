@@ -2,7 +2,7 @@
   <PropertyGroup>
 	<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
 	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-	<ProductVersion>8.0.50727</ProductVersion>
+	<ProductVersion>9.0.21022</ProductVersion>
 	<SchemaVersion>2.0</SchemaVersion>
 	<ProjectGuid>{6366719E-DA80-4680-9E06-D9BC6F340DE3}</ProjectGuid>
 	<OutputType>Library</OutputType>
@@ -52,6 +52,10 @@
 	<Reference Include="ICSharpCode.SharpZipLib, Version=0.85.1.271, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\lib\ICSharpCode.SharpZipLib.dll</HintPath>
+	</Reference>
+	<Reference Include="LiftIO, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+	  <SpecificVersion>False</SpecificVersion>
+	  <HintPath>..\..\lib\LiftIO.dll</HintPath>
 	</Reference>
 	<Reference Include="NetReflector, Version=1.0.0.0, Culture=neutral">
 	  <SpecificVersion>False</SpecificVersion>
