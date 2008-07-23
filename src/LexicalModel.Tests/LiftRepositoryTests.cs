@@ -247,7 +247,8 @@ namespace WeSay.LexicalModel.Tests
 
 		protected override void RepopulateRepositoryFromPersistedData()
 		{
-			//Do nothing.
+			RepositoryUnderTest.Dispose();
+			RepositoryUnderTest = new LiftRepository(_persistedFilePath);
 		}
 	}
 }

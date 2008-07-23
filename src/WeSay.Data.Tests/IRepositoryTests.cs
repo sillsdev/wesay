@@ -918,7 +918,7 @@ namespace WeSay.Data.Tests
 
 		public void SetState()
 		{
-			CreateInitialItem();
+			CreateAndSaveInitialItem();
 			DeleteAllItems();
 		}
 
@@ -927,10 +927,11 @@ namespace WeSay.Data.Tests
 			RepositoryUnderTest.DeleteAllItems();
 		}
 
-		private void CreateInitialItem()
+		private void CreateAndSaveInitialItem()
 		{
 			this.item = RepositoryUnderTest.CreateItem();
 			this.id = RepositoryUnderTest.GetId(this.item);
+			RepositoryUnderTest.SaveItem(item);
 		}
 
 		[Test]
@@ -941,7 +942,6 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof(ArgumentOutOfRangeException))]
 		public void DeleteAllItems_HasBeenPersisted()
 		{
 			SetState();
@@ -952,7 +952,7 @@ namespace WeSay.Data.Tests
 			else
 			{
 				RepopulateRepositoryFromPersistedData();
-				RepositoryUnderTest.GetItem(id);
+				Assert.IsEmpty(RepositoryUnderTest.GetAllItems());
 			}
 		}
 
@@ -1003,7 +1003,7 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void LastModified_IsChangedToLaterTime()
 		{
-			CreateInitialItem();
+			CreateAndSaveInitialItem();
 			DateTime modifiedTimePreTestedStateSwitch = RepositoryUnderTest.LastModified;
 			DeleteAllItems();
 			Assert.Greater(RepositoryUnderTest.LastModified, modifiedTimePreTestedStateSwitch);
