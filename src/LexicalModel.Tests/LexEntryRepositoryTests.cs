@@ -19,7 +19,6 @@ namespace WeSay.LexicalModel.Tests
 		private string _filePath;
 		private LexEntryRepository _lexEntryRepository;
 		private WritingSystem _headwordWritingSystem;
-		//private Db4oLexEntryRepository _db4oRepository;
 
 		[SetUp]
 		public void Setup()
@@ -45,23 +44,78 @@ namespace WeSay.LexicalModel.Tests
 			return;
 		}
 
-		[Test]
-		public void GetEntriesByApproximateLexicalForm_RepositoryContainsEntriesWithDifferingWritingSystems_OnlyFindEntriesMatchingTheGivenWritingSystem()
+		private void CreateThreeDifferentLexEntries()
 		{
-			const string entryInOtherWritingSystem = "foo2";
-			MakeTestLexEntry("v", "foo1");
-			MakeTestLexEntry("en", entryInOtherWritingSystem);
-			MakeTestLexEntry("v", "foo3");
-			WritingSystem ws = new WritingSystem("v", SystemFonts.DefaultFont);
+			LexEntry[] lexEntriesToSort = new LexEntry[3];
+
+			lexEntriesToSort[0] = _lexEntryRepository.CreateItem();
+			lexEntriesToSort[0].LexicalForm.SetAlternative("en", "en Word1");
+			//Create a second lexical form that will sort differently than the first
+			lexEntriesToSort[0].LexicalForm.SetAlternative("de", "de Word2");
+			//Create a third lexical form whose writing system does not appear in the other entries
+			lexEntriesToSort[0].LexicalForm.SetAlternative("fr", "fr Word");
+
+			lexEntriesToSort[1] = _lexEntryRepository.CreateItem();
+			lexEntriesToSort[1].LexicalForm.SetAlternative("en", "en Word2");
+			lexEntriesToSort[1].LexicalForm.SetAlternative("de", "de Word3");
+
+			lexEntriesToSort[2] = _lexEntryRepository.CreateItem();
+			lexEntriesToSort[2].LexicalForm.SetAlternative("en", "en Word3");
+			lexEntriesToSort[2].LexicalForm.SetAlternative("de", "de Word1");
+
+			_lexEntryRepository.SaveItem(lexEntriesToSort[0]);
+			_lexEntryRepository.SaveItem(lexEntriesToSort[1]);
+			_lexEntryRepository.SaveItem(lexEntriesToSort[2]);
+		}
+
+		[Test]
+		public void GetAllEntriesSortedByHeadword_RepositoryIsEmpty_ReturnsEmptyList()
+		{
+			Assert.AreEqual(0, _lexEntryRepository.GetAllEntriesSortedByHeadword(new WritingSystem()).Count);
+		}
+
+		[Test]
+		[ExpectedException(typeof(ArgumentNullException))]
+		public void GetAllEntriesSortedByHeadword_Null_Throws()
+		{
+			_lexEntryRepository.GetAllEntriesSortedByHeadword(null);
+		}
+
+		[Test]
+		public void GetAllEntriesSortedByHeadword_WritingSystem_ReturnsCorrectlySortedList()
+		{
+			CreateThreeDifferentLexEntries();
+			WritingSystem german = new WritingSystem("de", SystemFonts.DefaultFont);
+			ResultSet<LexEntry> listOfLexEntriesSortedByHeadWord = _lexEntryRepository.GetAllEntriesSortedByHeadword(german);
+			Assert.AreEqual("de Word1", listOfLexEntriesSortedByHeadWord[0]["Form"]);
+			Assert.AreEqual("de Word2", listOfLexEntriesSortedByHeadWord[1]["Form"]);
+			Assert.AreEqual("de Word3", listOfLexEntriesSortedByHeadWord[2]["Form"]);
+		}
+
+		[Test]
+		public void GetAllEntriesSortedByHeadword_LexicalFormInDesiredWritingSystemDoesNotExist_ReturnsEmptyForThatEntry()
+		{
+			CreateThreeDifferentLexEntries();
+			WritingSystem german = new WritingSystem("fr", SystemFonts.DefaultFont);
+			ResultSet<LexEntry> listOfLexEntriesSortedByHeadWord = _lexEntryRepository.GetAllEntriesSortedByHeadword(german);
+			Assert.AreEqual("", listOfLexEntriesSortedByHeadWord[0]["Form"]);
+			Assert.AreEqual("", listOfLexEntriesSortedByHeadWord[1]["Form"]);
+			Assert.AreEqual("fr Word", listOfLexEntriesSortedByHeadWord[2]["Form"]);
+		}
+
+		[Test]
+		public void GetEntriesWithSimilarLexicalForm_RepositoryContainsEntriesWithDifferingWritingSystems_OnlyFindEntriesMatchingTheGivenWritingSystem()
+		{
+			CreateThreeDifferentLexEntries();
+			WritingSystem ws = new WritingSystem("fr", SystemFonts.DefaultFont);
 
 			ResultSet<LexEntry> matches =
-					_lexEntryRepository.GetEntriesWithSimilarLexicalForm("foo",
+					_lexEntryRepository.GetEntriesWithSimilarLexicalForm("fr Wor",
 																		 ws,
 																		 ApproximateMatcherOptions.
 																				 IncludePrefixedForms);
-			Assert.AreEqual(2, matches.Count);
-			Assert.AreEqual("foo1", matches[0]["Form"]);
-			Assert.AreEqual("foo3", matches[1]["Form"]);
+			Assert.AreEqual(1, matches.Count);
+			Assert.AreEqual("fr Word", matches[0]["Form"]);
 		}
 
 		[Test]
@@ -119,7 +173,7 @@ namespace WeSay.LexicalModel.Tests
 
 		[Test]
 		[ExpectedException(typeof (ApplicationException))]
-		public void MultipleGuidMatchesThrows()
+		public void GetLexEntryWithMatchingGuid_MultipleGuidMatchesInRepo_Throws()
 		{
 			Guid g = SetupEntryWithGuid();
 			CreateEntryWithGuid(g);
