@@ -7,19 +7,15 @@ using Palaso.Text;
 using WeSay.Data;
 using WeSay.Foundation;
 using WeSay.Foundation.Options;
-using WeSay.LexicalModel.Db4oSpecific;
 
 namespace WeSay.LexicalModel
 {
 
 	public class LexEntryRepository: IRepository<LexEntry>
 	{
-		private static int _count = 0;
 		private readonly IRepository<LexEntry> _decoratedRepository;
 		public LexEntryRepository(string path)
 		{
-			IncCount();
-
 			//use default of Db4oRepository for now
 			//todo: eventually use synchronicRepository with Db4o and Lift
 			_decoratedRepository = new LiftRepository(path);
@@ -27,19 +23,12 @@ namespace WeSay.LexicalModel
 
 		public LexEntryRepository(IRepository<LexEntry> decoratedRepository)
 		{
-			IncCount();
 			if (decoratedRepository == null)
 			{
 				throw new ArgumentNullException("decoratedRepository");
 			}
 
 			_decoratedRepository = decoratedRepository;
-		}
-
-		private static void IncCount()
-		{
-			_count++;
-			Debug.WriteLine(String.Format("LER Count {0:d}", _count));
 		}
 
 		public DateTime LastModified
@@ -52,14 +41,14 @@ namespace WeSay.LexicalModel
 
 		public LexEntry CreateItem()
 		{
-			LexEntry item = this._decoratedRepository.CreateItem();
+			LexEntry item = _decoratedRepository.CreateItem();
 			return item;
 		}
 
 		// todo:remove
 		public LexEntry CreateItem(Extensible eInfo)
 		{
-			LexEntry item = this._decoratedRepository.CreateItem();
+			LexEntry item = _decoratedRepository.CreateItem();
 			item.Guid = eInfo.Guid;
 			item.Id = eInfo.Id;
 			item.ModificationTime = eInfo.ModificationTime;

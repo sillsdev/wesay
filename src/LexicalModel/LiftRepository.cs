@@ -70,6 +70,15 @@ namespace WeSay.LexicalModel
 			LastModified = PreciseDateTime.UtcNow;
 		}
 
+		public override void DeleteAllItems()
+		{
+			RepositoryId[] idsOfEntriesInRepository = GetAllItems();
+			foreach(RepositoryId id in idsOfEntriesInRepository)
+			{
+				DeleteItem(id);
+			}
+		}
+
 		public override void SaveItem(LexEntry item)
 		{
 			base.SaveItem(item);

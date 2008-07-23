@@ -1,10 +1,7 @@
-using System;
-using System.Collections.Generic;
 using System.IO;
 using NUnit.Framework;
-using WeSay.Data.Tests;
 using WeSay.Data;
-using WeSay.LexicalModel;
+using WeSay.Data.Tests;
 
 namespace WeSay.LexicalModel.Tests
 {
@@ -14,7 +11,7 @@ namespace WeSay.LexicalModel.Tests
 		{
 			string liftfileName = Path.GetTempFileName();
 			File.WriteAllText(liftfileName,
-				@"<?xml version='1.0' encoding='utf-8'?>
+							  @"<?xml version='1.0' encoding='utf-8'?>
 				<lift
 					version='0.12'
 					producer='WeSay 1.0.0.0'>
@@ -42,22 +39,23 @@ namespace WeSay.LexicalModel.Tests
 	}
 
 	[TestFixture]
-	public class LiftRepositoryStateUnitializedTests:IRepositoryStateUnitializedTests<LexEntry>
+	public class LiftRepositoryStateUnitializedTests : IRepositoryStateUnitializedTests<LexEntry>
 	{
 		private string _persistedFilePath;
+
 		[SetUp]
 		public void Setup()
 		{
-			this._persistedFilePath = Path.GetRandomFileName();
+			_persistedFilePath = Path.GetRandomFileName();
 			_persistedFilePath = Path.GetFullPath(_persistedFilePath);
-			this.RepositoryUnderTest = new LiftRepository(this._persistedFilePath);
+			RepositoryUnderTest = new LiftRepository(_persistedFilePath);
 		}
 
 		[TearDown]
 		public void Teardown()
 		{
 			RepositoryUnderTest.Dispose();
-			File.Delete(this._persistedFilePath);
+			File.Delete(_persistedFilePath);
 		}
 
 		[Test]
@@ -66,7 +64,8 @@ namespace WeSay.LexicalModel.Tests
 			string nonExistentFileToBeCreated = Path.GetTempPath() + Path.GetRandomFileName();
 			LiftRepository testRepoitory = new LiftRepository(nonExistentFileToBeCreated);
 			string fileContent = File.ReadAllText(nonExistentFileToBeCreated);
-			const string emptyLiftFileContent = @"<?xml version=""1.0"" encoding=""utf-8""?>
+			const string emptyLiftFileContent =
+				@"<?xml version=""1.0"" encoding=""utf-8""?>
 <lift version=""0.12"" producer=""WeSay 1.0.0.0"" />";
 			Assert.AreEqual(emptyLiftFileContent, fileContent);
 		}
@@ -77,7 +76,8 @@ namespace WeSay.LexicalModel.Tests
 			string emptyFileToBeFilled = Path.GetTempFileName();
 			LiftRepository testRepoitory = new LiftRepository(emptyFileToBeFilled);
 			string fileContent = File.ReadAllText(emptyFileToBeFilled);
-			const string emptyLiftFileContent = @"<?xml version=""1.0"" encoding=""utf-8""?>
+			const string emptyLiftFileContent =
+				@"<?xml version=""1.0"" encoding=""utf-8""?>
 <lift version=""0.12"" producer=""WeSay 1.0.0.0"" />";
 			Assert.AreEqual(emptyLiftFileContent, fileContent);
 		}
@@ -87,18 +87,19 @@ namespace WeSay.LexicalModel.Tests
 	public class LiftRepositoryCreatedFromPersistedData : IRepositoryPopulateFromPersistedTests<LexEntry>
 	{
 		private string _persistedFilePath;
+
 		[SetUp]
 		public void Setup()
 		{
-			this._persistedFilePath = LiftFileInitializer.MakeFile();
-			this.RepositoryUnderTest = new LiftRepository(this._persistedFilePath);
+			_persistedFilePath = LiftFileInitializer.MakeFile();
+			RepositoryUnderTest = new LiftRepository(_persistedFilePath);
 		}
 
 		[TearDown]
 		public void Teardown()
 		{
 			RepositoryUnderTest.Dispose();
-			File.Delete(this._persistedFilePath);
+			File.Delete(_persistedFilePath);
 		}
 
 		[Test]
@@ -112,7 +113,7 @@ namespace WeSay.LexicalModel.Tests
 		public override void GetItemMatchingQuery_QueryWithShow_ReturnsAllItemsAndFieldsMatchingQuery()
 		{
 			SetState();
-			Query query = new Query(typeof(LexEntry)).Show("LexicalForm");
+			Query query = new Query(typeof (LexEntry)).Show("LexicalForm");
 			ResultSet<LexEntry> resultsOfQuery = RepositoryUnderTest.GetItemsMatching(query);
 			Assert.AreEqual(1, resultsOfQuery.Count);
 			Assert.AreEqual("Sonne", resultsOfQuery[0]["LexicalForm"].ToString());
@@ -137,19 +138,20 @@ namespace WeSay.LexicalModel.Tests
 	public class LiftRepositoryCreateItemTransitionTests : IRepositoryCreateItemTransitionTests<LexEntry>
 	{
 		private string _persistedFilePath;
+
 		[SetUp]
 		public void Setup()
 		{
-			this._persistedFilePath = Path.GetRandomFileName();
+			_persistedFilePath = Path.GetRandomFileName();
 			_persistedFilePath = Path.GetFullPath(_persistedFilePath);
-			this.RepositoryUnderTest = new LiftRepository(this._persistedFilePath);
+			RepositoryUnderTest = new LiftRepository(_persistedFilePath);
 		}
 
 		[TearDown]
 		public void Teardown()
 		{
 			RepositoryUnderTest.Dispose();
-			File.Delete(this._persistedFilePath);
+			File.Delete(_persistedFilePath);
 		}
 
 		[Test]
@@ -157,7 +159,7 @@ namespace WeSay.LexicalModel.Tests
 		{
 			SetState();
 			Item.LexicalForm["de"] = "Sonne";
-			Query query = new Query(typeof(LexEntry)).Show("LexicalForm");
+			Query query = new Query(typeof (LexEntry)).Show("LexicalForm");
 			ResultSet<LexEntry> resultsOfQuery = RepositoryUnderTest.GetItemsMatching(query);
 			Assert.AreEqual(1, resultsOfQuery.Count);
 			Assert.AreEqual("Sonne", resultsOfQuery[0]["LexicalForm"].ToString());
@@ -174,19 +176,20 @@ namespace WeSay.LexicalModel.Tests
 	public class LiftRepositoryDeleteItemTransitionTests : IRepositoryDeleteItemTransitionTests<LexEntry>
 	{
 		private string _persistedFilePath;
+
 		[SetUp]
 		public void Setup()
 		{
-			this._persistedFilePath = Path.GetRandomFileName();
+			_persistedFilePath = Path.GetRandomFileName();
 			_persistedFilePath = Path.GetFullPath(_persistedFilePath);
-			this.RepositoryUnderTest = new LiftRepository(this._persistedFilePath);
+			RepositoryUnderTest = new LiftRepository(_persistedFilePath);
 		}
 
 		[TearDown]
 		public void Teardown()
 		{
 			RepositoryUnderTest.Dispose();
-			File.Delete(this._persistedFilePath);
+			File.Delete(_persistedFilePath);
 		}
 
 		protected override void CreateNewRepositoryFromPersistedData()
@@ -200,22 +203,49 @@ namespace WeSay.LexicalModel.Tests
 	public class LiftRepositoryDeleteIdTransitionTests : IRepositoryDeleteIdTransitionTests<LexEntry>
 	{
 		private string _persistedFilePath;
+
 		[SetUp]
 		public void Setup()
 		{
-			this._persistedFilePath = Path.GetRandomFileName();
+			_persistedFilePath = Path.GetRandomFileName();
 			_persistedFilePath = Path.GetFullPath(_persistedFilePath);
-			this.RepositoryUnderTest = new LiftRepository(this._persistedFilePath);
+			RepositoryUnderTest = new LiftRepository(_persistedFilePath);
 		}
 
 		[TearDown]
 		public void Teardown()
 		{
 			RepositoryUnderTest.Dispose();
-			File.Delete(this._persistedFilePath);
+			File.Delete(_persistedFilePath);
 		}
 
 		protected override void CreateNewRepositoryFromPersistedData()
+		{
+			RepositoryUnderTest.Dispose();
+			RepositoryUnderTest = new LiftRepository(_persistedFilePath);
+		}
+	}
+
+	[TestFixture]
+	public class LiftRepositoryDeleteAllItemsTransitionTests : IRepositoryDeleteAllItemsTransitionTests<LexEntry>
+	{
+		private string _persistedFilePath;
+
+		[SetUp]
+		public void Setup()
+		{
+			_persistedFilePath = Path.GetRandomFileName();
+			_persistedFilePath = Path.GetFullPath(_persistedFilePath);
+			RepositoryUnderTest = new LiftRepository(_persistedFilePath);
+		}
+
+		[TearDown]
+		public void Teardown()
+		{
+			RepositoryUnderTest.Dispose();
+		}
+
+		protected override void RepopulateRepositoryFromPersistedData()
 		{
 			RepositoryUnderTest.Dispose();
 			RepositoryUnderTest = new LiftRepository(_persistedFilePath);

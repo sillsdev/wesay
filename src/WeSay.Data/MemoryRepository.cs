@@ -62,7 +62,7 @@ namespace WeSay.Data
 			DeleteItem(item);
 		}
 
-		public void DeleteAllItems()
+		public virtual void DeleteAllItems()
 		{
 			idToObjectHashtable.Clear();
 			objectToIdHashtable.Clear();
