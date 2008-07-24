@@ -32,6 +32,15 @@ namespace WeSay.LexicalTools
 
 		public GatherBySemanticDomainTask(LexEntryRepository lexEntryRepository,
 										  string label,
+										  string description,
+										  string semanticDomainQuestionsFileName,
+										  ViewTemplate viewTemplate,
+										  string semanticDomainFieldName)
+			: this(lexEntryRepository, label, label, description, string.Empty, string.Empty,
+				  semanticDomainQuestionsFileName, viewTemplate, semanticDomainFieldName) { }
+
+		public GatherBySemanticDomainTask(LexEntryRepository lexEntryRepository,
+										  string label,
 										  string longLabel,
 										  string description,
 										  string remainingCountText,

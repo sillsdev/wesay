@@ -19,6 +19,15 @@ namespace WeSay.LexicalTools
 		private readonly WritingSystem _writingSystem;
 
 		public MissingInfoTask(LexEntryRepository lexEntryRepository,
+					string missingInfoField,
+					string label,
+					string description,
+					ViewTemplate viewTemplate)
+			: this(lexEntryRepository, missingInfoField, label, label, description, string.Empty, string.Empty, viewTemplate)
+		{
+		}
+
+		public MissingInfoTask(LexEntryRepository lexEntryRepository,
 							   string missingInfoField,
 							   string label,
 							   string longLabel,
@@ -64,6 +73,15 @@ namespace WeSay.LexicalTools
 				}
 			}
 		}
+
+		public MissingInfoTask(LexEntryRepository lexEntryRepository,
+					   string missingInfoField,
+					   string label,
+					   string description,
+					   ViewTemplate viewTemplate,
+					   string fieldsToShow)
+			: this(lexEntryRepository, missingInfoField, label, label, description, string.Empty, string.Empty, viewTemplate, fieldsToShow)
+		{}
 
 		/// <summary>
 		/// Creates a generic Lexical Field editing task
@@ -121,6 +139,24 @@ namespace WeSay.LexicalTools
 				return base.Group;
 			}
 		}
+
+		public MissingInfoTask(LexEntryRepository lexEntryRepository,
+					   string missingInfoField,
+					   string label,
+					   string description,
+					   ViewTemplate viewTemplate,
+					   string fieldsToShowEditable,
+					   string fieldsToShowReadOnly)
+			: this(lexEntryRepository,
+			   missingInfoField,
+			   label,
+			   label,
+			   description,
+			   string.Empty,
+			   string.Empty,
+			   viewTemplate,
+			   fieldsToShowEditable,
+			fieldsToShowReadOnly) {}
 
 		public MissingInfoTask(LexEntryRepository lexEntryRepository,
 							   string missingInfoField,
