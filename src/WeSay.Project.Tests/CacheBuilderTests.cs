@@ -100,12 +100,12 @@ namespace WeSay.Project.Tests
 			Assert.AreEqual(ProgressState.StateValue.Finished, _progress.State, _log);
 		}
 
-		[Test] //, Ignore("Run this by hand if you have an E: volume (windows only)")]
+		[Test]
 		public void WorksWithTempDirectoryOnADifferentVolumne()
 		{
 			if (Environment.OSVersion.Platform == PlatformID.Unix)
 			{
-				Console.WriteLine("Ignored on non-Windows");
+				Assert.Ignore("Ignored on non-Windows");
 			}
 			else
 			{
@@ -125,7 +125,7 @@ namespace WeSay.Project.Tests
 				}
 				if (driveName.Length == 0)
 				{
-					Console.WriteLine("Ignored when there is not an additional volume");
+					Assert.Ignore("Ignored when there is not an additional volume");
 				}
 				else
 				{
