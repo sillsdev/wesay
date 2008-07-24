@@ -37,6 +37,19 @@ namespace WeSay.Data.Tests
             RepositoryUnderTest.Dispose();
         }
 
+		[Test]
+		public override void GetItemMatchingQuery_QueryWithShow_ReturnsAllItemsAndFieldsMatchingQuery()
+		{
+			SetState();
+			Item.StoredInt = 123;
+			Item.StoredString = "I was stored!";
+			Query query = new Query(typeof(TestItem)).Show("StoredInt").Show("StoredString");
+			ResultSet<TestItem> resultsOfQuery = RepositoryUnderTest.GetItemsMatching(query);
+			Assert.AreEqual(1, resultsOfQuery.Count);
+			Assert.AreEqual(123, resultsOfQuery[0]["StoredInt"]);
+			Assert.AreEqual("I was stored!", resultsOfQuery[0]["StoredString"]);
+		}
+
 		protected override void CreateNewRepositoryFromPersistedData()
         {
             //Do nothing.
