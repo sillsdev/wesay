@@ -571,20 +571,6 @@ namespace WeSay.LexicalModel
 
 		#endregion
 
-		[Obsolete]
-		//todo: make this private and part of synchronic repository
-		public IList<RepositoryId> GetItemsModifiedSince(DateTime last)
-		{
-			Query query = new Query(typeof(LexEntry)).Show("ModificationTime");
-			ResultSet<LexEntry> items = GetItemsMatchingCore(query);
-			// remove items that were modified before last
-			items.RemoveAll(delegate(RecordToken<LexEntry> token)
-								{
-									return (DateTime)token["ModificationTime"] < last;
-								});
-			return new List<RepositoryId>(items);
-		}
-
 		public void BackendDoLiftUpdateNow(bool p)
 		{
 			//Do Nothing
