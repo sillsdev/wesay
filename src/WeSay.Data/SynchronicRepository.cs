@@ -19,18 +19,22 @@ namespace WeSay.Data
         {
             if (primary == null)
             {
+				Dispose();
                 throw new ArgumentNullException("primary");
             }
             if (secondary == null)
             {
+				Dispose();
                 throw new ArgumentNullException("secondary");
             }
             if (copyStrategy == null)
             {
+				Dispose();
                 throw new ArgumentNullException("copyStrategy");
             }
             if (ReferenceEquals(primary, secondary))
             {
+				Dispose();
                 throw new ArgumentException("primary and secondary must not be equal");
             }
             _primary = primary;
@@ -225,8 +229,14 @@ namespace WeSay.Data
 				if (disposing)
 				{
 					// dispose-only, i.e. non-finalizable logic
-					_primary.Dispose();
-					_secondary.Dispose();
+					if (this._primary != null)
+					{
+						this._primary.Dispose();
+					}
+					if (this._secondary != null)
+					{
+						this._secondary.Dispose();
+					}
 				}
 
 				// shared (dispose and finalizable) cleanup logic

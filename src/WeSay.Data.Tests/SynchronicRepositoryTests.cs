@@ -144,8 +144,13 @@ namespace WeSay.Data.Tests
         [ExpectedException(typeof(ArgumentException))]
         public void PassSameRepositoriesInConstructor_ThrowsArgumentException()
         {
-            IRepository<TestItem> repository = new MemoryRepository<TestItem>();
-            new SynchronicRepository<TestItem>(repository, repository);
+			using (IRepository<TestItem> repository = new MemoryRepository<TestItem>())
+			{
+				using(new SynchronicRepository<TestItem>(repository, repository))
+				{
+
+				}
+			}
         }
 
         [Test]
@@ -194,6 +199,7 @@ namespace WeSay.Data.Tests
             item.StoredString = "item one";
             item = _secondary.CreateItem();
             item.StoredString = "item two";
+			_synchronic.Dispose();
             _synchronic = new SynchronicRepository<TestItem>(_primary, _secondary);
             Assert.AreEqual(2, _primary.CountAllItems());
             List<string> strings = new List<string>(2);
@@ -212,6 +218,7 @@ namespace WeSay.Data.Tests
             item = _primary.CreateItem();
             item.StoredString = "item two";
 			_primary.SaveItem(item);
+			_synchronic.Dispose();
             _synchronic = new SynchronicRepository<TestItem>(_primary, _secondary);
             Assert.AreEqual(2, _secondary.CountAllItems());
             List<string> strings = new List<string>(2);
@@ -230,6 +237,7 @@ namespace WeSay.Data.Tests
             item = _secondary.CreateItem();
             item.StoredString = "item two";
             _secondary.SaveItem(item);
+			_synchronic.Dispose();
             _synchronic = new SynchronicRepository<TestItem>(_primary, _secondary);
             Assert.AreEqual(1, _primary.CountAllItems());
             Assert.AreEqual(1, _secondary.CountAllItems());
@@ -246,6 +254,7 @@ namespace WeSay.Data.Tests
             item = _primary.CreateItem();
             item.StoredString = "item two";
             _primary.SaveItem(item);
+			_synchronic.Dispose();
             _synchronic = new SynchronicRepository<TestItem>(_primary, _secondary);
             Assert.AreEqual(1, _primary.CountAllItems());
             Assert.AreEqual(1, _secondary.CountAllItems());
