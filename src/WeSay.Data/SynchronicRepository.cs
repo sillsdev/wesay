@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Text;
 using Palaso.Progress;
 
 namespace WeSay.Data
@@ -199,14 +198,49 @@ namespace WeSay.Data
 
         #endregion
 
+
         #region IDisposable Members
+#if DEBUG
+		~SynchronicRepository()
+		{
+			if (!this._disposed)
+			{
+				throw new ApplicationException("Disposed not explicitly called on SynchronicRepository.");
+			}
+		}
+#endif
+
+		private bool _disposed;
 
         public void Dispose()
         {
-            _primary.Dispose();
-            _secondary.Dispose();
+			Dispose(true);
+			GC.SuppressFinalize(this);
         }
 
+		protected virtual void Dispose(bool disposing)
+		{
+			if (!this._disposed)
+			{
+				if (disposing)
+				{
+					// dispose-only, i.e. non-finalizable logic
+					_primary.Dispose();
+					_secondary.Dispose();
+				}
+
+				// shared (dispose and finalizable) cleanup logic
+				this._disposed = true;
+			}
+		}
+
+		protected void VerifyNotDisposed()
+		{
+			if (this._disposed)
+			{
+				throw new ObjectDisposedException("SynchronicRepository");
+			}
+		}
         #endregion
     }
 }
