@@ -102,9 +102,8 @@ namespace WeSay.LexicalModel.Tests
 
 		private void CreateEntryWithGuid(Guid g)
 		{
-			Extensible extensible = new Extensible();
-			extensible.Guid = g;
-			LexEntry entry = _lexEntryRepository.CreateItem(extensible);
+			LexEntry entry = _lexEntryRepository.CreateItem();
+			entry.Guid = g;
 			entry.LexicalForm["en"] = "hello";
 			_lexEntryRepository.SaveItem(entry);
 		}

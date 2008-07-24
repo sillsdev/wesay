@@ -45,17 +45,6 @@ namespace WeSay.LexicalModel
 			return item;
 		}
 
-		// todo:remove
-		public LexEntry CreateItem(Extensible eInfo)
-		{
-			LexEntry item = _decoratedRepository.CreateItem();
-			item.Guid = eInfo.Guid;
-			item.Id = eInfo.Id;
-			item.ModificationTime = eInfo.ModificationTime;
-			item.CreationTime = eInfo.CreationTime;
-			return item;
-		}
-
 		public RepositoryId[] GetAllItems()
 		{
 			return _decoratedRepository.GetAllItems();
