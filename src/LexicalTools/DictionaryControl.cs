@@ -257,7 +257,7 @@ namespace WeSay.LexicalTools
 			}
 			else
 			{
-				_records = _lexEntryRepository.GetAllEntriesSortedByGloss(_listWritingSystem);
+				_records = _lexEntryRepository.GetAllEntriesSortedByDefinition(_listWritingSystem);
 			}
 			_recordsListBox.BeginUpdate();
 			_recordsListBox.DataSource = (BindingList<RecordToken<LexEntry>>) _records;
