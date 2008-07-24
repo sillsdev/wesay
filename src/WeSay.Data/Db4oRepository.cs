@@ -88,6 +88,7 @@ namespace WeSay.Data
 		{
 			T item = new T();
 			Database.Set(item, ActivationDepth);
+			Commit();
 			return item;
 		}
 

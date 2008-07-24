@@ -233,6 +233,21 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
+		public void CreatedItemHasBeenPersisted()
+		{
+			SetState();
+			if (!RepositoryUnderTest.CanPersist)
+			{
+			}
+			else
+			{
+				CreateNewRepositoryFromPersistedData();
+				T itemFromPersistedData = RepositoryUnderTest.GetItem(id);
+				Assert.AreEqual(item, itemFromPersistedData);
+			}
+		}
+
+		[Test]
 		public void CountAllItems_ReturnsOne()
 		{
 			SetState();
@@ -440,6 +455,21 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
+		public void CreatedItemHasBeenPersisted()
+		{
+			SetState();
+			if (!RepositoryUnderTest.CanPersist)
+			{
+			}
+			else
+			{
+				CreateNewRepositoryFromPersistedData();
+				T itemFromPersistedData = RepositoryUnderTest.GetItem(id);
+				Assert.AreEqual(item, itemFromPersistedData);
+			}
+		}
+
+		[Test]
 		public void CountAllItems_ReturnsOne()
 		{
 			SetState();
@@ -614,22 +644,16 @@ namespace WeSay.Data.Tests
 		public void SetState()
 		{
 			CreateInitialItem();
-			SaveItem();
 			DeleteItem();
 		}
 
 		private void DeleteItem() {
-			RepositoryUnderTest.DeleteItem(this.Item);
+			RepositoryUnderTest.DeleteItem(Item);
 		}
 
 		private void CreateInitialItem() {
 			this.item = RepositoryUnderTest.CreateItem();
-			this.id = RepositoryUnderTest.GetId(this.Item);
-		}
-
-		private void SaveItem()
-		{
-			RepositoryUnderTest.SaveItem(Item);
+			this.id = RepositoryUnderTest.GetId(Item);
 		}
 
 		[Test]
@@ -769,7 +793,6 @@ namespace WeSay.Data.Tests
 		public void SetState()
 		{
 			CreateItemToTest();
-			SaveItem();
 			DeleteItem();
 		}
 
@@ -779,12 +802,7 @@ namespace WeSay.Data.Tests
 
 		private void CreateItemToTest() {
 			this.item = RepositoryUnderTest.CreateItem();
-			this.id = RepositoryUnderTest.GetId(this.Item);
-		}
-
-		private void SaveItem()
-		{
-			RepositoryUnderTest.SaveItem(Item);
+			this.id = RepositoryUnderTest.GetId(Item);
 		}
 
 		[Test]
@@ -918,7 +936,7 @@ namespace WeSay.Data.Tests
 
 		public void SetState()
 		{
-			CreateAndSaveInitialItem();
+			CreateInitialItem();
 			DeleteAllItems();
 		}
 
@@ -927,11 +945,10 @@ namespace WeSay.Data.Tests
 			RepositoryUnderTest.DeleteAllItems();
 		}
 
-		private void CreateAndSaveInitialItem()
+		private void CreateInitialItem()
 		{
 			this.item = RepositoryUnderTest.CreateItem();
 			this.id = RepositoryUnderTest.GetId(this.item);
-			RepositoryUnderTest.SaveItem(item);
 		}
 
 		[Test]
@@ -1003,7 +1020,7 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void LastModified_IsChangedToLaterTime()
 		{
-			CreateAndSaveInitialItem();
+			CreateInitialItem();
 			DateTime modifiedTimePreTestedStateSwitch = RepositoryUnderTest.LastModified;
 			DeleteAllItems();
 			Assert.Greater(RepositoryUnderTest.LastModified, modifiedTimePreTestedStateSwitch);

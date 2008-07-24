@@ -18,14 +18,16 @@ namespace WeSay.LexicalModel
 	{
 		private readonly string _liftFilePath;
 		private FileStream _liftFileStreamForLocking;
-
+		private bool _loadingAllEntries;
 		public LiftRepository(string filePath)
 		{
 			_liftFilePath = filePath;
 			FileInfo fileInfo = new FileInfo(_liftFilePath);
 			//check if file is writeable
-			FileStream fileStream = fileInfo.OpenWrite();
-			fileStream.Close();
+			using (FileStream fileStream = fileInfo.OpenWrite())
+			{
+				fileStream.Close();
+			}
 			if (!fileInfo.Exists || fileInfo.Length == 0)
 			{
 				LiftExporter exporter = new LiftExporter(filePath);
@@ -44,6 +46,16 @@ namespace WeSay.LexicalModel
 				preparer.MigrateLiftFile(state);
 			}
 			preparer.PopulateDefinitions(state);
+		}
+
+		public override LexEntry CreateItem()
+		{
+			LexEntry item = base.CreateItem();
+			if (!_loadingAllEntries)
+			{
+				UpdateLiftFileWithModified(item);
+			}
+			return item;
 		}
 
 		public override void DeleteItem(RepositoryId id)
@@ -98,30 +110,38 @@ namespace WeSay.LexicalModel
 
 		private void LoadAllLexEntries()
 		{
-			using (LiftMerger merger = new LiftMerger(this))
+			_loadingAllEntries = true;
+			try
 			{
-				LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence> parser =
-					new LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence>(
-						merger);
-
-				parser.SetTotalNumberSteps += parser_SetTotalNumberSteps;
-				parser.SetStepsCompleted += parser_SetStepsCompleted;
-
-				parser.ParsingWarning += parser_ParsingWarning;
-
-				try
+				using (LiftMerger merger = new LiftMerger(this))
 				{
-					parser.ReadLiftFile(_liftFilePath);
-				}
-				catch (Exception)
-				{
-					//our parser failed.  Hopefully, because of bad lift. Validate it now  to
-					//see if that's the problem.
-					Validator.CheckLiftWithPossibleThrow(_liftFilePath);
+					LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence> parser =
+							new LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence>(
+									merger);
 
-					//if it got past that, ok, send along the error the parser encountered.
-					throw;
+					parser.SetTotalNumberSteps += parser_SetTotalNumberSteps;
+					parser.SetStepsCompleted += parser_SetStepsCompleted;
+
+					parser.ParsingWarning += parser_ParsingWarning;
+
+					try
+					{
+						parser.ReadLiftFile(_liftFilePath);
+					}
+					catch (Exception)
+					{
+						//our parser failed.  Hopefully, because of bad lift. Validate it now  to
+						//see if that's the problem.
+						Validator.CheckLiftWithPossibleThrow(_liftFilePath);
+
+						//if it got past that, ok, send along the error the parser encountered.
+						throw;
+					}
 				}
+			}
+			finally
+			{
+				_loadingAllEntries = false;
 			}
 		}
 
