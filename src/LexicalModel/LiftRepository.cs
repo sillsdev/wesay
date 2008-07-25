@@ -113,6 +113,7 @@ namespace WeSay.LexicalModel
 			_loadingAllEntries = true;
 			try
 			{
+				UnLockLift();
 				using (LiftMerger merger = new LiftMerger(this))
 				{
 					LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence> parser =
@@ -128,6 +129,10 @@ namespace WeSay.LexicalModel
 					{
 						parser.ReadLiftFile(_liftFilePath);
 					}
+					catch (LiftFormatException)
+					{
+						throw;
+					}
 					catch (Exception)
 					{
 						//our parser failed.  Hopefully, because of bad lift. Validate it now  to
@@ -141,6 +146,7 @@ namespace WeSay.LexicalModel
 			}
 			finally
 			{
+				LockLift();
 				_loadingAllEntries = false;
 			}
 		}
@@ -288,7 +294,7 @@ namespace WeSay.LexicalModel
 		///
 		/// </summary>
 		/// <returns>false if it failed (and it would have already reported the error)</returns>
-		public bool MergeIncrementFiles()
+		private void MergeIncrementFiles()
 		{
 			//merge the increment files
 
@@ -296,7 +302,7 @@ namespace WeSay.LexicalModel
 				SynchronicMerger.GetPendingUpdateFiles(_liftFilePath)
 					.Length > 0)
 			{
-				//Logger.WriteEvent("Running Synchronic Merger"); //needed??? TA 2008-07-09
+				Logger.WriteEvent("Running Synchronic Merger");
 				try
 				{
 					SynchronicMerger merger = new SynchronicMerger();
@@ -320,7 +326,7 @@ namespace WeSay.LexicalModel
 							error.PathToNewFile + ".bad");
 						ErrorNotificationDialog.ReportException(error, null, false);
 					}
-					return false;
+					//return false; //!!! remove CJP
 				}
 				catch (Exception e)
 				{
@@ -332,7 +338,6 @@ namespace WeSay.LexicalModel
 					LockLift();
 				}
 			}
-			return true;
 		}
 
 		private string MakeIncrementFileName(DateTime time)
@@ -408,10 +413,10 @@ namespace WeSay.LexicalModel
 		/// </summary>
 		private void UnLockLift()
 		{
-			//Debug.Assert(_liftFileStreamForLocking != null);
-			//_liftFileStreamForLocking.Close();
-			//_liftFileStreamForLocking.Dispose();
-			//_liftFileStreamForLocking = null;
+			Debug.Assert(_liftFileStreamForLocking != null);
+			_liftFileStreamForLocking.Close();
+			_liftFileStreamForLocking.Dispose();
+			_liftFileStreamForLocking = null;
 		}
 
 		public bool IsLiftFileLocked
@@ -421,8 +426,8 @@ namespace WeSay.LexicalModel
 
 		private void LockLift()
 		{
-			//Debug.Assert(_liftFileStreamForLocking == null);
-			//_liftFileStreamForLocking = File.OpenRead(_liftFilePath);
+			Debug.Assert(_liftFileStreamForLocking == null);
+			_liftFileStreamForLocking = File.OpenRead(_liftFilePath);
 		}
 	}
 }

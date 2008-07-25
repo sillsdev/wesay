@@ -13,7 +13,6 @@ namespace WeSay.LexicalModel.Tests
 	[TestFixture]
 	public class LiftPreparerTests
 	{
-		private LiftRepository _liftRepository;
 		private string _liftFilePath;
 
 		[SetUp]
@@ -21,14 +20,12 @@ namespace WeSay.LexicalModel.Tests
 		{
 			_liftFilePath = Path.GetTempFileName();
 			_liftFilePath = _liftFilePath.Replace(".tmp", ".lift");
-			_liftRepository = new LiftRepository(_liftFilePath);
 			ErrorReport.IsOkToInteractWithUser = false;
 		}
 
 		[TearDown]
 		public void TearDown()
 		{
-			_liftRepository.Dispose();
 			File.Delete(_liftFilePath);
 		}
 
@@ -63,15 +60,6 @@ namespace WeSay.LexicalModel.Tests
 			Assert.IsTrue(preparer.MigrateIfNeeded(), "MigrateIfNeeded Failed");
 			Assert.AreEqual(Validator.LiftVersion,
 							Validator.GetLiftVersion(_liftFilePath));
-		}
-
-		[Test]
-		public void MigrateIfNeeded_LiftIsLockedByProject_LockedAgainAfterMigration()
-		{
-			CreateLiftFileForTesting("0.10");
-			LiftPreparer preparer = new LiftPreparer(_liftFilePath);
-			Assert.IsTrue(preparer.MigrateIfNeeded(), "MigrateIfNeeded Failed");
-			Assert.IsTrue(_liftRepository.IsLiftFileLocked);
 		}
 
 		[Test]

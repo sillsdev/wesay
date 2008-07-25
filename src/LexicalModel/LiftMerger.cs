@@ -30,7 +30,7 @@ namespace WeSay.LexicalModel
 		public event EventHandler<EntryCreatedEventArgs> EntryCreatedEvent = delegate { };
 		private readonly IList<String> _expectedOptionTraits;
 		private readonly IList<string> _expectedOptionCollectionTraits;
-		private readonly LiftRepository _repository; // !!! Needs to be a weak ref CJP
+		private readonly LiftRepository _repository;
 
 		public LiftMerger(LiftRepository repository)
 		{

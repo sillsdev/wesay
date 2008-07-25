@@ -363,20 +363,11 @@ namespace WeSay.LexicalModel.Tests
 			}
 
 			[Test]
-			public void Constructor_FileIsWriteable()
+			public void Constructor_LexEntryIsDirtyIsFalse()
 			{
 				SetState();
-				FileStream fileStream = File.OpenWrite(_persistedFilePath);
-				Assert.IsTrue(fileStream.CanWrite);
-				fileStream.Close();
+				Assert.IsFalse(Item.IsDirty);
 			}
-
-		[Test]
-		public void Constructor_LexEntryIsDirtyIsFalse()
-		{
-			SetState();
-			Assert.IsFalse(Item.IsDirty);
-		}
 
 			[Test]
 			public override void GetItemMatchingQuery_QueryWithShow_ReturnsAllItemsAndFieldsMatchingQuery()

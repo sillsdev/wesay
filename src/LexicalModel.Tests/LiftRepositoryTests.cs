@@ -2,6 +2,7 @@ using System.IO;
 using NUnit.Framework;
 using WeSay.Data;
 using WeSay.Data.Tests;
+using WeSay.LexicalModel.Migration;
 
 namespace WeSay.LexicalModel.Tests
 {
@@ -11,7 +12,7 @@ namespace WeSay.LexicalModel.Tests
 		{
 			string liftfileName = Path.GetTempFileName();
 			File.WriteAllText(liftfileName,
-							  @"<?xml version='1.0' encoding='utf-8'?>
+				@"<?xml version='1.0' encoding='utf-8'?>
 				<lift
 					version='0.12'
 					producer='WeSay 1.0.0.0'>
@@ -121,14 +122,6 @@ namespace WeSay.LexicalModel.Tests
 			ResultSet<LexEntry> resultsOfQuery = RepositoryUnderTest.GetItemsMatching(query);
 			Assert.AreEqual(1, resultsOfQuery.Count);
 			Assert.AreEqual("Sonne", resultsOfQuery[0]["LexicalForm"].ToString());
-		}
-
-		[Test]
-		public void Constructor_FileIsWriteable()
-		{
-			FileStream fileStream = File.OpenWrite(_persistedFilePath);
-			Assert.IsTrue(fileStream.CanWrite);
-			fileStream.Close();
 		}
 
 		protected override void CreateNewRepositoryFromPersistedData()
@@ -255,4 +248,74 @@ namespace WeSay.LexicalModel.Tests
 			RepositoryUnderTest = new LiftRepository(_persistedFilePath);
 		}
 	}
+
+	[TestFixture]
+	public class LiftFileAlreadyLockedTest
+	{
+		private string _persistedFilePath;
+		private FileStream _fileStream;
+
+		[SetUp]
+		public void SetUp()
+		{
+			_persistedFilePath = Path.GetRandomFileName();
+			_persistedFilePath = Path.GetFullPath(_persistedFilePath);
+			_fileStream = File.OpenWrite(_persistedFilePath);
+		}
+
+		[TearDown]
+		public void TearDown()
+		{
+			_fileStream.Close();
+			File.Delete(_persistedFilePath);
+		}
+
+		[Test]
+		[ExpectedException(typeof(IOException))]
+		public void LockedFile_Throws()
+		{
+			Assert.IsTrue(_fileStream.CanWrite);
+			LiftRepository liftRepository = new LiftRepository(_persistedFilePath);
+		}
+	}
+
+	[TestFixture]
+	public class LiftFileNotLockedTest
+	{
+		[Test]
+		public void UnlockedLiftFile_ConstructorDoesNotThrow()
+		{
+			string persistedFilePath = Path.GetRandomFileName();
+			persistedFilePath = Path.GetFullPath(persistedFilePath);
+			// Confirm that the file is writable.
+			FileStream fileStream = File.OpenWrite(persistedFilePath);
+			Assert.IsTrue(fileStream.CanWrite);
+			// Close it before creating the LiftRepository.
+			fileStream.Close();
+			// LiftRepository constructor shouldn't throw an IOException.
+			using (LiftRepository liftRepository = new LiftRepository(persistedFilePath))
+			{
+			}
+			Assert.IsTrue(true); // Constructor didn't throw.
+			File.Delete(persistedFilePath);
+		}
+	}
+
+	[TestFixture]
+	public class LiftMigrationTests
+	{
+		[Test]
+		public void MigrateIfNeeded_LiftIsLockedByProject_LockedAgainAfterMigration()
+		{
+			Assert.Fail("NYI");
+			//CreateLiftFileAndRepositoryForTesting("0.10");
+			//LiftPreparer preparer = new LiftPreparer(_liftFilePath);
+			//Assert.IsTrue(preparer.MigrateIfNeeded(), "MigrateIfNeeded Failed");
+			//Assert.IsTrue(_liftRepository.IsLiftFileLocked);
+		}
+
+	}
+
+
+
 }

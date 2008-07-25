@@ -209,7 +209,8 @@ namespace WeSay.LexicalModel.Migration
 				File.Move(_liftFilePath, nameForOldFile);
 				File.Move(migratedFile, _liftFilePath);
 
-				//args.Result = args.Argument as ProgressState; //!!!
+				//review: CJP asks I'm not sure why this is required to be passed back via results. ???
+				//args.Result = args.Argument as ProgressState;
 			}
 			catch (Exception e)
 			{
