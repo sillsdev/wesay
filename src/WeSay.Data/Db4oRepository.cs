@@ -186,20 +186,6 @@ namespace WeSay.Data
 			return ids;
 		}
 
-		//todo: refactor this so handled by synchronizer
-		public RepositoryId[] GetItemsModifiedSince(DateTime last)
-		{
-			throw new NotImplementedException();
-			// by moving back 1 milliseconds, we ensure that we
-			// will get the correct records with just a > and not >=
-			last = last.AddMilliseconds(-1);
-			IQuery q = Database.Query();
-			q.Constrain(typeof(T));
-			q.Descend("_modificationTime").Constrain(last).Greater();
-			IObjectSet objectSet = q.Execute();
-			return WrapDb4oIdsInRepositoryIds(objectSet.Ext().GetIDs());
-		}
-
 		public void SaveItems(IEnumerable<T> items)
 		{
 			if (items == null)
