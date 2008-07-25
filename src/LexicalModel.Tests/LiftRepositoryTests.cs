@@ -62,24 +62,28 @@ namespace WeSay.LexicalModel.Tests
 		public void Constructor_FileDoesNotExist_EmptyLiftFileIsCreated()
 		{
 			string nonExistentFileToBeCreated = Path.GetTempPath() + Path.GetRandomFileName();
-			LiftRepository testRepoitory = new LiftRepository(nonExistentFileToBeCreated);
-			string fileContent = File.ReadAllText(nonExistentFileToBeCreated);
-			const string emptyLiftFileContent =
-				@"<?xml version=""1.0"" encoding=""utf-8""?>
+			using (new LiftRepository(nonExistentFileToBeCreated))
+			{
+				string fileContent = File.ReadAllText(nonExistentFileToBeCreated);
+				const string emptyLiftFileContent =
+						@"<?xml version=""1.0"" encoding=""utf-8""?>
 <lift version=""0.12"" producer=""WeSay 1.0.0.0"" />";
-			Assert.AreEqual(emptyLiftFileContent, fileContent);
+				Assert.AreEqual(emptyLiftFileContent, fileContent);
+			}
 		}
 
 		[Test]
 		public void Constructor_FileIsEmpty_MakeFileAnEmptyLiftFile()
 		{
 			string emptyFileToBeFilled = Path.GetTempFileName();
-			LiftRepository testRepoitory = new LiftRepository(emptyFileToBeFilled);
-			string fileContent = File.ReadAllText(emptyFileToBeFilled);
-			const string emptyLiftFileContent =
-				@"<?xml version=""1.0"" encoding=""utf-8""?>
+			using (new LiftRepository(emptyFileToBeFilled))
+			{
+				string fileContent = File.ReadAllText(emptyFileToBeFilled);
+				const string emptyLiftFileContent =
+						@"<?xml version=""1.0"" encoding=""utf-8""?>
 <lift version=""0.12"" producer=""WeSay 1.0.0.0"" />";
-			Assert.AreEqual(emptyLiftFileContent, fileContent);
+				Assert.AreEqual(emptyLiftFileContent, fileContent);
+			}
 		}
 	}
 
