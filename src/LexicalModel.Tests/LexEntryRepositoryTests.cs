@@ -2,14 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Threading;
-using LiftIO.Parsing;
 using NUnit.Framework;
 using Palaso.Text;
 using WeSay.Data;
 using WeSay.Data.Tests;
 using WeSay.Foundation;
-using WeSay.LexicalModel.Db4oSpecific;
 
 namespace WeSay.LexicalModel.Tests
 {
@@ -129,7 +126,7 @@ namespace WeSay.LexicalModel.Tests
 		public void
 			GetEntriesWithMatchingGlossSortedByLexicalForm_RepositoryContainsTwoEntriesWithDifferingLexicalForms_OnlyEntryWithmatchingLexicalFormIsFound()
 		{
-			string glossToFind = "Gloss To Find.";
+			const string glossToFind = "Gloss To Find.";
 			AddEntryWithGloss(glossToFind);
 			AddEntryWithGloss("Gloss Not To Find.");
 			LanguageForm glossLanguageForm = new LanguageForm("en", glossToFind, new MultiText());
@@ -300,16 +297,16 @@ namespace WeSay.LexicalModel.Tests
 			[SetUp]
 			public void Setup()
 			{
-				this._persistedFilePath = Path.GetRandomFileName();
+				_persistedFilePath = Path.GetRandomFileName();
 				_persistedFilePath = Path.GetFullPath(_persistedFilePath);
-				this.RepositoryUnderTest = new LexEntryRepository(this._persistedFilePath);
+				RepositoryUnderTest = new LexEntryRepository(_persistedFilePath);
 			}
 
 			[TearDown]
 			public void Teardown()
 			{
 				RepositoryUnderTest.Dispose();
-				File.Delete(this._persistedFilePath);
+				File.Delete(_persistedFilePath);
 			}
 		}
 
@@ -320,15 +317,15 @@ namespace WeSay.LexicalModel.Tests
 			[SetUp]
 			public void Setup()
 			{
-				this._persistedFilePath = LiftFileInitializer.MakeFile();
-				this.RepositoryUnderTest = new LexEntryRepository(this._persistedFilePath);
+				_persistedFilePath = LiftFileInitializer.MakeFile();
+				RepositoryUnderTest = new LexEntryRepository(_persistedFilePath);
 			}
 
 			[TearDown]
 			public void Teardown()
 			{
 				RepositoryUnderTest.Dispose();
-				File.Delete(this._persistedFilePath);
+				File.Delete(_persistedFilePath);
 			}
 
 			[Test]
@@ -405,16 +402,16 @@ namespace WeSay.LexicalModel.Tests
 			[SetUp]
 			public void Setup()
 			{
-				this._persistedFilePath = Path.GetRandomFileName();
+				_persistedFilePath = Path.GetRandomFileName();
 				_persistedFilePath = Path.GetFullPath(_persistedFilePath);
-				this.RepositoryUnderTest = new LexEntryRepository(this._persistedFilePath);
+				RepositoryUnderTest = new LexEntryRepository(_persistedFilePath);
 			}
 
 			[TearDown]
 			public void Teardown()
 			{
 				RepositoryUnderTest.Dispose();
-				File.Delete(this._persistedFilePath);
+				File.Delete(_persistedFilePath);
 			}
 
 
@@ -469,16 +466,16 @@ namespace WeSay.LexicalModel.Tests
 			[SetUp]
 			public void Setup()
 			{
-				this._persistedFilePath = Path.GetRandomFileName();
+				_persistedFilePath = Path.GetRandomFileName();
 				_persistedFilePath = Path.GetFullPath(_persistedFilePath);
-				this.RepositoryUnderTest = new LexEntryRepository(this._persistedFilePath);
+				RepositoryUnderTest = new LexEntryRepository(_persistedFilePath);
 			}
 
 			[TearDown]
 			public void Teardown()
 			{
 				RepositoryUnderTest.Dispose();
-				File.Delete(this._persistedFilePath);
+				File.Delete(_persistedFilePath);
 			}
 
 			[Test]
@@ -504,16 +501,16 @@ namespace WeSay.LexicalModel.Tests
 			[SetUp]
 			public void Setup()
 			{
-				this._persistedFilePath = Path.GetRandomFileName();
+				_persistedFilePath = Path.GetRandomFileName();
 				_persistedFilePath = Path.GetFullPath(_persistedFilePath);
-				this.RepositoryUnderTest = new LexEntryRepository(this._persistedFilePath);
+				RepositoryUnderTest = new LexEntryRepository(_persistedFilePath);
 			}
 
 			[TearDown]
 			public void Teardown()
 			{
 				RepositoryUnderTest.Dispose();
-				File.Delete(this._persistedFilePath);
+				File.Delete(_persistedFilePath);
 			}
 
 			[Test]
