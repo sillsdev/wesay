@@ -208,14 +208,15 @@ namespace WeSay.App.Tests.Services
 		[Test]
 		public void GivesHtml()
 		{
-			string entriesXml =
-					@"
+			const string entriesXml = @"
 						<entry id='foo1'>
 								<lexical-unit><form lang='v'><text>foo</text></form></lexical-unit>
 							  <sense>
-								<gloss lang='en'>
-									<text>gloss for foo</text>
-								</gloss>
+								<definition>
+									<form lang='en'>
+										<text>a definition</text>
+									</form>
+								</definition>
 							 </sense>
 						</entry>";
 			RunTest(kStartInServerMode,
@@ -225,7 +226,7 @@ namespace WeSay.App.Tests.Services
 						string html = dictionaryService.GetHtmlForEntries(new string[] {"foo1"});
 
 						Assert.IsTrue(html.Contains("<html>"));
-						Assert.IsTrue(html.Contains("gloss for foo"));
+						Assert.IsTrue(html.Contains("a definition"));
 					});
 		}
 
