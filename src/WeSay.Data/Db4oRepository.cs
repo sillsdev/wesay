@@ -12,7 +12,6 @@ namespace WeSay.Data
 		private readonly Db4oDataSource _database;
 		private const int ActivationDepth = 99;
 
-		[CLSCompliant(false)]
 		protected IExtObjectContainer InternalDatabase
 		{
 			get
