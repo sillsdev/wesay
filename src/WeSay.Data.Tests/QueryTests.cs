@@ -428,7 +428,6 @@ namespace WeSay.Data.Tests
 
 			IEnumerable<Dictionary<string, object>> results = query.GetResults(this.item);
 
-			//todo: Duplicate keys are not allowed - protect for this in the query.
 			Dictionary<string, object>[] expectedResult = new Dictionary<string, object>[]
 					{
 							new Result(new KV("StoredString", "top"), new KV("ChildStoredString", null), new KV("ChildrenStoredString", "1")),

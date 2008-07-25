@@ -16,7 +16,6 @@ namespace WeSay.LexicalModel
 		private readonly IRepository<LexEntry> _decoratedRepository;
 		public LexEntryRepository(string path)
 		{
-			//use default of Db4oRepository for now
 			//todo: eventually use synchronicRepository with Db4o and Lift
 			_decoratedRepository = new LiftRepository(path);
 		}
