@@ -570,12 +570,6 @@ namespace WeSay.LexicalModel
 
 		#endregion
 
-		public void BackendDoLiftUpdateNow(bool p)
-		{
-			//Do Nothing
-			//throw new Exception("The method or operation is not implemented.");
-		}
-
 		public bool BackendConsumePendingLiftUpdates()
 		{
 			//Do Nothing
@@ -606,5 +600,12 @@ namespace WeSay.LexicalModel
 		{
 			_decoratedRepository.Startup(state);
 		}
+
+		public void Shutdown()
+		{
+			//Do Nothing
+			//throw new Exception("The method or operation is not implemented.");
+		}
+
 	}
 }

@@ -108,27 +108,27 @@ namespace WeSay.App
 						_lexEntryRepository =
 						new LexEntryRepository(_project.PathToRepository))
 				{
-					//using (
-					//        _dictionary =
-					//        new DictionaryServiceProvider(_lexEntryRepository, this, _project))
-					//{
+					using (
+							_dictionary =
+							new DictionaryServiceProvider(_lexEntryRepository, this, _project))
+					{
 						if (_project.PathToWeSaySpecificFilesDirectoryInProject.IndexOf("PRETEND") < 0)
 						{
 							RecoverUnsavedDataIfNeeded();
 						}
 
-						//StartDictionaryServices();
-						//_dictionary.LastClientDeregistered +=
-						//        _serviceAppSingletonHelper.OnExitIfInServerMode;
+						StartDictionaryServices();
+						_dictionary.LastClientDeregistered +=
+								_serviceAppSingletonHelper.OnExitIfInServerMode;
 						_serviceAppSingletonHelper.HandleEventsUntilExit(StartUserInterface);
 
-						//_dictionary.LastClientDeregistered -=
-						//        _serviceAppSingletonHelper.OnExitIfInServerMode;
+						_dictionary.LastClientDeregistered -=
+								_serviceAppSingletonHelper.OnExitIfInServerMode;
 
 						//do a last backup before exiting
-						//_lexEntryRepository.BackendDoLiftUpdateNow(true);
+						_lexEntryRepository.Shutdown();
 						Logger.WriteEvent("App Exiting Normally.");
-					//}
+					}
 				}
 			}
 			finally
@@ -352,7 +352,7 @@ namespace WeSay.App
 		{
 			_serviceAppSingletonHelper.BringToFrontRequest += OnBringToFrontRequest;
 			_serviceAppSingletonHelper.UiReadyForEvents();
-			//!!! cjp _dictionary.UiSynchronizationContext = _tabbedForm.synchronizationContext;
+			_dictionary.UiSynchronizationContext = _tabbedForm.synchronizationContext;
 		}
 
 		private static LiftUpdateService SetupUpdateService(LexEntryRepository lexEntryRepository)
