@@ -3,11 +3,12 @@ using System.Collections.Generic;
 
 namespace WeSay.Data
 {
-	public sealed class RecordToken<T>: IEquatable<RecordToken<T>> where T:class ,new()
+	//todo test IComparable
+	public sealed class RecordToken<T>: IComparable<RecordToken<T>>, IEquatable<RecordToken<T>> where T:class ,new()
 	{
 		public delegate IEnumerable<string[]> DisplayStringGenerator(T item);
 
-		private Dictionary<string, object> _queryResults;
+		private SortedDictionary<string, object> _queryResults;
 		private readonly RepositoryId _id;
 		private readonly IRepository<T> _repository;
 
@@ -36,7 +37,7 @@ namespace WeSay.Data
 				throw new ArgumentNullException("queryResults");
 			}
 			_repository = repository;
-			_queryResults = new Dictionary<string, object>(queryResults); // we need to own this
+			_queryResults = new SortedDictionary<string, object>(queryResults); // we need to own this
 		}
 
 		public RepositoryId Id
@@ -75,7 +76,7 @@ namespace WeSay.Data
 			{
 				if(_queryResults == null)
 				{
-					_queryResults = new Dictionary<string, object>();
+					_queryResults = new SortedDictionary<string, object>();
 				}
 				_queryResults[fieldName] = value;
 			}
@@ -114,8 +115,65 @@ namespace WeSay.Data
 		public override int GetHashCode()
 		{
 			int queryResultsHash = new DictionaryEqualityComparer<string, object>()
-											.GetHashCode(this._queryResults);
+											.GetHashCode(_queryResults);
 			return queryResultsHash + 29 * _id.GetHashCode();
 		}
+
+		public int CompareTo(RecordToken<T> other)
+		{
+			if (other == null)
+				return 1;
+
+			int order = Id.CompareTo(other.Id);
+			if (order != 0)
+				return order;
+
+			SortedDictionary<string, object> theirResults = other._queryResults;
+			if(_queryResults == null)
+			{
+				if(theirResults == null)
+				{
+					return 0;
+				}
+				return -1;
+			}
+
+			if(theirResults == null)
+			{
+				return 1;
+			}
+
+			order = _queryResults.Count.CompareTo(theirResults.Count);
+			if (order != 0)
+			{
+				return order;
+			}
+
+			List<string> theirKeys = new List<string>(theirResults.Keys);
+
+			int i = 0;
+			foreach (string key in _queryResults.Keys)
+			{
+				order = key.CompareTo(theirKeys[i]);
+				if (order != 0)
+				{
+					return order;
+				}
+
+				order = ((IComparable) _queryResults[key]).CompareTo(theirResults[key]);
+				if(order != 0)
+				{
+					return order;
+				}
+				++i;
+			}
+			return 0;
+		}
+
+		public override string ToString()
+		{
+			return base.ToString() + " " + Id;
+		}
+
 	}
 }

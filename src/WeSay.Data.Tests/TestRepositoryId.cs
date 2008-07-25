@@ -30,5 +30,10 @@ namespace WeSay.Data.Tests
 				}
 				return id == otherAsMy.id;
 			}
+		public override string ToString()
+		{
+			return id.ToString();
+		}
+
 		}
 }

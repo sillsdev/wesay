@@ -10,7 +10,7 @@ namespace WeSay.Data
 		private readonly List<RecordToken<T>> _results;
 		private readonly IRepository<T> _repository;
 
-		public ResultSet(IRepository<T> repository, List<RecordToken<T>> results)
+		internal ResultSet(IRepository<T> repository, params IEnumerable<RecordToken<T>>[] results)
 		{
 			if (repository == null)
 			{
@@ -20,12 +20,29 @@ namespace WeSay.Data
 			{
 				throw new ArgumentNullException("results");
 			}
-			_results = results;
+			_results = CreateResultsWithNoDuplicates(results);
 			_repository = repository;
 		}
 
-		public ResultSet(IRepository<T> repository, IEnumerable<RecordToken<T>> results)
-				: this(repository, new List<RecordToken<T>>(results)) {}
+		private static List<RecordToken<T>> CreateResultsWithNoDuplicates(IEnumerable<IEnumerable<RecordToken<T>>> initialResults)
+		{
+			SortedDictionary<RecordToken<T>, object> alreadyUsedTokens = new SortedDictionary<RecordToken<T>, object>();
+			List<RecordToken<T>> results = new List<RecordToken<T>>();
+			foreach (IEnumerable<RecordToken<T>> resultSet in initialResults)
+			{
+				foreach (RecordToken<T> token in resultSet)
+				{
+					if (alreadyUsedTokens.ContainsKey(token))
+					{
+						continue;
+					}
+
+					alreadyUsedTokens.Add(token, null);
+					results.Add(token);
+				}
+			}
+			return results;
+		}
 
 		public RecordToken<T> this[int index]
 		{
@@ -36,6 +53,7 @@ namespace WeSay.Data
 		{
 			_results.RemoveAll(match);
 		}
+
 
 		public int Count
 		{
@@ -240,9 +258,63 @@ namespace WeSay.Data
 
 		public void SortByRepositoryId()
 		{
-			Sort(new SortDefinition("RepositoryId", Comparer<RepositoryId>.Default));
+			SortByRepositoryId(_results);
 		}
 
+		public void SortByRepositoryId(List<RecordToken<T>> list)
+		{
+			list.Sort(new RecordTokenComparer<T>(new SortDefinition("RepositoryId", Comparer<RepositoryId>.Default)));
+		}
+
+		/// <summary>
+		/// Removes any entries for which the predicate canBeRemoved is true
+		///   and another record token with the same repository Id exists
+		/// </summary>
+		/// <param name="fieldName"></param>
+		/// <param name="canBeRemoved"></param>
+		public void Coalesce(string fieldName, Predicate<object> canBeRemoved)
+		{
+			List<RecordToken<T>> results = new List<RecordToken<T>>(_results);
+			SortByRepositoryId(results);
+
+			bool hasReal = false;
+			List<RecordToken<T>> removeable = new List<RecordToken<T>>();
+			RecordToken<T> previousToken = null;
+			foreach (RecordToken<T> token in results)
+			{
+				if (previousToken != null && token.Id != previousToken.Id)
+				{
+					if(hasReal)
+					{
+						RemoveTokens(removeable);
+					}
+					removeable.Clear();
+					hasReal = false;
+				}
+
+				if (canBeRemoved(token[fieldName]))
+				{
+					removeable.Add(token);
+				}
+				else
+				{
+					hasReal = true;
+				}
+				previousToken = token;
+			}
+			if (hasReal)
+			{
+				RemoveTokens(removeable);
+			}
+		}
+
+		private void RemoveTokens(IEnumerable<RecordToken<T>> removeable)
+		{
+			foreach (RecordToken<T> recordToken in removeable)
+			{
+				_results.Remove(recordToken);
+			}
+		}
 	}
 	public class SortDefinition
 	{

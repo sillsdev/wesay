@@ -6,7 +6,7 @@ namespace WeSay.Data
 	public sealed class RecordTokenComparer<T>: IComparer<RecordToken<T>> where T:class, new()
 	{
 		private readonly IEnumerable<SortDefinition> _sortDefinitions;
-		public RecordTokenComparer(IEnumerable<SortDefinition> sortDefinitions)
+		public RecordTokenComparer(params SortDefinition[] sortDefinitions)
 		{
 			if (sortDefinitions == null)
 			{

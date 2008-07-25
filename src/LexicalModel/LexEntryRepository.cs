@@ -16,7 +16,6 @@ namespace WeSay.LexicalModel
 		private readonly IRepository<LexEntry> _decoratedRepository;
 		public LexEntryRepository(string path)
 		{
-			//use default of Db4oRepository for now
 			//todo: eventually use synchronicRepository with Db4o and Lift
 			_decoratedRepository = new LiftRepository(path);
 		}
@@ -176,7 +175,15 @@ namespace WeSay.LexicalModel
 			}
 		}
 
+
 		//todo: look at @order and the planned-for order-in-lift field on LexEntry
+		/// <summary>
+		/// Returns a result set of all entries sorted by citation form if one exists.
+		/// If an entry does not have a citation form the lexical form is used to sort that entry.
+		/// Use "Form" to access the headword in a record token.
+		/// </summary>
+		/// <param name="writingSystem"></param>
+		/// <returns></returns>
 		public ResultSet<LexEntry> GetAllEntriesSortedByHeadword(WritingSystem writingSystem)
 		{
 			if (writingSystem == null)
@@ -188,7 +195,7 @@ namespace WeSay.LexicalModel
 			query.Show("OrderForRoundTripping");
 			query.Show("CreationTime");
 
-			ResultSet<LexEntry> itemsMatching = GetItemsMatchingQueryFilteredByWritingSystemAndSortedByHeadword(query, "Form", "WritingSystemId", writingSystem);
+			ResultSet<LexEntry> itemsMatching = GetItemsMatchingQueryFilteredByWritingSystemAndSortedByForm(query, "Form", "WritingSystemId", writingSystem);
 			itemsMatching.Sort(new SortDefinition("Form", writingSystem),
 				new SortDefinition("OrderForRoundTripping", Comparer<int>.Default),
 				new SortDefinition("CreationTime", Comparer<DateTime>.Default));
@@ -230,7 +237,11 @@ namespace WeSay.LexicalModel
 			return itemsMatching;
 		}
 
-
+		/// <summary>
+		///
+		/// </summary>
+		/// <param name="writingSystem"></param>
+		/// <returns></returns>
 		public ResultSet<LexEntry> GetAllEntriesSortedByLexicalForm(WritingSystem writingSystem)
 		{
 			if (writingSystem == null)
@@ -240,37 +251,57 @@ namespace WeSay.LexicalModel
 			Query query = GetAllLexEntriesQuery().In("LexicalForm")
 						.ForEach("Forms").Show("Form").Show("WritingSystemId");
 
-			return GetItemsMatchingQueryFilteredByWritingSystemAndSortedByHeadword(query, "Form", "WritingSystemId", writingSystem);
+			return GetItemsMatchingQueryFilteredByWritingSystemAndSortedByForm(query, "Form", "WritingSystemId", writingSystem);
 		}
 
-		public ResultSet<LexEntry> GetAllEntriesSortedByGloss(WritingSystem writingSystem)
+		/// <summary>
+		/// Gets a ResultSet for all entries sorted by Definition and Gloss. It will return both the definition
+		/// and the gloss if both exist and they are different
+		/// use "Form" to access the Definition/Gloss in RecordToken
+		/// </summary>
+		/// <param name="writingSystem"></param>
+		/// <returns>"Gloss/Form" and "Definition/Form" merged</returns>
+		public ResultSet<LexEntry> GetAllEntriesSortedByDefinition(WritingSystem writingSystem)
 		{
 			if (writingSystem == null)
 			{
 				throw new ArgumentNullException("writingSystem");
 			}
-			Query query = GetAllLexEntriesQuery().ForEach("Senses");
-			query.In("Definition").ForEach("Forms").Show("Form", "Definition/Form").Show("WritingSystemId", "Definition/WritingSystemId");
-			query.In("Gloss").ForEach("Forms").Show("Form", "Gloss/Form").Show("WritingSystemId","Gloss/WritingSystemId");
+			Query defQuery = GetAllLexEntriesQuery().ForEach("Senses").In("Definition").ForEach("Forms").Show("Form").Show("WritingSystemId");
+			Query glossQuery = GetAllLexEntriesQuery().ForEach("Senses").In("Gloss").ForEach("Forms").Show("Form").Show("WritingSystemId");
+			//Remove any results that don't match the desired writingsystem (keeping at least one empty that does if nothing matches)
+			ResultSet<LexEntry> defResult = GetItemsMatchingQueryFilteredByWritingSystem(defQuery, "Form", "WritingSystemId", writingSystem);
+			ResultSet<LexEntry> glossResult = GetItemsMatchingQueryFilteredByWritingSystem(glossQuery, "Form", "WritingSystemId", writingSystem);
 
-			return GetItemsMatchingQueryFilteredByWritingSystemAndSortedByHeadword(query, "Definition/Form", "Definition/WritingSystemId", writingSystem);
+			ResultSet<LexEntry> result = new ResultSet<LexEntry>(this, defResult, glossResult);
+			result.Coalesce("Form", delegate(object o)
+										{
+											return string.IsNullOrEmpty((string) o);
+										});
+			result.Sort(new SortDefinition("Form", writingSystem));
+			return result;
+
 		}
 
-		private ResultSet<LexEntry> GetItemsMatchingQueryFilteredByWritingSystemAndSortedByHeadword(
+		private ResultSet<LexEntry> GetItemsMatchingQueryFilteredByWritingSystemAndSortedByForm(
 			Query query,
 			string formField,
 			string writingSystemIdField,
 			WritingSystem writingSystem)
 		{
-			ResultSet<LexEntry> allEntriesMatchingQuery = GetItemsMatchingCore(query);
-			ResultSet<LexEntry> result = FilterEntriesToOnlyThoseWithWritingSystemId(
-											allEntriesMatchingQuery,
-											formField,
-											writingSystemIdField,
-											writingSystem.Id);
-
+			ResultSet<LexEntry> result = GetItemsMatchingQueryFilteredByWritingSystem(query, formField, writingSystemIdField, writingSystem);
 			result.Sort(new SortDefinition(formField, writingSystem));
 			return result;
+		}
+
+		private ResultSet<LexEntry> GetItemsMatchingQueryFilteredByWritingSystem(Query query, string formField, string writingSystemIdField, WritingSystem writingSystem)
+		{
+			ResultSet<LexEntry> allEntriesMatchingQuery = GetItemsMatchingCore(query);
+			return FilterEntriesToOnlyThoseWithWritingSystemId(
+				allEntriesMatchingQuery,
+				formField,
+				writingSystemIdField,
+				writingSystem.Id);
 		}
 
 		public ResultSet<LexEntry> GetAllEntriesSortedBySemanticDomain(
@@ -302,28 +333,12 @@ namespace WeSay.LexicalModel
 			}
 			ResultSet<LexEntry> resultSet = new ResultSet<LexEntry>(this, result);
 			resultSet.Sort(new SortDefinition("SemanticDomain", StringComparer.InvariantCulture),
-						   new SortDefinition("RepositoryId", Comparer<RepositoryId>.Default));
+							new SortDefinition("RepositoryId", Comparer<RepositoryId>.Default));
 
-			return RemoveDuplicateResults(resultSet);
+			return resultSet;
 		}
 
-		private ResultSet<LexEntry> RemoveDuplicateResults(
-			ResultSet<LexEntry> resultSet)
-		{
-			List<RecordToken<LexEntry>> result = new List<RecordToken<LexEntry>>();
-			RecordToken<LexEntry> previousToken = null;
-			foreach (RecordToken<LexEntry> token in resultSet)
-			{
-				if(token != previousToken)
-				{
-					result.Add(token);
-				}
-				previousToken = token;
-			}
-			return new ResultSet<LexEntry>(this, result);
-		}
-
-		public ResultSet<LexEntry> GetEntriesWithMatchingGlossSortedByLexicalForm(
+	   public ResultSet<LexEntry> GetEntriesWithMatchingGlossSortedByLexicalForm(
 				LanguageForm glossForm, WritingSystem lexicalUnitWritingSystem)
 		{
 			if (glossForm == null)
@@ -338,7 +353,7 @@ namespace WeSay.LexicalModel
 			query.In("LexicalForm").ForEach("Forms").Show("Form").Show("WritingSystemId");
 			query.ForEach("Senses").In("Gloss").ForEach("Forms").Show("Form", "Gloss/Form").Show("WritingSystemId", "Gloss/WritingSystemId");
 
-			ResultSet<LexEntry> resultSet = GetItemsMatchingQueryFilteredByWritingSystemAndSortedByHeadword(
+			ResultSet<LexEntry> resultSet = GetItemsMatchingQueryFilteredByWritingSystemAndSortedByForm(
 													query,
 													"Form",
 													"WritingSystemId",
@@ -528,7 +543,7 @@ namespace WeSay.LexicalModel
 			query.In("LexicalForm").ForEach("Forms").Show("Form").Show("WritingSystemId");
 
 
-			ResultSet<LexEntry> itemsMatching = GetItemsMatchingQueryFilteredByWritingSystemAndSortedByHeadword(query, "Form", "WritingSystemId", lexicalUnitWritingSystem);
+			ResultSet<LexEntry> itemsMatching = GetItemsMatchingQueryFilteredByWritingSystemAndSortedByForm(query, "Form", "WritingSystemId", lexicalUnitWritingSystem);
 			//remove items that don't match our filteringPredicate
 			itemsMatching.RemoveAll(delegate(RecordToken<LexEntry> token)
 								{

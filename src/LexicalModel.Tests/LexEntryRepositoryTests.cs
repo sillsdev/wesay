@@ -44,24 +44,24 @@ namespace WeSay.LexicalModel.Tests
 			return;
 		}
 
-		private void CreateThreeDifferentLexEntries()
+		private delegate MultiText GetMultiTextFromLexEntryDelegate(LexEntry entry);
+
+		private void CreateThreeDifferentLexEntriesToBeSorted(GetMultiTextFromLexEntryDelegate getMultiTextFromLexEntryDelegate)
 		{
 			LexEntry[] lexEntriesToSort = new LexEntry[3];
+			MultiText[] propertyOfLexentry = new MultiText[3];
 
 			lexEntriesToSort[0] = _lexEntryRepository.CreateItem();
-			lexEntriesToSort[0].LexicalForm.SetAlternative("en", "en Word1");
-			//Create a second lexical form that will sort differently than the first
-			lexEntriesToSort[0].LexicalForm.SetAlternative("de", "de Word2");
-			//Create a third lexical form whose writing system does not appear in the other entries
-			lexEntriesToSort[0].LexicalForm.SetAlternative("fr", "fr Word");
+			propertyOfLexentry[0] = getMultiTextFromLexEntryDelegate(lexEntriesToSort[0]);
+			propertyOfLexentry[0].SetAlternative("de", "de Word2");
 
 			lexEntriesToSort[1] = _lexEntryRepository.CreateItem();
-			lexEntriesToSort[1].LexicalForm.SetAlternative("en", "en Word2");
-			lexEntriesToSort[1].LexicalForm.SetAlternative("de", "de Word3");
+			propertyOfLexentry[1] = getMultiTextFromLexEntryDelegate(lexEntriesToSort[1]);
+			propertyOfLexentry[1].SetAlternative("de", "de Word3");
 
 			lexEntriesToSort[2] = _lexEntryRepository.CreateItem();
-			lexEntriesToSort[2].LexicalForm.SetAlternative("en", "en Word3");
-			lexEntriesToSort[2].LexicalForm.SetAlternative("de", "de Word1");
+			propertyOfLexentry[2] = getMultiTextFromLexEntryDelegate(lexEntriesToSort[2]);
+			propertyOfLexentry[2].SetAlternative("de", "de Word1");
 
 			_lexEntryRepository.SaveItem(lexEntriesToSort[0]);
 			_lexEntryRepository.SaveItem(lexEntriesToSort[1]);
@@ -82,9 +82,9 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
-		public void GetAllEntriesSortedByHeadword_WritingSystem_ReturnsCorrectlySortedList()
+		public void GetAllEntriesSortedByHeadword_CitationFormExistsInWritingSystemForAllEntries_ReturnsListSortedByCitationForm()
 		{
-			CreateThreeDifferentLexEntries();
+			CreateThreeDifferentLexEntriesToBeSorted(delegate(LexEntry e) { return e.CitationForm; });
 			WritingSystem german = new WritingSystem("de", SystemFonts.DefaultFont);
 			ResultSet<LexEntry> listOfLexEntriesSortedByHeadWord = _lexEntryRepository.GetAllEntriesSortedByHeadword(german);
 			Assert.AreEqual("de Word1", listOfLexEntriesSortedByHeadWord[0]["Form"]);
@@ -93,20 +93,178 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
-		public void GetAllEntriesSortedByHeadword_LexicalFormInDesiredWritingSystemDoesNotExist_ReturnsEmptyForThatEntry()
+		public void GetAllEntriesSortedByHeadword_CitationAndLexicalFormInWritingSystemDoNotExist_ReturnsEmptyForThatEntry()
 		{
-			CreateThreeDifferentLexEntries();
-			WritingSystem german = new WritingSystem("fr", SystemFonts.DefaultFont);
-			ResultSet<LexEntry> listOfLexEntriesSortedByHeadWord = _lexEntryRepository.GetAllEntriesSortedByHeadword(german);
+			LexEntry lexEntryWithOutFrenchHeadWord = _lexEntryRepository.CreateItem();
+			lexEntryWithOutFrenchHeadWord.CitationForm.SetAlternative("de", "de Word1");
+			lexEntryWithOutFrenchHeadWord.LexicalForm.SetAlternative("de", "de Word1");
+			WritingSystem french = new WritingSystem("fr", SystemFonts.DefaultFont);
+			ResultSet<LexEntry> listOfLexEntriesSortedByHeadWord = _lexEntryRepository.GetAllEntriesSortedByHeadword(french);
 			Assert.AreEqual("", listOfLexEntriesSortedByHeadWord[0]["Form"]);
-			Assert.AreEqual("", listOfLexEntriesSortedByHeadWord[1]["Form"]);
-			Assert.AreEqual("fr Word", listOfLexEntriesSortedByHeadWord[2]["Form"]);
+		}
+
+		[Test]
+		public void GetAllEntriesSortedByHeadword_CitationFormInWritingSystemDoesNotExistButLexicalFormDoes_SortsByLexicalFormForThatEntry()
+		{
+			CreateThreeDifferentLexEntriesToBeSorted(delegate (LexEntry e) {return e.CitationForm;});
+			LexEntry lexEntryWithOutGermanCitationForm = _lexEntryRepository.CreateItem();
+			lexEntryWithOutGermanCitationForm.CitationForm.SetAlternative("fr", "fr Word4");
+			lexEntryWithOutGermanCitationForm.LexicalForm.SetAlternative("de", "de Word0");
+			WritingSystem german = new WritingSystem("de", SystemFonts.DefaultFont);
+			ResultSet<LexEntry> listOfLexEntriesSortedByHeadWord = _lexEntryRepository.GetAllEntriesSortedByHeadword(german);
+			Assert.AreEqual("de Word0", listOfLexEntriesSortedByHeadWord[0]["Form"]);
+			Assert.AreEqual("de Word1", listOfLexEntriesSortedByHeadWord[1]["Form"]);
+			Assert.AreEqual("de Word2", listOfLexEntriesSortedByHeadWord[2]["Form"]);
+			Assert.AreEqual("de Word3", listOfLexEntriesSortedByHeadWord[3]["Form"]);
+		}
+
+		[Test]
+		public void GetAllEntriesSortedByHeadword_CitationFormAndLexicalFormAreIdenticalInAnEntry_EntryOnlyApearsOnce()
+		{
+			LexEntry lexEntryWithIdenticalCitationandLexicalForm = _lexEntryRepository.CreateItem();
+			lexEntryWithIdenticalCitationandLexicalForm.CitationForm.SetAlternative("de", "de Word1");
+			lexEntryWithIdenticalCitationandLexicalForm.LexicalForm.SetAlternative("de", "de Word1");
+			WritingSystem german = new WritingSystem("de", SystemFonts.DefaultFont);
+			ResultSet<LexEntry> listOfLexEntriesSortedByHeadWord = _lexEntryRepository.GetAllEntriesSortedByHeadword(german);
+			Assert.AreEqual(1, listOfLexEntriesSortedByHeadWord.Count);
+		}
+
+		[Test]
+		public void GetAllEntriesSortedByLexicalForm_RepositoryIsEmpty_ReturnsEmptyList()
+		{
+			Assert.AreEqual(0, _lexEntryRepository.GetAllEntriesSortedByLexicalForm(new WritingSystem()).Count);
+		}
+
+		[Test]
+		[ExpectedException(typeof(ArgumentNullException))]
+		public void GetAllEntriesSortedByLexicalForm_Null_Throws()
+		{
+			_lexEntryRepository.GetAllEntriesSortedByLexicalForm(null);
+		}
+
+		[Test]
+		public void GetAllEntriesSortedByLexicalForm_LexicalFormExistsInWritingSystemForAllEntries_ReturnsListSortedByLexicalForm()
+		{
+			CreateThreeDifferentLexEntriesToBeSorted(delegate(LexEntry e) { return e.LexicalForm; });
+			WritingSystem german = new WritingSystem("de", SystemFonts.DefaultFont);
+			ResultSet<LexEntry> listOfLexEntriesSortedByLexicalForm = _lexEntryRepository.GetAllEntriesSortedByLexicalForm(german);
+			Assert.AreEqual("de Word1", listOfLexEntriesSortedByLexicalForm[0]["Form"]);
+			Assert.AreEqual("de Word2", listOfLexEntriesSortedByLexicalForm[1]["Form"]);
+			Assert.AreEqual("de Word3", listOfLexEntriesSortedByLexicalForm[2]["Form"]);
+		}
+
+		[Test]
+		public void GetAllEntriesSortedByLexicalForm_LexicalFormInWritingSystemDoesNotExist_ReturnsEmptyForThatEntry()
+		{
+			LexEntry lexEntryWithOutFrenchLexicalForm = _lexEntryRepository.CreateItem();
+			lexEntryWithOutFrenchLexicalForm.LexicalForm.SetAlternative("de", "de Word1");
+			WritingSystem french = new WritingSystem("fr", SystemFonts.DefaultFont);
+			ResultSet<LexEntry> listOfLexEntriesSortedByLexicalForm = _lexEntryRepository.GetAllEntriesSortedByLexicalForm(french);
+			Assert.AreEqual("", listOfLexEntriesSortedByLexicalForm[0]["Form"]);
+		}
+
+		[Test]
+		public void GetAllEntriesSortedByDefinition_RepositoryIsEmpty_ReturnsEmptyList()
+		{
+			Assert.AreEqual(0, _lexEntryRepository.GetAllEntriesSortedByDefinition(new WritingSystem()).Count);
+		}
+
+		[Test]
+		[ExpectedException(typeof(ArgumentNullException))]
+		public void GetAllEntriesSortedByDefinition_Null_Throws()
+		{
+			_lexEntryRepository.GetAllEntriesSortedByDefinition(null);
+		}
+
+		[Test]
+		public void GetAllEntriesSortedByDefinition_DefinitionExistsInWritingSystemForAllEntries_ReturnsListSortedByDefinition()
+		{
+			CreateThreeDifferentLexEntriesToBeSorted(delegate(LexEntry e)
+														 {
+															 e.Senses.Add(new LexSense());
+															 return e.Senses[0].Definition;
+														 });
+			WritingSystem german = new WritingSystem("de", SystemFonts.DefaultFont);
+			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinition(german);
+			Assert.AreEqual("de Word1", listOfLexEntriesSortedByDefinition[0]["Form"]);
+			Assert.AreEqual("de Word2", listOfLexEntriesSortedByDefinition[1]["Form"]);
+			Assert.AreEqual("de Word3", listOfLexEntriesSortedByDefinition[2]["Form"]);
+		}
+
+		[Test]
+		public void GetAllEntriesSortedByDefinition_GlossExistsInWritingSystemForAllEntries_ReturnsListSortedByGloss()
+		{
+			CreateThreeDifferentLexEntriesToBeSorted(delegate(LexEntry e)
+														 {
+															 e.Senses.Add(new LexSense());
+															 return e.Senses[0].Gloss;
+														 });
+			WritingSystem german = new WritingSystem("de", SystemFonts.DefaultFont);
+			ResultSet<LexEntry> listOfLexEntriesSortedByGloss = _lexEntryRepository.GetAllEntriesSortedByDefinition(german);
+			Assert.AreEqual(3, listOfLexEntriesSortedByGloss.Count);
+			Assert.AreEqual("de Word1", listOfLexEntriesSortedByGloss[0]["Form"]);
+			Assert.AreEqual("de Word2", listOfLexEntriesSortedByGloss[1]["Form"]);
+			Assert.AreEqual("de Word3", listOfLexEntriesSortedByGloss[2]["Form"]);
+		}
+
+		[Test]
+		public void GetAllEntriesSortedByDefinition_DefinitionAndGlossExistInWritingSystem_ReturnsSortedListWithBothDefinitionAndGloss()
+		{
+			LexEntry lexEntryWithBothDefinitionAndAGloss = _lexEntryRepository.CreateItem();
+			lexEntryWithBothDefinitionAndAGloss.Senses.Add(new LexSense());
+			lexEntryWithBothDefinitionAndAGloss.Senses[0].Definition.SetAlternative("de", "de Word2");
+			lexEntryWithBothDefinitionAndAGloss.Senses[0].Gloss.SetAlternative("de", "de Word1");
+			WritingSystem german = new WritingSystem("de", SystemFonts.DefaultFont);
+			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinition(german);
+			Assert.AreEqual("de Word1", listOfLexEntriesSortedByDefinition[0]["Form"]);
+			Assert.Fail("NotTesting what it says it is.");
+		}
+
+		[Test]
+		public void GetAllEntriesSortedByDefinition_DefinitionAndGlossInWritingSystemDoNotExist_ReturnsEmptyForThatEntry()
+		{
+			LexEntry lexEntryWithOutFrenchGloss = _lexEntryRepository.CreateItem();
+			lexEntryWithOutFrenchGloss.Senses.Add(new LexSense());
+			lexEntryWithOutFrenchGloss.Senses[0].Definition.SetAlternative("de", "de Word1");
+			WritingSystem french = new WritingSystem("fr", SystemFonts.DefaultFont);
+			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinition(french);
+			Assert.AreEqual(1 , listOfLexEntriesSortedByDefinition.Count);
+			Assert.AreEqual("", listOfLexEntriesSortedByDefinition[0]["Form"]);
+		}
+
+		[Test]
+		public void GetAllEntriesSortedByDefinition_DefinitionAndGlossOfOneEntryAreIdentical_ReturnsOnlyOneRecordToken()
+		{
+			LexEntry lexEntryWithBothDefinitionAndAGloss = _lexEntryRepository.CreateItem();
+			lexEntryWithBothDefinitionAndAGloss.Senses.Add(new LexSense());
+			lexEntryWithBothDefinitionAndAGloss.Senses[0].Definition.SetAlternative("de", "de Word1");
+			lexEntryWithBothDefinitionAndAGloss.Senses[0].Gloss.SetAlternative("de", "de Word1");
+			WritingSystem german = new WritingSystem("de", SystemFonts.DefaultFont);
+			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinition(german);
+			Assert.AreEqual(1, listOfLexEntriesSortedByDefinition.Count);
+			Assert.AreEqual("de Word1", listOfLexEntriesSortedByDefinition[0]["Form"]);
+		}
+
+		[Test]
+		public void GetAllEntriesSortedByDefinition_DefinitionOfTwoEntriesAreIdentical_ReturnsBothRecordToken()
+		{
+			LexEntry lexEntryWithBothDefinition = _lexEntryRepository.CreateItem();
+			lexEntryWithBothDefinition.Senses.Add(new LexSense());
+			lexEntryWithBothDefinition.Senses[0].Definition.SetAlternative("de", "de Word1");
+			LexEntry lexEntryTwoWithBothDefinition = _lexEntryRepository.CreateItem();
+			lexEntryTwoWithBothDefinition.Senses.Add(new LexSense());
+			lexEntryTwoWithBothDefinition.Senses[0].Definition.SetAlternative("de", "de Word1");
+			WritingSystem german = new WritingSystem("de", SystemFonts.DefaultFont);
+			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinition(german);
+			Assert.AreEqual(2, listOfLexEntriesSortedByDefinition.Count);
+			Assert.AreEqual("de Word1", listOfLexEntriesSortedByDefinition[0]["Form"]);
+			Assert.AreEqual("de Word1", listOfLexEntriesSortedByDefinition[1]["Form"]);
 		}
 
 		[Test]
 		public void GetEntriesWithSimilarLexicalForm_RepositoryContainsEntriesWithDifferingWritingSystems_OnlyFindEntriesMatchingTheGivenWritingSystem()
 		{
-			CreateThreeDifferentLexEntries();
+			//CreateThreeLexEntriesWithDifferentLexicalForms();
 			WritingSystem ws = new WritingSystem("fr", SystemFonts.DefaultFont);
 
 			ResultSet<LexEntry> matches =
@@ -366,6 +524,25 @@ namespace WeSay.LexicalModel.Tests
 				RepositoryUnderTest.Dispose();
 				File.Delete(this._persistedFilePath);
 			}
+
+			[Test, Ignore("Locking needs to be implemented in LiftRepository!")]
+			[ExpectedException(typeof(IOException))]
+			public void Constructor_FileIsWriteableAfterRepositoryIsCreated_Throws()
+			{
+				using (File.OpenWrite(_persistedFilePath))
+				{
+				}
+			}
+
+			[Test]
+			[ExpectedException(typeof(IOException))]
+			public void Constructor_FileIsNotWriteableWhenRepositoryIsCreated_Throws()
+			{
+				using (File.OpenWrite(_persistedFilePath))
+				{
+					LiftRepository repository = new LiftRepository(_persistedFilePath);
+				}
+			}
 		}
 
 		[TestFixture]
@@ -420,15 +597,6 @@ namespace WeSay.LexicalModel.Tests
 				Assert.AreEqual(Item.ModificationTime, RepositoryUnderTest.LastModified);
 			}
 
-			[Test]
-			public void Constructor_FileIsWriteable()
-			{
-				SetState();
-				FileStream fileStream = File.OpenWrite(_persistedFilePath);
-				Assert.IsTrue(fileStream.CanWrite);
-				fileStream.Close();
-			}
-
 		[Test]
 		public void Constructor_LexEntryIsDirtyIsFalse()
 		{
@@ -443,7 +611,8 @@ namespace WeSay.LexicalModel.Tests
 				Query query = new Query(typeof(LexEntry)).Show("LexicalForm");
 				ResultSet<LexEntry> resultsOfQuery = RepositoryUnderTest.GetItemsMatching(query);
 				Assert.AreEqual(1, resultsOfQuery.Count);
-				Assert.AreEqual("Sonne", resultsOfQuery[0]["LexicalForm"].ToString());
+				MultiText lexicalForm = (MultiText) resultsOfQuery[0]["LexicalForm"];
+				Assert.AreEqual("Sonne", lexicalForm.Forms[0].Form);
 			}
 
 			protected override void CreateNewRepositoryFromPersistedData()
