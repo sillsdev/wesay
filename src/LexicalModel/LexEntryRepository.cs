@@ -607,5 +607,9 @@ namespace WeSay.LexicalModel
 			//throw new Exception("The method or operation is not implemented.");
 		}
 
+		public void PersistNow()
+		{
+			throw new Exception("The method or operation is not implemented.");
+		}
 	}
 }
