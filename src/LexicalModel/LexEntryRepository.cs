@@ -603,13 +603,20 @@ namespace WeSay.LexicalModel
 
 		public void Shutdown()
 		{
-			//Do Nothing
-			//throw new Exception("The method or operation is not implemented.");
+			// Do Nothing for the moment. This is a good place to force a PeristNow
+			// and other tidy up ops.
+			// todo: delegate this to the decorated repository.
+			//_decoratedRepository.Shutdown();
 		}
 
 		public void PersistNow()
 		{
-			throw new Exception("The method or operation is not implemented.");
+			// Currently all backends keep up to date synchronously
+			// todo: delegate this to the decorated repository.
+			if (_decoratedRepository.CanPersist)
+			{
+				//_decoratedRepository.PersistNow();
+			}
 		}
 	}
 }
