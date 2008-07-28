@@ -203,7 +203,7 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		public void Coalesce_ItemCanBeRemovedItemThatCannot_ItemRemoved()
+		public void Coalesce_ItemThatCanBeRemovedItemThatCannot_ItemRemoved()
 		{
 			List<RecordToken<TestItem>> results = new List<RecordToken<TestItem>>();
 

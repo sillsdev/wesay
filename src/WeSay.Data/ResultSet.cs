@@ -261,7 +261,7 @@ namespace WeSay.Data
 			SortByRepositoryId(_results);
 		}
 
-		public void SortByRepositoryId(List<RecordToken<T>> list)
+		private static void SortByRepositoryId(List<RecordToken<T>> list)
 		{
 			list.Sort(new RecordTokenComparer<T>(new SortDefinition("RepositoryId", Comparer<RepositoryId>.Default)));
 		}
@@ -277,19 +277,19 @@ namespace WeSay.Data
 			List<RecordToken<T>> results = new List<RecordToken<T>>(_results);
 			SortByRepositoryId(results);
 
-			bool hasReal = false;
+			bool hasValidEntry = false;
 			List<RecordToken<T>> removeable = new List<RecordToken<T>>();
 			RecordToken<T> previousToken = null;
 			foreach (RecordToken<T> token in results)
 			{
-				if (previousToken != null && token.Id != previousToken.Id)
+				if ((previousToken != null) && (token.Id != previousToken.Id))
 				{
-					if(hasReal)
+					if(hasValidEntry)
 					{
 						RemoveTokens(removeable);
 					}
 					removeable.Clear();
-					hasReal = false;
+					hasValidEntry = false;
 				}
 
 				if (canBeRemoved(token[fieldName]))
@@ -298,11 +298,11 @@ namespace WeSay.Data
 				}
 				else
 				{
-					hasReal = true;
+					hasValidEntry = true;
 				}
 				previousToken = token;
 			}
-			if (hasReal)
+			if (hasValidEntry)
 			{
 				RemoveTokens(removeable);
 			}
