@@ -126,7 +126,6 @@ namespace WeSay.App
 								_serviceAppSingletonHelper.OnExitIfInServerMode;
 
 						//do a last backup before exiting
-						_lexEntryRepository.Shutdown();
 						Logger.WriteEvent("App Exiting Normally.");
 					}
 				}

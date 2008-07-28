@@ -601,14 +601,6 @@ namespace WeSay.LexicalModel
 			_decoratedRepository.Startup(state);
 		}
 
-		public void Shutdown()
-		{
-			// Do Nothing for the moment. This is a good place to force a PeristNow
-			// and other tidy up ops.
-			// todo: delegate this to the decorated repository.
-			//_decoratedRepository.Shutdown();
-		}
-
 		public void PersistNow()
 		{
 			// Currently all backends keep up to date synchronously
