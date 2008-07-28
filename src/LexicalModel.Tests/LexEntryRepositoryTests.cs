@@ -46,7 +46,7 @@ namespace WeSay.LexicalModel.Tests
 
 		private delegate MultiText GetMultiTextFromLexEntryDelegate(LexEntry entry);
 
-		private void CreateThreeDifferentLexEntriesToBeSorted(GetMultiTextFromLexEntryDelegate getMultiTextFromLexEntryDelegate)
+		private void CreateThreeDifferentLexEntries(GetMultiTextFromLexEntryDelegate getMultiTextFromLexEntryDelegate)
 		{
 			LexEntry[] lexEntriesToSort = new LexEntry[3];
 			MultiText[] propertyOfLexentry = new MultiText[3];
@@ -84,7 +84,7 @@ namespace WeSay.LexicalModel.Tests
 		[Test]
 		public void GetAllEntriesSortedByHeadword_CitationFormExistsInWritingSystemForAllEntries_ReturnsListSortedByCitationForm()
 		{
-			CreateThreeDifferentLexEntriesToBeSorted(delegate(LexEntry e) { return e.CitationForm; });
+			CreateThreeDifferentLexEntries(delegate(LexEntry e) { return e.CitationForm; });
 			WritingSystem german = new WritingSystem("de", SystemFonts.DefaultFont);
 			ResultSet<LexEntry> listOfLexEntriesSortedByHeadWord = _lexEntryRepository.GetAllEntriesSortedByHeadword(german);
 			Assert.AreEqual("de Word1", listOfLexEntriesSortedByHeadWord[0]["Form"]);
@@ -106,7 +106,7 @@ namespace WeSay.LexicalModel.Tests
 		[Test]
 		public void GetAllEntriesSortedByHeadword_CitationFormInWritingSystemDoesNotExistButLexicalFormDoes_SortsByLexicalFormForThatEntry()
 		{
-			CreateThreeDifferentLexEntriesToBeSorted(delegate (LexEntry e) {return e.CitationForm;});
+			CreateThreeDifferentLexEntries(delegate (LexEntry e) {return e.CitationForm;});
 			LexEntry lexEntryWithOutGermanCitationForm = _lexEntryRepository.CreateItem();
 			lexEntryWithOutGermanCitationForm.CitationForm.SetAlternative("fr", "fr Word4");
 			lexEntryWithOutGermanCitationForm.LexicalForm.SetAlternative("de", "de Word0");
@@ -145,7 +145,7 @@ namespace WeSay.LexicalModel.Tests
 		[Test]
 		public void GetAllEntriesSortedByLexicalForm_LexicalFormExistsInWritingSystemForAllEntries_ReturnsListSortedByLexicalForm()
 		{
-			CreateThreeDifferentLexEntriesToBeSorted(delegate(LexEntry e) { return e.LexicalForm; });
+			CreateThreeDifferentLexEntries(delegate(LexEntry e) { return e.LexicalForm; });
 			WritingSystem german = new WritingSystem("de", SystemFonts.DefaultFont);
 			ResultSet<LexEntry> listOfLexEntriesSortedByLexicalForm = _lexEntryRepository.GetAllEntriesSortedByLexicalForm(german);
 			Assert.AreEqual("de Word1", listOfLexEntriesSortedByLexicalForm[0]["Form"]);
@@ -179,7 +179,7 @@ namespace WeSay.LexicalModel.Tests
 		[Test]
 		public void GetAllEntriesSortedByDefinition_DefinitionExistsInWritingSystemForAllEntries_ReturnsListSortedByDefinition()
 		{
-			CreateThreeDifferentLexEntriesToBeSorted(delegate(LexEntry e)
+			CreateThreeDifferentLexEntries(delegate(LexEntry e)
 														 {
 															 e.Senses.Add(new LexSense());
 															 return e.Senses[0].Definition;
@@ -194,7 +194,7 @@ namespace WeSay.LexicalModel.Tests
 		[Test]
 		public void GetAllEntriesSortedByDefinition_DefinitionsDoesNotExistInWritingSystemButGlossDoesForAllEntries_ReturnsListSortedByGloss()
 		{
-			CreateThreeDifferentLexEntriesToBeSorted(delegate(LexEntry e)
+			CreateThreeDifferentLexEntries(delegate(LexEntry e)
 														 {
 															 e.Senses.Add(new LexSense());
 															 return e.Senses[0].Gloss;
@@ -235,7 +235,7 @@ namespace WeSay.LexicalModel.Tests
 		[Test]
 		public void GetAllEntriesSortedByDefinition_DefinitionAndGlossOfOneEntryAreIdentical_ReturnsOnlyOneRecordToken()
 		{
-			CreateThreeDifferentLexEntriesToBeSorted(delegate (LexEntry e)
+			CreateThreeDifferentLexEntries(delegate (LexEntry e)
 														 {
 															 e.Senses.Add(new LexSense());
 															 return e.Senses[0].Definition;
@@ -270,18 +270,107 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
-		public void GetEntriesWithSimilarLexicalForm_RepositoryContainsEntriesWithDifferingWritingSystems_OnlyFindEntriesMatchingTheGivenWritingSystem()
+		[ExpectedException(typeof(ArgumentNullException))]
+		public void GetEntriesWithSimilarLexicalForm_WritingSystemNull_Throws()
 		{
-			//CreateThreeLexEntriesWithDifferentLexicalForms();
-			WritingSystem ws = new WritingSystem("fr", SystemFonts.DefaultFont);
+			WritingSystem ws = null;
+			ResultSet<LexEntry> matches =
+					 _lexEntryRepository.GetEntriesWithSimilarLexicalForm("",
+																		  ws,
+																		  ApproximateMatcherOptions.
+																				  IncludePrefixedForms);
+		}
+
+		[Test]
+		public void GetEntriesWithSimilarLexicalForm_MultipleEntriesWithEqualAndLowestMatchingDistance_ReturnsThoseEntries()
+		{
+			CreateThreeDifferentLexEntries(delegate(LexEntry e) { return e.LexicalForm; });
+			WritingSystem ws = new WritingSystem("de", SystemFonts.DefaultFont);
+			ResultSet<LexEntry> matches =
+					 _lexEntryRepository.GetEntriesWithSimilarLexicalForm("",
+																		  ws,
+																		  ApproximateMatcherOptions.
+																				  IncludePrefixedForms);
+			Assert.AreEqual(3, matches.Count);
+		}
+
+		[Test]
+		public void GetEntriesWithSimilarLexicalForm_MultipleEntriesWithDifferentMatchingDistanceAndAnyEntriesBeginningWithWhatWeAreMatchingToHaveZeroDistance_ReturnsAllEntriesBeginningWithTheFormToMatch()
+		{
+			//Matching distance as compared to Empty string
+			LexEntry lexEntryWithMatchingDistance1 = _lexEntryRepository.CreateItem();
+			lexEntryWithMatchingDistance1.LexicalForm.SetAlternative("de", "d");
+			LexEntry lexEntryWithMatchingDistance2 = _lexEntryRepository.CreateItem();
+			lexEntryWithMatchingDistance2.LexicalForm.SetAlternative("de", "de");
+			LexEntry lexEntryWithMatchingDistance3 = _lexEntryRepository.CreateItem();
+			lexEntryWithMatchingDistance3.LexicalForm.SetAlternative("de", "de_");
+			WritingSystem ws = new WritingSystem("de", SystemFonts.DefaultFont);
+			ResultSet<LexEntry> matches =
+					 _lexEntryRepository.GetEntriesWithSimilarLexicalForm("",
+																		  ws,
+																		  ApproximateMatcherOptions.IncludePrefixedForms);
+			Assert.AreEqual(3, matches.Count);
+			Assert.AreEqual("d", matches[0]["Form"]);
+			Assert.AreEqual("de", matches[1]["Form"]);
+			Assert.AreEqual("de_", matches[2]["Form"]);
+		}
+
+		[Test]
+		public void GetEntriesWithSimilarLexicalForm_MultipleEntriesWithDifferentMatchingDistanceAndAnyEntriesBeginningWithWhatWeAreMatchingHaveZeroDistanceAndWeWantTheTwoClosestMatches_ReturnsAllEntriesBeginningWithTheFormToMatchAsWellAsTheNextClosestMatch()
+		{
+			LexEntry lexEntryWithMatchingDistance0 = _lexEntryRepository.CreateItem();
+			lexEntryWithMatchingDistance0.LexicalForm.SetAlternative("de", "de Word1");
+			LexEntry lexEntryWithMatchingDistance1 = _lexEntryRepository.CreateItem();
+			lexEntryWithMatchingDistance1.LexicalForm.SetAlternative("de", "fe");
+			LexEntry lexEntryWithMatchingDistance2 = _lexEntryRepository.CreateItem();
+			lexEntryWithMatchingDistance2.LexicalForm.SetAlternative("de", "ft");
+			WritingSystem ws = new WritingSystem("de", SystemFonts.DefaultFont);
+			ResultSet<LexEntry> matches =
+					 _lexEntryRepository.GetEntriesWithSimilarLexicalForm("de",
+																		  ws,
+																		  ApproximateMatcherOptions.IncludePrefixedAndNextClosestForms);
+			Assert.AreEqual(2, matches.Count);
+			Assert.AreEqual("de Word1", matches[0]["Form"]);
+			Assert.AreEqual("fe", matches[1]["Form"]);
+		}
+
+		[Test]
+		public void GetEntriesWithSimilarLexicalForm_MultipleEntriesWithDifferentMatchingDistanceAndWeWantTheTwoClosestForms_ReturnsTwoEntriesWithLowestMatchingDistance()
+		{
+			//Matching distance as compared to Empty string
+			LexEntry lexEntryWithMatchingDistance1 = _lexEntryRepository.CreateItem();
+			lexEntryWithMatchingDistance1.LexicalForm.SetAlternative("de", "d");
+			LexEntry lexEntryWithMatchingDistance2 = _lexEntryRepository.CreateItem();
+			lexEntryWithMatchingDistance2.LexicalForm.SetAlternative("de", "de");
+			LexEntry lexEntryWithMatchingDistance3 = _lexEntryRepository.CreateItem();
+			lexEntryWithMatchingDistance3.LexicalForm.SetAlternative("de", "de_");
+			WritingSystem ws = new WritingSystem("de", SystemFonts.DefaultFont);
+			ResultSet<LexEntry> matches =
+					 _lexEntryRepository.GetEntriesWithSimilarLexicalForm("",
+																		  ws,
+																		  ApproximateMatcherOptions.IncludeNextClosestForms);
+			Assert.AreEqual(2, matches.Count);
+			Assert.AreEqual("d", matches[0]["Form"]);
+			Assert.AreEqual("de", matches[1]["Form"]);
+		}
+
+		[Test]
+		public void GetEntriesWithSimilarLexicalForm_EntriesWithDifferingWritingSystems_OnlyFindEntriesMatchingTheGivenWritingSystem()
+		{
+			CreateThreeDifferentLexEntries(delegate(LexEntry e) { return e.LexicalForm; });
+			LexEntry lexEntryWithFrenchLexicalForm = _lexEntryRepository.CreateItem();
+			lexEntryWithFrenchLexicalForm.LexicalForm.SetAlternative("fr","de Word2");
+			WritingSystem ws = new WritingSystem("de", SystemFonts.DefaultFont);
 
 			ResultSet<LexEntry> matches =
-					_lexEntryRepository.GetEntriesWithSimilarLexicalForm("fr Wor",
+					_lexEntryRepository.GetEntriesWithSimilarLexicalForm("de Wor",
 																		 ws,
 																		 ApproximateMatcherOptions.
 																				 IncludePrefixedForms);
-			Assert.AreEqual(1, matches.Count);
-			Assert.AreEqual("fr Word", matches[0]["Form"]);
+			Assert.AreEqual(3, matches.Count);
+			Assert.AreEqual("de Word1", matches[0]["Form"]);
+			Assert.AreEqual("de Word2", matches[1]["Form"]);
+			Assert.AreEqual("de Word3", matches[2]["Form"]);
 		}
 
 		[Test]
