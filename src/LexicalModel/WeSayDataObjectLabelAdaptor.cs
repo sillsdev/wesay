@@ -24,9 +24,8 @@ namespace WeSay.LexicalModel
 			if (item is LexSense)
 			{
 				LexSense sense = (LexSense) item;
-				return
-						GetDisplayLabel(sense.Parent) + "." +
-						sense.Gloss.GetBestAlternativeString(_writingSystemIds);
+				return GetDisplayLabel(sense.Parent) + "." +
+					   sense.Gloss.GetBestAlternativeString(_writingSystemIds);
 			}
 			return "Program error";
 		}

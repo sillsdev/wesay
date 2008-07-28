@@ -152,9 +152,8 @@ namespace WeSay.Data.Tests
 				return false;
 			}
 
-			return
-					(_storedInt == item._storedInt) && (_storedString == item._storedString) &&
-					(_storedDateTime == item._storedDateTime);
+			return (_storedInt == item._storedInt) && (_storedString == item._storedString) &&
+				   (_storedDateTime == item._storedDateTime);
 		}
 
 		public int StoredInt

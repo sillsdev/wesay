@@ -51,7 +51,8 @@ namespace WeSay.LexicalModel.Tests
 		{
 			long start = _entry.ModificationTime.Ticks;
 			Thread.Sleep(1000); //else modtime doesn't change
-			_entry.Senses.Add(new LexSense());;
+			_entry.Senses.Add(new LexSense());
+			;
 			Assert.Greater((decimal) _entry.ModificationTime.Ticks, start);
 			Assert.IsTrue(_didNotify);
 		}
@@ -75,7 +76,8 @@ namespace WeSay.LexicalModel.Tests
 			_entry.Senses.Add(sense);
 			long start = _entry.ModificationTime.Ticks;
 			Thread.Sleep(1000); //else modtime doesn't change
-			sense.ExampleSentences.Add(new LexExampleSentence());;
+			sense.ExampleSentences.Add(new LexExampleSentence());
+			;
 			Assert.Greater((decimal) _entry.ModificationTime.Ticks, start);
 			Assert.IsTrue(_didNotify);
 		}

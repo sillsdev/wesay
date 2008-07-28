@@ -47,7 +47,6 @@ namespace WeSay.ConfigTool
 		//    c.Size = new Size(Width, Height - 25);
 		//    // c.BackColor = System.Drawing.Color.Crimson;
 		//}
-
 		private void OnAreaButton_Click(object sender, EventArgs e)
 		{
 			ToolStripButton currentItem = null;
@@ -91,11 +90,10 @@ namespace WeSay.ConfigTool
 				if (item.Checked) {}
 			}
 
-			Rectangle r =
-					new Rectangle(_areaPanel.Left - 1,
-								  _areaPanel.Top - 1,
-								  2 + _areaPanel.Width,
-								  2 + _areaPanel.Height);
+			Rectangle r = new Rectangle(_areaPanel.Left - 1,
+										_areaPanel.Top - 1,
+										2 + _areaPanel.Width,
+										2 + _areaPanel.Height);
 
 			ControlPaint.DrawBorder(e.Graphics, r, Color.LightGray, ButtonBorderStyle.Solid);
 		}

@@ -114,8 +114,11 @@ namespace WeSay.CommonTools
         {
             _projectNameLabel = new Label();
             _projectNameLabel.AutoSize = true;
-            _projectNameLabel.Font =
-                    new Font("Microsoft Sans Serif", 20.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+			_projectNameLabel.Font = new Font("Microsoft Sans Serif",
+											  20.25F,
+											  FontStyle.Bold,
+											  GraphicsUnit.Point,
+											  0);
             _projectNameLabel.Location = new Point(14, 13);
             _projectNameLabel.Name = "_projectNameLabel";
             _projectNameLabel.Size = new Size(194, 31);
@@ -228,9 +231,8 @@ namespace WeSay.CommonTools
         {
             get
             {
-                return
-                        StringCatalog.Get("~Home",
-                                          "The label for the 'dashboard'; the task which lets you see the status of other tasks and jump to them.");
+				return StringCatalog.Get("~Home",
+										 "The label for the 'dashboard'; the task which lets you see the status of other tasks and jump to them.");
             }
         }
 

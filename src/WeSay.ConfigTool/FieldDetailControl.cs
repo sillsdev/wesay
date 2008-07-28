@@ -332,20 +332,19 @@ namespace WeSay.ConfigTool
 			if (newDataTypeName == Field.BuiltInDataType.MultiText.ToString())
 			{
 				//we can't go from a option or option collection to multitext, if there is already data
-				conflictFound =
-						WeSayWordsProject.Project.LiftHasMatchingElement("trait",
-																		 "name",
-																		 _field.FieldName);
+				conflictFound = WeSayWordsProject.Project.LiftHasMatchingElement("trait",
+																				 "name",
+																				 _field.FieldName);
 			}
 			else if (newDataTypeName == Field.BuiltInDataType.Option.ToString())
 			{
 				//we can't go from an option collection to to a simple option, if there is already data
 				if (_field.DataTypeName == Field.BuiltInDataType.OptionCollection.ToString())
 				{
-					conflictFound =
-							WeSayWordsProject.Project.LiftHasMatchingElement("trait",
-																			 "name",
-																			 _field.FieldName);
+					conflictFound = WeSayWordsProject.Project.LiftHasMatchingElement("trait",
+																					 "name",
+																					 _field.
+																							 FieldName);
 				}
 				//we can't go from a multitext to to a simple option, if there is already data
 				conflictFound = conflictFound ||
@@ -356,10 +355,9 @@ namespace WeSay.ConfigTool
 			else if (newDataTypeName == Field.BuiltInDataType.OptionCollection.ToString())
 			{
 				//we can't go from a multitext to to a option collection, if there is already data
-				conflictFound =
-						WeSayWordsProject.Project.LiftHasMatchingElement("field",
-																		 "type",
-																		 _field.FieldName);
+				conflictFound = WeSayWordsProject.Project.LiftHasMatchingElement("field",
+																				 "type",
+																				 _field.FieldName);
 			}
 
 			if (conflictFound)

@@ -15,7 +15,9 @@ namespace WeSay.UI
 	[ProvideProperty("ParentFo", typeof (Form))]
 	public partial class LocalizationHelper: Component, ISupportInitialize, IExtenderProvider
 	{
-		private Dictionary<Control, TextFontPair> _originalControlProperties = new Dictionary<Control, TextFontPair>();
+		private readonly Dictionary<Control, TextFontPair> _originalControlProperties =
+				new Dictionary<Control, TextFontPair>();
+
 		private bool _alreadyChanging;
 		private bool _wiredToParent;
 		private Control _parent;
@@ -185,9 +187,7 @@ namespace WeSay.UI
 		///Signals the object that initialization is starting.
 		///</summary>
 		///
-		public void BeginInit()
-		{
-		}
+		public void BeginInit() {}
 
 		///<summary>
 		///Signals the object that initialization is complete.

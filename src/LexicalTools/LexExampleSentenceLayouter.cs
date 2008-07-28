@@ -19,13 +19,12 @@ namespace WeSay.LexicalTools
 
 		internal override int AddWidgets(WeSayDataObject wsdo, int insertAtRow)
 		{
-			LexExampleSentence example = (LexExampleSentence)wsdo;
+			LexExampleSentence example = (LexExampleSentence) wsdo;
 
 			DetailList.SuspendLayout();
 			int rowCount = 0;
 			try
 			{
-
 				Field field =
 						ActiveViewTemplate.GetField(Field.FieldNames.ExampleSentence.ToString());
 				if (field != null && field.GetDoShow(example.Sentence, ShowNormallyHiddenFields))
@@ -69,14 +68,13 @@ namespace WeSay.LexicalTools
 
 		public int AddGhost(IList<LexExampleSentence> list, int insertAtRow)
 		{
-			return
-					MakeGhostWidget(list,
-									insertAtRow,
-									Field.FieldNames.ExampleSentence.ToString(),
-									StringCatalog.Get("~Example",
-													  "This is the field containing an example sentence of a sense of a word."),
-									"Sentence",
-									false);
+			return MakeGhostWidget(list,
+								   insertAtRow,
+								   Field.FieldNames.ExampleSentence.ToString(),
+								   StringCatalog.Get("~Example",
+													 "This is the field containing an example sentence of a sense of a word."),
+								   "Sentence",
+								   false);
 		}
 	}
 }

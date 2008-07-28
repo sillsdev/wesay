@@ -20,12 +20,12 @@ namespace WeSay.UI
 		/// </summary>
 		public event EventHandler<CurrentItemEventArgs> ChangeOfWhichItemIsInFocus = delegate { };
 
-		private readonly int _indexOfLabel = 0;
+		private readonly int _indexOfLabel;
 		private readonly int _indexOfWidget = 1;
 
-		private bool _disposed = false;
+		private bool _disposed;
 		private readonly StackTrace _stackAtConstruction;
-		private static int _instanceCountForDebugging = 0;
+		private static int _instanceCountForDebugging;
 
 		public DetailList()
 		{
@@ -67,11 +67,10 @@ namespace WeSay.UI
 		{
 			VerifyNotDisposed();
 			base.OnPaddingChanged(e);
-			Padding =
-					new Padding(Padding.Left,
-								Padding.Top,
-								Math.Max(Padding.Right, 20),
-								Padding.Bottom);
+			Padding = new Padding(Padding.Left,
+								  Padding.Top,
+								  Math.Max(Padding.Right, 20),
+								  Padding.Bottom);
 		}
 
 		public Control AddWidgetRow(string label, bool isHeader, Control control)
@@ -96,8 +95,7 @@ namespace WeSay.UI
 					}
 				}
 				return null;
-			}
-			//set
+			} //set
 			//{
 			//    //Keep track of the active control ourselves by storing it in a private member, note that
 			//    //that we only allow the active control to be set if it is actually a child of ours.
@@ -167,11 +165,10 @@ namespace WeSay.UI
 
 			int beforeHeadingPadding = (isHeader && insertAtRow != 0) ? 18 : 0;
 			//        label.Top = 3 + beforeHeadingPadding;
-			label.Margin =
-					new Padding(label.Margin.Left,
-								beforeHeadingPadding,
-								label.Margin.Right,
-								label.Margin.Bottom);
+			label.Margin = new Padding(label.Margin.Left,
+									   beforeHeadingPadding,
+									   label.Margin.Right,
+									   label.Margin.Bottom);
 
 			if (isGhostField)
 			{
@@ -189,11 +186,10 @@ namespace WeSay.UI
 			//test
 			editWidget.TabIndex = insertAtRow;
 
-			editWidget.Margin =
-					new Padding(editWidget.Margin.Left,
-								beforeHeadingPadding,
-								editWidget.Margin.Right,
-								editWidget.Margin.Bottom);
+			editWidget.Margin = new Padding(editWidget.Margin.Left,
+											beforeHeadingPadding,
+											editWidget.Margin.Right,
+											editWidget.Margin.Bottom);
 
 			// At this point, multitext controls were being displayed on the screen.
 			// We weren't able to get around this by simply using SuspendLayout and ResumeLayout

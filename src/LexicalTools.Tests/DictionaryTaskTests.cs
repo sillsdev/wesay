@@ -19,19 +19,20 @@ namespace WeSay.LexicalTools.Tests
 			_filePath = Path.GetTempFileName();
 
 			WeSayWordsProject.InitializeForTests();
-			string[] vernacularWritingSystemIds =
-					new string[] {BasilProject.Project.WritingSystems.TestWritingSystemVernId};
+			string[] vernacularWritingSystemIds = new string[]
+													  {
+															  BasilProject.Project.WritingSystems.
+																	  TestWritingSystemVernId
+													  };
 			_viewTemplate = new ViewTemplate();
-			_viewTemplate.Add(
-					new Field(Field.FieldNames.EntryLexicalForm.ToString(),
-							  "LexEntry",
-							  vernacularWritingSystemIds));
-			_viewTemplate.Add(
-					new Field("Note",
-							  "LexEntry",
-							  new string[] {"en"},
-							  Field.MultiplicityType.ZeroOr1,
-							  "MultiText"));
+			_viewTemplate.Add(new Field(Field.FieldNames.EntryLexicalForm.ToString(),
+										"LexEntry",
+										vernacularWritingSystemIds));
+			_viewTemplate.Add(new Field("Note",
+										"LexEntry",
+										new string[] {"en"},
+										Field.MultiplicityType.ZeroOr1,
+										"MultiText"));
 			_lexEntryRepository = new LexEntryRepository(_filePath);
 			_task = new DictionaryTask(_lexEntryRepository, _viewTemplate);
 		}

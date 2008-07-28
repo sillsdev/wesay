@@ -19,7 +19,14 @@ namespace WeSay.LexicalTools
 		private static readonly string kTaskLongLabel = "~Dictionary Browse && Edit";
 
 		public DictionaryTask(LexEntryRepository lexEntryRepository, ViewTemplate viewTemplate)
-			: base(kTaskLabel, string.Empty, string.Empty, string.Empty, string.Empty, true, lexEntryRepository)
+				: base(
+						kTaskLabel,
+						string.Empty,
+						string.Empty,
+						string.Empty,
+						string.Empty,
+						true,
+						lexEntryRepository)
 		{
 #if JustForCodeScanner
 			StringCatalog.Get(kTaskLabel,

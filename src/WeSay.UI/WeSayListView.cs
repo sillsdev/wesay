@@ -5,7 +5,6 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 using WeSay.Foundation;
-using Palaso.Reporting;
 
 namespace WeSay.UI
 {
@@ -372,8 +371,10 @@ namespace WeSay.UI
 			{
 				// All this is to make the selection across the whole list box
 				// and not just the extent of the text itself
-				Rectangle bounds =
-						new Rectangle(e.Bounds.X, e.Bounds.Y, header.Width, e.Bounds.Height);
+				Rectangle bounds = new Rectangle(e.Bounds.X,
+												 e.Bounds.Y,
+												 header.Width,
+												 e.Bounds.Height);
 
 				Brush backgroundBrush;
 				bool backgroundBrushNeedsDisposal = false;
@@ -544,12 +545,11 @@ namespace WeSay.UI
 			int maxWidth = Screen.GetWorkingArea(this).Width;
 			using (Graphics g = Graphics.FromHwnd(Handle))
 			{
-				return
-						TextRenderer.MeasureText(g,
-												 text,
-												 _writingSystem.Font,
-												 new Size(maxWidth, int.MaxValue),
-												 flags);
+				return TextRenderer.MeasureText(g,
+												text,
+												_writingSystem.Font,
+												new Size(maxWidth, int.MaxValue),
+												flags);
 			}
 		}
 	}

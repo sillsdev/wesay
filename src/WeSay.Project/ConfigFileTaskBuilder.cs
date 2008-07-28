@@ -38,8 +38,8 @@ namespace WeSay.Project
 			if (navigator != null)
 			{
 				bool hasviewTemplate = false;
-				XPathNodeIterator componentList =
-						navigator.SelectChildren(string.Empty, string.Empty);
+				XPathNodeIterator componentList = navigator.SelectChildren(string.Empty,
+																		   string.Empty);
 				foreach (XPathNavigator component in componentList)
 				{
 					Debug.Assert(component.Name == "viewTemplate");

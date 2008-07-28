@@ -81,14 +81,21 @@ namespace WeSay.LexicalTools
 						string description,
 						bool isPinned,
 						LexEntryRepository lexEntryRepository)
-			: this(label, longLabel, description, string.Empty, string.Empty, isPinned, lexEntryRepository) { }
+				: this(
+						label,
+						longLabel,
+						description,
+						string.Empty,
+						string.Empty,
+						isPinned,
+						lexEntryRepository) {}
 
 		public virtual string Description
 		{
 			get { return StringCatalog.Get(_description); }
 		}
 
-		private bool _isActive = false;
+		private bool _isActive;
 
 		public virtual void Activate()
 		{
@@ -268,7 +275,8 @@ namespace WeSay.LexicalTools
 			int remainingCount = GetRemainingCount();
 			if (result == string.Empty)
 			{
-				result = StringCatalog.Get("~Remaining:", "Generic desciption of how many items in a task are left to do.");
+				result = StringCatalog.Get("~Remaining:",
+										   "Generic desciption of how many items in a task are left to do.");
 			}
 			if (remainingCount >= 0)
 			{
@@ -287,7 +295,8 @@ namespace WeSay.LexicalTools
 			int referenceCount = GetReferenceCount();
 			if (result == string.Empty)
 			{
-				result = StringCatalog.Get("~Total:", "Generic description of how many total items there are in a task.");
+				result = StringCatalog.Get("~Total:",
+										   "Generic description of how many total items there are in a task.");
 			}
 			if (referenceCount >= 0)
 			{
@@ -302,7 +311,8 @@ namespace WeSay.LexicalTools
 
 		public bool AreCountsRelevant()
 		{
-			return GetReferenceCount() != CountNotRelevant && GetRemainingCount() != CountNotRelevant;
+			return GetReferenceCount() != CountNotRelevant &&
+				   GetRemainingCount() != CountNotRelevant;
 		}
 
 		protected LexEntryRepository LexEntryRepository

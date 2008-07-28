@@ -66,10 +66,10 @@ namespace WeSay.ConfigTool
 
 		private void AddAddin(IWeSayAddin addin)
 		{
-			ActionItemControl control =
-					new ActionItemControl(addin,
-										  true,
-										  WeSayWordsProject.Project.GetProjectInfoForAddin(null));
+			ActionItemControl control = new ActionItemControl(addin,
+															  true,
+															  WeSayWordsProject.Project.
+																	  GetProjectInfoForAddin(null));
 			// GetProjectInfo());
 			control.DoShowInWeSay = AddinSet.Singleton.DoShowInWeSay(addin.ID);
 			control.TabIndex = _addinsList.RowCount;
@@ -87,8 +87,7 @@ namespace WeSay.ConfigTool
 			{
 				using (
 						LexEntryRepository lexEntryRepository =
-								new LexEntryRepository(
-										WeSayWordsProject.Project.PathToRepository))
+								new LexEntryRepository(WeSayWordsProject.Project.PathToRepository))
 				{
 					addin.Launch(ParentForm,
 								 WeSayWordsProject.Project.GetProjectInfoForAddin(lexEntryRepository));

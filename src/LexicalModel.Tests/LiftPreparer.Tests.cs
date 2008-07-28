@@ -5,7 +5,6 @@ using LiftIO;
 using LiftIO.Validation;
 using NUnit.Framework;
 using Palaso.Reporting;
-using WeSay.LexicalModel;
 using WeSay.LexicalModel.Migration;
 
 namespace WeSay.LexicalModel.Tests
@@ -58,8 +57,7 @@ namespace WeSay.LexicalModel.Tests
 			CreateLiftFileForTesting("0.10");
 			LiftPreparer preparer = new LiftPreparer(_liftFilePath);
 			Assert.IsTrue(preparer.MigrateIfNeeded(), "MigrateIfNeeded Failed");
-			Assert.AreEqual(Validator.LiftVersion,
-							Validator.GetLiftVersion(_liftFilePath));
+			Assert.AreEqual(Validator.LiftVersion, Validator.GetLiftVersion(_liftFilePath));
 		}
 
 		[Test]

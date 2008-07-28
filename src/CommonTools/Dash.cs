@@ -17,7 +17,7 @@ namespace WeSay.CommonTools
 	public partial class Dash: UserControl, ITask, IFinishCacheSetup
 	{
 		private const double GoldRatio = 4.0;
-							 // arbitrary ratio we think looks the best for button sizes
+		// arbitrary ratio we think looks the best for button sizes
 
 		private DictionaryStatusControl _title;
 		private readonly LexEntryRepository _lexEntryRepository;
@@ -555,7 +555,7 @@ namespace WeSay.CommonTools
 				}
 			}
 			Debug.Assert(workingSizes.Count > 0);
-					// contract: returned list must have at least one member
+			// contract: returned list must have at least one member
 			return workingSizes;
 		}
 

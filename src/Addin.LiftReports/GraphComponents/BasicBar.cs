@@ -402,22 +402,20 @@ namespace Addin.LiftReports.GraphComponents
 				barHeight = ClientRectangle.Height * ((BarValue - MinimumValue) / barRange);
 				barWidth = ClientRectangle.Width;
 
-				barRect =
-						new RectangleF(ClientRectangle.Left,
-									   ClientRectangle.Bottom - barHeight,
-									   barWidth,
-									   barHeight);
+				barRect = new RectangleF(ClientRectangle.Left,
+										 ClientRectangle.Bottom - barHeight,
+										 barWidth,
+										 barHeight);
 			}
 			else
 			{
 				barHeight = ClientRectangle.Height;
 				barWidth = ClientRectangle.Width * ((BarValue - MinimumValue) / barRange);
 
-				barRect =
-						new RectangleF(ClientRectangle.Left,
-									   ClientRectangle.Top,
-									   barWidth,
-									   barHeight);
+				barRect = new RectangleF(ClientRectangle.Left,
+										 ClientRectangle.Top,
+										 barWidth,
+										 barHeight);
 			}
 
 			graphics.FillRectangle(barBrush, barRect);
@@ -510,11 +508,10 @@ namespace Addin.LiftReports.GraphComponents
 
 					if (barRect.Top - ClientRectangle.Top - 2 > TextFont.Height)
 					{
-						textRect =
-								new RectangleF(barRect.Left,
-											   barRect.Top - 2 - TextFont.Height,
-											   barRect.Width,
-											   barRect.Height);
+						textRect = new RectangleF(barRect.Left,
+												  barRect.Top - 2 - TextFont.Height,
+												  barRect.Width,
+												  barRect.Height);
 					}
 					else
 					{
@@ -530,11 +527,10 @@ namespace Addin.LiftReports.GraphComponents
 
 					if (barRect.Width + textSize.Width + 2 < ClientRectangle.Width)
 					{
-						textRect =
-								new RectangleF(barRect.Left,
-											   barRect.Top,
-											   barRect.Width + textSize.Width + 2,
-											   barRect.Height);
+						textRect = new RectangleF(barRect.Left,
+												  barRect.Top,
+												  barRect.Width + textSize.Width + 2,
+												  barRect.Height);
 					}
 					else
 					{
@@ -617,27 +613,24 @@ namespace Addin.LiftReports.GraphComponents
 				float aboveRangeHeight = ClientRectangle.Height * (AboveRangeValue / MaximumValue);
 				float belowRangeHeight = ClientRectangle.Height * (BelowRangeValue / MaximumValue);
 
-				RectangleF aboveRangeRect =
-						new RectangleF(barRect.Left,
-									   ClientRectangle.Height - aboveRangeHeight,
-									   barRect.Width,
-									   aboveRangeHeight);
-				RectangleF belowRangeRect =
-						new RectangleF(barRect.Left,
-									   ClientRectangle.Height - belowRangeHeight,
-									   barRect.Width,
-									   belowRangeHeight);
+				RectangleF aboveRangeRect = new RectangleF(barRect.Left,
+														   ClientRectangle.Height - aboveRangeHeight,
+														   barRect.Width,
+														   aboveRangeHeight);
+				RectangleF belowRangeRect = new RectangleF(barRect.Left,
+														   ClientRectangle.Height - belowRangeHeight,
+														   barRect.Width,
+														   belowRangeHeight);
 
 				sf.Alignment = StringAlignment.Center;
 				sf.LineAlignment = StringAlignment.Near;
 
 				if (aboveRangeRect.Top - 2 > TextFont.Height)
 				{
-					aboveTextRect =
-							new RectangleF(aboveRangeRect.Left,
-										   aboveRangeRect.Top - 2 - TextFont.Height,
-										   aboveRangeRect.Right,
-										   aboveRangeRect.Bottom);
+					aboveTextRect = new RectangleF(aboveRangeRect.Left,
+												   aboveRangeRect.Top - 2 - TextFont.Height,
+												   aboveRangeRect.Right,
+												   aboveRangeRect.Bottom);
 				}
 				else
 				{
@@ -646,11 +639,10 @@ namespace Addin.LiftReports.GraphComponents
 
 				if (belowRangeRect.Top - 2 > TextFont.Height)
 				{
-					belowTextRect =
-							new RectangleF(belowRangeRect.Left,
-										   belowRangeRect.Top - 2 - TextFont.Height,
-										   belowRangeRect.Right,
-										   belowRangeRect.Bottom);
+					belowTextRect = new RectangleF(belowRangeRect.Left,
+												   belowRangeRect.Top - 2 - TextFont.Height,
+												   belowRangeRect.Right,
+												   belowRangeRect.Bottom);
 				}
 				else
 				{
@@ -662,10 +654,14 @@ namespace Addin.LiftReports.GraphComponents
 				float aboveRangeWidth = ClientRectangle.Width * (AboveRangeValue / MaximumValue);
 				float belowRangeWidth = ClientRectangle.Width * (BelowRangeValue / MaximumValue);
 
-				RectangleF aboveRangeRect =
-						new RectangleF(barRect.Left, barRect.Top, aboveRangeWidth, barRect.Height);
-				RectangleF belowRangeRect =
-						new RectangleF(barRect.Left, barRect.Top, belowRangeWidth, barRect.Height);
+				RectangleF aboveRangeRect = new RectangleF(barRect.Left,
+														   barRect.Top,
+														   aboveRangeWidth,
+														   barRect.Height);
+				RectangleF belowRangeRect = new RectangleF(barRect.Left,
+														   barRect.Top,
+														   belowRangeWidth,
+														   barRect.Height);
 
 				sf.Alignment = StringAlignment.Far;
 				sf.LineAlignment = StringAlignment.Center;
@@ -679,11 +675,10 @@ namespace Addin.LiftReports.GraphComponents
 
 				if (aboveRangeWidth + aboveTextSize.Width + 2 < ClientRectangle.Width)
 				{
-					aboveTextRect =
-							new RectangleF(aboveRangeRect.Left,
-										   aboveRangeRect.Top,
-										   aboveRangeRect.Width + aboveTextSize.Width + 2,
-										   aboveRangeRect.Bottom);
+					aboveTextRect = new RectangleF(aboveRangeRect.Left,
+												   aboveRangeRect.Top,
+												   aboveRangeRect.Width + aboveTextSize.Width + 2,
+												   aboveRangeRect.Bottom);
 				}
 				else
 				{
@@ -692,11 +687,10 @@ namespace Addin.LiftReports.GraphComponents
 
 				if (belowRangeWidth + belowTextSize.Width + 2 < ClientRectangle.Width)
 				{
-					belowTextRect =
-							new RectangleF(belowRangeRect.Left,
-										   belowRangeRect.Top,
-										   belowRangeRect.Width + belowTextSize.Width + 2,
-										   belowRangeRect.Bottom);
+					belowTextRect = new RectangleF(belowRangeRect.Left,
+												   belowRangeRect.Top,
+												   belowRangeRect.Width + belowTextSize.Width + 2,
+												   belowRangeRect.Bottom);
 				}
 				else
 				{

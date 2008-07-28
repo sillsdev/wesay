@@ -111,9 +111,11 @@ namespace WeSay.LexicalModel
 		public static string MakeFieldNameSafe(string text)
 		{
 			//parentheses mess up our greps, don't really belong in xml names
-			char[] charsToRemove =
-					new char[]
-							{' ', '(', ')', '*', ']', '[', '?', '{', '}', '\\', '<', '>', '+', '&'};
+			char[] charsToRemove = new char[]
+									   {
+											   ' ', '(', ')', '*', ']', '[', '?', '{', '}', '\\', '<', '>',
+											   '+', '&'
+									   };
 			foreach (char c in charsToRemove)
 			{
 				text = text.Replace(c.ToString(), "");
@@ -178,7 +180,7 @@ namespace WeSay.LexicalModel
 		}
 
 		[Description("The label of the field as it will be displayed to the user.")]
-		[ReflectorCollection("displayName", Required=false)]
+		[ReflectorCollection("displayName", Required = false)]
 		public string DisplayName
 		{
 			get
@@ -447,9 +449,8 @@ namespace WeSay.LexicalModel
 		{
 			get
 			{
-				return
-						DataTypeName == BuiltInDataType.Option.ToString() ||
-						DataTypeName == BuiltInDataType.OptionCollection.ToString();
+				return DataTypeName == BuiltInDataType.Option.ToString() ||
+					   DataTypeName == BuiltInDataType.OptionCollection.ToString();
 			}
 		}
 
@@ -463,12 +464,11 @@ namespace WeSay.LexicalModel
 
 		public bool GetDoShow(IReportEmptiness data, bool showNormallyHiddenFields)
 		{
-			return
-					_enabled &&
-					((showNormallyHiddenFields ||
-					  (data != null && data.ShouldCountAsFilledForPurposesOfConditionalDisplay)) ||
-					 (_visibility == CommonEnumerations.VisibilitySetting.Visible ||
-					  _visibility == CommonEnumerations.VisibilitySetting.ReadOnly));
+			return _enabled &&
+				   ((showNormallyHiddenFields ||
+					 (data != null && data.ShouldCountAsFilledForPurposesOfConditionalDisplay)) ||
+					(_visibility == CommonEnumerations.VisibilitySetting.Visible ||
+					 _visibility == CommonEnumerations.VisibilitySetting.ReadOnly));
 		}
 
 		public static string NewFieldNamePrefix

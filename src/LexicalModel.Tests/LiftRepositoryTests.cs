@@ -2,7 +2,6 @@ using System.IO;
 using NUnit.Framework;
 using WeSay.Data;
 using WeSay.Data.Tests;
-using WeSay.LexicalModel.Migration;
 
 namespace WeSay.LexicalModel.Tests
 {
@@ -12,7 +11,7 @@ namespace WeSay.LexicalModel.Tests
 		{
 			string liftfileName = Path.GetTempFileName();
 			File.WriteAllText(liftfileName,
-				@"<?xml version='1.0' encoding='utf-8'?>
+							  @"<?xml version='1.0' encoding='utf-8'?>
 				<lift
 					version='0.12'
 					producer='WeSay 1.0.0.0'>
@@ -40,7 +39,7 @@ namespace WeSay.LexicalModel.Tests
 	}
 
 	[TestFixture]
-	public class LiftRepositoryStateUnitializedTests : IRepositoryStateUnitializedTests<LexEntry>
+	public class LiftRepositoryStateUnitializedTests: IRepositoryStateUnitializedTests<LexEntry>
 	{
 		private string _persistedFilePath;
 
@@ -89,7 +88,8 @@ namespace WeSay.LexicalModel.Tests
 	}
 
 	[TestFixture]
-	public class LiftRepositoryCreatedFromPersistedData : IRepositoryPopulateFromPersistedTests<LexEntry>
+	public class LiftRepositoryCreatedFromPersistedData:
+			IRepositoryPopulateFromPersistedTests<LexEntry>
 	{
 		private string _persistedFilePath;
 
@@ -115,7 +115,8 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
-		public override void GetItemMatchingQuery_QueryWithShow_ReturnsAllItemsAndFieldsMatchingQuery()
+		public override void
+				GetItemMatchingQuery_QueryWithShow_ReturnsAllItemsAndFieldsMatchingQuery()
 		{
 			SetState();
 			Query query = new Query(typeof (LexEntry)).Show("LexicalForm");
@@ -132,7 +133,8 @@ namespace WeSay.LexicalModel.Tests
 	}
 
 	[TestFixture]
-	public class LiftRepositoryCreateItemTransitionTests : IRepositoryCreateItemTransitionTests<LexEntry>
+	public class LiftRepositoryCreateItemTransitionTests:
+			IRepositoryCreateItemTransitionTests<LexEntry>
 	{
 		private string _persistedFilePath;
 
@@ -152,7 +154,8 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
-		public override void GetItemMatchingQuery_QueryWithShow_ReturnsAllItemsAndFieldsMatchingQuery()
+		public override void
+				GetItemMatchingQuery_QueryWithShow_ReturnsAllItemsAndFieldsMatchingQuery()
 		{
 			SetState();
 			Item.LexicalForm["de"] = "Sonne";
@@ -170,7 +173,8 @@ namespace WeSay.LexicalModel.Tests
 	}
 
 	[TestFixture]
-	public class LiftRepositoryDeleteItemTransitionTests : IRepositoryDeleteItemTransitionTests<LexEntry>
+	public class LiftRepositoryDeleteItemTransitionTests:
+			IRepositoryDeleteItemTransitionTests<LexEntry>
 	{
 		private string _persistedFilePath;
 
@@ -197,7 +201,7 @@ namespace WeSay.LexicalModel.Tests
 	}
 
 	[TestFixture]
-	public class LiftRepositoryDeleteIdTransitionTests : IRepositoryDeleteIdTransitionTests<LexEntry>
+	public class LiftRepositoryDeleteIdTransitionTests: IRepositoryDeleteIdTransitionTests<LexEntry>
 	{
 		private string _persistedFilePath;
 
@@ -224,7 +228,8 @@ namespace WeSay.LexicalModel.Tests
 	}
 
 	[TestFixture]
-	public class LiftRepositoryDeleteAllItemsTransitionTests : IRepositoryDeleteAllItemsTransitionTests<LexEntry>
+	public class LiftRepositoryDeleteAllItemsTransitionTests:
+			IRepositoryDeleteAllItemsTransitionTests<LexEntry>
 	{
 		private string _persistedFilePath;
 
@@ -271,7 +276,7 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof(IOException))]
+		[ExpectedException(typeof (IOException))]
 		public void LockedFile_Throws()
 		{
 			Assert.IsTrue(_fileStream.CanWrite);
@@ -293,9 +298,7 @@ namespace WeSay.LexicalModel.Tests
 			// Close it before creating the LiftRepository.
 			fileStream.Close();
 			// LiftRepository constructor shouldn't throw an IOException.
-			using (LiftRepository liftRepository = new LiftRepository(persistedFilePath))
-			{
-			}
+			using (LiftRepository liftRepository = new LiftRepository(persistedFilePath)) {}
 			Assert.IsTrue(true); // Constructor didn't throw.
 			File.Delete(persistedFilePath);
 		}
@@ -313,9 +316,5 @@ namespace WeSay.LexicalModel.Tests
 			//Assert.IsTrue(preparer.MigrateIfNeeded(), "MigrateIfNeeded Failed");
 			//Assert.IsTrue(_liftRepository.IsLiftFileLocked);
 		}
-
 	}
-
-
-
 }

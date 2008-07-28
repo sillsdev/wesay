@@ -90,7 +90,7 @@ namespace WeSay.Data.Tests
 
 		private class MyClass
 		{
-			private readonly int t = 0;
+			private readonly int t;
 
 			public int T
 			{

@@ -180,8 +180,8 @@ namespace WeSay.Foundation.Tests
 		[Test]
 		public void Compare_fr_sortsLikeFrench()
 		{
-			WritingSystem writingSystem =
-					new WritingSystem("one", new Font(FontFamily.GenericSansSerif, 11));
+			WritingSystem writingSystem = new WritingSystem("one",
+															new Font(FontFamily.GenericSansSerif, 11));
 			writingSystem.SortUsing = "fr";
 			//u00c8 is Latin Capital Letter E with Grave
 			//u00ed is Latin small letter i with acute
@@ -191,8 +191,8 @@ namespace WeSay.Foundation.Tests
 		[Test]
 		public void Compare_en_sortsLikeEnglish()
 		{
-			WritingSystem writingSystem =
-					new WritingSystem("one", new Font(FontFamily.GenericSansSerif, 11));
+			WritingSystem writingSystem = new WritingSystem("one",
+															new Font(FontFamily.GenericSansSerif, 11));
 			writingSystem.SortUsing = "en-US";
 			//u00c8 is Latin Capital Letter E with Grave
 			//u00ed is Latin small letter i with acute
@@ -202,8 +202,8 @@ namespace WeSay.Foundation.Tests
 		[Test]
 		public void SortUsing_customWithNoRules_sortsLikeInvariant()
 		{
-			WritingSystem writingSystem =
-					new WritingSystem("one", new Font(FontFamily.GenericSansSerif, 11));
+			WritingSystem writingSystem = new WritingSystem("one",
+															new Font(FontFamily.GenericSansSerif, 11));
 			writingSystem.SortUsing = CustomSortRulesType.CustomSimple.ToString();
 			// hard to test because half of the system locales use the invariant table: http://blogs.msdn.com/michkap/archive/2004/12/29/344136.aspx
 		}
@@ -211,8 +211,8 @@ namespace WeSay.Foundation.Tests
 		[Test]
 		public void SortUsing_null_Id()
 		{
-			WritingSystem writingSystem =
-					new WritingSystem("one", new Font(FontFamily.GenericSansSerif, 11));
+			WritingSystem writingSystem = new WritingSystem("one",
+															new Font(FontFamily.GenericSansSerif, 11));
 			writingSystem.SortUsing = null;
 			Assert.AreEqual(writingSystem.Id, writingSystem.SortUsing);
 		}
@@ -220,8 +220,8 @@ namespace WeSay.Foundation.Tests
 		[Test]
 		public void SortUsing_HasCustomSortRulesSortUsingNotCustom_ClearsCustomSortRules()
 		{
-			WritingSystem writingSystem =
-					new WritingSystem("one", new Font(FontFamily.GenericSansSerif, 11));
+			WritingSystem writingSystem = new WritingSystem("one",
+															new Font(FontFamily.GenericSansSerif, 11));
 			writingSystem.SortUsing = "custom";
 			string rules = "&n < ng <<< Ng <<< NG";
 			writingSystem.CustomSortRules = rules;
@@ -234,8 +234,8 @@ namespace WeSay.Foundation.Tests
 		[Test]
 		public void CustomSortRules_SortUsingNotCustom_NotSet()
 		{
-			WritingSystem writingSystem =
-					new WritingSystem("one", new Font(FontFamily.GenericSansSerif, 11));
+			WritingSystem writingSystem = new WritingSystem("one",
+															new Font(FontFamily.GenericSansSerif, 11));
 			writingSystem.SortUsing = "two";
 			string rules = "&n < ng <<< Ng <<< NG";
 			writingSystem.CustomSortRules = rules;
@@ -245,8 +245,8 @@ namespace WeSay.Foundation.Tests
 		[Test]
 		public void CustomSortRules_SortUsingCustomSortRules_Set()
 		{
-			WritingSystem writingSystem =
-					new WritingSystem("one", new Font(FontFamily.GenericSansSerif, 11));
+			WritingSystem writingSystem = new WritingSystem("one",
+															new Font(FontFamily.GenericSansSerif, 11));
 			writingSystem.SortUsing = CustomSortRulesType.CustomICU.ToString();
 
 			string rules = "&n < ng <<< Ng <<< NG";

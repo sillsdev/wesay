@@ -66,8 +66,10 @@ namespace WeSay.LexicalModel.Tests
 		{
 			MakeTestLexEntry("sunset");
 			MakeTestLexEntry("flower");
-			ResultSet<LexEntry> allEntriesSortedByHeadword = _lexEntryRepository.GetAllEntriesSortedByHeadword(
-				new WritingSystem("test", SystemFonts.DefaultFont));
+			ResultSet<LexEntry> allEntriesSortedByHeadword =
+					_lexEntryRepository.GetAllEntriesSortedByHeadword(new WritingSystem("test",
+																						SystemFonts.
+																								DefaultFont));
 			foreach (RecordToken<LexEntry> token in allEntriesSortedByHeadword)
 			{
 				_exporter.Add(token.RealObject);
@@ -151,7 +153,7 @@ namespace WeSay.LexicalModel.Tests
 		{
 			LexSense sense = new LexSense();
 			OptionRef o =
-				sense.GetOrCreateProperty<OptionRef>(LexSense.WellKnownProperties.PartOfSpeech);
+					sense.GetOrCreateProperty<OptionRef>(LexSense.WellKnownProperties.PartOfSpeech);
 			o.Value = string.Empty;
 			_exporter.Add(sense);
 			_exporter.End();
@@ -179,7 +181,7 @@ namespace WeSay.LexicalModel.Tests
 		{
 			LexEntry entry = _lexEntryRepository.CreateItem();
 			MultiText citation =
-				entry.GetOrCreateProperty<MultiText>(LexEntry.WellKnownProperties.Citation);
+					entry.GetOrCreateProperty<MultiText>(LexEntry.WellKnownProperties.Citation);
 			citation["zz"] = "orange";
 			_lexEntryRepository.SaveItem(entry);
 			_exporter.Add(entry);
@@ -195,7 +197,7 @@ namespace WeSay.LexicalModel.Tests
 			LexEntry e = _lexEntryRepository.CreateItem();
 
 			MultiText citation =
-				e.GetOrCreateProperty<MultiText>(LexEntry.WellKnownProperties.Citation);
+					e.GetOrCreateProperty<MultiText>(LexEntry.WellKnownProperties.Citation);
 
 			citation.SetAlternative("x", "orange");
 			citation.SetAnnotationOfAlternativeIsStarred("x", true);
@@ -203,7 +205,7 @@ namespace WeSay.LexicalModel.Tests
 			_exporter.Add(e);
 			_exporter.End();
 			AssertXPathNotNull(
-				"entry/citation/form[@lang='x']/annotation[@name='flag' and @value='1']");
+					"entry/citation/form[@lang='x']/annotation[@name='flag' and @value='1']");
 		}
 
 		[Test]
@@ -267,8 +269,8 @@ namespace WeSay.LexicalModel.Tests
 			_exporter.Add(example);
 			_exporter.End();
 			Assert.AreEqual(
-				"<example><trait name=\"flubs\" value=\"orange\" /><trait name=\"flubs\" value=\"blue\" /></example>",
-				_stringBuilder.ToString());
+					"<example><trait name=\"flubs\" value=\"orange\" /><trait name=\"flubs\" value=\"blue\" /></example>",
+					_stringBuilder.ToString());
 		}
 
 		[Test]
@@ -281,9 +283,9 @@ namespace WeSay.LexicalModel.Tests
 			_exporter.Add(sense);
 			_exporter.End();
 			Assert.AreEqual(
-				GetSenseElement(sense) +
-				"<trait name=\"flubs\" value=\"orange\" /><trait name=\"flubs\" value=\"blue\" /></sense>",
-				_stringBuilder.ToString());
+					GetSenseElement(sense) +
+					"<trait name=\"flubs\" value=\"orange\" /><trait name=\"flubs\" value=\"blue\" /></sense>",
+					_stringBuilder.ToString());
 		}
 
 		[Test]
@@ -323,8 +325,8 @@ namespace WeSay.LexicalModel.Tests
 			_exporter.Add(sense);
 			_exporter.End();
 			Assert.AreEqual(
-				GetSenseElement(sense) + "<trait name=\"flub\" value=\"orange\" /></sense>",
-				_stringBuilder.ToString());
+					GetSenseElement(sense) + "<trait name=\"flub\" value=\"orange\" /></sense>",
+					_stringBuilder.ToString());
 		}
 
 		[Test]
@@ -333,7 +335,7 @@ namespace WeSay.LexicalModel.Tests
 			_fieldToOptionListName.Add("flub", "kindsOfFlubs");
 			LexSense sense = new LexSense();
 			OptionRef grammi =
-				sense.GetOrCreateProperty<OptionRef>(LexSense.WellKnownProperties.PartOfSpeech);
+					sense.GetOrCreateProperty<OptionRef>(LexSense.WellKnownProperties.PartOfSpeech);
 			grammi.Value = "verb";
 
 			OptionRef o = sense.GetOrCreateProperty<OptionRef>("flub");
@@ -349,7 +351,7 @@ namespace WeSay.LexicalModel.Tests
 		{
 			LexSense sense = new LexSense();
 			MultiText m =
-				sense.GetOrCreateProperty<MultiText>(LexSense.WellKnownProperties.Definition);
+					sense.GetOrCreateProperty<MultiText>(LexSense.WellKnownProperties.Definition);
 			m["zz"] = "orange";
 			_exporter.Add(sense);
 			_exporter.End();
@@ -474,10 +476,9 @@ namespace WeSay.LexicalModel.Tests
 			// make dateModified different than dateCreated
 			_exporter.Add(entry);
 			_exporter.End();
-			ShouldContain(
-				string.Format("id=\"{0}\"",
-							  LiftExporter.GetHumanReadableId(entry,
-															  new Dictionary<string, int>())));
+			ShouldContain(string.Format("id=\"{0}\"",
+										LiftExporter.GetHumanReadableId(entry,
+																		new Dictionary<string, int>())));
 		}
 
 		[Test]
@@ -495,9 +496,8 @@ namespace WeSay.LexicalModel.Tests
 			LexEntry entry = _lexEntryRepository.CreateItem();
 			_exporter.Add(entry);
 			_exporter.End();
-			ShouldContain(
-				string.Format("dateCreated=\"{0}\"",
-							  entry.CreationTime.ToString("yyyy-MM-ddThh:mm:ssZ")));
+			ShouldContain(string.Format("dateCreated=\"{0}\"",
+										entry.CreationTime.ToString("yyyy-MM-ddThh:mm:ssZ")));
 		}
 
 		[Test]
@@ -509,9 +509,8 @@ namespace WeSay.LexicalModel.Tests
 			_lexEntryRepository.SaveItem(entry);
 			_exporter.Add(entry);
 			_exporter.End();
-			ShouldContain(
-				string.Format("dateModified=\"{0}\"",
-							  entry.ModificationTime.ToString("yyyy-MM-ddThh:mm:ssZ")));
+			ShouldContain(string.Format("dateModified=\"{0}\"",
+										entry.ModificationTime.ToString("yyyy-MM-ddThh:mm:ssZ")));
 		}
 
 		[Test]
@@ -529,10 +528,10 @@ namespace WeSay.LexicalModel.Tests
 			_exporter.Add(entry);
 
 			ShouldContain(
-				string.Format(GetSenseElement(sense1) +
-							  "<gloss lang=\"a\"><text>aaa</text></gloss></sense>" +
-							  GetSenseElement(sense2) +
-							  "<gloss lang=\"b\"><text>bbb</text></gloss></sense></entry>"));
+					string.Format(GetSenseElement(sense1) +
+								  "<gloss lang=\"a\"><text>aaa</text></gloss></sense>" +
+								  GetSenseElement(sense2) +
+								  "<gloss lang=\"b\"><text>bbb</text></gloss></sense></entry>"));
 			AssertXPathNotNull("entry[count(sense)=2]");
 		}
 
@@ -544,7 +543,7 @@ namespace WeSay.LexicalModel.Tests
 			example.Sentence["red"] = "red sunset tonight";
 			_exporter.Add(example);
 			CheckAnswer(
-				"<example><form lang=\"blue\"><text>ocean's eleven</text></form><form lang=\"red\"><text>red sunset tonight</text></form></example>");
+					"<example><form lang=\"blue\"><text>ocean's eleven</text></form><form lang=\"red\"><text>red sunset tonight</text></form></example>");
 		}
 
 		[Test]
@@ -556,7 +555,7 @@ namespace WeSay.LexicalModel.Tests
 			example.Translation["green"] = "blah blah";
 			_exporter.Add(example);
 			CheckAnswer(
-				"<example><form lang=\"blue\"><text>ocean's eleven</text></form><form lang=\"red\"><text>red sunset tonight</text></form><translation><form lang=\"green\"><text>blah blah</text></form></translation></example>");
+					"<example><form lang=\"blue\"><text>ocean's eleven</text></form><form lang=\"red\"><text>red sunset tonight</text></form><translation><form lang=\"green\"><text>blah blah</text></form></translation></example>");
 		}
 
 		[Test]
@@ -564,7 +563,7 @@ namespace WeSay.LexicalModel.Tests
 		{
 			LexExampleSentence ex = new LexExampleSentence();
 			OptionRef z =
-				ex.GetOrCreateProperty<OptionRef>(LexExampleSentence.WellKnownProperties.Source);
+					ex.GetOrCreateProperty<OptionRef>(LexExampleSentence.WellKnownProperties.Source);
 			z.Value = "hearsay";
 
 			_exporter.Add(ex);
@@ -742,8 +741,8 @@ namespace WeSay.LexicalModel.Tests
 		{
 			LexEntry entry = new LexEntry(" ", Guid.NewGuid());
 			Assert.IsTrue(
-				LiftExporter.GetHumanReadableId(entry, new Dictionary<string, int>()).StartsWith
-					("Id'dPrematurely_"));
+					LiftExporter.GetHumanReadableId(entry, new Dictionary<string, int>()).StartsWith
+							("Id'dPrematurely_"));
 		}
 
 		[Test]
@@ -752,8 +751,8 @@ namespace WeSay.LexicalModel.Tests
 			LexEntry entry = new LexEntry(" ", Guid.NewGuid());
 			entry.LexicalForm["green"] = "string";
 			Assert.IsTrue(
-				LiftExporter.GetHumanReadableId(entry, new Dictionary<string, int>()).StartsWith
-					("string"));
+					LiftExporter.GetHumanReadableId(entry, new Dictionary<string, int>()).StartsWith
+							("string"));
 		}
 
 		[Test]
@@ -807,7 +806,7 @@ namespace WeSay.LexicalModel.Tests
 		{
 			LexSense sense = new LexSense();
 			OptionRef o =
-				sense.GetOrCreateProperty<OptionRef>(LexSense.WellKnownProperties.PartOfSpeech);
+					sense.GetOrCreateProperty<OptionRef>(LexSense.WellKnownProperties.PartOfSpeech);
 			o.Value = "orange";
 			_exporter.Add(sense);
 			_exporter.End();
@@ -820,13 +819,13 @@ namespace WeSay.LexicalModel.Tests
 		{
 			LexSense sense = new LexSense();
 			OptionRef o =
-				sense.GetOrCreateProperty<OptionRef>(LexSense.WellKnownProperties.PartOfSpeech);
+					sense.GetOrCreateProperty<OptionRef>(LexSense.WellKnownProperties.PartOfSpeech);
 			o.Value = "orange";
 			o.IsStarred = true;
 			_exporter.Add(sense);
 			_exporter.End();
 			AssertXPathNotNull(
-				"sense/grammatical-info[@value='orange']/annotation[@name='flag' and @value='1']");
+					"sense/grammatical-info[@value='orange']/annotation[@name='flag' and @value='1']");
 		}
 
 		[Test]
@@ -874,7 +873,7 @@ namespace WeSay.LexicalModel.Tests
 			_exporter.Add(e);
 			_exporter.End();
 			AssertXPathNotNull(
-				"entry/lexical-unit/form[@lang='x']/annotation[@name='flag' and @value='1']");
+					"entry/lexical-unit/form[@lang='x']/annotation[@name='flag' and @value='1']");
 		}
 
 		[Test]
@@ -894,7 +893,7 @@ namespace WeSay.LexicalModel.Tests
 			text["red"] = "sunset";
 			_exporter.Add(null, text);
 			CheckAnswer(
-				"<form lang=\"blue\"><text>ocean</text></form><form lang=\"red\"><text>sunset</text></form>");
+					"<form lang=\"blue\"><text>ocean</text></form><form lang=\"red\"><text>sunset</text></form>");
 		}
 
 		[Test]
@@ -902,7 +901,8 @@ namespace WeSay.LexicalModel.Tests
 		{
 			LexEntry entry = _lexEntryRepository.CreateItem();
 
-			MultiText m = entry.GetOrCreateProperty<MultiText>(WeSayDataObject.WellKnownProperties.Note);
+			MultiText m =
+					entry.GetOrCreateProperty<MultiText>(WeSayDataObject.WellKnownProperties.Note);
 			m["zz"] = "orange";
 			_lexEntryRepository.SaveItem(entry);
 			_exporter.Add(entry);
@@ -916,8 +916,7 @@ namespace WeSay.LexicalModel.Tests
 		{
 			LexExampleSentence example = new LexExampleSentence();
 			MultiText m =
-				example.GetOrCreateProperty<MultiText>(
-					WeSayDataObject.WellKnownProperties.Note);
+					example.GetOrCreateProperty<MultiText>(WeSayDataObject.WellKnownProperties.Note);
 			m["zz"] = "orange";
 			_exporter.Add(example);
 			_exporter.End();
@@ -929,7 +928,8 @@ namespace WeSay.LexicalModel.Tests
 		public void NoteOnSense_OutputAsNote()
 		{
 			LexSense sense = new LexSense();
-			MultiText m = sense.GetOrCreateProperty<MultiText>(WeSayDataObject.WellKnownProperties.Note);
+			MultiText m =
+					sense.GetOrCreateProperty<MultiText>(WeSayDataObject.WellKnownProperties.Note);
 			m["zz"] = "orange";
 			_exporter.Add(sense);
 			_exporter.End();
@@ -996,10 +996,11 @@ namespace WeSay.LexicalModel.Tests
 			entry.Senses.Add(sense2);
 
 			MultiText citation =
-				entry.GetOrCreateProperty<MultiText>(LexEntry.WellKnownProperties.Citation);
+					entry.GetOrCreateProperty<MultiText>(LexEntry.WellKnownProperties.Citation);
 			citation["zz"] = "orange";
 
-			MultiText note = entry.GetOrCreateProperty<MultiText>(WeSayDataObject.WellKnownProperties.Note);
+			MultiText note =
+					entry.GetOrCreateProperty<MultiText>(WeSayDataObject.WellKnownProperties.Note);
 			note["zz"] = "orange";
 
 			MultiText field = entry.GetOrCreateProperty<MultiText>("custom");
@@ -1009,10 +1010,10 @@ namespace WeSay.LexicalModel.Tests
 			_exporter.Add(entry);
 
 			ShouldContain(
-				string.Format(GetSenseElement(sense1) +
-							  "<gloss lang=\"a\"><text>aaa</text></gloss></sense>" +
-							  GetSenseElement(sense2) +
-							  "<gloss lang=\"b\"><text>bbb</text></gloss></sense></entry>"));
+					string.Format(GetSenseElement(sense1) +
+								  "<gloss lang=\"a\"><text>aaa</text></gloss></sense>" +
+								  GetSenseElement(sense2) +
+								  "<gloss lang=\"b\"><text>bbb</text></gloss></sense></entry>"));
 		}
 
 		[Test]
@@ -1032,15 +1033,17 @@ namespace WeSay.LexicalModel.Tests
 		{
 			LexSense sense = new LexSense();
 
-			LexRelationType synonymRelationType =
-				new LexRelationType("synonym",
-									LexRelationType.Multiplicities.Many,
-									LexRelationType.TargetTypes.Sense);
+			LexRelationType synonymRelationType = new LexRelationType("synonym",
+																	  LexRelationType.Multiplicities
+																			  .Many,
+																	  LexRelationType.TargetTypes.
+																			  Sense);
 
-			LexRelationType antonymRelationType =
-				new LexRelationType("antonym",
-									LexRelationType.Multiplicities.Many,
-									LexRelationType.TargetTypes.Sense);
+			LexRelationType antonymRelationType = new LexRelationType("antonym",
+																	  LexRelationType.Multiplicities
+																			  .Many,
+																	  LexRelationType.TargetTypes.
+																			  Sense);
 
 			LexRelationCollection relations = new LexRelationCollection();
 			sense.Properties.Add(new KeyValuePair<string, object>("relations", relations));

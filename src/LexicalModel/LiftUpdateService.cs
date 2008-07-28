@@ -1,12 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using LiftIO;
-using LiftIO.Merging;
-using Palaso.Reporting;
-using WeSay.Data;
-using WeSay.Foundation;
 
 /*  Analysis of what happens to the data when there is a crash
  *              (Note, you can simulate crash by doing shift-pause from a WeSayTextBox)
@@ -49,7 +41,7 @@ namespace WeSay.LexicalModel
 
 		private static string LiftDirectory
 		{
-			get { throw new NotImplementedException();}
+			get { throw new NotImplementedException(); }
 			//get { return Path.GetDirectoryName(WeSayWordsProject.Project.PathToLiftFile); }
 		}
 
@@ -88,9 +80,8 @@ namespace WeSay.LexicalModel
 		//    exporter.End();
 		//}
 
-
-//            //Logger.WriteEvent("Incremental Update Done");
-//        }
+		//            //Logger.WriteEvent("Incremental Update Done");
+		//        }
 
 		/// <summary>
 		///

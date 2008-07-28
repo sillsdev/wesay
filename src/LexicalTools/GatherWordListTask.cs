@@ -28,10 +28,14 @@ namespace WeSay.LexicalTools
 								  string wordListFileName,
 								  string writingSystemIdForWordListLanguage,
 								  ViewTemplate viewTemplate)
-			: this(lexEntryRepository, label, label, description, wordListFileName, writingSystemIdForWordListLanguage, viewTemplate)
-		{
-		}
-
+				: this(
+						lexEntryRepository,
+						label,
+						label,
+						description,
+						wordListFileName,
+						writingSystemIdForWordListLanguage,
+						viewTemplate) {}
 
 		public GatherWordListTask(LexEntryRepository lexEntryRepository,
 								  string label,
@@ -82,8 +86,8 @@ namespace WeSay.LexicalTools
 			string pathToUse = pathLocal;
 			if (!File.Exists(pathLocal))
 			{
-				string pathInProgramDir =
-						Path.Combine(WeSayWordsProject.ApplicationCommonDirectory, _wordListFileName);
+				string pathInProgramDir = Path.Combine(BasilProject.ApplicationCommonDirectory,
+													   _wordListFileName);
 				pathToUse = pathInProgramDir;
 				if (!File.Exists(pathToUse))
 				{

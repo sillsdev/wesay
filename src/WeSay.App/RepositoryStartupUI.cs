@@ -1,18 +1,16 @@
 using System;
 using System.ComponentModel;
 using System.Windows.Forms;
-
 using Palaso.Progress;
 using Palaso.Reporting;
 using Palaso.UI.WindowsForms.Progress;
-
 using WeSay.LexicalModel;
 
 namespace WeSay.App
 {
 	internal class RepositoryStartupUI
 	{
-		private LexEntryRepository _lexEntryRepository;
+		private readonly LexEntryRepository _lexEntryRepository;
 
 		public RepositoryStartupUI(LexEntryRepository lexEntryRepository)
 		{
@@ -42,9 +40,7 @@ namespace WeSay.App
 							 ProgressState.StateValue.StoppedWithError)
 					{
 						ErrorReport.ReportNonFatalMessage(
-								"Failed." + dlg.ProgressStateResult.LogString,
-								null,
-								false);
+								"Failed." + dlg.ProgressStateResult.LogString, null, false);
 					}
 				}
 			}
@@ -52,10 +48,8 @@ namespace WeSay.App
 
 		private void DoRepositoryStartup(object sender, DoWorkEventArgs args)
 		{
-			ProgressState progressState = (ProgressState)args.Argument;
+			ProgressState progressState = (ProgressState) args.Argument;
 			_lexEntryRepository.Startup(progressState);
 		}
-
-
 	}
 }

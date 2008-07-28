@@ -101,15 +101,20 @@ namespace WeSay.LexicalTools.Tests
 
 		private DetailList MakeDetailList(bool showNormallyHiddenFields)
 		{
-			string[] analysisWritingSystemIds =
-					new string[] {BasilProject.Project.WritingSystems.TestWritingSystemAnalId};
-			string[] vernacularWritingSystemIds =
-					new string[] {BasilProject.Project.WritingSystems.TestWritingSystemVernId};
+			string[] analysisWritingSystemIds = new string[]
+													{
+															BasilProject.Project.WritingSystems.
+																	TestWritingSystemAnalId
+													};
+			string[] vernacularWritingSystemIds = new string[]
+													  {
+															  BasilProject.Project.WritingSystems.
+																	  TestWritingSystemVernId
+													  };
 			ViewTemplate viewTemplate = new ViewTemplate();
-			Field field =
-					new Field(Field.FieldNames.EntryLexicalForm.ToString(),
-							  "LexEntry",
-							  vernacularWritingSystemIds);
+			Field field = new Field(Field.FieldNames.EntryLexicalForm.ToString(),
+									"LexEntry",
+									vernacularWritingSystemIds);
 			field.DisplayName = "Word";
 			viewTemplate.Add(field);
 #if GlossMeaning
@@ -118,14 +123,12 @@ namespace WeSay.LexicalTools.Tests
 			string meaningFieldName = LexSense.WellKnownProperties.Definition;
 #endif
 			viewTemplate.Add(new Field(meaningFieldName, "LexSense", analysisWritingSystemIds));
-			viewTemplate.Add(
-					new Field(Field.FieldNames.ExampleSentence.ToString(),
-							  "LexExampleSentence",
-							  vernacularWritingSystemIds));
-			viewTemplate.Add(
-					new Field(Field.FieldNames.ExampleTranslation.ToString(),
-							  "LexExampleSentence",
-							  analysisWritingSystemIds));
+			viewTemplate.Add(new Field(Field.FieldNames.ExampleSentence.ToString(),
+									   "LexExampleSentence",
+									   vernacularWritingSystemIds));
+			viewTemplate.Add(new Field(Field.FieldNames.ExampleTranslation.ToString(),
+									   "LexExampleSentence",
+									   analysisWritingSystemIds));
 
 			Field rare = new Field("rare", "LexSense", analysisWritingSystemIds);
 			rare.Visibility = CommonEnumerations.VisibilitySetting.NormallyHidden;

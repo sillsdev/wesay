@@ -1,15 +1,13 @@
-using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
-using NUnit.Framework;
 using NUnit.Extensions.Forms;
+using NUnit.Framework;
 
 namespace WeSay.UI.Tests
 {
 	[TestFixture]
-	public class WeSayListViewTests : NUnitFormTest
+	public class WeSayListViewTests: NUnitFormTest
 	{
 		private Form _window;
 		private WeSayListView _listView;

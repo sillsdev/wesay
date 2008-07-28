@@ -17,7 +17,7 @@ namespace WeSay.LexicalModel.Tests.Db4oSpecific
 	/// </summary>
 	public class Db4oProjectSetupForTesting: IDisposable
 	{
-		private bool _disposed = false;
+		private bool _disposed;
 		private readonly ProjectDirectorySetupForTesting _projectDirectory;
 		public WeSayWordsProject _project;
 		public LexEntryRepository _lexEntryRepository;

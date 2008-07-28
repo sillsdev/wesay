@@ -9,7 +9,7 @@ namespace WeSay.UI
 	public partial class WeSayListBox: ListBox
 	{
 		private WritingSystem _writingSystem;
-		private object _itemToNotDrawYet = null;
+		private object _itemToNotDrawYet;
 
 		public WeSayListBox()
 		{

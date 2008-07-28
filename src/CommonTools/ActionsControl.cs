@@ -13,7 +13,7 @@ namespace WeSay.CommonTools
     public partial class ActionsControl: UserControl, ITask
     {
         private bool _isActive;
-        private bool _wasLoaded = false;
+		private bool _wasLoaded;
         private readonly LexEntryRepository _lexEntryRepository;
 
         public ActionsControl(LexEntryRepository lexEntryRepository)
@@ -167,9 +167,8 @@ namespace WeSay.CommonTools
         {
             get
             {
-                return
-                        StringCatalog.Get("~Backup, print, etc.",
-                                          "The description of the Actions task.");
+				return StringCatalog.Get("~Backup, print, etc.",
+										 "The description of the Actions task.");
             }
         }
 

@@ -32,7 +32,7 @@ namespace WeSay.ConfigTool.Tests
 		public override void TearDown()
 		{
 			base.TearDown();
-			if (WeSayWordsProject.IsInitialized)
+			if (BasilProject.IsInitialized)
 			{
 				WeSayWordsProject.Project.Dispose();
 			}
@@ -199,11 +199,11 @@ namespace WeSay.ConfigTool.Tests
 			_mainWindowTester.Close();
 			WeSayWordsProject.InitializeForTests(); // for Teardown
 		}
+
 		[Test]
 		public void ExistingProjectGetsNewTasks()
 		{
 			_window.CreateAndOpenProject(_projectFolder);
-
 		}
 	}
 }

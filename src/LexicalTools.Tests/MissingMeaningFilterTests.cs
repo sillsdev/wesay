@@ -11,14 +11,14 @@ namespace WeSay.LexicalTools.Tests
 		[SetUp]
 		public void Setup()
 		{
-			Field field =
-					new Field(LexSense.WellKnownProperties.Definition,
-							  "LexSense",
-							  new string[] {"analysis"});
+			Field field = new Field(LexSense.WellKnownProperties.Definition,
+									"LexSense",
+									new string[] {"analysis"});
 			_missingMeaningFilter = new MissingFieldQuery(field);
 		}
 
-		private static LexEntry CreateEmptyEntryWithOneSense() {
+		private static LexEntry CreateEmptyEntryWithOneSense()
+		{
 			LexEntry entry = new LexEntry();
 			LexSense sense = new LexSense();
 			entry.Senses.Add(sense);

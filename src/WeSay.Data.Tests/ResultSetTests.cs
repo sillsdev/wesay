@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using NUnit.Framework;
 
@@ -25,7 +24,5 @@ namespace WeSay.Data.Tests
 				Assert.AreEqual(2, index);
 			}
 		}
-
 	}
-
 }

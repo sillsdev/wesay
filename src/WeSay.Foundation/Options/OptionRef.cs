@@ -22,7 +22,7 @@ namespace WeSay.Foundation.Options
 		/// </summary>
 		private IReceivePropertyChangeNotifications _parent;
 
-		private bool _suspendNotification = false;
+		private bool _suspendNotification;
 
 		public OptionRef(): this(string.Empty) {}
 

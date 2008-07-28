@@ -53,10 +53,9 @@ namespace WeSay.ConfigTool
 
 		private void UpdateFontDisplay()
 		{
-			_fontInfoDisplay.Text =
-					string.Format("{0}, {1}",
-								  WritingSystem.Font.Name,
-								  Math.Round(WritingSystem.Font.Size));
+			_fontInfoDisplay.Text = string.Format("{0}, {1}",
+												  WritingSystem.Font.Name,
+												  Math.Round(WritingSystem.Font.Size));
 			_sampleTextBox.WritingSystem = WritingSystem;
 			_sampleTextBox.Text = string.Empty;
 			Invalidate();

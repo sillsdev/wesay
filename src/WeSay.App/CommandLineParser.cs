@@ -369,7 +369,7 @@ namespace CommandLine
 		private string longName;
 		private string helpText;
 		private object defaultValue;
-		private ArgumentTypes type;
+		private readonly ArgumentTypes type;
 	}
 
 	/// <summary>
@@ -461,7 +461,7 @@ namespace CommandLine
 		/// <returns> true if no errors were detected. </returns>
 		public static bool ParseArguments(string[] arguments, object destination)
 		{
-			return ParseArguments(arguments, destination, new ReportError(Console.Error.WriteLine));
+			return ParseArguments(arguments, destination, Console.Error.WriteLine);
 		}
 
 		/// <summary>
@@ -484,8 +484,8 @@ namespace CommandLine
 
 		private class HelpArgument
 		{
-			[ArgumentAttribute(ArgumentTypes.AtMostOnce, ShortName="?")]
-			public bool help = false;
+			[Argument(ArgumentTypes.AtMostOnce, ShortName = "?")]
+			public bool help;
 		}
 
 		/// <summary>
@@ -495,7 +495,7 @@ namespace CommandLine
 		/// <returns> Returns true if args contains /? or /help. </returns>
 		public static bool ParseHelp(string[] args)
 		{
-			Parser helpParser = new Parser(typeof (HelpArgument), new ReportError(NullReportError));
+			Parser helpParser = new Parser(typeof (HelpArgument), NullReportError);
 			HelpArgument helpArgument = new HelpArgument();
 			helpParser.Parse(args, helpArgument);
 			return helpArgument.help;
@@ -740,11 +740,10 @@ namespace CommandLine
 						{
 							case '-':
 								int endIndex = argument.IndexOfAny(new char[] {':', '+', '-'}, 1);
-								string option =
-										argument.Substring(1,
-														   endIndex == -1
-																   ? argument.Length - 1
-																   : endIndex - 1);
+								string option = argument.Substring(1,
+																   endIndex == -1
+																		   ? argument.Length - 1
+																		   : endIndex - 1);
 								string optionArgument;
 								if (option.Length + 1 == argument.Length)
 								{
@@ -773,8 +772,8 @@ namespace CommandLine
 								break;
 							case '@':
 								string[] nestedArguments;
-								hadError |=
-										LexFileArguments(argument.Substring(1), out nestedArguments);
+								hadError |= LexFileArguments(argument.Substring(1),
+															 out nestedArguments);
 								hadError |= ParseArgumentList(nestedArguments, destination);
 								break;
 							default:
@@ -827,8 +826,8 @@ namespace CommandLine
 				this.help = help;
 			}
 
-			public string syntax;
-			public string help;
+			public readonly string syntax;
+			public readonly string help;
 		}
 
 		/// <summary>
@@ -894,10 +893,10 @@ namespace CommandLine
 					}
 					else
 					{
-						endIndex =
-								helpStrings.help.LastIndexOf(' ',
-															 endIndex - 1,
-															 Math.Min(endIndex - index, charsPerLine));
+						endIndex = helpStrings.help.LastIndexOf(' ',
+																endIndex - 1,
+																Math.Min(endIndex - index,
+																		 charsPerLine));
 						if (endIndex <= index)
 						{
 							// no spaces on this line, append full set of chars
@@ -994,10 +993,10 @@ namespace CommandLine
 			}
 			catch (Exception e)
 			{
-				reporter(
-						string.Format("Error: Can't open command line argument file '{0}' : '{1}'",
-									  fileName,
-									  e.Message));
+				reporter(string.Format(
+								 "Error: Can't open command line argument file '{0}' : '{1}'",
+								 fileName,
+								 e.Message));
 				arguments = null;
 				return false;
 			}
@@ -1099,10 +1098,9 @@ namespace CommandLine
 
 		private static string LongName(ArgumentAttribute attribute, FieldInfo field)
 		{
-			return
-					(attribute == null || attribute.DefaultLongName)
-							? field.Name
-							: attribute.LongName;
+			return (attribute == null || attribute.DefaultLongName)
+						   ? field.Name
+						   : attribute.LongName;
 		}
 
 		private static string ShortName(ArgumentAttribute attribute, FieldInfo field)
@@ -1180,10 +1178,9 @@ namespace CommandLine
 
 		private static bool IsValidElementType(Type type)
 		{
-			return
-					type != null &&
-					(type == typeof (int) || type == typeof (uint) || type == typeof (string) ||
-					 type == typeof (bool) || type.IsEnum);
+			return type != null &&
+				   (type == typeof (int) || type == typeof (uint) || type == typeof (string) ||
+					type == typeof (bool) || type.IsEnum);
 		}
 
 		private class Argument
@@ -1562,24 +1559,24 @@ namespace CommandLine
 				get { return isDefault; }
 			}
 
-			private string longName;
+			private readonly string longName;
 			private string shortName;
-			private string helpText;
-			private bool hasHelpText;
-			private bool explicitShortName;
-			private object defaultValue;
+			private readonly string helpText;
+			private readonly bool hasHelpText;
+			private readonly bool explicitShortName;
+			private readonly object defaultValue;
 			private bool seenValue;
-			private FieldInfo field;
-			private Type elementType;
-			private ArgumentTypes flags;
-			private ArrayList collectionValues;
-			private ReportError reporter;
-			private bool isDefault;
+			private readonly FieldInfo field;
+			private readonly Type elementType;
+			private readonly ArgumentTypes flags;
+			private readonly ArrayList collectionValues;
+			private readonly ReportError reporter;
+			private readonly bool isDefault;
 		}
 
-		private ArrayList arguments;
-		private Hashtable argumentMap;
-		private Argument defaultArgument;
-		private ReportError reporter;
+		private readonly ArrayList arguments;
+		private readonly Hashtable argumentMap;
+		private readonly Argument defaultArgument;
+		private readonly ReportError reporter;
 	}
 }

@@ -24,7 +24,7 @@ namespace WeSay.ConfigTool.Tests
 		{
 			_window.Close();
 			_window.Dispose();
-			if (WeSayWordsProject.IsInitialized)
+			if (BasilProject.IsInitialized)
 			{
 				WeSayWordsProject.Project.Dispose();
 			}

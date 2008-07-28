@@ -14,7 +14,7 @@ namespace WeSay.LexicalModel.Tests.Db4oSpecific
 		protected bool _didNotify;
 
 		protected string _filePath;
-		private Db4oLexEntryRepository _db4oRepository = null;
+		private Db4oLexEntryRepository _db4oRepository;
 
 		[SetUp]
 		public void Setup()
@@ -78,8 +78,7 @@ namespace WeSay.LexicalModel.Tests.Db4oSpecific
 			entry = GetFirstEntry();
 			Assert.AreEqual(1, _db4oRepository.CountAllItems());
 			Assert.AreEqual(1, entry.Senses.Count);
-			Assert.AreEqual(activations + 1 /*entry*/+ 1 /*sense*/,
-							_db4oRepository.ActivationCount);
+			Assert.AreEqual(activations + 1 /*entry*/+ 1 /*sense*/, _db4oRepository.ActivationCount);
 		}
 
 		[Test]

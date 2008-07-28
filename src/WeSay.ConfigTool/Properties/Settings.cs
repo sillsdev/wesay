@@ -54,7 +54,7 @@ namespace WeSay.ConfigTool.Properties
 		// it is user scoped or application scoped)
 		[UserScopedSetting]
 		[DebuggerNonUserCode]
-		[DefaultSettingValueAttribute("")]
+		[DefaultSettingValue("")]
 		[Obsolete("Please use MruConfigFilePaths instead")]
 		[NoSettingsVersionUpgrade]
 		public string LastConfigFilePath

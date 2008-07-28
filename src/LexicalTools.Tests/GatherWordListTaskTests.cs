@@ -33,16 +33,17 @@ namespace WeSay.LexicalTools.Tests
 
 			File.WriteAllLines(_wordListFilePath, _words);
 			_viewTemplate = new ViewTemplate();
-			_viewTemplate.Add(
-					new Field(Field.FieldNames.EntryLexicalForm.ToString(),
-							  "LexEntry",
-							  new string[]
-									  {BasilProject.Project.WritingSystems.TestWritingSystemVernId}));
+			_viewTemplate.Add(new Field(Field.FieldNames.EntryLexicalForm.ToString(),
+										"LexEntry",
+										new string[]
+											{
+													BasilProject.Project.WritingSystems.
+															TestWritingSystemVernId
+											}));
 
-			_task =
-					new GatherWordListTask(_lexEntryRepository,
+			_task = new GatherWordListTask(_lexEntryRepository,
 										   "label",
-												"long label",
+										   "long label",
 										   "description",
 										   _wordListFilePath,
 										   _glossingLanguageWSId,
@@ -60,14 +61,13 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void EmptyTemplate()
 		{
-			GatherWordListTask g =
-					new GatherWordListTask(_lexEntryRepository,
-										   "label",
+			GatherWordListTask g = new GatherWordListTask(_lexEntryRepository,
+														  "label",
 														  "long label",
-										   "description",
-										   _wordListFilePath,
-										   WritingSystem.IdForUnknownAnalysis,
-										   new ViewTemplate());
+														  "description",
+														  _wordListFilePath,
+														  WritingSystem.IdForUnknownAnalysis,
+														  new ViewTemplate());
 
 			Assert.IsNotNull(g);
 		}
@@ -76,14 +76,13 @@ namespace WeSay.LexicalTools.Tests
 		[ExpectedException(typeof (ErrorReport.NonFatalMessageSentToUserException))]
 		public void MissingWordListFileGivesMessage()
 		{
-			GatherWordListTask g =
-					new GatherWordListTask(_lexEntryRepository,
-										   "label",
+			GatherWordListTask g = new GatherWordListTask(_lexEntryRepository,
+														  "label",
 														  "long label",
-										   "description",
-										   "NotThere.txt",
-										   WritingSystem.IdForUnknownAnalysis,
-										   new ViewTemplate());
+														  "description",
+														  "NotThere.txt",
+														  WritingSystem.IdForUnknownAnalysis,
+														  new ViewTemplate());
 			g.Activate(); //should give a box to user, an exception in this text environment
 		}
 
@@ -91,14 +90,13 @@ namespace WeSay.LexicalTools.Tests
 		[ExpectedException(typeof (ErrorReport.NonFatalMessageSentToUserException))]
 		public void WritingSystemNotInCurrentListGivesMessage()
 		{
-			GatherWordListTask g =
-					new GatherWordListTask(_lexEntryRepository,
-										   "label",
+			GatherWordListTask g = new GatherWordListTask(_lexEntryRepository,
+														  "label",
 														  "long label",
-										   "description",
-										   _wordListFilePath,
-										   "z7z",
-										   new ViewTemplate());
+														  "description",
+														  _wordListFilePath,
+														  "z7z",
+														  new ViewTemplate());
 			g.Activate(); //should give a box to user, an exception in this text environment
 		}
 

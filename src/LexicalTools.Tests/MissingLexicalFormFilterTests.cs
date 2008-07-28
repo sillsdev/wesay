@@ -11,10 +11,9 @@ namespace WeSay.LexicalTools.Tests
 		[SetUp]
 		public void Setup()
 		{
-			Field field =
-					new Field(Field.FieldNames.EntryLexicalForm.ToString(),
-							  "LexEntry",
-							  new string[] {"vernacular"});
+			Field field = new Field(Field.FieldNames.EntryLexicalForm.ToString(),
+									"LexEntry",
+									new string[] {"vernacular"});
 			_missingLexicalFormFilter = new MissingFieldQuery(field);
 		}
 

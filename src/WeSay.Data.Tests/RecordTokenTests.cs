@@ -45,20 +45,18 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void ConstructWithResults()
 		{
-			Assert.IsNotNull(
-					new RecordToken<TestItem>(_repository,
-											  new Dictionary<string, object>(),
-											  new TestRepositoryId(8)));
+			Assert.IsNotNull(new RecordToken<TestItem>(_repository,
+													   new Dictionary<string, object>(),
+													   new TestRepositoryId(8)));
 		}
 
 		[Test]
 		[ExpectedException(typeof (ArgumentNullException))]
 		public void ConstructWithResults_NullRepository_Throws()
 		{
-			Assert.IsNotNull(
-					new RecordToken<TestItem>(null,
-											  new Dictionary<string, object>(),
-											  new TestRepositoryId(8)));
+			Assert.IsNotNull(new RecordToken<TestItem>(null,
+													   new Dictionary<string, object>(),
+													   new TestRepositoryId(8)));
 		}
 
 		[Test]
@@ -72,8 +70,9 @@ namespace WeSay.Data.Tests
 		[ExpectedException(typeof (ArgumentNullException))]
 		public void ConstructWithResults_NullRepositoryId_Throws()
 		{
-			Assert.IsNotNull(
-					new RecordToken<TestItem>(_repository, new Dictionary<string, object>(), null));
+			Assert.IsNotNull(new RecordToken<TestItem>(_repository,
+													   new Dictionary<string, object>(),
+													   null));
 		}
 	}
 
@@ -85,9 +84,10 @@ namespace WeSay.Data.Tests
 		{
 			get
 			{
-				if(_token == null)
+				if (_token == null)
 				{
-					throw new InvalidOperationException("Token must be initialized before tests can be run");
+					throw new InvalidOperationException(
+							"Token must be initialized before tests can be run");
 				}
 				return _token;
 			}
@@ -95,7 +95,7 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof(ArgumentNullException))]
+		[ExpectedException(typeof (ArgumentNullException))]
 		public void GetIndexer_NullFieldName_Throws()
 		{
 			Token[null] = null;
@@ -163,7 +163,7 @@ namespace WeSay.Data.Tests
 	}
 
 	[TestFixture]
-	public class RecordTokenConstructedWithResultsTests : RecordTokenTestsBase
+	public class RecordTokenConstructedWithResultsTests: RecordTokenTestsBase
 	{
 		private MemoryRepository<TestItem> _repository;
 
@@ -196,7 +196,6 @@ namespace WeSay.Data.Tests
 			Token["string"] = "new result";
 			Assert.AreEqual("new result", Token["string"]);
 		}
-
 	}
 
 	[TestFixture]
@@ -206,7 +205,8 @@ namespace WeSay.Data.Tests
 		{
 			private readonly TestItem _itemToReturn;
 
-			public TestRepository(TestItem itemToReturn) {
+			public TestRepository(TestItem itemToReturn)
+			{
 				_itemToReturn = itemToReturn;
 			}
 
@@ -268,18 +268,12 @@ namespace WeSay.Data.Tests
 
 			public bool CanQuery
 			{
-				get
-				{
-					return false;
-				}
+				get { return false; }
 			}
 
 			public bool CanPersist
 			{
-				get
-				{
-					return false;
-				}
+				get { return false; }
 			}
 
 			public void SaveItems(IEnumerable<TestItem> items)
@@ -292,9 +286,7 @@ namespace WeSay.Data.Tests
 				throw new NotImplementedException();
 			}
 
-			public void Dispose()
-			{
-			}
+			public void Dispose() {}
 		}
 
 		private TestRepository _repository;

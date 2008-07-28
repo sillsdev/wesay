@@ -22,7 +22,7 @@ namespace WeSay.UI.AutoCompleteTextBox
 		private FormToObectFinderDelegate _formToObectFinderDelegate;
 
 		public event EventHandler SelectedItemChanged;
-		private bool _inMidstOfSettingSelectedItem = false;
+		private bool _inMidstOfSettingSelectedItem;
 
 		#region EntryMode
 
@@ -168,7 +168,7 @@ namespace WeSay.UI.AutoCompleteTextBox
 		private ItemFilterDelegate _itemFilterDelegate;
 		private object _selectedItem;
 		private readonly ToolTip _toolTip;
-		private object _previousToolTipTarget = null;
+		private object _previousToolTipTarget;
 
 		[Browsable(false)]
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
@@ -561,9 +561,8 @@ namespace WeSay.UI.AutoCompleteTextBox
 				Form form = FindForm();
 				Point parentPointOnScreen = Parent.PointToClient(form.Location);
 				Point formPointOnScreen = form.PointToClient(form.Location);
-				Point offset =
-						new Point(formPointOnScreen.X - parentPointOnScreen.X,
-								  formPointOnScreen.Y - parentPointOnScreen.Y);
+				Point offset = new Point(formPointOnScreen.X - parentPointOnScreen.X,
+										 formPointOnScreen.Y - parentPointOnScreen.Y);
 				Point p = Location;
 				p.X += offset.X;
 				p.Y += offset.Y;
@@ -692,12 +691,11 @@ namespace WeSay.UI.AutoCompleteTextBox
 			{
 				flags |= TextFormatFlags.RightToLeft;
 			}
-			return
-					TextRenderer.MeasureText(dc,
-											 s,
-											 _listBox.Font,
-											 new Size(int.MaxValue, _listBox.ItemHeight),
-											 flags);
+			return TextRenderer.MeasureText(dc,
+											s,
+											_listBox.Font,
+											new Size(int.MaxValue, _listBox.ItemHeight),
+											flags);
 		}
 
 		private static IEnumerable FilterList(string text,

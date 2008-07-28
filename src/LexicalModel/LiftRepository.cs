@@ -14,11 +14,12 @@ using WeSay.LexicalModel.Migration;
 
 namespace WeSay.LexicalModel
 {
-	internal class LiftRepository : MemoryRepository<LexEntry>
+	internal class LiftRepository: MemoryRepository<LexEntry>
 	{
 		private readonly string _liftFilePath;
 		private FileStream _liftFileStreamForLocking;
 		private bool _loadingAllEntries;
+
 		public LiftRepository(string filePath)
 		{
 			_liftFilePath = filePath;
@@ -85,7 +86,7 @@ namespace WeSay.LexicalModel
 		public override void DeleteAllItems()
 		{
 			RepositoryId[] idsOfEntriesInRepository = GetAllItems();
-			foreach(RepositoryId id in idsOfEntriesInRepository)
+			foreach (RepositoryId id in idsOfEntriesInRepository)
 			{
 				DeleteItem(id);
 			}
@@ -159,22 +160,19 @@ namespace WeSay.LexicalModel
 
 		//???? Eric added these and I'm not sure why. TA 2008-07-10
 		private void parser_ParsingWarning(object sender,
-										   LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence>.ErrorArgs
-											   e)
-		{
-		}
+										   LiftParser
+												   <WeSayDataObject, LexEntry, LexSense,
+												   LexExampleSentence>.ErrorArgs e) {}
 
 		private void parser_SetStepsCompleted(object sender,
-											  LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence>.
-												  ProgressEventArgs e)
-		{
-		}
+											  LiftParser
+													  <WeSayDataObject, LexEntry, LexSense,
+													  LexExampleSentence>.ProgressEventArgs e) {}
 
 		private void parser_SetTotalNumberSteps(object sender,
-												LiftParser<WeSayDataObject, LexEntry, LexSense, LexExampleSentence>.
-													StepsArgs e)
-		{
-		}
+												LiftParser
+														<WeSayDataObject, LexEntry, LexSense,
+														LexExampleSentence>.StepsArgs e) {}
 
 		//private DateTime _timeOfLastQueryForNewRecords;
 
@@ -240,23 +238,22 @@ namespace WeSay.LexicalModel
 
 		private void CreateFileContainingModified(IEnumerable<LexEntry> entriesToUpdate)
 		{
-				LiftExporter exporter = null;
-				foreach (LexEntry entry in entriesToUpdate)
+			LiftExporter exporter = null;
+			foreach (LexEntry entry in entriesToUpdate)
+			{
+				if (exporter == null)
 				{
-					if (exporter == null)
-					{
-						exporter =
-							new LiftExporter(MakeIncrementFileName(PreciseDateTime.UtcNow));
-						//!!!exporter.Start(); //!!! Would be nice to have this CJP 2008-07-09
-					}
-					exporter.Add(entry);
+					exporter = new LiftExporter(MakeIncrementFileName(PreciseDateTime.UtcNow));
+					//!!!exporter.Start(); //!!! Would be nice to have this CJP 2008-07-09
 				}
-				if (exporter != null)
-				{
-					exporter.End();
-				}
+				exporter.Add(entry);
+			}
+			if (exporter != null)
+			{
+				exporter.End();
+			}
 
-				RecordUpdateTime(PreciseDateTime.UtcNow); //Why do we need to call this??? TA 7-4-2008
+			RecordUpdateTime(PreciseDateTime.UtcNow); //Why do we need to call this??? TA 7-4-2008
 		}
 
 		private void CreateFileContainingDeleted(LexEntry entryToDelete)
@@ -276,8 +273,7 @@ namespace WeSay.LexicalModel
 			{
 				if (exporter == null)
 				{
-					exporter =
-						new LiftExporter(MakeIncrementFileName(PreciseDateTime.UtcNow));
+					exporter = new LiftExporter(MakeIncrementFileName(PreciseDateTime.UtcNow));
 					//!!!exporter.Start(); //!!! Would be nice to have this CJP 2008-07-09
 				}
 				exporter.AddDeletedEntry(entry);
@@ -298,9 +294,7 @@ namespace WeSay.LexicalModel
 		{
 			//merge the increment files
 
-			if (
-				SynchronicMerger.GetPendingUpdateFiles(_liftFilePath)
-					.Length > 0)
+			if (SynchronicMerger.GetPendingUpdateFiles(_liftFilePath).Length > 0)
 			{
 				Logger.WriteEvent("Running Synchronic Merger");
 				try
@@ -315,15 +309,15 @@ namespace WeSay.LexicalModel
 					if (contents.Trim().Length == 0)
 					{
 						ErrorReport.ReportNonFatalMessage(
-							"It looks as though WeSay recently crashed while attempting to save.  It will try again to preserve your work, but you will want to check to make sure nothing was lost.");
+								"It looks as though WeSay recently crashed while attempting to save.  It will try again to preserve your work, but you will want to check to make sure nothing was lost.");
 						File.Delete(error.PathToNewFile);
 					}
 					else
 					{
 						File.Move(error.PathToNewFile, error.PathToNewFile + ".bad");
 						ErrorReport.ReportNonFatalMessage(
-							"WeSay was unable to save some work you did in the previous session.  The work might be recoverable from the file {0}. The next screen will allow you to send a report of this to the developers.",
-							error.PathToNewFile + ".bad");
+								"WeSay was unable to save some work you did in the previous session.  The work might be recoverable from the file {0}. The next screen will allow you to send a report of this to the developers.",
+								error.PathToNewFile + ".bad");
 						ErrorNotificationDialog.ReportException(error, null, false);
 					}
 					//return false; //!!! remove CJP
@@ -331,7 +325,7 @@ namespace WeSay.LexicalModel
 				catch (Exception e)
 				{
 					throw new ApplicationException(
-						"Could not finish updating LIFT dictionary file.", e);
+							"Could not finish updating LIFT dictionary file.", e);
 				}
 				finally
 				{
@@ -396,7 +390,6 @@ namespace WeSay.LexicalModel
 		//    Debug.Assert(Directory.Exists(LiftDirectory));
 		//    return File.GetLastWriteTimeUtc(_liftFilePath);
 		//}
-
 
 		//I don't think this is needed anymore TA 7-9-2008
 		//public IList<RepositoryId> GetRecordsNeedingUpdateInLift()

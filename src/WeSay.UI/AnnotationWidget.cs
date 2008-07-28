@@ -21,17 +21,26 @@ namespace WeSay.UI
 		private readonly string _nameForTesting;
 		private bool _hot;
 
-		private static readonly Image CheckedImage =
-				Resources.FlagOn.GetThumbnailImage(20, 20, ReturnFalse, IntPtr.Zero);
+		private static readonly Image CheckedImage = Resources.FlagOn.GetThumbnailImage(20,
+																						20,
+																						ReturnFalse,
+																						IntPtr.Zero);
 
-		private static readonly Image HotCheckedImage =
-				Resources.HotFlagOn.GetThumbnailImage(20, 20, ReturnFalse, IntPtr.Zero);
+		private static readonly Image HotCheckedImage = Resources.HotFlagOn.GetThumbnailImage(20,
+																							  20,
+																							  ReturnFalse,
+																							  IntPtr
+																									  .
+																									  Zero);
 
-		private static readonly Image UncheckedImage =
-				Resources.FlagOff.GetThumbnailImage(20, 20, ReturnFalse, IntPtr.Zero);
+		private static readonly Image UncheckedImage = Resources.FlagOff.GetThumbnailImage(20,
+																						   20,
+																						   ReturnFalse,
+																						   IntPtr.
+																								   Zero);
 
-		private static readonly Image HotUncheckedImage =
-				Resources.HotFlagOff.GetThumbnailImage(20, 20, ReturnFalse, IntPtr.Zero);
+		private static readonly Image HotUncheckedImage = Resources.HotFlagOff.GetThumbnailImage(
+				20, 20, ReturnFalse, IntPtr.Zero);
 
 		public AnnotationWidget(MultiText multitext, string writingSystemId, string nameForTesting)
 		{

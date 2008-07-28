@@ -17,7 +17,7 @@ namespace WeSay.Foundation
 	[XmlInclude(typeof (LanguageForm))]
 	public class MultiText: MultiTextBase, IParentable, IReportEmptiness, IXmlSerializable
 	{
-		private WeSayDataObject _parent = null;
+		private WeSayDataObject _parent;
 
 		public MultiText(WeSayDataObject parent)
 		{

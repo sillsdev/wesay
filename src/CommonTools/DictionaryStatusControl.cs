@@ -1,7 +1,7 @@
 using System;
 using System.Diagnostics;
-using System.Windows.Forms;
 using System.Drawing;
+using System.Windows.Forms;
 using Palaso.UI.WindowsForms.i8n;
 using WeSay.Project;
 
@@ -21,9 +21,11 @@ namespace WeSay.CommonTools
 		public DictionaryStatusControl(int count)
 		{
 			InitializeComponent();
-			_dictionarySizeLabel.Text = String.Format(StringCatalog.Get(this._dictionarySizeLabel.Text),
-													  count, WeSayWordsProject.Project.Name);
-	   }
+			_dictionarySizeLabel.Text =
+					String.Format(StringCatalog.Get(this._dictionarySizeLabel.Text),
+								  count,
+								  WeSayWordsProject.Project.Name);
+		}
 
 		public bool ShowLogo
 		{
@@ -37,9 +39,8 @@ namespace WeSay.CommonTools
 		private void UpdateSize()
 		{
 			int newHeight = _logoImage.Visible ? _logoImage.Location.Y + _logoImage.Height : 0;
-			newHeight =
-					Math.Max(_dictionarySizeLabel.Location.Y + _dictionarySizeLabel.Height,
-							 newHeight);
+			newHeight = Math.Max(_dictionarySizeLabel.Location.Y + _dictionarySizeLabel.Height,
+								 newHeight);
 			Height = newHeight;
 		}
 
@@ -60,7 +61,8 @@ namespace WeSay.CommonTools
 		protected override void OnSizeChanged(EventArgs e)
 		{
 			base.OnSizeChanged(e);
-			_dictionarySizeLabel.MaximumSize = new Size(Width - _dictionarySizeLabel.Location.X, int.MaxValue);
+			_dictionarySizeLabel.MaximumSize = new Size(Width - _dictionarySizeLabel.Location.X,
+														int.MaxValue);
 			_dictionarySizeLabel.PerformLayout();
 		}
 	}

@@ -95,10 +95,9 @@ namespace WeSay.LexicalTools
 #if GlossMeaning
 			rtf.Append(RenderGhostedField("Gloss", currentItem, entry.Senses.Count + 1));
 #else
-			rtf.Append(
-					RenderGhostedField(LexSense.WellKnownProperties.Definition,
-									   currentItem,
-									   entry.Senses.Count + 1));
+			rtf.Append(RenderGhostedField(LexSense.WellKnownProperties.Definition,
+										  currentItem,
+										  entry.Senses.Count + 1));
 #endif
 
 			rtf.Append(@"\par}");
@@ -119,11 +118,12 @@ namespace WeSay.LexicalTools
 				rtf.Append(headword.Form);
 				//   rtf.Append(" ");
 
-				int homographNumber =
-						lexEntryRepository.GetHomographNumber(entry,
-															  WeSayWordsProject.Project.
-																	  DefaultViewTemplate.
-																	  HeadwordWritingSystem);
+				int homographNumber = lexEntryRepository.GetHomographNumber(entry,
+																			WeSayWordsProject.
+																					Project.
+																					DefaultViewTemplate
+																					.
+																					HeadwordWritingSystem);
 				if (homographNumber > 0)
 				{
 					rtf.Append(@"{\super " + homographNumber + "}");
@@ -225,7 +225,7 @@ namespace WeSay.LexicalTools
 
 		private static string RenderGhostedField(string property,
 												 CurrentItemEventArgs currentItem,
-												 Nullable<int> number)
+												 int? number)
 		{
 			string rtf = string.Empty;
 			if (currentItem != null && property == currentItem.PropertyName)
@@ -266,9 +266,8 @@ namespace WeSay.LexicalTools
 			{
 				return false;
 			}
-			return
-					(currentItem.DataTarget == text &&
-					 currentItem.WritingSystemId == l.WritingSystemId);
+			return (currentItem.DataTarget == text &&
+					currentItem.WritingSystemId == l.WritingSystemId);
 		}
 
 		private static string Utf16ToRtfAnsi(IEnumerable<char> inString)

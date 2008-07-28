@@ -9,7 +9,7 @@ using WeSay.UI;
 
 namespace WeSay.CommonTools
 {
-	public partial class DashboardButton : UserControl, IButtonControl
+	public partial class DashboardButton: UserControl, IButtonControl
 	{
 		private DialogResult _dialogResult;
 		private Color _borderColor = Color.Blue;
@@ -18,9 +18,9 @@ namespace WeSay.CommonTools
 		private bool _mouseInControl;
 		private bool _keyIsDown;
 		// default format flags for text rendering
-		protected const TextFormatFlags _defaultTextFormatFlags = TextFormatFlags.WordBreak |
-																  TextFormatFlags.NoFullWidthCharacterBreak |
-																  TextFormatFlags.LeftAndRightPadding;
+		protected const TextFormatFlags _defaultTextFormatFlags =
+				TextFormatFlags.WordBreak | TextFormatFlags.NoFullWidthCharacterBreak |
+				TextFormatFlags.LeftAndRightPadding;
 
 		protected const int ShadowWidth = 3;
 		protected const int ButtonDownHorizontalNudge = ShadowWidth;
@@ -30,8 +30,17 @@ namespace WeSay.CommonTools
 		protected const int BottomMarginWidth = 9 + ShadowWidth;
 		protected const int ProgressBarHeight = 5;
 		protected const int ProgressBarTopMargin = 5;
-		protected virtual int ProgressBarLeftMargin { get { return 5; } }
-		protected virtual int ProgressBarRightMargin { get { return 5; } }
+
+		protected virtual int ProgressBarLeftMargin
+		{
+			get { return 5; }
+		}
+
+		protected virtual int ProgressBarRightMargin
+		{
+			get { return 5; }
+		}
+
 		private readonly IThingOnDashboard _thingToShowOnDashboard;
 
 		public event EventHandler Selected = delegate { };
@@ -69,16 +78,14 @@ namespace WeSay.CommonTools
 		/// <param name="radius"></param>
 		/// <param name="lw"></param>
 		/// <returns></returns>
-		public static GraphicsPath RoundRect(int x, int y,
-											 int width, int height,
-											 int radius, int lw)
-			// x,y - top left corner of rounded rectangle
-			// width, height - width and height of round rect
-			// radius - radius for corners
-			// lw - line width (for Graphics.Pen)
+		public static GraphicsPath RoundRect(int x, int y, int width, int height, int radius, int lw)
+				// x,y - top left corner of rounded rectangle
+				// width, height - width and height of round rect
+				// radius - radius for corners
+				// lw - line width (for Graphics.Pen)
 		{
 			GraphicsPath g = new GraphicsPath();
-			int diameter = radius*2;
+			int diameter = radius * 2;
 			g.AddArc(x + lw, y, diameter, diameter, 180, 90);
 			g.AddArc(x + (width - diameter - lw), y, diameter, diameter, 270, 90);
 			g.AddArc(x + (width - diameter - lw),
@@ -124,7 +131,8 @@ namespace WeSay.CommonTools
 
 			//draw the front part
 			rectangle = new Rectangle(ClientRectangle.Left + CurrentMouseButtonNudge,
-									  ClientRectangle.Top + CurrentMouseButtonNudge + borderWidth - 1,
+									  ClientRectangle.Top + CurrentMouseButtonNudge + borderWidth -
+									  1,
 									  ClientRectangle.Width - ShadowWidth,
 									  ClientRectangle.Height - ShadowWidth - borderWidth + 1);
 			path = GetButtonShapePath(rectangle, radius, borderWidth);
@@ -148,7 +156,12 @@ namespace WeSay.CommonTools
 
 		protected int CurrentMouseButtonNudge
 		{
-			get { return ((_mouseIsDown && _mouseInControl) || _keyIsDown) ? ButtonDownHorizontalNudge : 0; }
+			get
+			{
+				return ((_mouseIsDown && _mouseInControl) || _keyIsDown)
+							   ? ButtonDownHorizontalNudge
+							   : 0;
+			}
 		}
 
 		public IThingOnDashboard ThingToShowOnDashboard
@@ -170,11 +183,15 @@ namespace WeSay.CommonTools
 			}
 			int textTop = ClientRectangle.Top + TopMarginWidth;
 			// +1 is to fix off-by-one of width = right-left+1
-			TextRenderer.DrawText(e.Graphics, Text, Font, new Rectangle(left + nudge, textTop + nudge,
-																		ClientRectangle.Right - left - RightMarginWidth +
-																		1,
-																		textBottom - textTop + 1),
-								  Color.Black, FormatFlags);
+			TextRenderer.DrawText(e.Graphics,
+								  Text,
+								  Font,
+								  new Rectangle(left + nudge,
+												textTop + nudge,
+												ClientRectangle.Right - left - RightMarginWidth + 1,
+												textBottom - textTop + 1),
+								  Color.Black,
+								  FormatFlags);
 		}
 
 		protected virtual void PaintProgressBar(Graphics graphics)
@@ -191,10 +208,9 @@ namespace WeSay.CommonTools
 			if (DisplaySettings.Default.UsingProjectorScheme)
 			{
 				byte rgbMax = Math.Max(doneColor.R, Math.Max(doneColor.G, doneColor.B));
-				doneColor =
-						Color.FromArgb(doneColor.R == rgbMax ? 255 : 0,
-									   doneColor.G == rgbMax ? 255 : 0,
-									   doneColor.B == rgbMax ? 255 : 0);
+				doneColor = Color.FromArgb(doneColor.R == rgbMax ? 255 : 0,
+										   doneColor.G == rgbMax ? 255 : 0,
+										   doneColor.B == rgbMax ? 255 : 0);
 				todoColor = Color.FromArgb(50, 0, 0, 0);
 			}
 			Pen pen = new Pen(doneColor, ProgressBarHeight);
@@ -202,20 +218,26 @@ namespace WeSay.CommonTools
 			int nudge = CurrentMouseButtonNudge;
 			int left = ClientRectangle.Left + LeftMarginWidth;
 			int rightEdge = ClientRectangle.Right - RightMarginWidth;
-			int progressBarTop = ClientRectangle.Bottom - BottomMarginWidth - (HasProgressBar() ? ProgressBarHeight : 0);
-			float percentDone = (float)100.0 * (task.GetReferenceCount() - task.GetRemainingCount()) /
+			int progressBarTop = ClientRectangle.Bottom - BottomMarginWidth -
+								 (HasProgressBar() ? ProgressBarHeight : 0);
+			float percentDone = (float) 100.0 *
+								(task.GetReferenceCount() - task.GetRemainingCount()) /
 								task.GetReferenceCount();
-			percentDone = Math.Max(Math.Min(percentDone, 100), 0); // ensure that 0 <= percentDone <= 100
+			percentDone = Math.Max(Math.Min(percentDone, 100), 0);
+					// ensure that 0 <= percentDone <= 100
 
-			float rightEdgeOfDonePart = (float) (percentDone/100.0)*(rightEdge - left - ProgressBarLeftMargin - ProgressBarRightMargin)
-										+ left + ProgressBarLeftMargin;
-			graphics.DrawLine(pen, left + nudge + ProgressBarLeftMargin,
+			float rightEdgeOfDonePart = (float) (percentDone / 100.0) *
+										(rightEdge - left - ProgressBarLeftMargin -
+										 ProgressBarRightMargin) + left + ProgressBarLeftMargin;
+			graphics.DrawLine(pen,
+							  left + nudge + ProgressBarLeftMargin,
 							  progressBarTop + nudge,
 							  rightEdgeOfDonePart + nudge,
 							  progressBarTop + nudge);
 
 			pen = new Pen(todoColor, ProgressBarHeight);
-			graphics.DrawLine(pen, rightEdgeOfDonePart + nudge,
+			graphics.DrawLine(pen,
+							  rightEdgeOfDonePart + nudge,
 							  progressBarTop + nudge,
 							  rightEdge + nudge - ProgressBarRightMargin,
 							  progressBarTop + nudge);
@@ -235,7 +257,9 @@ namespace WeSay.CommonTools
 			{
 				possibleSizes.Add(new Size(size.Width + LeftMarginWidth + RightMarginWidth,
 										   size.Height + TopMarginWidth + BottomMarginWidth +
-										   (HasProgressBar() ? ProgressBarTopMargin + ProgressBarHeight : 0)));
+										   (HasProgressBar()
+													? ProgressBarTopMargin + ProgressBarHeight
+													: 0)));
 			}
 			return possibleSizes;
 		}
@@ -247,12 +271,17 @@ namespace WeSay.CommonTools
 		protected List<Size> GetPossibleTextSizes()
 		{
 			Graphics g = Graphics.FromHwnd(Handle);
-			List<Size> possibleSizes = DisplaySettings.GetPossibleTextSizes(g, Text, Font, FormatFlags);
+			List<Size> possibleSizes = DisplaySettings.GetPossibleTextSizes(g,
+																			Text,
+																			Font,
+																			FormatFlags);
 			g.Dispose();
 			return possibleSizes;
 		}
 
-		private static GraphicsPath GetButtonShapePath(Rectangle rectangle, int radius, int borderWidth)
+		private static GraphicsPath GetButtonShapePath(Rectangle rectangle,
+													   int radius,
+													   int borderWidth)
 		{
 			return RoundRect(rectangle.Left,
 							 rectangle.Top,
@@ -267,6 +296,7 @@ namespace WeSay.CommonTools
 			base.OnClick(e);
 			Selected(this, e);
 		}
+
 		protected override void OnMouseUp(MouseEventArgs e)
 		{
 			base.OnMouseUp(e);
@@ -277,6 +307,7 @@ namespace WeSay.CommonTools
 			_mouseIsDown = false;
 			Invalidate();
 		}
+
 		protected override void OnMouseDown(MouseEventArgs e)
 		{
 			base.OnMouseDown(e);
@@ -363,13 +394,10 @@ namespace WeSay.CommonTools
 
 		public DialogResult DialogResult
 		{
-			get
-			{
-				return _dialogResult;
-			}
+			get { return _dialogResult; }
 			set
 			{
-				if (Enum.IsDefined(typeof(DialogResult), value))
+				if (Enum.IsDefined(typeof (DialogResult), value))
 				{
 					_dialogResult = value;
 				}

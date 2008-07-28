@@ -23,9 +23,8 @@ namespace WeSay.ConfigTool
 				if (dirs.Length > 1)
 				{
 					string root = Path.Combine(dirs[dirs.Length - 3], dirs[dirs.Length - 2]);
-					_pathLabel.Text =
-							String.Format("Project will be created at: {0}",
-										  Path.Combine(root, dirs[dirs.Length - 1]));
+					_pathLabel.Text = String.Format("Project will be created at: {0}",
+													Path.Combine(root, dirs[dirs.Length - 1]));
 				}
 
 				_pathLabel.Invalidate();
@@ -77,10 +76,8 @@ namespace WeSay.ConfigTool
 		{
 			get
 			{
-				return
-						Path.Combine(
-								Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
-								"WeSay");
+				return Path.Combine(
+						Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "WeSay");
 			}
 		}
 

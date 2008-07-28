@@ -9,7 +9,8 @@ using WeSay.LexicalModel;
 
 namespace WeSay.Project.Tests
 {
-	[TestFixture, Ignore("This class is going away. TA 2008-07-16")]
+	[TestFixture]
+	[Ignore("This class is going away. TA 2008-07-16")]
 	public class CacheBuilderTests
 	{
 		private CacheBuilder _cacheBuilder;
@@ -53,8 +54,8 @@ namespace WeSay.Project.Tests
 			{
 				string dirToEmptyOfBackupDirs =
 						Directory.GetParent(WeSayWordsProject.Project.PathToLiftBackupDir).FullName;
-				string[] backUpDirs =
-						Directory.GetDirectories(dirToEmptyOfBackupDirs, "*incremental*");
+				string[] backUpDirs = Directory.GetDirectories(dirToEmptyOfBackupDirs,
+															   "*incremental*");
 				foreach (string dir in backUpDirs)
 				{
 					Directory.Delete(dir, true);

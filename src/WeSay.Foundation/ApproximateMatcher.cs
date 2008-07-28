@@ -43,11 +43,10 @@ namespace WeSay.Foundation
 												   GetStringDelegate<T> itemFormExtractor,
 												   string notNormalizedFormToMatch)
 		{
-			return
-					FindClosestForms(itemsToSearch,
-									 itemFormExtractor,
-									 notNormalizedFormToMatch,
-									 ApproximateMatcherOptions.None);
+			return FindClosestForms(itemsToSearch,
+									itemFormExtractor,
+									notNormalizedFormToMatch,
+									ApproximateMatcherOptions.None);
 		}
 
 		public static IList<string> FindClosestForms(IEnumerable forms,
@@ -83,11 +82,10 @@ namespace WeSay.Foundation
 				if (!string.IsNullOrEmpty(form))
 				{
 					int editDistance;
-					editDistance =
-							EditDistance(formToMatch,
-										 form,
-										 secondBestEditDistance,
-										 includeApproximatePrefixedForms);
+					editDistance = EditDistance(formToMatch,
+												form,
+												secondBestEditDistance,
+												includeApproximatePrefixedForms);
 					if (editDistance < bestEditDistance)
 					{
 						if (includeNextClosest && bestEditDistance != int.MaxValue)
@@ -268,9 +266,8 @@ namespace WeSay.Foundation
 							list1[list1index - 1].Equals(list2[list2index - 2]) &&
 							list1[list1index - 2].Equals(list2[list2index - 1]))
 						{
-							distance =
-									Math.Min(distance,
-											 rows[prevRow][list2index - 2] + transpositionCost);
+							distance = Math.Min(distance,
+												rows[prevRow][list2index - 2] + transpositionCost);
 						}
 					}
 

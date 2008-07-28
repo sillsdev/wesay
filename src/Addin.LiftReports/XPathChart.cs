@@ -68,8 +68,7 @@ namespace Addin.LiftReports
 					DrawToBitmap(bm, new Rectangle(0, 0, Width, Height));
 #endif
 					_graph.Bars.Clear();
-					string path =
-							Path.Combine(Path.GetTempPath(), Path.GetRandomFileName() + ".png");
+					string path = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName() + ".png");
 					//System.Drawing.Imaging.
 					//System.Drawing.Bitmap b= new png
 					bm.Save(path, ImageFormat.Png);

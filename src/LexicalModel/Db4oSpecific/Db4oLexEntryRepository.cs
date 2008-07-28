@@ -29,34 +29,33 @@ namespace WeSay.LexicalModel.Db4oSpecific
 				//            objectClass = db4oConfiguration.ObjectClass(typeof(System.Collections.Generic.Dictionary<string,object>));
 				//            objectClass.ObjectField("comparer").CascadeOnDelete(false);
 
-				objectClass = db4oConfiguration.ObjectClass(typeof(LanguageForm));
+				objectClass = db4oConfiguration.ObjectClass(typeof (LanguageForm));
 				objectClass.ObjectField("_writingSystemId").Indexed(true);
 				objectClass.ObjectField("_form").Indexed(true);
 				objectClass.CascadeOnDelete(true);
 
-				objectClass = db4oConfiguration.ObjectClass(typeof(LexEntry));
+				objectClass = db4oConfiguration.ObjectClass(typeof (LexEntry));
 				objectClass.ObjectField("_modificationTime").Indexed(true);
 				objectClass.ObjectField("_guid").Indexed(true);
 				objectClass.ObjectField("_lexicalForm").Indexed(true);
 				objectClass.ObjectField("_senses").Indexed(true);
 				objectClass.CascadeOnDelete(true);
 
-				objectClass = db4oConfiguration.ObjectClass(typeof(LexSense));
+				objectClass = db4oConfiguration.ObjectClass(typeof (LexSense));
 				objectClass.ObjectField("_gloss").Indexed(true);
 				objectClass.ObjectField("_exampleSentences").Indexed(true);
 				objectClass.CascadeOnDelete(true);
 
-				objectClass = db4oConfiguration.ObjectClass(typeof(LexExampleSentence));
+				objectClass = db4oConfiguration.ObjectClass(typeof (LexExampleSentence));
 				objectClass.ObjectField("_sentence").Indexed(true);
 				objectClass.ObjectField("_translation").Indexed(true);
 				objectClass.CascadeOnDelete(true);
 
-				objectClass = db4oConfiguration.ObjectClass(typeof(MultiText));
+				objectClass = db4oConfiguration.ObjectClass(typeof (MultiText));
 				objectClass.ObjectField("_forms").Indexed(true);
 				objectClass.CascadeOnDelete(true);
 			}
 		}
-
 
 		public Db4oLexEntryRepository(string path): base(path)
 		{
@@ -81,7 +80,7 @@ namespace WeSay.LexicalModel.Db4oSpecific
 		/// <summary>
 		/// for tests
 		/// </summary>
-		private int _activationCount = 0;
+		private int _activationCount;
 
 		/// <summary>
 		/// for tests
@@ -89,19 +88,15 @@ namespace WeSay.LexicalModel.Db4oSpecific
 		/// </summary>
 		internal int ActivationCount
 		{
-			get
-			{
-				return this._activationCount;
-			}
+			get { return this._activationCount; }
 		}
 
 		protected override void Dispose(bool disposing)
 		{
-			if(disposing)
+			if (disposing)
 			{
 				IEventRegistry r = EventRegistryFactory.ForObjectContainer(InternalDatabase);
 				r.Activated -= OnActivated;
-
 			}
 			base.Dispose(disposing);
 		}

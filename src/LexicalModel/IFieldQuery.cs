@@ -1,5 +1,4 @@
 using System;
-using WeSay.LexicalModel;
 
 namespace WeSay.LexicalModel
 {
@@ -9,9 +8,6 @@ namespace WeSay.LexicalModel
 
 		string Key { get; }
 
-		Field Field
-		{
-			get;
-		}
+		Field Field { get; }
 	}
 }

@@ -2,12 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using NUnit.Framework;
-using WeSay.Data;
 
 namespace WeSay.Data.Tests
 {
 	[TestFixture]
-	public class Db4oRepositoryStateUnitializedTests : IRepositoryStateUnitializedTests<TestItem>
+	public class Db4oRepositoryStateUnitializedTests: IRepositoryStateUnitializedTests<TestItem>
 	{
 		private string _name;
 
@@ -17,19 +16,21 @@ namespace WeSay.Data.Tests
 			this._name = Path.GetTempFileName();
 			RepositoryUnderTest = new Db4oRepository<TestItem>(_name);
 		}
+
 		[TearDown]
 		public void Teardown()
 		{
 			RepositoryUnderTest.Dispose();
 			File.Delete(_name);
 		}
-
 	}
 
 	[TestFixture]
-	public class Db4oRepositoryCreatedFromPersistedData : IRepositoryPopulateFromPersistedTests<TestItem>
+	public class Db4oRepositoryCreatedFromPersistedData:
+			IRepositoryPopulateFromPersistedTests<TestItem>
 	{
 		private string _persistedFilePath;
+
 		[SetUp]
 		public void Setup()
 		{
@@ -71,15 +72,14 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		public override void LastModified_IsSetToMostRecentItemInPersistedDatasLastModifiedTime()
-		{
-		}
+		public override void LastModified_IsSetToMostRecentItemInPersistedDatasLastModifiedTime() {}
 
 		[Test]
-		public override void GetItemMatchingQuery_QueryWithShow_ReturnsAllItemsAndFieldsMatchingQuery()
+		public override void
+				GetItemMatchingQuery_QueryWithShow_ReturnsAllItemsAndFieldsMatchingQuery()
 		{
 			SetState();
-			Query query = new Query(typeof(TestItem)).Show("StoredString");
+			Query query = new Query(typeof (TestItem)).Show("StoredString");
 			ResultSet<TestItem> resultsOfQuery = RepositoryUnderTest.GetItemsMatching(query);
 			Assert.AreEqual(1, resultsOfQuery.Count);
 			Assert.AreEqual("Sonne", resultsOfQuery[0]["StoredString"]);
@@ -93,7 +93,8 @@ namespace WeSay.Data.Tests
 	}
 
 	[TestFixture]
-	public class Db4oRepositoryCreateItemTransitionTests : IRepositoryCreateItemTransitionTests<TestItem>
+	public class Db4oRepositoryCreateItemTransitionTests:
+			IRepositoryCreateItemTransitionTests<TestItem>
 	{
 		private string _name;
 
@@ -104,7 +105,8 @@ namespace WeSay.Data.Tests
 			CreateRepository();
 		}
 
-		private void CreateRepository() {
+		private void CreateRepository()
+		{
 			RepositoryUnderTest = new Db4oRepository<TestItem>(this._name);
 		}
 
@@ -116,12 +118,13 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		public override void GetItemMatchingQuery_QueryWithShow_ReturnsAllItemsAndFieldsMatchingQuery()
+		public override void
+				GetItemMatchingQuery_QueryWithShow_ReturnsAllItemsAndFieldsMatchingQuery()
 		{
 			SetState();
 			Item.StoredInt = 123;
 			Item.StoredString = "I was stored!";
-			Query query = new Query(typeof(TestItem)).Show("StoredInt").Show("StoredString");
+			Query query = new Query(typeof (TestItem)).Show("StoredInt").Show("StoredString");
 			ResultSet<TestItem> resultsOfQuery = RepositoryUnderTest.GetItemsMatching(query);
 			Assert.AreEqual(1, resultsOfQuery.Count);
 			Assert.AreEqual(123, resultsOfQuery[0]["StoredInt"]);
@@ -136,37 +139,8 @@ namespace WeSay.Data.Tests
 	}
 
 	[TestFixture]
-	public class Db4oRepositoryDeleteItemTransitionTests : IRepositoryDeleteItemTransitionTests<TestItem>
-	{
-		private string _name;
-		[SetUp]
-		public void Setup()
-		{
-			this._name = Path.GetTempFileName();
-			CreateRepository();
-		}
-
-		private void CreateRepository()
-		{
-			RepositoryUnderTest = new Db4oRepository<TestItem>(this._name);
-		}
-
-		[TearDown]
-		public void Teardown()
-		{
-			RepositoryUnderTest.Dispose();
-			File.Delete(_name);
-		}
-
-		protected override void CreateNewRepositoryFromPersistedData()
-		{
-			RepositoryUnderTest.Dispose();
-			CreateRepository();
-		}
-	}
-
-	[TestFixture]
-	public class Db4oRepositoryDeleteIdTransitionTests : IRepositoryDeleteIdTransitionTests<TestItem>
+	public class Db4oRepositoryDeleteItemTransitionTests:
+			IRepositoryDeleteItemTransitionTests<TestItem>
 	{
 		private string _name;
 
@@ -197,7 +171,39 @@ namespace WeSay.Data.Tests
 	}
 
 	[TestFixture]
-	public class Db4oRepositoryDeleteAllItemsTransitionTests : IRepositoryDeleteAllItemsTransitionTests<TestItem>
+	public class Db4oRepositoryDeleteIdTransitionTests: IRepositoryDeleteIdTransitionTests<TestItem>
+	{
+		private string _name;
+
+		[SetUp]
+		public void Setup()
+		{
+			this._name = Path.GetTempFileName();
+			CreateRepository();
+		}
+
+		private void CreateRepository()
+		{
+			RepositoryUnderTest = new Db4oRepository<TestItem>(this._name);
+		}
+
+		[TearDown]
+		public void Teardown()
+		{
+			RepositoryUnderTest.Dispose();
+			File.Delete(_name);
+		}
+
+		protected override void CreateNewRepositoryFromPersistedData()
+		{
+			RepositoryUnderTest.Dispose();
+			CreateRepository();
+		}
+	}
+
+	[TestFixture]
+	public class Db4oRepositoryDeleteAllItemsTransitionTests:
+			IRepositoryDeleteAllItemsTransitionTests<TestItem>
 	{
 		private string _name;
 

@@ -134,9 +134,11 @@ namespace WeSay.ConfigTool.Tests
 		{
 			using (TempFile file1 = new TempFile(), file2 = new TempFile(), file3 = new TempFile())
 			{
-				_mruProjects.Paths =
-						new string[]
-								{file1.FileName, file2.FileName, file1.FileName, file3.FileName};
+				_mruProjects.Paths = new string[]
+										 {
+												 file1.FileName, file2.FileName, file1.FileName,
+												 file3.FileName
+										 };
 				Assert.AreEqual(3, _mruProjects.Paths.Length);
 				Assert.AreEqual(file1.FileName, _mruProjects.Paths[0]);
 			}

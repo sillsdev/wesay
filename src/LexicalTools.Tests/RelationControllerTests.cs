@@ -36,27 +36,23 @@ namespace WeSay.LexicalTools.Tests
 			CreateEntry("amarelho", "yellow");
 			CreateEntry("azul", "blue");
 
-			_synonymsRelationField =
-					new Field("synonyms",
-							  "LexEntry",
-							  new string[] {"vernacular"},
-							  Field.MultiplicityType.ZeroOrMore,
-							  "RelationToOneEntry");
-			_synonymsRelationType =
-					new LexRelationType("synonyms",
-										LexRelationType.Multiplicities.Many,
-										LexRelationType.TargetTypes.Sense);
+			_synonymsRelationField = new Field("synonyms",
+											   "LexEntry",
+											   new string[] {"vernacular"},
+											   Field.MultiplicityType.ZeroOrMore,
+											   "RelationToOneEntry");
+			_synonymsRelationType = new LexRelationType("synonyms",
+														LexRelationType.Multiplicities.Many,
+														LexRelationType.TargetTypes.Sense);
 
-			_synonymRelationField =
-					new Field("synonym",
-							  "LexEntry",
-							  new string[] {"vernacular"},
-							  Field.MultiplicityType.ZeroOr1,
-							  "RelationToOneEntry");
-			_synonymRelationType =
-					new LexRelationType("synonym",
-										LexRelationType.Multiplicities.One,
-										LexRelationType.TargetTypes.Sense);
+			_synonymRelationField = new Field("synonym",
+											  "LexEntry",
+											  new string[] {"vernacular"},
+											  Field.MultiplicityType.ZeroOr1,
+											  "RelationToOneEntry");
+			_synonymRelationType = new LexRelationType("synonym",
+													   LexRelationType.Multiplicities.One,
+													   LexRelationType.TargetTypes.Sense);
 		}
 
 		[TearDown]
@@ -103,12 +99,11 @@ namespace WeSay.LexicalTools.Tests
 		{
 			AddRelation(_source, _synonymRelationField.FieldName, "NonExistantId");
 
-			Control c =
-					RelationController.CreateWidget(_source,
-													_synonymRelationType,
-													_synonymRelationField,
-													_lexEntryRepository,
-													delegate { });
+			Control c = RelationController.CreateWidget(_source,
+														_synonymRelationType,
+														_synonymRelationField,
+														_lexEntryRepository,
+														delegate { });
 			Assert.AreEqual("NonExistantId", c.Text);
 		}
 
@@ -117,12 +112,11 @@ namespace WeSay.LexicalTools.Tests
 		{
 			AddRelation(_source, _synonymRelationField.FieldName, _target.Id);
 
-			Control c =
-					RelationController.CreateWidget(_source,
-													_synonymRelationType,
-													_synonymRelationField,
-													_lexEntryRepository,
-													delegate { });
+			Control c = RelationController.CreateWidget(_source,
+														_synonymRelationType,
+														_synonymRelationField,
+														_lexEntryRepository,
+														delegate { });
 
 			Assert.AreEqual(_target.LexicalForm["vernacular"], c.Text);
 		}
@@ -132,12 +126,11 @@ namespace WeSay.LexicalTools.Tests
 		{
 			LexRelation relation = AddRelation(_source, _synonymRelationField.FieldName, _target.Id);
 
-			Control c =
-					RelationController.CreateWidget(_source,
-													_synonymRelationType,
-													_synonymRelationField,
-													_lexEntryRepository,
-													delegate { });
+			Control c = RelationController.CreateWidget(_source,
+														_synonymRelationType,
+														_synonymRelationField,
+														_lexEntryRepository,
+														delegate { });
 			c.Text = string.Empty;
 
 			Assert.AreEqual(string.Empty, relation.Key);
@@ -148,12 +141,11 @@ namespace WeSay.LexicalTools.Tests
 		{
 			LexRelation relation = AddRelation(_source, _synonymRelationField.FieldName, _target.Id);
 
-			Control c =
-					RelationController.CreateWidget(_source,
-													_synonymRelationType,
-													_synonymRelationField,
-													_lexEntryRepository,
-													delegate { });
+			Control c = RelationController.CreateWidget(_source,
+														_synonymRelationType,
+														_synonymRelationField,
+														_lexEntryRepository,
+														delegate { });
 			c.Text = "NonExistantId";
 
 			Assert.AreEqual(string.Empty, relation.Key);
@@ -162,15 +154,13 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void ChangeBoundRelation_Single_Existing()
 		{
-			LexRelation relation =
-					AddRelation(_source, _synonymRelationField.FieldName, "something");
+			LexRelation relation = AddRelation(_source, _synonymRelationField.FieldName, "something");
 
-			Control c =
-					RelationController.CreateWidget(_source,
-													_synonymRelationType,
-													_synonymRelationField,
-													_lexEntryRepository,
-													delegate { });
+			Control c = RelationController.CreateWidget(_source,
+														_synonymRelationType,
+														_synonymRelationField,
+														_lexEntryRepository,
+														delegate { });
 			c.Text = _target.LexicalForm["vernacular"];
 
 			Assert.AreEqual(_target.Id, relation.Key);
@@ -181,12 +171,11 @@ namespace WeSay.LexicalTools.Tests
 		{
 			LexRelation relation = AddRelation(_source, _synonymRelationField.FieldName, _target.Id);
 
-			Control c =
-					RelationController.CreateWidget(_source,
-													_synonymRelationType,
-													_synonymRelationField,
-													_lexEntryRepository,
-													delegate { });
+			Control c = RelationController.CreateWidget(_source,
+														_synonymRelationType,
+														_synonymRelationField,
+														_lexEntryRepository,
+														delegate { });
 			c.Text = "new";
 
 			AutoCompleteWithCreationBox<RecordToken<LexEntry>, string> picker =
@@ -203,12 +192,11 @@ namespace WeSay.LexicalTools.Tests
 		{
 			AddRelation(_source, _synonymRelationField.FieldName, _target.Id);
 
-			Control c =
-					RelationController.CreateWidget(_source,
-													_synonymRelationType,
-													_synonymRelationField,
-													_lexEntryRepository,
-													delegate { });
+			Control c = RelationController.CreateWidget(_source,
+														_synonymRelationType,
+														_synonymRelationField,
+														_lexEntryRepository,
+														delegate { });
 			Form form = new Form();
 			form.Controls.Add(c);
 			AutoCompleteWithCreationBox<RecordToken<LexEntry>, string> picker =

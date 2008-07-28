@@ -104,15 +104,14 @@ namespace WeSay.App
 					return;
 				}
 
-				using (
-						_lexEntryRepository =
-						new LexEntryRepository(_project.PathToRepository))
+				using (_lexEntryRepository = new LexEntryRepository(_project.PathToRepository))
 				{
 					using (
 							_dictionary =
 							new DictionaryServiceProvider(_lexEntryRepository, this, _project))
 					{
-						if (_project.PathToWeSaySpecificFilesDirectoryInProject.IndexOf("PRETEND") < 0)
+						if (_project.PathToWeSaySpecificFilesDirectoryInProject.IndexOf("PRETEND") <
+							0)
 						{
 							RecoverUnsavedDataIfNeeded();
 						}
@@ -193,9 +192,8 @@ namespace WeSay.App
 		{
 			get
 			{
-				return
-						_serviceAppSingletonHelper.CurrentState ==
-						ServiceAppSingletonHelper.State.ServerMode;
+				return _serviceAppSingletonHelper.CurrentState ==
+					   ServiceAppSingletonHelper.State.ServerMode;
 			}
 		}
 
@@ -239,14 +237,13 @@ namespace WeSay.App
 		{
 			Thread notify = new Thread(NotifyOfLongStartupThread);
 
-			notify.Start(
-					StringCatalog.Get("~Please wait while WeSay prepares your data",
-									  "This is shown in rare circumstances where WeSay finds it needs to prepare some indices so it can run faster.  The main point to get across is that the user should settle in for a long wait, not think something is broken or try to run WeSay again."));
+			notify.Start(StringCatalog.Get("~Please wait while WeSay prepares your data",
+										   "This is shown in rare circumstances where WeSay finds it needs to prepare some indices so it can run faster.  The main point to get across is that the user should settle in for a long wait, not think something is broken or try to run WeSay again."));
 
 			try
 			{
-				DictionaryTask dictionaryTask =
-						new DictionaryTask(_lexEntryRepository, _project.DefaultViewTemplate);
+				DictionaryTask dictionaryTask = new DictionaryTask(_lexEntryRepository,
+																   _project.DefaultViewTemplate);
 			}
 			finally
 			{
@@ -302,17 +299,15 @@ namespace WeSay.App
 				//MONO bug as of 1.1.18 cannot bitwise or FileShare on FileStream constructor
 				//                    using (FileStream config = new FileStream(_project.PathTo_projectTaskInventory, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete))
 				using (
-						FileStream configFile =
-								new FileStream(_project.PathToConfigFile,
-											   FileMode.Open,
-											   FileAccess.Read,
-											   FileShare.ReadWrite))
+						FileStream configFile = new FileStream(_project.PathToConfigFile,
+															   FileMode.Open,
+															   FileAccess.Read,
+															   FileShare.ReadWrite))
 				{
-					builder =
-							new ConfigFileTaskBuilder(configFile,
-													  _project,
-													  _tabbedForm,
-													  _lexEntryRepository);
+					builder = new ConfigFileTaskBuilder(configFile,
+														_project,
+														_tabbedForm,
+														_lexEntryRepository);
 				}
 				_project.Tasks = builder.Tasks;
 				Application.DoEvents();
@@ -389,7 +384,8 @@ namespace WeSay.App
 			}
 			catch
 			{
-				ErrorReport.ReportNonFatalMessage("WeSay was unable to migrate the WeSay configuration file for the new version of WeSay. This may cause WeSay to not function properly. Try opening the project in the WeSay Configuration Tool to fix this.");
+				ErrorReport.ReportNonFatalMessage(
+						"WeSay was unable to migrate the WeSay configuration file for the new version of WeSay. This may cause WeSay to not function properly. Try opening the project in the WeSay Configuration Tool to fix this.");
 			}
 
 			return project;
@@ -444,8 +440,9 @@ namespace WeSay.App
 			[DefaultArgument(ArgumentTypes.AtMostOnce,
 					// DefaultValue = @"..\..\SampleProjects\Thai\WeSay\thai5000.words",
 					HelpText =
-					"Path to the Lift Xml file (e.g. on windows, \"c:\\thai\\wesay\\thai.lift\").")]
-			public string liftPath = null;
+							"Path to the Lift Xml file (e.g. on windows, \"c:\\thai\\wesay\\thai.lift\")."
+					)]
+			public string liftPath;
 
 			//            [Argument(ArgumentTypes.AtMostOnce,
 			//                HelpText = "Language to show the user interface in.",
@@ -453,18 +450,18 @@ namespace WeSay.App
 			//                ShortName = "")]
 			//            public string ui = null;
 
-			[Argument(ArgumentTypes.AtMostOnce, HelpText =
-												"Start without a user interface (will have no effect if WeSay is already running with a UI."
-					, LongName = "server", DefaultValue=false, ShortName = "")]
-			public bool startInServerMode = false;
+			[Argument(ArgumentTypes.AtMostOnce,
+					HelpText =
+							"Start without a user interface (will have no effect if WeSay is already running with a UI."
+					, LongName = "server", DefaultValue = false, ShortName = "")]
+			public bool startInServerMode;
 		}
 
 		private static void ShowCommandLineError(string e)
 		{
 			Parser p = new Parser(typeof (CommandLineArguments), ShowCommandLineError);
-			e =
-					e.Replace("Duplicate 'liftPath' argument",
-							  "Please enclose project path in quotes if it contains spaces.");
+			e = e.Replace("Duplicate 'liftPath' argument",
+						  "Please enclose project path in quotes if it contains spaces.");
 			e += "\r\n\r\n" + p.GetUsageString(200);
 			MessageBox.Show(e, "WeSay Command Line Problem");
 		}

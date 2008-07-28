@@ -61,7 +61,7 @@ namespace WeSay.LexicalModel.Tests
 				XmlWriterSettings settings = new XmlWriterSettings();
 				settings.Indent = true;
 				settings.ConformanceLevel = ConformanceLevel.Fragment;
-				XmlWriter writer = XmlTextWriter.Create(Console.Out, settings);
+				XmlWriter writer = XmlWriter.Create(Console.Out, settings);
 				doc.WriteContentTo(writer);
 				writer.Flush();
 			}

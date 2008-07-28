@@ -21,12 +21,11 @@ namespace WeSay.LexicalTools.Tests
 			_target = _lexEntryRepository.CreateItem();
 			_source = _lexEntryRepository.CreateItem();
 
-			Field relationField =
-					new Field("synonyms",
-							  "LexEntry",
-							  new string[] {"vernacular"},
-							  Field.MultiplicityType.ZeroOr1,
-							  "RelationToOneEntry");
+			Field relationField = new Field("synonyms",
+											"LexEntry",
+											new string[] {"vernacular"},
+											Field.MultiplicityType.ZeroOr1,
+											"RelationToOneEntry");
 			_missingRelationFieldFilter = new MissingFieldQuery(relationField);
 		}
 

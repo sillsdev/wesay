@@ -32,8 +32,8 @@ namespace WeSay.LexicalTools
 
 			_listViewOfWordsMatchingCurrentItem.Items.Clear();
 
-			_vernacularBox.WritingSystemsForThisField =
-					new WritingSystem[] {lexicalUnitWritingSystem};
+			_vernacularBox.WritingSystemsForThisField = new WritingSystem[]
+															{lexicalUnitWritingSystem};
 			_vernacularBox.TextChanged += _vernacularBox_TextChanged;
 			_vernacularBox.KeyDown += _boxVernacularWord_KeyDown;
 			_vernacularBox.MinimumSize = _boxForeignWord.Size;

@@ -1,17 +1,19 @@
 using System;
 using System.Collections.Generic;
 using NUnit.Framework;
-using WeSay.Data;
 
 namespace WeSay.Data.Tests
 {
     [TestFixture]
-    public class SynchronicRepositoryStateUnitializedTests : IRepositoryStateUnitializedTests<TestItem>
+	public class SynchronicRepositoryStateUnitializedTests:
+			IRepositoryStateUnitializedTests<TestItem>
     {
         [SetUp]
         public void Setup()
         {
-			RepositoryUnderTest = new SynchronicRepository<TestItem>(new MemoryRepository<TestItem>(), new MemoryRepository<TestItem>());
+			RepositoryUnderTest =
+					new SynchronicRepository<TestItem>(new MemoryRepository<TestItem>(),
+													   new MemoryRepository<TestItem>());
         }
 
         [TearDown]
@@ -19,16 +21,18 @@ namespace WeSay.Data.Tests
         {
             RepositoryUnderTest.Dispose();
         }
-
     }
 
     [TestFixture]
-    public class SynchronicRepositoryCreateItemTransitionTests : IRepositoryCreateItemTransitionTests<TestItem>
+	public class SynchronicRepositoryCreateItemTransitionTests:
+			IRepositoryCreateItemTransitionTests<TestItem>
     {
         [SetUp]
         protected void Setup()
         {
-			RepositoryUnderTest = new SynchronicRepository<TestItem>(new MemoryRepository<TestItem>(), new MemoryRepository<TestItem>());
+			RepositoryUnderTest =
+					new SynchronicRepository<TestItem>(new MemoryRepository<TestItem>(),
+													   new MemoryRepository<TestItem>());
         }
 
         [TearDown]
@@ -38,12 +42,13 @@ namespace WeSay.Data.Tests
         }
 
 		[Test]
-		public override void GetItemMatchingQuery_QueryWithShow_ReturnsAllItemsAndFieldsMatchingQuery()
+		public override void
+				GetItemMatchingQuery_QueryWithShow_ReturnsAllItemsAndFieldsMatchingQuery()
 		{
 			SetState();
 			Item.StoredInt = 123;
 			Item.StoredString = "I was stored!";
-			Query query = new Query(typeof(TestItem)).Show("StoredInt").Show("StoredString");
+			Query query = new Query(typeof (TestItem)).Show("StoredInt").Show("StoredString");
 			ResultSet<TestItem> resultsOfQuery = RepositoryUnderTest.GetItemsMatching(query);
 			Assert.AreEqual(1, resultsOfQuery.Count);
 			Assert.AreEqual(123, resultsOfQuery[0]["StoredInt"]);
@@ -57,12 +62,15 @@ namespace WeSay.Data.Tests
     }
 
     [TestFixture]
-    public class SynchronicRepositoryDeleteItemTransitionTests : IRepositoryDeleteItemTransitionTests<TestItem>
+	public class SynchronicRepositoryDeleteItemTransitionTests:
+			IRepositoryDeleteItemTransitionTests<TestItem>
     {
         [SetUp]
         public void Setup()
         {
-			RepositoryUnderTest = new SynchronicRepository<TestItem>(new MemoryRepository<TestItem>(), new MemoryRepository<TestItem>());
+			RepositoryUnderTest =
+					new SynchronicRepository<TestItem>(new MemoryRepository<TestItem>(),
+													   new MemoryRepository<TestItem>());
         }
 
         [TearDown]
@@ -78,12 +86,15 @@ namespace WeSay.Data.Tests
     }
 
     [TestFixture]
-    public class SynchronicRepositoryDeleteIdTransitionTests : IRepositoryDeleteIdTransitionTests<TestItem>
+	public class SynchronicRepositoryDeleteIdTransitionTests:
+			IRepositoryDeleteIdTransitionTests<TestItem>
     {
         [SetUp]
         public void Setup()
         {
-			RepositoryUnderTest = new SynchronicRepository<TestItem>(new MemoryRepository<TestItem>(), new MemoryRepository<TestItem>());
+			RepositoryUnderTest =
+					new SynchronicRepository<TestItem>(new MemoryRepository<TestItem>(),
+													   new MemoryRepository<TestItem>());
 		}
 
 		[TearDown]
@@ -99,12 +110,15 @@ namespace WeSay.Data.Tests
 	}
 
 	[TestFixture]
-	public class SynchronicRepositoryDeleteAllItemsTransitionTests : IRepositoryDeleteAllItemsTransitionTests<TestItem>
+	public class SynchronicRepositoryDeleteAllItemsTransitionTests:
+			IRepositoryDeleteAllItemsTransitionTests<TestItem>
 	{
 		[SetUp]
 		public void Setup()
 		{
-			RepositoryUnderTest = new SynchronicRepository<TestItem>(new MemoryRepository<TestItem>(), new MemoryRepository<TestItem>());
+			RepositoryUnderTest =
+					new SynchronicRepository<TestItem>(new MemoryRepository<TestItem>(),
+													   new MemoryRepository<TestItem>());
         }
 
         [TearDown]
@@ -122,9 +136,9 @@ namespace WeSay.Data.Tests
     [TestFixture]
     public class SynchronicRepositoryTests
     {
-        IRepository<TestItem> _primary;
-        IRepository<TestItem> _secondary;
-        SynchronicRepository<TestItem> _synchronic;
+		private IRepository<TestItem> _primary;
+		private IRepository<TestItem> _secondary;
+		private SynchronicRepository<TestItem> _synchronic;
 
         [SetUp]
         public void Setup()
@@ -141,15 +155,12 @@ namespace WeSay.Data.Tests
         }
 
         [Test]
-        [ExpectedException(typeof(ArgumentException))]
+		[ExpectedException(typeof (ArgumentException))]
         public void PassSameRepositoriesInConstructor_ThrowsArgumentException()
         {
 			using (IRepository<TestItem> repository = new MemoryRepository<TestItem>())
 			{
-				using(new SynchronicRepository<TestItem>(repository, repository))
-				{
-
-				}
+				using (new SynchronicRepository<TestItem>(repository, repository)) {}
 			}
         }
 

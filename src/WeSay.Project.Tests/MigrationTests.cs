@@ -59,22 +59,24 @@ namespace WeSay.Project.Tests
 			File.WriteAllText(_pathToInputConfig,
 							  "<?xml version='1.0' encoding='utf-8'?><configuration version='2'></configuration>");
 			XPathDocument doc = new XPathDocument(_pathToInputConfig);
-			bool didMigrate = WeSay.Project.WeSayWordsProject.MigrateConfigurationXmlIfNeeded(doc, _outputPath);
+			bool didMigrate = WeSayWordsProject.MigrateConfigurationXmlIfNeeded(doc, _outputPath);
 			Assert.IsFalse(didMigrate);
 		}
 
-		[Test, Ignore]
+		[Test]
+		[Ignore]
 		public void DoesMigrateV2File()
 		{
 			File.WriteAllText(_pathToInputConfig,
 							  "<?xml version='1.0' encoding='utf-8'?><configuration version='2'><components><viewTemplate></viewTemplate></components><tasks><task id='Dashboard' class='WeSay.CommonTools.DashboardControl' assembly='CommonTools' default='true'></task></tasks></configuration>");
 			XPathDocument doc = new XPathDocument(_pathToInputConfig);
-			bool didMigrate = WeSay.Project.WeSayWordsProject.MigrateConfigurationXmlIfNeeded(doc, _outputPath);
+			bool didMigrate = WeSayWordsProject.MigrateConfigurationXmlIfNeeded(doc, _outputPath);
 			Assert.IsTrue(didMigrate);
 			AssertXPathNotNull("configuration[@version='3']", _outputPath);
 		}
 
-		[Test, Ignore]
+		[Test]
+		[Ignore]
 		public void DoesNotTouchV3File()
 		{
 			File.WriteAllText(_pathToInputConfig,
@@ -102,7 +104,7 @@ namespace WeSay.Project.Tests
 				XmlWriterSettings settings = new XmlWriterSettings();
 				settings.Indent = true;
 				settings.ConformanceLevel = ConformanceLevel.Fragment;
-				XmlWriter writer = XmlTextWriter.Create(Console.Out, settings);
+				XmlWriter writer = XmlWriter.Create(Console.Out, settings);
 				doc.WriteContentTo(writer);
 				writer.Flush();
 			}

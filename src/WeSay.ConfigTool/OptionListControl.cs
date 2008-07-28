@@ -182,14 +182,14 @@ namespace WeSay.ConfigTool
 				splitContainer1.Panel2.Controls.Remove(_nameMultiTextControl);
 
 				_currentOption = proxy.UnderlyingOption;
-				MultiTextControl m =
-						new MultiTextControl(_currentField.WritingSystemIds,
-											 _currentOption.Name,
-											 _currentField.FieldName,
-											 false,
-											 BasilProject.Project.WritingSystems,
-											 CommonEnumerations.VisibilitySetting.Visible,
-											 _currentField.IsSpellCheckingEnabled);
+				MultiTextControl m = new MultiTextControl(_currentField.WritingSystemIds,
+														  _currentOption.Name,
+														  _currentField.FieldName,
+														  false,
+														  BasilProject.Project.WritingSystems,
+														  CommonEnumerations.VisibilitySetting.
+																  Visible,
+														  _currentField.IsSpellCheckingEnabled);
 				m.SizeChanged += OnNameControlSizeChanged;
 				m.Bounds = _nameMultiTextControl.Bounds;
 				m.Top = _nameLabel.Top;
@@ -205,8 +205,9 @@ namespace WeSay.ConfigTool
 
 				foreach (WeSayTextBox box in m.TextBoxes)
 				{
-					TextBinding binding =
-							new TextBinding(_currentOption.Name, box.WritingSystem.Id, box);
+					TextBinding binding = new TextBinding(_currentOption.Name,
+														  box.WritingSystem.Id,
+														  box);
 					//hooking on to this is more reliable, sequence-wise, than directly wiring to m.TextChanged
 					binding.DataTarget.PropertyChanged += DataTarget_PropertyChanged;
 				}
