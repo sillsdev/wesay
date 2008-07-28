@@ -192,7 +192,7 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
-		public void GetAllEntriesSortedByDefinition_GlossExistsInWritingSystemForAllEntries_ReturnsListSortedByGloss()
+		public void GetAllEntriesSortedByDefinition_DefinitionsDoesNotExistInWritingSystemButGlossDoesForAllEntries_ReturnsListSortedByGloss()
 		{
 			CreateThreeDifferentLexEntriesToBeSorted(delegate(LexEntry e)
 														 {
@@ -217,7 +217,7 @@ namespace WeSay.LexicalModel.Tests
 			WritingSystem german = new WritingSystem("de", SystemFonts.DefaultFont);
 			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinition(german);
 			Assert.AreEqual("de Word1", listOfLexEntriesSortedByDefinition[0]["Form"]);
-			Assert.Fail("NotTesting what it says it is.");
+			Assert.AreEqual("de Word2", listOfLexEntriesSortedByDefinition[1]["Form"]);
 		}
 
 		[Test]
@@ -235,14 +235,22 @@ namespace WeSay.LexicalModel.Tests
 		[Test]
 		public void GetAllEntriesSortedByDefinition_DefinitionAndGlossOfOneEntryAreIdentical_ReturnsOnlyOneRecordToken()
 		{
+			CreateThreeDifferentLexEntriesToBeSorted(delegate (LexEntry e)
+														 {
+															 e.Senses.Add(new LexSense());
+															 return e.Senses[0].Definition;
+														 });
 			LexEntry lexEntryWithBothDefinitionAndAGloss = _lexEntryRepository.CreateItem();
 			lexEntryWithBothDefinitionAndAGloss.Senses.Add(new LexSense());
-			lexEntryWithBothDefinitionAndAGloss.Senses[0].Definition.SetAlternative("de", "de Word1");
-			lexEntryWithBothDefinitionAndAGloss.Senses[0].Gloss.SetAlternative("de", "de Word1");
+			lexEntryWithBothDefinitionAndAGloss.Senses[0].Definition.SetAlternative("de", "de Word4");
+			lexEntryWithBothDefinitionAndAGloss.Senses[0].Gloss.SetAlternative("de", "de Word4");
 			WritingSystem german = new WritingSystem("de", SystemFonts.DefaultFont);
 			ResultSet<LexEntry> listOfLexEntriesSortedByDefinition = _lexEntryRepository.GetAllEntriesSortedByDefinition(german);
-			Assert.AreEqual(1, listOfLexEntriesSortedByDefinition.Count);
+			Assert.AreEqual(4, listOfLexEntriesSortedByDefinition.Count);
 			Assert.AreEqual("de Word1", listOfLexEntriesSortedByDefinition[0]["Form"]);
+			Assert.AreEqual("de Word2", listOfLexEntriesSortedByDefinition[1]["Form"]);
+			Assert.AreEqual("de Word3", listOfLexEntriesSortedByDefinition[2]["Form"]);
+			Assert.AreEqual("de Word4", listOfLexEntriesSortedByDefinition[3]["Form"]);
 		}
 
 		[Test]
