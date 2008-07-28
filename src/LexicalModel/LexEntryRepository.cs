@@ -600,15 +600,5 @@ namespace WeSay.LexicalModel
 		{
 			_decoratedRepository.Startup(state);
 		}
-
-		public void PersistNow()
-		{
-			// Currently all backends keep up to date synchronously
-			// todo: delegate this to the decorated repository.
-			if (_decoratedRepository.CanPersist)
-			{
-				//_decoratedRepository.PersistNow();
-			}
-		}
 	}
 }
