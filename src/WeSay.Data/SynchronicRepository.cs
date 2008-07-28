@@ -5,17 +5,20 @@ using Palaso.Progress;
 
 namespace WeSay.Data
 {
-    public class SynchronicRepository<T> : IRepository<T> where T: class, new()
+	public class SynchronicRepository<T>: IRepository<T> where T : class, new()
     {
-        readonly IRepository<T> _primary;
-        readonly IRepository<T> _secondary;
+		private readonly IRepository<T> _primary;
+		private readonly IRepository<T> _secondary;
 
         public delegate void CopyStrategy(T destination, T source);
+
         private readonly CopyStrategy _copyStrategy;
 
         private readonly Dictionary<RepositoryId, RepositoryId> _primarySecondaryMap;
 
-        public SynchronicRepository(IRepository<T> primary, IRepository<T> secondary, CopyStrategy copyStrategy)
+		public SynchronicRepository(IRepository<T> primary,
+									IRepository<T> secondary,
+									CopyStrategy copyStrategy)
         {
             if (primary == null)
             {
@@ -45,12 +48,14 @@ namespace WeSay.Data
         }
 
         public SynchronicRepository(IRepository<T> primary, IRepository<T> secondary)
-            : this(primary, secondary, DefaultCopyStrategy) {}
+				: this(primary, secondary, DefaultCopyStrategy) {}
 
         private static void DefaultCopyStrategy(T destination, T source)
         {
-            Type type = typeof(T);
-            FieldInfo [] fields = type.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+			Type type = typeof (T);
+			FieldInfo[] fields =
+					type.GetFields(BindingFlags.Instance | BindingFlags.Public |
+								   BindingFlags.NonPublic);
             foreach (FieldInfo field in fields)
             {
                 field.SetValue(destination, field.GetValue(source));
@@ -64,7 +69,8 @@ namespace WeSay.Data
             IRepository<T> master = _secondary;
             IRepository<T> slave = _primary;
             if ((_primary.CanPersist && !_secondary.CanPersist) ||
-                (_primary.LastModified > _secondary.LastModified && _primary.CanPersist == _secondary.CanPersist))
+				(_primary.LastModified > _secondary.LastModified &&
+				 _primary.CanPersist == _secondary.CanPersist))
             {
                 master = _primary;
                 slave = _secondary;
@@ -91,7 +97,13 @@ namespace WeSay.Data
 
         public DateTime LastModified
         {
-			get { return new DateTime(Math.Max(_primary.LastModified.Ticks, _secondary.LastModified.Ticks), DateTimeKind.Utc); }
+			get
+			{
+				return
+						new DateTime(
+								Math.Max(_primary.LastModified.Ticks, _secondary.LastModified.Ticks),
+								DateTimeKind.Utc);
+			}
         }
 
         public bool CanQuery
@@ -104,9 +116,7 @@ namespace WeSay.Data
             get { return _primary.CanPersist || _secondary.CanPersist; }
         }
 
-		public void Startup(ProgressState state)
-		{
-		}
+		public void Startup(ProgressState state) {}
 
 		public T CreateItem()
         {
@@ -202,14 +212,15 @@ namespace WeSay.Data
 
         #endregion
 
-
         #region IDisposable Members
+
 #if DEBUG
 		~SynchronicRepository()
 		{
 			if (!this._disposed)
 			{
-				throw new ApplicationException("Disposed not explicitly called on SynchronicRepository.");
+				throw new ApplicationException(
+						"Disposed not explicitly called on SynchronicRepository.");
 			}
 		}
 #endif
@@ -220,7 +231,7 @@ namespace WeSay.Data
         {
 			Dispose(true);
 			GC.SuppressFinalize(this);
-        }
+		}
 
 		protected virtual void Dispose(bool disposing)
 		{
@@ -250,7 +261,8 @@ namespace WeSay.Data
 			{
 				throw new ObjectDisposedException("SynchronicRepository");
 			}
-		}
+        }
+
         #endregion
     }
 }

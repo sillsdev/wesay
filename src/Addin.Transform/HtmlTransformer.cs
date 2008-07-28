@@ -29,7 +29,7 @@ namespace Addin.Transform
 			get { return LocalizedName; }
 		}
 
-		public override  string Description
+		public override string Description
 		{
 			get
 			{
@@ -86,9 +86,8 @@ namespace Addin.Transform
 				{
 					dlg.Show();
 					PLiftMaker maker = new PLiftMaker();
-					pliftPath =
-							maker.MakePLiftTempFile(lexEntryRepository,
-													(WeSayWordsProject) projectInfo.Project);
+					pliftPath = maker.MakePLiftTempFile(lexEntryRepository,
+														(WeSayWordsProject) projectInfo.Project);
 				}
 
 				projectInfo.PathToLIFT = pliftPath;
@@ -102,13 +101,12 @@ namespace Addin.Transform
 								   projectInfo.LocateFile("PartsOfSpeech.xml"));
 				arguments.AddParam("link-to-usercss", string.Empty, linkToUserCss + "()");
 
-				return
-						TransformLift(projectInfo,
-									  "plift2html.xsl",
-									  ".htm",
-									  arguments,
-									  //word doesn't notice that is is html if the <xml> directive is in there
-									  includeXmlDirective);
+				return TransformLift(projectInfo,
+									 "plift2html.xsl",
+									 ".htm",
+									 arguments,
+									 //word doesn't notice that is is html if the <xml> directive is in there
+									 includeXmlDirective);
 			}
 		}
 	}

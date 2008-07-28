@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -13,7 +13,7 @@ using System.Security.Permissions;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("WeSay")]
 [assembly: AssemblyProduct("WeSay")]
-[assembly: AssemblyCopyright("Copyright © WeSay 2006")]
+[assembly: AssemblyCopyright("Copyright � WeSay 2006")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -39,7 +39,6 @@ using System.Security.Permissions;
 
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
-
 [assembly: InternalsVisibleTo("CommonTools.Tests")]
 [assembly: CLSCompliant(true)]
 [assembly: SecurityPermission(SecurityAction.RequestMinimum, Execution = true)]

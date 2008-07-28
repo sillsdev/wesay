@@ -42,7 +42,7 @@ namespace WeSay.Foundation
 		private Font _font;
 		private string _id;
 		private string _keyboardName;
-		private bool _rightToLeft = false;
+		private bool _rightToLeft;
 		private SortComparer _sortComparer;
 		private SortKeyGenerator _sortKeyGenerator;
 		private string _sortUsing;
@@ -204,7 +204,7 @@ namespace WeSay.Foundation
 		}
 
 		[Browsable(false)]
-		[ReflectorProperty("FontName", Required=true)]
+		[ReflectorProperty("FontName", Required = true)]
 		public string FontName
 		{
 			get
@@ -287,7 +287,6 @@ namespace WeSay.Foundation
 		{
 			return Compare((string) x, (string) y);
 		}
-
 
 		#endregion
 
@@ -592,8 +591,7 @@ namespace WeSay.Foundation
 						try
 						{
 							string id = valueAsString.Replace('_', '-');
-							CultureInfo cultureInfo =
-									CultureInfo.GetCultureInfoByIetfLanguageTag(id);
+							CultureInfo cultureInfo = CultureInfo.GetCultureInfoByIetfLanguageTag(id);
 							display = valueAsString + " (" + cultureInfo.NativeName + ")";
 						}
 						catch
@@ -680,6 +678,5 @@ namespace WeSay.Foundation
 		}
 
 		#endregion
-
 	}
 }

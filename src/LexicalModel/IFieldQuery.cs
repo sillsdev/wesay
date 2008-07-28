@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using WeSay.LexicalModel;
 
 namespace WeSay.LexicalModel

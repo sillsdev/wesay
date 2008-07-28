@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using Palaso.Reporting;
+using Palaso.Text;
 using WeSay.Foundation.Options;
 
 namespace WeSay.Foundation
@@ -225,7 +226,7 @@ namespace WeSay.Foundation
 		{
 			if (property is MultiText)
 			{
-				return MultiText.IsEmpty((MultiText) property);
+				return MultiTextBase.IsEmpty((MultiText) property);
 			}
 			else if (property is OptionRef)
 			{

@@ -434,10 +434,12 @@ namespace WeSay.Project
 
 		public bool MigrateConfigurationXmlIfNeeded()
 		{
-			return MigrateConfigurationXmlIfNeeded(new XPathDocument(PathToConfigFile), PathToConfigFile);
+			return MigrateConfigurationXmlIfNeeded(new XPathDocument(PathToConfigFile),
+												   PathToConfigFile);
 		}
 
-		public static bool MigrateConfigurationXmlIfNeeded(XPathDocument configurationDoc, string targetPath)
+		public static bool MigrateConfigurationXmlIfNeeded(XPathDocument configurationDoc,
+														   string targetPath)
 		{
 			Logger.WriteEvent("Checking if migration of configuration is needed.");
 
@@ -580,17 +582,16 @@ namespace WeSay.Project
 
 		public ProjectInfo GetProjectInfoForAddin(LexEntryRepository lexEntryRepository)
 		{
-			return
-					new ProjectInfo(Name,
-									ApplicationRootDirectory,
-									ProjectDirectoryPath,
-									PathToLiftFile,
-									PathToExportDirectory,
-									GetFilesBelongingToProject(ProjectDirectoryPath),
-									AddinSet.Singleton.LocateFile,
-									WritingSystems,
-									lexEntryRepository,
-									this);
+			return new ProjectInfo(Name,
+								   ApplicationRootDirectory,
+								   ProjectDirectoryPath,
+								   PathToLiftFile,
+								   PathToExportDirectory,
+								   GetFilesBelongingToProject(ProjectDirectoryPath),
+								   AddinSet.Singleton.LocateFile,
+								   WritingSystems,
+								   lexEntryRepository,
+								   this);
 		}
 
 		private XPathDocument GetConfigurationDoc()
@@ -650,9 +651,8 @@ namespace WeSay.Project
 			get
 			{
 				string name = Path.GetFileNameWithoutExtension(PathToLiftFile);
-				return
-						Path.Combine(PathToWeSaySpecificFilesDirectoryInProject,
-									 name + ".WeSayConfig");
+				return Path.Combine(PathToWeSaySpecificFilesDirectoryInProject,
+									name + ".WeSayConfig");
 			}
 		}
 
@@ -713,9 +713,8 @@ namespace WeSay.Project
 			{
 				if (String.IsNullOrEmpty(_pathToLiftFile))
 				{
-					_pathToLiftFile =
-							Path.Combine(PathToWeSaySpecificFilesDirectoryInProject,
-										 Path.GetFileName(ProjectDirectoryPath) + ".lift");
+					_pathToLiftFile = Path.Combine(PathToWeSaySpecificFilesDirectoryInProject,
+												   Path.GetFileName(ProjectDirectoryPath) + ".lift");
 				}
 				return _pathToLiftFile;
 			}
@@ -773,9 +772,8 @@ namespace WeSay.Project
 
 		public string GetPathToDb4oLexicalModelDBFromPathToLift(string pathToLift)
 		{
-			return
-					Path.Combine(GetPathToCacheFromPathToLift(pathToLift),
-								 Path.GetFileNameWithoutExtension(pathToLift) + ".words");
+			return Path.Combine(GetPathToCacheFromPathToLift(pathToLift),
+								Path.GetFileNameWithoutExtension(pathToLift) + ".words");
 		}
 
 		/// <summary>
@@ -910,10 +908,9 @@ namespace WeSay.Project
 				if (_relationTypes == null)
 				{
 					_relationTypes = new List<LexRelationType>();
-					_relationTypes.Add(
-							new LexRelationType("RelationToOneEntry",
-												LexRelationType.Multiplicities.One,
-												LexRelationType.TargetTypes.Entry));
+					_relationTypes.Add(new LexRelationType("RelationToOneEntry",
+														   LexRelationType.Multiplicities.One,
+														   LexRelationType.TargetTypes.Entry));
 				}
 				return _relationTypes;
 			}
@@ -1000,16 +997,16 @@ namespace WeSay.Project
 				return list;
 			}
 
-			string pathInProject =
-					Path.Combine(PathToWeSaySpecificFilesDirectoryInProject, field.OptionsListFile);
+			string pathInProject = Path.Combine(PathToWeSaySpecificFilesDirectoryInProject,
+												field.OptionsListFile);
 			if (File.Exists(pathInProject))
 			{
 				LoadOptionsList(pathInProject);
 			}
 			else
 			{
-				string pathInProgramDir =
-						Path.Combine(ApplicationCommonDirectory, field.OptionsListFile);
+				string pathInProgramDir = Path.Combine(ApplicationCommonDirectory,
+													   field.OptionsListFile);
 				if (!File.Exists(pathInProgramDir))
 				{
 					if (createIfFileMissing)
@@ -1225,8 +1222,9 @@ namespace WeSay.Project
 		public static string[] GetFilesBelongingToProject(string pathToProjectRoot)
 		{
 			List<String> files = new List<string>();
-			string[] allFiles =
-					Directory.GetFiles(pathToProjectRoot, "*", SearchOption.AllDirectories);
+			string[] allFiles = Directory.GetFiles(pathToProjectRoot,
+												   "*",
+												   SearchOption.AllDirectories);
 			string[] antipatterns = {"Cache", "cache", ".bak", ".old", ".liftold"};
 
 			foreach (string file in allFiles)

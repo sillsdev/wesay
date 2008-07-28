@@ -215,8 +215,8 @@ namespace Addin.Transform
 								//                                string to = "$1" + parts[1] + "$2";
 								try
 								{
-									ChangePair p =
-											ChangePair.CreateReplacementFromTweak(parts[0], parts[1]);
+									ChangePair p = ChangePair.CreateReplacementFromTweak(parts[0],
+																						 parts[1]);
 
 									pairs.Add(p);
 								}

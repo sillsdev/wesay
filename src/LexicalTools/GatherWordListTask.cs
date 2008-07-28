@@ -17,7 +17,7 @@ namespace WeSay.LexicalTools
 		private readonly string _wordListFileName;
 		private GatherWordListControl _gatherControl;
 		private List<string> _words;
-		private int _currentWordIndex = 0;
+		private int _currentWordIndex;
 		private readonly string _writingSystemIdForWordListWords;
 		private readonly WritingSystem _lexicalUnitWritingSystem;
 		// private bool _suspendNotificationOfNavigation=false;
@@ -122,10 +122,7 @@ namespace WeSay.LexicalTools
 				{
 					return CurrentIndexIntoWordlist >= _words.Count;
 				}
-				else
-				{
-					return true;
-				}
+				return true;
 			}
 		}
 
@@ -332,7 +329,7 @@ namespace WeSay.LexicalTools
 			LexEntry entry = recordToken.RealObject;
 			for (int i = entry.Senses.Count - 1;i >= 0;i--)
 			{
-				LexSense sense = (LexSense) entry.Senses[i];
+				LexSense sense = entry.Senses[i];
 				if (sense.Gloss != null)
 				{
 					if (sense.Gloss.ContainsAlternative(_writingSystemIdForWordListWords))
