@@ -270,6 +270,21 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
+		public void GetAllEntriesSortedBySemanticDomain_EntriesWithDifferingSemanticDomains_EntriesAreSortedBySemanticDomain()
+		{
+			LexEntry lexentry = new LexEntry();
+			lexentry.Senses.Add(new LexSense());
+			//???How do I set the Semantic Domain for a given lexentry?!
+			Assert.Fail("test not implemented");
+		}
+
+		[Test]
+		public void GetAllEntriesSortedBySemanticDomain_ReturnsAllEntries()
+		{
+			Assert.Fail("test not implemented");
+		}
+
+		[Test]
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void GetEntriesWithSimilarLexicalForm_WritingSystemNull_Throws()
 		{
@@ -462,8 +477,27 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
-		public void
-			GetEntriesWithMatchingGlossSortedByLexicalForm_RepositoryContainsTwoEntriesWithDifferingLexicalForms_OnlyEntryWithmatchingLexicalFormIsFound()
+		[ExpectedException(typeof(ArgumentNullException))]
+		public void GetEntriesWithMatchingGlossSortedByLexicalForm_WritingSystemNull_Throws()
+		{
+			WritingSystem writingSystem = new WritingSystem("en", SystemFonts.DefaultFont);
+			ResultSet<LexEntry> list =
+					_lexEntryRepository.GetEntriesWithMatchingGlossSortedByLexicalForm(
+							null, writingSystem);
+		}
+
+		[Test]
+		[ExpectedException(typeof(ArgumentNullException))]
+		public void GetEntriesWithMatchingGlossSortedByLexicalForm_LanguageFormNull_Throws()
+		{
+			LanguageForm glossLanguageForm = new LanguageForm("en", "en Gloss", new MultiText());
+			ResultSet<LexEntry> list =
+					_lexEntryRepository.GetEntriesWithMatchingGlossSortedByLexicalForm(
+							glossLanguageForm, null);
+		}
+
+		[Test]
+		public void GetEntriesWithMatchingGlossSortedByLexicalForm_TwoEntriesWithDifferingGlosses_OnlyEntryWithmatchingGlossIsFound()
 		{
 			string glossToFind = "Gloss To Find.";
 			AddEntryWithGloss(glossToFind);
@@ -474,6 +508,48 @@ namespace WeSay.LexicalModel.Tests
 					_lexEntryRepository.GetEntriesWithMatchingGlossSortedByLexicalForm(
 							glossLanguageForm, writingSystem);
 			Assert.AreEqual(1, list.Count);
+			Assert.AreSame(glossToFind, list[0].RealObject.Senses[0].Gloss["en"]);
+		}
+
+		[Test]
+		public void GetEntriesWithMatchingGlossSortedByLexicalForm_GlossDoesNotExist_ReturnsEmpty()
+		{
+			WritingSystem ws = new WritingSystem("en", SystemFonts.DefaultFont);
+			LanguageForm glossThatDoesNotExist = new LanguageForm("en", "I don't exist!", new MultiText());
+			ResultSet<LexEntry> matches = _lexEntryRepository.GetEntriesWithMatchingGlossSortedByLexicalForm(glossThatDoesNotExist, ws);
+			Assert.AreEqual(0, matches.Count);
+		}
+
+		[Test]
+		public void GetEntriesWithMatchingGlossSortedByLexicalForm_TwoEntriesWithSameGlossButDifferentLexicalForms_ReturnsListSortedByLexicalForm()
+		{
+			LanguageForm glossToMatch = new LanguageForm("de", "de Gloss", new MultiText());
+			CreateEntryWithLexicalFormAndGloss(glossToMatch, "en", "en LexicalForm2");
+			CreateEntryWithLexicalFormAndGloss(glossToMatch, "en", "en LexicalForm1");
+			WritingSystem lexicalFormWritingSystem = new WritingSystem("en", SystemFonts.DefaultFont);
+			ResultSet<LexEntry> matches = _lexEntryRepository.GetEntriesWithMatchingGlossSortedByLexicalForm(glossToMatch, lexicalFormWritingSystem);
+			Assert.AreEqual("en LexicalForm1", matches[0].RealObject.LexicalForm.Forms[0].Form);
+			Assert.AreEqual("en LexicalForm2", matches[1].RealObject.LexicalForm.Forms[0].Form);
+		}
+
+		private void CreateEntryWithLexicalFormAndGloss(LanguageForm glossToMatch,
+														string lexicalFormWritingSystem, string lexicalForm)
+		{
+			LexEntry entryWithGlossAndLexicalForm = _lexEntryRepository.CreateItem();
+			entryWithGlossAndLexicalForm.Senses.Add(new LexSense());
+			entryWithGlossAndLexicalForm.Senses[0].Gloss.SetAlternative(glossToMatch.WritingSystemId, glossToMatch.Form);
+			entryWithGlossAndLexicalForm.LexicalForm.SetAlternative(lexicalFormWritingSystem, lexicalForm);
+		}
+
+		[Test]
+		public void GetEntriesWithMatchingGlossSortedByLexicalForm_EntryHasNoLexicalFormInWritingSystem_ReturnsEmptyForThatEntry()
+		{
+			LanguageForm glossToMatch = new LanguageForm("de", "de Gloss", new MultiText());
+			CreateEntryWithLexicalFormAndGloss(glossToMatch, "en", "en LexicalForm2");
+			WritingSystem lexicalFormWritingSystem = new WritingSystem("fr", SystemFonts.DefaultFont);
+			ResultSet<LexEntry> matches = _lexEntryRepository.GetEntriesWithMatchingGlossSortedByLexicalForm(glossToMatch, lexicalFormWritingSystem);
+			//??? should this be returning an Empty Rsultset or a Result Set with one Entry but an empty LexicalForm?
+			Assert.IsEmpty(matches[0].RealObject.LexicalForm.Forms);
 		}
 
 		private void AddEntryWithGloss(string gloss)
