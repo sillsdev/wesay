@@ -372,21 +372,38 @@ namespace WeSay.LexicalModel
 			{
 				throw new ArgumentNullException("id");
 			}
+			if (id == string.Empty)
+			{
+				throw new ArgumentOutOfRangeException("id", "The Id should not be empty.");
+			}
 			Query idOfEntries = GetAllLexEntriesQuery().Show("Id");
 			ResultSet<LexEntry> items = GetItemsMatchingCore(idOfEntries);
-			RecordToken<LexEntry> first = items.FindFirst(delegate(RecordToken<LexEntry> token)
+			int firstOccuranceOfId = items.FindFirstIndex(delegate(RecordToken<LexEntry> token)
 												{
 													return (string)token["Id"] == id;
 												});
-			if (first == null)
+			int secondOccuranceOfId = items.FindFirstIndex(firstOccuranceOfId+1, delegate(RecordToken<LexEntry> token)
+												{
+													return (string)token["Id"] == id;
+												});
+			if (firstOccuranceOfId < 0)
 			{
 				return null;
 			}
-			return first.RealObject;
+			if (0 <= secondOccuranceOfId)
+			{
+				throw new ApplicationException("More than one Entry exists with the Id" + id);
+			}
+			LexEntry lexEntryWithId = items[firstOccuranceOfId].RealObject;
+			return lexEntryWithId;
 		}
 
 		public LexEntry GetLexEntryWithMatchingGuid(Guid guid)
 		{
+			if(guid == Guid.Empty)
+			{
+				throw new ArgumentOutOfRangeException("guid", "Guids should not be empty!");
+			}
 			Query query = GetAllLexEntriesQuery().Show("Guid");
 			ResultSet<LexEntry> items = GetItemsMatchingCore(query);
 			int index = items.FindFirstIndex(delegate(RecordToken<LexEntry> token)

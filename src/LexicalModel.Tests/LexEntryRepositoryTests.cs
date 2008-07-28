@@ -390,38 +390,25 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
-		public void GetLexEntryWithMatchingGuid_FindEntryFromGuid()
+		[ExpectedException(typeof(ArgumentOutOfRangeException))]
+		public void GetLexEntryWithMatchingGuid_GuidIsEmpty_Throws()
 		{
-			Guid g = SetupEntryWithGuid();
-
-			LexEntry found = _lexEntryRepository.GetLexEntryWithMatchingGuid(g);
-			Assert.AreEqual("hello", found.LexicalForm["en"]);
+			LexEntry found = _lexEntryRepository.GetLexEntryWithMatchingGuid(Guid.Empty);
 		}
 
-		private Guid SetupEntryWithGuid()
+		[Test]
+		public void GetLexEntryWithMatchingGuid_GuidExists_ReturnsEntryWithGuid()
 		{
-			AddEntryWithGloss("hello");
-
-			Guid g = Guid.NewGuid();
-			CreateEntryWithGuid(g);
-
-			AddEntryWithGloss("world");
-			return g;
-		}
-
-		private void CreateEntryWithGuid(Guid g)
-		{
-			Extensible extensible = new Extensible();
-			extensible.Guid = g;
-			LexEntry entry = _lexEntryRepository.CreateItem(extensible);
-			entry.LexicalForm["en"] = "hello";
-			_lexEntryRepository.SaveItem(entry);
+			LexEntry lexEntryWithGuid = _lexEntryRepository.CreateItem();
+			Guid guidToFind = Guid.NewGuid();
+			lexEntryWithGuid.Guid = guidToFind;
+			LexEntry found = _lexEntryRepository.GetLexEntryWithMatchingGuid(guidToFind);
+			Assert.AreSame(lexEntryWithGuid, found);
 		}
 
 		[Test]
 		public void GetLexEntryWithMatchingGuid_GuidDoesNotExist_ReturnsNull()
 		{
-			SetupEntryWithGuid();
 			LexEntry found = _lexEntryRepository.GetLexEntryWithMatchingGuid(Guid.NewGuid());
 			Assert.IsNull(found);
 		}
@@ -430,9 +417,48 @@ namespace WeSay.LexicalModel.Tests
 		[ExpectedException(typeof (ApplicationException))]
 		public void GetLexEntryWithMatchingGuid_MultipleGuidMatchesInRepo_Throws()
 		{
-			Guid g = SetupEntryWithGuid();
-			CreateEntryWithGuid(g);
-			_lexEntryRepository.GetLexEntryWithMatchingGuid(g);
+			LexEntry lexEntryWithGuid = _lexEntryRepository.CreateItem();
+			Guid guidToFind = Guid.NewGuid();
+			lexEntryWithGuid.Guid = guidToFind;
+			LexEntry lexEntryWithConflictingGuid = _lexEntryRepository.CreateItem();
+			lexEntryWithConflictingGuid.Guid = guidToFind;
+			_lexEntryRepository.GetLexEntryWithMatchingGuid(guidToFind);
+		}
+
+		[Test]
+		[ExpectedException(typeof(ArgumentOutOfRangeException))]
+		public void GetLexEntryWithMatchingId_IdIsEmpty_Throws()
+		{
+			LexEntry found = _lexEntryRepository.GetLexEntryWithMatchingId("");
+		}
+
+		[Test]
+		public void GetLexEntryWithMatchingId_IdExists_ReturnsEntryWithId()
+		{
+			LexEntry lexEntryWithId = _lexEntryRepository.CreateItem();
+			string idToFind = "This is the id.";
+			lexEntryWithId.Id = idToFind;
+			LexEntry found = _lexEntryRepository.GetLexEntryWithMatchingId(idToFind);
+			Assert.AreSame(lexEntryWithId, found);
+		}
+
+		[Test]
+		public void GetLexEntryWithMatchingId_IdDoesNotExist_ReturnsNull()
+		{
+			LexEntry found = _lexEntryRepository.GetLexEntryWithMatchingId("This is a nonexistent Id.");
+			Assert.IsNull(found);
+		}
+
+		[Test]
+		[ExpectedException(typeof(ApplicationException))]
+		public void GetLexEntryWithMatchingId_MultipleIdMatchesInRepo_Throws()
+		{
+			LexEntry lexEntryWithId = _lexEntryRepository.CreateItem();
+			string idToFind = "This is an id";
+			lexEntryWithId.Id = idToFind;
+			LexEntry lexEntryWithConflictingId = _lexEntryRepository.CreateItem();
+			lexEntryWithConflictingId.Id = idToFind;
+			_lexEntryRepository.GetLexEntryWithMatchingId(idToFind);
 		}
 
 		[Test]
