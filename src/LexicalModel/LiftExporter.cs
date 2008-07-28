@@ -223,11 +223,6 @@ namespace WeSay.LexicalModel
 			{
 				WritePosCore(pos);
 			}
-			else
-			{
-				//review
-				// I think this is right (Eric)
-			}
 		}
 
 		protected virtual void WritePosCore(OptionRef pos)
