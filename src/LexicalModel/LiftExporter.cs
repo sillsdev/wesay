@@ -546,6 +546,17 @@ namespace WeSay.LexicalModel
 			return false;
 		}
 
+		public void AddNewEntry(LexEntry entry)
+		{
+			Writer.WriteStartElement("entry");
+			Writer.WriteAttributeString("dateCreated",
+										entry.CreationTime.ToString(LiftDateTimeFormat));
+			Writer.WriteAttributeString("dateModified",
+										entry.ModificationTime.ToString(LiftDateTimeFormat));
+			Writer.WriteAttributeString("guid", entry.Guid.ToString());
+			Writer.WriteEndElement();
+		}
+
 		public void AddDeletedEntry(LexEntry entry)
 		{
 			Writer.WriteStartElement("entry");

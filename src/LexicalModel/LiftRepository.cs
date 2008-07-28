@@ -54,7 +54,7 @@ namespace WeSay.LexicalModel
 			LexEntry item = base.CreateItem();
 			if (!_loadingAllEntries)
 			{
-				UpdateLiftFileWithModified(item);
+				UpdateLiftFileWithNew(item);
 			}
 			return item;
 		}
@@ -214,6 +214,12 @@ namespace WeSay.LexicalModel
 			MergeIncrementFiles();
 		}
 
+		private void UpdateLiftFileWithNew(LexEntry entryToUpdate)
+		{
+			CreateFileContainingNew(entryToUpdate);
+			MergeIncrementFiles();
+		}
+
 		private void UpdateLiftFileWithDeleted(IEnumerable<LexEntry> entriesToDelete)
 		{
 			CreateFileContainingDeleted(entriesToDelete);
@@ -224,6 +230,16 @@ namespace WeSay.LexicalModel
 		{
 			CreateFileContainingDeleted(entryToDelete);
 			MergeIncrementFiles();
+		}
+
+		private void CreateFileContainingNew(LexEntry entry)
+		{
+			LiftExporter exporter = new LiftExporter(MakeIncrementFileName(PreciseDateTime.UtcNow));
+			//!!!exporter.Start(); //!!! Would be nice to have this CJP 2008-07-09
+			exporter.AddNewEntry(entry);
+			exporter.End();
+
+			RecordUpdateTime(PreciseDateTime.UtcNow); //Why do we need to call this??? TA 7-4-2008
 		}
 
 		private void CreateFileContainingModified(LexEntry entryToUpdate)
