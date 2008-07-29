@@ -271,14 +271,22 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
-		public void GetAllEntriesSortedBySemanticDomain_EntriesWithDifferingSemanticDomains_EntriesAreSortedBySemanticDomain()
+		public void GetEntriesWithSemanticDomainSortedBySemanticDomain_EntriesWithDifferingSemanticDomains_EntriesAreSortedBySemanticDomain()
 		{
 			CreateLexEntryWithSemanticDomain("SemanticDomain2");
 			CreateLexEntryWithSemanticDomain("SemanticDomain1");
-			ResultSet<LexEntry> sortedResults = _lexEntryRepository.GetAllEntriesSortedBySemanticDomain(LexSense.WellKnownProperties.SemanticDomainsDdp4);
+			ResultSet<LexEntry> sortedResults = _lexEntryRepository.GetEntriesWithSemanticDomainSortedBySemanticDomain(LexSense.WellKnownProperties.SemanticDomainsDdp4);
 			Assert.AreEqual(2, sortedResults.Count);
 			Assert.AreEqual("SemanticDomain1", sortedResults[0]["SemanticDomain"]);
 			Assert.AreEqual("SemanticDomain2", sortedResults[1]["SemanticDomain"]);
+		}
+
+		[Test]
+		public void GetEntriesWithSemanticDomainSortedBySemanticDomain_EntryWithoutSemanticDomain_ReturnEmpty()
+		{
+			LexEntry lexEntryWithoutSemanticDomain = _lexEntryRepository.CreateItem();
+			ResultSet<LexEntry> sortedResults = _lexEntryRepository.GetEntriesWithSemanticDomainSortedBySemanticDomain(LexSense.WellKnownProperties.SemanticDomainsDdp4);
+			Assert.AreEqual(0, sortedResults.Count);
 		}
 
 		private void CreateLexEntryWithSemanticDomain(string semanticDomain)
@@ -615,63 +623,88 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[Test]
-		public void GetAllEntriesSortedByLexicalForm_WritingSystemNull_Throws()
-		{
-			Assert.Fail("Test not implemented!");
-		}
-
-		[Test]
-		public void GetAllEntriesSortedByLexicalForm_MultipleMatchingEntries_ReturnsMatchingEntries()
-		{
-			Assert.Fail("Test not implemented!");
-		}
-
-		[Test]
-		public void GetAllEntriesSortedByLexicalForm_NoMatchingEntries_ReturnsEmpty()
-		{
-			Assert.Fail("Test not implemented!");
-		}
-
-		[Test]
-		public void GetAllEntriesSortedByLexicalForm_NoLexicalFormMatchesInWritingSystem_ReturnsEmpty()
-		{
-			Assert.Fail("Test not implemented!");
-		}
-
-		[Test]
+		[ExpectedException(typeof(ArgumentNullException))]
 		public void GetEntriesWithMissingFieldSortedByLexicalUnit_FieldNull_Throws()
 		{
-			Assert.Fail("Test not implemented!");
+			Field fieldToFill = null;
+			WritingSystem lexicalFormWritingSystem = new WritingSystem("de", SystemFonts.DefaultFont);
+			ResultSet<LexEntry> sortedResults =
+				_lexEntryRepository.GetEntriesWithMissingFieldSortedByLexicalUnit(fieldToFill, lexicalFormWritingSystem);
+			Assert.AreEqual(0, sortedResults.Count);
 		}
 
 		[Test]
 		public void GetEntriesWithMissingFieldSortedByLexicalUnit_FieldNameDoesNotExist_ReturnsEmpty()
 		{
-			Assert.Fail("Test not implemented!");
+			Field fieldToFill = new Field("I do not exist!", "LexEntry", new string[] { "fr" });
+			WritingSystem lexicalFormWritingSystem = new WritingSystem("de", SystemFonts.DefaultFont);
+			ResultSet<LexEntry> sortedResults =
+				_lexEntryRepository.GetEntriesWithMissingFieldSortedByLexicalUnit(fieldToFill, lexicalFormWritingSystem);
+			Assert.AreEqual(0, sortedResults.Count);
 		}
 
 		[Test]
+		[ExpectedException(typeof(ArgumentNullException))]
 		public void GetEntriesWithMissingFieldSortedByLexicalUnit_WritingSystemNull_Throws()
 		{
-			Assert.Fail("Test not implemented!");
+			Field fieldToFill = new Field(LexEntry.WellKnownProperties.Citation, "LexEntry", new string[] { "fr" });
+			WritingSystem lexicalFormWritingSystem = null;
+			ResultSet<LexEntry> sortedResults =
+				_lexEntryRepository.GetEntriesWithMissingFieldSortedByLexicalUnit(fieldToFill, lexicalFormWritingSystem);
 		}
 
 		[Test]
-		public void GetEntriesWithMissingFieldSortedByLexicalUnit_EntryInWritingSystemInFieldDoesNotExist_ReturnsEmpty()
+		public void GetEntriesWithMissingFieldSortedByLexicalUnit_EntryInWritingSystemInFieldDoesNotExist_ReturnsEntries()
 		{
-			Assert.Fail("Test not implemented!");
+			CreateLexentryWithCitation("de", "de Word2");
+			CreateLexentryWithCitation("de", "de Word1");
+			Field fieldToFill = new Field(LexEntry.WellKnownProperties.Citation, "LexEntry", new string[] { "fr" });
+			WritingSystem lexicalFormWritingSystem = new WritingSystem("de", SystemFonts.DefaultFont);
+			ResultSet<LexEntry> sortedResults =
+				_lexEntryRepository.GetEntriesWithMissingFieldSortedByLexicalUnit(fieldToFill, lexicalFormWritingSystem);
+			Assert.AreEqual(2, sortedResults.Count);
+			Assert.AreEqual("", sortedResults[0]["Form"]);
+			Assert.AreEqual("", sortedResults[1]["Form"]);
+		}
+
+		private void CreateLexentryWithCitation(string citationWritingSystem, string lexicalForm)
+		{
+			LexEntry lexEntryWithMissingCitation = _lexEntryRepository.CreateItem();
+			lexEntryWithMissingCitation.CitationForm[citationWritingSystem] = lexicalForm;
+			_lexEntryRepository.SaveItem(lexEntryWithMissingCitation);
 		}
 
 		[Test]
 		public void GetEntriesWithMissingFieldSortedByLexicalUnit_MultipleEntriesWithMissingFieldExist_ReturnsEntriesSortedByLexicalForm()
 		{
-			Assert.Fail("Test not implemented!");
+			CreateLexentryWithLexicalFormButWithoutCitation("de Word2");
+			CreateLexentryWithLexicalFormButWithoutCitation("de Word1");
+			Field fieldToFill = new Field(LexEntry.WellKnownProperties.Citation, "LexEntry", new string[]{"de"});
+			WritingSystem lexicalFormWritingSystem = new WritingSystem("de", SystemFonts.DefaultFont);
+			ResultSet<LexEntry> sortedResults =
+				_lexEntryRepository.GetEntriesWithMissingFieldSortedByLexicalUnit(fieldToFill, lexicalFormWritingSystem);
+			Assert.AreEqual(2, sortedResults.Count);
+			Assert.AreEqual("de Word1", sortedResults[0]["Form"]);
+			Assert.AreEqual("de Word2", sortedResults[1]["Form"]);
+		}
+
+		private void CreateLexentryWithLexicalFormButWithoutCitation(string lexicalForm)
+		{
+			LexEntry lexEntryWithMissingCitation = _lexEntryRepository.CreateItem();
+			lexEntryWithMissingCitation.LexicalForm["de"] = lexicalForm;
+			_lexEntryRepository.SaveItem(lexEntryWithMissingCitation);
 		}
 
 		[Test]
 		public void GetEntriesWithMissingFieldSortedByLexicalUnit_LexicalFormDoesNotExistInWritingSystem_ReturnsEmptylexicalFormForThatEntry()
 		{
-			Assert.Fail("Test not implemented!");
+			CreateLexentryWithLexicalFormButWithoutCitation("de Word1");
+			Field fieldToFill = new Field(LexEntry.WellKnownProperties.Citation, "LexEntry", new string[] { "de" });
+			WritingSystem lexicalFormWritingSystem = new WritingSystem("fr", SystemFonts.DefaultFont);
+			ResultSet<LexEntry> sortedResults =
+				_lexEntryRepository.GetEntriesWithMissingFieldSortedByLexicalUnit(fieldToFill, lexicalFormWritingSystem);
+			Assert.AreEqual(1, sortedResults.Count);
+			Assert.AreEqual("", sortedResults[0]["Form"]);
 		}
 
 		[Test]
